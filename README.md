@@ -23,12 +23,16 @@
 index.html                 首頁。文章卡片是「真的寫在 HTML 裡」的靜態內容
 404.html
 site.json                  網站正式網址（給 sitemap 用）
-supabase-setup.sql         計數器的資料庫建置指令，執行一次即可
+d1-schema.sql              計數器的 D1 資料庫建置指令，執行一次即可
+wrangler.toml              Cloudflare Pages 與 D1 綁定設定
+functions/
+  api/views.js             計數器 API（Pages Function，與網站同網域）
+  allowed-slugs.js         允許計數的頁面白名單
 assets/
   style.css                全站樣式
-  supabase-config.js       ← Supabase 的 URL 與 anon key 填在這裡
   counter.js               瀏覽計數器
-  hero-dental.jpg          首頁主視覺（CC BY 4.0，出處見頁尾）
+  hero-clinic.jpg          首頁主視覺：診所建築外觀（自有照片，另有 -800 版供 srcset）
+  clinic-room-*.jpg        診療室照片（自有照片，另有 -600 版供 srcset）
   hero-*.svg               各篇文章的插圖（自製）
 posts/
   <slug>/index.html        一篇文章一個資料夾，網址就是 /posts/<slug>/
@@ -172,6 +176,10 @@ Cloudflare 那段另需在 repo 的 **Settings → Secrets and variables → Act
 
 ## 圖片授權
 
-首頁主視覺照片為 [A dental chair in a dentist clinic in North Carolina, United States](https://commons.wikimedia.org/wiki/File:A_dental_chair_in_a_dentist_clinic_in_North_Carolina,_United_States.jpg)，攝影 Harrison Keely，取自 Wikimedia Commons，依 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 授權使用；本站僅等比例縮放為 1280 像素寬，未另作修改。出處標示於全站頁尾。
+首頁主視覺（診所建築外觀）與診療室照片皆為芳仁牙醫診所自有，未經同意請勿轉載。
+原始檔為專業攝影大圖，已壓縮為網頁尺寸：主視覺 1600px / 800px，診療室 1200px / 600px，
+透過 `srcset` 依螢幕寬度與像素密度自動挑選。
 
 文章插圖與網站圖示為本站自製。
+
+> 若日後改用第三方的 CC BY 授權照片，需在全站頁尾標示照片名稱、攝影者、授權條款連結與是否修改。

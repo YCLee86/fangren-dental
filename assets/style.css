@@ -106,7 +106,8 @@ a:hover { color: var(--teal-500); }
 .hero-figure { margin: 0; }
 .hero-figure img {
   width: 100%; border-radius: var(--radius);
-  box-shadow: var(--shadow); aspect-ratio: 4 / 3; object-fit: cover;
+  /* 比例與診所實照原檔一致（1600×1091），避免裁掉建築上緣 */
+  box-shadow: var(--shadow); aspect-ratio: 1600 / 1091; object-fit: cover;
 }
 .hero-figure figcaption { margin-top: .6rem; font-size: .78rem; color: var(--ink-faint); }
 
@@ -248,6 +249,22 @@ a:hover { color: var(--teal-500); }
 .info-card h3 { margin: 0 0 .5rem; font-size: .95rem; color: var(--teal-900); }
 .info-card p { margin: 0; font-size: .9rem; color: var(--ink-soft); }
 .placeholder { color: #b0752b; background: #fdf3e2; border-radius: 5px; padding: 0 .3rem; font-size: .88em; }
+.info-card .info-note { margin-top: .6rem; font-size: .8rem; color: var(--ink-faint); }
+
+/* ---------- 診所照片 ---------- */
+.clinic-gallery {
+  display: grid; gap: 1rem; margin-top: 1.4rem;
+  /* min() 讓最小欄寬永遠不超過容器，窄螢幕自動單欄 */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+}
+.clinic-gallery figure { margin: 0; min-width: 0; }
+.clinic-gallery img {
+  width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover;
+  border-radius: var(--radius); box-shadow: var(--shadow); background: var(--teal-100);
+}
+.clinic-gallery figcaption {
+  margin-top: .5rem; font-size: .8rem; line-height: 1.7; color: var(--ink-faint);
+}
 
 /* ---------- 頁尾 ---------- */
 .site-footer { background: var(--teal-900); color: #cfe3e4; padding-block: clamp(2rem, 5vw, 2.8rem); margin-top: 2rem; }

@@ -13,7 +13,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/style.css">
 
-<!-- 本地搜尋用的結構化資料。看診時間確認後可加上 openingHoursSpecification。 -->
+<!-- 本地搜尋用的結構化資料。看診時間已由診所確認。 -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -21,13 +21,34 @@
   "name": "芳仁牙醫診所",
   "url": "https://fangren.net/",
   "telephone": "+886-5-533-9369",
+  "image": "https://fangren.net/assets/hero-clinic.jpg",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "永樂街70號",
     "addressLocality": "斗六市",
     "addressRegion": "雲林縣",
     "addressCountry": "TW"
-  }
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "08:45",
+      "closes": "12:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "13:45",
+      "closes": "16:45"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "17:45",
+      "closes": "20:30"
+    }
+  ]
 }
 </script>
 </head>
@@ -67,10 +88,11 @@
         </ul>
       </div>
       <figure class="hero-figure">
-        <img src="assets/hero-dental.jpg"
-             alt="牙醫診所診療室內的牙科治療椅與設備"
-             width="1280" height="960" fetchpriority="high">
-        <figcaption>照片：Harrison Keely，依 <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a> 使用（完整出處見頁尾）</figcaption>
+        <img src="assets/hero-clinic.jpg"
+             srcset="assets/hero-clinic-800.jpg 800w, assets/hero-clinic.jpg 1600w"
+             sizes="(max-width: 860px) 100vw, 50vw"
+             alt="芳仁牙醫診所的清水模建築外觀，位於斗六街角"
+             width="1600" height="1091" fetchpriority="high">
       </figure>
     </div>
   </section>
@@ -204,8 +226,31 @@
       </div>
       <div class="info-card">
         <h3>看診時間</h3>
-        <p><span class="placeholder">【請填入看診時間】</span></p>
+        <p><b>週一至週五</b><br>
+           上午 08:45–12:00<br>
+           下午 13:45–16:45<br>
+           晚上 17:45–20:30</p>
+        <p class="info-note">週六、週日休診。國定假日門診時間請來電確認。</p>
       </div>
+    </div>
+
+    <div class="clinic-gallery">
+      <figure>
+        <img src="assets/clinic-room-1.jpg"
+             srcset="assets/clinic-room-1-600.jpg 600w, assets/clinic-room-1.jpg 1200w"
+             sizes="(max-width: 720px) 100vw, 50vw"
+             width="1200" height="777" loading="lazy"
+             alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
+        <figcaption>獨立診療空間，每張診療椅旁都配有影像螢幕，方便看診時一起討論。</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/clinic-room-2.jpg"
+             srcset="assets/clinic-room-2-600.jpg 600w, assets/clinic-room-2.jpg 1200w"
+             sizes="(max-width: 720px) 100vw, 50vw"
+             width="1200" height="800" loading="lazy"
+             alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
+        <figcaption>診療區以隔屏分隔，保留採光也維持看診時的隱私。</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -224,10 +269,7 @@
       <div>
         <h4>圖片出處</h4>
         <p class="credit">
-          首頁主視覺照片：<a href="https://commons.wikimedia.org/wiki/File:A_dental_chair_in_a_dentist_clinic_in_North_Carolina,_United_States.jpg" rel="noopener">A dental chair in a dentist clinic in North Carolina, United States</a>，
-          攝影 <a href="https://commons.wikimedia.org/wiki/User:Hkeely" rel="noopener">Harrison Keely</a>，
-          取自 Wikimedia Commons，依 <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">Creative Commons 姓名標示 4.0 國際 (CC BY 4.0)</a> 授權使用。
-          本站僅將原圖等比例縮放為 1280 像素寬，未另作修改。
+          首頁主視覺與診療室照片為芳仁牙醫診所自有，未經同意請勿轉載。
         </p>
         <p class="credit">文章內頁插圖與網站識別圖示為本站自製，非引用來源。</p>
       </div>
