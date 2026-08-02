@@ -34,8 +34,14 @@
 
 這個 repo **有兩個人同時在推 commit**，兩台電腦各自跑 Claude Code。動手前：
 
+**這件事已經自動化了** —— `.claude/settings.json` 的 SessionStart hook 會在每次開啟專案時
+自動執行 `node tools/sync.mjs`（等同 `git pull --rebase --autostash`），並把結果顯示給使用者。
+所以正常情況下不必再手動 pull。
+
+但如果一個 session 開很久，中途仍要自己補一次：
+
 ```bash
-git fetch && git pull --rebase
+node tools/sync.mjs
 ```
 
 已經發生過 push 被擋、要 rebase 的情況。另外：**未追蹤的本機檔案若和遠端新增的同名檔撞到
@@ -61,6 +67,19 @@ node tools/serve.mjs      # 預設 http://localhost:8791
 ```
 
 計數器 API 在本機沒有 Worker 可跑，會**自動隱藏**，網站其他部分完全正常，這是預期行為。
+
+### 使用者的口語指令
+
+使用者不熟悉終端機，會用中文交代。看到這些說法就直接執行對應動作，不要只是把指令貼給他：
+
+| 使用者說 | 你要做的事 |
+| --- | --- |
+| 「上線」「發布」「推上去」 | `node tools/build.mjs` → `git add -A` → commit（訊息自己擬）→ `git push` |
+| 「同步」「更新」「拉最新的」 | `node tools/sync.mjs` |
+| 「預覽」「我要看看」 | `node tools/serve.mjs`，告訴他開 http://localhost:8791 |
+| 「網站好了嗎」 | 確認已 push，提醒 Cloudflare 需要幾分鐘，網址是 https://fangren.net |
+
+上線前若發現遠端有新 commit，先同步再 build、再推。
 
 ---
 
@@ -99,8 +118,11 @@ tools/
   build.mjs             產生首頁卡片、更新日期、排序、sitemap、allowed-slugs
   dist.mjs              把上線檔案組進 _site/
   serve.mjs             本機預覽伺服器
+  sync.mjs              同步遠端（SessionStart hook 自動呼叫）
   setup.ps1 / setup.sh  新電腦一鍵環境設定
   build-manifest.json   內容雜湊紀錄，build 自動維護，勿手改
+.claude/
+  settings.json         SessionStart hook：開啟專案時自動同步（隨 git 走，兩台都生效）
 ```
 
 > `tools/setup.ps1` **必須存成 UTF-8 with BOM**。Windows PowerShell 5.1 沒有 BOM 就會

@@ -198,14 +198,31 @@ Cloudflare 後台的 Worker `fangren-dental` 已接上這個 GitHub repo，build
 ### 兩人協作
 
 兩人共用同一個 repo（第二人加為 Write 權限的 collaborator），各自在自己電腦編修，
-push 到 `main` 就部署。動手前務必先：
+push 到 `main` 就部署。
+
+**開工前的同步已經自動化**：`.claude/settings.json` 設了 SessionStart hook，
+每次在 Claude Code 開啟這個專案時會自動跑 `node tools/sync.mjs`
+（等同 `git pull --rebase --autostash`），並把拉到什麼顯示出來。
+這個設定跟著 git 走，兩台電腦都生效，不必各自設定。
+
+要手動同步就跑：
 
 ```bash
-git fetch && git pull --rebase
+node tools/sync.mjs
 ```
 
 `index.html` 與 `tools/build-manifest.json` 是 build 產物，兩邊同時改必然衝突，
 所以「改完 → build → 立刻 push」，不要累積本機 commit。
+
+### 不想碰終端機的話
+
+直接用中文跟 Claude Code 說就行，它知道要做什麼（對照表寫在 [CLAUDE.md](CLAUDE.md)）：
+
+| 你說 | 它會做 |
+| --- | --- |
+| 上線 / 發布 | build → commit → push，幾分鐘後 fangren.net 更新 |
+| 同步 / 拉最新的 | `node tools/sync.mjs` |
+| 預覽 / 我要看看 | 開本機伺服器給你看 |
 
 ### 沒有 GitHub Actions
 
