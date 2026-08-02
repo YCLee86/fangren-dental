@@ -10,16 +10,26 @@ name = "fangren-dental"
 main = "src/worker.js"
 compatibility_date = "2026-08-02"
 
-# npm run build 產生的靜態網站。有對應檔案的網址由 Cloudflare 直接送出，
-# 不會進到 src/worker.js，所以計數器出問題也不會影響網站本體。
+# npm run build 產生的靜態網站，由 src/worker.js 轉交給 env.ASSETS 送出。
+#
+# run_worker_first 讓每個請求都先經過 Worker，這是 www 轉址唯一的做法——
+# 它只接受路徑樣式（例如 "/api/*"），無法指定主機名稱，所以沒辦法只攔 www。
+# 代價是 Worker 掛掉會連帶影響整個網站，不再只有計數器。
+# 若之後想拿掉這個代價，可改用後台 Rules → Redirect Rules 做 www 轉址，
+# 再把這行與 worker.js 裡的轉址一起刪掉。
 [assets]
 directory = "_site"
 binding = "ASSETS"
+run_worker_first = true
 
 # 正式網域。部署時 Cloudflare 會自動建好 DNS 紀錄與憑證。
-# www 若要能連，到後台 Rules → Redirect Rules 加一條轉到主網域即可。
+# www 只負責轉到主網域，不供內容，避免同一份內容有兩個網址。
 [[routes]]
 pattern = "fangren.net"
+custom_domain = true
+
+[[routes]]
+pattern = "www.fangren.net"
 custom_domain = true
 
 # 瀏覽計數器用的資料庫。程式裡以 env.DB 取用。
