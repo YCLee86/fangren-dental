@@ -24,9 +24,9 @@ index.html                 首頁。文章卡片是「真的寫在 HTML 裡」�
 404.html
 site.json                  網站正式網址（給 sitemap 用）
 d1-schema.sql              計數器的 D1 資料庫建置指令，執行一次即可
-wrangler.toml              Cloudflare Pages 與 D1 綁定設定
-functions/
-  api/views.js             計數器 API（Pages Function，與網站同網域）
+wrangler.toml              Cloudflare Worker、靜態資產與 D1 綁定設定
+src/
+  worker.js                計數器 API（Worker，與網站同網域）
   allowed-slugs.js         允許計數的頁面白名單
 assets/
   style.css                全站樣式
