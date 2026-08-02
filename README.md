@@ -4,16 +4,31 @@
 
 | 環境 | 網址 |
 | --- | --- |
-| 正式站（GitHub Pages） | https://yclee86.github.io/fangren-dental/ |
-| Cloudflare Pages | 尚未建立，見下方「Cloudflare 待辦」 |
+| 正式站 | **https://fangren.net**（Cloudflare Worker） |
+| 舊站（過渡期保留） | https://yclee86.github.io/fangren-dental/ |
 | 原始碼 | https://github.com/YCLee86/fangren-dental |
 
-> **Cloudflare 待辦**：原本的直接上傳專案已刪除，但 Cloudflare 會保留已刪除專案的
-> `pages.dev` 子網域一段時間，目前 `fangren-dental` 這個名字還拿不回來（表單會自動
-> 配成 `fangren-dental-bpt.pages.dev`）。等名字釋出後再依下方「自動部署」建立 Git 專案。
-> GitHub App（Cloudflare Workers and Pages）已授權，僅限這個 repo，屆時不必再授權一次。
->
-> 在那之前計數器不會運作——Pages Function 只跑在 Cloudflare，GitHub Pages 上會自動隱藏。
+`www.fangren.net` 已綁定，301 轉到主網域。
+舊的 GitHub Pages 網址仍會跟著 push 一起更新，之後要處理轉址。
+
+> 用 Claude Code 編修這個網站？架構守則與工作流程在 [CLAUDE.md](CLAUDE.md)。
+
+---
+
+## 換一台電腦開工
+
+```bash
+git clone https://github.com/YCLee86/fangren-dental.git
+cd fangren-dental
+git config user.name "YCLee86" && git config user.email "eugenelee0806@gmail.com"
+```
+
+需要 **Node ≥ 20** 與 git。**不必 `npm install`**（這個專案沒有任何依賴），
+也**不必裝 wrangler 或申請 Cloudflare token** — push 到 `main` 就會自動部署。
+
+第二個人只要是這個 repo 的 collaborator（Write 權限）即可，完全不需要 Cloudflare 帳號。
+
+> repo 層級的 git 身分一定要設，全域沒設，不設會 commit 失敗。
 
 ---
 
@@ -38,8 +53,18 @@ posts/
   <slug>/index.html        一篇文章一個資料夾，網址就是 /posts/<slug>/
 tools/
   build.mjs                產生首頁卡片、更新日期、排序、sitemap
+  dist.mjs                 把要上線的檔案組進 _site/
+  serve.mjs                本機預覽用的極簡靜態伺服器
   build-manifest.json      記錄每篇文章的內容雜湊，用來判斷有沒有被改過
 ```
+
+## 本機預覽
+
+```bash
+node tools/serve.mjs
+```
+
+開 http://localhost:8791。計數器在本機沒有 Worker 可跑，會自動隱藏，其餘完全正常。
 
 ---
 
@@ -64,7 +89,7 @@ node tools/build.mjs
 | --- | --- |
 | `slug` | 必須與資料夾名稱完全相同，也是計數器的代碼 |
 | `title` / `excerpt` / `tag` | 顯示在首頁卡片上 |
-| `author` | 文章作者，會同時出現在卡片與文章頁 |
+| `author` | 必填，但**不會顯示在頁面上**（署名已於 2026-08-02 移除），僅作為中繼資料 |
 | `published` | 發布日期，`YYYY-MM-DD` |
 | `updated` | **不用自己改**，由 build 腳本維護 |
 | `hero` / `heroAlt` | `assets/` 底下的圖檔名與替代文字 |
@@ -79,11 +104,11 @@ node tools/build.mjs
 
 ## 瀏覽計數器（Cloudflare D1）
 
-計數存在 Cloudflare D1 資料庫 `fangren-dental-views`，透過 Pages Function 讀寫，前端不直接碰資料庫，也沒有任何金鑰要放在頁面上。
+計數存在 Cloudflare D1 資料庫 `fangren-dental-views`，透過 Worker 讀寫，前端不直接碰資料庫，也沒有任何金鑰要放在頁面上。
 
 ```
-functions/api/views.js      API：GET 查詢、POST 加一
-functions/allowed-slugs.js  允許的代碼清單（由 build 自動產生，勿手改）
+src/worker.js               API：GET 查詢、POST 加一（另含 www 轉址）
+src/allowed-slugs.js        允許的代碼清單（由 build 自動產生，勿手改）
 assets/counter.js           前端
 d1-schema.sql               資料表定義
 wrangler.toml               D1 綁定（env.DB）
@@ -97,19 +122,21 @@ wrangler.toml               D1 綁定（env.DB）
 規則：
 
 - 每個瀏覽器分頁對同一篇文章只加一次（`sessionStorage`），重新整理不會灌水。
-- API 只接受 `functions/allowed-slugs.js` 裡的代碼，這份清單依實際文章自動產生，外部無法塞入不存在的頁面。首頁本身的代碼是 `home`。
-- 在 GitHub Pages 或本機直接開檔案時沒有 Function 可跑，此時計數器**自動隱藏**，網站其他部分完全正常。
+- API 只接受 `src/allowed-slugs.js` 裡的代碼，這份清單依實際文章自動產生，外部無法塞入不存在的頁面。首頁本身的代碼是 `home`。
+- 在舊站或本機預覽時沒有 Worker 可跑，此時計數器**自動隱藏**，網站其他部分完全正常。
 
 ### 常用指令
 
+需要先 `npx wrangler login`（日常編修用不到）。
+
 ```bash
-wrangler d1 execute fangren-dental-views --remote --command "SELECT * FROM page_views ORDER BY views DESC"
+npx wrangler d1 execute fangren-dental-views --remote --command "SELECT * FROM page_views ORDER BY views DESC"
 ```
 
 本機連遠端資料庫預覽整站（含 API）：
 
 ```bash
-npm run build && wrangler pages dev _site --d1 DB=fangren-dental-views --remote
+npm run build && npx wrangler dev --remote
 ```
 
 ---
@@ -124,37 +151,33 @@ npm run build && wrangler pages dev _site --d1 DB=fangren-dental-views --remote
 
 `_site/` 只包含 `index.html`、`404.html`、`assets/`、`posts/`、`sitemap.xml`、`robots.txt`，不會把 `tools/`、`site.json`、README 放上線。
 
-## 自動部署（Cloudflare Pages ← GitHub）
+## 自動部署（已生效）
 
-Workers &amp; Pages → Create → Pages → **Connect to Git** → 選 `YCLee86/fangren-dental`，設定如下：
+**push 到 `main` 就會上線**，幾分鐘內生效。不必手動跑 `wrangler deploy`，
+也不必在任何一台開發電腦上放 Cloudflare token。
 
-| 欄位 | 值 |
-| --- | --- |
-| Project name | `fangren-dental`（要與 `wrangler.toml` 的 `name` 一致，改名時兩邊都要改） |
-| Production branch | `main` |
-| Framework preset | None |
-| Build command | `npm run build` |
-| Build output directory | 不用填，`wrangler.toml` 已指定 `_site` |
+Cloudflare 後台的 Worker `fangren-dental` 已接上這個 GitHub repo，build command 為
+`npm run build`。靜態檔案目錄、D1 綁定、自訂網域全都寫在 `wrangler.toml` 裡，
+**這個檔案存在時後台改不動這些欄位**，所以不需要進後台設定。
 
-D1 綁定也寫在 `wrangler.toml` 裡，後台不需要另外設。
+`npm run deploy` 是手動部署的後路，需要先 `npx wrangler login`。平常用不到。
 
-建立完成後：
+### 兩人協作
 
-1. 把 `site.json` 的 `url` 與 `index.html` 裡 JSON-LD 的 `url` 改回 Cloudflare 網址。
-2. 跑 `npm run build`，commit + push。
-
-之後只要 push 到 `main`，Cloudflare 會自己拉程式碼、跑 build、上線。推到其他分支則會產生預覽網址。
-
-### GitHub Pages（備援）
-
-`.github/workflows/deploy.yml` 會同時部署到 GitHub Pages 與 Cloudflare Pages。
-要用它需要先讓 gh token 具備 workflow 權限：
+兩人共用同一個 repo（第二人加為 Write 權限的 collaborator），各自在自己電腦編修，
+push 到 `main` 就部署。動手前務必先：
 
 ```bash
-gh auth refresh -h github.com -s workflow
+git fetch && git pull --rebase
 ```
 
-Cloudflare 那段另需在 repo 的 **Settings → Secrets and variables → Actions** 加 `CLOUDFLARE_API_TOKEN` 與 `CLOUDFLARE_ACCOUNT_ID`；沒設定時該 job 會跳過並留下警告。若已改用上面的 Git 連線方式，這個 workflow 其實不是必要的。
+`index.html` 與 `tools/build-manifest.json` 是 build 產物，兩邊同時改必然衝突，
+所以「改完 → build → 立刻 push」，不要累積本機 commit。
+
+### 沒有 GitHub Actions
+
+`.gitignore` 直接排除了 `.github/`，repo 內沒有任何 workflow。
+（開發機的 gh token 也沒有 `workflow` scope，推不上去。）部署完全靠上面的 Git 連線。
 
 ---
 
@@ -162,15 +185,14 @@ Cloudflare 那段另需在 repo 的 **Settings → Secrets and variables → Act
 
 - 地址：雲林縣斗六市永樂街 70 號
 - 電話：05-533-9369（頁面上是 `tel:` 連結，手機可直接撥號）
+- 看診時間：週一至週五 08:45–12:00 / 13:45–16:45 / 17:45–20:30，週六日休診
 
-### 還沒補的
-
-網站上以 `【請填入…】` 標示的橘色欄位仍是佔位符：
-
-- **看診時間**（`index.html` 的診所資訊區塊）。補上之後，順便把 `index.html` `<head>` 裡那段 JSON-LD 加上 `openingHoursSpecification`，本地搜尋結果會更完整。
-- **各篇文章的「醫療審閱：醫師姓名」**（五篇文章都有）。
+已無 `【請填入…】` 佔位符。作者署名與「醫療審閱」欄位已於 2026-08-02 全站移除。
 
 > 註：修改頁首、頁尾這類全站共用區塊**不會**動到文章的「最後更新」日期——`tools/build.mjs` 的內容雜湊只看 `post-meta` 與 `<main>` 之內的內容。
+>
+> 反過來說，**一次改動所有文章 `<main>` 裡的共用結構會讓每篇日期一起跳成當天**。
+> 遇到時要手動把 `tools/build-manifest.json` 的日期改回原本的更新日，再跑一次 build。
 
 ---
 
