@@ -65,6 +65,7 @@
     </a>
     <nav class="site-nav" aria-label="主選單">
       <a href="#articles">全部文章</a>
+      <a href="#doctors">醫師介紹</a>
       <a href="#clinic">診所資訊</a>
     </nav>
   </div>
@@ -206,6 +207,54 @@
         </div>
       </a>
       <!-- POSTS:END -->
+    </div>
+  </section>
+
+  <!--
+    醫師介紹
+    · 每位醫師一個 <article class="doctor-card">，複製整段即可增加
+    · 有照片時，把 .doctor-photo 裡的 <span class="doctor-initial"> 換成：
+        <img src="assets/doctor-1.jpg" alt="OOO醫師" width="320" height="320">
+      照片請先裁成正方形再壓到 320px 左右
+    · 依醫療法，此處僅列姓名、職稱、學經歷等事實資訊，不作療效宣稱
+  -->
+  <section class="section wrap" id="doctors">
+    <div class="section-head">
+      <h2>醫師介紹</h2>
+      <p>看診團隊與各自的專長</p>
+    </div>
+    <div class="doctor-grid">
+
+      <article class="doctor-card">
+        <div class="doctor-photo">
+          <span class="doctor-initial" aria-hidden="true">醫</span>
+        </div>
+        <div class="doctor-body">
+          <h3><span class="placeholder">【請填入醫師姓名】</span></h3>
+          <p class="doctor-title"><span class="placeholder">【職稱，例如：院長】</span></p>
+          <ul class="doctor-facts">
+            <li><span class="placeholder">【學歷】</span></li>
+            <li><span class="placeholder">【經歷】</span></li>
+            <li><span class="placeholder">【專長】</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="doctor-card">
+        <div class="doctor-photo">
+          <span class="doctor-initial" aria-hidden="true">醫</span>
+        </div>
+        <div class="doctor-body">
+          <h3><span class="placeholder">【請填入醫師姓名】</span></h3>
+          <p class="doctor-title"><span class="placeholder">【職稱，例如：主治醫師】</span></p>
+          <ul class="doctor-facts">
+            <li><span class="placeholder">【學歷】</span></li>
+            <li><span class="placeholder">【經歷】</span></li>
+            <li><span class="placeholder">【專長】</span></li>
+          </ul>
+        </div>
+      </article>
+
     </div>
   </section>
 

@@ -251,6 +251,32 @@ a:hover { color: var(--teal-500); }
 .placeholder { color: #b0752b; background: #fdf3e2; border-radius: 5px; padding: 0 .3rem; font-size: .88em; }
 .info-card .info-note { margin-top: .6rem; font-size: .8rem; color: var(--ink-faint); }
 
+/* ---------- 醫師介紹 ---------- */
+.doctor-grid {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+}
+.doctor-card {
+  display: flex; gap: 1rem; min-width: 0;
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 1.15rem 1.2rem;
+}
+.doctor-photo {
+  width: 84px; height: 84px; flex: none;
+  border-radius: 50%; overflow: hidden; background: var(--teal-100);
+  display: grid; place-items: center;
+}
+.doctor-photo img { width: 100%; height: 100%; object-fit: cover; }
+.doctor-initial { font-size: 1.5rem; font-weight: 700; color: var(--teal-700); }
+.doctor-body { min-width: 0; }          /* 防止長字串把 flex 項目撐破 */
+.doctor-body h3 { margin: 0 0 .25rem; font-size: 1rem; color: var(--teal-900); }
+.doctor-title { margin: 0 0 .6rem; font-size: .85rem; color: var(--teal-700); }
+.doctor-facts {
+  margin: 0; padding-left: 1.1rem;
+  font-size: .85rem; line-height: 1.8; color: var(--ink-soft);
+}
+.doctor-facts li { margin-bottom: .15rem; overflow-wrap: anywhere; }
+
 /* ---------- 診所照片 ---------- */
 .clinic-gallery {
   display: grid; gap: 1rem; margin-top: 1.4rem;
