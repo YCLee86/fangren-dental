@@ -17,18 +17,44 @@
 
 ## 換一台電腦開工
 
+有一鍵設定腳本，會檢查並安裝 Node / Git / GitHub CLI、登入 GitHub、下載專案、
+設定 git 身分，最後驗證能不能正常建置。
+
+**Windows**（PowerShell）：
+
+```powershell
+irm https://raw.githubusercontent.com/YCLee86/fangren-dental/main/tools/setup.ps1 -OutFile "$env:TEMP\setup.ps1"; & "$env:TEMP\setup.ps1"
+```
+
+**macOS**：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/YCLee86/fangren-dental/main/tools/setup.sh -o /tmp/setup.sh && bash /tmp/setup.sh
+```
+
+預設裝到 `C:\MyProjects`（Mac 是 `~/Projects`）。要換位置就加參數：
+`.\setup.ps1 -Path D:\Work` 或 `bash setup.sh ~/Work`。
+
+腳本不會刪任何東西，專案已存在時改成 `git pull --rebase`，重複執行安全。
+
+### 或者手動四步
+
 ```bash
 git clone https://github.com/YCLee86/fangren-dental.git
 cd fangren-dental
-git config user.name "YCLee86" && git config user.email "eugenelee0806@gmail.com"
+git config user.name "你的GitHub帳號" && git config user.email "你的信箱"
+node tools/build.mjs --check
 ```
 
-需要 **Node ≥ 20** 與 git。**不必 `npm install`**（這個專案沒有任何依賴），
+需要 **Node ≥ 20**、git、`gh auth login`。**不必 `npm install`**（這個專案沒有任何依賴），
 也**不必裝 wrangler 或申請 Cloudflare token** — push 到 `main` 就會自動部署。
 
 第二個人只要是這個 repo 的 collaborator（Write 權限）即可，完全不需要 Cloudflare 帳號。
 
-> repo 層級的 git 身分一定要設，全域沒設，不設會 commit 失敗。
+> repo 層級的 git 身分一定要設，全域沒設，不設會 commit 失敗。兩人各自填各自的帳號。
+
+設定完成後打開 Claude Code Desktop，工作資料夾選 `fangren-dental` 這層，
+它會自動讀 [CLAUDE.md](CLAUDE.md)。
 
 ---
 

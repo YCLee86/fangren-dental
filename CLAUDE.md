@@ -99,8 +99,12 @@ tools/
   build.mjs             產生首頁卡片、更新日期、排序、sitemap、allowed-slugs
   dist.mjs              把上線檔案組進 _site/
   serve.mjs             本機預覽伺服器
+  setup.ps1 / setup.sh  新電腦一鍵環境設定
   build-manifest.json   內容雜湊紀錄，build 自動維護，勿手改
 ```
+
+> `tools/setup.ps1` **必須存成 UTF-8 with BOM**。Windows PowerShell 5.1 沒有 BOM 就會
+> 用 ANSI 讀檔，裡面的中文全變亂碼、腳本直接解析失敗。編輯這支檔案後要確認 BOM 還在。
 
 `_site/`、`.wrangler/`、`node_modules/` 都在 `.gitignore` 裡，是產物，不要 commit。
 
