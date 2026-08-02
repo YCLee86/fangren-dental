@@ -270,12 +270,21 @@ a:hover { color: var(--teal-500); }
 .doctor-initial { font-size: 1.5rem; font-weight: 700; color: var(--teal-700); }
 .doctor-body { min-width: 0; }          /* 防止長字串把 flex 項目撐破 */
 .doctor-body h3 { margin: 0 0 .25rem; font-size: 1rem; color: var(--teal-900); }
-.doctor-title { margin: 0 0 .6rem; font-size: .85rem; color: var(--teal-700); }
+/* 學歷／經歷／專長：標籤在左，內容在右；窄螢幕自動改為上下排列 */
 .doctor-facts {
-  margin: 0; padding-left: 1.1rem;
-  font-size: .85rem; line-height: 1.8; color: var(--ink-soft);
+  display: grid; grid-template-columns: auto 1fr; gap: .25rem .7rem;
+  margin: .5rem 0 0; font-size: .85rem; line-height: 1.75; color: var(--ink-soft);
 }
-.doctor-facts li { margin-bottom: .15rem; overflow-wrap: anywhere; }
+.doctor-facts dt {
+  font-size: .74rem; font-weight: 700; color: var(--teal-700);
+  background: var(--teal-100); border-radius: 4px;
+  padding: .1rem .4rem; height: fit-content; white-space: nowrap;
+}
+.doctor-facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 400px) {
+  .doctor-facts { grid-template-columns: 1fr; gap: .1rem; }
+  .doctor-facts dt { justify-self: start; margin-top: .35rem; }
+}
 
 /* ---------- 診所照片 ---------- */
 .clinic-gallery {
