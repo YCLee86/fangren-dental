@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://fangren-dental.pages.dev/sitemap.xml

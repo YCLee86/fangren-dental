@@ -209,7 +209,13 @@ if (!CHECK_ONLY && nextIndex !== index) fs.writeFileSync(INDEX_FILE, nextIndex, 
 
 let siteUrl = "";
 if (fs.existsSync(SITE_FILE)) {
-  try { siteUrl = (JSON.parse(read(SITE_FILE)).url || "").replace(/\/+$/, ""); } catch { /* 忽略 */ }
+  try {
+    // 去掉 BOM，否則 JSON.parse 會直接失敗
+    siteUrl = (JSON.parse(read(SITE_FILE).replace(/^﻿/, "")).url || "").replace(/\/+$/, "");
+  } catch (err) {
+    console.error(`× site.json 讀取失敗（${err.message}），將略過 sitemap。`);
+    process.exitCode = 1;
+  }
 }
 
 if (siteUrl && !CHECK_ONLY) {

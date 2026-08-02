@@ -180,8 +180,13 @@ a:hover { color: var(--teal-500); }
 .post-meta .author { color: var(--ink-soft); font-weight: 600; }
 .post-meta .dot { color: var(--line); }
 
-/* 文章 HERO 圖：等比例縮放，寬度不超過內容文字區寬度 */
-.post-hero { margin: clamp(1.4rem, 4vw, 2rem) auto 0; max-width: var(--content); }
+/* 文章 HERO 圖：等比例縮放，寬度切齊內文欄——含左右留白在內一起算，
+   才不會在手機上比文字還寬（.wrap-text 的內距也要扣掉）。 */
+.post-hero {
+  margin: clamp(1.4rem, 4vw, 2rem) auto 0;
+  max-width: var(--content);
+  padding-inline: var(--pad);
+}
 .post-hero img, .post-hero svg {
   width: 100%; max-width: 100%; height: auto;   /* height:auto = 等比例，不變形 */
   border-radius: var(--radius); box-shadow: var(--shadow); background: var(--teal-100);
@@ -217,7 +222,9 @@ a:hover { color: var(--teal-500); }
 
 /* 表格永遠在自己的容器內橫捲，不撐破頁面 */
 .table-scroll { overflow-x: auto; margin: 0 auto 1.4rem; max-width: var(--content); -webkit-overflow-scrolling: touch; }
-.table-scroll table { border-collapse: collapse; width: 100%; min-width: 30rem; font-size: .88rem; background: var(--white); }
+/* min-width 壓到 21rem，兩欄表格在 375px 手機上就能整張看完，
+   欄位多的表格才需要在容器內橫向捲動。 */
+.table-scroll table { border-collapse: collapse; width: 100%; min-width: 21rem; font-size: .88rem; background: var(--white); }
 .table-scroll th, .table-scroll td { border: 1px solid var(--line); padding: .55rem .7rem; text-align: left; vertical-align: top; }
 .table-scroll th { background: var(--teal-100); color: var(--teal-900); font-weight: 600; white-space: nowrap; }
 
