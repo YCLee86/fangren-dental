@@ -1,14 +1,20 @@
 /* =============================================================================
-   瀏覽計數 API（Cloudflare Pages Function + D1）
+   芳仁牙醫診所部落格 — Cloudflare Worker
    -----------------------------------------------------------------------------
-   GET  /api/views?slugs=home,bass-brushing   → { "counts": { "home": 12, ... } }
-   POST /api/views   body: { "slug": "home" } → { "slug": "home", "views": 13 }
+   靜態檔案（首頁、文章、圖片）由 Cloudflare 的資產伺服器直接送出，
+   根本不會進到這支程式；只有找不到對應檔案的網址才會落到這裡。
+   也就是說即使這支程式壞掉，網站本體仍然照常運作，受影響的只有計數器。
 
-   只接受 functions/allowed-slugs.js 裡列出的代碼，那份清單由 tools/build.mjs
+   路由：
+     GET  /api/views?slugs=home,bass-brushing → { "counts": { "home": 12, ... } }
+     POST /api/views   body: { "slug": "home" } → { "slug": "home", "views": 13 }
+     其他                                        → 404 頁
+
+   只接受 src/allowed-slugs.js 裡列出的代碼，那份清單由 tools/build.mjs
    依實際文章自動產生，所以外部無法灌入不存在的頁面、把資料表塞爆。
    ============================================================================= */
 
-import { ALLOWED } from "../allowed-slugs.js";
+import { ALLOWED } from "./allowed-slugs.js";
 
 const allowed = new Set(ALLOWED);
 
@@ -21,8 +27,7 @@ const json = (data, status = 200) =>
     },
   });
 
-export async function onRequestGet({ request, env }) {
-  const url = new URL(request.url);
+async function getViews(url, env) {
   const wanted = (url.searchParams.get("slugs") || "")
     .split(",")
     .map((s) => s.trim())
@@ -45,7 +50,7 @@ export async function onRequestGet({ request, env }) {
   return json({ counts });
 }
 
-export async function onRequestPost({ request, env }) {
+async function postViews(request, env) {
   let slug;
   try {
     ({ slug } = await request.json());
@@ -67,3 +72,26 @@ export async function onRequestPost({ request, env }) {
 
   return json({ slug, views: row ? row.views : 0 });
 }
+
+/* 走到這裡代表沒有對應的檔案，補上自己的 404 頁 */
+async function notFound(request, env) {
+  const page = await env.ASSETS.fetch(new URL("/404.html", request.url));
+  return new Response(page.body, {
+    status: 404,
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+  });
+}
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/api/views") {
+      if (request.method === "GET") return getViews(url, env);
+      if (request.method === "POST") return postViews(request, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
+    return notFound(request, env);
+  },
+};

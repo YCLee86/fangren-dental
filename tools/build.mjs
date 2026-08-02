@@ -220,7 +220,7 @@ const slugsSrc =
   `export const ALLOWED = ${JSON.stringify(slugList, null, 2)};\n`;
 
 if (!CHECK_ONLY) {
-  const slugsFile = path.join(ROOT, "functions", "allowed-slugs.js");
+  const slugsFile = path.join(ROOT, "src", "allowed-slugs.js");
   fs.mkdirSync(path.dirname(slugsFile), { recursive: true });
   if (!fs.existsSync(slugsFile) || read(slugsFile) !== slugsSrc) {
     fs.writeFileSync(slugsFile, slugsSrc, "utf8");

@@ -1,14 +1,26 @@
 # =============================================================================
-# Cloudflare Pages 設定
+# Cloudflare Worker 設定
 # -----------------------------------------------------------------------------
 # 這個檔案存在時，Cloudflare 會以它為準——後台看得到但改不動這些欄位。
-# 也就是說「build output directory」與 D1 綁定都不需要在後台手動設，
+# 也就是說靜態檔案目錄、D1 綁定、自訂網域都不需要在後台手動設，
 # 後台只要填 build command = npm run build 即可。
 # =============================================================================
 
 name = "fangren-dental"
+main = "src/worker.js"
 compatibility_date = "2026-08-02"
-pages_build_output_dir = "_site"
+
+# npm run build 產生的靜態網站。有對應檔案的網址由 Cloudflare 直接送出，
+# 不會進到 src/worker.js，所以計數器出問題也不會影響網站本體。
+[assets]
+directory = "_site"
+binding = "ASSETS"
+
+# 正式網域。部署時 Cloudflare 會自動建好 DNS 紀錄與憑證。
+# www 若要能連，到後台 Rules → Redirect Rules 加一條轉到主網域即可。
+[[routes]]
+pattern = "fangren.net"
+custom_domain = true
 
 # 瀏覽計數器用的資料庫。程式裡以 env.DB 取用。
 [[d1_databases]]
