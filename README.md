@@ -92,32 +92,40 @@ window.SUPABASE_CONFIG = {
 
 ---
 
-## 部署
+## 建置指令
 
-`main` 分支有新的 commit 時，`.github/workflows/deploy.yml` 會：
-
-1. 跑 `node tools/build.mjs`，若有產生變更就自動 commit 回 repo；
-2. 把靜態檔組進 `_site/`；
-3. 同時部署到 GitHub Pages 與 Cloudflare Pages。
-
-Cloudflare 那段需要在 repo 的 **Settings → Secrets and variables → Actions** 加兩個 secret：
-
-| Secret | 取得方式 |
+| 指令 | 作用 |
 | --- | --- |
-| `CLOUDFLARE_API_TOKEN` | Cloudflare 後台 → My Profile → API Tokens → Create Token，範本選 **Edit Cloudflare Workers**，或自訂權限 `Account / Cloudflare Pages / Edit` |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare 後台任一頁面右側，或 `wrangler whoami` |
+| `npm run build` | 產生首頁卡片與 sitemap，並把要上線的檔案組進 `_site/` |
+| `npm run check` | 只顯示排序結果，不寫任何檔案 |
+| `npm run deploy` | build 之後直接用 wrangler 手動部署 |
 
-沒設定 secret 時，Cloudflare 那個 job 會跳過並留下警告，GitHub Pages 仍照常部署。
+`_site/` 只包含 `index.html`、`404.html`、`assets/`、`posts/`、`sitemap.xml`、`robots.txt`，不會把 `tools/`、`site.json`、README 放上線。
 
-### 手動部署
+## 自動部署（Cloudflare Pages ← GitHub）
+
+Cloudflare Pages 專案以 **Git 連線**方式接上 `YCLee86/fangren-dental`，設定如下：
+
+| 欄位 | 值 |
+| --- | --- |
+| Production branch | `main` |
+| Framework preset | None |
+| Build command | `npm run build` |
+| Build output directory | `_site` |
+| Root directory | `/` |
+
+之後只要 push 到 `main`，Cloudflare 會自己拉程式碼、跑 build、上線。推到其他分支則會產生預覽網址。
+
+### GitHub Pages（備援）
+
+`.github/workflows/deploy.yml` 會同時部署到 GitHub Pages 與 Cloudflare Pages。
+要用它需要先讓 gh token 具備 workflow 權限：
 
 ```bash
-node tools/build.mjs
+gh auth refresh -h github.com -s workflow
 ```
 
-```bash
-wrangler pages deploy _site --project-name=fangren-dental --branch=main
-```
+Cloudflare 那段另需在 repo 的 **Settings → Secrets and variables → Actions** 加 `CLOUDFLARE_API_TOKEN` 與 `CLOUDFLARE_ACCOUNT_ID`；沒設定時該 job 會跳過並留下警告。若已改用上面的 Git 連線方式，這個 workflow 其實不是必要的。
 
 ---
 

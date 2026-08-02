@@ -1,0 +1,15 @@
+{
+  "name": "fangren-dental",
+  "version": "1.0.0",
+  "private": true,
+  "description": "芳仁牙醫診所部落格（雲林斗六）",
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build.mjs && node tools/dist.mjs",
+    "check": "node tools/build.mjs --check",
+    "deploy": "npm run build && wrangler pages deploy _site --project-name=fangren-dental --branch=main"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
