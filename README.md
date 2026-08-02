@@ -4,9 +4,16 @@
 
 | 環境 | 網址 |
 | --- | --- |
-| Cloudflare Pages（正式站） | https://fangren-dental.pages.dev |
-| GitHub Pages | https://yclee86.github.io/fangren-dental/ |
+| 正式站（GitHub Pages） | https://yclee86.github.io/fangren-dental/ |
+| Cloudflare Pages | 尚未建立，見下方「Cloudflare 待辦」 |
 | 原始碼 | https://github.com/YCLee86/fangren-dental |
+
+> **Cloudflare 待辦**：原本的直接上傳專案已刪除，但 Cloudflare 會保留已刪除專案的
+> `pages.dev` 子網域一段時間，目前 `fangren-dental` 這個名字還拿不回來（表單會自動
+> 配成 `fangren-dental-bpt.pages.dev`）。等名字釋出後再依下方「自動部署」建立 Git 專案。
+> GitHub App（Cloudflare Workers and Pages）已授權，僅限這個 repo，屆時不必再授權一次。
+>
+> 在那之前計數器不會運作——Pages Function 只跑在 Cloudflare，GitHub Pages 上會自動隱藏。
 
 ---
 
@@ -115,15 +122,22 @@ npm run build && wrangler pages dev _site --d1 DB=fangren-dental-views --remote
 
 ## 自動部署（Cloudflare Pages ← GitHub）
 
-Cloudflare Pages 專案以 **Git 連線**方式接上 `YCLee86/fangren-dental`，設定如下：
+Workers &amp; Pages → Create → Pages → **Connect to Git** → 選 `YCLee86/fangren-dental`，設定如下：
 
 | 欄位 | 值 |
 | --- | --- |
+| Project name | `fangren-dental`（要與 `wrangler.toml` 的 `name` 一致，改名時兩邊都要改） |
 | Production branch | `main` |
 | Framework preset | None |
 | Build command | `npm run build` |
-| Build output directory | `_site` |
-| Root directory | `/` |
+| Build output directory | 不用填，`wrangler.toml` 已指定 `_site` |
+
+D1 綁定也寫在 `wrangler.toml` 裡，後台不需要另外設。
+
+建立完成後：
+
+1. 把 `site.json` 的 `url` 與 `index.html` 裡 JSON-LD 的 `url` 改回 Cloudflare 網址。
+2. 跑 `npm run build`，commit + push。
 
 之後只要 push 到 `main`，Cloudflare 會自己拉程式碼、跑 build、上線。推到其他分支則會產生預覽網址。
 
