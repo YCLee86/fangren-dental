@@ -94,8 +94,17 @@ if ($installedSomething) {
 
 # --- 4. 登入 GitHub ---------------------------------------------------------
 Write-Step 4 "檢查 GitHub 登入狀態"
-gh auth status 2>&1 | Out-Null
-if ($LASTEXITCODE -eq 0) {
+# 未登入時 gh 會往 stderr 寫訊息並回傳非 0。Windows PowerShell 5.1 對原生執行檔
+# 用 2>&1 會把 stderr 包成 ErrorRecord，配上 $ErrorActionPreference = "Stop"
+# 就成了終止性錯誤，所以這裡必須用 try/catch 包起來，只看離開碼。
+$ghAuthed = $false
+try {
+    $null = gh auth status 2>&1
+    $ghAuthed = ($LASTEXITCODE -eq 0)
+} catch {
+    $ghAuthed = $false
+}
+if ($ghAuthed) {
     Write-Ok "已登入 GitHub"
 } else {
     Write-Warn2 "尚未登入，接下來會開瀏覽器讓你授權"
@@ -118,6 +127,18 @@ if (Test-Path (Join-Path $ProjectPath ".git")) {
     Write-Ok "專案已存在，改為更新：$ProjectPath"
     Push-Location $ProjectPath
     git pull --rebase
+    # pull 失敗不能默默放過，否則會拿著舊版繼續工作卻以為是最新的
+    if ($LASTEXITCODE -ne 0) {
+        Pop-Location
+        Write-Host ""
+        Write-Warn2 "更新失敗，你的本機有還沒提交的改動。三選一："
+        Write-Host "      git stash        先收起來，pull 完再 git stash pop" -ForegroundColor Gray
+        Write-Host "      git commit -am '說明'   直接提交後再執行一次" -ForegroundColor Gray
+        Write-Host "      把上面的訊息貼給 Claude 處理" -ForegroundColor Gray
+        Write-Host ""
+        Write-Warn2 "處理完再執行一次這支腳本。"
+        exit 1
+    }
     Pop-Location
 } elseif (Test-Path $ProjectPath) {
     Write-Warn2 "$ProjectPath 已存在但不是 git 專案。請先改名或移走，再執行一次。"

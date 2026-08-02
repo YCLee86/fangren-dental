@@ -92,7 +92,16 @@ step 5 "取得專案原始碼"
 mkdir -p "$BASE_PATH"
 if [ -d "$PROJECT_PATH/.git" ]; then
   ok "專案已存在，改為更新：$PROJECT_PATH"
-  git -C "$PROJECT_PATH" pull --rebase
+  # pull 失敗不能默默放過，否則會拿著舊版繼續工作卻以為是最新的
+  if ! git -C "$PROJECT_PATH" pull --rebase; then
+    printf "\n"
+    warn "更新失敗，你的本機有還沒提交的改動。三選一："
+    printf "      git stash        先收起來，pull 完再 git stash pop\n"
+    printf "      git commit -am '說明'   直接提交後再執行一次\n"
+    printf "      把上面的訊息貼給 Claude 處理\n\n"
+    warn "處理完再執行一次這支腳本。"
+    exit 1
+  fi
 elif [ -e "$PROJECT_PATH" ]; then
   warn "$PROJECT_PATH 已存在但不是 git 專案。請先改名或移走，再執行一次。"
   exit 1
