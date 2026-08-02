@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="植牙與假牙重建的示意插圖">
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eaf1f6"/><stop offset="1" stop-color="#d6e9ea"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8fa3ad"/><stop offset=".45" stop-color="#dfe8ec"/><stop offset="1" stop-color="#8fa3ad"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg4)"/>
+  <circle cx="120" cy="104" r="54" fill="#ffffff" opacity=".5"/>
+  <circle cx="690" cy="366" r="70" fill="#1a8f95" opacity=".10"/>
+
+  <!-- 骨床 -->
+  <path d="M180 300h440v66c0 24-18 42-42 42H222c-24 0-42-18-42-42z" fill="#f0d9b4"/>
+  <path d="M180 300h440" stroke="#dcbf92" stroke-width="6"/>
+
+  <!-- 左：自然牙 -->
+  <path d="M282 152c-30 0-48 18-48 48 0 26 8 48 14 74 5 20 8 34 18 34s12-16 16-16 6 16 16 16 13-14 18-34c6-26 14-48 14-74 0-30-18-48-48-48z"
+        fill="#fff" stroke="#12656a" stroke-width="7" stroke-linejoin="round"/>
+
+  <!-- 中：植體 -->
+  <g transform="translate(400 0)">
+    <path d="M0 148c-32 0-52 18-52 46 0 22 8 40 14 58h76c6-18 14-36 14-58 0-28-20-46-52-46z"
+          fill="#fff" stroke="#12656a" stroke-width="7" stroke-linejoin="round"/>
+    <rect x="-16" y="252" width="32" height="26" rx="5" fill="url(#metal)" stroke="#6f8792" stroke-width="4"/>
+    <g fill="url(#metal)" stroke="#6f8792" stroke-width="4">
+      <rect x="-26" y="278" width="52" height="106" rx="14"/>
+    </g>
+    <g stroke="#6f8792" stroke-width="4" opacity=".8">
+      <path d="M-26 300h52M-26 322h52M-26 344h52M-26 366h52"/>
+    </g>
+  </g>
+
+  <!-- 右：牙冠 -->
+  <path d="M518 152c-30 0-48 18-48 48 0 26 8 48 14 74 5 20 8 34 18 34s12-16 16-16 6 16 16 16 13-14 18-34c6-26 14-48 14-74 0-30-18-48-48-48z"
+        fill="#ffffff" stroke="#12656a" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M492 190c10-8 24-10 36-8" fill="none" stroke="#9fd4d6" stroke-width="9" stroke-linecap="round"/>
+</svg>

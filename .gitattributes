@@ -1,0 +1,4 @@
+# 統一用 LF，避免 Windows 與 CI(Linux) 之間換行不一致
+* text=auto eol=lf
+*.jpg binary
+*.png binary

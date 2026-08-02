@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="兒童牙齒保健的示意插圖">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fdf6e6"/><stop offset="1" stop-color="#dcefef"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg3)"/>
+  <circle cx="686" cy="96" r="58" fill="#f5c66b" opacity=".45"/>
+  <circle cx="108" cy="372" r="44" fill="#1a8f95" opacity=".12"/>
+
+  <!-- 三顆擬人化乳牙 -->
+  <g stroke="#12656a" stroke-width="7" stroke-linejoin="round">
+    <g transform="translate(150 140)">
+      <path d="M74 0C42 0 20 18 20 52c0 30 8 58 16 84 6 20 12 36 20 36s12-14 18-14 10 14 18 14 14-16 20-36c8-26 16-54 16-84C128 18 106 0 74 0z" fill="#fff"/>
+      <g stroke="none" fill="#0b3f42"><circle cx="54" cy="62" r="7"/><circle cx="94" cy="62" r="7"/></g>
+      <path d="M56 92c10 10 26 10 36 0" fill="none" stroke="#0b3f42" stroke-width="7" stroke-linecap="round"/>
+    </g>
+    <g transform="translate(326 106)">
+      <path d="M74 0C42 0 20 18 20 52c0 30 8 58 16 84 6 20 12 36 20 36s12-14 18-14 10 14 18 14 14-16 20-36c8-26 16-54 16-84C128 18 106 0 74 0z" fill="#fff"/>
+      <g stroke="none" fill="#0b3f42"><circle cx="54" cy="62" r="7"/><circle cx="94" cy="62" r="7"/></g>
+      <path d="M52 90c12 16 32 16 44 0" fill="none" stroke="#0b3f42" stroke-width="7" stroke-linecap="round"/>
+    </g>
+    <g transform="translate(502 140)">
+      <path d="M74 0C42 0 20 18 20 52c0 30 8 58 16 84 6 20 12 36 20 36s12-14 18-14 10 14 18 14 14-16 20-36c8-26 16-54 16-84C128 18 106 0 74 0z" fill="#fff"/>
+      <g stroke="none" fill="#0b3f42"><circle cx="54" cy="62" r="7"/><circle cx="94" cy="62" r="7"/></g>
+      <path d="M56 92c10 10 26 10 36 0" fill="none" stroke="#0b3f42" stroke-width="7" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- 地面 -->
+  <rect x="120" y="372" width="560" height="10" rx="5" fill="#1a8f95" opacity=".22"/>
+</svg>

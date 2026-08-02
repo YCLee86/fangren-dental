@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="牙齦與牙周保健的示意插圖">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fdf1ef"/><stop offset="1" stop-color="#e3f0f0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg2)"/>
+  <circle cx="94" cy="368" r="66" fill="#1a8f95" opacity=".10"/>
+  <circle cx="712" cy="92" r="46" fill="#ffffff" opacity=".55"/>
+
+  <!-- 牙齦 -->
+  <path d="M180 330c0-70 50-104 220-104s220 34 220 104c0 44-30 62-70 62-34 0-40-26-70-26s-38 26-80 26-50-26-80-26-36 26-70 26c-40 0-70-18-70-62z"
+        fill="#f0a5a0"/>
+  <path d="M180 330c0-70 50-104 220-104s220 34 220 104" fill="none" stroke="#d97d78" stroke-width="6"/>
+
+  <!-- 三顆牙 -->
+  <g fill="#ffffff" stroke="#12656a" stroke-width="6" stroke-linejoin="round">
+    <path d="M262 250c-26 0-42 14-42 38v46c0 20 12 32 30 32h24c18 0 30-12 30-32v-46c0-24-16-38-42-38z"/>
+    <path d="M400 234c-30 0-48 16-48 44v54c0 22 14 36 34 36h28c20 0 34-14 34-36v-54c0-28-18-44-48-44z"/>
+    <path d="M538 250c-26 0-42 14-42 38v46c0 20 12 32 30 32h24c18 0 30-12 30-32v-46c0-24-16-38-42-38z"/>
+  </g>
+
+  <!-- 護盾 -->
+  <g transform="translate(566 250)">
+    <path d="M74 0 8 24v52c0 44 30 78 66 92 36-14 66-48 66-92V24z" fill="#1a8f95" opacity=".95"/>
+    <path d="M44 82l22 24 42-48" fill="none" stroke="#ffffff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

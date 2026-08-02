@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="牙刷與牙齒的示意插圖">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e6f4f4"/><stop offset="1" stop-color="#cfe8e9"/>
+    </linearGradient>
+    <linearGradient id="tooth" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e8f1f2"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <circle cx="118" cy="86" r="52" fill="#ffffff" opacity=".45"/>
+  <circle cx="702" cy="378" r="76" fill="#1a8f95" opacity=".10"/>
+  <circle cx="648" cy="72" r="20" fill="#1a8f95" opacity=".16"/>
+
+  <!-- 牙齒 -->
+  <g transform="translate(300 96)">
+    <path d="M100 6C60 6 30 26 24 62c-6 36 4 74 14 118 7 31 12 62 24 84 8 15 24 15 31-1 8-19 10-46 14-70 2-13 16-13 18 0 4 24 6 51 14 70 7 16 23 16 31 1 12-22 17-53 24-84 10-44 20-82 14-118C202 26 172 6 132 6z"
+          fill="url(#tooth)" stroke="#12656a" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M62 48c14-10 34-14 54-12" fill="none" stroke="#9fd4d6" stroke-width="10" stroke-linecap="round"/>
+  </g>
+
+  <!-- 牙刷 -->
+  <g transform="rotate(-24 250 300)">
+    <rect x="120" y="286" width="250" height="26" rx="13" fill="#12656a"/>
+    <rect x="352" y="278" width="96" height="42" rx="16" fill="#0b3f42"/>
+    <g fill="#ffffff">
+      <rect x="364" y="258" width="12" height="24" rx="6"/>
+      <rect x="384" y="252" width="12" height="30" rx="6"/>
+      <rect x="404" y="252" width="12" height="30" rx="6"/>
+      <rect x="424" y="258" width="12" height="24" rx="6"/>
+    </g>
+  </g>
+
+  <!-- 泡泡 -->
+  <g fill="#ffffff" opacity=".85">
+    <circle cx="520" cy="150" r="16"/><circle cx="558" cy="112" r="10"/><circle cx="498" cy="104" r="7"/>
+  </g>
+</svg>
