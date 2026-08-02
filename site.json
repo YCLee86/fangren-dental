@@ -1,4 +1,4 @@
 {
-  "_comment": "目前正式站在 GitHub Pages。Cloudflare 的 fangren-dental.pages.dev 子網域仍被前一個已刪除的專案保留中，釋出後改回來。",
-  "url": "https://yclee86.github.io/fangren-dental"
+  "_comment": "正式站網域。改這裡之後跑 npm run build，sitemap.xml 與 robots.txt 會一起更新。",
+  "url": "https://fangren.net"
 }

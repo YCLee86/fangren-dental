@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://yclee86.github.io/fangren-dental/sitemap.xml
+Sitemap: https://fangren.net/sitemap.xml
