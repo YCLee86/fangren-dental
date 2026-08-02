@@ -26,6 +26,13 @@
 irm https://raw.githubusercontent.com/YCLee86/fangren-dental/main/tools/setup.ps1 -OutFile "$env:TEMP\setup.ps1"; & "$env:TEMP\setup.ps1"
 ```
 
+若出現「因為這個系統上已停用指令碼執行」，先跑這行再重試（只影響目前這個視窗，
+關掉就恢復，不需要系統管理員權限）：
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+```
+
 **macOS**：
 
 ```bash
