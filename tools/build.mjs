@@ -53,13 +53,19 @@ const esc = (s) =>
 
 const read = (f) => fs.readFileSync(f, "utf8");
 
-/* 讀取內容雜湊時，把「會被本腳本改寫的欄位」抽掉，
-   否則寫入新日期本身就會讓下次雜湊改變、日期永遠停不下來。 */
-const normalize = (html) =>
-  html
+/* 內容雜湊只看「這篇文章自己的東西」：post-meta 加上 <main> 裡的內容。
+   刻意排除兩類東西——
+     a) 會被本腳本改寫的日期欄位，否則寫入新日期就會讓下次雜湊改變、永遠停不下來；
+     b) 頁首與頁尾等全站共用區塊，改一次診所電話不該讓五篇文章同時「更新」。 */
+const normalize = (html) => {
+  const meta = html.match(/<script[^>]*id=["']post-meta["'][^>]*>([\s\S]*?)<\/script>/i);
+  const main = html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
+  return [meta ? meta[1] : "", main ? main[1] : html]
+    .join("\n---\n")
     .replace(/("updated"\s*:\s*")[^"]*"/g, '$1@"')
-    .replace(/<time class="post-updated"[^>]*>[^<]*<\/time>/g, "<time class=\"post-updated\">@</time>")
+    .replace(/<time class="post-updated"[^>]*>[^<]*<\/time>/g, '<time class="post-updated">@</time>')
     .replace(/\r\n/g, "\n");
+};
 
 /* ---------- 1. 掃描文章 ---------- */
 
