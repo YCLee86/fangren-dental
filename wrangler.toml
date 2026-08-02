@@ -1,0 +1,17 @@
+# =============================================================================
+# Cloudflare Pages 設定
+# -----------------------------------------------------------------------------
+# 這個檔案存在時，Cloudflare 會以它為準——後台看得到但改不動這些欄位。
+# 也就是說「build output directory」與 D1 綁定都不需要在後台手動設，
+# 後台只要填 build command = npm run build 即可。
+# =============================================================================
+
+name = "fangren-dental"
+compatibility_date = "2026-08-02"
+pages_build_output_dir = "_site"
+
+# 瀏覽計數器用的資料庫。程式裡以 env.DB 取用。
+[[d1_databases]]
+binding = "DB"
+database_name = "fangren-dental-views"
+database_id = "17f4c65d-bf4b-4c49-830e-f155a79d56a8"

@@ -211,7 +211,23 @@ nextIndex = nextIndex.replace(
 
 if (!CHECK_ONLY && nextIndex !== index) fs.writeFileSync(INDEX_FILE, nextIndex, "utf8");
 
-/* ---------- 4. sitemap ---------- */
+/* ---------- 4. 計數器允許的代碼清單 ----------
+   計數 API 只接受這份清單裡的代碼，避免有人往資料表塞不存在的頁面。 */
+
+const slugList = ["home", ...posts.map((p) => p.slug)];
+const slugsSrc =
+  "// 由 tools/build.mjs 自動產生，請勿手動編輯。\n" +
+  `export const ALLOWED = ${JSON.stringify(slugList, null, 2)};\n`;
+
+if (!CHECK_ONLY) {
+  const slugsFile = path.join(ROOT, "functions", "allowed-slugs.js");
+  fs.mkdirSync(path.dirname(slugsFile), { recursive: true });
+  if (!fs.existsSync(slugsFile) || read(slugsFile) !== slugsSrc) {
+    fs.writeFileSync(slugsFile, slugsSrc, "utf8");
+  }
+}
+
+/* ---------- 5. sitemap ---------- */
 
 let siteUrl = "";
 if (fs.existsSync(SITE_FILE)) {

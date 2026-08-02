@@ -66,29 +66,40 @@ node tools/build.mjs
 
 ---
 
-## 啟用瀏覽計數器（Supabase）
+## 瀏覽計數器（Cloudflare D1）
 
-計數器目前是**關閉**狀態——`assets/supabase-config.js` 兩個欄位還是空的，此時計數器會自動隱藏，網站其他部分完全正常。
+計數存在 Cloudflare D1 資料庫 `fangren-dental-views`，透過 Pages Function 讀寫，前端不直接碰資料庫，也沒有任何金鑰要放在頁面上。
 
-1. 到 [supabase.com](https://supabase.com) 建立一個免費專案。
-2. 左側 **SQL Editor → New query**，把 `supabase-setup.sql` 整份貼上，按 **Run**。
-3. 左側 **Project Settings → API**，複製這兩個值：
-   - **Project URL**
-   - **anon public** key
-4. 填進 `assets/supabase-config.js`：
-
-```js
-window.SUPABASE_CONFIG = {
-  url: "https://xxxxxxxx.supabase.co",
-  anonKey: "eyJhbGciOi..."
-};
+```
+functions/api/views.js      API：GET 查詢、POST 加一
+functions/allowed-slugs.js  允許的代碼清單（由 build 自動產生，勿手改）
+assets/counter.js           前端
+d1-schema.sql               資料表定義
+wrangler.toml               D1 綁定（env.DB）
 ```
 
-5. commit + push。
+| 端點 | 用途 |
+| --- | --- |
+| `GET /api/views?slugs=home,bass-brushing` | 回傳 `{ "counts": { "home": 12, ... } }` |
+| `POST /api/views` body `{"slug":"home"}` | 該頁 +1，回傳新的數字 |
 
-這兩個值本來就是設計成公開在瀏覽器端的。安全性由 SQL 裡的 RLS policy 保證：任何人只能**讀**計數，寫入一律只能透過 `increment_view()` 這個函式，前端無法直接把數字改成任意值。
+規則：
 
-計數規則：每個瀏覽器分頁對同一篇文章只加一次（用 `sessionStorage` 記錄），重新整理不會灌水。首頁本身的計數代碼是 `home`。
+- 每個瀏覽器分頁對同一篇文章只加一次（`sessionStorage`），重新整理不會灌水。
+- API 只接受 `functions/allowed-slugs.js` 裡的代碼，這份清單依實際文章自動產生，外部無法塞入不存在的頁面。首頁本身的代碼是 `home`。
+- 在 GitHub Pages 或本機直接開檔案時沒有 Function 可跑，此時計數器**自動隱藏**，網站其他部分完全正常。
+
+### 常用指令
+
+```bash
+wrangler d1 execute fangren-dental-views --remote --command "SELECT * FROM page_views ORDER BY views DESC"
+```
+
+本機連遠端資料庫預覽整站（含 API）：
+
+```bash
+npm run build && wrangler pages dev _site --d1 DB=fangren-dental-views --remote
+```
 
 ---
 
