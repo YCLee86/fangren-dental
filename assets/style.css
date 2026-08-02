@@ -265,6 +265,13 @@ a:hover { color: var(--teal-500); }
   margin: 0; padding-bottom: .6rem; border-bottom: 1px solid var(--line);
   font-size: 1rem; color: var(--teal-900); overflow-wrap: anywhere;
 }
+/* 職稱：接在姓名後面，窄螢幕時自動換到下一行，不會把標題撐破 */
+.doctor-role {
+  display: inline-block; margin-left: .5rem;
+  font-size: .78rem; font-weight: 500; color: var(--teal-700);
+  background: var(--teal-100); border-radius: 100px; padding: .1rem .55rem;
+  vertical-align: middle;
+}
 /* 學歷／經歷／專長：標籤在左，內容在右；窄螢幕自動改為上下排列 */
 .doctor-facts {
   display: grid; grid-template-columns: auto 1fr; gap: .25rem .7rem;
