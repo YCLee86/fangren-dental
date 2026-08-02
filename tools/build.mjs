@@ -166,8 +166,6 @@ const card = (p) => `      <a class="card" href="posts/${esc(p.slug)}/">
           <h3>${esc(p.title)}</h3>
           <p>${esc(p.excerpt)}</p>
           <div class="card-meta">
-            <span>${esc(p.author)}</span>
-            <span class="dot" aria-hidden="true">・</span>
             <span>更新 <time datetime="${p.updated}">${slashDate(p.updated)}</time></span>
             <span class="dot" aria-hidden="true">・</span>
             <span class="views" data-views="${esc(p.slug)}" data-state="loading">

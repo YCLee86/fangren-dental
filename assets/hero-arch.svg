@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="牙弓向外擴張的示意插圖">
+  <defs>
+    <linearGradient id="archBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e8f3f3"/>
+      <stop offset="1" stop-color="#f8fbfb"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#archBg)"/>
+
+  <!-- 原本狹窄的 V 型牙弓（虛線，對照用） -->
+  <path d="M300 120 L400 290 L500 120" fill="none" stroke="#b9c9cb"
+        stroke-width="6" stroke-dasharray="12 12" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 擴張後的 U 型牙弓 -->
+  <path d="M232 120 C232 300, 568 300, 568 120" fill="none" stroke="#9ccacb" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- 牙齒 -->
+  <g fill="#ffffff" stroke="#8fb9bb" stroke-width="3">
+    <rect x="217" y="112" width="30" height="40" rx="13"/>
+    <rect x="216" y="172" width="30" height="40" rx="13"/>
+    <rect x="230" y="228" width="30" height="40" rx="13"/>
+    <rect x="264" y="266" width="30" height="40" rx="13"/>
+    <rect x="314" y="290" width="30" height="40" rx="13"/>
+    <rect x="385" y="298" width="30" height="40" rx="13"/>
+    <rect x="456" y="290" width="30" height="40" rx="13"/>
+    <rect x="506" y="266" width="30" height="40" rx="13"/>
+    <rect x="540" y="228" width="30" height="40" rx="13"/>
+    <rect x="554" y="172" width="30" height="40" rx="13"/>
+    <rect x="553" y="112" width="30" height="40" rx="13"/>
+  </g>
+
+  <!-- 向外擴張的箭頭 -->
+  <g stroke="#c98432" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M178 215 H112"/>
+    <path d="M136 191 L112 215 L136 239"/>
+    <path d="M622 215 H688"/>
+    <path d="M664 191 L688 215 L664 239"/>
+  </g>
+
+  <!-- 上方留白處的空間示意點 -->
+  <g fill="#12656a" opacity=".14">
+    <circle cx="400" cy="86" r="7"/>
+    <circle cx="352" cy="96" r="5"/>
+    <circle cx="448" cy="96" r="5"/>
+  </g>
+</svg>
