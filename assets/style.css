@@ -257,19 +257,14 @@ a:hover { color: var(--teal-500); }
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
 }
 .doctor-card {
-  display: flex; gap: 1rem; min-width: 0;
+  min-width: 0;
   background: var(--white); border: 1px solid var(--line);
   border-radius: var(--radius); padding: 1.15rem 1.2rem;
 }
-.doctor-photo {
-  width: 84px; height: 84px; flex: none;
-  border-radius: 50%; overflow: hidden; background: var(--teal-100);
-  display: grid; place-items: center;
+.doctor-card h3 {
+  margin: 0; padding-bottom: .6rem; border-bottom: 1px solid var(--line);
+  font-size: 1rem; color: var(--teal-900); overflow-wrap: anywhere;
 }
-.doctor-photo img { width: 100%; height: 100%; object-fit: cover; }
-.doctor-initial { font-size: 1.5rem; font-weight: 700; color: var(--teal-700); }
-.doctor-body { min-width: 0; }          /* 防止長字串把 flex 項目撐破 */
-.doctor-body h3 { margin: 0 0 .25rem; font-size: 1rem; color: var(--teal-900); }
 /* 學歷／經歷／專長：標籤在左，內容在右；窄螢幕自動改為上下排列 */
 .doctor-facts {
   display: grid; grid-template-columns: auto 1fr; gap: .25rem .7rem;
