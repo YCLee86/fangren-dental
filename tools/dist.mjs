@@ -14,7 +14,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "_site");
 
 const ALWAYS = ["index.html", "404.html", "assets", "posts"];
-const OPTIONAL = ["sitemap.xml", "robots.txt"];
+// preview/ 是未上線的改版提案頁，由 worker.js 用密碼擋著，沒有也不影響建置
+const OPTIONAL = ["sitemap.xml", "robots.txt", "preview"];
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });

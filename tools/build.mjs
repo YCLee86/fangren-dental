@@ -250,9 +250,11 @@ if (siteUrl && !CHECK_ONLY) {
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`,
     "utf8"
   );
+  /* preview/ 是未上線的改版提案頁（Worker 另外用密碼擋著），不要被收錄。
+     這個檔案每次 build 都整個重寫，所以規則要寫在這裡，手改 robots.txt 會被蓋掉。 */
   fs.writeFileSync(
     path.join(ROOT, "robots.txt"),
-    `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
+    `User-agent: *\nAllow: /\nDisallow: /preview/\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
     "utf8"
   );
 }

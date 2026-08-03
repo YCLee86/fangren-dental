@@ -108,12 +108,13 @@ site.json               網站正式網址（給 sitemap 用）
 wrangler.toml           Worker、靜態資產、自訂網域、D1 綁定
 d1-schema.sql           計數器資料表定義，執行一次即可
 src/
-  worker.js             計數器 API ＋ www 轉址
+  worker.js             計數器 API ＋ www 轉址 ＋ /preview/* 密碼閘
   allowed-slugs.js      白名單，由 build 產生，勿手改
 assets/
   style.css             全站樣式
   counter.js            前端計數器
 posts/<slug>/index.html 一篇文章一個資料夾
+preview/<name>/index.html  未上線的改版提案頁，要密碼才看得到（見第八節）
 tools/
   build.mjs             產生首頁卡片、更新日期、排序、sitemap、allowed-slugs
   dist.mjs              把上線檔案組進 _site/
@@ -123,6 +124,7 @@ tools/
   build-manifest.json   內容雜湊紀錄，build 自動維護，勿手改
 .claude/
   settings.json         SessionStart hook：開啟專案時自動同步（隨 git 走，兩台都生效）
+  launch.json           本機預覽伺服器的啟動設定
 ```
 
 > `tools/setup.ps1` **必須存成 UTF-8 with BOM**。Windows PowerShell 5.1 沒有 BOM 就會
@@ -136,6 +138,7 @@ tools/
 - `src/allowed-slugs.js`
 - `tools/build-manifest.json`
 - `sitemap.xml`
+- `robots.txt`（**每次 build 整個重寫**，要加規則請改 `tools/build.mjs` 的產生字串）
 - 各文章 `post-meta` 的 `updated` 欄位
 
 ---
@@ -185,3 +188,40 @@ tools/
   代價是 Worker 掛掉會影響整站，不再只有計數器。若要拿回這點，改用 Cloudflare 後台
   Rules → Redirect Rules 做轉址，再拿掉那行與 `worker.js` 裡的轉址。
 - `tools/hero-new.css` 是還沒套用的 HERO 改版實驗（未進版控），不是死碼。
+
+---
+
+## 八、未上線的預覽頁 `preview/`
+
+給客戶／自己在手機上看改版提案用的。`preview/<name>/index.html` 一個提案一個資料夾，
+每份都是**自給自足的靜態快照**：樣式整份內嵌在自己的 `<head>` 裡，
+刻意不引用 `assets/style.css`，改預覽時才不會不小心動到正式站。
+`build.mjs` 完全不會碰這個資料夾（它只讀根目錄的 `index.html` 與 `posts/`），
+所以裡面的文章卡片是靜止的，不會跟著新文章更新。
+
+目前有：`preview/home-v2/` — 首頁改版提案，2026-08-03 從 Claude Artifact 匯出。
+
+### 怎麼鎖
+
+`src/worker.js` 對 `/preview/*` 要求 HTTP Basic 認證：
+
+- 帳號預設 `preview`，可用環境變數 `PREVIEW_USER` 改。
+- 密碼放在 Cloudflare 的 **Secret `PREVIEW_PASSWORD`**（Workers & Pages → 專案 →
+  Settings → Variables and Secrets）。**絕對不要寫進程式碼**，這個 repo 是公開的。
+- 沒設 secret 時一律回 503 擋下，不是放行 —— 設定漏掉只是自己看不到，
+  放行則是整頁對外公開。
+
+### 這道鎖擋不住什麼（重要，不要誤以為是真的私密）
+
+repo 是 **public**，所以檔案內容在 GitHub 上任何人都讀得到，舊的 GitHub Pages 站
+（`yclee86.github.io/fangren-dental/preview/...`）也照樣送得出來 —— 那邊沒有 Worker，擋不了。
+密碼閘只保護 `fangren.net` 這一側。因此預覽頁自己一定要帶
+`<meta name="robots" content="noindex, nofollow, noarchive">`，
+`robots.txt` 的 `Disallow: /preview/` 也已寫在 `build.mjs` 裡。
+
+**真的不能外流的東西不要放這裡。**
+
+### 本機預覽
+
+`node tools/serve.mjs` **不會**要求密碼（跟計數器一樣，本機沒有 Worker），
+直接開 http://localhost:8791/preview/home-v2/ 就看得到。這是預期行為。
