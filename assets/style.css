@@ -164,14 +164,21 @@ a:hover { color: var(--teal-500); }
 }
 .hero-stats li {
   min-width: 0; padding-inline: clamp(.85rem, 3vw, 1.5rem);
-  border-left: 1px solid rgba(255, 255, 255, .45);
+  border-left: 2px solid rgba(255, 255, 255, .7);
 }
+/* 頭尾兩格切齊底色塊的內距，左右留白才對稱 */
 .hero-stats li:first-child { padding-left: 0; border-left: 0; }
+.hero-stats li:last-child  { padding-right: 0; }
 .hero-stats b {
   display: block; font-size: clamp(1.3rem, 2.6vw, 1.7rem); line-height: 1.2;
   color: var(--white); font-variant-numeric: tabular-nums; letter-spacing: -.01em;
 }
-.hero-stats span {
+/* 量詞跟著數字同一行、縮小並拉開一點距離，三欄才對稱 */
+.hero-stats .unit {
+  font-size: .6em; font-weight: 600; margin-left: .3em; letter-spacing: .04em;
+}
+.hero-stats .label {
+  display: block;
   font-size: clamp(.78rem, 1.3vw, .88rem); color: rgba(255, 255, 255, .9);
 }
 
