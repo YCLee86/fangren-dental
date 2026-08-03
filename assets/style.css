@@ -87,83 +87,87 @@ a:hover { color: var(--teal-500); }
 .site-nav a:hover { color: var(--teal-700); }
 
 /* ---------- 首頁 HERO ----------
-   照片與文字交疊，而不是其中一個蓋住另一個。
-   照片不加遮罩：這張建築照的價值在清水模的亮度與那片天空，任何一層紗
-   都是在傷害它。文字改放在一塊白卡上壓過照片邊緣，兩者互相咬合。
-   白卡刻意沿用文章卡的材質（白底、同圓角、同陰影），HERO 才不會像
-   外掛上去的另一套設計。 */
+   照片鋪滿整區、文字直接落在照片上，不加任何遮罩。
+   主角是那棟清水模建築，所以文字刻意壓小、收在天空那一帶：字級只到
+   標題 2rem，段落不到 1rem，整塊文字約佔畫面上緣三分之一。
+   構圖上照片裁切偏上，保留足夠的天空給文字站，同時讓一樓門面留在下緣。 */
 .hero {
   position: relative;
-  background: var(--sand-50); border-bottom: 1px solid var(--line);
+  background: var(--teal-100); border-bottom: 1px solid var(--line);
   overflow: hidden;
 }
-.hero-photo { margin: 0; }
+.hero-photo {
+  margin: 0; position: absolute; inset: 0;
+}
+/* 手機的畫面比例讓建築的屋簷剛好切進文字尾端，深色屋頂上讀不到深色字。
+   只在上緣加一層白色薄霧、42% 之後全透明——白色疊在藍天上等於把天空
+   提亮，不會像米色那樣把顏色洗濁。桌機文字完全落在天空裡，不需要。 */
+.hero-photo::after {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 46%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, .62) 0%,
+    rgba(255, 255, 255, .40) 46%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+@media (min-width: 860px) { .hero-photo::after { content: none; } }
 .hero-photo img {
   width: 100%; height: 100%; object-fit: cover;
-  /* 橫向偏右保留建築本體，縱向偏下保留一樓門面與騎樓 */
-  object-position: 62% 62%;
+  /* 縱向偏上保留天空給文字，橫向偏右讓建築落在文字的另一側 */
+  object-position: 60% 40%;
 }
-
-/* 手機：照片在上、白卡由下往上壓進照片的下緣 */
-.hero-photo { height: clamp(14rem, 40svh, 20rem); }
-.hero-inner { position: relative; padding-block: 0 clamp(1.6rem, 5vw, 2.4rem); }
-.hero-copy {
+.hero-inner {
   position: relative;
-  margin-top: clamp(-4rem, -9vw, -2.2rem);
-  background: var(--white); border: 1px solid var(--line);
-  border-radius: var(--radius); box-shadow: var(--shadow-lift);
-  padding: clamp(1.35rem, 5.5vw, 2.5rem);
+  min-height: clamp(32rem, 84svh, 44rem);
+  padding-block: clamp(1.4rem, 4vw, 3rem);
+  display: grid; align-items: start;
 }
+.hero-copy { max-width: 30rem; }
 
-/* 桌機：照片出血到右緣，白卡從左側壓上去 */
 @media (min-width: 860px) {
-  .hero-photo {
-    position: absolute; top: 0; bottom: 0; height: 100%;
-    /* 一般寬度出血到右緣；超過 88rem 之後收進容器，
-       否則左側米色留白會愈拉愈大，構圖失衡 */
-    right: max(0px, calc((100% - 88rem) / 2));
-    width: min(64%, 52rem);
-  }
-  .hero-inner {
-    min-height: clamp(29rem, 68vh, 37rem);
-    padding-block: clamp(2.5rem, 6vw, 4rem);
-    display: grid; align-items: center;
-  }
-  .hero-copy { margin-top: 0; max-width: 33rem; }
+  .hero-inner { min-height: clamp(30rem, 72vh, 40rem); }
+  .hero-copy { max-width: 32rem; }
 }
 
+/* 文字全部帶一層極淡的白色光暈：天空亮度不均、雲影經過時仍讀得清楚。
+   這是描邊不是遮罩，照片本身完全沒有被覆蓋。 */
 .hero h1 {
-  margin: 0 0 .8rem;
-  font-size: clamp(1.6rem, 4.6vw, 2.55rem);
-  line-height: 1.32; letter-spacing: -.02em; color: var(--teal-900);
+  margin: 0 0 .75rem;
+  font-size: clamp(1.4rem, 3.1vw, 2rem);
+  line-height: 1.4; letter-spacing: -.01em; color: var(--teal-900);
+  text-shadow: 0 1px 12px rgba(255, 255, 255, .85), 0 0 3px rgba(255, 255, 255, .9);
 }
-.hero p { margin: 0; color: var(--ink-soft); font-size: clamp(.95rem, 2.6vw, 1.05rem); }
-/* 導言分兩層：上層講診所（深色、稍大），下層講這個網站在做什麼（輕） */
-.hero .hero-lede { margin-bottom: .55rem; color: var(--ink); font-size: clamp(1rem, 2.7vw, 1.15rem); }
-.hero .hero-sub  { font-size: clamp(.88rem, 2.4vw, .98rem); color: var(--ink-faint); }
-
-/* 數字列：細分隔線切開三組，讀起來是一組被編排過的資料，不是散落的文字 */
-.hero-stats {
-  display: flex; flex-wrap: wrap; row-gap: .9rem;
-  margin: 1.35rem 0 0; padding: 1.15rem 0 0;
-  border-top: 1px solid var(--line); list-style: none;
+.hero p {
+  margin: 0; color: var(--ink);
+  font-size: clamp(.9rem, 1.6vw, 1rem); line-height: 1.9;
+  text-shadow: 0 1px 10px rgba(255, 255, 255, .85), 0 0 3px rgba(255, 255, 255, .9);
 }
-.hero-stats li {
-  min-width: 0; padding-inline: clamp(.75rem, 3vw, 1.15rem);
-  border-left: 1px solid var(--line);
-}
-.hero-stats li:first-child { padding-left: 0; border-left: 0; }
-.hero-stats b {
-  display: block; font-size: clamp(1.25rem, 4vw, 1.4rem); line-height: 1.15;
-  color: var(--teal-700); font-variant-numeric: tabular-nums; letter-spacing: -.01em;
-}
-.hero-stats span { font-size: .78rem; color: var(--ink-faint); }
+.hero .hero-lede { margin-bottom: .45rem; }
+.hero .hero-sub  { font-size: clamp(.82rem, 1.4vw, .9rem); color: var(--ink-soft); }
 
 /* ---------- 首頁信任帶 ----------
    HERO 負責情緒，這一條負責事實與下一步：帶著任務來的人（找電話、
    確認做不做某項治療）在首屏就被接住，不必捲到頁尾。 */
 .trust-band { background: var(--white); border-bottom: 1px solid var(--line); }
 .trust-band .wrap { padding-block: 1.05rem 1.15rem; }
+/* 數字列：由 HERO 移下來。細分隔線切開三組，讀起來是一組被編排過的
+   資料，而不是散落的文字 */
+.trust-stats {
+  display: flex; flex-wrap: wrap; row-gap: .85rem;
+  margin: 0 0 1.05rem; padding: 0 0 1.05rem;
+  border-bottom: 1px solid var(--line); list-style: none;
+}
+.trust-stats li {
+  min-width: 0; padding-inline: clamp(.8rem, 3vw, 1.4rem);
+  border-left: 1px solid var(--line);
+}
+.trust-stats li:first-child { padding-left: 0; border-left: 0; }
+.trust-stats b {
+  display: block; font-size: clamp(1.2rem, 3.6vw, 1.35rem); line-height: 1.15;
+  color: var(--teal-700); font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+.trust-stats span { font-size: .78rem; color: var(--ink-faint); }
 .trust-title {
   margin: 0 0 .55rem; font-size: .72rem; letter-spacing: .14em; color: var(--ink-faint);
 }

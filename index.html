@@ -74,16 +74,16 @@
 <main id="main">
 
   <!--
-    首頁 HERO：照片與文字交疊成一區。
-    · 照片不加任何遮罩——這張建築照的價值就在亮度與天空，壓暗等於毀掉它
-    · 文字改放在一塊白卡上，讓白卡壓過照片邊緣形成交疊；白卡與下方文章卡
-      同材質，不是外來元素
+    首頁 HERO：照片鋪滿整區，文字直接落在照片上。
+    · 照片不加任何遮罩——這張建築照的價值就在亮度與天空
+    · 主角是建築，所以文字刻意壓小、只佔天空那一帶；數字列移到下方信任帶，
+      留在這裡會讓文字的份量蓋過建築
   -->
   <section class="hero">
     <figure class="hero-photo">
       <img src="assets/hero-clinic.jpg"
            srcset="assets/hero-clinic-800.jpg 800w, assets/hero-clinic.jpg 1600w"
-           sizes="(max-width: 859px) 100vw, 64vw"
+           sizes="100vw"
            alt="芳仁牙醫診所的清水模建築外觀，位於斗六市永樂街街角"
            width="1600" height="1091" fetchpriority="high">
     </figure>
@@ -92,11 +92,6 @@
         <h1>小時候被大人牽著來，<br>現在牽著別人</h1>
         <p class="hero-lede">從中華路到永樂街，四十多年，<br>有跟著換的，也有一直顧的。</p>
         <p class="hero-sub">斗六厝邊這些年最常問的，一篇一篇寫在這裡。</p>
-        <ul class="hero-stats">
-          <li><b>1983</b><span>開業至今</span></li>
-          <li><b>9</b><span>位醫師駐診</span></li>
-          <li><b>6</b><span>個部定專科</span></li>
-        </ul>
       </div>
     </div>
   </section>
@@ -108,6 +103,11 @@
   -->
   <section class="trust-band">
     <div class="wrap">
+      <ul class="trust-stats">
+        <li><b>1983</b><span>開業至今</span></li>
+        <li><b>9</b><span>位醫師駐診</span></li>
+        <li><b>6</b><span>個部定專科</span></li>
+      </ul>
       <p class="trust-title">治療項目</p>
       <ul class="trust-list">
         <li>一般牙科・定期檢查</li>
