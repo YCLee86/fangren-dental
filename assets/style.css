@@ -98,12 +98,29 @@ a:hover { color: var(--teal-500); }
 }
 .hero-photo {
   margin: 0; position: absolute; inset: 0;
+  /* 桌機的圖有 transform，會形成堆疊脈絡蓋過同層的遮罩。
+     這裡自成一個脈絡，讓兩層遮罩能疊在圖上，又整塊留在文字底下。 */
+  isolation: isolate;
 }
+/* 下緣的深色帶：數字列壓在騎樓與路面上，白字在淺色路面上會糊掉。
+   只鋪在最下面三分之一、往上完全淡出，天空與建築主體不受影響。
+   顏色不用純黑，帶一點品牌的墨綠，才不會在暖調照片上顯得死板。 */
+.hero-photo::before {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 42%; z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 22, 23, 0)   0%,
+    rgba(8, 22, 23, .26) 34%,
+    rgba(8, 22, 23, .62) 66%,
+    rgba(8, 22, 23, .80) 100%
+  );
+}
+
 /* 手機的畫面比例讓建築的屋簷剛好切進文字尾端，深色屋頂上讀不到深色字。
    只在上緣加一層白色薄霧、42% 之後全透明——白色疊在藍天上等於把天空
    提亮，不會像米色那樣把顏色洗濁。桌機文字完全落在天空裡，不需要。 */
 .hero-photo::after {
-  content: ""; position: absolute; inset: 0 0 auto 0; height: 46%;
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 46%; z-index: 1;
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, .62) 0%,
@@ -145,16 +162,16 @@ a:hover { color: var(--teal-500); }
   line-height: 1.4; letter-spacing: -.01em; color: var(--teal-900);
   text-shadow: 0 1px 12px rgba(255, 255, 255, .85), 0 0 3px rgba(255, 255, 255, .9);
 }
+/* 兩段文案同字級、同顏色，與標題共用同一個深綠；三者只靠字級分主次，
+   不再多出一組灰階，避免看起來像沒有理由的深淺不一 */
 .hero p {
-  margin: 0; color: var(--ink);
-  font-size: clamp(.9rem, 1.6vw, 1rem); line-height: 1.9;
+  margin: 0; color: var(--teal-900);
+  font-size: clamp(.92rem, 1.6vw, 1.02rem); line-height: 1.9;
   text-shadow: 0 1px 10px rgba(255, 255, 255, .85), 0 0 3px rgba(255, 255, 255, .9);
 }
-.hero .hero-lede { margin-bottom: .45rem; }
-.hero .hero-sub  { font-size: clamp(.82rem, 1.4vw, .9rem); color: var(--ink-soft); }
+.hero .hero-lede { margin-bottom: .35rem; }
 
-/* 數字列：壓在照片最下排。下緣是路面與騎樓（中灰到深色），
-   所以改用白字＋深色投影，不在照片上加任何色塊 */
+/* 數字列：壓在照片最下排，白字坐在上面那條深色帶上 */
 .hero-stats {
   grid-row: 3;
   display: flex; flex-wrap: wrap; row-gap: .8rem;
@@ -168,11 +185,9 @@ a:hover { color: var(--teal-500); }
 .hero-stats b {
   display: block; font-size: clamp(1.3rem, 2.6vw, 1.7rem); line-height: 1.2;
   color: var(--white); font-variant-numeric: tabular-nums; letter-spacing: -.01em;
-  text-shadow: 0 1px 14px rgba(11, 34, 36, .55), 0 0 4px rgba(11, 34, 36, .4);
 }
 .hero-stats span {
-  font-size: clamp(.76rem, 1.3vw, .85rem); color: rgba(255, 255, 255, .92);
-  text-shadow: 0 1px 12px rgba(11, 34, 36, .6), 0 0 4px rgba(11, 34, 36, .45);
+  font-size: clamp(.78rem, 1.3vw, .88rem); color: rgba(255, 255, 255, .9);
 }
 
 /* ---------- 首頁信任帶 ----------
