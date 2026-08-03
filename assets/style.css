@@ -102,20 +102,6 @@ a:hover { color: var(--teal-500); }
      這裡自成一個脈絡，讓兩層遮罩能疊在圖上，又整塊留在文字底下。 */
   isolation: isolate;
 }
-/* 下緣的深色帶：數字列壓在騎樓與路面上，白字在淺色路面上會糊掉。
-   只鋪在最下面三分之一、往上完全淡出，天空與建築主體不受影響。
-   顏色不用純黑，帶一點品牌的墨綠，才不會在暖調照片上顯得死板。 */
-.hero-photo::before {
-  content: ""; position: absolute; inset: auto 0 0 0; height: 42%; z-index: 1;
-  background: linear-gradient(
-    180deg,
-    rgba(8, 22, 23, 0)   0%,
-    rgba(8, 22, 23, .26) 34%,
-    rgba(8, 22, 23, .62) 66%,
-    rgba(8, 22, 23, .80) 100%
-  );
-}
-
 /* 手機的畫面比例讓建築的屋簷剛好切進文字尾端，深色屋頂上讀不到深色字。
    只在上緣加一層白色薄霧、42% 之後全透明——白色疊在藍天上等於把天空
    提亮，不會像米色那樣把顏色洗濁。桌機文字完全落在天空裡，不需要。 */
@@ -154,28 +140,27 @@ a:hover { color: var(--teal-500); }
   .hero-photo img { transform: scale(1.14); transform-origin: 0% 72%; }
 }
 
-/* 文字全部帶一層極淡的白色光暈：天空亮度不均、雲影經過時仍讀得清楚。
-   這是描邊不是遮罩，照片本身完全沒有被覆蓋。 */
-.hero h1 {
-  margin: 0 0 .75rem;
-  font-size: clamp(1.4rem, 3.1vw, 2rem);
-  line-height: 1.4; letter-spacing: -.01em; color: var(--teal-900);
-  text-shadow: 0 1px 12px rgba(255, 255, 255, .85), 0 0 3px rgba(255, 255, 255, .9);
-}
-/* 兩段文案同字級、同顏色，與標題共用同一個深綠；三者只靠字級分主次，
-   不再多出一組灰階，避免看起來像沒有理由的深淺不一 */
+/* 標題與兩段文案同字級、同顏色、同行高，整塊讀起來是一段勻稱的文字，
+   只靠字重分出標題。文字帶一層極淡的白色光暈：天空亮度不均、雲影經過
+   時仍讀得清楚——那是描邊不是遮罩，照片本身沒有被覆蓋。 */
+.hero h1,
 .hero p {
   margin: 0; color: var(--teal-900);
   font-size: clamp(.92rem, 1.6vw, 1.02rem); line-height: 1.9;
+  letter-spacing: 0;
   text-shadow: 0 1px 10px rgba(255, 255, 255, .85), 0 0 3px rgba(255, 255, 255, .9);
 }
+.hero h1 { margin-bottom: .55rem; }
 .hero .hero-lede { margin-bottom: .35rem; }
 
-/* 數字列：壓在照片最下排，白字坐在上面那條深色帶上 */
+/* 數字列：不鋪整條漸層（會把建築一起壓暗），只用一塊剛好包住數字的
+   半透明矩形當底。顏色帶一點墨綠而非純黑，接得上照片的暖調。 */
 .hero-stats {
-  grid-row: 3;
+  grid-row: 3; justify-self: start;
+  width: fit-content; max-width: 100%;
   display: flex; flex-wrap: wrap; row-gap: .8rem;
-  margin: 0; padding: 0; list-style: none;
+  margin: 0; padding: .85rem 1.3rem; list-style: none;
+  background: rgba(8, 22, 23, .58); border-radius: 6px;
 }
 .hero-stats li {
   min-width: 0; padding-inline: clamp(.85rem, 3vw, 1.5rem);
