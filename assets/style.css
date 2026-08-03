@@ -103,6 +103,9 @@ a:hover { color: var(--teal-500); }
   line-height: 1.3; letter-spacing: -.01em; color: var(--teal-900);
 }
 .hero p { margin: 0 0 1.2rem; color: var(--ink-soft); font-size: clamp(.95rem, 2.6vw, 1.05rem); }
+/* 導言分兩層：上層講診所（深色、稍大），下層講這個網站在做什麼（輕） */
+.hero .hero-lede { margin-bottom: .5rem; color: var(--ink); font-size: clamp(1rem, 2.8vw, 1.12rem); }
+.hero .hero-sub  { font-size: clamp(.9rem, 2.5vw, 1rem); }
 .hero-figure { margin: 0; }
 .hero-figure img {
   width: 100%; border-radius: var(--radius);
@@ -115,6 +118,31 @@ a:hover { color: var(--teal-500); }
 .hero-stats li { min-width: 0; }
 .hero-stats b { display: block; font-size: 1.3rem; color: var(--teal-700); line-height: 1.2; }
 .hero-stats span { font-size: .8rem; color: var(--ink-faint); }
+
+/* ---------- 首頁信任帶 ----------
+   HERO 負責情緒，這一條負責事實與下一步：帶著任務來的人（找電話、
+   確認做不做某項治療）在首屏就被接住，不必捲到頁尾。 */
+.trust-band { background: var(--white); border-bottom: 1px solid var(--line); }
+.trust-band .wrap { padding-block: 1.05rem 1.15rem; }
+.trust-title {
+  margin: 0 0 .55rem; font-size: .72rem; letter-spacing: .14em; color: var(--ink-faint);
+}
+.trust-list {
+  display: flex; flex-wrap: wrap; gap: .4rem .45rem;
+  margin: 0 0 .95rem; padding: 0; list-style: none;
+}
+.trust-list li {
+  min-width: 0; font-size: .82rem; line-height: 1.6; color: var(--teal-900);
+  background: var(--sand-100); border: 1px solid var(--line);
+  border-radius: 100px; padding: .2rem .7rem;
+}
+.trust-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem .9rem; }
+.trust-actions .btn { padding: .45rem .95rem; font-size: .86rem; }
+.trust-actions .tel {
+  font-size: 1.02rem; font-weight: 700; color: var(--teal-900);
+  text-decoration: none; font-variant-numeric: tabular-nums; letter-spacing: .02em;
+}
+.trust-actions .tel:hover { color: var(--teal-500); }
 
 /* ---------- 區塊標題 ---------- */
 .section { padding-block: clamp(2.2rem, 6vw, 3.5rem); }
