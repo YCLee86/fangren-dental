@@ -5,6 +5,11 @@
 
 這份檔案是給 AI 助理看的。人類用的說明在 [README.md](README.md)。
 
+> **要動到任何顏色之前，先讀 [PALETTE.md](PALETTE.md)。**
+> 那份是配色的唯一依據，每個色值都是從診所自己的照片量出來的（含官方色票、
+> 材質實測、對比度實測、版面規則）。**不要另外憑感覺挑色，也不要繞過裡面的
+> 對比度限制**（例如 `#A1A398` 量出來撐不住文字，就不要拿它當文字）。
+
 ---
 
 ## 一、不可更動的架構決策
@@ -103,6 +108,7 @@ node tools/serve.mjs      # 預設 http://localhost:8791
 
 ```
 index.html              首頁。POSTS 區塊由 build 產生，其餘手寫
+PALETTE.md              配色規範。動任何顏色之前先讀這份
 404.html
 site.json               網站正式網址（給 sitemap 用）
 wrangler.toml           Worker、靜態資產、自訂網域、D1 綁定
@@ -121,6 +127,7 @@ tools/
   serve.mjs             本機預覽伺服器
   sync.mjs              同步遠端（SessionStart hook 自動呼叫）
   setup.ps1 / setup.sh  新電腦一鍵環境設定
+  palette-measure.ps1   從照片實測取色（k-means ＋ 局部裁切），配色改動的依據來源
   build-manifest.json   內容雜湊紀錄，build 自動維護，勿手改
 .claude/
   settings.json         SessionStart hook：開啟專案時自動同步（隨 git 走，兩台都生效）
@@ -129,6 +136,9 @@ tools/
 
 > `tools/setup.ps1` **必須存成 UTF-8 with BOM**。Windows PowerShell 5.1 沒有 BOM 就會
 > 用 ANSI 讀檔，裡面的中文全變亂碼、腳本直接解析失敗。編輯這支檔案後要確認 BOM 還在。
+>
+> `tools/palette-measure.ps1` 走另一條路避開同一個坑：**整支刻意只用 ASCII**，
+> 中文一律放在它讀進來的 manifest（用 `-Encoding UTF8` 讀）。改它的時候不要加中文字面值。
 
 `_site/`、`.wrangler/`、`node_modules/` 都在 `.gitignore` 裡，是產物，不要 commit。
 
@@ -199,7 +209,12 @@ tools/
 `build.mjs` 完全不會碰這個資料夾（它只讀根目錄的 `index.html` 與 `posts/`），
 所以裡面的文章卡片是靜止的，不會跟著新文章更新。
 
-目前有：`preview/home-v2/` — 首頁改版提案，2026-08-03 從 Claude Artifact 匯出。
+目前有：
+
+- `preview/home-v2/` — 首頁改版提案，2026-08-03 從 Claude Artifact 匯出。
+- `preview/canvas/` — **配色主案**（2026-08-04）。暗夜 HERO × 淺色內文，中間以 3px 木色線
+  分界；內文底色三選一。頁內有官方色票、花藝比例與對比度的完整數據，數值同 [PALETTE.md](PALETTE.md)。
+- `preview/night-calibrated/` — 全暗版（2026-08-04），內文區也是暗的。留著對照用。
 
 ### 怎麼鎖
 
