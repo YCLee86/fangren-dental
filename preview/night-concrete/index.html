@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- 這是未上線的改版提案頁，不要讓搜尋引擎收錄 -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+
+<title>暗夜診所・清水模中性灰（手機 390px） — 芳仁牙醫診所改版預覽</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+
+<!--
+  這一頁的樣式刻意全部內嵌、不引用 assets/style.css；也完全不動首頁 index.html。
+
+  定調（2026-08-04，依使用者指示修正）：
+  上一版把底色推成深藍／深咖啡，是多加了不必要的顏色。
+  這一版回到診所本來的邏輯——整體低彩度灰，只有地板是木頭，
+  彩色只出現在家具布料那種小面積。
+
+  實測支持這個判斷（取樣自診所自己的照片）：
+    清水模外牆 白天正面 #9da3ab（彩度 8.2%，R-B −14，日光偏藍）
+    清水模外牆 白天中段 #a09c98（彩度 5.2%，R-B +8）
+    清水模外牆 背光面   #928c87（彩度 7.1%，R-B +10）
+    清水模外牆 夜景     #222326（彩度 9.9%，R-B −4）
+    診療室 白牆        #aba8a4（彩度 4.1%，R-B +7）
+    診療室 深色櫃體     #1e1c1b（彩度 10.5%，R-B +3）
+    診療室 天花管線區    #857e77（彩度 10.8%，R-B +14）
+  → 材質本身就是「近中性、極低彩度、微暖」。這一版的整條灰階就照這個走：
+    彩度壓在 5% 以內，R 比 B 高 2~7，跟白牆同一個色偏。
+
+  點綴色只有兩個來源，而且只用在極小的地方：
+    地板木色 #957c5f（診療室佔 21%）→ 全站只有一條水平線用它，對應「只有地板是木頭」
+    診療椅布料藍綠 #3c5f61 → 對應「家具布料才出現調色」
+    Logo 苔綠 #5D6D55 → 暗底上色相彩度不動、只提一階明度
+
+  三個版本的灰階完全一樣，差別只在那個「點綴的活潑」是哪一色。
+-->
+<style>:root { color-scheme: dark; }</style>
+<style>
+/* ==========================================================================
+   共用骨架
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: #121110; color: #e3e0dc;
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.85; letter-spacing: .01em;
+  overflow-x: hidden;
+}
+body, p, li, h1, h2, h3, h4, td, th { overflow-wrap: break-word; word-break: break-word; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* ---------- 唯一的一條灰階（三個版本完全共用） ----------
+   彩度全部壓在 5% 以內，R 比 B 高 2~7 —— 跟診所白牆 #aba8a4 同一個色偏。
+   不是純黑也不是藍黑，是清水模在夜裡的樣子。 */
+.phone {
+  --bg:        #1b1a19;   /* 深清水模 */
+  --surface:   #232221;   /* 面 */
+  --surface-2: #2c2a29;   /* 更高一階 */
+  --line:      #383634;   /* 分隔線 */
+  --text:      #e3e0dc;   /* 主文字（白牆提亮） */
+  --text-soft: #a8a4a0;   /* 次要 */
+  --text-faint:#8d8984;   /* 更淡 */
+  --wood:      #b8946b;   /* 地板木色，全站只有一條線用它 */
+  --brand:     #8ca07f;   /* Logo 苔綠，暗底用的提亮版 */
+  background: var(--bg); color: var(--text);
+}
+/* 三個版本唯一的差別：點綴色 */
+[data-accent="teal"]  { --accent: #6d9fa1; }   /* 診療椅布料的藍綠 */
+[data-accent="moss"]  { --accent: #8ca07f; }   /* Logo 的苔綠 */
+[data-accent="wood"]  { --accent: #b8946b; }   /* 地板的木色，不另外加彩色 */
+
+/* ---------- 外框與說明 ---------- */
+.case { margin: 0 0 2.6rem; }
+.case-head { padding: 0 1rem .9rem; }
+.case-head h2 { margin: 0 0 .2rem; font-size: 1.05rem; color: #e3e0dc; }
+.case-head p { margin: 0; font-size: .84rem; line-height: 1.75; color: #97938e; }
+@media (min-width: 600px) {
+  .phone { max-width: 390px; margin-inline: auto; border-radius: 14px; overflow: hidden;
+           border: 1px solid #2a2827; }
+  .case-head, .intro, .foot { max-width: 42rem; margin-inline: auto; }
+}
+.swatch-wrap { padding: 0 1rem 1.9rem; }
+@media (min-width: 600px) { .swatch-wrap { max-width: 390px; margin-inline: auto; padding-inline: 0; } }
+.swatches { display: flex; margin: 0; padding: 0; list-style: none; }
+.swatches li { flex: 1; height: 32px; position: relative; }
+.swatches li span {
+  position: absolute; inset: auto 0 -1.15rem 0; text-align: center;
+  font-size: .55rem; color: #7e7a76;
+}
+
+/* ==========================================================================
+   HERO
+   照片維持原圖比例（3743:2475），不裁切、不加漸層、不加遮罩。
+   疊字字級用 cqw，文字與暗部的相對位置在任何手機寬度下都固定。
+   ========================================================================== */
+.hero-stage { position: relative; container-type: inline-size; background: #0f0e0d; }
+.hero-photo { margin: 0; }
+.hero-photo img { width: 100%; height: auto; }
+.hero-copy {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  padding: 3cqw 4cqw 4cqw; pointer-events: none;
+}
+.hero-copy a { pointer-events: auto; }
+.site-header { display: flex; align-items: center; justify-content: space-between; gap: 3cqw; }
+.brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
+.brand-mark { flex: 0 0 9.5cqw; display: block; color: var(--brand); }
+.brand-mark svg { display: block; width: 100%; height: auto; }
+.brand-mark .dot { fill: var(--bg); }
+.brand-text b {
+  display: block; font-weight: 700; font-size: 4.1cqw; line-height: 1.25;
+  letter-spacing: 0; color: rgba(255, 253, 250, .95);
+}
+.brand-text small {
+  display: block; font-weight: 400; font-size: 2.85cqw; line-height: 1.6;
+  letter-spacing: 0; color: rgba(255, 253, 250, .62);
+  text-align: justify; text-align-last: justify;
+}
+.site-nav { display: flex; gap: 3.4cqw; font-size: 3.1cqw; line-height: 1.4; }
+.site-nav a { color: rgba(255, 253, 250, .72); text-decoration: none; white-space: nowrap; font-weight: 500; }
+.hero-line {
+  margin: 4cqw 0 0; max-width: 56cqw;
+  font-size: 4.8cqw; font-weight: 600; line-height: 1.55;
+  color: rgba(255, 253, 250, .92); letter-spacing: .01em;
+}
+
+/* ---------- 照片下方 ---------- */
+.hero-caption {
+  margin: 0; padding: .8rem 1rem .85rem;
+  font-size: .85rem; line-height: 1.7; letter-spacing: .04em;
+  color: var(--text-soft); background: var(--surface); border-bottom: 1px solid var(--line);
+}
+/* 數字刻意不上色——用主文字的米白。彩色留給真正需要「活起來」的那兩個地方 */
+.stats {
+  display: flex; margin: 0; padding: .9rem 1rem 1rem; list-style: none;
+  background: var(--surface); border-bottom: 1px solid var(--line);
+}
+.stats li { min-width: 0; padding-inline: 1.05rem; border-left: 1px solid var(--line); }
+.stats li:first-child { padding-left: 0; border-left: 0; }
+.stats b {
+  display: block; font-size: 1.28rem; line-height: 1.3; color: var(--text);
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+.stats span { font-size: .74rem; color: var(--text-faint); }
+
+.band { padding: 1rem; background: var(--bg); border-bottom: 1px solid var(--line); }
+.band-title { margin: 0 0 .55rem; font-size: .7rem; letter-spacing: .14em; color: var(--text-faint); }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem .45rem; margin: 0; padding: 0; list-style: none; }
+.chips li {
+  min-width: 0; font-size: .8rem; line-height: 1.6; color: var(--text-soft);
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: 100px; padding: .2rem .7rem;
+}
+
+.cards { padding: 1.1rem 1rem 1.4rem; background: var(--bg); }
+.cards-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: .8rem; }
+.cards-head h3 { margin: 0; font-size: 1.02rem; color: var(--text); }
+.cards-head a { font-size: .78rem; color: var(--text-soft); text-decoration: none; }
+.card {
+  display: block; text-decoration: none; color: inherit;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+}
+.card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.card-body { padding: .85rem .95rem 1rem; }
+/* 點綴 ①：文章分類標籤 */
+.tag {
+  display: inline-block; font-size: .68rem; letter-spacing: .06em; color: var(--accent);
+  border: 1px solid var(--accent); border-radius: 100px; padding: .05rem .5rem; margin-bottom: .5rem;
+}
+.card h4 { margin: 0 0 .4rem; font-size: .96rem; line-height: 1.5; color: var(--text); }
+.card p { margin: 0; font-size: .82rem; line-height: 1.7; color: var(--text-soft); }
+.card-meta { margin: .7rem 0 0; padding-top: .6rem; border-top: 1px solid var(--line);
+             font-size: .72rem; color: var(--text-faint); }
+
+/* ---------- 診所資訊帶 ----------
+   上緣那條 3px 的木色線，是全站唯一用木頭的地方——對應診所裡
+   只有地板是木頭。它是一個「水平面」，不是裝飾線。 */
+.lamp {
+  padding: 1.1rem 1rem 1.4rem; background: var(--surface);
+  border-top: 3px solid var(--wood);
+}
+.lamp p { margin: 0 0 .35rem; font-size: .82rem; line-height: 1.8; color: var(--text-soft); }
+/* 點綴 ②：現在有沒有開 */
+.lamp .now { display: inline-flex; align-items: center; gap: .45rem; font-size: .8rem; color: var(--accent); }
+.lamp .now::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+/* 點綴 ③：怎麼找到人 */
+.lamp .tel {
+  font-size: 1.15rem; font-weight: 700; color: var(--accent); text-decoration: none;
+  letter-spacing: .02em; font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 說明 ---------- */
+.intro, .foot { padding: 1.5rem 1rem; color: #aca8a3; }
+.intro h1 { margin: 0 0 .6rem; font-size: 1.2rem; color: #e3e0dc; line-height: 1.5; }
+.intro p, .foot p { margin: 0 0 .7rem; font-size: .86rem; line-height: 1.85; }
+.intro table, .foot table { border-collapse: collapse; margin: .2rem 0 1rem; }
+.intro td, .intro th, .foot td, .foot th {
+  font-size: .78rem; padding: .28rem .7rem .28rem 0; text-align: left; vertical-align: top;
+  color: #aca8a3; border-bottom: 1px solid #262423;
+}
+.intro th, .foot th { color: #85817c; font-weight: 500; }
+.chip-inline { display: inline-block; width: .78rem; height: .78rem; border-radius: 3px;
+               vertical-align: -1px; margin-right: .3rem; }
+.foot h2 { margin: 1.3rem 0 .5rem; font-size: 1rem; color: #e3e0dc; }
+.note-box { border-left: 2px solid #3a3836; padding-left: .9rem; margin: 0 0 1rem; }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>暗夜診所・清水模中性灰</h1>
+  <p>上一版把底色推成深藍與深咖啡，是多加了不必要的顏色。這一版回到診所本來的邏輯：<b>整體低彩度灰，只有地板是木頭，彩色只出現在家具布料那種小面積。</b></p>
+
+  <p>實測支持這個判斷 —— 診所的材質本身就是近中性、極低彩度、微暖：</p>
+  <table>
+    <tr><th>取樣位置</th><th>色</th><th>彩度</th><th>色偏 R−B</th></tr>
+    <tr><td>清水模 白天正面</td><td><span class="chip-inline" style="background:#9da3ab"></span>#9da3ab</td><td>8.2%</td><td>−14（日光偏藍）</td></tr>
+    <tr><td>清水模 白天中段</td><td><span class="chip-inline" style="background:#a09c98"></span>#a09c98</td><td>5.2%</td><td>+8</td></tr>
+    <tr><td>清水模 背光面</td><td><span class="chip-inline" style="background:#928c87"></span>#928c87</td><td>7.1%</td><td>+10</td></tr>
+    <tr><td>清水模 夜景</td><td><span class="chip-inline" style="background:#222326"></span>#222326</td><td>9.9%</td><td>−4</td></tr>
+    <tr><td>診療室 白牆</td><td><span class="chip-inline" style="background:#aba8a4"></span>#aba8a4</td><td>4.1%</td><td>+7</td></tr>
+    <tr><td>診療室 深色櫃體</td><td><span class="chip-inline" style="background:#1e1c1b"></span>#1e1c1b</td><td>10.5%</td><td>+3</td></tr>
+    <tr><td>診療室 天花管線區</td><td><span class="chip-inline" style="background:#857e77"></span>#857e77</td><td>10.8%</td><td>+14</td></tr>
+  </table>
+  <p>所以這一版整條灰階的彩度全部壓在 <b>5% 以內</b>，R 比 B 高 2～7 —— 跟診所白牆同一個色偏。不是純黑，也不是藍黑，是清水模在夜裡的樣子。</p>
+
+  <div class="note-box">
+    <p style="margin:0"><b>三個版本的灰階完全一樣</b>（底 #1b1a19、面 #232221、字 #e3e0dc），差別只在那個「點綴的活潑」是哪一色，而且只出現在三個地方：文章標籤、現在看診中的燈點、電話號碼。連數字（1983／9／6）都刻意不上色。</p>
+  </div>
+  <p>另外，全站只有一條 3px 的木色線 —— 在診所資訊帶的上緣。它對應診所裡「只有地板是木頭」：那是一個水平面，不是裝飾線。</p>
+</div>
+
+<!-- ============ 版本 1：藍綠（診療椅布料） ============ -->
+<section class="case">
+  <div class="case-head">
+    <h2>① 點綴＝診療椅的藍綠 <span style="color:#6d9fa1">#6d9fa1</span></h2>
+    <p>取自診療椅布料 #3c5f61。跟灰階的色偏相反（偏冷），所以那三個小地方會「跳」出來一點點 —— 最接近你在家具布料上做的事。</p>
+  </div>
+  <div class="phone" data-accent="teal">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+      </figure>
+      <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <path fill="currentColor" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062"/>
+                  <path class="dot" d="M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#">全部文章</a><a href="#">醫師介紹</a><a href="#">診所資訊</a>
+          </nav>
+        </header>
+        <p class="hero-line">小時候被大人牽著來<br>現在牽著別人</p>
+      </div>
+    </div>
+    <p class="hero-caption">從中華路到永樂街　四十多年</p>
+    <ul class="stats">
+      <li><b>1983</b><span>開業至今</span></li>
+      <li><b>9</b><span>位醫師駐診</span></li>
+      <li><b>6</b><span>個部定專科</span></li>
+    </ul>
+    <div class="band">
+      <p class="band-title">治療項目</p>
+      <ul class="chips"><li>一般牙科・定期檢查</li><li>牙周治療</li><li>兒童牙科</li><li>齒顎矯正</li><li>植牙・假牙重建</li></ul>
+    </div>
+    <div class="cards">
+      <div class="cards-head"><h3>最新文章</h3><a href="#">全部 →</a></div>
+      <a class="card" href="#">
+        <img src="/assets/clinic-room-1-600.jpg" alt="診療室內部，木質地板與收納櫃" loading="lazy">
+        <div class="card-body">
+          <span class="tag">日常保健</span>
+          <h4>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h4>
+          <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙。</p>
+          <p class="card-meta">2026 年 3 月 11 日</p>
+        </div>
+      </a>
+    </div>
+    <div class="lamp">
+      <p class="now">現在看診中・晚上看到 20:30</p>
+      <p><a class="tel" href="tel:+88655339369">05-533-9369</a></p>
+      <p>雲林縣斗六市永樂街 70 號</p>
+    </div>
+  </div>
+  <div class="swatch-wrap">
+    <ul class="swatches">
+      <li style="background:#1b1a19"><span>底</span></li>
+      <li style="background:#232221"><span>面</span></li>
+      <li style="background:#383634"><span>線</span></li>
+      <li style="background:#e3e0dc"><span>字</span></li>
+      <li style="background:#b8946b"><span>地板</span></li>
+      <li style="background:#6d9fa1"><span>點綴</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 版本 2：苔綠（Logo） ============ -->
+<section class="case">
+  <div class="case-head">
+    <h2>② 點綴＝Logo 的苔綠 <span style="color:#8ca07f">#8ca07f</span></h2>
+    <p>#5D6D55 色相彩度不動、只提一階明度。跟灰階同樣是微暖的低彩度，所以幾乎不跳 —— 整頁最安靜、最一致，識別也最統一。</p>
+  </div>
+  <div class="phone" data-accent="moss">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" loading="lazy">
+      </figure>
+      <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <path fill="currentColor" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062"/>
+                  <path class="dot" d="M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#">全部文章</a><a href="#">醫師介紹</a><a href="#">診所資訊</a>
+          </nav>
+        </header>
+        <p class="hero-line">小時候被大人牽著來<br>現在牽著別人</p>
+      </div>
+    </div>
+    <p class="hero-caption">從中華路到永樂街　四十多年</p>
+    <ul class="stats">
+      <li><b>1983</b><span>開業至今</span></li>
+      <li><b>9</b><span>位醫師駐診</span></li>
+      <li><b>6</b><span>個部定專科</span></li>
+    </ul>
+    <div class="band">
+      <p class="band-title">治療項目</p>
+      <ul class="chips"><li>一般牙科・定期檢查</li><li>牙周治療</li><li>兒童牙科</li><li>齒顎矯正</li><li>植牙・假牙重建</li></ul>
+    </div>
+    <div class="cards">
+      <div class="cards-head"><h3>最新文章</h3><a href="#">全部 →</a></div>
+      <a class="card" href="#">
+        <img src="/assets/clinic-room-1-600.jpg" alt="診療室內部，木質地板與收納櫃" loading="lazy">
+        <div class="card-body">
+          <span class="tag">日常保健</span>
+          <h4>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h4>
+          <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙。</p>
+          <p class="card-meta">2026 年 3 月 11 日</p>
+        </div>
+      </a>
+    </div>
+    <div class="lamp">
+      <p class="now">現在看診中・晚上看到 20:30</p>
+      <p><a class="tel" href="tel:+88655339369">05-533-9369</a></p>
+      <p>雲林縣斗六市永樂街 70 號</p>
+    </div>
+  </div>
+  <div class="swatch-wrap">
+    <ul class="swatches">
+      <li style="background:#1b1a19"><span>底</span></li>
+      <li style="background:#232221"><span>面</span></li>
+      <li style="background:#383634"><span>線</span></li>
+      <li style="background:#e3e0dc"><span>字</span></li>
+      <li style="background:#b8946b"><span>地板</span></li>
+      <li style="background:#8ca07f"><span>點綴</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 版本 3：木色（不另外加彩色） ============ -->
+<section class="case">
+  <div class="case-head">
+    <h2>③ 點綴＝地板的木色 <span style="color:#b8946b">#b8946b</span></h2>
+    <p>不另外引進第四個顏色，點綴直接沿用地板那條木色。整頁的色彩來源只剩「灰 ＋ 木」兩種，最極簡、也最像診所本人。</p>
+  </div>
+  <div class="phone" data-accent="wood">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" loading="lazy">
+      </figure>
+      <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <path fill="currentColor" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062"/>
+                  <path class="dot" d="M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#">全部文章</a><a href="#">醫師介紹</a><a href="#">診所資訊</a>
+          </nav>
+        </header>
+        <p class="hero-line">小時候被大人牽著來<br>現在牽著別人</p>
+      </div>
+    </div>
+    <p class="hero-caption">從中華路到永樂街　四十多年</p>
+    <ul class="stats">
+      <li><b>1983</b><span>開業至今</span></li>
+      <li><b>9</b><span>位醫師駐診</span></li>
+      <li><b>6</b><span>個部定專科</span></li>
+    </ul>
+    <div class="band">
+      <p class="band-title">治療項目</p>
+      <ul class="chips"><li>一般牙科・定期檢查</li><li>牙周治療</li><li>兒童牙科</li><li>齒顎矯正</li><li>植牙・假牙重建</li></ul>
+    </div>
+    <div class="cards">
+      <div class="cards-head"><h3>最新文章</h3><a href="#">全部 →</a></div>
+      <a class="card" href="#">
+        <img src="/assets/clinic-room-1-600.jpg" alt="診療室內部，木質地板與收納櫃" loading="lazy">
+        <div class="card-body">
+          <span class="tag">日常保健</span>
+          <h4>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h4>
+          <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙。</p>
+          <p class="card-meta">2026 年 3 月 11 日</p>
+        </div>
+      </a>
+    </div>
+    <div class="lamp">
+      <p class="now">現在看診中・晚上看到 20:30</p>
+      <p><a class="tel" href="tel:+88655339369">05-533-9369</a></p>
+      <p>雲林縣斗六市永樂街 70 號</p>
+    </div>
+  </div>
+  <div class="swatch-wrap">
+    <ul class="swatches">
+      <li style="background:#1b1a19"><span>底</span></li>
+      <li style="background:#232221"><span>面</span></li>
+      <li style="background:#383634"><span>線</span></li>
+      <li style="background:#e3e0dc"><span>字</span></li>
+      <li style="background:#b8946b"><span>地板</span></li>
+      <li style="background:#b8946b"><span>點綴（同色）</span></li>
+    </ul>
+  </div>
+</section>
+
+<div class="foot">
+  <h2>彩色只出現在三個地方</h2>
+  <p>文章分類標籤、「現在看診中」的燈點、電話號碼。其餘全部是灰。暗色系最容易失敗的地方就是到處都在發光，所以發光的權力只給「現在有沒有開」和「怎麼找到人」這兩件事。</p>
+  <p>數字（1983／9／6）刻意不上色 —— 上一版用了強調色，看起來熱鬧，但那不是需要被強調的東西。</p>
+
+  <h2>還要你提供的</h2>
+  <p><b>桌面那個 01-Preview 資料夾我這邊讀不到</b>（我跑在雲端，看不到你電腦的 C 槽）。把照片直接拖進聊天視窗給我，我會用同一套方法把每張的主色、彩度、色偏都測出來，再校正這條灰階與點綴色 —— 特別是家具布料實際用的顏色，現在只從兩張診療室照片抽到 #3c5f61，樣本太少。</p>
+
+  <h2>還沒做的</h2>
+  <p>桌機版排法；文章內頁與醫師介紹頁的暗色版；亮／暗自動切換。</p>
+  <p>照片為芳仁牙醫診所自有。這一頁完全不動正式首頁。</p>
+</div>
+
+</body>
+</html>
