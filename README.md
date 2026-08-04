@@ -11,7 +11,9 @@
 `www.fangren.net` 已綁定，301 轉到主網域。
 舊的 GitHub Pages 網址仍會跟著 push 一起更新，之後要處理轉址。
 
-> 用 Claude Code 編修這個網站？架構守則與工作流程在 [CLAUDE.md](CLAUDE.md)。
+> 用 Claude Code 編修這個網站？架構守則與工作流程在 [CLAUDE.md](CLAUDE.md)，
+> 配色規範在 [PALETTE.md](PALETTE.md)（含診所官方色票與實測數據，動顏色前先看）。
+> 電腦版、手機版（claude.ai/code）讀到的都是這個 repo，所以兩邊看到的是同一份。
 
 ---
 
