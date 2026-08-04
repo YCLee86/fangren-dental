@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- 這是未上線的改版提案頁，不要讓搜尋引擎收錄 -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+
+<title>夜景版 HERO（手機 390px） — 芳仁牙醫診所改版預覽</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+
+<!--
+  這一頁的樣式刻意全部內嵌、不引用 assets/style.css：
+  它是提案用的靜態快照，共用檔案會讓改預覽時不小心動到正式站。
+  這一頁也完全不動首頁 index.html。
+
+  來歷（2026-08-04）：把使用者自己做的 PPT 版型搬成真的網頁，只做手機 390px。
+  沿用 PPT 的三個決定：夜景照滿版、白字拉透明度、文案用空格斷句不用逗號。
+  修掉的三件事（詳見頁尾說明）：
+  1. PPT 右緣有一條約 15% 寬的白邊（照片沒拉滿版）→ 這裡滿版
+  2. 層級是反的（選單 16pt 粗體比文案 12pt 還重）→ 文案升為最大，選單退為最小
+  3. 三條不同的左緣 → 全部切齊同一條左內距線
+
+  文字位置是按照片實際亮度決定的，不是憑感覺：
+  把原圖切成 20×12 格量平均亮度（0=全黑），上緣兩列全區都在 60 以下、
+  左下角的柏油路面在 35 以下，都是白字站得住的暗部；
+  中段偏右是一樓亮著的門面（亮度到 138），任何淺色字放上去都會糊掉，所以空著。
+-->
+<style>:root { color-scheme: light; }</style>
+<style>
+/* ==========================================================================
+   基礎樣式（節錄自正式站，僅保留這一頁用得到的部分）
+   ========================================================================== */
+:root {
+  --wide: 68rem;
+  --pad: clamp(1rem, 4vw, 2rem);
+
+  --brand: #5D6D55;                 /* 診所識別色，只用在亮底上 */
+  --teal-900: #0b3f42;
+  --sand-100: #f3ece1;
+  --ink: #1c2426;
+  --ink-soft: #4d5b5e;
+  --ink-faint: #7c8a8d;
+  --line: #e2e0d8;
+  --white: #fff;
+  --radius: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: #fbf8f3;
+  color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.85;
+  letter-spacing: .01em;
+  overflow-x: hidden;               /* 最後一道防線：頁面永不橫向捲動 */
+}
+body, p, li, h1, h2, h3, h4 { overflow-wrap: break-word; word-break: break-word; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--brand); }
+
+.wrap { width: 100%; max-width: var(--wide); margin-inline: auto; padding-inline: var(--pad); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 60;
+  background: var(--white); color: var(--teal-900); padding: .6rem 1rem; }
+.skip-link:focus { left: .5rem; top: .5rem; }
+
+/* ==========================================================================
+   HERO：夜景照滿版，頁首與文案壓在照片上
+   照片維持原圖比例（3743:2475 ≈ 1.512），不裁切、不加漸層、不加遮罩。
+   疊上去的字級一律用 cqw，跟著照片寬度等比縮放——文字與暗部的相對位置
+   在任何手機寬度下都固定不變，不會某支手機就滑進亮著的門面裡。
+   ========================================================================== */
+.hero-stage { position: relative; container-type: inline-size; background: #12161a; }
+.hero-photo { margin: 0; }
+.hero-photo img { width: 100%; height: auto; }
+
+/* 疊字層：整層是一個 flex 直欄，上面頁首＋標題，最後一行用 auto 推到下緣。
+   左右內距 4cqw 就是全站那條左內距線，下面所有東西都切齊它。 */
+.hero-copy {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  padding: 3cqw 4cqw 4cqw;
+  pointer-events: none;             /* 只是視覺層，不擋照片 */
+}
+.hero-copy a { pointer-events: auto; }
+
+/* ---------- 頁首 ---------- */
+.site-header { display: flex; align-items: center; justify-content: space-between; gap: 3cqw; }
+.brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
+/* Logo 圖案取自診所 Illustrator 原檔。識別色 #5D6D55 是為亮底調的，
+   壓在夜景上會糊成一團，所以夜景版走白色；中間那點改成半透明黑，
+   等於在白色圖案上挖一個洞讓夜色透出來。 */
+.brand-mark { flex: 0 0 9.5cqw; display: block; color: rgba(255, 255, 255, .95); }
+.brand-mark svg { display: block; width: 100%; height: auto; }
+
+.brand-text { display: block; }
+/* 診所名與底下那行齊頭齊尾：letter-spacing 歸零讓末字不多出一截，
+   副標用 text-align-last: justify 撐開到與診所名等寬。 */
+.brand-text b {
+  display: block; font-weight: 700; font-size: 4.1cqw; line-height: 1.25;
+  letter-spacing: 0; color: rgba(255, 255, 255, .95);
+}
+.brand-text small {
+  display: block; font-weight: 400; font-size: 2.85cqw; line-height: 1.6;
+  letter-spacing: 0; color: rgba(255, 255, 255, .62);
+  text-align: justify; text-align-last: justify;
+}
+/* 選單退成配角：不粗體、字級最小、透明度最低。
+   它是給「已經決定要找東西的人」用的，不需要跟主文案搶。 */
+.site-nav { display: flex; gap: 3.4cqw; font-size: 3.1cqw; line-height: 1.4; }
+.site-nav a {
+  color: rgba(255, 255, 255, .72); text-decoration: none;
+  white-space: nowrap; font-weight: 500;
+}
+
+/* ---------- 主文案：整張圖上最大的字 ----------
+   實測對比：最差 4.9:1、平均 10.4:1（白字 92% 疊在實際像素上算的，不是估的）。
+   max-width 是保險絲：文案再長也不會往右漂進亮著的門面。 */
+.hero-line {
+  margin: 4cqw 0 0; max-width: 56cqw;
+  font-size: 4.8cqw; font-weight: 600; line-height: 1.55;
+  color: rgba(255, 255, 255, .92); letter-spacing: .01em;
+}
+
+/* ---------- 照片下方：立刻用亮面接住 ----------
+   「從中華路到永樂街　四十多年」原本想壓在左下角的柏油路上，實測不行：
+   那一帶有路面標線與車燈的小亮點（最暗的擺法也只有 1.2:1），白字會被打斷。
+   整張圖從標題下方到下緣掃過一遍，沒有任何一段能讓這行字站到 4.5:1，
+   所以它落到照片下方的亮底來。照片上只留標題，反而讓建築整個呼吸開。 */
+.hero-caption {
+  margin: 0; padding: .75rem var(--pad) .8rem;
+  font-size: .85rem; line-height: 1.7; letter-spacing: .04em;
+  color: var(--ink-soft); background: var(--white);
+  border-bottom: 1px solid var(--line);
+}
+.hero-stats {
+  display: flex; flex-wrap: wrap; margin: 0; padding: .85rem var(--pad) .95rem;
+  list-style: none; background: var(--white); border-bottom: 1px solid var(--line);
+}
+.hero-stats li { min-width: 0; padding-inline: 1.1rem; border-left: 1px solid var(--line); }
+.hero-stats li:first-child { padding-left: 0; border-left: 0; }
+.hero-stats b {
+  display: block; font-size: 1.25rem; line-height: 1.3; color: var(--brand);
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+.hero-stats span { font-size: .76rem; color: var(--ink-faint); }
+
+.trust-band { background: var(--sand-100); }
+.trust-band .wrap { padding-block: .9rem 1rem; }
+.trust-title { margin: 0 0 .5rem; font-size: .72rem; letter-spacing: .14em; color: var(--ink-faint); }
+.trust-list { display: flex; flex-wrap: wrap; gap: .4rem .45rem; margin: 0; padding: 0; list-style: none; }
+.trust-list li {
+  min-width: 0; font-size: .8rem; line-height: 1.6; color: var(--teal-900);
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: 100px; padding: .2rem .7rem;
+}
+
+/* ---------- 提案頁自己的外框 ----------
+   手機上滿版，和真的首頁一模一樣；桌機上收成 390px 一欄模擬手機。 */
+.note { padding: 1.4rem var(--pad) 2.4rem; }
+.note h2 { margin: 1.2rem 0 .5rem; font-size: 1.02rem; color: var(--brand); line-height: 1.5; }
+.note h2:first-child { margin-top: 0; }
+.note p { margin: 0 0 .6rem; font-size: .85rem; color: var(--ink-soft); line-height: 1.8; }
+.note ul { margin: 0 0 .6rem; padding-left: 1.1rem; font-size: .84rem; color: var(--ink-soft); line-height: 1.8; }
+.note td, .note th { font-size: .8rem; padding: .3rem .6rem .3rem 0; text-align: left; vertical-align: top; }
+.note table { border-collapse: collapse; margin-bottom: .8rem; }
+
+@media (min-width: 600px) {
+  .phone { max-width: 390px; margin-inline: auto; background: #fbf8f3;
+           border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .note { max-width: 42rem; margin-inline: auto; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要內容</a>
+
+<div class="phone">
+  <main id="main">
+    <h1 class="sr-only">芳仁牙醫診所 — 雲林斗六永樂街，在地四十年</h1>
+
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+      </figure>
+
+      <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <path fill="currentColor" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062"/>
+                  <path fill="#000" fill-opacity=".45" d="M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </header>
+
+        <p class="hero-line">小時候被大人牽著來<br>現在牽著別人</p>
+      </div>
+    </div>
+
+    <p class="hero-caption">從中華路到永樂街　四十多年</p>
+
+    <ul class="hero-stats">
+      <li><b>1983</b><span>開業至今</span></li>
+      <li><b>9</b><span>位醫師駐診</span></li>
+      <li><b>6</b><span>個部定專科</span></li>
+    </ul>
+
+    <section class="trust-band">
+      <div class="wrap">
+        <p class="trust-title">治療項目</p>
+        <ul class="trust-list">
+          <li>一般牙科・定期檢查</li>
+          <li>牙周治療</li>
+          <li>兒童牙科</li>
+          <li>齒顎矯正</li>
+          <li>植牙・假牙重建</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="note">
+  <h2>沿用 PPT 的部分</h2>
+  <ul>
+    <li>夜景照滿版，不加漸層、不加遮罩</li>
+    <li>白字拉透明度，讓照片的層次透出來</li>
+    <li>文案用空格斷句，不用全形逗號</li>
+    <li>診所名與副標齊頭齊尾（PPT 用的是分散對齊，同一個做法）</li>
+  </ul>
+
+  <h2>修掉的三件事</h2>
+  <ul>
+    <li><b>右邊那條白邊</b>：PPT 裡照片寬 11.34 吋、投影片寬 13.33 吋，右側約 15% 是純白。這裡照片滿版。</li>
+    <li><b>層級翻過來</b>：PPT 的選單是 16pt 粗體、文案只有 12pt，選單比主文案還重。這裡主文案最大、選單最小也不粗體。</li>
+    <li><b>左緣收成一條</b>：PPT 有三條左緣（Logo 0.26 吋、診所名 1.23 吋、文案右對齊所以左邊呈鋸齒）。這裡 Logo、主文案、下方那句全部切齊同一條線。</li>
+  </ul>
+
+  <table>
+    <tr><th>元素</th><th>PPT</th><th>這一版（390px）</th></tr>
+    <tr><td>主文案</td><td>12pt / 65%</td><td><b>18px / 92%</b></td></tr>
+    <tr><td>診所名</td><td>24pt 粗 / 92%</td><td>16px 粗 / 95%</td></tr>
+    <tr><td>選單</td><td>16pt 粗 / 92%</td><td>12px 不粗 / 72%</td></tr>
+    <tr><td>副標</td><td>16pt / 65%</td><td>11px / 62%</td></tr>
+  </table>
+
+  <h2>一個位置上的調整</h2>
+  <p>「從中華路到永樂街　四十多年」從照片上移到了照片下方。這不是美感判斷，是量出來的：手機是直式，照片只有 390×258，PPT 上那片好用的暗部到手機上被壓掉一大半。我把這行字從標題下方一路掃到照片下緣、每 4px 試一次，逐像素算它跟照片的對比 —— 最好的一段也只有 3.9:1，最差的地方只有 1.2:1（路面標線與車燈的小亮點，白字會被直接打斷）。</p>
+  <p>標題本身留在照片上沒問題：實測最差 4.9:1、平均 10.4:1。所以照片上只留標題，第二句退到下方亮底 —— 順帶讓中段的建築整個空出來呼吸。</p>
+  <table>
+    <tr><th>元素</th><th>最差對比</th><th>平均</th></tr>
+    <tr><td>診所名</td><td>13.2:1</td><td>15.5:1</td></tr>
+    <tr><td>副標</td><td>5.8:1</td><td>6.8:1</td></tr>
+    <tr><td>選單</td><td>6.5:1</td><td>7.4:1</td></tr>
+    <tr><td>主文案</td><td>4.9:1</td><td>10.4:1</td></tr>
+  </table>
+
+  <h2>還沒做的</h2>
+  <ul>
+    <li>桌機版的排法（這一頁只處理手機 390px）</li>
+    <li>捲下去之後接明亮的診療室照片，把溫度補回來——目前只用白底的數字列與治療項目接住</li>
+  </ul>
+  <p>首頁主視覺與夜景照片為芳仁牙醫診所自有。這一頁完全不動正式首頁。</p>
+</div>
+
+</body>
+</html>
