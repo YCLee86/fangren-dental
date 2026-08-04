@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- 這是未上線的改版提案頁，不要讓搜尋引擎收錄 -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+
+<title>B 版・照片上不放文案 — 芳仁牙醫診所改版預覽</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+
+<!--
+  這一頁的樣式刻意全部內嵌、不引用 assets/style.css：
+  它是提案用的靜態快照，共用檔案會讓改預覽時不小心動到正式站。
+
+  B 版（2026-08-04）：照片上完全不放文案。只做手機版。
+  · 照片維持原圖 800×546 完整呈現，不裁切、不加漸層、不加遮罩、不加色帶
+  · 照片上只有頁首，背景全透明
+  · 標題與副標落在照片下方的白底區，和頁首切齊同一條左緣
+  · 照片本身很強（清水模、藍天、街角），不壓字畫面最乾淨，
+    文字回到白底也拿回完整的字級與行距自由
+  · 頁首字級用 cqw，跟著照片寬度等比縮放，與建築的相對位置永遠固定
+-->
+<style>:root { color-scheme: light; }</style>
+<style>
+:root {
+  --wide: 68rem;
+  --pad: clamp(1rem, 4vw, 2rem);
+
+  /* 診所識別色：取自 Illustrator 原檔第三頁的色票 */
+  --brand: #5D6D55;
+  --brand-sub: #58605D;              /* 副標的灰 */
+  --ink-brand: #333C2F;              /* 壓在天空上的深字，同色系深階 */
+
+  --teal-900: #0b3f42;
+  --sand-50: #fbf8f3;
+  --sand-100: #f3ece1;
+  --ink: #1c2426;
+  --ink-soft: #4d5b5e;
+  --ink-faint: #7c8a8d;
+  --line: #e2e0d8;
+  --white: #fff;
+  --radius: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--sand-50);
+  color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.85;
+  letter-spacing: .01em;
+  overflow-x: hidden;               /* 最後一道防線：頁面永不橫向捲動 */
+}
+body, p, li, h1, h2, h3, h4 { overflow-wrap: break-word; word-break: break-word; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--brand); }
+
+.wrap { width: 100%; max-width: var(--wide); margin-inline: auto; padding-inline: var(--pad); }
+
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 60; background: var(--white); color: var(--teal-900); padding: .6rem 1rem; }
+.skip-link:focus { left: .5rem; top: .5rem; }
+
+/* ==========================================================================
+   HERO 舞台：照片 ＋ 壓在照片上的頁首與文案
+   .hero-stage 同時是定位基準與 container；疊在照片上的東西都用 cqw 計算。
+   ========================================================================== */
+.hero-stage { position: relative; container-type: inline-size; background: #b9cfe0; }
+.hero-photo { margin: 0; }
+.hero-photo img { width: 100%; height: auto; }   /* 原圖比例 800:546，完全不裁 */
+
+/* ---------- 頁首（透明，壓在照片上） ---------- */
+.site-header { position: absolute; inset: 0 0 auto 0; z-index: 5; }
+.site-header .wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 3cqw; padding-block: 2.6cqw; padding-inline: 4cqw;
+}
+.brand { display: flex; align-items: center; gap: 2.6cqw; color: var(--brand); text-decoration: none; }
+/* Logo 圖案：向量直接取自 Illustrator 原檔，沒有重畫 */
+.brand-mark { flex: 0 0 11cqw; display: block; }
+.brand-mark svg { display: block; width: 100%; height: auto; }
+.brand-text { display: block; }
+/* 診所名與底下那行左右兩端都切齊：letter-spacing 歸零＋副標 justify */
+.brand-text b { display: block; font-weight: 700; font-size: 4.3cqw; line-height: 1.25; letter-spacing: 0; }
+.brand-text small {
+  display: block; font-weight: 500; font-size: 2.9cqw; color: var(--brand-sub);
+  line-height: 1.6; letter-spacing: 0; text-align: justify; text-align-last: justify;
+}
+.site-nav { display: flex; gap: 3.4cqw; font-size: 3.3cqw; line-height: 1.4; }
+.site-nav a { color: var(--brand); text-decoration: none; white-space: nowrap; font-weight: 500; }
+.site-nav a:hover { color: #7d8f73; }
+
+/* ---------- 照片下方：標題區 ----------
+   文字離開照片之後就不必再遷就天空的位置，字級、行距、段落間距
+   全部可以照排版該有的樣子來——這是這一版最大的好處。 */
+.hero-copy { background: var(--white); border-bottom: 1px solid var(--line); }
+.hero-copy .wrap { padding-block: 1.5rem 1.6rem; }
+.hero-copy h1 {
+  margin: 0; color: var(--ink-brand);
+  font-size: 1.42rem; font-weight: 700; line-height: 1.6; letter-spacing: 0;
+}
+.hero-copy p {
+  margin: .7rem 0 0; color: var(--ink-soft);
+  font-size: .95rem; font-weight: 500; line-height: 1.9; letter-spacing: 0;
+}
+
+/* ---------- 數字列 ---------- */
+.hero-stats {
+  display: flex; flex-wrap: wrap; margin: 0; padding: .8rem var(--pad) .9rem;
+  list-style: none; background: var(--white); border-bottom: 1px solid var(--line);
+}
+.hero-stats li { min-width: 0; padding-inline: 1.1rem; border-left: 1px solid var(--line); }
+.hero-stats li:first-child { padding-left: 0; border-left: 0; }
+.hero-stats b { display: block; font-size: 1.25rem; line-height: 1.3; color: var(--brand); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.hero-stats span { font-size: .76rem; color: var(--ink-faint); }
+
+/* ---------- 治療項目 ---------- */
+.trust-band { background: var(--sand-100); }
+.trust-band .wrap { padding-block: .9rem 1rem; }
+.trust-title { margin: 0 0 .5rem; font-size: .72rem; letter-spacing: .14em; color: var(--ink-faint); }
+.trust-list { display: flex; flex-wrap: wrap; gap: .4rem .45rem; margin: 0; padding: 0; list-style: none; }
+.trust-list li {
+  min-width: 0; font-size: .8rem; line-height: 1.6; color: var(--teal-900);
+  background: var(--white); border: 1px solid var(--line); border-radius: 100px; padding: .2rem .7rem;
+}
+
+/* ---------- 提案頁的外框與說明（不是網站的一部分） ----------
+   手機上滿版，和真的首頁一模一樣；桌機上收成 390px 一欄模擬手機。 */
+.note { padding: 1.4rem var(--pad) 2.4rem; }
+.note h2 { margin: 0 0 .5rem; font-size: 1.05rem; color: var(--brand); line-height: 1.5; }
+.note ul { margin: 0 0 .8rem; padding-left: 1.1rem; font-size: .85rem; color: var(--ink-soft); line-height: 1.8; }
+.note p { margin: 0; font-size: .85rem; color: var(--ink-soft); line-height: 1.8; }
+
+@media (min-width: 600px) {
+  .phone { max-width: 390px; margin-inline: auto; background: var(--sand-50);
+           border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .note { max-width: 390px; margin-inline: auto; padding-inline: 0; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要內容</a>
+
+<div class="phone">
+  <main id="main">
+
+    <div class="hero-stage">
+      <header class="site-header">
+        <div class="wrap">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai 第三頁，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <path fill="currentColor" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062"/>
+                  <path fill="#fff" d="M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </div>
+      </header>
+
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-800.jpg"
+             srcset="/assets/hero-clinic-800.jpg 800w, /assets/hero-clinic.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所的清水模建築外觀，位於斗六市永樂街街角"
+             width="1600" height="1091" fetchpriority="high">
+      </figure>
+    </div>
+
+    <section class="hero-copy">
+      <div class="wrap">
+        <h1>小時候被大人牽著來，<br>現在牽著別人</h1>
+        <p>從中華路到永樂街，四十多年，有跟著換的，也有一直顧的。斗六厝邊這些年最常問的，一篇一篇寫在這裡。</p>
+      </div>
+    </section>
+
+    <ul class="hero-stats">
+      <li><b>1983</b><span>開業至今</span></li>
+      <li><b>9</b><span>位醫師駐診</span></li>
+      <li><b>6</b><span>個部定專科</span></li>
+    </ul>
+
+    <section class="trust-band">
+      <div class="wrap">
+        <p class="trust-title">治療項目</p>
+        <ul class="trust-list">
+          <li>一般牙科・定期檢查</li>
+          <li>牙周治療</li>
+          <li>兒童牙科</li>
+          <li>齒顎矯正</li>
+          <li>植牙・假牙重建</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="note">
+  <h2>B 版：照片上完全不放文案</h2>
+  <ul>
+    <li>照片上只有頁首，一個字都不壓——畫面最乾淨，照片自己說話</li>
+    <li>標題落在照片下方的白底區，和頁首切齊同一條左緣</li>
+    <li>文字回到白底，字級、行距、段落間距全部照排版該有的樣子，不必遷就天空</li>
+    <li>原本四行的文案在這裡可以完整保留，不必砍</li>
+    <li>只做手機版</li>
+  </ul>
+  <p><a href="/preview/hero-a/">看 A 版（照片上留兩行）→</a></p>
+</div>
+
+</body>
+</html>
