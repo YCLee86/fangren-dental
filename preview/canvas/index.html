@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- 這是未上線的改版提案頁，不要讓搜尋引擎收錄 -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+
+<title>一塊大畫布・暗夜門面 × 淺色內文（手機 390px） — 芳仁牙醫診所改版預覽</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+
+<!--
+  這一頁的樣式刻意全部內嵌、不引用 assets/style.css；也完全不動首頁 index.html。
+
+  2026-08-04。取色來源改為桌面 02-Final（開幕茶會約 290 張手機紀錄 ＋ 專業攝影原檔
+  ＋ Logo顏色.pptx）。
+
+  最重要的發現：診所已經有一套官方色票（Logo顏色.pptx 裡的八個色），
+  而且家具、磁磚、花藝都是照它挑的——不需要再發明配色。實測色相差：
+    診療椅 #4f6361 ↔ 深綠松 #214D48        ΔH=1
+    候診沙發 #4e718b ↔ 藍灰 #3C596B        ΔH=3
+    開幕花深紅 #89202d ↔ 磚紅 #AF4C52      ΔH=3
+    圓凳木件 #8d5e3a ↔ 焦糖褐 #9B735E      ΔH=5
+    磚紅長椅 #7c3721 ↔ 焦糖褐 #9B735E      ΔH=6
+    單椅布料 #8e7577 ↔ Deep Taupe #7D5A58  ΔH=8
+    茶室深藍磁磚 #1d273d ↔ 藍灰 #3C596B    ΔH=18
+
+  結構上的改變（依使用者指示）：暗夜只留在 HERO，不再延伸到內文區。
+  兩者之間的分界是那條 3px 木色線——對應「唯一有溫度的是地板」，
+  它是你走進診所時踩到的那個平面。
+
+  花藝的邏輯直接翻成版面規則：實測開幕花藝照片，花本身只佔畫面 1~22%，
+  其餘全是枝葉與灰。所以——
+    綠（深綠松／苔綠）是枝條，可以重複出現；
+    花（磚紅／Deep Taupe／藍灰）一種只出現一次，彼此隔開。
+-->
+<style>:root { color-scheme: light dark; }</style>
+<style>
+/* ==========================================================================
+   共用骨架
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: #17181a; color: #dcdedb;
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.85; letter-spacing: .01em;
+  overflow-x: hidden;
+}
+body, p, li, h1, h2, h3, h4, td, th { overflow-wrap: break-word; word-break: break-word; }
+img { max-width: 100%; height: auto; display: block; }
+
+.phone, .swatch-wrap, .case-head, .intro, .foot { }
+
+/* ---------- 色彩定義 ---------- */
+.phone, .mini {
+  /* 夜——只用在 HERO 與它下面那條窄帶 */
+  --night:      #191614;
+  --night-2:    #211e1b;
+  --night-line: #38342f;
+  --night-text: #e3e1e0;
+  --night-soft: #aaa49e;
+  --wood:       #a18262;   /* 地板實測色，夜與室內的分界 */
+
+  /* 室內——木線以下全部 */
+  --paper:    #ecede7;
+  --card:     #f6f7f2;
+  --ink:      #2a2c27;
+  --ink-soft: #5c5f57;
+  --rule:     #d9dbd1;
+
+  /* 診所官方色票（Logo顏色.pptx，原值一個都沒動） */
+  --c-taupe:   #7D5A58;
+  --c-caramel: #9B735E;
+  --c-brick:   #AF4C52;
+  --c-mauve:   #5F5D66;
+  --c-blue:    #3C596B;
+  --c-teal:    #214D48;
+  --c-moss:    #5D6D55;
+  --c-sage:    #A1A398;
+}
+/* 三個底色候選，只換這三個值 */
+[data-paper="concrete"] { --paper: #edeceb; --card: #f7f6f5; --rule: #dcdad8; }
+[data-paper="canvas"]   { --paper: #f1ece5; --card: #faf7f2; --rule: #e2dbd0; }
+[data-paper="sage"]     { --paper: #ecede7; --card: #f6f7f2; --rule: #d9dbd1; }
+
+/* ---------- 外框與說明 ---------- */
+.case { margin: 0 0 2.4rem; }
+.case-head { padding: 0 1rem .9rem; }
+.case-head h2 { margin: 0 0 .2rem; font-size: 1.05rem; color: #e6e8e4; }
+.case-head p { margin: 0; font-size: .84rem; line-height: 1.75; color: #93968f; }
+.phone { background: var(--night); }
+@media (min-width: 600px) {
+  .phone { max-width: 390px; margin-inline: auto; border-radius: 14px; overflow: hidden;
+           border: 1px solid #2b2c29; }
+  .case-head, .intro, .foot, .minis { max-width: 42rem; margin-inline: auto; }
+}
+.swatch-wrap { padding: 0 1rem 1.9rem; }
+@media (min-width: 600px) { .swatch-wrap { max-width: 390px; margin-inline: auto; padding-inline: 0; } }
+.swatches { display: flex; margin: 0; padding: 0; list-style: none; }
+.swatches li { flex: 1; height: 32px; position: relative; }
+.swatches li span {
+  position: absolute; inset: auto 0 -1.15rem 0; text-align: center;
+  font-size: .55rem; color: #7f827c;
+}
+
+/* ==========================================================================
+   夜：HERO
+   照片維持原圖比例，不裁切、不加漸層、不加遮罩。疊字字級用 cqw。
+   ========================================================================== */
+.hero-stage { position: relative; container-type: inline-size; background: #0f0e0d; }
+.hero-photo { margin: 0; }
+.hero-photo img { width: 100%; height: auto; }
+.hero-copy {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  padding: 3cqw 4cqw 4cqw; pointer-events: none;
+}
+.hero-copy a { pointer-events: auto; }
+.site-header { display: flex; align-items: center; justify-content: space-between; gap: 3cqw; }
+.brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
+.brand-mark { flex: 0 0 9.5cqw; display: block; color: #8ca07f; }
+.brand-mark svg { display: block; width: 100%; height: auto; }
+.brand-mark .dot { fill: var(--night); }
+.brand-text b {
+  display: block; font-weight: 700; font-size: 4.1cqw; line-height: 1.25;
+  letter-spacing: 0; color: rgba(255, 253, 250, .95);
+}
+.brand-text small {
+  display: block; font-weight: 400; font-size: 2.85cqw; line-height: 1.6;
+  letter-spacing: 0; color: rgba(255, 253, 250, .62);
+  text-align: justify; text-align-last: justify;
+}
+.site-nav { display: flex; gap: 3.4cqw; font-size: 3.1cqw; line-height: 1.4; }
+.site-nav a { color: rgba(255, 253, 250, .72); text-decoration: none; white-space: nowrap; font-weight: 500; }
+.hero-line {
+  margin: 4cqw 0 0; max-width: 56cqw;
+  font-size: 4.8cqw; font-weight: 600; line-height: 1.55;
+  color: rgba(255, 253, 250, .92); letter-spacing: .01em;
+}
+/* 夜的最後一道：照片下方那條窄帶。過了它就進到室內。 */
+.deck {
+  margin: 0; padding: .8rem 1rem .9rem;
+  font-size: .85rem; line-height: 1.7; letter-spacing: .04em;
+  color: var(--night-soft); background: var(--night-2);
+}
+
+/* ---------- 地板：夜與室內的分界 ---------- */
+.floor { height: 3px; background: var(--wood); }
+
+/* ==========================================================================
+   室內：淺色內文區
+   ========================================================================== */
+.room { background: var(--paper); color: var(--ink); }
+
+/* 唯一上色的標語。它是那朵「花」。 */
+.lede {
+  margin: 0; padding: 1.4rem 1rem 1.2rem;
+  font-size: 1.22rem; font-weight: 700; line-height: 1.6; letter-spacing: .01em;
+  color: var(--c-brick);
+}
+.lede small {
+  display: block; margin-top: .45rem;
+  font-size: .84rem; font-weight: 400; line-height: 1.8; color: var(--ink-soft);
+}
+
+/* 數字不上色——用墨。那不是需要被強調的東西。 */
+.stats {
+  display: flex; margin: 0; padding: 0 1rem 1.1rem; list-style: none;
+}
+.stats li { min-width: 0; padding-inline: 1.05rem; border-left: 1px solid var(--rule); }
+.stats li:first-child { padding-left: 0; border-left: 0; }
+.stats b {
+  display: block; font-size: 1.28rem; line-height: 1.3; color: var(--ink);
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+.stats span { font-size: .74rem; color: var(--ink-soft); }
+
+.band { padding: 1.1rem 1rem 1.2rem; border-top: 1px solid var(--rule); }
+.band-title { margin: 0 0 .6rem; font-size: .7rem; letter-spacing: .14em; color: var(--ink-soft); }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem .45rem; margin: 0; padding: 0; list-style: none; }
+.chips li {
+  min-width: 0; font-size: .8rem; line-height: 1.6; color: var(--ink-soft);
+  background: var(--card); border: 1px solid var(--rule);
+  border-radius: 100px; padding: .2rem .7rem;
+}
+
+.cards { padding: 1.2rem 1rem 1.4rem; border-top: 1px solid var(--rule); }
+.cards-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: .85rem; }
+.cards-head h3 { margin: 0; font-size: 1.02rem; color: var(--ink); }
+.cards-head a { font-size: .78rem; color: var(--ink-soft); text-decoration: none; }
+.card {
+  display: block; text-decoration: none; color: inherit; margin-bottom: .9rem;
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden;
+}
+.card:last-child { margin-bottom: 0; }
+.card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.card-body { padding: .85rem .95rem 1rem; }
+/* 每張卡一種花。同一種花不會出現第二次。 */
+.tag {
+  display: inline-block; font-size: .7rem; letter-spacing: .06em; color: var(--tag);
+  border: 1px solid var(--tag); border-radius: 100px; padding: .05rem .55rem; margin-bottom: .5rem;
+}
+.card h4 { margin: 0 0 .4rem; font-size: .96rem; line-height: 1.5; color: var(--ink); }
+.card p { margin: 0; font-size: .82rem; line-height: 1.7; color: var(--ink-soft); }
+.card-meta { margin: .7rem 0 0; padding-top: .6rem; border-top: 1px solid var(--rule);
+             font-size: .72rem; color: var(--ink-soft); }
+
+/* ---------- 診所資訊帶 ---------- */
+.info { padding: 1.2rem 1rem 1.5rem; border-top: 1px solid var(--rule); background: var(--card); }
+.info p { margin: 0 0 .4rem; font-size: .82rem; line-height: 1.8; color: var(--ink-soft); }
+/* 綠是枝條，允許重複出現 */
+.info .now { display: inline-flex; align-items: center; gap: .45rem; font-size: .8rem; color: var(--c-teal); font-weight: 500; }
+.info .now::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--c-teal); box-shadow: 0 0 0 3px rgba(33, 77, 72, .18);
+}
+.info .tel {
+  font-size: 1.15rem; font-weight: 700; color: var(--c-blue); text-decoration: none;
+  letter-spacing: .02em; font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 三個底色的小比較 ---------- */
+.minis { padding: 0 1rem 1rem; }
+.mini-row { display: flex; gap: .7rem; }
+.mini {
+  flex: 1; min-width: 0; border-radius: 10px; overflow: hidden;
+  border: 1px solid #2b2c29; background: var(--paper); color: var(--ink);
+}
+.mini .floor { height: 3px; }
+.mini-top { height: 34px; background: var(--night-2); }
+.mini-in { padding: .6rem .6rem .75rem; }
+.mini-in .t { margin: 0 0 .35rem; font-size: .78rem; font-weight: 700; line-height: 1.5; color: var(--c-brick); }
+.mini-in .p { margin: 0 0 .5rem; font-size: .6rem; line-height: 1.6; color: var(--ink-soft); }
+.mini-in .k {
+  display: inline-block; font-size: .55rem; color: var(--c-blue);
+  border: 1px solid var(--c-blue); border-radius: 100px; padding: 0 .4rem;
+}
+.mini-cap { margin: .45rem 0 0; font-size: .62rem; line-height: 1.6; color: #93968f; text-align: center; }
+.mini-cap b { display: block; color: #c6c9c3; font-size: .68rem; font-weight: 600; }
+/* 手機上三格並排只有 ~112px 寬，內文擠成一團反而看不出色調差別 —— 收掉，只留標語與標籤 */
+@media (max-width: 520px) {
+  .minis { padding-inline: .8rem; }
+  .mini-row { gap: .5rem; }
+  .mini-in { padding: .5rem .45rem .6rem; }
+  .mini-in .t { font-size: .7rem; }
+  .mini-in .p { display: none; }
+  .mini-in .k { font-size: .5rem; }
+}
+
+/* ---------- 說明 ---------- */
+.intro, .foot { padding: 1.5rem 1rem; color: #a9aca6; }
+.intro h1 { margin: 0 0 .6rem; font-size: 1.2rem; color: #e6e8e4; line-height: 1.5; }
+.intro h2, .foot h2 { margin: 1.5rem 0 .5rem; font-size: 1rem; color: #e6e8e4; }
+.intro p, .foot p { margin: 0 0 .7rem; font-size: .86rem; line-height: 1.85; }
+.tbl-scroll { overflow-x: auto; margin: .2rem 0 1rem; }
+.intro table, .foot table { border-collapse: collapse; }
+.intro td, .intro th, .foot td, .foot th {
+  font-size: .78rem; padding: .28rem .7rem .28rem 0; text-align: left; vertical-align: top;
+  color: #a9aca6; border-bottom: 1px solid #262825; white-space: nowrap;
+}
+.intro th, .foot th { color: #838680; font-weight: 500; }
+.chip-inline { display: inline-block; width: .78rem; height: .78rem; border-radius: 3px;
+               vertical-align: -1px; margin-right: .3rem; }
+.note-box { border-left: 2px solid #3a3c38; padding-left: .9rem; margin: 0 0 1rem; }
+.samples { margin: .2rem 0 1.2rem; }
+.samples img { width: 100%; border-radius: 8px; }
+.samples figcaption { margin-top: .5rem; font-size: .74rem; line-height: 1.7; color: #838680; }
+.brandgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin: .4rem 0 1.1rem; padding: 0; list-style: none; }
+.brandgrid li { font-size: .6rem; line-height: 1.5; color: #93968f; }
+.brandgrid i { display: block; height: 42px; border-radius: 6px; margin-bottom: .3rem; }
+.brandgrid b { display: block; color: #c6c9c3; font-weight: 600; font-size: .66rem; }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>一塊大畫布・暗夜門面 × 淺色內文</h1>
+  <p>取色來源換成桌面 <code>02-Final</code>：開幕茶會約 290 張手機紀錄、專業攝影原檔，以及 <code>Logo顏色.pptx</code>。</p>
+
+  <h2>先講最重要的一件事：診所已經有一套官方色票</h2>
+  <p><code>Logo顏色.pptx</code> 裡就是八個色。我把它們跟診所裡實際量到的東西比對，色相幾乎完全對得上——<b>家具、磁磚、開幕花藝，都是照這套色票挑的</b>。所以網站不需要再發明配色，把這套拿來用就好。</p>
+
+  <ul class="brandgrid">
+    <li><i style="background:#7D5A58"></i><b>Deep Taupe</b>#7D5A58</li>
+    <li><i style="background:#9B735E"></i><b>焦糖褐</b>#9B735E</li>
+    <li><i style="background:#AF4C52"></i><b>磚紅</b>#AF4C52</li>
+    <li><i style="background:#5F5D66"></i><b>灰紫</b>#5F5D66</li>
+    <li><i style="background:#3C596B"></i><b>藍灰</b>#3C596B</li>
+    <li><i style="background:#214D48"></i><b>深綠松</b>#214D48</li>
+    <li><i style="background:#5D6D55"></i><b>苔綠</b>#5D6D55</li>
+    <li><i style="background:#A1A398"></i><b>灰綠</b>#A1A398</li>
+  </ul>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>診所裡量到的</th><th>實測色</th><th>官方色票</th><th>色相差</th></tr>
+    <tr><td>診療椅</td><td><span class="chip-inline" style="background:#4f6361"></span>#4f6361</td><td><span class="chip-inline" style="background:#214D48"></span>深綠松</td><td>ΔH=1</td></tr>
+    <tr><td>候診沙發布料</td><td><span class="chip-inline" style="background:#4e718b"></span>#4e718b</td><td><span class="chip-inline" style="background:#3C596B"></span>藍灰</td><td>ΔH=3</td></tr>
+    <tr><td>開幕花・深紅</td><td><span class="chip-inline" style="background:#89202d"></span>#89202d</td><td><span class="chip-inline" style="background:#AF4C52"></span>磚紅</td><td>ΔH=3</td></tr>
+    <tr><td>圓凳與木件</td><td><span class="chip-inline" style="background:#8d5e3a"></span>#8d5e3a</td><td><span class="chip-inline" style="background:#9B735E"></span>焦糖褐</td><td>ΔH=5</td></tr>
+    <tr><td>磚紅長椅</td><td><span class="chip-inline" style="background:#7c3721"></span>#7c3721</td><td><span class="chip-inline" style="background:#9B735E"></span>焦糖褐</td><td>ΔH=6</td></tr>
+    <tr><td>單椅布料</td><td><span class="chip-inline" style="background:#8e7577"></span>#8e7577</td><td><span class="chip-inline" style="background:#7D5A58"></span>Deep Taupe</td><td>ΔH=8</td></tr>
+    <tr><td>茶室深藍磁磚</td><td><span class="chip-inline" style="background:#1d273d"></span>#1d273d</td><td><span class="chip-inline" style="background:#3C596B"></span>藍灰</td><td>ΔH=18</td></tr>
+  </table>
+  </div>
+
+  <figure class="samples">
+    <img src="samples.jpg" width="760" height="328" alt="八張照片的局部裁切，每張下方標示實測出來的色票與色碼">
+    <figcaption>上排是開幕花藝與茶室：深紅、含羞草黃、櫻花與深藍磁磚、繡球酒紅葉。下排是枝葉、識別名片、木桌面、清水模亮部。</figcaption>
+  </figure>
+
+  <h2>花藝的邏輯，可以直接當版面規則</h2>
+  <p>你說花很顯眼，但用大量綠色和枝條讓每種花「各自是一片風景」，不互相吵。我把開幕花藝的照片整張跑主色，這件事是量得出來的：</p>
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>照片</th><th>花的顏色</th><th>花佔畫面</th><th>其餘</th></tr>
+    <tr><td>門口紅花籃</td><td><span class="chip-inline" style="background:#89202d"></span>#89202d</td><td>13.0%</td><td>灰、黑、白</td></tr>
+    <tr><td>門口紅花籃（另一張）</td><td><span class="chip-inline" style="background:#731923"></span>#731923</td><td>11.2%</td><td>灰、木、白</td></tr>
+    <tr><td>含羞草</td><td><span class="chip-inline" style="background:#9d8313"></span>#9d8313</td><td>13.7%</td><td>灰牆、深色</td></tr>
+    <tr><td>繡球</td><td><span class="chip-inline" style="background:#6c1226"></span>#6c1226</td><td>21.5%</td><td>灰、深綠</td></tr>
+    <tr><td>茶席櫻花</td><td><span class="chip-inline" style="background:#a0a8b0"></span>#a0a8b0</td><td>1.1%</td><td>深藍磁磚 78%</td></tr>
+  </table>
+  </div>
+  <p><b>花本身只佔畫面的 1～22%。</b>所以版面規則就照這個定：</p>
+  <div class="note-box">
+    <p style="margin:0"><b>綠是枝條，可以重複出現</b>（深綠松、苔綠——「現在看診中」的燈點、分類標籤）。<b>花一種只出現一次</b>（磚紅、Deep Taupe、藍灰），而且彼此隔開，中間全是紙的顏色。整頁看下來，任何一個手機屏幕上最多只會同時看到兩個彩色。</p>
+  </div>
+
+  <h2>暗夜只留在 HERO，木線是分界</h2>
+  <p>照你說的，暗色不再延伸到內文。中間那條 3px 的木色線就是分界——對應診所裡唯一有溫度的東西是地板。它不是裝飾線，是你走進門踩到的那個平面：線以上是站在街上看夜裡亮著燈的診所，線以下就是室內。</p>
+</div>
+
+<!-- ============ 主案 ============ -->
+<section class="case">
+  <div class="case-head">
+    <h2>主案：底色＝品牌灰綠紙 <span style="color:#A1A398">#ecede7</span></h2>
+    <p>清水模的明度，配上官方色票裡那個灰綠 #A1A398 的色偏。不是白、也不是純灰，是一張很淡的紙。</p>
+  </div>
+  <div class="phone" data-paper="sage">
+    <!-- 夜 -->
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+      </figure>
+      <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <path fill="currentColor" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062"/>
+                  <path class="dot" d="M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#">全部文章</a><a href="#">醫師介紹</a><a href="#">診所資訊</a>
+          </nav>
+        </header>
+        <p class="hero-line">小時候被大人牽著來<br>現在牽著別人</p>
+      </div>
+    </div>
+    <p class="deck">從中華路到永樂街　四十多年</p>
+
+    <!-- 地板：夜與室內的分界 -->
+    <div class="floor"></div>
+
+    <!-- 室內 -->
+    <div class="room">
+      <p class="lede">牙齒的事，慢慢講給你聽<small>看牙不必等到痛。這裡放的是我們平常在診間裡會多說的那幾句。</small></p>
+      <ul class="stats">
+        <li><b>1983</b><span>開業至今</span></li>
+        <li><b>9</b><span>位醫師駐診</span></li>
+        <li><b>6</b><span>個部定專科</span></li>
+      </ul>
+      <div class="band">
+        <p class="band-title">治療項目</p>
+        <ul class="chips"><li>一般牙科・定期檢查</li><li>牙周治療</li><li>兒童牙科</li><li>齒顎矯正</li><li>植牙・假牙重建</li></ul>
+      </div>
+      <div class="cards">
+        <div class="cards-head"><h3>最新文章</h3><a href="#">全部 →</a></div>
+        <a class="card" href="#" style="--tag:#214D48">
+          <img src="/assets/clinic-room-1-600.jpg" alt="診療室內部，木質地板與收納櫃" loading="lazy">
+          <div class="card-body">
+            <span class="tag">日常保健</span>
+            <h4>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h4>
+            <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙。</p>
+            <p class="card-meta">2026 年 3 月 11 日</p>
+          </div>
+        </a>
+        <a class="card" href="#" style="--tag:#3C596B">
+          <img src="/assets/clinic-room-2-600.jpg" alt="候診區，木質長桌與灰色地坪" loading="lazy">
+          <div class="card-body">
+            <span class="tag">兒童牙科</span>
+            <h4>孩子第一次看牙：時機、氟化物與窩溝封填</h4>
+            <p>第一顆牙長出來後半年內就可以來。第一次不一定要治療，先讓他知道這裡不可怕。</p>
+            <p class="card-meta">2026 年 5 月 6 日</p>
+          </div>
+        </a>
+        <a class="card" href="#" style="--tag:#7D5A58">
+          <img src="/assets/clinic-room-1-600.jpg" alt="診療室一角" loading="lazy">
+          <div class="card-body">
+            <span class="tag">牙周治療</span>
+            <h4>牙齦流血不是火氣大：牙周病的早期訊號</h4>
+            <p>刷牙時的那一點血，多半不是上火。它是牙齦在告訴你，牙菌斑已經待得太久了。</p>
+            <p class="card-meta">2026 年 4 月 15 日</p>
+          </div>
+        </a>
+      </div>
+      <div class="info">
+        <p class="now">現在看診中・晚上看到 20:30</p>
+        <p><a class="tel" href="tel:+88655339369">05-533-9369</a></p>
+        <p>雲林縣斗六市永樂街 70 號</p>
+      </div>
+    </div>
+  </div>
+  <div class="swatch-wrap">
+    <ul class="swatches">
+      <li style="background:#191614"><span>夜</span></li>
+      <li style="background:#a18262"><span>地板</span></li>
+      <li style="background:#ecede7"><span>紙</span></li>
+      <li style="background:#2a2c27"><span>墨</span></li>
+      <li style="background:#AF4C52"><span>磚紅</span></li>
+      <li style="background:#3C596B"><span>藍灰</span></li>
+      <li style="background:#214D48"><span>深綠松</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 三個底色比較 ============ -->
+<div class="case-head" style="padding-top:.6rem">
+  <h2>底色三選一</h2>
+  <p>三個都不是白。可讀性上完全等價（同一組文字的對比度差距在 0.05:1 以內），所以純粹是氣質的選擇。</p>
+</div>
+<div class="minis">
+  <div class="mini-row">
+    <div>
+      <div class="mini" data-paper="concrete">
+        <div class="mini-top"></div><div class="floor"></div>
+        <div class="mini-in">
+          <p class="t">牙齒的事，慢慢講給你聽</p>
+          <p class="p">看牙不必等到痛。這裡放的是我們平常在診間裡會多說的那幾句。</p>
+          <span class="k">兒童牙科</span>
+        </div>
+      </div>
+      <p class="mini-cap"><b>① 清水模灰</b>#edeceb・最中性</p>
+    </div>
+    <div>
+      <div class="mini" data-paper="canvas">
+        <div class="mini-top"></div><div class="floor"></div>
+        <div class="mini-in">
+          <p class="t">牙齒的事，慢慢講給你聽</p>
+          <p class="p">看牙不必等到痛。這裡放的是我們平常在診間裡會多說的那幾句。</p>
+          <span class="k">兒童牙科</span>
+        </div>
+      </div>
+      <p class="mini-cap"><b>② 帆布米</b>#f1ece5・最暖</p>
+    </div>
+    <div>
+      <div class="mini" data-paper="sage">
+        <div class="mini-top"></div><div class="floor"></div>
+        <div class="mini-in">
+          <p class="t">牙齒的事，慢慢講給你聽</p>
+          <p class="p">看牙不必等到痛。這裡放的是我們平常在診間裡會多說的那幾句。</p>
+          <span class="k">兒童牙科</span>
+        </div>
+      </div>
+      <p class="mini-cap"><b>③ 品牌灰綠</b>#ecede7・主案</p>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <h2>三個底色是怎麼來的</h2>
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>底色</th><th>色</th><th>彩度</th><th>R−B</th><th>依據</th></tr>
+    <tr><td>① 清水模灰</td><td><span class="chip-inline" style="background:#edeceb"></span>#edeceb</td><td>5.3%</td><td>+2</td><td>外牆亮部實測 #cbcac9（彩度 1.9%）</td></tr>
+    <tr><td>② 帆布米</td><td><span class="chip-inline" style="background:#f1ece5"></span>#f1ece5</td><td>30%</td><td>+12</td><td>識別帆布袋實測 #d1c7bc</td></tr>
+    <tr><td>③ 品牌灰綠</td><td><span class="chip-inline" style="background:#ecede7"></span>#ecede7</td><td>14.3%</td><td>+5</td><td>清水模的明度 ＋ 官方灰綠 #A1A398 的色偏</td></tr>
+  </table>
+  </div>
+  <p>（彩度數字在明度 92% 這一帶會被放大，看 R−B 比較準：② 是明顯的暖米，③ 微微偏綠，① 幾乎中性。）</p>
+
+  <h2>對比度逐一實測</h2>
+  <p>官方色票直接當文字，壓在紙與卡片上：</p>
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>色票</th><th>紙 #ecede7</th><th>卡 #f6f7f2</th><th>能當</th></tr>
+    <tr><td><span class="chip-inline" style="background:#214D48"></span>深綠松 #214D48</td><td>8.03:1</td><td>8.79:1</td><td>內文、標籤、標題</td></tr>
+    <tr><td><span class="chip-inline" style="background:#3C596B"></span>藍灰 #3C596B</td><td>6.29:1</td><td>6.88:1</td><td>內文、標籤、標題</td></tr>
+    <tr><td><span class="chip-inline" style="background:#5F5D66"></span>灰紫 #5F5D66</td><td>5.50:1</td><td>6.01:1</td><td>內文、標籤、標題</td></tr>
+    <tr><td><span class="chip-inline" style="background:#7D5A58"></span>Deep Taupe #7D5A58</td><td>5.13:1</td><td>5.61:1</td><td>內文、標籤、標題</td></tr>
+    <tr><td><span class="chip-inline" style="background:#5D6D55"></span>苔綠 #5D6D55</td><td>4.71:1</td><td>5.15:1</td><td>內文、標籤、標題</td></tr>
+    <tr><td><span class="chip-inline" style="background:#AF4C52"></span>磚紅 #AF4C52</td><td>4.48:1</td><td>4.90:1</td><td><b>只能大字</b>（標語、標題）</td></tr>
+    <tr><td><span class="chip-inline" style="background:#9B735E"></span>焦糖褐 #9B735E</td><td>3.56:1</td><td>3.90:1</td><td><b>只能大字</b></td></tr>
+    <tr><td><span class="chip-inline" style="background:#A1A398"></span>灰綠 #A1A398</td><td>2.17:1</td><td>2.38:1</td><td><b>不能當文字</b>，只作底或色塊</td></tr>
+    <tr><td><span class="chip-inline" style="background:#2a2c27"></span>墨 #2a2c27</td><td>11.99:1</td><td>13.11:1</td><td>主文字</td></tr>
+    <tr><td><span class="chip-inline" style="background:#5c5f57"></span>墨淡 #5c5f57</td><td>5.52:1</td><td>6.04:1</td><td>次要文字</td></tr>
+  </table>
+  </div>
+  <p>所以主案裡：<b>標語用磚紅</b>（1.22rem 粗體，屬大字）、<b>分類標籤用深綠松／藍灰／Deep Taupe</b>（小字，都在 5:1 以上）、電話用藍灰、看診中的燈點用深綠松。焦糖褐與灰綠這一版沒用上——量出來它們在淺底上撐不住文字，硬用只會犧牲可讀性。</p>
+  <p>暗夜 HERO 區沿用上一版驗證過的灰階（底 #191614、字 #e3e1e0），390px 無水平捲動。正式首頁完全沒動。</p>
+
+  <h2>還沒做的</h2>
+  <p>桌機版排法；文章內頁；HERO 疊字在淺色版下的第二種寫法；要不要做亮／暗自動切換。</p>
+  <p>照片為芳仁牙醫診所自有（取自 <code>02-Final</code>）。</p>
+</div>
+
+</body>
+</html>
