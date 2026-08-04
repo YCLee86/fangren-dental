@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- 這是未上線的改版提案頁，不要讓搜尋引擎收錄 -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+
+<title>首頁 HERO 手機版三案 — 芳仁牙醫診所改版預覽</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+
+<!--
+  這一頁的樣式刻意全部內嵌、不引用 assets/style.css：
+  它是提案用的靜態快照，共用檔案會讓改預覽時不小心動到正式站。
+
+  三案的共同前提（依 2026-08-04 的指示）：
+  · 版式沿用 C 案：文字直接壓在照片上
+  · 照片比例沿用 A 案：原圖 800×546（約 3:2）完整呈現，不裁切、不變形
+  · 不使用任何漸層、遮罩、模糊或白霧——照片一整張維持原樣
+  · 文字一律收在左上角的天空區，不壓到建築本體
+  三案的差別只在文字的大小與排列方式。
+-->
+<style>:root { color-scheme: light; }</style>
+<style>
+/* ==========================================================================
+   基礎樣式（節錄自正式站，僅保留這一頁用得到的部分）
+   ========================================================================== */
+:root {
+  --content: 44rem;
+  --wide: 68rem;
+  --pad: clamp(1rem, 4vw, 2rem);
+
+  --teal-900: #0b3f42;
+  --teal-700: #12656a;
+  --teal-500: #1a8f95;
+  --teal-100: #d8efef;
+  --sand-50: #fbf8f3;
+  --sand-100: #f3ece1;
+  --ink: #1c2426;
+  --ink-soft: #4d5b5e;
+  --ink-faint: #7c8a8d;
+  --line: #e2e0d8;
+  --white: #fff;
+  --radius: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--sand-50);
+  color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.85;
+  letter-spacing: .01em;
+  overflow-x: hidden;               /* 最後一道防線：頁面永不橫向捲動 */
+}
+body, p, li, h1, h2, h3, h4, figcaption {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--teal-700); }
+
+.wrap { width: 100%; max-width: var(--wide); margin-inline: auto; padding-inline: var(--pad); }
+
+/* ---------- 頁首 ---------- */
+.site-header { background: var(--white); border-bottom: 1px solid var(--line); }
+.site-header .wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; min-height: 62px; flex-wrap: wrap;
+}
+.brand {
+  display: flex; align-items: center; gap: .6rem;
+  font-weight: 700; font-size: 1.05rem; color: var(--teal-900);
+  text-decoration: none; line-height: 1.3;
+}
+.brand-mark {
+  width: 30px; height: 30px; flex: 0 0 30px;
+  display: grid; place-items: center;
+  background: var(--teal-100); border-radius: 9px;
+}
+.brand-mark svg { width: 19px; height: 19px; }
+.brand small { display: block; font-weight: 500; font-size: .68rem; color: var(--ink-faint); letter-spacing: .06em; }
+
+/* ==========================================================================
+   提案頁自己的外框
+   手機上（<600px）每個方案就是滿版、和真的首頁一模一樣。
+   桌機上收成 390px 寬的一欄，模擬手機畫面——所以下面 HERO 內的字級
+   全部用 cqw（相對於 HERO 自己的寬度），不用 vw，桌機看到的比例才會
+   跟手機完全一致。
+   ========================================================================== */
+.page-intro { padding-block: 1.6rem 1.2rem; }
+.page-intro h1 { margin: 0 0 .5rem; font-size: 1.25rem; color: var(--teal-900); line-height: 1.5; }
+.page-intro p { margin: 0 0 .6rem; font-size: .88rem; color: var(--ink-soft); line-height: 1.8; }
+.page-intro ul { margin: 0; padding-left: 1.1rem; font-size: .84rem; color: var(--ink-soft); line-height: 1.8; }
+
+.case { margin-bottom: 2.2rem; }
+.case-label {
+  padding: .75rem var(--pad) .6rem;
+  border-top: 1px solid var(--line);
+}
+.case-label b {
+  display: block; font-size: .95rem; color: var(--teal-900); letter-spacing: .02em;
+}
+.case-label span { display: block; font-size: .8rem; color: var(--ink-faint); line-height: 1.7; }
+
+@media (min-width: 600px) {
+  .phone { max-width: 390px; margin-inline: auto; background: var(--sand-50);
+           border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .case-label { max-width: 390px; margin-inline: auto; border-top: 0; padding-inline: 0; }
+  .page-intro .wrap { max-width: 46rem; }
+}
+
+/* ==========================================================================
+   首頁 HERO（三案共用的底）
+   照片以原比例（800 : 546）整張呈現，不用 object-fit 裁切、不加任何覆蓋層。
+   文字用絕對定位疊在照片上；因為照片與文字都跟著容器寬度等比縮放，
+   文字與建築的相對位置在任何手機寬度下都固定不變。
+   ========================================================================== */
+.hero {
+  position: relative;
+  container-type: inline-size;      /* 讓內部的 cqw 以 HERO 寬度為基準 */
+  background: var(--teal-100);
+  border-bottom: 1px solid var(--line);
+}
+.hero-photo { margin: 0; }
+.hero-photo img { width: 100%; height: auto; }
+
+/* 文字層：蓋滿整張照片，實際內容各案自己收在左上角 */
+.hero-copy {
+  position: absolute; inset: 0;
+  padding: 4cqw;                     /* 與 --pad 在 390px 下等寬（≈15.6px） */
+  pointer-events: none;              /* 只是視覺層，不擋照片 */
+}
+.hero-copy h1, .hero-copy p {
+  margin: 0;
+  color: var(--teal-900);
+  letter-spacing: 0;
+  /* 不加 text-shadow、不加遮罩：深墨綠字落在亮天空上，對比已經足夠 */
+}
+.hero-copy h1 { font-weight: 700; }
+.hero-copy .lede { font-weight: 500; }
+
+/* ---------- 方案一：靠左橫排，標題兩行 + 說明兩行 ----------
+   最接近一般手機首頁的讀法。整塊文字收在左上 40% 寬、上緣 34% 高的天空裡，
+   最低的一行離屋簷還有一段距離。 */
+.case-1 .hero-copy h1 { font-size: 3.8cqw; line-height: 1.55; }
+.case-1 .hero-copy .lede { margin-top: 1.6cqw; font-size: 3.1cqw; line-height: 1.7; }
+
+/* ---------- 方案二：直排標題 ----------
+   標題轉成中文直式，只佔左緣一條約 14% 寬的窄帶，建築完整露出來、
+   一點都沒被壓到。說明文字移到照片下方那一列。 */
+.case-2 .hero-copy h1 {
+  writing-mode: vertical-rl;         /* 直式由右至左，第一行在右邊——中文正確讀序 */
+  font-size: 3.6cqw; line-height: 1.9;
+  /* 直排時「高度」才是一行的長度。用絕對定位讓寬度縮到剛好包住兩行，
+     否則區塊會撐滿整個寬度、字被推到右邊壓在建築上。 */
+  position: absolute; top: 4cqw; left: 4cqw; width: max-content;
+  height: 30cqw;                     /* 一行的長度上限：不往下伸進左邊那塊招牌 */
+}
+.case-2 .hero-caption {
+  padding: .7rem var(--pad) .8rem;
+  margin: 0; font-size: .85rem; line-height: 1.7;
+  color: var(--ink-soft); background: var(--white);
+  border-bottom: 1px solid var(--line);
+}
+
+/* ---------- 方案三：標題橫跨上緣一行 ----------
+   照片最上緣一整條都是天空，標題排成一行走完整個寬度，字可以放到最大；
+   說明再退到左邊小字。標題份量最重的一案。 */
+.case-3 .hero-copy h1 { font-size: 4.9cqw; line-height: 1.35; white-space: nowrap; }
+.case-3 .hero-copy .lede { margin-top: 2.2cqw; font-size: 3.1cqw; line-height: 1.7; }
+
+/* ---------- 照片下方的數字列（三案共用） ----------
+   原本 C 案把數字壓在照片下緣、底下墊一塊半透明深色板——那塊板子也是
+   一種遮罩，這裡一併拿掉，數字改放照片下方的白底列。 */
+.hero-stats {
+  display: flex; flex-wrap: wrap; margin: 0; padding: .8rem var(--pad) .9rem;
+  list-style: none; background: var(--white); border-bottom: 1px solid var(--line);
+}
+.hero-stats li {
+  min-width: 0; padding-inline: 1.1rem;
+  border-left: 1px solid var(--line);
+}
+.hero-stats li:first-child { padding-left: 0; border-left: 0; }
+.hero-stats b {
+  display: block; font-size: 1.25rem; line-height: 1.3; color: var(--teal-900);
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+.hero-stats span { font-size: .76rem; color: var(--ink-faint); }
+
+/* 接在 HERO 後面的治療項目列，用來確認首屏整體的份量 */
+.trust-band { background: var(--sand-100); }
+.trust-band .wrap { padding-block: .9rem 1rem; }
+.trust-title { margin: 0 0 .5rem; font-size: .72rem; letter-spacing: .14em; color: var(--ink-faint); }
+.trust-list { display: flex; flex-wrap: wrap; gap: .4rem .45rem; margin: 0; padding: 0; list-style: none; }
+.trust-list li {
+  min-width: 0; font-size: .8rem; line-height: 1.6; color: var(--teal-900);
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: 100px; padding: .2rem .7rem;
+}
+
+.page-foot { padding: 1.4rem var(--pad) 2.4rem; font-size: .8rem; color: var(--ink-faint); line-height: 1.8; }
+@media (min-width: 600px) { .page-foot { max-width: 390px; margin-inline: auto; padding-inline: 0; } }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 8c-12 0-20 7-20 19 0 11 3 21 7 30 2 6 4 11 8 11s4-7 5-11c.7-3 5.3-3 6 0 1 4 1 11 5 11s6-5 8-11c4-9 7-19 7-30 0-12-8-19-20-19z" fill="#12656a"/></svg>
+      </span>
+      <span>芳仁牙醫診所<small>HERO 手機版提案</small></span>
+    </a>
+  </div>
+</header>
+
+<div class="page-intro">
+  <div class="wrap">
+    <h1>首頁主視覺・手機版三案</h1>
+    <p>三案的共同點：照片維持原圖比例（約 3:2）整張呈現，文字直接壓在照片上，<b>沒有任何漸層、遮罩或模糊</b>，照片一整張是原樣。文字都收在左上角的天空裡，不會壓到建築。</p>
+    <ul>
+      <li><b>方案一</b>——靠左橫排，標題兩行、說明兩行</li>
+      <li><b>方案二</b>——標題直排貼左緣，說明移到照片下方</li>
+      <li><b>方案三</b>——標題橫跨上緣一整行，字最大</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ====================== 方案一 ====================== -->
+<section class="case case-1">
+  <div class="case-label">
+    <b>方案一・靠左橫排</b>
+    <span>最四平八穩的一案。標題與說明疊成一塊，收在左上角，最下面一行離屋簷還有距離。</span>
+  </div>
+  <div class="phone">
+    <section class="hero">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-800.jpg"
+             srcset="/assets/hero-clinic-800.jpg 800w, /assets/hero-clinic.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所的清水模建築外觀，位於斗六市永樂街街角"
+             width="1600" height="1091" fetchpriority="high">
+      </figure>
+      <div class="hero-copy">
+        <h1>小時候被大人牽著來，<br>現在牽著別人</h1>
+        <p class="lede">從中華路到永樂街，<br>四十多年的厝邊牙醫</p>
+      </div>
+    </section>
+    <ul class="hero-stats">
+      <li><b>1983</b><span>開業至今</span></li>
+      <li><b>9</b><span>位醫師駐診</span></li>
+      <li><b>6</b><span>個部定專科</span></li>
+    </ul>
+    <section class="trust-band">
+      <div class="wrap">
+        <p class="trust-title">治療項目</p>
+        <ul class="trust-list">
+          <li>一般牙科・定期檢查</li>
+          <li>牙周治療</li>
+          <li>兒童牙科</li>
+          <li>齒顎矯正</li>
+          <li>植牙・假牙重建</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- ====================== 方案二 ====================== -->
+<section class="case case-2">
+  <div class="case-label">
+    <b>方案二・標題直排</b>
+    <span>標題轉成中文直式，只佔左緣一條窄帶，整棟建築完全不被壓到。說明退到照片下方那一行。</span>
+  </div>
+  <div class="phone">
+    <section class="hero">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-800.jpg"
+             srcset="/assets/hero-clinic-800.jpg 800w, /assets/hero-clinic.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所的清水模建築外觀，位於斗六市永樂街街角"
+             width="1600" height="1091" loading="lazy">
+      </figure>
+      <div class="hero-copy">
+        <h1>小時候被牽著來，<br>現在牽著別人</h1>
+      </div>
+    </section>
+    <p class="hero-caption">從中華路到永樂街，四十多年的厝邊牙醫</p>
+    <ul class="hero-stats">
+      <li><b>1983</b><span>開業至今</span></li>
+      <li><b>9</b><span>位醫師駐診</span></li>
+      <li><b>6</b><span>個部定專科</span></li>
+    </ul>
+    <section class="trust-band">
+      <div class="wrap">
+        <p class="trust-title">治療項目</p>
+        <ul class="trust-list">
+          <li>一般牙科・定期檢查</li>
+          <li>牙周治療</li>
+          <li>兒童牙科</li>
+          <li>齒顎矯正</li>
+          <li>植牙・假牙重建</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- ====================== 方案三 ====================== -->
+<section class="case case-3">
+  <div class="case-label">
+    <b>方案三・標題橫跨上緣</b>
+    <span>照片最上緣整條都是天空，標題排成一行走完整個寬度，字級最大、氣勢最強；說明退到左邊小字。</span>
+  </div>
+  <div class="phone">
+    <section class="hero">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-800.jpg"
+             srcset="/assets/hero-clinic-800.jpg 800w, /assets/hero-clinic.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所的清水模建築外觀，位於斗六市永樂街街角"
+             width="1600" height="1091" loading="lazy">
+      </figure>
+      <div class="hero-copy">
+        <h1>小時候被大人牽著來，現在牽著別人</h1>
+        <p class="lede">從中華路到永樂街，<br>四十多年的厝邊牙醫</p>
+      </div>
+    </section>
+    <ul class="hero-stats">
+      <li><b>1983</b><span>開業至今</span></li>
+      <li><b>9</b><span>位醫師駐診</span></li>
+      <li><b>6</b><span>個部定專科</span></li>
+    </ul>
+    <section class="trust-band">
+      <div class="wrap">
+        <p class="trust-title">治療項目</p>
+        <ul class="trust-list">
+          <li>一般牙科・定期檢查</li>
+          <li>牙周治療</li>
+          <li>兒童牙科</li>
+          <li>齒顎矯正</li>
+          <li>植牙・假牙重建</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</section>
+
+<div class="page-foot">
+  三案的照片都是原檔原比例，沒有裁切、沒有遮罩。挑定一案之後再套進
+  <a href="/preview/home-v2/">home-v2</a> 首頁，並補上桌機版的排法。<br>
+  首頁主視覺照片為芳仁牙醫診所自有。
+</div>
+
+</body>
+</html>
