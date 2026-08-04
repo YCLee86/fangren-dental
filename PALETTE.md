@@ -8,6 +8,12 @@
 - 量測方法：見本文最後一節
 - 對應的預覽頁：`preview/canvas/`（主案）、`preview/night-calibrated/`（全暗版）
 
+> **在手機／雲端 session（claude.ai/code）工作時**：那邊跑在 Linux 容器裡，
+> **看不到使用者電腦上的照片，也不能跑 `tools/palette-measure.ps1`**（PowerShell + .NET，
+> 只在 Windows 本機能跑）。所以在雲端請**直接把這份文件的表格當成事實來源**，
+> 不要說「我讀不到資料夾」然後改用目測配色 —— 需要的數字都已經量好寫在下面了。
+> 只有要測「新的照片」時才需要回到 Windows 本機。
+
 ---
 
 ## 一、最重要的一件事：診所已經有官方色票
@@ -205,6 +211,10 @@
 ---
 
 ## 七、量測方法（要加新照片時照這個做）
+
+**這一節只適用於 Windows 本機。** 手機／雲端 session 跑在 Linux 容器裡，
+沒有 PowerShell、沒有 .NET Drawing，也沒有使用者的照片資料夾 —— 在那邊請用上面的表格，
+不要嘗試執行這支腳本。
 
 `tools/palette-measure.ps1` 用 .NET 解 JPEG、跑 k-means 抽主色，
 可以整張測，也可以只測指定區域。
