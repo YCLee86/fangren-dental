@@ -1,0 +1,120 @@
+/* =============================================================================
+   HERO 改版：滿版通欄橫幅、照片完整不裁切
+   -----------------------------------------------------------------------------
+   要點：
+   - 寬度邊到邊滿版；高度由照片原始比例決定，所以整張照片都看得到
+   - 刻意不用 object-fit: cover，那一定會切掉上下或左右
+   - 窄螢幕照片太矮塞不下文字，文字改放到照片正下方的同一塊深色區
+   ============================================================================= */
+
+.hero {
+  position: relative;
+  background: #0d1114;                       /* 照片載入前、以及文字區的底色 */
+  overflow: hidden;
+  border-bottom: 0;
+}
+
+/* 照片完整呈現：寬度滿版，高度由原始比例決定 */
+.hero-cover {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 2400 / 1587;                 /* 與 hero-clinic.jpg 相同 */
+}
+
+.hero-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;                       /* 保險：比例微調也不會裁切 */
+  display: block;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: block;                            /* 覆蓋原本的兩欄 grid */
+  padding: 0;
+  padding-block: clamp(1.3rem, 4vw, 2rem);
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  margin: 0 0 .7rem;
+  padding: .28rem .75rem;
+  font-size: .76rem;
+  letter-spacing: .14em;
+  color: #eaf6f6;
+  background: rgba(10, 40, 42, .55);
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 100px;
+}
+
+.hero h1 {
+  margin: 0 0 .7rem;
+  max-width: 22ch;
+  font-size: clamp(1.65rem, 4.8vw, 2.9rem);
+  line-height: 1.28;
+  letter-spacing: -.01em;
+  color: #fff;
+}
+
+.hero-lede {
+  margin: 0;
+  max-width: 42ch;
+  font-size: clamp(.92rem, 2.4vw, 1.05rem);
+  color: rgba(255, 255, 255, .93);
+}
+
+/* ---------- 夠寬時才把文字疊回照片上 ----------
+   700px 時照片已有 463px 高，文字疊上去綽綽有餘；再窄就會切到字。 */
+@media (min-width: 700px) {
+  .hero-inner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-block: clamp(1.5rem, 3.2vw, 2.6rem);
+  }
+
+  /* 疊字時才需要漸層與陰影；只壓最下緣，建築下半部不會被壓暗 */
+  .hero-cover::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: clamp(150px, 32%, 300px);
+    background: linear-gradient(to top,
+      rgba(5, 9, 12, .92) 0%,
+      rgba(5, 9, 12, .58) 42%,
+      rgba(5, 9, 12, .18) 74%,
+      rgba(5, 9, 12, 0) 100%);
+  }
+
+  .hero-eyebrow { backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+  .hero h1 { text-shadow: 0 2px 8px rgba(0, 0, 0, .92), 0 0 30px rgba(0, 0, 0, .55); }
+  .hero-lede { text-shadow: 0 1px 6px rgba(0, 0, 0, .9); }
+}
+
+/* ---------- 橫幅下方的數字條 ---------- */
+.stats-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+}
+.stats-bar .hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 2.4rem;
+  margin: 0;
+  padding-block: 1rem;
+  list-style: none;
+}
+.stats-bar .hero-stats li { min-width: 0; }
+.stats-bar .hero-stats b {
+  display: block;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  color: var(--teal-700);
+  font-variant-numeric: tabular-nums;
+}
+.stats-bar .hero-stats span { font-size: .8rem; color: var(--ink-faint); }

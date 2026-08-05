@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>B 版：照片原比例，詩句落在夜色延伸帶 — 芳仁牙醫診所 HERO 手機提案</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+
+<!--
+  2026-08-04．依使用者的 PPT（簡報20260804.pptx）重做的三案之一，只做手機 390px。
+
+  這一案的立場：資訊配置照 PPT，但照片不裁。
+  照片維持原圖比例 3743:2475（≈1.512），一根像素都不切——手機上就是 390×258，
+  天空只剩得下頁首那一排，所以三行詩往下移，落在一塊和照片同色的夜色帶裡
+  （#12161a，接著照片下緣長出去），視覺上仍是同一片夜，不是白底的字幕。
+
+  和上一版的差別：三行詩一行都沒少，字級也回到 PPT 的輕，不是 18px 粗體的標題。
+-->
+<style>:root { color-scheme: light; }</style>
+<style>
+:root {
+  --wide: 68rem;
+  --pad: clamp(1rem, 4vw, 2rem);
+  --brand: #5D6D55;
+  --teal-900: #0b3f42;
+  --sand-100: #f3ece1;
+  --ink: #1c2426;
+  --ink-soft: #4d5b5e;
+  --ink-faint: #7c8a8d;
+  --line: #e2e0d8;
+  --white: #fff;
+  --night: #12161a;
+  --radius: 14px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: #fbf8f3; color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.85; letter-spacing: .01em;
+  overflow-x: hidden;
+}
+body, p, li, h1, h2, h3 { overflow-wrap: break-word; word-break: break-word; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--brand); }
+.wrap { width: 100%; max-width: var(--wide); margin-inline: auto; padding-inline: var(--pad); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 60;
+  background: var(--white); color: var(--teal-900); padding: .6rem 1rem; }
+.skip-link:focus { left: .5rem; top: .5rem; }
+
+/* ==========================================================================
+   HERO：照片原比例，只有頁首壓在照片上
+   ========================================================================== */
+.hero-stage { position: relative; container-type: inline-size; background: var(--night); }
+.hero-photo { margin: 0; }
+/* 不裁切、不變形：width 100% + height auto，比例就是原圖的 1.512 */
+.hero-photo img { width: 100%; height: auto; }
+
+.hero-copy {
+  position: absolute; inset: 0 0 auto 0;
+  padding: 3.4cqw 4cqw 0;
+  pointer-events: none;
+}
+.hero-copy a { pointer-events: auto; }
+
+/* ---------- 頁首 ---------- */
+.site-header { display: flex; align-items: center; justify-content: space-between; gap: 3cqw; }
+.brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
+.brand-mark { flex: 0 0 9.5cqw; display: block; color: rgba(255, 255, 255, .95); }
+.brand-mark svg { display: block; width: 100%; height: auto; }
+.brand-text { display: block; }
+.brand-text b {
+  display: block; font-weight: 700; font-size: 4.4cqw; line-height: 1.25;
+  letter-spacing: 0; color: rgba(255, 255, 255, .95);
+}
+.brand-text small {
+  display: block; font-weight: 400; font-size: 3cqw; line-height: 1.6;
+  letter-spacing: 0; color: rgba(255, 255, 255, .65);
+  text-align: justify; text-align-last: justify;
+}
+.site-nav { display: flex; gap: 3.2cqw; font-size: 3cqw; line-height: 1.4; }
+.site-nav a { color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap; }
+
+/* ---------- 夜色延伸帶：三行詩 ----------
+   底色和照片最暗的天空同一支（#12161a），從照片下緣接下去，
+   所以它讀起來還是那片夜，只是文字有了站得住的位置。
+   字級與透明度照 PPT 的輕，行距 2.0，置中，用全形空白斷句。 */
+.hero-poem {
+  margin: 0; padding: 6cqw 4cqw 7cqw;
+  background: var(--night); text-align: center;
+  font-size: 3.2cqw; font-weight: 400; line-height: 2;
+  letter-spacing: .06em; color: rgba(255, 255, 255, .72);
+}
+
+/* ---------- 照片下方 ---------- */
+.hero-stats {
+  display: flex; flex-wrap: wrap; margin: 0; padding: .85rem var(--pad) .95rem;
+  list-style: none; background: var(--white); border-bottom: 1px solid var(--line);
+}
+.hero-stats li { min-width: 0; padding-inline: 1.1rem; border-left: 1px solid var(--line); }
+.hero-stats li:first-child { padding-left: 0; border-left: 0; }
+.hero-stats b {
+  display: block; font-size: 1.25rem; line-height: 1.3; color: var(--brand);
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+.hero-stats span { font-size: .76rem; color: var(--ink-faint); }
+
+.trust-band { background: var(--sand-100); }
+.trust-band .wrap { padding-block: .9rem 1rem; }
+.trust-title { margin: 0 0 .5rem; font-size: .72rem; letter-spacing: .14em; color: var(--ink-faint); }
+.trust-list { display: flex; flex-wrap: wrap; gap: .4rem .45rem; margin: 0; padding: 0; list-style: none; }
+.trust-list li {
+  min-width: 0; font-size: .8rem; line-height: 1.6; color: var(--teal-900);
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: 100px; padding: .2rem .7rem;
+}
+
+/* ---------- 提案頁自己的外框 ---------- */
+.note { padding: 1.4rem var(--pad) 2.4rem; }
+.note h2 { margin: 1.3rem 0 .5rem; font-size: 1.02rem; color: var(--brand); line-height: 1.5; }
+.note h2:first-child { margin-top: 0; }
+.note p { margin: 0 0 .6rem; font-size: .85rem; color: var(--ink-soft); line-height: 1.8; }
+.note ul { margin: 0 0 .6rem; padding-left: 1.1rem; font-size: .84rem; color: var(--ink-soft); line-height: 1.8; }
+.note table { border-collapse: collapse; margin-bottom: .8rem; }
+.note td, .note th { font-size: .8rem; padding: .3rem .6rem .3rem 0; text-align: left; vertical-align: top; }
+.switch { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: .84rem; }
+.switch a { margin-right: .9rem; }
+
+@media (min-width: 600px) {
+  .phone { max-width: 390px; margin-inline: auto; background: #fbf8f3;
+           border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .note { max-width: 42rem; margin-inline: auto; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要內容</a>
+
+<div class="phone">
+  <main id="main">
+    <h1 class="sr-only">芳仁牙醫診所 — 雲林斗六永樂街，在地四十年</h1>
+
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+      </figure>
+
+      <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                       中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                       原始 PPT 的自訂圖形就是這樣做的；先前搬成 SVG 時被拆成兩個 path，
+                       內圈只好填 45% 的黑假裝挖空，疊在白色圖案上就變成一顆灰點。 -->
+                  <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <p class="hero-poem">
+      小時候被大人牽著來　現在牽著別人<br>
+      從中華路到永樂街　四十多年<br>
+      有跟著換的　也有一直顧的
+    </p>
+
+    <ul class="hero-stats">
+      <li><b>1983</b><span>開業至今</span></li>
+      <li><b>9</b><span>位醫師駐診</span></li>
+      <li><b>6</b><span>個部定專科</span></li>
+    </ul>
+
+    <section class="trust-band">
+      <div class="wrap">
+        <p class="trust-title">治療項目</p>
+        <ul class="trust-list">
+          <li>一般牙科・定期檢查</li>
+          <li>牙周治療</li>
+          <li>兒童牙科</li>
+          <li>齒顎矯正</li>
+          <li>植牙・假牙重建</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="note">
+  <h2>B 版：照片原比例，詩句落在夜色延伸帶</h2>
+  <p>照片一根像素都不裁，維持原圖 3743:2475 的比例——手機上就是 390×258，<b>佔畫面高度 30.6%</b>，是三案裡最小的，也就是前次聊天那幾版用的尺寸。天空只剩得下頁首那一排，所以三行詩往下移，落在一塊和照片同色的夜色帶裡（#12161a，接著照片下緣長出去）。視覺上仍是同一片夜，不是白底字幕。</p>
+
+  <h2>和 PPT 的對照</h2>
+  <table>
+    <tr><th>元素</th><th>PPT</th><th>這一版（390px）</th></tr>
+    <tr><td>診所名</td><td>24pt 粗 / 92%</td><td>17px 粗 / 95%</td></tr>
+    <tr><td>副標</td><td>16pt / 65%</td><td>11.7px / 65%</td></tr>
+    <tr><td>選單</td><td>16pt / 92%</td><td>11.7px / 88%</td></tr>
+    <tr><td>三行詩</td><td>12pt / 65%，行距 200%，置中</td><td>12.5px / 72%，行距 200%，置中</td></tr>
+  </table>
+
+  <h2>取捨</h2>
+  <ul>
+    <li>換到的：照片完全不裁，建築的構圖和原檔一樣；而且是三案裡最不吃首屏的（照片 30.6%，加上詩的夜色帶共 45.4%）。</li>
+    <li>換到的：頁首照 PPT 壓在照片上，這一點 A 版做不到。</li>
+    <li>付出的：詩不再壓在照片上，少了字與夜景疊在一起的那層味道。落在純色上，對比是 9.74:1，最穩的一案。</li>
+  </ul>
+
+  <div class="switch">
+    另外兩案：<a href="/preview/hero-ppt-a/">A 版（詩句置中壓在天空）</a><a href="/preview/hero-ppt-c/">C 版（詩句靠左切齊）</a>
+  </div>
+</div>
+
+</body>
+</html>

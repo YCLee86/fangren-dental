@@ -10,6 +10,11 @@
 > 材質實測、對比度實測、版面規則）。**不要另外憑感覺挑色，也不要繞過裡面的
 > 對比度限制**（例如 `#A1A398` 量出來撐不住文字，就不要拿它當文字）。
 >
+> **要寫或改任何對外的品牌文字之前，先讀 [COPY.md](COPY.md)。**
+> 那份是文案的唯一依據：HERO 那首詩的寫作規則、品牌定位、**不能寫成什麼**（有紅線），
+> 以及正在進行中的收尾候選。使用者對這些句子已經來回修過好幾輪，
+> **不要憑感覺重寫，也不要從舊對話裡抄。**
+>
 > 跑在 **手機／雲端 session（claude.ai/code）** 時：容器看不到使用者電腦上的照片資料夾，
 > 也不能執行 `tools/palette-measure.ps1`。這**不影響**配色工作 —— 需要的數字全都已經
 > 量好寫在 PALETTE.md 裡了。不要因為讀不到照片就退回目測配色。
@@ -113,6 +118,7 @@ node tools/serve.mjs      # 預設 http://localhost:8791
 ```
 index.html              首頁。POSTS 區塊由 build 產生，其餘手寫
 PALETTE.md              配色規範。動任何顏色之前先讀這份
+COPY.md                 文案規範。動任何品牌文字之前先讀這份
 404.html
 site.json               網站正式網址（給 sitemap 用）
 wrangler.toml           Worker、靜態資產、自訂網域、D1 綁定
@@ -201,7 +207,8 @@ tools/
 - `run_worker_first = true` 是為了 www 轉址而開的（該選項只吃路徑樣式、不吃主機名稱）。
   代價是 Worker 掛掉會影響整站，不再只有計數器。若要拿回這點，改用 Cloudflare 後台
   Rules → Redirect Rules 做轉址，再拿掉那行與 `worker.js` 裡的轉址。
-- `tools/hero-new.css` 是還沒套用的 HERO 改版實驗（未進版控），不是死碼。
+- `tools/hero-new.css` 與 `tools/hero-preview.mjs` 是還沒套用的 HERO 改版實驗，不是死碼。
+  2026-08-05 一併進版控，讓另一台電腦與手機 session 也拿得到。
 
 ---
 
@@ -219,6 +226,11 @@ tools/
 - `preview/canvas/` — **配色主案**（2026-08-04）。暗夜 HERO × 淺色內文，中間以 3px 木色線
   分界；內文底色三選一。頁內有官方色票、花藝比例與對比度的完整數據，數值同 [PALETTE.md](PALETTE.md)。
 - `preview/night-calibrated/` — 全暗版（2026-08-04），內文區也是暗的。留著對照用。
+- `preview/hero-ppt-*/` — **手機版 HERO 提案（2026-08-05）**，依使用者的 `簡報20260804.pptx` 做的，
+  只做 390px。命名分四組：`a`/`b`/`c`/`c1`/`c3` 是版型，`r1`–`r3` 是右緣裁切，
+  `t1`–`t3` 是詩的透明度，`s1`/`s1a`/`s1b`/`s2`/`s3` 是文字陰影。
+  **`hero-ppt-s1a` 是使用者定案的那一版**，其餘留著互相比較，各頁底部有交叉連結。
+  詩的文字內容與尚未定案的收尾在 [COPY.md](COPY.md)。
 
 ### 怎麼鎖
 
