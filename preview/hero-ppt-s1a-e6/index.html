@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>1983／9／6 那條帶子：三個配色 — 芳仁牙醫診所 HERO 手機提案</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+
+<!--
+  2026-08-05．HERO 一律是定案的 C72（hero-ppt-s1a-e1 的原樣），
+  差別只在它下面那條 1983／9／6 的帶子。
+
+  所有顏色都取自 PALETTE.md，沒有一個是自己調的：
+    暗夜  --night #191614 / --night-text #e3e1e0 / --night-soft #aaa49e / --night-line #38342f
+    紙    --paper #ecede7 / --ink #2a2c27 / --ink-soft #5c5f57 / --rule #d9dbd1
+    木線  #a18262（3px，暗與亮的分界，規範第六節第 4 條）
+    深綠松 #214D48（官方色票，紙底 8.03:1）
+  對比度是算出來的，四捨五入後和 PALETTE.md 表上的數字完全一致。
+
+  規範裡直接管到這塊的兩條：
+    第六節第 5 條「數字不上色（1983／9／6 用墨色）」——所以三案的數字一律墨色／夜間文字色。
+    第六節第 4 條「暗夜只留在 HERO，分界是那條 3px 木色線」——甲案把帶子算在暗夜裡，
+    乙丙把它算在內文區，差別就是木線放在帶子的上面還是下面。
+-->
+<style>:root { color-scheme: light; }</style>
+<style>
+:root {
+  --pad: clamp(1rem, 4vw, 2rem);
+  --brand: #5D6D55;
+  --ink: #1c2426;
+  --ink-soft: #4d5b5e;
+  --ink-faint: #7c8a8d;
+  --line: #e2e0d8;
+  --radius: 14px;
+
+  /* PALETTE.md 第四節 */
+  --night: #191614;
+  --night-line: #38342f;
+  --night-text: #e3e1e0;
+  --night-soft: #aaa49e;
+  --wood: #a18262;
+  --paper: #ecede7;
+  --p-ink: #2a2c27;
+  --p-ink-soft: #5c5f57;
+  --rule: #d9dbd1;
+  --teal-deep: #214D48;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: #fbf8f3; color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.85; letter-spacing: .01em;
+  overflow-x: hidden;
+}
+body, p, li, h1, h2, h3 { overflow-wrap: break-word; word-break: break-word; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--brand); }
+
+/* ==========================================================================
+   HERO：定案 C72，和 hero-ppt-s1a-e1 相同
+   ========================================================================== */
+.hero-stage { position: relative; container-type: inline-size; background: #12161a; }
+.hero-photo {
+  margin: 0; position: relative; overflow: hidden;
+  height: clamp(70.5cqw, 34svh, 74.5cqw);
+  container-type: size;
+}
+.hero-photo img {
+  position: absolute; top: 0; left: 0;
+  width: 113%; height: auto; max-width: none; display: block;
+}
+.hero-copy {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  padding: 2cqh 4cqw 0;
+  pointer-events: none;
+}
+.hero-copy a { pointer-events: auto; }
+.site-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 3cqw; }
+.brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
+.brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
+.brand-mark svg { display: block; width: 100%; height: auto; }
+.brand-text { display: block; }
+.brand-text b {
+  display: block; font-weight: 700; font-size: clamp(14px, 5.1cqh, 18px); line-height: 1.25;
+  letter-spacing: 0; color: rgba(255, 255, 255, .95);
+}
+.brand-text small {
+  display: block; font-weight: 400; font-size: clamp(10px, 3.5cqh, 12.5px); line-height: 1.6;
+  letter-spacing: 0; color: rgba(255, 255, 255, .65);
+  text-align: justify; text-align-last: justify;
+}
+.site-nav {
+  display: flex; gap: 3.2cqw; line-height: 1.4; padding-top: 1cqh;
+  font-size: clamp(10px, 3.5cqh, 12.5px);
+}
+.site-nav a { color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap; }
+.hero-poem {
+  margin: 4cqh 0 0; max-width: 76cqw;
+  font-size: clamp(10px, 3.2cqh, 11.5px); font-weight: 400; line-height: 1.75;
+  letter-spacing: .2em; color: rgba(255, 255, 255, .65);
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
+}
+.hero-poem span { display: block; }
+.hero-poem .lead { margin-bottom: .55em; }
+.hero-sign {
+  position: absolute; left: calc(4cqw + 7.179cqw); margin: 0;
+  bottom: calc(100cqh - min(100cqh, 74.72cqw) + 3.077cqw);
+  font-size: clamp(9.2px, 2.56cqw, 11.5px); font-weight: 400; line-height: 1.5;
+  letter-spacing: .12em; color: rgba(255, 255, 255, .65);
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
+  isolation: isolate;
+}
+.hero-sign::before {
+  content: ''; position: absolute; z-index: -1;
+  inset: -1.3em -1.7em;
+  background: rgba(25, 22, 20, .72);
+  border-radius: 100px;
+  filter: blur(2.3cqw);
+}
+
+/* ==========================================================================
+   1983／9／6 那條帶子 —— 這一頁在比的就是這裡
+   ========================================================================== */
+.hero-stats {
+  display: flex; flex-wrap: wrap; margin: 0; padding: .85rem var(--pad) .95rem;
+  list-style: none;
+}
+.hero-stats li { min-width: 0; padding-inline: 1.1rem; border-left: 1px solid; }
+.hero-stats li:first-child { padding-left: 0; border-left: 0; }
+.hero-stats b {
+  display: block; font-size: 1.25rem; line-height: 1.3;
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+/* 單位（年／位／個）跟著數字走，但不加粗，
+   否則「1983年」會讀成四個數字加一個同樣重的漢字，數字就不成形了。
+   字級和下面的標籤同級（.76rem＝12.2px），使用者定的。
+   直接寫 .76rem 不寫 em，是為了和標籤那行是同一個值、不會因為數字級數改動而跑掉。
+   letter-spacing 歸零：上面那 -.01em 是為西文數字收的，漢字不需要。 */
+.hero-stats b small {
+  font-size: .76rem; font-weight: 400; letter-spacing: 0;
+  margin-left: .1em;
+}
+.hero-stats span { font-size: .76rem; }
+
+/* 3px 木色線：暗與亮的分界（規範第六節第 4 條）。
+   它是一個水平面，不是裝飾線，所以永遠滿版、永遠 3px。 */
+.wood { height: 3px; background: var(--wood); }
+.paper-tail {
+  background: var(--paper); color: var(--p-ink-soft);
+  padding: .9rem var(--pad) 1.1rem; font-size: .78rem;
+}
+
+/* ---- 現況（對照組，不符規範）---- */
+.case.ref .hero-stats { background: #fff; border-bottom: 1px solid var(--line); }
+.case.ref .hero-stats li { border-left-color: var(--line); }
+.case.ref .hero-stats b { color: var(--brand); }
+.case.ref .hero-stats span { color: var(--ink-faint); }
+
+/* ---- 甲：窄帶留在暗夜裡 ---- */
+.case.dark .hero-stats { background: var(--night); }
+.case.dark .hero-stats li { border-left-color: var(--night-line); }
+.case.dark .hero-stats b { color: var(--night-text); }
+.case.dark .hero-stats span { color: var(--night-soft); }
+
+/* ---- 乙／丙：帶子屬於內文區 ---- */
+.case.paper .hero-stats { background: var(--paper); }
+.case.paper .hero-stats li { border-left-color: var(--rule); }
+.case.paper .hero-stats b { color: var(--p-ink); }
+.case.paper .hero-stats span { color: var(--p-ink-soft); }
+/* 丙：只有標籤換色，數字仍是墨色 */
+.case.green .hero-stats span { color: var(--teal-deep); }
+
+/* ==========================================================================
+   比較頁自己的外框
+   ========================================================================== */
+.wrap { padding: 1.6rem var(--pad) 0; }
+.wrap h1 { margin: 0 0 .6rem; font-size: 1.15rem; line-height: 1.5; color: var(--brand); }
+.wrap h2 { margin: 1.4rem 0 .5rem; font-size: 1rem; color: var(--brand); line-height: 1.5; }
+.wrap p { margin: 0 0 .7rem; font-size: .86rem; color: var(--ink-soft); line-height: 1.8; }
+.wrap ul { margin: 0 0 .7rem; padding-left: 1.1rem; font-size: .86rem; color: var(--ink-soft); line-height: 1.8; }
+
+.case { padding: 1.6rem var(--pad) 0; border-top: 1px solid var(--line); margin-top: 1.6rem; }
+.case .phone { margin-inline: calc(var(--pad) * -1); }
+.case h2 { margin: 0 0 .8rem; font-size: 1rem; line-height: 1.5; color: var(--brand); }
+.case h2 b { display: inline-block; min-width: 2.6em; }
+.case .score { float: right; font-size: .8rem; font-weight: 400; color: var(--ink-faint); }
+.case .note { margin: .7rem 0 0; font-size: .84rem; color: var(--ink-soft); line-height: 1.8; }
+.nums { border-collapse: collapse; margin-top: .7rem; }
+.nums th, .nums td { font-size: .78rem; padding: .18rem .9rem .18rem 0; text-align: left; }
+.nums th { color: var(--ink-faint); font-weight: 400; white-space: nowrap; }
+
+.switch { padding: 1.6rem var(--pad) 2.4rem; margin-top: 1.6rem;
+  border-top: 1px solid var(--line); font-size: .84rem; }
+.switch a { margin-right: .9rem; }
+
+@media (min-width: 600px) {
+  .phone, .case .phone { max-width: 390px; margin-inline: auto; background: #fbf8f3;
+           border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .wrap, .case, .switch { max-width: 42rem; margin-inline: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>1983／9／6 那條帶子：三個配色</h1>
+
+  <p>HERO 一律是定案的 C72，差別只在它下面那條帶子。<b>所有顏色都取自 <a href="/PALETTE.md">PALETTE.md</a>，沒有一個是我自己調的</b>，對比度也是算出來的，和規範表上的數字一致。</p>
+
+  <h2>先講一條規則，它直接決定了這三案</h2>
+  <p>PALETTE.md 第六節第 5 條：<b>「數字不上色（1983／9／6 用墨色）。那不是需要被強調的東西。」</b></p>
+  <p>目前預覽頁上的版本把三個數字上了苔綠，正好是這條規則要避免的。所以三案的數字一律是墨色（或暗底上的夜間文字色），<b>能動的是底色、標籤、分隔線，還有那條 3px 木色線放在哪裡</b>。我把現況也放在最前面當對照。</p>
+
+  <h2>三案的差別其實是同一個問題：暗夜到哪裡結束</h2>
+  <p>規範第六節第 4 條說，暗夜與內文區的分界是一條 3px 的木色線 <code>#a18262</code>，它對應診所裡唯一有溫度的地板，是一個水平面、不是裝飾線。第四節又說暗夜「只用在 HERO <b>與它下面那條窄帶</b>」。</p>
+  <ul>
+    <li><b>甲</b>把 1983／9／6 算成那條窄帶——木線在帶子<b>下面</b>，暗夜到帶子才結束。</li>
+    <li><b>乙、丙</b>把它算成內文區的第一塊——木線在帶子<b>上面</b>，照片一停暗夜就結束。</li>
+  </ul>
+  <p>兩種都符合規範，是氣質的選擇。<b>我選甲</b>：照片與數字之間不斷開，「1983 開業至今」還留在夜色裡，讀起來像同一句話的延續；而且數字對比 13.82:1，是三案裡最高的。乙、丙的差別只在標籤要不要帶一點診所的綠。</p>
+</div>
+
+<article class="case ref">
+  <h2><b>現況</b>　目前預覽頁上的樣子（不符規範）<span class="score">對照組</span></h2>
+  <div class="phone">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+
+        <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                       中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                       原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                       先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                       疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+                  <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </header>
+
+        <p class="hero-poem">
+          <span class="lead">小時候被大人牽著來　現在牽著別人</span>
+          <span>從中華路到永樂街　四十多年</span>
+          <span>有跟著換的　也有一直顧的</span>
+        </p>
+
+        <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+        </div>
+      </figure>
+    </div>
+      <ul class="hero-stats">
+        <li><b>1983<small>年</small></b><span>開業至今</span></li>
+        <li><b>9<small>位</small></b><span>醫師駐診</span></li>
+        <li><b>6<small>個</small></b><span>部定專科</span></li>
+      </ul>
+      <div class="wood" aria-hidden="true"></div>
+      <div class="paper-tail">內文從這裡開始</div>
+  </div>
+  <table class="nums">
+    <tr><th>底</th><td>純白 #fff</td></tr>
+    <tr><th>數字</th><td>苔綠 #5D6D55　5.55:1</td></tr>
+    <tr><th>標籤</th><td>#7c8a8d　<b>3.57:1</b></td></tr>
+    <tr><th>木線</th><td>在下方</td></tr>
+  </table>
+  <p class="note">放在最前面當對照。<b>PALETTE.md 第六節第 5 條寫「數字不上色（1983／9／6 用墨色）。那不是需要被強調的東西。」</b>——現在這版把三個數字上了苔綠，正好是那條規則要避免的。底色用純白也不在規範的色票裡（規範的紙底是 #ecede7 那一組）。另外量到一件本來沒注意到的事：<b>「開業至今」那排標籤只有 3.57:1，小字沒有過 AA 的 4.5</b>。下面三案都照規範重做，標籤最低的一案也有 5.52。</p>
+</article>
+
+<article class="case dark">
+  <h2><b>甲</b>　窄帶留在暗夜裡<span class="score">我給 8 分</span></h2>
+  <div class="phone">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+
+        <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                       中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                       原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                       先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                       疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+                  <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </header>
+
+        <p class="hero-poem">
+          <span class="lead">小時候被大人牽著來　現在牽著別人</span>
+          <span>從中華路到永樂街　四十多年</span>
+          <span>有跟著換的　也有一直顧的</span>
+        </p>
+
+        <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+        </div>
+      </figure>
+    </div>
+      <ul class="hero-stats">
+        <li><b>1983<small>年</small></b><span>開業至今</span></li>
+        <li><b>9<small>位</small></b><span>醫師駐診</span></li>
+        <li><b>6<small>個</small></b><span>部定專科</span></li>
+      </ul>
+      <div class="wood" aria-hidden="true"></div>
+      <div class="paper-tail">內文從這裡開始</div>
+  </div>
+  <table class="nums">
+    <tr><th>底</th><td>暗夜 #191614</td></tr>
+    <tr><th>數字</th><td>#e3e1e0　13.82:1</td></tr>
+    <tr><th>標籤</th><td>#aaa49e　7.30:1</td></tr>
+    <tr><th>分隔線</th><td>#38342f</td></tr>
+    <tr><th>木線</th><td>在窄帶下方</td></tr>
+  </table>
+  <p class="note">PALETTE.md 第四節寫「暗夜<b>只用在 HERO 與它下面那條窄帶</b>」——這一案就是把 1983／9／6 當成那條窄帶。照片與數字之間沒有斷點，木色線退到窄帶下面才切開暗與亮，所以「暗夜」是一整塊結束的，不是照片一停就結束。三案裡對比度最高的一個。</p>
+</article>
+
+<article class="case paper">
+  <h2><b>乙</b>　木線緊貼照片，數字落在紙上<span class="score">我給 7 分</span></h2>
+  <div class="phone">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+
+        <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                       中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                       原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                       先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                       疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+                  <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </header>
+
+        <p class="hero-poem">
+          <span class="lead">小時候被大人牽著來　現在牽著別人</span>
+          <span>從中華路到永樂街　四十多年</span>
+          <span>有跟著換的　也有一直顧的</span>
+        </p>
+
+        <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+        </div>
+      </figure>
+    </div>
+      <div class="wood" aria-hidden="true"></div>
+      <ul class="hero-stats">
+        <li><b>1983<small>年</small></b><span>開業至今</span></li>
+        <li><b>9<small>位</small></b><span>醫師駐診</span></li>
+        <li><b>6<small>個</small></b><span>部定專科</span></li>
+      </ul>
+      <div class="paper-tail">內文從這裡開始</div>
+  </div>
+  <table class="nums">
+    <tr><th>底</th><td>紙 #ecede7</td></tr>
+    <tr><th>數字</th><td>墨 #2a2c27　11.99:1</td></tr>
+    <tr><th>標籤</th><td>#5c5f57　5.52:1</td></tr>
+    <tr><th>分隔線</th><td>#d9dbd1</td></tr>
+    <tr><th>木線</th><td>在照片正下方</td></tr>
+  </table>
+  <p class="note">木色線緊貼照片下緣，暗夜到此為止，數字已經屬於內文區。整條帶子只有墨色與灰，是三案裡最安靜的。缺點是照片一結束就轉亮，過渡比甲案硬。</p>
+</article>
+
+<article class="case paper green">
+  <h2><b>丙</b>　同乙，但標籤用深綠松<span class="score">我給 7 分</span></h2>
+  <div class="phone">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+
+        <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                       中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                       原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                       先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                       疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+                  <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </header>
+
+        <p class="hero-poem">
+          <span class="lead">小時候被大人牽著來　現在牽著別人</span>
+          <span>從中華路到永樂街　四十多年</span>
+          <span>有跟著換的　也有一直顧的</span>
+        </p>
+
+        <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+        </div>
+      </figure>
+    </div>
+      <div class="wood" aria-hidden="true"></div>
+      <ul class="hero-stats">
+        <li><b>1983<small>年</small></b><span>開業至今</span></li>
+        <li><b>9<small>位</small></b><span>醫師駐診</span></li>
+        <li><b>6<small>個</small></b><span>部定專科</span></li>
+      </ul>
+      <div class="paper-tail">內文從這裡開始</div>
+  </div>
+  <table class="nums">
+    <tr><th>底</th><td>紙 #ecede7</td></tr>
+    <tr><th>數字</th><td>墨 #2a2c27　11.99:1</td></tr>
+    <tr><th>標籤</th><td>深綠松 #214D48　8.03:1</td></tr>
+    <tr><th>分隔線</th><td>#d9dbd1</td></tr>
+    <tr><th>木線</th><td>在照片正下方</td></tr>
+  </table>
+  <p class="note">和乙一樣，只把三個標籤換成官方色票的深綠松。<b>數字仍然是墨色</b>，上色的是說明文字——這樣既沒有違反「數字不上色」，又讓這條帶子帶一點診所的綠。規範第六節第 1 條說「綠是枝條，可以重複出現」，深綠松是少數允許重複的顏色。</p>
+</article>
+
+<div class="switch">
+  收尾一句的定案：<a href="/preview/hero-ppt-s1a-e1/">e1（C72）</a><br>
+  一路比較的過程：<a href="/preview/hero-ppt-s1a-e2/">e2</a><a href="/preview/hero-ppt-s1a-e3/">e3</a><a href="/preview/hero-ppt-s1a-e4/">e4</a><a href="/preview/hero-ppt-s1a-e5/">e5</a><br>
+  配色主案：<a href="/preview/canvas/">canvas</a>　規範：<a href="/PALETTE.md">PALETTE.md</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>兩版之間的位置：陰影救不動，要墊暗帶 — 芳仁牙醫診所 HERO 手機提案</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+
+<!--
+  2026-08-05．位置都落在你指定的區間（離下緣 9.2px 到 21px 之間），
+  水平位置一律是「戊」的往右 28px，字級字距沿用定案版。
+
+  這一頁的量測沒有用瀏覽器：照片像素用 System.Drawing 解成 800×529，
+  字的覆蓋遮罩也用 System.Drawing 以同一個字體（Noto Sans TC）畫出來，
+  陰影的模糊自己做可分離高斯（CSS 的 blur 半徑 r 對應 sigma = r/2）。
+  拿定案版回頭對過：不計陰影 4.62（瀏覽器量到 4.63）、戊 現在 2.77（2.80）、
+  戊↑ 4.59（4.69），三個都對得上。
+
+  暗帶的實作是 .hero-sign::before：一塊 rgba(25,22,20,α) 的圓角矩形，
+  用 filter: blur() 柔邊，isolation: isolate ＋ z-index: -1 讓它落在字後面
+  但仍在照片之上（不加 isolation 的話 z-index:-1 會穿到照片底下去，整塊看不見）。
+-->
+<style>:root { color-scheme: light; }</style>
+<style>
+:root {
+  --pad: clamp(1rem, 4vw, 2rem);
+  --brand: #5D6D55;
+  --ink: #1c2426;
+  --ink-soft: #4d5b5e;
+  --ink-faint: #7c8a8d;
+  --line: #e2e0d8;
+  --radius: 14px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: #fbf8f3; color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.85; letter-spacing: .01em;
+  overflow-x: hidden;
+}
+body, p, li, h1, h2, h3 { overflow-wrap: break-word; word-break: break-word; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--brand); }
+
+/* ==========================================================================
+   HERO：和 hero-ppt-s1a-e1 相同
+   ========================================================================== */
+.hero-stage { position: relative; container-type: inline-size; background: #12161a; }
+.hero-photo {
+  margin: 0; position: relative; overflow: hidden;
+  height: clamp(70.5cqw, 34svh, 74.5cqw);
+  container-type: size;
+}
+.hero-photo img {
+  position: absolute; top: 0; left: 0;
+  width: 113%; height: auto; max-width: none; display: block;
+}
+.hero-copy {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  padding: 2cqh 4cqw 0;
+  pointer-events: none;
+}
+.hero-copy a { pointer-events: auto; }
+.site-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 3cqw; }
+.brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
+.brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
+.brand-mark svg { display: block; width: 100%; height: auto; }
+.brand-text { display: block; }
+.brand-text b {
+  display: block; font-weight: 700; font-size: clamp(14px, 5.1cqh, 18px); line-height: 1.25;
+  letter-spacing: 0; color: rgba(255, 255, 255, .95);
+}
+.brand-text small {
+  display: block; font-weight: 400; font-size: clamp(10px, 3.5cqh, 12.5px); line-height: 1.6;
+  letter-spacing: 0; color: rgba(255, 255, 255, .65);
+  text-align: justify; text-align-last: justify;
+}
+.site-nav {
+  display: flex; gap: 3.2cqw; line-height: 1.4; padding-top: 1cqh;
+  font-size: clamp(10px, 3.5cqh, 12.5px);
+}
+.site-nav a { color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap; }
+.hero-poem {
+  margin: 4cqh 0 0; max-width: 76cqw;
+  font-size: clamp(10px, 3.2cqh, 11.5px); font-weight: 400; line-height: 1.75;
+  letter-spacing: .2em; color: rgba(255, 255, 255, .65);
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
+}
+.hero-poem span { display: block; }
+.hero-poem .lead { margin-bottom: .55em; }
+
+/* 四案的差別：--bo 高度、--sh 陰影、--band 暗帶濃度 */
+.hero-sign {
+  position: absolute; left: calc(4cqw + 7.179cqw); margin: 0;
+  bottom: calc(100cqh - min(100cqh, 74.72cqw) + var(--bo));
+  font-size: 2.559cqw; font-weight: 400; line-height: 1.5;
+  letter-spacing: .12em; color: rgba(255, 255, 255, .65);
+  text-shadow: var(--sh);
+  /* isolation 是必要的：沒有它，下面 z-index:-1 的暗帶會穿過 .hero-copy
+     一路掉到照片底下，整塊看不見。有了它，暗帶被關在這一行自己的堆疊脈絡裡，
+     只落在字的後面。 */
+  isolation: isolate;
+}
+.hero-sign::before {
+  content: ''; position: absolute; z-index: -1;
+  inset: -1.3em -1.7em;
+  background: rgba(25, 22, 20, var(--band));
+  border-radius: 100px;
+  /* 模糊只作用在這塊偽元素上，字本身不受影響。
+     柔邊寬度不影響對比度（對比度只看字框內，那裡濃度已經是滿的），
+     它決定的是這塊東西看起來像不像路面自己的陰影。
+     用 cqw 而不是 px，換一支手機時暗帶和字一起等比例縮放。 */
+  filter: blur(2.3cqw);
+}
+
+/* ==========================================================================
+   比較頁自己的外框
+   ========================================================================== */
+.wrap { padding: 1.6rem var(--pad) 0; }
+.wrap h1 { margin: 0 0 .6rem; font-size: 1.15rem; line-height: 1.5; color: var(--brand); }
+.wrap h2 { margin: 1.4rem 0 .5rem; font-size: 1rem; color: var(--brand); line-height: 1.5; }
+.wrap p { margin: 0 0 .7rem; font-size: .86rem; color: var(--ink-soft); line-height: 1.8; }
+.wrap table, .nums { border-collapse: collapse; margin: 0 0 .9rem; }
+.wrap table td, .wrap table th { font-size: .8rem; padding: .24rem .8rem .24rem 0; text-align: left; vertical-align: top; }
+.wrap table th { color: var(--ink-faint); font-weight: 400; }
+
+.case { padding: 1.6rem var(--pad) 0; border-top: 1px solid var(--line); margin-top: 1.6rem; }
+.case .phone { margin-inline: calc(var(--pad) * -1); }
+.case h2 { margin: 0 0 .3rem; font-size: 1rem; line-height: 1.5; color: var(--brand); }
+.case h2 b { display: inline-block; min-width: 1.6em; }
+.case .score { float: right; font-size: .8rem; font-weight: 400; color: var(--ink-faint); }
+/* 不可以叫 .lead —— 三行詩的第一行就是 .hero-poem .lead，也在 .case 裡面。 */
+.case .case-lead { margin: 0 0 .8rem; font-size: .84rem; color: var(--ink-soft); }
+.case .note { margin: .7rem 0 0; font-size: .84rem; color: var(--ink-soft); line-height: 1.8; }
+.nums { margin-top: .7rem; }
+.nums th, .nums td { font-size: .78rem; padding: .18rem .8rem .18rem 0; text-align: left; }
+.nums th { color: var(--ink-faint); font-weight: 400; }
+
+.switch { padding: 1.6rem var(--pad) 2.4rem; margin-top: 1.6rem;
+  border-top: 1px solid var(--line); font-size: .84rem; }
+.switch a { margin-right: .9rem; }
+
+@media (min-width: 600px) {
+  .phone, .case .phone { max-width: 390px; margin-inline: auto; background: #fbf8f3;
+           border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .wrap, .case, .switch { max-width: 42rem; margin-inline: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>兩版之間的位置</h1>
+
+  <p>先講一件我沒辦法照做的事：<b>在這個區間裡，加深陰影救不動辨識度。</b></p>
+
+  <p>我把陰影從原本的 S1a 一路加到「40px 光暈、75% 濃度」，共七階，每一階都在五個高度上量過。整張表如下 —— 橫著看，七階陰影從頭到尾只買到 0.3 到 0.4：</p>
+
+  <table>
+    <tr><th>離下緣</th><th>S1a</th><th>加深</th><th>更深</th><th>再深</th><th>很深</th><th>極深</th><th>幾乎是塗黑</th></tr>
+    <tr><td>9.2px（原本）</td><td>2.80</td><td>2.86</td><td>2.88</td><td>2.94</td><td>2.96</td><td>2.95</td><td>3.14</td></tr>
+    <tr><td>12px</td><td>2.68</td><td>2.74</td><td>2.76</td><td>2.87</td><td>2.88</td><td>2.86</td><td>3.16</td></tr>
+    <tr><td>15px</td><td>2.01</td><td>2.07</td><td>2.14</td><td>2.19</td><td>2.20</td><td>2.19</td><td>2.39</td></tr>
+    <tr><td>18px</td><td>1.63</td><td>1.67</td><td>1.66</td><td>1.71</td><td>1.69</td><td>1.69</td><td>1.99</td></tr>
+    <tr><td>21px</td><td>1.65</td><td>1.73</td><td>1.76</td><td>1.81</td><td>1.82</td><td>1.80</td><td>2.05</td></tr>
+  </table>
+
+  <p>道理其實一句話：<b>陰影是繞著字的形狀長出來的，它的總量由字的筆畫量決定。</b>這十二個字的筆畫加起來只有 889 個像素，把它糊到 40px 寬，濃度就被攤到幾乎沒有了。而它要對付的白車車頂是一整片、比字大幾十倍的亮面。用小東西的影子去蓋大東西的光，本來就不成比例。</p>
+
+  <p>順帶一提，另一條路我也量了：<b>把字調白</b>。從 65% 白調到 100% 純白，離下緣 15px 那一格只從 2.20 到 3.12 —— 因為白字對亮背景本來就沒有對比可言，調到全白也只有那樣。</p>
+
+  <h2>真的有效的是：字底下墊一塊柔化的暗帶</h2>
+
+  <p>不是繞著字，是整條蓋過去，所以濃度不會被攤薄。用 <code>filter: blur()</code> 把邊緣化開，看起來會像路面上本來就有的一塊陰影，而不是一條字幕條。</p>
+
+  <p>代價是：<b>位置每往上一點，暗帶就得更濃一點</b>，因為愈上面愈接近白車車身和對向車道的車頭燈。下面三案就是這個交換：</p>
+
+  <table>
+    <tr><th>位置</th><th>暗帶要多濃才過 4.70</th></tr>
+    <tr><td>離下緣 12px</td><td>50%</td></tr>
+    <tr><td>離下緣 15px</td><td>62%</td></tr>
+    <tr><td>離下緣 18px</td><td>72%</td></tr>
+  </table>
+
+  <p>我的看法：<b>B（12px、50%）</b>是這區間裡最划算的一格 —— 位置確實離開了下緣，暗帶又還淡到像是路面自己的明暗。到了 D，那塊東西已經看得出來是墊上去的了。</p>
+
+  <p>如果你完全不想要暗帶，那就只有兩個高度可以選：現在的 9.2px，或是上一頁那個 27px（戊↑，最差 5.17）。這一頁的四案請當成「你要的中間位置實際上長什麼樣」來看。</p>
+</div>
+
+<article class="case" style="--bo: 3.077cqw; --sh: 0 1px 2px rgba(25, 22, 20, .7), 0 0 10px rgba(25, 22, 20, .6), 0 0 24px rgba(25, 22, 20, .55); --band: 0">
+  <h2><b>A</b>　中間高度，只把陰影加到最深，沒有暗帶<span class="score">我給 2 分</span></h2>
+  <p class="case-lead">離照片下緣 15px　·　陰影 E2（最深的那一階）　·　暗帶 無</p>
+  <div class="phone">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+
+        <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                       中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                       原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                       先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                       疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+                  <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </header>
+
+        <p class="hero-poem">
+          <span class="lead">小時候被大人牽著來　現在牽著別人</span>
+          <span>從中華路到永樂街　四十多年</span>
+          <span>有跟著換的　也有一直顧的</span>
+        </p>
+
+        <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+        </div>
+      </figure>
+    </div>
+  </div>
+  <table class="nums">
+    <tr><th>最差的字</th><td><b>2.20</b>（到）</td><th>三行詩的門檻</th><td>4.70</td></tr>
+  </table>
+  <p class="note">這就是照你說的做、只動陰影的結果。我從 S1a 一路試到「40px 光暈、75% 濃度」共七階陰影，這個高度的最差值只從 2.01 動到 2.39 —— <b>七階陰影總共只買到 0.38</b>。原因在下面那張表。</p>
+</article>
+
+<article class="case" style="--bo: 2.308cqw; --sh: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28); --band: 0.5">
+  <h2><b>B</b>　離下緣 12px ＋ 淡暗帶<span class="score">我給 7 分</span></h2>
+  <p class="case-lead">離照片下緣 12px　·　陰影 S1a（原本的）　·　暗帶 50%</p>
+  <div class="phone">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+
+        <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                       中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                       原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                       先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                       疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+                  <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </header>
+
+        <p class="hero-poem">
+          <span class="lead">小時候被大人牽著來　現在牽著別人</span>
+          <span>從中華路到永樂街　四十多年</span>
+          <span>有跟著換的　也有一直顧的</span>
+        </p>
+
+        <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+        </div>
+      </figure>
+    </div>
+  </div>
+  <table class="nums">
+    <tr><th>最差的字</th><td><b>4.84</b>（到）</td><th>三行詩的門檻</th><td>4.70</td></tr>
+  </table>
+  <p class="note">位置只比原本高 2.8px，所以暗帶只要 50% 就過線了。三案裡暗帶最不明顯的一個。</p>
+</article>
+
+<article class="case" style="--bo: 3.077cqw; --sh: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28); --band: 0.62">
+  <h2><b>C</b>　離下緣 15px ＋ 中等暗帶<span class="score">我給 7 分</span></h2>
+  <p class="case-lead">離照片下緣 15px　·　陰影 S1a（原本的）　·　暗帶 62%</p>
+  <div class="phone">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+
+        <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                       中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                       原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                       先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                       疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+                  <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </header>
+
+        <p class="hero-poem">
+          <span class="lead">小時候被大人牽著來　現在牽著別人</span>
+          <span>從中華路到永樂街　四十多年</span>
+          <span>有跟著換的　也有一直顧的</span>
+        </p>
+
+        <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+        </div>
+      </figure>
+    </div>
+  </div>
+  <table class="nums">
+    <tr><th>最差的字</th><td><b><s>4.89</s> 3.80</b>（到）</td><th>三行詩的門檻</th><td>4.70</td></tr>
+  </table>
+  <p class="note">你要的正中間（9.2 和 21 的中點）。<b>上面劃掉的 4.89 是我算錯的</b>：取樣用的字框比瀏覽器實際渲染的低了半個像素，而開頭的「到」正壓在車頭燈亮部的邊緣，半個像素就讓它從 3.80 跳到 4.54。重新用實際畫出來的像素量是 <b>3.80</b>，也就是說 62% 還不夠。<a href="/preview/hero-ppt-s1a-e5/">e5</a> 用同一個位置比了 62 / 67 / 72% 三種濃度，以那一頁為準。</p>
+</article>
+
+<article class="case" style="--bo: 3.846cqw; --sh: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28); --band: 0.72">
+  <h2><b>D</b>　離下緣 18px ＋ 明顯暗帶<span class="score">我給 6 分</span></h2>
+  <p class="case-lead">離照片下緣 18px　·　陰影 S1a（原本的）　·　暗帶 72%</p>
+  <div class="phone">
+    <div class="hero-stage">
+      <figure class="hero-photo">
+        <img src="/assets/hero-clinic-night-800.jpg"
+             srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+             sizes="(max-width: 600px) 100vw, 390px"
+             alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+             width="1600" height="1058" fetchpriority="high">
+
+        <div class="hero-copy">
+        <header class="site-header">
+          <a class="brand" href="./">
+            <span class="brand-mark">
+              <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+              <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(-232.8729 -333.8286)">
+                  <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                       中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                       原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                       先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                       疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+                  <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+                </g>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <b>芳仁牙醫診所</b>
+              <small>雲林斗六・永樂街</small>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="主選單">
+            <a href="#articles">全部文章</a>
+            <a href="#doctors">醫師介紹</a>
+            <a href="#clinic">診所資訊</a>
+          </nav>
+        </header>
+
+        <p class="hero-poem">
+          <span class="lead">小時候被大人牽著來　現在牽著別人</span>
+          <span>從中華路到永樂街　四十多年</span>
+          <span>有跟著換的　也有一直顧的</span>
+        </p>
+
+        <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+        </div>
+      </figure>
+    </div>
+  </div>
+  <table class="nums">
+    <tr><th>最差的字</th><td><b>5.28</b>（到）</td><th>三行詩的門檻</th><td>4.70</td></tr>
+  </table>
+  <p class="note">最接近上緣那一版的位置。暗帶要 72%，已經看得出來是一塊墊在字底下的東西，不太像路面自己的陰影了。</p>
+</article>
+
+<div class="switch">
+  戊往上移的五案：<a href="/preview/hero-ppt-s1a-e3/">e3</a><br>
+  字級與位置六案：<a href="/preview/hero-ppt-s1a-e2/">e2</a><br>
+  目前的定案版：<a href="/preview/hero-ppt-s1a-e1/">S1a ＋ 收尾一句</a><br>
+  沒有收尾的原版：<a href="/preview/hero-ppt-s1a/">S1a</a>
+</div>
+
+</body>
+</html>
