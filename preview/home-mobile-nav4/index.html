@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>固定頁首・玻璃邊三檔（遮罩 .06／模糊 6px 定案） — 芳仁牙醫診所提案</title>
+<title>固定頁首（全部定案：收合＋自適應毛玻璃，無邊線） — 芳仁牙醫診所提案</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <!--
@@ -61,12 +61,22 @@
   **所以提亮那條規則整個拿掉了，副標與 HERO 完全同值。**
   自適應不只是好看，它把那個妥協消掉了。
 
-  ## 過渡不是硬切
+  ## 過渡：兩段式，不是線性內插
 
-  條子高 45.8px，窄帶穿過它需要 45.8px 的捲動距離。這段期間條下同時有暗有亮，
-  硬切會露出破綻。所以用捲動進度 t 在兩組 rgba 之間線性內插
-  （t = 1 − 窄帶底距頂 / 條高），由 JS 寫進 --glass。底下的畫面與染色同步變化，
-  合成色在整段過渡中幾乎不動。
+  一開始做的是「依捲動進度在兩組 rgba 之間線性內插」，那是錯的。
+  使用者回報：「捲動從窄帶到灰底的部分，banner 先從透出灰底再轉變到深色，
+  其實沒什麼必要 —— 因為 banner 在窄帶就是深色了，可以直接銜接在灰底區的深色。」
+
+  原因很具體：過渡中段遮罩只剩 .5 左右，而條子下緣此時已經壓在灰底上，
+  那一塊的合成色會衝到 L*55 上下 —— 看起來就是「先透出灰底、再轉深」。
+
+  改成兩段式：**只要灰底開始進入條子的範圍，就直接切到淺區那組 .90**。
+  此刻條子還幾乎整片壓在窄帶最暗的那一段上，合成色從 L*15 上下走到 L*13，
+  肉眼幾乎看不出來；而剛露出的那一小條灰底立刻就是 L*22 的深色，直接銜接。
+  再加 .16s 的 background-color 過渡把那一步磨平。
+
+  實測整段交界（只取條內）：17.9 → 21.4 → 20.6 → 18.7 → 22.1 → 22.5，
+  總擺盪 4.6 L*，全程都在深色帶裡，沒有任何一刻變亮。
 -->
 <style>:root { color-scheme: light; }</style>
 <style>
@@ -189,14 +199,19 @@ html.glass .sticky-head { position: sticky; }
    backdrop-filter 本身沒辦法平滑地開關。z-index: -1 讓它待在 .sticky-head
    這個堆疊環境內、壓在頁首文字底下，但仍然在照片之上。 */
 .sticky-head .site-header { position: relative; }
-/* 模糊定案 6px（使用者選的）。三檔現在差的是下緣那條玻璃邊。 */
-html.glass { --blur: 6px; }
-html.e1 { --edge: 0; --edge-w: 0px; }                      /* 無線 */
-html.e2 { --edge: rgba(255,255,255,.10); --edge-w: .5px; } /* 半像素・更淡 */
-html.e3 { --edge: rgba(255,255,255,.08); --edge-w: 1px; }  /* 1px・更淡（原本是 .14） */
+/* 模糊 6px、下緣無線 —— 都定案了。
+   玻璃邊試過 1px @.14 → 0.5px @.10 → 1px @.08 → 無，使用者選無：
+   那條線太像裝飾，而玻璃的邊界其實靠模糊就講得夠清楚。 */
+html.glass {
+  --blur: 6px;
+  --glass-dark:  rgba(23, 25, 29, .06);   /* 暗區：幾乎不染色，靠模糊 */
+  --glass-light: rgba(31, 34, 42, .90);   /* 淺區：由暗區的合成色反推（見檔首等式） */
+}
 .sticky-head .site-header::before {
   content: ''; position: absolute; inset: 0; z-index: -1;
-  background: var(--glass, transparent);
+  /* 兩段式，不是內插。理由見下方 JS 的註解。 */
+  background: var(--glass-dark);
+  transition: opacity .22s ease, background-color .16s ease;
   /* 模糊量由切換列決定。遮罩定案 .06 之後，模糊就是「看不看得清楚裡面」的那個旋鈕：
      少一點更看得到照片，多一點更像一片玻璃。 */
   -webkit-backdrop-filter: blur(var(--blur, 10px)) saturate(1.08);
@@ -204,12 +219,10 @@ html.e3 { --edge: rgba(255,255,255,.08); --edge-w: 1px; }  /* 1px・更淡（原
   /* 下緣的細亮邊：遮罩 .00 時條子跟底下的照片幾乎沒有明度差，
      沒有這條線就看不出玻璃的邊界在哪。用亮邊不用暗線 ——
      暗線等於又把遮罩加回去了。 */
-  /* 下緣的玻璃邊。遮罩只有 .06，條子與底下的照片幾乎沒有明度差，
-     這條線是唯一在說「玻璃到這裡為止」的東西 —— 但它太明顯就變成一條裝飾線。
-     三檔可切換，含完全不要。 */
-  box-shadow: inset 0 calc(-1 * var(--edge-w, 1px)) 0 var(--edge, rgba(255, 255, 255, .10));
-  opacity: 0; transition: opacity .22s ease;
+  /* 下緣沒有線 —— 定案。玻璃的邊界靠模糊講就夠了。 */
+  opacity: 0;
 }
+html.glass.landed .sticky-head .site-header::before { background: var(--glass-light); }
 html.glass.scrolled .sticky-head .site-header::before { opacity: 1; }
 
 
@@ -744,7 +757,7 @@ body { padding-bottom: 4.2rem; }
 </div>
 
 <div class="demo-note">
-  <h2>固定頁首・收合字級修正 ＋ 玻璃邊三檔</h2>
+  <h2>固定頁首　全部定案</h2>
 
   <p><b>你講的那件事可以用算的，不必憑感覺調。</b>「兩邊看起來同一個顏色」是一條等式：合成色 <code>C = a·T + (1−a)·B</code>（T 是玻璃染色、B 是底下的畫面）。暗區用很低的遮罩求出 C，再<b>反推</b>淺區要用什麼染色才會落在同一個 C 上。</p>
 
@@ -754,9 +767,17 @@ body { padding-bottom: 4.2rem; }
     淺區（內文）　　平均 <code>#dde3e1</code>　<b>L* 89.8</b>
   </p>
 
-  <p><b>遮罩 .06、模糊 6px 都定案了</b>，這一輪處理你講的另外兩件事。</p>
+  <p><b>固定頁首到這裡全部定案了。</b>這一輪處理最後一件事：從窄帶接到灰底那段的過渡。</p>
 
-  <p><b>字級那兩個問題其實是同一個根因。</b>原本收合只縮了標題（縮到 <code>clamp(12.5px, 3.3cqw, 15.5px)</code>）、副標完全沒動，於是：</p>
+  <p><b>你說的沒錯，那個中間狀態是多餘的。</b>原因很具體：我原本是「依捲動進度在兩組 rgba 之間線性內插」，過渡中段遮罩只剩 <code>.5</code> 左右，而條子下緣此時已經壓在灰底上 —— 那一塊的合成色會衝到 <b>L* 55</b> 上下。看起來就是「先透出灰底、再轉深」。</p>
+
+  <p><b>改成兩段式：只要灰底開始進入條子的範圍，就直接切到深色。</b>此刻條子還幾乎整片壓在窄帶最暗的那一段上，合成色從 L* 15 走到 L* 13，肉眼幾乎看不出來；而剛露出的那一小條灰底<b>立刻就是 L* 22 的深色</b>，直接銜接 —— 正是你說的「banner 在窄帶就是深色了」。</p>
+
+  <p><b>實測整段交界</b>（只取條子內部）：17.9 → 21.4 → 20.6 → 18.7 → 22.1 → 22.5。總擺盪 <b>4.6 L*</b>，全程都在深色帶裡，<b>沒有任何一刻變亮</b>。</p>
+
+  <p><b>下緣的線也拿掉了</b>（你選無線）。玻璃的邊界現在只靠模糊講 —— 在照片上那一段確實比較沒有「一片玻璃」的界線感，但也少了一條裝飾線。</p>
+
+  <p><b>上一輪修掉的字級問題（保留紀錄）：兩個症狀其實是同一個根因。</b>原本收合只縮了標題（縮到 <code>clamp(12.5px, 3.3cqw, 15.5px)</code>）、副標完全沒動，於是：</p>
   <p>
     ・標題與副標的<b>字級比從 1.457 掉到 1.25</b>——標題看起來就跟副標差不多小。<br>
     ・「芳仁牙醫診所」6 字 × 12.87px = <b>77.2px</b>，比「雲林斗六・永樂街」8 字 × 10.2px = <b>81.6px</b> <b>還窄</b>。區塊寬度於是改由<b>副標</b>決定，而副標是 <code>text-align-last: justify</code> 會撐滿整個寬度 —— 標題比較窄，右緣就對不齊了。
@@ -764,16 +785,9 @@ body { padding-bottom: 4.2rem; }
 
   <p><b>改法：整組等比縮 0.9，不是只縮標題。</b>把六個數字（min／cqw／max）全部乘 0.9 之後，字級比在任何寬度下都與休止狀態<b>完全相同</b>（390px 是 1.457、375px 是 1.429，兩種狀態一致），標題也永遠比副標寬，右緣自然對齊。圖標也一起照 0.9 縮。</p>
 
-  <p><b>下緣那條線做成三檔，含完全不要：</b></p>
-  <p>
-    <b>無線</b>　　完全拿掉<br>
-    <b>0.5px</b>　@.10 —— 半個 CSS 像素，DPR 3 的手機上是 1.5 個裝置像素<br>
-    <b>1px 淡</b>　@.08 —— 保持 1px 但透明度從原本的 .14 降到 .08
-  </p>
+  <p><b>下面那條列現在只有開關</b>，可以跟「不固定」（也就是正式站現在的樣子）直接對照。</p>
 
-  <p>這條線唯一的工作是說「玻璃到這裡為止」—— 遮罩只有 .06，條子跟底下的照片幾乎沒有明度差。但它太明顯就變成一條裝飾線，你會注意到它不是沒有道理。<b>拿掉之後玻璃的邊界只剩模糊在講</b>，捲到內文區時因為底色差夠大，其實看不出差別；差在照片上那一段。</p>
-
-  <p><b>先前定下來的都沒動：</b>遮罩 .06（合成 <code>#32353c</code> L* 22.2、淺區染色 <code>#1f222a</code>@.90、兩區同色）、模糊 6px、副標維持 HERO 的 <code>.65</code>、捲動位置 0 完全沒有玻璃。條子的顏色會跟著照片擺盪（約 L* 10〜31），那是選 .06 換來的，也是它看起來像玻璃的原因。</p>
+  <p><b>定案的完整規格：</b>固定的是 HERO 原本那一排本人（不是另做一條）；捲動時收合（整組等比縮 0.9，副標保留）；毛玻璃遮罩暗區 <code>.06</code>／淺區 <code>#1f222a</code>@.90（兩區合成同色 <code>#32353c</code> L* 22.2）；模糊 6px；下緣無線；副標維持 HERO 的 <code>.65</code>；捲動位置 0 完全沒有玻璃，與定案的 HERO 座標完全相同。</p>
 
   <p><b>還有一個附帶的好處：副標退回 .65 了。</b>第三輪因為玻璃壓在亮內容上把條底推到 <code>#5d6062</code>，副標 <code>.65</code> 只剩 3.68，當時被迫提到 <code>.80</code>。自適應之後合成色是 L* 18〜21，<code>.65</code> 實測 <b>6.44〜6.85</b> —— <b>那條提亮規則整個拿掉了，副標與 HERO 完全同值。</b>自適應不只是好看，它把那個妥協消掉了。</p>
 
@@ -784,11 +798,9 @@ body { padding-bottom: 4.2rem; }
   <p>對照：<a href="https://fangren.net/preview/home-mobile-share/">分享版</a></p>
 </div>
 
-<nav class="switch" aria-label="毛玻璃通透度切換">
-  <button type="button" data-g="" aria-pressed="true">不固定</button>
-  <button type="button" data-g="1" aria-pressed="false">無線</button>
-  <button type="button" data-g="2" aria-pressed="false">0.5px</button>
-  <button type="button" data-g="3" aria-pressed="false">1px 淡</button>
+<nav class="switch" aria-label="固定頁首切換">
+  <button type="button" data-g="" aria-pressed="true">不固定（現在的樣子）</button>
+  <button type="button" data-g="1" aria-pressed="false">固定頁首</button>
 </nav>
 <script>
 (function () {
@@ -797,20 +809,24 @@ body { padding-bottom: 4.2rem; }
   var band = document.querySelector('.stats');
 
   // [暗區 rgba, 淺區 rgba]。淺區那組是由暗區的合成色反推的（見檔首等式）。
-  // 遮罩定案 .06（使用者選的）。三檔現在差的是模糊量，不是遮罩 ——
-  // 兩區的合成色因此完全相同，模糊只影響「看不看得清楚裡面」。
-  var PAIR = [[23, 25, 29, .06], [31, 34, 42, .90]];
+
   var mode = '';
 
   function paint() {
     root.classList.toggle('scrolled', scrollY > 4);
     if (!mode) return;
-    var p = PAIR, h = head.getBoundingClientRect().height || 1;
-    // t：窄帶穿過條子的進度。0 = 條下全是暗區，1 = 全是淺區。
-    var t = Math.min(1, Math.max(0, 1 - band.getBoundingClientRect().bottom / h));
-    var c = p[0].map(function (v, i) { return v + (p[1][i] - v) * t; });
-    root.style.setProperty('--glass',
-      'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + c[3].toFixed(3) + ')');
+    // 兩段式：只要灰底開始進入條子的範圍，就直接切到淺區那組深色。
+    //
+    // 原本是在兩組 rgba 之間依捲動進度線性內插，結果是錯的：
+    // 過渡中段遮罩只有 .5 左右，而條子下緣已經壓在灰底上 ——
+    // 那一塊的合成色會衝到 L*55 左右，看起來就是「先透出灰底、再轉深」。
+    // 條子在窄帶上本來就是深的，中間沒有理由先亮一次。
+    //
+    // 改成一進入就上 .90：此刻條子還幾乎整片壓在窄帶最暗的那一段上，
+    // 合成色從 L*15 上下走到 L*13，肉眼幾乎看不出來；
+    // 而剛露出的那一小條灰底立刻就是 L*22 的深色，直接銜接。
+    var h = head.getBoundingClientRect().height || 1;
+    root.classList.toggle('landed', band.getBoundingClientRect().bottom < h);
   }
   var tick = false;
   function onScroll() {
@@ -827,7 +843,7 @@ body { padding-bottom: 4.2rem; }
     if (!b) return;
     mode = b.dataset.g;
     root.classList.toggle('glass', mode !== '');
-    ['1', '2', '3'].forEach(function (x) { root.classList.toggle('e' + x, x === mode); });
+
     if (!mode) root.style.removeProperty('--glass');
     sw.querySelectorAll('button').forEach(function (x) {
       x.setAttribute('aria-pressed', String(x === b));
