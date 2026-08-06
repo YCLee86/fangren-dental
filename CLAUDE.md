@@ -231,26 +231,41 @@ tools/
   `t1`–`t3` 是詩的透明度，`s1`/`s1a`/`s1b`/`s2`/`s3` 是文字陰影。
   **`hero-ppt-s1a` 是使用者定案的那一版**，其餘留著互相比較，各頁底部有交叉連結。
   詩的文字內容與尚未定案的收尾在 [COPY.md](COPY.md)。
+- `preview/home-mobile/` — **完整手機首頁**（2026-08-06）：定案的 HERO C72 ＋ 1983／9／6 暗夜窄帶
+  ＋ 正式站現有資料補完的一整頁。HERO、窄帶、字級、墨色 `#2a2c27` 都已定版，**不要動**。
+  `preview/home-mobile-rule/` 是窄帶分隔線三案。
+- `preview/home-mobile-g1` `-g2` `-n1` `-n2` `-n3` — **內文底色提案（2026-08-06）**，
+  都是 `home-mobile` 的複本，只換 `--paper` / `--card` / `--rule`。
+  `g1` 灰紫、`g2` 灰綠（兩案仍有木線）；`n1`/`n2`/`n3` 是中性灰三案且**木線已拿掉**。
+  **`n3` 藍灰調 `#e2e5e6` 是使用者選定的那一版。** 詳細數據見 [PALETTE.md](PALETTE.md) 第四節 C。
 
-### 怎麼鎖
+### 沒有鎖（2026-08-06 起）
 
-`src/worker.js` 對 `/preview/*` 要求 HTTP Basic 認證：
+原本 `src/worker.js` 對 `/preview/*` 要求 HTTP Basic 認證，**已依使用者要求移除**。
+不要「順手加回去」。當時的判斷：
 
-- 帳號預設 `preview`，可用環境變數 `PREVIEW_USER` 改。
-- 密碼放在 Cloudflare 的 **Secret `PREVIEW_PASSWORD`**（Workers & Pages → 專案 →
-  Settings → Variables and Secrets）。**絕對不要寫進程式碼**，這個 repo 是公開的。
-- 沒設 secret 時一律回 503 擋下，不是放行 —— 設定漏掉只是自己看不到，
-  放行則是整頁對外公開。
+- 那道鎖只擋得住 `fangren.net` 這一側，repo 是 **public**，同一份 HTML 在 GitHub 上
+  任何人都讀得到，擋了也沒有實質保護。
+- 密碼要放在 Cloudflare Secret `PREVIEW_PASSWORD`，而那個 secret 從來沒設過，
+  Worker 就一直回 503 —— 結果是使用者自己用手機也打不開提案頁。
+  要設它得進 Cloudflare 後台，這件事只有使用者能做。
+- 使用者的結論是「沒有網址別人也看不到」，選擇不鎖。
 
-### 這道鎖擋不住什麼（重要，不要誤以為是真的私密）
+現在 `/preview/*` 只多兩個 header：`X-Robots-Tag: noindex, nofollow, noarchive`
+與 `Cache-Control: no-store`（提案頁改得勤，手機不能拿到快取的舊版）。
 
-repo 是 **public**，所以檔案內容在 GitHub 上任何人都讀得到，舊的 GitHub Pages 站
-（`yclee86.github.io/fangren-dental/preview/...`）也照樣送得出來 —— 那邊沒有 Worker，擋不了。
-密碼閘只保護 `fangren.net` 這一側。因此預覽頁自己一定要帶
-`<meta name="robots" content="noindex, nofollow, noarchive">`，
-`robots.txt` 的 `Disallow: /preview/` 也已寫在 `build.mjs` 裡。
+### 所以 `preview/` 等同對外公開
+
+`/preview/` 底下的東西任何人拿到網址就看得到，只是沒有連結指過去、也不會被搜尋到。
+搜尋引擎那一層有三道：頁面自己的 `<meta name="robots" content="noindex, nofollow, noarchive">`
+（**新增預覽頁一定要帶**）、Worker 的 `X-Robots-Tag`、以及 `robots.txt` 的
+`Disallow: /preview/`（寫在 `build.mjs` 裡）。
 
 **真的不能外流的東西不要放這裡。**
+
+舊的 GitHub Pages 站（`yclee86.github.io/fangren-dental/preview/...`）也送得出這些頁，
+但那邊是子路徑，預覽頁裡的 `/assets/...` 絕對路徑會 404 **圖片全破**，
+所以要看提案一律用 `https://fangren.net/preview/<name>/`。
 
 ### 本機預覽
 

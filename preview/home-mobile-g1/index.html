@@ -4,12 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>完整手機首頁（HERO C72 ＋ 暗夜窄帶） — 芳仁牙醫診所提案</title>
+<title>完整手機首頁（內文改灰紫灰 #dedce5） — 芳仁牙醫診所提案</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <!--
-  2026-08-06．把定案的 HERO（C72）接上「1983／9／6 暗夜窄帶」（e6 的甲案），
-  再往下用正式站現有的資料補完一整頁手機版，目的是看整體、判斷那條黑窄帶合不合適。
+  2026-08-06．從 home-mobile 分出來的配色變體：**HERO、窄帶、字級、墨色一個值都沒動**，
+  只換掉木線以下內文區的三個底色（紙／卡／線）。
+
+  為什麼要換：PALETTE.md 第四節 B 的三個底色都在明度 92% 那一帶，
+  ① 清水模灰 #edeceb 雖然最中性，但淺到「看不出是灰」，③ #ecede7 又偏米。
+  這一版把紙壓到 **明度 88%**（診所外牆實測亮部是 #cbcac9，明度 79%，
+  原本那組是硬拉上去的），色偏改用官方色票的 灰紫 #5F5D66 —— 色相與 R−B 都照它走。
+
+  本頁：灰紫灰　紙 #dedce5（H=253・S=14.8%・L=88%，R−B −7，來源 灰紫 #5F5D66 的 R−B 是 −7）
 
   **這一頁不會取代正式站。** 它是 preview/ 底下的自給自足快照：
   樣式整份內嵌，不引用 assets/style.css，改這裡不會動到 index.html。
@@ -23,7 +30,7 @@
   顏色全部照 PALETTE.md：
     HERO 與窄帶  暗夜 #191614 / #e3e1e0 / #aaa49e / 分隔線 #38342f
     分界        3px 木色線 #a18262（第六節第 4 條，暗夜到此為止）
-    內文區      紙 #ecede7 / 卡 #f6f7f2 / 線 #d9dbd1 / 墨 #2a2c27 / 次要 #5c5f57
+    內文區      紙 #dedce5 / 卡 #e9e8ed / 線 #c8c4d4 / 墨 #2a2c27 / 次要 #5c5f57（墨色未動）
     唯一的彩色   深綠松 #214D48（分類標籤與連結）
   第六節第 2、3 條說「花一種只出現一次、一個螢幕最多兩個彩色」，
   所以整頁只用了深綠松一種顏色，加上那條木線就到頂了，磚紅／藍灰／焦糖褐都沒有動用。
@@ -43,10 +50,12 @@
   --night-faint: #969089;   /* PALETTE.md 第四節 A */
   --band-bg: #2a2c27;       /* 窄帶底：PALETTE.md 第四節 B 的墨色 */
 
-  /* PALETTE.md 第四節 B：室內（③ 品牌灰綠，主案） */
-  --paper: #ecede7;
-  --card: #f6f7f2;
-  --rule: #d9dbd1;
+  /* 內文區：灰紫灰。官方色票 灰紫 #5F5D66 的色相 ＋ 明度 88%
+     （PALETTE.md 第四節 B 的三選一都在 92%，太淺，看不出是灰） */
+  --paper: #dedce5;   /* H=253・S=14.8%・L=88%，R−B −7 */
+  --card: #e9e8ed;
+  --rule: #c8c4d4;
+  --note: #f0f0f2;    /* 只給頁尾這條提案說明用，不是設計的一部分 */
   --ink: #2a2c27;
   --ink-soft: #5c5f57;
 
@@ -262,7 +271,7 @@ section + section { border-top: 1px solid var(--rule); }
 
 /* 提案頁自己的說明條 */
 .demo-note {
-  background: #fbf8f3; border-top: 1px solid var(--rule);
+  background: var(--note); border-top: 1px solid var(--rule);
   padding: 1.4rem var(--pad) 2rem; font-size: .82rem; line-height: 1.85; color: var(--ink-soft);
 }
 .demo-note h2 { margin: 0 0 .5rem; font-size: .95rem; color: var(--teal); }
@@ -553,13 +562,13 @@ section + section { border-top: 1px solid var(--rule); }
 </div>
 
 <div class="demo-note">
-  <h2>這一頁是什麼</h2>
-  <p>定案的 HERO（C72）＋ 你選的「暗夜窄帶」，再用正式站現有的資料補完一整頁手機版，讓那條黑窄帶可以放在整體裡看。<b>不會取代正式站</b>，這是 <code>preview/</code> 底下的獨立快照，樣式整份內嵌，改它不會動到 <code>index.html</code>。</p>
-  <p>資料全部搬自正式站：六篇文章、九位醫師、地址電話看診時間、頁尾聲明。唯一沒搬的是瀏覽數——本機沒有 Worker，計數 API 不會回應，與其顯示「—」不如拿掉。</p>
-  <p>顏色全部照 <a href="/PALETTE.md">PALETTE.md</a>：暗夜那組留給 HERO 與窄帶，3px 木線是分界，內文區用紙 <code>#ecede7</code>、卡 <code>#f6f7f2</code>。<b>整頁只用了深綠松 <code>#214D48</code> 一種彩色</b>（分類標籤與連結），磚紅、藍灰、焦糖褐都沒動用——規範說「花一種只出現一次、一個螢幕最多兩個彩色」。</p>
-  <p><b>中性灰三案（木線已拿掉）</b>：<a href="/preview/home-mobile-n1/">N1 看板灰 #e8e8e8</a><a href="/preview/home-mobile-n2/">N2 清水模灰 #dedede</a><a href="/preview/home-mobile-n3/">N3 藍灰調 #e2e5e6</a></p>
-  <p><b>先前的兩案</b>（有木線）：<a href="/preview/home-mobile-g1/">G1 灰紫灰 #dedce5</a><a href="/preview/home-mobile-g2/">G2 灰綠灰 #e4e6db</a></p>
-  <p>其他版本：<a href="/preview/home-mobile-rule/">窄帶分隔線三案</a><a href="/preview/hero-ppt-s1a-e6/">e6（窄帶三個配色）</a><a href="/preview/hero-ppt-s1a-e1/">e1（HERO 定案）</a></p>
+  <h2>這一頁是什麼：內文底色換成灰紫灰</h2>
+  <p><b>定案的東西一個都沒動</b>——HERO（C72）、1983／9／6 窄帶、字級、墨色 <code>#2a2c27</code> 全部原封不動。只換木線以下的三個底色。</p>
+  <p>紙 <code>#dedce5</code>　卡 <code>#e9e8ed</code>　線 <code>#c8c4d4</code>。取官方色票 <b>灰紫 #5F5D66</b> 的色相，明度定在 <b>88%</b>。原本三選一都在明度 92%，那個高度上灰是看不出來的；診所外牆清水模實測亮部 <code>#cbcac9</code> 其實只有明度 79%，所以往下壓才是照實物走。R−B 也對齊色票：本頁 −7，色票 −7。</p>
+  <p>氣質：偏冷、偏靜。灰裡帶一點紫，和暗夜 HERO 的黑是同一種涼度，接得順。</p>
+  <p>對比度（都重算過，內文全部過 AA）：墨 <code>#2a2c27</code> 在紙上 10.40:1、次要 <code>#5c5f57</code> 4.79:1、唯一的彩色深綠松 <code>#214D48</code> 6.97:1。<b>要注意</b>：底色壓深之後，苔綠 <code>#5D6D55</code>（4.09:1）掉到 4.5:1 以下，這一頁沒用到它，但之後要用就只能當大字。</p>
+  <p><b>中性灰三案（不帶紫、木線已拿掉）</b>：<a href="/preview/home-mobile-n1/">N1 看板灰 #e8e8e8</a><a href="/preview/home-mobile-n2/">N2 清水模灰 #dedede</a><a href="/preview/home-mobile-n3/">N3 藍灰調 #e2e5e6</a></p>
+  <p>比一比：<a href="/preview/home-mobile-g2/">G2 灰綠灰</a><a href="/preview/home-mobile/">原本的 ③ 品牌灰綠 #ecede7</a><a href="/PALETTE.md">PALETTE.md</a></p>
 </div>
 
 </body>

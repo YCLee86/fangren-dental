@@ -7,7 +7,7 @@
 
    路由：
      www.* 開頭的主機名稱                        → 301 轉到主網域
-     /preview/*                               → 要求密碼（見下方 PREVIEW_PREFIX）
+     /preview/*                               → 靜態檔＋noindex／no-store（見下方 PREVIEW_PREFIX）
      GET  /api/views?slugs=home,bass-brushing → { "counts": { "home": 12, ... } }
      POST /api/views   body: { "slug": "home" } → { "slug": "home", "views": 13 }
      其他                                        → 靜態檔，沒有就給 404 頁
@@ -76,79 +76,27 @@ async function postViews(request, env) {
 }
 
 /* =============================================================================
-   /preview/* — 未上線的改版提案頁，用 HTTP Basic 認證擋住
+   /preview/* — 未上線的改版提案頁
    -----------------------------------------------------------------------------
-   密碼放在 Cloudflare 的 Secret（PREVIEW_PASSWORD），不進版控——這個 repo 是
-   公開的，寫在程式碼裡等於沒鎖。帳號預設 preview，可用 PREVIEW_USER 覆寫。
+   2026-08-06：原本這裡有一道 HTTP Basic 密碼閘，使用者要求拿掉。
+   理由與現況：
 
-   沒設密碼時一律擋下（回 503），不是放行。設定漏掉的代價只是自己看不到，
-   放行的代價是整頁對外公開。
+   - 那道鎖本來就只擋得住 fangren.net 這一側。這個 repo 是**公開的**，
+     同一份 HTML 在 GitHub 上任何人都讀得到。
+   - 密碼放在 Cloudflare Secret（PREVIEW_PASSWORD），而那個 secret 從來沒設過，
+     所以閘門一直在回 503——等於預覽頁在正式網域上根本打不開，
+     連自己用手機看都看不到。
+   - 使用者的判斷是「沒有網址別人也看不到」，並要求改成不鎖。
 
-   注意：這只擋得住 fangren.net 這一側。同一份檔案在公開 repo 裡看得到，
-   舊的 GitHub Pages 站（yclee86.github.io/fangren-dental/）也還吃得到，
-   那邊沒有 Worker、擋不了——所以預覽頁本身也帶了 noindex。
+   所以現在只留兩件事：**noindex** 讓搜尋引擎不要收錄
+   （頁面自己也有 <meta name="robots">，robots.txt 也 Disallow: /preview/），
+   以及 **no-store**，手機才不會拿到快取住的舊版提案。
+
+   ⚠ 這代表 /preview/ 底下的東西等同對外公開，只是沒有連結指過去。
+   **真的不能外流的東西不要放這裡。**
    ============================================================================= */
 
 const PREVIEW_PREFIX = "/preview/";
-
-const askForPassword = () =>
-  new Response("這一頁需要密碼。\n", {
-    status: 401,
-    headers: {
-      "WWW-Authenticate": 'Basic realm="fangren preview", charset="UTF-8"',
-      "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "no-store",
-    },
-  });
-
-/* 比較兩個字串但不洩漏「差在第幾個字」——先各自雜湊成固定長度再逐位元組比，
-   長度也就一起藏住了。 */
-async function sameSecret(a, b) {
-  const digest = async (s) =>
-    new Uint8Array(
-      await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s))
-    );
-  const [x, y] = await Promise.all([digest(a), digest(b)]);
-  let diff = 0;
-  for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
-  return diff === 0;
-}
-
-async function guardPreview(request, env) {
-  const expected = env.PREVIEW_PASSWORD;
-  if (!expected) {
-    return new Response(
-      "預覽頁尚未設定密碼（Cloudflare Secret：PREVIEW_PASSWORD）。\n",
-      { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } }
-    );
-  }
-
-  const header = request.headers.get("Authorization") || "";
-  const [scheme, encoded] = header.split(" ");
-  if (scheme !== "Basic" || !encoded) return askForPassword();
-
-  let decoded;
-  try {
-    // atob 給的是位元組，要自己轉成 UTF-8 才不會弄壞非 ASCII 密碼
-    decoded = new TextDecoder().decode(
-      Uint8Array.from(atob(encoded), (c) => c.charCodeAt(0))
-    );
-  } catch {
-    return askForPassword();
-  }
-
-  // 帳號不能含冒號，密碼可以，所以切第一個冒號就好
-  const sep = decoded.indexOf(":");
-  if (sep === -1) return askForPassword();
-
-  const [okUser, okPass] = await Promise.all([
-    sameSecret(decoded.slice(0, sep), env.PREVIEW_USER || "preview"),
-    sameSecret(decoded.slice(sep + 1), expected),
-  ]);
-  if (!okUser || !okPass) return askForPassword();
-
-  return null;   // null＝通過，交回去繼續走靜態檔
-}
 
 /* 走到這裡代表沒有對應的檔案，補上自己的 404 頁 */
 async function notFound(request, env) {
@@ -176,16 +124,13 @@ export default {
     }
 
     if (url.pathname.startsWith(PREVIEW_PREFIX)) {
-      const blocked = await guardPreview(request, env);
-      if (blocked) return blocked;
-
       const page = await env.ASSETS.fetch(request);
       if (page.status === 404) return notFound(request, env);
-      // 過了密碼才拿得到的東西，不要留在瀏覽器或中間的快取裡
-      const guarded = new Response(page.body, page);
-      guarded.headers.set("Cache-Control", "no-store");
-      guarded.headers.set("X-Robots-Tag", "noindex, nofollow");
-      return guarded;
+      // 不收錄、不快取：提案頁改得很勤，手機不能拿到舊的那一版
+      const preview = new Response(page.body, page);
+      preview.headers.set("Cache-Control", "no-store");
+      preview.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+      return preview;
     }
 
     const asset = await env.ASSETS.fetch(request);

@@ -4,12 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>完整手機首頁（HERO C72 ＋ 暗夜窄帶） — 芳仁牙醫診所提案</title>
+<title>N3 藍灰調 #e2e5e6（無木線） — 芳仁牙醫診所提案</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <!--
-  2026-08-06．把定案的 HERO（C72）接上「1983／9／6 暗夜窄帶」（e6 的甲案），
-  再往下用正式站現有的資料補完一整頁手機版，目的是看整體、判斷那條黑窄帶合不合適。
+  2026-08-06．中性灰三案之 N3。HERO、窄帶、字級、墨色都沒動，只有兩件事不一樣：
+
+  1. 內文底色改成 藍灰調 #e2e5e6（H=203・L=89.4%・R−B −4（三案裡唯一有色偏的））。
+     色偏取官方色票藍灰 #3C596B（H=203，候診沙發／長椅／夜空同一條軸），不是紫。
+  2. **3px 木色線拿掉了。** 使用者的理由：地板色在網頁上很突兀，
+     而且拿地板當診所識別色本來就怪。暗夜窄帶現在直接接到內文底，不再有分界線。
+     （這一條牴觸 PALETTE.md 第六節第 4 條，等識別色定了要一起改那份規範。）
+
+  為什麼三案都是中性或接近中性：診所現在用的 LINE 圖文選單底色實測是
+  #e8e8e8 —— 彩度 0%、R−B 0，完全中性。既有的對外介面已經給了答案。
+  按鈕白實測 #f8f8f8，和底的階差 1.154:1；原本 ③ 的紙／卡只差 1.094:1，
+  這是「單獨看不覺得灰」的真正原因 —— 灰要有東西比才讀得出來，
+  所以三案的卡都往純白推。
 
   **這一頁不會取代正式站。** 它是 preview/ 底下的自給自足快照：
   樣式整份內嵌，不引用 assets/style.css，改這裡不會動到 index.html。
@@ -22,8 +33,7 @@
 
   顏色全部照 PALETTE.md：
     HERO 與窄帶  暗夜 #191614 / #e3e1e0 / #aaa49e / 分隔線 #38342f
-    分界        3px 木色線 #a18262（第六節第 4 條，暗夜到此為止）
-    內文區      紙 #ecede7 / 卡 #f6f7f2 / 線 #d9dbd1 / 墨 #2a2c27 / 次要 #5c5f57
+    內文區      紙 #e2e5e6 / 卡 #f4f4f5 / 線 #cdd0d2 / 墨 #2a2c27 / 次要 #5c5f57（墨色未動）
     唯一的彩色   深綠松 #214D48（分類標籤與連結）
   第六節第 2、3 條說「花一種只出現一次、一個螢幕最多兩個彩色」，
   所以整頁只用了深綠松一種顏色，加上那條木線就到頂了，磚紅／藍灰／焦糖褐都沒有動用。
@@ -39,14 +49,14 @@
   --night-line: #38342f;
   --night-text: #e3e1e0;
   --night-soft: #aaa49e;
-  --wood: #a18262;
   --night-faint: #969089;   /* PALETTE.md 第四節 A */
   --band-bg: #2a2c27;       /* 窄帶底：PALETTE.md 第四節 B 的墨色 */
 
-  /* PALETTE.md 第四節 B：室內（③ 品牌灰綠，主案） */
-  --paper: #ecede7;
-  --card: #f6f7f2;
-  --rule: #d9dbd1;
+  /* 內文區：N3 藍灰調。H=203・L=89.4%・R−B −4（三案裡唯一有色偏的） */
+  --paper: #e2e5e6;
+  --card: #f4f4f5;     /* 往純白推，紙才讀得出是灰。階差 1.15:1，同看板 */
+  --rule: #cdd0d2;
+  --note: #f9f9fa;     /* 只給頁尾那條提案說明用，不是設計的一部分 */
   --ink: #2a2c27;
   --ink-soft: #5c5f57;
 
@@ -188,10 +198,6 @@ a { color: var(--teal); }
 .stats b small { font-size: .625rem; font-weight: 400; letter-spacing: 0; margin-left: .1em; }
 .stats span { font-size: .625rem; color: var(--night-soft); }
 
-/* 3px 木色線：暗與亮的分界（PALETTE.md 第六節第 4 條）。
-   它是一個水平面，不是裝飾線，所以滿版、固定 3px、全頁只出現這一次。 */
-.wood { height: 3px; background: var(--wood); }
-
 /* ==========================================================================
    內文區
    ========================================================================== */
@@ -262,7 +268,7 @@ section + section { border-top: 1px solid var(--rule); }
 
 /* 提案頁自己的說明條 */
 .demo-note {
-  background: #fbf8f3; border-top: 1px solid var(--rule);
+  background: var(--note); border-top: 1px solid var(--rule);
   padding: 1.4rem var(--pad) 2rem; font-size: .82rem; line-height: 1.85; color: var(--ink-soft);
 }
 .demo-note h2 { margin: 0 0 .5rem; font-size: .95rem; color: var(--teal); }
@@ -338,7 +344,6 @@ section + section { border-top: 1px solid var(--rule); }
       <li><b>9<small>位</small></b><span>醫師駐診</span></li>
       <li><b>6<small>個</small></b><span>部定專科</span></li>
     </ul>
-    <div class="wood" aria-hidden="true"></div>
 
     <section class="wrap">
       <div class="sec-head">
@@ -553,13 +558,15 @@ section + section { border-top: 1px solid var(--rule); }
 </div>
 
 <div class="demo-note">
-  <h2>這一頁是什麼</h2>
-  <p>定案的 HERO（C72）＋ 你選的「暗夜窄帶」，再用正式站現有的資料補完一整頁手機版，讓那條黑窄帶可以放在整體裡看。<b>不會取代正式站</b>，這是 <code>preview/</code> 底下的獨立快照，樣式整份內嵌，改它不會動到 <code>index.html</code>。</p>
-  <p>資料全部搬自正式站：六篇文章、九位醫師、地址電話看診時間、頁尾聲明。唯一沒搬的是瀏覽數——本機沒有 Worker，計數 API 不會回應，與其顯示「—」不如拿掉。</p>
-  <p>顏色全部照 <a href="/PALETTE.md">PALETTE.md</a>：暗夜那組留給 HERO 與窄帶，3px 木線是分界，內文區用紙 <code>#ecede7</code>、卡 <code>#f6f7f2</code>。<b>整頁只用了深綠松 <code>#214D48</code> 一種彩色</b>（分類標籤與連結），磚紅、藍灰、焦糖褐都沒動用——規範說「花一種只出現一次、一個螢幕最多兩個彩色」。</p>
-  <p><b>中性灰三案（木線已拿掉）</b>：<a href="/preview/home-mobile-n1/">N1 看板灰 #e8e8e8</a><a href="/preview/home-mobile-n2/">N2 清水模灰 #dedede</a><a href="/preview/home-mobile-n3/">N3 藍灰調 #e2e5e6</a></p>
-  <p><b>先前的兩案</b>（有木線）：<a href="/preview/home-mobile-g1/">G1 灰紫灰 #dedce5</a><a href="/preview/home-mobile-g2/">G2 灰綠灰 #e4e6db</a></p>
-  <p>其他版本：<a href="/preview/home-mobile-rule/">窄帶分隔線三案</a><a href="/preview/hero-ppt-s1a-e6/">e6（窄帶三個配色）</a><a href="/preview/hero-ppt-s1a-e1/">e1（HERO 定案）</a></p>
+  <h2>N3　藍灰調　#e2e5e6　（木線已拿掉）</h2>
+  <p><b>木線沒了。</b>暗夜窄帶直接接到內文底，中間什麼都沒有。你說的沒錯——拿地板當識別色本來就站不住，那條線的存在感又比它承擔的意義大。識別色之後另外選。</p>
+  <p><b>底色：</b>紙 <code>#e2e5e6</code>　卡 <code>#f4f4f5</code>　線 <code>#cdd0d2</code>。H=203・L=89.4%・R−B −4（三案裡唯一有色偏的）。你要 G1 那種涼，但不要紫。這一版把色偏換成官方色票的<b>藍灰 <code>#3C596B</code></b>（H=203）—— 候診沙發、長椅、夜空都在這條軸上，是診所裡唯一天然的冷色，跟紫沒有關係。</p>
+  <p><b>為什麼三案都不帶紫：</b>去量了你給的 <code>看板_20260226</code>——診所現在用的 LINE 圖文選單，底色實測是 <b><code>#e8e8e8</code>，彩度 0%、R−B 0，完全中性</b>。圖示的深綠松量到 <code>#234b48</code>，就是官方色票的 <code>#214D48</code>。你們對外的介面早就給了答案：中性灰＋官方色票當點綴。</p>
+  <p><b>還有一件事比色相更關鍵：</b>你說「③ 單獨看不覺得灰」——因為 ③ 的紙 <code>#ecede7</code> 和卡 <code>#f6f7f2</code> 只差 <b>1.094:1</b>，兩塊都是暖的，眼睛沒有參照物就讀成白。看板的底和按鈕白差 <b>1.154:1</b>。所以三案的卡全部往純白推，階差拉到 1.15:1 —— 灰是比出來的，不是調出來的。</p>
+  <p><b>對比度</b>（重算過）：墨 <code>#2a2c27</code> 11.15:1、次要 <code>#5c5f57</code> 5.14:1、深綠松 <code>#214D48</code> 7.47:1，內文全過 AA。要注意 苔綠 <code>#5D6D55</code> 4.38:1，只能當大字。</p>
+  <p><b>不碰的東西：</b>HERO（C72）、1983／9／6 窄帶、所有字級、墨色 <code>#2a2c27</code>，一個值都沒動。</p>
+  <p>比一比：<a href="/preview/home-mobile-n1/">N1 看板灰 #e8e8e8</a><a href="/preview/home-mobile-n2/">N2 清水模灰 #dedede</a></p>
+  <p>先前的：<a href="/preview/home-mobile-g1/">G1 灰紫（你說有點紫）</a><a href="/preview/home-mobile/">③ 品牌灰綠 #ecede7（有木線）</a><a href="/PALETTE.md">PALETTE.md</a></p>
 </div>
 
 </body>
