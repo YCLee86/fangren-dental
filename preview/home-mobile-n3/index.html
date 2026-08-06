@@ -4,47 +4,40 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>N3 藍灰調 #e2e5e6（無木線） — 芳仁牙醫診所提案</title>
+<title>N3 藍灰調 #e2e5e6（無木線）＋固定頁首 — 芳仁牙醫診所提案</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <!--
-  2026-08-06．中性灰三案之 N3。HERO、窄帶、字級、墨色都沒動，只有兩件事不一樣：
+  2026-08-06．固定頁首（定案，已併入本頁）
 
-  1. 內文底色改成 藍灰調 #e2e5e6（H=203・L=89.4%・R−B −4（三案裡唯一有色偏的））。
-     色偏取官方色票藍灰 #3C596B（H=203，候診沙發／長椅／夜空同一條軸），不是紫。
-  2. **3px 木色線拿掉了。** 使用者的理由：地板色在網頁上很突兀，
-     而且拿地板當診所識別色本來就怪。暗夜窄帶現在直接接到內文底，不再有分界線。
-     （這一條牴觸 PALETTE.md 第六節第 4 條，等識別色定了要一起改那份規範。）
+  捲動時固定在頂端的是 **HERO 原本那一排 .site-header 本人**，不是另外做一條。
+  第一輪做過「另跳一條 .topbar」，被使用者否決：「有點多此一舉」。
 
-  為什麼三案都是中性或接近中性：診所現在用的 LINE 圖文選單底色實測是
-  #e8e8e8 —— 彩度 0%、R−B 0，完全中性。既有的對外介面已經給了答案。
-  按鈕白實測 #f8f8f8，和底的階差 1.154:1；原本 ③ 的紙／卡只差 1.094:1，
-  這是「單獨看不覺得灰」的真正原因 —— 灰要有東西比才讀得出來，
-  所以三案的卡都往純白推。
+  ## 搬動它處理掉的三件事
 
-  **這一頁不會取代正式站。** 它是 preview/ 底下的自給自足快照：
-  樣式整份內嵌，不引用 assets/style.css，改這裡不會動到 index.html。
+  1. 它原本在 .hero-copy 裡，而那是絕對定位在有 overflow: hidden 的 .hero-photo 之內 ——
+     sticky 在那裡面只會黏到 HERO 結束就跑掉。所以搬成 .phone 的直接子元素。
+  2. 搬出來之後容器查詢單位改變意義（原本 cqh，新容器只有 cqw）。
+     照片高 = 74.72cqw，所以 **1cqh = 0.7472cqw**，是等式不是近似。
+  3. 詩的位置 = 5cqh ＋ 頁首高 ＋ 7cqh，頁首搬走會讓詩往上跳。
+     原地補等高佔位，高度用同一組 clamp 算。
+     實測捲動位置 0 時 375／390 兩個寬度的座標與搬動前完全相同。
 
-  資料全部取自正式站 index.html，沒有一個字是新編的：
-  六篇文章的標題／摘要／日期／分類、九位醫師的專長資歷學歷、
-  地址電話看診時間、頁尾的免責與圖片出處。
-  唯一沒有搬過來的是瀏覽數 —— 本機沒有 Worker，計數 API 不會回應（這是預期行為），
-  與其顯示「—」不如整個拿掉。
+  ## 定案的規格
 
-  2026-08-06 後續兩項定案，一併記在這裡：
-    · 照片下緣補回（框高 74.72cqw）、照片與窄帶之間的白線消除（.hero-block）、窄帶 66→54px
-    · 窄帶改成「夜的漸層」#17191d → #282b31 → #2d3037，
-      窄帶裡的兩行字改用頁首同一組宣告：數字 rgba(255,255,255,.95)（＝芳仁牙醫診所）、
-      標籤 rgba(255,255,255,.65)（＝雲林斗六・永樂街）
+    收合      整組等比縮 0.9（副標保留），條高 60.4 → 45.1px
+    毛玻璃    暗區 rgba(23,25,29,.06)，模糊 6px，下緣無線
+    漸變區間  「條子開始壓到窄帶」到「窄帶整條從條子底下過完」
+    終點      **不透明** #32353c —— 之後底下是什麼都不影響，顏色完全固定
+    字色      全部沿用 HERO 的宣告：品牌名 .95／副標 .65／nav .88
+    捲動 0    完全沒有玻璃，與定案的 HERO 一模一樣
 
-  顏色全部照 PALETTE.md：
-    HERO        暗夜 #191614 / #e3e1e0 / #aaa49e / 分隔線 #38342f
-    窄帶        漸層 #17191d / #282b31 / #2d3037，字用半透明白（同頁首）
-    內文區      紙 #e2e5e6 / 卡 #f4f4f5 / 線 #cdd0d2 / 墨 #2a2c27 / 次要 #5c5f57（墨色未動）
-    唯一的彩色   深綠松 #214D48（分類標籤與連結）
-  第六節第 2、3 條說「花一種只出現一次、一個螢幕最多兩個彩色」，
-  所以整頁只用了深綠松一種顏色，加上那條木線就到頂了，磚紅／藍灰／焦糖褐都沒有動用。
-  第 5 條「數字不上色」也照做：1983／9／6 用的是白，不是苔綠。
+  暗區 .06 與終點 #32353c 的關係是解出來的：合成色 C = a·T + (1−a)·B，
+  條下畫面實測暗區平均 #34373e L*23.0、淺區平均 #dde3e1 L*89.8。
+  詳細數據與被否決的做法見 PALETTE.md 第四節 A，以及本檔 CSS／JS 的註解。
+
+  沒有 JS 時腳本不會掛上 html.glass，頁首維持原本的 absolute、跟著捲走 ——
+  也就是加這個功能之前的行為，不會壞掉。
 -->
 <style>:root { color-scheme: light; }</style>
 <style>
@@ -133,6 +126,96 @@ a { color: var(--teal); }
   pointer-events: none;
 }
 .hero-copy a { pointer-events: auto; }
+
+/* ==========================================================================
+   固定頁首。用的是 HERO 原本那一排本人（.site-header），不是另做一條。
+
+   .sticky-head 高度 0、不佔版面，只負責把頁首釘在頂端。
+   預設是 absolute（＝沒有 JS 時的行為，跟著捲走），
+   由腳本掛上 html.glass 之後才變成 sticky。
+   ========================================================================== */
+.phone { position: relative; container-type: inline-size; }
+.sticky-head { position: absolute; top: 0; left: 0; right: 0; z-index: 30; height: 0; }
+html.glass .sticky-head { position: sticky; }
+
+/* 搬出 .hero-photo 之後 cqh 沒有意義了，全部換成 cqw（1cqh = 0.7472cqw，見檔首註解）。
+   下面這一段是原本 .hero-copy ＋ .site-header 的尺寸，一個值都沒有改，只換單位。 */
+.sticky-head .site-header {
+  padding: 3.736cqw 4cqw 0;              /* 原 .hero-copy 的 padding: 5cqh 4cqw 0 */
+  transition: background-color .2s ease, color .2s ease, padding .2s ease;
+}
+.sticky-head .brand-mark { flex: 0 0 clamp(30px, 8.2192cqw, 40px); }   /* 原 11cqh */
+.sticky-head .brand-text b { font-size: clamp(14px, 3.81072cqw, 18px); }  /* 原 5.1cqh */
+.sticky-head .brand-text small,
+.sticky-head .site-nav { font-size: clamp(10px, 2.6152cqw, 12.5px); }     /* 原 3.5cqh */
+.sticky-head .site-nav { padding-top: 0.7472cqw; }                        /* 原 1cqh */
+
+/* 佔位：頁首高永遠等於 brand-text 兩行（圖標最高 40×0.4928=19.7px，一定比它矮，
+   nav 也只有一行）。用同一組 clamp，所以任何寬度下都等高。 */
+.header-space {
+  height: calc(clamp(14px, 5.1cqh, 18px) * 1.25 + clamp(10px, 3.5cqh, 12.5px) * 1.25);
+}
+
+/* ---------- 毛玻璃：一捲動就出現，一路都在 ---------- */
+/* 玻璃放在 ::before 而不是 .site-header 自己身上，為的是能用 opacity 淡入 ——
+   backdrop-filter 本身沒辦法平滑地開關。z-index: -1 讓它待在 .sticky-head
+   這個堆疊環境內、壓在頁首文字底下，但仍然在照片之上。 */
+.sticky-head .site-header { position: relative; }
+html.glass { --blur: 6px; }
+.sticky-head .site-header::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  /* 顏色由 JS 依捲動位置寫進 --glass（漸變區間見下方 JS 註解）。
+     這裡不要放 background-color 的 transition —— 值本來就是逐幀給的，
+     再加過渡只會讓它落後於捲動。 */
+  background: var(--glass, transparent);
+  transition: opacity .22s ease;
+  /* 模糊 6px。遮罩只有 .06，玻璃感是這個模糊撐出來的。
+     下緣刻意沒有線 —— 試過 1px @.14 / 0.5px @.10 / 1px @.08，
+     使用者選無：那條線太像裝飾，邊界靠模糊講就夠了。 */
+  -webkit-backdrop-filter: blur(var(--blur, 6px)) saturate(1.08);
+  backdrop-filter: blur(var(--blur, 6px)) saturate(1.08);
+  opacity: 0;
+}
+html.glass.scrolled .sticky-head .site-header::before { opacity: 1; }
+
+
+/* ---------- 收合：品牌名縮小、內距收緊，副標保留 ---------- */
+html.glass.scrolled .sticky-head .site-header {
+  padding-top: 2.4cqw; padding-bottom: 2.4cqw;
+}
+/* 收合的字級：**整組等比縮 0.9**，不是只縮標題。
+   原本只把標題縮到 clamp(12.5px, 3.3cqw, 15.5px)、副標不動，造成兩個問題：
+     1. 標題與副標的字級比從 1.457 掉到 1.25，標題看起來變得跟副標差不多小。
+     2. 「芳仁牙醫診所」6 字 × 12.87px = 77.2px，比「雲林斗六・永樂街」
+        8 字 × 10.2px = 81.6px **還窄** —— 於是區塊寬度改由副標決定，
+        副標又是 text-align-last: justify 撐滿，標題就對不齊右緣了。
+   把六個數字（min／cqw／max）全部乘 0.9 之後，兩行的字級比在任何寬度下都不變，
+   標題也永遠比副標寬，右緣自然對齊。 */
+html.glass.scrolled .sticky-head .brand-text b {
+  font-size: clamp(12.6px, 3.429648cqw, 16.2px); line-height: 1.15;
+}
+html.glass.scrolled .sticky-head .brand-text small {
+  font-size: clamp(9px, 2.35368cqw, 11.25px);
+}
+/* 副標維持 HERO 的 .65，一個字都沒改。
+   第三輪曾經被迫提到 .80（當時玻璃把條底推到 #5d6062，.65 只剩 3.68）——
+   自適應之後合成色是 L*18~21，.65 實測 6.44~6.85，那個妥協不需要了。 */
+html.glass.scrolled .sticky-head .brand-text small { line-height: 1.2; }
+html.glass.scrolled .sticky-head .brand-mark { flex-basis: clamp(27px, 7.39728cqw, 36px); }
+html.glass .sticky-head .brand-text b,
+html.glass .sticky-head .brand-text small,
+html.glass .sticky-head .brand-mark { transition: font-size .2s ease, line-height .2s ease, flex-basis .2s ease; }
+
+/* 錨點不要被固定的頁首蓋住 */
+html.glass #articles, html.glass #doctors, html.glass #clinic {
+  scroll-margin-top: calc(52px + env(safe-area-inset-top));
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticky-head .site-header, .sticky-head .site-header::before,
+  .sticky-head .brand-text small, .sticky-head .brand-text b, .sticky-head .brand-mark {
+    transition: none;
+  }
+}
 .site-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 3cqw; }
 .brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
 .brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
@@ -316,10 +399,11 @@ section + section { border-top: 1px solid var(--rule); }
 .demo-note p { margin: 0 0 .6rem; }
 .demo-note a { margin-right: .8rem; }
 
+
 @media (min-width: 600px) {
   .phone {
     max-width: 390px; margin-inline: auto; background: var(--paper);
-    border: 1px solid var(--rule); border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--rule); border-radius: 14px; overflow: clip;
   }
   .demo-note { max-width: 42rem; margin-inline: auto; }
 }
@@ -330,6 +414,35 @@ section + section { border-top: 1px solid var(--rule); }
 <a class="skip-link" href="#main">跳到主要內容</a>
 
 <div class="phone">
+  <div class="sticky-head">
+    <header class="site-header">
+      <a class="brand" href="./">
+        <span class="brand-mark">
+          <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+          <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="translate(-232.8729 -333.8286)">
+              <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                   中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                   原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                   先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                   疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+            </g>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <b>芳仁牙醫診所</b>
+          <small>雲林斗六・永樂街</small>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主選單">
+        <a href="#articles">全部文章</a>
+        <a href="#doctors">醫師介紹</a>
+        <a href="#clinic">診所資訊</a>
+      </nav>
+    </header>
+  </div>
+
   <main id="main">
     <h1 class="sr-only">芳仁牙醫診所 — 雲林斗六永樂街，在地四十年</h1>
 
@@ -343,32 +456,8 @@ section + section { border-top: 1px solid var(--rule); }
            width="1600" height="1058" fetchpriority="high">
 
       <div class="hero-copy">
-      <header class="site-header">
-        <a class="brand" href="./">
-          <span class="brand-mark">
-            <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
-            <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <g transform="translate(-232.8729 -333.8286)">
-                <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
-                     中間那顆牙成為真正的洞——照片的夜空直接透過來。
-                     原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
-                     先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
-                     疊在白色圖案上就變成一顆灰點，那是錯的。 -->
-                <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
-              </g>
-            </svg>
-          </span>
-          <span class="brand-text">
-            <b>芳仁牙醫診所</b>
-            <small>雲林斗六・永樂街</small>
-          </span>
-        </a>
-        <nav class="site-nav" aria-label="主選單">
-          <a href="#articles">全部文章</a>
-          <a href="#doctors">醫師介紹</a>
-          <a href="#clinic">診所資訊</a>
-        </nav>
-      </header>
+      <!-- 頁首本人搬到 .phone 底下當 sticky 了，這裡留等高的佔位，詩的位置才不會跑 -->
+      <div class="header-space" aria-hidden="true"></div>
 
       <p class="hero-poem">
         <span class="lead">小時候被大人牽著來　現在牽著別人</span>
@@ -601,7 +690,9 @@ section + section { border-top: 1px solid var(--rule); }
 </div>
 
 <div class="demo-note">
-  <h2>N3　藍灰調　#e2e5e6　（木線已拿掉）</h2>
+  <h2>N3　藍灰調　#e2e5e6　（木線已拿掉）＋ 固定頁首</h2>
+  <p><b>2026-08-06 併入：捲動時固定頁首。</b>固定的是 HERO 原本那一排本人，不是另做一條；捲動時收合（整組等比縮 0.9、副標保留），底下是一層毛玻璃 —— 在照片上通透看得到建築，捲進內文之後變成不透明的 <code>#32353c</code>。<b>漸變全部在窄帶上走完</b>，灰底出現時畫面不會再有任何變化。捲動位置 0 與定案的 HERO 完全相同。</p>
+
   <p><b>木線沒了。</b>暗夜窄帶直接接到內文底，中間什麼都沒有。你說的沒錯——拿地板當識別色本來就站不住，那條線的存在感又比它承擔的意義大。識別色之後另外選。</p>
   <p><b>底色：</b>紙 <code>#e2e5e6</code>　卡 <code>#f4f4f5</code>　線 <code>#cdd0d2</code>。H=203・L=89.4%・R−B −4（三案裡唯一有色偏的）。你要 G1 那種涼，但不要紫。這一版把色偏換成官方色票的<b>藍灰 <code>#3C596B</code></b>（H=203）—— 候診沙發、長椅、夜空都在這條軸上，是診所裡唯一天然的冷色，跟紫沒有關係。</p>
   <p><b>為什麼三案都不帶紫：</b>去量了你給的 <code>看板_20260226</code>——診所現在用的 LINE 圖文選單，底色實測是 <b><code>#e8e8e8</code>，彩度 0%、R−B 0，完全中性</b>。圖示的深綠松量到 <code>#234b48</code>，就是官方色票的 <code>#214D48</code>。你們對外的介面早就給了答案：中性灰＋官方色票當點綴。</p>
@@ -611,6 +702,61 @@ section + section { border-top: 1px solid var(--rule); }
   <p>比一比：<a href="/preview/home-mobile-n1/">N1 看板灰 #e8e8e8</a><a href="/preview/home-mobile-n2/">N2 清水模灰 #dedede</a></p>
   <p>先前的：<a href="/preview/home-mobile-g1/">G1 灰紫（你說有點紫）</a><a href="/preview/home-mobile/">③ 品牌灰綠 #ecede7（有木線）</a><a href="/PALETTE.md">PALETTE.md</a></p>
 </div>
+
+<script>
+/* 固定頁首。這支腳本只做兩件事：
+   1. 在 <html> 掛上 glass 這個 class，把固定＋收合＋毛玻璃整組打開。
+      **沒有 JS 的時候不會掛**，頁首就維持原本的 absolute、跟著捲走 ——
+      那正是加這個功能之前的行為，所以無 JS 環境不會壞掉，只是沒有這個效果。
+   2. 依捲動位置逐幀算出玻璃的顏色寫進 --glass。 */
+(function () {
+  var root = document.documentElement;
+  var head = document.querySelector('.sticky-head .site-header');
+  var band = document.querySelector('.stats');
+  if (!head || !band) return;
+  root.classList.add('glass');
+
+  // 玻璃的兩個端點。終點是**不透明**的，這一點是關鍵 —— 見下方註解。
+  var A = [23, 25, 29, .06];    // 起點：暗區。幾乎不染色，靠模糊撐出玻璃感
+  var B = [50, 53, 60, 1];      // 終點：#32353c，就是等式解出來的合成色 C
+
+  function paint() {
+    root.classList.toggle('scrolled', scrollY > 4);
+
+    // 漸變區間＝「條子開始壓到窄帶」到「窄帶整條從條子底下過完」。
+    //
+    // 為什麼是這一段：這整段期間條子底下都是**窄帶**（深色），
+    // 所以顏色怎麼變都在深色裡走，看不出來。等窄帶過完、灰底出現時，
+    // 條子早就已經是最終的深色了 —— 灰底那一刻不會再有任何變化。
+    //
+    // 做過但不夠好的兩版，留著避免有人改回去：
+    //   · 依捲動進度在兩組 rgba 之間線性內插 —— 中段遮罩只剩 .5，
+    //     而條子下緣已經壓在灰底上，那一塊會衝到 L*55，看起來是「先透出灰底再轉深」。
+    //   · 灰底一進入就切到 .90 —— 消掉了那個亮閃，但沒消掉第二段：
+    //     .90 在窄帶上是 L*13、在灰底上是 L*22，灰底滑進來時條子會慢慢變亮 10 個 L*。
+    //
+    // 關鍵是終點必須**不透明**。只要還留著 10% 的透明度，
+    // 底下換成灰底時條子就一定會跟著變亮 —— 光把切換點提早沒有用。
+    var r = band.getBoundingClientRect();
+    var h = head.getBoundingClientRect().height || 1;
+    var t = Math.min(1, Math.max(0, (h - r.top) / (r.height || 1)));
+    var c = A.map(function (v, i) { return v + (B[i] - v) * t; });
+    root.style.setProperty('--glass',
+      'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + c[3].toFixed(3) + ')');
+  }
+
+  var tick = false;
+  function onScroll() {
+    if (tick) return;
+    tick = true;
+    requestAnimationFrame(function () { tick = false; paint(); });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  paint();
+})();
+</script>
+
 
 </body>
 </html>
