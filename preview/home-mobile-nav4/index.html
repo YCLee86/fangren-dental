@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>固定頁首・毛玻璃模糊量三檔（遮罩定案 .06） — 芳仁牙醫診所提案</title>
+<title>固定頁首・玻璃邊三檔（遮罩 .06／模糊 6px 定案） — 芳仁牙醫診所提案</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <!--
@@ -36,12 +36,23 @@
   暗區這一側沒有下限 —— 沒有玻璃時副標本來就直接壓在原始照片上（已定案接受的狀態），
   加了模糊只會把亮部拉平。實算最壞的一刻（條下 L*32.7）副標 .65 仍有 4.69。
 
-  ## 模糊量是另一個旋鈕，三檔待選
+  **模糊定案 6px**（三檔 6／10／14 實測可讀性只差 0.03，純觀感）。
 
-  遮罩定案之後，模糊決定的是「看不看得清楚裡面」：6px 看得到屋簷與窗框，
-  14px 只剩色塊。**實測模糊量幾乎不影響可讀性**（副標最差對比 4.71／4.73／4.74），
-  所以這一檔純粹是觀感取捨，沒有技術上的對錯。
-  下緣的 rgba(255,255,255,.14) 細亮邊照留 —— 遮罩只有 .06，沒有那條線看不出玻璃的邊。
+  ## 這一輪修掉的兩件事
+
+  1. **收合的字級整組等比縮 0.9，不是只縮標題。**
+     原本只縮標題（clamp(12.5px, 3.3cqw, 15.5px)）、副標不動，造成兩個問題：
+       · 標題與副標的字級比從 1.457 掉到 1.25，標題看起來跟副標差不多小。
+       · 「芳仁牙醫診所」6 字 × 12.87px = 77.2px 比「雲林斗六・永樂街」
+         8 字 × 10.2px = 81.6px **還窄** —— 區塊寬度改由副標決定，
+         而副標是 text-align-last: justify 撐滿，標題就對不齊右緣。
+     **兩個症狀是同一個根因。** 把六個數字（min／cqw／max）全部乘 0.9 之後，
+     字級比在任何寬度下都與休止狀態相同，標題也永遠比副標寬，右緣自然對齊。
+
+  2. **下緣的玻璃邊做成三檔可切換**（含完全不要）：
+       無線 ／ 0.5px @.10 ／ 1px @.08（原本是 1px @.14）
+     這條線唯一的工作是說「玻璃到這裡為止」—— 遮罩只有 .06，
+     條子與底下的照片幾乎沒有明度差。但它太明顯就變成一條裝飾線。
 
   ## 副標退回 .65
 
@@ -178,9 +189,11 @@ html.glass .sticky-head { position: sticky; }
    backdrop-filter 本身沒辦法平滑地開關。z-index: -1 讓它待在 .sticky-head
    這個堆疊環境內、壓在頁首文字底下，但仍然在照片之上。 */
 .sticky-head .site-header { position: relative; }
-html.b1 { --blur: 6px; }
-html.b2 { --blur: 10px; }
-html.b3 { --blur: 14px; }
+/* 模糊定案 6px（使用者選的）。三檔現在差的是下緣那條玻璃邊。 */
+html.glass { --blur: 6px; }
+html.e1 { --edge: 0; --edge-w: 0px; }                      /* 無線 */
+html.e2 { --edge: rgba(255,255,255,.10); --edge-w: .5px; } /* 半像素・更淡 */
+html.e3 { --edge: rgba(255,255,255,.08); --edge-w: 1px; }  /* 1px・更淡（原本是 .14） */
 .sticky-head .site-header::before {
   content: ''; position: absolute; inset: 0; z-index: -1;
   background: var(--glass, transparent);
@@ -191,7 +204,10 @@ html.b3 { --blur: 14px; }
   /* 下緣的細亮邊：遮罩 .00 時條子跟底下的照片幾乎沒有明度差，
      沒有這條線就看不出玻璃的邊界在哪。用亮邊不用暗線 ——
      暗線等於又把遮罩加回去了。 */
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .14);
+  /* 下緣的玻璃邊。遮罩只有 .06，條子與底下的照片幾乎沒有明度差，
+     這條線是唯一在說「玻璃到這裡為止」的東西 —— 但它太明顯就變成一條裝飾線。
+     三檔可切換，含完全不要。 */
+  box-shadow: inset 0 calc(-1 * var(--edge-w, 1px)) 0 var(--edge, rgba(255, 255, 255, .10));
   opacity: 0; transition: opacity .22s ease;
 }
 html.glass.scrolled .sticky-head .site-header::before { opacity: 1; }
@@ -201,14 +217,25 @@ html.glass.scrolled .sticky-head .site-header::before { opacity: 1; }
 html.glass.scrolled .sticky-head .site-header {
   padding-top: 2.4cqw; padding-bottom: 2.4cqw;
 }
+/* 收合的字級：**整組等比縮 0.9**，不是只縮標題。
+   原本只把標題縮到 clamp(12.5px, 3.3cqw, 15.5px)、副標不動，造成兩個問題：
+     1. 標題與副標的字級比從 1.457 掉到 1.25，標題看起來變得跟副標差不多小。
+     2. 「芳仁牙醫診所」6 字 × 12.87px = 77.2px，比「雲林斗六・永樂街」
+        8 字 × 10.2px = 81.6px **還窄** —— 於是區塊寬度改由副標決定，
+        副標又是 text-align-last: justify 撐滿，標題就對不齊右緣了。
+   把六個數字（min／cqw／max）全部乘 0.9 之後，兩行的字級比在任何寬度下都不變，
+   標題也永遠比副標寬，右緣自然對齊。 */
 html.glass.scrolled .sticky-head .brand-text b {
-  font-size: clamp(12.5px, 3.3cqw, 15.5px); line-height: 1.15;
+  font-size: clamp(12.6px, 3.429648cqw, 16.2px); line-height: 1.15;
+}
+html.glass.scrolled .sticky-head .brand-text small {
+  font-size: clamp(9px, 2.35368cqw, 11.25px);
 }
 /* 副標維持 HERO 的 .65，一個字都沒改。
    第三輪曾經被迫提到 .80（當時玻璃把條底推到 #5d6062，.65 只剩 3.68）——
    自適應之後合成色是 L*18~21，.65 實測 6.44~6.85，那個妥協不需要了。 */
 html.glass.scrolled .sticky-head .brand-text small { line-height: 1.2; }
-html.glass.scrolled .sticky-head .brand-mark { flex-basis: clamp(26px, 7.1cqw, 34px); }
+html.glass.scrolled .sticky-head .brand-mark { flex-basis: clamp(27px, 7.39728cqw, 36px); }
 html.glass .sticky-head .brand-text b,
 html.glass .sticky-head .brand-text small,
 html.glass .sticky-head .brand-mark { transition: font-size .2s ease, line-height .2s ease, flex-basis .2s ease; }
@@ -717,7 +744,7 @@ body { padding-bottom: 4.2rem; }
 </div>
 
 <div class="demo-note">
-  <h2>固定頁首・毛玻璃　模糊量三檔</h2>
+  <h2>固定頁首・收合字級修正 ＋ 玻璃邊三檔</h2>
 
   <p><b>你講的那件事可以用算的，不必憑感覺調。</b>「兩邊看起來同一個顏色」是一條等式：合成色 <code>C = a·T + (1−a)·B</code>（T 是玻璃染色、B 是底下的畫面）。暗區用很低的遮罩求出 C，再<b>反推</b>淺區要用什麼染色才會落在同一個 C 上。</p>
 
@@ -727,20 +754,26 @@ body { padding-bottom: 4.2rem; }
     淺區（內文）　　平均 <code>#dde3e1</code>　<b>L* 89.8</b>
   </p>
 
-  <p><b>遮罩定案 .06</b>（你選的）：暗區遮罩 <code>.06</code> → 合成 <code>#32353c</code> L* 22.2，淺區染色 <code>#1f222a</code>@.90。兩區同色仍然成立。</p>
+  <p><b>遮罩 .06、模糊 6px 都定案了</b>，這一輪處理你講的另外兩件事。</p>
 
-  <p><b>這一輪三檔差的是模糊量，不是遮罩</b>——所以三檔的顏色完全一樣，差別只在「看不看得清楚裡面」：</p>
+  <p><b>字級那兩個問題其實是同一個根因。</b>原本收合只縮了標題（縮到 <code>clamp(12.5px, 3.3cqw, 15.5px)</code>）、副標完全沒動，於是：</p>
   <p>
-    <b>模糊 6px</b>　　看得到屋簷、窗框、天空的層次。最像一片真的玻璃壓在照片上<br>
-    <b>模糊 10px</b>　中間<br>
-    <b>模糊 14px</b>　只剩色塊，最接近上一版 22px 的感覺（但已經比它清楚）
+    ・標題與副標的<b>字級比從 1.457 掉到 1.25</b>——標題看起來就跟副標差不多小。<br>
+    ・「芳仁牙醫診所」6 字 × 12.87px = <b>77.2px</b>，比「雲林斗六・永樂街」8 字 × 10.2px = <b>81.6px</b> <b>還窄</b>。區塊寬度於是改由<b>副標</b>決定，而副標是 <code>text-align-last: justify</code> 會撐滿整個寬度 —— 標題比較窄，右緣就對不齊了。
   </p>
 
-  <p><b>可讀性不受影響，實測過。</b>副標在照片區最差的一刻，三檔分別是 <b>4.71／4.73／4.74</b>——差 0.03，等於沒差。條下畫面的起伏（sd）也只從 13.62 收到 12.39。<b>所以這一檔純粹是觀感取捨，沒有技術上的對錯，挑你喜歡的就好。</b></p>
+  <p><b>改法：整組等比縮 0.9，不是只縮標題。</b>把六個數字（min／cqw／max）全部乘 0.9 之後，字級比在任何寬度下都與休止狀態<b>完全相同</b>（390px 是 1.457、375px 是 1.429，兩種狀態一致），標題也永遠比副標寬，右緣自然對齊。圖標也一起照 0.9 縮。</p>
 
-  <p>下緣那條 <code>rgba(255,255,255,.14)</code> 的細亮邊照留 —— 遮罩只有 .06，沒有那條線看不出玻璃的邊界在哪。</p>
+  <p><b>下緣那條線做成三檔，含完全不要：</b></p>
+  <p>
+    <b>無線</b>　　完全拿掉<br>
+    <b>0.5px</b>　@.10 —— 半個 CSS 像素，DPR 3 的手機上是 1.5 個裝置像素<br>
+    <b>1px 淡</b>　@.08 —— 保持 1px 但透明度從原本的 .14 降到 .08
+  </p>
 
-  <p><b>要知道的取捨：</b>遮罩 .06 很低，所以條子的顏色會跟著照片擺盪（範圍約 L* 10〜31）。<b>「通透」和「兩區完全同色」是同一個旋鈕的兩端</b>——淺區那一側永遠對得準，會浮動的是暗區。這是選 .06 換來的，也是它看起來像玻璃的原因。</p>
+  <p>這條線唯一的工作是說「玻璃到這裡為止」—— 遮罩只有 .06，條子跟底下的照片幾乎沒有明度差。但它太明顯就變成一條裝飾線，你會注意到它不是沒有道理。<b>拿掉之後玻璃的邊界只剩模糊在講</b>，捲到內文區時因為底色差夠大，其實看不出差別；差在照片上那一段。</p>
+
+  <p><b>先前定下來的都沒動：</b>遮罩 .06（合成 <code>#32353c</code> L* 22.2、淺區染色 <code>#1f222a</code>@.90、兩區同色）、模糊 6px、副標維持 HERO 的 <code>.65</code>、捲動位置 0 完全沒有玻璃。條子的顏色會跟著照片擺盪（約 L* 10〜31），那是選 .06 換來的，也是它看起來像玻璃的原因。</p>
 
   <p><b>還有一個附帶的好處：副標退回 .65 了。</b>第三輪因為玻璃壓在亮內容上把條底推到 <code>#5d6062</code>，副標 <code>.65</code> 只剩 3.68，當時被迫提到 <code>.80</code>。自適應之後合成色是 L* 18〜21，<code>.65</code> 實測 <b>6.44〜6.85</b> —— <b>那條提亮規則整個拿掉了，副標與 HERO 完全同值。</b>自適應不只是好看，它把那個妥協消掉了。</p>
 
@@ -753,9 +786,9 @@ body { padding-bottom: 4.2rem; }
 
 <nav class="switch" aria-label="毛玻璃通透度切換">
   <button type="button" data-g="" aria-pressed="true">不固定</button>
-  <button type="button" data-g="1" aria-pressed="false">模糊 6</button>
-  <button type="button" data-g="2" aria-pressed="false">模糊 10</button>
-  <button type="button" data-g="3" aria-pressed="false">模糊 14</button>
+  <button type="button" data-g="1" aria-pressed="false">無線</button>
+  <button type="button" data-g="2" aria-pressed="false">0.5px</button>
+  <button type="button" data-g="3" aria-pressed="false">1px 淡</button>
 </nav>
 <script>
 (function () {
@@ -794,7 +827,7 @@ body { padding-bottom: 4.2rem; }
     if (!b) return;
     mode = b.dataset.g;
     root.classList.toggle('glass', mode !== '');
-    ['1', '2', '3'].forEach(function (x) { root.classList.toggle('b' + x, x === mode); });
+    ['1', '2', '3'].forEach(function (x) { root.classList.toggle('e' + x, x === mode); });
     if (!mode) root.style.removeProperty('--glass');
     sw.querySelectorAll('button').forEach(function (x) {
       x.setAttribute('aria-pressed', String(x === b));
