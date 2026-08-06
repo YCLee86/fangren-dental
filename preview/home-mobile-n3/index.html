@@ -86,10 +86,23 @@ a { color: var(--teal); }
 /* ==========================================================================
    HERO：定案 C72，與 hero-ppt-s1a-e1 相同，一個值都沒改
    ========================================================================== */
+/* 暗夜區（照片＋窄帶）整塊墊一層帶底色。
+
+   為什麼要這一層：.hero-photo 的高度是 cqw 算出來的小數（375px 上是 280.2px），
+   照片區與窄帶這兩個相鄰區塊的邊界落在非整數的裝置像素上，
+   瀏覽器分別做像素對齊之後中間會露出不到 1px 的縫，
+   而縫底下就是 body 的紙色 #e2e5e6 —— 在手機上看起來就是一條白線。
+   （實測 iPhone DPR 3 的截圖，那條縫是 1 個裝置像素、量到 #e2e5e6。）
+   墊上帶底色之後，縫再怎麼露也是露 #2a2c27，看不出來。 */
+.hero-block { background: var(--band-bg); }
 .hero-stage { position: relative; container-type: inline-size; background: #12161a; }
 .hero-photo {
   margin: 0; position: relative; overflow: hidden;
-  height: clamp(70.5cqw, 34svh, 74.5cqw);
+  /* 高度＝照片在 113% 寬度下的完整高度：113% × 1058/1600 = 74.72cqw。
+     原本是 clamp(70.5cqw, 34svh, 74.5cqw)，在手機上取到下限 70.5cqw，
+     照片底部被切掉約 5.6%（台階到柏油路那一段），看起來像斷掉。
+     現在讓框高等於圖高，整張照片完整落地，不再裁下緣（右緣的 13% 裁切維持不變）。 */
+  height: 74.72cqw;
   container-type: size;
 }
 .hero-photo img {
@@ -154,8 +167,12 @@ a { color: var(--teal); }
 .stats {
   display: flex; align-items: center; margin: 0; padding: 0 var(--pad);
   /* 定高 ＋ 垂直置中：不用上下內距硬算。行距或字級之後有任何調整，
-     內容仍然會自己置中，帶高也不會跟著跑掉。 */
-  min-height: 66px;
+     內容仍然會自己置中，帶高也不會跟著跑掉。
+
+     66px → 54px：木線拿掉之後帶子上下顯得空。字墨實測 28.3px 高，
+     原本上下各留 20／17.7px，現在各留約 13／11.7px，
+     還是比字高的一半多，不會擠。要再短就往 50px 走，48px 以下會開始貼字。 */
+  min-height: 54px;
   list-style: none; background: var(--band-bg);
 }
 /* 三格等寬、各自置中：原本是靠左排、第一格不縮排，右邊會空出一大塊，
@@ -292,6 +309,7 @@ section + section { border-top: 1px solid var(--rule); }
   <main id="main">
     <h1 class="sr-only">芳仁牙醫診所 — 雲林斗六永樂街，在地四十年</h1>
 
+  <div class="hero-block">
   <div class="hero-stage">
     <figure class="hero-photo">
       <img src="/assets/hero-clinic-night-800.jpg"
@@ -344,6 +362,7 @@ section + section { border-top: 1px solid var(--rule); }
       <li><b>9<small>位</small></b><span>醫師駐診</span></li>
       <li><b>6<small>個</small></b><span>部定專科</span></li>
     </ul>
+  </div>
 
     <section class="wrap">
       <div class="sec-head">
