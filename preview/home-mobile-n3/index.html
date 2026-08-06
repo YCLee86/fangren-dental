@@ -4,41 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>N3 藍灰調 #e2e5e6（無木線） — 芳仁牙醫診所提案</title>
+<title>N3 藍灰調 #e2e5e6（無木線）＋固定頁首＋一科一色實心藥丸 — 芳仁牙醫診所提案</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-
-<!--
-  2026-08-06．中性灰三案之 N3。HERO、窄帶、字級、墨色都沒動，只有兩件事不一樣：
-
-  1. 內文底色改成 藍灰調 #e2e5e6（H=203・L=89.4%・R−B −4（三案裡唯一有色偏的））。
-     色偏取官方色票藍灰 #3C596B（H=203，候診沙發／長椅／夜空同一條軸），不是紫。
-  2. **3px 木色線拿掉了。** 使用者的理由：地板色在網頁上很突兀，
-     而且拿地板當診所識別色本來就怪。暗夜窄帶現在直接接到內文底，不再有分界線。
-     （這一條牴觸 PALETTE.md 第六節第 4 條，等識別色定了要一起改那份規範。）
-
-  為什麼三案都是中性或接近中性：診所現在用的 LINE 圖文選單底色實測是
-  #e8e8e8 —— 彩度 0%、R−B 0，完全中性。既有的對外介面已經給了答案。
-  按鈕白實測 #f8f8f8，和底的階差 1.154:1；原本 ③ 的紙／卡只差 1.094:1，
-  這是「單獨看不覺得灰」的真正原因 —— 灰要有東西比才讀得出來，
-  所以三案的卡都往純白推。
-
-  **這一頁不會取代正式站。** 它是 preview/ 底下的自給自足快照：
-  樣式整份內嵌，不引用 assets/style.css，改這裡不會動到 index.html。
-
-  資料全部取自正式站 index.html，沒有一個字是新編的：
-  六篇文章的標題／摘要／日期／分類、九位醫師的專長資歷學歷、
-  地址電話看診時間、頁尾的免責與圖片出處。
-  唯一沒有搬過來的是瀏覽數 —— 本機沒有 Worker，計數 API 不會回應（這是預期行為），
-  與其顯示「—」不如整個拿掉。
-
-  顏色全部照 PALETTE.md：
-    HERO 與窄帶  暗夜 #191614 / #e3e1e0 / #aaa49e / 分隔線 #38342f
-    內文區      紙 #e2e5e6 / 卡 #f4f4f5 / 線 #cdd0d2 / 墨 #2a2c27 / 次要 #5c5f57（墨色未動）
-    唯一的彩色   深綠松 #214D48（分類標籤與連結）
-  第六節第 2、3 條說「花一種只出現一次、一個螢幕最多兩個彩色」，
-  所以整頁只用了深綠松一種顏色，加上那條木線就到頂了，磚紅／藍灰／焦糖褐都沒有動用。
-  第 5 條「數字不上色」也照做：1983／9／6 用的是夜間文字色，不是苔綠。
--->
+</head>
+<body>
 <style>:root { color-scheme: light; }</style>
 <style>
 :root {
@@ -50,7 +19,15 @@
   --night-text: #e3e1e0;
   --night-soft: #aaa49e;
   --night-faint: #969089;   /* PALETTE.md 第四節 A */
-  --band-bg: #2a2c27;       /* 窄帶底：PALETTE.md 第四節 B 的墨色 */
+  /* 窄帶：2026-08-06 定案的「夜的漸層」。原本是單色 #2a2c27（＝內文墨色），
+     使用者說它跟照片交界處突兀。量出來的原因不只是顏色：照片最底那一列實測
+     #161413、L* 只有 6.6，比窄帶的 17.6 還暗 11 個 L* —— 真正刺眼的是那條硬邊，
+     一張有明暗起伏的照片直接切到一塊全平的深色板。
+     所以窄帶改成從照片的暗度長出來：頂端貼近照片底緣，往下才亮到足以接紙色。
+     色相取自照片本身（夜空 #1b2635 × 柏油 #221e1c，5:5 後彩度 ×0.72 → H=220・S=10%）。 */
+  --band-top: #17191d;      /* L* 8.5，貼著照片底緣的 6.6 —— 上緣因此幾乎沒有邊 */
+  --band-bg:  #282b31;      /* L* 17.5，漸層中段。分隔線混色與 fallback 都以它為準 */
+  --band-bot: #2d3037;      /* L* 19.8，下緣，要有明度才接得住紙色 */
 
   /* 內文區：N3 藍灰調。H=203・L=89.4%・R−B −4（三案裡唯一有色偏的） */
   --paper: #e2e5e6;
@@ -60,8 +37,19 @@
   --ink: #2a2c27;
   --ink-soft: #5c5f57;
 
-  /* 全頁唯一的彩色。紙底 8.03:1、卡底 8.79:1 */
-  --teal: #214D48;
+  /* 官方色票原值（PALETTE.md 第一節），一個數字都沒有改。
+     對比度是對現在這組紙 #e2e5e6 / 卡 #f4f4f5 重算的，不是沿用舊紙那張表。 */
+  --teal:  #214D48;   /* 深綠松。紙 7.47:1・卡 8.60:1 —— 枝條，可以重複出現 */
+  --blue:  #3C596B;   /* 藍灰。  紙 5.85:1・卡 6.74:1 —— 候診沙發／長椅／夜空同一條軸 */
+  --taupe: #7D5A58;   /* Deep Taupe。紙 4.77:1・卡 5.50:1 —— 單椅布料 */
+  --moss:  #5D6D55;   /* 苔綠。  紙 4.38:1（不夠）・卡 5.05:1 —— Logo 的綠 */
+  --brick: #AF4C52;   /* 磚紅。  紙 4.17:1（不夠）・卡 4.80:1 —— 只准出現在卡上 */
+
+  /* 三個診所實物的實測色（PALETTE.md 第一、二節）。不是新調的顏色，
+     是官方色票在診所裡的實物版 —— 用它們的理由寫在下面科別色那一段。 */
+  --chair: #4f6361;   /* 診療椅。      對深綠松 ΔH=1 */
+  --stool: #8d5e3a;   /* 圓凳與木件。  對焦糖褐 ΔH=5 */
+  --tile:  #252d4a;   /* 茶室深藍磁磚。整個色盤裡最深的一個 */
 }
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
@@ -86,10 +74,23 @@ a { color: var(--teal); }
 /* ==========================================================================
    HERO：定案 C72，與 hero-ppt-s1a-e1 相同，一個值都沒改
    ========================================================================== */
+/* 暗夜區（照片＋窄帶）整塊墊一層帶底色。
+
+   為什麼要這一層：.hero-photo 的高度是 cqw 算出來的小數（375px 上是 280.2px），
+   照片區與窄帶這兩個相鄰區塊的邊界落在非整數的裝置像素上，
+   瀏覽器分別做像素對齊之後中間會露出不到 1px 的縫，
+   而縫底下就是 body 的紙色 #e2e5e6 —— 在手機上看起來就是一條白線。
+   （實測 iPhone DPR 3 的截圖，那條縫是 1 個裝置像素、量到 #e2e5e6。）
+   墊上 --band-top 之後，縫再怎麼露也是露 #17191d（漸層的頂色），看不出來。 */
+.hero-block { background: var(--band-top); }
 .hero-stage { position: relative; container-type: inline-size; background: #12161a; }
 .hero-photo {
   margin: 0; position: relative; overflow: hidden;
-  height: clamp(70.5cqw, 34svh, 74.5cqw);
+  /* 高度＝照片在 113% 寬度下的完整高度：113% × 1058/1600 = 74.72cqw。
+     原本是 clamp(70.5cqw, 34svh, 74.5cqw)，在手機上取到下限 70.5cqw，
+     照片底部被切掉約 5.6%（台階到柏油路那一段），看起來像斷掉。
+     現在讓框高等於圖高，整張照片完整落地，不再裁下緣（右緣的 13% 裁切維持不變）。 */
+  height: 74.72cqw;
   container-type: size;
 }
 .hero-photo img {
@@ -105,6 +106,96 @@ a { color: var(--teal); }
   pointer-events: none;
 }
 .hero-copy a { pointer-events: auto; }
+
+/* ==========================================================================
+   固定頁首。用的是 HERO 原本那一排本人（.site-header），不是另做一條。
+
+   .sticky-head 高度 0、不佔版面，只負責把頁首釘在頂端。
+   預設是 absolute（＝沒有 JS 時的行為，跟著捲走），
+   由腳本掛上 html.glass 之後才變成 sticky。
+   ========================================================================== */
+.phone { position: relative; container-type: inline-size; }
+.sticky-head { position: absolute; top: 0; left: 0; right: 0; z-index: 30; height: 0; }
+html.glass .sticky-head { position: sticky; }
+
+/* 搬出 .hero-photo 之後 cqh 沒有意義了，全部換成 cqw（1cqh = 0.7472cqw，見檔首註解）。
+   下面這一段是原本 .hero-copy ＋ .site-header 的尺寸，一個值都沒有改，只換單位。 */
+.sticky-head .site-header {
+  padding: 3.736cqw 4cqw 0;              /* 原 .hero-copy 的 padding: 5cqh 4cqw 0 */
+  transition: background-color .2s ease, color .2s ease, padding .2s ease;
+}
+.sticky-head .brand-mark { flex: 0 0 clamp(30px, 8.2192cqw, 40px); }   /* 原 11cqh */
+.sticky-head .brand-text b { font-size: clamp(14px, 3.81072cqw, 18px); }  /* 原 5.1cqh */
+.sticky-head .brand-text small,
+.sticky-head .site-nav { font-size: clamp(10px, 2.6152cqw, 12.5px); }     /* 原 3.5cqh */
+.sticky-head .site-nav { padding-top: 0.7472cqw; }                        /* 原 1cqh */
+
+/* 佔位：頁首高永遠等於 brand-text 兩行（圖標最高 40×0.4928=19.7px，一定比它矮，
+   nav 也只有一行）。用同一組 clamp，所以任何寬度下都等高。 */
+.header-space {
+  height: calc(clamp(14px, 5.1cqh, 18px) * 1.25 + clamp(10px, 3.5cqh, 12.5px) * 1.25);
+}
+
+/* ---------- 毛玻璃：一捲動就出現，一路都在 ---------- */
+/* 玻璃放在 ::before 而不是 .site-header 自己身上，為的是能用 opacity 淡入 ——
+   backdrop-filter 本身沒辦法平滑地開關。z-index: -1 讓它待在 .sticky-head
+   這個堆疊環境內、壓在頁首文字底下，但仍然在照片之上。 */
+.sticky-head .site-header { position: relative; }
+html.glass { --blur: 6px; }
+.sticky-head .site-header::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  /* 顏色由 JS 依捲動位置寫進 --glass（漸變區間見下方 JS 註解）。
+     這裡不要放 background-color 的 transition —— 值本來就是逐幀給的，
+     再加過渡只會讓它落後於捲動。 */
+  background: var(--glass, transparent);
+  transition: opacity .22s ease;
+  /* 模糊 6px。遮罩只有 .06，玻璃感是這個模糊撐出來的。
+     下緣刻意沒有線 —— 試過 1px @.14 / 0.5px @.10 / 1px @.08，
+     使用者選無：那條線太像裝飾，邊界靠模糊講就夠了。 */
+  -webkit-backdrop-filter: blur(var(--blur, 6px)) saturate(1.08);
+  backdrop-filter: blur(var(--blur, 6px)) saturate(1.08);
+  opacity: 0;
+}
+html.glass.scrolled .sticky-head .site-header::before { opacity: 1; }
+
+
+/* ---------- 收合：品牌名縮小、內距收緊，副標保留 ---------- */
+html.glass.scrolled .sticky-head .site-header {
+  padding-top: 2.4cqw; padding-bottom: 2.4cqw;
+}
+/* 收合的字級：**整組等比縮 0.9**，不是只縮標題。
+   原本只把標題縮到 clamp(12.5px, 3.3cqw, 15.5px)、副標不動，造成兩個問題：
+     1. 標題與副標的字級比從 1.457 掉到 1.25，標題看起來變得跟副標差不多小。
+     2. 「芳仁牙醫診所」6 字 × 12.87px = 77.2px，比「雲林斗六・永樂街」
+        8 字 × 10.2px = 81.6px **還窄** —— 於是區塊寬度改由副標決定，
+        副標又是 text-align-last: justify 撐滿，標題就對不齊右緣了。
+   把六個數字（min／cqw／max）全部乘 0.9 之後，兩行的字級比在任何寬度下都不變，
+   標題也永遠比副標寬，右緣自然對齊。 */
+html.glass.scrolled .sticky-head .brand-text b {
+  font-size: clamp(12.6px, 3.429648cqw, 16.2px); line-height: 1.15;
+}
+html.glass.scrolled .sticky-head .brand-text small {
+  font-size: clamp(9px, 2.35368cqw, 11.25px);
+}
+/* 副標維持 HERO 的 .65，一個字都沒改。
+   第三輪曾經被迫提到 .80（當時玻璃把條底推到 #5d6062，.65 只剩 3.68）——
+   自適應之後合成色是 L*18~21，.65 實測 6.44~6.85，那個妥協不需要了。 */
+html.glass.scrolled .sticky-head .brand-text small { line-height: 1.2; }
+html.glass.scrolled .sticky-head .brand-mark { flex-basis: clamp(27px, 7.39728cqw, 36px); }
+html.glass .sticky-head .brand-text b,
+html.glass .sticky-head .brand-text small,
+html.glass .sticky-head .brand-mark { transition: font-size .2s ease, line-height .2s ease, flex-basis .2s ease; }
+
+/* 錨點不要被固定的頁首蓋住 */
+html.glass #articles, html.glass #doctors, html.glass #clinic {
+  scroll-margin-top: calc(52px + env(safe-area-inset-top));
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticky-head .site-header, .sticky-head .site-header::before,
+  .sticky-head .brand-text small, .sticky-head .brand-text b, .sticky-head .brand-mark {
+    transition: none;
+  }
+}
 .site-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 3cqw; }
 .brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
 .brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
@@ -154,9 +245,16 @@ a { color: var(--teal); }
 .stats {
   display: flex; align-items: center; margin: 0; padding: 0 var(--pad);
   /* 定高 ＋ 垂直置中：不用上下內距硬算。行距或字級之後有任何調整，
-     內容仍然會自己置中，帶高也不會跟著跑掉。 */
-  min-height: 66px;
-  list-style: none; background: var(--band-bg);
+     內容仍然會自己置中，帶高也不會跟著跑掉。
+
+     66px → 54px：木線拿掉之後帶子上下顯得空。字墨實測 28.3px 高，
+     原本上下各留 20／17.7px，現在各留約 13／11.7px，
+     還是比字高的一半多，不會擠。要再短就往 50px 走，48px 以下會開始貼字。 */
+  min-height: 54px;
+  list-style: none;
+  background-color: var(--band-bg);
+  background-image: linear-gradient(180deg,
+    var(--band-top) 0%, var(--band-bg) 55%, var(--band-bot) 100%);
 }
 /* 三格等寬、各自置中：原本是靠左排、第一格不縮排，右邊會空出一大塊，
    整條看起來偏左。改成每格佔三分之一、文字置中。
@@ -189,14 +287,20 @@ a { color: var(--teal); }
   /* 字級：中文比照 HERO 那三行詩（390px 上是 10px＝.625rem），
      數字按同一個比例縮 —— 原本 20 / 12.16px 是 1.645 倍，
      現在 16.4 / 10px 還是 1.64 倍。落差維持住，數字才不會跟中文一樣小。 */
-  display: block; font-size: 1.025rem; color: var(--night-text);
+  /* 顏色與頁首的「芳仁牙醫診所」同一個宣告 —— 半透明白，不是 --night-text。
+     疊在漸層上的實際合成色 #f4f4f5，對比 12.08~15.93（原本 #e3e1e0 是 10.83）。 */
+  display: block; font-size: 1.025rem; color: rgba(255, 255, 255, .95);
   font-family: "Noto Serif TC", "Source Han Serif TC", serif;
   line-height: 1.05;
   font-variant-numeric: tabular-nums; letter-spacing: -.01em;
 }
 /* 單位（年／位／個）跟著數字走，字級和下面的標籤同級，不加粗 */
 .stats b small { font-size: .625rem; font-weight: 400; letter-spacing: 0; margin-left: .1em; }
-.stats span { font-size: .625rem; color: var(--night-soft); }
+/* 顏色與頁首的「雲林斗六・永樂街」同一個宣告。合成色 #b6b7b9，
+   對比 6.55~7.97（原本 #aaa49e 是 5.72）。
+   附帶的好處：半透明白會跟著底色一起變，所以窄帶明度再調也不會掉出 AA ——
+   原本用固定的 #aaa49e 時，窄帶最亮只能到 L* 25.1。 */
+.stats span { font-size: .625rem; color: rgba(255, 255, 255, .65); }
 
 /* ==========================================================================
    內文區
@@ -205,8 +309,7 @@ a { color: var(--teal); }
 section { padding-block: 1.8rem; }
 section + section { border-top: 1px solid var(--rule); }
 .sec-head { margin-bottom: 1.1rem; }
-.sec-head h2 { margin: 0 0 .2rem; font-size: 1.12rem; line-height: 1.5; letter-spacing: .02em; }
-.sec-head p { margin: 0; font-size: .82rem; color: var(--ink-soft); }
+.sec-head h2 { margin: 0; font-size: 1.12rem; line-height: 1.5; letter-spacing: .02em; }
 
 /* 治療項目 */
 .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0; padding: 0; list-style: none; }
@@ -233,13 +336,69 @@ section + section { border-top: 1px solid var(--rule); }
 .card p { margin: 0; font-size: .84rem; line-height: 1.8; color: var(--ink-soft); }
 .card-date { margin-top: .5rem !important; font-size: .76rem !important; }
 
+/* ==========================================================================
+   醫師介紹 ／ 診所資訊 的色塊（2026-08-07 定案：一科一色 ＋ 實心反白藥丸）
+
+   目標是使用者說的那個畫面：房間還是灰白黑，但有家具、擺件、花藝的色塊
+   讓視線停下來。彩色只出現在**小面積的塊**上，不是把文字整片染色 ——
+   實測開幕花藝的照片，花只佔畫面 1~22%（PALETTE.md 第三節），版面照這個比例走。
+
+   定案的三件事：
+     1. 一科一色，藥丸是**實心底＋純白字**。
+        淡底那條路已經走到底了 —— 藥丸字要維持色票原值，底就壓不下去，
+        磚紅最多只能到 10%（12% 就掉到 4.48，過不了 AA）。反白反而最寬鬆，
+        而且六個色的視覺重量終於一致。
+     2. **卡的左邊條收掉了**，回到普通的 1px --rule。藥丸實心之後那條 3px 只是描邊。
+     3. 卡底維持 --card #f4f4f5 一動不動 —— 卡一旦被染色就會往紙靠，
+        「卡要往純白推，紙才讀得出是灰」那條就毀了（PALETTE.md 第四節 B 第 1 條，
+        紙對卡只有 1.152:1，禁不起再被吃掉）。
+   ========================================================================== */
+
+/* ---- 六個科別色 ----------------------------------------------------------
+   科別代號：general 一般／perio 牙周・植牙／endo 顯微根管／ortho 齒顎矯正／
+             kids 兒童牙科／surg 口腔外科／prosth 贋復假牙
+
+   全部是 PALETTE.md 裡就有的值 —— 官方色票原值，或診所實物的實測色，
+   沒有一個是憑感覺調的。後面的數字是**純白字疊在該色上**的實測對比，AA 要 4.5:1。
+
+   為什麼有三個用實測色而不是色票原值：
+     · #4f6361 診療椅 —— 使用者指定給創辦醫師與李侑津醫師。它在 PALETTE 第一節，
+       對官方色票的深綠松 ΔH=1，本來就是同一個色的實物版。
+     · #8d5e3a 圓凳與木件 —— 兒牙原本是磚紅，使用者說紅在品牌裡的暗示性太強，先不要用。
+       換到暖色這一支之後，官方色票的焦糖褐 #9B735E 太淺、白字只有 4.19:1 撐不住，
+       所以取同一族的實物實測值（PALETTE 第一節，對焦糖褐 ΔH=5），夠深。
+     · #252d4a 茶室深藍磁磚 —— 口外與贋復原本共用 Deep Taupe，使用者說不同科不要重複。
+       贋復（全口重建）拿整個色盤裡最深的那一個。
+   -------------------------------------------------------------------------- */
+.doc[data-spec="general"],
+.doc[data-spec="perio"]  { --accent: var(--chair); }  /* 診療椅實測　　　　　 H=174　 6.38:1 */
+.doc[data-spec="endo"]   { --accent: var(--moss);  }  /* 色票・苔綠＝Logo　　 H=100　 5.55:1 */
+.doc[data-spec="ortho"]  { --accent: var(--blue);  }  /* 色票・藍灰＝候診沙發 H=203　 7.41:1 */
+.doc[data-spec="surg"]   { --accent: var(--taupe); }  /* 色票・Taupe＝單椅布料 H=3　　 6.04:1 */
+.doc[data-spec="prosth"] { --accent: var(--tile);  }  /* 茶室深藍磁磚實測　　 H=227　13.53:1 */
+.doc[data-spec="kids"]   { --accent: var(--stool); }  /* 圓凳與木件實測　　　 H=28　　 5.53:1 */
+
+/* 診所資訊維持深綠松當家色（它同時是全站的連結色），看診時間那張是 Deep Taupe。 */
+.info-card { --accent: var(--teal); }
+.info-card[data-hue="taupe"] { --accent: var(--taupe); }
+
+/* 小節標題前的那一小段枝條。只給這兩節，文章區不動。 */
+#doctors .sec-head h2, #clinic .sec-head h2 { display: flex; align-items: center; gap: .5rem; }
+#doctors .sec-head h2::before, #clinic .sec-head h2::before {
+  content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; background: var(--teal);
+}
+
 /* 醫師 */
 .docs { display: grid; gap: .9rem; }
-.doc { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem 1rem; }
+.doc {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: .9rem 1rem 1rem;
+}
 .doc h3 { margin: 0 0 .5rem; font-size: 1rem; line-height: 1.5; }
 .doc-role {
-  display: inline-block; margin-left: .5rem; font-size: .74rem; font-weight: 400;
-  color: var(--ink-soft);
+  display: inline-block; margin-left: .5rem; font-size: .72rem; font-weight: 400;
+  line-height: 1.5; padding: .05rem .6rem; border-radius: 100px;
+  background: var(--accent); color: #fff;
 }
 .doc dl { margin: 0; display: grid; grid-template-columns: 3.2em 1fr; gap: .2rem .6rem; }
 .doc dt { font-size: .76rem; color: var(--ink-soft); }
@@ -247,10 +406,36 @@ section + section { border-top: 1px solid var(--rule); }
 
 /* 診所資訊 */
 .info { display: grid; gap: .9rem; }
-.info-card { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem 1rem; }
-.info-card h3 { margin: 0 0 .3rem; font-size: .88rem; color: var(--ink-soft); font-weight: 400; letter-spacing: .04em; }
+.info-card {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: .9rem 1rem 1rem;
+}
+/* 「地址／電話／看診時間」從灰字改成擺件 —— 三顆小方塊擺在架子上的意思。
+   字級從 .88rem 收到 .76rem：它是標籤不是內容，縮小之後下面那行資料才站得出來。 */
+.info-card h3 {
+  display: inline-block; margin: 0 0 .45rem;
+  font-size: .76rem; font-weight: 400; letter-spacing: .08em; line-height: 1.6;
+  padding: .07rem .65rem; border-radius: 100px;
+  background: var(--accent); color: #fff;
+}
 .info-card p { margin: 0; font-size: .92rem; line-height: 1.8; }
 .info-card .big { font-size: 1.15rem; letter-spacing: .02em; }
+/* 電話是整節裡唯一需要「視覺停留」的東西，所以只有它拿到一塊真正填滿的色塊。
+   底 #dbe0e0 ＝ 深綠松 12% 混進卡色（比藥丸重，藥丸是 8% 混白）。
+   對卡 #f4f4f5 差 1.21:1，在白卡上讀得出來，深綠松疊上去 7.09:1。
+   塊放在卡**裡面**、不是把卡染色 —— 同一塊要是拿去當卡底，
+   它會跟紙 #e2e5e6 差不多，卡就整個消失了。 */
+#clinic .info-card .big {
+  display: inline-block; margin-top: .1rem;
+  background: #dbe0e0; border-radius: 10px;
+  padding: .3rem .85rem; font-size: 1.2rem; letter-spacing: .04em;
+}
+.info-card .big a { color: var(--accent); text-decoration: none; }
+/* 看診時間卡裡的「週一至週五」：14.7px 粗體，Taupe 對卡 5.50:1，過 AA。 */
+#clinic .info-card b { color: var(--accent); }
+/* 全頁唯一的一朵花。磚紅對卡 4.80:1（過 AA），對紙只有 4.17:1 ——
+   所以它只能待在卡上，不要把這個色搬到紙底的任何地方去。 */
+#clinic .info-note { color: var(--brick); }
 .info-note { margin-top: .5rem !important; font-size: .78rem !important; color: var(--ink-soft); }
 .gallery { display: grid; gap: .8rem; margin-top: 1rem; }
 .gallery figure { margin: 0; }
@@ -275,23 +460,53 @@ section + section { border-top: 1px solid var(--rule); }
 .demo-note p { margin: 0 0 .6rem; }
 .demo-note a { margin-right: .8rem; }
 
+
 @media (min-width: 600px) {
   .phone {
     max-width: 390px; margin-inline: auto; background: var(--paper);
-    border: 1px solid var(--rule); border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--rule); border-radius: 14px; overflow: clip;
   }
   .demo-note { max-width: 42rem; margin-inline: auto; }
 }
 </style>
-</head>
-<body>
+
 
 <a class="skip-link" href="#main">跳到主要內容</a>
 
 <div class="phone">
+  <div class="sticky-head">
+    <header class="site-header">
+      <a class="brand" href="./">
+        <span class="brand-mark">
+          <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+          <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="translate(-232.8729 -333.8286)">
+              <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                   中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                   原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                   先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                   疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+            </g>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <b>芳仁牙醫診所</b>
+          <small>雲林斗六・永樂街</small>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主選單">
+        <a href="#articles">全部文章</a>
+        <a href="#doctors">醫師介紹</a>
+        <a href="#clinic">診所資訊</a>
+      </nav>
+    </header>
+  </div>
+
   <main id="main">
     <h1 class="sr-only">芳仁牙醫診所 — 雲林斗六永樂街，在地四十年</h1>
 
+  <div class="hero-block">
   <div class="hero-stage">
     <figure class="hero-photo">
       <img src="/assets/hero-clinic-night-800.jpg"
@@ -301,32 +516,8 @@ section + section { border-top: 1px solid var(--rule); }
            width="1600" height="1058" fetchpriority="high">
 
       <div class="hero-copy">
-      <header class="site-header">
-        <a class="brand" href="./">
-          <span class="brand-mark">
-            <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
-            <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <g transform="translate(-232.8729 -333.8286)">
-                <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
-                     中間那顆牙成為真正的洞——照片的夜空直接透過來。
-                     原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
-                     先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
-                     疊在白色圖案上就變成一顆灰點，那是錯的。 -->
-                <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
-              </g>
-            </svg>
-          </span>
-          <span class="brand-text">
-            <b>芳仁牙醫診所</b>
-            <small>雲林斗六・永樂街</small>
-          </span>
-        </a>
-        <nav class="site-nav" aria-label="主選單">
-          <a href="#articles">全部文章</a>
-          <a href="#doctors">醫師介紹</a>
-          <a href="#clinic">診所資訊</a>
-        </nav>
-      </header>
+      <!-- 頁首本人搬到 .phone 底下當 sticky 了，這裡留等高的佔位，詩的位置才不會跑 -->
+      <div class="header-space" aria-hidden="true"></div>
 
       <p class="hero-poem">
         <span class="lead">小時候被大人牽著來　現在牽著別人</span>
@@ -344,6 +535,7 @@ section + section { border-top: 1px solid var(--rule); }
       <li><b>9<small>位</small></b><span>醫師駐診</span></li>
       <li><b>6<small>個</small></b><span>部定專科</span></li>
     </ul>
+  </div>
 
     <section class="wrap">
       <div class="sec-head">
@@ -361,7 +553,6 @@ section + section { border-top: 1px solid var(--rule); }
     <section class="wrap" id="articles">
       <div class="sec-head">
         <h2>最新文章</h2>
-        <p>依最後更新時間排序，最新的在前</p>
       </div>
       <div class="cards">
       <a class="card" href="/posts/kids-arch-expansion/">
@@ -424,10 +615,11 @@ section + section { border-top: 1px solid var(--rule); }
     <section class="wrap" id="doctors">
       <div class="sec-head">
         <h2>醫師介紹</h2>
-        <p>看診團隊與各自的專科</p>
       </div>
+
+
       <div class="docs">
-      <article class="doc">
+      <article class="doc" data-spec="general">
         <h3>李柄輝<span class="doc-role">創辦醫師</span></h3>
         <dl>
           <dt>專長</dt><dd>口腔檢查、一般牙科治療</dd>
@@ -435,7 +627,7 @@ section + section { border-top: 1px solid var(--rule); }
           <dt>學歷</dt><dd>中山醫學大學牙醫學博士</dd>
         </dl>
       </article>
-      <article class="doc">
+      <article class="doc" data-spec="perio">
         <h3>李侑津<span class="doc-role">醫師</span></h3>
         <dl>
           <dt>專長</dt><dd>牙周病治療、牙周再生手術、植牙手術、固定假牙、活動假牙、水雷射牙周治療</dd>
@@ -443,7 +635,7 @@ section + section { border-top: 1px solid var(--rule); }
           <dt>學歷</dt><dd>臺北醫學大學學士、國立陽明交通大學碩士</dd>
         </dl>
       </article>
-      <article class="doc">
+      <article class="doc" data-spec="ortho">
         <h3>王俊偉<span class="doc-role">矯正專科醫師</span></h3>
         <dl>
           <dt>專長</dt><dd>齒顎矯正、隱適美</dd>
@@ -451,7 +643,7 @@ section + section { border-top: 1px solid var(--rule); }
           <dt>學歷</dt><dd>臺北醫學大學學士、碩士</dd>
         </dl>
       </article>
-      <article class="doc">
+      <article class="doc" data-spec="ortho">
         <h3>廖立揚<span class="doc-role">矯正專科醫師</span></h3>
         <dl>
           <dt>專長</dt><dd>齒顎矯正、隱適美、阻生齒矯正</dd>
@@ -459,7 +651,7 @@ section + section { border-top: 1px solid var(--rule); }
           <dt>學歷</dt><dd>臺北醫學大學學士</dd>
         </dl>
       </article>
-      <article class="doc">
+      <article class="doc" data-spec="kids">
         <h3>林晏妤<span class="doc-role">兒牙專科醫師</span></h3>
         <dl>
           <dt>專長</dt><dd>兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療</dd>
@@ -467,7 +659,7 @@ section + section { border-top: 1px solid var(--rule); }
           <dt>學歷</dt><dd>高雄醫學大學學士</dd>
         </dl>
       </article>
-      <article class="doc">
+      <article class="doc" data-spec="surg">
         <h3>許馨文<span class="doc-role">口外專科醫師</span></h3>
         <dl>
           <dt>專長</dt><dd>阻生齒拔除、齒槽骨保留術</dd>
@@ -475,7 +667,7 @@ section + section { border-top: 1px solid var(--rule); }
           <dt>學歷</dt><dd>臺北醫學大學學士</dd>
         </dl>
       </article>
-      <article class="doc">
+      <article class="doc" data-spec="prosth">
         <h3>楊小瑩<span class="doc-role">贋復假牙專科醫師</span></h3>
         <dl>
           <dt>專長</dt><dd>活動假牙、固定假牙、牙橋、全口重建</dd>
@@ -483,7 +675,7 @@ section + section { border-top: 1px solid var(--rule); }
           <dt>學歷</dt><dd>高雄醫學大學學士</dd>
         </dl>
       </article>
-      <article class="doc">
+      <article class="doc" data-spec="endo">
         <h3>陳芷鈴<span class="doc-role">顯微根管專科醫師</span></h3>
         <dl>
           <dt>專長</dt><dd>顯微根管、根尖手術、活髓治療</dd>
@@ -491,7 +683,7 @@ section + section { border-top: 1px solid var(--rule); }
           <dt>學歷</dt><dd>臺北醫學大學學士</dd>
         </dl>
       </article>
-      <article class="doc">
+      <article class="doc" data-spec="kids">
         <h3>謝耀慶<span class="doc-role">兒牙專科醫師</span></h3>
         <dl>
           <dt>專長</dt><dd>兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療、一般牙科治療</dd>
@@ -505,7 +697,6 @@ section + section { border-top: 1px solid var(--rule); }
     <section class="wrap" id="clinic">
       <div class="sec-head">
         <h2>診所資訊</h2>
-        <p>雲林縣斗六市・在地經營超過四十年</p>
       </div>
       <div class="info">
         <div class="info-card">
@@ -517,7 +708,8 @@ section + section { border-top: 1px solid var(--rule); }
           <h3>電話</h3>
           <p class="big"><a href="tel:+88655339369">05-533-9369</a></p>
         </div>
-        <div class="info-card">
+        <!-- Deep Taupe 只出現在這一張（單椅布料的色），底下那行休診是全頁唯一的磚紅 -->
+        <div class="info-card" data-hue="taupe">
           <h3>看診時間</h3>
           <p><b>週一至週五</b><br>
              上午 08:45–12:00<br>
@@ -558,16 +750,112 @@ section + section { border-top: 1px solid var(--rule); }
 </div>
 
 <div class="demo-note">
-  <h2>N3　藍灰調　#e2e5e6　（木線已拿掉）</h2>
+  <h2>N3　藍灰調　#e2e5e6　（木線已拿掉）＋ 固定頁首 ＋ 一科一色的實心藥丸</h2>
+  <p><b>2026-08-07 定案：一科一色 ＋ 實心反白藥丸，左邊條收掉。</b>只動醫師介紹與診所資訊兩節，文章區一個值都沒碰。
+     切換條已經拿掉了，這頁現在就是定案的樣子。卡底 <code>#f4f4f5</code> 一動不動 ——
+     紙對卡本來就只差 1.152:1，卡一往紙靠，「灰是比出來的」那條就毀了。</p>
+  <p><b>六個科別色，全部是 PALETTE.md 裡就有的值</b>（官方色票原值，或診所實物的實測色），沒有一個是憑感覺調的。
+     後面的數字是<b>純白字疊在該色上</b>的實測對比，藥丸 11.5px，AA 要 4.5:1：<br>
+     一般＋牙周植牙　<code>#4f6361</code>　診療椅實測　　　　H=174　<b>6.38:1</b><br>
+     顯微根管　　　　<code>#5D6D55</code>　色票・苔綠（Logo）　H=100　<b>5.55:1</b><br>
+     齒顎矯正　　　　<code>#3C596B</code>　色票・藍灰（候診沙發）H=203　<b>7.41:1</b><br>
+     口腔外科　　　　<code>#7D5A58</code>　色票・Deep Taupe（單椅布料）H=3　<b>6.04:1</b><br>
+     贋復假牙　　　　<code>#252d4a</code>　茶室深藍磁磚實測　　H=227　<b>13.53:1</b><br>
+     兒童牙科　　　　<code>#8d5e3a</code>　圓凳與木件實測　　　H=28　　<b>5.53:1</b></p>
+  <p><b>三個用實測色而不是色票原值，各有理由：</b>
+     <code>#4f6361</code> 是你指定的，它在 PALETTE 第一節、對深綠松 ΔH=1，本來就是同一個色的實物版。
+     <b>兒牙</b>從磚紅換到暖色這一支之後，官方色票的焦糖褐 <code>#9B735E</code> 太淺、白字只有 <b>4.19:1</b> 撐不住，
+     所以取同一族的實物實測值（圓凳與木件，對焦糖褐 ΔH=5），夠深。
+     <b>贋復</b>要跟口外分開，就拿整個色盤裡最深的那一個（茶室深藍磁磚）—— 全口重建配最重的色。</p>
+  <p><b>為什麼藥丸一定要反白。</b>藥丸字要維持色票原值，底就壓不下去：深綠松、藍灰吃得下 22%，
+     Deep Taupe 18%，苔綠 15%，磚紅只能到 10%（12% 就掉到 4.48，過不了 AA）。
+     反白反而最寬鬆，而且六個色的視覺重量終於一致 —— 淡底那組深綠松 8.31 對磚紅 4.75，差了快一倍。</p>
+  <p><b>兩件要你決定的事：</b>
+     ① <b>贋復 <code>#252d4a</code> 與矯正 <code>#3C596B</code> 是兩個藍</b>（H 227 對 203），靠深淺分開。
+        要換的話，備案是枝葉亮處 <code>#447c56</code>（H=139，白字 4.93:1），但那樣頁上會有三個綠。
+     ② <b>「週六、週日休診」那一行還是磚紅 <code>#AF4C52</code></b>。你說紅在品牌裡暗示性太強 ——
+        這行是唯一還留著紅的地方，要一起拿掉的話講一聲，改成次要墨色就好。</p>
+  <p><b>2026-08-07：四個小節的副標全部拿掉了。</b>
+     「依最後更新時間排序，最新的在前」是在解釋機器怎麼排的，讀者沒問過 ——
+     COPY.md 第三節早就用同一個理由否決過「一篇一篇寫在這裡」（功能導向太強、主詞是文章不是人）。
+     「看診團隊與各自的專科」是「醫師介紹」的同義重述，而且專科現在寫在藥丸上了，那行等於在描述眼睛已經看到的東西。
+     「雲林縣斗六市・在地經營超過四十年」本身有內容，但同一頁已經講了三次：
+     頁首副標「雲林斗六・永樂街」、窄帶的 1983／9／6、頁尾一字不差的同一句 —— 那是第四次。
+     <b>頁尾那句留著</b>，那裡是它該在的地方。標題底下的 .2rem 也一起收掉了，不然會留一段空的。</p>
+  <p><b>電話是唯一填滿的那一塊。</b>整節裡只有它需要視覺停下來，所以只有它拿到一塊實心的底。
+     塊是放在白卡<b>裡面</b>的：底 <code>#dbe0e0</code>（深綠松 12% 混進卡色）對卡 <code>#f4f4f5</code> 差 1.21:1，在卡上讀得出來，字疊上去 7.09:1；
+     同一塊要是拿去當卡底，它會跟紙 <code>#e2e5e6</code> 差不多，卡就整個消失了 —— 這也是為什麼九張醫師卡的底都沒有動。</p>
+  <p><b>2026-08-06 併入：捲動時固定頁首。</b>固定的是 HERO 原本那一排本人，不是另做一條；捲動時收合（整組等比縮 0.9、副標保留），底下是一層毛玻璃 —— 在照片上通透看得到建築，捲進內文之後變成不透明的 <code>#32353c</code>。<b>漸變全部在窄帶上走完</b>，灰底出現時畫面不會再有任何變化。捲動位置 0 與定案的 HERO 完全相同。</p>
+
   <p><b>木線沒了。</b>暗夜窄帶直接接到內文底，中間什麼都沒有。你說的沒錯——拿地板當識別色本來就站不住，那條線的存在感又比它承擔的意義大。識別色之後另外選。</p>
   <p><b>底色：</b>紙 <code>#e2e5e6</code>　卡 <code>#f4f4f5</code>　線 <code>#cdd0d2</code>。H=203・L=89.4%・R−B −4（三案裡唯一有色偏的）。你要 G1 那種涼，但不要紫。這一版把色偏換成官方色票的<b>藍灰 <code>#3C596B</code></b>（H=203）—— 候診沙發、長椅、夜空都在這條軸上，是診所裡唯一天然的冷色，跟紫沒有關係。</p>
   <p><b>為什麼三案都不帶紫：</b>去量了你給的 <code>看板_20260226</code>——診所現在用的 LINE 圖文選單，底色實測是 <b><code>#e8e8e8</code>，彩度 0%、R−B 0，完全中性</b>。圖示的深綠松量到 <code>#234b48</code>，就是官方色票的 <code>#214D48</code>。你們對外的介面早就給了答案：中性灰＋官方色票當點綴。</p>
   <p><b>還有一件事比色相更關鍵：</b>你說「③ 單獨看不覺得灰」——因為 ③ 的紙 <code>#ecede7</code> 和卡 <code>#f6f7f2</code> 只差 <b>1.094:1</b>，兩塊都是暖的，眼睛沒有參照物就讀成白。看板的底和按鈕白差 <b>1.154:1</b>。所以三案的卡全部往純白推，階差拉到 1.15:1 —— 灰是比出來的，不是調出來的。</p>
   <p><b>對比度</b>（重算過）：墨 <code>#2a2c27</code> 11.15:1、次要 <code>#5c5f57</code> 5.14:1、深綠松 <code>#214D48</code> 7.47:1，內文全過 AA。要注意 苔綠 <code>#5D6D55</code> 4.38:1，只能當大字。</p>
   <p><b>不碰的東西：</b>HERO（C72）、1983／9／6 窄帶、所有字級、墨色 <code>#2a2c27</code>，一個值都沒動。</p>
-  <p>比一比：<a href="/preview/home-mobile-n1/">N1 看板灰 #e8e8e8</a><a href="/preview/home-mobile-n2/">N2 清水模灰 #dedede</a></p>
-  <p>先前的：<a href="/preview/home-mobile-g1/">G1 灰紫（你說有點紫）</a><a href="/preview/home-mobile/">③ 品牌灰綠 #ecede7（有木線）</a><a href="/PALETTE.md">PALETTE.md</a></p>
+  <p>比一比：<a href="https://fangren.net/preview/home-mobile-n1/">N1 看板灰 #e8e8e8</a><a href="https://fangren.net/preview/home-mobile-n2/">N2 清水模灰 #dedede</a></p>
+  <p>先前的：<a href="https://fangren.net/preview/home-mobile-g1/">G1 灰紫（你說有點紫）</a><a href="https://fangren.net/preview/home-mobile/">③ 品牌灰綠 #ecede7（有木線）</a><a href="https://github.com/YCLee86/fangren-dental/blob/main/PALETTE.md">PALETTE.md</a></p>
 </div>
+
+<script>
+/* 固定頁首。這支腳本只做兩件事：
+   1. 在 <html> 掛上 glass 這個 class，把固定＋收合＋毛玻璃整組打開。
+      **沒有 JS 的時候不會掛**，頁首就維持原本的 absolute、跟著捲走 ——
+      那正是加這個功能之前的行為，所以無 JS 環境不會壞掉，只是沒有這個效果。
+   2. 依捲動位置逐幀算出玻璃的顏色寫進 --glass。 */
+(function () {
+  var root = document.documentElement;
+  var head = document.querySelector('.sticky-head .site-header');
+  var band = document.querySelector('.stats');
+  if (!head || !band) return;
+  root.classList.add('glass');
+
+  // 玻璃的兩個端點。終點是**不透明**的，這一點是關鍵 —— 見下方註解。
+  var A = [23, 25, 29, .06];    // 起點：暗區。幾乎不染色，靠模糊撐出玻璃感
+  var B = [50, 53, 60, 1];      // 終點：#32353c，就是等式解出來的合成色 C
+
+  function paint() {
+    root.classList.toggle('scrolled', scrollY > 4);
+
+    // 漸變區間＝「條子開始壓到窄帶」到「窄帶整條從條子底下過完」。
+    //
+    // 為什麼是這一段：這整段期間條子底下都是**窄帶**（深色），
+    // 所以顏色怎麼變都在深色裡走，看不出來。等窄帶過完、灰底出現時，
+    // 條子早就已經是最終的深色了 —— 灰底那一刻不會再有任何變化。
+    //
+    // 做過但不夠好的兩版，留著避免有人改回去：
+    //   · 依捲動進度在兩組 rgba 之間線性內插 —— 中段遮罩只剩 .5，
+    //     而條子下緣已經壓在灰底上，那一塊會衝到 L*55，看起來是「先透出灰底再轉深」。
+    //   · 灰底一進入就切到 .90 —— 消掉了那個亮閃，但沒消掉第二段：
+    //     .90 在窄帶上是 L*13、在灰底上是 L*22，灰底滑進來時條子會慢慢變亮 10 個 L*。
+    //
+    // 關鍵是終點必須**不透明**。只要還留著 10% 的透明度，
+    // 底下換成灰底時條子就一定會跟著變亮 —— 光把切換點提早沒有用。
+    var r = band.getBoundingClientRect();
+    var h = head.getBoundingClientRect().height || 1;
+    var t = Math.min(1, Math.max(0, (h - r.top) / (r.height || 1)));
+    var c = A.map(function (v, i) { return v + (B[i] - v) * t; });
+    root.style.setProperty('--glass',
+      'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + c[3].toFixed(3) + ')');
+  }
+
+  var tick = false;
+  function onScroll() {
+    if (tick) return;
+    tick = true;
+    requestAnimationFrame(function () { tick = false; paint(); });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  paint();
+})();
+</script>
+
+
+
+
+
+
 
 </body>
 </html>
