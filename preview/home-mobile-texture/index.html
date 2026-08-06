@@ -660,7 +660,10 @@ body { padding-bottom: 4.2rem; }
     var b = e.target.closest('button[data-tex]');
     if (!b) return;
     var t = b.dataset.tex;
-    document.documentElement.className = t ? 'tex-' + t : '';
+    // 用 classList 逐一增減，不要整個覆寫 className ——
+    // <html> 上可能有別人放的 class（外掛預覽環境會放主題名），覆寫會把它們清掉。
+    var root = document.documentElement;
+    ['a', 'b', 'c'].forEach(function (x) { root.classList.toggle('tex-' + x, x === t); });
     bar.querySelectorAll('button').forEach(function (x) {
       x.setAttribute('aria-pressed', String(x === b));
     });
