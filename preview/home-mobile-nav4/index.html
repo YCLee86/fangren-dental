@@ -27,11 +27,19 @@
   暗區用很低的 a_dark 求出 C，再反推淺區的染色，使兩邊的 C 完全相同：
       淺區染色 = (C − (1−a_light)·B_light) / a_light      （a_light 取 0.90，留一點通透）
 
-  三檔（實算，ΔL* 都是 0.00）：
-      a_dark .18 → C #2f3238 L*20.6   淺區染色 #1b1e25
-      a_dark .28 → C #2c2f35 L*19.2   淺區染色 #181b22
-      a_dark .38 → C #292c31 L*17.8   淺區染色 #15171e
-  L* 17.8~20.6 正好落在窄帶自己的色域裡（--band-bg 是 L*17.5），不是另一個顏色。
+  第一次做的三檔是 .18／.28／.38，使用者的回饋：「.28 和 .38 比較厚實，看起來很像塗黑的，
+  毛玻璃完全不讓人看到裡面；.18 還勉強好一點，可是不夠通透。」這個描述是準的 ——
+  遮罩到了 .28 以上就是遮罩壓過模糊，玻璃自然不透。所以整組往下探：
+
+      a_dark .00 → C #34373e L*23.0   淺區染色 #21242c   （純模糊，暗區完全不染色）
+      a_dark .06 → C #32353c L*22.2   淺區染色 #1f222a
+      a_dark .12 → C #31333a L*21.7   淺區染色 #1d2027
+
+  **暗區這一側沒有下限問題**：沒有玻璃時副標本來就是直接壓在原始照片上，
+  那是已經定案接受的狀態；加了模糊只會把亮部拉平，只會更好。
+  實算最壞的一刻（條下 L*32.7）副標 .65 仍有 4.69，過 AA。
+
+  配合的兩個調整：模糊 18px → 22px；下緣加 rgba(255,255,255,.14) 的細亮邊定義玻璃邊界。
 
   ## 副標退回 .65
 
@@ -171,8 +179,13 @@ html.glass .sticky-head { position: sticky; }
 .sticky-head .site-header::before {
   content: ''; position: absolute; inset: 0; z-index: -1;
   background: var(--glass, transparent);
-  -webkit-backdrop-filter: blur(18px) saturate(1.08);
-  backdrop-filter: blur(18px) saturate(1.08);
+  /* 模糊拉到 22px：遮罩降到接近 0 之後，「這是一片玻璃」只剩模糊在講，所以模糊要夠。 */
+  -webkit-backdrop-filter: blur(22px) saturate(1.08);
+  backdrop-filter: blur(22px) saturate(1.08);
+  /* 下緣的細亮邊：遮罩 .00 時條子跟底下的照片幾乎沒有明度差，
+     沒有這條線就看不出玻璃的邊界在哪。用亮邊不用暗線 ——
+     暗線等於又把遮罩加回去了。 */
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .14);
   opacity: 0; transition: opacity .22s ease;
 }
 html.glass.scrolled .sticky-head .site-header::before { opacity: 1; }
@@ -711,14 +724,18 @@ body { padding-bottom: 4.2rem; }
     淺區（內文）　　平均 <code>#dde3e1</code>　<b>L* 89.8</b>
   </p>
 
-  <p><b>三檔的解（ΔL* 全部是 0.00，不是四捨五入後相近，是相同）：</b></p>
+  <p><b>你的判斷是準的：遮罩到了 .28 以上，玻璃就不透了</b>——「像塗黑的」正是遮罩壓過模糊之後的樣子。所以整組往下探，<b>現在三檔全部低於原本的 .18</b>：</p>
   <p>
-    <b>最通透 .18</b>　暗區遮罩 .18 → 合成 <code>#2f3238</code> L* 20.6　淺區染色 <code>#1b1e25</code>@.90<br>
-    <b>中　　 .28</b>　暗區遮罩 .28 → 合成 <code>#2c2f35</code> L* 19.2　淺區染色 <code>#181b22</code>@.90<br>
-    <b>較實　 .38</b>　暗區遮罩 .38 → 合成 <code>#292c31</code> L* 17.8　淺區染色 <code>#15171e</code>@.90
+    <b>全透 .00</b>　暗區<b>完全不染色，只有模糊</b> → 合成 <code>#34373e</code> L* 23.0　淺區染色 <code>#21242c</code>@.90<br>
+    <b>.06</b>　　　→ 合成 <code>#32353c</code> L* 22.2　淺區染色 <code>#1f222a</code>@.90<br>
+    <b>.12</b>　　　→ 合成 <code>#31333a</code> L* 21.7　淺區染色 <code>#1d2027</code>@.90
   </p>
 
-  <p>合成色的 L* 17.8〜20.6 <b>正好落在窄帶自己的色域裡</b>（<code>--band-bg</code> 是 L* 17.5）—— 不是第三個顏色，是同一家人。模糊固定 18px：通透感是靠模糊給的，不是靠遮罩淡。</p>
+  <p><b>暗區這一側其實沒有下限。</b>不加玻璃的時候，副標本來就是直接壓在原始照片上 —— 那是已經定案接受的狀態；加了模糊只會把亮部拉平，只會更好，不會更差。實算最壞的一刻（條下 L* 32.7）副標 <code>.65</code> 仍有 <b>4.69</b>，過 AA。所以「全透 .00」是可以用的，不是逞強。</p>
+
+  <p><b>兩個配合的調整：</b>模糊從 18px 拉到 <b>22px</b>（遮罩降到 0 之後，「這是一片玻璃」只剩模糊在講）；下緣加一條 <code>rgba(255,255,255,.14)</code> 的<b>細亮邊</b>定義玻璃的邊界 —— 用亮邊不用暗線，因為暗線等於又把遮罩加回去了。</p>
+
+  <p><b>要知道的取捨：</b>遮罩愈低，暗區愈透，但條子的顏色也愈跟著照片擺盪（<code>.00</code> 時擺盪範圍是 L* 10〜33，<code>.12</code> 收到 10〜30）。<b>「通透」和「兩區完全同色」是同一個旋鈕的兩端</b>——淺區那一側永遠對得準，會浮動的是暗區。</p>
 
   <p><b>還有一個附帶的好處：副標退回 .65 了。</b>第三輪因為玻璃壓在亮內容上把條底推到 <code>#5d6062</code>，副標 <code>.65</code> 只剩 3.68，當時被迫提到 <code>.80</code>。自適應之後合成色是 L* 18〜21，<code>.65</code> 實測 <b>6.44〜6.85</b> —— <b>那條提亮規則整個拿掉了，副標與 HERO 完全同值。</b>自適應不只是好看，它把那個妥協消掉了。</p>
 
@@ -731,9 +748,9 @@ body { padding-bottom: 4.2rem; }
 
 <nav class="switch" aria-label="毛玻璃通透度切換">
   <button type="button" data-g="" aria-pressed="true">不固定</button>
-  <button type="button" data-g="1" aria-pressed="false">通透 .18</button>
-  <button type="button" data-g="2" aria-pressed="false">中 .28</button>
-  <button type="button" data-g="3" aria-pressed="false">較實 .38</button>
+  <button type="button" data-g="1" aria-pressed="false">全透 .00</button>
+  <button type="button" data-g="2" aria-pressed="false">.06</button>
+  <button type="button" data-g="3" aria-pressed="false">.12</button>
 </nav>
 <script>
 (function () {
@@ -743,9 +760,9 @@ body { padding-bottom: 4.2rem; }
 
   // [暗區 rgba, 淺區 rgba]。淺區那組是由暗區的合成色反推的（見檔首等式）。
   var PAIRS = {
-    '1': [[23, 25, 29, .18], [27, 30, 37, .90]],
-    '2': [[23, 25, 29, .28], [24, 27, 34, .90]],
-    '3': [[23, 25, 29, .38], [21, 23, 30, .90]],
+    '1': [[23, 25, 29, .00], [33, 36, 44, .90]],   // 純模糊，暗區完全不染色
+    '2': [[23, 25, 29, .06], [31, 34, 42, .90]],
+    '3': [[23, 25, 29, .12], [29, 32, 39, .90]],
   };
   var mode = '';
 
