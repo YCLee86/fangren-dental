@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>固定頁首・自適應毛玻璃（暗區通透／淺區實，同色） — 芳仁牙醫診所提案</title>
+<title>固定頁首・毛玻璃模糊量三檔（遮罩定案 .06） — 芳仁牙醫診所提案</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <!--
@@ -27,19 +27,21 @@
   暗區用很低的 a_dark 求出 C，再反推淺區的染色，使兩邊的 C 完全相同：
       淺區染色 = (C − (1−a_light)·B_light) / a_light      （a_light 取 0.90，留一點通透）
 
-  第一次做的三檔是 .18／.28／.38，使用者的回饋：「.28 和 .38 比較厚實，看起來很像塗黑的，
-  毛玻璃完全不讓人看到裡面；.18 還勉強好一點，可是不夠通透。」這個描述是準的 ——
-  遮罩到了 .28 以上就是遮罩壓過模糊，玻璃自然不透。所以整組往下探：
+  遮罩試過兩組：先 .18／.28／.38（使用者：「.28 和 .38 像塗黑的，毛玻璃完全不讓人
+  看到裡面；.18 還勉強但不夠通透」），再 .00／.06／.12。**遮罩定案 .06**：
 
-      a_dark .00 → C #34373e L*23.0   淺區染色 #21242c   （純模糊，暗區完全不染色）
-      a_dark .06 → C #32353c L*22.2   淺區染色 #1f222a
-      a_dark .12 → C #31333a L*21.7   淺區染色 #1d2027
+      a_dark .06 → C #32353c L*22.2   淺區染色 #1f222a@.90
 
-  **暗區這一側沒有下限問題**：沒有玻璃時副標本來就是直接壓在原始照片上，
-  那是已經定案接受的狀態；加了模糊只會把亮部拉平，只會更好。
-  實算最壞的一刻（條下 L*32.7）副標 .65 仍有 4.69，過 AA。
+  記著這條：遮罩 .28 以上就是遮罩壓過模糊，玻璃自然不透。
+  暗區這一側沒有下限 —— 沒有玻璃時副標本來就直接壓在原始照片上（已定案接受的狀態），
+  加了模糊只會把亮部拉平。實算最壞的一刻（條下 L*32.7）副標 .65 仍有 4.69。
 
-  配合的兩個調整：模糊 18px → 22px；下緣加 rgba(255,255,255,.14) 的細亮邊定義玻璃邊界。
+  ## 模糊量是另一個旋鈕，三檔待選
+
+  遮罩定案之後，模糊決定的是「看不看得清楚裡面」：6px 看得到屋簷與窗框，
+  14px 只剩色塊。**實測模糊量幾乎不影響可讀性**（副標最差對比 4.71／4.73／4.74），
+  所以這一檔純粹是觀感取捨，沒有技術上的對錯。
+  下緣的 rgba(255,255,255,.14) 細亮邊照留 —— 遮罩只有 .06，沒有那條線看不出玻璃的邊。
 
   ## 副標退回 .65
 
@@ -176,12 +178,16 @@ html.glass .sticky-head { position: sticky; }
    backdrop-filter 本身沒辦法平滑地開關。z-index: -1 讓它待在 .sticky-head
    這個堆疊環境內、壓在頁首文字底下，但仍然在照片之上。 */
 .sticky-head .site-header { position: relative; }
+html.b1 { --blur: 6px; }
+html.b2 { --blur: 10px; }
+html.b3 { --blur: 14px; }
 .sticky-head .site-header::before {
   content: ''; position: absolute; inset: 0; z-index: -1;
   background: var(--glass, transparent);
-  /* 模糊拉到 22px：遮罩降到接近 0 之後，「這是一片玻璃」只剩模糊在講，所以模糊要夠。 */
-  -webkit-backdrop-filter: blur(22px) saturate(1.08);
-  backdrop-filter: blur(22px) saturate(1.08);
+  /* 模糊量由切換列決定。遮罩定案 .06 之後，模糊就是「看不看得清楚裡面」的那個旋鈕：
+     少一點更看得到照片，多一點更像一片玻璃。 */
+  -webkit-backdrop-filter: blur(var(--blur, 10px)) saturate(1.08);
+  backdrop-filter: blur(var(--blur, 10px)) saturate(1.08);
   /* 下緣的細亮邊：遮罩 .00 時條子跟底下的照片幾乎沒有明度差，
      沒有這條線就看不出玻璃的邊界在哪。用亮邊不用暗線 ——
      暗線等於又把遮罩加回去了。 */
@@ -190,9 +196,6 @@ html.glass .sticky-head { position: sticky; }
 }
 html.glass.scrolled .sticky-head .site-header::before { opacity: 1; }
 
-/* 三檔只差在暗區有多通透；淺區的染色是由它反推出來的（見檔首等式），
-   所以三檔各自的兩區合成色都相同，只是那個「相同的顏色」深淺不同。
-   模糊固定 18px —— 通透感是靠模糊給的，不是靠遮罩淡。 */
 
 /* ---------- 收合：品牌名縮小、內距收緊，副標保留 ---------- */
 html.glass.scrolled .sticky-head .site-header {
@@ -714,7 +717,7 @@ body { padding-bottom: 4.2rem; }
 </div>
 
 <div class="demo-note">
-  <h2>固定頁首・自適應毛玻璃</h2>
+  <h2>固定頁首・毛玻璃　模糊量三檔</h2>
 
   <p><b>你講的那件事可以用算的，不必憑感覺調。</b>「兩邊看起來同一個顏色」是一條等式：合成色 <code>C = a·T + (1−a)·B</code>（T 是玻璃染色、B 是底下的畫面）。暗區用很低的遮罩求出 C，再<b>反推</b>淺區要用什麼染色才會落在同一個 C 上。</p>
 
@@ -724,18 +727,20 @@ body { padding-bottom: 4.2rem; }
     淺區（內文）　　平均 <code>#dde3e1</code>　<b>L* 89.8</b>
   </p>
 
-  <p><b>你的判斷是準的：遮罩到了 .28 以上，玻璃就不透了</b>——「像塗黑的」正是遮罩壓過模糊之後的樣子。所以整組往下探，<b>現在三檔全部低於原本的 .18</b>：</p>
+  <p><b>遮罩定案 .06</b>（你選的）：暗區遮罩 <code>.06</code> → 合成 <code>#32353c</code> L* 22.2，淺區染色 <code>#1f222a</code>@.90。兩區同色仍然成立。</p>
+
+  <p><b>這一輪三檔差的是模糊量，不是遮罩</b>——所以三檔的顏色完全一樣，差別只在「看不看得清楚裡面」：</p>
   <p>
-    <b>全透 .00</b>　暗區<b>完全不染色，只有模糊</b> → 合成 <code>#34373e</code> L* 23.0　淺區染色 <code>#21242c</code>@.90<br>
-    <b>.06</b>　　　→ 合成 <code>#32353c</code> L* 22.2　淺區染色 <code>#1f222a</code>@.90<br>
-    <b>.12</b>　　　→ 合成 <code>#31333a</code> L* 21.7　淺區染色 <code>#1d2027</code>@.90
+    <b>模糊 6px</b>　　看得到屋簷、窗框、天空的層次。最像一片真的玻璃壓在照片上<br>
+    <b>模糊 10px</b>　中間<br>
+    <b>模糊 14px</b>　只剩色塊，最接近上一版 22px 的感覺（但已經比它清楚）
   </p>
 
-  <p><b>暗區這一側其實沒有下限。</b>不加玻璃的時候，副標本來就是直接壓在原始照片上 —— 那是已經定案接受的狀態；加了模糊只會把亮部拉平，只會更好，不會更差。實算最壞的一刻（條下 L* 32.7）副標 <code>.65</code> 仍有 <b>4.69</b>，過 AA。所以「全透 .00」是可以用的，不是逞強。</p>
+  <p><b>可讀性不受影響，實測過。</b>副標在照片區最差的一刻，三檔分別是 <b>4.71／4.73／4.74</b>——差 0.03，等於沒差。條下畫面的起伏（sd）也只從 13.62 收到 12.39。<b>所以這一檔純粹是觀感取捨，沒有技術上的對錯，挑你喜歡的就好。</b></p>
 
-  <p><b>兩個配合的調整：</b>模糊從 18px 拉到 <b>22px</b>（遮罩降到 0 之後，「這是一片玻璃」只剩模糊在講）；下緣加一條 <code>rgba(255,255,255,.14)</code> 的<b>細亮邊</b>定義玻璃的邊界 —— 用亮邊不用暗線，因為暗線等於又把遮罩加回去了。</p>
+  <p>下緣那條 <code>rgba(255,255,255,.14)</code> 的細亮邊照留 —— 遮罩只有 .06，沒有那條線看不出玻璃的邊界在哪。</p>
 
-  <p><b>要知道的取捨：</b>遮罩愈低，暗區愈透，但條子的顏色也愈跟著照片擺盪（<code>.00</code> 時擺盪範圍是 L* 10〜33，<code>.12</code> 收到 10〜30）。<b>「通透」和「兩區完全同色」是同一個旋鈕的兩端</b>——淺區那一側永遠對得準，會浮動的是暗區。</p>
+  <p><b>要知道的取捨：</b>遮罩 .06 很低，所以條子的顏色會跟著照片擺盪（範圍約 L* 10〜31）。<b>「通透」和「兩區完全同色」是同一個旋鈕的兩端</b>——淺區那一側永遠對得準，會浮動的是暗區。這是選 .06 換來的，也是它看起來像玻璃的原因。</p>
 
   <p><b>還有一個附帶的好處：副標退回 .65 了。</b>第三輪因為玻璃壓在亮內容上把條底推到 <code>#5d6062</code>，副標 <code>.65</code> 只剩 3.68，當時被迫提到 <code>.80</code>。自適應之後合成色是 L* 18〜21，<code>.65</code> 實測 <b>6.44〜6.85</b> —— <b>那條提亮規則整個拿掉了，副標與 HERO 完全同值。</b>自適應不只是好看，它把那個妥協消掉了。</p>
 
@@ -748,9 +753,9 @@ body { padding-bottom: 4.2rem; }
 
 <nav class="switch" aria-label="毛玻璃通透度切換">
   <button type="button" data-g="" aria-pressed="true">不固定</button>
-  <button type="button" data-g="1" aria-pressed="false">全透 .00</button>
-  <button type="button" data-g="2" aria-pressed="false">.06</button>
-  <button type="button" data-g="3" aria-pressed="false">.12</button>
+  <button type="button" data-g="1" aria-pressed="false">模糊 6</button>
+  <button type="button" data-g="2" aria-pressed="false">模糊 10</button>
+  <button type="button" data-g="3" aria-pressed="false">模糊 14</button>
 </nav>
 <script>
 (function () {
@@ -759,17 +764,15 @@ body { padding-bottom: 4.2rem; }
   var band = document.querySelector('.stats');
 
   // [暗區 rgba, 淺區 rgba]。淺區那組是由暗區的合成色反推的（見檔首等式）。
-  var PAIRS = {
-    '1': [[23, 25, 29, .00], [33, 36, 44, .90]],   // 純模糊，暗區完全不染色
-    '2': [[23, 25, 29, .06], [31, 34, 42, .90]],
-    '3': [[23, 25, 29, .12], [29, 32, 39, .90]],
-  };
+  // 遮罩定案 .06（使用者選的）。三檔現在差的是模糊量，不是遮罩 ——
+  // 兩區的合成色因此完全相同，模糊只影響「看不看得清楚裡面」。
+  var PAIR = [[23, 25, 29, .06], [31, 34, 42, .90]];
   var mode = '';
 
   function paint() {
     root.classList.toggle('scrolled', scrollY > 4);
     if (!mode) return;
-    var p = PAIRS[mode], h = head.getBoundingClientRect().height || 1;
+    var p = PAIR, h = head.getBoundingClientRect().height || 1;
     // t：窄帶穿過條子的進度。0 = 條下全是暗區，1 = 全是淺區。
     var t = Math.min(1, Math.max(0, 1 - band.getBoundingClientRect().bottom / h));
     var c = p[0].map(function (v, i) { return v + (p[1][i] - v) * t; });
@@ -791,6 +794,7 @@ body { padding-bottom: 4.2rem; }
     if (!b) return;
     mode = b.dataset.g;
     root.classList.toggle('glass', mode !== '');
+    ['1', '2', '3'].forEach(function (x) { root.classList.toggle('b' + x, x === mode); });
     if (!mode) root.style.removeProperty('--glass');
     sw.querySelectorAll('button').forEach(function (x) {
       x.setAttribute('aria-pressed', String(x === b));
