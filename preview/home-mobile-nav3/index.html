@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>固定頁首・收合＋毛玻璃（濃度三檔） — 芳仁牙醫診所提案</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+
+<!--
+  2026-08-06．固定頁首第三輪。使用者選了第二輪的 C（收合），並提出兩點修正：
+    · 「雲林斗六・永樂街」要保留（第二輪的 C 把它收掉了）
+    · 「捲動的過程中，在 hero 圖片區一直到窄帶，有點毛玻璃蓋住圖片的感覺比較有質感」
+
+  所以這一版把毛玻璃從「落到淺色內容才出現」改成 **一捲動就出現、而且一路都在**：
+  在照片與窄帶上它是蓋在圖片上的一層霧，捲到內文之後同一層霧繼續壓著。
+  整趟只有一種外觀，沒有換裝那一刻。
+
+  收合維持，但副標留著：品牌名縮小、上下內距收緊，兩行都在。
+  條高 60.4 → 45.8px（第二輪的 C 是 37.4px，那是把副標收掉換來的）。
+
+  捲動位置 0 時完全沒有玻璃，跟定案的 HERO 一模一樣 —— 玻璃是捲動才淡入的。
+
+  ## 三個玻璃濃度可切換
+
+  唯一需要憑眼睛決定的是濃度，所以做成可切換：輕 .70／中 .78／重 .86（另附無玻璃）。
+  **下限是對比度定的，不是品味**：條子壓在卡片白上時毛玻璃會把條底推亮，
+  濃度再低 nav 連結就掉出 AA（實測 .62 只有 4.3）。所以最輕的一檔是 .70。
+
+  其餘（單位換算、佔位、sticky 結構）與第二輪相同，見下方 CSS 註解。
+-->
+<style>:root { color-scheme: light; }</style>
+<style>
+:root {
+  --pad: clamp(1rem, 4vw, 2rem);
+
+  /* PALETTE.md 第四節 A：暗夜 */
+  --night: #191614;
+  --night-line: #38342f;
+  --night-text: #e3e1e0;
+  --night-soft: #aaa49e;
+  --night-faint: #969089;   /* PALETTE.md 第四節 A */
+  /* 窄帶：2026-08-06 定案的「夜的漸層」。原本是單色 #2a2c27（＝內文墨色），
+     使用者說它跟照片交界處突兀。量出來的原因不只是顏色：照片最底那一列實測
+     #161413、L* 只有 6.6，比窄帶的 17.6 還暗 11 個 L* —— 真正刺眼的是那條硬邊，
+     一張有明暗起伏的照片直接切到一塊全平的深色板。
+     所以窄帶改成從照片的暗度長出來：頂端貼近照片底緣，往下才亮到足以接紙色。
+     色相取自照片本身（夜空 #1b2635 × 柏油 #221e1c，5:5 後彩度 ×0.72 → H=220・S=10%）。 */
+  --band-top: #17191d;      /* L* 8.5，貼著照片底緣的 6.6 —— 上緣因此幾乎沒有邊 */
+  --band-bg:  #282b31;      /* L* 17.5，漸層中段。分隔線混色與 fallback 都以它為準 */
+  --band-bot: #2d3037;      /* L* 19.8，下緣，要有明度才接得住紙色 */
+
+  /* 內文區：N3 藍灰調。H=203・L=89.4%・R−B −4（三案裡唯一有色偏的） */
+  --paper: #e2e5e6;
+  --card: #f4f4f5;     /* 往純白推，紙才讀得出是灰。階差 1.15:1，同看板 */
+  --rule: #cdd0d2;
+  --note: #f9f9fa;     /* 只給頁尾那條提案說明用，不是設計的一部分 */
+  --ink: #2a2c27;
+  --ink-soft: #5c5f57;
+
+  /* 全頁唯一的彩色。紙底 8.03:1、卡底 8.79:1 */
+  --teal: #214D48;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px; line-height: 1.85; letter-spacing: .01em;
+  overflow-x: hidden;
+}
+body, p, li, h1, h2, h3, h4, dd { overflow-wrap: break-word; word-break: break-word; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--teal); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 60;
+  background: var(--card); color: var(--teal); padding: .6rem 1rem; }
+.skip-link:focus { left: .5rem; top: .5rem; }
+
+/* ==========================================================================
+   HERO：定案 C72，與 hero-ppt-s1a-e1 相同，一個值都沒改
+   ========================================================================== */
+/* 暗夜區（照片＋窄帶）整塊墊一層帶底色。
+
+   為什麼要這一層：.hero-photo 的高度是 cqw 算出來的小數（375px 上是 280.2px），
+   照片區與窄帶這兩個相鄰區塊的邊界落在非整數的裝置像素上，
+   瀏覽器分別做像素對齊之後中間會露出不到 1px 的縫，
+   而縫底下就是 body 的紙色 #e2e5e6 —— 在手機上看起來就是一條白線。
+   （實測 iPhone DPR 3 的截圖，那條縫是 1 個裝置像素、量到 #e2e5e6。）
+   墊上 --band-top 之後，縫再怎麼露也是露 #17191d（漸層的頂色），看不出來。 */
+.hero-block { background: var(--band-top); }
+.hero-stage { position: relative; container-type: inline-size; background: #12161a; }
+.hero-photo {
+  margin: 0; position: relative; overflow: hidden;
+  /* 高度＝照片在 113% 寬度下的完整高度：113% × 1058/1600 = 74.72cqw。
+     原本是 clamp(70.5cqw, 34svh, 74.5cqw)，在手機上取到下限 70.5cqw，
+     照片底部被切掉約 5.6%（台階到柏油路那一段），看起來像斷掉。
+     現在讓框高等於圖高，整張照片完整落地，不再裁下緣（右緣的 13% 裁切維持不變）。 */
+  height: 74.72cqw;
+  container-type: size;
+}
+.hero-photo img {
+  position: absolute; top: 0; left: 0;
+  width: 113%; height: auto; max-width: none; display: block;
+}
+.hero-copy {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  /* 頁首往下：使用者選的位置（離上緣 14.3px）。原本 2cqh＝5.7px，太貼上緣。
+     往下的空間是從下面 .hero-poem 的 margin-top 扣的，詩本身沒動 —— 兩者相加固定 6cqh。 */
+  padding: 5cqh 4cqw 0;
+  pointer-events: none;
+}
+.hero-copy a { pointer-events: auto; }
+
+/* ==========================================================================
+   固定頁首。用的是 HERO 原本那一排本人（.site-header），不是另做一條。
+
+   .sticky-head 高度 0、不佔版面，只負責把頁首釘在頂端；
+   「不固定」時改成 absolute，行為與原本完全相同。
+   ========================================================================== */
+.phone { position: relative; container-type: inline-size; }
+.sticky-head { position: absolute; top: 0; left: 0; right: 0; z-index: 30; height: 0; }
+html.glass .sticky-head { position: sticky; }
+
+/* 搬出 .hero-photo 之後 cqh 沒有意義了，全部換成 cqw（1cqh = 0.7472cqw，見檔首註解）。
+   下面這一段是原本 .hero-copy ＋ .site-header 的尺寸，一個值都沒有改，只換單位。 */
+.sticky-head .site-header {
+  padding: 3.736cqw 4cqw 0;              /* 原 .hero-copy 的 padding: 5cqh 4cqw 0 */
+  transition: background-color .2s ease, color .2s ease, padding .2s ease;
+}
+.sticky-head .brand-mark { flex: 0 0 clamp(30px, 8.2192cqw, 40px); }   /* 原 11cqh */
+.sticky-head .brand-text b { font-size: clamp(14px, 3.81072cqw, 18px); }  /* 原 5.1cqh */
+.sticky-head .brand-text small,
+.sticky-head .site-nav { font-size: clamp(10px, 2.6152cqw, 12.5px); }     /* 原 3.5cqh */
+.sticky-head .site-nav { padding-top: 0.7472cqw; }                        /* 原 1cqh */
+
+/* 佔位：頁首高永遠等於 brand-text 兩行（圖標最高 40×0.4928=19.7px，一定比它矮，
+   nav 也只有一行）。用同一組 clamp，所以任何寬度下都等高。 */
+.header-space {
+  height: calc(clamp(14px, 5.1cqh, 18px) * 1.25 + clamp(10px, 3.5cqh, 12.5px) * 1.25);
+}
+
+/* ---------- 毛玻璃：一捲動就出現，一路都在 ---------- */
+/* 玻璃放在 ::before 而不是 .site-header 自己身上，為的是能用 opacity 淡入 ——
+   backdrop-filter 本身沒辦法平滑地開關。z-index: -1 讓它待在 .sticky-head
+   這個堆疊環境內、壓在頁首文字底下，但仍然在照片之上。 */
+.sticky-head .site-header { position: relative; }
+.sticky-head .site-header::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: rgba(23, 25, 29, var(--glass-a, .78));
+  -webkit-backdrop-filter: blur(var(--glass-b, 14px)) saturate(1.08);
+  backdrop-filter: blur(var(--glass-b, 14px)) saturate(1.08);
+  opacity: 0; transition: opacity .22s ease;
+}
+html.glass.scrolled .sticky-head .site-header::before { opacity: 1; }
+
+/* 濃度三檔。最輕只到 .70 —— 再低 nav 連結壓在卡片白上就掉出 AA（.62 實測 4.3）。 */
+html.g1 { --glass-a: .70; --glass-b: 10px; }
+html.g2 { --glass-a: .78; --glass-b: 14px; }
+html.g3 { --glass-a: .86; --glass-b: 20px; }
+
+/* ---------- 收合：品牌名縮小、內距收緊，副標保留 ---------- */
+html.glass.scrolled .sticky-head .site-header {
+  padding-top: 2.4cqw; padding-bottom: 2.4cqw;
+}
+html.glass.scrolled .sticky-head .brand-text b {
+  font-size: clamp(12.5px, 3.3cqw, 15.5px); line-height: 1.15;
+}
+/* 副標收合之後要提亮到 .80。原因：它在 HERO 上是 .65（跟照片一起定案的），
+   但玻璃條捲到內文之後底色會被亮內容推到 #5d6062 上下，.65 只剩 3.68，過不了 AA。
+   .80 之後是 4.9。**捲動位置 0 時仍然是 .65**，HERO 一個值都沒動 —— 這條只在收合狀態生效。 */
+html.glass.scrolled .sticky-head .brand-text small { line-height: 1.2; color: rgba(255, 255, 255, .80); }
+html.glass.scrolled .sticky-head .brand-mark { flex-basis: clamp(26px, 7.1cqw, 34px); }
+html.glass .sticky-head .brand-text b,
+html.glass .sticky-head .brand-text small,
+html.glass .sticky-head .brand-mark { transition: font-size .2s ease, line-height .2s ease, flex-basis .2s ease; }
+
+/* 錨點不要被固定的頁首蓋住 */
+html.glass #articles, html.glass #doctors, html.glass #clinic {
+  scroll-margin-top: calc(52px + env(safe-area-inset-top));
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticky-head .site-header, .sticky-head .site-header::before,
+  .sticky-head .brand-text small, .sticky-head .brand-text b, .sticky-head .brand-mark {
+    transition: none;
+  }
+}
+.site-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 3cqw; }
+.brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
+.brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
+.brand-mark svg { display: block; width: 100%; height: auto; }
+.brand-text { display: block; }
+.brand-text b {
+  display: block; font-weight: 700; font-size: clamp(14px, 5.1cqh, 18px); line-height: 1.25;
+  letter-spacing: 0; color: rgba(255, 255, 255, .95);
+}
+.brand-text small {
+  display: block; font-weight: 400; font-size: clamp(10px, 3.5cqh, 12.5px); line-height: 1.6;
+  letter-spacing: 0; color: rgba(255, 255, 255, .65);
+  text-align: justify; text-align-last: justify;
+  /* 行高收緊：副標是單行，字墨往上挪約 1.2px，換到約 1px 的分隔感而不動詩的位置 */
+  line-height: 1.25;
+}
+.site-nav {
+  display: flex; gap: 3.2cqw; line-height: 1.4; padding-top: 1cqh;
+  font-size: clamp(10px, 3.5cqh, 12.5px);
+}
+.site-nav a { color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap; }
+.hero-poem {
+  margin: 7cqh 0 0; max-width: 76cqw;
+  font-size: clamp(10px, 3.2cqh, 11.5px); font-weight: 400; line-height: 1.75;
+  letter-spacing: .2em; color: rgba(255, 255, 255, .65);
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
+}
+.hero-poem span { display: block; }
+.hero-poem .lead { margin-bottom: .55em; }
+.hero-sign {
+  position: absolute; left: calc(4cqw + 7.179cqw); margin: 0;
+  bottom: calc(100cqh - min(100cqh, 74.72cqw) + 3.077cqw);
+  font-size: clamp(9.2px, 2.56cqw, 11.5px); font-weight: 400; line-height: 1.5;
+  letter-spacing: .12em; color: rgba(255, 255, 255, .65);
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
+  isolation: isolate;
+}
+.hero-sign::before {
+  content: ''; position: absolute; z-index: -1;
+  inset: -1.3em -1.7em;
+  background: rgba(25, 22, 20, .72);
+  border-radius: 100px;
+  filter: blur(2.3cqw);
+}
+
+/* ---------- 1983／9／6：留在暗夜裡的窄帶（e6 甲案）---------- */
+.stats {
+  display: flex; align-items: center; margin: 0; padding: 0 var(--pad);
+  /* 定高 ＋ 垂直置中：不用上下內距硬算。行距或字級之後有任何調整，
+     內容仍然會自己置中，帶高也不會跟著跑掉。
+
+     66px → 54px：木線拿掉之後帶子上下顯得空。字墨實測 28.3px 高，
+     原本上下各留 20／17.7px，現在各留約 13／11.7px，
+     還是比字高的一半多，不會擠。要再短就往 50px 走，48px 以下會開始貼字。 */
+  min-height: 54px;
+  list-style: none;
+  background-color: var(--band-bg);
+  background-image: linear-gradient(180deg,
+    var(--band-top) 0%, var(--band-bg) 55%, var(--band-bot) 100%);
+}
+/* 三格等寬、各自置中：原本是靠左排、第一格不縮排，右邊會空出一大塊，
+   整條看起來偏左。改成每格佔三分之一、文字置中。
+
+   分隔線用 ::before 畫，不用 border —— border 會算進 box 寬度（box-sizing 是 border-box），
+   第一格沒有 border、後兩格有，三格的框就差了 3px，分隔線會落在 128.3／243.7，
+   而三等分點是 125／250。改成絕對定位的偽元素之後線不佔寬度，
+   三格真的等寬，兩條線正好壓在三等分點上。 */
+.stats li {
+  position: relative; flex: 1 1 0; min-width: 0;
+  text-align: center; padding-inline: .5rem;
+  /* 收緊兩行之間：要動的是 li，不是 span。span 是行內元素，
+     它的行框高度受 li 這個區塊的 strut 撐著，而 li 原本從 body 繼承 1.85 ——
+     只改 span 的行高到 1.2 以下完全沒有作用（實測間距卡在 9.9px 不動）。 */
+  line-height: .95;
+  /* 視覺置中的補正：flex 的 align-items 置中的是「框」，不是「字墨」。
+     數字那行的行高 1.05 幾乎貼著字，說明那行 1.15 下面多了半個行距，
+     字級縮小之後框置中會變成上 17.9px、下 16.8px，補 .3px 的上內距把字墨推回對稱。
+     這個補正值和字級、行高綁在一起，動到那兩個就要重量一次。 */
+  padding-top: .3px;
+}
+.stats li + li::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  border-left: 1px solid color-mix(in srgb, var(--night-faint) 55%, var(--band-bg));
+}
+/* 數字用宋體（襯線），標籤維持黑體 —— 襯線只出現在數字上，兩層才分得開。
+   思源宋體和內文的思源黑體是同一個超家族，骨架一致；
+   而且它在手機上也是同一套（Georgia／Cambria 那類桌機襯線體手機沒有，會回退）。 */
+.stats b {
+  /* 字級：中文比照 HERO 那三行詩（390px 上是 10px＝.625rem），
+     數字按同一個比例縮 —— 原本 20 / 12.16px 是 1.645 倍，
+     現在 16.4 / 10px 還是 1.64 倍。落差維持住，數字才不會跟中文一樣小。 */
+  /* 顏色與頁首的「芳仁牙醫診所」同一個宣告 —— 半透明白，不是 --night-text。
+     疊在漸層上的實際合成色 #f4f4f5，對比 12.08~15.93（原本 #e3e1e0 是 10.83）。 */
+  display: block; font-size: 1.025rem; color: rgba(255, 255, 255, .95);
+  font-family: "Noto Serif TC", "Source Han Serif TC", serif;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+/* 單位（年／位／個）跟著數字走，字級和下面的標籤同級，不加粗 */
+.stats b small { font-size: .625rem; font-weight: 400; letter-spacing: 0; margin-left: .1em; }
+/* 顏色與頁首的「雲林斗六・永樂街」同一個宣告。合成色 #b6b7b9，
+   對比 6.55~7.97（原本 #aaa49e 是 5.72）。
+   附帶的好處：半透明白會跟著底色一起變，所以窄帶明度再調也不會掉出 AA ——
+   原本用固定的 #aaa49e 時，窄帶最亮只能到 L* 25.1。 */
+.stats span { font-size: .625rem; color: rgba(255, 255, 255, .65); }
+
+/* ==========================================================================
+   內文區
+   ========================================================================== */
+.wrap { padding-inline: var(--pad); }
+section { padding-block: 1.8rem; }
+section + section { border-top: 1px solid var(--rule); }
+.sec-head { margin-bottom: 1.1rem; }
+.sec-head h2 { margin: 0 0 .2rem; font-size: 1.12rem; line-height: 1.5; letter-spacing: .02em; }
+.sec-head p { margin: 0; font-size: .82rem; color: var(--ink-soft); }
+
+/* 治療項目 */
+.chips { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0; padding: 0; list-style: none; }
+.chips li {
+  font-size: .82rem; line-height: 1.6; color: var(--ink);
+  background: var(--card); border: 1px solid var(--rule);
+  border-radius: 100px; padding: .25rem .8rem;
+}
+
+/* 文章卡 */
+.cards { display: grid; gap: 1rem; }
+.card {
+  display: block; text-decoration: none; color: inherit;
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  overflow: hidden;
+}
+.card-thumb { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--paper); }
+.card-body { padding: .85rem 1rem 1rem; }
+.card-tag {
+  display: inline-block; font-size: .72rem; letter-spacing: .06em;
+  color: var(--teal); margin-bottom: .3rem;
+}
+.card h3 { margin: 0 0 .35rem; font-size: .98rem; line-height: 1.55; }
+.card p { margin: 0; font-size: .84rem; line-height: 1.8; color: var(--ink-soft); }
+.card-date { margin-top: .5rem !important; font-size: .76rem !important; }
+
+/* 醫師 */
+.docs { display: grid; gap: .9rem; }
+.doc { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem 1rem; }
+.doc h3 { margin: 0 0 .5rem; font-size: 1rem; line-height: 1.5; }
+.doc-role {
+  display: inline-block; margin-left: .5rem; font-size: .74rem; font-weight: 400;
+  color: var(--ink-soft);
+}
+.doc dl { margin: 0; display: grid; grid-template-columns: 3.2em 1fr; gap: .2rem .6rem; }
+.doc dt { font-size: .76rem; color: var(--ink-soft); }
+.doc dd { margin: 0; font-size: .82rem; line-height: 1.7; }
+
+/* 診所資訊 */
+.info { display: grid; gap: .9rem; }
+.info-card { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem 1rem; }
+.info-card h3 { margin: 0 0 .3rem; font-size: .88rem; color: var(--ink-soft); font-weight: 400; letter-spacing: .04em; }
+.info-card p { margin: 0; font-size: .92rem; line-height: 1.8; }
+.info-card .big { font-size: 1.15rem; letter-spacing: .02em; }
+.info-note { margin-top: .5rem !important; font-size: .78rem !important; color: var(--ink-soft); }
+.gallery { display: grid; gap: .8rem; margin-top: 1rem; }
+.gallery figure { margin: 0; }
+.gallery img { border-radius: 12px; }
+.gallery figcaption { margin-top: .4rem; font-size: .78rem; line-height: 1.7; color: var(--ink-soft); }
+
+/* 頁尾 */
+.foot { background: var(--card); border-top: 1px solid var(--rule); padding-block: 1.6rem 2rem; }
+.foot h4 { margin: 0 0 .4rem; font-size: .92rem; }
+.foot p { margin: 0 0 .7rem; font-size: .8rem; line-height: 1.8; color: var(--ink-soft); }
+.foot-bottom {
+  margin-top: 1rem; padding-top: .9rem; border-top: 1px solid var(--rule);
+  display: flex; flex-wrap: wrap; gap: .3rem 1rem; font-size: .76rem; color: var(--ink-soft);
+}
+
+/* 提案頁自己的說明條 */
+.demo-note {
+  background: var(--note); border-top: 1px solid var(--rule);
+  padding: 1.4rem var(--pad) 2rem; font-size: .82rem; line-height: 1.85; color: var(--ink-soft);
+}
+.demo-note h2 { margin: 0 0 .5rem; font-size: .95rem; color: var(--teal); }
+.demo-note p { margin: 0 0 .6rem; }
+.demo-note a { margin-right: .8rem; }
+
+
+/* ---------- 底部切換列（比較工具，不是設計的一部分）---------- */
+.switch {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  display: flex; gap: .35rem; justify-content: center;
+  padding: .5rem .6rem calc(.5rem + env(safe-area-inset-bottom));
+  background: rgba(25, 22, 20, .93);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.switch button {
+  flex: 1 1 0; min-width: 0; font: inherit; font-size: .72rem; line-height: 1.3;
+  padding: .42rem .2rem; border-radius: 999px; cursor: pointer;
+  color: var(--night-soft); background: transparent; border: 1px solid var(--night-line);
+}
+.switch button[aria-pressed="true"] {
+  color: #191614; background: var(--night-text); border-color: var(--night-text);
+}
+.switch button:focus-visible { outline: 2px solid var(--night-text); outline-offset: 2px; }
+body { padding-bottom: 4.2rem; }
+
+@media (min-width: 600px) {
+  .switch { max-width: 390px; margin-inline: auto; border-radius: 12px 12px 0 0; }
+  .phone {
+    max-width: 390px; margin-inline: auto; background: var(--paper);
+    border: 1px solid var(--rule); border-radius: 14px; overflow: clip;
+  }
+  .demo-note { max-width: 42rem; margin-inline: auto; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要內容</a>
+
+<div class="phone">
+  <div class="sticky-head">
+    <header class="site-header">
+      <a class="brand" href="./">
+        <span class="brand-mark">
+          <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+          <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="translate(-232.8729 -333.8286)">
+              <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                   中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                   原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                   先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                   疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+            </g>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <b>芳仁牙醫診所</b>
+          <small>雲林斗六・永樂街</small>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主選單">
+        <a href="#articles">全部文章</a>
+        <a href="#doctors">醫師介紹</a>
+        <a href="#clinic">診所資訊</a>
+      </nav>
+    </header>
+  </div>
+
+  <main id="main">
+    <h1 class="sr-only">芳仁牙醫診所 — 雲林斗六永樂街，在地四十年</h1>
+
+  <div class="hero-block">
+  <div class="hero-stage">
+    <figure class="hero-photo">
+      <img src="/assets/hero-clinic-night-800.jpg"
+           srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+           sizes="(max-width: 600px) 100vw, 390px"
+           alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+           width="1600" height="1058" fetchpriority="high">
+
+      <div class="hero-copy">
+      <!-- 頁首本人搬到 .phone 底下當 sticky 了，這裡留等高的佔位，詩的位置才不會跑 -->
+      <div class="header-space" aria-hidden="true"></div>
+
+      <p class="hero-poem">
+        <span class="lead">小時候被大人牽著來　現在牽著別人</span>
+        <span>從中華路到永樂街　四十多年</span>
+        <span>有跟著換的　也有一直顧的</span>
+      </p>
+
+      <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+      </div>
+    </figure>
+  </div>
+
+    <ul class="stats">
+      <li><b>1983<small>年</small></b><span>開業至今</span></li>
+      <li><b>9<small>位</small></b><span>醫師駐診</span></li>
+      <li><b>6<small>個</small></b><span>部定專科</span></li>
+    </ul>
+  </div>
+
+    <section class="wrap">
+      <div class="sec-head">
+        <h2>治療項目</h2>
+      </div>
+      <ul class="chips">
+        <li>一般牙科・定期檢查</li>
+        <li>牙周治療</li>
+        <li>兒童牙科</li>
+        <li>齒顎矯正</li>
+        <li>植牙・假牙重建</li>
+      </ul>
+    </section>
+
+    <section class="wrap" id="articles">
+      <div class="sec-head">
+        <h2>最新文章</h2>
+        <p>依最後更新時間排序，最新的在前</p>
+      </div>
+      <div class="cards">
+      <a class="card" href="/posts/kids-arch-expansion/">
+        <img class="card-thumb" src="/assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
+        <div class="card-body">
+          <span class="card-tag">兒童牙科</span>
+          <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
+          <p>牙弓不夠寬，恆牙就像在擠公車，沒位置站只能前後亂鑽。6 到 12 歲顎骨還沒定型，是引導牙弓向外擴張的黃金期。</p>
+          <p class="card-date">更新 <time datetime="2026-08-02">2026/08/02</time></p>
+        </div>
+      </a>
+      <a class="card" href="/posts/regular-checkup/">
+        <img class="card-thumb" src="/assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
+        <div class="card-body">
+          <span class="card-tag">定期檢查</span>
+          <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
+          <p>洗牙不會把牙齒洗薄，也不是美白。它清的是自己刷不掉的牙結石，順便讓醫師在問題還小的時候先看見它。</p>
+          <p class="card-date">更新 <time datetime="2026-07-08">2026/07/08</time></p>
+        </div>
+      </a>
+      <a class="card" href="/posts/missing-tooth/">
+        <img class="card-thumb" src="/assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
+        <div class="card-body">
+          <span class="card-tag">缺牙重建</span>
+          <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
+          <p>缺一顆牙不只是缺一顆牙。旁邊的牙會倒、對面的牙會長長、齒槽骨會流失。三種重建方式各自的原理、代價與限制。</p>
+          <p class="card-date">更新 <time datetime="2026-06-02">2026/06/02</time></p>
+        </div>
+      </a>
+      <a class="card" href="/posts/kids-first-visit/">
+        <img class="card-thumb" src="/assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
+        <div class="card-body">
+          <span class="card-tag">兒童牙科</span>
+          <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
+          <p>「乳牙反正會換掉」是最常見也最昂貴的誤解。從第一顆牙長出來後的六個月談起，帶爸媽看懂塗氟、窩溝封填與健保給付。</p>
+          <p class="card-date">更新 <time datetime="2026-05-06">2026/05/06</time></p>
+        </div>
+      </a>
+      <a class="card" href="/posts/gum-bleeding/">
+        <img class="card-thumb" src="/assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
+        <div class="card-body">
+          <span class="card-tag">牙周照護</span>
+          <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
+          <p>健康的牙齦被牙刷碰到不會出血。流血代表牙齦正在發炎，而發炎和退火無關，是牙菌斑長期堆積的結果。</p>
+          <p class="card-date">更新 <time datetime="2026-04-15">2026/04/15</time></p>
+        </div>
+      </a>
+      <a class="card" href="/posts/bass-brushing/">
+        <img class="card-thumb" src="/assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
+        <div class="card-body">
+          <span class="card-tag">日常保健</span>
+          <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
+          <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙，原地來回十次。</p>
+          <p class="card-date">更新 <time datetime="2026-03-11">2026/03/11</time></p>
+        </div>
+      </a>
+      </div>
+    </section>
+
+    <section class="wrap" id="doctors">
+      <div class="sec-head">
+        <h2>醫師介紹</h2>
+        <p>看診團隊與各自的專科</p>
+      </div>
+      <div class="docs">
+      <article class="doc">
+        <h3>李柄輝<span class="doc-role">創辦醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>口腔檢查、一般牙科治療</dd>
+          <dt>資歷</dt><dd>台灣國際植牙醫師學會專科醫師（ATIOI）<br>國際牙醫學院院士（TICD）<br>衛生福利部家庭牙醫專科</dd>
+          <dt>學歷</dt><dd>中山醫學大學牙醫學博士</dd>
+        </dl>
+      </article>
+      <article class="doc">
+        <h3>李侑津<span class="doc-role">醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>牙周病治療、牙周再生手術、植牙手術、固定假牙、活動假牙、水雷射牙周治療</dd>
+          <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
+          <dt>學歷</dt><dd>臺北醫學大學學士、國立陽明交通大學碩士</dd>
+        </dl>
+      </article>
+      <article class="doc">
+        <h3>王俊偉<span class="doc-role">矯正專科醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>齒顎矯正、隱適美</dd>
+          <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺北醫學大學附設醫院齒顎矯正科<br>臺安醫院主治醫師</dd>
+          <dt>學歷</dt><dd>臺北醫學大學學士、碩士</dd>
+        </dl>
+      </article>
+      <article class="doc">
+        <h3>廖立揚<span class="doc-role">矯正專科醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>齒顎矯正、隱適美、阻生齒矯正</dd>
+          <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺中榮民總醫院齒顎矯正科<br>國立臺灣大學附設醫院</dd>
+          <dt>學歷</dt><dd>臺北醫學大學學士</dd>
+        </dl>
+      </article>
+      <article class="doc">
+        <h3>林晏妤<span class="doc-role">兒牙專科醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療</dd>
+          <dt>資歷</dt><dd>衛生福利部兒童牙科專科<br>隱適美認證醫師<br>臺中榮民總醫院兒童牙科</dd>
+          <dt>學歷</dt><dd>高雄醫學大學學士</dd>
+        </dl>
+      </article>
+      <article class="doc">
+        <h3>許馨文<span class="doc-role">口外專科醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>阻生齒拔除、齒槽骨保留術</dd>
+          <dt>資歷</dt><dd>衛生福利部口腔顎面外科專科<br>奇美醫學中心口腔顎面外科總醫師<br>保提拉肉毒學院認證醫師</dd>
+          <dt>學歷</dt><dd>臺北醫學大學學士</dd>
+        </dl>
+      </article>
+      <article class="doc">
+        <h3>楊小瑩<span class="doc-role">贋復假牙專科醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>活動假牙、固定假牙、牙橋、全口重建</dd>
+          <dt>資歷</dt><dd>衛生福利部贋復牙科專科醫師<br>台大醫院補綴科兼任主治醫師<br>台大雲林分院主治醫師</dd>
+          <dt>學歷</dt><dd>高雄醫學大學學士</dd>
+        </dl>
+      </article>
+      <article class="doc">
+        <h3>陳芷鈴<span class="doc-role">顯微根管專科醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>顯微根管、根尖手術、活髓治療</dd>
+          <dt>資歷</dt><dd>衛生福利部牙髓病專科<br>成大醫院口腔醫學部總醫師<br>臺北榮民總醫院</dd>
+          <dt>學歷</dt><dd>臺北醫學大學學士</dd>
+        </dl>
+      </article>
+      <article class="doc">
+        <h3>謝耀慶<span class="doc-role">兒牙專科醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療、一般牙科治療</dd>
+          <dt>資歷</dt><dd>臺北榮總兒童牙科總醫師<br>日本新潟大學吞嚥功能受訓醫師<br>隱適美認證醫師</dd>
+          <dt>學歷</dt><dd>國立陽明交通大學學士</dd>
+        </dl>
+      </article>
+      </div>
+    </section>
+
+    <section class="wrap" id="clinic">
+      <div class="sec-head">
+        <h2>診所資訊</h2>
+        <p>雲林縣斗六市・在地經營超過四十年</p>
+      </div>
+      <div class="info">
+        <div class="info-card">
+          <h3>地址</h3>
+          <p>雲林縣斗六市永樂街 70 號<br>
+             <a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">在 Google 地圖開啟</a></p>
+        </div>
+        <div class="info-card">
+          <h3>電話</h3>
+          <p class="big"><a href="tel:+88655339369">05-533-9369</a></p>
+        </div>
+        <div class="info-card">
+          <h3>看診時間</h3>
+          <p><b>週一至週五</b><br>
+             上午 08:45–12:00<br>
+             下午 13:45–16:45<br>
+             晚上 17:45–20:30</p>
+          <p class="info-note">週六、週日休診。國定假日門診時間請來電確認。</p>
+        </div>
+      </div>
+      <div class="gallery">
+        <figure>
+          <img src="/assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
+               alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
+          <figcaption>獨立診療空間，每張診療椅旁都配有影像螢幕，方便看診時一起討論。</figcaption>
+        </figure>
+        <figure>
+          <img src="/assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
+               alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
+          <figcaption>診療區以隔屏分隔，保留採光也維持看診時的隱私。</figcaption>
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <h4>芳仁牙醫診所</h4>
+      <p>雲林縣斗六市・在地經營超過四十年<br>
+         地址：雲林縣斗六市永樂街 70 號<br>
+         電話：<a href="tel:+88655339369">05-533-9369</a></p>
+      <p>本站文章為一般口腔衛教資訊，用意在於幫助讀者理解常見狀況，不能取代臨床診斷。實際狀況請就診由醫師評估。</p>
+      <p>首頁主視覺與診療室照片為芳仁牙醫診所自有，未經同意請勿轉載。文章內頁插圖與網站識別圖示為本站自製。</p>
+      <div class="foot-bottom">
+        <span>&copy; 2026 芳仁牙醫診所</span>
+        <span>網站最後更新：<time datetime="2026-08-02">2026 年 8 月 2 日</time></span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<div class="demo-note">
+  <h2>固定頁首・收合 ＋ 毛玻璃</h2>
+
+  <p>照你說的兩點改了：<b>「雲林斗六・永樂街」留著</b>，而且<b>毛玻璃從一開始捲動就有</b>——在照片與窄帶上它是蓋在圖片上的一層霧，捲到內文之後同一層霧繼續壓著。<b>整趟只有一種外觀，沒有換裝那一刻。</b></p>
+
+  <p><b>捲動位置 0 時完全沒有玻璃</b>，跟定案的 HERO 一模一樣。玻璃是捲動才淡入的。</p>
+
+  <p><b>收合維持，副標保留：</b>品牌名與圖標縮小、上下內距收緊，兩行都在。條高 <b>60.4 → 45.8px</b>。（第二輪的 C 是 37.4px，那 8px 是把副標收掉換來的，現在還回去了。）</p>
+
+  <p><b>唯一要用眼睛決定的是濃度，所以做成三檔可切換：</b></p>
+  <p>
+    <b>輕</b>　遮罩 .70　模糊 10px　—— 照片透得最多，霧感最薄<br>
+    <b>中</b>　遮罩 .78　模糊 14px　—— 預設<br>
+    <b>重</b>　遮罩 .86　模糊 20px　—— 幾乎不透，玻璃感最強
+  </p>
+
+  <p><b>最輕只到 .70 是對比度定的，不是品味。</b>條子捲到內文之後會壓在卡片白上，毛玻璃會把周圍的亮像素吸進來、把條底推亮 —— 濃度再低，nav 連結就掉出 AA（實測 <code>.62</code> 只有 <b>4.3</b>）。三檔的實測值列在下面。</p>
+
+  <p><b>副標有一個非改不可的地方，先講清楚。</b>「雲林斗六・永樂街」在 HERO 上是 <code>rgba(255,255,255,.65)</code>（跟照片一起定案的），但玻璃條捲到內文之後，底色會被亮內容推到 <code>#5d6062</code> 上下 —— <code>.65</code> 實測只剩 <b>3.68</b>，<b>過不了 AA</b>。所以<b>收合狀態</b>把它提到 <code>.80</code>（4.9）。<b>捲動位置 0 時仍然是 .65，HERO 一個值都沒動</b>，這條規則只在收合時生效。<br>
+  品牌名 <code>.95</code> 與 nav <code>.88</code> 不用動，三檔都有餘裕。</p>
+
+  <p><b>技術上</b>：玻璃放在 <code>::before</code> 而不是頁首本身，因為 <code>backdrop-filter</code> 沒辦法平滑地開關，放在偽元素上才能用 opacity 淡入。固定的仍然是 HERO 原本那一排本人，畫面上沒有第二個元素；容器單位的換算（1cqh = 0.7472cqw）與詩的等高佔位都跟上一輪相同。</p>
+
+  <p>對照：<a href="https://fangren.net/preview/home-mobile-share/">分享版</a></p>
+</div>
+
+<nav class="switch" aria-label="毛玻璃濃度切換">
+  <button type="button" data-g="" aria-pressed="true">不固定</button>
+  <button type="button" data-g="1" aria-pressed="false">輕 .70</button>
+  <button type="button" data-g="2" aria-pressed="false">中 .78</button>
+  <button type="button" data-g="3" aria-pressed="false">重 .86</button>
+</nav>
+<script>
+(function () {
+  var root = document.documentElement;
+  function onScroll() { root.classList.toggle('scrolled', window.scrollY > 4); }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+
+  var sw = document.querySelector('.switch');
+  sw.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-g]');
+    if (!b) return;
+    var g = b.dataset.g;
+    root.classList.toggle('glass', g !== '');
+    ['1', '2', '3'].forEach(function (x) { root.classList.toggle('g' + x, x === g); });
+    sw.querySelectorAll('button').forEach(function (x) {
+      x.setAttribute('aria-pressed', String(x === b));
+    });
+    onScroll();
+  });
+  onScroll();
+})();
+</script>
+
+
+</body>
+</html>
