@@ -34,7 +34,15 @@
   --night-text: #e3e1e0;
   --night-soft: #aaa49e;
   --night-faint: #969089;   /* PALETTE.md 第四節 A */
-  --band-bg: #2a2c27;       /* 窄帶底：PALETTE.md 第四節 B 的墨色 */
+  /* 窄帶：2026-08-06 定案的「夜的漸層」。原本是單色 #2a2c27（＝內文墨色），
+     使用者說它跟照片交界處突兀。量出來的原因不只是顏色：照片最底那一列實測
+     #161413、L* 只有 6.6，比窄帶的 17.6 還暗 11 個 L* —— 真正刺眼的是那條硬邊，
+     一張有明暗起伏的照片直接切到一塊全平的深色板。
+     所以窄帶改成從照片的暗度長出來：頂端貼近照片底緣，往下才亮到足以接紙色。
+     色相取自照片本身（夜空 #1b2635 × 柏油 #221e1c，5:5 後彩度 ×0.72 → H=220・S=10%）。 */
+  --band-top: #17191d;      /* L* 8.5，貼著照片底緣的 6.6 —— 上緣因此幾乎沒有邊 */
+  --band-bg:  #282b31;      /* L* 17.5，漸層中段。分隔線混色與 fallback 都以它為準 */
+  --band-bot: #2d3037;      /* L* 19.8，下緣，要有明度才接得住紙色 */
 
   /* 內文區：N3 藍灰調。H=203・L=89.4%・R−B −4（三案裡唯一有色偏的） */
   --paper: #e2e5e6;
@@ -77,8 +85,8 @@ a { color: var(--teal); }
    瀏覽器分別做像素對齊之後中間會露出不到 1px 的縫，
    而縫底下就是 body 的紙色 #e2e5e6 —— 在手機上看起來就是一條白線。
    （實測 iPhone DPR 3 的截圖，那條縫是 1 個裝置像素、量到 #e2e5e6。）
-   墊上帶底色之後，縫再怎麼露也是露 #2a2c27，看不出來。 */
-.hero-block { background: var(--band-bg); }
+   墊上 --band-top 之後，縫再怎麼露也是露 #17191d（漸層的頂色），看不出來。 */
+.hero-block { background: var(--band-top); }
 .hero-stage { position: relative; container-type: inline-size; background: #12161a; }
 .hero-photo {
   margin: 0; position: relative; overflow: hidden;
@@ -157,7 +165,10 @@ a { color: var(--teal); }
      原本上下各留 20／17.7px，現在各留約 13／11.7px，
      還是比字高的一半多，不會擠。要再短就往 50px 走，48px 以下會開始貼字。 */
   min-height: 54px;
-  list-style: none; background: var(--band-bg);
+  list-style: none;
+  background-color: var(--band-bg);
+  background-image: linear-gradient(180deg,
+    var(--band-top) 0%, var(--band-bg) 55%, var(--band-bot) 100%);
 }
 /* 三格等寬、各自置中：原本是靠左排、第一格不縮排，右邊會空出一大塊，
    整條看起來偏左。改成每格佔三分之一、文字置中。
@@ -190,14 +201,20 @@ a { color: var(--teal); }
   /* 字級：中文比照 HERO 那三行詩（390px 上是 10px＝.625rem），
      數字按同一個比例縮 —— 原本 20 / 12.16px 是 1.645 倍，
      現在 16.4 / 10px 還是 1.64 倍。落差維持住，數字才不會跟中文一樣小。 */
-  display: block; font-size: 1.025rem; color: var(--night-text);
+  /* 顏色與頁首的「芳仁牙醫診所」同一個宣告 —— 半透明白，不是 --night-text。
+     疊在漸層上的實際合成色 #f4f4f5，對比 12.08~15.93（原本 #e3e1e0 是 10.83）。 */
+  display: block; font-size: 1.025rem; color: rgba(255, 255, 255, .95);
   font-family: "Noto Serif TC", "Source Han Serif TC", serif;
   line-height: 1.05;
   font-variant-numeric: tabular-nums; letter-spacing: -.01em;
 }
 /* 單位（年／位／個）跟著數字走，字級和下面的標籤同級，不加粗 */
 .stats b small { font-size: .625rem; font-weight: 400; letter-spacing: 0; margin-left: .1em; }
-.stats span { font-size: .625rem; color: var(--night-soft); }
+/* 顏色與頁首的「雲林斗六・永樂街」同一個宣告。合成色 #b6b7b9，
+   對比 6.55~7.97（原本 #aaa49e 是 5.72）。
+   附帶的好處：半透明白會跟著底色一起變，所以窄帶明度再調也不會掉出 AA ——
+   原本用固定的 #aaa49e 時，窄帶最亮只能到 L* 25.1。 */
+.stats span { font-size: .625rem; color: rgba(255, 255, 255, .65); }
 
 /* ==========================================================================
    內文區
