@@ -4,28 +4,41 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>固定頁首三案 A 暗夜／B 紙色／C 玻璃 — 芳仁牙醫診所提案</title>
+<title>固定頁首第二輪 A 紙色／B 暗夜／C 收合 — 芳仁牙醫診所提案</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <!--
-  2026-08-06．捲動時固定頁首（banner）三案。底色、HERO、窄帶都是定案版，一個值都沒動。
+  2026-08-06．固定頁首，第二輪。第一輪（另外跳出一條 .topbar）被否決：
+  「有點多此一舉，用原來和 hero 區結合的 logo 那一排就可以了。」
 
-  三案是三種不同的行為，不是同一種的三種強度：
+  所以這一輪是把 HERO 原本那一排 .site-header 本人固定起來，沒有第二個元素。
 
-    A 暗夜條  捲過 HERO 之後才出現。暗底（用窄帶漸層的同一組色）、白字。
-              頁首離開視線之後由「夜」接手，跟 HERO 是同一個世界。
-    B 紙色條  捲過 HERO 之後才出現。紙底、墨字、連結深綠松。
-              照 PALETTE.md 兩套色的邏輯：捲進內文就換成內文的衣服。
-    C 玻璃條  **全程都在。** 一開始捲動就浮出來（半透明暗底＋毛玻璃），
-              同時 HERO 自己的頁首淡出 —— 一個交接，不是兩個頁首。
+  ## 搬動它要處理的兩件事
 
-  共通處理：
-  · 條子是另外一個元素，HERO 原本的頁首完全沒動（它是定案的，cqh/cqw 也搬不出來）。
-  · 錨點（#articles/#doctors/#clinic）加 scroll-margin-top，
-    不然點了會被固定條蓋住標題。
-  · 藏起來時用 visibility: hidden ＋ aria-hidden，鍵盤不會 tab 到看不見的連結。
-  · 尊重 prefers-reduced-motion。
-  · 上緣留 env(safe-area-inset-top)，iPhone 的瀏海／動態島不會壓到字。
+  1. **它原本在 .hero-copy 裡面**，而 .hero-copy 是絕對定位在 .hero-photo 之內，
+     .hero-photo 又有 overflow: hidden —— sticky 在那裡面只會黏到 HERO 結束就跑掉。
+     所以必須把它搬成 .phone 的直接子元素才黏得住整頁。
+
+  2. **搬出來之後容器查詢單位會改變意義。** 原本 .hero-photo 是 size container，
+     頁首用的是 cqh；搬到 .phone（inline-size container）之後只剩 cqw。
+     兩者有精確換算：.hero-photo 高 = 74.72cqw，所以 1cqh = 0.7472cqw。
+       5cqh   → 3.736cqw      11cqh  → 8.2192cqw
+       5.1cqh → 3.81072cqw    3.5cqh → 2.6152cqw     1cqh → 0.7472cqw
+     這是等式不是近似，換完之後每個尺寸都跟原本一模一樣（下方有實測比對）。
+
+  3. **詩的位置不能跑掉。** .hero-copy 原本是 flex 直排，詩的位置 =
+     5cqh ＋ 頁首高 ＋ 7cqh。頁首搬走之後補一個 .header-space 佔位，
+     高度用同一條公式（頁首高永遠等於 brand-text 兩行的高，
+     圖標最高 40×0.4928=19.7px 一定比它矮）。
+
+  ## 三案（差別在「落到淺色內容上」之後怎麼辦）
+
+    A 紙色換裝  底變 --card、字變墨色、連結變深綠松。照兩套色的邏輯換衣服
+    B 暗夜換裝  底變窄帶的 --band-bg、字維持白。夜跟著走
+    C 收合      毛玻璃底，副標「雲林斗六・永樂街」淡出收起、品牌名縮到 .88，
+                整條高度變矮。強調的是佔的空間變小
+
+  切換到「不固定」時 .sticky-head 用 absolute，跟原本完全一樣會捲走。
 -->
 <style>:root { color-scheme: light; }</style>
 <style>
@@ -59,97 +72,6 @@
   /* 全頁唯一的彩色。紙底 8.03:1、卡底 8.79:1 */
   --teal: #214D48;
 }
-
-/* ==========================================================================
-   捲動時固定的頁首。三案共用同一個 .topbar，差別在 class。
-   ========================================================================== */
-.topbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
-  display: flex; align-items: center; justify-content: space-between; gap: 3vw;
-  padding: .5rem var(--pad); padding-top: calc(.5rem + env(safe-area-inset-top));
-  visibility: hidden; opacity: 0; transform: translateY(-6px);
-  transition: opacity .22s ease, transform .22s ease, visibility 0s .22s;
-}
-.topbar.on { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
-.topbar .brand { display: flex; align-items: center; gap: 2.4vw; text-decoration: none; }
-.topbar .brand-mark { flex: 0 0 26px; display: block; }
-.topbar .brand-mark svg { display: block; width: 100%; height: auto; }
-.topbar b { font-size: .95rem; font-weight: 700; letter-spacing: 0; line-height: 1.2; }
-.topbar nav { display: flex; gap: 3.2vw; font-size: .72rem; line-height: 1.3; }
-/* 品牌名 .95、nav 連結 .88 —— 兩個都直接沿用 HERO 頁首的同一組宣告
-   （.brand-text b 是 .95，.site-nav a 是 .88），不是另外挑的近似值。
-   順便解決了 C 的對比：.72 壓在卡片白上只剩 4.7，.88 拉到 6.2。 */
-.topbar nav a { text-decoration: none; white-space: nowrap; }
-
-/* A 暗夜條：跟窄帶同一組色，白字。頁首離開之後由「夜」接手 */
-html.nav-a .topbar {
-  background: var(--band-bg);
-  border-bottom: 1px solid var(--night-line);
-}
-html.nav-a .topbar .brand-mark { color: rgba(255, 255, 255, .95); }
-html.nav-a .topbar b { color: rgba(255, 255, 255, .95); }
-html.nav-a .topbar nav a { color: rgba(255, 255, 255, .88); }
-
-/* B 紙色條：捲進內文就換成內文的衣服（PALETTE.md 兩套色的邏輯） */
-html.nav-b .topbar {
-  background: var(--card);
-  border-bottom: 1px solid var(--rule);
-}
-html.nav-b .topbar .brand-mark { color: var(--ink); }
-html.nav-b .topbar b { color: var(--ink); }
-html.nav-b .topbar nav a { color: var(--teal); }
-
-/* C 玻璃條：全程都在，浮在照片上。毛玻璃讓底下的照片透出來，
-   所以在 HERO 上它是照片的一部分，捲下去之後又壓得住淺色內文。 */
-html.nav-c .topbar {
-  /* 遮罩 .78 不是隨便挑的：條子壓在最亮的內容上（卡片白，模糊後可能接近純白）時，
-     .72 會讓 nav 連結掉到 4.55 —— 過 AA 但只剩 0.05 的餘裕，而毛玻璃吸進來的
-     周邊像素可能更亮。.78 把它拉到 5.43，壓在照片上的觀感幾乎沒有差別。 */
-  background: rgba(23, 25, 29, .78);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
-  backdrop-filter: blur(14px) saturate(1.1);
-}
-html.nav-c .topbar .brand-mark { color: rgba(255, 255, 255, .95); }
-html.nav-c .topbar b { color: rgba(255, 255, 255, .95); }
-html.nav-c .topbar nav a { color: rgba(255, 255, 255, .88); }
-/* C 專屬：玻璃條浮出來的同時，HERO 自己的頁首淡出 —— 一個交接，不是兩個頁首 */
-html.nav-c .site-header { transition: opacity .22s ease; }
-html.nav-c.scrolled .site-header { opacity: 0; pointer-events: none; }
-
-/* 錨點被固定條蓋住的問題。條高約 48px（含安全區再多留一點） */
-html.nav-a #articles, html.nav-a #doctors, html.nav-a #clinic,
-html.nav-b #articles, html.nav-b #doctors, html.nav-b #clinic,
-html.nav-c #articles, html.nav-c #doctors, html.nav-c #clinic {
-  scroll-margin-top: calc(56px + env(safe-area-inset-top));
-}
-@media (prefers-reduced-motion: reduce) {
-  .topbar, html.nav-c .site-header { transition: none; }
-}
-
-/* ---------- 底部切換列（比較工具，不是設計的一部分）---------- */
-.switch {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
-  display: flex; gap: .35rem; justify-content: center;
-  padding: .5rem .6rem calc(.5rem + env(safe-area-inset-bottom));
-  background: rgba(25, 22, 20, .93);
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-}
-.switch button {
-  flex: 1 1 0; min-width: 0; font: inherit; font-size: .72rem; line-height: 1.3;
-  padding: .42rem .2rem; border-radius: 999px; cursor: pointer;
-  color: var(--night-soft); background: transparent; border: 1px solid var(--night-line);
-}
-.switch button[aria-pressed="true"] {
-  color: #191614; background: var(--night-text); border-color: var(--night-text);
-}
-.switch button:focus-visible { outline: 2px solid var(--night-text); outline-offset: 2px; }
-body { padding-bottom: 4.2rem; }
-
-@media (min-width: 600px) {
-  .switch { max-width: 390px; margin-inline: auto; border-radius: 12px 12px 0 0; }
-  .topbar { max-width: 390px; margin-inline: auto; }
-}
-
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
@@ -205,6 +127,77 @@ a { color: var(--teal); }
   pointer-events: none;
 }
 .hero-copy a { pointer-events: auto; }
+
+/* ==========================================================================
+   固定頁首。用的是 HERO 原本那一排本人（.site-header），不是另做一條。
+
+   .sticky-head 高度 0、不佔版面，只負責把頁首釘在頂端；
+   「不固定」時改成 absolute，行為與原本完全相同。
+   ========================================================================== */
+.phone { position: relative; container-type: inline-size; }
+.sticky-head { position: absolute; top: 0; left: 0; right: 0; z-index: 30; height: 0; }
+html.st-a .sticky-head, html.st-b .sticky-head, html.st-c .sticky-head { position: sticky; }
+
+/* 搬出 .hero-photo 之後 cqh 沒有意義了，全部換成 cqw（1cqh = 0.7472cqw，見檔首註解）。
+   下面這一段是原本 .hero-copy ＋ .site-header 的尺寸，一個值都沒有改，只換單位。 */
+.sticky-head .site-header {
+  padding: 3.736cqw 4cqw 0;              /* 原 .hero-copy 的 padding: 5cqh 4cqw 0 */
+  transition: background-color .2s ease, color .2s ease, padding .2s ease;
+}
+.sticky-head .brand-mark { flex: 0 0 clamp(30px, 8.2192cqw, 40px); }   /* 原 11cqh */
+.sticky-head .brand-text b { font-size: clamp(14px, 3.81072cqw, 18px); }  /* 原 5.1cqh */
+.sticky-head .brand-text small,
+.sticky-head .site-nav { font-size: clamp(10px, 2.6152cqw, 12.5px); }     /* 原 3.5cqh */
+.sticky-head .site-nav { padding-top: 0.7472cqw; }                        /* 原 1cqh */
+
+/* 佔位：頁首高永遠等於 brand-text 兩行（圖標最高 40×0.4928=19.7px，一定比它矮，
+   nav 也只有一行）。用同一組 clamp，所以任何寬度下都等高。 */
+.header-space {
+  height: calc(clamp(14px, 5.1cqh, 18px) * 1.25 + clamp(10px, 3.5cqh, 12.5px) * 1.25);
+}
+
+/* ---------- 落到淺色內容上之後：三種處理 ---------- */
+/* A 紙色換裝：捲進內文就換成內文的衣服 */
+html.st-a.landed .sticky-head .site-header {
+  background: var(--card); box-shadow: 0 1px 0 var(--rule);
+  padding-bottom: 3.736cqw;
+}
+html.st-a.landed .brand-mark { color: var(--ink); }
+html.st-a.landed .brand-text b { color: var(--ink); }
+html.st-a.landed .brand-text small { color: var(--ink-soft); }
+html.st-a.landed .site-nav a { color: var(--teal); }
+
+/* B 暗夜換裝：底變成窄帶的顏色，字維持白 —— 夜跟著走 */
+html.st-b.landed .sticky-head .site-header {
+  background: var(--band-bg); box-shadow: 0 1px 0 var(--night-line);
+  padding-bottom: 3.736cqw;
+}
+
+/* C 收合：毛玻璃底，副標收起、品牌名縮小，整條變矮 */
+html.st-c.landed .sticky-head .site-header {
+  background: rgba(23, 25, 29, .78);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  backdrop-filter: blur(14px) saturate(1.1);
+  padding-top: 2.6cqw; padding-bottom: 2.6cqw;
+}
+html.st-c.landed .brand-text small {
+  opacity: 0; height: 0; overflow: hidden;
+}
+html.st-c.landed .brand-text b { font-size: clamp(12.5px, 3.35cqw, 16px); }
+html.st-c .brand-text small { transition: opacity .2s ease, height .2s ease; }
+html.st-c .brand-text b { transition: font-size .2s ease; }
+
+/* 錨點不要被固定的頁首蓋住 */
+html.st-a #articles, html.st-a #doctors, html.st-a #clinic,
+html.st-b #articles, html.st-b #doctors, html.st-b #clinic,
+html.st-c #articles, html.st-c #doctors, html.st-c #clinic {
+  scroll-margin-top: calc(52px + env(safe-area-inset-top));
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticky-head .site-header, .sticky-head .brand-text small, .sticky-head .brand-text b {
+    transition: none;
+  }
+}
 .site-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 3cqw; }
 .brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
 .brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
@@ -388,10 +381,31 @@ section + section { border-top: 1px solid var(--rule); }
 .demo-note p { margin: 0 0 .6rem; }
 .demo-note a { margin-right: .8rem; }
 
+
+/* ---------- 底部切換列（比較工具，不是設計的一部分）---------- */
+.switch {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  display: flex; gap: .35rem; justify-content: center;
+  padding: .5rem .6rem calc(.5rem + env(safe-area-inset-bottom));
+  background: rgba(25, 22, 20, .93);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.switch button {
+  flex: 1 1 0; min-width: 0; font: inherit; font-size: .72rem; line-height: 1.3;
+  padding: .42rem .2rem; border-radius: 999px; cursor: pointer;
+  color: var(--night-soft); background: transparent; border: 1px solid var(--night-line);
+}
+.switch button[aria-pressed="true"] {
+  color: #191614; background: var(--night-text); border-color: var(--night-text);
+}
+.switch button:focus-visible { outline: 2px solid var(--night-text); outline-offset: 2px; }
+body { padding-bottom: 4.2rem; }
+
 @media (min-width: 600px) {
+  .switch { max-width: 390px; margin-inline: auto; border-radius: 12px 12px 0 0; }
   .phone {
     max-width: 390px; margin-inline: auto; background: var(--paper);
-    border: 1px solid var(--rule); border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--rule); border-radius: 14px; overflow: clip;
   }
   .demo-note { max-width: 42rem; margin-inline: auto; }
 }
@@ -401,28 +415,36 @@ section + section { border-top: 1px solid var(--rule); }
 
 <a class="skip-link" href="#main">跳到主要內容</a>
 
-<header class="topbar" aria-hidden="true">
-  <a class="brand" href="#main">
-    <span class="brand-mark"><svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <g transform="translate(-232.8729 -333.8286)">
-                <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
-                     中間那顆牙成為真正的洞——照片的夜空直接透過來。
-                     原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
-                     先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
-                     疊在白色圖案上就變成一顆灰點，那是錯的。 -->
-                <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
-              </g>
-            </svg></span>
-    <b>芳仁牙醫診所</b>
-  </a>
-  <nav aria-label="主選單（固定）">
-    <a href="#articles">全部文章</a>
-    <a href="#doctors">醫師介紹</a>
-    <a href="#clinic">診所資訊</a>
-  </nav>
-</header>
-
 <div class="phone">
+  <div class="sticky-head">
+    <header class="site-header">
+      <a class="brand" href="./">
+        <span class="brand-mark">
+          <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
+          <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="translate(-232.8729 -333.8286)">
+              <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                   中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                   原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
+                   先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                   疊在白色圖案上就變成一顆灰點，那是錯的。 -->
+              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+            </g>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <b>芳仁牙醫診所</b>
+          <small>雲林斗六・永樂街</small>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主選單">
+        <a href="#articles">全部文章</a>
+        <a href="#doctors">醫師介紹</a>
+        <a href="#clinic">診所資訊</a>
+      </nav>
+    </header>
+  </div>
+
   <main id="main">
     <h1 class="sr-only">芳仁牙醫診所 — 雲林斗六永樂街，在地四十年</h1>
 
@@ -436,32 +458,8 @@ section + section { border-top: 1px solid var(--rule); }
            width="1600" height="1058" fetchpriority="high">
 
       <div class="hero-copy">
-      <header class="site-header">
-        <a class="brand" href="./">
-          <span class="brand-mark">
-            <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
-            <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <g transform="translate(-232.8729 -333.8286)">
-                <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
-                     中間那顆牙成為真正的洞——照片的夜空直接透過來。
-                     原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
-                     先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
-                     疊在白色圖案上就變成一顆灰點，那是錯的。 -->
-                <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
-              </g>
-            </svg>
-          </span>
-          <span class="brand-text">
-            <b>芳仁牙醫診所</b>
-            <small>雲林斗六・永樂街</small>
-          </span>
-        </a>
-        <nav class="site-nav" aria-label="主選單">
-          <a href="#articles">全部文章</a>
-          <a href="#doctors">醫師介紹</a>
-          <a href="#clinic">診所資訊</a>
-        </nav>
-      </header>
+      <!-- 頁首本人搬到 .phone 底下當 sticky 了，這裡留等高的佔位，詩的位置才不會跑 -->
+      <div class="header-space" aria-hidden="true"></div>
 
       <p class="hero-poem">
         <span class="lead">小時候被大人牽著來　現在牽著別人</span>
@@ -694,67 +692,60 @@ section + section { border-top: 1px solid var(--rule); }
 </div>
 
 <div class="demo-note">
-  <h2>捲動時固定頁首　三案</h2>
+  <h2>固定頁首・第二輪　A 紙色／B 暗夜／C 收合</h2>
 
-  <p><b>底色、HERO、窄帶都是定案版，一個值都沒動。</b>加的只有一條固定的頁首。</p>
+  <p><b>這一輪沒有第二條列。</b>固定在頂端的就是 HERO 原本那一排 <code>.site-header</code> 本人 —— 你在最上面看到的那一排，捲下去之後留在原地的是同一個元素，不是另外冒出來的東西。</p>
 
-  <p><b>三案是三種不同的行為，不是同一種的三種強度：</b></p>
-
+  <p><b>搬動它要處理三件事，都處理掉了：</b></p>
   <p>
-    <b>A 暗夜條</b>　捲過 HERO 之後才出現。用窄帶漸層的同一組暗色、白字。頁首離開視線之後由「夜」接手，跟 HERO 還在同一個世界裡。<br><br>
-    <b>B 紙色條</b>　捲過 HERO 之後才出現。紙底、墨字、連結深綠松。這是照 PALETTE.md 兩套色的邏輯走的：<b>捲進內文，就換成內文的衣服</b>。份量最輕，不會在滑動時一直有一塊深色壓在頭上。<br><br>
-    <b>C 玻璃條</b>　<b>全程都在。</b>一開始捲動就浮出來（半透明暗底＋毛玻璃），<b>同時 HERO 自己的頁首淡出</b>——是一個交接，不是兩個頁首同時出現。毛玻璃讓底下的照片透上來，所以在 HERO 上它像照片的一部分，捲下去之後又壓得住淺色內文。
+    ・它原本在 <code>.hero-copy</code> 裡，而那是絕對定位在有 <code>overflow: hidden</code> 的 <code>.hero-photo</code> 之內 —— sticky 在那裡面只會黏到 HERO 結束就跑掉。所以搬成 <code>.phone</code> 的直接子元素。<br>
+    ・搬出來之後<b>容器查詢單位會改變意義</b>（原本是 <code>cqh</code>，新容器只有 <code>cqw</code>）。兩者有精確換算：照片高 = 74.72cqw，所以 <b>1cqh = 0.7472cqw</b>。全部照這個換完，<b>是等式不是近似</b>。<br>
+    ・<b>詩的位置不能跑掉。</b>原本詩的位置 = 5cqh ＋ 頁首高 ＋ 7cqh，頁首搬走會讓詩往上跳。所以原地補了一個等高的佔位，高度用同一組 <code>clamp</code> 公式算，任何寬度下都等高。
   </p>
 
-  <p><b>我的建議是 B。</b>理由是這頁的內容主體是白底長文與卡片，滑動時視線一直在淺色上；A 和 C 會讓一塊深色常駐在畫面頂端，在小螢幕上等於永久扣掉一條深色帶，久了會壓。B 只在需要的時候出現，而且它遵守「暗夜只留在 HERO」這條既有規則（PALETTE.md 第六節第 4 條）——A 和 C 其實都把夜帶進了室內。<br>
-  但如果你要的是「品牌感一路跟著」，那就選 C：它是三案裡唯一在 HERO 上就有存在感的，而且交接處理得最乾淨。</p>
-
-  <p><b>幾個一起處理掉的細節：</b></p>
+  <p><b>三案差在「落到淺色內容上之後怎麼辦」</b>——這是非做不可的，白字在紙色底上看不見：</p>
   <p>
-    ・HERO 原本的頁首<b>完全沒動</b>——它是定案的，而且用的是 <code>cqh</code>／<code>cqw</code>（綁在照片容器上），搬不進固定條裡。固定條是另外一個元素。<br>
-    ・錨點加了 <code>scroll-margin-top</code>，不然點「醫師介紹」會被固定條蓋住標題。<br>
-    ・藏起來時用 <code>visibility: hidden</code> ＋ <code>aria-hidden</code>，鍵盤不會 tab 到看不見的連結。<br>
-    ・上緣留了 <code>env(safe-area-inset-top)</code>，iPhone 的動態島不會壓到字。<br>
-    ・尊重 <code>prefers-reduced-motion</code>。<br>
-    ・固定條的字色<b>直接沿用 HERO 頁首的同一組宣告</b>：品牌名 <code>rgba(255,255,255,.95)</code>（＝<code>.brand-text b</code>）、nav <code>rgba(255,255,255,.88)</code>（＝<code>.site-nav a</code>），不是另外挑的近似值。<br>
-    ・C 的遮罩用 .78 而不是 .72：條子壓在卡片白上時，毛玻璃吸進來的周邊像素會把條底推亮，實測 .72 讓 nav 只剩 <b>4.7</b>。.78 ＋ 字色 .88 之後拉到 <b>6.2</b>，而壓在照片上的觀感幾乎沒差。
+    <b>A 紙色換裝</b>　底變成卡片白、字變墨色、連結變深綠松。照 PALETTE.md 兩套色的邏輯：捲進內文就換內文的衣服。<br><br>
+    <b>B 暗夜換裝</b>　底變成窄帶的 <code>#282b31</code>，字維持白。夜跟著一起走。<br><br>
+    <b>C 收合</b>　毛玻璃底，<b>副標「雲林斗六・永樂街」淡出收起、品牌名縮小</b>，整條變矮。強調的是佔的空間變小，不是換顏色。
   </p>
 
-  <p>下面那條列可以即時切換，含「不固定」的現況。</p>
+  <p><b>我的建議還是 A。</b>理由跟上一輪一樣：這頁滑動時視線一直在淺色上，B 和 C 會讓一塊深色常駐在頂端，小螢幕上等於永久扣掉一條。而且 PALETTE.md 第六節第 4 條寫的是「暗夜只留在 HERO，不延伸到內文區」—— B 和 C 都把夜帶進了室內。<br>
+  C 的收合在功能上最省空間，如果你覺得固定條佔位太多，那就選 C。</p>
+
+  <p><b>已實測比對</b>：捲動位置 0 時，這一頁的頁首與詩句座標與定案的 <code>home-mobile-n3</code> <b>完全相同</b>（375／390／430 三個寬度都比對過）。也就是說「沒捲動的時候，這一頁跟現在長得一模一樣」。</p>
+
+  <p>切到「不固定」時，那一排會用 <code>absolute</code>，行為跟現在完全一樣會捲走。</p>
   <p>對照：<a href="https://fangren.net/preview/home-mobile-share/">分享版</a></p>
 </div>
 
 <nav class="switch" aria-label="固定頁首切換">
-  <button type="button" data-nav="" aria-pressed="true">不固定</button>
-  <button type="button" data-nav="a" aria-pressed="false">A 暗夜</button>
-  <button type="button" data-nav="b" aria-pressed="false">B 紙色</button>
-  <button type="button" data-nav="c" aria-pressed="false">C 玻璃</button>
+  <button type="button" data-st="" aria-pressed="true">不固定</button>
+  <button type="button" data-st="a" aria-pressed="false">A 紙色</button>
+  <button type="button" data-st="b" aria-pressed="false">B 暗夜</button>
+  <button type="button" data-st="c" aria-pressed="false">C 收合</button>
 </nav>
 <script>
 (function () {
   var root = document.documentElement;
-  var bar = document.querySelector('.topbar');
-  var band = document.querySelector('.stats');   // 窄帶＝HERO 的結尾，拿它當哨兵
+  var head = document.querySelector('.sticky-head .site-header');
+  var band = document.querySelector('.stats');   // 窄帶＝暗夜區的結尾，拿它當哨兵
   var mode = '';
 
   function apply() {
-    // A／B 捲過 HERO 才出現；C 一開始捲動就出現
-    var past = band.getBoundingClientRect().bottom <= 0;
-    var moved = window.scrollY > 8;
-    var show = mode === 'c' ? moved : (mode ? past : false);
-    bar.classList.toggle('on', show);
-    bar.setAttribute('aria-hidden', String(!show));
-    root.classList.toggle('scrolled', moved);
+    // 照片與窄帶都捲過去之後，頁首底下就是淺色內容了 —— 那一刻才需要換裝
+    var landed = mode !== '' && band.getBoundingClientRect().bottom <= head.getBoundingClientRect().height;
+    root.classList.toggle('landed', landed);
   }
   addEventListener('scroll', apply, { passive: true });
   addEventListener('resize', apply);
 
   var sw = document.querySelector('.switch');
   sw.addEventListener('click', function (e) {
-    var b = e.target.closest('button[data-nav]');
+    var b = e.target.closest('button[data-st]');
     if (!b) return;
-    mode = b.dataset.nav;
-    ['a', 'b', 'c'].forEach(function (x) { root.classList.toggle('nav-' + x, x === mode); });
+    mode = b.dataset.st;
+    ['a', 'b', 'c'].forEach(function (x) { root.classList.toggle('st-' + x, x === mode); });
     sw.querySelectorAll('button').forEach(function (x) {
       x.setAttribute('aria-pressed', String(x === b));
     });
