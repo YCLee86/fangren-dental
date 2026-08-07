@@ -576,10 +576,13 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 .card-body > .card-date { margin-top: auto !important; }
 .card-date .dot { color: var(--rule); }
-.views { display: inline-flex; align-items: center; gap: .28rem; white-space: nowrap; }
-.views-icon { display: inline-flex; opacity: .6; }
-.views svg { width: 12px; height: 12px; display: block; }
+/* 2026-08-07：眼睛圖示拿掉，改成「數字 ＋ 次瀏覽」——
+   和窄帶那一列用同一種講法，整站只有一種說「幾次瀏覽」的方式。
+   圖示本來是照正式站做的，但那頁沒有窄帶、沒有別的地方講瀏覽數；
+   這一頁有了，兩種寫法並存反而要讀者多學一次。 */
+.views { display: inline-flex; align-items: baseline; white-space: nowrap; }
 .views-n { font-variant-numeric: tabular-nums; }
+.views small { font-size: inherit; margin-left: .3em; }
 
 /* ==========================================================================
    六個科別色（PALETTE.md／與手機版完全相同，一個值都沒有改）
@@ -869,9 +872,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
             <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
             <p>牙弓不夠寬，恆牙就像在擠公車，沒位置站只能前後亂鑽。6 到 12 歲顎骨還沒定型，是引導牙弓向外擴張的黃金期。</p>
             <p class="card-date">
-              <span>更新 <time datetime="2026-08-02">2026/08/02</time></span>
+              <span><span class="sr-only">更新 </span><time datetime="2026-08-02">2026/08/02</time></span>
               <span class="dot" aria-hidden="true">・</span>
-              <span class="views" data-views="kids-arch-expansion"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">1,284</span></span>
+              <span class="views" data-views="kids-arch-expansion"><span class="views-n">1,284</span><small>次瀏覽</small></span>
             </p>
           </div>
         </a>
@@ -882,9 +885,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
             <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
             <p>洗牙不會把牙齒洗薄，也不是美白。它清的是自己刷不掉的牙結石，順便讓醫師在問題還小的時候先看見它。</p>
             <p class="card-date">
-              <span>更新 <time datetime="2026-07-08">2026/07/08</time></span>
+              <span><span class="sr-only">更新 </span><time datetime="2026-07-08">2026/07/08</time></span>
               <span class="dot" aria-hidden="true">・</span>
-              <span class="views" data-views="regular-checkup"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">2,067</span></span>
+              <span class="views" data-views="regular-checkup"><span class="views-n">2,067</span><small>次瀏覽</small></span>
             </p>
           </div>
         </a>
@@ -895,9 +898,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
             <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
             <p>缺一顆牙不只是缺一顆牙。旁邊的牙會倒、對面的牙會長長、齒槽骨會流失。三種重建方式各自的原理、代價與限制。</p>
             <p class="card-date">
-              <span>更新 <time datetime="2026-06-02">2026/06/02</time></span>
+              <span><span class="sr-only">更新 </span><time datetime="2026-06-02">2026/06/02</time></span>
               <span class="dot" aria-hidden="true">・</span>
-              <span class="views" data-views="missing-tooth"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">1,530</span></span>
+              <span class="views" data-views="missing-tooth"><span class="views-n">1,530</span><small>次瀏覽</small></span>
             </p>
           </div>
         </a>
@@ -908,9 +911,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
             <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
             <p>「乳牙反正會換掉」是最常見也最昂貴的誤解。從第一顆牙長出來後的六個月談起，帶爸媽看懂塗氟、窩溝封填與健保給付。</p>
             <p class="card-date">
-              <span>更新 <time datetime="2026-05-06">2026/05/06</time></span>
+              <span><span class="sr-only">更新 </span><time datetime="2026-05-06">2026/05/06</time></span>
               <span class="dot" aria-hidden="true">・</span>
-              <span class="views" data-views="kids-first-visit"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">946</span></span>
+              <span class="views" data-views="kids-first-visit"><span class="views-n">946</span><small>次瀏覽</small></span>
             </p>
           </div>
         </a>
@@ -921,9 +924,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
             <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
             <p>健康的牙齦被牙刷碰到不會出血。流血代表牙齦正在發炎，而發炎和退火無關，是牙菌斑長期堆積的結果。</p>
             <p class="card-date">
-              <span>更新 <time datetime="2026-04-15">2026/04/15</time></span>
+              <span><span class="sr-only">更新 </span><time datetime="2026-04-15">2026/04/15</time></span>
               <span class="dot" aria-hidden="true">・</span>
-              <span class="views" data-views="gum-bleeding"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">2,318</span></span>
+              <span class="views" data-views="gum-bleeding"><span class="views-n">2,318</span><small>次瀏覽</small></span>
             </p>
           </div>
         </a>
@@ -934,9 +937,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
             <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
             <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙，原地來回十次。</p>
             <p class="card-date">
-              <span>更新 <time datetime="2026-03-11">2026/03/11</time></span>
+              <span><span class="sr-only">更新 </span><time datetime="2026-03-11">2026/03/11</time></span>
               <span class="dot" aria-hidden="true">・</span>
-              <span class="views" data-views="bass-brushing"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">3,105</span></span>
+              <span class="views" data-views="bass-brushing"><span class="views-n">3,105</span><small>次瀏覽</small></span>
             </p>
           </div>
         </a>
