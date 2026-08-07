@@ -648,10 +648,10 @@ section + section { border-top: 1px solid var(--rule); }
       <p class="filter-note" hidden></p>
     </section>
 
-    <section class="wrap" id="articles">
-      <div class="sec-head">
-        <h2>最新文章</h2>
-      </div>
+    <!-- 標題「最新文章」已拿掉（2026-08-07）—— 上一節的 chips 已經在講文章了，
+         再標一次是同義重述。aria-label 留著，導覽列的 #articles 與螢幕閱讀器
+         還是需要這一節有名字。 -->
+    <section class="wrap" id="articles" aria-label="最新文章">
       <div class="cards">
       <a class="card" href="/posts/kids-arch-expansion/" data-spec="kids">
         <img class="card-thumb" src="/assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
