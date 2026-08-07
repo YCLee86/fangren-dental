@@ -363,75 +363,35 @@ html.scrolled .brand-text small { font-size: .74rem; }
    L* 維持 10.2 / 17.5 / 19.6 三個停點，所以三案的「深淺」完全一樣，
    看到的差別純粹是色調，這樣比才比得準。 */
 
-/* 一 藍黑（現況）H=220。夜空與柏油的中間值。 */
-html[data-band="blue"] .band {
-  background-color: #282b31;
-  background-image: linear-gradient(180deg, #17191d 0%, #282b31 55%, #2d3037 100%);
-}
-/* 二 柏油 H=20。取自 PALETTE.md 第四節裡柏油的實測值 #221e1c 的色相，
-   L* 與藍黑案完全相同。這是「窄帶從柏油長出來」的直接答案。 */
-html[data-band="tar"] .band {
-  background-color: #312b28;
-  background-image: linear-gradient(180deg, #1d1917 0%, #312b28 55%, #37302d 100%);
-}
-/* 三 墨色 H=88。取自內文墨色 #2a2c27 的色相，L* 同上。
-   好處是它和內文的字同一個調，整站的深色只有一種傾向。 */
-html[data-band="ink"] .band {
-  background-color: #2d3128;
-  background-image: linear-gradient(180deg, #1a1d17 0%, #2d3128 55%, #32372d 100%);
-}
-/* ---- 毛玻璃三案（2026-08-07 第二輪）--------------------------------------
-   第一版是「遮罩 .52 ＋ 模糊 16px」，使用者說太霧、幾乎把下面遮住，
-   看起來像做黑的、或發黃、像違法電動遊樂場。兩個成因，分開處理：
+/* ---- 定案：毛玻璃 輕 ＋ 柏油漸層（2026-08-07）------------------------------
+   淘汰掉的：藍黑（現況）／柏油／墨色三個實色案、毛玻璃中與重、柏油漸層「深」。
+   為什麼不是實色：窄帶壓在照片上，實色就真的是「壓」，照片被切斷。
+   為什麼漸層取「標準」而不是「深」：深的底端收到全不透明，
+   最下緣變回一條實色的線，等於把毛玻璃的好處在最後 10% 還回去。
 
-   1. **模糊 16px 太重。** 它把路面糊成一整片均勻的灰 —— 底下有東西透出來，
-      但沒有一樣東西認得出來，那就不是「透」，只是變髒。三案降到 4／7／10px，
-      車、標線、路緣都還讀得出形狀。
-   2. **發黃是門口的暖光被抹開。** 原本還加了 saturate(1.06) 把它推得更黃。
-      三案一律改成 saturate(.92)，略微去飽和，暖光透出來仍是暖的，但不會整條帶子偏黃。
+   這一段有兩個非解不可的問題，解法都不直觀，改的時候不要拆掉：
 
-   另外照使用者說的加上**越往下越深**的漸層：上緣只有一點點遮罩（帶子和照片
-   之間因此沒有硬邊，不會有「壓上去」的感覺），往下才收深到足以撐住白字。
-   這也符合實際的明暗 —— 照片越往下越暗，遮罩跟著加重，合成後的深淺才平均。
-
-   三案的差別只有遮罩的三個停點與模糊半徑，其餘完全相同。 */
-html[data-band="glass1"] .band,
-html[data-band="glass2"] .band,
-html[data-band="glass3"] .band { background-color: transparent; }
-
-/* 輕：上緣幾乎全透，路面看得最清楚。白字在最亮的路段（左下角車頭燈）會吃力。 */
-html[data-band="glass1"] .band {
-  background-image: linear-gradient(180deg,
-    rgba(25, 22, 20, .16) 0%, rgba(25, 22, 20, .40) 45%, rgba(25, 22, 20, .62) 100%);
-  -webkit-backdrop-filter: blur(4px) saturate(.92);
-  backdrop-filter: blur(4px) saturate(.92);
-}
-/* ---- 毛玻璃 輕 ＋ 柏油漸層（2026-08-07 第三輪）--------------------------
-   這一版修掉兩個問題。
-
-   ── 問題一：窄帶上緣有一條很明顯的硬邊 ──
-   原因不是顏色，是 **backdrop-filter 只作用在元素自己的框裡**。
-   框內的照片被模糊、框外的沒有，兩者在框的上緣直接相接 ——
-   那條邊界本身就是一條線，就算遮罩的 alpha 從 0 開始也消不掉。
-   （這也是為什麼上一版把顏色調到完全透明仍然看得到分界。）
-
-   解法：把模糊放到一個 ::before 上，再用 mask-image 讓**模糊本身**由上往下淡入。
+   ── 一：窄帶上緣的硬邊 ──
+   **`backdrop-filter` 只作用在元素自己的框裡。** 框內的照片被模糊、框外的沒有，
+   兩者在框的上緣直接相接 —— 那條邊界本身就是一條線，
+   就算遮罩的 alpha 從 0 開始也消不掉。
+   解法：模糊放在 ::before 上，用 mask-image 讓**模糊本身**由上往下淡入。
    遮罩住的是濾鏡的結果，所以模糊是漸漸出現的，沒有框邊。
 
-   ── 問題二：柏油漸層看不出來 ──
-   上一版整條都用 #221e1c（柏油的一般實測值，L* 12），
-   但它壓住的路面本來就是 L* 6~15 —— 拿一個和底下差不多深的顏色去疊，
-   當然看不出變化。
-   這一版改成**兩個實測值之間的漸層**：上半用 #221e1c，下半換成
-   **#161413 —— 照片最底那一列的實測值，L* 只有 6.6**（PALETTE.md 第四節，
-   當初調窄帶漸層頂色時量的就是它）。往下走既加深又換色，
-   路面的標線與反光會逐漸被壓掉，那個「越下面越深」才看得出來。
+   ── 二：柏油漸層看不出來 ──
+   第一版整條用 #221e1c（柏油的一般實測值，L* 12），但它壓住的路面本來就是
+   L* 6~15 —— 拿一個和底下差不多深的顏色去疊，當然看不出變化。
+   現在是**兩個實測值之間的漸層**：上半 #221e1c，下半換成
+   **#161413 —— 照片最底那一列的實測值，L* 只有 6.6**（PALETTE.md 第四節）。
+   往下走既加深又換色，路面的標線與反光會逐漸被壓掉，「越下面越深」才看得出來。
 
-   兩案的差別只有四個 alpha 停點。 */
-html[data-band^="glasstar"] .band { background: none; }
+   飽和度用 saturate(.92)：門口的暖光被模糊抹開之後會讓整條帶子偏黃，
+   略微去飽和就收得住，暖光透出來仍然是暖的。
+   ---------------------------------------------------------------------------- */
+.band { background: none; }
 
 /* 模糊層：整條 4px 一致，但由 mask 讓它從上往下淡入，所以沒有框邊。 */
-html[data-band^="glasstar"] .band::before {
+.band::before {
   content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
   -webkit-backdrop-filter: blur(4px) saturate(.92);
   backdrop-filter: blur(4px) saturate(.92);
@@ -439,57 +399,23 @@ html[data-band^="glasstar"] .band::before {
   mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 38%);
 }
 /* 柏油層：#221e1c（柏油）→ #161413（照片最底那一列，L* 6.6）。 */
-html[data-band^="glasstar"] .band::after {
+.band::after {
   content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-}
-html[data-band="glasstar"] .band::after {
   background-image: linear-gradient(180deg,
     rgba(34, 30, 28, 0)   0%,
     rgba(34, 30, 28, .22) 28%,
     rgba(22, 20, 19, .58) 62%,
     rgba(22, 20, 19, .88) 100%);
 }
-/* 深一階：底端收到全不透明，最下緣完全是照片最底那一列的顏色。 */
-html[data-band="glasstar2"] .band::after {
-  background-image: linear-gradient(180deg,
-    rgba(34, 30, 28, 0)   0%,
-    rgba(34, 30, 28, .32) 24%,
-    rgba(22, 20, 19, .74) 58%,
-    rgba(22, 20, 19, 1)   100%);
-}
 /* 文字要在兩層之上 */
-html[data-band^="glasstar"] .band > .shell { position: relative; z-index: 1; }
+.band > .shell { position: relative; z-index: 1; }
 
-/* 中：折衷。路面仍然認得出來，白字在整條帶子上都站得住。 */
-html[data-band="glass2"] .band {
-  background-image: linear-gradient(180deg,
-    rgba(25, 22, 20, .26) 0%, rgba(25, 22, 20, .52) 45%, rgba(25, 22, 20, .74) 100%);
-  -webkit-backdrop-filter: blur(7px) saturate(.92);
-  backdrop-filter: blur(7px) saturate(.92);
-}
-/* 重：最接近實色案，但上緣仍然是軟的，不會有硬邊。 */
-html[data-band="glass3"] .band {
-  background-image: linear-gradient(180deg,
-    rgba(25, 22, 20, .36) 0%, rgba(25, 22, 20, .64) 45%, rgba(25, 22, 20, .86) 100%);
-  -webkit-backdrop-filter: blur(10px) saturate(.92);
-  backdrop-filter: blur(10px) saturate(.92);
-}
+/* 定案：三格靠內容寬度、整組置中，左右各 4rem（2026-08-07 的「拉開」）。
+   淘汰：1.9rem（三格擠在版心中央，兩側各空一大塊，像沒排完）、
+   以及「各佔版心三分之一」—— 那是手機 390px 上排不下才用的辦法，
+   搬到 1160px 的版心會拉得太開，三格之間的關係就散了。 */
+.stats li { padding-inline: 4rem; }
 
-/* ==========================================================================
-   三格的間距三案
-   --------------------------------------------------------------------------
-   置中之後三格擠在版心中央、兩側各空一大塊，看起來像沒排完。
-   三案是三種「拉開」的程度。
-   ========================================================================== */
-/* 一 現在：靠內容寬度，左右各 1.9rem。 */
-html[data-gap="now"] .stats li { padding-inline: 1.9rem; }
-/* 二 拉開：左右各 4rem。仍然是內容寬度決定，只是鬆一點。 */
-html[data-gap="wide"] .stats li { padding-inline: 4rem; }
-/* 三 撐滿版心：三格各佔版心的三分之一，分隔線落在三等分點上 ——
-   這是手機版的做法（390px 上排不下才用的），搬到 1160px 的版心上
-   三格會拉得很開，窄帶的兩端才真的被用到。 */
-html[data-gap="full"] .stats { width: 100%; }
-html[data-gap="full"] .stats li { flex: 1 1 0; min-width: 0; padding-inline: 1rem; }
 /* 2026-08-07：窄帶改回手機版的排法 —— **兩列、置中**，瀏覽數在 1983／9／6 上面。
    先前電腦版把它排成一列（事實靠左、瀏覽數靠右），是想用滿了寬度；
    但那樣整條帶子的重心偏在兩端，中間空一大塊，而照片是滿版置中的，
@@ -584,14 +510,55 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   display: flex; flex-direction: column; text-decoration: none; color: inherit;
   background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
   overflow: hidden;
-  transition: border-color .18s ease, transform .18s ease;
+  /* isolation 是給 Safari 的：卡有圓角＋overflow:hidden，裡面又有東西在 transform，
+     沒有獨立的堆疊脈絡時縮圖的四角會溢出圓角。 */
+  isolation: isolate;
+  box-shadow: var(--card-shadow);
+  transition: border-color .18s ease, transform .22s ease, box-shadow .22s ease;
 }
-/* hover：邊框往科別色靠，卡片抬 2px。不加陰影 —— 這一頁從頭到尾沒有陰影，
-   只有 HERO 那兩層是為了讓字在照片上讀得出來。 */
-.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+/* ---- 卡片的陰影：靜止就有，游標移上去再加重（2026-08-07）------------------
+   使用者：「每個圖卡在游標還沒點到時就自帶一點陰影……但又不能做太多到游標移到
+   圖卡才加強的陰影效果，這樣就沒差別了。」—— 兩件事要同時成立，
+   所以**靜止與 hover 之間必須留出可辨識的級距**，量出來是這樣：
+
+     　　　　　偏移 y　　模糊　　alpha
+     靜止　　　4px　　 10px　　　.09
+     hover　　16px　　 32px　　　.16
+     倍率　　 4×　　　3.2×　　　1.8×
+
+   模糊拉 3.2 倍、alpha 加 1.8 倍、位移 4 倍，三個量一起放大，
+   「浮起來」才是一個明確的事件而不是慢慢變濃。
+   加上卡本身抬 4px（原本是 2px），陰影與位移是同一個動作的兩半。
+
+   ＊陰影色用墨色 #2a2c27 不是純黑。紙是 #e2e5e6（L* 89），
+     純黑陰影在這個亮度的底上會讀成灰髒的一圈；帶著內文墨色的傾向才像同一頁的東西。
+   ---------------------------------------------------------------------------- */
+:root {
+  --card-shadow:       0 1px 2px  rgba(42, 44, 39, .07), 0 4px  10px rgba(42, 44, 39, .09);
+  --card-shadow-hover: 0 5px 10px rgba(42, 44, 39, .09), 0 16px 32px rgba(42, 44, 39, .16);
+}
+.card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+}
+/* 縮圖跟著微微放大。1.05 是刻意的小 —— 16:9 的縮圖放大 5% 只會讓構圖往外推
+   幾個 px，看得出來在動，但不會變成「換了一張圖」。
+   時間比卡片的位移長（.5s 對 .22s）：卡是立刻回應游標，圖是慢慢推進去，
+   兩個速度不同才讀得出是兩層，而不是整張卡在縮放。 */
+.card:hover .card-thumb { transform: scale(1.05); }
+
 .card:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) { .card, .chips button { transition: none; } .card:hover { transform: none; } }
-.card-thumb { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--paper); }
+@media (prefers-reduced-motion: reduce) {
+  .card, .chips button, .card-thumb { transition: none; }
+  .card:hover { transform: none; }
+  .card:hover .card-thumb { transform: none; }   /* 陰影留著，只拿掉會動的部分 */
+}
+.card-thumb {
+  width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--paper);
+  transition: transform .5s cubic-bezier(.22, .61, .36, 1);
+}
 .card-body { padding: 1rem 1.15rem 1.15rem; display: flex; flex-direction: column; flex: 1; }
 .card-tag {
   display: inline-block; align-self: flex-start;
@@ -792,38 +759,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .brand-text small::before { display: none; }
 }
 
-/* ---- 提案用的切換條。不是設計的一部分，定案之後整段連同 data-fill 一起刪掉。 ---- */
-.hero-switch {
-  /* 靠右下角，不置中 —— 案二的窄帶就壓在螢幕底線的正中間，
-     切換條若置中會正好蓋住要看的東西。 */
-  position: fixed; z-index: 50; right: 1.2rem;
-  bottom: 1.2rem; display: flex; gap: .4rem; align-items: center;
-  background: rgba(25, 22, 20, .88); border-radius: 999px; padding: .45rem .5rem;
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  box-shadow: 0 4px 20px rgba(25, 22, 20, .35);
-}
-.hero-switch b {
-  font-size: .7rem; font-weight: 400; letter-spacing: .08em;
-  color: rgba(255,255,255,.55); padding-inline: .6rem .3rem;
-}
-.hero-switch button {
-  font: inherit; font-size: .78rem; line-height: 1.5;
-  padding: .28rem .85rem; border-radius: 999px; cursor: pointer;
-  background: transparent; color: rgba(255,255,255,.72);
-  border: 1px solid rgba(255,255,255,.28);
-  -webkit-appearance: none; appearance: none;
-}
-.hero-switch button:hover { color: #fff; border-color: rgba(255,255,255,.5); }
-.hero-switch button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
-.hero-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-.hero-switch-2 { bottom: 4.1rem; }
-.hero-caption {
-  position: fixed; z-index: 50; right: 1.2rem;
-  bottom: 9.9rem; margin: 0; max-width: min(92vw, 30rem); text-align: left;
-  font-size: .76rem; line-height: 1.7; color: rgba(255,255,255,.9);
-  background: rgba(25, 22, 20, .82); border-radius: 10px; padding: .5rem .9rem;
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-}
 </style>
 
 
@@ -898,7 +833,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
       </p>
 
       <ul class="stats">
-        <li><b>1983<small>年</small></b><span>開業至今</span></li>
+        <li><b>1983<small>年</small></b><span>中華路開業</span></li>
         <li><b>9<small>位</small></b><span>醫師駐診</span></li>
         <li><b>6<small>個</small></b><span>部定專科</span></li>
       </ul>
@@ -1499,90 +1434,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 })();
 </script>
 
-<div class="hero-switch" role="group" aria-label="窄帶底色">
-  <b>底色</b>
-  <button type="button" data-band="blue"  aria-pressed="false">藍黑（現況）</button>
-  <button type="button" data-band="tar"   aria-pressed="false">柏油</button>
-  <button type="button" data-band="ink"   aria-pressed="false">墨色</button>
-  <button type="button" data-band="glasstar"  aria-pressed="true">柏油漸層</button>
-  <button type="button" data-band="glasstar2" aria-pressed="false">柏油漸層 深</button>
-  <button type="button" data-band="glass1" aria-pressed="false">毛玻璃 輕</button>
-  <button type="button" data-band="glass2" aria-pressed="false">毛玻璃 中</button>
-  <button type="button" data-band="glass3" aria-pressed="false">毛玻璃 重</button>
-</div>
-<div class="hero-switch hero-switch-2" role="group" aria-label="三格間距">
-  <b>間距</b>
-  <button type="button" data-gap="now"  aria-pressed="false">現在</button>
-  <button type="button" data-gap="wide" aria-pressed="true">拉開</button>
-  <button type="button" data-gap="full" aria-pressed="false">撐滿版心</button>
-</div>
-<!-- 兒牙的顏色已定案 1a #c28229（2026-08-07），切換條連同 data-kids 一起刪掉。 -->
-<p class="hero-caption" id="hero-caption"></p>
-
-<script>
-/* 兩組獨立的切換：底色四案 × 間距三案，共 12 種組合都可以直接看。
-   兩組各自記在 localStorage，網址也可帶 ?band=tar&gap=full。 */
-(function () {
-  var BAND = {
-    blue:  '底色一 藍黑（現況）H=220：夜空與柏油的中間值。當初窄帶接在照片下面、要同時接住上面的夜空與下面的紙色，取中間值合理 —— 但現在它壓住的位置只有柏油。',
-    tar:   '底色二 柏油 H=20：取自 PALETTE.md 裡柏油的實測值 #221e1c 的色相，亮度 L* 和藍黑案完全一樣，差別純粹是色調。這是「窄帶從柏油長出來」的直接答案。',
-    ink:   '底色三 墨色 H=88：取自內文墨色 #2a2c27 的色相，亮度同上。好處是它和內文的字同一個調，整站的深色只有一種傾向。',
-    glasstar: '柏油漸層：模糊 4px 由上往下淡入（用 mask 遮住濾鏡本身，所以沒有框邊）。色從 #221e1c（柏油）走到 #161413（照片最底那一列，L* 6.6），alpha 0 → .22 → .58 → .88。往下既加深又換色，路面的標線與反光會逐漸被壓掉。',
-    glasstar2: '柏油漸層 深：同上，但四個 alpha 停點加重（0 → .32 → .74 → 1），最下緣完全是照片最底那一列的顏色，一點都不透。',
-    glass1: '毛玻璃 輕：遮罩 .16→.62（越下面越深）＋ 模糊 4px。上緣幾乎全透，路面看得最清楚；白字在最亮的路段（左下角車頭燈）會吃力。',
-    glass2: '毛玻璃 中：遮罩 .26→.74 ＋ 模糊 7px。折衷案 —— 路面仍然認得出形狀，白字在整條帶子上都站得住。',
-    glass3: '毛玻璃 重：遮罩 .36→.86 ＋ 模糊 10px。最接近實色案，但上緣仍然是軟的，和照片之間沒有硬邊。'
-  };
-  var GAP = {
-    now:  '間距一 現在：靠內容寬度，左右各 1.9rem。',
-    wide: '間距二 拉開：左右各 4rem，仍然由內容寬度決定，只是鬆一點。',
-    full: '間距三 撐滿版心：三格各佔版心的三分之一，分隔線落在三等分點上 —— 手機版的做法搬到 1160px 的版心，窄帶的兩端才真的被用到。'
-  };
-  var root = document.documentElement;
-  var cap  = document.getElementById('hero-caption');
-  var cur  = { band: 'glasstar', gap: 'wide' };
-
-
-
-
-
-
-  function paint() {
-    root.setAttribute('data-band', cur.band);
-    root.setAttribute('data-gap', cur.gap);
-    document.querySelectorAll('.hero-switch button[data-band]').forEach(function (b) {
-      b.setAttribute('aria-pressed', b.getAttribute('data-band') === cur.band ? 'true' : 'false');
-    });
-    document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
-      b.setAttribute('aria-pressed', b.getAttribute('data-gap') === cur.gap ? 'true' : 'false');
-    });
-    if (cap) cap.textContent = BAND[cur.band] + '・' + GAP[cur.gap];
-    try {
-      localStorage.setItem('fangren:band', cur.band);
-      localStorage.setItem('fangren:gap', cur.gap);
-    } catch (e) {}
-  }
-
-  document.querySelectorAll('.hero-switch button[data-band]').forEach(function (b) {
-    b.addEventListener('click', function () { cur.band = b.getAttribute('data-band'); paint(); });
-  });
-  document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
-    b.addEventListener('click', function () { cur.gap = b.getAttribute('data-gap'); paint(); });
-  });
-
-  function pick(key, map, fallback) {
-    /* [a-z0-9]+ 不是 [a-z]+ —— 毛玻璃三案叫 glass1/2/3，只吃字母的話會比對失敗、
-       悄悄退回預設值，網址參數等於沒用。 */
-    var q = (location.search.match(new RegExp('[?&]' + key + '=([a-z0-9]+)')) || [])[1];
-    if (map[q]) return q;
-    var v = null;
-    try { v = localStorage.getItem('fangren:' + key); } catch (e) {}
-    return map[v] ? v : fallback;
-  }
-  cur.band = pick('band', BAND, 'glasstar');
-  cur.gap  = pick('gap',  GAP,  'wide');
-  paint();
-})();
-</script>
+<!-- 切換條全部拿掉了（2026-08-07 定案）：
+       窄帶底色 → 毛玻璃輕 ＋ 柏油漸層（標準）
+       三格間距 → 拉開（左右各 4rem）
+       兒牙的色 → 1a #c28229
+     連同 data-band／data-gap／data-kids 與那段 localStorage 記憶一起刪。
+     被淘汰的幾案為什麼落選，寫在上面各自的 CSS 註解與 PALETTE.md 第六之二、六之三節。 -->
 </body>
 </html>

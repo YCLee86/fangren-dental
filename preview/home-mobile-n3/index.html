@@ -373,9 +373,44 @@ section + section { border-top: 1px solid var(--rule); }
 .card {
   display: block; text-decoration: none; color: inherit;
   background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
-  overflow: hidden;
+  overflow: hidden; isolation: isolate;
+  box-shadow: var(--card-shadow);
+  transition: border-color .18s ease, transform .22s ease, box-shadow .22s ease;
 }
-.card-thumb { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--paper); }
+
+/* ---- 卡片的陰影（2026-08-07，和電腦版同一組值）----------------------------
+   靜止就帶一點，游標移上去再加重。兩者之間要留出可辨識的級距，
+   不然「一直有陰影」和「移上去有陰影」就變成同一件事：
+
+     　　　　　偏移 y　　模糊　　alpha
+     靜止　　　4px　　 10px　　　.09
+     hover　　16px　　 32px　　　.16
+
+   ＊陰影色用墨色 #2a2c27 不是純黑 —— 紙是 #e2e5e6（L* 89），
+     純黑在這個亮度的底上會讀成灰髒的一圈。
+   ＊hover 那一組包在 @media (hover: hover) 裡。手機沒有游標，
+     觸控裝置上 :hover 會在點下去之後「黏住」不放，看起來像卡片壞掉。
+   ---------------------------------------------------------------------------- */
+:root {
+  --card-shadow:       0 1px 2px  rgba(42, 44, 39, .07), 0 4px  10px rgba(42, 44, 39, .09);
+  --card-shadow-hover: 0 5px 10px rgba(42, 44, 39, .09), 0 16px 32px rgba(42, 44, 39, .16);
+}
+@media (hover: hover) {
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow-hover);
+  }
+  .card:hover .card-thumb { transform: scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card, .card-thumb { transition: none; }
+  .card:hover, .card:hover .card-thumb { transform: none; }
+}
+.card-thumb {
+  width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--paper);
+  transition: transform .5s cubic-bezier(.22, .61, .36, 1);
+}
 .card-body { padding: .85rem 1rem 1rem; }
 .card-tag {
   display: inline-block; font-size: .72rem; letter-spacing: .06em; line-height: 1.6;
@@ -699,7 +734,7 @@ section + section { border-top: 1px solid var(--rule); }
       </p>
 
       <ul class="stats">
-        <li><b>1983<small>年</small></b><span>開業至今</span></li>
+        <li><b>1983<small>年</small></b><span>中華路開業</span></li>
         <li><b>9<small>位</small></b><span>醫師駐診</span></li>
         <li><b>6<small>個</small></b><span>部定專科</span></li>
       </ul>
