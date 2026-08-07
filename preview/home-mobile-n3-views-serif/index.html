@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>N3・瀏覽數黑體版 — 芳仁牙醫診所提案</title>
+<title>N3・瀏覽數襯線版（落選對照） — 芳仁牙醫診所提案</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 </head>
 <body>
@@ -267,12 +267,13 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
 
    降下來之後 1983／9／6 那三格是帶子裡唯一亮的東西，層次只剩兩層，乾淨。
 
-   ＊這一版數字是**黑體**（和「次瀏覽」同一套字）。襯線版在 preview/home-mobile-n3/，
+   ＊**這是落選的襯線版**，留著對照用。定案的黑體版在 preview/home-mobile-n3/，
      兩頁除了下面這一行 font-family 之外一個字都沒有差。 */
 .band-views { margin: 0; text-align: center; line-height: 1.05; }
-.band-views .views-num {
+.band-views .views-n {
   display: inline-block; font-size: .625rem; color: rgba(255, 255, 255, .65);
-  font-family: inherit;   /* ← 兩版唯一的差別。inherit ＝ body 的思源黑體 */
+  font-family: "Noto Serif TC", "Source Han Serif TC", serif;   /* ← 兩版唯一的差別 */
+
   /* tabular-nums 讓每個數字等寬，數字在跑的時候不會左右抽動；
      但位數變多（999 → 1,000）整體還是會變寬，所以 JS 會先量好最終寬度鎖住。 */
   font-variant-numeric: tabular-nums; letter-spacing: -.01em;
@@ -380,7 +381,19 @@ section + section { border-top: 1px solid var(--rule); }
 }
 .card h3 { margin: 0 0 .35rem; font-size: .98rem; line-height: 1.55; }
 .card p { margin: 0; font-size: .84rem; line-height: 1.8; color: var(--ink-soft); }
-.card-date { margin-top: .5rem !important; font-size: .76rem !important; }
+/* 更新日期 ＋ 瀏覽數。做法照正式站 fangren.net 的卡片：眼睛圖示 ＋ 數字，
+   中間用「・」隔開。圖示 12px 是按字級等比縮的（正式站 .82rem 配 13px，
+   這裡 .76rem 配 12px），透明度 .6 —— 它是輔助符號，不該比數字還顯眼。 */
+.card-date {
+  margin-top: .5rem !important; font-size: .76rem !important;
+  display: flex; align-items: center; flex-wrap: wrap; gap: .3rem;
+}
+.card-date .dot { color: var(--rule); }
+.views { display: inline-flex; align-items: center; gap: .28rem; white-space: nowrap; }
+.views-icon { display: inline-flex; opacity: .6; }
+.views svg { width: 12px; height: 12px; display: block; }
+/* 等寬數字：六張卡的數字上下對齊時才不會參差 */
+.views-n { font-variant-numeric: tabular-nums; }
 
 /* ==========================================================================
    醫師介紹 ／ 診所資訊 的色塊（2026-08-07 定案：一科一色 ＋ 實心反白藥丸）
@@ -664,7 +677,7 @@ section + section { border-top: 1px solid var(--rule); }
            所以動的那一段整個 aria-hidden，另外放一句 .sr-only 講最終結果。 -->
       <p class="band-views" data-views="home">
         <span class="sr-only">累計 8,642 次瀏覽</span>
-        <span class="views-num" aria-hidden="true" data-count="8642">0</span><small aria-hidden="true">次瀏覽</small>
+        <span class="views-n" aria-hidden="true" data-count="8642">0</span><small aria-hidden="true">次瀏覽</small>
       </p>
 
       <ul class="stats">
@@ -701,7 +714,11 @@ section + section { border-top: 1px solid var(--rule); }
           <span class="card-tag">兒童牙科</span>
           <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
           <p>牙弓不夠寬，恆牙就像在擠公車，沒位置站只能前後亂鑽。6 到 12 歲顎骨還沒定型，是引導牙弓向外擴張的黃金期。</p>
-          <p class="card-date">更新 <time datetime="2026-08-02">2026/08/02</time></p>
+          <p class="card-date">
+            <span>更新 <time datetime="2026-08-02">2026/08/02</time></span>
+            <span class="dot" aria-hidden="true">・</span>
+            <span class="views" data-views="kids-arch-expansion"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">1,284</span></span>
+          </p>
         </div>
       </a>
       <a class="card" href="/posts/regular-checkup/" data-spec="general">
@@ -710,7 +727,11 @@ section + section { border-top: 1px solid var(--rule); }
           <span class="card-tag">定期檢查</span>
           <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
           <p>洗牙不會把牙齒洗薄，也不是美白。它清的是自己刷不掉的牙結石，順便讓醫師在問題還小的時候先看見它。</p>
-          <p class="card-date">更新 <time datetime="2026-07-08">2026/07/08</time></p>
+          <p class="card-date">
+            <span>更新 <time datetime="2026-07-08">2026/07/08</time></span>
+            <span class="dot" aria-hidden="true">・</span>
+            <span class="views" data-views="regular-checkup"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">2,067</span></span>
+          </p>
         </div>
       </a>
       <a class="card" href="/posts/missing-tooth/" data-spec="prosth">
@@ -719,7 +740,11 @@ section + section { border-top: 1px solid var(--rule); }
           <span class="card-tag">缺牙重建</span>
           <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
           <p>缺一顆牙不只是缺一顆牙。旁邊的牙會倒、對面的牙會長長、齒槽骨會流失。三種重建方式各自的原理、代價與限制。</p>
-          <p class="card-date">更新 <time datetime="2026-06-02">2026/06/02</time></p>
+          <p class="card-date">
+            <span>更新 <time datetime="2026-06-02">2026/06/02</time></span>
+            <span class="dot" aria-hidden="true">・</span>
+            <span class="views" data-views="missing-tooth"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">1,530</span></span>
+          </p>
         </div>
       </a>
       <a class="card" href="/posts/kids-first-visit/" data-spec="kids">
@@ -728,7 +753,11 @@ section + section { border-top: 1px solid var(--rule); }
           <span class="card-tag">兒童牙科</span>
           <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
           <p>「乳牙反正會換掉」是最常見也最昂貴的誤解。從第一顆牙長出來後的六個月談起，帶爸媽看懂塗氟、窩溝封填與健保給付。</p>
-          <p class="card-date">更新 <time datetime="2026-05-06">2026/05/06</time></p>
+          <p class="card-date">
+            <span>更新 <time datetime="2026-05-06">2026/05/06</time></span>
+            <span class="dot" aria-hidden="true">・</span>
+            <span class="views" data-views="kids-first-visit"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">946</span></span>
+          </p>
         </div>
       </a>
       <a class="card" href="/posts/gum-bleeding/" data-spec="perio">
@@ -737,7 +766,11 @@ section + section { border-top: 1px solid var(--rule); }
           <span class="card-tag">牙周照護</span>
           <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
           <p>健康的牙齦被牙刷碰到不會出血。流血代表牙齦正在發炎，而發炎和退火無關，是牙菌斑長期堆積的結果。</p>
-          <p class="card-date">更新 <time datetime="2026-04-15">2026/04/15</time></p>
+          <p class="card-date">
+            <span>更新 <time datetime="2026-04-15">2026/04/15</time></span>
+            <span class="dot" aria-hidden="true">・</span>
+            <span class="views" data-views="gum-bleeding"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">2,318</span></span>
+          </p>
         </div>
       </a>
       <a class="card" href="/posts/bass-brushing/" data-spec="general">
@@ -746,7 +779,11 @@ section + section { border-top: 1px solid var(--rule); }
           <span class="card-tag">日常保健</span>
           <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
           <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙，原地來回十次。</p>
-          <p class="card-date">更新 <time datetime="2026-03-11">2026/03/11</time></p>
+          <p class="card-date">
+            <span>更新 <time datetime="2026-03-11">2026/03/11</time></span>
+            <span class="dot" aria-hidden="true">・</span>
+            <span class="views" data-views="bass-brushing"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">3,105</span></span>
+          </p>
         </div>
       </a>
       </div>
@@ -977,7 +1014,8 @@ section + section { border-top: 1px solid var(--rule); }
   <p><b>對比度</b>（重算過）：墨 <code>#2a2c27</code> 11.15:1、次要 <code>#5c5f57</code> 5.14:1、深綠松 <code>#214D48</code> 7.47:1，內文全過 AA。要注意 苔綠 <code>#5D6D55</code> 4.38:1，只能當大字。</p>
   <p><b>不碰的東西：</b>HERO（C72）、所有字級、墨色 <code>#2a2c27</code>，一個值都沒動。</p>
   <p><b>窄帶 2026-08-07 加了瀏覽數：</b>高 54 → 76px，多出來的全給新的那一列（上下留白維持 13.8px，沒有變鬆）。漸層三個色停 <code>#17191d</code> / <code>#282b31</code> / <code>#2d3037</code> 原值不動。數字捲進畫面才往上數，1.4 秒 easeOutQuart，減少動態時直接寫最終值。<b>8,642 是示範數字</b>，上線後由 <code>counter.js</code> 從 D1 取真實值。</p>
-  <p><b>這一版的瀏覽數是黑體</b>，和「次瀏覽」用同一套字，整列讀起來是一句話而不是一個數據。字級與顏色也都和「次瀏覽」完全一樣（<code>.625rem</code>／白 65%）。襯線版在 <a href="https://fangren.net/preview/home-mobile-n3/">home-mobile-n3</a>，兩頁只差一行 <code>font-family</code>。</p>
+  <p><b>這是落選的襯線版</b>，留著對照。定案的是黑體，在 <a href="https://fangren.net/preview/home-mobile-n3/">home-mobile-n3</a>，兩頁只差一行 <code>font-family</code>。</p>
+  <p><b>文章卡也加了瀏覽數</b>，做法照正式站：眼睛圖示 ＋ 數字。<b>卡片上的數字不做動畫</b> —— 六個小數字同時跳會變成雜訊，窄帶那一個才是要被看見的。所有數字都是示範值，上線後由 <code>counter.js</code> 從 D1 取真實值。</p>
   <p>比一比：<a href="https://fangren.net/preview/home-mobile-n1/">N1 看板灰 #e8e8e8</a><a href="https://fangren.net/preview/home-mobile-n2/">N2 清水模灰 #dedede</a></p>
   <p>先前的：<a href="https://fangren.net/preview/home-mobile-g1/">G1 灰紫（你說有點紫）</a><a href="https://fangren.net/preview/home-mobile/">③ 品牌灰綠 #ecede7（有木線）</a><a href="https://github.com/YCLee86/fangren-dental/blob/main/PALETTE.md">PALETTE.md</a></p>
 </div>
@@ -1054,7 +1092,8 @@ section + section { border-top: 1px solid var(--rule); }
    上線時的接法：counter.js 從 D1 取回真實數字之後呼叫
    window.fangrenCountUp(n)，動畫、寬度、無障礙文字都會一起更新。 */
 (function () {
-  var el = document.querySelector('.views-num');
+  /* 一定要限定在 .band-views 底下 —— 文章卡的數字也叫 .views-n。 */
+  var el = document.querySelector('.band-views .views-n');
   var sr = document.querySelector('.band-views .sr-only');
   if (!el) return;
 
