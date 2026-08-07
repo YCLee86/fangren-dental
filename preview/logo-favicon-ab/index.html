@@ -42,8 +42,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
   color:var(--ink-soft);font-variant-numeric:tabular-nums;user-select:none;
   transition:background-color .18s ease,color .18s ease}
 .sw{width:.68rem;height:.68rem;border-radius:50%;display:inline-block;flex:0 0 auto}
+/* 讀數的高度鎖死兩行 —— 之前每格的說明字長度不一樣，1 號多一行，
+   整條控制列就變高、底下全部往下跳，根本沒辦法比。 */
 .hint{margin:.5rem 0 0;font-size:.75rem;line-height:1.7;color:var(--ink-soft);
-  font-variant-numeric:tabular-nums}
+  font-variant-numeric:tabular-nums;min-height:3.4em}
+.hint code{font-size:.9em}
 .hint b{color:var(--ink);font-weight:500}
 .hint .dot{display:inline-block;width:.62rem;height:.62rem;border-radius:50%;background:var(--cand);
   margin-right:.35rem;vertical-align:-1px}
@@ -145,11 +148,12 @@ td.no{color:#8a5a4a}
       <label class="pick" for="c4"><span class="sw" style="background:#4d7e63"></span>4</label>
       <label class="pick" for="c5"><span class="sw" style="background:#4f8065"></span>5</label>
   </div>
-  <p class="hint"><span class="dot"></span><span class="v v1"><b>#49785e</b>　明度 37.80%　·　對分頁列 <b>3.02</b>　·　與淺色的色差 ΔE <b>18.9</b>　·　原本的 1。最深、最接近淺色，也完全沒有餘裕。</span>
-    <span class="v v2"><b>#4b7a60</b>　明度 38.50%　·　對分頁列 <b>3.11</b>　·　與淺色的色差 ΔE <b>19.1</b>　·　新的。</span>
-    <span class="v v3"><b>#4c7c62</b>　明度 39.20%　·　對分頁列 <b>3.20</b>　·　與淺色的色差 ΔE <b>19.5</b>　·　新的，正中間。</span>
-    <span class="v v4"><b>#4d7e63</b>　明度 39.90%　·　對分頁列 <b>3.28</b>　·　與淺色的色差 ΔE <b>20.4</b>　·　新的。</span>
-    <span class="v v5"><b>#4f8065</b>　明度 40.60%　·　對分頁列 <b>3.37</b>　·　與淺色的色差 ΔE <b>20.7</b>　·　原本的 2。這一組裡餘裕最多的。</span></p>
+  <p class="hint"><span class="dot"></span>
+    <span class="v v1"><b>#49785e</b>　明度 37.80%　·　對 <code>#22252a</code> <b>3.02</b>　·　對 <code>#2b2f36</code> <b>2.64</b>　·　ΔE <b>18.9</b></span>
+    <span class="v v2"><b>#4b7a60</b>　明度 38.50%　·　對 <code>#22252a</code> <b>3.11</b>　·　對 <code>#2b2f36</code> <b>2.72</b>　·　ΔE <b>19.1</b></span>
+    <span class="v v3"><b>#4c7c62</b>　明度 39.20%　·　對 <code>#22252a</code> <b>3.20</b>　·　對 <code>#2b2f36</code> <b>2.80</b>　·　ΔE <b>19.5</b></span>
+    <span class="v v4"><b>#4d7e63</b>　明度 39.90%　·　對 <code>#22252a</code> <b>3.28</b>　·　對 <code>#2b2f36</code> <b>2.87</b>　·　ΔE <b>20.4</b></span>
+    <span class="v v5"><b>#4f8065</b>　明度 40.60%　·　對 <code>#22252a</code> <b>3.37</b>　·　對 <code>#2b2f36</code> <b>2.95</b>　·　ΔE <b>20.7</b></span></p>
 </div>
 
 <div class="wrap">
@@ -206,11 +210,11 @@ td.no{color:#8a5a4a}
 
 <table>
   <tr><th>#</th><th>色</th><th>明度</th><th>對 <code>#22252a</code></th><th>對 <code>#2b2f36</code></th><th>ΔE</th></tr>
-  <tr><td>1</td><td><code>#49785e</code></td><td>37.80%</td><td>3.02</td><td class="no">2.64</td><td>18.9</td></tr>
+  <tr><td>1 原</td><td><code>#49785e</code></td><td>37.80%</td><td>3.02</td><td class="no">2.64</td><td>18.9</td></tr>
 <tr><td>2</td><td><code>#4b7a60</code></td><td>38.50%</td><td>3.11</td><td class="no">2.72</td><td>19.1</td></tr>
 <tr><td>3</td><td><code>#4c7c62</code></td><td>39.20%</td><td>3.20</td><td class="no">2.80</td><td>19.5</td></tr>
 <tr><td>4</td><td><code>#4d7e63</code></td><td>39.90%</td><td>3.28</td><td class="no">2.87</td><td>20.4</td></tr>
-<tr><td>5</td><td><code>#4f8065</code></td><td>40.60%</td><td>3.37</td><td class="no">2.95</td><td>20.7</td></tr>
+<tr><td>5 原</td><td><code>#4f8065</code></td><td>40.60%</td><td>3.37</td><td class="no">2.95</td><td>20.7</td></tr>
 </table>
 
 <div class="note">
