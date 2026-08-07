@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="zh-Hant-TW" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>淺色定案 × 五個深色候選・一鍵切換 — 芳仁牙醫診所</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<!--
+  進行中：favicon 深色版顏色。這一頁把定案的淺色 #4f6361 與五個深色候選成對綁在一起，
+  用上方的鈕（或自動來回）一鍵切換整頁，看每一格從淺跳到深的落差有多大。
+  幾何維持定稿（牙洞 1.6×、上移 1.05）。
+-->
+</head>
+<body>
+<style>
+:root{
+  --pad:clamp(1rem,4vw,2rem);
+  --chair:#4f6361;
+  /* 淺色模式 */
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2; --ink:#2a2c27; --ink-soft:#5c5f57;
+  --mark:#4f6361;                 /* 標誌顏色：淺色模式下五格都是定案色 */
+  --tabbg:#dee1e5; --tabon:#ffffff; --tabtxt:#2a2c27; --tabdim:#5c5f57; --tidim:#a8adb3;
+  --lockbg:#ffffff; --lockb:#2a2c27; --locks:#5c5f57;
+}
+html[data-mode="dark"]{
+  --paper:#1c1f24; --card:#24272c; --rule:#3a3f46; --ink:#e7e9ea; --ink-soft:#9aa0a6;
+  --tabbg:#22252a; --tabon:#2b2f36; --tabtxt:#e8eaed; --tabdim:#9aa0a6; --tidim:#6b7078;
+  --lockbg:#22252a; --lockb:rgba(255,255,255,.95); --locks:rgba(255,255,255,.62);
+}
+/* --mark 只能在 .row 上換 —— --cand 定義在 .row，寫在 html 層的 var(--cand)
+   在計算 html 自己的自訂屬性時就解析失敗了（那時還沒有 --cand），整個變成無效值。 */
+html[data-mode="dark"] .row{--mark:var(--cand)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
+  font-size:16px;line-height:1.85;letter-spacing:.01em;
+  transition:background-color .28s ease,color .28s ease}
+.wrap{max-width:44rem;margin-inline:auto;padding:0 var(--pad) var(--pad)}
+h1{font-size:1.25rem;line-height:1.5;margin:0 0 .4rem}
+.lede{margin:0 0 1rem;font-size:.86rem;line-height:1.8;color:var(--ink-soft)}
+.lede b{color:var(--ink)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+
+/* ---------- 一鍵切換：釘在頂端，捲到哪都按得到 ---------- */
+.bar{position:sticky;top:0;z-index:20;background:var(--paper);padding:var(--pad) var(--pad) .7rem;
+  margin:0 auto;max-width:44rem;transition:background-color .28s ease}
+.bar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--rule)}
+.ctl{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.seg{display:inline-flex;padding:3px;border-radius:10px;background:var(--card);
+  border:1px solid var(--rule)}
+.seg button{appearance:none;border:0;background:transparent;color:var(--ink-soft);cursor:pointer;
+  font:inherit;font-size:.82rem;line-height:1.9;padding:.1rem .85rem;border-radius:8px;
+  font-family:inherit;transition:background-color .2s ease,color .2s ease}
+html[data-mode="light"] .seg button[value="light"],
+html[data-mode="dark"] .seg button[value="dark"]{background:var(--chair);color:#fff}
+html[data-mode="dark"] .seg button[value="dark"]{background:#5f7f7c}
+.auto{appearance:none;border:1px solid var(--rule);background:var(--card);color:var(--ink);
+  cursor:pointer;font:inherit;font-size:.82rem;line-height:1.9;padding:.1rem .8rem;border-radius:10px}
+.auto[aria-pressed="true"]{background:var(--chair);border-color:var(--chair);color:#fff}
+html[data-mode="dark"] .auto[aria-pressed="true"]{background:#5f7f7c;border-color:#5f7f7c}
+.hint{margin:.45rem 0 0;font-size:.74rem;line-height:1.6;color:var(--ink-soft)}
+
+/* ---------- 分頁列 ---------- */
+.tabbar{display:flex;gap:.35rem;padding:.45rem .45rem 0;background:var(--tabbg);
+  border-radius:10px 10px 0 0;overflow:hidden;transition:background-color .28s ease}
+.tab{display:flex;align-items:center;gap:.45rem;min-width:0;flex:0 1 13rem;
+  padding:.42rem .7rem;border-radius:8px 8px 0 0}
+.tab.on{background:var(--tabon);transition:background-color .28s ease}
+.ti{display:flex;flex:0 0 16px;color:var(--mark);transition:color .28s ease}
+.ti.dim{color:var(--tidim)}
+.tt{font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;font-size:.78rem;line-height:1.6;
+  color:var(--tabtxt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .28s ease}
+.tt.dim{color:var(--tabdim)}
+
+/* ---------- 頁首組合 ---------- */
+.lock{display:flex;align-items:center;gap:.7rem;padding:.85rem 1rem;background:var(--lockbg);
+  border-radius:0 0 10px 10px;transition:background-color .28s ease}
+.lmk{display:flex;flex:0 0 32px;color:var(--mark);transition:color .28s ease}
+.ltxt{display:flex;flex-direction:column;min-width:0}
+.ltxt b{font-size:1rem;line-height:1.3;font-weight:500;color:var(--lockb);letter-spacing:.04em;
+  transition:color .28s ease}
+.ltxt small{font-size:.72rem;line-height:1.5;color:var(--locks);letter-spacing:.06em;
+  transition:color .28s ease}
+
+/* ---------- 卡片 ---------- */
+.row{background:var(--card);border:1px solid var(--rule);border-radius:12px;
+  padding:1rem 1.1rem 1.2rem;margin-bottom:1rem;position:relative;
+  transition:background-color .28s ease,border-color .28s ease}
+.row[data-pick]{border-color:var(--chair);box-shadow:0 0 0 1px var(--chair)}
+html[data-mode="dark"] .row[data-pick]{border-color:var(--cand);box-shadow:0 0 0 1px var(--cand)}
+.row[data-pick]::after{content:"我建議";position:absolute;top:-9px;right:14px;
+  background:var(--chair);color:#fff;font-size:.68rem;line-height:1.6;padding:0 .5rem;border-radius:8px}
+html[data-mode="dark"] .row[data-pick]::after{background:var(--cand);color:#12151a}
+.row h2{margin:0;font-size:1rem;line-height:1.5;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
+.num{display:inline-flex;align-items:center;justify-content:center;min-width:1.5rem;height:1.5rem;
+  border-radius:8px;background:var(--mark);color:#fff;font-size:.78rem;font-weight:500;
+  transition:background-color .28s ease}
+html[data-mode="dark"] .num{color:#12151a}
+.tag{font-size:.72rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.meta{margin:.15rem 0 .9rem;font-size:.76rem;line-height:1.7;color:var(--ink-soft);
+  font-variant-numeric:tabular-nums}
+.meta b{color:var(--ink);font-weight:500}
+
+/* 依模式顯示不同的說明 */
+html[data-mode="light"] .ondark{display:none}
+html[data-mode="dark"] .onlight{display:none}
+
+.foot{margin-top:1.2rem;font-size:.8rem;line-height:1.85;color:var(--ink-soft)}
+.foot b{color:var(--ink)}
+.foot p{margin:0 0 .7rem}
+.foot a{color:var(--mark)}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+
+<div class="bar">
+  <div class="ctl">
+    <span class="seg" role="group" aria-label="淺色或深色">
+      <button type="button" value="light">淺色</button>
+      <button type="button" value="dark">深色</button>
+    </span>
+    <button type="button" class="auto" aria-pressed="false">自動來回</button>
+  </div>
+  <p class="hint">整頁一起切。淺色時五格都是定案的 <code>#4f6361</code>，深色時各換成自己的候選色。</p>
+</div>
+
+<div class="wrap">
+<h1>淺色定案 × 五個深色候選</h1>
+<p class="lede">每一格都是<b>同一組</b>圖案與字：16px 分頁列一次、32px 頁首一次。
+  切換時字與底色一起換，只有標誌的綠是各格自己的。
+  <b>要看的是「跳多遠」</b> —— 按住自動來回，落差最小的那一格就是最不像換了主題色的。</p>
+
+<section class="row" style="--cand:#49785e">
+  <h2><span class="num">1</span>
+    <code class="onlight">#4f6361</code><code class="ondark">#49785e</code>
+    <span class="tag onlight">對白底 6.38</span><span class="tag ondark">對分頁列 3.02</span></h2>
+  <p class="meta onlight">淺色定案，五格都一樣。按上面的鈕切到深色，看它跳多遠。</p>
+  <p class="meta ondark">明度 37.8%　·　與淺色的色差 ΔE <b>18.9</b>　·　數字愈小愈像同一個色。</p>
+
+  <div class="tabbar">
+    <div class="tab on"><span class="ti"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt">芳仁牙醫診所</span></div>
+    <div class="tab"><span class="ti dim"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt dim">雲林縣政府衛生局</span></div>
+  </div>
+  <div class="lock">
+    <span class="lmk"><svg viewBox="0 0 64 64" width="32" height="32" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span>
+    <span class="ltxt"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span>
+  </div>
+</section>
+
+<section class="row" data-pick style="--cand:#4f8065">
+  <h2><span class="num">2</span>
+    <code class="onlight">#4f6361</code><code class="ondark">#4f8065</code>
+    <span class="tag onlight">對白底 6.38</span><span class="tag ondark">對分頁列 3.37</span></h2>
+  <p class="meta onlight">淺色定案，五格都一樣。按上面的鈕切到深色，看它跳多遠。</p>
+  <p class="meta ondark">明度 40.6%　·　與淺色的色差 ΔE <b>20.7</b>　·　數字愈小愈像同一個色。</p>
+
+  <div class="tabbar">
+    <div class="tab on"><span class="ti"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt">芳仁牙醫診所</span></div>
+    <div class="tab"><span class="ti dim"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt dim">雲林縣政府衛生局</span></div>
+  </div>
+  <div class="lock">
+    <span class="lmk"><svg viewBox="0 0 64 64" width="32" height="32" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span>
+    <span class="ltxt"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span>
+  </div>
+</section>
+
+<section class="row" style="--cand:#54896c">
+  <h2><span class="num">3</span>
+    <code class="onlight">#4f6361</code><code class="ondark">#54896c</code>
+    <span class="tag onlight">對白底 6.38</span><span class="tag ondark">對分頁列 3.79</span></h2>
+  <p class="meta onlight">淺色定案，五格都一樣。按上面的鈕切到深色，看它跳多遠。</p>
+  <p class="meta ondark">明度 43.5%　·　與淺色的色差 ΔE <b>23.6</b>　·　數字愈小愈像同一個色。</p>
+
+  <div class="tabbar">
+    <div class="tab on"><span class="ti"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt">芳仁牙醫診所</span></div>
+    <div class="tab"><span class="ti dim"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt dim">雲林縣政府衛生局</span></div>
+  </div>
+  <div class="lock">
+    <span class="lmk"><svg viewBox="0 0 64 64" width="32" height="32" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span>
+    <span class="ltxt"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span>
+  </div>
+</section>
+
+<section class="row" style="--cand:#5a9374">
+  <h2><span class="num">4</span>
+    <code class="onlight">#4f6361</code><code class="ondark">#5a9374</code>
+    <span class="tag onlight">對白底 6.38</span><span class="tag ondark">對分頁列 4.29</span></h2>
+  <p class="meta onlight">淺色定案，五格都一樣。按上面的鈕切到深色，看它跳多遠。</p>
+  <p class="meta ondark">明度 46.6%　·　與淺色的色差 ΔE <b>26.9</b>　·　數字愈小愈像同一個色。</p>
+
+  <div class="tabbar">
+    <div class="tab on"><span class="ti"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt">芳仁牙醫診所</span></div>
+    <div class="tab"><span class="ti dim"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt dim">雲林縣政府衛生局</span></div>
+  </div>
+  <div class="lock">
+    <span class="lmk"><svg viewBox="0 0 64 64" width="32" height="32" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span>
+    <span class="ltxt"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span>
+  </div>
+</section>
+
+<section class="row" style="--cand:#609c7b">
+  <h2><span class="num">5</span>
+    <code class="onlight">#4f6361</code><code class="ondark">#609c7b</code>
+    <span class="tag onlight">對白底 6.38</span><span class="tag ondark">對分頁列 4.79</span></h2>
+  <p class="meta onlight">淺色定案，五格都一樣。按上面的鈕切到深色，看它跳多遠。</p>
+  <p class="meta ondark">明度 49.5%　·　與淺色的色差 ΔE <b>29.9</b>　·　數字愈小愈像同一個色。</p>
+
+  <div class="tabbar">
+    <div class="tab on"><span class="ti"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt">芳仁牙醫診所</span></div>
+    <div class="tab"><span class="ti dim"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt dim">雲林縣政府衛生局</span></div>
+  </div>
+  <div class="lock">
+    <span class="lmk"><svg viewBox="0 0 64 64" width="32" height="32" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span>
+    <span class="ltxt"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span>
+  </div>
+</section>
+
+<div class="foot">
+<p><b>2</b>（<code>#4f8065</code>，對比 3.37）是上一頁建議的：ΔE 已經壓得很小，同時離
+  非文字圖形的下限 3.0 還留一點餘裕 —— 各家瀏覽器的深色分頁列深淺不一樣，貼著下限有風險。</p>
+<p><b>1</b>（<code>#49785e</code>）是能做到最接近的極限，代價是完全沒有餘裕。
+  <b>5</b>（<code>#609c7b</code>）是最早那一版的亮度，也是唯一連字都能用同色的。</p>
+<p>幾何維持定稿（牙洞 1.6×、上移 1.05）、淺色維持 <code>#4f6361</code> 沒有動。
+  相鄰的兩頁：<a href="/preview/logo-favicon/">五個候選的數據</a>、
+  <a href="/preview/logo-favicon-wordmark/">配上字的三種情境</a>。</p>
+</div>
+</div>
+
+<script>
+(function () {
+  var html = document.documentElement;
+  var seg = document.querySelector('.seg');
+  var auto = document.querySelector('.auto');
+  var timer = null;
+
+  function set(mode) { html.dataset.mode = mode; }
+  function flip() { set(html.dataset.mode === 'dark' ? 'light' : 'dark'); }
+
+  seg.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    stop();
+    set(b.value);
+  });
+
+  function stop() {
+    if (!timer) return;
+    clearInterval(timer);
+    timer = null;
+    auto.setAttribute('aria-pressed', 'false');
+  }
+
+  auto.addEventListener('click', function () {
+    if (timer) { stop(); return; }
+    auto.setAttribute('aria-pressed', 'true');
+    flip();
+    timer = setInterval(flip, 1400);
+  });
+
+  // 離開分頁就停，回來不會看到它自己在閃
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stop();
+  });
+})();
+</script>
+</body>
+</html>
