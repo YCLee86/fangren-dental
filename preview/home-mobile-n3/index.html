@@ -239,45 +239,36 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
     transition: none;
   }
 }
-/* ---- 頁首這一列：讓它「不可能溢出」，而不是算剛好放得下（2026-08-07）--------
-   走過的路：
-     · 品牌可縮 → 選單的 nowrap 贏，「芳仁牙醫診所」斷成兩行。
-     · 品牌鎖死不縮 → 換成整列比視窗寬，選單被推出畫面（頁面因此可以左右拉、會晃）。
-     · 在 .phone 上裁掉 → 晃是不晃了，但右對齊的選單整組被裁掉、看不見。
+/* ---- 頁首這一列改用 grid（2026-08-07，第六輪才收斂）------------------------
+   真機量到的兩個數字，把病因指得很清楚：
 
-   **三種結果都是同一件事：這一列在真機上放不下。**
-   我在容器裡量到 375px 下只用了 313（還剩 61），但容器沒有 PingFang TC，
-   量出來的寬度不能拿來保證真機 —— 這一輪之前已經因此判斷錯兩次。
+       第一次   .brand w = 395.5   （沒有上限，直接撐出視窗 → 頁面可以左右拉 36px）
+       第二次   .brand w = 345     （＝ max-width: 100%，被夾住了，但還是佔滿整行
+                                     → 選單沒位置，只好換行）
 
-   所以不再賭「算得剛好」，改成把溢出這個可能性拿掉：
-     flex-wrap: wrap  真的放不下時，選單掉到品牌下面一行 —— 會擠一點，但
-                      **看得見、也不會把頁面撐寬**。這是三種壞結果裡唯一可接受的。
-     min-width: 0     讓選單可以被壓到 min-content 以下再換行，不會硬撐出去。
+   兩次都是同一件事：**WebKit 把 `.brand` 這個 flex 項目撐成可用寬度**，
+   而 Blink 給它內容寬度（131）。`width: max-content` 在 flex 項目上沒有讓 WebKit 改變主意。
+
+   所以不再靠 flex 的自動尺寸推論，改用 grid 的軌道明說：
+
+       grid-template-columns: max-content 1fr
+
+   **`max-content` 當軌道尺寸是兩邊都實作得很紮實的東西**，
+   不像「flex 項目 ＋ flex-basis: auto ＋ width: auto」那樣有解讀空間。
+   左欄就是品牌的內容寬度，右欄吃掉剩下的，選單靠右。
+
+   選單自己仍然 flex-wrap: wrap ＋ min-width: 0 ——
+   萬一右欄真的不夠寬，它在自己的欄位裡換行，不會往外撐。
    ---------------------------------------------------------------------------- */
 .site-header {
-  display: flex; flex-wrap: wrap; align-items: flex-start;
-  justify-content: space-between; gap: 3cqw;
+  display: grid; grid-template-columns: max-content 1fr;
+  align-items: start; gap: 3cqw;
 }
-/* ---- width: max-content 是這一列真正的修法（2026-08-07 量到才知道）----------
-   使用者手機上的實測：
-
-       innerWidth = 375   scrollWidth = 411   可左右拉 = 36
-       .brand w = 395.5   （但畫面上它只佔約 130px）
-
-   **395.5 ＋ 左右內距 ≈ 411 —— 溢出的 36px 全部來自這一個盒子。**
-   `.brand` 是 `display: flex` 的 <a>，當它變成 flex 項目時，
-   Blink 給它 max-content（131），WebKit 卻把它撐成可用寬度（395.5）。
-   兩邊對 `flex-basis: auto` ＋ `width: auto` 的區塊級 flex 容器解讀不同。
-
-   `width: max-content` 把這件事講死：這個盒子就是它內容的寬度，不接受推論。
-   `max-width: 100%` 是保險，讓它在任何情況下都不可能比容器寬。
-
-   ＊這也解釋了為什麼前面幾輪一直對不上 —— 我以為在比字型寬度（差幾 px），
-     實際上差的是一個盒子的**尺寸模型**（差 264px）。 */
 .brand {
   display: flex; align-items: center; gap: 2.6cqw; text-decoration: none;
-  flex: 0 0 auto; width: max-content; max-width: 100%; min-width: 0;
+  min-width: 0;   /* 左欄已經是 max-content，這一條只是不讓它反過來撐大軌道 */
 }
+/* 標題 nowrap，副標維持 text-align-last: justify 撐齊標題右緣（原本的設計）。 */
 .brand-text b { white-space: nowrap; }
 .brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
 .brand-mark svg { display: block; width: 100%; height: auto; }
@@ -297,7 +288,7 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
   display: flex; flex-wrap: wrap; justify-content: flex-end;
   gap: .2rem 3.2cqw; line-height: 1.4; padding-top: 1cqh;
   font-size: clamp(10px, 3.5cqh, 12.5px);
-  min-width: 0;   /* 沒有它，flex 項目不會縮到 min-content 以下，就只能往外撐 */
+  min-width: 0;   /* 讓它可以縮到 min-content 以下、在自己的欄位裡換行，而不是往外撐 */
 }
 .site-nav a { color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap; }
 .hero-poem {

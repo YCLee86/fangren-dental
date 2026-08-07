@@ -961,33 +961,34 @@ UA                iPhone OS 18_7 / AppleWebKit 605.1.15
 改完之後在 375 與 390 兩個寬度量到的結果一致：
 `html.scrollWidth` 等於視窗寬、**可左右拉 0px**、品牌名單行。
 
-### ⚠ `.brand` 一定要寫 `width: max-content`
-
-真機量到的數字，這才是四輪來的真正病因：
-
-```
-innerWidth = 375    scrollWidth = 411    可左右拉 = 36
-.brand w   = 395.5  （畫面上它只佔約 130px）
-```
-
-**395.5 ＋ 左右內距 ≈ 411 —— 溢出的 36px 全部來自這一個盒子。**
-
-`.brand` 是 `display: flex` 的 `<a>`。當它同時是 flex 項目、`flex-basis: auto`、
-`width: auto` 時，**Blink 給它 max-content（131），WebKit 把它撐成可用寬度（395.5）**。
-兩邊對「區塊級 flex 容器當 flex 項目」的尺寸解讀不同。
+### ⚠ 頁首用 grid 的 `max-content` 軌道，不要靠 flex 項目的自動尺寸
 
 ```css
-.brand { flex: 0 0 auto; width: max-content; max-width: 100%; min-width: 0; }
+.site-header { display: grid; grid-template-columns: max-content 1fr; align-items: start; }
+.site-nav    { justify-self: end; flex-wrap: wrap; min-width: 0; }
 ```
 
-`width: max-content` 把這件事講死：這個盒子就是它內容的寬度，不接受引擎推論。
-`max-width: 100%` 是保險。Blink 加了之後一個像素都沒變（本來就是 max-content）。
+真機量到的兩個數字，把病因指得很清楚：
+
+| | `.brand` 實際寬度 | 症狀 |
+| --- | --- | --- |
+| 只有 `flex: 0 0 auto` | **395.5**（視窗只有 375） | 撐出視窗，頁面可左右拉 36px、捲動時會晃 |
+| 加上 `width: max-content; max-width: 100%` | **345**（＝ `max-width` 夾住） | 不晃了，但仍佔滿整行 → 選單沒位置，換行 |
+| **grid `max-content` 軌道** | **126**（＝ 內容寬度） | ✓ 一行、不溢出 |
+
+**`width: max-content` 放在 flex 項目上沒有讓 WebKit 改變主意。**
+Blink 對「flex 項目 ＋ `flex-basis: auto` ＋ `width: auto`」給內容寬度，
+WebKit 給可用寬度 —— 差 264px。
+grid 的 `max-content` 軌道則是兩邊都實作得很紮實、沒有解讀空間的東西。
+
+量到的結果：280／320／375／390 四個寬度下 `可左右拉` 全部 0，
+`.brand` 121~131（＝內容寬度），頁首維持一行。
 
 > **這一段最該記住的不是 CSS，是判斷方式。**
-> 前面四輪我一直以為在比字型寬度（差幾 px），所以一直在調 gap、字級、選單項數 ——
-> 實際上差的是一個盒子的**尺寸模型**（差 264px）。
+> 前面五輪我一直以為在比字型寬度（差幾 px），所以一直在調 gap、字級、選單項數、
+> 裁切位置 —— 實際上差的是一個盒子的**尺寸模型**（差 264px）。
 > 症狀（斷行／被推出去／被裁掉／換行）全都只是這 264px 的不同表現。
-> **量到 `.brand w=395.5` 那一刻才真的知道問題在哪 —— 前面全是猜的。**
+> **量到 `.brand w=395.5` 那一刻才第一次真的知道問題在哪，前面全是猜的。**
 > 遇到跨引擎的版面問題，先把可疑元素的實際尺寸印在頁面上請使用者截圖，
 > 比再改五版 CSS 快得多。
 
