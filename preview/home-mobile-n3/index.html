@@ -258,11 +258,26 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
   display: flex; flex-wrap: wrap; align-items: flex-start;
   justify-content: space-between; gap: 3cqw;
 }
-/* 品牌是這一列的固定尺寸，永遠不被擠到斷行。標題 nowrap；
-   副標**不加** nowrap —— 它有 text-align-last: justify，
-   兩個一起用在不同引擎上的內在寬度算法不一致，而它本來就只有八個字、
-   讓它保有換行的自由不會有任何損失。 */
-.brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; flex: 0 0 auto; }
+/* ---- width: max-content 是這一列真正的修法（2026-08-07 量到才知道）----------
+   使用者手機上的實測：
+
+       innerWidth = 375   scrollWidth = 411   可左右拉 = 36
+       .brand w = 395.5   （但畫面上它只佔約 130px）
+
+   **395.5 ＋ 左右內距 ≈ 411 —— 溢出的 36px 全部來自這一個盒子。**
+   `.brand` 是 `display: flex` 的 <a>，當它變成 flex 項目時，
+   Blink 給它 max-content（131），WebKit 卻把它撐成可用寬度（395.5）。
+   兩邊對 `flex-basis: auto` ＋ `width: auto` 的區塊級 flex 容器解讀不同。
+
+   `width: max-content` 把這件事講死：這個盒子就是它內容的寬度，不接受推論。
+   `max-width: 100%` 是保險，讓它在任何情況下都不可能比容器寬。
+
+   ＊這也解釋了為什麼前面幾輪一直對不上 —— 我以為在比字型寬度（差幾 px），
+     實際上差的是一個盒子的**尺寸模型**（差 264px）。 */
+.brand {
+  display: flex; align-items: center; gap: 2.6cqw; text-decoration: none;
+  flex: 0 0 auto; width: max-content; max-width: 100%; min-width: 0;
+}
 .brand-text b { white-space: nowrap; }
 .brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
 .brand-mark svg { display: block; width: 100%; height: auto; }
