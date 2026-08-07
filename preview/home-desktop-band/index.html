@@ -627,6 +627,30 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 [data-spec="surg"]   { --accent: var(--taupe); }  /* 色票・Taupe＝單椅布料 H=3　　 6.04:1 */
 [data-spec="prosth"] { --accent: var(--tile);  }  /* 茶室深藍磁磚實測　　 H=227　13.53:1 */
 [data-spec="kids"]   { --accent: var(--stool); }  /* 圓凳與木件實測　　　 H=28　　 5.53:1 */
+
+/* ==========================================================================
+   兒牙的黃色系三案（2026-08-07，提案中）
+   --------------------------------------------------------------------------
+   **PALETTE 裡真正量到的黃只有一個** —— 開幕茶會的含羞草 `#9d8313`
+   （第三節花藝，H=49・S=78%・L=35%）。其餘暖色全落在 H=15~34
+   （磚紅長椅 15、焦糖褐 21、圓凳 28、窗光 30、入口燈 34），那是褐與琥珀不是黃。
+   所以三案只有色相是變數，其餘都跟著含羞草走，不是各挑一個。
+
+   規則（一個變數）：
+     色相　從含羞草的 49 往現有暖色軸靠，取 49 / 42 / 36 三階
+     彩度　固定 78%，就是含羞草自己的彩度，一度都不動
+     明度　取「白字仍過 AA 的**最亮**值」—— 黃色越亮越像黃，
+           所以這裡不是壓深，是頂著上限取最亮
+
+   為什麼不能更亮：兒牙這一色要同時當**實心藥丸的底（白字）**和
+   **卡上的線性標籤（它自己當字）**，兩邊夾殺。含羞草原色白字只有 3.69:1、
+   卡上 3.36:1，兩個都不夠。壓到過關的位置它就會讀成芥末／橄欖 ——
+   **這是黃色在這個系統裡的物理上限，不是調得不好。**
+   要真正明亮的黃，得先讓掉「實心白字」或「線性標籤過 AA」其中一條。
+   ========================================================================== */
+html[data-kids="1"] [data-spec="kids"] { --accent: #966113; }  /* H=36 琥珀黃　白字 5.23:1・卡上 4.76:1 */
+html[data-kids="2"] [data-spec="kids"] { --accent: #8d6811; }  /* H=42 中間　　白字 5.10:1・卡上 4.64:1 */
+html[data-kids="3"] [data-spec="kids"] { --accent: #7f6b10; }  /* H=49 含羞草　白字 5.23:1・卡上 4.76:1 */
 .info-card { --accent: var(--teal); }
 .info-card[data-hue="taupe"] { --accent: var(--taupe); }
 
@@ -786,9 +810,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .hero-switch button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
 .hero-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .hero-switch-2 { bottom: 4.1rem; }
+.hero-switch-3 { bottom: 7rem; }
 .hero-caption {
   position: fixed; z-index: 50; right: 1.2rem;
-  bottom: 7rem; margin: 0; max-width: min(92vw, 30rem); text-align: left;
+  bottom: 9.9rem; margin: 0; max-width: min(92vw, 30rem); text-align: left;
   font-size: .76rem; line-height: 1.7; color: rgba(255,255,255,.9);
   background: rgba(25, 22, 20, .82); border-radius: 10px; padding: .5rem .9rem;
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
@@ -1485,6 +1510,13 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   <button type="button" data-gap="wide" aria-pressed="true">拉開</button>
   <button type="button" data-gap="full" aria-pressed="false">撐滿版心</button>
 </div>
+<div class="hero-switch hero-switch-3" role="group" aria-label="兒牙的顏色">
+  <b>兒牙</b>
+  <button type="button" data-kids="0" aria-pressed="true">現在 #8d5e3a</button>
+  <button type="button" data-kids="1" aria-pressed="false">1 琥珀黃</button>
+  <button type="button" data-kids="2" aria-pressed="false">2 中間</button>
+  <button type="button" data-kids="3" aria-pressed="false">3 含羞草</button>
+</div>
 <p class="hero-caption" id="hero-caption"></p>
 
 <script>
@@ -1508,7 +1540,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   };
   var root = document.documentElement;
   var cap  = document.getElementById('hero-caption');
-  var cur  = { band: 'glasstar', gap: 'wide' };
+  var cur  = { band: 'glasstar', gap: 'wide', kids: '0' };
+  /* 兒牙的顏色三案。色相是唯一的變數，彩度固定 78%（含羞草自己的值），
+     明度取「白字仍過 AA 的最亮值」。 */
+  var KIDS = {
+    '0': '兒牙 現在　#8d5e3a　圓凳與木件實測，H=26・S=42%。白字 5.53:1、卡上 5.03:1。這是褐，不是黃。',
+    '1': '兒牙 1 琥珀黃　#966113　H=36・S=78%。白字 5.23:1、卡上 4.76:1。最接近現在的一個，轉黃但仍留著暖。',
+    '2': '兒牙 2 中間　#8d6811　H=42・S=78%。白字 5.10:1、卡上 4.64:1。',
+    '3': '兒牙 3 含羞草　#7f6b10　H=49・S=78%。白字 5.23:1、卡上 4.76:1。色相就是開幕茶會含羞草的原值，最黃、也最接近橄欖。'
+  };
 
 
 
@@ -1522,10 +1562,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
       b.setAttribute('aria-pressed', b.getAttribute('data-gap') === cur.gap ? 'true' : 'false');
     });
-    if (cap) cap.textContent = BAND[cur.band] + '　／　' + GAP[cur.gap];
+    root.setAttribute('data-kids', cur.kids);
+    document.querySelectorAll('.hero-switch button[data-kids]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-kids') === cur.kids ? 'true' : 'false');
+    });
+    if (cap) cap.textContent = KIDS[cur.kids] + '　／　' + BAND[cur.band] + '・' + GAP[cur.gap];
     try {
       localStorage.setItem('fangren:band', cur.band);
       localStorage.setItem('fangren:gap', cur.gap);
+      localStorage.setItem('fangren:kids', cur.kids);
     } catch (e) {}
   }
 
@@ -1534,6 +1579,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   });
   document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
     b.addEventListener('click', function () { cur.gap = b.getAttribute('data-gap'); paint(); });
+  });
+  document.querySelectorAll('.hero-switch button[data-kids]').forEach(function (b) {
+    b.addEventListener('click', function () { cur.kids = b.getAttribute('data-kids'); paint(); });
   });
 
   function pick(key, map, fallback) {
@@ -1547,6 +1595,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   }
   cur.band = pick('band', BAND, 'glasstar');
   cur.gap  = pick('gap',  GAP,  'wide');
+  cur.kids = pick('kids', KIDS, '0');
   paint();
 })();
 </script>
