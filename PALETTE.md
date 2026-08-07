@@ -936,6 +936,31 @@ img 比框寬 → iOS 把版面視窗（ICB）撐到內容寬度
 
 > 電腦版的 HERO 本來就用 `object-fit: cover`，沒有這個問題。
 
+### ⚠ 使用者的手機是 **375 CSS px**，不是 390
+
+2026-08-07 用診斷頁在他手機上量到的：
+
+```
+screen.width      375
+innerWidth        375
+scrollWidth       375      （＝ 可左右拉 0px）
+visualViewport    375 × 667（縮放 1.00）
+devicePixelRatio  3
+UA                iPhone OS 18_7 / AppleWebKit 605.1.15
+```
+
+375 × 667 配 dPR 3 表示他開了**顯示放大（Display Zoom）**，
+也就是螢幕硬體比 375 大、但版面照 375 排、字和元件都等比放大。
+**這一頁所有的寬度驗算都要以 375 為準**，先前算的 390 太寬鬆 ——
+主選單四項那次超出的其實比我算的 2px 更多。
+
+> 順帶這張診斷也證實了一件事：**claude.ai 的檢視器沒有把頁面塞進比螢幕寬的框**，
+> `innerWidth` 就等於 `screen.width`。所以先前的水平溢出是頁面自己的問題，
+> 不是檢視器的。診斷頁：`https://claude.ai/code/artifact/49b85912-755a-4dc6-81a9-76ca8d541b75`
+
+改完之後在 375 與 390 兩個寬度量到的結果一致：
+`html.scrollWidth` 等於視窗寬、**可左右拉 0px**、品牌名單行。
+
 ### 水平方向收在 `.phone` 上，用 `clip`
 
 ```css
