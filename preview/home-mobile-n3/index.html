@@ -208,7 +208,10 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
   }
 }
 .site-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 3cqw; }
-.brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; }
+/* flex: 0 0 auto ＋ 兩行都 nowrap：品牌是這一列的固定尺寸，永遠不會被選單擠到斷行。
+   沒有這一條的話 .site-nav a 的 nowrap 會讓選單贏、品牌輸 —— 就是真機上看到的斷行。 */
+.brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; flex: 0 0 auto; }
+.brand-text b, .brand-text small { white-space: nowrap; }
 .brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
 .brand-mark svg { display: block; width: 100%; height: auto; }
 .brand-text { display: block; }
@@ -693,8 +696,15 @@ section + section { border-top: 1px solid var(--rule); }
           <small>雲林斗六・永樂街</small>
         </span>
       </a>
+      <!-- **主選單只放三項，不要加第四項。**（2026-08-07 量過）
+           390px 上四項的算式：左右內距 31.2 ＋ 標誌 34.6 ＋ 標誌間距 10.1
+           ＋ 標題六字 95 ＋ 頁首間距 11.7 ＋ 選單四項 209.5 ＝ **392.1px，超出 2px**。
+           .site-nav a 有 white-space: nowrap 不會縮，所以被擠的是品牌 ——
+           「芳仁牙醫診所」就斷成「芳仁牙醫診／所」兩行（使用者在真機上拍到的就是這個）。
+           容器裡沒有 PingFang／Noto Sans TC，用替代字型量會以為放得下，**不要照那個結果判斷**。
+           「主題與科別」在頁尾的站內導覽裡有，而且它就是 HERO 底下的第一節，
+           少一個頁首連結的代價最小。 -->
       <nav class="site-nav" aria-label="主選單">
-        <a href="#topics">主題與科別</a>
         <a href="#articles">全部文章</a>
         <a href="#doctors">醫師介紹</a>
         <a href="#clinic">診所資訊</a>
