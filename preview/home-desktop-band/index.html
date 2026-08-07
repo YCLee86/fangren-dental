@@ -132,10 +132,16 @@ html.scrolled .site-head .shell { height: var(--head-h-sm); }
   backdrop-filter: blur(6px) saturate(1.08);
   /* 下緣淡出。理由和窄帶那條一樣：backdrop-filter 只作用在框內，
      框的下緣就是一條硬邊 —— 捲到照片下半部時，頁首、照片、窄帶會變成
-     三塊上下堆疊的板。用 mask 讓最後 24% 的玻璃淡掉，邊就不見了。
-     文字在垂直置中的位置，落在還沒開始淡的那一段，可讀性不受影響。 */
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
+     三塊上下堆疊的板。用 mask 讓最後一段玻璃淡掉，邊就不見了。
+     文字在垂直置中的位置，落在還沒開始淡的那一段，可讀性不受影響。
+
+     **但這個淡出只在深色區才對。** 條子一旦捲到紙色 #e2e5e6 上面，
+     那段「由深漸淡到透明」在淺色底上會被讀成一條陰影 —— 這頁本來
+     一個陰影都沒有（只有 HERO 那兩層文字陰影），多出來就很怪。
+     所以淡出的起點做成變數，由捲動的 JS 逐幀寫進來：
+     在照片與窄帶上是 76%（軟邊），窄帶過完、紙色上來時收到 100%（無淡出、無陰影）。 */
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 var(--head-fade, 76%), transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 var(--head-fade, 76%), transparent 100%);
   opacity: 0; transition: opacity .22s ease;
 }
 html.scrolled .site-head::before { opacity: 1; }
@@ -1193,8 +1199,13 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   var band = document.querySelector('.band');
   if (!head || !band) return;
 
-  var A = [23, 25, 29, .06];    // 起點：暗區。幾乎不染色，靠模糊撐出玻璃感
-  var B = [50, 53, 60, 1];      // 終點：#32353c，不透明
+  /* 玻璃的兩個端點。2026-08-07 第四輪：**從藍灰改成暖色的深灰黑**。
+     舊值 A #17191d／B #32353c 是配上一代藍黑窄帶（H=220）算出來的合成色；
+     窄帶改成柏油漸層之後，條子一捲到窄帶那一段就明顯偏藍，和底下的暖色打架。
+     新值取同一族：起點用暗夜 #191614，終點 #2a2523 —— 比柏油 #221e1c
+     亮一階（讀得出是另一個面），色相同一邊，所以接得起來。 */
+  var A = [25, 22, 20, .06];    // 起點：#191614 暗夜。幾乎不染色，靠模糊撐出玻璃感
+  var B = [42, 37, 35, 1];      // 終點：#2a2523 暖色深灰黑，不透明
 
   function paint() {
     root.classList.toggle('scrolled', scrollY > 4);
@@ -1204,6 +1215,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     var c = A.map(function (v, i) { return v + (B[i] - v) * t; });
     root.style.setProperty('--glass',
       'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + c[3].toFixed(3) + ')');
+
+    /* 頁首下緣的淡出起點：深色區 76%（軟邊），紙色上來時收到 100%（無淡出）。
+       用 t 的三次方，所以大部分行程都還是軟的，只有最後一段快速收起來 ——
+       收得太早會讓照片上又出現硬邊，收得太晚紙色上就會看到那條假陰影。 */
+    root.style.setProperty('--head-fade', (76 + 24 * t * t * t).toFixed(1) + '%');
   }
 
   var tick = false;
