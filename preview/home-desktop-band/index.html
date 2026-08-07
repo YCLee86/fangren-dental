@@ -147,41 +147,20 @@ html.scrolled .site-head .shell { height: var(--head-h-sm); }
 html.scrolled .site-head::before { opacity: 1; }
 
 /* ==========================================================================
-   頁首在淺色區的深淺三案（2026-08-07）
+   頁首在淺色區的深淺五階（2026-08-07 第二輪）
    --------------------------------------------------------------------------
-   條子捲過窄帶之後就一直待在紙色 #e2e5e6 上。現在的終點 #2a2523（L* 14）
-   在那裡是一塊很重的黑。三案是三種減輕的方式，前兩案只調深淺、
-   第三案換一個想法。
+   條子捲過窄帶之後就一直待在紙色 #e2e5e6 上。原本的終點 #2a2523 在那裡
+   是一塊很重的黑，但**也不能真的太淺** —— 試過「整條翻成卡色 #f4f4f5 的
+   淺色條、文字轉墨色」，使用者判斷太淺，已淘汰，不要再提。
 
-   注意：三案在**暗夜區的長相完全一樣**（起點都是 #191614 的 .06），
+   所以範圍就框在這兩端之間：
+     最深 #2a2523（rgb 42,37,35）＝ 原本的黑
+     最淺 #3a3532（rgb 58,53,50）＝ 第一輪的「淺一階」
+   中間三階用 **RGB 等距內插**（每階約 +4,+4,+4），所以五階的深淺是平均的，
+   不是憑感覺各挑一個。
+
+   五案在**暗夜區的長相完全一樣**（起點都是 #191614 的 .06），
    差別只出現在條子離開窄帶之後。 */
-
-/* 案一 淺一階：終點 #3a3532，L* 21。仍然是暖色深灰黑，白字 12.4:1。 */
-/* 案二 再淺 ＋ 半透：終點 rgba(74,68,64,.84)，紙色會透一點上來，
-   在紙上合成約 #59534f（L* 35）。條子因此不再是「一塊板」，
-   而是一層蒙在內容上的暗玻璃。白字對合成色 6.9:1。 */
-/* 案三 翻成淺色條：捲到內文區時整條變成卡色 #f4f4f5 的毛玻璃、
-   文字轉墨色、下緣一條 --rule 細線。
-   想法不同 —— 前兩案是「把黑調淡」，這一案是「**深色頁首只屬於暗夜區**」，
-   進了內文就該用內文的顏色。代價是文字要換色，切換點必須抓準：
-   就設在窄帶完全通過條子的那一刻（t 到 1），也就是紙色剛開始出現的時候。 */
-html[data-head="3"].past-band .site-head::before {
-  background: rgba(244, 244, 245, .82);
-  -webkit-backdrop-filter: blur(10px) saturate(1.05);
-  backdrop-filter: blur(10px) saturate(1.05);
-  border-bottom: 1px solid var(--rule);
-}
-html[data-head="3"].past-band .brand-mark,
-html[data-head="3"].past-band .brand-text b { color: var(--ink); }
-html[data-head="3"].past-band .brand-text small { color: var(--ink-soft); }
-html[data-head="3"].past-band .brand-text small::before { border-color: var(--rule); }
-html[data-head="3"].past-band .site-nav a { color: var(--ink); }
-html[data-head="3"].past-band .site-nav a:focus-visible,
-html[data-head="3"].past-band .brand:focus-visible { outline-color: var(--ink); }
-.brand-mark, .brand-text b, .brand-text small, .site-nav a { transition: color .2s ease; }
-@media (prefers-reduced-motion: reduce) {
-  .brand-mark, .brand-text b, .brand-text small, .site-nav a { transition: none; }
-}
 
 .brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
 .brand-mark { flex: 0 0 38px; display: block; color: rgba(255, 255, 255, .95); }
@@ -1246,12 +1225,14 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   /* 終點依「頁首深淺」那一組切換條決定。三案在暗夜區完全一樣，
      差別只出現在條子離開窄帶、待在紙色上之後。 */
   var ENDS = {
-    '1': [58, 53, 50, 1],       // 淺一階　#3a3532　L* 21
-    '2': [74, 68, 64, .84],     // 再淺＋半透　紙上合成約 #59534f　L* 35
-    '3': [42, 37, 35, 1]        // 維持 #2a2523，但過了窄帶整條翻成淺色（見 CSS）
+    '1': [42, 37, 35, 1],       // #2a2523　最深（原本的黑）
+    '2': [46, 41, 39, 1],       // #2e2927
+    '3': [50, 45, 43, 1],       // #322d2b　中間
+    '4': [54, 49, 46, 1],       // #36312e
+    '5': [58, 53, 50, 1]        // #3a3532　最淺（第一輪的「淺一階」）
   };
   function endPoint() {
-    return ENDS[root.getAttribute('data-head')] || ENDS['1'];
+    return ENDS[root.getAttribute('data-head')] || ENDS['3'];
   }
 
   function paint() {
@@ -1259,7 +1240,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     var r = band.getBoundingClientRect();
     var h = head.getBoundingClientRect().height || 1;
     var t = Math.min(1, Math.max(0, (h - r.top) / (r.height || 1)));
-    /* 條子完全離開窄帶＝紙色開始出現，案三就是在這一刻翻成淺色條。 */
+    /* 條子完全離開窄帶＝紙色開始出現。目前五階沒有用到這個 class
+       （用到的是已淘汰的「翻成淺色條」那一案），留著給日後需要分辨
+       「頁首在暗夜區／在內文區」的規則用。 */
     root.classList.toggle('past-band', t >= 1);
     var B = endPoint();
     var c = A.map(function (v, i) { return v + (B[i] - v) * t; });
@@ -1424,9 +1407,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 </div>
 <div class="hero-switch hero-switch-3" role="group" aria-label="頁首在淺色區的深淺">
   <b>頁首</b>
-  <button type="button" data-head="1" aria-pressed="true">一 淺一階</button>
-  <button type="button" data-head="2" aria-pressed="false">二 再淺＋半透</button>
-  <button type="button" data-head="3" aria-pressed="false">三 翻成淺色條</button>
+  <button type="button" data-head="1" aria-pressed="false">1 最深</button>
+  <button type="button" data-head="2" aria-pressed="false">2</button>
+  <button type="button" data-head="3" aria-pressed="true">3 中間</button>
+  <button type="button" data-head="4" aria-pressed="false">4</button>
+  <button type="button" data-head="5" aria-pressed="false">5 最淺</button>
 </div>
 <p class="hero-caption" id="hero-caption"></p>
 
@@ -1451,12 +1436,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   };
   var root = document.documentElement;
   var cap  = document.getElementById('hero-caption');
-  var cur  = { band: 'glasstar', gap: 'wide', head: '1' };
+  var cur  = { band: 'glasstar', gap: 'wide', head: '3' };
   var HEAD = {
-    '1': '頁首一 淺一階：終點 #3a3532（L* 21），仍是暖色深灰黑，白字 12.4:1。',
-    '2': '頁首二 再淺＋半透：終點 rgba(74,68,64,.84)，紙色會透一點上來，在紙上合成約 #59534f（L* 35）。條子不再是一塊板，是一層蒙在內容上的暗玻璃。白字 6.9:1。',
-    '3': '頁首三 翻成淺色條：捲進內文區時整條變成卡色 #f4f4f5 的毛玻璃、文字轉墨色、下緣一條細線。想法不同 —— 前兩案是把黑調淡，這一案是「深色頁首只屬於暗夜區」。'
+    '1': '頁首 1 最深　#2a2523（rgb 42,37,35）—— 原本的那一版。',
+    '2': '頁首 2　#2e2927（rgb 46,41,39）。',
+    '3': '頁首 3 中間　#322d2b（rgb 50,45,43）。五階的正中間。',
+    '4': '頁首 4　#36312e（rgb 54,49,46）。',
+    '5': '頁首 5 最淺　#3a3532（rgb 58,53,50）—— 第一輪的「淺一階」。再淺就過頭了（翻成卡色淺條那一案已淘汰）。'
   };
+
 
   function paint() {
     root.setAttribute('data-band', cur.band);
@@ -1501,7 +1489,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   }
   cur.band = pick('band', BAND, 'glasstar');
   cur.gap  = pick('gap',  GAP,  'wide');
-  cur.head = pick('head', HEAD, '1');
+  cur.head = pick('head', HEAD, '3');
   paint();
 })();
 </script>
