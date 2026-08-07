@@ -74,7 +74,13 @@
   --head-h-sm: 60px;        /* 捲動收合後 */
 }
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+/* overflow-x 兩個都要寫，而且 html 用 clip 不是 hidden（2026-08-07）。
+   只寫在 body 上時，瀏覽器會把 body 的 overflow「傳播」到視窗來處理，
+   而 iOS Safari 在頁面裡有 position: sticky／fixed 的東西時這條傳播並不可靠 ——
+   結果是頁面仍然可以左右拉，拉開之後固定的頁首會被帶到文件的最右邊，
+   看起來就是「頁首的字跑到很奇怪的地方」。
+   clip 不建立捲動容器（hidden 會），所以它不會讓 sticky／scroll-padding 失效。 */
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0; background: var(--paper); color: var(--ink);
@@ -480,7 +486,26 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 /* 主題與科別。每一顆是真的 <button> —— 按下去會同時篩下面的文章與醫師，不是裝飾。
    字級、內距、圓角都和手機版相同；寬螢幕上它們自然排成一行，不必換算。 */
-.chips { display: flex; flex-wrap: wrap; gap: .55rem; margin: 0; padding: 0; list-style: none; }
+/* 一列：左邊是標記、右邊是搜尋框。空間夠就同一列，不夠搜尋框自己換行。 */
+.topic-tools { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .55rem 1.2rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .55rem; margin: 0; padding: 0; list-style: none; flex: 1 1 22rem; }
+.topic-search { flex: 0 1 15rem; min-width: 11rem; }
+/* 搜尋框長得像一顆沒有被按下的標記：同字級、同內距、同圓角比例、同框色。
+   它和標記做的是同一件事（縮小範圍），所以不該長成另一種元件。 */
+.topic-search input {
+  font: inherit; font-size: .82rem; line-height: 1.6; width: 100%;
+  padding: .25rem .8rem; border-radius: 12px;
+  background: var(--card); color: var(--ink);
+  border: 1px solid var(--rule);
+  -webkit-appearance: none; appearance: none;
+  transition: border-color .15s ease;
+}
+.topic-search input::placeholder { color: var(--ink-soft); opacity: 1; }
+.topic-search input:hover { border-color: var(--ink-soft); }
+.topic-search input:focus { outline: none; border-color: var(--teal); }
+.topic-search input:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* Safari 的原生清除鈕在深色字上看得見，留著 —— 它是使用者熟悉的「清空」動作 */
+.topic-search input::-webkit-search-cancel-button { cursor: pointer; }
 .chips button {
   font: inherit; font-size: .82rem; line-height: 1.6;
   padding: .25rem .8rem; cursor: pointer;
@@ -598,6 +623,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      排在後面會把兒牙的 --accent-deep 蓋回 var(--accent)，黃字就糊在卡上了。 */
 [data-spec], .info-card { --accent-deep: var(--accent); --on-fill: #fff; }
 
+/* 「全部」＝不篩選，用中性墨色，刻意不參與那六個彩色。 */
+[data-spec="all"]    { --accent: var(--ink); }  /* #2a2c27　紙 11.15:1・白字 11.15:1 */
 [data-spec="general"],
 [data-spec="perio"]  { --accent: var(--chair); }  /* 診療椅實測　　　　　 H=174　 6.38:1 */
 [data-spec="endo"]   { --accent: var(--moss);  }  /* 色票・苔綠＝Logo　　 H=100　 5.55:1 */
@@ -786,8 +813,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         <small>雲林斗六・永樂街</small>
       </span>
     </a>
+    <!-- 「主題與科別」不放在主選單裡（2026-08-07，兩頁一致）。
+         手機版 390px 上四項會超出 2px，把品牌名擠成兩行；電腦版放得下，
+         但兩頁的主選單要是同一組，不然改一頁就得記得改另一頁。
+         這一節的入口在頁尾的站內導覽，而且它就是 HERO 底下的第一節。 -->
     <nav class="site-nav" aria-label="主選單">
-      <a href="#topics">主題與科別</a>
       <a href="#articles">全部文章</a>
       <a href="#doctors">醫師介紹</a>
       <a href="#clinic">診所資訊</a>
@@ -849,13 +879,22 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
       <div class="sec-head">
         <h2>主題與科別</h2>
       </div>
-      <ul class="chips">
-        <li><button type="button" data-spec="general" aria-pressed="false">一般牙科・定期檢查</button></li>
-        <li><button type="button" data-spec="perio"   aria-pressed="false">牙周治療</button></li>
-        <li><button type="button" data-spec="kids"    aria-pressed="false">兒童牙科</button></li>
-        <li><button type="button" data-spec="ortho"   aria-pressed="false">齒顎矯正</button></li>
-        <li><button type="button" data-spec="prosth"  aria-pressed="false">植牙・假牙重建</button></li>
-      </ul>
+      <div class="topic-tools">
+        <!-- 「全部」不是一個科別，是「不篩選」。所以它用中性的墨色，不是任何一個科別色 ——
+             六個彩色各自代表一科，這一顆若也上色就等於多了一科不存在的科別。 -->
+        <ul class="chips">
+          <li><button type="button" data-spec="all"     aria-pressed="true">全部</button></li>
+          <li><button type="button" data-spec="general" aria-pressed="false">一般牙科・定期檢查</button></li>
+          <li><button type="button" data-spec="perio"   aria-pressed="false">牙周治療</button></li>
+          <li><button type="button" data-spec="kids"    aria-pressed="false">兒童牙科</button></li>
+          <li><button type="button" data-spec="ortho"   aria-pressed="false">齒顎矯正</button></li>
+          <li><button type="button" data-spec="prosth"  aria-pressed="false">植牙・假牙重建</button></li>
+        </ul>
+        <div class="topic-search">
+          <label class="sr-only" for="q">搜尋文章與醫師</label>
+          <input id="q" type="search" placeholder="搜尋文章與醫師" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
       <p class="filter-note" hidden></p>
     </div>
   </section>
@@ -1395,45 +1434,85 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   var note   = document.querySelector('.filter-note');
   var emptyA = document.querySelector('.empty-note[data-for="articles"]');
   var emptyD = document.querySelector('.empty-note[data-for="doctors"]');
-  var active = null;
+  var input  = document.getElementById('q');
+  var active = 'all';   /* 'all' ＝ 不篩選。空字串會被 !spec 誤判，所以用一個明確的字 */
 
-  function apply(spec, label) {
+  /* 每張卡／每位醫師的可搜尋文字先算好收起來。
+     用 textContent 而不是另外維護一份關鍵字：標題、摘要、標籤、專長全都在裡面，
+     漏掉一個欄位的機會是零，而且之後加欄位不必回來改這裡。 */
+  function indexOf(list) {
+    return Array.prototype.map.call(list, function (el) {
+      return { el: el, text: (el.textContent || '').replace(/\s+/g, '').toLowerCase() };
+    });
+  }
+  var cardIdx = indexOf(cards);
+  var docIdx  = indexOf(docs);
+
+  function labelOf(spec) {
+    var found = '';
+    Array.prototype.forEach.call(chips, function (b) {
+      if (b.getAttribute('data-spec') === spec) found = b.textContent.trim();
+    });
+    return found;
+  }
+
+  function apply() {
+    var spec = active === 'all' ? null : active;
+    var q = input ? input.value.replace(/\s+/g, '').toLowerCase() : '';
     var nA = 0, nD = 0;
-    Array.prototype.forEach.call(cards, function (el) {
-      var hit = !spec || el.getAttribute('data-spec') === spec;
-      el.classList.toggle('is-filtered-out', !hit);
-      if (hit) nA++;
-    });
-    Array.prototype.forEach.call(docs, function (el) {
-      var hit = !spec || el.getAttribute('data-spec') === spec;
-      el.classList.toggle('is-filtered-out', !hit);
-      if (hit) nD++;
-    });
 
-    if (emptyA) emptyA.hidden = !(spec && nA === 0);
-    if (emptyD) emptyD.hidden = !(spec && nD === 0);
+    function pass(rec) {
+      var hit = (!spec || rec.el.getAttribute('data-spec') === spec)
+             && (!q || rec.text.indexOf(q) >= 0);
+      rec.el.classList.toggle('is-filtered-out', !hit);
+      return hit;
+    }
+    cardIdx.forEach(function (r) { if (pass(r)) nA++; });
+    docIdx.forEach(function (r) { if (pass(r)) nD++; });
+
+    var filtering = !!spec || !!q;
+    /* 空狀態的句子要跟著條件走：搜尋不到和「這一科還沒有文章」不是同一件事。 */
+    if (emptyA) {
+      emptyA.hidden = !(filtering && nA === 0);
+      emptyA.textContent = q ? '沒有符合的文章。' : '這一科目前還沒有文章。';
+    }
+    if (emptyD) {
+      emptyD.hidden = !(filtering && nD === 0);
+      emptyD.textContent = q ? '沒有符合的醫師。' : '這一科目前沒有駐診醫師。';
+    }
 
     if (!note) return;
-    if (!spec) { note.hidden = true; note.textContent = ''; return; }
+    if (!filtering) { note.hidden = true; note.textContent = ''; return; }
     note.hidden = false;
     /* 「文章」「醫師」是錨點，點下去跳到對應的小節。
-       數量是 0 的時候不給連結 —— 跳過去只會看到「這一科目前還沒有文章」。 */
+       數量是 0 的時候不給連結 —— 跳過去只會看到一句空狀態。 */
     var a = nA ? '<a href="#articles">文章</a>' : '文章';
     var d = nD ? '<a href="#doctors">醫師</a>' : '醫師';
-    note.innerHTML = '<b>' + label + '</b>：' + nA + ' 篇' + a + '、' + nD + ' 位' + d + '。';
+    var head = spec ? '<b>' + labelOf(spec) + '</b>' : '';
+    if (q) head += (head ? ' ＋ ' : '') + '「<b>' + input.value.trim() + '</b>」';
+    note.innerHTML = head + '：' + nA + ' 篇' + a + '、' + nD + ' 位' + d + '。';
   }
 
   Array.prototype.forEach.call(chips, function (btn) {
     btn.addEventListener('click', function () {
       var spec = btn.getAttribute('data-spec');
-      var off = (active === spec);
-      active = off ? null : spec;
+      /* 再點同一顆＝取消，回到「全部」。「全部」自己點下去永遠是「全部」。 */
+      active = (active === spec && spec !== 'all') ? 'all' : spec;
       Array.prototype.forEach.call(chips, function (b) {
-        b.setAttribute('aria-pressed', (!off && b === btn) ? 'true' : 'false');
+        b.setAttribute('aria-pressed', b.getAttribute('data-spec') === active ? 'true' : 'false');
       });
-      apply(active, btn.textContent.trim());
+      apply();
     });
   });
+
+  if (input) {
+    input.addEventListener('input', apply);
+    /* Enter 不送出（沒有 form 也沒有結果頁），但要吃掉它，
+       免得在 iOS 上收鍵盤的同時觸發其他預設行為。 */
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    });
+  }
 })();
 </script>
 
