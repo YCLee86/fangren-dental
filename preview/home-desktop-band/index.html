@@ -146,6 +146,43 @@ html.scrolled .site-head .shell { height: var(--head-h-sm); }
 }
 html.scrolled .site-head::before { opacity: 1; }
 
+/* ==========================================================================
+   頁首在淺色區的深淺三案（2026-08-07）
+   --------------------------------------------------------------------------
+   條子捲過窄帶之後就一直待在紙色 #e2e5e6 上。現在的終點 #2a2523（L* 14）
+   在那裡是一塊很重的黑。三案是三種減輕的方式，前兩案只調深淺、
+   第三案換一個想法。
+
+   注意：三案在**暗夜區的長相完全一樣**（起點都是 #191614 的 .06），
+   差別只出現在條子離開窄帶之後。 */
+
+/* 案一 淺一階：終點 #3a3532，L* 21。仍然是暖色深灰黑，白字 12.4:1。 */
+/* 案二 再淺 ＋ 半透：終點 rgba(74,68,64,.84)，紙色會透一點上來，
+   在紙上合成約 #59534f（L* 35）。條子因此不再是「一塊板」，
+   而是一層蒙在內容上的暗玻璃。白字對合成色 6.9:1。 */
+/* 案三 翻成淺色條：捲到內文區時整條變成卡色 #f4f4f5 的毛玻璃、
+   文字轉墨色、下緣一條 --rule 細線。
+   想法不同 —— 前兩案是「把黑調淡」，這一案是「**深色頁首只屬於暗夜區**」，
+   進了內文就該用內文的顏色。代價是文字要換色，切換點必須抓準：
+   就設在窄帶完全通過條子的那一刻（t 到 1），也就是紙色剛開始出現的時候。 */
+html[data-head="3"].past-band .site-head::before {
+  background: rgba(244, 244, 245, .82);
+  -webkit-backdrop-filter: blur(10px) saturate(1.05);
+  backdrop-filter: blur(10px) saturate(1.05);
+  border-bottom: 1px solid var(--rule);
+}
+html[data-head="3"].past-band .brand-mark,
+html[data-head="3"].past-band .brand-text b { color: var(--ink); }
+html[data-head="3"].past-band .brand-text small { color: var(--ink-soft); }
+html[data-head="3"].past-band .brand-text small::before { border-color: var(--rule); }
+html[data-head="3"].past-band .site-nav a { color: var(--ink); }
+html[data-head="3"].past-band .site-nav a:focus-visible,
+html[data-head="3"].past-band .brand:focus-visible { outline-color: var(--ink); }
+.brand-mark, .brand-text b, .brand-text small, .site-nav a { transition: color .2s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark, .brand-text b, .brand-text small, .site-nav a { transition: none; }
+}
+
 .brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
 .brand-mark { flex: 0 0 38px; display: block; color: rgba(255, 255, 255, .95); }
 html.scrolled .brand-mark { flex-basis: 32px; }
@@ -760,9 +797,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .hero-switch button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
 .hero-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .hero-switch-2 { bottom: 4.1rem; }
+.hero-switch-3 { bottom: 7rem; }
 .hero-caption {
   position: fixed; z-index: 50; right: 1.2rem;
-  bottom: 7rem; margin: 0; max-width: min(92vw, 30rem); text-align: left;
+  bottom: 9.9rem; margin: 0; max-width: min(92vw, 30rem); text-align: left;
   font-size: .76rem; line-height: 1.7; color: rgba(255,255,255,.9);
   background: rgba(25, 22, 20, .82); border-radius: 10px; padding: .5rem .9rem;
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
@@ -1205,13 +1243,25 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      新值取同一族：起點用暗夜 #191614，終點 #2a2523 —— 比柏油 #221e1c
      亮一階（讀得出是另一個面），色相同一邊，所以接得起來。 */
   var A = [25, 22, 20, .06];    // 起點：#191614 暗夜。幾乎不染色，靠模糊撐出玻璃感
-  var B = [42, 37, 35, 1];      // 終點：#2a2523 暖色深灰黑，不透明
+  /* 終點依「頁首深淺」那一組切換條決定。三案在暗夜區完全一樣，
+     差別只出現在條子離開窄帶、待在紙色上之後。 */
+  var ENDS = {
+    '1': [58, 53, 50, 1],       // 淺一階　#3a3532　L* 21
+    '2': [74, 68, 64, .84],     // 再淺＋半透　紙上合成約 #59534f　L* 35
+    '3': [42, 37, 35, 1]        // 維持 #2a2523，但過了窄帶整條翻成淺色（見 CSS）
+  };
+  function endPoint() {
+    return ENDS[root.getAttribute('data-head')] || ENDS['1'];
+  }
 
   function paint() {
     root.classList.toggle('scrolled', scrollY > 4);
     var r = band.getBoundingClientRect();
     var h = head.getBoundingClientRect().height || 1;
     var t = Math.min(1, Math.max(0, (h - r.top) / (r.height || 1)));
+    /* 條子完全離開窄帶＝紙色開始出現，案三就是在這一刻翻成淺色條。 */
+    root.classList.toggle('past-band', t >= 1);
+    var B = endPoint();
     var c = A.map(function (v, i) { return v + (B[i] - v) * t; });
     root.style.setProperty('--glass',
       'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + c[3].toFixed(3) + ')');
@@ -1230,6 +1280,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   }
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll);
+  window.fangrenRepaintHead = paint;   // 切換頁首深淺時要立刻重算
   paint();
 })();
 </script>
@@ -1371,6 +1422,12 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   <button type="button" data-gap="wide" aria-pressed="true">拉開</button>
   <button type="button" data-gap="full" aria-pressed="false">撐滿版心</button>
 </div>
+<div class="hero-switch hero-switch-3" role="group" aria-label="頁首在淺色區的深淺">
+  <b>頁首</b>
+  <button type="button" data-head="1" aria-pressed="true">一 淺一階</button>
+  <button type="button" data-head="2" aria-pressed="false">二 再淺＋半透</button>
+  <button type="button" data-head="3" aria-pressed="false">三 翻成淺色條</button>
+</div>
 <p class="hero-caption" id="hero-caption"></p>
 
 <script>
@@ -1394,7 +1451,12 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   };
   var root = document.documentElement;
   var cap  = document.getElementById('hero-caption');
-  var cur  = { band: 'glasstar', gap: 'wide' };
+  var cur  = { band: 'glasstar', gap: 'wide', head: '1' };
+  var HEAD = {
+    '1': '頁首一 淺一階：終點 #3a3532（L* 21），仍是暖色深灰黑，白字 12.4:1。',
+    '2': '頁首二 再淺＋半透：終點 rgba(74,68,64,.84)，紙色會透一點上來，在紙上合成約 #59534f（L* 35）。條子不再是一塊板，是一層蒙在內容上的暗玻璃。白字 6.9:1。',
+    '3': '頁首三 翻成淺色條：捲進內文區時整條變成卡色 #f4f4f5 的毛玻璃、文字轉墨色、下緣一條細線。想法不同 —— 前兩案是把黑調淡，這一案是「深色頁首只屬於暗夜區」。'
+  };
 
   function paint() {
     root.setAttribute('data-band', cur.band);
@@ -1405,10 +1467,16 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
       b.setAttribute('aria-pressed', b.getAttribute('data-gap') === cur.gap ? 'true' : 'false');
     });
-    if (cap) cap.textContent = BAND[cur.band] + '　／　' + GAP[cur.gap];
+    root.setAttribute('data-head', cur.head);
+    document.querySelectorAll('.hero-switch button[data-head]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-head') === cur.head ? 'true' : 'false');
+    });
+    if (window.fangrenRepaintHead) window.fangrenRepaintHead();
+    if (cap) cap.textContent = BAND[cur.band] + '　／　' + GAP[cur.gap] + '　／　' + HEAD[cur.head];
     try {
       localStorage.setItem('fangren:band', cur.band);
       localStorage.setItem('fangren:gap', cur.gap);
+      localStorage.setItem('fangren:head', cur.head);
     } catch (e) {}
   }
 
@@ -1417,6 +1485,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   });
   document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
     b.addEventListener('click', function () { cur.gap = b.getAttribute('data-gap'); paint(); });
+  });
+  document.querySelectorAll('.hero-switch button[data-head]').forEach(function (b) {
+    b.addEventListener('click', function () { cur.head = b.getAttribute('data-head'); paint(); });
   });
 
   function pick(key, map, fallback) {
@@ -1430,6 +1501,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   }
   cur.band = pick('band', BAND, 'glasstar');
   cur.gap  = pick('gap',  GAP,  'wide');
+  cur.head = pick('head', HEAD, '1');
   paint();
 })();
 </script>
