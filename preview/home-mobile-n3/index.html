@@ -239,11 +239,31 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
     transition: none;
   }
 }
-.site-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 3cqw; }
-/* flex: 0 0 auto ＋ 兩行都 nowrap：品牌是這一列的固定尺寸，永遠不會被選單擠到斷行。
-   沒有這一條的話 .site-nav a 的 nowrap 會讓選單贏、品牌輸 —— 就是真機上看到的斷行。 */
+/* ---- 頁首這一列：讓它「不可能溢出」，而不是算剛好放得下（2026-08-07）--------
+   走過的路：
+     · 品牌可縮 → 選單的 nowrap 贏，「芳仁牙醫診所」斷成兩行。
+     · 品牌鎖死不縮 → 換成整列比視窗寬，選單被推出畫面（頁面因此可以左右拉、會晃）。
+     · 在 .phone 上裁掉 → 晃是不晃了，但右對齊的選單整組被裁掉、看不見。
+
+   **三種結果都是同一件事：這一列在真機上放不下。**
+   我在容器裡量到 375px 下只用了 313（還剩 61），但容器沒有 PingFang TC，
+   量出來的寬度不能拿來保證真機 —— 這一輪之前已經因此判斷錯兩次。
+
+   所以不再賭「算得剛好」，改成把溢出這個可能性拿掉：
+     flex-wrap: wrap  真的放不下時，選單掉到品牌下面一行 —— 會擠一點，但
+                      **看得見、也不會把頁面撐寬**。這是三種壞結果裡唯一可接受的。
+     min-width: 0     讓選單可以被壓到 min-content 以下再換行，不會硬撐出去。
+   ---------------------------------------------------------------------------- */
+.site-header {
+  display: flex; flex-wrap: wrap; align-items: flex-start;
+  justify-content: space-between; gap: 3cqw;
+}
+/* 品牌是這一列的固定尺寸，永遠不被擠到斷行。標題 nowrap；
+   副標**不加** nowrap —— 它有 text-align-last: justify，
+   兩個一起用在不同引擎上的內在寬度算法不一致，而它本來就只有八個字、
+   讓它保有換行的自由不會有任何損失。 */
 .brand { display: flex; align-items: center; gap: 2.6cqw; text-decoration: none; flex: 0 0 auto; }
-.brand-text b, .brand-text small { white-space: nowrap; }
+.brand-text b { white-space: nowrap; }
 .brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
 .brand-mark svg { display: block; width: 100%; height: auto; }
 .brand-text { display: block; }
@@ -259,8 +279,10 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
   line-height: 1.25;
 }
 .site-nav {
-  display: flex; gap: 3.2cqw; line-height: 1.4; padding-top: 1cqh;
+  display: flex; flex-wrap: wrap; justify-content: flex-end;
+  gap: .2rem 3.2cqw; line-height: 1.4; padding-top: 1cqh;
   font-size: clamp(10px, 3.5cqh, 12.5px);
+  min-width: 0;   /* 沒有它，flex 項目不會縮到 min-content 以下，就只能往外撐 */
 }
 .site-nav a { color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap; }
 .hero-poem {
