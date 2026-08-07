@@ -115,9 +115,9 @@ td{color:var(--ink-soft)}
 
 <input class="r" type="radio" name="geo" id="g1">
 <input class="r" type="radio" name="geo" id="g2">
-<input class="r" type="radio" name="geo" id="g3" checked>
+<input class="r" type="radio" name="geo" id="g3">
 <input class="r" type="radio" name="geo" id="g4">
-<input class="r" type="radio" name="geo" id="g5">
+<input class="r" type="radio" name="geo" id="g5" checked>
 
 <div class="bar">
   <div class="picks">
@@ -187,15 +187,16 @@ td{color:var(--ink-soft)}
   <tr class="r2"><td>2</td><td>上移 +0.25</td><td>-0.24</td><td>-0.24</td><td>-0.02</td></tr>
   <tr class="r3"><td>3</td><td>上移 +0.50</td><td>-0.11</td><td>-0.22</td><td>+0.27</td></tr>
   <tr class="r4"><td>4</td><td>上移 +0.75</td><td>-0.11</td><td>+0.12</td><td>+0.67</td></tr>
-  <tr class="r5"><td>5</td><td>上移 +1.00</td><td>+0.14</td><td>+0.34</td><td>+1.10</td></tr>
+  <tr class="r5"><td>5　採用</td><td>上移 +1.00</td><td>+0.14</td><td>+0.34</td><td>+1.10</td></tr>
 </table>
 
 <div class="note">
 <p><b>這些數字怎麼來的：</b>抗鋸齒把邊緣變成一條漸層，眼睛認定的邊界不在覆蓋率一半，
   而在兩端顏色的 L* 中點 —— 白底上落在覆蓋率 <b>0.650</b>、深底上落在 <b>0.332</b>。
   把圖算出來、逐欄取覆蓋率剖面、用這兩個門檻找邊，就得到兩邊各自「看起來」多厚。</p>
-<p><b>目前正式檔用的是 3 號。</b>如果你切到別的覺得更準，跟我說幾號，我改
-  <code>assets/favicon.svg</code>。深色版不會動。</p>
+<p><b>正式檔用的是 5 號（上移 +1.00）。</b>在這個位置淺色的肉會比深色<b>略厚</b>
+  （16px 多 0.14、32px 多 0.34 px）—— 使用者比對後選的分寸，不是算出來最接近 0 的那個。
+  深色版一個點都沒動，維持定稿的 1.05。</p>
 </div>
 
 <div class="foot">
