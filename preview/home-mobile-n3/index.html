@@ -242,19 +242,45 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
 }
 
 /* ---------- 1983／9／6：留在暗夜裡的窄帶（e6 甲案）---------- */
-.stats {
-  display: flex; align-items: center; margin: 0; padding: 0 var(--pad);
-  /* 定高 ＋ 垂直置中：不用上下內距硬算。行距或字級之後有任何調整，
-     內容仍然會自己置中，帶高也不會跟著跑掉。
+/* 窄帶本體。原本背景與定高都掛在 .stats 上，2026-08-07 加了瀏覽數之後
+   帶子裡有兩列，所以背景與高度搬到外層的 .band，.stats 只負責那三格。
 
-     66px → 54px：木線拿掉之後帶子上下顯得空。字墨實測 28.3px 高，
-     原本上下各留 20／17.7px，現在各留約 13／11.7px，
-     還是比字高的一半多，不會擠。要再短就往 50px 走，48px 以下會開始貼字。 */
-  min-height: 54px;
-  list-style: none;
+   66px → 54px → 80px：木線拿掉時縮到 54，現在為了讓瀏覽數有自己的一列再加回去。
+   內容量出來是 14.7（瀏覽數）＋ 9.6（列距）＋ 28.3（1983 那三格字墨）＝ 52.6px，
+   80px 上下各留約 13.7px —— 和 54px 那版的 13／11.7 幾乎一樣，帶子沒有變鬆，
+   只是多了一列。要再矮就往 76px 走，72px 以下瀏覽數會開始貼上緣。
+
+   漸層三個色停留原值不動：上緣 #17191d 仍然貼著照片底緣實測的 L*6.6，
+   下緣 #2d3037 仍然要有明度才接得住紙色。帶子拉高只是讓同一段漸層走得慢一點。 */
+.band {
+  display: flex; flex-direction: column; justify-content: center;
+  gap: .6rem; min-height: 80px; padding: 0 var(--pad);
   background-color: var(--band-bg);
   background-image: linear-gradient(180deg,
     var(--band-top) 0%, var(--band-bg) 55%, var(--band-bot) 100%);
+}
+
+/* 瀏覽數那一列。數字沿用下面三格的宋體，單位「次瀏覽」沿用標籤的黑體與灰度 ——
+   它是同一個家族裡的第四個數字，不是另外一個元件。
+
+   字級刻意比 1983 那三格小一階（.875 對 1.025）：1983／9／6 是診所的事實，
+   瀏覽數是環境音，不該搶。它會被看見是因為它在動，不是因為它比較大。 */
+.band-views { margin: 0; text-align: center; line-height: 1.05; }
+.band-views .views-num {
+  display: inline-block; font-size: .875rem; color: rgba(255, 255, 255, .95);
+  font-family: "Noto Serif TC", "Source Han Serif TC", serif;
+  /* tabular-nums 讓每個數字等寬，數字在跑的時候不會左右抽動；
+     但位數變多（999 → 1,000）整體還是會變寬，所以 JS 會先量好最終寬度鎖住。 */
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+.band-views small {
+  font-size: .625rem; color: rgba(255, 255, 255, .65);
+  font-weight: 400; letter-spacing: 0; margin-left: .3em;
+}
+
+.stats {
+  display: flex; align-items: center; margin: 0; padding: 0;
+  list-style: none;
 }
 /* 三格等寬、各自置中：原本是靠左排、第一格不縮排，右邊會空出一大塊，
    整條看起來偏左。改成每格佔三分之一、文字置中。
@@ -626,11 +652,23 @@ section + section { border-top: 1px solid var(--rule); }
     </figure>
   </div>
 
-    <ul class="stats">
-      <li><b>1983<small>年</small></b><span>開業至今</span></li>
-      <li><b>9<small>位</small></b><span>醫師駐診</span></li>
-      <li><b>6<small>個</small></b><span>部定專科</span></li>
-    </ul>
+    <div class="band">
+      <!-- 瀏覽數。data-views="home" 是給正式站的 assets/counter.js 用的掛勾 ——
+           上線之後由它從 D1 取真實數字，再呼叫 window.fangrenCountUp(n) 跑同一段動畫。
+           **這一頁是靜態快照，沒有 Worker 可以問**，所以 data-count 先放示範數字。
+           數字在跑的時候會一直變，讓螢幕閱讀器跟著念沒有意義，
+           所以動的那一段整個 aria-hidden，另外放一句 .sr-only 講最終結果。 -->
+      <p class="band-views" data-views="home">
+        <span class="sr-only">累計 8,642 次瀏覽</span>
+        <span class="views-num" aria-hidden="true" data-count="8642">0</span><small aria-hidden="true">次瀏覽</small>
+      </p>
+
+      <ul class="stats">
+        <li><b>1983<small>年</small></b><span>開業至今</span></li>
+        <li><b>9<small>位</small></b><span>醫師駐診</span></li>
+        <li><b>6<small>個</small></b><span>部定專科</span></li>
+      </ul>
+    </div>
   </div>
 
     <section class="wrap">
@@ -933,7 +971,8 @@ section + section { border-top: 1px solid var(--rule); }
   <p><b>為什麼三案都不帶紫：</b>去量了你給的 <code>看板_20260226</code>——診所現在用的 LINE 圖文選單，底色實測是 <b><code>#e8e8e8</code>，彩度 0%、R−B 0，完全中性</b>。圖示的深綠松量到 <code>#234b48</code>，就是官方色票的 <code>#214D48</code>。你們對外的介面早就給了答案：中性灰＋官方色票當點綴。</p>
   <p><b>還有一件事比色相更關鍵：</b>你說「③ 單獨看不覺得灰」——因為 ③ 的紙 <code>#ecede7</code> 和卡 <code>#f6f7f2</code> 只差 <b>1.094:1</b>，兩塊都是暖的，眼睛沒有參照物就讀成白。看板的底和按鈕白差 <b>1.154:1</b>。所以三案的卡全部往純白推，階差拉到 1.15:1 —— 灰是比出來的，不是調出來的。</p>
   <p><b>對比度</b>（重算過）：墨 <code>#2a2c27</code> 11.15:1、次要 <code>#5c5f57</code> 5.14:1、深綠松 <code>#214D48</code> 7.47:1，內文全過 AA。要注意 苔綠 <code>#5D6D55</code> 4.38:1，只能當大字。</p>
-  <p><b>不碰的東西：</b>HERO（C72）、1983／9／6 窄帶、所有字級、墨色 <code>#2a2c27</code>，一個值都沒動。</p>
+  <p><b>不碰的東西：</b>HERO（C72）、所有字級、墨色 <code>#2a2c27</code>，一個值都沒動。</p>
+  <p><b>窄帶 2026-08-07 加了瀏覽數：</b>高 54 → 80px，多出來的全給新的那一列（上下留白維持 13.7px，沒有變鬆）。漸層三個色停 <code>#17191d</code> / <code>#282b31</code> / <code>#2d3037</code> 原值不動。數字捲進畫面才往上數，1.4 秒 easeOutQuart，減少動態時直接寫最終值。<b>8,642 是示範數字</b>，上線後由 <code>counter.js</code> 從 D1 取真實值。</p>
   <p>比一比：<a href="https://fangren.net/preview/home-mobile-n1/">N1 看板灰 #e8e8e8</a><a href="https://fangren.net/preview/home-mobile-n2/">N2 清水模灰 #dedede</a></p>
   <p>先前的：<a href="https://fangren.net/preview/home-mobile-g1/">G1 灰紫（你說有點紫）</a><a href="https://fangren.net/preview/home-mobile/">③ 品牌灰綠 #ecede7（有木線）</a><a href="https://github.com/YCLee86/fangren-dental/blob/main/PALETTE.md">PALETTE.md</a></p>
 </div>
@@ -947,7 +986,9 @@ section + section { border-top: 1px solid var(--rule); }
 (function () {
   var root = document.documentElement;
   var head = document.querySelector('.sticky-head .site-header');
-  var band = document.querySelector('.stats');
+  /* 量的是整條窄帶（含瀏覽數那一列），不是裡面的 .stats ——
+     漸變區間要涵蓋條子壓在深色上的**全部**時間，帶子加高了就得跟著加長。 */
+  var band = document.querySelector('.band') || document.querySelector('.stats');
   if (!head || !band) return;
   root.classList.add('glass');
 
@@ -989,6 +1030,82 @@ section + section { border-top: 1px solid var(--rule); }
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll);
   paint();
+})();
+</script>
+
+<script>
+/* 窄帶裡的瀏覽數：往上數到最終值。
+   ---------------------------------------------------------------------------
+   1. **捲進畫面才開始跑，而且只跑一次。** 數字在畫面外跑完等於沒發生過 ——
+      窄帶就在 HERO 底下，一開站多半已經看得到，所以多數情況是進站就跑。
+   2. **先量好最終寬度再歸零。** tabular-nums 保證每個數字等寬，但 8,642 比 0
+      寬得多，不鎖住的話整列會在跑的時候一路往外推，旁邊的「次瀏覽」跟著漂。
+   3. **easeOutQuart**：一開始衝得很快，最後幾百在慢慢收。均速跑起來像進度條，
+      沒有「跳動」的手感；要的是那個先衝再停的落差。
+   4. 使用者把系統設定成減少動態時直接寫最終值，不跑動畫。
+   5. 沒有 JS 的時候數字停在 0 —— 這是這一頁唯一會壞掉的地方，
+      正式站由 counter.js 接手時要一併處理（無 JS 就整個隱藏，跟現在的行為一致）。
+
+   上線時的接法：counter.js 從 D1 取回真實數字之後呼叫
+   window.fangrenCountUp(n)，動畫、寬度、無障礙文字都會一起更新。 */
+(function () {
+  var el = document.querySelector('.views-num');
+  var sr = document.querySelector('.band-views .sr-only');
+  if (!el) return;
+
+  var raf = window.requestAnimationFrame;
+  function fmt(n) { return n.toLocaleString('zh-TW'); }
+
+  function lockWidth(n) {
+    el.style.minWidth = '';
+    var keep = el.textContent;
+    el.textContent = fmt(n);
+    el.style.minWidth = el.getBoundingClientRect().width + 'px';
+    el.textContent = keep;
+  }
+
+  function run(target) {
+    lockWidth(target);
+    if (sr) sr.textContent = '累計 ' + fmt(target) + ' 次瀏覽';
+
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !raf) { el.textContent = fmt(target); return; }
+
+    var DUR = 1400, t0 = null;
+    el.textContent = fmt(0);
+    raf(function step(t) {
+      if (t0 === null) t0 = t;
+      var p = Math.min(1, (t - t0) / DUR);
+      var e = 1 - Math.pow(1 - p, 4);          // easeOutQuart
+      el.textContent = fmt(Math.round(target * e));
+      if (p < 1) raf(step);
+      else el.textContent = fmt(target);       // 收在正確值上，不靠 round 湊
+    });
+  }
+
+  var done = false;
+  function once(target) {
+    if (done) return;
+    done = true;
+    run(target);
+  }
+
+  /* 正式站的掛勾：真實數字回來得比捲動晚也沒關係，會直接以真實值重跑一次。 */
+  window.fangrenCountUp = function (n) {
+    done = true;
+    el.setAttribute('data-count', n);
+    run(n);
+  };
+
+  var demo = parseInt(el.getAttribute('data-count'), 10) || 0;
+
+  if (!('IntersectionObserver' in window)) { once(demo); return; }
+  var io = new IntersectionObserver(function (entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) { io.disconnect(); once(demo); return; }
+    }
+  }, { threshold: .6 });
+  io.observe(el);
 })();
 </script>
 
