@@ -725,6 +725,26 @@ html[data-kids="4"] [data-spec="kids"] { --accent: #d38000; --accent-deep: var(-
    -------------------------------------------------------------------------- */
 html[data-kids="8"] [data-spec="kids"] { --accent: #c8a464; --accent-deep: #8f6a15; --on-fill: #fff; }
 
+/* ---- 2026-08-07 第十一輪：1 與沙金之間補兩階 ------------------------------
+   在 Lab 空間取 1→04 沙金的三等分點。**這一段和第九輪那條梯子不一樣：
+   那條只在動亮度（彩度是各亮度的上限，被動跟著跑），這一段是彩度自己在掉**
+   —— 67 → 58 → 48 → 38，色相同時往橙金那頭走 67°→82°。
+
+       1        #c06f00   L* 54.6・C* 67.2・h 67.3   白字 3.81:1
+       1a       #c28229   L* 59.5・C* 57.6・h 72.3   白字 3.22:1
+       1b       #c59347   L* 64.4・C* 48.0・h 77.3   白字 2.75:1
+       04 沙金  #c8a464   L* 69.3・C* 38.4・h 82.3   白字 2.35:1
+
+   四個底的亮度只差 15，但彩度差了將近一倍 —— **這一排真正在比的是
+   「要多飽和」，不是「要多亮」。** 越往下越像金屬金，越往上越像果汁黃。
+
+   深階字仍然各自收在 L* 47（這一族當字的天花板），
+   彩度跟著各自的底走，所以四案的線框態這次**不完全相同**：
+   1 的框最艷，沙金的框最收。差別很小，但不是零。
+   -------------------------------------------------------------------------- */
+html[data-kids="9"]  [data-spec="kids"] { --accent: #c28229; --accent-deep: #9e6301; --on-fill: #fff; }
+html[data-kids="10"] [data-spec="kids"] { --accent: #c59347; --accent-deep: #93681b; --on-fill: #fff; }
+
 /* 第八輪為了看亮黃，把兒牙的 chip 強制成「永遠填色」。
    使用者：「主題與科別的標籤記得要做回去，沒點的時候白底，點下去套色。」
    —— 那條強制規則已經整段移除，兒牙回到和其他四科完全相同的元件合約：
@@ -1598,8 +1618,10 @@ html[data-kids="8"] [data-spec="kids"] { --accent: #c8a464; --accent-deep: #8f6a
 <div class="hero-switch hero-switch-3" role="group" aria-label="兒牙的顏色">
   <b>兒牙</b>
   <button type="button" data-kids="0" aria-pressed="true">現在</button>
-  <button type="button" data-kids="3" aria-pressed="false">1</button>
-  <button type="button" data-kids="8" aria-pressed="false">04 沙金</button>
+  <button type="button" data-kids="3"  aria-pressed="false">1</button>
+  <button type="button" data-kids="9"  aria-pressed="false">1a</button>
+  <button type="button" data-kids="10" aria-pressed="false">1b</button>
+  <button type="button" data-kids="8"  aria-pressed="false">04 沙金</button>
 </div>
 <p class="hero-caption" id="hero-caption"></p>
 
@@ -1630,9 +1652,11 @@ html[data-kids="8"] [data-spec="kids"] { --accent: #c8a464; --accent-deep: #8f6a
      沒按下去的線框態五案完全相同 —— 這一族當字的可讀天花板就是 A 的亮度。 */
   var KIDS = {
     '0': '兒牙 現在　#8d5e3a　白字 5.53:1 ✓',
-    '3': '1　#c06f00　L* 54.6・C* 67.2　白字 3.81:1 ✗（AA 小字需 4.5）',
-    '8': '04 沙金　#c8a464　L* 69.3・C* 38.4　白字 2.35:1 ✗ —— 彩度只有 1 的一半、亮度卻高 15，' +
-         '所以讀起來是金屬金而不是果汁黃。色值是照 IG 截圖目視估的，要精準請給我 hex。',
+    '3':  '1　#c06f00　L* 54.6・C* 67.2　白字 3.81:1 ✗（AA 小字需 4.5）　最艷的一端。',
+    '9':  '1a　#c28229　L* 59.5・C* 57.6　白字 3.22:1 ✗　彩度掉了 10，開始出現金屬感。',
+    '10': '1b　#c59347　L* 64.4・C* 48.0　白字 2.75:1 ✗　四案的正中間。',
+    '8':  '04 沙金　#c8a464　L* 69.3・C* 38.4　白字 2.35:1 ✗ —— 彩度只有 1 的一半、亮度卻高 15，' +
+          '所以讀起來是金屬金而不是果汁黃。色值是照 IG 截圖目視估的，要精準請給我 hex。',
     'x': ''
   };
 
