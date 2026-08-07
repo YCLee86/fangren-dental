@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>電腦版首頁提案 — 芳仁牙醫診所</title>
+<title>電腦版 HERO 裁切四案 — 芳仁牙醫診所</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 </head>
 <body>
@@ -200,6 +200,47 @@ html.scrolled .brand-text small { font-size: .74rem; }
   width: 100%; height: 100%; max-width: none;
   object-fit: cover; object-position: 50% 62%;
 }
+/* ==========================================================================
+   HERO 裁切四案（2026-08-07）
+   --------------------------------------------------------------------------
+   問題：cover 是「把照片放大到填滿框」，所以**螢幕越寬，照片被放得越大、
+   上下切得越多**。1440px 寬時切掉 26%，1900px 寬時切掉 44% —— 屋頂就是這樣不見的。
+   1900 那個裁切量不是設定錯，是 cover 的本質。
+
+   四案處理的是同一件事的四種取捨：要嘛不裁（照片決定高度或寬度），
+   要嘛選一邊裁（保屋頂或保路面）。
+   ========================================================================== */
+
+/* 現在這一版：78svh ＋ 錨點 62%。留著當對照組。 */
+html[data-hero="now"] .hero-photo { height: clamp(460px, 78svh, 780px); }
+html[data-hero="now"] .hero-photo img { object-position: 50% 62%; }
+
+/* A 完整不裁 —— 框的比例＝照片的比例，所以一刀都沒切。
+   代價是高度由寬度決定：1440 寬 → 952px 高，1900 寬 → 1256px 高，
+   窄帶一定在第一屏之外。這是四案裡唯一「什麼都沒失去」的，
+   失去的是第一屏還有沒有別的東西。 */
+html[data-hero="a"] .hero-photo { height: auto; aspect-ratio: 1600 / 1058; }
+html[data-hero="a"] .hero-photo img { object-position: 50% 50%; }
+
+/* B 保屋頂 —— 維持撐滿寬度，但把框加高到 88svh 並把錨點從 62% 提到 34%。
+   錨點是「照片的哪一條水平線對齊框的中心」，往上移＝多留天空與屋頂，
+   切掉的改成最下面那條路。收尾句因此會落在建築下緣而不是柏油路上，
+   它自己那塊模糊的深色底照樣撐得住。 */
+html[data-hero="b"] .hero-photo { height: clamp(460px, 88svh, 900px); }
+html[data-hero="b"] .hero-photo img { object-position: 50% 34%; }
+
+/* C 置中不裁，兩側夜色 —— 換一個方向想：不要讓照片跟著螢幕變寬，
+   改成**以高度為準**等比縮好之後置中，左右空出來的地方補 #17191d（漸層的頂色，
+   也就是照片自己最暗那一條的顏色）。
+   於是任何螢幕寬度下裁切量都是零，屋頂和路面同時都在，高度也還控制得住。
+   超寬螢幕上兩側的暗底會變寬，看起來像夜色從照片延伸出去。 */
+html[data-hero="c"] .hero-photo {
+  height: clamp(460px, 78svh, 780px);
+  max-width: calc(clamp(460px, 78svh, 780px) * 1600 / 1058);
+  margin-inline: auto;
+}
+html[data-hero="c"] .hero-photo img { object-position: 50% 50%; }
+
 /* 詩與收尾句疊在照片上。整層 pointer-events: none，
    免得這一大塊蓋住底下（現在底下沒有東西，但頁首是 sticky 的，留著比較安全）。 */
 .hero-copy {
@@ -518,6 +559,40 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .brand-text small { padding-left: 0; }
   .brand-text small::before { display: none; }
 }
+
+/* ---- 提案用的切換條。不是設計的一部分，定案之後整段連同 data-hero 一起刪掉。 ---- */
+.hero-switch {
+  position: fixed; z-index: 50; left: 50%; transform: translateX(-50%);
+  bottom: 1.2rem; display: flex; gap: .4rem; align-items: center;
+  background: rgba(25, 22, 20, .88); border-radius: 999px;
+  padding: .45rem .5rem;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(25, 22, 20, .35);
+}
+.hero-switch b {
+  font-size: .7rem; font-weight: 400; letter-spacing: .08em;
+  color: rgba(255,255,255,.55); padding-inline: .6rem .3rem;
+}
+.hero-switch button {
+  font: inherit; font-size: .78rem; line-height: 1.5;
+  padding: .28rem .85rem; border-radius: 999px; cursor: pointer;
+  background: transparent; color: rgba(255,255,255,.72);
+  border: 1px solid rgba(255,255,255,.28);
+  -webkit-appearance: none; appearance: none;
+}
+.hero-switch button:hover { color: #fff; border-color: rgba(255,255,255,.5); }
+.hero-switch button[aria-pressed="true"] {
+  background: #fff; color: #191614; border-color: #fff;
+}
+.hero-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.hero-caption {
+  position: fixed; z-index: 50; left: 50%; transform: translateX(-50%);
+  bottom: 4.1rem; margin: 0; max-width: min(92vw, 46rem); text-align: center;
+  font-size: .76rem; line-height: 1.7; color: rgba(255,255,255,.9);
+  background: rgba(25, 22, 20, .82); border-radius: 10px; padding: .5rem .9rem;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+@media (max-width: 720px) { .hero-switch, .hero-caption { display: none; } }
 </style>
 
 
@@ -855,7 +930,13 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 <div class="demo-note">
   <div class="shell">
-    <h2>電腦版首頁提案（2026-08-07）</h2>
+    <h2>電腦版 HERO 裁切四案（2026-08-07）</h2>
+    <p><b>畫面正下方有切換條，四案即時切換，選擇會記在瀏覽器裡。</b>
+       這一頁只有 HERO 的裁切方式不同，底下的內容與
+       <a href="https://fangren.net/preview/home-desktop/">電腦版首頁提案</a>完全相同。</p>
+    <p><b>問題出在 <code>object-fit: cover</code> 的本質：</b>它是「把照片放大到填滿框」，
+       所以<b>螢幕越寬、照片被放得越大、上下切得越多</b>。1440px 寬時切掉 26%，
+       1900px 寬時切掉 44% —— 屋頂就是這樣不見的。這不是設定錯，是 cover 一定會這樣。</p>
     <p><b>這是把定稿的手機版套到寬螢幕，不是新設計，也不會取代現有的 fangren.net。</b>
        顏色一個都沒有新調 —— 暗夜、窄帶漸層、N3 藍灰紙 <code>#e2e5e6</code>、六個科別色全部從
        <a href="https://fangren.net/preview/home-mobile-n3/">home-mobile-n3</a> 原樣搬過來，依據仍是
@@ -1043,5 +1124,46 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 })();
 </script>
 
+<div class="hero-switch" role="group" aria-label="HERO 裁切方式">
+  <b>HERO</b>
+  <button type="button" data-mode="now" aria-pressed="true">現在</button>
+  <button type="button" data-mode="a"   aria-pressed="false">A 完整</button>
+  <button type="button" data-mode="b"   aria-pressed="false">B 保屋頂</button>
+  <button type="button" data-mode="c"   aria-pressed="false">C 置中</button>
+</div>
+<p class="hero-caption" id="hero-caption"></p>
+
+<script>
+/* 切換條。只改 <html> 上的 data-hero，其餘全部由 CSS 決定 ——
+   所以四案之間沒有任何 JS 差異，看到的就是純 CSS 的結果。 */
+(function () {
+  var TEXT = {
+    now: '現在這一版：撐滿寬度、框高 78svh、錨點 62%。螢幕越寬切得越多 —— 1900px 上切掉 44%，屋頂就是這樣不見的。',
+    a:   'A 完整不裁：框的比例＝照片的比例，一刀都沒切。代價是高度由寬度決定（1440 寬 → 952px 高），窄帶一定在第一屏之外。',
+    b:   'B 保屋頂：一樣撐滿寬度，但框加高到 88svh、錨點提到 34%。屋頂與天空完整，改成切掉最下面那條路，收尾句落在建築下緣。',
+    c:   'C 置中不裁：照片以高度為準等比縮好置中，兩側補 #17191d（照片自己最暗那條的顏色）。任何螢幕寬度下裁切量都是零，屋頂與路面同時都在。'
+  };
+  var root = document.documentElement;
+  var btns = document.querySelectorAll('.hero-switch button');
+  var cap  = document.getElementById('hero-caption');
+  function set(mode) {
+    root.setAttribute('data-hero', mode);
+    Array.prototype.forEach.call(btns, function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-mode') === mode ? 'true' : 'false');
+    });
+    if (cap) cap.textContent = TEXT[mode] || '';
+    try { localStorage.setItem('fangren:hero', mode); } catch (e) {}
+  }
+  Array.prototype.forEach.call(btns, function (b) {
+    b.addEventListener('click', function () { set(b.getAttribute('data-mode')); });
+  });
+  /* 網址帶 ?hero=a 可以直接開到某一案，方便把某一案單獨傳給別人看。
+     沒帶就用上次選的，都沒有就是「現在」。 */
+  var q = (location.search.match(/[?&]hero=([a-z]+)/) || [])[1];
+  var saved = null;
+  try { saved = localStorage.getItem('fangren:hero'); } catch (e) {}
+  set(TEXT[q] ? q : (TEXT[saved] ? saved : 'now'));
+})();
+</script>
 </body>
 </html>
