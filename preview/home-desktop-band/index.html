@@ -1,0 +1,1307 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>電腦版 整屏 ＋ 壓在下緣的窄帶 — 芳仁牙醫診所</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<style>:root { color-scheme: light; }</style>
+<style>
+/* ==========================================================================
+   電腦版首頁提案（2026-08-07）
+
+   這一頁是把定稿的手機版 preview/home-mobile-n3/ 套到寬螢幕上，**不是新設計**。
+   規則：
+
+     · 顏色一個都沒有新調。下面的 :root 是從 home-mobile-n3 原樣搬過來的，
+       包含暗夜、窄帶漸層、N3 藍灰紙、六個科別色。依據仍然是 PALETTE.md。
+     · 元件（卡、藥丸、chips、標籤、資訊卡）的邊框、圓角、填色規則完全不動 ——
+       只有版面從一欄變成多欄。手機版量出來的圓角比例 0.384 在這裡照用，
+       因為這些小元件的字級沒有變。
+     · 只有兩種東西按螢幕放大：**版心的欄數**，以及**標題級的字**（h2、卡片標題）。
+       內文、標籤、藥丸維持手機版的字級 —— 它們在 15 吋螢幕上本來就夠讀，
+       放大只會讓頁面看起來像放大鏡。
+
+   電腦版真正重新想過的只有三處，各自的理由寫在對應段落：
+     1. HERO 照片要裁（手機版是整張完整落地，寬螢幕上整張會有 950px 高）
+     2. 窄帶從「兩列置中」改成「一列左右分」（寬度夠了就不該再疊）
+     3. 頁首從兩行品牌改成一行橫排
+   ========================================================================== */
+:root {
+  --pad: clamp(1.25rem, 3vw, 2.5rem);
+  --shell: 1160px;                       /* 版心。三欄卡片各約 365px */
+
+  /* ↓↓↓ 以下整段與 preview/home-mobile-n3/ 完全相同，一個值都沒有改 ↓↓↓ */
+
+  /* PALETTE.md 第四節 A：暗夜 */
+  --night: #191614;
+  --night-line: #38342f;
+  --night-text: #e3e1e0;
+  --night-soft: #aaa49e;
+  --night-faint: #969089;
+  /* 窄帶「夜的漸層」：色相取自照片本身（夜空 #1b2635 × 柏油 #221e1c，
+     5:5 後彩度 ×0.72 → H=220・S=10%）。 */
+  --band-top: #17191d;      /* L* 8.5，貼著照片底緣 */
+  --band-bg:  #282b31;      /* L* 17.5，漸層中段 */
+  --band-bot: #2d3037;      /* L* 19.8，下緣，要有明度才接得住紙色 */
+
+  /* 內文區：N3 藍灰調。H=203・L=89.4%・R−B −4 */
+  --paper: #e2e5e6;
+  --card: #f4f4f5;
+  --rule: #cdd0d2;
+  --note: #f9f9fa;
+  --ink: #2a2c27;
+  --ink-soft: #5c5f57;
+
+  /* 官方色票原值（PALETTE.md 第一節） */
+  --teal:  #214D48;
+  --blue:  #3C596B;
+  --taupe: #7D5A58;
+  --moss:  #5D6D55;
+  --brick: #AF4C52;
+
+  /* 診所實物實測色（PALETTE.md 第一、二節） */
+  --chair: #4f6361;
+  --stool: #8d5e3a;
+  --tile:  #252d4a;
+
+  /* 頁首高度。錨點的 scroll-margin 與 HERO 的上內距都讀它，改一個地方就好。 */
+  --band-h: 84px;      /* 窄帶高度。案二要拿它從一個螢幕高裡扣掉 */
+  --head-h: 76px;
+  --head-h-sm: 60px;        /* 捲動收合後 */
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px; line-height: 1.85; letter-spacing: .01em;
+  overflow-x: hidden;
+}
+body, p, li, h1, h2, h3, h4, dd { overflow-wrap: break-word; word-break: break-word; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--teal); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 60;
+  background: var(--card); color: var(--teal); padding: .6rem 1rem; }
+.skip-link:focus { left: .5rem; top: .5rem; }
+
+/* 版心。全站只有這一個容器，所以 HERO 裡的詩、窄帶的數字、卡片格線
+   全部對齊同一條左緣 —— 寬螢幕上這條線就是整頁的骨架。 */
+.shell { max-width: var(--shell); margin-inline: auto; padding-inline: var(--pad); }
+
+/* ==========================================================================
+   頁首：橫排一行，壓在 HERO 上，捲動後變成毛玻璃
+   --------------------------------------------------------------------------
+   手機版是「標誌 ＋ 兩行品牌字」豎著疊，因為 390px 放不下別的。
+   寬螢幕上那個排法會在右邊留一大塊空白，所以改成一行：
+   左邊標誌與品牌（副標移到品牌名右邊，用一條細線隔開），右邊導覽。
+
+   毛玻璃的做法、顏色、漸變區間都和手機版相同 —— 見下方 JS 的註解。
+   ========================================================================== */
+/* fixed 不是 sticky。sticky 的頁首會**佔掉自己那一列的版面**，
+   於是 HERO 從第 76px 才開始，頁首自己站在紙色 #e2e5e6 上 ——
+   而它的字是白的（要疊在照片上），結果就是整排字看不見。
+   改成 fixed 之後它脫離文件流、浮在照片上，HERO 從 y=0 開始，
+   這也是手機版用「高度 0 的 sticky 外框」達成的同一件事。 */
+.site-head {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+  transition: background-color .2s ease, padding .2s ease;
+}
+.site-head .shell {
+  display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+  height: var(--head-h);
+  transition: height .2s ease;
+}
+html.scrolled .site-head .shell { height: var(--head-h-sm); }
+
+/* 玻璃放在 ::before 而不是頁首自己身上，才能用 opacity 平滑淡入 ——
+   backdrop-filter 本身沒辦法漸進開關。 */
+.site-head::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: var(--glass, transparent);
+  -webkit-backdrop-filter: blur(6px) saturate(1.08);
+  backdrop-filter: blur(6px) saturate(1.08);
+  opacity: 0; transition: opacity .22s ease;
+}
+html.scrolled .site-head::before { opacity: 1; }
+
+.brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+.brand-mark { flex: 0 0 38px; display: block; color: rgba(255, 255, 255, .95); }
+html.scrolled .brand-mark { flex-basis: 32px; }
+.brand-mark, html.scrolled .brand-mark { transition: flex-basis .2s ease; }
+.brand-mark svg { display: block; width: 100%; height: auto; }
+/* 品牌名與地名同一行。中間那條線是 --night-faint 混窄帶色，
+   和窄帶裡三格之間的分隔線同一個做法，不是另外挑的灰。 */
+.brand-text { display: flex; align-items: baseline; gap: .7rem; }
+.brand-text b {
+  font-weight: 700; font-size: 1.06rem; line-height: 1.3; letter-spacing: .01em;
+  color: rgba(255, 255, 255, .95);
+}
+.brand-text small {
+  position: relative; padding-left: .7rem;
+  font-size: .78rem; line-height: 1.3; letter-spacing: .04em;
+  color: rgba(255, 255, 255, .65);
+}
+.brand-text small::before {
+  content: ''; position: absolute; left: 0; top: .1em; bottom: .1em;
+  border-left: 1px solid rgba(255, 255, 255, .28);
+}
+html.scrolled .brand-text b { font-size: .96rem; }
+html.scrolled .brand-text small { font-size: .74rem; }
+.brand-text b, .brand-text small { transition: font-size .2s ease; }
+
+.site-nav { display: flex; gap: 1.9rem; font-size: .86rem; }
+.site-nav a {
+  position: relative; color: rgba(255, 255, 255, .88);
+  text-decoration: none; white-space: nowrap; padding-block: .35rem;
+}
+/* 底線從中間長出來。這是全頁唯一的 hover 動效 —— 手機版沒有 hover 這件事，
+   所以它不算違背手機版，是電腦版本來就要補的狀態。 */
+.site-nav a::after {
+  content: ''; position: absolute; left: 50%; right: 50%; bottom: 0;
+  border-bottom: 1px solid currentColor; opacity: 0;
+  transition: left .2s ease, right .2s ease, opacity .2s ease;
+}
+.site-nav a:hover::after, .site-nav a:focus-visible::after { left: 0; right: 0; opacity: .8; }
+.site-nav a:focus-visible, .brand:focus-visible { outline: 2px solid rgba(255,255,255,.8); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .site-head, .site-head .shell, .site-head::before,
+  .brand-mark, .brand-text b, .brand-text small, .site-nav a::after { transition: none; }
+}
+
+/* ==========================================================================
+   HERO
+   --------------------------------------------------------------------------
+   手機版讓整張照片完整落地（框高＝圖高），因為 390px 寬時圖只有 280px 高。
+   寬螢幕不能照做：1440px 寬時整張是 952px 高，比多數筆電的可視高度還高，
+   窄帶和文章會整個被推到第二屏。所以電腦版**要裁**，問題只在裁哪裡。
+
+   照片的構圖決定了答案：天空在上方與左側、亮著燈的門面在下方中央、
+   柏油路在最底那一條。詩要躺在天空上，收尾句要躺在路面上 —— 上下兩端都不能丟。
+   所以取 78svh（上限 780px）＋ object-position 50% 62%：
+   1440×900 的視窗裡看到的是原圖的 y 16%~90%，天空留了 24 個百分點給詩，
+   門面與路口都還在。裁掉的是最上緣的空天空和最下緣的空路面，兩塊都沒有內容。
+
+   height 用 svh 不用 vh：手機瀏覽器的網址列會讓 vh 在捲動時跳動。
+   這一頁雖然是給電腦看的，但寬螢幕平板橫放也會落在這個版型。
+   ========================================================================== */
+.hero { position: relative; background: var(--band-top); overflow: hidden; }
+
+/* 橫幅滿版：照片撐滿整個畫面寬度，**下緣貼齊、一律不切**，
+   要切就從天空那一頭切。做法只有一行：object-position 的縱向值給 100%。
+
+     object-position: 50% 100%   ←「照片的底邊對齊框的底邊」
+
+   為什麼這一條特別值得做，不只是構圖偏好：
+   窄帶的漸層頂色 #17191d（L* 8.5）是 2026-08-06 照著**照片最底那一列的實測值**
+   #161413（L* 6.6）調出來的，就是為了讓照片與窄帶之間看不出接縫。
+   但那個校準只有在「照片最底那一列真的有顯示出來」時才成立 ——
+   先前每一版都從中間裁，露在窄帶上方的其實是照片的中段（比較亮），
+   接縫的校準等於失效。貼齊下緣之後那條接縫才回到當初量的狀態。
+
+   代價是天空會被吃掉，而且螢幕越寬吃越多（cover 的本質）：
+   1440px 寬時照片有 952px 高，露出 620px ＝ 切掉上面 35%；
+   1900px 寬時照片 1256px 高，露出 620px ＝ 切掉上面 51%。
+   屋頂在寬螢幕上會不見 —— 這是這個做法明講的取捨。
+
+   詩還是待在左上角，而且仍然躺在天空上：這張照片的**左半邊天空一路延伸到
+   y 72%**（右半邊才被建築佔滿），所以就算從中間往下取，左上角依然是天空。
+   高度 66svh／上限 640px 就是照這個算的 —— 再矮下去詩就會壓到左邊的矮房子。 */
+/* ---- 兩案的差別只有 .hero-photo 的高度 ----------------------------------
+   案一 整屏：照片高＝一整個螢幕。窄帶要捲一下才看得到。
+   案二 抵下緣：照片高＝一個螢幕扣掉窄帶。窄帶的下緣正好壓在螢幕底線上，
+        剩下的空間全給照片 —— 開站的第一眼就是「照片 ＋ 一條窄帶」剛好一屏，
+        底下什麼都不露，但也不用捲就知道有 1983／9／6。
+
+   兩案的裁切方式相同，都是 object-position: 50% 100%（下緣貼齊、要切切天空）。
+   用 svh 不用 vh：手機與平板的網址列會讓 vh 在捲動時跳動，svh 是收起網址列前的
+   小尺寸，不會跳。 */
+/* 照片固定整屏。窄帶不再接在照片下面，而是**壓在整屏的下緣**（見下一段），
+   所以照片拿回完整的一個螢幕高。 */
+.hero-photo { margin: 0; position: relative; height: 100svh; }
+
+/* ---- 窄帶壓在整屏下緣 ------------------------------------------------------
+   原本窄帶是照片下面的另一個區塊，兩者是接起來的；現在改成疊在照片上。
+   差別不只是位置：**接縫沒有了**。先前那條 #17191d 的漸層頂色是為了讓
+   照片與窄帶之間看不出邊而調的，現在窄帶直接蓋在照片上，沒有邊要藏，
+   所以底色可以重新選 —— 下面四案就是在選這個。
+
+   收尾句「到巷口的芳仁」要往上讓開窄帶，不然會被壓到。 */
+.hero { position: relative; }
+.hero > .band { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; }
+.hero-photo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; max-width: none;
+  object-fit: cover;
+  object-position: 50% 100%;   /* ← 整個做法就是這一行：下緣貼齊 */
+}
+
+/* 頂部的一層淡漸層。滿版之後頁首會壓在照片的任意位置上 ——
+   1900px 寬時右上角正好落在建築的淺色水泥牆，白字幾乎讀不到（實測那塊 L* 約 42）。
+   先前的版本沒有這個問題，是因為裁切位置讓上緣一直是天空。
+
+   做法比照收尾句底下那塊：顏色用 #191614（品牌的暗夜），不是純黑；
+   而且是漸層到全透明，不是一條實心的橫帶 —— 不能讓它看起來像多了一條工具列。
+   只蓋上面 46%，下半段的街景一點都沒被壓到。 */
+.hero-photo::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 46%; z-index: 1;
+  background: linear-gradient(180deg,
+    rgba(25, 22, 20, .52) 0%, rgba(25, 22, 20, .30) 42%, rgba(25, 22, 20, 0) 100%);
+  pointer-events: none;
+}
+/* 詩與收尾句要在漸層之上 */
+.hero-copy { z-index: 2; }
+/* 詩與收尾句疊在照片上。整層 pointer-events: none，
+   免得這一大塊蓋住底下（現在底下沒有東西，但頁首是 sticky 的，留著比較安全）。 */
+.hero-copy {
+  position: absolute; inset: 0; pointer-events: none;
+  display: flex; flex-direction: column; justify-content: space-between;
+  /* 上緣讓開頁首，下緣留給收尾句 */
+  /* 橫幅比先前矮，上內距跟著收 —— 原本 7vh 會把詩推到快要碰到收尾句。 */
+  padding-top: calc(var(--head-h) + clamp(1.2rem, 4vh, 2.6rem));
+  /* 讓開壓在下緣的窄帶。收尾句因此往上移了一個帶高 ＋ 一點呼吸。 */
+  padding-bottom: calc(var(--band-h) + clamp(1rem, 3vh, 2rem));
+}
+.hero-copy .shell { width: 100%; }
+.hero-copy a { pointer-events: auto; }
+
+/* 詩：三行已定稿，用全形空格斷句、沒有標點（COPY.md 第一節）。
+   字級從手機版的 10~11.5px 放大到 15px —— 這是全頁少數該跟著螢幕長大的東西，
+   因為它疊在一張 780px 高的照片上，維持手機的字級會變成一撮小字。
+   字距 .2em、行高、兩層陰影（色用 #191614 不用純黑）都和手機版相同。 */
+.hero-poem {
+  margin: 0; max-width: 34em;
+  font-size: clamp(12.5px, 1.05vw, 15px); font-weight: 400; line-height: 1.95;
+  letter-spacing: .2em; color: rgba(255, 255, 255, .65);
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
+}
+.hero-poem span { display: block; }
+.hero-poem .lead { margin-bottom: .5em; }
+
+/* 收尾句躺在路面上。底下那塊模糊的深色是必要的 ——
+   左下角有車頭燈，不墊這一塊字會消失在亮點裡。
+   做法和手機版相同：一塊 rgba(25,22,20,.72) 的圓角矩形，整塊 blur 掉，
+   所以看起來不是一個「框」，是路面自己暗下去。 */
+.hero-sign {
+  position: relative; margin: 0; display: inline-block;
+  font-size: clamp(11.5px, .95vw, 14px); font-weight: 400; line-height: 1.5;
+  letter-spacing: .12em; color: rgba(255, 255, 255, .65);
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
+  isolation: isolate;
+}
+.hero-sign::before {
+  content: ''; position: absolute; z-index: -1;
+  inset: -1.3em -1.7em;
+  background: rgba(25, 22, 20, .72);
+  border-radius: 100px;
+  filter: blur(26px);
+}
+
+/* ==========================================================================
+   窄帶
+   --------------------------------------------------------------------------
+   手機版是兩列置中（瀏覽數一列、1983／9／6 一列），因為 390px 排不下四組數字。
+   寬螢幕有 1160px，再疊成兩列就是浪費 —— 改成一列：
+   三個事實靠左（沿用那兩條分隔線），瀏覽數靠右。
+
+   靠右還有一個理由：瀏覽數是紀錄不是事實，把它推到版心的另一端，
+   它和 1983／9／6 之間就自然有了距離，不必再靠字級去分層 ——
+   所以這裡的字級可以和三格的標籤同級，比手機版少一次妥協。
+
+   高度 84px：內容最高的是 1983 那組（字墨 30px），上下各留 27px。
+   漸層三個色停維持原值，帶子變寬只是讓同一段漸層走得慢一點。
+   ========================================================================== */
+/* ==========================================================================
+   窄帶底色四案（2026-08-07）
+   --------------------------------------------------------------------------
+   現況的藍黑是 2026-08-06 定的，取自「夜空 #1b2635 × 柏油 #221e1c 各半、
+   彩度 ×0.72」→ H=220・S=10%。當時的前提是窄帶接在照片下面、要同時接住
+   上面的夜空與下面的紙色，所以取中間值合理。
+
+   現在窄帶改成壓在照片上，而它壓住的位置**只有柏油**，夜空離得很遠 ——
+   取中間值的理由消失了。柏油那一案就是照這個重算的。
+
+   三個實色案的做法是同一套：**亮度（L*）一個都不動，只轉色相**。
+   L* 維持 10.2 / 17.5 / 19.6 三個停點，所以三案的「深淺」完全一樣，
+   看到的差別純粹是色調，這樣比才比得準。 */
+
+/* 一 藍黑（現況）H=220。夜空與柏油的中間值。 */
+html[data-band="blue"] .band {
+  background-color: #282b31;
+  background-image: linear-gradient(180deg, #17191d 0%, #282b31 55%, #2d3037 100%);
+}
+/* 二 柏油 H=20。取自 PALETTE.md 第四節裡柏油的實測值 #221e1c 的色相，
+   L* 與藍黑案完全相同。這是「窄帶從柏油長出來」的直接答案。 */
+html[data-band="tar"] .band {
+  background-color: #312b28;
+  background-image: linear-gradient(180deg, #1d1917 0%, #312b28 55%, #37302d 100%);
+}
+/* 三 墨色 H=88。取自內文墨色 #2a2c27 的色相，L* 同上。
+   好處是它和內文的字同一個調，整站的深色只有一種傾向。 */
+html[data-band="ink"] .band {
+  background-color: #2d3128;
+  background-image: linear-gradient(180deg, #1a1d17 0%, #2d3128 55%, #32372d 100%);
+}
+/* 四 毛玻璃。這一案只有在窄帶疊到照片上之後才可能 —— 先前它接在照片下面，
+   底下是紙色，模糊也沒東西可以透。
+   遮罩用 #191614（品牌的暗夜）.52，模糊 16px：柏油的紋理會隱約透出來，
+   帶子看起來像壓在路面上的一層霧，不是蓋上去的一塊板。
+   字的對比要另外看 —— 透出來的柏油本身很暗（實測 L* 6.6~12），
+   加上 .52 的遮罩之後合成亮度和實色案接近，白字仍然安全。 */
+html[data-band="glass"] .band {
+  background-color: rgba(25, 22, 20, .52);
+  background-image: none;
+  -webkit-backdrop-filter: blur(16px) saturate(1.06);
+  backdrop-filter: blur(16px) saturate(1.06);
+}
+
+/* ==========================================================================
+   三格的間距三案
+   --------------------------------------------------------------------------
+   置中之後三格擠在版心中央、兩側各空一大塊，看起來像沒排完。
+   三案是三種「拉開」的程度。
+   ========================================================================== */
+/* 一 現在：靠內容寬度，左右各 1.9rem。 */
+html[data-gap="now"] .stats li { padding-inline: 1.9rem; }
+/* 二 拉開：左右各 4rem。仍然是內容寬度決定，只是鬆一點。 */
+html[data-gap="wide"] .stats li { padding-inline: 4rem; }
+/* 三 撐滿版心：三格各佔版心的三分之一，分隔線落在三等分點上 ——
+   這是手機版的做法（390px 上排不下才用的），搬到 1160px 的版心上
+   三格會拉得很開，窄帶的兩端才真的被用到。 */
+html[data-gap="full"] .stats { width: 100%; }
+html[data-gap="full"] .stats li { flex: 1 1 0; min-width: 0; padding-inline: 1rem; }
+/* 2026-08-07：窄帶改回手機版的排法 —— **兩列、置中**，瀏覽數在 1983／9／6 上面。
+   先前電腦版把它排成一列（事實靠左、瀏覽數靠右），是想用滿了寬度；
+   但那樣整條帶子的重心偏在兩端，中間空一大塊，而照片是滿版置中的，
+   兩者對不起來。改回置中之後窄帶和照片共用同一條中軸。
+
+   三格不再各佔三分之一（那是 390px 上排不下才用的辦法），
+   改成靠內容寬度、整組置中，兩條分隔線就落在文字之間而不是版面的三等分點上。 */
+.band .shell {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .6rem; min-height: var(--band-h);
+}
+.stats { display: flex; align-items: center; justify-content: center; margin: 0; padding: 0; list-style: none; }
+.stats li {
+  position: relative; padding-inline: 1.9rem; line-height: 1; text-align: center;
+}
+/* 分隔線用絕對定位的偽元素，不用 border —— border 會算進 box 寬度，
+   第一格沒有、後兩格有，三格就不等寬了。和手機版同一個做法。 */
+.stats li + li::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  border-left: 1px solid color-mix(in srgb, var(--night-faint) 55%, var(--band-bg));
+}
+/* 數字用宋體、標籤維持黑體 —— 襯線只出現在數字上，兩層才分得開。
+   思源宋體和內文的思源黑體是同一個超家族，骨架一致。
+   顏色用半透明白（不是 --night-text）：它會跟著底色一起變，
+   窄帶明度日後再調也不會掉出 AA。 */
+.stats b {
+  display: block; font-size: 1.18rem; color: rgba(255, 255, 255, .95);
+  font-family: "Noto Serif TC", "Source Han Serif TC", serif;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+.stats b small { font-size: .7rem; font-weight: 400; letter-spacing: 0; margin-left: .15em; }
+.stats span { font-size: .7rem; color: rgba(255, 255, 255, .65); }
+
+/* 瀏覽數。2026-08-07 定案：字、字級、顏色都和單位「次瀏覽」完全一樣（B 案）——
+   它只是紀錄、是概念，不該和 1983／9／6 同一層。 */
+.band-views { margin: 0; line-height: 1.05; text-align: center; }
+.band-views .views-n {
+  display: inline-block; font-size: .7rem; color: rgba(255, 255, 255, .65);
+  font-family: inherit;
+  /* tabular-nums 讓數字等寬，跑動畫時不會左右抽動；
+     位數變多整體還是會變寬，所以 JS 會先量好最終寬度鎖住。
+     text-align: right 是配套 —— 鎖了寬度之後數字若靠左，跑到 0～999 的階段
+     右邊會空出一塊，「次瀏覽」看起來像被推走了。靠右它就一直貼著單位長。 */
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em; text-align: right;
+}
+.band-views small {
+  font-size: .7rem; color: rgba(255, 255, 255, .65);
+  font-weight: 400; letter-spacing: 0; margin-left: .35em;
+}
+
+/* ==========================================================================
+   內文區
+   ========================================================================== */
+section { padding-block: clamp(2.4rem, 4vw, 3.4rem); }
+section + section { border-top: 1px solid var(--rule); }
+/* 分隔線要通到底、內容仍然對齊版心 —— 所以線畫在 section 上，
+   內距交給裡面的 .shell。 */
+.sec-head { margin-bottom: 1.5rem; }
+.sec-head h2 { margin: 0; font-size: 1.35rem; line-height: 1.5; letter-spacing: .02em; }
+html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
+
+/* 主題與科別。每一顆是真的 <button> —— 按下去會同時篩下面的文章與醫師，不是裝飾。
+   字級、內距、圓角都和手機版相同；寬螢幕上它們自然排成一行，不必換算。 */
+.chips { display: flex; flex-wrap: wrap; gap: .55rem; margin: 0; padding: 0; list-style: none; }
+.chips button {
+  font: inherit; font-size: .82rem; line-height: 1.6;
+  padding: .25rem .8rem; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  transition: background-color .15s ease, color .15s ease;
+}
+.chips button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* hover 只給一點點提示：底色往科別色靠 8%，不要直接變成按下的實心，
+   不然滑過去會以為已經選到了。 */
+.chips button:hover { background: color-mix(in srgb, var(--accent) 8%, var(--card)); }
+.chips button[aria-pressed="true"]:hover { background: var(--accent); }
+
+.filter-note { margin: 1rem 0 0; font-size: .82rem; line-height: 1.7; color: var(--ink-soft); }
+.filter-note b { color: var(--ink); font-weight: 500; }
+.empty-note {
+  margin: 0; padding: 2rem 0; font-size: .88rem; line-height: 1.8;
+  color: var(--ink-soft); text-align: center;
+}
+.is-filtered-out { display: none !important; }
+
+/* ---- 文章卡：手機一欄 → 電腦三欄 ----------------------------------------
+   卡本身完全沒動（底 --card、1px --rule、圓角 12px、16:9 縮圖）。
+   三欄是因為 1160px ÷ 3 ≈ 365px，正好落在卡片舒服的寬度帶；
+   四欄會讓標題每張都折到三行以上，兩欄則縮圖大得像文章頁。 */
+.cards { display: grid; gap: 1.4rem; grid-template-columns: repeat(3, 1fr); }
+.card {
+  display: flex; flex-direction: column; text-decoration: none; color: inherit;
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  overflow: hidden;
+  transition: border-color .18s ease, transform .18s ease;
+}
+/* hover：邊框往科別色靠，卡片抬 2px。不加陰影 —— 這一頁從頭到尾沒有陰影，
+   只有 HERO 那兩層是為了讓字在照片上讀得出來。 */
+.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.card:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .card, .chips button { transition: none; } .card:hover { transform: none; } }
+.card-thumb { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--paper); }
+.card-body { padding: 1rem 1.15rem 1.15rem; display: flex; flex-direction: column; flex: 1; }
+.card-tag {
+  display: inline-block; align-self: flex-start;
+  font-size: .72rem; letter-spacing: .06em; line-height: 1.6;
+  margin-bottom: .45rem; padding: .06rem .5rem;
+}
+.card h3 { margin: 0 0 .4rem; font-size: 1.02rem; line-height: 1.55; }
+.card p { margin: 0; font-size: .85rem; line-height: 1.8; color: var(--ink-soft); }
+/* 日期那一列推到卡底。三欄並排時摘要長短不一，不推底的話三張卡的
+   日期會各自停在不同高度，一排看過去就散了。 */
+.card-date {
+  margin: .8rem 0 0 !important; padding-top: .1rem; font-size: .78rem !important;
+  display: flex; align-items: center; flex-wrap: wrap; gap: .3rem;
+  color: var(--ink-soft);
+}
+.card-body > .card-date { margin-top: auto !important; }
+.card-date .dot { color: var(--rule); }
+.views { display: inline-flex; align-items: center; gap: .28rem; white-space: nowrap; }
+.views-icon { display: inline-flex; opacity: .6; }
+.views svg { width: 12px; height: 12px; display: block; }
+.views-n { font-variant-numeric: tabular-nums; }
+
+/* ==========================================================================
+   六個科別色（PALETTE.md／與手機版完全相同，一個值都沒有改）
+   general 一般／perio 牙周・植牙／endo 顯微根管／ortho 齒顎矯正／
+   kids 兒童牙科／surg 口腔外科／prosth 贋復假牙
+   後面的數字是純白字疊在該色上的實測對比，AA 要 4.5:1。
+   ========================================================================== */
+[data-spec="general"],
+[data-spec="perio"]  { --accent: var(--chair); }  /* 診療椅實測　　　　　 H=174　 6.38:1 */
+[data-spec="endo"]   { --accent: var(--moss);  }  /* 色票・苔綠＝Logo　　 H=100　 5.55:1 */
+[data-spec="ortho"]  { --accent: var(--blue);  }  /* 色票・藍灰＝候診沙發 H=203　 7.41:1 */
+[data-spec="surg"]   { --accent: var(--taupe); }  /* 色票・Taupe＝單椅布料 H=3　　 6.04:1 */
+[data-spec="prosth"] { --accent: var(--tile);  }  /* 茶室深藍磁磚實測　　 H=227　13.53:1 */
+[data-spec="kids"]   { --accent: var(--stool); }  /* 圓凳與木件實測　　　 H=28　　 5.53:1 */
+.info-card { --accent: var(--teal); }
+.info-card[data-hue="taupe"] { --accent: var(--taupe); }
+
+/* 小節標題前的那一小段枝條。只給醫師與診所資訊兩節，文章區不動。 */
+#doctors .sec-head h2, #clinic .sec-head h2 { display: flex; align-items: center; gap: .55rem; }
+#doctors .sec-head h2::before, #clinic .sec-head h2::before {
+  content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; background: var(--teal);
+}
+
+/* ---- 醫師：手機一欄 → 電腦三欄（九位剛好排滿三列）---------------------- */
+.docs { display: grid; gap: 1.2rem; grid-template-columns: repeat(3, 1fr); }
+.doc {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 1.1rem 1.2rem 1.2rem;
+}
+.doc h3 { margin: 0 0 .7rem; font-size: 1.05rem; line-height: 1.5; }
+.doc-role {
+  display: inline-block; margin-left: .5rem; font-size: .72rem; font-weight: 400;
+  line-height: 1.5; padding: .05rem .6rem; white-space: nowrap;
+}
+.doc dl { margin: 0; display: grid; grid-template-columns: 3.2em 1fr; gap: .35rem .7rem; }
+.doc dd { margin: 0; font-size: .83rem; line-height: 1.75; }
+/* 兩個 self 都是必要的：justify-self 少了，底會被 3.2em 欄寬撐滿變成灰帶；
+   align-self 少了，「資歷」那三行會把標籤從第一行一路拉到第三行底。 */
+.doc dt {
+  font-size: .74rem; font-weight: 500; line-height: 1.6;
+  justify-self: start; align-self: start; white-space: nowrap;
+  padding: .1rem .4rem;
+  background: var(--paper); color: var(--ink-soft);
+}
+
+/* ---- 圓角：比例對齊，不是同一個數字。基準是醫師藥丸的 半徑÷框高 = 0.384。
+   這幾個元件的字級和手機版一樣，所以手機版量出來的值原樣沿用。 ---------- */
+.doc dt          { border-radius: 6px; }
+.doc-role        { border-radius: 8px; }
+.chips button    { border-radius: 12px; }
+.card-tag        { border-radius: 8.5px; }
+.info-card h3    { border-radius: 9px; }
+
+/* 科別標記：線條與文字套色，底不套色。底維持 --card 不留透明 ——
+   躺在紙 #e2e5e6 上，底若透明兒牙 #8d5e3a 只有 4.37:1 掉出 AA，
+   墊那層卡色才是 5.03。 */
+.doc-role, .info-card h3, .chips button, .card-tag {
+  background: var(--card); color: var(--accent); border: 1px solid var(--accent);
+}
+/* 按下去的 chip 換成實心：它代表「你正在看這一科」，
+   和醫師藥丸的「這位醫師是這一科」是同一種份量，所以長得一樣。 */
+.chips button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+/* 只有醫師藥丸是實心的 —— 認人的份量比分類重。 */
+.doc-role { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ---- 診所資訊：三張卡一排，照片兩張並排 -------------------------------- */
+.info { display: grid; gap: 1.2rem; grid-template-columns: repeat(3, 1fr); }
+.info-card {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 1.1rem 1.2rem 1.2rem;
+}
+.info-card h3 {
+  display: inline-block; margin: 0 0 .55rem;
+  font-size: .76rem; font-weight: 400; letter-spacing: .08em; line-height: 1.6;
+  padding: .07rem .65rem;
+}
+.info-card p { margin: 0; font-size: .93rem; line-height: 1.8; }
+.info-card .big { font-size: 1.15rem; letter-spacing: .02em; }
+/* 電話是整節裡唯一需要視覺停留的東西，所以只有它拿到一塊填滿的色塊。
+   底 #dbe0e0 ＝ 深綠松 12% 混進卡色。塊放在卡裡面、不是把卡染色 ——
+   同一塊拿去當卡底會跟紙差不多，卡就整個消失了。 */
+#clinic .info-card .big {
+  display: inline-block; margin-top: .15rem;
+  background: #dbe0e0; border-radius: 10px;
+  padding: .3rem .85rem; font-size: 1.2rem; letter-spacing: .04em;
+}
+.info-card .big a { color: var(--accent); text-decoration: none; }
+#clinic .info-card b { color: var(--accent); }
+/* 全頁唯一的一朵花。磚紅對卡 4.80:1 過 AA、對紙只有 4.17:1 ——
+   所以它只能待在卡上，不要把這個色搬到紙底的任何地方。 */
+#clinic .info-note { color: var(--brick); }
+.info-note { margin-top: .55rem !important; font-size: .8rem !important; color: var(--ink-soft); }
+.gallery { display: grid; gap: 1.2rem; grid-template-columns: repeat(2, 1fr); margin-top: 1.4rem; }
+.gallery figure { margin: 0; }
+.gallery img { border-radius: 12px; width: 100%; }
+.gallery figcaption { margin-top: .5rem; font-size: .8rem; line-height: 1.7; color: var(--ink-soft); }
+
+/* ---- 頁尾：手機一欄 → 電腦三欄 ---------------------------------------- */
+.foot { background: var(--card); border-top: 1px solid var(--rule); padding-block: 2.4rem 1.6rem; }
+.foot-cols {
+  display: grid; gap: 1.6rem 2.4rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1.2fr);
+}
+.foot h4 { margin: 0 0 .5rem; font-size: .95rem; }
+.foot p { margin: 0 0 .7rem; font-size: .82rem; line-height: 1.8; color: var(--ink-soft); }
+.foot p:last-child { margin-bottom: 0; }
+.foot-bottom {
+  margin-top: 1.8rem; padding-top: 1rem; border-top: 1px solid var(--rule);
+  display: flex; flex-wrap: wrap; gap: .3rem 1.5rem; font-size: .78rem; color: var(--ink-soft);
+}
+
+/* 提案頁自己的說明條 */
+.demo-note {
+  background: var(--note); border-top: 1px solid var(--rule);
+  padding-block: 1.8rem 2.4rem; font-size: .84rem; line-height: 1.85; color: var(--ink-soft);
+}
+.demo-note h2 { margin: 0 0 .6rem; font-size: 1rem; color: var(--teal); }
+.demo-note p { margin: 0 0 .7rem; }
+.demo-note a { margin-right: .9rem; }
+
+/* ==========================================================================
+   窄一點的螢幕：欄數依序退場。這不是手機版 ——
+   手機版是另外一份（preview/home-mobile-n3/），版型不同。
+   這幾個斷點只是讓這一頁在筆電、平板橫放時不要爆掉。
+   ========================================================================== */
+@media (max-width: 1040px) {
+  .cards, .docs, .info { grid-template-columns: repeat(2, 1fr); }
+  .foot-cols { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+  .cards, .docs, .info, .gallery, .foot-cols { grid-template-columns: 1fr; }
+  .band .shell { flex-direction: column; align-items: flex-start; gap: .5rem; padding-block: 1rem; }
+  .stats li { padding-inline: 1.2rem; }
+  .site-nav { display: none; }
+  .brand-text { flex-direction: column; align-items: flex-start; gap: 0; }
+  .brand-text small { padding-left: 0; }
+  .brand-text small::before { display: none; }
+}
+
+/* ---- 提案用的切換條。不是設計的一部分，定案之後整段連同 data-fill 一起刪掉。 ---- */
+.hero-switch {
+  /* 靠右下角，不置中 —— 案二的窄帶就壓在螢幕底線的正中間，
+     切換條若置中會正好蓋住要看的東西。 */
+  position: fixed; z-index: 50; right: 1.2rem;
+  bottom: 1.2rem; display: flex; gap: .4rem; align-items: center;
+  background: rgba(25, 22, 20, .88); border-radius: 999px; padding: .45rem .5rem;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(25, 22, 20, .35);
+}
+.hero-switch b {
+  font-size: .7rem; font-weight: 400; letter-spacing: .08em;
+  color: rgba(255,255,255,.55); padding-inline: .6rem .3rem;
+}
+.hero-switch button {
+  font: inherit; font-size: .78rem; line-height: 1.5;
+  padding: .28rem .85rem; border-radius: 999px; cursor: pointer;
+  background: transparent; color: rgba(255,255,255,.72);
+  border: 1px solid rgba(255,255,255,.28);
+  -webkit-appearance: none; appearance: none;
+}
+.hero-switch button:hover { color: #fff; border-color: rgba(255,255,255,.5); }
+.hero-switch button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
+.hero-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.hero-switch-2 { bottom: 4.1rem; }
+.hero-caption {
+  position: fixed; z-index: 50; right: 1.2rem;
+  bottom: 7rem; margin: 0; max-width: min(92vw, 30rem); text-align: left;
+  font-size: .76rem; line-height: 1.7; color: rgba(255,255,255,.9);
+  background: rgba(25, 22, 20, .82); border-radius: 10px; padding: .5rem .9rem;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+</style>
+
+
+<a class="skip-link" href="#main">跳到主要內容</a>
+
+<header class="site-head">
+  <div class="shell">
+    <a class="brand" href="./">
+      <span class="brand-mark">
+        <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai。牙那條子路徑依自己的中心
+             放大 1.3 倍、再往上移 0.50 個單位（2026-08-07 定案），嘴一個節點都沒改。
+             一個路徑、兩條子路徑，用奇偶填充規則讓中間那顆牙成為真正的洞 ——
+             照片的夜空直接透過來。 -->
+        <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g transform="translate(-232.8729 -333.8286)">
+            <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
+          </g>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <b>芳仁牙醫診所</b>
+        <small>雲林斗六・永樂街</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="主選單">
+      <a href="#topics">主題與科別</a>
+      <a href="#articles">全部文章</a>
+      <a href="#doctors">醫師介紹</a>
+      <a href="#clinic">診所資訊</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <h1 class="sr-only">芳仁牙醫診所 — 雲林斗六永樂街，在地四十年</h1>
+
+  <div class="hero">
+    <figure class="hero-photo">
+      <img src="/assets/hero-clinic-night.jpg"
+           srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+           sizes="100vw"
+           alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+           width="1600" height="1058" fetchpriority="high">
+
+      <!-- 詩與收尾句放在 <figure> 裡面、不是外面 —— 這樣照片的框如果被限制寬度
+           （見下面 HERO 的三種裁切模式），文字會自動跟著照片走，不會飄到旁邊的暗底上。 -->
+      <div class="hero-copy">
+        <div class="shell">
+          <!-- 三行已定稿（COPY.md 第一節）。分隔用全形空格，整首詩沒有標點。 -->
+          <p class="hero-poem">
+            <span class="lead">小時候被大人牽著來　現在牽著別人</span>
+            <span>從中華路到永樂街　四十多年</span>
+            <span>有跟著換的　也有一直顧的</span>
+          </p>
+        </div>
+        <div class="shell">
+          <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+        </div>
+      </div>
+    </figure>
+
+    <div class="band">
+    <div class="shell">
+      <!-- 瀏覽數。data-views="home" 是給正式站 assets/counter.js 的掛勾 ——
+           上線後由它從 D1 取真實數字，再呼叫 window.fangrenCountUp(n) 跑同一段動畫。
+           這一頁是靜態快照，沒有 Worker 可以問，所以 data-count 先放示範數字。
+           數字跑動時一直在變，讓螢幕閱讀器跟著念沒有意義，所以動的那一段
+           整個 aria-hidden，另外放一句 .sr-only 講最終結果。 -->
+      <p class="band-views" data-views="home">
+        <span class="sr-only">累計 8,642 次瀏覽</span>
+        <span class="views-n" aria-hidden="true" data-count="8642">0</span><small aria-hidden="true">次瀏覽</small>
+      </p>
+
+      <ul class="stats">
+        <li><b>1983<small>年</small></b><span>開業至今</span></li>
+        <li><b>9<small>位</small></b><span>醫師駐診</span></li>
+        <li><b>6<small>個</small></b><span>部定專科</span></li>
+      </ul>
+    </div>
+    </div>
+  </div>
+
+  <section id="topics">
+    <div class="shell">
+      <div class="sec-head">
+        <h2>主題與科別</h2>
+      </div>
+      <ul class="chips">
+        <li><button type="button" data-spec="general" aria-pressed="false">一般牙科・定期檢查</button></li>
+        <li><button type="button" data-spec="perio"   aria-pressed="false">牙周治療</button></li>
+        <li><button type="button" data-spec="kids"    aria-pressed="false">兒童牙科</button></li>
+        <li><button type="button" data-spec="ortho"   aria-pressed="false">齒顎矯正</button></li>
+        <li><button type="button" data-spec="prosth"  aria-pressed="false">植牙・假牙重建</button></li>
+      </ul>
+      <p class="filter-note" hidden></p>
+    </div>
+  </section>
+
+  <!-- 標題「最新文章」已拿掉 —— 上一節的 chips 已經在講文章了，再標一次是同義重述。
+       aria-label 留著，導覽列的 #articles 與螢幕閱讀器還是需要這一節有名字。 -->
+  <section id="articles" aria-label="最新文章">
+    <div class="shell">
+      <div class="cards">
+        <a class="card" href="/posts/kids-arch-expansion/" data-spec="kids">
+          <img class="card-thumb" src="/assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
+          <div class="card-body">
+            <span class="card-tag">兒童牙科</span>
+            <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
+            <p>牙弓不夠寬，恆牙就像在擠公車，沒位置站只能前後亂鑽。6 到 12 歲顎骨還沒定型，是引導牙弓向外擴張的黃金期。</p>
+            <p class="card-date">
+              <span>更新 <time datetime="2026-08-02">2026/08/02</time></span>
+              <span class="dot" aria-hidden="true">・</span>
+              <span class="views" data-views="kids-arch-expansion"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">1,284</span></span>
+            </p>
+          </div>
+        </a>
+        <a class="card" href="/posts/regular-checkup/" data-spec="general">
+          <img class="card-thumb" src="/assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
+          <div class="card-body">
+            <span class="card-tag">定期檢查</span>
+            <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
+            <p>洗牙不會把牙齒洗薄，也不是美白。它清的是自己刷不掉的牙結石，順便讓醫師在問題還小的時候先看見它。</p>
+            <p class="card-date">
+              <span>更新 <time datetime="2026-07-08">2026/07/08</time></span>
+              <span class="dot" aria-hidden="true">・</span>
+              <span class="views" data-views="regular-checkup"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">2,067</span></span>
+            </p>
+          </div>
+        </a>
+        <a class="card" href="/posts/missing-tooth/" data-spec="prosth">
+          <img class="card-thumb" src="/assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
+          <div class="card-body">
+            <span class="card-tag">缺牙重建</span>
+            <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
+            <p>缺一顆牙不只是缺一顆牙。旁邊的牙會倒、對面的牙會長長、齒槽骨會流失。三種重建方式各自的原理、代價與限制。</p>
+            <p class="card-date">
+              <span>更新 <time datetime="2026-06-02">2026/06/02</time></span>
+              <span class="dot" aria-hidden="true">・</span>
+              <span class="views" data-views="missing-tooth"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">1,530</span></span>
+            </p>
+          </div>
+        </a>
+        <a class="card" href="/posts/kids-first-visit/" data-spec="kids">
+          <img class="card-thumb" src="/assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
+          <div class="card-body">
+            <span class="card-tag">兒童牙科</span>
+            <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
+            <p>「乳牙反正會換掉」是最常見也最昂貴的誤解。從第一顆牙長出來後的六個月談起，帶爸媽看懂塗氟、窩溝封填與健保給付。</p>
+            <p class="card-date">
+              <span>更新 <time datetime="2026-05-06">2026/05/06</time></span>
+              <span class="dot" aria-hidden="true">・</span>
+              <span class="views" data-views="kids-first-visit"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">946</span></span>
+            </p>
+          </div>
+        </a>
+        <a class="card" href="/posts/gum-bleeding/" data-spec="perio">
+          <img class="card-thumb" src="/assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
+          <div class="card-body">
+            <span class="card-tag">牙周照護</span>
+            <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
+            <p>健康的牙齦被牙刷碰到不會出血。流血代表牙齦正在發炎，而發炎和退火無關，是牙菌斑長期堆積的結果。</p>
+            <p class="card-date">
+              <span>更新 <time datetime="2026-04-15">2026/04/15</time></span>
+              <span class="dot" aria-hidden="true">・</span>
+              <span class="views" data-views="gum-bleeding"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">2,318</span></span>
+            </p>
+          </div>
+        </a>
+        <a class="card" href="/posts/bass-brushing/" data-spec="general">
+          <img class="card-thumb" src="/assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
+          <div class="card-body">
+            <span class="card-tag">日常保健</span>
+            <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
+            <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙，原地來回十次。</p>
+            <p class="card-date">
+              <span>更新 <time datetime="2026-03-11">2026/03/11</time></span>
+              <span class="dot" aria-hidden="true">・</span>
+              <span class="views" data-views="bass-brushing"><span class="views-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="views-n">3,105</span></span>
+            </p>
+          </div>
+        </a>
+      </div>
+      <p class="empty-note" data-for="articles" hidden>這一科目前還沒有文章。</p>
+    </div>
+  </section>
+
+  <section id="doctors">
+    <div class="shell">
+      <div class="sec-head">
+        <h2>醫師介紹</h2>
+      </div>
+      <div class="docs">
+        <article class="doc" data-spec="general">
+          <h3>李柄輝<span class="doc-role">創辦醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd>口腔檢查、一般牙科治療</dd>
+            <dt>資歷</dt><dd>台灣國際植牙醫師學會專科醫師（ATIOI）<br>國際牙醫學院院士（TICD）<br>衛生福利部家庭牙醫專科</dd>
+            <dt>學歷</dt><dd>中山醫學大學牙醫學博士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-spec="perio">
+          <h3>李侑津<span class="doc-role">醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd>牙周病治療、牙周再生手術、植牙手術、固定假牙、活動假牙、水雷射牙周治療</dd>
+            <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
+            <dt>學歷</dt><dd>臺北醫學大學學士、國立陽明交通大學碩士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-spec="ortho">
+          <h3>王俊偉<span class="doc-role">矯正專科醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd>齒顎矯正、隱適美</dd>
+            <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺北醫學大學附設醫院齒顎矯正科<br>臺安醫院主治醫師</dd>
+            <dt>學歷</dt><dd>臺北醫學大學學士、碩士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-spec="ortho">
+          <h3>廖立揚<span class="doc-role">矯正專科醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd>齒顎矯正、隱適美、阻生齒矯正</dd>
+            <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺中榮民總醫院齒顎矯正科<br>國立臺灣大學附設醫院</dd>
+            <dt>學歷</dt><dd>臺北醫學大學學士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-spec="kids">
+          <h3>林晏妤<span class="doc-role">兒牙專科醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd>兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療</dd>
+            <dt>資歷</dt><dd>衛生福利部兒童牙科專科<br>隱適美認證醫師<br>臺中榮民總醫院兒童牙科</dd>
+            <dt>學歷</dt><dd>高雄醫學大學學士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-spec="surg">
+          <h3>許馨文<span class="doc-role">口外專科醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd>阻生齒拔除、齒槽骨保留術</dd>
+            <dt>資歷</dt><dd>衛生福利部口腔顎面外科專科<br>奇美醫學中心口腔顎面外科總醫師<br>保提拉肉毒學院認證醫師</dd>
+            <dt>學歷</dt><dd>臺北醫學大學學士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-spec="prosth">
+          <h3>楊小瑩<span class="doc-role">贋復假牙專科醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd>活動假牙、固定假牙、牙橋、全口重建</dd>
+            <dt>資歷</dt><dd>衛生福利部贋復牙科專科醫師<br>台大醫院補綴科兼任主治醫師<br>台大雲林分院主治醫師</dd>
+            <dt>學歷</dt><dd>高雄醫學大學學士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-spec="endo">
+          <h3>陳芷鈴<span class="doc-role">顯微根管專科醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd>顯微根管、根尖手術、活髓治療</dd>
+            <dt>資歷</dt><dd>衛生福利部牙髓病專科<br>成大醫院口腔醫學部總醫師<br>臺北榮民總醫院</dd>
+            <dt>學歷</dt><dd>臺北醫學大學學士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-spec="kids">
+          <h3>謝耀慶<span class="doc-role">兒牙專科醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd>兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療、一般牙科治療</dd>
+            <dt>資歷</dt><dd>臺北榮總兒童牙科總醫師<br>日本新潟大學吞嚥功能受訓醫師<br>隱適美認證醫師</dd>
+            <dt>學歷</dt><dd>國立陽明交通大學學士</dd>
+          </dl>
+        </article>
+      </div>
+      <p class="empty-note" data-for="doctors" hidden>這一科目前沒有駐診醫師。</p>
+    </div>
+  </section>
+
+  <section id="clinic">
+    <div class="shell">
+      <div class="sec-head">
+        <h2>診所資訊</h2>
+      </div>
+      <div class="info">
+        <div class="info-card">
+          <h3>地址</h3>
+          <p>雲林縣斗六市永樂街 70 號<br>
+             <a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">在 Google 地圖開啟</a></p>
+        </div>
+        <div class="info-card">
+          <h3>電話</h3>
+          <p class="big"><a href="tel:+88655339369">05-533-9369</a></p>
+        </div>
+        <!-- Deep Taupe 只出現在這一張（單椅布料的色），底下那行休診是全頁唯一的磚紅 -->
+        <div class="info-card" data-hue="taupe">
+          <h3>看診時間</h3>
+          <p><b>週一至週五</b><br>
+             上午 08:45–12:00<br>
+             下午 13:45–16:45<br>
+             晚上 17:45–20:30</p>
+          <p class="info-note">週六、週日休診。國定假日門診時間請來電確認。</p>
+        </div>
+      </div>
+      <div class="gallery">
+        <figure>
+          <img src="/assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
+               alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
+          <figcaption>獨立診療空間，每張診療椅旁都配有影像螢幕，方便看診時一起討論。</figcaption>
+        </figure>
+        <figure>
+          <img src="/assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
+               alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
+          <figcaption>診療區以隔屏分隔，保留採光也維持看診時的隱私。</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="shell">
+    <div class="foot-cols">
+      <div>
+        <h4>芳仁牙醫診所</h4>
+        <p>雲林縣斗六市・在地經營超過四十年<br>
+           地址：雲林縣斗六市永樂街 70 號<br>
+           電話：<a href="tel:+88655339369">05-533-9369</a></p>
+      </div>
+      <div>
+        <h4>關於這些文章</h4>
+        <p>本站文章為一般口腔衛教資訊，用意在於幫助讀者理解常見狀況，不能取代臨床診斷。實際狀況請就診由醫師評估。</p>
+      </div>
+      <div>
+        <h4>圖片來源</h4>
+        <p>首頁主視覺與診療室照片為芳仁牙醫診所自有，未經同意請勿轉載。文章內頁插圖與網站識別圖示為本站自製。</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 芳仁牙醫診所</span>
+      <span>網站最後更新：<time datetime="2026-08-02">2026 年 8 月 2 日</time></span>
+    </div>
+  </div>
+</footer>
+
+<div class="demo-note">
+  <div class="shell">
+    <h2>電腦版 整屏 ＋ 壓在下緣的窄帶（2026-08-07）</h2>
+    <p><b>右下角有兩組切換條：底色四案 × 間距三案，12 種組合都可以直接看。</b>
+       網址可帶 <code>?band=blue|tar|ink|glass&gap=now|wide|full</code>。</p>
+    <p><b>照片拿回完整的一個螢幕高，窄帶改成壓在整屏的下緣。</b>
+       收尾句「到巷口的芳仁」因此往上讓了一個帶高。
+       這個改動的重點不只是位置 —— <b>接縫沒有了</b>。先前那條 <code>#17191d</code>
+       的漸層頂色是為了讓照片與窄帶之間看不出邊而調的，現在窄帶直接蓋在照片上，
+       沒有邊要藏，<b>底色因此可以重新選</b>。</p>
+    <p><b>底色為什麼要重選：</b>現況的藍黑 H=220 是「夜空 <code>#1b2635</code> ×
+       柏油 <code>#221e1c</code> 各半、彩度 ×0.72」算出來的。當時窄帶接在照片下面，
+       要同時接住上面的夜空與下面的紙色，取中間值合理。
+       但現在它壓住的位置<b>只有柏油</b>，夜空離得很遠 —— 取中間值的理由消失了。</p>
+    <p><b>三個實色案的做法是同一套：亮度一個都不動，只轉色相。</b>
+       L* 維持 10.2 / 17.5 / 19.6 三個停點，所以三案的深淺完全一樣，
+       看到的差別純粹是色調，這樣比才比得準。</p>
+    <p><b>案一 整屏</b>：照片高＝一整個螢幕（<code>100svh</code>），就是你在 PPT 上全螢幕的樣子。窄帶要捲一下才看得到。<br>
+       <b>案二 抵下緣</b>：照片高＝一個螢幕扣掉窄帶（<code>calc(100svh - 84px)</code>）。
+       窄帶下緣正好壓在螢幕底線上，剩下的空間全給照片 ——
+       第一眼是「照片＋一條窄帶」剛好一屏，底下什麼都不露，但不用捲就知道有 1983／9／6。</p>
+    <p><b>兩案的裁切方式相同：</b><code>object-position: 50% 100%</code>，下緣貼齊、要切切天空。
+       你在 PPT 上那張其實就是這個 —— 16:9 的框（1.78:1）和照片的 1.512:1 差得不多，
+       只切掉上面 13%，所以屋頂剛好留得住。<b>瀏覽器的視窗比 16:9 更扁</b>
+       （1900×900 是 2.11:1），切掉的就會到 28%，屋頂會不見。這是視窗形狀決定的，不是設定。</p>
+    <p><b>窄帶改回手機版的排法：兩列、置中，瀏覽數在 1983／9／6 上面。</b>
+       先前電腦版排成一列（事實靠左、瀏覽數靠右）是想用滿寬度，但那樣重心偏在兩端、
+       中間空一大塊，而照片是滿版置中的，兩者對不起來。改回置中之後窄帶和照片共用同一條中軸。</p>
+    <p><b>這個做法有一個構圖以外的好處：接縫回來了。</b>
+       窄帶的漸層頂色 <code>#17191d</code>（L* 8.5）是 2026-08-06 照著<b>照片最底那一列的實測值</b>
+       <code>#161413</code>（L* 6.6）調出來的，為的是讓照片與窄帶之間看不出邊。
+       但那個校準只有在照片最底那一列真的顯示出來時才成立 —— 先前每一版都從中間裁，
+       露在窄帶上方的其實是照片中段（比較亮），校準等於失效。貼齊下緣之後才回到當初量的狀態。</p>
+    <p><b>取捨講清楚：天空會被吃掉，而且螢幕越寬吃越多。</b>
+       1440px 寬時照片 952px 高、露出 620px ＝ 切掉上面 35%；
+       1900px 寬時照片 1256px 高、露出 620px ＝ 切掉上面 51%，<b>屋頂在寬螢幕上會不見</b>。
+       詩仍然躺在天空上，因為這張照片的<b>左半邊天空一路延伸到 y 72%</b>
+       （右半邊才被建築佔滿），所以就算從中間往下取，左上角依然是天空。
+       高度上限 640px 就是照這個算的，再矮詩就會壓到左邊的矮房子。</p>
+    <p><b>這是把定稿的手機版套到寬螢幕，不是新設計，也不會取代現有的 fangren.net。</b>
+       顏色一個都沒有新調 —— 暗夜、窄帶漸層、N3 藍灰紙 <code>#e2e5e6</code>、六個科別色全部從
+       <a href="https://fangren.net/preview/home-mobile-n3/">home-mobile-n3</a> 原樣搬過來，依據仍是
+       <a href="https://github.com/YCLee86/fangren-dental/blob/main/PALETTE.md">PALETTE.md</a>。
+       元件的邊框、圓角、填色規則也完全不動，只有版面從一欄變多欄。</p>
+    <p><b>電腦版真正重新想過的只有三處：</b><br>
+       ① <b>HERO 要裁</b> —— 手機版是整張照片完整落地，1440px 寬時整張有 950px 高，窄帶會被推到第二屏。
+       改成 78svh（上限 780px）＋ <code>object-position: 50% 62%</code>：看到的是原圖的 y 16%~90%，
+       天空留了 24 個百分點給詩，門面與路口都還在，裁掉的是最上緣的空天空和最下緣的空路面。<br>
+       ② <b>窄帶從兩列變一列</b> —— 三個事實靠左、瀏覽數靠右。推到版心的另一端之後，
+       它和 1983／9／6 之間自然有了距離，不必再靠字級分層，所以字級可以和三格的標籤同級。<br>
+       ③ <b>頁首從兩行變一行</b> —— 標誌與品牌在左（地名移到品牌名右邊，中間一條細線），導覽在右。
+       多了一個「主題與科別」的錨點，手機版放不下。</p>
+    <p><b>只有兩種東西跟著螢幕放大：</b>版心的欄數，以及標題級的字（h2、卡片標題、HERO 的詩）。
+       內文、標籤、藥丸維持手機版的字級 —— 它們在 15 吋螢幕上本來就夠讀，放大只會像放大鏡。
+       圓角照用手機版量出來的比例 0.384，因為這些小元件的字級沒有變。</p>
+    <p><b>電腦版才有的狀態：</b>導覽底線從中間長出來、chip 滑過去底色往科別色靠 8%、
+       卡片滑過去邊框變成該科的色並抬 2px。手機沒有 hover 這件事，所以這不算違背手機版，
+       是電腦版本來就要補的。全頁沒有陰影 —— 只有 HERO 那兩層，那是為了讓字在照片上讀得出來。</p>
+    <p><b>所有瀏覽數都是示範值</b>（窄帶 8,642，文章 946～3,105）。這一頁是靜態快照沒有 Worker，
+       上線後由 <code>counter.js</code> 從 D1 取真實值。窄帶那個數字捲進畫面才往上數，1.4 秒；
+       文章卡上的不做動畫，六個小數字同時跳會變成雜訊。</p>
+    <p>比一比：<a href="https://fangren.net/preview/home-mobile-n3/">手機版定稿 N3</a><a href="https://fangren.net/">現在的正式站</a></p>
+  </div>
+</div>
+
+<script>
+/* 固定頁首的毛玻璃。做法與手機版相同，只有選擇器換了。
+   1. 捲動超過 4px 就掛上 html.scrolled，把玻璃與收合一起打開。
+      沒有 JS 的時候不會掛，頁首就是一條透明的 sticky 條 —— 不會壞，只是沒有效果。
+   2. 依捲動位置逐幀算出玻璃的顏色寫進 --glass。
+
+   **終點必須是不透明的**，這一點是關鍵。漸變區間是「條子開始壓到窄帶」到
+   「窄帶整條從條子底下過完」—— 這段期間條子底下都是深色，顏色怎麼變都看不出來；
+   等窄帶過完、紙色出現時，條子早就是最終的深色了。只要還留著一點透明度，
+   底下換成紙色時條子就一定會跟著變亮，把切換點提早沒有用。 */
+(function () {
+  var root = document.documentElement;
+  var head = document.querySelector('.site-head');
+  var band = document.querySelector('.band');
+  if (!head || !band) return;
+
+  var A = [23, 25, 29, .06];    // 起點：暗區。幾乎不染色，靠模糊撐出玻璃感
+  var B = [50, 53, 60, 1];      // 終點：#32353c，不透明
+
+  function paint() {
+    root.classList.toggle('scrolled', scrollY > 4);
+    var r = band.getBoundingClientRect();
+    var h = head.getBoundingClientRect().height || 1;
+    var t = Math.min(1, Math.max(0, (h - r.top) / (r.height || 1)));
+    var c = A.map(function (v, i) { return v + (B[i] - v) * t; });
+    root.style.setProperty('--glass',
+      'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + c[3].toFixed(3) + ')');
+  }
+
+  var tick = false;
+  function onScroll() {
+    if (tick) return;
+    tick = true;
+    requestAnimationFrame(function () { tick = false; paint(); });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  paint();
+})();
+</script>
+
+<script>
+/* 窄帶裡的瀏覽數：捲進畫面才開始往上數，只跑一次。
+   · 先量好最終寬度再歸零 —— 不鎖住的話「次瀏覽」會被一路往外推。
+   · easeOutQuart：先衝再收。均速跑起來像進度條，沒有跳動的手感。
+   · 系統設定成減少動態時直接寫最終值。
+   上線時的接法：counter.js 取回真實數字後呼叫 window.fangrenCountUp(n)。 */
+(function () {
+  /* 限定在 .band-views 底下 —— 文章卡的數字也叫 .views-n。 */
+  var el = document.querySelector('.band-views .views-n');
+  var sr = document.querySelector('.band-views .sr-only');
+  if (!el) return;
+
+  var raf = window.requestAnimationFrame;
+  function fmt(n) { return n.toLocaleString('zh-TW'); }
+
+  function lockWidth(n) {
+    el.style.minWidth = '';
+    var keep = el.textContent;
+    el.textContent = fmt(n);
+    el.style.minWidth = el.getBoundingClientRect().width + 'px';
+    el.textContent = keep;
+  }
+
+  function run(target) {
+    lockWidth(target);
+    if (sr) sr.textContent = '累計 ' + fmt(target) + ' 次瀏覽';
+
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !raf) { el.textContent = fmt(target); return; }
+
+    var DUR = 1400, t0 = null;
+    el.textContent = fmt(0);
+    raf(function step(t) {
+      if (t0 === null) t0 = t;
+      var p = Math.min(1, (t - t0) / DUR);
+      var e = 1 - Math.pow(1 - p, 4);
+      el.textContent = fmt(Math.round(target * e));
+      if (p < 1) raf(step);
+      else el.textContent = fmt(target);
+    });
+  }
+
+  var done = false;
+  function once(target) { if (done) return; done = true; run(target); }
+
+  window.fangrenCountUp = function (n) {
+    done = true;
+    el.setAttribute('data-count', n);
+    run(n);
+  };
+
+  var demo = parseInt(el.getAttribute('data-count'), 10) || 0;
+
+  if (!('IntersectionObserver' in window)) { once(demo); return; }
+  var io = new IntersectionObserver(function (entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) { io.disconnect(); once(demo); return; }
+    }
+  }, { threshold: .6 });
+  io.observe(el);
+})();
+</script>
+
+<script>
+/* 主題與科別的篩選。與手機版同一支，一行都沒有改：
+   1. 按一下同時篩文章與醫師；再按同一顆＝取消。
+   2. 沒有 JS 的時候 chips 就是按不動的按鈕，底下什麼都不會被藏 —— 不會壞。
+   3. 對應關係讀的是 HTML 上的 data-spec，跟配色共用同一個屬性，
+      所以顏色與篩選永遠不可能對不起來。 */
+(function () {
+  var chips = document.querySelectorAll('.chips button[data-spec]');
+  if (!chips.length) return;
+
+  var cards  = document.querySelectorAll('.cards .card[data-spec]');
+  var docs   = document.querySelectorAll('.docs .doc[data-spec]');
+  var note   = document.querySelector('.filter-note');
+  var emptyA = document.querySelector('.empty-note[data-for="articles"]');
+  var emptyD = document.querySelector('.empty-note[data-for="doctors"]');
+  var active = null;
+
+  function apply(spec, label) {
+    var nA = 0, nD = 0;
+    Array.prototype.forEach.call(cards, function (el) {
+      var hit = !spec || el.getAttribute('data-spec') === spec;
+      el.classList.toggle('is-filtered-out', !hit);
+      if (hit) nA++;
+    });
+    Array.prototype.forEach.call(docs, function (el) {
+      var hit = !spec || el.getAttribute('data-spec') === spec;
+      el.classList.toggle('is-filtered-out', !hit);
+      if (hit) nD++;
+    });
+
+    if (emptyA) emptyA.hidden = !(spec && nA === 0);
+    if (emptyD) emptyD.hidden = !(spec && nD === 0);
+
+    if (!note) return;
+    if (!spec) { note.hidden = true; note.textContent = ''; return; }
+    note.hidden = false;
+    /* 「文章」「醫師」是錨點，點下去跳到對應的小節。
+       數量是 0 的時候不給連結 —— 跳過去只會看到「這一科目前還沒有文章」。 */
+    var a = nA ? '<a href="#articles">文章</a>' : '文章';
+    var d = nD ? '<a href="#doctors">醫師</a>' : '醫師';
+    note.innerHTML = '<b>' + label + '</b>：' + nA + ' 篇' + a + '、' + nD + ' 位' + d + '。';
+  }
+
+  Array.prototype.forEach.call(chips, function (btn) {
+    btn.addEventListener('click', function () {
+      var spec = btn.getAttribute('data-spec');
+      var off = (active === spec);
+      active = off ? null : spec;
+      Array.prototype.forEach.call(chips, function (b) {
+        b.setAttribute('aria-pressed', (!off && b === btn) ? 'true' : 'false');
+      });
+      apply(active, btn.textContent.trim());
+    });
+  });
+})();
+</script>
+
+<div class="hero-switch" role="group" aria-label="窄帶底色">
+  <b>底色</b>
+  <button type="button" data-band="blue"  aria-pressed="true">藍黑（現況）</button>
+  <button type="button" data-band="tar"   aria-pressed="false">柏油</button>
+  <button type="button" data-band="ink"   aria-pressed="false">墨色</button>
+  <button type="button" data-band="glass" aria-pressed="false">毛玻璃</button>
+</div>
+<div class="hero-switch hero-switch-2" role="group" aria-label="三格間距">
+  <b>間距</b>
+  <button type="button" data-gap="now"  aria-pressed="true">現在</button>
+  <button type="button" data-gap="wide" aria-pressed="false">拉開</button>
+  <button type="button" data-gap="full" aria-pressed="false">撐滿版心</button>
+</div>
+<p class="hero-caption" id="hero-caption"></p>
+
+<script>
+/* 兩組獨立的切換：底色四案 × 間距三案，共 12 種組合都可以直接看。
+   兩組各自記在 localStorage，網址也可帶 ?band=tar&gap=full。 */
+(function () {
+  var BAND = {
+    blue:  '底色一 藍黑（現況）H=220：夜空與柏油的中間值。當初窄帶接在照片下面、要同時接住上面的夜空與下面的紙色，取中間值合理 —— 但現在它壓住的位置只有柏油。',
+    tar:   '底色二 柏油 H=20：取自 PALETTE.md 裡柏油的實測值 #221e1c 的色相，亮度 L* 和藍黑案完全一樣，差別純粹是色調。這是「窄帶從柏油長出來」的直接答案。',
+    ink:   '底色三 墨色 H=88：取自內文墨色 #2a2c27 的色相，亮度同上。好處是它和內文的字同一個調，整站的深色只有一種傾向。',
+    glass: '底色四 毛玻璃：#191614 遮罩 .52 ＋ 模糊 16px。柏油的紋理會隱約透出來，帶子像壓在路面上的一層霧而不是一塊板。這一案只有在窄帶疊到照片上之後才可能。'
+  };
+  var GAP = {
+    now:  '間距一 現在：靠內容寬度，左右各 1.9rem。',
+    wide: '間距二 拉開：左右各 4rem，仍然由內容寬度決定，只是鬆一點。',
+    full: '間距三 撐滿版心：三格各佔版心的三分之一，分隔線落在三等分點上 —— 手機版的做法搬到 1160px 的版心，窄帶的兩端才真的被用到。'
+  };
+  var root = document.documentElement;
+  var cap  = document.getElementById('hero-caption');
+  var cur  = { band: 'blue', gap: 'now' };
+
+  function paint() {
+    root.setAttribute('data-band', cur.band);
+    root.setAttribute('data-gap', cur.gap);
+    document.querySelectorAll('.hero-switch button[data-band]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-band') === cur.band ? 'true' : 'false');
+    });
+    document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-gap') === cur.gap ? 'true' : 'false');
+    });
+    if (cap) cap.textContent = BAND[cur.band] + '　／　' + GAP[cur.gap];
+    try {
+      localStorage.setItem('fangren:band', cur.band);
+      localStorage.setItem('fangren:gap', cur.gap);
+    } catch (e) {}
+  }
+
+  document.querySelectorAll('.hero-switch button[data-band]').forEach(function (b) {
+    b.addEventListener('click', function () { cur.band = b.getAttribute('data-band'); paint(); });
+  });
+  document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
+    b.addEventListener('click', function () { cur.gap = b.getAttribute('data-gap'); paint(); });
+  });
+
+  function pick(key, map, fallback) {
+    var q = (location.search.match(new RegExp('[?&]' + key + '=([a-z]+)')) || [])[1];
+    if (map[q]) return q;
+    var v = null;
+    try { v = localStorage.getItem('fangren:' + key); } catch (e) {}
+    return map[v] ? v : fallback;
+  }
+  cur.band = pick('band', BAND, 'blue');
+  cur.gap  = pick('gap',  GAP,  'now');
+  paint();
+})();
+</script>
+</body>
+</html>
