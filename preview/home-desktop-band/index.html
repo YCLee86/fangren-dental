@@ -712,10 +712,21 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 /* ---- 頁尾：手機一欄 → 電腦三欄 ---------------------------------------- */
 .foot { background: var(--card); border-top: 1px solid var(--rule); padding-block: 2.4rem 1.6rem; }
+/* 四欄：診所資料／看診時間／站內導覽／免責。
+   最後一欄給 1.5fr —— 只有它是整段文字，其餘三欄都是短行。 */
 .foot-cols {
   display: grid; gap: 1.6rem 2.4rem;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1.2fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, .85fr) minmax(0, .7fr) minmax(0, 1.5fr);
 }
+/* 電話是頁尾唯一需要視覺停留的東西 —— 捲到底的人多半就是在找它。
+   字級比內文大一階，沿用診所資訊卡的做法但不加色塊（頁尾已經是卡色，
+   再墊一塊會和上面那張資訊卡打架）。 */
+.foot-tel { margin-top: .5rem !important; font-size: 1.08rem !important; letter-spacing: .02em; }
+.foot-tel a { color: var(--teal); text-decoration: none; }
+.foot-note { font-size: .76rem !important; }
+.foot-nav { margin: 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
+.foot-nav a { font-size: .82rem; color: var(--ink-soft); text-decoration: none; }
+.foot-nav a:hover { color: var(--teal); text-decoration: underline; }
 .foot h4 { margin: 0 0 .5rem; font-size: .95rem; }
 .foot p { margin: 0 0 .7rem; font-size: .82rem; line-height: 1.8; color: var(--ink-soft); }
 .foot p:last-child { margin-bottom: 0; }
@@ -1097,19 +1108,46 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 <footer class="foot">
   <div class="shell">
     <div class="foot-cols">
+      <!-- 2026-08-07：頁尾改寫。
+           拿掉「雲林縣斗六市・在地經營超過四十年」——
+             · 同一個捲動流程裡這是第三次講四十年（HERO 的詩、窄帶的 1983），
+               而且是最差的一次：前兩個是故事與事實，這句是形容詞、主詞是診所。
+             · 語氣違背 COPY.md 的紅線（自我表功、行銷腔）。
+             · 「超過四十年」會過期，1983 不會。
+             · 「雲林縣斗六市」已在 title、meta description、JSON-LD 的 address、
+               下面的地址那一行出現過，再重複不會加分。
+           補上兩件原本沒有、但頁尾真正該有的：
+             · **看診時間** —— JSON-LD 有 openingHoursSpecification，但那是給機器看的，
+               人看不到。在地搜尋的決策裡「現在開嗎」佔很大比重。
+             · **站內導覽** —— 原本的頁尾一條站內連結都沒有（只有 tel: 與地圖）。
+               頁尾的內部連結對爬取深度與權重分配有實際作用。 -->
       <div>
         <h4>芳仁牙醫診所</h4>
-        <p>雲林縣斗六市・在地經營超過四十年<br>
-           地址：雲林縣斗六市永樂街 70 號<br>
-           電話：<a href="tel:+88655339369">05-533-9369</a></p>
+        <p>雲林縣斗六市永樂街 70 號<br>
+           <a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">在 Google 地圖開啟</a></p>
+        <p class="foot-tel"><a href="tel:+88655339369">05-533-9369</a></p>
+      </div>
+      <div>
+        <h4>看診時間</h4>
+        <p>週一至週五<br>
+           上午 08:45–12:00<br>
+           下午 13:45–16:45<br>
+           晚上 17:45–20:30</p>
+        <p class="foot-note">週六、週日休診。國定假日請來電確認。</p>
+      </div>
+      <div>
+        <h4>站內導覽</h4>
+        <ul class="foot-nav">
+          <li><a href="#topics">主題與科別</a></li>
+          <li><a href="#articles">全部文章</a></li>
+          <li><a href="#doctors">醫師介紹</a></li>
+          <li><a href="#clinic">診所資訊</a></li>
+        </ul>
       </div>
       <div>
         <h4>關於這些文章</h4>
         <p>本站文章為一般口腔衛教資訊，用意在於幫助讀者理解常見狀況，不能取代臨床診斷。實際狀況請就診由醫師評估。</p>
-      </div>
-      <div>
-        <h4>圖片來源</h4>
-        <p>首頁主視覺與診療室照片為芳仁牙醫診所自有，未經同意請勿轉載。文章內頁插圖與網站識別圖示為本站自製。</p>
+        <p>照片與插圖為芳仁牙醫診所自有或本站自製，未經同意請勿轉載。</p>
       </div>
     </div>
     <div class="foot-bottom">
