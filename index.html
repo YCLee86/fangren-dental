@@ -881,7 +881,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   html.scrolled .brand-text b { font-size: clamp(12.6px, 3.429648vw, 16.2px); }
   .brand-text small { font-size: clamp(10px, 2.6152vw, 12.5px); }
   html.scrolled .brand-text small { font-size: clamp(9px, 2.35368vw, 11.25px); }
-  .site-nav { font-size: clamp(10px, 2.6152vw, 12.5px); padding-top: .7472vw; }
+  /* 間距從電腦版的 1.9rem（30.4px）收到 3.2vw（375 上是 12px），
+     省下來的寬度還給字級：10px → 12px。
+     375 上的算式：品牌 129 ＋ 頁首間距 11 ＋ 選單（12 字 ×12 ＋ 2×12）＝ 168
+                   ＋ 左右內距 30  ＝ 338，離 375 還有 37px，維持一行。 */
+  .site-nav { font-size: clamp(11px, 3.2vw, 13px); gap: 3.2vw; padding-top: .7472vw; }
   /* 手機的品牌是兩行（標題／副標各一行），不是電腦版那種「標題｜副標」橫排。
      兩個子元素都要 display: block —— 只把 .brand-text 改成 block 不夠，
      b 與 small 仍是行內元素，會排成同一行（量到副標在 155~238、正好被選單蓋住）。 */
@@ -889,6 +893,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .brand-text b, .brand-text small { display: block; }
   .brand-text small { padding-left: 0; }
   .brand-text small::before { display: none; }
+  /* 副標撐齊標題的右緣。區塊寬度由較寬的那一行（標題）決定，
+     text-align-last: justify 讓副標把字距拉開填滿同一個寬度，兩行右緣才會切齊。
+     這一條原本只在手機版的 preview 裡，搬過來的時候漏了。 */
+  .brand-text small { text-align: justify; text-align-last: justify; }
 
   /* ---- HERO：照片一塊、窄帶接在下面 --------------------------------- */
   .hero-photo { height: 74.72vw; }
@@ -898,7 +906,23 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   /* 上緣那層漸層是整屏版為了讓頁首壓在水泥牆上仍讀得到字才加的；
      手機的頁首壓在天空上，不需要，留著只會讓天空變濁。 */
   .hero-photo::after { display: none; }
-  .hero > .band { position: static; }
+  /* ---- 窄帶：手機是實色漸層，不是毛玻璃 -----------------------------
+     **position 一定要 relative，不能 static。** .band::before（毛玻璃）與
+     .band::after（柏油漸層）都是 position:absolute; inset:0 ——
+     .band 若是 static 就不是它們的包含塊，兩層會改用 .hero（position:relative），
+     於是**整張照片被 blur(4px) 糊掉、再蓋上一層柏油色**，
+     那就是「HERO 整個變暗糊掉」的原因。
+
+     手機版本來就不用毛玻璃：帶子接在照片下面，底下沒有東西可以透，
+     所以兩層直接關掉，換回定案手機版的夜色漸層（PALETTE 第四節 A）。 */
+  .hero > .band { position: relative; }
+  .band::before, .band::after { display: none; }
+  .band {
+    min-height: 76px;
+    background-color: var(--band-bg);
+    background-image: linear-gradient(180deg,
+      var(--band-top) 0%, var(--band-bg) 55%, var(--band-bot) 100%);
+  }
   .hero-copy { padding-top: 0; padding-bottom: 0; }
   /* 詩的位置照手機版：距上緣約 5vh（原 5cqh），和頁首之間留一個呼吸 */
   .hero-copy { justify-content: flex-start; padding-top: 15vw; }

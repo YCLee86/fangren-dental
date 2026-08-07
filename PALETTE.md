@@ -961,6 +961,36 @@ UA                iPhone OS 18_7 / AppleWebKit 605.1.15
 改完之後在 375 與 390 兩個寬度量到的結果一致：
 `html.scrollWidth` 等於視窗寬、**可左右拉 0px**、品牌名單行。
 
+### ⚠ 虛擬元素的 `position: absolute` 是找**祖先**，不是找自己那個元素
+
+首頁把窄帶從「壓在整屏下緣」改成手機的「接在照片下面」時，我寫了：
+
+```css
+.hero > .band { position: static; }     /* ← 錯 */
+```
+
+`.band::before`（毛玻璃 `blur(4px)`）與 `.band::after`（柏油漸層）都是
+`position: absolute; inset: 0`。`.band` 一旦是 `static` 就**不是包含塊**，
+兩層改用 `.hero`（`position: relative`）—— 於是整張 HERO 照片被糊掉、再蓋一層柏油色。
+使用者的原話是「Hero 區的圖片整個變暗糊掉了」。
+
+```css
+.hero > .band { position: relative; }   /* 留在流內，但仍是自己虛擬元素的包含塊 */
+```
+
+手機版本來就不用毛玻璃（帶子接在照片下面，底下沒有東西可以透），
+所以兩層直接 `display: none`，換回定案的夜色漸層。
+
+### 頁首品牌兩行要右緣切齊，靠的是 `text-align-last: justify`
+
+```css
+.brand-text small { text-align: justify; text-align-last: justify; }
+```
+
+區塊寬度由較寬的那一行（標題六字）決定，副標八字用字距拉開填滿同一個寬度，
+兩行的右緣才會切齊。**捲動收合時也成立**，因為兩行的字級是整組 ×0.9、比例不變。
+量到的結果：375／390／414 三個寬度、正常與收合兩種狀態，右緣差都是 `0.00`。
+
 ### ⚠⚠ 內嵌 `<svg>` 一定要寫 `width` / `height` 屬性
 
 **這是頁首搞了七輪的真正源頭。**
