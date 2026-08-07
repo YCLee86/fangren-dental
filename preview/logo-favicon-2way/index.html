@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>淺色五案 × 深色三案・兩邊都能換 — 芳仁牙醫診所</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<!--
+  進行中：favicon 顏色。左半的淺色五案（現況 #4f6361 起，往亮處走四階），
+  右半保留上一輪的深色 1、2、3。兩邊各一組 radio，可以任意配。
+
+  淺色五案怎麼來的：Lab 的色相角（189.7°）與彩度（C*=8.10）**鎖住**，只抬 L*。
+  只抬 HSL 明度會愈提愈灰（PALETTE 第六節量過，使用者形容「像漂白過」）。
+  上限：第五案 L*=45.22，比最深的深色案 #49785e（46.52）還低一步 ——
+  淺色永遠比深色暗，這是使用者定的界線。
+
+  切換是純 CSS（radio ＋ #id:checked ~ 兄弟選擇器，15 組合用兩個 :checked 串接）。
+  **不要放 script** —— 手機的檔案預覽器會擋掉，按了完全沒反應。
+  每一格的讀數都是同一組固定欄位、高度鎖死，換候選時版面不會跳。
+-->
+</head>
+<body>
+<style>
+:root{
+  --paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;--ink:#2a2c27;--ink-soft:#5c5f57;
+  --light:#556967;--cand:#4b7a60;
+  --pad:clamp(.9rem,4vw,2rem)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
+  font-size:16px;line-height:1.85;letter-spacing:.01em}
+.wrap{max-width:44rem;margin-inline:auto;padding:0 var(--pad) var(--pad)}
+h1{font-size:1.2rem;line-height:1.5;margin:0 0 .35rem}
+.lede{margin:0 0 1rem;font-size:.84rem;line-height:1.8;color:var(--ink-soft)}
+.lede b{color:var(--ink)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+
+.r{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.bar{position:sticky;top:0;z-index:20;background:var(--paper);
+  padding:var(--pad) var(--pad) .55rem;max-width:44rem;margin-inline:auto}
+.bar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--rule)}
+.row{display:flex;align-items:center;gap:.5rem}
+.row+.row{margin-top:.4rem}
+.rl{flex:0 0 1.9rem;font-size:.74rem;line-height:1.6;color:var(--ink-soft)}
+.picks{flex:1 1 auto;display:flex;gap:4px;padding:4px;border-radius:12px;background:var(--card);
+  border:1px solid var(--rule)}
+.pick{flex:1 1 0;display:flex;align-items:center;justify-content:center;gap:.35rem;
+  padding:.3rem .3rem;border-radius:9px;cursor:pointer;font-size:.84rem;line-height:1.8;
+  color:var(--ink-soft);font-variant-numeric:tabular-nums;user-select:none;
+  transition:background-color .18s ease,color .18s ease}
+.sw{width:.66rem;height:.66rem;border-radius:50%;display:inline-block;flex:0 0 auto}
+/* 讀數高度鎖死兩行，每格欄位同形 —— 換候選時底下不會被推走 */
+.hint{margin:.45rem 0 0;font-size:.75rem;line-height:1.7;color:var(--ink-soft);
+  font-variant-numeric:tabular-nums;min-height:3.4em}
+.hint b{color:var(--ink);font-weight:500}
+.hint code{font-size:.9em}
+.sep{opacity:.5;margin:0 .25rem}
+.v{display:none}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);
+  border-radius:12px;overflow:hidden;margin-bottom:.9rem}
+.side{padding:.75rem .8rem 1rem;min-width:0}
+.side.l{background:#fff}
+.side.d{background:#22252a}
+.cap{margin:0 0 .55rem;font-size:.68rem;line-height:1.6;letter-spacing:.03em}
+.side.l .cap{color:#7b7f77}
+.side.d .cap{color:#8b9098}
+.cap code{font-size:.66rem}
+
+.tab{display:flex;align-items:center;gap:.4rem;min-width:0;padding:.4rem .55rem;border-radius:8px}
+.side.l .tab{background:#eef0f2}
+.side.d .tab{background:#2b2f36}
+.ti{display:flex;flex:0 0 16px}
+.side.l .ti{color:var(--light)}
+.side.d .ti{color:var(--cand)}
+.tt{font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;font-size:.74rem;line-height:1.6;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side.l .tt{color:#2a2c27}
+.side.d .tt{color:#e8eaed}
+
+.lock{display:flex;align-items:center;gap:.5rem;margin-top:.7rem;min-width:0}
+.lmk{display:flex;flex:0 0 30px}
+.side.l .lmk{color:var(--light)}
+.side.d .lmk{color:var(--cand)}
+.ltxt{display:flex;flex-direction:column;min-width:0}
+.ltxt b{font-size:.92rem;line-height:1.3;font-weight:500;letter-spacing:.03em;white-space:nowrap}
+.ltxt small{font-size:.64rem;line-height:1.5;letter-spacing:.04em;white-space:nowrap}
+.side.l .ltxt b{color:#2a2c27}.side.l .ltxt small{color:#6b6f68}
+.side.d .ltxt b{color:rgba(255,255,255,.95)}.side.d .ltxt small{color:rgba(255,255,255,.6)}
+
+.big{display:flex;align-items:center;justify-content:center;padding:.9rem 0 .2rem}
+.side.l .big{color:var(--light)}
+.side.d .big{color:var(--cand)}
+.px{display:flex;align-items:flex-end;justify-content:center;gap:.8rem;padding:.7rem 0 0}
+.px figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.px figcaption{font-size:.6rem;line-height:1.4;font-variant-numeric:tabular-nums}
+.side.l .px{color:var(--light)}.side.l .px figcaption{color:#8a8e86}
+.side.d .px{color:var(--cand)}.side.d .px figcaption{color:#7d838b}
+
+.ramps{display:grid;grid-template-columns:5fr 3fr;gap:.6rem;margin-bottom:.9rem}
+.ramp{display:flex;justify-content:space-around;align-items:flex-end;gap:.4rem;
+  border-radius:12px;padding:.9rem .6rem .7rem}
+.ramp-l{background:#fff;border:1px solid var(--rule)}
+.ramp-d{background:#22252a}
+.ramp figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.ramp figcaption{font-size:.66rem;line-height:1.4;font-variant-numeric:tabular-nums}
+.ramp-l figcaption{color:#8a8e86}
+.ramp-d figcaption{color:#8b9098}
+
+table{width:100%;border-collapse:collapse;font-size:.73rem;line-height:1.7;margin:0 0 .9rem;
+  font-variant-numeric:tabular-nums}
+caption{text-align:left;font-size:.76rem;line-height:1.8;padding:0 0 .25rem;color:var(--ink)}
+th,td{border:1px solid var(--rule);padding:.25rem .45rem;text-align:left}
+th{background:var(--card);font-weight:500;color:var(--ink)}
+td{color:var(--ink-soft)}
+td.no{color:#8a5a4a}
+
+.note{margin:0 0 1.2rem;padding:.75rem .9rem;background:var(--card);border:1px solid var(--rule);
+  border-radius:10px;font-size:.78rem;line-height:1.8;color:var(--ink-soft)}
+.note b{color:var(--ink)}
+.note p{margin:0 0 .5rem}.note p:last-child{margin:0}
+.foot{margin-top:1rem;font-size:.78rem;line-height:1.85;color:var(--ink-soft)}
+.foot p{margin:0 0 .6rem}.foot b{color:var(--ink)}.foot a{color:#4f6361}
+
+#l1:checked ~ .bar, #l1:checked ~ .wrap { --light: #4f6361; }
+#l1:checked ~ .bar .pick[for="l1"] { background: #4f6361; color: #fff; }
+#l1:checked ~ .bar .vl1, #l1:checked ~ .wrap .vl1 { display: inline; }
+#l1:checked ~ .wrap .ramp-l .k1 { outline: 2px solid #2a2c27; outline-offset: 3px; border-radius: 4px; }
+#l2:checked ~ .bar, #l2:checked ~ .wrap { --light: #526664; }
+#l2:checked ~ .bar .pick[for="l2"] { background: #526664; color: #fff; }
+#l2:checked ~ .bar .vl2, #l2:checked ~ .wrap .vl2 { display: inline; }
+#l2:checked ~ .wrap .ramp-l .k2 { outline: 2px solid #2a2c27; outline-offset: 3px; border-radius: 4px; }
+#l3:checked ~ .bar, #l3:checked ~ .wrap { --light: #556967; }
+#l3:checked ~ .bar .pick[for="l3"] { background: #556967; color: #fff; }
+#l3:checked ~ .bar .vl3, #l3:checked ~ .wrap .vl3 { display: inline; }
+#l3:checked ~ .wrap .ramp-l .k3 { outline: 2px solid #2a2c27; outline-offset: 3px; border-radius: 4px; }
+#l4:checked ~ .bar, #l4:checked ~ .wrap { --light: #586c6a; }
+#l4:checked ~ .bar .pick[for="l4"] { background: #586c6a; color: #fff; }
+#l4:checked ~ .bar .vl4, #l4:checked ~ .wrap .vl4 { display: inline; }
+#l4:checked ~ .wrap .ramp-l .k4 { outline: 2px solid #2a2c27; outline-offset: 3px; border-radius: 4px; }
+#l5:checked ~ .bar, #l5:checked ~ .wrap { --light: #5b6f6d; }
+#l5:checked ~ .bar .pick[for="l5"] { background: #5b6f6d; color: #fff; }
+#l5:checked ~ .bar .vl5, #l5:checked ~ .wrap .vl5 { display: inline; }
+#l5:checked ~ .wrap .ramp-l .k5 { outline: 2px solid #2a2c27; outline-offset: 3px; border-radius: 4px; }
+#d1:checked ~ .bar, #d1:checked ~ .wrap { --cand: #49785e; }
+#d1:checked ~ .bar .pick[for="d1"] { background: #49785e; color: #fff; }
+#d1:checked ~ .bar .vd1, #d1:checked ~ .wrap .vd1 { display: inline; }
+#d1:checked ~ .wrap .ramp-d .k1 { outline: 2px solid #e8eaed; outline-offset: 3px; border-radius: 4px; }
+#d2:checked ~ .bar, #d2:checked ~ .wrap { --cand: #4b7a60; }
+#d2:checked ~ .bar .pick[for="d2"] { background: #4b7a60; color: #fff; }
+#d2:checked ~ .bar .vd2, #d2:checked ~ .wrap .vd2 { display: inline; }
+#d2:checked ~ .wrap .ramp-d .k2 { outline: 2px solid #e8eaed; outline-offset: 3px; border-radius: 4px; }
+#d3:checked ~ .bar, #d3:checked ~ .wrap { --cand: #4c7c62; }
+#d3:checked ~ .bar .pick[for="d3"] { background: #4c7c62; color: #fff; }
+#d3:checked ~ .bar .vd3, #d3:checked ~ .wrap .vd3 { display: inline; }
+#d3:checked ~ .wrap .ramp-d .k3 { outline: 2px solid #e8eaed; outline-offset: 3px; border-radius: 4px; }
+#l1:checked ~ #d1:checked ~ .bar .vc11 { display: inline; }
+#l1:checked ~ #d2:checked ~ .bar .vc12 { display: inline; }
+#l1:checked ~ #d3:checked ~ .bar .vc13 { display: inline; }
+#l2:checked ~ #d1:checked ~ .bar .vc21 { display: inline; }
+#l2:checked ~ #d2:checked ~ .bar .vc22 { display: inline; }
+#l2:checked ~ #d3:checked ~ .bar .vc23 { display: inline; }
+#l3:checked ~ #d1:checked ~ .bar .vc31 { display: inline; }
+#l3:checked ~ #d2:checked ~ .bar .vc32 { display: inline; }
+#l3:checked ~ #d3:checked ~ .bar .vc33 { display: inline; }
+#l4:checked ~ #d1:checked ~ .bar .vc41 { display: inline; }
+#l4:checked ~ #d2:checked ~ .bar .vc42 { display: inline; }
+#l4:checked ~ #d3:checked ~ .bar .vc43 { display: inline; }
+#l5:checked ~ #d1:checked ~ .bar .vc51 { display: inline; }
+#l5:checked ~ #d2:checked ~ .bar .vc52 { display: inline; }
+#l5:checked ~ #d3:checked ~ .bar .vc53 { display: inline; }
+</style>
+
+<input class="r" type="radio" name="lt" id="l1">
+<input class="r" type="radio" name="lt" id="l2">
+<input class="r" type="radio" name="lt" id="l3" checked>
+<input class="r" type="radio" name="lt" id="l4">
+<input class="r" type="radio" name="lt" id="l5">
+<input class="r" type="radio" name="dk" id="d1">
+<input class="r" type="radio" name="dk" id="d2" checked>
+<input class="r" type="radio" name="dk" id="d3">
+
+<div class="bar">
+  <div class="row"><span class="rl">淺</span>
+    <span class="picks">
+      <label class="pick" for="l1"><span class="sw" style="background:#4f6361"></span>1</label>
+      <label class="pick" for="l2"><span class="sw" style="background:#526664"></span>2</label>
+      <label class="pick" for="l3"><span class="sw" style="background:#556967"></span>3</label>
+      <label class="pick" for="l4"><span class="sw" style="background:#586c6a"></span>4</label>
+      <label class="pick" for="l5"><span class="sw" style="background:#5b6f6d"></span>5</label>
+    </span>
+  </div>
+  <div class="row"><span class="rl">深</span>
+    <span class="picks">
+      <label class="pick" for="d1"><span class="sw" style="background:#49785e"></span>1</label>
+      <label class="pick" for="d2"><span class="sw" style="background:#4b7a60"></span>2</label>
+      <label class="pick" for="d3"><span class="sw" style="background:#4c7c62"></span>3</label>
+    </span>
+  </div>
+  <p class="hint"><span class="v vl1">淺 <b>#4f6361</b>　對白底 <b>6.38</b></span>
+    <span class="v vl2">淺 <b>#526664</b>　對白底 <b>6.10</b></span>
+    <span class="v vl3">淺 <b>#556967</b>　對白底 <b>5.83</b></span>
+    <span class="v vl4">淺 <b>#586c6a</b>　對白底 <b>5.57</b></span>
+    <span class="v vl5">淺 <b>#5b6f6d</b>　對白底 <b>5.33</b></span><span class="sep">·</span><span class="v vd1">深 <b>#49785e</b>　對 <code>#22252a</code> <b>3.02</b></span>
+    <span class="v vd2">深 <b>#4b7a60</b>　對 <code>#22252a</code> <b>3.11</b></span>
+    <span class="v vd3">深 <b>#4c7c62</b>　對 <code>#22252a</code> <b>3.20</b></span><span class="sep">·</span><span class="v vc11">兩邊色差 ΔE <b>18.9</b></span>
+    <span class="v vc12">兩邊色差 ΔE <b>19.1</b></span>
+    <span class="v vc13">兩邊色差 ΔE <b>19.5</b></span>
+    <span class="v vc21">兩邊色差 ΔE <b>18.6</b></span>
+    <span class="v vc22">兩邊色差 ΔE <b>18.7</b></span>
+    <span class="v vc23">兩邊色差 ΔE <b>19.1</b></span>
+    <span class="v vc31">兩邊色差 ΔE <b>18.3</b></span>
+    <span class="v vc32">兩邊色差 ΔE <b>18.4</b></span>
+    <span class="v vc33">兩邊色差 ΔE <b>18.8</b></span>
+    <span class="v vc41">兩邊色差 ΔE <b>18.1</b></span>
+    <span class="v vc42">兩邊色差 ΔE <b>18.2</b></span>
+    <span class="v vc43">兩邊色差 ΔE <b>18.5</b></span>
+    <span class="v vc51">兩邊色差 ΔE <b>18.0</b></span>
+    <span class="v vc52">兩邊色差 ΔE <b>18.0</b></span>
+    <span class="v vc53">兩邊色差 ΔE <b>18.3</b></span></p>
+</div>
+
+<div class="wrap">
+<h1>淺色五案 × 深色三案</h1>
+<p class="lede">上排換<b>左半邊</b>（淺色），下排換<b>右半邊</b>（深色，就是上一輪保留的 1、2、3）。
+  兩邊可以任意配，<b>15 種組合</b>都看得到。淺色 1 是現況，往右愈來愈亮 ——
+  <b>第 5 案是上限，再亮就會超過深色版了</b>。</p>
+
+<div class="pair">
+  <div class="side l">
+    <p class="cap">淺色・<span class="v vl1">1　<code>#4f6361</code></span>
+      <span class="v vl2">2　<code>#526664</code></span>
+      <span class="v vl3">3　<code>#556967</code></span>
+      <span class="v vl4">4　<code>#586c6a</code></span>
+      <span class="v vl5">5　<code>#5b6f6d</code></span></p>
+    <div class="tab"><span class="ti"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt">芳仁牙醫診所</span></div>
+    <div class="lock"><span class="lmk"><svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span>
+      <span class="ltxt"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span></div>
+  </div>
+  <div class="side d">
+    <p class="cap">深色・<span class="v vd1">1　<code>#49785e</code></span>
+      <span class="v vd2">2　<code>#4b7a60</code></span>
+      <span class="v vd3">3　<code>#4c7c62</code></span></p>
+    <div class="tab"><span class="ti"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt">芳仁牙醫診所</span></div>
+    <div class="lock"><span class="lmk"><svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span>
+      <span class="ltxt"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span></div>
+  </div>
+</div>
+
+<div class="pair">
+  <div class="side l">
+    <p class="cap">放大</p>
+    <div class="big"><svg viewBox="0 0 64 64" width="96" height="96" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></div>
+    <div class="px">
+      <figure><svg viewBox="0 0 64 64" width="32" height="32" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg><figcaption>32</figcaption></figure>
+      <figure><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg><figcaption>16</figcaption></figure>
+    </div>
+  </div>
+  <div class="side d">
+    <p class="cap">放大</p>
+    <div class="big"><svg viewBox="0 0 64 64" width="96" height="96" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></div>
+    <div class="px">
+      <figure><svg viewBox="0 0 64 64" width="32" height="32" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg><figcaption>32</figcaption></figure>
+      <figure><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg><figcaption>16</figcaption></figure>
+    </div>
+  </div>
+</div>
+
+<div class="ramps">
+  <div class="ramp ramp-l">
+      <figure class="k1"><span style="color:#4f6361"><svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>1</figcaption></figure>
+      <figure class="k2"><span style="color:#526664"><svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>2</figcaption></figure>
+      <figure class="k3"><span style="color:#556967"><svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>3</figcaption></figure>
+      <figure class="k4"><span style="color:#586c6a"><svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>4</figcaption></figure>
+      <figure class="k5"><span style="color:#5b6f6d"><svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>5</figcaption></figure>
+  </div>
+  <div class="ramp ramp-d">
+      <figure class="k1"><span style="color:#49785e"><svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>1</figcaption></figure>
+      <figure class="k2"><span style="color:#4b7a60"><svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>2</figcaption></figure>
+      <figure class="k3"><span style="color:#4c7c62"><svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>3</figcaption></figure>
+  </div>
+</div>
+
+<table>
+  <caption>淺色五案（色相角與 Lab 彩度鎖住，只抬 L*）</caption>
+  <tr><th>#</th><th>色</th><th>L*</th><th>對白底</th><th>對 <code>#e2e5e6</code></th><th></th></tr>
+  <tr><td>1</td><td><code>#4f6361</code></td><td>40.33</td><td>6.38</td><td>5.04</td><td>現況</td></tr>
+  <tr><td>2</td><td><code>#526664</code></td><td>41.56</td><td>6.10</td><td>4.82</td><td>＋1</td></tr>
+  <tr><td>3</td><td><code>#556967</code></td><td>42.78</td><td>5.83</td><td>4.60</td><td>＋2</td></tr>
+  <tr><td>4</td><td><code>#586c6a</code></td><td>44.00</td><td>5.57</td><td>4.40</td><td>＋3</td></tr>
+  <tr><td>5</td><td><code>#5b6f6d</code></td><td>45.22</td><td>5.33</td><td>4.21</td><td>上限</td></tr>
+</table>
+
+<table>
+  <caption>深色三案（上一輪保留，沒有動）</caption>
+  <tr><th>#</th><th>色</th><th>L*</th><th>對 <code>#22252a</code></th><th>對 <code>#2b2f36</code></th><th></th></tr>
+  <tr><td>1</td><td><code>#49785e</code></td><td>46.52</td><td>3.02</td><td class="no">2.64</td><td>保留</td></tr>
+  <tr><td>2</td><td><code>#4b7a60</code></td><td>47.31</td><td>3.11</td><td class="no">2.72</td><td>保留</td></tr>
+  <tr><td>3</td><td><code>#4c7c62</code></td><td>48.05</td><td>3.20</td><td class="no">2.80</td><td>保留</td></tr>
+</table>
+
+<div class="note">
+<p><b>提亮的方式：</b>Lab 的色相角（189.7°）與彩度（C*=8.10）鎖住，只抬 L*。
+  這是刻意的 —— 只把 HSL 明度往上推，這個色會愈提愈灰（診療椅的彩度本來就只有 11.2%），
+  上次你的形容是「像漂白過」。鎖住 Lab 彩度就不會。</p>
+<p><b>上限在哪裡：</b>第 5 案 L*=45.22，比最深的深色案 <code>#49785e</code>（46.52）還低一步。
+  再往上淺色就會比深色亮，兩版的關係整個顛倒 —— 所以停在這裡。</p>
+<p><b>提亮的代價：</b>對白底的對比從 6.38 掉到 5.33。都還遠高於門檻，
+  但淺色版當文字用（頁首同色那種）也是靠這個數字，愈亮就愈接近 4.5 那條線。</p>
+</div>
+
+<div class="foot">
+<p>幾何維持定稿（牙洞 1.6×、上移 1.05）。深色三案就是上一輪的 1、2、3，一個值都沒有改。</p>
+<p>相鄰的頁：<a href="/preview/logo-favicon-ab/">上一輪的深色細分五案</a>、
+  <a href="/preview/logo-favicon/">最早那組跨距大的五個</a>、
+  <a href="/preview/logo-favicon-wordmark/">配上字的三種情境</a>。</p>
+</div>
+</div>
+</body>
+</html>
