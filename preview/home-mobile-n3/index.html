@@ -432,13 +432,28 @@ section + section { border-top: 1px solid var(--rule); }
      · #252d4a 茶室深藍磁磚 —— 口外與贋復原本共用 Deep Taupe，使用者說不同科不要重複。
        贋復（全口重建）拿整個色盤裡最深的那一個。
    -------------------------------------------------------------------------- */
+/* ---- 一個色不夠用的時候（2026-08-07）----------------------------------------
+   其餘五科的 --accent 一個值就能同時當「字」和「底」，因為它們夠深。
+   兒牙的黃不行：當底要亮才像黃，當字要深才讀得到，同一個值做不到兩件事。
+   所以拆成三個，**預設全部等於原本的行為**，其他五科一個像素都不會變：
+     --accent       當「底」用的階（實心藥丸、按下去的 chip）
+     --accent-deep  當「字」用的階（線性標籤的字與框）
+     --on-fill      填色上面的字
+   ＊**這一行必須排在科別色前面。** 它和 [data-spec="kids"] 權重相同，
+     排在後面會把兒牙的 --accent-deep 蓋回 var(--accent)，黃字就糊在卡上了。
+   ---------------------------------------------------------------------------- */
+[data-spec], .info-card { --accent-deep: var(--accent); --on-fill: #fff; }
+
 [data-spec="general"],
 [data-spec="perio"]  { --accent: var(--chair); }  /* 診療椅實測　　　　　 H=174　 6.38:1 */
 [data-spec="endo"]   { --accent: var(--moss);  }  /* 色票・苔綠＝Logo　　 H=100　 5.55:1 */
 [data-spec="ortho"]  { --accent: var(--blue);  }  /* 色票・藍灰＝候診沙發 H=203　 7.41:1 */
 [data-spec="surg"]   { --accent: var(--taupe); }  /* 色票・Taupe＝單椅布料 H=3　　 6.04:1 */
 [data-spec="prosth"] { --accent: var(--tile);  }  /* 茶室深藍磁磚實測　　 H=227　13.53:1 */
-[data-spec="kids"]   { --accent: var(--stool); }  /* 圓凳與木件實測　　　 H=28　　 5.53:1 */
+/* 兒牙原本是圓凳實測的 --stool #8d5e3a。2026-08-07 換成黃 1a #c28229（十一輪，
+   推導見 PALETTE.md 第六之二節）。它比其他五科亮，當「字」用會掉出 AA（對卡只有
+   2.93:1），所以這一科要拆成兩個值 —— 也就是上面 --accent-deep／--on-fill 那組合約。 */
+[data-spec="kids"]   { --accent: #c28229; --accent-deep: #9e6301; --on-fill: #fff; }
 
 /* 診所資訊維持深綠松當家色（它同時是全站的連結色），看診時間那張是 Deep Taupe。 */
 .info-card { --accent: var(--teal); }
@@ -525,13 +540,13 @@ section + section { border-top: 1px solid var(--rule); }
    「底不套色」的意思是底不吃科別色，不是底完全不上色。
    ---------------------------------------------------------------------------- */
 .doc-role, .info-card h3, .chips button, .card-tag {
-  background: var(--card); color: var(--accent); border: 1px solid var(--accent);
+  background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep);
 }
 
 /* 被按下去的治療項目：換成實心。這是全站第二個實心的東西（第一個是醫師藥丸）——
    它代表「你正在看這一科」，跟醫師藥丸的「這位醫師是這一科」是同一種份量，所以長得一樣。
    白字對五個科別色 5.53~13.52:1。 */
-.chips button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.chips button[aria-pressed="true"] { background: var(--accent); color: var(--on-fill); }
 
 /* ---- 只有醫師藥丸是實心的（2026-08-07）--------------------------------------
    同樣是「科別」兩個字，在瀏覽者心裡不是同一個層級：
@@ -541,7 +556,7 @@ section + section { border-top: 1px solid var(--rule); }
    邊框也給同色（不是透明），框的尺寸才跟線性那三處完全一致。
    白字對六個科別色 5.53~13.52:1。
    ---------------------------------------------------------------------------- */
-.doc-role { background: var(--accent); color: #fff; border-color: var(--accent); }
+.doc-role { background: var(--accent); color: var(--on-fill); border-color: var(--accent); }
 
 /* 診所資訊 */
 .info { display: grid; gap: .9rem; }
