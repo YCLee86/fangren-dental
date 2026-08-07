@@ -961,36 +961,54 @@ UA                iPhone OS 18_7 / AppleWebKit 605.1.15
 改完之後在 375 與 390 兩個寬度量到的結果一致：
 `html.scrollWidth` 等於視窗寬、**可左右拉 0px**、品牌名單行。
 
-### ⚠ 頁首用 grid 的 `max-content` 軌道，不要靠 flex 項目的自動尺寸
+### ⚠⚠ 內嵌 `<svg>` 一定要寫 `width` / `height` 屬性
 
-```css
-.site-header { display: grid; grid-template-columns: max-content 1fr; align-items: start; }
-.site-nav    { justify-self: end; flex-wrap: wrap; min-width: 0; }
+**這是頁首搞了七輪的真正源頭。**
+
+`<svg>` 沒有 `width`／`height` 屬性時，**它的內在尺寸在 WebKit 是預設的 300×150**。
+`.brand-mark` 是 flex 項目、`min-width` 預設 `auto`（＝ min-content），
+於是它縮不到 300px 以下 —— `.brand` 的 max-content 就變成
+
+```
+300（標誌被頂住） ＋ 間距 ＋ 品牌文字  ≈  395.5
 ```
 
-真機量到的兩個數字，把病因指得很清楚：
+而真機量到的就是 `.brand w = 395.5`。**Blink 把 `width: 100%` 的 SVG 當成
+min-content 0，所以在這裡怎麼量都正常。**
 
-| | `.brand` 實際寬度 | 症狀 |
-| --- | --- | --- |
-| 只有 `flex: 0 0 auto` | **395.5**（視窗只有 375） | 撐出視窗，頁面可左右拉 36px、捲動時會晃 |
-| 加上 `width: max-content; max-width: 100%` | **345**（＝ `max-width` 夾住） | 不晃了，但仍佔滿整行 → 選單沒位置，換行 |
-| **grid `max-content` 軌道** | **126**（＝ 內容寬度） | ✓ 一行、不溢出 |
+```html
+<svg width="44.2873" height="21.8244" viewBox="0 0 44.2873 21.8244">
+```
+```css
+.brand-mark { min-width: 0; }
+.brand-mark svg { width: 100%; max-width: 100%; height: auto; }
+```
 
-**`width: max-content` 放在 flex 項目上沒有讓 WebKit 改變主意。**
-Blink 對「flex 項目 ＋ `flex-basis: auto` ＋ `width: auto`」給內容寬度，
-WebKit 給可用寬度 —— 差 264px。
-grid 的 `max-content` 軌道則是兩邊都實作得很紮實、沒有解讀空間的東西。
+屬性只是給「內在尺寸」用的，CSS 的 `width: 100%` 仍然覆蓋它，畫面一個像素都不變。
+兩頁的標誌都補了。
 
-量到的結果：280／320／375／390 四個寬度下 `可左右拉` 全部 0，
-`.brand` 121~131（＝內容寬度），頁首維持一行。
+#### 頁首的版型：grid，不是 flex
 
-> **這一段最該記住的不是 CSS，是判斷方式。**
-> 前面五輪我一直以為在比字型寬度（差幾 px），所以一直在調 gap、字級、選單項數、
-> 裁切位置 —— 實際上差的是一個盒子的**尺寸模型**（差 264px）。
-> 症狀（斷行／被推出去／被裁掉／換行）全都只是這 264px 的不同表現。
-> **量到 `.brand w=395.5` 那一刻才第一次真的知道問題在哪，前面全是猜的。**
-> 遇到跨引擎的版面問題，先把可疑元素的實際尺寸印在頁面上請使用者截圖，
-> 比再改五版 CSS 快得多。
+```css
+.site-header { display: grid; grid-template-columns: max-content minmax(0, 1fr); }
+.site-nav    { flex-wrap: nowrap; min-width: 0; justify-content: flex-end; }
+```
+
+- `max-content` 軌道：左欄就是品牌的內容寬度，不接受引擎推論。
+- `minmax(0, 1fr)`：右欄下限 0，**不會反過來把格線撐寬**。
+- 選單 `flex-wrap: nowrap`：使用者要求一定同一行。
+
+量到的結果：300／320／375／390／414 五個寬度下 `可左右拉` 全部 0、
+頁首維持一行、選單末項都在畫面內。
+
+#### 這一段真正的教訓
+
+七輪裡我換過六種寫法（品牌可縮／鎖死／`width: max-content`／
+裁 `html`／裁 `.phone`／裁 `.hero-stage`／改 grid），**沒有一次打中**，
+因為我一直以為在比字型寬度（差幾 px）。實際上是一個 `<svg>` 的預設內在尺寸（300px）。
+
+> **把可疑元素的實際尺寸印在頁面上請使用者截圖，比再改五版 CSS 快得多。**
+> `.brand w = 395.5` 這個數字出現之後，兩輪就收斂了。
 
 ### ⚠ 頁首那一列：讓它「不可能溢出」，不要算「剛好放得下」
 

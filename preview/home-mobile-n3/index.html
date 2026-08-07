@@ -261,7 +261,7 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
    萬一右欄真的不夠寬，它在自己的欄位裡換行，不會往外撐。
    ---------------------------------------------------------------------------- */
 .site-header {
-  display: grid; grid-template-columns: max-content 1fr;
+  display: grid; grid-template-columns: max-content minmax(0, 1fr);
   align-items: start; gap: 3cqw;
 }
 .brand {
@@ -270,8 +270,20 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
 }
 /* 標題 nowrap，副標維持 text-align-last: justify 撐齊標題右緣（原本的設計）。 */
 .brand-text b { white-space: nowrap; }
-.brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); display: block; color: rgba(255, 255, 255, .95); }
-.brand-mark svg { display: block; width: 100%; height: auto; }
+/* ---- 這兩條是頁首寬度失控的真正源頭（2026-08-07 第七輪才抓到）--------------
+   `<svg>` 如果沒有 width／height 屬性，**它的內在尺寸在 WebKit 是預設的 300×150**。
+   `.brand-mark` 是 flex 項目、`min-width` 預設 auto ＝ min-content，
+   於是它縮不到 300px 以下 —— `.brand` 的 max-content 就變成
+   300 ＋ 間距 ＋ 品牌文字 ≈ 395.5，這正是真機上量到的數字。
+   Blink 把 `width: 100%` 的 SVG 當成 min-content 0，所以完全看不出問題。
+
+   兩條一起補才算收乾淨：
+     · SVG 補上 width／height 屬性 → 內在尺寸變成 44.29×21.82（CSS 的 width:100% 仍然覆蓋它，
+       屬性只是給「內在尺寸」用的）。
+     · min-width: 0 → 這個 flex 項目不再被 min-content 頂住。
+   ---------------------------------------------------------------------------- */
+.brand-mark { flex: 0 0 clamp(30px, 11cqh, 40px); min-width: 0; display: block; color: rgba(255, 255, 255, .95); }
+.brand-mark svg { display: block; width: 100%; max-width: 100%; height: auto; }
 .brand-text { display: block; }
 .brand-text b {
   display: block; font-weight: 700; font-size: clamp(14px, 5.1cqh, 18px); line-height: 1.25;
@@ -284,11 +296,15 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
   /* 行高收緊：副標是單行，字墨往上挪約 1.2px，換到約 1px 的分隔感而不動詩的位置 */
   line-height: 1.25;
 }
+/* **選單一定是一行**（使用者要求）。所以不給 flex-wrap ——
+   能一行的前提是左欄真的只佔品牌的內容寬度，那件事由上面的
+   `max-content` 軌道 ＋ .brand-mark 的 min-width: 0 保證。
+   右欄用 minmax(0, 1fr)：0 是下限，代表這一欄不會反過來把格線撐寬。 */
 .site-nav {
-  display: flex; flex-wrap: wrap; justify-content: flex-end;
-  gap: .2rem 3.2cqw; line-height: 1.4; padding-top: 1cqh;
+  display: flex; flex-wrap: nowrap; justify-content: flex-end;
+  gap: 3.2cqw; line-height: 1.4; padding-top: 1cqh;
   font-size: clamp(10px, 3.5cqh, 12.5px);
-  min-width: 0;   /* 讓它可以縮到 min-content 以下、在自己的欄位裡換行，而不是往外撐 */
+  min-width: 0;
 }
 .site-nav a { color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap; }
 .hero-poem {
@@ -772,7 +788,7 @@ section + section { border-top: 1px solid var(--rule); }
       <a class="brand" href="./">
         <span class="brand-mark">
           <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
-          <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <svg width="44.2873" height="21.8244" viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <g transform="translate(-232.8729 -333.8286)">
               <!-- 2026-08-07：牙那條子路徑依自己的中心放大 1.3 倍、再往上移 0.50 個單位。
                    嘴一個節點都沒有改。放大是因為 31.88px 下原比例的洞只有 2.51px，偏小；

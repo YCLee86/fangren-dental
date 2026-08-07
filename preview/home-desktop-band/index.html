@@ -168,10 +168,10 @@ html.scrolled .site-head::before { opacity: 1; }
    ========================================================================== */
 
 .brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
-.brand-mark { flex: 0 0 38px; display: block; color: rgba(255, 255, 255, .95); }
+.brand-mark { flex: 0 0 38px; display: block; color: rgba(255, 255, 255, .95); min-width: 0; }
 html.scrolled .brand-mark { flex-basis: 32px; }
 .brand-mark, html.scrolled .brand-mark { transition: flex-basis .2s ease; }
-.brand-mark svg { display: block; width: 100%; height: auto; }
+.brand-mark svg { display: block; width: 100%; max-width: 100%; height: auto; }
 /* 品牌名與地名同一行。中間那條線是 --night-faint 混窄帶色，
    和窄帶裡三格之間的分隔線同一個做法，不是另外挑的灰。 */
 .brand-text { display: flex; align-items: baseline; gap: .7rem; }
@@ -815,7 +815,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
              放大 1.3 倍、再往上移 0.50 個單位（2026-08-07 定案），嘴一個節點都沒改。
              一個路徑、兩條子路徑，用奇偶填充規則讓中間那顆牙成為真正的洞 ——
              照片的夜空直接透過來。 -->
-        <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg width="44.2873" height="21.8244" viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <g transform="translate(-232.8729 -333.8286)">
             <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
           </g>
