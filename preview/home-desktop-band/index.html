@@ -147,20 +147,21 @@ html.scrolled .site-head .shell { height: var(--head-h-sm); }
 html.scrolled .site-head::before { opacity: 1; }
 
 /* ==========================================================================
-   頁首在淺色區的深淺五階（2026-08-07 第二輪）
+   頁首玻璃的深淺 —— 交給底下的東西決定（2026-08-07 第五輪）
    --------------------------------------------------------------------------
-   條子捲過窄帶之後就一直待在紙色 #e2e5e6 上。原本的終點 #2a2523 在那裡
-   是一塊很重的黑，但**也不能真的太淺** —— 試過「整條翻成卡色 #f4f4f5 的
-   淺色條、文字轉墨色」，使用者判斷太淺，已淘汰，不要再提。
+   走過的路，避免有人改回去：
+     第一輪  顏色從幾乎透明內插到不透明的 #32353c（藍灰）
+     第二輪  終點換成暖色 #2a2523
+     第三輪  在 #2a2523 ~ #3a3532 之間做了五階等距讓使用者挑
+     第四輪  試過「捲進內文就整條翻成卡色淺條、文字轉墨色」—— 太淺，淘汰
 
-   所以範圍就框在這兩端之間：
-     最深 #2a2523（rgb 42,37,35）＝ 原本的黑
-     最淺 #3a3532（rgb 58,53,50）＝ 第一輪的「淺一階」
-   中間三階用 **RGB 等距內插**（每階約 +4,+4,+4），所以五階的深淺是平均的，
-   不是憑感覺各挑一個。
+   以上全部是在調**終點的顏色**，而那個框架本身就錯了。
+   往不透明終點內插的結果是：條子壓在照片最暗的下半部與窄帶上時反而**變淺**，
+   看起來像一塊浮在夜色上的灰板。玻璃不會這樣。
 
-   五案在**暗夜區的長相完全一樣**（起點都是 #191614 的 .06），
-   差別只出現在條子離開窄帶之後。 */
+   現在只有一層固定的薄色（見下方 JS 的 GLASS），深淺完全交給底下：
+   壓在夜色上就深，壓在紙色上就淺。**不要再回去做「終點顏色」那件事。**
+   ========================================================================== */
 
 .brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
 .brand-mark { flex: 0 0 38px; display: block; color: rgba(255, 255, 255, .95); }
@@ -776,10 +777,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .hero-switch button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
 .hero-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .hero-switch-2 { bottom: 4.1rem; }
-.hero-switch-3 { bottom: 7rem; }
 .hero-caption {
   position: fixed; z-index: 50; right: 1.2rem;
-  bottom: 9.9rem; margin: 0; max-width: min(92vw, 30rem); text-align: left;
+  bottom: 7rem; margin: 0; max-width: min(92vw, 30rem); text-align: left;
   font-size: .76rem; line-height: 1.7; color: rgba(255,255,255,.9);
   background: rgba(25, 22, 20, .82); border-radius: 10px; padding: .5rem .9rem;
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
@@ -1201,53 +1201,53 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 </div>
 
 <script>
-/* 固定頁首的毛玻璃。做法與手機版相同，只有選擇器換了。
+/* 固定頁首的毛玻璃。
    1. 捲動超過 4px 就掛上 html.scrolled，把玻璃與收合一起打開。
       沒有 JS 的時候不會掛，頁首就是一條透明的 sticky 條 —— 不會壞，只是沒有效果。
-   2. 依捲動位置逐幀算出玻璃的顏色寫進 --glass。
+   2. 玻璃是**一層固定的薄色**，深淺交給底下的東西決定（見下方 GLASS）。
 
-   **終點必須是不透明的**，這一點是關鍵。漸變區間是「條子開始壓到窄帶」到
-   「窄帶整條從條子底下過完」—— 這段期間條子底下都是深色，顏色怎麼變都看不出來；
-   等窄帶過完、紙色出現時，條子早就是最終的深色了。只要還留著一點透明度，
-   底下換成紙色時條子就一定會跟著變亮，把切換點提早沒有用。 */
+   > 這裡原本有一段註解主張「終點必須是不透明的，否則底下換成紙色時條子會跟著變亮」。
+   > **那段推論已作廢**，2026-08-07 第五輪整個推翻 —— 條子會跟著底下變，
+   > 正是玻璃該有的行為，不是要消除的缺陷。詳見 GLASS 上面那段。 */
 (function () {
   var root = document.documentElement;
   var head = document.querySelector('.site-head');
   var band = document.querySelector('.band');
   if (!head || !band) return;
 
-  /* 玻璃的兩個端點。2026-08-07 第四輪：**從藍灰改成暖色的深灰黑**。
-     舊值 A #17191d／B #32353c 是配上一代藍黑窄帶（H=220）算出來的合成色；
-     窄帶改成柏油漸層之後，條子一捲到窄帶那一段就明顯偏藍，和底下的暖色打架。
-     新值取同一族：起點用暗夜 #191614，終點 #2a2523 —— 比柏油 #221e1c
-     亮一階（讀得出是另一個面），色相同一邊，所以接得起來。 */
-  var A = [25, 22, 20, .06];    // 起點：#191614 暗夜。幾乎不染色，靠模糊撐出玻璃感
-  /* 終點依「頁首深淺」那一組切換條決定。三案在暗夜區完全一樣，
-     差別只出現在條子離開窄帶、待在紙色上之後。 */
-  var ENDS = {
-    '1': [42, 37, 35, 1],       // #2a2523　最深（原本的黑）
-    '2': [46, 41, 39, 1],       // #2e2927
-    '3': [50, 45, 43, 1],       // #322d2b　中間
-    '4': [54, 49, 46, 1],       // #36312e
-    '5': [58, 53, 50, 1]        // #3a3532　最淺（第一輪的「淺一階」）
-  };
-  function endPoint() {
-    return ENDS[root.getAttribute('data-head')] || ENDS['3'];
-  }
+  /* ---- 玻璃：一層固定的薄色，深淺交給底下的東西決定（2026-08-07 第五輪）----
+     先前的做法是把顏色從「幾乎透明」內插到一個**不透明**的終點 #322d2b。
+     那樣做的原因寫在下面那段已作廢的註解裡：怕條子在窄帶與紙色之間切換時
+     跟著變亮。但那個目標本身就錯了 —— **玻璃本來就會跟著底下變**。
+
+     實際造成的毛病是：條子壓在照片最暗的下半部與窄帶上時，
+     反而因為往不透明的灰內插而**變淺**，看起來像一塊浮在夜色上的灰板，
+     不像玻璃。使用者指出這一點，這一輪整個改掉。
+
+     現在只有一層固定的 rgba(25,22,20,.76)。實際截圖量到的合成色：
+
+       壓在窄帶／照片下半部　#1b1815　導覽白字 15.7:1　（舊版是 #322d2b，明顯更淺）
+       壓在紙色 #e2e5e6 上　 #494846　導覽白字  8.2:1
+
+     一個值，兩種表現，因為那正是玻璃在做的事。
+
+     .76 是這樣定的：先確定深色區夠深（幾乎全黑，比舊版深），
+     再往薄的方向推到紙色區明顯變淺、但白字仍然舒服地過 AA。
+     試過 .84，紙色區只到 #3a3736 —— 比舊版淺得太少，看不出「透」。
+     再往下走到 .70 以下，紙色區的導覽白字會開始逼近 4.5:1 的下限，不要過去。 */
+  var GLASS = 'rgba(25, 22, 20, .76)';
 
   function paint() {
     root.classList.toggle('scrolled', scrollY > 4);
+
+    /* 條子完全離開窄帶＝紙色開始出現。留著給日後需要分辨
+       「頁首在暗夜區／在內文區」的規則用。 */
     var r = band.getBoundingClientRect();
     var h = head.getBoundingClientRect().height || 1;
     var t = Math.min(1, Math.max(0, (h - r.top) / (r.height || 1)));
-    /* 條子完全離開窄帶＝紙色開始出現。目前五階沒有用到這個 class
-       （用到的是已淘汰的「翻成淺色條」那一案），留著給日後需要分辨
-       「頁首在暗夜區／在內文區」的規則用。 */
     root.classList.toggle('past-band', t >= 1);
-    var B = endPoint();
-    var c = A.map(function (v, i) { return v + (B[i] - v) * t; });
-    root.style.setProperty('--glass',
-      'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + c[3].toFixed(3) + ')');
+
+    root.style.setProperty('--glass', GLASS);
 
     /* 頁首下緣的淡出起點：深色區 76%（軟邊），紙色上來時收到 100%（無淡出）。
        用 t 的三次方，所以大部分行程都還是軟的，只有最後一段快速收起來 ——
@@ -1405,14 +1405,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   <button type="button" data-gap="wide" aria-pressed="true">拉開</button>
   <button type="button" data-gap="full" aria-pressed="false">撐滿版心</button>
 </div>
-<div class="hero-switch hero-switch-3" role="group" aria-label="頁首在淺色區的深淺">
-  <b>頁首</b>
-  <button type="button" data-head="1" aria-pressed="false">1 最深</button>
-  <button type="button" data-head="2" aria-pressed="false">2</button>
-  <button type="button" data-head="3" aria-pressed="true">3 中間</button>
-  <button type="button" data-head="4" aria-pressed="false">4</button>
-  <button type="button" data-head="5" aria-pressed="false">5 最淺</button>
-</div>
 <p class="hero-caption" id="hero-caption"></p>
 
 <script>
@@ -1436,14 +1428,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   };
   var root = document.documentElement;
   var cap  = document.getElementById('hero-caption');
-  var cur  = { band: 'glasstar', gap: 'wide', head: '3' };
-  var HEAD = {
-    '1': '頁首 1 最深　#2a2523（rgb 42,37,35）—— 原本的那一版。',
-    '2': '頁首 2　#2e2927（rgb 46,41,39）。',
-    '3': '頁首 3 中間　#322d2b（rgb 50,45,43）。五階的正中間。',
-    '4': '頁首 4　#36312e（rgb 54,49,46）。',
-    '5': '頁首 5 最淺　#3a3532（rgb 58,53,50）—— 第一輪的「淺一階」。再淺就過頭了（翻成卡色淺條那一案已淘汰）。'
-  };
+  var cur  = { band: 'glasstar', gap: 'wide' };
+
 
 
   function paint() {
@@ -1455,16 +1441,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
       b.setAttribute('aria-pressed', b.getAttribute('data-gap') === cur.gap ? 'true' : 'false');
     });
-    root.setAttribute('data-head', cur.head);
-    document.querySelectorAll('.hero-switch button[data-head]').forEach(function (b) {
-      b.setAttribute('aria-pressed', b.getAttribute('data-head') === cur.head ? 'true' : 'false');
-    });
-    if (window.fangrenRepaintHead) window.fangrenRepaintHead();
-    if (cap) cap.textContent = BAND[cur.band] + '　／　' + GAP[cur.gap] + '　／　' + HEAD[cur.head];
+    if (cap) cap.textContent = BAND[cur.band] + '　／　' + GAP[cur.gap];
     try {
       localStorage.setItem('fangren:band', cur.band);
       localStorage.setItem('fangren:gap', cur.gap);
-      localStorage.setItem('fangren:head', cur.head);
     } catch (e) {}
   }
 
@@ -1473,9 +1453,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   });
   document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
     b.addEventListener('click', function () { cur.gap = b.getAttribute('data-gap'); paint(); });
-  });
-  document.querySelectorAll('.hero-switch button[data-head]').forEach(function (b) {
-    b.addEventListener('click', function () { cur.head = b.getAttribute('data-head'); paint(); });
   });
 
   function pick(key, map, fallback) {
@@ -1489,7 +1466,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   }
   cur.band = pick('band', BAND, 'glasstar');
   cur.gap  = pick('gap',  GAP,  'wide');
-  cur.head = pick('head', HEAD, '3');
   paint();
 })();
 </script>
