@@ -651,6 +651,40 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 html[data-kids="1"] [data-spec="kids"] { --accent: #966113; }  /* H=36 琥珀黃　白字 5.23:1・卡上 4.76:1 */
 html[data-kids="2"] [data-spec="kids"] { --accent: #8d6811; }  /* H=42 中間　　白字 5.10:1・卡上 4.64:1 */
 html[data-kids="3"] [data-spec="kids"] { --accent: #7f6b10; }  /* H=49 含羞草　白字 5.23:1・卡上 4.76:1 */
+
+/* ---- 真正是黃的兩案（2026-08-07 第二輪）---------------------------------
+   使用者看過上面三案後說：「現在的和琥珀黃看起來不是黃，是咖啡色、拿鐵色、泰奶色。」
+   他是對的，而且這不是調偏了 —— **黃色沒有深色版本**。
+   把黃壓暗，它必然變成橄欖、芥末、拿鐵；要真的黃就一定要亮，
+   而一亮，白字就撐不住。上面三案都卡在這裡。
+
+   含羞草提亮到 L=56%（H=49・S=78% 一度不動）＝ #e6c637，實測：
+       墨字 #2a2c27 　　8.40:1  ← 非常安全
+       白字 　　　　　　1.68:1  ✗
+       拿它當卡上的字 　1.53:1  ✗
+
+   所以亮黃能用，但要讓掉一條規則。兩案各讓掉不同的一條：
+
+   案 4「雙階」讓掉的是**一科一個值**。
+     填色用亮階 #e6c637（字改墨色），當字用深階 #7f6b10。
+     兩者是同一個色相、同一個彩度，只差明度 —— 像設計系統的 500 / 700。
+     好處：**形式完全不變**，兒牙的 chip 與標籤仍然是線性的，和其他五科一樣。
+
+   案 5「全實心」讓掉的是**形式一致**。
+     兒牙的 chip 與文章標籤也改成實心亮黃底＋墨字，只有一個值。
+     好處：一科真的只有一個色。代價：兒牙的標籤和其他五科長得不一樣。
+   -------------------------------------------------------------------------- */
+html[data-kids="4"] [data-spec="kids"],
+html[data-kids="5"] [data-spec="kids"] {
+  --accent: #e6c637;          /* 填色用的亮階 */
+  --accent-text: #7f6b10;     /* 當字用的深階，卡上 4.76:1 */
+  --on-accent: var(--ink);    /* 亮黃上面的字用墨色，8.40:1 */
+}
+/* 案 5：兒牙的 chip 與文章標籤也填滿 */
+html[data-kids="5"] .chips button[data-spec="kids"],
+html[data-kids="5"] .card[data-spec="kids"] .card-tag {
+  background: var(--accent); color: var(--ink); border-color: var(--accent);
+}
 .info-card { --accent: var(--teal); }
 .info-card[data-hue="taupe"] { --accent: var(--taupe); }
 
@@ -693,14 +727,20 @@ html[data-kids="3"] [data-spec="kids"] { --accent: #7f6b10; }  /* H=49 含羞草
 /* 科別標記：線條與文字套色，底不套色。底維持 --card 不留透明 ——
    躺在紙 #e2e5e6 上，底若透明兒牙 #8d5e3a 只有 4.37:1 掉出 AA，
    墊那層卡色才是 5.03。 */
+/* 兩個衍生變數，預設完全等於原本的行為，所以其他五科一個像素都不會變：
+     --accent-text  「當字用」的階（線性標籤的字與框）
+     --on-accent    「填色上的字」（實心藥丸／按下的 chip）
+   只有兒牙的黃案會覆寫它們 —— 理由見下面「黃色為什麼要兩階」。 */
+[data-spec], .info-card { --accent-text: var(--accent); --on-accent: #fff; }
+
 .doc-role, .info-card h3, .chips button, .card-tag {
-  background: var(--card); color: var(--accent); border: 1px solid var(--accent);
+  background: var(--card); color: var(--accent-text); border: 1px solid var(--accent-text);
 }
 /* 按下去的 chip 換成實心：它代表「你正在看這一科」，
    和醫師藥丸的「這位醫師是這一科」是同一種份量，所以長得一樣。 */
-.chips button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.chips button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 /* 只有醫師藥丸是實心的 —— 認人的份量比分類重。 */
-.doc-role { background: var(--accent); color: #fff; border-color: var(--accent); }
+.doc-role { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 
 /* ---- 診所資訊：三張卡一排，照片兩張並排 -------------------------------- */
 .info { display: grid; gap: 1.2rem; grid-template-columns: repeat(3, 1fr); }
@@ -1514,8 +1554,8 @@ html[data-kids="3"] [data-spec="kids"] { --accent: #7f6b10; }  /* H=49 含羞草
   <b>兒牙</b>
   <button type="button" data-kids="0" aria-pressed="true">現在 #8d5e3a</button>
   <button type="button" data-kids="1" aria-pressed="false">1 琥珀黃</button>
-  <button type="button" data-kids="2" aria-pressed="false">2 中間</button>
-  <button type="button" data-kids="3" aria-pressed="false">3 含羞草</button>
+  <button type="button" data-kids="4" aria-pressed="false">4 亮黃・雙階</button>
+  <button type="button" data-kids="5" aria-pressed="false">5 亮黃・全實心</button>
 </div>
 <p class="hero-caption" id="hero-caption"></p>
 
@@ -1546,8 +1586,8 @@ html[data-kids="3"] [data-spec="kids"] { --accent: #7f6b10; }  /* H=49 含羞草
   var KIDS = {
     '0': '兒牙 現在　#8d5e3a　圓凳與木件實測，H=26・S=42%。白字 5.53:1、卡上 5.03:1。這是褐，不是黃。',
     '1': '兒牙 1 琥珀黃　#966113　H=36・S=78%。白字 5.23:1、卡上 4.76:1。最接近現在的一個，轉黃但仍留著暖。',
-    '2': '兒牙 2 中間　#8d6811　H=42・S=78%。白字 5.10:1、卡上 4.64:1。',
-    '3': '兒牙 3 含羞草　#7f6b10　H=49・S=78%。白字 5.23:1、卡上 4.76:1。色相就是開幕茶會含羞草的原值，最黃、也最接近橄欖。'
+    '4': '兒牙 4 亮黃・雙階　填色 #e6c637（含羞草提亮，H/S 不動）＋墨字 8.40:1；當字時用深階 #7f6b10（卡上 4.76:1）。讓掉的是「一科一個值」—— 但兩階同色相同彩度，只差明度。**形式完全不變**，chip 與標籤仍是線性的。',
+    '5': '兒牙 5 亮黃・全實心　只有一個值 #e6c637，chip 與文章標籤也改成實心亮黃底＋墨字。讓掉的是「形式一致」—— 兒牙的標籤會和其他五科長得不一樣。'
   };
 
 
