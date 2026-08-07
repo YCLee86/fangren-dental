@@ -4,22 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>淺色 vs 深色・同一行並排，一鍵換候選 — 芳仁牙醫診所</title>
+<title>細分五案・1 與 2 之間再切三段 — 芳仁牙醫診所</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <!--
-  進行中：favicon 深色版顏色。左右並排 —— 左邊永遠是定案的淺色 #4f6361，
-  右邊在五個深色候選之間切換，同一行直接對照。幾何維持定稿（1.6×、上移 1.05）。
+  進行中：favicon 深色版顏色。這一版把原本的 1（#49785e）與 2（#4f8065）留下來當頭尾，
+  中間依明度平均插三個，五格全部只差 0.7% 明度。色相 147°、彩度 24% 沒有動。
+  左半永遠是定案的淺色 #4f6361。幾何維持定稿（1.6×、上移 1.05）。
 
-  切換是純 CSS：五個 radio 放在最前面，用 #cN:checked ~ 兄弟選擇器改 --cand。
-  **這一頁沒有任何 JavaScript** —— 手機的檔案預覽器會擋掉內嵌 script，
-  之前用 JS 寫的版本在那裡按了完全沒反應。要加互動請照這個做法，不要放回 script。
+  切換是純 CSS（radio ＋ #cN:checked ~ 兄弟選擇器）。**不要放 script** ——
+  手機的檔案預覽器會擋掉，按了完全沒反應。
 -->
 </head>
 <body>
 <style>
 :root{
   --paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;--ink:#2a2c27;--ink-soft:#5c5f57;--chair:#4f6361;
-  --cand:#4f8065;
+  --cand:#4c7c62;
   --pad:clamp(.9rem,4vw,2rem)}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
@@ -31,7 +31,6 @@ h1{font-size:1.2rem;line-height:1.5;margin:0 0 .35rem}
 .lede b{color:var(--ink)}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
 
-/* ---------- 切換器：radio 本體藏起來，label 當按鈕 ---------- */
 .r{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .bar{position:sticky;top:0;z-index:20;background:var(--paper);
   padding:var(--pad) var(--pad) .6rem;max-width:44rem;margin-inline:auto}
@@ -43,16 +42,13 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
   color:var(--ink-soft);font-variant-numeric:tabular-nums;user-select:none;
   transition:background-color .18s ease,color .18s ease}
 .sw{width:.68rem;height:.68rem;border-radius:50%;display:inline-block;flex:0 0 auto}
-/* 鍵盤：radio 收到焦點時，對應的 label 顯示外框 */
-.r:focus-visible + .r + .r + .r + .r ~ .bar .pick{outline:none}
-.hint{margin:.5rem 0 0;font-size:.76rem;line-height:1.7;color:var(--ink-soft);
+.hint{margin:.5rem 0 0;font-size:.75rem;line-height:1.7;color:var(--ink-soft);
   font-variant-numeric:tabular-nums}
 .hint b{color:var(--ink);font-weight:500}
 .hint .dot{display:inline-block;width:.62rem;height:.62rem;border-radius:50%;background:var(--cand);
   margin-right:.35rem;vertical-align:-1px}
 .v{display:none}
 
-/* ---------- 並排：左淺右深，永遠同一行 ---------- */
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);
   border-radius:12px;overflow:hidden;margin-bottom:.9rem}
 .side{padding:.75rem .8rem 1rem;min-width:0}
@@ -93,55 +89,74 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
 .side.l .px{color:#4f6361}.side.l .px figcaption{color:#8a8e86}
 .side.d .px{color:var(--cand)}.side.d .px figcaption{color:#7d838b}
 
+/* 五個一起排在深底上，選到的那個加白框 */
+.ramp{display:flex;justify-content:space-around;align-items:flex-end;gap:.5rem;flex-wrap:wrap;
+  background:#22252a;border-radius:12px;padding:1rem .8rem .8rem;margin-bottom:.9rem}
+.ramp figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:.45rem}
+.ramp figcaption{font-size:.68rem;line-height:1.4;color:#8b9098;font-variant-numeric:tabular-nums}
+
+table{width:100%;border-collapse:collapse;font-size:.74rem;line-height:1.7;margin:0 0 .9rem;
+  font-variant-numeric:tabular-nums}
+th,td{border:1px solid var(--rule);padding:.25rem .5rem;text-align:left}
+th{background:var(--card);font-weight:500;color:var(--ink)}
+td{color:var(--ink-soft)}
+td.no{color:#8a5a4a}
+
 .note{margin:0 0 1.2rem;padding:.75rem .9rem;background:var(--card);border:1px solid var(--rule);
   border-radius:10px;font-size:.78rem;line-height:1.8;color:var(--ink-soft)}
 .note b{color:var(--ink)}
+.note p{margin:0 0 .5rem}.note p:last-child{margin:0}
 .foot{margin-top:1rem;font-size:.78rem;line-height:1.85;color:var(--ink-soft)}
 .foot p{margin:0 0 .6rem}.foot b{color:var(--ink)}.foot a{color:var(--chair)}
 
-/* ---------- 五個候選：唯一會變的東西都在這裡 ---------- */
 #c1:checked ~ .bar, #c1:checked ~ .wrap { --cand: #49785e; }
 #c1:checked ~ .bar .pick[for="c1"] { background: #49785e; color: #fff; }
 #c1:checked ~ .bar .v1, #c1:checked ~ .wrap .v1 { display: inline; }
-#c2:checked ~ .bar, #c2:checked ~ .wrap { --cand: #4f8065; }
-#c2:checked ~ .bar .pick[for="c2"] { background: #4f8065; color: #fff; }
+#c1:checked ~ .wrap .ramp .r1 { outline: 2px solid #e8eaed; outline-offset: 3px; border-radius: 4px; }
+#c2:checked ~ .bar, #c2:checked ~ .wrap { --cand: #4b7a60; }
+#c2:checked ~ .bar .pick[for="c2"] { background: #4b7a60; color: #fff; }
 #c2:checked ~ .bar .v2, #c2:checked ~ .wrap .v2 { display: inline; }
-#c3:checked ~ .bar, #c3:checked ~ .wrap { --cand: #54896c; }
-#c3:checked ~ .bar .pick[for="c3"] { background: #54896c; color: #fff; }
+#c2:checked ~ .wrap .ramp .r2 { outline: 2px solid #e8eaed; outline-offset: 3px; border-radius: 4px; }
+#c3:checked ~ .bar, #c3:checked ~ .wrap { --cand: #4c7c62; }
+#c3:checked ~ .bar .pick[for="c3"] { background: #4c7c62; color: #fff; }
 #c3:checked ~ .bar .v3, #c3:checked ~ .wrap .v3 { display: inline; }
-#c4:checked ~ .bar, #c4:checked ~ .wrap { --cand: #5a9374; }
-#c4:checked ~ .bar .pick[for="c4"] { background: #5a9374; color: #fff; }
+#c3:checked ~ .wrap .ramp .r3 { outline: 2px solid #e8eaed; outline-offset: 3px; border-radius: 4px; }
+#c4:checked ~ .bar, #c4:checked ~ .wrap { --cand: #4d7e63; }
+#c4:checked ~ .bar .pick[for="c4"] { background: #4d7e63; color: #fff; }
 #c4:checked ~ .bar .v4, #c4:checked ~ .wrap .v4 { display: inline; }
-#c5:checked ~ .bar, #c5:checked ~ .wrap { --cand: #609c7b; }
-#c5:checked ~ .bar .pick[for="c5"] { background: #609c7b; color: #fff; }
+#c4:checked ~ .wrap .ramp .r4 { outline: 2px solid #e8eaed; outline-offset: 3px; border-radius: 4px; }
+#c5:checked ~ .bar, #c5:checked ~ .wrap { --cand: #4f8065; }
+#c5:checked ~ .bar .pick[for="c5"] { background: #4f8065; color: #fff; }
 #c5:checked ~ .bar .v5, #c5:checked ~ .wrap .v5 { display: inline; }
+#c5:checked ~ .wrap .ramp .r5 { outline: 2px solid #e8eaed; outline-offset: 3px; border-radius: 4px; }
 </style>
 
 <input class="r" type="radio" name="cand" id="c1">
-<input class="r" type="radio" name="cand" id="c2" checked>
-<input class="r" type="radio" name="cand" id="c3">
+<input class="r" type="radio" name="cand" id="c2">
+<input class="r" type="radio" name="cand" id="c3" checked>
 <input class="r" type="radio" name="cand" id="c4">
 <input class="r" type="radio" name="cand" id="c5">
 
 <div class="bar">
   <div class="picks">
       <label class="pick" for="c1"><span class="sw" style="background:#49785e"></span>1</label>
-      <label class="pick" for="c2"><span class="sw" style="background:#4f8065"></span>2</label>
-      <label class="pick" for="c3"><span class="sw" style="background:#54896c"></span>3</label>
-      <label class="pick" for="c4"><span class="sw" style="background:#5a9374"></span>4</label>
-      <label class="pick" for="c5"><span class="sw" style="background:#609c7b"></span>5</label>
+      <label class="pick" for="c2"><span class="sw" style="background:#4b7a60"></span>2</label>
+      <label class="pick" for="c3"><span class="sw" style="background:#4c7c62"></span>3</label>
+      <label class="pick" for="c4"><span class="sw" style="background:#4d7e63"></span>4</label>
+      <label class="pick" for="c5"><span class="sw" style="background:#4f8065"></span>5</label>
   </div>
-  <p class="hint"><span class="dot"></span><span class="v v1"><b>#49785e</b>　對分頁列 <b>3.02</b>　·　與淺色的色差 ΔE <b>18.9</b>　·　最深，也最接近淺色。3.0 是下限，沒有餘裕。</span>
-    <span class="v v2"><b>#4f8065</b>　對分頁列 <b>3.37</b>　·　與淺色的色差 ΔE <b>20.7</b>　·　建議這個：離下限留餘裕，ΔE 仍然很小。</span>
-    <span class="v v3"><b>#54896c</b>　對分頁列 <b>3.79</b>　·　與淺色的色差 ΔE <b>23.6</b>　·　中間值。</span>
-    <span class="v v4"><b>#5a9374</b>　對分頁列 <b>4.29</b>　·　與淺色的色差 ΔE <b>26.9</b>　·　開始看得出比淺色亮一階。</span>
-    <span class="v v5"><b>#609c7b</b>　對分頁列 <b>4.79</b>　·　與淺色的色差 ΔE <b>29.9</b>　·　最早那一版的亮度，落差最大。</span></p>
+  <p class="hint"><span class="dot"></span><span class="v v1"><b>#49785e</b>　明度 37.80%　·　對分頁列 <b>3.02</b>　·　與淺色的色差 ΔE <b>18.9</b>　·　原本的 1。最深、最接近淺色，也完全沒有餘裕。</span>
+    <span class="v v2"><b>#4b7a60</b>　明度 38.50%　·　對分頁列 <b>3.11</b>　·　與淺色的色差 ΔE <b>19.1</b>　·　新的。</span>
+    <span class="v v3"><b>#4c7c62</b>　明度 39.20%　·　對分頁列 <b>3.20</b>　·　與淺色的色差 ΔE <b>19.5</b>　·　新的，正中間。</span>
+    <span class="v v4"><b>#4d7e63</b>　明度 39.90%　·　對分頁列 <b>3.28</b>　·　與淺色的色差 ΔE <b>20.4</b>　·　新的。</span>
+    <span class="v v5"><b>#4f8065</b>　明度 40.60%　·　對分頁列 <b>3.37</b>　·　與淺色的色差 ΔE <b>20.7</b>　·　原本的 2。這一組裡餘裕最多的。</span></p>
 </div>
 
 <div class="wrap">
-<h1>左邊淺色，右邊深色，同一行</h1>
-<p class="lede">左半邊永遠是定案的 <code>#4f6361</code>，不會變。右半邊點上面的 <b>1–5</b> 就換 ——
-  <b>眼睛不用移開就能比</b>。（鍵盤左右鍵也可以。）</p>
+<h1>1 與 2 留著，中間再切三個</h1>
+<p class="lede">頭尾就是原本的 <b>1</b>（<code>#49785e</code>）與 <b>2</b>（<code>#4f8065</code>），
+  中間依明度平均插三個。色相 147°、彩度 24% 沒有動，五格只差 <b>0.7% 明度</b>。
+  左半邊永遠是定案的 <code>#4f6361</code>。</p>
 
 <div class="pair">
   <div class="side l">
@@ -151,11 +166,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
       <span class="ltxt"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span></div>
   </div>
   <div class="side d">
-    <p class="cap">深色・<span class="v v1">候選 1　<code>#49785e</code></span>
-      <span class="v v2">候選 2　<code>#4f8065</code></span>
-      <span class="v v3">候選 3　<code>#54896c</code></span>
-      <span class="v v4">候選 4　<code>#5a9374</code></span>
-      <span class="v v5">候選 5　<code>#609c7b</code></span></p>
+    <p class="cap">深色・<span class="v v1">1　<code>#49785e</code></span>
+      <span class="v v2">2　<code>#4b7a60</code></span>
+      <span class="v v3">3　<code>#4c7c62</code></span>
+      <span class="v v4">4　<code>#4d7e63</code></span>
+      <span class="v v5">5　<code>#4f8065</code></span></p>
     <div class="tab"><span class="ti"><svg viewBox="0 0 64 64" width="16" height="16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><span class="tt">芳仁牙醫診所</span></div>
     <div class="lock"><span class="lmk"><svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span>
       <span class="ltxt"><b>芳仁牙醫診所</b><small>雲林斗六・永樂街</small></span></div>
@@ -181,13 +196,39 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
   </div>
 </div>
 
-<p class="note"><b>ΔE 是兩個色在 Lab 空間裡的距離</b> —— 數字愈小，左右兩邊愈像同一個色。
-  但深色版不能無限貼近淺色：對深色分頁列至少要 <b>3.0</b> 才看得清楚，
-  所以 1 號（3.02）已經是能做到最接近的極限了。</p>
+<div class="ramp">
+      <figure class="r1"><span style="color:#49785e"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>1</figcaption></figure>
+      <figure class="r2"><span style="color:#4b7a60"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>2</figcaption></figure>
+      <figure class="r3"><span style="color:#4c7c62"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>3</figcaption></figure>
+      <figure class="r4"><span style="color:#4d7e63"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>4</figcaption></figure>
+      <figure class="r5"><span style="color:#4f8065"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" transform="translate(0.000 16.231) scale(1.44511) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9254 352.2145 C 264.3254 352.0957 264.4754 352.0707 264.8629 352.2145 C 265.1254 352.3145 265.4754 352.2957 265.7379 352.2145 C 266.5754 351.9520 267.4066 350.2957 267.2504 348.1895 C 267.1004 346.0832 261.6754 346.3770 261.6816 348.1895 C 261.6816 349.6332 262.2004 351.4957 262.9191 352.0020 C 263.2254 352.2207 263.4504 352.3520 263.9254 352.2145 Z"/></svg></span><figcaption>5</figcaption></figure>
+</div>
+
+<table>
+  <tr><th>#</th><th>色</th><th>明度</th><th>對 <code>#22252a</code></th><th>對 <code>#2b2f36</code></th><th>ΔE</th></tr>
+  <tr><td>1</td><td><code>#49785e</code></td><td>37.80%</td><td>3.02</td><td class="no">2.64</td><td>18.9</td></tr>
+<tr><td>2</td><td><code>#4b7a60</code></td><td>38.50%</td><td>3.11</td><td class="no">2.72</td><td>19.1</td></tr>
+<tr><td>3</td><td><code>#4c7c62</code></td><td>39.20%</td><td>3.20</td><td class="no">2.80</td><td>19.5</td></tr>
+<tr><td>4</td><td><code>#4d7e63</code></td><td>39.90%</td><td>3.28</td><td class="no">2.87</td><td>20.4</td></tr>
+<tr><td>5</td><td><code>#4f8065</code></td><td>40.60%</td><td>3.37</td><td class="no">2.95</td><td>20.7</td></tr>
+</table>
+
+<div class="note">
+<p><b>先講一件不好聽的：這五個差得非常小。</b>相鄰兩格只差 0.09 的對比、0.7% 的明度，
+  並排看幾乎分不出來 —— 上面那條五個一起排的帶子就是要讓你確認這件事。
+  真正在變的不是「看起來的顏色」，而是<b>離下限 3.0 還剩多少餘裕</b>。</p>
+<p><b>餘裕是為了什麼：</b>不是每個瀏覽器的深色分頁列都是 <code>#22252a</code>。
+  被選取的那個分頁通常淺一階（約 <code>#2b2f36</code>），表格最後第二欄就是對它的對比 ——
+  <b>這五個全部低於 3.0</b>。要在那個情境也合格，得回到原本的 3 號 <code>#54896c</code>（3.31）以上。</p>
+<p>所以這一輪其實是在問：<b>要多接近淺色，還是要多安全。</b>
+  只看 <code>#22252a</code> 的話五個都合格，選最深的 1 就是最接近；
+  要連被選取的分頁也撐得住，這五個都不夠。</p>
+</div>
 
 <div class="foot">
 <p>幾何維持定稿（牙洞 1.6×、上移 1.05），淺色維持 <code>#4f6361</code> 沒有動。</p>
-<p>相鄰的三頁：<a href="/preview/logo-favicon/">五個候選的數據</a>、
+<p>原本那組跨距大的五個（3.02 → 4.79）留在
+  <a href="/preview/logo-favicon/">五個候選的數據</a>、
   <a href="/preview/logo-favicon-wordmark/">配上字的三種情境</a>、
   <a href="/preview/logo-favicon-pair/">整頁一鍵翻淺／深</a>。</p>
 </div>
