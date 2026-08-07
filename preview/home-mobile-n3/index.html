@@ -497,8 +497,12 @@ section + section { border-top: 1px solid var(--rule); }
    ---------------------------------------------------------------------------- */
 [data-spec], .info-card { --accent-deep: var(--accent); --on-fill: #fff; }
 
-/* 「全部」＝不篩選，用中性墨色，刻意不參與那六個彩色。 */
-[data-spec="all"]    { --accent: var(--ink); }  /* #2a2c27　紙 11.15:1・白字 11.15:1 */
+/* 「全部」＝不篩選，用中性灰，刻意不參與那六個彩色。
+   錨在**頁首玻璃壓到淺色區時的那個顏色** #393736 —— 不是新調的色，
+   是 TINT #191614 以 .84 濃度疊在紙 #e2e5e6 上算出來的合成色，整頁本來就有這一塊灰。
+   （第一版用 --ink #2a2c27，L* 17.6，使用者說太黑。）
+   電腦版右下角正在比 A~D 四階，定案後這裡跟著換。 */
+[data-spec="all"]    { --accent: #393736; }  /* L* 23.2　白字 11.84:1・對卡 10.77:1 */
 [data-spec="general"],
 [data-spec="perio"]  { --accent: var(--chair); }  /* 診療椅實測　　　　　 H=174　 6.38:1 */
 [data-spec="endo"]   { --accent: var(--moss);  }  /* 色票・苔綠＝Logo　　 H=100　 5.55:1 */
