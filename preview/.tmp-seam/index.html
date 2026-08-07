@@ -1684,6 +1684,21 @@ html[data-kids="5"] .card[data-spec="kids"] .card-tag {
   cur.kids = pick('kids', KIDS, '0');
   paint();
 })();
-</script>
+</script><style>.hero,.band,#clinic,.foot,.demo-note{display:none !important}
+.hero-switch,.hero-caption{display:none !important}
+#topics{padding-top:.5rem !important;padding-bottom:.4rem !important}
+#articles{padding-top:.3rem !important;padding-bottom:.3rem !important}
+#doctors{padding-top:.3rem !important}
+#articles .card:not([data-spec="kids"]){display:none !important}
+#articles .card:nth-of-type(n+2){display:none !important}
+#doctors .doc:not([data-spec="kids"]){display:none !important}
+#doctors .doc:nth-of-type(n+2){display:none !important}
+#doctors .sec-head{display:none !important}
+.cards,.docs{grid-template-columns:repeat(2,1fr) !important}
+.card-thumb{display:none !important}
+.card p:not(.card-date),.doc dl{display:none !important}</style>
+<script>addEventListener('load',function(){
+  document.querySelectorAll('.chips button[data-spec="kids"]').forEach(function(b){b.setAttribute('aria-pressed','true');});
+});</script>
 </body>
 </html>
