@@ -648,36 +648,49 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    **這是黃色在這個系統裡的物理上限，不是調得不好。**
    要真正明亮的黃，得先讓掉「實心白字」或「線性標籤過 AA」其中一條。
    ========================================================================== */
-/* ---- 兒牙：往橙走的三案（2026-08-07 第四輪）------------------------------
-   第三輪的三案（Lab h 80~90°）使用者說「有點混到髒髒的綠，像嘔吐物」。
-   成因是**黃帶靠綠的那一側在低亮度下一定會泛綠** —— 而白字把亮度鎖在 L* 47，
-   所以那一側躲不掉。往橙走是對的方向。
+/* ---- 兒牙：明黃三案（2026-08-07 第五輪）----------------------------------
+   第四輪往橙走的三案（C* 56~62、L* 47）使用者說「比之前好很多，但還是有點
+   牛奶糖、帶咖啡感」，要往**明黃**走。
 
-   往橙走還有一個順帶的好處：**彩度的天花板會跟著升高。**
-   同樣的兩條規則（白字 ≥4.5、當卡上的字 ≥4.5），各色相帶能達到的最高 C*：
+   數字直接把路堵死：
 
-       h 82°  C* 54.9      h 70°  C* 59.3      h 58°  C* 68.4
-       h 78°  C* 56.1      h 66°  C* 61.9      h 50°  C* 75.3
+       L* 50  #9c7200   白字 4.36:1  ← 已經在邊緣
+       L* 60  #be8a00   白字 3.08:1  ✗
+       L* 75  #f2ae00   白字 1.94:1  ✗✗
 
-   三案取 76 / 69 / 64 度，都在各自色相帶的天花板上：
+   **明黃 ＋ 白字在物理上不存在。** 保留白字，天花板就是 L* 50，
+   那裡永遠帶焦糖感，換什麼色相都一樣 —— 第一到第四輪全部卡在這裡。
 
-       1 琥珀黃 #986600   L* 47.2   C* 56.1   h 76.5°
-       2 琥珀金 #a36000   L* 47.2   C* 59.3   h 68.7°
-       3 焦糖金 #aa5c00   L* 47.2   C* 61.9   h 64.3°
+   使用者第三輪反對的是「**字變成黑色**很突兀」，那和「非白字」不是同一件事。
+   所以這一輪的字改用**同一個黃的深階**，是同族的深淺配，不會像黑字那樣跳出來。
 
-   **一個重要的發現：案 3 的色相 64.3° 和現在的 #8d5e3a（61.7°）幾乎相同，
-   但彩度是 61.9 對 32.1。所以「拿鐵感」的成因一直是彩度不足，不是色相。**
-   同一個色相把彩度拉到兩倍，它就是琥珀不是拿鐵。
+   三案（亮階當底、深階當字，兩者色相相差 6~8°）：
 
-   和其他五科的距離（最近的是口腔外科 Deep Taupe，h 25.9°）：
-   案 1 Δh 50.7°、案 2 Δh 42.9°、案 3 Δh 38.5°，
-   而且 Deep Taupe 的 C* 只有 15.7，和這三案的 56~62 讀起來完全是兩件事，不會混淆。
+       1  底 #dd9a00 L* 68.4 C* 74.3   字 #583400   4.56:1
+       2  底 #f3aa00 L* 74.7 C* 79.8   字 #6a4000   4.50:1
+       3  底 #ffbe00 L* 80.8 C* 83.6   字 #744c00   4.54:1
 
-   > 白字是硬條件（第三輪使用者定的），所以亮度一律 L* 47，三案只有色相與彩度在動。
+   彩度 74~84，對照第四輪的 56~62、現在的 32 —— 這才是「明黃」的量級。
+
+   **實作上必須跟著改的一件事：亮黃當「字」永遠讀不出來**
+   （#f3aa00 疊在卡 #f4f4f5 上只有 1.5:1）。所以要看得到黃，
+   兒牙的 chip 與文章標籤**必須改成填色**，字用深階。
+   代價：兒牙這一科的標籤在形式上會和其他五科（線性）不同。
+   這是明黃的入場費，不是可以繞過的細節。
    -------------------------------------------------------------------------- */
-html[data-kids="1"] [data-spec="kids"] { --accent: #986600; }  /* 1 琥珀黃 h76.5 C*56.1　白字 4.96:1・卡上 4.51:1 */
-html[data-kids="2"] [data-spec="kids"] { --accent: #a36000; }  /* 2 琥珀金 h68.7 C*59.3　白字 4.96:1・卡上 4.52:1 */
-html[data-kids="3"] [data-spec="kids"] { --accent: #aa5c00; }  /* 3 焦糖金 h64.3 C*61.9　白字 4.95:1・卡上 4.51:1 */
+html[data-kids="1"] [data-spec="kids"] { --accent: #dd9a00; --accent-deep: #583400; --on-fill: #583400; }
+html[data-kids="2"] [data-spec="kids"] { --accent: #f3aa00; --accent-deep: #6a4000; --on-fill: #6a4000; }
+html[data-kids="3"] [data-spec="kids"] { --accent: #ffbe00; --accent-deep: #744c00; --on-fill: #744c00; }
+
+/* 兒牙的 chip 與文章標籤改成填色（亮黃只能當底，不能當字） */
+html[data-kids="1"] .chips button[data-spec="kids"],
+html[data-kids="2"] .chips button[data-spec="kids"],
+html[data-kids="3"] .chips button[data-spec="kids"],
+html[data-kids="1"] .card[data-spec="kids"] .card-tag,
+html[data-kids="2"] .card[data-spec="kids"] .card-tag,
+html[data-kids="3"] .card[data-spec="kids"] .card-tag {
+  background: var(--accent); color: var(--accent-deep); border-color: var(--accent);
+}
 
 .info-card { --accent: var(--teal); }
 .info-card[data-hue="taupe"] { --accent: var(--taupe); }
@@ -721,14 +734,20 @@ html[data-kids="3"] [data-spec="kids"] { --accent: #aa5c00; }  /* 3 焦糖金 h6
 /* 科別標記：線條與文字套色，底不套色。底維持 --card 不留透明 ——
    躺在紙 #e2e5e6 上，底若透明兒牙 #8d5e3a 只有 4.37:1 掉出 AA，
    墊那層卡色才是 5.03。 */
+/* 兩個衍生變數，**預設完全等於原本的行為**，所以其他五科一個像素都不會變：
+     --accent-deep  當「字」用的階（線性標籤的字與框）
+     --on-fill      填色上面的字
+   只有兒牙的明黃案會覆寫它們 —— 理由見上面那段。 */
+[data-spec], .info-card { --accent-deep: var(--accent); --on-fill: #fff; }
+
 .doc-role, .info-card h3, .chips button, .card-tag {
-  background: var(--card); color: var(--accent); border: 1px solid var(--accent);
+  background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep);
 }
 /* 按下去的 chip 換成實心：它代表「你正在看這一科」，
    和醫師藥丸的「這位醫師是這一科」是同一種份量，所以長得一樣。 */
-.chips button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.chips button[aria-pressed="true"] { background: var(--accent); color: var(--on-fill); border-color: var(--accent); }
 /* 只有醫師藥丸是實心的 —— 認人的份量比分類重。 */
-.doc-role { background: var(--accent); color: #fff; border-color: var(--accent); }
+.doc-role { background: var(--accent); color: var(--on-fill); border-color: var(--accent); }
 
 /* ---- 診所資訊：三張卡一排，照片兩張並排 -------------------------------- */
 .info { display: grid; gap: 1.2rem; grid-template-columns: repeat(3, 1fr); }
@@ -1541,9 +1560,9 @@ html[data-kids="3"] [data-spec="kids"] { --accent: #aa5c00; }  /* 3 焦糖金 h6
 <div class="hero-switch hero-switch-3" role="group" aria-label="兒牙的顏色">
   <b>兒牙</b>
   <button type="button" data-kids="0" aria-pressed="true">現在</button>
-  <button type="button" data-kids="1" aria-pressed="false">1 琥珀黃</button>
-  <button type="button" data-kids="2" aria-pressed="false">2 琥珀金</button>
-  <button type="button" data-kids="3" aria-pressed="false">3 焦糖金</button>
+  <button type="button" data-kids="1" aria-pressed="false">1 明黃 L*68</button>
+  <button type="button" data-kids="2" aria-pressed="false">2 明黃 L*75</button>
+  <button type="button" data-kids="3" aria-pressed="false">3 明黃 L*81</button>
 </div>
 <p class="hero-caption" id="hero-caption"></p>
 
@@ -1572,11 +1591,14 @@ html[data-kids="3"] [data-spec="kids"] { --accent: #aa5c00; }  /* 3 焦糖金 h6
   /* 兒牙的顏色三案。色相是唯一的變數，彩度固定 78%（含羞草自己的值），
      明度取「白字仍過 AA 的最亮值」。 */
   var KIDS = {
-    '0': '兒牙 現在　#8d5e3a　L* 44.2・彩度 C* 32.1・Lab 色相 61.7°。白字 5.53:1。注意它的色相和案 3 幾乎一樣 —— 差的是彩度（32 對 62），拿鐵感的成因在這裡。',
-    '1': '兒牙 1 琥珀黃　#986600　C* 56.1・h 76.5°。三案裡最靠黃的一個，但已經離開會泛綠的那一側。白字 4.96:1、卡上 4.51:1。',
-    '2': '兒牙 2 琥珀金　#a36000　C* 59.3・h 68.7°。白字 4.96:1、卡上 4.52:1。',
-    '3': '兒牙 3 焦糖金　#aa5c00　C* 61.9・h 64.3°。色相和現在的幾乎相同，但彩度是兩倍。白字 4.95:1、卡上 4.51:1。'
+    '0': '兒牙 現在　#8d5e3a　L* 44.2・C* 32.1。白字。這是對照組。',
+    '1': '兒牙 1 明黃　底 #dd9a00（L* 68.4・C* 74.3）＋ 同色相深階字 #583400，4.56:1。三案裡最收斂的明黃。',
+    '2': '兒牙 2 明黃　底 #f3aa00（L* 74.7・C* 79.8）＋ 字 #6a4000，4.50:1。',
+    '3': '兒牙 3 明黃　底 #ffbe00（L* 80.8・C* 83.6）＋ 字 #744c00，4.54:1。最亮最飽和。',
+    'x': ''
   };
+  /* 三個明黃案裡，兒牙的 chip 與文章標籤都改成填色 —— 亮黃當字讀不出來
+     （#f3aa00 疊在卡上只有 1.5:1），要看得到黃就只能當底。 */
 
 
 
