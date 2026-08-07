@@ -52,13 +52,17 @@
   --tile:  #252d4a;   /* 茶室深藍磁磚。整個色盤裡最深的一個 */
 }
 *, *::before, *::after { box-sizing: border-box; }
-/* overflow-x 兩個都要寫，而且 html 用 clip 不是 hidden（2026-08-07）。
-   只寫在 body 上時，瀏覽器會把 body 的 overflow「傳播」到視窗來處理，
-   而 iOS Safari 在頁面裡有 position: sticky／absolute 的東西時這條傳播並不可靠 ——
-   結果是頁面仍然可以左右拉，拉開之後 .sticky-head 的 right: 0 會把主選單
-   帶到文件的最右邊，看起來就是「頁首的字跑到很奇怪的地方」。
-   clip 不建立捲動容器（hidden 會），所以它不會讓 sticky 失效。 */
-html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
+/* ⚠ 這裡**不要**加 overflow-x: clip。2026-08-07 加過一次，當天就退掉：
+   `overflow-x: clip` 讓 html 變成裁切容器，底下的 .sticky-head 就黏不住了 ——
+   量出來捲到 700px 時 header.top = -700（整條跟著捲走）。
+   當時是想擋 iOS 的水平捲動，但那個猜測沒有證據，代價卻是頁首壞掉。
+   水平方向就靠下面 body 的 overflow-x: hidden，它一直都是這樣。 */
+html { -webkit-text-size-adjust: 100%; }
+/* 錨點捲過去時要留出固定頁首的高度，不然 #topics 的標題會被頁首壓住。
+   390px 上量到的收合頁首是 45.9px，取 46px ＋ 1rem 的呼吸。
+   （電腦版是 calc(var(--head-h-sm) + 1rem)，同一件事、不同的取得方式 ——
+   手機版的頁首高是 cqw 算出來的，沒有一個現成的變數可以引用。） */
+html { scroll-padding-top: calc(46px + 1rem); }
 body {
   margin: 0; background: var(--paper); color: var(--ink);
   font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
@@ -497,12 +501,23 @@ section + section { border-top: 1px solid var(--rule); }
    ---------------------------------------------------------------------------- */
 [data-spec], .info-card { --accent-deep: var(--accent); --on-fill: #fff; }
 
-/* 「全部」＝不篩選，用中性灰，刻意不參與那六個彩色。
-   錨在**頁首玻璃壓到淺色區時的那個顏色** #393736 —— 不是新調的色，
-   是 TINT #191614 以 .84 濃度疊在紙 #e2e5e6 上算出來的合成色，整頁本來就有這一塊灰。
-   （第一版用 --ink #2a2c27，L* 17.6，使用者說太黑。）
-   電腦版右下角正在比 A~D 四階，定案後這裡跟著換。 */
-[data-spec="all"]    { --accent: #393736; }  /* L* 23.2　白字 11.84:1・對卡 10.77:1 */
+/* ---- 「全部」的灰 —— 定案（2026-08-07）--------------------------------------
+   使用者：「選 B 的線條白底 ＋ C 的套色。」所以這一顆是**兩階**，不是一階：
+
+       線框態（沒按下）  #4c4948  L* 31.4   當字疊在卡 #f4f4f5 上  8.12:1
+       填色態（按下去）  #5f5d5c  L* 39.6   白字疊在它上面          6.55:1
+
+   兩個都錨在**頁首玻璃壓到淺色區時的那個顏色** #393736（L* 23.2）往上提亮度，
+   色相彩度一度都沒動 —— 那不是新調的色，是暗夜 #191614 以 .84 濃度疊在紙上的合成色，
+   整頁本來就有這一塊灰，所以「全部」不會變成第八個顏色。
+
+   為什麼填色要比線框**淺**（一般會反過來）：
+   線框那一階是拿來當**字**的，字要深才讀得清楚；填色那一階是**底**，
+   底太深會讓「全部」在一排彩色標記裡變成最重的一顆，
+   但它其實是最中性的那一顆。所以是「字用 B、底用 C」，不是同一個值兩用。
+   第一版用 --ink #2a2c27（L* 17.6）當兩用值，使用者說太黑。
+   ---------------------------------------------------------------------------- */
+[data-spec="all"]    { --accent: #5f5d5c; --accent-deep: #4c4948; --on-fill: #fff; }
 [data-spec="general"],
 [data-spec="perio"]  { --accent: var(--chair); }  /* 診療椅實測　　　　　 H=174　 6.38:1 */
 [data-spec="endo"]   { --accent: var(--moss);  }  /* 色票・苔綠＝Logo　　 H=100　 5.55:1 */
@@ -732,7 +747,7 @@ section + section { border-top: 1px solid var(--rule); }
            「主題與科別」在頁尾的站內導覽裡有，而且它就是 HERO 底下的第一節，
            少一個頁首連結的代價最小。 -->
       <nav class="site-nav" aria-label="主選單">
-        <a href="#articles">全部文章</a>
+        <a href="#topics">全部文章</a>
         <a href="#doctors">醫師介紹</a>
         <a href="#clinic">診所資訊</a>
       </nav>

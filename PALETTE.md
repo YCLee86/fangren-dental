@@ -900,23 +900,24 @@ u  窄帶開始離開 → 完全離開。這一段把玻璃換成實色 #393736
 > 順手加的兩道保險，之後就算又被擠到也不會斷行：
 > `.brand { flex: 0 0 auto }` ＋ `.brand-text b, .brand-text small { white-space: nowrap }`。
 
-### ⚠ `overflow-x` 兩個都要寫，而且 `html` 要用 `clip`
+### ⚠ 不要在 `html` 上加 `overflow-x: clip`
 
-```css
-html { overflow-x: clip; }     /* 不是 hidden */
-body { overflow-x: hidden; }
+2026-08-07 加過一次，**當天就退掉**。當時是想擋 iOS 的水平捲動，
+但那只是猜測、沒有證據，代價卻是**手機版的固定頁首整條壞掉**：
+
+```
+加了之後量到：scrollY=300 → header.top = -300
+              scrollY=700 → header.top = -700   （跟著捲走，完全沒黏住）
+退掉之後：     三個位置 header.top 都是 0
 ```
 
-只寫在 `body` 上時，瀏覽器會把 body 的 overflow「傳播」到視窗去處理，
-而 **iOS Safari 在頁面裡有 `position: sticky` / `fixed` 的東西時，這條傳播並不可靠**。
-結果是頁面仍然可以左右拉；一旦拉開，`.sticky-head { right: 0 }` 會把主選單帶到
-**文件的最右邊** —— 使用者看到的就是「頁首的字跑到很奇怪的地方」。
+`overflow-x: clip` 讓 `html` 變成裁切容器，`.sticky-head` 的 `position: sticky`
+就失去它原本相對視窗黏著的行為。**水平方向就靠 `body { overflow-x: hidden }`，
+那一直都在，也一直都夠。**
 
-`clip` 不建立捲動容器（`hidden` 會），所以它不會讓 sticky 或 `scroll-padding-top` 失效。
-
-> 這在容器裡量不出來：`documentElement.scrollWidth` 一直等於視窗寬，
-> 連把字距推寬 25% 都一樣。唯一真的超出去的是 HERO 那張 `width: 113%` 的照片，
-> 但它被 `.hero-photo { overflow: hidden }` 收住了。**Blink 收得住，WebKit 不一定。**
+> 教訓不在 CSS，在流程：**為了一個沒有重現步驟的猜測，去動一個正在正常運作的東西。**
+> 使用者回報「頁首的字跑到很奇怪的地方」時，那張截圖裡還有 artifact 檢視器自己的
+> 浮動按鈕，成因並不明確；正確的作法是先問清楚或先量到，而不是先下藥。
 
 ### 量手機版的版面時，不要用 `--window-size` 直接截圖
 

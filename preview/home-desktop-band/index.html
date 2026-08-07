@@ -9,33 +9,6 @@
 </head>
 <body>
 <style>:root { color-scheme: light; }
-/* ---- 提案用的切換條。定案之後整段連同 data-all 一起刪掉。 ---- */
-.all-switch {
-  position: fixed; z-index: 50; right: 1.2rem; bottom: 1.2rem;
-  display: flex; gap: .4rem; align-items: center;
-  background: rgba(25, 22, 20, .88); border-radius: 999px; padding: .45rem .5rem;
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  box-shadow: 0 4px 20px rgba(25, 22, 20, .35);
-}
-.all-switch b {
-  font-size: .7rem; font-weight: 400; letter-spacing: .08em;
-  color: rgba(255,255,255,.55); padding-inline: .6rem .3rem;
-}
-.all-switch button {
-  font: inherit; font-size: .78rem; line-height: 1.5;
-  padding: .28rem .85rem; border-radius: 999px; cursor: pointer;
-  background: transparent; color: rgba(255,255,255,.72);
-  border: 1px solid rgba(255,255,255,.28);
-  -webkit-appearance: none; appearance: none;
-}
-.all-switch button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
-.all-caption {
-  position: fixed; z-index: 50; right: 1.2rem; bottom: 4rem; margin: 0;
-  max-width: min(92vw, 26rem); font-size: .76rem; line-height: 1.7;
-  color: rgba(255,255,255,.9); background: rgba(25, 22, 20, .82);
-  border-radius: 10px; padding: .5rem .9rem;
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-}
 </style>
 <style>
 /* ==========================================================================
@@ -102,13 +75,10 @@
   --head-h-sm: 60px;        /* 捲動收合後 */
 }
 *, *::before, *::after { box-sizing: border-box; }
-/* overflow-x 兩個都要寫，而且 html 用 clip 不是 hidden（2026-08-07）。
-   只寫在 body 上時，瀏覽器會把 body 的 overflow「傳播」到視窗來處理，
-   而 iOS Safari 在頁面裡有 position: sticky／fixed 的東西時這條傳播並不可靠 ——
-   結果是頁面仍然可以左右拉，拉開之後固定的頁首會被帶到文件的最右邊，
-   看起來就是「頁首的字跑到很奇怪的地方」。
-   clip 不建立捲動容器（hidden 會），所以它不會讓 sticky／scroll-padding 失效。 */
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; overflow-x: clip; }
+/* ⚠ 這裡**不要**加 overflow-x: clip。2026-08-07 加過一次，當天就退掉 ——
+   它讓 html 變成裁切容器，手機版那條 .sticky-head 就整個黏不住了。
+   兩頁一起退，免得只有一頁保留、之後又被抄回去。 */
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0; background: var(--paper); color: var(--ink);
@@ -651,27 +621,23 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      排在後面會把兒牙的 --accent-deep 蓋回 var(--accent)，黃字就糊在卡上了。 */
 [data-spec], .info-card { --accent-deep: var(--accent); --on-fill: #fff; }
 
-/* ---- 「全部」的灰（2026-08-07 提案中，右下角可切換）----------------------
-   第一版直接用 --ink #2a2c27（L* 17.6），使用者說太黑。
-   改成錨在**頁首玻璃壓到淺色區時的那個顏色** `#393736` —— 它不是新調的色，
-   是 TINT #191614 以 .84 濃度疊在紙 #e2e5e6 上算出來的合成色，
-   整頁本來就已經有這一塊灰在，用它「全部」就不是第八個顏色。
+/* ---- 「全部」的灰 —— 定案（2026-08-07）--------------------------------------
+   使用者：「選 B 的線條白底 ＋ C 的套色。」所以這一顆是**兩階**，不是一階：
 
-   往上三階只提亮度，色相彩度一度都不動（C* 只有 1.1，本來就近乎中性）：
+       線框態（沒按下）  #4c4948  L* 31.4   當字疊在卡 #f4f4f5 上  8.12:1
+       填色態（按下去）  #5f5d5c  L* 39.6   白字疊在它上面          6.55:1
 
-       A  #393736   L* 23.2   白字 11.84   對卡 10.77   ← BANNER 淺色區本色
-       B  #4c4948   L* 31.4   白字  8.92   對卡  8.12
-       C  #5f5d5c   L* 39.6   白字  6.55   對卡  5.96
-       D  #716f6e   L* 46.9   白字  5.00   對卡  4.55   ← 天花板
+   兩個都錨在**頁首玻璃壓到淺色區時的那個顏色** #393736（L* 23.2）往上提亮度，
+   色相彩度一度都沒動 —— 那不是新調的色，是暗夜 #191614 以 .84 濃度疊在紙上的合成色，
+   整頁本來就有這一塊灰，所以「全部」不會變成第八個顏色。
 
-   **D 就是這條路的盡頭**，不能再淡：這顆標記兩種狀態都要撐住小字 ——
-   按下去是白字疊在它上面，沒按下去是它自己當字疊在卡 #f4f4f5 上。
-   兩邊夾殺的結果，對卡那一側在 L* 47.3 就掉出 4.5:1（比白字那側早）。
-   -------------------------------------------------------------------------- */
-[data-spec="all"]    { --accent: #393736; }
-html[data-all="b"] [data-spec="all"] { --accent: #4c4948; }
-html[data-all="c"] [data-spec="all"] { --accent: #5f5d5c; }
-html[data-all="d"] [data-spec="all"] { --accent: #716f6e; }
+   為什麼填色要比線框**淺**（一般會反過來）：
+   線框那一階是拿來當**字**的，字要深才讀得清楚；填色那一階是**底**，
+   底太深會讓「全部」在一排彩色標記裡變成最重的一顆，
+   但它其實是最中性的那一顆。所以是「字用 B、底用 C」，不是同一個值兩用。
+   第一版用 --ink #2a2c27（L* 17.6）當兩用值，使用者說太黑。
+   ---------------------------------------------------------------------------- */
+[data-spec="all"]    { --accent: #5f5d5c; --accent-deep: #4c4948; --on-fill: #fff; }
 [data-spec="general"],
 [data-spec="perio"]  { --accent: var(--chair); }  /* 診療椅實測　　　　　 H=174　 6.38:1 */
 [data-spec="endo"]   { --accent: var(--moss);  }  /* 色票・苔綠＝Logo　　 H=100　 5.55:1 */
@@ -865,7 +831,7 @@ html[data-all="d"] [data-spec="all"] { --accent: #716f6e; }
          但兩頁的主選單要是同一組，不然改一頁就得記得改另一頁。
          這一節的入口在頁尾的站內導覽，而且它就是 HERO 底下的第一節。 -->
     <nav class="site-nav" aria-label="主選單">
-      <a href="#articles">全部文章</a>
+      <a href="#topics">全部文章</a>
       <a href="#doctors">醫師介紹</a>
       <a href="#clinic">診所資訊</a>
     </nav>
@@ -1569,37 +1535,6 @@ html[data-all="d"] [data-spec="all"] { --accent: #716f6e; }
        兒牙的色 → 1a #c28229
      連同 data-band／data-gap／data-kids 與那段 localStorage 記憶一起刪。
      被淘汰的幾案為什麼落選，寫在上面各自的 CSS 註解與 PALETTE.md 第六之二、六之三節。 -->
-<div class="all-switch" role="group" aria-label="「全部」的灰">
-  <b>全部</b>
-  <button type="button" data-all="a" aria-pressed="true">A</button>
-  <button type="button" data-all="b" aria-pressed="false">B</button>
-  <button type="button" data-all="c" aria-pressed="false">C</button>
-  <button type="button" data-all="d" aria-pressed="false">D</button>
-</div>
-<p class="all-caption" id="all-caption"></p>
-<script>
-/* 提案用，定案後連同上面的 CSS、markup 與 data-all 一起刪。 */
-(function () {
-  var MAP = {
-    a: 'A　#393736　L* 23.2 —— **頁首玻璃壓到淺色區時的那個顏色本人**，不是新調的。白字 11.84:1、當字疊在卡上 10.77:1。',
-    b: 'B　#4c4948　L* 31.4　白字 8.92:1、對卡 8.12:1。',
-    c: 'C　#5f5d5c　L* 39.6　白字 6.55:1、對卡 5.96:1。',
-    d: 'D　#716f6e　L* 46.9　白字 5.00:1、對卡 4.55:1 —— **這是天花板**，再淡下去沒按下的狀態就讀不到了。'
-  };
-  var root = document.documentElement, cap = document.getElementById('all-caption');
-  var cur = (location.search.match(/[?&]all=([a-d])/) || [])[1] || 'a';
-  function paint() {
-    root.setAttribute('data-all', cur);
-    document.querySelectorAll('.all-switch button').forEach(function (b) {
-      b.setAttribute('aria-pressed', b.getAttribute('data-all') === cur ? 'true' : 'false');
-    });
-    if (cap) cap.textContent = MAP[cur];
-  }
-  document.querySelectorAll('.all-switch button').forEach(function (b) {
-    b.addEventListener('click', function () { cur = b.getAttribute('data-all'); paint(); });
-  });
-  paint();
-})();
-</script>
+<!-- 「全部」的灰已定案（線框 #4c4948 ＋ 填色 #5f5d5c），切換條連同 data-all 一起刪。 -->
 </body>
 </html>
