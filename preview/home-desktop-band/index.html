@@ -377,6 +377,33 @@ html[data-band="glass1"] .band {
   -webkit-backdrop-filter: blur(4px) saturate(.92);
   backdrop-filter: blur(4px) saturate(.92);
 }
+/* ---- 毛玻璃 輕 ＋ 柏油漸層（2026-08-07 定案方向）--------------------------
+   模糊維持「輕」的 4px、整條一致 —— 帶子從頭到尾都是同一片玻璃。
+   變的只有疊在上面的那層色：**從完全沒有顏色，漸層到柏油色**。
+
+   顏色用柏油的實測值 #221e1c ＝ rgb(34,30,28)（PALETTE.md 第四節）。
+   先前幾案的遮罩是 #191614（暗夜），那是 HERO 陰影在用的顏色；
+   這裡改用柏油，因為帶子壓住的就是路面 —— 讓路自己的顏色越積越厚，
+   而不是拿另一個顏色蓋上去。
+
+   上緣 alpha 是 0：帶子的起點完全沒有邊、沒有色，只有一點點模糊，
+   往下才慢慢長出柏油。所以它不是「一條帶子」，是路面自己越來越沉。
+
+   四個停點不是等距的 —— 前 34% 幾乎不上色（那一段沒有文字），
+   70% 之後才快速收深，把兩行字所在的下半段撐起來。
+   底端停在 .82 而不是 1：留一點路面透出來，帶子才還是玻璃。
+   要讓最底完全實心的話把 .82 改成 1 就好。 */
+html[data-band="glasstar"] .band {
+  background-color: transparent;
+  background-image: linear-gradient(180deg,
+    rgba(34, 30, 28, 0)   0%,
+    rgba(34, 30, 28, .20) 34%,
+    rgba(34, 30, 28, .50) 70%,
+    rgba(34, 30, 28, .82) 100%);
+  -webkit-backdrop-filter: blur(4px) saturate(.92);
+  backdrop-filter: blur(4px) saturate(.92);
+}
+
 /* 中：折衷。路面仍然認得出來，白字在整條帶子上都站得住。 */
 html[data-band="glass2"] .band {
   background-image: linear-gradient(180deg,
@@ -1058,6 +1085,14 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
        另外照你說的加上<b>越往下越深</b>的漸層：上緣只有一點點遮罩，
        帶子和照片之間因此沒有硬邊，往下才收深到足以撐住白字 ——
        這也符合實際的明暗，照片越往下越暗，遮罩跟著加重，合成後的深淺才平均。</p>
+    <p><b>定案方向：毛玻璃輕 ＋ 柏油漸層。</b>模糊維持「輕」的 4px、整條一致 ——
+       帶子從頭到尾都是同一片玻璃；變的只有疊在上面的那層色，
+       <b>從完全沒有顏色漸層到柏油色</b> <code>#221e1c</code>（alpha 0 → .20 → .50 → .82）。
+       先前幾案的遮罩用的是 <code>#191614</code>（暗夜，HERO 陰影在用的顏色），
+       這裡改用柏油 —— 帶子壓住的就是路面，該讓路自己的顏色越積越厚，
+       而不是拿另一個顏色蓋上去。上緣 alpha 是 0，所以帶子的起點完全沒有邊、沒有色，
+       它不是「一條帶子」，是路面自己越來越沉。
+       底端停在 .82 而不是 1，留一點路面透出來，帶子才還是玻璃。</p>
     <p><b>三個實色案的做法是同一套：亮度一個都不動，只轉色相。</b>
        L* 維持 10.2 / 17.5 / 19.6 三個停點，所以三案的深淺完全一樣，
        看到的差別純粹是色調，這樣比才比得準。</p>
@@ -1274,7 +1309,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   <b>底色</b>
   <button type="button" data-band="blue"  aria-pressed="false">藍黑（現況）</button>
   <button type="button" data-band="tar"   aria-pressed="false">柏油</button>
-  <button type="button" data-band="ink"   aria-pressed="true">墨色</button>
+  <button type="button" data-band="ink"   aria-pressed="false">墨色</button>
+  <button type="button" data-band="glasstar" aria-pressed="true">毛玻璃輕＋柏油漸層</button>
   <button type="button" data-band="glass1" aria-pressed="false">毛玻璃 輕</button>
   <button type="button" data-band="glass2" aria-pressed="false">毛玻璃 中</button>
   <button type="button" data-band="glass3" aria-pressed="false">毛玻璃 重</button>
@@ -1295,6 +1331,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     blue:  '底色一 藍黑（現況）H=220：夜空與柏油的中間值。當初窄帶接在照片下面、要同時接住上面的夜空與下面的紙色，取中間值合理 —— 但現在它壓住的位置只有柏油。',
     tar:   '底色二 柏油 H=20：取自 PALETTE.md 裡柏油的實測值 #221e1c 的色相，亮度 L* 和藍黑案完全一樣，差別純粹是色調。這是「窄帶從柏油長出來」的直接答案。',
     ink:   '底色三 墨色 H=88：取自內文墨色 #2a2c27 的色相，亮度同上。好處是它和內文的字同一個調，整站的深色只有一種傾向。',
+    glasstar: '毛玻璃輕＋柏油漸層：模糊維持 4px、整條一致；疊在上面的色從「完全沒有顏色」漸層到柏油色 #221e1c（rgb 34,30,28），alpha 0 → .20 → .50 → .82。上緣完全沒有邊，往下才慢慢長出柏油 —— 不是一條帶子，是路面自己越來越沉。',
     glass1: '毛玻璃 輕：遮罩 .16→.62（越下面越深）＋ 模糊 4px。上緣幾乎全透，路面看得最清楚；白字在最亮的路段（左下角車頭燈）會吃力。',
     glass2: '毛玻璃 中：遮罩 .26→.74 ＋ 模糊 7px。折衷案 —— 路面仍然認得出形狀，白字在整條帶子上都站得住。',
     glass3: '毛玻璃 重：遮罩 .36→.86 ＋ 模糊 10px。最接近實色案，但上緣仍然是軟的，和照片之間沒有硬邊。'
@@ -1306,7 +1343,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   };
   var root = document.documentElement;
   var cap  = document.getElementById('hero-caption');
-  var cur  = { band: 'ink', gap: 'wide' };
+  var cur  = { band: 'glasstar', gap: 'wide' };
 
   function paint() {
     root.setAttribute('data-band', cur.band);
@@ -1340,7 +1377,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     try { v = localStorage.getItem('fangren:' + key); } catch (e) {}
     return map[v] ? v : fallback;
   }
-  cur.band = pick('band', BAND, 'ink');
+  cur.band = pick('band', BAND, 'glasstar');
   cur.gap  = pick('gap',  GAP,  'wide');
   paint();
 })();
