@@ -275,8 +275,10 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
   font-family: "Noto Serif TC", "Source Han Serif TC", serif;   /* ← 兩版唯一的差別 */
 
   /* tabular-nums 讓每個數字等寬，數字在跑的時候不會左右抽動；
-     但位數變多（999 → 1,000）整體還是會變寬，所以 JS 會先量好最終寬度鎖住。 */
-  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+     但位數變多（999 → 1,000）整體還是會變寬，所以 JS 會先量好最終寬度鎖住。
+     text-align: right 是配套 —— 鎖了寬度之後數字若靠左，跑到 0～999 的階段
+     右邊會空出一塊，「次瀏覽」看起來像被推走了。靠右它就一直貼著單位長。 */
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em; text-align: right;
 }
 .band-views small {
   font-size: .625rem; color: rgba(255, 255, 255, .65);
