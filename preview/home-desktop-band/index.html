@@ -777,10 +777,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .hero-switch button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
 .hero-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .hero-switch-2 { bottom: 4.1rem; }
-.hero-switch-3 { bottom: 7rem; }
 .hero-caption {
   position: fixed; z-index: 50; right: 1.2rem;
-  bottom: 9.9rem; margin: 0; max-width: min(92vw, 30rem); text-align: left;
+  bottom: 7rem; margin: 0; max-width: min(92vw, 30rem); text-align: left;
   font-size: .76rem; line-height: 1.7; color: rgba(255,255,255,.9);
   background: rgba(25, 22, 20, .82); border-radius: 10px; padding: .5rem .9rem;
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
@@ -1237,40 +1236,59 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
      終點值做成五階讓使用者挑，見下面 A_MAX。下限是對比度：
      .70 以下紙色區的導覽白字會逼近 4.5:1，不要過去。 */
-  var TINT = [25, 22, 20];      // 暗夜 #191614。這三個數字不隨捲動變。
-  var A_MIN = .06;              // HERO 區的濃度，五案共用（玻璃感靠它）
+  /* ---- 玻璃 → 實心，切換點選在顏色剛好相等的那一刻（2026-08-07 第七輪）----
+     使用者定案：濃度取第 3 階（.84）。但要的是「**到了淺色區就不要透了**，
+     顏色維持第 3 階的樣子；而深淺交界的那一段捲動仍然要有透的感覺，
+     往回捲也一樣」。
 
-  /* 終點濃度（條子待在紙色區時的值）。使用者說 .76 在紙色區「透感有點多」，
-     所以往上做四階。**這個旋鈕幾乎只影響淺色區** —— 深色區底下本來就接近全黑，
-     alpha 再加也差不了多少，所以調它不會動到 HERO 與窄帶上的長相。
-     括號裡是疊在紙色 #e2e5e6 上量到的合成色。 */
-  var A_MAX = {
-    '1': .76,   // #494846　現在這一版
-    '2': .80,   // #413f3e
-    '3': .84,   // #393736
-    '4': .88,   // #312f2d
-    '5': .92    // #292725　再上去就回到先前嫌太黑的那一帶了
-  };
-  function aMax() { return A_MAX[root.getAttribute('data-glass')] || A_MAX['1']; }
+     兩件事看起來衝突，其實不會 —— 因為 **.84 的玻璃疊在紙色上算出來就是 #393736**，
+     和實心版要用的顏色一模一樣。所以只要把「玻璃 → 實心」的切換點放在
+     **紙色已經完全補到條子底下**的那一刻，兩邊的顏色相等，切換是看不見的。
+     來回捲都一樣，因為它不是時間動畫，是捲動位置的函數。
+
+     為什麼要有實心這一段：紙色區本身是平的，透不透看起來一樣；
+     但再往下捲，文章卡、縮圖、彩色 chips 會從條子底下經過 ——
+     那時候玻璃會把它們糊上來，實心才不會。
+
+     兩個進度值，剛好接續（u 開始的那一刻正是 t 到 1 的那一刻）：
+
+       t：窄帶從下方進入條子 → 填滿條子。這段是玻璃，alpha 從 .06 走到 .84。
+       u：窄帶往上離開條子 → 紙色補滿。這段從玻璃轉成實心。
+
+     實心色不是手寫的，是**用同一個 alpha 疊在紙色上算出來的**，
+     所以改 A_MAX 的話實心色會自己跟著走，兩邊永遠相等，不會脫鉤。 */
+  var TINT  = [25, 22, 20];     // 暗夜 #191614
+  var PAPER = [226, 229, 230];  // --paper #e2e5e6
+  var A_MIN = .06;              // HERO 區：幾乎不染色，玻璃感靠它
+  var A_MAX = .84;              // 定案的第 3 階
+  /* 實心色 ＝ A_MAX 的 TINT 疊在 PAPER 上的合成色 → #393736 */
+  var SOLID = TINT.map(function (v, i) {
+    return Math.round(v * A_MAX + PAPER[i] * (1 - A_MAX));
+  });
 
   function paint() {
     root.classList.toggle('scrolled', scrollY > 4);
 
-    /* 條子完全離開窄帶＝紙色開始出現。留著給日後需要分辨
-       「頁首在暗夜區／在內文區」的規則用。 */
     var r = band.getBoundingClientRect();
     var h = head.getBoundingClientRect().height || 1;
+
+    /* t：窄帶進入並填滿條子（0 → 1）。這段條子底下是夜色。 */
     var t = Math.min(1, Math.max(0, (h - r.top) / (r.height || 1)));
-    root.classList.toggle('past-band', t >= 1);
+    /* u：窄帶往上離開條子、紙色補滿（0 → 1）。u 開始的那一刻正是 t 到 1 的那一刻。 */
+    var u = Math.min(1, Math.max(0, (h - r.bottom) / h));
+    root.classList.toggle('past-band', u >= 1);
 
-    var a = A_MIN + (aMax() - A_MIN) * t;
+    var a = A_MIN + (A_MAX - A_MIN) * t;          // 玻璃的濃度
+    var col = TINT.map(function (v, i) { return Math.round(v + (SOLID[i] - v) * u); });
+    var alpha = a + (1 - a) * u;                  // u 到 1 時剛好完全不透明
+
     root.style.setProperty('--glass',
-      'rgba(' + TINT[0] + ',' + TINT[1] + ',' + TINT[2] + ',' + a.toFixed(3) + ')');
+      'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + alpha.toFixed(3) + ')');
 
-    /* 頁首下緣的淡出起點：深色區 76%（軟邊），紙色上來時收到 100%（無淡出）。
-       用 t 的三次方，所以大部分行程都還是軟的，只有最後一段快速收起來 ——
-       收得太早會讓照片上又出現硬邊，收得太晚紙色上就會看到那條假陰影。 */
-    root.style.setProperty('--head-fade', (76 + 24 * t * t * t).toFixed(1) + '%');
+    /* 頁首下緣的淡出：只有在條子底下還是深色時才需要軟邊。
+       紙色補上來之後那段「由深漸淡到透明」會被讀成一條陰影，所以收成 100%。
+       綁 u 不綁 t —— 假陰影只在紙色出現時才會發生。 */
+    root.style.setProperty('--head-fade', (76 + 24 * u).toFixed(1) + '%');
   }
 
   var tick = false;
@@ -1423,14 +1441,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   <button type="button" data-gap="wide" aria-pressed="true">拉開</button>
   <button type="button" data-gap="full" aria-pressed="false">撐滿版心</button>
 </div>
-<div class="hero-switch hero-switch-3" role="group" aria-label="頁首在淺色區的濃度">
-  <b>頁首</b>
-  <button type="button" data-glass="1" aria-pressed="true">1 現在</button>
-  <button type="button" data-glass="2" aria-pressed="false">2</button>
-  <button type="button" data-glass="3" aria-pressed="false">3</button>
-  <button type="button" data-glass="4" aria-pressed="false">4</button>
-  <button type="button" data-glass="5" aria-pressed="false">5 最濃</button>
-</div>
 <p class="hero-caption" id="hero-caption"></p>
 
 <script>
@@ -1454,16 +1464,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   };
   var root = document.documentElement;
   var cap  = document.getElementById('hero-caption');
-  var cur  = { band: 'glasstar', gap: 'wide', glass: '1' };
-  var GLASS = {
-    '1': '頁首 1 現在　alpha .76 → 紙色區合成 #494846。導覽白字 8.2:1。',
-    '2': '頁首 2　alpha .80 → 紙色區合成 #413f3e。',
-    '3': '頁首 3　alpha .84 → 紙色區合成 #393736。',
-    '4': '頁首 4　alpha .88 → 紙色區合成 #312f2d。',
-    '5': '頁首 5 最濃　alpha .92 → 紙色區合成 #292725。再上去就回到先前嫌太黑的那一帶。'
-  };
-  /* 這一組只動「條子待在紙色區時的濃度」。HERO 區永遠是 .06，
-     所以五案在 HERO 與窄帶上的長相幾乎一樣，差別只在捲進內文之後。 */
+  var cur  = { band: 'glasstar', gap: 'wide' };
+
 
 
 
@@ -1476,16 +1478,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
       b.setAttribute('aria-pressed', b.getAttribute('data-gap') === cur.gap ? 'true' : 'false');
     });
-    root.setAttribute('data-glass', cur.glass);
-    document.querySelectorAll('.hero-switch button[data-glass]').forEach(function (b) {
-      b.setAttribute('aria-pressed', b.getAttribute('data-glass') === cur.glass ? 'true' : 'false');
-    });
-    if (window.fangrenRepaintHead) window.fangrenRepaintHead();
-    if (cap) cap.textContent = BAND[cur.band] + '　／　' + GAP[cur.gap] + '　／　' + GLASS[cur.glass];
+    if (cap) cap.textContent = BAND[cur.band] + '　／　' + GAP[cur.gap];
     try {
       localStorage.setItem('fangren:band', cur.band);
       localStorage.setItem('fangren:gap', cur.gap);
-      localStorage.setItem('fangren:glass', cur.glass);
     } catch (e) {}
   }
 
@@ -1494,9 +1490,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   });
   document.querySelectorAll('.hero-switch button[data-gap]').forEach(function (b) {
     b.addEventListener('click', function () { cur.gap = b.getAttribute('data-gap'); paint(); });
-  });
-  document.querySelectorAll('.hero-switch button[data-glass]').forEach(function (b) {
-    b.addEventListener('click', function () { cur.glass = b.getAttribute('data-glass'); paint(); });
   });
 
   function pick(key, map, fallback) {
@@ -1510,7 +1503,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   }
   cur.band = pick('band', BAND, 'glasstar');
   cur.gap  = pick('gap',  GAP,  'wide');
-  cur.glass = pick('glass', GLASS, '1');
   paint();
 })();
 </script>
