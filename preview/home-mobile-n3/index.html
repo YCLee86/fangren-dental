@@ -311,7 +311,7 @@ section + section { border-top: 1px solid var(--rule); }
 .sec-head { margin-bottom: 1.1rem; }
 .sec-head h2 { margin: 0; font-size: 1.12rem; line-height: 1.5; letter-spacing: .02em; }
 
-/* 治療項目。每一顆是真的 <button> —— 它會篩選下面的文章與醫師，不是裝飾。 */
+/* 主題與科別。每一顆是真的 <button> —— 它會篩選下面的文章與醫師，不是裝飾。 */
 .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0; padding: 0; list-style: none; }
 .chips button {
   font: inherit; font-size: .82rem; line-height: 1.6;
@@ -439,20 +439,20 @@ section + section { border-top: 1px solid var(--rule); }
 
 /* ---- 圓角：比例對齊，不是同一個數字（2026-08-07）-----------------------------
    四案裡選了 4「各自往中間靠」：標籤方一階、科別標記圓一階。
-   但一開始四個標記全寫 8px，看起來就不對 —— 治療項目的 chip 明顯偏方。
+   但一開始四個標記全寫 8px，看起來就不對 —— 主題與科別的 chip 明顯偏方。
    量出來原因很清楚：**圓角要看的是半徑與框高的比例，不是絕對值**。
 
      醫師藥丸（基準）  高 20.86px　8px　　比例 0.384
-     治療項目 chip     高 31.00px　8px　　比例 0.258　← 差最多，所以最方
+     主題與科別 chip   高 31.00px　8px　　比例 0.258　← 差最多，所以最方
      文章標籤          高 22.33px　8px　　比例 0.358
      診所資訊標籤      高 23.66px　8px　　比例 0.338
 
    chip 的框本來就比較大（字 13.12px、上下內距各 4px，藥丸只有 0.8px），
    同樣 8px 落在大框上就變方了。所以改成**各自取 0.384 × 自己的框高**：
 
-     治療項目 chip　31.00 × 0.384 ＝ 11.9　→ 12px
-     文章標籤　　　22.33 × 0.384 ＝  8.6　→ 8.5px
-     診所資訊標籤　23.66 × 0.384 ＝  9.1　→ 9px
+     主題與科別 chip 31.00 × 0.384 ＝ 11.9　→ 12px
+     文章標籤　　　　22.33 × 0.384 ＝  8.6　→ 8.5px
+     診所資訊標籤　　23.66 × 0.384 ＝  9.1　→ 9px
 
    這樣四個標記的視覺圓度一致，框大小不同也沒關係。
    （另一條路是把 chip 的內距縮小、讓框變矮，但那會動到觸控面積，先不動。）
@@ -467,7 +467,7 @@ section + section { border-top: 1px solid var(--rule); }
 
 /* ---- 科別標記：線條與文字套色，底不套色（2026-08-07 定案）---------------------
    醫師藥丸的那套色推廣到另外兩處，都是在標科別的小標籤：
-     · 治療項目的五個 chips
+     · 主題與科別的五個 chips
      · 文章卡上的分類標籤
    對應關係寫在 HTML 的 data-spec 上，跟醫師卡共用同一組 --accent，
    所以「兒童牙科」在三個地方一定是同一個色，不會各講各的。
@@ -635,7 +635,7 @@ section + section { border-top: 1px solid var(--rule); }
 
     <section class="wrap">
       <div class="sec-head">
-        <h2>治療項目</h2>
+        <h2>主題與科別</h2>
       </div>
 
       <ul class="chips">
