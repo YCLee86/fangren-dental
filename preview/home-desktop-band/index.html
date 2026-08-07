@@ -648,43 +648,38 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    **這是黃色在這個系統裡的物理上限，不是調得不好。**
    要真正明亮的黃，得先讓掉「實心白字」或「線性標籤過 AA」其中一條。
    ========================================================================== */
-html[data-kids="1"] [data-spec="kids"] { --accent: #966113; }  /* H=36 琥珀黃　白字 5.23:1・卡上 4.76:1 */
-html[data-kids="2"] [data-spec="kids"] { --accent: #8d6811; }  /* H=42 中間　　白字 5.10:1・卡上 4.64:1 */
-html[data-kids="3"] [data-spec="kids"] { --accent: #7f6b10; }  /* H=49 含羞草　白字 5.23:1・卡上 4.76:1 */
+/* ---- 兒牙的黃三案（2026-08-07 第三輪・白字是硬條件）--------------------
+   第二輪做過「亮黃 #e6c637 ＋ 墨字」，使用者說**標籤裡的字變黑很突兀，白字要保留**。
+   白字一旦是硬條件，亮度就被鎖死，不能再靠換字色換亮度 ——
+   所以這一輪走另一條路：**在天花板底下把彩度推到最高、色相移進真正的黃帶**。
 
-/* ---- 真正是黃的兩案（2026-08-07 第二輪）---------------------------------
-   使用者看過上面三案後說：「現在的和琥珀黃看起來不是黃，是咖啡色、拿鐵色、泰奶色。」
-   他是對的，而且這不是調偏了 —— **黃色沒有深色版本**。
-   把黃壓暗，它必然變成橄欖、芥末、拿鐵；要真的黃就一定要亮，
-   而一亮，白字就撐不住。上面三案都卡在這裡。
+   前兩輪用 HSL 挑，那是錯的工具 —— **HSL 的「彩度」在黃色區會騙人**
+   （#7f6b10 的 HSL S 是 78%，但感知彩度 C* 只有 48）。
+   這一輪改用 Lab／LCh 全域掃描：把所有同時滿足「白字 ≥4.5:1」與
+   「拿它當卡上的字 ≥4.5:1」的顏色掃過一遍，取 Lab 色相落在黃帶（80~105°）裡
+   **彩度最高**的那些。
 
-   含羞草提亮到 L=56%（H=49・S=78% 一度不動）＝ #e6c637，實測：
-       墨字 #2a2c27 　　8.40:1  ← 非常安全
-       白字 　　　　　　1.68:1  ✗
-       拿它當卡上的字 　1.53:1  ✗
+   結果三案都落在 L* 47、C* 54 —— 那就是這兩條規則交集的天花板，再高就有一條會破。
 
-   所以亮黃能用，但要讓掉一條規則。兩案各讓掉不同的一條：
+       兒牙現在 #8d5e3a   L* 44.2   C* 32.1   Lab h 61.7°  ← 橘褐，就是「拿鐵」
+       A 金黃  #926800   L* 47.0   C* 54.9   Lab h 80.4°
+       B 中間  #8a6c00   L* 47.1   C* 53.8   Lab h 86.8°
+       C 純黃  #866e00   L* 47.3   C* 53.6   Lab h 90.1°
 
-   案 4「雙階」讓掉的是**一科一個值**。
-     填色用亮階 #e6c637（字改墨色），當字用深階 #7f6b10。
-     兩者是同一個色相、同一個彩度，只差明度 —— 像設計系統的 500 / 700。
-     好處：**形式完全不變**，兒牙的 chip 與標籤仍然是線性的，和其他五科一樣。
+   **彩度從 32 拉到 54、色相從橘褐移進黃帶** —— 差別在這裡，不是明度。
+   三案的藍色分量都是 0（B=00），那正是彩度能到 54 的原因；
+   上一輪的 #7f6b10 帶了 16 的藍，才會顯得混濁。
 
-   案 5「全實心」讓掉的是**形式一致**。
-     兒牙的 chip 與文章標籤也改成實心亮黃底＋墨字，只有一個值。
-     好處：一科真的只有一個色。代價：兒牙的標籤和其他五科長得不一樣。
+   再往綠走（#7a7200、h 98.7°）也在天花板上，但那會回到橄欖，先不放進來。
+
+   > 第二輪的「亮黃 #e6c637 ＋ 墨字」與「雙階」已依使用者判斷移除，
+   > 連同 --accent-text / --on-accent 兩個衍生變數一起還原。
+   >   使用者的話：「為了迎合這個黃，標籤裡的字變成黑色，這樣很突兀，還是要維持白字。」
    -------------------------------------------------------------------------- */
-html[data-kids="4"] [data-spec="kids"],
-html[data-kids="5"] [data-spec="kids"] {
-  --accent: #e6c637;          /* 填色用的亮階 */
-  --accent-text: #7f6b10;     /* 當字用的深階，卡上 4.76:1 */
-  --on-accent: var(--ink);    /* 亮黃上面的字用墨色，8.40:1 */
-}
-/* 案 5：兒牙的 chip 與文章標籤也填滿 */
-html[data-kids="5"] .chips button[data-spec="kids"],
-html[data-kids="5"] .card[data-spec="kids"] .card-tag {
-  background: var(--accent); color: var(--ink); border-color: var(--accent);
-}
+html[data-kids="1"] [data-spec="kids"] { --accent: #926800; }  /* A 金黃　白字 5.00:1・卡上 4.55:1 */
+html[data-kids="2"] [data-spec="kids"] { --accent: #8a6c00; }  /* B 中間　白字 4.97:1・卡上 4.52:1 */
+html[data-kids="3"] [data-spec="kids"] { --accent: #866e00; }  /* C 純黃　白字 4.95:1・卡上 4.50:1 */
+
 .info-card { --accent: var(--teal); }
 .info-card[data-hue="taupe"] { --accent: var(--taupe); }
 
@@ -727,20 +722,14 @@ html[data-kids="5"] .card[data-spec="kids"] .card-tag {
 /* 科別標記：線條與文字套色，底不套色。底維持 --card 不留透明 ——
    躺在紙 #e2e5e6 上，底若透明兒牙 #8d5e3a 只有 4.37:1 掉出 AA，
    墊那層卡色才是 5.03。 */
-/* 兩個衍生變數，預設完全等於原本的行為，所以其他五科一個像素都不會變：
-     --accent-text  「當字用」的階（線性標籤的字與框）
-     --on-accent    「填色上的字」（實心藥丸／按下的 chip）
-   只有兒牙的黃案會覆寫它們 —— 理由見下面「黃色為什麼要兩階」。 */
-[data-spec], .info-card { --accent-text: var(--accent); --on-accent: #fff; }
-
 .doc-role, .info-card h3, .chips button, .card-tag {
-  background: var(--card); color: var(--accent-text); border: 1px solid var(--accent-text);
+  background: var(--card); color: var(--accent); border: 1px solid var(--accent);
 }
 /* 按下去的 chip 換成實心：它代表「你正在看這一科」，
    和醫師藥丸的「這位醫師是這一科」是同一種份量，所以長得一樣。 */
-.chips button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.chips button[aria-pressed="true"] { background: var(--accent); color: #fff; }
 /* 只有醫師藥丸是實心的 —— 認人的份量比分類重。 */
-.doc-role { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.doc-role { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 /* ---- 診所資訊：三張卡一排，照片兩張並排 -------------------------------- */
 .info { display: grid; gap: 1.2rem; grid-template-columns: repeat(3, 1fr); }
@@ -1552,10 +1541,10 @@ html[data-kids="5"] .card[data-spec="kids"] .card-tag {
 </div>
 <div class="hero-switch hero-switch-3" role="group" aria-label="兒牙的顏色">
   <b>兒牙</b>
-  <button type="button" data-kids="0" aria-pressed="true">現在 #8d5e3a</button>
-  <button type="button" data-kids="1" aria-pressed="false">1 琥珀黃</button>
-  <button type="button" data-kids="4" aria-pressed="false">4 亮黃・雙階</button>
-  <button type="button" data-kids="5" aria-pressed="false">5 亮黃・全實心</button>
+  <button type="button" data-kids="0" aria-pressed="true">現在</button>
+  <button type="button" data-kids="1" aria-pressed="false">A 金黃</button>
+  <button type="button" data-kids="2" aria-pressed="false">B 中間</button>
+  <button type="button" data-kids="3" aria-pressed="false">C 純黃</button>
 </div>
 <p class="hero-caption" id="hero-caption"></p>
 
@@ -1584,11 +1573,12 @@ html[data-kids="5"] .card[data-spec="kids"] .card-tag {
   /* 兒牙的顏色三案。色相是唯一的變數，彩度固定 78%（含羞草自己的值），
      明度取「白字仍過 AA 的最亮值」。 */
   var KIDS = {
-    '0': '兒牙 現在　#8d5e3a　圓凳與木件實測，H=26・S=42%。白字 5.53:1、卡上 5.03:1。這是褐，不是黃。',
-    '1': '兒牙 1 琥珀黃　#966113　H=36・S=78%。白字 5.23:1、卡上 4.76:1。最接近現在的一個，轉黃但仍留著暖。',
-    '4': '兒牙 4 亮黃・雙階　填色 #e6c637（含羞草提亮，H/S 不動）＋墨字 8.40:1；當字時用深階 #7f6b10（卡上 4.76:1）。讓掉的是「一科一個值」—— 但兩階同色相同彩度，只差明度。**形式完全不變**，chip 與標籤仍是線性的。',
-    '5': '兒牙 5 亮黃・全實心　只有一個值 #e6c637，chip 與文章標籤也改成實心亮黃底＋墨字。讓掉的是「形式一致」—— 兒牙的標籤會和其他五科長得不一樣。'
+    '0': '兒牙 現在　#8d5e3a　L* 44.2・彩度 C* 32.1・Lab 色相 61.7°。色相在橘褐帶 —— 這就是你說的拿鐵色。白字 5.53:1。',
+    '1': '兒牙 A 金黃　#926800　C* 54.9・Lab 色相 80.4°。三案裡最暖、偏金的一個。白字 5.00:1、卡上 4.55:1。',
+    '2': '兒牙 B 中間　#8a6c00　C* 53.8・Lab 色相 86.8°。白字 4.97:1、卡上 4.52:1。',
+    '3': '兒牙 C 純黃　#866e00　C* 53.6・Lab 色相 90.1°。三案裡最正的黃。白字 4.95:1、卡上 4.50:1。'
   };
+
 
 
 
