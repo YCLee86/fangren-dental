@@ -351,17 +351,45 @@ html[data-band="ink"] .band {
   background-color: #2d3128;
   background-image: linear-gradient(180deg, #1a1d17 0%, #2d3128 55%, #32372d 100%);
 }
-/* 四 毛玻璃。這一案只有在窄帶疊到照片上之後才可能 —— 先前它接在照片下面，
-   底下是紙色，模糊也沒東西可以透。
-   遮罩用 #191614（品牌的暗夜）.52，模糊 16px：柏油的紋理會隱約透出來，
-   帶子看起來像壓在路面上的一層霧，不是蓋上去的一塊板。
-   字的對比要另外看 —— 透出來的柏油本身很暗（實測 L* 6.6~12），
-   加上 .52 的遮罩之後合成亮度和實色案接近，白字仍然安全。 */
-html[data-band="glass"] .band {
-  background-color: rgba(25, 22, 20, .52);
-  background-image: none;
-  -webkit-backdrop-filter: blur(16px) saturate(1.06);
-  backdrop-filter: blur(16px) saturate(1.06);
+/* ---- 毛玻璃三案（2026-08-07 第二輪）--------------------------------------
+   第一版是「遮罩 .52 ＋ 模糊 16px」，使用者說太霧、幾乎把下面遮住，
+   看起來像做黑的、或發黃、像違法電動遊樂場。兩個成因，分開處理：
+
+   1. **模糊 16px 太重。** 它把路面糊成一整片均勻的灰 —— 底下有東西透出來，
+      但沒有一樣東西認得出來，那就不是「透」，只是變髒。三案降到 4／7／10px，
+      車、標線、路緣都還讀得出形狀。
+   2. **發黃是門口的暖光被抹開。** 原本還加了 saturate(1.06) 把它推得更黃。
+      三案一律改成 saturate(.92)，略微去飽和，暖光透出來仍是暖的，但不會整條帶子偏黃。
+
+   另外照使用者說的加上**越往下越深**的漸層：上緣只有一點點遮罩（帶子和照片
+   之間因此沒有硬邊，不會有「壓上去」的感覺），往下才收深到足以撐住白字。
+   這也符合實際的明暗 —— 照片越往下越暗，遮罩跟著加重，合成後的深淺才平均。
+
+   三案的差別只有遮罩的三個停點與模糊半徑，其餘完全相同。 */
+html[data-band="glass1"] .band,
+html[data-band="glass2"] .band,
+html[data-band="glass3"] .band { background-color: transparent; }
+
+/* 輕：上緣幾乎全透，路面看得最清楚。白字在最亮的路段（左下角車頭燈）會吃力。 */
+html[data-band="glass1"] .band {
+  background-image: linear-gradient(180deg,
+    rgba(25, 22, 20, .16) 0%, rgba(25, 22, 20, .40) 45%, rgba(25, 22, 20, .62) 100%);
+  -webkit-backdrop-filter: blur(4px) saturate(.92);
+  backdrop-filter: blur(4px) saturate(.92);
+}
+/* 中：折衷。路面仍然認得出來，白字在整條帶子上都站得住。 */
+html[data-band="glass2"] .band {
+  background-image: linear-gradient(180deg,
+    rgba(25, 22, 20, .26) 0%, rgba(25, 22, 20, .52) 45%, rgba(25, 22, 20, .74) 100%);
+  -webkit-backdrop-filter: blur(7px) saturate(.92);
+  backdrop-filter: blur(7px) saturate(.92);
+}
+/* 重：最接近實色案，但上緣仍然是軟的，不會有硬邊。 */
+html[data-band="glass3"] .band {
+  background-image: linear-gradient(180deg,
+    rgba(25, 22, 20, .36) 0%, rgba(25, 22, 20, .64) 45%, rgba(25, 22, 20, .86) 100%);
+  -webkit-backdrop-filter: blur(10px) saturate(.92);
+  backdrop-filter: blur(10px) saturate(.92);
 }
 
 /* ==========================================================================
@@ -1022,6 +1050,14 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
        柏油 <code>#221e1c</code> 各半、彩度 ×0.72」算出來的。當時窄帶接在照片下面，
        要同時接住上面的夜空與下面的紙色，取中間值合理。
        但現在它壓住的位置<b>只有柏油</b>，夜空離得很遠 —— 取中間值的理由消失了。</p>
+    <p><b>毛玻璃第一版太霧（2026-08-07 第二輪修正）。</b>原本是「遮罩 .52 ＋ 模糊 16px」，
+       幾乎把下面遮住、還發黃。兩個成因分開處理：<b>模糊 16px 太重</b>，
+       它把路面糊成一整片均勻的灰 —— 底下有東西透出來但沒有一樣認得出來，
+       那就不是「透」，只是變髒，三案降到 4／7／10px；<b>發黃是門口的暖光被抹開</b>，
+       原本還加了 <code>saturate(1.06)</code> 把它推得更黃，三案一律改成 <code>saturate(.92)</code>。
+       另外照你說的加上<b>越往下越深</b>的漸層：上緣只有一點點遮罩，
+       帶子和照片之間因此沒有硬邊，往下才收深到足以撐住白字 ——
+       這也符合實際的明暗，照片越往下越暗，遮罩跟著加重，合成後的深淺才平均。</p>
     <p><b>三個實色案的做法是同一套：亮度一個都不動，只轉色相。</b>
        L* 維持 10.2 / 17.5 / 19.6 三個停點，所以三案的深淺完全一樣，
        看到的差別純粹是色調，這樣比才比得準。</p>
@@ -1236,15 +1272,17 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 <div class="hero-switch" role="group" aria-label="窄帶底色">
   <b>底色</b>
-  <button type="button" data-band="blue"  aria-pressed="true">藍黑（現況）</button>
+  <button type="button" data-band="blue"  aria-pressed="false">藍黑（現況）</button>
   <button type="button" data-band="tar"   aria-pressed="false">柏油</button>
-  <button type="button" data-band="ink"   aria-pressed="false">墨色</button>
-  <button type="button" data-band="glass" aria-pressed="false">毛玻璃</button>
+  <button type="button" data-band="ink"   aria-pressed="true">墨色</button>
+  <button type="button" data-band="glass1" aria-pressed="false">毛玻璃 輕</button>
+  <button type="button" data-band="glass2" aria-pressed="false">毛玻璃 中</button>
+  <button type="button" data-band="glass3" aria-pressed="false">毛玻璃 重</button>
 </div>
 <div class="hero-switch hero-switch-2" role="group" aria-label="三格間距">
   <b>間距</b>
-  <button type="button" data-gap="now"  aria-pressed="true">現在</button>
-  <button type="button" data-gap="wide" aria-pressed="false">拉開</button>
+  <button type="button" data-gap="now"  aria-pressed="false">現在</button>
+  <button type="button" data-gap="wide" aria-pressed="true">拉開</button>
   <button type="button" data-gap="full" aria-pressed="false">撐滿版心</button>
 </div>
 <p class="hero-caption" id="hero-caption"></p>
@@ -1257,7 +1295,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     blue:  '底色一 藍黑（現況）H=220：夜空與柏油的中間值。當初窄帶接在照片下面、要同時接住上面的夜空與下面的紙色，取中間值合理 —— 但現在它壓住的位置只有柏油。',
     tar:   '底色二 柏油 H=20：取自 PALETTE.md 裡柏油的實測值 #221e1c 的色相，亮度 L* 和藍黑案完全一樣，差別純粹是色調。這是「窄帶從柏油長出來」的直接答案。',
     ink:   '底色三 墨色 H=88：取自內文墨色 #2a2c27 的色相，亮度同上。好處是它和內文的字同一個調，整站的深色只有一種傾向。',
-    glass: '底色四 毛玻璃：#191614 遮罩 .52 ＋ 模糊 16px。柏油的紋理會隱約透出來，帶子像壓在路面上的一層霧而不是一塊板。這一案只有在窄帶疊到照片上之後才可能。'
+    glass1: '毛玻璃 輕：遮罩 .16→.62（越下面越深）＋ 模糊 4px。上緣幾乎全透，路面看得最清楚；白字在最亮的路段（左下角車頭燈）會吃力。',
+    glass2: '毛玻璃 中：遮罩 .26→.74 ＋ 模糊 7px。折衷案 —— 路面仍然認得出形狀，白字在整條帶子上都站得住。',
+    glass3: '毛玻璃 重：遮罩 .36→.86 ＋ 模糊 10px。最接近實色案，但上緣仍然是軟的，和照片之間沒有硬邊。'
   };
   var GAP = {
     now:  '間距一 現在：靠內容寬度，左右各 1.9rem。',
@@ -1266,7 +1306,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   };
   var root = document.documentElement;
   var cap  = document.getElementById('hero-caption');
-  var cur  = { band: 'blue', gap: 'now' };
+  var cur  = { band: 'ink', gap: 'wide' };
 
   function paint() {
     root.setAttribute('data-band', cur.band);
@@ -1292,14 +1332,16 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   });
 
   function pick(key, map, fallback) {
-    var q = (location.search.match(new RegExp('[?&]' + key + '=([a-z]+)')) || [])[1];
+    /* [a-z0-9]+ 不是 [a-z]+ —— 毛玻璃三案叫 glass1/2/3，只吃字母的話會比對失敗、
+       悄悄退回預設值，網址參數等於沒用。 */
+    var q = (location.search.match(new RegExp('[?&]' + key + '=([a-z0-9]+)')) || [])[1];
     if (map[q]) return q;
     var v = null;
     try { v = localStorage.getItem('fangren:' + key); } catch (e) {}
     return map[v] ? v : fallback;
   }
-  cur.band = pick('band', BAND, 'blue');
-  cur.gap  = pick('gap',  GAP,  'now');
+  cur.band = pick('band', BAND, 'ink');
+  cur.gap  = pick('gap',  GAP,  'wide');
   paint();
 })();
 </script>
