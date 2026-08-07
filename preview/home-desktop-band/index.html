@@ -668,22 +668,45 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    所以這一輪不重複給同一個東西，改成三種取捨，各自錨在他挑的一個黃上。
    -------------------------------------------------------------------------- */
 
-/* A 守白字 —— 錨在雄黃 h68.2，壓到白字能用的天花板。
-   白字、線性標籤全部維持現行規則，其他五科的做法一模一樣。
-   代價：L* 47，就是他說的牛奶糖那一帶。 */
+/* A 守白字 —— 錨在雄黃 h68.2，壓到白字能用的天花板。規則一條都沒破。 */
 html[data-kids="1"] [data-spec="kids"] { --accent: #a75e00; }
 
-/* B 神黃本人的亮度（L* 74・C* 80）—— 字改用同色相深階 #6c3b00（4.58:1）。
-   C 鼬黃本人的亮度（L* 72・C* 77）—— 字 #643b00（4.56:1），比 B 黃一點、彩度低一點。
-   兩案都必須把兒牙的 chip 與文章標籤改成填色：亮黃當「字」讀不出來
-   （#f6a600 疊在卡上只有 1.4:1），要看得到黃就只能當底。 */
-html[data-kids="2"] [data-spec="kids"] { --accent: #f6a600; --accent-deep: #6c3b00; --on-fill: #6c3b00; }
-html[data-kids="3"] [data-spec="kids"] { --accent: #e8a600; --accent-deep: #643b00; --on-fill: #643b00; }
+/* ---- A 與 B 之間的三階（2026-08-07 第七輪）--------------------------------
+   使用者：「我覺得我想要的在 A B 之間。」所以在 Lab 空間把 A→B 等距切三份
+   （L* 47.3→74.1、C* 60.7→80.3、h 66.3→75.9），各自取該亮度‧色相下的最高彩度。
 
+   **白字的臨界點量出來了：L* 48 還過（4.72:1），L* 50 就破（4.43:1）。**
+   A 本身站在懸崖邊（L* 47.3），所以**三階全部都要深色字**，沒有例外。
+
+       1  #c06f00  L* 54.6  C* 67.2   白字 3.81:1 ✗   深階字 #2a1700
+       2  #d38000  L* 61.0  C* 71.7   白字 3.06:1 ✗   深階字 #482300
+       3  #e89300  L* 68.0  C* 76.9   白字 2.44:1 ✗   深階字 #5e2f00
+
+   > **一個反直覺的地方，選之前要知道：越靠近 A，深階字反而越黑。**
+   > 第 1 階的字 #2a1700 亮度只有 L* 10，幾乎就是黑色 —— 正是使用者先前嫌棄的那種。
+   > 越往 B 走，底越亮，字反而可以是暖棕（#5e2f00 → #6c3b00），
+   > 讀起來才像同一族的深淺配。
+   > **所以中間三階是「兩頭不到岸」：不夠亮到像明黃，字又被迫接近黑。**
+
+   三階的卡上對比都是 2.2~3.5，全部不夠，所以兒牙的 chip 與文章標籤一律改填色。
+   -------------------------------------------------------------------------- */
+html[data-kids="3"] [data-spec="kids"] { --accent: #c06f00; --accent-deep: #2a1700; --on-fill: #2a1700; }
+html[data-kids="4"] [data-spec="kids"] { --accent: #d38000; --accent-deep: #482300; --on-fill: #482300; }
+html[data-kids="5"] [data-spec="kids"] { --accent: #e89300; --accent-deep: #5e2f00; --on-fill: #5e2f00; }
+
+/* B 神黃本人的亮度 —— 字用同色相深階 #6c3b00（4.58:1）。 */
+html[data-kids="2"] [data-spec="kids"] { --accent: #f6a600; --accent-deep: #6c3b00; --on-fill: #6c3b00; }
+
+/* 亮黃當「字」讀不出來（卡上 1.4~3.5:1），所以除了 A 之外，
+   兒牙的 chip 與文章標籤一律改成填色。 */
 html[data-kids="2"] .chips button[data-spec="kids"],
 html[data-kids="3"] .chips button[data-spec="kids"],
+html[data-kids="4"] .chips button[data-spec="kids"],
+html[data-kids="5"] .chips button[data-spec="kids"],
 html[data-kids="2"] .card[data-spec="kids"] .card-tag,
-html[data-kids="3"] .card[data-spec="kids"] .card-tag {
+html[data-kids="3"] .card[data-spec="kids"] .card-tag,
+html[data-kids="4"] .card[data-spec="kids"] .card-tag,
+html[data-kids="5"] .card[data-spec="kids"] .card-tag {
   background: var(--accent); color: var(--accent-deep); border-color: var(--accent);
 }
 
@@ -1555,9 +1578,11 @@ html[data-kids="3"] .card[data-spec="kids"] .card-tag {
 <div class="hero-switch hero-switch-3" role="group" aria-label="兒牙的顏色">
   <b>兒牙</b>
   <button type="button" data-kids="0" aria-pressed="true">現在</button>
-  <button type="button" data-kids="1" aria-pressed="false">A 守白字</button>
-  <button type="button" data-kids="2" aria-pressed="false">B 神黃</button>
-  <button type="button" data-kids="3" aria-pressed="false">C 鼬黃</button>
+  <button type="button" data-kids="1" aria-pressed="false">A</button>
+  <button type="button" data-kids="3" aria-pressed="false">1</button>
+  <button type="button" data-kids="4" aria-pressed="false">2</button>
+  <button type="button" data-kids="5" aria-pressed="false">3</button>
+  <button type="button" data-kids="2" aria-pressed="false">B</button>
 </div>
 <p class="hero-caption" id="hero-caption"></p>
 
@@ -1587,9 +1612,11 @@ html[data-kids="3"] .card[data-spec="kids"] .card-tag {
      明度取「白字仍過 AA 的最亮值」。 */
   var KIDS = {
     '0': '兒牙 現在　#8d5e3a　L* 44.2・C* 32.1。對照組。',
-    '1': 'A 守白字　#a75e00（錨在雄黃 h68.2，壓到白字能用的天花板）L* 47.3・C* 60.7，白字 4.95:1。規則一條都沒破 —— 但這就是你說「牛奶糖」的那一帶，和上一輪的 #a36000 幾乎同色。',
-    '2': 'B 神黃　底 #f6a600（L* 74.1・C* 80.3・h 75.9°，等於神黃本人的亮度）＋ 同色相深階字 #6c3b00，4.58:1。白字在這裡只有 2.02:1，所以字必須讓掉。',
-    '3': 'C 鼬黃　底 #e8a600（L* 72.5・C* 77.3・h 79.8°）＋ 字 #643b00，4.56:1。比 B 再黃一點、彩度低一點，比較不刺。',
+    '1': 'A　#a75e00　L* 47.3・C* 60.7。**白字 4.95:1**，規則一條都沒破。白字的臨界點在 L* 48~50 之間，A 就站在懸崖邊。',
+    '3': 'A–B 之間 1　底 #c06f00（L* 54.6・C* 67.2）＋ 深階字 #2a1700，4.52:1。⚠ 這個字亮度只有 L* 10，幾乎是黑色 —— 越靠近 A，字反而越黑。',
+    '4': 'A–B 之間 2　底 #d38000（L* 61.0・C* 71.7）＋ 字 #482300，4.52:1。',
+    '5': 'A–B 之間 3　底 #e89300（L* 68.0・C* 76.9）＋ 字 #5e2f00，4.57:1。字開始像暖棕而不是黑。',
+    '2': 'B 神黃　底 #f6a600（L* 74.1・C* 80.3）＋ 字 #6c3b00，4.58:1。五案裡字最像「同一族的深淺配」的一個。',
     'x': ''
   };
   /* 三個明黃案裡，兒牙的 chip 與文章標籤都改成填色 —— 亮黃當字讀不出來
