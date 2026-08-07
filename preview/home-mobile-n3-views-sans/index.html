@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>N3 藍灰調 #e2e5e6（無木線）＋固定頁首＋一科一色實心藥丸 — 芳仁牙醫診所提案</title>
+<title>N3・瀏覽數黑體版 — 芳仁牙醫診所提案</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 </head>
 <body>
@@ -267,12 +267,12 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
 
    降下來之後 1983／9／6 那三格是帶子裡唯一亮的東西，層次只剩兩層，乾淨。
 
-   ＊這一版數字是**襯線**（宋體）。黑體版在 preview/home-mobile-n3-views-sans/，
+   ＊這一版數字是**黑體**（和「次瀏覽」同一套字）。襯線版在 preview/home-mobile-n3/，
      兩頁除了下面這一行 font-family 之外一個字都沒有差。 */
 .band-views { margin: 0; text-align: center; line-height: 1.05; }
 .band-views .views-num {
   display: inline-block; font-size: .625rem; color: rgba(255, 255, 255, .65);
-  font-family: "Noto Serif TC", "Source Han Serif TC", serif;   /* ← 兩版唯一的差別 */
+  font-family: inherit;   /* ← 兩版唯一的差別。inherit ＝ body 的思源黑體 */
   /* tabular-nums 讓每個數字等寬，數字在跑的時候不會左右抽動；
      但位數變多（999 → 1,000）整體還是會變寬，所以 JS 會先量好最終寬度鎖住。 */
   font-variant-numeric: tabular-nums; letter-spacing: -.01em;
@@ -977,7 +977,7 @@ section + section { border-top: 1px solid var(--rule); }
   <p><b>對比度</b>（重算過）：墨 <code>#2a2c27</code> 11.15:1、次要 <code>#5c5f57</code> 5.14:1、深綠松 <code>#214D48</code> 7.47:1，內文全過 AA。要注意 苔綠 <code>#5D6D55</code> 4.38:1，只能當大字。</p>
   <p><b>不碰的東西：</b>HERO（C72）、所有字級、墨色 <code>#2a2c27</code>，一個值都沒動。</p>
   <p><b>窄帶 2026-08-07 加了瀏覽數：</b>高 54 → 76px，多出來的全給新的那一列（上下留白維持 13.8px，沒有變鬆）。漸層三個色停 <code>#17191d</code> / <code>#282b31</code> / <code>#2d3037</code> 原值不動。數字捲進畫面才往上數，1.4 秒 easeOutQuart，減少動態時直接寫最終值。<b>8,642 是示範數字</b>，上線後由 <code>counter.js</code> 從 D1 取真實值。</p>
-  <p><b>這一版的瀏覽數是襯線（宋體）。</b>字級與顏色都已經降到和「次瀏覽」完全一樣（<code>.625rem</code>／白 65%）—— 它是紀錄，不是事實，不該和 1983／9／6 同一層。黑體版在 <a href="https://fangren.net/preview/home-mobile-n3-views-sans/">home-mobile-n3-views-sans</a>，兩頁只差一行 <code>font-family</code>。</p>
+  <p><b>這一版的瀏覽數是黑體</b>，和「次瀏覽」用同一套字，整列讀起來是一句話而不是一個數據。字級與顏色也都和「次瀏覽」完全一樣（<code>.625rem</code>／白 65%）。襯線版在 <a href="https://fangren.net/preview/home-mobile-n3/">home-mobile-n3</a>，兩頁只差一行 <code>font-family</code>。</p>
   <p>比一比：<a href="https://fangren.net/preview/home-mobile-n1/">N1 看板灰 #e8e8e8</a><a href="https://fangren.net/preview/home-mobile-n2/">N2 清水模灰 #dedede</a></p>
   <p>先前的：<a href="https://fangren.net/preview/home-mobile-g1/">G1 灰紫（你說有點紫）</a><a href="https://fangren.net/preview/home-mobile/">③ 品牌灰綠 #ecede7（有木線）</a><a href="https://github.com/YCLee86/fangren-dental/blob/main/PALETTE.md">PALETTE.md</a></p>
 </div>
