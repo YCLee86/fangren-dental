@@ -961,30 +961,24 @@ UA                iPhone OS 18_7 / AppleWebKit 605.1.15
 改完之後在 375 與 390 兩個寬度量到的結果一致：
 `html.scrollWidth` 等於視窗寬、**可左右拉 0px**、品牌名單行。
 
-### 水平方向收在 `.phone` 上，用 `clip`
+### 水平方向收在 `.hero-stage` 上，用 `clip` —— **不要收在 `.phone` 或 `html` 上**
 
 ```css
-.phone { position: relative; container-type: inline-size; overflow-x: clip; }
+.hero-stage { overflow-x: clip; }     /* HERO 是唯一量得到水平溢出的地方 */
 ```
 
-`.phone` 包住除了提案說明條以外的整頁，所以它是「頁面寬度」真正的邊界。
-三個選擇都是刻意的：
+三個位置都試過，只有這一個對：
 
-| | 為什麼 |
+| 放哪裡 | 結果 |
 | --- | --- |
-| 放 `.phone`，不放 `html`／`body` | 放在 html／body 上要經過「overflow 傳播到視窗」那一層，**iOS Safari 在有 sticky／fixed 的頁面上那條傳播並不可靠**。放在普通元素上沒有傳播，行為是確定的。 |
-| 用 `clip`，不用 `hidden` | `hidden` 會讓 `.phone` 變成捲動容器，裡面那條 `.sticky-head` 就黏不住。`clip` 不建立捲動容器。 |
-| 只收 `-x` | 直向要能捲。 |
+| `html` | `.sticky-head` 黏不住了。量到捲到 700px 時 `header.top = -700`（整條跟著捲走）。 |
+| `.phone` | 頁首被裁掉。`.phone` 包著頁首，一旦它比視窗寬，**右對齊的主選單整組看不見** —— 使用者回報「全部文章／醫師介紹／診所資訊 沒有顯示」。 |
+| **`.hero-stage`** | ✓ 它是溢出真正的來源（照片、`.hero-sign::before` 那顆用負 inset 往外撐的藥丸），**而且不是 `.sticky-head` 的祖先**（兩者是 `.phone` 底下的兄弟），所以裁它動不到頁首。 |
 
-加完之後量到：`.phone` 的 `overflow-x` 是 `clip`，而捲到 0／300／700／1400 四個位置
-`header.top` 都還是 0（sticky 沒被弄壞），`html.scrollWidth` 等於視窗寬。
+用 `clip` 不用 `hidden`：`hidden` 會建立捲動容器，`clip` 不會。
 
-> **為什麼需要「收在邊界上」而不是一個一個抓：** iOS 會把版面視窗撐到
-> 「沒有被裁掉的內容」的寬度，而絕對定位的子孫、虛擬元素這些東西
-> **在 Blink 量不出來也不會撐版面，WebKit 會**。這一頁就有一個例子：
-> `.hero-sign::before` 那顆藥丸用 `inset: -1.3em -1.7em` 往外撐，
-> 用 `querySelectorAll('*')` 量元素的 rect 完全看不到它（虛擬元素不在裡面），
-> 要改用 `scrollWidth > clientWidth` 才抓得出來。
+> **通則：裁切要放在「溢出的來源」上，不要放在「頁面的邊界」上。**
+> 放在邊界看起來比較保險，實際上是把所有右對齊的東西一起賭進去。
 
 ### ⚠ 不要在 `html` 上加 `overflow-x: clip`
 
