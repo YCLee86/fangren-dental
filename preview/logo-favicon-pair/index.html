@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant-TW" data-mode="light">
+<html lang="zh-Hant-TW">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,6 +10,10 @@
   進行中：favicon 深色版顏色。這一頁把定案的淺色 #4f6361 與五個深色候選成對綁在一起，
   用上方的鈕（或自動來回）一鍵切換整頁，看每一格從淺跳到深的落差有多大。
   幾何維持定稿（牙洞 1.6×、上移 1.05）。
+
+  切換是純 CSS：三個 radio 放在 body 最前面，用 :has() 判斷哪個 radio 被選中來換整組色票，
+  自動來回則是 @keyframes 直接改自訂屬性。**這一頁沒有任何 JavaScript** ——
+  手機的檔案預覽器會擋掉內嵌 script，用 JS 寫的版本在那裡按了完全沒反應。
 -->
 </head>
 <body>
@@ -23,14 +27,14 @@
   --tabbg:#dee1e5; --tabon:#ffffff; --tabtxt:#2a2c27; --tabdim:#5c5f57; --tidim:#a8adb3;
   --lockbg:#ffffff; --lockb:#2a2c27; --locks:#5c5f57;
 }
-html[data-mode="dark"]{
+html:is(:has(#m-dark:checked),:has(#m-auto:checked)){
   --paper:#1c1f24; --card:#24272c; --rule:#3a3f46; --ink:#e7e9ea; --ink-soft:#9aa0a6;
   --tabbg:#22252a; --tabon:#2b2f36; --tabtxt:#e8eaed; --tabdim:#9aa0a6; --tidim:#6b7078;
   --lockbg:#22252a; --lockb:rgba(255,255,255,.95); --locks:rgba(255,255,255,.62);
 }
 /* --mark 只能在 .row 上換 —— --cand 定義在 .row，寫在 html 層的 var(--cand)
    在計算 html 自己的自訂屬性時就解析失敗了（那時還沒有 --cand），整個變成無效值。 */
-html[data-mode="dark"] .row{--mark:var(--cand)}
+html:is(:has(#m-dark:checked),:has(#m-auto:checked)) .row{--mark:var(--cand)}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
@@ -49,16 +53,16 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
 .ctl{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 .seg{display:inline-flex;padding:3px;border-radius:10px;background:var(--card);
   border:1px solid var(--rule)}
-.seg button{appearance:none;border:0;background:transparent;color:var(--ink-soft);cursor:pointer;
-  font:inherit;font-size:.82rem;line-height:1.9;padding:.1rem .85rem;border-radius:8px;
-  font-family:inherit;transition:background-color .2s ease,color .2s ease}
-html[data-mode="light"] .seg button[value="light"],
-html[data-mode="dark"] .seg button[value="dark"]{background:var(--chair);color:#fff}
-html[data-mode="dark"] .seg button[value="dark"]{background:#5f7f7c}
-.auto{appearance:none;border:1px solid var(--rule);background:var(--card);color:var(--ink);
-  cursor:pointer;font:inherit;font-size:.82rem;line-height:1.9;padding:.1rem .8rem;border-radius:10px}
-.auto[aria-pressed="true"]{background:var(--chair);border-color:var(--chair);color:#fff}
-html[data-mode="dark"] .auto[aria-pressed="true"]{background:#5f7f7c;border-color:#5f7f7c}
+.r{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.seg label{color:var(--ink-soft);cursor:pointer;
+  font-size:.82rem;line-height:1.9;padding:.1rem .85rem;border-radius:8px;user-select:none;
+  transition:background-color .2s ease,color .2s ease}
+#m-light:checked ~ .bar .seg label[for="m-light"]{background:var(--chair);color:#fff}
+#m-dark:checked ~ .bar .seg label[for="m-dark"],
+#m-auto:checked ~ .bar .seg label[for="m-dark"]{background:#5f7f7c;color:#fff}
+.auto{border:1px solid var(--rule);background:var(--card);color:var(--ink);
+  cursor:pointer;font-size:.82rem;line-height:1.9;padding:.1rem .8rem;border-radius:10px;user-select:none}
+#m-auto:checked ~ .bar .auto{background:#5f7f7c;border-color:#5f7f7c;color:#fff}
 .hint{margin:.45rem 0 0;font-size:.74rem;line-height:1.6;color:var(--ink-soft)}
 
 /* ---------- 分頁列 ---------- */
@@ -88,40 +92,58 @@ html[data-mode="dark"] .auto[aria-pressed="true"]{background:#5f7f7c;border-colo
   padding:1rem 1.1rem 1.2rem;margin-bottom:1rem;position:relative;
   transition:background-color .28s ease,border-color .28s ease}
 .row[data-pick]{border-color:var(--chair);box-shadow:0 0 0 1px var(--chair)}
-html[data-mode="dark"] .row[data-pick]{border-color:var(--cand);box-shadow:0 0 0 1px var(--cand)}
+html:is(:has(#m-dark:checked),:has(#m-auto:checked)) .row[data-pick]{border-color:var(--cand);box-shadow:0 0 0 1px var(--cand)}
 .row[data-pick]::after{content:"我建議";position:absolute;top:-9px;right:14px;
   background:var(--chair);color:#fff;font-size:.68rem;line-height:1.6;padding:0 .5rem;border-radius:8px}
-html[data-mode="dark"] .row[data-pick]::after{background:var(--cand);color:#12151a}
+html:is(:has(#m-dark:checked),:has(#m-auto:checked)) .row[data-pick]::after{background:var(--cand);color:#12151a}
 .row h2{margin:0;font-size:1rem;line-height:1.5;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
 .num{display:inline-flex;align-items:center;justify-content:center;min-width:1.5rem;height:1.5rem;
   border-radius:8px;background:var(--mark);color:#fff;font-size:.78rem;font-weight:500;
   transition:background-color .28s ease}
-html[data-mode="dark"] .num{color:#12151a}
+html:is(:has(#m-dark:checked),:has(#m-auto:checked)) .num{color:#12151a}
 .tag{font-size:.72rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
 .meta{margin:.15rem 0 .9rem;font-size:.76rem;line-height:1.7;color:var(--ink-soft);
   font-variant-numeric:tabular-nums}
 .meta b{color:var(--ink);font-weight:500}
 
 /* 依模式顯示不同的說明 */
-html[data-mode="light"] .ondark{display:none}
-html[data-mode="dark"] .onlight{display:none}
+html:is(:has(#m-light:checked)) .ondark{display:none}
+html:is(:has(#m-dark:checked),:has(#m-auto:checked)) .onlight{display:none}
 
 .foot{margin-top:1.2rem;font-size:.8rem;line-height:1.85;color:var(--ink-soft)}
 .foot b{color:var(--ink)}
 .foot p{margin:0 0 .7rem}
 .foot a{color:var(--mark)}
-@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+/* 自動來回：整組色票在 keyframes 裡切換，不需要 JS。
+   steps 式的硬切 —— 中間不做內插，兩邊各停 1.4 秒。 */
+@keyframes flip{
+  0%,49.99%{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;--ink:#2a2c27;--ink-soft:#5c5f57;
+    --tabbg:#dee1e5;--tabon:#ffffff;--tabtxt:#2a2c27;--tabdim:#5c5f57;--tidim:#a8adb3;
+    --lockbg:#ffffff;--lockb:#2a2c27;--locks:#5c5f57;--auto-mark:#4f6361}
+  50%,100%{--paper:#1c1f24;--card:#24272c;--rule:#3a3f46;--ink:#e7e9ea;--ink-soft:#9aa0a6;
+    --tabbg:#22252a;--tabon:#2b2f36;--tabtxt:#e8eaed;--tabdim:#9aa0a6;--tidim:#6b7078;
+    --lockbg:#22252a;--lockb:rgba(255,255,255,.95);--locks:rgba(255,255,255,.62);--auto-mark:var(--cand)}
+}
+html:has(#m-auto:checked){animation:flip 2.8s infinite}
+html:has(#m-auto:checked) .row{--mark:var(--auto-mark)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none !important}
+  html:has(#m-auto:checked){animation:none}}
 </style>
+
+<input class="r" type="radio" name="mode" id="m-light" checked>
+<input class="r" type="radio" name="mode" id="m-dark">
+<input class="r" type="radio" name="mode" id="m-auto">
 
 <div class="bar">
   <div class="ctl">
-    <span class="seg" role="group" aria-label="淺色或深色">
-      <button type="button" value="light">淺色</button>
-      <button type="button" value="dark">深色</button>
+    <span class="seg">
+      <label for="m-light">淺色</label>
+      <label for="m-dark">深色</label>
     </span>
-    <button type="button" class="auto" aria-pressed="false">自動來回</button>
+    <label class="auto" for="m-auto">自動來回</label>
   </div>
-  <p class="hint">整頁一起切。淺色時五格都是定案的 <code>#4f6361</code>，深色時各換成自己的候選色。</p>
+  <p class="hint">整頁一起切（鍵盤左右鍵也可以）。淺色時五格都是定案的 <code>#4f6361</code>，深色時各換成自己的候選色。</p>
 </div>
 
 <div class="wrap">
@@ -226,42 +248,5 @@ html[data-mode="dark"] .onlight{display:none}
 </div>
 </div>
 
-<script>
-(function () {
-  var html = document.documentElement;
-  var seg = document.querySelector('.seg');
-  var auto = document.querySelector('.auto');
-  var timer = null;
-
-  function set(mode) { html.dataset.mode = mode; }
-  function flip() { set(html.dataset.mode === 'dark' ? 'light' : 'dark'); }
-
-  seg.addEventListener('click', function (e) {
-    var b = e.target.closest('button');
-    if (!b) return;
-    stop();
-    set(b.value);
-  });
-
-  function stop() {
-    if (!timer) return;
-    clearInterval(timer);
-    timer = null;
-    auto.setAttribute('aria-pressed', 'false');
-  }
-
-  auto.addEventListener('click', function () {
-    if (timer) { stop(); return; }
-    auto.setAttribute('aria-pressed', 'true');
-    flip();
-    timer = setInterval(flip, 1400);
-  });
-
-  // 離開分頁就停，回來不會看到它自己在閃
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) stop();
-  });
-})();
-</script>
 </body>
 </html>

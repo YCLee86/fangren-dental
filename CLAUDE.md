@@ -257,8 +257,18 @@ tools/
   深色模式下 `--mark` 只能寫在 `.row` 上（`--cand` 定義在 `.row`，寫在 `html` 層
   `var(--cand)` 在計算當下就解析失敗，整個變無效值）。
 - `preview/logo-favicon-ab/` — **左右並排、一鍵換候選**（2026-08-07）。左半永遠是定案的
-  `#4f6361`，右半用 1–5 或「下一個」在五個深色之間循環（鍵盤左右鍵也可以），
+  `#4f6361`，右半用 1–5 在五個深色之間換（鍵盤左右鍵也可以），
   眼睛不用移開就能比。**這是目前最快看出差別的一頁。**
+
+> **提案頁的互動請用純 CSS，不要用 JavaScript。**
+> 在手機／雲端 session 裡把 HTML 直接傳給使用者看時，內嵌 `<script>` 會被預覽器擋掉 ——
+> 使用者按了完全沒反應（2026-08-07 踩過，`logo-favicon-ab` 與 `logo-favicon-pair` 都重寫過一次）。
+> 做法：radio ＋ `#id:checked ~ 兄弟` 選擇器換自訂屬性；整頁換色票用
+> `html:is(:has(#id:checked))`；連「自動來回」都可以用 `@keyframes` 直接改自訂屬性做出來。
+> 用 `:has()` 寫後代選擇器時**一定要包在 `:is()` 裡** —— 逗號分隔的
+> `html:has(A), html:has(B) .x{...}` 第一段會套到 `html` 自己身上，
+> 若那條規則是 `display:none` 整頁會直接空白。
+> （正式站經由 `fangren.net` 開，JS 正常，這條限制只針對直接傳檔案看的提案頁。）
 - `preview/logo-favicon-shift/` — 紀錄：favicon 牙洞往上移的四個位置，定案是上移 1.05。
 
   > **`assets/favicon.svg` 目前還是舊的那顆手繪牙，故意沒有換。**
