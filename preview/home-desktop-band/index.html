@@ -14,7 +14,7 @@
 /* ==========================================================================
    電腦版首頁提案（2026-08-07）
 
-   這一頁是把定稿的手機版 preview/home-mobile-n3/ 套到寬螢幕上，**不是新設計**。
+   這一頁是正式站的首頁。版型源自定稿的手機版 preview/home-mobile-n3/，
    規則：
 
      · 顏色一個都沒有新調。下面的 :root 是從 home-mobile-n3 原樣搬過來的，
@@ -120,11 +120,21 @@ a { color: var(--teal); }
   position: fixed; top: 0; left: 0; right: 0; z-index: 30;
   transition: background-color .2s ease, padding .2s ease;
 }
+/* ---- 用 grid 的 max-content 軌道，不要靠 flex 項目的自動尺寸 ---------------
+   `.brand` 是 display:flex 的 <a>。當它同時是 flex 項目、flex-basis: auto、
+   width: auto 時，**Blink 給它內容寬度、WebKit 給可用寬度** —— 真機上量到
+   .brand w = 395.5（視窗只有 375），整列因此比視窗寬，品牌被擠成兩行、
+   選單被推出畫面，頁面還可以左右拉。
+   grid 的 max-content 軌道兩邊都實作得很紮實，沒有解讀空間。
+   minmax(0, 1fr)：右欄下限 0，不會反過來把格線撐寬。
+   詳見 PALETTE.md 第六之五節。 */
 .site-head .shell {
-  display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+  display: grid; grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center; gap: 2rem;
   height: var(--head-h);
   transition: height .2s ease;
 }
+.site-nav { justify-self: end; }
 html.scrolled .site-head .shell { height: var(--head-h-sm); }
 
 /* 玻璃放在 ::before 而不是頁首自己身上，才能用 opacity 平滑淡入 ——
@@ -167,7 +177,8 @@ html.scrolled .site-head::before { opacity: 1; }
    壓在夜色上就深，壓在紙色上就淺。**不要再回去做「終點顏色」那件事。**
    ========================================================================== */
 
-.brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+.brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; min-width: 0; }
+.brand-text b { white-space: nowrap; }
 .brand-mark { flex: 0 0 38px; display: block; color: rgba(255, 255, 255, .95); min-width: 0; }
 html.scrolled .brand-mark { flex-basis: 32px; }
 .brand-mark, html.scrolled .brand-mark { transition: flex-basis .2s ease; }
@@ -192,7 +203,8 @@ html.scrolled .brand-text b { font-size: .96rem; }
 html.scrolled .brand-text small { font-size: .74rem; }
 .brand-text b, .brand-text small { transition: font-size .2s ease; }
 
-.site-nav { display: flex; gap: 1.9rem; font-size: .86rem; }
+.site-nav { display: flex; flex-wrap: nowrap; gap: 1.9rem; font-size: .86rem; min-width: 0; }
+.site-nav a { white-space: nowrap; }
 .site-nav a {
   position: relative; color: rgba(255, 255, 255, .88);
   text-decoration: none; white-space: nowrap; padding-block: .35rem;
@@ -785,7 +797,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 /* ==========================================================================
    窄一點的螢幕：欄數依序退場。這不是手機版 ——
-   手機版是另外一份（preview/home-mobile-n3/），版型不同。
+   ≤720px 的手機版型寫在本檔最後那一段 @media，兩者是同一份標記。
    這幾個斷點只是讓這一頁在筆電、平板橫放時不要爆掉。
    ========================================================================== */
 @media (max-width: 1040px) {
@@ -796,7 +808,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .cards, .docs, .info, .gallery, .foot-cols { grid-template-columns: 1fr; }
   .band .shell { flex-direction: column; align-items: flex-start; gap: .5rem; padding-block: 1rem; }
   .stats li { padding-inline: 1.2rem; }
-  .site-nav { display: none; }
+  /* **不要 display: none。** 手機版定案的頁首是有主選單的（三項），
+     它靠 grid 的 max-content 軌道 ＋ 標誌 SVG 的內在尺寸放得下 ——
+     見 PALETTE.md 第六之五節。 */
   .brand-text { flex-direction: column; align-items: flex-start; gap: 0; }
   .brand-text small { padding-left: 0; }
   .brand-text small::before { display: none; }

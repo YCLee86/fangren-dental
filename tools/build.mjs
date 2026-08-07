@@ -157,24 +157,36 @@ posts.sort((a, b) =>
   b.updated.localeCompare(a.updated) || b.published.localeCompare(a.published)
 );
 
-const card = (p) => `      <a class="card" href="posts/${esc(p.slug)}/">
-        <div class="card-thumb">
-          <img src="assets/${esc(p.hero)}" alt="${esc(p.heroAlt || p.title)}" width="800" height="450" loading="lazy">
-        </div>
+/* 標籤 → 科別代碼。首頁的「主題與科別」用 data-spec 同時篩文章與醫師，
+   三個地方（chip、文章標籤、醫師藥丸）共用同一組代碼，同一科才會是同一個色。
+   新增標籤時要一起加進來，不然那篇文章不會被任何一顆 chip 篩到。 */
+const SPEC = {
+  "一般牙科": "general", "定期檢查": "general", "日常保健": "general",
+  "牙周照護": "perio",   "牙周治療": "perio",   "植牙": "perio",
+  "兒童牙科": "kids",
+  "齒顎矯正": "ortho",
+  "缺牙重建": "prosth",  "贋復假牙": "prosth",
+  "口腔外科": "surg",
+  "顯微根管": "endo",
+};
+
+const card = (p) => {
+  const spec = SPEC[p.tag];
+  if (!spec) console.warn(`  ⚠ 標籤「${p.tag}」沒有對應的科別代碼，${p.slug} 不會被主題與科別篩到`);
+  return `      <a class="card" href="posts/${esc(p.slug)}/"${spec ? ` data-spec="${spec}"` : ""}>
+        <img class="card-thumb" src="assets/${esc(p.hero)}" alt="${esc(p.heroAlt || p.title)}" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">${esc(p.tag)}</span>
           <h3>${esc(p.title)}</h3>
           <p>${esc(p.excerpt)}</p>
-          <div class="card-meta">
-            <span>更新 <time datetime="${p.updated}">${slashDate(p.updated)}</time></span>
+          <p class="card-date">
+            <span><span class="sr-only">更新 </span><time datetime="${p.updated}">${slashDate(p.updated)}</time></span>
             <span class="dot" aria-hidden="true">・</span>
-            <span class="views" data-views="${esc(p.slug)}" data-state="loading">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              <span class="views-n">—</span>
-            </span>
-          </div>
+            <span class="views" data-views="${esc(p.slug)}" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+          </p>
         </div>
       </a>`;
+};
 
 const START = "<!-- POSTS:START";
 const END = "<!-- POSTS:END -->";
