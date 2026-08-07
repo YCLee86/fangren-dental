@@ -103,9 +103,23 @@ a { color: var(--teal); }
   height: 74.72cqw;
   container-type: size;
 }
+/* ---- 2026-08-07：右緣的 13% 裁切改用 object-fit，不要再讓 img 比框寬 ----------
+   原本是 `width: 113%` ＋ 靠 .hero-photo 的 overflow: hidden 收住。
+   **Blink 收得住，iOS Safari 收不住** —— 使用者在真機上看到的是：
+   整頁可以左右拉，拉開之後 .sticky-head（left:0 / right:0）跟著文件的寬度走，
+   主選單就被帶到文件的最右邊，看起來像「頁首的字跑到範圍外面」。
+   成因是 iOS 會把版面視窗（ICB）撐到內容的寬度，而內容寬度又是由 img 決定的，
+   撐開一次 img 又跟著變寬，量到的結果是 390 的螢幕排成大約 590。
+
+   換成 object-fit 之後**畫面完全一樣**，但 img 本身就是 100% 寬，沒有東西溢出：
+     框是 W × 0.7472W（比例 1.338），照片是 1600×1058（比例 1.512）——
+     cover 會以高度為準放大到 1.13W 寬，再左右裁切；
+     object-position 取 left，所以裁掉的是右緣那 13%，和原本一模一樣。
+   ---------------------------------------------------------------------------- */
 .hero-photo img {
-  position: absolute; top: 0; left: 0;
-  width: 113%; height: auto; max-width: none; display: block;
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; max-width: 100%;
+  object-fit: cover; object-position: left center; display: block;
 }
 .hero-copy {
   position: absolute; inset: 0;

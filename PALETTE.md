@@ -900,6 +900,42 @@ u  窄帶開始離開 → 完全離開。這一段把玻璃換成實色 #393736
 > 順手加的兩道保險，之後就算又被擠到也不會斷行：
 > `.brand { flex: 0 0 auto }` ＋ `.brand-text b, .brand-text small { white-space: nowrap }`。
 
+### ⚠ 不要讓 `img` 比它的框寬，就算外面有 `overflow: hidden`
+
+手機版 HERO 原本靠 `width: 113%` ＋ 外框 `overflow: hidden` 做右緣 13% 的裁切。
+**Blink 收得住，iOS Safari 收不住** —— 使用者在真機上連續回報兩次
+「頁首的文字跑到範圍外面」，成因就是它：
+
+```
+img 比框寬 → iOS 把版面視窗（ICB）撐到內容寬度
+          → .phone（width:100%）跟著變寬 → img 又跟著變寬
+          → 390 的螢幕最後排成大約 590
+```
+
+版面一變寬，`.sticky-head`（`left: 0; right: 0`）就跟著文件的寬度走，
+**主選單被帶到文件的最右邊**，而內容還在左邊 —— 那正是截圖裡的樣子。
+`body { overflow-x: hidden }` 擋不住，因為問題發生在「版面視窗被撐大」這一層，
+不是「內容被畫出去」那一層。
+
+改用 `object-fit` 之後畫面一模一樣，但 img 本身就是 100% 寬：
+
+```css
+.hero-photo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; max-width: 100%;
+  object-fit: cover; object-position: left center;
+}
+```
+
+框是 `W × 0.7472W`（比例 1.338），照片是 1600×1058（比例 1.512）——
+`cover` 會以高度為準放大到 1.13W 寬再左右裁，`object-position: left`
+讓裁掉的正好是右緣那 13%。**和原本的 `width: 113%` 是同一個結果。**
+
+改完之後 375／390／414 三個寬度下，**沒有任何一個元素的右緣超出視窗**
+（連把 `overflow` 強制設成 `visible` 去量都一樣）。這是這一頁第一次做到。
+
+> 電腦版的 HERO 本來就用 `object-fit: cover`，沒有這個問題。
+
 ### ⚠ 不要在 `html` 上加 `overflow-x: clip`
 
 2026-08-07 加過一次，**當天就退掉**。當時是想擋 iOS 的水平捲動，
