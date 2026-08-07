@@ -130,6 +130,12 @@ html.scrolled .site-head .shell { height: var(--head-h-sm); }
   background: var(--glass, transparent);
   -webkit-backdrop-filter: blur(6px) saturate(1.08);
   backdrop-filter: blur(6px) saturate(1.08);
+  /* 下緣淡出。理由和窄帶那條一樣：backdrop-filter 只作用在框內，
+     框的下緣就是一條硬邊 —— 捲到照片下半部時，頁首、照片、窄帶會變成
+     三塊上下堆疊的板。用 mask 讓最後 24% 的玻璃淡掉，邊就不見了。
+     文字在垂直置中的位置，落在還沒開始淡的那一段，可讀性不受影響。 */
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 76%, transparent 100%);
   opacity: 0; transition: opacity .22s ease;
 }
 html.scrolled .site-head::before { opacity: 1; }
@@ -377,32 +383,59 @@ html[data-band="glass1"] .band {
   -webkit-backdrop-filter: blur(4px) saturate(.92);
   backdrop-filter: blur(4px) saturate(.92);
 }
-/* ---- 毛玻璃 輕 ＋ 柏油漸層（2026-08-07 定案方向）--------------------------
-   模糊維持「輕」的 4px、整條一致 —— 帶子從頭到尾都是同一片玻璃。
-   變的只有疊在上面的那層色：**從完全沒有顏色，漸層到柏油色**。
+/* ---- 毛玻璃 輕 ＋ 柏油漸層（2026-08-07 第三輪）--------------------------
+   這一版修掉兩個問題。
 
-   顏色用柏油的實測值 #221e1c ＝ rgb(34,30,28)（PALETTE.md 第四節）。
-   先前幾案的遮罩是 #191614（暗夜），那是 HERO 陰影在用的顏色；
-   這裡改用柏油，因為帶子壓住的就是路面 —— 讓路自己的顏色越積越厚，
-   而不是拿另一個顏色蓋上去。
+   ── 問題一：窄帶上緣有一條很明顯的硬邊 ──
+   原因不是顏色，是 **backdrop-filter 只作用在元素自己的框裡**。
+   框內的照片被模糊、框外的沒有，兩者在框的上緣直接相接 ——
+   那條邊界本身就是一條線，就算遮罩的 alpha 從 0 開始也消不掉。
+   （這也是為什麼上一版把顏色調到完全透明仍然看得到分界。）
 
-   上緣 alpha 是 0：帶子的起點完全沒有邊、沒有色，只有一點點模糊，
-   往下才慢慢長出柏油。所以它不是「一條帶子」，是路面自己越來越沉。
+   解法：把模糊放到一個 ::before 上，再用 mask-image 讓**模糊本身**由上往下淡入。
+   遮罩住的是濾鏡的結果，所以模糊是漸漸出現的，沒有框邊。
 
-   四個停點不是等距的 —— 前 34% 幾乎不上色（那一段沒有文字），
-   70% 之後才快速收深，把兩行字所在的下半段撐起來。
-   底端停在 .82 而不是 1：留一點路面透出來，帶子才還是玻璃。
-   要讓最底完全實心的話把 .82 改成 1 就好。 */
-html[data-band="glasstar"] .band {
-  background-color: transparent;
-  background-image: linear-gradient(180deg,
-    rgba(34, 30, 28, 0)   0%,
-    rgba(34, 30, 28, .20) 34%,
-    rgba(34, 30, 28, .50) 70%,
-    rgba(34, 30, 28, .82) 100%);
+   ── 問題二：柏油漸層看不出來 ──
+   上一版整條都用 #221e1c（柏油的一般實測值，L* 12），
+   但它壓住的路面本來就是 L* 6~15 —— 拿一個和底下差不多深的顏色去疊，
+   當然看不出變化。
+   這一版改成**兩個實測值之間的漸層**：上半用 #221e1c，下半換成
+   **#161413 —— 照片最底那一列的實測值，L* 只有 6.6**（PALETTE.md 第四節，
+   當初調窄帶漸層頂色時量的就是它）。往下走既加深又換色，
+   路面的標線與反光會逐漸被壓掉，那個「越下面越深」才看得出來。
+
+   兩案的差別只有四個 alpha 停點。 */
+html[data-band^="glasstar"] .band { background: none; }
+
+/* 模糊層：整條 4px 一致，但由 mask 讓它從上往下淡入，所以沒有框邊。 */
+html[data-band^="glasstar"] .band::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
   -webkit-backdrop-filter: blur(4px) saturate(.92);
   backdrop-filter: blur(4px) saturate(.92);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 38%);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 38%);
 }
+/* 柏油層：#221e1c（柏油）→ #161413（照片最底那一列，L* 6.6）。 */
+html[data-band^="glasstar"] .band::after {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+}
+html[data-band="glasstar"] .band::after {
+  background-image: linear-gradient(180deg,
+    rgba(34, 30, 28, 0)   0%,
+    rgba(34, 30, 28, .22) 28%,
+    rgba(22, 20, 19, .58) 62%,
+    rgba(22, 20, 19, .88) 100%);
+}
+/* 深一階：底端收到全不透明，最下緣完全是照片最底那一列的顏色。 */
+html[data-band="glasstar2"] .band::after {
+  background-image: linear-gradient(180deg,
+    rgba(34, 30, 28, 0)   0%,
+    rgba(34, 30, 28, .32) 24%,
+    rgba(22, 20, 19, .74) 58%,
+    rgba(22, 20, 19, 1)   100%);
+}
+/* 文字要在兩層之上 */
+html[data-band^="glasstar"] .band > .shell { position: relative; z-index: 1; }
 
 /* 中：折衷。路面仍然認得出來，白字在整條帶子上都站得住。 */
 html[data-band="glass2"] .band {
@@ -1310,7 +1343,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   <button type="button" data-band="blue"  aria-pressed="false">藍黑（現況）</button>
   <button type="button" data-band="tar"   aria-pressed="false">柏油</button>
   <button type="button" data-band="ink"   aria-pressed="false">墨色</button>
-  <button type="button" data-band="glasstar" aria-pressed="true">毛玻璃輕＋柏油漸層</button>
+  <button type="button" data-band="glasstar"  aria-pressed="true">柏油漸層</button>
+  <button type="button" data-band="glasstar2" aria-pressed="false">柏油漸層 深</button>
   <button type="button" data-band="glass1" aria-pressed="false">毛玻璃 輕</button>
   <button type="button" data-band="glass2" aria-pressed="false">毛玻璃 中</button>
   <button type="button" data-band="glass3" aria-pressed="false">毛玻璃 重</button>
@@ -1331,7 +1365,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     blue:  '底色一 藍黑（現況）H=220：夜空與柏油的中間值。當初窄帶接在照片下面、要同時接住上面的夜空與下面的紙色，取中間值合理 —— 但現在它壓住的位置只有柏油。',
     tar:   '底色二 柏油 H=20：取自 PALETTE.md 裡柏油的實測值 #221e1c 的色相，亮度 L* 和藍黑案完全一樣，差別純粹是色調。這是「窄帶從柏油長出來」的直接答案。',
     ink:   '底色三 墨色 H=88：取自內文墨色 #2a2c27 的色相，亮度同上。好處是它和內文的字同一個調，整站的深色只有一種傾向。',
-    glasstar: '毛玻璃輕＋柏油漸層：模糊維持 4px、整條一致；疊在上面的色從「完全沒有顏色」漸層到柏油色 #221e1c（rgb 34,30,28），alpha 0 → .20 → .50 → .82。上緣完全沒有邊，往下才慢慢長出柏油 —— 不是一條帶子，是路面自己越來越沉。',
+    glasstar: '柏油漸層：模糊 4px 由上往下淡入（用 mask 遮住濾鏡本身，所以沒有框邊）。色從 #221e1c（柏油）走到 #161413（照片最底那一列，L* 6.6），alpha 0 → .22 → .58 → .88。往下既加深又換色，路面的標線與反光會逐漸被壓掉。',
+    glasstar2: '柏油漸層 深：同上，但四個 alpha 停點加重（0 → .32 → .74 → 1），最下緣完全是照片最底那一列的顏色，一點都不透。',
     glass1: '毛玻璃 輕：遮罩 .16→.62（越下面越深）＋ 模糊 4px。上緣幾乎全透，路面看得最清楚；白字在最亮的路段（左下角車頭燈）會吃力。',
     glass2: '毛玻璃 中：遮罩 .26→.74 ＋ 模糊 7px。折衷案 —— 路面仍然認得出形狀，白字在整條帶子上都站得住。',
     glass3: '毛玻璃 重：遮罩 .36→.86 ＋ 模糊 10px。最接近實色案，但上緣仍然是軟的，和照片之間沒有硬邊。'
