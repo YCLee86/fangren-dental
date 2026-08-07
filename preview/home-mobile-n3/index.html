@@ -138,7 +138,22 @@ a { color: var(--teal); }
    預設是 absolute（＝沒有 JS 時的行為，跟著捲走），
    由腳本掛上 html.glass 之後才變成 sticky。
    ========================================================================== */
-.phone { position: relative; container-type: inline-size; }
+/* ---- 2026-08-07：水平方向在這裡收乾淨 ----------------------------------------
+   .phone 包住除了提案說明條以外的整頁，所以它是「頁面寬度」真正的邊界。
+
+   **用 clip 不是 hidden，而且是放在這個中層元素上、不是 html／body 上：**
+     · hidden 會讓 .phone 變成捲動容器，裡面那條 .sticky-head 就黏不住了
+       （放在 html 上試過，量到捲到 700px 時 header.top = -700）。
+       clip 不建立捲動容器，sticky 照常運作。
+     · 放在 html／body 上要經過「overflow 傳播到視窗」那一層，
+       而 iOS Safari 在有 sticky／fixed 的頁面上那條傳播並不可靠。
+       放在一個普通元素上就沒有傳播問題，行為是確定的。
+
+   為什麼需要它：iOS 會把版面視窗撐到「沒有被裁掉的內容」的寬度，
+   而絕對定位的子孫、虛擬元素這些東西在 Blink 量不出來也不會撐版面，WebKit 會。
+   與其一個一個找，不如在唯一的邊界上收掉。
+   ---------------------------------------------------------------------------- */
+.phone { position: relative; container-type: inline-size; overflow-x: clip; }
 .sticky-head { position: absolute; top: 0; left: 0; right: 0; z-index: 30; height: 0; }
 html.glass .sticky-head { position: sticky; }
 
@@ -264,6 +279,10 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
 .hero-poem span { display: block; }
 .hero-poem .lead { margin-bottom: .55em; }
 .hero-sign {
+  /* 只給 left，讓它 shrink-to-fit —— **不要補 right**。
+     補了之後框會被撐滿，::before 那顆藥丸（inset 的負值）就變成整條全寬。
+     它的 ::before 確實比自己的框寬 17px（左右各 1.7em），但那 17px 落在
+     HERO 中間、離頁面右緣還很遠，而且 .phone 的 overflow-x: clip 也收住了。 */
   position: absolute; left: calc(4cqw + 7.179cqw); margin: 0;
   bottom: calc(100cqh - min(100cqh, 74.72cqw) + 3.077cqw);
   font-size: clamp(9.2px, 2.56cqw, 11.5px); font-weight: 400; line-height: 1.5;
