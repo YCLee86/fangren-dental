@@ -311,13 +311,28 @@ section + section { border-top: 1px solid var(--rule); }
 .sec-head { margin-bottom: 1.1rem; }
 .sec-head h2 { margin: 0; font-size: 1.12rem; line-height: 1.5; letter-spacing: .02em; }
 
-/* 治療項目 */
+/* 治療項目。每一顆是真的 <button> —— 它會篩選下面的文章與醫師，不是裝飾。 */
 .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0; padding: 0; list-style: none; }
-.chips li {
-  font-size: .82rem; line-height: 1.6; color: var(--ink);
-  background: var(--card); border: 1px solid var(--rule);
-  border-radius: 100px; padding: .25rem .8rem;
+.chips button {
+  font: inherit; font-size: .82rem; line-height: 1.6;
+  padding: .25rem .8rem; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
 }
+.chips button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* 篩選狀態列。沒有 JS 的時候它一直是 hidden，不會出現。 */
+.filter-note {
+  margin: .7rem 0 0; font-size: .78rem; line-height: 1.7; color: var(--ink-soft);
+}
+.filter-note b { color: var(--ink); font-weight: 500; }
+.empty-note {
+  margin: 0; padding: 1.1rem 0; font-size: .84rem; line-height: 1.8;
+  color: var(--ink-soft); text-align: center;
+}
+/* 被篩掉的卡片與醫師。用 class 不用 hidden 屬性 ——
+   .cards / .docs 是 display:grid，grid 項目的 display:none 要贏過 grid 的排版，
+   走 class 比較不會跟其他規則互相蓋。 */
+.is-filtered-out { display: none !important; }
 
 /* 文章卡 */
 .cards { display: grid; gap: 1rem; }
@@ -329,8 +344,9 @@ section + section { border-top: 1px solid var(--rule); }
 .card-thumb { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--paper); }
 .card-body { padding: .85rem 1rem 1rem; }
 .card-tag {
-  display: inline-block; font-size: .72rem; letter-spacing: .06em;
-  color: var(--teal); margin-bottom: .3rem;
+  display: inline-block; font-size: .72rem; letter-spacing: .06em; line-height: 1.6;
+  margin-bottom: .35rem;
+  padding: .06rem .5rem;
 }
 .card h3 { margin: 0 0 .35rem; font-size: .98rem; line-height: 1.55; }
 .card p { margin: 0; font-size: .84rem; line-height: 1.8; color: var(--ink-soft); }
@@ -370,13 +386,13 @@ section + section { border-top: 1px solid var(--rule); }
      · #252d4a 茶室深藍磁磚 —— 口外與贋復原本共用 Deep Taupe，使用者說不同科不要重複。
        贋復（全口重建）拿整個色盤裡最深的那一個。
    -------------------------------------------------------------------------- */
-.doc[data-spec="general"],
-.doc[data-spec="perio"]  { --accent: var(--chair); }  /* 診療椅實測　　　　　 H=174　 6.38:1 */
-.doc[data-spec="endo"]   { --accent: var(--moss);  }  /* 色票・苔綠＝Logo　　 H=100　 5.55:1 */
-.doc[data-spec="ortho"]  { --accent: var(--blue);  }  /* 色票・藍灰＝候診沙發 H=203　 7.41:1 */
-.doc[data-spec="surg"]   { --accent: var(--taupe); }  /* 色票・Taupe＝單椅布料 H=3　　 6.04:1 */
-.doc[data-spec="prosth"] { --accent: var(--tile);  }  /* 茶室深藍磁磚實測　　 H=227　13.53:1 */
-.doc[data-spec="kids"]   { --accent: var(--stool); }  /* 圓凳與木件實測　　　 H=28　　 5.53:1 */
+[data-spec="general"],
+[data-spec="perio"]  { --accent: var(--chair); }  /* 診療椅實測　　　　　 H=174　 6.38:1 */
+[data-spec="endo"]   { --accent: var(--moss);  }  /* 色票・苔綠＝Logo　　 H=100　 5.55:1 */
+[data-spec="ortho"]  { --accent: var(--blue);  }  /* 色票・藍灰＝候診沙發 H=203　 7.41:1 */
+[data-spec="surg"]   { --accent: var(--taupe); }  /* 色票・Taupe＝單椅布料 H=3　　 6.04:1 */
+[data-spec="prosth"] { --accent: var(--tile);  }  /* 茶室深藍磁磚實測　　 H=227　13.53:1 */
+[data-spec="kids"]   { --accent: var(--stool); }  /* 圓凳與木件實測　　　 H=28　　 5.53:1 */
 
 /* 診所資訊維持深綠松當家色（它同時是全站的連結色），看診時間那張是 Deep Taupe。 */
 .info-card { --accent: var(--teal); }
@@ -397,12 +413,89 @@ section + section { border-top: 1px solid var(--rule); }
 .doc h3 { margin: 0 0 .5rem; font-size: 1rem; line-height: 1.5; }
 .doc-role {
   display: inline-block; margin-left: .5rem; font-size: .72rem; font-weight: 400;
-  line-height: 1.5; padding: .05rem .6rem; border-radius: 100px;
-  background: var(--accent); color: #fff;
+  line-height: 1.5; padding: .05rem .6rem;
 }
-.doc dl { margin: 0; display: grid; grid-template-columns: 3.2em 1fr; gap: .2rem .6rem; }
-.doc dt { font-size: .76rem; color: var(--ink-soft); }
+.doc dl { margin: 0; display: grid; grid-template-columns: 3.2em 1fr; gap: .3rem .6rem; }
 .doc dd { margin: 0; font-size: .82rem; line-height: 1.7; }
+
+/* ---- 專長／資歷／學歷 的標籤（2026-08-07：底色定案為紙色底）-------------------
+   形狀比照正式站 fangren.net 的 .doctor-facts dt，顏色改成灰階 ——
+   藥丸已經是六個實心的科別色了，標籤再上色會太花。
+   底 --paper #e2e5e6 ＋ 字 --ink-soft #5c5f57，實測 5.14:1，字級 11.8px 過 AA。
+   字重從正式站的 700 收到 500：灰的 700 看起來比 teal 的 700 重一階。
+
+   兩個 self 都是必要的，少一個就跑掉：
+     justify-self: start —— 少了它，底會被 3.2em 的欄寬撐滿，變成三條長短不一的灰帶。
+     align-self: start   —— 少了它，格線列有多高、底就被拉多高（grid 預設是 stretch），
+                            「資歷」那列有三行，標籤就會從第一行一路拉到第三行底部。
+                            這就是你看到的那個往下拉長。
+   ---------------------------------------------------------------------------- */
+.doc dt {
+  font-size: .74rem; font-weight: 500; line-height: 1.6;
+  justify-self: start; align-self: start; white-space: nowrap;
+  padding: .1rem .4rem;
+  background: var(--paper); color: var(--ink-soft);
+}
+
+/* ---- 圓角：比例對齊，不是同一個數字（2026-08-07）-----------------------------
+   四案裡選了 4「各自往中間靠」：標籤方一階、科別標記圓一階。
+   但一開始四個標記全寫 8px，看起來就不對 —— 治療項目的 chip 明顯偏方。
+   量出來原因很清楚：**圓角要看的是半徑與框高的比例，不是絕對值**。
+
+     醫師藥丸（基準）  高 20.86px　8px　　比例 0.384
+     治療項目 chip     高 31.00px　8px　　比例 0.258　← 差最多，所以最方
+     文章標籤          高 22.33px　8px　　比例 0.358
+     診所資訊標籤      高 23.66px　8px　　比例 0.338
+
+   chip 的框本來就比較大（字 13.12px、上下內距各 4px，藥丸只有 0.8px），
+   同樣 8px 落在大框上就變方了。所以改成**各自取 0.384 × 自己的框高**：
+
+     治療項目 chip　31.00 × 0.384 ＝ 11.9　→ 12px
+     文章標籤　　　22.33 × 0.384 ＝  8.6　→ 8.5px
+     診所資訊標籤　23.66 × 0.384 ＝  9.1　→ 9px
+
+   這樣四個標記的視覺圓度一致，框大小不同也沒關係。
+   （另一條路是把 chip 的內距縮小、讓框變矮，但那會動到觸控面積，先不動。）
+
+   專長標籤維持 6px／比例 0.271 —— 它本來就要比標記方一階，那是選 4 的意思。
+   ---------------------------------------------------------------------------- */
+.doc dt          { border-radius: 6px; }     /* 高 22.13px・比例 0.271 */
+.doc-role        { border-radius: 8px; }     /* 高 20.86px・比例 0.384（基準） */
+.chips button    { border-radius: 12px; }    /* 高 31.00px・比例 0.387 */
+.card-tag        { border-radius: 8.5px; }   /* 高 22.33px・比例 0.381 */
+.info-card h3    { border-radius: 9px; }     /* 高 23.66px・比例 0.380 */
+
+/* ---- 科別標記：線條與文字套色，底不套色（2026-08-07 定案）---------------------
+   醫師藥丸的那套色推廣到另外兩處，都是在標科別的小標籤：
+     · 治療項目的五個 chips
+     · 文章卡上的分類標籤
+   對應關係寫在 HTML 的 data-spec 上，跟醫師卡共用同一組 --accent，
+   所以「兒童牙科」在三個地方一定是同一個色，不會各講各的。
+
+   色票字疊在卡色 #f4f4f5 上實測 5.03~12.31:1，最低的是兒牙 #8d5e3a 的 5.03。
+
+   底維持 var(--card) 不是留透明 —— chips 躺在紙 #e2e5e6 上，
+   底若透明，兒牙 #8d5e3a 對紙只有 4.37:1、掉出 AA；墊那層卡色才是 5.03。
+   「底不套色」的意思是底不吃科別色，不是底完全不上色。
+   ---------------------------------------------------------------------------- */
+.doc-role, .info-card h3, .chips button, .card-tag {
+  background: var(--card); color: var(--accent); border: 1px solid var(--accent);
+}
+
+/* 被按下去的治療項目：換成實心。這是全站第二個實心的東西（第一個是醫師藥丸）——
+   它代表「你正在看這一科」，跟醫師藥丸的「這位醫師是這一科」是同一種份量，所以長得一樣。
+   白字對五個科別色 5.53~13.52:1。 */
+.chips button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+
+/* ---- 只有醫師藥丸是實心的（2026-08-07）--------------------------------------
+   同樣是「科別」兩個字，在瀏覽者心裡不是同一個層級：
+     · 治療項目與文章的標籤是**分類** —— 站上有哪些科、這篇文章屬於哪一科。
+     · 醫師卡上的那顆是**在認人** —— 這位醫師是哪一科的。
+   認人的份量比分類重，所以只有它填滿，其餘維持線性。
+   邊框也給同色（不是透明），框的尺寸才跟線性那三處完全一致。
+   白字對六個科別色 5.53~13.52:1。
+   ---------------------------------------------------------------------------- */
+.doc-role { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 /* 診所資訊 */
 .info { display: grid; gap: .9rem; }
@@ -415,8 +508,7 @@ section + section { border-top: 1px solid var(--rule); }
 .info-card h3 {
   display: inline-block; margin: 0 0 .45rem;
   font-size: .76rem; font-weight: 400; letter-spacing: .08em; line-height: 1.6;
-  padding: .07rem .65rem; border-radius: 100px;
-  background: var(--accent); color: #fff;
+  padding: .07rem .65rem;
 }
 .info-card p { margin: 0; font-size: .92rem; line-height: 1.8; }
 .info-card .big { font-size: 1.15rem; letter-spacing: .02em; }
@@ -481,12 +573,16 @@ section + section { border-top: 1px solid var(--rule); }
           <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai，路徑原樣搬過來 -->
           <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <g transform="translate(-232.8729 -333.8286)">
-              <!-- 一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+              <!-- 2026-08-07：牙那條子路徑依自己的中心放大 1.3 倍、再往上移 0.50 個單位。
+                   嘴一個節點都沒有改。放大是因為 31.88px 下原比例的洞只有 2.51px，偏小；
+                   上移是因為放大會把洞下方的肉從 3.43 吃到 2.93，移 0.50 剛好還回去。
+                   favicon 用同一套做法但參數是 1.6 倍／上移 1.05（它要撐到 16px）。
+                   一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
                    中間那顆牙成為真正的洞——照片的夜空直接透過來。
                    原始 PPT 的自訂圖形就是這樣做的（<a:pathLst> 裡兩條子路徑）；
                    先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
                    疊在白色圖案上就變成一顆灰點，那是錯的。 -->
-              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.15625 352.140625 C 264.40625 352.066406 264.5 352.050781 264.742188 352.140625 C 264.90625 352.203125 265.125 352.191406 265.289062 352.140625 C 265.8125 351.976562 266.332031 350.941406 266.234375 349.625 C 266.140625 348.308594 262.75 348.492188 262.753906 349.625 C 262.753906 350.527344 263.078125 351.691406 263.527344 352.007812 C 263.71875 352.144531 263.859375 352.226562 264.15625 352.140625 Z"/>
+              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
             </g>
           </svg>
         </span>
@@ -541,13 +637,15 @@ section + section { border-top: 1px solid var(--rule); }
       <div class="sec-head">
         <h2>治療項目</h2>
       </div>
+
       <ul class="chips">
-        <li>一般牙科・定期檢查</li>
-        <li>牙周治療</li>
-        <li>兒童牙科</li>
-        <li>齒顎矯正</li>
-        <li>植牙・假牙重建</li>
+        <li><button type="button" data-spec="general" aria-pressed="false">一般牙科・定期檢查</button></li>
+        <li><button type="button" data-spec="perio"   aria-pressed="false">牙周治療</button></li>
+        <li><button type="button" data-spec="kids"    aria-pressed="false">兒童牙科</button></li>
+        <li><button type="button" data-spec="ortho"   aria-pressed="false">齒顎矯正</button></li>
+        <li><button type="button" data-spec="prosth"  aria-pressed="false">植牙・假牙重建</button></li>
       </ul>
+      <p class="filter-note" hidden></p>
     </section>
 
     <section class="wrap" id="articles">
@@ -555,7 +653,7 @@ section + section { border-top: 1px solid var(--rule); }
         <h2>最新文章</h2>
       </div>
       <div class="cards">
-      <a class="card" href="/posts/kids-arch-expansion/">
+      <a class="card" href="/posts/kids-arch-expansion/" data-spec="kids">
         <img class="card-thumb" src="/assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
@@ -564,7 +662,7 @@ section + section { border-top: 1px solid var(--rule); }
           <p class="card-date">更新 <time datetime="2026-08-02">2026/08/02</time></p>
         </div>
       </a>
-      <a class="card" href="/posts/regular-checkup/">
+      <a class="card" href="/posts/regular-checkup/" data-spec="general">
         <img class="card-thumb" src="/assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">定期檢查</span>
@@ -573,7 +671,7 @@ section + section { border-top: 1px solid var(--rule); }
           <p class="card-date">更新 <time datetime="2026-07-08">2026/07/08</time></p>
         </div>
       </a>
-      <a class="card" href="/posts/missing-tooth/">
+      <a class="card" href="/posts/missing-tooth/" data-spec="prosth">
         <img class="card-thumb" src="/assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">缺牙重建</span>
@@ -582,7 +680,7 @@ section + section { border-top: 1px solid var(--rule); }
           <p class="card-date">更新 <time datetime="2026-06-02">2026/06/02</time></p>
         </div>
       </a>
-      <a class="card" href="/posts/kids-first-visit/">
+      <a class="card" href="/posts/kids-first-visit/" data-spec="kids">
         <img class="card-thumb" src="/assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
@@ -591,7 +689,7 @@ section + section { border-top: 1px solid var(--rule); }
           <p class="card-date">更新 <time datetime="2026-05-06">2026/05/06</time></p>
         </div>
       </a>
-      <a class="card" href="/posts/gum-bleeding/">
+      <a class="card" href="/posts/gum-bleeding/" data-spec="perio">
         <img class="card-thumb" src="/assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">牙周照護</span>
@@ -600,7 +698,7 @@ section + section { border-top: 1px solid var(--rule); }
           <p class="card-date">更新 <time datetime="2026-04-15">2026/04/15</time></p>
         </div>
       </a>
-      <a class="card" href="/posts/bass-brushing/">
+      <a class="card" href="/posts/bass-brushing/" data-spec="general">
         <img class="card-thumb" src="/assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">日常保健</span>
@@ -610,13 +708,13 @@ section + section { border-top: 1px solid var(--rule); }
         </div>
       </a>
       </div>
+      <p class="empty-note" data-for="articles" hidden>這一科目前還沒有文章。</p>
     </section>
 
     <section class="wrap" id="doctors">
       <div class="sec-head">
         <h2>醫師介紹</h2>
       </div>
-
 
       <div class="docs">
       <article class="doc" data-spec="general">
@@ -692,6 +790,7 @@ section + section { border-top: 1px solid var(--rule); }
         </dl>
       </article>
       </div>
+      <p class="empty-note" data-for="doctors" hidden>這一科目前沒有駐診醫師。</p>
     </section>
 
     <section class="wrap" id="clinic">
@@ -782,6 +881,48 @@ section + section { border-top: 1px solid var(--rule); }
      「雲林縣斗六市・在地經營超過四十年」本身有內容，但同一頁已經講了三次：
      頁首副標「雲林斗六・永樂街」、窄帶的 1983／9／6、頁尾一字不差的同一句 —— 那是第四次。
      <b>頁尾那句留著</b>，那裡是它該在的地方。標題底下的 .2rem 也一起收掉了，不然會留一段空的。</p>
+  <p><b>2026-08-07：專長／資歷／學歷 的標籤，底色定案為紙色底。</b>
+     形狀比照 <a href="https://fangren.net/">fangren.net</a> 現在的 <code>.doctor-facts dt</code>，顏色改灰階 ——
+     藥丸已經是六個實心的科別色了，標籤再上色會太花。
+     底 <code>#e2e5e6</code>（<code>--paper</code>）＋ 字 <code>#5c5f57</code>（<code>--ink-soft</code>），實測 <b>5.14:1</b>，字級 11.8px 過 AA。
+     字重從正式站的 700 收到 500 —— 灰的 700 看起來比 teal 的 700 重一階。</p>
+  <p><b>標籤往下拉長是 bug，已經修掉了。</b>原因是 grid 項目預設 <code>align-self: stretch</code>：
+     格線列有多高、底就被拉多高，所以「資歷」那種三行的內容會把標籤從第一行一路拉到第三行底部。
+     加上 <code>align-self: start</code> 之後就只包住字了。
+     （旁邊那個 <code>justify-self: start</code> 是另一件事，少了它底會被 3.2em 的欄寬撐滿，變成長短不一的灰帶。）</p>
+  <p><b>圓角：比例對齊，不是同一個數字。</b>四案裡選了 4「各自往中間靠」，但一開始四個標記全寫 8px 就不對 ——
+     治療項目的 chip 明顯偏方。量出來原因很清楚：<b>圓角要看的是半徑與框高的比例，不是絕對值</b>。
+     醫師藥丸高 20.86px 配 8px，比例 <b>0.384</b>；chip 的框大得多（高 31.00px，字 13.12px、上下內距各 4px，藥丸只有 0.8px），
+     同樣 8px 落上去只有 0.258，所以看起來是方的。<br>
+     改成各自取 <b>0.384 × 自己的框高</b>：治療項目 chip <b>12px</b>、文章標籤 <b>8.5px</b>、診所資訊標籤 <b>9px</b>、醫師藥丸維持 <b>8px</b>。
+     實測比例 0.387／0.381／0.380／0.384，四個一致。
+     （另一條路是把 chip 的內距縮小讓框變矮，但那會動到觸控面積，先不動。）
+     專長標籤維持 6px／比例 0.271 —— 它本來就要比標記方一階，那正是選 4 的意思。</p>
+  <p><b>2026-08-07：科別色推廣到治療項目與文章標籤，兩個填色版本在頁上可以切</b>（切換條在「治療項目」標題底下，三節一起換）。
+     對應關係寫在 <code>data-spec</code> 上，跟醫師卡共用同一組色 ——
+     所以<b>「兒童牙科」在治療項目、文章標籤、醫師藥丸三個地方一定是同一個色</b>，不會各講各的。
+     治療項目：一般＝<code>#4f6361</code>・牙周＝<code>#4f6361</code>・兒牙＝<code>#8d5e3a</code>・矯正＝<code>#3C596B</code>・植牙假牙＝<code>#252d4a</code>。
+     文章六篇：兒童牙科×2＝<code>#8d5e3a</code>・定期檢查＝<code>#4f6361</code>・缺牙重建＝<code>#252d4a</code>・牙周照護＝<code>#4f6361</code>・日常保健＝<code>#4f6361</code>。</p>
+  <p><b>填色定案：線性為主，只有醫師藥丸是實心的。</b>切換條已經拿掉，這頁就是定案的樣子。<br>
+     <b>治療項目、文章標籤、診所資訊</b>：線條與文字套色，底不套色。色票字疊在卡色 <code>#f4f4f5</code> 上 <b>5.03~12.31:1</b>，最低是兒牙 <code>#8d5e3a</code>。<br>
+     <b>醫師藥丸</b>：套底色、字反白。白字對六個科別色 <b>5.53~13.52:1</b>。</p>
+  <p><b>2026-08-07 新增：治療項目可以點，會同時篩選文章與醫師。</b>
+     點「兒童牙科」就只留下兒牙的文章與兒牙專科的醫師，被按下去的那顆換成實心（跟醫師藥丸同一種份量 ——
+     它代表「你正在看這一科」）。<b>文章標籤與醫師藥丸的樣子完全不變</b>，只有數量變少。再點同一顆就回到全部。<br>
+     底下會出現一行狀態：「<b>兒童牙科</b>：2 篇<u>文章</u>、2 位<u>醫師</u>。」——
+     <b>「文章」「醫師」是連結</b>，點下去跳到對應的小節（數量是 0 的時候不給連結，跳過去只會看到空的）。
+     <b>齒顎矯正目前一篇文章都沒有</b>，那一科會顯示「這一科目前還沒有文章」，不會變成一片空白。</p>
+  <p><b>文章卡仍然是靜態 HTML，一張都沒有由 JS 產生。</b>（CLAUDE.md 第一節第 1 條）
+     這裡只是把不符合的卡加一個 class 藏起來，原始碼裡六張卡永遠都在 —— 搜尋引擎與無 JS 的環境看到的是完整清單。
+     沒有 JS 的時候，chips 就是五顆按不動的按鈕，底下什麼都不會被藏，不會壞。
+     對應關係讀的是 HTML 上的 <code>data-spec</code>，跟配色<b>共用同一個屬性</b>，所以顏色與篩選永遠不可能對不起來。</p>
+  <p><b>為什麼只有醫師藥丸填滿。</b>同樣是「科別」兩個字，在瀏覽者心裡不是同一個層級：
+     治療項目與文章上的是<b>分類</b>（站上有哪些科、這篇屬於哪一科），醫師卡上的那顆是<b>在認人</b>（這位醫師是哪一科的）。
+     認人的份量比分類重，所以只有它填滿。這不是前面說的那種「一半實心一半線性」的衝突 ——
+     差別對應的是真實的層級差，不是隨機的。實心那顆的框也給同色邊框（不是透明），尺寸才跟線性那三處完全一致。</p>
+  <p><b>一個技術細節：</b>治療項目的 chips 底維持 <code>var(--card)</code>，不是留透明。
+     它們躺在紙 <code>#e2e5e6</code> 上，底若透明，兒牙 <code>#8d5e3a</code> 對紙只有 <b>4.37:1</b>、掉出 AA；
+     墊那層卡色才是 5.03。所謂「底不套色」指的是<b>底不吃科別色</b>，不是底完全不上色。</p>
   <p><b>電話是唯一填滿的那一塊。</b>整節裡只有它需要視覺停下來，所以只有它拿到一塊實心的底。
      塊是放在白卡<b>裡面</b>的：底 <code>#dbe0e0</code>（深綠松 12% 混進卡色）對卡 <code>#f4f4f5</code> 差 1.21:1，在卡上讀得出來，字疊上去 7.09:1；
      同一塊要是拿去當卡底，它會跟紙 <code>#e2e5e6</code> 差不多，卡就整個消失了 —— 這也是為什麼九張醫師卡的底都沒有動。</p>
@@ -856,6 +997,71 @@ section + section { border-top: 1px solid var(--rule); }
 
 
 
+
+
+
+<script>
+/* 治療項目 → 篩選文章與醫師。
+   2026-08-07 加的。三件事先講清楚：
+
+   1. **文章卡仍然是靜態 HTML，一張都沒有由 JS 產生。**（CLAUDE.md 第一節第 1 條）
+      這裡只是把不符合的卡加上一個 class 藏起來，原始碼裡六張卡永遠都在，
+      搜尋引擎與無 JS 的環境看到的是完整的清單。
+   2. 沒有 JS 的時候，chips 就是五顆按不動的按鈕，底下什麼都不會被藏 —— 不會壞。
+   3. 對應關係讀的是 HTML 上的 data-spec，跟配色共用同一個屬性，
+      所以顏色與篩選永遠不可能對不起來。 */
+(function () {
+  var chips = document.querySelectorAll('.chips button[data-spec]');
+  if (!chips.length) return;
+
+  var cards  = document.querySelectorAll('.cards .card[data-spec]');
+  var docs   = document.querySelectorAll('.docs .doc[data-spec]');
+  var note   = document.querySelector('.filter-note');
+  var emptyA = document.querySelector('.empty-note[data-for="articles"]');
+  var emptyD = document.querySelector('.empty-note[data-for="doctors"]');
+  var active = null;
+
+  function apply(spec, label) {
+    var nA = 0, nD = 0;
+    Array.prototype.forEach.call(cards, function (el) {
+      var hit = !spec || el.getAttribute('data-spec') === spec;
+      el.classList.toggle('is-filtered-out', !hit);
+      if (hit) nA++;
+    });
+    Array.prototype.forEach.call(docs, function (el) {
+      var hit = !spec || el.getAttribute('data-spec') === spec;
+      el.classList.toggle('is-filtered-out', !hit);
+      if (hit) nD++;
+    });
+
+    if (emptyA) emptyA.hidden = !(spec && nA === 0);
+    if (emptyD) emptyD.hidden = !(spec && nD === 0);
+
+    if (!note) return;
+    if (!spec) { note.hidden = true; note.textContent = ''; return; }
+    note.hidden = false;
+    /* 「文章」「醫師」是錨點，點下去跳到對應的小節。
+       數量是 0 的時候不給連結 —— 跳過去只會看到「這一科目前還沒有文章」，
+       那不值得做成一個可以點的東西。
+       跳過去不會被固定頁首蓋住：#articles / #doctors 已經有 scroll-margin-top。 */
+    var a = nA ? '<a href="#articles">文章</a>' : '文章';
+    var d = nD ? '<a href="#doctors">醫師</a>' : '醫師';
+    note.innerHTML = '<b>' + label + '</b>：' + nA + ' 篇' + a + '、' + nD + ' 位' + d + '。';
+  }
+
+  Array.prototype.forEach.call(chips, function (btn) {
+    btn.addEventListener('click', function () {
+      var spec = btn.getAttribute('data-spec');
+      var off = (active === spec);          // 再點同一顆 = 取消篩選
+      active = off ? null : spec;
+      Array.prototype.forEach.call(chips, function (b) {
+        b.setAttribute('aria-pressed', (!off && b === btn) ? 'true' : 'false');
+      });
+      apply(active, btn.textContent.trim());
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
