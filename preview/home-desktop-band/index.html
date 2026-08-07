@@ -712,18 +712,16 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 /* ---- 頁尾：手機一欄 → 電腦三欄 ---------------------------------------- */
 .foot { background: var(--card); border-top: 1px solid var(--rule); padding-block: 2.4rem 1.6rem; }
-/* 四欄：診所資料／看診時間／站內導覽／免責。
-   最後一欄給 1.5fr —— 只有它是整段文字，其餘三欄都是短行。 */
+/* 三欄：聯絡／站內導覽／免責。最後一欄給 1.6fr —— 只有它是整段文字。 */
 .foot-cols {
   display: grid; gap: 1.6rem 2.4rem;
-  grid-template-columns: minmax(0, 1fr) minmax(0, .85fr) minmax(0, .7fr) minmax(0, 1.5fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, .7fr) minmax(0, 1.6fr);
 }
 /* 電話是頁尾唯一需要視覺停留的東西 —— 捲到底的人多半就是在找它。
    字級比內文大一階，沿用診所資訊卡的做法但不加色塊（頁尾已經是卡色，
    再墊一塊會和上面那張資訊卡打架）。 */
 .foot-tel { margin-top: .5rem !important; font-size: 1.08rem !important; letter-spacing: .02em; }
 .foot-tel a { color: var(--teal); text-decoration: none; }
-.foot-note { font-size: .76rem !important; }
 .foot-nav { margin: 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
 .foot-nav a { font-size: .82rem; color: var(--ink-soft); text-decoration: none; }
 .foot-nav a:hover { color: var(--teal); text-decoration: underline; }
@@ -1108,32 +1106,31 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 <footer class="foot">
   <div class="shell">
     <div class="foot-cols">
-      <!-- 2026-08-07：頁尾改寫。
-           拿掉「雲林縣斗六市・在地經營超過四十年」——
-             · 同一個捲動流程裡這是第三次講四十年（HERO 的詩、窄帶的 1983），
-               而且是最差的一次：前兩個是故事與事實，這句是形容詞、主詞是診所。
-             · 語氣違背 COPY.md 的紅線（自我表功、行銷腔）。
-             · 「超過四十年」會過期，1983 不會。
-             · 「雲林縣斗六市」已在 title、meta description、JSON-LD 的 address、
-               下面的地址那一行出現過，再重複不會加分。
-           補上兩件原本沒有、但頁尾真正該有的：
-             · **看診時間** —— JSON-LD 有 openingHoursSpecification，但那是給機器看的，
-               人看不到。在地搜尋的決策裡「現在開嗎」佔很大比重。
-             · **站內導覽** —— 原本的頁尾一條站內連結都沒有（只有 tel: 與地圖）。
-               頁尾的內部連結對爬取深度與權重分配有實際作用。 -->
+      <!-- 2026-08-07 頁尾改寫（第二輪修正）。
+
+           拿掉「雲林縣斗六市・在地經營超過四十年」：同一個捲動流程裡「四十年」
+           已經講過兩次（HERO 的詩、窄帶的 1983），而且那兩個都比它好 ——
+           一個是故事、一個是事實，它是形容詞而且主詞是診所。理由見 COPY.md 第六之二節。
+
+           **第一輪我補了看診時間與地圖連結，那是錯的**，使用者當場指出來：
+           首頁的 #clinic 就在頁尾正上方（正式站相隔 47 行），
+           地址／電話／看診時間在同一個畫面裡連著出現兩次，那不是落款，是重複。
+           我用「重複」的理由拿掉一句，卻補了三樣就在它上面的東西，自相矛盾。
+
+           所以只留下真正站得住的：
+
+           · **名稱 ＋ 地址 ＋ 電話**留著。理由不在首頁，在**文章頁** ——
+             posts/<slug>/ 沒有「診所資訊」那一節，頁尾是那六頁上**唯一**的聯絡資訊。
+             頁尾是全站共用元件，它在為另外六頁工作，首頁只是剛好撞在一起。
+           · **看診時間拿掉** —— 四行，那是內容不是落款。首頁上它就在正上方；
+             文章頁上想看時間的人本來就會點進診所資訊。搜尋引擎那邊有 JSON-LD。
+           · **地圖連結拿掉** —— 首頁的診所資訊卡已經有一個一模一樣的。
+           · **站內導覽留著** —— 這是頁尾唯一在任何地方都沒有重複的東西。
+             原本的頁尾一條站內連結都沒有（只有 tel:）。 -->
       <div>
         <h4>芳仁牙醫診所</h4>
-        <p>雲林縣斗六市永樂街 70 號<br>
-           <a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">在 Google 地圖開啟</a></p>
+        <p>雲林縣斗六市永樂街 70 號</p>
         <p class="foot-tel"><a href="tel:+88655339369">05-533-9369</a></p>
-      </div>
-      <div>
-        <h4>看診時間</h4>
-        <p>週一至週五<br>
-           上午 08:45–12:00<br>
-           下午 13:45–16:45<br>
-           晚上 17:45–20:30</p>
-        <p class="foot-note">週六、週日休診。國定假日請來電確認。</p>
       </div>
       <div>
         <h4>站內導覽</h4>
