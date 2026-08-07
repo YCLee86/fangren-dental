@@ -648,45 +648,40 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    **這是黃色在這個系統裡的物理上限，不是調得不好。**
    要真正明亮的黃，得先讓掉「實心白字」或「線性標籤過 AA」其中一條。
    ========================================================================== */
-/* ---- 兒牙：明黃三案（2026-08-07 第五輪）----------------------------------
-   第四輪往橙走的三案（C* 56~62、L* 47）使用者說「比之前好很多，但還是有點
-   牛奶糖、帶咖啡感」，要往**明黃**走。
+/* ---- 兒牙：錨在使用者挑的四個傳統色（2026-08-07 第六輪）------------------
+   使用者從《天然染色經》的黃色卡裡挑出四個貼近他心中的黃：
+   **神黃、雄黃、萬壽菊黃（他自己註明偏橘了）、鼬黃**。
+   （以下四個 hex 是從他的截圖**目視估**的，色相方向可信、絕對值不精確。
+     日後拿到原始色票的 hex 要回來重算。）
 
-   數字直接把路堵死：
+       神黃    #e9a72c   L* 73.0  C* 69.2  h 78.1°   白字 2.09:1
+       雄黃    #e28a1c   L* 65.3  C* 70.9  h 68.2°   白字 2.66:1
+       萬壽菊黃 #ef8b21   L* 67.2  C* 73.6  h 64.8°   白字 2.50:1
+       鼬黃    #d9a73f   L* 71.4  C* 59.0  h 82.0°   白字 2.20:1
 
-       L* 50  #9c7200   白字 4.36:1  ← 已經在邊緣
-       L* 60  #be8a00   白字 3.08:1  ✗
-       L* 75  #f2ae00   白字 1.94:1  ✗✗
+   **四個全落在 L* 65~73。那正是它們看起來像「他要的黃」的原因，
+   也正是白字全部失守（1.9~2.7:1）的原因。** 兩件事是同一件事。
 
-   **明黃 ＋ 白字在物理上不存在。** 保留白字，天花板就是 L* 50，
-   那裡永遠帶焦糖感，換什麼色相都一樣 —— 第一到第四輪全部卡在這裡。
-
-   使用者第三輪反對的是「**字變成黑色**很突兀」，那和「非白字」不是同一件事。
-   所以這一輪的字改用**同一個黃的深階**，是同族的深淺配，不會像黑字那樣跳出來。
-
-   三案（亮階當底、深階當字，兩者色相相差 6~8°）：
-
-       1  底 #dd9a00 L* 68.4 C* 74.3   字 #583400   4.56:1
-       2  底 #f3aa00 L* 74.7 C* 79.8   字 #6a4000   4.50:1
-       3  底 #ffbe00 L* 80.8 C* 83.6   字 #744c00   4.54:1
-
-   彩度 74~84，對照第四輪的 56~62、現在的 32 —— 這才是「明黃」的量級。
-
-   **實作上必須跟著改的一件事：亮黃當「字」永遠讀不出來**
-   （#f3aa00 疊在卡 #f4f4f5 上只有 1.5:1）。所以要看得到黃，
-   兒牙的 chip 與文章標籤**必須改成填色**，字用深階。
-   代價：兒牙這一科的標籤在形式上會和其他五科（線性）不同。
-   這是明黃的入場費，不是可以繞過的細節。
+   而且要先講清楚：把它們壓到白字能用的高度，得到的就是第四輪那組。
+   雄黃色相 68.2° 壓下來是 #a75e00，和第四輪的 #a36000（h68.7・C*59.3）
+   **幾乎是同一個色** —— 也就是他說「牛奶糖」的那一個。
+   所以這一輪不重複給同一個東西，改成三種取捨，各自錨在他挑的一個黃上。
    -------------------------------------------------------------------------- */
-html[data-kids="1"] [data-spec="kids"] { --accent: #dd9a00; --accent-deep: #583400; --on-fill: #583400; }
-html[data-kids="2"] [data-spec="kids"] { --accent: #f3aa00; --accent-deep: #6a4000; --on-fill: #6a4000; }
-html[data-kids="3"] [data-spec="kids"] { --accent: #ffbe00; --accent-deep: #744c00; --on-fill: #744c00; }
 
-/* 兒牙的 chip 與文章標籤改成填色（亮黃只能當底，不能當字） */
-html[data-kids="1"] .chips button[data-spec="kids"],
+/* A 守白字 —— 錨在雄黃 h68.2，壓到白字能用的天花板。
+   白字、線性標籤全部維持現行規則，其他五科的做法一模一樣。
+   代價：L* 47，就是他說的牛奶糖那一帶。 */
+html[data-kids="1"] [data-spec="kids"] { --accent: #a75e00; }
+
+/* B 神黃本人的亮度（L* 74・C* 80）—— 字改用同色相深階 #6c3b00（4.58:1）。
+   C 鼬黃本人的亮度（L* 72・C* 77）—— 字 #643b00（4.56:1），比 B 黃一點、彩度低一點。
+   兩案都必須把兒牙的 chip 與文章標籤改成填色：亮黃當「字」讀不出來
+   （#f6a600 疊在卡上只有 1.4:1），要看得到黃就只能當底。 */
+html[data-kids="2"] [data-spec="kids"] { --accent: #f6a600; --accent-deep: #6c3b00; --on-fill: #6c3b00; }
+html[data-kids="3"] [data-spec="kids"] { --accent: #e8a600; --accent-deep: #643b00; --on-fill: #643b00; }
+
 html[data-kids="2"] .chips button[data-spec="kids"],
 html[data-kids="3"] .chips button[data-spec="kids"],
-html[data-kids="1"] .card[data-spec="kids"] .card-tag,
 html[data-kids="2"] .card[data-spec="kids"] .card-tag,
 html[data-kids="3"] .card[data-spec="kids"] .card-tag {
   background: var(--accent); color: var(--accent-deep); border-color: var(--accent);
@@ -1560,9 +1555,9 @@ html[data-kids="3"] .card[data-spec="kids"] .card-tag {
 <div class="hero-switch hero-switch-3" role="group" aria-label="兒牙的顏色">
   <b>兒牙</b>
   <button type="button" data-kids="0" aria-pressed="true">現在</button>
-  <button type="button" data-kids="1" aria-pressed="false">1 明黃 L*68</button>
-  <button type="button" data-kids="2" aria-pressed="false">2 明黃 L*75</button>
-  <button type="button" data-kids="3" aria-pressed="false">3 明黃 L*81</button>
+  <button type="button" data-kids="1" aria-pressed="false">A 守白字</button>
+  <button type="button" data-kids="2" aria-pressed="false">B 神黃</button>
+  <button type="button" data-kids="3" aria-pressed="false">C 鼬黃</button>
 </div>
 <p class="hero-caption" id="hero-caption"></p>
 
@@ -1591,10 +1586,10 @@ html[data-kids="3"] .card[data-spec="kids"] .card-tag {
   /* 兒牙的顏色三案。色相是唯一的變數，彩度固定 78%（含羞草自己的值），
      明度取「白字仍過 AA 的最亮值」。 */
   var KIDS = {
-    '0': '兒牙 現在　#8d5e3a　L* 44.2・C* 32.1。白字。這是對照組。',
-    '1': '兒牙 1 明黃　底 #dd9a00（L* 68.4・C* 74.3）＋ 同色相深階字 #583400，4.56:1。三案裡最收斂的明黃。',
-    '2': '兒牙 2 明黃　底 #f3aa00（L* 74.7・C* 79.8）＋ 字 #6a4000，4.50:1。',
-    '3': '兒牙 3 明黃　底 #ffbe00（L* 80.8・C* 83.6）＋ 字 #744c00，4.54:1。最亮最飽和。',
+    '0': '兒牙 現在　#8d5e3a　L* 44.2・C* 32.1。對照組。',
+    '1': 'A 守白字　#a75e00（錨在雄黃 h68.2，壓到白字能用的天花板）L* 47.3・C* 60.7，白字 4.95:1。規則一條都沒破 —— 但這就是你說「牛奶糖」的那一帶，和上一輪的 #a36000 幾乎同色。',
+    '2': 'B 神黃　底 #f6a600（L* 74.1・C* 80.3・h 75.9°，等於神黃本人的亮度）＋ 同色相深階字 #6c3b00，4.58:1。白字在這裡只有 2.02:1，所以字必須讓掉。',
+    '3': 'C 鼬黃　底 #e8a600（L* 72.5・C* 77.3・h 79.8°）＋ 字 #643b00，4.56:1。比 B 再黃一點、彩度低一點，比較不刺。',
     'x': ''
   };
   /* 三個明黃案裡，兒牙的 chip 與文章標籤都改成填色 —— 亮黃當字讀不出來
