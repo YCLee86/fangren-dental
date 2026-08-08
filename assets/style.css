@@ -165,21 +165,50 @@ a:hover { color: var(--teal-500); }
 
 /* ---------- 文章頁 ---------- */
 .post-head { background: var(--white); border-bottom: 1px solid var(--line); padding-block: clamp(1.8rem, 5vw, 2.8rem); }
-.crumbs { font-size: .8rem; color: var(--ink-faint); margin-bottom: .9rem; }
+
+/* 標題上面那一行：首頁 › 科別藥丸 · 發布日 · 瀏覽數（2026-08-08）
+   原本是麵包屑在標題上、「發布・最後更新・瀏覽數」在標題下，分成兩行。
+   合併成一行的理由：兩行講的是同一件事（這篇是什麼、什麼時候的），
+   而且「最後更新」對讀者沒有意義——那是給排序用的，首頁卡片上還看得到。
+   科別取代原本的「文章 › 科別」兩層，藥丸本身就說明了分類。 */
+.crumbs {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .45rem .7rem;
+  margin: 0 0 .85rem;
+  font-size: .8rem; color: var(--ink-faint);
+}
 .crumbs a { color: var(--ink-faint); text-decoration: none; }
 .crumbs a:hover { color: var(--teal-700); text-decoration: underline; }
+.crumbs .sep { color: var(--line); }
+
+/* ---- 科別色（PALETTE.md 第六之二節定案，值與 preview/home-mobile-n3/ 完全相同）----
+   後面的數字是純白字疊在該色上的實測對比，AA 要 4.5:1。
+   一般與牙周植牙共用診療椅色，這是定案時就決定的，不是漏填。 */
+[data-spec="general"],
+[data-spec="perio"]  { --spec: #4f6361; }   /* 診療椅實測　　　　　　 H=174　 6.38:1 */
+[data-spec="endo"]   { --spec: #5D6D55; }   /* 色票・苔綠＝Logo　　　 H=100　 5.55:1 */
+[data-spec="ortho"]  { --spec: #3C596B; }   /* 色票・藍灰＝候診沙發　 H=203　 7.41:1 */
+[data-spec="surg"]   { --spec: #7D5A58; }   /* 色票・Deep Taupe＝單椅 H=3　　 6.04:1 */
+[data-spec="prosth"] { --spec: #252d4a; }   /* 茶室深藍磁磚實測　　　 H=227　13.52:1 */
+[data-spec="kids"]   { --spec: #8d5e3a; }   /* 圓凳與木件實測　　　　 H=28　　 5.53:1 */
+
+/* 實心底＋純白字。文章內頁整頁只有這一顆彩色，面積小到不影響 PALETTE 第六節的
+   面積限制，而它是這一頁的身分標記，份量等同醫師藥丸，所以填滿而不是線性。
+   圓角照 PALETTE 第六之二節的比例 0.384：框高 12×1.6 + 2×1.92 ＝ 23.04px → 9px。
+   （rem 認的是 html 的 16px，不是 body 的 17px，所以 .75rem 是 12px 不是 12.75px。）
+   letter-spacing 會在最後一個字後面多留一格，右內距因此比左邊少 .07rem。 */
+.post-tag {
+  display: inline-block;
+  font-size: .75rem; line-height: 1.6; letter-spacing: .08em;
+  padding: .12rem .55rem .12rem .62rem;
+  border-radius: 9px;
+  background: var(--spec, var(--teal-700)); color: var(--white);
+}
 
 .post-head h1 {
-  margin: .2rem 0 .9rem;
+  margin: 0;
   font-size: clamp(1.5rem, 5vw, 2.15rem);
   line-height: 1.35; letter-spacing: -.01em; color: var(--teal-900);
 }
-.post-meta {
-  display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .85rem;
-  font-size: .82rem; color: var(--ink-faint);
-}
-.post-meta .author { color: var(--ink-soft); font-weight: 600; }
-.post-meta .dot { color: var(--line); }
 
 /* 文章 HERO 圖：等比例縮放，寬度切齊內文欄——含左右留白在內一起算，
    才不會在手機上比文字還寬（.wrap-text 的內距也要扣掉）。 */
