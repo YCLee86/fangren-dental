@@ -11,7 +11,8 @@
         並同步寫回文章頁面上顯示的日期。沒改動的文章日期維持不變。
      3. 依「最後更新日期」由新到舊排序，重新產生 index.html 的卡片區塊
         （直接寫成靜態 HTML，不需要前端 JavaScript 讀 JSON）。
-     4. 產生 sitemap.xml。
+     4. 在每一頁的 <head> 補上 canonical（絕對網址，指回 site.json 的正式站）。
+     5. 產生 sitemap.xml。
 
    新增文章：複製一個現有的 posts/<slug>/ 資料夾、改內容與 post-meta，
              再跑一次這個指令，首頁卡片就會自己出現並排到最前面。
@@ -52,6 +53,43 @@ const esc = (s) =>
            .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 const read = (f) => fs.readFileSync(f, "utf8");
+
+/* ---------- 正式站網址 ----------
+   canonical 與 sitemap 都要用，所以在掃描文章之前就先讀出來。 */
+
+let siteUrl = "";
+if (fs.existsSync(SITE_FILE)) {
+  try {
+    // 去掉 BOM，否則 JSON.parse 會直接失敗
+    siteUrl = (JSON.parse(read(SITE_FILE).replace(/^﻿/, "")).url || "").replace(/\/+$/, "");
+  } catch (err) {
+    console.error(`× site.json 讀取失敗（${err.message}），將略過 canonical 與 sitemap。`);
+    process.exitCode = 1;
+  }
+}
+
+/* 在 <head> 裡放一行絕對網址的 canonical，宣告「這一頁的正本在 fangren.net」。
+
+   為什麼要有：同一份 HTML 目前有兩個網址送得出去——正式站，以及還活著的舊站
+   yclee86.github.io/fangren-dental/（GitHub Pages 直接讀 main 分支根目錄）。
+   Google 看到兩份一樣的內容會分散評價。canonical 是絕對網址，所以舊站送出去的
+   每一頁都會指回正式站，收錄與評價就集中在 fangren.net。
+   順帶也解決 www、結尾斜線、以及網址被加上 ?fbclid=… 這類追蹤參數時被當成不同頁。
+
+   放在 <head>，不在內容雜湊涵蓋的 post-meta 與 <main> 之內，所以加這一行
+   不會讓所有文章的「最後更新日期」一起跳成今天。 */
+const withCanonical = (html, url) => {
+  if (!siteUrl) return html;
+  const tag = `<link rel="canonical" href="${url}">`;
+  if (/<link[^>]+rel=["']canonical["'][^>]*>/i.test(html)) {
+    return html.replace(/<link[^>]+rel=["']canonical["'][^>]*>/i, tag);
+  }
+  // 排在 favicon 那一行前面，跟其他 <link> 待在一起
+  if (/<link[^>]+rel=["']icon["'][^>]*>/i.test(html)) {
+    return html.replace(/(<link[^>]+rel=["']icon["'][^>]*>)/i, `${tag}\n$1`);
+  }
+  return html.replace(/<\/head>/i, `${tag}\n</head>`);
+};
 
 /* 內容雜湊只看「這篇文章自己的東西」：post-meta 加上 <main> 裡的內容。
    刻意排除兩類東西——
@@ -140,6 +178,8 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
     `<time class="post-updated" datetime="${updated}">${zhDate(updated)}</time>`
   );
 
+  html = withCanonical(html, `${siteUrl}/posts/${meta.slug}/`);
+
   if (!CHECK_ONLY && html !== read(file)) fs.writeFileSync(file, html, "utf8");
 
   nextManifest[meta.slug] = { hash, updated };
@@ -219,6 +259,8 @@ nextIndex = nextIndex.replace(
   `$1${posts.length}$2`
 );
 
+nextIndex = withCanonical(nextIndex, `${siteUrl}/`);
+
 if (!CHECK_ONLY && nextIndex !== index) fs.writeFileSync(INDEX_FILE, nextIndex, "utf8");
 
 /* ---------- 4. 計數器允許的代碼清單 ----------
@@ -238,17 +280,6 @@ if (!CHECK_ONLY) {
 }
 
 /* ---------- 5. sitemap ---------- */
-
-let siteUrl = "";
-if (fs.existsSync(SITE_FILE)) {
-  try {
-    // 去掉 BOM，否則 JSON.parse 會直接失敗
-    siteUrl = (JSON.parse(read(SITE_FILE).replace(/^﻿/, "")).url || "").replace(/\/+$/, "");
-  } catch (err) {
-    console.error(`× site.json 讀取失敗（${err.message}），將略過 sitemap。`);
-    process.exitCode = 1;
-  }
-}
 
 if (siteUrl && !CHECK_ONLY) {
   const urls = [
@@ -282,5 +313,5 @@ for (const p of posts) {
   console.log(`  ${p.updated}  ${p.slug.padEnd(20)} ${p.title}`);
 }
 if (changed.length) console.log(`\n內容有變動、已換成今天(${today()})的：${changed.join(", ")}`);
-if (!siteUrl) console.log("\n提示：site.json 尚未填入 url，這次略過 sitemap.xml / robots.txt。");
+if (!siteUrl) console.log("\n提示：site.json 尚未填入 url，這次略過 canonical、sitemap.xml 與 robots.txt。");
 console.log(CHECK_ONLY ? "\n(--check 模式，未寫入任何檔案)" : "\n完成。");
