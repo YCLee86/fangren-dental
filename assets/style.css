@@ -32,6 +32,10 @@
   --blue:  #3C596B;          /* 藍灰。 紙 5.85:1・卡 6.74:1 */
   --taupe: #7D5A58;          /* Deep Taupe */
   --brick: #AF4C52;          /* 磚紅。對紙只有 4.17:1，**只能待在卡上** */
+  /* 首頁「主題與科別」那六顆標記的實測色，一個值都沒改（PALETTE.md 第一節） */
+  --chair: #4f6361;          /* 診療椅 */
+  --moss:  #5D6D55;          /* 苔綠＝Logo */
+  --tile:  #252d4a;          /* 茶室深藍磁磚 */
 
   /* 頁首的深色。這不是新調的色 —— 它是首頁那條毛玻璃頁首捲到淺色區之後
      的合成色（暗夜 #191614 以 .84 濃度疊在紙上）。用同一個值，
@@ -44,6 +48,37 @@
   --shadow:      0 1px 2px  rgba(42, 44, 39, .07), 0 4px  10px rgba(42, 44, 39, .09);
   --shadow-lift: 0 5px 10px rgba(42, 44, 39, .09), 0 16px 32px rgba(42, 44, 39, .16);
 }
+
+/* ==========================================================================
+   這一篇的科別色 —— 跟著首頁「主題與科別」的標記走
+   --------------------------------------------------------------------------
+   科別寫在 <body data-spec="…"> 上（在 <main> 之外，所以不會動到內容雜湊）。
+   標籤 → 代碼的對照表在 tools/build.mjs 的 SPEC，和首頁卡片用的是同一份。
+
+   兩個變數，用途分得很清楚 —— 這是首頁那一輪的結論，直接沿用：
+
+       --accent       當「底」用：小節標題前的短棒、重點框左邊那條、實心按鈕
+       --accent-deep  當「字」用：連結、h3、線框按鈕的字與框
+       --on-fill      疊在 --accent 填色上面的字
+
+   為什麼字要另外一階：亮的顏色當底很好看，當字就讀不清楚。
+   **而且這裡的字階比首頁再深一點點** —— 首頁的標記是坐在卡片 #f4f4f5 上，
+   文章的內文是坐在紙 #e2e5e6 上，底更深，字就得跟著更深才守得住 AA 的 4.5:1。
+   下面每一行後面的數字就是該色當字疊在紙上的實測對比。
+   ========================================================================== */
+/* 預設（404 這種沒有科別的頁）＝ 全站的深綠松 */
+body { --accent: var(--teal); --accent-deep: var(--teal); --on-fill: #fff; }
+
+[data-spec="general"],
+[data-spec="perio"]  { --accent: var(--chair); --accent-deep: var(--chair); }  /* 5.04 */
+[data-spec="ortho"]  { --accent: var(--blue);  --accent-deep: var(--blue);  }  /* 5.85 */
+[data-spec="surg"]   { --accent: var(--taupe); --accent-deep: var(--taupe); }  /* 4.77 */
+[data-spec="prosth"] { --accent: var(--tile);  --accent-deep: var(--tile);  }  /* 10.68 */
+[data-spec="endo"]   { --accent: var(--moss);  --accent-deep: #596951;      }  /* 苔綠原值在紙上 4.38，差一點，壓深到 4.65 */
+/* 兒牙的黃：當底 #c28229（定案，十一輪，PALETTE.md 第六之二節），
+   當字得壓到 #915800 才有 4.61 —— 首頁那顆 #9e6301 是對著卡片算的，
+   放到紙上只剩 3.91，所以這裡不能直接搬。 */
+[data-spec="kids"]   { --accent: #c28229; --accent-deep: #915800; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -71,8 +106,10 @@ body, p, li, td, th, h1, h2, h3, h4, dd, dt, figcaption, blockquote {
 
 img, svg, video, iframe { max-width: 100%; height: auto; display: block; }
 
-a { color: var(--teal); }
-a:hover { color: #2d6a63; }
+/* 連結、標題、按鈕都走這一篇的科別色。頁尾的電話仍是深綠松（頁尾是全站共用的落款，
+   不屬於某一篇文章），所以那一條在下面自己指定 var(--teal)。 */
+a { color: var(--accent-deep); }
+a:hover { color: var(--accent); }
 
 /* ---------- 版心 ---------- */
 .wrap      { width: 100%; max-width: var(--wide);    margin-inline: auto; padding-inline: var(--pad); }
@@ -139,7 +176,7 @@ a:hover { color: #2d6a63; }
 }
 .crumbs { font-size: .8rem; color: var(--ink-soft); margin-bottom: .9rem; }
 .crumbs a { color: var(--ink-soft); text-decoration: none; }
-.crumbs a:hover { color: var(--teal); text-decoration: underline; }
+.crumbs a:hover { color: var(--accent-deep); text-decoration: underline; }
 
 .post-head h1 {
   margin: .2rem 0 .9rem;
@@ -154,12 +191,14 @@ a:hover { color: #2d6a63; }
 .post-meta .dot { color: var(--rule); }
 
 /* 瀏覽數：和首頁講同一種話 ——「數字 ＋ 次瀏覽」，沒有眼睛圖示。
-   圖示與「次瀏覽」三個字都在 <main> 裡改不得（會動到內容雜湊），
-   所以圖示用 CSS 藏、字用 ::after 補。 */
-.views { display: inline-flex; align-items: baseline; white-space: nowrap; }
+   「次瀏覽」三個字**標記裡本來就有**，不要再用 ::after 補一次（補了會變成
+   「1,284 次瀏覽 次瀏覽」）。要拿掉的只有眼睛圖示，而它在 <main> 裡動不得，
+   所以用 CSS 藏起來。 */
+/* gap 是必要的：inline-flex 會把「數字」和「次瀏覽」當成兩個項目，
+   標記裡那個半形空白在 flex 排版下會被吃掉，不補就變成「1,284次瀏覽」。 */
+.views { display: inline-flex; align-items: baseline; white-space: nowrap; gap: .3em; }
 .views svg { display: none; }
 .views-n { font-variant-numeric: tabular-nums; }
-.views::after { content: "次瀏覽"; margin-left: .3em; }
 .views[data-state="loading"] .views-n { opacity: .45; }
 .views[data-state="error"] { display: none; }
 
@@ -187,9 +226,9 @@ a:hover { color: #2d6a63; }
 }
 .post-body h2::before {
   content: ''; flex: 0 0 3px; align-self: center;
-  height: 1.05em; border-radius: 2px; background: var(--teal);
+  height: 1.05em; border-radius: 2px; background: var(--accent);
 }
-.post-body h3 { margin: 1.5rem 0 .5rem; font-size: 1.02rem; color: var(--teal); }
+.post-body h3 { margin: 1.5rem 0 .5rem; font-size: 1.02rem; color: var(--accent-deep); }
 .post-body p { margin: 0 0 1.1rem; }
 .post-body ul, .post-body ol { margin: 0 0 1.2rem; padding-left: 1.35rem; }
 .post-body li { margin-bottom: .5rem; }
@@ -199,7 +238,7 @@ a:hover { color: #2d6a63; }
 
 /* 重點框：卡色底＋左邊一條深綠松。和首頁的卡片同一個陰影、同一個圓角。 */
 .callout {
-  background: var(--card); border: 1px solid var(--rule); border-left: 3px solid var(--teal);
+  background: var(--card); border: 1px solid var(--rule); border-left: 3px solid var(--accent);
   border-radius: var(--radius); padding: 1rem 1.1rem; margin: 0 auto 1.4rem;
   box-shadow: var(--shadow);
 }
@@ -230,14 +269,20 @@ a:hover { color: #2d6a63; }
    實心按鈕高約 42px，所以 16px。 */
 .btn {
   display: inline-flex; align-items: center; gap: .4rem;
-  background: var(--teal); color: #fff; text-decoration: none;
+  background: var(--accent); color: var(--on-fill); text-decoration: none;
   padding: .6rem 1.05rem; border-radius: 16px; font-size: .9rem; font-weight: 500;
-  border: 1px solid var(--teal);
+  border: 1px solid var(--accent);
   transition: background-color .15s ease, color .15s ease;
 }
-.btn:hover { background: #2d6a63; border-color: #2d6a63; color: #fff; }
-.btn-ghost { background: var(--card); color: var(--teal); }
-.btn-ghost:hover { background: var(--card); color: #2d6a63; border-color: #2d6a63; }
+/* hover 是把同一個顏色壓深一階，不是換一個色 —— 這樣七個科別共用一條規則。
+   舊瀏覽器不支援 color-mix 就整條失效，按鈕維持原色，不會壞掉。 */
+.btn:hover {
+  background: color-mix(in srgb, var(--accent) 84%, #1a1a17);
+  border-color: color-mix(in srgb, var(--accent) 84%, #1a1a17);
+  color: var(--on-fill);
+}
+.btn-ghost { background: var(--card); color: var(--accent-deep); border-color: var(--accent-deep); }
+.btn-ghost:hover { background: var(--card); color: color-mix(in srgb, var(--accent-deep) 82%, #1a1a17); border-color: color-mix(in srgb, var(--accent-deep) 82%, #1a1a17); }
 
 /* ==========================================================================
    頁尾 —— 和首頁同一份（聯絡／站內導覽／關於這些文章）
