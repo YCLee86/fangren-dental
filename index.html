@@ -1543,13 +1543,25 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     });
   }
 
-  /* 兩個條件都到齊才跑，只跑一次：
+  /* 三個條件都到齊才跑，只跑一次：
        1. 真實數字回來了（counter.js 從 D1 取到之後呼叫 fangrenCountUp）
        2. 窄帶已經捲進畫面
+       3. 頁面已經載完、靜下來了
      哪一個先到都可以，最後到的那個負責啟動 —— 這是這次的修法重點。
      舊版是「捲進畫面就用 data-count 開跑」，所以永遠跑的是提案頁留下的示範數字，
      真值即使回來了也只能在動畫之後硬蓋上去。 */
-  var target = null, done = false;
+  var target = null, done = false, settled = false;
+
+  /* 眼睛真正看得到的高度。
+     ⚠ iOS Safari 的 window.innerHeight 是**工具列收起後**的大視窗高度，
+     比當下看得到的那一塊高出整條網址列（這也是 100vh 在 iOS 會爆框的老問題）。
+     拿它當門檻會**提早**判定「看到了」，動畫在使用者還沒捲到之前就跑完，
+     等他捲到窄帶時數字早就停在最終值 —— 看起來就是「完全不會動」。
+     visualViewport.height 才是可見的那一塊，iOS 9.3 以後都有。 */
+  function viewH() {
+    var vv = window.visualViewport;
+    return (vv && vv.height) || window.innerHeight || 0;
+  }
 
   /* 「捲進畫面」自己量，不用 IntersectionObserver。
      IO 在某些情境下連**第一次**的回呼都不會送（背景分頁、被遮住的 webview），
@@ -1558,11 +1570,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   function inView() {
     if (document.hidden) return false;   /* 分頁在背景就先不要跑，rAF 那時是停的 */
     var r = el.getBoundingClientRect();
-    return r.bottom > 0 && r.top < (window.innerHeight || 0) * .95;
+    return r.bottom > 0 && r.top < viewH() * .9;
   }
 
   function maybeRun() {
-    if (done || target === null || !inView()) return;
+    if (done || !settled || target === null || !inView()) return;
     done = true;
     removeEventListener('scroll', maybeRun);
     removeEventListener('resize', maybeRun);
@@ -1573,6 +1585,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   addEventListener('scroll', maybeRun, { passive: true });
   addEventListener('resize', maybeRun);
   document.addEventListener('visibilitychange', maybeRun);
+
+  /* 不在「還在載入」的那一刻開跑。
+     手機上那一刻主執行緒正在解 HERO 那張大圖、排整頁的版，rAF 拿不到幾個影格 ——
+     1.4 秒的動畫被壓成一兩次跳動，等於沒有動畫。等 load 之後再多等一小段才算數。
+     3 秒是上限：圖再慢也不能讓數字一直不出現（在那之前它是 visibility: hidden）。 */
+  function settle() { settled = true; maybeRun(); }
+  var settleCap = setTimeout(settle, 3000);
+  if (document.readyState === 'complete') { clearTimeout(settleCap); setTimeout(settle, 300); }
+  else addEventListener('load', function () { clearTimeout(settleCap); setTimeout(settle, 300); });
 
   window.fangrenCountUp = function (n) { target = n; maybeRun(); };
 
