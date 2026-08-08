@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="芳仁牙醫診所">
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="芳仁牙醫診所">
   <!-- 診所的標誌本體。幾何是 2026-08-07 定稿的那一版（牙洞 1.6 倍、上移 1.05），
        和頁首那顆同一條路徑，只有牙洞比例不同 —— favicon 要在 16px 下還看得出洞。
 
@@ -9,7 +9,11 @@
                           而和淺色的色差 ΔE 只有 20.7，並排要盯著看才分得出來。
 
        fill 屬性留著當退路：不吃 <style> 的算圖器（少數 RSS 閱讀器、舊工具）
-       會用屬性上的淺色，不會變成黑色方塊。 -->
+       會用屬性上的淺色，不會變成黑色方塊。
+
+       ⚠ 改這個檔（換色、改幾何）之後，**一定要把引用它的 ?v= 日期一起換掉**。
+       Safari 的 favicon 快取是按「圖示網址」存的，網址沒變就一直給舊圖，
+       重新整理、清網頁快取都沒用。詳見 PALETTE.md 第六之七節。 -->
   <style>
     path { fill: #4f6361; }
     @media (prefers-color-scheme: dark) { path { fill: #4f8065; } }
