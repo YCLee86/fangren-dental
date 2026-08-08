@@ -174,21 +174,37 @@ a:hover { color: var(--accent); }
   background: var(--card); border-bottom: 1px solid var(--rule);
   padding-block: clamp(1.8rem, 5vw, 2.8rem);
 }
-.crumbs { font-size: .8rem; color: var(--ink-soft); margin-bottom: .9rem; }
+/* 標題上面那一行：首頁 › 科別藥丸 ・ 發布日 ・ 瀏覽數（2026-08-08 定案，
+   標記在 <main> 裡，不要動）。原本是麵包屑在標題上、「發布・最後更新・瀏覽數」
+   在標題下，分成兩行；合併的理由是兩行講的是同一件事，而「最後更新」對讀者
+   沒有意義 —— 那是給排序用的，首頁卡片上還看得到。 */
+.crumbs {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .45rem .7rem;
+  margin: 0 0 .85rem;
+  font-size: .8rem; color: var(--ink-soft);
+}
 .crumbs a { color: var(--ink-soft); text-decoration: none; }
 .crumbs a:hover { color: var(--accent-deep); text-decoration: underline; }
+.crumbs .sep { color: var(--rule); }
+
+/* 科別藥丸。顏色不寫在這裡 —— 它自己帶 data-spec，所以上面那組 token
+   直接落在它身上：底 --accent、字 --on-fill。整頁只有這一顆是滿版彩色。
+   圓角照 PALETTE 第六之二節的比例 0.384：框高 12×1.6 ＋ 2×1.92 ＝ 23.04px → 9px。
+   （rem 認的是 html 的 16px，不是 body 的 17px，所以 .75rem 是 12px。）
+   letter-spacing 會在最後一個字後面多留一格，右內距因此比左邊少 .07rem。 */
+.post-tag {
+  display: inline-block;
+  font-size: .75rem; line-height: 1.6; letter-spacing: .08em;
+  padding: .12rem .55rem .12rem .62rem;
+  border-radius: 9px;
+  background: var(--accent); color: var(--on-fill);
+}
 
 .post-head h1 {
-  margin: .2rem 0 .9rem;
+  margin: 0;
   font-size: clamp(1.5rem, 5vw, 2.15rem);
   line-height: 1.4; letter-spacing: .01em; color: var(--ink);
 }
-.post-meta {
-  display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .85rem;
-  font-size: .82rem; color: var(--ink-soft);
-}
-.post-meta .author { color: var(--ink-soft); font-weight: 500; }
-.post-meta .dot { color: var(--rule); }
 
 /* 瀏覽數：和首頁講同一種話 ——「數字 ＋ 次瀏覽」，沒有眼睛圖示。
    「次瀏覽」三個字**標記裡本來就有**，不要再用 ::after 補一次（補了會變成
