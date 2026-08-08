@@ -426,7 +426,13 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
   font-variant-numeric: tabular-nums; letter-spacing: -.01em;
 }
 /* 單位（年／位／個）跟著數字走，字級和下面的標籤同級，不加粗 */
-.stats b small { font-size: .625rem; font-weight: 400; letter-spacing: 0; margin-left: .1em; }
+/* 「年／位／個」用黑體，襯線只留給數字（2026-08-08 定）。
+   要寫出整串字族，不能用 inherit —— 它繼承的是上面 .stats b 的宋體。 */
+.stats b small {
+  font-size: .625rem; font-weight: 400; letter-spacing: 0; margin-left: .1em;
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+}
 /* 顏色與頁首的「雲林斗六・永樂街」同一個宣告。合成色 #b6b7b9，
    對比 6.55~7.97（原本 #aaa49e 是 5.72）。
    附帶的好處：半透明白會跟著底色一起變，所以窄帶明度再調也不會掉出 AA ——

@@ -466,7 +466,13 @@ html.scrolled .brand-text small { font-size: .74rem; }
   line-height: 1.15;
   font-variant-numeric: tabular-nums; letter-spacing: -.01em;
 }
-.stats b small { font-size: .7rem; font-weight: 400; letter-spacing: 0; margin-left: .15em; }
+/* 「年／位／個」用黑體，襯線只留給數字（2026-08-08 定）。
+   要寫出整串字族，不能用 inherit —— 它繼承的是上面 .stats b 的宋體。 */
+.stats b small {
+  font-size: .7rem; font-weight: 400; letter-spacing: 0; margin-left: .15em;
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+}
 .stats span { font-size: .7rem; color: rgba(255, 255, 255, .65); }
 
 /* 瀏覽數。2026-08-07 定案：字、字級、顏色都和單位「次瀏覽」完全一樣（B 案）——

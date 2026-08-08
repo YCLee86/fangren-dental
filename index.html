@@ -507,9 +507,8 @@ html.scrolled .brand-text small { font-size: .74rem; }
    所以 iOS 解 generic `serif` 時是照中文去找 —— 找不到就整個退回系統的中文字
    （PingFang，黑體），連 1983／9／6 這幾個數字一起變成黑體。
    把一個確定存在於 iOS 的拉丁襯線字排在 generic 前面就解決了：
-   字體比對是**逐字**做的，數字在 Times New Roman 裡找得到 → 用它（襯線）；
-   「年／位／個」在 Times New Roman 裡找不到 → 繼續往後掉到 serif，
-   跟以前完全一樣。**所以中文一個字都沒有變。**
+   字體比對是**逐字**做的，數字在 Times New Roman 裡找得到 → 用它（襯線）。
+   「年／位／個」不受這裡影響 —— 它們在下面 .stats b small 另外指定黑體。
    Windows／macOS 上 generic serif 本來就是 Times New Roman／有裝思源宋體，
    排序在它前面的兩項先命中，電腦版的樣子也沒有變。 */
 .stats b {
@@ -518,7 +517,14 @@ html.scrolled .brand-text small { font-size: .74rem; }
   line-height: 1.15;
   font-variant-numeric: tabular-nums; letter-spacing: -.01em;
 }
-.stats b small { font-size: .7rem; font-weight: 400; letter-spacing: 0; margin-left: .15em; }
+/* 「年／位／個」用黑體 —— 襯線只留給數字，兩層才分得開（2026-08-08 定）。
+   要寫出整串字族，不能用 inherit：它繼承的是上面 .stats b 的宋體。
+   和 body、和下面的 .stats span 同一串，窄帶裡除了數字以外全是同一種字。 */
+.stats b small {
+  font-size: .7rem; font-weight: 400; letter-spacing: 0; margin-left: .15em;
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+}
 .stats span { font-size: .7rem; color: rgba(255, 255, 255, .65); }
 
 /* 瀏覽數。2026-08-07 定案：字、字級、顏色都和單位「次瀏覽」完全一樣（B 案）——
