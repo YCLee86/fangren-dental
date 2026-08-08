@@ -500,10 +500,21 @@ html.scrolled .brand-text small { font-size: .74rem; }
 /* 數字用宋體、標籤維持黑體 —— 襯線只出現在數字上，兩層才分得開。
    思源宋體和內文的思源黑體是同一個超家族，骨架一致。
    顏色用半透明白（不是 --night-text）：它會跟著底色一起變，
-   窄帶明度日後再調也不會掉出 AA。 */
+   窄帶明度日後再調也不會掉出 AA。
+
+   ⚠ "Times New Roman" 這一項是 2026-08-08 補的，不要拿掉。
+   iPhone／iPad **沒有內建任何中文襯線字**，而這一頁是 <html lang="zh-Hant-TW">，
+   所以 iOS 解 generic `serif` 時是照中文去找 —— 找不到就整個退回系統的中文字
+   （PingFang，黑體），連 1983／9／6 這幾個數字一起變成黑體。
+   把一個確定存在於 iOS 的拉丁襯線字排在 generic 前面就解決了：
+   字體比對是**逐字**做的，數字在 Times New Roman 裡找得到 → 用它（襯線）；
+   「年／位／個」在 Times New Roman 裡找不到 → 繼續往後掉到 serif，
+   跟以前完全一樣。**所以中文一個字都沒有變。**
+   Windows／macOS 上 generic serif 本來就是 Times New Roman／有裝思源宋體，
+   排序在它前面的兩項先命中，電腦版的樣子也沒有變。 */
 .stats b {
   display: block; font-size: 1.18rem; color: rgba(255, 255, 255, .95);
-  font-family: "Noto Serif TC", "Source Han Serif TC", serif;
+  font-family: "Noto Serif TC", "Source Han Serif TC", "Times New Roman", Times, serif;
   line-height: 1.15;
   font-variant-numeric: tabular-nums; letter-spacing: -.01em;
 }
@@ -513,6 +524,11 @@ html.scrolled .brand-text small { font-size: .74rem; }
 /* 瀏覽數。2026-08-07 定案：字、字級、顏色都和單位「次瀏覽」完全一樣（B 案）——
    它只是紀錄、是概念，不該和 1983／9／6 同一層。 */
 .band-views { margin: 0; line-height: 1.05; text-align: center; }
+/* 真實數字回來、而且窄帶捲進畫面了，JS 才掛上 .is-on 讓它現身。
+   在那之前先藏起來，否則會先看到一個「0 次瀏覽」再跳成真值。
+   用 visibility 不用 display —— 窄帶是壓在整屏下緣的，高度不能在那一瞬間跳一下。
+   計數器 API 掛掉或沒有 JS 時就一直維持隱形，不會露出壞掉的 0。 */
+.band-views:not(.is-on) { visibility: hidden; }
 .band-views .views-n {
   display: inline-block; font-size: .7rem; color: rgba(255, 255, 255, .65);
   font-family: inherit;
@@ -662,6 +678,12 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .views { display: inline-flex; align-items: baseline; white-space: nowrap; }
 .views-n { font-variant-numeric: tabular-nums; }
 .views small { font-size: inherit; margin-left: .3em; }
+/* 數字還沒回來時是一個「—」，先壓淡；API 掛掉（或沒有 JS）就整個收掉，
+   連前面那顆分隔點一起 —— 只留一個孤零零的「・」比沒有還糟。
+   和 assets/style.css 裡文章頁的規則同一套寫法。 */
+.views[data-state="loading"] .views-n { opacity: .45; }
+.views[data-state="error"] { display: none; }
+.card-date:has(.views[data-state="error"]) .dot { display: none; }
 
 /* ==========================================================================
    六個科別色（PALETTE.md／與手機版完全相同，一個值都沒有改）
@@ -1032,14 +1054,18 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
     <div class="band">
     <div class="shell">
-      <!-- 瀏覽數。data-views="home" 是給正式站 assets/counter.js 的掛勾 ——
-           上線後由它從 D1 取真實數字，再呼叫 window.fangrenCountUp(n) 跑同一段動畫。
-           這一頁是靜態快照，沒有 Worker 可以問，所以 data-count 先放示範數字。
-           數字跑動時一直在變，讓螢幕閱讀器跟著念沒有意義，所以動的那一段
-           整個 aria-hidden，另外放一句 .sr-only 講最終結果。 -->
-      <p class="band-views" data-views="home">
-        <span class="sr-only">累計 8,642 次瀏覽</span>
-        <span class="views-n" aria-hidden="true" data-count="8642">0</span><small aria-hidden="true">次瀏覽</small>
+      <!-- 瀏覽數。data-views-self="home" 是 assets/counter.js 的掛勾：它先幫首頁 +1，
+           再從 D1 取回真實數字，然後呼叫 window.fangrenCountUp(n) 跑往上數的動畫。
+           **self** 不能寫成 data-views —— 後者只顯示不加總，首頁的數字就永遠不會長。
+
+           ⚠ 這裡**不要**寫死 data-count。提案頁當初的示範數字（8642）跟著版型一起被
+           搬進正式站，結果真實的 190 被一個假數字蓋掉，還不會動。真值一律由 D1 給。
+
+           數字跑動時一直在變，讓螢幕閱讀器跟著念沒有意義，所以動的那一段整個
+           aria-hidden，另外放一句 .sr-only 講最終結果（由 JS 填）。 -->
+      <p class="band-views" data-views-self="home">
+        <span class="sr-only"></span>
+        <span class="views-n" aria-hidden="true">0</span><small aria-hidden="true">次瀏覽</small>
       </p>
 
       <ul class="stats">
@@ -1461,11 +1487,13 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    · 先量好最終寬度再歸零 —— 不鎖住的話「次瀏覽」會被一路往外推。
    · easeOutQuart：先衝再收。均速跑起來像進度條，沒有跳動的手感。
    · 系統設定成減少動態時直接寫最終值。
-   上線時的接法：counter.js 取回真實數字後呼叫 window.fangrenCountUp(n)。 */
+   接法：counter.js 取回真實數字後呼叫 window.fangrenCountUp(n)。
+   這段是 inline、counter.js 是 defer，所以 fangrenCountUp 一定先定義好。 */
 (function () {
   /* 限定在 .band-views 底下 —— 文章卡的數字也叫 .views-n。 */
-  var el = document.querySelector('.band-views .views-n');
-  var sr = document.querySelector('.band-views .sr-only');
+  var box = document.querySelector('.band-views');
+  var el = box && box.querySelector('.views-n');
+  var sr = box && box.querySelector('.sr-only');
   if (!el) return;
 
   var raf = window.requestAnimationFrame;
@@ -1480,6 +1508,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   }
 
   function run(target) {
+    box.classList.add('is-on');          /* 這一刻才現身，見 .band-views:not(.is-on) */
     lockWidth(target);
     if (sr) sr.textContent = '累計 ' + fmt(target) + ' 次瀏覽';
 
@@ -1488,34 +1517,60 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
     var DUR = 1400, t0 = null;
     el.textContent = fmt(0);
+
+    /* 保險絲：rAF 在分頁被藏起來時整個停擺，數字就會卡在 0。
+       正常情況下分頁回到前景 rAF 就接著跑，這條線用不到；
+       但萬一它沒回來（webview、被遮住的分頁），時間到了直接寫最終值 ——
+       寧可沒有動畫，也不要一個停在 0 的瀏覽數。 */
+    var guard = setTimeout(function () { el.textContent = fmt(target); }, DUR + 900);
+
     raf(function step(t) {
       if (t0 === null) t0 = t;
       var p = Math.min(1, (t - t0) / DUR);
       var e = 1 - Math.pow(1 - p, 4);
       el.textContent = fmt(Math.round(target * e));
       if (p < 1) raf(step);
-      else el.textContent = fmt(target);
+      else { clearTimeout(guard); el.textContent = fmt(target); }
     });
   }
 
-  var done = false;
-  function once(target) { if (done) return; done = true; run(target); }
+  /* 兩個條件都到齊才跑，只跑一次：
+       1. 真實數字回來了（counter.js 從 D1 取到之後呼叫 fangrenCountUp）
+       2. 窄帶已經捲進畫面
+     哪一個先到都可以，最後到的那個負責啟動 —— 這是這次的修法重點。
+     舊版是「捲進畫面就用 data-count 開跑」，所以永遠跑的是提案頁留下的示範數字，
+     真值即使回來了也只能在動畫之後硬蓋上去。 */
+  var target = null, done = false;
 
-  window.fangrenCountUp = function (n) {
+  /* 「捲進畫面」自己量，不用 IntersectionObserver。
+     IO 在某些情境下連**第一次**的回呼都不會送（背景分頁、被遮住的 webview），
+     那時數字就永遠停在 0 —— 2026-08-08 在本機重現過。getBoundingClientRect
+     是同步的、到處都能用，這裡只要判斷「有沒有露出來」，不必用到 IO 的精度。 */
+  function inView() {
+    if (document.hidden) return false;   /* 分頁在背景就先不要跑，rAF 那時是停的 */
+    var r = el.getBoundingClientRect();
+    return r.bottom > 0 && r.top < (window.innerHeight || 0) * .95;
+  }
+
+  function maybeRun() {
+    if (done || target === null || !inView()) return;
     done = true;
-    el.setAttribute('data-count', n);
-    run(n);
-  };
+    removeEventListener('scroll', maybeRun);
+    removeEventListener('resize', maybeRun);
+    document.removeEventListener('visibilitychange', maybeRun);
+    run(target);
+  }
 
-  var demo = parseInt(el.getAttribute('data-count'), 10) || 0;
+  addEventListener('scroll', maybeRun, { passive: true });
+  addEventListener('resize', maybeRun);
+  document.addEventListener('visibilitychange', maybeRun);
 
-  if (!('IntersectionObserver' in window)) { once(demo); return; }
-  var io = new IntersectionObserver(function (entries) {
-    for (var i = 0; i < entries.length; i++) {
-      if (entries[i].isIntersecting) { io.disconnect(); once(demo); return; }
-    }
-  }, { threshold: .6 });
-  io.observe(el);
+  window.fangrenCountUp = function (n) { target = n; maybeRun(); };
+
+  /* 提案頁（preview/）沒有 Worker 可以問，靠 data-count 給示範值。
+     正式站刻意不寫這個屬性，數字只能來自 D1。 */
+  var demo = el.getAttribute('data-count');
+  if (demo !== null) { target = parseInt(demo, 10) || 0; maybeRun(); }
 })();
 </script>
 
@@ -1616,6 +1671,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 })();
 </script>
 
+<!-- 瀏覽計數器。2026-08-08 補回來 —— 首頁換成定案版型（2c0f7aa）時整支被漏掉，
+     窄帶的數字停在提案頁的示範值 8642、六張文章卡的數字則一直是「—」。
+     文章頁一直都有掛，所以只有首頁壞掉。 -->
+<script src="assets/counter.js" defer></script>
 
 </body>
 </html>

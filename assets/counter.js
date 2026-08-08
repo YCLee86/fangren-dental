@@ -38,7 +38,14 @@
       var out = el.querySelector(".views-n");
       if (!out) return;
       var n = counts[slugOf(el)];
-      out.textContent = (typeof n === "number" ? n : 0).toLocaleString("zh-TW");
+      n = typeof n === "number" ? n : 0;
+      /* 首頁窄帶的那個數字有自己的「捲進畫面才往上數」動畫（index.html 裡的
+         window.fangrenCountUp），交給它跑；直接寫 textContent 會把動畫蓋掉。 */
+      if (el.classList.contains("band-views") && typeof window.fangrenCountUp === "function") {
+        window.fangrenCountUp(n);
+      } else {
+        out.textContent = n.toLocaleString("zh-TW");
+      }
     });
     setState("ready");
   }

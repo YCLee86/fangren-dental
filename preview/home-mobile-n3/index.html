@@ -418,7 +418,10 @@ html.glass #articles, html.glass #doctors, html.glass #clinic {
   /* 顏色與頁首的「芳仁牙醫診所」同一個宣告 —— 半透明白，不是 --night-text。
      疊在漸層上的實際合成色 #f4f4f5，對比 12.08~15.93（原本 #e3e1e0 是 10.83）。 */
   display: block; font-size: 1.025rem; color: rgba(255, 255, 255, .95);
-  font-family: "Noto Serif TC", "Source Han Serif TC", serif;
+  /* "Times New Roman" 不要拿掉：iOS 沒有中文襯線字，這頁又是 lang="zh-Hant-TW"，
+     generic serif 會整個退回黑體，連數字一起。逐字比對下數字命中 Times（襯線）、
+     中文找不到就繼續往後掉到 serif，所以中文完全沒變。詳見 index.html 同一條。 */
+  font-family: "Noto Serif TC", "Source Han Serif TC", "Times New Roman", Times, serif;
   line-height: 1.05;
   font-variant-numeric: tabular-nums; letter-spacing: -.01em;
 }
