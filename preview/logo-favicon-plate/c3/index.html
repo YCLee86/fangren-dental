@@ -1,0 +1,64 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>c3 #71a889 — favicon 白底測試</title>
+<link rel="icon" href="../c3.svg?v=20260808b" type="image/svg+xml">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 2rem 1.25rem 4rem;
+    font: 16px/1.75 -apple-system, "PingFang TC", "Noto Sans TC", sans-serif;
+    background: #000; color: #e8eae9; }
+  main { max-width: 34rem; margin: 0 auto; }
+  h1 { font-size: 1.35rem; line-height: 1.5; margin: 0 0 .25rem; }
+  h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; }
+  p { margin: 0 0 1rem; }
+  .lead { color: #a9aeac; font-size: .95rem; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9em;
+    background: #1c1c1e; padding: .1em .35em; border-radius: .25rem; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: #3a3a3c; border-radius: .6rem; overflow: hidden; margin: 1rem 0; }
+  .pair div { padding: 1.5rem; display: grid; place-items: center; }
+  .pair .on-dark { background: #1c1c1e; }
+  .pair .on-light { background: #fff; }
+  .pair img { width: 48px; height: 48px; display: block; }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 1rem 0; }
+  th, td { text-align: left; padding: .45rem .5rem; border-bottom: 1px solid #2c2c2e; }
+  th { color: #a9aeac; font-weight: 600; }
+  td.n { font-variant-numeric: tabular-nums; }
+  .bad { color: #ff8a80; }
+  nav { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.75rem 0 0; }
+  nav a { display: inline-block; padding: .45rem .85rem; border-radius: 999px;
+    border: 1px solid #48504d; color: #cfd4d2; text-decoration: none; font-size: .9rem; }
+  nav a[aria-current] { background: #4f8065; border-color: #4f8065; color: #fff; }
+  .note { border-left: 3px solid #4f8065; padding: .1rem 0 .1rem 1rem; color: #c2c7c5; }
+</style>
+<main>
+  <h1>候選 c3　<code>#71a889</code></h1>
+  <p class="lead">HSL 147° 24% 55%</p>
+
+  <p><strong>看這一頁的分頁小圖示有沒有白色圓角底。</strong>
+  按網址列、或開分頁列表，看標題左邊那顆圖示。</p>
+
+  <div class="pair">
+    <div class="on-dark"><img src="../c3.svg?v=20260808b" alt="c3 在深色底上"></div>
+    <div class="on-light"><img src="../c3.svg?v=20260808b" alt="c3 在淺色底上"></div>
+  </div>
+
+  <table>
+    <tr><th>對比</th><th>數值</th><th></th></tr>
+    <tr><td>對深色列 <code>#1c1c1e</code></td><td class="n">6.21:1</td><td>Safari 加不加白底看這個</td></tr>
+    <tr><td>對純黑</td><td class="n">7.66:1</td><td></td></tr>
+    <tr><td>對白色分頁列</td><td class="n">2.74:1</td><td><span class="bad">低於 3.0</span></td></tr>
+  </table>
+
+  <p class="note">深底很安全了，但白底掉到 2.74 —— 淺色分頁列上開始偏淡。</p>
+
+  <nav>
+    <a href="../">說明</a>
+    <a href="../c1/">c1　#4f8065</a>
+    <a href="../c2/">c2　#5d9877</a>
+    <a href="../c3/" aria-current="page">c3　#71a889</a>
+    <a href="../c4/">c4　#87b59c</a>
+  </nav>
+</main>

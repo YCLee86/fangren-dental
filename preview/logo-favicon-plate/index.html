@@ -1,0 +1,84 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>favicon 白底 — Safari 亮度候選（2026-08-08）</title>
+<link rel="icon" href="../../assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 2rem 1.25rem 4rem;
+    font: 16px/1.75 -apple-system, "PingFang TC", "Noto Sans TC", sans-serif;
+    background: #000; color: #e8eae9; }
+  main { max-width: 34rem; margin: 0 auto; }
+  h1 { font-size: 1.35rem; line-height: 1.5; margin: 0 0 .25rem; }
+  h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; }
+  p { margin: 0 0 1rem; }
+  .lead { color: #a9aeac; font-size: .95rem; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9em;
+    background: #1c1c1e; padding: .1em .35em; border-radius: .25rem; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: #3a3a3c; border-radius: .6rem; overflow: hidden; margin: 1rem 0; }
+  .pair div { padding: 1.5rem; display: grid; place-items: center; }
+  .pair .on-dark { background: #1c1c1e; }
+  .pair .on-light { background: #fff; }
+  .pair img { width: 48px; height: 48px; display: block; }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 1rem 0; }
+  th, td { text-align: left; padding: .45rem .5rem; border-bottom: 1px solid #2c2c2e; }
+  th { color: #a9aeac; font-weight: 600; }
+  td.n { font-variant-numeric: tabular-nums; }
+  .bad { color: #ff8a80; }
+  nav { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.75rem 0 0; }
+  nav a { display: inline-block; padding: .45rem .85rem; border-radius: 999px;
+    border: 1px solid #48504d; color: #cfd4d2; text-decoration: none; font-size: .9rem; }
+  nav a[aria-current] { background: #4f8065; border-color: #4f8065; color: #fff; }
+  .note { border-left: 3px solid #4f8065; padding: .1rem 0 .1rem 1rem; color: #c2c7c5; }
+</style>
+<main>
+  <h1>為什麼 Safari 會在圖示後面加一塊白底</h1>
+  <p class="lead">2026-08-08．四個亮度候選，一頁一顆，用手機逐頁看</p>
+
+  <h2>兩件事疊在一起</h2>
+  <p><strong>一、Safari 不看 SVG favicon 裡的 <code>prefers-color-scheme</code>。</strong>
+  它支援一般 CSS 的深色模式，唯獨 favicon 這裡不吃，只會用沒有條件的那一行。
+  所以我們寫的深色版 <code>#4f8065</code> 在 Safari 上從來沒生效過，
+  它一直拿的是淺色版 <code>#4f6361</code>。</p>
+
+  <p><strong>二、Safari 在深色模式下，會自動幫「對比不夠」的圖示墊一塊白底。</strong>
+  這是它為了讓暗色圖示在黑底上看得見所做的補救，門檻沒有公開。
+  <code>#4f6361</code> 對深色列只有 <strong>2.67:1</strong> —— 連非文字圖形的 3.0 下限都沒過，
+  被墊白底完全合理。蔡依橙那兩站用的是 emoji 圖示（✍️、🔬），本身又亮又滿，
+  所以不會觸發。</p>
+
+  <h2>已經做的</h2>
+  <p>把 <code>assets/favicon.svg</code> 裡兩個顏色的順序<strong>反過來</strong>：深色版當預設，
+  淺色版改放進 <code>@media (prefers-color-scheme: light)</code>。
+  這樣 Safari 拿到的就是亮的那顆（對深色列 3.73:1，過線），
+  Chrome／Firefox 的表現完全不變。<strong>沒有新增任何顏色。</strong></p>
+
+  <p>如果這樣還是被墊白底，就是 3.73 仍在 Safari 的門檻之下 —— 那個門檻沒人量得出來，
+  只能一階一階試。下面四頁就是給這件事用的。</p>
+
+  <h2>怎麼測</h2>
+  <p>依序打開 <code>c1</code>～<code>c4</code> 四頁，每一頁按一下網址列（或開分頁列表），
+  看標題左邊那顆圖示<strong>有沒有白色圓角底</strong>。找到第一顆沒有白底的，就是門檻。
+  告訴我編號，我把那個顏色套進正式站。</p>
+
+  <p class="note">往上走是有代價的：Safari 只會用同一個顏色去畫淺色與深色兩種分頁列，
+  所以在深底變亮，就等於在白底變淡。表格最後一欄就是這個代價。</p>
+
+  <table>
+    <tr><th>候選</th><th>色值</th><th>對深色列</th><th>對白底</th></tr>
+    <tr><td><a href="c1/" style="color:#8fd0ac">c1</a></td><td><code>#4f8065</code></td><td class="n">3.73:1</td><td class="n">4.56:1</td></tr>
+    <tr><td><a href="c2/" style="color:#8fd0ac">c2</a></td><td><code>#5d9877</code></td><td class="n">5.04:1</td><td class="n">3.37:1</td></tr>
+    <tr><td><a href="c3/" style="color:#8fd0ac">c3</a></td><td><code>#71a889</code></td><td class="n">6.21:1</td><td class="n bad">2.74:1</td></tr>
+    <tr><td><a href="c4/" style="color:#8fd0ac">c4</a></td><td><code>#87b59c</code></td><td class="n">7.39:1</td><td class="n bad">2.30:1</td></tr>
+  </table>
+
+  <nav>
+    <a href="../" aria-current="page">說明</a>
+    <a href="../c1/">c1　#4f8065</a>
+    <a href="../c2/">c2　#5d9877</a>
+    <a href="../c3/">c3　#71a889</a>
+    <a href="../c4/">c4　#87b59c</a>
+  </nav>
+</main>
