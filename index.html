@@ -1521,8 +1521,12 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     lockWidth(target);
     if (sr) sr.textContent = '累計 ' + fmt(target) + ' 次瀏覽';
 
-    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce || !raf) { el.textContent = fmt(target); return; }
+    /* 這裡**不看** prefers-reduced-motion（2026-08-08 使用者定的）。
+       iOS 的「減少動態效果」很多人是開著的，開著就等於這個數字永遠不會動。
+       那個設定針對的是會位移、視差、縮放的東西 —— 一個在原地長大的數字不屬於那類，
+       別的網站（blog.ichentsai.tw）在同樣設定下也照跑。
+       真的關掉的話請改這裡，不要改 CSS。 */
+    if (!raf) { el.textContent = fmt(target); return; }
 
     var DUR = 1400, t0 = null;
     el.textContent = fmt(0);
