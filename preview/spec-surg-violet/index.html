@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>口腔外科改靛／紫 — 五案｜芳仁牙醫診所</title>
+<title>口腔外科的紫 — 拆成填色與白底兩個值｜芳仁牙醫診所</title>
 <link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <style>
 /* 自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
@@ -17,6 +17,9 @@
   /* 現役六科 */
   --kids:#c28229; --endo:#5D6D55; --chair:#4f6361; --ortho:#3C596B; --prosth:#252d4a;
   --taupe:#7D5A58; --all:#5f5d5c;
+
+  /* 外科提案：兩個值。預設是 ⑤ 的原值 —— 拆開之前兩者相同 */
+  --surg-fill:#6f5575; --surg-deep:#6f5575;
 
   --han:"PingFang TC","Noto Sans TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
@@ -39,7 +42,7 @@ section{display:flex;flex-direction:column;gap:1rem}
 hr{border:0;border-top:1px solid var(--rule)}
 code{font-family:var(--mono);font-size:.9em}
 
-blockquote{border-left:3px solid var(--taupe);padding:.1rem 0 .1rem 1rem;font-size:1.02rem}
+blockquote{border-left:3px solid var(--surg-fill);padding:.1rem 0 .1rem 1rem;font-size:1.02rem}
 blockquote cite{display:block;font-style:normal;margin-top:.35rem;font-size:.86rem;color:var(--ink-soft)}
 
 .note{background:var(--card);border:1px solid var(--rule);border-radius:12px;
@@ -58,31 +61,56 @@ blockquote cite{display:block;font-style:normal;margin-top:.35rem;font-size:.86r
      padding:.19rem .6rem;border-radius:8.5px;
      background:var(--card);color:var(--deep,var(--c));border:1px solid var(--deep,var(--c))}
 
-/* ---- 五案 ------------------------------------------------------------ */
-.cases{display:flex;flex-direction:column;gap:1rem}
-.case{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--c);
-      border-radius:12px;padding:1.05rem 1.1rem 1.15rem;display:flex;flex-direction:column;gap:.8rem}
-.case-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem .75rem}
-.case-head b{font-size:1.04rem;letter-spacing:.05em}
-.case-head .hex{font-family:var(--mono);font-size:.82rem;color:var(--ink-soft)}
-.case.out{opacity:.72}
-.case.out .case-head b::after{content:"　出局";color:var(--ink-soft);font-weight:400;font-size:.85rem}
-
 .parts{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem .7rem}
 .parts .lbl{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--ink-soft);
              width:100%;margin-top:.15rem}
 .metrics{display:flex;flex-wrap:wrap;gap:.15rem 1.1rem;font-family:var(--mono);font-size:.76rem;
          color:var(--ink-soft);font-variant-numeric:tabular-nums}
 
-/* ---- 並排比較 -------------------------------------------------------- */
-.picker{display:flex;flex-wrap:wrap;gap:.45rem}
+/* ---- 五案（第一輪，留著看推論） -------------------------------------- */
+.cases{display:flex;flex-direction:column;gap:.85rem}
+.case{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--c);
+      border-radius:12px;padding:.95rem 1.05rem 1.05rem;display:flex;flex-direction:column;gap:.7rem}
+.case-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .75rem}
+.case-head b{font-size:1.02rem;letter-spacing:.05em}
+.case-head .hex{font-family:var(--mono);font-size:.8rem;color:var(--ink-soft)}
+.case.out{opacity:.66}
+.case.pick{border-left-width:6px}
+.badge{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--ink-soft)}
+
+/* ---- 兩條梯子 -------------------------------------------------------- */
+.ladder{display:flex;flex-direction:column;gap:.5rem}
+.rung{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+      padding:.7rem .85rem;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .8rem}
+.rung .swatch{width:2.6rem;height:1.6rem;border-radius:6px;background:var(--c);flex:0 0 auto}
+.rung .name{font-size:.93rem;letter-spacing:.04em;min-width:6.5rem}
+.rung .hex{font-family:var(--mono);font-size:.79rem;color:var(--ink-soft)}
+.rung .m{font-family:var(--mono);font-size:.73rem;color:var(--ink-soft);
+         font-variant-numeric:tabular-nums;margin-left:auto}
+
+/* ---- 組合預覽 -------------------------------------------------------- */
+.picker{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.picker .plbl{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;color:var(--ink-soft);
+              width:100%}
 .picker button{font:inherit;font-size:13px;line-height:1.6;letter-spacing:.04em;cursor:pointer;
-  padding:.3rem .8rem;border-radius:12px;background:var(--card);color:var(--ink-soft);
+  padding:.28rem .75rem;border-radius:12px;background:var(--card);color:var(--ink-soft);
   border:1px solid var(--rule)}
 .picker button[aria-pressed="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
 .picker button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
-.row{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:1rem 1.1rem;
-     display:flex;flex-wrap:wrap;gap:.5rem .55rem;align-items:center}
+
+.stage{background:var(--card);border:1px solid var(--rule);border-radius:12px;
+       padding:1.05rem 1.1rem;display:flex;flex-direction:column;gap:1rem}
+.stage .row{display:flex;flex-wrap:wrap;gap:.5rem .55rem;align-items:center}
+.stage .rowlbl{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--ink-soft)}
+.stage-paper{background:var(--paper);border-radius:10px;padding:.9rem 1rem;
+             display:flex;flex-direction:column;gap:.6rem}
+.bar-h3{display:flex;align-items:center;gap:.5rem;color:var(--surg-deep);font-size:1rem;letter-spacing:.04em}
+.bar-h3::before{content:"";width:3px;height:1.05em;background:var(--surg-fill);border-radius:2px;flex:0 0 auto}
+.stage-paper a{color:var(--surg-deep)}
+.btn{display:inline-block;background:var(--surg-fill);color:#fff;font-size:14px;letter-spacing:.04em;
+     padding:.4rem 1rem;border-radius:9px}
+.readout{font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);
+         font-variant-numeric:tabular-nums;line-height:1.9}
 
 /* ---- 表 -------------------------------------------------------------- */
 .scroll{overflow-x:auto}
@@ -92,7 +120,7 @@ th,td{text-align:left;padding:.45rem .7rem .45rem 0;border-bottom:1px solid var(
 th{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--ink-soft);font-weight:400}
 td.num{font-family:var(--mono);font-size:.84rem}
 td.bad{color:var(--taupe);font-weight:700}
-td.best{font-weight:700}
+tr.best td{font-weight:700}
 
 ol.rules{display:flex;flex-direction:column;gap:.8rem;padding-left:1.25rem}
 ol.rules b{display:block}
@@ -107,21 +135,128 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
 
   <div class="head">
     <p class="eyebrow">提案中 · PALETTE.md 第六之九節 · 2026-08-09</p>
-    <h1>口腔外科改靛／紫</h1>
-    <p class="lead">五案。<b>現行的 <code>#7D5A58</code> 還是定案值，程式碼一行都沒動。</b></p>
+    <h1>口腔外科的紫</h1>
+    <p class="lead">第一輪五案已選定 <b>⑤ <code>#6f5575</code></b>。第二輪把它拆成<b>填色</b>與<b>白底的字</b>兩個值 —— 那是這一頁現在的重點。<br><span class="small">現行的 <code>#7D5A58</code> 還是定案值，程式碼一行都沒動。</span></p>
   </div>
-
-  <blockquote>
-    我感覺這個意象和目前顏色有點衝突（血色的意象似乎怪怪的），心裡覺得應該會是紫色或靛色（先有高技術門檻的專業感），再加入降低彩度或色相或其他方式達到支持、堅定、不喧賓的感覺。
-    <cite>—— 使用者，2026-08-09</cite>
-  </blockquote>
 
   <hr>
 
+  <!-- ===================== 第二輪：拆成兩個值 ===================== -->
   <section>
-    <h2>血色那個意象站不住 —— 你是對的</h2>
-    <p>六之八節把外科寫成「被灰包住的紅」，理由是 Taupe 的色相 3 是色票裡最靠近正紅的一個。<b>那是從顏色反推意象，順序反了。</b></p>
-    <p>照你給的定位重推，這一科的病人真正付出的不是痛，是<b>風險</b>；診所給的也不是安撫，是<b>說明</b>。忍了很多年才來的中年人，要的不是被哄，是被說服。</p>
+    <h2>第二輪：拆成兩個值</h2>
+
+    <blockquote>
+      標籤在白底時候的跟套色的可以是兩個不一樣的。套色的明度不太夠，可以再稍微拉一點點彩度跟明度，讓它套色下去後就是有點<b>燈亮</b>的感覺，可以再清楚一點。白底的時候現在看起來有點<b>紫黑紫黑</b>的。
+      <cite>—— 使用者，2026-08-09</cite>
+    </blockquote>
+
+    <div class="note ok">
+      <p><b>這個要求本身就解開了一個天花板。</b></p>
+      <p>一個值同時要當底又要當字的時候，它被最嚴的那一關綁著 —— <b>拿它當字疊在紙 <code>#e2e5e6</code> 上要 4.5:1，天花板是 L* 43.4</b>。所以 ⑤ 只能停在 39.9，再亮就掉出去。</p>
+      <p>拆成兩個值之後，填色那一側只剩「白字 4.5:1」這一關，天花板變成 <b>L* 49.9</b> —— <b>一口氣多了 6.5 階亮度</b>。「燈亮」在單一變數下做不到，拆開才做得到。</p>
+      <p class="soft">機制不用另外發明：<code>--accent</code>（填色）／<code>--accent-deep</code>（白底的字）／<code>--on-fill</code>（填色上的字）兒牙已經在用，外科會是第二個用兩階的科。</p>
+    </div>
+
+    <h3>填色：往「燈亮」走</h3>
+    <p class="small">色相鎖死在 ⑤ 的 320°，只動明度與彩度，兩個一起往上。天花板是白字 4.5:1。</p>
+    <div class="ladder">
+      <div class="rung" style="--c:#6f5575"><span class="swatch"></span><span class="name">⑤ 基準</span><span class="hex">#6f5575</span><span class="m">L* 39.9　C* 22.0　白字 6.50</span></div>
+      <div class="rung" style="--c:#7a5a82"><span class="swatch"></span><span class="name">F1 亮一階</span><span class="hex">#7a5a82</span><span class="m">L* 42.9　C* 27.0　白字 5.81</span></div>
+      <div class="rung" style="--c:#865f90"><span class="swatch"></span><span class="name">F2 亮兩階</span><span class="hex">#865f90</span><span class="m">L* 46.0　C* 32.4　白字 5.18</span></div>
+      <div class="rung" style="--c:#8e6299"><span class="swatch"></span><span class="name">F3 頂著上限</span><span class="hex">#8e6299</span><span class="m">L* 48.0　C* 36.0　白字 4.82</span></div>
+    </div>
+    <p class="small">F3 是白字還撐得住的最後一階（再上去 L* 50 就掉到 4.4 左右）。F2、F3 拿去當字會不夠 —— <b>但那正是拆成兩個值的意義，它們不必當字。</b></p>
+
+    <h3>白底的字：三案是診斷式的</h3>
+    <p class="small">「紫黑」有兩個可能的成因：亮度不夠，或彩度不夠。三案刻意各動一個變數，這樣你選哪一個就直接告訴我成因是哪一個。</p>
+    <div class="ladder">
+      <div class="rung" style="--c:#6f5575"><span class="swatch"></span><span class="name">⑤ 基準</span><span class="hex">#6f5575</span><span class="m">L* 39.9　C* 22.0　對卡 5.91　對紙 5.13</span></div>
+      <div class="rung" style="--c:#784e84"><span class="swatch"></span><span class="name">T1 只拉彩度</span><span class="hex">#784e84</span><span class="m">L* 39.8　C* 36.2　對卡 5.93　對紙 5.15</span></div>
+      <div class="rung" style="--c:#775d7d"><span class="swatch"></span><span class="name">T2 只拉明度</span><span class="hex">#775d7d</span><span class="m">L* 43.1　C* 21.8　對卡 5.24　對紙 4.55</span></div>
+      <div class="rung" style="--c:#7f578a"><span class="swatch"></span><span class="name">T3 兩個一起</span><span class="hex">#7f578a</span><span class="m">L* 43.0　C* 33.9　對卡 5.26　對紙 4.57</span></div>
+    </div>
+
+    <div class="note">
+      <p><b>T1 是免費的。</b>亮度一度沒動，所以對卡 5.93、對紙 5.15 和 ⑤ 幾乎一樣 —— 純粹多拿了彩度。</p>
+      <p class="soft">會先問「是不是彩度」是兒牙那一輪學到的：當時「拿鐵感」的成因其實是彩度不足，我卻挪了四輪色相都沒打中。所以這次先把兩個成因分開來問，而不是一起調。</p>
+    </div>
+
+    <div class="note warn">
+      <p><b>T2、T3 貼著紙的天花板（L* 43.4）。</b>對紙 4.55／4.57，過了但餘裕不多 —— 那是文章內頁的連結與 <code>h3</code> 要用的。想再亮就得像顯微根管和兒牙那樣，替文章頁另開一階深色字。<b>目前四案都不必。</b></p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ===================== 組合預覽 ===================== -->
+  <section>
+    <h2>組合起來看</h2>
+    <p class="small">兩個值互相獨立，任何組合都合法。上排選填色，下排選白底的字。網址可帶 <code>?f=f2&amp;t=t1</code>。</p>
+
+    <div class="picker" id="pf">
+      <span class="plbl">填色（醫師藥丸、按下的 chip、按鈕、短棒）</span>
+      <button type="button" data-v="#6f5575" data-k="f0" aria-pressed="true">⑤ 基準</button>
+      <button type="button" data-v="#7a5a82" data-k="f1" aria-pressed="false">F1</button>
+      <button type="button" data-v="#865f90" data-k="f2" aria-pressed="false">F2</button>
+      <button type="button" data-v="#8e6299" data-k="f3" aria-pressed="false">F3</button>
+    </div>
+
+    <div class="picker" id="pt">
+      <span class="plbl">白底的字（未選的 chip、文章卡標籤、內文連結）</span>
+      <button type="button" data-v="#6f5575" data-k="t0" aria-pressed="true">⑤ 基準</button>
+      <button type="button" data-v="#784e84" data-k="t1" aria-pressed="false">T1 彩度</button>
+      <button type="button" data-v="#775d7d" data-k="t2" aria-pressed="false">T2 明度</button>
+      <button type="button" data-v="#7f578a" data-k="t3" aria-pressed="false">T3 兩個</button>
+    </div>
+
+    <div class="stage">
+      <div>
+        <p class="rowlbl">首頁・醫師藥丸與其餘六科並排</p>
+        <div class="row" style="margin-top:.5rem">
+          <span class="pill" style="--c:var(--kids)">兒童牙科</span>
+          <span class="pill" style="--c:var(--endo)">顯微根管</span>
+          <span class="pill" style="--c:var(--chair)">一般・牙周</span>
+          <span class="pill" style="--c:var(--ortho)">齒顎矯正</span>
+          <span class="pill" style="--c:var(--prosth)">贋復假牙</span>
+          <span class="pill" style="--c:var(--surg-fill)">口腔外科</span>
+          <span class="pill" style="--c:var(--all)">全部</span>
+        </div>
+      </div>
+
+      <div>
+        <p class="rowlbl">主題與科別・chip 兩態　／　文章卡標籤</p>
+        <div class="row" style="margin-top:.5rem">
+          <span class="chip" style="--c:var(--surg-fill);--deep:var(--surg-deep)">口腔外科</span>
+          <span class="chip on" style="--c:var(--surg-fill);--deep:var(--surg-deep)">口腔外科</span>
+          <span class="tag" style="--c:var(--surg-fill);--deep:var(--surg-deep)">口腔外科</span>
+        </div>
+      </div>
+
+      <div>
+        <p class="rowlbl">文章內頁・重點色跟著科別走（底是紙，不是卡）</p>
+        <div class="stage-paper" style="margin-top:.5rem">
+          <span class="bar-h3">拔智齒為什麼算手術</span>
+          <p class="small" style="color:var(--ink)">過程要切開、翻瓣、修除骨頭，甚至把牙齒切半取出。<a href="#done">下顎神經管與鼻竇的風險</a>會在術前一起說明。</p>
+          <span class="btn">預約諮詢</span>
+        </div>
+      </div>
+
+      <p class="readout" id="readout"></p>
+    </div>
+
+    <div class="note">
+      <p><b>要盯的一件事：填色越亮，它和白底那個字的落差就越大。</b>F3 ＋ ⑤ 的組合是 L* 48 對 39.9，chip 的兩態會像兩個不同的紫。兒牙就是這樣（填色 L* 59.5、字 L* 47），所以不是不行 —— 但那是兒牙被物理逼出來的，外科是自己選的，值得先看清楚再決定。</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ===================== 第一輪：留著看推論 ===================== -->
+  <section>
+    <h2>第一輪的推論（留著）</h2>
+
+    <h3>血色那個意象站不住</h3>
+    <p>六之八節把外科寫成「被灰包住的紅」，理由是 Taupe 的色相 3 是色票裡最靠近正紅的一個。<b>那是從顏色反推意象，順序反了。</b>照使用者給的定位重推：</p>
     <dl class="chain">
       <dt>對象</dt><dd>忍了很多年、終於決定處理的人</dd>
       <dt>動作</dt><dd><b>交付</b></dd>
@@ -129,121 +264,34 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
       <dt>意象</dt><dd><b>鋪在四周的那塊布</b></dd>
     </dl>
     <div class="note ok">
-      <p><b>手術巾這個意象有依據，但要說得準確。</b>外科真正拿來對抗血色的是<b>藍綠與藍</b> —— 手術衣、手術巾用血的補色，是為了讓術者不留殘像、看得清楚。那個方向本身就證實了你的直覺：<b>外科的顏色不該是血，應該是外科自己用來抵銷血的那一端。</b></p>
-      <p class="soft">但那兩段色相在這套系統裡已經被佔走了（一般牙周 174、矯正 203），所以往同一個方向再走一步，落在冷色端還空著的地方 —— 靛與紫。不要把「紫＝手術巾的顏色」寫成事實，手術巾不是紫的。站得住的是那塊布的<b>功能</b>：把範圍框出來（堅定）、讓注意力不在血上（不喧賓）、不是主角但少了它做不成（支持）。</p>
+      <p><b>手術巾這個意象有依據，但要說得準確。</b>外科真正拿來對抗血色的是<b>藍綠與藍</b> —— 手術衣、手術巾用血的補色，是為了讓術者不留殘像、看得清楚。那個方向本身就證實了使用者的直覺：<b>外科的顏色不該是血，應該是外科自己用來抵銷血的那一端。</b></p>
+      <p class="soft">但那兩段色相已被一般牙周 174 與矯正 203 佔走，所以往同一方向再走一步，落在冷色端還空著的地方 —— 靛與紫。不要把「紫＝手術巾的顏色」寫成事實，手術巾不是紫的。站得住的是那塊布的<b>功能</b>：把範圍框出來（堅定）、讓注意力不在血上（不喧賓）、不是主角但少了它做不成（支持）。</p>
     </div>
-  </section>
 
-  <hr>
-
-  <section>
-    <h2>這一輪完全沒有被對比度綁住</h2>
-    <p>先講一個讓這一輪好做很多的事實：<b>L* 40 這一帶，靛紫的彩度上限是 50~124，而五案只用到 22。</b></p>
-    <p>兒牙那十一輪是「要亮才像黃、白字又把亮度鎖死」，兩頭夾殺。靛紫在這個亮度帶連邊都碰不到 —— 所以五案的亮度可以全部固定在 <b>L* 40</b>，白字 6.44~6.50、對卡 5.85~5.91、對紙 5.08~5.13，<b>五案幾乎一模一樣</b>。</p>
-    <div class="note">
-      <p><b>這一排比的純粹是色相與彩度，沒有任何一案是被對比度逼出來的。</b></p>
-      <p class="soft">也表示口腔外科可以維持一個變數就夠（不像兒牙要三個），文章內頁的字階直接用原值，不必另外開一階。</p>
-    </div>
-  </section>
-
-  <hr>
-
-  <section>
-    <h2>五案</h2>
-    <p class="small">固定：L* 40、白字。變數只有色相（靛↔紫）與彩度（收斂↔存在感）。每一案都套在三個真實元件上。</p>
-
+    <h3>五案（固定 L* 40 ＋ 白字，只動色相與彩度）</h3>
     <div class="cases">
-
       <article class="case out" style="--c:#5F5D66">
-        <div class="case-head"><b>① 官方灰紫</b><span class="hex">#5F5D66　C* 5.6　h 299°</span></div>
-        <p class="small">色票裡唯一的紫，地位等同兒牙那一輪的含羞草。所以它必須先站上來 —— 然後就出局了，理由在下一節。</p>
-        <div class="parts">
-          <span class="lbl">醫師藥丸　　主題與科別 chip（未選／選取）　　文章卡標籤</span>
-          <span class="pill">口腔外科</span>
-          <span class="chip">口腔外科</span>
-          <span class="chip on">口腔外科</span>
-          <span class="tag">口腔外科</span>
-        </div>
-        <p class="metrics"><span>白字 6.47</span><span>對卡 5.89</span><span>對紙 5.11</span></p>
+        <div class="case-head"><b>① 官方灰紫</b><span class="hex">#5F5D66　C* 5.6　H 253</span><span class="badge">出局</span></div>
+        <p class="small">色票裡唯一的紫，地位等同兒牙那一輪的含羞草。但它 L* 40.0／C* 5.6，而「全部」那顆灰是 L* 39.6／C* 1.0 —— <b>亮度只差 0.4，ΔE 只有 6.1</b>，藥丸尺寸下會讀成同一個色。「全部」不是一科，這是最不能撞的一種。</p>
+        <div class="parts"><span class="pill">口腔外科</span><span class="chip">口腔外科</span><span class="chip on">口腔外科</span><span class="pill" style="--c:var(--all)">全部</span></div>
       </article>
-
-      <article class="case" style="--c:#5e5c70">
-        <div class="case-head"><b>② 靛・收斂</b><span class="hex">#5e5c70　C* 12.3　h 296°</span></div>
-        <div class="parts">
-          <span class="lbl">醫師藥丸　　主題與科別 chip（未選／選取）　　文章卡標籤</span>
-          <span class="pill">口腔外科</span>
-          <span class="chip">口腔外科</span>
-          <span class="chip on">口腔外科</span>
-          <span class="tag">口腔外科</span>
-        </div>
-        <p class="metrics"><span>白字 6.48</span><span>對卡 5.90</span><span>對紙 5.12</span></p>
+      <article class="case out" style="--c:#5e5c70">
+        <div class="case-head"><b>② 靛・收斂</b><span class="hex">#5e5c70　C* 12.3　H 246</span></div>
+        <div class="parts"><span class="pill">口腔外科</span><span class="chip">口腔外科</span><span class="chip on">口腔外科</span><span class="tag">口腔外科</span></div>
       </article>
-
-      <article class="case" style="--c:#5c5b7f">
-        <div class="case-head"><b>③ 靛・存在感</b><span class="hex">#5c5b7f　C* 22.0　h 294°</span></div>
-        <div class="parts">
-          <span class="lbl">醫師藥丸　　主題與科別 chip（未選／選取）　　文章卡標籤</span>
-          <span class="pill">口腔外科</span>
-          <span class="chip">口腔外科</span>
-          <span class="chip on">口腔外科</span>
-          <span class="tag">口腔外科</span>
-        </div>
-        <p class="metrics"><span>白字 6.45</span><span>對卡 5.86</span><span>對紙 5.09</span></p>
+      <article class="case out" style="--c:#5c5b7f">
+        <div class="case-head"><b>③ 靛・存在感</b><span class="hex">#5c5b7f　C* 22.0　H 242</span></div>
+        <div class="parts"><span class="pill">口腔外科</span><span class="chip">口腔外科</span><span class="chip on">口腔外科</span><span class="tag">口腔外科</span></div>
       </article>
-
-      <article class="case" style="--c:#685a6b">
-        <div class="case-head"><b>④ 紫・收斂</b><span class="hex">#685a6b　C* 11.9　h 320°</span></div>
-        <div class="parts">
-          <span class="lbl">醫師藥丸　　主題與科別 chip（未選／選取）　　文章卡標籤</span>
-          <span class="pill">口腔外科</span>
-          <span class="chip">口腔外科</span>
-          <span class="chip on">口腔外科</span>
-          <span class="tag">口腔外科</span>
-        </div>
-        <p class="metrics"><span>白字 6.44</span><span>對卡 5.85</span><span>對紙 5.08</span></p>
+      <article class="case out" style="--c:#685a6b">
+        <div class="case-head"><b>④ 紫・收斂</b><span class="hex">#685a6b　C* 11.9　H 289</span></div>
+        <div class="parts"><span class="pill">口腔外科</span><span class="chip">口腔外科</span><span class="chip on">口腔外科</span><span class="tag">口腔外科</span></div>
       </article>
-
-      <article class="case" style="--c:#6f5575">
-        <div class="case-head"><b>⑤ 紫・存在感</b><span class="hex">#6f5575　C* 22.0　h 320°</span></div>
-        <p class="small">數字上最乾淨的一案，理由在下一節。</p>
-        <div class="parts">
-          <span class="lbl">醫師藥丸　　主題與科別 chip（未選／選取）　　文章卡標籤</span>
-          <span class="pill">口腔外科</span>
-          <span class="chip">口腔外科</span>
-          <span class="chip on">口腔外科</span>
-          <span class="tag">口腔外科</span>
-        </div>
-        <p class="metrics"><span>白字 6.50</span><span>對卡 5.91</span><span>對紙 5.13</span></p>
+      <article class="case pick" style="--c:#6f5575">
+        <div class="case-head"><b>⑤ 紫・存在感</b><span class="hex">#6f5575　C* 22.0　H 289</span><span class="badge">選定</span></div>
+        <p class="small">對四個現役色的 ΔE 全部 ≥22，色相 289 在整個色盤上沒有鄰居。<b>靛（②③）色相 242~246 夾在矯正 203 與贋復 227 中間，冷色端三顆會擠在 39° 內</b> —— 紫的 289 離贋復 62°，是唯一真正走出去的。</p>
+        <div class="parts"><span class="pill">口腔外科</span><span class="chip">口腔外科</span><span class="chip on">口腔外科</span><span class="tag">口腔外科</span></div>
       </article>
-
-    </div>
-
-    <p class="small">彩度的兩階是照家族自己的範圍定的：其餘五科（不含兒牙）落在 C* 8.1~19.9，<b>22 貼著家族上限、12 是家族中位</b>。「不喧賓」的標準不是低到看不見，是不要超過贋復太多。兒牙是 57.6 —— 五案沒有一個接近它的一半。</p>
-  </section>
-
-  <hr>
-
-  <section>
-    <h2>並排看：分不分得開</h2>
-    <p class="small">對比度五案全過，所以決定勝負的是它和已經在用的色分不分得開。點一個候選，它會代進整排裡。</p>
-
-    <div class="picker" id="picker">
-      <button type="button" data-c="cur" aria-pressed="true">現行 Taupe</button>
-      <button type="button" data-c="c1" aria-pressed="false">①</button>
-      <button type="button" data-c="c2" aria-pressed="false">②</button>
-      <button type="button" data-c="c3" aria-pressed="false">③</button>
-      <button type="button" data-c="c4" aria-pressed="false">④</button>
-      <button type="button" data-c="c5" aria-pressed="false">⑤</button>
-    </div>
-
-    <div class="row" id="row">
-      <span class="pill" style="--c:var(--kids)">兒童牙科</span>
-      <span class="pill" style="--c:var(--endo)">顯微根管</span>
-      <span class="pill" style="--c:var(--chair)">一般・牙周</span>
-      <span class="pill" style="--c:var(--ortho)">齒顎矯正</span>
-      <span class="pill" style="--c:var(--prosth)">贋復假牙</span>
-      <span class="pill" id="surg" style="--c:var(--taupe)">口腔外科</span>
-      <span class="pill" style="--c:var(--all)">全部</span>
     </div>
 
     <div class="scroll">
@@ -259,23 +307,6 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
         </tbody>
       </table>
     </div>
-
-    <div class="note warn">
-      <p><b>① 出局，而且是唯一硬性出局的。</b>官方灰紫 L* 40.0、C* 5.6，「全部」那顆灰是 L* 39.6、C* 1.0 —— <b>亮度只差 0.4，ΔE 只有 6.1</b>。在藥丸那個尺寸上兩顆會讀成同一個色，而「全部」不是一科，科別色和它撞在一起是最不能撞的一種。</p>
-      <p class="soft">這正好是「灰是比出來的，不是調出來的」的另一面：一個彩度 5.6 的紫，旁邊站著一個彩度 1.0 的灰，它就不是紫了。</p>
-    </div>
-
-    <div class="note">
-      <p><b>靛（②③）還有一個結構性的問題。</b>色相 242~246，夾在矯正 203 與贋復 227 中間再往外一點點 —— 冷色端三顆會擠在 39° 內。紫（④⑤）的 289 離贋復 62°，是唯一真正走出去的。</p>
-    </div>
-  </section>
-
-  <hr>
-
-  <section>
-    <h2>目前的判斷：⑤ 紫・存在感 <code>#6f5575</code></h2>
-    <p>對四個現役色的 ΔE 全部 ≥22，色相 289 在整個色盤上沒有鄰居，彩度 22 貼著家族上限但沒超過兒牙的四成。<b>要更收斂就往 ④，要讀起來像靛就往 ③</b>（代價是和贋復擠在一起）。</p>
-    <p class="soft">這是建議，不是定案。</p>
   </section>
 
   <hr>
@@ -285,19 +316,19 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
     <ol class="rules">
       <li>
         <b>六之八的三組會重排，而且會變好。</b>
-        外科離開「情緒」組，冷色端變成 矯正 203 → 贋復 227 → 外科 289，仍然連續。暖色只剩兒牙 ——<b>唯一不需要被說服、只需要不害怕的科</b>。冷色三科則是<b>要先聽懂，才決定交付</b>：時間、錢、風險。而且多出一層順序 —— <b>越冷，門檻越高。</b>
+        外科離開「情緒」組，冷色端變成 矯正 203 → 贋復 227 → 外科 289，仍然連續。暖色只剩兒牙 ——<b>唯一不需要被說服、只需要不害怕的科</b>。冷色三科是<b>要先聽懂，才決定交付</b>：時間、錢、風險。而且多出一層順序 —— <b>越冷，門檻越高。</b>
       </li>
       <li>
         <b>Taupe <code>#7D5A58</code> 被釋出，但沒有浪費。</b>
-        它還在診所資訊的「看診時間」卡。而且釋出之後，暖紅那一整段就沒有任何科別在用，和「紅在品牌裡的暗示性太強」那條原則反而更一致。
+        它還在診所資訊的「看診時間」卡。而且釋出之後暖紅那一整段就沒有任何科別在用，和「紅在品牌裡的暗示性太強」那條原則反而更一致。
       </li>
       <li>
         <b>「不要帶紫的感覺」要標清楚適用範圍，不是推翻。</b>
-        那句話的出處是<b>內文底色</b> —— G1 灰紫 <code>#dedce5</code>（L* 88、整片鋪滿）。一整片 L* 88 的淡紫，和一顆 L* 40 的深紫藥丸不是同一件事。<b>底色那條仍然有效，不要拿這一節去改底色。</b>
+        那句話的出處是<b>內文底色</b> —— G1 灰紫 <code>#dedce5</code>（L* 88、整片鋪滿）。一整片 L* 88 的淡紫，和一顆 L* 40 的深紫藥丸不是同一件事。<b>底色那條仍然有效。</b>
       </li>
       <li>
-        <b>六之八「227→3 的紫紅帶不能用」要改寫。</b>
-        紫的部分開放了，紅的部分不變。
+        <b>外科變成第二個用兩階的科。</b>
+        <code>--accent</code> ／ <code>--accent-deep</code> 的預設值那一行<b>必須排在科別色前面</b> —— <code>[data-spec]</code> 和 <code>[data-spec="surg"]</code> 權重相同，排在後面會把深階字蓋回去。這個坑兒牙踩過一次。
       </li>
     </ol>
   </section>
@@ -307,30 +338,55 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
 </div>
 
 <script>
-/* 只影響「並排看」那一排，五案本身是靜態的，沒有 JS 也讀得完。
-   網址可帶 ?c=c3 直接開到某一案 —— 正規式要吃得下數字（[a-z0-9]+），
-   寫成 [a-z]+ 會比對失敗後悄悄退回預設，等於參數沒作用（PALETTE 踩過一次）。 */
+/* 組合預覽。五案與兩條梯子本身都是靜態的，沒有 JS 也讀得完整頁。
+   網址參數的正規式要吃得下數字（[a-z0-9]+）—— 寫成 [a-z]+ 會比對失敗後
+   悄悄退回預設，等於參數沒作用（PALETTE 記過這個坑）。 */
 (function(){
-  var MAP = { cur:'#7D5A58', c1:'#5F5D66', c2:'#5e5c70', c3:'#5c5b7f', c4:'#685a6b', c5:'#6f5575' };
-  var picker = document.getElementById('picker');
-  var surg = document.getElementById('surg');
-  if (!picker || !surg) return;
+  var root = document.documentElement;
+  var pf = document.getElementById('pf');
+  var pt = document.getElementById('pt');
+  var readout = document.getElementById('readout');
+  if (!pf || !pt) return;
 
-  function apply(key){
-    if (!MAP[key]) return;
-    surg.style.setProperty('--c', MAP[key]);
-    var bs = picker.querySelectorAll('button');
-    for (var i = 0; i < bs.length; i++){
-      bs[i].setAttribute('aria-pressed', bs[i].getAttribute('data-c') === key ? 'true' : 'false');
+  function apply(group, key){
+    var btns = group.querySelectorAll('button[data-k]');
+    var hit = null;
+    for (var i = 0; i < btns.length; i++){
+      var on = btns[i].getAttribute('data-k') === key;
+      btns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (on) hit = btns[i];
     }
+    if (!hit) return false;
+    root.style.setProperty(group === pf ? '--surg-fill' : '--surg-deep', hit.getAttribute('data-v'));
+    return true;
   }
 
-  var m = /[?&]c=([a-z0-9]+)/.exec(location.search);
-  if (m) apply(m[1]);
+  function current(group){
+    var b = group.querySelector('button[aria-pressed="true"]');
+    return b ? { k: b.getAttribute('data-k'), v: b.getAttribute('data-v'), t: b.textContent.trim() } : null;
+  }
 
-  picker.addEventListener('click', function(e){
-    var b = e.target.closest('button[data-c]');
-    if (b) apply(b.getAttribute('data-c'));
+  function sync(){
+    var f = current(pf), t = current(pt);
+    if (!f || !t) return;
+    readout.textContent = '填色 ' + f.v + '（' + f.t + '）　白底的字 ' + t.v + '（' + t.t + '）'
+                        + '　—　?f=' + f.k + '&t=' + t.k;
+    /* 刻意不寫 history.replaceState：這一頁也會以 artifact 的形式跑在
+       sandbox 的 iframe 裡，那裡呼叫它會丟 SecurityError 把整段中斷。
+       參數改成印在下面那行，要分享時自己接到網址後面。 */
+  }
+
+  var mf = /[?&]f=([a-z0-9]+)/.exec(location.search);
+  var mt = /[?&]t=([a-z0-9]+)/.exec(location.search);
+  if (mf) apply(pf, mf[1]);
+  if (mt) apply(pt, mt[1]);
+  sync();
+
+  [pf, pt].forEach(function(group){
+    group.addEventListener('click', function(e){
+      var b = e.target.closest('button[data-k]');
+      if (b && apply(group, b.getAttribute('data-k'))) sync();
+    });
   });
 })();
 </script>
