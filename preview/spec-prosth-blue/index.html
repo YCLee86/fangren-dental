@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>植牙・假牙重建的藍 — 3×3 提案｜芳仁牙醫診所</title>
+<title>植牙・假牙重建的藍 — 定案 #4a5789 / #364067｜芳仁牙醫診所</title>
 <link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <style>
 /* 自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
@@ -23,9 +23,9 @@
   /* 白底的字三案（天花板：疊在紙上 L* 43.4） */
   --t1:#364067; --t2:#44507e; --t3:#526197;
 
-  /* 組合預覽的當選值。預設寫在這裡，JS 只是覆寫它 ——
-     少了這兩行，JS 跑起來之前那幾個藥丸會整顆沒有底色。 */
-  --pick-fill:#4a5789; --pick-deep:#364067;
+  /* 定案值（2026-08-09）：填色 F2、白底的字 T1 */
+  --pick-fill:#4a5789;   /* F2 定案 */
+  --pick-deep:#364067;   /* T1 定案 */
 
   --han:"PingFang TC","Noto Sans TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
@@ -96,6 +96,8 @@ blockquote cite{display:block;font-style:normal;margin-top:.35rem;font-size:.86r
 .cell{background:var(--card);border:1px solid var(--rule);border-radius:10px;
       padding:.55rem .45rem;display:flex;flex-direction:column;align-items:center;gap:.34rem}
 .cell.flip{border-style:dashed}
+.cell.pick{border-color:var(--pick-fill);border-width:2px;box-shadow:0 0 0 3px rgba(74,87,137,.13)}
+.cell.pick .code{color:var(--pick-deep);font-weight:700}
 .cell .code{font-family:var(--mono);font-size:.63rem;color:var(--ink-soft);letter-spacing:.04em;
             text-align:center;line-height:1.35}
 .cell .pill,.cell .chip,.cell .tag{white-space:nowrap}
@@ -126,39 +128,8 @@ blockquote cite{display:block;font-style:normal;margin-top:.35rem;font-size:.86r
 .readout{font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);
          font-variant-numeric:tabular-nums;line-height:1.9}
 
-/* ⚠ 切換條是純 CSS 的（radio ＋ :has()），一行 JS 都沒有。
-   原因：這一頁會被丟進沙箱 iframe 看（Claude 的預覽面板、各種 in-app 瀏覽器），
-   那些地方常常整包擋掉 script —— 靠 JS 的切換條在那裡按了完全沒反應。
-   `:has()` iOS Safari 15.4 以後都有，使用者的手機吃得到。 */
-.switcher{position:fixed;right:.7rem;bottom:.7rem;z-index:9;
-          background:rgba(244,244,245,.93);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-          border:1px solid var(--rule);border-radius:12px;padding:.5rem .6rem;
-          display:flex;flex-direction:column;gap:.35rem;box-shadow:0 4px 18px rgba(0,0,0,.14)}
-.switcher .grp{display:flex;align-items:center;gap:.3rem}
-.switcher .glbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--ink-soft);width:2.6rem}
-.switcher .opt{position:relative;font-size:.74rem;font-family:var(--mono);letter-spacing:.04em;
-               line-height:1.6;padding:.26rem .6rem;border-radius:7px;border:1px solid var(--rule);
-               background:#fff;color:var(--ink);cursor:pointer;-webkit-user-select:none;user-select:none}
-.switcher .opt input{position:absolute;inset:0;opacity:0;margin:0;width:100%;height:100%;cursor:pointer}
-.switcher .opt:has(input:checked){background:var(--f2);color:#fff;border-color:var(--f2)}
-.switcher .opt:has(input:focus-visible){outline:2px solid var(--teal);outline-offset:2px}
-
-/* 當選值：radio 是唯一的真相來源 */
-body:has(#pf1:checked){--pick-fill:var(--f1)}
-body:has(#pf2:checked){--pick-fill:var(--f2)}
-body:has(#pf3:checked){--pick-fill:var(--f3)}
-body:has(#pt1:checked){--pick-deep:var(--t1)}
-body:has(#pt2:checked){--pick-deep:var(--t2)}
-body:has(#pt3:checked){--pick-deep:var(--t3)}
-/* 讀數也是 CSS 產生的，不然沒有 JS 就會停在預設值那一行說謊 */
-#ro-f::before,#ro-t::before{content:"—"}
-body:has(#pf1:checked) #ro-f::before{content:"#3a456d（F1）"}
-body:has(#pf2:checked) #ro-f::before{content:"#4a5789（F2）"}
-body:has(#pf3:checked) #ro-f::before{content:"#5e6fac（F3）"}
-body:has(#pt1:checked) #ro-t::before{content:"#364067（T1）"}
-body:has(#pt2:checked) #ro-t::before{content:"#44507e（T2）"}
-body:has(#pt3:checked) #ro-t::before{content:"#526197（T3）"}
-
+/* 切換條的 CSS 已隨定案刪除（2026-08-09）。它原本是純 CSS 的（radio ＋ :has()），
+   因為沙箱 iframe 會擋掉 script —— 這一點寫進 PALETTE 第六之十節了，下次做提案頁照抄。 */
 /* ---- 表 -------------------------------------------------------------- */
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
@@ -176,9 +147,9 @@ tr.base td{color:var(--ink-soft)}
 <div class="wrap">
 
   <div class="head">
-    <p class="eyebrow">提案中 · 3×3 待選 · 2026-08-09</p>
+    <p class="eyebrow">已定案 · PALETTE.md 第六之十節 · 2026-08-09</p>
     <h1>植牙・假牙重建的藍</h1>
-    <p class="lead">現行 <code>#252d4a</code> 是七科裡<b>唯一掉出家族亮度帶的一顆</b>。這一頁把它拆成<b>填色</b>與<b>白底的字</b>兩個值，各做三階，<b>九個組合可以互相比對</b>。<br><span class="small">右下角切換條可以任意組合，網址也可以直接帶 <code>?f=f2&amp;t=t1</code>。</span></p>
+    <p class="lead">定案 <b>填色 <code>#4a5789</code>（F2）</b> ＋ <b>白底的字 <code>#364067</code>（T1）</b>。已套進 <code>index.html</code> 與 <code>assets/style.css</code>，這一頁往下是怎麼走到這裡的。<br><span class="small">舊值 <code>#252d4a</code> 是七科裡唯一掉出家族亮度帶的一顆。</span></p>
   </div>
 
   <hr>
@@ -296,7 +267,7 @@ tr.base td{color:var(--ink-soft)}
   <!-- ===================== 3×3 ===================== -->
   <section>
     <h2>3×3 一次看完</h2>
-    <p class="small">每一格由上到下是：<b>醫師藥丸</b>（實心＋白字）、<b>chip 未選 / 選取</b>、<b>文章卡標籤</b>。橫的是填色，直的是白底的字。</p>
+    <p class="small">每一格由上到下是：<b>醫師藥丸</b>（實心＋白字）、<b>chip 未選 / 選取</b>、<b>文章卡標籤</b>。橫的是填色，直的是白底的字。<b>粗框那一格 F2·T1 是定案。</b></p>
 
     <div class="matrix-scroll">
       <div class="matrix">
@@ -308,8 +279,8 @@ tr.base td{color:var(--ink-soft)}
         <div class="mr">T1<br>#364067</div>
         <div class="cell" style="--c:var(--f1);--deep:var(--t1)">
           <span class="pill">贋復假牙</span><span class="chip">贋復假牙</span><span class="chip on">贋復假牙</span><span class="tag">缺牙重建</span><span class="code">F1·T1　+2.1</span></div>
-        <div class="cell" style="--c:var(--f2);--deep:var(--t1)">
-          <span class="pill">贋復假牙</span><span class="chip">贋復假牙</span><span class="chip on">贋復假牙</span><span class="tag">缺牙重建</span><span class="code">F2·T1　+10.1</span></div>
+        <div class="cell pick" style="--c:var(--f2);--deep:var(--t1)">
+          <span class="pill">贋復假牙</span><span class="chip">贋復假牙</span><span class="chip on">贋復假牙</span><span class="tag">缺牙重建</span><span class="code">F2·T1　+10.1<br>★ 定案</span></div>
         <div class="cell" style="--c:var(--f3);--deep:var(--t1)">
           <span class="pill">贋復假牙</span><span class="chip">贋復假牙</span><span class="chip on">贋復假牙</span><span class="tag">缺牙重建</span><span class="code">F3·T1　+20.0</span></div>
 
@@ -341,8 +312,13 @@ tr.base td{color:var(--ink-soft)}
 
   <!-- ===================== 組合預覽 ===================== -->
   <section>
-    <h2>套在真實版面上</h2>
-    <p class="small">右下角切換條選組合，下面四個區塊一起跟著換。預設是 F2·T1。</p>
+    <h2>定案：F2 配 T1</h2>
+    <p class="small">使用者選的組合。切換條已依慣例刪掉，下面就是定案的樣子。</p>
+
+    <div class="note ok">
+      <p><b>我建議的是 F3·T1，使用者選了 F2 —— 而且他是對的。</b>F3 的填色比字亮 <b>20.0 階</b>，chip 按下去會跳一大截；F2 收在 <b>+10.1</b>，和口腔外科的 +8.2 同一個量級，整個色盤的深淺行為就一致了。</p>
+      <p class="soft">「比照紫色」真正該比照的是那個<b>落差</b>，不是「也頂著上限」。</p>
+    </div>
 
     <div class="stage" id="stage">
       <div>
@@ -377,7 +353,7 @@ tr.base td{color:var(--ink-soft)}
         </div>
       </div>
 
-      <p class="readout">填色 <span id="ro-f"></span>　白底的字 <span id="ro-t"></span></p>
+      <p class="readout">填色 #4a5789（F2）　白底的字 #364067（T1）</p>
     </div>
   </section>
 
@@ -407,58 +383,19 @@ tr.base td{color:var(--ink-soft)}
   <hr>
 
   <section>
-    <h2>我的判斷（不是定案）</h2>
+    <h2>當時的判斷（留著）</h2>
     <div class="note ok">
       <p><b>填色我會挑 F3 <code>#5e6fac</code>。</b>它和外科的填色站在同一個高度（L* 47.9 對 48.0、白字 4.83 對 4.82），兩科的視覺重量會完全一致；而且使用者說的「比照紫色那樣再亮一點」，紫色那一輪選的正是頂著上限的那一階。</p>
       <p><b>白底的字我會挑 T1 <code>#364067</code>。</b>使用者對這一側說的是「稍微淺一點點」，不是「亮起來」—— T1 從 19.1 走到 27.9，看得出來變淺了，但仍然是一顆沉穩的深藍，不會和填色搶。</p>
-      <p class="soft">合起來是 <b>F3·T1</b>，落差 20.0 階。<b>唯一要在真機上看清楚的就是這個落差</b> —— chip 按下去會明顯亮一截。覺得跳太多就往 F2·T1（+10.1）收。</p>
+      <p class="soft">合起來是 <b>F3·T1</b>，落差 20.0 階。當時就寫著「唯一要在真機上看清楚的就是這個落差，覺得跳太多就往 F2·T1（+10.1）收」—— <b>使用者看了真機，就是往那裡收的。</b></p>
     </div>
   </section>
 
-  <p class="foot">推導與數字寫進 <code>PALETTE.md</code> 第六之十節。這一頁是自給自足的靜態快照，不引用 <code>/assets/style.css</code>；定案之後切換條會照慣例連同 <code>data-*</code> 一起刪掉。</p>
+  <p class="foot">推導與數字寫進 <code>PALETTE.md</code> 第六之十節。這一頁是自給自足的靜態快照，不引用 <code>/assets/style.css</code>；切換條已隨定案刪除。</p>
 
 </div>
 
-<div class="switcher">
-  <div class="grp" role="radiogroup" aria-label="填色"><span class="glbl">填色</span>
-    <label class="opt">F1<input type="radio" name="pf" id="pf1" value="f1"></label>
-    <label class="opt">F2<input type="radio" name="pf" id="pf2" value="f2" checked></label>
-    <label class="opt">F3<input type="radio" name="pf" id="pf3" value="f3"></label>
-  </div>
-  <div class="grp" role="radiogroup" aria-label="白底的字"><span class="glbl">字</span>
-    <label class="opt">T1<input type="radio" name="pt" id="pt1" value="t1" checked></label>
-    <label class="opt">T2<input type="radio" name="pt" id="pt2" value="t2"></label>
-    <label class="opt">T3<input type="radio" name="pt" id="pt3" value="t3"></label>
-  </div>
-</div>
 
-<script>
-// 純粹的加分項：讓網址參數還能用，以及按了之後把網址同步成可以貼給別人的樣子。
-// 整段被擋掉也沒關係 —— 切換條本身是 CSS 做的，照樣能按。
-(function(){
-  try{
-    // ⚠ 正規式要吃得下帶數字的值（PALETTE 第八節踩過：[a-z]+ 會吃不到 f1/t1）
-    var RE = /^[a-z0-9]+$/;
-    var q = new URLSearchParams(location.search);
-    ['f','t'].forEach(function(k){
-      var v = (q.get(k) || '').toLowerCase();
-      if (!RE.test(v)) return;
-      var el = document.getElementById('p' + k + v.slice(1));
-      if (el && v.charAt(0) === k) el.checked = true;
-    });
-    document.querySelectorAll('.switcher input').forEach(function(i){
-      i.addEventListener('change', function(){
-        try{
-          var u = new URL(location.href);
-          u.searchParams.set('f', document.querySelector('input[name=pf]:checked').value);
-          u.searchParams.set('t', document.querySelector('input[name=pt]:checked').value);
-          history.replaceState(null, '', u);
-        }catch(e){}   // 沙箱 iframe 的 replaceState 會丟 SecurityError，不能讓它中斷
-      });
-    });
-  }catch(e){}
-})();
-</script>
 
 </body>
 </html>

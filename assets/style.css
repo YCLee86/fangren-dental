@@ -77,7 +77,12 @@ body { --accent: var(--teal); --accent-deep: var(--teal); --on-fill: #fff; }
    只差亮度 8.2 —— 同一個色的兩個高度，不是兩個色。原本的 Deep Taupe 被釋出，
    但 --taupe 留著：診所資訊的「看診時間」卡還在用它，而且首頁那邊也還需要它。 */
 [data-spec="surg"]   { --accent: #8e6299; --accent-deep: #784e84; }  /* 5.15 */
-[data-spec="prosth"] { --accent: var(--tile);  --accent-deep: var(--tile);  }  /* 10.68 */
+/* 贋復假牙的藍提亮（定案 2026-08-09，PALETTE.md 第六之十節）。原本兩階都是茶室
+   磁磚實測的 --tile #252d4a（L* 19.1），那是全色盤最深的一顆 —— 當初挑最深是為了和
+   口腔外科分開，但外科改成 H 288 的紫之後那個前提就沒了。兩階色相同鎖 Lab 286.7°，
+   彩度跟著亮度按色域比例放大（固定在上限的 51%）—— 彩度不跟著走就會一路變灰。
+   --tile 留著：它是第二節的材質實測值，只是 prosth 不再直接指向它。 */
+[data-spec="prosth"] { --accent: #4a5789; --accent-deep: #364067; }  /* 7.95 */
 [data-spec="endo"]   { --accent: var(--moss);  --accent-deep: #596951;      }  /* 苔綠原值在紙上 4.38，差一點，壓深到 4.65 */
 /* 兒牙的黃：當底 #c28229（定案，十一輪，PALETTE.md 第六之二節），
    當字得壓到 #915800 才有 4.61 —— 首頁那顆 #9e6301 是對著卡片算的，
