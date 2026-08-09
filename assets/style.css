@@ -338,10 +338,9 @@ a:hover { color: var(--accent); }
 }
 @media (max-width: 900px) { .footer-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; } }
+/* 三顆欄位標題一律 .95rem。⚠ 2026-08-09 曾把診所名單獨放大，使用者當天就要求
+   改回「三顆一樣大」——**不要再加 .foot-brand 那種例外**。理由同 index.html。 */
 .site-footer h4 { margin: 0 0 .5rem; font-size: .95rem; color: var(--ink); }
-/* 只有診所名那一顆放大 —— 它是招牌，不是欄位標題。其餘兩欄的標題底下是
-   .82rem 的連結與內文，跟著放大會變成大標配小字。理由同 index.html。 */
-.site-footer h4.foot-brand { font-size: 1.22rem; line-height: 1.6; }
 .site-footer p { margin: 0 0 .7rem; font-size: .82rem; line-height: 1.8; }
 .site-footer p:last-child { margin-bottom: 0; }
 /* ---- 頁尾的地址與電話 —— 定案 2026-08-09（第二版）------------------------
@@ -349,18 +348,26 @@ a:hover { color: var(--accent); }
    為什麼欄寬與間距一定要用 rem、為什麼釘子要比話筒高、為什麼底線畫在 .txt／.num
    上、以及舊規則「地址刻意不上色不加底線」為什麼作廢（手機沒有 hover）。
    **這份和 index.html 裡那份必須一模一樣，改一邊就要改另一邊。** */
-.foot-addr { font-size: 1.05rem !important; letter-spacing: .02em; }
-.foot-tel  { margin-top: .35rem !important; font-size: 1.05rem !important; letter-spacing: .02em; }
+.foot-addr { font-size: .95rem !important; letter-spacing: .02em; }
+.foot-tel  { margin-top: .35rem !important; font-size: .95rem !important; letter-spacing: .02em; }
+/* ⚠ `display: flex` ＋ `width: fit-content`，**不要改回 `inline-flex`**。
+   使用者 2026-08-09 在 iPhone 上看到地址斷成「…永樂街 70」＋「號」，
+   但同一份 CSS 在 Chromium 量起來是需要 206px、可用 272～350px，**根本不該斷** ——
+   重現不了。WebKit 對 inline-flex 在 grid 格子裡的收縮寬度算法和 Blink 有落差，
+   會拿接近 min-content 的值去排。block flex ＋ fit-content 不走那條路徑，
+   結果和 inline-flex 看起來一樣（寬度貼齊內容），但兩邊行為一致。
+   max-width 是安全帶：真的放不下時讓它收縮換行，不要撐破版面。 */
 .foot-addr a, .foot-tel a {
   color: var(--teal); text-decoration: none; font-weight: 500;
-  display: inline-flex; align-items: flex-start; gap: .5rem;   /* ← rem，改成 em 就歪 */
+  display: flex; width: fit-content; max-width: 100%;
+  align-items: flex-start; gap: .45rem;  /* ← rem，改成 em 就歪 */
 }
 .foot-addr .ico, .foot-tel .ico {
-  flex: 0 0 1.15rem; height: 1.8em;
+  flex: 0 0 1rem; height: 1.8em;
   display: flex; align-items: center; justify-content: center;
 }
-.foot-addr .ico svg { width: .825rem; height: 1.1rem; display: block; }   /* 384×512，寬 = 高 × .75 */
-.foot-tel  .ico svg { width: .89rem;  height: .89rem; display: block; }   /* 512×512，方的 */
+.foot-addr .ico svg { width: .73rem; height: .97rem; display: block; }   /* 384×512，寬 = 高 × .75 */
+.foot-tel  .ico svg { width: .78rem; height: .78rem; display: block; }   /* 512×512，方的 */
 .foot-addr .txt, .foot-tel .num {
   text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em;
 }
