@@ -517,7 +517,15 @@ html.scrolled .brand-text small { font-size: .74rem; }
 /* 定案：三格靠內容寬度、整組置中，左右各 4rem（2026-08-07 的「拉開」）。
    淘汰：1.9rem（三格擠在版心中央，兩側各空一大塊，像沒排完）、
    以及「各佔版心三分之一」—— 那是手機 390px 上排不下才用的辦法，
-   搬到 1160px 的版心會拉得太開，三格之間的關係就散了。 */
+   搬到 1160px 的版心會拉得太開，三格之間的關係就散了。
+
+   ⚠⚠ **這一行目前沒有生效**（2026-08-10 量到，尚未處理，先記錄）。
+   下面第 536 行的 `.stats li { position: relative; padding-inline: 1.9rem; … }`
+   權重相同（都是 0,0,2）而且排在後面，所以贏 —— 實測 1440 上算出來的內距是
+   30.4px（1.9rem），不是 64px（4rem），三格的方塊只有 330.1px 寬而不是 531.7px。
+   也就是說**線上現在跑的是被淘汰的那個 1.9rem**。
+   要修只要把 1.9rem 那一份的 padding-inline 拿掉（讓這一行接手）即可，
+   但那會讓首頁窄帶明顯變寬，是看得見的改動 —— 使用者還沒看過，所以先不動。 */
 .stats li { padding-inline: 4rem; }
 
 /* 2026-08-07：窄帶改回手機版的排法 —— **兩列、置中**，瀏覽數在 1983／9／6 上面。
@@ -591,6 +599,156 @@ html.scrolled .brand-text small { font-size: .74rem; }
 .band-views small {
   font-size: .7rem; color: rgba(255, 255, 255, .65);
   font-weight: 400; letter-spacing: 0; margin-left: .35em;
+}
+
+/* ==========================================================================
+   窄帶右側的地址與電話 —— 定案 2026-08-10（只有電腦版）
+   --------------------------------------------------------------------------
+   把頁尾那組「圖示＋地址／電話」也放進 HERO 的窄帶。六輪推導的完整過程、
+   每一個落選案的實測數字、以及踩過的坑，全部在 preview/hero-contact/。
+
+   定案的樣子：一行，地址在左、電話在右，中間拉開 1.9rem；整組貼**版心外緣**，
+   離照片下緣 15.18px；圖示是線條空心的，兩顆大小各自算過。
+
+   ---- 三件不要違反的事 ----
+   ① **1983／9／6 一步都不能動。** 六輪下來這是使用者唯一從頭講到尾的要求。
+      所以這一組是 `position: absolute`、掛在 .band 底下、**完全不參與版面**。
+      第一輪讓它當格線的項目時，實測三格的中軸被往左推了 42.4px ——
+      而窄帶和照片共用同一條中軸是 2026-08-07 的定案。
+   ② **這條帶子上只准有兩個白。** 靜止用 .65（＝「部定專科」那排標籤），
+      hover／focus 用 .95（＝1983／9／6 那三個數字）。中間那一階曾經加過，
+      使用者當場指出「這樣有三個白」，是對的：聯絡不是新的層級，它就是標籤那層。
+      亮起來由**狀態**表達，不由靜止的顏色表達。不要再開第三階。
+   ③ **手機（≤720px）不顯示。** 這一輪只做電腦版，手機的窄帶是靜態接在照片下面、
+      而且排成兩列靠左，這一組進去會破版。見最後那條 @media。
+
+   ---- 為什麼不沿用頁尾那組的綠與實心圖示 ----
+   頁尾吃一般牙科的套色 #3f654a，是因為它站在 #f4f4f5 的淺卡片上（6.02:1）；
+   同一個綠丟到窄帶（L* 8~20 的柏油與毛玻璃）上只有 1.3:1，等於看不見。
+   實心圖示疊在夜景照片上則會變成兩個小黑塊，而窄帶裡其他東西全是細的。
+   ========================================================================== */
+.hero-contact { margin: 0; line-height: 1.15; white-space: nowrap; }
+/* ⚠ display 是 **flex**，不是 inline-flex（和頁尾那兩行連結一樣）。
+   inline-flex 的話這個連結是行內盒，而**行內 flex 盒的基線是它第一個項目的基線**
+   —— 第一個項目是圖示，圖示沒有文字、只好拿自己的底邊當基線。兩顆圖示不一樣高，
+   於是兩行的基線差了 1.13px。踩過，不要改回去。 */
+.hero-contact a {
+  display: flex; align-items: center; gap: .45rem;
+  font-size: .78rem; letter-spacing: .02em;
+  color: rgba(255, 255, 255, .65);          /* ＝「部定專科」那一階，見上面第②條 */
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .45);
+  transition: color .18s ease;
+}
+.hero-contact a:hover,
+.hero-contact a:focus-visible { color: rgba(255, 255, 255, .95); }  /* ＝1983 那一階 */
+@media (prefers-reduced-motion: reduce) { .hero-contact a { transition: none; } }
+/* 底線一直都在（不是 hover 才出現）—— 使用者：「和頁尾一樣加底線才會讓人有超連結感」。
+   兩個值和頁尾完全相同；一樣**畫在 .t 上不畫在 <a> 上**，因為連結是 flex，
+   下在連結上會連圖示底下一起拉過去。 */
+.hero-contact .t {
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em;
+}
+.hero-contact a:focus-visible { outline: none; }
+.hero-contact a:focus-visible .t { outline: 2px solid rgba(255,255,255,.8); outline-offset: 3px; border-radius: 3px; }
+
+/* ---- 兩顆圖示的大小是分開算的，不能共用一個框 ----------------------------
+   兩顆在 24 格的 viewBox 裡本來就不一樣滿（釘子畫 20 格高、話筒 19 格又幾乎頂滿寬），
+   框一樣大畫出來就不一樣大。而且**要拿字面去比，不是字級**：
+   中文字面 12.0px（占字級 .96），數字字面只有 11.0px（占 .88，數字沒有下伸部）。
+     釘子 12.68px ＝ 中文字面的 1.057 倍，下緣往下探出中文 0.77px
+     話筒 11.33px ＝ 數字字面的 1.030 倍，下緣往下探出數字 0.69px（含下面那 .8px）
+   一度用「圖示 ÷ 字級」去算，話筒就變成 10.30px、**縮在數字裡面 0.64px** ——
+   一顆踩在字底下面、一顆浮在字底上面，並排看話筒就會像飄起來的。
+   ⚠ 話筒的 ＋10% 是使用者在 ＋9~13% 五階裡挑的。比例最貼近釘子的其實是 ＋13%、
+      下緣距離最貼近的是 ＋11~12% —— 那兩個是尺不是答案，**不要照數字去「修正」它**。 */
+.hero-contact .ico {
+  flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+}
+.c-addr .ico svg { width: .85rem; height: .85rem; }      /* 框 13.6px  → 畫出來 12.68px */
+.c-tel  .ico svg {
+  width: .7918rem; height: .7918rem;                      /* 框 12.67px → 畫出來 11.33px */
+  /* 下移 .8px：話筒比釘子矮，光是放大還是會偏高。
+     ⚠ 用 transform，不要改 .ico 的 align-items 或加 margin —— .ico 是撐開連結高度的
+        項目之一，動它的盒會推到整行的基線，而基線和「部定專科」的對齊只差 0.02px。
+        transform 不參與版面，位移不影響任何已經對齊好的東西。 */
+  transform: translateY(.8px);
+}
+.hero-contact .ico svg {
+  display: block; overflow: visible;
+  fill: none; stroke: currentColor; stroke-width: 1.3;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* ⚠ non-scaling-stroke 不要拿掉：兩顆框不一樣大，沒有它同一個 stroke-width 會畫成
+   1.16px 與 0.97px 兩種粗細。加上之後 stroke-width 直接就是螢幕 px，兩顆都是 1.3px，
+   和旁邊 12.48px 的字筆畫同一個重量。
+   ⚠ 它要下在圖形上（path／circle），不是下在 <svg> 上 —— 這個屬性不會繼承。 */
+.hero-contact .ico svg path,
+.hero-contact .ico svg circle { vector-effect: non-scaling-stroke; }
+
+/* ---- 位置 ----------------------------------------------------------------
+   掛在 .band 底下、**不在 .shell 裡**，所以絕對定位的參考框是整條窄帶
+   （＝整張照片的寬度）。這樣「版心外緣」可以用 (100% - --shell)/2 精確算回來，
+   不必用 100vw ——後者會把捲軸算進去，1440 的視窗實際只有 1425，差 7.5px。
+   max() 是窄螢幕的保險：版心比視窗寬時那個式子會變負的，不夾住整組會被推出畫面。
+
+   水平比過三階（1440 上離螢幕右緣）：版心內緣 172.5 太左、貼照片邊 40 不站在
+   全站骨架上而且螢幕越寬離版心越遠，**定案版心外緣 132.5**。
+   垂直比過五階（離照片下緣）：8.72（基線切齊部定專科，太低、幾乎掉出照片）、
+   11.95、**15.18【定案】**、18.40、21.63（對三格中線）。
+   ⚠ 15.18 在幾何上**沒有依據** —— 它是頭尾兩階之間四等分的第二格，就是使用者挑的
+      那一格。不要事後幫它編一個對齊理由，也不要順手挪到最近的錨點上。
+   ⚠ 因為不在 .shell 裡，`.band > .shell` 的 z-index: 1 蓋不到它，要自己寫 z-index，
+      否則會被窄帶的毛玻璃與柏油層（z-index: 0）壓住。 */
+.contact-pair {
+  position: absolute; z-index: 2;
+  right: max(var(--pad), calc((100% - var(--shell)) / 2));
+  bottom: 15.18px;
+  display: flex; flex-direction: row; align-items: center; gap: 1.9rem;
+}
+/* 間距 1.9rem（30.4px）也是量出來的。1440 上（正式站實測）：
+     「部定專科」那幾個字的右緣　847.1
+     整組的左緣　　　　　　　　1000.0（右緣貼版心外緣 1292.5，整組寬 292.5）
+   → 和「部定專科」之間留得住 **152.9px**，而群內只有 30.4px ——
+   **群內 30 << 群外 153**，兩項才讀成一組、不會被當成第四、五格。
+   ⚠ 提案頁 preview/hero-contact/ 上這個數字是 86.9px，不是頁面做錯，是因為那一頁
+      的三格吃到了 4rem 的「拉開」（方塊 531.7px），而正式站上面那條 4rem 被
+      1.9rem 蓋掉了（見 .stats li 那一段的 ⚠⚠）。**哪天把 4rem 修回來，
+      群外就會從 153 收成 87** —— 仍然遠大於群內的 30，這一組不必跟著改。 */
+
+/* ---- 版心縮不滿 1160 就改回兩行 ------------------------------------------
+   上面那 153px 的餘裕是版心滿寬時才有的：版心一跟著視窗縮，右邊的空間就開始掉
+   （三格是置中的，視窗每少 2px，右邊只少 1px，但整組的右緣是跟著視窗走的）。
+   一行整組要 292.5px，兩行只要 172px、一路都放得下。
+
+   斷點取 **1160 ＝ 版心的寬度**，也就是「版心不再滿寬」的那一刻。這是刻意取的，
+   不是算出來的臨界點：
+     ・照 4rem「拉開」的定案幾何（三格 531.7px），臨界點正好落在 1160 附近。
+     ・照現在實際跑的 1.9rem 幾何（三格 330.1px），其實撐到約 909px 才會壓到字。
+   取 1160 在兩種幾何下都安全，而且它本身是這個站的骨架尺寸、不是一個湊出來的數字。
+   代價是 909~1160 之間會比需要的早一步變成兩行 —— 可以接受。
+
+   兩行版有它自己非做不可的一件事：**「雲」和「0」要切齊、兩顆圖示也要切齊**。
+   做法整套照搬頁尾那條「溝」：左邊留一條固定寬度的溝，圖示置中在溝裡，
+   文字一律從溝的右緣起跑，連結的 gap 收成 0。
+   ⚠ 溝不能用 gap 代替 —— 兩顆圖示的框不一樣大，用 gap 文字起點會差 2.24px。
+   ⚠ 溝寬 1.55rem（24.8px）＝ 較大那顆的框 13.6px ＋ 左右各 5.6px。置中之後兩顆
+      畫出來的範圍都落在溝的 7.9~16.9px（實測中心差 0.03px、文字起點差 0）。
+      日後改了圖示大小，這個對齊要重新量。
+   ⚠ 兩行必須**靠左**對齊。靠右的話兩行右緣切齊、左緣參差，雲和 0 就對不上。
+   ⚠ bottom 是 12.46px 不是一行版的 15.18px：兩行盒高 32.7px，要讓中線落在三格的
+      中線上，盒底得離照片底 12.46px。沿用一行版的值會往上飄、還差點頂到瀏覽數。
+   ⚠ 選擇器要寫 `body .contact-pair` 抬一階權重 —— **@media 不增加權重**，
+      只寫 `.contact-pair` 會和上面那條同權重、靠順序決勝，很容易被後來的規則弄壞。 */
+@media (max-width: 1159px) {
+  body .contact-pair {
+    --hero-gutter: 1.55rem;
+    bottom: 12.46px;
+    flex-direction: column; align-items: flex-start; gap: .25rem;
+  }
+  .hero-contact a { gap: 0; }
+  .hero-contact .ico { flex: 0 0 var(--hero-gutter); }
 }
 
 /* ==========================================================================
@@ -1216,6 +1374,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .cards, .docs, .info, .gallery, .foot-cols { grid-template-columns: 1fr; }
   .band .shell { flex-direction: column; align-items: flex-start; gap: .5rem; padding-block: 1rem; }
   .stats li { padding-inline: 1.2rem; }
+  /* 窄帶右側的地址與電話**只做電腦版**（2026-08-10 定案時就講好的）。
+     手機的窄帶不是壓在照片下緣的絕對定位層，而是靜態接在照片下面、內容排成
+     兩列靠左；那一組絕對定位進來會疊在 1983／9／6 上。手機要不要放、放哪裡，
+     是還沒討論的另一題 —— 在那之前**不要只把這條 display: none 拿掉**。 */
+  .contact-pair { display: none; }
   /* **不要 display: none。** 手機版定案的頁首是有主選單的（三項），
      它靠 grid 的 max-content 軌道 ＋ 標誌 SVG 的內在尺寸放得下 ——
      見 PALETTE.md 第六之五節。 */
@@ -1567,6 +1730,31 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
              改任何一位醫師的資歷欄都要回來數一次，見 COPY.md 第八之一節。 -->
         <li><b>5<small>個</small></b><span>部定專科</span></li>
       </ul>
+    </div>
+
+    <!-- 窄帶右側的地址與電話（定案 2026-08-10，只有電腦版；手機由 @media 收掉）。
+         ⚠ 這一組是 .band 的**直接子元素，刻意不放進 .shell**，兩個理由都在 CSS
+            那一段寫清楚了：① 它是絕對定位、完全不參與版面，1983／9／6 才推不動
+            （第一輪讓它參與版面時，三格的中軸被往左推了 42.4px）；
+            ② 參考框變成整條窄帶，「版心外緣」才算得出精確值、不必碰 100vw。
+         整組的推導與所有落選案留在 preview/hero-contact/。 -->
+    <div class="contact-pair">
+      <p class="hero-contact c-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
+        <!-- 線條空心的地圖釘。頁尾那顆是 Font Awesome 的實心版，這裡刻意不沿用 ——
+             實心圖示疊在夜景照片上會變成一個小黑塊，而窄帶裡其他東西全是細的。
+             素材出處：Lucide "map-pin"，ISC 授權，https://lucide.dev ——
+             這一行註解就是署名，改圖或搬檔的時候不要刪。
+             aria-hidden：地址本身已經是連結的可讀內容，圖示再念一次是重複。 -->
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10.4c0 5.4-8 12.1-8 12.1s-8-6.7-8-12.1a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10.2" r="3"/></svg></span>
+        <span class="t">雲林縣斗六市永樂街&nbsp;70&nbsp;號</span>
+      </a></p>
+
+      <p class="hero-contact c-tel"><a href="tel:+88655339369">
+        <!-- 線條空心的話筒。素材出處：Lucide "phone"，ISC 授權，https://lucide.dev ——
+             這一行註解就是署名，改圖或搬檔的時候不要刪。 -->
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 0 1-2.1 1.9 18.8 18.8 0 0 1-8.2-2.9 18.5 18.5 0 0 1-5.7-5.7A18.8 18.8 0 0 1 2.6 4.7 1.9 1.9 0 0 1 4.5 2.6h2.8a1.9 1.9 0 0 1 1.9 1.6c.1.9.3 1.8.7 2.7a1.9 1.9 0 0 1-.4 2L8.3 10.1a15.2 15.2 0 0 0 5.7 5.7l1.2-1.2a1.9 1.9 0 0 1 2-.4c.9.4 1.8.6 2.7.7a1.9 1.9 0 0 1 1.6 2Z"/></svg></span>
+        <span class="t">05-5339-369</span>
+      </a></p>
     </div>
     </div>
   </div>

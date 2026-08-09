@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>HERO 放地址與電話 — 右邊那一組兩案｜芳仁牙醫</title>
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<style>
+/* ==========================================================================
+   提案：把頁尾那組「地址・電話」也放進 HERO 的窄帶（2026-08-10）
+   --------------------------------------------------------------------------
+   ── 已經定下來的（不要再動、也不要再做別的案）──
+   ・**1983／9／6 照原來的置中，一步都不要動。**
+   ・地址與電話放在**右邊**，比較不搶戲。
+   ・排法是**一行、中間拉開**（兩行版與分隔線版都已淘汰）。
+   ・圖示線條空心，大小逐顆算；底線一直都在。
+
+   ── 這一輪在選的（第六輪）──
+   只剩**話筒的大小**（?p=），五階：＋9 / 10 / 11 / 12 / 13%（相對原本的 10.30px）。
+   其餘全部定案並寫死：水平版心外緣、垂直離照片下緣 15.18px（Ⓨb）、
+   話筒下移 .8px（Ⓝ2）。三條切換條刪到只剩一條。
+
+   第四輪選位置時量到的兩個事實（留著當背景）：
+     ・Ⓨ1 那個位置整組的下緣在 891.3、照片底 900 —— 只剩 8.7px，
+       使用者說「快要超出圖片」不是錯覺。
+     ・水平停在版心內緣時，離螢幕右緣還有 172.5px 的空照片。
+
+   ── 走過的路，不要繞回去 ──
+   第一輪 兩端／右側成組／接在 9／6 後面 —— 全部淘汰。
+   第二輪 兩行／一行拉開／拉開＋分隔線 —— 分隔線淘汰。
+   第三輪 兩行 vs 一行拉開 —— 兩行淘汰（但**留著當窄螢幕的退路**，見最後的 @media）。
+   第三輪同時處理掉的三件事：圖示大小逐顆算、底線常駐、雲／0 切齊。
+
+   ── 三格的中軸為什麼要用絕對定位守住 ──
+   聯絡那一組如果是格線或流內的項目，寬度不夠時會去擠中間那格：
+   第一輪實測三格的中軸被往左推了 42.4px。窄帶和照片共用同一條中軸是
+   2026-08-07 的定案，不能被推歪。所以這一組是 `position: absolute`，
+   **完全不參與版面** —— 三格永遠是「一個人置中」，右邊放什麼都推不動它。
+   ⚠ 它掛在 `.band` 底下、**不在 `.shell` 裡面**，這是為了水平第三階
+      （貼照片邊）算得出來，見下面 .contact-pair 那一段。
+
+   ── 一行放得下嗎（量過的）──
+   1440 上版心內寬 1080、三格的方塊 531.7px，看起來右邊只剩 274px，一行擺不下。
+   但那個 531.7 裡有 128px 是**最後一格的右內距**（4rem，2026-08-07 的「拉開」）——
+   「部定專科」這幾個字的右緣其實在 914px，離版心右緣還有 338px。
+   一行實際要 291px，所以放得下。
+   ⚠ 這也是為什麼版心一縮到 1160 以下就必須改回兩行（見最後的 @media）：
+      338px 是版心滿寬時才有的，1100 上只剩 16px，1024 上會直接壓到字。
+
+   ── 圖示換成線條空心 ──
+   頁尾那兩顆是 Font Awesome Free 6 的實心版（solid），這裡不能沿用 ——
+   實心圖示疊在夜景照片上會變成兩個小黑塊，而窄帶裡其他東西（數字、標籤、
+   分隔線）全是細的。線條版和它們同一種質地。
+   兩顆改用 Lucide（`map-pin`／`phone`，ISC 授權，https://lucide.dev）的輪廓路徑，
+   fill: none ＋ stroke: currentColor。**這一行註解就是署名，改圖或搬檔不要刪。**
+   線寬見下面 .hero-contact .ico svg 那一段（要換算，不能照抄數字）。
+
+   ── 顏色：這條帶子上只准有兩個白（2026-08-10 第四輪）──
+   頁尾那組吃一般牙科的套色 #3f654a，是因為它站在 #f4f4f5 的淺卡片上（6.02:1）。
+   同一個綠丟到窄帶（L* 8~20 的柏油與毛玻璃）上只有 1.3:1，等於看不見，
+   所以這裡一定是白的。但白要用**已經存在的那兩個**：
+
+     .95  —— 1983／9／6 那三個數字（窄帶裡最亮的一層）
+     .65  —— 「中華路開業／部定專科」那排標籤，以及瀏覽數
+
+   第三輪自作主張給了聯絡一個 .82，理由是「它可以按，該亮一階」——
+   使用者當場指出「這樣有三個白」。**他是對的**：多一階等於在這條帶子上
+   多開一個層級，而聯絡並不是新的層級，它就是標籤那一層的東西。
+   現在：**靜止 .65（＝部定專科）、hover／focus .95（＝1983）**。
+   亮起來這件事改由狀態表達，不再由靜止的顏色表達。
+   ⚠ 不要再加第三階，也不要把靜止值調到 .65 和 .95 中間。
+   ========================================================================== */
+
+/* ---- 以下到「新的東西」為止，整段從 index.html 原樣複製，一個值都沒有改 ---- */
+:root {
+  --pad: clamp(1.25rem, 3vw, 2.5rem);
+  --shell: 1160px;
+
+  --night: #191614;
+  --night-line: #38342f;
+  --night-text: #e3e1e0;
+  --night-soft: #aaa49e;
+  --night-faint: #969089;
+  --band-top: #17191d;
+  --band-bg:  #282b31;
+  --band-bot: #2d3037;
+
+  --paper: #e2e5e6;
+  --card: #f4f4f5;
+  --rule: #cdd0d2;
+  --note: #f9f9fa;
+  --ink: #2a2c27;
+  --ink-soft: #5c5f57;
+
+  --teal:  #214D48;
+
+  --band-h: 84px;
+  --head-h: 76px;
+  --head-h-sm: 60px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px; line-height: 1.85; letter-spacing: .01em;
+  overflow-x: hidden;
+}
+img { max-width: 100%; height: auto; display: block; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.shell { max-width: var(--shell); margin-inline: auto; padding-inline: var(--pad); }
+
+.site-head {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+  transition: background-color .2s ease, padding .2s ease;
+}
+.site-head .shell {
+  display: grid; grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center; gap: 2rem;
+  height: var(--head-h);
+}
+.site-nav { justify-self: end; }
+.brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; min-width: 0; }
+.brand-text b { white-space: nowrap; }
+.brand-mark { flex: 0 0 38px; display: block; color: rgba(255, 255, 255, .95); min-width: 0; }
+.brand-mark svg { display: block; width: 100%; max-width: 100%; height: auto; overflow: visible; }
+.brand-text { display: flex; align-items: baseline; gap: .7rem; }
+.brand-text b {
+  font-weight: 700; font-size: 1.06rem; line-height: 1.3; letter-spacing: .01em;
+  color: rgba(255, 255, 255, .95);
+}
+.brand-text small {
+  position: relative; padding-left: .7rem;
+  font-size: .78rem; line-height: 1.3; letter-spacing: .04em;
+  color: rgba(255, 255, 255, .65);
+}
+.brand-text small::before {
+  content: ''; position: absolute; left: 0; top: .1em; bottom: .1em;
+  border-left: 1px solid rgba(255, 255, 255, .28);
+}
+.site-nav { display: flex; flex-wrap: nowrap; gap: 1.9rem; font-size: .86rem; min-width: 0; }
+.site-nav a {
+  position: relative; color: rgba(255, 255, 255, .88);
+  text-decoration: none; white-space: nowrap; padding-block: .35rem;
+}
+.site-nav a::after {
+  content: ''; position: absolute; left: 50%; right: 50%; bottom: 0;
+  border-bottom: 1px solid currentColor; opacity: 0;
+  transition: left .2s ease, right .2s ease, opacity .2s ease;
+}
+.site-nav a:hover::after, .site-nav a:focus-visible::after { left: 0; right: 0; opacity: .8; }
+
+.hero { position: relative; background: var(--band-top); overflow: hidden; }
+.hero-photo { margin: 0; position: relative; height: 100svh; }
+.hero > .band { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; }
+.hero-photo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; max-width: none;
+  object-fit: cover;
+  object-position: 50% 100%;
+}
+.hero-photo::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 46%; z-index: 1;
+  background: linear-gradient(180deg,
+    rgba(25, 22, 20, .52) 0%, rgba(25, 22, 20, .30) 42%, rgba(25, 22, 20, 0) 100%);
+  pointer-events: none;
+}
+.hero-copy { z-index: 2; }
+.hero-copy {
+  position: absolute; inset: 0; pointer-events: none;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding-top: calc(var(--head-h) + clamp(2.6rem, 9vh, 5.4rem));
+  padding-bottom: calc(var(--band-h) + clamp(1rem, 3vh, 2rem));
+}
+.hero-copy .shell { width: 100%; }
+.hero-copy a { pointer-events: auto; }
+.hero-poem {
+  margin: 0; max-width: 40em;
+  font-size: clamp(12.5px, 1.05vw, 15px); font-weight: 400; line-height: 2.45;
+  letter-spacing: .32em; color: rgba(255, 255, 255, .65);
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
+}
+.hero-poem > span { display: block; }
+.hero-poem .lead { margin-bottom: .9em; }
+.hero-sign {
+  position: relative; margin: 0; display: inline-block;
+  font-size: clamp(11.5px, .95vw, 14px); font-weight: 400; line-height: 1.5;
+  letter-spacing: .12em; color: rgba(255, 255, 255, .65);
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
+  isolation: isolate;
+}
+.hero-sign::before {
+  content: ''; position: absolute; z-index: -1;
+  inset: -1.3em -1.7em;
+  background: rgba(25, 22, 20, .72);
+  border-radius: 100px;
+  filter: blur(26px);
+}
+
+.band { background: none; }
+.band::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  -webkit-backdrop-filter: blur(4px) saturate(.92);
+  backdrop-filter: blur(4px) saturate(.92);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 38%);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 38%);
+}
+.band::after {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image: linear-gradient(180deg,
+    rgba(34, 30, 28, 0)   0%,
+    rgba(34, 30, 28, .22) 28%,
+    rgba(22, 20, 19, .58) 62%,
+    rgba(22, 20, 19, .88) 100%);
+}
+.band > .shell { position: relative; z-index: 1; }
+.band .shell {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .6rem; min-height: var(--band-h);
+}
+.stats { display: flex; align-items: center; justify-content: center; margin: 0; padding: 0; list-style: none; }
+.stats li {
+  position: relative; padding-inline: 4rem; line-height: 1; text-align: center;
+}
+.stats li + li::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  border-left: 1px solid color-mix(in srgb, var(--night-faint) 55%, var(--band-bg));
+}
+.stats b {
+  display: block; font-size: 1.18rem; color: rgba(255, 255, 255, .95);
+  font-family: "Noto Serif TC", "Source Han Serif TC", "Times New Roman", Times, serif;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+.stats b small {
+  font-size: .7rem; font-weight: 400; letter-spacing: 0; margin-left: .15em;
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.stats span { font-size: .7rem; color: rgba(255, 255, 255, .65); }
+.band-views { margin: 0; line-height: 1.05; text-align: center; }
+.band-views .views-n {
+  display: inline-block; font-size: .7rem; color: rgba(255, 255, 255, .65);
+  font-family: inherit;
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em; text-align: right;
+}
+.band-views small {
+  font-size: .7rem; color: rgba(255, 255, 255, .65);
+  font-weight: 400; letter-spacing: 0; margin-left: .35em;
+}
+
+/* ==========================================================================
+   ↓↓↓ 新的東西從這裡開始 ↓↓↓
+   ========================================================================== */
+
+/* ---- 三案共用：聯絡兩項長什麼樣 ------------------------------------------
+   字級 .78rem：比三格的標籤（.7rem）大一階、比 1983 那個數字（1.18rem）小很多。
+   理由和頁尾那組同一套 —— 它是**要被讀出來、還要能按**的資訊，
+   不是標籤；但它也不能和 1983 搶第一眼。
+
+   line-height: 1.15 是配合窄帶的：這一列其他東西都是 line-height: 1，
+   聯絡兩項若用 body 的 1.85，行框會比三格高一截，
+   align-items: center 對齊之後看起來反而像浮起來。 */
+.hero-contact { margin: 0; line-height: 1.15; white-space: nowrap; }
+/* ⚠ display 是 **flex**，不是 inline-flex（和頁尾那兩行連結一樣）。
+   inline-flex 的話這個連結會是個行內盒，而**行內 flex 盒的基線是它第一個
+   項目的基線** —— 第一個項目是圖示，圖示沒有文字、只好拿自己的底邊當基線。
+   兩顆圖示現在不一樣高（12.68／10.30），於是兩行的基線差了 1.13px，
+   而且整體也對不上「部定專科」。實測過才發現的，不要改回去。
+   改成 flex 之後 <p> 的高度就是連結的高度，兩行幾何完全一樣，基線自然疊合。 */
+.hero-contact a {
+  display: flex; align-items: center; gap: .45rem;
+  font-size: .78rem; letter-spacing: .02em;
+  /* 靜止＝「部定專科」那一階，hover＝「1983」那一階。
+     這條帶子上只准有這兩個白，理由寫在檔頭「顏色」那一段。
+     圖示吃 currentColor，所以它跟著一起亮，不必另外寫一條。 */
+  color: rgba(255, 255, 255, .65);
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(25, 22, 20, .45);
+  transition: color .18s ease;
+}
+.hero-contact a:hover,
+.hero-contact a:focus-visible { color: rgba(255, 255, 255, .95); }
+@media (prefers-reduced-motion: reduce) { .hero-contact a { transition: none; } }
+/* ---- 底線一直都在，不是 hover 才出現（2026-08-10 第三輪）------------------
+   使用者：「和頁尾一樣加底線才會讓人有超連結感」。
+   先前只在 hover 才畫，等於靜止時完全沒有可按的暗示 —— 而且窄帶在 HERO 上，
+   手指裝置根本沒有 hover 這一態。
+
+   兩個值和頁尾完全相同（thickness 1px、offset .18em），只有一處不同：
+   **底線畫在 .t 上，不畫在 <a> 上**。這一條也和頁尾同一個理由 ——
+   連結是 flex，底線下在連結上會連圖示底下一起拉過去。 */
+.hero-contact .t {
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em;
+}
+.hero-contact a:focus-visible { outline: none; }
+.hero-contact a:focus-visible .t { outline: 2px solid rgba(255,255,255,.8); outline-offset: 3px; border-radius: 3px; }
+
+/* ---- 線條空心圖示：大小逐顆算，不共用一個框（2026-08-10 第三輪）----------
+   使用者：「電話 icon 明顯比號碼數字大非常多」。量過確實如此 ——
+   兩顆先前共用 1.02rem 的框，話筒**畫出來 14.28px 高，而號碼的字面只有 10px**，
+   大了 43%；釘子 15.02px 對地址的字面 12.0px，也大了 25%。
+   原因是這兩顆在 24 格的 viewBox 裡本來就不一樣滿：釘子畫 20 格高、
+   話筒畫 19 格高又幾乎頂滿寬 —— 框一樣大，畫出來就不一樣大。
+   （頁尾那兩顆本來就各給一組寬高：.73×.97rem 與 .78rem 見方，同一個道理。）
+
+   現在照**頁尾量到的比例**逐顆回推。頁尾：字 15.2px、釘子 15.52px（字的 1.021 倍）、
+   話筒 12.48px（字的 0.821 倍）。這裡字是 12.48px，所以目標是
+   釘子 12.74px、話筒 10.25px；扣掉線寬、換回框的大小就是 .85rem 與 .71rem。
+   實測畫出來 12.69 與 10.29，兩顆的寬度也剛好都落在 10.3px 左右。 */
+.hero-contact .ico {
+  flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+}
+.c-addr .ico svg { width: .85rem; height: .85rem; }   /* 釘子：畫出來 12.68px 高 */
+/* 話筒的大小與微調在下面「話筒三階」那一段，由 ?p= / ?n= 決定 —— 這一輪還在選。 */
+.hero-contact .ico svg {
+  display: block; overflow: visible;
+  fill: none; stroke: currentColor; stroke-width: 1.3;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* ⚠ vector-effect: non-scaling-stroke 是這一段的關鍵，不要拿掉。
+   沒有它的話 stroke-width 會跟著框一起縮：兩顆框現在不一樣大（.85／.71rem），
+   同一個 stroke-width 畫出來會變成 1.16px 與 0.97px —— 兩顆線條粗細不一樣，
+   一眼就看得出來。加上它之後 stroke-width 直接就是螢幕上的 px，
+   所以 1.3 兩顆都是 1.3px，和旁邊 12.48px 的字筆畫同一個重量。
+   ⚠ 它要下在圖形上（path／circle），不是下在 <svg> 上 —— 這個屬性不會繼承。 */
+.hero-contact .ico svg path,
+.hero-contact .ico svg circle { vector-effect: non-scaling-stroke; }
+
+/* ==========================================================================
+   話筒三階 × 微調三階（?p= / ?n=）—— 2026-08-10 第五輪
+   --------------------------------------------------------------------------
+   使用者：「電話 ICON 相對於後面的號碼數字感覺有點飄起來 似乎可以放大一點點
+   在看看要不要往下移一點點」。逐像素量過，飄起來是真的，而且原因很具體：
+
+     釘子  畫出來 865.12 ~ 877.80　中文字面 865.03 ~ 877.03
+           → 釘子的下緣**探出中文 0.77px**，高度是字面的 1.057 倍
+     話筒  畫出來 866.10 ~ 876.39　數字字面 866.03 ~ 877.03
+           → 話筒的下緣**縮在數字裡面 0.64px**，高度是字面的 0.936 倍
+
+   兩行的關係是**反的**：一顆踩在字底下面、一顆浮在字底上面。並排看的時候
+   眼睛就是在比這兩行，所以話筒看起來飄。
+
+   ---- 上一輪為什麼會算錯 ----
+   上一輪是拿頁尾的比例「圖示高 ÷ **字級**」去回推的（話筒 0.821×字級）。
+   那個比例在頁尾成立，是因為頁尾兩行都用同一個字級、而且比的是同一件事。
+   但**字級不等於字面**：中文字面 12.0px（占字級 0.96），
+   數字字面只有 11.0px（占 0.88，數字沒有下伸部）。
+   同一個「÷字級」的比例套到數字上，畫出來就矮了一截 —— 要比的是**字面**。
+
+   ---- 第五輪的三階（已收斂，留著看推論）----
+   Ⓟ1 .710rem → 10.30px（字面的 0.936 倍）【現況，就是使用者說飄的那一顆】
+   Ⓟ2 .780rem → 11.18px（1.016 倍）
+   Ⓟ3 .815rem → 11.62px（1.057 倍 ＝ 釘子對中文的同一個比例）
+   微調 Ⓝ0 不動／Ⓝ1 下移 .4px／Ⓝ2 下移 .8px。九種組合都量過。
+
+   ---- 第六輪：下移定 Ⓝ2，大小切成五階（2026-08-10）----
+   使用者：「Yb＋N2　P 給我 9/10/11/12/13% 五個版本看看」。
+   所以垂直鎖在 Ⓨb（離照片底 15.17px）、下移鎖在 Ⓝ2（.8px），兩條切換條都刪了，
+   只留大小這一條 —— **一次只剩一個變數**。
+
+   百分比是相對**現況那一顆 10.30px** 算的，換算回框的大小：
+     ＋9%  → 11.23px　框 .7837rem（12.54px）　字面的 1.021 倍
+     ＋10% → 11.33px　框 .7918rem（12.67px）　1.030 倍
+     ＋11% → 11.43px　框 .8000rem（12.80px）　1.039 倍
+     ＋12% → 11.54px　框 .8081rem（12.93px）　1.049 倍
+     ＋13% → 11.64px　框 .8162rem（13.06px）　1.058 倍 ← 最接近釘子的 1.057
+   換算式：畫出來的高 ＝ 19 ×（框 ÷ 24）＋ 1.3（線寬，non-scaling-stroke 不縮）。
+   ⚠ 所以**框的大小不等於畫出來的大小**，要改百分比一定要走這條式子回推，
+      不要直接把 .8rem 乘一乘。
+
+   ⚠ 微調要下在 <svg> 上（transform），不要改 .ico 的 align-items 或加 margin：
+      .ico 是撐開連結高度的其中一個項目，動它的盒會連帶推到整行的基線，
+      而基線已經和「部定專科」對齊過了（誤差 0.02px），不要為了 0.8px 打掉它。
+      transform 不參與版面，位移完全不影響任何已經對齊好的東西。
+   ---- 定案：＋10%（2026-08-10，第六輪結束）----
+   五階的實測：
+     ＋9%  11.23px　字面的 1.021 倍　下緣探出 0.64px
+     ＋10% 11.33px　1.030 倍　0.69px　←【定案】
+     ＋11% 11.44px　1.040 倍　0.74px
+     ＋12% 11.54px　1.049 倍　0.79px
+     ＋13% 11.63px　1.058 倍　0.84px
+     （釘子那一行當尺：12.68px、1.057 倍、下緣探出 0.77px）
+   兩個指標指到不同格 —— 比例最貼近釘子的是 ＋13%，下緣探出的距離最貼近的是
+   ＋11%／＋12%。使用者選的是比兩者都再小一階的 ＋10%，切換條已刪。
+   ⚠ 不要「照數字修正」把它推去 ＋11% 或 ＋13%。那兩個是尺，不是答案。 */
+.c-tel .ico svg {
+  width: .7918rem; height: .7918rem;   /* 框 12.67px → 畫出來 11.33px */
+  transform: translateY(.8px);          /* 下移定案 Ⓝ2 */
+}
+
+/* ==========================================================================
+   聯絡那一組：一行、中間拉開 1.9rem
+   --------------------------------------------------------------------------
+   間距 1.9rem（30.4px）是量出來的，不是挑的：
+   1440 上「部定專科」那幾個字的右緣在 914px，版心右緣 1252px，中間有 338px
+   可用（三格方塊右邊那 128px 是最後一格的內距，不是字）。一行整組要 291.2px，
+   所以水平停在版心內緣時，和「部定專科」之間還留得住 46.9px ——
+   **群內 30.4 < 群外 46.9**，兩項才讀成一組、不會被當成第四、五格。
+   間距再往上加就會翻過來，那一組就散進三格裡了。
+
+   ---- 它掛在 .band 底下，不在 .shell 裡 ----
+   絕對定位的參考框因此是**整條窄帶＝整張照片的寬度**，不是版心。
+   這是為了水平第三階（貼照片邊）能用 CSS 精確算出來：只要參考框是照片，
+   `right: var(--pad)` 就是「離照片邊一個版心內距」，不必去猜捲軸多寬
+   （用 100vw 會把捲軸算進去，1440 的視窗實際只有 1425，差 7.5px）。
+   前兩階則反過來，用 `(100% - --shell)/2` 把版心的位置算回來，也都是精確值。
+   ⚠ 因為它不在 .shell 裡，`.band > .shell` 的 z-index: 1 蓋不到它，
+      要自己寫 z-index，否則會被窄帶的毛玻璃與柏油層（z-index: 0）壓住。 */
+.contact-pair {
+  position: absolute; z-index: 2;
+  display: flex; flex-direction: row; align-items: center; gap: 1.9rem;
+}
+
+/* ---- 水平：定案 Ⓧ2 版心外緣（2026-08-10 第四輪）--------------------------
+   使用者看過三階之後選了 Ⓧ2，切換條已刪。三階當時的實測（1440 上離螢幕右緣）：
+     Ⓧ1 版心內緣 172.5px　—— 全站骨架那條線，但使用者嫌太左（前一輪的位置）
+     Ⓧ2 版心外緣 132.5px　←【定案】比 Ⓧ1 右移 40px（一個 --pad）
+     Ⓧ3 貼照片邊  40.0px　—— 右得夠，但不站在骨架上，而且螢幕越寬離版心越遠
+                              （2560 上會離版心外緣 660px），淘汰
+   max() 是給窄螢幕的保險：版心比視窗寬時 (100% - --shell)/2 會變負的，
+   不夾住的話整組會被推出畫面。夾在 --pad 就退化成「離螢幕邊一個內距」。
+   ⚠ 用 (100% - --shell)/2 而不是 100vw：這一組的參考框是 .band（＝整張照片），
+      100% 拿到的是**可用**寬度；100vw 會把捲軸算進去，1440 的視窗差 7.5px。 */
+.contact-pair { right: max(var(--pad), calc((100% - var(--shell)) / 2)); }
+
+/* ---- 垂直：定案 Ⓨb，離照片下緣 15.18px（2026-08-10 第六輪）---------------
+   窄帶的內容位置（1440 實測，窄帶 816~900）：
+     瀏覽數      825.8 ~ 842.6
+     三格方塊    852.2 ~ 890.1（中線 871.19）
+     1983 的基線 871.23  ← 幾乎正好就是三格的中線，兩者差 0.04px
+     部定專科基線 888.94
+   聯絡這一行的盒高 14.34px，基線在自己盒底上面 2.34px。
+
+   五階當時的實測（離照片下緣）與依據，切換條已刪：
+     Ⓨ1  8.72px　基線切齊「部定專科」—— 第三輪的位置，使用者說「快要超出圖片」
+     Ⓨa 11.95px
+     Ⓨb 15.18px　←【定案】
+     Ⓨc 18.40px
+     Ⓨ2 21.63px　盒的中線對三格中線，也等於「和 1983 那一行同高」
+   中間三階（含定案的 Ⓨb）**刻意不對齊任何東西** —— 它們是把 Ⓨ1→Ⓨ2 這 12.91px
+   切成四等份的手感刻度。兩端才有對齊依據。所以 15.18 這個數字沒有幾何上的說法，
+   **它就是使用者挑的那一格**，不要事後去幫它編一個對齊理由、也不要「順手」
+   把它挪到最近的錨點上。
+
+   ⚠ 淘汰：Ⓨ3（盒頂切齊 1983 字頂，離照片底 33.46px），太高。
+   ⚠ 這個 bottom 是從上面那張表算出來的，**不是隨手調的**。
+      窄帶高度、瀏覽數字級、三格字級任何一個變了都要重算整張表。
+      定案之後搬進 index.html 時請重新量一次，不要照抄。 */
+.contact-pair { bottom: 15.18px; }
+
+/* ---- 版心縮不滿 1160 就改回兩行 ------------------------------------------
+   上面那 338px 是版心滿寬時才有的。版心一跟著視窗縮，右邊的空間掉得很快：
+   1100 上只剩 16px，1024 上是負的（會直接壓到「部定專科」）。
+   把字改小可以多擠 20px，但那是拿可讀性換的，而且還是不夠。
+   所以窄過 1160 就退回**兩行**（第三輪淘汰的那一案，留著當退路）——
+   兩行只要 172px，一路都放得下。（這一頁是給電腦版看的，手機還沒討論。）
+
+   兩行版有它自己非做不可的一件事：**「雲」和「0」要切齊、兩顆圖示也要切齊**。
+   做法整套照搬頁尾那條「溝」（index.html 第 1099 行那一段）：左邊留一條
+   固定寬度的溝，圖示置中在溝裡，文字一律從溝的右緣起跑，連結的 gap 收成 0。
+   ⚠ 溝是非有不可的，不能只靠 gap —— 兩顆圖示的框不一樣大（.85／.71rem），
+      用 gap 的話文字起點會差 2.24px，兩行疊起來就是看得出來的參差。
+   ⚠ 溝寬 1.55rem（24.8px）＝ 較大那顆的框 13.6px ＋ 左右各 5.6px。置中之後
+      兩顆畫出來的範圍都落在溝的 7.9~16.9px（實測中心差 0.03px、文字起點差 0）。
+      日後改了圖示大小，這個對齊要重新量。
+   ⚠ 兩行必須**靠左**對齊。靠右的話兩行右緣切齊、左緣參差，雲和 0 就對不上。
+   ⚠ 垂直不是一行版那個 15.18px：兩行的盒高 32.7px，要讓它的中線落在三格的
+      中線 871.19 上，盒底得在 887.54 ＝ **離照片底 12.46px**。
+      直接沿用一行版的值會整組往上飄、還差點頂到瀏覽數。 */
+@media (max-width: 1159px) {
+  /* ⚠ 選擇器寫 `body .contact-pair`（0,1,1）而不是 `.contact-pair`（0,1,0）——
+     **@media 不會增加權重**。第五輪的 y 階是 `body[data-y="…"] .contact-pair`
+     （0,2,0），那時只寫 `.contact-pair` 就被整條蓋掉、退路等於沒生效
+     （1100 上量到整組還停在 8.72px、比三格中線低 3.75px）。
+     現在 y 已定案、規則降成 `.contact-pair`，但**仍然要加 body 抬一階** ——
+     同權重時比的是先後順序，而這一塊在後面；不加的話兩條同權重、順序又對，
+     看似會過，日後只要有人在上面補一條 `body[...]` 就又壞掉。 */
+  body .contact-pair {
+    --hero-gutter: 1.55rem;
+    bottom: 12.46px;
+    flex-direction: column; align-items: flex-start; gap: .25rem;
+  }
+  .hero-contact a { gap: 0; }
+  .hero-contact .ico { flex: 0 0 var(--hero-gutter); }
+}
+
+/* ---- 底下墊一段紙色，看得出窄帶與內文的交界 ------------------------------ */
+.after { padding: 3rem 0 5rem; }
+.after h2 { margin: 0 0 .6rem; font-size: 1.1rem; }
+.after p { margin: 0 0 .8rem; font-size: .88rem; color: var(--ink-soft); max-width: 46em; }
+.after b { color: var(--ink); }
+
+/* ---- 切換條（定案後連同 data-* 一起刪掉，不要留到正式站）----------------
+   兩條：水平一條、垂直一條。做成兩列而不是擠成一列，是因為兩個軸要能各自
+   單獨切 —— 一次只動一個變數，才知道是哪一個造成差別。 */
+.sw {
+  position: fixed; right: 1rem; bottom: 1rem; z-index: 50;
+  display: grid; gap: .35rem;
+  background: rgba(25, 22, 20, .82); border-radius: 1rem; padding: .5rem .55rem;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.sw-row { display: flex; align-items: center; gap: .35rem; }
+.sw span { font-size: .68rem; color: rgba(255,255,255,.6); padding-inline: .35rem; min-width: 3.4em; }
+.sw button {
+  font: inherit; font-size: .74rem; line-height: 1;
+  padding: .42rem .75rem; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.32); background: transparent; color: rgba(255,255,255,.82);
+}
+.sw button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="shell">
+    <a class="brand" href="#">
+      <span class="brand-mark">
+        <svg width="44.2873" height="21.8244" viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g transform="translate(-232.8729 -333.8286)">
+            <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
+          </g>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <b>芳仁牙醫診所</b>
+        <small>雲林斗六・永樂街</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="主選單">
+      <a href="#">全部文章</a>
+      <a href="#">醫師介紹</a>
+      <a href="#">診所資訊</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1 class="sr-only">芳仁牙醫診所 — HERO 放地址與電話，水平排法三案</h1>
+
+  <div class="hero">
+    <figure class="hero-photo">
+      <img src="/assets/hero-clinic-night.jpg"
+           srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
+           sizes="100vw"
+           alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
+           width="1600" height="1058" fetchpriority="high">
+      <div class="hero-copy">
+        <div class="shell">
+          <p class="hero-poem">
+            <span class="lead">小時候被大人牽著來<span class="g">　</span>現在牽著別人</span>
+            <span>從中華路到永樂街<span class="g">　</span>四十多年</span>
+            <span>有跟著換的<span class="g">　</span>也有一直顧的</span>
+          </p>
+        </div>
+        <div class="shell">
+          <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
+        </div>
+      </div>
+    </figure>
+
+    <div class="band">
+    <div class="shell">
+      <!-- ⚠ 這個 190 是**提案頁專用的示範值**。正式站的數字只能來自 D1
+           （assets/counter.js ＋ data-views-self="home"）。
+           2026-08-07 就是把提案頁的示範值 8642 跟著版型搬進正式站，
+           結果真值被一個不會動的假數字蓋掉 —— 搬版型的時候不要連這個一起帶。 -->
+      <p class="band-views">
+        <span class="views-n">190</span><small>次瀏覽</small>
+      </p>
+
+      <!-- 三格這一段和正式站的 index.html 一字不差 —— 聯絡那一組刻意不塞進來。 -->
+      <ul class="stats">
+        <li><b>1983<small>年</small></b><span>中華路開業</span></li>
+        <li><b>9<small>位</small></b><span>醫師駐診</span></li>
+        <li><b>5<small>個</small></b><span>部定專科</span></li>
+      </ul>
+    </div>
+
+    <!-- ⚠ 聯絡這一組是 .band 的直接子元素，**刻意不放進 .shell**。
+         兩個理由，都在 CSS 的 .contact-pair 那一段寫清楚了：
+         ① 它是絕對定位、完全不參與版面，三格才推不動 —— 第一輪讓它參與版面時，
+            實測三格的中軸被往左推了 42.4px，而那條中軸是 2026-08-07 的定案。
+         ② 參考框變成整條窄帶（＝整張照片的寬度），水平第三階「貼照片邊」
+            才算得出精確值；三階都不必用到 100vw，也就不會被捲軸寬度污染。 -->
+    <div class="contact-pair">
+      <p class="hero-contact c-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
+        <!-- 線條空心的地圖釘。頁尾那顆是 Font Awesome 的實心版，這裡不沿用（見上面註解）。
+             素材出處：Lucide "map-pin"，ISC 授權，https://lucide.dev ——
+             這一行註解就是署名，改圖或搬檔的時候不要刪。
+             aria-hidden：地址本身已經是連結的可讀內容，圖示再念一次是重複。 -->
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10.4c0 5.4-8 12.1-8 12.1s-8-6.7-8-12.1a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10.2" r="3"/></svg></span>
+        <span class="t">雲林縣斗六市永樂街&nbsp;70&nbsp;號</span>
+      </a></p>
+
+      <p class="hero-contact c-tel"><a href="tel:+88655339369">
+        <!-- 線條空心的話筒。素材出處：Lucide "phone"，ISC 授權，https://lucide.dev ——
+             這一行註解就是署名，改圖或搬檔的時候不要刪。 -->
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 0 1-2.1 1.9 18.8 18.8 0 0 1-8.2-2.9 18.5 18.5 0 0 1-5.7-5.7A18.8 18.8 0 0 1 2.6 4.7 1.9 1.9 0 0 1 4.5 2.6h2.8a1.9 1.9 0 0 1 1.9 1.6c.1.9.3 1.8.7 2.7a1.9 1.9 0 0 1-.4 2L8.3 10.1a15.2 15.2 0 0 0 5.7 5.7l1.2-1.2a1.9 1.9 0 0 1 2-.4c.9.4 1.8.6 2.7.7a1.9 1.9 0 0 1 1.6 2Z"/></svg></span>
+        <span class="t">05-5339-369</span>
+      </a></p>
+    </div>
+    </div>
+  </div>
+
+  <section class="after">
+    <div class="shell">
+      <h2>定稿（2026-08-10）</h2>
+      <p>六輪之後全部收斂，切換條已刪，這一頁現在是<b>定稿的紀錄</b> ——
+        畫面上就是上線的樣子。</p>
+      <p>　<b>排法</b>　一行、中間拉開 30px，地址在左、電話在右<br>
+        　<b>水平</b>　版心外緣（1440 上離螢幕右緣 132.5px）<br>
+        　<b>垂直</b>　離照片下緣 15.18px<br>
+        　<b>釘子</b>　畫出來 12.68px（中文字面的 1.057 倍）<br>
+        　<b>話筒</b>　畫出來 11.33px（數字字面的 1.030 倍）＋ 下移 0.8px<br>
+        　<b>顏色</b>　靜止＝「部定專科」的白 .65，滑過去＝「1983」的白 .95<br>
+        　<b>底線</b>　一直都在，和頁尾同一組值（1px、offset .18em）<br>
+        　<b>1983／9／6</b>　照原來的置中，六輪下來一步都沒有動</p>
+      <p>視窗窄過 1160 時自動退回兩行（那時右邊真的放不下一行，硬塞會壓到
+        「部定專科」），兩行版的「雲」和「0」用頁尾那條「溝」對齊。
+        手機（≤720px）完全不顯示這一組 —— 這一輪只做電腦版。</p>
+      <p>六輪的推導、每一個落選案的實測數字、以及三個踩過的坑
+        （格線會偷走三格的中軸／inline-flex 的基線是圖示的底邊／@media 不增加權重），
+        全部留在這一頁的 <code>&lt;head&gt;</code> 註解裡。</p>
+    </div>
+  </section>
+</main>
+
+<!-- 切換條與那支 JS 已經在 2026-08-10 定案時整組刪掉（六輪、五條軸都收斂了）。
+     這一頁現在是**定稿的紀錄**：畫面上就是上線的樣子，六輪的推導與所有落選案的
+     實測數字全部留在 <head> 的註解裡。 -->
+</body>
+</html>
