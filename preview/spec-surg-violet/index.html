@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>口腔外科的紫 — 拆成填色與白底兩個值｜芳仁牙醫診所</title>
+<title>口腔外科的紫 — 定案 #8e6299 / #784e84｜芳仁牙醫診所</title>
 <link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <style>
 /* 自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
@@ -18,8 +18,9 @@
   --kids:#c28229; --endo:#5D6D55; --chair:#4f6361; --ortho:#3C596B; --prosth:#252d4a;
   --taupe:#7D5A58; --all:#5f5d5c;
 
-  /* 外科提案：兩個值。預設是 ⑤ 的原值 —— 拆開之前兩者相同 */
-  --surg-fill:#6f5575; --surg-deep:#6f5575;
+  /* 外科定案（2026-08-09）：兩個值，色相與彩度相同，只差亮度 8.2 */
+  --surg-fill:#8e6299;   /* F3　L* 48.0・C* 36.0・h 320.4 */
+  --surg-deep:#784e84;   /* T1　L* 39.8・C* 36.2・h 319.9 */
 
   --han:"PingFang TC","Noto Sans TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
@@ -89,14 +90,7 @@ blockquote cite{display:block;font-style:normal;margin-top:.35rem;font-size:.86r
          font-variant-numeric:tabular-nums;margin-left:auto}
 
 /* ---- 組合預覽 -------------------------------------------------------- */
-.picker{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
-.picker .plbl{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;color:var(--ink-soft);
-              width:100%}
-.picker button{font:inherit;font-size:13px;line-height:1.6;letter-spacing:.04em;cursor:pointer;
-  padding:.28rem .75rem;border-radius:12px;background:var(--card);color:var(--ink-soft);
-  border:1px solid var(--rule)}
-.picker button[aria-pressed="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
-.picker button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+/* 切換條的 CSS 已隨定案刪除（2026-08-09）。落選的理由留在正文裡。 */
 
 .stage{background:var(--card);border:1px solid var(--rule);border-radius:12px;
        padding:1.05rem 1.1rem;display:flex;flex-direction:column;gap:1rem}
@@ -107,7 +101,8 @@ blockquote cite{display:block;font-style:normal;margin-top:.35rem;font-size:.86r
 .bar-h3{display:flex;align-items:center;gap:.5rem;color:var(--surg-deep);font-size:1rem;letter-spacing:.04em}
 .bar-h3::before{content:"";width:3px;height:1.05em;background:var(--surg-fill);border-radius:2px;flex:0 0 auto}
 .stage-paper a{color:var(--surg-deep)}
-.btn{display:inline-block;background:var(--surg-fill);color:#fff;font-size:14px;letter-spacing:.04em;
+.btn{display:inline-block;align-self:flex-start;   /* 少了 align-self，flex 預設 stretch 會把按鈕拉滿欄寬 */
+     background:var(--surg-fill);color:#fff;font-size:14px;letter-spacing:.04em;
      padding:.4rem 1rem;border-radius:9px}
 .readout{font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);
          font-variant-numeric:tabular-nums;line-height:1.9}
@@ -134,9 +129,9 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
 <div class="wrap">
 
   <div class="head">
-    <p class="eyebrow">提案中 · PALETTE.md 第六之九節 · 2026-08-09</p>
+    <p class="eyebrow">已定案 · PALETTE.md 第六之九節 · 2026-08-09</p>
     <h1>口腔外科的紫</h1>
-    <p class="lead">第一輪五案已選定 <b>⑤ <code>#6f5575</code></b>。第二輪把它拆成<b>填色</b>與<b>白底的字</b>兩個值 —— 那是這一頁現在的重點。<br><span class="small">現行的 <code>#7D5A58</code> 還是定案值，程式碼一行都沒動。</span></p>
+    <p class="lead">定案 <b>填色 <code>#8e6299</code>（F3）</b> ＋ <b>白底的字 <code>#784e84</code>（T1）</b>。已套進 <code>index.html</code> 與 <code>assets/style.css</code>，這一頁往下是怎麼走到這裡的。<br><span class="small">在 <code>main</code> 上還是原本的 Deep Taupe —— 這個分支不會自動部署。</span></p>
   </div>
 
   <hr>
@@ -163,7 +158,7 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
       <div class="rung" style="--c:#6f5575"><span class="swatch"></span><span class="name">⑤ 基準</span><span class="hex">#6f5575</span><span class="m">L* 39.9　C* 22.0　白字 6.50</span></div>
       <div class="rung" style="--c:#7a5a82"><span class="swatch"></span><span class="name">F1 亮一階</span><span class="hex">#7a5a82</span><span class="m">L* 42.9　C* 27.0　白字 5.81</span></div>
       <div class="rung" style="--c:#865f90"><span class="swatch"></span><span class="name">F2 亮兩階</span><span class="hex">#865f90</span><span class="m">L* 46.0　C* 32.4　白字 5.18</span></div>
-      <div class="rung" style="--c:#8e6299"><span class="swatch"></span><span class="name">F3 頂著上限</span><span class="hex">#8e6299</span><span class="m">L* 48.0　C* 36.0　白字 4.82</span></div>
+      <div class="rung" style="--c:#8e6299"><span class="swatch"></span><span class="name">F3 頂著上限 ★</span><span class="hex">#8e6299</span><span class="m">L* 48.0　C* 36.0　白字 4.82</span></div>
     </div>
     <p class="small">F3 是白字還撐得住的最後一階（再上去 L* 50 就掉到 4.4 左右）。F2、F3 拿去當字會不夠 —— <b>但那正是拆成兩個值的意義，它們不必當字。</b></p>
 
@@ -171,7 +166,7 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
     <p class="small">「紫黑」有兩個可能的成因：亮度不夠，或彩度不夠。三案刻意各動一個變數，這樣你選哪一個就直接告訴我成因是哪一個。</p>
     <div class="ladder">
       <div class="rung" style="--c:#6f5575"><span class="swatch"></span><span class="name">⑤ 基準</span><span class="hex">#6f5575</span><span class="m">L* 39.9　C* 22.0　對卡 5.91　對紙 5.13</span></div>
-      <div class="rung" style="--c:#784e84"><span class="swatch"></span><span class="name">T1 只拉彩度</span><span class="hex">#784e84</span><span class="m">L* 39.8　C* 36.2　對卡 5.93　對紙 5.15</span></div>
+      <div class="rung" style="--c:#784e84"><span class="swatch"></span><span class="name">T1 只拉彩度 ★</span><span class="hex">#784e84</span><span class="m">L* 39.8　C* 36.2　對卡 5.93　對紙 5.15</span></div>
       <div class="rung" style="--c:#775d7d"><span class="swatch"></span><span class="name">T2 只拉明度</span><span class="hex">#775d7d</span><span class="m">L* 43.1　C* 21.8　對卡 5.24　對紙 4.55</span></div>
       <div class="rung" style="--c:#7f578a"><span class="swatch"></span><span class="name">T3 兩個一起</span><span class="hex">#7f578a</span><span class="m">L* 43.0　C* 33.9　對卡 5.26　對紙 4.57</span></div>
     </div>
@@ -190,23 +185,12 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
 
   <!-- ===================== 組合預覽 ===================== -->
   <section>
-    <h2>組合起來看</h2>
-    <p class="small">兩個值互相獨立，任何組合都合法。上排選填色，下排選白底的字。網址可帶 <code>?f=f2&amp;t=t1</code>。</p>
+    <h2>定案：T1 配 F3</h2>
+    <p class="small">使用者選的組合。切換條已依慣例刪掉，下面就是定案的樣子。</p>
 
-    <div class="picker" id="pf">
-      <span class="plbl">填色（醫師藥丸、按下的 chip、按鈕、短棒）</span>
-      <button type="button" data-v="#6f5575" data-k="f0" aria-pressed="true">⑤ 基準</button>
-      <button type="button" data-v="#7a5a82" data-k="f1" aria-pressed="false">F1</button>
-      <button type="button" data-v="#865f90" data-k="f2" aria-pressed="false">F2</button>
-      <button type="button" data-v="#8e6299" data-k="f3" aria-pressed="false">F3</button>
-    </div>
-
-    <div class="picker" id="pt">
-      <span class="plbl">白底的字（未選的 chip、文章卡標籤、內文連結）</span>
-      <button type="button" data-v="#6f5575" data-k="t0" aria-pressed="true">⑤ 基準</button>
-      <button type="button" data-v="#784e84" data-k="t1" aria-pressed="false">T1 彩度</button>
-      <button type="button" data-v="#775d7d" data-k="t2" aria-pressed="false">T2 明度</button>
-      <button type="button" data-v="#7f578a" data-k="t3" aria-pressed="false">T3 兩個</button>
+    <div class="note ok">
+      <p><b>這個選擇同時回答了診斷題：「紫黑」的成因是彩度不足，不是亮度。</b>T1 的亮度和 ⑤ 差 0.1，一度沒動 —— 解決問題的是彩度從 22.0 拉到 36.2。</p>
+      <p>而且兩階剛好長成最乾淨的樣子：<b>色相差 0.5°、彩度差 0.1，只差亮度 8.2</b>。它不是「兩個色」，是同一個色的兩個高度。兒牙那一組色相差 6°、彩度差 20，是被物理逼出來的；這一組是選出來的。</p>
     </div>
 
     <div class="stage">
@@ -241,11 +225,28 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
         </div>
       </div>
 
-      <p class="readout" id="readout"></p>
+      <p class="readout">填色 #8e6299（F3）　白底的字 #784e84（T1）</p>
+    </div>
+
+    <div class="scroll">
+      <table>
+        <caption>每一個實際用到的地方都驗過。<b>七科裡第一組完全沒有例外的科別色</b> —— 兒牙的填色白字是 3.22，顯微根管與兒牙都還要替文章頁另開一階字色，這一組兩者皆免。</caption>
+        <thead><tr><th>用在哪</th><th>用哪一階</th><th>對比</th><th>門檻</th></tr></thead>
+        <tbody>
+          <tr><td>醫師藥丸（實心＋白字）</td><td class="num">#8e6299</td><td class="num">4.82</td><td class="num">4.5 ✓</td></tr>
+          <tr><td>chip 選取（實心＋白字）</td><td class="num">#8e6299</td><td class="num">4.82</td><td class="num">4.5 ✓</td></tr>
+          <tr><td>文章內頁 實心藥丸／按鈕</td><td class="num">#8e6299</td><td class="num">4.82</td><td class="num">4.5 ✓</td></tr>
+          <tr><td>chip 未選（字與框，底是卡）</td><td class="num">#784e84</td><td class="num">5.93</td><td class="num">4.5 ✓</td></tr>
+          <tr><td>文章卡標籤（字與框，底是卡）</td><td class="num">#784e84</td><td class="num">5.93</td><td class="num">4.5 ✓</td></tr>
+          <tr><td>文章內頁 連結／h3（底是紙）</td><td class="num">#784e84</td><td class="num">5.15</td><td class="num">4.5 ✓</td></tr>
+          <tr><td>短棒／重點框左條（底是紙）</td><td class="num">#8e6299</td><td class="num">3.81</td><td class="num">3.0 ✓</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="note">
-      <p><b>要盯的一件事：填色越亮，它和白底那個字的落差就越大。</b>F3 ＋ ⑤ 的組合是 L* 48 對 39.9，chip 的兩態會像兩個不同的紫。兒牙就是這樣（填色 L* 59.5、字 L* 47），所以不是不行 —— 但那是兒牙被物理逼出來的，外科是自己選的，值得先看清楚再決定。</p>
+      <p><b>ΔE 也是七科裡分得最開的一組。</b>對六個現役色最小的距離是 30.4（深階對贋復），其餘都在 34~81 之間 —— 沒有任何一顆會和它混淆。</p>
+      <p class="soft">要盯的是另一件：填色比白底的字亮 8.2 階，chip 的未選與選取會有明顯的深淺差。兒牙也是這樣（填色 59.5、字 47），所以不是新的行為 —— 但外科這一組是選出來的，先看清楚再上線。</p>
     </div>
   </section>
 
@@ -337,58 +338,5 @@ dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:v
 
 </div>
 
-<script>
-/* 組合預覽。五案與兩條梯子本身都是靜態的，沒有 JS 也讀得完整頁。
-   網址參數的正規式要吃得下數字（[a-z0-9]+）—— 寫成 [a-z]+ 會比對失敗後
-   悄悄退回預設，等於參數沒作用（PALETTE 記過這個坑）。 */
-(function(){
-  var root = document.documentElement;
-  var pf = document.getElementById('pf');
-  var pt = document.getElementById('pt');
-  var readout = document.getElementById('readout');
-  if (!pf || !pt) return;
-
-  function apply(group, key){
-    var btns = group.querySelectorAll('button[data-k]');
-    var hit = null;
-    for (var i = 0; i < btns.length; i++){
-      var on = btns[i].getAttribute('data-k') === key;
-      btns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
-      if (on) hit = btns[i];
-    }
-    if (!hit) return false;
-    root.style.setProperty(group === pf ? '--surg-fill' : '--surg-deep', hit.getAttribute('data-v'));
-    return true;
-  }
-
-  function current(group){
-    var b = group.querySelector('button[aria-pressed="true"]');
-    return b ? { k: b.getAttribute('data-k'), v: b.getAttribute('data-v'), t: b.textContent.trim() } : null;
-  }
-
-  function sync(){
-    var f = current(pf), t = current(pt);
-    if (!f || !t) return;
-    readout.textContent = '填色 ' + f.v + '（' + f.t + '）　白底的字 ' + t.v + '（' + t.t + '）'
-                        + '　—　?f=' + f.k + '&t=' + t.k;
-    /* 刻意不寫 history.replaceState：這一頁也會以 artifact 的形式跑在
-       sandbox 的 iframe 裡，那裡呼叫它會丟 SecurityError 把整段中斷。
-       參數改成印在下面那行，要分享時自己接到網址後面。 */
-  }
-
-  var mf = /[?&]f=([a-z0-9]+)/.exec(location.search);
-  var mt = /[?&]t=([a-z0-9]+)/.exec(location.search);
-  if (mf) apply(pf, mf[1]);
-  if (mt) apply(pt, mt[1]);
-  sync();
-
-  [pf, pt].forEach(function(group){
-    group.addEventListener('click', function(e){
-      var b = e.target.closest('button[data-k]');
-      if (b && apply(group, b.getAttribute('data-k'))) sync();
-    });
-  });
-})();
-</script>
 </body>
 </html>

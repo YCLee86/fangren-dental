@@ -30,7 +30,8 @@
   /* ---- 官方色票原值（PALETTE.md 第一節），一個數字都沒改 ---------------- */
   --teal:  #214D48;          /* 深綠松。紙 7.47:1・卡 8.60:1 —— 全站的連結色 */
   --blue:  #3C596B;          /* 藍灰。 紙 5.85:1・卡 6.74:1 */
-  --taupe: #7D5A58;          /* Deep Taupe */
+  --taupe: #7D5A58;          /* Deep Taupe。2026-08-09 口腔外科改紫之後這一頁沒有元件用它了，
+                                但首頁的「看診時間」卡還在用，色票原值留著當紀錄 */
   --brick: #AF4C52;          /* 磚紅。對紙只有 4.17:1，**只能待在卡上** */
   /* 首頁「主題與科別」那六顆標記的實測色，一個值都沒改（PALETTE.md 第一節） */
   --chair: #4f6361;          /* 診療椅 */
@@ -72,7 +73,10 @@ body { --accent: var(--teal); --accent-deep: var(--teal); --on-fill: #fff; }
 [data-spec="general"],
 [data-spec="perio"]  { --accent: var(--chair); --accent-deep: var(--chair); }  /* 5.04 */
 [data-spec="ortho"]  { --accent: var(--blue);  --accent-deep: var(--blue);  }  /* 5.85 */
-[data-spec="surg"]   { --accent: var(--taupe); --accent-deep: var(--taupe); }  /* 4.77 */
+/* 口腔外科的紫（定案 2026-08-09，PALETTE.md 第六之九節）。兩階的色相與彩度相同、
+   只差亮度 8.2 —— 同一個色的兩個高度，不是兩個色。原本的 Deep Taupe 被釋出，
+   但 --taupe 留著：診所資訊的「看診時間」卡還在用它，而且首頁那邊也還需要它。 */
+[data-spec="surg"]   { --accent: #8e6299; --accent-deep: #784e84; }  /* 5.15 */
 [data-spec="prosth"] { --accent: var(--tile);  --accent-deep: var(--tile);  }  /* 10.68 */
 [data-spec="endo"]   { --accent: var(--moss);  --accent-deep: #596951;      }  /* 苔綠原值在紙上 4.38，差一點，壓深到 4.65 */
 /* 兒牙的黃：當底 #c28229（定案，十一輪，PALETTE.md 第六之二節），
