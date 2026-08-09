@@ -378,7 +378,17 @@ html.scrolled .brand-text small { font-size: .74rem; }
   display: flex; flex-direction: column; justify-content: space-between;
   /* 上緣讓開頁首，下緣留給收尾句 */
   /* 橫幅比先前矮，上內距跟著收 —— 原本 7vh 會把詩推到快要碰到收尾句。 */
-  padding-top: calc(var(--head-h) + clamp(1.2rem, 4vh, 2.6rem));
+  /* ---- 2026-08-09：往下再讓一段（提案 Ⓒ 定案，電腦版）--------------------
+     使用者的朋友回報「左上角 logo 的字跟 cover image 的字大小差不多，
+     看起來會比較 noisy，可以增加 spacing」。實測後成立：品牌那一行的下緣在
+     1440×900 上是 49px、詩的上緣是 112px，中間只有 63px，而兩者同一個左緣、
+     同一個白、字級只差 1.13 倍（16.96 / 15）——眼睛沒有理由把它們讀成兩件事。
+     4vh → 9vh 之後空隙變成 108px。**字級一個都沒動**（那是 2026-08-07 定的），
+     動的只有距離，以及下面那首詩自己的字距與行距。
+     三案 Ⓐ／Ⓑ／Ⓒ 的比較與量測留在 preview/head-hero-space/。
+     ⚠ 手機版**不吃這一條** —— 手機的 .hero-copy 在下面的 @media 裡另外寫死
+        padding-top，而手機要怎麼排還在重做（見那一段的註解）。 */
+  padding-top: calc(var(--head-h) + clamp(2.6rem, 9vh, 5.4rem));
   /* 讓開壓在下緣的窄帶。收尾句因此往上移了一個帶高 ＋ 一點呼吸。 */
   padding-bottom: calc(var(--band-h) + clamp(1rem, 3vh, 2rem));
 }
@@ -388,15 +398,24 @@ html.scrolled .brand-text small { font-size: .74rem; }
 /* 詩：三行已定稿，用全形空格斷句、沒有標點（COPY.md 第一節）。
    字級從手機版的 10~11.5px 放大到 15px —— 這是全頁少數該跟著螢幕長大的東西，
    因為它疊在一張 780px 高的照片上，維持手機的字級會變成一撮小字。
-   字距 .2em、行高、兩層陰影（色用 #191614 不用純黑）都和手機版相同。 */
+   兩層陰影（色用 #191614 不用純黑）和手機版相同。
+
+   ---- 2026-08-09：字距與行距放開（提案 Ⓒ 定案，電腦版）--------------------
+   上面那條「往下讓一段」處理的是距離，這裡處理的是**質地**：
+   頁首的字是緊排的、詩也是緊排的，兩塊看起來一樣，才會在同一個左緣上糊成一欄。
+   字距 .2em → .32em、行高 1.95 → 2.45、首行之後的間隔 .5em → .9em，
+   詩因此讀起來慢下來，和頁首那排字不再是同一種東西。**字級沒有動。**
+   max-width 跟著從 34em 開到 40em —— 不開的話字距一放大就會換行。
+   ⚠ 這三個值手機版都在下面的 @media 裡另外指定（含 letter-spacing），
+      所以手機看不到這一段的變化。手機要怎麼排還在重做。 */
 .hero-poem {
-  margin: 0; max-width: 34em;
-  font-size: clamp(12.5px, 1.05vw, 15px); font-weight: 400; line-height: 1.95;
-  letter-spacing: .2em; color: rgba(255, 255, 255, .65);
+  margin: 0; max-width: 40em;
+  font-size: clamp(12.5px, 1.05vw, 15px); font-weight: 400; line-height: 2.45;
+  letter-spacing: .32em; color: rgba(255, 255, 255, .65);
   text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
 }
 .hero-poem span { display: block; }
-.hero-poem .lead { margin-bottom: .5em; }
+.hero-poem .lead { margin-bottom: .9em; }
 
 /* 收尾句躺在路面上。底下那塊模糊的深色是必要的 ——
    左下角有車頭燈，不墊這一塊字會消失在亮點裡。
@@ -1215,8 +1234,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   /* 詩的位置照手機版：距上緣約 5vh（原 5cqh），和頁首之間留一個呼吸 */
   .hero-copy { justify-content: flex-start; padding-top: 15vw; }
   .hero-copy .shell:last-child { margin-top: auto; padding-bottom: 3vw; }
+  /* ⚠ letter-spacing 一定要在這裡寫出來，即使值和以前一樣。
+     2026-08-09 電腦版把 .hero-poem 的字距從 .2em 放大到 .32em（提案 Ⓒ），
+     而手機版原本只覆寫 font-size / line-height / max-width —— 字距沒寫，
+     就會**整條漏下來**，手機的詩跟著變寬、直接撞上照片裡的房子。
+     手機要怎麼排是另一件事（使用者 2026-08-09 說三案都會壓到房子，正在重做），
+     在那之前這裡就是把手機釘回原樣。 */
   .hero-poem {
     font-size: clamp(10px, 3.06vw, 11.5px); line-height: 1.75; max-width: 76vw;
+    letter-spacing: .2em;
   }
   .hero-poem .lead { margin-bottom: .55em; }
   .hero-sign { font-size: clamp(9.2px, 2.56vw, 11.5px); }
