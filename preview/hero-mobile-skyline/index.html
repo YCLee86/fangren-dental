@@ -1403,21 +1403,43 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      整塊詩因此可以整體再往下坐。代價是多佔一行的高度，
      所以三案的行高都比現況（1.75）略收，讓總高不要爆掉。
 
+     ---- 一個要回報的發現：第 4 點瞄錯行了 -------------------------------------
+     把「拆第三行」單獨做出來量，**它一點高度都換不到**：拆或不拆，整首詩能降到的
+     最低點完全一樣（.10em 的收緊程度下都是 27px）。原因就是上面那張表 ——
+     卡住整首詩的是**第一行**：它最長（16 格 vs 14 格 vs 12 格），
+     而屋簷正好從它的右上方壓下來。第三行只有 165px，掉到楔形最窄處都還有餘裕，
+     所以拆它是在解一個沒有卡住的地方。
+
+     同一招用在**第一行**才真的換得到高度。這就是 Ⓜ2／Ⓜ3 的做法。
+
      ---- 三案 -----------------------------------------------------------------
-     三案的做法完全相同，差別只有「收多緊」，收得越緊、第一行就能坐得越低：
+     三案是三種不同的取捨，不是同一件事的三個強度。括號是 375px 上量到的
+     「詩的上緣離頁首那一塊有多遠」（現況是 −2.9px，也就是疊著）：
 
-                     字距      全形空格   第一行寬   詩的上緣   和頁首的空隙
-       現況          .20em     1em        220.8px     58.5px     −3.7px（疊著）
-       Ⓜ1 輕        .14em     .5em       —           —          —
-       Ⓜ2 中        .10em     .4em       —           —          —
-       Ⓜ3 緊        .06em     .3em       —           —          —
+       Ⓜ1 收字距（26px・三行）
+           完全照第 1～3 點，行不拆。字距 .20em → .06em、全形空格 1em → .3em。
+           詩的形狀一個字都沒變，只是字排緊了。代價：字距是這首詩的調性之一
+           （電腦版當天才從 .2em 放大到 .32em），收到 .06em 等於手機和電腦兩種質地。
 
-     （實際數字由下面的 CSS 決定，量測結果寫在 commit 訊息與 CLAUDE.md。）
+       Ⓜ2 拆一二行（39px・五行）—— 三案裡降得最多
+           第一行、第二行各拆成兩截，第三行維持一行。字距只收到 .10em。
+           拆完之後前兩行都只剩 130px 上下，楔形完全管不到它們，
+           剩下唯一要閃的是第三行 —— 它在下面那一段寬度回穩的區間（右界 191px），
+           164px 進得去。詩變成長短交錯的五行。
 
-     底部還有兩條線不能過，兩條都不是「房子」而是招牌：
+       Ⓜ3 全拆（21px・六行）
+           三行全部拆成兩截，**字距完全不動（.20em，和現在一樣）**。
+           質地一個字都沒改，換來的是形狀：詩變成六個短行的一直條。
+           降得比 Ⓜ2 少，因為多出來的行高自己吃掉了空間。
+
+     所以取捨很清楚：**要距離就得付出「字距」或「行的形狀」其中一樣**，
+     兩樣都不付的話，詩只能待在現在的位置（那正是現況 −2.9px 的由來）。
+
+     底部還有兩條線不能過：
        ・y 216px 以下右界只剩 64px —— 對街矮房子的屋頂
        ・y 181px 以下左界從 11px 開始往右吃 —— 左下角那面「Ｐ」停車招牌
-     詩的左緣在 15px（版心內距），所以最後一個半行的字腳大約到 y 193px 就是極限。
+     詩的左緣在 20px（版心內距），所以最後一行的字腳大約到 y 193px 就是極限。
+     Ⓜ2 與 Ⓜ3 的最後一行都停在 187px，卡的就是這一條。
 
      右上角有一顆「天空邊界」可以打開，把上面量到的楔形直接畫在照片上，
      一眼就看得出每一行離房子還有多遠。那條線是提案用的，定案後刪掉。
@@ -1427,33 +1449,58 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    全部只在手機生效。電腦版是 2026-08-09 已上線的 Ⓒ，這一頁一個字都沒動它。 */
 @media (max-width: 720px) {
   html[data-m] .hero-copy { padding-top: var(--m-top); }
+  /* ⚠ 詩的左緣也要跟著寬度縮，否則整套幾何在不同手機上會走鐘。
+     `--pad` 是 clamp(1.25rem, 3vw, 2.5rem)，在所有手機寬度上都撞到 1.25rem 的
+     **下限＝固定 20px**。照片、字級、往下推的距離全部是 vw（等比例），只有這個
+     左緣是定值 —— 於是同一組數字在 390 上剛好閃過，在 375 上就差 0.7px 壓到，
+     在 320 上差更多。改成 5.13vw（＝390 上的 20px）之後整組幾何等比例，
+     320～430 的餘裕完全一樣。
+     代價：詩的左緣不再和底下窄帶、卡片的版心對齊（390 上分毫不差，
+     320 上差 3.6px、430 上差 2px）。詩是浮在照片上的一塊，離那些元素很遠，
+     這個取捨可以接受；不能接受的話就得回頭改 --pad，那會動到整頁。 */
+  html[data-m] .hero-copy .shell { padding-inline: 5.13vw; }
   html[data-m] .hero-poem {
     letter-spacing: var(--m-ls);
     line-height: var(--m-lh);
     max-width: 92vw;              /* 只是保險，實際寬度由字距決定，不靠它斷行 */
+    /* ⚠ 字級下限從 10px 降到 9.5px —— 這一行是**幾何上必要**的，不是想把字改小。
+       原本是 clamp(10px, 3.06vw, 11.5px)：320px 寬時 3.06vw ＝ 9.79px 撞到 10px 的
+       下限，字因此比照片「相對變大」2.1%，而照片是整個跟著 vw 縮的 ——
+       於是同一組 vw 參數在 390 上剛好閃過房子、在 320 上就壓進去 7px。
+       把下限降到 9.5px 之後 320 上取的是 9.79px（vw 那一項），
+       整組幾何在每一支寬度上都同比例，一組數字就通吃。
+       實際看到的字只小 0.21px。上限 11.5px 不動。 */
+    font-size: clamp(9.5px, 3.06vw, 11.5px);
   }
   html[data-m] .hero-poem .lead { margin-bottom: var(--m-lead); }
   /* 第 2、3 點：把兩段文字之間的全形空格縮窄。
      縮的是那個字的 font-size，字元本身沒有換掉。 */
   html[data-m] .hero-poem .g { font-size: var(--m-gap); }
-  /* 第 4 點：第三行的全形空格改成換行。
-     display:block ＋ font-size:0 ＝ 它自己撐出一個高度 0 的區塊，
-     前後的文字因此被切成兩個匿名區塊 —— 換行有了，高度沒有多出來。 */
-  html[data-m] .hero-poem .l3 .g { display: block; font-size: 0; height: 0; }
-  /* 拆出來的兩個半行是同一句話，行距收緊一點，讀起來才是一對、不是兩行 */
-  html[data-m] .hero-poem .l3 { line-height: var(--m-lh3); }
 
-  /* Ⓜ3 把第一行也拆成兩行 —— 使用者的第 4 點原本只給第三行，
-     但綁住整首詩的其實是第一行（它最長），所以同一招用在它身上才真的換得到高度。 */
-  html[data-m="m3"] .hero-poem .l1 .g { display: block; font-size: 0; height: 0; }
-  html[data-m="m3"] .hero-poem .l1 { line-height: var(--m-lh3); }
+  /* ---- 拆行 -----------------------------------------------------------------
+     把那一行的全形空格變成 display:block ＋ font-size:0：
+     它自己是一個高度 0 的區塊，前後的文字因此被切成兩個匿名區塊 ——
+     換行有了，高度沒有多出來，字元也還在（沒有改成 <br>）。
+     拆出來的兩個半行是同一句話，行距收緊（--m-lh3），讀起來才是一對、不是兩行。 */
+  html[data-m="m2"] .hero-poem .l1 .g, html[data-m="m2"] .hero-poem .l2 .g,
+  html[data-m="m3"] .hero-poem .l1 .g, html[data-m="m3"] .hero-poem .l2 .g,
+  html[data-m="m3"] .hero-poem .l3 .g { display: block; font-size: 0; height: 0; }
+  html[data-m="m2"] .hero-poem .l1, html[data-m="m2"] .hero-poem .l2,
+  html[data-m="m3"] .hero-poem .l1, html[data-m="m3"] .hero-poem .l2,
+  html[data-m="m3"] .hero-poem .l3 { line-height: var(--m-lh3); }
 
-  /* --m-top 的值不是挑的，是**用二分法逼出來的上限**：
-     在每一支寬度上，把詩整塊往下推到「任何一個視覺行的右端離天空邊界剩 8px、
-     左端離招牌剩 5px」為止。所以每一案都是那個收緊程度能換到的最低位置。 */
-  html[data-m="m1"] { --m-top: 20.5vw; --m-ls: .14em; --m-gap: .5em;  --m-lh: 1.95; --m-lh3: 1.7;  --m-lead: .75em; }
-  html[data-m="m2"] { --m-top: 23.4vw; --m-ls: .08em; --m-gap: .35em; --m-lh: 1.85; --m-lh3: 1.55; --m-lead: .65em; }
-  html[data-m="m3"] { --m-top: 27.3vw; --m-ls: .06em; --m-gap: .3em;  --m-lh: 1.75; --m-lh3: 1.4;  --m-lead: .55em; }
+  /* --m-top 不是挑的，是**用二分法逼出來的下限位置**：
+     把詩整塊往下推到「任何一個視覺行的右端離天空邊界只剩 8px、
+     左端離『Ｐ』招牌只剩 5px」為止（餘裕按視窗寬等比例換算）。
+     所以每一案的位置都是「那個收緊程度能換到的最低點」，不是估的。
+
+     ⚠ 逼值是在 **375px 寬**做的，不是 390 —— 字級 clamp(9.5px, 3.06vw, 11.5px)
+        在 376px 以上會撞到 11.5px 的上限，字因此相對照片變小、變安全；
+        376 以下才是「相對最大」的狀態。所以 375 是最壞情況，
+        在那裡過關的數字，320～376 全部同比例過關，376 以上只會更寬鬆。 */
+  html[data-m="m1"] { --m-top: 22.7vw; --m-ls: .06em; --m-gap: .3em; --m-lh: 1.85; --m-lh3: 1.5;  --m-lead: .65em; }
+  html[data-m="m2"] { --m-top: 26.2vw; --m-ls: .10em; --m-gap: .4em; --m-lh: 1.85; --m-lh3: 1.45; --m-lead: .6em; }
+  html[data-m="m3"] { --m-top: 21.4vw; --m-ls: .20em; --m-gap: .6em; --m-lh: 1.9;  --m-lh3: 1.5;  --m-lead: .65em; }
 }
 
 /* ---- 天空邊界的示意線（提案用，定案後刪）----------------------------------
@@ -1484,6 +1531,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .sw button:focus-visible { outline: 2px solid rgba(255, 255, 255, .8); outline-offset: 2px; }
 .sw .sep { width: 1px; background: rgba(255, 255, 255, .22); margin: .2rem .15rem; }
 @media (max-width: 720px) { .sw { font-size: .66rem; bottom: .6rem; } .sw button { padding: .3rem .42rem; } }
+/* 五顆按鈕在 320 寬會超出兩側各 2px（量到 −2 ~ 322）。再收一階字級與內距。 */
+@media (max-width: 360px) { .sw { font-size: .6rem; gap: .2rem; padding: .3rem .32rem; } .sw button { padding: .28rem .34rem; } }
 </style>
 </head>
 <body>
@@ -2272,9 +2321,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      就比對失敗、悄悄退回預設，等於參數沒有作用。 -->
 <div class="sw" role="group" aria-label="手機版三案切換">
   <button type="button" data-v="now">現況</button>
-  <button type="button" data-v="m1">Ⓜ1 輕</button>
-  <button type="button" data-v="m2">Ⓜ2 中</button>
-  <button type="button" data-v="m3">Ⓜ3 緊</button>
+  <button type="button" data-v="m1">Ⓜ1 收字距</button>
+  <button type="button" data-v="m2">Ⓜ2 拆一二行</button>
+  <button type="button" data-v="m3">Ⓜ3 全拆</button>
   <span class="sep" aria-hidden="true"></span>
   <button type="button" data-sky="1">天空邊界</button>
 </div>
