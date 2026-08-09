@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>九個綠 — 診療椅／Logo 苔綠／家色深綠松 ＋ 中間六階｜芳仁牙醫診所</title>
+<title>一般牙科的綠 — 套色 ⑪ ＋ 白底字三案｜芳仁牙醫診所</title>
 <link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <style>
 /* 自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
@@ -33,6 +33,10 @@
   --g11:#3f654a; --gl11:#3f654a;
   --g12:#386646; --gl12:#386646;
   --g13:#306843; --gl13:#306843;
+  /* 白底字／文章字的三階：以 ⑪ 為準只降亮度，色相 150.9 與彩度 22.9 都鎖住 ——
+     彩度跟著縮的話「翠」會在文字階被稀釋掉，而且會更靠近深綠松（連結色）。
+     鎖住反而讓色域佔比從 50% 升到 63%，翠度保住了。 */
+  --d1:#33593e; --d2:#2c5238; --d3:#254a31;
   --chair:#4f6361; --moss:#5D6D55; --teal:#214D48; --leaf:#447c56;
 
   /* 其餘現役科別（2026-08-09 收盤） */
@@ -133,12 +137,17 @@ code{font-family:var(--mono);font-size:.9em}
       padding:.55rem 1rem;border-radius:16px;font-size:.9rem;text-decoration:none}
 
 /* ---- 切換條 ---------------------------------------------------------- */
-.switcher{position:fixed;left:50%;transform:translateX(-50%);bottom:.7rem;z-index:9;
+.switcher{position:fixed;left:50%;transform:translateX(-50%);bottom:.7rem;z-index:9;flex-direction:column;align-items:stretch;
           background:rgba(244,244,245,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
           border:1px solid var(--rule);border-radius:14px;padding:.45rem .55rem;
-          display:flex;align-items:center;gap:.3rem;box-shadow:0 4px 20px rgba(0,0,0,.18);
-          flex-wrap:wrap;width:min(calc(100vw - 1.4rem), 26rem)}
-.switcher .glbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.04em;color:var(--ink-soft);flex:0 0 auto}
+          /* ⚠ 這一行的 align-items 排在上面那個 stretch 後面，寫 center 會贏 ——
+             兩排寬度不同時，窄的那排就被推到中間。column 方向要用 stretch。 */
+          display:flex;align-items:stretch;gap:.3rem;box-shadow:0 4px 20px rgba(0,0,0,.18);
+          width:min(calc(100vw - 1.4rem), 26rem)}
+.switcher .grp{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:.26rem}
+.switcher .opt.same{background:var(--card);border-color:var(--rule)}
+.switcher .opt.same .n{color:var(--ink)}
+.switcher .glbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.04em;color:var(--ink-soft);flex:0 0 auto;width:2.1rem}
 /* 每一顆就是那個顏色本身，白字編號壓在上面（九個綠白字對比最低 5.55，讀得到）。
    ⚠ 收縮包覆的 flex 容器裡放會換行的列，寬度會塌 —— 要明寫寬度。 */
 .switcher .opt{position:relative;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
@@ -151,20 +160,25 @@ code{font-family:var(--mono);font-size:.9em}
 .switcher .opt:has(input:checked){box-shadow:0 0 0 2px var(--ink)}
 .switcher .opt:has(input:focus-visible){outline:2px solid var(--teal);outline-offset:3px}
 
-body:has(#p1:checked){--pick:var(--g1);--pick-line:var(--gl1)}
-body:has(#p2:checked){--pick:var(--g2);--pick-line:var(--gl2)}
-body:has(#p3:checked){--pick:var(--g3);--pick-line:var(--gl3)}
-body:has(#p4:checked){--pick:var(--g4);--pick-line:var(--gl4)}
-body:has(#p5:checked){--pick:var(--g5);--pick-line:var(--gl5)}
-body:has(#p6:checked){--pick:var(--g6);--pick-line:var(--gl6)}
-body:has(#p7:checked){--pick:var(--g7);--pick-line:var(--gl7)}
-body:has(#p8:checked){--pick:var(--g8);--pick-line:var(--gl8)}
-body:has(#p9:checked){--pick:var(--g9);--pick-line:var(--gl9)}
-body:has(#p10:checked){--pick:var(--g10);--pick-line:var(--gl10)}
-body:has(#p11:checked){--pick:var(--g11);--pick-line:var(--gl11)}
-body:has(#p12:checked){--pick:var(--g12);--pick-line:var(--gl12)}
-body:has(#p13:checked){--pick:var(--g13);--pick-line:var(--gl13)}
-#rn::before,#ro::before{content:"—"}
+body:has(#p1:checked){--pick:var(--g1);--pick-auto:var(--gl1)}
+body:has(#p2:checked){--pick:var(--g2);--pick-auto:var(--gl2)}
+body:has(#p3:checked){--pick:var(--g3);--pick-auto:var(--gl3)}
+body:has(#p4:checked){--pick:var(--g4);--pick-auto:var(--gl4)}
+body:has(#p5:checked){--pick:var(--g5);--pick-auto:var(--gl5)}
+body:has(#p6:checked){--pick:var(--g6);--pick-auto:var(--gl6)}
+body:has(#p7:checked){--pick:var(--g7);--pick-auto:var(--gl7)}
+body:has(#p8:checked){--pick:var(--g8);--pick-auto:var(--gl8)}
+body:has(#p9:checked){--pick:var(--g9);--pick-auto:var(--gl9)}
+body:has(#p10:checked){--pick:var(--g10);--pick-auto:var(--gl10)}
+body:has(#p11:checked){--pick:var(--g11);--pick-auto:var(--gl11)}
+body:has(#p12:checked){--pick:var(--g12);--pick-auto:var(--gl12)}
+body:has(#p13:checked){--pick:var(--g13);--pick-auto:var(--gl13)}
+/* 「同」＝跟著套色走（④ 苔綠會自動用壓深過的 #596951，它原值在紙上不夠） */
+body:has(#t0:checked){--pick-line:var(--pick-auto)}
+body:has(#t1:checked){--pick-line:var(--d1)}
+body:has(#t2:checked){--pick-line:var(--d2)}
+body:has(#t3:checked){--pick-line:var(--d3)}
+#rn::before,#ro::before,#rt::before{content:"—"}
 body:has(#p1:checked) #rn::before{content:"① 診療椅・現行"}
 body:has(#p1:checked) #ro::before{content:"① #4f6361　L* 40.3　C* 8.1　Lab h 190　白底字同一個值　白字 6.38　對卡 5.81　對紙 5.04"}
 body:has(#p2:checked) #rn::before{content:"② 椅→苔 ⅓"}
@@ -196,6 +210,11 @@ body:has(#p12:checked) #ro::before{content:"⑫ #386646　L* 39.3　C* 27.2　La
 body:has(#p13:checked) #rn::before{content:"⑬ 枝葉亮處的彩度"}
 body:has(#p13:checked) #ro::before{content:"⑬ #306843　L* 39.3　C* 31.5　Lab h 151　白底字同一個值　白字 6.59　對卡 6.00　對紙 5.20"}
 
+body:has(#t0:checked) #rt::before{content:"白底字／文章字　同套色（單一值）"}
+body:has(#t1:checked) #rt::before{content:"白底字／文章字　Ⓐ #33593e　L* 34.4　比套色深 5.0　對卡 7.24　對紙 6.28"}
+body:has(#t2:checked) #rt::before{content:"白底字／文章字　Ⓑ #2c5238　L* 31.5　比套色深 8.0　對卡 8.06　對紙 6.99"}
+body:has(#t3:checked) #rt::before{content:"白底字／文章字　Ⓒ #254a31　L* 28.1　比套色深 11.0　對卡 9.09　對紙 7.89"}
+
 /* ---- 表 -------------------------------------------------------------- */
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;font-size:.89rem;font-variant-numeric:tabular-nums}
@@ -212,8 +231,8 @@ td.bad{color:#8c2f34;font-weight:700}
 
   <div class="head">
     <p class="eyebrow">對照用 · 2026-08-09</p>
-    <h1>三個綠 ＋ 中間補的六階</h1>
-    <p class="lead">顯微根管改紅之後，<b>苔綠 <code>#5D6D55</code>（Logo 本身的色）沒有科別在用了</b>。這一頁把它放回「一般牙科・定期檢查」與「創辦醫師」現在用的診療椅綠旁邊，加上家色深綠松，<b>三個錨之間每條邊再補兩階，繞成一圈：椅 → 苔 → 松 → 椅</b>。<br><span class="small">切換條在下面，九顆。白框那三顆是錨（①椅 ④苔 ⑦松）。這一頁只是拿來看的，正式站一個字都沒動。</span></p>
+    <h1>一般牙科的綠 — 套色 ⑪ ＋ 文字階三案</h1>
+    <p class="lead">顯微根管改紅之後，<b>苔綠 <code>#5D6D55</code>（Logo 本身的色）沒有科別在用了</b>。這一頁把它放回「一般牙科・定期檢查」與「創辦醫師」現在用的診療椅綠旁邊，加上家色深綠松，<b>三個錨之間每條邊再補兩階，繞成一圈：椅 → 苔 → 松 → 椅</b>。<br><span class="small"><b>切換條有兩排</b>：上排是十三個綠（套色），下排是白底字／文章字（同／Ⓐ／Ⓑ／Ⓒ）。<b>套色已經定在 ⑪ <code>#3f654a</code>，現在要決定的是下排。</b>這一頁只是拿來看的，正式站一個字都沒動。</span></p>
   </div>
 
   <div class="note ok">
@@ -290,6 +309,39 @@ td.bad{color:#8c2f34;font-weight:700}
 
   <hr>
 
+  <section>
+    <h2>白底字／文章字：Ⓐ Ⓑ Ⓒ</h2>
+    <p class="small">套色定案 ⑪ <code>#3f654a</code>。這三階是<b>以它為準只降亮度</b> —— 色相 150.9 與彩度 22.9 一格都沒動。</p>
+
+    <div class="note ok">
+      <p><b>彩度刻意不跟著縮。</b>往深處走的時候色域天花板會變低，如果照比例縮彩度，<b>你剛挑中的那個「翠」會在文字階被稀釋掉</b>，而且會更靠近深綠松（全站連結色，ΔE 掉到 10.4）。鎖住 22.9 之後色域佔比反而從 50% 升到 63% —— <b>翠度保住了，離連結色也還有 13~15</b>。</p>
+    </div>
+
+    <div class="trio">
+      <div class="g anchor" style="--c:#3f654a"><div class="band"><span>⑪</span></div><div class="t">
+        <span class="n">套色（定案）</span><span class="v">#3f654a<br>L* 39.3　C* 22.9<br>白字 6.62</span></div></div>
+      <div class="g" style="--c:#33593e"><div class="band"><span>Ⓐ</span></div><div class="t">
+        <span class="n">深一階</span><span class="v">#33593e<br>L* 34.4　深 5.0<br>對卡 7.24　對紙 6.28</span></div></div>
+      <div class="g" style="--c:#2c5238"><div class="band"><span>Ⓑ</span></div><div class="t">
+        <span class="n">深兩階</span><span class="v">#2c5238<br>L* 31.5　深 8.0<br>對卡 8.06　對紙 6.99</span></div></div>
+      <div class="g" style="--c:#254a31"><div class="band"><span>Ⓒ</span></div><div class="t">
+        <span class="n">深三階</span><span class="v">#254a31<br>L* 28.1　深 11.0<br>對卡 9.09　對紙 7.89</span></div></div>
+      <div class="g" style="--c:#214D48"><div class="band"><span>參</span></div><div class="t">
+        <span class="n">深綠松・連結色</span><span class="v">#214D48<br>L* 29.7　C* 16.7<br>h 186（藍綠）</span></div></div>
+    </div>
+
+    <div class="note warn">
+      <p><b>要盯的就是最後那一格。</b><code>#214D48</code> 是全站連結色與診所資訊的家色，<b>它會和這一階同時出現在同一篇文章裡</b>（內文連結吃科別色，頁尾電話固定是深綠松）。三階對它的 ΔE 是 <b>14.5 / 13.4 / 13.1</b> —— 越深越近，但色相差 36°（151 偏綠、186 偏藍綠），並排分得開。<b>切到 Ⓒ 的時候特別看文章內頁那一段。</b></p>
+    </div>
+
+    <div class="note">
+      <p><b>落差要多大，家族有現成的刻度：</b>口腔外科 +8.2、贋復假牙 +10.1、兒童牙科 +12.3、顯微根管 +15.1。<br><b>Ⓐ +5.0</b> 比現役任何一組都小（chip 按下去的深淺變化最不明顯）；<b>Ⓑ +8.0</b> 幾乎等於口腔外科；<b>Ⓒ +11.0</b> 落在贋復與兒牙之間。</p>
+      <p class="soft">切換條下面那排多一顆「同」 —— 那是<b>不開第二階</b>、整科只用 ⑪ 一個值的樣子（現在的一般牙科與齒顎矯正就是這樣）。先按它，再按 Ⓐ，差別最清楚。</p>
+    </div>
+  </section>
+
+  <hr>
+
   <!-- ===================== 舞台 ===================== -->
   <section>
     <h2>套在真實元件上</h2>
@@ -359,7 +411,7 @@ td.bad{color:#8c2f34;font-weight:700}
         </div>
       </div>
 
-      <p class="readout"><span id="ro"></span></p>
+      <p class="readout"><span id="ro"></span><span id="rt"></span></p>
     </div>
   </section>
 
@@ -425,21 +477,30 @@ td.bad{color:#8c2f34;font-weight:700}
 
 </div>
 
-<div class="switcher" role="radiogroup" aria-label="九個綠切換">
-  <span class="glbl">綠</span>
-  <label class="opt anchor" style="--c:#4f6361"><span class="n">①</span><input type="radio" name="g" id="p1" value="1" checked></label>
-  <label class="opt" style="--c:#54665d"><span class="n">②</span><input type="radio" name="g" id="p2" value="2"></label>
-  <label class="opt" style="--c:#596a59"><span class="n">③</span><input type="radio" name="g" id="p3" value="3"></label>
-  <label class="opt anchor" style="--c:#5D6D55"><span class="n">④</span><input type="radio" name="g" id="p4" value="4"></label>
-  <label class="opt" style="--c:#4b6251"><span class="n">⑤</span><input type="radio" name="g" id="p5" value="5"></label>
-  <label class="opt" style="--c:#37584c"><span class="n">⑥</span><input type="radio" name="g" id="p6" value="6"></label>
-  <label class="opt anchor" style="--c:#214D48"><span class="n">⑦</span><input type="radio" name="g" id="p7" value="7"></label>
-  <label class="opt" style="--c:#315450"><span class="n">⑧</span><input type="radio" name="g" id="p8" value="8"></label>
-  <label class="opt" style="--c:#415c59"><span class="n">⑨</span><input type="radio" name="g" id="p9" value="9"></label>
-  <label class="opt" style="--c:#45644d"><span class="n">⑩</span><input type="radio" name="g" id="p10" value="10"></label>
-  <label class="opt" style="--c:#3f654a"><span class="n">⑪</span><input type="radio" name="g" id="p11" value="11"></label>
-  <label class="opt" style="--c:#386646"><span class="n">⑫</span><input type="radio" name="g" id="p12" value="12"></label>
-  <label class="opt" style="--c:#306843"><span class="n">⑬</span><input type="radio" name="g" id="p13" value="13"></label>
+<div class="switcher">
+  <div class="grp" role="radiogroup" aria-label="套色">
+    <span class="glbl">套色</span>
+    <label class="opt anchor" style="--c:#4f6361"><span class="n">①</span><input type="radio" name="g" id="p1" value="1"></label>
+    <label class="opt" style="--c:#54665d"><span class="n">②</span><input type="radio" name="g" id="p2" value="2"></label>
+    <label class="opt" style="--c:#596a59"><span class="n">③</span><input type="radio" name="g" id="p3" value="3"></label>
+    <label class="opt anchor" style="--c:#5D6D55"><span class="n">④</span><input type="radio" name="g" id="p4" value="4"></label>
+    <label class="opt" style="--c:#4b6251"><span class="n">⑤</span><input type="radio" name="g" id="p5" value="5"></label>
+    <label class="opt" style="--c:#37584c"><span class="n">⑥</span><input type="radio" name="g" id="p6" value="6"></label>
+    <label class="opt anchor" style="--c:#214D48"><span class="n">⑦</span><input type="radio" name="g" id="p7" value="7"></label>
+    <label class="opt" style="--c:#315450"><span class="n">⑧</span><input type="radio" name="g" id="p8" value="8"></label>
+    <label class="opt" style="--c:#415c59"><span class="n">⑨</span><input type="radio" name="g" id="p9" value="9"></label>
+    <label class="opt" style="--c:#45644d"><span class="n">⑩</span><input type="radio" name="g" id="p10" value="10"></label>
+    <label class="opt" style="--c:#3f654a"><span class="n">⑪</span><input type="radio" name="g" id="p11" value="11" checked></label>
+    <label class="opt" style="--c:#386646"><span class="n">⑫</span><input type="radio" name="g" id="p12" value="12"></label>
+    <label class="opt" style="--c:#306843"><span class="n">⑬</span><input type="radio" name="g" id="p13" value="13"></label>
+  </div>
+  <div class="grp" role="radiogroup" aria-label="白底字">
+    <span class="glbl">字</span>
+    <label class="opt same" style="--c:var(--pick)"><span class="n">同</span><input type="radio" name="t" id="t0" value="t0"></label>
+    <label class="opt" style="--c:#33593e"><span class="n">Ⓐ</span><input type="radio" name="t" id="t1" value="t1"></label>
+    <label class="opt" style="--c:#2c5238"><span class="n">Ⓑ</span><input type="radio" name="t" id="t2" value="t2" checked></label>
+    <label class="opt" style="--c:#254a31"><span class="n">Ⓒ</span><input type="radio" name="t" id="t3" value="t3"></label>
+  </div>
 </div>
 
 <script>
@@ -448,6 +509,8 @@ td.bad{color:#8c2f34;font-weight:700}
   try{
     var v = (new URLSearchParams(location.search).get('g') || '');
     if (/^(?:[1-9]|1[0-3])$/.test(v)) { var el = document.getElementById('p' + v); if (el) el.checked = true; }
+    var t = (new URLSearchParams(location.search).get('t') || '');
+    if (/^[0-3]$/.test(t)) { var e2 = document.getElementById('t' + t); if (e2) e2.checked = true; }
     document.querySelectorAll('.switcher input').forEach(function(i){
       i.addEventListener('change', function(){
         try{
