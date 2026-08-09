@@ -125,6 +125,42 @@ body:has(#r5:checked) #rn::before{content:"⑤ 磚紅・滿彩"}
 body:has(#r6:checked) #rn::before{content:"⑥ 紅花籃・原值"}
 body:has(#r7:checked) #rn::before{content:"⑦ 繡球・原值"}
 
+/* ---- 文章內頁的模擬 -------------------------------------------------- */
+/* 規格逐條照 assets/style.css 抄過來（.post-tag / .post-body h2::before /
+   .post-body h3 / .callout / .btn / .btn-ghost），只有把 var(--accent) 換成
+   var(--pick)、var(--accent-deep) 換成 var(--pick-line)。哪個元件吃哪一階
+   寫在 PALETTE 六之六節那張表裡，這裡一格都沒有改。 */
+.post{background:var(--paper);border:1px solid var(--rule);border-radius:12px;
+      padding:1.2rem 1.15rem 1.3rem;display:flex;flex-direction:column;gap:0}
+.post .post-tag{display:inline-block;align-self:flex-start;
+      font-size:.75rem;line-height:1.6;letter-spacing:.08em;
+      padding:.12rem .55rem .12rem .62rem;border-radius:9px;
+      background:var(--pick);color:#fff}
+.post h1{margin:.7rem 0 .5rem;font-size:1.5rem;line-height:1.4;letter-spacing:.01em;color:var(--ink)}
+.post .lede{font-size:1.02rem;color:var(--ink-soft);margin-bottom:.2rem}
+.post h2{display:flex;align-items:baseline;gap:.6rem;margin:1.6rem 0 .7rem;
+      font-size:1.2rem;color:var(--ink);line-height:1.55}
+.post h2::before{content:'';flex:0 0 3px;align-self:center;height:1.05em;
+      border-radius:2px;background:var(--pick)}
+.post h3{margin:1.2rem 0 .45rem;font-size:1.02rem;color:var(--pick-line)}
+.post p{margin:0 0 .9rem}
+.post a{color:var(--pick-line)}
+.post .callout{background:var(--card);border:1px solid var(--rule);
+      border-left:3px solid var(--pick);border-radius:12px;padding:1rem 1.1rem;margin:0 0 1.2rem;
+      box-shadow:0 1px 2px rgba(42,44,39,.07),0 4px 10px rgba(42,44,39,.09)}
+.post .callout p:last-child{margin-bottom:0}
+.post .callout b{color:var(--ink)}
+.post .btns{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.4rem}
+.post .btn{display:inline-flex;align-items:center;gap:.4rem;text-decoration:none;
+      background:var(--pick);color:#fff;border:1px solid var(--pick);
+      padding:.6rem 1.05rem;border-radius:16px;font-size:.9rem;font-weight:500}
+.post .btn-ghost{background:var(--card);color:var(--pick-line);border-color:var(--pick-line)}
+.post .disclaim{font-size:.84rem;color:var(--ink-soft);background:var(--card);
+      border:1px solid var(--rule);border-radius:12px;padding:.85rem 1rem;margin-top:1.4rem}
+.tiers{display:grid;grid-template-columns:max-content 1fr;gap:.28rem .8rem;
+       font-family:var(--mono);font-size:.71rem;line-height:1.7;color:var(--ink-soft)}
+.tiers dt{white-space:nowrap}
+
 /* ---- 表 -------------------------------------------------------------- */
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;font-size:.89rem;font-variant-numeric:tabular-nums}
@@ -247,6 +283,51 @@ tr.raw td{background:rgba(137,32,45,.045)}
           <span class="chip on" style="--c:var(--moss)">現行苔綠</span>
         </div>
       </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ===================== 文章內頁 ===================== -->
+  <section>
+    <h2>文章內頁裡的紅</h2>
+    <p class="small">同一個切換條也控制這一段。規格逐條照 <code>assets/style.css</code> 抄的，<b>哪個元件吃哪一階完全沒改</b>（PALETTE 六之六節那張表）：</p>
+
+    <dl class="tiers">
+      <dt>填色階</dt><dd>科別藥丸（實心＋白字）、小節標題前的 3px 短棒、重點框左條、實心按鈕</dd>
+      <dt>套字階</dt><dd>內文連結、h3、線框按鈕的字與框</dd>
+      <dt>不變</dt><dd>h2 本身、內文、頁尾電話（頁尾一律維持深綠松，它是全站落款）</dd>
+    </dl>
+
+    <div class="post">
+      <span class="post-tag">顯微根管</span>
+      <h1>牙齒還救得回來的時候</h1>
+      <p class="lede">這一段是版型示範用的假文，只為了看顏色落在哪些地方，不是正式文案。</p>
+
+      <h2>牙髓是什麼</h2>
+      <p>牙齒中間那條管道裡有神經與血管，是牙齒裡活著的那一部分。發炎之後不處理，痛會擴散到周圍的骨頭。<a href="#demo">什麼情況需要用到顯微鏡</a>會在檢查後一起說明。</p>
+
+      <h3>什麼時候會建議做</h3>
+      <p>冷熱刺激後痛很久才退、夜裡自發性抽痛、牙齦上出現小膿包，都是常見的時機。</p>
+
+      <div class="callout">
+        <p><b>重點框的左邊那一條吃的是填色階。</b>它是「底」不是字，只要 3:1，所以七案全部過得了 —— 但七案在這裡的濃淡差很大，切著看最明顯。</p>
+      </div>
+
+      <h3>做完之後</h3>
+      <p>清乾淨的牙齒會變脆，多數情況要再做牙套保護。整顆牙留著，比拔掉再重建省事。</p>
+
+      <div class="btns">
+        <a class="btn" href="#demo">預約諮詢</a>
+        <a class="btn btn-ghost" href="#demo">看所有根管文章</a>
+      </div>
+
+      <p class="disclaim">本文為衛教資訊，不能取代醫師的臨床診斷。</p>
+    </div>
+
+    <div class="note warn">
+      <p><b>這一段是七案差最多的地方，因為它同時用到兩階，而且底是紙。</b>切 ⑥⑦ 的時候特別看 h3 與連結：它們仍然明顯是紅的（有底線幫忙），但<b>比內文墨色 <code>#2a2c27</code> 只淺一點</b>，整篇的重量會往下壓一階。⑦ 繡球對紙 9.47，那是「太安全」的另一面。</p>
+      <p class="soft">反過來 ② 那一階（對紙 5.50）和其餘六科的字階同一帶，讀起來就是「另一科的文章」而不是「另一種頁面」。</p>
     </div>
   </section>
 
