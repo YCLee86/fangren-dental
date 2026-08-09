@@ -414,7 +414,10 @@ html.scrolled .brand-text small { font-size: .74rem; }
   letter-spacing: .32em; color: rgba(255, 255, 255, .65);
   text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
 }
-.hero-poem span { display: block; }
+/* `>` 是必要的：詩的每一行是 .hero-poem 的直接子元素，但行內還包了一個
+   <span class="g"> 裝全形空格（見 <body> 裡的註解）。沒有 `>` 的話那個 span
+   也會變成 block，一行會被切成三段。 */
+.hero-poem > span { display: block; }
 .hero-poem .lead { margin-bottom: .9em; }
 
 /* 收尾句躺在路面上。底下那塊模糊的深色是必要的 ——
@@ -1289,22 +1292,91 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
       var(--band-top) 0%, var(--band-bg) 55%, var(--band-bot) 100%);
   }
   .hero-copy { padding-top: 0; padding-bottom: 0; }
-  /* 詩的位置照手機版：距上緣約 5vh（原 5cqh），和頁首之間留一個呼吸 */
-  .hero-copy { justify-content: flex-start; padding-top: 15vw; }
+
+  /* ======================================================================
+     手機版的詩：往下坐，字跟著收窄（提案 Ⓢ1 定案，2026-08-10）
+     ----------------------------------------------------------------------
+     起因是使用者的朋友說「左上角 logo 的字跟 cover image 的字大小差不多，
+     看起來會比較 noisy，可以增加 spacing」。電腦版 2026-08-09 已經處理完
+     （見上面 .hero-copy 與 .hero-poem 的註解）；手機版難在**照片本身**。
+
+     ---- 為什麼手機不能只是「往下推」 ----------------------------------
+     把 assets/hero-clinic-night.jpg 畫進 canvas 逐列掃描（藍減紅 > 8 分辨
+     夜空與建物），換算成 390px 寬時的畫面座標，可以寫字的天空是一個**楔形**：
+
+         畫面 y      能寫字的左界 → 右界      擋住的東西
+          52px            0 → 291
+         105px            0 → 222            ← 診所建築的屋簷從右上壓下來
+         140px            0 → 182            ← 最窄處（建築的左牆）
+         181px           11 → 191            ← 左下角的「Ｐ」停車招牌吃左界
+         216px           28 →  64            ← 對街矮房子的屋頂，右界整個收掉
+
+     詩是「左上角固定、往右往下長」，和這個楔形方向正好相反 ——
+     所以整塊往下推一定撞，跟字級無關。要往下坐就得先變窄。
+
+     ---- Ⓢ1 的值怎麼來的 ----------------------------------------------
+     對每一個位置用二分法解出「**還能不撞到房子的最鬆字距**」
+     （右端留 8px、左端留 5px，餘裕按視窗寬等比例），得到一條階梯：
+
+         padding-top   字距     全形空格   詩與頁首的空隙
+         15.0vw        .193em   .97em      −2.9px  ← 改動前（.20em 已在極限上）
+         17.9vw        .131em   .65em       8.0px  ← Ⓢ1（本案）
+         20.3vw        .106em   .53em      17.0px
+         22.7vw        .061em   .30em      26.0px
+
+     這也解釋了改動前為什麼一動就撞：.20em 在原位就已經用滿額度。
+     更大的位移要靠拆行（拆第一行最有效，因為它最長、屋簷正好壓在它右上方），
+     那幾案與完整推導留在 preview/hero-mobile-skyline/，使用者選了 Ⓢ1。
+
+     ---- 兩個「看起來無關、其實非動不可」的值 --------------------------
+     手機的幾何原本不是等比例的，同一組 vw 參數會「390 上剛好閃過、375 上壓到」：
+
+       1. .hero-copy .shell 的左緣改用 5.13vw（＝390 上的 20px）。
+          `--pad` 是 clamp(1.25rem, 3vw, 2.5rem)，在所有手機寬度都撞到 1.25rem
+          的下限＝固定 20px，而照片、字級、位移全部跟著 vw 縮。
+          代價：詩與收尾句的左緣不再和窄帶、卡片的版心切齊
+          （390 上分毫不差，320 上差 3.6px、430 上差 2px）。這兩塊浮在照片上，
+          離那些元素很遠，是刻意接受的取捨。
+       2. 字級下限 10px → 9.5px。320 寬時 3.06vw ＝ 9.79px 會撞到 10px 的下限，
+          字因此相對照片變大 2.1%，剛好足以壓進房子。降到 9.5px 之後取的是
+          vw 那一項，整組等比例。**實際看到的字只小 0.21px。**
+
+     **最壞情況是 375px 寬，不是 320 也不是 390** —— 376 以上字級撞到 11.5px
+     上限、相對變小反而安全。改這一段之後要用 375 驗。
+     ====================================================================== */
+  .hero-copy { justify-content: flex-start; padding-top: 17.9vw; }
+  .hero-copy .shell { padding-inline: 5.13vw; }
   .hero-copy .shell:last-child { margin-top: auto; padding-bottom: 3vw; }
-  /* ⚠ letter-spacing 一定要在這裡寫出來，即使值和以前一樣。
-     2026-08-09 電腦版把 .hero-poem 的字距從 .2em 放大到 .32em（提案 Ⓒ），
-     而手機版原本只覆寫 font-size / line-height / max-width —— 字距沒寫，
-     就會**整條漏下來**，手機的詩跟著變寬、直接撞上照片裡的房子。
-     手機要怎麼排是另一件事（使用者 2026-08-09 說三案都會壓到房子，正在重做），
-     在那之前這裡就是把手機釘回原樣。 */
+  /* ⚠ letter-spacing 一定要在這裡寫出來。電腦版是 .32em（2026-08-09 的提案 Ⓒ），
+     手機版若不覆寫就會整條漏下來，詩跟著變寬、直接撞上房子。 */
   .hero-poem {
-    font-size: clamp(10px, 3.06vw, 11.5px); line-height: 1.75; max-width: 76vw;
-    letter-spacing: .2em;
+    font-size: clamp(9.5px, 3.06vw, 11.5px); line-height: 1.75; max-width: 92vw;
+    letter-spacing: .13em;
   }
+  /* 兩段文字之間的全形空格縮到 .65em。縮的是那個字的 font-size，
+     字元本身沒有換掉（見 <body> 裡 .hero-poem 的註解）。 */
+  .hero-poem .g { font-size: .65em; }
   .hero-poem .lead { margin-bottom: .55em; }
+
   .hero-sign { font-size: clamp(9.2px, 2.56vw, 11.5px); }
-  .hero-sign::before { inset: -1.1em -1.4em; filter: blur(18px); }
+  /* ---- 收尾句底下那塊暗塊加深（提案 Ⓔ2 定案，2026-08-10）--------------
+     使用者回報「巷口」剛好壓在車頭燈上看不清楚。逐字量過照片底下的亮度
+     （375 寬）：「巷」最亮 219、「口」最亮 236，白字 65% 疊上去的對比度只有
+     1.24 / 1.12（1.0 ＝ 完全看不見），其他十個字都在 3～7。
+
+     原本的 rgba(25,22,20,.72) 被 blur(18px) 攤開之後，在「巷口」的位置
+     （離暗塊左緣只有 24px）實際只剩約 0.44 不透明度，236 壓完還有 142。
+     所以把不透明度提到 .9、範圍放大，讓它在那一端還有密度。
+
+     ⚠ **blur 一個值都不要動。** 一收就會看得出這是一個框 ——
+        「看不出是框、只是路面自己暗下去」正是這塊東西的設計重點。
+     ⚠ **只在手機。** 電腦版的裁切是下緣貼齊，收尾句落在純暗的路面上，
+        十二個字最亮處都 ≤58、對比度 ≥5.9，不需要也不該加。 */
+  .hero-sign::before {
+    inset: -1.5em -2em;
+    background: rgba(25, 22, 20, .9);
+    filter: blur(18px);
+  }
 
   /* ---- 窄帶：三格各佔三分之一（390px 上排不下靠內容寬度）------------- */
   .band .shell { flex-direction: column; align-items: stretch; gap: .55rem; padding-block: .85rem; }
@@ -1447,11 +1519,18 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
            （見下面 HERO 的三種裁切模式），文字會自動跟著照片走，不會飄到旁邊的暗底上。 -->
       <div class="hero-copy">
         <div class="shell">
-          <!-- 三行已定稿（COPY.md 第一節）。分隔用全形空格，整首詩沒有標點。 -->
+          <!-- 三行已定稿（COPY.md 第一節）。分隔用全形空格，整首詩沒有標點。
+
+               每一行中間的**全形空格包在 <span class="g"> 裡**（2026-08-10）。
+               **一個字都沒有改**：span 裡裝的仍然是那個全形空格 U+3000，
+               複製出來的文字、螢幕閱讀器念的內容都和以前一樣。
+               包起來是為了讓手機版能單獨把它縮窄（見下面 @media 裡的 .hero-poem .g）——
+               手機的詩要往下坐，就得先變窄，否則會壓到照片裡的房子。
+               電腦版沒有任何規則指到 .g，所以那裡完全照舊。 -->
           <p class="hero-poem">
-            <span class="lead">小時候被大人牽著來　現在牽著別人</span>
-            <span>從中華路到永樂街　四十多年</span>
-            <span>有跟著換的　也有一直顧的</span>
+            <span class="lead">小時候被大人牽著來<span class="g">　</span>現在牽著別人</span>
+            <span>從中華路到永樂街<span class="g">　</span>四十多年</span>
+            <span>有跟著換的<span class="g">　</span>也有一直顧的</span>
           </p>
         </div>
         <div class="shell">
