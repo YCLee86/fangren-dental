@@ -1031,6 +1031,25 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    CC BY 4.0，https://fontawesome.com/license/free 。署名放在七個檔案裡
    那兩顆 SVG 上面的 HTML 註解，**改圖或搬檔的時候不要刪**。
    ========================================================================== */
+/* ---- 頁尾的診所標誌與那條「溝」—— 定案 2026-08-09 ------------------------
+   標誌放進診所名前面之後，底下的釘子與話筒要和它對齊，**三行的字要同一個起點**。
+   做法是在左邊留一條固定寬度的「溝」：溝寬 = 標誌寬 ＋ 標誌和字的距離。
+   · 第一行：標誌待在溝裡，「芳」從溝的右緣起跑。
+   · 二三行：圖示**置中在同一條溝裡**，「雲」與「0」同樣從溝的右緣起跑。
+   所以連結的 gap 收成 0，間距整個併進 --gutter —— 標誌一改大小，溝跟著變，
+   三行永遠一起動，不會調了一個忘了另一個。
+
+   ⚠ --logo-w 是算出來的，不要寫死：viewBox 44.2873 × 21.8244，寬 = 高 × 2.029。
+   ⚠ 這幾個值一律用 rem。改成 em 會被 .foot-addr 的 .95rem 縮一次，溝就對不上了。
+   ⚠ 標誌大小是使用者在三案（.78／.88／.98rem）裡選的**最小那個**，不要「順手放大」。
+   ⚠ 這裡只給版面，**沒有動字級** —— 三顆欄位標題一律 .95rem 的規定沒有被破，
+      下面那條「不要再加 .foot-brand 那種例外」講的是 font-size，不是這個。 */
+.foot, .site-footer {
+  --logo-h: .78rem; --logo-w: calc(var(--logo-h) * 2.029); --brand-gap: .5rem;
+  --gutter: calc(var(--logo-w) + var(--brand-gap));
+}
+.foot-brand { display: flex; align-items: center; gap: var(--brand-gap); }
+.foot-brand svg { flex: 0 0 var(--logo-w); height: var(--logo-h); display: block; }
 .foot-addr { font-size: .95rem !important; letter-spacing: .02em; }
 .foot-tel  { margin-top: .35rem !important; font-size: .95rem !important; letter-spacing: .02em; }
 /* ⚠ `display: flex` ＋ `width: fit-content`，**不要改回 `inline-flex`**。
@@ -1043,10 +1062,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .foot-addr a, .foot-tel a {
   color: var(--teal); text-decoration: none; font-weight: 500;
   display: flex; width: fit-content; max-width: 100%;
-  align-items: flex-start; gap: .45rem;  /* ← rem，改成 em 就歪 */
+  align-items: flex-start; gap: 0;  /* ← 間距併進 --gutter，見上面那段 */
 }
 .foot-addr .ico, .foot-tel .ico {
-  flex: 0 0 1rem; height: 1.8em;
+  flex: 0 0 var(--gutter); height: 1.8em;
   display: flex; align-items: center; justify-content: center;
 }
 .foot-addr .ico svg { width: .73rem; height: .97rem; display: block; }   /* 384×512，寬 = 高 × .75 */
@@ -1634,7 +1653,24 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
            · **站內導覽留著** —— 這是頁尾唯一在任何地方都沒有重複的東西。
              原本的頁尾一條站內連結都沒有（只有 tel:）。 -->
       <div>
-        <h4>芳仁牙醫診所</h4>
+        <h4 class="foot-brand">
+          <!-- 診所標誌。**牙那條子路徑和頁首那顆不一樣，是刻意的** ——
+               這裡只有 12.5px 高（比 favicon 還小），洞橫向只剩約 2px，抗鋸齒會把它吃掉。
+               所以牙依自己的中心放大 1.15 倍、再往上移 1.4 個單位（2026-08-09 定案，B 案）。
+               **嘴一個節點都沒改**，fill-rule="evenodd" 讓那顆牙成為真正的洞，
+               頁尾的卡片底色直接透過來。
+
+               ⚠ **這一顆沒有遵守 PALETTE.md 第六之七節「把洞下方的肉還原成原標誌」那條規則。**
+               同一支逐像素掃描量下來：頁首那顆最薄處 3.13 個單位，這一顆 4.13 ——
+               肉多了一個單位（32%），牙比那條規則規定的位置**高**。
+               這是使用者在實際大小逐案看過之後挑的，不是從那條規則推出來的。
+               規則的用意是「放大時不要讓外觀走樣」，這裡是刻意讓它走樣一點點。
+
+               ⚠ 另外更正一筆會誤導後人的話：牙的底部本來就有一道分叉，那是**牙自己的輪廓**，
+               不是嘴的邊緣被切開。原始比例下洞的下方一直有 3.13 個單位的實心肉，沒有破。 -->
+          <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true"><g transform="translate(-232.8729 -333.8286)"><path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9658 351.1677 C 264.3395 351.0569 264.4797 351.0334 264.8417 351.1677 C 265.087 351.2612 265.4141 351.2438 265.6594 351.1677 C 266.4418 350.9226 267.2185 349.375 267.0726 347.4069 C 266.9324 345.4389 261.8635 345.7134 261.8693 347.4069 C 261.8693 348.756 262.354 350.4963 263.0255 350.9692 C 263.3118 351.1736 263.522 351.2963 263.9658 351.1677 Z"/></g></svg>
+          芳仁牙醫診所
+        </h4>
         <p class="foot-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
           <!-- 實心地圖釘。和話筒同一套：Font Awesome Free 6 "location-dot"，
                圖示部分授權 CC BY 4.0，https://fontawesome.com/license/free ——

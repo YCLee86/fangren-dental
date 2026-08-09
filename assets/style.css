@@ -348,6 +348,25 @@ a:hover { color: var(--accent); }
    為什麼欄寬與間距一定要用 rem、為什麼釘子要比話筒高、為什麼底線畫在 .txt／.num
    上、以及舊規則「地址刻意不上色不加底線」為什麼作廢（手機沒有 hover）。
    **這份和 index.html 裡那份必須一模一樣，改一邊就要改另一邊。** */
+/* ---- 頁尾的診所標誌與那條「溝」—— 定案 2026-08-09 ------------------------
+   標誌放進診所名前面之後，底下的釘子與話筒要和它對齊，**三行的字要同一個起點**。
+   做法是在左邊留一條固定寬度的「溝」：溝寬 = 標誌寬 ＋ 標誌和字的距離。
+   · 第一行：標誌待在溝裡，「芳」從溝的右緣起跑。
+   · 二三行：圖示**置中在同一條溝裡**，「雲」與「0」同樣從溝的右緣起跑。
+   所以連結的 gap 收成 0，間距整個併進 --gutter —— 標誌一改大小，溝跟著變，
+   三行永遠一起動，不會調了一個忘了另一個。
+
+   ⚠ --logo-w 是算出來的，不要寫死：viewBox 44.2873 × 21.8244，寬 = 高 × 2.029。
+   ⚠ 這幾個值一律用 rem。改成 em 會被 .foot-addr 的 .95rem 縮一次，溝就對不上了。
+   ⚠ 標誌大小是使用者在三案（.78／.88／.98rem）裡選的**最小那個**，不要「順手放大」。
+   ⚠ 這裡只給版面，**沒有動字級** —— 三顆欄位標題一律 .95rem 的規定沒有被破，
+      下面那條「不要再加 .foot-brand 那種例外」講的是 font-size，不是這個。 */
+.foot, .site-footer {
+  --logo-h: .78rem; --logo-w: calc(var(--logo-h) * 2.029); --brand-gap: .5rem;
+  --gutter: calc(var(--logo-w) + var(--brand-gap));
+}
+.foot-brand { display: flex; align-items: center; gap: var(--brand-gap); }
+.foot-brand svg { flex: 0 0 var(--logo-w); height: var(--logo-h); display: block; }
 .foot-addr { font-size: .95rem !important; letter-spacing: .02em; }
 .foot-tel  { margin-top: .35rem !important; font-size: .95rem !important; letter-spacing: .02em; }
 /* ⚠ `display: flex` ＋ `width: fit-content`，**不要改回 `inline-flex`**。
@@ -360,10 +379,10 @@ a:hover { color: var(--accent); }
 .foot-addr a, .foot-tel a {
   color: var(--teal); text-decoration: none; font-weight: 500;
   display: flex; width: fit-content; max-width: 100%;
-  align-items: flex-start; gap: .45rem;  /* ← rem，改成 em 就歪 */
+  align-items: flex-start; gap: 0;  /* ← 間距併進 --gutter，見上面那段 */
 }
 .foot-addr .ico, .foot-tel .ico {
-  flex: 0 0 1rem; height: 1.8em;
+  flex: 0 0 var(--gutter); height: 1.8em;
   display: flex; align-items: center; justify-content: center;
 }
 .foot-addr .ico svg { width: .73rem; height: .97rem; display: block; }   /* 384×512，寬 = 高 × .75 */
