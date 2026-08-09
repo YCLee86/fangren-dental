@@ -1406,10 +1406,27 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ========================================================================== */
 @media (max-width: 720px) {
   /* ---- 頁首：整組縮一階，選單留著（**不要 display:none**）------------- */
+  /* ---- 選單和品牌對齊：垂直置中，不是 start（2026-08-10）--------------
+     原本兩欄都是 `align-items: start`，選單再用 `padding-top: .7472vw`
+     手動往下推。375 上量出來的結果是**沒對齊**：
+       品牌方塊（標誌＋診所名＋副標）　14.00 ~ 45.58　中線 29.79
+       選單那一列　　　　　　　　　　 16.80 ~ 50.17　中線 33.48　→ 低了 3.69px
+     而且 padding 那條救不回來 —— 選單自己的高度（33.41，因為 a 有
+     padding-block .35rem）本來就比品牌（31.57）高，要對齊得往**上**移，
+     padding-top 只能往下。
+
+     所以改成兩欄一起置中，由格線自己算，不留任何補償數字：
+     列高＝較高的那一個（選單 33.41），兩欄各自置中 → 兩個中線都是 30.72，
+     **差 0.00px**。捲動收合時品牌字級變小、選單不變，置中仍然成立。
+
+     ⚠ 底部內距 2.4vw → 3.1472vw 是**補回**選單那條 padding-top（.7472vw）。
+        拿掉它列高會少 2.8px，頁首整塊跟著從 59.17 縮到 56.43，
+        於是 HERO 那首詩的空隙會從定案的 8.0px 變成 10.7px。
+        那 8.0px 是 Ⓢ1 當天定的（見上面手機 HERO 那段），不要順手改掉 ——
+        把同一個量搬到下緣，頁首高度維持 59.2，詩的空隙實測 7.95px，原封不動。 */
   .site-head .shell,
-  html.scrolled .site-head .shell { height: auto; align-items: start; gap: 3vw; }
-  .site-head .shell { padding-block: 3.736vw 2.4vw; }
-  .site-nav { padding-top: .7472vw; }
+  html.scrolled .site-head .shell { height: auto; align-items: center; gap: 3vw; }
+  .site-head .shell { padding-block: 3.736vw 3.1472vw; }
   .brand-mark { flex-basis: clamp(30px, 8.2192vw, 40px); }
   html.scrolled .brand-mark { flex-basis: clamp(27px, 7.39728vw, 36px); }
   .brand-text b { font-size: clamp(14px, 3.81072vw, 18px); }
@@ -1420,7 +1437,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      省下來的寬度還給字級：10px → 12px。
      375 上的算式：品牌 129 ＋ 頁首間距 11 ＋ 選單（12 字 ×12 ＋ 2×12）＝ 168
                    ＋ 左右內距 30  ＝ 338，離 375 還有 37px，維持一行。 */
-  .site-nav { font-size: clamp(11px, 3.2vw, 13px); gap: 3.2vw; padding-top: .7472vw; }
+  .site-nav { font-size: clamp(11px, 3.2vw, 13px); gap: 3.2vw; }
   /* 手機的品牌是兩行（標題／副標各一行），不是電腦版那種「標題｜副標」橫排。
      兩個子元素都要 display: block —— 只把 .brand-text 改成 block 不夠，
      b 與 small 仍是行內元素，會排成同一行（量到副標在 155~238、正好被選單蓋住）。 */
