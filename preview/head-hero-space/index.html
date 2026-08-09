@@ -1315,6 +1315,16 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
                 兩塊質地一樣才會糊在一起。字級一個都沒動，但詩會慢下來、
                 和頁首那排緊排的字讀起來不再是同一種東西。
 
+     使用者 2026-08-09 選了 Ⓒ，接著問「那手機版呢」，所以多做一案：
+
+       Ⓒ＋ 手機再低  **電腦上與 Ⓒ 一模一樣**（按了不會有任何變化），
+                     只把手機的距離再往下一階：24vw → 28vw，
+                     空隙 390 上從 32.5px 變成 48.1px。
+                     為什麼手機值得單獨再問一次：現況的空隙在電腦上是 63px、
+                     在手機上是 −2.6px，兩邊的起點差很多，
+                     同一個「往下讓一個呼吸」在手機上未必夠。
+                     為什麼不是直接搬 Ⓑ 的 33vw：會壓到矮房子，見下面的實測表。
+
      手機的 Ⓑ 有上限：這張照片左半邊的天空只到 y 72%（390 上 ＝ 210px），
      再往下詩就會壓到隔壁的矮房子。33vw 讓最後一行收在 195.4px，還在天空裡。
 
@@ -1328,17 +1338,39 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 html[data-sp="a"] .hero-copy { padding-top: calc(var(--head-h) + clamp(2.6rem, 9vh, 5.4rem)); }
 /* Ⓑ 大幅 ------------------------------------------------------------------- */
 html[data-sp="b"] .hero-copy { padding-top: calc(var(--head-h) + clamp(4.4rem, 17vh, 10rem)); }
-/* Ⓒ 鬆：距離同 Ⓐ，加上詩自己的字距與行距 ----------------------------------- */
-html[data-sp="c"] .hero-copy { padding-top: calc(var(--head-h) + clamp(2.6rem, 9vh, 5.4rem)); }
-html[data-sp="c"] .hero-poem { letter-spacing: .32em; line-height: 2.45; max-width: 40em; }
-html[data-sp="c"] .hero-poem .lead { margin-bottom: .9em; }
+/* Ⓒ 鬆：距離同 Ⓐ，加上詩自己的字距與行距 -----------------------------------
+   Ⓒ＋ 在**電腦上與 Ⓒ 完全相同**，差別只在手機（見下面的 @media）。 */
+html[data-sp="c"] .hero-copy,
+html[data-sp="c2"] .hero-copy { padding-top: calc(var(--head-h) + clamp(2.6rem, 9vh, 5.4rem)); }
+html[data-sp="c"] .hero-poem,
+html[data-sp="c2"] .hero-poem { letter-spacing: .32em; line-height: 2.45; max-width: 40em; }
+html[data-sp="c"] .hero-poem .lead,
+html[data-sp="c2"] .hero-poem .lead { margin-bottom: .9em; }
 
 @media (max-width: 720px) {
   html[data-sp="a"] .hero-copy { padding-top: 24vw; }
   html[data-sp="b"] .hero-copy { padding-top: 33vw; }
   html[data-sp="c"] .hero-copy { padding-top: 24vw; }
-  html[data-sp="c"] .hero-poem { letter-spacing: .3em; line-height: 2.2; max-width: 84vw; }
-  html[data-sp="c"] .hero-poem .lead { margin-bottom: .9em; }
+  /* Ⓒ＋：字距行距同 Ⓒ，只把手機的距離再往下一階（24vw → 28vw）。
+     為什麼不是 Ⓑ 的 33vw、也不是 30vw：Ⓒ 的行距把詩這一塊從 67px 撐到 86px，
+     底下那條線（左半邊天空的下緣 ＝ 照片高的 72%）因此逼得很近。
+     四支寬度實測，括號是**詩的最後一行離那條線還有多少**：
+
+                    320×700        360×780        390×844        430×932
+       天空下緣      172.1px        193.7px        209.8px        231.3px
+       24vw（Ⓒ）    151.8 (+20.4)  169.0 (+24.7)  179.8 (+30.0)  189.4 (+41.9)
+       28vw（Ⓒ＋）  164.6  (+7.6)  183.4 (+10.3)  195.4 (+14.4)  206.6 (+24.7)
+       30vw          171.0  (+1.1)  190.6  (+3.1)  203.2  (+6.6)  215.2 (+16.1)
+       33vw（＝Ⓑ）  180.6  (−8.4)  201.4  (−7.7)  214.9  (−5.1)  228.1  (+3.2)
+
+     所以 Ⓑ 的 33vw 配上 Ⓒ 的行距**會壓到矮房子**（四支裡三支是負的）；
+     30vw 在 320 上只剩 1.1px、360 上只剩 3.1px —— 等於最後一行的字腳正好踩在屋脊上。
+     28vw 每一支都留 7px 以上，而 390 上的空隙仍有 48.1px（Ⓒ 是 32.5）。 */
+  html[data-sp="c2"] .hero-copy { padding-top: 28vw; }
+  html[data-sp="c"] .hero-poem,
+  html[data-sp="c2"] .hero-poem { letter-spacing: .3em; line-height: 2.2; max-width: 84vw; }
+  html[data-sp="c"] .hero-poem .lead,
+  html[data-sp="c2"] .hero-poem .lead { margin-bottom: .9em; }
 }
 
 /* ---- 切換條（提案頁專用，定案後連同 data-sp 一起刪掉）--------------------- */
@@ -2133,12 +2165,14 @@ html[data-sp="c"] .hero-poem .lead { margin-bottom: .9em; }
   <button type="button" data-v="a">Ⓐ 微幅</button>
   <button type="button" data-v="b">Ⓑ 大幅</button>
   <button type="button" data-v="c">Ⓒ 鬆</button>
+  <button type="button" data-v="c2">Ⓒ＋ 手機再低</button>
 </div>
+<!-- Ⓒ＋ 在電腦上與 Ⓒ 一模一樣，按了不會有任何變化 —— 它是給手機看的。 -->
 <script>
 (function () {
   var root = document.documentElement;
   var btns = Array.prototype.slice.call(document.querySelectorAll('.sw button'));
-  var ok = { now: 1, a: 1, b: 1, c: 1 };
+  var ok = { now: 1, a: 1, b: 1, c: 1, c2: 1 };
   function apply(v, push) {
     if (!ok[v]) v = 'now';
     if (v === 'now') root.removeAttribute('data-sp'); else root.setAttribute('data-sp', v);
