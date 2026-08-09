@@ -1030,7 +1030,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .info-note { margin-top: .55rem !important; font-size: .8rem !important; color: var(--ink-soft); }
 .gallery { display: grid; gap: 1.2rem; grid-template-columns: repeat(2, 1fr); margin-top: 1.4rem; }
 .gallery figure { margin: 0; }
-.gallery img { border-radius: 12px; width: 100%; }
+/* 兩張診間照的原始比例差了 2.8%（600×389 與 600×400），兩欄並排時右邊那張
+   會高出約 10px，連帶說明文字也錯開一行的高度。統一鎖成 3:2 ＋ object-fit: cover：
+   第二張本來就是 3:2 不受影響，第一張左右各裁掉 1.4%（畫面上約 7px），看不出來。
+   ⚠ 之後換照片請一併確認新圖是 3:2，否則會被裁到重點。 */
+.gallery img { border-radius: 12px; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
 .gallery figcaption { margin-top: .5rem; font-size: .8rem; line-height: 1.7; color: var(--ink-soft); }
 
 /* ---- 頁尾：手機一欄 → 電腦三欄 ---------------------------------------- */
