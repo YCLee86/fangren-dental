@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>釋出的 Logo 色 vs 一般牙科／創辦醫師｜芳仁牙醫診所</title>
+<title>九個綠 — 診療椅／Logo 苔綠／家色深綠松 ＋ 中間六階｜芳仁牙醫診所</title>
 <link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <style>
 /* 自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
@@ -14,11 +14,18 @@
   --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
   --ink:#2a2c27; --ink-soft:#5c5f57;
 
-  /* 三個綠 */
-  --chair:#4f6361;      /* 診療椅實測。現行：一般牙科・定期檢查／牙周／創辦醫師 */
-  --moss:#5D6D55;       /* 苔綠＝Logo 本身。2026-08-09 顯微根管改紅之後被釋出 */
-  --moss-deep:#596951;  /* 苔綠壓到紙上撐得住的位置（L* 42.5）。原本是根管的文章頁字階 */
-  --teal:#214D48;       /* 深綠松＝家色，全站連結色與診所資訊 */
+  /* 九個綠：三個錨（①椅 ④苔 ⑦松）＋ 每條邊補兩階，繞成一圈 椅→苔→松→椅。
+     Lab 線性內插。line 只有 ④ 不同（苔綠原值在紙上 4.38 不夠，壓深到 #596951）。 */
+  --g1:#4f6361; --gl1:#4f6361;   /* 診療椅・現行 */
+  --g2:#54665d; --gl2:#54665d;
+  --g3:#596a59; --gl3:#596a59;
+  --g4:#5D6D55; --gl4:#596951;   /* 苔綠＝Logo */
+  --g5:#4b6251; --gl5:#4b6251;
+  --g6:#37584c; --gl6:#37584c;
+  --g7:#214D48; --gl7:#214D48;   /* 深綠松＝家色 */
+  --g8:#315450; --gl8:#315450;
+  --g9:#415c59; --gl9:#415c59;
+  --chair:#4f6361; --moss:#5D6D55; --teal:#214D48;
 
   /* 其餘現役科別（2026-08-09 收盤） */
   --kids:#c28229; --kids-line:#9e6301; --ortho:#3C596B;
@@ -66,14 +73,17 @@ code{font-family:var(--mono);font-size:.9em}
 .is-pick{box-shadow:0 0 0 3px rgba(42,44,39,.10)}
 
 /* ---- 三個綠並排 ------------------------------------------------------ */
-.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem}
+.g .band{position:relative}
+.g .band span{position:absolute;left:.4rem;top:.3rem;font-family:var(--mono);font-size:.72rem;color:#fff}
+.g.anchor{border-color:var(--ink);border-width:2px}
 .g{background:var(--card);border:1px solid var(--rule);border-radius:10px;overflow:hidden;
    display:flex;flex-direction:column}
-.g .band{height:3.4rem;background:var(--c)}
+.g .band{height:2.9rem;background:var(--c)}
 .g .t{padding:.5rem .55rem .6rem;display:flex;flex-direction:column;gap:.15rem}
 .g .n{font-size:.82rem;letter-spacing:.03em;line-height:1.4}
 .g .v{font-family:var(--mono);font-size:.66rem;color:var(--ink-soft);line-height:1.55}
-.g.now{border-color:var(--ink);border-width:2px}
+
 
 /* ---- 醫師卡（照 index.html 的樣子） ---------------------------------- */
 .doc{background:var(--card);border:1px solid var(--rule);border-radius:12px;
@@ -97,8 +107,10 @@ code{font-family:var(--mono);font-size:.9em}
 .readout{font-family:var(--mono);font-size:.73rem;color:var(--ink-soft);
          font-variant-numeric:tabular-nums;line-height:1.85;border-top:1px solid var(--rule);padding-top:.7rem}
 /* 讀數長度會隨案子變，先把兩行佔住，切著比對時版面才不會跳 */
-.readout span{display:block}
-@media (max-width:35rem){ .readout span{min-height:calc(2 * 1.85em)} }
+.readout span{display:block;min-height:calc(2 * 1.85em)}   /* 寬螢幕上 ④ 也還是兩行 */
+/* ④ 的讀數多帶一句「壓深過」的說明，比別人長一行 —— 佔三行才不會跳。
+   量過：≥44rem 三行都放得下，不必佔。 */
+@media (max-width:44rem){ .readout span{min-height:calc(3 * 1.85em)} }
 
 /* ---- 文章內頁 -------------------------------------------------------- */
 .post{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:1.1rem 1.1rem 1.2rem}
@@ -117,27 +129,48 @@ code{font-family:var(--mono);font-size:.9em}
           background:rgba(244,244,245,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
           border:1px solid var(--rule);border-radius:14px;padding:.45rem .55rem;
           display:flex;align-items:center;gap:.3rem;box-shadow:0 4px 20px rgba(0,0,0,.18);
-          width:max-content;max-width:calc(100vw - 1.4rem)}
+          flex-wrap:wrap;width:min(calc(100vw - 1.4rem), 26rem)}
 .switcher .glbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.04em;color:var(--ink-soft);flex:0 0 auto}
-.switcher .opt{position:relative;flex:0 0 auto;display:flex;align-items:center;gap:.32rem;
-               padding:.26rem .5rem;border-radius:8px;border:1px solid var(--rule);
-               background:#fff;color:var(--ink);cursor:pointer;-webkit-user-select:none;user-select:none;
-               font-size:.72rem;line-height:1.4}
-.switcher .opt i{width:.85rem;height:.85rem;border-radius:3px;background:var(--c);flex:0 0 auto}
+/* 每一顆就是那個顏色本身，白字編號壓在上面（九個綠白字對比最低 5.55，讀得到）。
+   ⚠ 收縮包覆的 flex 容器裡放會換行的列，寬度會塌 —— 要明寫寬度。 */
+.switcher .opt{position:relative;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+               min-width:2rem;padding:.24rem .3rem;border-radius:7px;
+               border:1px solid rgba(42,44,39,.18);background:var(--c);
+               cursor:pointer;-webkit-user-select:none;user-select:none}
+.switcher .opt.anchor{border-color:rgba(255,255,255,.85);border-width:2px}
+.switcher .opt .n{font-family:var(--mono);font-size:.72rem;line-height:1.3;color:#fff}
 .switcher .opt input{position:absolute;inset:0;opacity:0;margin:0;width:100%;height:100%;cursor:pointer}
-.switcher .opt:has(input:checked){box-shadow:0 0 0 2px var(--ink);border-color:var(--ink)}
+.switcher .opt:has(input:checked){box-shadow:0 0 0 2px var(--ink)}
 .switcher .opt:has(input:focus-visible){outline:2px solid var(--teal);outline-offset:3px}
 
-body:has(#a:checked){--pick:var(--chair);--pick-line:var(--chair)}
-body:has(#b:checked){--pick:var(--moss);--pick-line:var(--moss-deep)}
-body:has(#c:checked){--pick:var(--teal);--pick-line:var(--teal)}
+body:has(#p1:checked){--pick:var(--g1);--pick-line:var(--gl1)}
+body:has(#p2:checked){--pick:var(--g2);--pick-line:var(--gl2)}
+body:has(#p3:checked){--pick:var(--g3);--pick-line:var(--gl3)}
+body:has(#p4:checked){--pick:var(--g4);--pick-line:var(--gl4)}
+body:has(#p5:checked){--pick:var(--g5);--pick-line:var(--gl5)}
+body:has(#p6:checked){--pick:var(--g6);--pick-line:var(--gl6)}
+body:has(#p7:checked){--pick:var(--g7);--pick-line:var(--gl7)}
+body:has(#p8:checked){--pick:var(--g8);--pick-line:var(--gl8)}
+body:has(#p9:checked){--pick:var(--g9);--pick-line:var(--gl9)}
 #rn::before,#ro::before{content:"—"}
-body:has(#a:checked) #rn::before{content:"現行・診療椅 #4f6361"}
-body:has(#b:checked) #rn::before{content:"苔綠＝Logo #5D6D55"}
-body:has(#c:checked) #rn::before{content:"深綠松＝家色 #214D48"}
-body:has(#a:checked) #ro::before{content:"套色 #4f6361　白底字 #4f6361（同一個值）　白字 6.38　對卡 5.81　對紙 5.04"}
-body:has(#b:checked) #ro::before{content:"套色 #5D6D55　白底字 #596951（要壓深才過紙）　白字 5.55　對卡 5.36　對紙 4.65"}
-body:has(#c:checked) #ro::before{content:"套色 #214D48　白底字 #214D48（同一個值）　白字 9.46　對卡 8.61　對紙 7.47"}
+body:has(#p1:checked) #rn::before{content:"① 診療椅・現行"}
+body:has(#p1:checked) #ro::before{content:"① #4f6361　L* 40.3　C* 8.1　Lab h 190　白底字同一個值　白字 6.38　對卡 5.81　對紙 5.04"}
+body:has(#p2:checked) #rn::before{content:"② 椅→苔 ⅓"}
+body:has(#p2:checked) #ro::before{content:"② #54665d　L* 41.5　C* 9.3　Lab h 162　白底字同一個值　白字 6.11　對卡 5.56　對紙 4.83"}
+body:has(#p3:checked) #rn::before{content:"③ 椅→苔 ⅔"}
+body:has(#p3:checked) #ro::before{content:"③ #596a59　L* 43.0　C* 12.5　Lab h 144　白底字同一個值　白字 5.78　對卡 5.26　對紙 4.57"}
+body:has(#p4:checked) #rn::before{content:"④ 苔綠＝Logo"}
+body:has(#p4:checked) #ro::before{content:"④ #5D6D55　L* 44.1　C* 15.9　Lab h 134　白底字 #596951（苔綠原值在紙上 4.38 不夠，壓深過）　白字 5.55　對卡 5.36　對紙 4.65"}
+body:has(#p5:checked) #rn::before{content:"⑤ 苔→松 ⅓"}
+body:has(#p5:checked) #ro::before{content:"⑤ #4b6251　L* 39.3　C* 14.3　Lab h 151　白底字同一個值　白字 6.63　對卡 6.04　對紙 5.24"}
+body:has(#p6:checked) #rn::before{content:"⑥ 苔→松 ⅔"}
+body:has(#p6:checked) #ro::before{content:"⑥ #37584c　L* 34.6　C* 15.5　Lab h 168　白底字同一個值　白字 7.89　對卡 7.18　對紙 6.23"}
+body:has(#p7:checked) #rn::before{content:"⑦ 深綠松＝家色"}
+body:has(#p7:checked) #ro::before{content:"⑦ #214D48　L* 29.7　C* 16.7　Lab h 186　白底字同一個值　白字 9.46　對卡 8.61　對紙 7.47"}
+body:has(#p8:checked) #rn::before{content:"⑧ 松→椅 ⅓"}
+body:has(#p8:checked) #ro::before{content:"⑧ #315450　L* 33.1　C* 13.8　Lab h 187　白底字同一個值　白字 8.35　對卡 7.60　對紙 6.60"}
+body:has(#p9:checked) #rn::before{content:"⑨ 松→椅 ⅔"}
+body:has(#p9:checked) #ro::before{content:"⑨ #415c59　L* 36.9　C* 10.9　Lab h 188　白底字同一個值　白字 7.24　對卡 6.59　對紙 5.72"}
 
 /* ---- 表 -------------------------------------------------------------- */
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -155,8 +188,8 @@ td.bad{color:#8c2f34;font-weight:700}
 
   <div class="head">
     <p class="eyebrow">對照用 · 2026-08-09</p>
-    <h1>釋出的 Logo 色，和現在用它旁邊那個綠的兩個地方</h1>
-    <p class="lead">顯微根管改紅之後，<b>苔綠 <code>#5D6D55</code>（Logo 本身的色）沒有科別在用了</b>。這一頁把它放回「一般牙科・定期檢查」與「創辦醫師」現在用的診療椅綠旁邊，兩個狀態、兩種底一起看。<br><span class="small">切換條在下面。這一頁只是拿來看的，正式站一個字都沒動。</span></p>
+    <h1>三個綠 ＋ 中間補的六階</h1>
+    <p class="lead">顯微根管改紅之後，<b>苔綠 <code>#5D6D55</code>（Logo 本身的色）沒有科別在用了</b>。這一頁把它放回「一般牙科・定期檢查」與「創辦醫師」現在用的診療椅綠旁邊，加上家色深綠松，<b>三個錨之間每條邊再補兩階，繞成一圈：椅 → 苔 → 松 → 椅</b>。<br><span class="small">切換條在下面，九顆。白框那三顆是錨（①椅 ④苔 ⑦松）。這一頁只是拿來看的，正式站一個字都沒動。</span></p>
   </div>
 
   <div class="note ok">
@@ -167,22 +200,29 @@ td.bad{color:#8c2f34;font-weight:700}
 
   <!-- ===================== 三個綠 ===================== -->
   <section>
-    <h2>三個綠</h2>
+    <h2>九個綠</h2>
     <div class="trio">
-      <div class="g now" style="--c:var(--chair)"><div class="band"></div><div class="t">
-        <span class="n">診療椅<br><b>現行</b></span>
-        <span class="v">#4f6361<br>L* 40.3　C* 8.1<br>Lab h 190</span></div></div>
-      <div class="g" style="--c:var(--moss)"><div class="band"></div><div class="t">
-        <span class="n">苔綠<br><b>＝Logo</b></span>
-        <span class="v">#5D6D55<br>L* 44.1　C* 15.9<br>Lab h 134</span></div></div>
-      <div class="g" style="--c:var(--teal)"><div class="band"></div><div class="t">
-        <span class="n">深綠松<br><b>家色</b></span>
-        <span class="v">#214D48<br>L* 29.7　C* 16.7<br>Lab h 186</span></div></div>
+      <div class="g anchor" style="--c:#4f6361"><div class="band"><span>①</span></div><div class="t"><span class="n">診療椅・現行</span><span class="v">#4f6361<br>L* 40.3　C* 8.1<br>h 190</span></div></div>
+      <div class="g" style="--c:#54665d"><div class="band"><span>②</span></div><div class="t"><span class="n">椅→苔 ⅓</span><span class="v">#54665d<br>L* 41.5　C* 9.3<br>h 162</span></div></div>
+      <div class="g" style="--c:#596a59"><div class="band"><span>③</span></div><div class="t"><span class="n">椅→苔 ⅔</span><span class="v">#596a59<br>L* 43.0　C* 12.5<br>h 144</span></div></div>
+      <div class="g anchor" style="--c:#5D6D55"><div class="band"><span>④</span></div><div class="t"><span class="n">苔綠＝Logo</span><span class="v">#5D6D55<br>L* 44.1　C* 15.9<br>h 134</span></div></div>
+      <div class="g" style="--c:#4b6251"><div class="band"><span>⑤</span></div><div class="t"><span class="n">苔→松 ⅓</span><span class="v">#4b6251<br>L* 39.3　C* 14.3<br>h 151</span></div></div>
+      <div class="g" style="--c:#37584c"><div class="band"><span>⑥</span></div><div class="t"><span class="n">苔→松 ⅔</span><span class="v">#37584c<br>L* 34.6　C* 15.5<br>h 168</span></div></div>
+      <div class="g anchor" style="--c:#214D48"><div class="band"><span>⑦</span></div><div class="t"><span class="n">深綠松＝家色</span><span class="v">#214D48<br>L* 29.7　C* 16.7<br>h 186</span></div></div>
+      <div class="g" style="--c:#315450"><div class="band"><span>⑧</span></div><div class="t"><span class="n">松→椅 ⅓</span><span class="v">#315450<br>L* 33.1　C* 13.8<br>h 187</span></div></div>
+      <div class="g" style="--c:#415c59"><div class="band"><span>⑨</span></div><div class="t"><span class="n">松→椅 ⅔</span><span class="v">#415c59<br>L* 36.9　C* 10.9<br>h 188</span></div></div>
     </div>
-    <p class="small">深綠松放進來當第三個參考點 —— 它是<b>全站的連結色與診所資訊</b>那一支，不是科別色，不能被拿走。</p>
+    <p class="small">白框那三顆是錨：<b>① 診療椅</b>（一般牙科・定期檢查／牙周治療／創辦醫師現在用的）、<b>④ 苔綠</b>（Logo 本身，剛被釋出）、<b>⑦ 深綠松</b>（家色，全站連結色與診所資訊 —— <b>它不是科別色，不能被拿走</b>，放進來只當參考點）。中間六階是 Lab 線性內插。</p>
+    <div class="note ok">
+      <p><b>三條邊的性格完全不同，這是這一圈最有用的地方：</b></p>
+      <p><b>①→④（椅到苔）</b>色相從 190 走到 134，<b>從藍綠轉黃綠</b>，亮度只動 3.8 階 —— 這條邊在問「要不要往 Logo 那個綠靠」。<br>
+      <b>④→⑦（苔到松）</b>亮度掉 14.4 階、彩度只多 0.8 —— 這條邊幾乎純粹是<b>變深</b>。<br>
+      <b>⑦→①（松到椅）</b>色相幾乎不動（186→190），亮度升 10.6、彩度掉 8.6 —— 這條邊是<b>同一個藍綠的三個高度</b>，和現役那些兩階色是同一種關係。</p>
+    </div>
 
     <div class="note warn">
-      <p><b>苔綠和診療椅只差 ΔE 13.7</b>，是這三個裡最近的一對。但那 13.7 不是「幾乎一樣」—— <b>它們的色相差 56°</b>（134 對 190，一個往黃綠、一個往藍綠），只是兩個彩度都很低（15.9 與 8.1），所以距離拉不開。<b>低彩度的顏色差別要靠並排才看得出來，這就是為什麼要做這一頁。</b></p>
+      <p><b>苔綠和診療椅只差 ΔE 13.7</b>，是三個錨裡最近的一對。但那 13.7 不是「幾乎一樣」—— <b>它們的色相差 56°</b>（134 對 190，一個往黃綠、一個往藍綠），只是兩個彩度都很低（15.9 與 8.1），所以距離拉不開。<b>低彩度的顏色差別要靠並排才看得出來，這就是為什麼要做這一頁。</b></p>
+      <p class="soft">相鄰兩階之間是 ΔE 4.3~7.1，是很細的一格 —— <b>切著看比看數字準。</b></p>
     </div>
   </section>
 
@@ -323,19 +363,25 @@ td.bad{color:#8c2f34;font-weight:700}
 
 </div>
 
-<div class="switcher" role="radiogroup" aria-label="三個綠切換">
+<div class="switcher" role="radiogroup" aria-label="九個綠切換">
   <span class="glbl">綠</span>
-  <label class="opt" style="--c:var(--chair)"><i></i>現行<input type="radio" name="g" id="a" value="a" checked></label>
-  <label class="opt" style="--c:var(--moss)"><i></i>Logo<input type="radio" name="g" id="b" value="b"></label>
-  <label class="opt" style="--c:var(--teal)"><i></i>家色<input type="radio" name="g" id="c" value="c"></label>
+  <label class="opt anchor" style="--c:#4f6361"><span class="n">①</span><input type="radio" name="g" id="p1" value="1" checked></label>
+  <label class="opt" style="--c:#54665d"><span class="n">②</span><input type="radio" name="g" id="p2" value="2"></label>
+  <label class="opt" style="--c:#596a59"><span class="n">③</span><input type="radio" name="g" id="p3" value="3"></label>
+  <label class="opt anchor" style="--c:#5D6D55"><span class="n">④</span><input type="radio" name="g" id="p4" value="4"></label>
+  <label class="opt" style="--c:#4b6251"><span class="n">⑤</span><input type="radio" name="g" id="p5" value="5"></label>
+  <label class="opt" style="--c:#37584c"><span class="n">⑥</span><input type="radio" name="g" id="p6" value="6"></label>
+  <label class="opt anchor" style="--c:#214D48"><span class="n">⑦</span><input type="radio" name="g" id="p7" value="7"></label>
+  <label class="opt" style="--c:#315450"><span class="n">⑧</span><input type="radio" name="g" id="p8" value="8"></label>
+  <label class="opt" style="--c:#415c59"><span class="n">⑨</span><input type="radio" name="g" id="p9" value="9"></label>
 </div>
 
 <script>
-// 純粹的加分項：網址參數 ?g=b。整段被擋掉也沒關係，切換條本身是 CSS 做的。
+// 純粹的加分項：網址參數 ?g=4。整段被擋掉也沒關係，切換條本身是 CSS 做的。
 (function(){
   try{
     var v = (new URLSearchParams(location.search).get('g') || '');
-    if (/^[abc]$/.test(v)) { var el = document.getElementById(v); if (el) el.checked = true; }
+    if (/^[1-9]$/.test(v)) { var el = document.getElementById('p' + v); if (el) el.checked = true; }
     document.querySelectorAll('.switcher input').forEach(function(i){
       i.addEventListener('change', function(){
         try{
