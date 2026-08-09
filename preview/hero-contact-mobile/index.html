@@ -7,7 +7,7 @@
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>手機版：窄帶的地址與電話 三案｜芳仁牙醫（提案）</title>
+<title>手機版：窄帶的地址與電話 兩案｜芳仁牙醫（提案）</title>
 <!-- ⚠ 提案頁一定要帶這一行。三道防線的第一道，另外兩道是 Worker 的
      X-Robots-Tag 與 robots.txt 的 Disallow: /preview/。 -->
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -26,7 +26,8 @@
           （不拿掉的話每開一次提案頁就幫首頁的真實計數 +1）
        4. **地址與電話的標記從 .band 的直接子元素移進 .shell**，
           夾在瀏覽數與 1983／9／6 之間 —— 這一輪要看的就是這個
-       5. 手機的 @media 裡多了三案的排法與右下角的切換條
+       5. 手機的 @media 裡多了兩案的排法（第二輪淘汰了「撐開」）、兩行的行距四階，
+          以及右下角的切換條
 
      電腦版有沒有被影響：**沒有**。第 4 點只換了絕對定位的包含塊
      （.band → .band > .shell），而 .shell 的內距盒右緣就是版心外緣、底邊和 .band
@@ -1614,21 +1615,41 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         **兩顆的比例關係沒有變**，所以「話筒不會飄」那件事一起帶過來了。
         下移仍是 .8px（那是為了補話筒比釘子矮，和字級無關）。
 
-     ---- 三案 ----
+     ---- 兩案（第二輪，2026-08-10）----
      Ⓜ1 一行置中　　和上面的瀏覽數同一個對齊方式（瀏覽數是置中的）。
-     Ⓜ2 一行撐開　　地址貼左緣、電話貼右緣，和下面三格的滿版對齊。
-     Ⓜ3 兩行置中　　地址一行、電話一行，各自置中。
+     Ⓜ3 兩行置中　　**電話在上、地址在下**，各自置中。
+     淘汰：Ⓜ2 一行撐開（地址貼左緣、電話貼右緣）—— 使用者：「撐開不要 好怪」。
 
-     375 上放得下嗎：版心內寬 335px，一行整組約 260px（地址 151 ＋ 間距 30 ＋
-     電話 79），Ⓜ1／Ⓜ2 都放得下；320 上剩 280px 也還過得去。實測見下面的量測註解。
+     ---- ⚠ 那條「溝」一定要在手機關掉（第二輪修的）----------------------
+     使用者：「置中看起來沒有真的置中，從圖釘 icon 到電話號碼最後一碼 9
+     這整個區塊看起來就沒有置中」。量出來完全成立：
+       .c-addr 的方塊左緣　48.11
+       釘子第一筆墨水　　　55.79　→ **中間有 7.68px 的死空白**
+       「9」的墨水右緣　　326.44
+       .c-tel 的方塊右緣　326.88　→ 死空白只有 0.44px
+     方塊確實置中（中心 187.49 ≈ 版心中心 187.5），但**看得見的那一塊中心在
+     191.11，偏右 3.61px** —— 兩端的死空白不一樣多，眼睛看的是墨水不是盒子。
 
-     ⚠ 窄帶會變高。現在是 80px（.85rem 內距 ×2 ＋ 瀏覽數 13 ＋ gap 8.8 ＋ 三格 31），
-        多一列之後 Ⓜ1／Ⓜ2 約 +23px、Ⓜ3 約 +37px。手機的窄帶是**接在照片下面**的
-        靜態區塊（不是壓在照片上），所以變高只會把下面的內容往下推，不會蓋到照片。
-     ⚠ 定案之後把 data-m 與切換條刪掉，只留選中那一案。
+     那 7.68px 是哪來的：手機吃到了上面 `@media (max-width: 1159px)` 那一段
+     （1159 也涵蓋 375）裡的 `.hero-contact .ico { flex: 0 0 var(--hero-gutter) }`。
+     那條溝是**電腦版窄螢幕退成兩行、要讓「雲」和「0」切齊左緣**才需要的；
+     手機這兩案都是置中，沒有左緣要對，溝就只是圖示前面的一塊空白。
+     所以手機把它關掉：`.ico` 回到 `flex: 0 0 auto`、連結的 gap 回到 .45rem。
+     關掉之後兩端的死空白只剩 1.4px 與 0.44px，盒置中就等於視覺置中。
+     ⚠ **不要用「整組往左推幾 px」去修這件事** —— 那是拿一個補償數字去蓋掉
+        真正的原因，字級或圖示一改就又要重算。把多餘的空白拿掉才是解。
+
+     ---- 放得下嗎 ----
+     375 上版心內寬 335px；關掉溝之後一行整組約 249px，320 上（內寬 280）
+     也還有餘裕。實測見下面。
+
+     ⚠ 窄帶會變高。原本 85.2px，Ⓜ1 約 +22、Ⓜ3 約 +39。手機的窄帶是**接在照片
+        下面**的靜態區塊（不是壓在照片上），所以變高只會把下面的內容往下推。
+     ⚠ 定案之後把 data-m／data-g 與切換條刪掉，只留選中那一案。
      ====================================================================== */
   .contact-pair { position: static; }
-  .hero-contact a { font-size: .7rem; }
+  .hero-contact a { font-size: .7rem; gap: .45rem; }
+  .hero-contact .ico { flex: 0 0 auto; }     /* ← 關掉那條溝，見上面 */
   .c-addr .ico svg { width: .762rem; height: .762rem; }
   .c-tel  .ico svg { width: .710rem; height: .710rem; }
 
@@ -1636,19 +1657,32 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   body[data-m="m1"] .contact-pair {
     flex-direction: row; justify-content: center; align-items: center; gap: 1.9rem;
   }
-  /* Ⓜ2 一行撐開（地址貼左、電話貼右）。
-     ⚠ 用 space-between 不是 justify-content: stretch —— 兩項寬度差很多，
-        撐開會讓地址被拉得比電話寬一倍，那不是「對齊兩端」是「等分」。 */
-  body[data-m="m2"] .contact-pair {
-    flex-direction: row; justify-content: space-between; align-items: center; gap: 1rem;
-  }
-  /* Ⓜ3 兩行置中。
-     ⚠ 這一案**不用**電腦版窄螢幕退路那條「溝」：那條溝是為了讓兩行靠左時
-        「雲」和「0」切齊；這裡兩行是各自置中的，本來就不對齊左緣，加了溝只會
-        在圖示前面多留一塊空白。 */
+
+  /* Ⓜ3 兩行置中，**電話在上、地址在下**（使用者：「這樣版面比較順」）。
+     用 order 換順序、不動 HTML 的先後 —— 電腦版是「地址在左、電話在右」，
+     兩邊共用同一份標記，改 DOM 會連電腦版一起換掉。
+     ⚠ 代價：鍵盤 Tab 的順序仍是地址→電話，和看到的上下相反。兩個連結而已，
+        而且兩種順序都讀得通，可以接受；但**不要再往這一組加第三個連結**，
+        那時候順序不一致就會開始難用了。 */
   body[data-m="m3"] .contact-pair {
-    flex-direction: column; align-items: center; gap: .3rem;
+    flex-direction: column; align-items: center;
   }
+  body[data-m="m3"] .c-tel { order: -1; }
+
+  /* ---- 兩行的行距四階（?g=）：這一輪要選的 --------------------------
+     使用者：「兩行的間距有點擠，拉開一點」。現況 .3rem＝4.8px。
+
+     ⚠ 有一條上限：**窄帶自己的列距是 .55rem（8.8px）**（.band .shell 的 gap，
+        管的是「瀏覽數↔聯絡↔1983」之間）。兩行的內距一旦追上或超過它，
+        這兩行就不再讀成一組，而會變成窄帶的第三、第四列。
+        Ⓖ3 正好等於它、Ⓖ4 已經超過 —— 兩個都留著讓使用者自己看，
+        但**選 Ⓖ4 的話要有心理準備那就是四列，不是三列**。 */
+     ⚠ 這四條一定要帶 [data-m="m3"] —— `gap` 在 Ⓜ1 是**橫向**的那個 1.9rem，
+        不限定案別的話會把它一起蓋掉，一行版的地址與電話就黏在一起了。 */
+  body[data-m="m3"][data-g="g1"] .contact-pair { gap: .30rem; }   /* 4.8px　現況 */
+  body[data-m="m3"][data-g="g2"] .contact-pair { gap: .45rem; }   /* 7.2px */
+  body[data-m="m3"][data-g="g3"] .contact-pair { gap: .55rem; }   /* 8.8px　＝窄帶自己的列距 */
+  body[data-m="m3"][data-g="g4"] .contact-pair { gap: .70rem; }   /* 11.2px　超過列距 */
 
   /* ---- 內文區：字級與間距收一階 ------------------------------------- */
   .sec-head { margin-bottom: 1.1rem; }
@@ -1730,17 +1764,18 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 
 /* ---- 320 級的窄機：Ⓜ1 的間距要收 ----------------------------------------
-   量出來的：一行整組（地址 157.4 ＋ 間距 30.4 ＋ 電話 91）＝ 278.8px，
-   而 320 上版心內寬只有 280px —— **餘裕 1.2px**。
+   第一輪量到的：一行整組 278.8px，而 320 上版心內寬只有 280px —— **餘裕 1.2px**。
    這正是頁尾地址踩過的那個坑（CLAUDE.md 第四節那段長註解）：餘裕接近 0 時，
    只要系統字後備、PingFang 與 Chromium 的字寬差、letter-spacing 的次像素進位
    有任何一點落差，中文就會折行，而且會斷在最後一兩個字，最難看。
    Chromium 上重現不了不代表 iPhone 上不會。
 
-   所以 ≤360 把 Ⓜ1 的間距從 1.9rem 收到 1.1rem，320 上的餘裕變成 14px（5%）。
-   ⚠ Ⓜ2 不用改：space-between 的中間那段本來就是可壓縮的餘量
-      （320 上還有 31.6px），文字變寬只會讓中間變窄，不會溢出。
-   ⚠ Ⓜ3 是兩行，寬度只由較長的地址決定，更不會有事。
+   第二輪關掉那條溝之後整組瘦了 11.7px（267.1），320 上的餘裕自己變成 12.9px。
+   **這一條仍然留著**：12.9px 只有 4.6%，還在那個坑的射程內。收到 1.1rem 之後
+   320 上是 254.3px、餘裕 25.7px（9.2%），才真的安全。
+   代價是 ≤360 的間距（17.6px）和 375 以上（30.4px）不一樣 —— 兩種寬度不會同時
+   出現在同一個人眼前，可以接受。
+   ⚠ Ⓜ3 是兩行，寬度只由較長的地址決定（320 上餘裕 128px），不用改。
    ⚠ **不要改用 white-space: nowrap 去防折行** —— 那會讓地址在窄機上撐破版面，
       違反 CLAUDE.md 第一節第 6 條（手機版不可水平捲動）。 */
 @media (max-width: 360px) {
@@ -1751,11 +1786,12 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    固定在右下角。手機上它會蓋住一點內容，但只有提案頁有，正式站不會有。 */
 .sw {
   position: fixed; right: .6rem; bottom: .6rem; z-index: 60;
-  display: flex; align-items: center; gap: .3rem;
-  background: rgba(25, 22, 20, .86); border-radius: 999px; padding: .35rem .4rem;
+  display: grid; gap: .3rem;
+  background: rgba(25, 22, 20, .86); border-radius: .9rem; padding: .4rem .45rem;
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
-.sw span { font-size: .62rem; color: rgba(255,255,255,.6); padding-inline: .3rem; }
+.sw-row { display: flex; align-items: center; gap: .3rem; transition: opacity .15s ease; }
+.sw span { font-size: .62rem; color: rgba(255,255,255,.6); padding-inline: .3rem; min-width: 2.4em; }
 .sw button {
   font: inherit; font-size: .68rem; line-height: 1;
   padding: .38rem .6rem; border-radius: 999px; cursor: pointer;
@@ -1764,8 +1800,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .sw button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
 </style>
 </head>
-<!-- 預設開 Ⓜ1（一行置中）。三案的差別與量測寫在手機 @media 裡那一大段。 -->
-<body data-m="m1">
+<!-- 預設開 Ⓜ1（一行置中）＋ 行距 Ⓖ2（7.2px）。兩案的差別與量測寫在手機 @media 裡那一大段。 -->
+<body data-m="m1" data-g="g2">
 
 
 <a class="skip-link" href="#main">跳到主要內容</a>
@@ -2560,32 +2596,47 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      ⚠ 版型搬回 index.html 的時候，**不要把這一頁的示範值一起帶過去**。
         2026-08-07 就發生過一次：提案頁的 8642 蓋掉了真值 190，還不會動。 -->
 
-<div class="sw" role="group" aria-label="手機版排法三案">
-  <span>手機</span>
-  <button type="button" data-set="m1" aria-pressed="true">Ⓜ1 置中</button>
-  <button type="button" data-set="m2" aria-pressed="false">Ⓜ2 撐開</button>
-  <button type="button" data-set="m3" aria-pressed="false">Ⓜ3 兩行</button>
+<div class="sw">
+  <div class="sw-row" role="group" aria-label="手機版排法兩案">
+    <span>排法</span>
+    <button type="button" data-axis="m" data-set="m1" aria-pressed="true">Ⓜ1 一行</button>
+    <button type="button" data-axis="m" data-set="m3" aria-pressed="false">Ⓜ3 兩行</button>
+  </div>
+  <div class="sw-row" role="group" aria-label="兩行的行距四階">
+    <span>行距</span>
+    <button type="button" data-axis="g" data-set="g1" aria-pressed="false">4.8</button>
+    <button type="button" data-axis="g" data-set="g2" aria-pressed="true">7.2</button>
+    <button type="button" data-axis="g" data-set="g3" aria-pressed="false">8.8</button>
+    <button type="button" data-axis="g" data-set="g4" aria-pressed="false">11.2</button>
+  </div>
 </div>
 
 <script>
-/* 切換條。網址可帶 ?m=m1|m2|m3。
+/* 兩條切換條。網址可帶 ?m=m1|m3&g=g1|g2|g3|g4。
+   行距那一條只有 Ⓜ3 看得出效果（Ⓜ1 是一行，沒有行距），所以切到 Ⓜ1 時
+   把它整條淡掉、但**不停用** —— 停用會讓使用者以為壞了。
    ⚠ 正規式寫 [a-z0-9]+ 不是 [a-z]+ —— 值裡有數字時比對會失敗，然後**悄悄**
       退回預設，等於參數沒作用。這一頁的值全都帶數字，非這樣寫不可。 */
 (function () {
-  var VALS = ['m1', 'm2', 'm3'];
-  var m = /[?&]m=([a-z0-9]+)/.exec(location.search);
-  var cur = (m && VALS.indexOf(m[1]) >= 0) ? m[1] : 'm1';
-  function set(v) {
-    cur = v;
-    document.body.setAttribute('data-m', v);
-    document.querySelectorAll('.sw button').forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b.dataset.set === v));
+  var AXES = { m: ['m1', 'm3'], g: ['g2', 'g1', 'g3', 'g4'] };  /* 每欄第一個是預設 */
+  var cur = {};
+  Object.keys(AXES).forEach(function (axis) {
+    var hit = new RegExp('[?&]' + axis + '=([a-z0-9]+)').exec(location.search);
+    cur[axis] = (hit && AXES[axis].indexOf(hit[1]) >= 0) ? hit[1] : AXES[axis][0];
+  });
+  function apply() {
+    Object.keys(AXES).forEach(function (axis) {
+      document.body.setAttribute('data-' + axis, cur[axis]);
+      document.querySelectorAll('.sw button[data-axis="' + axis + '"]').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.set === cur[axis]));
+      });
     });
-    history.replaceState(null, '', location.pathname + '?m=' + v);
+    document.querySelectorAll('.sw-row')[1].style.opacity = (cur.m === 'm3') ? '1' : '.45';
+    history.replaceState(null, '', location.pathname + '?m=' + cur.m + '&g=' + cur.g);
   }
-  set(cur);
+  apply();
   document.querySelectorAll('.sw button').forEach(function (b) {
-    b.addEventListener('click', function () { set(b.dataset.set); });
+    b.addEventListener('click', function () { cur[b.dataset.axis] = b.dataset.set; apply(); });
   });
 })();
 </script>
