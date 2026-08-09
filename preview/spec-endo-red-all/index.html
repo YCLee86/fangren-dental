@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>顯微根管的紅 — 七案一鍵切換｜芳仁牙醫診所</title>
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<style>
+/* 自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
+   七案＝正規化的五案（①~⑤，填色 L*46／套字 L*38）＋ 原值的兩個（⑥⑦，單一值）。
+   ⚠ 切換條是純 CSS 的（radio ＋ :has()），一行 JS 都沒有 —— 這一頁會被丟進沙箱
+   iframe 看（預覽面板、in-app 瀏覽器），那些地方會整包擋掉 script。2026-08-09 踩過。 */
+:root{
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  --ink:#2a2c27; --ink-soft:#5c5f57; --teal:#214D48;
+
+  /* 現役六科 —— 兩階都照 index.html 的實際值 */
+  --kids:#c28229;   --kids-line:#9e6301;
+  --chair:#4f6361;  --chair-line:#4f6361;
+  --ortho:#3C596B;  --ortho-line:#3C596B;
+  --prosth:#4a5789; --prosth-line:#364067;
+  --surg:#8e6299;   --surg-line:#784e84;
+  --all:#5f5d5c;    --all-line:#4c4948;
+  --moss:#5D6D55;   --taupe:#7D5A58;
+
+  /* 七案：填色 / 白底套字 */
+  --f1:#9b5b5d; --l1:#804b4c;
+  --f2:#b04d53; --l2:#923f44;
+  --f3:#b14b62; --l3:#923d50;
+  --f4:#a85541; --l4:#8b4635;
+  --f5:#bf3f4d; --l5:#9f333e;
+  --f6:#89202d; --l6:#89202d;
+  --f7:#6c1226; --l7:#6c1226;
+
+  /* 當選（預設 ⑥，radio 覆寫） */
+  --pick:#89202d; --pick-line:#89202d;
+
+  --han:"PingFang TC","Noto Sans TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--han);font-size:17px;line-height:1.85}
+.wrap{max-width:44rem;margin:0 auto;padding:2.4rem 1.2rem 7rem;display:flex;flex-direction:column;gap:2.2rem}
+
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+h1{font-size:1.85rem;line-height:1.4;letter-spacing:.04em;text-wrap:balance}
+h2{font-size:1.16rem;letter-spacing:.05em;line-height:1.55;text-wrap:balance}
+p{text-wrap:pretty}
+.lead{font-size:1.02rem}
+.small{font-size:.88rem;line-height:1.75;color:var(--ink-soft)}
+.soft{color:var(--ink-soft)}
+section{display:flex;flex-direction:column;gap:1rem}
+.head{display:flex;flex-direction:column;gap:.6rem}
+hr{border:0;border-top:1px solid var(--rule)}
+code{font-family:var(--mono);font-size:.9em}
+
+.note{background:var(--card);border:1px solid var(--rule);border-radius:12px;
+      padding:1rem 1.1rem;font-size:.92rem;line-height:1.8;display:flex;flex-direction:column;gap:.5rem}
+.note.ok{border-left:3px solid var(--teal)}
+.note.warn{border-left:3px solid var(--f2)}
+
+/* ---- 元件：規格照 PALETTE 六之二 ------------------------------------- */
+.chip{display:inline-block;font-size:13px;line-height:1.6;letter-spacing:.04em;
+      padding:.34rem .85rem;border-radius:12px;
+      background:transparent;color:var(--c);border:1px solid var(--c)}
+.chip.on{background:var(--c);color:#fff;border-color:var(--c)}
+.pill{display:inline-block;background:var(--c);color:#fff;
+      font-size:11.5px;line-height:1.6;letter-spacing:.05em;padding:.16rem .6rem;border-radius:8px}
+.tag{display:inline-block;font-size:12px;line-height:1.6;letter-spacing:.04em;
+     padding:.19rem .6rem;border-radius:8.5px;
+     background:transparent;color:var(--c);border:1px solid var(--c)}
+/* 當選的那一顆加一圈細光暈，一排裡才找得到它 */
+.is-endo{box-shadow:0 0 0 3px rgba(42,44,39,.10)}
+
+/* ---- 舞台 ------------------------------------------------------------ */
+.stage{background:var(--card);border:1px solid var(--rule);border-radius:12px;
+       padding:1rem 1.05rem 1.1rem;display:flex;flex-direction:column;gap:1.05rem}
+.stage.on-paper{background:var(--paper)}
+.blk{display:flex;flex-direction:column;gap:.5rem}
+.lbl{font-family:var(--mono);font-size:.67rem;letter-spacing:.07em;color:var(--ink-soft);line-height:1.5}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem .5rem}
+.readout{font-family:var(--mono);font-size:.73rem;color:var(--ink-soft);
+         font-variant-numeric:tabular-nums;line-height:1.85;border-top:1px solid var(--rule);padding-top:.7rem}
+
+/* ---- 切換條 ---------------------------------------------------------- */
+.switcher{position:fixed;left:50%;transform:translateX(-50%);bottom:.7rem;z-index:9;
+          background:rgba(244,244,245,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+          border:1px solid var(--rule);border-radius:14px;padding:.5rem .6rem;
+          display:flex;align-items:center;gap:.3rem;box-shadow:0 4px 20px rgba(0,0,0,.16);
+          max-width:calc(100vw - 1.4rem)}
+.switcher .glbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;color:var(--ink-soft);flex:0 0 auto}
+.switcher .opt{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:.2rem;
+               padding:.28rem .3rem .24rem;border-radius:9px;border:1px solid var(--rule);
+               background:#fff;cursor:pointer;-webkit-user-select:none;user-select:none;min-width:2.1rem}
+.switcher .opt .dot{width:1.15rem;height:.62rem;border-radius:3px;background:var(--c)}
+.switcher .opt .n{font-family:var(--mono);font-size:.66rem;line-height:1;color:var(--ink)}
+.switcher .opt input{position:absolute;inset:0;opacity:0;margin:0;width:100%;height:100%;cursor:pointer}
+.switcher .opt:has(input:checked){border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.switcher .opt:has(input:focus-visible){outline:2px solid var(--teal);outline-offset:2px}
+
+body:has(#r1:checked){--pick:var(--f1);--pick-line:var(--l1)}
+body:has(#r2:checked){--pick:var(--f2);--pick-line:var(--l2)}
+body:has(#r3:checked){--pick:var(--f3);--pick-line:var(--l3)}
+body:has(#r4:checked){--pick:var(--f4);--pick-line:var(--l4)}
+body:has(#r5:checked){--pick:var(--f5);--pick-line:var(--l5)}
+body:has(#r6:checked){--pick:var(--f6);--pick-line:var(--l6)}
+body:has(#r7:checked){--pick:var(--f7);--pick-line:var(--l7)}
+/* 讀數用 CSS 產生，script 被擋掉時才不會停在預設值上說謊 */
+#ro::before{content:"—"}
+body:has(#r1:checked) #ro::before{content:"① 磚紅・收斂　填色 #9b5b5d　套字 #804b4c　反白 5.19　套字對卡 6.31／對紙 5.48"}
+body:has(#r2:checked) #ro::before{content:"② 磚紅・官方　填色 #b04d53　套字 #923f44　反白 5.21　套字對卡 6.33／對紙 5.50"}
+body:has(#r3:checked) #ro::before{content:"③ 酒紅　　　　填色 #b14b62　套字 #923d50　反白 5.18　套字對卡 6.36／對紙 5.52"}
+body:has(#r4:checked) #ro::before{content:"④ 燒磚　　　　填色 #a85541　套字 #8b4635　反白 5.20　套字對卡 6.32／對紙 5.48"}
+body:has(#r5:checked) #ro::before{content:"⑤ 磚紅・滿彩　填色 #bf3f4d　套字 #9f333e　反白 5.21　套字對卡 6.33／對紙 5.50"}
+body:has(#r6:checked) #ro::before{content:"⑥ 紅花籃・原值　單一值 #89202d　反白 9.10　套字對卡 8.28／對紙 7.18"}
+body:has(#r7:checked) #ro::before{content:"⑦ 繡球・原值　　單一值 #6c1226　反白 11.99　套字對卡 10.90／對紙 9.47"}
+#rn::before{content:"—"}
+body:has(#r1:checked) #rn::before{content:"① 磚紅・收斂"}
+body:has(#r2:checked) #rn::before{content:"② 磚紅・官方"}
+body:has(#r3:checked) #rn::before{content:"③ 酒紅"}
+body:has(#r4:checked) #rn::before{content:"④ 燒磚"}
+body:has(#r5:checked) #rn::before{content:"⑤ 磚紅・滿彩"}
+body:has(#r6:checked) #rn::before{content:"⑥ 紅花籃・原值"}
+body:has(#r7:checked) #rn::before{content:"⑦ 繡球・原值"}
+
+/* ---- 表 -------------------------------------------------------------- */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:.89rem;font-variant-numeric:tabular-nums}
+caption{text-align:left;font-size:.85rem;color:var(--ink-soft);padding-bottom:.5rem;line-height:1.7}
+th,td{text-align:left;padding:.42rem .65rem .42rem 0;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-family:var(--mono);font-size:.71rem;letter-spacing:.07em;color:var(--ink-soft);font-weight:400}
+td.num{font-family:var(--mono);font-size:.83rem}
+td.bad{color:#8c2f34;font-weight:700}
+tr.raw td{background:rgba(137,32,45,.045)}
+.foot{font-size:.83rem;color:var(--ink-soft);line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <p class="eyebrow">提案中 · 七案一鍵切換 · 2026-08-09</p>
+    <h1>顯微根管的紅 — 七案</h1>
+    <p class="lead">正規化的五案（①~⑤）＋ 原值的紅花籃與繡球（⑥⑦），<b>全部併在同一排科別標籤裡</b>。下面切換條一按就換。<br><span class="small">兩個狀態都排出來：<b>白底套字</b>（字與整圈框都是該色）與<b>整圈套色、字反白</b>。</span></p>
+  </div>
+
+  <div class="note ok">
+    <p><b>官方磚紅的原值不必另外佔一格 —— ② 就是它。</b>② <code>#b04d53</code> 對色票原值 <code>#AF4C52</code> 只差 <b>ΔE 0.38</b>，色相彩度一模一樣，亮度差 0.4。<b>唯一的差別是原值在紙上當字只有 4.17（不到 4.5），②壓下去的那 0.4 階正好把它救回來。</b></p>
+  </div>
+
+  <hr>
+
+  <!-- ===================== 舞台：卡 ===================== -->
+  <section>
+    <h2>底＝卡 <code>#f4f4f5</code>（首頁的 chip 與文章卡標籤）</h2>
+
+    <div class="stage">
+      <div class="blk">
+        <p class="lbl">白底字套顏色 —— 七科的未選態，<b><span id="rn"></span></b> 有一圈光暈</p>
+        <div class="row">
+          <span class="chip" style="--c:var(--kids-line)">兒童牙科</span>
+          <span class="chip is-endo" style="--c:var(--pick-line)">顯微根管</span>
+          <span class="chip" style="--c:var(--chair-line)">一般牙科・牙周</span>
+          <span class="chip" style="--c:var(--ortho-line)">齒顎矯正</span>
+          <span class="chip" style="--c:var(--prosth-line)">植牙・假牙重建</span>
+          <span class="chip" style="--c:var(--surg-line)">口腔外科</span>
+          <span class="chip" style="--c:var(--all-line)">全部</span>
+        </div>
+      </div>
+
+      <div class="blk">
+        <p class="lbl">整圈套色、字反白 —— 七科的選取態</p>
+        <div class="row">
+          <span class="chip on" style="--c:var(--kids)">兒童牙科</span>
+          <span class="chip on is-endo" style="--c:var(--pick)">顯微根管</span>
+          <span class="chip on" style="--c:var(--chair)">一般牙科・牙周</span>
+          <span class="chip on" style="--c:var(--ortho)">齒顎矯正</span>
+          <span class="chip on" style="--c:var(--prosth)">植牙・假牙重建</span>
+          <span class="chip on" style="--c:var(--surg)">口腔外科</span>
+          <span class="chip on" style="--c:var(--all)">全部</span>
+        </div>
+      </div>
+
+      <div class="blk">
+        <p class="lbl">醫師藥丸 11.5px（實心＋白字）</p>
+        <div class="row">
+          <span class="pill" style="--c:var(--kids)">兒童牙科</span>
+          <span class="pill is-endo" style="--c:var(--pick)">顯微根管</span>
+          <span class="pill" style="--c:var(--chair)">一般・牙周</span>
+          <span class="pill" style="--c:var(--ortho)">齒顎矯正</span>
+          <span class="pill" style="--c:var(--prosth)">贋復假牙</span>
+          <span class="pill" style="--c:var(--surg)">口腔外科</span>
+          <span class="pill" style="--c:var(--all)">全部</span>
+        </div>
+      </div>
+
+      <div class="blk">
+        <p class="lbl">文章卡標籤 12px（線框）</p>
+        <div class="row">
+          <span class="tag" style="--c:var(--kids-line)">兒童牙科</span>
+          <span class="tag is-endo" style="--c:var(--pick-line)">根管治療</span>
+          <span class="tag" style="--c:var(--prosth-line)">缺牙重建</span>
+          <span class="tag" style="--c:var(--chair-line)">定期檢查</span>
+        </div>
+      </div>
+
+      <p class="readout"><span id="ro"></span></p>
+    </div>
+  </section>
+
+  <!-- ===================== 舞台：紙 ===================== -->
+  <section>
+    <h2>底＝紙 <code>#e2e5e6</code>（文章內頁）</h2>
+    <p class="small">紙比卡深一階（1.152:1），這裡是最嚴的一關 —— <b>官方磚紅原值就是死在這一格</b>（4.17）。</p>
+
+    <div class="stage on-paper">
+      <div class="blk">
+        <p class="lbl">白底字套顏色</p>
+        <div class="row">
+          <span class="chip" style="--c:var(--kids-line)">兒童牙科</span>
+          <span class="chip is-endo" style="--c:var(--pick-line)">顯微根管</span>
+          <span class="chip" style="--c:var(--chair-line)">一般牙科・牙周</span>
+          <span class="chip" style="--c:var(--ortho-line)">齒顎矯正</span>
+          <span class="chip" style="--c:var(--prosth-line)">植牙・假牙重建</span>
+          <span class="chip" style="--c:var(--surg-line)">口腔外科</span>
+        </div>
+      </div>
+      <div class="blk">
+        <p class="lbl">整圈套色、字反白</p>
+        <div class="row">
+          <span class="chip on" style="--c:var(--kids)">兒童牙科</span>
+          <span class="chip on is-endo" style="--c:var(--pick)">顯微根管</span>
+          <span class="chip on" style="--c:var(--chair)">一般牙科・牙周</span>
+          <span class="chip on" style="--c:var(--ortho)">齒顎矯正</span>
+          <span class="chip on" style="--c:var(--prosth)">植牙・假牙重建</span>
+          <span class="chip on" style="--c:var(--surg)">口腔外科</span>
+        </div>
+      </div>
+      <div class="blk">
+        <p class="lbl">和現行的苔綠對照（最右邊那顆是現在的顯微根管）</p>
+        <div class="row">
+          <span class="chip is-endo" style="--c:var(--pick-line)">顯微根管</span>
+          <span class="chip on is-endo" style="--c:var(--pick)">顯微根管</span>
+          <span class="chip" style="--c:var(--moss)">現行苔綠</span>
+          <span class="chip on" style="--c:var(--moss)">現行苔綠</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ===================== 數字 ===================== -->
+  <section>
+    <h2>七案的數字</h2>
+    <div class="scroll">
+      <table>
+        <caption>①~⑤ 是兩階（填色 L* 46／套字 L* 38）；<b>⑥⑦ 是單一值</b>，原值兩種狀態都夠用，不必拆。底色標紅的兩列就是原值那兩個。</caption>
+        <thead><tr><th>案</th><th>填色</th><th>套字</th><th>反白</th><th>套字・卡</th><th>套字・紙</th><th>對 Taupe</th></tr></thead>
+        <tbody>
+          <tr><td>① 磚紅・收斂</td><td class="num">#9b5b5d</td><td class="num">#804b4c</td><td class="num">5.19</td><td class="num">6.31</td><td class="num">5.48</td><td class="num bad">9.5</td></tr>
+          <tr><td>② 磚紅・官方</td><td class="num">#b04d53</td><td class="num">#923f44</td><td class="num">5.21</td><td class="num">6.33</td><td class="num">5.50</td><td class="num">23.0</td></tr>
+          <tr><td>③ 酒紅</td><td class="num">#b14b62</td><td class="num">#923d50</td><td class="num">5.18</td><td class="num">6.36</td><td class="num">5.52</td><td class="num">24.0</td></tr>
+          <tr><td>④ 燒磚</td><td class="num">#a85541</td><td class="num">#8b4635</td><td class="num">5.20</td><td class="num">6.32</td><td class="num">5.48</td><td class="num">21.8</td></tr>
+          <tr><td>⑤ 磚紅・滿彩</td><td class="num">#bf3f4d</td><td class="num">#9f333e</td><td class="num">5.21</td><td class="num">6.33</td><td class="num">5.50</td><td class="num">33.6</td></tr>
+          <tr class="raw"><td>⑥ 紅花籃・原值</td><td class="num">#89202d</td><td class="num">#89202d</td><td class="num">9.10</td><td class="num">8.28</td><td class="num">7.18</td><td class="num">34.6</td></tr>
+          <tr class="raw"><td>⑦ 繡球・原值</td><td class="num">#6c1226</td><td class="num">#6c1226</td><td class="num">11.99</td><td class="num">10.90</td><td class="num">9.47</td><td class="num">32.2</td></tr>
+          <tr><td>（現行苔綠）</td><td class="num">#5D6D55</td><td class="num">#596951</td><td class="num">5.55</td><td class="num">5.05</td><td class="num">4.65</td><td class="num">21.7</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note warn">
+      <p><b>切換的時候，兩個狀態要分開看，因為 ⑥⑦ 在兩態的行為和 ①~⑤ 不一樣。</b></p>
+      <p><b>整圈套色</b>：①~⑤ 全部是 L* 46 的中亮度紅，⑥ 是 30.7、⑦ 是 22.9 —— <b>⑥⑦ 按下去會明顯比其他六科重</b>，其餘六科的填色落在 L* 36~60。</p>
+      <p><b>白底套字</b>：反過來，①~⑤ 的套字階 L* 38 和其他科同一帶，⑥⑦ 則深得多。<b>⑦ 繡球的線框在一排裡幾乎讀成黑色。</b></p>
+      <p class="soft">也就是說 ⑥⑦ 兩態都偏重，代價是整排的視覺重量不平；換來的是它們不必拆兩階，而且是真正的實物原值。</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>怎麼比</h2>
+    <div class="note ok">
+      <p><b>先按 ② 和 ⑥ 來回切</b> —— 那是這一輪真正的分岔：<b>要一顆和其他六科等重的紅（②），還是要一顆比較沉、辨識度更強的紅（⑥）。</b>其餘五案都是繞著這兩個的變化。</p>
+      <p>然後看兩個地方：<b>整圈套色那一排</b>，⑥⑦ 會不會重到把旁邊的兒牙壓下去；<b>白底套字那一排</b>，② 的線框會不會太淡、⑦ 會不會讀成黑的。</p>
+      <p class="soft">① 唯一要注意的是對「看診時間」卡 Taupe 只有 9.5（那一顆不在這幾排裡，是診所資訊那一區）。④ 是唯一往兒牙靠的（34.4）—— 切到 ④ 時特別看左邊第一顆。</p>
+    </div>
+  </section>
+
+  <p class="foot">前兩頁留著看推論：<a href="/preview/spec-endo-red/">正規化的五案</a>、<a href="/preview/spec-endo-red-raw/">三個紅的原值</a>。數字與推導在 <code>PALETTE.md</code> 第六之十一節。這一頁是自給自足的靜態快照，不引用 <code>/assets/style.css</code>；定案後切換條照慣例刪掉。</p>
+
+</div>
+
+<div class="switcher" role="radiogroup" aria-label="七案切換">
+  <span class="glbl">案</span>
+  <label class="opt" style="--c:var(--f1)"><span class="dot"></span><span class="n">①</span><input type="radio" name="r" id="r1" value="1"></label>
+  <label class="opt" style="--c:var(--f2)"><span class="dot"></span><span class="n">②</span><input type="radio" name="r" id="r2" value="2"></label>
+  <label class="opt" style="--c:var(--f3)"><span class="dot"></span><span class="n">③</span><input type="radio" name="r" id="r3" value="3"></label>
+  <label class="opt" style="--c:var(--f4)"><span class="dot"></span><span class="n">④</span><input type="radio" name="r" id="r4" value="4"></label>
+  <label class="opt" style="--c:var(--f5)"><span class="dot"></span><span class="n">⑤</span><input type="radio" name="r" id="r5" value="5"></label>
+  <label class="opt" style="--c:var(--f6)"><span class="dot"></span><span class="n">⑥</span><input type="radio" name="r" id="r6" value="6" checked></label>
+  <label class="opt" style="--c:var(--f7)"><span class="dot"></span><span class="n">⑦</span><input type="radio" name="r" id="r7" value="7"></label>
+</div>
+
+<script>
+// 純粹的加分項：網址參數 ?c=6，以及按了之後把網址同步成可以貼的樣子。
+// 整段被擋掉也沒關係 —— 切換條本身是 CSS 做的，照樣能按。
+(function(){
+  try{
+    var v = (new URLSearchParams(location.search).get('c') || '');
+    if (/^[1-7]$/.test(v)) { var el = document.getElementById('r' + v); if (el) el.checked = true; }
+    document.querySelectorAll('.switcher input').forEach(function(i){
+      i.addEventListener('change', function(){
+        try{
+          var u = new URL(location.href);
+          u.searchParams.set('c', document.querySelector('input[name=r]:checked').value);
+          history.replaceState(null, '', u);
+        }catch(e){}   // 沙箱 iframe 的 replaceState 會丟 SecurityError
+      });
+    });
+  }catch(e){}
+})();
+</script>
+
+</body>
+</html>
