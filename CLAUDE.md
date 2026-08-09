@@ -89,11 +89,36 @@ node tools/serve.mjs      # 預設 http://localhost:8791
 | 使用者說 | 你要做的事 |
 | --- | --- |
 | 「上線」「發布」「推上去」 | `node tools/build.mjs` → `git add -A` → commit（訊息自己擬）→ `git push` |
+| **「定案幫我上線」「定案幫我放上去」** | **把目前這條工作分支合併進 `main` 並推上去**，見下面那一段 |
 | 「同步」「更新」「拉最新的」 | `node tools/sync.mjs` |
 | 「預覽」「我要看看」 | `node tools/serve.mjs`，告訴他開 http://localhost:8791 |
 | 「網站好了嗎」 | 確認已 push，提醒 Cloudflare 需要幾分鐘，網址是 https://fangren.net |
 
 上線前若發現遠端有新 commit，先同步再 build、再推。
+
+#### 「定案幫我上線」＝ 合併到 `main`（2026-08-09 起）
+
+雲端 session 的工作都在 `claude/...` 分支上，**Cloudflare 只建置 `main`**，
+所以推到分支等於還沒上線。使用者說這句話的時候，他要的是**真的出現在 fangren.net 上**：
+
+```bash
+git fetch origin main
+git log --oneline HEAD..origin/main      # main 有沒有被另一台推過東西
+git checkout main && git merge --ff-only <工作分支>   # 快轉不了就先 rebase 分支
+node tools/build.mjs
+git push -u origin main
+```
+
+推完告訴他 Cloudflare 要幾分鐘，網址是 https://fangren.net。
+
+**動手前先掃一遍要合併的東西，把還沒定案的擋下來。** 分支上常常同時躺著
+「已定案並套進版型的」和「還在提案中的」；`PALETTE.md`／`COPY.md` 裡標著
+**提案中**、**未定**、**三案待選** 的段落是文件，跟著上去沒關係，
+但**不要把還沒定案的顏色或文案套進 `index.html`／`assets/style.css`／`posts/` 再合併**。
+不確定就先問他是哪一件定案了。
+
+`preview/` 底下的提案頁**跟著上去是正常的**（本檔第八節：那本來就是給他在手機上看的，
+`robots.txt` 與各頁的 `noindex` 已經擋掉搜尋引擎）。
 
 ---
 
