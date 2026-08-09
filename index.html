@@ -1056,8 +1056,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    · **.ico 的高度 = 1.8em = 一行的行高。** 搭配 align-items: flex-start，
      地址在很窄的畫面折成兩行時，圖示會留在**第一行**，不會滑到兩行正中間。
 
-   · **底線畫在 .txt／.num 上，不是畫在 <a> 上。** 連結是 inline-flex，
-     底線下在連結上會連圖示下面一起拉過去。
+   · **底線畫在 .txt／.num 上，不是畫在 <a> 上。** 連結是 flex，
+     底線下在連結上會連圖示下面一起拉過去 —— 第四版連結變成整列寬之後
+     更是如此，底線會一路拉到欄位右緣。對焦框同理，也收在文字上。
 
    · **號碼不折行。** 它有連字號，那是天然的斷行點；拆成兩行等於不能用。
 
@@ -1095,13 +1096,26 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .foot-brand svg { flex: 0 0 var(--logo-w); height: var(--logo-h); display: block; }
 .foot-addr { font-size: .95rem !important; letter-spacing: .02em; }
 .foot-tel  { margin-top: .35rem !important; font-size: .95rem !important; letter-spacing: .02em; }
-/* ⚠ `display: flex` ＋ `width: fit-content`，**不要改回 `inline-flex`**。
-   使用者 2026-08-09 在 iPhone 上看到地址斷成「…永樂街 70」＋「號」，
-   但同一份 CSS 在 Chromium 量起來是需要 206px、可用 272～350px，**根本不該斷** ——
-   重現不了。WebKit 對 inline-flex 在 grid 格子裡的收縮寬度算法和 Blink 有落差，
-   會拿接近 min-content 的值去排。block flex ＋ fit-content 不走那條路徑，
-   結果和 inline-flex 看起來一樣（寬度貼齊內容），但兩邊行為一致。
-   max-width 是安全帶：真的放不下時讓它收縮換行，不要撐破版面。 */
+/* ⚠ 這兩行連結是**佔滿整格的 block flex**，
+   **不要再加 `width: fit-content`，也不要改回 `inline-flex`。**（2026-08-09 第四版）
+
+   前三版都在試著讓方塊「貼齊內容」，三版都在 iPhone 上斷行：
+   inline-flex 斷成「…永樂街 70」＋「號」，換成 fit-content 之後改斷成
+   「…永樂」＋「街 70 號」。Chromium 一次都重現不了。
+
+   問題不在哪一種寫法，在「貼齊內容」這件事本身 —— 兩種寫法都是把方塊
+   **正好**收成 max-content，於是留給文字的寬度和文字需要的寬度分毫不差，
+   **可用的餘裕是 0**。只要量的時候和畫的時候有任何一點落差（系統字後備、
+   PingFang 和 Chromium 拿到的字寬不同、letter-spacing 的次像素進位），
+   文字就多出那麼一點點、只好折行。而中文每個字之間都是斷點，隨便哪裡都能斷。
+
+   拿掉 fit-content 之後，方塊寬度改由 grid 的格子給（390px 上是 350px），
+   文字可用 316.7px、實際需要 183.3px，**餘裕 133.4px（73%）** ——
+   字寬就算差一成也還是一行。真的塞不下（很窄的機器、放大字級）才會斷，
+   而且會斷在 `&nbsp;` 綁好的「街 70 號」前面，看起來像正常的地址換行。
+
+   ⚠ 代價是連結的方塊變成整列寬（外觀完全沒變，底線本來就畫在 .txt／.num 上）。
+      對焦框另外收回文字上，見下面那條規則。 */
 /* 釘子・地址・話筒・號碼四樣統一吃一般牙科的**套色** `#3f654a`（2026-08-09 定案，①案）。
    對頁尾卡 #f4f4f5 是 6.02:1，過 AA 的 4.5:1。同時比過的另外兩階：
    現在的 --teal #214D48（8.61:1）與一般牙科的白底字階 #2c5238（8.06:1），使用者選了套色。
@@ -1111,8 +1125,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ⚠ 診所名與標誌不動，維持墨色 —— 只有這兩行連結上色。 */
 .foot-addr a, .foot-tel a {
   color: #3f654a; text-decoration: none; font-weight: 500;
-  display: flex; width: fit-content; max-width: 100%;
+  display: flex;
   align-items: flex-start; gap: 0;  /* ← 間距併進 --gutter，見上面那段 */
+}
+/* 方塊變成整列寬之後，對焦框跟著變成整列 —— 把它收回文字本身，
+   看起來和前三版一模一樣。 */
+.foot-addr a:focus-visible, .foot-tel a:focus-visible { outline: none; }
+.foot-addr a:focus-visible .txt,
+.foot-tel a:focus-visible .num {
+  outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px;
 }
 .foot-addr .ico, .foot-tel .ico {
   flex: 0 0 var(--gutter); height: 1.8em;
