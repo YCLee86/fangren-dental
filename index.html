@@ -1124,6 +1124,25 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em;
 }
 .foot-tel .num { white-space: nowrap; }
+/* ---- 圖示不要被 viewBox 的邊界削掉 —— 2026-08-09 --------------------------
+   使用者在手機上放大頁尾，看到標誌、地圖釘、話筒「有一部分好像被切掉」。
+   不是版面問題，是這幾顆圖的輪廓**剛好和自己的 viewBox 四邊相切**：
+   標誌的路徑逐段解出來是 0～44.2874 × 0～21.8243，和 viewBox 一模一樣；
+   Font Awesome 的釘子與話筒也是照著 384×512／512×512 撐滿設計的。
+   瀏覽器對 <svg> 預設 `overflow: hidden`，那道裁切切在整數裝置像素上，
+   最外緣那一列就被削掉 —— 偏偏在**切點**附近，曲線離邊界不到一個像素的區間很寬
+   （半徑 r 的圓約 2√(2r) 個像素），削掉一列，整段就塌成一小條平面。
+   釘子頭在 12px 下平掉的那段約佔寬度兩成，所以真的看得出來被切平。
+
+   解法是讓那一列畫得出來。**溢出的只有抗鋸齒的次像素，圖形本身沒有一點在框外**
+   （相切＝最遠就到邊界），不會蓋到旁邊的字，版面、尺寸、--gutter 一個值都沒動。
+   ⚠ 不要改成「把 viewBox 加 padding」—— 那會讓 --logo-w 連帶 --gutter 一起變大，
+      地址與電話兩行的起點就要重算，見上面那一段。
+   ⚠ 這份和 assets/style.css 裡那份必須一模一樣，改一邊就要改另一邊。 */
+.brand-mark svg,
+.foot-brand svg,
+.foot-addr .ico svg,
+.foot-tel .ico svg { overflow: visible; }
 .foot-nav { margin: 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
 .foot-nav a { font-size: .82rem; color: var(--ink-soft); text-decoration: none; }
 .foot-nav a:hover { color: var(--teal); text-decoration: underline; }
