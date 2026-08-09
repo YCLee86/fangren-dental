@@ -6,7 +6,7 @@
    靜態檔案本身仍由 Cloudflare 的資產伺服器送出，這裡只是轉交。
 
    路由：
-     www.* 開頭的主機名稱                        → 301 轉到主網域
+     www.* 開頭的主機名稱                        → 301 轉到主網域（並升成 https）
      /preview/*                               → 靜態檔＋noindex／no-store（見下方 PREVIEW_PREFIX）
      GET  /api/views?slugs=home,bass-brushing → { "counts": { "home": 12, ... } }
      POST /api/views   body: { "slug": "home" } → { "slug": "home", "views": 13 }
@@ -111,9 +111,15 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    /* www 一律轉到主網域，同一份內容才不會有兩個網址 */
+    /* www 一律轉到主網域，同一份內容才不會有兩個網址。
+       協定也要一起升上去——只切掉 www. 的話，http://www.fangren.net/
+       會轉到 http://fangren.net/ 而停在非加密版，Google 得再繞一手才走到
+       canonical 指的 https。2026-08-10 從 Search Console 的
+       「頁面會重新導向」追出來的（那一筆就是 http://www.fangren.net/）。
+       非 www 的 http 不歸這裡管，那要靠 Cloudflare 的 Always Use HTTPS。 */
     if (url.hostname.startsWith("www.")) {
       url.hostname = url.hostname.slice(4);
+      url.protocol = "https:";
       return Response.redirect(url.toString(), 301);
     }
 
