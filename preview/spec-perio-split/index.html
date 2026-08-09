@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>牙周獨立 ＋ 贋復 Ⓑ — 冷色端三顆放在一起｜芳仁牙醫診所</title>
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<style>
+/* 自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
+   ⚠ 切換條是純 CSS 的（radio ＋ :has()），一行 JS 都沒有 —— 這一頁會被丟進
+   沙箱 iframe 看，那裡會整包擋掉 script。2026-08-09 踩過。 */
+:root{
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  --ink:#2a2c27; --ink-soft:#5c5f57; --teal:#214D48;
+
+  /* 贋復假牙：亮度不動（套色 L*38.0、深階 L*27.9），只把色相從 287 往藍拉。
+     彩度上限壓在色域 75%，不然越往藍走 HSL 彩度會飆到像網頁藍。 */
+  /* 已定：贋復＝藍紫那一輪的 Ⓑ；牙周＝矯正提亮那一輪的 Ⓒ */
+  --prosth:#335b8b; --prosth-line:#244368;   /* h 273　白字 6.98・字對紙 7.98 */
+  --perio:#39799a;                            /* h 247　白字 4.80（＝矯正 Ⓒ） */
+  /* 牙周的深階三案：套色 L* 48.1 超過紙上當字的 43.4，一定要另開。
+     ⚠ 這一階和矯正現行 #3C596B 同色相，越淺越撞 —— 切換條在比的就是這個。 */
+  --o0:#235067; --o1:#1e465b; --o2:#193d4f;
+  --ortho2:#3C596B;
+
+  /* 其餘六科（2026-08-09 收盤，全部已定案） */
+  --kids:#c28229;   --kids-line:#9e6301;
+  --gen:#3f654a;    --gen-line:#2c5238;
+  --endo:#ae4f4d;   --endo-line:#89202d;
+  --ortho:#3C596B;  --ortho-line:#3C596B;
+  --gen:#3f654a;    --gen-line:#2c5238;
+  --surg:#8e6299;   --surg-line:#784e84;
+  --all:#5f5d5c;    --all-line:#4c4948;
+
+  --pick:#39799a; --deep:#1e465b;    /* 牙周：套色固定，深階預設 Ⓑ */
+
+  --han:"PingFang TC","Noto Sans TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--han);font-size:17px;line-height:1.85}
+.wrap{max-width:44rem;margin:0 auto;padding:2.4rem 1.2rem 6rem;display:flex;flex-direction:column;gap:2.2rem}
+
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+h1{font-size:1.8rem;line-height:1.4;letter-spacing:.04em;text-wrap:balance}
+h2{font-size:1.16rem;letter-spacing:.05em;line-height:1.55;text-wrap:balance}
+p{text-wrap:pretty}
+.lead{font-size:1.02rem}
+.small{font-size:.88rem;line-height:1.75;color:var(--ink-soft)}
+.soft{color:var(--ink-soft)}
+section{display:flex;flex-direction:column;gap:1rem}
+.head{display:flex;flex-direction:column;gap:.6rem}
+hr{border:0;border-top:1px solid var(--rule)}
+code{font-family:var(--mono);font-size:.9em}
+
+.note{background:var(--card);border:1px solid var(--rule);border-radius:12px;
+      padding:1rem 1.1rem;font-size:.92rem;line-height:1.8;display:flex;flex-direction:column;gap:.5rem}
+.note.ok{border-left:3px solid var(--teal)}
+.note.warn{border-left:3px solid var(--endo)}
+
+/* ---- 元件：規格照 PALETTE 六之二 ------------------------------------- */
+.chip{display:inline-block;font-size:13px;line-height:1.6;letter-spacing:.04em;
+      padding:.34rem .85rem;border-radius:12px;
+      background:transparent;color:var(--c);border:1px solid var(--c)}
+.chip.on{background:var(--c);color:#fff;border-color:var(--c)}
+.pill{display:inline-block;background:var(--c);color:#fff;
+      font-size:11.5px;line-height:1.6;letter-spacing:.05em;padding:.16rem .6rem;border-radius:8px}
+.tag{display:inline-block;font-size:12px;line-height:1.6;letter-spacing:.04em;
+     padding:.19rem .6rem;border-radius:8.5px;
+     background:transparent;color:var(--c);border:1px solid var(--c)}
+.is-pick{box-shadow:0 0 0 3px rgba(42,44,39,.10)}
+
+/* ---- 四格色塊 -------------------------------------------------------- */
+.quad{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem}
+.q{background:var(--card);border:1px solid var(--rule);border-radius:10px;overflow:hidden;
+   display:flex;flex-direction:column}
+.q.now{border-color:var(--ink);border-width:2px}
+.q .band{height:2.9rem;background:var(--c);position:relative}
+.q .band span{position:absolute;left:.4rem;top:.3rem;font-family:var(--mono);font-size:.72rem;color:#fff}
+.q .t{padding:.5rem .55rem .6rem;display:flex;flex-direction:column;gap:.12rem}
+.q .n{font-size:.82rem;letter-spacing:.03em;line-height:1.4}
+.q .v{font-family:var(--mono);font-size:.66rem;color:var(--ink-soft);line-height:1.55}
+
+/* ---- 醫師卡 ---------------------------------------------------------- */
+.doc{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:.95rem 1.05rem 1.05rem;
+     box-shadow:0 1px 2px rgba(42,44,39,.07),0 4px 10px rgba(42,44,39,.09)}
+.doc h3{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;font-size:1.06rem;letter-spacing:.03em;margin-bottom:.5rem}
+.doc-role{display:inline-block;background:var(--pick);color:#fff;font-size:11.5px;font-weight:400;
+          line-height:1.6;letter-spacing:.05em;padding:.16rem .6rem;border-radius:8px}
+.doc dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem .7rem;font-size:.9rem;line-height:1.7}
+.doc dt{font-size:.74rem;letter-spacing:.06em;color:var(--ink-soft);background:#e9eaea;
+        border-radius:6px;padding:.05rem .4rem;height:max-content;margin-top:.25em;white-space:nowrap}
+
+/* ---- 舞台 ------------------------------------------------------------ */
+.stage{background:var(--card);border:1px solid var(--rule);border-radius:12px;
+       padding:1rem 1.05rem 1.1rem;display:flex;flex-direction:column;gap:1rem}
+.stage.on-paper{background:var(--paper)}
+.blk{display:flex;flex-direction:column;gap:.5rem}
+.lbl{font-family:var(--mono);font-size:.67rem;letter-spacing:.07em;color:var(--ink-soft);line-height:1.5}
+@media (max-width:44rem){ .lbl-name{min-height:calc(2 * 1.5em)} }
+/* 案名長度差很多（「Ⓐ 亮一階」到「現行（套色＝深階，單一值）」），
+   窄螢幕下會在一行與兩行之間跳。先把兩行佔住。 */
+.name-line{min-height:calc(2 * 1.75em)}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem .5rem}
+.readout{font-family:var(--mono);font-size:.73rem;color:var(--ink-soft);
+         font-variant-numeric:tabular-nums;line-height:1.85;border-top:1px solid var(--rule);padding-top:.7rem}
+/* 讀數長度隨案子變，先把兩行佔住 —— 切著比對時版面才不會跳（2026-08-09 踩過） */
+.readout span{display:block;min-height:calc(2 * 1.85em)}
+@media (max-width:44rem){ .readout span{min-height:calc(3 * 1.85em)} }
+
+/* ---- 文章內頁（規格逐條照 assets/style.css） -------------------------- */
+.post{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:1.15rem 1.15rem 1.25rem}
+.post .post-tag{display:inline-block;font-size:.75rem;line-height:1.6;letter-spacing:.08em;
+      padding:.12rem .55rem .12rem .62rem;border-radius:9px;background:var(--pick);color:#fff}
+.post h1{margin:.7rem 0 .5rem;font-size:1.5rem;line-height:1.4;letter-spacing:.01em;color:var(--ink)}
+.post .lede{font-size:1.02rem;color:var(--ink-soft);margin-bottom:.2rem}
+.post h2{display:flex;align-items:baseline;gap:.6rem;margin:1.6rem 0 .7rem;font-size:1.2rem;color:var(--ink);line-height:1.55}
+.post h2::before{content:'';flex:0 0 3px;align-self:center;height:1.05em;border-radius:2px;background:var(--pick)}
+.post h3{margin:1.2rem 0 .45rem;font-size:1.02rem;color:var(--deep)}
+.post p{margin:0 0 .9rem}
+.post a{color:var(--deep)}
+.post .callout{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--pick);
+      border-radius:12px;padding:1rem 1.1rem;margin:0 0 1.2rem;
+      box-shadow:0 1px 2px rgba(42,44,39,.07),0 4px 10px rgba(42,44,39,.09)}
+.post .callout p:last-child{margin-bottom:0}
+.post .btns{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.4rem}
+.post .btn{display:inline-flex;align-items:center;text-decoration:none;
+      background:var(--pick);color:#fff;border:1px solid var(--pick);
+      padding:.6rem 1.05rem;border-radius:16px;font-size:.9rem;font-weight:500}
+.post .btn-ghost{background:var(--card);color:var(--deep);border-color:var(--deep)}
+.post .disclaim{font-size:.84rem;color:var(--ink-soft);background:var(--card);
+      border:1px solid var(--rule);border-radius:12px;padding:.85rem 1rem;margin-top:1.4rem}
+.tiers{display:grid;grid-template-columns:max-content 1fr;gap:.28rem .8rem;
+       font-family:var(--mono);font-size:.71rem;line-height:1.7;color:var(--ink-soft)}
+
+/* ---- 切換條 ---------------------------------------------------------- */
+.switcher{position:fixed;left:50%;transform:translateX(-50%);bottom:.7rem;z-index:9;
+          background:rgba(244,244,245,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+          border:1px solid var(--rule);border-radius:14px;padding:.45rem .55rem;
+          display:flex;align-items:center;gap:.3rem;box-shadow:0 4px 20px rgba(0,0,0,.18);
+          width:max-content;max-width:calc(100vw - 1.4rem)}
+.switcher .glbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.04em;color:var(--ink-soft);flex:0 0 auto}
+.switcher .opt{position:relative;flex:0 0 auto;display:flex;align-items:center;gap:.32rem;
+               padding:.26rem .5rem;border-radius:8px;border:1px solid rgba(42,44,39,.18);
+               background:var(--c);color:#fff;cursor:pointer;-webkit-user-select:none;user-select:none;
+               font-family:var(--mono);font-size:.72rem;line-height:1.4}
+.switcher .opt input{position:absolute;inset:0;opacity:0;margin:0;width:100%;height:100%;cursor:pointer}
+.switcher .opt:has(input:checked){box-shadow:0 0 0 2px var(--ink)}
+.switcher .opt:has(input:focus-visible){outline:2px solid var(--teal);outline-offset:3px}
+
+body:has(#o0:checked){--deep:var(--o0)}
+body:has(#o1:checked){--deep:var(--o1)}
+body:has(#o2:checked){--deep:var(--o2)}
+#rn::before,#ro::before{content:"—"}
+body:has(#o0:checked) #rn::before{content:"Ⓐ L* 32（正常落差，但撞矯正）"}
+body:has(#o1:checked) #rn::before{content:"Ⓑ L* 28"}
+body:has(#o2:checked) #rn::before{content:"Ⓒ L* 24（離矯正最遠）"}
+
+body:has(#o0:checked) #ro::before{content:"牙周 套色 #39799a　深階 #235067　L* 32.0　落差 16.1　對卡 7.91　對紙 6.87　ΔE 對矯正 6.4 ✗"}
+body:has(#o1:checked) #ro::before{content:"牙周 套色 #39799a　深階 #1e465b　L* 28.0　落差 20.1　對卡 9.17　對紙 7.96　ΔE 對矯正 9.0"}
+body:has(#o2:checked) #ro::before{content:"牙周 套色 #39799a　深階 #193d4f　L* 24.0　落差 24.1　對卡 10.49　對紙 9.10　ΔE 對矯正 12.4"}
+
+
+/* ---- 表 -------------------------------------------------------------- */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:.89rem;font-variant-numeric:tabular-nums}
+caption{text-align:left;font-size:.85rem;color:var(--ink-soft);padding-bottom:.5rem;line-height:1.7}
+th,td{text-align:left;padding:.42rem .65rem .42rem 0;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-family:var(--mono);font-size:.71rem;letter-spacing:.07em;color:var(--ink-soft);font-weight:400}
+td.num{font-family:var(--mono);font-size:.83rem}
+tr.base td{color:var(--ink-soft)}
+.foot{font-size:.83rem;color:var(--ink-soft);line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <p class="eyebrow">提案中 · 2026-08-09</p>
+    <h1>牙周獨立 ＋ 贋復 Ⓑ</h1>
+    <p class="lead"><b>贋復用 Ⓑ <code>#335b8b</code>／<code>#244368</code></b>（藍紫拉回藍那一輪），<b>牙周從一般牙科拆出來，用矯正提亮案的 Ⓒ <code>#39799a</code></b>。兩件都套上去了，這一頁是把冷色端三顆放在一起看。</p>
+  </div>
+
+  <div class="note warn">
+    <p><b>⚠ 先講會撞的地方：牙周和齒顎矯正是同一個色相。</b>牙周 Ⓒ 的 Lab h 是 247.2，矯正現行是 248.1 —— <b>差 0.9°</b>。它們現在只靠亮度分開（48.1 對 36.3，ΔE 16.3，剛好等於現役最近的一對 16.1）。</p>
+    <p><b>而且牙周非開深階不可</b>：套色 L* 48.1 超過「當字疊在紙上」的天花板 43.4。<b>那個深階會落在矯正頭上</b> —— 正常的落差（L* 32，比套色深 16）對矯正只有 <b>ΔE 6.4</b>，等於出局線。</p>
+    <p class="soft">所以下面切換條在比的是：<b>牙周的深階要壓多深才閃得開矯正</b>。代價是兩階落差會變得很大（現役最大的是顯微根管 15.1）。</p>
+  </div>
+
+  <!-- ===================== 深階三案 ===================== -->
+  <section>
+    <h2>牙周的深階：三案</h2>
+    <p class="small">套色固定 <code>#39799a</code>，色相鎖 247.2，彩度維持佔色域 78%，只往下找亮度。</p>
+
+    <div class="quad">
+      <div class="q" style="--c:var(--perio)"><div class="band"><span>套色</span></div><div class="t">
+        <span class="n">牙周・固定</span><span class="v">#39799a<br>L* 48.1　C* 25.9<br>白字 4.80</span></div></div>
+      <div class="q" style="--c:var(--o0)"><div class="band"><span>Ⓐ</span></div><div class="t">
+        <span class="n">L* 32　落差 16.1</span><span class="v">#235067<br>對紙 6.87<br><b>ΔE 對矯正 6.4 ✗</b></span></div></div>
+      <div class="q" style="--c:var(--o1)"><div class="band"><span>Ⓑ</span></div><div class="t">
+        <span class="n">L* 28　落差 20.1</span><span class="v">#1e465b<br>對紙 7.96<br>ΔE 對矯正 9.0</span></div></div>
+      <div class="q" style="--c:var(--o2)"><div class="band"><span>Ⓒ</span></div><div class="t">
+        <span class="n">L* 24　落差 24.1</span><span class="v">#193d4f<br>對紙 9.10<br>ΔE 對矯正 12.4</span></div></div>
+      <div class="q" style="--c:var(--ortho2)"><div class="band"><span>鄰</span></div><div class="t">
+        <span class="n">齒顎矯正・現行</span><span class="v">#3C596B<br>L* 36.3　h 248.1<br>要閃開的那顆</span></div></div>
+      <div class="q" style="--c:var(--gen)"><div class="band"><span>原</span></div><div class="t">
+        <span class="n">牙周原本用的</span><span class="v">#3f654a<br>（和一般牙科共用）<br>拆出來就不用了</span></div></div>
+    </div>
+
+    <div class="note">
+      <p><b>兩階落差的家族刻度：</b>一般 7.9、外科 8.2、贋復 10.1、兒牙 12.3、顯微根管 15.1。<br><b>Ⓐ 的 16.1 已經是新高，Ⓑ 20.1、Ⓒ 24.1 更是遠超</b> —— chip 按下去會亮非常多，這是為了閃開矯正付的代價。</p>
+      <p class="soft">Ⓐ 的落差最像其他科，但 ΔE 6.4 等於六之九那一輪讓官方灰紫硬性出局的數字。<b>要嘛接受大落差，要嘛接受和矯正很近。</b></p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ===================== 標籤 ===================== -->
+  <section>
+    <h2>和其他六科放在一起</h2>
+    <p class="small name-line">當選的那顆有一圈光暈。現在是 <b><span id="rn"></span></b>。</p>
+
+    <div class="stage">
+      <div class="blk">
+        <p class="lbl lbl-name">主題與科別・選取態　冷色端三顆（牙周／矯正／贋復）擺在一起</p>
+        <div class="row">
+          <span class="chip on" style="--c:var(--kids)">兒童牙科</span>
+          <span class="chip on is-pick" style="--c:var(--perio)">牙周治療</span>
+          <span class="chip on" style="--c:var(--ortho)">齒顎矯正</span>
+          <span class="chip on" style="--c:var(--prosth)">植牙・假牙重建</span>
+          <span class="chip on" style="--c:var(--gen)">一般牙科・定期檢查</span>
+          <span class="chip on" style="--c:var(--endo)">顯微根管</span>
+          <span class="chip on" style="--c:var(--surg)">口腔外科</span>
+          <span class="chip on" style="--c:var(--all)">全部</span>
+        </div>
+      </div>
+
+      <div class="blk">
+        <p class="lbl">主題與科別・未選態（白底字套色）　牙周這一顆吃的是切換條選的深階</p>
+        <div class="row">
+          <span class="chip" style="--c:var(--kids-line)">兒童牙科</span>
+          <span class="chip is-pick" style="--c:var(--deep)">牙周治療</span>
+          <span class="chip" style="--c:var(--ortho-line)">齒顎矯正</span>
+          <span class="chip" style="--c:var(--prosth-line)">植牙・假牙重建</span>
+          <span class="chip" style="--c:var(--gen-line)">一般牙科・定期檢查</span>
+          <span class="chip" style="--c:var(--endo-line)">顯微根管</span>
+          <span class="chip" style="--c:var(--surg-line)">口腔外科</span>
+          <span class="chip" style="--c:var(--all-line)">全部</span>
+        </div>
+      </div>
+
+      <div class="blk">
+        <p class="lbl">醫師藥丸 11.5px（實心＋白字）</p>
+        <div class="row">
+          <span class="pill" style="--c:var(--kids)">兒童牙科</span>
+          <span class="pill is-pick" style="--c:var(--perio)">牙周治療</span>
+          <span class="pill" style="--c:var(--ortho)">齒顎矯正</span>
+          <span class="pill" style="--c:var(--prosth)">贋復假牙</span>
+          <span class="pill" style="--c:var(--gen)">一般・牙周</span>
+          <span class="pill" style="--c:var(--endo)">顯微根管</span>
+          <span class="pill" style="--c:var(--surg)">口腔外科</span>
+          <span class="pill" style="--c:var(--all)">全部</span>
+        </div>
+      </div>
+
+      <div class="blk">
+        <p class="lbl">醫師介紹・牙周（示範）</p>
+        <div class="doc">
+          <h3>（示範）<span class="doc-role">牙周治療</span></h3>
+          <dl>
+            <dt>專長</dt><dd>牙周病治療、牙周手術、牙周維護</dd>
+            <dt>資歷</dt><dd>（示範用，非正式資料）</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="blk">
+        <p class="lbl">文章卡標籤 12px（線框，用深階）</p>
+        <div class="row">
+          <span class="tag is-pick" style="--c:var(--deep)">牙周治療</span>
+          <span class="tag" style="--c:var(--ortho-line)">齒顎矯正</span>
+          <span class="tag" style="--c:var(--prosth-line)">缺牙重建</span>
+          <span class="tag" style="--c:var(--kids-line)">兒童牙科</span>
+          <span class="tag" style="--c:var(--gen-line)">定期檢查</span>
+          <span class="tag" style="--c:var(--endo-line)">根管治療</span>
+        </div>
+      </div>
+
+      <p class="readout"><span id="ro"></span></p>
+    </div>
+
+    <div class="stage on-paper">
+      <div class="blk">
+        <p class="lbl">底＝紙 #e2e5e6（文章內頁）—— 選取態與未選態一起看</p>
+        <div class="row">
+          <span class="chip on is-pick" style="--c:var(--perio)">牙周治療</span>
+          <span class="chip on" style="--c:var(--ortho)">齒顎矯正</span>
+          <span class="chip on" style="--c:var(--prosth)">植牙・假牙重建</span>
+          <span class="chip is-pick" style="--c:var(--deep)">牙周治療</span>
+          <span class="chip" style="--c:var(--ortho-line)">齒顎矯正</span>
+          <span class="chip" style="--c:var(--prosth-line)">植牙・假牙重建</span>
+        </div>
+        <p class="small" style="margin-top:.5rem">上排是選取態、下排是未選態。<b>牙周（有光暈）和齒顎矯正是同一個色相，只差亮度</b> —— 這一排就是在看它們分不分得開。未選態那邊尤其要看，因為牙周的深階正是往矯正身上壓的那一階。</p>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ===================== 文章內頁 ===================== -->
+  <section>
+    <h2>文章內頁</h2>
+    <p class="small">規格逐條照 <code>assets/style.css</code>。哪個元件吃哪一階完全沒改（PALETTE 六之六節）：</p>
+    <dl class="tiers">
+      <dt>套色階</dt><dd>科別藥丸、小節標題前的 3px 短棒、重點框左條、實心按鈕</dd>
+      <dt>深階</dt><dd>內文連結、h3、線框按鈕的字與框　← 跟著色相一起走</dd>
+    </dl>
+
+    <div class="post">
+      <span class="post-tag">牙周治療</span>
+      <h1>牙齦流血不是火氣大</h1>
+      <p class="lede">這一段是版型示範用的假文，只為了看顏色落在哪些地方，不是正式文案。</p>
+
+      <h2>流血是什麼訊號</h2>
+      <p>健康的牙齦刷牙不會流血。會流，通常表示牙齦邊緣已經在發炎。<a href="#demo">牙結石清乾淨之後</a>多數會改善。</p>
+
+      <h3>牙周病和牙齦炎的差別</h3>
+      <p>牙齦炎停在軟組織，牙周病已經傷到底下的骨頭 —— 後者不會自己好。</p>
+
+      <div class="callout">
+        <p><b>這一段是套色與深階同框的地方。</b>藥丸、短棒、重點框左條、實心按鈕吃套色 <code>#39799a</code>；h3、連結、線框按鈕吃深階。<b>切換條在換的就是深階 —— 落差 16／20／24，這裡看得最清楚。</b></p>
+      </div>
+
+      <h3>治療之後要一直回來</h3>
+      <p>牙周治療沒有「做完」，是把狀態穩住之後靠定期維護撐著。</p>
+
+      <div class="btns">
+        <a class="btn" href="#demo">預約檢查</a>
+        <a class="btn btn-ghost" href="#demo">看所有牙周文章</a>
+      </div>
+
+      <p class="disclaim">本文為衛教資訊，不能取代醫師的臨床診斷。</p>
+    </div>
+
+    <div class="note">
+      <p><b>文章內頁是落差最看得出來的地方。</b>Ⓒ 的兩階差 24.1 —— 藥丸很亮、h3 與連結很深，<b>會不會讀成「兩個顏色」就看這一段。</b>對照：現役最大的落差是顯微根管的 15.1。</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ===================== 數字 ===================== -->
+  <section>
+    <h2>數字</h2>
+    <div class="scroll">
+      <table>
+        <caption>牙周深階三案。<b>套色固定 <code>#39799a</code>（白字 4.80、對紙 3.79）。</b></caption>
+        <thead><tr><th>案</th><th>深階</th><th>L*</th><th>兩階落差</th><th>對卡</th><th>對紙</th><th>ΔE 對矯正</th><th>ΔE 對贋復深階</th></tr></thead>
+        <tbody>
+          <tr><td>Ⓐ</td><td class="num">#235067</td><td class="num">32.0</td><td class="num">16.1</td><td class="num">7.91</td><td class="num">6.87</td><td class="num bad">6.4 ✗</td><td class="num">12.2</td></tr>
+          <tr><td>Ⓑ</td><td class="num">#1e465b</td><td class="num">28.0</td><td class="num">20.1</td><td class="num">9.17</td><td class="num">7.96</td><td class="num">9.0</td><td class="num">11.7</td></tr>
+          <tr><td>Ⓒ</td><td class="num">#193d4f</td><td class="num">24.0</td><td class="num">24.1</td><td class="num">10.49</td><td class="num">9.10</td><td class="num">12.4</td><td class="num">13.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="scroll">
+      <table>
+        <caption>套色階彼此 —— 冷色端現在有三顆。</caption>
+        <thead><tr><th>對</th><th>ΔE</th></tr></thead>
+        <tbody>
+          <tr><td>牙周 #39799a　對　齒顎矯正 #3C596B</td><td class="num">16.3</td></tr>
+          <tr><td>牙周 #39799a　對　贋復 #335b8b</td><td class="num">17.0</td></tr>
+          <tr><td>贋復 #335b8b　對　齒顎矯正 #3C596B</td><td class="num">17.8</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">三顆彼此 16~18，<b>剛好都貼著現役最近的一對（16.1）</b>。冷色端從兩顆變三顆之後就是這樣 —— 過得了，但沒有餘裕了。</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>我的判斷</h2>
+    <div class="note ok">
+      <p><b>深階選 Ⓑ <code>#1e465b</code>。</b>對矯正 9.0 —— 明顯高過出局線，兩階落差 20.1 雖然是新高，但牙周的套色本來就是七科裡最亮的一顆，落差大是結構性的、不是調錯。</p>
+      <p><b>但整件事還有一個上游問題沒解：矯正要不要提亮。</b>牙周拿走 Ⓒ 之後，<b>矯正就只能維持現行 <code>#3C596B</code></b> —— 它一提亮（Ⓑ <code>#3f6d88</code>）就會和牙周撞（ΔE 6.4）。也就是「矯正不夠亮」那件事等於被放棄了。</p>
+      <p class="soft">如果你兩件都要，唯一的路是<b>把牙周或矯正其中一個移到別的色相</b>。色盤的空位很少（六之八第四節），但這是唯一沒有代價的解法。這一頁先照你說的做出來，你看實際的樣子再決定。</p>
+    </div>
+  </section>
+
+  <p class="foot">數字出自 <code>PALETTE.md</code> 第六之十二～十四節。這一頁是自給自足的靜態快照，不引用 <code>/assets/style.css</code>；定案後切換條照慣例刪掉。</p>
+
+</div>
+
+<div class="switcher" role="radiogroup" aria-label="牙周深階三案">
+  <span class="glbl">牙周深階</span>
+  <label class="opt" style="--c:var(--o0)">Ⓐ<input type="radio" name="o" id="o0" value="0"></label>
+  <label class="opt" style="--c:var(--o1)">Ⓑ<input type="radio" name="o" id="o1" value="1" checked></label>
+  <label class="opt" style="--c:var(--o2)">Ⓒ<input type="radio" name="o" id="o2" value="2"></label>
+</div>
+
+<script>
+// 純粹的加分項：網址參數 ?c=2。整段被擋掉也沒關係，切換條本身是 CSS 做的。
+(function(){
+  try{
+    var v = (new URLSearchParams(location.search).get('c') || '');
+    if (/^[0-2]$/.test(v)) { var el = document.getElementById('o' + v); if (el) el.checked = true; }
+    document.querySelectorAll('.switcher input').forEach(function(i){
+      i.addEventListener('change', function(){
+        try{
+          var u = new URL(location.href);
+          u.searchParams.set('c', document.querySelector('input[name=o]:checked').value);
+          history.replaceState(null, '', u);
+        }catch(e){}   // 沙箱 iframe 的 replaceState 會丟 SecurityError
+      });
+    });
+  }catch(e){}
+})();
+</script>
+
+</body>
+</html>
