@@ -359,6 +359,19 @@ a:hover { color: var(--accent); }
 .btn-ghost { background: var(--card); color: var(--accent-deep); border-color: var(--accent-deep); }
 .btn-ghost:hover { background: var(--card); color: color-mix(in srgb, var(--accent-deep) 82%, #1a1a17); border-color: color-mix(in srgb, var(--accent-deep) 82%, #1a1a17); }
 
+/* 404 那顆「回首頁看看其他文章」跟著**頁尾的地址與電話**同一個綠 `#3f654a`
+   （一般牙科的套色），不是預設的深綠松 --teal。使用者 2026-08-10 指定：
+   那一頁上看得見的彩色只有兩處（按鈕、頁尾兩行連結），兩處要是同一個綠。
+   白字對 #3f654a 是 6.62:1，過 AA 的 4.5:1（實心按鈕的字是 --on-fill #fff）。
+   ⚠ 刻意寫死，理由同下面頁尾那一段：**不要改成 var(--accent)**。
+      404 沒有 data-spec，用變數等於綁死在 --teal，跟頁尾就對不起來了。
+   ⚠ 只掛在 .notfound 底下 —— 文章頁與首頁的 .btn 一個都不受影響。 */
+.notfound .btn { background: #3f654a; border-color: #3f654a; }
+.notfound .btn:hover {
+  background: color-mix(in srgb, #3f654a 84%, #1a1a17);
+  border-color: color-mix(in srgb, #3f654a 84%, #1a1a17);
+}
+
 /* ==========================================================================
    頁尾 —— 和首頁同一份（聯絡／站內導覽／關於這些文章）
    --------------------------------------------------------------------------
