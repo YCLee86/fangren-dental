@@ -3,11 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<!-- ==========================================================================
+     直立（旋轉）螢幕的 HERO — 定案紀錄（2026-08-09）
+     --------------------------------------------------------------------------
+     使用者把 1920×1080 的螢幕轉成直的，回報 HERO 左邊那首詩「看起來非常小」。
+     成因與 62svh 這個值的推導寫在本檔最後那一段 @media 的註解裡（和 index.html
+     同一份），這裡只留當時比過的五案與定案。
+
+     這一頁原本有一條純 CSS 的切換條（版式五案 × 字級兩案）。**定案後已刪除**，
+     現在這一頁停在定案的樣子，和正式站的 index.html 相同。
+
+       版式（實測 1080×1920，字級「中」）
+         現狀            詩 12.5px、第一行 240px 寬 —— 對照組
+         橫排放大        22.1px、第一行 424px；位置不動
+         直排・上        vertical-rl，155×424 的一柱，貼左上
+         直排・中        同上，margin-block: auto 垂直置中，落在 y 734–1158
+       → 照片不整屏      height: 62svh；照片 1190px，左右裁切 63% → 41%   ← 使用者選這案
+         （字級 中 clamp(15px, 1.15svh, 24px) → 22px；
+           大 clamp(17px, 1.45svh, 30px) → 27.8px。定案是「中」。）
+
+     直排落選，但那一案問出了這個比例的地形，值得留著：這張照片的建築偏右，
+     屋頂上緣在 y≈17%，而**左側天空一路延伸到 y≈78%** —— 左邊有一條約 340px 寬、
+     1500px 高的天空柱。橫排最長那行 22px 時實測 424px，比柱子還寬，往下移就會
+     壓到屋頂，所以橫排只有頂端那一塊能整條躺在天空上；直排整首詩 155×424，
+     整條進得去。若哪天要重提直排，地形在這裡。
+
+     ⚠ 計數器標記改成 data-views（沒有 -self）＝只顯示、不加總，
+     提案頁不該把首頁的真實瀏覽數往上灌。正式站必須維持 -self（CLAUDE.md 第九節）。
+     ========================================================================== -->
 <!-- <title> 不只給 Google —— Safari 分頁、書籤、加到主畫面、iOS 的分享面板
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>芳仁牙醫診所｜雲林斗六・永樂街</title>
+<title>直立螢幕的 HERO ｜定案紀錄</title>
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
 <meta name="description" content="芳仁牙醫診所，1983 年創立，現址雲林縣斗六市永樂街。這裡整理刷牙、牙周、兒童牙科、缺牙重建與定期檢查的衛教文章。">
@@ -31,8 +60,8 @@
 <meta property="og:image:width" content="1600">
 <meta property="og:image:height" content="1058">
 <meta property="og:image:alt" content="芳仁牙醫診所外觀，入夜後的永樂街街角">
-<link rel="canonical" href="https://fangren.net/">
-<link rel="icon" href="assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<!-- canonical 拿掉：提案頁不能自稱是首頁 -->
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <!-- 首頁的樣式全部內嵌在下面。assets/style.css 是文章頁在用的，
      兩者的版型與配色完全不同，共用一份只會互相污染。 -->
 
@@ -1222,7 +1251,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 <header class="site-head">
   <div class="shell">
-    <a class="brand" href="./">
+    <a class="brand" href="/">
       <span class="brand-mark">
         <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai。牙那條子路徑依自己的中心
              放大 1.3 倍、再往上移 0.50 個單位（2026-08-07 定案），嘴一個節點都沒改。
@@ -1256,8 +1285,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
   <div class="hero">
     <figure class="hero-photo">
-      <img src="assets/hero-clinic-night.jpg"
-           srcset="assets/hero-clinic-night-800.jpg 800w, assets/hero-clinic-night.jpg 1600w"
+      <img src="/assets/hero-clinic-night.jpg"
+           srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
            sizes="100vw"
            alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
            width="1600" height="1058" fetchpriority="high">
@@ -1290,7 +1319,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
            數字跑動時一直在變，讓螢幕閱讀器跟著念沒有意義，所以動的那一段整個
            aria-hidden，另外放一句 .sr-only 講最終結果（由 JS 填）。 -->
-      <p class="band-views" data-views-self="home">
+      <!-- ⚠ 這一頁是提案頁：改成 data-views（沒有 -self）＝只顯示、不加總。
+           正式站的 index.html 必須維持 -self。 -->
+      <p class="band-views" data-views="home">
         <span class="sr-only"></span>
         <span class="views-n" aria-hidden="true">0</span><small aria-hidden="true">次瀏覽</small>
       </p>
@@ -1348,8 +1379,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     <div class="shell">
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
-      <a class="card" href="posts/kids-arch-expansion/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/kids-arch-expansion/" data-spec="kids">
+        <img class="card-thumb" src="/assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
@@ -1361,8 +1392,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
           </p>
         </div>
       </a>
-      <a class="card" href="posts/regular-checkup/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/regular-checkup/" data-spec="general">
+        <img class="card-thumb" src="/assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">定期檢查</span>
           <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
@@ -1374,8 +1405,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
           </p>
         </div>
       </a>
-      <a class="card" href="posts/missing-tooth/" data-spec="prosth">
-        <img class="card-thumb" src="assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/missing-tooth/" data-spec="prosth">
+        <img class="card-thumb" src="/assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">缺牙重建</span>
           <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
@@ -1387,8 +1418,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
           </p>
         </div>
       </a>
-      <a class="card" href="posts/kids-first-visit/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/kids-first-visit/" data-spec="kids">
+        <img class="card-thumb" src="/assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
@@ -1400,8 +1431,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
           </p>
         </div>
       </a>
-      <a class="card" href="posts/gum-bleeding/" data-spec="perio">
-        <img class="card-thumb" src="assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/gum-bleeding/" data-spec="perio">
+        <img class="card-thumb" src="/assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">牙周照護</span>
           <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
@@ -1413,8 +1444,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
           </p>
         </div>
       </a>
-      <a class="card" href="posts/bass-brushing/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/bass-brushing/" data-spec="general">
+        <img class="card-thumb" src="/assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">日常保健</span>
           <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
@@ -1548,12 +1579,12 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
       </div>
       <div class="gallery">
         <figure>
-          <img src="assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
+          <img src="/assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
                alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
           <figcaption>獨立診療空間，每張診療椅旁都配有影像螢幕，方便看診時一起討論。</figcaption>
         </figure>
         <figure>
-          <img src="assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
+          <img src="/assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
                alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
           <figcaption>診療區以隔屏分隔，保留採光也維持看診時的隱私。</figcaption>
         </figure>
@@ -1951,7 +1982,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 <!-- 瀏覽計數器。2026-08-08 補回來 —— 首頁換成定案版型（2c0f7aa）時整支被漏掉，
      窄帶的數字停在提案頁的示範值 8642、六張文章卡的數字則一直是「—」。
      文章頁一直都有掛，所以只有首頁壞掉。 -->
-<script src="assets/counter.js" defer></script>
+<script src="/assets/counter.js" defer></script>
 
 </body>
 </html>
