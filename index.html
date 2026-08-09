@@ -699,12 +699,23 @@ html.scrolled .brand-text small { font-size: .74rem; }
    11.95、**15.18【定案】**、18.40、21.63（對三格中線）。
    ⚠ 15.18 在幾何上**沒有依據** —— 它是頭尾兩階之間四等分的第二格，就是使用者挑的
       那一格。不要事後幫它編一個對齊理由，也不要順手挪到最近的錨點上。
-   ⚠ 因為不在 .shell 裡，`.band > .shell` 的 z-index: 1 蓋不到它，要自己寫 z-index，
-      否則會被窄帶的毛玻璃與柏油層（z-index: 0）壓住。 */
+   ---- 2026-08-10 手機版上線時搬過家：標記從 .band 移進 .shell ----
+   手機要它排在「瀏覽數」與「1983／9／6」**之間**，那就得參與 .shell 這個直向
+   flex 的流；待在 .shell 外面永遠只能靠絕對定位疊上去，排不進中間。
+   於是包含塊從 .band 變成 `.band > .shell`（它本來就是 position: relative）。
+
+   **電腦版一個像素都沒變**，因為：
+     ・絕對定位對齊的是包含塊的**內距盒**，而 .shell 的內距盒右緣就是版心外緣，
+       所以 `right: 0` 就是定案位置，原本那條 max(--pad, (100% - --shell)/2)
+       整條可以收掉。
+     ・.band 的高度就是 .shell 的高度（min-height: var(--band-h)），底邊同一條，
+       bottom: 15.18px 不用換算。
+     ・z-index 也不用寫了 —— 它現在在 .shell 裡面，本來就在毛玻璃與柏油層之上。
+   ⚠ 但**窄螢幕那段 @media 要補一行 `right: var(--pad)`**，見下面那一段的 ⚠⚠。
+   ⚠ 不要因為「它在 .shell 裡面了」就把 position 拿掉 —— 電腦版它必須 out of flow，
+      否則 .shell 會多長一列、窄帶被撐高。 */
 .contact-pair {
-  position: absolute; z-index: 2;
-  right: max(var(--pad), calc((100% - var(--shell)) / 2));
-  bottom: 15.18px;
+  position: absolute; right: 0; bottom: 15.18px;
   display: flex; flex-direction: row; align-items: center; gap: 1.9rem;
 }
 /* 間距 1.9rem（30.4px）也是量出來的。1440 上（正式站實測）：
@@ -740,10 +751,19 @@ html.scrolled .brand-text small { font-size: .74rem; }
    ⚠ bottom 是 12.46px 不是一行版的 15.18px：兩行盒高 32.7px，要讓中線落在三格的
       中線上，盒底得離照片底 12.46px。沿用一行版的值會往上飄、還差點頂到瀏覽數。
    ⚠ 選擇器要寫 `body .contact-pair` 抬一階權重 —— **@media 不增加權重**，
-      只寫 `.contact-pair` 會和上面那條同權重、靠順序決勝，很容易被後來的規則弄壞。 */
+      只寫 `.contact-pair` 會和上面那條同權重、靠順序決勝，很容易被後來的規則弄壞。
+
+   ⚠⚠ **`right: var(--pad)` 這一行是包含塊搬進 .shell 之後才需要的，不要刪。**
+      包含塊還是 .band 的時候，右緣寫的是 max(--pad, (100% - --shell)/2) ——
+      視窗窄過 1160 時那個式子退化成 --pad，也就是「離照片邊一個內距」。
+      換成 .shell 之後 `right: 0` 對齊的是內距盒右緣，而視窗窄過 1160 時
+      .shell 就是滿版的，它的內距盒右緣＝螢幕右緣，於是整組會**貼死在螢幕邊**
+      （985 上實測離螢幕 0px，搬家前是 30px）。補這一行就回到搬家前的數字。
+      斷點正好也是 1160，和「改回兩行」同一個 @media，不必另開一條。 */
 @media (max-width: 1159px) {
   body .contact-pair {
     --hero-gutter: 1.55rem;
+    right: var(--pad);
     bottom: 12.46px;
     flex-direction: column; align-items: flex-start; gap: .25rem;
   }
@@ -1374,11 +1394,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .cards, .docs, .info, .gallery, .foot-cols { grid-template-columns: 1fr; }
   .band .shell { flex-direction: column; align-items: flex-start; gap: .5rem; padding-block: 1rem; }
   .stats li { padding-inline: 1.2rem; }
-  /* 窄帶右側的地址與電話**只做電腦版**（2026-08-10 定案時就講好的）。
-     手機的窄帶不是壓在照片下緣的絕對定位層，而是靜態接在照片下面、內容排成
-     兩列靠左；那一組絕對定位進來會疊在 1983／9／6 上。手機要不要放、放哪裡，
-     是還沒討論的另一題 —— 在那之前**不要只把這條 display: none 拿掉**。 */
-  .contact-pair { display: none; }
+  /* 手機的地址與電話**排進流裡**（2026-08-10 定案，見下面手機那一大段的
+     「窄帶的地址與電話」）。這裡把絕對定位關掉，它才會乖乖夾在
+     瀏覽數與 1983／9／6 之間。 */
+  .contact-pair { position: static; }
   /* **不要 display: none。** 手機版定案的頁首是有主選單的（三項），
      它靠 grid 的 max-content 軌道 ＋ 標誌 SVG 的內在尺寸放得下 ——
      見 PALETTE.md 第六之五節。 */
@@ -1572,6 +1591,65 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .band-views .views-n, .band-views small { font-size: .625rem; }
   .band-views small { margin-left: .3em; }
 
+  /* ======================================================================
+     窄帶的地址與電話 —— 定案 2026-08-10（手機版）
+     ----------------------------------------------------------------------
+     位置是使用者指定的：**瀏覽數下面、1983／9／6 上面**，一行、置中。
+     兩案的比較與所有量測留在 preview/hero-contact-mobile/
+     （淘汰：一行撐開「好怪」、兩行「電話在上、地址在下」）。
+
+     ---- 字級與圖示：照電腦版的比例換算，不是照搬 ----
+     電腦版是「聯絡 .78rem ÷ 標籤 .7rem ＝ 1.114」。手機的標籤是 .625rem，
+     所以 .625 × 1.114 ＝ .696 → **.7rem**。直接搬電腦版的 12.48px 進來，
+     會變成整條帶子裡最大的字、比 1983 底下的標籤還顯眼 —— 而它和標籤是同一層。
+     圖示跟著等比例縮（11.2 ÷ 12.48 ＝ 0.897）：釘子 .85 × .897 ＝ .762rem、
+     話筒 .7918 × .897 ＝ .710rem。**兩顆的比例關係沒變**，所以電腦版調了六輪
+     才擺平的「話筒不會飄」一起帶過來了。下移仍是 .8px（那是補話筒比釘子矮，
+     和字級無關，寫在上面 .c-tel .ico svg 那一段）。
+
+     ---- ⚠ 那條「溝」一定要在手機關掉 ----
+     使用者回報「置中看起來沒有真的置中，從圖釘 icon 到電話號碼最後一碼 9
+     這整個區塊看起來就沒有置中」。量出來成立，但**不是置中算錯**：
+       .c-addr 方塊左緣 48.11、釘子第一筆墨水 55.79 → 中間 7.68px 死空白
+       「9」的墨水 326.44、.c-tel 方塊右緣 326.88 → 死空白只有 0.44px
+     盒子確實置中（187.49 ≈ 版心中心 187.5），但**看得見的那一塊中心在 191.11、
+     偏右 3.61px** —— 兩端的死空白不一樣多，而眼睛看的是墨水不是盒子。
+     那 7.68px 來自上面 `@media (max-width: 1159px)`（1159 也涵蓋 375）裡的
+     `.hero-contact .ico { flex: 0 0 var(--hero-gutter) }` —— 那條溝是**電腦版
+     窄螢幕退成兩行、要讓「雲」和「0」切齊左緣**才需要的；手機是一行置中，
+     沒有左緣要對。關掉之後偏移剩 0.47px。
+     ⚠ **不要改用「整組往左推 3.6px」去修** —— 那是拿補償數字蓋掉原因，
+        字級或圖示一改就要重算。把多餘的空白拿掉才是解。
+     ====================================================================== */
+  .hero-contact a { font-size: .7rem; gap: .45rem; }
+  .hero-contact .ico { flex: 0 0 auto; }     /* ← 關掉那條溝，見上面 */
+  .c-addr .ico svg { width: .762rem; height: .762rem; }
+  .c-tel  .ico svg { width: .710rem; height: .710rem; }
+  /* ⚠ 選擇器要寫 `body .contact-pair`（0,1,1），不能只寫 `.contact-pair`（0,1,0）。
+     上面 `@media (max-width: 1159px)` 那條「退成兩行」寫的就是 `body .contact-pair`，
+     1159 也涵蓋 375 —— 只寫 `.contact-pair` 權重比它低，會**整條被蓋掉**，
+     手機就變成直排的兩行。踩過：實測 375 上量到 groupW 84.7、兩項上下疊著。 */
+  body .contact-pair {
+    flex-direction: row; justify-content: center; align-items: center; gap: 1.9rem;
+  }
+
+  /* ---- 1983／9／6 那一列往下坐 2px（2026-08-10）------------------------
+     使用者：「1983／9／5 這條資訊列似乎可以稍微往下一點，目前離窄帶的下緣
+     還有點距離，反而離地址和電話很近」。量出來完全成立（375 上）：
+       地址電話的字底 331.4 → 1983 的字頂 341.0　＝ 上面 **9.7px**
+       部定專科的字底 373.3 → 窄帶下緣 387.0　　＝ 下面 **13.8px**
+     那一列離聯絡近了 4.1px。
+
+     做法是**兩邊各動 2px**：三格往下 2（margin-top），下內距收 2。
+     結果上面 11.7、下面 11.8 —— 平衡了，而且**窄帶的高度一點都沒變**
+     （加的和減的一樣多），照片與底下內容的位置完全不受影響。
+     ⚠ 不要只加 margin 不收內距：那樣窄帶會長高 2px。
+     ⚠ 也不要只收內距：那樣是「整條帶子變矮」，不是「那一列往下坐」，
+        上面 9.7 的擁擠沒有解到。
+     ⚠ 這兩個值是一組的，改一個就要改另一個。 */
+  .band .shell { padding-block: .85rem .725rem; }   /* 下內距 13.6 → 11.6 */
+  .stats { margin-top: .125rem; }                    /* 三格往下 2px */
+
   /* ---- 內文區：字級與間距收一階 ------------------------------------- */
   .sec-head { margin-bottom: 1.1rem; }
   .sec-head h2 { font-size: 1.12rem; }
@@ -1649,6 +1727,27 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .hero-photo { height: 62svh; }
   .hero-poem { font-size: clamp(15px, 1.15svh, 24px); }
   .hero-sign { font-size: clamp(13px, .95svh, 18px); }
+}
+
+/* ==========================================================================
+   320 級的窄機：窄帶裡地址與電話的間距要收（2026-08-10）
+   --------------------------------------------------------------------------
+   一行整組 267.1px，而 320 上版心內寬只有 280px —— 餘裕 12.9px（4.6%）。
+   這是頁尾地址踩過的那個坑（見本檔 .foot-addr 那段長註解）：餘裕接近 0 時，
+   只要系統字後備、PingFang 與 Chromium 的字寬差、letter-spacing 的次像素進位
+   有任何一點落差，中文就會折行，而且會斷在最後一兩個字，最難看。
+   **Chromium 上重現不了不代表 iPhone 上不會。**
+   收到 1.1rem 之後 320 上是 254.3px、餘裕 25.7px（9.2%），才真的安全。
+   代價是 ≤360 的間距（17.6px）和 375 以上（30.4px）不一樣 ——
+   兩種寬度不會同時出現在同一個人眼前，可以接受。
+   ⚠ **不要改用 white-space: nowrap 去防折行** —— 那會讓地址在窄機上撐破版面，
+      違反本檔開頭第 6 條（手機版不可水平捲動）。
+   ⚠ 選擇器同樣要寫 `body .contact-pair`（0,1,1）—— 手機那段的一行排法就是這個
+      權重，只寫 `.contact-pair`（0,1,0）會被它蓋掉，這條保險等於沒生效。
+   ⚠ 這一段還要排在手機那段 @media **後面**：同權重時靠順序決勝。
+      搬動的時候順序不能反。 */
+@media (max-width: 360px) {
+  body .contact-pair { gap: 1.1rem; }
 }
 </style>
 </head>
@@ -1739,23 +1838,16 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         <span class="views-n" aria-hidden="true">0</span><small aria-hidden="true">次瀏覽</small>
       </p>
 
-      <ul class="stats">
-        <li><b>1983<small>年</small></b><span>中華路開業</span></li>
-        <li><b>9<small>位</small></b><span>醫師駐診</span></li>
-        <!-- 這個數字是「頁面上列得出來的、不同的衛福部部定專科」種數，不是醫師人數：
-             家庭牙醫、齒顎矯正、兒童牙科、口腔顎面外科、贋復牙科 = 5。
-             改任何一位醫師的資歷欄都要回來數一次，見 COPY.md 第八之一節。 -->
-        <li><b>5<small>個</small></b><span>部定專科</span></li>
-      </ul>
-    </div>
-
-    <!-- 窄帶右側的地址與電話（定案 2026-08-10，只有電腦版；手機由 @media 收掉）。
-         ⚠ 這一組是 .band 的**直接子元素，刻意不放進 .shell**，兩個理由都在 CSS
-            那一段寫清楚了：① 它是絕對定位、完全不參與版面，1983／9／6 才推不動
-            （第一輪讓它參與版面時，三格的中軸被往左推了 42.4px）；
-            ② 參考框變成整條窄帶，「版心外緣」才算得出精確值、不必碰 100vw。
-         整組的推導與所有落選案留在 preview/hero-contact/。 -->
-    <div class="contact-pair">
+      <!-- 地址與電話。**電腦版**：絕對定位貼在版心外緣，看起來在窄帶右側，
+           完全不參與版面（1983／9／6 才推不動 —— 第一輪讓它參與版面時，
+           實測三格的中軸被往左推了 42.4px）。
+           **手機版**：絕對定位關掉，它就照這裡的順序夾在瀏覽數與 1983／9／6
+           之間，一行置中。兩邊共用這一份標記，一個字都沒有重複。
+           ⚠ 它**必須待在 .shell 裡面**：手機要它排在兩者「之間」，就得參與
+              .shell 這個直向 flex 的流。移到 .shell 外面手機就排不進中間了。
+           推導與所有落選案：preview/hero-contact/（電腦版六輪）、
+           preview/hero-contact-mobile/（手機版兩輪）。 -->
+      <div class="contact-pair">
       <p class="hero-contact c-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
         <!-- 線條空心的地圖釘。頁尾那顆是 Font Awesome 的實心版，這裡刻意不沿用 ——
              實心圖示疊在夜景照片上會變成一個小黑塊，而窄帶裡其他東西全是細的。
@@ -1772,6 +1864,16 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 0 1-2.1 1.9 18.8 18.8 0 0 1-8.2-2.9 18.5 18.5 0 0 1-5.7-5.7A18.8 18.8 0 0 1 2.6 4.7 1.9 1.9 0 0 1 4.5 2.6h2.8a1.9 1.9 0 0 1 1.9 1.6c.1.9.3 1.8.7 2.7a1.9 1.9 0 0 1-.4 2L8.3 10.1a15.2 15.2 0 0 0 5.7 5.7l1.2-1.2a1.9 1.9 0 0 1 2-.4c.9.4 1.8.6 2.7.7a1.9 1.9 0 0 1 1.6 2Z"/></svg></span>
         <span class="t">05-5339-369</span>
       </a></p>
+      </div>
+
+      <ul class="stats">
+        <li><b>1983<small>年</small></b><span>中華路開業</span></li>
+        <li><b>9<small>位</small></b><span>醫師駐診</span></li>
+        <!-- 這個數字是「頁面上列得出來的、不同的衛福部部定專科」種數，不是醫師人數：
+             家庭牙醫、齒顎矯正、兒童牙科、口腔顎面外科、贋復牙科 = 5。
+             改任何一位醫師的資歷欄都要回來數一次，見 COPY.md 第八之一節。 -->
+        <li><b>5<small>個</small></b><span>部定專科</span></li>
+      </ul>
     </div>
     </div>
   </div>

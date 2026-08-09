@@ -1653,36 +1653,38 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .c-addr .ico svg { width: .762rem; height: .762rem; }
   .c-tel  .ico svg { width: .710rem; height: .710rem; }
 
-  /* Ⓜ1 一行置中 */
-  body[data-m="m1"] .contact-pair {
+  /* ---- 定案 Ⓜ1：一行、置中（2026-08-10，切換條已刪）--------------------
+     淘汰的兩案，留著避免有人重走：
+       Ⓜ2 一行撐開（地址貼左緣、電話貼右緣）—— 使用者：「撐開不要 好怪」。
+       Ⓜ3 兩行（電話在上、地址在下，用 order 換位不動 DOM）。行距試過四階
+           4.8／7.2／8.8／11.2px；**上限是窄帶自己的列距 8.8px**（.band .shell
+           的 gap，管「瀏覽數↔聯絡↔1983」），追上就不再讀成一組，會變成
+           窄帶的第三、第四列。最後整案沒選。
+
+     ⚠ 選擇器要寫 `body .contact-pair`（0,1,1），不能只寫 `.contact-pair`（0,1,0）。
+        上面 `@media (max-width: 1159px)` 那條「退成兩行」寫的就是 `body .contact-pair`，
+        而 1159 也涵蓋 375 —— 權重比它低會**整條被蓋掉**，手機變成直排的兩行。
+        踩過兩次（這一頁與 index.html 各一次），症狀是 375 上兩項上下疊著。 */
+  body .contact-pair {
     flex-direction: row; justify-content: center; align-items: center; gap: 1.9rem;
   }
 
-  /* Ⓜ3 兩行置中，**電話在上、地址在下**（使用者：「這樣版面比較順」）。
-     用 order 換順序、不動 HTML 的先後 —— 電腦版是「地址在左、電話在右」，
-     兩邊共用同一份標記，改 DOM 會連電腦版一起換掉。
-     ⚠ 代價：鍵盤 Tab 的順序仍是地址→電話，和看到的上下相反。兩個連結而已，
-        而且兩種順序都讀得通，可以接受；但**不要再往這一組加第三個連結**，
-        那時候順序不一致就會開始難用了。 */
-  body[data-m="m3"] .contact-pair {
-    flex-direction: column; align-items: center;
-  }
-  body[data-m="m3"] .c-tel { order: -1; }
+  /* ---- 1983／9／6 那一列往下坐 2px（2026-08-10）------------------------
+     使用者：「1983／9／5 這條資訊列似乎可以稍微往下一點，目前離窄帶的下緣
+     還有點距離，反而離地址和電話很近」。量出來完全成立（375 上）：
+       地址電話的字底 331.4 → 1983 的字頂 341.0　＝ 上面 **9.7px**
+       部定專科的字底 373.3 → 窄帶下緣 387.0　　＝ 下面 **13.8px**
+     那一列離聯絡近了 4.1px。
 
-  /* ---- 兩行的行距四階（?g=）：這一輪要選的 --------------------------
-     使用者：「兩行的間距有點擠，拉開一點」。現況 .3rem＝4.8px。
-
-     ⚠ 有一條上限：**窄帶自己的列距是 .55rem（8.8px）**（.band .shell 的 gap，
-        管的是「瀏覽數↔聯絡↔1983」之間）。兩行的內距一旦追上或超過它，
-        這兩行就不再讀成一組，而會變成窄帶的第三、第四列。
-        Ⓖ3 正好等於它、Ⓖ4 已經超過 —— 兩個都留著讓使用者自己看，
-        但**選 Ⓖ4 的話要有心理準備那就是四列，不是三列**。 */
-     ⚠ 這四條一定要帶 [data-m="m3"] —— `gap` 在 Ⓜ1 是**橫向**的那個 1.9rem，
-        不限定案別的話會把它一起蓋掉，一行版的地址與電話就黏在一起了。 */
-  body[data-m="m3"][data-g="g1"] .contact-pair { gap: .30rem; }   /* 4.8px　現況 */
-  body[data-m="m3"][data-g="g2"] .contact-pair { gap: .45rem; }   /* 7.2px */
-  body[data-m="m3"][data-g="g3"] .contact-pair { gap: .55rem; }   /* 8.8px　＝窄帶自己的列距 */
-  body[data-m="m3"][data-g="g4"] .contact-pair { gap: .70rem; }   /* 11.2px　超過列距 */
+     做法是**兩邊各動 2px**：三格往下 2（margin-top），下內距收 2。
+     結果上面 11.67、下面 11.78 —— 平衡了，而且**窄帶的高度一點都沒變**
+     （加的和減的一樣多），照片與底下內容的位置完全不受影響。
+     ⚠ 不要只加 margin 不收內距：那樣窄帶會長高 2px。
+     ⚠ 也不要只收內距：那樣是「整條帶子變矮」，不是「那一列往下坐」，
+        上面 9.7 的擁擠沒有解到。
+     ⚠ 這兩個值是一組的，改一個就要改另一個。 */
+  .band .shell { padding-block: .85rem .725rem; }   /* 下內距 13.6 → 11.6 */
+  .stats { margin-top: .125rem; }                    /* 三格往下 2px */
 
   /* ---- 內文區：字級與間距收一階 ------------------------------------- */
   .sec-head { margin-bottom: 1.1rem; }
@@ -1779,29 +1781,13 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ⚠ **不要改用 white-space: nowrap 去防折行** —— 那會讓地址在窄機上撐破版面，
       違反 CLAUDE.md 第一節第 6 條（手機版不可水平捲動）。 */
 @media (max-width: 360px) {
-  body[data-m="m1"] .contact-pair { gap: 1.1rem; }
+  body .contact-pair { gap: 1.1rem; }
 }
 
-/* ---- 切換條（提案用，定案後連同 data-m 一起刪掉）------------------------
-   固定在右下角。手機上它會蓋住一點內容，但只有提案頁有，正式站不會有。 */
-.sw {
-  position: fixed; right: .6rem; bottom: .6rem; z-index: 60;
-  display: grid; gap: .3rem;
-  background: rgba(25, 22, 20, .86); border-radius: .9rem; padding: .4rem .45rem;
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-}
-.sw-row { display: flex; align-items: center; gap: .3rem; transition: opacity .15s ease; }
-.sw span { font-size: .62rem; color: rgba(255,255,255,.6); padding-inline: .3rem; min-width: 2.4em; }
-.sw button {
-  font: inherit; font-size: .68rem; line-height: 1;
-  padding: .38rem .6rem; border-radius: 999px; cursor: pointer;
-  border: 1px solid rgba(255,255,255,.32); background: transparent; color: rgba(255,255,255,.82);
-}
-.sw button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
+/* 切換條的樣式也跟著定案刪掉了（2026-08-10）。 */
 </style>
 </head>
-<!-- 預設開 Ⓜ1（一行置中）＋ 行距 Ⓖ2（7.2px）。兩案的差別與量測寫在手機 @media 裡那一大段。 -->
-<body data-m="m1" data-g="g2">
+<body>
 
 
 <a class="skip-link" href="#main">跳到主要內容</a>
@@ -2596,50 +2582,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      ⚠ 版型搬回 index.html 的時候，**不要把這一頁的示範值一起帶過去**。
         2026-08-07 就發生過一次：提案頁的 8642 蓋掉了真值 190，還不會動。 -->
 
-<div class="sw">
-  <div class="sw-row" role="group" aria-label="手機版排法兩案">
-    <span>排法</span>
-    <button type="button" data-axis="m" data-set="m1" aria-pressed="true">Ⓜ1 一行</button>
-    <button type="button" data-axis="m" data-set="m3" aria-pressed="false">Ⓜ3 兩行</button>
-  </div>
-  <div class="sw-row" role="group" aria-label="兩行的行距四階">
-    <span>行距</span>
-    <button type="button" data-axis="g" data-set="g1" aria-pressed="false">4.8</button>
-    <button type="button" data-axis="g" data-set="g2" aria-pressed="true">7.2</button>
-    <button type="button" data-axis="g" data-set="g3" aria-pressed="false">8.8</button>
-    <button type="button" data-axis="g" data-set="g4" aria-pressed="false">11.2</button>
-  </div>
-</div>
-
-<script>
-/* 兩條切換條。網址可帶 ?m=m1|m3&g=g1|g2|g3|g4。
-   行距那一條只有 Ⓜ3 看得出效果（Ⓜ1 是一行，沒有行距），所以切到 Ⓜ1 時
-   把它整條淡掉、但**不停用** —— 停用會讓使用者以為壞了。
-   ⚠ 正規式寫 [a-z0-9]+ 不是 [a-z]+ —— 值裡有數字時比對會失敗，然後**悄悄**
-      退回預設，等於參數沒作用。這一頁的值全都帶數字，非這樣寫不可。 */
-(function () {
-  var AXES = { m: ['m1', 'm3'], g: ['g2', 'g1', 'g3', 'g4'] };  /* 每欄第一個是預設 */
-  var cur = {};
-  Object.keys(AXES).forEach(function (axis) {
-    var hit = new RegExp('[?&]' + axis + '=([a-z0-9]+)').exec(location.search);
-    cur[axis] = (hit && AXES[axis].indexOf(hit[1]) >= 0) ? hit[1] : AXES[axis][0];
-  });
-  function apply() {
-    Object.keys(AXES).forEach(function (axis) {
-      document.body.setAttribute('data-' + axis, cur[axis]);
-      document.querySelectorAll('.sw button[data-axis="' + axis + '"]').forEach(function (b) {
-        b.setAttribute('aria-pressed', String(b.dataset.set === cur[axis]));
-      });
-    });
-    document.querySelectorAll('.sw-row')[1].style.opacity = (cur.m === 'm3') ? '1' : '.45';
-    history.replaceState(null, '', location.pathname + '?m=' + cur.m + '&g=' + cur.g);
-  }
-  apply();
-  document.querySelectorAll('.sw button').forEach(function (b) {
-    b.addEventListener('click', function () { cur[b.dataset.axis] = b.dataset.set; apply(); });
-  });
-})();
-</script>
+<!-- 切換條與那支 JS 已經在 2026-08-10 定案時整組刪掉。這一頁現在是**定稿的紀錄**：
+     畫面上就是上線的樣子，兩輪的推導與落選案的實測數字全部留在 <head> 與
+     手機 @media 的註解裡。 -->
 
 </body>
 </html>
