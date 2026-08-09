@@ -25,7 +25,15 @@
   --g7:#214D48; --gl7:#214D48;   /* 深綠松＝家色 */
   --g8:#315450; --gl8:#315450;
   --g9:#415c59; --gl9:#415c59;
-  --chair:#4f6361; --moss:#5D6D55; --teal:#214D48;
+  /* ⑩~⑬：把 ⑤ 的彩度往上推。L* 39.3 與 Lab h 151.1 一格都沒動 ——
+     ⑤ 的色相剛好就是枝葉亮處 #447c56 的色相（151.1 對 151.2），
+     所以「再翠一點」只要動彩度，14.3 → 31.5（＝枝葉亮處自己的彩度）。
+     四個都是單一值：對紙 5.2，不必另開字階。 */
+  --g10:#45644d; --gl10:#45644d;
+  --g11:#3f654a; --gl11:#3f654a;
+  --g12:#386646; --gl12:#386646;
+  --g13:#306843; --gl13:#306843;
+  --chair:#4f6361; --moss:#5D6D55; --teal:#214D48; --leaf:#447c56;
 
   /* 其餘現役科別（2026-08-09 收盤） */
   --kids:#c28229; --kids-line:#9e6301; --ortho:#3C596B;
@@ -152,6 +160,10 @@ body:has(#p6:checked){--pick:var(--g6);--pick-line:var(--gl6)}
 body:has(#p7:checked){--pick:var(--g7);--pick-line:var(--gl7)}
 body:has(#p8:checked){--pick:var(--g8);--pick-line:var(--gl8)}
 body:has(#p9:checked){--pick:var(--g9);--pick-line:var(--gl9)}
+body:has(#p10:checked){--pick:var(--g10);--pick-line:var(--gl10)}
+body:has(#p11:checked){--pick:var(--g11);--pick-line:var(--gl11)}
+body:has(#p12:checked){--pick:var(--g12);--pick-line:var(--gl12)}
+body:has(#p13:checked){--pick:var(--g13);--pick-line:var(--gl13)}
 #rn::before,#ro::before{content:"—"}
 body:has(#p1:checked) #rn::before{content:"① 診療椅・現行"}
 body:has(#p1:checked) #ro::before{content:"① #4f6361　L* 40.3　C* 8.1　Lab h 190　白底字同一個值　白字 6.38　對卡 5.81　對紙 5.04"}
@@ -171,6 +183,18 @@ body:has(#p8:checked) #rn::before{content:"⑧ 松→椅 ⅓"}
 body:has(#p8:checked) #ro::before{content:"⑧ #315450　L* 33.1　C* 13.8　Lab h 187　白底字同一個值　白字 8.35　對卡 7.60　對紙 6.60"}
 body:has(#p9:checked) #rn::before{content:"⑨ 松→椅 ⅔"}
 body:has(#p9:checked) #ro::before{content:"⑨ #415c59　L* 36.9　C* 10.9　Lab h 188　白底字同一個值　白字 7.24　對卡 6.59　對紙 5.72"}
+
+body:has(#p10:checked) #rn::before{content:"⑩ 翠一階"}
+body:has(#p10:checked) #ro::before{content:"⑩ #45644d　L* 39.3　C* 18.6　Lab h 151　白底字同一個值　白字 6.60　對卡 6.00　對紙 5.21"}
+
+body:has(#p11:checked) #rn::before{content:"⑪ 翠兩階"}
+body:has(#p11:checked) #ro::before{content:"⑪ #3f654a　L* 39.3　C* 22.9　Lab h 151　白底字同一個值　白字 6.62　對卡 6.02　對紙 5.23"}
+
+body:has(#p12:checked) #rn::before{content:"⑫ 翠三階"}
+body:has(#p12:checked) #ro::before{content:"⑫ #386646　L* 39.3　C* 27.2　Lab h 151　白底字同一個值　白字 6.65　對卡 6.05　對紙 5.25"}
+
+body:has(#p13:checked) #rn::before{content:"⑬ 枝葉亮處的彩度"}
+body:has(#p13:checked) #ro::before{content:"⑬ #306843　L* 39.3　C* 31.5　Lab h 151　白底字同一個值　白字 6.59　對卡 6.00　對紙 5.20"}
 
 /* ---- 表 -------------------------------------------------------------- */
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -223,6 +247,44 @@ td.bad{color:#8c2f34;font-weight:700}
     <div class="note warn">
       <p><b>苔綠和診療椅只差 ΔE 13.7</b>，是三個錨裡最近的一對。但那 13.7 不是「幾乎一樣」—— <b>它們的色相差 56°</b>（134 對 190，一個往黃綠、一個往藍綠），只是兩個彩度都很低（15.9 與 8.1），所以距離拉不開。<b>低彩度的顏色差別要靠並排才看得出來，這就是為什麼要做這一頁。</b></p>
       <p class="soft">相鄰兩階之間是 ΔE 4.3~7.1，是很細的一格 —— <b>切著看比看數字準。</b></p>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>⑤ 再翠一點：⑩⑪⑫⑬</h2>
+
+    <div class="note ok">
+      <p><b>先講一個剛好的事：⑤ 的色相就是枝葉的色相。</b>花藝那一節量過枝葉亮處 <code>#447c56</code>（PALETTE 第三節），它的 Lab 色相是 <b>151.2</b>；⑤ <code>#4b6251</code> 是 <b>151.1</b>。<b>你挑中的那一階，剛好落在診所自己那叢綠葉的色相上。</b></p>
+      <p>所以「再新鮮一點、再翠一點」不必換色相 —— <b>只要把彩度往上推</b>。⑤ 是 C* 14.3，枝葉亮處是 31.5，這四階就排在中間。</p>
+    </div>
+
+    <div class="trio">
+      <div class="g anchor" style="--c:var(--g5)"><div class="band"><span>⑤</span></div><div class="t">
+        <span class="n">基準（現有）</span><span class="v">#4b6251<br>C* 14.3<br>HSL 136/13%</span></div></div>
+      <div class="g" style="--c:var(--g10)"><div class="band"><span>⑩</span></div><div class="t">
+        <span class="n">翠一階</span><span class="v">#45644d<br>C* 18.6<br>HSL 135/18%</span></div></div>
+      <div class="g" style="--c:var(--g11)"><div class="band"><span>⑪</span></div><div class="t">
+        <span class="n">翠兩階</span><span class="v">#3f654a<br>C* 22.9<br>HSL 137/23%</span></div></div>
+      <div class="g" style="--c:var(--g12)"><div class="band"><span>⑫</span></div><div class="t">
+        <span class="n">翠三階</span><span class="v">#386646<br>C* 27.2<br>HSL 138/29%</span></div></div>
+      <div class="g" style="--c:var(--g13)"><div class="band"><span>⑬</span></div><div class="t">
+        <span class="n">枝葉亮處的彩度</span><span class="v">#306843<br>C* 31.5<br>HSL 140/37%</span></div></div>
+      <div class="g" style="--c:var(--leaf)"><div class="band"><span>參</span></div><div class="t">
+        <span class="n">枝葉亮處・原值</span><span class="v">#447c56<br>L* 47.4 C* 31.5<br>白字 4.93</span></div></div>
+    </div>
+
+    <p class="small">最後一格是<b>枝葉亮處的原值</b>，放進來當比例尺 —— 它比 ⑬ 亮 8.1 階（L* 47.4），白字只剩 4.93，而且會跳出你選定的那個亮度。<b>⑬ 是「把枝葉的彩度搬到你要的亮度上」，不是枝葉本身。</b></p>
+
+    <div class="note warn">
+      <p><b>「太翠會喧賓」有一條量得出來的線。</b>家族現有的彩度分兩段：低段是一般 8.1、矯正 14.8、苔綠 15.9、深綠松 16.7；高段是外科 36.0、顯微根管與贋復 43.6、兒牙 57.6。</p>
+      <p><b>⑬ 的 31.5 仍然在外科的 36 以下</b> —— 也就是說，就算推到枝葉亮處的彩度，它在整排標籤裡也不會是最吵的那一顆。<b>真正會喧賓是在 36 以上</b>，而那已經超出資料庫裡任何一個綠。</p>
+    </div>
+
+    <div class="note">
+      <p><b>這四階的對比一模一樣</b>：白字 6.59~6.65、對卡 6.00~6.05、對紙 5.20~5.25 —— 因為亮度一格都沒動。<b>所以這一排比的純粹是翠度，沒有一階是被對比度逼出來的</b>，也沒有一階需要另開字階（對紙 5.2 遠高於 4.5）。</p>
+      <p class="soft">相鄰兩階 ΔE 約 4.3；⑤ 到 ⑬ 整段 17.4。另外注意：⑤ 離釋出的苔綠只有 ΔE 6.8，<b>越往翠走離苔綠越遠</b>（7.6 → 17.8）。</p>
     </div>
   </section>
 
@@ -374,6 +436,10 @@ td.bad{color:#8c2f34;font-weight:700}
   <label class="opt anchor" style="--c:#214D48"><span class="n">⑦</span><input type="radio" name="g" id="p7" value="7"></label>
   <label class="opt" style="--c:#315450"><span class="n">⑧</span><input type="radio" name="g" id="p8" value="8"></label>
   <label class="opt" style="--c:#415c59"><span class="n">⑨</span><input type="radio" name="g" id="p9" value="9"></label>
+  <label class="opt" style="--c:#45644d"><span class="n">⑩</span><input type="radio" name="g" id="p10" value="10"></label>
+  <label class="opt" style="--c:#3f654a"><span class="n">⑪</span><input type="radio" name="g" id="p11" value="11"></label>
+  <label class="opt" style="--c:#386646"><span class="n">⑫</span><input type="radio" name="g" id="p12" value="12"></label>
+  <label class="opt" style="--c:#306843"><span class="n">⑬</span><input type="radio" name="g" id="p13" value="13"></label>
 </div>
 
 <script>
@@ -381,7 +447,7 @@ td.bad{color:#8c2f34;font-weight:700}
 (function(){
   try{
     var v = (new URLSearchParams(location.search).get('g') || '');
-    if (/^[1-9]$/.test(v)) { var el = document.getElementById('p' + v); if (el) el.checked = true; }
+    if (/^(?:[1-9]|1[0-3])$/.test(v)) { var el = document.getElementById('p' + v); if (el) el.checked = true; }
     document.querySelectorAll('.switcher input').forEach(function(i){
       i.addEventListener('change', function(){
         try{
