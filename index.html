@@ -1125,10 +1125,20 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
           <li><button type="button" data-spec="all"     aria-pressed="true">全部</button></li>
           <li><button type="button" data-spec="general" aria-pressed="false">一般牙科・定期檢查</button></li>
           <li><button type="button" data-spec="perio"   aria-pressed="false">牙周治療</button></li>
+          <li><button type="button" data-spec="endo"    aria-pressed="false">顯微根管</button></li>
           <li><button type="button" data-spec="kids"    aria-pressed="false">兒童牙科</button></li>
           <li><button type="button" data-spec="ortho"   aria-pressed="false">齒顎矯正</button></li>
           <li><button type="button" data-spec="prosth"  aria-pressed="false">植牙・假牙重建</button></li>
+          <li><button type="button" data-spec="surg"    aria-pressed="false">口腔外科</button></li>
         </ul>
+        <!-- 顯微根管與口腔外科是 2026-08-09 補的。這兩科目前一篇文章都沒有，
+             但 chips 同時篩**文章與醫師**，兩科各有一位專科醫師（陳芷鈴、許馨文），
+             按下去會顯示「0 篇文章、1 位醫師」，文章那一區出現空狀態的句子 ——
+             那句話（「這一科目前還沒有文章。」）本來就是為這個情況寫的，
+             而且數量是 0 的時候 .filter-note 不會給文章那邊的連結。所以不必改任何邏輯。
+
+             ＊按鈕上的字要和 tools/build.mjs 的 SPEC 對照表用同一個詞
+               （「顯微根管」「口腔外科」），日後那兩科的文章才篩得到。 -->
         <div class="topic-search">
           <label class="sr-only" for="q">搜尋文章與醫師</label>
           <input id="q" type="search" placeholder="搜尋文章與醫師" autocomplete="off" spellcheck="false">
