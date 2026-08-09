@@ -13,7 +13,11 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "_site");
 
-const ALWAYS = ["index.html", "404.html", "assets", "posts"];
+/* favicon.ico 一定要在根目錄、也一定要進 _site/ ——
+   Google 的圖示爬蟲會直接去試 /favicon.ico，路徑錯了等於沒放。
+   它不是 build 產物，是 tools/favicon-ico.mjs 從 assets/favicon.svg 算出來、
+   已經進版控的檔案，所以缺了就是有東西不對，寧可讓建置出聲。 */
+const ALWAYS = ["index.html", "404.html", "favicon.ico", "assets", "posts"];
 // preview/ 是未上線的改版提案頁，由 worker.js 用密碼擋著，沒有也不影響建置
 const OPTIONAL = ["sitemap.xml", "robots.txt", "preview"];
 

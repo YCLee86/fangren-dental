@@ -12,7 +12,8 @@
      3. 依「最後更新日期」由新到舊排序，重新產生 index.html 的卡片區塊
         （直接寫成靜態 HTML，不需要前端 JavaScript 讀 JSON）。
      4. 在每一頁的 <head> 補上 canonical（絕對網址，指回 site.json 的正式站）。
-     5. 產生 sitemap.xml。
+     5. 產生 sitemap.xml。首頁的 lastmod 和文章一樣是比對內容雜湊得來的，
+        不是抄最新那篇文章的日期 —— 只改首頁、沒發新文章的時候也要動。
 
    新增文章：複製一個現有的 posts/<slug>/ 資料夾、改內容與 post-meta，
              再跑一次這個指令，首頁卡片就會自己出現並排到最前面。
@@ -246,7 +247,9 @@ const block =
 let nextIndex =
   index.slice(0, startEnd) + block + index.slice(e);
 
-/* 首頁自己的「網站最後更新」＝所有文章中最新的那一天 */
+/* 首頁上若有「網站最後更新」的欄位，顯示的是所有文章中最新的那一天。
+   （目前的版型沒有這個元素，這一行等於沒作用，留著是為了版型改回來時會自己接上。）
+   ⚠ 這個值**不是** sitemap 給首頁的 lastmod，兩者是不同的東西，見下一段。 */
 const siteUpdated = posts[0].updated;
 nextIndex = nextIndex.replace(
   /<time class="site-updated"[^>]*>[^<]*<\/time>/,
@@ -260,6 +263,37 @@ nextIndex = nextIndex.replace(
 );
 
 nextIndex = withCanonical(nextIndex, `${siteUrl}/`);
+
+/* ---------- 3.5 首頁自己的最後更新日（給 sitemap 用） ----------
+
+   首頁在 sitemap 裡的 lastmod 原本抄的是「最新那篇文章的更新日」。
+   那個值在文章沒動、只改首頁的時候完全不會變 —— 而首頁被改的次數遠比發新文章多
+   （換版型、改標題與 description、換頁首標誌、調 HERO…）。
+   實際踩到的後果：2026-08-07 整頁換版型、08-08 換 favicon、08-09 改 <title> 與
+   description，sitemap 卻一路宣稱首頁「最後更新 2026-08-02」。
+   Google 是看 lastmod 決定要不要回頭重抓的，等於一直在告訴它「別來了，沒變」，
+   搜尋結果就長期停在舊的標題與描述上。
+
+   所以首頁改用和文章同一套辦法：對首頁自己的內容取雜湊，變了才換成今天。
+   紀錄同樣存在 build-manifest.json，鍵值用 "/"（資料夾名稱不可能長這樣，不會和 slug 撞）。 */
+const HOME_KEY = "/";
+
+/* 雜湊前要先把「這支腳本自己寫進去的東西」抹掉，否則每跑一次 build 都會有東西不一樣，
+   日期就永遠停在今天、和原本抄文章日期一樣沒有意義（只是換個方向壞）。
+   ⚠ 文章卡片那一整塊**要算進去**：卡片的標題、摘要、日期變了，
+   首頁對讀者來說就是真的變了，這時候請 Google 回來看是對的。 */
+const normalizeHome = (html) =>
+  html
+    .replace(/<link[^>]+rel=["']canonical["'][^>]*>/i, "")
+    .replace(/<time class="site-updated"[^>]*>[^<]*<\/time>/, "")
+    .replace(/(<b data-post-count>)[^<]*(<\/b>)/, "$1$2")
+    .replace(/\r\n/g, "\n");
+
+const homeHash = sha(normalizeHome(nextIndex));
+const prevHome = manifest[HOME_KEY];
+const homeChanged = !prevHome || prevHome.hash !== homeHash;
+const homeUpdated = homeChanged ? today() : prevHome.updated;
+nextManifest[HOME_KEY] = { hash: homeHash, updated: homeUpdated };
 
 if (!CHECK_ONLY && nextIndex !== index) fs.writeFileSync(INDEX_FILE, nextIndex, "utf8");
 
@@ -283,7 +317,7 @@ if (!CHECK_ONLY) {
 
 if (siteUrl && !CHECK_ONLY) {
   const urls = [
-    `  <url><loc>${siteUrl}/</loc><lastmod>${siteUpdated}</lastmod><priority>1.0</priority></url>`,
+    `  <url><loc>${siteUrl}/</loc><lastmod>${homeUpdated}</lastmod><priority>1.0</priority></url>`,
     ...posts.map(
       (p) => `  <url><loc>${siteUrl}/posts/${p.slug}/</loc><lastmod>${p.updated}</lastmod><priority>0.8</priority></url>`
     ),
@@ -312,6 +346,7 @@ console.log(`${CHECK_ONLY ? "[檢查]" : "[建置]"} 共 ${posts.length} 篇文�
 for (const p of posts) {
   console.log(`  ${p.updated}  ${p.slug.padEnd(20)} ${p.title}`);
 }
-if (changed.length) console.log(`\n內容有變動、已換成今天(${today()})的：${changed.join(", ")}`);
+console.log(`\n首頁 lastmod：${homeUpdated}${homeChanged ? "（內容有變動，已換成今天）" : "（內容沒動，沿用）"}`);
+if (changed.length) console.log(`內容有變動、已換成今天(${today()})的：${changed.join(", ")}`);
 if (!siteUrl) console.log("\n提示：site.json 尚未填入 url，這次略過 canonical、sitemap.xml 與 robots.txt。");
 console.log(CHECK_ONLY ? "\n(--check 模式，未寫入任何檔案)" : "\n完成。");

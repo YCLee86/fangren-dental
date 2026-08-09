@@ -145,6 +145,9 @@ index.html              首頁。POSTS 區塊由 build 產生，其餘手寫
 PALETTE.md              配色規範。動任何顏色之前先讀這份
 COPY.md                 文案規範。動任何品牌文字之前先讀這份
 404.html
+favicon.ico             根目錄的點陣圖示，**只給 Google 的圖示爬蟲**。
+                        由 tools/favicon-ico.mjs 從 assets/favicon.svg 算出來，已進版控。
+                        ⚠ 刻意不在任何 <head> 宣告 —— 見 PALETTE.md 第六之七節
 site.json               網站正式網址（給 sitemap 用）
 wrangler.toml           Worker、靜態資產、自訂網域、D1 綁定
 d1-schema.sql           計數器資料表定義，執行一次即可
@@ -163,6 +166,8 @@ tools/
   sync.mjs              同步遠端（SessionStart hook 自動呼叫）
   setup.ps1 / setup.sh  新電腦一鍵環境設定
   palette-measure.ps1   從照片實測取色（k-means ＋ 局部裁切），配色改動的依據來源
+  favicon-ico.mjs       從 assets/favicon.svg 產生根目錄的 favicon.ico。
+                        只有改過 favicon 的顏色或幾何時才要跑，npm run build 不會呼叫它
   build-manifest.json   內容雜湊紀錄，build 自動維護，勿手改
 .claude/
   settings.json         SessionStart hook：開啟專案時自動同步（隨 git 走，兩台都生效）
@@ -182,7 +187,8 @@ tools/
 - `index.html` 的 `<!-- POSTS:START -->` ~ `<!-- POSTS:END -->` 之間
 - `src/allowed-slugs.js`
 - `tools/build-manifest.json`
-- `sitemap.xml`
+- `sitemap.xml`（首頁那一筆的 `lastmod` 和文章一樣是**比對首頁自己的內容雜湊**得來的，
+  不是抄最新文章的日期 —— 只改首頁、沒發新文章時它也要動，否則等於在跟 Google 說「別來了」）
 - `robots.txt`（**每次 build 整個重寫**，要加規則請改 `tools/build.mjs` 的產生字串）
 - 各文章 `post-meta` 的 `updated` 欄位
 
@@ -234,6 +240,11 @@ tools/
   Rules → Redirect Rules 做轉址，再拿掉那行與 `worker.js` 裡的轉址。
 - `tools/hero-new.css` 與 `tools/hero-preview.mjs` 是還沒套用的 HERO 改版實驗，不是死碼。
   2026-08-05 一併進版控，讓另一台電腦與手機 session 也拿得到。
+- **Google 搜尋結果會落後好幾天到幾週，那不是網站壞了。** 使用者 2026-08-09 回報
+  搜尋結果的標題、描述、小圖「都不對」—— 三樣逐字比對過，全是站上改版之前的舊快照
+  （標題與描述是 08-09 才改的，圖示是 08-08 才換的）。**先去 git log 對一次時間再說**，
+  不要因為看起來不對就動 `index.html`。要催快一點只有一條路：Google Search Console
+  的「網址審查 → 要求建立索引」，那個後台只有使用者能開。
 
 ---
 
