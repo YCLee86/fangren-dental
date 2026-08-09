@@ -90,9 +90,17 @@ code{font-family:var(--mono);font-size:.9em}
 .stage.on-paper{background:var(--paper)}
 .blk{display:flex;flex-direction:column;gap:.5rem}
 .lbl{font-family:var(--mono);font-size:.67rem;letter-spacing:.07em;color:var(--ink-soft);line-height:1.5}
+/* 帶案名的那兩行同理：案名從「④ 燒磚」到「⑨ ④⑥之間・近④」長度差很多，
+   中等寬度下會在一行與兩行之間跳。先把兩行佔住。 */
+@media (max-width:44rem){ .lbl-name{min-height:calc(2 * 1.5em)} }
 .row{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem .5rem}
 .readout{font-family:var(--mono);font-size:.73rem;color:var(--ink-soft);
          font-variant-numeric:tabular-nums;line-height:1.85;border-top:1px solid var(--rule);padding-top:.7rem}
+/* ⚠ 讀數的三行長度隨案子變（有的帶「★ 你挑的那一組」這種尾巴），窄螢幕下
+   會在一行與兩行之間跳，整頁跟著上下位移 —— 切著比對時最惱人的就是這個。
+   所以每一行都先把兩行的高度佔住。560px 以上量過不會換行，就不必佔。 */
+.readout span{display:block}
+@media (max-width:35rem){ .readout span{min-height:calc(2 * 1.85em)} }
 
 /* ---- 切換條 ---------------------------------------------------------- */
 .switcher{position:fixed;left:50%;transform:translateX(-50%);bottom:.7rem;z-index:9;
@@ -400,7 +408,7 @@ tr.mid td{background:rgba(33,77,72,.05)}
 
     <div class="stage">
       <div class="blk">
-        <p class="lbl">白底字套顏色 —— 七科的未選態，顯微根管＝<b><span id="rnl"></span></b>（上排切換條）</p>
+        <p class="lbl lbl-name">白底字套顏色 —— 七科的未選態，顯微根管＝<b><span id="rnl"></span></b>（上排切換條）</p>
         <div class="row">
           <span class="chip" style="--c:var(--kids-line)">兒童牙科</span>
           <span class="chip is-endo" style="--c:var(--pick-line)">顯微根管</span>
@@ -413,7 +421,7 @@ tr.mid td{background:rgba(33,77,72,.05)}
       </div>
 
       <div class="blk">
-        <p class="lbl">整圈套色、字反白 —— 七科的選取態，顯微根管＝<b><span id="rnf"></span></b>（下排切換條）</p>
+        <p class="lbl lbl-name">整圈套色、字反白 —— 七科的選取態，顯微根管＝<b><span id="rnf"></span></b>（下排切換條）</p>
         <div class="row">
           <span class="chip on" style="--c:var(--kids)">兒童牙科</span>
           <span class="chip on is-endo" style="--c:var(--pick)">顯微根管</span>
@@ -448,7 +456,7 @@ tr.mid td{background:rgba(33,77,72,.05)}
         </div>
       </div>
 
-      <p class="readout"><span id="rl"></span><br><span id="rf"></span><br><span id="rd"></span></p>
+      <p class="readout"><span id="rl"></span><span id="rf"></span><span id="rd"></span></p>
     </div>
   </section>
 
