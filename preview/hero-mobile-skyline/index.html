@@ -1412,9 +1412,16 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
      同一招用在**第一行**才真的換得到高度。這就是 Ⓜ2／Ⓜ3 的做法。
 
-     ---- 三案 -----------------------------------------------------------------
-     三案是三種不同的取捨，不是同一件事的三個強度。括號是 375px 上量到的
+     ---- 五案 -----------------------------------------------------------------
+     Ⓢ1／Ⓢ2 是 2026-08-10 補的：使用者看過之後說「我要的感覺應該在現況和 Ⓜ1 之間」。
+     它們**不拆行、行高與首行間隔維持現況**，只往下移一點、字距跟著收到剛好不撞。
+     細節在下面 CSS 裡那張「每個位置能用的最鬆字距」的階梯表。
+
+     Ⓜ1～Ⓜ3 是三種不同的取捨，不是同一件事的三個強度。括號是 375px 上量到的
      「詩的上緣離頁首那一塊有多遠」（現況是 −2.9px，也就是疊著）：
+
+       Ⓢ1 小（8px・三行）    字距 .20em → .13em、全形空格 1em → .65em
+       Ⓢ2 中（17px・三行）   字距 .20em → .10em、全形空格 1em → .5em
 
        Ⓜ1 收字距（26px・三行）
            完全照第 1～3 點，行不拆。字距 .20em → .06em、全形空格 1em → .3em。
@@ -1498,6 +1505,31 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         在 376px 以上會撞到 11.5px 的上限，字因此相對照片變小、變安全；
         376 以下才是「相對最大」的狀態。所以 375 是最壞情況，
         在那裡過關的數字，320～376 全部同比例過關，376 以上只會更寬鬆。 */
+  /* ---- Ⓢ1／Ⓢ2：夾在現況與 Ⓜ1 之間（2026-08-10，使用者說「感覺應該在現況和 1 之間」）
+     這兩案的行高與首行間隔**維持現況的 1.75 / .55em**，只動兩件事：往下移多少、
+     以及為了往下移必須收多緊。所以它們讀起來就是「現況往下坐了一點」，
+     不是另一種排法。
+
+     字距不是挑的：對每一個位置去解「**還能不撞到房子的最鬆字距**」，
+     用二分法逼出來（右端留 8px、左端留 5px，餘裕按視窗寬等比例）。
+     全形空格跟著字距線性連動（.20em↔1em、.06em↔.3em），兩者一起放鬆／收緊。
+
+     375px 上的完整階梯，每一階都是「那個位置的極限」：
+
+       --m-top   字距     全形空格   和頁首的空隙
+       15.0vw    .193em   .97em      −2.9px   ← 現況（.20em/1em，等於已經在極限上）
+       16.5vw    .161em   .80em       2.7px
+       17.9vw    .131em   .65em       8.0px   ← Ⓢ1
+       19.0vw    .116em   .58em      12.1px
+       20.3vw    .106em   .53em      17.0px   ← Ⓢ2
+       21.5vw    .086em   .43em      21.5px
+       22.7vw    .061em   .30em      26.0px   ← Ⓜ1
+
+     這張表也回答了「為什麼現況一往下推就撞」：現況的字距 .20em 在原位就已經
+     用滿了額度（能過關的最鬆是 .193em），一往下走就沒有餘地。 */
+  html[data-m="s1"] { --m-top: 17.9vw; --m-ls: .13em;  --m-gap: .65em; --m-lh: 1.75; --m-lh3: 1.5; --m-lead: .55em; }
+  html[data-m="s2"] { --m-top: 20.3vw; --m-ls: .10em;  --m-gap: .5em;  --m-lh: 1.75; --m-lh3: 1.5; --m-lead: .55em; }
+
   html[data-m="m1"] { --m-top: 22.7vw; --m-ls: .06em; --m-gap: .3em; --m-lh: 1.85; --m-lh3: 1.5;  --m-lead: .65em; }
   html[data-m="m2"] { --m-top: 26.2vw; --m-ls: .10em; --m-gap: .4em; --m-lh: 1.85; --m-lh3: 1.45; --m-lead: .6em; }
   html[data-m="m3"] { --m-top: 21.4vw; --m-ls: .20em; --m-gap: .6em; --m-lh: 1.9;  --m-lh3: 1.5;  --m-lead: .65em; }
@@ -1517,7 +1549,14 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 /* ---- 切換條（提案頁專用）-------------------------------------------------- */
 .sw {
   position: fixed; left: 50%; transform: translateX(-50%); bottom: .8rem; z-index: 90;
-  display: flex; gap: .3rem; padding: .34rem .4rem; border-radius: 999px;
+  /* 七顆按鈕一列在手機上放不下 —— 讓它換行，並把圓角從 999px 收成 1rem，
+     不然第二列會被膠囊的弧線切掉。max-width 留兩側各 .6rem 的邊。 */
+  /* width: max-content 是必要的 —— fixed 定位的收縮寬度會被算成很窄的一條，
+     實測 375px 上只有 187px 寬、疊成四列。給了 max-content 之後它先用滿，
+     再由 max-width 決定要不要換行。 */
+  width: max-content; max-width: calc(100vw - 1.2rem);
+  flex-wrap: wrap; justify-content: center; row-gap: .25rem;
+  display: flex; gap: .3rem; padding: .34rem .4rem; border-radius: 1rem;
   background: rgba(25, 22, 20, .82); box-shadow: 0 6px 22px rgba(0, 0, 0, .34);
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   font-size: .74rem; letter-spacing: .02em;
@@ -2319,8 +2358,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 <!-- ---- 切換條。網址可帶 ?m=now|m1|m2|m3 與 &sky=1 -----------------------------
      正規式寫 [a-z0-9]+ 不寫 [a-z]+ —— 這個專案踩過：值一旦帶數字（m1、glass1）
      就比對失敗、悄悄退回預設，等於參數沒有作用。 -->
-<div class="sw" role="group" aria-label="手機版三案切換">
+<div class="sw" role="group" aria-label="手機版五案切換">
   <button type="button" data-v="now">現況</button>
+  <button type="button" data-v="s1">Ⓢ1 小</button>
+  <button type="button" data-v="s2">Ⓢ2 中</button>
   <button type="button" data-v="m1">Ⓜ1 收字距</button>
   <button type="button" data-v="m2">Ⓜ2 拆一二行</button>
   <button type="button" data-v="m3">Ⓜ3 全拆</button>
@@ -2332,7 +2373,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   var root = document.documentElement;
   var btns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-v]'));
   var skyBtn = document.querySelector('.sw button[data-sky]');
-  var ok = { now: 1, m1: 1, m2: 1, m3: 1 };
+  var ok = { now: 1, s1: 1, s2: 1, m1: 1, m2: 1, m3: 1 };
 
   function sync(push) {
     var u = new URL(location.href);
