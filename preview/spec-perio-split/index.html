@@ -18,7 +18,12 @@
      彩度上限壓在色域 75%，不然越往藍走 HSL 彩度會飆到像網頁藍。 */
   /* 已定：贋復＝藍紫那一輪的 Ⓑ；牙周＝矯正提亮那一輪的 Ⓒ */
   --prosth:#335b8b; --prosth-line:#244368;   /* h 273　白字 6.98・字對紙 7.98 */
-  --perio:#39799a;                            /* h 247　白字 4.80（＝矯正 Ⓒ） */
+  /* 牙周套色六案：Ⓐ Ⓑ Ⓒ 是矯正提亮那一輪（h 247~249）；
+     Ⓧ Ⓨ Ⓩ 是使用者給的 #3496F2（h 273.5）收下來的三階。 */
+  --pA:#426276; --pB:#3f6d88; --pC:#39799a;
+  --pX:#4478b5; --pY:#496fa1; --pZ:#4c678f;
+  --src:#3496F2;                              /* 使用者給的原值 */
+  --perio:#39799a;
   /* 牙周的深階三案：套色 L* 48.1 超過紙上當字的 43.4，一定要另開。
      ⚠ 這一階和矯正現行 #3C596B 同色相，越淺越撞 —— 切換條在比的就是這個。 */
   --o0:#235067; --o1:#1e465b; --o2:#193d4f;
@@ -137,11 +142,13 @@ code{font-family:var(--mono);font-size:.9em}
 
 /* ---- 切換條 ---------------------------------------------------------- */
 .switcher{position:fixed;left:50%;transform:translateX(-50%);bottom:.7rem;z-index:9;
+          flex-direction:column;align-items:stretch;
           background:rgba(244,244,245,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
           border:1px solid var(--rule);border-radius:14px;padding:.45rem .55rem;
-          display:flex;align-items:center;gap:.3rem;box-shadow:0 4px 20px rgba(0,0,0,.18);
-          width:max-content;max-width:calc(100vw - 1.4rem)}
-.switcher .glbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.04em;color:var(--ink-soft);flex:0 0 auto}
+          display:flex;gap:.3rem;box-shadow:0 4px 20px rgba(0,0,0,.18);
+          width:min(calc(100vw - 1.4rem), 24rem)}
+.switcher .grp{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:.26rem}
+.switcher .glbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.04em;color:var(--ink-soft);flex:0 0 auto;width:2.1rem}
 .switcher .opt{position:relative;flex:0 0 auto;display:flex;align-items:center;gap:.32rem;
                padding:.26rem .5rem;border-radius:8px;border:1px solid rgba(42,44,39,.18);
                background:var(--c);color:#fff;cursor:pointer;-webkit-user-select:none;user-select:none;
@@ -150,10 +157,22 @@ code{font-family:var(--mono);font-size:.9em}
 .switcher .opt:has(input:checked){box-shadow:0 0 0 2px var(--ink)}
 .switcher .opt:has(input:focus-visible){outline:2px solid var(--teal);outline-offset:3px}
 
+body:has(#fA:checked){--pick:var(--pA)}
+body:has(#fB:checked){--pick:var(--pB)}
+body:has(#fC:checked){--pick:var(--pC)}
+body:has(#fX:checked){--pick:var(--pX)}
+body:has(#fY:checked){--pick:var(--pY)}
+body:has(#fZ:checked){--pick:var(--pZ)}
 body:has(#o0:checked){--deep:var(--o0)}
 body:has(#o1:checked){--deep:var(--o1)}
 body:has(#o2:checked){--deep:var(--o2)}
-#rn::before,#ro::before{content:"—"}
+#rf::before,#rn::before,#ro::before{content:"—"}
+body:has(#fA:checked) #rf::before{content:"套色 Ⓐ #426276　L* 39.9　白字 6.48　對白/對黑 6.48 / 3.24"}
+body:has(#fB:checked) #rf::before{content:"套色 Ⓑ #3f6d88　L* 43.9　白字 5.59　對白/對黑 5.59 / 3.75"}
+body:has(#fC:checked) #rf::before{content:"套色 Ⓒ #39799a　L* 48.1　白字 4.80　對白/對黑 4.80 / 4.38（差 0.42）"}
+body:has(#fX:checked) #rf::before{content:"套色 Ⓧ #4478b5　L* 49.5　白字 4.57　對白/對黑 4.57 / 4.60（差 0.03）　ΔE 對贋復Ⓑ 13.3"}
+body:has(#fY:checked) #rf::before{content:"套色 Ⓨ #496fa1　L* 46.1　白字 5.16　ΔE 對贋復Ⓑ 8.2 ✗"}
+body:has(#fZ:checked) #rf::before{content:"套色 Ⓩ #4c678f　L* 43.1　白字 5.76　ΔE 對贋復Ⓑ 7.7 ✗"}
 body:has(#o0:checked) #rn::before{content:"Ⓐ L* 32（正常落差，但撞矯正）"}
 body:has(#o1:checked) #rn::before{content:"Ⓑ L* 28"}
 body:has(#o2:checked) #rn::before{content:"Ⓒ L* 24（離矯正最遠）"}
@@ -188,6 +207,46 @@ tr.base td{color:var(--ink-soft)}
     <p><b>而且牙周非開深階不可</b>：套色 L* 48.1 超過「當字疊在紙上」的天花板 43.4。<b>那個深階會落在矯正頭上</b> —— 正常的落差（L* 32，比套色深 16）對矯正只有 <b>ΔE 6.4</b>，等於出局線。</p>
     <p class="soft">所以下面切換條在比的是：<b>牙周的深階要壓多深才閃得開矯正</b>。代價是兩階落差會變得很大（現役最大的是顯微根管 15.1）。</p>
   </div>
+
+  <section>
+    <h2>使用者給的藍 <code>#3496F2</code></h2>
+
+    <div class="note warn">
+      <p><b>先更正一件事：這個藍量下來不是「白底黑底一樣」。</b>對白只有 <b>3.09</b>、對黑 <b>6.79</b>，差 3.70 —— 它其實明顯偏向<b>深底</b>那一邊。<b>白字疊上去 3.09，不到 4.5，不能當套色用。</b></p>
+      <p><b>真正「白黑等效」的是一條亮度線：L* 49.4，兩邊都剛好 4.58:1</b>（和色相彩度無關，只跟明度有關）。<code>#3496F2</code> 是 L* 60.7，比那條線高 11 階。</p>
+      <p class="soft">你的直覺「會太搶戲太亮」也量得出來：L* 60.7 <b>比七科全部都亮</b>（最亮的兒牙是 59.5），彩度 54.1 排第二，而且吃到色域的 <b>91%</b>。</p>
+    </div>
+
+    <div class="note ok">
+      <p><b>意外的發現：你已經挑的 Ⓒ <code>#39799a</code> 幾乎就是那條線。</b>對白 4.80、對黑 4.38，<b>差只有 0.42</b>。Ⓐ 是 3.24、Ⓑ 是 1.84 —— <b>Ⓒ 本來就是三案裡唯一有這個特性的</b>。</p>
+    </div>
+
+    <h3>把它收下來：Ⓧ Ⓨ Ⓩ</h3>
+    <p class="small">色相鎖在它自己的 273.5，亮度與彩度一起往下收。</p>
+
+    <div class="quad">
+      <div class="q" style="--c:var(--src)"><div class="band"><span>原</span></div><div class="t">
+        <span class="n">#3496F2</span><span class="v">L* 60.7　C* 54.1<br>佔色域 91%<br>白字 3.09 ✗</span></div></div>
+      <div class="q" style="--c:var(--pX)"><div class="band"><span>Ⓧ</span></div><div class="t">
+        <span class="n">收到等效線</span><span class="v">#4478b5<br>L* 49.5　74%<br>對白/黑 4.57/4.60</span></div></div>
+      <div class="q" style="--c:var(--pY)"><div class="band"><span>Ⓨ</span></div><div class="t">
+        <span class="n">收一階</span><span class="v">#496fa1<br>L* 46.1　65%<br>白字 5.16</span></div></div>
+      <div class="q" style="--c:var(--pZ)"><div class="band"><span>Ⓩ</span></div><div class="t">
+        <span class="n">收兩階</span><span class="v">#4c678f<br>L* 43.1　55%<br>白字 5.76</span></div></div>
+      <div class="q" style="--c:var(--prosth)"><div class="band"><span>撞</span></div><div class="t">
+        <span class="n">贋復 Ⓑ・你剛選的</span><span class="v">#335b8b<br>h 273.2<br><b>同一個色相</b></span></div></div>
+      <div class="q" style="--c:var(--pC)"><div class="band"><span>Ⓒ</span></div><div class="t">
+        <span class="n">現在牙周用的</span><span class="v">#39799a<br>h 247.2<br>差 0.42</span></div></div>
+    </div>
+
+    <div class="note warn">
+      <p><b>⚠ 這一段是關鍵：<code>#3496F2</code> 的色相是 273.5，你剛選的贋復 Ⓑ 是 273.2 —— 同一支。</b></p>
+      <p>所以把它收暗就是往贋復身上走：<b>ΔE 對贋復 Ⓑ，Ⓧ 13.3、Ⓨ 8.2、Ⓩ 7.7</b>（家族最近的一對是 16.1，硬性出局線 6.1）。<b>Ⓨ 與 Ⓩ 出局</b>，只有最亮的 Ⓧ 勉強站得住，而它仍低於家族水準。</p>
+      <p class="soft">換贋復也救不了：Ⓧ 對贋復 Ⓐ(h280) 14.1、對現行(h287) 15.8 —— 都還是低於 16.1。<b>這支色相就是被贋復佔著。</b></p>
+    </div>
+  </section>
+
+  <hr>
 
   <!-- ===================== 深階三案 ===================== -->
   <section>
@@ -394,11 +453,22 @@ tr.base td{color:var(--ink-soft)}
 
 </div>
 
-<div class="switcher" role="radiogroup" aria-label="牙周深階三案">
-  <span class="glbl">牙周深階</span>
-  <label class="opt" style="--c:var(--o0)">Ⓐ<input type="radio" name="o" id="o0" value="0"></label>
-  <label class="opt" style="--c:var(--o1)">Ⓑ<input type="radio" name="o" id="o1" value="1" checked></label>
-  <label class="opt" style="--c:var(--o2)">Ⓒ<input type="radio" name="o" id="o2" value="2"></label>
+<div class="switcher">
+  <div class="grp" role="radiogroup" aria-label="牙周套色">
+    <span class="glbl">套色</span>
+    <label class="opt" style="--c:var(--pA)">Ⓐ<input type="radio" name="f" id="fA" value="A"></label>
+    <label class="opt" style="--c:var(--pB)">Ⓑ<input type="radio" name="f" id="fB" value="B"></label>
+    <label class="opt" style="--c:var(--pC)">Ⓒ<input type="radio" name="f" id="fC" value="C" checked></label>
+    <label class="opt" style="--c:var(--pX)">Ⓧ<input type="radio" name="f" id="fX" value="X"></label>
+    <label class="opt" style="--c:var(--pY)">Ⓨ<input type="radio" name="f" id="fY" value="Y"></label>
+    <label class="opt" style="--c:var(--pZ)">Ⓩ<input type="radio" name="f" id="fZ" value="Z"></label>
+  </div>
+  <div class="grp" role="radiogroup" aria-label="牙周深階">
+    <span class="glbl">深階</span>
+    <label class="opt" style="--c:var(--o0)">Ⓐ<input type="radio" name="o" id="o0" value="0"></label>
+    <label class="opt" style="--c:var(--o1)">Ⓑ<input type="radio" name="o" id="o1" value="1" checked></label>
+    <label class="opt" style="--c:var(--o2)">Ⓒ<input type="radio" name="o" id="o2" value="2"></label>
+  </div>
 </div>
 
 <script>
