@@ -17,7 +17,10 @@
   /* 贋復假牙：亮度不動（套色 L*38.0、深階 L*27.9），只把色相從 287 往藍拉。
      彩度上限壓在色域 75%，不然越往藍走 HSL 彩度會飆到像網頁藍。 */
   /* 已定：贋復＝藍紫那一輪的 Ⓑ；牙周＝矯正提亮那一輪的 Ⓒ */
-  --prosth:#335b8b; --prosth-line:#244368;   /* h 273　白字 6.98・字對紙 7.98 */
+  --prosth:#335b8b;                          /* 贋復 Ⓑ 套色，h 273 */
+  /* 贋復白底字三案：現行 ＋ 往下探兩階。深階下探會鬆開牙周的位置。 */
+  --pl0:#244368; --pl1:#1d3858; --pl2:#182f4b;
+  --prosth-line:#244368;
   /* 牙周套色六案：Ⓐ Ⓑ Ⓒ 是矯正提亮那一輪（h 247~249）；
      Ⓧ Ⓨ Ⓩ 是使用者給的 #3496F2（h 273.5）收下來的三階。 */
   --pA:#426276; --pB:#3f6d88; --pC:#39799a;
@@ -167,10 +170,16 @@ body:has(#fC:checked){--pick:var(--pC)}
 body:has(#fX:checked){--pick:var(--pX)}
 body:has(#fY:checked){--pick:var(--pY)}
 body:has(#fZ:checked){--pick:var(--pZ)}
+body:has(#q0:checked){--prosth-line:var(--pl0)}
+body:has(#q1:checked){--prosth-line:var(--pl1)}
+body:has(#q2:checked){--prosth-line:var(--pl2)}
 body:has(#o0:checked){--deep:var(--o0)}
 body:has(#o1:checked){--deep:var(--o1)}
 body:has(#o2:checked){--deep:var(--o2)}
-#rf::before,#rn::before,#ro::before{content:"—"}
+#rf::before,#rn::before,#ro::before,#rq::before{content:"—"}
+body:has(#q0:checked) #rq::before{content:"贋復白底字 現行 #244368　L* 27.8　落差 10.1　對紙 7.98　│ 對牙周 Ⓡ 0.7 ✗ Ⓟ 11.1 Ⓠ 11.7"}
+body:has(#q1:checked) #rq::before{content:"贋復白底字 Ⓓ1 #1d3858　L* 23.0　落差 15.0　對紙 9.43　│ 對牙周 Ⓡ 5.9 ✗ Ⓟ 9.3 Ⓠ 10.9"}
+body:has(#q2:checked) #rq::before{content:"贋復白底字 Ⓓ2 #182f4b　L* 18.9　落差 19.0　對紙 10.72　│ 對牙周 Ⓡ 10.5 ✓ Ⓟ 10.3 Ⓠ 12.4"}
 body:has(#o0:checked) #rn::before{content:"Ⓡ 同色相 h273（撞贋復）"}
 body:has(#o1:checked) #rn::before{content:"Ⓟ h252（最平衡）"}
 body:has(#o2:checked) #rn::before{content:"Ⓠ h248（貼矯正那一支）"}
@@ -289,6 +298,42 @@ tr.base td{color:var(--ink-soft)}
 
   <hr>
 
+  <section>
+    <h2>贋復的白底字往下探：Ⓓ1 Ⓓ2</h2>
+    <p class="small">色相鎖 273.2、彩度照色域比例（75%），只往下降亮度。<b>贋復的套色 <code>#335b8b</code> 不動。</b></p>
+
+    <div class="quad">
+      <div class="q now" style="--c:var(--pl0)"><div class="band"><span>現</span></div><div class="t">
+        <span class="n">現行</span><span class="v">#244368<br>L* 27.8　落差 10.1<br>對紙 7.98</span></div></div>
+      <div class="q" style="--c:var(--pl1)"><div class="band"><span>Ⓓ1</span></div><div class="t">
+        <span class="n">深一階</span><span class="v">#1d3858<br>L* 23.0　落差 15.0<br>對紙 9.43</span></div></div>
+      <div class="q" style="--c:var(--pl2)"><div class="band"><span>Ⓓ2</span></div><div class="t">
+        <span class="n">深兩階</span><span class="v">#182f4b<br>L* 18.9　落差 19.0<br>對紙 10.72</span></div></div>
+      <div class="q" style="--c:#252d4a"><div class="band"><span>源</span></div><div class="t">
+        <span class="n">茶室磁磚原值</span><span class="v">#252d4a<br>L* 19.1<br>Ⓓ2 幾乎回到它</span></div></div>
+      <div class="q" style="--c:var(--o0)"><div class="band"><span>Ⓡ</span></div><div class="t">
+        <span class="n">牙周・同色相</span><span class="v">#244369<br>L* 28.0<br>被擠掉的那個</span></div></div>
+      <div class="q" style="--c:var(--o1)"><div class="band"><span>Ⓟ</span></div><div class="t">
+        <span class="n">牙周・你選的</span><span class="v">#1e4156<br>L* 26.0　h 252</span></div></div>
+    </div>
+
+    <div class="note ok">
+      <p><b>贋復深階往下探，會把牙周的位置鬆開 —— 而且鬆得最多的是 Ⓡ。</b></p>
+      <p>ΔE 對牙周三案：<br>
+      現行 27.8 → Ⓡ <b>0.7 ✗</b>　Ⓟ 11.1　Ⓠ 11.7<br>
+      Ⓓ1 23.0 → Ⓡ <b>5.9 ✗</b>　Ⓟ 9.3　Ⓠ 10.9<br>
+      Ⓓ2 18.9 → Ⓡ <b>10.5 ✓</b>　Ⓟ 10.3　Ⓠ 12.4</p>
+      <p><b>選 Ⓓ2 之後 Ⓡ 就活了</b> —— 那代表牙周可以回到「兩階同色相」，和其餘六科一樣（Ⓟ Ⓠ 都要歪 21°~25°）。<b>這是這一整輪唯一能把牙周救回標準結構的路。</b></p>
+    </div>
+
+    <div class="note">
+      <p><b>Ⓓ2 <code>#182f4b</code> 是 L* 18.9 —— 幾乎剛好回到茶室磁磚原值 <code>#252d4a</code> 的 19.1。</b>贋復的字階等於繞了一圈回到它自己的出處。</p>
+      <p class="soft">代價：對卡 12.35，字會很接近墨色，讀起來偏「深藍黑」而不是藍；兩階落差 19.0（現役最大是顯微根管 15.1）。<b>切到 Ⓓ2 看文章內頁那段的 h3 與連結，那是最看得出來的地方。</b></p>
+    </div>
+  </section>
+
+  <hr>
+
   <!-- ===================== 標籤 ===================== -->
   <section>
     <h2>和其他六科放在一起</h2>
@@ -360,7 +405,7 @@ tr.base td{color:var(--ink-soft)}
         </div>
       </div>
 
-      <p class="readout"><span id="ro"></span></p>
+      <p class="readout"><span id="ro"></span><span id="rq"></span></p>
     </div>
 
     <div class="stage on-paper">
@@ -475,6 +520,12 @@ tr.base td{color:var(--ink-soft)}
     <label class="opt" style="--c:var(--pX)">Ⓧ<input type="radio" name="f" id="fX" value="X" checked></label>
     <label class="opt" style="--c:var(--pY)">Ⓨ<input type="radio" name="f" id="fY" value="Y"></label>
     <label class="opt" style="--c:var(--pZ)">Ⓩ<input type="radio" name="f" id="fZ" value="Z"></label>
+  </div>
+  <div class="grp" role="radiogroup" aria-label="贋復白底字">
+    <span class="glbl">贋復字</span>
+    <label class="opt" style="--c:var(--pl0)">現<input type="radio" name="q" id="q0" value="0" checked></label>
+    <label class="opt" style="--c:var(--pl1)">Ⓓ1<input type="radio" name="q" id="q1" value="1"></label>
+    <label class="opt" style="--c:var(--pl2)">Ⓓ2<input type="radio" name="q" id="q2" value="2"></label>
   </div>
   <div class="grp" role="radiogroup" aria-label="牙周深階">
     <span class="glbl">深階</span>
