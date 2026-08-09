@@ -7,28 +7,34 @@
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>窄帶三格的間距：現況 vs 定案 4rem｜芳仁牙醫（提案）</title>
+<title>窄帶三格的間距 4rem — 定稿紀錄｜芳仁牙醫</title>
 <meta name="robots" content="noindex, nofollow, noarchive">
 <!-- ============================================================================
-     這一頁是什麼（2026-08-10）
+     這一頁是什麼（2026-08-10，已定案上線）
      ----------------------------------------------------------------------------
      只為了看一件事：**窄帶裡「1983／9／6」三格的左右內距**。
 
-     index.html 裡同一個屬性被寫了兩次，權重相同、後面的贏：
+     起因：index.html 裡同一個屬性被寫了兩次，權重相同（都是 0,0,2）、後面的贏：
        .stats li { padding-inline: 4rem; }                        ← 2026-08-07 的定案
        .stats li { position: relative; padding-inline: 1.9rem; }  ← 舊值，排在後面
-     所以線上一直跑的是**當初被淘汰的 1.9rem**，那條 4rem 從來沒生效過。
+     所以從定案那天起，線上跑的一直是**當初被淘汰的 1.9rem**，整整三天沒人發現。
+     2026-08-10 使用者看過這一頁之後說「4rem 定案上線」，已經修好 ——
+     修法是**把 1.9rem 那一份的 padding-inline 刪掉**，讓原本那條 4rem 接手，
+     正式站沒有留下任何 !important。
 
-     這一頁把 4rem 用 !important 補回來（只在 ≥721px），右下角可以切回現況比較。
-     ⚠ **這只是提案頁的做法。** 真的要修的話是把 1.9rem 那一份的 padding-inline
-        拿掉、讓原本那條 4rem 接手，**不是加 !important**。
+     兩案的實測（1440）：
+                  三格那一組   文字之間   離右邊地址電話
+       現況 1.9rem     330.1      60.8         152.9
+       定案 4rem       531.7     128.0          85.6
+     窄帶本身 1425×84 兩案完全相同 —— 變寬的是裡面那一組，不是窄帶。
+     三格的中軸 712.5 ＝ 版心中軸，兩案都沒動。手機完全不受影響（自己一套規則）。
 
-     和正式站的差異只有四處：
+     這一頁是**定稿後的紀錄**，就是正式站的複本、沒有任何覆寫。
+     和正式站的差異只有三處：
        1. <title> ＋ noindex ＋ 這段註解
        2. 資產路徑改成絕對路徑 /assets/…（提案頁在子目錄）
        3. 拿掉 counter.js，瀏覽數改成寫死的示範值 190
           （不拿掉的話每開一次提案頁就幫首頁的真實計數 +1）
-       4. 多了 body[data-p] 那一條與右下角的切換條
      ============================================================================ -->
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
@@ -541,13 +547,17 @@ html.scrolled .brand-text small { font-size: .74rem; }
    以及「各佔版心三分之一」—— 那是手機 390px 上排不下才用的辦法，
    搬到 1160px 的版心會拉得太開，三格之間的關係就散了。
 
-   ⚠⚠ **這一行目前沒有生效**（2026-08-10 量到，尚未處理，先記錄）。
-   下面第 536 行的 `.stats li { position: relative; padding-inline: 1.9rem; … }`
-   權重相同（都是 0,0,2）而且排在後面，所以贏 —— 實測 1440 上算出來的內距是
-   30.4px（1.9rem），不是 64px（4rem），三格的方塊只有 330.1px 寬而不是 531.7px。
-   也就是說**線上現在跑的是被淘汰的那個 1.9rem**。
-   要修只要把 1.9rem 那一份的 padding-inline 拿掉（讓這一行接手）即可，
-   但那會讓首頁窄帶明顯變寬，是看得見的改動 —— 使用者還沒看過，所以先不動。 */
+   ⚠⚠ **這一行從 2026-08-07 定案起整整三天沒有生效，2026-08-10 才修好。**
+   原因：下面那條 `.stats li { position: relative; … }` 裡也寫了一次
+   `padding-inline: 1.9rem`，權重相同（都是 0,0,2）又排在後面，所以贏 ——
+   實測 1440 上算出來的內距是 30.4px、三格只有 330.1px 寬，
+   **線上一直跑的是當初被淘汰的那個 1.9rem**。
+   修法是把下面那一份的 padding-inline 刪掉，讓這一行接手（已完成）。
+   ⚠ **不要在下面那條規則裡再寫一次 padding-inline** —— 這個屬性在這一份
+      樣式表裡只准出現在這一行。要調間距就改這裡的 4rem。
+   修好之後的實測（1440）：三格 531.7px、文字之間 128px、
+   離右邊地址電話那一組 85.6px。窄帶本身 1425×84 沒變，三格中軸 712.5 也沒動。
+   兩案的對照留在 preview/band-stats-gap/。 */
 .stats li { padding-inline: 4rem; }
 
 /* 2026-08-07：窄帶改回手機版的排法 —— **兩列、置中**，瀏覽數在 1983／9／6 上面。
@@ -562,8 +572,11 @@ html.scrolled .brand-text small { font-size: .74rem; }
   gap: .6rem; min-height: var(--band-h);
 }
 .stats { display: flex; align-items: center; justify-content: center; margin: 0; padding: 0; list-style: none; }
+/* ⚠ 這裡**刻意沒有 padding-inline**（2026-08-10 拿掉的）。左右內距只由上面那一行
+   `.stats li { padding-inline: 4rem; }` 決定 —— 兩邊都寫的話權重相同、後面的贏，
+   上面那條定案就會被悄悄蓋掉，整整三天沒人發現。不要再加回來。 */
 .stats li {
-  position: relative; padding-inline: 1.9rem; line-height: 1; text-align: center;
+  position: relative; line-height: 1; text-align: center;
 }
 /* 分隔線用絕對定位的偽元素，不用 border —— border 會算進 box 寬度，
    第一格沒有、後兩格有，三格就不等寬了。和手機版同一個做法。 */
@@ -740,27 +753,24 @@ html.scrolled .brand-text small { font-size: .74rem; }
   position: absolute; right: 0; bottom: 15.18px;
   display: flex; flex-direction: row; align-items: center; gap: 1.9rem;
 }
-/* 間距 1.9rem（30.4px）也是量出來的。1440 上（正式站實測）：
-     「部定專科」那幾個字的右緣　847.1
+/* 間距 1.9rem（30.4px）也是量出來的。1440 上（三格的 4rem 修好之後實測）：
+     「部定專科」那幾個字的右緣　914.4
      整組的左緣　　　　　　　　1000.0（右緣貼版心外緣 1292.5，整組寬 292.5）
-   → 和「部定專科」之間留得住 **152.9px**，而群內只有 30.4px ——
-   **群內 30 << 群外 153**，兩項才讀成一組、不會被當成第四、五格。
-   ⚠ 提案頁 preview/hero-contact/ 上這個數字是 86.9px，不是頁面做錯，是因為那一頁
-      的三格吃到了 4rem 的「拉開」（方塊 531.7px），而正式站上面那條 4rem 被
-      1.9rem 蓋掉了（見 .stats li 那一段的 ⚠⚠）。**哪天把 4rem 修回來，
-      群外就會從 153 收成 87** —— 仍然遠大於群內的 30，這一組不必跟著改。 */
+   → 和「部定專科」之間留得住 **85.6px**，而群內只有 30.4px ——
+   **群內 30 < 群外 86**，兩項才讀成一組、不會被當成第四、五格。
+   （2026-08-10 上午三格還是被蓋掉的 1.9rem，那時群外量到 152.9px；
+     下午把 4rem 修回來之後收成 85.6px —— 仍然遠大於群內的 30，這一組沒有跟著改。） */
 
 /* ---- 版心縮不滿 1160 就改回兩行 ------------------------------------------
    上面那 153px 的餘裕是版心滿寬時才有的：版心一跟著視窗縮，右邊的空間就開始掉
    （三格是置中的，視窗每少 2px，右邊只少 1px，但整組的右緣是跟著視窗走的）。
    一行整組要 292.5px，兩行只要 172px、一路都放得下。
 
-   斷點取 **1160 ＝ 版心的寬度**，也就是「版心不再滿寬」的那一刻。這是刻意取的，
-   不是算出來的臨界點：
-     ・照 4rem「拉開」的定案幾何（三格 531.7px），臨界點正好落在 1160 附近。
-     ・照現在實際跑的 1.9rem 幾何（三格 330.1px），其實撐到約 909px 才會壓到字。
-   取 1160 在兩種幾何下都安全，而且它本身是這個站的骨架尺寸、不是一個湊出來的數字。
-   代價是 909~1160 之間會比需要的早一步變成兩行 —— 可以接受。
+   斷點取 **1160 ＝ 版心的寬度**，也就是「版心不再滿寬」的那一刻。
+   三格的 4rem 修好之後（2026-08-10 下午），臨界點本來就落在 1160 附近，
+   所以這個斷點現在是名副其實的 —— 而且它同時是這個站的骨架尺寸，不是湊出來的。
+   （修好之前三格只有 330.1px，其實能撐到約 909px；那時取 1160 是保守，
+     現在不再是保守而是剛好。）
 
    兩行版有它自己非做不可的一件事：**「雲」和「0」要切齊、兩顆圖示也要切齊**。
    做法整套照搬頁尾那條「溝」：左邊留一條固定寬度的溝，圖示置中在溝裡，
@@ -1745,34 +1755,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    會落回手機版型而不是這一段（720 是 max-width: 720px 的邊界，含）。
    那個結果也還可以看，所以不另外處理。
    ========================================================================== */
-/* ==========================================================================
-   提案：把 2026-08-07 定案的 4rem「拉開」補回來（2026-08-10）
-   --------------------------------------------------------------------------
-   ⚠ 一定要關在 `min-width: 721px` 裡面。手機有自己的一套（三格各佔三分之一、
-      內距 .5rem），那是 390px 上排不下才用的辦法；這條 body[data-p] 的權重
-      （0,2,0）比手機那條 `.stats li`（0,0,2）高，不關起來會**連手機一起改掉**。
-   ⚠ !important 只是提案頁為了蓋掉後面那條 1.9rem 的臨時手段。
-      真的要修是**把 1.9rem 那一份的 padding-inline 刪掉**，不是加 !important。 */
-@media (min-width: 721px) {
-  body[data-p="wide"] .stats li { padding-inline: 4rem !important; }
-  body[data-p="now"]  .stats li { padding-inline: 1.9rem !important; }
-}
-
-/* ---- 切換條（比較用）---------------------------------------------------- */
-.sw {
-  position: fixed; right: 1rem; bottom: 1rem; z-index: 60;
-  display: flex; align-items: center; gap: .4rem;
-  background: rgba(25, 22, 20, .86); border-radius: 999px; padding: .4rem .5rem;
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-}
-.sw span { font-size: .68rem; color: rgba(255,255,255,.6); padding-inline: .4rem; }
-.sw button {
-  font: inherit; font-size: .74rem; line-height: 1;
-  padding: .42rem .8rem; border-radius: 999px; cursor: pointer;
-  border: 1px solid rgba(255,255,255,.32); background: transparent; color: rgba(255,255,255,.82);
-}
-.sw button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
-
 @media (min-width: 721px) and (max-aspect-ratio: 2 / 3) {
   .hero-photo { height: 62svh; }
   .hero-poem { font-size: clamp(15px, 1.15svh, 24px); }
@@ -1801,8 +1783,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 </style>
 </head>
-<!-- 預設開 4rem（就是你要看的那個）。切到「現況」可以比較。 -->
-<body data-p="wide">
+<body>
 
 
 <a class="skip-link" href="#main">跳到主要內容</a>
@@ -2598,34 +2579,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      窄帶的數字停在提案頁的示範值 8642、六張文章卡的數字則一直是「—」。
      文章頁一直都有掛，所以只有首頁壞掉。 -->
 <!-- ⚠ 計數器那支 script 在這一份提案頁裡是刻意拿掉的：data-views-self="home"
-     會對 /api/views 送 POST，等於每開一次提案頁就幫首頁的真實瀏覽數 +1。 -->
-
-<div class="sw" role="group" aria-label="三格間距兩案">
-  <span>三格間距</span>
-  <button type="button" data-set="wide" aria-pressed="true">4rem（定案）</button>
-  <button type="button" data-set="now" aria-pressed="false">1.9rem（現況）</button>
-</div>
-
-<script>
-/* 切換條。網址可帶 ?p=wide|now。
-   ⚠ 正規式寫 [a-z0-9]+ 不是 [a-z]+ —— 值裡有數字時比對會失敗，然後悄悄退回預設。 */
-(function () {
-  var VALS = ['wide', 'now'];
-  var hit = /[?&]p=([a-z0-9]+)/.exec(location.search);
-  var cur = (hit && VALS.indexOf(hit[1]) >= 0) ? hit[1] : 'wide';
-  function set(v) {
-    document.body.setAttribute('data-p', v);
-    document.querySelectorAll('.sw button').forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b.dataset.set === v));
-    });
-    history.replaceState(null, '', location.pathname + '?p=' + v);
-  }
-  set(cur);
-  document.querySelectorAll('.sw button').forEach(function (b) {
-    b.addEventListener('click', function () { set(b.dataset.set); });
-  });
-})();
-</script>
+     會對 /api/views 送 POST，等於每開一次提案頁就幫首頁的真實瀏覽數 +1。
+     正式站的 index.html 有這一支，不要以為它漏了。 -->
 
 </body>
 </html>
