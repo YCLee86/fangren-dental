@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>口腔外科改靛／紫 — 五案｜芳仁牙醫診所</title>
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<style>
+/* 自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
+   顏色全部寫死、只有一個主題 —— 這一頁的對比數字都是對紙 #e2e5e6 與卡 #f4f4f5 量的，
+   換到暗底那些數字就不成立，等於把證據畫錯。 */
+:root{
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  --ink:#2a2c27; --ink-soft:#5c5f57; --teal:#214D48;
+
+  /* 現役六科 */
+  --kids:#c28229; --endo:#5D6D55; --chair:#4f6361; --ortho:#3C596B; --prosth:#252d4a;
+  --taupe:#7D5A58; --all:#5f5d5c;
+
+  --han:"PingFang TC","Noto Sans TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--han);font-size:17px;line-height:1.85}
+.wrap{max-width:44rem;margin:0 auto;padding:2.6rem 1.2rem 4rem;display:flex;flex-direction:column;gap:2.4rem}
+
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+h1{font-size:1.9rem;line-height:1.4;letter-spacing:.04em;text-wrap:balance}
+h2{font-size:1.18rem;letter-spacing:.05em;line-height:1.55;text-wrap:balance}
+h3{font-size:1rem;letter-spacing:.04em}
+p{text-wrap:pretty}
+.lead{font-size:1.04rem}
+.small{font-size:.89rem;line-height:1.75;color:var(--ink-soft)}
+.soft{color:var(--ink-soft)}
+section{display:flex;flex-direction:column;gap:1rem}
+.head{display:flex;flex-direction:column;gap:.65rem}
+hr{border:0;border-top:1px solid var(--rule)}
+code{font-family:var(--mono);font-size:.9em}
+
+blockquote{border-left:3px solid var(--taupe);padding:.1rem 0 .1rem 1rem;font-size:1.02rem}
+blockquote cite{display:block;font-style:normal;margin-top:.35rem;font-size:.86rem;color:var(--ink-soft)}
+
+.note{background:var(--card);border:1px solid var(--rule);border-radius:12px;
+      padding:1rem 1.1rem;font-size:.92rem;line-height:1.8;display:flex;flex-direction:column;gap:.5rem}
+.note.warn{border-left:3px solid var(--taupe)}
+.note.ok{border-left:3px solid var(--teal)}
+
+/* ---- 三個真實元件（規格照 PALETTE 六之二） ---------------------------- */
+.pill{display:inline-block;background:var(--c);color:#fff;
+      font-size:11.5px;line-height:1.6;letter-spacing:.05em;padding:.16rem .6rem;border-radius:8px}
+.chip{display:inline-block;font-size:13px;line-height:1.6;letter-spacing:.04em;
+      padding:.34rem .85rem;border-radius:12px;
+      background:var(--card);color:var(--deep,var(--c));border:1px solid var(--deep,var(--c))}
+.chip.on{background:var(--c);color:#fff;border-color:var(--c)}
+.tag{display:inline-block;font-size:12px;line-height:1.6;letter-spacing:.04em;
+     padding:.19rem .6rem;border-radius:8.5px;
+     background:var(--card);color:var(--deep,var(--c));border:1px solid var(--deep,var(--c))}
+
+/* ---- 五案 ------------------------------------------------------------ */
+.cases{display:flex;flex-direction:column;gap:1rem}
+.case{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--c);
+      border-radius:12px;padding:1.05rem 1.1rem 1.15rem;display:flex;flex-direction:column;gap:.8rem}
+.case-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem .75rem}
+.case-head b{font-size:1.04rem;letter-spacing:.05em}
+.case-head .hex{font-family:var(--mono);font-size:.82rem;color:var(--ink-soft)}
+.case.out{opacity:.72}
+.case.out .case-head b::after{content:"　出局";color:var(--ink-soft);font-weight:400;font-size:.85rem}
+
+.parts{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem .7rem}
+.parts .lbl{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--ink-soft);
+             width:100%;margin-top:.15rem}
+.metrics{display:flex;flex-wrap:wrap;gap:.15rem 1.1rem;font-family:var(--mono);font-size:.76rem;
+         color:var(--ink-soft);font-variant-numeric:tabular-nums}
+
+/* ---- 並排比較 -------------------------------------------------------- */
+.picker{display:flex;flex-wrap:wrap;gap:.45rem}
+.picker button{font:inherit;font-size:13px;line-height:1.6;letter-spacing:.04em;cursor:pointer;
+  padding:.3rem .8rem;border-radius:12px;background:var(--card);color:var(--ink-soft);
+  border:1px solid var(--rule)}
+.picker button[aria-pressed="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.picker button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.row{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:1rem 1.1rem;
+     display:flex;flex-wrap:wrap;gap:.5rem .55rem;align-items:center}
+
+/* ---- 表 -------------------------------------------------------------- */
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
+caption{text-align:left;font-size:.85rem;color:var(--ink-soft);padding-bottom:.5rem;line-height:1.7}
+th,td{text-align:left;padding:.45rem .7rem .45rem 0;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--ink-soft);font-weight:400}
+td.num{font-family:var(--mono);font-size:.84rem}
+td.bad{color:var(--taupe);font-weight:700}
+td.best{font-weight:700}
+
+ol.rules{display:flex;flex-direction:column;gap:.8rem;padding-left:1.25rem}
+ol.rules b{display:block}
+dl.chain{display:grid;grid-template-columns:max-content 1fr;gap:.3rem .9rem;font-size:.95rem;line-height:1.75}
+dl.chain dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:var(--ink-soft);padding-top:.3em}
+
+.foot{font-size:.83rem;color:var(--ink-soft);line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <p class="eyebrow">提案中 · PALETTE.md 第六之九節 · 2026-08-09</p>
+    <h1>口腔外科改靛／紫</h1>
+    <p class="lead">五案。<b>現行的 <code>#7D5A58</code> 還是定案值，程式碼一行都沒動。</b></p>
+  </div>
+
+  <blockquote>
+    我感覺這個意象和目前顏色有點衝突（血色的意象似乎怪怪的），心裡覺得應該會是紫色或靛色（先有高技術門檻的專業感），再加入降低彩度或色相或其他方式達到支持、堅定、不喧賓的感覺。
+    <cite>—— 使用者，2026-08-09</cite>
+  </blockquote>
+
+  <hr>
+
+  <section>
+    <h2>血色那個意象站不住 —— 你是對的</h2>
+    <p>六之八節把外科寫成「被灰包住的紅」，理由是 Taupe 的色相 3 是色票裡最靠近正紅的一個。<b>那是從顏色反推意象，順序反了。</b></p>
+    <p>照你給的定位重推，這一科的病人真正付出的不是痛，是<b>風險</b>；診所給的也不是安撫，是<b>說明</b>。忍了很多年才來的中年人，要的不是被哄，是被說服。</p>
+    <dl class="chain">
+      <dt>對象</dt><dd>忍了很多年、終於決定處理的人</dd>
+      <dt>動作</dt><dd><b>交付</b></dd>
+      <dt>付出</dt><dd><b>風險</b>（聽懂之後自己承擔）</dd>
+      <dt>意象</dt><dd><b>鋪在四周的那塊布</b></dd>
+    </dl>
+    <div class="note ok">
+      <p><b>手術巾這個意象有依據，但要說得準確。</b>外科真正拿來對抗血色的是<b>藍綠與藍</b> —— 手術衣、手術巾用血的補色，是為了讓術者不留殘像、看得清楚。那個方向本身就證實了你的直覺：<b>外科的顏色不該是血，應該是外科自己用來抵銷血的那一端。</b></p>
+      <p class="soft">但那兩段色相在這套系統裡已經被佔走了（一般牙周 174、矯正 203），所以往同一個方向再走一步，落在冷色端還空著的地方 —— 靛與紫。不要把「紫＝手術巾的顏色」寫成事實，手術巾不是紫的。站得住的是那塊布的<b>功能</b>：把範圍框出來（堅定）、讓注意力不在血上（不喧賓）、不是主角但少了它做不成（支持）。</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>這一輪完全沒有被對比度綁住</h2>
+    <p>先講一個讓這一輪好做很多的事實：<b>L* 40 這一帶，靛紫的彩度上限是 50~124，而五案只用到 22。</b></p>
+    <p>兒牙那十一輪是「要亮才像黃、白字又把亮度鎖死」，兩頭夾殺。靛紫在這個亮度帶連邊都碰不到 —— 所以五案的亮度可以全部固定在 <b>L* 40</b>，白字 6.44~6.50、對卡 5.85~5.91、對紙 5.08~5.13，<b>五案幾乎一模一樣</b>。</p>
+    <div class="note">
+      <p><b>這一排比的純粹是色相與彩度，沒有任何一案是被對比度逼出來的。</b></p>
+      <p class="soft">也表示口腔外科可以維持一個變數就夠（不像兒牙要三個），文章內頁的字階直接用原值，不必另外開一階。</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>五案</h2>
+    <p class="small">固定：L* 40、白字。變數只有色相（靛↔紫）與彩度（收斂↔存在感）。每一案都套在三個真實元件上。</p>
+
+    <div class="cases">
+
+      <article class="case out" style="--c:#5F5D66">
+        <div class="case-head"><b>① 官方灰紫</b><span class="hex">#5F5D66　C* 5.6　h 299°</span></div>
+        <p class="small">色票裡唯一的紫，地位等同兒牙那一輪的含羞草。所以它必須先站上來 —— 然後就出局了，理由在下一節。</p>
+        <div class="parts">
+          <span class="lbl">醫師藥丸　　主題與科別 chip（未選／選取）　　文章卡標籤</span>
+          <span class="pill">口腔外科</span>
+          <span class="chip">口腔外科</span>
+          <span class="chip on">口腔外科</span>
+          <span class="tag">口腔外科</span>
+        </div>
+        <p class="metrics"><span>白字 6.47</span><span>對卡 5.89</span><span>對紙 5.11</span></p>
+      </article>
+
+      <article class="case" style="--c:#5e5c70">
+        <div class="case-head"><b>② 靛・收斂</b><span class="hex">#5e5c70　C* 12.3　h 296°</span></div>
+        <div class="parts">
+          <span class="lbl">醫師藥丸　　主題與科別 chip（未選／選取）　　文章卡標籤</span>
+          <span class="pill">口腔外科</span>
+          <span class="chip">口腔外科</span>
+          <span class="chip on">口腔外科</span>
+          <span class="tag">口腔外科</span>
+        </div>
+        <p class="metrics"><span>白字 6.48</span><span>對卡 5.90</span><span>對紙 5.12</span></p>
+      </article>
+
+      <article class="case" style="--c:#5c5b7f">
+        <div class="case-head"><b>③ 靛・存在感</b><span class="hex">#5c5b7f　C* 22.0　h 294°</span></div>
+        <div class="parts">
+          <span class="lbl">醫師藥丸　　主題與科別 chip（未選／選取）　　文章卡標籤</span>
+          <span class="pill">口腔外科</span>
+          <span class="chip">口腔外科</span>
+          <span class="chip on">口腔外科</span>
+          <span class="tag">口腔外科</span>
+        </div>
+        <p class="metrics"><span>白字 6.45</span><span>對卡 5.86</span><span>對紙 5.09</span></p>
+      </article>
+
+      <article class="case" style="--c:#685a6b">
+        <div class="case-head"><b>④ 紫・收斂</b><span class="hex">#685a6b　C* 11.9　h 320°</span></div>
+        <div class="parts">
+          <span class="lbl">醫師藥丸　　主題與科別 chip（未選／選取）　　文章卡標籤</span>
+          <span class="pill">口腔外科</span>
+          <span class="chip">口腔外科</span>
+          <span class="chip on">口腔外科</span>
+          <span class="tag">口腔外科</span>
+        </div>
+        <p class="metrics"><span>白字 6.44</span><span>對卡 5.85</span><span>對紙 5.08</span></p>
+      </article>
+
+      <article class="case" style="--c:#6f5575">
+        <div class="case-head"><b>⑤ 紫・存在感</b><span class="hex">#6f5575　C* 22.0　h 320°</span></div>
+        <p class="small">數字上最乾淨的一案，理由在下一節。</p>
+        <div class="parts">
+          <span class="lbl">醫師藥丸　　主題與科別 chip（未選／選取）　　文章卡標籤</span>
+          <span class="pill">口腔外科</span>
+          <span class="chip">口腔外科</span>
+          <span class="chip on">口腔外科</span>
+          <span class="tag">口腔外科</span>
+        </div>
+        <p class="metrics"><span>白字 6.50</span><span>對卡 5.91</span><span>對紙 5.13</span></p>
+      </article>
+
+    </div>
+
+    <p class="small">彩度的兩階是照家族自己的範圍定的：其餘五科（不含兒牙）落在 C* 8.1~19.9，<b>22 貼著家族上限、12 是家族中位</b>。「不喧賓」的標準不是低到看不見，是不要超過贋復太多。兒牙是 57.6 —— 五案沒有一個接近它的一半。</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>並排看：分不分得開</h2>
+    <p class="small">對比度五案全過，所以決定勝負的是它和已經在用的色分不分得開。點一個候選，它會代進整排裡。</p>
+
+    <div class="picker" id="picker">
+      <button type="button" data-c="cur" aria-pressed="true">現行 Taupe</button>
+      <button type="button" data-c="c1" aria-pressed="false">①</button>
+      <button type="button" data-c="c2" aria-pressed="false">②</button>
+      <button type="button" data-c="c3" aria-pressed="false">③</button>
+      <button type="button" data-c="c4" aria-pressed="false">④</button>
+      <button type="button" data-c="c5" aria-pressed="false">⑤</button>
+    </div>
+
+    <div class="row" id="row">
+      <span class="pill" style="--c:var(--kids)">兒童牙科</span>
+      <span class="pill" style="--c:var(--endo)">顯微根管</span>
+      <span class="pill" style="--c:var(--chair)">一般・牙周</span>
+      <span class="pill" style="--c:var(--ortho)">齒顎矯正</span>
+      <span class="pill" style="--c:var(--prosth)">贋復假牙</span>
+      <span class="pill" id="surg" style="--c:var(--taupe)">口腔外科</span>
+      <span class="pill" style="--c:var(--all)">全部</span>
+    </div>
+
+    <div class="scroll">
+      <table>
+        <caption>CIE76 ΔE —— 兩個色在感知上差多遠。數字越小越像。</caption>
+        <thead><tr><th>案</th><th>對贋復</th><th>對矯正</th><th>對全部</th><th>對根管</th></tr></thead>
+        <tbody>
+          <tr><td>① 官方灰紫</td><td class="num">25.5</td><td class="num">12.6</td><td class="num bad">6.1</td><td class="num">21.7</td></tr>
+          <tr><td>② 靛・收斂</td><td class="num">22.4</td><td class="num">11.7</td><td class="num">12.8</td><td class="num">28.1</td></tr>
+          <tr><td>③ 靛・存在感</td><td class="num">21.3</td><td class="num">16.3</td><td class="num">22.5</td><td class="num">37.5</td></tr>
+          <tr><td>④ 紫・收斂</td><td class="num">24.2</td><td class="num">16.3</td><td class="num">12.0</td><td class="num">28.0</td></tr>
+          <tr class="best"><td>⑤ 紫・存在感</td><td class="num">24.2</td><td class="num">22.8</td><td class="num">22.2</td><td class="num">38.1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note warn">
+      <p><b>① 出局，而且是唯一硬性出局的。</b>官方灰紫 L* 40.0、C* 5.6，「全部」那顆灰是 L* 39.6、C* 1.0 —— <b>亮度只差 0.4，ΔE 只有 6.1</b>。在藥丸那個尺寸上兩顆會讀成同一個色，而「全部」不是一科，科別色和它撞在一起是最不能撞的一種。</p>
+      <p class="soft">這正好是「灰是比出來的，不是調出來的」的另一面：一個彩度 5.6 的紫，旁邊站著一個彩度 1.0 的灰，它就不是紫了。</p>
+    </div>
+
+    <div class="note">
+      <p><b>靛（②③）還有一個結構性的問題。</b>色相 242~246，夾在矯正 203 與贋復 227 中間再往外一點點 —— 冷色端三顆會擠在 39° 內。紫（④⑤）的 289 離贋復 62°，是唯一真正走出去的。</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>目前的判斷：⑤ 紫・存在感 <code>#6f5575</code></h2>
+    <p>對四個現役色的 ΔE 全部 ≥22，色相 289 在整個色盤上沒有鄰居，彩度 22 貼著家族上限但沒超過兒牙的四成。<b>要更收斂就往 ④，要讀起來像靛就往 ③</b>（代價是和贋復擠在一起）。</p>
+    <p class="soft">這是建議，不是定案。</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>如果改了，四件事要跟著改</h2>
+    <ol class="rules">
+      <li>
+        <b>六之八的三組會重排，而且會變好。</b>
+        外科離開「情緒」組，冷色端變成 矯正 203 → 贋復 227 → 外科 289，仍然連續。暖色只剩兒牙 ——<b>唯一不需要被說服、只需要不害怕的科</b>。冷色三科則是<b>要先聽懂，才決定交付</b>：時間、錢、風險。而且多出一層順序 —— <b>越冷，門檻越高。</b>
+      </li>
+      <li>
+        <b>Taupe <code>#7D5A58</code> 被釋出，但沒有浪費。</b>
+        它還在診所資訊的「看診時間」卡。而且釋出之後，暖紅那一整段就沒有任何科別在用，和「紅在品牌裡的暗示性太強」那條原則反而更一致。
+      </li>
+      <li>
+        <b>「不要帶紫的感覺」要標清楚適用範圍，不是推翻。</b>
+        那句話的出處是<b>內文底色</b> —— G1 灰紫 <code>#dedce5</code>（L* 88、整片鋪滿）。一整片 L* 88 的淡紫，和一顆 L* 40 的深紫藥丸不是同一件事。<b>底色那條仍然有效，不要拿這一節去改底色。</b>
+      </li>
+      <li>
+        <b>六之八「227→3 的紫紅帶不能用」要改寫。</b>
+        紫的部分開放了，紅的部分不變。
+      </li>
+    </ol>
+  </section>
+
+  <p class="foot">完整推導寫在 <code>PALETTE.md</code> 第六之九節。這一頁是自給自足的靜態快照，不引用 <code>/assets/style.css</code>。</p>
+
+</div>
+
+<script>
+/* 只影響「並排看」那一排，五案本身是靜態的，沒有 JS 也讀得完。
+   網址可帶 ?c=c3 直接開到某一案 —— 正規式要吃得下數字（[a-z0-9]+），
+   寫成 [a-z]+ 會比對失敗後悄悄退回預設，等於參數沒作用（PALETTE 踩過一次）。 */
+(function(){
+  var MAP = { cur:'#7D5A58', c1:'#5F5D66', c2:'#5e5c70', c3:'#5c5b7f', c4:'#685a6b', c5:'#6f5575' };
+  var picker = document.getElementById('picker');
+  var surg = document.getElementById('surg');
+  if (!picker || !surg) return;
+
+  function apply(key){
+    if (!MAP[key]) return;
+    surg.style.setProperty('--c', MAP[key]);
+    var bs = picker.querySelectorAll('button');
+    for (var i = 0; i < bs.length; i++){
+      bs[i].setAttribute('aria-pressed', bs[i].getAttribute('data-c') === key ? 'true' : 'false');
+    }
+  }
+
+  var m = /[?&]c=([a-z0-9]+)/.exec(location.search);
+  if (m) apply(m[1]);
+
+  picker.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-c]');
+    if (b) apply(b.getAttribute('data-c'));
+  });
+})();
+</script>
+</body>
+</html>
