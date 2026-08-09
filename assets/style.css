@@ -71,7 +71,12 @@
 body { --accent: var(--teal); --accent-deep: var(--teal); --on-fill: #fff; }
 
 [data-spec="general"],
-[data-spec="perio"]  { --accent: var(--chair); --accent-deep: var(--chair); }  /* 5.04 */
+/* 一般牙科・定期檢查／牙周治療／創辦醫師的綠（定案 2026-08-09，PALETTE.md 第六之十一節
+   第七小節）。原本是診療椅實測 var(--chair) #4f6361，一個值管到底。改成兩階：
+   套色 #3f654a、字 #2c5238 —— **色相 151 與彩度 23 完全相同，只差亮度 7.9**。
+   色相就是花藝那一節枝葉亮處 #447c56 的色相（151.2），彩度是枝葉的 31.5 收到 22.9。
+   --chair 留著：它是第二節的材質實測值，只是不再有科別指向它。 */
+[data-spec="perio"]  { --accent: #3f654a; --accent-deep: #2c5238; }  /* 6.99 */
 [data-spec="ortho"]  { --accent: var(--blue);  --accent-deep: var(--blue);  }  /* 5.85 */
 /* 口腔外科的紫（定案 2026-08-09，PALETTE.md 第六之九節）。兩階的色相與彩度相同、
    只差亮度 8.2 —— 同一個色的兩個高度，不是兩個色。原本的 Deep Taupe 被釋出，
