@@ -342,7 +342,16 @@ a:hover { color: var(--accent); }
 .foot-addr a:hover { color: var(--teal); text-decoration: underline; }
 /* 電話是頁尾唯一需要視覺停留的東西 —— 捲到底的人多半就是在找它。 */
 .foot-tel { margin-top: .5rem !important; font-size: 1.05rem !important; letter-spacing: .02em; }
-.foot-tel a { color: var(--teal); text-decoration: none; }
+/* 話筒圖示 —— 定案 2026-08-09。三個數字的由來寫在 index.html 同一段註解裡
+   （為什麼是 .82em 不是 1em、為什麼號碼要 500、為什麼底線畫在 .num 上）。
+   兩邊必須一模一樣，改一邊就要改另一邊。 */
+.foot-tel a {
+  color: var(--teal); text-decoration: none;
+  display: inline-flex; align-items: center; gap: .45em;
+  font-weight: 500;
+}
+.foot-tel svg { flex: 0 0 auto; width: .82em; height: .82em; display: block; }
+.foot-tel .num { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em; }
 .foot-nav { margin: 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
 .foot-nav a { font-size: .82rem; text-decoration: none; }
 .foot-nav a:hover { color: var(--teal); text-decoration: underline; }
