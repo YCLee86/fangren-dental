@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>顯微根管的紅 — 七案一鍵切換｜芳仁牙醫診所</title>
+<title>顯微根管的紅 — 七案 × 兩態自由對照｜芳仁牙醫診所</title>
 <link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <style>
 /* 自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
@@ -86,11 +86,13 @@ code{font-family:var(--mono);font-size:.9em}
 
 /* ---- 切換條 ---------------------------------------------------------- */
 .switcher{position:fixed;left:50%;transform:translateX(-50%);bottom:.7rem;z-index:9;
-          background:rgba(244,244,245,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-          border:1px solid var(--rule);border-radius:14px;padding:.5rem .6rem;
-          display:flex;align-items:center;gap:.3rem;box-shadow:0 4px 20px rgba(0,0,0,.16);
+          background:rgba(244,244,245,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+          border:1px solid var(--rule);border-radius:14px;padding:.45rem .55rem;
+          display:flex;flex-direction:column;gap:.3rem;box-shadow:0 4px 20px rgba(0,0,0,.18);
           max-width:calc(100vw - 1.4rem)}
-.switcher .glbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;color:var(--ink-soft);flex:0 0 auto}
+.switcher .grp{display:flex;align-items:center;gap:.26rem}
+.switcher .glbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.04em;color:var(--ink-soft);
+                flex:0 0 auto;width:2.6rem;line-height:1.25}
 .switcher .opt{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:.2rem;
                padding:.28rem .3rem .24rem;border-radius:9px;border:1px solid var(--rule);
                background:#fff;cursor:pointer;-webkit-user-select:none;user-select:none;min-width:2.1rem}
@@ -100,30 +102,101 @@ code{font-family:var(--mono);font-size:.9em}
 .switcher .opt:has(input:checked){border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .switcher .opt:has(input:focus-visible){outline:2px solid var(--teal);outline-offset:2px}
 
-body:has(#r1:checked){--pick:var(--f1);--pick-line:var(--l1)}
-body:has(#r2:checked){--pick:var(--f2);--pick-line:var(--l2)}
-body:has(#r3:checked){--pick:var(--f3);--pick-line:var(--l3)}
-body:has(#r4:checked){--pick:var(--f4);--pick-line:var(--l4)}
-body:has(#r5:checked){--pick:var(--f5);--pick-line:var(--l5)}
-body:has(#r6:checked){--pick:var(--f6);--pick-line:var(--l6)}
-body:has(#r7:checked){--pick:var(--f7);--pick-line:var(--l7)}
-/* 讀數用 CSS 產生，script 被擋掉時才不會停在預設值上說謊 */
-#ro::before{content:"—"}
-body:has(#r1:checked) #ro::before{content:"① 磚紅・收斂　填色 #9b5b5d　套字 #804b4c　反白 5.19　套字對卡 6.31／對紙 5.48"}
-body:has(#r2:checked) #ro::before{content:"② 磚紅・官方　填色 #b04d53　套字 #923f44　反白 5.21　套字對卡 6.33／對紙 5.50"}
-body:has(#r3:checked) #ro::before{content:"③ 酒紅　　　　填色 #b14b62　套字 #923d50　反白 5.18　套字對卡 6.36／對紙 5.52"}
-body:has(#r4:checked) #ro::before{content:"④ 燒磚　　　　填色 #a85541　套字 #8b4635　反白 5.20　套字對卡 6.32／對紙 5.48"}
-body:has(#r5:checked) #ro::before{content:"⑤ 磚紅・滿彩　填色 #bf3f4d　套字 #9f333e　反白 5.21　套字對卡 6.33／對紙 5.50"}
-body:has(#r6:checked) #ro::before{content:"⑥ 紅花籃・原值　單一值 #89202d　反白 9.10　套字對卡 8.28／對紙 7.18"}
-body:has(#r7:checked) #ro::before{content:"⑦ 繡球・原值　　單一值 #6c1226　反白 11.99　套字對卡 10.90／對紙 9.47"}
-#rn::before{content:"—"}
-body:has(#r1:checked) #rn::before{content:"① 磚紅・收斂"}
-body:has(#r2:checked) #rn::before{content:"② 磚紅・官方"}
-body:has(#r3:checked) #rn::before{content:"③ 酒紅"}
-body:has(#r4:checked) #rn::before{content:"④ 燒磚"}
-body:has(#r5:checked) #rn::before{content:"⑤ 磚紅・滿彩"}
-body:has(#r6:checked) #rn::before{content:"⑥ 紅花籃・原值"}
-body:has(#r7:checked) #rn::before{content:"⑦ 繡球・原值"}
+/* 兩個切換條各自獨立：l* 管白底字套色那一階，f* 管整圈套色那一階。
+   同號＝系統原本的搭配；不同號＝自訂一組兩階，看得到才選得出來。 */
+body:has(#f1:checked){--pick:var(--f1)}
+body:has(#f2:checked){--pick:var(--f2)}
+body:has(#f3:checked){--pick:var(--f3)}
+body:has(#f4:checked){--pick:var(--f4)}
+body:has(#f5:checked){--pick:var(--f5)}
+body:has(#f6:checked){--pick:var(--f6)}
+body:has(#f7:checked){--pick:var(--f7)}
+body:has(#l1:checked){--pick-line:var(--l1)}
+body:has(#l2:checked){--pick-line:var(--l2)}
+body:has(#l3:checked){--pick-line:var(--l3)}
+body:has(#l4:checked){--pick-line:var(--l4)}
+body:has(#l5:checked){--pick-line:var(--l5)}
+body:has(#l6:checked){--pick-line:var(--l6)}
+body:has(#l7:checked){--pick-line:var(--l7)}
+/* 讀數全部由 CSS 產生 —— script 被擋掉時才不會停在預設值上說謊 */
+#rl::before,#rf::before,#rd::before,#rnl::before,#rnf::before{content:"—"}
+body:has(#l1:checked) #rnl::before{content:"① 磚紅・收斂"}
+body:has(#f1:checked) #rnf::before{content:"① 磚紅・收斂"}
+body:has(#l1:checked) #rl::before{content:"白底字套色　① #804b4c　磚紅・收斂　對卡 6.31／對紙 5.48"}
+body:has(#f1:checked) #rf::before{content:"整圈套色　　① #9b5b5d　磚紅・收斂　白字 5.19"}
+body:has(#l2:checked) #rnl::before{content:"② 磚紅・官方"}
+body:has(#f2:checked) #rnf::before{content:"② 磚紅・官方"}
+body:has(#l2:checked) #rl::before{content:"白底字套色　② #923f44　磚紅・官方　對卡 6.33／對紙 5.50"}
+body:has(#f2:checked) #rf::before{content:"整圈套色　　② #b04d53　磚紅・官方　白字 5.21"}
+body:has(#l3:checked) #rnl::before{content:"③ 酒紅"}
+body:has(#f3:checked) #rnf::before{content:"③ 酒紅"}
+body:has(#l3:checked) #rl::before{content:"白底字套色　③ #923d50　酒紅　對卡 6.36／對紙 5.52"}
+body:has(#f3:checked) #rf::before{content:"整圈套色　　③ #b14b62　酒紅　白字 5.18"}
+body:has(#l4:checked) #rnl::before{content:"④ 燒磚"}
+body:has(#f4:checked) #rnf::before{content:"④ 燒磚"}
+body:has(#l4:checked) #rl::before{content:"白底字套色　④ #8b4635　燒磚　對卡 6.32／對紙 5.48"}
+body:has(#f4:checked) #rf::before{content:"整圈套色　　④ #a85541　燒磚　白字 5.20"}
+body:has(#l5:checked) #rnl::before{content:"⑤ 磚紅・滿彩"}
+body:has(#f5:checked) #rnf::before{content:"⑤ 磚紅・滿彩"}
+body:has(#l5:checked) #rl::before{content:"白底字套色　⑤ #9f333e　磚紅・滿彩　對卡 6.33／對紙 5.50"}
+body:has(#f5:checked) #rf::before{content:"整圈套色　　⑤ #bf3f4d　磚紅・滿彩　白字 5.21"}
+body:has(#l6:checked) #rnl::before{content:"⑥ 紅花籃・原值"}
+body:has(#f6:checked) #rnf::before{content:"⑥ 紅花籃・原值"}
+body:has(#l6:checked) #rl::before{content:"白底字套色　⑥ #89202d　紅花籃・原值　對卡 8.28／對紙 7.18"}
+body:has(#f6:checked) #rf::before{content:"整圈套色　　⑥ #89202d　紅花籃・原值　白字 9.10"}
+body:has(#l7:checked) #rnl::before{content:"⑦ 繡球・原值"}
+body:has(#f7:checked) #rnf::before{content:"⑦ 繡球・原值"}
+body:has(#l7:checked) #rl::before{content:"白底字套色　⑦ #6c1226　繡球・原值　對卡 10.90／對紙 9.47"}
+body:has(#f7:checked) #rf::before{content:"整圈套色　　⑦ #6c1226　繡球・原值　白字 11.99"}
+body:has(#f1:checked):has(#l1:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 38.1 ＝ +7.9　（同號＝系統原本的搭配）"}
+body:has(#f1:checked):has(#l2:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 38.0 ＝ +8.0"}
+body:has(#f1:checked):has(#l3:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 37.9 ＝ +8.1"}
+body:has(#f1:checked):has(#l4:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 38.1 ＝ +7.9"}
+body:has(#f1:checked):has(#l5:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 38.0 ＝ +8.0"}
+body:has(#f1:checked):has(#l6:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 30.7 ＝ +15.3"}
+body:has(#f1:checked):has(#l7:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 22.9 ＝ +23.1"}
+body:has(#f2:checked):has(#l1:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.1 ＝ +7.8"}
+body:has(#f2:checked):has(#l2:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.0 ＝ +7.9　（同號＝系統原本的搭配）"}
+body:has(#f2:checked):has(#l3:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 37.9 ＝ +8.0"}
+body:has(#f2:checked):has(#l4:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.1 ＝ +7.8"}
+body:has(#f2:checked):has(#l5:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.0 ＝ +7.9"}
+body:has(#f2:checked):has(#l6:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 30.7 ＝ +15.2"}
+body:has(#f2:checked):has(#l7:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 22.9 ＝ +23.0"}
+body:has(#f3:checked):has(#l1:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 38.1 ＝ +7.9"}
+body:has(#f3:checked):has(#l2:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 38.0 ＝ +8.0"}
+body:has(#f3:checked):has(#l3:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 37.9 ＝ +8.1　（同號＝系統原本的搭配）"}
+body:has(#f3:checked):has(#l4:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 38.1 ＝ +7.9"}
+body:has(#f3:checked):has(#l5:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 38.0 ＝ +8.0"}
+body:has(#f3:checked):has(#l6:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 30.7 ＝ +15.3"}
+body:has(#f3:checked):has(#l7:checked) #rd::before{content:"套色 L* 46.0 − 套字 L* 22.9 ＝ +23.1"}
+body:has(#f4:checked):has(#l1:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.1 ＝ +7.8"}
+body:has(#f4:checked):has(#l2:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.0 ＝ +7.9"}
+body:has(#f4:checked):has(#l3:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 37.9 ＝ +8.0"}
+body:has(#f4:checked):has(#l4:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.1 ＝ +7.8　（同號＝系統原本的搭配）"}
+body:has(#f4:checked):has(#l5:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.0 ＝ +7.9"}
+body:has(#f4:checked):has(#l6:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 30.7 ＝ +15.2"}
+body:has(#f4:checked):has(#l7:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 22.9 ＝ +23.0"}
+body:has(#f5:checked):has(#l1:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.1 ＝ +7.8"}
+body:has(#f5:checked):has(#l2:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.0 ＝ +7.9"}
+body:has(#f5:checked):has(#l3:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 37.9 ＝ +8.0"}
+body:has(#f5:checked):has(#l4:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.1 ＝ +7.8"}
+body:has(#f5:checked):has(#l5:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 38.0 ＝ +7.9　（同號＝系統原本的搭配）"}
+body:has(#f5:checked):has(#l6:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 30.7 ＝ +15.2"}
+body:has(#f5:checked):has(#l7:checked) #rd::before{content:"套色 L* 45.9 − 套字 L* 22.9 ＝ +23.0"}
+body:has(#f6:checked):has(#l1:checked) #rd::before{content:"套色 L* 30.7 − 套字 L* 38.1 ＝ -7.4　⚠ 反向：套色比套字還暗"}
+body:has(#f6:checked):has(#l2:checked) #rd::before{content:"套色 L* 30.7 − 套字 L* 38.0 ＝ -7.3　⚠ 反向：套色比套字還暗"}
+body:has(#f6:checked):has(#l3:checked) #rd::before{content:"套色 L* 30.7 − 套字 L* 37.9 ＝ -7.2　⚠ 反向：套色比套字還暗"}
+body:has(#f6:checked):has(#l4:checked) #rd::before{content:"套色 L* 30.7 − 套字 L* 38.1 ＝ -7.4　⚠ 反向：套色比套字還暗"}
+body:has(#f6:checked):has(#l5:checked) #rd::before{content:"套色 L* 30.7 − 套字 L* 38.0 ＝ -7.3　⚠ 反向：套色比套字還暗"}
+body:has(#f6:checked):has(#l6:checked) #rd::before{content:"套色 L* 30.7 − 套字 L* 30.7 ＝ +0.0　（同號＝系統原本的搭配）"}
+body:has(#f6:checked):has(#l7:checked) #rd::before{content:"套色 L* 30.7 − 套字 L* 22.9 ＝ +7.8"}
+body:has(#f7:checked):has(#l1:checked) #rd::before{content:"套色 L* 22.9 − 套字 L* 38.1 ＝ -15.2　⚠ 反向：套色比套字還暗"}
+body:has(#f7:checked):has(#l2:checked) #rd::before{content:"套色 L* 22.9 − 套字 L* 38.0 ＝ -15.1　⚠ 反向：套色比套字還暗"}
+body:has(#f7:checked):has(#l3:checked) #rd::before{content:"套色 L* 22.9 − 套字 L* 37.9 ＝ -15.0　⚠ 反向：套色比套字還暗"}
+body:has(#f7:checked):has(#l4:checked) #rd::before{content:"套色 L* 22.9 − 套字 L* 38.1 ＝ -15.2　⚠ 反向：套色比套字還暗"}
+body:has(#f7:checked):has(#l5:checked) #rd::before{content:"套色 L* 22.9 − 套字 L* 38.0 ＝ -15.1　⚠ 反向：套色比套字還暗"}
+body:has(#f7:checked):has(#l6:checked) #rd::before{content:"套色 L* 22.9 − 套字 L* 30.7 ＝ -7.8　⚠ 反向：套色比套字還暗"}
+body:has(#f7:checked):has(#l7:checked) #rd::before{content:"套色 L* 22.9 − 套字 L* 22.9 ＝ +0.0　（同號＝系統原本的搭配）"}
 
 /* ---- 文章內頁的模擬 -------------------------------------------------- */
 /* 規格逐條照 assets/style.css 抄過來（.post-tag / .post-body h2::before /
@@ -177,9 +250,9 @@ tr.raw td{background:rgba(137,32,45,.045)}
 <div class="wrap">
 
   <div class="head">
-    <p class="eyebrow">提案中 · 七案一鍵切換 · 2026-08-09</p>
+    <p class="eyebrow">提案中 · 七案 × 兩條切換條 · 2026-08-09</p>
     <h1>顯微根管的紅 — 七案</h1>
-    <p class="lead">正規化的五案（①~⑤）＋ 原值的紅花籃與繡球（⑥⑦），<b>全部併在同一排科別標籤裡</b>。下面切換條一按就換。<br><span class="small">兩個狀態都排出來：<b>白底套字</b>（字與整圈框都是該色）與<b>整圈套色、字反白</b>。</span></p>
+    <p class="lead">正規化的五案（①~⑤）＋ 原值的紅花籃與繡球（⑥⑦），<b>全部併在同一排科別標籤裡</b>。<br><b>切換條有兩排，各自獨立</b>：上排管<b>白底字套色</b>、下排管<b>整圈套色字反白</b>，可以分開選，兩態、兩種底、連文章內頁一起跟著換。</p>
   </div>
 
   <div class="note ok">
@@ -194,7 +267,7 @@ tr.raw td{background:rgba(137,32,45,.045)}
 
     <div class="stage">
       <div class="blk">
-        <p class="lbl">白底字套顏色 —— 七科的未選態，<b><span id="rn"></span></b> 有一圈光暈</p>
+        <p class="lbl">白底字套顏色 —— 七科的未選態，顯微根管＝<b><span id="rnl"></span></b>（上排切換條）</p>
         <div class="row">
           <span class="chip" style="--c:var(--kids-line)">兒童牙科</span>
           <span class="chip is-endo" style="--c:var(--pick-line)">顯微根管</span>
@@ -207,7 +280,7 @@ tr.raw td{background:rgba(137,32,45,.045)}
       </div>
 
       <div class="blk">
-        <p class="lbl">整圈套色、字反白 —— 七科的選取態</p>
+        <p class="lbl">整圈套色、字反白 —— 七科的選取態，顯微根管＝<b><span id="rnf"></span></b>（下排切換條）</p>
         <div class="row">
           <span class="chip on" style="--c:var(--kids)">兒童牙科</span>
           <span class="chip on is-endo" style="--c:var(--pick)">顯微根管</span>
@@ -242,7 +315,7 @@ tr.raw td{background:rgba(137,32,45,.045)}
         </div>
       </div>
 
-      <p class="readout"><span id="ro"></span></p>
+      <p class="readout"><span id="rl"></span><br><span id="rf"></span><br><span id="rd"></span></p>
     </div>
   </section>
 
@@ -366,9 +439,15 @@ tr.raw td{background:rgba(137,32,45,.045)}
   <section>
     <h2>怎麼比</h2>
     <div class="note ok">
-      <p><b>先按 ② 和 ⑥ 來回切</b> —— 那是這一輪真正的分岔：<b>要一顆和其他六科等重的紅（②），還是要一顆比較沉、辨識度更強的紅（⑥）。</b>其餘五案都是繞著這兩個的變化。</p>
-      <p>然後看兩個地方：<b>整圈套色那一排</b>，⑥⑦ 會不會重到把旁邊的兒牙壓下去；<b>白底套字那一排</b>，② 的線框會不會太淡、⑦ 會不會讀成黑的。</p>
-      <p class="soft">① 唯一要注意的是對「看診時間」卡 Taupe 只有 9.5（那一顆不在這幾排裡，是診所資訊那一區）。④ 是唯一往兒牙靠的（34.4）—— 切到 ④ 時特別看左邊第一顆。</p>
+      <p><b>兩排都選同一個號碼</b>，看到的就是那一案原本設計的樣子（讀數會標「同號」）。<b>兩排選不同號碼，等於當場自訂一組兩階</b> —— 例如白底字用 ② <code>#923f44</code>、整圈套色用 ⑥ <code>#89202d</code>，那是資料庫裡沒有、但完全成立的一組。</p>
+      <p><b>先把兩排都放 ② 和都放 ⑥ 來回切</b> —— 那是這一輪真正的分岔：要一顆和其他六科等重的紅（②），還是一顆比較沉、辨識度更強的紅（⑥）。其餘五案都是繞著這兩個的變化。</p>
+      <p>然後看兩個地方：<b>整圈套色那一排</b>，⑥⑦ 會不會重到把旁邊的兒牙壓下去；<b>白底字那一排</b>，② 的線框會不會太淡、⑦ 會不會太重。</p>
+      <p class="soft">① 唯一要注意的是對「看診時間」卡 Taupe 只有 9.5（那顆不在這幾排裡，是診所資訊那一區）。④ 是唯一往兒牙靠的（34.4）—— 切到 ④ 時特別看左邊第一顆。</p>
+    </div>
+
+    <div class="note warn">
+      <p><b>讀數第三行是「套色 L* − 套字 L*」。</b>正數才和全站一致（口腔外科 +8.2、兒牙 +12.5、贋復 +10.1）—— 那代表 chip 按下去會變亮。</p>
+      <p><b>負數會標「⚠ 反向」</b>：套色比套字還暗，按下去反而變深。整圈套色選 ⑥⑦、白底字選 ①~⑤ 的組合全部是反向的（⑦ 配 ①~⑤ 差到 −15）。</p>
     </div>
   </section>
 
@@ -376,29 +455,45 @@ tr.raw td{background:rgba(137,32,45,.045)}
 
 </div>
 
-<div class="switcher" role="radiogroup" aria-label="七案切換">
-  <span class="glbl">案</span>
-  <label class="opt" style="--c:var(--f1)"><span class="dot"></span><span class="n">①</span><input type="radio" name="r" id="r1" value="1"></label>
-  <label class="opt" style="--c:var(--f2)"><span class="dot"></span><span class="n">②</span><input type="radio" name="r" id="r2" value="2"></label>
-  <label class="opt" style="--c:var(--f3)"><span class="dot"></span><span class="n">③</span><input type="radio" name="r" id="r3" value="3"></label>
-  <label class="opt" style="--c:var(--f4)"><span class="dot"></span><span class="n">④</span><input type="radio" name="r" id="r4" value="4"></label>
-  <label class="opt" style="--c:var(--f5)"><span class="dot"></span><span class="n">⑤</span><input type="radio" name="r" id="r5" value="5"></label>
-  <label class="opt" style="--c:var(--f6)"><span class="dot"></span><span class="n">⑥</span><input type="radio" name="r" id="r6" value="6" checked></label>
-  <label class="opt" style="--c:var(--f7)"><span class="dot"></span><span class="n">⑦</span><input type="radio" name="r" id="r7" value="7"></label>
+<div class="switcher">
+  <div class="grp" role="radiogroup" aria-label="白底字">
+    <span class="glbl">白底字</span>
+    <label class="opt" style="--c:#804b4c"><span class="dot"></span><span class="n">①</span><input type="radio" name="l" id="l1" value="1"></label>
+    <label class="opt" style="--c:#923f44"><span class="dot"></span><span class="n">②</span><input type="radio" name="l" id="l2" value="2" checked></label>
+    <label class="opt" style="--c:#923d50"><span class="dot"></span><span class="n">③</span><input type="radio" name="l" id="l3" value="3"></label>
+    <label class="opt" style="--c:#8b4635"><span class="dot"></span><span class="n">④</span><input type="radio" name="l" id="l4" value="4"></label>
+    <label class="opt" style="--c:#9f333e"><span class="dot"></span><span class="n">⑤</span><input type="radio" name="l" id="l5" value="5"></label>
+    <label class="opt" style="--c:#89202d"><span class="dot"></span><span class="n">⑥</span><input type="radio" name="l" id="l6" value="6"></label>
+    <label class="opt" style="--c:#6c1226"><span class="dot"></span><span class="n">⑦</span><input type="radio" name="l" id="l7" value="7"></label>
+  </div>
+  <div class="grp" role="radiogroup" aria-label="套色">
+    <span class="glbl">套色</span>
+    <label class="opt" style="--c:#9b5b5d"><span class="dot"></span><span class="n">①</span><input type="radio" name="f" id="f1" value="1"></label>
+    <label class="opt" style="--c:#b04d53"><span class="dot"></span><span class="n">②</span><input type="radio" name="f" id="f2" value="2" checked></label>
+    <label class="opt" style="--c:#b14b62"><span class="dot"></span><span class="n">③</span><input type="radio" name="f" id="f3" value="3"></label>
+    <label class="opt" style="--c:#a85541"><span class="dot"></span><span class="n">④</span><input type="radio" name="f" id="f4" value="4"></label>
+    <label class="opt" style="--c:#bf3f4d"><span class="dot"></span><span class="n">⑤</span><input type="radio" name="f" id="f5" value="5"></label>
+    <label class="opt" style="--c:#89202d"><span class="dot"></span><span class="n">⑥</span><input type="radio" name="f" id="f6" value="6"></label>
+    <label class="opt" style="--c:#6c1226"><span class="dot"></span><span class="n">⑦</span><input type="radio" name="f" id="f7" value="7"></label>
+  </div>
 </div>
 
 <script>
-// 純粹的加分項：網址參數 ?c=6，以及按了之後把網址同步成可以貼的樣子。
+// 純粹的加分項：網址參數 ?l=2&f=6，以及按了之後把網址同步成可以貼的樣子。
 // 整段被擋掉也沒關係 —— 切換條本身是 CSS 做的，照樣能按。
 (function(){
   try{
-    var v = (new URLSearchParams(location.search).get('c') || '');
-    if (/^[1-7]$/.test(v)) { var el = document.getElementById('r' + v); if (el) el.checked = true; }
+    var q = new URLSearchParams(location.search);
+    ['l','f'].forEach(function(k){
+      var v = q.get(k) || '';
+      if (/^[1-7]$/.test(v)) { var el = document.getElementById(k + v); if (el) el.checked = true; }
+    });
     document.querySelectorAll('.switcher input').forEach(function(i){
       i.addEventListener('change', function(){
         try{
           var u = new URL(location.href);
-          u.searchParams.set('c', document.querySelector('input[name=r]:checked').value);
+          u.searchParams.set('l', document.querySelector('input[name=l]:checked').value);
+          u.searchParams.set('f', document.querySelector('input[name=f]:checked').value);
           history.replaceState(null, '', u);
         }catch(e){}   // 沙箱 iframe 的 replaceState 會丟 SecurityError
       });
