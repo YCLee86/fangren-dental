@@ -976,44 +976,74 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   display: grid; gap: 1.6rem 2.4rem;
   grid-template-columns: minmax(0, 1fr) minmax(0, .7fr) minmax(0, 1.6fr);
 }
-/* 電話是頁尾唯一需要視覺停留的東西 —— 捲到底的人多半就是在找它。
-   字級比內文大一階，沿用診所資訊卡的做法但不加色塊（頁尾已經是卡色，
-   再墊一塊會和上面那張資訊卡打架）。 */
-/* 地址整行是連結（開 Google 地圖）。刻意不上色、不加底線 —— 它在落款區塊裡，
-   看起來還是一行地址，只有滑過去才表態。電話那行才是頁尾唯一該搶眼的東西。 */
-.foot-addr a { color: inherit; text-decoration: none; }
-.foot-addr a:hover { color: var(--teal); text-decoration: underline; }
-.foot-tel { margin-top: .5rem !important; font-size: 1.08rem !important; letter-spacing: .02em; }
-/* ---- 電話的話筒圖示 —— 定案（2026-08-09）--------------------------------
-   使用者拿 modernanimal.com 的頁尾當參考。**這是全站第一個、目前唯一的圖示**
-   （頁首標誌不算，那是標誌本體）。2026-08-07 才刻意把文章卡瀏覽數的眼睛圖示
-   拿掉過，所以再加一個之前先問過 —— 是使用者要的，不是順手加的。
+/* ==========================================================================
+   頁尾的地址與電話 —— 定案（2026-08-09，第二版）
+   --------------------------------------------------------------------------
+   使用者拿 modernanimal.com 的頁尾當參考，前後改了六輪。**這兩顆是全站僅有的
+   圖示**（頁首標誌不算，那是標誌本體）。2026-08-07 才刻意把文章卡瀏覽數的眼睛
+   圖示拿掉過，所以再加之前先問過 —— 是使用者要的，不是順手加的。
 
-   三個數字都是比出來的，不要憑感覺調：
+   ⚠ 這段推翻了一條舊規則。原本地址「刻意不上色、不加底線，只有滑過去才表態，
+     電話那行才是頁尾唯一該搶眼的東西」。**那條規則已作廢**，理由是：
+     手機上根本沒有 hover，佔多數的訪客永遠不會知道地址點得下去 ——
+     一個從來不宣告自己是連結的連結。現在兩行同規格，靠**字級**分層。
 
-   · **圖示 .82em，不是 1em。** `1em` 給的是整個 em 框（這一行 17.3px），
-     但數字實際只有約 12.4px 高 —— 剩下的空間是留給注音、括號那些上下伸出去
-     的東西。所以 1em 的圖示會比數字高將近四成，使用者一眼就看出來了。
-     .72em 才是數學上完全切齊，但實心圖形切齊反而顯小，所以往上抓到 .82em。
-   · **號碼 500，不是 400。** 圖示是實心的，400 的數字撐不住它，
-     眼睛會先看到圖示。500 和站上小節標題、醫師姓名同一階，不是新的粗細。
-   · **底線畫在 .num 上，不是畫在 <a> 上。** 連結是 inline-flex，
-     底線下在連結上會連圖示下面一起拉過去 —— 參考的那一站也只畫在號碼上。
+   ---- 定案的值（都是比出來的，不要憑感覺調）----------------------------
 
-   圖示尺寸用 em 不用 px：文章頁的 .foot-tel 是 1.05rem、首頁是 1.08rem，
-   同一份規則兩邊都對得上，日後字級再改也不必回來調這裡。
-   -------------------------------------------------------------------------- */
-.foot-tel a {
-  color: var(--teal); text-decoration: none;
-  display: inline-flex; align-items: center; gap: .45em;
-  font-weight: 500;
+   · **診所名 1.25rem，地址與電話 1.08rem。** 使用者選的 B 案（A 案是三行等大）。
+     診所名是標題，地址與電話是它底下的兩筆資料，兩筆自己等大。
+     電話維持 1.08rem —— 第一版上線的大小原封不動。
+
+   · **圖示欄寬與間距一律用 rem，不能用 em。** em 跟著各自那行的字級走，
+     兩行字級只要不同，同一個 .45em 就算出兩個間距、文字起點就對不齊 ——
+     踩過。改成固定 rem 之後兩行的文字一定從同一個 x 開始。
+
+   · **兩顆圖示各自置中在同寬的欄裡。** 話筒的 viewBox 是 512×512（方的）、
+     釘子是 384×512（直立水滴），寬度天生不同，靠置中讓中軸對齊。
+     ⚠ 第一版把釘子的寬高都設成同一個值，它只填滿 75% 的寬 ——
+     既顯小、左右又各多一條空白把間距撐開。寬度必須按 .75 的比例另外寫。
+
+   · **釘子 1.1rem 高、話筒 .89rem。數字不同是刻意的。** 釘子只有話筒 0.75 倍寬，
+     同高會看起來小一號，要更高才一樣重。
+
+   · **.ico 的高度 = 1.8em = 一行的行高。** 搭配 align-items: flex-start，
+     地址在很窄的畫面折成兩行時，圖示會留在**第一行**，不會滑到兩行正中間。
+
+   · **底線畫在 .txt／.num 上，不是畫在 <a> 上。** 連結是 inline-flex，
+     底線下在連結上會連圖示下面一起拉過去。
+
+   · **號碼不折行。** 它有兩個連字號，那是天然的斷行點；拆成「05-」「533-9369」
+     兩行等於不能用。目前的欄寬折不到，那一行是保險。
+
+   ---- 素材授權 ----------------------------------------------------------
+   兩顆都是 Font Awesome Free 6（`phone`／`location-dot`），圖示部分授權
+   CC BY 4.0，https://fontawesome.com/license/free 。署名放在七個檔案裡
+   那兩顆 SVG 上面的 HTML 註解，**改圖或搬檔的時候不要刪**。
+   ========================================================================== */
+.foot-addr { font-size: 1.08rem !important; letter-spacing: .02em; }
+.foot-tel  { margin-top: .35rem !important; font-size: 1.08rem !important; letter-spacing: .02em; }
+.foot-addr a, .foot-tel a {
+  color: var(--teal); text-decoration: none; font-weight: 500;
+  display: inline-flex; align-items: flex-start; gap: .5rem;   /* ← rem，改成 em 就歪 */
 }
-.foot-tel svg { flex: 0 0 auto; width: .82em; height: .82em; display: block; }
-.foot-tel .num { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em; }
+.foot-addr .ico, .foot-tel .ico {
+  flex: 0 0 1.15rem; height: 1.8em;
+  display: flex; align-items: center; justify-content: center;
+}
+.foot-addr .ico svg { width: .825rem; height: 1.1rem; display: block; }   /* 384×512，寬 = 高 × .75 */
+.foot-tel  .ico svg { width: .89rem;  height: .89rem; display: block; }   /* 512×512，方的 */
+.foot-addr .txt, .foot-tel .num {
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em;
+}
+.foot-tel .num { white-space: nowrap; }
 .foot-nav { margin: 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
 .foot-nav a { font-size: .82rem; color: var(--ink-soft); text-decoration: none; }
 .foot-nav a:hover { color: var(--teal); text-decoration: underline; }
 .foot h4 { margin: 0 0 .5rem; font-size: .95rem; }
+/* 只有診所名那一顆放大到 1.25rem —— 它是招牌，不是欄位標題。
+   「站內導覽」「關於這些文章」維持 .95rem：它們底下是 .82rem 的連結與內文，
+   跟著放大會變成大標配小字。使用者定案的 B 案只動了聯絡欄這一格。 */
+.foot h4.foot-brand { font-size: 1.25rem; line-height: 1.6; }
 .foot p { margin: 0 0 .7rem; font-size: .82rem; line-height: 1.8; color: var(--ink-soft); }
 .foot p:last-child { margin-bottom: 0; }
 .foot-bottom {
@@ -1587,14 +1617,20 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
            · **站內導覽留著** —— 這是頁尾唯一在任何地方都沒有重複的東西。
              原本的頁尾一條站內連結都沒有（只有 tel:）。 -->
       <div>
-        <h4>芳仁牙醫診所</h4>
-        <p class="foot-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">雲林縣斗六市永樂街 70 號</a></p>
+        <h4 class="foot-brand">芳仁牙醫診所</h4>
+        <p class="foot-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
+          <!-- 實心地圖釘。和話筒同一套：Font Awesome Free 6 "location-dot"，
+               圖示部分授權 CC BY 4.0，https://fontawesome.com/license/free ——
+               這一行註解就是署名，改圖或搬檔的時候不要刪。 -->
+          <span class="ico"><svg viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg></span>
+          <span class="txt">雲林縣斗六市永樂街 70 號</span>
+        </a></p>
         <p class="foot-tel"><a href="tel:+88655339369">
           <!-- 實心話筒。路徑直接內嵌，不引任何外部檔（站上沒有圖示字型，也不該為了一顆去載）。
                素材出處：Font Awesome Free 6 "phone"，圖示部分授權 CC BY 4.0，
                https://fontawesome.com/license/free —— 這一行註解就是署名，改圖或搬檔的時候不要刪。
                aria-hidden：號碼本身已經是連結的可讀內容，圖示再念一次是重複。 -->
-          <svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
+          <span class="ico"><svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></span>
           <span class="num">05-533-9369</span>
         </a></p>
       </div>
