@@ -142,6 +142,14 @@ code{font-family:var(--mono);font-size:.9em}
       background:var(--pick);color:#fff;border:1px solid var(--pick);
       padding:.6rem 1.05rem;border-radius:16px;font-size:.9rem;font-weight:500}
 .post .btn-ghost{background:var(--card);color:var(--deep);border-color:var(--deep)}
+/* 贋復版：套色固定 #335b8b，字階跟著「贋復字」那一排走 */
+.post.pros .post-tag{background:var(--prosth)}
+.post.pros h2::before{background:var(--prosth)}
+.post.pros h3{color:var(--prosth-line)}
+.post.pros a{color:var(--prosth-line)}
+.post.pros .callout{border-left-color:var(--prosth)}
+.post.pros .btn{background:var(--prosth);border-color:var(--prosth)}
+.post.pros .btn-ghost{background:var(--card);color:var(--prosth-line);border-color:var(--prosth-line)}
 .post .disclaim{font-size:.84rem;color:var(--ink-soft);background:var(--card);
       border:1px solid var(--rule);border-radius:12px;padding:.85rem 1rem;margin-top:1.4rem}
 .tiers{display:grid;grid-template-columns:max-content 1fr;gap:.28rem .8rem;
@@ -329,6 +337,49 @@ tr.base td{color:var(--ink-soft)}
     <div class="note">
       <p><b>Ⓓ2 <code>#182f4b</code> 是 L* 18.9 —— 幾乎剛好回到茶室磁磚原值 <code>#252d4a</code> 的 19.1。</b>贋復的字階等於繞了一圈回到它自己的出處。</p>
       <p class="soft">代價：對卡 12.35，字會很接近墨色，讀起來偏「深藍黑」而不是藍；兩階落差 19.0（現役最大是顯微根管 15.1）。<b>切到 Ⓓ2 看文章內頁那段的 h3 與連結，那是最看得出來的地方。</b></p>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>贋復的文章內頁：字階配現在的套色</h2>
+    <p class="small">套色固定 <b><code>#335b8b</code>（Ⓑ）</b>，字階跟著上面那排「贋復字」切換。<b>這一段和牙周無關，只看贋復自己兩階合不合。</b></p>
+
+    <dl class="tiers">
+      <dt>套色階</dt><dd>科別藥丸、小節標題前的短棒、重點框左條、實心按鈕　← 固定 <code>#335b8b</code>，白字 6.98、對紙 5.47</dd>
+      <dt>字階</dt><dd>內文連結、h3、線框按鈕的字與框　← 現行 7.98／Ⓓ1 9.43／Ⓓ2 10.72（對紙）</dd>
+    </dl>
+
+    <div class="post pros">
+      <span class="post-tag">缺牙重建</span>
+      <h1>缺牙之後：活動假牙、牙橋與植牙怎麼選</h1>
+      <p class="lede">這一段是版型示範用的假文，只為了看顏色落在哪些地方，不是正式文案。</p>
+
+      <h2>不處理會發生什麼</h2>
+      <p>缺牙的空隙會讓鄰牙倒過去、對咬牙長下來，咬合整個亂掉。<a href="#demo">三種重建方式</a>的差別會在諮詢時一起說明。</p>
+
+      <h3>活動假牙</h3>
+      <p>可以自己取下來清潔，價格最親切，但穩定度也最低。</p>
+
+      <div class="callout">
+        <p><b>左邊那一條是套色階（固定），h3 和這行裡的連結是字階（會跟著切換）。</b>兩者同框，切到 Ⓓ2 的時候看它們還像不像同一個顏色 —— 落差會從 10.1 拉到 19.0。</p>
+      </div>
+
+      <h3>人工植牙</h3>
+      <p>把鈦金屬植體放進齒槽骨，等它和骨頭長在一起再接上牙冠，時間最長。</p>
+
+      <div class="btns">
+        <a class="btn" href="#demo">預約諮詢</a>
+        <a class="btn btn-ghost" href="#demo">看所有重建文章</a>
+      </div>
+
+      <p class="disclaim">本文為衛教資訊，不能取代醫師的臨床診斷。</p>
+    </div>
+
+    <div class="note">
+      <p><b>兩顆按鈕是最直接的對照。</b>實心那顆吃套色（永遠 <code>#335b8b</code>），線框那顆吃字階 —— <b>切到 Ⓓ2，線框按鈕的字與框會明顯比實心那顆深一大截</b>（對卡 12.35 對 6.55）。</p>
+      <p class="soft">要判斷的是：這樣讀起來像「同一個色的兩個高度」，還是像「一個藍配一個藍黑」。落差 19.0 已經超過現役最大的顯微根管 15.1。</p>
     </div>
   </section>
 
