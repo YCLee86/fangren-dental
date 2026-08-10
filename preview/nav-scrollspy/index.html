@@ -58,10 +58,9 @@
                    Ⓓ2 玻璃　**框常駐、底才跟著捲動**（2026-08-10 第四輪，使用者要的：
                              「這三個元素在 HERO 區時就有玻璃框，比較像按鈕」）。
                              **這一案是使用者選定的方向**，第五、六輪都在調它：
-                               底　紙色 `--paper`，亮度三階 `?g=1|2|3` → .24／.34／.44
-                                   **使用者選 Ⓖ1 淡（.24）**，所以那一階是預設
-                               框　紙色，靜止 .26、亮起來 .55；
-                                   粗細三階 `?w=1|2|3` → .5／.75／1px（預設 1px ＝ 原樣）
+                               底　紙色 `--paper`，**定案 Ⓖ1 淡 .24**（另兩階 .34／.44 落選）
+                               框　紙色，**沒亮 .75px/.26、亮起來 1px/.55**（使用者指定
+                                   兩態不同粗；.5px 落選）。線是 box-shadow: inset 畫的
                              亮起來那一項的字提到純白（Ⓖ1 上 6.20:1）
                    Ⓓ3 灰塊　`#5f5d5c` ＝ 站上「全部」那顆標記的填色（介面灰），白字
                    Ⓓ 發光　**原案，使用者否決**：「太寫實了，跟整個網站的風格不搭。」
@@ -484,7 +483,8 @@ html[data-nav="d1"][data-here] .site-nav a[aria-current] { color: var(--ink); }
        紙 .34（預設）   rgb(115,114,114)  對玻璃 2.47   R−B ＋0.7  ← 幾乎中性
        紙 .44           rgb(132,131,131)  對玻璃 3.17   R−B ＋0.1
 
-   「差異不大」則是另一件事：原本只有 1.50。三階讓使用者挑，見 data-g。
+   「差異不大」則是另一件事：原本底對玻璃只有 1.50。第五輪做了三階讓使用者挑，
+   定案 Ⓖ1（數字在下面 .nav-lamp 那一段）。
    ------------------------------------------------------------------------ */
 /* ⚠ 燈箱在這一案**不畫自己的框**。
    它和 `a::before` 那圈框是同一個矩形（同一組 padX／±1px 算出來的），
@@ -492,22 +492,19 @@ html[data-nav="d1"][data-here] .site-nav a[aria-current] { color: var(--ink); }
    有一半是這麼來的：不是變粗，是同一條線被畫了兩次。
    線只留一條，由 `a::before` 負責；燈箱只負責面。 */
 html[data-nav="d2"] .nav-lamp {
-  background: rgba(226, 229, 230, var(--d2-a, .24));
+  /* **定案 Ⓖ1 淡（.24）**，2026-08-10 第五輪。切換條已刪。
+     三階的實測數字留著，日後要再調亮度直接查這一張表，不要重新目測：
+
+       Ⓖ1 .24　底 rgb(98,97,96)　　底對玻璃 1.91　純白字 6.20 ✓　← 定案
+       Ⓖ2 .34　底 rgb(114,114,114)　　　　　 2.47　純白字 4.80 ✓（AA 4.5 剛過）
+       Ⓖ3 .44　底 rgb(131,132,131)　　　　　 3.14　純白字 3.77 ✗ 低於 AA
+
+     ⚠ 底一亮，**站在它上面的白字就開始變難讀**，這是這一案的天花板。
+       Ⓖ3 過不了 AA —— 真要用它，那一項的字得翻成墨色（就變成 Ⓓ1 那種讀法），
+       不能白字硬上；這一站只在兒牙那一顆破例過一次，而且是刻意的。 */
+  background: rgba(226, 229, 230, .24);
   border-color: transparent;
 }
-/* 亮度三階（只作用在 Ⓓ2）。網址 ?g=1|2|3，預設 2。
-   ⚠ 底一亮，**站在它上面的白字就開始變難讀** —— 這是這一案的天花板，
-      不是可以無視的細節。目前這一項的字因此從 .88 白提到純白：
-
-        Ⓖ1 .24　底 rgb(98,97,96)　　底對玻璃 1.91　純白字 6.20 ✓
-        Ⓖ2 .34　底 rgb(114,114,114)　　　　　 2.47　純白字 4.80 ✓（AA 4.5 剛過）
-        Ⓖ3 .44　底 rgb(131,132,131)　　　　　 3.14　純白字 3.77 ✗ 低於 AA
-
-      **Ⓖ3 過不了 AA。** 如果最後選它，那一項的字要翻成墨色（就變成 Ⓓ1 那種讀法），
-      不能白字硬上 —— 這一站只在兒牙那一顆破例過一次，而且是刻意的。 */
-/* **使用者已選 Ⓖ1 淡（.24）**，所以預設值改成它，另外兩階留著對照。 */
-html[data-g="2"] { --d2-a: .34; }
-html[data-g="3"] { --d2-a: .44; }
 /* 亮起來的那一項提到純白。Ⓖ1 的底最淡，純白字 6.20:1，最寬鬆的一格。 */
 html[data-nav="d2"][data-here] .site-nav a[aria-current] { color: #fff; }
 
@@ -531,29 +528,33 @@ html[data-nav="d2"] .site-nav a::before {
   content: ''; position: absolute; z-index: -1;
   inset: -1px calc(-1 * var(--lamp-pad, 6px));
   /* 框也走紙色，理由同上 —— 一條線上看不太出色相，但沒理由讓框和底不同族。
-     粗細做成變數（`?w=1|2|3` → .5／.75／1px，預設 1px ＝ 目前線上的樣子）。
+
+     **粗細定案（2026-08-10 第六輪）：沒亮 .75px、亮起來 1px。**
+     兩個狀態不同粗是使用者指定的 —— 亮的那一項除了變亮，線本身也**扎實一階**，
+     所以「被點到」這件事是靠三個量一起講：底、框的濃度、框的粗細。
+     三階量過的結果留著（.5／.75／1px），落選的是 .5（太糊）與「兩態同粗」。
 
      ⚠ **這條線是 `box-shadow: inset` 畫的，不是 `border`。**
         Blink（Chrome／Edge／Android）會把 `border-width` 進位到整數 px ——
         實測 `.5px` 的 computed value 回來就是 `1px`，三階完全一樣粗，
-        等於那個切換條是假的。inset 陰影吃得到小數，
+        等於切換條是假的。inset 陰影吃得到小數，
         而且一樣跟著 `border-radius` 走，圓角不會走鐘。
-     ⚠ 畫得出多細仍由裝置決定：手機 DPR 3 的 .5px ＝ 1.5 個實體像素，銳利；
+        **日後這一站要畫細線一律用這個做法。**
+     ⚠ 畫得出多細仍由裝置決定：手機 DPR 3 的 .75px ＝ 2.25 個實體像素，銳利；
         1x 的外接螢幕上不到一個像素，只能用淡一階的灰去近似，會比手機上更淡。
-        **挑的時候以手機為準。** */
+        **挑的時候以手機為準。**
+     ⚠ 粗細變化不會動到版面：陰影不佔位，框的外框也仍然是 `inset` 那一個矩形，
+        和滑過去的那塊底永遠對齊。 */
   border: 0;
   border-radius: 12px;
-  box-shadow: inset 0 0 0 var(--d2-w, 1px) rgba(226, 229, 230, .26);
+  box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .26);
   transition: box-shadow .25s ease;
 }
-/* 目前這一項的框跟著亮，和底一起。.26 → .55 是這一案「亮起來」的另一半：
-   底負責面、框負責邊，兩個一起拉開才看得出是同一塊東西被點亮。 */
+/* 目前這一項：線同時**變濃**（.26 → .55）與**變粗**（.75px → 1px），
+   底則從無到 .24。三個量一起走，才看得出是同一塊東西被點亮。 */
 html[data-nav="d2"][data-here] .site-nav a[aria-current]::before {
-  box-shadow: inset 0 0 0 var(--d2-w, 1px) rgba(226, 229, 230, .55);
+  box-shadow: inset 0 0 0 1px rgba(226, 229, 230, .55);
 }
-/* 邊框粗細三階（只作用在 Ⓓ2）。 */
-html[data-w="1"] { --d2-w: .5px; }
-html[data-w="2"] { --d2-w: .75px; }
 
 /* ⚠ 框一旦常駐，外擴的量就不能再固定是「半個字」了 —— 手機的選單間距只有
    3.2vw（375 上 12px），兩邊各長 6px 就會**邊碰邊**。
@@ -3011,20 +3012,12 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   <button type="button" data-v="d3">Ⓓ3 灰塊</button>
   <button type="button" data-v="d">Ⓓ 發光（原案）</button>
   <span class="sep" aria-hidden="true"></span>
-  <!-- Ⓓ2 專用的亮度三階。和上面那組是獨立的兩件事，可以任意組合，
-       但只有選在 Ⓓ2 的時候看得到差別。 -->
-  <button type="button" data-g="1">Ⓖ1 淡</button>
-  <button type="button" data-g="2">Ⓖ2 中</button>
-  <button type="button" data-g="3">Ⓖ3 亮</button>
-  <span class="sep" aria-hidden="true"></span>
-  <!-- 邊框粗細。同樣只有 Ⓓ2 看得到差別。 -->
-  <button type="button" data-w="1">Ⓦ1 .5px</button>
-  <button type="button" data-w="2">Ⓦ2 .75px</button>
-  <button type="button" data-w="3">Ⓦ3 1px</button>
-  <span class="sep" aria-hidden="true"></span>
+  <!-- Ⓖ（亮度）與 Ⓦ（邊框粗細）兩排切換條已於 2026-08-10 定案後刪除：
+       亮度取 Ⓖ1 .24、邊框取「沒亮 .75px／亮起來 1px」。
+       各階的實測數字留在上面 Ⓓ2 那兩段 CSS 的註解裡。 -->
   <!-- 版本戳。手機上看到的是不是最新一版，看這裡就知道 ——
        Cloudflare 建置要幾分鐘，中間開到的會是上一版。 -->
-  <span class="sw-live" aria-hidden="true">版本 <b>⑥ 08-10</b>　目前：<b class="sw-now">—</b></span>
+  <span class="sw-live" aria-hidden="true">版本 <b>⑦ 08-10</b>　目前：<b class="sw-now">—</b></span>
 </div>
 <script>
 (function () {
@@ -3037,22 +3030,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      退回 Ⓐ 至少畫面上有東西在動，一看就知道是網址指定的那一案沒生效。 */
   var FALLBACK = 'd2';   /* 這一輪在調 Ⓓ2，預設就開在它；其餘各案切換條上都還在 */
 
-  var gBtns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-g]'));
-  var wBtns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-w]'));
-  var okG = { 1: 1, 2: 1, 3: 1 };
-
   function sync(push) {
     var v = root.getAttribute('data-nav') || 'now';
-    var g = root.getAttribute('data-g') || '1';
-    var w = root.getAttribute('data-w') || '3';
     var u = new URL(location.href);
     if (v === 'now') u.searchParams.delete('nav'); else u.searchParams.set('nav', v);
-    if (g === '1') u.searchParams.delete('g'); else u.searchParams.set('g', g);
-    if (w === '3') u.searchParams.delete('w'); else u.searchParams.set('w', w);
+    /* Ⓖ／Ⓦ 已定案，兩個參數不再有作用；舊網址帶著它們也不會壞，只是被忽略。 */
+    u.searchParams.delete('g');
+    u.searchParams.delete('w');
     if (push) history.replaceState(null, '', u);
     btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
-    gBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.g === g)); });
-    wBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.w === w)); });
     if (window.navSpyRelayout) window.navSpyRelayout();
   }
 
@@ -3061,29 +3047,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     if (v === 'now') root.removeAttribute('data-nav'); else root.setAttribute('data-nav', v);
     sync(push);
   }
-  /* 亮度與粗細都是獨立的一組，只有 Ⓓ2 看得到差別。 */
-  function setGlow(g, push) {
-    if (!okG[g]) g = '1';
-    root.setAttribute('data-g', g);
-    sync(push);
-  }
-  function setWidth(w, push) {
-    if (!okG[w]) w = '3';
-    root.setAttribute('data-w', w);
-    sync(push);
-  }
-
   var q = new URLSearchParams(location.search);
   var m = /^[a-z0-9]+$/.exec(q.get('nav') || '');
-  var gq = /^[0-9]+$/.exec(q.get('g') || '');
-  var wq = /^[0-9]+$/.exec(q.get('w') || '');
-  setGlow(gq ? gq[0] : '1', false);
-  setWidth(wq ? wq[0] : '3', false);
   setCase(m ? m[0] : FALLBACK, false);
 
   btns.forEach(function (b) { b.addEventListener('click', function () { setCase(b.dataset.v, true); }); });
-  gBtns.forEach(function (b) { b.addEventListener('click', function () { setGlow(b.dataset.g, true); }); });
-  wBtns.forEach(function (b) { b.addEventListener('click', function () { setWidth(b.dataset.w, true); }); });
 })();
 </script>
 
