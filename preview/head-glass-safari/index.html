@@ -7,67 +7,49 @@
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>頁首玻璃的下緣在 Safari 上是硬邊 — 四案｜芳仁牙醫</title>
+<title>玻璃的強度與邊緣 — 四階×四案｜芳仁牙醫</title>
 <meta name="robots" content="noindex, nofollow, noarchive">
 <!-- ============================================================================
-     這一頁是什麼（2026-08-10）
+     這一頁是什麼（2026-08-10，第二版）
      ----------------------------------------------------------------------------
-     使用者在 iPad 上回報：捲動時的頁首「算是毛玻璃，但**邊緣很清楚**，
-     跟手機版和電腦版的感覺很不一樣」。
+     **版型是現在的 index.html**（含 2026-08-10 定案的 iPad 直放：照片 70svh ＋
+     窄帶接在照片下面）。只多了兩排切換條，用來調兩層玻璃。
 
-     ---- 先排除程式錯誤（已查，不是這個）--------------------------------------
-     頁首玻璃的下緣本來就有羽化，做法是 mask：
+     ---- 使用者回報的三件事 ---------------------------------------------------
+     ① 「右上三個元素沒有出現剛才製作的亮玻璃效果」→ **正常**。
+        那四案只在這一頁，而且預設是「現況」，要切過去才看得到；
+        fangren.net 的首頁到目前為止一個字都沒改。
+     ② 「iPhone 和 iPad 的 banner 玻璃看起來都很模糊，印象中電腦版不是這麼模糊」
+     ③ 「iPad 圖片下方柏油路到診所台階那一塊也特別模糊」
 
-         .site-head::before {
-           backdrop-filter: blur(6px) saturate(1.08);
-           mask-image: linear-gradient(180deg, #000 0%, #000 var(--head-fade,76%), transparent 100%);
-         }
+     ---- ②③ 的參數是死的 -----------------------------------------------------
+         頁首 .site-head::before   blur(6px) saturate(1.08)   整條 76px（捲動後 60px）
+         窄帶 .band::before        blur(4px) saturate(.92)    84px，模糊由上往下淡入
+     **沒有任何 media query 會改這兩組值**，電腦／iPad／iPhone 完全一樣。
+     所以差別不會來自設定，只可能是 Safari 把同樣的 px 算得比較重（Retina 上
+     常見的抱怨），或是螢幕尺寸造成的觀感差。
+     ⚠ 做這一頁的環境沒有 Safari，這一點無法驗證 —— 所以做成四階讓實機轉。
 
-     而 --head-fade 由捲動的 JS 逐幀寫入（76% 軟邊 → 100% 無羽化）。
-     在 Chromium 上逐點量過，**這段邏輯完全正確**：
+     ③ 指的那一塊就是窄帶那一層。iPad 定案之後它被搬到照片的最後 84px 上
+     （PALETTE.md 第六之十八節），所以現在調「窄帶」那一階，改的正是那一塊。
 
-         捲動   窄帶上緣   --head-fade   玻璃
-            0      896        76.0%      rgba(25,22,20,.060)
-          700      196        76.0%      rgba(25,22,20,.060)
-          820       76        76.0%      rgba(25,22,20,.060)
-          850       46        77.1%      rgba(25,22,20,.339)
-          880       16        84.7%      rgba(25,22,20,.617)
-          920      −24       100.0%      rgba(27,24,22,.848)
+     ---- 兩排切換條 -----------------------------------------------------------
+     強度  現況 6/4 ／ 弱 4/3 ／ 更弱 3/2 ／ 極弱 2/1.5
+           （前面是頁首 --gb，後面是窄帶 --bb）
+     邊緣  現況    mask 直接下在有 backdrop-filter 的元素上
+           拆兩層  外層帶 mask、內層帶 backdrop-filter（偽元素不能巢狀，所以插了
+                   真的 <div>）。賭祖先的 mask 會連帶裁掉子元素的 backdrop。
+           合成層  現況 ＋ transform: translateZ(0)
+           階梯    完全不用 mask：四條由上而下 blur 遞減，各自硬邊但相鄰差很小
 
-     也就是說：**頁首壓在照片上的整段捲動，羽化都是開著的（76%）**，
-     只有在窄帶離開的最後一小段才收成硬邊，而那一刻它正好和「窄帶結束、
-     紙色開始」那條原本就有的邊重合，看不出來。設計是對的，值也是對的。
+     兩排可自由組合，?g=now|layer|gpu|steps&b=now|w|ww|www。
 
-     ---- 所以問題在渲染，不在邏輯 ---------------------------------------------
-     推測是 **WebKit 對「同一個元素上同時有 backdrop-filter 與 mask」的處理**
-     和 Blink 不同：mask 只作用在元素自己畫的底色上，**backdrop-filter 的模糊
-     區域仍然是一個硬邊矩形**。這樣就會得到使用者說的「算是毛玻璃但邊緣很清楚」。
+     ⚠ 切換條上的讀數會顯示「iPad 版型：生效／未生效」——
+        那是在檢查 index.html 那條 (min-aspect-ratio:2/3) and (max-aspect-ratio:9/10)
+        在這台機器上有沒有命中。**如果在 iPad 上顯示「未生效」，就是門檻抓錯了，
+        要回頭改 index.html 的比例區間。**
 
-     ⚠ **這是推測，沒有查到明確的官方紀錄，而且做這一頁的環境裡沒有 Safari
-        可以驗證。** 所以下面四案是候選，要靠實機看哪一個對。
-        （同一類 bug 在 Blink 也發生過：Chrome 76 的 mask/clip-path 不作用在
-          backdrop-filter 上，77 修掉。所以這條路是有前例的。）
-
-     ---- 為什麼手機不明顯 -------------------------------------------------------
-     不是手機沒事，是**看不到**：手機版 HERO 只有 74.72vw 高（375 上約 280px），
-     窄帶緊接在下面，頁首壓在照片上的行程只有兩百多 px，一下就過去了；
-     之後頁首坐在紙色上，那一段本來就設計成無羽化。
-     iPad 是 100svh（約 890px），頁首在照片上飄快一千 px，當然看得出來。
-
-     ---- 四案（切換條）---------------------------------------------------------
-       現況    mask 直接下在有 backdrop-filter 的 ::before 上
-       拆兩層  外層元素帶 mask、內層元素帶 backdrop-filter。
-               祖先的 mask 會不會連帶裁掉子元素的 backdrop —— 這是最主要的候選。
-               偽元素不能巢狀，所以這一案另外插了兩層真的 <div>。
-       合成層  現況 ＋ transform: translateZ(0)，逼它獨立合成再套 mask
-       階梯    完全不用 mask：四條由上而下 blur 6→4→2→1、濃度遞減。
-               每一條的邊都是硬的，但相鄰兩條差很小，看起來就像漸層。
-               這一案在任何瀏覽器都成立，代價是多三層合成。
-
-     ⚠ 這一頁只改**頁首**那一層。窄帶的毛玻璃（.band::before）用的是一模一樣的
-        技術（backdrop-filter ＋ mask 淡入），所以哪一案贏，兩邊要一起改。
-
-     網址可帶 ?g=now|layer|gpu|steps。**定案後把切換條與多插的 <div> 一起刪掉。**
+     **定案後把兩排切換條、多插的 <div> 與這段註解一起刪掉。**
      ============================================================================ -->
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
@@ -1138,8 +1120,8 @@ html.scrolled .brand-text small { font-size: .74rem; }
 /* 模糊層：整條 4px 一致，但由 mask 讓它從上往下淡入，所以沒有框邊。 */
 .band::before {
   content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  -webkit-backdrop-filter: blur(calc(var(--gb) * .67)) saturate(.92);
-  backdrop-filter: blur(calc(var(--gb) * .67)) saturate(.92);
+  -webkit-backdrop-filter: blur(4px) saturate(.92);
+  backdrop-filter: blur(4px) saturate(.92);
   -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 38%);
   mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 38%);
 }
@@ -2126,7 +2108,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      **position 一定要 relative，不能 static。** .band::before（毛玻璃）與
      .band::after（柏油漸層）都是 position:absolute; inset:0 ——
      .band 若是 static 就不是它們的包含塊，兩層會改用 .hero（position:relative），
-     於是**整張照片被 blur(calc(var(--gb) * .67)) 糊掉、再蓋上一層柏油色**，
+     於是**整張照片被 blur(4px) 糊掉、再蓋上一層柏油色**，
      那就是「HERO 整個變暗糊掉」的原因。
 
      手機版本來就不用毛玻璃：帶子接在照片下面，底下沒有東西可以透，
@@ -2375,6 +2357,86 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 
 /* ==========================================================================
+   iPad 直放：照片 70svh ＋ 窄帶接在照片下面（定案 2026-08-10）
+   --------------------------------------------------------------------------
+   推導與落選案：preview/hero-ipad/（照片高度四階）、
+                 preview/hero-ipad-band/（接縫與地址位置）。
+
+   ---- 為什麼上面那條 2/3 涵蓋不到 iPad ----
+   2/3 = 0.667，而 iPad 直放是 0.75 —— 上面那段當初就寫明「刻意排除」。
+   而且**實際的視窗比例比 0.75 更寬**：media query 算的是視窗，
+   Safari 的分頁列與工具列會從高度扣掉約 137 CSS px。實機換算：
+
+       iPad mini 6    744×1133 → 744×996  = 0.747
+       iPad 10.9"     820×1180 → 820×1043 = 0.786
+       iPad Pro 11"   834×1194 → 834×1057 = 0.789
+       iPad Pro 12.9" 1024×1366 → 1024×1229 = 0.833
+
+   所以這一段的區間取 **(2/3, 9/10]**，四台都在裡面，上緣還留 0.067 的餘裕。
+   ⚠ 下界寫 min-aspect-ratio: 2/3 是**為了不要蓋到上面那條**：
+      旋轉螢幕（1080×1920 = 0.5625）2026-08-09 已經定案 62svh ＋ 窄帶疊在照片上，
+      那個決定沒有被推翻，所以兩段刻意不重疊。
+      **要不要讓旋轉螢幕也改成這一版，是還沒問過的一題。**
+
+   ---- 為什麼要改 ----
+   使用者在 preview/hero-ipad/ 的四階裡選了 70svh（「以圖片來說剛好」），
+   但回報「下面窄帶幾乎沒什麼空間了」。所以照片留 70svh，窄帶改成**接在照片
+   下面**（＝手機版的做法），1983／9／6 整組往下移、上下都鬆開。
+
+   ---- 接縫：這一段的重點 ----
+   使用者的條件是「新接的窄帶必須和照片裡的柏油路加模糊的下半部接在一起」。
+
+   把 hero-clinic-night.jpg 畫進 canvas 逐列取整列平均：照片最後一列是
+   **#131110**（L* 5.2）。但畫面上現在看到的不是它 —— 窄帶的柏油層底端是
+   rgba(22,20,19,.88)，和照片合成之後是：
+       .88×(22,20,19) + .12×(19,17,16) = (21.6, 19.6, 18.6) → **#161413**
+   （正好就是 .band::after 那段註解寫的值。）**所以接縫要接的是 #161413。**
+
+   做法不重畫，把現在那兩層原地搬家：兩層原本是 inset: 0（疊在窄帶自己身上），
+   改成 top: auto; bottom: 100%; height: 84px，它們就**原封不動移到照片的最後
+   84px 上** —— 模糊強度、mask、柏油漸層的每一個值都沒有動，所以照片下半部
+   看起來和改動前完全一樣。窄帶再從 #161413 起跑，接縫是同一個顏色。
+
+   窄帶自己的漸層方向是**往下變亮**（#161413 → --band-bg → --band-bot），
+   和手機版同一個方向 —— 下緣要有明度才接得住紙色。
+
+   ⚠ .hero > .band 用 relative **不能用 static**：.band::before／::after 是
+      absolute，.band 若是 static 就不是它們的包含塊，兩層會改用 .hero，
+      於是整張照片被 blur 糊掉再蓋一層柏油色。手機版那段註解記過同一個坑。
+   ⚠ .hero-copy 的 z-index 要抬到 4：模糊層現在蓋在照片最後 84px 上，
+      收尾句「到巷口的芳仁」就落在那一段，不抬的話它會跟著被糊掉。
+   ========================================================================== */
+@media (min-width: 721px) and (min-aspect-ratio: 2 / 3) and (max-aspect-ratio: 9 / 10) {
+  .hero-photo { height: 70svh; }
+  .hero-poem { font-size: clamp(15px, 1.15svh, 24px); }
+  .hero-sign { font-size: clamp(13px, .95svh, 18px); }
+  /* 收尾句原本要讓開疊上來的窄帶，窄帶搬走之後不必了 */
+  .hero-copy { padding-bottom: 0; z-index: 4; }
+
+  .hero > .band { position: relative; }
+  .band {
+    min-height: 104px;                 /* 原本 84 —— 「往下移一些」多給的 20px */
+    background-color: var(--band-bg);
+    background-image: linear-gradient(180deg,
+      #161413 0%, var(--band-bg) 62%, var(--band-bot) 100%);
+  }
+  /* 模糊層與柏油層原地搬到照片的最後 84px，數值一個都沒改 */
+  .band::before, .band::after { top: auto; bottom: 100%; height: 84px; }
+
+  /* 地址與電話：一行置中，夾在瀏覽數與三格之間（＝手機版的位置）。
+     標記順序本來就是 瀏覽數 → 聯絡 → 三格，所以 static 之後它自然落在中間。
+     要把 ≤1159 那段為了兩行做的三件事還原：直排、溝、gap 0。 */
+  body .contact-pair {
+    position: static;
+    flex-direction: row; align-items: center; gap: 1.9rem;
+  }
+  .hero-contact a { gap: .45rem; }
+  .hero-contact .ico { flex: 0 0 auto; }
+
+  .band .shell { gap: .8rem; padding-block: 1rem; }
+}
+
+/* ==========================================================================
    320 級的窄機：窄帶裡地址與電話的間距要收（2026-08-10）
    --------------------------------------------------------------------------
    一行整組 267.1px，而 320 上版心內寬只有 280px —— 餘裕 12.9px（4.6%）。
@@ -2398,24 +2460,13 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 <style>
 /* ==========================================================================
-   頁首與窄帶的玻璃 — 邊緣四案 ＋ 強度四階（提案用，定案後整段刪掉）
-   --------------------------------------------------------------------------
-   ⚠ 正式站上兩層的模糊值是**寫死的、沒有任何 media query 會改**：
-       頁首 .site-head::before   blur(6px) saturate(1.08)   整條 76px（捲動後 60px）
-       窄帶 .band::before        blur(calc(var(--gb) * .67)) saturate(.92)    84px，模糊由上往下淡入
-     所以電腦、iPad、iPhone 吃到的是同一組數字。使用者回報「iPad 和 iPhone 看起來
-     比電腦模糊」，設定上不可能有差 —— 只可能是 Safari 把同樣的 px 算得比較重
-     （Retina 上常見），或是螢幕尺寸造成的觀感差。這一頁把強度做成四階讓他在
-     實機上轉，轉到對為止。
-
-     使用者同時回報「iPad 圖片下方柏油路到診所台階那一塊特別模糊」——
-     那就是窄帶那一層（84px、blur 4px）疊在照片下緣造成的，改「窄帶」那一階。
+   玻璃：強度四階 × 邊緣四案（提案用，定案後整段刪掉）
    ========================================================================== */
-/* 強度四階。兩個變數：--gb 頁首、--bb 窄帶。 */
+/* 強度。兩個變數：--gb 頁首、--bb 窄帶。 */
 :root { --gb: 6px; --bb: 4px; }
-[data-b="w"]   { --gb: 4px; --bb: 3px; }
-[data-b="ww"]  { --gb: 3px; --bb: 2px; }
-[data-b="www"] { --gb: 2px; --bb: 1.5px; }
+[data-b="w"]   { --gb: 4px;   --bb: 3px; }
+[data-b="ww"]  { --gb: 3px;   --bb: 2px; }
+[data-b="www"] { --gb: 2px;   --bb: 1.5px; }
 
 .site-head::before {
   -webkit-backdrop-filter: blur(var(--gb)) saturate(1.08);
@@ -2426,13 +2477,12 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   backdrop-filter: blur(var(--bb)) saturate(.92);
 }
 
-.hg { display: none; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+/* ---- 邊緣四案 ---- */
+.hg { display: none; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+      opacity: 0; transition: opacity .22s ease; }
 html.scrolled .hg { opacity: 1; }
-.hg { opacity: 0; transition: opacity .22s ease; }   /* 和 ::before 同步淡入 */
 
-/* ---- 拆兩層：mask 在外層，backdrop-filter 在內層 ----
-   賭的是「祖先的 mask 會連帶裁掉子元素的 backdrop-filter」。
-   偽元素不能巢狀，所以只能插真的 <div>。 */
+/* 拆兩層：mask 在外層，backdrop-filter 在內層 */
 [data-g="layer"] .site-head::before { display: none; }
 [data-g="layer"] .hg {
   display: block;
@@ -2446,19 +2496,18 @@ html.scrolled .hg { opacity: 1; }
   backdrop-filter: blur(var(--gb)) saturate(1.08);
 }
 
-/* ---- 合成層：現況再逼它自己一層 ---- */
+/* 合成層 */
 [data-g="gpu"] .site-head::before { transform: translateZ(0); will-change: transform; }
 
-/* ---- 階梯：不用 mask，四條硬邊但相鄰差很小 ----
-   高度是累加的（每一條都從頂端開始、往下長），所以上面那幾條會互相疊 ——
-   疊起來的總模糊在上緣最重、往下遞減，這正是要的方向。 */
+/* 階梯：不用 mask，四條硬邊但相鄰差很小。高度累加，上面幾條互相疊，
+   總模糊在上緣最重、往下遞減 —— 正是要的方向。 */
 [data-g="steps"] .site-head::before { display: none; }
 [data-g="steps"] .hg { display: block; }
-[data-g="steps"] .hg-s { position: absolute; left: 0; right: 0; top: 0; }
-[data-g="steps"] .hg-s[data-i="1"] { height: 100%; -webkit-backdrop-filter: blur(calc(var(--gb) * .17)); backdrop-filter: blur(calc(var(--gb) * .17)); opacity: .28; background: var(--glass, transparent); }
-[data-g="steps"] .hg-s[data-i="2"] { height: 82%;  -webkit-backdrop-filter: blur(calc(var(--gb) * .33)); backdrop-filter: blur(calc(var(--gb) * .33)); opacity: .5;  background: var(--glass, transparent); }
-[data-g="steps"] .hg-s[data-i="3"] { height: 62%;  -webkit-backdrop-filter: blur(calc(var(--gb) * .67)); backdrop-filter: blur(calc(var(--gb) * .67)); opacity: .7;  background: var(--glass, transparent); }
-[data-g="steps"] .hg-s[data-i="4"] { height: 40%;  -webkit-backdrop-filter: blur(var(--gb)) saturate(1.08); backdrop-filter: blur(var(--gb)) saturate(1.08); background: var(--glass, transparent); }
+[data-g="steps"] .hg-s { position: absolute; left: 0; right: 0; top: 0; background: var(--glass, transparent); }
+[data-g="steps"] .hg-s[data-i="1"] { height: 100%; opacity: .28; -webkit-backdrop-filter: blur(calc(var(--gb) * .17)); backdrop-filter: blur(calc(var(--gb) * .17)); }
+[data-g="steps"] .hg-s[data-i="2"] { height: 82%;  opacity: .5;  -webkit-backdrop-filter: blur(calc(var(--gb) * .33)); backdrop-filter: blur(calc(var(--gb) * .33)); }
+[data-g="steps"] .hg-s[data-i="3"] { height: 62%;  opacity: .7;  -webkit-backdrop-filter: blur(calc(var(--gb) * .67)); backdrop-filter: blur(calc(var(--gb) * .67)); }
+[data-g="steps"] .hg-s[data-i="4"] { height: 40%;  -webkit-backdrop-filter: blur(var(--gb)) saturate(1.08); backdrop-filter: blur(var(--gb)) saturate(1.08); }
 
 /* ---- 切換條（靠右，詩是靠左的）---- */
 .fixbar {
@@ -2477,6 +2526,8 @@ html.scrolled .hg { opacity: 1; }
   padding: .22rem .5rem; border-radius: 6px; border: 1px solid #4a4640;
 }
 .fixbar a[aria-current] { background: #e3e1e0; color: #191614; border-color: #e3e1e0; }
+.fixbar .w { color: #969089; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.fixbar .w.bad { color: #d99a94; }
 </style>
 </head>
 <body>
@@ -2485,7 +2536,7 @@ html.scrolled .hg { opacity: 1; }
 <a class="skip-link" href="#main">跳到主要內容</a>
 
 <header class="site-head">
-  <!-- 提案用：偽元素不能巢狀，所以「拆兩層」與「階梯」兩案需要真的元素。定案後刪掉。 -->
+  <!-- 提案用：偽元素不能巢狀，「拆兩層」與「階梯」兩案需要真的元素。定案後刪掉。 -->
   <div class="hg" aria-hidden="true">
     <div class="hg-in"></div>
     <div class="hg-s" data-i="1"></div>
@@ -3285,7 +3336,7 @@ html.scrolled .hg { opacity: 1; }
 
 
 <div class="fixbar" role="navigation" aria-label="方案切換">
-  <div class="row"><i>往下捲：看頁首下緣，以及照片底下那一段</i></div>
+  <div class="row"><i>往下捲：看頁首下緣，和照片底下那一段</i></div>
   <div class="row">
     <b>強度：</b>
     <a href="#" data-b="now">現況 6/4</a>
@@ -3300,6 +3351,7 @@ html.scrolled .hg { opacity: 1; }
     <a href="#" data-g="gpu">合成層</a>
     <a href="#" data-g="steps">階梯</a>
   </div>
+  <div class="row"><span class="w" id="wnow">—</span></div>
 </div>
 <script>
 (function () {
@@ -3310,16 +3362,15 @@ html.scrolled .hg { opacity: 1; }
     return (m && list.indexOf(m[1]) !== -1) ? m[1] : list[0];
   }
   var G = ["now", "layer", "gpu", "steps"], B = ["now", "w", "ww", "www"];
-  var g = read("g", G), b = read("b", B);
+  var st = { g: read("g", G), b: read("b", B) };
 
   function apply() {
-    root.setAttribute("data-g", g);
-    root.setAttribute("data-b", b);
+    root.setAttribute("data-g", st.g);
+    root.setAttribute("data-b", st.b);
     var links = document.querySelectorAll(".fixbar a");
     for (var i = 0; i < links.length; i++) {
       var a = links[i], k = a.hasAttribute("data-g") ? "g" : "b";
-      var v = a.getAttribute("data-" + k), cur = (k === "g" ? g : b);
-      if (v === cur) a.setAttribute("aria-current", "true");
+      if (a.getAttribute("data-" + k) === st[k]) a.setAttribute("aria-current", "true");
       else a.removeAttribute("aria-current");
     }
     if (window.fangrenRepaintHead) window.fangrenRepaintHead();
@@ -3331,11 +3382,27 @@ html.scrolled .hg { opacity: 1; }
     var a = e.target.closest("a");
     if (!a) return;
     e.preventDefault();
-    if (a.hasAttribute("data-g")) g = a.getAttribute("data-g");
-    else b = a.getAttribute("data-b");
+    st[a.hasAttribute("data-g") ? "g" : "b"] =
+      a.getAttribute(a.hasAttribute("data-g") ? "data-g" : "data-b");
     apply();
-    history.replaceState(null, "", "?g=" + g + "&b=" + b);
+    history.replaceState(null, "", "?g=" + st.g + "&b=" + st.b);
   });
+
+  /* 讀數：順便檢查 index.html 那條 iPad 比例區間在這台機器上有沒有命中。
+     判斷方式是看窄帶的 position —— 電腦版是 absolute（疊在照片上），
+     iPad 那一段改成 relative（接在照片下面）。 */
+  var w = document.getElementById("wnow");
+  var band = document.querySelector(".hero > .band");
+  function tick() {
+    var vv = window.visualViewport;
+    var px = Math.round((vv && vv.width) || innerWidth), py = Math.round((vv && vv.height) || innerHeight);
+    var on = band && getComputedStyle(band).position === "relative";
+    w.textContent = px + "×" + py + "（" + (px / py).toFixed(3) + "）· iPad 版型：" + (on ? "生效" : "未生效");
+    w.className = "w" + (on ? "" : " bad");
+  }
+  tick();
+  addEventListener("resize", tick);
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", tick);
 })();
 </script>
 </body>
