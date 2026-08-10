@@ -7,26 +7,29 @@
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>iPad：窄帶接在照片下面 — 接縫與地址位置｜芳仁牙醫</title>
+<title>iPad 直放：窄帶接在照片下面 — 定稿紀錄｜芳仁牙醫</title>
 <meta name="robots" content="noindex, nofollow, noarchive">
 <!-- ============================================================================
-     這一頁是什麼（2026-08-10）
+     iPad 直放的 HERO 與窄帶 —— 定稿紀錄（2026-08-10，已套進 index.html）
      ----------------------------------------------------------------------------
-     使用者選了 **70svh**（preview/hero-ipad/ 四階裡的一階），但回報
-     「下面窄帶幾乎沒什麼空間了」，要求：
+     **這一頁是 index.html 的完整複本**（只有兩處不同：標題、noindex、
+     assets 改成絕對路徑）。切換條已刪，畫面上就是上線的樣子。
 
-       「像手機版那樣多接一段窄帶在圖片的下面，把 1983／9／6 這些資訊往下移一些，
-         但是這個新接窄帶必須要和現在照片裡的柏油路加模糊的下半部接在一起。」
+     使用者定案：**接縫「保留模糊＋柏油」＋ 地址電話「三格上（一行）」**。
 
-     所以這一頁：照片固定 70svh、窄帶**脫離照片**接在下面，重點在**接縫**。
+     ---- 走過的路 -------------------------------------------------------------
+     1. preview/hero-ipad/  照片高度四階（現況 100svh／62svh／70svh／不裁）。
+        使用者選 **70svh** —— 「以圖片來說 70svh 比較剛好」。
+        「不裁」（aspect-ratio 1600/1058，744 上只有 492px 高）落選：
+        照片是完整的，但詩、收尾句、窄帶擠在一起。
+     2. 但 70svh 之後「下面窄帶幾乎沒什麼空間了」，所以窄帶改成**接在照片下面**
+        （＝手機版的做法），1983／9／6 整組往下移。
+     3. 接縫兩案：**保留模糊＋柏油（定案）** vs 直接接（落選——照片會被切出
+        一條硬邊，車子與路面細節突然中斷）。
+     4. 地址電話三案：**三格上一行（定案）** vs 三格下一行 vs 三格上兩行。
 
-     ⚠ 這一頁的規則關在 @media (min-width: 721px) 裡、**刻意不看 aspect-ratio**，
-        所以用電腦開也會看到同一個樣子 —— 那是提案頁的設定，不代表電腦版要跟著改。
-        真的要上線時得補上比例條件（iPad 直放的視窗比例約 0.759，
-        現行那條 max-aspect-ratio: 2/3 = 0.667 涵蓋不到，見 preview/hero-ipad/）。
-
-     ---- 接縫要對到哪個顏色（實測，不是憑印象）--------------------------------
-     把 assets/hero-clinic-night.jpg 畫進 canvas 逐列取整列平均：
+     ---- 接縫的數字（實測，別重新目測）----------------------------------------
+     hero-clinic-night.jpg 畫進 canvas 逐列取整列平均：
 
          底起 1px    #131110  L* 5.2   ← 照片真正的最後一列
          底起 4px    #141211  L* 5.6
@@ -35,35 +38,24 @@
          底起 64px   #211c1a  L* 10.8
          底起 200px  #2f2c29  L* 18.2
 
-     但畫面上現在看到的**不是** #131110 —— 窄帶疊在上面，底層是
-     .band::after 的 rgba(22,20,19,.88)。合成後：
-         .88×(22,20,19) + .12×(19,17,16) = (21.6, 19.6, 18.6) → **#161413**
-     這正好就是 index.html 那段註解寫的「#161413（照片最底那一列）」。
-     **所以接縫要接的是 #161413，不是 #131110。**
+     但畫面上看到的**不是** #131110：窄帶的柏油層底端是 rgba(22,20,19,.88)，
+     和照片合成後 = **#161413**。**接縫要接的是這一個。**
 
-     ---- 怎麼接 ---------------------------------------------------------------
-     不重畫，直接把現在那兩層原地搬家：
+     ---- 觸發條件 -------------------------------------------------------------
+     @media (min-width: 721px) and (min-aspect-ratio: 2/3) and (max-aspect-ratio: 9/10)
 
-         .band::before  模糊層  blur(4px) saturate(.92) ＋ mask 從上往下淡入
-         .band::after   柏油層  透明 → rgba(22,20,19,.88)
+     下界 2/3 是為了不蓋到 2026-08-09 定案的旋轉螢幕那一段（62svh ＋ 窄帶疊在
+     照片上），兩段刻意不重疊。上界 9/10 涵蓋四台 iPad（扣掉 Safari 分頁列之後
+     0.747~0.833），還留 0.067 餘裕。
 
-     兩層原本是 inset: 0（疊在窄帶自己身上）。改成
-         top: auto; bottom: 100%; height: 84px;
-     它們就**原封不動地移到照片的最後 84px 上** —— 數值一個都沒改，
-     所以照片下半部看起來和現在完全一樣（柏油路 ＋ 由上往下糊進去）。
-     然後新的窄帶從 #161413 接下去，接縫在數學上就是同一個顏色。
+     ⚠ **這一段只涵蓋直立比例。** 視窗寬 721–870 但**橫向**的情況（例如
+        768×500 的分割畫面）仍然是舊的兩行絕對定位，第三格與地址電話還是會撞
+        （實測 −25.1px）—— 那是 preview/band-tablet-gap/ 的 Ⓐ／Ⓑ／Ⓒ 在處理的事，
+        **還沒定案**。
 
-     ---- 兩排切換條 -----------------------------------------------------------
-     接縫  soft（預設）保留那兩層，照片最後 84px 維持現在的樣子
-           hard        兩層關掉，照片直接結束、窄帶用手機版純粹的夜色漸層
-                       （＝手機版現在的做法，拿來當對照）
-
-     地址  above（預設）一行置中，在瀏覽數與三格之間（＝手機版的位置）
-     電話  below        一行置中，移到三格**下面**
-           two          兩行置中，在三格上面
-
-     網址可帶 ?seam=soft|hard&pos=above|below|two。
-     **定案之後把兩排切換條連同 data-* 一起刪掉**，不要留到正式站。
+     ⚠ 逐項比對過（改動前後放進同尺寸 iframe）：
+        1440×900、1280×800、375×812、1080×1920（旋轉螢幕）**四組完全相同**，
+        只有 iPad 那一組有變。電腦版與手機版真的沒被動到。
      ============================================================================ -->
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
@@ -701,7 +693,7 @@
         "@id": "https://fangren.net/#dentist"
       },
       "inLanguage": "zh-Hant-TW",
-      "dateModified": "2026-08-10",
+      "dateModified": "2026-08-11",
       "primaryImageOfPage": {
         "@type": "ImageObject",
         "url": "https://fangren.net/assets/hero-clinic-night.jpg"
@@ -906,24 +898,96 @@ html.scrolled .brand-text b { font-size: .96rem; }
 html.scrolled .brand-text small { font-size: .74rem; }
 .brand-text b, .brand-text small { transition: font-size .2s ease; }
 
-.site-nav { display: flex; flex-wrap: nowrap; gap: 1.9rem; font-size: .86rem; min-width: 0; }
+/* ==========================================================================
+   主選單：三個玻璃框 ＋ 一塊跟著捲動滑過去的底（2026-08-10 定案）
+   --------------------------------------------------------------------------
+   ⚠ 這一段換掉了原本的「hover 從中間長出底線」。**那條底線是壞的**：
+     它只有 `:hover` 一種來源，而手機沒有游標、hover 一被點出來就黏住，
+     所以三項點過之後三條線一起留著。使用者的原話是「邏輯不通」。
+     和文章卡「手機版不做 hover」是同一個坑，選單當初漏掉了。
+
+   現在分成兩件事：
+
+     框　三項都有、從頭到尾都在（包含 HERO 那一屏）。它的工作是**暗示可以按**，
+        所以在還沒捲動、什麼都還沒發生的時候就要看得見。
+     底　只有「畫面目前停在的那一節」那一項有，跟著捲動在三個字之間滑過去。
+        狀態由 </body> 前那支 JS 掛在 <html> 上：`data-here` ＋ `aria-current`，
+        **同時只會有一個**，所以線再也不會累加。
+
+   被點亮是三個量一起走（使用者第六輪指定的）：
+     底　　無　　→ 紙色 .24
+     線濃　.26　 → .55
+     線粗　.75px → 1px
+
+   為什麼底是**紙色 `--paper`** 而不是白：頁首玻璃的染色 `#191614` 是暖的
+   （過了窄帶的實色 `#393736`，R 比 B 高 3），低透明度的白只拉亮度、
+   色相原封不動搬上來，看起來會偏橘黃（手機開 True Tone 更明顯）。
+   紙色 R 比 B 低 4，冷正好抵掉底的暖：R−B 從 ＋2.6 收到 ＋0.7。
+   對比度：底對玻璃 1.91、亮起來那一項的純白字對底 6.20:1。
+
+   推導過程、落選的階數（底 .34／.44、線 .5px、發光燈箱、白線、燈亮…）
+   與每一階的實測數字，全部留在 preview/nav-scrollspy/。要改先讀那一頁。
+   ========================================================================== */
+.site-nav { position: relative; display: flex; flex-wrap: nowrap; gap: 1.9rem; font-size: .86rem; min-width: 0; }
 .site-nav a { white-space: nowrap; }
 .site-nav a {
-  position: relative; color: rgba(255, 255, 255, .88);
+  /* z-index 1：字要壓在燈箱上面。 */
+  position: relative; z-index: 1; color: rgba(255, 255, 255, .88);
   text-decoration: none; white-space: nowrap; padding-block: .35rem;
+  transition: color .25s ease;
 }
-/* 底線從中間長出來。這是全頁唯一的 hover 動效 —— 手機版沒有 hover 這件事，
-   所以它不算違背手機版，是電腦版本來就要補的狀態。 */
-.site-nav a::after {
-  content: ''; position: absolute; left: 50%; right: 50%; bottom: 0;
-  border-bottom: 1px solid currentColor; opacity: 0;
-  transition: left .2s ease, right .2s ease, opacity .2s ease;
+/* 常駐的框。
+   ⚠ **畫在 ::before，不能直接給 a 加 border** —— 加了會把選單撐寬，
+     375 上頁首只剩 37px 餘裕，品牌會被擠成兩行（PALETTE 第六之五節那個坑）。
+     ::before 是絕對定位、不佔位。
+   ⚠ **線是 `box-shadow: inset` 畫的，不是 border** —— Blink 會把 `border-width`
+     進位到整數 px，`.75px` 寫上去量回來是 `1px`，兩個狀態會一樣粗。
+     inset 陰影吃得到小數，一樣跟著 border-radius 走。日後畫細線一律用這個做法。
+   ⚠ 圓角 12px ＝ 標記、搜尋框、三種卡片用的同一個，不要另外挑。
+   `--lamp-pad` 由 JS 現量寫進來（半個字，但不能大到讓兩個框黏在一起）；
+   沒有 JS 時退回 .29em，手機上仍然留得住 5px 的間隙。 */
+.site-nav a::before {
+  content: ''; position: absolute; z-index: -1;
+  inset: -1px calc(-1 * var(--lamp-pad, .29em));
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .26);
+  transition: box-shadow .25s ease;
 }
-.site-nav a:hover::after, .site-nav a:focus-visible::after { left: 0; right: 0; opacity: .8; }
+/* 目前這一節的那一項：線變濃又變粗。 */
+html[data-here] .site-nav a[aria-current]::before {
+  box-shadow: inset 0 0 0 1px rgba(226, 229, 230, .55);
+}
+html[data-here] .site-nav a[aria-current] { color: #fff; }
+/* 有游標的裝置才給 hover，而且只動框的濃度、不畫任何會留下來的東西。
+   手機完全不會進到這一條（`hover: hover` 為假），所以不會有黏住的狀態。 */
+@media (hover: hover) and (pointer: fine) {
+  .site-nav a:hover::before { box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .40); }
+}
 .site-nav a:focus-visible, .brand:focus-visible { outline: 2px solid rgba(255,255,255,.8); outline-offset: 3px; }
+
+/* 滑過去的那塊底。整條選單只有一塊，由 JS 生出來並用 CSS 變數餵位置 ——
+   **是同一盞燈移過去，不是三個各自亮滅**（後者看起來像三個開關）。
+   幾何全部現量：選單字級在手機是 clamp，寫死一定會在某個寬度歪掉。 */
+.nav-lamp {
+  position: absolute; z-index: 0; top: 0; left: 0;
+  width: var(--lamp-w, 0px); height: var(--lamp-h, 0px);
+  transform: translate(var(--lamp-x, 0px), var(--lamp-y, 0px));
+  border-radius: 12px;
+  background: rgba(226, 229, 230, .24);
+  opacity: 0; pointer-events: none;
+  transition: transform .3s cubic-bezier(.4, 0, .2, 1),
+              width .3s cubic-bezier(.4, 0, .2, 1),
+              height .3s cubic-bezier(.4, 0, .2, 1),
+              opacity .22s ease;
+}
+/* HERO 那一屏還沒進到任何一節，三項都只有框、沒有底。 */
+html[data-here] .nav-lamp { opacity: 1; }
+
 @media (prefers-reduced-motion: reduce) {
   .site-head, .site-head .shell, .site-head::before,
-  .brand-mark, .brand-text b, .brand-text small, .site-nav a::after { transition: none; }
+  .brand-mark, .brand-text b, .brand-text small,
+  .site-nav a, .site-nav a::before { transition: none; }
+  .nav-lamp { transition: opacity .22s ease; }
 }
 
 /* ==========================================================================
@@ -2371,6 +2435,86 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 
 /* ==========================================================================
+   iPad 直放：照片 70svh ＋ 窄帶接在照片下面（定案 2026-08-10）
+   --------------------------------------------------------------------------
+   推導與落選案：preview/hero-ipad/（照片高度四階）、
+                 preview/hero-ipad-band/（接縫與地址位置）。
+
+   ---- 為什麼上面那條 2/3 涵蓋不到 iPad ----
+   2/3 = 0.667，而 iPad 直放是 0.75 —— 上面那段當初就寫明「刻意排除」。
+   而且**實際的視窗比例比 0.75 更寬**：media query 算的是視窗，
+   Safari 的分頁列與工具列會從高度扣掉約 137 CSS px。實機換算：
+
+       iPad mini 6    744×1133 → 744×996  = 0.747
+       iPad 10.9"     820×1180 → 820×1043 = 0.786
+       iPad Pro 11"   834×1194 → 834×1057 = 0.789
+       iPad Pro 12.9" 1024×1366 → 1024×1229 = 0.833
+
+   所以這一段的區間取 **(2/3, 9/10]**，四台都在裡面，上緣還留 0.067 的餘裕。
+   ⚠ 下界寫 min-aspect-ratio: 2/3 是**為了不要蓋到上面那條**：
+      旋轉螢幕（1080×1920 = 0.5625）2026-08-09 已經定案 62svh ＋ 窄帶疊在照片上，
+      那個決定沒有被推翻，所以兩段刻意不重疊。
+      **要不要讓旋轉螢幕也改成這一版，是還沒問過的一題。**
+
+   ---- 為什麼要改 ----
+   使用者在 preview/hero-ipad/ 的四階裡選了 70svh（「以圖片來說剛好」），
+   但回報「下面窄帶幾乎沒什麼空間了」。所以照片留 70svh，窄帶改成**接在照片
+   下面**（＝手機版的做法），1983／9／6 整組往下移、上下都鬆開。
+
+   ---- 接縫：這一段的重點 ----
+   使用者的條件是「新接的窄帶必須和照片裡的柏油路加模糊的下半部接在一起」。
+
+   把 hero-clinic-night.jpg 畫進 canvas 逐列取整列平均：照片最後一列是
+   **#131110**（L* 5.2）。但畫面上現在看到的不是它 —— 窄帶的柏油層底端是
+   rgba(22,20,19,.88)，和照片合成之後是：
+       .88×(22,20,19) + .12×(19,17,16) = (21.6, 19.6, 18.6) → **#161413**
+   （正好就是 .band::after 那段註解寫的值。）**所以接縫要接的是 #161413。**
+
+   做法不重畫，把現在那兩層原地搬家：兩層原本是 inset: 0（疊在窄帶自己身上），
+   改成 top: auto; bottom: 100%; height: 84px，它們就**原封不動移到照片的最後
+   84px 上** —— 模糊強度、mask、柏油漸層的每一個值都沒有動，所以照片下半部
+   看起來和改動前完全一樣。窄帶再從 #161413 起跑，接縫是同一個顏色。
+
+   窄帶自己的漸層方向是**往下變亮**（#161413 → --band-bg → --band-bot），
+   和手機版同一個方向 —— 下緣要有明度才接得住紙色。
+
+   ⚠ .hero > .band 用 relative **不能用 static**：.band::before／::after 是
+      absolute，.band 若是 static 就不是它們的包含塊，兩層會改用 .hero，
+      於是整張照片被 blur 糊掉再蓋一層柏油色。手機版那段註解記過同一個坑。
+   ⚠ .hero-copy 的 z-index 要抬到 4：模糊層現在蓋在照片最後 84px 上，
+      收尾句「到巷口的芳仁」就落在那一段，不抬的話它會跟著被糊掉。
+   ========================================================================== */
+@media (min-width: 721px) and (min-aspect-ratio: 2 / 3) and (max-aspect-ratio: 9 / 10) {
+  .hero-photo { height: 70svh; }
+  .hero-poem { font-size: clamp(15px, 1.15svh, 24px); }
+  .hero-sign { font-size: clamp(13px, .95svh, 18px); }
+  /* 收尾句原本要讓開疊上來的窄帶，窄帶搬走之後不必了 */
+  .hero-copy { padding-bottom: 0; z-index: 4; }
+
+  .hero > .band { position: relative; }
+  .band {
+    min-height: 104px;                 /* 原本 84 —— 「往下移一些」多給的 20px */
+    background-color: var(--band-bg);
+    background-image: linear-gradient(180deg,
+      #161413 0%, var(--band-bg) 62%, var(--band-bot) 100%);
+  }
+  /* 模糊層與柏油層原地搬到照片的最後 84px，數值一個都沒改 */
+  .band::before, .band::after { top: auto; bottom: 100%; height: 84px; }
+
+  /* 地址與電話：一行置中，夾在瀏覽數與三格之間（＝手機版的位置）。
+     標記順序本來就是 瀏覽數 → 聯絡 → 三格，所以 static 之後它自然落在中間。
+     要把 ≤1159 那段為了兩行做的三件事還原：直排、溝、gap 0。 */
+  body .contact-pair {
+    position: static;
+    flex-direction: row; align-items: center; gap: 1.9rem;
+  }
+  .hero-contact a { gap: .45rem; }
+  .hero-contact .ico { flex: 0 0 auto; }
+
+  .band .shell { gap: .8rem; padding-block: 1rem; }
+}
+
+/* ==========================================================================
    320 級的窄機：窄帶裡地址與電話的間距要收（2026-08-10）
    --------------------------------------------------------------------------
    一行整組 267.1px，而 320 上版心內寬只有 280px —— 餘裕 12.9px（4.6%）。
@@ -2390,94 +2534,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 @media (max-width: 360px) {
   body .contact-pair { gap: 1.1rem; }
 }
-</style>
-
-<style>
-/* ==========================================================================
-   iPad：窄帶接在照片下面（提案用，定案後整段刪掉）
-   ========================================================================== */
-@media (min-width: 721px) {
-
-  /* ---- 照片 70svh（使用者在 preview/hero-ipad/ 選定的那一階）---- */
-  .hero-photo { height: 70svh; }
-  .hero-poem { font-size: clamp(15px, 1.15svh, 24px); }
-  .hero-sign { font-size: clamp(13px, .95svh, 18px); }
-  /* 收尾句原本要讓開疊上來的窄帶，窄帶搬走之後不必了。
-     z-index 抬到 4：接縫的模糊層會蓋到照片最後 84px，收尾句不能跟著被糊掉。 */
-  .hero-copy { padding-bottom: 0; z-index: 4; }
-
-  /* ---- 窄帶脫離照片，接在下面 ----
-     機制照抄手機版：position 從 absolute 改成 relative 就會回到流裡。
-     ⚠ **不能用 static** —— .band::before／::after 是 absolute; inset: 0，
-        .band 若是 static 就不是它們的包含塊，兩層會改用 .hero，
-        於是整張照片被 blur 糊掉再蓋一層柏油色（index.html 那段註解記過這個坑）。 */
-  .hero > .band { position: relative; }
-  .band {
-    min-height: 104px;          /* 原本 84 —— 使用者要「往下移一些」，多給 20px */
-    background-color: var(--band-bg);
-  }
-
-  /* ---- 接縫 soft：兩層原地搬到照片的最後 84px，數值一個都沒改 ---- */
-  [data-seam="soft"] .band::before,
-  [data-seam="soft"] .band::after {
-    top: auto; bottom: 100%; height: 84px;
-  }
-  /* 窄帶自己的漸層從 #161413 起跑 ＝ 上面那兩層合成出來的顏色，接縫同色。
-     往下走是**變亮**（和手機版同一個方向）—— 下緣要有明度才接得住紙色。 */
-  [data-seam="soft"] .band {
-    background-image: linear-gradient(180deg,
-      #161413 0%, var(--band-bg) 62%, var(--band-bot) 100%);
-  }
-
-  /* ---- 接縫 hard：兩層關掉，照片直接結束（＝手機版現在的做法，對照用）---- */
-  [data-seam="hard"] .band::before,
-  [data-seam="hard"] .band::after { display: none; }
-  [data-seam="hard"] .band {
-    background-image: linear-gradient(180deg,
-      var(--band-top) 0%, var(--band-bg) 55%, var(--band-bot) 100%);
-  }
-
-  /* ---- 地址與電話 ----
-     標記順序是 瀏覽數 → 聯絡 → 三格，而 .band .shell 是直向 flex，
-     所以 static 之後它自然落在瀏覽數與三格之間（＝手機版的位置）。
-     要移到三格下面就用 order，不必動標記。 */
-  body .contact-pair { position: static; }
-
-  [data-pos="above"] body .contact-pair,
-  [data-pos="below"] body .contact-pair {
-    flex-direction: row; align-items: center; gap: 1.9rem;
-  }
-  [data-pos="above"] .hero-contact a,
-  [data-pos="below"] .hero-contact a { gap: .45rem; }
-  [data-pos="above"] .hero-contact .ico,
-  [data-pos="below"] .hero-contact .ico { flex: 0 0 auto; }
-
-  [data-pos="below"] body .contact-pair { order: 1; }
-
-  /* two：維持 ≤1159 那段的兩行排法（含那條對齊用的溝），只是整塊置中 */
-  [data-pos="two"] body .contact-pair { align-items: flex-start; }
-
-  /* 三格與上下兩塊拉開一點，「往下移」才有感覺 */
-  .band .shell { gap: .8rem; padding-block: 1rem; }
-}
-
-/* ---- 切換條（靠右，不置中：詩靠左，置中會壓到它）---- */
-.fixbar {
-  position: fixed; top: 88px; right: 12px; z-index: 90;
-  display: flex; flex-direction: column; align-items: stretch; gap: .35rem;
-  max-width: calc(100vw - 24px);
-  background: rgba(20, 18, 16, .93); border: 1px solid #38342f; border-radius: 10px;
-  padding: .4rem .5rem; font-size: .72rem; line-height: 1.4;
-  box-shadow: 0 6px 20px rgba(0,0,0,.35);
-}
-.fixbar .row { display: flex; align-items: center; gap: .3rem; flex-wrap: wrap; justify-content: flex-end; }
-.fixbar b { color: #969089; font-weight: 400; margin-right: .2rem; white-space: nowrap; }
-.fixbar a {
-  color: #e3e1e0; text-decoration: none; white-space: nowrap;
-  padding: .22rem .5rem; border-radius: 6px; border: 1px solid #4a4640;
-}
-.fixbar a[aria-current] { background: #e3e1e0; color: #191614; border-color: #e3e1e0; }
-.fixbar .w { color: #969089; white-space: nowrap; font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
@@ -3058,6 +3114,110 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 </script>
 
 <script>
+/* 主選單：捲到哪一節，哪一項就亮（2026-08-10 定案，提案頁 preview/nav-scrollspy/）。
+
+   判斷線用**頁首下緣 ＋20px**，不是畫面中央，理由是要和點擊對得起來：
+   `html { scroll-padding-top: calc(var(--head-h-sm) + 1rem) }`，所以點了選單之後
+   那一節的上緣正好停在「頁首高度 ＋16px」，判斷線放在 ＋20px，
+   點完一定亮到剛剛點的那一項，不會差一格。頁首捲動後會收合，所以高度每次現量。
+
+   規則：**最後一個「上緣已經越過判斷線」的那一節**就是目前這一節。
+   ・#articles（文章卡）沒有自己的選單項，它在 #topics 與 #doctors 之間，
+     照這條規則自然歸給「全部文章」，不必特別處理。
+   ・HERO 那一屏不屬於任何一節 —— 三項都只有框、沒有底。硬要選一個亮是說謊。
+   ・捲到最底時最後一節可能還沒越過判斷線（診所資訊比較短、後面又接著頁尾），
+     所以補一條「貼到底就是最後一項」。這裡的視窗高度要用 visualViewport：
+     iOS 的 innerHeight 是工具列收起後的大視窗高度，比看得到的高，
+     拿它算「到底了沒」會提早成立（同一個坑在窄帶那個數字上踩過）。
+
+   沒有 JS 的時候：三個框仍然在（純 CSS），只是不會有底。不會壞。 */
+(function () {
+  var root  = document.documentElement;
+  var head  = document.querySelector('.site-head');
+  var nav   = document.querySelector('.site-nav');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.site-nav a[href^="#"]'));
+  if (!head || !nav || !links.length) return;
+
+  /* 燈箱由 JS 生出來 —— 標記裡不必多一個純裝飾的空元素。 */
+  var lamp = document.createElement('span');
+  lamp.className = 'nav-lamp';
+  lamp.setAttribute('aria-hidden', 'true');
+  nav.appendChild(lamp);
+
+  var spots = links.map(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    return { a: a, id: id, el: document.getElementById(id) };
+  }).filter(function (s) { return s.el; });
+  if (!spots.length) return;
+
+  var current = null;
+
+  function vh() {
+    return (window.visualViewport && window.visualViewport.height) || innerHeight;
+  }
+
+  /* 外擴半個字，但不能大到讓兩個框黏在一起（手機的選單間距只有 3.2vw，
+     375 上 12px），所以取「半個字」與「(間距 − 5) ÷ 2」的較小值 ——
+     框與框永遠留 5px。實測 375 上 3.50px、320 上 2.62px、電腦版 6.88px。
+     ⚠ 這裡不動版面：框是絕對定位的 ::before，選單的間距一個字都沒改。
+        走過的死路是「把手機的選單間距開大」，320 上會撞到品牌。 */
+  function padX() {
+    var cs = getComputedStyle(nav);
+    var gap = parseFloat(cs.columnGap || cs.gap) || 0;
+    return Math.max(2, Math.min(parseFloat(cs.fontSize) * .5, (gap - 5) / 2));
+  }
+  /* 這一行要**和有沒有人亮著無關**地跑：HERO 那一屏沒有人亮著，
+     但三個框在那時候就已經要畫出來了。 */
+  function setPad() { root.style.setProperty('--lamp-pad', padX().toFixed(2) + 'px'); }
+
+  function moveLamp(a) {
+    var r = a.getBoundingClientRect();
+    var n = nav.getBoundingClientRect();
+    var p = padX();
+    root.style.setProperty('--lamp-x', (r.left - n.left - p).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-y', (r.top - n.top - 1).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-w', (r.width + p * 2).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-h', (r.height + 2).toFixed(2) + 'px');
+  }
+
+  function pick() {
+    var line = (head.getBoundingClientRect().height || 0) + 20;
+    var here = null;
+    for (var i = 0; i < spots.length; i++) {
+      if (spots[i].el.getBoundingClientRect().top <= line) here = spots[i];
+    }
+    if (scrollY + vh() >= root.scrollHeight - 2) here = spots[spots.length - 1];
+    return here;
+  }
+
+  function paintNav() {
+    setPad();
+    var here = pick();
+    if (here === current) { if (here) moveLamp(here.a); return; }
+    current = here;
+    spots.forEach(function (s) {
+      if (s === here) s.a.setAttribute('aria-current', 'true');
+      else s.a.removeAttribute('aria-current');
+    });
+    if (here) { root.setAttribute('data-here', here.id); moveLamp(here.a); }
+    else root.removeAttribute('data-here');
+  }
+
+  var tick = false;
+  function onScroll() {
+    if (tick) return;
+    tick = true;
+    requestAnimationFrame(function () { tick = false; paintNav(); });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  addEventListener('load', paintNav);   /* 字體換好之後選單的寬度會變，要重量 */
+  if (window.visualViewport) visualViewport.addEventListener('resize', onScroll);
+  paintNav();
+})();
+</script>
+
+<script>
 /* 窄帶裡的瀏覽數：捲進畫面才開始往上數，只跑一次。
    · 先量好最終寬度再歸零 —— 不鎖住的話「次瀏覽」會被一路往外推。
    · easeOutQuart：先衝再收。均速跑起來像進度條，沒有跳動的手感。
@@ -3276,65 +3436,5 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      文章頁一直都有掛，所以只有首頁壞掉。 -->
 <script src="/assets/counter.js" defer></script>
 
-
-<div class="fixbar" role="navigation" aria-label="方案切換">
-  <div class="row">
-    <b>接縫：</b>
-    <a href="#" data-seam="soft">保留模糊＋柏油</a>
-    <a href="#" data-seam="hard">直接接</a>
-  </div>
-  <div class="row">
-    <b>地址電話：</b>
-    <a href="#" data-pos="above">三格上（一行）</a>
-    <a href="#" data-pos="below">三格下（一行）</a>
-    <a href="#" data-pos="two">三格上（兩行）</a>
-  </div>
-  <div class="row"><span class="w" id="wnow">—</span></div>
-</div>
-<script>
-(function () {
-  var root = document.documentElement;
-  /* ⚠ 正規式要寫 [a-z0-9]+（CLAUDE.md 第九節，寫成 [a-z]+ 會吃不到帶數字的值）。 */
-  function read(name, list) {
-    var m = new RegExp("[?&]" + name + "=([a-z0-9]+)").exec(location.search);
-    return (m && list.indexOf(m[1]) !== -1) ? m[1] : list[0];
-  }
-  var SEAM = ["soft", "hard"], POS = ["above", "below", "two"];
-  var st = { seam: read("seam", SEAM), pos: read("pos", POS) };
-
-  function apply() {
-    root.setAttribute("data-seam", st.seam);
-    root.setAttribute("data-pos", st.pos);
-    var links = document.querySelectorAll(".fixbar a");
-    for (var i = 0; i < links.length; i++) {
-      var a = links[i], k = a.hasAttribute("data-seam") ? "seam" : "pos";
-      if (a.getAttribute("data-" + k) === st[k]) a.setAttribute("aria-current", "true");
-      else a.removeAttribute("aria-current");
-    }
-  }
-  apply();
-
-  /* 點了不重新載入 —— iPad 上每按一次都重載會閃、照片要重新解碼。 */
-  document.querySelector(".fixbar").addEventListener("click", function (e) {
-    var a = e.target.closest("a");
-    if (!a) return;
-    e.preventDefault();
-    var k = a.hasAttribute("data-seam") ? "seam" : "pos";
-    st[k] = a.getAttribute("data-" + k);
-    apply();
-    history.replaceState(null, "", "?seam=" + st.seam + "&pos=" + st.pos);
-  });
-
-  var w = document.getElementById("wnow");
-  function tick() {
-    var vv = window.visualViewport;
-    var px = Math.round((vv && vv.width) || innerWidth), py = Math.round((vv && vv.height) || innerHeight);
-    w.textContent = px + "×" + py + "（" + (px / py).toFixed(3) + "）";
-  }
-  tick();
-  addEventListener("resize", tick);
-  if (window.visualViewport) window.visualViewport.addEventListener("resize", tick);
-})();
-</script>
 </body>
 </html>

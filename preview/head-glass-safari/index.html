@@ -687,7 +687,7 @@
         "@id": "https://fangren.net/#dentist"
       },
       "inLanguage": "zh-Hant-TW",
-      "dateModified": "2026-08-10",
+      "dateModified": "2026-08-11",
       "primaryImageOfPage": {
         "@type": "ImageObject",
         "url": "https://fangren.net/assets/hero-clinic-night.jpg"
@@ -892,24 +892,167 @@ html.scrolled .brand-text b { font-size: .96rem; }
 html.scrolled .brand-text small { font-size: .74rem; }
 .brand-text b, .brand-text small { transition: font-size .2s ease; }
 
-.site-nav { display: flex; flex-wrap: nowrap; gap: 1.9rem; font-size: .86rem; min-width: 0; }
+/* ==========================================================================
+   主選單：三個玻璃框 ＋ 一塊跟著捲動滑過去的底（2026-08-10 定案）
+   --------------------------------------------------------------------------
+   ⚠ 這一段換掉了原本的「hover 從中間長出底線」。**那條底線是壞的**：
+     它只有 `:hover` 一種來源，而手機沒有游標、hover 一被點出來就黏住，
+     所以三項點過之後三條線一起留著。使用者的原話是「邏輯不通」。
+     和文章卡「手機版不做 hover」是同一個坑，選單當初漏掉了。
+
+   現在分成兩件事：
+
+     框　三項都有、從頭到尾都在（包含 HERO 那一屏）。它的工作是**暗示可以按**，
+        所以在還沒捲動、什麼都還沒發生的時候就要看得見。
+     底　只有「畫面目前停在的那一節」那一項有，跟著捲動在三個字之間滑過去。
+        狀態由 
+<div class="fixbar" role="navigation" aria-label="方案切換">
+  <div class="row"><i>往下捲：看頁首下緣，和照片底下那一段</i></div>
+  <div class="row">
+    <b>強度：</b>
+    <a href="#" data-b="now">現況 6/4</a>
+    <a href="#" data-b="w">弱 4/3</a>
+    <a href="#" data-b="ww">更弱 3/2</a>
+    <a href="#" data-b="www">極弱 2/1.5</a>
+  </div>
+  <div class="row">
+    <b>邊緣：</b>
+    <a href="#" data-g="now">現況</a>
+    <a href="#" data-g="layer">拆兩層</a>
+    <a href="#" data-g="gpu">合成層</a>
+    <a href="#" data-g="steps">階梯</a>
+  </div>
+  <div class="row"><span class="w" id="wnow">—</span></div>
+</div>
+<script>
+(function () {
+  var root = document.documentElement;
+  /* ⚠ 正規式要寫 [a-z0-9]+（CLAUDE.md 第九節）。 */
+  function read(name, list) {
+    var m = new RegExp("[?&]" + name + "=([a-z0-9]+)").exec(location.search);
+    return (m && list.indexOf(m[1]) !== -1) ? m[1] : list[0];
+  }
+  var G = ["now", "layer", "gpu", "steps"], B = ["now", "w", "ww", "www"];
+  var st = { g: read("g", G), b: read("b", B) };
+
+  function apply() {
+    root.setAttribute("data-g", st.g);
+    root.setAttribute("data-b", st.b);
+    var links = document.querySelectorAll(".fixbar a");
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i], k = a.hasAttribute("data-g") ? "g" : "b";
+      if (a.getAttribute("data-" + k) === st[k]) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    }
+    if (window.fangrenRepaintHead) window.fangrenRepaintHead();
+  }
+  apply();
+
+  /* 點了不重新載入 —— 重載會回到頁首，那正好看不到要看的東西。 */
+  document.querySelector(".fixbar").addEventListener("click", function (e) {
+    var a = e.target.closest("a");
+    if (!a) return;
+    e.preventDefault();
+    st[a.hasAttribute("data-g") ? "g" : "b"] =
+      a.getAttribute(a.hasAttribute("data-g") ? "data-g" : "data-b");
+    apply();
+    history.replaceState(null, "", "?g=" + st.g + "&b=" + st.b);
+  });
+
+  /* 讀數：順便檢查 index.html 那條 iPad 比例區間在這台機器上有沒有命中。
+     判斷方式是看窄帶的 position —— 電腦版是 absolute（疊在照片上），
+     iPad 那一段改成 relative（接在照片下面）。 */
+  var w = document.getElementById("wnow");
+  var band = document.querySelector(".hero > .band");
+  function tick() {
+    var vv = window.visualViewport;
+    var px = Math.round((vv && vv.width) || innerWidth), py = Math.round((vv && vv.height) || innerHeight);
+    var on = band && getComputedStyle(band).position === "relative";
+    w.textContent = px + "×" + py + "（" + (px / py).toFixed(3) + "）· iPad 版型：" + (on ? "生效" : "未生效");
+    w.className = "w" + (on ? "" : " bad");
+  }
+  tick();
+  addEventListener("resize", tick);
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", tick);
+})();
+</script>
+</body> 前那支 JS 掛在 <html> 上：`data-here` ＋ `aria-current`，
+        **同時只會有一個**，所以線再也不會累加。
+
+   被點亮是三個量一起走（使用者第六輪指定的）：
+     底　　無　　→ 紙色 .24
+     線濃　.26　 → .55
+     線粗　.75px → 1px
+
+   為什麼底是**紙色 `--paper`** 而不是白：頁首玻璃的染色 `#191614` 是暖的
+   （過了窄帶的實色 `#393736`，R 比 B 高 3），低透明度的白只拉亮度、
+   色相原封不動搬上來，看起來會偏橘黃（手機開 True Tone 更明顯）。
+   紙色 R 比 B 低 4，冷正好抵掉底的暖：R−B 從 ＋2.6 收到 ＋0.7。
+   對比度：底對玻璃 1.91、亮起來那一項的純白字對底 6.20:1。
+
+   推導過程、落選的階數（底 .34／.44、線 .5px、發光燈箱、白線、燈亮…）
+   與每一階的實測數字，全部留在 preview/nav-scrollspy/。要改先讀那一頁。
+   ========================================================================== */
+.site-nav { position: relative; display: flex; flex-wrap: nowrap; gap: 1.9rem; font-size: .86rem; min-width: 0; }
 .site-nav a { white-space: nowrap; }
 .site-nav a {
-  position: relative; color: rgba(255, 255, 255, .88);
+  /* z-index 1：字要壓在燈箱上面。 */
+  position: relative; z-index: 1; color: rgba(255, 255, 255, .88);
   text-decoration: none; white-space: nowrap; padding-block: .35rem;
+  transition: color .25s ease;
 }
-/* 底線從中間長出來。這是全頁唯一的 hover 動效 —— 手機版沒有 hover 這件事，
-   所以它不算違背手機版，是電腦版本來就要補的狀態。 */
-.site-nav a::after {
-  content: ''; position: absolute; left: 50%; right: 50%; bottom: 0;
-  border-bottom: 1px solid currentColor; opacity: 0;
-  transition: left .2s ease, right .2s ease, opacity .2s ease;
+/* 常駐的框。
+   ⚠ **畫在 ::before，不能直接給 a 加 border** —— 加了會把選單撐寬，
+     375 上頁首只剩 37px 餘裕，品牌會被擠成兩行（PALETTE 第六之五節那個坑）。
+     ::before 是絕對定位、不佔位。
+   ⚠ **線是 `box-shadow: inset` 畫的，不是 border** —— Blink 會把 `border-width`
+     進位到整數 px，`.75px` 寫上去量回來是 `1px`，兩個狀態會一樣粗。
+     inset 陰影吃得到小數，一樣跟著 border-radius 走。日後畫細線一律用這個做法。
+   ⚠ 圓角 12px ＝ 標記、搜尋框、三種卡片用的同一個，不要另外挑。
+   `--lamp-pad` 由 JS 現量寫進來（半個字，但不能大到讓兩個框黏在一起）；
+   沒有 JS 時退回 .29em，手機上仍然留得住 5px 的間隙。 */
+.site-nav a::before {
+  content: ''; position: absolute; z-index: -1;
+  inset: -1px calc(-1 * var(--lamp-pad, .29em));
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .26);
+  transition: box-shadow .25s ease;
 }
-.site-nav a:hover::after, .site-nav a:focus-visible::after { left: 0; right: 0; opacity: .8; }
+/* 目前這一節的那一項：線變濃又變粗。 */
+html[data-here] .site-nav a[aria-current]::before {
+  box-shadow: inset 0 0 0 1px rgba(226, 229, 230, .55);
+}
+html[data-here] .site-nav a[aria-current] { color: #fff; }
+/* 有游標的裝置才給 hover，而且只動框的濃度、不畫任何會留下來的東西。
+   手機完全不會進到這一條（`hover: hover` 為假），所以不會有黏住的狀態。 */
+@media (hover: hover) and (pointer: fine) {
+  .site-nav a:hover::before { box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .40); }
+}
 .site-nav a:focus-visible, .brand:focus-visible { outline: 2px solid rgba(255,255,255,.8); outline-offset: 3px; }
+
+/* 滑過去的那塊底。整條選單只有一塊，由 JS 生出來並用 CSS 變數餵位置 ——
+   **是同一盞燈移過去，不是三個各自亮滅**（後者看起來像三個開關）。
+   幾何全部現量：選單字級在手機是 clamp，寫死一定會在某個寬度歪掉。 */
+.nav-lamp {
+  position: absolute; z-index: 0; top: 0; left: 0;
+  width: var(--lamp-w, 0px); height: var(--lamp-h, 0px);
+  transform: translate(var(--lamp-x, 0px), var(--lamp-y, 0px));
+  border-radius: 12px;
+  background: rgba(226, 229, 230, .24);
+  opacity: 0; pointer-events: none;
+  transition: transform .3s cubic-bezier(.4, 0, .2, 1),
+              width .3s cubic-bezier(.4, 0, .2, 1),
+              height .3s cubic-bezier(.4, 0, .2, 1),
+              opacity .22s ease;
+}
+/* HERO 那一屏還沒進到任何一節，三項都只有框、沒有底。 */
+html[data-here] .nav-lamp { opacity: 1; }
+
 @media (prefers-reduced-motion: reduce) {
   .site-head, .site-head .shell, .site-head::before,
-  .brand-mark, .brand-text b, .brand-text small, .site-nav a::after { transition: none; }
+  .brand-mark, .brand-text b, .brand-text small,
+  .site-nav a, .site-nav a::before { transition: none; }
+  .nav-lamp { transition: opacity .22s ease; }
 }
 
 /* ==========================================================================
@@ -3116,6 +3259,110 @@ html.scrolled .hg { opacity: 1; }
 </script>
 
 <script>
+/* 主選單：捲到哪一節，哪一項就亮（2026-08-10 定案，提案頁 preview/nav-scrollspy/）。
+
+   判斷線用**頁首下緣 ＋20px**，不是畫面中央，理由是要和點擊對得起來：
+   `html { scroll-padding-top: calc(var(--head-h-sm) + 1rem) }`，所以點了選單之後
+   那一節的上緣正好停在「頁首高度 ＋16px」，判斷線放在 ＋20px，
+   點完一定亮到剛剛點的那一項，不會差一格。頁首捲動後會收合，所以高度每次現量。
+
+   規則：**最後一個「上緣已經越過判斷線」的那一節**就是目前這一節。
+   ・#articles（文章卡）沒有自己的選單項，它在 #topics 與 #doctors 之間，
+     照這條規則自然歸給「全部文章」，不必特別處理。
+   ・HERO 那一屏不屬於任何一節 —— 三項都只有框、沒有底。硬要選一個亮是說謊。
+   ・捲到最底時最後一節可能還沒越過判斷線（診所資訊比較短、後面又接著頁尾），
+     所以補一條「貼到底就是最後一項」。這裡的視窗高度要用 visualViewport：
+     iOS 的 innerHeight 是工具列收起後的大視窗高度，比看得到的高，
+     拿它算「到底了沒」會提早成立（同一個坑在窄帶那個數字上踩過）。
+
+   沒有 JS 的時候：三個框仍然在（純 CSS），只是不會有底。不會壞。 */
+(function () {
+  var root  = document.documentElement;
+  var head  = document.querySelector('.site-head');
+  var nav   = document.querySelector('.site-nav');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.site-nav a[href^="#"]'));
+  if (!head || !nav || !links.length) return;
+
+  /* 燈箱由 JS 生出來 —— 標記裡不必多一個純裝飾的空元素。 */
+  var lamp = document.createElement('span');
+  lamp.className = 'nav-lamp';
+  lamp.setAttribute('aria-hidden', 'true');
+  nav.appendChild(lamp);
+
+  var spots = links.map(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    return { a: a, id: id, el: document.getElementById(id) };
+  }).filter(function (s) { return s.el; });
+  if (!spots.length) return;
+
+  var current = null;
+
+  function vh() {
+    return (window.visualViewport && window.visualViewport.height) || innerHeight;
+  }
+
+  /* 外擴半個字，但不能大到讓兩個框黏在一起（手機的選單間距只有 3.2vw，
+     375 上 12px），所以取「半個字」與「(間距 − 5) ÷ 2」的較小值 ——
+     框與框永遠留 5px。實測 375 上 3.50px、320 上 2.62px、電腦版 6.88px。
+     ⚠ 這裡不動版面：框是絕對定位的 ::before，選單的間距一個字都沒改。
+        走過的死路是「把手機的選單間距開大」，320 上會撞到品牌。 */
+  function padX() {
+    var cs = getComputedStyle(nav);
+    var gap = parseFloat(cs.columnGap || cs.gap) || 0;
+    return Math.max(2, Math.min(parseFloat(cs.fontSize) * .5, (gap - 5) / 2));
+  }
+  /* 這一行要**和有沒有人亮著無關**地跑：HERO 那一屏沒有人亮著，
+     但三個框在那時候就已經要畫出來了。 */
+  function setPad() { root.style.setProperty('--lamp-pad', padX().toFixed(2) + 'px'); }
+
+  function moveLamp(a) {
+    var r = a.getBoundingClientRect();
+    var n = nav.getBoundingClientRect();
+    var p = padX();
+    root.style.setProperty('--lamp-x', (r.left - n.left - p).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-y', (r.top - n.top - 1).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-w', (r.width + p * 2).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-h', (r.height + 2).toFixed(2) + 'px');
+  }
+
+  function pick() {
+    var line = (head.getBoundingClientRect().height || 0) + 20;
+    var here = null;
+    for (var i = 0; i < spots.length; i++) {
+      if (spots[i].el.getBoundingClientRect().top <= line) here = spots[i];
+    }
+    if (scrollY + vh() >= root.scrollHeight - 2) here = spots[spots.length - 1];
+    return here;
+  }
+
+  function paintNav() {
+    setPad();
+    var here = pick();
+    if (here === current) { if (here) moveLamp(here.a); return; }
+    current = here;
+    spots.forEach(function (s) {
+      if (s === here) s.a.setAttribute('aria-current', 'true');
+      else s.a.removeAttribute('aria-current');
+    });
+    if (here) { root.setAttribute('data-here', here.id); moveLamp(here.a); }
+    else root.removeAttribute('data-here');
+  }
+
+  var tick = false;
+  function onScroll() {
+    if (tick) return;
+    tick = true;
+    requestAnimationFrame(function () { tick = false; paintNav(); });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  addEventListener('load', paintNav);   /* 字體換好之後選單的寬度會變，要重量 */
+  if (window.visualViewport) visualViewport.addEventListener('resize', onScroll);
+  paintNav();
+})();
+</script>
+
+<script>
 /* 窄帶裡的瀏覽數：捲進畫面才開始往上數，只跑一次。
    · 先量好最終寬度再歸零 —— 不鎖住的話「次瀏覽」會被一路往外推。
    · easeOutQuart：先衝再收。均速跑起來像進度條，沒有跳動的手感。
@@ -3334,76 +3581,5 @@ html.scrolled .hg { opacity: 1; }
      文章頁一直都有掛，所以只有首頁壞掉。 -->
 <script src="/assets/counter.js" defer></script>
 
-
-<div class="fixbar" role="navigation" aria-label="方案切換">
-  <div class="row"><i>往下捲：看頁首下緣，和照片底下那一段</i></div>
-  <div class="row">
-    <b>強度：</b>
-    <a href="#" data-b="now">現況 6/4</a>
-    <a href="#" data-b="w">弱 4/3</a>
-    <a href="#" data-b="ww">更弱 3/2</a>
-    <a href="#" data-b="www">極弱 2/1.5</a>
-  </div>
-  <div class="row">
-    <b>邊緣：</b>
-    <a href="#" data-g="now">現況</a>
-    <a href="#" data-g="layer">拆兩層</a>
-    <a href="#" data-g="gpu">合成層</a>
-    <a href="#" data-g="steps">階梯</a>
-  </div>
-  <div class="row"><span class="w" id="wnow">—</span></div>
-</div>
-<script>
-(function () {
-  var root = document.documentElement;
-  /* ⚠ 正規式要寫 [a-z0-9]+（CLAUDE.md 第九節）。 */
-  function read(name, list) {
-    var m = new RegExp("[?&]" + name + "=([a-z0-9]+)").exec(location.search);
-    return (m && list.indexOf(m[1]) !== -1) ? m[1] : list[0];
-  }
-  var G = ["now", "layer", "gpu", "steps"], B = ["now", "w", "ww", "www"];
-  var st = { g: read("g", G), b: read("b", B) };
-
-  function apply() {
-    root.setAttribute("data-g", st.g);
-    root.setAttribute("data-b", st.b);
-    var links = document.querySelectorAll(".fixbar a");
-    for (var i = 0; i < links.length; i++) {
-      var a = links[i], k = a.hasAttribute("data-g") ? "g" : "b";
-      if (a.getAttribute("data-" + k) === st[k]) a.setAttribute("aria-current", "true");
-      else a.removeAttribute("aria-current");
-    }
-    if (window.fangrenRepaintHead) window.fangrenRepaintHead();
-  }
-  apply();
-
-  /* 點了不重新載入 —— 重載會回到頁首，那正好看不到要看的東西。 */
-  document.querySelector(".fixbar").addEventListener("click", function (e) {
-    var a = e.target.closest("a");
-    if (!a) return;
-    e.preventDefault();
-    st[a.hasAttribute("data-g") ? "g" : "b"] =
-      a.getAttribute(a.hasAttribute("data-g") ? "data-g" : "data-b");
-    apply();
-    history.replaceState(null, "", "?g=" + st.g + "&b=" + st.b);
-  });
-
-  /* 讀數：順便檢查 index.html 那條 iPad 比例區間在這台機器上有沒有命中。
-     判斷方式是看窄帶的 position —— 電腦版是 absolute（疊在照片上），
-     iPad 那一段改成 relative（接在照片下面）。 */
-  var w = document.getElementById("wnow");
-  var band = document.querySelector(".hero > .band");
-  function tick() {
-    var vv = window.visualViewport;
-    var px = Math.round((vv && vv.width) || innerWidth), py = Math.round((vv && vv.height) || innerHeight);
-    var on = band && getComputedStyle(band).position === "relative";
-    w.textContent = px + "×" + py + "（" + (px / py).toFixed(3) + "）· iPad 版型：" + (on ? "生效" : "未生效");
-    w.className = "w" + (on ? "" : " bad");
-  }
-  tick();
-  addEventListener("resize", tick);
-  if (window.visualViewport) window.visualViewport.addEventListener("resize", tick);
-})();
-</script>
 </body>
 </html>
