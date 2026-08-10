@@ -24,13 +24,20 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { homeGraph, parseDoctors, parseHours, parseTopics, postGraph } from "./schema.mjs";
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const POSTS_DIR = path.join(ROOT, "posts");
 const INDEX_FILE = path.join(ROOT, "index.html");
 const MANIFEST_FILE = path.join(ROOT, "tools", "build-manifest.json");
 const SITE_FILE = path.join(ROOT, "site.json");
+const CLINIC_FILE = path.join(ROOT, "clinic.json");
 
 const CHECK_ONLY = process.argv.includes("--check");
+
+/* 分享圖的尺寸。tools/og-images.mjs 產出的就是這個大小，兩邊要一致。 */
+const OG_WIDTH = 1600;
+const OG_HEIGHT = 900;
 
 /* ---------- 小工具 ---------- */
 
@@ -91,6 +98,53 @@ const withCanonical = (html, url) => {
   }
   return html.replace(/<\/head>/i, `${tag}\n</head>`);
 };
+
+/* ---------- 產生的 SEO 區塊（結構化資料＋機器讀的 meta） ----------
+
+   放在 <head> 裡兩個標記之間，整段由本腳本重寫。和 canonical 一樣，
+   它**不在內容雜湊涵蓋的 post-meta 與 <main> 之內**，所以加這些東西
+   不會讓六篇文章的「最後更新日期」一起跳成今天、把首頁排序打亂。
+
+   標記不存在的話就插在 </head> 前面（新文章從別篇複製過來就會自動長出來）。 */
+const SEO_START = "<!-- SEO:START — 由 tools/build.mjs 產生，請勿手動編輯 -->";
+const SEO_END = "<!-- SEO:END -->";
+
+const injectSeo = (html, body) => {
+  const block = `${SEO_START}\n${body}\n${SEO_END}`;
+  const s = html.indexOf("<!-- SEO:START");
+  const e = html.indexOf(SEO_END);
+  if (s !== -1 && e !== -1) {
+    return html.slice(0, s) + block + html.slice(e + SEO_END.length);
+  }
+  return html.replace(/<\/head>/i, `${block}\n</head>`);
+};
+
+/* JSON-LD 是放在 <script> 裡的，字串內容出現 "</" 會提早關掉那個標籤。
+   跳成 "<\/" 之後 JSON 的值完全不變（JSON 規範允許這個跳脫），但 HTML 解析器不會誤判。 */
+const ldScript = (obj) =>
+  `<script type="application/ld+json">\n${JSON.stringify(obj, null, 2).replace(/<\//g, "<\\/")}\n</script>`;
+
+/* 這一行決定 Google 能不能在搜尋結果放大圖。沒有它預設只給小縮圖。 */
+const ROBOTS_META =
+  '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">';
+
+const metaTag = (attr, name, content) =>
+  `<meta ${attr}="${name}" content="${esc(content)}">`;
+
+/* ---------- 診所實體的設定 ---------- */
+
+let clinic = null;
+if (fs.existsSync(CLINIC_FILE)) {
+  try {
+    clinic = JSON.parse(read(CLINIC_FILE).replace(/^﻿/, ""));
+  } catch (err) {
+    console.error(`× clinic.json 不是合法 JSON（${err.message}），將略過結構化資料。`);
+    process.exitCode = 1;
+  }
+} else {
+  console.error("× 找不到 clinic.json，將略過結構化資料。");
+  process.exitCode = 1;
+}
 
 /* 內容雜湊只看「這篇文章自己的東西」：post-meta 加上 <main> 裡的內容。
    刻意排除兩類東西——
@@ -181,6 +235,45 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
 
   html = withCanonical(html, `${siteUrl}/posts/${meta.slug}/`);
 
+  /* ---------- 2.5 結構化資料與分享用的 meta ----------
+
+     ⚠ 分享圖不能用 HERO 那張 SVG。**Facebook 與 LINE 的爬蟲不吃 SVG**，
+       og:image 指到 .svg 等於沒設，對方看到的卡片是空的、或爬蟲自己從頁面亂撿一張。
+       首頁 2026 年就踩過這個坑（見 index.html 的 og:image 註解），當時只補了首頁。
+       點陣複本由 tools/og-images.mjs 產生，命名沿用「後綴＝寬度」的慣例。 */
+  if (siteUrl && clinic) {
+    const url = `${siteUrl}/posts/${meta.slug}/`;
+    const png = meta.hero.replace(/\.svg$/, `-${OG_WIDTH}.png`);
+    const hasPng = fs.existsSync(path.join(ROOT, "assets", png));
+    if (!hasPng) {
+      console.warn(`  ⚠ 找不到 assets/${png}，${meta.slug} 不會有分享圖。跑一次 node tools/og-images.mjs`);
+    }
+    const image = hasPng
+      ? { url: `${siteUrl}/assets/${png}`, width: OG_WIDTH, height: OG_HEIGHT, alt: meta.heroAlt || meta.title }
+      : null;
+
+    const seo = [
+      ROBOTS_META,
+      metaTag("property", "og:url", url),
+      metaTag("property", "og:locale", "zh_TW"),
+      ...(image
+        ? [
+            metaTag("property", "og:image", image.url),
+            metaTag("property", "og:image:width", String(image.width)),
+            metaTag("property", "og:image:height", String(image.height)),
+            metaTag("property", "og:image:alt", image.alt),
+            metaTag("name", "twitter:card", "summary_large_image"),
+          ]
+        : []),
+      metaTag("property", "article:published_time", meta.published),
+      metaTag("property", "article:modified_time", updated),
+      metaTag("property", "article:section", meta.tag),
+      ldScript(postGraph({ site: siteUrl, clinic, meta: { ...meta, updated }, image })),
+    ].join("\n");
+
+    html = injectSeo(html, seo);
+  }
+
   if (!CHECK_ONLY && html !== read(file)) fs.writeFileSync(file, html, "utf8");
 
   nextManifest[meta.slug] = { hash, updated };
@@ -264,6 +357,51 @@ nextIndex = nextIndex.replace(
 
 nextIndex = withCanonical(nextIndex, `${siteUrl}/`);
 
+/* ---------- 3.4 首頁的結構化資料 ----------
+
+   看診時間、醫師名冊、服務項目全部是**回頭讀這一頁自己的內容**產生的，
+   不是另外維護一份（理由寫在 clinic.json 與 tools/schema.mjs 開頭）。
+   所以改了 #clinic 那張看診時間卡、或加了一位醫師，JSON-LD 會自己跟上。
+
+   dateModified 先寫成一個佔位符，等下面算出首頁的 lastmod 再換掉 ——
+   它自己就是雜湊的輸入之一，先填日期會變成「每跑一次 build 就變一次」的循環。 */
+const HOME_UPDATED_TOKEN = "@@HOME_UPDATED@@";
+
+if (siteUrl && clinic) {
+  const facts = {
+    hours: parseHours(nextIndex),
+    topics: parseTopics(nextIndex),
+    doctors: parseDoctors(nextIndex),
+  };
+
+  const homeTitle = (nextIndex.match(/<title>([^<]*)<\/title>/i) || [])[1] || "";
+  const homeDesc =
+    (nextIndex.match(/<meta name="description" content="([^"]*)"/i) || [])[1] || "";
+
+  const seo = [
+    ROBOTS_META,
+    metaTag("property", "og:locale", "zh_TW"),
+    metaTag("name", "twitter:card", "summary_large_image"),
+    ldScript(
+      homeGraph({
+        site: siteUrl,
+        clinic,
+        facts,
+        title: homeTitle,
+        description: homeDesc,
+        updatedToken: HOME_UPDATED_TOKEN,
+      })
+    ),
+  ].join("\n");
+
+  nextIndex = injectSeo(nextIndex, seo);
+
+  console.log(
+    `結構化資料：${facts.doctors.length} 位醫師、` +
+      `${Object.keys(facts.topics).length} 個科別、${facts.hours.length} 段營業時間`
+  );
+}
+
 /* ---------- 3.5 首頁自己的最後更新日（給 sitemap 用） ----------
 
    首頁在 sitemap 裡的 lastmod 原本抄的是「最新那篇文章的更新日」。
@@ -294,6 +432,11 @@ const prevHome = manifest[HOME_KEY];
 const homeChanged = !prevHome || prevHome.hash !== homeHash;
 const homeUpdated = homeChanged ? today() : prevHome.updated;
 nextManifest[HOME_KEY] = { hash: homeHash, updated: homeUpdated };
+
+/* 佔位符換成真正的日期。**一定要排在 homeHash 算完之後** ——
+   否則 dateModified 會進到雜湊裡，於是「換了日期 → 雜湊變了 → 下次又換成今天」，
+   首頁的 lastmod 從此天天跳，等於這個欄位沒有意義。 */
+nextIndex = nextIndex.replace(HOME_UPDATED_TOKEN, homeUpdated);
 
 if (!CHECK_ONLY && nextIndex !== index) fs.writeFileSync(INDEX_FILE, nextIndex, "utf8");
 

@@ -141,9 +141,11 @@ git push -u origin main
 ## 四、目錄與檔案
 
 ```
-index.html              首頁。POSTS 區塊由 build 產生，其餘手寫
+index.html              首頁。POSTS 與 SEO 兩個區塊由 build 產生，其餘手寫
 PALETTE.md              配色規範。動任何顏色之前先讀這份
 COPY.md                 文案規範。動任何品牌文字之前先讀這份
+clinic.json             診所這個「實體」的資料（sameAs、座標、郵遞區號…）。
+                        **只放頁面上沒有的東西** —— 看診時間、醫師、科別一律回頭讀 index.html
 404.html
 favicon.ico             根目錄的點陣圖示，**只給 Google 的圖示爬蟲**。
                         由 tools/favicon-ico.mjs 從 assets/favicon.svg 算出來，已進版控。
@@ -160,7 +162,11 @@ assets/
 posts/<slug>/index.html 一篇文章一個資料夾
 preview/<name>/index.html  未上線的改版提案頁，要密碼才看得到（見第八節）
 tools/
-  build.mjs             產生首頁卡片、更新日期、排序、sitemap、allowed-slugs
+  build.mjs             產生首頁卡片、更新日期、排序、sitemap、allowed-slugs、結構化資料
+  schema.mjs            JSON-LD 產生器（被 build.mjs 匯入，不單獨執行）。
+                        看診時間／醫師／科別都是從 index.html 讀回來的，不另外維護一份
+  og-images.mjs         把文章 HERO 的 SVG 轉成 assets/hero-*-1600.png（分享圖）。
+                        一次性工具，npm run build 不會呼叫它，只有換了插圖或新增文章才跑
   dist.mjs              把上線檔案組進 _site/
   serve.mjs             本機預覽伺服器
   sync.mjs              同步遠端（SessionStart hook 自動呼叫）
@@ -185,6 +191,8 @@ tools/
 ### 自動產生、不要手動編輯的檔案
 
 - `index.html` 的 `<!-- POSTS:START -->` ~ `<!-- POSTS:END -->` 之間
+- **每一頁 `<head>` 裡 `<!-- SEO:START -->` ~ `<!-- SEO:END -->` 之間**
+  （結構化資料、robots、og:image、article:* 等機器讀的 meta，見第十節）
 - `src/allowed-slugs.js`
 - `tools/build-manifest.json`
 - `sitemap.xml`（首頁那一筆的 `lastmod` 和文章一樣是**比對首頁自己的內容雜湊**得來的，
@@ -601,3 +609,76 @@ git pull
 比對失敗後悄悄退回預設，等於參數沒作用 —— 已經踩過一次。
 
 切換條全部是提案用的，**定案後連同 `data-*` 屬性一起刪掉**，不要留到正式站。
+
+---
+
+## 十、結構化資料與實體（2026-08-10）
+
+整站的 JSON-LD 由 `tools/build.mjs` ＋ `tools/schema.mjs` 產生，寫進每一頁
+`<head>` 的 `<!-- SEO:START -->` ~ `<!-- SEO:END -->` 之間。**手改會在下次 build 被蓋掉。**
+
+首頁是一份 `@graph`：`Dentist`（`#dentist`）＋九位醫師（`Person` ＋ `Physician`）
+＋ `WebSite` ＋ `WebPage`。六篇文章各一份：`BlogPosting` ＋ `WebPage` ＋
+`BreadcrumbList` ＋ 一份**精簡的**診所節點 ＋ `WebSite`。
+
+### 不要違反的規則
+
+1. **資料不重抄。** 看診時間讀 `#clinic` 那張資訊卡、醫師名冊讀 `#doctors`、
+   科別讀 `#topics` 的 chips。要改看診時間就去改那張卡，JSON-LD 會自己跟上。
+   `clinic.json` 只放**頁面上沒有**的東西（sameAs、座標、郵遞區號、國碼電話）。
+2. **文章的 `author` 指向診所，不是某個人。** 2026-08-02 定案的「全站移除作者署名
+   與醫療審閱」仍然有效 —— 這是機器讀的欄位，畫面上不會多出任何一行字。
+   **不要為了 E-E-A-T 把署名或「醫療審閱」加回頁面上。**
+   同理，文章頁刻意用 `WebPage` 而不是 `MedicalWebPage`（後者的重點欄位是
+   `lastReviewed`，宣告一個沒有人做的審閱等於造假）。
+3. **部定專科 ≠ 訓練經歷**，`hasCredential` 只收「衛生福利部…專科／專科醫師」。
+   第一版只比對開頭，把李侑津醫師的「**衛生福利部雙和醫院**」（那是他任職的醫院）
+   認成專科認證，等於幫他掛一個沒有的資格。規則同 COPY.md 第八之一節。
+4. **分享圖不能用 SVG。** Facebook 與 LINE 的爬蟲不吃 SVG，`og:image` 指到 `.svg`
+   等於沒設。點陣複本由 `node tools/og-images.mjs` 產生（`hero-gum.svg` →
+   `hero-gum-1600.png`，命名沿用「後綴＝寬度」的慣例），**要一起 commit**。
+   新增文章、或換了 HERO 插圖之後要記得跑一次。
+5. **首頁 `WebPage.dateModified` 用佔位符**，等 `homeHash` 算完才換成真日期。
+   先填日期會變成「換了日期 → 雜湊變了 → 下次又換成今天」的循環，
+   首頁的 lastmod 從此天天跳。
+6. `WebSite` **不宣告 `SearchAction`** —— 首頁那個搜尋框是純前端篩選，
+   沒有會回結果頁的網址，宣告一個不存在的端點等於說謊。
+
+### 這三種標記不要加（加了沒有回報，或會扣分）
+
+| 類型 | 為什麼 |
+| --- | --- |
+| `FAQPage` | Google **2026-05-07** 起停止顯示 FAQ 複合式搜尋結果，6 月移除 Search Console 報表、8 月移除 API 資料 |
+| `HowTo` | 2023-09 就下架了。〈貝氏刷牙法〉是典型的 how-to，還是不要加 |
+| `Review`／`AggregateRating` | 在自己網站上標自己的星等是明文禁止的（self-serving review），會拖累整站 |
+
+### 還沒補上的（都需要使用者提供，不要自己猜）
+
+1. **座標**（`clinic.json` 的 `geo`）—— Google 地圖上長按診所位置會跳出一組座標。
+   兩個值是 `null` 時 build 會整個略過 `geo` 欄位。
+2. **點陣 logo**（`clinic.json` 的 `logo`）—— Google 的 Organization logo 要 PNG／JPG，
+   站上只有 `assets/favicon.svg`。直接放大不行，它的牙洞位置是為了 16px 分頁列調過的
+   （PALETTE.md 第六之七節）。要補得先決定用哪個綠、底色與留白 —— 那是配色的決定。
+3. **文章的 `about`** —— `post-meta` 可以選填
+   `"about": [{ "type": "MedicalCondition", "name": "牙周病", "sameAs": "…" }]`，
+   把文章綁到具名的醫療實體上。沒填就整個略過（猜錯比沒有更糟）。
+4. **`sameAs` 的完整網址** —— 現在放的是 Google 地圖與 FB 的分享短網址（會轉址，
+   Google 跟得上，但完整網址更穩），LINE 那條是從 ID `@fafa070` 推出來的格式、**還沒驗證過**。
+
+### ⚠ 已經發現、還沒解決的資料不一致
+
+**LINE 官方帳號上的門診時間和網站不一樣**（2026-08-10 從使用者的手機截圖看到的）：
+
+| | 網站 `#clinic` | LINE 官方帳號「門診時間」 |
+| --- | --- | --- |
+| 上午 | 08:45–11:30 | 08:45–**12:00** |
+| 下午 | 13:45–16:30 | 13:45–**16:40** |
+| 晚上 | 17:45–20:00 | 17:45–**20:30** |
+
+LINE 那邊還另外列了一組「營業時間」（早班 08:35–12:05…），是第三組數字。
+**哪一組才對只有診所知道**，所以 JSON-LD 目前照網站上的那一組產生，沒有動它。
+確認之後改 `index.html` 的看診時間卡就好，結構化資料會自己跟上 ——
+但也要**同步改 Google 商家檔案與 LINE**，三邊不一致會直接傷到本地搜尋的實體辨識。
+
+順帶一筆：電話的顯示寫法（`05-5339-369`）**和 LINE 官方帳號一致**，
+反而是本檔第六節寫的 `05-533-9369` 對不上。要統一的話是改這份文件，不是改網站。
