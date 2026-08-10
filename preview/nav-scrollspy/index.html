@@ -55,7 +55,9 @@
                  後者看起來是三個開關，前者才是一塊東西移過去）。
                  差別只在那塊底的材質：
                    Ⓓ1 紙塊　`--paper #e2e5e6` ＋ 墨字，不發光。像內文那張紙推上來一塊
-                   Ⓓ2 玻璃　只把頁首玻璃在這一格擦亮一階（.12 白 ＋ .22 細框），字仍是白
+                   Ⓓ2 玻璃　**框常駐、底才跟著捲動**（2026-08-10 第四輪，使用者要的：
+                             「這三個元素在 HERO 區時就有玻璃框，比較像按鈕」）。
+                             靜止的框 .26、目前這一項的框 .45 ＋ 底 .13 白，字都是白的
                    Ⓓ3 灰塊　`#5f5d5c` ＝ 站上「全部」那顆標記的填色（介面灰），白字
                    Ⓓ 發光　**原案，使用者否決**：「太寫實了，跟整個網站的風格不搭。」
                  圓角一律 12px —— 標記、搜尋框、三種卡片用的都是這一個，
@@ -461,9 +463,44 @@ html[data-nav="d1"][data-here] .site-nav a[aria-current] { color: var(--ink); }
 /* 亮度差只有 1.45:1（塊對玻璃）—— 這一案就是刻意做到「看得出來、但不搶」。
    字沒有換，仍然是 .88 的白，對這塊底 6.77:1。 */
 html[data-nav="d2"] .nav-lamp {
-  background: rgba(255, 255, 255, .12);
-  border-color: rgba(255, 255, 255, .22);
+  background: rgba(255, 255, 255, .13);
+  border-color: rgba(255, 255, 255, .45);
 }
+
+/* ---- Ⓓ2 的框常駐（2026-08-10 第四輪，使用者要的）--------------------------
+   「我要這些元素在 HERO 區時就有玻璃框（但不一定要套玻璃底），
+     這樣比較有暗示這三個元素是按鈕的感覺。」
+
+   所以框和底拆成兩件事：
+     框　三項都有、從頭到尾都在（包含 HERO 那一屏），只是一條線
+     底　只有目前這一節那一項有，跟著捲動滑過去
+
+   框畫在 `a::before`，**不是直接給 a 加 border** —— 加 border 會把選單撐寬。
+   375 上頁首原本只剩 37px 餘裕，三個框的邊框加內距會直接吃掉一大半，
+   品牌就會被擠成兩行（PALETTE 第六之五節記過同一個坑）。
+   ::before 是絕對定位、不佔位，外擴的量讀同一個 `--lamp-pad`（由 JS 寫成 px），
+   所以框和滑過去的那塊底**永遠是同一個外框**，不會差一兩 px 露出邊。
+
+   z-index：a 自己是 z-index 1，::before 給 -1 —— 在字底下、但仍然蓋在燈箱上，
+   剛好讓框壓在底的邊緣上，兩者對齊看起來是同一塊東西。 */
+html[data-nav="d2"] .site-nav a::before {
+  content: ''; position: absolute; z-index: -1;
+  inset: -1px calc(-1 * var(--lamp-pad, 6px));
+  border: 1px solid rgba(255, 255, 255, .26);
+  border-radius: 12px;
+  transition: border-color .25s ease;
+}
+/* 目前這一項的框跟著亮一階，和底一起。 */
+html[data-nav="d2"][data-here] .site-nav a[aria-current]::before { border-color: rgba(255, 255, 255, .45); }
+
+/* ⚠ 框一旦常駐，外擴的量就不能再固定是「半個字」了 —— 手機的選單間距只有
+   3.2vw（375 上 12px），兩邊各長 6px 就會**邊碰邊**。
+   走過的死路：把手機的選單間距開大（試過 5vw）。**320 上會撞到品牌** ——
+   那個寬度的頁首本來就已經頂到極限（現況量到選單左緣比品牌右緣還左 1.2px），
+   再把間距撐開只會更糟。所以**版面一個字都不動**，改成讓外擴量自己讓步：
+       padX ＝ min(半個字, (選單間距 − 5) ÷ 2)
+   框與框之間永遠留 5px。實測：375 上 3.50px、320 上 2.62px、
+   電腦版 30.4px 的間距吃不到上限，仍然是半個字 6.88px。算式寫在下面那支 JS。 */
 
 /* ---- Ⓓ3 灰塊 -------------------------------------------------------------
    用站上已經有的那顆界面灰 `#5f5d5c` —— 它就是「全部」那顆標記的填色，
@@ -2837,18 +2874,34 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
   /* 燈箱的幾何：全部現量。左右外擴半個字，上下外擴 1px（連結本身已經有
      padding-block .35rem，盒子夠高了，再撐會比頁首還厚）。 */
+  /* 外擴半個字。同一個數字也餵給 Ⓓ2 常駐的那圈框（a::before 的 inset），
+     框和滑過去的那塊底才會是同一個外框。
+     ⚠ 這一行要**和有沒有人亮著無關**地跑 —— HERO 那一屏沒有人亮著，
+        但 Ⓓ2 的框在那時候就已經要畫出來了。 */
+  function padX() {
+    var cs = getComputedStyle(nav);
+    var gap = parseFloat(cs.columnGap || cs.gap) || 0;
+    /* 上限是「半個字」，但不能大到讓兩個框黏在一起 —— 框與框至少留 5px。
+       手機的間距是 3.2vw，所以窄螢幕會吃到後面那一項；電腦版 1.9rem 吃不到。 */
+    return Math.max(2, Math.min(parseFloat(cs.fontSize) * .5, (gap - 5) / 2));
+  }
+  function setPad() {
+    root.style.setProperty('--lamp-pad', padX().toFixed(2) + 'px');
+  }
+
   function moveLamp(a) {
     if (!a) return;
     var r = a.getBoundingClientRect();
     var n = nav.getBoundingClientRect();
-    var padX = parseFloat(getComputedStyle(nav).fontSize) * .5;
-    root.style.setProperty('--lamp-x', (r.left - n.left - padX).toFixed(2) + 'px');
+    var p = padX();
+    root.style.setProperty('--lamp-x', (r.left - n.left - p).toFixed(2) + 'px');
     root.style.setProperty('--lamp-y', (r.top - n.top - 1).toFixed(2) + 'px');
-    root.style.setProperty('--lamp-w', (r.width + padX * 2).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-w', (r.width + p * 2).toFixed(2) + 'px');
     root.style.setProperty('--lamp-h', (r.height + 2).toFixed(2) + 'px');
   }
 
   function paintNav() {
+    setPad();
     var here = pick();
     if (here === current) { if (here) moveLamp(here.a); return; }
     current = here;
@@ -2876,6 +2929,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   addEventListener('resize', onScroll);
   addEventListener('load', paintNav);
   if (window.visualViewport) visualViewport.addEventListener('resize', onScroll);
+  /* 切換案子時要重量一次：Ⓓ2 把手機的選單間距開大，三個字的位置會變，
+     燈箱不重算就會停在舊位置。 */
+  window.navSpyRelayout = function () { setPad(); if (current) moveLamp(current.a); };
   paintNav();
 })();
 </script>
@@ -2908,6 +2964,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     if (v === 'now') u.searchParams.delete('nav'); else u.searchParams.set('nav', v);
     if (push) history.replaceState(null, '', u);
     btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
+    if (window.navSpyRelayout) window.navSpyRelayout();
   }
 
   var q = new URLSearchParams(location.search);
