@@ -51,11 +51,17 @@
        Ⓐ 白線　　目前這一節的那一項長出白線，其餘不變
        Ⓑ 燈亮　　不畫線，改成「亮起來」：目前這項純白，其餘壓到 .5
        Ⓒ 線＋亮　兩個一起
-       Ⓓ 燈箱　　**第二輪加的（2026-08-10，使用者提的）**：白底墨字，
-                 像有一盞燈從後面打上來，而且是**同一塊燈箱在三個字之間滑過去**，
-                 不是三個各自亮滅。
+       Ⓓ 系列　　**同一塊底在三個字之間滑過去**（不是三個各自亮滅 ——
+                 後者看起來是三個開關，前者才是一塊東西移過去）。
+                 差別只在那塊底的材質：
+                   Ⓓ1 紙塊　`--paper #e2e5e6` ＋ 墨字，不發光。像內文那張紙推上來一塊
+                   Ⓓ2 玻璃　只把頁首玻璃在這一格擦亮一階（.12 白 ＋ .22 細框），字仍是白
+                   Ⓓ3 灰塊　`#5f5d5c` ＝ 站上「全部」那顆標記的填色（介面灰），白字
+                   Ⓓ 發光　**原案，使用者否決**：「太寫實了，跟整個網站的風格不搭。」
+                 圓角一律 12px —— 標記、搜尋框、三種卡片用的都是這一個，
+                 燈箱沒有理由自己另外挑（原案的 4px ＋ 光暈就是這樣走鐘的）。
      `?nav=` 的正規式寫 `[a-z0-9]+`：這個專案踩過，值帶數字時 `[a-z]+` 會比對失敗、
-     悄悄退回預設，等於參數沒有作用。
+     悄悄退回預設，等於參數沒有作用（`d1`~`d3` 正好是會踩到的那種值）。
 
      ── 第二輪追加的兩件（2026-08-10）─────────────────────────────────────────
        ・使用者回報 Ⓐ 在手機上「一直往下滑，三條白線都出來了」。
@@ -417,20 +423,54 @@ html[data-nav="c"][data-here] .site-nav a[aria-current] { color: #fff; }
   position: absolute; z-index: 0; top: 0; left: 0;
   width: var(--lamp-w, 0px); height: var(--lamp-h, 0px);
   transform: translate(var(--lamp-x, 0px), var(--lamp-y, 0px));
-  border-radius: 4px;
-  background: rgba(255, 255, 255, .94);
-  /* 兩層光暈：外面那層是「燈從後面打上來」的散光，
-     裡面那層很短，只是讓白塊的邊不要切得像貼紙。 */
-  box-shadow: 0 0 18px rgba(255, 255, 255, .30), 0 0 4px rgba(255, 255, 255, .45);
+  /* 圓角 12px ＝ 標記、搜尋框、文章卡、醫師卡、診所卡全部用的那一個。
+     這一站只有一個圓角，燈箱沒有理由自己另外挑（原案的 4px 就是這樣走鐘的）。 */
+  border-radius: 12px;
+  border: 1px solid transparent;
   opacity: 0; pointer-events: none;
   transition: transform .3s cubic-bezier(.4, 0, .2, 1),
               width .3s cubic-bezier(.4, 0, .2, 1),
               height .3s cubic-bezier(.4, 0, .2, 1),
               opacity .22s ease;
 }
-html[data-nav="d"] .nav-lamp { display: block; }
-html[data-nav="d"][data-here] .nav-lamp { opacity: 1; }
+html[data-nav^="d"] .nav-lamp { display: block; }
+html[data-nav^="d"][data-here] .nav-lamp { opacity: 1; }
+
+/* ---- Ⓓ 發光（第一版，原案）------------------------------------------------
+   使用者：「太寫實了，跟整個網站的風格不搭。」留著對照，不要拿去實作。
+   問題不在亮度，在**材質**：這一站從頭到尾沒有任何一處在發光 ——
+   文章卡是投影（光從外面來），頁首是毛玻璃，窄帶是漸層，全都是被照亮的東西。
+   一塊自己會亮的燈箱等於在這裡多了一個光源，所以怎麼調亮度都不會搭。 */
+html[data-nav="d"] .nav-lamp {
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 0 18px rgba(255, 255, 255, .30), 0 0 4px rgba(255, 255, 255, .45);
+}
 html[data-nav="d"][data-here] .site-nav a[aria-current] { color: #191614; }
+
+/* ---- Ⓓ1 紙塊 -------------------------------------------------------------
+   同樣是白底墨字，但用的是**這一頁自己的紙** `--paper #e2e5e6` 與墨色
+   `--ink #2a2c27`，而且完全不發光。讀起來像「內文那張紙被推上來一塊」，
+   不是一盞燈。墨字對紙 11.15:1（就是內文那一組，本來就是站上最穩的一格）。 */
+html[data-nav="d1"] .nav-lamp { background: var(--paper); }
+html[data-nav="d1"][data-here] .site-nav a[aria-current] { color: var(--ink); }
+
+/* ---- Ⓓ2 玻璃 -------------------------------------------------------------
+   最輕的一案：不換材質，只把頁首那塊玻璃在這一格**擦亮一階**（.12 的白
+   ＋ 一條 .22 的細框），字仍然是白的。整條頁首本來就是玻璃，
+   這一案等於沒有引進任何新東西。 */
+/* 亮度差只有 1.45:1（塊對玻璃）—— 這一案就是刻意做到「看得出來、但不搶」。
+   字沒有換，仍然是 .88 的白，對這塊底 6.77:1。 */
+html[data-nav="d2"] .nav-lamp {
+  background: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .22);
+}
+
+/* ---- Ⓓ3 灰塊 -------------------------------------------------------------
+   用站上已經有的那顆界面灰 `#5f5d5c` —— 它就是「全部」那顆標記的填色，
+   錨在頁首玻璃 `#393736` 往上提亮度（PALETTE 第六之九節：它屬於介面、
+   不屬於科別）。選單也是介面，所以這一案是全站現有語彙裡最直接的答案。
+   選單的字是 .88 的白，對它 5.54:1（純白 6.55）。 */
+html[data-nav="d3"] .nav-lamp { background: #5f5d5c; }
 
 @media (prefers-reduced-motion: reduce) {
   .nav-lamp { transition: opacity .22s ease; }
@@ -2843,12 +2883,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 <!-- ---- 切換條。網址可帶 ?nav=now|a|b|c ----------------------------------------
      正規式寫 [a-z0-9]+ 不寫 [a-z]+ —— 這個專案踩過：值一旦帶數字就比對失敗、
      悄悄退回預設，等於參數沒有作用。 -->
-<div class="sw" role="group" aria-label="頁首選單五案切換">
+<div class="sw" role="group" aria-label="頁首選單各案切換">
   <button type="button" data-v="now">現況</button>
   <button type="button" data-v="a">Ⓐ 白線</button>
   <button type="button" data-v="b">Ⓑ 燈亮</button>
   <button type="button" data-v="c">Ⓒ 線＋亮</button>
-  <button type="button" data-v="d">Ⓓ 燈箱</button>
+  <button type="button" data-v="d1">Ⓓ1 紙塊</button>
+  <button type="button" data-v="d2">Ⓓ2 玻璃</button>
+  <button type="button" data-v="d3">Ⓓ3 灰塊</button>
+  <button type="button" data-v="d">Ⓓ 發光（原案）</button>
   <span class="sep" aria-hidden="true"></span>
   <span class="sw-live" aria-hidden="true">目前：<b class="sw-now">—</b></span>
 </div>
@@ -2856,7 +2899,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 (function () {
   var root = document.documentElement;
   var btns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-v]'));
-  var ok = { now: 1, a: 1, b: 1, c: 1, d: 1 };
+  var ok = { now: 1, a: 1, b: 1, c: 1, d: 1, d1: 1, d2: 1, d3: 1 };
 
   function setCase(v, push) {
     if (!ok[v]) v = 'now';
