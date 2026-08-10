@@ -224,7 +224,13 @@ a:hover { color: var(--accent); }
   font-size: clamp(11px, 3.2vw, 13.5px);
 }
 .site-nav a { color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap; }
-.site-nav a:hover { color: #fff; }
+/* ⚠ hover 一定要關在這個 media 裡。手機沒有游標，`:hover` 一被點出來就會黏住，
+   點過的那幾項會一直維持在 hover 的樣子 —— 首頁的選單底線就是這樣壞掉的
+   （2026-08-10 修掉，見 index.html 主選單那一段）。和文章卡「手機版不做 hover」
+   是同一條規則。 */
+@media (hover: hover) and (pointer: fine) {
+  .site-nav a:hover { color: #fff; }
+}
 
 /* ==========================================================================
    文章頁
