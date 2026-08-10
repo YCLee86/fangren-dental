@@ -2949,16 +2949,23 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   <button type="button" data-v="d3">Ⓓ3 灰塊</button>
   <button type="button" data-v="d">Ⓓ 發光（原案）</button>
   <span class="sep" aria-hidden="true"></span>
-  <span class="sw-live" aria-hidden="true">目前：<b class="sw-now">—</b></span>
+  <!-- 版本戳。手機上看到的是不是最新一版，看這裡就知道 ——
+       Cloudflare 建置要幾分鐘，中間開到的會是上一版。 -->
+  <span class="sw-live" aria-hidden="true">版本 <b>④ 08-10</b>　目前：<b class="sw-now">—</b></span>
 </div>
 <script>
 (function () {
   var root = document.documentElement;
   var btns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-v]'));
   var ok = { now: 1, a: 1, b: 1, c: 1, d: 1, d1: 1, d2: 1, d3: 1 };
+  /* ⚠ 認不得的值要退回**預設的 Ⓐ**，不是退回「現況」。
+     踩過：這一頁還沒部署完的時候用 `?nav=d2` 打開，舊版的白名單裡沒有 d2，
+     於是退回現況 —— 現況本來就什麼都不標，看起來就像「點進去沒有東西」。
+     退回 Ⓐ 至少畫面上有東西在動，一看就知道是網址指定的那一案沒生效。 */
+  var FALLBACK = 'a';
 
   function setCase(v, push) {
-    if (!ok[v]) v = 'now';
+    if (!ok[v]) v = FALLBACK;
     if (v === 'now') root.removeAttribute('data-nav'); else root.setAttribute('data-nav', v);
     var u = new URL(location.href);
     if (v === 'now') u.searchParams.delete('nav'); else u.searchParams.set('nav', v);
@@ -2969,7 +2976,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
   var q = new URLSearchParams(location.search);
   var m = /^[a-z0-9]+$/.exec(q.get('nav') || '');
-  setCase(m ? m[0] : 'a', false);   /* 預設直接開在 Ⓐ，一進來就看得到這一輪在講什麼 */
+  setCase(m ? m[0] : FALLBACK, false);   /* 預設直接開在 Ⓐ，一進來就看得到這一輪在講什麼 */
 
   btns.forEach(function (b) { b.addEventListener('click', function () { setCase(b.dataset.v, true); }); });
 })();
