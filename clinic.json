@@ -43,17 +43,20 @@
 
   "_sameAs_comment": [
     "實體 SEO 最關鍵的一欄：告訴 Google「fangren.net 和這幾個帳號是同一家診所」。",
-    "沒有這一欄，它只能靠名稱＋地址去猜。2026-08-10 由使用者提供。",
+    "沒有這一欄，它只能靠名稱＋地址去猜。三條都由使用者提供（2026-08-10）。",
     "",
     "⚠ 前兩條是分享用的短網址（會轉址）。Google 跟得上轉址，所以可以用，",
     "  但完整網址更穩。之後在電腦上打開它們、把網址列裡展開後的那一串換進來會更好。",
-    "⚠ 第三條是從 LINE 官方帳號的 ID @fafa070 推出來的標準網址格式，**還沒實際驗證過**。",
-    "  請在手機上點一次確認打得開；打不開的話改用 LINE 後台「分享」給的 lin.ee 短網址。"
+    "",
+    "LINE 那條是使用者給的官方帳號連結，用的是系統 ID @445rpiiv。",
+    "⚠ **不要改成 @fafa070。** 那是同一個帳號的基本 ID（手機截圖上顯示的那個），",
+    "  我一度從它推出 https://page.line.me/fafa070 放進來，但那是推的、沒驗證過。",
+    "  這裡要放使用者實際給的那一條。"
   ],
   "sameAs": [
     "https://maps.app.goo.gl/bKSrVyS2Qu2xvnMj7",
     "https://www.facebook.com/share/1Bwe9BMkP3/",
-    "https://page.line.me/fafa070"
+    "https://line.me/R/ti/p/@445rpiiv"
   ],
 
   "foundingDate": "1983",

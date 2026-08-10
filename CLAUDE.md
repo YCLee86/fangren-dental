@@ -686,8 +686,11 @@ git pull
    而 Q 編號猜錯等於把文章綁到另一個疾病上。
    要補的格式是 `{ "type": …, "name": …, "sameAs": "https://www.wikidata.org/wiki/Q…" }`，
    在有網路的電腦上做。沒填 `about` 的文章會整個略過這個欄位。
-4. **`sameAs` 的完整網址** —— 現在放的是 Google 地圖與 FB 的分享短網址（會轉址，
-   Google 跟得上，但完整網址更穩），LINE 那條是從 ID `@fafa070` 推出來的格式、**還沒驗證過**。
+4. **`sameAs` 的完整網址** —— Google 地圖與 FB 放的是分享短網址（會轉址，Google 跟得上，
+   但完整網址更穩）。LINE 那條 2026-08-10 已由使用者提供並確認：
+   `https://line.me/R/ti/p/@445rpiiv`（系統 ID）。
+   ⚠ **不要改成 `@fafa070`** —— 那是同一個帳號的基本 ID，我曾據此推出
+   `https://page.line.me/fafa070` 放進去，那是推的、沒驗證過，已經換掉。
 
 ### ⚠ 已經發現、還沒解決的資料不一致
 
