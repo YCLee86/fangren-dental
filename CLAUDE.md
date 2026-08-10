@@ -293,6 +293,14 @@ tools/
   `?band=glasstar|glasstar2|blue|tar|ink|glass1|glass2|glass3&gap=now|wide|full`。
   **已定：間距用「拉開」、底色用毛玻璃＋柏油漸層。**
   還沒定：柏油漸層要「標準」還是「深」。細節全部寫在 [PALETTE.md](PALETTE.md) 第六之三節。
+- `preview/nav-scrollspy/` — **⚠ 最新一頁：頁首選單「捲到哪一節哪一項就亮」四案（2026-08-10，未定案）**。
+  起因是使用者回報「右上三項點過之後三條白線一起留著，邏輯不通」。
+  原因是那條白線只有 `:hover`，**手機沒有游標、hover 會黏住**
+  —— 和文章卡「手機版不做 hover」是同一個坑，選單當初漏掉了。
+  這一頁做兩件事：① hover 關進 `@media (hover: hover) and (pointer: fine)`；
+  ② 加捲動偵測，目前這一節的那一項才亮（HERO 那一屏三項都不亮）。
+  四案：現況／Ⓐ 白線／Ⓑ 燈亮／Ⓒ 線＋亮，網址可帶 `?nav=now|a|b|c`（預設 Ⓐ）。
+  是 `index.html` 的**完整複本**，差異六處寫在它 `<head>` 最前面。
 - `preview/band-stats-gap/` — **窄帶三格的間距 4rem，定稿紀錄（2026-08-10）**。
   用來看「2026-08-07 定案的 4rem」和「線上誤跑三天的 1.9rem」差在哪；
   選定後已修進 `index.html`，這一頁現在就是正式站的複本、沒有任何覆寫。
@@ -448,6 +456,14 @@ git pull
 
 ### 還沒決定的
 
+0. **頁首選單的「目前在哪一節」要用哪一案**（2026-08-10 開，提案頁 `preview/nav-scrollspy/`）。
+   使用者回報三項點過之後三條白線一起留著。**成因已經確定**：那條線只有 `:hover`，
+   而手機沒有游標、hover 會黏住 —— 這一半不必等定案，`@media (hover: hover) and
+   (pointer: fine)` 是要修的。要挑的是另一半：捲到哪一節時那一項怎麼標
+   （Ⓐ 白線／Ⓑ 燈亮／Ⓒ 線＋亮）。
+   > 判斷線用**頁首下緣 ＋20px**，不是畫面中央 —— 這樣才和點擊對得起來
+   > （`scroll-padding-top` 是頁首 ＋16px，點完一定亮到剛點的那一項）。
+   > #articles 沒有自己的選單項，歸在「全部文章」那一段；HERO 那一屏三項都不亮。
 1. **要不要把定案套進 `preview/home-desktop/`**，並刪掉中間過程的幾頁
    （`home-desktop-hero/` `-align/` `-banner/` `-fullscreen/`）。
    `home-desktop-band/` 自己的切換條已經全部刪掉了。
