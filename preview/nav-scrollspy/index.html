@@ -462,10 +462,43 @@ html[data-nav="d1"][data-here] .site-nav a[aria-current] { color: var(--ink); }
    這一案等於沒有引進任何新東西。 */
 /* 亮度差只有 1.45:1（塊對玻璃）—— 這一案就是刻意做到「看得出來、但不搶」。
    字沒有換，仍然是 .88 的白，對這塊底 6.77:1。 */
+/* ---- 為什麼白色的紗會看起來偏橘黃（2026-08-10 第五輪）--------------------
+   使用者：「玻璃亮的感覺有點橘黃光，而且和其他沒亮的元素差異不大。」
+
+   不是錯覺，是把**白**疊在**暖底**上的必然結果：
+   頁首玻璃的染色是 `#191614`（暗夜，刻意的暖色），過了窄帶之後的實色是
+   `#393736` —— R 比 B 高 3。低透明度的白只會把亮度拉高，色相原封不動搬上來，
+   所以那一格看起來就是「暖了一階的灰」，在暖色調的手機螢幕（True Tone／
+   Night Shift）上更明顯。
+
+   解法不必發明新顏色：改用這一頁自己的紙 `--paper #e2e5e6`（R 比 B 低 4，
+   是冷的）。同樣的亮度下，紙的冷正好抵掉底的暖：
+
+       白 .13（原本）   rgb(83,81,80)     對玻璃 1.50   R−B ＋2.6  ← 偏暖
+       紙 .24           rgb( 97, 96, 96)  對玻璃 1.91   R−B ＋1.3
+       紙 .34（預設）   rgb(115,114,114)  對玻璃 2.47   R−B ＋0.7  ← 幾乎中性
+       紙 .44           rgb(132,131,131)  對玻璃 3.17   R−B ＋0.1
+
+   「差異不大」則是另一件事：原本只有 1.50。三階讓使用者挑，見 data-g。
+   ------------------------------------------------------------------------ */
 html[data-nav="d2"] .nav-lamp {
-  background: rgba(255, 255, 255, .13);
-  border-color: rgba(255, 255, 255, .45);
+  background: rgba(226, 229, 230, var(--d2-a, .34));
+  border-color: rgba(226, 229, 230, .55);
 }
+/* 亮度三階（只作用在 Ⓓ2）。網址 ?g=1|2|3，預設 2。
+   ⚠ 底一亮，**站在它上面的白字就開始變難讀** —— 這是這一案的天花板，
+      不是可以無視的細節。目前這一項的字因此從 .88 白提到純白：
+
+        Ⓖ1 .24　底 rgb(98,97,96)　　底對玻璃 1.91　純白字 6.20 ✓
+        Ⓖ2 .34　底 rgb(114,114,114)　　　　　 2.47　純白字 4.80 ✓（AA 4.5 剛過）
+        Ⓖ3 .44　底 rgb(131,132,131)　　　　　 3.14　純白字 3.77 ✗ 低於 AA
+
+      **Ⓖ3 過不了 AA。** 如果最後選它，那一項的字要翻成墨色（就變成 Ⓓ1 那種讀法），
+      不能白字硬上 —— 這一站只在兒牙那一顆破例過一次，而且是刻意的。 */
+html[data-g="1"] { --d2-a: .24; }
+html[data-g="3"] { --d2-a: .44; }
+/* 亮起來的那一項提到純白：Ⓖ2 的 4.14 → 4.80，剛好把 AA 拉回來。 */
+html[data-nav="d2"][data-here] .site-nav a[aria-current] { color: #fff; }
 
 /* ---- Ⓓ2 的框常駐（2026-08-10 第四輪，使用者要的）--------------------------
    「我要這些元素在 HERO 區時就有玻璃框（但不一定要套玻璃底），
@@ -486,12 +519,14 @@ html[data-nav="d2"] .nav-lamp {
 html[data-nav="d2"] .site-nav a::before {
   content: ''; position: absolute; z-index: -1;
   inset: -1px calc(-1 * var(--lamp-pad, 6px));
-  border: 1px solid rgba(255, 255, 255, .26);
+  /* 框也走紙色，理由同上 —— 一條線上看不太出色相，但沒理由讓框和底不同族。 */
+  border: 1px solid rgba(226, 229, 230, .26);
   border-radius: 12px;
   transition: border-color .25s ease;
 }
-/* 目前這一項的框跟著亮一階，和底一起。 */
-html[data-nav="d2"][data-here] .site-nav a[aria-current]::before { border-color: rgba(255, 255, 255, .45); }
+/* 目前這一項的框跟著亮，和底一起。.26 → .55 是這一案「亮起來」的另一半：
+   底負責面、框負責邊，兩個一起拉開才看得出是同一塊東西被點亮。 */
+html[data-nav="d2"][data-here] .site-nav a[aria-current]::before { border-color: rgba(226, 229, 230, .55); }
 
 /* ⚠ 框一旦常駐，外擴的量就不能再固定是「半個字」了 —— 手機的選單間距只有
    3.2vw（375 上 12px），兩邊各長 6px 就會**邊碰邊**。
@@ -2949,9 +2984,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   <button type="button" data-v="d3">Ⓓ3 灰塊</button>
   <button type="button" data-v="d">Ⓓ 發光（原案）</button>
   <span class="sep" aria-hidden="true"></span>
+  <!-- Ⓓ2 專用的亮度三階。和上面那組是獨立的兩件事，可以任意組合，
+       但只有選在 Ⓓ2 的時候看得到差別。 -->
+  <button type="button" data-g="1">Ⓖ1 淡</button>
+  <button type="button" data-g="2">Ⓖ2 中</button>
+  <button type="button" data-g="3">Ⓖ3 亮</button>
+  <span class="sep" aria-hidden="true"></span>
   <!-- 版本戳。手機上看到的是不是最新一版，看這裡就知道 ——
        Cloudflare 建置要幾分鐘，中間開到的會是上一版。 -->
-  <span class="sw-live" aria-hidden="true">版本 <b>④ 08-10</b>　目前：<b class="sw-now">—</b></span>
+  <span class="sw-live" aria-hidden="true">版本 <b>⑤ 08-10</b>　目前：<b class="sw-now">—</b></span>
 </div>
 <script>
 (function () {
@@ -2964,21 +3005,41 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      退回 Ⓐ 至少畫面上有東西在動，一看就知道是網址指定的那一案沒生效。 */
   var FALLBACK = 'a';
 
+  var gBtns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-g]'));
+  var okG = { 1: 1, 2: 1, 3: 1 };
+
+  function sync(push) {
+    var v = root.getAttribute('data-nav') || 'now';
+    var g = root.getAttribute('data-g') || '2';
+    var u = new URL(location.href);
+    if (v === 'now') u.searchParams.delete('nav'); else u.searchParams.set('nav', v);
+    if (g === '2') u.searchParams.delete('g'); else u.searchParams.set('g', g);
+    if (push) history.replaceState(null, '', u);
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
+    gBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.g === g)); });
+    if (window.navSpyRelayout) window.navSpyRelayout();
+  }
+
   function setCase(v, push) {
     if (!ok[v]) v = FALLBACK;
     if (v === 'now') root.removeAttribute('data-nav'); else root.setAttribute('data-nav', v);
-    var u = new URL(location.href);
-    if (v === 'now') u.searchParams.delete('nav'); else u.searchParams.set('nav', v);
-    if (push) history.replaceState(null, '', u);
-    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
-    if (window.navSpyRelayout) window.navSpyRelayout();
+    sync(push);
+  }
+  /* 亮度是獨立的一組，只有 Ⓓ2 看得到差別。 */
+  function setGlow(g, push) {
+    if (!okG[g]) g = '2';
+    root.setAttribute('data-g', g);
+    sync(push);
   }
 
   var q = new URLSearchParams(location.search);
   var m = /^[a-z0-9]+$/.exec(q.get('nav') || '');
+  var gq = /^[0-9]+$/.exec(q.get('g') || '');
+  setGlow(gq ? gq[0] : '2', false);
   setCase(m ? m[0] : FALLBACK, false);   /* 預設直接開在 Ⓐ，一進來就看得到這一輪在講什麼 */
 
   btns.forEach(function (b) { b.addEventListener('click', function () { setCase(b.dataset.v, true); }); });
+  gBtns.forEach(function (b) { b.addEventListener('click', function () { setGlow(b.dataset.g, true); }); });
 })();
 </script>
 
