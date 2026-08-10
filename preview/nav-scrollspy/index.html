@@ -46,21 +46,34 @@
           **HERO 這一屏三項都不亮** —— 那時候還沒進到任何一節，
           硬要選一個亮反而是說謊。
 
-     ── 四案（右下角切換條，網址可帶 ?nav=now|a|b|c）────────────────────────────
+     ── 五案（右下角切換條，網址可帶 ?nav=now|a|b|c|d）──────────────────────────
        現況　　　只有 hover（電腦上才看得到），就是線上現在的樣子
        Ⓐ 白線　　目前這一節的那一項長出白線，其餘不變
        Ⓑ 燈亮　　不畫線，改成「亮起來」：目前這項純白，其餘壓到 .5
-       Ⓒ 線＋亮　兩個一起（使用者原話裡的兩個講法都做出來比）
+       Ⓒ 線＋亮　兩個一起
+       Ⓓ 燈箱　　**第二輪加的（2026-08-10，使用者提的）**：白底墨字，
+                 像有一盞燈從後面打上來，而且是**同一塊燈箱在三個字之間滑過去**，
+                 不是三個各自亮滅。
      `?nav=` 的正規式寫 `[a-z0-9]+`：這個專案踩過，值帶數字時 `[a-z]+` 會比對失敗、
      悄悄退回預設，等於參數沒有作用。
 
-     ── 和正式站的差異，只有這六處 ─────────────────────────────────────────────
+     ── 第二輪追加的兩件（2026-08-10）─────────────────────────────────────────
+       ・使用者回報 Ⓐ 在手機上「一直往下滑，三條白線都出來了」。
+         `hover: hover` 那一道理論上已經擋掉，但**只要它沒生效線就會再度累加**，
+         所以再加一道 `html:not([data-nav])`：Ⓐ～Ⓓ 這幾案裡 hover 完全不畫線，
+         那條線唯一的來源是 `aria-current`，而它同時只會有一個。
+       ・切換條右邊加了**即時讀數**（目前：⋯）。畫面上看到的和讀數不一致，
+         就表示問題出在瀏覽器留下來的狀態，不是判斷邏輯 —— 回報時一起截圖最省事。
+
+     ── 和正式站的差異 ─────────────────────────────────────────────────────────
        1. <title> ＋ noindex（就是這裡）
        2. 資產與文章路徑改成絕對路徑 /assets/… /posts/…（提案頁在子目錄，相對路徑會 404）
        3. 拿掉 counter.js，窄帶的瀏覽數改成寫死的示範值 190
           （不拿掉的話每開一次提案頁就幫首頁的真實計數 +1）
-       4. `.site-nav a:hover` 拆成兩條，hover 那一條關進 `@media (hover: hover)`
-       5. 新增 `html[data-here]` 的三案樣式
+       4. `.site-nav a:hover` 拆成兩條，hover 那一條關進
+          `@media (hover: hover) and (pointer: fine)` ＋ `html:not([data-nav])`
+       5. 新增 `html[data-here]` 的四案樣式與 `.nav-lamp`（燈箱，由 JS 生出來，
+          正式站的標記完全不必動）
        6. 新增 scrollspy 的 JS 與右下角的切換條
      ============================================================================ -->
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
@@ -341,8 +354,14 @@ html.scrolled .brand-text small { font-size: .74rem; }
    手機沒有游標，`:hover` 被點出來之後會黏在那裡，點過三項就三條線一起留著
    —— 這就是使用者回報的「邏輯不通」。hover 只給真的有游標的裝置，
    `:focus-visible` 留在外面（鍵盤操作在哪種裝置上都要有焦點框）。 */
+/* ⚠ 第二輪加的第二道保險（2026-08-10）：`html:not([data-nav])`。
+   使用者回報 Ⓐ 在手機上「一直往下滑，三條白線都出來了」。
+   `hover: hover` 那一道理論上已經擋掉了，但只要它沒生效，線就會再度累加 ——
+   所以在**任何一個有捲動偵測的案子裡（Ⓐ～Ⓓ），hover 完全不畫線**，
+   那條線唯一的來源是 `aria-current`，而 aria-current 全站同時只會有一個。
+   hover 只剩「現況」那一案還有（就是線上現在的樣子，留著對照用）。 */
 @media (hover: hover) and (pointer: fine) {
-  .site-nav a:hover::after { left: 0; right: 0; opacity: .8; }
+  html:not([data-nav]) .site-nav a:hover::after { left: 0; right: 0; opacity: .8; }
 }
 .site-nav a:focus-visible::after { left: 0; right: 0; opacity: .8; }
 .site-nav a:focus-visible, .brand:focus-visible { outline: 2px solid rgba(255,255,255,.8); outline-offset: 3px; }
@@ -371,6 +390,51 @@ html[data-nav="b"][data-here] .site-nav a,
 html[data-nav="c"][data-here] .site-nav a { color: rgba(255, 255, 255, .5); }
 html[data-nav="b"][data-here] .site-nav a[aria-current],
 html[data-nav="c"][data-here] .site-nav a[aria-current] { color: #fff; }
+
+/* ==========================================================================
+   Ⓓ 燈箱（2026-08-10 第二輪，使用者提的）
+   --------------------------------------------------------------------------
+   「滑到那個區的時候，上面的元素變成白底黑字，有點像是有燈從後面打上來，
+     那個燈箱會在三個元素之間切換。」
+
+   做法是**一塊燈箱在三個字之間滑過去**，不是三個各自亮滅 ——
+   後者看起來是三個開關，前者才是「同一盞燈移過去」。
+   所以整條選單只有一個 .nav-lamp（由 JS 生出來，正式站的標記不必動），
+   位置與大小用 CSS 變數餵，transition 掛在 transform／width 上。
+
+   幾何全部由 JS 現量（那一項的 getBoundingClientRect），不寫死任何數字 ——
+   選單的字級在手機是 clamp(11px, 3.2vw, 13px)，寫死一定會在某個寬度歪掉。
+   左右各外擴半個字（padX ＝ .5em）：手機 12px 字 → 外擴 6px，
+   而選單的 gap 是 3.2vw（375 上 12px），所以燈箱邊緣離隔壁的字還有 6px。
+
+   燈箱是白的，所以那一項的字要翻成墨色；其餘兩項維持原本的 .88 白，
+   不壓暗 —— 壓暗的是 Ⓑ，這一案的對比已經由燈箱本身給足了。
+   ========================================================================== */
+.site-nav { position: relative; }
+.site-nav a { position: relative; z-index: 1; }   /* 字要在燈箱上面 */
+.nav-lamp {
+  display: none;
+  position: absolute; z-index: 0; top: 0; left: 0;
+  width: var(--lamp-w, 0px); height: var(--lamp-h, 0px);
+  transform: translate(var(--lamp-x, 0px), var(--lamp-y, 0px));
+  border-radius: 4px;
+  background: rgba(255, 255, 255, .94);
+  /* 兩層光暈：外面那層是「燈從後面打上來」的散光，
+     裡面那層很短，只是讓白塊的邊不要切得像貼紙。 */
+  box-shadow: 0 0 18px rgba(255, 255, 255, .30), 0 0 4px rgba(255, 255, 255, .45);
+  opacity: 0; pointer-events: none;
+  transition: transform .3s cubic-bezier(.4, 0, .2, 1),
+              width .3s cubic-bezier(.4, 0, .2, 1),
+              height .3s cubic-bezier(.4, 0, .2, 1),
+              opacity .22s ease;
+}
+html[data-nav="d"] .nav-lamp { display: block; }
+html[data-nav="d"][data-here] .nav-lamp { opacity: 1; }
+html[data-nav="d"][data-here] .site-nav a[aria-current] { color: #191614; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-lamp { transition: opacity .22s ease; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .site-nav a { transition: none; }
@@ -1864,6 +1928,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 .sw button[aria-pressed="true"] { background: rgba(255, 255, 255, .92); color: #191614; font-weight: 700; }
 .sw button:focus-visible { outline: 2px solid rgba(255, 255, 255, .8); outline-offset: 2px; }
+.sw .sep { width: 1px; background: rgba(255, 255, 255, .22); margin: .2rem .15rem; }
+/* 即時讀數：畫面上亮著的那一項，JS 每次改狀態就寫進來。 */
+.sw-live { color: rgba(255, 255, 255, .6); padding: .32rem .3rem; white-space: nowrap; }
+.sw-live b { color: rgba(255, 255, 255, .92); font-weight: 700; }
 @media (max-width: 720px) { .sw { font-size: .66rem; bottom: .6rem; } .sw button { padding: .3rem .42rem; } }
 @media (max-width: 360px) { .sw { font-size: .6rem; gap: .2rem; padding: .3rem .32rem; } .sw button { padding: .28rem .34rem; } }
 </style>
@@ -2694,8 +2762,16 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 (function () {
   var root  = document.documentElement;
   var head  = document.querySelector('.site-head');
+  var nav   = document.querySelector('.site-nav');
   var links = Array.prototype.slice.call(document.querySelectorAll('.site-nav a[href^="#"]'));
-  if (!head || !links.length) return;
+  if (!head || !nav || !links.length) return;
+
+  /* Ⓓ 的燈箱。由 JS 生出來，正式站的標記因此完全不必動 ——
+     真的選了這一案再決定要不要寫進 HTML。 */
+  var lamp = document.createElement('span');
+  lamp.className = 'nav-lamp';
+  lamp.setAttribute('aria-hidden', 'true');
+  nav.appendChild(lamp);
 
   /* 選單項 → 它負責的那一節。順序＝頁面上的先後，下面靠這個順序取「最後一個」。 */
   var spots = links.map(function (a) {
@@ -2719,16 +2795,35 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     return here;
   }
 
+  /* 燈箱的幾何：全部現量。左右外擴半個字，上下外擴 1px（連結本身已經有
+     padding-block .35rem，盒子夠高了，再撐會比頁首還厚）。 */
+  function moveLamp(a) {
+    if (!a) return;
+    var r = a.getBoundingClientRect();
+    var n = nav.getBoundingClientRect();
+    var padX = parseFloat(getComputedStyle(nav).fontSize) * .5;
+    root.style.setProperty('--lamp-x', (r.left - n.left - padX).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-y', (r.top - n.top - 1).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-w', (r.width + padX * 2).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-h', (r.height + 2).toFixed(2) + 'px');
+  }
+
   function paintNav() {
     var here = pick();
-    if (here === current) return;
+    if (here === current) { if (here) moveLamp(here.a); return; }
     current = here;
     spots.forEach(function (s) {
       if (s === here) s.a.setAttribute('aria-current', 'true');
       else s.a.removeAttribute('aria-current');
     });
-    if (here) root.setAttribute('data-here', here.id);
+    if (here) { root.setAttribute('data-here', here.id); moveLamp(here.a); }
     else root.removeAttribute('data-here');
+
+    /* 切換條上的即時讀數（提案頁專用）。畫面上看到幾條線、幾個亮，
+       和這裡寫的必須一致 —— 不一致就表示問題出在瀏覽器的狀態（例如黏住的
+       hover），不是判斷邏輯。回報的時候連這一行一起截圖最省事。 */
+    var out = document.querySelector('.sw-now');
+    if (out) out.textContent = here ? here.a.textContent.trim() : '（都不亮）';
   }
 
   var tick = false;
@@ -2739,6 +2834,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   }
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll);
+  addEventListener('load', paintNav);
   if (window.visualViewport) visualViewport.addEventListener('resize', onScroll);
   paintNav();
 })();
@@ -2747,17 +2843,20 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 <!-- ---- 切換條。網址可帶 ?nav=now|a|b|c ----------------------------------------
      正規式寫 [a-z0-9]+ 不寫 [a-z]+ —— 這個專案踩過：值一旦帶數字就比對失敗、
      悄悄退回預設，等於參數沒有作用。 -->
-<div class="sw" role="group" aria-label="頁首選單四案切換">
+<div class="sw" role="group" aria-label="頁首選單五案切換">
   <button type="button" data-v="now">現況</button>
   <button type="button" data-v="a">Ⓐ 白線</button>
   <button type="button" data-v="b">Ⓑ 燈亮</button>
   <button type="button" data-v="c">Ⓒ 線＋亮</button>
+  <button type="button" data-v="d">Ⓓ 燈箱</button>
+  <span class="sep" aria-hidden="true"></span>
+  <span class="sw-live" aria-hidden="true">目前：<b class="sw-now">—</b></span>
 </div>
 <script>
 (function () {
   var root = document.documentElement;
   var btns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-v]'));
-  var ok = { now: 1, a: 1, b: 1, c: 1 };
+  var ok = { now: 1, a: 1, b: 1, c: 1, d: 1 };
 
   function setCase(v, push) {
     if (!ok[v]) v = 'now';
