@@ -1138,8 +1138,8 @@ html.scrolled .brand-text small { font-size: .74rem; }
 /* 模糊層：整條 4px 一致，但由 mask 讓它從上往下淡入，所以沒有框邊。 */
 .band::before {
   content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  -webkit-backdrop-filter: blur(4px) saturate(.92);
-  backdrop-filter: blur(4px) saturate(.92);
+  -webkit-backdrop-filter: blur(calc(var(--gb) * .67)) saturate(.92);
+  backdrop-filter: blur(calc(var(--gb) * .67)) saturate(.92);
   -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 38%);
   mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 38%);
 }
@@ -2126,7 +2126,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      **position 一定要 relative，不能 static。** .band::before（毛玻璃）與
      .band::after（柏油漸層）都是 position:absolute; inset:0 ——
      .band 若是 static 就不是它們的包含塊，兩層會改用 .hero（position:relative），
-     於是**整張照片被 blur(4px) 糊掉、再蓋上一層柏油色**，
+     於是**整張照片被 blur(calc(var(--gb) * .67)) 糊掉、再蓋上一層柏油色**，
      那就是「HERO 整個變暗糊掉」的原因。
 
      手機版本來就不用毛玻璃：帶子接在照片下面，底下沒有東西可以透，
@@ -2398,8 +2398,34 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 <style>
 /* ==========================================================================
-   頁首玻璃下緣 — 四案（提案用，定案後整段刪掉）
+   頁首與窄帶的玻璃 — 邊緣四案 ＋ 強度四階（提案用，定案後整段刪掉）
+   --------------------------------------------------------------------------
+   ⚠ 正式站上兩層的模糊值是**寫死的、沒有任何 media query 會改**：
+       頁首 .site-head::before   blur(6px) saturate(1.08)   整條 76px（捲動後 60px）
+       窄帶 .band::before        blur(calc(var(--gb) * .67)) saturate(.92)    84px，模糊由上往下淡入
+     所以電腦、iPad、iPhone 吃到的是同一組數字。使用者回報「iPad 和 iPhone 看起來
+     比電腦模糊」，設定上不可能有差 —— 只可能是 Safari 把同樣的 px 算得比較重
+     （Retina 上常見），或是螢幕尺寸造成的觀感差。這一頁把強度做成四階讓他在
+     實機上轉，轉到對為止。
+
+     使用者同時回報「iPad 圖片下方柏油路到診所台階那一塊特別模糊」——
+     那就是窄帶那一層（84px、blur 4px）疊在照片下緣造成的，改「窄帶」那一階。
    ========================================================================== */
+/* 強度四階。兩個變數：--gb 頁首、--bb 窄帶。 */
+:root { --gb: 6px; --bb: 4px; }
+[data-b="w"]   { --gb: 4px; --bb: 3px; }
+[data-b="ww"]  { --gb: 3px; --bb: 2px; }
+[data-b="www"] { --gb: 2px; --bb: 1.5px; }
+
+.site-head::before {
+  -webkit-backdrop-filter: blur(var(--gb)) saturate(1.08);
+  backdrop-filter: blur(var(--gb)) saturate(1.08);
+}
+.band::before {
+  -webkit-backdrop-filter: blur(var(--bb)) saturate(.92);
+  backdrop-filter: blur(var(--bb)) saturate(.92);
+}
+
 .hg { display: none; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 html.scrolled .hg { opacity: 1; }
 .hg { opacity: 0; transition: opacity .22s ease; }   /* 和 ::before 同步淡入 */
@@ -2416,8 +2442,8 @@ html.scrolled .hg { opacity: 1; }
 [data-g="layer"] .hg-in {
   position: absolute; inset: 0;
   background: var(--glass, transparent);
-  -webkit-backdrop-filter: blur(6px) saturate(1.08);
-  backdrop-filter: blur(6px) saturate(1.08);
+  -webkit-backdrop-filter: blur(var(--gb)) saturate(1.08);
+  backdrop-filter: blur(var(--gb)) saturate(1.08);
 }
 
 /* ---- 合成層：現況再逼它自己一層 ---- */
@@ -2429,10 +2455,10 @@ html.scrolled .hg { opacity: 1; }
 [data-g="steps"] .site-head::before { display: none; }
 [data-g="steps"] .hg { display: block; }
 [data-g="steps"] .hg-s { position: absolute; left: 0; right: 0; top: 0; }
-[data-g="steps"] .hg-s[data-i="1"] { height: 100%; -webkit-backdrop-filter: blur(1px); backdrop-filter: blur(1px); opacity: .28; background: var(--glass, transparent); }
-[data-g="steps"] .hg-s[data-i="2"] { height: 82%;  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); opacity: .5;  background: var(--glass, transparent); }
-[data-g="steps"] .hg-s[data-i="3"] { height: 62%;  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity: .7;  background: var(--glass, transparent); }
-[data-g="steps"] .hg-s[data-i="4"] { height: 40%;  -webkit-backdrop-filter: blur(6px) saturate(1.08); backdrop-filter: blur(6px) saturate(1.08); background: var(--glass, transparent); }
+[data-g="steps"] .hg-s[data-i="1"] { height: 100%; -webkit-backdrop-filter: blur(calc(var(--gb) * .17)); backdrop-filter: blur(calc(var(--gb) * .17)); opacity: .28; background: var(--glass, transparent); }
+[data-g="steps"] .hg-s[data-i="2"] { height: 82%;  -webkit-backdrop-filter: blur(calc(var(--gb) * .33)); backdrop-filter: blur(calc(var(--gb) * .33)); opacity: .5;  background: var(--glass, transparent); }
+[data-g="steps"] .hg-s[data-i="3"] { height: 62%;  -webkit-backdrop-filter: blur(calc(var(--gb) * .67)); backdrop-filter: blur(calc(var(--gb) * .67)); opacity: .7;  background: var(--glass, transparent); }
+[data-g="steps"] .hg-s[data-i="4"] { height: 40%;  -webkit-backdrop-filter: blur(var(--gb)) saturate(1.08); backdrop-filter: blur(var(--gb)) saturate(1.08); background: var(--glass, transparent); }
 
 /* ---- 切換條（靠右，詩是靠左的）---- */
 .fixbar {
@@ -3259,9 +3285,16 @@ html.scrolled .hg { opacity: 1; }
 
 
 <div class="fixbar" role="navigation" aria-label="方案切換">
-  <div class="row"><i>往下捲，看條子下緣</i></div>
+  <div class="row"><i>往下捲：看頁首下緣，以及照片底下那一段</i></div>
   <div class="row">
-    <b>玻璃：</b>
+    <b>強度：</b>
+    <a href="#" data-b="now">現況 6/4</a>
+    <a href="#" data-b="w">弱 4/3</a>
+    <a href="#" data-b="ww">更弱 3/2</a>
+    <a href="#" data-b="www">極弱 2/1.5</a>
+  </div>
+  <div class="row">
+    <b>邊緣：</b>
     <a href="#" data-g="now">現況</a>
     <a href="#" data-g="layer">拆兩層</a>
     <a href="#" data-g="gpu">合成層</a>
@@ -3272,16 +3305,22 @@ html.scrolled .hg { opacity: 1; }
 (function () {
   var root = document.documentElement;
   /* ⚠ 正規式要寫 [a-z0-9]+（CLAUDE.md 第九節）。 */
-  var m = /[?&]g=([a-z0-9]+)/.exec(location.search);
-  var LIST = ["now", "layer", "gpu", "steps"];
-  var g = (m && LIST.indexOf(m[1]) !== -1) ? m[1] : "now";
+  function read(name, list) {
+    var m = new RegExp("[?&]" + name + "=([a-z0-9]+)").exec(location.search);
+    return (m && list.indexOf(m[1]) !== -1) ? m[1] : list[0];
+  }
+  var G = ["now", "layer", "gpu", "steps"], B = ["now", "w", "ww", "www"];
+  var g = read("g", G), b = read("b", B);
 
   function apply() {
     root.setAttribute("data-g", g);
+    root.setAttribute("data-b", b);
     var links = document.querySelectorAll(".fixbar a");
     for (var i = 0; i < links.length; i++) {
-      if (links[i].getAttribute("data-g") === g) links[i].setAttribute("aria-current", "true");
-      else links[i].removeAttribute("aria-current");
+      var a = links[i], k = a.hasAttribute("data-g") ? "g" : "b";
+      var v = a.getAttribute("data-" + k), cur = (k === "g" ? g : b);
+      if (v === cur) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
     }
     if (window.fangrenRepaintHead) window.fangrenRepaintHead();
   }
@@ -3292,9 +3331,10 @@ html.scrolled .hg { opacity: 1; }
     var a = e.target.closest("a");
     if (!a) return;
     e.preventDefault();
-    g = a.getAttribute("data-g");
+    if (a.hasAttribute("data-g")) g = a.getAttribute("data-g");
+    else b = a.getAttribute("data-b");
     apply();
-    history.replaceState(null, "", "?g=" + g);
+    history.replaceState(null, "", "?g=" + g + "&b=" + b);
   });
 })();
 </script>
