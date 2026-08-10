@@ -34,10 +34,10 @@
   },
 
   "_geo_comment": [
-    "⚠ 還沒填。要填的話：Google 地圖上長按診所位置 → 會跳出一組座標 → 複製貼上。",
-    "   兩個值都是 null 的時候 build.mjs 會直接略過 geo 這個欄位（寧可沒有，不要有錯的）。"
+    "2026-08-10 由使用者在 Google 地圖上長按診所位置取得（圖釘落在永樂街那棟樓上）。",
+    "兩個值有任何一個不是數字時，build.mjs 會整個略過 geo 欄位 —— 寧可沒有，不要有錯的。"
   ],
-  "geo": { "latitude": null, "longitude": null },
+  "geo": { "latitude": 23.7101740, "longitude": 120.5468936 },
 
   "hasMap": "https://www.google.com/maps/search/?api=1&query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F",
 

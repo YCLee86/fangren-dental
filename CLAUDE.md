@@ -655,8 +655,8 @@ git pull
 
 ### 還沒補上的（都需要使用者提供，不要自己猜）
 
-1. **座標**（`clinic.json` 的 `geo`）—— Google 地圖上長按診所位置會跳出一組座標。
-   兩個值是 `null` 時 build 會整個略過 `geo` 欄位。
+1. ~~座標~~ —— **2026-08-10 已填**：`23.7101740, 120.5468936`（使用者在 Google 地圖上
+   長按診所位置取得）。`clinic.json` 的 `geo`，只出現在首頁的 `Dentist` 節點上。
 2. **點陣 logo**（`clinic.json` 的 `logo`）—— Google 的 Organization logo 要 PNG／JPG，
    站上只有 `assets/favicon.svg`。直接放大不行，它的牙洞位置是為了 16px 分頁列調過的
    （PALETTE.md 第六之七節）。要補得先決定用哪個綠、底色與留白 —— 那是配色的決定。
