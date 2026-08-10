@@ -193,6 +193,10 @@ tools/
 - `index.html` 的 `<!-- POSTS:START -->` ~ `<!-- POSTS:END -->` 之間
 - **每一頁 `<head>` 裡 `<!-- SEO:START -->` ~ `<!-- SEO:END -->` 之間**
   （結構化資料、robots、og:image、article:* 等機器讀的 meta，見第十節）
+- **文章頁 `<!-- RELATED:START -->` ~ `<!-- RELATED:END -->` 之間**（底部的「延伸閱讀」三張卡）。
+  ⚠ 這一段**在 `</main>` 外面**，是刻意的：`<main>` 在內容雜湊涵蓋範圍內，
+  卡片放進去的話，每發一篇新文章就會讓所有舊文的「最後更新」跳成今天。
+  它同時會避開該篇「上一篇／下一篇」已經指到的兩篇，不然同一個畫面會連兩次同一篇
 - `src/allowed-slugs.js`
 - `tools/build-manifest.json`
 - `sitemap.xml`（首頁那一筆的 `lastmod` 和文章一樣是**比對首頁自己的內容雜湊**得來的，
@@ -213,6 +217,19 @@ tools/
 
 > 改頁首、頁尾這類全站共用區塊**不會**讓所有文章的日期一起跳成當天 —
 > 內容雜湊只涵蓋 `post-meta` 與 `<main>` 之內。這是刻意設計，不要改掉。
+
+`post-meta` 多一個**選填**欄位 `about`（2026-08-10 起），把文章綁到具名的醫療實體上：
+
+```json
+"about": [{ "type": "MedicalCondition", "name": "牙周病" },
+          { "type": "MedicalProcedure", "name": "牙周翻瓣手術" }]
+```
+
+實體要從**那一篇自己的 `<h2>` 與內文**挑，不要憑印象填。沒填就整個略過。
+⚠ **改到 `post-meta` 就會動到內容雜湊**，那一篇的日期會跳成今天。
+只是補後設資料（內文一個字沒改）的話，照第五節那個陷阱的程序把日期改回去。
+
+底部的「延伸閱讀」三張卡不必管，build 會自己產生並排除上下篇。
 
 ### 陷阱：跨全部文章的 `<main>` 內修改
 
@@ -642,7 +659,10 @@ git pull
 5. **首頁 `WebPage.dateModified` 用佔位符**，等 `homeHash` 算完才換成真日期。
    先填日期會變成「換了日期 → 雜湊變了 → 下次又換成今天」的循環，
    首頁的 lastmod 從此天天跳。
-6. `WebSite` **不宣告 `SearchAction`** —— 首頁那個搜尋框是純前端篩選，
+6. **`sitemap.xml` 帶圖片擴充**（`xmlns:image`），列的是那一頁上真的有的圖：
+   首頁三張診所實景、文章各自的 HERO。只寫 `<image:loc>` ——
+   `image:caption`／`title`／`license` 這幾個 Google 2022 年就停用了。
+7. `WebSite` **不宣告 `SearchAction`** —— 首頁那個搜尋框是純前端篩選，
    沒有會回結果頁的網址，宣告一個不存在的端點等於說謊。
 
 ### 這三種標記不要加（加了沒有回報，或會扣分）
@@ -660,9 +680,12 @@ git pull
 2. **點陣 logo**（`clinic.json` 的 `logo`）—— Google 的 Organization logo 要 PNG／JPG，
    站上只有 `assets/favicon.svg`。直接放大不行，它的牙洞位置是為了 16px 分頁列調過的
    （PALETTE.md 第六之七節）。要補得先決定用哪個綠、底色與留白 —— 那是配色的決定。
-3. **文章的 `about`** —— `post-meta` 可以選填
-   `"about": [{ "type": "MedicalCondition", "name": "牙周病", "sameAs": "…" }]`，
-   把文章綁到具名的醫療實體上。沒填就整個略過（猜錯比沒有更糟）。
+3. **文章 `about` 的 `sameAs`** —— 六篇的 `about` 已於 2026-08-10 填好
+   （`post-meta` 的 `about` 欄位，實體全部是從各篇自己的 `<h2>` 與內文挑的），
+   但**沒有填 Wikidata 的 `sameAs`**：雲端 session 連不到 wikidata.org，
+   而 Q 編號猜錯等於把文章綁到另一個疾病上。
+   要補的格式是 `{ "type": …, "name": …, "sameAs": "https://www.wikidata.org/wiki/Q…" }`，
+   在有網路的電腦上做。沒填 `about` 的文章會整個略過這個欄位。
 4. **`sameAs` 的完整網址** —— 現在放的是 Google 地圖與 FB 的分享短網址（會轉址，
    Google 跟得上，但完整網址更穩），LINE 那條是從 ID `@fafa070` 推出來的格式、**還沒驗證過**。
 

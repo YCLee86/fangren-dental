@@ -373,6 +373,74 @@ a:hover { color: var(--accent); }
 }
 
 /* ==========================================================================
+   延伸閱讀 —— 每篇文章底下的三張卡（2026-08-10）
+   --------------------------------------------------------------------------
+   標記由 tools/build.mjs 產生，**放在 </main> 外面**：
+   文章的內容雜湊涵蓋整個 <main>，放進去的話每加一篇新文章就會讓六篇舊文的
+   「最後更新」全部跳成今天（CLAUDE.md 第五節的陷阱）。語意上也對 ——
+   這是補充導覽不是本文，所以是 <aside>。
+
+   **沒有可見的小標題**，只有 aria-label。這是照首頁已經定案的做法：
+   首頁「最新文章」的小標題 2026-08-07 就拿掉了，同一個站不該一邊拿掉一邊加回來。
+
+   顏色沒有新調。卡上的標籤吃該篇自己的科別色（卡片自己帶 data-spec，
+   蓋掉 <body> 上這一篇的那個），用的是 --accent-deep ——
+   那是「當字用」的那一階，規則同本檔最上面那一段。
+
+   陰影用 :root 已經有的 --shadow／--shadow-lift，和首頁的文章卡同一組級距
+   （PALETTE.md 第六之四節：位移／模糊／alpha 三個量一起放大，縮圖同時 scale）。
+   ========================================================================== */
+.related {
+  border-top: 1px solid var(--rule);
+  padding-block: clamp(1.8rem, 5vw, 2.8rem);
+}
+.rel-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: clamp(.9rem, 2.5vw, 1.4rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+.rel-card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); overflow: hidden;
+  transition: box-shadow .18s ease, transform .18s ease;
+}
+.rel-card > a {
+  display: flex; flex-direction: column; height: 100%;
+  color: inherit; text-decoration: none;
+}
+.rel-card img {
+  width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+  transition: transform .18s ease;
+}
+.rel-body { display: block; padding: .8rem .9rem 1rem; }
+.rel-tag {
+  display: inline-block; margin-bottom: .35rem;
+  font-size: .72rem; letter-spacing: .02em;
+  color: var(--accent-deep);
+}
+.rel-title {
+  display: block; font-size: .92rem; font-weight: 600; line-height: 1.6;
+  color: var(--ink);
+}
+.rel-date {
+  display: block; margin-top: .45rem;
+  font-size: .74rem; color: var(--ink-soft);
+}
+
+/* hover 只給真的有游標的裝置。手機上 :hover 會在點過之後**黏住**，
+   卡片停在浮起的狀態 —— 首頁那一輪已經踩過，規則同 PALETTE.md 第六之四節。 */
+@media (hover: hover) {
+  .rel-card:hover { box-shadow: var(--shadow-lift); transform: translateY(-2px); }
+  .rel-card:hover img { transform: scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rel-card, .rel-card img { transition: none; }
+  .rel-card:hover { transform: none; }
+  .rel-card:hover img { transform: none; }
+}
+.rel-card > a:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+
+/* ==========================================================================
    頁尾 —— 和首頁同一份（聯絡／站內導覽／關於這些文章）
    --------------------------------------------------------------------------
    為什麼名稱＋地址＋電話留著、看診時間與地圖不留：

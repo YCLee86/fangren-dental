@@ -291,6 +291,77 @@ posts.sort((a, b) =>
   b.updated.localeCompare(a.updated) || b.published.localeCompare(a.published)
 );
 
+/* ---------- 2.9 每篇文章底下的「延伸閱讀」 ----------
+
+   ⚠ **這一段一定要放在 </main> 外面。**
+   文章的內容雜湊涵蓋整個 <main>，把卡片放進去的話，每加一篇新文章就會讓
+   舊文的 <main> 跟著變、六篇的「最後更新」全部跳成今天、排序也跟著亂
+   （CLAUDE.md 第五節的陷阱）。放在 <main> 與 <footer> 之間就完全不會碰到雜湊，
+   而且語意上也對 —— 這是補充導覽，不是這篇文章的內容，所以用 <aside>。
+
+   **刻意沒有可見的小標題**，只留 aria-label。這不是偷懶，是照首頁已經定案的做法：
+   首頁「最新文章」那個小標題 2026-08-07 就被拿掉了，只留 aria-label（CLAUDE.md 第九節）。
+   同一個站不該一邊拿掉、一邊又加一個回來。
+
+   挑哪三篇：**同科別的優先**（照更新日新到舊），不夠再用其他科別的最新文章補滿。
+   六篇的規模下這樣就夠了，不需要標籤權重之類的東西。 */
+const REL_START = "<!-- RELATED:START — 由 tools/build.mjs 產生，請勿手動編輯 -->";
+const REL_END = "<!-- RELATED:END -->";
+const REL_COUNT = 3;
+
+/* 文章底部本來就有一組「上一篇／下一篇」（<nav class="post-nav">，手寫在 <main> 裡）。
+   那兩篇要從卡片裡排除 —— 否則同一個畫面上、上下相鄰的兩塊會指到同一篇。
+   實測六篇裡有五篇會撞，其中兩篇是上下篇兩個都撞。
+   一樣是回頭讀頁面本身，不另外維護一份對照表。 */
+const navSlugs = (html) => {
+  const nav = html.match(/<nav class="post-nav"[\s\S]*?<\/nav>/i);
+  if (!nav) return new Set();
+  return new Set([...nav[0].matchAll(/href="\.\.\/([a-z0-9-]+)\/"/g)].map((m) => m[1]));
+};
+
+const relatedFor = (self, all, skip) => {
+  const others = all.filter((p) => p.slug !== self.slug && !skip.has(p.slug));
+  const same = others.filter((p) => SPEC[p.tag] && SPEC[p.tag] === SPEC[self.tag]);
+  const rest = others.filter((p) => !same.includes(p));
+  return [...same, ...rest].slice(0, REL_COUNT);
+};
+
+const relCard = (p) => {
+  const spec = SPEC[p.tag];
+  return `        <li class="rel-card"${spec ? ` data-spec="${spec}"` : ""}>
+          <a href="../${esc(p.slug)}/">
+            <img src="../../assets/${esc(p.hero)}" alt="" width="800" height="450" loading="lazy">
+            <span class="rel-body">
+              <span class="rel-tag">${esc(p.tag)}</span>
+              <span class="rel-title">${esc(p.title)}</span>
+              <time class="rel-date" datetime="${p.updated}">${slashDate(p.updated)}</time>
+            </span>
+          </a>
+        </li>`;
+};
+
+const relatedBlock = (self, all, skip) => {
+  const picks = relatedFor(self, all, skip);
+  if (!picks.length) return "";
+  return `${REL_START}
+<aside class="related" aria-label="延伸閱讀">
+  <div class="wrap">
+    <ul class="rel-list">
+${picks.map(relCard).join("\n")}
+    </ul>
+  </div>
+</aside>
+${REL_END}`;
+};
+
+const injectRelated = (html, block) => {
+  const s = html.indexOf("<!-- RELATED:START");
+  const e = html.indexOf(REL_END);
+  if (s !== -1 && e !== -1) return html.slice(0, s) + block + html.slice(e + REL_END.length);
+  // 第一次：插在 </main> 後面（**不是裡面**）
+  return html.replace(/<\/main>/i, `</main>\n\n${block}`);
+};
+
 /* 標籤 → 科別代碼。首頁的「主題與科別」用 data-spec 同時篩文章與醫師，
    三個地方（chip、文章標籤、醫師藥丸）共用同一組代碼，同一科才會是同一個色。
    新增標籤時要一起加進來，不然那篇文章不會被任何一顆 chip 篩到。 */
@@ -321,6 +392,17 @@ const card = (p) => {
         </div>
       </a>`;
 };
+
+/* 第二趟：把「延伸閱讀」寫進每一篇。
+   要等 posts 排序完才知道誰排在誰前面，所以不能併進上面那個掃描迴圈。 */
+if (!CHECK_ONLY) {
+  for (const p of posts) {
+    const file = path.join(POSTS_DIR, p.slug, "index.html");
+    const before = read(file);
+    const after = injectRelated(before, relatedBlock(p, posts, navSlugs(before)));
+    if (after !== before) fs.writeFileSync(file, after, "utf8");
+  }
+}
 
 const START = "<!-- POSTS:START";
 const END = "<!-- POSTS:END -->";
@@ -459,15 +541,29 @@ if (!CHECK_ONLY) {
 /* ---------- 5. sitemap ---------- */
 
 if (siteUrl && !CHECK_ONLY) {
+  /* 圖片 sitemap（image 擴充）。列的是**那一頁上真的有的圖**：
+     首頁是外觀夜景與兩張診療室內景，文章是它自己的 HERO 插圖。
+     診所實景才是這裡真正的目的 —— 讓「斗六 牙醫」在 Google 圖片裡找得到人。
+
+     只寫 <image:loc>。image:caption／title／license／geo_location 這幾個
+     Google 2022 年就停用了，寫了也不會讀，徒增檔案大小。 */
+  const img = (p) => `<image:image><image:loc>${siteUrl}/assets/${p}</image:loc></image:image>`;
+  const homeImages = ["hero-clinic-night.jpg", "clinic-room-1-600.jpg", "clinic-room-2-600.jpg"]
+    .filter((f) => fs.existsSync(path.join(ROOT, "assets", f)));
+
   const urls = [
-    `  <url><loc>${siteUrl}/</loc><lastmod>${homeUpdated}</lastmod><priority>1.0</priority></url>`,
+    `  <url><loc>${siteUrl}/</loc><lastmod>${homeUpdated}</lastmod><priority>1.0</priority>` +
+      `${homeImages.map(img).join("")}</url>`,
     ...posts.map(
-      (p) => `  <url><loc>${siteUrl}/posts/${p.slug}/</loc><lastmod>${p.updated}</lastmod><priority>0.8</priority></url>`
+      (p) => `  <url><loc>${siteUrl}/posts/${p.slug}/</loc><lastmod>${p.updated}</lastmod><priority>0.8</priority>` +
+             `${p.hero ? img(p.hero) : ""}</url>`
     ),
   ];
   fs.writeFileSync(
     path.join(ROOT, "sitemap.xml"),
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`,
+    `<?xml version="1.0" encoding="UTF-8"?>\n` +
+      `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n` +
+      `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>\n`,
     "utf8"
   );
   /* preview/ 是未上線的改版提案頁（Worker 另外用密碼擋著），不要被收錄。
