@@ -104,10 +104,20 @@ node tools/serve.mjs      # 預設 http://localhost:8791
 ```bash
 git fetch origin main
 git log --oneline HEAD..origin/main      # main 有沒有被另一台推過東西
-git checkout main && git merge --ff-only <工作分支>   # 快轉不了就先 rebase 分支
-node tools/build.mjs
-git push -u origin main
+node tools/build.mjs && git add -A && git commit -m "..."
+git push origin <工作分支>                # 先把分支自己推上去
+git merge-base --is-ancestor origin/main HEAD && \
+  git push origin <工作分支>:main         # 遠端直接快轉，不必 checkout main
 ```
+
+> ⚠ **不要 `git checkout main && git merge --ff-only`**（2026-08-11 踩到）。
+> 雲端 session 的容器裡那個**本機 `main` 常常是別的東西** —— 實際遇到的是
+> 689f1f0，對 `origin/main` 「ahead 50, behind 50」，和工作分支**沒有共同祖先**，
+> merge 直接回 `refusing to merge unrelated histories`。
+> 那條舊線並沒有不見（掛在 `origin/claude/footer-icons-cutoff-9nk1wa` 上），
+> 所以**也不要順手把本機 main reset 掉**。
+> 上面那條 `<分支>:main` 的推法完全不碰本機 `main`，而且 `--is-ancestor` 先擋一次，
+> 快轉不了就會停下來（那時才需要先 rebase 分支）。
 
 推完告訴他 Cloudflare 要幾分鐘，網址是 https://fangren.net。
 
