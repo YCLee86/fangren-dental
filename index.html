@@ -1891,6 +1891,85 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 @media (max-width: 360px) {
   body .contact-pair { gap: 1.1rem; }
 }
+
+/* ==========================================================================
+   點到的科別才亮起來（2026-08-11 上線）
+   --------------------------------------------------------------------------
+   主題與科別按下去的時候：**命中的專長變成淡色填滿的標記、沒命中的維持純文字；
+   專科藥丸不是那一科就退成白底字套色；被篩到的文章卡主題標籤套色填滿。**
+   沒有點任何一科的時候，這一段一個像素都不作用 —— 專長就是原本那句話。
+
+   推導、落選案與全部實測數字在 preview/doc-spec-tags/ 的 <head>。要動這一段
+   之前先讀那一頁，不要重新目測。
+
+   ⚠ **這一版正式放掉了「顏色 ＝ 篩選」那個不變量。** 底下那段篩選 JS 原本的註解
+     寫著 data-spec「跟配色共用同一個屬性，所以顏色與篩選永遠不可能對不起來」——
+     現在一張綠卡（李柄輝，一般牙科）會出現在牙周治療底下，因為他的專長裡有
+     「牙周照護」。換來的是關聯講得更清楚：亮起來的那顆標記就是理由。
+     見 PALETTE.md 第六之二節。
+   ⚠ 註解裡不能出現 style 的結束標籤（那六個字＋角括號）—— HTML 解析器是純字串
+     比對，寫下去樣式表就在那一行被切斷，後面全部失效而且不報錯。
+   ========================================================================== */
+
+/* 專長的每個詞都包在 .sk 裡，但 **平常沒有任何樣式** —— 那一欄就是原本那句話。
+   標記只在 .tag-on 的時候長出來，而 .tag-on 只由篩選那支 JS 加上去。 */
+.sk { }
+
+/* ---- 亮起來的專長：淡色填滿 ----------------------------------------------
+   底 ＝ 該科的 --accent 依 --tint 混進卡色 --card，字用 --accent-deep，
+   **框和底同色**，所以看起來是一整塊實心而不是線框。
+   ⚠ 框不能拿掉：那 1px 算在塊高裡。
+   ⚠ --tint **一定要有預設值**，沒有的話 color-mix 整條失效、塊會變透明。
+   ⚠ 每個 span 自己帶 data-spec，所以上面那排 [data-spec="…"] 的變數宣告會落在
+     span 上，--accent／--accent-deep 自動就是那一科的。卡片的顏色不受影響。
+
+   濃度 12% 是量出來的，不是挑的：淡底會吃掉深階字的對比，實測字對淡底
+   一般 6.82・牙周 4.74・根管 7.07・**兒童 4.01**・矯正 7.96・贋復 10.42・口外 5.12 ——
+   **只有 12% 是「除了兒牙以外全過 AA」**（20% 牙周也掉到 4.26，30% 再加口外 4.06）。
+   兒牙本來就有一條已定案的 AA 例外（填色白字 3.22），4.01 比它還好。 */
+html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em; }
+.sk.tag-on {
+  display: inline-block; font-size: var(--sk-fs); font-weight: 400;
+  line-height: 1.5; padding: .05rem .6rem; border-radius: 8px;
+  white-space: nowrap; vertical-align: var(--sk-lift);
+  background: color-mix(in srgb, var(--accent) var(--tint), var(--card));
+  border: 1px solid color-mix(in srgb, var(--accent) var(--tint), var(--card));
+  color: var(--accent-deep);
+}
+
+/* 專科藥丸：≠ 這一科的時候退成白底字套色（＝這一站線框標記的預設態）。 */
+.doc-role.tag-off {
+  background: var(--card); color: var(--accent-deep); border-color: var(--accent-deep);
+}
+
+/* 文章卡的主題標籤：被某一科篩到的時候套色填滿。
+   ⚠ 用**滿色**不是淡色，是刻意的：文章卡只有一顆標籤，而且它就是那篇文章的科別
+     本身 —— 和醫師的專科藥丸同一種份量。專長那幾顆是「他也會做這件事」，輕一階。
+   ⚠ 只在「按了某一科」時才套 —— 只用搜尋框命中的是字、不是科別。 */
+.card-tag.tag-on {
+  background: var(--accent); color: var(--on-fill); border-color: var(--accent);
+}
+
+.doc-role, .sk, .card-tag { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+@media (prefers-reduced-motion: reduce) { .doc-role, .sk, .card-tag { transition: none; } }
+
+/* ---- 小字往下坐的修正 -----------------------------------------------------
+   中文小字和大字並排時，瀏覽器對的是**基線**，眼睛讀的是**字面中線**
+   （Noto Sans TC 實測 0.345em）。而且**填滿的標記，眼睛讀的是那個色塊，不是塊裡
+   面的字** —— 塊裡的字本來就比塊的中線高 0.66px，所以要對的是「塊對字」，
+   不是「字對字」。判斷方法：量「塊上緣比旁邊字的 ink 上緣高多少」與「塊下緣比
+   ink 下緣低多少」，兩個數字要一樣（修完 3.85 / 3.87）。
+
+   ⚠ **專科藥丸這一行是 2026-08-11 新加的。** 在那之前 .doc-role 沒有
+     vertical-align，那顆藥丸的字一直比名字低 1.82px。用的是「字對字」的量
+     （0.345 × (16.8 − 11.52) ÷ 11.52 = .158em）—— 使用者看過之後說那一顆對了，
+     所以**不要**把它改成塊對字的 .218em。
+   ⚠⚠ **專長標記的抬升量不能寫死，由 JS 現量**（見底下那支 measureLift）。
+     Blink 把 inline-block 的塊內基線位置**進位到整數 px**，所以「要抬多少」不是
+     字級的線性函數，而且同一個字級在不同 DPR 上會落在不同的整數（差到 1px）。
+     上面那個 .135em 只是 JS 沒跑起來時的近似後備。
+     **和 nav-scrollspy 的 --lamp-pad 是同一個做法、同一個理由。** */
+.doc-role { vertical-align: .158em; }
 </style>
 </head>
 <body>
@@ -2154,7 +2233,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         <article class="doc" data-spec="general">
           <h3>李柄輝<span class="doc-role">創辦醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd>口腔檢查、一般牙科治療、牙周照護</dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="general">口腔檢查</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><span class="sep">、</span><span class="sk" data-spec="perio">牙周照護</span></dd>
             <dt>資歷</dt><dd>台灣國際植牙醫師學會專科醫師（ATIOI）<br>國際牙醫學院院士（TICD）<br>衛生福利部家庭牙醫專科</dd>
             <dt>學歷</dt><dd>中山醫學大學牙醫學博士</dd>
           </dl>
@@ -2162,7 +2241,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         <article class="doc" data-spec="perio">
           <h3>李侑津<span class="doc-role">醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd>牙周病治療、牙周再生手術、植牙手術、固定假牙、活動假牙、水雷射牙周治療</dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="perio">牙周病治療</span><span class="sep">、</span><span class="sk" data-spec="perio">牙周再生手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">植牙手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">活動假牙</span><span class="sep">、</span><span class="sk" data-spec="perio">水雷射牙周治療</span></dd>
             <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
             <dt>學歷</dt><dd>臺北醫學大學學士<br>國立陽明交通大學碩士</dd>
           </dl>
@@ -2170,7 +2249,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         <article class="doc" data-spec="ortho">
           <h3>王俊偉<span class="doc-role">矯正專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd>齒顎矯正、隱適美</dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk" data-spec="ortho">隱適美</span></dd>
             <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺北醫學大學附設醫院齒顎矯正科<br>臺安醫院主治醫師</dd>
             <dt>學歷</dt><dd>臺北醫學大學學士、碩士</dd>
           </dl>
@@ -2178,7 +2257,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         <article class="doc" data-spec="ortho">
           <h3>廖立揚<span class="doc-role">矯正專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd>齒顎矯正、隱適美、阻生齒矯正</dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk" data-spec="ortho">隱適美</span><span class="sep">、</span><span class="sk" data-spec="ortho">阻生齒矯正</span></dd>
             <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺中榮民總醫院齒顎矯正科<br>國立臺灣大學附設醫院</dd>
             <dt>學歷</dt><dd>臺北醫學大學學士</dd>
           </dl>
@@ -2186,7 +2265,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         <article class="doc" data-spec="kids">
           <h3>林晏妤<span class="doc-role">兒牙專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd>兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療</dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span></dd>
             <dt>資歷</dt><dd>衛生福利部兒童牙科專科<br>隱適美認證醫師<br>臺中榮民總醫院兒童牙科</dd>
             <dt>學歷</dt><dd>高雄醫學大學學士</dd>
           </dl>
@@ -2194,7 +2273,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         <article class="doc" data-spec="surg">
           <h3>許馨文<span class="doc-role">口外專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd>阻生齒拔除、齒槽骨保留術</dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="surg">阻生齒拔除</span><span class="sep">、</span><span class="sk" data-spec="surg">齒槽骨保留術</span></dd>
             <dt>資歷</dt><dd>衛生福利部口腔顎面外科專科<br>奇美醫學中心口腔顎面外科總醫師<br>保提拉肉毒學院認證醫師</dd>
             <dt>學歷</dt><dd>臺北醫學大學學士</dd>
           </dl>
@@ -2202,7 +2281,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         <article class="doc" data-spec="prosth">
           <h3>楊小瑩<span class="doc-role">贋復假牙專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd>活動假牙、固定假牙、牙橋、全口重建</dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="prosth">活動假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">牙橋</span><span class="sep">、</span><span class="sk" data-spec="prosth">全口重建</span></dd>
             <dt>資歷</dt><dd>衛生福利部贋復牙科專科醫師<br>台大醫院補綴科兼任主治醫師<br>台大雲林分院主治醫師</dd>
             <dt>學歷</dt><dd>高雄醫學大學學士</dd>
           </dl>
@@ -2213,7 +2292,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
                部定專科，所以藥丸上的「專科醫師」跟著拿掉。規則見 COPY.md 第八之一節。 -->
           <h3>陳芷鈴<span class="doc-role">顯微根管</span></h3>
           <dl>
-            <dt>專長</dt><dd>顯微根管、根尖手術、活髓治療</dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="endo">顯微根管</span><span class="sep">、</span><span class="sk" data-spec="endo">根尖手術</span><span class="sep">、</span><span class="sk" data-spec="endo">活髓治療</span></dd>
             <dt>資歷</dt><dd>成大醫院牙髓病專科訓練<br>成大醫院口腔醫學部總醫師<br>臺北榮民總醫院</dd>
             <dt>學歷</dt><dd>臺北醫學大學學士</dd>
           </dl>
@@ -2224,7 +2303,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
                規則見 COPY.md 第八節。這和林晏妤醫師不一樣是刻意的，不要「順手統一」。 -->
           <h3>謝耀慶<span class="doc-role">兒童牙科</span></h3>
           <dl>
-            <dt>專長</dt><dd>兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療、一般牙科治療</dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
             <dt>資歷</dt><dd>臺北榮總兒童牙科總醫師<br>日本新潟大學吞嚥功能受訓醫師<br>隱適美認證醫師</dd>
             <dt>學歷</dt><dd>國立陽明交通大學學士</dd>
           </dl>
@@ -2707,8 +2786,12 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 /* 主題與科別的篩選。與手機版同一支，一行都沒有改：
    1. 按一下同時篩文章與醫師；再按同一顆＝取消。
    2. 沒有 JS 的時候 chips 就是按不動的按鈕，底下什麼都不會被藏 —— 不會壞。
-   3. 對應關係讀的是 HTML 上的 data-spec，跟配色共用同一個屬性，
-      所以顏色與篩選永遠不可能對不起來。 */
+   3. 對應關係讀的是 HTML 上的 data-spec。
+      ⚠ **2026-08-11 起，醫師那一邊不再是「一張卡一科」** —— 專長那句話裡的每個詞
+        也帶 data-spec，任何一個對得上就篩得到（見下面的 specHit）。所以
+        **「顏色 ＝ 篩選」那個不變量已經放掉了**：李柄輝的卡是一般牙科的綠，
+        但他的專長寫著「牙周照護」，按牙周治療時他也會出現。
+        亮起來的那顆標記就是理由。文章那一邊沒有改，仍然是一篇一科。 */
 (function () {
   var chips = document.querySelectorAll('.chips button[data-spec]');
   if (!chips.length) return;
@@ -2745,14 +2828,46 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     var q = input ? input.value.replace(/\s+/g, '').toLowerCase() : '';
     var nA = 0, nD = 0;
 
+    /* 醫師：專科 ＝ 那一科，**或**專長裡有一個詞屬於那一科。
+       讀的就是畫面上那句話裡的詞，不是另外維護的隱藏屬性 ——
+       所以「篩得到什麼」和「畫面上寫什麼」不可能對不起來。
+       文章卡沒有 .sk，這一支對它等於原本的行為。 */
+    function specHit(el) {
+      if (!spec) return true;
+      if (el.getAttribute('data-spec') === spec) return true;
+      var sk = el.querySelectorAll('.sk');
+      for (var i = 0; i < sk.length; i++) {
+        if (sk[i].getAttribute('data-spec') === spec) return true;
+      }
+      return false;
+    }
+
     function pass(rec) {
-      var hit = (!spec || rec.el.getAttribute('data-spec') === spec)
+      var hit = specHit(rec.el)
              && (!q || rec.text.indexOf(q) >= 0);
       rec.el.classList.toggle('is-filtered-out', !hit);
       return hit;
     }
     cardIdx.forEach(function (r) { if (pass(r)) nA++; });
     docIdx.forEach(function (r) { if (pass(r)) nD++; });
+
+    /* 亮起來的規則。沒有按任何一科的時候一顆都不亮 —— 專長就是原本那句話、
+       文章標籤就是原本的白底字套色。按了某一科：
+         命中的專長 → 淡色填滿的標記（沒命中的維持純文字）
+         專科藥丸 ≠ 那一科 → 退成白底字套色
+         文章卡的主題標籤 → 套色填滿
+       ⚠ 三處都只看 spec，不看搜尋字 —— 搜尋命中的是字、不是科別。 */
+    Array.prototype.forEach.call(document.querySelectorAll('.docs .doc'), function (doc) {
+      var role = doc.querySelector('.doc-role');
+      if (role) role.classList.toggle('tag-off', !!spec && doc.getAttribute('data-spec') !== spec);
+      Array.prototype.forEach.call(doc.querySelectorAll('.sk'), function (el) {
+        el.classList.toggle('tag-on', !!spec && el.getAttribute('data-spec') === spec);
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.cards .card'), function (card) {
+      var tag = card.querySelector('.card-tag');
+      if (tag) tag.classList.toggle('tag-on', !!spec && card.getAttribute('data-spec') === spec);
+    });
 
     var filtering = !!spec || !!q;
     /* 空狀態的句子要跟著條件走：搜尋不到和「這一科還沒有文章」不是同一件事。 */
@@ -2788,6 +2903,37 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
       apply();
     });
   });
+
+  /* 專長標記的抬升量現量。理由見上面 CSS 那一段：Blink 把 inline-block 的塊內
+     基線位置進位到整數 px，寫死的 em 在某些字級／某些 DPR 上會差到 1px。
+     探針是零尺寸、絕對定位、隱形的，不影響版面。
+     ⚠ 量「那一行的基線」的探針要插在標記**後面** —— 插前面的話，標記被擠到下一行
+       時探針會留在上一行。 */
+  function measureLift() {
+    var dd = document.querySelector('.docs .doc .skills');
+    if (!dd || !window.getComputedStyle) return;
+    var probe = document.createElement('span');
+    probe.className = 'sk tag-on';
+    probe.textContent = '測';
+    probe.style.cssText = 'position:absolute;visibility:hidden;vertical-align:baseline';
+    dd.appendChild(probe);
+    var inner = document.createElement('span');
+    inner.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+    probe.appendChild(inner);
+    var r = probe.getBoundingClientRect();
+    var ownBase = inner.getBoundingClientRect().bottom;
+    var blockCentreAboveBase = ownBase - (r.top + r.bottom) / 2;
+    probe.remove();
+    if (!r.height) return;
+    var fs = parseFloat(getComputedStyle(dd).fontSize);
+    var inkCentre = fs * 0.3495;      /* 中文字面中線，實測 0.336~0.359 取中 */
+    document.documentElement.style.setProperty(
+      '--sk-lift', (inkCentre - blockCentreAboveBase).toFixed(3) + 'px');
+  }
+  measureLift();
+  /* 字型還沒下載完時量到的是後備字型，好了再量一次；換裝置像素比也要重量。 */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureLift);
+  addEventListener('resize', measureLift);
 
   if (input) {
     input.addEventListener('input', apply);
