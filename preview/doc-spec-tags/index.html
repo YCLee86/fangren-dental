@@ -7,131 +7,119 @@
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>醫師卡：點到的專科與專長才亮起來｜芳仁牙醫</title>
+<title>醫師卡與文章卡：點到的科別才亮起來（定稿）｜芳仁牙醫</title>
 <!-- ⚠ 提案頁一定要帶下面這一行。三道防線的第一道，另外兩道是 Worker 的
      X-Robots-Tag 與 robots.txt 的 Disallow: /preview/。 -->
 <meta name="robots" content="noindex, nofollow, noarchive">
 <!-- ============================================================================
-     這一頁是什麼（2026-08-11・提案中，尚未套進正式站）
+     這一頁是什麼（2026-08-11・四輪之後的定稿版，尚未套進正式站）
      ----------------------------------------------------------------------------
-     **主題與科別按下去的時候，把有關聯的醫師都帶出來（關聯同時看專科與專長），
-       並且讓被點到的那幾顆自己亮起來說「我就是原因」。
+     **主題與科別按下去的時候，把有關聯的醫師與文章都帶出來（醫師的關聯同時看
+       專科與專長），並且讓被點到的那幾顆自己亮起來說「我就是原因」。
        沒有點任何一科的時候，這一頁和正式站長得一模一樣。**
 
-     ── 兩次要求（使用者，2026-08-11）────────────────────────────────────────
+     ⚠ **切換條已經刪掉** —— 使用者 2026-08-11 定案 Ⓚ3・Ⓟ1・Ⓩ2・Ⓧ1，
+       畫面上就是定案的樣子。落選案的數字全部留在下面與 CSS 註解裡，不要重新目測。
+
+     ── 使用者的四輪要求 ─────────────────────────────────────────────────────
      ① 「主題與科別標籤被點選時，出現有關聯的醫師，包括專科、專長。專科標籤和專長
         都做成套色標籤。如果醫師本身的標籤不是這個主題，改成白底字套色的標籤。」
      ② 「主題科別標籤沒有點選的，專長不需要套標籤，像原來一樣。是點下標籤之後，
-        點到的專科跟專長再套標籤。」
+        點到的專科跟專長再套標籤。」　→ 收掉了 ① 的一半。
+     ③ 「標籤過的字有點往下跑，專長和專科都是。」→ 對齊，兩輪，見下面。
+     ④ 「實心套色，但這個顏色刷淡」＋「套色之後那個字好像變小了，做幾版把字放大
+        一點」＋定案 **Ⓚ3・Ⓟ1・Ⓩ2・Ⓧ1**。
+     ⑤ 「被標籤篩選到而顯示的文章，文章上的主題標籤要套色。」
 
-     ②**收掉了 ① 的一半**：專長平常仍然是一句頓號串起來的文字（跟現在線上完全相同），
-     標記只在「按下某一科」的那一刻長出來，而且**只長在被點到的那幾顆上**。
+     ── 定案的四個值 ─────────────────────────────────────────────────────────
+       Ⓚ3  命中的專長 ＝ **淡色填滿**（該科的色混進卡色，字用深階，框與底同色）
+       Ⓟ1  濃度 **12%**
+       Ⓩ2  標記字級 **.748rem／11.97px**
+       Ⓧ1  兒童隱適美／兒童早期矯正 **只算兒童牙科**，不算齒顎矯正
+     落選：Ⓚ1 套色填滿（白字）／Ⓚ2 白底字套色；Ⓟ2 20%／Ⓟ3 30%；
+           Ⓩ1 .72rem（原本）／Ⓩ3 .775／Ⓩ4 .803／Ⓩ5 .83rem（＝內文字級）；
+           Ⓧ2 兒童矯正也算齒顎矯正（那會讓齒顎矯正從 2 位變 4 位）。
 
-     **量過了**：沒點任何一科的時候，醫師介紹整區逐一元素比對（.doc／h3／藥丸／
-     dt／dd 共 81 個），top、height、width **一個值都不差**；整區外框 1440 上
-     881.8px 兩邊相同。逐像素比只剩字緣的反鋸齒有差，成因是把一句話拆成幾個 span
-     會切斷 shaping run，整行的推進量累積差 **0.04px**（1440 上第一行右緣
-     870.63 → 870.67）。放大四倍逐字看不出來。
-     ⚠ **頓號不要用 <i> 包** —— <i> 預設是斜體，中文沒有義式斜體、瀏覽器會合成
-       一個傾斜的頓號，畫面上就真的看得出來。這一頁第一版踩過，改成 <span>。
-
-     ── 三個狀態 ─────────────────────────────────────────────────────────────
+     ── 四個狀態 ─────────────────────────────────────────────────────────────
        沒點任何一科　　專科藥丸：套色（現在線上就是這樣）
-       　　　　　　　　專長：純文字，沒有框、沒有底　←②
+       　　　　　　　　專長：純文字，沒有框、沒有底
+       　　　　　　　　文章卡的主題標籤：白底字套色（現在線上就是這樣）
 
-       點了某一科　　　命中的專長：**變成標記**（我就是原因）—— 樣子由 Ⓚ 決定：
-       　　　　　　　　　Ⓚ1 套色填滿／Ⓚ2 白底字套色／Ⓚ3 淡色填滿
-       　　　　　　　　沒命中的專長：**維持純文字**　←②「點到的…再套標籤」
-       　　　　　　　　專科藥丸 ＝ 那一科：套色填滿
-       　　　　　　　　專科藥丸 ≠ 那一科：**白底字套色**　←①
+       點了某一科　　　命中的專長：**淡色填滿的標記**（我就是原因）
+       　　　　　　　　沒命中的專長：**維持純文字**
+       　　　　　　　　專科藥丸 ＝ 那一科：套色填滿／≠ 那一科：白底字套色
+       　　　　　　　　**文章卡的主題標籤：套色填滿**　←⑤
 
      舉例，按「牙周治療」：
-       李侑津　[醫師]實心青綠　　牙周病治療 牙周再生手術 水雷射牙周治療 → 三顆實心青綠
+       文章　　牙齦流血那一篇的「牙周照護」標籤 → 實心青綠
+       李侑津　[醫師]實心青綠　　牙周病治療 牙周再生手術 水雷射牙周治療 → 淡青綠
        　　　　　　　　　　　　　植牙手術、固定假牙、活動假牙 → 維持純文字
        李柄輝　[創辦醫師]白底綠字　口腔檢查、一般牙科治療 → 純文字
-       　　　　　　　　　　　　　牙周照護 → 實心青綠
-     兩張卡為什麼並排、關聯有什麼不同，一眼就看得出來，而且畫面沒有變吵。
+       　　　　　　　　　　　　　牙周照護 → 淡青綠
+     ⚠ **文章那顆用滿色、專長用淡色是刻意的**：文章卡只有一顆標籤，而且它就是那篇
+       文章的科別本身（和醫師的專科藥丸同一種份量）；專長是「他也會做這件事」，
+       輕一階。三種份量在同一個畫面上分得開。
 
      ── 篩選改讀什麼 ─────────────────────────────────────────────────────────
-     一位醫師被某一科篩到的條件：**專科 ＝ 那一科**，或**專長裡有一個詞屬於那一科**。
-     讀的就是畫面上那幾個詞身上的 data-spec，不是另外維護的隱藏屬性 ——
-     所以「篩得到什麼」和「畫面上寫什麼」不可能對不起來。
+     文章：照舊，一篇一個 data-spec。
+     醫師：**專科 ＝ 那一科**，或**專長裡有一個詞屬於那一科**。讀的就是畫面上那幾個
+     詞身上的 data-spec，不是另外維護的隱藏屬性 —— 所以「篩得到什麼」和「畫面上
+     寫什麼」不可能對不起來。
      ⚠ 上一版（preview/doc-cross-spec/）用一個看不見的 data-spec-also 硬掛，
        **那個屬性在這一版不需要了**。
-
-     ⚠ 這也順帶回答了上一頁那個 Ⓝ1／Ⓝ2（只做李柄輝一位，還是全部九位）：
-       規則是從專長長出來的，沒辦法只套在一個人身上，所以**是全部九位**。
-       李侑津因此進得了「植牙・假牙重建」，謝耀慶進得了「一般牙科」。
+     ⚠ 這也回答了那一頁的 Ⓝ1／Ⓝ2（只做李柄輝一位，還是全部九位）：規則是從專長長
+       出來的，沒辦法只套在一個人身上，所以**是全部九位**。李侑津因此進得了
+       「植牙・假牙重建」，謝耀慶進得了「一般牙科」。
 
      ── 代價：放掉「顏色 ＝ 篩選」那個不變量 ─────────────────────────────────
      index.html 原本的註解寫著 data-spec「跟配色共用同一個屬性，所以顏色與篩選
      永遠不可能對不起來」。現在一張綠卡會出現在牙周底下。
      **換來的是關聯講得更清楚** —— 亮起來的那顆標記就是理由。
-     ⚠ 如果定案，這件事要寫進 PALETTE.md 第六之二節。
+     ⚠ 如果上線，這件事要寫進 PALETTE.md 第六之二節。
 
-     ── 切換條（右下角，網址可帶參數）───────────────────────────────────────
-     ?k=1|2|3  **命中的專長要多重**（三案都只動專長，**專科藥丸永遠是填滿的**）：
-               Ⓚ1 套色填滿（白字）　← **預設**
-               Ⓚ2 白底字套色（＝這一站線框標記的預設態）
-               Ⓚ3 **淡色填滿** —— 該科的色混進卡色，字用深階。2026-08-11 使用者
-                  要的第三版：「實心套色，但這個顏色刷淡」。
-               ⚠ Ⓚ2／Ⓚ3 的副作用：**只靠專長進來的那張卡整張沒有一顆滿色**
-                 （按牙周時的李柄輝）。關聯還講得出來，但份量比 Ⓚ1 輕。
-     ?p=1|2|3  Ⓚ3 的**濃度**：Ⓟ1 12%／**Ⓟ2 20%（預設）**／Ⓟ3 30%。
-               對比度全部量過，見下面那一段。
-     ?z=1|2|3|4|5  **標記的字級**（2026-08-11 第三輪，使用者：「套色之後那個字好像
-               變小了，做幾版把字放大一點」）。兩端定死、中間三階等距內插：
-               **Ⓩ1 .72rem／11.52px ＝ 現在（和專科藥丸同一組）** ← **預設**
-               Ⓩ2 .748／11.97　Ⓩ3 .775／12.40　Ⓩ4 .803／12.85
-               Ⓩ5 .83rem／13.28px ＝ 和旁邊那句話一樣大，字完全沒縮
-               ⚠ **使用者猜的「原大會很擠」是對的**：Ⓩ5 的塊高 23.52px > dd 行高
-                 23.24px，**行框會被撐開**。Ⓩ1~Ⓩ4 都塞得進去、版面一格都不動。
-                 切換條右邊會**現量**塊高、行高與上下不對稱，不必查表。
-               ⚠ 抬升量跟著字級走（字愈大抬得愈少）：.111／.096／.082／.069／.058em。
-                 公式與推導寫在那一頁 CSS 的「字級五階」那一段。
-     ⚠ **原本的 Ⓥ 那一排（垂直位置四案）已經收掉**，定案是「色塊對中線、只改專長」，
-       直接寫死。落選案的數字留在 CSS 註解裡。
-     ?x=1|2    兒童隱適美／兒童早期矯正 這兩顆算不算齒顎矯正：
-               Ⓧ1 只算兒童牙科　← **預設**
-               Ⓧ2 也算齒顎矯正（按矯正時會多出林晏妤、謝耀慶兩位）
-               ⚠ 這一題還沒回答：兒童早期矯正和兩位矯正專科醫師做的齒顎矯正
-                 不是同一件事，但字面上確實都是矯正。
-     ⚠ **原本的 Ⓣ 那一排（專長要不要永遠是標記）已經刪掉** —— 使用者
-       2026-08-11 明講「沒有點選的專長不需要套標籤，像原來一樣」，Ⓣ2 落選。
+     ── 對比度：Ⓚ3 12% 那一組（實測，字 ＝ 各科的 --accent-deep 疊在淡底上）─────
+       一般 6.82・牙周 4.74・根管 7.07・**兒童 4.01**・矯正 7.96・贋復 10.42・口外 5.12
+     ⚠ **只有兒牙 4.01 低於 AA 4.5**，其餘全過。20% 會再多一科（牙周 4.26）掉出，
+       30% 會有三科掉出 —— **12% 是唯一「除了兒牙以外全過」的濃度**，這也是定案的
+       主要理由之一。兒牙本來就有一條已定案的 AA 例外（填色白字 3.22，2026-08-08
+       看過實際樣子後決定維持），4.01 比那一條還好，沿用同一個判斷。
+     ⚠ 文章卡那顆是**滿色白字**，對比度就是既有的那一組（PALETTE 第六之二節），
+       兒牙一樣是 3.22 的例外。這一顆本來就是線上那個元件，只是換到填滿態。
 
      ── 專長 → 科別 的完整對照（32 個詞）────────────────────────────────────
        一般牙科  口腔檢查・一般牙科治療
        牙周治療  牙周照護・牙周病治療・牙周再生手術・水雷射牙周治療
        植牙假牙  植牙手術・固定假牙・活動假牙・牙橋・全口重建
        齒顎矯正  齒顎矯正・隱適美・阻生齒矯正
-       兒童牙科  兒童隱適美※・兒童早期矯正※・兒童鎮靜麻醉・兒童齲齒治療
+       兒童牙科  兒童隱適美・兒童早期矯正・兒童鎮靜麻醉・兒童齲齒治療
        口腔外科  阻生齒拔除・齒槽骨保留術
        顯微根管  顯微根管・根尖手術・活髓治療
-       （※ 這兩個詞吃 Ⓧ 切換條）
      ⚠ 對照表是寫死在 HTML 屬性上的。日後**新增或修改任何一位醫師的專長，就要順手
        給那個詞一個 data-spec**，不然它不會被任何一科篩到，也永遠不會亮起來。
        這是這個做法唯一的維護成本。
+     ⚠ 「兒童隱適美／兒童早期矯正」歸兒童牙科**是使用者判斷過的**（Ⓧ1）：兒童早期
+       矯正和兩位矯正專科醫師做的齒顎矯正不是同一件事。不要「順手」把它們併進矯正。
 
      ── 材質：一顆都沒有新發明 ───────────────────────────────────────────────
-     亮起來的標記和專科藥丸用**同一組尺寸**（.72rem／line-height 1.5／
-     padding .05rem .6rem／圓角 8px），只有顏色來源不同：藥丸吃卡片的 data-spec，
-     這幾顆吃自己身上的。兩態的顏色也是現成的：
+     亮起來的標記和專科藥丸同一組幾何（line-height 1.5／padding .05rem .6rem／
+     圓角 8px），只有字級與顏色不同。用到的顏色全部是現成的：
        套色填滿   ＝ chip 按下去那一態（--accent 底、--on-fill 字）
        白底字套色 ＝ 這一站所有線性標記的預設（--card 底、--accent-deep 字與框）
-     **沒有新的顏色，沒有新的圓角。**
-     ⚠ 兒牙填色上的白字是 3.22:1，低於 AA —— 那是 2026-08-08 看過實際樣子之後定案
-       要維持的（見 CLAUDE.md 的定案表）。這一頁沿用，不要「順手修」。
+       淡色填滿   ＝ 上面兩者之間，用 color-mix 把 --accent 12% 混進 --card
+     **沒有新的色票、沒有新的圓角。** color-mix 這一站本來就在用（.chips button:hover）。
 
      ── 為什麼頓號留著 ───────────────────────────────────────────────────────
-     Ⓣ1 亮起來的時候，句子仍然是句子（「口腔檢查、一般牙科治療、[牙周照護]」），
-     頓號一個都沒有拿掉 —— 那句話原本就是這樣讀的，抽掉分隔會變成半個清單半段話。
-     每個頓號包在 <span class="sep"> 裡，只有 Ⓣ2 那一案（整排標記）才把它藏起來。
+     亮起來的時候句子仍然是句子（「口腔檢查、一般牙科治療、[牙周照護]」），頓號一個
+     都沒拿掉 —— 那句話原本就是這樣讀的，抽掉分隔會變成半個清單半段話。
+     ⚠ **頓號不要用 <i> 包** —— <i> 預設是斜體，中文沒有義式斜體、瀏覽器會**合成**
+       一個傾斜的頓號，畫面上真的看得出來。這一頁第一版踩過，改成 <span>。
 
      ── 沒做的 ───────────────────────────────────────────────────────────────
      ・**亮起來的標記沒有做成可以按的。** 按下去等於篩那一科，很順，但那會讓每張卡
        多出好幾個可點擊目標，而且和上面那排 chips 職責重疊。
-     ・**文章卡沒有跟著改**（一篇文章只有一個科別，沒有「關聯」的問題）。
      ・**資歷欄沒有跟著標記化**（那一欄是機構名，不是科別）。
+     ・**只用搜尋框、沒按科別的時候，文章標籤不會套色** —— ⑤ 講的是「被標籤篩選到」，
+       而搜尋命中的是字，不是科別，套色會講出一個它沒有的意思。
 
      ── 這一頁和正式站的差異（全部）─────────────────────────────────────────
      1. 這一段註解、<title>、robots meta；canonical 拿掉。
@@ -139,14 +127,14 @@
         ⚠ HERO 那張圖是 src ＋ **srcset** 兩份，只改 src 不夠 —— 瀏覽器仍然選
           srcset、404，**畫面上不會破圖，只會安靜地變成 alt 文字疊在黑底上**。
      3. 計數器那支 script 拿掉，數字寫死示範值（不然每開一次就幫首頁 +1）。
+        ⚠ 不要把示範值帶回 index.html。
      4. 九張醫師卡的專長欄：句子一個字沒動，每個詞包一層 <span class="sk">、
         每個頓號包一層 <span class="sep">。
-     5. 篩選 JS：specHit() 改讀那些 span；apply() 最後多一段把兩態刷上去。
-     5.5 **.doc-role 多一行 vertical-align: .158em**（Ⓥ1）—— 這是唯一一處動到
-        正式站既有元件的地方，見上面 .sk 那一段的長註解。
-     6. .skills / .sk 的 CSS ＋ 右下角切換條。**定案後切換條連 data-* 一起刪。**
-     7. Ⓚ3 用到 color-mix()。這一站本來就有用（.chips button:hover），不是新東西。
-        ⚠ --tint 一定要有預設值，沒有的話 color-mix 整條失效、塊會變透明。
+     5. .doc-role 多一行 vertical-align（見 CSS 那一段）—— 唯一動到正式站既有
+        元件外觀的地方。
+     6. 篩選 JS：specHit() 改讀那些 span；apply() 最後多一段刷狀態（專長、專科藥丸、
+        文章卡標籤三處）；多一支 measureLift()。
+     7. .sk / .card-tag.tag-on 的 CSS。
      ============================================================================ -->
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
@@ -2033,172 +2021,85 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 
 /* ==========================================================================
-   ↓↓↓ 以下到這份樣式表結尾為止是**這份提案**加的 ↓↓↓
-   （切換條那一段定案後刪掉；.sk 那一段是要留下來的）
+   ↓↓↓ 以下到這份樣式表結尾為止是**這份提案**加的（2026-08-11 定稿）↓↓↓
 
    ⚠ 註解裡不能出現 style 的結束標籤（那六個字＋角括號）—— HTML 解析器是純字串
      比對，寫下去樣式表就在那一行被切斷，後面全部失效而且不報錯。
    ========================================================================== */
 
 /* ---- 專長：平常什麼都不是 ------------------------------------------------
-   .sk 預設**沒有任何樣式** —— 那一欄就是原本那句話，這是使用者第二次要求的重點。
-   標記只在 .tag-on 的時候長出來，而 .tag-on 只由篩選那支 JS 加上去。 */
+   .sk 預設**沒有任何樣式** —— 那一欄就是原本那句話。標記只在 .tag-on 的時候長
+   出來，而 .tag-on 只由篩選那支 JS 加上去。 */
 .sk { }
 
-/* 亮起來：和專科藥丸 .doc-role 同一組尺寸，顏色來自這個詞自己的 data-spec。
+/* ---- 亮起來的專長：淡色填滿（定案 Ⓚ3・Ⓟ1 12%・Ⓩ2 .748rem）---------------
+   底 ＝ 該科的 --accent 依 --tint 混進卡色 --card，字用 --accent-deep，
+   **框和底同色**，所以看起來是一整塊實心而不是線框。
+   ⚠ 框不能拿掉：那 1px 算在塊高裡，拿掉就和其他兩案的塊高不一樣了。
+   ⚠ --tint **一定要有預設值**，沒有的話 color-mix 整條失效、塊會變透明。
    ⚠ 每個 span 自己帶 data-spec，所以上面那排 [data-spec="…"] 的變數宣告會落在
-     span 上，--accent／--accent-deep／--on-fill 自動就是那一科的。卡片不受影響。 */
+     span 上，--accent／--accent-deep 自動就是那一科的。卡片的顏色不受影響。
+
+   對比度（字對淡底，12%）：一般 6.82・牙周 4.74・根管 7.07・**兒童 4.01**・
+   矯正 7.96・贋復 10.42・口外 5.12 —— 只有兒牙低於 AA，沿用它既有的例外。
+   落選的濃度：20%（牙周也掉到 4.26）、30%（再加口外 4.06）。 */
+html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em; }
 .sk.tag-on {
   display: inline-block; font-size: var(--sk-fs); font-weight: 400;
   line-height: 1.5; padding: .05rem .6rem; border-radius: 8px;
   white-space: nowrap; vertical-align: var(--sk-lift);
-  background: var(--accent); color: var(--on-fill); border: 1px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) var(--tint), var(--card));
+  border: 1px solid color-mix(in srgb, var(--accent) var(--tint), var(--card));
+  color: var(--accent-deep);
 }
-/* 專科藥丸：≠ 這一科的時候退成白底字套色（這一站線性標記的預設態）。 */
+
+/* ---- 專科藥丸：≠ 這一科的時候退成白底字套色 ------------------------------ */
 .doc-role.tag-off {
   background: var(--card); color: var(--accent-deep); border-color: var(--accent-deep);
 }
 
-/* ---- 小字往下坐的修正（2026-08-11，使用者回報）----------------------------
-   使用者：「標籤過的字有點往下跑，專長和專科都是。」量出來兩個都成立，
-   而且**是同一個成因**：中文小字和大字並排時，瀏覽器對的是**基線**，
-   但眼睛讀的是**字面中線**。Noto Sans TC 的中文字面中線實測在基線上方
-   0.345em（400px 下量 李柄輝／創辦醫師／口腔檢查／一般牙科治療 四組，
-   ink 中線 0.336~0.359em，取 0.345）。所以小字每比大字小 1px，
-   它的中線就低 0.345px。
+/* ---- 文章卡的主題標籤：被某一科篩到的時候套色填滿 ------------------------
+   使用者：「被標籤篩選到而顯示的文章，文章上的主題標籤要套色。」
+   .card-tag 平常是白底字套色（線上就是這樣，這一段沒動它）。
+   ⚠ 用**滿色**不是淡色，是刻意的：文章卡只有一顆標籤，而且它就是那篇文章的科別
+     本身 —— 和醫師的專科藥丸同一種份量。專長那幾顆是「他也會做這件事」，輕一階。
+   ⚠ 只在「按了某一科」時才套 —— 只用搜尋框命中的是字、不是科別。 */
+.card-tag.tag-on {
+  background: var(--accent); color: var(--on-fill); border-color: var(--accent);
+}
 
-   需要往上抬的量 ＝ 0.345 × (父層字級 − 自己的字級) ÷ 自己的字級（em）
+.doc-role, .sk, .card-tag { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+@media (prefers-reduced-motion: reduce) { .doc-role, .sk, .card-tag { transition: none; } }
 
-     專科藥丸  父層 h3 16.8px、自己 11.52px → 0.345 × 5.28 ÷ 11.52 = .158em（1.82px）
-     專長標記  父層 dd 13.28px、自己 11.52px → 0.345 × 1.76 ÷ 11.52 = .053em（0.61px）
+/* ---- 小字往下坐：兩輪的修正（2026-08-11）---------------------------------
+   使用者第一輪：「標籤過的字有點往下跑，專長和專科都是。」
+   成因：中文小字和大字並排時，瀏覽器對的是**基線**，眼睛讀的是**字面中線**。
+   Noto Sans TC 的中文字面中線實測在基線上方 0.345em（400px 下量四組，0.336~0.359）。
 
-   ⚠ **專長那顆原本更糟**：第一版寫了 vertical-align: -.12em（−1.38px），方向加反了，
-     實際低了 1.99px。那一行已經拿掉。
-   ⚠ **專科藥丸這一顆是正式站本來就有的**（.doc-role 沒寫 vertical-align，
-     吃預設 baseline）。所以修好之後這一頁的藥丸會比線上高 1.82px ——
-     **這是使用者要的，不是提案頁跑掉了。**
-   ⚠ 兩個都**不會**讓行高變動：抬完之後藥丸離基線 16.26px、標記 15.04px，
-     都還在各自 strut 的 18.42／16.22px 以內，line box 不長高。
-     （反而是原本那個 −1.38px 會讓 dd 的行框多長 0.82px。）
-   ⚠ em 是**元素自己的字級**，不是父層的 —— 兩顆的字級都是 .72rem，
-     但父層不同，所以兩個值不一樣，不能共用。 */
-/* ---- 字級五階 ＋ 垂直位置（Ⓩ，2026-08-11 第三輪）------------------------
-   使用者：「專長在套色之後那個字好像變小了，做幾版把字放大一點。一個是現在的、
-   一個是原來自己的大小套色，再做三個介於這兩者之間。」
+       字對字的抬升量 ＝ 0.345 × (父層字級 − 自己的字級) ÷ 自己的字級（em）
 
-   兩端是定死的：**現在 .72rem（11.52px，＝專科藥丸那一組）**，
-   **原大 .83rem（13.28px，＝專長那句話本來的字級）**。中間三階等距內插。
-
-     Ⓩ1 .72rem   11.52px　＝ 現在（和專科藥丸同一組）　★ 預設
-     Ⓩ2 .748rem  11.97px
-     Ⓩ3 .775rem  12.40px
-     Ⓩ4 .803rem  12.85px
-     Ⓩ5 .83rem   13.28px　＝ 和旁邊那句話一樣大（只有顏色與框在變，字沒縮）
-
-   ⚠ **使用者猜的「原大會很擠」是對的，而且擠的地方很具體**：塊高 ＝ 字級×1.5 ＋
-     內距 1.6 ＋ 框 2，所以 Ⓩ5 的塊是 23.52px，而 dd 那一行的行高只有 23.24px ——
-     **塊比行還高**，行框會被撐開。實測見下面那一排的讀數（會現算給你看）。
-     Ⓩ1~Ⓩ4 都塞得進行框，一個像素都不會動到版面。
-
-   ── 垂直位置：跟著字級走，不是一個固定值 ──────────────────────────────
-   對齊的目標是「**色塊**的中線對齊旁邊那句話的字面中線」（第二輪定的，見下面）。
-   塊的中線離塊自己的基線 ＝ 0.29185 × 字級（純線性 —— 內距與框在算中線時剛好
-   互相抵消掉），旁邊那句話的字面中線在基線上方 4.641px（13.28 × 0.3495）。所以
-
-       抬升量（px）＝ 4.641 − 0.29185 × 自己的字級
-
-   ⚠⚠ **但這個量不能寫死，要 JS 現算。** Blink 把 inline-block 的**塊內基線位置
-     進位到整數 px**（實測「基線離塊頂」五階是 13.797／13.797／14.797／15.797／
-     15.797 —— 跳階、不是線性），所以上面那條公式算出來的值在 Ⓩ2／Ⓩ4 會差到 1px，
-     而且**同一個字級在不同 DPR 上還會落在不同的整數**。實測需要的抬升是
-     1.27／1.62／0.95／0.27／0.60px，看不出規律。
-     這一頁改成**開頁時量一次**（放一顆看不見的探針，量它的塊中線離自己基線多少，
-     再減出差額寫進 --sk-lift），字級一換就重量。CSS 裡的 em 值只是 JS 沒跑起來時
-     的近似後備。**和 nav-scrollspy 的 --lamp-pad 是同一個做法、同一個理由。**
-
-   ── 第二輪為什麼從「字對字」改成「塊對字」（保留紀錄）──────────────────
-   使用者：「專科有對齊名字的垂直中線，但專長上標籤後看起來是對齊沒被標籤的文字
-   下緣。」成立 —— **填滿的標記，眼睛讀的是那個色塊，不是塊裡面的字**，而塊裡的字
-   本來就比塊的中線高 0.66px（塊高是 line-height ＋ 內距 ＋ 框算出來的，對的是字型
-   的 ascent／descent，不是中文字面）。所以「字對齊了」＝「塊往下掉 0.66px」。
-   1440 實測不對稱量：標記 3.20 / 4.53（差 1.33px），改成塊對字之後 3.85 / 3.87。
-   ⚠ **專科藥丸維持 .158em（字對字）** —— 使用者明講那一顆現在是對的，這一輪不動它。
+   使用者第二輪：「專科有對齊名字的垂直中線，但專長上標籤後看起來是對齊沒被標籤的
+   文字下緣。」**成立，而且第一輪對錯了東西** —— **填滿的標記，眼睛讀的是那個色塊，
+   不是塊裡面的字**，而塊裡的字本來就比塊的中線高 0.66px（塊高是 line-height ＋
+   內距 ＋ 框算出來的，那條線對的是字型的 ascent／descent，不是中文字面）。
+   所以「字對齊了」＝「塊往下掉 0.66px」。判斷方法：量「塊上緣比旁邊字的 ink 上緣
+   高多少」與「塊下緣比 ink 下緣低多少」，兩個數字要一樣。
+     專長標記　修前 3.20 / 4.53（差 1.33px）→ 修後 3.85 / 3.87（差 0.02px）
+   ⚠ **專科藥丸維持「字對字」的 .158em** —— 使用者明講那一顆現在是對的，不要動它。
      若日後要一起改成塊對字，它的值是 .218em（再高 0.69px）。
    ⚠ 第一版寫過 vertical-align: -.12em，**方向加反了**（正值才是往上），實際低
-     1.99px。那一行早就拿掉了。 */
-html { --sk-fs: .72rem; --sk-lift: .111em; }
-html[data-z="2"] { --sk-fs: .748rem; --sk-lift: .096em; }
-html[data-z="3"] { --sk-fs: .775rem; --sk-lift: .082em; }
-html[data-z="4"] { --sk-fs: .803rem; --sk-lift: .069em; }
-html[data-z="5"] { --sk-fs: .83rem;  --sk-lift: .058em; }
+     1.99px。那一行早就拿掉了。
+
+   ⚠⚠ **標記的抬升量不能寫死，要 JS 現量。** Blink 把 inline-block 的**塊內基線
+     位置進位到整數 px**（五個候選字級量到的「基線離塊頂」是 13.797／13.797／
+     14.797／15.797／15.797，跳階、不是線性），**而且同一個字級在不同 DPR 上會落在
+     不同的整數**（.803rem 那一階 DPR1 要抬 0.274px、DPR3 要抬 1.274px）。
+     所以開頁時放一顆看不見的探針量一次，把差額寫進 --sk-lift。
+     上面那個 .135em 只是 JS 沒跑起來時的近似後備（定案字級在 DPR3 量到 1.618px）。
+     **和 nav-scrollspy 的 --lamp-pad 是同一個做法、同一個理由。**
+   ⚠ 量「那一行的基線」要把探針插在標記**後面**：插在前面的話，標記被擠到下一行時
+     探針會留在上一行（375／320 上量到 −19.44 就是這個坑）。 */
 .doc-role { vertical-align: .158em; }
-
-/* ---- Ⓚ2：命中的專長改成白底字套色（2026-08-11 使用者要的另一版）------------
-   只動命中的**專長**那幾顆，**專科藥丸不動**（＝那一科就填滿、不是就白底）。
-   所以 Ⓚ2 之下會出現一個層次：藥丸最重（他本科就是這個），專長輕一階
-   （他會做這件事）。顏色沒有新的 —— 就是這一站線性標記的預設態。
-   對比度都是現成的（PALETTE 第六之二節，各科的 --accent-deep 疊在 --card 上）。 */
-html[data-k="2"] .sk.tag-on {
-  background: var(--card); color: var(--accent-deep); border-color: var(--accent-deep);
-}
-
-/* ---- Ⓚ3：實心套色但把顏色刷淡（2026-08-11 使用者要的第三版）---------------
-   底 ＝ 該科的 --accent 依 --tint 的比例混進卡色 --card，字用 --accent-deep。
-   **框和底同色**，所以看起來是一整塊實心、不是線框（框不能拿掉：1px 的邊算在
-   高度裡，拿掉三案的塊高就不一樣了）。
-   白字在淡底上一定不夠，所以字改用深階 —— 那一階本來就是為了疊在淡底設計的
-   （PALETTE 第六之二節：白底態的字）。淡的程度由 Ⓟ 那一排切，三階見下面。 */
-html[data-k="3"] .sk.tag-on {
-  background: color-mix(in srgb, var(--accent) var(--tint), var(--card));
-  border-color: color-mix(in srgb, var(--accent) var(--tint), var(--card));
-  color: var(--accent-deep);
-}
-/* ⚠ 這一行要排在上面那條前面沒關係（不同選擇器、不同屬性），但**預設值一定要有** ——
-   沒有 --tint 的話 color-mix 整條失效，塊會變透明。 */
-html { --tint: 20%; }
-html[data-p="1"] { --tint: 12%; }
-html[data-p="2"] { --tint: 20%; }
-html[data-p="3"] { --tint: 30%; }
-.doc-role, .sk { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
-@media (prefers-reduced-motion: reduce) { .doc-role, .sk { transition: none; } }
-
-/* ---- 切換條（提案專用，定案後刪掉這一段）-------------------------------- */
-.switcher {
-  position: fixed; right: .7rem; bottom: .7rem; z-index: 60;
-  display: flex; flex-direction: column; gap: .34rem;
-  padding: .5rem .55rem; border-radius: 12px;
-  background: rgba(226,229,230,.94);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-  border: 1px solid rgba(42,44,39,.16);
-  box-shadow: 0 4px 20px rgba(0,0,0,.18);
-  width: max-content; max-width: calc(100vw - 1.4rem);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-}
-.switcher.is-min { padding: .34rem .4rem; }
-.switcher.is-min .row, .switcher.is-min .ro { display: none; }
-.switcher .row { display: flex; align-items: center; gap: .3rem; }
-.switcher .glbl { font-size: .58rem; letter-spacing: .04em; color: #5f5d5c;
-                  flex: 0 0 auto; min-width: 4.6em; white-space: nowrap; }
-.switcher button.opt {
-  flex: 0 0 auto; padding: .24rem .48rem; border-radius: 8px;
-  border: 1px solid rgba(42,44,39,.2); background: #fff; color: #2a2c27;
-  font: inherit; font-size: .7rem; line-height: 1.4; cursor: pointer;
-}
-.switcher button.opt[aria-pressed="true"] { background: #2a2c27; color: #fff; border-color: #2a2c27; }
-.switcher .ro { font-size: .62rem; line-height: 1.5; color: #4a4c46; max-width: 22rem; margin: 0; }
-.switcher .ro b { font-weight: 600; }
-.switcher .min {
-  position: absolute; top: -.55rem; left: -.55rem; width: 1.5rem; height: 1.5rem;
-  border-radius: 50%; border: 1px solid rgba(42,44,39,.2); background: #fff; color: #2a2c27;
-  font: inherit; font-size: .7rem; line-height: 1; cursor: pointer; padding: 0;
-}
-@media (max-width: 30rem) {
-  .switcher { left: .7rem; right: .7rem; width: auto; }
-  /* 四排按鈕 ＋ 五行讀數在 390 上會吃掉半個螢幕，所以窄機把讀數關進一個小捲動區。
-     數字還在（要查得到），但不再擋住醫師卡。 */
-  .switcher .ro { max-width: none; max-height: 4.2em; overflow-y: auto; }
-  .switcher .row { flex-wrap: wrap; }
-}
 </style>
 </head>
 <body>
@@ -2493,7 +2394,7 @@ html[data-p="3"] { --tint: 30%; }
         <article class="doc" data-spec="kids">
           <h3>林晏妤<span class="doc-role">兒牙專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids" data-spec-x="ortho">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids" data-spec-x="ortho">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span></dd>
             <dt>資歷</dt><dd>衛生福利部兒童牙科專科<br>隱適美認證醫師<br>臺中榮民總醫院兒童牙科</dd>
             <dt>學歷</dt><dd>高雄醫學大學學士</dd>
           </dl>
@@ -2531,7 +2432,7 @@ html[data-p="3"] { --tint: 30%; }
                規則見 COPY.md 第八節。這和林晏妤醫師不一樣是刻意的，不要「順手統一」。 -->
           <h3>謝耀慶<span class="doc-role">兒童牙科</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids" data-spec-x="ortho">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids" data-spec-x="ortho">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
             <dt>資歷</dt><dd>臺北榮總兒童牙科總醫師<br>日本新潟大學吞嚥功能受訓醫師<br>隱適美認證醫師</dd>
             <dt>學歷</dt><dd>國立陽明交通大學學士</dd>
           </dl>
@@ -3027,9 +2928,6 @@ html[data-p="3"] { --tint: 30%; }
   var emptyD = document.querySelector('.empty-note[data-for="doctors"]');
   var input  = document.getElementById('q');
   var active = 'all';   /* 'all' ＝ 不篩選。空字串會被 !spec 誤判，所以用一個明確的字 */
-  /* ★ 提案頁專用：切換條。定案後這兩行刪掉，XKIDS 當成 '1'。 */
-  var XKIDS = document.documentElement.getAttribute('data-x') || '1';
-  window.__setCase = function (x) { XKIDS = x; apply(); };
 
   /* 每張卡／每位醫師的可搜尋文字先算好收起來。
      用 textContent 而不是另外維護一份關鍵字：標題、摘要、標籤、專長全都在裡面，
@@ -3057,19 +2955,15 @@ html[data-p="3"] { --tint: 30%; }
 
     /* ★ 這一頁改掉的核心。正式站是
          var hit = (!spec || rec.el.getAttribute('data-spec') === spec) && …
-       也就是一張卡只屬於一科。這裡改成「專科 或 任何一個專長的詞」對得上就算。
-       ⚠ 讀的就是**畫面上那句話裡的詞**，不是另外維護的隱藏屬性。 */
-    function tagSpecs(el) {
-      var a = [el.getAttribute('data-spec')];
-      if (XKIDS === '2' && el.getAttribute('data-spec-x')) a.push(el.getAttribute('data-spec-x'));
-      return a;
-    }
+       也就是一張卡只屬於一科。醫師改成「專科 或 任何一個專長的詞」對得上就算。
+       ⚠ 讀的就是**畫面上那句話裡的詞**，不是另外維護的隱藏屬性。
+       ⚠ 文章沒有改 —— 一篇文章只有一個科別，沒有「關聯」的問題。 */
     function specHit(el) {
       if (!spec) return true;
       if (el.getAttribute('data-spec') === spec) return true;
       var sk = el.querySelectorAll('.sk');
       for (var i = 0; i < sk.length; i++) {
-        if (tagSpecs(sk[i]).indexOf(spec) >= 0) return true;
+        if (sk[i].getAttribute('data-spec') === spec) return true;
       }
       return false;
     }
@@ -3083,17 +2977,22 @@ html[data-p="3"] { --tint: 30%; }
     cardIdx.forEach(function (r) { if (pass(r)) nA++; });
     docIdx.forEach(function (r) { if (pass(r)) nD++; });
 
-    /* ★ 亮起來的規則。沒有按任何一科的時候一顆都不亮 —— 專長就是原本那句話。
-       按了某一科：命中的詞變成套色標記，沒命中的維持純文字；
-       專科藥丸 ≠ 那一科就退成白底字套色（.tag-off）。 */
-    Array.prototype.forEach.call(document.querySelectorAll('.doc'), function (doc) {
+    /* ★ 亮起來的規則。沒有按任何一科的時候一顆都不亮 —— 專長就是原本那句話、
+       文章標籤就是原本的白底字套色。按了某一科：
+         命中的專長 → 淡色填滿的標記（沒命中的維持純文字）
+         專科藥丸 ≠ 那一科 → 退成白底字套色
+         文章卡的主題標籤 → 套色填滿 */
+    Array.prototype.forEach.call(document.querySelectorAll('.docs .doc'), function (doc) {
       var role = doc.querySelector('.doc-role');
       if (role) role.classList.toggle('tag-off', !!spec && doc.getAttribute('data-spec') !== spec);
       Array.prototype.forEach.call(doc.querySelectorAll('.sk'), function (el) {
-        el.classList.toggle('tag-on', !!spec && tagSpecs(el).indexOf(spec) >= 0);
+        el.classList.toggle('tag-on', !!spec && el.getAttribute('data-spec') === spec);
       });
     });
-    if (window.__roll) window.__roll();
+    Array.prototype.forEach.call(document.querySelectorAll('.cards .card'), function (card) {
+      var tag = card.querySelector('.card-tag');
+      if (tag) tag.classList.toggle('tag-on', !!spec && card.getAttribute('data-spec') === spec);
+    });
 
     var filtering = !!spec || !!q;
     /* 空狀態的句子要跟著條件走：搜尋不到和「這一科還沒有文章」不是同一件事。 */
@@ -3130,6 +3029,34 @@ html[data-p="3"] { --tint: 30%; }
     });
   });
 
+  /* ★ 抬升量現量。理由見 CSS 那一段：塊內基線被進位到整數 px，寫死的 em 在某些
+     字級／某些 DPR 上會差到 1px。探針是零尺寸、絕對定位、隱形的，不影響版面。 */
+  function measureLift() {
+    var dd = document.querySelector('.docs .doc .skills');
+    if (!dd || !window.getComputedStyle) return;
+    var probe = document.createElement('span');
+    probe.className = 'sk tag-on';
+    probe.textContent = '測';
+    probe.style.cssText = 'position:absolute;visibility:hidden;vertical-align:baseline';
+    dd.appendChild(probe);
+    var inner = document.createElement('span');
+    inner.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+    probe.appendChild(inner);
+    var r = probe.getBoundingClientRect();
+    var ownBase = inner.getBoundingClientRect().bottom;
+    var blockCentreAboveBase = ownBase - (r.top + r.bottom) / 2;
+    probe.remove();
+    if (!r.height) return;                       /* 還沒版面就別亂寫 */
+    var fs = parseFloat(getComputedStyle(dd).fontSize);
+    var inkCentre = fs * 0.3495;                 /* 中文字面中線，實測 0.336~0.359 取中 */
+    document.documentElement.style.setProperty(
+      '--sk-lift', (inkCentre - blockCentreAboveBase).toFixed(3) + 'px');
+  }
+  measureLift();
+  /* 字型還沒下載完時量到的是後備字型，好了再量一次；換裝置像素比也要重量。 */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureLift);
+  addEventListener('resize', measureLift);
+
   if (input) {
     input.addEventListener('input', apply);
     /* Enter 不送出（沒有 form 也沒有結果頁），但要吃掉它，
@@ -3147,219 +3074,6 @@ html[data-p="3"] { --tint: 30%; }
 <!-- ⚠ 計數器那支 script 在這一頁是刻意拿掉的（正式站的 index.html 有）。
      data-views-self="home" 會對 /api/views 送 POST，每開一次提案頁就幫首頁
      的真實瀏覽數 +1。這裡改成寫死示範值。⚠ 不要把示範值帶回 index.html。 -->
-
-
-<!-- ========================================================================
-     提案頁專用的切換條。**定案後整段刪掉**，連同上面 CSS 裡 Ⓣ2 與切換條那兩段、
-     以及篩選 JS 裡的 TCASE／XKIDS 三行。
-     要帶回正式站的是：專長那句話的 <span class="sk"> 包法、.sk.tag-on 與
-     .doc-role.tag-off 兩條規則、specHit()，還有 apply() 最後那段刷狀態的迴圈。
-     ======================================================================== -->
-<div class="switcher" id="sw">
-  <button type="button" class="min" id="swmin" aria-label="收合切換條">－</button>
-  <div class="row">
-    <span class="glbl">命中的專長</span>
-    <button type="button" class="opt" data-k="k" data-v="1" aria-pressed="true">Ⓚ1 套色填滿</button>
-    <button type="button" class="opt" data-k="k" data-v="2" aria-pressed="false">Ⓚ2 白底字套色</button>
-    <button type="button" class="opt" data-k="k" data-v="3" aria-pressed="false">Ⓚ3 淡色填滿</button>
-  </div>
-  <div class="row">
-    <span class="glbl">淡到什麼程度</span>
-    <button type="button" class="opt" data-k="p" data-v="1" aria-pressed="false">Ⓟ1 12%</button>
-    <button type="button" class="opt" data-k="p" data-v="2" aria-pressed="true">Ⓟ2 20%</button>
-    <button type="button" class="opt" data-k="p" data-v="3" aria-pressed="false">Ⓟ3 30%</button>
-  </div>
-  <div class="row">
-    <span class="glbl">標記的字級</span>
-    <button type="button" class="opt" data-k="z" data-v="1" aria-pressed="true">Ⓩ1 現在 11.5</button>
-    <button type="button" class="opt" data-k="z" data-v="2" aria-pressed="false">Ⓩ2 12.0</button>
-    <button type="button" class="opt" data-k="z" data-v="3" aria-pressed="false">Ⓩ3 12.4</button>
-    <button type="button" class="opt" data-k="z" data-v="4" aria-pressed="false">Ⓩ4 12.8</button>
-    <button type="button" class="opt" data-k="z" data-v="5" aria-pressed="false">Ⓩ5 原大 13.3</button>
-  </div>
-  <div class="row">
-    <span class="glbl">兒童矯正</span>
-    <button type="button" class="opt" data-k="x" data-v="1" aria-pressed="true">Ⓧ1 只算兒童牙科</button>
-    <button type="button" class="opt" data-k="x" data-v="2" aria-pressed="false">Ⓧ2 也算齒顎矯正</button>
-  </div>
-  <p class="ro" id="ro"></p>
-</div>
-
-<script>
-(function () {
-  var root = document.documentElement;
-  var sw = document.getElementById('sw');
-  var ro = document.getElementById('ro');
-  var q  = new URLSearchParams(location.search);
-  var st = {
-    x: /^[12]$/.test(q.get('x')  || '') ? q.get('x') : '1',
-    z: /^[1-5]$/.test(q.get('z') || '') ? q.get('z') : '1',
-    k: /^[123]$/.test(q.get('k') || '') ? q.get('k') : '1',
-    p: /^[123]$/.test(q.get('p') || '') ? q.get('p') : '2'
-  };
-
-
-  var LX = {
-    '1': 'Ⓧ1 兒童隱適美／兒童早期矯正只算兒童牙科。',
-    '2': 'Ⓧ2 那兩個詞也算齒顎矯正（按矯正會多出林晏妤、謝耀慶）。'
-  };
-  var LZ = {
-    '1': 'Ⓩ1 標記字級 .72rem／11.52px ＝ 現在（和專科藥丸同一組）。',
-    '2': 'Ⓩ2 .748rem／11.97px。',
-    '3': 'Ⓩ3 .775rem／12.40px。',
-    '4': 'Ⓩ4 .803rem／12.85px。',
-    '5': 'Ⓩ5 .83rem／13.28px ＝ 和旁邊那句話一樣大，字完全沒縮。'
-  };
-  var LK = {
-    '1': 'Ⓚ1 命中的專長套色填滿（白字）；專科藥丸也填滿。',
-    '2': 'Ⓚ2 命中的專長白底字套色；專科藥丸仍然填滿（藥丸重一階）。',
-    '3': 'Ⓚ3 命中的專長淡色填滿（該科的色混進卡色，字用深階）；專科藥丸仍然填滿。'
-  };
-  var LP = { '1': '12%', '2': '20%', '3': '30%' };
-
-  /* ★ 抬升量現量。理由見 CSS「字級五階」那一段：塊內基線被進位到整數 px，
-     寫死的 em 在某些字級／某些 DPR 上會差到 1px。 */
-  function measureLift() {
-    var dd = document.querySelector('.doc .skills');
-    if (!dd) return;
-    var probe = document.createElement('span');
-    probe.className = 'sk tag-on';
-    probe.textContent = '測';
-    probe.style.verticalAlign = 'baseline';
-    probe.style.position = 'absolute';
-    probe.style.visibility = 'hidden';
-    dd.appendChild(probe);
-    var inner = document.createElement('span');
-    inner.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
-    probe.appendChild(inner);
-    var r = probe.getBoundingClientRect();
-    var ownBase = inner.getBoundingClientRect().bottom;
-    var blockCentreAboveBase = ownBase - (r.top + r.bottom) / 2;
-    probe.remove();
-    var fs = parseFloat(getComputedStyle(dd).fontSize);
-    var inkCentre = fs * 0.3495;          /* 中文字面中線，實測 0.336~0.359 取中 */
-    root.style.setProperty('--sk-lift', (inkCentre - blockCentreAboveBase).toFixed(3) + 'px');
-  }
-
-  function paint() {
-    root.setAttribute('data-x', st.x);
-    root.setAttribute('data-z', st.z);
-    root.setAttribute('data-k', st.k);
-    root.setAttribute('data-p', st.p);
-    Array.prototype.forEach.call(sw.querySelectorAll('button.opt'), function (b) {
-      b.setAttribute('aria-pressed', st[b.getAttribute('data-k')] === b.getAttribute('data-v') ? 'true' : 'false');
-    });
-    if (window.__setCase) window.__setCase(st.x);
-    measureLift();
-    roll();
-    try {
-      var u = new URL(location.href);
-      u.searchParams.set('x', st.x); u.searchParams.set('z', st.z);
-      u.searchParams.set('k', st.k); u.searchParams.set('p', st.p);
-      history.replaceState(null, '', u);
-    } catch (e) {}
-  }
-
-  /* 讀數：每一科篩得到幾位醫師（本科＋靠專長進來的）。
-     畫面和讀數對不上就表示哪裡壞了。 */
-  var SPECS = [['general','一般'],['perio','牙周'],['endo','根管'],['kids','兒童'],
-               ['ortho','矯正'],['prosth','贋復'],['surg','口外']];
-  /* Ⓚ3 的對比度現算：淡底會吃掉深階字的對比，哪一科掉出 AA 要當場講。
-     用 canvas 把 color-mix 解成實際 sRGB，再算 WCAG 對比。 */
-  var CVX = null;
-  function px(col) {
-    if (!CVX) { var c = document.createElement('canvas'); c.width = c.height = 1;
-                CVX = c.getContext('2d', { willReadFrequently: true }); }
-    CVX.fillStyle = '#ffffff'; CVX.fillRect(0, 0, 1, 1);
-    CVX.fillStyle = col; CVX.fillRect(0, 0, 1, 1);
-    var d = CVX.getImageData(0, 0, 1, 1).data; return [d[0], d[1], d[2]];
-  }
-  function lum(c) { var f = function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
-    return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); }
-  function cr(a, b2) { var l1 = lum(a), l2 = lum(b2);
-    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05); }
-  function aaReport() {
-    var probe = document.createElement('div'); document.body.appendChild(probe);
-    var bad = [], all = [];
-    SPECS.forEach(function (sp) {
-      probe.setAttribute('data-spec', sp[0]);
-      var cs = getComputedStyle(probe);
-      var acc = cs.getPropertyValue('--accent').trim(), deep = cs.getPropertyValue('--accent-deep').trim();
-      var bg = px('color-mix(in srgb, ' + acc + ' ' + LP[st.p] + ', #f4f4f5)');
-      var v = cr(bg, px(deep));
-      all.push(sp[1] + ' ' + v.toFixed(2));
-      if (v < 4.5) bad.push(sp[1] + ' ' + v.toFixed(2));
-    });
-    probe.remove();
-    return '字對淡底：' + all.join('・') + (bad.length ? '　<b>掉出 AA：' + bad.join('・') + '</b>' : '　<b>全部過 AA</b>');
-  }
-
-  /* 現量：塊有沒有比行還高（Ⓩ5 會），以及塊的上下緣對旁邊的字對不對稱。
-     畫面和這兩個數字對不上就表示哪裡壞了。 */
-  function fitReport() {
-    var lit = document.querySelector('.docs .doc:not(.is-filtered-out) .sk.tag-on');
-    if (!lit) return '　（先按一科才量得到）';
-    var dd = lit.closest('.skills');
-    /* ⚠ 取「那一行的基線」要在標記**正後面**插一顆零寬探針。三種寫法踩過兩種：
-       ① 挑一顆純文字當參照 —— 那些詞自己會折行，rect 跨兩行，差幾十 px；
-       ② 插在標記**前面** —— 標記被擠到下一行時，探針會留在上一行（375／320 上
-          量到 −19.44 就是這個）；
-       ③ 插在標記**後面** —— 零寬的東西不會自己折行，一定留在標記那一行。★ */
-    var probe = document.createElement('span');
-    probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline;';
-    lit.after(probe);
-    var base = probe.getBoundingClientRect().bottom;
-    probe.remove();
-    var fs = parseFloat(getComputedStyle(dd).fontSize);
-    var it = base - fs * 0.844, ib = base + fs * 0.145;   /* 旁邊那句話的 ink 上下緣 */
-    var r = lit.getBoundingClientRect();
-    var up = it - r.top, dn = r.bottom - ib;
-    var h = r.height, lh = parseFloat(getComputedStyle(dd).lineHeight);
-    return '　塊高 ' + h.toFixed(2) + 'px（行高 ' + lh.toFixed(2) + '）　' +
-           '塊比字凸出 上 ' + up.toFixed(2) + ' / 下 ' + dn.toFixed(2) +
-           '　<b>不對稱 ' + (dn - up).toFixed(2) + 'px</b>';
-  }
-
-  function roll() {
-    if (!ro) return;
-    var parts = SPECS.map(function (p) {
-      var own = 0, via = 0;
-      Array.prototype.forEach.call(document.querySelectorAll('.docs .doc'), function (doc) {
-        if (doc.getAttribute('data-spec') === p[0]) { own++; return; }
-        var hit = false;
-        Array.prototype.forEach.call(doc.querySelectorAll('.sk'), function (el) {
-          if (el.getAttribute('data-spec') === p[0]) hit = true;
-          if (st.x === '2' && el.getAttribute('data-spec-x') === p[0]) hit = true;
-        });
-        if (hit) via++;
-      });
-      return p[1] + ' ' + own + (via ? '<b>+' + via + '</b>' : '');
-    });
-    ro.innerHTML = LK[st.k] + (st.k === '3' ? '　濃度 ' + LP[st.p] : '') +
-                   (st.k === '3' ? '<br>' + aaReport() : '') +
-                   '<br>' + LZ[st.z] + fitReport() + '<br>' + LX[st.x] +
-                   '<br>每一科篩得到的醫師（本科＋靠專長進來的）：' + parts.join('・');
-  }
-  window.__roll = roll;
-
-  Array.prototype.forEach.call(sw.querySelectorAll('button.opt'), function (b) {
-    b.addEventListener('click', function () {
-      st[b.getAttribute('data-k')] = b.getAttribute('data-v');
-      paint();
-    });
-  });
-  document.getElementById('swmin').addEventListener('click', function () {
-    var min = sw.classList.toggle('is-min');
-    this.textContent = min ? '＋' : '－';
-    this.setAttribute('aria-label', min ? '展開切換條' : '收合切換條');
-  });
-
-  paint();
-  /* position:absolute 的探針在字型還沒下載完時量到的是後備字型，所以字型好了再量一次。 */
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measureLift(); roll(); });
-  addEventListener('resize', function () { measureLift(); roll(); });
-})();
-</script>
 
 </body>
 </html>
