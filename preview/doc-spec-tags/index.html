@@ -39,7 +39,7 @@
        沒點任何一科　　專科藥丸：套色（現在線上就是這樣）
        　　　　　　　　專長：純文字，沒有框、沒有底　←②
 
-       點了某一科　　　命中的專長：**套色填滿的標記**（我就是原因）
+       點了某一科　　　命中的專長：**套色填滿的標記**（我就是原因）　※Ⓚ2 改成白底字套色
        　　　　　　　　沒命中的專長：**維持純文字**　←②「點到的…再套標籤」
        　　　　　　　　專科藥丸 ＝ 那一科：套色填滿
        　　　　　　　　專科藥丸 ≠ 那一科：**白底字套色**　←①
@@ -74,6 +74,14 @@
               Ⓣ2 專長永遠是一排標記（第一版，留著對照）
                  沒篩選時全部白底字套色，篩選時命中的填滿、其餘維持白底。
                  ＊要看「整排標記」有多重就切這一案。**它不是使用者要的那一案。**
+     ?k=1|2   **命中的專長要多重**（2026-08-11 使用者要求另做一版）：
+              Ⓚ1 套色填滿　← **預設**
+              Ⓚ2 **白底字套色** —— 只動專長，**專科藥丸仍然填滿**。
+                 所以 Ⓚ2 之下有一個層次：藥丸最重（他本科就是這個）、
+                 專長輕一階（他會做這件事）、沒命中的是純文字。
+                 ⚠ 副作用要知道：**只靠專長進來的那張卡（例如按牙周時的李柄輝）
+                   整張會一顆填滿都沒有** —— 藥丸退成白底、專長也是白底。
+                   關聯還講得出來（那個詞被框起來了），但份量比 Ⓚ1 輕很多。
      ?v=1|0   小字（藥丸與亮起來的標記）怎麼對齊：
               **Ⓥ1 對字面中線** ← **預設**，2026-08-11 使用者回報「標籤過的字有點
                  往下跑，專長和專科都是」之後修的。藥丸抬 .158em、標記抬 .053em。
@@ -2071,6 +2079,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .sk.tag-on { vertical-align: .053em; }
 /* Ⓥ0（切換條）＝ 不修，回到 baseline，用來對照。定案後這兩行連切換條一起刪。 */
 html[data-v="0"] .doc-role, html[data-v="0"] .sk.tag-on { vertical-align: baseline; }
+
+/* ---- Ⓚ2：命中的專長改成白底字套色（2026-08-11 使用者要的另一版）------------
+   只動命中的**專長**那幾顆，**專科藥丸不動**（＝那一科就填滿、不是就白底）。
+   所以 Ⓚ2 之下會出現一個層次：藥丸最重（他本科就是這個），專長輕一階
+   （他會做這件事）。顏色沒有新的 —— 就是這一站線性標記的預設態。
+   對比度都是現成的（PALETTE 第六之二節，各科的 --accent-deep 疊在 --card 上）。 */
+html[data-k="2"] .sk.tag-on {
+  background: var(--card); color: var(--accent-deep); border-color: var(--accent-deep);
+}
 .doc-role, .sk { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
 @media (prefers-reduced-motion: reduce) { .doc-role, .sk { transition: none; } }
 
@@ -3088,6 +3105,11 @@ html[data-t="2"] .sk.tag-on {
     <button type="button" class="opt" data-k="t" data-v="2" aria-pressed="false">Ⓣ2 永遠是一排標記</button>
   </div>
   <div class="row">
+    <span class="glbl">命中的專長</span>
+    <button type="button" class="opt" data-k="k" data-v="1" aria-pressed="true">Ⓚ1 套色填滿</button>
+    <button type="button" class="opt" data-k="k" data-v="2" aria-pressed="false">Ⓚ2 白底字套色</button>
+  </div>
+  <div class="row">
     <span class="glbl">小字對齊</span>
     <button type="button" class="opt" data-k="v" data-v="1" aria-pressed="true">Ⓥ1 對字面中線</button>
     <button type="button" class="opt" data-k="v" data-v="0" aria-pressed="false">Ⓥ0 對基線（現況）</button>
@@ -3109,7 +3131,8 @@ html[data-t="2"] .sk.tag-on {
   var st = {
     t: /^[12]$/.test(q.get('t') || '') ? q.get('t') : '1',
     x: /^[12]$/.test(q.get('x') || '') ? q.get('x') : '1',
-    v: /^[01]$/.test(q.get('v') || '') ? q.get('v') : '1'
+    v: /^[01]$/.test(q.get('v') || '') ? q.get('v') : '1',
+    k: /^[12]$/.test(q.get('k') || '') ? q.get('k') : '1'
   };
 
   var LT = {
@@ -3121,14 +3144,19 @@ html[data-t="2"] .sk.tag-on {
     '2': 'Ⓧ2 那兩個詞也算齒顎矯正（按矯正會多出林晏妤、謝耀慶）。'
   };
   var LV = {
-    '1': 'Ⓥ1 小字對字面中線：藥丸抬 .158em（1.82px）、專長標記抬 .053em（0.61px）。',
-    '0': 'Ⓥ0 對基線（＝現在線上的對法）：藥丸的字低 1.82px、專長標記低 0.61px。'
+    '1': 'Ⓥ1 小字對字面中線（藥丸抬 1.82px、標記抬 0.61px）。',
+    '0': 'Ⓥ0 對基線＝現在線上的對法（藥丸低 1.82px、標記低 0.61px）。'
+  };
+  var LK = {
+    '1': 'Ⓚ1 命中的專長套色填滿；專科藥丸也填滿。',
+    '2': 'Ⓚ2 命中的專長白底字套色；專科藥丸仍然填滿（藥丸重一階）。'
   };
 
   function paint() {
     root.setAttribute('data-t', st.t);
     root.setAttribute('data-x', st.x);
     root.setAttribute('data-v', st.v);
+    root.setAttribute('data-k', st.k);
     Array.prototype.forEach.call(sw.querySelectorAll('button.opt'), function (b) {
       b.setAttribute('aria-pressed', st[b.getAttribute('data-k')] === b.getAttribute('data-v') ? 'true' : 'false');
     });
@@ -3136,7 +3164,8 @@ html[data-t="2"] .sk.tag-on {
     roll();
     try {
       var u = new URL(location.href);
-      u.searchParams.set('t', st.t); u.searchParams.set('x', st.x); u.searchParams.set('v', st.v);
+      u.searchParams.set('t', st.t); u.searchParams.set('x', st.x);
+      u.searchParams.set('v', st.v); u.searchParams.set('k', st.k);
       history.replaceState(null, '', u);
     } catch (e) {}
   }
@@ -3160,7 +3189,7 @@ html[data-t="2"] .sk.tag-on {
       });
       return p[1] + ' ' + own + (via ? '<b>+' + via + '</b>' : '');
     });
-    ro.innerHTML = LT[st.t] + '<br>' + LX[st.x] + '<br>' + LV[st.v] +
+    ro.innerHTML = LT[st.t] + '<br>' + LK[st.k] + '<br>' + LX[st.x] + '<br>' + LV[st.v] +
                    '<br>每一科篩得到的醫師（本科＋靠專長進來的）：' + parts.join('・');
   }
   window.__roll = roll;
