@@ -79,10 +79,18 @@
                  （按牙周時的李柄輝）。關聯還講得出來，但份量比 Ⓚ1 輕。
      ?p=1|2|3  Ⓚ3 的**濃度**：Ⓟ1 12%／**Ⓟ2 20%（預設）**／Ⓟ3 30%。
                對比度全部量過，見下面那一段。
-     ?v=3|2|1|0  標記的**垂直位置**（第二輪，見 .sk 那一段的長註解）：
-               **Ⓥ3 只改專長**　← **預設**，＝使用者這次要的
-               Ⓥ2 兩個都改成「色塊對中線」（藥丸會再高 0.69px）
-               Ⓥ1 上一版「字對字」　Ⓥ0 正式站的對法（對基線）
+     ?z=1|2|3|4|5  **標記的字級**（2026-08-11 第三輪，使用者：「套色之後那個字好像
+               變小了，做幾版把字放大一點」）。兩端定死、中間三階等距內插：
+               **Ⓩ1 .72rem／11.52px ＝ 現在（和專科藥丸同一組）** ← **預設**
+               Ⓩ2 .748／11.97　Ⓩ3 .775／12.40　Ⓩ4 .803／12.85
+               Ⓩ5 .83rem／13.28px ＝ 和旁邊那句話一樣大，字完全沒縮
+               ⚠ **使用者猜的「原大會很擠」是對的**：Ⓩ5 的塊高 23.52px > dd 行高
+                 23.24px，**行框會被撐開**。Ⓩ1~Ⓩ4 都塞得進去、版面一格都不動。
+                 切換條右邊會**現量**塊高、行高與上下不對稱，不必查表。
+               ⚠ 抬升量跟著字級走（字愈大抬得愈少）：.111／.096／.082／.069／.058em。
+                 公式與推導寫在那一頁 CSS 的「字級五階」那一段。
+     ⚠ **原本的 Ⓥ 那一排（垂直位置四案）已經收掉**，定案是「色塊對中線、只改專長」，
+       直接寫死。落選案的數字留在 CSS 註解裡。
      ?x=1|2    兒童隱適美／兒童早期矯正 這兩顆算不算齒顎矯正：
                Ⓧ1 只算兒童牙科　← **預設**
                Ⓧ2 也算齒顎矯正（按矯正時會多出林晏妤、謝耀慶兩位）
@@ -2041,9 +2049,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ⚠ 每個 span 自己帶 data-spec，所以上面那排 [data-spec="…"] 的變數宣告會落在
      span 上，--accent／--accent-deep／--on-fill 自動就是那一科的。卡片不受影響。 */
 .sk.tag-on {
-  display: inline-block; font-size: .72rem; font-weight: 400;
+  display: inline-block; font-size: var(--sk-fs); font-weight: 400;
   line-height: 1.5; padding: .05rem .6rem; border-radius: 8px;
-  white-space: nowrap;
+  white-space: nowrap; vertical-align: var(--sk-lift);
   background: var(--accent); color: var(--on-fill); border: 1px solid var(--accent);
 }
 /* 專科藥丸：≠ 這一科的時候退成白底字套色（這一站線性標記的預設態）。 */
@@ -2074,36 +2082,56 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      （反而是原本那個 −1.38px 會讓 dd 的行框多長 0.82px。）
    ⚠ em 是**元素自己的字級**，不是父層的 —— 兩顆的字級都是 .72rem，
      但父層不同，所以兩個值不一樣，不能共用。 */
-/* ---- 對齊：Ⓥ1 字對字／Ⓥ2 框對字／Ⓥ3 只改專長（預設）--------------------
-   第二輪（2026-08-11）：使用者「專科有對齊名字的垂直中線，但專長上標籤後看起來是
-   對齊沒被標籤的文字下緣，應該要對齊垂直中線」。
+/* ---- 字級五階 ＋ 垂直位置（Ⓩ，2026-08-11 第三輪）------------------------
+   使用者：「專長在套色之後那個字好像變小了，做幾版把字放大一點。一個是現在的、
+   一個是原來自己的大小套色，再做三個介於這兩者之間。」
 
-   **量出來成立，而且第一輪我對錯了東西。** 第一輪對的是「兩段字的字面中線」，
-   但**填滿的標記，眼睛讀的是那個色塊**，不是塊裡面的字。而那個色塊裡的字
-   本來就不在塊的正中央 —— 實測**字面中線比色塊中線高 0.66px**（成因：塊的高度
-   是 line-height 1.5 ＋ 內距 ＋ 框算出來的，那條線對的是字型的 ascent／descent，
-   不是中文的字面）。所以「字對齊了」＝「塊往下掉 0.66px」。
+   兩端是定死的：**現在 .72rem（11.52px，＝專科藥丸那一組）**，
+   **原大 .83rem（13.28px，＝專長那句話本來的字級）**。中間三階等距內插。
 
-   1440 實測（按一般牙科，李柄輝那張卡）：
-                     塊上緣比字 ink 上緣高　塊下緣比字 ink 下緣低　不對稱
-     專科藥丸 Ⓥ1        1.43px               2.81px            1.38px
-     專長標記 Ⓥ1        3.20px               4.53px            1.33px
-   兩個都是下面多出來一截。**專長那顆之所以比較明顯**：它旁邊的字只有 13.28px，
-   4.53px 的下墜佔了那行字高的三分之一；藥丸旁邊是 16.8px 的名字，比例小得多。
+     Ⓩ1 .72rem   11.52px　＝ 現在（和專科藥丸同一組）　★ 預設
+     Ⓩ2 .748rem  11.97px
+     Ⓩ3 .775rem  12.40px
+     Ⓩ4 .803rem  12.85px
+     Ⓩ5 .83rem   13.28px　＝ 和旁邊那句話一樣大（只有顏色與框在變，字沒縮）
 
-   修法：把抬升量從「字對字」加到「塊對字」，各再抬那 0.66／0.69px。
-     Ⓥ1 字對字（第一輪）      藥丸 .158em(1.82px)　標記 .053em(0.61px)
-     Ⓥ2 框對字（兩個都改）    藥丸 .218em(2.51px)　標記 .111em(1.28px)
-     Ⓥ3 只改專長　★ 預設      藥丸 .158em 不動　　標記 .111em(1.28px)
-   **預設取 Ⓥ3**，因為使用者明講專科那顆現在是對的，只有專長要改。
-   Ⓥ2 是「兩顆用同一條規則」的版本，差別只有藥丸再高 0.69px，附在切換條上比較。
-   ⚠ 三案都不會撐高行框：抬完之後標記離基線 15.70 < strut 16.22、
-     藥丸 16.94 < 18.42。 */
+   ⚠ **使用者猜的「原大會很擠」是對的，而且擠的地方很具體**：塊高 ＝ 字級×1.5 ＋
+     內距 1.6 ＋ 框 2，所以 Ⓩ5 的塊是 23.52px，而 dd 那一行的行高只有 23.24px ——
+     **塊比行還高**，行框會被撐開。實測見下面那一排的讀數（會現算給你看）。
+     Ⓩ1~Ⓩ4 都塞得進行框，一個像素都不會動到版面。
+
+   ── 垂直位置：跟著字級走，不是一個固定值 ──────────────────────────────
+   對齊的目標是「**色塊**的中線對齊旁邊那句話的字面中線」（第二輪定的，見下面）。
+   塊的中線離塊自己的基線 ＝ 0.29185 × 字級（純線性 —— 內距與框在算中線時剛好
+   互相抵消掉），旁邊那句話的字面中線在基線上方 4.641px（13.28 × 0.3495）。所以
+
+       抬升量（px）＝ 4.641 − 0.29185 × 自己的字級
+
+   ⚠⚠ **但這個量不能寫死，要 JS 現算。** Blink 把 inline-block 的**塊內基線位置
+     進位到整數 px**（實測「基線離塊頂」五階是 13.797／13.797／14.797／15.797／
+     15.797 —— 跳階、不是線性），所以上面那條公式算出來的值在 Ⓩ2／Ⓩ4 會差到 1px，
+     而且**同一個字級在不同 DPR 上還會落在不同的整數**。實測需要的抬升是
+     1.27／1.62／0.95／0.27／0.60px，看不出規律。
+     這一頁改成**開頁時量一次**（放一顆看不見的探針，量它的塊中線離自己基線多少，
+     再減出差額寫進 --sk-lift），字級一換就重量。CSS 裡的 em 值只是 JS 沒跑起來時
+     的近似後備。**和 nav-scrollspy 的 --lamp-pad 是同一個做法、同一個理由。**
+
+   ── 第二輪為什麼從「字對字」改成「塊對字」（保留紀錄）──────────────────
+   使用者：「專科有對齊名字的垂直中線，但專長上標籤後看起來是對齊沒被標籤的文字
+   下緣。」成立 —— **填滿的標記，眼睛讀的是那個色塊，不是塊裡面的字**，而塊裡的字
+   本來就比塊的中線高 0.66px（塊高是 line-height ＋ 內距 ＋ 框算出來的，對的是字型
+   的 ascent／descent，不是中文字面）。所以「字對齊了」＝「塊往下掉 0.66px」。
+   1440 實測不對稱量：標記 3.20 / 4.53（差 1.33px），改成塊對字之後 3.85 / 3.87。
+   ⚠ **專科藥丸維持 .158em（字對字）** —— 使用者明講那一顆現在是對的，這一輪不動它。
+     若日後要一起改成塊對字，它的值是 .218em（再高 0.69px）。
+   ⚠ 第一版寫過 vertical-align: -.12em，**方向加反了**（正值才是往上），實際低
+     1.99px。那一行早就拿掉了。 */
+html { --sk-fs: .72rem; --sk-lift: .111em; }
+html[data-z="2"] { --sk-fs: .748rem; --sk-lift: .096em; }
+html[data-z="3"] { --sk-fs: .775rem; --sk-lift: .082em; }
+html[data-z="4"] { --sk-fs: .803rem; --sk-lift: .069em; }
+html[data-z="5"] { --sk-fs: .83rem;  --sk-lift: .058em; }
 .doc-role { vertical-align: .158em; }
-.sk.tag-on { vertical-align: .111em; }
-html[data-v="1"] .sk.tag-on { vertical-align: .053em; }
-html[data-v="2"] .doc-role { vertical-align: .218em; }
-html[data-v="0"] .doc-role, html[data-v="0"] .sk.tag-on { vertical-align: baseline; }
 
 /* ---- Ⓚ2：命中的專長改成白底字套色（2026-08-11 使用者要的另一版）------------
    只動命中的**專長**那幾顆，**專科藥丸不動**（＝那一科就填滿、不是就白底）。
@@ -3142,10 +3170,12 @@ html[data-p="3"] { --tint: 30%; }
     <button type="button" class="opt" data-k="p" data-v="3" aria-pressed="false">Ⓟ3 30%</button>
   </div>
   <div class="row">
-    <span class="glbl">標記的垂直位置</span>
-    <button type="button" class="opt" data-k="v" data-v="3" aria-pressed="true">Ⓥ3 只改專長</button>
-    <button type="button" class="opt" data-k="v" data-v="2" aria-pressed="false">Ⓥ2 兩個都改</button>
-    <button type="button" class="opt" data-k="v" data-v="1" aria-pressed="false">Ⓥ1 上一版</button>
+    <span class="glbl">標記的字級</span>
+    <button type="button" class="opt" data-k="z" data-v="1" aria-pressed="true">Ⓩ1 現在 11.5</button>
+    <button type="button" class="opt" data-k="z" data-v="2" aria-pressed="false">Ⓩ2 12.0</button>
+    <button type="button" class="opt" data-k="z" data-v="3" aria-pressed="false">Ⓩ3 12.4</button>
+    <button type="button" class="opt" data-k="z" data-v="4" aria-pressed="false">Ⓩ4 12.8</button>
+    <button type="button" class="opt" data-k="z" data-v="5" aria-pressed="false">Ⓩ5 原大 13.3</button>
   </div>
   <div class="row">
     <span class="glbl">兒童矯正</span>
@@ -3163,7 +3193,7 @@ html[data-p="3"] { --tint: 30%; }
   var q  = new URLSearchParams(location.search);
   var st = {
     x: /^[12]$/.test(q.get('x')  || '') ? q.get('x') : '1',
-    v: /^[0123]$/.test(q.get('v')|| '') ? q.get('v') : '3',
+    z: /^[1-5]$/.test(q.get('z') || '') ? q.get('z') : '1',
     k: /^[123]$/.test(q.get('k') || '') ? q.get('k') : '1',
     p: /^[123]$/.test(q.get('p') || '') ? q.get('p') : '2'
   };
@@ -3173,11 +3203,12 @@ html[data-p="3"] { --tint: 30%; }
     '1': 'Ⓧ1 兒童隱適美／兒童早期矯正只算兒童牙科。',
     '2': 'Ⓧ2 那兩個詞也算齒顎矯正（按矯正會多出林晏妤、謝耀慶）。'
   };
-  var LV = {
-    '3': 'Ⓥ3 只改專長：標記的**色塊**對齊旁邊文字的中線（抬 1.28px）；專科藥丸維持 1.82px。',
-    '2': 'Ⓥ2 兩個都改成色塊對中線：藥丸 2.51px、標記 1.28px。',
-    '1': 'Ⓥ1 上一版（字對字）：藥丸 1.82px、標記 0.61px —— 色塊會往下掉 0.66px。',
-    '0': 'Ⓥ0 對基線＝正式站的對法（藥丸的字低 1.82px、標記低 0.61px）。'
+  var LZ = {
+    '1': 'Ⓩ1 標記字級 .72rem／11.52px ＝ 現在（和專科藥丸同一組）。',
+    '2': 'Ⓩ2 .748rem／11.97px。',
+    '3': 'Ⓩ3 .775rem／12.40px。',
+    '4': 'Ⓩ4 .803rem／12.85px。',
+    '5': 'Ⓩ5 .83rem／13.28px ＝ 和旁邊那句話一樣大，字完全沒縮。'
   };
   var LK = {
     '1': 'Ⓚ1 命中的專長套色填滿（白字）；專科藥丸也填滿。',
@@ -3186,19 +3217,44 @@ html[data-p="3"] { --tint: 30%; }
   };
   var LP = { '1': '12%', '2': '20%', '3': '30%' };
 
+  /* ★ 抬升量現量。理由見 CSS「字級五階」那一段：塊內基線被進位到整數 px，
+     寫死的 em 在某些字級／某些 DPR 上會差到 1px。 */
+  function measureLift() {
+    var dd = document.querySelector('.doc .skills');
+    if (!dd) return;
+    var probe = document.createElement('span');
+    probe.className = 'sk tag-on';
+    probe.textContent = '測';
+    probe.style.verticalAlign = 'baseline';
+    probe.style.position = 'absolute';
+    probe.style.visibility = 'hidden';
+    dd.appendChild(probe);
+    var inner = document.createElement('span');
+    inner.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+    probe.appendChild(inner);
+    var r = probe.getBoundingClientRect();
+    var ownBase = inner.getBoundingClientRect().bottom;
+    var blockCentreAboveBase = ownBase - (r.top + r.bottom) / 2;
+    probe.remove();
+    var fs = parseFloat(getComputedStyle(dd).fontSize);
+    var inkCentre = fs * 0.3495;          /* 中文字面中線，實測 0.336~0.359 取中 */
+    root.style.setProperty('--sk-lift', (inkCentre - blockCentreAboveBase).toFixed(3) + 'px');
+  }
+
   function paint() {
     root.setAttribute('data-x', st.x);
-    root.setAttribute('data-v', st.v);
+    root.setAttribute('data-z', st.z);
     root.setAttribute('data-k', st.k);
     root.setAttribute('data-p', st.p);
     Array.prototype.forEach.call(sw.querySelectorAll('button.opt'), function (b) {
       b.setAttribute('aria-pressed', st[b.getAttribute('data-k')] === b.getAttribute('data-v') ? 'true' : 'false');
     });
     if (window.__setCase) window.__setCase(st.x);
+    measureLift();
     roll();
     try {
       var u = new URL(location.href);
-      u.searchParams.set('x', st.x); u.searchParams.set('v', st.v);
+      u.searchParams.set('x', st.x); u.searchParams.set('z', st.z);
       u.searchParams.set('k', st.k); u.searchParams.set('p', st.p);
       history.replaceState(null, '', u);
     } catch (e) {}
@@ -3238,6 +3294,32 @@ html[data-p="3"] { --tint: 30%; }
     return '字對淡底：' + all.join('・') + (bad.length ? '　<b>掉出 AA：' + bad.join('・') + '</b>' : '　<b>全部過 AA</b>');
   }
 
+  /* 現量：塊有沒有比行還高（Ⓩ5 會），以及塊的上下緣對旁邊的字對不對稱。
+     畫面和這兩個數字對不上就表示哪裡壞了。 */
+  function fitReport() {
+    var lit = document.querySelector('.docs .doc:not(.is-filtered-out) .sk.tag-on');
+    if (!lit) return '　（先按一科才量得到）';
+    var dd = lit.closest('.skills');
+    /* ⚠ 取「那一行的基線」要在標記**正後面**插一顆零寬探針。三種寫法踩過兩種：
+       ① 挑一顆純文字當參照 —— 那些詞自己會折行，rect 跨兩行，差幾十 px；
+       ② 插在標記**前面** —— 標記被擠到下一行時，探針會留在上一行（375／320 上
+          量到 −19.44 就是這個）；
+       ③ 插在標記**後面** —— 零寬的東西不會自己折行，一定留在標記那一行。★ */
+    var probe = document.createElement('span');
+    probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline;';
+    lit.after(probe);
+    var base = probe.getBoundingClientRect().bottom;
+    probe.remove();
+    var fs = parseFloat(getComputedStyle(dd).fontSize);
+    var it = base - fs * 0.844, ib = base + fs * 0.145;   /* 旁邊那句話的 ink 上下緣 */
+    var r = lit.getBoundingClientRect();
+    var up = it - r.top, dn = r.bottom - ib;
+    var h = r.height, lh = parseFloat(getComputedStyle(dd).lineHeight);
+    return '　塊高 ' + h.toFixed(2) + 'px（行高 ' + lh.toFixed(2) + '）　' +
+           '塊比字凸出 上 ' + up.toFixed(2) + ' / 下 ' + dn.toFixed(2) +
+           '　<b>不對稱 ' + (dn - up).toFixed(2) + 'px</b>';
+  }
+
   function roll() {
     if (!ro) return;
     var parts = SPECS.map(function (p) {
@@ -3255,7 +3337,7 @@ html[data-p="3"] { --tint: 30%; }
     });
     ro.innerHTML = LK[st.k] + (st.k === '3' ? '　濃度 ' + LP[st.p] : '') +
                    (st.k === '3' ? '<br>' + aaReport() : '') +
-                   '<br>' + LV[st.v] + '<br>' + LX[st.x] +
+                   '<br>' + LZ[st.z] + fitReport() + '<br>' + LX[st.x] +
                    '<br>每一科篩得到的醫師（本科＋靠專長進來的）：' + parts.join('・');
   }
   window.__roll = roll;
@@ -3273,6 +3355,9 @@ html[data-p="3"] { --tint: 30%; }
   });
 
   paint();
+  /* position:absolute 的探針在字型還沒下載完時量到的是後備字型，所以字型好了再量一次。 */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measureLift(); roll(); });
+  addEventListener('resize', function () { measureLift(); roll(); });
 })();
 </script>
 
