@@ -307,20 +307,83 @@ html.scrolled .brand-text small { font-size: .74rem; }
   text-decoration: none; white-space: nowrap; padding-block: .35rem;
   transition: color .25s ease;
 }
-/* 常駐的框。
+/* ==========================================================================
+   框的幾何 —— 高度與圓角（2026-08-11 定案，兩輪）
+   --------------------------------------------------------------------------
+   ⚠ **這兩個值不要各憑感覺改，兩輪都是量出來的。** 推導與落選案在
+     preview/nav-frame-height/，那一頁 <head> 有完整的表。
+
+   ── 起因 ──────────────────────────────────────────────────────────────────
+   使用者：「右上三個元素的玻璃框的垂直段好像有點長，但字沒那麼大。」
+   成立：框是圓角矩形，四個角各吃掉一個圓角，**中間剩下的那段直線**才是
+   眼睛讀到的「垂直段」。390 上量到 12.28px —— 和一個字（12.48）一樣長。
+
+   **成因不是有人把框畫大了，是框本來沒有自己的尺寸**：它原本寫成
+   `inset: -1px …`，也就是從 `a` 的盒子外擴 1px。而 `a` 的高 ＝
+   `line-height 1.85` ＋ `padding-block .35rem`：前者是排版用的、
+   後者是**點擊範圍**用的，兩個都不是為了框而設 —— 等於把「手指按得到的
+   大小」直接畫成了看得見的框。上下留白 0.95 字、左右只有 0.30 字，
+   **上下是左右的 3.2 倍**。左右動不了（框與框要留 5px，見 --lamp-pad），
+   所以只能收上下。
+
+   ── 第一輪：高度 → `--frame-em: 2.65`（框高 ÷ 字級）──────────────────────
+   三案 2.65／2.36／2.15，使用者選 2.65「收一階剛剛好」。
+   ⚠ **必須是「字級的倍數 ＋ 對 a 垂直置中」，不能回去用 `inset` 外擴。**
+     原本的寫法是 `1.85em ＋ 11.2px`，一半跟字級走、一半是固定 px，所以
+     「框高 ÷ 字級」在 320／375／390／430 是 3.05／2.95／2.91／2.86 ——
+     **手機愈窄框相對愈長**，正好是最擠的那一端。改成純 em 才等比例。
+   ⚠ 只寫 top/height/transform，**不要改回 `inset` 簡寫** —— 簡寫會把
+     left/right 一起重設，那兩邊是 `--lamp-pad` 在管的。
+   置中用的是 `a` 的盒子中線：實測字的中線對它只差 0.05~0.67px，不需要補償。
+
+   ── 第二輪：圓角 → `--frame-r: 8px` ──────────────────────────────────────
+   使用者：「圓角的圓要小一點。」三案 10／8／6px，選 8px。
+   ⚠ **頁首因此離開 12px 那一族，是使用者指定的，不是漏改。**
+     12px 仍然是標記、搜尋框、三種卡片的值（見下面那幾段）。
+     但 **8px 不是憑空冒出來的第三個數字** —— 這一站的小標籤本來就是一族
+     小圓角：`.doc dt` 6px、`.card-tag` 8.5px、`.info-card h3` 9px。
+     選單那三個框（33~36px 高的小盒子）落在 8px，正好在這一族裡。
+     為什麼收完高度圓角就開始礙眼：圓角是固定 px、框高變小了，角就吃掉
+     更大的比例 —— 用「弧佔周長」（四個角的弧長 ÷ 整圈周長）量，同一個
+     12px 從 44.9% 變成 46.7%，**更圓**；320 上是 54.9%，一半以上的邊
+     都是彎的。8px 收到 29.9%。
+   ⚠ **圓角維持 px、不要跟著字級走。** 這一站的圓角是「材質」不是「比例」：
+     434px 高的文章卡和 31px 高的標記用同一個 12px。高度改 em 是因為它要
+     跟著字，圓角不是。
+   ⚠ **框與底要吃同一個 `--frame-r`** —— `a::before` 是線、`.nav-lamp` 是面，
+     同一個矩形，只改一邊會露出一圈錯位的邊。
+   ⚠ 「框高 < 圓角 ×2」框就會收成膠囊、直段消失。8px 的門檻是 16px，
+     目前最矮的 320 是 29.14px，離得很遠。
+
+   ── 三個版型都吃這一組（2026-08-11 第三輪）───────────────────────────────
+   **手機、平板、電腦版用同一個 `--frame-em` 與 `--frame-r`**，所以這一段
+   是**基底規則、不放在任何 @media 裡**。選單字級在 >720 是 .86rem、
+   ≤720 是 clamp(11px, 3.2vw, 13px)，em 會自己換算，不必分開寫。
+   實測：320 H29.14／375 H31.80／390 H33.06／430 H34.44／>720 H36.46。
+   ⚠ **這一段不影響版面** —— ::before 是絕對定位，`a` 的盒子一個值都沒動，
+     所以列高、頁首高度（手機 59.17）與 **HERO 那首詩的空隙 8.0px**（Ⓢ1 定案）
+     全部原封不動。**要動框就只動這兩個變數，不要去碰 `a` 的 padding-block。**
+     點擊範圍也還是 `a` 那個盒子，只有畫出來的框變小。
+
+   ── 原本就有、仍然成立的兩條 ─────────────────────────────────────────────
    ⚠ **畫在 ::before，不能直接給 a 加 border** —— 加了會把選單撐寬，
      375 上頁首只剩 37px 餘裕，品牌會被擠成兩行（PALETTE 第六之五節那個坑）。
      ::before 是絕對定位、不佔位。
    ⚠ **線是 `box-shadow: inset` 畫的，不是 border** —— Blink 會把 `border-width`
      進位到整數 px，`.75px` 寫上去量回來是 `1px`，兩個狀態會一樣粗。
      inset 陰影吃得到小數，一樣跟著 border-radius 走。日後畫細線一律用這個做法。
-   ⚠ 圓角 12px ＝ 標記、搜尋框、三種卡片用的同一個，不要另外挑。
    `--lamp-pad` 由 JS 現量寫進來（半個字，但不能大到讓兩個框黏在一起）；
-   沒有 JS 時退回 .29em，手機上仍然留得住 5px 的間隙。 */
+   沒有 JS 時退回 .29em，手機上仍然留得住 5px 的間隙。
+   ========================================================================== */
+:root { --frame-em: 2.65; --frame-r: 8px; }
 .site-nav a::before {
   content: ''; position: absolute; z-index: -1;
-  inset: -1px calc(-1 * var(--lamp-pad, .29em));
-  border-radius: 12px;
+  left: calc(-1 * var(--lamp-pad, .29em));
+  right: calc(-1 * var(--lamp-pad, .29em));
+  top: 50%;
+  height: calc(var(--frame-em) * 1em);
+  transform: translateY(-50%);
+  border-radius: var(--frame-r);
   box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .26);
   transition: box-shadow .25s ease;
 }
@@ -338,12 +401,15 @@ html[data-here] .site-nav a[aria-current] { color: #fff; }
 
 /* 滑過去的那塊底。整條選單只有一塊，由 JS 生出來並用 CSS 變數餵位置 ——
    **是同一盞燈移過去，不是三個各自亮滅**（後者看起來像三個開關）。
-   幾何全部現量：選單字級在手機是 clamp，寫死一定會在某個寬度歪掉。 */
+   幾何全部現量：選單字級在手機是 clamp，寫死一定會在某個寬度歪掉。
+   ⚠ `--frame-r` 要和上面那個框吃同一個值：線與面是同一個矩形，
+     只改一邊會露出一圈錯位的邊。高度那一半是 JS 的 frameBox() 在算，
+     和框共用 `--frame-em`。 */
 .nav-lamp {
   position: absolute; z-index: 0; top: 0; left: 0;
   width: var(--lamp-w, 0px); height: var(--lamp-h, 0px);
   transform: translate(var(--lamp-x, 0px), var(--lamp-y, 0px));
-  border-radius: 12px;
+  border-radius: var(--frame-r);
   background: rgba(226, 229, 230, .24);
   opacity: 0; pointer-events: none;
   transition: transform .3s cubic-bezier(.4, 0, .2, 1),
@@ -2461,14 +2527,26 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      但三個框在那時候就已經要畫出來了。 */
   function setPad() { root.style.setProperty('--lamp-pad', padX().toFixed(2) + 'px'); }
 
+  /* 框（`a::before`，CSS 畫的）與底（`.nav-lamp`，這裡餵的）**必須是同一個盒子**。
+     兩邊各算各的就會露出半個像素的錯位，所以高度這一半也要照 CSS 那條算式走：
+     **框高 ＝ `--frame-em` × 字級，對 `a` 的盒子垂直置中**（2026-08-11 定案）。
+     圓角那一半在 CSS 端共用 `--frame-r`，這裡不必管。
+     ⚠ 不要改回「`a` 的盒子 ＋ 2」—— 那是舊寫法，框已經不是那個高度了。 */
+  function frameBox(r) {
+    var em = parseFloat(getComputedStyle(root).getPropertyValue('--frame-em')) || 2.65;
+    var h = em * parseFloat(getComputedStyle(nav).fontSize);
+    return { top: r.top + (r.height - h) / 2, h: h };
+  }
+
   function moveLamp(a) {
     var r = a.getBoundingClientRect();
     var n = nav.getBoundingClientRect();
     var p = padX();
+    var f = frameBox(r);
     root.style.setProperty('--lamp-x', (r.left - n.left - p).toFixed(2) + 'px');
-    root.style.setProperty('--lamp-y', (r.top - n.top - 1).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-y', (f.top - n.top).toFixed(2) + 'px');
     root.style.setProperty('--lamp-w', (r.width + p * 2).toFixed(2) + 'px');
-    root.style.setProperty('--lamp-h', (r.height + 2).toFixed(2) + 'px');
+    root.style.setProperty('--lamp-h', f.h.toFixed(2) + 'px');
   }
 
   function pick() {
