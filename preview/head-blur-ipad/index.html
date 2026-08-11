@@ -3,17 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>頁首玻璃：招牌之前不要那麼糊（三案）｜芳仁牙醫</title>
+<title>頁首玻璃：招牌之前不要那麼糊・iPad 那一輪（定案紀錄）｜芳仁牙醫</title>
 <!-- ⚠ 提案頁一定要帶這一行。三道防線的第一道，另外兩道是 Worker 的
      X-Robots-Tag 與 robots.txt 的 Disallow: /preview/。 -->
 <meta name="robots" content="noindex, nofollow, noarchive">
 <!-- ============================================================================
-     這一頁是什麼（2026-08-11・iPad 這一輪已定案 Ⓑ1）
+     這一頁是什麼（2026-08-11・iPad 那一輪的定案紀錄，已上線）
      ----------------------------------------------------------------------------
-     ★ **使用者定案 Ⓑ1（招牌之前 4px）。** 切換條先留著，因為整件事還沒上線 ——
-       手機版怎麼套是另一輪，在 preview/head-blur-mobile/；
-       電腦版要不要跟著套也還沒問過（電腦版的條子同時蓋到左右兩側的天空，
-       細節量只有 0.34，本來就沒那麼糊）。三處都定了才一起改 index.html。
+     ★ **使用者定案 Ⓑ1（招牌之前 4px）。** 落選 Ⓑ2 3px／Ⓑ3 2px。
+     **這一頁現在是正式站 index.html 的複本，沒有任何覆寫，切換條也刪了** ——
+     畫面上就是線上的樣子。留著是為了保存 iPad 那一輪的推導與落選案的數字。
+
+     ⚠ **上線的版本和這一輪定的不完全一樣，兩處，都是後兩輪帶來的**：
+       ① **轉場改用捲動距離表示**：這一輪定的是「f 0.70 起升」，
+          換算成捲動距離是 118px。電腦版那一輪發現手機定的 f 0.45 換算是
+          98~102px，兩個分開決定的案子幾乎同一個距離，於是收成一條通則
+          **「招牌之前 110px 起升」**。回頭套到 iPad 是 f 0.706，差 8px 的捲動。
+       ② **平段分成兩個值**：橫的螢幕 5px、直的螢幕 4px（電腦版那一輪的 Ⓓ3）。
+          iPad **直放**仍然是這一輪定的 4px；iPad **橫放**會拿到 5px
+          （它看得到 95% 的照片寬度，情況和電腦版一樣）。
+     整條規則寫在 index.html 的「招牌之前不要那麼糊」那一段。
+     後兩輪：preview/head-blur-mobile/、preview/head-blur-desktop/。
 
      ── 起因（使用者，iPad）──────────────────────────────────────────────────
      「iPad 上頁首那條玻璃太糊了。捲到照片的診所招牌附近就覺得還好 ——
@@ -99,27 +109,14 @@
      3. **沒有 JS 就是 6px。** 值放在 `--head-blur`，CSS 那一行寫
         `blur(var(--head-blur, 6px))`，變數沒被設過就退回現況。
 
-     ── 這一頁和 index.html 的差異（只有這幾處）──────────────────────────────
-       (1) <title> / robots meta / 這段註解
-       (2) 相對路徑 assets/ posts/ -> /assets/ /posts/（這一頁在子目錄底下）
-           ⚠ **`srcset` 也要一起換**：HERO 那張圖是 `src` + `srcset` 兩份路徑，
-             只換 `src=` 的話瀏覽器仍然選 srcset，去要 /preview/<name>/assets/… 而 404，
-             畫面上不會破圖，只會安靜地變成 alt 文字疊在黑底上（很像「照片比較暗」）。
-       (3) .site-head::before 的 blur(6px) -> blur(var(--head-blur, 6px))
-       (4) 這份樣式表結尾前多了切換條 .sw 與招牌標線 .signline 的樣式
-       (5) </body> 前多了切換條與那支算 --head-blur 的 JS
-     沒有 data-blur 屬性時（＝「現況」那一顆），(3) 退回 6px、(5) 完全不寫變數，
-     畫面和正式站完全相同。
+     ── 這一頁和 index.html 的差異 ──────────────────────────────────────────
+       **只有 <title> / robots meta / 這段註解，其餘一模一樣。** 定案上線之後
+       切換條、招牌標線與那支覆寫 --head-blur 的 JS 都刪掉了，畫面上就是線上的樣子。
+       路徑另外改過一處：相對的 assets/ posts/ 換成 /assets/ /posts/（這一頁在子目錄）。
+       ⚠ **`srcset` 也要一起換**：HERO 那張圖是 `src` + `srcset` 兩份路徑，
+         只換 `src=` 的話瀏覽器仍然選 srcset，去要 /preview/<name>/assets/… 而 404，
+         畫面上不會破圖，只會安靜地變成 alt 文字疊在黑底上（很像「照片比較暗」）。
      ============================================================================ -->
-<!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
-     1983 年開的是中華路那間。 -->
-<meta name="description" content="芳仁牙醫診所，1983 年創立，現址雲林縣斗六市永樂街。這裡整理刷牙、牙周、兒童牙科、缺牙重建與定期檢查的衛教文章。">
-<meta name="theme-color" content="#12656a">
-<!-- 分享到 LINE／FB 時對方看到的卡片。這幾行畫面上看不到，只有各家的爬蟲會讀。
-     og:description 壓在 20 字上下，因為訊息 app 的氣泡只露兩行（實測 27 個全形字），
-     長度是收訊那一端決定的，我們只能控制字串本身。「1983年創立」擺最後，
-     接的是「巷口牙醫」不是「永樂街」—— 診所 1983 年是在中華路開的，順序寫反會讀錯。 -->
-<meta property="og:type" content="website">
 <meta property="og:title" content="芳仁牙醫診所">
 <!-- 分隔符有兩階，不是隨便挑的：全形直線切三個並列的段落，
      中點只用在地址內部（縣市／街名）—— 那是同一段裡的細分，不該和上一階同重量。
@@ -311,9 +308,8 @@ html.scrolled .site-head .shell { height: var(--head-h-sm); }
 .site-head::before {
   content: ''; position: absolute; inset: 0; z-index: -1;
   background: var(--glass, transparent);
-  /* ⚠ 提案頁改的一行：6px -> var(--head-blur, 6px)。
-     變數由這一頁底下那支 JS 逐幀寫進來（量化到 0.25px），
-     沒有 JS、或切換條選「現況」時變數不存在，退回 6px ＝ 正式站。 */
+  /* 模糊量不是固定的 —— 見下面「招牌之前不要那麼糊」那一段與底下 JS 的 headBlur。
+     **變數沒被設過就是 6px**，所以沒有 JS 的時候完全等於 2026-08-11 之前的樣子。 */
   -webkit-backdrop-filter: blur(var(--head-blur, 6px)) saturate(1.08);
   backdrop-filter: blur(var(--head-blur, 6px)) saturate(1.08);
   /* 下緣淡出。理由和窄帶那條一樣：backdrop-filter 只作用在框內，
@@ -348,6 +344,54 @@ html.scrolled .site-head::before { opacity: 1; }
    現在只有一層固定的薄色（見下方 JS 的 GLASS），深淺完全交給底下：
    壓在夜色上就深，壓在紙色上就淺。**不要再回去做「終點顏色」那件事。**
    ========================================================================== */
+
+/* ==========================================================================
+   招牌之前不要那麼糊（2026-08-11，三輪定案並上線）
+   --------------------------------------------------------------------------
+   起因：使用者在 iPad 上回報「那條玻璃太糊了，捲到照片的診所招牌附近就覺得還好」。
+
+   **量出來成立，成因是裁切不是模糊本身。** 照片是 1600x1058，`.hero-photo`
+   用 object-fit: cover，視窗比例不同、裁掉的地方就完全不同：
+
+     視窗　　　　　　　可見的原圖寬　條子佔照片高　整張照片走完要捲多少
+     iPad 直放 834　　　 46%（純立面）　 5.2%　　　1132px
+     電腦 1440x900　　　100%　　　　　　 6.9%　　　 838px
+     手機 375　　　　　　89%　　　　　　21.1%　　　 221px
+
+   iPad 直放留下的那 46% 正好是**水泥立面加整片窗戶**，全張照片裡結構最規則、
+   對比最強的一塊；電腦版看得到整張（含左右兩側的天空）；手機的條子厚達照片高的
+   21%，永遠會把大片天空一起平均進來，所以讀起來最不糊。
+   **三邊的模糊本來都是 6px，差別在底下的東西怕不怕糊。**
+
+   ⚠ 曾經寫錯過一次：「電腦版的細節量只有 0.34、本來就沒那麼糊」——
+     那是**捲動 0（條子壓在天空上）那一刻**的值。整段量完電腦版接近 iPad：
+     f 70% 時 iPad 8.79 / 電腦 7.52 / 手機 6.55（細節量 ＝ 梯度平均絕對值）。
+
+   ── 規則 ─────────────────────────────────────────────────────────────────
+   **招牌之前平的一個值 → 招牌之前 110px 開始升 → 招牌之後維持 6px。**
+
+   ・招牌 ＝ 檔案高度的 **79.9%**（在 x 850~1060 逐列數亮度 > 120 的點量出來的；
+     招牌是燈箱字，最亮 250 以上，和二三樓窗戶透出來的室內燈 155 分得很開）。
+   ・招牌之後維持 6px，是因為那一段亮度掉到 29~34（立面是 50~81），暗處的糊看不見。
+   ・**轉場用「捲動距離」表示，不是照片比例。** 眼睛讀的是「手指滑一段，糊度變了
+     多少」，那本來就是一個捲動距離。用比例寫，同一條規則在不同視窗會差四倍
+     （f 0.70 起升：iPad 118px、手機 375 只有 28px）。
+     110px 這個值是回推出來的：iPad 那一輪定的轉場換算是 118px、
+     手機那一輪是 98~102px —— 兩個分開決定的案子幾乎同一個距離，取中間值。
+
+   ── 平段的值：橫的螢幕 5px、直的螢幕 4px ─────────────────────────────────
+   這是**整條規則唯一分尺寸的地方**（`--head-blur-flat`，就在下面）。
+   分界用**畫面比例**不是寬度，因為決定「裁掉多少天空」的是盒子的長寬比：
+     橫的（≥1:1）→ 照片幾乎整張看得見，兩側天空都在，收到 5px 就夠
+     直的（<1:1）→ cover 往中間收，剩下的都是立面與窗戶，要收到 4px
+   ⚠ **不要改成 min-width。** iPad 直放是 834 寬，比 720 的手機斷點大得多，
+     用寬度分會和電腦版分在同一邊；而 iPad 橫放（1194x834）看得到 95% 的寬度，
+     情況其實和電腦版一樣 —— 只有「比例」分得對。
+   ⚠ 使用者是分三輪各自看實機挑的：iPad 直 4px、手機 4px、電腦 5px。
+     Ⓓ2（電腦也 4px）與 Ⓓ1 的 4px 落選，「電腦不改（維持 6px）」也落選。
+   ========================================================================== */
+:root { --head-blur-flat: 4px; }
+@media (min-aspect-ratio: 1/1) { :root { --head-blur-flat: 5px; } }
 
 .brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; min-width: 0; }
 .brand-text b { white-space: nowrap; }
@@ -2076,54 +2120,6 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em; }
      上面那個 .135em 只是 JS 沒跑起來時的近似後備。
      **和 nav-scrollspy 的 --lamp-pad 是同一個做法、同一個理由。** */
 .doc-role { vertical-align: .158em; }
-
-/* ==========================================================================
-   以下只有提案頁有：切換條與招牌標線。定案後連同 data-blur 一起刪掉。
-   ========================================================================== */
-.sw {
-  position: fixed; left: 50%; transform: translateX(-50%); bottom: .8rem; z-index: 90;
-  /* width: max-content 是必要的 —— fixed 定位的收縮寬度會被算成很窄的一條。
-     給了 max-content 之後它先用滿，再由 max-width 決定要不要換行。 */
-  width: max-content; max-width: calc(100vw - 1.2rem);
-  flex-wrap: wrap; justify-content: center; row-gap: .25rem; align-items: center;
-  display: flex; gap: .3rem; padding: .34rem .4rem; border-radius: 1rem;
-  background: rgba(25, 22, 20, .82); box-shadow: 0 6px 22px rgba(0, 0, 0, .34);
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  font-size: .74rem; letter-spacing: .02em;
-}
-.sw button {
-  appearance: none; border: 0; cursor: pointer; white-space: nowrap;
-  padding: .32rem .68rem; border-radius: 999px;
-  background: transparent; color: rgba(255, 255, 255, .72); font: inherit;
-}
-.sw button[aria-pressed="true"] { background: rgba(255, 255, 255, .92); color: #191614; font-weight: 700; }
-.sw button:focus-visible { outline: 2px solid rgba(255, 255, 255, .8); outline-offset: 2px; }
-.sw .sep { width: 1px; align-self: stretch; background: rgba(255, 255, 255, .22); margin: .2rem .15rem; }
-/* 即時讀數。畫面和讀數對不起來就表示是瀏覽器留下的狀態，不是這一頁算錯。 */
-.sw .read {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: .66em; letter-spacing: 0; color: rgba(255, 255, 255, .66);
-  padding: 0 .3rem; white-space: nowrap; font-variant-numeric: tabular-nums;
-}
-@media (max-width: 720px) { .sw { font-size: .66rem; bottom: .6rem; } .sw button { padding: .3rem .42rem; } }
-@media (max-width: 360px) { .sw { font-size: .6rem; gap: .2rem; padding: .3rem .32rem; } .sw button { padding: .28rem .34rem; } }
-
-/* 招牌標線（?mark=1）。招牌那六個字實測落在檔案高度的 79.9% ~ 82.9%，
-   由 JS 換算成照片盒裡的位置寫進 --sign-top / --sign-bot —— 不能直接拿百分比
-   當 top，因為 cover 會把照片上下裁掉，盒子的 66% 不等於檔案的 66%。 */
-.signline { display: none; }
-html[data-mark="1"] .signline {
-  display: block; position: absolute; left: 0; right: 0; z-index: 4; pointer-events: none;
-  top: var(--sign-top, 66%); height: calc(var(--sign-bot, 70%) - var(--sign-top, 66%));
-  border-top: 1px dashed rgba(255, 90, 60, .9);
-  border-bottom: 1px dashed rgba(255, 90, 60, .9);
-  background: rgba(255, 90, 60, .12);
-}
-html[data-mark="1"] .signline::after {
-  content: '招牌 79.9%~82.9%'; position: absolute; left: .6rem; top: 100%;
-  font-size: .62rem; letter-spacing: .04em; color: rgba(255, 160, 140, .95);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, .9);
-}
 </style>
 </head>
 <body>
@@ -2172,9 +2168,6 @@ html[data-mark="1"] .signline::after {
            sizes="100vw"
            alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
            width="1600" height="1058" fetchpriority="high">
-
-      <!-- 提案頁專用：招牌標線（?mark=1 才顯示）。定案後整行刪掉。 -->
-      <div class="signline" aria-hidden="true"></div>
 
       <!-- 詩與收尾句放在 <figure> 裡面、不是外面 —— 這樣照片的框如果被限制寬度
            （見下面 HERO 的三種裁切模式），文字會自動跟著照片走，不會飄到旁邊的暗底上。 -->
@@ -2528,7 +2521,7 @@ html[data-mark="1"] .signline::after {
            所以只留下真正站得住的：
 
            · **名稱 ＋ 地址 ＋ 電話**留著。理由不在首頁，在**文章頁** ——
-             /posts/<slug>/ 沒有「診所資訊」那一節，頁尾是那六頁上**唯一**的聯絡資訊。
+             posts/<slug>/ 沒有「診所資訊」那一節，頁尾是那六頁上**唯一**的聯絡資訊。
              頁尾是全站共用元件，它在為另外六頁工作，首頁只是剛好撞在一起。
            · **看診時間拿掉** —— 四行，那是內容不是落款。首頁上它就在正上方；
              文章頁上想看時間的人本來就會點進診所資訊。搜尋引擎那邊有 JSON-LD。
@@ -2659,6 +2652,72 @@ html[data-mark="1"] .signline::after {
     return Math.round(v * A_MAX + PAPER[i] * (1 - A_MAX));
   });
 
+  /* ---- 招牌之前不要那麼糊（2026-08-11 定案上線）----------------------------
+     整條規則與三輪的推導寫在上面樣式表「招牌之前不要那麼糊」那一段，
+     落選案的數字在 preview/head-blur-ipad|mobile|desktop/ 三頁的 <head>。
+     這裡只放怎麼算。
+
+     ⚠ **「條子底下是照片的哪一列」一定要把 cover 的裁切一起算**，
+       不能拿 scrollY 當門檻 —— 同一個 scrollY 在不同視窗比例指到的照片內容
+       完全不一樣（電腦版是上下裁、iPad 直放是左右裁、手機切右邊）。
+
+         s     = max(盒寬 / 圖寬, 盒高 / 圖高)
+         vh01  = (盒高 / s) / 圖高             可見的高度佔整張圖多少
+         top01 = objectPositionY * (1 - vh01)  可見範圍的上緣在整張圖的哪裡
+         f     = top01 + vh01 * ((條子高 - 照片盒.top) / 盒高)
+
+       objectPositionY 是**讀 computed style** 的，所以電腦版的 `50% 100%` 與
+       手機那條 `left center`（＝`0% 50%`）都自動算對，不必分尺寸各寫一份。
+     ⚠ **起升點是反著算回來的**：先由 f=SIGN 換出招牌在哪個 scrollY，退 RAMP_PX，
+       再換回 f 當門檻。這樣那 110px 在每個視窗都真的是 110px。
+       要夾在 f(scroll 0) 以上 —— 視窗很矮時 110px 可能比招牌之前的全部行程還長。
+     ⚠ **量化到 0.25px 再寫。** backdrop-filter 每一幀重算是有代價的，
+       量化之後大部分的幀根本不會動到 style，只有真的跨過一階才寫。
+     ⚠ 平段的值來自 CSS 的 `--head-blur-flat`（橫的 5px、直的 4px），
+       **只在 resize 時重讀** —— 逐幀 getComputedStyle 會每一幀強制重算樣式。 */
+  var photo = document.querySelector('.hero-photo');
+  var heroImg = photo && photo.querySelector('img');
+  var SIGN = .799;              // 招牌那六個字的上緣（檔案高度的比例，實測）
+  var RAMP_PX = 110;            // 招牌之前多少 px 開始升回 FULL
+  var FULL = 6;                 // 招牌之後 ＝ 改動之前的樣子
+  var flat = 4, lastBlur = null;
+
+  function readFlat() {
+    var v = parseFloat(getComputedStyle(root).getPropertyValue('--head-blur-flat'));
+    flat = isFinite(v) && v > 0 ? v : 4;
+    lastBlur = null;            // 換了平段就得重寫一次，不能被上一格擋掉
+  }
+
+  function objPosY() {
+    var v = getComputedStyle(heroImg).objectPosition.split(/\s+/)[1] || '50%';
+    if (v.slice(-1) === '%') return parseFloat(v) / 100;
+    if (v === 'top') return 0;
+    if (v === 'bottom') return 1;
+    return .5;                  // center，以及這一站沒用到的 px 值
+  }
+
+  function paintBlur(headH) {
+    if (!photo || !heroImg || !heroImg.naturalWidth) return;
+    var r = photo.getBoundingClientRect();
+    if (!r.height) return;
+    var s = Math.max(r.width / heroImg.naturalWidth, r.height / heroImg.naturalHeight);
+    var vh01 = Math.min(1, (r.height / s) / heroImg.naturalHeight);
+    var top01 = objPosY() * (1 - vh01);
+    var f = Math.max(0, Math.min(1, top01 + vh01 * ((headH - r.top) / r.height)));
+
+    var signScroll = ((SIGN - top01) / vh01) * r.height - headH;
+    var start = top01 + vh01 * ((Math.max(0, signScroll - RAMP_PX) + headH) / r.height);
+
+    var b = f <= start ? flat
+          : f >= SIGN  ? FULL
+          : flat + (FULL - flat) * (f - start) / (SIGN - start);
+    b = Math.round(b * 4) / 4;
+    if (b !== lastBlur) {
+      root.style.setProperty('--head-blur', b.toFixed(2) + 'px');
+      lastBlur = b;
+    }
+  }
+
   function paint() {
     root.classList.toggle('scrolled', scrollY > 4);
 
@@ -2691,6 +2750,8 @@ html[data-mark="1"] .signline::after {
        收完之後條子下緣是硬邊，但那一刻它正好和「窄帶結束、紙色開始」
        那條原本就存在的邊重合，所以看不出多了一條線。 */
     root.style.setProperty('--head-fade', (76 + 24 * t * t * t).toFixed(1) + '%');
+
+    paintBlur(h);               // 招牌之前不要那麼糊，見上面 paintBlur
   }
 
   var tick = false;
@@ -2699,9 +2760,15 @@ html[data-mark="1"] .signline::after {
     tick = true;
     requestAnimationFrame(function () { tick = false; paint(); });
   }
+  function onResize() { readFlat(); onScroll(); }
   addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', onScroll);
+  addEventListener('resize', onResize);
+  addEventListener('orientationchange', onResize);
+  /* 照片還沒解出尺寸的時候 paintBlur 會直接跳過（naturalWidth 是 0），
+     所以要在它載完之後補算一次，否則 HERO 那一屏會停在 6px。 */
+  if (heroImg && !heroImg.complete) heroImg.addEventListener('load', onScroll);
   window.fangrenRepaintHead = paint;   // 切換頁首深淺時要立刻重算
+  readFlat();
   paint();
 })();
 </script>
@@ -3107,162 +3174,6 @@ html[data-mark="1"] .signline::after {
      窄帶的數字停在提案頁的示範值 8642、六張文章卡的數字則一直是「—」。
      文章頁一直都有掛，所以只有首頁壞掉。 -->
 <script src="/assets/counter.js" defer></script>
-
-
-<!-- ==========================================================================
-     以下只有提案頁有。網址可帶 ?blur=now|b1|b2|b3 與 &mark=1。
-     定案後把切換條、.signline、.sw／.signline 的樣式與這一整支 JS 一起刪掉，
-     正式站只留 `blur(var(--head-blur, 6px))` 那一行與底下 headBlur 的算法。
-     ========================================================================== -->
-<div class="sw" role="group" aria-label="頁首玻璃模糊三案切換">
-  <button type="button" data-v="now">現況 6px</button>
-  <button type="button" data-v="b1">Ⓑ1 4px</button>
-  <button type="button" data-v="b2">Ⓑ2 3px</button>
-  <button type="button" data-v="b3">Ⓑ3 2px</button>
-  <span class="sep" aria-hidden="true"></span>
-  <button type="button" data-mark="1">招牌線</button>
-  <span class="read" id="sw-read">—</span>
-</div>
-<script>
-/* 頁首玻璃的模糊量：招牌之前輕、招牌之後照舊（提案，2026-08-11）。
-
-   ── 為什麼要算「照片的哪一列」而不是直接看 scrollY ──────────────────────
-   .hero-photo 是 object-fit: cover，**視窗比例不同、裁掉的地方就不同**：
-   iPad 直放把左右各切掉 27%（只剩水泥立面與窗戶），電腦版一寸都沒切但上下
-   切了 58 列。所以同一個 scrollY 在兩邊指到的照片內容完全不一樣，
-   拿捲動距離當門檻，換一個視窗就會偏掉。
-
-   cover 的幾何自己算一次就好（只用到長寬比，所以 srcset 選到 800w 還是 1600w
-   都不影響 —— naturalWidth 對 w 描述符的圖會被密度正規化，但比例不變）：
-
-     s     = max(盒寬 / 圖寬, 盒高 / 圖高)
-     vh01  = (盒高 / s) / 圖高            可見的高度佔整張圖多少
-     top01 = objectPositionY * (1 - vh01) 可見範圍的上緣在整張圖的哪裡
-     f     = top01 + vh01 * ((條子高 - 照片盒.top) / 盒高)
-
-   objectPositionY 是讀 computed style 的第二個值，所以手機版那條
-   `object-position: left center` 也會自己算對，不必另外寫一份規則。 */
-(function () {
-  var root = document.documentElement;
-  var head = document.querySelector('.site-head');
-  var photo = document.querySelector('.hero-photo');
-  var img = photo && photo.querySelector('img');
-  var line = document.querySelector('.signline');
-  var read = document.getElementById('sw-read');
-  if (!head || !photo || !img) return;
-
-  /* 招牌那六個字：在 x 850~1060 逐列數亮度 > 120 的點，實測 y 845~877，
-     ÷ 1058 ＝ 79.9% ~ 82.9%。是量出來的，不要憑印象改 ——
-     ⚠ 招牌是燈箱字（最亮值 250 以上），二三樓窗戶透出來的室內燈只到 155，
-       先前掃錯範圍就把標線畫到窗戶上了。改這兩個數字之前先開 ?mark=1 看一眼。 */
-  var SIGN_TOP = .799;
-  var SIGN_BOT = .829;
-  /* 升回 6px 的那一段：在招牌進來之前就升完，所以盯著招牌看的時候不會看到它在變。 */
-  var RAMP_FROM = .70, RAMP_TO = SIGN_TOP;
-  var FULL = 6;                                   // 招牌之後 ＝ 現況
-  var CASES = { b1: 4, b2: 3, b3: 2 };            // 招牌之前的平段
-
-  var lastBlur = null;
-
-  function posY() {
-    /* object-position 的第二個值。'50% 100%' -> 1；'left center' -> .5。 */
-    var v = getComputedStyle(img).objectPosition.split(/\s+/)[1] || '50%';
-    if (v.slice(-1) === '%') return parseFloat(v) / 100;
-    if (v === 'top') return 0;
-    if (v === 'bottom') return 1;
-    if (v === 'center') return .5;
-    return .5;                                     // px 值這一站沒用到
-  }
-
-  function frac() {
-    var r = photo.getBoundingClientRect();
-    if (!r.height || !img.naturalWidth) return { f: 1, top01: 0, vh01: 1 };
-    var s = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight);
-    var vh01 = Math.min(1, (r.height / s) / img.naturalHeight);
-    var top01 = posY() * (1 - vh01);
-    var hh = head.getBoundingClientRect().height || 1;
-    var box01 = (hh - r.top) / r.height;           // 條子下緣在照片盒裡的位置
-    return { f: top01 + vh01 * box01, top01: top01, vh01: vh01 };
-  }
-
-  function curve(flat, f) {
-    if (f <= RAMP_FROM) return flat;
-    if (f >= RAMP_TO) return FULL;
-    var k = (f - RAMP_FROM) / (RAMP_TO - RAMP_FROM);
-    return flat + (FULL - flat) * k;
-  }
-
-  function paint() {
-    var v = root.getAttribute('data-blur');
-    var g = frac();
-
-    /* 招牌標線：照片盒裡的位置 ≠ 檔案裡的百分比（cover 會裁掉上下），要換算。 */
-    if (line && g.vh01) {
-      line.style.setProperty('--sign-top', ((SIGN_TOP - g.top01) / g.vh01 * 100).toFixed(2) + '%');
-      line.style.setProperty('--sign-bot', ((SIGN_BOT - g.top01) / g.vh01 * 100).toFixed(2) + '%');
-    }
-
-    if (!v || !CASES[v]) {
-      root.style.removeProperty('--head-blur');     // 現況：變數不存在，CSS 退回 6px
-      lastBlur = null;
-      if (read) read.textContent = 'f ' + (g.f * 100).toFixed(1) + '%　blur 6.00px';
-      return;
-    }
-    /* ⚠ 量化到 0.25px 再寫：backdrop-filter 每一幀重算是有代價的，
-       量化之後大部分的幀根本不會動到 style。 */
-    var b = Math.round(curve(CASES[v], Math.max(0, Math.min(1, g.f))) * 4) / 4;
-    if (b !== lastBlur) {
-      root.style.setProperty('--head-blur', b.toFixed(2) + 'px');
-      lastBlur = b;
-    }
-    if (read) read.textContent = 'f ' + (g.f * 100).toFixed(1) + '%　blur ' + b.toFixed(2) + 'px';
-  }
-
-  var tick = false;
-  function onScroll() {
-    if (tick) return;
-    tick = true;
-    requestAnimationFrame(function () { tick = false; paint(); });
-  }
-  addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', onScroll);
-  addEventListener('orientationchange', onScroll);
-  if (img.complete) paint(); else img.addEventListener('load', paint);
-
-  /* ---- 切換條 ---- */
-  var btns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-v]'));
-  var markBtn = document.querySelector('.sw button[data-mark]');
-  var ok = { now: 1, b1: 1, b2: 1, b3: 1 };
-
-  function sync(push) {
-    var u = new URL(location.href);
-    var v = root.getAttribute('data-blur') || 'now';
-    if (v === 'now') u.searchParams.delete('blur'); else u.searchParams.set('blur', v);
-    if (root.getAttribute('data-mark') === '1') u.searchParams.set('mark', '1'); else u.searchParams.delete('mark');
-    if (push) history.replaceState(null, '', u);
-    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
-    markBtn.setAttribute('aria-pressed', String(root.getAttribute('data-mark') === '1'));
-    paint();
-  }
-  function setCase(v, push) {
-    if (!ok[v]) v = 'now';
-    if (v === 'now') root.removeAttribute('data-blur'); else root.setAttribute('data-blur', v);
-    sync(push);
-  }
-  btns.forEach(function (b) { b.addEventListener('click', function () { setCase(b.dataset.v, true); }); });
-  markBtn.addEventListener('click', function () {
-    if (root.getAttribute('data-mark') === '1') root.removeAttribute('data-mark');
-    else root.setAttribute('data-mark', '1');
-    sync(true);
-  });
-
-  /* ⚠ 正規式要寫 [a-z0-9]+，不是 [a-z]+ —— 寫成後者會吃不到帶數字的值，
-     比對失敗後悄悄退回預設，等於參數沒作用（這一站踩過一次）。 */
-  var q = /[?&]blur=([a-z0-9]+)/.exec(location.search);
-  if (/[?&]mark=1/.test(location.search)) root.setAttribute('data-mark', '1');
-  setCase(q ? q[1] : 'now', false);
-})();
-</script>
 
 </body>
 </html>
