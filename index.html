@@ -1347,9 +1347,12 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   padding: 1.1rem 1.2rem 1.2rem;
 }
 .doc h3 { margin: 0 0 .7rem; font-size: 1.05rem; line-height: 1.5; }
+/* ⚠ `line-height: 1` ＋ 上下兩個內距由 JS 現量，和專長標記同一套 ——
+     塊要包住的是**字面框**不是行框。理由與數字見底下那一段長註解。
+     側邊的 .6rem 與塊高都沒動，這一輪只把塊在垂直方向擺正。 */
 .doc-role {
   display: inline-block; margin-left: .5rem; font-size: .72rem; font-weight: 400;
-  line-height: 1.5; padding: .05rem .6rem; white-space: nowrap;
+  line-height: 1; padding: var(--role-padT) .6rem var(--role-padB); white-space: nowrap;
 }
 .doc dl { margin: 0; display: grid; grid-template-columns: 3.2em 1fr; gap: .35rem .7rem; }
 .doc dd { margin: 0; font-size: .83rem; line-height: 1.75; }
@@ -2077,7 +2080,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ⚠ `--sk-padX` 是 em 不是 rem：側邊留白要**跟著標記的字**走，比例才不會漂。
      `.4546em` ＝ 定案 Ⓧ3 的 `.34rem ÷ 11.968px`，等於把當初挑的比例原樣搬過來。 */
 html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
-       --sk-padX: .4546em; --sk-padT: .30em; --sk-padB: .12em; }
+       --sk-padX: .4546em; --sk-padT: .30em; --sk-padB: .12em;
+       /* 專科藥丸（.doc-role）的上下內距，同樣由 JS 現量，這裡是後備值。
+          它的比例和專長標記不同（0.405 vs 0.28）—— 見底下那一段。 */
+       --role-padT: .425em; --role-padB: .21em; }
 .sk.tag-on {
   display: inline-block; font-size: var(--sk-fs); font-weight: 400;
   /* ⚠ `line-height: 1` 是刻意的，塊高改由上下兩個內距各自負責 ——
@@ -2169,10 +2175,28 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      14.97px —— 已經超出 0.16px，那一列因此長高 **0.13px**（23.23 → 23.36，看不出來）。
      再加就會開始把行距推開。
 
-   ⚠ **這一輪只動專長標記，`.doc-role`（專科藥丸）一個值都沒動。** 那顆有一模一樣
-     的行框偏差（0.354 / 0.519em），但使用者第二輪明講它現在是對的，不要順手改。
-     兩者的幾何因此從這一輪起分家了 —— 也說得過去：藥丸是名字後面單獨掛的一顆，
-     專長標記是夾在一句話裡、左右都有字可以對，偏差在那裡才看得出來。
+   ── 專科藥丸（`.doc-role`，2026-08-11 第五輪）───────────────────────────
+   使用者：「專科醫師的標籤套色似乎也不在專科內文的垂直高度中線上。」
+   **同一個成因、同一個修法。** 它的行框偏差量到上面 3.90px、下面 5.44px
+   （差 1.55px），塊心因此比名字的字面中線低 0.86px。
+
+   **只把塊擺正，塊高一個像素都不動**（20.86px）—— 使用者說的是位置，不是大小。
+   上下各留 **0.405 個藥丸字級**，那個數字就是「維持現在這個高度」算出來的，
+   不是另外挑的。所以它和專長標記的 0.28 不一樣是刻意的：**藥丸重、專長輕，
+   那一階要留著。**
+
+   ⚠ **`vertical-align: .158em` 這一輪不動。** 量出來藥丸裡的**字**本來就對得很準
+     （字面中線只差 0.085px），使用者第二輪也確認過那顆是對的 —— 歪掉的是**塊**。
+     而且改 padding **不會動到裡面的字**：`vertical-align` 是把 inline-block 的
+     **基線**釘在父層基線上方 L 的位置，跟 padding、`line-height` 都無關。
+     所以這一輪只有塊的上下緣會走，字站在原地。
+   ⚠ **側邊的 `.6rem` 也不動**（留白比 0.947）。使用者這次講的是垂直，
+     而且藥丸本來就該比夾在句子裡的專長標記寬一點。
+
+   ⚠ **同一個偏差，這一站每一顆有底色的小標籤都有**（`.doc dt` 0.389／0.542em、
+     `.card-tag` 0.439／0.546、`.chips button` 0.604／0.821、`.info-card h3`
+     0.399／0.593）。**這一輪一顆都沒動** —— 那幾顆都是單獨站著的塊，旁邊沒有
+     同一行的字可以比，看不出來。要改再說，不要為了「一致」順手改。
 
    ── 底下這一行（專科藥丸）是第二輪留下來的 ──────────────────────────────
    中文小字和大字並排時，瀏覽器對的是**基線**，眼睛讀的是**字面中線**
@@ -3188,9 +3212,19 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     });
   });
 
-  /* 專長標記的上下內距與抬升量，全部現量。完整理由見上面 CSS 的
+  /* 有底色的小標籤，上下內距現量。完整理由見上面 CSS 的
      「塊要包住的是字面框，不是行框」那一段。一句話：塊的大小不能從行框長出來，
      行框對的是字型的 ascent／descent，中文用不到的部分上下不一樣多。
+
+     兩個元件共用這一支：**專長標記**（.sk.tag-on）與**專科藥丸**（.doc-role）。
+     ⚠ 兩者的 pad 不一樣是刻意的，不是漏改：專長標記收到 0.28（使用者定案），
+       藥丸用 0.405 —— 那個值是算出來讓**塊高一個像素都不變**的，因為使用者只說
+       它沒對到中線、沒說它太高。藥丸比較重、專長比較輕，這個階也要留著。
+     ⚠ **抬升量只有專長標記要算**（lift: true）。藥丸的 vertical-align 是上一輪
+       手挑並經使用者確認的 .158em，這一輪不動它 —— 見 CSS 那一段最後。
+       而且改 padding **不會動到藥丸裡的字**：vertical-align 是把 inline-block 的
+       **基線**釘在父層基線上方 L 的位置，跟 padding、line-height 都無關，
+       所以動 padding 只有塊的上下緣會走，字站在原地。
 
      ⚠ **不能寫死成 em。** 一來字面框是字型的性質（這一站沒有載網頁字型，
        每台裝置解出來的可能是 Noto／PingFang／微軟正黑，三套的字面框不一樣）；
@@ -3198,26 +3232,31 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        不同 DPR 上會落在不同的整數。和 --lamp-pad 是同一個做法、同一個理由。
      ⚠ 這支跑第二次是**冪等**的：它讀的是當下算出來的 padding，第二次算出來
        的修正量會是 0。 */
-  var SK_PAD = 0.28;    /* 字面框上下各留多少（÷ 標記字級），使用者定案。
-                           落選 0.385（＝維持原本的塊高）與 0.32 —— 見 CSS 那一段。 */
-  function skFit() {
-    var dd = document.querySelector('.docs .doc .skills');
-    if (!dd || !window.getComputedStyle) return;
+  var FIT = [
+    { host: '.docs .doc .skills', cls: 'sk tag-on', all: '.sk',
+      pad: 0.28,  v: '--sk-',   lift: true },
+    { host: '.docs .doc h3',      cls: 'doc-role',  all: '.doc-role',
+      pad: 0.405, v: '--role-', lift: false }
+  ];
+  function fitOne(job) {
+    var host = document.querySelector(job.host);
+    if (!host) return;
     var probe = document.createElement('span');
-    probe.className = 'sk tag-on';
+    probe.className = job.cls;
     probe.textContent = '測';
     probe.style.cssText = 'position:absolute;visibility:hidden;left:-9999px;top:0';
-    dd.appendChild(probe);
-    var scs = getComputedStyle(probe), pcs = getComputedStyle(dd);
+    host.appendChild(probe);
+    var scs = getComputedStyle(probe), pcs = getComputedStyle(host);
     var fsT = parseFloat(scs.fontSize), fsP = parseFloat(pcs.fontSize);
 
     /* ① 字面框。400px 量一次再等比例縮 —— actualBoundingBox 的顆粒很粗，
-          直接用 12px 量會少掉半個像素。取全部專長詞的極值，所有標記才會同高。 */
+          直接用 12px 量會少掉半個像素。取這個元件**全部文字的極值**，
+          它底下每一顆才會同高、同對齊（逐顆量會長成不同高度的塊）。 */
     var ctx, N = 400, A = 0, D = 0;
     try { ctx = document.createElement('canvas').getContext('2d'); } catch (e) { ctx = null; }
     if (!ctx || !('actualBoundingBoxAscent' in ctx.measureText('測'))) { probe.remove(); return; }
     ctx.font = scs.fontStyle + ' ' + scs.fontWeight + ' ' + N + 'px ' + scs.fontFamily;
-    Array.prototype.forEach.call(document.querySelectorAll('.sk'), function (w) {
+    Array.prototype.forEach.call(document.querySelectorAll(job.all), function (w) {
       var m = ctx.measureText(w.textContent);
       if (m.actualBoundingBoxAscent > A) A = m.actualBoundingBoxAscent;
       if (m.actualBoundingBoxDescent > D) D = m.actualBoundingBoxDescent;
@@ -3240,12 +3279,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
     /* ③ 補成上下一樣多。slackTop 只跟 padding-top 有關、slackBottom 只跟
           padding-bottom 有關，所以兩邊各自加差額就好。 */
-    var want = SK_PAD * fsT, root = document.documentElement;
-    root.style.setProperty('--sk-padT', Math.max(0, padT + (want - slackTop)).toFixed(3) + 'px');
-    root.style.setProperty('--sk-padB', Math.max(0, padB + (want - slackBottom)).toFixed(3) + 'px');
+    var want = job.pad * fsT, root = document.documentElement;
+    root.style.setProperty(job.v + 'padT', Math.max(0, padT + (want - slackTop)).toFixed(3) + 'px');
+    root.style.setProperty(job.v + 'padB', Math.max(0, padB + (want - slackBottom)).toFixed(3) + 'px');
     /* ④ 上下對稱之後塊心就是自己那幾個字的字面中線，抬升量因此退化成
           「兩行字的字面中線對在一起」這條最單純的式子。 */
-    root.style.setProperty('--sk-lift', ((A - D) / 2 * (fsP - fsT)).toFixed(3) + 'px');
+    if (job.lift) root.style.setProperty(job.v + 'lift', ((A - D) / 2 * (fsP - fsT)).toFixed(3) + 'px');
+  }
+  function skFit() {
+    if (!window.getComputedStyle) return;
+    for (var i = 0; i < FIT.length; i++) fitOne(FIT[i]);
   }
   skFit();
   /* 字型還沒下載完時量到的是後備字型，好了再量一次；換裝置像素比也要重量。 */
