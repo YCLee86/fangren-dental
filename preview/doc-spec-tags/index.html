@@ -74,6 +74,12 @@
               Ⓣ2 專長永遠是一排標記（第一版，留著對照）
                  沒篩選時全部白底字套色，篩選時命中的填滿、其餘維持白底。
                  ＊要看「整排標記」有多重就切這一案。**它不是使用者要的那一案。**
+     ?v=1|0   小字（藥丸與亮起來的標記）怎麼對齊：
+              **Ⓥ1 對字面中線** ← **預設**，2026-08-11 使用者回報「標籤過的字有點
+                 往下跑，專長和專科都是」之後修的。藥丸抬 .158em、標記抬 .053em。
+              Ⓥ0 對基線 ＝ 現在線上的對法，留著對照。
+              ⚠ **專科藥丸這一顆正式站本來就是低的**，修好之後這一頁會比線上高
+                1.82px。那是使用者要的，不是提案頁跑掉了。
      ?x=1|2   兒童隱適美／兒童早期矯正 這兩顆算不算齒顎矯正：
               Ⓧ1 只算兒童牙科　← **預設**
               Ⓧ2 也算齒顎矯正（按矯正時會多出林晏妤、謝耀慶兩位）
@@ -123,6 +129,8 @@
      4. 九張醫師卡的專長欄：句子一個字沒動，每個詞包一層 <span class="sk">、
         每個頓號包一層 <span class="sep">。
      5. 篩選 JS：specHit() 改讀那些 span；apply() 最後多一段把兩態刷上去。
+     5.5 **.doc-role 多一行 vertical-align: .158em**（Ⓥ1）—— 這是唯一一處動到
+        正式站既有元件的地方，見上面 .sk 那一段的長註解。
      6. .skills / .sk 的 CSS ＋ 右下角切換條。**定案後切換條連 data-* 一起刪。**
      ============================================================================ -->
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
@@ -2024,19 +2032,45 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 /* 亮起來：和專科藥丸 .doc-role 同一組尺寸，顏色來自這個詞自己的 data-spec。
    ⚠ 每個 span 自己帶 data-spec，所以上面那排 [data-spec="…"] 的變數宣告會落在
-     span 上，--accent／--accent-deep／--on-fill 自動就是那一科的。卡片不受影響。
-   ⚠ vertical-align 用 -.12em 對回中文的字面中線 —— 預設 baseline 會讓有框的
-     那一顆坐得比旁邊的字高一點，兩者並排時看得出來。 */
+     span 上，--accent／--accent-deep／--on-fill 自動就是那一科的。卡片不受影響。 */
 .sk.tag-on {
   display: inline-block; font-size: .72rem; font-weight: 400;
   line-height: 1.5; padding: .05rem .6rem; border-radius: 8px;
-  white-space: nowrap; vertical-align: -.12em;
+  white-space: nowrap;
   background: var(--accent); color: var(--on-fill); border: 1px solid var(--accent);
 }
 /* 專科藥丸：≠ 這一科的時候退成白底字套色（這一站線性標記的預設態）。 */
 .doc-role.tag-off {
   background: var(--card); color: var(--accent-deep); border-color: var(--accent-deep);
 }
+
+/* ---- 小字往下坐的修正（2026-08-11，使用者回報）----------------------------
+   使用者：「標籤過的字有點往下跑，專長和專科都是。」量出來兩個都成立，
+   而且**是同一個成因**：中文小字和大字並排時，瀏覽器對的是**基線**，
+   但眼睛讀的是**字面中線**。Noto Sans TC 的中文字面中線實測在基線上方
+   0.345em（400px 下量 李柄輝／創辦醫師／口腔檢查／一般牙科治療 四組，
+   ink 中線 0.336~0.359em，取 0.345）。所以小字每比大字小 1px，
+   它的中線就低 0.345px。
+
+   需要往上抬的量 ＝ 0.345 × (父層字級 − 自己的字級) ÷ 自己的字級（em）
+
+     專科藥丸  父層 h3 16.8px、自己 11.52px → 0.345 × 5.28 ÷ 11.52 = .158em（1.82px）
+     專長標記  父層 dd 13.28px、自己 11.52px → 0.345 × 1.76 ÷ 11.52 = .053em（0.61px）
+
+   ⚠ **專長那顆原本更糟**：第一版寫了 vertical-align: -.12em（−1.38px），方向加反了，
+     實際低了 1.99px。那一行已經拿掉。
+   ⚠ **專科藥丸這一顆是正式站本來就有的**（.doc-role 沒寫 vertical-align，
+     吃預設 baseline）。所以修好之後這一頁的藥丸會比線上高 1.82px ——
+     **這是使用者要的，不是提案頁跑掉了。**
+   ⚠ 兩個都**不會**讓行高變動：抬完之後藥丸離基線 16.26px、標記 15.04px，
+     都還在各自 strut 的 18.42／16.22px 以內，line box 不長高。
+     （反而是原本那個 −1.38px 會讓 dd 的行框多長 0.82px。）
+   ⚠ em 是**元素自己的字級**，不是父層的 —— 兩顆的字級都是 .72rem，
+     但父層不同，所以兩個值不一樣，不能共用。 */
+.doc-role { vertical-align: .158em; }
+.sk.tag-on { vertical-align: .053em; }
+/* Ⓥ0（切換條）＝ 不修，回到 baseline，用來對照。定案後這兩行連切換條一起刪。 */
+html[data-v="0"] .doc-role, html[data-v="0"] .sk.tag-on { vertical-align: baseline; }
 .doc-role, .sk { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
 @media (prefers-reduced-motion: reduce) { .doc-role, .sk { transition: none; } }
 
@@ -3054,6 +3088,11 @@ html[data-t="2"] .sk.tag-on {
     <button type="button" class="opt" data-k="t" data-v="2" aria-pressed="false">Ⓣ2 永遠是一排標記</button>
   </div>
   <div class="row">
+    <span class="glbl">小字對齊</span>
+    <button type="button" class="opt" data-k="v" data-v="1" aria-pressed="true">Ⓥ1 對字面中線</button>
+    <button type="button" class="opt" data-k="v" data-v="0" aria-pressed="false">Ⓥ0 對基線（現況）</button>
+  </div>
+  <div class="row">
     <span class="glbl">兒童矯正</span>
     <button type="button" class="opt" data-k="x" data-v="1" aria-pressed="true">Ⓧ1 只算兒童牙科</button>
     <button type="button" class="opt" data-k="x" data-v="2" aria-pressed="false">Ⓧ2 也算齒顎矯正</button>
@@ -3069,7 +3108,8 @@ html[data-t="2"] .sk.tag-on {
   var q  = new URLSearchParams(location.search);
   var st = {
     t: /^[12]$/.test(q.get('t') || '') ? q.get('t') : '1',
-    x: /^[12]$/.test(q.get('x') || '') ? q.get('x') : '1'
+    x: /^[12]$/.test(q.get('x') || '') ? q.get('x') : '1',
+    v: /^[01]$/.test(q.get('v') || '') ? q.get('v') : '1'
   };
 
   var LT = {
@@ -3080,10 +3120,15 @@ html[data-t="2"] .sk.tag-on {
     '1': 'Ⓧ1 兒童隱適美／兒童早期矯正只算兒童牙科。',
     '2': 'Ⓧ2 那兩個詞也算齒顎矯正（按矯正會多出林晏妤、謝耀慶）。'
   };
+  var LV = {
+    '1': 'Ⓥ1 小字對字面中線：藥丸抬 .158em（1.82px）、專長標記抬 .053em（0.61px）。',
+    '0': 'Ⓥ0 對基線（＝現在線上的對法）：藥丸的字低 1.82px、專長標記低 0.61px。'
+  };
 
   function paint() {
     root.setAttribute('data-t', st.t);
     root.setAttribute('data-x', st.x);
+    root.setAttribute('data-v', st.v);
     Array.prototype.forEach.call(sw.querySelectorAll('button.opt'), function (b) {
       b.setAttribute('aria-pressed', st[b.getAttribute('data-k')] === b.getAttribute('data-v') ? 'true' : 'false');
     });
@@ -3091,7 +3136,7 @@ html[data-t="2"] .sk.tag-on {
     roll();
     try {
       var u = new URL(location.href);
-      u.searchParams.set('t', st.t); u.searchParams.set('x', st.x);
+      u.searchParams.set('t', st.t); u.searchParams.set('x', st.x); u.searchParams.set('v', st.v);
       history.replaceState(null, '', u);
     } catch (e) {}
   }
@@ -3115,7 +3160,7 @@ html[data-t="2"] .sk.tag-on {
       });
       return p[1] + ' ' + own + (via ? '<b>+' + via + '</b>' : '');
     });
-    ro.innerHTML = LT[st.t] + '<br>' + LX[st.x] +
+    ro.innerHTML = LT[st.t] + '<br>' + LX[st.x] + '<br>' + LV[st.v] +
                    '<br>每一科篩得到的醫師（本科＋靠專長進來的）：' + parts.join('・');
   }
   window.__roll = roll;
