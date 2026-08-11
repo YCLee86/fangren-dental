@@ -3,11 +3,64 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ⚠ 提案頁一定要帶下面這一行。三道防線的第一道，另外兩道是 Worker 的
+     X-Robots-Tag 與 robots.txt 的 Disallow: /preview/。 -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+<!-- ============================================================================
+     這一頁是什麼（2026-08-11・提案中）
+     ----------------------------------------------------------------------------
+     **套色之後，專長那幾個字要多大。**
+
+     使用者：「現在的版本套色後內文字應該是變小了。」**成立，而且一直都是這樣**：
+     專長那一欄（.doc dd）的字是 .83rem／13.28px，標記裡的字是 .748rem／11.97px ——
+     **被標起來的那幾個字比旁邊的字小 1.31px（10%）**。標記亮起來本來是要說
+     「這個詞就是你點的那一科」，字卻反而縮了一階，方向是相反的。
+
+     ── 三案（?z=z1|z2|z3）──────────────────────────────────────────────────
+       Ⓩ1  .748rem／11.97px　現況。比內文小 1.31px。塊高 19.05px
+       Ⓩ2  .79rem ／12.64px　中間。比內文小 0.64px。塊高 20.11px
+       Ⓩ3  .83rem ／13.28px　**和沒套色的內文一模一樣，完全不縮**。塊高 21.13px
+     預設 Ⓩ1（＝線上的樣子），這樣一開頁看到的就是現況。
+
+     ⚠ **.83rem 這一階在上一輪（preview/doc-spec-tags/ 的 Ⓩ5）是被否決的**，
+       理由是「塊高 23.52 > dd 行高 23.24，會撐開行框」。**那個理由現在不成立了** ——
+       塊高當時是從行框長出來的（line-height 1.5 ＋ 內距），這一輪改成從字面框長，
+       同樣 .83rem 只有 **21.13px**，離 dd 的行高 23.24 還有 2.1px。
+       所以這一題是被上一輪的幾何改動重新打開的，不是有人忘記它被否決過。
+     ⚠ **不過 Ⓩ3 還是會讓那一列長高 0.13px**（實測 23.23 → 23.36）。
+       決定行框會不會被撐開的**不是塊高，是塊的上緣離基線多遠**：Ⓩ3 是
+       0.8594×13.28 ＋ 0.28×13.28 ＝ **15.13px**，而 dd 那條 strut 的 ascent 只有
+       14.97px，差 0.16px。Ⓩ1／Ⓩ2 都在裡面，那一列一個像素都不動。
+       0.13px 看不出來，但知道有這回事 —— 要再往上加字級，這條才是真正的天花板。
+
+     ⚠ **抬升量在 Ⓩ3 正好是 0。** 式子是 (A−D)/2 × (父層字級 − 自己的字級)，
+       字級一樣就不必抬 —— 標記裡的字和旁邊的字本來就在同一條字面中線上了。
+
+     ── 這一頁只有一個變數 ──────────────────────────────────────────────────
+     切換條**只動字級**。上下留白（0.28）與側邊留白（0.562）兩個**比例**都不動，
+     所以三案的塊是等比例放大，不是「字變大、框沒跟上」。
+     ⚠ 為此側邊內距在這一頁寫成 **.4546em**（＝ .34rem ÷ 11.968px）而不是 .34rem。
+       在 Ⓩ1 上兩者算出來一模一樣（5.44px），所以**現況那一案和線上完全相同**；
+       Ⓩ2／Ⓩ3 才會跟著字一起長。1px 的框不跟著縮放，所以比例會有 ±0.01 的漂移。
+
+     ── 沒有動的東西 ────────────────────────────────────────────────────────
+     顏色、濃度 12%、圓角 8px、.doc-role（專科藥丸）、沒套色的那幾個詞 —— 全都沒動。
+     ⚠ 三案的對比度完全一樣（顏色沒變）。字級都在 AA 的「小字」那一側，
+       所以門檻也沒變：淡底 12% 上一般 6.82・牙周 4.74・根管 7.07・**兒童 4.01**・
+       矯正 7.96・贋復 10.42・口外 5.12。
+
+     ── 這一頁和 index.html 的差別 ──────────────────────────────────────────
+       1. title、robots、這段註解、右下角的切換條。
+       2. 所有 assets/ 與 posts/ 路徑改成絕對路徑（srcset 那兩份都要改）。
+       3. --sk-fs 與 --sk-padX 由切換條寫進來；其餘一個值都沒有覆寫。
+       4. 計數器那支拿掉（提案頁不要去 +1 正式站的數字）。
+     ⚠ 參數的正規式要寫 [a-z0-9]+，寫成 [a-z]+ 會吃不到 z1 這種帶數字的值。
+     ============================================================================ -->
 <!-- <title> 不只給 Google —— Safari 分頁、書籤、加到主畫面、iOS 的分享面板
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>芳仁牙醫診所｜雲林斗六・永樂街</title>
+<title>套色之後那幾個字要多大｜芳仁牙醫</title>
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
 <meta name="description" content="芳仁牙醫診所，1983 年創立，現址雲林縣斗六市永樂街。這裡整理刷牙、牙周、兒童牙科、缺牙重建與定期檢查的衛教文章。">
@@ -32,7 +85,7 @@
 <meta property="og:image:height" content="1058">
 <meta property="og:image:alt" content="芳仁牙醫診所外觀，入夜後的永樂街街角">
 <link rel="canonical" href="https://fangren.net/">
-<link rel="icon" href="assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <!-- 首頁的樣式全部內嵌在下面。assets/style.css 是文章頁在用的，
      兩者的版型與配色完全不同，共用一份只會互相污染。 -->
 
@@ -2011,6 +2064,24 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
    那顆藥丸的字一直比名字低 1.82px。用的是「字對字」的量
    （0.345 × (16.8 − 11.52) ÷ 11.52 = .158em）。 */
 .doc-role { vertical-align: .158em; }
+
+/* ==== 提案頁專用：切換條 ================================================== */
+.zbar {
+  position: fixed; right: .8rem; bottom: .8rem; z-index: 80;
+  display: flex; gap: .3rem; align-items: center;
+  font-size: .72rem; line-height: 1.4;
+  background: rgba(25,22,20,.82); backdrop-filter: blur(6px);
+  border-radius: 12px; padding: .3rem .45rem; color: rgba(255,255,255,.8);
+}
+.zbar b { font-weight: 400; opacity: .65; padding-inline: .25rem; }
+.zbar button {
+  font: inherit; cursor: pointer; border-radius: 8px; padding: .2rem .5rem;
+  background: transparent; color: rgba(255,255,255,.8);
+  border: 1px solid rgba(255,255,255,.28);
+}
+.zbar button[aria-pressed="true"] { background: rgba(255,255,255,.9); color: #191614; border-color: transparent; }
+.zbar output { opacity: .7; padding-left: .3rem; font-variant-numeric: tabular-nums; }
+@media print { .zbar { display: none; } }
 </style>
 </head>
 <body>
@@ -2020,7 +2091,7 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
 
 <header class="site-head">
   <div class="shell">
-    <a class="brand" href="./">
+    <a class="brand" href="/">
       <span class="brand-mark">
         <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai。牙那條子路徑依自己的中心
              放大 1.3 倍、再往上移 0.50 個單位（2026-08-07 定案），嘴一個節點都沒改。
@@ -2054,8 +2125,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
 
   <div class="hero">
     <figure class="hero-photo">
-      <img src="assets/hero-clinic-night.jpg"
-           srcset="assets/hero-clinic-night-800.jpg 800w, assets/hero-clinic-night.jpg 1600w"
+      <img src="/assets/hero-clinic-night.jpg"
+           srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
            sizes="100vw"
            alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
            width="1600" height="1058" fetchpriority="high">
@@ -2181,8 +2252,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
     <div class="shell">
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
-      <a class="card" href="posts/kids-arch-expansion/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/kids-arch-expansion/" data-spec="kids">
+        <img class="card-thumb" src="/assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
@@ -2194,8 +2265,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           </p>
         </div>
       </a>
-      <a class="card" href="posts/regular-checkup/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/regular-checkup/" data-spec="general">
+        <img class="card-thumb" src="/assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">定期檢查</span>
           <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
@@ -2207,8 +2278,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           </p>
         </div>
       </a>
-      <a class="card" href="posts/missing-tooth/" data-spec="prosth">
-        <img class="card-thumb" src="assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/missing-tooth/" data-spec="prosth">
+        <img class="card-thumb" src="/assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">缺牙重建</span>
           <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
@@ -2220,8 +2291,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           </p>
         </div>
       </a>
-      <a class="card" href="posts/kids-first-visit/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/kids-first-visit/" data-spec="kids">
+        <img class="card-thumb" src="/assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
@@ -2233,8 +2304,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           </p>
         </div>
       </a>
-      <a class="card" href="posts/gum-bleeding/" data-spec="perio">
-        <img class="card-thumb" src="assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/gum-bleeding/" data-spec="perio">
+        <img class="card-thumb" src="/assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">牙周照護</span>
           <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
@@ -2246,8 +2317,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           </p>
         </div>
       </a>
-      <a class="card" href="posts/bass-brushing/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/bass-brushing/" data-spec="general">
+        <img class="card-thumb" src="/assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">日常保健</span>
           <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
@@ -2381,12 +2452,12 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
       </div>
       <div class="gallery">
         <figure>
-          <img src="assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
+          <img src="/assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
                alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
           <figcaption>獨立診療空間，每張診療椅旁都配有影像螢幕，方便看診時一起討論。</figcaption>
         </figure>
         <figure>
-          <img src="assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
+          <img src="/assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
                alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
           <figcaption>診療區以隔屏分隔，保留採光也維持看診時的隱私。</figcaption>
         </figure>
@@ -3004,6 +3075,7 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           「兩行字的字面中線對在一起」這條最單純的式子。 */
     root.style.setProperty('--sk-lift', ((A - D) / 2 * (fsP - fsT)).toFixed(3) + 'px');
   }
+  window.skFit = skFit;
   skFit();
   /* 字型還沒下載完時量到的是後備字型，好了再量一次；換裝置像素比也要重量。 */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(skFit);
@@ -3023,7 +3095,53 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
 <!-- 瀏覽計數器。2026-08-08 補回來 —— 首頁換成定案版型（2c0f7aa）時整支被漏掉，
      窄帶的數字停在提案頁的示範值 8642、六張文章卡的數字則一直是「—」。
      文章頁一直都有掛，所以只有首頁壞掉。 -->
-<script src="assets/counter.js" defer></script>
+<!-- 提案頁不掛計數器，免得去 +1 正式站的數字。 -->
 
+
+<!-- ==== 切換條（提案用，定案後連同 data-z 一起刪掉）======================== -->
+<div class="zbar" role="group" aria-label="標記字級切換">
+  <b>Ⓩ 字級</b>
+  <button type="button" data-z="z1">.748</button>
+  <button type="button" data-z="z2">.79</button>
+  <button type="button" data-z="z3">.83</button>
+  <output id="zread"></output>
+</div>
+<script>
+/* 切換條。⚠ 正規式一定要 [a-z0-9]+ —— 寫成 [a-z]+ 會吃不到 z1 這種帶數字的值。
+   只動字級：側邊內距用 em 跟著字一起縮放，上下由 skFit 現量，兩個比例都不變。 */
+(function () {
+  var root = document.documentElement;
+  var FS = { z1: '.748rem', z2: '.79rem', z3: '.83rem' };
+  var m = location.search.match(/[?&]z=([a-z0-9]+)/);
+  var z = (m && /^z[123]$/.test(m[1])) ? m[1] : 'z1';
+  function paint() {
+    root.setAttribute('data-z', z);
+    root.style.setProperty('--sk-fs', FS[z]);
+    root.style.setProperty('--sk-padX', '.4546em');   /* ＝ .34rem ÷ 11.968px */
+    if (window.skFit) window.skFit();
+    Array.prototype.forEach.call(document.querySelectorAll('.zbar button'), function (b) {
+      b.setAttribute('aria-pressed', b.dataset.z === z ? 'true' : 'false');
+    });
+    var on = document.querySelector('.sk.tag-on');
+    var out = document.getElementById('zread');
+    if (!out) return;
+    if (!on) { out.textContent = '（先點一顆科別）'; return; }
+    var dd = document.querySelector('.docs .doc .skills');
+    out.textContent = Math.round(parseFloat(getComputedStyle(on).fontSize) * 100) / 100 + 'px（內文 '
+      + Math.round(parseFloat(getComputedStyle(dd).fontSize) * 100) / 100 + '）／塊高 '
+      + Math.round(on.getBoundingClientRect().height * 100) / 100;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.zbar button'), function (b) {
+    b.addEventListener('click', function () {
+      z = b.dataset.z;
+      history.replaceState(null, '', '?z=' + z);
+      paint();
+    });
+  });
+  document.addEventListener('click', function (e) { if (e.target.closest('.chips button')) setTimeout(paint, 0); });
+  paint();
+  addEventListener('load', paint);
+})();
+</script>
 </body>
 </html>
