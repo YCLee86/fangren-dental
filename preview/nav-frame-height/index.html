@@ -7,7 +7,7 @@
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>頁首選單：玻璃框收高 三案｜芳仁牙醫（提案）</title>
+<title>頁首選單：玻璃框的高與圓角｜芳仁牙醫（提案）</title>
 <!-- ⚠ 提案頁一定要帶這一行。三道防線的第一道，另外兩道是 Worker 的
      X-Robots-Tag 與 robots.txt 的 Disallow: /preview/。 -->
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -52,17 +52,51 @@
      選單的框是 36.28 ÷ 12.48 ＝ **2.91**。字更小、左右更擠，框卻比標記更高 ——
      這就是它看起來不對的來源。三案都是往標記那個比例走。
 
-     ── 三案（右下角切換條，網址可帶 ?v=now|v1|v2|v3）──────────────────────────
+     ── 第一輪：框要多高（三案，**已定案 Ⓥ1**）───────────────────────────────
      框高改成**字級的倍數**，這樣各寬度才等比例（下面「順手修掉的漂移」那段）。
 
-       現況　　2.91　H 36.28　直段 12.28　上下留白 0.95 字　上下÷左右 3.18
-       Ⓥ1 收一階　2.65　H 33.07　直段  9.07　　　　0.83 字　　　　　2.77
-       Ⓥ2 齊標記　2.36　H 29.44　直段  5.44　　　　0.68 字　　　　　2.27　←　＝ 標記的比例
+       現況　　　　2.91　H 36.28　直段 12.28　上下留白 0.95 字　上下÷左右 3.18
+       Ⓥ1 收一階　 2.65　H 33.07　直段  9.07　　　　0.83 字　　　　　2.77　★ 定案
+       Ⓥ2 齊標記　 2.36　H 29.44　直段  5.44　　　　0.68 字　　　　　2.27
        Ⓥ3 再收一階 2.15　H 26.83　直段  2.83　　　　0.58 字　　　　　1.93
 
-     ⚠ **Ⓥ3 在 320 寬會觸底**：H ＝ 23.65 < 24，圓角 12px 上下就接在一起，
-       框變成膠囊、直段消失。375 以上都還是圓角矩形（375 上直段 1.80px）。
-       挑 Ⓥ3 的話要知道 320 上是另一種形狀。
+     使用者：「收一階剛剛好。」**所以 2.65 從這裡起是這一頁的底盤，不再是選項。**
+     Ⓥ2／Ⓥ3 的切換鈕已刪，數字留在上面這張表裡，日後要再收直接查表。
+     ⚠ 落選的 Ⓥ3 有一件事值得記著：它在 320 寬 H ＝ 23.64 < 24，圓角 12px
+       上下就接在一起、框變成膠囊。**「框高 < 圓角 ×2」就會發生這件事** ——
+       這一輪把圓角改小，那條線也跟著往下移，Ⓥ1 的高度離它更遠了。
+
+     ── 第二輪：圓角要多小（三案，**未定案**）─────────────────────────────────
+     使用者：「圓角的圓要小一點。」高度固定在 Ⓥ1 2.65，只動圓角。
+     網址可帶 ?r=now|r12|r10|r8|r6。
+
+     ⚠ **先講清楚這一改動到了什麼**：12px 是**全站規則** —— CLAUDE.md 第八節寫著
+       「圓角一律 12px：標記、搜尋框、三種卡片都是這一個，不要另外挑」。
+       選單框改小，等於頁首那三個框脫離那個家族。這是使用者指定的，記在這裡是
+       為了讓日後看到「為什麼只有頁首不一樣」的人知道不是漏改。
+     ・**但 6px 不是新數字**：`.doc dt`（醫師卡那三顆「專長／資歷／學歷」標籤）
+       本來就是 6px。所以 Ⓡ3 是回到系統裡已經有的第二個值，不是發明第三個。
+     ・**圓角維持 px、不跟著字級走**：這一站的圓角是「材質」不是「比例」——
+       434px 高的文章卡和 31px 高的標記用的是同一個 12px。高度改成 em 是因為
+       它要跟著字，圓角不是。
+
+     390 寬實測（框高一律 33.06 ＝ Ⓥ1，只有圓角在變）：
+
+       　　　　　圓角　垂直直段　弧佔周長　　和誰同一個值
+       Ⓡ12　　　12px　 9.06px　　46.7%　　　標記／搜尋框／三種卡片
+       Ⓡ1　　　 10px　13.06px　　38.1%　　　—
+       Ⓡ2　　　  8px　17.06px　　29.9%　　　—
+       Ⓡ3　　　  6px　21.06px　　21.9%　　　.doc dt（專長／資歷／學歷）
+       （參考）現況　12px　12.28px　44.9%　　高度也還是舊的 36.28
+
+     「弧佔周長」＝ 四個角的圓弧長度（合起來剛好一個整圓）÷ 整圈周長，
+     是「這個框讀起來有多圓」最直接的量。三案都是等距 2px 一階。
+     ⚠ **框收矮之後，同一個 12px 反而更圓了**：現況 44.9% → Ⓡ12 46.7%。
+       圓角是固定 px、框高卻變小，角就吃掉更大的比例。
+       **這就是為什麼上一輪收完高度，圓角會跟著看起來不對** —— 不是錯覺。
+       320 上更明顯：Ⓡ12 是 **54.9%，一半以上的邊是彎的**。
+     ⚠ 圓角要**框（a::before）和底（.nav-lamp）一起改** —— 兩個是同一個矩形的
+       線與面，只改一邊會露出一圈錯位的邊。這一頁用同一個 `--frame-r` 餵兩者。
 
      ── 順手修掉的一個漂移（不是新設計，是原本就歪的）───────────────────────
      現況的框高 ＝ 1.85em ＋ 11.2px，**一半跟著字級走、一半是固定 px**，
@@ -88,9 +122,11 @@
             所以更早的幾份提案頁（nav-scrollspy 等）沒有這個問題。
        ③ 拿掉 counter.js、窄帶瀏覽數寫死 190（見頁尾那段註解）
        ④ **手機版（≤720px）的 `.site-nav a::before` 改成「字級倍數的固定高度、
-          對 a 的盒子垂直置中」**，由 `--frame-em` 控制。電腦版一個值都沒動。
-       ⑤ scrollspy 的 `moveLamp()` 跟著讀 `--frame-em` —— 底和框要同一個盒子
-       ⑥ 右下角切換條 ＋ 即時讀數（定案後連同 data-* 一起刪）
+          對 a 的盒子垂直置中」**，由 `--frame-em` 控制（定案 2.65）。
+          電腦版一個值都沒動。
+       ⑤ 同一段裡框與底的 `border-radius` 改讀 `--frame-r`（第二輪在調的就是它）
+       ⑥ scrollspy 的 `moveLamp()` 跟著讀 `--frame-em` —— 底和框要同一個盒子
+       ⑦ 右下角切換條 ＋ 即時讀數（定案後連同 data-* 一起刪）
 
      ── 沒有動的（刻意）──────────────────────────────────────────────────────
      ・**`a` 的 `padding-block: .35rem` 一個字都沒改。** 框是絕對定位的 ::before，
@@ -98,9 +134,13 @@
        （由較高的那一個決定，就是選單的 33.41）→ 頁首總高 59.17 →
        **HERO 那首詩的空隙 8.0px**。那個 8.0 是 Ⓢ1 當天定的，不能碰。
      ・點擊範圍不變（還是 `a` 那個盒子），框只是畫得小一點。
-     ・圓角維持 12px、線的濃度與粗細（.26／.75px → .55／1px）、底的 .24 紙色，
-       全部原封不動 —— 這一輪只問「多高」。
+     ・線的濃度與粗細（.26／.75px → .55／1px）、底的 .24 紙色、字的兩態
+       （.88 白 → 純白）全部原封不動 —— 兩輪都只在動幾何。
+     ・**框的左右一個字都沒動**（`--lamp-pad`，JS 現量的半個字，框與框永遠留 5px）。
+       圓角改小不會改到寬度，四個寬度實測過。
      ・電腦版、平板、直立螢幕都不動（使用者：先做手機版就好）。
+       ⚠ 所以定案之後，**電腦版的框會是 12px 圓角、手機版是新的值**。
+       這是這一輪還沒問過的一題，見 CLAUDE.md 第九節那一條。
      ============================================================================ -->
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
@@ -1643,20 +1683,34 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
      ⚠ 只寫 top/height/transform，**不要改回 `inset` 簡寫** —— 簡寫會把
        left/right 一起重設，那兩邊是 `--lamp-pad`（JS 現量的半個字）在管的。
-     ⚠ 「現況」那一案**完全不套這一段**（html 上不掛 data-v），走的是原本那條
-       `inset: -1px …`。不用 --frame-em: 2.91 去模擬它 —— 那只在 390 上等值，
-       375 上會差 0.45px，比較基準就不乾淨了。
-     ========================================================================== */
-  html[data-v="v1"] { --frame-em: 2.65; }  /* 收一階 */
-  html[data-v="v2"] { --frame-em: 2.36; }  /* 齊標記（.chips button 是 31 ÷ 13.12） */
-  html[data-v="v3"] { --frame-em: 2.15; }  /* 再收一階；320 上會收成膠囊 */
+     ⚠ 「現況」那一案**完全不套這一段**（html 上不掛 data-r），走的是原本那條
+       `inset: -1px …` ＋ `border-radius: 12px`。不用 --frame-em: 2.91 去模擬它 ——
+       那只在 390 上等值，375 上會差 0.45px，比較基準就不乾淨了。
 
-  html[data-v] .site-nav a::before {
+     ── 第二輪：圓角（2026-08-11 同日，未定案）────────────────────────────────
+     高度已定案 2.65，這一輪只動 `--frame-r`。三案 10／8／6px，等距一階。
+     ⚠ **圓角維持 px，不要改成 em。** 這一站的圓角是「材質」不是「比例」——
+       434px 高的文章卡和 31px 高的標記用的是同一個 12px。高度改 em 是因為
+       它要跟著字走，圓角不是。
+     ⚠ **框（a::before）和底（.nav-lamp）要吃同一個值**，只改一邊會露出
+       一圈錯位的邊 —— 兩個是同一個矩形的線與面。
+     ⚠ 圓角只改變角，**不改寬高**：`--lamp-pad` 那兩邊、以及 JS 餵給燈箱的
+       x/w/y/h 全部不受影響，四個寬度實測過。
+     ========================================================================== */
+  html[data-r] { --frame-em: 2.65; }        /* ★ 第一輪定案的 Ⓥ1，三案共用的底盤 */
+  html[data-r="r12"] { --frame-r: 12px; }   /* 現在的圓角（＝標記／搜尋框／卡片） */
+  html[data-r="r10"] { --frame-r: 10px; }
+  html[data-r="r8"]  { --frame-r:  8px; }
+  html[data-r="r6"]  { --frame-r:  6px; }   /* ＝ .doc dt（專長／資歷／學歷那三顆） */
+
+  html[data-r] .site-nav a::before {
     top: 50%;
     bottom: auto;
     height: calc(var(--frame-em) * 1em);
     transform: translateY(-50%);
+    border-radius: var(--frame-r);
   }
+  html[data-r] .nav-lamp { border-radius: var(--frame-r); }
   /* 手機的品牌是兩行（標題／副標各一行），不是電腦版那種「標題｜副標」橫排。
      兩個子元素都要 display: block —— 只把 .brand-text 改成 block 不夠，
      b 與 small 仍是行內元素，會排成同一行（量到副標在 155~238、正好被選單蓋住）。 */
@@ -2615,7 +2669,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      框是 CSS 畫的，兩邊各算各的就會露出半個像素的錯位。
      提案的手機版把框高改成「字級的倍數、對 a 垂直置中」（見 CSS 那段），
      所以這裡也要跟著同一條算式走。
-     `--frame-em` 只定義在 ≤720px ＋ html[data-v] 底下：讀不到（電腦版、
+     `--frame-em` 只定義在 ≤720px ＋ html[data-r] 底下：讀不到（電腦版、
      或「現況」那一案）就回到原本的「a 的盒子外擴 1px」，一個值都不變。 */
   function frameBox(r) {
     var em = parseFloat(getComputedStyle(root).getPropertyValue('--frame-em'));
@@ -2900,52 +2954,68 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      等於每開一次提案頁就幫首頁的真實瀏覽數 +1。所以這一頁改成寫死示範值。
      ⚠ 版型搬回 index.html 的時候，**不要把這一頁的示範值一起帶過去**。 -->
 
-<!-- ---- 切換條。網址可帶 ?v=now|v1|v2|v3 ----------------------------------------
+<!-- ---- 切換條。網址可帶 ?r=now|r12|r10|r8|r6 ------------------------------------
      正規式寫 [a-z0-9]+ 不寫 [a-z]+ —— 這個專案踩過：值一旦帶數字就比對失敗、
-     悄悄退回預設，等於參數沒有作用。這一輪的值全都帶數字，寫錯必中。 -->
-<div class="sw" role="group" aria-label="選單玻璃框高度各案切換">
-  <button type="button" data-v="now">現況</button>
-  <button type="button" data-v="v1">Ⓥ1 收一階</button>
-  <button type="button" data-v="v2">Ⓥ2 齊標記</button>
-  <button type="button" data-v="v3">Ⓥ3 再收</button>
+     悄悄退回預設，等於參數沒有作用。這一輪的值全都帶數字，寫錯必中。
+
+     ⚠ 第一輪（框高 Ⓥ1/Ⓥ2/Ⓥ3）的按鈕已刪 —— 使用者選了 Ⓥ1「收一階剛剛好」，
+       2.65 成為底盤。三案的數字留在 <head> 那張表裡，不必再切一次。
+     「現況」＝ 線上的樣子（高 2.91 ＋ 圓角 12），留著當比較基準。
+     「Ⓡ12」＝ 定案的高 ＋ 現在的圓角，也就是上一輪你挑中的那一個 ——
+       要看圓角改小差在哪，是拿它比，不是拿現況比（現況連高度都不一樣）。 -->
+<div class="sw" role="group" aria-label="選單玻璃框圓角各案切換">
+  <button type="button" data-r="now">現況</button>
+  <button type="button" data-r="r12">Ⓡ12 上輪定案</button>
+  <button type="button" data-r="r10">Ⓡ1 10px</button>
+  <button type="button" data-r="r8">Ⓡ2 8px</button>
+  <button type="button" data-r="r6">Ⓡ3 6px</button>
   <span class="sep" aria-hidden="true"></span>
-  <!-- 即時讀數。這一輪要比的就是「多高」，所以直接把現量的數字放上來：
-       框高、垂直直段（＝框高 − 圓角 12×2，眼睛讀到的那一段線）、
-       以及框高 ÷ 字級（拿去和主題與科別那排標記的 2.36 比）。 -->
-  <span class="sw-live" aria-hidden="true">高 <b class="sw-h">—</b>　直段 <b class="sw-s">—</b>　÷字級 <b class="sw-r">—</b></span>
+  <!-- 即時讀數。這一輪比的是「多圓」，所以主角換成圓角與「弧佔周長」——
+       後者 ＝ 四個角的弧長 ÷ 整圈周長，是「讀起來有多圓」最直接的量。
+       框高留著，確認三案都沒有動到上一輪定的 2.65。 -->
+  <span class="sw-live" aria-hidden="true">圓角 <b class="sw-r">—</b>　弧佔周長 <b class="sw-arc">—</b>　高 <b class="sw-h">—</b>　直段 <b class="sw-s">—</b></span>
 </div>
 <script>
 (function () {
   var root = document.documentElement;
-  var btns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-v]'));
-  var ok = { now: 1, v1: 1, v2: 1, v3: 1 };
-  /* 認不得的值退回 Ⓥ2（這一輪的主案），不是退回「現況」——
-       現況本來就是使用者嫌長的那一個，退到它看起來像「點進去沒有東西」。 */
-  var FALLBACK = 'v2';
+  var btns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-r]'));
+  var ok = { now: 1, r12: 1, r10: 1, r8: 1, r6: 1 };
+  /* 認不得的值退回 Ⓡ2（這一輪的中間案），不是退回「現況」——
+     現況連高度都還是舊的，退到它看起來像「點進去沒有東西」。 */
+  var FALLBACK = 'r8';
 
   /* 讀數一律**現量**，不要照抄註解裡那張表：那張表是 390 寬量的，
      使用者手上的機器不一定是 390，字級是 clamp(11px, 3.2vw, 13px)。 */
   function readout() {
     var a = document.querySelector('.site-nav a');
     if (!a) return;
-    var h = parseFloat(getComputedStyle(a, '::before').height);
-    var F = parseFloat(getComputedStyle(a).fontSize);
-    var R = parseFloat(getComputedStyle(a, '::before').borderTopLeftRadius);
+    var cs = getComputedStyle(a, '::before');
+    var h = parseFloat(cs.height);
+    var w = a.getBoundingClientRect().width
+          + 2 * (parseFloat(getComputedStyle(root).getPropertyValue('--lamp-pad')) || 0);
+    var R = parseFloat(cs.borderTopLeftRadius);
     var put = function (sel, txt) { var el = document.querySelector(sel); if (el) el.textContent = txt; };
+    put('.sw-r', R.toFixed(1) + 'px');
     put('.sw-h', h.toFixed(1) + 'px');
-    /* 直段可能是負的 —— 圓角上下接在一起就變成膠囊（Ⓥ3 在 320 上會這樣）。
+    /* 直段可能是負的 —— 圓角上下接在一起就變成膠囊。
        負數對使用者沒有意義，直接講「膠囊」。 */
     var s = h - R * 2;
     put('.sw-s', s > .05 ? s.toFixed(1) + 'px' : '膠囊');
-    put('.sw-r', (h / F).toFixed(2));
+    /* 弧佔周長 ＝ 四個角的弧長（合起來剛好一個整圓）÷ 整圈周長。
+       直段夾到 0，膠囊的情況才不會算出大於 1 的比例。 */
+    var arc = 2 * Math.PI * R;
+    var peri = 2 * Math.max(0, w - 2 * R) + 2 * Math.max(0, h - 2 * R) + arc;
+    put('.sw-arc', peri > 0 ? (arc / peri * 100).toFixed(1) + '%' : '—');
   }
 
   function sync(push) {
-    var v = root.getAttribute('data-v') || 'now';
+    var v = root.getAttribute('data-r') || 'now';
     var u = new URL(location.href);
-    if (v === 'now') u.searchParams.delete('v'); else u.searchParams.set('v', v);
+    if (v === 'now') u.searchParams.delete('r'); else u.searchParams.set('r', v);
+    /* 第一輪的 ?v= 已定案（Ⓥ1），參數不再有作用；舊網址帶著它不會壞，只是被忽略。 */
+    u.searchParams.delete('v');
     if (push) history.replaceState(null, '', u);
-    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.r === v)); });
     /* 底（.nav-lamp）是 JS 餵的，換案後沒有捲動就不會自己重畫，
        會停在上一案的高度、和框錯開。 */
     if (window.navFrameRelayout) window.navFrameRelayout();
@@ -2954,14 +3024,14 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
   function setCase(v, push) {
     if (!ok[v]) v = FALLBACK;
-    if (v === 'now') root.removeAttribute('data-v'); else root.setAttribute('data-v', v);
+    if (v === 'now') root.removeAttribute('data-r'); else root.setAttribute('data-r', v);
     sync(push);
   }
   var q = new URLSearchParams(location.search);
-  var m = /^[a-z0-9]+$/.exec(q.get('v') || '');
+  var m = /^[a-z0-9]+$/.exec(q.get('r') || '');
   setCase(m ? m[0] : FALLBACK, false);
 
-  btns.forEach(function (b) { b.addEventListener('click', function () { setCase(b.dataset.v, true); }); });
+  btns.forEach(function (b) { b.addEventListener('click', function () { setCase(b.dataset.r, true); }); });
   /* 字級是 clamp(vw)，轉螢幕或改視窗寬度時讀數要跟著動。 */
   addEventListener('resize', readout);
   addEventListener('load', readout);
