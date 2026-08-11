@@ -3,11 +3,95 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ⚠ 提案頁一定要帶下面這一行。三道防線的第一道，另外兩道是 Worker 的
+     X-Robots-Tag 與 robots.txt 的 Disallow: /preview/。 -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+<!-- ============================================================================
+     這一頁是什麼（2026-08-11・第三輪）
+     ----------------------------------------------------------------------------
+     **專長那幾顆淡色標記，要怎麼貼合它自己包住的那幾個字。**
+
+     使用者回報兩件：
+       ① 「套色的區塊好像在沒有對到被套色內文的垂直高度中線。看起來比較偏文字的
+          下面一點。」
+       ② 「套色的區塊水平長度有點長、感覺超出文字不少。應該可以縮短一點。」
+
+     **兩件是同一個成因**：塊的大小一直是從「行框（line-height）＋ 內距」長出來的，
+     跟裡面那幾個字的**字面框**沒有關係。行框對齊的是字型的 ascent／descent，
+     那兩個值涵蓋拉丁字母的上伸與下伸部，中文方塊字用不到那麼多 ——
+     而且**用不到的部分上下不一樣多**。
+
+     ── 改動前實測（1440，Noto Sans TC）─────────────────────────────────────
+       字面上緣離塊上緣  3.51px
+       字面下緣離塊下緣  5.69px      → 下面比上面多 **62%**，這就是「往下坐」
+       側邊留白 ÷ 字級   0.909       → 同一張卡的 .doc dt 只有 0.553
+
+     ⚠ **這和 2026-08-11 稍早那兩輪不是同一件事。** 那兩輪處理的是「整塊相對於
+       旁邊那行字」的位置（結論：塊心要對到旁邊的字面中線），沒有錯；
+       但塊心本來就不在自己那幾個字的中線上，所以對完看起來還是低的。
+       這一輪處理的是「塊相對於它自己裡面那幾個字」。
+
+     ── 做法 ────────────────────────────────────────────────────────────────
+     把行框從尺寸裡拿掉：**line-height: 1，塊高改由上下兩個內距各自負責**，
+     由 JS 現量成「字面上下各留一樣多」。收完 innerAsym 從 −2.18px 變 −0.01px。
+     一旦上下對稱了，**抬升量就退化成最單純的那條式子**
+     (A−D)/2 × (父層字級 − 自己的字級)，1440 上 0.451px（原本 1.618px）——
+     因為塊心此時就是自己那幾個字的字面中線，把它對到旁邊的字面中線，
+     等於把兩行字的字面中線對在一起。
+
+     ⚠ **A／D 取的是全部專長詞的極值，不是每個詞各自量。** 逐詞量的話「齒顎矯正」
+       （下緣 .172em）和「隱適美」（.094em）會長成不同高度的塊，同一行擺在一起
+       一眼就看得出來。
+     ⚠ **量字面框要在 400px 上量再等比例縮。** Blink 回來的 actualBoundingBox
+       顆粒很粗（實測 400px 上以 1/64 em 為階），直接拿 12px 去量，半個像素就沒了。
+       順帶驗到：這樣算出來的字面中線是 **0.34375em**，和第二輪手量的 0.345 對得上。
+     ⚠ **不能寫死成 em。** 這一站沒有載網頁字型，每台裝置解出來的可能是
+       Noto／PingFang／微軟正黑，三套的字面框不一樣；Blink 又把 inline-block 的
+       塊內基線位置進位到整數 px，同一個字級在不同 DPR 上會落在不同的整數。
+       和 nav-scrollspy 的 --lamp-pad 是同一個做法、同一個理由。
+
+     ── 切換條（網址可帶參數）───────────────────────────────────────────────
+       ?fit=now|new                現況（改動前）／新版。預設 new
+       ?v=v1|v2|v3                 上下各留 **0.385**（＝等高，預設）／0.32／0.28
+       ?x=x1|x2|x3                 側邊 .5rem／**.42rem**（預設）／.34rem
+     ⚠ 參數的正規式要寫 [a-z0-9]+，寫成 [a-z]+ 會吃不到帶數字的值。
+
+     ── Ⓥ：上下各留多少（÷ 標記字級）────────────────────────────────────────
+       Ⓥ1 **0.385**　塊高 21.56px　＝ **和改動前一模一樣**（21.55）。
+                      使用者只說位置不對、沒說塊太高，所以預設不動高度。
+       Ⓥ2 0.32　　　 塊高 19.98px　收 1.6px
+       Ⓥ3 0.28　　　 塊高 19.03px　收 2.5px
+     下限是 0.159（＝ padding-bottom 收到 0），再小塊就不可能上下對稱。
+
+     ── Ⓧ：側邊留白（含 1px 框與字身左右的空隙）─────────────────────────────
+       同一族小標籤的「側邊留白 ÷ 字級」：
+         .doc dt 0.553　.card-tag 0.901　.doc-role 0.947　.info-card h3 1.017
+         .chips button 1.051　　專長標記（改動前 .6rem）0.909
+       Ⓧ1 .5rem　 0.776
+       Ⓧ2 **.42rem** 0.669　落在 .doc dt 與 .card-tag 之間 ← 預設
+       Ⓧ3 .34rem　0.562　≈ 貼齊 .doc dt
+
+     ── 這一輪沒有動的東西 ──────────────────────────────────────────────────
+     ⚠ **.doc-role（專科藥丸）一個值都沒動。** 那顆有一模一樣的行框偏差
+       （0.354 / 0.519em），但使用者第二輪明講它現在是對的。兩者的幾何因此分家了 ——
+       也說得過去：藥丸是名字後面單獨掛的一顆，專長標記是夾在一句話裡、
+       左右都有字可以對，偏差在那裡才看得出來。
+     ⚠ 顏色、濃度 12%、字級 .748rem、圓角 8px 全部沒動。
+
+     ── 這一頁和 index.html 的差別 ──────────────────────────────────────────
+       1. title、robots、這段註解、右下角的切換條。
+       2. 所有 assets/ 與 posts/ 路徑改成絕對路徑。
+          ⚠ HERO 那張圖是 src ＋ **srcset** 兩份，只改 src 不夠 —— 瀏覽器仍然選
+            srcset、404，**畫面上不會破圖，只會安靜地變成 alt 文字疊在黑底上**。
+       3. .sk.tag-on 的三個內距改讀切換條的值；?fit=now 時整組退回改動前的
+          line-height: 1.5 ＋ padding .05rem .6rem ＋ 舊的抬升算法。
+       4. 計數器那支拿掉（提案頁不要去 +1 正式站的數字）。
+     ============================================================================ -->
 <!-- <title> 不只給 Google —— Safari 分頁、書籤、加到主畫面、iOS 的分享面板
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>芳仁牙醫診所｜雲林斗六・永樂街</title>
+<title>專長標記的貼合：上下與左右｜芳仁牙醫</title>
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
 <meta name="description" content="芳仁牙醫診所，1983 年創立，現址雲林縣斗六市永樂街。這裡整理刷牙、牙周、兒童牙科、缺牙重建與定期檢查的衛教文章。">
@@ -32,7 +116,7 @@
 <meta property="og:image:height" content="1058">
 <meta property="og:image:alt" content="芳仁牙醫診所外觀，入夜後的永樂街街角">
 <link rel="canonical" href="https://fangren.net/">
-<link rel="icon" href="assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <!-- 首頁的樣式全部內嵌在下面。assets/style.css 是文章頁在用的，
      兩者的版型與配色完全不同，共用一份只會互相污染。 -->
 
@@ -2009,6 +2093,27 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
    那顆藥丸的字一直比名字低 1.82px。用的是「字對字」的量
    （0.345 × (16.8 − 11.52) ÷ 11.52 = .158em）。 */
 .doc-role { vertical-align: .158em; }
+
+/* ==== 提案頁專用：切換條與 ?fit=now 的還原 ================================ */
+/* ?fit=now：整組退回改動前 —— 行框 1.5、上下 .05rem、側邊 .6rem。 */
+html[data-fit="now"] .sk.tag-on { line-height: 1.5; padding: .05rem .6rem; }
+.fitbar {
+  position: fixed; right: .8rem; bottom: .8rem; z-index: 80;
+  display: grid; gap: .35rem; justify-items: end;
+  font-size: .72rem; line-height: 1.4;
+}
+.fitbar div { display: flex; gap: .3rem; align-items: center;
+  background: rgba(25,22,20,.82); backdrop-filter: blur(6px);
+  border-radius: 12px; padding: .3rem .45rem; color: rgba(255,255,255,.8); }
+.fitbar b { font-weight: 400; opacity: .65; padding-inline: .25rem; }
+.fitbar button {
+  font: inherit; cursor: pointer; border-radius: 8px; padding: .2rem .5rem;
+  background: transparent; color: rgba(255,255,255,.8);
+  border: 1px solid rgba(255,255,255,.28);
+}
+.fitbar button[aria-pressed="true"] { background: rgba(255,255,255,.9); color: #191614; border-color: transparent; }
+.fitbar output { opacity: .7; padding-left: .3rem; font-variant-numeric: tabular-nums; }
+@media print { .fitbar { display: none; } }
 </style>
 </head>
 <body>
@@ -2018,7 +2123,7 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
 
 <header class="site-head">
   <div class="shell">
-    <a class="brand" href="./">
+    <a class="brand" href="/">
       <span class="brand-mark">
         <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai。牙那條子路徑依自己的中心
              放大 1.3 倍、再往上移 0.50 個單位（2026-08-07 定案），嘴一個節點都沒改。
@@ -2052,8 +2157,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
 
   <div class="hero">
     <figure class="hero-photo">
-      <img src="assets/hero-clinic-night.jpg"
-           srcset="assets/hero-clinic-night-800.jpg 800w, assets/hero-clinic-night.jpg 1600w"
+      <img src="/assets/hero-clinic-night.jpg"
+           srcset="/assets/hero-clinic-night-800.jpg 800w, /assets/hero-clinic-night.jpg 1600w"
            sizes="100vw"
            alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
            width="1600" height="1058" fetchpriority="high">
@@ -2179,8 +2284,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
     <div class="shell">
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
-      <a class="card" href="posts/kids-arch-expansion/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/kids-arch-expansion/" data-spec="kids">
+        <img class="card-thumb" src="/assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
@@ -2192,8 +2297,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           </p>
         </div>
       </a>
-      <a class="card" href="posts/regular-checkup/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/regular-checkup/" data-spec="general">
+        <img class="card-thumb" src="/assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">定期檢查</span>
           <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
@@ -2205,8 +2310,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           </p>
         </div>
       </a>
-      <a class="card" href="posts/missing-tooth/" data-spec="prosth">
-        <img class="card-thumb" src="assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/missing-tooth/" data-spec="prosth">
+        <img class="card-thumb" src="/assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">缺牙重建</span>
           <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
@@ -2218,8 +2323,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           </p>
         </div>
       </a>
-      <a class="card" href="posts/kids-first-visit/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/kids-first-visit/" data-spec="kids">
+        <img class="card-thumb" src="/assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
@@ -2231,8 +2336,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           </p>
         </div>
       </a>
-      <a class="card" href="posts/gum-bleeding/" data-spec="perio">
-        <img class="card-thumb" src="assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/gum-bleeding/" data-spec="perio">
+        <img class="card-thumb" src="/assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">牙周照護</span>
           <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
@@ -2244,8 +2349,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           </p>
         </div>
       </a>
-      <a class="card" href="posts/bass-brushing/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
+      <a class="card" href="/posts/bass-brushing/" data-spec="general">
+        <img class="card-thumb" src="/assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">日常保健</span>
           <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
@@ -2379,12 +2484,12 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
       </div>
       <div class="gallery">
         <figure>
-          <img src="assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
+          <img src="/assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
                alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
           <figcaption>獨立診療空間，每張診療椅旁都配有影像螢幕，方便看診時一起討論。</figcaption>
         </figure>
         <figure>
-          <img src="assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
+          <img src="/assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
                alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
           <figcaption>診療區以隔屏分隔，保留採光也維持看診時的隱私。</figcaption>
         </figure>
@@ -2953,7 +3058,8 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
        不同 DPR 上會落在不同的整數。和 --lamp-pad 是同一個做法、同一個理由。
      ⚠ 這支跑第二次是**冪等**的：它讀的是當下算出來的 padding，第二次算出來
        的修正量會是 0。 */
-  var SK_PAD = 0.385;   /* 字面框上下各留多少（÷ 標記字級）。取這個值是因為
+  var SK_PAD = 0.385;   /* ⚠ 提案頁：這個值會被上面的切換條覆寫（window.SK_PAD）。
+                           字面框上下各留多少（÷ 標記字級）。取這個值是因為
                            套用後塊高和這一輪之前完全一樣 —— 見 CSS 那一段。 */
   function skFit() {
     var dd = document.querySelector('.docs .doc .skills');
@@ -2995,13 +3101,22 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
 
     /* ③ 補成上下一樣多。slackTop 只跟 padding-top 有關、slackBottom 只跟
           padding-bottom 有關，所以兩邊各自加差額就好。 */
-    var want = SK_PAD * fsT, root = document.documentElement;
+    var want = (window.SK_PAD || SK_PAD) * fsT, root = document.documentElement;
+    if (document.documentElement.getAttribute('data-fit') === 'now') {
+      /* 提案頁的「現況」：不動 padding，抬升量退回改動前那條（塊心對 0.3495em）。 */
+      root.style.removeProperty('--sk-padT');
+      root.style.removeProperty('--sk-padB');
+      root.style.setProperty('--sk-lift',
+        (fsP * 0.3495 - (base - (r.top + r.bottom) / 2)).toFixed(3) + 'px');
+      return;
+    }
     root.style.setProperty('--sk-padT', Math.max(0, padT + (want - slackTop)).toFixed(3) + 'px');
     root.style.setProperty('--sk-padB', Math.max(0, padB + (want - slackBottom)).toFixed(3) + 'px');
     /* ④ 上下對稱之後塊心就是自己那幾個字的字面中線，抬升量因此退化成
           「兩行字的字面中線對在一起」這條最單純的式子。 */
     root.style.setProperty('--sk-lift', ((A - D) / 2 * (fsP - fsT)).toFixed(3) + 'px');
   }
+  window.skFit = skFit;
   skFit();
   /* 字型還沒下載完時量到的是後備字型，好了再量一次；換裝置像素比也要重量。 */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(skFit);
@@ -3021,7 +3136,69 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
 <!-- 瀏覽計數器。2026-08-08 補回來 —— 首頁換成定案版型（2c0f7aa）時整支被漏掉，
      窄帶的數字停在提案頁的示範值 8642、六張文章卡的數字則一直是「—」。
      文章頁一直都有掛，所以只有首頁壞掉。 -->
-<script src="assets/counter.js" defer></script>
+<!-- 提案頁不掛計數器，免得去 +1 正式站的數字。 -->
 
+
+<!-- ==== 切換條（提案用，定案後連同 data-* 一起刪掉）======================== -->
+<div class="fitbar" role="group" aria-label="標記貼合切換">
+  <div><b>整組</b>
+    <button type="button" data-k="fit" data-v="now">現況</button>
+    <button type="button" data-k="fit" data-v="new">新版</button>
+  </div>
+  <div><b>Ⓥ 上下</b>
+    <button type="button" data-k="v" data-v="v1">.385</button>
+    <button type="button" data-k="v" data-v="v2">.32</button>
+    <button type="button" data-k="v" data-v="v3">.28</button>
+  </div>
+  <div><b>Ⓧ 側邊</b>
+    <button type="button" data-k="x" data-v="x1">.5</button>
+    <button type="button" data-k="x" data-v="x2">.42</button>
+    <button type="button" data-k="x" data-v="x3">.34</button>
+    <output id="fitread"></output>
+  </div>
+</div>
+<script>
+/* 切換條。網址參數與按鈕同步，值寫在 html 的 data-* 上，
+   ⚠ 正規式一定要 [a-z0-9]+ —— 寫成 [a-z]+ 會吃不到 v1／x2 這種帶數字的值。 */
+(function () {
+  var root = document.documentElement;
+  var DEF = { fit: 'new', v: 'v1', x: 'x2' };
+  var PAD = { v1: 0.385, v2: 0.32, v3: 0.28 };
+  var PADX = { x1: '.5rem', x2: '.42rem', x3: '.34rem' };
+  var q = location.search;
+  function read(k) {
+    var m = q.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
+    var val = m && m[1];
+    return (val && (k === 'fit' ? /^(now|new)$/ : k === 'v' ? /^v[123]$/ : /^x[123]$/).test(val)) ? val : DEF[k];
+  }
+  var state = { fit: read('fit'), v: read('v'), x: read('x') };
+  function paint() {
+    Object.keys(state).forEach(function (k) { root.setAttribute('data-' + k, state[k]); });
+    root.style.setProperty('--sk-padX', PADX[state.x]);
+    window.SK_PAD = PAD[state.v];
+    if (window.skFit) window.skFit();
+    Array.prototype.forEach.call(document.querySelectorAll('.fitbar button'), function (b) {
+      b.setAttribute('aria-pressed', state[b.dataset.k] === b.dataset.v ? 'true' : 'false');
+    });
+    var on = document.querySelector('.sk.tag-on');
+    var out = document.getElementById('fitread');
+    if (out) {
+      if (!on) { out.textContent = '（先點一顆科別）'; return; }
+      var cs = getComputedStyle(on);
+      out.textContent = Math.round(on.getBoundingClientRect().height * 100) / 100 + 'px 高 ／ 側 ' + cs.paddingLeft;
+    }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.fitbar button'), function (b) {
+    b.addEventListener('click', function () {
+      state[b.dataset.k] = b.dataset.v;
+      history.replaceState(null, '', '?fit=' + state.fit + '&v=' + state.v + '&x=' + state.x);
+      paint();
+    });
+  });
+  document.addEventListener('click', function (e) { if (e.target.closest('.chips button')) setTimeout(paint, 0); });
+  paint();
+  addEventListener('load', paint);
+})();
+</script>
 </body>
 </html>
