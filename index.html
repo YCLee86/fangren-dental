@@ -36,44 +36,596 @@
 <!-- 首頁的樣式全部內嵌在下面。assets/style.css 是文章頁在用的，
      兩者的版型與配色完全不同，共用一份只會互相污染。 -->
 
-<!-- 本地搜尋用的結構化資料。看診時間已由診所確認。 -->
+<!-- 結構化資料與機器讀的 meta。
+     ⚠ 這一段整個由 tools/build.mjs 產生，**手改會在下次 build 被蓋掉**。
+
+     原本這裡是一份手寫的 Dentist JSON-LD（只有名稱、電話、地址、看診時間）。
+     2026-08-10 換成由腳本產生的 @graph：診所、九位醫師、WebSite、WebPage，
+     每個節點都有 @id 互相引用，文章頁的 author／publisher 直接指回 #dentist。
+
+     資料從哪裡來：
+       · 看診時間 → 讀下面 #clinic 那張「看診時間」資訊卡
+       · 醫師名冊 → 讀下面 #doctors 的每一張 .doc
+       · 服務項目 → 讀下面 #topics 的 chips
+       · 座標、sameAs、郵遞區號、國碼電話 → clinic.json（頁面上沒有的才放那裡）
+     所以要改看診時間就改那張卡，不要來改這裡。 -->
+<!-- SEO:START — 由 tools/build.mjs 產生，請勿手動編輯 -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Dentist",
-  "name": "芳仁牙醫診所",
-  "url": "https://fangren.net/",
-  "telephone": "+886-5-5339-369",
-  "image": "https://fangren.net/assets/hero-clinic.jpg",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "永樂街70號",
-    "addressLocality": "斗六市",
-    "addressRegion": "雲林縣",
-    "addressCountry": "TW"
-  },
-  "openingHoursSpecification": [
+  "@graph": [
     {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      "opens": "08:45",
-      "closes": "11:30"
+      "@type": "Dentist",
+      "@id": "https://fangren.net/#dentist",
+      "name": "芳仁牙醫診所",
+      "url": "https://fangren.net/",
+      "telephone": "+886-5-533-9369",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "medicalSpecialty": "Dentistry",
+      "inLanguage": "zh-Hant-TW",
+      "alternateName": "芳仁牙醫",
+      "image": [
+        "https://fangren.net/assets/hero-clinic-night.jpg",
+        "https://fangren.net/assets/clinic-room-1.jpg",
+        "https://fangren.net/assets/clinic-room-2.jpg"
+      ],
+      "hasMap": "https://www.google.com/maps/search/?api=1&query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F",
+      "sameAs": [
+        "https://maps.app.goo.gl/bKSrVyS2Qu2xvnMj7",
+        "https://www.facebook.com/share/1Bwe9BMkP3/",
+        "https://line.me/R/ti/p/@445rpiiv"
+      ],
+      "areaServed": [
+        "雲林縣斗六市",
+        "雲林縣"
+      ],
+      "priceRange": "$$",
+      "currenciesAccepted": "TWD",
+      "foundingDate": "1983",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 23.710174,
+        "longitude": 120.5468936
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "opens": "08:45",
+          "closes": "11:30"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "opens": "13:45",
+          "closes": "16:30"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "opens": "17:45",
+          "closes": "20:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "00:00",
+          "closes": "00:00"
+        }
+      ],
+      "knowsAbout": [
+        "一般牙科・定期檢查",
+        "牙周治療",
+        "顯微根管",
+        "兒童牙科",
+        "齒顎矯正",
+        "植牙・假牙重建",
+        "口腔外科"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "診療項目",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "MedicalProcedure",
+              "name": "一般牙科・定期檢查"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "MedicalProcedure",
+              "name": "牙周治療"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "MedicalProcedure",
+              "name": "顯微根管"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "MedicalProcedure",
+              "name": "兒童牙科"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "MedicalProcedure",
+              "name": "齒顎矯正"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "MedicalProcedure",
+              "name": "植牙・假牙重建"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "MedicalProcedure",
+              "name": "口腔外科"
+            }
+          }
+        ]
+      },
+      "founder": {
+        "@id": "https://fangren.net/#doctor-1"
+      },
+      "employee": [
+        {
+          "@id": "https://fangren.net/#doctor-1"
+        },
+        {
+          "@id": "https://fangren.net/#doctor-2"
+        },
+        {
+          "@id": "https://fangren.net/#doctor-3"
+        },
+        {
+          "@id": "https://fangren.net/#doctor-4"
+        },
+        {
+          "@id": "https://fangren.net/#doctor-5"
+        },
+        {
+          "@id": "https://fangren.net/#doctor-6"
+        },
+        {
+          "@id": "https://fangren.net/#doctor-7"
+        },
+        {
+          "@id": "https://fangren.net/#doctor-8"
+        },
+        {
+          "@id": "https://fangren.net/#doctor-9"
+        }
+      ]
     },
     {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      "opens": "13:45",
-      "closes": "16:30"
+      "@type": [
+        "Person",
+        "Physician"
+      ],
+      "@id": "https://fangren.net/#doctor-1",
+      "name": "李柄輝",
+      "jobTitle": "創辦醫師",
+      "medicalSpecialty": "Dentistry",
+      "worksFor": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "knowsAbout": [
+        "一般牙科・定期檢查"
+      ],
+      "description": "台灣國際植牙醫師學會專科醫師（ATIOI）、國際牙醫學院院士（TICD）、衛生福利部家庭牙醫專科",
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "中山醫學大學"
+        }
+      ],
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "credentialCategory": "部定專科醫師",
+          "name": "衛生福利部家庭牙醫專科",
+          "recognizedBy": {
+            "@type": "GovernmentOrganization",
+            "name": "衛生福利部"
+          }
+        }
+      ]
     },
     {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      "opens": "17:45",
-      "closes": "20:00"
+      "@type": [
+        "Person",
+        "Physician"
+      ],
+      "@id": "https://fangren.net/#doctor-2",
+      "name": "李侑津",
+      "jobTitle": "醫師",
+      "medicalSpecialty": "Dentistry",
+      "worksFor": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "knowsAbout": [
+        "牙周治療"
+      ],
+      "description": "臺北榮民總醫院、衛生福利部雙和醫院",
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "臺北醫學大學"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "國立陽明交通大學"
+        }
+      ]
+    },
+    {
+      "@type": [
+        "Person",
+        "Physician"
+      ],
+      "@id": "https://fangren.net/#doctor-3",
+      "name": "王俊偉",
+      "jobTitle": "矯正專科醫師",
+      "medicalSpecialty": "Dentistry",
+      "worksFor": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "knowsAbout": [
+        "齒顎矯正"
+      ],
+      "description": "衛生福利部齒顎矯正專科、臺北醫學大學附設醫院齒顎矯正科、臺安醫院主治醫師",
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "臺北醫學大學"
+        }
+      ],
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "credentialCategory": "部定專科醫師",
+          "name": "衛生福利部齒顎矯正專科",
+          "recognizedBy": {
+            "@type": "GovernmentOrganization",
+            "name": "衛生福利部"
+          }
+        }
+      ]
+    },
+    {
+      "@type": [
+        "Person",
+        "Physician"
+      ],
+      "@id": "https://fangren.net/#doctor-4",
+      "name": "廖立揚",
+      "jobTitle": "矯正專科醫師",
+      "medicalSpecialty": "Dentistry",
+      "worksFor": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "knowsAbout": [
+        "齒顎矯正"
+      ],
+      "description": "衛生福利部齒顎矯正專科、臺中榮民總醫院齒顎矯正科、國立臺灣大學附設醫院",
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "臺北醫學大學"
+        }
+      ],
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "credentialCategory": "部定專科醫師",
+          "name": "衛生福利部齒顎矯正專科",
+          "recognizedBy": {
+            "@type": "GovernmentOrganization",
+            "name": "衛生福利部"
+          }
+        }
+      ]
+    },
+    {
+      "@type": [
+        "Person",
+        "Physician"
+      ],
+      "@id": "https://fangren.net/#doctor-5",
+      "name": "林晏妤",
+      "jobTitle": "兒牙專科醫師",
+      "medicalSpecialty": "Dentistry",
+      "worksFor": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "knowsAbout": [
+        "兒童牙科"
+      ],
+      "description": "衛生福利部兒童牙科專科、隱適美認證醫師、臺中榮民總醫院兒童牙科",
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "高雄醫學大學"
+        }
+      ],
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "credentialCategory": "部定專科醫師",
+          "name": "衛生福利部兒童牙科專科",
+          "recognizedBy": {
+            "@type": "GovernmentOrganization",
+            "name": "衛生福利部"
+          }
+        }
+      ]
+    },
+    {
+      "@type": [
+        "Person",
+        "Physician"
+      ],
+      "@id": "https://fangren.net/#doctor-6",
+      "name": "許馨文",
+      "jobTitle": "口外專科醫師",
+      "medicalSpecialty": "Dentistry",
+      "worksFor": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "knowsAbout": [
+        "口腔外科"
+      ],
+      "description": "衛生福利部口腔顎面外科專科、奇美醫學中心口腔顎面外科總醫師、保提拉肉毒學院認證醫師",
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "臺北醫學大學"
+        }
+      ],
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "credentialCategory": "部定專科醫師",
+          "name": "衛生福利部口腔顎面外科專科",
+          "recognizedBy": {
+            "@type": "GovernmentOrganization",
+            "name": "衛生福利部"
+          }
+        }
+      ]
+    },
+    {
+      "@type": [
+        "Person",
+        "Physician"
+      ],
+      "@id": "https://fangren.net/#doctor-7",
+      "name": "楊小瑩",
+      "jobTitle": "贋復假牙專科醫師",
+      "medicalSpecialty": "Dentistry",
+      "worksFor": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "knowsAbout": [
+        "植牙・假牙重建"
+      ],
+      "description": "衛生福利部贋復牙科專科醫師、台大醫院補綴科兼任主治醫師、台大雲林分院主治醫師",
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "高雄醫學大學"
+        }
+      ],
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "credentialCategory": "部定專科醫師",
+          "name": "衛生福利部贋復牙科專科醫師",
+          "recognizedBy": {
+            "@type": "GovernmentOrganization",
+            "name": "衛生福利部"
+          }
+        }
+      ]
+    },
+    {
+      "@type": [
+        "Person",
+        "Physician"
+      ],
+      "@id": "https://fangren.net/#doctor-8",
+      "name": "陳芷鈴",
+      "jobTitle": "顯微根管",
+      "medicalSpecialty": "Dentistry",
+      "worksFor": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "knowsAbout": [
+        "顯微根管"
+      ],
+      "description": "成大醫院牙髓病專科訓練、成大醫院口腔醫學部總醫師、臺北榮民總醫院",
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "臺北醫學大學"
+        }
+      ]
+    },
+    {
+      "@type": [
+        "Person",
+        "Physician"
+      ],
+      "@id": "https://fangren.net/#doctor-9",
+      "name": "謝耀慶",
+      "jobTitle": "兒童牙科",
+      "medicalSpecialty": "Dentistry",
+      "worksFor": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "knowsAbout": [
+        "兒童牙科"
+      ],
+      "description": "臺北榮總兒童牙科總醫師、日本新潟大學吞嚥功能受訓醫師、隱適美認證醫師",
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "國立陽明交通大學"
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://fangren.net/#website",
+      "url": "https://fangren.net/",
+      "name": "芳仁牙醫診所",
+      "inLanguage": "zh-Hant-TW",
+      "publisher": {
+        "@id": "https://fangren.net/#dentist"
+      }
+    },
+    {
+      "@type": [
+        "WebPage",
+        "CollectionPage"
+      ],
+      "@id": "https://fangren.net/#webpage",
+      "url": "https://fangren.net/",
+      "name": "芳仁牙醫診所｜雲林斗六・永樂街",
+      "description": "芳仁牙醫診所，1983 年創立，現址雲林縣斗六市永樂街。這裡整理刷牙、牙周、兒童牙科、缺牙重建與定期檢查的衛教文章。",
+      "isPartOf": {
+        "@id": "https://fangren.net/#website"
+      },
+      "about": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "inLanguage": "zh-Hant-TW",
+      "dateModified": "2026-08-12",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://fangren.net/assets/hero-clinic-night.jpg"
+      }
     }
   ]
 }
 </script>
+<!-- SEO:END -->
 <style>:root { color-scheme: light; }
 </style>
 <style>
@@ -2317,7 +2869,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         <!-- 線條空心的話筒。素材出處：Lucide "phone"，ISC 授權，https://lucide.dev ——
              這一行註解就是署名，改圖或搬檔的時候不要刪。 -->
         <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 0 1-2.1 1.9 18.8 18.8 0 0 1-8.2-2.9 18.5 18.5 0 0 1-5.7-5.7A18.8 18.8 0 0 1 2.6 4.7 1.9 1.9 0 0 1 4.5 2.6h2.8a1.9 1.9 0 0 1 1.9 1.6c.1.9.3 1.8.7 2.7a1.9 1.9 0 0 1-.4 2L8.3 10.1a15.2 15.2 0 0 0 5.7 5.7l1.2-1.2a1.9 1.9 0 0 1 2-.4c.9.4 1.8.6 2.7.7a1.9 1.9 0 0 1 1.6 2Z"/></svg></span>
-        <span class="t">05-5339-369</span>
+        <data class="t" value="05-533-9369">(05)5339-369</data>
       </a></p>
       </div>
 
@@ -2560,7 +3112,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
         <div class="info-card">
           <h3>電話</h3>
-          <p class="big"><a href="tel:+88655339369">05-5339-369</a></p>
+          <p class="big"><a href="tel:+88655339369"><data value="05-533-9369">(05)5339-369</data></a></p>
         </div>
         <!-- Deep Taupe 只出現在這一張（單椅布料的色），底下那行休診是全頁唯一的磚紅 -->
         <div class="info-card" data-hue="taupe">
@@ -2644,7 +3196,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                https://fontawesome.com/license/free —— 這一行註解就是署名，改圖或搬檔的時候不要刪。
                aria-hidden：號碼本身已經是連結的可讀內容，圖示再念一次是重複。 -->
           <span class="ico"><svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></span>
-          <span class="num">05-5339-369</span>
+          <data class="num" value="05-533-9369">(05)5339-369</data>
         </a></p>
       </div>
       <div>

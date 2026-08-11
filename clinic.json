@@ -1,0 +1,91 @@
+{
+  "_comment": [
+    "診所這個「實體」的資料。tools/build.mjs 用它產生全站的 JSON-LD 結構化資料。",
+    "",
+    "⚠ 這裡**只放頁面上沒有、或機器需要另一種格式**的東西。",
+    "   已經寫在 index.html 畫面上的資料，build.mjs 一律回頭去讀那一頁，不在這裡重抄：",
+    "     · 看診時間  → 讀 #clinic 的「看診時間」資訊卡",
+    "     · 醫師名冊  → 讀 #doctors 的每一張 .doc",
+    "     · 服務項目  → 讀 #topics 的 chips",
+    "   理由有兩個：Google 明文要求結構化資料要和使用者看得到的內容一致；",
+    "   而抄第二份的下場一定是兩邊哪天不一樣，然後沒有人發現。",
+    "",
+    "   所以要改看診時間，改 index.html 那張卡就好，JSON-LD 會自己跟上。"
+  ],
+
+  "name": "芳仁牙醫診所",
+  "alternateName": "芳仁牙醫",
+
+  "_telephone_comment": [
+    "顯示用的寫法是 (05)533-9369（2026-08-10 使用者定案，全站統一）。",
+    "這一欄是給機器的國際格式：國碼 +886，區碼的前導 0 要拿掉，所以是 +886-5-…，",
+    "分組跟著顯示的寫法走。**不要把括號寫進來** —— (05) 是國內撥號的寫法，",
+    "和 +886 併在一起是矛盾的。",
+    "撥號用的 tel:+88655339369 一個字都沒動，那是純數字、和分組無關。"
+  ],
+  "telephone": "+886-5-533-9369",
+
+  "address": {
+    "streetAddress": "永樂街70號",
+    "addressLocality": "斗六市",
+    "addressRegion": "雲林縣",
+    "postalCode": "640",
+    "addressCountry": "TW"
+  },
+
+  "_geo_comment": [
+    "2026-08-10 由使用者在 Google 地圖上長按診所位置取得（圖釘落在永樂街那棟樓上）。",
+    "兩個值有任何一個不是數字時，build.mjs 會整個略過 geo 欄位 —— 寧可沒有，不要有錯的。"
+  ],
+  "geo": { "latitude": 23.7101740, "longitude": 120.5468936 },
+
+  "hasMap": "https://www.google.com/maps/search/?api=1&query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F",
+
+  "_sameAs_comment": [
+    "實體 SEO 最關鍵的一欄：告訴 Google「fangren.net 和這幾個帳號是同一家診所」。",
+    "沒有這一欄，它只能靠名稱＋地址去猜。三條都由使用者提供（2026-08-10）。",
+    "",
+    "⚠ 前兩條是分享用的短網址（會轉址）。Google 跟得上轉址，所以可以用，",
+    "  但完整網址更穩。之後在電腦上打開它們、把網址列裡展開後的那一串換進來會更好。",
+    "",
+    "LINE 那條是使用者給的官方帳號連結，用的是系統 ID @445rpiiv。",
+    "⚠ **不要改成 @fafa070。** 那是同一個帳號的基本 ID（手機截圖上顯示的那個），",
+    "  我一度從它推出 https://page.line.me/fafa070 放進來，但那是推的、沒驗證過。",
+    "  這裡要放使用者實際給的那一條。"
+  ],
+  "sameAs": [
+    "https://maps.app.goo.gl/bKSrVyS2Qu2xvnMj7",
+    "https://www.facebook.com/share/1Bwe9BMkP3/",
+    "https://line.me/R/ti/p/@445rpiiv"
+  ],
+
+  "foundingDate": "1983",
+  "_foundingDate_comment": "1983 年在中華路開業，現址永樂街。窄帶第一格講的就是這件事。",
+
+  "areaServed": ["雲林縣斗六市", "雲林縣"],
+
+  "priceRange": "$$",
+  "_priceRange_comment": "Google 的 LocalBusiness 規範要這一欄。牙醫用 $$（中價位）是慣例，不是實際收費。",
+
+  "currenciesAccepted": "TWD",
+
+  "_images_comment": [
+    "診所本體的照片。第一張是主圖（og:image 也是它）。",
+    "Google 建議同一個地點給多個長寬比，這裡是 16:9 的外觀照＋兩張診療室內景。"
+  ],
+  "images": [
+    "assets/hero-clinic-night.jpg",
+    "assets/clinic-room-1.jpg",
+    "assets/clinic-room-2.jpg"
+  ],
+
+  "_logo_comment": [
+    "⚠ 還沒有。Google 的 Organization logo 需要**點陣圖**（PNG／JPG），",
+    "   而站上的標誌目前只有 assets/favicon.svg 一份向量檔。",
+    "   直接把 favicon 放大不行 —— 它的牙洞位置是為了 16px 的分頁列調過的",
+    "   （PALETTE.md 第六之七節），放到 512px 會走樣。",
+    "   要補這一欄得先決定：用哪一個綠（#4f6361 還是 #4f8065）、底色、留白多少。",
+    "   那是配色的決定，不該由腳本自己選，所以先空著。null 時 build.mjs 會略過。"
+  ],
+  "logo": null
+}

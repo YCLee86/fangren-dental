@@ -24,13 +24,20 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { homeGraph, parseDoctors, parseHours, parseTopics, postGraph } from "./schema.mjs";
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const POSTS_DIR = path.join(ROOT, "posts");
 const INDEX_FILE = path.join(ROOT, "index.html");
 const MANIFEST_FILE = path.join(ROOT, "tools", "build-manifest.json");
 const SITE_FILE = path.join(ROOT, "site.json");
+const CLINIC_FILE = path.join(ROOT, "clinic.json");
 
 const CHECK_ONLY = process.argv.includes("--check");
+
+/* 分享圖的尺寸。tools/og-images.mjs 產出的就是這個大小，兩邊要一致。 */
+const OG_WIDTH = 1600;
+const OG_HEIGHT = 900;
 
 /* ---------- 小工具 ---------- */
 
@@ -91,6 +98,53 @@ const withCanonical = (html, url) => {
   }
   return html.replace(/<\/head>/i, `${tag}\n</head>`);
 };
+
+/* ---------- 產生的 SEO 區塊（結構化資料＋機器讀的 meta） ----------
+
+   放在 <head> 裡兩個標記之間，整段由本腳本重寫。和 canonical 一樣，
+   它**不在內容雜湊涵蓋的 post-meta 與 <main> 之內**，所以加這些東西
+   不會讓六篇文章的「最後更新日期」一起跳成今天、把首頁排序打亂。
+
+   標記不存在的話就插在 </head> 前面（新文章從別篇複製過來就會自動長出來）。 */
+const SEO_START = "<!-- SEO:START — 由 tools/build.mjs 產生，請勿手動編輯 -->";
+const SEO_END = "<!-- SEO:END -->";
+
+const injectSeo = (html, body) => {
+  const block = `${SEO_START}\n${body}\n${SEO_END}`;
+  const s = html.indexOf("<!-- SEO:START");
+  const e = html.indexOf(SEO_END);
+  if (s !== -1 && e !== -1) {
+    return html.slice(0, s) + block + html.slice(e + SEO_END.length);
+  }
+  return html.replace(/<\/head>/i, `${block}\n</head>`);
+};
+
+/* JSON-LD 是放在 <script> 裡的，字串內容出現 "</" 會提早關掉那個標籤。
+   跳成 "<\/" 之後 JSON 的值完全不變（JSON 規範允許這個跳脫），但 HTML 解析器不會誤判。 */
+const ldScript = (obj) =>
+  `<script type="application/ld+json">\n${JSON.stringify(obj, null, 2).replace(/<\//g, "<\\/")}\n</script>`;
+
+/* 這一行決定 Google 能不能在搜尋結果放大圖。沒有它預設只給小縮圖。 */
+const ROBOTS_META =
+  '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">';
+
+const metaTag = (attr, name, content) =>
+  `<meta ${attr}="${name}" content="${esc(content)}">`;
+
+/* ---------- 診所實體的設定 ---------- */
+
+let clinic = null;
+if (fs.existsSync(CLINIC_FILE)) {
+  try {
+    clinic = JSON.parse(read(CLINIC_FILE).replace(/^﻿/, ""));
+  } catch (err) {
+    console.error(`× clinic.json 不是合法 JSON（${err.message}），將略過結構化資料。`);
+    process.exitCode = 1;
+  }
+} else {
+  console.error("× 找不到 clinic.json，將略過結構化資料。");
+  process.exitCode = 1;
+}
 
 /* 內容雜湊只看「這篇文章自己的東西」：post-meta 加上 <main> 裡的內容。
    刻意排除兩類東西——
@@ -181,6 +235,45 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
 
   html = withCanonical(html, `${siteUrl}/posts/${meta.slug}/`);
 
+  /* ---------- 2.5 結構化資料與分享用的 meta ----------
+
+     ⚠ 分享圖不能用 HERO 那張 SVG。**Facebook 與 LINE 的爬蟲不吃 SVG**，
+       og:image 指到 .svg 等於沒設，對方看到的卡片是空的、或爬蟲自己從頁面亂撿一張。
+       首頁 2026 年就踩過這個坑（見 index.html 的 og:image 註解），當時只補了首頁。
+       點陣複本由 tools/og-images.mjs 產生，命名沿用「後綴＝寬度」的慣例。 */
+  if (siteUrl && clinic) {
+    const url = `${siteUrl}/posts/${meta.slug}/`;
+    const png = meta.hero.replace(/\.svg$/, `-${OG_WIDTH}.png`);
+    const hasPng = fs.existsSync(path.join(ROOT, "assets", png));
+    if (!hasPng) {
+      console.warn(`  ⚠ 找不到 assets/${png}，${meta.slug} 不會有分享圖。跑一次 node tools/og-images.mjs`);
+    }
+    const image = hasPng
+      ? { url: `${siteUrl}/assets/${png}`, width: OG_WIDTH, height: OG_HEIGHT, alt: meta.heroAlt || meta.title }
+      : null;
+
+    const seo = [
+      ROBOTS_META,
+      metaTag("property", "og:url", url),
+      metaTag("property", "og:locale", "zh_TW"),
+      ...(image
+        ? [
+            metaTag("property", "og:image", image.url),
+            metaTag("property", "og:image:width", String(image.width)),
+            metaTag("property", "og:image:height", String(image.height)),
+            metaTag("property", "og:image:alt", image.alt),
+            metaTag("name", "twitter:card", "summary_large_image"),
+          ]
+        : []),
+      metaTag("property", "article:published_time", meta.published),
+      metaTag("property", "article:modified_time", updated),
+      metaTag("property", "article:section", meta.tag),
+      ldScript(postGraph({ site: siteUrl, clinic, meta: { ...meta, updated }, image })),
+    ].join("\n");
+
+    html = injectSeo(html, seo);
+  }
+
   if (!CHECK_ONLY && html !== read(file)) fs.writeFileSync(file, html, "utf8");
 
   nextManifest[meta.slug] = { hash, updated };
@@ -197,6 +290,77 @@ if (!posts.length) {
 posts.sort((a, b) =>
   b.updated.localeCompare(a.updated) || b.published.localeCompare(a.published)
 );
+
+/* ---------- 2.9 每篇文章底下的「延伸閱讀」 ----------
+
+   ⚠ **這一段一定要放在 </main> 外面。**
+   文章的內容雜湊涵蓋整個 <main>，把卡片放進去的話，每加一篇新文章就會讓
+   舊文的 <main> 跟著變、六篇的「最後更新」全部跳成今天、排序也跟著亂
+   （CLAUDE.md 第五節的陷阱）。放在 <main> 與 <footer> 之間就完全不會碰到雜湊，
+   而且語意上也對 —— 這是補充導覽，不是這篇文章的內容，所以用 <aside>。
+
+   **刻意沒有可見的小標題**，只留 aria-label。這不是偷懶，是照首頁已經定案的做法：
+   首頁「最新文章」那個小標題 2026-08-07 就被拿掉了，只留 aria-label（CLAUDE.md 第九節）。
+   同一個站不該一邊拿掉、一邊又加一個回來。
+
+   挑哪三篇：**同科別的優先**（照更新日新到舊），不夠再用其他科別的最新文章補滿。
+   六篇的規模下這樣就夠了，不需要標籤權重之類的東西。 */
+const REL_START = "<!-- RELATED:START — 由 tools/build.mjs 產生，請勿手動編輯 -->";
+const REL_END = "<!-- RELATED:END -->";
+const REL_COUNT = 3;
+
+/* 文章底部本來就有一組「上一篇／下一篇」（<nav class="post-nav">，手寫在 <main> 裡）。
+   那兩篇要從卡片裡排除 —— 否則同一個畫面上、上下相鄰的兩塊會指到同一篇。
+   實測六篇裡有五篇會撞，其中兩篇是上下篇兩個都撞。
+   一樣是回頭讀頁面本身，不另外維護一份對照表。 */
+const navSlugs = (html) => {
+  const nav = html.match(/<nav class="post-nav"[\s\S]*?<\/nav>/i);
+  if (!nav) return new Set();
+  return new Set([...nav[0].matchAll(/href="\.\.\/([a-z0-9-]+)\/"/g)].map((m) => m[1]));
+};
+
+const relatedFor = (self, all, skip) => {
+  const others = all.filter((p) => p.slug !== self.slug && !skip.has(p.slug));
+  const same = others.filter((p) => SPEC[p.tag] && SPEC[p.tag] === SPEC[self.tag]);
+  const rest = others.filter((p) => !same.includes(p));
+  return [...same, ...rest].slice(0, REL_COUNT);
+};
+
+const relCard = (p) => {
+  const spec = SPEC[p.tag];
+  return `        <li class="rel-card"${spec ? ` data-spec="${spec}"` : ""}>
+          <a href="../${esc(p.slug)}/">
+            <img src="../../assets/${esc(p.hero)}" alt="" width="800" height="450" loading="lazy">
+            <span class="rel-body">
+              <span class="rel-tag">${esc(p.tag)}</span>
+              <span class="rel-title">${esc(p.title)}</span>
+              <time class="rel-date" datetime="${p.updated}">${slashDate(p.updated)}</time>
+            </span>
+          </a>
+        </li>`;
+};
+
+const relatedBlock = (self, all, skip) => {
+  const picks = relatedFor(self, all, skip);
+  if (!picks.length) return "";
+  return `${REL_START}
+<aside class="related" aria-label="延伸閱讀">
+  <div class="wrap">
+    <ul class="rel-list">
+${picks.map(relCard).join("\n")}
+    </ul>
+  </div>
+</aside>
+${REL_END}`;
+};
+
+const injectRelated = (html, block) => {
+  const s = html.indexOf("<!-- RELATED:START");
+  const e = html.indexOf(REL_END);
+  if (s !== -1 && e !== -1) return html.slice(0, s) + block + html.slice(e + REL_END.length);
+  // 第一次：插在 </main> 後面（**不是裡面**）
+  return html.replace(/<\/main>/i, `</main>\n\n${block}`);
+};
 
 /* 標籤 → 科別代碼。首頁的「主題與科別」用 data-spec 同時篩文章與醫師，
    三個地方（chip、文章標籤、醫師藥丸）共用同一組代碼，同一科才會是同一個色。
@@ -228,6 +392,17 @@ const card = (p) => {
         </div>
       </a>`;
 };
+
+/* 第二趟：把「延伸閱讀」寫進每一篇。
+   要等 posts 排序完才知道誰排在誰前面，所以不能併進上面那個掃描迴圈。 */
+if (!CHECK_ONLY) {
+  for (const p of posts) {
+    const file = path.join(POSTS_DIR, p.slug, "index.html");
+    const before = read(file);
+    const after = injectRelated(before, relatedBlock(p, posts, navSlugs(before)));
+    if (after !== before) fs.writeFileSync(file, after, "utf8");
+  }
+}
 
 const START = "<!-- POSTS:START";
 const END = "<!-- POSTS:END -->";
@@ -264,6 +439,51 @@ nextIndex = nextIndex.replace(
 
 nextIndex = withCanonical(nextIndex, `${siteUrl}/`);
 
+/* ---------- 3.4 首頁的結構化資料 ----------
+
+   看診時間、醫師名冊、服務項目全部是**回頭讀這一頁自己的內容**產生的，
+   不是另外維護一份（理由寫在 clinic.json 與 tools/schema.mjs 開頭）。
+   所以改了 #clinic 那張看診時間卡、或加了一位醫師，JSON-LD 會自己跟上。
+
+   dateModified 先寫成一個佔位符，等下面算出首頁的 lastmod 再換掉 ——
+   它自己就是雜湊的輸入之一，先填日期會變成「每跑一次 build 就變一次」的循環。 */
+const HOME_UPDATED_TOKEN = "@@HOME_UPDATED@@";
+
+if (siteUrl && clinic) {
+  const facts = {
+    hours: parseHours(nextIndex),
+    topics: parseTopics(nextIndex),
+    doctors: parseDoctors(nextIndex),
+  };
+
+  const homeTitle = (nextIndex.match(/<title>([^<]*)<\/title>/i) || [])[1] || "";
+  const homeDesc =
+    (nextIndex.match(/<meta name="description" content="([^"]*)"/i) || [])[1] || "";
+
+  const seo = [
+    ROBOTS_META,
+    metaTag("property", "og:locale", "zh_TW"),
+    metaTag("name", "twitter:card", "summary_large_image"),
+    ldScript(
+      homeGraph({
+        site: siteUrl,
+        clinic,
+        facts,
+        title: homeTitle,
+        description: homeDesc,
+        updatedToken: HOME_UPDATED_TOKEN,
+      })
+    ),
+  ].join("\n");
+
+  nextIndex = injectSeo(nextIndex, seo);
+
+  console.log(
+    `結構化資料：${facts.doctors.length} 位醫師、` +
+      `${Object.keys(facts.topics).length} 個科別、${facts.hours.length} 段營業時間`
+  );
+}
+
 /* ---------- 3.5 首頁自己的最後更新日（給 sitemap 用） ----------
 
    首頁在 sitemap 裡的 lastmod 原本抄的是「最新那篇文章的更新日」。
@@ -295,6 +515,11 @@ const homeChanged = !prevHome || prevHome.hash !== homeHash;
 const homeUpdated = homeChanged ? today() : prevHome.updated;
 nextManifest[HOME_KEY] = { hash: homeHash, updated: homeUpdated };
 
+/* 佔位符換成真正的日期。**一定要排在 homeHash 算完之後** ——
+   否則 dateModified 會進到雜湊裡，於是「換了日期 → 雜湊變了 → 下次又換成今天」，
+   首頁的 lastmod 從此天天跳，等於這個欄位沒有意義。 */
+nextIndex = nextIndex.replace(HOME_UPDATED_TOKEN, homeUpdated);
+
 if (!CHECK_ONLY && nextIndex !== index) fs.writeFileSync(INDEX_FILE, nextIndex, "utf8");
 
 /* ---------- 4. 計數器允許的代碼清單 ----------
@@ -316,15 +541,29 @@ if (!CHECK_ONLY) {
 /* ---------- 5. sitemap ---------- */
 
 if (siteUrl && !CHECK_ONLY) {
+  /* 圖片 sitemap（image 擴充）。列的是**那一頁上真的有的圖**：
+     首頁是外觀夜景與兩張診療室內景，文章是它自己的 HERO 插圖。
+     診所實景才是這裡真正的目的 —— 讓「斗六 牙醫」在 Google 圖片裡找得到人。
+
+     只寫 <image:loc>。image:caption／title／license／geo_location 這幾個
+     Google 2022 年就停用了，寫了也不會讀，徒增檔案大小。 */
+  const img = (p) => `<image:image><image:loc>${siteUrl}/assets/${p}</image:loc></image:image>`;
+  const homeImages = ["hero-clinic-night.jpg", "clinic-room-1-600.jpg", "clinic-room-2-600.jpg"]
+    .filter((f) => fs.existsSync(path.join(ROOT, "assets", f)));
+
   const urls = [
-    `  <url><loc>${siteUrl}/</loc><lastmod>${homeUpdated}</lastmod><priority>1.0</priority></url>`,
+    `  <url><loc>${siteUrl}/</loc><lastmod>${homeUpdated}</lastmod><priority>1.0</priority>` +
+      `${homeImages.map(img).join("")}</url>`,
     ...posts.map(
-      (p) => `  <url><loc>${siteUrl}/posts/${p.slug}/</loc><lastmod>${p.updated}</lastmod><priority>0.8</priority></url>`
+      (p) => `  <url><loc>${siteUrl}/posts/${p.slug}/</loc><lastmod>${p.updated}</lastmod><priority>0.8</priority>` +
+             `${p.hero ? img(p.hero) : ""}</url>`
     ),
   ];
   fs.writeFileSync(
     path.join(ROOT, "sitemap.xml"),
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`,
+    `<?xml version="1.0" encoding="UTF-8"?>\n` +
+      `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n` +
+      `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>\n`,
     "utf8"
   );
   /* preview/ 是未上線的改版提案頁（Worker 另外用密碼擋著），不要被收錄。
