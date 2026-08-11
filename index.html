@@ -1977,10 +1977,15 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    一般 6.82・牙周 4.74・根管 7.07・**兒童 4.01**・矯正 7.96・贋復 10.42・口外 5.12 ——
    **只有 12% 是「除了兒牙以外全過 AA」**（20% 牙周也掉到 4.26，30% 再加口外 4.06）。
    兒牙本來就有一條已定案的 AA 例外（填色白字 3.22），4.01 比它還好。 */
-html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em; }
+html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
+       --sk-padX: .34rem; --sk-padT: .30em; --sk-padB: .12em; }
 .sk.tag-on {
   display: inline-block; font-size: var(--sk-fs); font-weight: 400;
-  line-height: 1.5; padding: .05rem .6rem; border-radius: 8px;
+  /* ⚠ `line-height: 1` 是刻意的，塊高改由上下兩個內距各自負責 ——
+       理由與三個內距的來源見底下「塊要包住的是字面框」那一段。
+       上下兩個由 JS 現量寫進來，這裡的 em 只是 JS 沒跑起來時的後備。 */
+  line-height: 1; padding: var(--sk-padT) var(--sk-padX) var(--sk-padB);
+  border-radius: 8px;
   white-space: nowrap; vertical-align: var(--sk-lift);
   background: color-mix(in srgb, var(--accent) var(--tint), var(--card));
   border: 1px solid color-mix(in srgb, var(--accent) var(--tint), var(--card));
@@ -2003,22 +2008,58 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em; }
 .doc-role, .sk, .card-tag { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
 @media (prefers-reduced-motion: reduce) { .doc-role, .sk, .card-tag { transition: none; } }
 
-/* ---- 小字往下坐的修正 -----------------------------------------------------
-   中文小字和大字並排時，瀏覽器對的是**基線**，眼睛讀的是**字面中線**
-   （Noto Sans TC 實測 0.345em）。而且**填滿的標記，眼睛讀的是那個色塊，不是塊裡
-   面的字** —— 塊裡的字本來就比塊的中線高 0.66px，所以要對的是「塊對字」，
-   不是「字對字」。判斷方法：量「塊上緣比旁邊字的 ink 上緣高多少」與「塊下緣比
-   ink 下緣低多少」，兩個數字要一樣（修完 3.85 / 3.87）。
+/* ---- 塊要包住的是字面框，不是行框（2026-08-11 第三輪）---------------------
+   使用者：「套色的區塊好像沒有對到被套色內文的垂直高度中線，看起來比較偏文字的
+   下面一點」、「水平長度有點長、感覺超出文字不少」。**兩件都成立，而且是同一個
+   成因**：塊的大小一直是從「行框 ＋ 內距」長出來的，跟裡面那幾個字的**字面框**
+   沒有關係。
 
-   ⚠ **專科藥丸這一行是 2026-08-11 新加的。** 在那之前 .doc-role 沒有
-     vertical-align，那顆藥丸的字一直比名字低 1.82px。用的是「字對字」的量
-     （0.345 × (16.8 − 11.52) ÷ 11.52 = .158em）—— 使用者看過之後說那一顆對了，
-     所以**不要**把它改成塊對字的 .218em。
-   ⚠⚠ **專長標記的抬升量不能寫死，由 JS 現量**（見底下那支 measureLift）。
-     Blink 把 inline-block 的塊內基線位置**進位到整數 px**，所以「要抬多少」不是
-     字級的線性函數，而且同一個字級在不同 DPR 上會落在不同的整數（差到 1px）。
-     上面那個 .135em 只是 JS 沒跑起來時的近似後備。
-     **和 nav-scrollspy 的 --lamp-pad 是同一個做法、同一個理由。** */
+   ── 垂直 ────────────────────────────────────────────────────────────────
+   行框（line-height）對齊的是字型的 ascent／descent，那兩個值涵蓋了拉丁字母的
+   上伸與下伸部；中文方塊字用不到那麼多，而且**用不到的部分上下不一樣多**。
+   原本 `line-height: 1.5` ＋ 上下各 .05rem 的結果（1440，Noto Sans TC 實測）：
+
+       字面上緣離塊上緣 3.51px　　字面下緣離塊下緣 5.69px　　差 2.18px
+
+   **下面比上面多 62%** —— 這就是使用者看到的「塊往下坐」。要注意它和第二輪那件
+   （2026-08-11 稍早）不是同一件事：第二輪處理的是「整塊相對於旁邊那行字」的位置，
+   這一輪處理的是「塊相對於它自己裡面那幾個字」。第二輪把塊心對到了旁邊的字面
+   中線沒有錯，但塊心本來就不在自己那幾個字的中線上，所以看起來還是低的。
+
+   做法是把行框從尺寸裡拿掉：**`line-height: 1`，塊高改由上下兩個內距各自負責**，
+   由 JS 現量成「字面上下各留一樣多」。留多少 ＝ **0.28 個標記字級**（使用者定案），
+   塊高因此從 21.55px 收到 **19.03px**。落選：0.385（＝維持原本的塊高）、0.32。
+   下限是 0.159（padding-bottom 收到 0），再小就不可能上下對稱。
+
+   ⚠ 一旦上下對稱了，**抬升量就退化成最單純的那條式子**：
+     `(A−D)/2 × (父層字級 − 自己的字級)`，A／D ＝ 字面框的上下緣（em）。
+     因為塊心此時就是自己那幾個字的字面中線，把塊心對到旁邊的字面中線，
+     等於把兩行字的字面中線對在一起。1440 上量到 0.451px（原本 1.618px）。
+   ⚠ **A／D 取的是全部專長詞的極值，不是每個詞各自量。** 逐詞量的話「齒顎矯正」
+     （下緣 .172em）和「隱適美」（.094em）會長成不同高度的塊，同一行擺在一起
+     一眼就看得出來。取極值 → 所有標記同高、同對齊。
+   ⚠ **量字面框要在 400px 上量再等比例縮。** Blink 回來的 actualBoundingBox 是
+     粗顆粒的（實測 400px 上以 1/64 em 為階），直接拿 12px 去量，半個像素就沒了。
+     順帶驗到：這樣算出來的字面中線是 0.34375em，和第二輪手量的 0.345 對得上。
+
+   ── 水平 ────────────────────────────────────────────────────────────────
+   `.6rem` 換算成「側邊留白 ÷ 標記字級」是 **0.909**，比同一張卡上的
+   `.doc dt`（專長／資歷／學歷那三顆灰標籤，0.553）多了六成 —— 一個字 11.97px，
+   左右各留了將近一整個字。收到 **`.34rem`（0.562）**，等於**貼齊 `.doc dt`**
+   （使用者定案）。落選：.5rem（0.776）、.42rem（0.669）。
+   同一族的其他幾顆：`.card-tag` 0.901、`.doc-role` 0.947、`.info-card h3` 1.017、
+   `.chips button` 1.051 —— 這一輪都沒動，逐項數字在 preview/spec-tag-fit/。
+
+   ⚠ **這一輪只動專長標記，`.doc-role`（專科藥丸）一個值都沒動。** 那顆有一模一樣
+     的行框偏差（0.354 / 0.519em），但使用者第二輪明講它現在是對的，不要順手改。
+     兩者的幾何因此從這一輪起分家了 —— 也說得過去：藥丸是名字後面單獨掛的一顆，
+     專長標記是夾在一句話裡、左右都有字可以對，偏差在那裡才看得出來。
+
+   ── 底下這一行（專科藥丸）是第二輪留下來的 ──────────────────────────────
+   中文小字和大字並排時，瀏覽器對的是**基線**，眼睛讀的是**字面中線**
+   （Noto Sans TC 實測 0.345em）。在那之前 .doc-role 沒有 vertical-align，
+   那顆藥丸的字一直比名字低 1.82px。用的是「字對字」的量
+   （0.345 × (16.8 − 11.52) ÷ 11.52 = .158em）。 */
 .doc-role { vertical-align: .158em; }
 </style>
 </head>
@@ -3028,36 +3069,69 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em; }
     });
   });
 
-  /* 專長標記的抬升量現量。理由見上面 CSS 那一段：Blink 把 inline-block 的塊內
-     基線位置進位到整數 px，寫死的 em 在某些字級／某些 DPR 上會差到 1px。
-     探針是零尺寸、絕對定位、隱形的，不影響版面。
-     ⚠ 量「那一行的基線」的探針要插在標記**後面** —— 插前面的話，標記被擠到下一行
-       時探針會留在上一行。 */
-  function measureLift() {
+  /* 專長標記的上下內距與抬升量，全部現量。完整理由見上面 CSS 的
+     「塊要包住的是字面框，不是行框」那一段。一句話：塊的大小不能從行框長出來，
+     行框對的是字型的 ascent／descent，中文用不到的部分上下不一樣多。
+
+     ⚠ **不能寫死成 em。** 一來字面框是字型的性質（這一站沒有載網頁字型，
+       每台裝置解出來的可能是 Noto／PingFang／微軟正黑，三套的字面框不一樣）；
+       二來 Blink 把 inline-block 的塊內基線位置**進位到整數 px**，同一個字級在
+       不同 DPR 上會落在不同的整數。和 --lamp-pad 是同一個做法、同一個理由。
+     ⚠ 這支跑第二次是**冪等**的：它讀的是當下算出來的 padding，第二次算出來
+       的修正量會是 0。 */
+  var SK_PAD = 0.28;    /* 字面框上下各留多少（÷ 標記字級），使用者定案。
+                           落選 0.385（＝維持原本的塊高）與 0.32 —— 見 CSS 那一段。 */
+  function skFit() {
     var dd = document.querySelector('.docs .doc .skills');
     if (!dd || !window.getComputedStyle) return;
     var probe = document.createElement('span');
     probe.className = 'sk tag-on';
     probe.textContent = '測';
-    probe.style.cssText = 'position:absolute;visibility:hidden;vertical-align:baseline';
+    probe.style.cssText = 'position:absolute;visibility:hidden;left:-9999px;top:0';
     dd.appendChild(probe);
+    var scs = getComputedStyle(probe), pcs = getComputedStyle(dd);
+    var fsT = parseFloat(scs.fontSize), fsP = parseFloat(pcs.fontSize);
+
+    /* ① 字面框。400px 量一次再等比例縮 —— actualBoundingBox 的顆粒很粗，
+          直接用 12px 量會少掉半個像素。取全部專長詞的極值，所有標記才會同高。 */
+    var ctx, N = 400, A = 0, D = 0;
+    try { ctx = document.createElement('canvas').getContext('2d'); } catch (e) { ctx = null; }
+    if (!ctx || !('actualBoundingBoxAscent' in ctx.measureText('測'))) { probe.remove(); return; }
+    ctx.font = scs.fontStyle + ' ' + scs.fontWeight + ' ' + N + 'px ' + scs.fontFamily;
+    Array.prototype.forEach.call(document.querySelectorAll('.sk'), function (w) {
+      var m = ctx.measureText(w.textContent);
+      if (m.actualBoundingBoxAscent > A) A = m.actualBoundingBoxAscent;
+      if (m.actualBoundingBoxDescent > D) D = m.actualBoundingBoxDescent;
+    });
+    A /= N; D /= N;
+    if (!(A > 0) || !(D > 0)) { probe.remove(); return; }
+
+    /* ② 現況：塊上下緣離字面上下緣各有多少。塊內基線用零寬、對基線的
+          inline-block 探針量（零寬的東西不會自己折行）。 */
     var inner = document.createElement('span');
     inner.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
     probe.appendChild(inner);
+    var base = inner.getBoundingClientRect().bottom;
     var r = probe.getBoundingClientRect();
-    var ownBase = inner.getBoundingClientRect().bottom;
-    var blockCentreAboveBase = ownBase - (r.top + r.bottom) / 2;
+    var padT = parseFloat(scs.paddingTop), padB = parseFloat(scs.paddingBottom);
+    var slackTop = (base - A * fsT) - r.top;
+    var slackBottom = r.bottom - (base + D * fsT);
     probe.remove();
     if (!r.height) return;
-    var fs = parseFloat(getComputedStyle(dd).fontSize);
-    var inkCentre = fs * 0.3495;      /* 中文字面中線，實測 0.336~0.359 取中 */
-    document.documentElement.style.setProperty(
-      '--sk-lift', (inkCentre - blockCentreAboveBase).toFixed(3) + 'px');
+
+    /* ③ 補成上下一樣多。slackTop 只跟 padding-top 有關、slackBottom 只跟
+          padding-bottom 有關，所以兩邊各自加差額就好。 */
+    var want = SK_PAD * fsT, root = document.documentElement;
+    root.style.setProperty('--sk-padT', Math.max(0, padT + (want - slackTop)).toFixed(3) + 'px');
+    root.style.setProperty('--sk-padB', Math.max(0, padB + (want - slackBottom)).toFixed(3) + 'px');
+    /* ④ 上下對稱之後塊心就是自己那幾個字的字面中線，抬升量因此退化成
+          「兩行字的字面中線對在一起」這條最單純的式子。 */
+    root.style.setProperty('--sk-lift', ((A - D) / 2 * (fsP - fsT)).toFixed(3) + 'px');
   }
-  measureLift();
+  skFit();
   /* 字型還沒下載完時量到的是後備字型，好了再量一次；換裝置像素比也要重量。 */
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureLift);
-  addEventListener('resize', measureLift);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(skFit);
+  addEventListener('resize', skFit);
 
   if (input) {
     input.addEventListener('input', apply);

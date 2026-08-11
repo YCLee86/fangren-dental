@@ -3,120 +3,73 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>頁首玻璃：招牌之前不要那麼糊・iPad 那一輪（定案紀錄）｜芳仁牙醫</title>
-<!-- ⚠ 提案頁一定要帶這一行。三道防線的第一道，另外兩道是 Worker 的
+<!-- ⚠ 提案頁一定要帶下面這一行。三道防線的第一道，另外兩道是 Worker 的
      X-Robots-Tag 與 robots.txt 的 Disallow: /preview/。 -->
 <meta name="robots" content="noindex, nofollow, noarchive">
 <!-- ============================================================================
-     這一頁是什麼（2026-08-11・iPad 那一輪的定案紀錄，已上線）
+     這一頁是什麼（2026-08-11・提案中）
      ----------------------------------------------------------------------------
-     ★ **使用者定案 Ⓑ1（招牌之前 4px）。** 落選 Ⓑ2 3px／Ⓑ3 2px。
-     **這一頁現在是正式站 index.html 的複本，沒有任何覆寫，切換條也刪了** ——
-     畫面上就是線上的樣子。留著是為了保存 iPad 那一輪的推導與落選案的數字。
+     **套色之後，專長那幾個字要多大。**
 
-     ⚠ **上線的版本和這一輪定的不完全一樣，兩處，都是後兩輪帶來的**：
-       ① **轉場改用捲動距離表示**：這一輪定的是「f 0.70 起升」，
-          換算成捲動距離是 118px。電腦版那一輪發現手機定的 f 0.45 換算是
-          98~102px，兩個分開決定的案子幾乎同一個距離，於是收成一條通則
-          **「招牌之前 110px 起升」**。回頭套到 iPad 是 f 0.706，差 8px 的捲動。
-       ② **平段分成兩個值**：橫的螢幕 5px、直的螢幕 4px（電腦版那一輪的 Ⓓ3）。
-          iPad **直放**仍然是這一輪定的 4px；iPad **橫放**會拿到 5px
-          （它看得到 95% 的照片寬度，情況和電腦版一樣）。
-     整條規則寫在 index.html 的「招牌之前不要那麼糊」那一段。
-     後兩輪：preview/head-blur-mobile/、preview/head-blur-desktop/。
+     使用者：「現在的版本套色後內文字應該是變小了。」**成立，而且一直都是這樣**：
+     專長那一欄（.doc dd）的字是 .83rem／13.28px，標記裡的字是 .748rem／11.97px ——
+     **被標起來的那幾個字比旁邊的字小 1.31px（10%）**。標記亮起來本來是要說
+     「這個詞就是你點的那一科」，字卻反而縮了一階，方向是相反的。
 
-     ── 起因（使用者，iPad）──────────────────────────────────────────────────
-     「iPad 上頁首那條玻璃太糊了。捲到照片的診所招牌附近就覺得還好 ——
-       可不可以做一個『到招牌之前不要那麼糊』的版本？」
+     ── 三案（?z=z1|z2|z3）──────────────────────────────────────────────────
+       Ⓩ1  .748rem／11.97px　現況。比內文小 1.31px。塊高 19.05px
+       Ⓩ2  .79rem ／12.64px　中間。比內文小 0.64px。塊高 20.11px
+       Ⓩ3  .83rem ／13.28px　**和沒套色的內文一模一樣，完全不縮**。塊高 21.13px
+     預設 Ⓩ1（＝線上的樣子），這樣一開頁看到的就是現況。
 
-     ── 量出來成立，而且 iPad 比電腦嚴重，成因是**裁切**不是模糊本身 ──────────
-     照片 assets/hero-clinic-night.jpg 是 1600x1058（比例 1.512）。
-     .hero-photo 是 100svh + object-fit: cover + object-position: 50% 100%，
-     所以**視窗愈瘦，左右被切掉愈多**：
+     ⚠ **.83rem 這一階在上一輪（preview/doc-spec-tags/ 的 Ⓩ5）是被否決的**，
+       理由是「塊高 23.52 > dd 行高 23.24，會撐開行框」。**那個理由現在不成立了** ——
+       塊高當時是從行框長出來的（line-height 1.5 ＋ 內距），這一輪改成從字面框長，
+       同樣 .83rem 只有 **21.13px**，離 dd 的行高 23.24 還有 2.1px。
+       所以這一題是被上一輪的幾何改動重新打開的，不是有人忘記它被否決過。
+     ⚠ **不過 Ⓩ3 還是會讓那一列長高 0.13px**（實測 23.23 → 23.36）。
+       決定行框會不會被撐開的**不是塊高，是塊的上緣離基線多遠**：Ⓩ3 是
+       0.8594×13.28 ＋ 0.28×13.28 ＝ **15.13px**，而 dd 那條 strut 的 ascent 只有
+       14.97px，差 0.16px。Ⓩ1／Ⓩ2 都在裡面，那一列一個像素都不動。
+       0.13px 看不出來，但知道有這回事 —— 要再往上加字級，這條才是真正的天花板。
 
-       視窗　　　　　　照片盒　　　可見的 x（檔案座標）　佔原圖寬
-       iPad Pro 11 直　834x1194　　430 ~ 1170　　　　　　 46%
-       iPad 10.9 直　　820x1180　　432 ~ 1168　　　　　　 46%
-       iPad 1024 直　 1024x1366　　403 ~ 1197　　　　　　 50%
-       電腦 1440x900 1440x 900　　　0 ~ 1600　　　　　　100%
+     ⚠ **抬升量在 Ⓩ3 正好是 0。** 式子是 (A−D)/2 × (父層字級 − 自己的字級)，
+       字級一樣就不必抬 —— 標記裡的字和旁邊的字本來就在同一條字面中線上了。
 
-     那被留下來的 46%**正好就是水泥立面加整片窗戶** —— 全張照片裡結構最規則、
-     對比最強的一塊。電腦版的條子同時蓋到左右兩側的天空（幾乎沒有細節），
-     糊掉也看不出來；iPad 直放把天空整個切掉，條子從頭到尾只蓋在窗戶上。
-     **所以不是 iPad 的模糊比較重（都是 6px），是 iPad 底下的東西比較怕糊。**
+     ── 這一頁只有一個變數 ──────────────────────────────────────────────────
+     切換條**只動字級**。上下留白（0.28）與側邊留白（0.562）兩個**比例**都不動，
+     所以三案的塊是等比例放大，不是「字變大、框沒跟上」。
+     ⚠ 為此側邊內距在這一頁寫成 **.4546em**（＝ .34rem ÷ 11.968px）而不是 .34rem。
+       在 Ⓩ1 上兩者算出來一模一樣（5.44px），所以**現況那一案和線上完全相同**；
+       Ⓩ2／Ⓩ3 才會跟著字一起長。1px 的框不跟著縮放，所以比例會有 ±0.01 的漂移。
 
-     逐列實測「條子底下那一段的細節量」（＝水平＋垂直梯度的平均絕對值，
-     數字愈大表示底下的結構愈清楚、糊掉愈明顯。iPad Pro 11 直放，只算可見的 x）：
+     ── 沒有動的東西 ────────────────────────────────────────────────────────
+     顏色、濃度 12%、圓角 8px、.doc-role（專科藥丸）、沒套色的那幾個詞 —— 全都沒動。
+     ⚠ 三案的對比度完全一樣（顏色沒變）。字級都在 AA 的「小字」那一側，
+       所以門檻也沒變：淡底 12% 上一般 6.82・牙周 4.74・根管 7.07・**兒童 4.01**・
+       矯正 7.96・贋復 10.42・口外 5.12。
 
-       捲動進度　條子底下的照片列　細節　亮度　底下是什麼
-       　 0%　　　　 0 ~  67　　　 0.43　37.4　天空
-       　10%　　　　99 ~ 166　　　 0.40　47.8　天空
-       　15%　　  149 ~ 216　　　 0.94　53.1　第一排窗戶進來
-       　20%　　  198 ~ 265　　　 2.02　53.9
-       　30%　　  297 ~ 365　　　 3.23　49.6　水泥立面＋窗戶
-       　40%　　  396 ~ 464　　　 4.89　57.8
-       　50%　　  495 ~ 563　　　 7.37　72.6
-       　60%　　  594 ~ 662　　　 8.52　80.7
-       　70%　　  693 ~ 761　　　 8.87　81.4　二三樓的窗戶，最亮也最清楚的一段
-       　80%　　  793 ~ 860　　  12.47　66.6　★ 招牌就在這一段
-       　85%　　  842 ~ 909　　  16.06　33.9　騎樓（暗）
-       　90%　　  892 ~ 959　　  13.01　29.2　店面（暗）
-       100%　　  991 ~ 1058　　　8.40　34.6　柏油
-
-     ⚠ **細節量在招牌之後反而更高，但使用者說那裡「還好」，兩件事不矛盾** ——
-       招牌以下亮度整個掉下來（立面 50~81，騎樓與店面只剩 29~34）。
-       暗處的糊看不見，所以那一段的高細節其實不會被讀成「糊」。
-       真正被讀成糊的是 15%~80% 那一段：**又亮又規則的水泥立面與窗戶格子**，
-       而它正好就是使用者說的「招牌之前」。
-
-     ── 招牌在哪：實測，不是目測 ─────────────────────────────────────────────
-     在 x 850~1060（招牌那一塊）逐列數亮度 > 120 的點。
-     ⚠ 這裡踩過一次：先掃 y 640~820 掃到的是**二三樓窗戶透出來的室內燈**
-       （最亮值只到 155），把標線畫在那裡，一開 ?mark=1 就看得出對不上。
-       招牌是燈箱字，**最亮值 250 以上**，和窗戶差得很開：
-         y 845 ~ 877　＝ 檔案高度的 **79.9% ~ 82.9%**　← 「芳仁牙醫診所」那六個字
-       （最密的一段是 y 857~869 ＝ 81.0%~82.1%）
-     所以「條子下緣碰到招牌」＝ 條子底下的照片列走到 0.799。
-     ⚠ 動這個數字之前先開 ?mark=1 看標線有沒有壓在招牌上，不要憑印象改。
-
-     ── 三案：形狀一樣，只有「招牌之前那個平段有多輕」不同 ──────────────────
-     全部都是「招牌之前平的一個值 → 0.70 到 0.799 之間升回 6px → 招牌之後維持 6px」。
-     招牌以後和現況**一模一樣**，使用者說那裡本來就好。
-
-       　　　招牌之前　　和現況比
-       現況　6px　　　　—
-       B1　　4px　　　　收一階　　　★ 定案
-       B2　　3px　　　　收兩階
-       B3　　2px　　　　幾乎是清楚的玻璃
-
-     ⚠ 平段一路平到照片最上面（天空那一段）是刻意的：天空的細節量只有 0.4，
-       6px 和 2px 在那裡看起來一樣，收了不花任何代價，規則也才講得清楚
-       ——「招牌之前輕、招牌之後照舊」，不必再多一個轉折點。
-     ⚠ 升回 6px 的那一段取 0.70 → 0.799：**在招牌進來之前就升完**，
-       所以使用者盯著招牌看的時候，畫面上已經是 6px 了，不會看到它在變。
-       iPad Pro 11 上這一段是 118px 的捲動。
-
-     ── 三個實作上的重點（要搬回正式站的話一起搬）────────────────────────────
-     1. **對到照片的哪一列是算出來的，不是拿捲動距離猜的。**
-        cover 的裁切要一起算，否則同一個 scrollY 在不同視窗比例會指到不同的列：
-          s = max(盒寬/圖寬, 盒高/圖高)　可見高度佔全圖 vh01 = (盒高/s)/圖高
-          可見範圍的上緣 top01 = objectPositionY * (1 - vh01)
-          條子底下那一列 f = top01 + vh01 * ((條子高 - 照片盒.top) / 盒高)
-        object-position 是讀 computed style 的，所以手機版那條
-        `object-position: left center` 也自動算對，不必另外寫一份。
-     2. **blur 的值量化到 0.25px 再寫。** backdrop-filter 每一幀重算是有代價的，
-        量化之後大部分的幀根本不會動到 style，只有真的跨過一階才寫。
-     3. **沒有 JS 就是 6px。** 值放在 `--head-blur`，CSS 那一行寫
-        `blur(var(--head-blur, 6px))`，變數沒被設過就退回現況。
-
-     ── 這一頁和 index.html 的差異 ──────────────────────────────────────────
-       **只有 <title> / robots meta / 這段註解，其餘一模一樣。** 定案上線之後
-       切換條、招牌標線與那支覆寫 --head-blur 的 JS 都刪掉了，畫面上就是線上的樣子。
-       路徑另外改過一處：相對的 assets/ posts/ 換成 /assets/ /posts/（這一頁在子目錄）。
-       ⚠ **`srcset` 也要一起換**：HERO 那張圖是 `src` + `srcset` 兩份路徑，
-         只換 `src=` 的話瀏覽器仍然選 srcset，去要 /preview/<name>/assets/… 而 404，
-         畫面上不會破圖，只會安靜地變成 alt 文字疊在黑底上（很像「照片比較暗」）。
+     ── 這一頁和 index.html 的差別 ──────────────────────────────────────────
+       1. title、robots、這段註解、右下角的切換條。
+       2. 所有 assets/ 與 posts/ 路徑改成絕對路徑（srcset 那兩份都要改）。
+       3. --sk-fs 與 --sk-padX 由切換條寫進來；其餘一個值都沒有覆寫。
+       4. 計數器那支拿掉（提案頁不要去 +1 正式站的數字）。
+     ⚠ 參數的正規式要寫 [a-z0-9]+，寫成 [a-z]+ 會吃不到 z1 這種帶數字的值。
      ============================================================================ -->
+<!-- <title> 不只給 Google —— Safari 分頁、書籤、加到主畫面、iOS 的分享面板
+     顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
+     又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
+     「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
+<title>套色之後那幾個字要多大｜芳仁牙醫</title>
+<!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
+     1983 年開的是中華路那間。 -->
+<meta name="description" content="芳仁牙醫診所，1983 年創立，現址雲林縣斗六市永樂街。這裡整理刷牙、牙周、兒童牙科、缺牙重建與定期檢查的衛教文章。">
+<meta name="theme-color" content="#12656a">
+<!-- 分享到 LINE／FB 時對方看到的卡片。這幾行畫面上看不到，只有各家的爬蟲會讀。
+     og:description 壓在 20 字上下，因為訊息 app 的氣泡只露兩行（實測 27 個全形字），
+     長度是收訊那一端決定的，我們只能控制字串本身。「1983年創立」擺最後，
+     接的是「巷口牙醫」不是「永樂街」—— 診所 1983 年是在中華路開的，順序寫反會讀錯。 -->
+<meta property="og:type" content="website">
 <meta property="og:title" content="芳仁牙醫診所">
 <!-- 分隔符有兩階，不是隨便挑的：全形直線切三個並列的段落，
      中點只用在地址內部（縣市／街名）—— 那是同一段裡的細分，不該和上一階同重量。
@@ -308,10 +261,8 @@ html.scrolled .site-head .shell { height: var(--head-h-sm); }
 .site-head::before {
   content: ''; position: absolute; inset: 0; z-index: -1;
   background: var(--glass, transparent);
-  /* 模糊量不是固定的 —— 見下面「招牌之前不要那麼糊」那一段與底下 JS 的 headBlur。
-     **變數沒被設過就是 6px**，所以沒有 JS 的時候完全等於 2026-08-11 之前的樣子。 */
-  -webkit-backdrop-filter: blur(var(--head-blur, 6px)) saturate(1.08);
-  backdrop-filter: blur(var(--head-blur, 6px)) saturate(1.08);
+  -webkit-backdrop-filter: blur(6px) saturate(1.08);
+  backdrop-filter: blur(6px) saturate(1.08);
   /* 下緣淡出。理由和窄帶那條一樣：backdrop-filter 只作用在框內，
      框的下緣就是一條硬邊 —— 捲到照片下半部時，頁首、照片、窄帶會變成
      三塊上下堆疊的板。用 mask 讓最後一段玻璃淡掉，邊就不見了。
@@ -344,54 +295,6 @@ html.scrolled .site-head::before { opacity: 1; }
    現在只有一層固定的薄色（見下方 JS 的 GLASS），深淺完全交給底下：
    壓在夜色上就深，壓在紙色上就淺。**不要再回去做「終點顏色」那件事。**
    ========================================================================== */
-
-/* ==========================================================================
-   招牌之前不要那麼糊（2026-08-11，三輪定案並上線）
-   --------------------------------------------------------------------------
-   起因：使用者在 iPad 上回報「那條玻璃太糊了，捲到照片的診所招牌附近就覺得還好」。
-
-   **量出來成立，成因是裁切不是模糊本身。** 照片是 1600x1058，`.hero-photo`
-   用 object-fit: cover，視窗比例不同、裁掉的地方就完全不同：
-
-     視窗　　　　　　　可見的原圖寬　條子佔照片高　整張照片走完要捲多少
-     iPad 直放 834　　　 46%（純立面）　 5.2%　　　1132px
-     電腦 1440x900　　　100%　　　　　　 6.9%　　　 838px
-     手機 375　　　　　　89%　　　　　　21.1%　　　 221px
-
-   iPad 直放留下的那 46% 正好是**水泥立面加整片窗戶**，全張照片裡結構最規則、
-   對比最強的一塊；電腦版看得到整張（含左右兩側的天空）；手機的條子厚達照片高的
-   21%，永遠會把大片天空一起平均進來，所以讀起來最不糊。
-   **三邊的模糊本來都是 6px，差別在底下的東西怕不怕糊。**
-
-   ⚠ 曾經寫錯過一次：「電腦版的細節量只有 0.34、本來就沒那麼糊」——
-     那是**捲動 0（條子壓在天空上）那一刻**的值。整段量完電腦版接近 iPad：
-     f 70% 時 iPad 8.79 / 電腦 7.52 / 手機 6.55（細節量 ＝ 梯度平均絕對值）。
-
-   ── 規則 ─────────────────────────────────────────────────────────────────
-   **招牌之前平的一個值 → 招牌之前 110px 開始升 → 招牌之後維持 6px。**
-
-   ・招牌 ＝ 檔案高度的 **79.9%**（在 x 850~1060 逐列數亮度 > 120 的點量出來的；
-     招牌是燈箱字，最亮 250 以上，和二三樓窗戶透出來的室內燈 155 分得很開）。
-   ・招牌之後維持 6px，是因為那一段亮度掉到 29~34（立面是 50~81），暗處的糊看不見。
-   ・**轉場用「捲動距離」表示，不是照片比例。** 眼睛讀的是「手指滑一段，糊度變了
-     多少」，那本來就是一個捲動距離。用比例寫，同一條規則在不同視窗會差四倍
-     （f 0.70 起升：iPad 118px、手機 375 只有 28px）。
-     110px 這個值是回推出來的：iPad 那一輪定的轉場換算是 118px、
-     手機那一輪是 98~102px —— 兩個分開決定的案子幾乎同一個距離，取中間值。
-
-   ── 平段的值：橫的螢幕 5px、直的螢幕 4px ─────────────────────────────────
-   這是**整條規則唯一分尺寸的地方**（`--head-blur-flat`，就在下面）。
-   分界用**畫面比例**不是寬度，因為決定「裁掉多少天空」的是盒子的長寬比：
-     橫的（≥1:1）→ 照片幾乎整張看得見，兩側天空都在，收到 5px 就夠
-     直的（<1:1）→ cover 往中間收，剩下的都是立面與窗戶，要收到 4px
-   ⚠ **不要改成 min-width。** iPad 直放是 834 寬，比 720 的手機斷點大得多，
-     用寬度分會和電腦版分在同一邊；而 iPad 橫放（1194x834）看得到 95% 的寬度，
-     情況其實和電腦版一樣 —— 只有「比例」分得對。
-   ⚠ 使用者是分三輪各自看實機挑的：iPad 直 4px、手機 4px、電腦 5px。
-     Ⓓ2（電腦也 4px）與 Ⓓ1 的 4px 落選，「電腦不改（維持 6px）」也落選。
-   ========================================================================== */
-:root { --head-blur-flat: 4px; }
-@media (min-aspect-ratio: 1/1) { :root { --head-blur-flat: 5px; } }
 
 .brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; min-width: 0; }
 .brand-text b { white-space: nowrap; }
@@ -2161,6 +2064,24 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
    那顆藥丸的字一直比名字低 1.82px。用的是「字對字」的量
    （0.345 × (16.8 − 11.52) ÷ 11.52 = .158em）。 */
 .doc-role { vertical-align: .158em; }
+
+/* ==== 提案頁專用：切換條 ================================================== */
+.zbar {
+  position: fixed; right: .8rem; bottom: .8rem; z-index: 80;
+  display: flex; gap: .3rem; align-items: center;
+  font-size: .72rem; line-height: 1.4;
+  background: rgba(25,22,20,.82); backdrop-filter: blur(6px);
+  border-radius: 12px; padding: .3rem .45rem; color: rgba(255,255,255,.8);
+}
+.zbar b { font-weight: 400; opacity: .65; padding-inline: .25rem; }
+.zbar button {
+  font: inherit; cursor: pointer; border-radius: 8px; padding: .2rem .5rem;
+  background: transparent; color: rgba(255,255,255,.8);
+  border: 1px solid rgba(255,255,255,.28);
+}
+.zbar button[aria-pressed="true"] { background: rgba(255,255,255,.9); color: #191614; border-color: transparent; }
+.zbar output { opacity: .7; padding-left: .3rem; font-variant-numeric: tabular-nums; }
+@media print { .zbar { display: none; } }
 </style>
 </head>
 <body>
@@ -2170,7 +2091,7 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
 
 <header class="site-head">
   <div class="shell">
-    <a class="brand" href="./">
+    <a class="brand" href="/">
       <span class="brand-mark">
         <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai。牙那條子路徑依自己的中心
              放大 1.3 倍、再往上移 0.50 個單位（2026-08-07 定案），嘴一個節點都沒改。
@@ -2693,72 +2614,6 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
     return Math.round(v * A_MAX + PAPER[i] * (1 - A_MAX));
   });
 
-  /* ---- 招牌之前不要那麼糊（2026-08-11 定案上線）----------------------------
-     整條規則與三輪的推導寫在上面樣式表「招牌之前不要那麼糊」那一段，
-     落選案的數字在 preview/head-blur-ipad|mobile|desktop/ 三頁的 <head>。
-     這裡只放怎麼算。
-
-     ⚠ **「條子底下是照片的哪一列」一定要把 cover 的裁切一起算**，
-       不能拿 scrollY 當門檻 —— 同一個 scrollY 在不同視窗比例指到的照片內容
-       完全不一樣（電腦版是上下裁、iPad 直放是左右裁、手機切右邊）。
-
-         s     = max(盒寬 / 圖寬, 盒高 / 圖高)
-         vh01  = (盒高 / s) / 圖高             可見的高度佔整張圖多少
-         top01 = objectPositionY * (1 - vh01)  可見範圍的上緣在整張圖的哪裡
-         f     = top01 + vh01 * ((條子高 - 照片盒.top) / 盒高)
-
-       objectPositionY 是**讀 computed style** 的，所以電腦版的 `50% 100%` 與
-       手機那條 `left center`（＝`0% 50%`）都自動算對，不必分尺寸各寫一份。
-     ⚠ **起升點是反著算回來的**：先由 f=SIGN 換出招牌在哪個 scrollY，退 RAMP_PX，
-       再換回 f 當門檻。這樣那 110px 在每個視窗都真的是 110px。
-       要夾在 f(scroll 0) 以上 —— 視窗很矮時 110px 可能比招牌之前的全部行程還長。
-     ⚠ **量化到 0.25px 再寫。** backdrop-filter 每一幀重算是有代價的，
-       量化之後大部分的幀根本不會動到 style，只有真的跨過一階才寫。
-     ⚠ 平段的值來自 CSS 的 `--head-blur-flat`（橫的 5px、直的 4px），
-       **只在 resize 時重讀** —— 逐幀 getComputedStyle 會每一幀強制重算樣式。 */
-  var photo = document.querySelector('.hero-photo');
-  var heroImg = photo && photo.querySelector('img');
-  var SIGN = .799;              // 招牌那六個字的上緣（檔案高度的比例，實測）
-  var RAMP_PX = 110;            // 招牌之前多少 px 開始升回 FULL
-  var FULL = 6;                 // 招牌之後 ＝ 改動之前的樣子
-  var flat = 4, lastBlur = null;
-
-  function readFlat() {
-    var v = parseFloat(getComputedStyle(root).getPropertyValue('--head-blur-flat'));
-    flat = isFinite(v) && v > 0 ? v : 4;
-    lastBlur = null;            // 換了平段就得重寫一次，不能被上一格擋掉
-  }
-
-  function objPosY() {
-    var v = getComputedStyle(heroImg).objectPosition.split(/\s+/)[1] || '50%';
-    if (v.slice(-1) === '%') return parseFloat(v) / 100;
-    if (v === 'top') return 0;
-    if (v === 'bottom') return 1;
-    return .5;                  // center，以及這一站沒用到的 px 值
-  }
-
-  function paintBlur(headH) {
-    if (!photo || !heroImg || !heroImg.naturalWidth) return;
-    var r = photo.getBoundingClientRect();
-    if (!r.height) return;
-    var s = Math.max(r.width / heroImg.naturalWidth, r.height / heroImg.naturalHeight);
-    var vh01 = Math.min(1, (r.height / s) / heroImg.naturalHeight);
-    var top01 = objPosY() * (1 - vh01);
-    var f = Math.max(0, Math.min(1, top01 + vh01 * ((headH - r.top) / r.height)));
-
-    var signScroll = ((SIGN - top01) / vh01) * r.height - headH;
-    var start = top01 + vh01 * ((Math.max(0, signScroll - RAMP_PX) + headH) / r.height);
-
-    var b = f <= start ? flat
-          : f >= SIGN  ? FULL
-          : flat + (FULL - flat) * (f - start) / (SIGN - start);
-    b = Math.round(b * 4) / 4;
-    if (b !== lastBlur) {
-      root.style.setProperty('--head-blur', b.toFixed(2) + 'px');
-      lastBlur = b;
-    }
-  }
-
   function paint() {
     root.classList.toggle('scrolled', scrollY > 4);
 
@@ -2791,8 +2646,6 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
        收完之後條子下緣是硬邊，但那一刻它正好和「窄帶結束、紙色開始」
        那條原本就存在的邊重合，所以看不出多了一條線。 */
     root.style.setProperty('--head-fade', (76 + 24 * t * t * t).toFixed(1) + '%');
-
-    paintBlur(h);               // 招牌之前不要那麼糊，見上面 paintBlur
   }
 
   var tick = false;
@@ -2801,15 +2654,9 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
     tick = true;
     requestAnimationFrame(function () { tick = false; paint(); });
   }
-  function onResize() { readFlat(); onScroll(); }
   addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', onResize);
-  addEventListener('orientationchange', onResize);
-  /* 照片還沒解出尺寸的時候 paintBlur 會直接跳過（naturalWidth 是 0），
-     所以要在它載完之後補算一次，否則 HERO 那一屏會停在 6px。 */
-  if (heroImg && !heroImg.complete) heroImg.addEventListener('load', onScroll);
+  addEventListener('resize', onScroll);
   window.fangrenRepaintHead = paint;   // 切換頁首深淺時要立刻重算
-  readFlat();
   paint();
 })();
 </script>
@@ -3228,6 +3075,7 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
           「兩行字的字面中線對在一起」這條最單純的式子。 */
     root.style.setProperty('--sk-lift', ((A - D) / 2 * (fsP - fsT)).toFixed(3) + 'px');
   }
+  window.skFit = skFit;
   skFit();
   /* 字型還沒下載完時量到的是後備字型，好了再量一次；換裝置像素比也要重量。 */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(skFit);
@@ -3247,7 +3095,53 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em;
 <!-- 瀏覽計數器。2026-08-08 補回來 —— 首頁換成定案版型（2c0f7aa）時整支被漏掉，
      窄帶的數字停在提案頁的示範值 8642、六張文章卡的數字則一直是「—」。
      文章頁一直都有掛，所以只有首頁壞掉。 -->
-<script src="/assets/counter.js" defer></script>
+<!-- 提案頁不掛計數器，免得去 +1 正式站的數字。 -->
 
+
+<!-- ==== 切換條（提案用，定案後連同 data-z 一起刪掉）======================== -->
+<div class="zbar" role="group" aria-label="標記字級切換">
+  <b>Ⓩ 字級</b>
+  <button type="button" data-z="z1">.748</button>
+  <button type="button" data-z="z2">.79</button>
+  <button type="button" data-z="z3">.83</button>
+  <output id="zread"></output>
+</div>
+<script>
+/* 切換條。⚠ 正規式一定要 [a-z0-9]+ —— 寫成 [a-z]+ 會吃不到 z1 這種帶數字的值。
+   只動字級：側邊內距用 em 跟著字一起縮放，上下由 skFit 現量，兩個比例都不變。 */
+(function () {
+  var root = document.documentElement;
+  var FS = { z1: '.748rem', z2: '.79rem', z3: '.83rem' };
+  var m = location.search.match(/[?&]z=([a-z0-9]+)/);
+  var z = (m && /^z[123]$/.test(m[1])) ? m[1] : 'z1';
+  function paint() {
+    root.setAttribute('data-z', z);
+    root.style.setProperty('--sk-fs', FS[z]);
+    root.style.setProperty('--sk-padX', '.4546em');   /* ＝ .34rem ÷ 11.968px */
+    if (window.skFit) window.skFit();
+    Array.prototype.forEach.call(document.querySelectorAll('.zbar button'), function (b) {
+      b.setAttribute('aria-pressed', b.dataset.z === z ? 'true' : 'false');
+    });
+    var on = document.querySelector('.sk.tag-on');
+    var out = document.getElementById('zread');
+    if (!out) return;
+    if (!on) { out.textContent = '（先點一顆科別）'; return; }
+    var dd = document.querySelector('.docs .doc .skills');
+    out.textContent = Math.round(parseFloat(getComputedStyle(on).fontSize) * 100) / 100 + 'px（內文 '
+      + Math.round(parseFloat(getComputedStyle(dd).fontSize) * 100) / 100 + '）／塊高 '
+      + Math.round(on.getBoundingClientRect().height * 100) / 100;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.zbar button'), function (b) {
+    b.addEventListener('click', function () {
+      z = b.dataset.z;
+      history.replaceState(null, '', '?z=' + z);
+      paint();
+    });
+  });
+  document.addEventListener('click', function (e) { if (e.target.closest('.chips button')) setTimeout(paint, 0); });
+  paint();
+  addEventListener('load', paint);
+})();
+</script>
 </body>
 </html>
