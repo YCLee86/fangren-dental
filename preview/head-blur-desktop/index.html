@@ -3,104 +3,87 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>頁首玻璃：手機版怎麼套（形狀三案 × 濃度三階）｜芳仁牙醫</title>
+<title>頁首玻璃：電腦版怎麼套（收尾這一輪）｜芳仁牙醫</title>
 <!-- ⚠ 提案頁一定要帶這一行。三道防線的第一道，另外兩道是 Worker 的
      X-Robots-Tag 與 robots.txt 的 Disallow: /preview/。 -->
 <meta name="robots" content="noindex, nofollow, noarchive">
 <!-- ============================================================================
-     這一頁是什麼（2026-08-11・手機這一輪已定案 Ⓜ3＋Ⓛ1）
+     這一頁是什麼（2026-08-11・提案中，這一件的最後一輪）
      ----------------------------------------------------------------------------
-     ★ **使用者定案 Ⓜ3＋Ⓛ1**：平段 4px、f 0.45 起升回 6px（375 上轉場 97.8px）。
-       落選：Ⓜ1 同 iPad（轉場只有 27.7px，太快）、Ⓜ2 一路到底、
-       濃度 Ⓛ2 3px／Ⓛ3 2px。切換條先留著，因為整件事還沒上線 ——
-       電腦版是最後一輪，在 preview/head-blur-desktop/。三處都定了才一起改 index.html。
-     ⚠ **下一輪發現這個 0.45 可以和 iPad 的 0.70 收成同一條規則**：
-       兩個起升點換算成**捲動距離**分別是 98px（375）與 118px（iPad），
-       幾乎一樣。所以電腦版那一輪的 Ⓓ1 改用「招牌之前 110px」表示，
-       回頭套到這裡是 f 0.407（375）／0.423（390），和 0.45 差不到 30px 的捲動。
-       **如果 Ⓓ1 被選上，這一頁的定案值會被那條通則取代**（畫面上等於沒變）。
+     ── 前情：前兩輪已定案 ───────────────────────────────────────────────────
+     使用者在 iPad 上回報頁首玻璃太糊，捲到招牌附近就還好。招牌之前收輕、
+     招牌之後維持 6px。前兩輪：
+       iPad　preview/head-blur-ipad/　　 ★ Ⓑ1：平段 4px，f 0.70 起升回 6px
+       手機　preview/head-blur-mobile/　 ★ Ⓜ3＋Ⓛ1：平段 4px，f 0.45 起升回 6px
+     兩邊的平段一樣（4px），**只有起升點不同**。這一輪要決定電腦版，
+     順便把那個不一致收乾淨。
 
-     ── 前情 ─────────────────────────────────────────────────────────────────
-     使用者在 iPad 上回報頁首玻璃太糊，捲到招牌附近就還好。
-     上一頁 preview/head-blur-ipad/ 做了三案，**使用者定案 Ⓑ1**：
-       招牌之前 4px → 0.70 ~ 0.799 之間升回 6px → 招牌之後維持 6px。
-     接著他要看**手機版怎麼套**。這一頁就是那一輪。
+     ── ⚠ 先更正上一輪講過的一句話 ───────────────────────────────────────────
+     上一輪說「電腦版的細節量只有 0.34、本來就沒那麼糊」。
+     **那個 0.34 是捲動 0（條子壓在天空上）那一刻的值，不是整段。**
+     把整個捲動範圍量完，電腦版其實**很接近 iPad，不像手機**：
 
-     ── 手機不是「同一件事的小尺寸」，是另一件事 ─────────────────────────────
-     那條規則搬到手機上，三個前提**全部不成立**，所以不能直接照抄：
+       f（條子下緣）　iPad 直　電腦 1440　手機 375
+       　40%　　　　　 3.97　　 2.59　　　 2.02
+       　50%　　　　　 6.58　　 4.17　　　 3.41
+       　60%　　　　　 8.46　　 5.67　　　 5.09
+       　70%　　　　　 8.79　　 7.52　　　 6.55
+       　80%（招牌）　10.66　　11.55　　　 8.62
+       　90%　　　　　12.97　　12.15　　　11.63
 
-     一、**裁切方向相反，手機反而看得到天空。**
-        手機的 HERO 是 `height: 74.72vw` + `object-position: left center`，
-        盒子變成橫的，cover 於是切**右邊**、留左邊；iPad 直放是切左右、留中間。
+     **成因也和先前的說法不同，這裡要寫對**：手機讀起來比較不糊，主因**不是**
+     左右裁切，而是**條子在手機上有 21% 的照片高**（電腦 6.9%、iPad 5.2%）——
+     那麼厚的一條永遠會把大片天空一起平均進來。電腦版的條子薄，
+     所以它量到的就是那一列真正的細節，和 iPad 同一個量級。
 
-          視窗　　　　　可見的 x（檔案座標）　佔原圖寬　留下來的是什麼
-          iPad 直放　　 430 ~ 1170　　　　　　 46%　　　水泥立面＋整片窗戶
-          手機 375　　　　0 ~ 1416　　　　　　 89%　　　連左邊的天空、路燈、老屋都在
-          手機 320　　　　0 ~  708／800　　　  89%　　　同上（換到 800w 那張圖）
+     → **所以「電腦版不需要改」這個前提站不住。** 這一輪的預設是要改的。
 
-        天空的細節量只有 0.4，被一起平均進來，**同一個位置手機的細節量只有 iPad 的一半**：
+     ── 這一輪真正的題目：一條規則還是三條？ ─────────────────────────────────
+     把已經定案的兩個轉場**換算成捲動距離**（＝手指要滑多遠，blur 才走完）：
 
-          f（條子下緣）　iPad　手機 375
-          　52%　　　　　7.47　 3.86
-          　62%　　　　　8.46　 5.17
-          　71%　　　　　8.80　 6.31
-          　81%　　　　 12.33　10.36　← 招牌
-          　90%　　　　 12.94　12.09
+       裝置　　　　　　　招牌在捲動　起升點　　轉場長度
+       iPad 直放　　　　　　892px　　f 0.70　　**118px**
+       手機 390　　　　　　 172px　　f 0.45　　**102px**
+       手機 375　　　　　　 165px　　f 0.45　　** 98px**
 
-        **所以「手機到底要不要跟著改」本身就是一題**（切換條上的「現況」那一顆）。
+     **兩個分開決定的案子，換算出來幾乎是同一個距離。** 這不是巧合 ——
+     眼睛讀的是「滑一段手指，糊度變了多少」，那本來就是一個**捲動距離**，
+     不是「照片比例」。用比例寫，同一條規則在不同視窗會忽快忽慢
+     （iPad 118px / 手機 28px，差四倍，那正是手機那一輪要另外開一案的原因）。
 
-     二、**條子在手機上蓋掉照片的五分之一，不是二十分之一。**
-        照片盒只有 280px 高（375 寬），頁首 59.2px：
+     所以 Ⓓ1 把規則改寫成：**平段 4px → 招牌之前 110px 開始升 → 招牌之後 6px。**
+     回頭套用到已定案的兩處，差距在 10px 以內，畫面上等於沒變：
 
-          視窗　　　照片盒　　頁首　　條子佔照片高　整張照片走完要捲多少
-          iPad 直　1194.0　　61.2　　 **5.1%**　　　1133px
-          手機 375　280.2　　59.2　　**21.1%**　　　 221px
-          手機 390　291.4　　61.1　　  21.0%　　　　 230px
-          手機 430　321.3　　64.8　　  20.2%　　　　 256px
-          手機 320　239.1　　53.5　　  22.4%　　　　 186px
+       　　　　　原本　　改成 110px 之後　起升點的 f
+       iPad　　118px　　110px　　　　　　0.700 → 0.706
+       手機 390 102px　　110px　　　　　　0.450 → 0.423
+       手機 375　98px　　110px　　　　　　0.450 → 0.407
+       電腦 1440　—　　　110px　　　　　　　—　→ 0.683
 
-        兩個後果：
-        ・條子底下**永遠是混的**（一半天空一半窗戶，或一半窗戶一半招牌），
-          不會有「現在整條都壓在立面上」這種乾淨的狀態。
-        ・**整張照片一個滑動就走完了**（221px）。iPad 要捲 1133px，是五倍。
+     ── 四案 ─────────────────────────────────────────────────────────────────
+     ?d=now|d1|d2|d3
 
-     三、**因為第二點，iPad 那個轉場在手機上等於一個瞬間。**
-        Ⓑ1 的轉場是 f 從 0.70 走到 0.799，換算成捲動距離：
+       現況　　　　　　　整條 6px（＝電腦版不跟著改，只有 iPad 與手機變輕）
+       Ⓓ1 一條規則　★推薦　平段 4px，轉場 ＝ 招牌之前 110px 的捲動。
+       　　　　　　　　　　**全站同一條**，沒有任何 @media，iPad 與手機的定案
+       　　　　　　　　　　都被這一條涵蓋（誤差 10px 內）。1440 上起升 f 0.683。
+       Ⓓ2 照抄手機的 f　平段 4px，轉場 f 0.45 → 0.799。電腦上那是 **332px**
+       　　　　　　　　　　的捲動（1920 上 443px），很長很緩，但和 iPad 的定案
+       　　　　　　　　　　對不起來 —— 等於三個尺寸三條規則。
+       Ⓓ3 電腦收少一階　平段 **5px**，轉場同 Ⓓ1。給「電腦版確實沒 iPad 糊、
+       　　　　　　　　　　不必收到 4px」這個想法一個實際的樣子。
 
-          iPad 直放　0.099 x 1194 ＝ **118px**　　→ 慢慢升上去，看不出接縫
-          手機 375　 0.099 x 280 ＝ **27.7px**　　→ 一個指節的距離，接近直接跳
+     ⚠ **Ⓓ1 是唯一不需要 @media 的一案。** 另外兩案都要在 CSS／JS 裡分尺寸，
+       而這一站的規則向來能不分就不分（見 nav-frame-height 那一輪，
+       框高與圓角是使用者指定推到手機／iPad／電腦共用的基底規則）。
 
-        這就是這一頁**形狀三案**要解的問題。
-
-     ── 招牌在手機上還看得見（有先確認過）─────────────────────────────────────
-     招牌實測在檔案的 x 850~1060、y 845~877（＝高度的 79.9%~82.9%）。
-     手機留下的是 x 0~1416，**招牌在裡面**（落在可見寬度的 60%~75% 處），
-     所以「招牌之前／之後」在手機上仍然講得通，門檻值和 iPad 共用 0.799。
-     ⚠ 開 ?mark=1 可以看到標線壓在招牌上。這一頁的標線也會**跟著手機的裁切**
-       自己換算，因為它讀的是 computed 的 object-position。
-
-     ── 切換條：兩排，形狀 x 濃度 ────────────────────────────────────────────
-     ?m=now|m1|m2|m3　　形狀
-       現況　　　　　　整條 6px（＝手機不跟著改）
-       Ⓜ1 同 iPad　　招牌之前平的 → 0.70~0.799 升回 6px（375 上轉場 27.7px）
-       Ⓜ2 一路到底　　完全不升回去，整條 HERO 都是那個平段的值
-       Ⓜ3 轉場拉長　　0.45 就開始升，到 0.799 才到 6px（375 上轉場 97.8px）　★ 定案
-
-     ?L=L1|L2|L3　　　平段的值（Ⓜ1~Ⓜ3 共用；「現況」那一顆不吃這一排）
-       Ⓛ1 4px　　　　＝ iPad 定案的那個值　★ 定案
-       Ⓛ2 3px
-       Ⓛ3 2px
-
-     預設是 **Ⓜ1 ＋ Ⓛ1**，也就是「iPad 定案的規則原封不動搬過來」的樣子。
-
-     ⚠ **Ⓜ2 的代價要知道**：它連 HERO 之後都不升回去。實際上看不出來 ——
-       照片走完之後窄帶接著進條子，玻璃的濃度會從 .06 一路走到 .84，
-       到「紙色補滿」那一刻整條變不透明，backdrop-filter 的結果就完全看不見了。
-       所以 Ⓜ2 真正和別案不同的只有窄帶通過的那 100px 左右。
-     ⚠ **手機的模糊在實體像素上是 iPad 的 1.5 倍。** 手機 DPR 3、iPad DPR 2，
-       同樣寫 4px，手機畫出來是 12 個實體像素、iPad 是 8 個。
-       眼睛看到的還要再乘上「手機拿得比較近」。**所以手機不一定要跟 iPad 同一個值**，
-       這就是第二排切換條存在的理由。
+     ── 招牌的位置（三輪共用，不要重新目測）─────────────────────────────────
+     在檔案的 x 850~1060 逐列數亮度 > 120 的點：招牌是燈箱字（最亮 250 以上），
+     落在 y 845~877 ＝ 高度的 **79.9% ~ 82.9%**。二三樓窗戶透出來的室內燈
+     最亮只到 155，先前掃錯範圍就把標線畫到窗戶上了。
+     ⚠ 開 ?mark=1 看標線有沒有壓在招牌上，再動那個數字。
+     ⚠ 電腦版是**上下**裁切（1440×900 只看得到檔案的 y 58~1058），
+       所以標線的位置要換算，不能直接把 79.9% 當 top。
 
      ── 這一頁和 index.html 的差異（只有這幾處）──────────────────────────────
        (1) <title> / robots meta / 這段註解
@@ -120,9 +103,11 @@
           可見範圍的上緣 top01 = objectPositionY * (1 - vh01)
           條子底下那一列 f = top01 + vh01 * ((條子高 - 照片盒.top) / 盒高)
         object-position 讀 computed style，所以手機那條 `left center`
-        （＝`0% 50%`）自動算對，**不必為手機另外寫一份規則**。
+        （＝`0% 50%`）與電腦版的 `50% 100%` 都自動算對，不必分尺寸各寫一份。
+        ⚠ **Ⓓ1 的起升點是反著算回來的**：先由 f=0.799 換出招牌在哪個 scrollY，
+          往前退 110px，再換回 f 當門檻。所以那 110px 在每個視窗都真的是 110px。
      2. **blur 的值量化到 0.25px 再寫。** backdrop-filter 每一幀重算是有代價的，
-        量化之後大部分的幀根本不會動到 style。手機更需要這一條。
+        量化之後大部分的幀根本不會動到 style。
      3. **沒有 JS 就是 6px。** 值放在 `--head-blur`，CSS 那一行寫
         `blur(var(--head-blur, 6px))`，變數沒被設過就退回現況。
      ============================================================================ -->
@@ -2093,7 +2078,7 @@ html { --tint: 12%; --sk-fs: .748rem; --sk-lift: .135em; }
 .doc-role { vertical-align: .158em; }
 
 /* ==========================================================================
-   以下只有提案頁有：切換條與招牌標線。定案後連同 data-m / data-l 一起刪掉。
+   以下只有提案頁有：切換條與招牌標線。定案後連同 data-d 一起刪掉。
    ========================================================================== */
 .sw {
   position: fixed; left: 50%; transform: translateX(-50%); bottom: .8rem; z-index: 90;
@@ -3125,47 +3110,51 @@ html[data-mark="1"] .signline::after {
 
 
 <!-- ==========================================================================
-     以下只有提案頁有。網址可帶 ?m=now|m1|m2|m3 與 ?L=L1|L2|L3 與 &mark=1。
+     以下只有提案頁有。網址可帶 ?d=now|d1|d2|d3 與 &mark=1。
      定案後把切換條、.signline、.sw／.signline 的樣式與這一整支 JS 一起刪掉，
      正式站只留 `blur(var(--head-blur, 6px))` 那一行與底下 headBlur 的算法。
      ========================================================================== -->
-<div class="sw" role="group" aria-label="頁首玻璃：手機版形狀與濃度切換">
+<div class="sw" role="group" aria-label="頁首玻璃：電腦版四案切換">
   <button type="button" data-v="now">現況 6px</button>
-  <button type="button" data-v="m1">Ⓜ1 同 iPad</button>
-  <button type="button" data-v="m2">Ⓜ2 一路到底</button>
-  <button type="button" data-v="m3">Ⓜ3 轉場拉長</button>
-  <span class="sep" aria-hidden="true"></span>
-  <button type="button" data-l="L1">Ⓛ1 4px</button>
-  <button type="button" data-l="L2">Ⓛ2 3px</button>
-  <button type="button" data-l="L3">Ⓛ3 2px</button>
+  <button type="button" data-v="d1">Ⓓ1 一條規則</button>
+  <button type="button" data-v="d2">Ⓓ2 照抄手機的 f</button>
+  <button type="button" data-v="d3">Ⓓ3 收少一階 5px</button>
   <span class="sep" aria-hidden="true"></span>
   <button type="button" data-mark="1">招牌線</button>
   <span class="read" id="sw-read">—</span>
 </div>
 <script>
-/* 頁首玻璃的模糊量 —— 手機版怎麼套（提案，2026-08-11）。
+/* 頁首玻璃的模糊量 —— 電腦版怎麼套（提案，2026-08-11，這一件的最後一輪）。
 
-   iPad 那一輪已定案 Ⓑ1：招牌之前 4px → 0.70~0.799 升回 6px → 招牌之後 6px。
-   這一頁只在問「手機要不要跟、跟的話用什麼形狀與什麼值」。
+   前兩輪已定案：iPad Ⓑ1（平段 4px、f 0.70 起升）、手機 Ⓜ3＋Ⓛ1（4px、f 0.45 起升）。
+   兩邊平段一樣，只有起升點不同 —— 這一輪順便把那個不一致收乾淨。
+
+   ── 關鍵：轉場要用「捲動距離」表示，不是「照片比例」──────────────────────
+   眼睛讀的是「手指滑一段，糊度變了多少」，那本來就是一個捲動距離。
+   用 f（照片比例）寫，同一條規則在不同視窗會忽快忽慢：
+
+     f 0.70 起升 →　iPad 118px　電腦 1440  94px　手機 375  28px　（差四倍）
+
+   把兩個已定案的轉場換算成捲動距離，反而幾乎是同一個數：
+
+     iPad Ⓑ1（f 0.70）　118px
+     手機 390 Ⓜ3（f 0.45）　102px
+     手機 375 Ⓜ3（f 0.45）　 98px
+
+   所以 Ⓓ1 ＝ **招牌之前 110px 開始升**，一條規則涵蓋三個尺寸，誤差 10px 內。
 
    ── 為什麼要算「照片的哪一列」而不是直接看 scrollY ──────────────────────
    .hero-photo 是 object-fit: cover，**視窗比例不同、裁掉的地方就不同**：
-   iPad 直放切左右、只留中間 46%（水泥立面與窗戶）；
-   手機是 `height: 74.72vw` + `object-position: left center`，盒子變成橫的，
-   切的是**右邊**、留下左邊 89%（連天空、路燈、老屋都在）。
-   所以同一個 scrollY 在兩邊指到的照片內容完全不一樣，
-   拿捲動距離當門檻，換一個視窗就會偏掉。
-
-   cover 的幾何自己算一次就好（只用到長寬比，所以 srcset 選到 800w 還是 1600w
-   都不影響 —— naturalWidth 對 w 描述符的圖會被密度正規化，但比例不變）：
+   電腦 1440×900 是上下裁（只看得到檔案的 y 58~1058）、左右一寸沒切；
+   iPad 直放是左右裁、只留中間 46%；手機是 `object-position: left center`
+   切右邊、留左邊 89%。三種裁法完全不同，所以門檻一定要換算：
 
      s     = max(盒寬 / 圖寬, 盒高 / 圖高)
      vh01  = (盒高 / s) / 圖高            可見的高度佔整張圖多少
      top01 = objectPositionY * (1 - vh01) 可見範圍的上緣在整張圖的哪裡
      f     = top01 + vh01 * ((條子高 - 照片盒.top) / 盒高)
 
-   objectPositionY 是讀 computed style 的第二個值，手機那條 `left center`
-   會被算成 `0% 50%`，所以**這一支不必為手機另外寫一份規則**。 */
+   objectPositionY 讀 computed style，所以三種寫法都自動算對。 */
 (function () {
   var root = document.documentElement;
   var head = document.querySelector('.site-head');
@@ -3176,22 +3165,20 @@ html[data-mark="1"] .signline::after {
   if (!head || !photo || !img) return;
 
   /* 招牌那六個字：在 x 850~1060 逐列數亮度 > 120 的點，實測 y 845~877，
-     ÷ 1058 ＝ 79.9% ~ 82.9%。是量出來的，不要憑印象改 ——
+     ÷ 1058 ＝ 79.9% ~ 82.9%。三輪共用，是量出來的，不要憑印象改 ——
      ⚠ 招牌是燈箱字（最亮值 250 以上），二三樓窗戶透出來的室內燈只到 155，
-       先前掃錯範圍就把標線畫到窗戶上了。改這兩個數字之前先開 ?mark=1 看一眼。
-     ⚠ 手機的裁切留下 x 0~1416，**招牌在裡面**（落在可見寬度的 60%~75% 處），
-       所以這個門檻手機與 iPad 共用，不必分開。 */
+       先前掃錯範圍就把標線畫到窗戶上了。改這兩個數字之前先開 ?mark=1 看一眼。 */
   var SIGN_TOP = .799;
   var SIGN_BOT = .829;
   var FULL = 6;                                   // 招牌之後 ＝ 現況
+  var RAMP_PX = 110;                              // Ⓓ1／Ⓓ3：招牌之前多少 px 開始升
 
-  /* 形狀三案。start ＝ 從哪裡開始升回 6px；null ＝ 完全不升。
-     換算成 375 寬（照片盒 280.2px）的捲動距離：
-       Ⓜ1  (0.799-0.70) x 280.2 ＝ 27.7px　← iPad 上是 118px，手機只剩四分之一
-       Ⓜ2  —
-       Ⓜ3  (0.799-0.45) x 280.2 ＝ 97.8px */
-  var SHAPES = { m1: .70, m2: null, m3: .45 };
-  var LEVELS = { L1: 4, L2: 3, L3: 2 };
+  /* px ＝ 用捲動距離定轉場（null 表示改用 f）；startF ＝ 用照片比例定轉場。 */
+  var CASES = {
+    d1: { flat: 4, px: RAMP_PX, startF: null },
+    d2: { flat: 4, px: null,    startF: .45 },
+    d3: { flat: 5, px: RAMP_PX, startF: null }
+  };
 
   var lastBlur = null;
 
@@ -3205,51 +3192,64 @@ html[data-mark="1"] .signline::after {
     return .5;                                     // px 值這一站沒用到
   }
 
-  function frac() {
+  function geo() {
     var r = photo.getBoundingClientRect();
-    if (!r.height || !img.naturalWidth) return { f: 1, top01: 0, vh01: 1 };
+    if (!r.height || !img.naturalWidth) return null;
     var s = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight);
     var vh01 = Math.min(1, (r.height / s) / img.naturalHeight);
     var top01 = posY() * (1 - vh01);
     var hh = head.getBoundingClientRect().height || 1;
-    var box01 = (hh - r.top) / r.height;            // 條子下緣在照片盒裡的位置
-    return { f: top01 + vh01 * box01, top01: top01, vh01: vh01 };
+    return {
+      f: top01 + vh01 * ((hh - r.top) / r.height),
+      top01: top01, vh01: vh01, boxH: r.height, headH: hh
+    };
   }
 
-  function curve(flat, start, f) {
-    if (start === null) return flat;                // Ⓜ2：一路到底
-    if (f <= start) return flat;
-    if (f >= SIGN_TOP) return FULL;
-    return flat + (FULL - flat) * (f - start) / (SIGN_TOP - start);
+  /* Ⓓ1／Ⓓ3 的起升點是**反著算回來的**：先由 f=0.799 換出招牌在哪個 scrollY，
+     往前退 RAMP_PX，再換回 f 當門檻。這樣那 110px 在每個視窗都真的是 110px。
+     ⚠ 夾在 f(scroll 0) 以上 —— 視窗很矮時 110px 可能比招牌之前的全部行程還長，
+       不夾住的話起升點會跑到負的捲動位置去。 */
+  function startFrom(c, g) {
+    if (c.px === null) return c.startF;
+    var signScroll = ((SIGN_TOP - g.top01) / g.vh01) * g.boxH - g.headH;
+    var s0 = Math.max(0, signScroll - c.px);
+    return g.top01 + g.vh01 * ((s0 + g.headH) / g.boxH);
   }
 
   function paint() {
-    var v = root.getAttribute('data-m');
-    var l = root.getAttribute('data-l') || 'L1';
-    var g = frac();
+    var v = root.getAttribute('data-d');
+    var g = geo();
+    if (!g) return;
 
-    /* 招牌標線：照片盒裡的位置 ≠ 檔案裡的百分比（cover 會裁掉上下），要換算。
-       手機這一頁 vh01 是 1（上下沒裁），所以換算後就等於原值 —— 但**不要因此
-       把換算拿掉**，這一頁在寬螢幕上開起來會裁掉上面 58 列，那時就需要它。 */
+    /* 招牌標線：照片盒裡的位置 ≠ 檔案裡的百分比（電腦版上下有裁），要換算。 */
     if (line && g.vh01) {
       line.style.setProperty('--sign-top', ((SIGN_TOP - g.top01) / g.vh01 * 100).toFixed(2) + '%');
       line.style.setProperty('--sign-bot', ((SIGN_BOT - g.top01) / g.vh01 * 100).toFixed(2) + '%');
     }
 
-    if (!v || !(v in SHAPES)) {
+    if (!v || !CASES[v]) {
       root.style.removeProperty('--head-blur');     // 現況：變數不存在，CSS 退回 6px
       lastBlur = null;
       if (read) read.textContent = 'f ' + (g.f * 100).toFixed(1) + '%　blur 6.00px';
       return;
     }
+    var c = CASES[v];
+    var start = startFrom(c, g);
+    var f = Math.max(0, Math.min(1, g.f));
+    var b = f <= start ? c.flat
+          : f >= SIGN_TOP ? FULL
+          : c.flat + (FULL - c.flat) * (f - start) / (SIGN_TOP - start);
     /* ⚠ 量化到 0.25px 再寫：backdrop-filter 每一幀重算是有代價的，
-       量化之後大部分的幀根本不會動到 style。手機更需要這一條。 */
-    var b = Math.round(curve(LEVELS[l] || 4, SHAPES[v], Math.max(0, Math.min(1, g.f))) * 4) / 4;
+       量化之後大部分的幀根本不會動到 style。 */
+    b = Math.round(b * 4) / 4;
     if (b !== lastBlur) {
       root.style.setProperty('--head-blur', b.toFixed(2) + 'px');
       lastBlur = b;
     }
-    if (read) read.textContent = 'f ' + (g.f * 100).toFixed(1) + '%　blur ' + b.toFixed(2) + 'px';
+    if (read) {
+      read.textContent = 'f ' + (g.f * 100).toFixed(1) + '%　起升 f ' + (start * 100).toFixed(1) +
+        '%　blur ' + b.toFixed(2) + 'px';
+    }
   }
 
   var tick = false;
@@ -3265,51 +3265,35 @@ html[data-mark="1"] .signline::after {
 
   /* ---- 切換條 ---- */
   var btns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-v]'));
-  var lBtns = Array.prototype.slice.call(document.querySelectorAll('.sw button[data-l]'));
   var markBtn = document.querySelector('.sw button[data-mark]');
 
   function sync(push) {
     var u = new URL(location.href);
-    var v = root.getAttribute('data-m') || 'now';
-    var l = root.getAttribute('data-l') || 'L1';
-    if (v === 'now') u.searchParams.delete('m'); else u.searchParams.set('m', v);
-    if (l === 'L1') u.searchParams.delete('L'); else u.searchParams.set('L', l);
+    var v = root.getAttribute('data-d') || 'now';
+    if (v === 'now') u.searchParams.delete('d'); else u.searchParams.set('d', v);
     if (root.getAttribute('data-mark') === '1') u.searchParams.set('mark', '1'); else u.searchParams.delete('mark');
     if (push) history.replaceState(null, '', u);
     btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
-    /* 「現況」不吃濃度那一排 —— 讓那三顆看起來是關掉的，不然讀數和按鈕會對不起來。 */
-    lBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(v !== 'now' && b.dataset.l === l)); });
     markBtn.setAttribute('aria-pressed', String(root.getAttribute('data-mark') === '1'));
     paint();
   }
-  function setShape(v, push) {
-    if (!(v in SHAPES)) v = 'now';
-    if (v === 'now') root.removeAttribute('data-m'); else root.setAttribute('data-m', v);
+  function setCase(v, push) {
+    if (!CASES[v]) v = 'now';
+    if (v === 'now') root.removeAttribute('data-d'); else root.setAttribute('data-d', v);
     sync(push);
   }
-  btns.forEach(function (b) { b.addEventListener('click', function () { setShape(b.dataset.v, true); }); });
-  lBtns.forEach(function (b) {
-    b.addEventListener('click', function () {
-      root.setAttribute('data-l', b.dataset.l);
-      /* 按濃度時如果還停在「現況」，自動切到 Ⓜ1 —— 否則按了沒反應，像壞掉。 */
-      if (!root.getAttribute('data-m')) root.setAttribute('data-m', 'm1');
-      sync(true);
-    });
-  });
+  btns.forEach(function (b) { b.addEventListener('click', function () { setCase(b.dataset.v, true); }); });
   markBtn.addEventListener('click', function () {
     if (root.getAttribute('data-mark') === '1') root.removeAttribute('data-mark');
     else root.setAttribute('data-mark', '1');
     sync(true);
   });
 
-  /* ⚠ 正規式要寫 [a-zA-Z0-9]+，不是 [a-z]+ —— 寫成後者會吃不到 m1／L1 這種
-     帶數字或大寫的值，比對失敗後悄悄退回預設，等於參數沒作用（這一站踩過一次）。 */
-  var qm = /[?&]m=([a-zA-Z0-9]+)/.exec(location.search);
-  var ql = /[?&]L=([a-zA-Z0-9]+)/.exec(location.search);
-  if (ql && LEVELS[ql[1]]) root.setAttribute('data-l', ql[1]);
+  /* ⚠ 正規式要寫 [a-z0-9]+，不是 [a-z]+ —— 寫成後者會吃不到 d1 這種帶數字的值，
+     比對失敗後悄悄退回預設，等於參數沒作用（這一站踩過一次）。 */
+  var q = /[?&]d=([a-z0-9]+)/.exec(location.search);
   if (/[?&]mark=1/.test(location.search)) root.setAttribute('data-mark', '1');
-  /* 預設是 Ⓜ1 ＋ Ⓛ1 ＝ iPad 定案的規則原封不動搬過來的樣子。 */
-  setShape(qm ? qm[1] : 'm1', false);
+  setCase(q ? q[1] : 'd1', false);                 // 預設 Ⓓ1（推薦的那一案）
 })();
 </script>
 
