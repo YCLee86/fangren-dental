@@ -87,6 +87,51 @@ const TARGETS = [
   { file: "apple-touch-icon-precomposed.png", size: 180, maskable: false, root: true },
 ];
 
+/* =============================================================================
+   iOS 26「Liquid Glass」的顏色補償（2026-08-12 第四輪，實測反推）
+   -----------------------------------------------------------------------------
+   iOS 26 會在主畫面圖示上疊一層玻璃效果。它**不是均勻的白色覆蓋** ——
+   從使用者的截圖量出來，它幾乎只抬暗色、亮色原地不動：
+
+     綠 #3f654a rgb(63,101,74)  → 螢幕上 rgb(89,115,94)   每通道 +26 / +14 / +20
+     紙 #e2e5e6 rgb(226,229,230)→ 螢幕上 rgb(227,228,230) 每通道  +1 /  −1 /   0
+
+   兩個已知點可以解出每個通道的線性映射 out = m×in + b（下面 GLASS 那組數字），
+   三個通道分別是 0.847/0.883/0.872 的斜率 —— 一層往亮端壓縮的疊加。
+
+   既然量得到就補得回去：把要顯示的顏色反推回 in = (target − b) / m，
+   疊加之後就正好落在原本的品牌色上。實測 ΔE 從 9.2 降到 0.0。
+
+   ⚠⚠ **icon.svg 裡放的永遠是品牌真值 #3f654a，補償只發生在這支腳本裡。**
+      來源檔要看得出「這顆圖示是什麼顏色」，補償是輸出階段的裝置修正，
+      兩件事不要混在一起 —— 就像印刷的打樣補償不會回頭改設計稿。
+
+   ⚠ **這組數字是從那一支手機、那一組設定量到的。** 如果使用者打開了
+      「減少透明度」，或 Apple 之後改了效果，補償就會過頭（圖示會偏暗）。
+      要關掉就把 COMPENSATE 設成 false，其餘什麼都不用改。
+
+   ⚠ **模糊不在這裡處理，也處理不了。** 同一批量測顯示邊緣過渡從 1px 變成 5px，
+      那是 iOS 產生捷徑圖示時自己重新取樣的，網站這側沒有介面可以影響。
+      這一節只修顏色。
+   ============================================================================= */
+const COMPENSATE = true;
+const GLASS = [                       // [m, b] per channel，從上面兩個實測點解出來
+  [0.8466, 35.7],                     // R
+  [0.8828, 25.8],                     // G
+  [0.8718, 29.5],                     // B
+];
+const BRAND_FILL = "#3f654a";         // icon.svg 裡標誌的顏色（品牌真值）
+
+const compensate = (hex) => {
+  const n = parseInt(hex.slice(1), 16);
+  const src = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  const out = src.map((v, i) => {
+    const [m, b] = GLASS[i];
+    return Math.max(0, Math.min(255, Math.round((v - b) / m)));
+  });
+  return "#" + out.map((v) => v.toString(16).padStart(2, "0")).join("");
+};
+
 /* maskable 版要把 icon.svg 的放大倍率換成這個值（68%，理由見上面）。 */
 const SCALE_MASKABLE = ".696";
 
@@ -263,7 +308,16 @@ if (!chrome) {
   process.exit(1);
 }
 
-const source = fs.readFileSync(SVG_FILE, "utf8");
+let source = fs.readFileSync(SVG_FILE, "utf8");
+
+if (COMPENSATE) {
+  if (!source.includes(BRAND_FILL)) {
+    throw new Error(`assets/icon.svg 裡找不到 ${BRAND_FILL} —— 顏色補償對不到標誌的填色`);
+  }
+  const fixed = compensate(BRAND_FILL);
+  source = source.split(BRAND_FILL).join(fixed);
+  console.log(`  · iOS 玻璃補償：${BRAND_FILL} → ${fixed}（疊加後會還原成 ${BRAND_FILL}）`);
+}
 
 /* 命中次數必須剛好 1：0 ＝ <g> 的寫法被改過、比對不到（maskable 會悄悄退化成
    一般版）；≥2 ＝ 比對太寬鬆，咬到註解了。兩種都要當場停下來，
