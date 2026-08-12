@@ -92,6 +92,21 @@ const TARGETS = [
      "type": "image/png", "purpose": "maskable" }。
      ⚠ 沒有它 Android 就沒有自適應圖示（會拿 192 那張直接裁），這是暫時的取捨。 */
   { file: "icon-maskable-512.png", size: 512, maskable: true },
+
+  /* ⚠ **透明底的實驗版（2026-08-12 第九輪），只給 /preview/icon-test-b/ 用，正式站沒有引用。**
+     使用者問「改成沒有背景、跟著手機主題變，會不會就沒有模糊問題」。
+     查證結果：**iOS 不支援網頁捷徑的深淺色自適應圖示**（Apple 開發者論壇
+     thread/801448，2025-09 提問至今零回覆），透明的部分它是**直接填黑**、不會跟著主題。
+     所以這一張實際上等於「黑底 ＋ 淺色標誌」，不是自適應。
+
+     那為什麼還是要做？因為**目前所有「銳利」的參考案例底色都是深的**
+     （blog.ichentsai.tw 那顆是黑底、Tailscale 也是），而我們糊掉的都是淺底。
+     這是唯一還沒試過的變數，值得用一張測試圖示排除掉。
+
+     標誌改用官方色票的**米色 #D3CBC5** —— 深綠 #3f654a 疊在黑底上只有 2.1:1，
+     等於看不見。⚠ 這一張**不套玻璃補償**：補償是為那顆暗綠算的，
+     淺色標誌幾乎不會被抬。 */
+  { file: "icon-192-alpha.png", size: 192, maskable: false, alpha: true, fill: "#D3CBC5" },
 ];
 
 /* =============================================================================
@@ -185,7 +200,7 @@ const findChrome = () => chromeCandidates().find((p) => p && fs.existsSync(p));
 
 /* ---------- 算一張 PNG ---------- */
 
-const renderPng = (chrome, svg, size, dir, tag) => {
+const renderPng = (chrome, svg, size, dir, tag, alpha = false) => {
   const page = path.join(dir, `${tag}.html`);
   const png = path.join(dir, `${tag}.png`);
   fs.writeFileSync(
@@ -211,7 +226,7 @@ const renderPng = (chrome, svg, size, dir, tag) => {
       /* ⚠ 這裡和 favicon-ico.mjs 相反，**底要不透明**（ARGB 全 f）。
          icon.svg 自己有一張滿版的 <rect>，正常情況輪不到這個預設值；
          留白底當第二道保險，萬一 <rect> 被改壞了也不會產出帶 alpha 的圖給 iOS。 */
-      "--default-background-color=ffffffff",
+      `--default-background-color=${alpha ? "00000000" : "ffffffff"}`,
       `--screenshot=${png}`,
       `--window-size=${size},${size}`,
       `--user-data-dir=${path.join(dir, `profile-${tag}`)}`,
@@ -244,7 +259,7 @@ const renderPng = (chrome, svg, size, dir, tag) => {
    寫死 6 的話這裡會在「產物其實完全正確」的情況下報錯。
    順帶一提，**沒有 alpha 通道正是我們要的結果** —— 下面那個
    「有沒有半透明像素」的檢查在型態 2 時恆真，等於天生就過。 */
-const inspect = (buf, tag) => {
+const inspect = (buf, tag, alpha = false) => {
   const depth = buf.readUInt8(24);
   const colourType = buf.readUInt8(25);
   if (depth !== 8 || (colourType !== 2 && colourType !== 6)) {
@@ -301,7 +316,7 @@ const inspect = (buf, tag) => {
   if (colours.size < 8) {
     throw new Error(`${tag} 只有 ${colours.size} 種顏色 —— 標誌沒有畫出來`);
   }
-  if (transparent > 0) {
+  if (!alpha && transparent > 0) {
     throw new Error(`${tag} 有 ${transparent} 個半透明像素 —— iOS 會把它壓在純黑上`);
   }
   return { colours: colours.size };
@@ -316,6 +331,7 @@ if (!chrome) {
 }
 
 let source = fs.readFileSync(SVG_FILE, "utf8");
+const rawSource = source;   // 未套玻璃補償的原稿，透明底那張要用
 
 if (COMPENSATE) {
   if (!source.includes(BRAND_FILL)) {
@@ -345,11 +361,20 @@ const dir = fs.mkdtempSync(path.join(os.tmpdir(), "app-icons-"));
 let changed = 0;
 
 try {
-  for (const { file, size, maskable, root } of TARGETS) {
-    const svg = maskable ? maskableSource : source;
+  for (const { file, size, maskable, root, alpha, fill } of TARGETS) {
+    let svg = maskable ? maskableSource : source;
+    if (alpha) {
+      /* 透明底：把滿版的 <rect> 拿掉，標誌換成指定的淺色。
+         ⚠ 這裡要用**未補償**的來源（rawSource），理由見 TARGETS 的註解。 */
+      svg = (maskable ? rawSource.replace(SCALE_RE, `$1scale(${SCALE_MASKABLE})`) : rawSource)
+        .replace(/<rect[^>]*\/>/, "")
+        .split(BRAND_FILL).join(fill);
+      if (svg.includes("<rect")) throw new Error(`${file} 的背景 <rect> 沒有被移除`);
+      if (!svg.includes(fill)) throw new Error(`${file} 的標誌顏色沒有換成 ${fill}`);
+    }
     const tag = file.replace(/\.png$/, "");
-    const buf = renderPng(chrome, svg, size, dir, tag);
-    const { colours } = inspect(buf, file);
+    const buf = renderPng(chrome, svg, size, dir, tag, !!alpha);
+    const { colours } = inspect(buf, file, !!alpha);
 
     const dest = root ? path.join(ROOT, file) : path.join(ROOT, "assets", file);
     const shown = root ? file : `assets/${file}`;
