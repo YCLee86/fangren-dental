@@ -481,7 +481,14 @@ var DOTS_DAYS = DAYS.slice(0, 5);
     b.type = "button";
     b.setAttribute("data-spec", code);
     b.setAttribute("aria-pressed", code === "all" ? "true" : "false");
-    b.textContent = code === "all" ? "全部" : SPEC[code];
+    /* 第一顆不叫「全部」（2026-08-12 使用者：太直白）。
+       「一週門診」＝ 沒挑科別的時候看到的就是整週的門診，直接把這件事寫出來。
+       ⚠ 不要改成「不分科別」—— 它會緊挨著「一般牙科」站著，而醫院裡「不分科」
+         本身就是一個科別的講法，兩顆並排會被讀成又一個科。
+       ⚠ 也不要用「總覽／全覽」那一類 UI 詞彙：COPY.md 第六節的語氣是功能標籤，
+         而且第四輪的收穫是「不是不準，是太用力」。
+       ⚠ 首頁「主題與科別」那排 chips 的第一顆仍然是「全部」，這一輪沒有動它。 */
+    b.textContent = code === "all" ? "一週門診" : SPEC[code];
     b.addEventListener("click", function () {
       paint(b.getAttribute("aria-pressed") === "true" ? "all" : code);
     });
