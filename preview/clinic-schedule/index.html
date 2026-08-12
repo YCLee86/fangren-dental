@@ -124,6 +124,59 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
 .sp.fill { background: var(--accent); color: var(--on-fill, #fff); border-color: var(--accent); }
 .sp.fill::before { background: currentColor; }
 
+/* ---- Ⓓ 點陣表（參考 drsunkist.com 與 drcmliu.com 的做法）----
+   骨架和門口那面板子一樣：日子當欄、早午晚當列、格子裡只放點。
+   三件是從那兩站抄回來的：
+     ・時段寫在列標題上，不另外開一欄
+     ・不符合的點是「淡掉」不是「拿掉」—— 格子的節奏不破，還看得出那一節有沒有診
+     ・今天那一欄墊底色；休診日寫在圖例那一行，不在表格裡放「休」
+   drcmliu 上面那排分頁是切「哪一間診所」，我們只有一間，所以換成切**科別**。 */
+.dots { display: none; }
+[data-v="d"] .dots { display: block; }
+.dots table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.dots col.lab { width: 5.9rem; }
+.dots thead th {
+  font-size: .84rem; font-weight: 400; color: var(--ink-soft);
+  padding: .1rem 0 .5rem; text-align: center; letter-spacing: .04em;
+}
+.dots thead th.off { color: #b3b8b3; }
+.dots tbody th {
+  text-align: left; font-weight: 400; font-size: .7rem; color: var(--ink-soft);
+  letter-spacing: 0; white-space: nowrap; padding: .5rem .5rem .5rem 0;
+  border-top: 1px solid var(--rule);
+}
+.dots tbody th b { color: var(--ink); font-size: .8rem; font-weight: 700; margin-right: .25em; }
+.dots tbody td { border-top: 1px solid var(--rule); padding: .45rem .1rem; vertical-align: middle; }
+/* 欄的分隔線。一格最多四顆點，沒有這條線的話相鄰兩欄的點會連成一串
+   —— 欄與欄的空隙只有 3.2px，比點與點之間的 3.5px 還窄。
+   參考的那兩站一格只有一顆點，所以他們不需要。 */
+.dots thead th + th, .dots tbody td + td { border-left: 1px solid #dde1e2; }
+.dots .today { background: rgba(33, 77, 72, .07); }
+.dots thead th.today { border-radius: 6px 6px 0 0; }
+.dots .cluster {
+  display: flex; flex-wrap: wrap; justify-content: center; align-content: center;
+  gap: .2rem; max-width: 1.42rem; margin: 0 auto; min-height: .61rem;
+}
+.dots .d {
+  width: .61rem; height: .61rem; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 1px var(--accent-deep) inset;
+}
+/* 被篩掉的：淡掉不是拿掉 */
+.dots .d.dim { background: #c9cdc9; box-shadow: none; }
+.dots .empty { display: block; width: .3rem; height: .3rem; border-radius: 50%;
+               background: #d5d9d5; margin: 0 auto; }
+.dots-note { margin: .8rem 0 0; font-size: .74rem; color: var(--ink-soft); line-height: 1.7; }
+.dots-note .swatch {
+  display: inline-block; width: .5rem; height: .5rem; border-radius: 50%;
+  background: var(--ink-soft); margin-right: .3em; vertical-align: .05em;
+}
+/* 圖例兼篩選：點一下只留那一科 */
+.filter { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .9rem; }
+.filter button { font: inherit; cursor: pointer; }
+.filter .sp[aria-pressed="true"] { background: var(--accent); color: var(--on-fill, #fff); border-color: var(--accent); }
+.filter .sp[aria-pressed="true"]::before { background: currentColor; }
+.filter .sp[data-spec="all"] { --accent: #5f5d5c; --accent-deep: #4c4948; --on-fill: #fff; }
+
 /* ---- Ⓐ 一週一張表 ---- */
 .grid { display: none; }
 [data-v="a"] .grid { display: block; }
@@ -178,6 +231,7 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
 
 /* ---- 圖例 ---- */
 .legend { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .9rem; }
+[data-v="d"] .legend { display: none; }   /* Ⓓ 的圖例就是上面那排篩選 */
 
 .diff { border-left: 4px solid var(--brick); }
 .diff b { color: var(--brick); }
@@ -185,7 +239,7 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
 </style>
 </head>
 
-<body data-v="a">
+<body data-v="d">
 
 <div class="top">
   <div class="shell">
@@ -196,7 +250,8 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
 
 <nav class="switch" aria-label="版型切換">
   <div class="shell">
-    <button type="button" data-go="a" aria-pressed="true">Ⓐ 一週一張表</button>
+    <button type="button" data-go="d" aria-pressed="true">Ⓓ 點陣表</button>
+    <button type="button" data-go="a" aria-pressed="false">Ⓐ 一週一張表</button>
     <button type="button" data-go="b" aria-pressed="false">Ⓑ 依星期</button>
     <button type="button" data-go="c" aria-pressed="false">Ⓒ 依科別</button>
   </div>
@@ -208,6 +263,18 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
   <p class="lead" id="lead"></p>
 
   <div class="card">
+    <div class="dots">
+      <table>
+        <caption style="position:absolute;left:-9999px">一週門診時間與各科別看診時段</caption>
+        <colgroup><col class="lab"><col span="7"></colgroup>
+        <thead><tr id="dots-head"></tr></thead>
+        <tbody id="dots-body"></tbody>
+      </table>
+      <p class="dots-note"><span class="swatch"></span>看診時段・週日休診　｜　底色為今日</p>
+      <p class="dots-note">＊國定假日門診時間請來電確認。</p>
+      <div class="filter" id="filter" role="group" aria-label="只看某一科"></div>
+    </div>
+
     <div class="grid"><table>
       <caption class="sr-only" style="position:absolute;left:-9999px">一週門診時間與各科別看診時段</caption>
       <thead><tr id="grid-head"></tr></thead>
@@ -247,6 +314,15 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
     <p style="margin:0">這一頁用的是<b>站上原本的科別色</b>（PALETTE.md 那七顆），不是板子的磁鐵色。
        兩邊只有兒童牙科與齒顎矯正大致對得上，其餘五科完全不同。<br>
        要不要反過來把實體板子的磁鐵換成網站這一組，是另外一個決定 —— 這裡先不動。</p>
+  </div>
+
+  <div class="card diff">
+    <span class="tag">縮到 10px 之後的一件</span>
+    <p style="margin:0">站上的<b>齒顎矯正</b>與<b>植牙・假牙重建</b>是同色相、只差亮度的兩顆藍
+       （CLAUDE.md 記著這一對是全站最近的 ΔE 13.3）。當標籤有字的時候分得出來，
+       縮成 10px 的點就相當接近了 —— 上面表格裡週五早診那顆深藍與週六早診那顆亮藍就是這兩科。<br>
+       點某一科之後其他點會淡掉，實務上讀得出來；但如果要把這張表放上首頁，
+       這一對是不是要再拉開，得先決定。</p>
   </div>
 
   <p class="foot-note">
@@ -307,6 +383,92 @@ function pill(code, opts) {
   s.title = SPEC[code];
   return s;
 }
+
+/* ---- Ⓓ 點陣表 ----
+   「今天」那一欄的底色：DAYS 的順序是週一起算，JS 的 getDay() 是週日 0，所以要換算。 */
+(function () {
+  var todayIdx = (new Date().getDay() + 6) % 7;   /* 0 = 週一 */
+
+  var head = document.getElementById("dots-head");
+  head.appendChild(document.createElement("td"));
+  DAYS.forEach(function (d, i) {
+    var th = document.createElement("th");
+    th.scope = "col";
+    th.textContent = d.short;
+    var cls = [];
+    if (!SESSIONS.some(function (s) { return d[s.key].length; })) cls.push("off");
+    if (i === todayIdx) cls.push("today");
+    th.className = cls.join(" ");
+    head.appendChild(th);
+  });
+
+  var body = document.getElementById("dots-body");
+  SESSIONS.forEach(function (s) {
+    var tr = document.createElement("tr");
+    var th = document.createElement("th");
+    th.scope = "row";
+    th.innerHTML = "<b>" + s.name.charAt(0) + "</b>" + s.time;
+    tr.appendChild(th);
+    DAYS.forEach(function (d, i) {
+      var td = document.createElement("td");
+      if (i === todayIdx) td.className = "today";
+      var list = d[s.key];
+      if (!list.length) {
+        td.innerHTML = '<span class="empty"></span>';
+        td.setAttribute("aria-label", d.name + s.name + "休診");
+      } else {
+        var box = document.createElement("div");
+        box.className = "cluster";
+        list.forEach(function (c) {
+          var dot = document.createElement("span");
+          dot.className = "d";
+          dot.setAttribute("data-spec", c);
+          dot.title = SPEC[c];
+          box.appendChild(dot);
+        });
+        td.appendChild(box);
+        td.setAttribute("aria-label", d.name + s.name + "：" +
+          list.map(function (c) { return SPEC[c]; }).join("、"));
+      }
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+})();
+
+/* ---- Ⓓ 的圖例兼篩選 ----
+   drcmliu 上面那排分頁是切診所，我們切科別：點下去只留那一科，其餘的點淡掉。 */
+(function () {
+  var wrap = document.getElementById("filter");
+  var codes = ["all"].concat(Object.keys(SPEC));
+
+  function paint(sel) {
+    [].forEach.call(document.querySelectorAll(".dots .d"), function (dot) {
+      var on = sel === "all" || dot.getAttribute("data-spec") === sel;
+      dot.classList.toggle("dim", !on);
+    });
+    [].forEach.call(wrap.children, function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-spec") === sel ? "true" : "false");
+    });
+  }
+
+  codes.forEach(function (code) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "sp";
+    b.setAttribute("data-spec", code);
+    b.setAttribute("aria-pressed", code === "all" ? "true" : "false");
+    var i = document.createElement("i");
+    i.style.fontStyle = "normal";
+    i.textContent = code === "all" ? "全部" : SPEC[code];
+    b.appendChild(i);
+    b.addEventListener("click", function () {
+      paint(b.getAttribute("aria-pressed") === "true" ? "all" : code);
+    });
+    wrap.appendChild(b);
+  });
+  paint("all");
+})();
 
 /* ---- Ⓐ 一週一張表 ---- */
 (function () {
@@ -429,6 +591,7 @@ function pill(code, opts) {
 /* ---- 切換 ---- */
 (function () {
   var LEAD = {
+    d: "參考 drsunkist.com 與 drcmliu.com 的做法：時段寫在列標題上、格子裡只放點、今天那一欄墊底色、休診寫在圖例那一行。下面那排標記兼作篩選 —— 點一科，其他科的點會淡掉（不是消失，那一節有沒有診還看得出來）。",
     a: "整週一張表，和門口那面板子的排法一樣。手機上格子裡只留色點，名稱看底下的圖例；螢幕夠寬才把字放進格子裡。",
     b: "一天一張卡，早／午／晚三節各自列出當節有哪幾科。手機上最好讀，但要捲比較長。",
     c: "一科一列，列出那一科一週有哪幾節。想找「矯正什麼時候看」的人最快，而且能直接接上首頁「主題與科別」的篩選。"
@@ -437,7 +600,7 @@ function pill(code, opts) {
   var btns = [].slice.call(document.querySelectorAll(".switch button"));
 
   function go(v) {
-    if (!LEAD[v]) v = "a";
+    if (!LEAD[v]) v = "d";
     document.body.setAttribute("data-v", v);
     lead.textContent = LEAD[v];
     btns.forEach(function (b) {
@@ -453,7 +616,7 @@ function pill(code, opts) {
   });
 
   var m = location.search.match(/[?&]v=([a-z0-9]+)/);
-  go(m ? m[1] : "a");
+  go(m ? m[1] : "d");
 })();
 </script>
 </body>
