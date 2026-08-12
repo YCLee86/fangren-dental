@@ -12,7 +12,7 @@
      Disallow: /preview/。⚠ 沒有鎖 —— 拿到網址的人看得到。 -->
 
 <!-- ==========================================================================
-     提案：照片與窄帶的接縫（2026-08-12，第二版）
+     提案：照片與窄帶的接縫（2026-08-12，第三版）
      ==========================================================================
      這一頁是 index.html 的完整複本，只多了底下那條切換條。
      「改動前」＝ 現在線上 fangren.net 的樣子（把改過的每一個值原封不動還原），
@@ -22,7 +22,7 @@
      使用者在 iPhone 上回報：「hero 圖片到窄帶隱隱約約還是看得到分界線，
      電腦版翻轉螢幕、iPad 這個分界更明顯。」
 
-     ---- ⚠ 第一版做錯了方向，這一版整個掉頭 ----------------------------------
+     ---- ⚠ 第一版做錯了方向，第二版整個掉頭；第三版是把漸層拉長 ---------------
      第一版是**在照片下緣疊柏油漸層**（手機 22vw、收到不透明），
      接縫確實不見了，但使用者一看就說：
        「你把照片的下半部做成漸層黑然後接上窄帶這個做法錯的，
@@ -62,17 +62,30 @@
        上緣是一條可以用手指描出來的線。
 
      ---- 提案改了什麼 ---------------------------------------------------------
-     1. **手機：窄帶從 #151311 起跑，而且前 12% 是平的。照片一個像素都不碰。**
+     1. **手機：窄帶從 #151311 起跑，整條 smoothstep 走到底。照片一個像素都不碰。**
         #151311 這個值很穩：320／360／375／390／414／430 六個寬度量下來
         整列平均都是它（手機的裁法是「右緣裁 13%、下緣完整落地」，
         各寬度看到的是同一批像素等比例縮放）。
         · 顏色接上 → 跳階歸零。
         · **斜率也要接上**：照片往下變暗、窄帶往下變亮，在同一列折返會長出
-          一條馬赫帶。所以前 12% 維持 #151311 不動，之後才 smoothstep 往上走
-          （smoothstep 的起點斜率是 0），12% 那個轉折兩側都是平的。
-        · 整條因此**比原本深**（上半段 L* 8.5 → 6.0，中段 --band-bg 從 55% 推到
-          62%）—— 這正是使用者要的「窄帶做成比較深的漸層」。
-        ⚠ --band-bg 與 --band-bot 一個值都沒動，接紙色那一頭完全照舊。
+          一條馬赫帶。整條用 smoothstep，而 smoothstep 在起點的斜率本來就是 0 ——
+          接縫這一側自動是平的，不必另外寫平段。
+        · 整條因此**比原本深**（上半段 L* 8.5 → 6.0）—— 這正是使用者要的
+          「窄帶做成比較深的漸層」。
+
+     1a. **漸層攤在整條窄帶上**（使用者第二輪：「這個漸層從黑邊到深藍有點短，
+        看起來很突兀，可以再拉長一點」）。
+        中間那一版是「前 12% 平段 ＋ 12%~62% 走完 ＋ 後 38% 幾乎不動」——
+        13.8 個 L* 全部擠在中間那 53px 裡，107px 高的窄帶只用了一半。
+        改成 0% 一路走到 100%：**長度 53px → 107px（兩倍）、最陡的一列
+        0.326 → 0.194 L* 每像素（少 40%）**，50% 的位置從 L* 17.5 降到 13.2。
+        ⚠ --band-bg 因此不再是這條漸層的色停（變數還在，後備色與分隔線在用）。
+        ⚠ 8-bit 暗部漸層拉長會擔心色帶，實測沒有：Chromium 自己抖動，
+          107px 裡有 73 個色階、最長的一階只有 6px、平均 1.5px 一階。
+        ⚠⚠ 這一輪踩到：CSS 註解裡不能出現註解的結束記號。上面那個「每像素」
+          原本寫成「L 星號 斜線 px」，整段註解在那裡被提早關掉，
+          .band 的規則跟著失效而且完全不報錯。
+        ⚠ --band-bot 沒動，接紙色那一頭完全照舊。
         ⚠ 不是換配色：藍黑三停當初是「夾在夜空與紙色中間、兩邊都要接」取的
           中間值，而窄帶上緣接的是柏油、不是夜空 —— 電腦版 2026-08-07 就為
           同一個理由換掉了，手機這裡是補上同一件事。
@@ -90,7 +103,7 @@
         ⚠ 這**不是** PALETTE 六之三節否決掉的「深一階」。那一案不透明的位置在
           窄帶的**下緣**（螢幕最底），會變回一條實色的線；這裡在**照片與窄帶的
           交界**，窄帶從同一個顏色接下去，沒有任何一條邊。方向相反。
-        iPad 窄帶的漸層一樣補了 smoothstep 的平段（頭尾兩停與 62% 沒動）。
+        iPad 窄帶的漸層做法同手機：從 #161413 起跑、整條 smoothstep 走到底（126px 全用上）。
 
      ---- 量出來的結果 ---------------------------------------------------------
        視窗                              改動前 ΔL\*      改完的 ΔL\*
@@ -1829,23 +1842,40 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      · **顏色接上**：接縫兩側同一個值，跳階歸零。
      · **斜率也要接上**：照片往下變暗、窄帶往下變亮，在同一列折返就會長出
        一條馬赫帶（第九節那條「線性漸層在它的起點是一條線」的反面）。
-       所以窄帶前 12% 維持 #151311 不動，之後才用 smoothstep 往上走 ——
-       smoothstep 的起點斜率是 0，12% 那個轉折兩側都是平的，找不到。
-     · 整條因此**比原本深**（上半段從 L* 8.5 降到 6.0，中段的 --band-bg
-       從 55% 推到 62%），這正是使用者要的「窄帶做成比較深的漸層」。
-     ⚠ --band-bg 與 --band-bot 兩個值一個都沒動，接紙色那一頭完全照舊。
+       整條用 smoothstep，而 **smoothstep 在起點的斜率本來就是 0** ——
+       接縫這一側自動是平的，不必另外寫平段。
+     · 整條因此**比原本深**（上半段從 L* 8.5 降到 6.0），
+       這正是使用者要的「窄帶做成比較深的漸層」。
+     ⚠ --band-bot 沒動，接紙色那一頭完全照舊。
      ⚠ 這不是換一組配色：藍黑三停（PALETTE 六之三第 1 點）當初是
        「夾在夜空與紙色中間、兩邊都要接」取的中間值，而窄帶的**上緣接的是柏油、
        不是夜空** —— 電腦版 2026-08-07 就為同一個理由把上緣換掉了，
-       手機這裡等於補上同一件事。`--band-top` 仍然留著（.hero 的底色用它）。 */
+       手機這裡等於補上同一件事。`--band-top` 仍然留著（.hero 的底色用它）。
+
+     ---- 第三版：漸層攤到整條窄帶（2026-08-12）----
+     使用者：「這個漸層從黑邊到深藍有點短，看起來很突兀，可以再拉長一點。」
+     成立 —— 第二版是「前 12% 平段 ＋ 12%~62% 走完 ＋ 後 38% 幾乎不動」，
+     **13.8 個 L\* 全部擠在中間那 53px 裡**（107px 高的窄帶只用了一半）。
+     現在從 0% 一路走到 100%：
+       ・長度 53px → **107px（兩倍）**
+       ・最陡的那一列 0.326 → **0.194 L\* 每像素（少 40%）**
+     ⚠⚠ 這一行的單位本來寫成「L星號 斜線 px」，**那兩個字元連在一起就是註解的
+        結束記號，整段註解在那裡被提早關掉**，底下的 .band 整條規則跟著失效
+        （量出來 background-image 是 none、接縫又跳回 +2.7，而且是靜悄悄的）。
+        和「CSS 註解裡不能出現樣式表的結束標籤」是同一類的坑
+        （CLAUDE.md 第九節第 8 條）。單位改用「每像素」就沒事。
+     ⚠ `--band-bg`（L* 17.5）因此**不再是這條漸層的色停** —— 它是中段那一停，
+       而中段現在由 smoothstep 自己算出來（50% 的位置是 L* 11.9，比原本深）。
+       變數本身沒有拿掉：`background-color` 的後備、`.stats li` 那條分隔線的
+       `color-mix` 都還在用它。 */
   .band {
     min-height: 76px;
     background-color: var(--band-bg);
     background-image: linear-gradient(180deg,
-      #151311 0%, #151311 12%,            /* ← 平段：接縫兩側的斜率都是 0 */
-      #161513 19.5%, #191818 27%, #1d1d1f 34.5%,
-      #212326 42%, #25272c 49.5%, #272a30 56%,
-      var(--band-bg) 62%, var(--band-bot) 100%);
+      #151311 0%,                          /* 接縫。smoothstep 起點斜率 0，這一側是平的 */
+      #161412 10%, #181615 20%, #1a1919 30%, #1d1d1e 40%,
+      #212224 50%, #25262a 60%, #282a2f 70%, #2b2d33 80%, #2c2f36 90%,
+      var(--band-bot) 100%);
   }
   .hero-copy { padding-top: 0; padding-bottom: 0; }
 
@@ -2151,16 +2181,20 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .hero-copy { padding-bottom: 0; z-index: 4; }
 
   .hero > .band { position: relative; }
-  /* 窄帶從 #161413 起跑（＝柏油層現在收到的顏色，見下面那一段）。
-     中間四停是 2026-08-12 補的 smoothstep：接縫那一側要是平的，
-     不然照片往下變暗、窄帶往下變亮，在同一列折返會長出一條馬赫帶。
-     頭尾兩個色停與 62%／100% 的位置一個都沒改。 */
+  /* 窄帶從 #161413 起跑（＝柏油層現在收到的顏色，見下面那一段），
+     整條 smoothstep 走到 --band-bot。做法與理由同手機版那一段的長註解：
+     smoothstep 在起點的斜率是 0，接縫這一側自動是平的；
+     而漸層攤在整條窄帶上（126px）而不是 62% 就走完，
+     這是使用者「從黑邊到深藍有點短，可以再拉長一點」那一輪改的。
+     ⚠ --band-bg 因此不再是這條漸層的色停，變數本身還在（後備色與分隔線在用）。 */
   .band {
     min-height: 104px;                 /* 原本 84 —— 「往下移一些」多給的 20px */
     background-color: var(--band-bg);
     background-image: linear-gradient(180deg,
-      #161413 0%, #171515 10%, #1b1b1c 22%, #212225 36%, #26282d 48%,
-      var(--band-bg) 62%, var(--band-bot) 100%);
+      #161413 0%,
+      #171514 10%, #181717 20%, #1b1a1b 30%, #1e1e20 40%,
+      #222225 50%, #25262a 60%, #282a2f 70%, #2b2d33 80%, #2c2f36 90%,
+      var(--band-bot) 100%);
   }
   /* 模糊層與柏油層原地搬到照片的最後 84px。**高度沒有變**（2026-08-12 第一版
      曾經把柏油層拉到 132px，等於多吃照片 48px —— 使用者否決了那個方向，
@@ -2738,7 +2772,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="perio">牙周病治療</span><span class="sep">、</span><span class="sk" data-spec="perio">牙周再生手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">植牙手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">活動假牙</span><span class="sep">、</span><span class="sk" data-spec="perio">水雷射牙周治療</span></dd>
             <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
-            <dt>學歷</dt><dd>臺北醫學大學學士<br>國立陽明交通大學碩士</dd>
+            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>國立陽明交通大學牙醫學碩士</dd>
           </dl>
         </article>
         <article class="doc" data-spec="ortho">
@@ -2746,7 +2780,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk" data-spec="ortho">隱適美</span></dd>
             <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺北醫學大學附設醫院齒顎矯正科<br>臺安醫院主治醫師</dd>
-            <dt>學歷</dt><dd>臺北醫學大學學士、碩士</dd>
+            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>臺北醫學大學牙醫學碩士</dd>
           </dl>
         </article>
         <article class="doc" data-spec="ortho">
@@ -2754,7 +2788,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk" data-spec="ortho">隱適美</span><span class="sep">、</span><span class="sk" data-spec="ortho">阻生齒矯正</span></dd>
             <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺中榮民總醫院齒顎矯正科<br>國立臺灣大學附設醫院</dd>
-            <dt>學歷</dt><dd>臺北醫學大學學士</dd>
+            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
           </dl>
         </article>
         <article class="doc" data-spec="kids">
@@ -2762,7 +2796,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span></dd>
             <dt>資歷</dt><dd>衛生福利部兒童牙科專科<br>隱適美認證醫師<br>臺中榮民總醫院兒童牙科</dd>
-            <dt>學歷</dt><dd>高雄醫學大學學士</dd>
+            <dt>學歷</dt><dd>高雄醫學大學牙醫學學士</dd>
           </dl>
         </article>
         <article class="doc" data-spec="surg">
@@ -2770,7 +2804,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="surg">阻生齒拔除</span><span class="sep">、</span><span class="sk" data-spec="surg">齒槽骨保留術</span></dd>
             <dt>資歷</dt><dd>衛生福利部口腔顎面外科專科<br>奇美醫學中心口腔顎面外科總醫師<br>保提拉肉毒學院認證醫師</dd>
-            <dt>學歷</dt><dd>臺北醫學大學學士</dd>
+            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
           </dl>
         </article>
         <article class="doc" data-spec="prosth">
@@ -2778,7 +2812,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="prosth">活動假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">牙橋</span><span class="sep">、</span><span class="sk" data-spec="prosth">全口重建</span></dd>
             <dt>資歷</dt><dd>衛生福利部贋復牙科專科醫師<br>台大醫院補綴科兼任主治醫師<br>台大雲林分院主治醫師</dd>
-            <dt>學歷</dt><dd>高雄醫學大學學士</dd>
+            <dt>學歷</dt><dd>高雄醫學大學牙醫學學士</dd>
           </dl>
         </article>
         <article class="doc" data-spec="endo">
@@ -2789,7 +2823,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="endo">顯微根管</span><span class="sep">、</span><span class="sk" data-spec="endo">根尖手術</span><span class="sep">、</span><span class="sk" data-spec="endo">活髓治療</span></dd>
             <dt>資歷</dt><dd>成大醫院牙髓病專科訓練<br>成大醫院口腔醫學部總醫師<br>臺北榮民總醫院</dd>
-            <dt>學歷</dt><dd>臺北醫學大學學士</dd>
+            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
           </dl>
         </article>
         <article class="doc" data-spec="kids">
@@ -2800,7 +2834,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
             <dt>資歷</dt><dd>臺北榮總兒童牙科總醫師<br>日本新潟大學吞嚥功能受訓醫師<br>隱適美認證醫師</dd>
-            <dt>學歷</dt><dd>國立陽明交通大學學士</dd>
+            <dt>學歷</dt><dd>國立陽明交通大學牙醫學學士</dd>
           </dl>
         </article>
       </div>
