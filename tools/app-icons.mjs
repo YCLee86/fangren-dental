@@ -88,6 +88,21 @@ const TARGETS = [
      所以已經加回去了。⚠ iOS 不會拿 purpose: maskable 當 apple-touch-icon。 */
   { file: "icon-maskable-512.png", size: 512, maskable: true },
 
+  /* ⚠ **整片套色的實驗版（2026-08-12 第十輪），只給 /preview/icon-test-c/ 用，正式站沒有引用。**
+     使用者加了 innovarad.tw（新思惟國際）—— 整片紅底 ＋ 白色字標，在同一支手機上很銳利。
+     用「一個像素跨掉多少反差」量（只取圖示中央、避開 iOS 的遮罩邊）：
+
+         A・白底＋深綠（我們）        90.9%
+         B・黑底＋米色（我們）        95.2%
+         新思惟・整片套色＋白字        95.9%
+
+     深底／套色那一類確實在最上面那一級。所以做一張同構的：
+     **整片品牌綠當底 ＋ 白色標誌**，看能不能也進到 95% 那一段。
+
+     ⚠ 底色套**玻璃補償**（現在暗色的是底，不是標誌），白色標誌不必補 —— 亮端不會被抬。
+     ⚠ 白字疊在 #3f654a 上是 6.62:1，遠高於非文字圖形的 3.0 下限。 */
+  { file: "icon-192-solid.png", size: 192, maskable: false, swap: true },
+
   /* ⚠ 這裡曾經有一筆 alpha: true 的透明底實驗版（2026-08-12 第九輪，已刪）。
      結論：**透明底沒有用** —— iOS 不支援網頁捷徑的自適應圖示（透明直接填黑），
      而且深底只把邊緣過渡從 4px 改善到 3px（檔案本身是 1px），沒有解決模糊。
@@ -348,8 +363,19 @@ const dir = fs.mkdtempSync(path.join(os.tmpdir(), "app-icons-"));
 let changed = 0;
 
 try {
-  for (const { file, size, maskable, root, alpha, fill } of TARGETS) {
+  for (const { file, size, maskable, root, alpha, fill, swap } of TARGETS) {
     let svg = maskable ? maskableSource : source;
+    if (swap) {
+      /* 整片套色：底換成**補償過的**品牌綠，標誌換成白。
+         用佔位符換兩次，避免第二次替換又咬到第一次的結果。 */
+      svg = rawSource
+        .replace(/(<rect[^>]*fill=")#ffffff(")/, `$1__BG__$2`)
+        .split(BRAND_FILL).join("#ffffff")
+        .replace("__BG__", compensate(BRAND_FILL));
+      if (svg.includes("__BG__") || svg.includes(BRAND_FILL)) {
+        throw new Error(`${file} 的套色替換沒有成功`);
+      }
+    }
     if (alpha) {
       /* 透明底：把滿版的 <rect> 拿掉，標誌換成指定的淺色。
          ⚠ 這裡要用**未補償**的來源（rawSource），理由見 TARGETS 的註解。 */

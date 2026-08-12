@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>圖示對照測試 C・整片套色</title>
+
+<!-- ===========================================================================
+     圖示對照測試頁（2026-08-12 第八輪）
+
+     測試頁 C：**整片套色**（2026-08-12 第十輪）。
+
+     底＝品牌綠（套過玻璃補償的 #205533，疊加後會還原成 #3f654a）、標誌＝白色。
+     和 innovarad.tw（新思惟國際，整片紅底 ＋ 白字標）同一個結構 —— 那顆在同一支
+     手機上量到 95.9%，和我們的黑底版 95.2% 同一級，而白底版只有 90.9%。
+
+     宣告環境和測試頁 A、B 完全一樣（乾淨、只有一行 apple-touch-icon），
+     唯一的變數是圖檔本身的配色結構。
+
+     和首頁比，這一頁刻意**沒有**：
+       ・site.webmanifest（連 <link rel="manifest"> 都沒有）
+       ・apple-mobile-web-app-capable / mobile-web-app-capable
+       ・apple-mobile-web-app-title
+       ・任何其他尺寸的圖示宣告
+
+     只留下一行 apple-touch-icon，指向和首頁**完全同一個檔案**。
+     所以圖檔是同一張、顏色是同一組，唯一的變數是「宣告的環境」。
+
+     判讀：
+       這一頁的圖示**銳利** → 是我們多宣告的東西害的（manifest / web-app 模式），
+                              回首頁把對應的東西拆掉即可。
+       這一頁的圖示**一樣糊** → 和宣告無關，是 iOS 對這張圖本身的處理，
+                              那就沒有站方能做的事了，停手。
+
+     ⚠ 定案之後這一頁要刪掉（CLAUDE.md 第八節的規則）。
+     =========================================================================== -->
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192-solid.png?v=testc1">
+
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; padding: 2.5rem 1.4rem; background: #205533; color: #ffffff;
+         font: 16px/1.75 "Noto Sans TC", system-ui, sans-serif; }
+  main { max-width: 34em; margin: 0 auto; }
+  h1 { font-size: 1.35rem; margin: 0 0 1.2rem; }
+  img { width: 96px; height: 96px; display: block; margin: 1.4rem 0;
+        border-radius: 21px; box-shadow: 0 4px 14px rgba(0,0,0,.18); }
+  ol { padding-left: 1.3em; }
+  li { margin-bottom: .6rem; }
+  code { background: #2b6b41; padding: .1em .35em; border-radius: 4px; font-size: .9em; }
+  .note { margin-top: 2rem; padding: 1rem 1.1rem; background: #2b6b41; border-radius: 12px;
+          font-size: .93rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>圖示對照測試 C・整片套色</h1>
+
+  <p>這一頁測的是<strong>整片套色</strong>：底是品牌綠、標誌是白色 —— 和新思惟國際那顆（整片紅底 ＋ 白字標）同一個結構。宣告環境和測試頁 A、B 一樣乾淨。</p>
+
+  <p>會做這一版，是因為量出來深底／套色那一類確實比較銳利（只取圖示中央、避開 iOS 自己畫的遮罩邊，用「一個像素跨掉多少反差」計算）：</p>
+
+  <p style="font-family:ui-monospace,monospace;font-size:.88rem;line-height:1.9">A・白底＋深綠（我們）　　90.9%<br>B・黑底＋米色（我們）　　95.2%<br>新思惟・整片套色＋白字　95.9%</p>
+
+  <img src="/assets/icon-192-solid.png?v=testc1" alt="芳仁牙醫圖示">
+
+  <ol>
+    <li>用 Safari 的「分享 → 加入主畫面」把這一頁加上去</li>
+    <li>和首頁那顆放在一起比較</li>
+  </ol>
+
+  <div class="note">
+    <p><strong>這一顆和 B 差不多銳利</strong> → 那就確定是「底深、標誌淺」這個結構的功勞，和配色細節無關。整片套色比純黑更像品牌的樣子，可以考慮定案這一版。</p>
+    <p style="margin-bottom:0"><strong>比 B 差</strong> → 那 B 的黑底才是關鍵，得再想。</p>
+  </div>
+</main>
+</body>
+</html>
