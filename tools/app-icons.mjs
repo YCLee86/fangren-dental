@@ -77,6 +77,14 @@ const TARGETS = [
   { file: "icon-192.png", size: 192, maskable: false },
   { file: "icon-512.png", size: 512, maskable: false },
   { file: "icon-maskable-512.png", size: 512, maskable: true },
+
+  /* 根目錄那兩張：**iOS 找不到 <link> 時會自己去試的固定路徑**（和 favicon.ico 同一套慣例）。
+     2026-08-12 補的，起因見下面「第三輪」那一段 —— 我們原本只有 <link>，
+     而且網址還帶 ?v= 查詢字串，等於把「iOS 拿得到圖」這件事押在單一條路上。
+     這兩張是 180（＝ iPhone 主畫面 60pt × @3x 的標準尺寸），內容和 assets/ 那幾張同源。
+     ⚠ 檔名固定，**不要加 ?v=** —— 這條路的意義就是「不帶參數也找得到」。 */
+  { file: "apple-touch-icon.png", size: 180, maskable: false, root: true },
+  { file: "apple-touch-icon-precomposed.png", size: 180, maskable: false, root: true },
 ];
 
 /* maskable 版要把 icon.svg 的放大倍率換成這個值（68%，理由見上面）。 */
@@ -276,25 +284,26 @@ const dir = fs.mkdtempSync(path.join(os.tmpdir(), "app-icons-"));
 let changed = 0;
 
 try {
-  for (const { file, size, maskable } of TARGETS) {
+  for (const { file, size, maskable, root } of TARGETS) {
     const svg = maskable ? maskableSource : source;
     const tag = file.replace(/\.png$/, "");
     const buf = renderPng(chrome, svg, size, dir, tag);
     const { colours } = inspect(buf, file);
 
-    const dest = path.join(ROOT, "assets", file);
+    const dest = root ? path.join(ROOT, file) : path.join(ROOT, "assets", file);
+    const shown = root ? file : `assets/${file}`;
     const same = fs.existsSync(dest) && fs.readFileSync(dest).equals(buf);
 
     if (same) {
-      console.log(`  = assets/${file}  ${size}×${size}・${colours} 色`);
+      console.log(`  = ${shown}  ${size}×${size}・${colours} 色`);
       continue;
     }
     changed++;
     if (CHECK_ONLY) {
-      console.log(`  ≠ assets/${file}  和 icon.svg 不同步`);
+      console.log(`  ≠ ${shown}  和 icon.svg 不同步`);
     } else {
       fs.writeFileSync(dest, buf);
-      console.log(`  ✓ assets/${file}  ${size}×${size}・${colours} 色・${(buf.length / 1024).toFixed(1)} KB`);
+      console.log(`  ✓ ${shown}  ${size}×${size}・${colours} 色・${(buf.length / 1024).toFixed(1)} KB`);
     }
   }
 } finally {
