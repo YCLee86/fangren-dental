@@ -25,7 +25,8 @@
           板子這一組**和 LINE 官方帳號那一組完全相同** ——
           CLAUDE.md 第十節記著的那個三邊不一致，板子這一票投給了 LINE。
        2. 週六：板子上週六早診有兩顆磁鐵（一般牙科＋齒顎矯正），
-          網站寫的是「週六、週日休診」。這一句目前是錯的。
+          網站寫的是「週六、週日休診」。⚠ 哪一邊對還沒確認 —— 使用者 2026-08-12
+          指示把六日兩欄拿掉，Ⓓ 因此只排週一到週五，但 DAYS 裡週六的資料沒有刪。
        3. 板子是「哪一科、哪一節」的表，網站只有一段總營業時間。
 
      ▍顏色：用站上的科別色，不是板子的磁鐵色
@@ -129,8 +130,8 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
 
 /* ---- Ⓓ 點陣表（參考 drsunkist.com 與 drcmliu.com 的做法）----
    骨架和門口那面板子一樣：日子當欄、早午晚當列、格子裡只放點。
-   從那兩站抄回來的：時段寫在列標題上；今天那一欄墊底色；
-   休診寫在表格底下那一行，不在格子裡放「休」。
+   從那兩站抄回來的：時段寫在列標題上；休診寫在表格底下那一行，不在格子裡放「休」。
+   （「今天那一欄墊底色」也是抄來的，但 2026-08-12 使用者要求拿掉了。）
 
    ⚠ 一格只放**一顆**點 ＝「這一節有診」，不是一科一顆（2026-08-12 第二版，
      使用者：「點太多，每個門診一個點就好，選到的科別再套色」）。
@@ -184,9 +185,8 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
 }
 .dots .d.faint { background: #ccd0cd; }                       /* 有診，但不是這一科 */
 .dots .d.hit   { background: var(--accent); transform: scale(1.16); }
-.dots-sum { margin: 1.1rem 0 0; font-size: .78rem; line-height: 1.8; color: var(--ink-soft); }
-.dots-sum b { color: var(--accent-deep); font-weight: 400; margin-right: .6em; }
-.dots-note { margin: .55rem 0 0; font-size: .73rem; color: #8b908a; line-height: 1.75; }
+.dots-note { margin: 1.15rem 0 0; font-size: .73rem; color: #8b908a; line-height: 1.75; }
+.dots-note + .dots-note { margin-top: .55rem; }
 
 /* ---- Ⓐ 一週一張表 ---- */
 .grid { display: none; }
@@ -283,7 +283,6 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
         <thead><tr id="dots-head"></tr></thead>
         <tbody id="dots-body"></tbody>
       </table>
-      <p class="dots-sum" id="dots-sum"></p>
       <p class="dots-note">週六、週日休診。</p>
       <p class="dots-note">＊國定假日門診時間請來電確認。</p>
     </div>
@@ -449,7 +448,6 @@ var DOTS_DAYS = DAYS.slice(0, 5);
    其餘有診的點淡掉。全部 ＝ 一律中性色。 */
 (function () {
   var wrap = document.getElementById("filter");
-  var sum = document.getElementById("dots-sum");
   var codes = ["all"].concat(Object.keys(SPEC));
 
   function paint(sel) {
@@ -463,17 +461,8 @@ var DOTS_DAYS = DAYS.slice(0, 5);
     [].forEach.call(wrap.children, function (b) {
       b.setAttribute("aria-pressed", b.getAttribute("data-spec") === sel ? "true" : "false");
     });
-
-    /* 表格底下那一行：選到的科別一週有哪幾節 */
-    if (sel === "all") { sum.textContent = ""; sum.removeAttribute("data-spec"); return; }
-    var slots = [];
-    DOTS_DAYS.forEach(function (d) {
-      SESSIONS.forEach(function (s) {
-        if (d[s.key].indexOf(sel) >= 0) slots.push(d.name + s.name.charAt(0));
-      });
-    });
-    sum.setAttribute("data-spec", sel);
-    sum.innerHTML = "<b>" + SPEC[sel] + "</b>" + slots.join("・");
+    /* ⚠ 這裡原本還有一行「顯微根管　週三早・週三午…」的文字摘要，
+         2026-08-12 使用者要求拿掉。表格自己已經說了同一件事，不要再加回來。 */
   }
 
   codes.forEach(function (code) {
