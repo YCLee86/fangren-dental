@@ -16,10 +16,15 @@
 <!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，這兩行走的是另一條路，
      兩者刻意分開 —— 差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：
      iOS 會把帶透明的 apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
+     ⚠⚠ 這裡給的是 **1024**，不是「尺寸剛好」的 180（60pt × @3x）。第一版給 180，
+     使用者回報糊掉；從截圖逐像素量出來是 **iOS 自己又縮放過一次**（我們的檔案本身
+     只有 1px 過渡，螢幕上卻是 5px），放大才會糊、縮小不會，所以改成餵它大的。
+     **不要為了符合文件再補一個 180 的 <link>** —— 兩個都在，iOS 會挑剛好的那個，
+     等於繞回原地。完整量測寫在 tools/app-icons.mjs 的檔頭與 PALETTE 第六之二十節。
      ⚠ 改過 assets/icon.svg 就要跑 node tools/app-icons.mjs 重算點陣版，
      並把下面的 ?v= 換成當天 —— Safari 的圖示快取是按網址存的，
      網址沒變就一直給舊圖（和 favicon 同一個坑，PALETTE 第六之七節）。 -->
-<link rel="apple-touch-icon" href="../../assets/icon-180.png?v=20260812b">
+<link rel="apple-touch-icon" href="../../assets/icon-1024.png?v=20260812c">
 <!-- Android 的「加到主螢幕」讀這一份（iOS 不需要它也能加）。
      manifest 裡 display 是 "browser" 不是 "standalone"，是刻意的：
      這是一個會連出去（Google 地圖、LINE）的內容網站，

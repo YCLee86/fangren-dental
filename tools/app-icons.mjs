@@ -6,10 +6,29 @@
            node tools/app-icons.mjs --check     (只比對，不寫檔；不一致就回傳非零)
 
    產物（都已進版控）：
-     assets/icon-180.png            iOS「加入主畫面」——  <link rel="apple-touch-icon">
+     assets/icon-1024.png           iOS「加入主畫面」——  <link rel="apple-touch-icon">
      assets/icon-192.png            Android，site.webmanifest 的 purpose: any
      assets/icon-512.png            同上，安裝畫面／啟動畫面會用到大的那張
      assets/icon-maskable-512.png   Android 的 purpose: maskable（它會自己裁形狀）
+
+   ⚠⚠ **apple-touch-icon 給的是 1024，不是「正確」的 180 —— 這是實測改的，不要改回去。**
+   2026-08-12 第一版照 Apple 文件給 180（iPhone 主畫面 60pt × @3x ＝ 180px，尺寸剛好），
+   使用者回報「看起來模模糊糊的」。從他的截圖（1125×2436，iPhone @3x）逐像素量：
+
+     ・標誌邊緣的 10%~90% 過渡＝ **5px**；同一張截圖裡隔壁 Tailscale 的白點是 **0px**（硬邊）
+     ・我們自己的 icon-180.png 量同一條邊只有 **1px** —— 檔案本身是銳利的
+     ・牙洞在螢幕上是乾淨的 10px，佔標誌寬 0.0794（icon.svg 的設計值 0.0786）
+       → **不是「拿小圖放大」**，那樣 36px 的來源會把牙洞整個糊掉、比例也對不上
+     ・標誌佔圖示 0.760（把 5px 模糊各攤一半扣掉之後）＝ 76%，正是這裡的 any 版
+     ・圖示是綠的（不是第一版的青灰），證明手機拿到的是上線後的當前檔，不是舊快取
+
+   四條合起來只剩一個解釋：**iOS 拿到的是正確且銳利的圖，但它自己重新縮放過**。
+   1:1 不會糊，所以它渲染的尺寸不是 180 —— 放大才會糊，縮小不會。
+   於是改成餵它 1024：不管 iOS 想畫多大（180、512、或 iOS 26 那套玻璃效果用的更大畫布），
+   都變成「往下縮」，往下縮不會糊。
+
+   ⚠ **不要為了「符合文件」再加一個 180 的 <link>。** 兩個都宣告的話 iOS 會挑
+     尺寸剛好的那個（180），等於繞回原地。這裡刻意**只留一個** apple-touch-icon。
 
    什麼時候要跑：**只有動到 assets/icon.svg 的顏色或幾何時。**
    和 tools/favicon-ico.mjs 一樣需要 headless Chromium，所以
@@ -54,7 +73,7 @@ const CHECK_ONLY = process.argv.includes("--check");
 
 /* 要產生哪幾張。maskable 為 true 的那張會先把 scale 換掉。 */
 const TARGETS = [
-  { file: "icon-180.png", size: 180, maskable: false },
+  { file: "icon-1024.png", size: 1024, maskable: false },
   { file: "icon-192.png", size: 192, maskable: false },
   { file: "icon-512.png", size: 512, maskable: false },
   { file: "icon-maskable-512.png", size: 512, maskable: true },
