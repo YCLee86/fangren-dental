@@ -52,7 +52,10 @@
   --brick: #AF4C52;
 }
 
-/* 科別色：與 index.html 的宣告逐字相同，一個值都沒有改 */
+/* 科別色：與 index.html 的宣告逐字相同，一個值都沒有改。
+   ⚠ 下面這一行的預設值必須排在各科別前面 —— 它和 [data-spec="kids"] 權重相同，
+     排在後面會把兒牙特別指定的深階字蓋回去。 */
+[data-spec] { --accent-deep: var(--accent); --on-fill: #fff; }
 [data-spec="general"] { --accent: #3f654a; --accent-deep: #2c5238; }
 [data-spec="perio"]   { --accent: #317d78; --accent-deep: #2a6d69; }
 [data-spec="endo"]    { --accent: #ae4f4d; --accent-deep: #89202d; }
@@ -141,16 +144,20 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
    整塊（切換條、表格、底下那幾行）收在同一個定寬裡置中，參考的那兩站也是這樣收的。 */
 [data-v="d"] .dots { display: block; max-width: 620px; margin-inline: auto; }
 
-/* 上面那排切換。做成 drcmliu 那種分頁的樣子：純文字、選到的才有顏色與底線，
-   不用有框的藥丸 —— 八顆藥丸排下來就是使用者說的「不夠簡約」。 */
-.filter { display: flex; flex-wrap: wrap; gap: .15rem 1.05rem; margin: 0 0 1.35rem; }
+/* 上面那排切換。和首頁「主題與科別」那排標記完全同一組值
+   （.chips button：字 .82rem、內距 .25/.8rem、圓角 12px、未選白底深階字與框、
+   選到整顆套色填滿）—— 純文字加底線那一版使用者說看不清楚，
+   而站上本來就有一個做同一件事的元件，不該再長出第二種樣子。 */
+.filter { display: flex; flex-wrap: wrap; gap: .55rem; margin: 0 0 1.5rem; }
 .filter button {
-  font: inherit; font-size: .78rem; line-height: 1.95; cursor: pointer;
-  background: none; border: 0; padding: 0 0 .2rem; color: #8b908a;
-  border-bottom: 1.5px solid transparent; letter-spacing: .02em;
+  font: inherit; font-size: .82rem; line-height: 1.6;
+  padding: .25rem .8rem; border-radius: 12px; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep);
+  transition: background-color .15s ease, color .15s ease;
 }
-.filter button[aria-pressed="true"] { color: var(--accent-deep); border-bottom-color: var(--accent); }
-.filter button[data-spec="all"] { --accent: #5f5d5c; --accent-deep: #4c4948; }
+.filter button[aria-pressed="true"] { background: var(--accent); color: var(--on-fill); border-color: var(--accent); }
+.filter button[data-spec="all"] { --accent: #5f5d5c; --accent-deep: #4c4948; --on-fill: #fff; }
 
 .dots table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .dots col.lab { width: 6.3rem; }
@@ -158,8 +165,8 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
   font-size: .88rem; font-weight: 400; color: #9aa09b; letter-spacing: .14em;
   padding: .15rem 0 .8rem; text-align: center;
 }
-.dots thead th.today { color: var(--ink); }
-.dots thead th.off { color: #c2c7c2; }   /* 整天休診的那一欄（週日） */
+/* ⚠ 原本有「今天那一欄墊底色」（抄自 drcmliu），2026-08-12 使用者要求拿掉。
+     連同表格底下那行「底色為今日」一起移除，不要再加回來。 */
 .dots tbody th {
   text-align: left; font-weight: 400; font-size: .715rem; color: #8b908a;
   letter-spacing: 0; white-space: nowrap; padding: 1rem .6rem 1rem 0;
@@ -170,10 +177,6 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
   margin-right: .5em; letter-spacing: .06em;
 }
 .dots tbody td { border-top: 1px solid #dee2e3; text-align: center; }
-/* 今日那一欄。底色一路從表頭墊到最後一列，上下各收一個圓角。 */
-.dots .today { background: #eceeee; }
-.dots thead th.today { border-radius: 8px 8px 0 0; }
-.dots tbody tr:last-child td.today { border-radius: 0 0 8px 8px; }
 .dots .d {
   display: inline-block; width: .56rem; height: .56rem; border-radius: 50%;
   background: #5c5f57; vertical-align: middle;
@@ -275,12 +278,13 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
       <div class="filter" id="filter" role="group" aria-label="只看某一科"></div>
       <table>
         <caption style="position:absolute;left:-9999px">一週門診時間與各科別看診時段</caption>
-        <colgroup><col class="lab"><col span="7"></colgroup>
+        <!-- span 由 JS 依實際欄數設定；寫死 7 的話拿掉六日之後右邊會空 60px -->
+        <colgroup><col class="lab"><col id="dots-cols" span="5"></colgroup>
         <thead><tr id="dots-head"></tr></thead>
         <tbody id="dots-body"></tbody>
       </table>
       <p class="dots-sum" id="dots-sum"></p>
-      <p class="dots-note">週日休診　｜　底色為今日</p>
+      <p class="dots-note">週六、週日休診。</p>
       <p class="dots-note">＊國定假日門診時間請來電確認。</p>
     </div>
 
@@ -307,9 +311,11 @@ h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; bac
   </div>
 
   <div class="card diff">
-    <span class="tag">二・週六</span>
-    <p style="margin:0">板子上<b>週六早診有看診</b>（一般牙科＋齒顎矯正），午診與晚診才是休診。<br>
-       網站現在寫的是「週六、週日休診」—— 這一句和板子不一致。</p>
+    <span class="tag">二・週六（還沒確認）</span>
+    <p style="margin:0">板子上<b>週六早診有兩顆磁鐵</b>（一般牙科＋齒顎矯正），午診與晚診才是空的；
+       網站現在寫的是「週六、週日休診」。<br>
+       上面那張表已經照指示只排週一到週五，<b>所以週六那兩顆看不到了</b>。
+       週六到底有沒有早診，請確認 —— 資料本身沒有刪，Ⓐ／Ⓑ／Ⓒ 三案裡還看得到。</p>
   </div>
 
   <div class="card diff">
@@ -394,20 +400,20 @@ function pill(code, opts) {
 }
 
 /* ---- Ⓓ 點陣表 ----
-   「今天」那一欄的底色：DAYS 的順序是週一起算，JS 的 getDay() 是週日 0，所以要換算。 */
+   ⚠ 只排週一到週五（2026-08-12 使用者要求把六日兩欄拿掉）。
+     DAYS 裡週六那一列的資料**沒有刪**（板子上週六早診有一般牙科與齒顎矯正），
+     Ⓐ／Ⓑ／Ⓒ 仍然看得到 —— 週六到底有沒有診還沒跟使用者確認過。 */
+var DOTS_DAYS = DAYS.slice(0, 5);
+
 (function () {
-  var todayIdx = (new Date().getDay() + 6) % 7;   /* 0 = 週一 */
+  document.getElementById("dots-cols").setAttribute("span", DOTS_DAYS.length);
 
   var head = document.getElementById("dots-head");
   head.appendChild(document.createElement("td"));
-  DAYS.forEach(function (d, i) {
+  DOTS_DAYS.forEach(function (d) {
     var th = document.createElement("th");
     th.scope = "col";
     th.textContent = d.short;
-    var cls = [];
-    if (!SESSIONS.some(function (s) { return d[s.key].length; })) cls.push("off");
-    if (i === todayIdx) cls.push("today");
-    th.className = cls.join(" ");
     head.appendChild(th);
   });
 
@@ -418,9 +424,8 @@ function pill(code, opts) {
     th.scope = "row";
     th.innerHTML = "<b>" + s.name.charAt(0) + "</b>" + s.time;
     tr.appendChild(th);
-    DAYS.forEach(function (d, i) {
+    DOTS_DAYS.forEach(function (d) {
       var td = document.createElement("td");
-      if (i === todayIdx) td.className = "today";
       var list = d[s.key];
       /* 一格一顆點 ＝ 這一節有診。休診的格子留空，不放任何東西。 */
       if (list.length) {
@@ -462,7 +467,7 @@ function pill(code, opts) {
     /* 表格底下那一行：選到的科別一週有哪幾節 */
     if (sel === "all") { sum.textContent = ""; sum.removeAttribute("data-spec"); return; }
     var slots = [];
-    DAYS.forEach(function (d) {
+    DOTS_DAYS.forEach(function (d) {
       SESSIONS.forEach(function (s) {
         if (d[s.key].indexOf(sel) >= 0) slots.push(d.name + s.name.charAt(0));
       });
@@ -606,7 +611,7 @@ function pill(code, opts) {
 /* ---- 切換 ---- */
 (function () {
   var LEAD = {
-    d: "一格一顆點 ＝ 這一節有診。要看某一科就點上面那一排 —— 有那一科的點會套上該科的色，其餘有診的點淡掉，休診的格子本來就是空的。所以沒有另外的圖例，上面那排就是。",
+    d: "一格一顆點 ＝ 這一節有診，只排週一到週五。要看某一科就點上面那一排標記 —— 有那一科的點會套上該科的色，其餘有診的點淡掉，休診的格子本來就是空的。所以沒有另外的圖例，上面那排就是。",
     a: "整週一張表，和門口那面板子的排法一樣。手機上格子裡只留色點，名稱看底下的圖例；螢幕夠寬才把字放進格子裡。",
     b: "一天一張卡，早／午／晚三節各自列出當節有哪幾科。手機上最好讀，但要捲比較長。",
     c: "一科一列，列出那一科一週有哪幾節。想找「矯正什麼時候看」的人最快，而且能直接接上首頁「主題與科別」的篩選。"
