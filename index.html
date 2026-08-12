@@ -134,7 +134,7 @@
             "Friday"
           ],
           "opens": "08:45",
-          "closes": "12:00"
+          "closes": "11:30"
         },
         {
           "@type": "OpeningHoursSpecification",
@@ -146,7 +146,7 @@
             "Friday"
           ],
           "opens": "13:45",
-          "closes": "16:40"
+          "closes": "16:30"
         },
         {
           "@type": "OpeningHoursSpecification",
@@ -158,7 +158,7 @@
             "Friday"
           ],
           "opens": "17:45",
-          "closes": "20:30"
+          "closes": "20:00"
         },
         {
           "@type": "OpeningHoursSpecification",
@@ -2075,10 +2075,16 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      搬進正式站的時候一顆都沒有帶進來 —— PALETTE.md 是唯一依據。
    ⚠ 標記的兩態和首頁「主題與科別」那排完全同一組值（未選白底深階字與框、
      選到整顆套色填滿），只有字級與內距各收一階，因為它待在卡片裡。 */
+/* 「看診時間」那顆標題移出視窗 —— 畫面上不要，但原始碼裡不能刪
+   （tools/schema.mjs 靠它找這張卡；螢幕閱讀器也需要）。做法同下面的 caption。 */
+.hours-title { position: absolute; left: -9999px; }
+
 .hours-filter {
   display: flex; flex-wrap: wrap; gap: .45rem;
   margin: 0 0 1.15rem; padding: 0; list-style: none;
 }
+/* 「開診時段」自己一排、和七個科別隔開。它是「不篩選」，和那七顆不是同一層。 */
+.hours-filter-top { margin-bottom: .8rem; }
 .hours-filter button {
   font: inherit; font-size: .8rem; line-height: 1.6;
   padding: .2rem .7rem; border-radius: 12px; cursor: pointer;
@@ -3392,10 +3398,21 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
              ⚠ 第一顆標記叫「開診時段」不是「全部」（使用者指定）。
                首頁上面「主題與科別」那排仍然是「全部」，兩者刻意不同，不要順手統一。 -->
         <div class="info-card" data-hue="taupe">
-          <h3>看診時間</h3>
+          <!-- ⚠ 這個 h3 畫面上看不到（.hours-title 把它移出視窗），但**不要刪掉**：
+                 ・tools/schema.mjs 是靠 <h3>看診時間</h3> 找到這張卡的，
+                   刪了營業時間會整段從 JSON-LD 消失，而且只會印一行警告。
+                 ・另外兩張卡（地址、電話）都有標題，螢幕閱讀器需要這一個。
+               使用者 2026-08-13 要求畫面上拿掉，理由是底下「開診時段」那顆
+               已經在講同一件事。 -->
+          <h3 class="hours-title">看診時間</h3>
+
+          <!-- 「開診時段」自己一排，和七個科別分開（使用者指定）——
+               它是「不篩選」，和底下那七顆不是同一層的東西。 -->
+          <ul class="hours-filter hours-filter-top">
+            <li><button type="button" data-spec="all"     aria-pressed="true">開診時段</button></li>
+          </ul>
 
           <ul class="hours-filter">
-            <li><button type="button" data-spec="all"     aria-pressed="true">開診時段</button></li>
             <li><button type="button" data-spec="general" aria-pressed="false">一般牙科</button></li>
             <li><button type="button" data-spec="perio"   aria-pressed="false">牙周治療</button></li>
             <li><button type="button" data-spec="endo"    aria-pressed="false">顯微根管</button></li>
@@ -3414,19 +3431,19 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                   <th scope="col">四</th><th scope="col">五</th></tr>
             </thead>
             <tbody>
-              <tr><th scope="row"><b>早</b>08:45–12:00</th>
+              <tr><th scope="row"><b>早</b>08:45–11:30</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general endo"></span></td>
                   <td><span class="d" data-in="general perio"></span></td>
                   <td><span class="d" data-in="general prosth"></span></td></tr>
-              <tr><th scope="row"><b>午</b>13:45–16:40</th>
+              <tr><th scope="row"><b>午</b>13:45–16:30</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general kids"></span></td>
                   <td><span class="d" data-in="general kids prosth endo"></span></td>
                   <td><span class="d" data-in="surg kids"></span></td>
                   <td><span class="d" data-in="general prosth perio"></span></td></tr>
-              <tr><th scope="row"><b>晚</b>17:45–20:30</th>
+              <tr><th scope="row"><b>晚</b>17:45–20:00</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="ortho kids perio"></span></td>
                   <td><span class="d" data-in="general ortho kids endo"></span></td>
@@ -4182,9 +4199,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
    ⚠ 比對用「前後補空白再找子字串」而不是 split —— data-in 是空白分隔的科別代碼，
      直接 indexOf('endo') 會被 'endodontic' 這種未來可能出現的代碼誤中。 */
 (function () {
-  var wrap = document.querySelector('.hours-filter');
-  if (!wrap) return;
-  var btns = wrap.querySelectorAll('button[data-spec]');
+  /* 標記分成兩排（「開診時段」自己一排、七個科別一排），所以要跨兩個 ul 收集 */
+  var btns = document.querySelectorAll('.hours-filter button[data-spec]');
   var dots = document.querySelectorAll('.hours-grid .d');
   if (!btns.length || !dots.length) return;
 

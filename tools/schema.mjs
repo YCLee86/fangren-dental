@@ -91,14 +91,19 @@ function parseDays(text) {
      （opens 與 closes 都是 00:00）—— 只列營業日的話，Google 分不出
      「週六日休診」和「忘了填」。 */
 export function parseHours(indexHtml, warn = console.warn) {
-  const card = indexHtml.match(
-    /<div class="info-card"[^>]*>\s*<h3>\s*看診時間\s*<\/h3>([\s\S]*?)<\/div>/i
+  /* ⚠ 比對之前先把 HTML 註解整份拿掉。那張卡的 <div> 和 <h3> 之間有一段長註解，
+       而下面的 \s* 吃不下註解 —— 不先清掉會整段對不上（症狀是
+       「找不到看診時間資訊卡」＋ 0 段營業時間，只印一行警告不會中斷 build）。
+     ⚠ <h3> 要寫成 <h3[^>]*>：那顆標題 2026-08-13 起帶著 class="hours-title"
+       （畫面上藏起來，但不能刪 —— 這裡靠它找卡片）。 */
+  const card = stripComments(indexHtml).match(
+    /<div class="info-card"[^>]*>\s*<h3[^>]*>\s*看診時間\s*<\/h3>([\s\S]*?)<\/div>/i
   );
   if (!card) {
     warn("  ⚠ index.html 找不到「看診時間」資訊卡，JSON-LD 會少掉營業時間");
     return [];
   }
-  const body = stripComments(card[1]);
+  const body = card[1];
 
   const dayText = [...body.matchAll(/<th[^>]*scope="col"[^>]*>\s*([一二三四五六日])\s*<\/th>/gi)]
     .map((m) => "週" + m[1])
