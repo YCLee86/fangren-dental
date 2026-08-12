@@ -6,29 +6,17 @@
            node tools/app-icons.mjs --check     (只比對，不寫檔；不一致就回傳非零)
 
    產物（都已進版控）：
-     assets/icon-1024.png           iOS「加入主畫面」——  <link rel="apple-touch-icon">
-     assets/icon-192.png            Android，site.webmanifest 的 purpose: any
-     assets/icon-512.png            同上，安裝畫面／啟動畫面會用到大的那張
+     assets/icon-192.png            **iOS 與 Android 共用同一張**
+                                    iOS: <link rel="apple-touch-icon" sizes="192x192">
+                                    Android: site.webmanifest 的 purpose: any
      assets/icon-maskable-512.png   Android 的 purpose: maskable（它會自己裁形狀）
 
-   ⚠⚠ **apple-touch-icon 給的是 1024，不是「正確」的 180 —— 這是實測改的，不要改回去。**
-   2026-08-12 第一版照 Apple 文件給 180（iPhone 主畫面 60pt × @3x ＝ 180px，尺寸剛好），
-   使用者回報「看起來模模糊糊的」。從他的截圖（1125×2436，iPhone @3x）逐像素量：
-
-     ・標誌邊緣的 10%~90% 過渡＝ **5px**；同一張截圖裡隔壁 Tailscale 的白點是 **0px**（硬邊）
-     ・我們自己的 icon-180.png 量同一條邊只有 **1px** —— 檔案本身是銳利的
-     ・牙洞在螢幕上是乾淨的 10px，佔標誌寬 0.0794（icon.svg 的設計值 0.0786）
-       → **不是「拿小圖放大」**，那樣 36px 的來源會把牙洞整個糊掉、比例也對不上
-     ・標誌佔圖示 0.760（把 5px 模糊各攤一半扣掉之後）＝ 76%，正是這裡的 any 版
-     ・圖示是綠的（不是第一版的青灰），證明手機拿到的是上線後的當前檔，不是舊快取
-
-   四條合起來只剩一個解釋：**iOS 拿到的是正確且銳利的圖，但它自己重新縮放過**。
-   1:1 不會糊，所以它渲染的尺寸不是 180 —— 放大才會糊，縮小不會。
-   於是改成餵它 1024：不管 iOS 想畫多大（180、512、或 iOS 26 那套玻璃效果用的更大畫布），
-   都變成「往下縮」，往下縮不會糊。
-
-   ⚠ **不要為了「符合文件」再加一個 180 的 <link>。** 兩個都宣告的話 iOS 會挑
-     尺寸剛好的那個（180），等於繞回原地。這裡刻意**只留一個** apple-touch-icon。
+   ⚠⚠ **apple-touch-icon 給的是 192，不是 180、也不是 1024。**
+   iPhone 主畫面需要 180（60pt × @3x）。192 比它大 6% —— **只縮一點點**。
+   放大會糊，大幅縮小也會糊，只有「幾乎不用縮」才銳利。
+   前五輪試過 180（1:1，仍糊，因為 iOS 其實去拿了 manifest 裡更大的那張）
+   與 1024（縮 5.7 倍，更糊）。做法照 blog.ichentsai.tw 的成功案例，
+   詳見下面 TARGETS 的註解。
 
    什麼時候要跑：**只有動到 assets/icon.svg 的顏色或幾何時。**
    和 tools/favicon-ico.mjs 一樣需要 headless Chromium，所以
@@ -73,18 +61,28 @@ const CHECK_ONLY = process.argv.includes("--check");
 
 /* 要產生哪幾張。maskable 為 true 的那張會先把 scale 換掉。 */
 const TARGETS = [
-  { file: "icon-1024.png", size: 1024, maskable: false },
-  { file: "icon-192.png", size: 192, maskable: false },
-  { file: "icon-512.png", size: 512, maskable: false },
-  { file: "icon-maskable-512.png", size: 512, maskable: true },
+  /* ⚠⚠ **只產這兩張，而且 any 版只有 192 —— 這是 2026-08-12 第六輪照別站的成功案例重做的。**
 
-  /* 根目錄那兩張：**iOS 找不到 <link> 時會自己去試的固定路徑**（和 favicon.ico 同一套慣例）。
-     2026-08-12 補的，起因見下面「第三輪」那一段 —— 我們原本只有 <link>，
-     而且網址還帶 ?v= 查詢字串，等於把「iOS 拿得到圖」這件事押在單一條路上。
-     這兩張是 180（＝ iPhone 主畫面 60pt × @3x 的標準尺寸），內容和 assets/ 那幾張同源。
-     ⚠ 檔名固定，**不要加 ?v=** —— 這條路的意義就是「不帶參數也找得到」。 */
-  { file: "apple-touch-icon.png", size: 180, maskable: false, root: true },
-  { file: "apple-touch-icon-precomposed.png", size: 180, maskable: false, root: true },
+     使用者找到 blog.ichentsai.tw（同一支手機、同一個流程，圖示完全銳利）的原始碼：
+
+         <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png?v=4">
+
+     一行就解釋完了。**192 只比 iPhone 主畫面要的 180 大 6%，所以 iOS 只需要縮一點點。**
+     放大會糊、大幅縮小也會糊（快速降採樣），只有「幾乎不用縮」最銳利。
+
+     我們前五輪一路走反方向：180 → 1024，還在 manifest 把 1024 排第一，
+     等於請 iOS 從 1024 縮到 180（縮 5.7 倍）。而且同時掛著
+     根目錄 180 ×2 ＋ manifest 的 192／512／1024／maskable 共五種候選 ——
+     正是「給一整組反而讓 iOS 挑錯那張」。這解釋了為什麼每一輪都糊：
+     第一輪 manifest 有 512（縮 2.8 倍），後面又加了 1024（縮 5.7 倍）。
+
+     所以現在**整個站能被 iOS 找到的 any 版只有 192 這一張**，沒有第二個選項。
+     ⚠ 不要「順手」再補 512／1024 的 any，也不要再放根目錄的 apple-touch-icon.png ——
+       那就是把選項還給 iOS，等於繞回原地。
+     ⚠ maskable 那張是 Android 專用（purpose 不同，iOS 不會拿它當 apple-touch-icon），
+       Android 的安裝條件也靠它滿足。 */
+  { file: "icon-192.png", size: 192, maskable: false },
+  { file: "icon-maskable-512.png", size: 512, maskable: true },
 ];
 
 /* =============================================================================

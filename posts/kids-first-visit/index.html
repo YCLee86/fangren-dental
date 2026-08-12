@@ -13,23 +13,24 @@
 <meta property="og:site_name" content="芳仁牙醫診所">
 <link rel="canonical" href="https://fangren.net/posts/kids-first-visit/">
 <link rel="icon" href="../../assets/favicon.svg?v=20260808b" type="image/svg+xml">
-<!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，這幾行走的是另一條路，
-     兩者刻意分開 —— 差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：
-     iOS 會把帶透明的 apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
+<!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，兩者刻意分開 ——
+     差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
+     apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
 
-     ⚠⚠ 圖示放在**根目錄的固定檔名**，而且**刻意不帶 ?v=**（2026-08-12 第三輪）。
-     前兩輪都只宣告 <link>、網址還帶查詢字串。實測發現：同一支手機同一分鐘，
-     **分享選單那顆是銳利的（過渡 0.9px），加到主畫面那顆是糊的（4.7px）** ——
-     兩條路徑拿到的東西不一樣。而同一支手機加別的網站完全正常，
-     所以不是 iOS 對所有網頁捷徑都這樣，是我們這邊少了什麼。
-     根目錄這兩個檔名是 iOS 找不到 <link> 時會自己去試的慣例路徑（同 favicon.ico），
-     補上之後兩條路都指得到同一張圖，也順便拿掉查詢字串這個變數。
+     ⚠⚠ **只宣告這一個尺寸，而且是 192 —— 這是照別站的成功案例做的，不要改。**
+     iPhone 主畫面要 180（60pt × @3x）。192 比它大 6%，iOS 只需要縮一點點；
+     **放大會糊，大幅縮小也會糊，只有「幾乎不用縮」才銳利。**
+     前面試過 180（1:1 竟然還是糊，因為 iOS 其實去拿了 manifest 裡更大的那張）
+     和 1024（縮 5.7 倍，更糊）。
+     ⚠ **不要好心多補幾個尺寸**（57／76／120／152／512／1024）——
+       候選一多，iOS 會挑錯那張再縮放，這正是前五輪一直糊的原因。
+       整個站現在能被 iOS 找到的 any 版就只有這一張。
+     ⚠ sizes 屬性只是宣告，iOS 不會驗證 —— 檔案實際像素必須真的是 192×192
+       （tools/app-icons.mjs 產生時會檢查尺寸，改不動它就不會過）。
 
-     ⚠ 主畫面那顆是**按下「加入」的當下**存進捷徑的，之後不會自己更新 ——
-     換了圖一定要**刪掉重加**。所以 ?v= 對它沒有意義，這裡不放。
-     完整量測在 tools/app-icons.mjs 檔頭與 PALETTE 第六之二十節。
-     ⚠ 改過 assets/icon.svg 要跑 node tools/app-icons.mjs 重算（根目錄那兩張也是它產的）。 -->
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+     ⚠ 主畫面那顆是**按下「加入」的當下**存進捷徑的，之後不會自己更新。
+     換了圖要把 ?v= 加一，並且**把主畫面上那顆刪掉重加**，兩件都要做。 -->
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192.png?v=6">
 <!-- Android 的「加到主螢幕」讀這一份（iOS 不需要它也能加）。
      manifest 裡 display 是 "browser" 不是 "standalone"，是刻意的：
      這是一個會連出去（Google 地圖、LINE）的內容網站，

@@ -20,10 +20,11 @@ const OUT = path.join(ROOT, "_site");
 /* site.webmanifest 也一定要在根目錄：它裡面的 start_url／scope 都寫死 "/"，
    而各頁的 <link rel="manifest"> 指的就是根目錄那一份。Android 的
    「加到主螢幕」讀不到它就會退回猜圖示，圖示與名稱都會變成瀏覽器自己撿的。 */
-/* apple-touch-icon*.png 也必須在根目錄：那是 iOS 找不到 <link> 時自己會去試的
-   固定路徑（同 favicon.ico 的慣例），少了它就只剩 <link> 那一條路。 */
+/* ⚠ 根目錄**刻意沒有** apple-touch-icon.png（2026-08-12 第六輪拿掉）。
+   那條慣例路徑等於多給 iOS 一個候選，而「候選一多就挑錯那張再縮放」
+   正是圖示一直糊掉的原因。整站的 any 版現在只有 assets/icon-192.png 一張。 */
 const ALWAYS = ["index.html", "404.html", "favicon.ico", "site.webmanifest",
-  "apple-touch-icon.png", "apple-touch-icon-precomposed.png", "assets", "posts"];
+  "assets", "posts"];
 /* history/ 是改版紀錄（原 preview/ 的推導文字），沒有也不影響建置。
    preview/ 是**進行中**的提案頁：定案上線後那一頁會被刪掉、文字搬進 history/，
    所以這個資料夾常常是空的甚至不存在 —— 一樣是選配。
