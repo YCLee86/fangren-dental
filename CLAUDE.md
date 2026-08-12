@@ -293,8 +293,13 @@ tools/
 
 **這一節 2026-08-12 整個換掉了。** 原本這裡是 79 個提案頁（`preview/<name>/`）的清單，
 使用者當天決定：**範例頁只放 fangren.net、定案上線之後就把頁面刪掉，只留下歷史文本**。
-所以 `preview/` 整個資料夾已經不存在，那些頁的推導、量測與落選案的數字
-搬進了 `history/`，一頁一個純文字存檔。
+那 79 頁的推導、量測與落選案的數字搬進了 `history/`，一頁一個純文字存檔。
+
+> **`preview/` 這條路徑本身沒有廢掉**（2026-08-12 當天稍晚就又用上了）。
+> 上面那句「整個資料夾已經不存在」指的是**當下清空了**，規則是
+> 「提案期間放 `preview/`，定案上線後刪頁、文字搬進 `history/`」——
+> 所以那個資料夾本來就會時有時無。目前躺著的：
+> `preview/hero-band-seam/`（照片與窄帶的接縫，`?seam=before|after`）。
 
 ### 規則（要新開一個提案的時候照這個做）
 
@@ -303,6 +308,23 @@ tools/
 2. 提案期間放 `preview/<name>/index.html`（沒有的話自己建這個資料夾），
    **一定要帶 `<meta name="robots" content="noindex, nofollow, noarchive">`**。
    切換條的網址參數正規式要寫 `[a-z0-9]+`，寫 `[a-z]+` 會吃不到 `glass1` 這種值。
+   > **⚠ 提案頁是 `index.html` 的完整複本的話，有四件事一定要一起做**
+   > （2026-08-12 `hero-band-seam` 那一頁踩過前三件）：
+   > ・**相對路徑往上兩層**（`assets/` → `../../assets/`）。
+   >   **不要用 `<base href="/">` 代替** —— 那會讓 `#topics` 這種錨點跳回首頁。
+   > ・**把 `assets/counter.js` 與 `data-views-self` 拿掉**，窄帶的數字寫死並手動加
+   >   `.is-on`（正式站是真值回來才加，不加就一直 `visibility: hidden`）。
+   >   不拿掉的話**每開一次提案頁，首頁的計數就多一次**。
+   >   ⚠ 那個假數字**絕對不要跟著版型搬回正式站** —— 2026-08-07 踩過（示範值 8642
+   >   把真實的 190 蓋掉還不會動）。
+   > ・**切換條要插在最後一個 `</body>` 前面。** 這一站的註解裡就寫著
+   >   `</body>` 這幾個字（`.nav-lamp` 那一段），用 `String.replace('</body>', …)`
+   >   會換到**註解裡那一個**，切換條落在 `<head>` 的樣式表中間、整段不會執行。
+   >   症狀是「按鈕不見了、`data-seam` 是 undefined」。用 `lastIndexOf`。
+   > ・**`preview/` 要進得了 `_site/`**：`tools/dist.mjs` 的 `OPTIONAL` 已經列了它，
+   >   `robots.txt` 的 `Disallow: /preview/` 寫在 `tools/build.mjs` 裡，
+   >   Worker 對 `/preview/*` 加 `X-Robots-Tag` ＋ `Cache-Control: no-store`
+   >   （提案頁改得勤，不設 no-store 使用者重新整理會拿到舊的）。三處都已經就位。
 3. **定案上線之後，把那一頁刪掉**，同時把它 `<head>` 裡的推導文字搬進
    `history/<name>.html`。切換條、`data-*` 屬性一起消失，不要留到正式站。
 4. `history/` 是**寫完就不動的純文字存檔**：目錄在 `history/index.html`，
@@ -321,11 +343,14 @@ tools/
 
 | | |
 | --- | --- |
-| 目錄 | <https://fangren.net/history/> |
-| 單篇 | `https://fangren.net/history/<name>.html` |
-| 本機 | `node tools/serve.mjs` → <http://localhost:8791/history/> |
+| 改版紀錄・目錄 | <https://fangren.net/history/> |
+| 改版紀錄・單篇 | `https://fangren.net/history/<name>.html` |
+| **進行中的提案** | `https://fangren.net/preview/<name>/` |
+| 本機 | `node tools/serve.mjs` → <http://localhost:8791/history/>、`/preview/<name>/` |
 
-沒有鎖，也沒有任何連結指過去 —— 拿到網址的人看得到，和以前的 `/preview/` 一樣。
+`/preview/` 沒有目錄頁（`history/` 才有）—— 提案頁是一次一兩頁、直接把網址給使用者。
+
+沒有鎖，也沒有任何連結指過去 —— 拿到網址的人看得到，`/history/` 與 `/preview/` 都一樣。
 **真的不能外流的東西不要放這裡。**
 
 > 為什麼沒有鎖（2026-08-06 的判斷，仍然有效）：那道 HTTP Basic 只擋得住
