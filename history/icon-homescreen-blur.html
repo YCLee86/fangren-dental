@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>icon-homescreen-blur｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>icon-homescreen-blur</h1>
+<p class="meta">
+  原網址 <code>/preview/icon-test/</code>、<code>/preview/icon-test-b/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show f98afe6:preview/icon-test/index.html</code><br>
+  九輪，**結論是站方無解** —— 完整推導見 PALETTE.md 第六之二十節
+</p>
+
+<h2>問題</h2>
+<p>「加到主畫面」的圖示在 iPhone 上看起來模糊、有雙層疊影。檔案本身是銳利的（邊緣過渡 1px），
+螢幕上卻是 4~5px。同一支手機上，別的網站（blog.ichentsai.tw）的網頁捷徑是銳利的。</p>
+
+<h2>九輪試過的變數</h2>
+<pre>輪次  改動                                    螢幕上的邊緣過渡
+ 一   apple-touch-icon 180                    5px
+ 二   改餵 1024（以為是放大造成的）              5px
+ 三   補根目錄 apple-touch-icon.png、拿掉 ?v=    5px
+ 四   顏色補償 #3f654a → #205533               5px（顏色修好了，ΔE 9.2→0.0）
+ 五   底色紙色 → 純白（使用者指定，比照 Maps）     5.1px
+ 六   照別站重做：只給一張 192、砍掉所有其他候選   4.0px  ← 唯一有效的一步
+ 七   補 web-app-capable、display: standalone   仍有
+ 八   對照頁 A：拆光所有宣告，只留一行 icon      4px    ← 和正式站一樣
+ 九   對照頁 B：透明底（iOS 填黑）＋米色標誌      3px    ← 只好一點點
+
+檔案本身（任何一版）                            1px</pre>
+
+<h2>結論</h2>
+<p><strong>不是我們的宣告。</strong>對照頁 A 把 manifest、web-app meta、其他尺寸全部拿掉，
+只留一行 <code>apple-touch-icon</code>，量出來和正式站一模一樣是 4px。</p>
+<p><strong>不是淺色底。</strong>對照頁 B 換成深底只從 4px 進步到 3px，離檔案的 1px 還很遠。</p>
+<p><strong>是 iOS 產生捷徑圖示時自己重新取樣 ＋ 疊上 Liquid Glass 的立體處理</strong>
+（放大看得到沿著上緣的亮邊與底下的陰影）。網站這一側沒有任何介面可以影響它。</p>
+
+<h2>排除掉的（都有量測依據，不要再重查）</h2>
+<pre>・不是 Cloudflare      使用者用 Safari 直接開 PNG，是銳利的
+・不是我們的檔案      icon-192/512/1024 自己量都是 1px 過渡
+・不是舊快取          圖示是綠的，是上線後的當前檔
+・不是 favicon        favicon.svg 沒有背景 rect（透明底），
+                      而糊掉那顆的底量出來是 rgb(226,229,230) ＝ icon.svg 的紙色
+・不是 maskable       標誌佔比 0.75~0.76，maskable 版是 0.68
+・不是解析度不足      牙洞在螢幕上乾淨且比例正確（0.0794 vs 設計值 0.0786）；
+                      36px 級的來源會把洞整個糊掉
+・不是淺色底本身      同一張主畫面上 McDonald's／台灣虎航／簡報都是淺色底且銳利
+・不支援自適應圖示    Apple 開發者論壇 thread/801448（2025-09 提問，零回覆）：
+                      網頁捷徑沒有 dark/tinted 變體的機制，透明會被填黑</pre>
+
+<h2>留下來的成果（都保留在正式站）</h2>
+<pre>・apple-touch-icon 只宣告一張 192（sizes ＋ ?v=），全站沒有第二個 any 版候選
+  —— 這是九輪裡唯一量得出改善的一步（5.1 → 4.0px）
+・底色純白 #ffffff，和 Google Maps 同亮度（實測兩者都原封不動通過玻璃效果）
+・顏色補償 #3f654a → #205533，疊加後正好還原成品牌色（ΔE 9.2 → 0.0）</pre>
+
+<h2>兩個對照頁的角色</h2>
+<p>A：宣告環境全部拆光，只留一行 <code>apple-touch-icon</code>，圖檔和正式站相同。<br>
+B：同上，但圖檔沒有背景（iOS 填黑）、標誌換成官方色票米色 <code>#D3CBC5</code>
+（深綠疊在黑底上只有 3.17:1，等於看不見；米色是 13.12:1）。</p>
+<div class="note">
+<p>兩頁都是在使用者的實機上做 A/B，不是在容器裡模擬 —— 這個問題完全無法在
+Linux 容器重現，所有數字都是從使用者的截圖逐像素量出來的
+（Playwright 擷圖 → zlib 自解 PNG → 取每列中位數）。</p>
+</div>
+
+<footer>芳仁牙醫診所・改版紀錄</footer>
+</div></body>
+</html>

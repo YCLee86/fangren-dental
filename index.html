@@ -50,7 +50,7 @@
 
      ⚠ 主畫面那顆是**按下「加入」的當下**存進捷徑的，之後不會自己更新。
      換了圖要把 ?v= 加一，並且**把主畫面上那顆刪掉重加**，兩件都要做。 -->
-<link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192.png?v=8">
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192.png?v=9">
 <!-- Android 的「加到主螢幕」讀這一份（iOS 不需要它也能加）。
      manifest 裡 display 是 "browser" 不是 "standalone"，是刻意的：
      這是一個會連出去（Google 地圖、LINE）的內容網站，
@@ -59,18 +59,6 @@
 <!-- 主畫面圖示底下顯示的名字。不寫的話 iOS 會拿 <title> 去截，
      首頁那一句是「芳仁牙醫診所｜雲林斗六・永樂街」，截完會變成半句。 -->
 <meta name="apple-mobile-web-app-title" content="芳仁牙醫">
-<!-- ⚠ 這兩行是 2026-08-12 第七輪加的，目的**只有一個：對齊 blog.ichentsai.tw**。
-     那個站在同一支手機、同一個流程下圖示完全銳利，逐項比對之後，
-     圖示的宣告我們已經一模一樣了（192 ＋ sizes ＋ ?v=），只剩這兩個 meta 它有、我們沒有。
-
-     ⚠⚠ **副作用要知道：加了之後從主畫面開啟會是「網頁 App」模式（沒有網址列）。**
-     本來擔心這站會連出去（地圖、LINE、電話）被關在裡面 —— 實際上那幾個都是
-     外部 App，照樣會跳出去；站內導覽靠頁首選單，沒有網址列不影響。
-     而且使用者每次加入時本來就手動把「打開為網頁 App」打開了，等於只是把它變成預設。
-
-     ⚠ 要退回舊行為：把這兩行刪掉，並把 site.webmanifest 的 display 改回 "browser"。 -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
 <!-- 首頁的樣式全部內嵌在下面。assets/style.css 是文章頁在用的，
      兩者的版型與配色完全不同，共用一份只會互相污染。 -->
 
