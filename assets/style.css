@@ -220,16 +220,85 @@ a:hover { color: var(--accent); }
 
 .site-nav {
   display: flex; flex-wrap: nowrap; justify-self: end; min-width: 0;
-  gap: clamp(.7rem, 3.2vw, 1.6rem);
+  /* 間距只寫在這一個地方 —— 底下的 --lamp-pad 要拿它算「框與框留得住 5px 嗎」，
+     兩處各寫一份必然會有一天對不起來。 */
+  --nav-gap: clamp(.7rem, 3.2vw, 1.6rem);
+  gap: var(--nav-gap);
   font-size: clamp(11px, 3.2vw, 13.5px);
 }
-.site-nav a { color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap; }
+.site-nav a {
+  /* z-index 1：字要壓在框上面（框是 z-index:-1 的 ::before）。 */
+  position: relative; z-index: 1;
+  color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap;
+}
+
+/* ==========================================================================
+   選單那三個玻璃框 —— 和首頁同一組幾何（2026-08-12 補上）
+   --------------------------------------------------------------------------
+   首頁 2026-08-11 定案並上線之後，文章頁的選單一直只有純文字（CLAUDE.md
+   第九節第 0 項）。同一條頁首、同一組品牌與字級，只有三項有沒有框不一樣，
+   從首頁點進文章看得出是兩個東西 —— 這一輪把框帶過來。
+
+   ⚠ **只有框，沒有「亮起來」那一半，這不是漏做。** 首頁的框會多一塊底
+     （.nav-lamp）與變濃變粗的線，因為那三項指向首頁自己的三個區塊、
+     捲到哪一節哪一項就亮。文章頁的三項是**跨頁連結**（`../../#topics`），
+     這一頁沒有任何一節可以偵測，硬要選一個亮是說謊。
+     所以這裡只搬「靜止的框」那一態：.75px、紙色 .26。
+
+   ⚠ **值不要各憑感覺改。** --frame-em / --frame-r / 線的濃度與粗細四個數字
+     全部是首頁那三輪量出來的，推導與落選案在 preview/nav-frame-height/
+     與 preview/nav-scrollspy/，規則寫在 index.html「框的幾何」那一段。
+     這裡是**複本**，要改就兩邊一起改。
+
+   ── 三件從首頁原樣沿用的約束 ──────────────────────────────────────────────
+   ⚠ **畫在 ::before，不能直接給 a 加 border** —— 加了會把選單撐寬，
+     375 上頁首只剩 37px 餘裕，品牌會被擠成兩行（PALETTE.md 第六之五節）。
+     ::before 是絕對定位、不佔位，所以這一整段**一個像素都不動版面**：
+     頁首高度、品牌、選單間距全部原封不動，改變的只有畫出來的東西。
+   ⚠ **線用 `box-shadow: inset`，不是 border** —— Blink 會把 `border-width`
+     進位到整數 px，`.75px` 寫上去量回來是 `1px`。inset 陰影吃得到小數，
+     而且一樣跟著 border-radius 走。
+   ⚠ **框高必須是「字級的倍數 ＋ 對 a 垂直置中」**，不能回去用 `inset` 外擴。
+     這裡的 `a` 沒有 padding-block（首頁有 .35rem），但兩邊的 line-height
+     都是 1.85em、框都是 2.65em 對盒子置中 —— 幾何完全相同。
+     只寫 top/height/transform，**不要改成 `inset` 簡寫**：簡寫會把 left/right
+     一起重設，那兩邊是 --lamp-pad 在管的。
+
+   ── --lamp-pad：左右外擴半個字，但框與框永遠留 5px ────────────────────────
+   首頁是用 JS 現量的（那一頁本來就要 JS 算燈箱的位置）。**這一頁不必為了
+   一個常數去掛一支腳本** —— 兩個輸入（選單字級、選單間距）都是 CSS 自己的
+   clamp，min()／max() 算得出完全一樣的值：
+
+       max(2px, min(半個字, (選單間距 − 5px) ÷ 2))
+
+   實測與首頁對得上：375 上 3.50px（間距 12px，框與框剛好留 5px）、
+   320 上 2.62px、電腦版 6.75px（間距 25.6px，半個字贏）。
+   ⚠ **走過的死路是「把手機的選單間距開大」** —— 320 上會撞到品牌。
+     讓外擴量自己讓步，版面一個字都不動。
+   ========================================================================== */
+:root { --frame-em: 2.65; --frame-r: 8px; }
+.site-nav a::before {
+  content: ''; position: absolute; z-index: -1;
+  --lamp-pad: max(2px, min(.5em, (var(--nav-gap) - 5px) / 2));
+  left: calc(-1 * var(--lamp-pad));
+  right: calc(-1 * var(--lamp-pad));
+  top: 50%;
+  height: calc(var(--frame-em) * 1em);
+  transform: translateY(-50%);
+  border-radius: var(--frame-r);
+  box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .26);
+  transition: box-shadow .25s ease;
+}
 /* ⚠ hover 一定要關在這個 media 裡。手機沒有游標，`:hover` 一被點出來就會黏住，
    點過的那幾項會一直維持在 hover 的樣子 —— 首頁的選單底線就是這樣壞掉的
    （2026-08-10 修掉，見 index.html 主選單那一段）。和文章卡「手機版不做 hover」
-   是同一條規則。 */
+   是同一條規則。框的濃度階數與首頁相同（.26 → .40，粗細不變）。 */
 @media (hover: hover) and (pointer: fine) {
   .site-nav a:hover { color: #fff; }
+  .site-nav a:hover::before { box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .40); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-nav a::before { transition: none; }
 }
 
 /* ==========================================================================
@@ -419,10 +488,27 @@ a:hover { color: var(--accent); }
   transition: transform .18s ease;
 }
 .rel-body { display: block; padding: .8rem .9rem 1rem; }
+/* 主題與科別的標記 —— 和首頁文章卡的 .card-tag 是同一顆（2026-08-12 補上）。
+   在這之前它只有套色的字、沒有框，所以同一張卡在首頁是一顆標記、
+   在文章頁底下卻只是一行小字。三個尺寸原樣照抄首頁：
+     字級 .72rem・字距 .06em・行高 1.6・內距 .06rem .5rem・圓角 8.5px
+     底 --card（不留透明）・字與框 --accent-deep（1px）
+   ⚠ **圓角 8.5px 是首頁那一族的值，不要改成 --radius(12px)。** 這一站的小標籤
+     本來就是一族小圓角（.doc dt 6／.doc-role 8／.card-tag 8.5／.info-card h3 9），
+     12px 是卡片與 chip 那一族的。
+   ⚠ **底要留 --card、不能透明。** 躺在紙上時兒牙那階會掉出 AA，墊那層卡色才守得住
+     （規則同首頁，PALETTE.md 第六之二節）。這裡本來就坐在 .rel-card 的卡色上，
+     寫死同一個值是為了日後卡片換底時這顆不會跟著漂。
+   ⚠ 顏色照舊吃**該篇自己的**科別色 —— .rel-card 自己帶 data-spec，蓋掉 <body>
+     上這一篇的那個（見本節開頭）。
+   letter-spacing 會在最後一個字後面多留一格，右邊因此看起來比左邊鬆一點點 ——
+   首頁那顆也是這樣，**刻意不補**，兩邊要長得一模一樣。 */
 .rel-tag {
   display: inline-block; margin-bottom: .35rem;
-  font-size: .72rem; letter-spacing: .02em;
-  color: var(--accent-deep);
+  font-size: .72rem; letter-spacing: .06em; line-height: 1.6;
+  padding: .06rem .5rem;
+  border-radius: 8.5px;
+  background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep);
 }
 .rel-title {
   display: block; font-size: .92rem; font-weight: 600; line-height: 1.6;
