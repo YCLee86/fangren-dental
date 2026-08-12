@@ -134,7 +134,7 @@
             "Friday"
           ],
           "opens": "08:45",
-          "closes": "11:30"
+          "closes": "12:00"
         },
         {
           "@type": "OpeningHoursSpecification",
@@ -146,7 +146,7 @@
             "Friday"
           ],
           "opens": "13:45",
-          "closes": "16:30"
+          "closes": "16:40"
         },
         {
           "@type": "OpeningHoursSpecification",
@@ -158,7 +158,7 @@
             "Friday"
           ],
           "opens": "17:45",
-          "closes": "20:00"
+          "closes": "20:30"
         },
         {
           "@type": "OpeningHoursSpecification",
@@ -642,7 +642,7 @@
         "@id": "https://fangren.net/#dentist"
       },
       "inLanguage": "zh-Hant-TW",
-      "dateModified": "2026-08-12",
+      "dateModified": "2026-08-13",
       "primaryImageOfPage": {
         "@type": "ImageObject",
         "url": "https://fangren.net/assets/hero-clinic-night.jpg"
@@ -2032,8 +2032,13 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 /* 只有醫師藥丸是實心的 —— 認人的份量比分類重。 */
 .doc-role { background: var(--accent); color: var(--on-fill); border-color: var(--accent); }
 
-/* ---- 診所資訊：三張卡一排，照片兩張並排 -------------------------------- */
-.info { display: grid; gap: 1.2rem; grid-template-columns: repeat(3, 1fr); }
+/* ---- 診所資訊：地址與電話並排，看診時間橫跨一整列，照片兩張並排 -------- */
+/* 2026-08-12 從「三張卡一排」改成「上面兩張、下面一整條」。
+   看診時間換成門診表之後塞不進三欄的 347px —— 八顆科別標記會排成四行，
+   整張卡比地址、電話高三倍，而 grid 會把同一列的卡一起拉到最高那張的高度，
+   結果是左邊兩張幾乎全白。表格本身仍然收在 620px（見 .hours-grid）。 */
+.info { display: grid; gap: 1.2rem; grid-template-columns: repeat(2, 1fr); }
+.info-card[data-hue="taupe"] { grid-column: 1 / -1; }
 .info-card {
   background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
   padding: 1.1rem 1.2rem 1.2rem;
@@ -2059,6 +2064,61 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    所以它只能待在卡上，不要把這個色搬到紙底的任何地方。 */
 #clinic .info-note { color: var(--brick); }
 .info-note { margin-top: .55rem !important; font-size: .8rem !important; color: var(--ink-soft); }
+
+/* ---- 看診時間裡的門診表（2026-08-12）------------------------------------
+   骨架：日子當欄、早／午／晚當列、一格一顆點。時段寫在列標題上。
+   推導、參考的兩個同業站、以及落選的三種版型都在 /history/clinic-schedule.html。
+
+   ⚠ 顏色全部用既有的變數，沒有新增任何色值：格線與被篩掉的點是 --rule，
+     字與有診的點是 --ink-soft，套色那一顆吃該科的 --accent。
+     提案頁上那四個灰（#9aa09b／#ccd0cd／#dee2e3／#8b908a）是隨手挑的，
+     搬進正式站的時候一顆都沒有帶進來 —— PALETTE.md 是唯一依據。
+   ⚠ 標記的兩態和首頁「主題與科別」那排完全同一組值（未選白底深階字與框、
+     選到整顆套色填滿），只有字級與內距各收一階，因為它待在卡片裡。 */
+.hours-filter {
+  display: flex; flex-wrap: wrap; gap: .45rem;
+  margin: 0 0 1.15rem; padding: 0; list-style: none;
+}
+.hours-filter button {
+  font: inherit; font-size: .8rem; line-height: 1.6;
+  padding: .2rem .7rem; border-radius: 12px; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep);
+  transition: background-color .15s ease, color .15s ease;
+}
+.hours-filter button[aria-pressed="true"] {
+  background: var(--accent); color: var(--on-fill); border-color: var(--accent);
+}
+/* 第一顆「開診時段」＝ 不篩選。灰的兩階和 [data-spec="all"] 同值 */
+.hours-filter button[data-spec="all"] { --accent: #5f5d5c; --accent-deep: #4c4948; --on-fill: #fff; }
+
+.hours-grid { width: 100%; max-width: 620px; border-collapse: collapse; table-layout: fixed; }
+.hours-grid caption { position: absolute; left: -9999px; }
+.hours-grid col.lab { width: 6.3rem; }
+.hours-grid thead th {
+  font-size: .88rem; font-weight: 400; color: var(--ink-soft);
+  letter-spacing: .14em; padding: .15rem 0 .8rem; text-align: center;
+}
+.hours-grid tbody th {
+  text-align: left; font-weight: 400; font-size: .715rem; color: var(--ink-soft);
+  letter-spacing: 0; white-space: nowrap; padding: 1rem .6rem 1rem 0;
+  border-top: 1px solid var(--rule);
+}
+/* 早／午／晚三個字要維持墨色 —— 上面 `#clinic .info-card b` 把 b 染成強調色，
+   那條是給電話與「週一至週五」用的，這裡要蓋回去 */
+#clinic .hours-grid tbody th b {
+  color: var(--ink); font-size: .82rem; font-weight: 400;
+  margin-right: .5em; letter-spacing: .06em;
+}
+.hours-grid tbody td { border-top: 1px solid var(--rule); text-align: center; }
+.hours-grid .d {
+  display: inline-block; width: .56rem; height: .56rem; border-radius: 50%;
+  background: var(--ink-soft); vertical-align: middle;
+  transition: background-color .18s ease, transform .18s ease;
+}
+.hours-grid .d.faint { background: var(--rule); }              /* 有診，但不是這一科 */
+.hours-grid .d.hit   { background: var(--accent); transform: scale(1.16); }
+
 .gallery { display: grid; gap: 1.2rem; grid-template-columns: repeat(2, 1fr); margin-top: 1.4rem; }
 .gallery figure { margin: 0; }
 /* 兩張診間照的原始比例差了 2.8%（600×389 與 600×400），兩欄並排時右邊那張
@@ -3311,14 +3371,71 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <h3>電話</h3>
           <p class="big"><a href="tel:+88655339369"><data value="05-533-9369">(05)5339-369</data></a></p>
         </div>
-        <!-- Deep Taupe 只出現在這一張（單椅布料的色），底下那行休診是全頁唯一的磚紅 -->
+        <!-- Deep Taupe 只出現在這一張（單椅布料的色），底下那行休診是全頁唯一的磚紅
+
+             2026-08-12：這張卡從四行文字（週一至週五＋三個時段）換成門診表。
+             來源是診所門口那面磁鐵門診表的照片，推導與落選案在
+             /history/clinic-schedule.html。
+
+             ⚠ **表格是靜態 HTML，不要改成 JS 產生。** 理由和 CLAUDE.md 第一條
+               （首頁文章列表）完全相同：看診時間是這一站最關鍵的一項事實，
+               爬蟲與沒有 JS 的瀏覽器都必須看得到。JS 只做「點某一科就套色」，
+               關掉 JS 之後整張表仍然完整，只是點不動。
+             ⚠ **這張卡是 tools/schema.mjs 讀營業時間的唯一來源**，動它之前先看那支：
+               ・開診日讀 <th scope="col"> 那幾個「一二三四五」
+               ・三個時段讀 <th scope="row"> 裡的時間（一般的 – 是 U+2013）
+               ・休診日讀底下 .info-note 的「週六、週日休診」
+               所以**不要把 div 的 class 從 "info-card" 改掉**（那支的正規式比對
+               的是 class="info-card" 這個完整字串），也不要把日子或時間搬進註解裡。
+             ⚠ 一格一顆點 ＝ 那一節有診，不是一科一顆。data-in 列出那一節有哪幾科，
+               點上面的標記才會套色。這是使用者定的（「點太多，每個門診一個點就好」）。
+             ⚠ 第一顆標記叫「開診時段」不是「全部」（使用者指定）。
+               首頁上面「主題與科別」那排仍然是「全部」，兩者刻意不同，不要順手統一。 -->
         <div class="info-card" data-hue="taupe">
           <h3>看診時間</h3>
-          <p><b>週一至週五</b><br>
-             上午 08:45–11:30<br>
-             下午 13:45–16:30<br>
-             晚上 17:45–20:00</p>
-          <p class="info-note">週六、週日休診。國定假日門診時間請來電確認。</p>
+
+          <ul class="hours-filter">
+            <li><button type="button" data-spec="all"     aria-pressed="true">開診時段</button></li>
+            <li><button type="button" data-spec="general" aria-pressed="false">一般牙科</button></li>
+            <li><button type="button" data-spec="perio"   aria-pressed="false">牙周治療</button></li>
+            <li><button type="button" data-spec="endo"    aria-pressed="false">顯微根管</button></li>
+            <li><button type="button" data-spec="kids"    aria-pressed="false">兒童牙科</button></li>
+            <li><button type="button" data-spec="ortho"   aria-pressed="false">齒顎矯正</button></li>
+            <li><button type="button" data-spec="prosth"  aria-pressed="false">植牙・假牙重建</button></li>
+            <li><button type="button" data-spec="surg"    aria-pressed="false">口腔外科</button></li>
+          </ul>
+
+          <table class="hours-grid">
+            <caption>一週各時段的門診，以及每一節有哪些科別</caption>
+            <colgroup><col class="lab"><col span="5"></colgroup>
+            <thead>
+              <tr><td></td>
+                  <th scope="col">一</th><th scope="col">二</th><th scope="col">三</th>
+                  <th scope="col">四</th><th scope="col">五</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row"><b>早</b>08:45–12:00</th>
+                  <td><span class="d" data-in="general"></span></td>
+                  <td><span class="d" data-in="general"></span></td>
+                  <td><span class="d" data-in="general endo"></span></td>
+                  <td><span class="d" data-in="general perio"></span></td>
+                  <td><span class="d" data-in="general prosth"></span></td></tr>
+              <tr><th scope="row"><b>午</b>13:45–16:40</th>
+                  <td><span class="d" data-in="general"></span></td>
+                  <td><span class="d" data-in="general kids"></span></td>
+                  <td><span class="d" data-in="general kids prosth endo"></span></td>
+                  <td><span class="d" data-in="surg kids"></span></td>
+                  <td><span class="d" data-in="general prosth perio"></span></td></tr>
+              <tr><th scope="row"><b>晚</b>17:45–20:30</th>
+                  <td><span class="d" data-in="general"></span></td>
+                  <td><span class="d" data-in="ortho kids perio"></span></td>
+                  <td><span class="d" data-in="general ortho kids endo"></span></td>
+                  <td><span class="d" data-in="surg kids perio"></span></td>
+                  <td><span class="d" data-in="general ortho perio"></span></td></tr>
+            </tbody>
+          </table>
+
+          <p class="info-note">週六、週日休診。國定假日與各科特別門診請來電確認。</p>
         </div>
       </div>
       <div class="gallery">
@@ -4052,6 +4169,43 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
     });
   }
+})();
+</script>
+
+<script>
+/* 看診時間那張門診表：按一顆科別標記，有那一科的點套上該科的色，
+   其餘有診的點淡掉；再按同一顆＝回到「開診時段」。
+
+   ⚠ **表格本身是靜態 HTML，這支只加 class。** 沒有 JS 的時候整張表照樣完整，
+     只是標記按不動 —— 和上面 chips 那一支同一個原則，也和 CLAUDE.md 第一條
+     （首頁文章列表不准改成 JS 產生）同一個理由。
+   ⚠ 比對用「前後補空白再找子字串」而不是 split —— data-in 是空白分隔的科別代碼，
+     直接 indexOf('endo') 會被 'endodontic' 這種未來可能出現的代碼誤中。 */
+(function () {
+  var wrap = document.querySelector('.hours-filter');
+  if (!wrap) return;
+  var btns = wrap.querySelectorAll('button[data-spec]');
+  var dots = document.querySelectorAll('.hours-grid .d');
+  if (!btns.length || !dots.length) return;
+
+  function paint(sel) {
+    Array.prototype.forEach.call(dots, function (dot) {
+      var has = (' ' + (dot.getAttribute('data-in') || '') + ' ').indexOf(' ' + sel + ' ') >= 0;
+      dot.classList.toggle('hit', sel !== 'all' && has);
+      dot.classList.toggle('faint', sel !== 'all' && !has);
+      if (sel !== 'all' && has) dot.setAttribute('data-spec', sel);
+      else dot.removeAttribute('data-spec');
+    });
+    Array.prototype.forEach.call(btns, function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-spec') === sel ? 'true' : 'false');
+    });
+  }
+
+  Array.prototype.forEach.call(btns, function (b) {
+    b.addEventListener('click', function () {
+      paint(b.getAttribute('aria-pressed') === 'true' ? 'all' : b.getAttribute('data-spec'));
+    });
+  });
 })();
 </script>
 

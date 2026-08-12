@@ -68,15 +68,28 @@ function parseDays(text) {
    ============================================================================= */
 
 /* ---- 看診時間 ----
-   來源是 #clinic 那張「看診時間」資訊卡：
+   來源是 #clinic 那張「看診時間」資訊卡。2026-08-12 那張卡從四行文字換成門診表，
+   所以這裡讀的是表格：
 
      <h3>看診時間</h3>
-     <p><b>週一至週五</b><br>上午 08:45–11:30<br>…</p>
+     <ul class="hours-filter">…八顆科別標記…</ul>
+     <table class="hours-grid">
+       <thead><tr><td></td><th scope="col">一</th>…<th scope="col">五</th></tr></thead>
+       <tbody><tr><th scope="row"><b>早</b>08:45–12:00</th><td>…</td>…</tr>…</tbody>
+     </table>
      <p class="info-note">週六、週日休診。…</p>
 
-   時間的破折號是全形連接號 U+2013（–），不是半形減號，所以下面的正規式兩種都收。
-   休診日要**明確宣告**（opens 與 closes 都是 00:00）—— 只列營業日的話，
-   Google 分不出「週六日休診」和「忘了填」。 */
+   ・**開診日**讀 thead 那幾個 <th scope="col">（一二三四五）。
+     ⚠ 原本讀的是 <p><b>週一至週五</b>，換成表格之後第一個 <b> 變成「早」，
+       照舊寫法會解不出來、整段營業時間會從 JSON-LD 消失。
+     ⚠ 這個讀法的前提是**列出來的每一天都三節全開** —— 目前的表就是這樣
+       （週六休診所以整欄沒有列）。日後若出現「某一天只有早診」，
+       這裡要改成逐格判斷，不能再假設整欄一致。
+   ・**時段**讀 <th scope="row"> 裡的三個時間範圍。
+     時間的破折號是全形連接號 U+2013（–），不是半形減號，所以正規式兩種都收。
+   ・**休診日**讀底下 .info-note 的「週六、週日休診」。要**明確宣告**
+     （opens 與 closes 都是 00:00）—— 只列營業日的話，Google 分不出
+     「週六日休診」和「忘了填」。 */
 export function parseHours(indexHtml, warn = console.warn) {
   const card = indexHtml.match(
     /<div class="info-card"[^>]*>\s*<h3>\s*看診時間\s*<\/h3>([\s\S]*?)<\/div>/i
@@ -87,8 +100,10 @@ export function parseHours(indexHtml, warn = console.warn) {
   }
   const body = stripComments(card[1]);
 
-  const dayText = (body.match(/<b>([^<]+)<\/b>/) || [])[1];
-  const open = dayText && parseDays(clean(dayText));
+  const dayText = [...body.matchAll(/<th[^>]*scope="col"[^>]*>\s*([一二三四五六日])\s*<\/th>/gi)]
+    .map((m) => "週" + m[1])
+    .join("、");
+  const open = dayText && parseDays(dayText);
   if (!open) {
     warn(`  ⚠ 看不懂看診日的寫法「${dayText || ""}」，JSON-LD 會少掉營業時間`);
     return [];
