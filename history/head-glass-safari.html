@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>head-glass-safari｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>head-glass-safari</h1>
+<p class="meta">
+  原網址 <code>/preview/head-glass-safari/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/head-glass-safari/index.html</code><br>
+  抽出 7 段推導文字，共 6,573 字
+</p>
+
+<h2>那一頁自己的推導與量測</h2>
+<pre>============================================================================
+這一頁是什麼（2026-08-10，第二版）
+----------------------------------------------------------------------------
+**版型是現在的 index.html**（含 2026-08-10 定案的 iPad 直放：照片 70svh ＋
+窄帶接在照片下面）。只多了兩排切換條，用來調兩層玻璃。
+
+---- 使用者回報的三件事 ---------------------------------------------------
+① 「右上三個元素沒有出現剛才製作的亮玻璃效果」→ **正常**。
+   那四案只在這一頁，而且預設是「現況」，要切過去才看得到；
+   fangren.net 的首頁到目前為止一個字都沒改。
+② 「iPhone 和 iPad 的 banner 玻璃看起來都很模糊，印象中電腦版不是這麼模糊」
+③ 「iPad 圖片下方柏油路到診所台階那一塊也特別模糊」
+
+---- ②③ 的參數是死的 -----------------------------------------------------
+    頁首 .site-head::before   blur(6px) saturate(1.08)   整條 76px（捲動後 60px）
+    窄帶 .band::before        blur(4px) saturate(.92)    84px，模糊由上往下淡入
+**沒有任何 media query 會改這兩組值**，電腦／iPad／iPhone 完全一樣。
+所以差別不會來自設定，只可能是 Safari 把同樣的 px 算得比較重（Retina 上
+常見的抱怨），或是螢幕尺寸造成的觀感差。
+⚠ 做這一頁的環境沒有 Safari，這一點無法驗證 —— 所以做成四階讓實機轉。
+
+③ 指的那一塊就是窄帶那一層。iPad 定案之後它被搬到照片的最後 84px 上
+（PALETTE.md 第六之十八節），所以現在調「窄帶」那一階，改的正是那一塊。
+
+---- 兩排切換條 -----------------------------------------------------------
+強度  現況 6/4 ／ 弱 4/3 ／ 更弱 3/2 ／ 極弱 2/1.5
+      （前面是頁首 --gb，後面是窄帶 --bb）
+邊緣  現況    mask 直接下在有 backdrop-filter 的元素上
+      拆兩層  外層帶 mask、內層帶 backdrop-filter（偽元素不能巢狀，所以插了
+              真的 &lt;div&gt;）。賭祖先的 mask 會連帶裁掉子元素的 backdrop。
+      合成層  現況 ＋ transform: translateZ(0)
+      階梯    完全不用 mask：四條由上而下 blur 遞減，各自硬邊但相鄰差很小
+
+兩排可自由組合，?g=now|layer|gpu|steps&amp;b=now|w|ww|www。
+
+⚠ 切換條上的讀數會顯示「iPad 版型：生效／未生效」——
+   那是在檢查 index.html 那條 (min-aspect-ratio:2/3) and (max-aspect-ratio:9/10)
+   在這台機器上有沒有命中。**如果在 iPad 上顯示「未生效」，就是門檻抓錯了，
+   要回頭改 index.html 的比例區間。**
+
+**定案後把兩排切換條、多插的 &lt;div&gt; 與這段註解一起刪掉。**
+============================================================================</pre>
+<pre>==========================================================================
+主選單：三個玻璃框 ＋ 一塊跟著捲動滑過去的底（2026-08-10 定案）
+--------------------------------------------------------------------------
+⚠ 這一段換掉了原本的「hover 從中間長出底線」。**那條底線是壞的**：
+它只有 `:hover` 一種來源，而手機沒有游標、hover 一被點出來就黏住，
+所以三項點過之後三條線一起留著。使用者的原話是「邏輯不通」。
+和文章卡「手機版不做 hover」是同一個坑，選單當初漏掉了。
+
+現在分成兩件事：
+
+框　三項都有、從頭到尾都在（包含 HERO 那一屏）。它的工作是**暗示可以按**，
+   所以在還沒捲動、什麼都還沒發生的時候就要看得見。
+底　只有「畫面目前停在的那一節」那一項有，跟著捲動在三個字之間滑過去。
+   狀態由 
+&lt;div class="fixbar" role="navigation" aria-label="方案切換"&gt;
+&lt;div class="row"&gt;&lt;i&gt;往下捲：看頁首下緣，和照片底下那一段&lt;/i&gt;&lt;/div&gt;
+&lt;div class="row"&gt;
+&lt;b&gt;強度：&lt;/b&gt;
+&lt;a href="#" data-b="now"&gt;現況 6/4&lt;/a&gt;
+&lt;a href="#" data-b="w"&gt;弱 4/3&lt;/a&gt;
+&lt;a href="#" data-b="ww"&gt;更弱 3/2&lt;/a&gt;
+&lt;a href="#" data-b="www"&gt;極弱 2/1.5&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="row"&gt;
+&lt;b&gt;邊緣：&lt;/b&gt;
+&lt;a href="#" data-g="now"&gt;現況&lt;/a&gt;
+&lt;a href="#" data-g="layer"&gt;拆兩層&lt;/a&gt;
+&lt;a href="#" data-g="gpu"&gt;合成層&lt;/a&gt;
+&lt;a href="#" data-g="steps"&gt;階梯&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="row"&gt;&lt;span class="w" id="wnow"&gt;—&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+(function () {
+var root = document.documentElement;
+/* ⚠ 正規式要寫 [a-z0-9]+（CLAUDE.md 第九節）。</pre>
+<pre>常駐的框。
+⚠ **畫在 ::before，不能直接給 a 加 border** —— 加了會把選單撐寬，
+375 上頁首只剩 37px 餘裕，品牌會被擠成兩行（PALETTE 第六之五節那個坑）。
+::before 是絕對定位、不佔位。
+⚠ **線是 `box-shadow: inset` 畫的，不是 border** —— Blink 會把 `border-width`
+進位到整數 px，`.75px` 寫上去量回來是 `1px`，兩個狀態會一樣粗。
+inset 陰影吃得到小數，一樣跟著 border-radius 走。日後畫細線一律用這個做法。
+⚠ 圓角 12px ＝ 標記、搜尋框、三種卡片用的同一個，不要另外挑。
+`--lamp-pad` 由 JS 現量寫進來（半個字，但不能大到讓兩個框黏在一起）；
+沒有 JS 時退回 .29em，手機上仍然留得住 5px 的間隙。</pre>
+<pre>---- 收尾句底下那塊暗塊加深（提案 Ⓔ2 定案，2026-08-10）--------------
+使用者回報「巷口」剛好壓在車頭燈上看不清楚。逐字量過照片底下的亮度
+（375 寬）：「巷」最亮 219、「口」最亮 236，白字 65% 疊上去的對比度只有
+1.24 / 1.12（1.0 ＝ 完全看不見），其他十個字都在 3～7。
+
+原本的 rgba(25,22,20,.72) 被 blur(18px) 攤開之後，在「巷口」的位置
+（離暗塊左緣只有 24px）實際只剩約 0.44 不透明度，236 壓完還有 142。
+所以把不透明度提到 .9、範圍放大，讓它在那一端還有密度。
+
+⚠ **blur 一個值都不要動。** 一收就會看得出這是一個框 ——
+   「看不出是框、只是路面自己暗下去」正是這塊東西的設計重點。
+⚠ **只在手機。** 電腦版的裁切是下緣貼齊，收尾句落在純暗的路面上，
+   十二個字最亮處都 ≤58、對比度 ≥5.9，不需要也不該加。</pre>
+<pre>==========================================================================
+直立（旋轉）螢幕：照片不整屏（2026-08-09 定案）
+--------------------------------------------------------------------------
+使用者把 1920×1080 的螢幕轉成直的，回報「左邊的字看起來非常小」。
+原因不是字級設錯，是**這一頁只有照片跟著高度長**：
+
+                                  1440×900 → 1080×1920
+.hero-photo  height: 100svh        900px → 1920px（2.13 倍）
+.hero-poem   clamp(12.5px, 1.05vw, 15px)   15px → 12.5px（撞下限）
+.hero-sign   clamp(11.5px,  .95vw, 14px)   14px → 11.5px（撞下限）
+.hero-copy   padding-top …clamp(1.2rem, 4vh, 2.6rem)   41.6px → 41.6px（撞上限）
+
+字級只讀 vw，還掉到 clamp 的下限；內距讀了 vh 卻撞在上限。高度多出來的
+1000px 沒有任何一條式子接得住，全變成空天空 —— 三行詩在 900px 的畫面裡
+佔 10.6%，在 1920px 裡只佔 4.1%。
+
+而且照片的裁切整個換了方向：1600×1058（1.512）的橫幅塞進 1080×1920 的框，
+cover 的縮放由高度決定（1920 ÷ 1058 = 1.815 倍），照片被放到 2904px 寬 ——
+**左右各裁掉 31.5%，只露出中間 37%**，垂直方向反而一點都沒切。
+所以電腦版定案的 `object-position: 50% 100%`（下緣貼齊）在這個比例下
+完全沒有作用，要裁到垂直得矮到 37svh（1080 ÷ 1.512 = 714px）以下。
+
+---- 定案：照片不整屏 -----------------------------------------------------
+五案做成 preview/hero-portrait/ 給使用者在旋轉螢幕上比過（橫排放大、
+直排靠上、直排置中、照片不整屏、以及不改的對照），他選了照片不整屏。
+
+62svh 是「不整屏」的那個值：1920 高時照片 1190px，縮放降到 1.12 倍，
+左右只裁掉 41%（原本 63%），街角、門面、隔壁的矮房子都回得來。
+詩與收尾句因此靠近，不再是一撮小字隔著 1000px 空天空對望。
+窄帶是 position: absolute; bottom: 0 掛在 .hero 上，會自己跟上來，不必處理。
+
+字級仍要換成 svh —— 只把照片變矮不夠，字級讀 vw 這件事沒解決。
+1.15svh 的錨點在電腦版身上（1440×900 的 15px 等於 1.667svh），保守一點取
+1.15：1920 高時 22px。旋轉螢幕的觀看距離和一般螢幕一樣，字級要照桌機的
+尺度看，不是照海報。下限 15px 是留給比較矮的直立畫面（例如 800×1200）。
+
+---- 這一段的界線 ---------------------------------------------------------
+min-width: 721px      721 是上面手機版型（max-width: 720px）的補集，
+                      手機一個像素都碰不到。
+max-aspect-ratio: 2/3 aspect-ratio 是寬 ÷ 高，所以這是「比 0.667 更瘦」。
+                      1080×1920 = 0.5625 ✓、1200×1920（16:10 旋轉）= 0.625 ✓、
+                      iPad 直放 1024×1366 = 0.75 ✗ —— 刻意排除，
+                      它現在看到的是電腦版，那個樣子不動。
+
+驗過：把這一頁與改動前放進同尺寸 iframe 逐項比對，1440×900 與 390×844
+兩組的字級、行高、書寫方向、.hero-copy 內距、詩的座標、scrollWidth
+**每一個值都相同** —— 電腦版與手機版真的沒被動到。
+
+已知邊界：旋轉螢幕若開 150% 縮放，視窗只有 720 CSS px 寬，
+會落回手機版型而不是這一段（720 是 max-width: 720px 的邊界，含）。
+那個結果也還可以看，所以不另外處理。
+==========================================================================</pre>
+<pre>==========================================================================
+玻璃：強度四階 × 邊緣四案（提案用，定案後整段刪掉）
+==========================================================================</pre>
+<pre>主題與科別的篩選。與手機版同一支，一行都沒有改：
+1. 按一下同時篩文章與醫師；再按同一顆＝取消。
+2. 沒有 JS 的時候 chips 就是按不動的按鈕，底下什麼都不會被藏 —— 不會壞。
+3. 對應關係讀的是 HTML 上的 data-spec，跟配色共用同一個屬性，
+ 所以顏色與篩選永遠不可能對不起來。</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

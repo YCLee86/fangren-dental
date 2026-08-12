@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>改版紀錄｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>改版紀錄（原 /preview/ 的推導文字）</h1>
+<p class="meta">
+  79 個提案頁的推導、量測與落選案，2026-08-12 從 <code>/preview/</code> 搬過來。<br>
+  <strong>提案頁本身已經刪掉了</strong> —— 定案上線之後就不再保留，只留下這些文字。
+  要看整頁請用 <code>git show 5390136:preview/&lt;名稱&gt;/index.html</code>。<br>
+  規則寫在 repo 的 <code>CLAUDE.md</code> 第八節。
+</p>
+<h2>條目</h2>
+<ul class="idx">
+  <li><a href="/history/band-stats-gap.html">band-stats-gap</a><span>〔CLAUDE.md〕 - `preview/band-stats-gap/` — 窄帶三格的間距 4rem，定稿紀錄（2026-08-10）。 用來看「2026-08-07 定案的 4rem…</span></li>
+  <li><a href="/history/band-tablet-gap.html">band-tablet-gap</a><span>〔PALETTE.md〕 這一段只涵蓋直立比例。 視窗寬 721–870 但橫向的情況（例如 768×500 的 分割畫面）仍然是舊的兩行絕對定位，第三格與地址電話還是會撞（實測 −25.1p…</span></li>
+  <li><a href="/history/canvas.html">canvas</a><span>〔CLAUDE.md〕 - `preview/canvas/` — 配色主案（2026-08-04）。暗夜 HERO × 淺色內文，中間以 3px 木色線 分界；內文底色三選一。頁內有官方色票…</span></li>
+  <li><a href="/history/doc-cross-spec.html">doc-cross-spec</a><span>〔CLAUDE.md〕 - `preview/doc-cross-spec/` — ⚠ 提案中：一位醫師出現在兩科底下（2026-08-11）。 起因是使用者要「李柄輝醫師的專長加上牙周照護」…</span></li>
+  <li><a href="/history/doc-degree-align.html">doc-degree-align</a><span>〔COPY.md〕 結論：右緣參差是可以接受的，不要為了它把一張卡排得跟其他八張不一樣。 提案頁 `preview/doc-degree-align/` 四案都留著。…</span></li>
+  <li><a href="/history/doc-spec-tags.html">doc-spec-tags</a><span>〔CLAUDE.md〕 - `preview/doc-spec-tags/` — 點到的科別才亮起來，已定案上線（2026-08-11）。 主題與科別按下去的時候，把有關聯的醫師與文章都帶出來…</span></li>
+  <li><a href="/history/head-blur-desktop.html">head-blur-desktop</a><span>〔CLAUDE.md〕 - `preview/head-blur-desktop/` — 同一件事的電腦版，定案 Ⓓ3 並上線（2026-08-11，收尾這一輪）： 平段 5px、轉場 ＝ 招…</span></li>
+  <li><a href="/history/head-blur-ipad.html">head-blur-ipad</a><span>〔CLAUDE.md〕 - `preview/head-blur-ipad/` — 頁首玻璃「招牌之前不要那麼糊」，iPad 這一輪定案 Ⓑ1（2026-08-11）。 起因是使用者在 iPa…</span></li>
+  <li><a href="/history/head-blur-mobile.html">head-blur-mobile</a><span>〔CLAUDE.md〕 - `preview/head-blur-mobile/` — 同一件事的手機版，定案 Ⓜ3＋Ⓛ1（2026-08-11）： 平段 4px、f 0.45 起升回 6px…</span></li>
+  <li><a href="/history/head-glass-safari.html">head-glass-safari</a></li>
+  <li><a href="/history/head-hero-space.html">head-hero-space</a><span>〔CLAUDE.md〕 6. 手機版 HERO 的詩要怎麼排（2026-08-09 起）。起因是使用者的朋友說 「左上角 logo 的字跟 cover image 的字大小差不多，看起來會比較…</span></li>
+  <li><a href="/history/hero-contact.html">hero-contact</a><span>〔CLAUDE.md〕 - `preview/hero-contact/` — 窄帶右側的地址與電話，已定案上線（2026-08-10）。 六輪收斂：排法（兩端／右側成組／接同一列／兩行／一行…</span></li>
+  <li><a href="/history/hero-contact-mobile.html">hero-contact-mobile</a><span>〔CLAUDE.md〕 - `preview/hero-contact-mobile/` — 手機版的地址與電話，已定案上線（2026-08-10）。 位置是使用者指定的：瀏覽數下面、1983…</span></li>
+  <li><a href="/history/hero-ipad.html">hero-ipad</a><span>〔PALETTE.md〕 推導：`preview/hero-ipad/`（照片高度四階）→ `preview/hero-ipad-band/`（接縫與地址位置， 定案後已換成正式站的複本）。…</span></li>
+  <li><a href="/history/hero-ipad-band.html">hero-ipad-band</a><span>〔PALETTE.md〕 推導：`preview/hero-ipad/`（照片高度四階）→ `preview/hero-ipad-band/`（接縫與地址位置， 定案後已換成正式站的複本）。…</span></li>
+  <li><a href="/history/hero-mobile-skyline.html">hero-mobile-skyline</a><span>〔CLAUDE.md〕 6. 手機版 HERO 的詩要怎麼排（2026-08-09 起）。起因是使用者的朋友說 「左上角 logo 的字跟 cover image 的字大小差不多，看起來會比較…</span></li>
+  <li><a href="/history/hero-portrait.html">hero-portrait</a><span>〔CLAUDE.md〕 - `preview/hero-portrait/` — 直立（旋轉）螢幕的 HERO，已定案（2026-08-09）。 使用者把 1920×1080 轉成直的，詩變成…</span></li>
+  <li><a href="/history/hero-ppt-a.html">hero-ppt-a</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-b.html">hero-ppt-b</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-c.html">hero-ppt-c</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-c1.html">hero-ppt-c1</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-c3.html">hero-ppt-c3</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-r1.html">hero-ppt-r1</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-r2.html">hero-ppt-r2</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-r3.html">hero-ppt-r3</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-s1.html">hero-ppt-s1</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-s1a.html">hero-ppt-s1a</a><span>〔COPY.md〕 版型定案在 S1a：`preview/hero-ppt-s1a/index.html` （T3 底 ＋ 兩層陰影 `0 1px 2px /.5` ＋ `0 0 4px /.…</span></li>
+  <li><a href="/history/hero-ppt-s1a-e1.html">hero-ppt-s1a-e1</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-s1a-e2.html">hero-ppt-s1a-e2</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-s1a-e3.html">hero-ppt-s1a-e3</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-s1a-e4.html">hero-ppt-s1a-e4</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-s1a-e5.html">hero-ppt-s1a-e5</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-s1a-e6.html">hero-ppt-s1a-e6</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-s1b.html">hero-ppt-s1b</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-s2.html">hero-ppt-s2</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-s3.html">hero-ppt-s3</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-t1.html">hero-ppt-t1</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-t2.html">hero-ppt-t2</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-ppt-t3.html">hero-ppt-t3</a><span>〔CLAUDE.md〕 - `preview/hero-ppt-*/` — 手機版 HERO 提案（2026-08-05），依使用者的 `簡報20260804.pptx` 做的， 只做 390…</span></li>
+  <li><a href="/history/hero-sign-size.html">hero-sign-size</a><span>〔CLAUDE.md〕 - `preview/hero-sign-size/` — 收尾句「到巷口的芳仁 一起想辦法」要多大， 已定案上線（2026-08-12）。使用者：「手機版的『到巷口的…</span></li>
+  <li><a href="/history/home-a.html">home-a</a></li>
+  <li><a href="/history/home-b.html">home-b</a></li>
+  <li><a href="/history/home-c.html">home-c</a></li>
+  <li><a href="/history/home-desktop.html">home-desktop</a><span>〔CLAUDE.md〕 - `preview/home-desktop/` — 電腦版首頁提案（2026-08-07）。把定案的手機版 N3 套到寬螢幕： 三欄卡片、單列窄帶、橫排頁首。顏色一…</span></li>
+  <li><a href="/history/home-desktop-align.html">home-desktop-align</a></li>
+  <li><a href="/history/home-desktop-band.html">home-desktop-band</a><span>〔CLAUDE.md〕 - `preview/home-desktop-band/` — 電腦版目前的最新一頁（2026-08-07）。整屏照片 （`100svh`、`object-posit…</span></li>
+  <li><a href="/history/home-desktop-banner.html">home-desktop-banner</a></li>
+  <li><a href="/history/home-desktop-fullscreen.html">home-desktop-fullscreen</a></li>
+  <li><a href="/history/home-desktop-hero.html">home-desktop-hero</a><span>〔CLAUDE.md〕 - `preview/home-desktop-hero/` `-align/` `-banner/` `-fullscreen/` — HERO 裁切的探索過程， 每…</span></li>
+  <li><a href="/history/home-mobile.html">home-mobile</a><span>〔CLAUDE.md〕 - `preview/home-mobile/` — 完整手機首頁（2026-08-06）：定案的 HERO C72 ＋ 1983／9／6 暗夜窄帶 ＋ 正式站現有資料…</span></li>
+  <li><a href="/history/home-mobile-g1.html">home-mobile-g1</a><span>〔CLAUDE.md〕 - `preview/home-mobile-g1` `-g2` `-n1` `-n2` `-n3` — 內文底色提案（2026-08-06）， 都是 `home-mo…</span></li>
+  <li><a href="/history/home-mobile-g2.html">home-mobile-g2</a></li>
+  <li><a href="/history/home-mobile-n1.html">home-mobile-n1</a></li>
+  <li><a href="/history/home-mobile-n2.html">home-mobile-n2</a></li>
+  <li><a href="/history/home-mobile-n3.html">home-mobile-n3</a><span>〔CLAUDE.md〕 &gt; `preview/home-mobile-n3/` 已經是這個專案目前最完整的一頁（2026-08-07 更新）， &gt; 遠遠超過它原本「只換底色」的定位。現在它還包…</span></li>
+  <li><a href="/history/home-mobile-n3-views-serif.html">home-mobile-n3-views-serif</a><span>〔CLAUDE.md〕 | 項目 | 定案 | 依據寫在哪 | | --- | --- | --- | | 頁首選單的「目前在哪一節」 | Ⓓ2 玻璃（2026-08-10 上線）。三項常駐一…</span></li>
+  <li><a href="/history/home-mobile-rule.html">home-mobile-rule</a><span>〔CLAUDE.md〕 - `preview/home-mobile/` — 完整手機首頁（2026-08-06）：定案的 HERO C72 ＋ 1983／9／6 暗夜窄帶 ＋ 正式站現有資料…</span></li>
+  <li><a href="/history/home-mobile-share.html">home-mobile-share</a></li>
+  <li><a href="/history/home-v2.html">home-v2</a><span>〔CLAUDE.md〕 - `preview/home-v2/` — 首頁改版提案，2026-08-03 從 Claude Artifact 匯出。 〔CLAUDE.md〕 `node too…</span></li>
+  <li><a href="/history/logo-banner.html">logo-banner</a><span>〔CLAUDE.md〕 - `preview/logo-banner/` — 標誌定稿的前後對照（2026-08-07）。頁首標誌牙洞 1.3 倍、上移 0.50。…</span></li>
+  <li><a href="/history/logo-favicon.html">logo-favicon</a><span>〔CLAUDE.md〕 - `preview/logo-favicon/` — favicon 的顏色，已定案（2026-08-08）。 淺色 `#4f6361`、深色 `#4f8065`（那…</span></li>
+  <li><a href="/history/logo-favicon-plate.html">logo-favicon-plate</a><span>〔CLAUDE.md〕 - `preview/logo-favicon-plate/` — Safari 在圖示後面墊白底的四個亮度候選（2026-08-08）。 一個候選一頁（`c1`～`c…</span></li>
+  <li><a href="/history/logo-favicon-shift.html">logo-favicon-shift</a><span>〔CLAUDE.md〕 - `preview/logo-favicon-shift/` — 紀錄：favicon 牙洞往上移的四個位置，定案是上移 1.05。 〔PALETTE.md〕 牙洞 …</span></li>
+  <li><a href="/history/logo-green-compare.html">logo-green-compare</a><span>〔PALETTE.md〕 &gt; 對照頁：`preview/logo-green-compare/`（2026-08-09，`?g=a|b|c`）。 &gt; 把釋出的苔綠放回「一般牙科・定期檢查／牙周…</span></li>
+  <li><a href="/history/nav-frame-height.html">nav-frame-height</a><span>〔CLAUDE.md〕 - `preview/nav-frame-height/` — 選單那三個玻璃框的高與圓角，已定案上線（2026-08-11）。 三輪：①「要多高」定 Ⓥ1 2.65（…</span></li>
+  <li><a href="/history/nav-scrollspy.html">nav-scrollspy</a><span>〔CLAUDE.md〕 - `preview/nav-scrollspy/` — 頁首選單「捲到哪一節哪一項就亮」，定案 Ⓓ2 玻璃並已上線（2026-08-10）。 起因是使用者回報「右上三…</span></li>
+  <li><a href="/history/night-calibrated.html">night-calibrated</a><span>〔CLAUDE.md〕 - `preview/night-calibrated/` — 全暗版（2026-08-04），內文區也是暗的。留著對照用。 〔PALETTE.md〕 - 對應的預覽頁…</span></li>
+  <li><a href="/history/spec-endo-red.html">spec-endo-red</a><span>〔PALETTE.md〕 最新的提案頁是 `preview/spec-endo-red-all/`（十一案 × 兩條切換條，`?l=6&amp;f=11`）。 `preview/spec-endo-r…</span></li>
+  <li><a href="/history/spec-endo-red-all.html">spec-endo-red-all</a><span>〔CLAUDE.md〕 （兒牙白字那一件已經結案了，見上面的定案表。口腔外科的紫已定案 `#8e6299`／`#784e84`， 見 PALETTE.md 第六之九節與 `preview/sp…</span></li>
+  <li><a href="/history/spec-endo-red-raw.html">spec-endo-red-raw</a><span>〔PALETTE.md〕 最新的提案頁是 `preview/spec-endo-red-all/`（十一案 × 兩條切換條，`?l=6&amp;f=11`）。 `preview/spec-endo-r…</span></li>
+  <li><a href="/history/spec-ortho-bright.html">spec-ortho-bright</a><span>〔CLAUDE.md〕 4. ~~齒顎矯正的藍要不要提亮~~ —— 2026-08-10 結案上線，見上面定案表。 走的不是提亮那條路：使用者從 `preview/spec-ortho-pal…</span></li>
+  <li><a href="/history/spec-ortho-palette.html">spec-ortho-palette</a><span>〔CLAUDE.md〕 4. ~~齒顎矯正的藍要不要提亮~~ —— 2026-08-10 結案上線，見上面定案表。 走的不是提亮那條路：使用者從 `preview/spec-ortho-pal…</span></li>
+  <li><a href="/history/spec-perio-split.html">spec-perio-split</a><span>〔CLAUDE.md〕 （兒牙白字那一件已經結案了，見上面的定案表。口腔外科的紫已定案 `#8e6299`／`#784e84`， 見 PALETTE.md 第六之九節與 `preview/sp…</span></li>
+  <li><a href="/history/spec-perio-teal.html">spec-perio-teal</a><span>〔CLAUDE.md〕 8. ~~牙周的青綠要幾階~~ —— 2026-08-10 定案 Ⓣ1 並上線（兩階 `#317d78`／`#2a6d69`）。 &gt; 留下來的約束：牙周的字階對全站連結…</span></li>
+  <li><a href="/history/spec-prosth-blue.html">spec-prosth-blue</a><span>〔PALETTE.md〕 提案頁 `preview/spec-prosth-blue/`，網址可帶 `?f=f1|f2|f3&amp;t=t1|t2|t3`。 〔CLAUDE.md〕 - `previ…</span></li>
+  <li><a href="/history/spec-prosth-bluer.html">spec-prosth-bluer</a><span>〔PALETTE.md〕 還沒定案。 提案頁 `preview/spec-prosth-bluer/`（`?c=0|1|2|3`）。 〔CLAUDE.md〕 - `preview/spec-*…</span></li>
+  <li><a href="/history/spec-surg-violet.html">spec-surg-violet</a><span>〔CLAUDE.md〕 （兒牙白字那一件已經結案了，見上面的定案表。口腔外科的紫已定案 `#8e6299`／`#784e84`， 見 PALETTE.md 第六之九節與 `preview/sp…</span></li>
+  <li><a href="/history/spec-tag-fit.html">spec-tag-fit</a><span>〔CLAUDE.md〕 - `preview/spec-tag-fit/` — 專長標記要怎麼貼合它包住的那幾個字，已定案上線（2026-08-11）。 使用者回報兩件：「套色的區塊沒有對到被…</span></li>
+  <li><a href="/history/spec-tag-size.html">spec-tag-size</a><span>〔CLAUDE.md〕 - `preview/spec-tag-size/` — 套色之後那幾個字要多大，已定案上線（2026-08-11）。 使用者：「現在的版本套色後內文字應該是變小了。」…</span></li>
+</ul>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

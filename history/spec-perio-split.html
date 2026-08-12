@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>spec-perio-split｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>spec-perio-split</h1>
+<p class="meta">
+  原網址 <code>/preview/spec-perio-split/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/spec-perio-split/index.html</code><br>
+  抽出 2 段推導文字，共 301 字
+</p>
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md〕
+（兒牙白字那一件已經結案了，見上面的定案表。口腔外科的紫已定案 `#8e6299`／`#784e84`，
+見 PALETTE.md 第六之九節與 `preview/spec-surg-violet/`；贋復假牙的藍已定案
+`#335b8b`／`#182f4b`，見第六之十、十三、十四節與 `preview/spec-perio-split/`；
+顯微根管的紅已定案 `#ae4f4d`／`#89202d`，見第六之十一節與 `preview/spec-endo-red-all/`；
+**`#4478b5`／`#244369` 原本是牙周的，2026-08-10 起改屬齒顎矯正，牙周換成青綠
+`#317d78`／`#2a6d69`**，見第六之十四、十六節與 `preview/spec-perio-split/`、
+`preview/spec-perio-teal/`。）
+
+〔PALETTE.md〕
+&gt; **2026-08-09 追加：使用者決定「贋復用 Ⓑ、牙周用矯正的 Ⓒ」。**
+&gt; 已做成 `preview/spec-perio-split/`。**做出來之後多冒出一個問題：**
+&gt; 牙周套色 `#39799a` 是 L\* 48.1，**超過「當字疊在紙上」的天花板 43.4，
+&gt; 所以它非開深階不可** —— 而那個深階和矯正同色相（差 0.9°），會直接壓在矯正頭上。
+&gt;
+&gt; | 牙周深階 | 值 | L\* | 兩階落差 | 對紙 | ΔE 對矯正 `#3C596B` |
+&gt; | --- | --- | --- | --- | --- | --- |
+&gt; | Ⓐ | `#235067` | 32.0 | 16.1 | 6.87 | **6.4 ✗** |
+&gt; | Ⓑ | `#1e465b` | 28.0 | 20.1 | 7.96 | 9.0 |
+&gt; | Ⓒ | `#193d4f` | 24.0 | 24.1 | 9.10 | 12.4 |
+&gt;
+&gt; **要嘛接受和矯正很近，要嘛接受很大的兩階落差**（現役最大是顯微根管的 15.1，
+&gt; Ⓑ 的 20.1 已經遠超）。建議 Ⓑ。
+&gt;
+&gt; 冷色端現在三顆，套色彼此：牙周對矯正 16.3、牙周對贋復 17.0、贋復對矯正 17.8
+&gt; —— **全部貼著現役最近的一對（16.1），過得了但沒有餘裕。**
+&gt;
+&gt; ⚠ **而且矯正等於不能提亮了**：它一動到 Ⓑ `#3f6d88` 就和牙周撞（ΔE 6.4）。
+&gt; 第六之十二節那一輪的結論被這一個決定否決掉了。
+&gt;
+&gt; **2026-08-09 續：牙周套色改用 Ⓧ `#4478b5`（使用者給的 `#3496F2` 收到白黑等效線）。**
+&gt; 那顆的色相 273 就是贋復那一支，於是牙周的深階整條被贋復佔滿 ——
+&gt; 同色相 L\* 37~43 對贋復套色 ΔE 1.0~5.8、L\* 28~31 對贋復深階 0.7~3.8。
+&gt;
+&gt; | 牙周深階 | 值 | h | 兩階色相差 | 最小 ΔE |
+&gt; | --- | --- | --- | --- | --- |
+&gt; | Ⓡ 同色相 | `#244369` | 273 | 0° | **0.7**（對贋復深階） |
+&gt; | **Ⓟ** | `#1e4156` | 252 | 21° | 10.7（對矯正） |
+&gt; | Ⓠ | `#1e465b` | 248 | 25° | 9.0（對矯正） |
+&gt;
+&gt; **使用者傾向 Ⓟ。** 接著他要求把贋復的白底字往下探兩階，看能不能讓開：
+&gt;
+&gt; | 贋復白底字 | 值 | L\* | 落差 | 對紙 | 對牙周 Ⓡ | Ⓟ | Ⓠ |
+&gt; | --- | --- | --- | --- | --- | --- | --- | --- |
+&gt; | 現行 | `#244368` | 27.8 | 10.1 | 7.98 | **0.7 ✗** | 11.1 | 11.7 |
+&gt; | Ⓓ1 | `#1d3858` | 23.0 | 15.0 | 9.43 | **5.9 ✗** | 9.3 | 10.9 |
+&gt; | **Ⓓ2** | `#182f4b` | 18.9 | 19.0 | 10.72 | **10.5 ✓** | 10.3 | 12.4 |
+&gt;
+&gt; &gt; **關鍵：選 Ⓓ2 之後牙周的 Ⓡ 就活了** —— 牙周可以回到「兩階同色相」，
+&gt; &gt; 和其餘六科一樣（Ⓟ Ⓠ 都要歪 21°~25°，牙周會是唯一的例外）。
+&gt; &gt; **這是唯一能把牙周救回標準結構的路。**
+&gt; &gt; 而且 Ⓓ2 的 L\* 18.9 幾乎剛好回到茶室磁磚原值 `#252d4a` 的 19.1 ——
+&gt; &gt; 贋復的字階繞一圈回到自己的出處。代價是對卡 12.35，字會偏深藍黑。
+&gt;
+&gt; 提案頁 `preview/spec-perio-split/` 現在是三排切換條：
+&gt; 牙周套色六案 ／ 贋復白底字三案 ／ 牙周深階三案。
+
+〔CLAUDE.md〕
+- `preview/spec-*/` — **七個科別色的推導過程（2026-08-09 一整天）**，一輪一頁：
+  `spec-surg-violet/`（外科紫，定案）、`spec-prosth-blue/`（贋復 3×3，已被後面兩輪取代）、
+  `spec-endo-red/` `-raw/` `-all/`（顯微根管紅，`-all` 是定案頁，十一案×兩條切換條）、
+  `logo-green-compare/`（一般牙科綠，十三案，定案）、`spec-ortho-bright/`（矯正提亮，**未定案**）、
+  **`spec-ortho-palette/`（矯正換色系：品牌剩的米色＋稻草灰，加資料庫三個，八案）**、
+  **`spec-perio-teal/`（⚠ 最新一頁：牙周換青綠、矯正接手牙周的藍。兩科對調已定，
+  只剩牙周的青綠要幾階，三案 Ⓣ1／Ⓣ2／Ⓣ3）**、
+  `spec-prosth-bluer/`（贋復藍紫，定案 Ⓑ）、
+  **`spec-perio-split/`（牙周獨立＋贋復字階，三排切換條，定案 Ⓧ·Ⓡ·Ⓓ2）**。
+  每一頁都有完整元件舞台與文章頁模擬。數據全部同步在 [PALETTE.md](PALETTE.md) 第六之九～十四節。</pre></div>
+<h2>那一頁自己的推導與量測</h2>
+<pre>自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
+⚠ 切換條是純 CSS 的（radio ＋ :has()），一行 JS 都沒有 —— 這一頁會被丟進
+沙箱 iframe 看，那裡會整包擋掉 script。2026-08-09 踩過。</pre>
+<pre>牙周深階三案（套色定 Ⓧ #4478b5 h 273 之後重算）：
+Ⓡ 同色相 —— 使用者懷疑的那個，證實會和贋復深階變成同一個色（ΔE 0.7）
+Ⓟ h 252  —— 兩邊最平衡（最小 ΔE 10.7）
+Ⓠ h 248  —— 和矯正那一支同色相，離贋復最遠但離矯正近（9.0）</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

@@ -566,11 +566,11 @@ if (siteUrl && !CHECK_ONLY) {
       `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>\n`,
     "utf8"
   );
-  /* preview/ 是未上線的改版提案頁（Worker 另外用密碼擋著），不要被收錄。
+  /* history/ 是改版紀錄（原本的提案頁 preview/，2026-08-12 起只留文字），不要被收錄。
      這個檔案每次 build 都整個重寫，所以規則要寫在這裡，手改 robots.txt 會被蓋掉。 */
   fs.writeFileSync(
     path.join(ROOT, "robots.txt"),
-    `User-agent: *\nAllow: /\nDisallow: /preview/\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
+    `User-agent: *\nAllow: /\nDisallow: /history/\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
     "utf8"
   );
 }

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>canvas｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>canvas</h1>
+<p class="meta">
+  原網址 <code>/preview/canvas/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/canvas/index.html</code><br>
+  抽出 4 段推導文字，共 1,245 字
+</p>
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md〕
+- `preview/canvas/` — **配色主案**（2026-08-04）。暗夜 HERO × 淺色內文，中間以 3px 木色線
+  分界；內文底色三選一。頁內有官方色票、花藝比例與對比度的完整數據，數值同 [PALETTE.md](PALETTE.md)。
+
+〔PALETTE.md〕
+- 對應的預覽頁：**`preview/home-mobile-n3/`（定案的手機首頁：底色 ＋ 固定頁首 ＋ 科別色）**、
+  `preview/canvas/`（配色數據頁）、`preview/night-calibrated/`（全暗版）</pre></div>
+<h2>那一頁自己的推導與量測</h2>
+<pre>這一頁的樣式刻意全部內嵌、不引用 assets/style.css；也完全不動首頁 index.html。
+
+2026-08-04。取色來源改為桌面 02-Final（開幕茶會約 290 張手機紀錄 ＋ 專業攝影原檔
+＋ Logo顏色.pptx）。
+
+最重要的發現：診所已經有一套官方色票（Logo顏色.pptx 裡的八個色），
+而且家具、磁磚、花藝都是照它挑的——不需要再發明配色。實測色相差：
+診療椅 #4f6361 ↔ 深綠松 #214D48        ΔH=1
+候診沙發 #4e718b ↔ 藍灰 #3C596B        ΔH=3
+開幕花深紅 #89202d ↔ 磚紅 #AF4C52      ΔH=3
+圓凳木件 #8d5e3a ↔ 焦糖褐 #9B735E      ΔH=5
+磚紅長椅 #7c3721 ↔ 焦糖褐 #9B735E      ΔH=6
+單椅布料 #8e7577 ↔ Deep Taupe #7D5A58  ΔH=8
+茶室深藍磁磚 #1d273d ↔ 藍灰 #3C596B    ΔH=18
+
+結構上的改變（依使用者指示）：暗夜只留在 HERO，不再延伸到內文區。
+兩者之間的分界是那條 3px 木色線——對應「唯一有溫度的是地板」，
+它是你走進診所時踩到的那個平面。
+
+花藝的邏輯直接翻成版面規則：實測開幕花藝照片，花本身只佔畫面 1~22%，
+其餘全是枝葉與灰。所以——
+綠（深綠松／苔綠）是枝條，可以重複出現；
+花（磚紅／Deep Taupe／藍灰）一種只出現一次，彼此隔開。</pre>
+<pre>==========================================================================
+共用骨架
+==========================================================================</pre>
+<pre>==========================================================================
+夜：HERO
+照片維持原圖比例，不裁切、不加漸層、不加遮罩。疊字字級用 cqw。
+==========================================================================</pre>
+<pre>==========================================================================
+室內：淺色內文區
+==========================================================================</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

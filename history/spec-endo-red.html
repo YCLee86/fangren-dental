@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>spec-endo-red｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>spec-endo-red</h1>
+<p class="meta">
+  原網址 <code>/preview/spec-endo-red/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/spec-endo-red/index.html</code><br>
+  抽出 1 段推導文字，共 145 字
+</p>
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔PALETTE.md〕
+最新的提案頁是 **`preview/spec-endo-red-all/`**（十一案 × 兩條切換條，`?l=6&amp;f=11`）。
+`preview/spec-endo-red/`（正規化的五案）與 `preview/spec-endo-red-raw/`（三個原值）
+留著看推論過程。
+
+〔CLAUDE.md〕
+- `preview/spec-*/` — **七個科別色的推導過程（2026-08-09 一整天）**，一輪一頁：
+  `spec-surg-violet/`（外科紫，定案）、`spec-prosth-blue/`（贋復 3×3，已被後面兩輪取代）、
+  `spec-endo-red/` `-raw/` `-all/`（顯微根管紅，`-all` 是定案頁，十一案×兩條切換條）、
+  `logo-green-compare/`（一般牙科綠，十三案，定案）、`spec-ortho-bright/`（矯正提亮，**未定案**）、
+  **`spec-ortho-palette/`（矯正換色系：品牌剩的米色＋稻草灰，加資料庫三個，八案）**、
+  **`spec-perio-teal/`（⚠ 最新一頁：牙周換青綠、矯正接手牙周的藍。兩科對調已定，
+  只剩牙周的青綠要幾階，三案 Ⓣ1／Ⓣ2／Ⓣ3）**、
+  `spec-prosth-bluer/`（贋復藍紫，定案 Ⓑ）、
+  **`spec-perio-split/`（牙周獨立＋贋復字階，三排切換條，定案 Ⓧ·Ⓡ·Ⓓ2）**。
+  每一頁都有完整元件舞台與文章頁模擬。數據全部同步在 [PALETTE.md](PALETTE.md) 第六之九～十四節。</pre></div>
+<h2>那一頁自己的推導與量測</h2>
+<pre>⚠ 切換條是純 CSS 的（radio ＋ :has()），一行 JS 都沒有 —— 這一頁會被丟進
+沙箱 iframe 看（預覽面板、各種 in-app 瀏覽器），那些地方會整包擋掉 script，
+靠 JS 的切換條在那裡按了完全沒反應。2026-08-09 踩過一次。</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

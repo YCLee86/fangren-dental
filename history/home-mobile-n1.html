@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>home-mobile-n1｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>home-mobile-n1</h1>
+<p class="meta">
+  原網址 <code>/preview/home-mobile-n1/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/home-mobile-n1/index.html</code><br>
+  抽出 7 段推導文字，共 2,200 字
+</p>
+
+<h2>那一頁自己的推導與量測</h2>
+<pre>2026-08-06．中性灰三案之 N1。HERO、窄帶、字級、墨色都沒動，只有兩件事不一樣：
+
+1. 內文底色改成 看板灰 #e8e8e8（L=91.0%・R−B 0（純中性））。
+整組實測自診所現用的 LINE 圖文選單（底 #e8e8e8、按鈕白 #f8f8f8、陰影 #d3d2d2），原值未調。
+2. **3px 木色線拿掉了。** 使用者的理由：地板色在網頁上很突兀，
+而且拿地板當診所識別色本來就怪。暗夜窄帶現在直接接到內文底，不再有分界線。
+（這一條牴觸 PALETTE.md 第六節第 4 條，等識別色定了要一起改那份規範。）
+
+為什麼三案都是中性或接近中性：診所現在用的 LINE 圖文選單底色實測是
+#e8e8e8 —— 彩度 0%、R−B 0，完全中性。既有的對外介面已經給了答案。
+按鈕白實測 #f8f8f8，和底的階差 1.154:1；原本 ③ 的紙／卡只差 1.094:1，
+這是「單獨看不覺得灰」的真正原因 —— 灰要有東西比才讀得出來，
+所以三案的卡都往純白推。
+
+**這一頁不會取代正式站。** 它是 preview/ 底下的自給自足快照：
+樣式整份內嵌，不引用 assets/style.css，改這裡不會動到 index.html。
+
+資料全部取自正式站 index.html，沒有一個字是新編的：
+六篇文章的標題／摘要／日期／分類、九位醫師的專長資歷學歷、
+地址電話看診時間、頁尾的免責與圖片出處。
+唯一沒有搬過來的是瀏覽數 —— 本機沒有 Worker，計數 API 不會回應（這是預期行為），
+與其顯示「—」不如整個拿掉。
+
+顏色全部照 PALETTE.md：
+HERO 與窄帶  暗夜 #191614 / #e3e1e0 / #aaa49e / 分隔線 #38342f
+內文區      紙 #e8e8e8 / 卡 #f8f8f8 / 線 #d3d2d2 / 墨 #2a2c27 / 次要 #5c5f57（墨色未動）
+唯一的彩色   深綠松 #214D48（分類標籤與連結）
+第六節第 2、3 條說「花一種只出現一次、一個螢幕最多兩個彩色」，
+所以整頁只用了深綠松一種顏色，加上那條木線就到頂了，磚紅／藍灰／焦糖褐都沒有動用。
+第 5 條「數字不上色」也照做：1983／9／6 用的是夜間文字色，不是苔綠。</pre>
+<pre>一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                原始 PPT 的自訂圖形就是這樣做的（&lt;a:pathLst&gt; 裡兩條子路徑）；
+                先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                疊在白色圖案上就變成一顆灰點，那是錯的。</pre>
+<pre>==========================================================================
+HERO：定案 C72，與 hero-ppt-s1a-e1 相同，一個值都沒改
+==========================================================================</pre>
+<pre>三格等寬、各自置中：原本是靠左排、第一格不縮排，右邊會空出一大塊，
+整條看起來偏左。改成每格佔三分之一、文字置中。
+
+分隔線用 ::before 畫，不用 border —— border 會算進 box 寬度（box-sizing 是 border-box），
+第一格沒有 border、後兩格有，三格的框就差了 3px，分隔線會落在 128.3／243.7，
+而三等分點是 125／250。改成絕對定位的偽元素之後線不佔寬度，
+三格真的等寬，兩條線正好壓在三等分點上。</pre>
+<pre>收緊兩行之間：要動的是 li，不是 span。span 是行內元素，
+它的行框高度受 li 這個區塊的 strut 撐著，而 li 原本從 body 繼承 1.85 ——
+只改 span 的行高到 1.2 以下完全沒有作用（實測間距卡在 9.9px 不動）。</pre>
+<pre>視覺置中的補正：flex 的 align-items 置中的是「框」，不是「字墨」。
+數字那行的行高 1.05 幾乎貼著字，說明那行 1.15 下面多了半個行距，
+字級縮小之後框置中會變成上 17.9px、下 16.8px，補 .3px 的上內距把字墨推回對稱。
+這個補正值和字級、行高綁在一起，動到那兩個就要重量一次。</pre>
+<pre>字級：中文比照 HERO 那三行詩（390px 上是 10px＝.625rem），
+數字按同一個比例縮 —— 原本 20 / 12.16px 是 1.645 倍，
+現在 16.4 / 10px 還是 1.64 倍。落差維持住，數字才不會跟中文一樣小。</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

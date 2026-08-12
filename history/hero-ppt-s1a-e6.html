@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>hero-ppt-s1a-e6｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>hero-ppt-s1a-e6</h1>
+<p class="meta">
+  原網址 <code>/preview/hero-ppt-s1a-e6/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/hero-ppt-s1a-e6/index.html</code><br>
+  抽出 6 段推導文字，共 1,543 字
+</p>
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md〕
+- `preview/hero-ppt-*/` — **手機版 HERO 提案（2026-08-05）**，依使用者的 `簡報20260804.pptx` 做的，
+  只做 390px。命名分四組：`a`/`b`/`c`/`c1`/`c3` 是版型，`r1`–`r3` 是右緣裁切，
+  `t1`–`t3` 是詩的透明度，`s1`/`s1a`/`s1b`/`s2`/`s3` 是文字陰影。
+  **`hero-ppt-s1a` 是使用者定案的那一版**，其餘留著互相比較，各頁底部有交叉連結。
+  詩的文字內容與尚未定案的收尾在 [COPY.md](COPY.md)。
+
+〔COPY.md〕
+排版與陰影的技術數據不在這裡，在 `preview/hero-ppt-*/` 各提案頁自己的說明區。</pre></div>
+<h2>那一頁自己的推導與量測</h2>
+<pre>2026-08-05．HERO 一律是定案的 C72（hero-ppt-s1a-e1 的原樣），
+差別只在它下面那條 1983／9／6 的帶子。
+
+所有顏色都取自 PALETTE.md，沒有一個是自己調的：
+暗夜  --night #191614 / --night-text #e3e1e0 / --night-soft #aaa49e / --night-line #38342f
+紙    --paper #ecede7 / --ink #2a2c27 / --ink-soft #5c5f57 / --rule #d9dbd1
+木線  #a18262（3px，暗與亮的分界，規範第六節第 4 條）
+深綠松 #214D48（官方色票，紙底 8.03:1）
+對比度是算出來的，四捨五入後和 PALETTE.md 表上的數字完全一致。
+
+規範裡直接管到這塊的兩條：
+第六節第 5 條「數字不上色（1983／9／6 用墨色）」——所以三案的數字一律墨色／夜間文字色。
+第六節第 4 條「暗夜只留在 HERO，分界是那條 3px 木色線」——甲案把帶子算在暗夜裡，
+乙丙把它算在內文區，差別就是木線放在帶子的上面還是下面。</pre>
+<pre>一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                  中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                  原始 PPT 的自訂圖形就是這樣做的（&lt;a:pathLst&gt; 裡兩條子路徑）；
+                  先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                  疊在白色圖案上就變成一顆灰點，那是錯的。</pre>
+<pre>==========================================================================
+HERO：定案 C72，和 hero-ppt-s1a-e1 相同
+==========================================================================</pre>
+<pre>==========================================================================
+1983／9／6 那條帶子 —— 這一頁在比的就是這裡
+==========================================================================</pre>
+<pre>單位（年／位／個）跟著數字走，但不加粗，
+否則「1983年」會讀成四個數字加一個同樣重的漢字，數字就不成形了。
+字級和下面的標籤同級（.76rem＝12.2px），使用者定的。
+直接寫 .76rem 不寫 em，是為了和標籤那行是同一個值、不會因為數字級數改動而跑掉。
+letter-spacing 歸零：上面那 -.01em 是為西文數字收的，漢字不需要。</pre>
+<pre>==========================================================================
+比較頁自己的外框
+==========================================================================</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

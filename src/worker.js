@@ -7,7 +7,7 @@
 
    路由：
      www.* 開頭的主機名稱                        → 301 轉到主網域（並升成 https）
-     /preview/*                               → 靜態檔＋noindex／no-store（見下方 PREVIEW_PREFIX）
+     /history/*                               → 靜態檔＋noindex（見下方 HISTORY_PREFIX）
      GET  /api/views?slugs=home,bass-brushing → { "counts": { "home": 12, ... } }
      POST /api/views   body: { "slug": "home" } → { "slug": "home", "views": 13 }
      其他                                        → 靜態檔，沒有就給 404 頁
@@ -76,27 +76,22 @@ async function postViews(request, env) {
 }
 
 /* =============================================================================
-   /preview/* — 未上線的改版提案頁
+   /history/* — 改版紀錄（原本的提案頁 /preview/*）
    -----------------------------------------------------------------------------
-   2026-08-06：原本這裡有一道 HTTP Basic 密碼閘，使用者要求拿掉。
-   理由與現況：
+   2026-08-12：使用者要求「範例定稿上線後，範例頁面刪除，只留下歷史文本」。
+   所以 /preview/ 整個拿掉了，改成 /history/ 底下一頁一個純文字存檔
+   （推導、量測、落選案的數字）。提案頁本身的完整 HTML 留在 git 歷史裡，
+   commit 5390136 之前都還原得回來。
 
-   - 那道鎖本來就只擋得住 fangren.net 這一側。這個 repo 是**公開的**，
-     同一份 HTML 在 GitHub 上任何人都讀得到。
-   - 密碼放在 Cloudflare Secret（PREVIEW_PASSWORD），而那個 secret 從來沒設過，
-     所以閘門一直在回 503——等於預覽頁在正式網域上根本打不開，
-     連自己用手機看都看不到。
-   - 使用者的判斷是「沒有網址別人也看不到」，並要求改成不鎖。
+   這裡只做一件事：**noindex**。搜尋引擎不必收錄這些內部紀錄
+   （頁面自己也有 <meta name="robots">，robots.txt 也 Disallow: /history/）。
+   ⚠ 沒有鎖 —— 拿到網址的人看得到，和以前的 /preview/ 一樣。
+      **真的不能外流的東西不要放這裡。**
 
-   所以現在只留兩件事：**noindex** 讓搜尋引擎不要收錄
-   （頁面自己也有 <meta name="robots">，robots.txt 也 Disallow: /preview/），
-   以及 **no-store**，手機才不會拿到快取住的舊版提案。
-
-   ⚠ 這代表 /preview/ 底下的東西等同對外公開，只是沒有連結指過去。
-   **真的不能外流的東西不要放這裡。**
+   ⚠ no-store 不再需要：提案頁改得很勤才怕拿到快取，紀錄是寫完就不動的。
    ============================================================================= */
 
-const PREVIEW_PREFIX = "/preview/";
+const HISTORY_PREFIX = "/history/";
 
 /* 走到這裡代表沒有對應的檔案，補上自己的 404 頁 */
 async function notFound(request, env) {
@@ -129,14 +124,12 @@ export default {
       return json({ error: "method not allowed" }, 405);
     }
 
-    if (url.pathname.startsWith(PREVIEW_PREFIX)) {
+    if (url.pathname.startsWith(HISTORY_PREFIX)) {
       const page = await env.ASSETS.fetch(request);
       if (page.status === 404) return notFound(request, env);
-      // 不收錄、不快取：提案頁改得很勤，手機不能拿到舊的那一版
-      const preview = new Response(page.body, page);
-      preview.headers.set("Cache-Control", "no-store");
-      preview.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
-      return preview;
+      const archive = new Response(page.body, page);
+      archive.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+      return archive;
     }
 
     const asset = await env.ASSETS.fetch(request);

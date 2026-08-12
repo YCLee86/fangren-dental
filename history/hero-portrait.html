@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>hero-portrait｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>hero-portrait</h1>
+<p class="meta">
+  原網址 <code>/preview/hero-portrait/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/hero-portrait/index.html</code><br>
+  抽出 6 段推導文字，共 4,758 字
+</p>
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md〕
+- `preview/hero-portrait/` — **直立（旋轉）螢幕的 HERO，已定案（2026-08-09）**。
+  使用者把 1920×1080 轉成直的，詩變成一撮小字。**定案「照片不整屏」`62svh` ＋
+  字級改讀 `svh`，已套進 `index.html`**（一段 `@media (min-width: 721px) and
+  (max-aspect-ratio: 2/3)`，電腦版與手機版逐項比對過、一個值都沒動）。
+  這一頁是定案後的紀錄，切換條已刪。當時比過的五案、落選直排問出來的「左側天空柱」
+  地形、以及為什麼 `object-position: 50% 100%` 在直立比例下失效，
+  全部在 [PALETTE.md](PALETTE.md) 第六之十三節。
+
+〔PALETTE.md〕
+五案做成 `preview/hero-portrait/` 給使用者在他自己的旋轉螢幕上比過：</pre></div>
+<h2>那一頁自己的推導與量測</h2>
+<pre>==========================================================================
+直立（旋轉）螢幕的 HERO — 定案紀錄（2026-08-09）
+--------------------------------------------------------------------------
+使用者把 1920×1080 的螢幕轉成直的，回報 HERO 左邊那首詩「看起來非常小」。
+成因與 62svh 這個值的推導寫在本檔最後那一段 @media 的註解裡（和 index.html
+同一份），這裡只留當時比過的五案與定案。
+
+這一頁原本有一條純 CSS 的切換條（版式五案 × 字級兩案）。**定案後已刪除**，
+現在這一頁停在定案的樣子，和正式站的 index.html 相同。
+
+  版式（實測 1080×1920，字級「中」）
+    現狀            詩 12.5px、第一行 240px 寬 —— 對照組
+    橫排放大        22.1px、第一行 424px；位置不動
+    直排・上        vertical-rl，155×424 的一柱，貼左上
+    直排・中        同上，margin-block: auto 垂直置中，落在 y 734–1158
+  → 照片不整屏      height: 62svh；照片 1190px，左右裁切 63% → 41%   ← 使用者選這案
+    （字級 中 clamp(15px, 1.15svh, 24px) → 22px；
+      大 clamp(17px, 1.45svh, 30px) → 27.8px。定案是「中」。）
+
+直排落選，但那一案問出了這個比例的地形，值得留著：這張照片的建築偏右，
+屋頂上緣在 y≈17%，而**左側天空一路延伸到 y≈78%** —— 左邊有一條約 340px 寬、
+1500px 高的天空柱。橫排最長那行 22px 時實測 424px，比柱子還寬，往下移就會
+壓到屋頂，所以橫排只有頂端那一塊能整條躺在天空上；直排整首詩 155×424，
+整條進得去。若哪天要重提直排，地形在這裡。
+
+⚠ 計數器標記改成 data-views（沒有 -self）＝只顯示、不加總，
+提案頁不該把首頁的真實瀏覽數往上灌。正式站必須維持 -self（CLAUDE.md 第九節）。
+==========================================================================</pre>
+<pre>詩：三行已定稿，用全形空格斷句、沒有標點（COPY.md 第一節）。
+字級從手機版的 10~11.5px 放大到 15px —— 這是全頁少數該跟著螢幕長大的東西，
+因為它疊在一張 780px 高的照片上，維持手機的字級會變成一撮小字。
+字距 .2em、行高、兩層陰影（色用 #191614 不用純黑）都和手機版相同。</pre>
+<pre>定案：三格靠內容寬度、整組置中，左右各 4rem（2026-08-07 的「拉開」）。
+淘汰：1.9rem（三格擠在版心中央，兩側各空一大塊，像沒排完）、
+以及「各佔版心三分之一」—— 那是手機 390px 上排不下才用的辦法，
+搬到 1160px 的版心會拉得太開，三格之間的關係就散了。</pre>
+<pre>---- 電話的話筒圖示 —— 定案（2026-08-09）--------------------------------
+使用者拿 modernanimal.com 的頁尾當參考。**這是全站第一個、目前唯一的圖示**
+（頁首標誌不算，那是標誌本體）。2026-08-07 才刻意把文章卡瀏覽數的眼睛圖示
+拿掉過，所以再加一個之前先問過 —— 是使用者要的，不是順手加的。
+
+三個數字都是比出來的，不要憑感覺調：
+
+· **圖示 .82em，不是 1em。** `1em` 給的是整個 em 框（這一行 17.3px），
+但數字實際只有約 12.4px 高 —— 剩下的空間是留給注音、括號那些上下伸出去
+的東西。所以 1em 的圖示會比數字高將近四成，使用者一眼就看出來了。
+.72em 才是數學上完全切齊，但實心圖形切齊反而顯小，所以往上抓到 .82em。
+· **號碼 500，不是 400。** 圖示是實心的，400 的數字撐不住它，
+眼睛會先看到圖示。500 和站上小節標題、醫師姓名同一階，不是新的粗細。
+· **底線畫在 .num 上，不是畫在 &lt;a&gt; 上。** 連結是 inline-flex，
+底線下在連結上會連圖示下面一起拉過去 —— 參考的那一站也只畫在號碼上。
+
+圖示尺寸用 em 不用 px：文章頁的 .foot-tel 是 1.05rem、首頁是 1.08rem，
+同一份規則兩邊都對得上，日後字級再改也不必回來調這裡。
+--------------------------------------------------------------------------</pre>
+<pre>==========================================================================
+直立（旋轉）螢幕：照片不整屏（2026-08-09 定案）
+--------------------------------------------------------------------------
+使用者把 1920×1080 的螢幕轉成直的，回報「左邊的字看起來非常小」。
+原因不是字級設錯，是**這一頁只有照片跟著高度長**：
+
+                                  1440×900 → 1080×1920
+.hero-photo  height: 100svh        900px → 1920px（2.13 倍）
+.hero-poem   clamp(12.5px, 1.05vw, 15px)   15px → 12.5px（撞下限）
+.hero-sign   clamp(11.5px,  .95vw, 14px)   14px → 11.5px（撞下限）
+.hero-copy   padding-top …clamp(1.2rem, 4vh, 2.6rem)   41.6px → 41.6px（撞上限）
+
+字級只讀 vw，還掉到 clamp 的下限；內距讀了 vh 卻撞在上限。高度多出來的
+1000px 沒有任何一條式子接得住，全變成空天空 —— 三行詩在 900px 的畫面裡
+佔 10.6%，在 1920px 裡只佔 4.1%。
+
+而且照片的裁切整個換了方向：1600×1058（1.512）的橫幅塞進 1080×1920 的框，
+cover 的縮放由高度決定（1920 ÷ 1058 = 1.815 倍），照片被放到 2904px 寬 ——
+**左右各裁掉 31.5%，只露出中間 37%**，垂直方向反而一點都沒切。
+所以電腦版定案的 `object-position: 50% 100%`（下緣貼齊）在這個比例下
+完全沒有作用，要裁到垂直得矮到 37svh（1080 ÷ 1.512 = 714px）以下。
+
+---- 定案：照片不整屏 -----------------------------------------------------
+五案做成 preview/hero-portrait/ 給使用者在旋轉螢幕上比過（橫排放大、
+直排靠上、直排置中、照片不整屏、以及不改的對照），他選了照片不整屏。
+
+62svh 是「不整屏」的那個值：1920 高時照片 1190px，縮放降到 1.12 倍，
+左右只裁掉 41%（原本 63%），街角、門面、隔壁的矮房子都回得來。
+詩與收尾句因此靠近，不再是一撮小字隔著 1000px 空天空對望。
+窄帶是 position: absolute; bottom: 0 掛在 .hero 上，會自己跟上來，不必處理。
+
+字級仍要換成 svh —— 只把照片變矮不夠，字級讀 vw 這件事沒解決。
+1.15svh 的錨點在電腦版身上（1440×900 的 15px 等於 1.667svh），保守一點取
+1.15：1920 高時 22px。旋轉螢幕的觀看距離和一般螢幕一樣，字級要照桌機的
+尺度看，不是照海報。下限 15px 是留給比較矮的直立畫面（例如 800×1200）。
+
+---- 這一段的界線 ---------------------------------------------------------
+min-width: 721px      721 是上面手機版型（max-width: 720px）的補集，
+                      手機一個像素都碰不到。
+max-aspect-ratio: 2/3 aspect-ratio 是寬 ÷ 高，所以這是「比 0.667 更瘦」。
+                      1080×1920 = 0.5625 ✓、1200×1920（16:10 旋轉）= 0.625 ✓、
+                      iPad 直放 1024×1366 = 0.75 ✗ —— 刻意排除，
+                      它現在看到的是電腦版，那個樣子不動。
+
+驗過：把這一頁與改動前放進同尺寸 iframe 逐項比對，1440×900 與 390×844
+兩組的字級、行高、書寫方向、.hero-copy 內距、詩的座標、scrollWidth
+**每一個值都相同** —— 電腦版與手機版真的沒被動到。
+
+已知邊界：旋轉螢幕若開 150% 縮放，視窗只有 720 CSS px 寬，
+會落回手機版型而不是這一段（720 是 max-width: 720px 的邊界，含）。
+那個結果也還可以看，所以不另外處理。
+==========================================================================</pre>
+<pre>主題與科別的篩選。與手機版同一支，一行都沒有改：
+1. 按一下同時篩文章與醫師；再按同一顆＝取消。
+2. 沒有 JS 的時候 chips 就是按不動的按鈕，底下什麼都不會被藏 —— 不會壞。
+3. 對應關係讀的是 HTML 上的 data-spec，跟配色共用同一個屬性，
+ 所以顏色與篩選永遠不可能對不起來。</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

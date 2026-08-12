@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>spec-endo-red-all｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>spec-endo-red-all</h1>
+<p class="meta">
+  原網址 <code>/preview/spec-endo-red-all/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/spec-endo-red-all/index.html</code><br>
+  抽出 3 段推導文字，共 610 字
+</p>
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md〕
+（兒牙白字那一件已經結案了，見上面的定案表。口腔外科的紫已定案 `#8e6299`／`#784e84`，
+見 PALETTE.md 第六之九節與 `preview/spec-surg-violet/`；贋復假牙的藍已定案
+`#335b8b`／`#182f4b`，見第六之十、十三、十四節與 `preview/spec-perio-split/`；
+顯微根管的紅已定案 `#ae4f4d`／`#89202d`，見第六之十一節與 `preview/spec-endo-red-all/`；
+**`#4478b5`／`#244369` 原本是牙周的，2026-08-10 起改屬齒顎矯正，牙周換成青綠
+`#317d78`／`#2a6d69`**，見第六之十四、十六節與 `preview/spec-perio-split/`、
+`preview/spec-perio-teal/`。）
+
+〔PALETTE.md〕
+最新的提案頁是 **`preview/spec-endo-red-all/`**（十一案 × 兩條切換條，`?l=6&amp;f=11`）。
+`preview/spec-endo-red/`（正規化的五案）與 `preview/spec-endo-red-raw/`（三個原值）
+留著看推論過程。
+
+〔PALETTE.md〕
+使用者要「兩案併起來、做成兩態、跟其他科別標籤放在一起、一鍵切換」。
+提案頁 **`preview/spec-endo-red-all/`** —— ①~⑤ 是正規化的五案（兩階），
+⑥⑦ 是原值的紅花籃與繡球（單一值），七案都排進真正的七科標籤列裡，
+白底套字與整圈套色兩態、卡與紙兩種底，外加一整段文章內頁模擬。
+
+〔CLAUDE.md〕
+- `preview/spec-*/` — **七個科別色的推導過程（2026-08-09 一整天）**，一輪一頁：
+  `spec-surg-violet/`（外科紫，定案）、`spec-prosth-blue/`（贋復 3×3，已被後面兩輪取代）、
+  `spec-endo-red/` `-raw/` `-all/`（顯微根管紅，`-all` 是定案頁，十一案×兩條切換條）、
+  `logo-green-compare/`（一般牙科綠，十三案，定案）、`spec-ortho-bright/`（矯正提亮，**未定案**）、
+  **`spec-ortho-palette/`（矯正換色系：品牌剩的米色＋稻草灰，加資料庫三個，八案）**、
+  **`spec-perio-teal/`（⚠ 最新一頁：牙周換青綠、矯正接手牙周的藍。兩科對調已定，
+  只剩牙周的青綠要幾階，三案 Ⓣ1／Ⓣ2／Ⓣ3）**、
+  `spec-prosth-bluer/`（贋復藍紫，定案 Ⓑ）、
+  **`spec-perio-split/`（牙周獨立＋贋復字階，三排切換條，定案 Ⓧ·Ⓡ·Ⓓ2）**。
+  每一頁都有完整元件舞台與文章頁模擬。數據全部同步在 [PALETTE.md](PALETTE.md) 第六之九～十四節。</pre></div>
+<h2>那一頁自己的推導與量測</h2>
+<pre>自給自足的靜態快照：樣式整份內嵌，刻意不引用 /assets/style.css。
+七案＝正規化的五案（①~⑤，填色 L*46／套字 L*38）＋ 原值的兩個（⑥⑦，單一值）。
+⚠ 切換條是純 CSS 的（radio ＋ :has()），一行 JS 都沒有 —— 這一頁會被丟進沙箱
+iframe 看（預覽面板、in-app 瀏覽器），那些地方會整包擋掉 script。2026-08-09 踩過。</pre>
+<pre>⑨⑩⑪ ④↔⑥ 之間補三階（使用者第六輪要的）。亮度鎖在他選的那組結構：
+套色 L* 45.9（④ 自己的）、白底字 L* 30.7（⑥ 自己的）；色相 40.1→23.4 均分；
+彩度兩端都錨在實測值 —— 套色 42.2(④)→44.2(官方磚紅)，
+白底字 39.7(磚紅長椅)→48.4(紅花籃)。</pre>
+<pre>規格逐條照 assets/style.css 抄過來（.post-tag / .post-body h2::before /
+.post-body h3 / .callout / .btn / .btn-ghost），只有把 var(--accent) 換成
+var(--pick)、var(--accent-deep) 換成 var(--pick-line)。哪個元件吃哪一階
+寫在 PALETTE 六之六節那張表裡，這裡一格都沒有改。</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

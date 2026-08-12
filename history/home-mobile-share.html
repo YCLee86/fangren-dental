@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>home-mobile-share｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>home-mobile-share</h1>
+<p class="meta">
+  原網址 <code>/preview/home-mobile-share/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/home-mobile-share/index.html</code><br>
+  抽出 10 段推導文字，共 2,196 字
+</p>
+
+<h2>那一頁自己的推導與量測</h2>
+<pre>2026-08-06．給外部朋友看的分享版。
+
+內容與版型完全等同 preview/home-mobile-n3/（定案的內文底色 N3 藍灰調 #e2e5e6、
+無木線、照片下緣補回、窄帶 54px）—— 這一份只做兩件事不一樣：
+
+1. 頁尾那段內部說明（色票、對比度、與其他提案的交叉連結）整塊換成徵求建議的短文，
+外部的人不需要看調色過程。
+2. 標題改成看得懂的名字，不是「N3 藍灰調 #e2e5e6」。
+
+**設計上的任何調整請改 home-mobile-n3，改完再同步過來**，
+不要讓兩份各自長出不同的樣子。
+
+這一頁一樣是 preview/ 底下的自給自足快照：樣式整份內嵌，不引用 assets/style.css，
+build.mjs 不會碰它，所以文章卡片是靜止的，不會跟著新文章更新。</pre>
+<pre>一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                原始 PPT 的自訂圖形就是這樣做的（&lt;a:pathLst&gt; 裡兩條子路徑）；
+                先前搬成 SVG 時被拆成兩個 path，內圈只好填 45% 的黑假裝挖空，
+                疊在白色圖案上就變成一顆灰點，那是錯的。</pre>
+<pre>==========================================================================
+HERO：定案 C72，與 hero-ppt-s1a-e1 相同，一個值都沒改
+==========================================================================</pre>
+<pre>暗夜區（照片＋窄帶）整塊墊一層帶底色。
+
+為什麼要這一層：.hero-photo 的高度是 cqw 算出來的小數（375px 上是 280.2px），
+照片區與窄帶這兩個相鄰區塊的邊界落在非整數的裝置像素上，
+瀏覽器分別做像素對齊之後中間會露出不到 1px 的縫，
+而縫底下就是 body 的紙色 #e2e5e6 —— 在手機上看起來就是一條白線。
+（實測 iPhone DPR 3 的截圖，那條縫是 1 個裝置像素、量到 #e2e5e6。）
+墊上帶底色之後，縫再怎麼露也是露 #2a2c27，看不出來。</pre>
+<pre>高度＝照片在 113% 寬度下的完整高度：113% × 1058/1600 = 74.72cqw。
+原本是 clamp(70.5cqw, 34svh, 74.5cqw)，在手機上取到下限 70.5cqw，
+照片底部被切掉約 5.6%（台階到柏油路那一段），看起來像斷掉。
+現在讓框高等於圖高，整張照片完整落地，不再裁下緣（右緣的 13% 裁切維持不變）。</pre>
+<pre>定高 ＋ 垂直置中：不用上下內距硬算。行距或字級之後有任何調整，
+內容仍然會自己置中，帶高也不會跟著跑掉。
+
+66px → 54px：木線拿掉之後帶子上下顯得空。字墨實測 28.3px 高，
+原本上下各留 20／17.7px，現在各留約 13／11.7px，
+還是比字高的一半多，不會擠。要再短就往 50px 走，48px 以下會開始貼字。</pre>
+<pre>三格等寬、各自置中：原本是靠左排、第一格不縮排，右邊會空出一大塊，
+整條看起來偏左。改成每格佔三分之一、文字置中。
+
+分隔線用 ::before 畫，不用 border —— border 會算進 box 寬度（box-sizing 是 border-box），
+第一格沒有 border、後兩格有，三格的框就差了 3px，分隔線會落在 128.3／243.7，
+而三等分點是 125／250。改成絕對定位的偽元素之後線不佔寬度，
+三格真的等寬，兩條線正好壓在三等分點上。</pre>
+<pre>收緊兩行之間：要動的是 li，不是 span。span 是行內元素，
+它的行框高度受 li 這個區塊的 strut 撐著，而 li 原本從 body 繼承 1.85 ——
+只改 span 的行高到 1.2 以下完全沒有作用（實測間距卡在 9.9px 不動）。</pre>
+<pre>視覺置中的補正：flex 的 align-items 置中的是「框」，不是「字墨」。
+數字那行的行高 1.05 幾乎貼著字，說明那行 1.15 下面多了半個行距，
+字級縮小之後框置中會變成上 17.9px、下 16.8px，補 .3px 的上內距把字墨推回對稱。
+這個補正值和字級、行高綁在一起，動到那兩個就要重量一次。</pre>
+<pre>字級：中文比照 HERO 那三行詩（390px 上是 10px＝.625rem），
+數字按同一個比例縮 —— 原本 20 / 12.16px 是 1.645 倍，
+現在 16.4 / 10px 還是 1.64 倍。落差維持住，數字才不會跟中文一樣小。</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

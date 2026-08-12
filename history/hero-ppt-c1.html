@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>hero-ppt-c1｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>hero-ppt-c1</h1>
+<p class="meta">
+  原網址 <code>/preview/hero-ppt-c1/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/hero-ppt-c1/index.html</code><br>
+  抽出 7 段推導文字，共 1,695 字
+</p>
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md〕
+- `preview/hero-ppt-*/` — **手機版 HERO 提案（2026-08-05）**，依使用者的 `簡報20260804.pptx` 做的，
+  只做 390px。命名分四組：`a`/`b`/`c`/`c1`/`c3` 是版型，`r1`–`r3` 是右緣裁切，
+  `t1`–`t3` 是詩的透明度，`s1`/`s1a`/`s1b`/`s2`/`s3` 是文字陰影。
+  **`hero-ppt-s1a` 是使用者定案的那一版**，其餘留著互相比較，各頁底部有交叉連結。
+  詩的文字內容與尚未定案的收尾在 [COPY.md](COPY.md)。
+
+〔COPY.md〕
+排版與陰影的技術數據不在這裡，在 `preview/hero-ppt-*/` 各提案頁自己的說明區。</pre></div>
+<h2>那一頁自己的推導與量測</h2>
+<pre>2026-08-04．依使用者的 PPT（簡報20260804.pptx）重做的三案之一，只做手機 390px。
+
+這一案的立場：PPT 的內容與層級全留，但把左上角收成一塊。
+PPT 上有三條左緣（Logo、診所名、置中的詩），在 13 吋的投影片上看起來鬆得剛好，
+縮到 390px 會顯得散。這裡讓診所名、副標、三行詩共用同一條左緣，
+由上而下一路變輕：粗體 → 一般 → 更淡，讀起來是一段自然收尾的文字。
+選單留在右上角，和 PPT 一樣。
+
+照片改成 4:5 直式（只裁左右不裁上下），比 A 版的 3:4 矮一些，
+建築在畫面裡佔的比例更大，天空剛好夠這一塊文字站。</pre>
+<pre>一個路徑、兩條子路徑，用奇偶填充規則（fill-rule="evenodd"）讓
+                  中間那顆牙成為真正的洞——照片的夜空直接透過來。
+                  原始 PPT 的自訂圖形就是這樣做的；先前搬成 SVG 時被拆成兩個 path，
+                  內圈只好填 45% 的黑假裝挖空，疊在白色圖案上就變成一顆灰點。</pre>
+<pre>==========================================================================
+HERO：4:5 直式夜景，左上角一整塊文字共用一條左緣
+==========================================================================</pre>
+<pre>高度取前次聊天定下的 1/3～2/5 區間的**上緣**（2/5）。
+這一案是三案裡唯一把頁首和三行詩「都」壓在照片上的，而照片能用的暗部
+（天空到屋簷之間）只佔照片高度的四分之一——非得取到 2/5 才裝得下兩者。
+高度寫在 figure 上，讓它有確定高度可以當 container-type: size 的容器，
+底下的詩才能用 cqh（照片高度的百分比）定尺寸。</pre>
+<pre>完整的一幀：上下一刀不裁，只裁左右。
+量過原圖——一樓亮著的門面在照片高度的 80% 到 93%，建築的基座在 94%。
+任何往上取景的做法（曾經試過 118%，只留到 84.7%）都會把門框下半截切掉，
+建築就斷了、張力也沒了。所以垂直方向完整保留，屋簷到騎樓一整棟都在。
+橫向 60% 的定位讓建築（原圖的 42%～78%）連同兩側街景都留在畫面內。</pre>
+<pre>頁首與詩之間收得比 A 版緊：這一案兩者都要擠進同一片暗部，
+每一毫米的上方留白都是從詩的可讀性借來的。
+
+整層疊字（含頁首）一律用 cqh —— 照片高度的百分比，不是寬度。
+照片能站字的暗部是「天空到屋簷」那一段，永遠是照片高度的三分之一左右，
+跟寬度無關。頁首若用寬度算，換一支矮手機時頁首沒縮、暗部縮了，
+底下的詩就被推出安全區（實測掉到 3.99:1）。綁在高度上，
+「頁首＋三行詩」這一整塊佔照片的比例在每一支手機上都一樣。</pre>
+<pre>---------- 三行詩：C1「輕聲」——收小、放鬆、拉開字距 ----------
+原本的 C 版把詩排成 13px／行距 1.55，字級是診所名的 76%，三行擠成一塊
+灰色的字磚，讀起來是「一段文字」而不是「一句氛圍」。這一版動三個地方：
+
+1. 字級收到診所名的 63%（PPT 是 50%，那個比例在手機上等於 8.5px，看不清楚）
+2. 行距從 1.55 放到 2.05 —— 回到 PPT 的鬆，三行各自浮著，不再黏成一塊
+3. 字距從 .06em 拉到 .16em —— 中文一拉開字距就從「文案」變成「氣音」，
+ 這是三個手法裡最有效的一個，而且完全不用把字改得更小
+
+透明度 70%，比副標（65%）只重一點點，但字級更小，所以在視覺順位上仍在最後。</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

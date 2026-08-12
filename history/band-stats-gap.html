@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>band-stats-gap｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>band-stats-gap</h1>
+<p class="meta">
+  原網址 <code>/preview/band-stats-gap/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/band-stats-gap/index.html</code><br>
+  抽出 5 段推導文字，共 4,233 字
+</p>
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md〕
+- `preview/band-stats-gap/` — **窄帶三格的間距 4rem，定稿紀錄（2026-08-10）**。
+  用來看「2026-08-07 定案的 4rem」和「線上誤跑三天的 1.9rem」差在哪；
+  選定後已修進 `index.html`，這一頁現在就是正式站的複本、沒有任何覆寫。
+
+〔CLAUDE.md〕
+9. ~~三格間距的 4rem「拉開」沒有生效~~ —— **2026-08-10 已修好並上線。**
+   `.stats li { padding-inline: 4rem; }`（2026-08-07 定案）之後還有一條同權重、
+   排在後面的 `.stats li { position: relative; padding-inline: 1.9rem; … }`，後者贏，
+   所以**定案後整整三天線上跑的都是當初被淘汰的 1.9rem**。
+   修法是把後面那一份的 `padding-inline` 刪掉、讓原本那條接手（沒有用 !important）。
+   &gt; **留下來的規則**：`padding-inline` 在這份樣式表裡**只准出現在那一行**。
+   &gt; 要調三格的間距就改那個 4rem，不要在下面的 `.stats li` 裡再寫一次。
+   &gt; 對照頁 `preview/band-stats-gap/`，數據見 [PALETTE.md](PALETTE.md) 第六之十七節第七小節。
+
+〔PALETTE.md〕
+使用者在 `preview/band-stats-gap/` 看過兩案之後選了 4rem，已修好上線。
+修法是**把後面那一份的 `padding-inline` 刪掉**，讓原本那條接手，
+正式站沒有留下任何 `!important`。</pre></div>
+<h2>那一頁自己的推導與量測</h2>
+<pre>============================================================================
+這一頁是什麼（2026-08-10，已定案上線）
+----------------------------------------------------------------------------
+只為了看一件事：**窄帶裡「1983／9／6」三格的左右內距**。
+
+起因：index.html 裡同一個屬性被寫了兩次，權重相同（都是 0,0,2）、後面的贏：
+  .stats li { padding-inline: 4rem; }                        ← 2026-08-07 的定案
+  .stats li { position: relative; padding-inline: 1.9rem; }  ← 舊值，排在後面
+所以從定案那天起，線上跑的一直是**當初被淘汰的 1.9rem**，整整三天沒人發現。
+2026-08-10 使用者看過這一頁之後說「4rem 定案上線」，已經修好 ——
+修法是**把 1.9rem 那一份的 padding-inline 刪掉**，讓原本那條 4rem 接手，
+正式站沒有留下任何 !important。
+
+兩案的實測（1440）：
+             三格那一組   文字之間   離右邊地址電話
+  現況 1.9rem     330.1      60.8         152.9
+  定案 4rem       531.7     128.0          85.6
+窄帶本身 1425×84 兩案完全相同 —— 變寬的是裡面那一組，不是窄帶。
+三格的中軸 712.5 ＝ 版心中軸，兩案都沒動。手機完全不受影響（自己一套規則）。
+
+這一頁是**定稿後的紀錄**，就是正式站的複本、沒有任何覆寫。
+和正式站的差異只有三處：
+  1. &lt;title&gt; ＋ noindex ＋ 這段註解
+  2. 資產路徑改成絕對路徑 /assets/…（提案頁在子目錄）
+  3. 拿掉 counter.js，瀏覽數改成寫死的示範值 190
+     （不拿掉的話每開一次提案頁就幫首頁的真實計數 +1）
+============================================================================</pre>
+<pre>⚠ 計數器那支 script 在這一份提案頁裡是刻意拿掉的：data-views-self="home"
+會對 /api/views 送 POST，等於每開一次提案頁就幫首頁的真實瀏覽數 +1。
+正式站的 index.html 有這一支，不要以為它漏了。</pre>
+<pre>---- 收尾句底下那塊暗塊加深（提案 Ⓔ2 定案，2026-08-10）--------------
+使用者回報「巷口」剛好壓在車頭燈上看不清楚。逐字量過照片底下的亮度
+（375 寬）：「巷」最亮 219、「口」最亮 236，白字 65% 疊上去的對比度只有
+1.24 / 1.12（1.0 ＝ 完全看不見），其他十個字都在 3～7。
+
+原本的 rgba(25,22,20,.72) 被 blur(18px) 攤開之後，在「巷口」的位置
+（離暗塊左緣只有 24px）實際只剩約 0.44 不透明度，236 壓完還有 142。
+所以把不透明度提到 .9、範圍放大，讓它在那一端還有密度。
+
+⚠ **blur 一個值都不要動。** 一收就會看得出這是一個框 ——
+   「看不出是框、只是路面自己暗下去」正是這塊東西的設計重點。
+⚠ **只在手機。** 電腦版的裁切是下緣貼齊，收尾句落在純暗的路面上，
+   十二個字最亮處都 ≤58、對比度 ≥5.9，不需要也不該加。</pre>
+<pre>==========================================================================
+直立（旋轉）螢幕：照片不整屏（2026-08-09 定案）
+--------------------------------------------------------------------------
+使用者把 1920×1080 的螢幕轉成直的，回報「左邊的字看起來非常小」。
+原因不是字級設錯，是**這一頁只有照片跟著高度長**：
+
+                                  1440×900 → 1080×1920
+.hero-photo  height: 100svh        900px → 1920px（2.13 倍）
+.hero-poem   clamp(12.5px, 1.05vw, 15px)   15px → 12.5px（撞下限）
+.hero-sign   clamp(11.5px,  .95vw, 14px)   14px → 11.5px（撞下限）
+.hero-copy   padding-top …clamp(1.2rem, 4vh, 2.6rem)   41.6px → 41.6px（撞上限）
+
+字級只讀 vw，還掉到 clamp 的下限；內距讀了 vh 卻撞在上限。高度多出來的
+1000px 沒有任何一條式子接得住，全變成空天空 —— 三行詩在 900px 的畫面裡
+佔 10.6%，在 1920px 裡只佔 4.1%。
+
+而且照片的裁切整個換了方向：1600×1058（1.512）的橫幅塞進 1080×1920 的框，
+cover 的縮放由高度決定（1920 ÷ 1058 = 1.815 倍），照片被放到 2904px 寬 ——
+**左右各裁掉 31.5%，只露出中間 37%**，垂直方向反而一點都沒切。
+所以電腦版定案的 `object-position: 50% 100%`（下緣貼齊）在這個比例下
+完全沒有作用，要裁到垂直得矮到 37svh（1080 ÷ 1.512 = 714px）以下。
+
+---- 定案：照片不整屏 -----------------------------------------------------
+五案做成 preview/hero-portrait/ 給使用者在旋轉螢幕上比過（橫排放大、
+直排靠上、直排置中、照片不整屏、以及不改的對照），他選了照片不整屏。
+
+62svh 是「不整屏」的那個值：1920 高時照片 1190px，縮放降到 1.12 倍，
+左右只裁掉 41%（原本 63%），街角、門面、隔壁的矮房子都回得來。
+詩與收尾句因此靠近，不再是一撮小字隔著 1000px 空天空對望。
+窄帶是 position: absolute; bottom: 0 掛在 .hero 上，會自己跟上來，不必處理。
+
+字級仍要換成 svh —— 只把照片變矮不夠，字級讀 vw 這件事沒解決。
+1.15svh 的錨點在電腦版身上（1440×900 的 15px 等於 1.667svh），保守一點取
+1.15：1920 高時 22px。旋轉螢幕的觀看距離和一般螢幕一樣，字級要照桌機的
+尺度看，不是照海報。下限 15px 是留給比較矮的直立畫面（例如 800×1200）。
+
+---- 這一段的界線 ---------------------------------------------------------
+min-width: 721px      721 是上面手機版型（max-width: 720px）的補集，
+                      手機一個像素都碰不到。
+max-aspect-ratio: 2/3 aspect-ratio 是寬 ÷ 高，所以這是「比 0.667 更瘦」。
+                      1080×1920 = 0.5625 ✓、1200×1920（16:10 旋轉）= 0.625 ✓、
+                      iPad 直放 1024×1366 = 0.75 ✗ —— 刻意排除，
+                      它現在看到的是電腦版，那個樣子不動。
+
+驗過：把這一頁與改動前放進同尺寸 iframe 逐項比對，1440×900 與 390×844
+兩組的字級、行高、書寫方向、.hero-copy 內距、詩的座標、scrollWidth
+**每一個值都相同** —— 電腦版與手機版真的沒被動到。
+
+已知邊界：旋轉螢幕若開 150% 縮放，視窗只有 720 CSS px 寬，
+會落回手機版型而不是這一段（720 是 max-width: 720px 的邊界，含）。
+那個結果也還可以看，所以不另外處理。
+==========================================================================</pre>
+<pre>主題與科別的篩選。與手機版同一支，一行都沒有改：
+1. 按一下同時篩文章與醫師；再按同一顆＝取消。
+2. 沒有 JS 的時候 chips 就是按不動的按鈕，底下什麼都不會被藏 —— 不會壞。
+3. 對應關係讀的是 HTML 上的 data-spec，跟配色共用同一個屬性，
+ 所以顏色與篩選永遠不可能對不起來。</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

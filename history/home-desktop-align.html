@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>home-desktop-align｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>home-desktop-align</h1>
+<p class="meta">
+  原網址 <code>/preview/home-desktop-align/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/home-desktop-align/index.html</code><br>
+  抽出 11 段推導文字，共 3,090 字
+</p>
+
+<h2>那一頁自己的推導與量測</h2>
+<pre>瀏覽數。data-views="home" 是給正式站 assets/counter.js 的掛勾 ——
+      上線後由它從 D1 取真實數字，再呼叫 window.fangrenCountUp(n) 跑同一段動畫。
+      這一頁是靜態快照，沒有 Worker 可以問，所以 data-count 先放示範數字。
+      數字跑動時一直在變，讓螢幕閱讀器跟著念沒有意義，所以動的那一段
+      整個 aria-hidden，另外放一句 .sr-only 講最終結果。</pre>
+<pre>==========================================================================
+電腦版首頁提案（2026-08-07）
+
+這一頁是把定稿的手機版 preview/home-mobile-n3/ 套到寬螢幕上，**不是新設計**。
+規則：
+
+· 顏色一個都沒有新調。下面的 :root 是從 home-mobile-n3 原樣搬過來的，
+  包含暗夜、窄帶漸層、N3 藍灰紙、六個科別色。依據仍然是 PALETTE.md。
+· 元件（卡、藥丸、chips、標籤、資訊卡）的邊框、圓角、填色規則完全不動 ——
+  只有版面從一欄變成多欄。手機版量出來的圓角比例 0.384 在這裡照用，
+  因為這些小元件的字級沒有變。
+· 只有兩種東西按螢幕放大：**版心的欄數**，以及**標題級的字**（h2、卡片標題）。
+  內文、標籤、藥丸維持手機版的字級 —— 它們在 15 吋螢幕上本來就夠讀，
+  放大只會讓頁面看起來像放大鏡。
+
+電腦版真正重新想過的只有三處，各自的理由寫在對應段落：
+1. HERO 照片要裁（手機版是整張完整落地，寬螢幕上整張會有 950px 高）
+2. 窄帶從「兩列置中」改成「一列左右分」（寬度夠了就不該再疊）
+3. 頁首從兩行品牌改成一行橫排
+==========================================================================</pre>
+<pre>==========================================================================
+HERO 對齊三案（2026-08-07）
+--------------------------------------------------------------------------
+裁切方式定案為 C 置中不裁。但「置中不裁」原本是**由高度決定照片寬度**
+（78svh → 照片 1062px 寬），而底下的卡片欄是 1080px —— 差 18px，
+照片的左右緣和卡片的左右緣就是差那麼一點，看起來像沒對準。
+
+三案的共同做法：反過來，**由版心決定照片寬度，高度自己算**。
+比例仍然是 1600:1058，所以一樣零裁切；改變的只是照片對齊哪一條線。
+
+.hero-photo { aspect-ratio: 1600/1058; max-width: var(--photo-w); margin-inline: auto }
+
+差別只在 --photo-w，以及詩要不要跟著內縮。
+==========================================================================</pre>
+<pre>案一 齊卡片 —— 照片寬＝卡片欄寬（版心扣掉左右留白）。
+照片的左右緣和卡片、標題、窄帶裡的 1983 全部落在同一條線上，
+整頁只有一條左緣。詩因此不能再內縮，所以 .shell 的左右內距要歸零。
+1900px 上照片 1080×714。</pre>
+<pre>案二 齊版心外框 —— 照片寬＝版心整個框（含左右留白），卡片比照片各內縮一個 --pad。
+照片因此比文字寬一階，像壓在文字外面；這是雜誌把大圖出血到欄外的做法。
+詩維持內縮，所以詩和卡片對齊，只有照片自己往外站。
+1900px 上照片 1160×767。</pre>
+<pre>案三 版心加寬 —— 對齊方式和案一相同（照片＝卡片欄），但整個版心從 1160 放到 1320。
+照片、卡片、醫師卡一起變寬，照片有份量得多，兩側的暗底也少掉 160px。
+代價是三欄卡片各寬 53px，摘要每張少折一行，頁面重心整個往外推。
+1900px 上照片 1240×820。</pre>
+<pre>詩：三行已定稿，用全形空格斷句、沒有標點（COPY.md 第一節）。
+字級從手機版的 10~11.5px 放大到 15px —— 這是全頁少數該跟著螢幕長大的東西，
+因為它疊在一張 780px 高的照片上，維持手機的字級會變成一撮小字。
+字距 .2em、行高、兩層陰影（色用 #191614 不用純黑）都和手機版相同。</pre>
+<pre>==========================================================================
+窄一點的螢幕：欄數依序退場。這不是手機版 ——
+手機版是另外一份（preview/home-mobile-n3/），版型不同。
+這幾個斷點只是讓這一頁在筆電、平板橫放時不要爆掉。
+==========================================================================</pre>
+<pre>固定頁首的毛玻璃。做法與手機版相同，只有選擇器換了。
+1. 捲動超過 4px 就掛上 html.scrolled，把玻璃與收合一起打開。
+ 沒有 JS 的時候不會掛，頁首就是一條透明的 sticky 條 —— 不會壞，只是沒有效果。
+2. 依捲動位置逐幀算出玻璃的顏色寫進 --glass。
+
+**終點必須是不透明的**，這一點是關鍵。漸變區間是「條子開始壓到窄帶」到
+「窄帶整條從條子底下過完」—— 這段期間條子底下都是深色，顏色怎麼變都看不出來；
+等窄帶過完、紙色出現時，條子早就是最終的深色了。只要還留著一點透明度，
+底下換成紙色時條子就一定會跟著變亮，把切換點提早沒有用。</pre>
+<pre>窄帶裡的瀏覽數：捲進畫面才開始往上數，只跑一次。
+· 先量好最終寬度再歸零 —— 不鎖住的話「次瀏覽」會被一路往外推。
+· easeOutQuart：先衝再收。均速跑起來像進度條，沒有跳動的手感。
+· 系統設定成減少動態時直接寫最終值。
+上線時的接法：counter.js 取回真實數字後呼叫 window.fangrenCountUp(n)。</pre>
+<pre>主題與科別的篩選。與手機版同一支，一行都沒有改：
+1. 按一下同時篩文章與醫師；再按同一顆＝取消。
+2. 沒有 JS 的時候 chips 就是按不動的按鈕，底下什麼都不會被藏 —— 不會壞。
+3. 對應關係讀的是 HTML 上的 data-spec，跟配色共用同一個屬性，
+ 所以顏色與篩選永遠不可能對不起來。</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

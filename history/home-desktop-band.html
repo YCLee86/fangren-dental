@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>home-desktop-band｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>home-desktop-band</h1>
+<p class="meta">
+  原網址 <code>/preview/home-desktop-band/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/home-desktop-band/index.html</code><br>
+  抽出 8 段推導文字，共 2,080 字
+</p>
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md〕
+- `preview/home-desktop-band/` — **電腦版目前的最新一頁（2026-08-07）**。整屏照片
+  （`100svh`、`object-position: 50% 100%` 下緣貼齊）＋ **壓在下緣的窄帶**。
+  右下角兩組切換條：底色七案 × 三格間距三案，網址可帶
+  `?band=glasstar|glasstar2|blue|tar|ink|glass1|glass2|glass3&amp;gap=now|wide|full`。
+  **已定：間距用「拉開」、底色用毛玻璃＋柏油漸層。**
+  還沒定：柏油漸層要「標準」還是「深」。細節全部寫在 [PALETTE.md](PALETTE.md) 第六之三節。
+
+〔PALETTE.md〕
+十一輪之後定下來。**兩個提案頁都已經套上去了**（`preview/home-desktop-band/`
+與 `preview/home-mobile-n3/`），切換條連同 `data-kids` 一起刪掉。
+
+〔PALETTE.md〕
+**`preview/home-desktop-band/` 的三組切換條連同 `data-band`／`data-gap`／`data-kids`
+已經全部刪掉**，落選的 CSS 也一併移除，只有落選的理由留在註解裡。
+
+〔PALETTE.md〕
+&gt; 手機版 `preview/home-mobile-n3/` 是先做的，電腦版 `preview/home-desktop-band/`
+&gt; 是從它推廣出去的。但**電腦版定案得比較晚、也比較完整**，
+&gt; 所以從 2026-08-07 起 **以電腦版為準**，改動先進電腦版，再回推手機版。</pre></div>
+<h2>那一頁自己的推導與量測</h2>
+<pre>瀏覽數。data-views="home" 是給正式站 assets/counter.js 的掛勾 ——
+      上線後由它從 D1 取真實數字，再呼叫 window.fangrenCountUp(n) 跑同一段動畫。
+      這一頁是靜態快照，沒有 Worker 可以問，所以 data-count 先放示範數字。
+      數字跑動時一直在變，讓螢幕閱讀器跟著念沒有意義，所以動的那一段
+      整個 aria-hidden，另外放一句 .sr-only 講最終結果。</pre>
+<pre>切換條全部拿掉了（2026-08-07 定案）：
+  窄帶底色 → 毛玻璃輕 ＋ 柏油漸層（標準）
+  三格間距 → 拉開（左右各 4rem）
+  兒牙的色 → 1a #c28229
+連同 data-band／data-gap／data-kids 與那段 localStorage 記憶一起刪。
+被淘汰的幾案為什麼落選，寫在上面各自的 CSS 註解與 PALETTE.md 第六之二、六之三節。</pre>
+<pre>詩：三行已定稿，用全形空格斷句、沒有標點（COPY.md 第一節）。
+字級從手機版的 10~11.5px 放大到 15px —— 這是全頁少數該跟著螢幕長大的東西，
+因為它疊在一張 780px 高的照片上，維持手機的字級會變成一撮小字。
+字距 .2em、行高、兩層陰影（色用 #191614 不用純黑）都和手機版相同。</pre>
+<pre>定案：三格靠內容寬度、整組置中，左右各 4rem（2026-08-07 的「拉開」）。
+淘汰：1.9rem（三格擠在版心中央，兩側各空一大塊，像沒排完）、
+以及「各佔版心三分之一」—— 那是手機 390px 上排不下才用的辦法，
+搬到 1160px 的版心會拉得太開，三格之間的關係就散了。</pre>
+<pre>"Times New Roman" 不要拿掉：iOS 沒有中文襯線字，這頁又是 lang="zh-Hant-TW"，
+generic serif 會整個退回黑體，連數字一起。逐字比對下數字命中 Times（襯線）、
+中文找不到就繼續往後掉到 serif，所以中文完全沒變。詳見 index.html 同一條。</pre>
+<pre>==========================================================================
+兒牙的黃 —— 定案 1a `#c28229`（2026-08-07）
+--------------------------------------------------------------------------
+十一輪才定下來的一個色。完整的推導、每一輪被否決的原因與全部實測數據
+都在 PALETTE.md 第六之二節；這裡只留結論與**還沒收乾淨的那一件事**。
+
+  1a  #c28229   L* 59.5・C* 57.6・h 72.5
+
+為什麼是它：最後一輪比的不是亮度而是**彩度**（1 的 67 → 沙金的 38），
+1a 落在 57.6 —— 還是黃，但已經開始有金屬感，不會像果汁。
+
+&gt; **填色上的白字是 3.22:1，不到 AA 小字的 4.5:1 —— 已結案，維持白字。**
+&gt; 2026-08-08 把備案做成實際的樣子給使用者看過（並排的藥丸、陽光下的模擬、
+&gt; 縮小／模糊／灰階、七科的對比長條），他的回覆是「維持白字 不用動」。
+&gt; 這是看過證據之後做的取捨，**不要再提、也不要順手改掉**。
+&gt; 備案留在 PALETTE.md 第六之二節，只是紀錄。
+&gt; 線框態（chip 未選、文章卡標籤）用 `#9e6301`，那一側本來就是合規的。
+==========================================================================</pre>
+<pre>窄帶裡的瀏覽數：捲進畫面才開始往上數，只跑一次。
+· 先量好最終寬度再歸零 —— 不鎖住的話「次瀏覽」會被一路往外推。
+· easeOutQuart：先衝再收。均速跑起來像進度條，沒有跳動的手感。
+· 系統設定成減少動態時直接寫最終值。
+上線時的接法：counter.js 取回真實數字後呼叫 window.fangrenCountUp(n)。</pre>
+<pre>主題與科別的篩選。與手機版同一支，一行都沒有改：
+1. 按一下同時篩文章與醫師；再按同一顆＝取消。
+2. 沒有 JS 的時候 chips 就是按不動的按鈕，底下什麼都不會被藏 —— 不會壞。
+3. 對應關係讀的是 HTML 上的 data-spec，跟配色共用同一個屬性，
+ 所以顏色與篩選永遠不可能對不起來。</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

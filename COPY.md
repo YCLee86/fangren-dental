@@ -3,13 +3,13 @@
 這份是**文案的唯一依據**，地位等同配色的 [PALETTE.md](PALETTE.md)。
 要寫或改任何對外的品牌文字之前先讀這份，不要憑感覺重寫。
 
-排版與陰影的技術數據不在這裡，在 `preview/hero-ppt-*/` 各提案頁自己的說明區。
+排版與陰影的技術數據不在這裡，在 `/history/hero-ppt-*.html` 各提案頁自己的說明區。
 
 ---
 
 ## 一、HERO 的詩（目前狀態）
 
-版型定案在 **S1a**：`preview/hero-ppt-s1a/index.html`
+版型定案在 **S1a**：`/history/hero-ppt-s1a.htmlindex.html`
 （T3 底 ＋ 兩層陰影 `0 1px 2px /.5` ＋ `0 0 4px /.28`，陰影色用 `#191614` 不用純黑）。
 
 **已定稿的三行**，疊在照片左上角的夜空上：
@@ -123,7 +123,7 @@
   那是為左上角夜空調的；照片下緣的路面比夜空亮，65% 大概撐不住，
   字級與透明度都要重新量，規則依 [PALETTE.md](PALETTE.md)。
 - 決定收尾要放幾行（目前三案都是一行）。
-- 定稿後才把 S1a 的版型併進正式站的 `index.html`，現在還只是 `preview/`。
+- 定稿後才把 S1a 的版型併進正式站的 `index.html`（已完成；提案頁 2026-08-12 刪除，文字在 `/history/hero-ppt-s1a.html`）。
 
 ---
 
@@ -169,7 +169,7 @@
 1. **chips 按下的狀態要不要降一階。** 現在是實心滿彩＋純白字，相當亮。
    使用者希望視覺圓潤、不高亮度、辨識度夠但舒服，可改成淡底＋深色字
    （科別色 12% 混進卡色當底，字維持色票原值）。要動的是
-   `preview/home-mobile-n3/index.html` 的 `.chips button[aria-pressed="true"]`。
+   `/history/home-mobile-n3.htmlindex.html` 的 `.chips button[aria-pressed="true"]`。
 2. **這一區之後怎麼容納故事類內容** —— 是在同一排 chips 加「診所的事」這類非科別的顆粒，
    還是分成兩排。名字已經先留好位置，做法未定。
    > **顏色那一側已經有建議了**（[PALETTE.md](PALETTE.md) 第六之八節第四小節）：
@@ -249,7 +249,7 @@
 - 手機／雲端 session 一樣讀得到本檔；**不要從對話裡重抄句子**，以這份為準。
 - 提案頁在正式站要密碼（見 [CLAUDE.md](CLAUDE.md) 第八節），
   本機 `node tools/serve.mjs` 不用密碼，開
-  <http://localhost:8791/preview/hero-ppt-s1a/> 就看得到。
+  <http://localhost:8791/history/hero-ppt-s1a.html> 就看得到（提案頁本身已刪，這是文字存檔）。
 - 這個 repo 是 **public**，這份文件在 GitHub 上任何人都讀得到。
   真正不能外流的經營資訊不要寫進來。
 
@@ -334,7 +334,7 @@
 | C | 學位靠右（`臺北醫學大學　　學士`） | 左右兩緣都齊，但中間留白、而且同樣只有他一張特別 |
 
 **結論：右緣參差是可以接受的，不要為了它把一張卡排得跟其他八張不一樣。**
-提案頁 `preview/doc-degree-align/` 四案都留著。
+提案頁 `/history/doc-degree-align.html` 四案都留著。
 
 ### 八之四、專長欄不只是文案，它同時是搜尋的索引（2026-08-11）
 
@@ -351,7 +351,7 @@
 2. **主題與科別那排標記讀的是 `data-spec`，不是專長欄的文字。**
    所以「專長寫著牙周照護」和「按牙周治療會不會出現他」是**兩件事** ——
    使用者 2026-08-11 當天就發現了，那一件還在提案中，見
-   [CLAUDE.md](CLAUDE.md) 第八節的 `preview/doc-cross-spec/` 與第九節第 12 項。
+   [CLAUDE.md](CLAUDE.md) 第八節的 `/history/doc-cross-spec.html` 與第九節第 12 項。
 
 > **用詞跟著頁面上既有的字走。** 這次寫「牙周照護」是照使用者的話，也和文章卡的
 > 標籤（`牙周照護`）一致；篩選標記上那顆寫的是「牙周治療」。

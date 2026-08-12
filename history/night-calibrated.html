@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>night-calibrated｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  ul.idx { list-style: none; margin: 0; padding: 0; }
+  ul.idx li { padding: .45rem 0; border-bottom: 1px solid var(--rule); font-size: .9rem; }
+  ul.idx a { text-decoration: none; font-weight: 600; }
+  ul.idx span { display: block; color: var(--ink-soft); font-size: .78rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>night-calibrated</h1>
+<p class="meta">
+  原網址 <code>/preview/night-calibrated/</code>（已刪除 2026-08-12）<br>
+  整頁還原：<code>git show 5390136:preview/night-calibrated/index.html</code><br>
+  抽出 4 段推導文字，共 1,347 字
+</p>
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md〕
+- `preview/night-calibrated/` — 全暗版（2026-08-04），內文區也是暗的。留著對照用。
+
+〔PALETTE.md〕
+- 對應的預覽頁：**`preview/home-mobile-n3/`（定案的手機首頁：底色 ＋ 固定頁首 ＋ 科別色）**、
+  `preview/canvas/`（配色數據頁）、`preview/night-calibrated/`（全暗版）</pre></div>
+<h2>那一頁自己的推導與量測</h2>
+<pre>這一頁的樣式刻意全部內嵌、不引用 assets/style.css；也完全不動首頁 index.html。
+
+2026-08-04 校正版。
+上一版（/preview/night-concrete/）的取色只有兩張診療室照片可用，樣本太少。
+這一版改用桌面 01-Preview 那 108 張診所照片，逐張以 k-means 取主色，
+再對指定材質做局部裁切取樣（沙發布料、單椅布料、診療椅、木地板、地磚、
+清水模特寫、夜間窗光），所有數字都是量出來的，不是目測。
+
+兩個和上一版不同的結論：
+
+A. 灰階的色偏方向要反過來。
+清水模在白天幾乎是純中性（彩度 1.8~5.1%），比上一版估的 4~11% 更中性；
+但夜裡受光的清水模彩度 9.2%、R−B +22，暗部彩度 36.8%。
+因為夜裡照到它的只有診所自己的燈。
+→ 色偏應該「暗處最暖、往亮處收回中性」，不是整條均勻微暖。
+
+B. 家具布料的「調色」不是診療椅的藍綠。
+沙發與長椅是藍灰 H≈206（#4e718b / #38607b / #2d4455），
+單椅是藕粉 H≈356（#8e7577 / #967e7c），一張長椅是磚紅 H=15（#7c3721）。
+診療椅的青灰綠 H=174（#4f6361）是醫療設備，不是家具布料。
+
+三個版本的灰階完全一樣，差別只在點綴色是哪一個布料。</pre>
+<pre>==========================================================================
+共用骨架
+==========================================================================</pre>
+<pre>---------- 唯一的一條灰階（三個版本完全共用） ----------
+校正後的規則：色偏在暗處最強、往亮處收回中性。
+底／面   彩度 8~11%，R−B +5~+6   ← 深灰地磚 #36312b、夜間清水模暗部
+分隔線   彩度 8.7%，R−B +9       ← 清水模暗部 #393432
+次要文字 彩度 6~7%，R−B +12~13   ← 診療室白牆 #a09a94
+主文字   彩度 5.1%，R−B +3       ← 清水模亮部 #d6d4d3 / #d0cdcb
+不是純黑也不是藍黑，是清水模在夜裡、只被診所自己的燈照到的樣子。</pre>
+<pre>==========================================================================
+HERO
+照片維持原圖比例（3743:2475），不裁切、不加漸層、不加遮罩。
+疊字字級用 cqw，文字與暗部的相對位置在任何手機寬度下都固定。
+==========================================================================</pre>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

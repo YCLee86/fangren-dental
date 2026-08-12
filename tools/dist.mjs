@@ -18,8 +18,8 @@ const OUT = path.join(ROOT, "_site");
    它不是 build 產物，是 tools/favicon-ico.mjs 從 assets/favicon.svg 算出來、
    已經進版控的檔案，所以缺了就是有東西不對，寧可讓建置出聲。 */
 const ALWAYS = ["index.html", "404.html", "favicon.ico", "assets", "posts"];
-// preview/ 是未上線的改版提案頁，由 worker.js 用密碼擋著，沒有也不影響建置
-const OPTIONAL = ["sitemap.xml", "robots.txt", "preview"];
+// history/ 是改版紀錄（原 preview/ 的推導文字），沒有也不影響建置
+const OPTIONAL = ["sitemap.xml", "robots.txt", "history"];
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
