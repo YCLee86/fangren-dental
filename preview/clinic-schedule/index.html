@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>門診表提案 — 芳仁牙醫診所</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+
+<!-- ============================================================================
+     門診表提案頁（2026-08-12）
+
+     來源：使用者拍的診所門口那面磁鐵門診表（白板 ＋ 七色磁鐵 ＋ 右側圖例）。
+     這一頁只做「怎麼呈現」的提案，資料本身還沒有套進 index.html。
+
+     ⚠ 判讀是從照片來的，磁鐵有幾顆、是哪一色，請對著實物再核一次。
+       特別容易看錯的三處：
+       ・週二晚、週四午、週四晚 這三格「沒有」一般牙科（棕色）
+       ・週四午／晚 最前面那顆是綠色（口腔外科），不是棕色
+       ・週六只有早診，午晚兩格是空的
+
+     ▍板子上量到、和現在網站不一樣的三件事
+       1. 時段：板子是 08:45–12:00 / 13:45–16:40 / 17:45–20:30，
+          網站的看診時間卡寫的是 11:30 / 16:30 / 20:00。
+          板子這一組**和 LINE 官方帳號那一組完全相同** ——
+          CLAUDE.md 第十節記著的那個三邊不一致，板子這一票投給了 LINE。
+       2. 週六：板子上週六早診有兩顆磁鐵（一般牙科＋齒顎矯正），
+          網站寫的是「週六、週日休診」。這一句目前是錯的。
+       3. 板子是「哪一科、哪一節」的表，網站只有一段總營業時間。
+
+     ▍顏色：用站上的科別色，不是板子的磁鐵色
+       板子的七色和站上的七色只有兒牙、矯正大致對得上，其餘五科完全不同
+       （板子的一般牙科是棕、牙周是桃紅、根管是紫、假牙是橘紅、外科是綠；
+       站上分別是綠、青綠、磚紅、藍、紫）。
+       PALETTE.md 是配色的唯一依據，所以這一頁一律用站上的
+       [data-spec] 那組值，沒有從照片取色。要不要反過來讓板子跟網站一致，
+       是另一個問題（實體板子換磁鐵成本很低）。
+     ============================================================================ -->
+
+<style>
+:root {
+  --pad: clamp(1.25rem, 3vw, 2.5rem);
+  --shell: 1160px;
+  --paper: #e2e5e6;
+  --card: #f4f4f5;
+  --rule: #cdd0d2;
+  --note: #f9f9fa;
+  --ink: #2a2c27;
+  --ink-soft: #5c5f57;
+  --teal: #214D48;
+  --taupe: #7D5A58;
+  --brick: #AF4C52;
+}
+
+/* 科別色：與 index.html 的宣告逐字相同，一個值都沒有改 */
+[data-spec="general"] { --accent: #3f654a; --accent-deep: #2c5238; }
+[data-spec="perio"]   { --accent: #317d78; --accent-deep: #2a6d69; }
+[data-spec="endo"]    { --accent: #ae4f4d; --accent-deep: #89202d; }
+[data-spec="kids"]    { --accent: #c28229; --accent-deep: #9e6301; --on-fill: #fff; }
+[data-spec="ortho"]   { --accent: #4478b5; --accent-deep: #244369; }
+[data-spec="prosth"]  { --accent: #335b8b; --accent-deep: #182f4b; }
+[data-spec="surg"]    { --accent: #8e6299; --accent-deep: #784e84; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px; line-height: 1.85; letter-spacing: .01em;
+  overflow-x: hidden;
+  padding-bottom: 5.5rem;
+}
+.shell { max-width: var(--shell); margin: 0 auto; padding-inline: var(--pad); }
+
+.top { background: #191614; color: #e3e1e0; padding: 1.1rem 0 1.2rem; }
+.top h1 { margin: 0; font-size: 1.05rem; font-weight: 700; letter-spacing: .02em; }
+.top p { margin: .25rem 0 0; font-size: .82rem; color: #aaa49e; line-height: 1.7; }
+
+h2 {
+  margin: 2.4rem 0 .3rem; font-size: 1.12rem; font-weight: 700;
+  display: flex; align-items: center; gap: .55rem;
+}
+h2::before { content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; background: var(--teal); }
+.lead { margin: .1rem 0 1.1rem; font-size: .86rem; color: var(--ink-soft); line-height: 1.85; }
+
+.card {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 1.1rem 1.2rem 1.2rem;
+}
+.card + .card { margin-top: 1rem; }
+.tag {
+  display: inline-block; margin: 0 0 .55rem; background: var(--card);
+  color: var(--accent-deep, var(--teal)); border: 1px solid var(--accent-deep, var(--teal));
+  border-radius: 9px; font-size: .76rem; font-weight: 400; letter-spacing: .08em;
+  line-height: 1.6; padding: .07rem .65rem;
+}
+
+/* ---- 切換條 ---- */
+.switch {
+  position: sticky; top: 0; z-index: 20; background: var(--paper);
+  border-bottom: 1px solid var(--rule); padding: .55rem 0;
+}
+.switch .shell { display: flex; gap: .4rem; flex-wrap: wrap; }
+.switch button {
+  font: inherit; font-size: .8rem; line-height: 1.6; cursor: pointer;
+  padding: .18rem .8rem; border-radius: 8px;
+  background: var(--card); color: #2c5238; border: 1px solid #2c5238;
+}
+.switch button[aria-pressed="true"] { background: #2c5238; color: #fff; }
+
+/* ---- 科別標記（三個版型共用）---- */
+.sp {
+  display: inline-flex; align-items: center; gap: .34em;
+  font-size: .78rem; line-height: 1; letter-spacing: .02em;
+  padding: .34em .58em; border-radius: 7px;
+  background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep);
+  white-space: nowrap;
+}
+.sp::before {
+  content: ''; width: .58em; height: .58em; border-radius: 50%;
+  background: var(--accent); flex: 0 0 auto;
+}
+.sp.fill { background: var(--accent); color: var(--on-fill, #fff); border-color: var(--accent); }
+.sp.fill::before { background: currentColor; }
+
+/* ---- Ⓐ 一週一張表 ---- */
+.grid { display: none; }
+[data-v="a"] .grid { display: block; }
+.grid table { width: 100%; border-collapse: collapse; }
+.grid th, .grid td { border: 1px solid var(--rule); padding: .4rem .3rem; vertical-align: top; }
+.grid thead th {
+  background: var(--note); font-size: .8rem; font-weight: 700; text-align: center;
+  line-height: 1.4; padding-block: .5rem;
+}
+.grid tbody th {
+  background: var(--note); width: 4.4rem; text-align: left; font-weight: 700;
+  font-size: .8rem; line-height: 1.5;
+}
+.grid tbody th small { display: block; font-weight: 400; font-size: .68rem; color: var(--ink-soft); letter-spacing: 0; }
+.grid td { text-align: center; }
+.grid .cell { display: flex; flex-direction: column; align-items: center; gap: .22rem; }
+.grid .off { color: #9aa09a; font-size: .78rem; }
+/* 手機：格子裡只留色點，名稱靠底下的圖例讀 */
+.grid .sp { padding: .3em; border-radius: 50%; gap: 0; }
+.grid .sp i { display: none; }
+.grid .sp::before { width: .62rem; height: .62rem; }
+@media (min-width: 860px) {
+  .grid .sp { padding: .34em .58em; border-radius: 7px; gap: .34em; }
+  .grid .sp i { display: inline; font-style: normal; }
+  .grid th, .grid td { padding: .5rem .45rem; }
+}
+
+/* ---- Ⓑ 依星期 ---- */
+.byday { display: none; }
+[data-v="b"] .byday { display: grid; gap: .7rem; }
+.day { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .85rem 1rem 1rem; }
+.day > b { font-size: .95rem; }
+.day .off-note { color: var(--ink-soft); font-size: .84rem; }
+.slot { display: grid; grid-template-columns: 5.6rem 1fr; gap: .5rem; align-items: start; padding-top: .5rem; }
+.slot + .slot { border-top: 1px solid var(--rule); }
+.slot .when { font-size: .78rem; color: var(--ink-soft); line-height: 1.5; letter-spacing: 0; }
+.slot .when b { display: block; color: var(--ink); font-size: .82rem; }
+.slot .who { display: flex; flex-wrap: wrap; gap: .3rem; }
+.slot .none { color: #9aa09a; font-size: .8rem; }
+
+/* ---- Ⓒ 依科別 ---- */
+.byspec { display: none; }
+[data-v="c"] .byspec { display: grid; gap: .7rem; }
+.spec-row {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: .8rem 1rem .9rem; border-left: 4px solid var(--accent);
+}
+.spec-row > b { font-size: .95rem; color: var(--accent-deep); }
+.spec-row ul { margin: .35rem 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: .3rem .45rem; }
+.spec-row li { font-size: .82rem; line-height: 1.5; color: var(--ink-soft); }
+.spec-row li b { color: var(--ink); font-weight: 700; }
+
+/* ---- 圖例 ---- */
+.legend { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .9rem; }
+
+.diff { border-left: 4px solid var(--brick); }
+.diff b { color: var(--brick); }
+.foot-note { margin-top: 2.6rem; font-size: .8rem; color: var(--ink-soft); line-height: 1.9; }
+</style>
+</head>
+
+<body data-v="a">
+
+<div class="top">
+  <div class="shell">
+    <h1>門診表提案</h1>
+    <p>資料來自門口那面磁鐵門診表（2026-08-12 的照片）。這一頁還沒有套進正式站。</p>
+  </div>
+</div>
+
+<nav class="switch" aria-label="版型切換">
+  <div class="shell">
+    <button type="button" data-go="a" aria-pressed="true">Ⓐ 一週一張表</button>
+    <button type="button" data-go="b" aria-pressed="false">Ⓑ 依星期</button>
+    <button type="button" data-go="c" aria-pressed="false">Ⓒ 依科別</button>
+  </div>
+</nav>
+
+<div class="shell">
+
+  <h2>門診表</h2>
+  <p class="lead" id="lead"></p>
+
+  <div class="card">
+    <div class="grid"><table>
+      <caption class="sr-only" style="position:absolute;left:-9999px">一週門診時間與各科別看診時段</caption>
+      <thead><tr id="grid-head"></tr></thead>
+      <tbody id="grid-body"></tbody>
+    </table></div>
+
+    <div class="byday" id="byday"></div>
+    <div class="byspec" id="byspec"></div>
+
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <h2>和現在網站上的差別</h2>
+  <p class="lead">下面三件是照片和 <code>index.html</code> 那張「看診時間」卡對不起來的地方，還沒有動。</p>
+
+  <div class="card diff">
+    <span class="tag">一・時段</span>
+    <p style="margin:0">板子上是 <b>08:45–12:00 / 13:45–16:40 / 17:45–20:30</b>，
+       網站現在寫的是 11:30 / 16:30 / 20:00，三段的結束時間都不一樣。<br>
+       板子這一組和 LINE 官方帳號上的那一組<b>完全相同</b>。</p>
+  </div>
+
+  <div class="card diff">
+    <span class="tag">二・週六</span>
+    <p style="margin:0">板子上<b>週六早診有看診</b>（一般牙科＋齒顎矯正），午診與晚診才是休診。<br>
+       網站現在寫的是「週六、週日休診」—— 這一句和板子不一致。</p>
+  </div>
+
+  <div class="card diff">
+    <span class="tag">三・顆粒度</span>
+    <p style="margin:0">板子是「哪一科在哪一節」，網站只有一段總營業時間。
+       特別門診（矯正、牙周、根管、兒牙、假牙、外科）在網站上完全看不出時段。</p>
+  </div>
+
+  <h2>顏色</h2>
+  <div class="card">
+    <p style="margin:0">這一頁用的是<b>站上原本的科別色</b>（PALETTE.md 那七顆），不是板子的磁鐵色。
+       兩邊只有兒童牙科與齒顎矯正大致對得上，其餘五科完全不同。<br>
+       要不要反過來把實體板子的磁鐵換成網站這一組，是另外一個決定 —— 這裡先不動。</p>
+  </div>
+
+  <p class="foot-note">
+    提案頁，沒有進搜尋引擎（noindex）。定案之後這一頁會刪掉，推導文字搬進 /history/。
+  </p>
+</div>
+
+<script>
+/* 門診表資料 —— 逐格從照片判讀。改資料只改這一塊。 */
+var SPEC = {
+  general: "一般牙科",
+  perio:   "牙周治療",
+  endo:    "顯微根管",
+  kids:    "兒童牙科",
+  ortho:   "齒顎矯正",
+  prosth:  "植牙・假牙重建",
+  surg:    "口腔外科"
+};
+/* 表格格子裡用的短名（手機上放不下全名） */
+var SHORT = { general: "一般", perio: "牙周", endo: "根管", kids: "兒童",
+              ortho: "矯正", prosth: "假牙", surg: "外科" };
+
+var SESSIONS = [
+  { key: "am", name: "早診", time: "08:45–12:00" },
+  { key: "pm", name: "午診", time: "13:45–16:40" },
+  { key: "ev", name: "晚診", time: "17:45–20:30" }
+];
+
+var DAYS = [
+  { name: "週一", short: "一", am: ["general"],
+                               pm: ["general"],
+                               ev: ["general"] },
+  { name: "週二", short: "二", am: ["general"],
+                               pm: ["general", "kids"],
+                               ev: ["ortho", "kids", "perio"] },
+  { name: "週三", short: "三", am: ["general", "endo"],
+                               pm: ["general", "kids", "prosth", "endo"],
+                               ev: ["general", "ortho", "kids", "endo"] },
+  { name: "週四", short: "四", am: ["general", "perio"],
+                               pm: ["surg", "kids"],
+                               ev: ["surg", "kids", "perio"] },
+  { name: "週五", short: "五", am: ["general", "prosth"],
+                               pm: ["general", "prosth", "perio"],
+                               ev: ["general", "ortho", "perio"] },
+  { name: "週六", short: "六", am: ["general", "ortho"], pm: [], ev: [] },
+  { name: "週日", short: "日", am: [], pm: [], ev: [] }
+];
+
+function pill(code, opts) {
+  var s = document.createElement("span");
+  s.className = "sp" + (opts && opts.fill ? " fill" : "");
+  s.setAttribute("data-spec", code);
+  var label = (opts && opts.short) ? SHORT[code] : SPEC[code];
+  var i = document.createElement("i");
+  i.style.fontStyle = "normal";
+  i.textContent = label;
+  s.appendChild(i);
+  s.title = SPEC[code];
+  return s;
+}
+
+/* ---- Ⓐ 一週一張表 ---- */
+(function () {
+  var head = document.getElementById("grid-head");
+  head.appendChild(document.createElement("th"));
+  DAYS.forEach(function (d) {
+    var th = document.createElement("th");
+    th.scope = "col";
+    th.textContent = d.name;
+    head.appendChild(th);
+  });
+
+  var body = document.getElementById("grid-body");
+  SESSIONS.forEach(function (s) {
+    var tr = document.createElement("tr");
+    var th = document.createElement("th");
+    th.scope = "row";
+    th.innerHTML = s.name + "<small>" + s.time + "</small>";
+    tr.appendChild(th);
+    DAYS.forEach(function (d) {
+      var td = document.createElement("td");
+      var list = d[s.key];
+      if (!list.length) {
+        var off = document.createElement("span");
+        off.className = "off";
+        off.textContent = "休";
+        td.appendChild(off);
+      } else {
+        var box = document.createElement("div");
+        box.className = "cell";
+        list.forEach(function (c) { box.appendChild(pill(c, { short: true })); });
+        td.appendChild(box);
+      }
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+})();
+
+/* ---- Ⓑ 依星期 ---- */
+(function () {
+  var wrap = document.getElementById("byday");
+  DAYS.forEach(function (d) {
+    var box = document.createElement("div");
+    box.className = "day";
+    var b = document.createElement("b");
+    b.textContent = d.name;
+    box.appendChild(b);
+
+    var any = SESSIONS.some(function (s) { return d[s.key].length; });
+    if (!any) {
+      var p = document.createElement("div");
+      p.className = "off-note";
+      p.textContent = "全天休診";
+      box.appendChild(p);
+      wrap.appendChild(box);
+      return;
+    }
+
+    SESSIONS.forEach(function (s) {
+      var row = document.createElement("div");
+      row.className = "slot";
+      var when = document.createElement("div");
+      when.className = "when";
+      when.innerHTML = "<b>" + s.name + "</b>" + s.time;
+      row.appendChild(when);
+      var who = document.createElement("div");
+      who.className = "who";
+      if (!d[s.key].length) {
+        var n = document.createElement("span");
+        n.className = "none";
+        n.textContent = "休診";
+        who.appendChild(n);
+      } else {
+        d[s.key].forEach(function (c) { who.appendChild(pill(c)); });
+      }
+      row.appendChild(who);
+      box.appendChild(row);
+    });
+    wrap.appendChild(box);
+  });
+})();
+
+/* ---- Ⓒ 依科別 ---- */
+(function () {
+  var wrap = document.getElementById("byspec");
+  Object.keys(SPEC).forEach(function (code) {
+    var slots = [];
+    DAYS.forEach(function (d) {
+      SESSIONS.forEach(function (s) {
+        if (d[s.key].indexOf(code) >= 0) slots.push(d.name + " " + s.name);
+      });
+    });
+    if (!slots.length) return;
+
+    var row = document.createElement("div");
+    row.className = "spec-row";
+    row.setAttribute("data-spec", code);
+    var b = document.createElement("b");
+    b.textContent = SPEC[code];
+    row.appendChild(b);
+    var ul = document.createElement("ul");
+    slots.forEach(function (t) {
+      var li = document.createElement("li");
+      var parts = t.split(" ");
+      li.innerHTML = "<b>" + parts[0] + "</b> " + parts[1];
+      ul.appendChild(li);
+    });
+    row.appendChild(ul);
+    wrap.appendChild(row);
+  });
+})();
+
+/* ---- 圖例 ---- */
+(function () {
+  var wrap = document.getElementById("legend");
+  Object.keys(SPEC).forEach(function (code) { wrap.appendChild(pill(code)); });
+})();
+
+/* ---- 切換 ---- */
+(function () {
+  var LEAD = {
+    a: "整週一張表，和門口那面板子的排法一樣。手機上格子裡只留色點，名稱看底下的圖例；螢幕夠寬才把字放進格子裡。",
+    b: "一天一張卡，早／午／晚三節各自列出當節有哪幾科。手機上最好讀，但要捲比較長。",
+    c: "一科一列，列出那一科一週有哪幾節。想找「矯正什麼時候看」的人最快，而且能直接接上首頁「主題與科別」的篩選。"
+  };
+  var lead = document.getElementById("lead");
+  var btns = [].slice.call(document.querySelectorAll(".switch button"));
+
+  function go(v) {
+    if (!LEAD[v]) v = "a";
+    document.body.setAttribute("data-v", v);
+    lead.textContent = LEAD[v];
+    btns.forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-go") === v ? "true" : "false");
+    });
+    try {
+      history.replaceState(null, "", location.pathname + "?v=" + v);
+    } catch (e) {}
+  }
+
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () { go(b.getAttribute("data-go")); });
+  });
+
+  var m = location.search.match(/[?&]v=([a-z0-9]+)/);
+  go(m ? m[1] : "a");
+})();
+</script>
+</body>
+</html>
