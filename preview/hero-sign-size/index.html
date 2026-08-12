@@ -6,9 +6,10 @@
      X-Robots-Tag 與 robots.txt 的 Disallow: /preview/。 -->
 <meta name="robots" content="noindex, nofollow, noarchive">
 <!-- ============================================================================
-     這一頁是什麼（2026-08-12・⚠ 提案中，正式站一個值都沒動）
+     這一頁是什麼（2026-08-12・已定案並上線）
      ----------------------------------------------------------------------------
-     **手機版的收尾句「到巷口的芳仁　一起想辦法」看起來比較小。三個放大的版本。**
+     **手機版的收尾句「到巷口的芳仁　一起想辦法」看起來比較小。**
+     **定案 Ⓕ2 ＝ 和詩一模一樣大，並依使用者指定推到電腦版、iPad 直放、直立螢幕。**
 
      使用者：「手機版的『到巷口的芳仁　一起想辦法』字看起來比較小。」
      **成立，而且原因不是有人把它調小了 —— 是那兩條 clamp 的三個端點從來沒有對齊過。**
@@ -53,6 +54,24 @@
                     收尾句是一句完整的話、是落款，可以比詩重。
                     375 上 → **12.39px（＋29.1%）**
 
+     **定案 Ⓕ2**，而且不是只把數字改大 —— 上線的版本把**兩條式子併成一條**：
+     index.html 多一個 `--hero-fs`，`.hero-poem` 與 `.hero-sign` 都讀它，
+     四段尺寸（基底／手機／直立／iPad 直放）各自只改這一個變數。
+     **日後不論調哪一個尺寸，兩者永遠一樣大，不可能再漂。**
+
+     ── 使用者同時指定「推到其他版本」──────────────────────────────────────
+         尺寸            改動前 → 改動後      變化
+         手機 375        9.60 → 11.47px     ＋19.5%
+         電腦 1440      13.68 → 15.00px     ＋9.6%
+         電腦 1920      14.00 → 15.00px     ＋7.1%
+         iPad 直放 834  13.00 → 15.00px     ＋15.4%
+         直立 1080      18.00 → 22.08px     ＋22.7%
+     十二個視窗逐項比對過**詩的字級、座標、高度一個值都沒動**，
+     收尾句全部一行、沒有任何一個視窗破框；收尾句的下緣是被釘住的
+     （電腦版與 iPad 是 `space-between` 的最後一項），所以**字往上長，
+     離窄帶的距離不變**（iPad 3.1px、1440 30.1px，改動前後相同）。
+
+     ── 三案的原始比較（留作紀錄）──────────────────────────────────────────
      五個寬度實測（px）：
 
          寬度    現況     Ⓕ1      Ⓕ2      Ⓕ3
@@ -1275,9 +1294,42 @@ html[data-here] .nav-lamp { opacity: 1; }
    max-width 跟著從 34em 開到 40em —— 不開的話字距一放大就會換行。
    ⚠ 這三個值手機版都在下面的 @media 裡另外指定（含 letter-spacing），
       所以手機看不到這一段的變化。手機要怎麼排還在重做。 */
+
+/* ==========================================================================
+   HERO 的字級：詩與收尾句共用同一個值（Ⓕ2 定案，2026-08-12）
+   --------------------------------------------------------------------------
+   起因是使用者回報「手機版的『到巷口的芳仁　一起想辦法』字看起來比較小」。
+   成立，但**不是有人把它調小了 —— 是兩條 clamp 的三個端點從來沒有對齊過**：
+
+       詩　　 clamp(9.5px, 3.06vw, 11.5px)
+       收尾句 clamp(9.2px, 2.56vw, 11.5px)      ← 改動前
+       比例    .968      .837      1.000
+
+   端點各自不同，「收尾句比詩小多少」就**隨螢幕寬度走**：320 上 .940、
+   360~375 上只有 .837（最常見的手機寬度）、390 上 .868、430 以上又回到 1.000。
+   使用者看到的就是中間那一段。電腦版那一對是 .920／.905／.933，全程穩定 ——
+   **歪掉的只有手機**，而歪的成因是「同一件事寫了兩條式子」。
+
+   所以定案不只是把手機那個數字改大，而是**把兩條式子併成一條**：
+   一個 `--hero-fs`，詩與收尾句都讀它。日後不論調哪一個尺寸，
+   **兩者永遠一樣大，不可能再漂**。
+
+   ⚠ **不要再給 .hero-sign 寫第二條 font-size。** 那正是這個坑本身。
+   ⚠ 使用者同時指定**推到其他版本**（電腦版、iPad 直放、直立螢幕），
+      所以下面三段 @media 也都只改這一個變數。各尺寸的變化量：
+        手機 375　　 9.60 → 11.47px（＋19.5%）
+        電腦 1440　13.68 → 15.00px（＋9.6%）
+        iPad 直放　13.00 → 15.00px（＋15.4%）
+        直立 1080　18.00 → 22.08px（＋22.7%）
+   ⚠ 落選：Ⓕ1 ×.92（＝改動前兩條下限的比例，也＝電腦版那一對的比例）、
+      Ⓕ3 ×1.08（比詩再大一階）。三案的實測數字全部在
+      preview/hero-sign-size/ 的 <head> 註解裡。
+   ========================================================================== */
+:root { --hero-fs: clamp(12.5px, 1.05vw, 15px); }
+
 .hero-poem {
   margin: 0; max-width: 40em;
-  font-size: clamp(12.5px, 1.05vw, 15px); font-weight: 400; line-height: 2.45;
+  font-size: var(--hero-fs); font-weight: 400; line-height: 2.45;
   letter-spacing: .32em; color: rgba(255, 255, 255, .65);
   text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
 }
@@ -1293,7 +1345,7 @@ html[data-here] .nav-lamp { opacity: 1; }
    所以看起來不是一個「框」，是路面自己暗下去。 */
 .hero-sign {
   position: relative; margin: 0; display: inline-block;
-  font-size: clamp(11.5px, .95vw, 14px); font-weight: 400; line-height: 1.5;
+  font-size: var(--hero-fs); font-weight: 400; line-height: 1.5;
   letter-spacing: .12em; color: rgba(255, 255, 255, .65);
   text-shadow: 0 1px 2px rgba(25, 22, 20, .5), 0 0 4px rgba(25, 22, 20, .28);
   isolation: isolate;
@@ -2424,10 +2476,14 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .hero-copy { justify-content: flex-start; padding-top: 17.9vw; }
   .hero-copy .shell { padding-inline: 5.13vw; }
   .hero-copy .shell:last-child { margin-top: auto; padding-bottom: 3vw; }
+  /* 手機的 HERO 字級。**詩與收尾句共用**（Ⓕ2 定案 2026-08-12，見上面
+     `--hero-fs` 那一段）—— 改動前收尾句自己有一條 clamp(9.2px, 2.56vw, 11.5px)，
+     375 上因此只有詩的 .837。 */
+  :root { --hero-fs: clamp(9.5px, 3.06vw, 11.5px); }
   /* ⚠ letter-spacing 一定要在這裡寫出來。電腦版是 .32em（2026-08-09 的提案 Ⓒ），
      手機版若不覆寫就會整條漏下來，詩跟著變寬、直接撞上房子。 */
   .hero-poem {
-    font-size: clamp(9.5px, 3.06vw, 11.5px); line-height: 1.75; max-width: 92vw;
+    line-height: 1.75; max-width: 92vw;
     letter-spacing: .13em;
   }
   /* 兩段文字之間的全形空格縮到 .65em。縮的是那個字的 font-size，
@@ -2435,8 +2491,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .hero-poem .g { font-size: .65em; }
   .hero-poem .lead { margin-bottom: .55em; }
 
-  .hero-sign { font-size: clamp(9.2px, 2.56vw, 11.5px); }
-  /* ---- 收尾句底下那塊暗塊加深（提案 Ⓔ2 定案，2026-08-10）--------------
+  /* ⚠ 這裡刻意**沒有** .hero-sign 的 font-size —— 它讀上面那個 --hero-fs。
+     ---- 收尾句底下那塊暗塊加深（提案 Ⓔ2 定案，2026-08-10）--------------
      使用者回報「巷口」剛好壓在車頭燈上看不清楚。逐字量過照片底下的亮度
      （375 寬）：「巷」最亮 219、「口」最亮 236，白字 65% 疊上去的對比度只有
      1.24 / 1.12（1.0 ＝ 完全看不見），其他十個字都在 3～7。
@@ -2555,6 +2611,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      .hero-photo  height: 100svh        900px → 1920px（2.13 倍）
      .hero-poem   clamp(12.5px, 1.05vw, 15px)   15px → 12.5px（撞下限）
      .hero-sign   clamp(11.5px,  .95vw, 14px)   14px → 11.5px（撞下限）
+       ⚠ 收尾句那一條 2026-08-12 起不存在了 —— 詩與收尾句共用 `--hero-fs`
+         （Ⓕ2 定案）。這張表留著是當初的推導，不要照它去改回兩條式子。
      .hero-copy   padding-top …clamp(1.2rem, 4vh, 2.6rem)   41.6px → 41.6px（撞上限）
 
    字級只讀 vw，還掉到 clamp 的下限；內距讀了 vh 卻撞在上限。高度多出來的
@@ -2602,8 +2660,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ========================================================================== */
 @media (min-width: 721px) and (max-aspect-ratio: 2 / 3) {
   .hero-photo { height: 62svh; }
-  .hero-poem { font-size: clamp(15px, 1.15svh, 24px); }
-  .hero-sign { font-size: clamp(13px, .95svh, 18px); }
+  /* 詩與收尾句共用同一個字級（Ⓕ2 定案 2026-08-12）。改動前收尾句是
+     clamp(13px, .95svh, 18px)，1080×1920 上只有詩的 .82。 */
+  :root { --hero-fs: clamp(15px, 1.15svh, 24px); }
 }
 
 /* ==========================================================================
@@ -2658,8 +2717,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ========================================================================== */
 @media (min-width: 721px) and (min-aspect-ratio: 2 / 3) and (max-aspect-ratio: 9 / 10) {
   .hero-photo { height: 70svh; }
-  .hero-poem { font-size: clamp(15px, 1.15svh, 24px); }
-  .hero-sign { font-size: clamp(13px, .95svh, 18px); }
+  /* 詩與收尾句共用同一個字級（Ⓕ2 定案 2026-08-12）。改動前收尾句是
+     clamp(13px, .95svh, 18px)，1080×1920 上只有詩的 .82。 */
+  :root { --hero-fs: clamp(15px, 1.15svh, 24px); }
   /* 收尾句原本要讓開疊上來的窄帶，窄帶搬走之後不必了 */
   .hero-copy { padding-bottom: 0; z-index: 4; }
 
@@ -2872,53 +2932,6 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
    那顆藥丸的字一直比名字低 1.82px。用的是「字對字」的量
    （0.345 × (16.8 − 11.52) ÷ 11.52 = .158em）。 */
 .doc-role { vertical-align: .158em; }
-
-/* ==========================================================================
-   提案頁專用：手機版收尾句的字級三案（2026-08-12）—— 定案後整段刪掉
-   --------------------------------------------------------------------------
-   三案都寫成「詩的字級 × 一個係數」，不是各自一條 clamp。理由見這一頁 <head>：
-   現況那條 clamp(9.2px, 2.56vw, 11.5px) 的斷點和詩的 clamp(9.5px, 3.06vw, 11.5px)
-   不一樣，所以「收尾句比詩小多少」會**隨螢幕寬度漂**（375 上小 16.3%、430 上只小 4.3%）。
-   寫成係數之後，每一個寬度上的比例都相同。
-   ⚠ ::before 那塊暗塊的 inset 本來就是 em，字一放大它自己跟著長，
-      所以三案不必動它 —— 但 blur(18px) 是固定 px，塊變大等於相對變銳利，
-      這一頁量過三案在「巷口」那兩個字上的對比度，數字寫在 <head>。
-   ========================================================================== */
-@media (max-width: 720px) {
-  html[data-f="f1"] .hero-sign { font-size: calc(clamp(9.5px, 3.06vw, 11.5px) * .92); }
-  html[data-f="f2"] .hero-sign { font-size: clamp(9.5px, 3.06vw, 11.5px); }
-  html[data-f="f3"] .hero-sign { font-size: calc(clamp(9.5px, 3.06vw, 11.5px) * 1.08); }
-}
-
-/* ---- 切換條（提案用，定案後刪）------------------------------------------ */
-.switcher {
-  position: fixed; right: .8rem; bottom: .8rem; z-index: 99;
-  display: flex; flex-direction: column; gap: .35rem;
-  padding: .55rem .7rem; border-radius: 12px;
-  background: rgba(255, 255, 255, .94); border: 1px solid #cfd3d4;
-  box-shadow: 0 6px 20px rgba(25, 22, 20, .18);
-  font-family: inherit;
-}
-.switcher.is-min { padding: .34rem .4rem; }
-.switcher.is-min .row, .switcher.is-min .ro { display: none; }
-.switcher .row { display: flex; align-items: center; gap: .3rem; flex-wrap: wrap; }
-.switcher .glbl { font-size: .58rem; letter-spacing: .04em; color: #5f5d5c; }
-.switcher button.opt {
-  font: inherit; font-size: .62rem; line-height: 1.4; cursor: pointer;
-  padding: .18rem .45rem; border-radius: 8px;
-  background: #fff; color: #2a2c27; border: 1px solid #cfd3d4;
-}
-.switcher button.opt[aria-pressed="true"] { background: #2a2c27; color: #fff; border-color: #2a2c27; }
-.switcher .ro { font-size: .6rem; line-height: 1.55; color: #4a4c46; max-width: 20rem; margin: 0; }
-.switcher .ro b { font-weight: 600; }
-.switcher .min {
-  position: absolute; top: .2rem; right: .3rem; border: 0; background: none;
-  font: inherit; font-size: .7rem; line-height: 1; color: #5f5d5c; cursor: pointer;
-}
-@media (max-width: 520px) {
-  .switcher { left: .7rem; right: .7rem; width: auto; }
-  .switcher .ro { max-width: none; }
-}
 </style>
 </head>
 <body>
@@ -4025,78 +4038,6 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      窄帶的數字停在提案頁的示範值 8642、六張文章卡的數字則一直是「—」。
      文章頁一直都有掛，所以只有首頁壞掉。 -->
 
-<!-- ========================================================================
-     提案頁專用的切換條。**定案後整段刪掉**，連同上面 CSS 裡標記的那一段。
-     ======================================================================== -->
-<div class="switcher" id="sw">
-  <button type="button" class="min" id="swmin" aria-label="收合切換條">－</button>
-  <div class="row">
-    <span class="glbl">收尾句字級</span>
-    <button type="button" class="opt" data-v="now" aria-pressed="false">現況</button>
-    <button type="button" class="opt" data-v="f1" aria-pressed="false">Ⓕ1 ＋10%</button>
-    <button type="button" class="opt" data-v="f2" aria-pressed="true">Ⓕ2 ＝詩</button>
-    <button type="button" class="opt" data-v="f3" aria-pressed="false">Ⓕ3 ＋8%</button>
-  </div>
-  <p class="ro" id="ro"></p>
-</div>
-
-<script>
-/* 切換條。網址可帶 ?f=now|f1|f2|f3（預設 f2）。
-   ⚠ 正規式一律寫成 [a-z0-9]+ 那一族：值裡有數字，寫 [a-z]+ 會比對失敗、
-     悄悄退回預設，等於參數沒作用（CLAUDE.md 第八節踩過）。
-   右邊的讀數是**現場量的**，不是寫死的 —— 畫面和讀數對不上就表示哪裡壞了。 */
-(function () {
-  var root = document.documentElement;
-  var sw = document.getElementById('sw');
-  var ro = document.getElementById('ro');
-  var q  = new URLSearchParams(location.search);
-  var v  = q.get('f') || '';
-  var st = /^(now|f1|f2|f3)$/.test(v) ? v : 'f2';
-
-  function paint() {
-    root.setAttribute('data-f', st);
-    Array.prototype.forEach.call(sw.querySelectorAll('button.opt'), function (b) {
-      b.setAttribute('aria-pressed', b.getAttribute('data-v') === st ? 'true' : 'false');
-    });
-    roll();
-    try {
-      var u = new URL(location.href);
-      u.searchParams.set('f', st);
-      history.replaceState(null, '', u);
-    } catch (e) {}
-  }
-
-  function roll() {
-    var sign = document.querySelector('.hero-sign');
-    var poem = document.querySelector('.hero-poem');
-    if (!sign || !poem) return;
-    var fs = parseFloat(getComputedStyle(sign).fontSize);
-    var fp = parseFloat(getComputedStyle(poem).fontSize);
-    var r  = sign.getBoundingClientRect();
-    var shell = sign.parentElement.getBoundingClientRect();
-    var padR = parseFloat(getComputedStyle(sign.parentElement).paddingRight);
-    var room = shell.right - padR - r.right;      /* 右邊還剩多少（負值＝要折行了） */
-    ro.innerHTML =
-      '收尾句 <b>' + fs.toFixed(2) + 'px</b>　詩 ' + fp.toFixed(2) + 'px　' +
-      '比例 <b>' + (fs / fp).toFixed(3) + '</b><br>' +
-      '一行寬 ' + r.width.toFixed(1) + 'px　右邊剩 <b>' + room.toFixed(1) + 'px</b>　' +
-      '（視窗 ' + Math.round(window.innerWidth) + '）';
-  }
-
-  sw.addEventListener('click', function (e) {
-    var b = e.target.closest('button.opt');
-    if (!b) return;
-    st = b.getAttribute('data-v');
-    paint();
-  });
-  document.getElementById('swmin').addEventListener('click', function () {
-    sw.classList.toggle('is-min');
-    this.textContent = sw.classList.contains('is-min') ? '＋' : '－';
-  });
-  window.addEventListener('resize', roll);
-  paint();
-})();
-</script>
 
 </body>
 </html>
