@@ -17,7 +17,10 @@ const OUT = path.join(ROOT, "_site");
    Google 的圖示爬蟲會直接去試 /favicon.ico，路徑錯了等於沒放。
    它不是 build 產物，是 tools/favicon-ico.mjs 從 assets/favicon.svg 算出來、
    已經進版控的檔案，所以缺了就是有東西不對，寧可讓建置出聲。 */
-const ALWAYS = ["index.html", "404.html", "favicon.ico", "assets", "posts"];
+/* site.webmanifest 也一定要在根目錄：它裡面的 start_url／scope 都寫死 "/"，
+   而各頁的 <link rel="manifest"> 指的就是根目錄那一份。Android 的
+   「加到主螢幕」讀不到它就會退回猜圖示，圖示與名稱都會變成瀏覽器自己撿的。 */
+const ALWAYS = ["index.html", "404.html", "favicon.ico", "site.webmanifest", "assets", "posts"];
 /* history/ 是改版紀錄（原 preview/ 的推導文字），沒有也不影響建置。
    preview/ 是**進行中**的提案頁：定案上線後那一頁會被刪掉、文字搬進 history/，
    所以這個資料夾常常是空的甚至不存在 —— 一樣是選配。

@@ -161,6 +161,9 @@ clinic.json             診所這個「實體」的資料（sameAs、座標、�
 favicon.ico             根目錄的點陣圖示，**只給 Google 的圖示爬蟲**。
                         由 tools/favicon-ico.mjs 從 assets/favicon.svg 算出來，已進版控。
                         ⚠ 刻意不在任何 <head> 宣告 —— 見 PALETTE.md 第六之七節
+site.webmanifest        Android「加到主螢幕」讀的那一份（圖示、名稱）。
+                        display 是 "browser" 不是 "standalone"，刻意的 ——
+                        見 PALETTE.md 第六之二十節
 site.json               網站正式網址（給 sitemap 用）
 wrangler.toml           Worker、靜態資產、自訂網域、D1 綁定
 d1-schema.sql           計數器資料表定義，執行一次即可
@@ -170,6 +173,9 @@ src/
 assets/
   style.css             全站樣式
   counter.js            前端計數器
+  icon.svg              主畫面圖示的**來源檔**（不透明底、一色、牙洞原始比例）。
+                        ⚠ 和 favicon.svg 是兩件事，不要合併 —— 見 PALETTE.md 第六之二十節
+  icon-*.png            由 tools/app-icons.mjs 從 icon.svg 算出來，已進版控，勿手改
 posts/<slug>/index.html 一篇文章一個資料夾
 history/<name>.html     改版紀錄（原提案頁的推導文字，定案後只留這個。見第八節）
 history/index.html      改版紀錄的目錄
@@ -187,6 +193,8 @@ tools/
   palette-measure.ps1   從照片實測取色（k-means ＋ 局部裁切），配色改動的依據來源
   favicon-ico.mjs       從 assets/favicon.svg 產生根目錄的 favicon.ico。
                         只有改過 favicon 的顏色或幾何時才要跑，npm run build 不會呼叫它
+  app-icons.mjs         從 assets/icon.svg 產生 assets/icon-*.png（主畫面圖示）。
+                        同上，只有改過 icon.svg 才要跑；--check 只比對不寫檔
   build-manifest.json   內容雜湊紀錄，build 自動維護，勿手改
 .claude/
   settings.json         SessionStart hook：開啟專案時自動同步（隨 git 走，兩台都生效）
@@ -212,6 +220,8 @@ tools/
   它同時會避開該篇「上一篇／下一篇」已經指到的兩篇，不然同一個畫面會連兩次同一篇
 - `src/allowed-slugs.js`
 - `tools/build-manifest.json`
+- `assets/icon-*.png`（四張主畫面圖示，由 `tools/app-icons.mjs` 從 `assets/icon.svg` 算出來。
+  要改就改 `icon.svg` 再重跑，`npm run build` 不會呼叫它）
 - `sitemap.xml`（首頁那一筆的 `lastmod` 和文章一樣是**比對首頁自己的內容雜湊**得來的，
   不是抄最新文章的日期 —— 只改首頁、沒發新文章時它也要動，否則等於在跟 Google 說「別來了」）
 - `robots.txt`（**每次 build 整個重寫**，要加規則請改 `tools/build.mjs` 的產生字串）
@@ -415,6 +425,7 @@ git pull
 | **點到的科別才亮起來** | **主題與科別按下去 → 帶出有關聯的醫師（專科**或**專長命中）與文章；命中的專長**淡色填滿**（該科的色 12% 混進卡色、字用深階）、沒命中的維持純文字；專科藥丸 ≠ 那一科就退成**白底字套色**；被篩到的文章卡主題標籤**套色填滿**。沒點任何一科時和改動前完全相同（四個寬度逐一元素量過）。⚠ 這一版正式放掉了「顏色 ＝ 篩選」那個不變量 | [PALETTE.md](PALETTE.md) 第六之二節、`/history/doc-spec-tags.html` |
 | **專長標記的貼合** | **塊要包住的是字面框、不是行框**（2026-08-11 上線）。`line-height: 1`，塊高由上下兩個內距各自負責，JS 現量成「字面上下各留一樣多」＝ **0.28 個標記字級**；側邊 **`.4546em`**（留白比 0.551，≈ `.doc dt` 的 0.553）。上下不對稱 −2.18 → −0.01px。落選 Ⓥ .385／.32、Ⓧ .5／.42rem（那一輪的 Ⓧ3 是 `.34rem`，字級定案後改寫成同比例的 em）。**`.doc-role`（專科藥丸）第五輪一起擺正**：上下各留 **0.405**（＝維持它原本的塊高 20.86），`vertical-align` 與側邊 `.6rem` 都沒動。⚠ **其餘有底色的小標籤（`.doc dt`／`.card-tag`／`.chips button`／`.info-card h3`）一顆都沒動** —— 它們單獨站著，看不出來，不要為了一致順手改 | 本檔第八節、`/history/spec-tag-fit.html` |
 | **套色之後那幾個字多大** | **`.83rem` ＝ 和沒套色的內文一模一樣，完全不縮**（2026-08-11 上線）。原本 `.748rem` 比內文小 1.31px／10%，標記亮起來卻讓字縮一階，方向是反的。落選 `.748`（原本）、`.79rem`。塊高 21.13px、抬升量因此正好是 **0**。⚠ **`.83rem` 更早被否決過**（會撐開行框），那個理由在塊高改成從字面框長之後不成立了。⚠ **再往上加字級的天花板不是塊高，是塊上緣離基線多遠**（現在 15.13px vs `.doc dd` strut ascent 14.97，那一列已經長高 0.13px） | 本檔第八節、`/history/spec-tag-size.html` |
+| **加到主畫面的圖示** | **紙色底 `#e2e5e6` ＋ 診療椅綠 `#4f6361` 的標誌**（2026-08-12 上線，對比 5.18:1）。兩顆都是站上已經在用的值。幾何直接從診所的 AI 原始檔取出 —— 順帶量到**站上頁首那條路徑本來就是原廠向量**（等比例 0.6454888747，25 個節點最大殘差 0.005%）。⚠ **和 `assets/favicon.svg` 是兩個檔，不要合併**：主畫面這顆**底一定要不透明**（iOS 會把帶 alpha 的 apple-touch-icon 壓在純黑上），牙洞維持**原始比例**（favicon 放大 1.6 倍是為了 16px，這裡最小 180px）。⚠ `site.webmanifest` 的 `display` 是 `"browser"` 不是 `"standalone"`，也**沒有加** `apple-mobile-web-app-capable` —— 這站會連出去（地圖、LINE、電話），standalone 等於把人關在裡面。⚠ 落選 Ⓑ 米色＋苔綠、Ⓒ 深綠松＋米色（方向接近 2026-08-02 被換掉的「深綠方塊＋白牙」）、Ⓓ 白＋焦糖褐。**使用者當下沒回覆選哪一案，先照 Ⓐ 上線；要換只改 `assets/icon.svg` 那兩個色值再跑 `node tools/app-icons.mjs`** | [PALETTE.md](PALETTE.md) 第六之二十節 |
 | 首頁區塊改名 | 「治療項目」→ **主題與科別** | [COPY.md](COPY.md) 第六節（含六輪否決清單） |
 | 「最新文章」小節標題 | **拿掉**，只留 `aria-label` | 同上 |
 | 窄帶瀏覽數 | 加在 1983／9／6 **上面**，單位「次瀏覽」，捲進畫面才往上數 1.4 秒 | 本檔第八節 |

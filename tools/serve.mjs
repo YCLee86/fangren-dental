@@ -13,6 +13,10 @@ const TYPES = {
   ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
+  /* 少了這一行本機預覽會用 application/octet-stream 送 site.webmanifest，
+     Chrome 直接不理它 —— 主畫面圖示在本機就測不出來了。 */
+  ".webmanifest": "application/manifest+json; charset=utf-8",
+  ".ico": "image/x-icon",
   ".svg": "image/svg+xml",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",

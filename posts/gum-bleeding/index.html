@@ -13,6 +13,21 @@
 <meta property="og:site_name" content="芳仁牙醫診所">
 <link rel="canonical" href="https://fangren.net/posts/gum-bleeding/">
 <link rel="icon" href="../../assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，這兩行走的是另一條路，
+     兩者刻意分開 —— 差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：
+     iOS 會把帶透明的 apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
+     ⚠ 改過 assets/icon.svg 就要跑 node tools/app-icons.mjs 重算點陣版，
+     並把下面的 ?v= 換成當天 —— Safari 的圖示快取是按網址存的，
+     網址沒變就一直給舊圖（和 favicon 同一個坑，PALETTE 第六之七節）。 -->
+<link rel="apple-touch-icon" href="../../assets/icon-180.png?v=20260812">
+<!-- Android 的「加到主螢幕」讀這一份（iOS 不需要它也能加）。
+     manifest 裡 display 是 "browser" 不是 "standalone"，是刻意的：
+     這是一個會連出去（Google 地圖、LINE）的內容網站，
+     standalone 會把網址列與上一頁一起收掉，等於把人關在裡面。 -->
+<link rel="manifest" href="../../site.webmanifest">
+<!-- 主畫面圖示底下顯示的名字。不寫的話 iOS 會拿 <title> 去截，
+     首頁那一句是「芳仁牙醫診所｜雲林斗六・永樂街」，截完會變成半句。 -->
+<meta name="apple-mobile-web-app-title" content="芳仁牙醫">
 <link rel="stylesheet" href="../../assets/style.css">
 
 <script type="application/json" id="post-meta">
