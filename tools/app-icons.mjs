@@ -82,6 +82,15 @@ const TARGETS = [
      ⚠ maskable 那張是 Android 專用（purpose 不同，iOS 不會拿它當 apple-touch-icon），
        Android 的安裝條件也靠它滿足。 */
   { file: "icon-192.png", size: 192, maskable: false },
+
+  /* ⚠ **maskable 那張 2026-08-12 第八輪起暫時沒有被任何地方引用。**
+     圖示一路糊到第七輪，`site.webmanifest` 的 icons 因此清到只剩 192 ——
+     因為「候選一多 iOS 就挑錯那張」已經證實過一次，maskable 512 是全站
+     最後一個大檔，先拆掉排除嫌疑。
+     檔案**繼續產、繼續進版控**（成本 7KB），確認不是它之後把 manifest 那一筆
+     加回去就好：{ "src": "/assets/icon-maskable-512.png", "sizes": "512x512",
+     "type": "image/png", "purpose": "maskable" }。
+     ⚠ 沒有它 Android 就沒有自適應圖示（會拿 192 那張直接裁），這是暫時的取捨。 */
   { file: "icon-maskable-512.png", size: 512, maskable: true },
 ];
 

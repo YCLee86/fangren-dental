@@ -4184,3 +4184,33 @@ iOS 根本沒用那張。
 > ⚠ **如果這一輪仍然糊，下一個要拆的是 manifest 裡的 maskable 512** ——
 > 那是全站僅存的大檔。理論上 `purpose: maskable` 不會被 iOS 當成 apple-touch-icon，
 > 但「候選一多就挑錯」這件事已經證實過一次了。
+
+
+### 第八輪：做一個「拆掉所有宣告」的對照頁（2026-08-12）
+
+第七輪（補 web-app meta ＋ display: standalone）上線後，使用者回報**還是有**。
+
+到這裡已經試過的變數：尺寸（180／192／1024）、候選數量（五個 → 一個）、
+底色（紙色／純白）、顏色補償、根目錄慣例路徑、查詢字串、web-app meta、display。
+再盲改下去只是浪費時間，所以改成**做一個能一次分辨清楚的對照**。
+
+**`/preview/icon-test/`** —— 和首頁用**完全同一張圖檔**，但那一頁刻意什麼都沒有：
+
+- 沒有 `site.webmanifest`（連 `<link rel="manifest">` 都沒有）
+- 沒有 `apple-mobile-web-app-capable` / `mobile-web-app-capable`
+- 沒有 `apple-mobile-web-app-title`
+- 沒有任何其他尺寸的圖示宣告
+
+只留一行 `<link rel="apple-touch-icon" sizes="192x192">`。**圖檔相同、顏色相同，
+唯一的變數是「宣告的環境」。**
+
+| 結果 | 結論 |
+| --- | --- |
+| 對照頁那顆**銳利** | 是我們多宣告的東西害的 → 回首頁拆掉對應的部分 |
+| 兩顆**一樣糊** | 和宣告無關，是 iOS 對這張圖本身的處理 → **停手**，站方沒有能做的事 |
+
+同一輪也把 `site.webmanifest` 的 icons 清到**只剩 192**（拆掉 maskable 512，
+全站最後一個大檔）。`assets/icon-maskable-512.png` 仍然照產、照進版控，
+確認不是它之後把那一筆加回去就好。
+
+> ⚠ 對照頁定案後要**刪掉**（CLAUDE.md 第八節的規則），推導文字搬進 `history/`。
