@@ -91,6 +91,17 @@ async function postViews(request, env) {
    ⚠ no-store 不再需要：提案頁改得很勤才怕拿到快取，紀錄是寫完就不動的。
    ============================================================================= */
 
+/* /preview/* — 進行中的提案頁（2026-08-12 重新啟用）
+   -----------------------------------------------------------------------------
+   上面那一段說「/preview/ 整個拿掉了」，指的是**定案之後那一頁要刪掉**，
+   不是這條路徑不再使用 —— CLAUDE.md 第八節的規則是：
+   提案期間放 preview/<name>/，定案上線後刪頁、推導文字搬進 history/。
+   所以兩條路徑同時存在，做的事也一樣：**只加 noindex**。
+
+   ⚠ 提案頁改得很勤，這一條要 no-store —— 不然使用者在手機上重新整理
+      拿到的還是上一版，會以為改沒生效。history/ 是寫完就不動的，不必。 */
+const PREVIEW_PREFIX = "/preview/";
+
 const HISTORY_PREFIX = "/history/";
 
 /* 走到這裡代表沒有對應的檔案，補上自己的 404 頁 */
@@ -130,6 +141,15 @@ export default {
       const archive = new Response(page.body, page);
       archive.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
       return archive;
+    }
+
+    if (url.pathname.startsWith(PREVIEW_PREFIX)) {
+      const page = await env.ASSETS.fetch(request);
+      if (page.status === 404) return notFound(request, env);
+      const draft = new Response(page.body, page);
+      draft.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+      draft.headers.set("Cache-Control", "no-store");
+      return draft;
     }
 
     const asset = await env.ASSETS.fetch(request);

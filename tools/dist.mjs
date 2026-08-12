@@ -18,8 +18,12 @@ const OUT = path.join(ROOT, "_site");
    它不是 build 產物，是 tools/favicon-ico.mjs 從 assets/favicon.svg 算出來、
    已經進版控的檔案，所以缺了就是有東西不對，寧可讓建置出聲。 */
 const ALWAYS = ["index.html", "404.html", "favicon.ico", "assets", "posts"];
-// history/ 是改版紀錄（原 preview/ 的推導文字），沒有也不影響建置
-const OPTIONAL = ["sitemap.xml", "robots.txt", "history"];
+/* history/ 是改版紀錄（原 preview/ 的推導文字），沒有也不影響建置。
+   preview/ 是**進行中**的提案頁：定案上線後那一頁會被刪掉、文字搬進 history/，
+   所以這個資料夾常常是空的甚至不存在 —— 一樣是選配。
+   兩者都靠三道 noindex 擋搜尋引擎（頁面自己的 meta、Worker 的 X-Robots-Tag、
+   robots.txt 的 Disallow），沒有鎖。 */
+const OPTIONAL = ["sitemap.xml", "robots.txt", "history", "preview"];
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
