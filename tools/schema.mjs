@@ -128,18 +128,20 @@ export function parseHours(indexHtml, warn = console.warn) {
     closes,
   }));
 
-  /* 休診日。句子長這樣：「週六、週日休診。國定假日門診時間請來電確認。」 */
-  const closedText = (clean(body).match(/((?:週[一二三四五六日][、，,]?)+)休診/) || [])[1];
-  const closed = closedText && parseDays(closedText);
-  if (closed && closed.length) {
+  /* 休診日 ＝ 表格上沒有列出來的那幾天。
+     2026-08-13 起改成這樣算。原本是讀 .info-note 那句「週六、週日休診。」，
+     但使用者當天把那句話拿掉了（表格只列一到五，本來就看得出哪幾天沒診）——
+     不改的話 Google 會以為週六日只是忘了填。
+     休診日仍然要**明確宣告**（opens 與 closes 都是 00:00）：只列營業日的話，
+     Google 分不出「那幾天休診」和「那幾天沒填」。 */
+  const closed = DAY_ORDER.map((d) => DAYS[d]).filter((d) => !open.includes(d));
+  if (closed.length) {
     spec.push({
       "@type": "OpeningHoursSpecification",
       dayOfWeek: closed,
       opens: "00:00",
       closes: "00:00",
     });
-  } else {
-    warn("  ⚠ 看診時間卡裡讀不到休診日，Google 會以為那幾天只是沒填");
   }
   return spec;
 }

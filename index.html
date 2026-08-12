@@ -2060,9 +2060,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 .info-card .big a { color: var(--accent); text-decoration: none; }
 #clinic .info-card b { color: var(--accent); }
-/* 全頁唯一的一朵花。磚紅對卡 4.80:1 過 AA、對紙只有 4.17:1 ——
-   所以它只能待在卡上，不要把這個色搬到紙底的任何地方。 */
-#clinic .info-note { color: var(--brick); }
+/* ⚠ 這裡原本是全頁唯一的一朵花（磚紅 --brick）。2026-08-13 使用者指定
+   「不要紅字，用預覽的顏色就好」，所以改回 .info-note 自己的 --ink-soft。
+   **--brick 因此在首頁上一次都沒有用到了**，變數還留在色票裡。
+   要是哪天想把它放回來：磚紅對卡 4.80:1 過 AA、對紙只有 4.17:1 ——
+   它只能待在卡上，不要搬到紙底的任何地方。 */
 .info-note { margin-top: .55rem !important; font-size: .8rem !important; color: var(--ink-soft); }
 
 /* ---- 看診時間裡的門診表（2026-08-12）------------------------------------
@@ -3390,7 +3392,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
              ⚠ **這張卡是 tools/schema.mjs 讀營業時間的唯一來源**，動它之前先看那支：
                ・開診日讀 <th scope="col"> 那幾個「一二三四五」
                ・三個時段讀 <th scope="row"> 裡的時間（一般的 – 是 U+2013）
-               ・休診日讀底下 .info-note 的「週六、週日休診」
+               ・休診日 ＝ thead 沒有列出來的那幾天（反推，不是讀文字）——
+                 「週六、週日休診」那句話 2026-08-13 由使用者拿掉了
                所以**不要把 div 的 class 從 "info-card" 改掉**（那支的正規式比對
                的是 class="info-card" 這個完整字串），也不要把日子或時間搬進註解裡。
              ⚠ 一格一顆點 ＝ 那一節有診，不是一科一顆。data-in 列出那一節有哪幾科，
@@ -3452,7 +3455,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
             </tbody>
           </table>
 
-          <p class="info-note">週六、週日休診。國定假日與各科特別門診請來電確認。</p>
+          <p class="info-note">國定假日與各科特別門診請來電確認。</p>
         </div>
       </div>
       <div class="gallery">
