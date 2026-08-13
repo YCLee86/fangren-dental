@@ -4709,17 +4709,157 @@ html[data-cardtitle="on"] .card h3 {
    ⚠ 捲軸藏起來，但**保留鍵盤與觸控的捲動**（不是 overflow: hidden）。
    ⚠ 只在 ≤720。電腦版八顆本來就一排放得下（量到 31px、一排）。 */
 @media (max-width: 720px) {
-  html[data-chiprow="on"] .chips {
+  /* ⚠ **門診表那排科別跟著一起收**（使用者 2026-08-13 指定）。
+       它和「主題與科別」是同一種藥丸、同樣兩態，一邊橫捲一邊三排會很怪。
+       `:not(.hours-filter-top)` 是要排掉「開診時段」那一排 —— 它只有一顆，
+       收成橫捲沒有意義，而且它刻意自己一排（那是「不篩選」，不同層）。 */
+  /* ⚠⚠ **門診表那張卡要先能被壓小，橫捲才會發生。**
+       `.hours-filter` 在 `.info-card` 裡，而 `.info-card` 是 `.info` 這個 grid 的
+       項目 —— grid 項目的 `min-width` 預設是 `auto`，也就是「不准比內容窄」。
+       所以一排七顆不換行之後，撐開的不是捲軸，是**整張卡**，
+       整頁跟著長出水平捲軸（375 上量到溢出 296px）。
+       `.chips` 那邊沒踩到只是因為它的祖先是 flex 而它自己已經寫了 min-width: 0。
+       ⚠ 這一行只在 chiprow 打開時生效，關掉就完全回到原狀。 */
+  html[data-chiprow="on"] .info-card { min-width: 0; }
+  html[data-chiprow="on"] .chips,
+  html[data-chiprow="on"] .hours-filter:not(.hours-filter-top) {
     flex-wrap: nowrap; min-width: 0; overflow-x: auto;
     scrollbar-width: none; -ms-overflow-style: none;
     padding-bottom: .15rem;
     /* 捲到底的時候右邊那顆不要貼著螢幕邊，留一點讓人知道還有 */
     scroll-padding-inline: 1rem;
   }
-  html[data-chiprow="on"] .chips::-webkit-scrollbar { display: none; }
-  html[data-chiprow="on"] .chips li     { flex: 0 0 auto; }
-  html[data-chiprow="on"] .chips button { white-space: nowrap; }
+  html[data-chiprow="on"] .chips::-webkit-scrollbar,
+  html[data-chiprow="on"] .hours-filter:not(.hours-filter-top)::-webkit-scrollbar { display: none; }
+  html[data-chiprow="on"] .chips > li,
+  html[data-chiprow="on"] .hours-filter:not(.hours-filter-top) > li { flex: 0 0 auto; }
+  html[data-chiprow="on"] .chips button,
+  html[data-chiprow="on"] .hours-filter:not(.hours-filter-top) button { white-space: nowrap; }
 }
+
+/* ==========================================================================
+   十五、「這排可以往右捲」要怎麼講（data-shint）—— 四案
+   --------------------------------------------------------------------------
+   起因：使用者 2026-08-13 選了 data-chiprow 之後說「乍看會不知道變成橫幅捲動，
+   要加提示的符號或捲動軸？做四個給我看」。成立 —— 收成一排之後，
+   畫面上唯一的線索是最右邊那顆被切掉，而**它常常剛好切在字與字之間**，
+   看起來就像一顆正常的標記，不像「被切到」。
+
+   四案刻意走四種不同的路，不是同一個東西的四個濃度：
+
+     Ⓐ 漸層淡出   右緣 34px 讓內容淡掉。沒有新元素、沒有新顏色、不佔空間。
+                   捲到底自動收掉（否則會變成「永遠有東西在後面」的假訊號）。
+     Ⓑ 細捲軸     4px 的軌道常駐，用站上既有的 --rule／--ink-soft 兩色。
+                   最直白，但**iOS Safari 上幾乎看不到**（見下面那條 ⚠）。
+     Ⓒ 角形       右緣一顆貼著捲的角形（position: sticky），捲到底才淡掉。
+                   最明確的「符號」，但它是畫面上多出來的一個東西。
+     Ⓓ 晃一下     捲進畫面時自己往右挪 26px 再回來，用動作講「我會動」。
+                   靜止時畫面最乾淨，代價是只講一次、沒看到就沒了。
+
+   ⚠⚠ **Ⓑ 在 iPhone 上幾乎等於沒有提示。** iOS Safari 的捲軸是 overlay 的：
+      平常不畫，只有正在捲的時候才浮出來一下，而且 `scrollbar-width`
+      與 `::-webkit-scrollbar` 在 iOS 上都不生效。所以 Ⓑ 在 Android 與電腦上
+      是常駐的一條，在 iPhone 上要捲了才看得到 —— 那正好是「已經知道會捲」
+      之後才出現，順序是反的。**在手機上比這四案的時候要知道這件事。**
+   ⚠ Ⓐ／Ⓒ 需要知道「捲到哪裡了」，由底下那支 JS 寫進 data-sx
+      （start／mid／end／none）。沒有 JS 的時候兩案都退成「一直顯示」——
+      不會壞，只是提示不會消失。
+   ⚠ Ⓓ 看 prefers-reduced-motion。這一項是**位移**，正是那個設定針對的東西
+      （窄帶數字那一個不看，是因為原地長大的數字不屬於那一類，見 CLAUDE.md）。
+   ⚠ 四案都只在 data-chiprow 打開時才有意義 —— 沒有橫捲就沒有東西要提示。 */
+
+/* ---- Ⓐ 漸層淡出 ------------------------------------------------------- */
+@media (max-width: 720px) {
+  html[data-chiprow="on"][data-shint="a"] .chips,
+  html[data-chiprow="on"][data-shint="a"] .hours-filter:not(.hours-filter-top) {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
+            mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
+  }
+  /* 捲到底就沒有東西在後面了，遮罩要收掉；捲離起點之後左邊也補一段，
+     不然左邊會變成硬邊、看起來像被裁掉而不是捲過去。 */
+  html[data-chiprow="on"][data-shint="a"] .chips[data-sx="mid"],
+  html[data-chiprow="on"][data-shint="a"] .hours-filter[data-sx="mid"] {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 34px, #000 calc(100% - 34px), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 34px, #000 calc(100% - 34px), transparent);
+  }
+  html[data-chiprow="on"][data-shint="a"] .chips[data-sx="end"],
+  html[data-chiprow="on"][data-shint="a"] .hours-filter[data-sx="end"] {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 34px);
+            mask-image: linear-gradient(90deg, transparent, #000 34px);
+  }
+  html[data-chiprow="on"][data-shint="a"] .chips[data-sx="none"],
+  html[data-chiprow="on"][data-shint="a"] .hours-filter[data-sx="none"] {
+    -webkit-mask-image: none; mask-image: none;
+  }
+}
+
+/* ---- Ⓑ 細捲軸 --------------------------------------------------------- */
+/* ⚠⚠ **這一條是自己畫的，不是瀏覽器的原生捲軸。** 第一版用
+     `scrollbar-width: thin` ＋ `::-webkit-scrollbar` 去改原生的那條，
+     結果在**使用者的手機上等於沒做**：iOS Safari 的捲軸是 overlay 的，
+     平常不畫、只有正在捲的時候浮出來一下，而且那兩組屬性 iOS 都不吃。
+     那正好是「已經知道會捲」之後才出現，順序反了 —— 而這一案的重點
+     就是「還沒捲之前就告訴你可以捲」。
+     所以改成 JS 插一條 `.sbar`（軌道 ＋ 拇指），每次捲動更新兩個 CSS 變數。
+     這樣 iPhone、Android、電腦畫出來的完全一樣，四案才比得起來。
+   ⚠ 顏色沒有新增：軌道 --rule、拇指 --ink-soft，都是站上已經在用的。
+   ⚠ 它是**純顯示**，不能拖 —— 拖曳要自己實作慣性與命中區，
+     那是另一件事；這一輪要比的是「看不看得出來會捲」。 */
+.sbar { display: none; }
+@media (max-width: 720px) {
+  html[data-chiprow="on"][data-shint="b"] .sbar {
+    display: block; height: 3px; border-radius: 2px; background: var(--rule);
+  }
+  /* 不用捲就不要畫 —— 一條走不動的捲軸比沒有還糟。 */
+  html[data-chiprow="on"][data-shint="b"] .sbar[data-sx="none"] { display: none; }
+  html[data-chiprow="on"][data-shint="b"] .sbar > i {
+    display: block; height: 100%; border-radius: 2px; background: var(--ink-soft);
+    width: var(--sb-w, 30%); margin-left: var(--sb-x, 0%);
+  }
+  /* 兩個落點的間距各自處理：
+     ・.topic-tools 是 wrap 的 flex —— 要 flex-basis 100% 才會自己一列。
+     ・.info-card 是普通的區塊，但上面那排標記自己帶 1.15rem 下外距，
+       所以把那個外距借過來給軌道，總高度不變。 */
+  html[data-chiprow="on"][data-shint="b"] .topic-tools > .sbar { flex: 0 0 100%; margin-top: -.2rem; }
+  html[data-chiprow="on"][data-shint="b"] .info-card > .sbar { margin: -.8rem 0 1.15rem; }
+  html[data-chiprow="on"][data-shint="b"] .hours-filter:not(.hours-filter-top) { margin-bottom: .35rem; }
+}
+
+/* ---- Ⓒ 角形 ----------------------------------------------------------- */
+/* ⚠ 用 ::after 當**最後一個 flex 項目** ＋ position: sticky。
+     不能寫成絕對定位的浮層：這一排自己就是捲動容器，絕對定位的子元素
+     會跟著內容一起捲走，捲兩下就不見了。sticky 的項目仍然佔位，
+     所以最後一顆標記不會被它蓋住。 */
+@media (max-width: 720px) {
+/* ⚠ 第一版是「一個 9px 的角形，兩條 1px 的線」——**貼是貼住了，但看不見**：
+     它正好疊在最後那顆標記上，細線和標記自己的框混在一起。
+     改成一顆有底的小圓盤（紙色 ＋ 一圈 --rule ＋ 左側一點點陰影），
+     它才會讀成「浮在這一排上面的東西」而不是某顆標記的一部分。
+   ⚠ 角形本身改用 data: URI 的 SVG 當背景 —— ::after 只有一個盒子，
+     要「圓盤 ＋ 角形」兩層就得有一層走 background-image。
+     ⚠ data: URI 裡不能寫 var()，所以 #5c5f57 是 --ink-soft 的值抄過來的，
+       那兩個要一起改。 */
+  html[data-chiprow="on"][data-shint="c"] .chips::after,
+  html[data-chiprow="on"][data-shint="c"] .hours-filter:not(.hours-filter-top)::after {
+    content: ''; flex: 0 0 auto; align-self: center;
+    position: sticky; right: 0;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--card)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c5f57' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E")
+      center / 10px 10px no-repeat;
+    box-shadow: 0 0 0 1px var(--rule), -7px 0 12px -5px rgba(0, 0, 0, .12);
+    transition: opacity .2s ease;
+  }
+  /* 捲到底、或本來就不用捲，就把它收掉 —— 不然是個假訊號。 */
+  html[data-chiprow="on"][data-shint="c"] .chips[data-sx="end"]::after,
+  html[data-chiprow="on"][data-shint="c"] .chips[data-sx="none"]::after,
+  html[data-chiprow="on"][data-shint="c"] .hours-filter[data-sx="end"]::after,
+  html[data-chiprow="on"][data-shint="c"] .hours-filter[data-sx="none"]::after { opacity: 0; }
+}
+
+/* ---- Ⓓ 晃一下 --------------------------------------------------------- */
+/* 這一案沒有 CSS 樣式，整個行為在下面那支 JS 裡（scrollTo 出去再回來）。
+   放在這裡只是為了讓四案在同一個地方看得到。 */
 
 /* ==========================================================================
    十三、標記要多高（data-taph）—— 五段，不是開關
@@ -4869,6 +5009,13 @@ html[data-taph="d"] .hours-filter button { padding-block: 10.75px; }
   font-size: 10px; font-style: normal; font-weight: 400; letter-spacing: .04em;
   color: #b8b2ab; vertical-align: 1px;
 }
+/* 使用者 2026-08-13 已經拍板的那幾項。標出來，剩下的才知道還在挑。 */
+.fr-tg-row .lb .ok {
+  display: inline-block; margin-right: 6px; padding: 0 5px;
+  border-radius: 4px; background: #6fb3a8; color: #14120f;
+  font-size: 10px; font-style: normal; font-weight: 700; letter-spacing: .04em;
+  vertical-align: 1px;
+}
 .fr-tg-row {
   display: flex; align-items: flex-start; gap: 9px;
   padding: 9px 7px; cursor: pointer; min-height: 44px;
@@ -4914,8 +5061,11 @@ html[data-taph="d"] .hours-filter button { padding-block: 10.75px; }
   <button class="fr-tg-btn" type="button" aria-expanded="false">前後對照 <b></b></button>
   <div class="fr-tg-panel">
     <div class="fr-tg-head">
-      <button type="button" data-all="off">全部關（改前）</button>
-      <button type="button" data-all="on">全部開（改後）</button>
+      <!-- 三顆的字刻意短：320 上三顆並排，「全部關（改前）」會折成兩行、
+           整個頁首區塊跟著長高。 -->
+      <button type="button" data-all="off">改前</button>
+      <button type="button" data-all="def">回到定稿</button>
+      <button type="button" data-all="on">全開</button>
     </div>
     <ul class="fr-tg-list"></ul>
     <div class="fr-tg-foot"></div>
@@ -4923,41 +5073,140 @@ html[data-taph="d"] .hours-filter button { padding-block: 10.75px; }
 </div>
 
 <script>
+/* ==========================================================================
+   橫捲那兩排的狀態（給 data-shint 的 Ⓐ／Ⓒ／Ⓓ 用）
+   --------------------------------------------------------------------------
+   ⚠ 沒有 JS 的時候：Ⓐ 的遮罩與 Ⓒ 的角形會**一直顯示**（因為 data-sx 從來
+     不會變成 end）。那是刻意的退路 —— 提示多留一下不會壞，比整個消失好。
+     Ⓑ 完全不需要這支，Ⓓ 沒有它就不會晃。
+   ⚠ 兩排各自獨立記自己的狀態，所以主題那排捲到底不會把門診表那排的角形收掉。
+   ⚠ 這一整塊定案之後要跟著切換條一起搬進正式站（Ⓑ 以外的三案都要它）。
+   ========================================================================== */
+(function () {
+  var SEL = '.chips, .hours-filter:not(.hours-filter-top)';
+  var els = [].slice.call(document.querySelectorAll(SEL));
+  if (!els.length) return;
+
+  /* Ⓑ 要用的那條軌道。每一排配一條，插在它自己後面。
+     ⚠ **不管現在選哪一案都先插進去**，用 CSS 決定看不看得到 ——
+       這樣切換純粹是 CSS，不必在切換的時候動 DOM。
+       沒選 Ⓑ 的時候它是 display: none，不佔任何空間。 */
+  els.forEach(function (el) {
+    var bar = document.createElement('i');
+    bar.className = 'sbar';
+    bar.setAttribute('aria-hidden', 'true');
+    bar.appendChild(document.createElement('i'));
+    el.parentNode.insertBefore(bar, el.nextSibling);
+    el.__bar = bar;
+  });
+
+  function mark(el) {
+    var max = el.scrollWidth - el.clientWidth;
+    /* 沒有溢出就是 none —— 電腦版（一排放得下）與關掉 chiprow 的時候都走這裡，
+       Ⓐ／Ⓒ 因此自動失效，不必再寫一份 @media。 */
+    if (max <= 1) {
+      el.setAttribute('data-sx', 'none');
+      if (el.__bar) el.__bar.setAttribute('data-sx', 'none');
+      return;
+    }
+    var x = el.scrollLeft;
+    var sx = x <= 1 ? 'start' : (x >= max - 1 ? 'end' : 'mid');
+    el.setAttribute('data-sx', sx);
+    if (el.__bar) {
+      el.__bar.setAttribute('data-sx', sx);
+      /* 拇指的長度 ＝ 看得到的比例，位置 ＝ 已經捲掉的比例 ×（軌道 − 拇指）。
+         下限 14% —— 標記很多的時候拇指會短到看不出是拇指。 */
+      var w = Math.max(14, el.clientWidth / el.scrollWidth * 100);
+      el.__bar.style.setProperty('--sb-w', w.toFixed(2) + '%');
+      el.__bar.style.setProperty('--sb-x', (x / max * (100 - w)).toFixed(2) + '%');
+    }
+  }
+  function markAll() { els.forEach(mark); }
+
+  els.forEach(function (el) {
+    el.addEventListener('scroll', function () { mark(el); }, { passive: true });
+  });
+  markAll();
+  addEventListener('resize', markAll);
+  /* 字型換掉會改變每顆標記的寬度，連帶改變「有沒有溢出」。 */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(markAll);
+  addEventListener('load', function () { setTimeout(markAll, 200); });
+  /* 切換條改了 data-chiprow／data-taph 之後版面會變，狀態要重算。
+     用 MutationObserver 盯 <html> 的屬性，比在切換條裡硬接一條線乾淨。 */
+  if (window.MutationObserver) {
+    new MutationObserver(function () { requestAnimationFrame(markAll); })
+      .observe(document.documentElement, { attributes: true });
+  }
+
+  /* ---- Ⓓ 晃一下 ------------------------------------------------------
+     捲進畫面時往右挪 26px 再回來。26 ≈ 半顆標記的寬度：
+     少於這個看不出來，多了就變成「頁面自己在動」。
+     ⚠ 只做一次。每次捲過去都晃會變成干擾，而且使用者第二次看到的時候
+       已經知道它會捲了。
+     ⚠ 看 prefers-reduced-motion —— 這是位移，正是那個設定針對的類別。
+     ⚠ 使用者自己動手捲過了就不要再晃（done 先設起來）。 */
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!window.IntersectionObserver) return;
+  var io = new IntersectionObserver(function (ens) {
+    ens.forEach(function (en) {
+      var el = en.target;
+      if (!en.isIntersecting || el.__nudged) return;
+      if (document.documentElement.getAttribute('data-shint') !== 'd') return;
+      if (document.documentElement.getAttribute('data-chiprow') !== 'on') return;
+      if (el.scrollWidth - el.clientWidth <= 1) return;
+      el.__nudged = true;
+      if (reduce) return;
+      el.scrollTo({ left: 26, behavior: 'smooth' });
+      setTimeout(function () { el.scrollTo({ left: 0, behavior: 'smooth' }); }, 430);
+    });
+  }, { threshold: .9 });
+  els.forEach(function (el) {
+    io.observe(el);
+    /* 自己動手捲過就算看過了，之後不要再晃。
+       ⚠ 這裡不必排掉動畫自己觸發的 scroll —— 上面在啟動動畫**之前**就已經
+         把 __nudged 設起來了，重複設一次沒有影響。 */
+    el.addEventListener('scroll', function () { el.__nudged = true; }, { passive: true });
+  });
+})();
+
 window.__FR_ITEMS = [
   /* ── 一、有人想約診的時候，畫面上有沒有下一步 ───────────────────────── */
-  { g:'約診動線', k:'bar', w:'手機', label:'手機行動條',
+  { g:'約診動線', k:'bar', def:'off', w:'手機', label:'手機行動條',
     note:'底部固定的「打電話／LINE 詢問」。關掉＝現況，整頁找不到任何約診的動作。' },
-  { g:'約診動線', k:'deskcta', w:'電腦', label:'頁首那顆 LINE',
+  { g:'約診動線', k:'deskcta', def:'off', w:'電腦', label:'頁首那顆 LINE',
     note:'電腦版沒有行動條，也就完全沒有約診入口。造形抄選單「目前在這一節」那一態，<b>沒有新顏色</b>。' },
-  { g:'約診動線', k:'mapcta', w:'全部', label:'地圖入口做成按鈕',
+  { g:'約診動線', k:'mapcta', def:'off', w:'全部', label:'地圖入口做成按鈕',
     note:'「在 Google 地圖開啟」現在是 <b>14.9px</b> 的文字連結，是那張卡唯一的動作卻最不明顯。改按鈕後命中區順便過 44。' },
-  { g:'約診動線', k:'footline', w:'全部', label:'頁尾補上 LINE',
+  { g:'約診動線', k:'footline', def:'off', w:'全部', label:'頁尾補上 LINE',
     note:'全站唯一提到 LINE 的地方是 JSON-LD 的 sameAs（機器讀的），畫面上<b>一個連結都沒有</b>。' },
-  { g:'約診動線', k:'cue', w:'電腦', label:'第一屏的「下面還有」',
+  { g:'約診動線', k:'cue', def:'off', w:'電腦', label:'第一屏的「下面還有」',
     note:'電腦版 HERO 是整屏 100svh，捲之前沒有任何東西說下面還有六篇文章與九位醫師。' },
 
   /* ── 二、看得清楚、按得到 ────────────────────────────────────────────── */
-  { g:'看得清楚・按得到', k:'fs', w:'手機', label:'字級抬一階',
+  { g:'看得清楚・按得到', k:'fs', def:'on', done:1, w:'手機', label:'字級抬一階',
     note:'窄帶三格 <b>10→12</b>、地址電話 <b>11.2→12.8</b>、標籤與門診表 <b>11.5→12.8</b>。' },
-  { g:'看得清楚・按得到', k:'bandgap', w:'手機', label:'窄帶三行的間距', on:'b',
+  { g:'看得清楚・按得到', k:'bandgap', def:'b', done:1, w:'手機', label:'窄帶三行的間距', on:'b',
     opts:[{v:'off',lb:'現況'},{v:'a',lb:'+2'},{v:'b',lb:'+4'},{v:'c',lb:'+6'}],
     note:'字抬一階之後行距沒跟著長，三行擠在一起。gap 與上下內距<b>一起加同一個 Δ</b> —— 只加 gap 會弄壞 2026-08-10 那一輪的 11.7／11.8 平衡。窄帶會高 <b>+8／+16／+24</b>。' },
-  { g:'看得清楚・按得到', k:'hit', w:'全部', label:'觸控目標 44px・第一批',
+  { g:'看得清楚・按得到', k:'hit', def:'on', done:1, w:'全部', label:'觸控目標 44px・第一批',
     note:'窄帶地址電話、頁首選單、頁尾導覽。看不見的改動：命中區用 <b>::after</b> 撐開，版面一個像素不動。' },
-  { g:'看得清楚・按得到', k:'taph', w:'全部', label:'標記要多高', on:'b',
+  { g:'看得清楚・按得到', k:'taph', def:'a', done:1, w:'全部', label:'標記要多高', on:'a',
     opts:[{v:'off',lb:'31'},{v:'a',lb:'34'},{v:'b',lb:'38'},{v:'c',lb:'41'},{v:'d',lb:'44'}],
     note:'主題與科別＋門診表那兩排。<b>31</b> 是現況、<b>44</b> 是上一版（你說太大），中間補三段。WCAG 的 AA 門檻是 24，<b>34 起全部都過</b>，44 是 AAA。' },
-  { g:'看得清楚・按得到', k:'hit2', w:'全部', label:'觸控目標・頁尾與搜尋框',
+  { g:'看得清楚・按得到', k:'hit2', def:'on', done:1, w:'全部', label:'觸控目標・頁尾與搜尋框',
     note:'頁尾地址電話 <b>27.4</b>、搜尋框 <b>31</b>。兩行只隔 5.6px，<b>撐不出來、只能長高</b>。（標記已經拆到上面那把尺）' },
-  { g:'看得清楚・按得到', k:'head', w:'手機', label:'320px 頁首修正',
+  { g:'看得清楚・按得到', k:'head', def:'off', w:'手機', label:'320px 頁首修正',
     note:'把視窗拉到 320 寬才看得出來：關掉時品牌字會被「全部文章」壓到（實測 <b>−1.2px</b>）。' },
 
   /* ── 三、版面與資訊 ──────────────────────────────────────────────────── */
-  { g:'版面與資訊', k:'cardtitle', w:'電腦', label:'文章卡標題固定兩行',
+  { g:'版面與資訊', k:'cardtitle', def:'off', w:'電腦', label:'文章卡標題固定兩行',
     note:'六篇有的標題一行、有的兩行，摘要因此各自從不同高度起跑，同一列差 <b>24.3px</b>。' },
-  { g:'版面與資訊', k:'chiprow', w:'手機', label:'科別標記收成一排橫捲',
-    note:'375 上八顆排成 <b>3 排 107.4px</b>，第一張卡被推到 y=<b>701.8</b>。收成一排省 76px，代價是後面幾顆看不見。' },
-  { g:'版面與資訊', k:'footdate', w:'全部', label:'頁尾的更新日期',
+  { g:'版面與資訊', k:'chiprow', def:'on', done:1, w:'手機', label:'科別標記收成一排橫捲',
+    note:'主題與科別＋<b>門診表那排也一起收</b>。375 上八顆本來排成 3 排 107.4px。收成一排省 76px，代價是後面幾顆看不見 —— 所以要配下面那個提示。' },
+  { g:'版面與資訊', k:'shint', def:'a', w:'手機', label:'怎麼讓人知道它會捲', on:'a',
+    opts:[{v:'off',lb:'不加'},{v:'a',lb:'Ⓐ漸層'},{v:'b',lb:'Ⓑ捲軸'},{v:'c',lb:'Ⓒ角形'},{v:'d',lb:'Ⓓ晃一下'}],
+    note:'<b>Ⓐ</b> 右緣淡出，不佔空間、捲到底自動收。<b>Ⓑ</b> 4px 細捲軸，最直白 —— 但 <b>iPhone 上要捲了才看得到</b>（iOS 的捲軸是浮動的），順序是反的。<b>Ⓒ</b> 右緣一顆角形貼著捲，最明確但多一個東西。<b>Ⓓ</b> 捲進畫面時自己晃 26px，靜止最乾淨但只講一次。' },
+  { g:'版面與資訊', k:'footdate', def:'on', done:1, w:'全部', label:'頁尾的更新日期',
     note:'頁尾寫 <b>8 月 2 日</b>，首頁實際的 lastmod 是 <b>8 月 13 日</b>，差 11 天。手寫的，沒有人維護。' }
 ];
 </script><script>
@@ -4985,13 +5234,19 @@ window.__FR_ITEMS = [
     for (var i = 0; i < it.opts.length; i++) if (it.opts[i].v === v) return it.opts[i];
     return null;
   }
+  /* 這一頁的預設**不再是「全部開」**（2026-08-13 起）：使用者已經定稿七項，
+     所以沒帶參數打開時直接呈現定稿那一組，其餘留在現況 ——
+     打開就是「將要上線的樣子」，比打開是「十四項全開」有用。
+     每一項的預設值寫在自己的 it.def 裡，面板上「回到定稿」就是回到這一組。 */
+  function defOf(it) { return it.def || (it.opts ? 'off' : 'on'); }
   items.forEach(function (it) {
     var v = (qs.get(it.k) || '').toLowerCase();
+    if (!v) { state[it.k] = defOf(it); return; }
     if (it.opts) {
-      /* 認得的段就用它；1／on 當成「這一項的建議值」（it.on）；其餘退回預設全開 */
+      /* 認得的段就用它；1／on 當成「這一項的建議值」（it.on）；0／off 是關 */
       state[it.k] = optOf(it, v) ? v : ((v === '0' || v === 'off') ? 'off' : (it.on || it.opts[1].v));
     } else {
-      state[it.k] = (v === '0' || v === 'off') ? 'off' : 'on';   /* 預設全開 ＝ 改後 */
+      state[it.k] = (v === '0' || v === 'off') ? 'off' : 'on';
     }
   });
 
@@ -5047,7 +5302,7 @@ window.__FR_ITEMS = [
       li.innerHTML = '<label class="fr-tg-row"><input type="checkbox"><span>' +
         '<span class="lb"></span><span class="nt"></span></span></label>';
     }
-    li.querySelector('.lb').innerHTML = '<i class="w"></i>';
+    li.querySelector('.lb').innerHTML = '<i class="w"></i>' + (it.done ? '<i class="ok">定稿</i>' : '');
     li.querySelector('.lb .w').textContent = it.w || '全部';
     li.querySelector('.lb').append(it.label);
     li.querySelector('.nt').innerHTML  = it.note;
@@ -5064,8 +5319,11 @@ window.__FR_ITEMS = [
         segs.appendChild(sb);
         return sb;
       });
-      /* 全開／全關要能操作它：off 就是關，on 用 it.on（沒寫就取第二段）。 */
-      it._set = function (v) { state[it.k] = (v === 'on') ? (it.on || it.opts[1].v) : 'off'; };
+      /* 全開／全關／回到定稿要能操作它：
+         off 就是關，on 用 it.on（沒寫就取第二段），def 用這一項的預設。 */
+      it._set = function (v) {
+        state[it.k] = v === 'def' ? defOf(it) : (v === 'on' ? (it.on || it.opts[1].v) : 'off');
+      };
     } else {
       var cb = li.querySelector('input');
       cb.checked = state[it.k] === 'on';
@@ -5074,7 +5332,10 @@ window.__FR_ITEMS = [
         apply(true);
       });
       it._cb = cb;
-      it._set = function (v) { state[it.k] = v; cb.checked = (v === 'on'); };
+      it._set = function (v) {
+        state[it.k] = v === 'def' ? defOf(it) : v;
+        cb.checked = state[it.k] === 'on';
+      };
     }
     list.appendChild(li);
   });
