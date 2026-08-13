@@ -4768,27 +4768,30 @@ html[data-cardtitle="on"] .card h3 {
       （窄帶數字那一個不看，是因為原地長大的數字不屬於那一類，見 CLAUDE.md）。
    ⚠ 四案都只在 data-chiprow 打開時才有意義 —— 沒有橫捲就沒有東西要提示。 */
 
-/* ---- Ⓐ 漸層淡出 ------------------------------------------------------- */
+/* ---- Ⓐ 漸層淡出（Ⓔ 也吃這一段）----------------------------------------
+   ⚠ 用 `:is(...)` 把 Ⓐ 與 Ⓔ 併在同一組選擇器裡 —— Ⓔ ＝ 這一段的遮罩
+     ＋ 下面那組新的角形，遮罩的部分兩案完全一樣，抄第二份只會漏改一邊。
+     :is() 的權重取括號裡最高的那一個，和原本寫 [data-shint="a"] 相同。 */
 @media (max-width: 720px) {
-  html[data-chiprow="on"][data-shint="a"] .chips,
-  html[data-chiprow="on"][data-shint="a"] .hours-filter:not(.hours-filter-top) {
+  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .chips,
+  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .hours-filter:not(.hours-filter-top) {
     -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
             mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
   }
   /* 捲到底就沒有東西在後面了，遮罩要收掉；捲離起點之後左邊也補一段，
      不然左邊會變成硬邊、看起來像被裁掉而不是捲過去。 */
-  html[data-chiprow="on"][data-shint="a"] .chips[data-sx="mid"],
-  html[data-chiprow="on"][data-shint="a"] .hours-filter[data-sx="mid"] {
+  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .chips[data-sx="mid"],
+  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .hours-filter[data-sx="mid"] {
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 34px, #000 calc(100% - 34px), transparent);
             mask-image: linear-gradient(90deg, transparent, #000 34px, #000 calc(100% - 34px), transparent);
   }
-  html[data-chiprow="on"][data-shint="a"] .chips[data-sx="end"],
-  html[data-chiprow="on"][data-shint="a"] .hours-filter[data-sx="end"] {
+  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .chips[data-sx="end"],
+  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .hours-filter[data-sx="end"] {
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 34px);
             mask-image: linear-gradient(90deg, transparent, #000 34px);
   }
-  html[data-chiprow="on"][data-shint="a"] .chips[data-sx="none"],
-  html[data-chiprow="on"][data-shint="a"] .hours-filter[data-sx="none"] {
+  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .chips[data-sx="none"],
+  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .hours-filter[data-sx="none"] {
     -webkit-mask-image: none; mask-image: none;
   }
 }
@@ -4805,6 +4808,7 @@ html[data-cardtitle="on"] .card h3 {
    ⚠ 顏色沒有新增：軌道 --rule、拇指 --ink-soft，都是站上已經在用的。
    ⚠ 它是**純顯示**，不能拖 —— 拖曳要自己實作慣性與命中區，
      那是另一件事；這一輪要比的是「看不看得出來會捲」。 */
+.swrap { display: contents; }
 .sbar { display: none; }
 @media (max-width: 720px) {
   html[data-chiprow="on"][data-shint="b"] .sbar {
@@ -4820,8 +4824,8 @@ html[data-cardtitle="on"] .card h3 {
      ・.topic-tools 是 wrap 的 flex —— 要 flex-basis 100% 才會自己一列。
      ・.info-card 是普通的區塊，但上面那排標記自己帶 1.15rem 下外距，
        所以把那個外距借過來給軌道，總高度不變。 */
-  html[data-chiprow="on"][data-shint="b"] .topic-tools > .sbar { flex: 0 0 100%; margin-top: -.2rem; }
-  html[data-chiprow="on"][data-shint="b"] .info-card > .sbar { margin: -.8rem 0 1.15rem; }
+  html[data-chiprow="on"][data-shint="b"] .topic-tools .sbar { flex: 0 0 100%; margin-top: -.2rem; }
+  html[data-chiprow="on"][data-shint="b"] .info-card .sbar { margin: -.8rem 0 1.15rem; }
   html[data-chiprow="on"][data-shint="b"] .hours-filter:not(.hours-filter-top) { margin-bottom: .35rem; }
 }
 
@@ -4855,6 +4859,79 @@ html[data-cardtitle="on"] .card h3 {
   html[data-chiprow="on"][data-shint="c"] .chips[data-sx="none"]::after,
   html[data-chiprow="on"][data-shint="c"] .hours-filter[data-sx="end"]::after,
   html[data-chiprow="on"][data-shint="c"] .hours-filter[data-sx="none"]::after { opacity: 0; }
+}
+
+/* ---- Ⓔ 漸層 ＋ 兩顆會退場的角形（2026-08-13 第二輪）-------------------
+   使用者看過 Ⓐ 與 Ⓒ 之後：「模糊加角形可以，可是那個角形好明顯，
+   是不是可以不要那麼突兀。而且你現在只有一個往右的角形，如果往右滑的時候
+   其實還可以往左滑，所以理論上往右滑的時候左邊要有。而且它不用一直都這麼
+   明顯，可以有點提示性說要往右滑，然後真的往右滑就不要那麼明顯，
+   等到還沒滑完或是慢下來的時候，那個角形再出來。」
+
+   三件事，逐條對應：
+
+   ① **不要那麼突兀** —— 拿掉 Ⓒ 那顆圓盤（紙色底 ＋ 框 ＋ 陰影），
+     只留角形本身，線也收細。它站得住是因為**遮罩已經把它背後那顆標記淡掉了**，
+     不必再自己墊一塊底。這是 Ⓐ 與 Ⓒ 合起來才成立的事，Ⓒ 單獨用就得有底。
+
+   ② **左邊也要有一顆** —— `::before` 是這一排的第一個 flex 項目，
+     `position: sticky; left: 0` 就會貼在左緣，和 `::after` 對稱。
+     ⚠⚠ 兩顆都給**負外距抵銷自己的寬度「加上一份 gap」**（`-22px - .45rem`），
+       這樣它們在版面上佔 0。只扣 22px 是不夠的 —— `gap` 是**每兩個 flex
+       項目之間都有一份**，多兩個偽元素就多兩份 gap（實測 scrollWidth
+       769 → 784，第一顆標記被往右推 7.2px）。.45rem 是這一段 @media 裡
+       .chips 與 .hours-filter 共用的 gap 值，改 gap 的話這裡要一起改。
+       它們是浮在標記上面的（sticky 是定位元素，會蓋過靜態的標記）。
+
+   ③ **會退場、停下來再回來** —— 三態：
+        起點／中間／到底　停著　→ 提示態 .5（該有的那一側才出現）
+        正在捲　　　　　　　　→ .1，幾乎看不見
+        停了 700ms　　　　　　→ 淡回 .5（.45s 的淡入，不會突然跳出來）
+     「正在捲」由底下那支 JS 寫 data-sc="1"，最後一次 scroll 事件過 700ms 拿掉。
+     ⚠ **CSS 的順序不能反**：`[data-sc="1"]` 那一條要排在 start／end／none
+       前面。四條的權重相同，靠順序決勝 —— 排反了會變成「在起點捲動時
+       左邊那顆也跑出來」，而左邊根本沒東西可以滑。
+   ⚠ 兩顆都 pointer-events: none —— 它們蓋在標記上面，不擋點擊。 */
+@media (max-width: 720px) {
+  /* 外層：Ⓔ 才把 .swrap 變成真的區塊（平常是 display: contents，等於不存在）。
+     ⚠ 它同時要接手原本那一排的 flex 項目身分 —— .chips 在 .topic-tools 裡
+       本來是 `flex: 1 1 22rem`，包起來之後那條落在包裝上才對。
+     ⚠ 門診表那一排在 .info-card 裡是普通區塊，寬度自己撐滿，不必特別寫。
+     ⚠ overflow 不要在這裡寫任何值 —— 一寫就會擋掉裡面那層的黏著定位，
+       而且會讓子層的下外距不再穿透出來（門診表那排的 1.15rem 靠它）。 */
+  html[data-chiprow="on"][data-shint="e"] .swrap { display: block; position: relative; min-width: 0; }
+  html[data-chiprow="on"][data-shint="e"] .topic-tools .swrap { flex: 1 1 22rem; }
+
+  html[data-chiprow="on"][data-shint="e"] .swrap::before,
+  html[data-chiprow="on"][data-shint="e"] .swrap::after {
+    content: ''; position: absolute; top: 0; z-index: 2;
+    width: 26px; height: 100%; pointer-events: none;
+    background-repeat: no-repeat; background-position: center; background-size: 9px 9px;
+    opacity: .5; transition: opacity .45s ease;
+  }
+  /* ⚠ data: URI 裡不能寫 var()，#5c5f57 是 --ink-soft 的值抄過來的，要一起改。 */
+  html[data-chiprow="on"][data-shint="e"] .swrap::before {
+    left: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c5f57' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 5l-7 7 7 7'/%3E%3C/svg%3E");
+  }
+  html[data-chiprow="on"][data-shint="e"] .swrap::after {
+    right: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c5f57' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E");
+  }
+  /* 正在捲的時候退到幾乎看不見。⚠ 這一條要排在下面三條**前面**：
+     四條權重相同、靠順序決勝，排反了會變成「在起點捲動時左邊那顆也跑出來」，
+     而左邊根本沒東西可以滑。 */
+  html[data-chiprow="on"][data-shint="e"] .swrap[data-sc="1"]::before,
+  html[data-chiprow="on"][data-shint="e"] .swrap[data-sc="1"]::after {
+    opacity: .1; transition: opacity .15s ease;   /* 退場要快，回來才慢 */
+  }
+  /* 在起點：左邊沒東西可以滑。 */
+  html[data-chiprow="on"][data-shint="e"] .swrap[data-sx="start"]::before { opacity: 0; }
+  /* 到底：右邊沒東西可以滑（左邊那顆留著 —— 使用者說的就是這件事）。 */
+  html[data-chiprow="on"][data-shint="e"] .swrap[data-sx="end"]::after { opacity: 0; }
+  /* 本來就不用捲：兩顆都不要。 */
+  html[data-chiprow="on"][data-shint="e"] .swrap[data-sx="none"]::before,
+  html[data-chiprow="on"][data-shint="e"] .swrap[data-sx="none"]::after { opacity: 0; }
 }
 
 /* ---- Ⓓ 晃一下 --------------------------------------------------------- */
@@ -5087,17 +5164,33 @@ html[data-taph="d"] .hours-filter button { padding-block: 10.75px; }
   var els = [].slice.call(document.querySelectorAll(SEL));
   if (!els.length) return;
 
-  /* Ⓑ 要用的那條軌道。每一排配一條，插在它自己後面。
+  /* 每一排包一層 .swrap，並在裡面補一條 Ⓑ 要用的軌道 .sbar。
+     ⚠⚠ **為什麼要包一層**：Ⓔ 的角形不能是捲動容器自己的偽元素 ——
+       `mask-image` 會作用在**元素的整個算繪結果，偽元素也算在內**，
+       所以 Ⓐ 的遮罩會把貼在邊緣的角形一起淡掉（第一版就是這樣，
+       角形明明在、就是看不見）。角形改掛在**沒有被遮罩的外層**上。
+     ⚠ `.swrap` 平常是 `display: contents` —— 這一層在版面上完全不存在，
+       捲動容器仍然是它原本那個父層的直接項目（和 .crumb-meta 同一招，
+       量過：關掉時每一個尺寸都不變）。只有 Ⓔ 才把它變成真的區塊。
      ⚠ **不管現在選哪一案都先插進去**，用 CSS 決定看不看得到 ——
-       這樣切換純粹是 CSS，不必在切換的時候動 DOM。
-       沒選 Ⓑ 的時候它是 display: none，不佔任何空間。 */
+       切換純粹是 CSS，不必在切換的當下動 DOM，關掉一定回得去。
+     ⚠ 包完之後 .sbar 的 DOM 父層變成 .swrap，所以它的 CSS 選擇器要用
+       後代（`.topic-tools .sbar`）不能用子代 —— `display: contents`
+       只影響版面，**選擇器仍然照 DOM 樹比對**。 */
   els.forEach(function (el) {
+    var wrap = document.createElement('i');
+    wrap.className = 'swrap';
+    el.parentNode.insertBefore(wrap, el);
+    wrap.appendChild(el);
+
     var bar = document.createElement('i');
     bar.className = 'sbar';
     bar.setAttribute('aria-hidden', 'true');
     bar.appendChild(document.createElement('i'));
-    el.parentNode.insertBefore(bar, el.nextSibling);
+    wrap.appendChild(bar);
+
     el.__bar = bar;
+    el.__wrap = wrap;
   });
 
   function mark(el) {
@@ -5112,6 +5205,8 @@ html[data-taph="d"] .hours-filter button { padding-block: 10.75px; }
     var x = el.scrollLeft;
     var sx = x <= 1 ? 'start' : (x >= max - 1 ? 'end' : 'mid');
     el.setAttribute('data-sx', sx);
+    /* 外層也要知道，Ⓔ 的角形掛在它身上（見上面「為什麼要包一層」）。 */
+    if (el.__wrap) el.__wrap.setAttribute('data-sx', sx);
     if (el.__bar) {
       el.__bar.setAttribute('data-sx', sx);
       /* 拇指的長度 ＝ 看得到的比例，位置 ＝ 已經捲掉的比例 ×（軌道 − 拇指）。
@@ -5123,8 +5218,20 @@ html[data-taph="d"] .hours-filter button { padding-block: 10.75px; }
   }
   function markAll() { els.forEach(mark); }
 
+  /* 「正在捲」與「停下來了」。Ⓔ 的兩顆角形靠這個退場與回來：
+     捲的當下掛 data-sc="1"，最後一次 scroll 事件之後 700ms 拿掉。
+     ⚠ 700 是挑過的：太短（~300）手指還在滑的空檔就會閃一下，
+       太長（~1200）停下來要等很久才看得到提示，等於沒有。
+     ⚠ 只寫屬性，要不要理它是 CSS 的事 —— 其他四案完全不看 data-sc。 */
   els.forEach(function (el) {
-    el.addEventListener('scroll', function () { mark(el); }, { passive: true });
+    el.addEventListener('scroll', function () {
+      mark(el);
+      if (el.__wrap) el.__wrap.setAttribute('data-sc', '1');
+      clearTimeout(el.__sct);
+      el.__sct = setTimeout(function () {
+        if (el.__wrap) el.__wrap.removeAttribute('data-sc');
+      }, 700);
+    }, { passive: true });
   });
   markAll();
   addEventListener('resize', markAll);
@@ -5203,9 +5310,9 @@ window.__FR_ITEMS = [
     note:'六篇有的標題一行、有的兩行，摘要因此各自從不同高度起跑，同一列差 <b>24.3px</b>。' },
   { g:'版面與資訊', k:'chiprow', def:'on', done:1, w:'手機', label:'科別標記收成一排橫捲',
     note:'主題與科別＋<b>門診表那排也一起收</b>。375 上八顆本來排成 3 排 107.4px。收成一排省 76px，代價是後面幾顆看不見 —— 所以要配下面那個提示。' },
-  { g:'版面與資訊', k:'shint', def:'a', w:'手機', label:'怎麼讓人知道它會捲', on:'a',
-    opts:[{v:'off',lb:'不加'},{v:'a',lb:'Ⓐ漸層'},{v:'b',lb:'Ⓑ捲軸'},{v:'c',lb:'Ⓒ角形'},{v:'d',lb:'Ⓓ晃一下'}],
-    note:'<b>Ⓐ</b> 右緣淡出，不佔空間、捲到底自動收。<b>Ⓑ</b> 4px 細捲軸，最直白 —— 但 <b>iPhone 上要捲了才看得到</b>（iOS 的捲軸是浮動的），順序是反的。<b>Ⓒ</b> 右緣一顆角形貼著捲，最明確但多一個東西。<b>Ⓓ</b> 捲進畫面時自己晃 26px，靜止最乾淨但只講一次。' },
+  { g:'版面與資訊', k:'shint', def:'e', w:'手機', label:'怎麼讓人知道它會捲', on:'e',
+    opts:[{v:'off',lb:'不加'},{v:'a',lb:'Ⓐ漸層'},{v:'b',lb:'Ⓑ捲軸'},{v:'c',lb:'Ⓒ角形'},{v:'d',lb:'Ⓓ晃一下'},{v:'e',lb:'Ⓔ漸層＋角形'}],
+    note:'<b>Ⓔ 是照你的三點改的</b>：角形拿掉圓盤只留線（背後有遮罩，不必自己墊底）、<b>左右各一顆</b>（能往哪滑才出現哪一顆）、捲的時候退到 .1、<b>停 0.7 秒再淡回來</b>。<br>Ⓐ 只有遮罩、Ⓒ 是上一版那顆有底的（留著對照）、Ⓑ 自己畫的細捲軸、Ⓓ 進場晃一下。' },
   { g:'版面與資訊', k:'footdate', def:'on', done:1, w:'全部', label:'頁尾的更新日期',
     note:'頁尾寫 <b>8 月 2 日</b>，首頁實際的 lastmod 是 <b>8 月 13 日</b>，差 11 天。手寫的，沒有人維護。' }
 ];
