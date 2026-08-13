@@ -4808,7 +4808,10 @@ html[data-cardtitle="on"] .card h3 {
    ⚠ 顏色沒有新增：軌道 --rule、拇指 --ink-soft，都是站上已經在用的。
    ⚠ 它是**純顯示**，不能拖 —— 拖曳要自己實作慣性與命中區，
      那是另一件事；這一輪要比的是「看不看得出來會捲」。 */
-.swrap { display: contents; }
+/* ⚠ `font-style: normal` 是保險。這一層是 JS 生出來的，2026-08-13 用了 <i>，
+     而 `display: contents` 只拿掉盒子、**不擋繼承** —— 整排標記的字全部變斜的。
+     元素已經改成 <span>，這一行是萬一有人又改回去時的第二道防線。 */
+.swrap { display: contents; font-style: normal; }
 .sbar { display: none; }
 @media (max-width: 720px) {
   html[data-chiprow="on"][data-shint="b"] .sbar {
@@ -4848,8 +4851,12 @@ html[data-cardtitle="on"] .card h3 {
     content: ''; flex: 0 0 auto; align-self: center;
     position: sticky; right: 0;
     width: 26px; height: 26px; border-radius: 50%;
+    /* ⚠ 根元素上的 width／height **一定要寫**（2026-08-13 補）：
+         只給 viewBox 的 SVG 沒有內在尺寸，Chromium 會自己套 background-size，
+         **Safari 有時直接不畫**。Ⓔ 因此整個改用 CSS 邊框畫（見下面那一段），
+         Ⓒ 留著對照，所以把這個已知的修法補上。 */
     background: var(--card)
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c5f57' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E")
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235c5f57' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E")
       center / 10px 10px no-repeat;
     box-shadow: 0 0 0 1px var(--rule), -7px 0 12px -5px rgba(0, 0, 0, .12);
     transition: opacity .2s ease;
@@ -4902,21 +4909,34 @@ html[data-cardtitle="on"] .card h3 {
   html[data-chiprow="on"][data-shint="e"] .swrap { display: block; position: relative; min-width: 0; }
   html[data-chiprow="on"][data-shint="e"] .topic-tools .swrap { flex: 1 1 22rem; }
 
+  /* ⚠⚠ **角形是用兩條框線畫的，不是背景圖。**（2026-08-13 第二版）
+       第一版是 `background-image: url("data:image/svg+xml,…")` ＋ background-size，
+       在容器裡的 Chromium 上畫得出來，**使用者的 iPhone 上完全沒出現**。
+       最可能的原因是那支 SVG 的根元素**只有 viewBox、沒有 width/height**：
+       Safari 對「沒有內在尺寸的 SVG 當背景圖」一直有算繪問題，
+       Chromium 會自己套 background-size，Safari 有時直接不畫。
+       這裡改成 CSS 邊框畫的角形 —— 沒有圖片、沒有解碼、沒有 data URI 的
+       跳脫規則，只剩兩條邊和一個旋轉，任何瀏覽器畫得出方框就畫得出它。
+     ⚠ 顏色因此可以寫回 `var(--ink-soft)`（data URI 裡不能寫 var()，
+       上一版是把 #5c5f57 抄進去的，改一邊會漏另一邊 —— 這個問題也一起沒了）。
+     ⚠ `translateY(-50%)` 與 `rotate()` 要寫在**同一個 transform** 裡，
+       順序也不能反：先位移再旋轉，反過來位移的方向會跟著轉 45 度。 */
   html[data-chiprow="on"][data-shint="e"] .swrap::before,
   html[data-chiprow="on"][data-shint="e"] .swrap::after {
-    content: ''; position: absolute; top: 0; z-index: 2;
-    width: 26px; height: 100%; pointer-events: none;
-    background-repeat: no-repeat; background-position: center; background-size: 9px 9px;
+    content: ''; position: absolute; top: 50%; z-index: 2;
+    width: 9px; height: 9px; pointer-events: none;
+    border-style: solid; border-color: var(--ink-soft);
     opacity: .5; transition: opacity .45s ease;
   }
-  /* ⚠ data: URI 裡不能寫 var()，#5c5f57 是 --ink-soft 的值抄過來的，要一起改。 */
+  /* 左邊那顆：取上與左兩條邊（Γ），逆時針轉 45 度就指向左。 */
   html[data-chiprow="on"][data-shint="e"] .swrap::before {
-    left: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c5f57' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 5l-7 7 7 7'/%3E%3C/svg%3E");
+    left: 7px; border-width: 1.6px 0 0 1.6px;
+    transform: translateY(-50%) rotate(-45deg);
   }
+  /* 右邊那顆：取上與右兩條邊（⌐），順時針轉 45 度就指向右。 */
   html[data-chiprow="on"][data-shint="e"] .swrap::after {
-    right: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c5f57' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E");
+    right: 7px; border-width: 1.6px 1.6px 0 0;
+    transform: translateY(-50%) rotate(45deg);
   }
   /* 正在捲的時候退到幾乎看不見。⚠ 這一條要排在下面三條**前面**：
      四條權重相同、靠順序決勝，排反了會變成「在起點捲動時左邊那顆也跑出來」，
@@ -5178,15 +5198,21 @@ html[data-taph="d"] .hours-filter button { padding-block: 10.75px; }
        後代（`.topic-tools .sbar`）不能用子代 —— `display: contents`
        只影響版面，**選擇器仍然照 DOM 樹比對**。 */
   els.forEach(function (el) {
-    var wrap = document.createElement('i');
+    /* ⚠⚠ **一定要用 <span>，不可以用 <i>。**（2026-08-13 踩到，使用者回報
+         「字變成斜體的好奇怪」）<i> 的 UA 預設樣式是 `font-style: italic`，
+         而 `display: contents` **只拿掉盒子、不擋繼承** —— 這一層雖然在版面上
+         不存在，font-style 照樣傳給裡面每一顆標記，整排字全部變斜的。
+         同一個坑對 .sbar 沒有症狀（它裡面沒有字），但一起改掉比較不會再犯。
+         下面 CSS 那條 `font-style: normal` 是第二道保險。 */
+    var wrap = document.createElement('span');
     wrap.className = 'swrap';
     el.parentNode.insertBefore(wrap, el);
     wrap.appendChild(el);
 
-    var bar = document.createElement('i');
+    var bar = document.createElement('span');
     bar.className = 'sbar';
     bar.setAttribute('aria-hidden', 'true');
-    bar.appendChild(document.createElement('i'));
+    bar.appendChild(document.createElement('span'));
     wrap.appendChild(bar);
 
     el.__bar = bar;
