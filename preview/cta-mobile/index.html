@@ -4768,30 +4768,30 @@ html[data-cardtitle="on"] .card h3 {
       （窄帶數字那一個不看，是因為原地長大的數字不屬於那一類，見 CLAUDE.md）。
    ⚠ 四案都只在 data-chiprow 打開時才有意義 —— 沒有橫捲就沒有東西要提示。 */
 
-/* ---- Ⓐ 漸層淡出（Ⓔ 也吃這一段）----------------------------------------
-   ⚠ 用 `:is(...)` 把 Ⓐ 與 Ⓔ 併在同一組選擇器裡 —— Ⓔ ＝ 這一段的遮罩
-     ＋ 下面那組新的角形，遮罩的部分兩案完全一樣，抄第二份只會漏改一邊。
-     :is() 的權重取括號裡最高的那一個，和原本寫 [data-shint="a"] 相同。 */
+/* ---- Ⓐ 漸層淡出 --------------------------------------------------------
+   ⚠ 這一段**只給 Ⓐ**。Ⓔ 一度和它共用（`:is([data-shint="a"], [data-shint="e"])`），
+     2026-08-13 第三輪拆開了 —— Ⓔ 的遮罩要「先淡完、末端留一段淨空」，
+     和 Ⓐ 的「一路淡到邊緣」不是同一條曲線，理由見下面第十五之二節。 */
 @media (max-width: 720px) {
-  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .chips,
-  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .hours-filter:not(.hours-filter-top) {
+  html[data-chiprow="on"][data-shint="a"] .chips,
+  html[data-chiprow="on"][data-shint="a"] .hours-filter:not(.hours-filter-top) {
     -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
             mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
   }
   /* 捲到底就沒有東西在後面了，遮罩要收掉；捲離起點之後左邊也補一段，
      不然左邊會變成硬邊、看起來像被裁掉而不是捲過去。 */
-  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .chips[data-sx="mid"],
-  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .hours-filter[data-sx="mid"] {
+  html[data-chiprow="on"][data-shint="a"] .chips[data-sx="mid"],
+  html[data-chiprow="on"][data-shint="a"] .hours-filter[data-sx="mid"] {
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 34px, #000 calc(100% - 34px), transparent);
             mask-image: linear-gradient(90deg, transparent, #000 34px, #000 calc(100% - 34px), transparent);
   }
-  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .chips[data-sx="end"],
-  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .hours-filter[data-sx="end"] {
+  html[data-chiprow="on"][data-shint="a"] .chips[data-sx="end"],
+  html[data-chiprow="on"][data-shint="a"] .hours-filter[data-sx="end"] {
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 34px);
             mask-image: linear-gradient(90deg, transparent, #000 34px);
   }
-  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .chips[data-sx="none"],
-  html[data-chiprow="on"]:is([data-shint="a"], [data-shint="e"]) .hours-filter[data-sx="none"] {
+  html[data-chiprow="on"][data-shint="a"] .chips[data-sx="none"],
+  html[data-chiprow="on"][data-shint="a"] .hours-filter[data-sx="none"] {
     -webkit-mask-image: none; mask-image: none;
   }
 }
@@ -4909,6 +4909,62 @@ html[data-cardtitle="on"] .card h3 {
   html[data-chiprow="on"][data-shint="e"] .swrap { display: block; position: relative; min-width: 0; }
   html[data-chiprow="on"][data-shint="e"] .topic-tools .swrap { flex: 1 1 22rem; }
 
+  /* ==========================================================================
+     十五之二、Ⓔ 的遮罩：**先淡完，末端留一段淨空**（2026-08-13 第三輪）
+     --------------------------------------------------------------------------
+     使用者：「我知道問題出在哪裡了。那個捲動的角形應該要在標籤被模糊化的
+     （之外）—— 因為你現在是把角形壓在標籤上面，所以怎麼看都很奇怪。
+     然後我發現放上面放下面也都不對，應該是跟標籤垂直高度一樣，
+     但是要放在標籤模糊化的出去一點的地方。」
+
+     這個診斷是對的，而且指出的是**遮罩的形狀**，不是角形的位置：
+     Ⓐ 的遮罩是「從 34px 處開始淡、到邊緣才全透明」，所以邊緣那一段
+     **一直都還有一點標籤在**（角形站的地方大約還有 20% 的標籤透出來）。
+     角形疊在那個殘影上，看起來就是「壓在標籤上」。
+
+     改法：把漸層**提早結束**，末端留一條完全透明的淨空帶，角形站在那裡。
+
+         │←──── 標籤看得清楚 ────→│← 漸層 →│← 淨空 →│
+         │                        │  28px  │  24px  │
+                                              ↑ 角形在這裡，背後一定是純底
+
+     ⚠ 角形的垂直位置**維持垂直置中**（使用者：「應該是跟標籤垂直高度一樣」）。
+       上緣／超上／超下三案已經由使用者否決，不要再走回去。
+     ⚠ 淨空帶的寬度由 data-apos 那把尺調（--m-clear），漸層長度跟著不動。
+       淨空 0 ＝ 回到「壓在標籤上」，留著當對照。
+     ⚠ 代價：右邊少 24px 的可視寬度。橫捲本來就是拿寬度換高度，
+       這裡再讓出一點給提示 —— 值不值得就是這把尺要比的。
+     ⚠ 到底（end）的時候右邊**不留淨空也不漸層**：已經沒有東西在後面了，
+       最後一顆標記本來就該站到邊緣。左邊同理。
+     ========================================================================== */
+  html[data-chiprow="on"][data-shint="e"] .chips,
+  html[data-chiprow="on"][data-shint="e"] .hours-filter:not(.hours-filter-top) {
+    --m-fade: 28px;
+    --m-clear: var(--ar-clear, 24px);
+    -webkit-mask-image: var(--m-img); mask-image: var(--m-img);
+    --m-img: linear-gradient(90deg,
+      #000 calc(100% - var(--m-fade) - var(--m-clear)),
+      transparent calc(100% - var(--m-clear)));
+  }
+  html[data-chiprow="on"][data-shint="e"] .chips[data-sx="mid"],
+  html[data-chiprow="on"][data-shint="e"] .hours-filter[data-sx="mid"] {
+    --m-img: linear-gradient(90deg,
+      transparent var(--m-clear),
+      #000 calc(var(--m-clear) + var(--m-fade)),
+      #000 calc(100% - var(--m-fade) - var(--m-clear)),
+      transparent calc(100% - var(--m-clear)));
+  }
+  html[data-chiprow="on"][data-shint="e"] .chips[data-sx="end"],
+  html[data-chiprow="on"][data-shint="e"] .hours-filter[data-sx="end"] {
+    --m-img: linear-gradient(90deg,
+      transparent var(--m-clear),
+      #000 calc(var(--m-clear) + var(--m-fade)));
+  }
+  html[data-chiprow="on"][data-shint="e"] .chips[data-sx="none"],
+  html[data-chiprow="on"][data-shint="e"] .hours-filter[data-sx="none"] {
+    --m-img: none;
+  }
+
   /* ⚠⚠ **角形是用兩條框線畫的，不是背景圖。**（2026-08-13 第二版）
        第一版是 `background-image: url("data:image/svg+xml,…")` ＋ background-size，
        在容器裡的 Chromium 上畫得出來，**使用者的 iPhone 上完全沒出現**。
@@ -4928,19 +4984,23 @@ html[data-cardtitle="on"] .card h3 {
     border-style: solid; border-color: var(--ink-soft);
     border-width: var(--ar-w, 1.6px);
     opacity: var(--ar-o, .5); transition: opacity .45s ease;
-    /* 位置由 data-apos 那把尺決定，見下面第十六節。預設是垂直置中。 */
-    top: var(--ar-t, 50%);
-    transform: var(--ar-tf, translateY(-50%)) rotate(var(--ar-r));
+    /* **垂直永遠置中**（使用者 2026-08-13：「應該是跟標籤垂直高度一樣」）。
+       上緣／超上／超下那三案已經由他否決，那組變數整個拿掉了。 */
+    top: 50%;
+    transform: translateY(-50%) rotate(var(--ar-r));
+    /* 水平：站在淨空帶的正中間。淨空帶由 data-apos 調，角形自己跟著走 ——
+       兩個數字寫死成兩份的話，調寬淨空帶角形就會偏掉。 */
+    --ar-in: calc((var(--ar-clear, 24px) - var(--ar-s, 9px)) / 2);
   }
   /* 左邊那顆：取上與左兩條邊（Γ），逆時針轉 45 度就指向左。
-     ⚠ 旋轉角度放進 --ar-r，位置那把尺才不必為了左右各寫一條 transform。 */
+     ⚠ 旋轉角度放進 --ar-r，才不必為了左右各寫一條 transform。 */
   html[data-chiprow="on"][data-shint="e"] .swrap::before {
-    --ar-r: -45deg; left: 7px;
+    --ar-r: -45deg; left: var(--ar-in);
     border-right-width: 0; border-bottom-width: 0;
   }
   /* 右邊那顆：取上與右兩條邊（⌐），順時針轉 45 度就指向右。 */
   html[data-chiprow="on"][data-shint="e"] .swrap::after {
-    --ar-r: 45deg; right: 7px;
+    --ar-r: 45deg; right: var(--ar-in);
     border-left-width: 0; border-bottom-width: 0;
   }
   /* 正在捲的時候退到幾乎看不見。⚠ 這一條要排在下面三條**前面**：
@@ -4960,46 +5020,38 @@ html[data-cardtitle="on"] .card h3 {
 }
 
 /* ==========================================================================
-   十六、角形放哪裡、要多清楚（data-apos）—— 五段
+   十六、角形離標籤多遠（data-apos）—— 四段
    --------------------------------------------------------------------------
-   使用者 2026-08-13：「有看到角形了，不過我覺得角形不是很清楚。到底是要在
-   目前的狀態下讓它變清楚一點呢，把角形移到標籤行的上緣，或是超出上面一點，
-   或是超出下面一點，哪一個比較好不知道，做給我看看。」
+   ⚠⚠ **這一節 2026-08-13 第三輪整個換掉了。** 原本是「角形放哪裡」五段
+     （現況／更清楚／上緣／超上／超下），使用者看過之後說：
 
-   所以這把尺就是那四個候選 ＋ 現況：
+       「我知道問題出在哪裡了。那個捲動的角形應該要在標籤被模糊化的（之外），
+         因為你現在是把角形壓在標籤上面，所以怎麼看都很奇怪。然後我發現
+         放上面放下面也都不對，應該是跟標籤垂直高度一樣，
+         但是要放在標籤模糊化的出去一點的地方。」
 
-     現況　　垂直置中，壓在標記上，.5
-     更清楚　**位置完全不動**，只加重：透明度 .5→.72、線 1.6→2px、邊長 9→11px
-     上緣　　移到標記行的上緣內側（還在行內，但離開字的中線）
-     超上　　整顆移到標記行外面、上方那道空隙裡
-     超下　　整顆移到標記行外面、下方那道空隙裡
+     所以：**上緣／超上／超下三案已被否決，不要再走回去**；垂直維持置中；
+     真正要調的是「角形站的地方，標籤還剩多少殘影」。那不是角形的位置問題，
+     是**遮罩的形狀**問題 —— 解法寫在上面第十五之二節。
 
-   ⚠⚠ **只有「更清楚」那一段動了濃度，其餘三段的濃度和現況一模一樣（.5）。**
-     這是刻意的：這一輪要比的是**位置**。位置和濃度一起動，比出來的結果
-     沒辦法拆開解讀 —— 分不出是「移到上緣比較好」還是「比較濃比較好」。
-     位置選定之後要再加濃度，那是下一把尺。
-   ⚠ 超上／超下把角形放進**相鄰兩塊之間本來就有的空隙**，不是自己撐開空間：
-       主題那排　上面是「主題與科別」標題的 1.1rem（17.6px）
-       　　　　　下面是搜尋框之前的列間距 .55rem（8.8px）→ 所以往下只挪 9px
-       門診表那排上面是「開診時段」的 .8rem（12.8px）
-       　　　　　下面是表格之前的 1.15rem（18.4px）
-     ⚠ 這幾個數字一旦有人改了間距就要重算，**不要以為它們是常數**。
+   這把尺調的是遮罩末端那條淨空帶有多寬（`--ar-clear`），角形自己站在它正中間：
+
+     壓在標籤上　0px　＝ 改動前的樣子（漸層一路淡到邊緣，角形疊在殘影上）
+     18　　　　　窄一點，讓出的可視寬度少
+     24　　　　　預設
+     30　　　　　寬一點，角形離標籤最遠，但可視寬度也少最多
+
+   ⚠ 濃度四段完全相同（.5／線 1.6px／邊長 9px），只有淨空帶在動 ——
+     這一輪要比的是距離，兩個一起動就分不出是哪一個變好了。
+   ⚠ 「壓在標籤上」那一段是拿 0 去餵同一條公式，不是另外寫一套：
+     淨空 0 → 漸層直接淡到邊緣、角形的內縮量變成 (0−9)/2 ＝ −4.5px，
+     等於半顆掛在框外，正是改動前的樣子。
    ⚠ 這把尺只在 data-shint 選 Ⓔ 時有意義（其他案沒有這兩顆角形）。 */
 @media (max-width: 720px) {
-  /* ── 更清楚：位置不動，只加重 ── */
-  html[data-apos="a"] .swrap { --ar-o: .72; --ar-w: 2px; --ar-s: 11px; }
-
-  /* ── 上緣：還在行內，貼著上緣。translateY 要歸零，不然又被拉回中線。
-       ⚠⚠ **要寫 `translateY(0)`，不可以寫 `none`。** transform 的值是
-         `var(--ar-tf) rotate(…)`，代進 none 會變成 `none rotate(45deg)` ——
-         那是**無效的 transform**，整條被丟掉，角形連轉都不轉了
-         （量到 transform: none，看起來會是一個直角而不是角形）。 ── */
-  html[data-apos="b"] .swrap { --ar-t: 3px; --ar-tf: translateY(0); }
-
-  /* ── 超上／超下：整顆移到行外那道空隙裡 ── */
-  html[data-apos="c"] .swrap { --ar-t: -12px; --ar-tf: translateY(0); }
-  /* 超下用 top: 100% ＋ 位移，這樣不管那一排多高都貼在它下緣外側。 */
-  html[data-apos="d"] .swrap { --ar-t: 100%; --ar-tf: translateY(1px); }
+  html[data-apos="off"] .swrap { --ar-clear: 0px; }
+  html[data-apos="a"]   .swrap { --ar-clear: 18px; }
+  html[data-apos="b"]   .swrap { --ar-clear: 24px; }
+  html[data-apos="c"]   .swrap { --ar-clear: 30px; }
 }
 
 /* ---- Ⓓ 晃一下 --------------------------------------------------------- */
@@ -5437,9 +5489,9 @@ window.__FR_ITEMS = [
   { g:'版面與資訊', k:'shint', def:'e', w:'手機', label:'怎麼讓人知道它會捲', on:'e',
     opts:[{v:'off',lb:'不加'},{v:'a',lb:'Ⓐ漸層'},{v:'b',lb:'Ⓑ捲軸'},{v:'c',lb:'Ⓒ角形'},{v:'d',lb:'Ⓓ晃一下'},{v:'e',lb:'Ⓔ漸層＋角形'}],
     note:'<b>Ⓔ 是照你的三點改的</b>：角形拿掉圓盤只留線（背後有遮罩，不必自己墊底）、<b>左右各一顆</b>（能往哪滑才出現哪一顆）、捲的時候退到 .1、<b>停 0.7 秒再淡回來</b>。<br>Ⓐ 只有遮罩、Ⓒ 是上一版那顆有底的（留著對照）、Ⓑ 自己畫的細捲軸、Ⓓ 進場晃一下。' },
-  { g:'版面與資訊', k:'apos', def:'off', w:'手機', label:'角形放哪裡（要選 Ⓔ）', on:'a',
-    opts:[{v:'off',lb:'現況'},{v:'a',lb:'更清楚'},{v:'b',lb:'上緣'},{v:'c',lb:'超上'},{v:'d',lb:'超下'}],
-    note:'<b>只有「更清楚」動了濃度</b>（.5→.72、線 1.6→2px、邊長 9→11），其餘三段濃度和現況一模一樣 —— 這一輪要比的是<b>位置</b>，兩個一起動就分不出是哪個變好了。超上／超下是塞進相鄰兩塊本來就有的空隙，沒有自己撐開空間。' },
+  { g:'版面與資訊', k:'apos', def:'b', w:'手機', label:'角形離標籤多遠（要選 Ⓔ）', on:'b',
+    opts:[{v:'off',lb:'壓在標籤上'},{v:'a',lb:'18'},{v:'b',lb:'24'},{v:'c',lb:'30'}],
+    note:'<b>問題不在角形的位置，在遮罩的形狀。</b>原本漸層一路淡到邊緣，角形站的地方標籤還剩約 20% 殘影 —— 所以看起來像壓在標籤上。現在漸層<b>提早結束</b>，末端留一條完全透明的淨空帶，角形站在它正中間，背後一定是純底。<b>垂直維持置中</b>（上緣／超上／超下三案已否決）。代價：右邊少這麼多可視寬度。' },
   { g:'版面與資訊', k:'footdate', def:'on', done:1, w:'全部', label:'頁尾的更新日期',
     note:'頁尾寫 <b>8 月 2 日</b>，首頁實際的 lastmod 是 <b>8 月 13 日</b>，差 11 天。手寫的，沒有人維護。' }
 ];
