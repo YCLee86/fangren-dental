@@ -4984,12 +4984,27 @@ html[data-cardtitle="on"] .card h3 {
   html[data-chiprow="on"][data-shint="e"] .swrap::after {
     content: ''; position: absolute; z-index: 2;
     width: var(--ar-s, 9px); height: var(--ar-s, 9px); pointer-events: none;
-    border-style: solid; border-color: var(--ink-soft);
+    border-style: solid; border-color: var(--ar-c, var(--ink-soft));
     border-width: var(--ar-w, 1.6px);
     opacity: var(--ar-o, .5); transition: opacity .45s ease;
-    /* **垂直永遠置中**（使用者 2026-08-13：「應該是跟標籤垂直高度一樣」）。
-       上緣／超上／超下那三案已經由他否決，那組變數整個拿掉了。 */
-    top: 50%;
+    /* ⚠⚠ **垂直對的是「標籤文字的字面中線」，不是盒子的中線。**
+       （2026-08-13 第六輪，使用者：「那個角形好像沒有對標籤文字的垂直中線，
+         看起來比文字比較往下一點點」。）
+
+       量出來低 **2.31px**，是兩件事疊在一起（375、字 13.12、塊高 34）：
+         ① 捲動列自己有 `padding-bottom: .15rem`（2.4px），
+            所以包裝高 36.39 ≠ 按鈕高 34 —— 幾何中心因此低 1.20px。
+         ② 中文的字面中線本來就在**行框中線上方**：按鈕盒中心在 17.00，
+            字面中線在 15.89 —— 又低 1.11px。
+       1.20 ＋ 1.11 ＝ 2.31。只解其中一個都還會歪。
+
+       ⚠ **不能寫死成一個 em 值。** 這一站已經記過同一個坑（CLAUDE.md 第九節
+         第 9 條）：Blink 把行內盒的基線位置**進位到整數 px**，所以偏移量不是
+         字級的線性函數，而且同一個字級在不同 DPR 上會落在不同的整數。
+         這裡又多兩個變數（data-taph 的塊高、data-tapfs 的字級都會動它）。
+         所以由底下那支 JS **現場量一次**，寫進 --ar-y。
+       ⚠ 沒有 JS 的時候退回 50%（就是改動前的樣子，低 2.31px，不會壞）。 */
+    top: var(--ar-y, 50%);
     transform: translateY(-50%) rotate(var(--ar-r));
     /* 水平：往版心**外面**站（2026-08-13 第四輪，使用者：「為什麼一定要在
        那個邊框內，不可以往外面一點點嗎，感覺就是很吃裡面的空間」）。
@@ -5099,6 +5114,32 @@ html[data-cardtitle="on"] .card h3 {
      ⚠ 硬切之後「後面還有東西」就完全靠角形在講了 ——
        這正是這一段要驗的：角形自己撐不撐得住。 */
   html[data-mfade="none"] .swrap { --m-fade-set: 0px; }
+
+  /* ========================================================================
+     十六之三、角形要多深（data-acol）—— 四段
+     ------------------------------------------------------------------------
+     使用者 2026-08-13 第六輪：「那個角形的顏色有點太淡了，可能要調深一點
+     比較清楚。」
+
+     .5 是角形還壓在標籤上的時候挑的 —— 那時它疊在字上面，太深會變成髒點。
+     搬到版心外、背後是純底之後，.5 就真的太輕了。
+
+       現況　　--ink-soft ＋ .5
+       ＋　　　--ink-soft ＋ .7
+       ＋＋　　--ink-soft ＋ .9　　預設
+       墨色　　--ink　　　 ＋ .9　　最深，和標記裡的字同一階
+
+     ⚠ **沒有新增顏色。** 兩支都是站上已經在用的：--ink-soft 是次要文字
+       （對紙色 5.92:1），--ink 是內文（12.84:1）。
+     ⚠ 只動顏色與透明度，**線寬 1.6px 與邊長 9px 四段都一樣** ——
+       這一輪比的是深淺，粗細一起動就分不出來了。
+     ⚠ 「正在捲」那一態仍然是寫死的 .1，不吃這把尺 ——
+       那一態的重點是「讓開」，四種深淺都該讓到一樣淡。
+     ======================================================================== */
+  html[data-acol="off"] .swrap { --ar-c: var(--ink-soft); --ar-o: .5; }
+  html[data-acol="a"]   .swrap { --ar-c: var(--ink-soft); --ar-o: .7; }
+  html[data-acol="b"]   .swrap { --ar-c: var(--ink-soft); --ar-o: .9; }
+  html[data-acol="c"]   .swrap { --ar-c: var(--ink);      --ar-o: .9; }
   html[data-mfade="off"] .swrap { --m-fade-set: 28px; }
   html[data-mfade="a"]   .swrap { --m-fade-set: 22px; }
   html[data-mfade="b"]   .swrap { --m-fade-set: 16px; }
@@ -5442,6 +5483,52 @@ html[data-tapfs="c"] .hours-filter button { font-size: .92rem; }
   }
   function markAll() { els.forEach(mark); }
 
+  /* ── 角形對齊標籤文字的字面中線 ────────────────────────────────────────
+     為什麼要現場量、而不是寫死一個 em：見上面 CSS 那一段的 ⚠⚠。
+     一句話版本：偏移量同時被「捲動列的下內距」「中文字面中線高於行框中線」
+     兩件事影響，而後者在 Blink 裡會被進位到整數 px、還跟 DPR 有關。
+
+     ⚠ 這支**不掛在 scroll 上**。捲動時每一幀都量 canvas 太浪費，
+       而且捲動不會改變垂直位置 —— 只有版面變了（改字級、改塊高、換視窗、
+       字型載入完成）才需要重量。
+     ⚠ 量字面框要**在 400px 上量再等比例縮**：Blink 回來的
+       actualBoundingBox 顆粒很粗（實測以 1/64 em 為階），
+       直接用 13px 去量會有可見的誤差。 */
+  var _cv = null;
+  function alignOne(el) {
+    var wrap = el.__wrap;
+    if (!wrap) return;
+    var btn = el.querySelector('button');
+    if (!btn) return;
+    var wr = wrap.getBoundingClientRect();
+    if (!wr.height) return;                       /* 收起來的時候不用量 */
+    var cs = getComputedStyle(btn);
+    var fs = parseFloat(cs.fontSize);
+    if (!fs) return;
+
+    /* 基線：塞一顆零尺寸的 inline-block 探針，它的下緣就是那一行的基線。 */
+    var probe = document.createElement('span');
+    probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+    btn.appendChild(probe);
+    var baseline = probe.getBoundingClientRect().bottom;
+    probe.remove();
+    if (!baseline) return;
+
+    if (!_cv) { try { _cv = document.createElement('canvas').getContext('2d'); } catch (e) { return; } }
+    if (!_cv) return;
+    _cv.font = cs.fontWeight + ' 400px ' + cs.fontFamily;
+    var m;
+    try { m = _cv.measureText((btn.textContent || '').trim() || '字'); } catch (e) { return; }
+    if (!m || !m.actualBoundingBoxAscent) return;   /* 舊瀏覽器沒有這兩個值就不動 */
+
+    var asc = m.actualBoundingBoxAscent / 400 * fs;
+    var desc = m.actualBoundingBoxDescent / 400 * fs;
+    /* 字面中線 ＝ 基線 −（上伸 − 下伸）÷ 2 */
+    var mid = baseline - (asc - desc) / 2;
+    wrap.style.setProperty('--ar-y', (mid - wr.top).toFixed(2) + 'px');
+  }
+  function alignAll() { els.forEach(alignOne); }
+
   /* 「正在捲」與「停下來了」。Ⓔ 的兩顆角形靠這個退場與回來：
      捲的當下掛 data-sc="1"，最後一次 scroll 事件之後 700ms 拿掉。
      ⚠ 700 是挑過的：太短（~300）手指還在滑的空檔就會閃一下，
@@ -5457,15 +5544,18 @@ html[data-tapfs="c"] .hours-filter button { font-size: .92rem; }
       }, 700);
     }, { passive: true });
   });
-  markAll();
-  addEventListener('resize', markAll);
-  /* 字型換掉會改變每顆標記的寬度，連帶改變「有沒有溢出」。 */
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(markAll);
-  addEventListener('load', function () { setTimeout(markAll, 200); });
-  /* 切換條改了 data-chiprow／data-taph 之後版面會變，狀態要重算。
-     用 MutationObserver 盯 <html> 的屬性，比在切換條裡硬接一條線乾淨。 */
+  function refresh() { markAll(); alignAll(); }
+  refresh();
+  addEventListener('resize', refresh);
+  /* 字型換掉會改變每顆標記的寬度（連帶「有沒有溢出」），也會改變字面框 ——
+     兩件事都要重算。 */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+  addEventListener('load', function () { setTimeout(refresh, 200); });
+  /* 切換條改了 data-chiprow／data-taph／data-tapfs 之後版面會變，狀態與對齊都要重算。
+     用 MutationObserver 盯 <html> 的屬性，比在切換條裡硬接一條線乾淨。
+     ⚠ 這支寫的是 .swrap 的 style，不是 <html> 的屬性，所以不會自己觸發自己。 */
   if (window.MutationObserver) {
-    new MutationObserver(function () { requestAnimationFrame(markAll); })
+    new MutationObserver(function () { requestAnimationFrame(refresh); })
       .observe(document.documentElement, { attributes: true });
   }
 
@@ -5543,6 +5633,9 @@ window.__FR_ITEMS = [
   { g:'版面與資訊', k:'apos', def:'a10', w:'手機', label:'角形往外多遠（要選 Ⓔ）', on:'a10',
     opts:[{v:'off',lb:'貼齊內緣'},{v:'a',lb:'6'},{v:'a9',lb:'9'},{v:'a10',lb:'10'},{v:'a11',lb:'11'},{v:'b',lb:'12'},{v:'c',lb:'16'}],
     note:'角形移到<b>版心外面</b>那塊本來就空著的留白，不再跟內容搶空間。淨空帶因此歸零 —— 被吃掉的寬度 <b>52px → 16px</b>。<b>16 是上限</b>：留白只有 20px（主題）／19.2px（門診表），角形自己 9px 寬，往外 16 時離螢幕邊只剩 4px。「貼齊內緣」是對照組，就是上一版那種吃空間的樣子。' },
+  { g:'版面與資訊', k:'acol', def:'b', w:'手機', label:'角形要多深（要選 Ⓔ）', on:'b',
+    opts:[{v:'off',lb:'現況'},{v:'a',lb:'＋'},{v:'b',lb:'＋＋'},{v:'c',lb:'墨色'}],
+    note:'<b>.5 是角形還壓在標籤上時挑的</b> —— 那時太深會變成髒點。搬到版心外、背後是純底之後就太輕了。沒有新增顏色：前三段是 <b>--ink-soft</b>（次要文字色）調透明度，最後一段換 <b>--ink</b>（內文色）。線寬與邊長四段都一樣。' },
   { g:'版面與資訊', k:'mfade', def:'b', w:'手機', label:'漸層要多長（要選 Ⓔ）', on:'b',
     opts:[{v:'none',lb:'無'},{v:'c',lb:'10'},{v:'b',lb:'16'},{v:'a',lb:'22'},{v:'off',lb:'28'}],
     note:'28 是角形還在版心內時挑的 —— 那時要一段夠長的漸層把它背後的標記洗乾淨。角形搬出去之後，漸層剩下的任務只是<b>把切口收軟</b>。<b>「無」是硬切</b>（第五輪指定）—— 那時「後面還有東西」就完全靠角形在講，正好驗角形自己撐不撐得住。' },
