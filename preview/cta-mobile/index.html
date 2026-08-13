@@ -4890,14 +4890,12 @@ html[data-cardtitle="on"] .card h3 {
        .chips 與 .hours-filter 共用的 gap 值，改 gap 的話這裡要一起改。
        它們是浮在標記上面的（sticky 是定位元素，會蓋過靜態的標記）。
 
-   ③ **會退場、停下來再回來** —— 三態：
-        起點／中間／到底　停著　→ 提示態 .5（該有的那一側才出現）
-        正在捲　　　　　　　　→ .1，幾乎看不見
-        停了 700ms　　　　　　→ 淡回 .5（.45s 的淡入，不會突然跳出來）
-     「正在捲」由底下那支 JS 寫 data-sc="1"，最後一次 scroll 事件過 700ms 拿掉。
-     ⚠ **CSS 的順序不能反**：`[data-sc="1"]` 那一條要排在 start／end／none
-       前面。四條的權重相同，靠順序決勝 —— 排反了會變成「在起點捲動時
-       左邊那顆也跑出來」，而左邊根本沒東西可以滑。
+   ③ **各自跟著自己那一側的餘量連續變化**（2026-08-13 第七輪改成這樣）
+     ⚠⚠ 這一條原本寫的是「正在捲就退到 .1，停 700ms 再淡回來」，
+       **那個模型已經整組拿掉，不要加回來**。使用者：「滑動的時候不要變淡，
+       是滑到底再隨著滑動減緩變淡。所以往右滑到底，左角形並不會變淡也不會
+       消失。這樣才符合介面設計的邏輯。」——「手在動」不等於「沒得滑了」。
+       現在的模型與斜坡長度寫在下面 CSS 的 opacity 那一段。
    ⚠ 兩顆都 pointer-events: none —— 它們蓋在標記上面，不擋點擊。 */
 @media (max-width: 720px) {
   /* 外層：Ⓔ 才把 .swrap 變成真的區塊（平常是 display: contents，等於不存在）。
@@ -4986,7 +4984,27 @@ html[data-cardtitle="on"] .card h3 {
     width: var(--ar-s, 9px); height: var(--ar-s, 9px); pointer-events: none;
     border-style: solid; border-color: var(--ar-c, var(--ink-soft));
     border-width: var(--ar-w, 1.6px);
-    opacity: var(--ar-o, .5); transition: opacity .45s ease;
+    /* ⚠⚠ **透明度跟著「這一側還剩多少可以滑」連續變化**（2026-08-13 第七輪）。
+       使用者：「滑動的時候不要變淡，是滑到底再隨著滑動減緩變淡。所以往右
+       滑到底，左角形並不會變淡也不會消失。這樣才符合介面設計的邏輯。」
+
+       原本的模型是錯的：它把「正在捲」當成要退場的訊號（data-sc ＋ 700ms
+       計時器），所以一動手兩顆就一起變淡 —— 但**手在動不代表沒得滑了**。
+       而且它用 start／mid／end 三個離散狀態決定顯不顯示，到底的那一瞬間
+       右邊那顆是「啪」地消失，不是滑順地淡掉。
+
+       現在兩顆各自看自己那一側：
+           左邊的係數 --ar-fl ＝ min(1, scrollLeft ÷ 斜坡)
+           右邊的係數 --ar-fr ＝ min(1, (可捲總量 − scrollLeft) ÷ 斜坡)
+       斜坡 48px。所以：
+         ・手在滑但兩邊都還很多 → 兩顆都是滿的（不會變淡）
+         ・快滑到右底 → 右邊那顆在最後 48px 內逐漸淡掉
+         ・已經滑到右底 → **左邊那顆滿的，因為左邊還有一整排可以滑回去**
+       ⚠ data-sc 那一整套（屬性、計時器、.1 的規則）已經整個拿掉，不要加回來。
+       ⚠ 過場 .15s 是為了讓捲動事件的顆粒平滑，不是為了做效果 ——
+         再長就會跟不上手指，看起來像慢半拍。 */
+    opacity: calc(var(--ar-o, .5) * var(--ar-f, 1));
+    transition: opacity .15s linear;
     /* ⚠⚠ **垂直對的是「標籤文字的字面中線」，不是盒子的中線。**
        （2026-08-13 第六輪，使用者：「那個角形好像沒有對標籤文字的垂直中線，
          看起來比文字比較往下一點點」。）
@@ -5012,30 +5030,19 @@ html[data-cardtitle="on"] .card h3 {
     --ar-in: calc(-1 * var(--ar-out, 12px));
   }
   /* 左邊那顆：取上與左兩條邊（Γ），逆時針轉 45 度就指向左。
-     ⚠ 旋轉角度放進 --ar-r，才不必為了左右各寫一條 transform。 */
+     ⚠ 旋轉角度放進 --ar-r，才不必為了左右各寫一條 transform。
+     ⚠ 它吃的是**左側**的餘量係數 --ar-fl。 */
   html[data-chiprow="on"][data-shint="e"] .swrap::before {
     --ar-r: -45deg; left: var(--ar-in);
+    --ar-f: var(--ar-fl, 0);
     border-right-width: 0; border-bottom-width: 0;
   }
   /* 右邊那顆：取上與右兩條邊（⌐），順時針轉 45 度就指向右。 */
   html[data-chiprow="on"][data-shint="e"] .swrap::after {
     --ar-r: 45deg; right: var(--ar-in);
+    --ar-f: var(--ar-fr, 1);
     border-left-width: 0; border-bottom-width: 0;
   }
-  /* 正在捲的時候退到幾乎看不見。⚠ 這一條要排在下面三條**前面**：
-     四條權重相同、靠順序決勝，排反了會變成「在起點捲動時左邊那顆也跑出來」，
-     而左邊根本沒東西可以滑。 */
-  html[data-chiprow="on"][data-shint="e"] .swrap[data-sc="1"]::before,
-  html[data-chiprow="on"][data-shint="e"] .swrap[data-sc="1"]::after {
-    opacity: .1; transition: opacity .15s ease;   /* 退場要快，回來才慢 */
-  }
-  /* 在起點：左邊沒東西可以滑。 */
-  html[data-chiprow="on"][data-shint="e"] .swrap[data-sx="start"]::before { opacity: 0; }
-  /* 到底：右邊沒東西可以滑（左邊那顆留著 —— 使用者說的就是這件事）。 */
-  html[data-chiprow="on"][data-shint="e"] .swrap[data-sx="end"]::after { opacity: 0; }
-  /* 本來就不用捲：兩顆都不要。 */
-  html[data-chiprow="on"][data-shint="e"] .swrap[data-sx="none"]::before,
-  html[data-chiprow="on"][data-shint="e"] .swrap[data-sx="none"]::after { opacity: 0; }
 }
 
 /* ==========================================================================
@@ -5125,8 +5132,8 @@ html[data-cardtitle="on"] .card h3 {
      搬到版心外、背後是純底之後，.5 就真的太輕了。
 
        現況　　--ink-soft ＋ .5
-       ＋　　　--ink-soft ＋ .7
-       ＋＋　　--ink-soft ＋ .9　　預設
+       ＋　　　--ink-soft ＋ .7　　**預設**（使用者 2026-08-13 第七輪：「一個 ＋ 就夠了」）
+       ＋＋　　--ink-soft ＋ .9
        墨色　　--ink　　　 ＋ .9　　最深，和標記裡的字同一階
 
      ⚠ **沒有新增顏色。** 兩支都是站上已經在用的：--ink-soft 是次要文字
@@ -5458,6 +5465,12 @@ html[data-tapfs="c"] .hours-filter button { font-size: .92rem; }
     el.__wrap = wrap;
   });
 
+  /* Ⓔ 的角形在最後這麼多像素內逐漸淡掉。48 是挑的：
+     ・太短（~16）幾乎等於「啪」地消失，就是第七輪之前被否決的那個感覺
+     ・太長（~120）整趟滑動有一大半時間角形都是半透明的，反而看不清楚
+     主題那排可捲 434px，48 佔 11%。 */
+  var RAMP = 48;
+
   function mark(el) {
     var max = el.scrollWidth - el.clientWidth;
     /* 沒有溢出就是 none —— 電腦版（一排放得下）與關掉 chiprow 的時候都走這裡，
@@ -5465,13 +5478,26 @@ html[data-tapfs="c"] .hours-filter button { font-size: .92rem; }
     if (max <= 1) {
       el.setAttribute('data-sx', 'none');
       if (el.__bar) el.__bar.setAttribute('data-sx', 'none');
+      /* 不用捲的時候兩顆都不要 —— 由係數歸零做掉，不必再寫一條 CSS。 */
+      if (el.__wrap) {
+        el.__wrap.setAttribute('data-sx', 'none');
+        el.__wrap.style.setProperty('--ar-fl', '0');
+        el.__wrap.style.setProperty('--ar-fr', '0');
+      }
       return;
     }
     var x = el.scrollLeft;
     var sx = x <= 1 ? 'start' : (x >= max - 1 ? 'end' : 'mid');
     el.setAttribute('data-sx', sx);
     /* 外層也要知道，Ⓔ 的角形掛在它身上（見上面「為什麼要包一層」）。 */
-    if (el.__wrap) el.__wrap.setAttribute('data-sx', sx);
+    if (el.__wrap) {
+      el.__wrap.setAttribute('data-sx', sx);
+      /* ⚠ 兩顆各看自己那一側還剩多少可以滑，**不看手有沒有在動**。
+           所以往右滑到底的時候左邊那顆是滿的 —— 左邊還有一整排可以滑回去。
+           推導與被否決的舊模型寫在上面 CSS 的 opacity 那一段。 */
+      el.__wrap.style.setProperty('--ar-fl', Math.min(1, x / RAMP).toFixed(3));
+      el.__wrap.style.setProperty('--ar-fr', Math.min(1, (max - x) / RAMP).toFixed(3));
+    }
     if (el.__bar) {
       el.__bar.setAttribute('data-sx', sx);
       /* 拇指的長度 ＝ 看得到的比例，位置 ＝ 已經捲掉的比例 ×（軌道 − 拇指）。
@@ -5529,20 +5555,14 @@ html[data-tapfs="c"] .hours-filter button { font-size: .92rem; }
   }
   function alignAll() { els.forEach(alignOne); }
 
-  /* 「正在捲」與「停下來了」。Ⓔ 的兩顆角形靠這個退場與回來：
-     捲的當下掛 data-sc="1"，最後一次 scroll 事件之後 700ms 拿掉。
-     ⚠ 700 是挑過的：太短（~300）手指還在滑的空檔就會閃一下，
-       太長（~1200）停下來要等很久才看得到提示，等於沒有。
-     ⚠ 只寫屬性，要不要理它是 CSS 的事 —— 其他四案完全不看 data-sc。 */
+  /* ⚠⚠ **這裡曾經有一整套「正在捲就退場、停 700ms 再回來」的機制
+       （data-sc ＋ 計時器），2026-08-13 第七輪整個拿掉了。** 使用者：
+       「滑動的時候不要變淡，是滑到底再隨著滑動減緩變淡。」
+       那個模型把「手在動」當成要退場的訊號，但**手在動不代表沒得滑了**。
+       現在只要 mark() 一支，兩顆角形各自跟著自己那一側的餘量連續變化。
+       不要把 data-sc 加回來。 */
   els.forEach(function (el) {
-    el.addEventListener('scroll', function () {
-      mark(el);
-      if (el.__wrap) el.__wrap.setAttribute('data-sc', '1');
-      clearTimeout(el.__sct);
-      el.__sct = setTimeout(function () {
-        if (el.__wrap) el.__wrap.removeAttribute('data-sc');
-      }, 700);
-    }, { passive: true });
+    el.addEventListener('scroll', function () { mark(el); }, { passive: true });
   });
   function refresh() { markAll(); alignAll(); }
   refresh();
@@ -5633,9 +5653,9 @@ window.__FR_ITEMS = [
   { g:'版面與資訊', k:'apos', def:'a10', w:'手機', label:'角形往外多遠（要選 Ⓔ）', on:'a10',
     opts:[{v:'off',lb:'貼齊內緣'},{v:'a',lb:'6'},{v:'a9',lb:'9'},{v:'a10',lb:'10'},{v:'a11',lb:'11'},{v:'b',lb:'12'},{v:'c',lb:'16'}],
     note:'角形移到<b>版心外面</b>那塊本來就空著的留白，不再跟內容搶空間。淨空帶因此歸零 —— 被吃掉的寬度 <b>52px → 16px</b>。<b>16 是上限</b>：留白只有 20px（主題）／19.2px（門診表），角形自己 9px 寬，往外 16 時離螢幕邊只剩 4px。「貼齊內緣」是對照組，就是上一版那種吃空間的樣子。' },
-  { g:'版面與資訊', k:'acol', def:'b', w:'手機', label:'角形要多深（要選 Ⓔ）', on:'b',
+  { g:'版面與資訊', k:'acol', def:'a', w:'手機', label:'角形要多深（要選 Ⓔ）', on:'a',
     opts:[{v:'off',lb:'現況'},{v:'a',lb:'＋'},{v:'b',lb:'＋＋'},{v:'c',lb:'墨色'}],
-    note:'<b>.5 是角形還壓在標籤上時挑的</b> —— 那時太深會變成髒點。搬到版心外、背後是純底之後就太輕了。沒有新增顏色：前三段是 <b>--ink-soft</b>（次要文字色）調透明度，最後一段換 <b>--ink</b>（內文色）。線寬與邊長四段都一樣。' },
+    note:'<b>你選了「＋」，已設為預設。</b>.5 是角形還壓在標籤上時挑的 —— 那時太深會變成髒點。搬到版心外、背後是純底之後就太輕了。沒有新增顏色：前三段是 <b>--ink-soft</b>（次要文字色）調透明度，最後一段換 <b>--ink</b>（內文色）。線寬與邊長四段都一樣。' },
   { g:'版面與資訊', k:'mfade', def:'b', w:'手機', label:'漸層要多長（要選 Ⓔ）', on:'b',
     opts:[{v:'none',lb:'無'},{v:'c',lb:'10'},{v:'b',lb:'16'},{v:'a',lb:'22'},{v:'off',lb:'28'}],
     note:'28 是角形還在版心內時挑的 —— 那時要一段夠長的漸層把它背後的標記洗乾淨。角形搬出去之後，漸層剩下的任務只是<b>把切口收軟</b>。<b>「無」是硬切</b>（第五輪指定）—— 那時「後面還有東西」就完全靠角形在講，正好驗角形自己撐不撐得住。' },
