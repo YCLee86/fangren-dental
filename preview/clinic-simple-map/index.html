@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-pos="card" data-shape="blob" data-mark="brick" data-block="warm" data-park="tile">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>提案：診所簡易地圖（芳仁）</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<link rel="icon" href="../../assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192.png?v=10">
+
+<!-- ==========================================================================
+     提案：診所資訊要不要放一張「簡易地圖」（2026-08-13）
+     --------------------------------------------------------------------------
+     來源：使用者提供的一張設計稿截圖（設計者「無事生活 吳曉柔」，同一張稿子
+     底下就是診所那排品牌色點）。那張圖是一個圓形的示意地圖 —— 白色的路、
+     米灰色的街廓、紅色豆子標診所、藍色圓圈標停車場、一個三角形指「入口」。
+     這一頁把那張圖的**資訊**重畫成向量，顏色全部換成站上既有的變數。
+
+     ⚠ 這一頁是**自己寫的獨立頁**，不是 index.html 的複本（做法同
+       /history/clinic-schedule.html）。所以 CLAUDE.md 第八節那四個陷阱
+       （相對路徑、計數器、切換條插在哪、dist 收不收）只剩下相對路徑那一條要顧，
+       而這一頁只用到 favicon，已經寫成 ../../。
+     ⚠ **沒有掛 assets/counter.js，也沒有任何 data-views-self** —— 提案頁每開一次
+       就會讓首頁的計數多一次，那是 2026-08-07 踩過的坑。
+
+     ---- 街廓怎麼來的 ------------------------------------------------------
+     照著那張設計稿的拓樸關係重排，不是描圖：
+
+       ・南北向（由西往東）：平和街 → 永樂街 → 永安路
+       ・東西向（由北往南）：文化路 → 平和街12巷（西側）／永安路14巷（東側）
+                             → 平和街33巷 → 大同路
+       ・診所在**平和街與永樂街之間、12巷與33巷之間**那一個街廓裡，靠永樂街那一側。
+         這和地址「永樂街 70 號」對得上 —— 門開在永樂街。
+       ・入口的三角形指向診所東緣，「入口」兩個字落在永樂街上。
+       ・停車場兩處：西邊那一處在診所北邊同一排街廓，東邊那一處在永安路14巷旁。
+
+     設計稿上「平和街12巷」與「永安路14巷」是兩條**不連續**的巷子，高度也差一點，
+     所以這裡也沒有把它們接成同一條橫線。
+
+     ---- 顏色（一顆都沒有新增）--------------------------------------------
+     PALETTE.md 是唯一依據，這一頁只是重新組合既有的值：
+
+       路面    --card   #f4f4f5      街廓    見下面的三案
+       街名    --ink    #2a2c27      診所    --brick #AF4C52（磚紅）
+       停車場  --tile   #252d4a（診間地磚的深藍）
+
+     ⚠ **街名用 --ink 不是 --ink-soft**，這是量出來的：柔墨 #5c5f57 站在街廓上
+       只有 4.20（冷）／4.20（暖）／3.90（深）:1，三案都低於 AA 的 4.5；
+       換成墨色是 9.11／9.12／8.46:1。地圖上的字比內文更需要看得清楚，
+       這裡不跟著內文用柔墨。
+     ⚠ **「入口」兩個字底下墊了一塊路面色的牌子**：磚紅站在卡色上是 4.80:1（過 AA），
+       站在紙色只有 4.17、站在街廓更低到 3.4 —— 磚紅只能待在卡色上，
+       這是 PALETTE.md 早就寫過的限制，不是這一輪新加的。
+     ⚠ 診所那顆豆子是**填色的塊、不是字**，所以 3.41:1 不受文字對比度限制；
+       它旁邊還有三角形與「入口」兩個字幫忙指認。
+     ⚠ 豆子上那一顆白點是品牌的形狀語彙（設計稿裡每一顆色點都有），
+       同時和標誌上的牙洞呼應。
+
+     街廓三案（都會影響「路看不看得出來」，括號是路面 vs 街廓的對比）：
+       冷 cool  --rule #cdd0d2                    1.41:1  站上既有的線色，最省
+       暖 warm  --stool 16% 混進紙色 #d4cfca      1.41:1  最接近設計稿的米灰
+       深 deep  --stool 22% 混進紙色 #cfc7c0      1.52:1  路最清楚，但整張偏重
+     ⚠ **不要用紙色 --paper 當街廓** —— 量過是 1.15:1，路幾乎消失，等於整張只剩字。
+
+     ---- 這一頁要決定的事 --------------------------------------------------
+     底下的切換條一項一顆開關，網址也吃參數（?pos=card&shape=blob&mark=brick…）：
+
+       pos    地圖放哪：自成一張卡（整列）／收在地址卡裡
+       shape  外框：有機色塊／正圓／圓角方（12px 那一族）
+       mark   診所那顆的顏色：磚紅／深綠松／苔綠
+       block  街廓底色：冷／暖／深
+       park   停車場：地磚深藍／矯正藍／柔墨／不顯示
+
+     ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
+       這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
+     ========================================================================== -->
+
+<style>
+:root {
+  --pad: clamp(1.25rem, 3vw, 2.5rem);
+  --shell: 1160px;
+
+  --paper: #e2e5e6;
+  --card:  #f4f4f5;
+  --rule:  #cdd0d2;
+  --ink:   #2a2c27;
+  --ink-soft: #5c5f57;
+
+  --teal:  #214D48;
+  --taupe: #7D5A58;
+  --moss:  #5D6D55;
+  --brick: #AF4C52;
+  --stool: #8d5e3a;
+  --tile:  #252d4a;
+
+  /* 地圖自己的五個值，全部指回上面那些變數 */
+  --map-road:  var(--card);
+  --map-block: #d4cfca;
+  --map-ink:   var(--ink);
+  --map-mark:  var(--brick);
+  --map-park:  var(--tile);
+}
+html[data-block="cool"] { --map-block: var(--rule); }   /* #cdd0d2 */
+html[data-block="warm"] { --map-block: #d4cfca; }       /* 凳子的褐 16% 混進紙色 */
+html[data-block="deep"] { --map-block: #cfc7c0; }       /* 同上，22% */
+html[data-mark="brick"] { --map-mark: var(--brick); }
+html[data-mark="teal"]  { --map-mark: var(--teal); }
+html[data-mark="moss"]  { --map-mark: var(--moss); }
+html[data-park="tile"]  { --map-park: var(--tile); }
+html[data-park="ortho"] { --map-park: #4478b5; }        /* 齒顎矯正的套色 */
+html[data-park="ink"]   { --map-park: var(--ink-soft); }
+html[data-park="off"] .map-park { display: none; }
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px; line-height: 1.85; letter-spacing: .01em;
+}
+.shell { max-width: var(--shell); margin-inline: auto; padding-inline: var(--pad); }
+main { padding-block: 2.4rem 9rem; }
+h1 { font-size: 1.5rem; font-weight: 500; margin: 0 0 .4rem; letter-spacing: .04em; }
+.lead { margin: 0 0 2rem; font-size: .9rem; line-height: 1.9; color: var(--ink-soft); max-width: 46em; }
+h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .05em; }
+
+/* ---- 底下這一段是 index.html「診所資訊」那一節的複本，只留這一頁用得到的 ---- */
+.info { display: grid; gap: 1.2rem; grid-template-columns: repeat(2, 1fr); }
+.info-card {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 1.1rem 1.2rem 1.2rem; min-width: 0;
+}
+.info-card h3 {
+  display: inline-block; margin: 0 0 .55rem;
+  font-size: .76rem; font-weight: 400; letter-spacing: .08em; line-height: 1.6;
+  padding: .07rem .65rem; border-radius: 9px;
+  background: var(--teal); color: #fff;
+}
+.info-card p { margin: 0; font-size: .93rem; line-height: 1.8; }
+.info-card .big {
+  display: inline-block; margin-top: .15rem;
+  background: #dbe0e0; border-radius: 10px;
+  padding: .3rem .85rem; font-size: 1.2rem; letter-spacing: .04em;
+}
+.info-card .big a { color: var(--teal); text-decoration: none; }
+.info-card a { color: var(--teal); }
+.card-map { grid-column: 1 / -1; }
+
+/* ---- 地圖本體 ---------------------------------------------------------- */
+.map-fig { margin: 0; }
+/* 收在地址卡裡的時候，地圖接在地址那兩行下面 */
+.info-card .map-fig { margin-top: .9rem; }
+.map-svg {
+  display: block; width: 100%; height: auto; max-width: 460px;
+  font-family: inherit;
+}
+.card-map .map-svg { max-width: 420px; margin-inline: auto; }
+.map-note { margin-top: .7rem; font-size: .8rem; line-height: 1.7; color: var(--ink-soft); }
+/* ≤720 的地方 .info 收成一欄（同 index.html 的斷點），地圖才不會被擠成
+   150px 寬 —— 那個寬度上街名只剩 5.7px，等於整張圖只剩形狀。 */
+@media (max-width: 720px) { .info { grid-template-columns: 1fr; } }
+.map-svg text { fill: var(--map-ink); font-weight: 400; }
+.map-svg .lbl  { font-size: 26px; letter-spacing: .06em; }
+.map-svg .lbl-s { font-size: 23px; letter-spacing: .04em; }
+.map-svg .ent  { font-size: 29px; letter-spacing: .1em; fill: var(--map-mark); }
+.map-svg .pk   { font-size: 34px; fill: var(--map-road); letter-spacing: 0; }
+
+/* ---- 切換條（定案後整段刪掉）------------------------------------------ */
+.sw {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  background: rgba(25,22,20,.93); color: #fff;
+  padding: .55rem var(--pad) .8rem;
+  font-size: .78rem; line-height: 1.5;
+  max-height: 42vh; overflow-y: auto;
+}
+.sw div { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; margin-top: .3rem; }
+.sw b { font-weight: 400; opacity: .62; width: 4.4em; flex: none; }
+.sw button {
+  font: inherit; cursor: pointer; padding: .2rem .6rem; border-radius: 8px;
+  background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.32);
+}
+.sw button[aria-pressed="true"] { background: #fff; color: #191614; border-color: #fff; }
+</style>
+</head>
+
+<body>
+<main class="shell">
+  <h1>提案：診所簡易地圖</h1>
+  <p class="lead">
+    照設計稿上的街廓重畫成向量圖：白色的路、米灰色的街廓、一顆豆子標診所、
+    三角形指入口、兩處停車場。顏色全部取自站上既有的色票，沒有新增任何色值。
+    底下的切換條可以逐項對照。
+  </p>
+
+  <h2>診所資訊</h2>
+  <div class="info">
+    <div class="info-card" id="card-addr">
+      <h3>地址</h3>
+      <p>雲林縣斗六市永樂街 70 號<br>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">在 Google 地圖開啟</a></p>
+    </div>
+
+    <div class="info-card">
+      <h3>電話</h3>
+      <p class="big"><a href="tel:+88655339369"><data value="05-533-9369">(05)5339-369</data></a></p>
+    </div>
+
+    <div class="info-card card-map" id="card-map">
+      <h3>簡易地圖</h3>
+      <div id="map-slot"></div>
+    </div>
+  </div>
+</main>
+
+<!-- 地圖本體。JS 會照 data-pos 把它搬進「地址卡」或「自己那張卡」。
+     viewBox 640×640；街廓、路寬、標記位置全部寫在這裡，改一個數字就整張跟著動。 -->
+<template id="map-tpl">
+<figure class="map-fig">
+  <svg class="map-svg" viewBox="0 0 640 640" role="img" aria-labelledby="mt md">
+    <title id="mt">芳仁牙醫診所簡易地圖</title>
+    <desc id="md">診所位在永樂街上、平和街與永樂街之間的街廓內，北接文化路、南臨大同路與平和街33巷，入口朝永樂街；西側街廓與東側永安路14巷旁各有一處停車場。</desc>
+
+    <defs>
+      <!-- 三種外框。有機色塊那一條是極座標八個點轉成的封閉貝茲曲線：
+           四個角的半徑（328~334）比上下左右（298~306）大，所以它是一顆
+           「圓角方」而不是圓 —— 和設計稿上那排色點同一種語彙，邊緣會呼吸。 -->
+      <clipPath id="clip-blob"><path d="M320 18C398.02 17.76 504.76 34.91 554.76 85.24C604.76 135.57 620.47 242.22 620 320C619.53 397.78 601.93 500.93 551.93 551.93C501.93 602.93 398.02 625.29 320 626C241.98 626.71 133.49 607.17 83.83 556.17C34.16 505.17 21.53 398.25 22 320C22.47 241.75 36.99 136.99 86.65 86.65C136.32 36.32 241.98 18.24 320 18Z"/></clipPath>
+      <clipPath id="clip-circle"><circle cx="320" cy="320" r="317"/></clipPath>
+      <clipPath id="clip-round"><rect x="2" y="2" width="636" height="636" rx="44"/></clipPath>
+    </defs>
+
+    <g id="map-clip" clip-path="url(#clip-blob)">
+      <!-- 街廓（整張底） -->
+      <rect width="640" height="640" fill="var(--map-block)"/>
+
+      <!-- 路。南北向三條、東西向兩條大路 ＋ 三條巷子 -->
+      <g fill="var(--map-road)">
+        <rect x="168" y="0"   width="36"  height="640"/><!-- 平和街 -->
+        <rect x="372" y="0"   width="36"  height="640"/><!-- 永樂街 -->
+        <rect x="536" y="0"   width="40"  height="640"/><!-- 永安路 -->
+        <rect x="0"   y="96"  width="640" height="36"/> <!-- 文化路 -->
+        <rect x="0"   y="536" width="640" height="38"/> <!-- 大同路 -->
+        <rect x="0"   y="246" width="204" height="22"/> <!-- 平和街12巷 -->
+        <rect x="372" y="214" width="268" height="22"/> <!-- 永安路14巷 -->
+        <rect x="0"   y="424" width="408" height="22"/> <!-- 平和街33巷 -->
+      </g>
+
+      <!-- 街名。橫的寫在路面上，直的沿著路排（一個字一個 tspan，
+           不用 writing-mode —— Safari 對 SVG 的直排支援不齊）。 -->
+      <text class="lbl" x="286" y="123" text-anchor="middle">文化路</text>
+      <text class="lbl" x="286" y="563" text-anchor="middle">大同路</text>
+      <text class="lbl" x="186" y="182" text-anchor="middle"><tspan x="186">平</tspan><tspan x="186" dy="30">和</tspan><tspan x="186" dy="30">街</tspan></text>
+      <text class="lbl" x="390" y="182" text-anchor="middle"><tspan x="390">永</tspan><tspan x="390" dy="30">樂</tspan><tspan x="390" dy="30">街</tspan></text>
+      <!-- 「永安路」壓在 14 巷那一段會和巷名擠在一起，所以往下排到巷子底下 -->
+      <text class="lbl" x="556" y="336" text-anchor="middle"><tspan x="556">永</tspan><tspan x="556" dy="30">安</tspan><tspan x="556" dy="30">路</tspan></text>
+      <text class="lbl-s" x="36"  y="306">平和街12巷</text>
+      <text class="lbl-s" x="416" y="200">永安路14巷</text>
+      <text class="lbl-s" x="212" y="480">平和街33巷</text>
+
+      <!-- 停車場 -->
+      <g class="map-park">
+        <circle cx="250" cy="196" r="27" fill="var(--map-park)"/>
+        <text class="pk" x="250" y="208" text-anchor="middle">P</text>
+        <circle cx="470" cy="278" r="27" fill="var(--map-park)"/>
+        <text class="pk" x="470" y="290" text-anchor="middle">P</text>
+      </g>
+
+      <!-- 診所。豆子（同品牌色點的做法）＋ 牙洞白點 ＋ 指向入口的三角形。
+           ⚠ 「入口」兩個字**寫在永樂街的路面上**（直排），不是寫在街廓上：
+              磚紅站在路面（卡色）是 4.80:1 過 AA，站在街廓只有 3.4，撐不住字。
+              第一版是在街廓上墊一塊路面色的牌子，看起來像一顆按鈕，改掉了。 -->
+      <g class="map-mark">
+        <path fill="var(--map-mark)" transform="translate(290 344)"
+              d="M62 0C61.76 12.96 48.52 30.52 38.18 38.18C27.85 45.85 12.85 45.88 0 46C-12.85 46.12 -28.89 46.56 -38.89 38.89C-48.89 31.22 -60.35 12.61 -60 0C-59.65 -12.61 -46.77 -28.94 -36.77 -36.77C-26.77 -44.6 -12.73 -46.53 0 -47C12.73 -47.47 29.26 -47.43 39.6 -39.6C49.93 -31.76 62.24 -12.96 62 0Z"/>
+        <circle cx="266" cy="326" r="9" fill="var(--map-road)"/>
+        <path fill="var(--map-mark)" d="M356 344L374 334L374 354Z"/>
+        <text class="ent" x="390" y="336" text-anchor="middle"><tspan x="390">入</tspan><tspan x="390" dy="30">口</tspan></text>
+      </g>
+    </g>
+  </svg>
+  <figcaption class="map-note">示意圖，非按實際比例。門口在永樂街這一側。</figcaption>
+</figure>
+</template>
+
+<!-- ⚠ 切換條與底下這支 JS 都是提案用的，定案後整段刪掉，不要跟著搬進 index.html -->
+<div class="sw" id="sw">
+  <div><b>放哪</b>
+    <button data-k="pos" data-v="card">自成一張卡</button>
+    <button data-k="pos" data-v="addr">收在地址卡裡</button>
+  </div>
+  <div><b>外框</b>
+    <button data-k="shape" data-v="blob">有機色塊</button>
+    <button data-k="shape" data-v="circle">正圓</button>
+    <button data-k="shape" data-v="round">圓角方</button>
+  </div>
+  <div><b>診所</b>
+    <button data-k="mark" data-v="brick">磚紅</button>
+    <button data-k="mark" data-v="teal">深綠松</button>
+    <button data-k="mark" data-v="moss">苔綠</button>
+  </div>
+  <div><b>街廓</b>
+    <button data-k="block" data-v="warm">暖</button>
+    <button data-k="block" data-v="cool">冷</button>
+    <button data-k="block" data-v="deep">深</button>
+  </div>
+  <div><b>停車場</b>
+    <button data-k="park" data-v="tile">地磚深藍</button>
+    <button data-k="park" data-v="ortho">矯正藍</button>
+    <button data-k="park" data-v="ink">柔墨</button>
+    <button data-k="park" data-v="off">不顯示</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var OPTS = {
+    pos:   ['card', 'addr'],
+    shape: ['blob', 'circle', 'round'],
+    mark:  ['brick', 'teal', 'moss'],
+    block: ['warm', 'cool', 'deep'],
+    park:  ['tile', 'ortho', 'ink', 'off']
+  };
+  var root = document.documentElement;
+  var tpl  = document.getElementById('map-tpl');
+  var fig  = tpl.content.firstElementChild.cloneNode(true);
+  var slot = document.getElementById('map-slot');
+  var addr = document.getElementById('card-addr');
+  var cardMap = document.getElementById('card-map');
+
+  // 網址參數。⚠ 正規式要寫 [a-z0-9]+ —— 寫成 [a-z]+ 會吃不到帶數字的值，
+  // 比對失敗後會悄悄退回預設，等於參數沒作用（CLAUDE.md 第九節，踩過一次）。
+  var q = new URLSearchParams(location.search);
+  Object.keys(OPTS).forEach(function (k) {
+    var v = q.get(k);
+    if (v && /^[a-z0-9]+$/.test(v) && OPTS[k].indexOf(v) >= 0) root.dataset[k] = v;
+  });
+
+  function apply() {
+    // 位置：把同一個 figure 搬過去，不留兩份 DOM（id 才不會重複）
+    if (root.dataset.pos === 'addr') { addr.appendChild(fig); cardMap.hidden = true; }
+    else { slot.appendChild(fig); cardMap.hidden = false; }
+
+    fig.querySelector('#map-clip')
+       .setAttribute('clip-path', 'url(#clip-' + root.dataset.shape + ')');
+
+    document.querySelectorAll('#sw button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(root.dataset[b.dataset.k] === b.dataset.v));
+    });
+
+    var p = new URLSearchParams();
+    Object.keys(OPTS).forEach(function (k) { p.set(k, root.dataset[k]); });
+    history.replaceState(null, '', location.pathname + '?' + p.toString());
+  }
+
+  document.getElementById('sw').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    root.dataset[b.dataset.k] = b.dataset.v;
+    apply();
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>
