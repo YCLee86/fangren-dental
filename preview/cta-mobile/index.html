@@ -4228,39 +4228,50 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
 
 <!-- ==========================================================================
-     提案：手機行動條 ＋ 320px 頁首修正 ＋ 字級抬一階（2026-08-13）
+     提案：手機行動條 ＋ 320px 頁首修正 ＋ 字級抬一階 ＋ 觸控目標（2026-08-13）
      --------------------------------------------------------------------------
-     這一整段是提案新增的，正式站的 index.html 一個字都還沒動。
-     定案之後要把下面的 CSS 併回原本的位置（不要整塊貼過去），
-     並把這個提案頁刪掉、推導搬進 history/。
+     正式站的 index.html 一個字都還沒動。
+
+     ⚠ 每一項都掛在 <html> 的一個 data-* 上，右上角的切換條可以分別開關：
+         data-bar   手機行動條
+         data-head  320px 頁首修正
+         data-fs    字級抬一階
+         data-hit   觸控目標 44px
+       關掉 ＝ 改動前，打開 ＝ 改動後。
+
+     ⚠ 選擇器都寫成 `html[data-x="on"] .foo`（0,2,1），刻意比原本的 `.foo`（0,1,0）
+       高一階 —— 這樣「開」的時候一定贏，「關」的時候整條不存在、原本那條自然接手。
+       **不要改成 !important**，那會讓關掉之後回不去原狀。
+
+     ⚠ 定案之後：把要的那幾項的 CSS 併回原本的位置（去掉 html[data-x] 那一層前綴），
+       切換條、所有 data-* 屬性、這個提案頁一起刪掉，推導搬進 history/。
      ========================================================================== -->
 <style>
 /* ==========================================================================
-   一、手機行動條（sticky）
+   一、手機行動條（data-bar）
    --------------------------------------------------------------------------
    為什麼要有：全站「預約」「掛號」「加入好友」出現 0 次，LINE 只存在於
-   JSON-LD 的 sameAs 裡、畫面上完全沒有連結，而窄帶那個電話是 12.9px 高的
-   細字。有人半夜牙齦流血讀完文章，找不到下一步。
+   JSON-LD 的 sameAs 裡、畫面上完全沒有連結，而窄帶那個電話是 12.9px 高的細字。
+   有人半夜牙齦流血讀完文章，找不到下一步。
 
    造形刻意抄窄帶自己的語彙，不是另外設計一條：
-     底　　rgba(25,22,20,.86) ＝ --night，和頁首玻璃同一個染色
+     底　　rgba(25,22,20,.88) ＝ --night，和頁首玻璃同一個染色
      分隔　一條 hairline，同 .stats li + li::before 的做法
      字　　白 .95 ＝ 窄帶「1983」那一階
    所以沒有引進任何新顏色。
 
-   ⚠ LINE 那顆刻意**沒有用 LINE 官方綠 #06C755**。那是外來品牌色，
-     PALETTE.md 是配色的唯一依據，不該由我自己決定引進。
-     圖示也照這一站既有的線條語言自己畫（同窄帶的釘子與話筒），
-     不是 LINE 的官方標誌。要不要換成官方綠與官方標誌，是使用者的決定。
-
-   ⚠ 高度 56px 是刻意的：這是行動條唯一的工作，要能一次點中。
+   ⚠ LINE 那顆刻意**沒有用 LINE 官方綠**。那是外來品牌色，PALETTE.md 是配色的
+     唯一依據，不該由我自己決定引進。圖示也照這一站既有的線條語言自己畫
+     （同窄帶的釘子與話筒），不是 LINE 的官方標誌。要不要換是使用者的決定。
+   ⚠ 高度 56px：這是行動條唯一的工作，要能一次點中。
      底下再加 safe-area-inset-bottom，iPhone 的橫條不會壓到。
-   ⚠ body 要補等高的下內距，否則頁尾最後一行會被蓋住。
+   ⚠ body 要補等高的下內距，否則頁尾最後一行會被蓋住 —— 這一條也要跟著開關，
+     不然關掉行動條之後頁尾底下會空一塊。
    ========================================================================== */
 .act-bar { display: none; }
 
 @media (max-width: 720px) {
-  .act-bar {
+  html[data-bar="on"] .act-bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
     display: grid; grid-template-columns: 1fr 1fr;
     background: rgba(25, 22, 20, .88);
@@ -4269,27 +4280,25 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     border-top: 1px solid rgba(255, 255, 255, .14);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
-  .act {
+  html[data-bar="on"] .act {
     display: flex; align-items: center; justify-content: center; gap: .5rem;
     min-height: 56px; text-decoration: none;
     color: rgba(255, 255, 255, .95);
     font-size: .95rem; letter-spacing: .05em;
   }
-  .act + .act { border-left: 1px solid rgba(255, 255, 255, .14); }
-  .act .ico { display: block; width: 1.05rem; height: 1.05rem; flex: 0 0 auto; }
-  .act .ico svg {
+  html[data-bar="on"] .act + .act { border-left: 1px solid rgba(255, 255, 255, .14); }
+  html[data-bar="on"] .act .ico { display: block; width: 1.05rem; height: 1.05rem; flex: 0 0 auto; }
+  html[data-bar="on"] .act .ico svg {
     display: block; width: 100%; height: 100%;
     fill: none; stroke: currentColor; stroke-width: 1.7;
     stroke-linecap: round; stroke-linejoin: round;
   }
-  .act:focus-visible { outline: 2px solid rgba(255,255,255,.8); outline-offset: -4px; }
-
-  /* 頁尾不被蓋住。56 ＝ 行動條高度，和上面那條 min-height 綁在一起。 */
-  body { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
+  html[data-bar="on"] .act:focus-visible { outline: 2px solid rgba(255,255,255,.8); outline-offset: -4px; }
+  html[data-bar="on"] body { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* ==========================================================================
-   二、320px 的頁首重疊
+   二、320px 的頁首重疊（data-head）
    --------------------------------------------------------------------------
    實測（品牌文字右緣 → 選單第一項左緣）：
      320 −1.2px ← 重疊　344 +21.2　360 +30.0　375 +35.7　390 +39.4　430 +58.0
@@ -4308,14 +4317,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      地址就在正下方的窄帶裡，資訊沒有掉。
    ========================================================================== */
 @media (max-width: 344px) {
-  .brand-text small { display: none; }
-  .brand-mark { flex-basis: 26px; }
-  .brand { gap: .5rem; }
-  .site-nav { gap: 2.6vw; }
+  html[data-head="on"] .brand-text small { display: none; }
+  html[data-head="on"] .brand-mark { flex-basis: 26px; }
+  html[data-head="on"] .brand { gap: .5rem; }
+  html[data-head="on"] .site-nav { gap: 2.6vw; }
 }
 
 /* ==========================================================================
-   三、字級抬一階
+   三、字級抬一階（data-fs）
    --------------------------------------------------------------------------
    一間 1983 年開業的社區牙醫，客群裡有大量五十歲以上的人，而全站最小的兩行字
    正好是他們要看的地址與電話。改動前的手機實測：
@@ -4331,28 +4340,28 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      照搬字級會讓話筒矮一截，所以只能等比例縮放、不能重算。
    ========================================================================== */
 @media (max-width: 720px) {
-  .stats b small,
-  .stats span                          { font-size: .75rem; }
-  .band-views .views-n,
-  .band-views small                    { font-size: .75rem; }
+  html[data-fs="on"] .stats b small,
+  html[data-fs="on"] .stats span                    { font-size: .75rem; }
+  html[data-fs="on"] .band-views .views-n,
+  html[data-fs="on"] .band-views small              { font-size: .75rem; }
 
-  .hero-contact a                      { font-size: .8rem; }
-  .c-addr .ico svg                     { width: .871rem; height: .871rem; }
-  .c-tel  .ico svg                     { width: .811rem; height: .811rem; }
+  html[data-fs="on"] .hero-contact a                { font-size: .8rem; }
+  html[data-fs="on"] .c-addr .ico svg               { width: .871rem; height: .871rem; }
+  html[data-fs="on"] .c-tel  .ico svg               { width: .811rem; height: .811rem; }
 
-  .brand-text small                    { font-size: clamp(11px, 2.95vw, 13px); }
-  html.scrolled .brand-text small      { font-size: clamp(10px, 2.66vw, 11.7px); }
+  html[data-fs="on"] .brand-text small              { font-size: clamp(11px, 2.95vw, 13px); }
+  html.scrolled[data-fs="on"] .brand-text small     { font-size: clamp(10px, 2.66vw, 11.7px); }
 }
 
-/* 這四個是基底規則（各尺寸共用），不放在 @media 裡 */
-.card-tag                              { font-size: .8rem; }
-.doc-role                              { font-size: .8rem; }
-.doc dt                                { font-size: .81rem; }
-.hours-grid tbody th                   { font-size: .8rem; }
-.hours-grid thead th                   { font-size: .8rem; }
+/* 這五個是基底規則（各尺寸共用），不放在 @media 裡 */
+html[data-fs="on"] .card-tag                        { font-size: .8rem; }
+html[data-fs="on"] .doc-role                        { font-size: .8rem; }
+html[data-fs="on"] .doc dt                          { font-size: .81rem; }
+html[data-fs="on"] .hours-grid tbody th             { font-size: .8rem; }
+html[data-fs="on"] .hours-grid thead th             { font-size: .8rem; }
 
 /* ==========================================================================
-   四、觸控目標補到 44px
+   四、觸控目標補到 44px（data-hit）
    --------------------------------------------------------------------------
    改動前：窄帶地址／電話 13.9~14.9px（連 WCAG 2.5.8 最寬鬆的 24px 都不到）、
    選單 31.5~35.2、頁尾連結 15。
@@ -4360,33 +4369,32 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
    ⚠ 做法刻意是**加一塊看不見的命中區，不是加內距** —— 加內距會長高窄帶、
      推開頁首，而窄帶高度與頁首高度都是量過定案的（窄帶 107.5 手機／84 電腦，
      頁首連動 HERO 詩的 8.0px 空隙）。`::after` 撐開的是命中範圍，
-     版面一個像素都不動，改動前後的高度可以逐項比對。
-   ⚠ 高度寫死 44px ＋ 垂直置中，不寫負的 inset —— 字級之後再變，命中區仍然是 44。
+     版面一個像素都不動，開關前後的高度可以逐項比對。
+   ⚠ 用負的 inset，不要用 `top: 50%` ＋ `translateY(-50%)` ＋ 寫死高度 ——
+     那一版量出來只有 39.7px。`.hero-contact a` 是 inline-flex，百分比的 `top`
+     要對「包含塊」解析，結果和預期差了 4.3px。負 inset 是從自己的邊框框
+     往外推，量多少就是多少，和 display 無關。
+   ⚠ `z-index: 2` 是必要的：下面那條 `.stats li` 有 `position: relative`，
+     沒有 z-index 的話三格會蓋掉命中區的下半，實測會少掉 2.15px。
    ⚠ 選單用 `::after`，因為 `::before` 已經是那圈玻璃框了。
+   ⚠ 上下的外擴量要**照最壞情況挑**，不是照現況：這兩項可以分別開關，
+     所以「觸控開、字級關」也是一個要成立的組合。那時字只有 13.9px 高，
+     −15px 只到 43.9；−15.5 兩種組合都過（字級關 44.9、開 45.7）。
+     選單同理，320 上那三項只有 31.5px 高，−5px 只到 41.5，改用 −6.5。
    ⚠ 窄帶那兩顆左右各外擴 .4rem：≤360 時兩顆之間的間距是 17.6px，
      各吃 6.4px 之後還剩 4.8px，不會互相蓋到。
-   ⚠ 頁尾那三個改用內距（它是縱向排列，外擴的命中區會互相重疊）。
-     gap 收成 0 由內距接手；32.6px 過得了 WCAG 的 24，但**沒有到 44** ——
-     要到 44 頁尾會長高 75px，這是取捨，等使用者決定。
+   ⚠ 頁尾那三個改用內距（縱向排列，外擴的命中區會互相重疊）。
+     gap 收成 0 由內距接手，量出來 41.9px。
    ========================================================================== */
-/* ⚠ 用負的 inset，不要用 `top: 50%` ＋ `translateY(-50%)` ＋ 寫死高度 ——
-     那一版量出來只有 39.7px。`.hero-contact a` 是 inline-flex，百分比的
-     `top` 要對「包含塊」解析，結果和預期差了 4.3px。負 inset 是從自己的
-     邊框框往外推，量多少就是多少，和 display 無關。
-   ⚠ `z-index: 2` 是必要的：下面那條 `.stats li` 有 `position: relative`，
-     沒有 z-index 的話三格會蓋掉命中區的下半，實測會少掉 2.15px。 */
-.hero-contact a { position: relative; z-index: 2; }
-.hero-contact a::after {
-  content: ''; position: absolute;
-  inset: -15px -.4rem;
+html[data-hit="on"] .hero-contact a { position: relative; z-index: 2; }
+html[data-hit="on"] .hero-contact a::after {
+  content: ''; position: absolute; inset: -15.5px -.4rem;
 }
-.site-nav a::after {
-  content: ''; position: absolute;
-  top: 50%; transform: translateY(-50%);
-  left: 0; right: 0; height: 44px;
+html[data-hit="on"] .site-nav a::after {
+  content: ''; position: absolute; inset: -6.5px 0;
 }
-.foot-nav { gap: 0; }
-.foot-nav a { display: block; padding-block: .55rem; }
+html[data-hit="on"] .foot-nav { gap: 0; }
+html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
 </style>
 
 <!-- 手機行動條。正式站要放在同一個位置（頁尾之後、最後一個結束標籤之前）。 -->
@@ -4400,5 +4408,256 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     <span class="t">LINE 詢問</span>
   </a>
 </div>
+
+<!-- ==========================================================================
+     切換條（提案用）
+     --------------------------------------------------------------------------
+     每一項獨立開關，關掉＝改動前、打開＝改動後。狀態同時寫進網址，
+     所以可以把某一種組合的網址直接傳給別人。
+
+     ⚠ 網址參數接受 0/1、off/on，比對用的是明確的字串測試，不是正規式 ——
+       CLAUDE.md 記過一次教訓：切換條的正規式寫 `[a-z]+` 會吃不到 `glass1`
+       這種帶數字的值，比對失敗後悄悄退回預設，等於參數沒作用。
+     ⚠ 這一整塊（含所有 data-* 屬性）定案之後要連根刪掉，不要留到正式站。
+     ========================================================================== -->
+<style>
+.fr-tg, .fr-tg * { box-sizing: border-box; }
+.fr-tg {
+  position: fixed; z-index: 999; right: 12px; top: 12px;
+  font: 400 13px/1.6 "PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  color: #f2f0ee;
+}
+.fr-tg-btn {
+  display: flex; align-items: center; gap: .4em;
+  margin-left: auto; padding: .5em .8em; min-height: 36px;
+  background: rgba(20,18,16,.92); color: #f2f0ee;
+  border: 1px solid rgba(255,255,255,.28); border-radius: 8px;
+  font: inherit; font-weight: 700; letter-spacing: .05em; cursor: pointer;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.fr-tg-btn b { font-weight: 700; font-variant-numeric: tabular-nums; opacity: .75; }
+.fr-tg-panel {
+  display: none; margin-top: 8px; width: min(310px, calc(100vw - 24px));
+  background: rgba(20,18,16,.95); border: 1px solid rgba(255,255,255,.22);
+  border-radius: 10px; overflow: hidden;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  box-shadow: 0 12px 34px rgba(0,0,0,.45);
+}
+.fr-tg[data-open="1"] .fr-tg-panel { display: block; }
+.fr-tg-head {
+  display: flex; gap: 6px; padding: 9px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.16);
+}
+.fr-tg-head button {
+  flex: 1 1 0; padding: .5em .3em; min-height: 34px;
+  background: rgba(255,255,255,.08); color: #f2f0ee;
+  border: 1px solid rgba(255,255,255,.2); border-radius: 6px;
+  font: inherit; font-size: 12px; cursor: pointer;
+}
+.fr-tg-head button:hover { background: rgba(255,255,255,.16); }
+.fr-tg-list { margin: 0; padding: 4px; list-style: none; }
+.fr-tg-list li + li { border-top: 1px solid rgba(255,255,255,.1); }
+.fr-tg-row {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 9px 7px; cursor: pointer; min-height: 44px;
+}
+.fr-tg-row:hover { background: rgba(255,255,255,.06); }
+.fr-tg-row input { margin: 3px 0 0; width: 16px; height: 16px; flex: 0 0 auto; accent-color: #6fb3a8; }
+.fr-tg-row .lb { display: block; font-weight: 700; font-size: 12.5px; }
+.fr-tg-row .nt { display: block; font-size: 11.5px; line-height: 1.65; color: #b8b2ab; margin-top: 1px; }
+.fr-tg-row .nt b { color: #e8e3dd; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fr-tg-foot {
+  padding: 8px 11px 10px; border-top: 1px solid rgba(255,255,255,.16);
+  font-size: 11.5px; line-height: 1.75; color: #b8b2ab;
+}
+.fr-tg-foot .m { display: flex; justify-content: space-between; gap: 8px; }
+.fr-tg-foot .m b { color: #f2f0ee; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fr-tg-foot .m.bad b { color: #ff9a9a; }
+.fr-tg-foot .m.good b { color: #8fd6a4; }
+.fr-tg-note { margin-top: 6px; color: #8f8a84; font-size: 11px; }
+@media (max-width: 420px) {
+  .fr-tg { right: 8px; top: 8px; }
+  .fr-tg-panel { width: calc(100vw - 16px); }
+}
+@media print { .fr-tg { display: none; } }
+</style>
+
+<div class="fr-tg" data-open="0">
+  <button class="fr-tg-btn" type="button" aria-expanded="false">前後對照 <b></b></button>
+  <div class="fr-tg-panel">
+    <div class="fr-tg-head">
+      <button type="button" data-all="off">全部關（改前）</button>
+      <button type="button" data-all="on">全部開（改後）</button>
+    </div>
+    <ul class="fr-tg-list"></ul>
+    <div class="fr-tg-foot"></div>
+  </div>
+</div>
+
+<script>
+window.__FR_ITEMS = [
+  { k:'bar',  label:'手機行動條',
+    note:'底部固定的「打電話／LINE 詢問」。關掉＝現況，畫面上找不到任何約診的動作。' },
+  { k:'head', label:'320px 頁首修正',
+    note:'把視窗拉到 320 寬才看得出來：關掉時品牌字會被「全部文章」壓到（實測 <b>−1.2px</b>）。' },
+  { k:'fs',   label:'字級抬一階',
+    note:'窄帶三格 <b>10→12</b>、地址電話 <b>11.2→12.8</b>、標籤與門診表 <b>11.5→12.8</b>。' },
+  { k:'hit',  label:'觸控目標 44px',
+    note:'看不見的改動：命中區用 <b>::after</b> 撐開，版面一個像素不動。看下面那兩個數字。' }
+];
+</script><script>
+/* 切換條的行為。定案後連同上面那塊 HTML、CSS 與所有 data-* 屬性一起刪掉。 */
+(function () {
+  var root  = document.documentElement;
+  var items = window.__FR_ITEMS || [];
+  var box   = document.querySelector('.fr-tg');
+  var list  = box.querySelector('.fr-tg-list');
+  var foot  = box.querySelector('.fr-tg-foot');
+  var btn   = box.querySelector('.fr-tg-btn');
+
+  /* ── 讀網址。接受 1/0 與 on/off，用明確的字串比對。
+        （CLAUDE.md 記過：切換條的正規式寫 [a-z]+ 會吃不到帶數字的值，
+          比對失敗後悄悄退回預設，等於參數沒作用。） */
+  var qs = new URLSearchParams(location.search);
+  var state = {};
+  items.forEach(function (it) {
+    var v = (qs.get(it.k) || '').toLowerCase();
+    state[it.k] = (v === '0' || v === 'off') ? 'off' : 'on';   /* 預設全開 ＝ 改後 */
+  });
+
+  function apply(push) {
+    items.forEach(function (it) { root.setAttribute('data-' + it.k, state[it.k]); });
+    var on = items.filter(function (it) { return state[it.k] === 'on'; }).length;
+    btn.querySelector('b').textContent = on + '/' + items.length;
+    if (push) {
+      var q = new URLSearchParams();
+      items.forEach(function (it) { q.set(it.k, state[it.k] === 'on' ? '1' : '0'); });
+      history.replaceState(null, '', location.pathname + '?' + q + location.hash);
+    }
+    /* 量測要等版面重排完 */
+    requestAnimationFrame(measure);
+  }
+
+  items.forEach(function (it) {
+    var li = document.createElement('li');
+    li.innerHTML = '<label class="fr-tg-row"><input type="checkbox"><span>' +
+      '<span class="lb"></span><span class="nt"></span></span></label>';
+    li.querySelector('.lb').textContent = it.label;
+    li.querySelector('.nt').innerHTML  = it.note;
+    var cb = li.querySelector('input');
+    cb.checked = state[it.k] === 'on';
+    cb.addEventListener('change', function () {
+      state[it.k] = cb.checked ? 'on' : 'off';
+      apply(true);
+    });
+    list.appendChild(li);
+    it._cb = cb;
+  });
+
+  box.querySelectorAll('[data-all]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var v = b.getAttribute('data-all');
+      items.forEach(function (it) { state[it.k] = v; it._cb.checked = (v === 'on'); });
+      apply(true);
+    });
+  });
+
+  btn.addEventListener('click', function () {
+    var open = box.getAttribute('data-open') === '1' ? '0' : '1';
+    box.setAttribute('data-open', open);
+    btn.setAttribute('aria-expanded', open === '1' ? 'true' : 'false');
+    if (open === '1') requestAnimationFrame(measure);   /* 打開的當下重量一次 */
+  });
+
+  /* ── 現場量測 ─────────────────────────────────────────────────────────
+     每切一次就重新量一次，數字是當下這個視窗真的量出來的，不是寫死的表。 */
+  function hitHeight(el) {
+    if (!el) return null;
+    var b = el.getBoundingClientRect(), x = b.left + b.width / 2;
+    var t = b.top, bo = b.bottom, i, e;
+    for (i = 0.5; i <= 40; i += 0.5) {
+      e = document.elementFromPoint(x, b.top - i);
+      if (e && (e === el || el.contains(e))) t = b.top - i; else break;
+    }
+    for (i = 0.5; i <= 40; i += 0.5) {
+      e = document.elementFromPoint(x, b.bottom + i);
+      if (e && (e === el || el.contains(e))) bo = b.bottom + i; else break;
+    }
+    return bo - t;
+  }
+
+  var smEl = '';
+  function smallestText() {
+    var min = 999, who = null, nodes = document.querySelectorAll('p,li,span,dd,dt,small,time,a,td,th,b,figcaption');
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      if (box.contains(el)) continue;                         /* 切換條自己不算 */
+      /* ⚠ HERO 那首詩不算。它在 320 上是 9.8px，但那是 CLAUDE.md 第九節
+           定案過的裝飾字級（Ⓢ1 那一輪把下限訂在 9.5px，為的是讓整組幾何
+           等比例、不要在 375 上壓到房子），不是這一輪要抬的內文字級。
+           不排掉的話這個數字永遠停在 9.8，開關字級也不會動，看起來像壞掉。 */
+      if (el.closest('.hero-copy')) continue;
+      if (!el.offsetParent && el.tagName !== 'BODY') continue; /* 收起來的不算 */
+      var has = false, c = el.childNodes;
+      for (var j = 0; j < c.length; j++) if (c[j].nodeType === 3 && c[j].textContent.trim()) has = true;
+      if (!has) continue;
+      var fs = parseFloat(getComputedStyle(el).fontSize);
+      if (fs && fs < min) { min = fs; who = el; }
+    }
+    smEl = who ? (who.tagName.toLowerCase() +
+      (who.className && typeof who.className === 'string' && who.className
+        ? '.' + who.className.split(/\s+/)[0] : '')) : '';
+    return min === 999 ? null : min;
+  }
+
+  function measure() {
+    var rows = [];
+    /* ⚠ 量之前一定要讓切換條自己「穿透」—— 面板是浮在畫面上的，
+         elementFromPoint 會先撞到面板，量到的命中區就會變成原本的大小，
+         看起來像是開關沒有生效。量完立刻還原，同一個影格內完成、不會閃。 */
+    box.style.pointerEvents = 'none';
+
+    /* 頁首：品牌文字右緣 → 選單第一項左緣 */
+    var bt = document.querySelector('.brand-text b') || document.querySelector('.brand b');
+    var n1 = document.querySelector('.site-nav a');
+    if (bt && n1) {
+      var r = document.createRange(); r.selectNodeContents(bt);
+      var gap = n1.getBoundingClientRect().left - r.getBoundingClientRect().right;
+      rows.push(['頁首間距', gap.toFixed(1) + 'px', gap < 0 ? 'bad' : (gap < 6 ? 'bad' : 'good')]);
+    }
+
+    /* 最重要的那個觸控目標 */
+    var tel = document.querySelector('.c-tel a') || document.querySelector('.cta-acts .btn');
+    if (tel) {
+      var h = hitHeight(tel);
+      rows.push(['電話可點高度', h.toFixed(1) + 'px', h >= 44 ? 'good' : (h < 24 ? 'bad' : '')]);
+    }
+    var nav = hitHeight(n1);
+    if (nav) rows.push(['選單可點高度', nav.toFixed(1) + 'px', nav >= 44 ? 'good' : (nav < 24 ? 'bad' : '')]);
+
+    var sm = smallestText();
+    if (sm) rows.push(['內文最小字', sm.toFixed(1) + 'px', sm >= 12 ? 'good' : 'bad']);
+
+    var html = rows.map(function (r) {
+      return '<div class="m ' + (r[2] || '') + '"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>';
+    }).join('');
+    foot.innerHTML = html +
+      '<div class="fr-tg-note">目前視窗 ' + innerWidth + '×' + innerHeight +
+      '。數字是這個視窗當下量的，切窄一點看 320 的頁首。' +
+      (smEl ? '最小字在 ' + smEl + '。' : '') + '</div>';
+    box.style.pointerEvents = '';
+  }
+
+  apply(false);
+  addEventListener('resize', function () { requestAnimationFrame(measure); });
+
+  /* ⚠ 開頁的第一次量測會落在字型載入完成**之前** —— 那時「芳仁牙醫診所」
+       還是用後備字排的，寬度不一樣，320 上的頁首間距會量成 6.6 而不是 10.6。
+       這一站的窄帶數字踩過同一類坑（CLAUDE.md 第九節第 7 條：不要在頁面
+       還在載入的那一刻開跑）。所以字型好了、load 完了都要再量一次。 */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  addEventListener('load', function () { setTimeout(measure, 200); });
+})();
+</script>
 </body>
 </html>

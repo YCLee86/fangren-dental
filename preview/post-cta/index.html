@@ -482,6 +482,14 @@
      正式站的 posts/ 與 assets/style.css 一個字都還沒動。
      下面的 CSS 定案後要併進 assets/style.css（六篇共用），
      收尾區塊的那段 HTML 則應該由 tools/build.mjs 產生 —— 見最後那段說明。
+
+     ⚠ 每一項都掛在 <html> 的一個 data-* 上，右上角的切換條可以分別開關：
+         data-cta   文章收尾區塊
+         data-bar   手機行動條
+         data-fs    字級抬一階
+         data-hit   觸控目標
+       關掉 ＝ 改動前，打開 ＝ 改動後。選擇器都比原本那條高一階，
+       所以「關」的時候整條不存在、原本的自然接手。不要改成 !important。
      ========================================================================== -->
 <style>
 /* ==========================================================================
@@ -507,29 +515,30 @@
    ⚠ 文案守 COPY.md 的紅線：不寫「問到飽」「來這裡問到懂」「不做也沒關係」。
      「來一趟才有辦法一起決定」刻意回收 HERO 收尾句的「一起想辦法」。
    ========================================================================== */
-.post-cta { margin: 2.6rem 0 0; }
-.cta-card {
+.post-cta { display: none; margin: 2.6rem 0 0; }
+html[data-cta="on"] .post-cta { display: block; }
+html[data-cta="on"] .cta-card {
   background: var(--card);
   border: 1px solid var(--rule);
   border-left: 3px solid var(--accent);
   border-radius: 12px;
   padding: 1.5rem clamp(1.1rem, 4vw, 1.7rem);
 }
-.cta-card h2 {
+html[data-cta="on"] .cta-card h2 {
   margin: 0 0 .6rem; font-size: 1.04rem; line-height: 1.7;
   color: var(--accent-deep); font-weight: 700;
 }
-.cta-card h2::before { content: none; }   /* 蓋掉 .post-body h2 那根短棒 */
-.cta-card > p { margin: 0 0 1.15rem; font-size: .94rem; line-height: 1.95; color: var(--ink-soft); }
-.cta-acts { display: flex; flex-wrap: wrap; gap: .6rem; }
-.cta-acts .btn { display: inline-flex; align-items: center; gap: .45rem; min-height: 46px; }
-.cta-acts .ico { display: block; width: .95rem; height: .95rem; flex: 0 0 auto; }
-.cta-acts .ico svg {
+html[data-cta="on"] .cta-card h2::before { content: none; }   /* 蓋掉 .post-body h2 那根短棒 */
+html[data-cta="on"] .cta-card > p { margin: 0 0 1.15rem; font-size: .94rem; line-height: 1.95; color: var(--ink-soft); }
+html[data-cta="on"] .cta-acts { display: flex; flex-wrap: wrap; gap: .6rem; }
+html[data-cta="on"] .cta-acts .btn { display: inline-flex; align-items: center; gap: .45rem; min-height: 46px; }
+html[data-cta="on"] .cta-acts .ico { display: block; width: .95rem; height: .95rem; flex: 0 0 auto; }
+html[data-cta="on"] .cta-acts .ico svg {
   display: block; width: 100%; height: 100%;
   fill: none; stroke: currentColor; stroke-width: 1.7;
   stroke-linecap: round; stroke-linejoin: round;
 }
-.cta-more { margin: 1.1rem 0 0; font-size: .88rem; }
+html[data-cta="on"] .cta-more { margin: 1.1rem 0 0; font-size: .88rem; }
 
 /* ==========================================================================
    二、字級抬一階（同首頁那一輪的門檻：10 抬到 12、11.x 抬到 12.8）
@@ -538,10 +547,10 @@
    延伸閱讀日期 11.84　文章科別藥丸 12.0
    ⚠ 內文 `.post-body p` 本來就夠大，沒有動。
    ========================================================================== */
-.brand small   { font-size: clamp(11px, 2.95vw, 13px); }
-.rel-tag       { font-size: .8rem; }
-.rel-date      { font-size: .8rem; }
-.post-tag      { font-size: .8rem; }
+html[data-fs="on"] .brand small   { font-size: clamp(11px, 2.95vw, 13px); }
+html[data-fs="on"] .rel-tag       { font-size: .8rem; }
+html[data-fs="on"] .rel-date      { font-size: .8rem; }
+html[data-fs="on"] .post-tag      { font-size: .8rem; }
 
 /* ==========================================================================
    三、觸控目標
@@ -550,23 +559,23 @@
    做法同首頁：用看不見的 `::after` 撐命中區，不加內距、版面一個像素不動。
    `::before` 是那圈玻璃框（2026-08-12 補上線的那一版），所以用 `::after`。
    ========================================================================== */
-.site-nav a { position: relative; }
-.site-nav a::after { content: ''; position: absolute; inset: -11px -4px; }
+html[data-hit="on"] .site-nav a { position: relative; }
+html[data-hit="on"] .site-nav a::after { content: ''; position: absolute; inset: -11px -4px; }
 /* ⚠ 麵包屑（首頁 › 牙周照護）維持 23.7px，**這一輪沒有解掉**。
      試過 `::after` 外擴與 inline-block，量出來都還是 23.7 —— 那一列
      三個東西（麵包屑、科別藥丸、日期）擠在同一行，命中區往上下撐會直接
      疊到鄰居，撐了也沒有用。23.7 差 WCAG 2.5.8 的 24 只有 0.3px，
      而且它是第三層導覽（首頁在頁首與頁尾各還有一個入口），先擱著。
      真要解得把那一列改成兩行，那是版面決定，不是這一輪的範圍。 */
-.foot-nav { gap: 0; }
-.foot-nav a { display: block; padding-block: .55rem; }
+html[data-hit="on"] .foot-nav { gap: 0; }
+html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
 
 /* ==========================================================================
    四、手機行動條（和首頁同一份，定案後兩邊要共用同一段 CSS）
    ========================================================================== */
 .act-bar { display: none; }
 @media (max-width: 720px) {
-  .act-bar {
+  html[data-bar="on"] .act-bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
     display: grid; grid-template-columns: 1fr 1fr;
     background: rgba(25, 22, 20, .88);
@@ -575,22 +584,273 @@
     border-top: 1px solid rgba(255, 255, 255, .14);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
-  .act {
+  html[data-bar="on"] .act {
     display: flex; align-items: center; justify-content: center; gap: .5rem;
     min-height: 56px; text-decoration: none;
     color: rgba(255, 255, 255, .95); font-size: .95rem; letter-spacing: .05em;
   }
-  .act + .act { border-left: 1px solid rgba(255, 255, 255, .14); }
-  .act .ico { display: block; width: 1.05rem; height: 1.05rem; flex: 0 0 auto; }
-  .act .ico svg {
+  html[data-bar="on"] .act + .act { border-left: 1px solid rgba(255, 255, 255, .14); }
+  html[data-bar="on"] .act .ico { display: block; width: 1.05rem; height: 1.05rem; flex: 0 0 auto; }
+  html[data-bar="on"] .act .ico svg {
     display: block; width: 100%; height: 100%;
     fill: none; stroke: currentColor; stroke-width: 1.7;
     stroke-linecap: round; stroke-linejoin: round;
   }
-  .act:focus-visible { outline: 2px solid rgba(255,255,255,.8); outline-offset: -4px; }
-  body { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
+  html[data-bar="on"] .act:focus-visible { outline: 2px solid rgba(255,255,255,.8); outline-offset: -4px; }
+  html[data-bar="on"] body { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
 }
 </style>
+
+<!-- ==========================================================================
+     切換條（提案用）
+     --------------------------------------------------------------------------
+     每一項獨立開關，關掉＝改動前、打開＝改動後。狀態同時寫進網址，
+     所以可以把某一種組合的網址直接傳給別人。
+
+     ⚠ 網址參數接受 0/1、off/on，比對用的是明確的字串測試，不是正規式 ——
+       CLAUDE.md 記過一次教訓：切換條的正規式寫 `[a-z]+` 會吃不到 `glass1`
+       這種帶數字的值，比對失敗後悄悄退回預設，等於參數沒作用。
+     ⚠ 這一整塊（含所有 data-* 屬性）定案之後要連根刪掉，不要留到正式站。
+     ========================================================================== -->
+<style>
+.fr-tg, .fr-tg * { box-sizing: border-box; }
+.fr-tg {
+  position: fixed; z-index: 999; right: 12px; top: 12px;
+  font: 400 13px/1.6 "PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  color: #f2f0ee;
+}
+.fr-tg-btn {
+  display: flex; align-items: center; gap: .4em;
+  margin-left: auto; padding: .5em .8em; min-height: 36px;
+  background: rgba(20,18,16,.92); color: #f2f0ee;
+  border: 1px solid rgba(255,255,255,.28); border-radius: 8px;
+  font: inherit; font-weight: 700; letter-spacing: .05em; cursor: pointer;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.fr-tg-btn b { font-weight: 700; font-variant-numeric: tabular-nums; opacity: .75; }
+.fr-tg-panel {
+  display: none; margin-top: 8px; width: min(310px, calc(100vw - 24px));
+  background: rgba(20,18,16,.95); border: 1px solid rgba(255,255,255,.22);
+  border-radius: 10px; overflow: hidden;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  box-shadow: 0 12px 34px rgba(0,0,0,.45);
+}
+.fr-tg[data-open="1"] .fr-tg-panel { display: block; }
+.fr-tg-head {
+  display: flex; gap: 6px; padding: 9px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.16);
+}
+.fr-tg-head button {
+  flex: 1 1 0; padding: .5em .3em; min-height: 34px;
+  background: rgba(255,255,255,.08); color: #f2f0ee;
+  border: 1px solid rgba(255,255,255,.2); border-radius: 6px;
+  font: inherit; font-size: 12px; cursor: pointer;
+}
+.fr-tg-head button:hover { background: rgba(255,255,255,.16); }
+.fr-tg-list { margin: 0; padding: 4px; list-style: none; }
+.fr-tg-list li + li { border-top: 1px solid rgba(255,255,255,.1); }
+.fr-tg-row {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 9px 7px; cursor: pointer; min-height: 44px;
+}
+.fr-tg-row:hover { background: rgba(255,255,255,.06); }
+.fr-tg-row input { margin: 3px 0 0; width: 16px; height: 16px; flex: 0 0 auto; accent-color: #6fb3a8; }
+.fr-tg-row .lb { display: block; font-weight: 700; font-size: 12.5px; }
+.fr-tg-row .nt { display: block; font-size: 11.5px; line-height: 1.65; color: #b8b2ab; margin-top: 1px; }
+.fr-tg-row .nt b { color: #e8e3dd; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fr-tg-foot {
+  padding: 8px 11px 10px; border-top: 1px solid rgba(255,255,255,.16);
+  font-size: 11.5px; line-height: 1.75; color: #b8b2ab;
+}
+.fr-tg-foot .m { display: flex; justify-content: space-between; gap: 8px; }
+.fr-tg-foot .m b { color: #f2f0ee; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fr-tg-foot .m.bad b { color: #ff9a9a; }
+.fr-tg-foot .m.good b { color: #8fd6a4; }
+.fr-tg-note { margin-top: 6px; color: #8f8a84; font-size: 11px; }
+@media (max-width: 420px) {
+  .fr-tg { right: 8px; top: 8px; }
+  .fr-tg-panel { width: calc(100vw - 16px); }
+}
+@media print { .fr-tg { display: none; } }
+</style>
+
+<div class="fr-tg" data-open="0">
+  <button class="fr-tg-btn" type="button" aria-expanded="false">前後對照 <b></b></button>
+  <div class="fr-tg-panel">
+    <div class="fr-tg-head">
+      <button type="button" data-all="off">全部關（改前）</button>
+      <button type="button" data-all="on">全部開（改後）</button>
+    </div>
+    <ul class="fr-tg-list"></ul>
+    <div class="fr-tg-foot"></div>
+  </div>
+</div>
+
+<script>
+window.__FR_ITEMS = [
+  { k:'cta',  label:'文章收尾區塊',
+    note:'內文結束後的「牙周這一科在芳仁是李侑津醫師看的」＋ 電話 ＋ LINE。關掉＝現況，讀完就直接接上下篇。' },
+  { k:'bar',  label:'手機行動條',
+    note:'底部固定的「打電話／LINE 詢問」，和首頁同一份。' },
+  { k:'fs',   label:'字級抬一階',
+    note:'品牌副標 <b>10.1→11.5</b>、延伸閱讀標籤與日期 <b>11.5／11.8→12.8</b>、科別藥丸 <b>12→12.8</b>。' },
+  { k:'hit',  label:'觸控目標',
+    note:'選單 <b>23.1→45.1</b>、頁尾 <b>15→41.9</b>。麵包屑仍是 23.7，這一輪沒解掉。' }
+];
+</script><script>
+/* 切換條的行為。定案後連同上面那塊 HTML、CSS 與所有 data-* 屬性一起刪掉。 */
+(function () {
+  var root  = document.documentElement;
+  var items = window.__FR_ITEMS || [];
+  var box   = document.querySelector('.fr-tg');
+  var list  = box.querySelector('.fr-tg-list');
+  var foot  = box.querySelector('.fr-tg-foot');
+  var btn   = box.querySelector('.fr-tg-btn');
+
+  /* ── 讀網址。接受 1/0 與 on/off，用明確的字串比對。
+        （CLAUDE.md 記過：切換條的正規式寫 [a-z]+ 會吃不到帶數字的值，
+          比對失敗後悄悄退回預設，等於參數沒作用。） */
+  var qs = new URLSearchParams(location.search);
+  var state = {};
+  items.forEach(function (it) {
+    var v = (qs.get(it.k) || '').toLowerCase();
+    state[it.k] = (v === '0' || v === 'off') ? 'off' : 'on';   /* 預設全開 ＝ 改後 */
+  });
+
+  function apply(push) {
+    items.forEach(function (it) { root.setAttribute('data-' + it.k, state[it.k]); });
+    var on = items.filter(function (it) { return state[it.k] === 'on'; }).length;
+    btn.querySelector('b').textContent = on + '/' + items.length;
+    if (push) {
+      var q = new URLSearchParams();
+      items.forEach(function (it) { q.set(it.k, state[it.k] === 'on' ? '1' : '0'); });
+      history.replaceState(null, '', location.pathname + '?' + q + location.hash);
+    }
+    /* 量測要等版面重排完 */
+    requestAnimationFrame(measure);
+  }
+
+  items.forEach(function (it) {
+    var li = document.createElement('li');
+    li.innerHTML = '<label class="fr-tg-row"><input type="checkbox"><span>' +
+      '<span class="lb"></span><span class="nt"></span></span></label>';
+    li.querySelector('.lb').textContent = it.label;
+    li.querySelector('.nt').innerHTML  = it.note;
+    var cb = li.querySelector('input');
+    cb.checked = state[it.k] === 'on';
+    cb.addEventListener('change', function () {
+      state[it.k] = cb.checked ? 'on' : 'off';
+      apply(true);
+    });
+    list.appendChild(li);
+    it._cb = cb;
+  });
+
+  box.querySelectorAll('[data-all]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var v = b.getAttribute('data-all');
+      items.forEach(function (it) { state[it.k] = v; it._cb.checked = (v === 'on'); });
+      apply(true);
+    });
+  });
+
+  btn.addEventListener('click', function () {
+    var open = box.getAttribute('data-open') === '1' ? '0' : '1';
+    box.setAttribute('data-open', open);
+    btn.setAttribute('aria-expanded', open === '1' ? 'true' : 'false');
+    if (open === '1') requestAnimationFrame(measure);   /* 打開的當下重量一次 */
+  });
+
+  /* ── 現場量測 ─────────────────────────────────────────────────────────
+     每切一次就重新量一次，數字是當下這個視窗真的量出來的，不是寫死的表。 */
+  function hitHeight(el) {
+    if (!el) return null;
+    var b = el.getBoundingClientRect(), x = b.left + b.width / 2;
+    var t = b.top, bo = b.bottom, i, e;
+    for (i = 0.5; i <= 40; i += 0.5) {
+      e = document.elementFromPoint(x, b.top - i);
+      if (e && (e === el || el.contains(e))) t = b.top - i; else break;
+    }
+    for (i = 0.5; i <= 40; i += 0.5) {
+      e = document.elementFromPoint(x, b.bottom + i);
+      if (e && (e === el || el.contains(e))) bo = b.bottom + i; else break;
+    }
+    return bo - t;
+  }
+
+  var smEl = '';
+  function smallestText() {
+    var min = 999, who = null, nodes = document.querySelectorAll('p,li,span,dd,dt,small,time,a,td,th,b,figcaption');
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      if (box.contains(el)) continue;                         /* 切換條自己不算 */
+      /* ⚠ HERO 那首詩不算。它在 320 上是 9.8px，但那是 CLAUDE.md 第九節
+           定案過的裝飾字級（Ⓢ1 那一輪把下限訂在 9.5px，為的是讓整組幾何
+           等比例、不要在 375 上壓到房子），不是這一輪要抬的內文字級。
+           不排掉的話這個數字永遠停在 9.8，開關字級也不會動，看起來像壞掉。 */
+      if (el.closest('.hero-copy')) continue;
+      if (!el.offsetParent && el.tagName !== 'BODY') continue; /* 收起來的不算 */
+      var has = false, c = el.childNodes;
+      for (var j = 0; j < c.length; j++) if (c[j].nodeType === 3 && c[j].textContent.trim()) has = true;
+      if (!has) continue;
+      var fs = parseFloat(getComputedStyle(el).fontSize);
+      if (fs && fs < min) { min = fs; who = el; }
+    }
+    smEl = who ? (who.tagName.toLowerCase() +
+      (who.className && typeof who.className === 'string' && who.className
+        ? '.' + who.className.split(/\s+/)[0] : '')) : '';
+    return min === 999 ? null : min;
+  }
+
+  function measure() {
+    var rows = [];
+    /* ⚠ 量之前一定要讓切換條自己「穿透」—— 面板是浮在畫面上的，
+         elementFromPoint 會先撞到面板，量到的命中區就會變成原本的大小，
+         看起來像是開關沒有生效。量完立刻還原，同一個影格內完成、不會閃。 */
+    box.style.pointerEvents = 'none';
+
+    /* 頁首：品牌文字右緣 → 選單第一項左緣 */
+    var bt = document.querySelector('.brand-text b') || document.querySelector('.brand b');
+    var n1 = document.querySelector('.site-nav a');
+    if (bt && n1) {
+      var r = document.createRange(); r.selectNodeContents(bt);
+      var gap = n1.getBoundingClientRect().left - r.getBoundingClientRect().right;
+      rows.push(['頁首間距', gap.toFixed(1) + 'px', gap < 0 ? 'bad' : (gap < 6 ? 'bad' : 'good')]);
+    }
+
+    /* 最重要的那個觸控目標 */
+    var tel = document.querySelector('.c-tel a') || document.querySelector('.cta-acts .btn');
+    if (tel) {
+      var h = hitHeight(tel);
+      rows.push(['電話可點高度', h.toFixed(1) + 'px', h >= 44 ? 'good' : (h < 24 ? 'bad' : '')]);
+    }
+    var nav = hitHeight(n1);
+    if (nav) rows.push(['選單可點高度', nav.toFixed(1) + 'px', nav >= 44 ? 'good' : (nav < 24 ? 'bad' : '')]);
+
+    var sm = smallestText();
+    if (sm) rows.push(['內文最小字', sm.toFixed(1) + 'px', sm >= 12 ? 'good' : 'bad']);
+
+    var html = rows.map(function (r) {
+      return '<div class="m ' + (r[2] || '') + '"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>';
+    }).join('');
+    foot.innerHTML = html +
+      '<div class="fr-tg-note">目前視窗 ' + innerWidth + '×' + innerHeight +
+      '。數字是這個視窗當下量的，切窄一點看 320 的頁首。' +
+      (smEl ? '最小字在 ' + smEl + '。' : '') + '</div>';
+    box.style.pointerEvents = '';
+  }
+
+  apply(false);
+  addEventListener('resize', function () { requestAnimationFrame(measure); });
+
+  /* ⚠ 開頁的第一次量測會落在字型載入完成**之前** —— 那時「芳仁牙醫診所」
+       還是用後備字排的，寬度不一樣，320 上的頁首間距會量成 6.6 而不是 10.6。
+       這一站的窄帶數字踩過同一類坑（CLAUDE.md 第九節第 7 條：不要在頁面
+       還在載入的那一刻開跑）。所以字型好了、load 完了都要再量一次。 */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  addEventListener('load', function () { setTimeout(measure, 200); });
+})();
+</script>
 
 <div class="act-bar" role="group" aria-label="聯絡芳仁牙醫診所">
   <a class="act" href="tel:+88655339369">
