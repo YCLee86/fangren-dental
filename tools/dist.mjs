@@ -8,7 +8,9 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
+import { stripFile } from "./strip-notes.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "_site");
@@ -64,3 +66,64 @@ const files = [];
 })(OUT);
 
 console.log(`_site/ 已產生：${count} 個項目、共 ${files.length} 個檔案`);
+
+/* =============================================================================
+   把設計註解剝掉（2026-08-13 起）
+   -----------------------------------------------------------------------------
+   這一站的決策紀錄寫在原始碼註解裡，而 index.html 自己就是送給訪客的檔案 ——
+   在這之前每個訪客都會連著 165 KB 的中文推導一起下載（首頁 gzip 的 76%）。
+
+   ⚠ **只剝 _site/ 裡的複本，原始碼一個字都不動。**
+   註解留在版控裡繼續當唯一的決策紀錄，CLAUDE.md 那套「決定要寫進註解」的
+   規矩完全不受影響；改變的只有訪客拿到的那一份。
+
+   ⚠ 這不是 minifier，只拿掉註解。程式碼一個位元組都沒改，所以「畫面一樣」
+   是可以逐項證明的（見 tools/strip-notes.mjs 的說明）。
+
+   ⚠ 剝完會過語法檢查：內嵌 JS 要還能 parse、JSON-LD 要還是合法 JSON、
+   CSS 大括號要成對。任何一項不過就讓建置失敗 —— 這一類錯誤在瀏覽器裡
+   **不會報錯**，只會讓後面整段悄悄失效，一定要在這裡攔下來。
+
+   要看剝之前的樣子：DIST_KEEP_NOTES=1 node tools/dist.mjs
+   ============================================================================= */
+const gz = (s) => zlib.gzipSync(Buffer.from(s), { level: 9 }).length;
+const STRIPPABLE = /\.(?:html?|css|m?js)$/i;
+
+if (process.env.DIST_KEEP_NOTES === "1") {
+  console.log("⚠ DIST_KEEP_NOTES=1 —— 註解保留在 _site/ 裡，不要這樣上線");
+} else {
+  const problems = [];
+  const pending = [];
+  let before = 0;
+  let after = 0;
+
+  /* ⚠ 先全部算完、確認乾淨，才真的寫檔 —— 邊寫邊檢查的話，
+     檢查沒過的時候 _site/ 已經是半剝好的狀態了。 */
+  for (const file of files) {
+    if (!STRIPPABLE.test(file)) continue;
+    const rel = path.relative(OUT, file);
+    const src = fs.readFileSync(file, "utf8");
+    const { text, problems: found } = stripFile(rel, src);
+    problems.push(...found);
+    before += gz(src);
+    after += gz(text);
+    if (text !== src) pending.push([file, text]);
+  }
+
+  if (problems.length) {
+    console.error("× 剝除註解之後檢查沒過，一個字都沒改，_site/ 不可上線：");
+    problems.forEach((p) => console.error(`  ${p}`));
+    process.exit(1);
+  }
+
+  const touched = pending.length;
+  pending.forEach(([file, text]) => fs.writeFileSync(file, text));
+
+  const saved = before - after;
+  const pct = before ? ((saved / before) * 100).toFixed(1) : "0";
+  const kb = (n) => (n / 1024).toFixed(1);
+  console.log(
+    `設計註解已從 ${touched} 個檔案剝除：` +
+    `gzip ${kb(before)} KB → ${kb(after)} KB（少 ${kb(saved)} KB、${pct}%）`,
+  );
+}
