@@ -422,15 +422,6 @@ const block =
 let nextIndex =
   index.slice(0, startEnd) + block + index.slice(e);
 
-/* 首頁上若有「網站最後更新」的欄位，顯示的是所有文章中最新的那一天。
-   （目前的版型沒有這個元素，這一行等於沒作用，留著是為了版型改回來時會自己接上。）
-   ⚠ 這個值**不是** sitemap 給首頁的 lastmod，兩者是不同的東西，見下一段。 */
-const siteUpdated = posts[0].updated;
-nextIndex = nextIndex.replace(
-  /<time class="site-updated"[^>]*>[^<]*<\/time>/,
-  `<time class="site-updated" datetime="${siteUpdated}">${zhDate(siteUpdated)}</time>`
-);
-
 /* 文章篇數 */
 nextIndex = nextIndex.replace(
   /(<b data-post-count>)[^<]*(<\/b>)/,
@@ -519,6 +510,27 @@ nextManifest[HOME_KEY] = { hash: homeHash, updated: homeUpdated };
    否則 dateModified 會進到雜湊裡，於是「換了日期 → 雜湊變了 → 下次又換成今天」，
    首頁的 lastmod 從此天天跳，等於這個欄位沒有意義。 */
 nextIndex = nextIndex.replace(HOME_UPDATED_TOKEN, homeUpdated);
+
+/* 頁尾那行「網站最後更新」（2026-08-13 起由這裡維護）。
+   在那之前它是手寫的，一路停在 8 月 2 日 —— 期間門診表換版型、主畫面圖示換兩輪、
+   照片與窄帶的接縫改四輪，一次都沒跟上。手寫的欄位沒有人維護，只會愈差愈多。
+
+   值 ＝ **首頁自己的 lastmod** 與 **最新那篇文章的更新日** 取較新的那個。
+   ISO 日期可以直接字串比大小，不必轉 Date。
+     · 只改首頁（換版型、改文案）→ homeUpdated 動，這一行跟著動
+     · 只發新文章 → posts[0].updated 動，這一行也跟著動
+   舊版只看 posts[0].updated，所以「改了首頁但沒發文」的時候完全不會動 ——
+   那正是這一行會落後十一天的原因。
+
+   ⚠⚠ **一定要排在 homeHash 算完之後**，理由和上面那行佔位符一樣。
+     （其實 normalizeHome() 已經把整個 <time class="site-updated"> 剔除掉了，
+     所以就算寫在前面也不會回饋到雜湊 —— 但那是第二道保險，不是可以依賴的順序。）
+   ⚠ 對應的元素在 index.html 頁尾，**不要手改那個日期**。 */
+const siteUpdated = [homeUpdated, posts[0].updated].sort().pop();
+nextIndex = nextIndex.replace(
+  /<time class="site-updated"[^>]*>[^<]*<\/time>/,
+  `<time class="site-updated" datetime="${siteUpdated}">${zhDate(siteUpdated)}</time>`
+);
 
 if (!CHECK_ONLY && nextIndex !== index) fs.writeFileSync(INDEX_FILE, nextIndex, "utf8");
 

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>cta-mobile｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>cta-mobile</h1>
+<p class="meta">
+  原網址 <code>/preview/cta-mobile/</code>（已刪除 2026-08-13）<br>
+  整頁還原：<code>git show 700a6ae:preview/cta-mobile/index.html</code><br>
+  切換條有 19 項、每一項一顆開關，網址參數如 <code>?fs=1&amp;taph=a&amp;shint=e</code>；定案十二項，已上線
+</p>
+
+<h2>這一頁在做什麼</h2>
+<div class="note"><pre>使用者：「根據這個工作裡的項目，做一次可一鍵切換對照的預覽頁面給我看……
+因為項目很多，每個項目單獨成一鍵切換，這樣我才能慢慢比較對照。」
+
+所以這一頁是首頁的完整複本 ＋ 一條切換條：每一項掛在 <html> 的一個 data-* 上，
+關掉＝現況、打開＝提案，狀態同時寫進網址。後期有幾項不是開關而是「一把尺」
+（多段分段按鈕），因為那幾件要比的是數值不是有無。
+
+面板底下是**現場量測**，不是寫死的表：頁首間距、各處的可點高度、標記塊高、
+窄帶高度與行距、第一張卡上緣、內文最小字 —— 每切一次重量一次。</pre></div>
+
+<h2>定案的十二項（2026-08-13 上線）</h2>
+<div class="note"><pre>字級抬一階              窄帶三格 10→12、地址電話 11.2→12.8、標籤與門診表 11.5→12.8
+窄帶三行的間距 +4       gap 與上下內距一起加 4px（只加 gap 會弄壞 08-10 那一輪的平衡）
+觸控目標 44px・第一批   窄帶地址電話、頁首選單、頁尾導覽（::after 撐開，版面不動）
+標記要多高 34           主題與科別 ＋ 門診表兩排，門診表原本只有 28.8
+標記的字要多大 +2       .82rem→.90rem（門診表 .80→.88）
+觸控目標・頁尾與搜尋框  頁尾地址電話 27.4→44.4、搜尋框 31→44
+科別標記收成一排橫捲    兩排都收；375 上原本 3 排 107.4px
+怎麼讓人知道它會捲 Ⓔ    右緣淡出 ＋ 左右各一顆角形
+角形往外多遠 10         往版心外面站 10px
+角形要多深 ＋           --ink-soft × .7
+漸層要多長 16
+頁尾的更新日期          交給 build.mjs 維護</pre></div>
+
+<h2>沒有選上、維持現況的七項</h2>
+<div class="note"><pre>手機行動條（底部固定的打電話／LINE）
+頁首那顆 LINE（電腦版的約診動線）
+地圖入口做成按鈕
+頁尾補上 LINE
+第一屏的「下面還有」（電腦版 HERO 底下的角形）
+320px 頁首修正   ⚠ 這一項是**破圖**不是美感問題：320 寬時品牌字與「全部文章」
+                 實測重疊 −1.2px。使用者看過數字之後仍然沒有選它。
+文章卡標題固定兩行</pre></div>
+
+<h2>「標記高度」那一輪：31 / 34 / 38 / 41 / 44</h2>
+<div class="note"><pre>第一版把標記直接撐到 44（WCAG 2.5.5 AAA），使用者：「為了增大點擊空間、
+避免誤觸所以垂直幅度變大，但好像太大了，不然在現在這個版本跟原始版本的
+中間做三個讓我比較看看。」→ 13px 平分四段取整，得 34／38／41。定案 34。
+
+⚠ WCAG 2.5.8 的 AA 門檻是 24×24，44 是 2.5.5 的 AAA。34／38／41 三段
+  都已經過 AA，過不了的只有 AAA。
+
+反推內距（框 1px×2、行高 1.6）：
+  .chips button        字 13.12 × 1.6 = 21.0  → 內距 = (h − 23) / 2
+  .hours-filter button 字 12.80 × 1.6 = 20.5  → 內距 = (h − 22.5) / 2
+
+  h            31(現況)  34     38     41     44
+  chips          4.0     5.5    7.5    9.0   10.5
+  hours          4.2*    5.75   7.75   9.25  10.75    * 原本 .2rem=3.2，量到 28.8
+
+⚠⚠ 第二版改成用目標高回推，不再寫死 px：
+      padding-block: calc((34px − 1.6em − 2px) / 2)
+   因為使用者接著要求「字再大一點」，而字級一動，寫死的內距就會把塊高頂開
+   （34 → 35.1 → 36.2）。1em 是按鈕自己當下的字級，所以兩把尺互不干擾。
+   量過 5 種塊高 × 4 種字級共 20 組，塊高全部等於指定值。
+⚠ 字級天花板是「內距不能是負的」：34px 的塊上限 (34−2)/1.6 = 20px；
+  塊高若調回 31 就掉到 18.1px。高與字是一組的。</pre></div>
+
+<h2>「橫捲提示」四案 → Ⓔ（四輪掉頭）</h2>
+<div class="note"><pre>使用者選了橫捲之後：「乍看會不知道變成橫幅捲動，要加提示的符號或捲動軸？
+做四個給我看。」
+
+Ⓐ 漸層淡出   右緣讓內容淡掉，不佔空間、捲到底自動收
+Ⓑ 細捲軸     3px 軌道常駐
+Ⓒ 角形       右緣一顆有底的圓盤，position: sticky
+Ⓓ 晃一下     捲進畫面時自己往右挪 26px 再回來，只做一次
+
+⚠⚠ Ⓑ 第一版用 scrollbar-width: thin ＋ ::-webkit-scrollbar 去改**原生**捲軸，
+   在使用者的 iPhone 上等於沒做 —— iOS Safari 的捲軸是 overlay 的，平常不畫、
+   只有正在捲的時候浮出來，而且那兩組屬性 iOS 都不吃。那正好是「已經知道會捲」
+   之後才出現，順序反了。改成 JS 插一條 .sbar 自己畫，三個平台才一致。
+⚠ Ⓒ 第一版是 9px 的角形＋兩條 1px 的線 —— 貼住了但看不見（疊在最後那顆標記上，
+   細線和標記自己的框混在一起）。改成有底的小圓盤才讀得出是「浮在上面的東西」。
+⚠ Ⓓ 看 prefers-reduced-motion（這是位移），而且使用者自己捲過就不再晃。
+
+使用者選 Ⓐ＋Ⓒ 合併，之後四輪修正 ——</pre></div>
+
+<h2>Ⓔ 的四輪修正</h2>
+<div class="note"><pre>第一輪「角形好明顯、只有往右的一顆、不用一直這麼明顯」
+  → 拿掉圓盤只留線；左右各一顆（能往哪滑才出現哪一顆）；
+     捲的時候退到 .1、停 700ms 淡回 .5
+
+第二輪（實機回報）「角形沒有出來，而且字變成斜體的好奇怪」
+  ⚠⚠ 斜體：包裝層用了 document.createElement('i') —— <i> 的 UA 預設是
+     font-style: italic，而 display: contents **只拿掉盒子、不擋繼承**，
+     整排標記的字全變斜的。改成 <span>。這個坑在前一輪的截圖裡就看得到。
+  ⚠ 角形沒出來：第一版用 background-image + data:image/svg+xml，那支 SVG
+     只有 viewBox、沒有 width/height（沒有內在尺寸），Safari 對這種 SVG 當
+     背景圖一直有算繪問題。改成兩條 CSS 邊框 + rotate(±45deg)，沒有圖片。
+
+第三輪「角形應該在標籤被模糊化的外面，不是壓在標籤上面。放上面放下面也都不對，
+       應該跟標籤垂直高度一樣。」
+  ⚠ 這個診斷指的是**遮罩的形狀**不是角形的位置：原本漸層一路淡到邊緣，
+     角形站的地方標籤還剩約 20% 殘影。上緣／超上／超下三案同時被否決。
+  → 漸層提早結束，末端留一條完全透明的淨空帶，角形站在正中間。
+
+第四輪「模糊把標籤吃掉太多了。而且角形為什麼一定要在邊框內？很吃裡面的空間。」
+  ⚠ 兩句是同一件事：**提示不該跟內容搶版心**。
+  → 角形移到版心外面（那裡本來就是留白），淨空帶因此歸零，漸層收短。
+     被吃掉的寬度 52px（28 漸層 ＋ 24 淨空）→ 16px，少 69%。
+
+第五輪 指定補一段「沒有漸層」（硬切）與往外 9／10／11 三段
+第六輪「角形沒有對標籤文字的垂直中線，比文字往下一點點。顏色也太淡。」
+第七輪「一個 ＋ 就夠了。但滑動的時候不要變淡，是滑到底再隨著滑動減緩變淡。」</pre></div>
+
+<h2>角形為什麼要掛在外層</h2>
+<div class="note"><pre>⚠⚠ **mask-image 會作用在元素的偽元素上。**
+第一版把角形寫成捲動容器自己的 ::before/::after，結果 Ⓐ 的遮罩把貼在邊緣的
+角形一起淡掉 —— 量得到 opacity 是 .5，畫面上就是沒有。
+
+解法是包一層 .swrap，角形掛在**沒有被遮罩的外層**上。
+⚠ .swrap 平常是 display: contents，在版面上完全不存在。中立性驗過：
+  五個寬度 × 六種設定，十一個元素的寬高座標 ＋ scrollWidth ＋ 文件高度，
+  逐項完全相同。
+⚠ 包完之後 .sbar 的 DOM 父層變成 .swrap，選擇器要從子代改成後代 ——
+  display: contents 只影響版面，**選擇器仍然照 DOM 樹比對**。
+⚠ 外層不要寫任何 overflow：一寫就擋掉裡面的黏著定位，而且子層的下外距
+  不再穿透出來（門診表那排的 1.15rem 靠它）。
+
+（角形還在捲動列裡的那一版另外踩過一個坑：負外距要扣的不只是自己的寬度，
+  還要扣一份 gap —— gap 是每兩個 flex 項目之間都有一份，多兩個偽元素就多兩份，
+  scrollWidth 769 → 784、第一顆標記被往右推 7.2px。搬到外層後自然消失。）</pre></div>
+
+<h2>角形的垂直位置：對字面中線，不是盒子中線</h2>
+<div class="note"><pre>量出來低 2.31px（375、字 13.12、塊高 34），**兩件事疊在一起**：
+  ① 捲動列自己有 padding-bottom: .15rem（2.4px），
+     包裝高 36.39 ≠ 按鈕高 34 → 幾何中心低 1.20px
+  ② 中文的字面中線本來就在行框中線上方：
+     按鈕盒中心 17.00、字面中線 15.89 → 又低 1.11px
+1.20 + 1.11 = 2.31。只解其中一個都還會歪。
+
+⚠⚠ **不能寫死成 em。** Blink 把行內盒的基線位置進位到整數 px，偏移量不是
+  字級的線性函數，同一個字級在不同 DPR 上還會落在不同的整數
+  （CLAUDE.md 第九節第 9 條記過同一個坑）。而且這裡又多兩個變數
+  （塊高與字級兩把尺都會動它）。所以由 JS 現場量，寫進 --ar-y。
+⚠ 量法：零尺寸 inline-block 探針取基線，canvas 的 actualBoundingBox 取字面框，
+  **在 400px 上量再等比例縮**（Blink 回來的值以 1/64 em 為階）。
+⚠ 這支不掛在 scroll 上：捲動不會改變垂直位置。
+
+驗證：3 個寬度 × 2 種 DPR × 4 組（塊高／字級）× 兩排標記，差全部是 0.00px。</pre></div>
+
+<h2>角形的透明度：跟餘量走，不跟手走</h2>
+<div class="note"><pre>使用者：「滑動的時候不要變淡，是滑到底再隨著滑動減緩變淡。所以往右滑到底，
+左角形並不會變淡也不會消失。這樣才符合介面設計的邏輯。」
+
+⚠⚠ 舊模型（data-sc ＋ 700ms 計時器）有兩個錯，已整組拿掉：
+  ・把「正在捲」當成要退場的訊號 —— 手在動不代表沒得滑了，
+    結果一動手兩顆就一起變淡，在最需要提示的時候消失
+  ・用 start／mid／end 三個離散狀態決定顯不顯示，到底那一瞬間是「啪」地消失
+
+新模型：兩顆各看**自己那一側還剩多少可以滑**。
+    左 = min(1, scrollLeft ÷ 48)      右 = min(1, (可捲總量 − scrollLeft) ÷ 48)
+
+斜坡 48px：太短（~16）幾乎等於「啪」地消失，太長（~120）整趟有一大半時間
+角形都是半透明的。主題那排可捲 434px，48 佔 11%。
+過場 .15s linear 只是平滑捲動事件的顆粒，再長就會跟不上手指。
+
+實測（基準 .7）：
+  scrollLeft   0 → 左 0.000 右 0.700
+              12 → 左 0.175 右 0.700
+              24 → 左 0.350 右 0.700
+              48 → 左 0.700 右 0.700   （之後一路維持，滑動中不變淡）
+       離右底 24 → 左 0.700 右 0.350
+       離右底 12 → 左 0.700 右 0.175
+           到底 → 左 0.700 右 0.000   ← 使用者要的那一條</pre></div>
+
+<h2>橫捲踩到的第一個坑：撐開的不是捲軸，是整張卡</h2>
+<div class="note"><pre>⚠⚠ 門診表那排在 .info-card 裡，而那張卡是 .info 這個 grid 的項目 ——
+**grid 項目的 min-width 預設是 auto**（不准比內容窄）。一排七顆不換行之後，
+撐開的不是捲軸、是整張卡，整頁跟著長出水平捲軸（375 上量到溢出 296px）。
+補一行 min-width: 0 才真的變成橫捲。
+主題那排沒踩到，只是因為它的祖先是 flex 而它自己早就寫了 min-width: 0。</pre></div>
+
+<h2>窄帶三行的間距：不能只加 gap</h2>
+<div class="note"><pre>字抬一階之後行距沒跟著長，三行擠成一團。
+
+⚠⚠ 2026-08-10 有一輪定案在管窄帶的上下平衡（當時使用者說「1983 那一列離窄帶
+下緣還有距離，反而離地址電話很近」，兩邊各動 2px 收成 11.7／11.8）。
+gap 一加大，上面那個數字跟著長、下面沒動，那一輪立刻壞掉。
+所以 gap 與**上下內距一起加同一個 Δ**。
+
+  Δ          現況    +2     +4(定案)  +6
+  窄帶高度   108.9  116.9   124.9    132.9
+  行距       8.8/10.8 10.8/12.8 12.8/14.8 14.8/16.8
+  下留白     11.6   13.6    15.6     17.6
+
+照片一個像素都沒動 —— 窄帶接在照片下面，長高只把底下的內容往下推。</pre></div>
+
+<h2>頁尾的更新日期</h2>
+<div class="note"><pre>頁尾寫「網站最後更新：2026 年 8 月 2 日」，而首頁自己的內容雜湊算出來的
+更新日是 2026-08-13（sitemap 首頁那一筆的 lastmod 就是這個值），差 11 天。
+期間門診表整個換成點陣表、主畫面圖示換過兩輪、照片與窄帶的接縫改過四輪，
+這一行一次都沒跟上 —— 手寫的欄位沒有人維護，只會愈差愈多。
+
+⚠ 真正要做的**不是把 8/2 改成 8/13**（下星期一樣錯），是讓 build.mjs 寫進來。
+上線時發現 build.mjs **早就備好了接線**：normalizeHome() 已經把
+<time class="site-updated"> 整個從雜湊裡剔除（所以寫日期不會回頭改變雜湊、
+不會變成每天自己跳），只是 index.html 那個 <time> 從來沒掛上 class。
+
+改法：index.html 的 <time> 加 class="site-updated"，build.mjs 的值改成
+  [homeUpdated, posts[0].updated].sort().pop()
+＝ 首頁自己的 lastmod 與最新那篇文章的更新日取較新的。
+舊版只看 posts[0].updated，所以「改了首頁但沒發文」的時候完全不會動 ——
+那正是它會落後十一天的原因。</pre></div>
+
+<h2>切換條本身學到的</h2>
+<div class="note"><pre>・選擇器一律 html[data-x="on"] .foo（0,2,1），比原本的 .foo（0,1,0）高一階：
+  「開」一定贏、「關」的時候整條不存在、原本那條自然接手。
+  **不要用 !important**，那會讓關掉之後回不去原狀。
+・需要新元素的項目，元素寫死在 HTML 裡、預設 display: none ——
+  切換純粹是 CSS，不必在切換的當下動 DOM，關掉一定回得去。
+・多段的那幾列**不用 <label> 包**：label 會把點擊轉給第一個表單元素，
+  按第二段以後會跳回第一段。
+・網址參數用明確的清單查找，不是正規式（CLAUDE.md 記過：[a-z]+ 吃不到
+  帶數字的值，比對失敗後悄悄退回預設）。
+・面板高度上限用 svh 不用 vh —— iOS 的 vh 是工具列收起後的大視窗高度，
+  用 vh 會讓最底下那幾個量測數字永遠捲不到。
+・量命中區之前要先讓面板自己 pointer-events: none，
+  否則 elementFromPoint 會先撞到面板。
+・第一次量測會落在字型載入完成之前，要在 fonts.ready 與 load 之後各再量一次。
+・「最小字」要排掉 HERO 那首詩（那是定案過的裝飾字級）。
+
+⚠ 提案頁自己的一個小瑕疵（正式站沒有）：頁尾第一欄多了一個 display: none 的
+  .foot-line，它仍然是最後一個元素子節點，所以 .foot-tel 不再是 :last-child、
+  多留了 11.2px 的下外距。上線比對時兩邊差的那 11px 就是它。</pre></div>
+
+<footer>
+  芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a>　<a href="/">回首頁</a>
+</footer>
+</div></body>
+</html>

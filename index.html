@@ -3021,6 +3021,186 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
    那顆藥丸的字一直比名字低 1.82px。用的是「字對字」的量
    （0.345 × (16.8 − 11.52) ÷ 11.52 = .158em）。 */
 .doc-role { vertical-align: .158em; }
+
+/* ==========================================================================
+   2026-08-13 定案上線 —— 手機的可讀性、觸控目標、橫捲的科別標記
+   --------------------------------------------------------------------------
+   十二項提案在 preview/cta-mobile/ 逐項對照過（切換條可以一項一項開關），
+   使用者當天定案十二項，這一段就是把它們併回來的結果。
+   **完整的推導、每一個落選案的數字、踩過的坑，全部在 /history/cta-mobile.html。**
+   要還原那一頁：git show 700a6ae:preview/cta-mobile/index.html > /tmp/x.html
+
+   沒有選上、維持現況的七項（不要以為是漏掉的）：手機行動條、頁首那顆 LINE、
+   地圖入口做成按鈕、頁尾補上 LINE、第一屏的「下面還有」、320px 頁首修正、
+   文章卡標題固定兩行。
+
+   ⚠ 這一段刻意放在樣式表**最後面**。它覆寫的是上面那些基底規則，
+     權重相同（都是 0,1,0），靠順序決勝 —— 往前搬就會失效。
+   ========================================================================== */
+
+/* ---- 一、字級抬一階（各尺寸共用的那幾條）--------------------------------
+   一間 1983 年開業的社區牙醫，客群裡有大量五十歲以上的人，而全站最小的幾行字
+   正好是他們要看的東西。10px 這一階抬到 12、11.x 抬到 12.8~13。
+   ⚠ `.doc dd`（專長那一句 13.28px）與 `--sk-fs` 沒有動 —— 本來就在門檻之上，
+     而且 `--sk-fs` 必須等於 `.doc dd`，動一個就要動兩個。 */
+.card-tag                                   { font-size: .8rem; }
+/* ⚠ `.doc-role` 抬到 .8rem 之後，本檔上面那條 `vertical-align: .158em`
+     嚴格說已經不精準了 —— 那個值是照 0.345 ×（父層字級 − 自己的字級）÷ 自己的字級
+     算的，用 .72rem 代進去才等於 .158em；.8rem 應該是 .108em，差 0.64px。
+     **刻意維持 .158em**：提案頁上使用者看過並定案的就是這個組合，
+     為了公式去改會讓正式站和他點頭的那一版不一樣。0.64px 也在看不出來的範圍。
+     日後若要重算，公式與量法在 /history/cta-mobile.html 與 CLAUDE.md 第九節第 9 條。
+   ⚠ 藥丸的上下內距不受影響 —— 那兩個是 em 而且由 JS 現量（--role-padT/padB）。 */
+.doc-role                                   { font-size: .8rem; }
+.doc dt                                     { font-size: .81rem; }
+.hours-grid tbody th, .hours-grid thead th  { font-size: .8rem; }
+
+/* ---- 二、兩排科別標記的高與字 ------------------------------------------
+   塊高一律 34px（WCAG 2.5.8 的 AA 門檻是 24×24；44 是 2.5.5 的 AAA，
+   使用者看過 31／34／38／41／44 五段之後挑 34）。門診表那排原本只有 28.8，
+   一起拉齊 —— 兩排是同一種藥丸，一邊 44 一邊 31 會變成兩套語彙。
+
+   ⚠⚠ **內距是用目標高回推的，不要寫死 px。**
+         內距 ＝（目標高 − 行框 − 框線）÷ 2 ＝ calc((34px − 1.6em − 2px) / 2)
+       1.6 是 line-height、1em 是按鈕**自己當下的字級**。寫死的話字級一改
+       （下面那兩行就把字級抬高了）塊高會被頂開，34 變成 35.1／36.2。
+   ⚠ 字級天花板是「內距不能是負的」：34px 的塊上限 (34−2)/1.6 ＝ 20px。
+     日後若把塊高調回 31，上限就掉到 18.1px —— 高與字是一組的，不要各調各的。
+   ⚠ 兩排的字級差 .02rem 是原本就有的，等距平移、沒有去統一。 */
+.chips button        { font-size: .90rem; padding-block: calc((34px - 1.6em - 2px) / 2); }
+.hours-filter button { font-size: .88rem; padding-block: calc((34px - 1.6em - 2px) / 2); }
+
+/* ---- 三、觸控目標補到 44px ----------------------------------------------
+   改動前：窄帶地址／電話 13.9~14.9px（連 WCAG 2.5.8 最寬鬆的 24px 都不到）、
+   頁首選單 31.5~35.2、頁尾導覽 15、頁尾地址電話 27.4、搜尋框 31。
+   ⚠ 選單用 `::after`，因為 `::before` 已經是那圈玻璃框了。
+   ⚠ 窄帶那兩顆左右各外擴 .4rem：≤360 時兩顆之間是 17.6px，各吃 6.4px
+     還剩 4.8px，不會互相蓋到。
+   ⚠ 頁尾那幾個改用內距，不用外擴 —— 它們縱向排列，間距只有 5.6px，
+     外擴的命中區會疊到隔壁那一行，按上面會按到下面。
+   ⚠ 8.5 不是 8.3：27.4 是量出來的，字型載入前後會差零點幾。 */
+.hero-contact a          { position: relative; z-index: 2; }
+.hero-contact a::after   { content: ''; position: absolute; inset: -15.5px -.4rem; }
+.site-nav a::after       { content: ''; position: absolute; inset: -6.5px 0; }
+.foot-nav                { gap: 0; }
+.foot-nav a              { display: block; padding-block: .55rem; }
+.foot-addr a, .foot-tel a { padding-block: 8.5px; }
+.foot-tel                { margin-top: 0 !important; }   /* 命中區要連續，中間不留按不到的縫 */
+.topic-search input      { min-height: 44px; }
+
+/* ---- 四、橫捲那一層外框 -------------------------------------------------
+   平常在版面上完全不存在（見標記那兩段的 HTML 註解）。
+   ⚠ `font-style: normal` 是保險：這一層若被改成 <i>，display: contents
+     會把 italic 繼承給整排標記。 */
+.swrap { display: contents; font-style: normal; }
+
+@media (max-width: 720px) {
+  /* ---- 一之二、字級抬一階（手機專屬的那幾條）--------------------------
+     ⚠ 窄帶的圖示是按比例跟著走的，不是重挑：
+       釘子 .762 × (.8 ÷ .7) = .871rem、話筒 .710 × (.8 ÷ .7) = .811rem。
+       那個比例是量「字面」得來的（數字沒有下伸部，字面只占字級 0.88），
+       照搬字級會讓話筒矮一截，只能等比例縮放。 */
+  .stats b small, .stats span            { font-size: .75rem; }
+  .band-views .views-n, .band-views small { font-size: .75rem; }
+  .hero-contact a                        { font-size: .8rem; }
+  .c-addr .ico svg                       { width: .871rem; height: .871rem; }
+  .c-tel  .ico svg                       { width: .811rem; height: .811rem; }
+  .brand-text small                      { font-size: clamp(11px, 2.95vw, 13px); }
+  html.scrolled .brand-text small        { font-size: clamp(10px, 2.66vw, 11.7px); }
+
+  /* ---- 五、窄帶三行的間距 ＋4 ------------------------------------------
+     字抬一階之後行距沒跟著長，瀏覽數／地址電話／1983・9・5 三行擠成一團。
+     ⚠⚠ **不能只把 gap 加大。** 2026-08-10 有一輪定案在管窄帶的上下平衡
+       （「1983 那一列離窄帶下緣還有距離，反而離地址電話很近」，兩邊各動 2px
+       收成 11.7／11.8）。gap 一加大，上面那個數字跟著長、下面沒動，
+       那一輪立刻壞掉。所以 gap 與上下內距**一起加同一個 4px**。
+     量到：帶高 104.9 → 124.9（＋8 是兩個間距、＋16 含上下內距，共 ＋20），
+     行距 8.8/10.8 → 12.8/14.8，下留白 11.6 → 15.6，平衡維持。
+     ⚠ 照片一個像素都沒動 —— 窄帶接在照片下面，長高只把底下的內容往下推。 */
+  .band .shell {
+    gap: calc(.55rem + 4px);
+    padding-block: calc(.85rem + 4px) calc(.725rem + 4px);
+  }
+
+  /* ---- 六、兩排科別標記收成一排橫捲 ------------------------------------
+     改動前 375 上八顆排成 3 排 107.4px，第一張文章卡被推到 y=701.8。
+     收成一排省下約 76px。代價很清楚：後面幾顆看不見了，所以配下面的提示。
+
+     ⚠⚠ **`.info-card` 那一行 `min-width: 0` 不能刪。** 門診表那排在
+       `.info-card` 裡，而那張卡是 `.info` 這個 grid 的項目 —— grid 項目的
+       `min-width` 預設是 `auto`（不准比內容窄）。一排七顆不換行之後，
+       撐開的不是捲軸、是**整張卡**，整頁跟著長出水平捲軸（375 上量到 296px）。
+     ⚠ `:not(.hours-filter-top)` 是排掉「開診時段」那一排（只有一顆）。
+     ⚠ 捲軸藏起來，但**保留鍵盤與觸控的捲動**（不是 overflow: hidden）。 */
+  .info-card { min-width: 0; }
+  .swrap { display: block; position: relative; min-width: 0; }
+  .topic-tools .swrap { flex: 1 1 22rem; }   /* 接手 .chips 原本的 flex 項目身分 */
+  .chips,
+  .hours-filter:not(.hours-filter-top) {
+    flex-wrap: nowrap; min-width: 0; overflow-x: auto;
+    scrollbar-width: none; -ms-overflow-style: none;
+    padding-bottom: .15rem; scroll-padding-inline: 1rem;
+  }
+  .chips::-webkit-scrollbar,
+  .hours-filter:not(.hours-filter-top)::-webkit-scrollbar { display: none; }
+  .chips > li,
+  .hours-filter:not(.hours-filter-top) > li { flex: 0 0 auto; }
+  .chips button,
+  .hours-filter:not(.hours-filter-top) button { white-space: nowrap; }
+
+  /* ---- 七、「這排可以往右捲」怎麼講：右緣淡出 ＋ 兩顆角形 ---------------
+     四種做法比過（純漸層／細捲軸／有底的圓盤／進場晃一下），定案是
+     「漸層 ＋ 角形」。漸層 16px：長度只夠**把切口收軟**，
+     不必再長 —— 角形站在版心外面，背後本來就沒有標記要洗乾淨。
+     ⚠ 到底（end）時那一側**不再淡出**：已經沒有東西在後面，
+       最後一顆標記本來就該站到邊緣。
+     ⚠ data-sx 由底下那支 JS 寫（start／mid／end／none）。沒有 JS 的時候
+       只會停在起點那一態，不會壞。 */
+  .chips, .hours-filter:not(.hours-filter-top) {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 16px), transparent);
+            mask-image: linear-gradient(90deg, #000 calc(100% - 16px), transparent);
+  }
+  .chips[data-sx="mid"], .hours-filter[data-sx="mid"] {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  }
+  .chips[data-sx="end"], .hours-filter[data-sx="end"] {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px);
+            mask-image: linear-gradient(90deg, transparent, #000 16px);
+  }
+  .chips[data-sx="none"], .hours-filter[data-sx="none"] {
+    -webkit-mask-image: none; mask-image: none;
+  }
+
+  /* 兩顆角形。**掛在外層 .swrap 上，不是掛在捲動列上** —— 捲動列帶著遮罩，
+     而遮罩會作用在它自己的偽元素上，貼在邊緣的角形會被一起淡掉。
+     ⚠ 用兩條 CSS 邊框畫，不是背景圖：只有 viewBox、沒有 width/height 的
+       SVG 當背景圖時 Safari 有時直接不畫（實機上完全沒出現過一次）。
+     ⚠ **往版心外面站 10px**（`left/right: -10px`）。留白只有 20px（版心內距）
+       ／19.2px（資訊卡內距），角形自己 9px 寬 —— 10 的時候右緣離螢幕邊 10px，
+       上限是 16（離邊 4px），再往外就會貼到螢幕邊。
+     ⚠ 垂直對的是**標籤文字的字面中線**，不是盒子中線；--ar-y 由 JS 現場量，
+       原因見底下那支 JS 的註解。沒有 JS 就退回 50%（低 2.31px，不會壞）。
+     ⚠ 透明度跟著「這一側還剩多少可以滑」連續變化（--ar-fl／--ar-fr），
+       **不看手有沒有在動** —— 所以往右滑到底時左邊那顆是滿的。 */
+  .swrap::before, .swrap::after {
+    content: ''; position: absolute; z-index: 2;
+    width: 9px; height: 9px; pointer-events: none;
+    border-style: solid; border-color: var(--ink-soft); border-width: 1.6px;
+    top: var(--ar-y, 50%);
+    transform: translateY(-50%) rotate(var(--ar-r));
+    opacity: calc(.7 * var(--ar-f, 1));
+    transition: opacity .15s linear;
+  }
+  .swrap::before {   /* 取上與左兩條邊（Γ），逆時針轉 45 度指向左 */
+    --ar-r: -45deg; --ar-f: var(--ar-fl, 0);
+    left: -10px; border-right-width: 0; border-bottom-width: 0;
+  }
+  .swrap::after {    /* 取上與右兩條邊（⌐），順時針轉 45 度指向右 */
+    --ar-r: 45deg; --ar-f: var(--ar-fr, 1);
+    right: -10px; border-left-width: 0; border-bottom-width: 0;
+  }
+}
 </style>
 </head>
 <body>
@@ -3158,6 +3338,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <div class="topic-tools">
         <!-- 「全部」不是一個科別，是「不篩選」。所以它用中性的墨色，不是任何一個科別色 ——
              六個彩色各自代表一科，這一顆若也上色就等於多了一科不存在的科別。 -->
+        <!-- ⚠ 這一層 .swrap 是「往右捲」那兩顆角形的掛點（2026-08-13 定案）。
+             **平常是 `display: contents`，在版面上完全不存在** —— 只有 ≤720
+             才變成真的區塊。為什麼不能把角形直接掛在下面那一排身上：
+             那一排帶著 `mask-image`，而**遮罩會作用在元素的偽元素上**，
+             貼在邊緣的角形會被自己的遮罩一起淡掉（看得到 opacity，畫面上沒有）。
+             ⚠ 一定要用 <span>，不可以用 <i> —— <i> 的預設是 font-style: italic，
+             而 display: contents 只拿掉盒子、不擋繼承，整排標記的字會變斜的。 -->
+        <span class="swrap">
         <ul class="chips">
           <li><button type="button" data-spec="all"     aria-pressed="true">全部</button></li>
           <li><button type="button" data-spec="general" aria-pressed="false">一般牙科・定期檢查</button></li>
@@ -3168,6 +3356,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <li><button type="button" data-spec="prosth"  aria-pressed="false">植牙・假牙重建</button></li>
           <li><button type="button" data-spec="surg"    aria-pressed="false">口腔外科</button></li>
         </ul>
+        </span>
         <!-- 顯微根管與口腔外科是 2026-08-09 補的。這兩科目前一篇文章都沒有，
              但 chips 同時篩**文章與醫師**，兩科各有一位駐診醫師（陳芷鈴、許馨文），
              按下去會顯示「0 篇文章、1 位醫師」，文章那一區出現空狀態的句子 ——
@@ -3415,6 +3604,9 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
             <li><button type="button" data-spec="all"     aria-pressed="true">開診時段</button></li>
           </ul>
 
+          <!-- 同上，這一排也會橫捲。⚠ 只包這一排，不包上面那顆「開診時段」——
+               它只有一顆，收成橫捲沒有意義，而且它刻意自己一排（那是「不篩選」）。 -->
+          <span class="swrap">
           <ul class="hours-filter">
             <li><button type="button" data-spec="general" aria-pressed="false">一般牙科</button></li>
             <li><button type="button" data-spec="perio"   aria-pressed="false">牙周治療</button></li>
@@ -3424,6 +3616,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
             <li><button type="button" data-spec="prosth"  aria-pressed="false">植牙・假牙重建</button></li>
             <li><button type="button" data-spec="surg"    aria-pressed="false">口腔外科</button></li>
           </ul>
+          </span>
 
           <table class="hours-grid">
             <caption>一週各時段的門診，以及每一節有哪些科別</caption>
@@ -3549,7 +3742,13 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     </div>
     <div class="foot-bottom">
       <span>&copy; 2026 芳仁牙醫診所</span>
-      <span>網站最後更新：<time datetime="2026-08-02">2026 年 8 月 2 日</time></span>
+      <!-- ⚠ 這個日期由 tools/build.mjs 維護（`class="site-updated"` 是它的掛勾），
+           **不要手改**。2026-08-13 之前它是手寫的，一路停在 8 月 2 日 ——
+           期間門診表換版型、圖示換兩輪、接縫改四輪，一次都沒跟上。
+           寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
+           ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
+           所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
+      <span>網站最後更新：<time class="site-updated" datetime="2026-08-13">2026 年 8 月 13 日</time></span>
     </div>
   </div>
 </footer>
@@ -4231,6 +4430,104 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 <!-- 瀏覽計數器。2026-08-08 補回來 —— 首頁換成定案版型（2c0f7aa）時整支被漏掉，
      窄帶的數字停在提案頁的示範值 8642、六張文章卡的數字則一直是「—」。
      文章頁一直都有掛，所以只有首頁壞掉。 -->
+
+<!-- ==========================================================================
+     兩排科別標記橫捲時的狀態（2026-08-13 定案上線）
+     --------------------------------------------------------------------------
+     只做三件事，全部寫進 CSS 變數／屬性，樣式留在樣式表裡：
+       ① data-sx    捲到哪裡了（start／mid／end／none）—— 右緣淡出靠它
+       ② --ar-y     角形的垂直位置 ＝ 標籤文字的**字面中線**
+       ③ --ar-fl／--ar-fr  兩顆角形各自的透明度係數
+
+     ⚠ 沒有這支 JS 也不會壞：遮罩停在起點那一態、角形退回垂直置中（低 2.31px）、
+       右邊那顆常駐、左邊那顆不出現。橫捲本身是純 CSS，照樣捲得動。
+     ⚠ 完整推導、落選案與踩過的坑在 /history/cta-mobile.html。
+     ========================================================================== -->
+<script>
+(function () {
+  var els = [].slice.call(
+    document.querySelectorAll('.chips, .hours-filter:not(.hours-filter-top)')
+  );
+  if (!els.length) return;
+
+  /* 角形在最後這麼多像素內逐漸淡掉。48 是挑的：太短（~16）幾乎等於「啪」地
+     消失，太長（~120）整趟滑動有一大半時間角形都是半透明的。
+     主題那排可捲約 434px，48 佔 11%。 */
+  var RAMP = 48;
+
+  function mark(el) {
+    var wrap = el.parentElement;
+    var max = el.scrollWidth - el.clientWidth;
+    /* 沒有溢出 ＝ 一排放得下（電腦版就是這樣）。遮罩與角形一起收掉。 */
+    if (max <= 1) {
+      el.setAttribute('data-sx', 'none');
+      if (wrap) {
+        wrap.style.setProperty('--ar-fl', '0');
+        wrap.style.setProperty('--ar-fr', '0');
+      }
+      return;
+    }
+    var x = el.scrollLeft;
+    el.setAttribute('data-sx', x <= 1 ? 'start' : (x >= max - 1 ? 'end' : 'mid'));
+    if (!wrap) return;
+    /* ⚠ 兩顆各看**自己那一側還剩多少可以滑**，不看手有沒有在動 ——
+         所以往右滑到底的時候左邊那顆是滿的（左邊還有一整排可以滑回去）。
+         這一條是使用者指定的：「滑動的時候不要變淡，是滑到底再隨著滑動減緩變淡」。 */
+    wrap.style.setProperty('--ar-fl', Math.min(1, x / RAMP).toFixed(3));
+    wrap.style.setProperty('--ar-fr', Math.min(1, (max - x) / RAMP).toFixed(3));
+  }
+
+  /* ---- 角形對齊標籤文字的字面中線 --------------------------------------
+     不對齊的話會低 2.31px（375、字 14.4、塊高 34 實測），兩個成因疊在一起：
+       ① 捲動列自己有 `padding-bottom: .15rem`，所以外層比按鈕高 2.4px
+       ② 中文的字面中線本來就在行框中線上方
+     ⚠⚠ **不能寫死成一個 em 值。** Blink 把行內盒的基線位置進位到整數 px，
+       偏移量不是字級的線性函數，同一個字級在不同 DPR 上還會落在不同的整數
+       （CLAUDE.md 第九節第 9 條記過同一個坑）。所以現場量。
+     ⚠ 量字面框要**在 400px 上量再等比例縮** —— Blink 回來的
+       actualBoundingBox 顆粒很粗（以 1/64 em 為階）。
+     ⚠ 這支**不掛在 scroll 上**：捲動不會改變垂直位置。 */
+  var cv = null;
+  function alignOne(el) {
+    var wrap = el.parentElement, btn = el.querySelector('button');
+    if (!wrap || !btn) return;
+    var wr = wrap.getBoundingClientRect();
+    if (!wr.height) return;
+    var cs = getComputedStyle(btn), fs = parseFloat(cs.fontSize);
+    if (!fs) return;
+
+    var probe = document.createElement('span');
+    probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+    btn.appendChild(probe);
+    var baseline = probe.getBoundingClientRect().bottom;
+    probe.remove();
+    if (!baseline) return;
+
+    if (!cv) { try { cv = document.createElement('canvas').getContext('2d'); } catch (e) { return; } }
+    if (!cv) return;
+    cv.font = cs.fontWeight + ' 400px ' + cs.fontFamily;
+    var m;
+    try { m = cv.measureText((btn.textContent || '').trim() || '字'); } catch (e) { return; }
+    if (!m || !m.actualBoundingBoxAscent) return;   /* 舊瀏覽器沒有這兩個值就不動 */
+
+    var asc = m.actualBoundingBoxAscent / 400 * fs;
+    var desc = m.actualBoundingBoxDescent / 400 * fs;
+    wrap.style.setProperty('--ar-y', (baseline - (asc - desc) / 2 - wr.top).toFixed(2) + 'px');
+  }
+
+  function refresh() { els.forEach(function (el) { mark(el); alignOne(el); }); }
+
+  els.forEach(function (el) {
+    el.addEventListener('scroll', function () { mark(el); }, { passive: true });
+  });
+  refresh();
+  addEventListener('resize', refresh);
+  /* 字型換掉會改變標記的寬度（連帶有沒有溢出）也會改變字面框，兩件都要重算。 */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+  addEventListener('load', function () { setTimeout(refresh, 200); });
+})();
+</script>
+
 <script src="assets/counter.js" defer></script>
 
 </body>
