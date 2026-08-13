@@ -4497,8 +4497,9 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
      照 8.3 寫會在某些狀態下量成 43.98，剛好差那一點點過不了 44。
    ⚠ 這三個都**不受 data-fs 影響**（那一項動的是窄帶、標籤與門診表的字，
      不含這幾顆），所以不必像第一批那樣照「最壞組合」多留一點。 */
-html[data-hit2="on"] .chips button        { padding-block: 10.5px; }
-html[data-hit2="on"] .hours-filter button { padding-block: 10.75px; }
+/* ⚠ 標記（.chips / .hours-filter）**已經從這一項拿出去了**，改成下面第十三節
+     那個多段的 data-taph —— 使用者 2026-08-13 看過 44 之後說「垂直幅度太大」，
+     所以那兩顆需要的是一把尺，不是一個開關。這裡只剩頁尾兩行與搜尋框。 */
 html[data-hit2="on"] .foot-addr a,
 html[data-hit2="on"] .foot-tel a,
 html[data-hit2="on"] .foot-line a         { padding-block: 8.5px; }
@@ -4719,6 +4720,71 @@ html[data-cardtitle="on"] .card h3 {
   html[data-chiprow="on"] .chips li     { flex: 0 0 auto; }
   html[data-chiprow="on"] .chips button { white-space: nowrap; }
 }
+
+/* ==========================================================================
+   十三、標記要多高（data-taph）—— 五段，不是開關
+   --------------------------------------------------------------------------
+   起因：使用者 2026-08-13 在手機上看過 data-hit2 把標記撐到 44 之後說
+   「為了增大點擊空間、避免誤觸所以垂直幅度變大，但好像太大了，
+     不然在現在這個版本跟原始版本的中間做三個讓我比較看看」。
+
+   所以這一項從 hit2 裡拆出來，做成一把尺 —— 原始 31、上一版 44，
+   中間補三段。四個區間平分 13px：31 → 34.25 → 37.5 → 40.75 → 44，
+   取整之後是 **34／38／41**。
+
+   反推內距（框 1px×2、行高固定）：
+     .chips button        字 13.12 × 1.6 ＝ 21.0　→ 內距 ＝ (h − 23) / 2
+     .hours-filter button 字 12.80 × 1.6 ＝ 20.5　→ 內距 ＝ (h − 22.5) / 2
+
+       h        31(現況)   34      38      41      44
+       chips      4.0     5.5     7.5     9.0    10.5
+       hours      4.2*    5.75    7.75    9.25   10.75      * 原本是 .2rem＝3.2，量到 28.8
+
+   ⚠ **門診表那七顆跟著一起走。** 使用者講的是「主題與科別」，但那兩排是
+     同一種東西（同樣的藥丸、同樣的兩態、同樣的 12px 圓角），一邊 44 一邊 31
+     會變成兩套語彙。要拆開再說一聲。
+   ⚠ **只動 padding-block。** 字級、圓角、左右內距、間距一個都沒碰 ——
+     這一輪要比的是高度，其他變數動了就比不出來。
+   ⚠ WCAG 2.5.8 的門檻是 24×24（AA），44×44 是 2.5.5（AAA）。
+     34／38／41 三段**都已經過 AA**，過不了的只有 AAA。 */
+html[data-taph="a"] .chips button        { padding-block: 5.5px; }
+html[data-taph="a"] .hours-filter button { padding-block: 5.75px; }
+html[data-taph="b"] .chips button        { padding-block: 7.5px; }
+html[data-taph="b"] .hours-filter button { padding-block: 7.75px; }
+html[data-taph="c"] .chips button        { padding-block: 9px; }
+html[data-taph="c"] .hours-filter button { padding-block: 9.25px; }
+html[data-taph="d"] .chips button        { padding-block: 10.5px; }
+html[data-taph="d"] .hours-filter button { padding-block: 10.75px; }
+
+/* ==========================================================================
+   十四、窄帶三行的間距（data-bandgap）—— 四段
+   --------------------------------------------------------------------------
+   起因：使用者 2026-08-13 開了 data-fs 之後說「字變大了，但這樣每一行資訊行
+   都有點集中，感覺可以間距再拉開一點」。成立 —— 字長高了，**行與行之間的
+   8.8px 沒有跟著長**，所以三行看起來擠成一團。
+
+   窄帶在手機上是三行：瀏覽數／地址電話／1983・9・5。
+   間距由 `.band .shell` 的 `gap: .55rem`（8.8px）管。
+
+   ⚠⚠ **不能只把 gap 加大。** 2026-08-10 有一輪定案在管這件事：
+     那時「地址電話 → 1983」只有 9.7px、「部定專科 → 窄帶下緣」有 13.8px，
+     使用者說那一列「離窄帶下緣還有點距離，反而離地址電話很近」，
+     所以兩邊各動 2px 收成 11.7／11.8（就在上面那段註解裡）。
+     **gap 一加大，上面那個數字就跟著長、下面那個沒動，那一輪的平衡立刻壞掉。**
+     所以這裡是 gap 與下內距**一起加同一個 Δ**，平衡維持不變。
+     上內距也加同一個 Δ，整條帶子才是「均勻鬆開」而不是「往下擠」。
+
+     Δ ＝ 2／4／6px　→　窄帶高度 ＋8／＋16／＋24（兩個間距 ＋ 上下兩個內距）
+
+   ⚠ 窄帶長高會把底下的內容往下推，但**照片一個像素都不會動**（照片是自己的
+     高度，窄帶接在下面）—— 所以 2026-08-12 那一輪的接縫不受影響。
+     漸層是百分比的，帶子變高它自己跟著拉長。
+   ⚠ 這一項和 data-fs 是分開的兩把尺：字級一把、間距一把，可以各自試。 */
+@media (max-width: 720px) {
+  html[data-bandgap="a"] .band .shell { gap: calc(.55rem + 2px); padding-block: calc(.85rem + 2px) calc(.725rem + 2px); }
+  html[data-bandgap="b"] .band .shell { gap: calc(.55rem + 4px); padding-block: calc(.85rem + 4px) calc(.725rem + 4px); }
+  html[data-bandgap="c"] .band .shell { gap: calc(.55rem + 6px); padding-block: calc(.85rem + 6px) calc(.725rem + 6px); }
+}
 </style>
 
 <!-- ==========================================================================
@@ -4808,6 +4874,21 @@ html[data-cardtitle="on"] .card h3 {
   padding: 9px 7px; cursor: pointer; min-height: 44px;
 }
 .fr-tg-row:hover { background: rgba(255,255,255,.06); }
+/* 多段那種列：沒有核取方塊，左邊那格留白對齊上下的方塊。 */
+.fr-tg-row.is-seg { cursor: default; padding-left: 32px; }
+.fr-tg-row .segs { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.fr-tg-row .segs button {
+  flex: 1 1 auto; min-width: 42px; min-height: 30px; padding: 3px 6px;
+  background: rgba(255,255,255,.07); color: #cfc9c2;
+  border: 1px solid rgba(255,255,255,.2); border-radius: 6px;
+  font: inherit; font-size: 12px; font-variant-numeric: tabular-nums; cursor: pointer;
+}
+.fr-tg-row .segs button:hover { background: rgba(255,255,255,.16); color: #f2f0ee; }
+/* 選到的那一段。用 aria-pressed 當選擇器 —— 狀態只存一份，
+   不會有「class 標了但 aria 沒跟上」那種讀螢幕的人看到的和畫面不一樣的情況。 */
+.fr-tg-row .segs button[aria-pressed="true"] {
+  background: #6fb3a8; color: #14120f; border-color: #6fb3a8; font-weight: 700;
+}
 .fr-tg-row input { margin: 3px 0 0; width: 16px; height: 16px; flex: 0 0 auto; accent-color: #6fb3a8; }
 .fr-tg-row .lb { display: block; font-weight: 700; font-size: 12.5px; }
 .fr-tg-row .nt { display: block; font-size: 11.5px; line-height: 1.65; color: #b8b2ab; margin-top: 1px; }
@@ -4858,10 +4939,16 @@ window.__FR_ITEMS = [
   /* ── 二、看得清楚、按得到 ────────────────────────────────────────────── */
   { g:'看得清楚・按得到', k:'fs', w:'手機', label:'字級抬一階',
     note:'窄帶三格 <b>10→12</b>、地址電話 <b>11.2→12.8</b>、標籤與門診表 <b>11.5→12.8</b>。' },
+  { g:'看得清楚・按得到', k:'bandgap', w:'手機', label:'窄帶三行的間距', on:'b',
+    opts:[{v:'off',lb:'現況'},{v:'a',lb:'+2'},{v:'b',lb:'+4'},{v:'c',lb:'+6'}],
+    note:'字抬一階之後行距沒跟著長，三行擠在一起。gap 與上下內距<b>一起加同一個 Δ</b> —— 只加 gap 會弄壞 2026-08-10 那一輪的 11.7／11.8 平衡。窄帶會高 <b>+8／+16／+24</b>。' },
   { g:'看得清楚・按得到', k:'hit', w:'全部', label:'觸控目標 44px・第一批',
     note:'窄帶地址電話、頁首選單、頁尾導覽。看不見的改動：命中區用 <b>::after</b> 撐開，版面一個像素不動。' },
-  { g:'看得清楚・按得到', k:'hit2', w:'全部', label:'觸控目標 44px・第二批',
-    note:'標記 <b>31</b>、門診表標記 <b>28.8</b>、頁尾兩行 <b>27.4</b>。這一批鄰居太近，<b>撐不出來、只能長高</b> —— 版面會動，這正是要比的。' },
+  { g:'看得清楚・按得到', k:'taph', w:'全部', label:'標記要多高', on:'b',
+    opts:[{v:'off',lb:'31'},{v:'a',lb:'34'},{v:'b',lb:'38'},{v:'c',lb:'41'},{v:'d',lb:'44'}],
+    note:'主題與科別＋門診表那兩排。<b>31</b> 是現況、<b>44</b> 是上一版（你說太大），中間補三段。WCAG 的 AA 門檻是 24，<b>34 起全部都過</b>，44 是 AAA。' },
+  { g:'看得清楚・按得到', k:'hit2', w:'全部', label:'觸控目標・頁尾與搜尋框',
+    note:'頁尾地址電話 <b>27.4</b>、搜尋框 <b>31</b>。兩行只隔 5.6px，<b>撐不出來、只能長高</b>。（標記已經拆到上面那把尺）' },
   { g:'看得清楚・按得到', k:'head', w:'手機', label:'320px 頁首修正',
     note:'把視窗拉到 320 寬才看得出來：關掉時品牌字會被「全部文章」壓到（實測 <b>−1.2px</b>）。' },
 
@@ -4888,18 +4975,42 @@ window.__FR_ITEMS = [
           比對失敗後悄悄退回預設，等於參數沒作用。） */
   var qs = new URLSearchParams(location.search);
   var state = {};
+  /* 有些項目不是開／關兩態，而是一把尺（it.opts 就是那幾段）——
+     例如「標記要多高」有 31／34／38／41／44 五段。
+     它們的網址參數收的是段的代號（off／a／b／c／d），不是 1／0。
+     ⚠ 比對用**明確的清單查找**，不是正規式：CLAUDE.md 記過一次教訓，
+       切換條的正規式寫 [a-z]+ 會吃不到帶數字的值，比對失敗後悄悄退回預設。 */
+  function optOf(it, v) {
+    if (!it.opts) return null;
+    for (var i = 0; i < it.opts.length; i++) if (it.opts[i].v === v) return it.opts[i];
+    return null;
+  }
   items.forEach(function (it) {
     var v = (qs.get(it.k) || '').toLowerCase();
-    state[it.k] = (v === '0' || v === 'off') ? 'off' : 'on';   /* 預設全開 ＝ 改後 */
+    if (it.opts) {
+      /* 認得的段就用它；1／on 當成「這一項的建議值」（it.on）；其餘退回預設全開 */
+      state[it.k] = optOf(it, v) ? v : ((v === '0' || v === 'off') ? 'off' : (it.on || it.opts[1].v));
+    } else {
+      state[it.k] = (v === '0' || v === 'off') ? 'off' : 'on';   /* 預設全開 ＝ 改後 */
+    }
   });
 
   function apply(push) {
     items.forEach(function (it) { root.setAttribute('data-' + it.k, state[it.k]); });
-    var on = items.filter(function (it) { return state[it.k] === 'on'; }).length;
+    /* 「幾項開著」——多段的那幾項只要不是 off 就算開著 */
+    var on = items.filter(function (it) { return state[it.k] !== 'off'; }).length;
     btn.querySelector('b').textContent = on + '/' + items.length;
+    items.forEach(function (it) {
+      if (!it._segs) return;
+      it._segs.forEach(function (sb) {
+        sb.setAttribute('aria-pressed', sb.getAttribute('data-v') === state[it.k] ? 'true' : 'false');
+      });
+    });
     if (push) {
       var q = new URLSearchParams();
-      items.forEach(function (it) { q.set(it.k, state[it.k] === 'on' ? '1' : '0'); });
+      items.forEach(function (it) {
+        q.set(it.k, it.opts ? state[it.k] : (state[it.k] === 'on' ? '1' : '0'));
+      });
       history.replaceState(null, '', location.pathname + '?' + q + location.hash);
     }
     /* 量測要等版面重排完 */
@@ -4925,26 +5036,53 @@ window.__FR_ITEMS = [
       list.appendChild(gl);
     }
     var li = document.createElement('li');
-    li.innerHTML = '<label class="fr-tg-row"><input type="checkbox"><span>' +
-      '<span class="lb"></span><span class="nt"></span></span></label>';
+    /* 兩種列：一般的是核取方塊；有 it.opts 的是一排分段按鈕（一把尺）。
+       多段那種**不用 <label> 包**，因為 label 會把點擊轉給第一個表單元素，
+       按第二段以後會跳回第一段。 */
+    if (it.opts) {
+      li.innerHTML = '<div class="fr-tg-row is-seg"><span>' +
+        '<span class="lb"></span><span class="nt"></span>' +
+        '<span class="segs"></span></span></div>';
+    } else {
+      li.innerHTML = '<label class="fr-tg-row"><input type="checkbox"><span>' +
+        '<span class="lb"></span><span class="nt"></span></span></label>';
+    }
     li.querySelector('.lb').innerHTML = '<i class="w"></i>';
     li.querySelector('.lb .w').textContent = it.w || '全部';
     li.querySelector('.lb').append(it.label);
     li.querySelector('.nt').innerHTML  = it.note;
-    var cb = li.querySelector('input');
-    cb.checked = state[it.k] === 'on';
-    cb.addEventListener('change', function () {
-      state[it.k] = cb.checked ? 'on' : 'off';
-      apply(true);
-    });
+
+    if (it.opts) {
+      var segs = li.querySelector('.segs');
+      it._segs = it.opts.map(function (o) {
+        var sb = document.createElement('button');
+        sb.type = 'button';
+        sb.setAttribute('data-v', o.v);
+        sb.setAttribute('aria-pressed', state[it.k] === o.v ? 'true' : 'false');
+        sb.textContent = o.lb;
+        sb.addEventListener('click', function () { state[it.k] = o.v; apply(true); });
+        segs.appendChild(sb);
+        return sb;
+      });
+      /* 全開／全關要能操作它：off 就是關，on 用 it.on（沒寫就取第二段）。 */
+      it._set = function (v) { state[it.k] = (v === 'on') ? (it.on || it.opts[1].v) : 'off'; };
+    } else {
+      var cb = li.querySelector('input');
+      cb.checked = state[it.k] === 'on';
+      cb.addEventListener('change', function () {
+        state[it.k] = cb.checked ? 'on' : 'off';
+        apply(true);
+      });
+      it._cb = cb;
+      it._set = function (v) { state[it.k] = v; cb.checked = (v === 'on'); };
+    }
     list.appendChild(li);
-    it._cb = cb;
   });
 
   box.querySelectorAll('[data-all]').forEach(function (b) {
     b.addEventListener('click', function () {
       var v = b.getAttribute('data-all');
-      items.forEach(function (it) { state[it.k] = v; it._cb.checked = (v === 'on'); });
+      items.forEach(function (it) { it._set(v); });
       apply(true);
     });
   });
@@ -4955,10 +5093,7 @@ window.__FR_ITEMS = [
     var b = e.target.closest ? e.target.closest('[data-grp]') : null;
     if (!b) return;
     var v = b.getAttribute('data-grp'), g = b.getAttribute('data-g');
-    items.forEach(function (it) {
-      if (it.g !== g) return;
-      state[it.k] = v; it._cb.checked = (v === 'on');
-    });
+    items.forEach(function (it) { if (it.g === g) it._set(v); });
     apply(true);
   });
 
@@ -5046,10 +5181,24 @@ window.__FR_ITEMS = [
     /* 第二批命中區裡最有代表性的兩顆：科別標記與頁尾電話。
        這兩顆撐不出來、只能長高，所以它們一動，下面那個「第一張卡上緣」
        也會跟著動 —— 兩個數字要一起看才知道代價。 */
+    /* 標記：量兩個。**塊自己有多高**（data-taph 這把尺在動的就是它）
+       與**可點高度**（含 ::after 的外擴，現在兩者相同）。
+       門檻寫 24 不是 44 —— WCAG 2.5.8 的 AA 是 24×24，44 是 2.5.5 的 AAA。 */
     var chip = document.querySelector('.chips button');
     if (chip) {
+      rows.push(['標記塊高', chip.getBoundingClientRect().height.toFixed(1) + 'px', '']);
       var ch = hitHeight(chip);
-      rows.push(['科別標記可點高度', ch.toFixed(1) + 'px', ch >= 44 ? 'good' : (ch < 24 ? 'bad' : '')]);
+      rows.push(['標記可點高度', ch.toFixed(1) + 'px', ch >= 24 ? 'good' : 'bad']);
+    }
+    /* 窄帶：整條的高度，以及三行之間的間距（data-bandgap 在動的那個）。 */
+    var band = document.querySelector('.band'), bv = document.querySelector('.band-views'),
+        cp = document.querySelector('.contact-pair'), st = document.querySelector('.stats');
+    if (band && bv && cp && st) {
+      rows.push(['窄帶高度', band.getBoundingClientRect().height.toFixed(1) + 'px', '']);
+      var g1 = cp.getBoundingClientRect().top - bv.getBoundingClientRect().bottom;
+      var g2 = st.getBoundingClientRect().top - cp.getBoundingClientRect().bottom;
+      /* 電腦版是橫排的，量出來會是負的或亂跳 —— 只有直排（手機）才有意義。 */
+      if (g1 > 0 && g2 > 0) rows.push(['窄帶行距', g1.toFixed(1) + ' / ' + g2.toFixed(1) + 'px', '']);
     }
     var ft = document.querySelector('.foot-tel a');
     if (ft) {
