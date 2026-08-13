@@ -3056,6 +3056,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <a href="#doctors">醫師介紹</a>
       <a href="#clinic">診所資訊</a>
     </nav>
+    <!-- 提案 data-deskcta：電腦版的約診動線。
+         ⚠ 刻意放在 <nav> **外面**。頁首的「目前在哪一節」是拿 .site-nav a
+           逐個對回頁面上的區塊的，多塞一個指向站外的 <a> 進去，那支 JS 會
+           對到一個不存在的節，燈就亂了。放外面 grid 多一欄就好。
+         ⚠ 造形抄選單自己那三個玻璃框（同一組框線與圓角），沒有新顏色。 -->
+    <a class="head-cta" href="https://line.me/R/ti/p/@445rpiiv" rel="noopener" target="_blank">LINE 詢問</a>
   </div>
 </header>
 
@@ -3092,6 +3098,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
         </div>
       </div>
+      <!-- 提案 data-cue：電腦版第一屏的「下面還有」。
+           電腦版 HERO 是整屏 100svh，捲之前畫面上只有照片、詩與窄帶，
+           沒有任何東西說下面還有六篇文章與九位醫師。
+           ⚠ 只在 ≥721 出現 —— 手機的照片只有 291px 高，窄帶底下就是內容，
+             不需要提示，加了反而擋住路面。
+           ⚠ 用 CSS 邊框畫的角形，沒有新增 SVG，也沒有新顏色
+             （白 .65／hover .95 ＝ 窄帶地址電話那兩階）。 -->
+      <a class="scroll-cue" href="#topics" aria-label="往下看內容"><i></i></a>
     </figure>
 
     <div class="band">
@@ -3526,6 +3540,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <span class="ico"><svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></span>
           <data class="num" value="05-533-9369">(05)5339-369</data>
         </a></p>
+        <!-- 提案 data-footline：頁尾補上 LINE。
+             現在全站唯一提到 LINE 的地方是 JSON-LD 的 sameAs（機器讀的），
+             畫面上一個連結都沒有。網址與 JSON-LD 同一個系統 ID。
+             ⚠ 造形完全照 .foot-addr／.foot-tel（同一個 --gutter、同樣的底線），
+               沒有用 LINE 官方綠 #06C755 —— 那是外來品牌色，不該由這裡引進。
+             ⚠ 泡泡圖示是本站自畫的簡形，不是 LINE 的商標。 -->
+        <p class="foot-line"><a href="https://line.me/R/ti/p/@445rpiiv" rel="noopener" target="_blank">
+          <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 11.5c0 4-4 7.2-9 7.2a10.7 10.7 0 0 1-2.5-.3L4.5 21l1.2-3.5A6.9 6.9 0 0 1 3 11.5c0-4 4-7.2 9-7.2s9 3.2 9 7.2Z"/></svg></span>
+          <span class="txt">LINE 線上詢問</span>
+        </a></p>
       </div>
       <div>
         <h4>站內導覽</h4>
@@ -3543,7 +3567,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     </div>
     <div class="foot-bottom">
       <span>&copy; 2026 芳仁牙醫診所</span>
-      <span>網站最後更新：<time datetime="2026-08-02">2026 年 8 月 2 日</time></span>
+      <!-- 提案 data-footdate：這個日期是手寫的，而且已經停在 8 月 2 日。
+           首頁自己的內容雜湊算出來的更新日是 2026-08-13（sitemap.xml 的
+           <lastmod> 就是這個值），差了 11 天 —— 期間門診表換過版型、
+           主畫面圖示換過兩輪、接縫改過四輪，這一行一次都沒跟上。
+           ⚠ 它跟文章的「最後更新」不同：文章那個由 tools/build.mjs 依雜湊維護，
+             這一行沒有人維護，所以只會愈差愈多。
+           ⚠ 真的要修不是把 8/2 改成 8/13（下星期又錯），是讓 build 寫進來：
+             build.mjs 已經算出 homeHash 與首頁的 lastmod（第十節第 5 點），
+             把同一個值填進這裡就好，跟 POSTS／SEO 那兩個區塊同一個做法。 -->
+      <span>網站最後更新：<time class="fd-old" datetime="2026-08-02">2026 年 8 月 2 日</time><time class="fd-new" datetime="2026-08-13">2026 年 8 月 13 日</time></span>
     </div>
   </div>
 </footer>
@@ -4410,6 +4443,285 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
 </div>
 
 <!-- ==========================================================================
+     提案・第二批（2026-08-13）—— 八項，每一項一顆開關
+     --------------------------------------------------------------------------
+     第一批那四項（bar／head／fs／hit）是 08-13 凌晨做的，寫在上面那一段。
+     這一段是把整站重新掃過一遍之後補上的，規則完全一樣：
+
+       · 每一項掛在 <html> 的一個 data-* 上，關掉 ＝ 現況，打開 ＝ 提案。
+       · 選擇器一律 `html[data-x="on"] .foo`（0,2,1），比原本的 `.foo`（0,1,0）
+         高一階，所以「開」一定贏、「關」的時候整條不存在、原本那條自然接手。
+         **不要改成 !important**，那會讓關掉之後回不去原狀。
+       · 需要新元素的那幾項（頁首按鈕、頁尾 LINE、往下提示、另一個日期）
+         元素**已經寫死在 HTML 裡**，預設 display: none，只有打開才現身 ——
+         這樣切換純粹是 CSS，不必動 DOM，關掉一定回得去。
+
+     八項：
+       data-hit2      觸控目標・第二批（標記、門診表、頁尾兩行、搜尋框）
+       data-deskcta   電腦版的約診動線（頁首那顆 LINE）
+       data-cue       電腦版第一屏的「下面還有」
+       data-mapcta    地址卡的地圖入口做成按鈕
+       data-footline  頁尾補上 LINE
+       data-footdate  頁尾那個停在 8/2 的更新日期
+       data-cardtitle 文章卡標題固定兩行（摘要起跑線對齊）
+       data-chiprow   手機的科別標記收成一排橫捲
+     ========================================================================== -->
+<style>
+/* ==========================================================================
+   五、觸控目標・第二批（data-hit2）
+   --------------------------------------------------------------------------
+   第一批（data-hit）補的是窄帶的地址電話、頁首選單、頁尾站內導覽三處，
+   用看不見的 ::after 撐命中區、版面一個像素不動。**剩下的四處撐不出來**，
+   量到的高度與各自的鄰居間距是：
+
+     .chips button           31.0px   同排間距 8.8px（.55rem）
+     .hours-filter button    28.8px   同上
+     .foot-addr a／.foot-tel a  27.4px   兩行之間只有 5.6px（.35rem）
+     .topic-search input     31.0px（電腦）／37.2px（手機）
+
+   ::after 要補到 44 得往上下各外擴 6.5～8.3px，**都比鄰居的間距大** ——
+   兩顆的命中區會疊在一起，疊到的那一段由 DOM 後面那顆接手，
+   等於按上面那顆會按到下面那顆。這比小一點更糟。
+
+   所以這一批**改成把元素自己長大**，用 padding-block。代價是版面會變高，
+   打開關掉自己比一下就知道值不值得：
+     ・標記那一排在 375 上 3 排 107.4px → 會長高（配 data-chiprow 可抵銷）
+     ・門診表上面那兩排標記跟著長高
+     ・頁尾第一欄長高，但那一欄本來就是三者中最短的，看起來反而齊
+
+   算法（都是 44 ÷ 反推，不是憑感覺）：
+     .chips button        字 13.12 × 行高 1.6 ＝ 21.0，框 2 → (44−23)/2 ＝ 10.5px
+     .hours-filter button 字 12.80 × 行高 1.6 ＝ 20.5，框 2 → (44−22.5)/2 ＝ 10.75px
+     .foot-* a            現高 27.4                    → (44−27.4)/2 ＝ 8.3px
+   ⚠ 頁尾那兩行取 8.5 不是 8.3：27.4 是量出來的，字型載入前後會差零點幾，
+     照 8.3 寫會在某些狀態下量成 43.98，剛好差那一點點過不了 44。
+   ⚠ 這三個都**不受 data-fs 影響**（那一項動的是窄帶、標籤與門診表的字，
+     不含這幾顆），所以不必像第一批那樣照「最壞組合」多留一點。 */
+html[data-hit2="on"] .chips button        { padding-block: 10.5px; }
+html[data-hit2="on"] .hours-filter button { padding-block: 10.75px; }
+html[data-hit2="on"] .foot-addr a,
+html[data-hit2="on"] .foot-tel a,
+html[data-hit2="on"] .foot-line a         { padding-block: 8.5px; }
+/* 兩行之間原本靠 margin 隔開，內距長出來之後那 5.6px 會讓兩塊黏在一起，
+   收掉正好 —— 命中區本來就該連續，中間不要有按不到的縫。 */
+html[data-hit2="on"] .foot-tel,
+html[data-hit2="on"] .foot-line           { margin-top: 0 !important; }
+/* 輸入框沒有 ::after 可用（replaced element），只能直接長高。 */
+html[data-hit2="on"] .topic-search input  { min-height: 44px; }
+
+/* ==========================================================================
+   六、電腦版的約診動線（data-deskcta）
+   --------------------------------------------------------------------------
+   data-bar 那條行動條只出現在 ≤720，**電腦版從頭到尾沒有任何約診的動作** ——
+   要打電話得先捲回第一屏去找窄帶那行 14.3px 的字，或者捲到最底看頁尾。
+
+   造形沒有新東西：底＝紙色 .24、框＝1px 紙色 .55、字＝純白，
+   三個值全部照抄選單「目前在這一節」那一態（見上面 --frame-em 那一段），
+   圓角吃同一個 --frame-r。**這是頁首已經有的語彙，不是新設計一顆按鈕。**
+
+   ⚠ 頁首的格線因此從兩欄變三欄。右欄 max-content，選單仍然 justify-self: end，
+     所以選單與品牌的相對位置不變（320 那一項量的是品牌↔選單，不受影響）。
+   ⚠ ≤720 一律不出現 —— 手機那一側是 data-bar 在管，兩個都開會變成
+     上面一顆下面一條，同一件事講兩次。 */
+.head-cta { display: none; }
+@media (min-width: 721px) {
+  html[data-deskcta="on"] .site-head .shell {
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+  }
+  html[data-deskcta="on"] .head-cta {
+    display: inline-flex; align-items: center; justify-self: end;
+    height: calc(var(--frame-em) * 1em); padding-inline: 1.05em;
+    font-size: .86rem;                       /* ＝ .site-nav 的字級 */
+    color: #fff; text-decoration: none; white-space: nowrap;
+    border-radius: var(--frame-r);
+    background: rgba(226, 229, 230, .24);
+    box-shadow: inset 0 0 0 1px rgba(226, 229, 230, .55);
+    transition: background-color .25s ease, box-shadow .25s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    html[data-deskcta="on"] .head-cta:hover {
+      background: rgba(226, 229, 230, .34);
+      box-shadow: inset 0 0 0 1px rgba(226, 229, 230, .72);
+    }
+  }
+  html[data-deskcta="on"] .head-cta:focus-visible {
+    outline: 2px solid rgba(255,255,255,.8); outline-offset: 3px;
+  }
+}
+
+/* ==========================================================================
+   七、電腦版第一屏的「下面還有」（data-cue）
+   --------------------------------------------------------------------------
+   電腦版 HERO 是整屏 100svh（PALETTE.md 第六之三節定案），捲之前畫面上
+   只有照片、詩、窄帶三格 —— 沒有任何東西說下面還有六篇文章與九位醫師。
+   窄帶那三格看起來很像頁尾，第一屏因此會被讀成「整個網站就這樣」。
+
+   幾何：窄帶在電腦版是絕對定位、貼齊照片下緣，量到**六個視窗一律 84px**
+   （1280／1440／1920／900 寬都一樣，它的高度不吃視窗）。
+   所以提示放在 84 ＋ 16 ＝ 100px。
+   ⚠ iPad 直放與旋轉螢幕（≤9/10）的窄帶是**接在照片下面**、不疊在上面，
+     那時 100px 會把提示推到照片中間 —— 下面那條 @media 把它收回 18px。
+   ⚠ 角形是兩條 border 轉 45 度畫的，沒有新增 SVG。
+   ⚠ 兩階白 .65／.95 ＝ 窄帶地址電話那兩階（PALETTE.md 第六之十七節：
+     「這條帶子上只准兩個白」），沒有引進第三個。
+   ⚠ 它是 <a href="#topics">，和頁首「全部文章」同一個目的地 ——
+     沒有 JS 也點得動，捲動由瀏覽器自己做。 */
+.scroll-cue { display: none; }
+@media (min-width: 721px) {
+  html[data-cue="on"] .scroll-cue {
+    display: flex; align-items: center; justify-content: center;
+    position: absolute; z-index: 2; left: 50%; bottom: 100px;
+    width: 44px; height: 44px; margin-left: -22px;   /* 命中區直接就是 44 */
+    color: rgba(255, 255, 255, .65);
+    transition: color .25s ease, transform .25s ease;
+  }
+  html[data-cue="on"] .scroll-cue i {
+    display: block; width: 13px; height: 13px;
+    border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translate(-2px, -2px);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    html[data-cue="on"] .scroll-cue:hover { color: rgba(255, 255, 255, .95); transform: translateY(3px); }
+  }
+  html[data-cue="on"] .scroll-cue:focus-visible {
+    outline: 2px solid rgba(255,255,255,.8); outline-offset: 2px; border-radius: 6px;
+  }
+  /* iPad 直放與旋轉螢幕：窄帶接在照片下面，不疊上去。 */
+  @media (max-aspect-ratio: 9/10) {
+    html[data-cue="on"] .scroll-cue { bottom: 18px; }
+  }
+}
+
+/* ==========================================================================
+   八、地址卡的地圖入口（data-mapcta）
+   --------------------------------------------------------------------------
+   「在 Google 地圖開啟」現在是一條夾在地址下面的文字連結，14.9px 高。
+   它其實是這張卡唯一的動作（電話那張卡的號碼本身就很大、很明顯，
+   看診時間那張是表格），但看起來和上面那行地址一樣重。
+
+   改成有框的按鈕：命中區順便就過 44（不必靠 data-hit2），
+   框線與圓角吃這張卡自己的 --accent（深綠松），沒有新顏色。
+   ⚠ 選擇器用 `p:not(.big)` —— 電話那張卡是 `p.big`，不要一起變成按鈕。 */
+html[data-mapcta="on"] .info-card p:not(.big) a {
+  display: inline-flex; align-items: center; gap: .45em;
+  margin-top: .6rem; padding: .55rem 1rem; min-height: 44px;
+  border: 1px solid var(--accent); border-radius: 12px;
+  color: var(--accent); text-decoration: none; font-size: .88rem;
+}
+html[data-mapcta="on"] .info-card p:not(.big) a::after {
+  content: ''; width: .42em; height: .42em;
+  border-top: 1.2px solid currentColor; border-right: 1.2px solid currentColor;
+  transform: rotate(45deg);
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-mapcta="on"] .info-card p:not(.big) a:hover {
+    background: color-mix(in srgb, var(--accent) 8%, var(--card));
+  }
+}
+
+/* ==========================================================================
+   九、頁尾補上 LINE（data-footline）
+   --------------------------------------------------------------------------
+   全站現在唯一提到 LINE 的地方是 JSON-LD 的 sameAs —— 那是給機器讀的，
+   畫面上一個連結都沒有。診所實際上收 LINE 訊息（系統 ID @445rpiiv 是
+   使用者 2026-08-10 自己提供並確認過的），等於有一條動線沒有告訴訪客。
+
+   ⚠ 造形完全照 .foot-addr／.foot-tel，同一個 --gutter、同樣的底線與 #3f654a。
+     **沒有用 LINE 官方綠 #06C755** —— 那是外來品牌色，引進與否是使用者的決定。
+   ⚠ 這一項和 data-bar／data-deskcta 不衝突：那兩個是給「現在就想問」的人，
+     頁尾這條是給看完整頁、走到最後才決定的人。三個都開也不重複。 */
+.foot-line { display: none; }
+html[data-footline="on"] .foot-line {
+  display: block; margin-top: .35rem !important;
+  font-size: .95rem !important; letter-spacing: .02em;
+}
+html[data-footline="on"] .foot-line a {
+  color: #3f654a; text-decoration: none; font-weight: 500;
+  display: flex; align-items: flex-start; gap: 0;
+}
+html[data-footline="on"] .foot-line .ico {
+  flex: 0 0 var(--gutter); height: 1.8em;
+  display: flex; align-items: center; justify-content: center;
+}
+html[data-footline="on"] .foot-line .ico svg { width: .82rem; height: .82rem; display: block; overflow: visible; }
+html[data-footline="on"] .foot-line .txt {
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em;
+}
+html[data-footline="on"] .foot-line a:focus-visible { outline: none; }
+html[data-footline="on"] .foot-line a:focus-visible .txt {
+  outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px;
+}
+
+/* ==========================================================================
+   十、頁尾那個停在 8 月 2 日的更新日期（data-footdate）
+   --------------------------------------------------------------------------
+   頁尾寫「網站最後更新：2026 年 8 月 2 日」。首頁自己的內容雜湊算出來的
+   更新日是 **2026-08-13**（sitemap.xml 首頁那一筆的 lastmod 就是這個值），
+   差 11 天。這期間門診表整個換成點陣表、主畫面圖示換過兩輪、
+   照片與窄帶的接縫改過四輪 —— 這一行一次都沒跟上。
+
+   ⚠ 它和文章卡上那個「最後更新」不是同一件事：文章那個由 tools/build.mjs
+     依內容雜湊維護，這一行是手寫的，沒有人在維護，只會愈差愈多。
+   ⚠ 所以真正要做的**不是把 8/2 改成 8/13**（下星期一樣錯），
+     是讓 build.mjs 把它寫進來 —— 那支腳本本來就已經算出首頁的 lastmod
+     （第十節第 5 點的 homeHash），塞進來就好，跟 POSTS／SEO 兩個區塊同一個做法。
+   這個開關只是把「跟上之後長什麼樣」擺出來看。 */
+.fd-new { display: none; }
+html[data-footdate="on"] .fd-old { display: none; }
+html[data-footdate="on"] .fd-new { display: inline; }
+
+/* ==========================================================================
+   十一、文章卡標題固定兩行（data-cardtitle）
+   --------------------------------------------------------------------------
+   六篇的標題有的一行、有的兩行（〈缺牙之後〉與〈牙齦流血不是火氣大〉是一行）。
+   標題底下的摘要因此**各自從不同高度起跑**：電腦版三欄並排時，
+   同一列裡有的摘要在 y=A、有的在 y=A−24.3，一排看過去是散的。
+
+   日期那一列已經有解（`.card-date { margin-top: auto }` 推到卡底，
+   上面那段註解寫著理由），但那只解決了下緣，上面這一段沒有。
+
+   ⚠ min-height 用 em 不用 px —— 卡片標題是 1.02rem，手機與電腦不同值。
+     兩行 ＝ line-height 1.55 × 2 ＝ 3.1em。
+   ⚠ 一起加 line-clamp: 2 是保險：現在最長的標題正好兩行，
+     日後標題再長一點就會變三行，那時卡片高度又會不齊。
+   ⚠ 手機是單欄，看不出對齊的好處，只會多一段空白 —— 這一項的價值
+     在電腦版與平板（兩欄以上）。切窄一點看就知道要不要只在 ≥721 開。 */
+html[data-cardtitle="on"] .card h3 {
+  min-height: 3.1em;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   十二、手機的科別標記收成一排橫捲（data-chiprow）
+   --------------------------------------------------------------------------
+   375 上八顆標記排成 **3 排、107.4px**，把「最新文章」整個推下去 ——
+   第一張卡的上緣在 y=701.8，等於捲完 HERO 還要再捲快一屏才看得到文章。
+
+   收成單排橫捲之後那一塊變成 31px（開了 data-hit2 是 44px），省下約 76px。
+   代價很清楚，也是這一項要對照的重點：**後面幾顆看不見了**，
+   得往右撥才知道有八科。對「已經知道自己要找哪一科」的人是省事，
+   對「不知道有哪些科」的人是損失。
+
+   ⚠ overflow-x 開在 .chips 自己身上、而且 min-width: 0 —— 沒有 min-width
+     的 flex 項目撐不小，整頁會跟著長出水平捲軸（十三個視窗量過，溢出 0）。
+   ⚠ 捲軸藏起來，但**保留鍵盤與觸控的捲動**（不是 overflow: hidden）。
+   ⚠ 只在 ≤720。電腦版八顆本來就一排放得下（量到 31px、一排）。 */
+@media (max-width: 720px) {
+  html[data-chiprow="on"] .chips {
+    flex-wrap: nowrap; min-width: 0; overflow-x: auto;
+    scrollbar-width: none; -ms-overflow-style: none;
+    padding-bottom: .15rem;
+    /* 捲到底的時候右邊那顆不要貼著螢幕邊，留一點讓人知道還有 */
+    scroll-padding-inline: 1rem;
+  }
+  html[data-chiprow="on"] .chips::-webkit-scrollbar { display: none; }
+  html[data-chiprow="on"] .chips li     { flex: 0 0 auto; }
+  html[data-chiprow="on"] .chips button { white-space: nowrap; }
+}
+</style>
+
+<!-- ==========================================================================
      切換條（提案用）
      --------------------------------------------------------------------------
      每一項獨立開關，關掉＝改動前、打開＝改動後。狀態同時寫進網址，
@@ -4437,15 +4749,21 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
 }
 .fr-tg-btn b { font-weight: 700; font-variant-numeric: tabular-nums; opacity: .75; }
 .fr-tg-panel {
-  display: none; margin-top: 8px; width: min(310px, calc(100vw - 24px));
+  display: none; margin-top: 8px; width: min(340px, calc(100vw - 24px));
+  /* 12 項的面板比一個手機畫面高，所以整塊要有上限、由中間那段清單去捲。
+     ⚠ 用 svh 不用 vh —— iOS 的 vh 是工具列收起後的大視窗高度（CLAUDE.md
+       第九節第 6 條踩過同一個坑），用 vh 會讓面板比看得到的範圍還高，
+       最下面那幾個量測數字永遠捲不到。
+     68 ＝ 上方 12（top）＋ 按鈕 36 ＋ 間隔 8 ＋ 下方留 12。 */
+  flex-direction: column; max-height: calc(100svh - 68px);
   background: rgba(20,18,16,.95); border: 1px solid rgba(255,255,255,.22);
   border-radius: 10px; overflow: hidden;
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
   box-shadow: 0 12px 34px rgba(0,0,0,.45);
 }
-.fr-tg[data-open="1"] .fr-tg-panel { display: block; }
+.fr-tg[data-open="1"] .fr-tg-panel { display: flex; }
 .fr-tg-head {
-  display: flex; gap: 6px; padding: 9px 10px;
+  display: flex; gap: 6px; padding: 9px 10px; flex: 0 0 auto;
   border-bottom: 1px solid rgba(255,255,255,.16);
 }
 .fr-tg-head button {
@@ -4455,8 +4773,36 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
   font: inherit; font-size: 12px; cursor: pointer;
 }
 .fr-tg-head button:hover { background: rgba(255,255,255,.16); }
-.fr-tg-list { margin: 0; padding: 4px; list-style: none; }
+/* 12 項放不進一個畫面（手機更明顯），所以中間這段清單自己捲，
+   上下兩塊（全開全關、量測）固定不動。min-height: 0 是 flex 的老坑：
+   不寫的話項目的最小尺寸是內容高，捲不起來、整塊還是會被撐開。 */
+.fr-tg-list { margin: 0; padding: 4px; list-style: none; flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 .fr-tg-list li + li { border-top: 1px solid rgba(255,255,255,.1); }
+/* 組標題。sticky 讓捲到中間時還看得出現在在哪一組。 */
+.fr-tg-g {
+  position: sticky; top: 0; z-index: 1;
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 7px 6px; background: #14120f;
+  border-top: 1px solid rgba(255,255,255,.16) !important;
+  font-size: 11px; letter-spacing: .1em; color: #8f8a84;
+}
+.fr-tg-list > .fr-tg-g:first-child { border-top: 0 !important; }
+.fr-tg-g span { flex: 1 1 auto; }
+.fr-tg-g button {
+  flex: 0 0 auto; padding: 3px 8px; min-height: 24px;
+  background: rgba(255,255,255,.07); color: #cfc9c2;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 5px;
+  font: inherit; font-size: 11px; letter-spacing: 0; cursor: pointer;
+}
+.fr-tg-g button:hover { background: rgba(255,255,255,.16); color: #f2f0ee; }
+/* 這一項在哪一種螢幕才看得出差別。手機上開一個只有電腦才有的項目，
+   畫面完全不會動 —— 不標的話會以為開關壞了。 */
+.fr-tg-row .lb .w {
+  display: inline-block; margin-right: 6px; padding: 0 5px;
+  border: 1px solid rgba(255,255,255,.24); border-radius: 4px;
+  font-size: 10px; font-style: normal; font-weight: 400; letter-spacing: .04em;
+  color: #b8b2ab; vertical-align: 1px;
+}
 .fr-tg-row {
   display: flex; align-items: flex-start; gap: 9px;
   padding: 9px 7px; cursor: pointer; min-height: 44px;
@@ -4467,6 +4813,7 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
 .fr-tg-row .nt { display: block; font-size: 11.5px; line-height: 1.65; color: #b8b2ab; margin-top: 1px; }
 .fr-tg-row .nt b { color: #e8e3dd; font-weight: 600; font-variant-numeric: tabular-nums; }
 .fr-tg-foot {
+  flex: 0 0 auto; max-height: 42svh; overflow-y: auto;
   padding: 8px 11px 10px; border-top: 1px solid rgba(255,255,255,.16);
   font-size: 11.5px; line-height: 1.75; color: #b8b2ab;
 }
@@ -4496,14 +4843,35 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
 
 <script>
 window.__FR_ITEMS = [
-  { k:'bar',  label:'手機行動條',
-    note:'底部固定的「打電話／LINE 詢問」。關掉＝現況，畫面上找不到任何約診的動作。' },
-  { k:'head', label:'320px 頁首修正',
-    note:'把視窗拉到 320 寬才看得出來：關掉時品牌字會被「全部文章」壓到（實測 <b>−1.2px</b>）。' },
-  { k:'fs',   label:'字級抬一階',
+  /* ── 一、有人想約診的時候，畫面上有沒有下一步 ───────────────────────── */
+  { g:'約診動線', k:'bar', w:'手機', label:'手機行動條',
+    note:'底部固定的「打電話／LINE 詢問」。關掉＝現況，整頁找不到任何約診的動作。' },
+  { g:'約診動線', k:'deskcta', w:'電腦', label:'頁首那顆 LINE',
+    note:'電腦版沒有行動條，也就完全沒有約診入口。造形抄選單「目前在這一節」那一態，<b>沒有新顏色</b>。' },
+  { g:'約診動線', k:'mapcta', w:'全部', label:'地圖入口做成按鈕',
+    note:'「在 Google 地圖開啟」現在是 <b>14.9px</b> 的文字連結，是那張卡唯一的動作卻最不明顯。改按鈕後命中區順便過 44。' },
+  { g:'約診動線', k:'footline', w:'全部', label:'頁尾補上 LINE',
+    note:'全站唯一提到 LINE 的地方是 JSON-LD 的 sameAs（機器讀的），畫面上<b>一個連結都沒有</b>。' },
+  { g:'約診動線', k:'cue', w:'電腦', label:'第一屏的「下面還有」',
+    note:'電腦版 HERO 是整屏 100svh，捲之前沒有任何東西說下面還有六篇文章與九位醫師。' },
+
+  /* ── 二、看得清楚、按得到 ────────────────────────────────────────────── */
+  { g:'看得清楚・按得到', k:'fs', w:'手機', label:'字級抬一階',
     note:'窄帶三格 <b>10→12</b>、地址電話 <b>11.2→12.8</b>、標籤與門診表 <b>11.5→12.8</b>。' },
-  { k:'hit',  label:'觸控目標 44px',
-    note:'看不見的改動：命中區用 <b>::after</b> 撐開，版面一個像素不動。看下面那兩個數字。' }
+  { g:'看得清楚・按得到', k:'hit', w:'全部', label:'觸控目標 44px・第一批',
+    note:'窄帶地址電話、頁首選單、頁尾導覽。看不見的改動：命中區用 <b>::after</b> 撐開，版面一個像素不動。' },
+  { g:'看得清楚・按得到', k:'hit2', w:'全部', label:'觸控目標 44px・第二批',
+    note:'標記 <b>31</b>、門診表標記 <b>28.8</b>、頁尾兩行 <b>27.4</b>。這一批鄰居太近，<b>撐不出來、只能長高</b> —— 版面會動，這正是要比的。' },
+  { g:'看得清楚・按得到', k:'head', w:'手機', label:'320px 頁首修正',
+    note:'把視窗拉到 320 寬才看得出來：關掉時品牌字會被「全部文章」壓到（實測 <b>−1.2px</b>）。' },
+
+  /* ── 三、版面與資訊 ──────────────────────────────────────────────────── */
+  { g:'版面與資訊', k:'cardtitle', w:'電腦', label:'文章卡標題固定兩行',
+    note:'六篇有的標題一行、有的兩行，摘要因此各自從不同高度起跑，同一列差 <b>24.3px</b>。' },
+  { g:'版面與資訊', k:'chiprow', w:'手機', label:'科別標記收成一排橫捲',
+    note:'375 上八顆排成 <b>3 排 107.4px</b>，第一張卡被推到 y=<b>701.8</b>。收成一排省 76px，代價是後面幾顆看不見。' },
+  { g:'版面與資訊', k:'footdate', w:'全部', label:'頁尾的更新日期',
+    note:'頁尾寫 <b>8 月 2 日</b>，首頁實際的 lastmod 是 <b>8 月 13 日</b>，差 11 天。手寫的，沒有人維護。' }
 ];
 </script><script>
 /* 切換條的行為。定案後連同上面那塊 HTML、CSS 與所有 data-* 屬性一起刪掉。 */
@@ -4538,11 +4906,30 @@ window.__FR_ITEMS = [
     requestAnimationFrame(measure);
   }
 
+  /* ── 分組 ────────────────────────────────────────────────────────────
+     項目變多之後（4 → 12）平鋪一長串很難找，所以照「這一項在解什麼問題」
+     分三組。每一組自己有一顆小的「這組全開／全關」，因為使用者通常是
+     一組一組比：先看約診動線那五項，再看可及性那四項。 */
+  var lastG = null;
   items.forEach(function (it) {
+    if (it.g && it.g !== lastG) {
+      lastG = it.g;
+      var gl = document.createElement('li');
+      gl.className = 'fr-tg-g';
+      gl.innerHTML = '<span></span><button type="button" data-grp="on">全開</button>' +
+                     '<button type="button" data-grp="off">全關</button>';
+      gl.querySelector('span').textContent = it.g;
+      gl.querySelectorAll('[data-grp]').forEach(function (gb) {
+        gb.setAttribute('data-g', it.g);
+      });
+      list.appendChild(gl);
+    }
     var li = document.createElement('li');
     li.innerHTML = '<label class="fr-tg-row"><input type="checkbox"><span>' +
       '<span class="lb"></span><span class="nt"></span></span></label>';
-    li.querySelector('.lb').textContent = it.label;
+    li.querySelector('.lb').innerHTML = '<i class="w"></i>';
+    li.querySelector('.lb .w').textContent = it.w || '全部';
+    li.querySelector('.lb').append(it.label);
     li.querySelector('.nt').innerHTML  = it.note;
     var cb = li.querySelector('input');
     cb.checked = state[it.k] === 'on';
@@ -4560,6 +4947,19 @@ window.__FR_ITEMS = [
       items.forEach(function (it) { state[it.k] = v; it._cb.checked = (v === 'on'); });
       apply(true);
     });
+  });
+
+  /* 每一組自己的全開／全關。事件掛在 list 上（委派），因為那幾顆按鈕是
+     上面那個迴圈現生出來的。 */
+  list.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-grp]') : null;
+    if (!b) return;
+    var v = b.getAttribute('data-grp'), g = b.getAttribute('data-g');
+    items.forEach(function (it) {
+      if (it.g !== g) return;
+      state[it.k] = v; it._cb.checked = (v === 'on');
+    });
+    apply(true);
   });
 
   btn.addEventListener('click', function () {
@@ -4604,9 +5004,17 @@ window.__FR_ITEMS = [
       var fs = parseFloat(getComputedStyle(el).fontSize);
       if (fs && fs < min) { min = fs; who = el; }
     }
-    smEl = who ? (who.tagName.toLowerCase() +
-      (who.className && typeof who.className === 'string' && who.className
-        ? '.' + who.className.split(/\s+/)[0] : '')) : '';
+    /* 標成「在哪一個元素」。自己沒有 class 的時候（例如頁首那個副標
+       `.brand-text small`）光印 tag 名看不出是誰，所以往上找一層帶 class 的祖先。 */
+    function nameOf(el) {
+      var n = el.tagName.toLowerCase();
+      var c = el.className && typeof el.className === 'string' ? el.className.split(/\s+/)[0] : '';
+      if (c) return n + '.' + c;
+      var p = el.parentElement;
+      var pc = p && p.className && typeof p.className === 'string' ? p.className.split(/\s+/)[0] : '';
+      return pc ? '.' + pc + ' ' + n : n;
+    }
+    smEl = who ? nameOf(who) : '';
     return min === 999 ? null : min;
   }
 
@@ -4634,6 +5042,28 @@ window.__FR_ITEMS = [
     }
     var nav = hitHeight(n1);
     if (nav) rows.push(['選單可點高度', nav.toFixed(1) + 'px', nav >= 44 ? 'good' : (nav < 24 ? 'bad' : '')]);
+
+    /* 第二批命中區裡最有代表性的兩顆：科別標記與頁尾電話。
+       這兩顆撐不出來、只能長高，所以它們一動，下面那個「第一張卡上緣」
+       也會跟著動 —— 兩個數字要一起看才知道代價。 */
+    var chip = document.querySelector('.chips button');
+    if (chip) {
+      var ch = hitHeight(chip);
+      rows.push(['科別標記可點高度', ch.toFixed(1) + 'px', ch >= 44 ? 'good' : (ch < 24 ? 'bad' : '')]);
+    }
+    var ft = document.querySelector('.foot-tel a');
+    if (ft) {
+      var fh = hitHeight(ft);
+      rows.push(['頁尾電話可點高度', fh.toFixed(1) + 'px', fh >= 44 ? 'good' : (fh < 24 ? 'bad' : '')]);
+    }
+
+    /* 「要捲多久才看得到第一篇文章」—— data-chiprow 與 data-hit2 一個往下拉、
+       一個往上推，這個數字是它們相加之後的淨結果。用文件座標，不受目前捲到哪裡影響。 */
+    var c1 = document.querySelector('.card');
+    if (c1) {
+      var y = c1.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop);
+      rows.push(['第一張卡上緣', Math.round(y) + 'px', '']);
+    }
 
     var sm = smallestText();
     if (sm) rows.push(['內文最小字', sm.toFixed(1) + 'px', sm >= 12 ? 'good' : 'bad']);

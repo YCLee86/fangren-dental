@@ -252,10 +252,18 @@
         <a href="../../">首頁</a>
         <span class="sep" aria-hidden="true">&rsaquo;</span>
         <span class="post-tag" data-spec="perio">牙周照護</span>
-        <time datetime="2026-04-15">2026 年 4 月 15 日</time>
-        <span class="views">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          <span class="views-n">64</span> 次瀏覽
+        <!-- 提案 data-crumb 用的包裝。**預設是 display: contents**，也就是這一層
+             在版面上完全不存在、日期與瀏覽數照樣是 .crumbs 這個 flex 的直接項目 ——
+             關掉開關時量出來和現況一模一樣（23.7px，逐項比對過）。
+             打開才變成一個 flex-basis: 100% 的項目，把這兩樣一起帶到第二行。
+             ⚠ 不能只給 <time> 寫 flex-basis: 100% —— 那樣瀏覽數會被擠到**第三行**
+               （第一版就是這樣，量到 107.3px 而不是預期的 76）。 -->
+        <span class="crumb-meta">
+          <time datetime="2026-04-15">2026 年 4 月 15 日</time>
+          <span class="views">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span class="views-n">64</span> 次瀏覽
+          </span>
         </span>
       </p>
       <h1>牙齦流血不是火氣大：牙周病的早期訊號</h1>
@@ -454,6 +462,16 @@
           <span class="ico"><svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></span>
           <data class="num" value="05-533-9369">(05)5339-369</data>
         </a></p>
+        <!-- 提案 data-footline：頁尾補上 LINE。和首頁那一頁同一份，
+             定案之後兩邊要共用 assets/style.css 裡的同一段（頁尾是全站共用元件）。
+             ⚠ 沒有用 LINE 官方綠 #06C755 —— 那是外來品牌色。
+             ⚠ 顏色寫死 #3f654a，不用 var(--accent)：文章頁的 <body> 帶著該篇的
+               科別，用 --accent 會讓頁尾跟著文章變色（上面 .foot-addr 那一段
+               的註解就寫著這條，這一行照同一條規則）。 -->
+        <p class="foot-line"><a href="https://line.me/R/ti/p/@445rpiiv" rel="noopener" target="_blank">
+          <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 11.5c0 4-4 7.2-9 7.2a10.7 10.7 0 0 1-2.5-.3L4.5 21l1.2-3.5A6.9 6.9 0 0 1 3 11.5c0-4 4-7.2 9-7.2s9 3.2 9 7.2Z"/></svg></span>
+          <span class="txt">LINE 線上詢問</span>
+        </a></p>
       </div>
       <div>
         <h4>站內導覽</h4>
@@ -602,6 +620,92 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
 </style>
 
 <!-- ==========================================================================
+     提案・第二批（2026-08-13）—— 文章頁三項
+     --------------------------------------------------------------------------
+     首頁那一頁同一天補了八項，這一頁補三項。規則完全一樣：
+     每一項掛在 <html> 的一個 data-* 上，關掉 ＝ 現況、打開 ＝ 提案；
+     選擇器一律 `html[data-x="on"] .foo`（0,2,1），不用 !important。
+
+       data-crumb     麵包屑那一列拆成兩行（順便解掉 23.7px）
+       data-footline  頁尾補上 LINE
+       data-hit2      頁尾地址與電話的命中區
+     ========================================================================== -->
+<style>
+/* ==========================================================================
+   五、麵包屑那一列拆成兩行（data-crumb）
+   --------------------------------------------------------------------------
+   ⚠ **這一項就是第一批留著沒解的那一件。** 上面 data-hit 那一段的註解寫著：
+     麵包屑維持 23.7px、`::after` 外擴與 inline-block 都試過、量出來還是 23.7 ——
+     因為那一列**四個東西擠在同一行**（首頁 › 科別藥丸　日期　瀏覽數），
+     命中區往上下撐會直接疊到鄰居。當時的結論是「真要解得把那一列改成兩行，
+     那是版面決定，不是那一輪的範圍」。這一項就是把那個版面決定做出來給你看。
+
+   做法：日期與瀏覽數包在一個 .crumb-meta 裡，**平常是 display: contents**
+   （這一層在版面上不存在，兩者仍是 .crumbs 的直接 flex 項目，關掉時和現況
+   一個像素都不差），打開才變成一個 flex-basis: 100% 的項目，一起落到第二行。
+   第一行剩下「首頁 › 牙周照護」，這時 <a> 才有上下的空間可以長到 44。
+   ⚠ **不要只給 <time> 寫 flex-basis: 100%** —— 第一版那樣做，瀏覽數被擠到
+     第三行，量出來 107.3px 而不是預期的 76。flex-basis: 100% 的項目會獨佔一整列。
+   ⚠ 用 flex-basis 而不是插一個看不見的換行元素：這一列本來就是 flex-wrap: wrap，
+     有一個項目要求 100%，它前面就自動斷行。
+   ⚠ 順便把「首頁」加上底線。理由和 2026-08-09 頁尾地址那一輪一模一樣：
+     手機沒有 hover，只靠 :hover 才表態的連結，對多數訪客等於從來不宣告
+     自己是連結。這一列現在唯一的連結就是它。
+   ⚠ 代價：標題往下移一行的高度（約 33px）。值不值得自己開關比一下。 */
+.crumb-meta { display: contents; }
+html[data-crumb="on"] .crumbs { row-gap: .5rem; }
+html[data-crumb="on"] .crumb-meta {
+  display: flex; flex-basis: 100%; align-items: center; gap: .45rem .7rem;
+}
+html[data-crumb="on"] .crumbs a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em;
+}
+
+/* ==========================================================================
+   六、頁尾補上 LINE（data-footline）
+   --------------------------------------------------------------------------
+   和首頁那一頁同一份。全站唯一提到 LINE 的地方是 JSON-LD 的 sameAs，
+   畫面上一個連結都沒有。
+   ⚠ 顏色寫死 #3f654a 不用 var(--accent) —— 見上面 HTML 那一段的註解。 */
+.foot-line { display: none; }
+html[data-footline="on"] .foot-line {
+  display: block; margin-top: .35rem !important;
+  font-size: .95rem !important; letter-spacing: .02em;
+}
+html[data-footline="on"] .foot-line a {
+  color: #3f654a; text-decoration: none; font-weight: 500;
+  display: flex; align-items: flex-start; gap: 0;
+}
+html[data-footline="on"] .foot-line .ico {
+  flex: 0 0 var(--gutter); height: 1.8em;
+  display: flex; align-items: center; justify-content: center;
+}
+html[data-footline="on"] .foot-line .ico svg { width: .82rem; height: .82rem; display: block; overflow: visible; }
+html[data-footline="on"] .foot-line .txt {
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em;
+}
+html[data-footline="on"] .foot-line a:focus-visible { outline: none; }
+html[data-footline="on"] .foot-line a:focus-visible .txt {
+  outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px;
+}
+
+/* ==========================================================================
+   七、頁尾地址與電話的命中區（data-hit2）
+   --------------------------------------------------------------------------
+   第一批（data-hit）補的是選單與站內導覽，頁尾這兩行沒補到 —— 量到 27.4px，
+   而兩行之間只有 5.6px（.35rem），`::after` 要外擴 8.3px 才到 44，
+   會直接疊到隔壁那一行。所以這一批只能把元素自己長高。
+   ⚠ 取 8.5 不是 8.3：27.4 是量出來的，字型載入前後會差零點幾。
+   ⚠ margin 收掉是刻意的 —— 命中區本來就該連續，中間不要留按不到的縫。 */
+html[data-hit2="on"] .foot-addr a,
+html[data-hit2="on"] .foot-tel a,
+html[data-hit2="on"] .foot-line a { padding-block: 8.5px; }
+html[data-hit2="on"] .foot-tel,
+html[data-hit2="on"] .foot-line   { margin-top: 0 !important; }
+</style>
+
+<!-- ==========================================================================
      切換條（提案用）
      --------------------------------------------------------------------------
      每一項獨立開關，關掉＝改動前、打開＝改動後。狀態同時寫進網址，
@@ -629,15 +733,21 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
 }
 .fr-tg-btn b { font-weight: 700; font-variant-numeric: tabular-nums; opacity: .75; }
 .fr-tg-panel {
-  display: none; margin-top: 8px; width: min(310px, calc(100vw - 24px));
-  background: rgba(20,18,16,.95); border: 1px solid rgba(255,255,255,.22);
+  display: none; margin-top: 8px; width: min(340px, calc(100vw - 24px));
+  /* 12 項的面板比一個手機畫面高，所以整塊要有上限、由中間那段清單去捲。
+     ⚠ 用 svh 不用 vh —— iOS 的 vh 是工具列收起後的大視窗高度（CLAUDE.md
+       第九節第 6 條踩過同一個坑），用 vh 會讓面板比看得到的範圍還高，
+       最下面那幾個量測數字永遠捲不到。
+     68 ＝ 上方 12（top）＋ 按鈕 36 ＋ 間隔 8 ＋ 下方留 12。 */
+  flex-direction: column; max-height: calc(100svh - 68px);
+    background: rgba(20,18,16,.95); border: 1px solid rgba(255,255,255,.22);
   border-radius: 10px; overflow: hidden;
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
   box-shadow: 0 12px 34px rgba(0,0,0,.45);
 }
-.fr-tg[data-open="1"] .fr-tg-panel { display: block; }
+.fr-tg[data-open="1"] .fr-tg-panel { display: flex; }
 .fr-tg-head {
-  display: flex; gap: 6px; padding: 9px 10px;
+  display: flex; gap: 6px; padding: 9px 10px; flex: 0 0 auto;
   border-bottom: 1px solid rgba(255,255,255,.16);
 }
 .fr-tg-head button {
@@ -647,7 +757,36 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
   font: inherit; font-size: 12px; cursor: pointer;
 }
 .fr-tg-head button:hover { background: rgba(255,255,255,.16); }
-.fr-tg-list { margin: 0; padding: 4px; list-style: none; }
+/* 12 項放不進一個畫面（手機更明顯），所以中間這段清單自己捲，
+   上下兩塊（全開全關、量測）固定不動。min-height: 0 是 flex 的老坑：
+   不寫的話項目的最小尺寸是內容高，捲不起來、整塊還是會被撐開。 */
+.fr-tg-list { margin: 0; padding: 4px; list-style: none; flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.fr-tg-list li + li { border-top: 1px solid rgba(255,255,255,.1); }
+/* 組標題。sticky 讓捲到中間時還看得出現在在哪一組。 */
+.fr-tg-g {
+  position: sticky; top: 0; z-index: 1;
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 7px 6px; background: #14120f;
+  border-top: 1px solid rgba(255,255,255,.16) !important;
+  font-size: 11px; letter-spacing: .1em; color: #8f8a84;
+}
+.fr-tg-list > .fr-tg-g:first-child { border-top: 0 !important; }
+.fr-tg-g span { flex: 1 1 auto; }
+.fr-tg-g button {
+  flex: 0 0 auto; padding: 3px 8px; min-height: 24px;
+  background: rgba(255,255,255,.07); color: #cfc9c2;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 5px;
+  font: inherit; font-size: 11px; letter-spacing: 0; cursor: pointer;
+}
+.fr-tg-g button:hover { background: rgba(255,255,255,.16); color: #f2f0ee; }
+/* 這一項在哪一種螢幕才看得出差別。手機上開一個只有電腦才有的項目，
+   畫面完全不會動 —— 不標的話會以為開關壞了。 */
+.fr-tg-row .lb .w {
+  display: inline-block; margin-right: 6px; padding: 0 5px;
+  border: 1px solid rgba(255,255,255,.24); border-radius: 4px;
+  font-size: 10px; font-style: normal; font-weight: 400; letter-spacing: .04em;
+  color: #b8b2ab; vertical-align: 1px;
+}
 .fr-tg-list li + li { border-top: 1px solid rgba(255,255,255,.1); }
 .fr-tg-row {
   display: flex; align-items: flex-start; gap: 9px;
@@ -659,6 +798,7 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
 .fr-tg-row .nt { display: block; font-size: 11.5px; line-height: 1.65; color: #b8b2ab; margin-top: 1px; }
 .fr-tg-row .nt b { color: #e8e3dd; font-weight: 600; font-variant-numeric: tabular-nums; }
 .fr-tg-foot {
+  flex: 0 0 auto; max-height: 42svh; overflow-y: auto;
   padding: 8px 11px 10px; border-top: 1px solid rgba(255,255,255,.16);
   font-size: 11.5px; line-height: 1.75; color: #b8b2ab;
 }
@@ -688,14 +828,25 @@ html[data-hit="on"] .foot-nav a { display: block; padding-block: .55rem; }
 
 <script>
 window.__FR_ITEMS = [
-  { k:'cta',  label:'文章收尾區塊',
+  /* ── 一、讀完之後有沒有下一步 ────────────────────────────────────────── */
+  { g:'約診動線', k:'cta', w:'全部', label:'文章收尾區塊',
     note:'內文結束後的「牙周這一科在芳仁是李侑津醫師看的」＋ 電話 ＋ LINE。關掉＝現況，讀完就直接接上下篇。' },
-  { k:'bar',  label:'手機行動條',
+  { g:'約診動線', k:'bar', w:'手機', label:'手機行動條',
     note:'底部固定的「打電話／LINE 詢問」，和首頁同一份。' },
-  { k:'fs',   label:'字級抬一階',
+  { g:'約診動線', k:'footline', w:'全部', label:'頁尾補上 LINE',
+    note:'全站唯一提到 LINE 的地方是 JSON-LD 的 sameAs（機器讀的），畫面上<b>一個連結都沒有</b>。' },
+
+  /* ── 二、看得清楚、按得到 ────────────────────────────────────────────── */
+  { g:'看得清楚・按得到', k:'fs', w:'手機', label:'字級抬一階',
     note:'品牌副標 <b>10.1→11.5</b>、延伸閱讀標籤與日期 <b>11.5／11.8→12.8</b>、科別藥丸 <b>12→12.8</b>。' },
-  { k:'hit',  label:'觸控目標',
-    note:'選單 <b>23.1→45.1</b>、頁尾 <b>15→41.9</b>。麵包屑仍是 23.7，這一輪沒解掉。' }
+  { g:'看得清楚・按得到', k:'hit', w:'全部', label:'觸控目標・第一批',
+    note:'選單 <b>23.1→45.1</b>、頁尾導覽 <b>15→41.9</b>。看不見的改動，版面不動。' },
+  { g:'看得清楚・按得到', k:'hit2', w:'全部', label:'觸控目標・第二批',
+    note:'頁尾地址與電話 <b>27.4</b>。兩行只隔 5.6px，撐不出來、<b>只能長高</b>。' },
+
+  /* ── 三、版面 ────────────────────────────────────────────────────────── */
+  { g:'版面', k:'crumb', w:'全部', label:'麵包屑拆成兩行',
+    note:'<b>第一批留著沒解的那一件。</b>四個東西擠在同一行，「首頁」只有 <b>23.7px</b>（WCAG 要 24）。拆兩行才撐得到 44，代價是標題往下 33px。' }
 ];
 </script><script>
 /* 切換條的行為。定案後連同上面那塊 HTML、CSS 與所有 data-* 屬性一起刪掉。 */
@@ -730,11 +881,30 @@ window.__FR_ITEMS = [
     requestAnimationFrame(measure);
   }
 
+  /* ── 分組 ────────────────────────────────────────────────────────────
+     項目變多之後（4 → 12）平鋪一長串很難找，所以照「這一項在解什麼問題」
+     分三組。每一組自己有一顆小的「這組全開／全關」，因為使用者通常是
+     一組一組比：先看約診動線那五項，再看可及性那四項。 */
+  var lastG = null;
   items.forEach(function (it) {
+    if (it.g && it.g !== lastG) {
+      lastG = it.g;
+      var gl = document.createElement('li');
+      gl.className = 'fr-tg-g';
+      gl.innerHTML = '<span></span><button type="button" data-grp="on">全開</button>' +
+                     '<button type="button" data-grp="off">全關</button>';
+      gl.querySelector('span').textContent = it.g;
+      gl.querySelectorAll('[data-grp]').forEach(function (gb) {
+        gb.setAttribute('data-g', it.g);
+      });
+      list.appendChild(gl);
+    }
     var li = document.createElement('li');
     li.innerHTML = '<label class="fr-tg-row"><input type="checkbox"><span>' +
       '<span class="lb"></span><span class="nt"></span></span></label>';
-    li.querySelector('.lb').textContent = it.label;
+    li.querySelector('.lb').innerHTML = '<i class="w"></i>';
+    li.querySelector('.lb .w').textContent = it.w || '全部';
+    li.querySelector('.lb').append(it.label);
     li.querySelector('.nt').innerHTML  = it.note;
     var cb = li.querySelector('input');
     cb.checked = state[it.k] === 'on';
@@ -752,6 +922,19 @@ window.__FR_ITEMS = [
       items.forEach(function (it) { state[it.k] = v; it._cb.checked = (v === 'on'); });
       apply(true);
     });
+  });
+
+  /* 每一組自己的全開／全關。事件掛在 list 上（委派），因為那幾顆按鈕是
+     上面那個迴圈現生出來的。 */
+  list.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-grp]') : null;
+    if (!b) return;
+    var v = b.getAttribute('data-grp'), g = b.getAttribute('data-g');
+    items.forEach(function (it) {
+      if (it.g !== g) return;
+      state[it.k] = v; it._cb.checked = (v === 'on');
+    });
+    apply(true);
   });
 
   btn.addEventListener('click', function () {
@@ -796,9 +979,17 @@ window.__FR_ITEMS = [
       var fs = parseFloat(getComputedStyle(el).fontSize);
       if (fs && fs < min) { min = fs; who = el; }
     }
-    smEl = who ? (who.tagName.toLowerCase() +
-      (who.className && typeof who.className === 'string' && who.className
-        ? '.' + who.className.split(/\s+/)[0] : '')) : '';
+    /* 標成「在哪一個元素」。自己沒有 class 的時候（例如頁首那個副標
+       `.brand-text small`）光印 tag 名看不出是誰，所以往上找一層帶 class 的祖先。 */
+    function nameOf(el) {
+      var n = el.tagName.toLowerCase();
+      var c = el.className && typeof el.className === 'string' ? el.className.split(/\s+/)[0] : '';
+      if (c) return n + '.' + c;
+      var p = el.parentElement;
+      var pc = p && p.className && typeof p.className === 'string' ? p.className.split(/\s+/)[0] : '';
+      return pc ? '.' + pc + ' ' + n : n;
+    }
+    smEl = who ? nameOf(who) : '';
     return min === 999 ? null : min;
   }
 
@@ -828,6 +1019,18 @@ window.__FR_ITEMS = [
     if (nav) rows.push(['選單可點高度', nav.toFixed(1) + 'px', nav >= 44 ? 'good' : (nav < 24 ? 'bad' : '')]);
 
     var sm = smallestText();
+    /* 麵包屑的「首頁」—— data-crumb 就是為了這個數字做的（23.7 → 44）。 */
+    var cr = document.querySelector('.crumbs a');
+    if (cr) {
+      var crh = hitHeight(cr);
+      rows.push(['麵包屑可點高度', crh.toFixed(1) + 'px', crh >= 44 ? 'good' : (crh < 24 ? 'bad' : '')]);
+    }
+    var ft = document.querySelector('.foot-tel a');
+    if (ft) {
+      var fh = hitHeight(ft);
+      rows.push(['頁尾電話可點高度', fh.toFixed(1) + 'px', fh >= 44 ? 'good' : (fh < 24 ? 'bad' : '')]);
+    }
+
     if (sm) rows.push(['內文最小字', sm.toFixed(1) + 'px', sm >= 12 ? 'good' : 'bad']);
 
     var html = rows.map(function (r) {
