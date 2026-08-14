@@ -501,6 +501,24 @@
        ＝ 一串圓點（Google 的步行路線就是這種）。不要改成 dash，
        那會變成虛線、看起來像行政區界。
 
+     ---- 2026-08-14 第十九輪：路線與牌子的三件修正 -------------------------
+     使用者：「虛線歪歪斜斜的不好看。路程資訊的文字被切到，可以做成像 Google 的
+     對話框。另外點選停車場時，道路文字變淺，不然路線壓在道路上很難辨認。」
+
+       ① **點狀線改乾淨**：路徑拿掉「從停車場邊緣往路口」那一小段接頭
+          （6~9 個單位的短線會把 dash 的相位打亂，看起來就是歪的），
+          三條都改成從路的中心線起跑的直角折線；
+          `stroke-dasharray` 從 `0.1 15` 改成 **`0 14`**（0 長度 ＋ 圓端點
+          ＝ 正圓點）並補上 `stroke-linejoin: round`。
+       ② **牌子改成 Google 那種對話框**：圓角矩形 ＋ 指向路線的小尾巴，
+          **尺寸與尾巴的座標都是開頁時用 `getBBox()` 現量的**。
+          ⚠ 第一版把寬度寫死（112／120），字就被切掉了 —— 字級、字型、
+            系統的文字縮放都會改變實際寬度，**這種牌子不能寫死尺寸**。
+          ⚠ 量測要等字型載入：`document.fonts.ready` 之後再量一次。
+       ③ **有停車場亮著時，街名整組降到 .28**，路線才讀得出來。
+          那一條 CSS 要寫成 `.map-svg.dim .lbl`（多一階），
+          否則蓋不過 `.lbl` 自己的 `opacity: var(--lbl-op)`。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -572,17 +590,24 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
 /* 步行路線：Google 那種點狀線。dasharray 的 0.1 ＋ round 端點 ＝ 圓點。 */
 .route {
   fill: none; stroke: var(--map-park); stroke-width: 7;
-  stroke-linecap: round; stroke-dasharray: 0.1 15;
+  stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 0 14;
   opacity: 0; transition: opacity .18s ease;
 }
 .rlab { opacity: 0; transition: opacity .18s ease; }
 .route.on, .rlab.on { opacity: 1; }
-.map-svg .rlab rect { fill: var(--map-park); }
+.map-svg .rlab rect, .map-svg .rlab .tail { fill: var(--map-park); }
 /* ⚠ 這一條要寫成 .map-svg .rlab text（多一階）—— 只寫 .rlab text 的話
    和後面的 `.map-svg text { fill: var(--map-ink) }` 同權重，後者排在後面會贏，
    牌子上的字就變成墨色、在深藍上幾乎看不見。 */
 .map-svg .rlab text { fill: var(--card); font-size: 15px; font-weight: 700; letter-spacing: .02em; }
-@media (prefers-reduced-motion: reduce) { .lot rect, .lot path, .route, .rlab { transition: none; } }
+/* 有停車場亮著的時候，街名淡下去 —— 不然點狀路線壓在街名上很難辨認
+   （2026-08-14 使用者指出）。⚠ 這一條要比 .map-svg .lbl 那條多一階才蓋得過
+   它自己的 opacity: var(--lbl-op)。 */
+.map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: opacity .18s ease; }
+.map-svg.dim .lbl, .map-svg.dim .lbl-s, .map-svg.dim .lbl-xs { opacity: .28; }
+@media (prefers-reduced-motion: reduce) {
+  .lot rect, .lot path, .route, .rlab, .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: none; }
+}
 
 html[data-corner="all"]  .c-edge { display: none; }
 html[data-corner="edge"] .c-all  { display: none; }
@@ -830,21 +855,24 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
            **不是從這張圖上量的** —— 這張圖的南北被壓過（見上面第五、九輪），
            圖上的長短只能當示意。 -->
       <g class="routes">
-        <path class="route" data-lot="a" d="M235 171L235 165L339 165L339 261L324 261"/>
-        <path class="route" data-lot="b" d="M410 197L410 188L339 188L339 261L324 261"/>
+        <path class="route" data-lot="a" d="M235 165L339 165L339 261L324 261"/>
+        <path class="route" data-lot="b" d="M410 188L339 188L339 261L324 261"/>
         <path class="route" data-lot="c" d="M354 507L339 507L339 261L324 261"/>
 
-        <g class="rlab" data-lot="a">
-          <rect x="214" y="133" width="112" height="26" rx="4"/>
+        <!-- 三塊牌子。⚠ 矩形與小尾巴的座標**是開頁時用 getBBox() 現量出來的**
+             （見下面的 JS）—— 寫死寬度會被字級、字型、系統設定改掉，
+             第一版就是寫死 112/120，字直接被切掉。 -->
+        <g class="rlab" data-lot="a" data-tx="270" data-ty="165">
+          <rect rx="6"/><path class="tail"/>
           <text x="270" y="151" text-anchor="middle">50 公尺・1 分鐘</text>
         </g>
-        <g class="rlab" data-lot="b">
-          <rect x="345" y="138" width="120" height="26" rx="4"/>
-          <text x="405" y="156" text-anchor="middle">140 公尺・2 分鐘</text>
+        <g class="rlab" data-lot="b" data-tx="400" data-ty="188">
+          <rect rx="6"/><path class="tail"/>
+          <text x="400" y="172" text-anchor="middle">140 公尺・2 分鐘</text>
         </g>
-        <g class="rlab" data-lot="c">
-          <rect x="210" y="487" width="120" height="26" rx="4"/>
-          <text x="270" y="505" text-anchor="middle">190 公尺・3 分鐘</text>
+        <g class="rlab" data-lot="c" data-tx="339" data-ty="500">
+          <rect rx="6"/><path class="tail"/>
+          <text x="272" y="480" text-anchor="middle">190 公尺・3 分鐘</text>
         </g>
       </g>
 
@@ -977,8 +1005,25 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
   // 桌機另外吃 hover（預覽），滑開就回到「釘住」的那一個。
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var pinned = null, hovered = null;
+  // 牌子的矩形與尾巴：用文字的實際外框現量（字級、字型、系統縮放都吃得到）
+  function sizeLabels() {
+    fig.querySelectorAll('.rlab').forEach(function (g) {
+      var t = g.querySelector('text'), r = g.querySelector('rect'), tail = g.querySelector('.tail');
+      var b = t.getBBox(), padX = 11, padY = 6;
+      r.setAttribute('x', b.x - padX);
+      r.setAttribute('y', b.y - padY);
+      r.setAttribute('width', b.width + padX * 2);
+      r.setAttribute('height', b.height + padY * 2);
+      var tx = +g.dataset.tx, ty = +g.dataset.ty, bottom = b.y + b.height + padY;
+      tail.setAttribute('d', 'M' + (tx - 7) + ' ' + (bottom - 1) + 'H' + (tx + 7) + 'L' + tx + ' ' + ty + 'Z');
+    });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeLabels);
+  sizeLabels();
+
   function paintLots() {
     var id = hovered || pinned;
+    fig.querySelector('.map-svg').classList.toggle('dim', !!id);
     fig.querySelectorAll('.lot').forEach(function (g) {
       var on = g.dataset.lot === id;
       g.classList.toggle('on', on);
