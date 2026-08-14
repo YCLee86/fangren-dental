@@ -1504,6 +1504,21 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
   //   transform 的聯集**，所以圖釘那個 scale() 也算得進去。
   // 圖釘原圖是 384x512（實心水滴，= 頁尾那顆）。先定高，寬按 .75 的比例跟著走。
   var PIN_H = 17, PIN_S = PIN_H / 512, PIN_W = 384 * PIN_S;
+
+  // 字面下緣離基線多遠（單位＝該元素的 user unit）。量不到就回 null。
+  var CTX = (function () {
+    try { return document.createElement('canvas').getContext('2d'); } catch (e) { return null; }
+  })();
+  function inkDescent(el) {
+    if (!CTX) return null;
+    var cs = getComputedStyle(el), fs = parseFloat(cs.fontSize);
+    if (!fs) return null;
+    // 在 400px 上量再等比例縮回去（Blink 在小字級回來的值顆粒很粗）
+    CTX.font = cs.fontStyle + ' ' + cs.fontWeight + ' 400px ' + cs.fontFamily;
+    var m = CTX.measureText(el.textContent);
+    if (typeof m.actualBoundingBoxDescent !== 'number') return null;
+    return m.actualBoundingBoxDescent / 400 * fs;
+  }
   function sizeLabels() {
     // (1) 先把圖釘與底線擺到名字旁邊／底下 —— 它們的位置要等字量出來才知道
     fig.querySelectorAll('.rl-link').forEach(function (a) {
@@ -1514,11 +1529,26 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
       pin.setAttribute('transform',
         'translate(' + (b.x - PIN_W - 3).toFixed(2) + ' ' + (b.y + b.height / 2 - PIN_H / 2).toFixed(2) +
         ') scale(' + PIN_S.toFixed(5) + ')');
-      // 底線自己畫，不用 text-decoration（各家瀏覽器位置不一致）
+      // 底線自己畫，不用 text-decoration（各家瀏覽器位置不一致）。
+      // ⚠⚠ **y 要對「字面」不是對 bbox**（2026-08-14 使用者：「底線和停車場
+      //   名稱好像有點遠，是我的錯覺嗎」—— 不是錯覺）。
+      //   SVG 文字的 `getBBox()` 高度是**字型的 ascent＋descent**，
+      //   而中文方塊字用不到下伸部，所以 bbox 下緣比字的實際下緣低一截：
+      //   Noto Sans TC 的 descent 約 .29em，16px 下就是 4.6 個單位的空白，
+      //   再加 2.5 的間隙，底線等於離字 7.1 —— 看起來就是「有點遠」。
+      //   改成用 canvas 量**字面**下緣（actualBoundingBoxDescent），
+      //   底線落在字面下 1 個單位（16px 下離基線 3.75，原本是 6.0）。
+      //   ⚠ 這個字型的字面下緣是 .172em（畫布逐像素掃出來 .157em，對得上）——
+      //     中文方塊字大多平底停在基線上，只有像「車」那種豎筆會探下去，
+      //     所以**眼睛量到的空隙比數字大**，間隙才要收到 1。
+      // ⚠ 要在 400px 上量再等比例縮 —— Blink 回來的值顆粒很粗
+      //   （CLAUDE.md 第九節第 9 條，量字面框那一段）。
+      var d = inkDescent(nm);
+      var uy = (+nm.getAttribute('y')) + (d === null ? b.y + b.height - +nm.getAttribute('y') + 2.5 : d + 1);
       ul.setAttribute('x1', b.x.toFixed(2));
       ul.setAttribute('x2', (b.x + b.width).toFixed(2));
-      ul.setAttribute('y1', (b.y + b.height + 2.5).toFixed(2));
-      ul.setAttribute('y2', (b.y + b.height + 2.5).toFixed(2));
+      ul.setAttribute('y1', uy.toFixed(2));
+      ul.setAttribute('y2', uy.toFixed(2));
     });
     // (2) 再量整塊內容，套上矩形與尾巴
     fig.querySelectorAll('.rlab, .clab').forEach(function (g) {
