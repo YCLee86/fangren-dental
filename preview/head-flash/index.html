@@ -4053,9 +4053,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     return .5;                  // center，以及這一站沒用到的 px 值
   }
 
-  function paintBlur(headH) {
+  function paintBlur(headH, dy) {
     if (!photo || !heroImg || !heroImg.naturalWidth) return;
-    var r = photo.getBoundingClientRect();
+    var rp = photo.getBoundingClientRect();
+    var r = { top: rp.top - (dy || 0), width: rp.width, height: rp.height };
     if (!r.height) return;
     var s = Math.max(r.width / heroImg.naturalWidth, r.height / heroImg.naturalHeight);
     var vh01 = Math.min(1, (r.height / s) / heroImg.naturalHeight);
@@ -4075,10 +4076,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     }
   }
 
-  function paint() {
-    root.classList.toggle('scrolled', scrollY > 4);
+  function paint(vy) {
+    /* dy：把「假裝捲到 vy」換算成一個位移量，所有 rect 都減掉它。
+       不傳就是 0，行為和正式站一模一樣（window.fangrenRepaintHead 也是這樣呼叫的）。 */
+    var dy = (typeof vy === 'number') ? vy - scrollY : 0;
+    root.classList.toggle('scrolled', (scrollY + dy) > 4);
 
-    var r = band.getBoundingClientRect();
+    var rb = band.getBoundingClientRect();
+    var r = { top: rb.top - dy, bottom: rb.bottom - dy, height: rb.height };
     var h = head.getBoundingClientRect().height || 1;
 
     /* t：窄帶進入並填滿條子（0 → 1）。這段條子底下是夜色。 */
@@ -4086,6 +4091,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     /* u：窄帶往上離開條子、紙色補滿（0 → 1）。u 開始的那一刻正是 t 到 1 的那一刻。 */
     var u = Math.min(1, Math.max(0, (h - r.bottom) / h));
     root.classList.toggle('past-band', u >= 1);
+    /* h：條子底下**整片都是窄帶**的時候（窄帶上緣已經過了畫面頂、下緣還在
+       條子下緣以下），濾鏡是真的一點事都不做 —— 窄帶是一片平的顏色，
+       糊一片平的顏色等於沒糊。實測：把模糊拆掉，那一段逐像素 0 個有差。
+       ⚠ 條件要用**幾何**不要用 t 的門檻：#topics 那個落點的 t 只有 0.88~0.92
+       （三個視窗都是），寫 t >= 1 會剛好漏掉出事的那個位置。 */
+    root.classList.toggle('band-full', r.top <= 0 && r.bottom >= h);
 
     var a = A_MIN + (A_MAX - A_MIN) * t;          // 玻璃的濃度
     var col = TINT.map(function (v, i) { return Math.round(v + (SOLID[i] - v) * u); });
@@ -4108,12 +4119,38 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        那條原本就存在的邊重合，所以看不出多了一條線。 */
     root.style.setProperty('--head-fade', (76 + 24 * t * t * t).toFixed(1) + '%');
 
-    paintBlur(h);               // 招牌之前不要那麼糊，見上面 paintBlur
+    paintBlur(h, dy);           // 招牌之前不要那麼糊，見上面 paintBlur
   }
+
+  /* ---- 提案 f：點下去就先把頁首換成目的地的樣子 ------------------------- */
+  var hLock = false, hT = 0, hLastY = null;
+  function hSettle() {
+    if (scrollY === hLastY) { hLock = false; paint(); return; }
+    hLastY = scrollY;
+    hT = setTimeout(hSettle, 120);
+  }
+  document.addEventListener('click', function (ev) {
+    if (!root.matches('[data-opt~="f"]')) return;
+    var a = ev.target && ev.target.closest && ev.target.closest('.site-nav a[href^="#"]');
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute('href').slice(1));
+    if (!el) return;
+    /* 目的地的捲動位置 ＝ 那一節的上緣減掉 scroll-padding-top，夾在可捲範圍內。 */
+    var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+    var vhNow = (window.visualViewport && visualViewport.height) || innerHeight;
+    var target = Math.max(0, Math.min(root.scrollHeight - vhNow,
+      el.getBoundingClientRect().top + scrollY - pad));
+    hLock = false;
+    paint(target);              /* 先用目的地的值畫一次 */
+    hLock = true;               /* 然後把逐幀的 paint 擋住，直到捲動停下來 */
+    clearTimeout(hT); hLastY = null;
+    hT = setTimeout(hSettle, 120);
+    setTimeout(function () { hLock = false; }, 2500);   /* 保險絲 */
+  }, true);
 
   var tick = false;
   function onScroll() {
-    if (tick) return;
+    if (tick || hLock) return;
     tick = true;
     requestAnimationFrame(function () { tick = false; paint(); });
   }
@@ -5027,6 +5064,17 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                         一幀**落在「窄帶還在頁首底下」那一段，於是那一幀合法地
                         長成玻璃的樣子（第 153 幀：條子變淡、下緣還有淡出）。
                         瞬間跳就沒有中間那幾幀。
+       f 點了就先算好    點的當下用**目的地的捲動位置**算一次頁首的深淺，
+                        捲動停下來之前不讓逐幀的 paint 蓋回去。治「慢一幀」
+                        那一種（條子變淡、上深下淺帶漸層）。
+       h 窄帶蓋滿就拆濾鏡 條子底下整片都是窄帶的時候（#topics 那個落點就是）
+                        把 backdrop-filter 整個拆掉 —— 沒有濾鏡就沒有東西可以漏畫。
+                        ⚠ **預設關著，因為代價是看得見的**：窄帶那一段底下有字
+                        （地址、電話、1983／9／5 那三格），模糊拿掉之後那些字
+                        會從條子底下透出來、而且看得清楚，變成兩層字疊在一起。
+                        390 上實測最大差 65 階。留著這顆只是為了讓你確認
+                        「濾鏡拆掉就真的不閃了嗎」——
+                        如果拆掉就不閃，那方向是對的，只是得換個不透字的做法。
        g 底色畫在頁首上  b 的加強版，也是這一輪的主角。b 把薄色搬到 ::after，
                         但 ::after 和 ::before 同樣是負 z-index 的那一組 ——
                         **WebKit 是整組一起丟的**，第 198 幀兩層一起不見。
@@ -5077,11 +5125,22 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      ⚠ 和 b 的差別是**畫在哪一層**：b 在 ::after（負 z-index，和 ::before 同一組），
        g 在頁首自己身上（那一組之前就畫完）。錄影證明前者會跟著一起被丟掉。 */
   html[data-opt~="g"] .site-head::before { background: transparent; }
+  /* ⚠ g 開著的時候要把 a 那條 background-color 關掉 —— 兩個都在頁首自己身上，
+     疊起來就是**薄色上兩次**。past-band 時 alpha 是 1 看不出來，但捲動跳一格
+     的那一幀 class 與變數會短暫不同步，疊起來就會暗一階（錄影第 306 幀那種）。 */
+  html[data-opt~="g"].past-band .site-head { background-color: transparent; }
   html[data-opt~="g"].scrolled .site-head {
     background-image: linear-gradient(180deg,
       var(--glass, transparent) 0%,
       var(--glass, transparent) var(--head-fade, 76%),
       rgba(25, 22, 20, 0) 100%);
+  }
+
+  /* ---- h 窄帶整片蓋住頁首之後就把濾鏡拆掉 -------------------------------
+     band-full 由頁首那支 JS 在 t >= 1 時掛上（t ＝ 窄帶填滿頁首的進度）。 */
+  html[data-opt~="h"].band-full .site-head::before {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   /* ---- c 把那一層釘住 --------------------------------------------------- */
@@ -5120,10 +5179,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   <button type="button" data-opt="c" aria-pressed="false">c 釘住圖層</button>
   <button type="button" data-opt="d" aria-pressed="false">d 瞬間跳</button>
   <button type="button" data-opt="e" aria-pressed="false">e 點了就先亮</button>
+  <button type="button" data-opt="f" aria-pressed="false">f 點了就先算好</button>
   <button type="button" data-opt="g" aria-pressed="false">g 底色畫在頁首上</button>
+  <button type="button" data-opt="h" aria-pressed="false">h 窄帶蓋滿就拆濾鏡</button>
   <button type="button" class="pv-reset" data-opt="">全關</button>
   <span class="pv-state"></span>
-  <span class="pv-hint">預設就是這一輪要看的那組（a＋d＋e＋g）。c 實測更糟，別開。</span>
+  <span class="pv-hint">預設就是這一輪要看的那組（a d e f g）。c 更糟、h 會透出窄帶的字，都別預設開。</span>
 </div>
 <script>
 (function () {
@@ -5131,7 +5192,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   var bar = document.querySelector('.pv-bar');
   var state = bar.querySelector('.pv-state');
   var btns = Array.prototype.slice.call(bar.querySelectorAll('button[data-opt]'));
-  var LETTERS = ['a', 'b', 'c', 'd', 'e', 'g'];
+  var LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   var on = {};
 
   function serialize() { return LETTERS.filter(function (k) { return on[k]; }).join(''); }
@@ -5165,7 +5226,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   function later() { requestAnimationFrame(function () { requestAnimationFrame(paint); }); }
 
   var m = /[?&]opt=([a-z0-9]+)/.exec(location.search);
-  var init = m ? m[1] : 'adeg';
+  var init = m ? m[1] : 'adefg';
   LETTERS.forEach(function (k) { on[k] = init.indexOf(k) >= 0; });
   apply(false);
 
