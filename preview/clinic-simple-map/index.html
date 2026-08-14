@@ -749,7 +749,7 @@
          字與圖釘＝路牌藍（對那個淺底 5.84:1）。
          ・**診所那塊反過來維持實心綠底白字。** 一深一淺才分得出
            「這是目的地」與「這是可選的停車場」，也正好接上 (3) 的層次。
-         ・圖釘直接用站上頁尾那顆（Lucide 的 map-pin，24 格見方，描邊不填色）。
+         ・圖釘用站上的那顆（**第三十一輪改成頁尾那顆實心的**，見下面）。
          ・名字底下那條線是**畫出來的 `<line>`，不是 text-decoration** ——
            SVG 文字的 text-decoration 各家位置不一致，畫一條線才對得準字面。
          ・連結目前指向 Google 地圖的**搜尋網址**（`/maps/search/?api=1&query=…`）。
@@ -765,6 +765,35 @@
          ⚠ 連結要 `stopPropagation`：地圖底層有一個「點空白處＝收回」的 handler。
          ⚠ 牌子長高之後**尾巴會被自己的盒子吃掉** —— 兩塊朝下的牌子因此各往上
            挪 14，尾巴才留得下 16 個單位。加內容的時候要一起檢查這件事。
+
+     ---- 2026-08-14 第三十一輪：名牌搬到診所下面、圖釘換成實心 ----------------
+
+     (1) **診所名牌從左邊搬到下面。** 使用者：「那個芳仁牙醫診所標籤壓到旁邊的
+         街道，應該要把它左下一點，這樣剛好壓在那個無名的街道上，那個不是重點。」
+
+         ・原本擺左邊，左緣懸在 **平和街** 的路面上。那是圖上七條有名字的路之一
+           （第六輪使用者親自列的名單），蓋掉它會讓人以為那裡沒有路。
+         ・現在整塊落在 (192~308, 300~328)：上半在診所底下那塊空街廓裡，
+           下緣壓到 **平和街33巷**（321~333）—— 那條巷子圖上刻意不標名字，
+           蓋到不影響判讀。使用者說的「無名的街道」就是它。
+         ・尾巴多了第三種方向 **朝上**，尖端 y=281 進到綠色裡 6 個單位。
+           ⚠ `data-gap` 的符號和朝下那一支**相反**：朝下是「尖端比目標高 GAP」，
+             朝上是「尖端比目標低 GAP」。
+         ⚠ **左右兩邊都是量過的**：左緣 192 遠離平和街的直排字（x 109±12），
+           右緣 308 沒碰到永樂街（324 起）—— 那一欄是路線的點在走的地方，
+           碰到就會跟虛線打架。
+
+     (2) **圖釘換成實心的那顆。** 使用者：「停車場標示你現在是用線條空心，
+         我比較喜歡放在頁尾那樣子的實心。」
+
+         ⚠ **這一站有兩顆不同的圖釘，換的時候要看清楚是哪一顆**：
+           ・HERO 窄帶那顆 —— Lucide 的 map-pin，**24 格見方、描邊不填色**。
+           ・頁尾地址那顆 —— Font Awesome 的 map-marker，**384×512、實心**。
+           第三十輪抄的是前者，這一輪換成後者。
+         ⚠ 兩者的 viewBox 比例不同（1:1 vs 0.75:1），所以**不能只換路徑**：
+           縮放改成「先定高 17，寬按 .75 跟著走」。這和 index.html 頁尾那一段
+           踩過的坑是同一個（CLAUDE.md 沒寫，但 index.html 的註解裡有：
+           「第一版把釘子的寬高都設成同一個值，它只填滿 75% 的寬」）。
 
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
@@ -892,7 +921,11 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
    和後面的 `.map-svg text { fill: var(--map-ink) }` 同權重，後者排在後面會贏。 */
 .map-svg .rlab text { fill: var(--map-park); font-size: 15px; font-weight: 700; letter-spacing: .02em; }
 .map-svg .rlab .rl-nm { font-size: 16px; }
-.map-svg .rl-pin { fill: none; stroke: var(--map-park); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* 圖釘：**實心那顆**（Font Awesome 的 map-marker，viewBox 384x512），
+   = 頁尾地址前面那一顆。2026-08-14 第三十一輪從線條空心換過來，使用者指定。
+   注意 和 HERO 窄帶那顆（Lucide 線條版，24 格見方）**是兩個不同的圖示**，
+     這一站兩顆都在用，換的時候要看清楚是哪一顆。 */
+.map-svg .rl-pin { fill: var(--map-park); stroke: none; }
 .map-svg .rl-ul  { stroke: var(--map-park); stroke-width: 1.2; }
 .rl-link { cursor: pointer; }
 /* 診所的名牌：**實心綠底白字**，和停車場那三塊剛好相反（見標記那一段）。 */
@@ -1220,7 +1253,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <rect rx="6"/><path class="tail"/>
           <g class="rl-body">
             <a class="rl-link" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%96%97%E5%85%AD%E6%B0%B8%E6%A8%82%E7%AB%99%E5%81%9C%E8%BB%8A%E5%A0%B4" target="_blank" rel="noopener">
-              <g class="rl-pin"><path d="M20 10.4c0 5.4-8 12.1-8 12.1s-8-6.7-8-12.1a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10.2" r="3"/></g>
+              <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
               <text class="rl-nm" x="274" y="104" text-anchor="middle">斗六永樂站停車場</text>
               <line class="rl-ul"/>
             </a>
@@ -1231,7 +1264,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <rect rx="6"/><path class="tail"/>
           <g class="rl-body">
             <a class="rl-link" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%90%88%E5%BB%B7%E5%81%9C%E8%BB%8A%E5%A0%B4%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82" target="_blank" rel="noopener">
-              <g class="rl-pin"><path d="M20 10.4c0 5.4-8 12.1-8 12.1s-8-6.7-8-12.1a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10.2" r="3"/></g>
+              <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
               <text class="rl-nm" x="404" y="127" text-anchor="middle">合廷停車場</text>
               <line class="rl-ul"/>
             </a>
@@ -1243,7 +1276,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <rect rx="6"/><path class="tail"/>
           <g class="rl-body">
             <a class="rl-link" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%A3%B9%E8%BB%8A%E6%88%BF%20%E4%B8%AD%E8%8F%AF%E8%B7%AF%E5%81%9C%E8%BB%8A%E5%A0%B4%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82" target="_blank" rel="noopener">
-              <g class="rl-pin"><path d="M20 10.4c0 5.4-8 12.1-8 12.1s-8-6.7-8-12.1a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10.2" r="3"/></g>
+              <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
               <text class="rl-nm" x="247" y="486" text-anchor="middle">壹車房停車場</text>
               <line class="rl-ul"/>
             </a>
@@ -1267,18 +1300,27 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
       <!-- 診所的名牌（2026-08-14 第三十輪，使用者：「診所的框框可能要標註
            芳仁牙醫診所，拉個對話框，指標指到這個區塊內，顏色一樣都是這個
            一般牙科的綠」）。
-           ⚠ **擺在診所左邊、尾巴朝右指進綠色裡**，不是擺在上面 ——
-             上面 17 個單位就是平和街19巷的字（x 129~223、基線 232），
-             牌子放上去一定壓到，而那個位置是前面幾輪特地挑過的。
-           ⚠ 牌子左緣會**懸在平和街的路面上**（約 16 個單位），這是刻意的：
-             對話框本來就是浮在圖上的一層。平和街的直排字在 y 308 以下，不會撞到。
-           ⚠ 尾巴的尖端在 x=234，**已經進到綠色裡 6 個單位**（綠色從 228 起）。
-             路線那三塊牌子的尾巴是停在線外 12 的（`data-gap`），這一塊是 0。
-           ⚠ 實心綠底白字，和停車場那三塊「淺底藍字」剛好相反 —— 見上面那段。 -->
-      <g class="clab" data-dir="right" data-tx="234" data-gap="0">
+           ⚠ 實心綠底白字，和停車場那三塊「淺底藍字」剛好相反 —— 見上面那段。
+
+           ⚠⚠ **第三十一輪從診所左邊搬到診所下面**（2026-08-14 使用者：
+             「那個芳仁牙醫診所標籤壓到旁邊的街道，應該要把它左下一點，
+             這樣剛好壓在那個無名的街道上，那個不是重點」）。
+             ・原本擺左邊，左緣懸在**平和街**的路面上 —— 那是圖上七條有名字的
+               路之一，蓋掉它會讓人以為那裡沒有路。
+             ・現在整塊落在 (192~308, 296~324)：上半在診所底下那塊空街廓裡，
+               下緣壓到 **平和街33巷**（y 321~333）—— 那條巷子圖上刻意不標名字
+               （第六輪使用者指定「其他道路或街巷改細一點且不用標路名」），
+               蓋到不影響判讀。
+             ・**左右兩邊都是量過的**：左緣 192 遠離平和街的直排字（x 109±12），
+               右緣 308 沒碰到永樂街（324 起）—— 那一欄是路線的點在走的地方，
+               碰到就會跟虛線打架。
+           ⚠ 尾巴改成**朝上**（第三種方向），尖端 y=281，**進到綠色裡 6 個單位**
+             （綠色到 287 為止），x=250 落在診所的 228~324 之間。
+             路線那三塊牌子的尾巴是停在線外 12 的（`data-gap`），這一塊是 0。 -->
+      <g class="clab" data-dir="up" data-tx="250" data-ty="281" data-gap="0">
         <rect rx="6"/><path class="tail"/>
         <g class="rl-body">
-          <text class="cl-nm" x="160" y="267" text-anchor="middle">芳仁牙醫診所</text>
+          <text class="cl-nm" x="250" y="319" text-anchor="middle">芳仁牙醫診所</text>
         </g>
       </g>
 
@@ -1427,17 +1469,18 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
   // ⚠ 量的是 `.rl-body` 這個群組不是單一個 <text> —— 停車場那三塊現在有
   //   圖釘＋名字＋底線＋距離四樣東西。`getBBox()` 對群組回傳的是**含子元素
   //   transform 的聯集**，所以圖釘那個 scale() 也算得進去。
-  var PIN_S = 0.72;                       // 圖釘原圖是 24 格見方
+  // 圖釘原圖是 384x512（實心水滴，= 頁尾那顆）。先定高，寬按 .75 的比例跟著走。
+  var PIN_H = 17, PIN_S = PIN_H / 512, PIN_W = 384 * PIN_S;
   function sizeLabels() {
     // (1) 先把圖釘與底線擺到名字旁邊／底下 —— 它們的位置要等字量出來才知道
     fig.querySelectorAll('.rl-link').forEach(function (a) {
       var nm = a.querySelector('.rl-nm'), pin = a.querySelector('.rl-pin'), ul = a.querySelector('.rl-ul');
-      var b = nm.getBBox(), w = 24 * PIN_S;
+      var b = nm.getBBox();
       // 圖釘：字面中線對齊。⚠ 對的是 bbox 的中線不是基線 ——
       //   圖釘是個對稱的水滴，跟著基線走會整顆偏高。
       pin.setAttribute('transform',
-        'translate(' + (b.x - w - 2).toFixed(2) + ' ' + (b.y + b.height / 2 - w / 2).toFixed(2) +
-        ') scale(' + PIN_S + ')');
+        'translate(' + (b.x - PIN_W - 3).toFixed(2) + ' ' + (b.y + b.height / 2 - PIN_H / 2).toFixed(2) +
+        ') scale(' + PIN_S.toFixed(5) + ')');
       // 底線自己畫，不用 text-decoration（各家瀏覽器位置不一致）
       ul.setAttribute('x1', b.x.toFixed(2));
       ul.setAttribute('x2', (b.x + b.width).toFixed(2));
@@ -1459,6 +1502,11 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
       if (g.dataset.dir === 'right') {
         var rx2 = b.x + b.width + padX, cy = b.y + b.height / 2, tipX = +g.dataset.tx - GAP;
         tail.setAttribute('d', 'M' + (rx2 - 1) + ' ' + (cy - 7) + 'V' + (cy + 7) + 'L' + tipX + ' ' + cy + 'Z');
+      } else if (g.dataset.dir === 'up') {
+        // 診所的名牌在下面、尖端朝上。⚠ GAP 的符號和朝下那一支相反：
+        //   朝下是「尖端比目標高 GAP」，朝上是「尖端比目標低 GAP」。
+        var ux = +g.dataset.tx, top = b.y - padY, utip = +g.dataset.ty + GAP;
+        tail.setAttribute('d', 'M' + (ux - 7) + ' ' + (top + 1) + 'H' + (ux + 7) + 'L' + ux + ' ' + utip + 'Z');
       } else {
         var cx = +g.dataset.tx, bottom = b.y + b.height + padY, tipY = +g.dataset.ty - GAP;
         tail.setAttribute('d', 'M' + (cx - 7) + ' ' + (bottom - 1) + 'H' + (cx + 7) + 'L' + cx + ' ' + tipY + 'Z');
