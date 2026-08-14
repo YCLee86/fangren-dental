@@ -752,16 +752,21 @@
          ・圖釘用站上的那顆（**第三十一輪改成頁尾那顆實心的**，見下面）。
          ・名字底下那條線是**畫出來的 `<line>`，不是 text-decoration** ——
            SVG 文字的 text-decoration 各家位置不一致，畫一條線才對得準字面。
-         ・連結目前指向 Google 地圖的**搜尋網址**（`/maps/search/?api=1&query=…`）。
-           ⚠⚠ **這是暫時的。** 使用者 2026-08-14 指定「超連結是連到那個停車場
-             在 Google Map 上的連結」＝ 要地點本身那一頁，不是搜尋結果。
-             但**雲端 session 連不到 google.com**（egress proxy 擋掉，實測
-             EGRESS_BLOCKED），拿不到那三個地點的 place id 或分享短網址。
-           ⚠ **不要自己拼一個 place id 或座標。** 猜錯就是把人帶到別的地方去 ——
+         ・連結是**使用者本人在手機的 Google 地圖上分享出來的短網址**
+           （2026-08-14 第三十二輪提供，`maps.app.goo.gl/…`）：
+             永樂站 rwPydf3Mvt4fS4er7／合廷 tiHLpeKc2gETXRh96／
+             壹車房 z8Ds9sgX7YBy4mRw7
+           ⚠ **順序是照他貼的先後對進去的**（＝我問的順序：永樂站、合廷、壹車房），
+             **這台機器連不到 maps.app.goo.gl**（egress proxy 擋掉，實測
+             EGRESS_BLOCKED），沒辦法自己展開來驗證是哪一場。
+             **日後有人動到這三行，要先在手機上點過確認對應沒錯。**
+           ⚠ 網址**逐字照貼**，連結尾巴那個 `?g_st=ic` 也留著 —— 它是 Google
+             自己帶的來源標記，短碼在路徑上、拿掉理論上也會通，但沒驗證過的事
+             不要自己動。
+           ⚠ **不要換成自己拼的 place id 或座標。** 猜錯就是把人帶到別的地方去 ——
              CLAUDE.md 第十節那個 `@fafa070` 的教訓（推出來、沒驗證過，已經換掉）。
-           → **要換的時候只改那三個 `href`**：使用者在手機的 Google 地圖上開那一場
-             → 分享 → 複製連結，貼進來即可（`https://maps.app.goo.gl/…` 或
-             `https://www.google.com/maps/place/…` 都可以）。
+           ⚠ 前一版用的是 `/maps/search/?api=1&query=…` 搜尋網址，
+             使用者指定要**地點本身那一頁**，所以換掉了。
          ⚠ 連結要 `stopPropagation`：地圖底層有一個「點空白處＝收回」的 handler。
          ⚠ 牌子長高之後**尾巴會被自己的盒子吃掉** —— 兩塊朝下的牌子因此各往上
            挪 14，尾巴才留得下 16 個單位。加內容的時候要一起檢查這件事。
@@ -1252,7 +1257,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         <g class="rlab" data-lot="a" data-dir="down" data-tx="270" data-ty="165">
           <rect rx="6"/><path class="tail"/>
           <g class="rl-body">
-            <a class="rl-link" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%96%97%E5%85%AD%E6%B0%B8%E6%A8%82%E7%AB%99%E5%81%9C%E8%BB%8A%E5%A0%B4" target="_blank" rel="noopener">
+            <a class="rl-link" href="https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic" target="_blank" rel="noopener">
               <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
               <text class="rl-nm" x="274" y="104" text-anchor="middle">斗六永樂站停車場</text>
               <line class="rl-ul"/>
@@ -1263,7 +1268,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         <g class="rlab" data-lot="b" data-dir="down" data-tx="400" data-ty="188">
           <rect rx="6"/><path class="tail"/>
           <g class="rl-body">
-            <a class="rl-link" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%90%88%E5%BB%B7%E5%81%9C%E8%BB%8A%E5%A0%B4%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82" target="_blank" rel="noopener">
+            <a class="rl-link" href="https://maps.app.goo.gl/tiHLpeKc2gETXRh96?g_st=ic" target="_blank" rel="noopener">
               <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
               <text class="rl-nm" x="404" y="127" text-anchor="middle">合廷停車場</text>
               <line class="rl-ul"/>
@@ -1275,7 +1280,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         <g class="rlab" data-lot="c" data-dir="right" data-tx="339">
           <rect rx="6"/><path class="tail"/>
           <g class="rl-body">
-            <a class="rl-link" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%A3%B9%E8%BB%8A%E6%88%BF%20%E4%B8%AD%E8%8F%AF%E8%B7%AF%E5%81%9C%E8%BB%8A%E5%A0%B4%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82" target="_blank" rel="noopener">
+            <a class="rl-link" href="https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic" target="_blank" rel="noopener">
               <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
               <text class="rl-nm" x="247" y="486" text-anchor="middle">壹車房停車場</text>
               <line class="rl-ul"/>
