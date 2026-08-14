@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW" data-pos="card" data-style="plate" data-shape="round" data-mark="plot" data-hue="brick" data-txt="soft" data-corner="edge" data-block="warm" data-park="tile" data-key="on">
+<html lang="zh-Hant-TW" data-pos="card" data-style="plate" data-shape="round" data-mark="plot" data-hue="green" data-txt="soft" data-corner="edge" data-block="warm" data-park="tile" data-key="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -423,6 +423,19 @@
        ⚠ 塊裡的白色標誌要重新置中（translate y 242.9 → 248.4）；
          圓標誌與豆子那兩案的中心也跟著下移 5（256 → 261）。
 
+     ---- 2026-08-14 第十四輪：診所改一般牙科綠、P 加粗 ---------------------
+     使用者：「診所顏色還是做成一般牙科的綠。停車場的 P 應該要粗一點，
+     和一般標誌符合意象。」
+
+       ・診所改用 **#3f654a**（一般牙科・創辦醫師的套色，PALETTE.md
+         第六之十一節第七小節）。**這顆也是主畫面圖示那顆綠**，
+         等於站上「牙科本身」的顏色。切換條多一顆，磚紅／深綠松／苔綠留著。
+         ⚠ 第三輪改用磚紅的理由是「深綠松 #214D48 對地磚深藍分不出來」，
+           那個顧慮對這顆不成立：#3f654a 比深綠松亮一階，
+           對 #252d4a 差 22 個 L\*，加上綠 vs 藍的色相差，兩塊分得開。
+       ・**P 改粗體並放大一階**（28→30，小塊那顆 26→28），
+         比照路上停車標誌的份量。白字站在深藍上仍是 13.5:1。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -460,6 +473,12 @@ html[data-style="line"]  { --map-bg: var(--card);      --map-road: var(--rule); 
 html[data-block="cool"] { --map-block: var(--rule); }   /* #cdd0d2 */
 html[data-block="warm"] { --map-block: #d4cfca; }       /* 凳子的褐 16% 混進紙色 */
 html[data-block="deep"] { --map-block: #cfc7c0; }       /* 同上，22% */
+/* 一般牙科・創辦醫師那一支的套色（PALETTE.md 第六之十一節第七小節）。
+   ⚠ 這顆也是主畫面圖示在用的綠 —— 站上「牙科本身」的顏色就是它。
+   ⚠ 它和停車場的地磚深藍 #252d4a 差 22 個 L*、色相也不同（綠 vs 藍），
+     所以兩種深色塊分得出來；當初改用磚紅就是怕深綠松 #214D48 分不出來，
+     那顆比這顆暗一階。 */
+html[data-hue="green"]  { --map-mark: #3f654a; }
 html[data-hue="brick"]  { --map-mark: var(--brick); }
 html[data-hue="teal"]   { --map-mark: var(--teal); }
 html[data-hue="moss"]   { --map-mark: var(--moss); }
@@ -532,8 +551,10 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
 .map-svg .lbl   { font-size: 22px; letter-spacing: .06em; font-weight: 700; opacity: var(--lbl-op, 1); }
 .map-svg .lbl-xs{ font-size: 16px; letter-spacing: .02em; font-weight: 700; opacity: var(--lbl-op, 1); }
 .map-svg .lbl-s { font-size: 20px; letter-spacing: .04em; font-weight: 700; opacity: var(--lbl-op, 1); }
-.map-svg .pk    { font-size: 28px; fill: var(--card); letter-spacing: 0; }
-.map-svg .pk-s  { font-size: 26px; }                      /* 小一號的 P（頂三站那顆圓比較小） */
+/* 停車場的 P：**粗體**，比照路上停車標誌的份量（2026-08-14 使用者指定）。
+   白字站在地磚深藍上 13.5:1，是這張圖裡最清楚的字。 */
+.map-svg .pk    { font-size: 30px; font-weight: 700; fill: var(--card); letter-spacing: 0; }
+.map-svg .pk-s  { font-size: 28px; }                      /* 小一號的 P（頂三站那顆圓比較小） */
 .map-svg .pk-nm { font-size: 22px; fill: var(--card); letter-spacing: .06em; }
 .map-svg .nm    { font-size: 24px; letter-spacing: .08em; font-weight: 500; }
 
@@ -751,6 +772,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     <button data-k="mark" data-v="bean">設計稿的豆子</button>
   </div>
   <div><b>顏色</b>
+    <button data-k="hue" data-v="green">一般牙科綠（定）</button>
     <button data-k="hue" data-v="brick">磚紅</button>
     <button data-k="hue" data-v="teal">深綠松</button>
     <button data-k="hue" data-v="moss">苔綠</button>
@@ -785,7 +807,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     pos:   ['card', 'addr'],
     shape: ['round', 'blob', 'circle'],
     mark:  ['plot', 'logo', 'bean'],
-    hue:   ['brick', 'teal', 'moss'],
+    hue:   ['green', 'brick', 'teal', 'moss'],
     txt:   ['soft', 'ink', 'fade', 'white'],
     corner: ['edge', 'all'],
     block: ['warm', 'cool', 'deep'],
