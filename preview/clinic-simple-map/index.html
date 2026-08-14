@@ -436,6 +436,25 @@
        ・**P 改粗體並放大一階**（28→30，小塊那顆 26→28），
          比照路上停車標誌的份量。白字站在深藍上仍是 13.5:1。
 
+     ---- 2026-08-14 第十五輪：14 巷往南，合廷與診所並排 --------------------
+     使用者：「合廷停車場的巷子和平和街19巷的相對關係不對，跟你 Google map
+     截圖參考。」對，錯的是**兩條巷子差多遠**：
+
+       舊版　14 巷比 19 巷高 78 個單位（＝39 公尺），合廷整塊落在診所的
+             **正北方**，兩者完全沒有重疊。
+       截圖　合廷那支圖釘只比診所高約 20 公尺，**合廷的場地橫跨診所那一列**
+             （以「33巷→大同路 200px ＝ 60 公尺」定出 3.33 px/公尺換算）。
+
+       改法：14 巷 143 → 180（離 19 巷 32 個單位 ≒ 16 公尺），
+       合廷北緣仍然貼著它 → 192~268，因此和診所（236~287）**上下重疊**。
+       ⚠ 第九輪之後**路已經沒有自己的矩形**了（改成鋪路色、畫街廓），
+         所以「移動一條巷子」＝ 改它兩側街廓的 y 與 height，
+         這一輪動的是永樂街以東那兩欄（59~180 與 192~403）。
+
+     ⚠ 這是第三次修這一帶的南北關係（第三輪把 14 巷放到 19 巷之上、
+       第五輪重定比例、這一輪再收窄）。**南北向的量測一律以「一張同時看得到
+       兩個地標」的截圖為準** —— 跨截圖換算的誤差就是這樣累積的。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -660,14 +679,14 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         <rect x="124" y="587" width="200" height="53" rx="4"/>
         <!-- 永樂街～永安路 -->
         <rect x="354" y="-20" width="101" height="41" rx="4"/>
-        <rect x="354" y="59" width="101" height="84" rx="4"/>
-        <rect x="354" y="155" width="101" height="248" rx="4"/>
+        <rect x="354" y="59" width="101" height="121" rx="4"/>
+        <rect x="354" y="192" width="101" height="211" rx="4"/>
         <rect x="354" y="441" width="101" height="100" rx="4"/>
         <rect x="354" y="587" width="101" height="53" rx="4"/>
         <!-- 永安路以東 -->
         <rect x="487" y="-20" width="93" height="41" rx="4"/>
-        <rect x="487" y="59" width="93" height="84" rx="4"/>
-        <rect x="487" y="155" width="93" height="248" rx="4"/>
+        <rect x="487" y="59" width="93" height="121" rx="4"/>
+        <rect x="487" y="192" width="93" height="211" rx="4"/>
         <rect x="487" y="441" width="93" height="100" rx="4"/>
         <rect x="487" y="587" width="93" height="53" rx="4"/>
       </g>
@@ -708,10 +727,10 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         <text class="pk pk-s" x="235" y="197" text-anchor="middle">P</text>
 
         <!-- 合廷停車場：永安路上，北緣貼著 14 巷 -->
-        <rect class="c-all"  x="388" y="155" width="67" height="76" rx="4" fill="var(--map-park)"/>
+        <rect class="c-all"  x="388" y="192" width="67" height="76" rx="4" fill="var(--map-park)"/>
         <!-- 只有右上角壓在街廓的右上角（永安路 × 14 巷）上 -->
-        <path class="c-edge" d="M388 155H451A4 4 0 0 1 455 159V231H388Z" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="421" y="199" text-anchor="middle">P</text>
+        <path class="c-edge" d="M388 192H451A4 4 0 0 1 455 196V268H388Z" fill="var(--map-park)"/>
+        <text class="pk pk-s" x="421" y="236" text-anchor="middle">P</text>
 
         <!-- 壹車房－中華路停車場：中華路與永樂街的那一角 -->
         <rect class="c-all"  x="354" y="474" width="48" height="67" rx="4" fill="var(--map-park)"/>
