@@ -562,6 +562,21 @@
        （衛星照上車陣是南北向、南端抵中華路）。**要請使用者確認**，
        尤其壹車房也可能是從永樂街進出。
 
+     ---- 2026-08-14 第二十三輪：入口改角形指標、三處微調位置 ----------------
+     使用者：「像導航在用的那種角形指標。永樂站的入口要往右一點點，
+     合廷的入口要往下一點，壹車房的入口往右一點點。」
+
+       ・三個入口從**實心三角形**改成**角形（＞）**：兩段線的折線、
+         `stroke-linecap/linejoin: round`、寬 4.2。
+         ⚠ 它是描邊不是填色，所以 `.lot path { fill: … }` 那條要在
+           `.map-svg .lot .ent` 裡關掉（`fill: none`），顏色改走 stroke，
+           兩態才會跟著整塊一起深淺變化。
+         ⚠ 首頁那排橫捲提示的角形是**用 CSS 邊框畫的**（PALETTE 有記：
+           只有 viewBox 沒有 width/height 的 SVG，Safari 當背景圖時有時不畫）。
+           這裡是**行內 SVG 的 path**，不受那個坑影響，兩者做法不同不必統一。
+       ・位置：永樂站 235 → 249（往右）、合廷 235 → 253（往下）、
+         壹車房 378 → 388（往右）。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -633,6 +648,15 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
      亮起來之後反過來 —— 深藍底、白 P（13.5:1）。 */
 .lot rect, .lot path { fill: color-mix(in srgb, var(--map-park) 45%, var(--card)); transition: fill .16s ease; }
 .lot.on rect, .lot.on path { fill: var(--map-park); }
+/* 入口的角形指標：導航 App 那種「＞」，不是實心三角形（2026-08-14 使用者指定）。
+   ⚠ 它是**描邊**不是填色，所以上面那條 `.lot path { fill: … }` 要在這裡關掉，
+     顏色改用 stroke —— 兩態一樣跟著整塊深淺走。 */
+.map-svg .lot .ent {
+  fill: none; stroke-width: 4.2; stroke-linecap: round; stroke-linejoin: round;
+  stroke: color-mix(in srgb, var(--map-park) 45%, var(--card));
+  transition: stroke .16s ease;
+}
+.map-svg .lot.on .ent { stroke: var(--map-park); }
 .map-svg .lot .pk { fill: var(--map-park); transition: fill .16s ease; }
 .map-svg .lot.on .pk { fill: var(--card); }
 .lot:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
@@ -876,8 +900,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <title>斗六永樂站停車場・步行 1 分鐘（50 公尺）</title>
           <rect class="c-all"  x="206" y="171" width="58" height="34" rx="4"/>
           <rect class="c-edge" x="206" y="171" width="58" height="34"/>
-          <!-- 入口：從北邊那條平行巷進去（朝下） -->
-          <path class="ent" d="M228 159H242L235 169Z"/>
+          <!-- 入口：從北邊那條平行巷進去（朝下）。位置偏右 -->
+          <path class="ent" d="M242 163L249 170L256 163"/>
           <text class="pk pk-s" x="235" y="197" text-anchor="middle">P</text>
         </g>
 
@@ -888,8 +912,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <rect class="c-all"  x="388" y="197" width="67" height="76" rx="4"/>
           <!-- 只有右上角壓在街廓的右上角（永安路 × 14 巷）上 -->
           <path class="c-edge" d="M388 197H451A4 4 0 0 1 455 201V273H388Z"/>
-          <!-- 入口：從永安路進去（朝西） -->
-          <path class="ent" d="M468 228V242L457 235Z"/>
+          <!-- 入口：從永安路進去（朝西）。位置偏下 -->
+          <path class="ent" d="M463 246L456 253L463 260"/>
           <text class="pk pk-s" x="421" y="241" text-anchor="middle">P</text>
         </g>
 
@@ -900,8 +924,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <rect class="c-all"  x="354" y="474" width="48" height="67" rx="4"/>
           <!-- 只有左下角壓在街廓的左下角（永樂街 × 中華路）上 -->
           <path class="c-edge" d="M354 474H402V541H358A4 4 0 0 1 354 537Z"/>
-          <!-- 入口：從中華路進去（朝北） -->
-          <path class="ent" d="M371 557H385L378 547Z"/>
+          <!-- 入口：從中華路進去（朝北）。位置偏右 -->
+          <path class="ent" d="M381 553L388 546L395 553"/>
           <text class="pk pk-s" x="378" y="515" text-anchor="middle">P</text>
         </g>
       </g>
