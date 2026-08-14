@@ -183,6 +183,41 @@
        這一輪用 transform 把它們拉成橫的（blob 乘 1.21875×0.875，
        正圓改成同比例的橢圓）。要再改版面尺寸，這兩個係數要一起換。
 
+     ---- 2026-08-13 第五輪：照實際比例重排，砍到三處停車場 ---------------
+     使用者：「頂三站、永安店拿掉。中華路的壹車房應該是長方形。整個街區比例
+     差太多，診所那個街區太真實，其他街區太扭曲。診所的區域是貼在永樂街和
+     平和街〔19巷〕的那一角，是橫的長方形。」
+
+     ⚠⚠ **這一輪把版面從橫式（780×560）改回直式（560×840），是幾何逼出來的，
+       不是推翻上一輪。** 從衛星圖上的比例尺（50 公尺 ≒ 130 px）換算：
+
+         平和街→永樂街 298px ≒ 115m      文化路→19巷   170px ≒  65m
+         永樂街→永安路 145px ≒  56m      19巷→33巷     250px ≒  96m
+                                          33巷→大同路   155px ≒  60m
+                                          大同路→中華路 410px ≒ 158m
+
+       要涵蓋的實際範圍是 **171m × 371m，本身就是直的（1:2.17）**。
+       上一版之所以能做成橫的，是因為把「大同路→中華路」那 158 公尺壓成了
+       33巷→大同路 的 0.3 倍（實際是 2.6 倍）—— 那就是使用者說的「太扭曲」。
+       這一版四段南北間距、兩段東西間距**全部照實際比例**，
+       所以整張圖只能是直的。要再變回橫的，就得重新接受南北壓縮。
+
+       ⚠ **標記本身沒有照比例**：診所那一塊 96×40 ≒ 實際 48×20 公尺，
+         比真的建物大一號。照真實尺寸畫在手機上只有 12px 見方，看不出是什麼。
+         圖說因此改成「街廓與距離依實際比例，標記本身放大以便閱讀」。
+
+       ・**診所改成貼在永樂街 × 平和街19巷那一角的橫長方形**（右緣貼永樂街、
+         上緣貼 19 巷）—— 使用者指定，也和 Google 上那支圖釘的位置一致。
+       ・**頂三站、Times 永安店拿掉**，只剩斗六永樂站、合廷、壹車房三處。
+       ・**壹車房改成 156×50 的橫長方形**，沿著中華路北側 —— 它本來就是一片
+         場地，不是一顆點。
+       ・大同路與中華路之間補了**一條細的無名巷**：衛星圖上看得到，
+         沒有查到名字所以不標。少了它那一格會空掉約 80 公尺寬的一整片。
+
+     ⚠ 版面變窄變高，字級整組往下收一階（街名 30→22、小標 26→20、
+       診所名 32→24、P 34→28），`.map-svg` 的 max-width 620 → 440。
+       手機 295px 上量到約 11px，五輪下來都維持在這個數字。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -273,18 +308,18 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
 /* ---- 地圖本體 ---------------------------------------------------------- */
 .map-fig { margin: 0; }
 .info-card .map-fig { margin-top: .9rem; }   /* 收在地址卡裡的時候接在地址下面 */
-.map-svg { display: block; width: 100%; height: auto; max-width: 620px; font-family: inherit; }
-.card-map .map-svg { max-width: 620px; margin-inline: auto; }
+.map-svg { display: block; width: 100%; height: auto; max-width: 440px; font-family: inherit; }
+.card-map .map-svg { max-width: 440px; margin-inline: auto; }
 .map-svg text { fill: var(--map-ink); font-weight: 400; }
-.map-svg .lbl   { font-size: 30px; letter-spacing: .06em; }
-.map-svg .lbl-s { font-size: 26px; letter-spacing: .04em; }
-.map-svg .pk    { font-size: 34px; fill: var(--card); letter-spacing: 0; }
-.map-svg .pk-s  { font-size: 30px; }                      /* 小一號的 P（頂三站那顆圓比較小） */
+.map-svg .lbl   { font-size: 22px; letter-spacing: .06em; }
+.map-svg .lbl-s { font-size: 20px; letter-spacing: .04em; }
+.map-svg .pk    { font-size: 28px; fill: var(--card); letter-spacing: 0; }
+.map-svg .pk-s  { font-size: 26px; }                      /* 小一號的 P（頂三站那顆圓比較小） */
 .map-svg .pk-nm { font-size: 22px; fill: var(--card); letter-spacing: .06em; }
-.map-svg .nm    { font-size: 32px; letter-spacing: .08em; font-weight: 500; }
+.map-svg .nm    { font-size: 24px; letter-spacing: .08em; font-weight: 500; }
 
 .map-note { margin-top: .5rem; font-size: .8rem; line-height: 1.7; color: var(--ink-soft); }
-.card-map .map-note { max-width: 620px; margin-inline: auto; }
+.card-map .map-note { max-width: 440px; margin-inline: auto; }
 
 /* ---- 切換條（定案後整段刪掉）------------------------------------------ */
 .sw {
@@ -338,130 +373,100 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
      viewBox 640×640；街廓、路寬、標記位置全部寫在這裡，改一個數字就整張跟著動。 -->
 <template id="map-tpl">
 <figure class="map-fig">
-  <svg class="map-svg" viewBox="0 0 780 560" role="img" aria-labelledby="mt md">
+  <svg class="map-svg" viewBox="0 0 560 840" role="img" aria-labelledby="mt md">
     <title id="mt">芳仁牙醫診所簡易地圖</title>
-    <desc id="md">診所位在永樂街上、平和街與永樂街之間的街廓內，北緣是平和街19巷，再往北是文化路，往南依序是大同路與中華路；附近有五處停車場：19巷以北的頂三站與斗六永樂站、永樂街以東的合廷、永安路以東的 Times 永安店，以及中華路上場地較大的壹車房。</desc>
+    <desc id="md">診所位在永樂街與平和街19巷交會的那一角，門面朝永樂街；街區北接文化路，往南依序是平和街33巷、大同路與中華路。附近三處停車場：19巷以北的斗六永樂站、永樂街以東的合廷，以及中華路上的壹車房。</desc>
 
     <defs>
-      <!-- 三種外框。有機色塊那一條是極座標八個點轉成的封閉貝茲曲線：
-           四個角的半徑比上下左右大，所以它是一顆會呼吸的圓角方 ——
-           和設計稿上那排色點同一種語彙。
-           ⚠ 2026-08-13 第四輪版面改成 780×560 的橫式（使用者指定），
-             有機色塊與正圓那兩條都是為 640×640 的正方形畫的，
-             這裡用 preserveAspectRatio="none" 的縮放把它們拉成橫的
-             （寫在 transform 上：780/640 × 560/640）。 -->
-      <clipPath id="clip-blob"><path transform="scale(1.21875 0.875)" d="M320 18C398.02 17.76 504.76 34.91 554.76 85.24C604.76 135.57 620.47 242.22 620 320C619.53 397.78 601.93 500.93 551.93 551.93C501.93 602.93 398.02 625.29 320 626C241.98 626.71 133.49 607.17 83.83 556.17C34.16 505.17 21.53 398.25 22 320C22.47 241.75 36.99 136.99 86.65 86.65C136.32 36.32 241.98 18.24 320 18Z"/></clipPath>
-      <clipPath id="clip-circle"><ellipse cx="390" cy="280" rx="387" ry="277"/></clipPath>
-      <clipPath id="clip-round"><rect x="0" y="0" width="780" height="560" rx="18"/></clipPath>
+      <!-- 三種外框。⚠ 2026-08-13 第五輪版面改成 560×840（照實際比例，見 head 註解），
+           有機色塊與正圓那兩條原本是為 640×640 畫的，這裡用 transform 拉成
+           同樣的比例（560/640 × 840/640）。要再改版面尺寸，兩個係數要一起換。 -->
+      <clipPath id="clip-blob"><path transform="scale(0.875 1.3125)" d="M320 18C398.02 17.76 504.76 34.91 554.76 85.24C604.76 135.57 620.47 242.22 620 320C619.53 397.78 601.93 500.93 551.93 551.93C501.93 602.93 398.02 625.29 320 626C241.98 626.71 133.49 607.17 83.83 556.17C34.16 505.17 21.53 398.25 22 320C22.47 241.75 36.99 136.99 86.65 86.65C136.32 36.32 241.98 18.24 320 18Z"/></clipPath>
+      <clipPath id="clip-circle"><ellipse cx="280" cy="420" rx="277" ry="417"/></clipPath>
+      <clipPath id="clip-round"><rect x="0" y="0" width="560" height="840" rx="18"/></clipPath>
     </defs>
 
     <g id="map-clip" clip-path="url(#clip-round)">
-      <rect width="780" height="560" fill="var(--map-bg)"/>
+      <rect width="560" height="840" fill="var(--map-bg)"/>
 
-      <!-- ⚠ 這一層 translate 是 2026-08-13 第四輪加的：使用者說
-           「停車場和診所比較集中在中間和右邊，整個地圖區域可以往右涵括，
-             把診所停車場移到畫面左邊一點的位置」。
-           往左搬 30 個單位 ＝ 畫面右邊多露出 30 個單位的東側。
-           ⚠ 橫的路因此都畫成 x=-60、寬 900（原本 0~780）——
-             不加寬的話右緣會禿掉 30 個單位。底色那一塊不在這一層裡。 -->
-      <g transform="translate(-30 0)">
-
-      <!-- 路。2026-08-13 第四輪照使用者指定分成兩級：
-           **有標名字的畫粗**（文化路／大同路／中華路／平和街／永樂街／永安路，
-           以及 19 巷因為要標名字所以走中間的 20），
-           **沒標名字的畫細**（12巷／14巷／33巷，高 12，等於粗路的三分之一強）。
-           ⚠ 細的那三條**刻意不標路名** —— 使用者：「其他道路或街巷改細一點
-             且不用標路名」。它們留著是為了讓街廓的形狀對，不是為了指路。 -->
+      <!-- 路。2026-08-13 第五輪整組**照實際比例**重排（見 head 註解的量測表）。
+           兩級：有標名字的粗（34~46，19 巷 17），沒標名字的細（12）。 -->
       <g fill="var(--map-road)">
-        <rect x="80"  y="0"   width="32"  height="560"/><!-- 平和街 -->
-        <rect x="378" y="0"   width="32"  height="560"/><!-- 永樂街 -->
-        <rect x="521" y="0"   width="36"  height="560"/><!-- 永安路 -->
-        <rect x="-60" y="44"  width="900" height="32"/> <!-- 文化路 -->
-        <rect x="-60" y="424" width="900" height="32"/> <!-- 大同路 -->
-        <rect x="-60" y="500" width="900" height="36"/> <!-- 中華路 -->
-        <rect x="112" y="186" width="266" height="20"/> <!-- 平和街19巷 -->
-        <rect x="-60" y="196" width="172" height="12"/> <!-- 細：平和街12巷 -->
-        <rect x="378" y="212" width="462" height="12"/> <!-- 細：永安路14巷 -->
-        <rect x="-60" y="352" width="470" height="12"/> <!-- 細：平和街33巷 -->
+        <rect x="92"  y="0"   width="34"  height="840"/><!-- 平和街 -->
+        <rect x="320" y="0"   width="38"  height="840"/><!-- 永樂街 -->
+        <rect x="430" y="0"   width="42"  height="840"/><!-- 永安路 -->
+        <rect x="-20" y="29"  width="600" height="38"/> <!-- 文化路 -->
+        <rect x="-20" y="473" width="600" height="38"/> <!-- 大同路 -->
+        <rect x="-20" y="785" width="600" height="46"/> <!-- 中華路 -->
+        <rect x="126" y="171" width="194" height="17"/> <!-- 平和街19巷 -->
+        <rect x="-20" y="192" width="112" height="12"/> <!-- 細：平和街12巷 -->
+        <rect x="358" y="208" width="222" height="12"/> <!-- 細：永安路14巷 -->
+        <rect x="-20" y="366" width="378" height="12"/> <!-- 細：平和街33巷 -->
+        <!-- 細：大同路與中華路之間那條巷子。衛星圖上看得到，沒有查到名字，
+             所以不標路名。少了它那一格會空掉 210 個單位（實際上約 80 公尺）。 -->
+        <rect x="-20" y="594" width="450" height="12"/>
       </g>
 
-      <!-- 街名。七條，就是使用者指定要留的那幾條。
-           橫的寫在路面上，直的沿著路排（一個字一個 tspan，
-           不用 writing-mode —— Safari 對 SVG 的直排支援不齊）。 -->
-      <text class="lbl" x="250" y="70"  text-anchor="middle">文化路</text>
-      <text class="lbl" x="250" y="450" text-anchor="middle">大同路</text>
-      <text class="lbl" x="250" y="528" text-anchor="middle">中華路</text>
-      <text class="lbl" x="96"  y="280" text-anchor="middle"><tspan x="96">平</tspan><tspan x="96" dy="34">和</tspan><tspan x="96" dy="34">街</tspan></text>
-      <text class="lbl" x="394" y="280" text-anchor="middle"><tspan x="394">永</tspan><tspan x="394" dy="34">樂</tspan><tspan x="394" dy="34">街</tspan></text>
-      <text class="lbl" x="539" y="130" text-anchor="middle"><tspan x="539">永</tspan><tspan x="539" dy="34">安</tspan><tspan x="539" dy="34">路</tspan></text>
-      <!-- 19 巷上下都是停車場與診所，沒有空位，所以字直接壓在巷子上 -->
-      <text class="lbl-s" x="245" y="203" text-anchor="middle">平和街19巷</text>
+      <!-- 街名。七條裡的六條在這裡（19 巷寫在下面，因為要壓在巷子上）。 -->
+      <text class="lbl" x="200" y="57"  text-anchor="middle">文化路</text>
+      <text class="lbl" x="200" y="501" text-anchor="middle">大同路</text>
+      <text class="lbl" x="200" y="817" text-anchor="middle">中華路</text>
+      <text class="lbl" x="109" y="280" text-anchor="middle"><tspan x="109">平</tspan><tspan x="109" dy="26">和</tspan><tspan x="109" dy="26">街</tspan></text>
+      <text class="lbl" x="339" y="280" text-anchor="middle"><tspan x="339">永</tspan><tspan x="339" dy="26">樂</tspan><tspan x="339" dy="26">街</tspan></text>
+      <text class="lbl" x="451" y="120" text-anchor="middle"><tspan x="451">永</tspan><tspan x="451" dy="26">安</tspan><tspan x="451" dy="26">路</tspan></text>
+      <text class="lbl-s" x="223" y="185" text-anchor="middle">平和街19巷</text>
 
-      <!-- 停車場。五處，位置與名字出自使用者提供的 Google 衛星圖。
-           畫的是**場地本身的範圍**（面），裡面壓一個白色的 P，名字寫在塊外面。
-           ⚠ 塊的大小是有意義的：壹車房最大（使用者說它「比較大」）。
-           ⚠ Times 永安店是這一輪才收進來的 —— 版面往右拉寬之後
-             （640×640 → 780×560），永安路以東那一格進到畫面裡了。 -->
+      <!-- 停車場。三處（2026-08-13 第五輪使用者指定拿掉頂三站與 Times 永安店）。
+           畫的是場地本身的範圍，裡面壓一個白色的 P，名字寫在塊外面。
+           ⚠ 壹車房是**橫的長方形**（156×50）—— 使用者指定，它本來就是一片
+             沿著中華路的場地，不是一顆點。 -->
       <g class="map-park">
-        <!-- 頂三站停車場 -->
-        <rect x="140" y="92" width="64" height="44" rx="4" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="172" y="123" text-anchor="middle">P</text>
-        <text class="lbl-s" x="172" y="166" text-anchor="middle">頂三站</text>
+        <!-- 斗六永樂站停車場：19 巷以北那一排街廓 -->
+        <rect x="216" y="96" width="96" height="52" rx="4" fill="var(--map-park)"/>
+        <text class="pk pk-s" x="264" y="131" text-anchor="middle">P</text>
+        <text class="lbl-s" x="206" y="128" text-anchor="end">斗六永樂站</text>
 
-        <!-- 斗六永樂站停車場 -->
-        <rect x="272" y="92" width="78" height="44" rx="4" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="311" y="123" text-anchor="middle">P</text>
-        <text class="lbl-s" x="311" y="166" text-anchor="middle">斗六永樂站</text>
+        <!-- 合廷停車場：永樂街以東 -->
+        <rect x="366" y="250" width="58" height="50" rx="4" fill="var(--map-park)"/>
+        <text class="pk pk-s" x="395" y="285" text-anchor="middle">P</text>
+        <text class="lbl-s" x="395" y="326" text-anchor="middle">合廷</text>
 
-        <!-- 合廷停車場 -->
-        <rect x="432" y="250" width="74" height="44" rx="4" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="469" y="281" text-anchor="middle">P</text>
-        <text class="lbl-s" x="469" y="324" text-anchor="middle">合廷</text>
-
-        <!-- Times 永安店停車場（永安路以東） -->
-        <rect x="576" y="250" width="80" height="44" rx="4" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="616" y="281" text-anchor="middle">P</text>
-        <text class="lbl-s" x="616" y="324" text-anchor="middle">Times 永安店</text>
-
-        <!-- 壹車房－中華路停車場（塊最大） -->
-        <rect x="414" y="462" width="100" height="32" rx="4" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="436" y="487" text-anchor="middle">P</text>
-        <text class="lbl-s" x="404" y="487" text-anchor="end">壹車房</text>
+        <!-- 壹車房－中華路停車場：中華路北側 -->
+        <rect x="344" y="726" width="156" height="50" rx="4" fill="var(--map-park)"/>
+        <text class="pk pk-s" x="370" y="761" text-anchor="middle">P</text>
+        <text class="lbl-s" x="334" y="759" text-anchor="end">壹車房</text>
       </g>
 
-      <!-- 診所。三案（data-mark）：
-           ・plot ＝ 預設：建物範圍的多邊形，裡面壓白色的標誌。
-                    和停車場同一種語彙（面），只有顏色不同。
-           ・logo ＝ 圓形標誌　・bean ＝ 設計稿上那顆豆子
-           名字「芳仁牙醫」三案共用，寫在塊的下面。
-           ⚠ 名字置中在 x=292 不是塊的正中（348）—— 置中在塊上會撞到
-             直排的「永樂街」（x 379~409），現在兩者之間留 23 個單位。 -->
+      <!-- 診所。**貼在永樂街與平和街19巷交會的那一角，橫的長方形**
+           （2026-08-13 第五輪使用者指定）：右緣貼永樂街、上緣貼 19 巷。
+           ⚠ 96×40 ≒ 實際 48×20 公尺，比真的建物大一號 —— 這是標記不是測量圖，
+             照真實尺寸畫在手機上只有 12px 見方，看不出是什麼。
+           三案（data-mark）：plot 面／logo 圓標誌／bean 設計稿的豆子。 -->
       <g class="mark-plot">
-        <rect x="320" y="244" width="56" height="56" rx="4" fill="var(--map-mark)"/>
-        <g transform="translate(325.9 261.1) translate(-232.8729 -333.8286)">
+        <rect x="224" y="188" width="96" height="40" rx="3" fill="var(--map-mark)"/>
+        <g transform="translate(245.4 194.9) scale(1.2) translate(-232.8729 -333.8286)">
           <path fill="var(--card)" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
         </g>
       </g>
 
       <g class="mark-logo">
-        <circle cx="348" cy="272" r="34" fill="var(--map-mark)"/>
-        <g transform="translate(325.9 261.1) translate(-232.8729 -333.8286)">
+        <circle cx="288" cy="208" r="28" fill="var(--map-mark)"/>
+        <g transform="translate(268.2 199.1) translate(-232.8729 -333.8286)">
           <path fill="var(--card)" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
         </g>
       </g>
 
       <g class="mark-bean">
-        <path fill="var(--map-mark)" transform="translate(344 272) scale(.62)"
+        <path fill="var(--map-mark)" transform="translate(284 208) scale(.52)"
               d="M62 0C61.76 12.96 48.52 30.52 38.18 38.18C27.85 45.85 12.85 45.88 0 46C-12.85 46.12 -28.89 46.56 -38.89 38.89C-48.89 31.22 -60.35 12.61 -60 0C-59.65 -12.61 -46.77 -28.94 -36.77 -36.77C-26.77 -44.6 -12.73 -46.53 0 -47C12.73 -47.47 29.26 -47.43 39.6 -39.6C49.93 -31.76 62.24 -12.96 62 0Z"/>
-        <circle cx="329" cy="261" r="6" fill="var(--card)"/>
+        <circle cx="271" cy="199" r="5" fill="var(--card)"/>
       </g>
 
-      <text class="nm" x="292" y="336" text-anchor="middle">芳仁牙醫</text>
-      </g><!-- /translate -->
+      <text class="nm" x="264" y="262" text-anchor="middle">芳仁牙醫</text>
     </g>
   </svg>
 
-  <figcaption class="map-note">示意圖，非按實際比例。停車場全名：頂三站停車場、斗六永樂站停車場、合廷停車場、Times 永安店、壹車房－中華路停車場。</figcaption>
+  <figcaption class="map-note">街廓與距離依 Google 地圖的實際比例，標記本身放大以便閱讀。停車場全名：斗六永樂站停車場、合廷停車場、壹車房－中華路停車場。</figcaption>
 </figure>
 </template>
 
