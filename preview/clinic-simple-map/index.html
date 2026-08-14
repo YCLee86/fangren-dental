@@ -577,6 +577,18 @@
        ・位置：永樂站 235 → 249（往右）、合廷 235 → 253（往下）、
          壹車房 378 → 388（往右）。
 
+     ---- 2026-08-14 第二十四輪：入口換成導航箭頭、P 反白加粗 ----------------
+     使用者：「位置沒問題了，但角形好怪，像附圖的那個一看就知道往上。
+     另外 P 反白、字體加粗，像照片是停車場的指標。」（附了 Apple 地圖的圖示
+     與路邊那面藍底白 P 的停車場指標照片。）
+
+       ・入口從**角形（＞）**換成**導航 App 那種箭頭**：尖頭 ＋ 尾端內凹的
+         實心四邊形（`M0 -9L7 8L0 3.5L-7 8Z`），方向用 `rotate()` 給。
+         角形在這個尺寸下看不出朝哪邊，箭頭一眼就看得出來。
+       ・**P 一律白色反白 ＋ 字重 700→800、31px**，比照路上的停車標誌。
+       ・**熄滅時的底色因此加深到 62%**（≒ #74798b）：白字對它 4.33:1 才站得住。
+         這推翻了前一輪「熄滅時用深藍 P」—— 那是因為 45% 太淡不得已。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -640,25 +652,23 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
      是用 <path> 一個一個畫的。兩案都在標記裡，靠這兩行切。 */
 /* 停車場：平常淺墨，點到（或滑鼠停著）才變成停車場的藍並帶出路線。 */
 .lot { cursor: pointer; }
-/* 熄滅時是**淡一階的同一支藍**（停車場色 45% 混進卡色 ≒ #979ba8；
-   2026-08-14 從 28% 加重，使用者說 28% 那一階「在整個地圖辨識度不好」），
+/* 熄滅時是**淡一階的同一支藍**（停車場色 62% 混進卡色 ≒ #74798b）。
+   兩次加重都是使用者要的：28%→45%（「辨識度不好」）→62%（要白色反白的 P）。
+   ⚠ 62% 是**白 P 與「亮起來看得出來」之間的平衡點**：
+     白字對它 4.33:1（過），而它對點亮的深藍還有 3.12:1 的落差；
+     再淡白字就撐不住（45% 只有 2.8），再深就和點亮那一態分不出來（78% 剩 1.95）。
    點到才整塊變成停車場的藍 —— 這樣「亮起來」是同一族的深一階，不是換一個顏色。
    ⚠ **熄滅時的 P 必須是深藍、不能是白的**：白字站在那塊淡藍上只有 1.9:1，
      等於看不見（下限就算按大字算也要 3:1）。深藍站在淡藍上是 6.8:1。
      亮起來之後反過來 —— 深藍底、白 P（13.5:1）。 */
-.lot rect, .lot path { fill: color-mix(in srgb, var(--map-park) 45%, var(--card)); transition: fill .16s ease; }
+.lot rect, .lot path { fill: color-mix(in srgb, var(--map-park) 62%, var(--card)); transition: fill .16s ease; }
 .lot.on rect, .lot.on path { fill: var(--map-park); }
-/* 入口的角形指標：導航 App 那種「＞」，不是實心三角形（2026-08-14 使用者指定）。
-   ⚠ 它是**描邊**不是填色，所以上面那條 `.lot path { fill: … }` 要在這裡關掉，
-     顏色改用 stroke —— 兩態一樣跟著整塊深淺走。 */
-.map-svg .lot .ent {
-  fill: none; stroke-width: 4.2; stroke-linecap: round; stroke-linejoin: round;
-  stroke: color-mix(in srgb, var(--map-park) 45%, var(--card));
-  transition: stroke .16s ease;
-}
-.map-svg .lot.on .ent { stroke: var(--map-park); }
-.map-svg .lot .pk { fill: var(--map-park); transition: fill .16s ease; }
-.map-svg .lot.on .pk { fill: var(--card); }
+/* 入口指標：**導航 App 那種箭頭**（尖頭 ＋ 尾端內凹的實心四邊形，
+   使用者指定「像 Apple 地圖那顆」）。2026-08-14 從「角形（＞）」換掉 ——
+   角形在這個尺寸下看不出朝哪邊。填色，所以跟著 `.lot path` 一起深淺變化，
+   只要不另外指定 fill 就好。方向用 `rotate()` 給：0＝朝北、180＝朝南、-90＝朝西。 */
+/* P 一律白色反白，比照路上的停車標誌（使用者指定）。 */
+.map-svg .lot .pk { fill: var(--card); }
 .lot:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 /* 步行路線：Google 那種點狀線。dasharray 的 0.1 ＋ round 端點 ＝ 圓點。 */
 /* ⚠ 路線**不畫線**，它只是「幾何來源」：底下的 JS 沿著它等距排圓點。
@@ -739,7 +749,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
 .map-svg .lbl-s { font-size: 20px; letter-spacing: .04em; font-weight: 700; opacity: var(--lbl-op, 1); }
 /* 停車場的 P：**粗體**，比照路上停車標誌的份量（2026-08-14 使用者指定）。
    白字站在地磚深藍上 13.5:1，是這張圖裡最清楚的字。 */
-.map-svg .pk    { font-size: 30px; font-weight: 700; fill: var(--card); letter-spacing: 0; }
+.map-svg .pk    { font-size: 31px; font-weight: 800; fill: var(--card); letter-spacing: 0; }
 .map-svg .pk-s  { font-size: 28px; }                      /* 小一號的 P（頂三站那顆圓比較小） */
 .map-svg .pk-nm { font-size: 22px; fill: var(--card); letter-spacing: .06em; }
 .map-svg .nm    { font-size: 24px; letter-spacing: .08em; font-weight: 500; }
@@ -901,7 +911,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <rect class="c-all"  x="206" y="171" width="58" height="34" rx="4"/>
           <rect class="c-edge" x="206" y="171" width="58" height="34"/>
           <!-- 入口：從北邊那條平行巷進去（朝下）。位置偏右 -->
-          <path class="ent" d="M242 163L249 170L256 163"/>
+          <path class="ent" transform="translate(249 161) rotate(180)" d="M0 -9L7 8L0 3.5L-7 8Z"/>
           <text class="pk pk-s" x="235" y="197" text-anchor="middle">P</text>
         </g>
 
@@ -913,7 +923,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <!-- 只有右上角壓在街廓的右上角（永安路 × 14 巷）上 -->
           <path class="c-edge" d="M388 197H451A4 4 0 0 1 455 201V273H388Z"/>
           <!-- 入口：從永安路進去（朝西）。位置偏下 -->
-          <path class="ent" d="M463 246L456 253L463 260"/>
+          <path class="ent" transform="translate(466 253) rotate(-90)" d="M0 -9L7 8L0 3.5L-7 8Z"/>
           <text class="pk pk-s" x="421" y="241" text-anchor="middle">P</text>
         </g>
 
@@ -925,7 +935,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <!-- 只有左下角壓在街廓的左下角（永樂街 × 中華路）上 -->
           <path class="c-edge" d="M354 474H402V541H358A4 4 0 0 1 354 537Z"/>
           <!-- 入口：從中華路進去（朝北）。位置偏右 -->
-          <path class="ent" d="M381 553L388 546L395 553"/>
+          <path class="ent" transform="translate(388 552)" d="M0 -9L7 8L0 3.5L-7 8Z"/>
           <text class="pk pk-s" x="378" y="515" text-anchor="middle">P</text>
         </g>
       </g>
