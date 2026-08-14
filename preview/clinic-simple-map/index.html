@@ -803,6 +803,10 @@
                中間，不用拉這麼中間，可以再往右一些些，然後三角形的尖頭也可以
                再往右一點」。底邊中心 234 → **250**、尖端 252 → **264**
                （橫向差維持 14，斜度沒有再變）。
+             ⚠ **再一輪把尖端收回 258**：使用者「尖角很尖，把尖角頂點左移一點點，
+               三角形底部不要動」。底邊 238~262 沒動，尖端 264 → 258
+               ＝ 橫向差 14 → 8。**尖角開闊與否看的是尖端離底邊中心多遠**，
+               不是底邊多寬 —— 底邊已經是 24 了，再加寬只會讓牌子上多一塊贅肉。
                底邊在牌子上的位置從 57% 移到 **71%** —— 對話框的尾巴本來就
                不該長在正中間，那看起來像箭頭不像尾巴。
              ⚠ 這件事的重點不是角度好不好看，是**尖端該指哪裡**：
@@ -1331,18 +1335,26 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
              ・第二輪：當時的解法是往外挪到 330，於是多出一段**只有 9 個單位
                的橫向短段**。那一段比點距（14）還短，轉角與終點的兩顆點就變成
                斜著並排 —— 使用者放大手機截圖看出來：「那個藍色點沒有對齊，
-               歪歪斜斜的」。
-               改成**整條直線走 x=334、到 y=261 收尾**，短段整個不存在。
-               334 仍在永樂街的路面內（324~354），點的左緣 330.5，
-               離診所 6.5，整顆都在路面上。
+               歪歪斜斜的」。當時把短段整個拿掉、直線收在 y=261。
+             ・第三輪：使用者要**把轉折留著**（「還是要保留診所前面那一點有個
+               轉折，現在的版本排成一直線」）。所以短段回來了，但**直線段從
+               339 移到 344**，讓最後那一段正好是 `344 − 330 = 14` ＝**一個點距**。
+               ⚠ 這是關鍵：轉角與終點因此各一顆、間距和其他地方一模一樣，
+                 不會再看起來像兩顆黏在一起。**要動這條路線，先確認最後一段
+                 仍然是 14 的整數倍。**
+               ⚠ 代價在另一端：壹車房那條的第一段變成 `354 − 344 = 10`。
+                 那一顆有一半疊在停車場色塊上（同色，看不太出來），
+                 而使用者在意的是診所這一端，所以把 14 給了診所這邊。
+               344 仍在永樂街的路面內（324~354）。終點 330 沒動，
+               點的左緣 326.5、離診所 2.5，整顆都在路面上。
              ⚠ 起點那一端不必處理：三個停車場的 .lot 排在 .dots 前面，
                點本來就畫在色塊上面，不會被切。
-             ⚠ 壹車房那塊牌子的 `data-tx` 也跟著從 339 改成 334，
+             ⚠ 壹車房那塊牌子的 `data-tx` 跟著直線段走（339 → 334 → 344），
                不然尾巴的尖端會頂到點上。 -->
       <g class="routes">
-        <path class="route" data-lot="a" d="M235 165L334 165L334 261"/>
-        <path class="route" data-lot="b" d="M410 188L334 188L334 261"/>
-        <path class="route" data-lot="c" d="M354 507L334 507L334 261"/>
+        <path class="route" data-lot="a" d="M235 165L344 165L344 261L330 261"/>
+        <path class="route" data-lot="b" d="M410 188L344 188L344 261L330 261"/>
+        <path class="route" data-lot="c" d="M354 507L344 507L344 261L330 261"/>
         <g class="dots" data-lot="a"></g>
         <g class="dots" data-lot="b"></g>
         <g class="dots" data-lot="c"></g>
@@ -1388,7 +1400,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           </g>
         </g>
         <!-- 這一塊的路線是直的（永樂街），所以尾巴朝右、牌子擺在路線左邊 -->
-        <g class="rlab" data-lot="c" data-dir="right" data-tx="334">
+        <g class="rlab" data-lot="c" data-dir="right" data-tx="344">
           <path class="bub"/><path class="tail"/>
           <g class="rl-body">
             <a class="rl-link" href="https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic" target="_blank" rel="noopener">
@@ -1433,7 +1445,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
            ⚠ 尾巴改成**朝上**（第三種方向），尖端 y=281，**進到綠色裡 6 個單位**
              （綠色到 287 為止），x=250 落在診所的 228~324 之間。
              路線那三塊牌子的尾巴是停在線外 12 的（`data-gap`），這一塊是 0。 -->
-      <g class="clab" data-dir="up" data-tx="264" data-ty="287" data-bx="250" data-bw="12" data-gap="0">
+      <g class="clab" data-dir="up" data-tx="258" data-ty="287" data-bx="250" data-bw="12" data-gap="0">
         <path class="bub"/><path class="tail"/>
         <g class="rl-body">
           <text class="cl-nm" x="226" y="319" text-anchor="middle">芳仁牙醫診所</text>
