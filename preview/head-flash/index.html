@@ -4038,6 +4038,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   var RAMP_PX = 110;            // 招牌之前多少 px 開始升回 FULL
   var FULL = 6;                 // 招牌之後 ＝ 改動之前的樣子
   var flat = 4, lastBlur = null;
+  var iMul = 1;                 /* 提案 i 用的模糊倍率，1 ＝ 沒開 i */
 
   function readFlat() {
     var v = parseFloat(getComputedStyle(root).getPropertyValue('--head-blur-flat'));
@@ -4069,7 +4070,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var b = f <= start ? flat
           : f >= SIGN  ? FULL
           : flat + (FULL - flat) * (f - start) / (SIGN - start);
-    b = Math.round(b * 4) / 4;
+    b = Math.round(b * iMul * 4) / 4;   /* iMul 是提案 i 的收斂倍率 */
     if (b !== lastBlur) {
       root.style.setProperty('--head-blur', b.toFixed(2) + 'px');
       lastBlur = b;
@@ -4101,6 +4102,20 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var a = A_MIN + (A_MAX - A_MIN) * t;          // 玻璃的濃度
     var col = TINT.map(function (v, i) { return Math.round(v + (SOLID[i] - v) * u); });
     var alpha = a + (1 - a) * u;                  // u 到 1 時剛好完全不透明
+    var fadePct = 76 + 24 * t * t * t;            // 下緣淡出的起點
+
+    /* ---- 提案 i：窄帶壓上來就收成實色（定案後這一段連同 data-opt 一起刪掉）---- */
+    iMul = 1;
+    if (root.matches('[data-opt~="i"]')) {
+      var k = Math.max(0, Math.min(1, (h - r.top) / h));
+      var kk = k * k * (3 - 2 * k);
+      alpha = alpha + (1 - alpha) * kk;
+      fadePct = fadePct + (100 - fadePct) * kk;
+      iMul = 1 - kk;
+      root.classList.toggle('band-solid', k >= 1);
+    } else {
+      root.classList.remove('band-solid');
+    }
 
     root.style.setProperty('--glass',
       'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + alpha.toFixed(3) + ')');
@@ -4117,7 +4132,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
        收完之後條子下緣是硬邊，但那一刻它正好和「窄帶結束、紙色開始」
        那條原本就存在的邊重合，所以看不出多了一條線。 */
-    root.style.setProperty('--head-fade', (76 + 24 * t * t * t).toFixed(1) + '%');
+    root.style.setProperty('--head-fade', fadePct.toFixed(1) + '%');
 
     paintBlur(h, dy);           // 招牌之前不要那麼糊，見上面 paintBlur
   }
@@ -5075,6 +5090,11 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                         390 上實測最大差 65 階。留著這顆只是為了讓你確認
                         「濾鏡拆掉就真的不閃了嗎」——
                         如果拆掉就不閃，那方向是對的，只是得換個不透字的做法。
+       i 窄帶壓上來就收實色 h 的完成版，**這一輪的主角**：濾鏡拆掉的同時把薄色
+                        收到不透明，底下就沒有東西透得上來（h 只拆濾鏡，所以
+                        窄帶那幾行字會變清楚）。兩件事用同一條 smoothstep 綁在
+                        一起，滑進條子底下的字是「一邊滑一邊淡掉」不是啪一下不見。
+                        HERO 那一屏完全沒動。開 i 就不要開 h。
        g 底色畫在頁首上  b 的加強版，也是這一輪的主角。b 把薄色搬到 ::after，
                         但 ::after 和 ::before 同樣是負 z-index 的那一組 ——
                         **WebKit 是整組一起丟的**，第 198 幀兩層一起不見。
@@ -5136,6 +5156,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       rgba(25, 22, 20, 0) 100%);
   }
 
+  /* ---- i 窄帶壓上來就收成實色 -------------------------------------------
+     band-solid 由頁首那支 JS 掛上（薄色已經收到不透明的那一刻）。
+     那時候濾鏡與遮罩都不做事了，整組拆掉。 */
+  html[data-opt~="i"].band-solid .site-head::before {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
   /* ---- h 窄帶整片蓋住頁首之後就把濾鏡拆掉 -------------------------------
      band-full 由頁首那支 JS 在 t >= 1 時掛上（t ＝ 窄帶填滿頁首的進度）。 */
   html[data-opt~="h"].band-full .site-head::before {
@@ -5181,10 +5211,11 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   <button type="button" data-opt="e" aria-pressed="false">e 點了就先亮</button>
   <button type="button" data-opt="f" aria-pressed="false">f 點了就先算好</button>
   <button type="button" data-opt="g" aria-pressed="false">g 底色畫在頁首上</button>
-  <button type="button" data-opt="h" aria-pressed="false">h 窄帶蓋滿就拆濾鏡</button>
+  <button type="button" data-opt="h" aria-pressed="false">h 只拆濾鏡</button>
+  <button type="button" data-opt="i" aria-pressed="false">i 窄帶收實色</button>
   <button type="button" class="pv-reset" data-opt="">全關</button>
   <span class="pv-state"></span>
-  <span class="pv-hint">預設就是這一輪要看的那組（a d e f g）。c 更糟、h 會透出窄帶的字，都別預設開。</span>
+  <span class="pv-hint">預設 a d e f g i。i 是 h 的完成版（連薄色一起收到不透明），開 i 就別開 h。</span>
 </div>
 <script>
 (function () {
@@ -5192,7 +5223,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   var bar = document.querySelector('.pv-bar');
   var state = bar.querySelector('.pv-state');
   var btns = Array.prototype.slice.call(bar.querySelectorAll('button[data-opt]'));
-  var LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  var LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
   var on = {};
 
   function serialize() { return LETTERS.filter(function (k) { return on[k]; }).join(''); }
@@ -5226,7 +5257,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   function later() { requestAnimationFrame(function () { requestAnimationFrame(paint); }); }
 
   var m = /[?&]opt=([a-z0-9]+)/.exec(location.search);
-  var init = m ? m[1] : 'adefg';
+  var init = m ? m[1] : 'adefgi';
   LETTERS.forEach(function (k) { on[k] = init.indexOf(k) >= 0; });
   apply(false);
 
