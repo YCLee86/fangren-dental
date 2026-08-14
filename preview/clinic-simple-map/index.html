@@ -982,6 +982,13 @@ html[data-chip="solid"] .map-svg .rl-ul  { stroke: var(--card); }
 /* 診所的名牌：**實心綠底白字**，和停車場那三塊剛好相反（見標記那一段）。 */
 .map-svg .clab rect, .map-svg .clab .tail { fill: var(--map-mark); }
 .map-svg .clab text { fill: var(--card); font-size: 15px; font-weight: 700; letter-spacing: .04em; }
+/* 有停車場亮起來的時候，診所的名牌**整塊收掉**（2026-08-14 使用者指定）。
+   ⚠ 這不是「怕擋到」——它離路線和三塊牌子都不近。是**一次只回答一個問題**：
+     點下去之後畫面在講「從這一場走過來多遠」，那一刻診所是終點、不是主角，
+     兩塊實心牌子同時亮著會互相搶。收回去就又出現。
+   ⚠ 跟著 `.dim` 走（滑鼠停著預覽時也會收），不另外開一個 class。 */
+.map-svg .clab { transition: opacity .18s ease; }
+.map-svg.dim .clab { opacity: 0; }
 /* 有停車場亮著的時候，街名淡下去 —— 不然點狀路線壓在街名上很難辨認
    （2026-08-14 使用者指出）。⚠ 這一條要比 .map-svg .lbl 那條多一階才蓋得過
    它自己的 opacity: var(--lbl-op)。 */
@@ -1005,7 +1012,8 @@ html[data-chip="solid"] .map-svg .rl-ul  { stroke: var(--card); }
 .map-svg .lot.on .ent { visibility: visible; opacity: 1; }
 .map-svg .lot.on .ent.hide { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
-  .lot rect, .lot path, .lot .pk, .dots, .rlab, .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: none; }
+  .lot rect, .lot path, .lot .pk, .dots, .rlab, .map-svg .clab,
+  .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: none; }
 }
 
 html[data-corner="all"]  .c-edge { display: none; }
