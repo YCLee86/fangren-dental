@@ -546,6 +546,22 @@
           ⚠ 原本用 `stroke-dasharray` 排點，**轉角會把相位打亂** ——
             間隔看起來不一致、靠近診所那一段還會像歪掉。這是這輪修掉的兩件。
 
+     ---- 2026-08-14 第二十二輪：淡藍加重 ＋ 入口箭頭 -----------------------
+     使用者：「現在停車場沒有點的時候顏色很淡，在整個地圖辨識度不好。
+     另外每個停車場的入口可以用箭頭標示。」
+
+       ・熄滅時的淡藍 **28% → 45%**（≒ #979ba8）。深藍的 P 對它 4.9:1，
+         仍然過；對路色 --rule 也拉開得夠，遠看就認得出是三塊東西。
+       ・**每塊各加一個入口箭頭**，畫在 `.lot` 群組裡，所以它跟著整塊
+         一起深淺變化（`.lot path` 那條規則同時管 `.c-edge` 與箭頭）。
+         方向：永樂站朝下（從北邊那條平行巷進）、合廷朝西（從永安路進）、
+         壹車房朝北（從中華路進）。
+
+     ⚠⚠ **三個入口的方向是推的，不是查證過的**：永樂站只臨那條巷子，
+       所以確定；合廷取「開在永安路上」（使用者說過）；壹車房取中華路那一側
+       （衛星照上車陣是南北向、南端抵中華路）。**要請使用者確認**，
+       尤其壹車房也可能是從永樂街進出。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -609,12 +625,13 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
      是用 <path> 一個一個畫的。兩案都在標記裡，靠這兩行切。 */
 /* 停車場：平常淺墨，點到（或滑鼠停著）才變成停車場的藍並帶出路線。 */
 .lot { cursor: pointer; }
-/* 熄滅時是**淡一階的同一支藍**（停車場色 28% 混進卡色 ≒ #babcc5），
+/* 熄滅時是**淡一階的同一支藍**（停車場色 45% 混進卡色 ≒ #979ba8；
+   2026-08-14 從 28% 加重，使用者說 28% 那一階「在整個地圖辨識度不好」），
    點到才整塊變成停車場的藍 —— 這樣「亮起來」是同一族的深一階，不是換一個顏色。
    ⚠ **熄滅時的 P 必須是深藍、不能是白的**：白字站在那塊淡藍上只有 1.9:1，
      等於看不見（下限就算按大字算也要 3:1）。深藍站在淡藍上是 6.8:1。
      亮起來之後反過來 —— 深藍底、白 P（13.5:1）。 */
-.lot rect, .lot path { fill: color-mix(in srgb, var(--map-park) 28%, var(--card)); transition: fill .16s ease; }
+.lot rect, .lot path { fill: color-mix(in srgb, var(--map-park) 45%, var(--card)); transition: fill .16s ease; }
 .lot.on rect, .lot.on path { fill: var(--map-park); }
 .map-svg .lot .pk { fill: var(--map-park); transition: fill .16s ease; }
 .map-svg .lot.on .pk { fill: var(--card); }
@@ -859,6 +876,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <title>斗六永樂站停車場・步行 1 分鐘（50 公尺）</title>
           <rect class="c-all"  x="206" y="171" width="58" height="34" rx="4"/>
           <rect class="c-edge" x="206" y="171" width="58" height="34"/>
+          <!-- 入口：從北邊那條平行巷進去（朝下） -->
+          <path class="ent" d="M228 159H242L235 169Z"/>
           <text class="pk pk-s" x="235" y="197" text-anchor="middle">P</text>
         </g>
 
@@ -869,6 +888,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <rect class="c-all"  x="388" y="197" width="67" height="76" rx="4"/>
           <!-- 只有右上角壓在街廓的右上角（永安路 × 14 巷）上 -->
           <path class="c-edge" d="M388 197H451A4 4 0 0 1 455 201V273H388Z"/>
+          <!-- 入口：從永安路進去（朝西） -->
+          <path class="ent" d="M468 228V242L457 235Z"/>
           <text class="pk pk-s" x="421" y="241" text-anchor="middle">P</text>
         </g>
 
@@ -879,6 +900,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           <rect class="c-all"  x="354" y="474" width="48" height="67" rx="4"/>
           <!-- 只有左下角壓在街廓的左下角（永樂街 × 中華路）上 -->
           <path class="c-edge" d="M354 474H402V541H358A4 4 0 0 1 354 537Z"/>
+          <!-- 入口：從中華路進去（朝北） -->
+          <path class="ent" d="M371 557H385L378 547Z"/>
           <text class="pk pk-s" x="378" y="515" text-anchor="middle">P</text>
         </g>
       </g>
@@ -940,7 +963,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     </g>
   </svg>
 
-  <figcaption class="map-note">點停車場看步行距離與時間（Google 地圖的實際值）。街廓與距離大致依實際比例，標記本身放大以便閱讀。停車場全名：斗六永樂站停車場、合廷停車場、壹車房－中華路停車場。</figcaption>
+  <figcaption class="map-note">點停車場看步行距離與時間（Google 地圖的實際值）。箭頭是停車場的入口。街廓與距離大致依實際比例，標記本身放大以便閱讀。停車場全名：斗六永樂站停車場、合廷停車場、壹車房－中華路停車場。</figcaption>
 </figure>
 </template>
 
