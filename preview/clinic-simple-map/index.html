@@ -269,6 +269,21 @@
        停車場三處與診所都跟著自己那條路走，形狀與大小一個沒動。
      ⚠ **文化路往上收 8**（29→21）：中華路往下之後要留得住 46 的路寬。
 
+     ---- 2026-08-14 第四輪：兩處刻意離開實際比例 -------------------------
+     使用者：「大同路和芳仁牙醫中間那塊街區距離縮短一點，永安路和永樂街中間的
+     街區也可以再寬一點。」兩件都是**版面判斷、不是量錯**，所以這一版有兩處
+     刻意偏離實際比例。記在這裡，免得日後有人「照地圖訂正」回去：
+
+       ① **33巷→大同路 95 → 67 個單位**（實際 60 公尺，圖上等於 33 公尺，
+          壓到 56%）。大同路以南整組跟著上移 28、南邊那一段長度沒變：
+          大同路 479→451、無名巷 600→572、中華路 791→763、壹車房 655→627。
+       ② **永樂街→永安路那一格 72 → 92 個單位**（實際 36 公尺，圖上 46 公尺，
+          放大 1.28 倍）。永安路整條往東搬 20，合廷跟著貼上去（388→408）。
+          代價是永安路以東只剩 68 個單位的街廓。
+
+     其餘每一段仍然照實際比例（見上一輪的量測表）。圖說那句
+     「街廓與距離依 Google 地圖的實際比例」因此改成「大致依實際比例」。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -445,10 +460,10 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
       <g fill="var(--map-road)">
         <rect x="92"  y="0"   width="34"  height="840"/><!-- 平和街 -->
         <rect x="320" y="0"   width="38"  height="840"/><!-- 永樂街 -->
-        <rect x="430" y="0"   width="42"  height="840"/><!-- 永安路 -->
+        <rect x="450" y="0"   width="42"  height="840"/><!-- 永安路 -->
         <rect x="-20" y="21"  width="600" height="38"/> <!-- 文化路 -->
-        <rect x="-20" y="479" width="600" height="38"/> <!-- 大同路 -->
-        <rect x="-20" y="791" width="600" height="46"/> <!-- 中華路 -->
+        <rect x="-20" y="451" width="600" height="38"/> <!-- 大同路 -->
+        <rect x="-20" y="763" width="600" height="46"/> <!-- 中華路 -->
         <rect x="126" y="270" width="194" height="17"/> <!-- 平和街19巷 -->
         <!-- 細：和 19 巷平行的隔壁巷（19 巷北邊那一條）。使用者 2026-08-14：
              「永樂站的位置是和平和街19巷平行的隔壁巷」。沒有查到名字，不標。 -->
@@ -458,16 +473,16 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         <rect x="-20" y="372" width="378" height="12"/> <!-- 細：平和街33巷 -->
         <!-- 細：大同路與中華路之間那條巷子。衛星圖上看得到，沒有查到名字，
              所以不標路名。少了它那一格會空掉 210 個單位（實際上約 80 公尺）。 -->
-        <rect x="-20" y="600" width="450" height="12"/>
+        <rect x="-20" y="572" width="470" height="12"/>
       </g>
 
       <!-- 街名。七條裡的六條在這裡（19 巷寫在下面，因為要壓在巷子上）。 -->
       <text class="lbl" x="200" y="49"  text-anchor="middle">文化路</text>
-      <text class="lbl" x="200" y="507" text-anchor="middle">大同路</text>
-      <text class="lbl" x="200" y="823" text-anchor="middle">中華路</text>
+      <text class="lbl" x="200" y="479" text-anchor="middle">大同路</text>
+      <text class="lbl" x="200" y="795" text-anchor="middle">中華路</text>
       <text class="lbl" x="109" y="280" text-anchor="middle"><tspan x="109">平</tspan><tspan x="109" dy="26">和</tspan><tspan x="109" dy="26">街</tspan></text>
       <text class="lbl" x="339" y="280" text-anchor="middle"><tspan x="339">永</tspan><tspan x="339" dy="26">樂</tspan><tspan x="339" dy="26">街</tspan></text>
-      <text class="lbl" x="451" y="112" text-anchor="middle"><tspan x="451">永</tspan><tspan x="451" dy="26">安</tspan><tspan x="451" dy="26">路</tspan></text>
+      <text class="lbl" x="471" y="112" text-anchor="middle"><tspan x="471">永</tspan><tspan x="471" dy="26">安</tspan><tspan x="471" dy="26">路</tspan></text>
       <text class="lbl-s" x="223" y="284" text-anchor="middle">平和街19巷</text>
 
       <!-- 停車場。三處，形狀與大小照使用者 2026-08-14 提供的三張衛星照重畫
@@ -492,14 +507,14 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
 
         <!-- 合廷停車場：**開在永安路上、沒有連到永樂街**（使用者 2026-08-14 指正）。
              所以西邊留一整條建物的空隙，東緣才貼著永安路。 -->
-        <rect x="388" y="212" width="42" height="76" rx="4" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="409" y="256" text-anchor="middle">P</text>
-        <text class="lbl-s" x="409" y="312" text-anchor="middle">合廷</text>
+        <rect x="408" y="212" width="42" height="76" rx="4" fill="var(--map-park)"/>
+        <text class="pk pk-s" x="429" y="256" text-anchor="middle">P</text>
+        <text class="lbl-s" x="429" y="312" text-anchor="middle">合廷</text>
 
         <!-- 壹車房－中華路停車場：貼著永樂街東側的長條，南端抵中華路 -->
-        <rect x="360" y="655" width="48" height="136" rx="4" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="384" y="732" text-anchor="middle">P</text>
-        <text class="lbl-s" x="418" y="730">壹車房</text>
+        <rect x="360" y="627" width="48" height="136" rx="4" fill="var(--map-park)"/>
+        <text class="pk pk-s" x="384" y="704" text-anchor="middle">P</text>
+        <text class="lbl-s" x="418" y="702">壹車房</text>
       </g>
 
       <!-- 診所。**貼在永樂街與平和街19巷交會的那一角，橫的長方形**
@@ -531,7 +546,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     </g>
   </svg>
 
-  <figcaption class="map-note">街廓與距離依 Google 地圖的實際比例，標記本身放大以便閱讀。停車場全名：斗六永樂站停車場、合廷停車場、壹車房－中華路停車場。</figcaption>
+  <figcaption class="map-note">街廓與距離大致依 Google 地圖的實際比例，標記本身放大以便閱讀。停車場全名：斗六永樂站停車場、合廷停車場、壹車房－中華路停車場。</figcaption>
 </figure>
 </template>
 
