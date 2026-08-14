@@ -531,6 +531,21 @@
      ⚠ 牌子的位置是「先擺文字、再由 getBBox 長出矩形與尾巴」，所以要挪牌子
        就改 `<text>` 的 x/y，不要去改矩形 —— 矩形每次開頁都會被重算覆蓋。
 
+     ---- 2026-08-14 第二十一輪：停車場改淡藍、圓點改等距 --------------------
+     使用者：「綠色的診所在灰線灰房子中已經很明顯，所以停車場的區塊應該改成
+     有點淺淺的藍，P 字用白色或是深藍，這樣點下去變成深藍時才不會太突兀。」
+     ＋「虛線的間隔有點不一致，而且虛線到診所門口的線歪歪斜斜的。」
+
+       ① **停車場熄滅時＝停車場藍 28% 混進卡色**（≒ #babcc5），
+          點到才整塊變成 --map-park。同一支藍的深淺兩階，不是換色。
+          ⚠ **熄滅時那顆 P 一定是深藍、不能白**：白字站在淡藍上只有 1.9:1
+            （就算按大字算，下限也要 3:1）。深藍站在淡藍上 6.8:1、
+            亮起來之後白字站在深藍上 13.5:1，兩態都過。
+       ② **圓點改成 JS 沿著路徑等距排**（總長 ÷ 顆數，起訖各落一顆），
+          `.route` 只留幾何、不再畫線。
+          ⚠ 原本用 `stroke-dasharray` 排點，**轉角會把相位打亂** ——
+            間隔看起來不一致、靠近診所那一段還會像歪掉。這是這輪修掉的兩件。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -594,19 +609,25 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
      是用 <path> 一個一個畫的。兩案都在標記裡，靠這兩行切。 */
 /* 停車場：平常淺墨，點到（或滑鼠停著）才變成停車場的藍並帶出路線。 */
 .lot { cursor: pointer; }
-/* 熄滅時的淺墨：柔墨 75% 混進卡色。白色的 P 對它約 4.2:1 —— P 是
-   30px 的粗體（大字），下限 3:1，過。再淺就會撐不住那顆 P。 */
-.lot rect, .lot path { fill: color-mix(in srgb, var(--ink-soft) 75%, var(--card)); transition: fill .16s ease; }
+/* 熄滅時是**淡一階的同一支藍**（停車場色 28% 混進卡色 ≒ #babcc5），
+   點到才整塊變成停車場的藍 —— 這樣「亮起來」是同一族的深一階，不是換一個顏色。
+   ⚠ **熄滅時的 P 必須是深藍、不能是白的**：白字站在那塊淡藍上只有 1.9:1，
+     等於看不見（下限就算按大字算也要 3:1）。深藍站在淡藍上是 6.8:1。
+     亮起來之後反過來 —— 深藍底、白 P（13.5:1）。 */
+.lot rect, .lot path { fill: color-mix(in srgb, var(--map-park) 28%, var(--card)); transition: fill .16s ease; }
 .lot.on rect, .lot.on path { fill: var(--map-park); }
+.map-svg .lot .pk { fill: var(--map-park); transition: fill .16s ease; }
+.map-svg .lot.on .pk { fill: var(--card); }
 .lot:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 /* 步行路線：Google 那種點狀線。dasharray 的 0.1 ＋ round 端點 ＝ 圓點。 */
-.route {
-  fill: none; stroke: var(--map-park); stroke-width: 7;
-  stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 0 14;
-  opacity: 0; transition: opacity .18s ease;
-}
+/* ⚠ 路線**不畫線**，它只是「幾何來源」：底下的 JS 沿著它等距排圓點。
+   原本用 stroke-dasharray 排點，轉角會把相位打亂，看起來就是間隔不一致、
+   靠近診所那一段還會像歪掉（2026-08-14 使用者指出兩次）。 */
+.route { fill: none; stroke: none; }
+.dots { opacity: 0; transition: opacity .18s ease; }
+.dots circle { fill: var(--map-park); }
 .rlab { opacity: 0; transition: opacity .18s ease; }
-.route.on, .rlab.on { opacity: 1; }
+.dots.on, .rlab.on { opacity: 1; }
 .map-svg .rlab rect, .map-svg .rlab .tail { fill: var(--map-park); }
 /* ⚠ 這一條要寫成 .map-svg .rlab text（多一階）—— 只寫 .rlab text 的話
    和後面的 `.map-svg text { fill: var(--map-ink) }` 同權重，後者排在後面會贏，
@@ -618,7 +639,7 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
 .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: opacity .18s ease; }
 .map-svg.dim .lbl, .map-svg.dim .lbl-s, .map-svg.dim .lbl-xs { opacity: .28; }
 @media (prefers-reduced-motion: reduce) {
-  .lot rect, .lot path, .route, .rlab, .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: none; }
+  .lot rect, .lot path, .lot .pk, .dots, .rlab, .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: none; }
 }
 
 html[data-corner="all"]  .c-edge { display: none; }
@@ -870,6 +891,9 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         <path class="route" data-lot="a" d="M235 165L339 165L339 261L324 261"/>
         <path class="route" data-lot="b" d="M410 188L339 188L339 261L324 261"/>
         <path class="route" data-lot="c" d="M354 507L339 507L339 261L324 261"/>
+        <g class="dots" data-lot="a"></g>
+        <g class="dots" data-lot="b"></g>
+        <g class="dots" data-lot="c"></g>
 
         <!-- 三塊牌子。⚠ 矩形與小尾巴的座標**是開頁時用 getBBox() 現量出來的**
              （見下面的 JS）—— 寫死寬度會被字級、字型、系統設定改掉，
@@ -1018,6 +1042,27 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
   // 桌機另外吃 hover（預覽），滑開就回到「釘住」的那一個。
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var pinned = null, hovered = null;
+  // 步行路線的圓點：沿著 .route 的幾何**等距**排。
+  // ⚠ 間距是「總長 ÷ 四捨五入後的顆數」，所以每一條的間隔自己會是均勻的，
+  //   起點與終點都剛好落一顆 —— 用 stroke-dasharray 做不到這件事（轉角會跳相位）。
+  function buildDots() {
+    fig.querySelectorAll('.route').forEach(function (path) {
+      var g = fig.querySelector('.dots[data-lot="' + path.dataset.lot + '"]');
+      if (!g) return;
+      while (g.firstChild) g.removeChild(g.firstChild);
+      var L = path.getTotalLength(), n = Math.max(2, Math.round(L / 14));
+      for (var i = 0; i <= n; i++) {
+        var pt = path.getPointAtLength(L * i / n);
+        var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c.setAttribute('cx', pt.x.toFixed(2));
+        c.setAttribute('cy', pt.y.toFixed(2));
+        c.setAttribute('r', '3.5');
+        g.appendChild(c);
+      }
+    });
+  }
+  buildDots();
+
   // 牌子的矩形與尾巴：用文字的實際外框現量（字級、字型、系統縮放都吃得到）
   function sizeLabels() {
     fig.querySelectorAll('.rlab').forEach(function (g) {
@@ -1050,7 +1095,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
       g.classList.toggle('on', on);
       g.setAttribute('aria-pressed', String(g.dataset.lot === pinned));
     });
-    fig.querySelectorAll('.route, .rlab').forEach(function (el) {
+    fig.querySelectorAll('.dots, .rlab').forEach(function (el) {
       el.classList.toggle('on', el.dataset.lot === id);
     });
   }
