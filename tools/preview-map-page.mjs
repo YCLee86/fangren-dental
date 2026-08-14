@@ -96,16 +96,33 @@ src = src.replace(/<title>[^<]*<\/title>/, '<title>提案：位置與周邊停�
 // 6) 地圖的 CSS 接在既有樣式表後面
 src = src.replace('</head>', '<style>\n/* ==== 位置與周邊停車（提案）==== */\n' + mapCss + '\n</style>\n</head>');
 
-// 7) 卡片插進「診所資訊」那一格的最後
+// 7) 診所資訊改成兩張卡：地圖擺第一張，門診表接在後面。
+//
+// ⚠ **地址與電話那兩張卡整個拿掉**（2026-08-14 使用者：「地址電話感覺可以拿掉，
+//   把位置與周邊停車移到第一個」）。兩件事先確認過才敢動：
+//     ・**JSON-LD 不受影響** —— tools/schema.mjs 的地址與電話是讀 clinic.json，
+//       不是從這兩張卡爬的（只有營業時間是爬門診表那張卡）。
+//     ・**頁面上仍然找得到** —— HERO 窄帶有一行「地址・電話」，頁尾也有一組
+//       （都連到同一個 Google 地圖網址與 tel:）。所以拿掉的是第三份。
+//   ⚠ 「在 Google 地圖開啟」那個連結只有這張卡有 —— 但頁尾的地址本身就是
+//     同一條連結，沒有真的少掉入口。
+const dropCard = (t) => {
+  const re = new RegExp('\\n\\s*<div class="info-card">\\s*<h3>' + t + '</h3>[\\s\\S]*?</div>');
+  if (!re.test(src)) throw new Error('找不到「' + t + '」那張卡');
+  src = src.replace(re, '');
+};
+dropCard('地址');
+dropCard('電話');
+
 const card = `
         <!-- 位置與周邊停車。⚠ 提案中，推導在 /preview/clinic-simple-map/ -->
-        <div class="info-card card-map" data-hue="taupe">
+        <div class="info-card card-map">
           <h3>位置與周邊停車</h3>
 ${svg.split('\n').map(l => l ? '          ' + l : l).join('\n')}
         </div>
 `;
-const anchor = '        <p class="info-note">國定假日與各科特別門診請來電確認。</p>\n        </div>\n';
-if (src.indexOf(anchor) < 0) throw new Error('找不到門診表那張卡的結尾');
+const anchor = '      <div class="info">\n';
+if (src.indexOf(anchor) < 0) throw new Error('找不到 .info 那一格');
 src = src.replace(anchor, anchor + card);
 
 // 8) JS 放在**最後一個** </body> 前面（⚠ 註解裡也有一個 </body>，一定要用 lastIndexOf）

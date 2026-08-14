@@ -3262,100 +3262,9 @@ html[data-mark="bean"] .mark-plot, html[data-mark="bean"] .mark-logo { display: 
         <h2>診所資訊</h2>
       </div>
       <div class="info">
-        <div class="info-card">
-          <h3>地址</h3>
-          <p>雲林縣斗六市永樂街 70 號<br>
-             <a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">在 Google 地圖開啟</a></p>
-        </div>
-        <div class="info-card">
-          <h3>電話</h3>
-          <p class="big"><a href="tel:+88655339369"><data value="05-533-9369">(05)5339-369</data></a></p>
-        </div>
-        <!-- Deep Taupe 只出現在這一張（單椅布料的色），底下那行休診是全頁唯一的磚紅
-
-             2026-08-12：這張卡從四行文字（週一至週五＋三個時段）換成門診表。
-             來源是診所門口那面磁鐵門診表的照片，推導與落選案在
-             /history/clinic-schedule.html。
-
-             ⚠ **表格是靜態 HTML，不要改成 JS 產生。** 理由和 CLAUDE.md 第一條
-               （首頁文章列表）完全相同：看診時間是這一站最關鍵的一項事實，
-               爬蟲與沒有 JS 的瀏覽器都必須看得到。JS 只做「點某一科就套色」，
-               關掉 JS 之後整張表仍然完整，只是點不動。
-             ⚠ **這張卡是 tools/schema.mjs 讀營業時間的唯一來源**，動它之前先看那支：
-               ・開診日讀 <th scope="col"> 那幾個「一二三四五」
-               ・三個時段讀 <th scope="row"> 裡的時間（一般的 – 是 U+2013）
-               ・休診日 ＝ thead 沒有列出來的那幾天（反推，不是讀文字）——
-                 「週六、週日休診」那句話 2026-08-13 由使用者拿掉了
-               所以**不要把 div 的 class 從 "info-card" 改掉**（那支的正規式比對
-               的是 class="info-card" 這個完整字串），也不要把日子或時間搬進註解裡。
-             ⚠ 一格一顆點 ＝ 那一節有診，不是一科一顆。data-in 列出那一節有哪幾科，
-               點上面的標記才會套色。這是使用者定的（「點太多，每個門診一個點就好」）。
-             ⚠ 第一顆標記叫「開診時段」不是「全部」（使用者指定）。
-               首頁上面「主題與科別」那排仍然是「全部」，兩者刻意不同，不要順手統一。 -->
-        <div class="info-card" data-hue="taupe">
-          <!-- ⚠ 這個 h3 畫面上看不到（.hours-title 把它移出視窗），但**不要刪掉**：
-                 ・tools/schema.mjs 是靠 <h3>看診時間</h3> 找到這張卡的，
-                   刪了營業時間會整段從 JSON-LD 消失，而且只會印一行警告。
-                 ・另外兩張卡（地址、電話）都有標題，螢幕閱讀器需要這一個。
-               使用者 2026-08-13 要求畫面上拿掉，理由是底下「開診時段」那顆
-               已經在講同一件事。 -->
-          <h3 class="hours-title">看診時間</h3>
-
-          <!-- 「開診時段」自己一排，和七個科別分開（使用者指定）——
-               它是「不篩選」，和底下那七顆不是同一層的東西。 -->
-          <ul class="hours-filter hours-filter-top">
-            <li><button type="button" data-spec="all"     aria-pressed="true">開診時段</button></li>
-          </ul>
-
-          <!-- 同上，這一排也會橫捲。⚠ 只包這一排，不包上面那顆「開診時段」——
-               它只有一顆，收成橫捲沒有意義，而且它刻意自己一排（那是「不篩選」）。 -->
-          <span class="swrap">
-          <ul class="hours-filter">
-            <li><button type="button" data-spec="general" aria-pressed="false">一般牙科</button></li>
-            <li><button type="button" data-spec="perio"   aria-pressed="false">牙周治療</button></li>
-            <li><button type="button" data-spec="endo"    aria-pressed="false">顯微根管</button></li>
-            <li><button type="button" data-spec="kids"    aria-pressed="false">兒童牙科</button></li>
-            <li><button type="button" data-spec="ortho"   aria-pressed="false">齒顎矯正</button></li>
-            <li><button type="button" data-spec="prosth"  aria-pressed="false">植牙・假牙重建</button></li>
-            <li><button type="button" data-spec="surg"    aria-pressed="false">口腔外科</button></li>
-          </ul>
-          </span>
-
-          <table class="hours-grid">
-            <caption>一週各時段的門診，以及每一節有哪些科別</caption>
-            <colgroup><col class="lab"><col span="5"></colgroup>
-            <thead>
-              <tr><td></td>
-                  <th scope="col">一</th><th scope="col">二</th><th scope="col">三</th>
-                  <th scope="col">四</th><th scope="col">五</th></tr>
-            </thead>
-            <tbody>
-              <tr><th scope="row"><b>早</b>08:45–11:30</th>
-                  <td><span class="d" data-in="general"></span></td>
-                  <td><span class="d" data-in="general"></span></td>
-                  <td><span class="d" data-in="general endo"></span></td>
-                  <td><span class="d" data-in="general perio"></span></td>
-                  <td><span class="d" data-in="general prosth"></span></td></tr>
-              <tr><th scope="row"><b>午</b>13:45–16:30</th>
-                  <td><span class="d" data-in="general"></span></td>
-                  <td><span class="d" data-in="general kids"></span></td>
-                  <td><span class="d" data-in="general kids prosth endo"></span></td>
-                  <td><span class="d" data-in="surg kids"></span></td>
-                  <td><span class="d" data-in="general prosth perio"></span></td></tr>
-              <tr><th scope="row"><b>晚</b>17:45–20:00</th>
-                  <td><span class="d" data-in="general"></span></td>
-                  <td><span class="d" data-in="ortho kids perio"></span></td>
-                  <td><span class="d" data-in="general ortho kids endo"></span></td>
-                  <td><span class="d" data-in="surg kids perio"></span></td>
-                  <td><span class="d" data-in="general ortho perio"></span></td></tr>
-            </tbody>
-          </table>
-
-          <p class="info-note">國定假日與各科特別門診請來電確認。</p>
-        </div>
 
         <!-- 位置與周邊停車。⚠ 提案中，推導在 /preview/clinic-simple-map/ -->
-        <div class="info-card card-map" data-hue="taupe">
+        <div class="info-card card-map">
           <h3>位置與周邊停車</h3>
           <figure class="map-fig">
             <svg class="map-svg" viewBox="0 0 560 620" role="img" aria-labelledby="mt md">
@@ -3646,6 +3555,88 @@ html[data-mark="bean"] .mark-plot, html[data-mark="bean"] .mark-logo { display: 
                  要加回去先問他。 -->
             <figcaption class="map-note"><span class="mn-first">周邊路段另有畫設之路邊停車格</span>停車計價方式依各業者現場標示為準</figcaption>
           </figure>
+        </div>
+        <!-- Deep Taupe 只出現在這一張（單椅布料的色），底下那行休診是全頁唯一的磚紅
+
+             2026-08-12：這張卡從四行文字（週一至週五＋三個時段）換成門診表。
+             來源是診所門口那面磁鐵門診表的照片，推導與落選案在
+             /history/clinic-schedule.html。
+
+             ⚠ **表格是靜態 HTML，不要改成 JS 產生。** 理由和 CLAUDE.md 第一條
+               （首頁文章列表）完全相同：看診時間是這一站最關鍵的一項事實，
+               爬蟲與沒有 JS 的瀏覽器都必須看得到。JS 只做「點某一科就套色」，
+               關掉 JS 之後整張表仍然完整，只是點不動。
+             ⚠ **這張卡是 tools/schema.mjs 讀營業時間的唯一來源**，動它之前先看那支：
+               ・開診日讀 <th scope="col"> 那幾個「一二三四五」
+               ・三個時段讀 <th scope="row"> 裡的時間（一般的 – 是 U+2013）
+               ・休診日 ＝ thead 沒有列出來的那幾天（反推，不是讀文字）——
+                 「週六、週日休診」那句話 2026-08-13 由使用者拿掉了
+               所以**不要把 div 的 class 從 "info-card" 改掉**（那支的正規式比對
+               的是 class="info-card" 這個完整字串），也不要把日子或時間搬進註解裡。
+             ⚠ 一格一顆點 ＝ 那一節有診，不是一科一顆。data-in 列出那一節有哪幾科，
+               點上面的標記才會套色。這是使用者定的（「點太多，每個門診一個點就好」）。
+             ⚠ 第一顆標記叫「開診時段」不是「全部」（使用者指定）。
+               首頁上面「主題與科別」那排仍然是「全部」，兩者刻意不同，不要順手統一。 -->
+        <div class="info-card" data-hue="taupe">
+          <!-- ⚠ 這個 h3 畫面上看不到（.hours-title 把它移出視窗），但**不要刪掉**：
+                 ・tools/schema.mjs 是靠 <h3>看診時間</h3> 找到這張卡的，
+                   刪了營業時間會整段從 JSON-LD 消失，而且只會印一行警告。
+                 ・另外兩張卡（地址、電話）都有標題，螢幕閱讀器需要這一個。
+               使用者 2026-08-13 要求畫面上拿掉，理由是底下「開診時段」那顆
+               已經在講同一件事。 -->
+          <h3 class="hours-title">看診時間</h3>
+
+          <!-- 「開診時段」自己一排，和七個科別分開（使用者指定）——
+               它是「不篩選」，和底下那七顆不是同一層的東西。 -->
+          <ul class="hours-filter hours-filter-top">
+            <li><button type="button" data-spec="all"     aria-pressed="true">開診時段</button></li>
+          </ul>
+
+          <!-- 同上，這一排也會橫捲。⚠ 只包這一排，不包上面那顆「開診時段」——
+               它只有一顆，收成橫捲沒有意義，而且它刻意自己一排（那是「不篩選」）。 -->
+          <span class="swrap">
+          <ul class="hours-filter">
+            <li><button type="button" data-spec="general" aria-pressed="false">一般牙科</button></li>
+            <li><button type="button" data-spec="perio"   aria-pressed="false">牙周治療</button></li>
+            <li><button type="button" data-spec="endo"    aria-pressed="false">顯微根管</button></li>
+            <li><button type="button" data-spec="kids"    aria-pressed="false">兒童牙科</button></li>
+            <li><button type="button" data-spec="ortho"   aria-pressed="false">齒顎矯正</button></li>
+            <li><button type="button" data-spec="prosth"  aria-pressed="false">植牙・假牙重建</button></li>
+            <li><button type="button" data-spec="surg"    aria-pressed="false">口腔外科</button></li>
+          </ul>
+          </span>
+
+          <table class="hours-grid">
+            <caption>一週各時段的門診，以及每一節有哪些科別</caption>
+            <colgroup><col class="lab"><col span="5"></colgroup>
+            <thead>
+              <tr><td></td>
+                  <th scope="col">一</th><th scope="col">二</th><th scope="col">三</th>
+                  <th scope="col">四</th><th scope="col">五</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row"><b>早</b>08:45–11:30</th>
+                  <td><span class="d" data-in="general"></span></td>
+                  <td><span class="d" data-in="general"></span></td>
+                  <td><span class="d" data-in="general endo"></span></td>
+                  <td><span class="d" data-in="general perio"></span></td>
+                  <td><span class="d" data-in="general prosth"></span></td></tr>
+              <tr><th scope="row"><b>午</b>13:45–16:30</th>
+                  <td><span class="d" data-in="general"></span></td>
+                  <td><span class="d" data-in="general kids"></span></td>
+                  <td><span class="d" data-in="general kids prosth endo"></span></td>
+                  <td><span class="d" data-in="surg kids"></span></td>
+                  <td><span class="d" data-in="general prosth perio"></span></td></tr>
+              <tr><th scope="row"><b>晚</b>17:45–20:00</th>
+                  <td><span class="d" data-in="general"></span></td>
+                  <td><span class="d" data-in="ortho kids perio"></span></td>
+                  <td><span class="d" data-in="general ortho kids endo"></span></td>
+                  <td><span class="d" data-in="surg kids perio"></span></td>
+                  <td><span class="d" data-in="general ortho perio"></span></td></tr>
+            </tbody>
+          </table>
+
+          <p class="info-note">國定假日與各科特別門診請來電確認。</p>
         </div>
       </div>
       <div class="gallery">
