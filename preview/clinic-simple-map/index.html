@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW" data-pos="card" data-style="plate" data-shape="round" data-mark="plot" data-hue="brick" data-txt="soft" data-block="warm" data-park="tile" data-key="on">
+<html lang="zh-Hant-TW" data-pos="card" data-style="plate" data-shape="round" data-mark="plot" data-hue="brick" data-txt="soft" data-corner="all" data-block="warm" data-park="tile" data-key="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -374,6 +374,22 @@
      ⚠ 街廓要往框外多留一點（西邊 -20、東邊 580、上下同理），
        不然圓角會在畫面最邊緣露出一小塊底色。
 
+     ---- 2026-08-14 第十輪：停車場與診所也導角，兩案 ----------------------
+     使用者：「停車場和診所的色塊也要跟街區一樣導角，做兩個版本：一個是四個角
+     都導，另一個是只有壓到街區邊圓角的地方導角，其他不用。」
+
+       all  四個角都導（rx=6，和街廓同一個值）
+       edge **只導那些「剛好坐在街廓圓角上」的角**，其餘維持直角：
+              診所      右上（永樂街 × 19 巷）
+              合廷      右上（永安路 × 14 巷）
+              壹車房    左下（永樂街 × 中華路）
+              斗六永樂站 **一個都不導** —— 它只貼著巷子，左右都在街廓中間
+
+     ⚠ SVG 的 `<rect rx>` 只能四角一起導，所以 edge 那一案是用 `<path>`
+       一個一個畫的（直線 ＋ 一段 6 半徑的圓弧）。兩案都寫在標記裡，
+       靠 `.c-all` / `.c-edge` 兩行 CSS 切換。**定案後把沒選上的那一組刪掉。**
+     ⚠ 圓標誌與豆子那兩案沒有角，不受影響。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -425,6 +441,12 @@ html[data-txt="soft"]   { --map-ink: var(--ink);      --lbl-op: 1; }
 html[data-txt="soft"]  { --map-ink: var(--ink-soft); --lbl-op: 1; }
 html[data-txt="fade"]  { --map-ink: var(--ink);      --lbl-op: .45; }
 html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
+
+/* 停車場與診所那幾塊要不要導角、導幾個（2026-08-14 使用者要兩案比一比）。
+   ⚠ SVG 的 <rect rx> 沒辦法只導某一角，所以「只導壓到街廓角的」那一案
+     是用 <path> 一個一個畫的。兩案都在標記裡，靠這兩行切。 */
+html[data-corner="all"]  .c-edge { display: none; }
+html[data-corner="edge"] .c-all  { display: none; }
 
 html[data-mark="plot"] .mark-logo, html[data-mark="plot"] .mark-bean { display: none; }
 html[data-mark="logo"] .mark-plot, html[data-mark="logo"] .mark-bean { display: none; }
@@ -613,16 +635,23 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
            ⚠ **壹車房的高度 ＝ 它那一格的 2/3**（格高 100 → 67）。
              上一版 80 ≒ 5/6，使用者指出太長。 -->
       <g class="map-park">
-        <!-- 斗六永樂站停車場：**19 巷北邊那條平行巷的南側**（比上一版往南一格） -->
-        <rect x="206" y="171" width="58" height="34" fill="var(--map-park)"/>
+        <!-- 斗六永樂站停車場：19 巷北邊那條平行巷的南側。
+             ⚠ 它只貼著巷子、左右都在街廓中間，所以「只導壓到街廓角的」那一案
+               **一個角都不導**（下面那個 .c-edge 就是原本的直角矩形）。 -->
+        <rect class="c-all"  x="206" y="171" width="58" height="34" rx="6" fill="var(--map-park)"/>
+        <rect class="c-edge" x="206" y="171" width="58" height="34" fill="var(--map-park)"/>
         <text class="pk pk-s" x="235" y="197" text-anchor="middle">P</text>
 
         <!-- 合廷停車場：永安路上，北緣貼著 14 巷 -->
-        <rect x="388" y="155" width="67" height="76" fill="var(--map-park)"/>
+        <rect class="c-all"  x="388" y="155" width="67" height="76" rx="6" fill="var(--map-park)"/>
+        <!-- 只有右上角壓在街廓的右上角（永安路 × 14 巷）上 -->
+        <path class="c-edge" d="M388 155H449A6 6 0 0 1 455 161V231H388Z" fill="var(--map-park)"/>
         <text class="pk pk-s" x="421" y="199" text-anchor="middle">P</text>
 
         <!-- 壹車房－中華路停車場：中華路與永樂街的那一角 -->
-        <rect x="354" y="474" width="48" height="67" fill="var(--map-park)"/>
+        <rect class="c-all"  x="354" y="474" width="48" height="67" rx="6" fill="var(--map-park)"/>
+        <!-- 只有左下角壓在街廓的左下角（永樂街 × 中華路）上 -->
+        <path class="c-edge" d="M354 474H402V541H360A6 6 0 0 1 354 535Z" fill="var(--map-park)"/>
         <text class="pk pk-s" x="378" y="515" text-anchor="middle">P</text>
       </g>
 
@@ -630,7 +659,9 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
            名字同樣由使用者指定先拿掉。
            三案（data-mark）：plot 面／logo 圓標誌／bean 設計稿的豆子。 -->
       <g class="mark-plot">
-        <rect x="228" y="236" width="96" height="40" fill="var(--map-mark)"/>
+        <rect class="c-all"  x="228" y="236" width="96" height="40" rx="6" fill="var(--map-mark)"/>
+        <!-- 只有右上角壓在街廓的右上角（永樂街 × 19 巷）上 -->
+        <path class="c-edge" d="M228 236H318A6 6 0 0 1 324 242V276H228Z" fill="var(--map-mark)"/>
         <g transform="translate(249.4 242.9) scale(1.2) translate(-232.8729 -333.8286)">
           <path fill="var(--card)" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
         </g>
@@ -680,6 +711,10 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     <button data-k="hue" data-v="teal">深綠松</button>
     <button data-k="hue" data-v="moss">苔綠</button>
   </div>
+  <div><b>導角</b>
+    <button data-k="corner" data-v="all">四角都導</button>
+    <button data-k="corner" data-v="edge">只導壓到街區角的</button>
+  </div>
   <div><b>街名</b>
     <button data-k="txt" data-v="soft">柔墨（定）</button>
     <button data-k="txt" data-v="ink">墨色</button>
@@ -708,6 +743,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     mark:  ['plot', 'logo', 'bean'],
     hue:   ['brick', 'teal', 'moss'],
     txt:   ['soft', 'ink', 'fade', 'white'],
+    corner: ['all', 'edge'],
     block: ['warm', 'cool', 'deep'],
     park:  ['tile', 'ortho', 'ink', 'off']
   };
