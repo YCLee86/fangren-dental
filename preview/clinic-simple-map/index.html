@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW" data-pos="card" data-style="line" data-shape="round" data-mark="plot" data-hue="green" data-txt="soft" data-corner="edge" data-block="warm" data-park="tile" data-key="on">
+<html lang="zh-Hant-TW" data-pos="card" data-style="line" data-shape="round" data-mark="plot" data-hue="green" data-txt="soft" data-corner="edge" data-block="warm" data-park="sign" data-key="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -634,10 +634,35 @@
          剛好過大字粗體的 3:1。再往上混（更淺）就破線。
        ⚠ **代價：越淺，「點下去」的落差越小**（2.31 → 1.49）。
          矯正藍那一端幾乎看不出點到沒點，實務上不建議。
-       ⚠ 「柔墨」那一案拿掉了 —— 熄滅態現在是從主色推出來的，不需要另一族的灰。
+       ⚠ 「柔墨」那一案這一輪拿掉了 —— 熄滅態是從主色推出來的，不需要另一族的灰。
+         **下一輪又把它請回來了，見第二十八輪。**
 
-     ⚠⚠ **這三顆中間色不在 PALETTE.md 裡**。定案之後要把選上的那一顆寫進
-       第六節（連同 76% 這個熄滅比例與上面這張表），不要只留在這一頁。
+     ---- 2026-08-14 第二十八輪：藍只給「點到」那一態 -------------------------
+     使用者：「路牌藍好，但只有點到的才要變色，其他不用。」
+
+       定案 **路牌藍 `#365685`**（L* 36.2）。落選的四顆見上表。
+       同時**熄滅態整個換掉**：不再是淡一階的藍，改回 **柔墨 `--ink-soft`
+       `#5c5f57`**（L* 39.8），`--park-soft` 這個變數一起刪掉。
+
+       　　　　　　　　      L*     白 P    對路面／街廓   兩態對比
+       熄滅  柔墨 #5c5f57   39.8   6.50    4.20           1.14
+       點到  路牌藍 #365685 36.2   7.43    4.79
+
+       ・**藍是「點到」的意思，不是「停車場」的意思。** 三塊平常都上藍的話，
+         藍就只剩深淺兩階可以表達點沒點到 —— 那正是上一輪量到的死路
+         （越淺落差越小，2.31 → 1.49）。現在點下去是**換色相**（灰 → 藍），
+         完全不必靠亮度，所以路牌藍再淺也不影響辨識。
+       ・**兩態亮度幾乎一樣**（39.8 vs 36.2，對比 1.14），整塊不會忽明忽暗地跳，
+         只有顏色變。這是刻意的。
+       ⚠ 這**不是**退回 2026-08-14 那個「顏色很淡、辨識度不好」的版本 ——
+         那一版是 28% 的淡藍（對路面只有 1.5:1）。柔墨足額對路面是 4.20:1。
+       ⚠ **P 兩態都是白的**（柔墨上 6.50、路牌藍上 7.43），不必再像淡藍那一版
+         熄滅時翻成深藍。入口箭頭同理，跟著整塊換色。
+       ⚠ 柔墨同時也是街名的顏色（`data-txt="soft"`）。**不衝突** ——
+         街名是細長的字、停車場是實心的塊，而且點到之後街名還會再淡下去。
+
+     ⚠⚠ **路牌藍 `#365685` 不在 PALETTE.md 裡**。定案之後要寫進第六節
+       （連同「藍只給點到那一態、平常是柔墨」這條規則與上面兩張表）。
 
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
@@ -667,10 +692,7 @@
   --map-road:  var(--card);
   --map-ink:   var(--ink);
   --map-mark:  var(--teal);
-  --map-park:  var(--tile);
-  /* 熄滅態＝主色混這麼多、其餘補卡色。五個候選共用同一個值，
-     熄滅態才會跟著純色一起排成階梯（見上面第二十七輪那段） */
-  --park-soft: 76%;
+  --map-park:  #365685;   /* 路牌藍。⚠ 只用在「點到」那一態，見第二十八輪 */
 }
 /* 兩種畫法 ＝ 底與路互換 */
 html[data-style="plate"] { --map-bg: var(--map-block); --map-road: var(--card); }
@@ -688,27 +710,12 @@ html[data-hue="green"]  { --map-mark: #3f654a; }
 html[data-hue="brick"]  { --map-mark: var(--brick); }
 html[data-hue="teal"]   { --map-mark: var(--teal); }
 html[data-hue="moss"]   { --map-mark: var(--moss); }
-/* 停車場的藍：地磚深藍 ↔ 矯正藍之間的階梯（2026-08-14 使用者：
-   「一個太深一個太淺，和一般停車場的藍都蠻有落差」）。
-   中間三顆是兩端點的線性混色，**不是新挑的顏色**。
-   ⚠⚠ **五顆共用同一個 `--park-soft: 76%`，不要各給各的。**
-     第一版每顆自己帶一個（62/70/76/80/88%），用意是把熄滅態的白 P 對比
-     都拉到 4.3~4.8。結果是**五顆熄滅起來長得幾乎一模一樣**
-     （L star 依序 50.8／49.4／48.3／48.9／55.2），中藍和路牌藍在螢幕上
-     根本分不出來 —— 而地圖上絕大多數時間看到的正是熄滅態，
-     等於這一輪要挑的東西被自己抹平了。改成同一個混色比例之後，
-     熄滅態才跟著純色一起排成階梯：L star 39.6／45.1／48.2／51.4／61.0。
-   ⚠ 76% 是白 P 撐得住的上限那一側：熄滅態白 P 對比依序
-     5.86／4.86／4.36／3.92／3.08，最淺的矯正藍剛好過大字粗體的 3:1。
-     再往上混（更淺）矯正藍那一顆就破線。
-   ⚠ **越淺，「亮起來」的落差越小**：兩態對比 2.31／2.13／2.01／1.90／1.49。
-     矯正藍那一端幾乎看不出點到沒點 —— 這是選淺色要付的代價。 */
-html[data-park="tile"]  { --map-park: var(--tile); }  /* 地磚深藍 L* 19.1 */
-html[data-park="navy2"] { --map-park: #2d4065; }      /* L* 27.2 */
-html[data-park="mid"]   { --map-park: #314b75; }      /* L* 31.7 */
-html[data-park="sign"]  { --map-park: #365685; }      /* L* 36.2 —— 最接近路牌藍 #0058a8 的 37.5 */
-html[data-park="ortho"] { --map-park: #4478b5; }      /* 齒顎矯正的套色 L* 49.5 */
-html[data-park="off"]   .map-park { display: none; }
+/* 停車場的藍 ＝ **路牌藍 `#365685`**（2026-08-14 使用者從五階裡挑的，見上面第
+   二十七、二十八輪）。L* 36.2，亮度最接近台灣路牌的 #0058a8（37.5）。
+   落選：地磚深藍 #252d4a（太深）、深藍二 #2d4065、中藍 #314b75、
+        矯正藍 #4478b5（太淺，而且點到看不出來）。
+   ⚠ 它**只出現在「點到」那一態**，平常那三塊是柔墨，見下面 `.lot` 那一段。 */
+html[data-park="off"] .map-park { display: none; }
 /* 三案二不顯示。⚠ 預設是 plot（面），和停車場同一種語彙 */
 /* 街名的四種輕重（2026-08-14 使用者要求做出來比一比）。
    ⚠ 只作用在**街名**（.lbl／.lbl-s），停車場那三個 P 一律維持白字站在深藍上。 */
@@ -722,16 +729,18 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
      是用 <path> 一個一個畫的。兩案都在標記裡，靠這兩行切。 */
 /* 停車場：平常淺墨，點到（或滑鼠停著）才變成停車場的藍並帶出路線。 */
 .lot { cursor: pointer; }
-/* 熄滅時是**淡一階的同一支藍**（停車場色 62% 混進卡色 ≒ #74798b）。
-   兩次加重都是使用者要的：28%→45%（「辨識度不好」）→62%（要白色反白的 P）。
-   ⚠ 62% 是**白 P 與「亮起來看得出來」之間的平衡點**：
-     白字對它 4.33:1（過），而它對點亮的深藍還有 3.12:1 的落差；
-     再淡白字就撐不住（45% 只有 2.8），再深就和點亮那一態分不出來（78% 剩 1.95）。
-   點到才整塊變成停車場的藍 —— 這樣「亮起來」是同一族的深一階，不是換一個顏色。
-   ⚠ **熄滅時的 P 必須是深藍、不能是白的**：白字站在那塊淡藍上只有 1.9:1，
-     等於看不見（下限就算按大字算也要 3:1）。深藍站在淡藍上是 6.8:1。
-     亮起來之後反過來 —— 深藍底、白 P（13.5:1）。 */
-.lot rect, .lot path { fill: color-mix(in srgb, var(--map-park) var(--park-soft), var(--card)); transition: fill .16s ease; }
+/* 熄滅時是**柔墨 `--ink-soft`，不是淡一階的藍**（2026-08-14 第二十八輪定案，
+   使用者：「路牌藍好，但只有點到的才要變色，其他不用。」）。
+   ⚠ **藍是「點到」的意思，不是「停車場」的意思** —— 三塊都上藍的話，
+     藍就只剩深淺兩階可以表達點沒點到，那正是前一輪量到越淺落差越小的死路。
+     改成灰底之後，點下去是**換色相**（灰→藍），不必再靠亮度。
+   ⚠ 兩態的亮度**幾乎一樣**（柔墨 L star 39.8、路牌藍 36.2，對比只有 1.14），
+     所以整塊不會忽明忽暗地跳，只有顏色變 —— 這是刻意的。
+   ⚠ 柔墨在地圖上站得住：對路面與街廓都是 4.20:1，白 P 對它 6.50:1。
+     前面「顏色很淡、辨識度不好」那一版是 28% 的淡藍，不是這個。
+   ⚠ **P 兩態都是白的**（柔墨上 6.50、路牌藍上 7.43），不必再像淡藍那一版
+     熄滅時翻成深藍。 */
+.lot rect, .lot path { fill: var(--ink-soft); transition: fill .16s ease; }
 .lot.on rect, .lot.on path { fill: var(--map-park); }
 /* 入口指標：**導航 App 那種箭頭**（尖頭 ＋ 尾端內凹的實心四邊形，
    使用者指定「像 Apple 地圖那顆」）。2026-08-14 從「角形（＞）」換掉 ——
@@ -1134,11 +1143,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     <button data-k="block" data-v="deep">深</button>
   </div>
   <div><b>停車場</b>
-    <button data-k="park" data-v="tile">地磚深藍（現）</button>
-    <button data-k="park" data-v="navy2">深藍二</button>
-    <button data-k="park" data-v="mid">中藍</button>
-    <button data-k="park" data-v="sign">路牌藍</button>
-    <button data-k="park" data-v="ortho">矯正藍</button>
+    <button data-k="park" data-v="sign">路牌藍（定案）</button>
     <button data-k="park" data-v="off">不顯示</button>
   </div>
 </div>
@@ -1154,7 +1159,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     txt:   ['soft', 'ink', 'fade', 'white'],
     corner: ['edge', 'all'],
     block: ['warm', 'cool', 'deep'],
-    park:  ['tile', 'navy2', 'mid', 'sign', 'ortho', 'off']
+    park:  ['sign', 'off']
   };
   var root = document.documentElement;
   var tpl  = document.getElementById('map-tpl');
