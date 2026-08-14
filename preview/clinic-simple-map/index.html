@@ -1604,10 +1604,21 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     history.replaceState(null, '', location.pathname + '?' + p.toString());
   }
 
-  // ---- 停車場的點選：點一下亮起來並帶出路線，再點一下收回 -----------------
+  // ---- 停車場的點選：一次總有一個亮著，點另一個就換過去 -------------------
   // 桌機另外吃 hover（預覽），滑開就回到「釘住」的那一個。
+  //
+  // ⚠⚠ **開頁就先亮壹車房，而且沒有「全部熄滅」那一態**
+  //   （2026-08-14 使用者：「現在的顯示是全部都是深灰色，我想改成直接顯示
+  //   壹車房，然後彼此間可以互相點選」）。
+  //   ・原本開頁是三塊都熄滅，等使用者發現可以點。那一態沒有回答任何問題 ——
+  //     圖上只有三塊灰，路線與距離全部藏著。
+  //   ・所以：點一塊 ＝ 換到那一塊（**不再是點第二下就收回**），
+  //     點空白處 ＝ 回到預設的那一塊，不是全部熄滅。
+  //   ⚠ 預設是**壹車房**（使用者指定），不是最近的永樂站（50 公尺）。
+  //     要換預設就改 DEFAULT_LOT 這一個字母。
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  var pinned = null, hovered = null;
+  var DEFAULT_LOT = 'c';
+  var pinned = DEFAULT_LOT, hovered = null;
   // 步行路線的圓點：**一段一段排，不是沿著整條路徑排**。
   //
   // ⚠⚠ 這裡改過兩次，第二次是 2026-08-14 使用者放大手機截圖看出來的
@@ -1815,10 +1826,10 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     // ⚠ 點完 blur()：不然 Chrome 會把滑鼠點擊也算成 focus-visible，
     //   在停車場外面畫一個框（使用者 2026-08-14 回報）。鍵盤走過來的不受影響。
     g.addEventListener('click', function (e) {
-      e.stopPropagation(); pinned = (pinned === id ? null : id); paintLots(); g.blur();
+      e.stopPropagation(); pinned = id; paintLots(); g.blur();
     });
     g.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pinned = (pinned === id ? null : id); paintLots(); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pinned = id; paintLots(); }
     });
     if (fine) {
       g.addEventListener('mouseenter', function () { hovered = id; paintLots(); });
@@ -1831,7 +1842,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
   //   <figure> 是一般的 HTML 盒子，連圖說那幾行字一起算進來，整塊都收得回。
   //   ⚠ 停車場自己的 handler 有 stopPropagation，牌子上那三個連結也有，
   //     所以不會互踩。
-  fig.addEventListener('click', function () { pinned = null; paintLots(); });
+  fig.addEventListener('click', function () { pinned = DEFAULT_LOT; paintLots(); });
   paintLots();
 
   document.getElementById('sw').addEventListener('click', function (e) {
