@@ -600,6 +600,15 @@
          壹車房那條藏「永樂街」；永樂站那條沒有壓到任何一個，所以一個都不藏。
        ・沒被壓到的仍然只是淡到 .28，地圖不會整個失去脈絡。
 
+     ---- 2026-08-14 第二十六輪：入口指標被路線壓到也藏起來 -------------------
+     使用者：「永樂站的入口指標和路徑虛線會重疊，但其他停車場入口指標都很剛好、
+     沒有重疊，留著很清楚。」
+
+       ・**沿用上一輪那套「壓到就藏」**，只是把 `.ent`（入口指標）也納入檢查。
+         不必特別針對永樂站寫規則 —— 外框相交才藏，實測只有它那顆會中
+         （它的入口就開在路線起點那條巷子上），合廷與壹車房的都留著。
+       ・這樣日後路線改道或箭頭挪位置，行為都會自己跟著對。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -705,6 +714,11 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
    由 JS 現算（見底下 hideCovered），不是寫死 —— 路線或牌子挪位置就會自己跟著變。
    ⚠ 這一條要排在上面那條 .dim 後面（同權重，後者贏）。 */
 .map-svg .lbl.hide, .map-svg .lbl-s.hide, .map-svg .lbl-xs.hide { opacity: 0; }
+/* 入口指標也吃同一套：**被自己那條路線壓到就藏起來**（2026-08-14 使用者：
+   「永樂站的入口指標和路徑虛線會重疊，但其他停車場的都很剛好」）。
+   實際上只有永樂站那顆會中 —— 它的入口就開在路線起點那條巷子上。 */
+.map-svg .ent { transition: opacity .18s ease; }
+.map-svg .ent.hide { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   .lot rect, .lot path, .lot .pk, .dots, .rlab, .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: none; }
 }
@@ -1163,18 +1177,23 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
   // 被亮起來的那條路線／那塊牌子壓到的街名，這個模式下整個藏起來。
   // 兩個外框相交就算壓到（各留 2 個單位的餘裕）。
   function hideCovered(id) {
-    var labels = fig.querySelectorAll('.lbl, .lbl-s, .lbl-xs');
+    var labels = fig.querySelectorAll('.lbl, .lbl-s, .lbl-xs, .ent');
     if (!id) { labels.forEach(function (l) { l.classList.remove('hide'); }); return; }
+    // ⚠ 這裡用 getBoundingClientRect() 不是 getBBox()：
+    //   `getBBox()` **不吃元素自己的 transform**，而入口箭頭是用
+    //   `transform="translate() rotate()"` 擺位置的 —— 用 getBBox 比對，
+    //   永樂站那顆的外框會停在原點附近，永遠比對不到（第一版就是這樣，沒作用）。
+    //   螢幕座標對所有元素都一致，同一張 SVG 裡比對是安全的。
     var boxes = [];
     ['.dots', '.rlab'].forEach(function (sel) {
       var el = fig.querySelector(sel + '[data-lot="' + id + '"]');
-      if (el) { try { boxes.push(el.getBBox()); } catch (e) {} }
+      if (el) boxes.push(el.getBoundingClientRect());
     });
     labels.forEach(function (l) {
-      var b = l.getBBox();
+      var b = l.getBoundingClientRect();
       var hit = boxes.some(function (o) {
-        return !(b.x + b.width < o.x - 2 || b.x > o.x + o.width + 2 ||
-                 b.y + b.height < o.y - 2 || b.y > o.y + o.height + 2);
+        return !(b.right < o.left - 2 || b.left > o.right + 2 ||
+                 b.bottom < o.top - 2 || b.top > o.bottom + 2);
       });
       l.classList.toggle('hide', hit);
     });
