@@ -210,12 +210,20 @@ a:hover { color: var(--accent); }
   font-weight: 700; font-size: clamp(14px, 3.8vw, 17px); line-height: 1.25;
   letter-spacing: 0; color: rgba(255, 255, 255, .95);
 }
-/* 副標撐齊標題的右緣：區塊寬度由較寬的標題決定，
-   text-align-last: justify 讓副標用字距填滿同一個寬度。 */
+/* 兩行的左右緣切齊：區塊寬度是 max-content ＝ 較寬的那一行，
+   兩行都 text-align-last: justify，較窄的那一行用字距填滿同一個寬度。
+   ⚠ **兩行都要寫，不能只寫副標**（2026-08-14 補）。只寫副標的前提是
+     「標題一定比較寬」—— 標題 6 個字、副標 8 個字，要
+     **副標字級 ÷ 標題字級 ≤ 6/8 ＝ 0.75** 才成立。首頁 2026-08-13
+     把副標抬到 0.774 就翻船了（標題那一行短 5.4~6.9px，見 index.html 那一段）。
+     這一份的比值是 2.6 ÷ 3.8 ＝ 0.684、上下限 0.706／0.714，目前還沒翻，
+     補上這一條是為了日後誰動字級都不會再壞。
+   ⚠ 標題的 white-space: nowrap 不要拿掉，justify 在 nowrap 的行上照樣生效。 */
+.brand-text b,
+.brand-text small { text-align: justify; text-align-last: justify; }
 .brand-text small {
   display: block; font-weight: 400; font-size: clamp(10px, 2.6vw, 12px); line-height: 1.25;
   letter-spacing: 0; color: rgba(255, 255, 255, .65);
-  text-align: justify; text-align-last: justify;
 }
 
 .site-nav {

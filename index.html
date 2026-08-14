@@ -642,7 +642,7 @@
         "@id": "https://fangren.net/#dentist"
       },
       "inLanguage": "zh-Hant-TW",
-      "dateModified": "2026-08-14",
+      "dateModified": "2026-08-15",
       "primaryImageOfPage": {
         "@type": "ImageObject",
         "url": "https://fangren.net/assets/hero-clinic-night.jpg"
@@ -2509,9 +2509,25 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .brand-text b, .brand-text small { display: block; }
   .brand-text small { padding-left: 0; }
   .brand-text small::before { display: none; }
-  /* 副標撐齊標題的右緣。區塊寬度由較寬的那一行（標題）決定，
-     text-align-last: justify 讓副標把字距拉開填滿同一個寬度，兩行右緣才會切齊。
-     這一條原本只在手機版的 preview 裡，搬過來的時候漏了。 */
+  /* 兩行的左右緣都要切齊。區塊寬度是 max-content ＝ **較寬的那一行**，
+     兩行都 text-align-last: justify，較窄的那一行就把字距拉開填滿同一個寬度。
+     這一條原本只在手機版的 preview 裡，搬過來的時候漏了。
+
+     ⚠ **兩行都要寫，不能只寫副標**（2026-08-14 修）。原本只有副標有這一條，
+       前提是「標題一定比較寬」—— 標題 6 個字、副標 8 個字，所以要
+       **副標字級 ÷ 標題字級 ≤ 6/8 ＝ 0.75** 才成立。2026-08-13 那一輪
+       「字級抬一階」把副標從 2.6152vw 抬到 2.95vw，比值變成 0.774
+       （捲動後 2.66 ÷ 3.429648 ＝ 0.776），**較寬的那一行換成副標**，
+       於是區塊寬度由副標決定、justify 對它沒事可做，反而是**標題**這一行
+       短了一截：375 上右緣差 5.37px（捲動後 5.27），320 上 6.69／6.87。
+       兩行都寫之後 320~430 八個寬度、捲動前後左右緣全部 0.00。
+     ⚠ 標題那條 `white-space: nowrap` 不要拿掉 —— justify 在 nowrap 的行上
+       照樣生效（實測仍是一行），而 nowrap 擋的是另一件事（品牌被擠成兩行，
+       見 PALETTE.md 第六之五節）。
+     ⚠ 文章頁（assets/style.css）的比值是 2.6 ÷ 3.8 ＝ 0.684、上下限 0.706／0.714，
+       都在 0.75 以內，所以那邊沒壞（六篇逐一量過，右緣差 0.00）。
+       那一份也一起補上同一條，日後誰的字級動了都不會再翻船。 */
+  .brand-text b,
   .brand-text small { text-align: justify; text-align-last: justify; }
 
   /* ---- HERO：照片一塊、窄帶接在下面 --------------------------------- */
@@ -4437,7 +4453,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-08-14">2026 年 8 月 14 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-08-15">2026 年 8 月 15 日</time></span>
     </div>
   </div>
 </footer>

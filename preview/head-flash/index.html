@@ -1997,9 +1997,11 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .brand-text b, .brand-text small { display: block; }
   .brand-text small { padding-left: 0; }
   .brand-text small::before { display: none; }
-  /* 副標撐齊標題的右緣。區塊寬度由較寬的那一行（標題）決定，
-     text-align-last: justify 讓副標把字距拉開填滿同一個寬度，兩行右緣才會切齊。
-     這一條原本只在手機版的 preview 裡，搬過來的時候漏了。 */
+  /* 兩行的左右緣都要切齊。區塊寬度是 max-content ＝ 較寬的那一行，
+     兩行都 text-align-last: justify，較窄的那一行把字距拉開填滿同一個寬度。
+     ⚠ 兩行都要寫（2026-08-14 跟著 index.html 一起修）——
+       只寫副標的前提是「標題比較寬」，2026-08-13 副標抬一階之後不再成立。 */
+  .brand-text b,
   .brand-text small { text-align: justify; text-align-last: justify; }
 
   /* ---- HERO：照片一塊、窄帶接在下面 --------------------------------- */
