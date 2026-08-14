@@ -1100,12 +1100,27 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
 .info-card .big a { color: var(--teal); text-decoration: none; }
 .info-card a { color: var(--teal); }
 .card-map { grid-column: 1 / -1; }
-/* 標籤套色跟「開診時段」一樣（2026-08-14 使用者指定）：實心、那一顆灰
-   `#5f5d5c`、白字。⚠ **不是新的顏色** —— 它就是首頁「全部」與門診表
-   「開診時段」在用的那一階（index.html 的 `.chips button[data-spec="all"]`）。
-   ⚠ 幾何維持 `.info-card h3` 自己的（9px 圓角、.76rem），只換填色 ——
-     它仍然是卡片標題，不是一顆可以按的篩選鈕。 */
-.card-map h3 { background: #5f5d5c; color: #fff; border-color: #5f5d5c; }
+/* 標籤**整個比照「開診時段」**（2026-08-14 使用者兩輪指定：先是「套色跟看診
+   時段一樣」，再來「標籤格式要比照開診時段」）。所以連幾何一起抄，不只顏色：
+
+     套色      實心 `#5f5d5c` ＋ 白字。⚠ **不是新顏色** —— 就是首頁「全部」與
+               門診表「開診時段」在用的那一階（`[data-spec="all"]`）。
+     字級      .88rem（門診表那排 2026-08-13 抬過的值，不是基底的 .8rem）
+     圓角      12px（`.hours-filter button`，不是 `.info-card h3` 的 9px）
+     字距      normal（`.info-card h3` 原本有 .08em，這裡要拿掉）
+     左右內距  .7rem
+
+   ⚠⚠ **上下內距一定要寫 `calc((34px - 1.6em - 2px) / 2)`，不要換算成 px。**
+     34 是那一排藥丸的塊高、1.6 是 line-height、1em 是**自己當下的字級**、
+     2 是上下框線。寫死之後字級一改塊高就被頂開 —— 這條規則 index.html 裡
+     也有（CLAUDE.md 第九節「手機的可讀性與橫捲標記」那一條）。
+   ⚠ 它仍然是 `<h3>` 卡片標題，不是可以按的鈕 —— 抄的是外觀，不是行為。 */
+.card-map h3 {
+  font-size: .88rem; line-height: 1.6; letter-spacing: normal;
+  padding: calc((34px - 1.6em - 2px) / 2) .7rem;
+  border-radius: 12px;
+  background: #5f5d5c; color: #fff; border: 1px solid #5f5d5c;
+}
 /* ≤720 的地方 .info 收成一欄（同 index.html 的斷點），地圖才不會被擠成
    150px 寬 —— 那個寬度上街名只剩 5.7px，等於整張圖只剩形狀。 */
 @media (max-width: 720px) { .info { grid-template-columns: 1fr; } }
