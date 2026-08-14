@@ -928,9 +928,15 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
      所以只有**外側那一半**留得下來 —— 字往外長 1.1，**字腔（P 的那個洞）
      不會被吃掉**。不寫 paint-order 的話描邊蓋在填色上，洞會縮成一條縫。 */
 .map-svg .lot .pk {
-  fill: var(--card); stroke: var(--card); stroke-width: 2.2;
+  fill: var(--card); stroke: var(--card); stroke-width: 1.6;
   paint-order: stroke; stroke-linejoin: round;
 }
+/* 對焦框。⚠ **滑鼠點下去不可以出現**（2026-08-14 使用者：「電腦版點下去
+   停車場有奇怪的框框」）。`:focus-visible` 本來就是為了這件事，但**帶
+   `tabindex` 的非原生可聚焦元素，Chrome 用滑鼠點也會判定成 focus-visible**
+   —— 這三塊 `<g role="button" tabindex="0">` 正是那種。
+   所以點完之後主動 `blur()`（見下面的 JS）：滑鼠使用者不留焦點，
+   用 Tab 走過來的還是會亮框（那不是 click 來的）。 */
 .lot:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 /* 步行路線：Google 那種點狀線。dasharray 的 0.1 ＋ round 端點 ＝ 圓點。 */
 /* ⚠ 路線**不畫線**，它只是「幾何來源」：底下的 JS 沿著它等距排圓點。
@@ -982,13 +988,11 @@ html[data-chip="solid"] .map-svg .rl-ul  { stroke: var(--card); }
 /* 診所的名牌：**實心綠底白字**，和停車場那三塊剛好相反（見標記那一段）。 */
 .map-svg .clab rect, .map-svg .clab .tail { fill: var(--map-mark); }
 .map-svg .clab text { fill: var(--card); font-size: 15px; font-weight: 700; letter-spacing: .04em; }
-/* 有停車場亮起來的時候，診所的名牌**整塊收掉**（2026-08-14 使用者指定）。
-   ⚠ 這不是「怕擋到」——它離路線和三塊牌子都不近。是**一次只回答一個問題**：
-     點下去之後畫面在講「從這一場走過來多遠」，那一刻診所是終點、不是主角，
-     兩塊實心牌子同時亮著會互相搶。收回去就又出現。
-   ⚠ 跟著 `.dim` 走（滑鼠停著預覽時也會收），不另外開一個 class。 */
-.map-svg .clab { transition: opacity .18s ease; }
-.map-svg.dim .clab { opacity: 0; }
+/* ⚠ **診所的名牌一直都在，點到停車場也不收**（2026-08-14 使用者：
+   「還是保留芳仁牙醫診所標籤好了」）。
+   上一輪做過「點到就整塊淡出」，看過實際畫面之後退回來了 ——
+   收掉之後那一刻圖上沒有任何東西寫著終點是誰，路線變成從停車場走向一塊
+   無名的綠色。**不要再加回去。** */
 /* 有停車場亮著的時候，街名淡下去 —— 不然點狀路線壓在街名上很難辨認
    （2026-08-14 使用者指出）。⚠ 這一條要比 .map-svg .lbl 那條多一階才蓋得過
    它自己的 opacity: var(--lbl-op)。 */
@@ -1012,7 +1016,7 @@ html[data-chip="solid"] .map-svg .rl-ul  { stroke: var(--card); }
 .map-svg .lot.on .ent { visibility: visible; opacity: 1; }
 .map-svg .lot.on .ent.hide { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
-  .lot rect, .lot path, .lot .pk, .dots, .rlab, .map-svg .clab,
+  .lot rect, .lot path, .lot .pk, .dots, .rlab,
   .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: none; }
 }
 
@@ -1071,8 +1075,19 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
 .map-svg .lbl-xs{ font-size: 16px; letter-spacing: .02em; font-weight: 700; opacity: var(--lbl-op, 1); }
 .map-svg .lbl-s { font-size: 20px; letter-spacing: .04em; font-weight: 700; opacity: var(--lbl-op, 1); }
 /* 停車場的 P：**粗體**，比照路上停車標誌的份量（2026-08-14 使用者指定）。
-   白字站在地磚深藍上 13.5:1，是這張圖裡最清楚的字。 */
-.map-svg .pk    { font-size: 31px; font-weight: 800; fill: var(--card); letter-spacing: 0; }
+   ⚠⚠ **這個 P 不吃全站的中文字型堆疊，自己指定 Arial/Helvetica**
+     （2026-08-14 第三十六輪，使用者：「電腦版停車場的 P 好胖」，手機版沒事）。
+     成因是**同一個 `font-weight: 800` 在不同系統落在不同地方**：
+     iOS/macOS 的 PingFang TC 最重只到 Semibold，要 800 就給 Semibold；
+     Windows 的微軟正黑只有 Regular/Bold，要 800 會**合成假粗體**
+     （瀏覽器自己把字塗厚），再加上我們的描邊就腫成一塊。
+     P 是拉丁字母，改指定 Arial／Helvetica —— 三個平台都有**真的 Bold**，
+     不必合成，粗細因此各平台一致。
+   ⚠ 描邊跟著從 2.2 收到 1.6：Arial Bold 本身就比 PingFang Semibold 重，
+     維持 2.2 會變成另一種胖。`paint-order: stroke` 的道理不變（見下面）。
+   ⚠ 這也更接近路上的停車標誌 —— 那個 P 本來就是無襯線的拉丁字。 */
+.map-svg .pk    { font-family: Arial, Helvetica, "Helvetica Neue", sans-serif;
+                  font-size: 31px; font-weight: 700; fill: var(--card); letter-spacing: 0; }
 .map-svg .pk-s  { font-size: 28px; }                      /* 小一號的 P（頂三站那顆圓比較小） */
 .map-svg .pk-nm { font-size: 22px; fill: var(--card); letter-spacing: .06em; }
 .map-svg .nm    { font-size: 24px; letter-spacing: .08em; font-weight: 500; }
@@ -1661,7 +1676,11 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
   }
   fig.querySelectorAll('.lot').forEach(function (g) {
     var id = g.dataset.lot;
-    g.addEventListener('click', function (e) { e.stopPropagation(); pinned = (pinned === id ? null : id); paintLots(); });
+    // ⚠ 點完 blur()：不然 Chrome 會把滑鼠點擊也算成 focus-visible，
+    //   在停車場外面畫一個框（使用者 2026-08-14 回報）。鍵盤走過來的不受影響。
+    g.addEventListener('click', function (e) {
+      e.stopPropagation(); pinned = (pinned === id ? null : id); paintLots(); g.blur();
+    });
     g.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pinned = (pinned === id ? null : id); paintLots(); }
     });
