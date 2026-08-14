@@ -1642,14 +1642,19 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
       //   Noto Sans TC 的 descent 約 .29em，16px 下就是 4.6 個單位的空白，
       //   再加 2.5 的間隙，底線等於離字 7.1 —— 看起來就是「有點遠」。
       //   改成用 canvas 量**字面**下緣（actualBoundingBoxDescent），
-      //   底線落在字面下 1 個單位（16px 下離基線 3.75，原本是 6.0）。
+      //   底線落在字面下 2.2 個單位（16px 下離基線 4.95）。
+      //   ⚠ **這個數字來回調過兩次，不要再憑感覺動**：
+      //     bbox＋2.5 ＝ 離基線 6.0 → 使用者「有點遠」；
+      //     字面＋1   ＝ 離基線 3.75 → 使用者「幾乎黏在一起」；
+      //     字面＋2.2 ＝ 離基線 4.95 → 現行（大約落在兩者中間）。
       //   ⚠ 這個字型的字面下緣是 .172em（畫布逐像素掃出來 .157em，對得上）——
       //     中文方塊字大多平底停在基線上，只有像「車」那種豎筆會探下去，
-      //     所以**眼睛量到的空隙比數字大**，間隙才要收到 1。
+      //     所以**眼睛量到的空隙比數字小**：看起來的空隙是從平底那一列算的，
+      //     比 .172em 那條深線還多將近 3 個單位。
       // ⚠ 要在 400px 上量再等比例縮 —— Blink 回來的值顆粒很粗
       //   （CLAUDE.md 第九節第 9 條，量字面框那一段）。
       var d = inkDescent(nm);
-      var uy = (+nm.getAttribute('y')) + (d === null ? b.y + b.height - +nm.getAttribute('y') + 2.5 : d + 1);
+      var uy = (+nm.getAttribute('y')) + (d === null ? b.y + b.height - +nm.getAttribute('y') + 2.5 : d + 2.2);
       ul.setAttribute('x1', b.x.toFixed(2));
       ul.setAttribute('x2', (b.x + b.width).toFixed(2));
       ul.setAttribute('y1', uy.toFixed(2));
