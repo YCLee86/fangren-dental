@@ -4529,10 +4529,14 @@ html[data-mark="bean"] .mark-plot, html[data-mark="bean"] .mark-logo { display: 
   // ⚠⚠ **開頁就先亮壹車房，而且沒有「全部熄滅」那一態**
   //   （2026-08-14 使用者：「現在的顯示是全部都是深灰色，我想改成直接顯示
   //   壹車房，然後彼此間可以互相點選」）。
-  //   ・原本開頁是三塊都熄滅，等使用者發現可以點。那一態沒有回答任何問題 ——
-  //     圖上只有三塊灰，路線與距離全部藏著。
-  //   ・所以：點一塊 ＝ 換到那一塊（**不再是點第二下就收回**），
-  //     點空白處 ＝ 回到預設的那一塊，不是全部熄滅。
+  //   ・原本開頁是三塊都熄滅，等使用者發現可以點。那一態當開場沒有回答任何
+  //     問題 —— 圖上只有三塊灰，路線與距離全部藏著。所以改成開頁就先亮一個。
+  //   ・**但「全部熄滅」那一態要留著**（第四十二輪使用者當場退回我拿掉它的做法：
+  //     「全部熄滅不要拿掉啊，如果點這個圖片的停車場以外的地方，還是可以變成
+  //     全部，還是比較知道道路的資訊」）—— 亮著的時候街名會淡下去、還會被
+  //     路線壓掉幾個，要看清楚路名就得有一個「什麼都沒選」的狀態。
+  //   ・所以：點一塊 ＝ 換到那一塊（**不是點第二下就收回**），
+  //     點停車場以外的地方 ＝ 全部熄滅、街名回到滿的。
   //   ⚠ 預設是**壹車房**（使用者指定），不是最近的永樂站（50 公尺）。
   //     要換預設就改 DEFAULT_LOT 這一個字母。
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -4761,7 +4765,7 @@ html[data-mark="bean"] .mark-plot, html[data-mark="bean"] .mark-logo { display: 
   //   <figure> 是一般的 HTML 盒子，連圖說那幾行字一起算進來，整塊都收得回。
   //   ⚠ 停車場自己的 handler 有 stopPropagation，牌子上那三個連結也有，
   //     所以不會互踩。
-  fig.addEventListener('click', function () { pinned = DEFAULT_LOT; paintLots(); });
+  fig.addEventListener('click', function () { pinned = null; paintLots(); });
   paintLots();
 
 
