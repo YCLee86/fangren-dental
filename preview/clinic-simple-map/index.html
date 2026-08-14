@@ -399,6 +399,20 @@
          裡的圓弧半徑**要一起改**（三處，漏掉任何一處就會看到大小不一的角）。
          畫到 480px 寬時 4 個單位約 3.4px。
 
+     ---- 2026-08-14 第十二輪：直排街名對齊、19 巷降一階 --------------------
+     使用者：「垂直的道路可能要同一個水平對齊比較整齊，但現在永樂街的字剛好壓在
+     診所旁邊，這樣辨識有點打架。同樣的邏輯平和街19巷是不是也要移一下位置
+     或是字縮小？畢竟應該不會有人從 19 巷來找。」
+
+       ・**三條直排街名對齊到同一組基線 308／334／360。**
+         那一段（286~360）是三條路上唯一同時避開四個標記的區間
+         （合廷 155~231、診所 236~276、壹車房 474~541）。
+         壓過 33 巷、大同路那種橫向的路沒關係 —— 打架的是標記，不是路。
+       ・**19 巷的字 20 → 16，並往西挪到 x176**（原本置中在 224，
+         右半段就貼著診所）。它留著是為了說明診所那一格的北緣，不是指路用的。
+
+     ⚠ 街名的層級因此變成三階：街名 22 ＞ 巷名 16 ＞（停車場的 P 26，另一族）。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -506,6 +520,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
 .card-map .map-svg { max-width: 480px; margin-inline: auto; }
 .map-svg text { fill: var(--map-ink); font-weight: 400; }
 .map-svg .lbl   { font-size: 22px; letter-spacing: .06em; font-weight: 700; opacity: var(--lbl-op, 1); }
+.map-svg .lbl-xs{ font-size: 16px; letter-spacing: .02em; font-weight: 700; opacity: var(--lbl-op, 1); }
 .map-svg .lbl-s { font-size: 20px; letter-spacing: .04em; font-weight: 700; opacity: var(--lbl-op, 1); }
 .map-svg .pk    { font-size: 28px; fill: var(--card); letter-spacing: 0; }
 .map-svg .pk-s  { font-size: 26px; }                      /* 小一號的 P（頂三站那顆圓比較小） */
@@ -626,14 +641,24 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         <rect x="487" y="587" width="93" height="53" rx="4"/>
       </g>
 
-      <!-- 街名。七條，全部壓在自己那條路的路面上。 -->
+      <!-- 街名。七條，全部壓在自己那條路的路面上。
+           ⚠ 2026-08-14：三條直排街名**對齊到同一組基線（308／334／360）**
+             —— 使用者：「垂直的道路可能要同一個水平對齊比較整齊」。
+             那一段（286~360）是三條路上唯一同時避開四個標記的區間：
+             合廷 155~231、診所 236~276、壹車房 474~541，
+             以及橫向的 33 巷 321~333 與大同路 403~441（壓過巷子沒關係，
+             壓到標記才會打架）。永樂街原本在 250 起跑，正好貼著診所那一塊，
+             使用者說「辨識有點打架」。
+           ⚠ **19 巷的字縮一階（20→16）並往西挪到 x176**，離開診所那一頭
+             —— 使用者：「應該不會有人從 19 巷來找」。它留著是為了說明
+             診所那一格的北緣，不是拿來指路的。 -->
       <text class="lbl" x="200" y="49"  text-anchor="middle">文化路</text>
       <text class="lbl" x="200" y="431" text-anchor="middle">大同路</text>
       <text class="lbl" x="200" y="569" text-anchor="middle">中華路</text>
-      <text class="lbl" x="109" y="250" text-anchor="middle"><tspan x="109">平</tspan><tspan x="109" dy="26">和</tspan><tspan x="109" dy="26">街</tspan></text>
-      <text class="lbl" x="339" y="250" text-anchor="middle"><tspan x="339">永</tspan><tspan x="339" dy="26">樂</tspan><tspan x="339" dy="26">街</tspan></text>
-      <text class="lbl" x="471" y="240" text-anchor="middle"><tspan x="471">永</tspan><tspan x="471" dy="26">安</tspan><tspan x="471" dy="26">路</tspan></text>
-      <text class="lbl-s" x="224" y="233" text-anchor="middle">平和街19巷</text>
+      <text class="lbl" x="109" y="308" text-anchor="middle"><tspan x="109">平</tspan><tspan x="109" dy="26">和</tspan><tspan x="109" dy="26">街</tspan></text>
+      <text class="lbl" x="339" y="308" text-anchor="middle"><tspan x="339">永</tspan><tspan x="339" dy="26">樂</tspan><tspan x="339" dy="26">街</tspan></text>
+      <text class="lbl" x="471" y="308" text-anchor="middle"><tspan x="471">永</tspan><tspan x="471" dy="26">安</tspan><tspan x="471" dy="26">路</tspan></text>
+      <text class="lbl-xs" x="176" y="232" text-anchor="middle">平和街19巷</text>
 
       <!-- 停車場。三處，只留 P，**名字 2026-08-14 由使用者指定拿掉**
            （全名還留在圖底下那一行）。
