@@ -589,6 +589,17 @@
        ・**熄滅時的底色因此加深到 62%**（≒ #74798b）：白字對它 4.33:1 才站得住。
          這推翻了前一輪「熄滅時用深藍 P」—— 那是因為 45% 太淡不得已。
 
+     ---- 2026-08-14 第二十五輪：被路線壓到的街名整個藏起來 -------------------
+     使用者：「點下去有虛線路線後，若壓到路名，這個模式下路名可拿掉。」
+
+       ・原本是「有停車場亮著 → 街名整組降到 .28」，這一輪再加一層：
+         **真的被那條路線或那塊牌子壓到的，直接 opacity: 0**。
+       ・**哪幾個算壓到是 JS 現算的**（外框相交、各留 2 個單位餘裕），
+         不是寫死 —— 路線或牌子挪了位置，會自己跟著變。
+         目前實際會被藏起來的：合廷那條藏「永安路14巷」、
+         壹車房那條藏「永樂街」；永樂站那條沒有壓到任何一個，所以一個都不藏。
+       ・沒被壓到的仍然只是淡到 .28，地圖不會整個失去脈絡。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -689,6 +700,11 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
    它自己的 opacity: var(--lbl-op)。 */
 .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: opacity .18s ease; }
 .map-svg.dim .lbl, .map-svg.dim .lbl-s, .map-svg.dim .lbl-xs { opacity: .28; }
+/* **被路線或牌子壓到的那幾個街名直接不見**（2026-08-14 使用者：「點下去有
+   虛線路線後，若壓到路名，這個模式下路名可拿掉」）。哪幾個是壓到的
+   由 JS 現算（見底下 hideCovered），不是寫死 —— 路線或牌子挪位置就會自己跟著變。
+   ⚠ 這一條要排在上面那條 .dim 後面（同權重，後者贏）。 */
+.map-svg .lbl.hide, .map-svg .lbl-s.hide, .map-svg .lbl-xs.hide { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   .lot rect, .lot path, .lot .pk, .dots, .rlab, .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: none; }
 }
@@ -1144,9 +1160,30 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeLabels);
   sizeLabels();
 
+  // 被亮起來的那條路線／那塊牌子壓到的街名，這個模式下整個藏起來。
+  // 兩個外框相交就算壓到（各留 2 個單位的餘裕）。
+  function hideCovered(id) {
+    var labels = fig.querySelectorAll('.lbl, .lbl-s, .lbl-xs');
+    if (!id) { labels.forEach(function (l) { l.classList.remove('hide'); }); return; }
+    var boxes = [];
+    ['.dots', '.rlab'].forEach(function (sel) {
+      var el = fig.querySelector(sel + '[data-lot="' + id + '"]');
+      if (el) { try { boxes.push(el.getBBox()); } catch (e) {} }
+    });
+    labels.forEach(function (l) {
+      var b = l.getBBox();
+      var hit = boxes.some(function (o) {
+        return !(b.x + b.width < o.x - 2 || b.x > o.x + o.width + 2 ||
+                 b.y + b.height < o.y - 2 || b.y > o.y + o.height + 2);
+      });
+      l.classList.toggle('hide', hit);
+    });
+  }
+
   function paintLots() {
     var id = hovered || pinned;
     fig.querySelector('.map-svg').classList.toggle('dim', !!id);
+    hideCovered(id);
     fig.querySelectorAll('.lot').forEach(function (g) {
       var on = g.dataset.lot === id;
       g.classList.toggle('on', on);
