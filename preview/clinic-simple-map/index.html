@@ -1021,13 +1021,24 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
       </g>
 
       <!-- 步行路線與時間。三條都沿著路的中心線走，最後都收在診所朝永樂街那一側
-           的門口 (324, 261)。⚠ 時間與距離是 Google 地圖給的實際值，
+           的門口。⚠ 時間與距離是 Google 地圖給的實際值，
            **不是從這張圖上量的** —— 這張圖的南北被壓過（見上面第五、九輪），
-           圖上的長短只能當示意。 -->
+           圖上的長短只能當示意。
+
+           ⚠⚠ **終點是 x=330，不是診所的邊 x=324**（2026-08-14 使用者：
+             「虛線原點離診所最近的被切到了，我希望那個圓點是完整的」）。
+             成因是**畫的順序**：診所那塊綠色（.mark-plot）在 DOM 上排在
+             .dots 後面，所以會蓋在點上面。終點原本正好壓在診所右緣，
+             最後那顆點（r 3.5）就被切掉一半。往外挪 6 個單位（約 3 公尺）之後
+             點的左緣落在 326.5，離診所還有 2.5，整顆都在永樂街的路面上。
+             ⚠ 不要改成「把 .mark-plot 搬到 .dots 前面」——那樣點雖然完整，
+               但會疊在診所色塊上，看起來像路線穿進屋子裡。
+             ⚠ 起點那一端不必處理：三個停車場的 .lot 排在 .dots 前面，
+               點本來就畫在色塊上面，不會被切。 -->
       <g class="routes">
-        <path class="route" data-lot="a" d="M235 165L339 165L339 261L324 261"/>
-        <path class="route" data-lot="b" d="M410 188L339 188L339 261L324 261"/>
-        <path class="route" data-lot="c" d="M354 507L339 507L339 261L324 261"/>
+        <path class="route" data-lot="a" d="M235 165L339 165L339 261L330 261"/>
+        <path class="route" data-lot="b" d="M410 188L339 188L339 261L330 261"/>
+        <path class="route" data-lot="c" d="M354 507L339 507L339 261L330 261"/>
         <g class="dots" data-lot="a"></g>
         <g class="dots" data-lot="b"></g>
         <g class="dots" data-lot="c"></g>
