@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW" data-pos="card" data-style="plate" data-shape="round" data-mark="plot" data-hue="green" data-txt="soft" data-corner="edge" data-block="warm" data-park="tile" data-key="on">
+<html lang="zh-Hant-TW" data-pos="card" data-style="line" data-shape="round" data-mark="plot" data-hue="green" data-txt="soft" data-corner="edge" data-block="warm" data-park="tile" data-key="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -480,6 +480,27 @@
        ＝ 把它兩側的街廓**合併成一塊**。這一輪就是把 A 欄的兩塊、
        D 欄的兩塊各自併成一塊。日後要再開一條巷子則相反：把一塊切成兩塊。
 
+     ---- 2026-08-14 第十八輪：畫法定「線」＋ 停車場可以點 ------------------
+     使用者：「這個版本可以了，路是線。另外要做停車場到診所的距離和走路時間，
+     概念是停車場都是淺墨色，點下去變成停車場的藍色並標示路線和時間，像 Google map。」
+
+       ・**畫法定案 line**（底＝路色 --rule、街廓＝卡色）。plate 留在切換條裡。
+       ・停車場平常是**淺墨 --ink-soft**，點下去（桌機滑鼠停著也行）
+         變成 --map-park 並帶出**點狀的步行路線 ＋ 一塊時間距離的牌子**。
+         再點一下收回；點地圖其他地方也收回。鍵盤 Enter／空白鍵同效，
+         有 focus 外框、aria-pressed。
+       ・白色的 P 在兩種底上都讀得到：淺墨 6.5:1、地磚深藍 13.5:1。
+
+     ⚠ **時間與距離是 Google 地圖給的實際值，不是從這張圖量的**
+       （斗六永樂站 50m/1min、合廷 140m/2min、壹車房 190m/3min）。
+       這張圖的南北被壓過，圖上的長短只能當示意 —— 所以牌子上寫的是真值、
+       線只負責指路徑。三條路線都收在診所朝永樂街那一側的門口 (324, 261)。
+     ⚠ 名字從圖上拿掉之後，每個停車場的 `<title>` 是**唯一還帶著名字的地方**
+       （滑鼠停著會顯示、螢幕閱讀器讀得到），不要刪。
+     ⚠ 點狀線的做法：`stroke-dasharray: 0.1 15` ＋ `stroke-linecap: round`
+       ＝ 一串圓點（Google 的步行路線就是這種）。不要改成 dash，
+       那會變成虛線、看起來像行政區界。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -541,6 +562,28 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
 /* 停車場與診所那幾塊要不要導角、導幾個（2026-08-14 使用者要兩案比一比）。
    ⚠ SVG 的 <rect rx> 沒辦法只導某一角，所以「只導壓到街廓角的」那一案
      是用 <path> 一個一個畫的。兩案都在標記裡，靠這兩行切。 */
+/* 停車場：平常淺墨，點到（或滑鼠停著）才變成停車場的藍並帶出路線。 */
+.lot { cursor: pointer; }
+/* 熄滅時的淺墨：柔墨 75% 混進卡色。白色的 P 對它約 4.2:1 —— P 是
+   30px 的粗體（大字），下限 3:1，過。再淺就會撐不住那顆 P。 */
+.lot rect, .lot path { fill: color-mix(in srgb, var(--ink-soft) 75%, var(--card)); transition: fill .16s ease; }
+.lot.on rect, .lot.on path { fill: var(--map-park); }
+.lot:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* 步行路線：Google 那種點狀線。dasharray 的 0.1 ＋ round 端點 ＝ 圓點。 */
+.route {
+  fill: none; stroke: var(--map-park); stroke-width: 7;
+  stroke-linecap: round; stroke-dasharray: 0.1 15;
+  opacity: 0; transition: opacity .18s ease;
+}
+.rlab { opacity: 0; transition: opacity .18s ease; }
+.route.on, .rlab.on { opacity: 1; }
+.map-svg .rlab rect { fill: var(--map-park); }
+/* ⚠ 這一條要寫成 .map-svg .rlab text（多一階）—— 只寫 .rlab text 的話
+   和後面的 `.map-svg text { fill: var(--map-ink) }` 同權重，後者排在後面會贏，
+   牌子上的字就變成墨色、在深藍上幾乎看不見。 */
+.map-svg .rlab text { fill: var(--card); font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+@media (prefers-reduced-motion: reduce) { .lot rect, .lot path, .route, .rlab { transition: none; } }
+
 html[data-corner="all"]  .c-edge { display: none; }
 html[data-corner="edge"] .c-all  { display: none; }
 
@@ -742,25 +785,67 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
              ・壹車房  緊貼中華路的上緣 ＋ 永樂街的東緣
            ⚠ **壹車房的高度 ＝ 它那一格的 2/3**（格高 100 → 67）。
              上一版 80 ≒ 5/6，使用者指出太長。 -->
+      <!-- 停車場。三處，各自是一顆可以點的東西（data-lot=a/b/c）。
+           ⚠ 平常是**淺墨** `--ink-soft`，點下去才變成停車場的藍 `--map-park`，
+             同時把那一條步行路線與時間叫出來（2026-08-14 使用者指定，
+             概念照 Google 地圖）。白色的 P 在兩種底上都讀得到：
+             淺墨 6.5:1、地磚深藍 13.5:1。
+           ⚠ 名字從圖上拿掉之後，`<title>` 是唯一還帶著名字的地方 ——
+             滑鼠停著會顯示，螢幕閱讀器也讀得到，**不要刪**。 -->
       <g class="map-park">
         <!-- 斗六永樂站停車場：19 巷北邊那條平行巷的南側。
              ⚠ 它只貼著巷子、左右都在街廓中間，所以「只導壓到街廓角的」那一案
-               **一個角都不導**（下面那個 .c-edge 就是原本的直角矩形）。 -->
-        <rect class="c-all"  x="206" y="171" width="58" height="34" rx="4" fill="var(--map-park)"/>
-        <rect class="c-edge" x="206" y="171" width="58" height="34" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="235" y="197" text-anchor="middle">P</text>
+               一個角都不導（.c-edge 就是原本的直角矩形）。 -->
+        <g class="lot" data-lot="a" role="button" tabindex="0"
+           aria-label="斗六永樂站停車場，步行 1 分鐘、50 公尺">
+          <title>斗六永樂站停車場・步行 1 分鐘（50 公尺）</title>
+          <rect class="c-all"  x="206" y="171" width="58" height="34" rx="4"/>
+          <rect class="c-edge" x="206" y="171" width="58" height="34"/>
+          <text class="pk pk-s" x="235" y="197" text-anchor="middle">P</text>
+        </g>
 
         <!-- 合廷停車場：永安路上，北緣貼著 14 巷 -->
-        <rect class="c-all"  x="388" y="197" width="67" height="76" rx="4" fill="var(--map-park)"/>
-        <!-- 只有右上角壓在街廓的右上角（永安路 × 14 巷）上 -->
-        <path class="c-edge" d="M388 197H451A4 4 0 0 1 455 201V273H388Z" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="421" y="241" text-anchor="middle">P</text>
+        <g class="lot" data-lot="b" role="button" tabindex="0"
+           aria-label="合廷停車場，步行 2 分鐘、140 公尺">
+          <title>合廷停車場・步行 2 分鐘（140 公尺）</title>
+          <rect class="c-all"  x="388" y="197" width="67" height="76" rx="4"/>
+          <!-- 只有右上角壓在街廓的右上角（永安路 × 14 巷）上 -->
+          <path class="c-edge" d="M388 197H451A4 4 0 0 1 455 201V273H388Z"/>
+          <text class="pk pk-s" x="421" y="241" text-anchor="middle">P</text>
+        </g>
 
         <!-- 壹車房－中華路停車場：中華路與永樂街的那一角 -->
-        <rect class="c-all"  x="354" y="474" width="48" height="67" rx="4" fill="var(--map-park)"/>
-        <!-- 只有左下角壓在街廓的左下角（永樂街 × 中華路）上 -->
-        <path class="c-edge" d="M354 474H402V541H358A4 4 0 0 1 354 537Z" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="378" y="515" text-anchor="middle">P</text>
+        <g class="lot" data-lot="c" role="button" tabindex="0"
+           aria-label="壹車房－中華路停車場，步行 3 分鐘、190 公尺">
+          <title>壹車房－中華路停車場・步行 3 分鐘（190 公尺）</title>
+          <rect class="c-all"  x="354" y="474" width="48" height="67" rx="4"/>
+          <!-- 只有左下角壓在街廓的左下角（永樂街 × 中華路）上 -->
+          <path class="c-edge" d="M354 474H402V541H358A4 4 0 0 1 354 537Z"/>
+          <text class="pk pk-s" x="378" y="515" text-anchor="middle">P</text>
+        </g>
+      </g>
+
+      <!-- 步行路線與時間。三條都沿著路的中心線走，最後都收在診所朝永樂街那一側
+           的門口 (324, 261)。⚠ 時間與距離是 Google 地圖給的實際值，
+           **不是從這張圖上量的** —— 這張圖的南北被壓過（見上面第五、九輪），
+           圖上的長短只能當示意。 -->
+      <g class="routes">
+        <path class="route" data-lot="a" d="M235 171L235 165L339 165L339 261L324 261"/>
+        <path class="route" data-lot="b" d="M410 197L410 188L339 188L339 261L324 261"/>
+        <path class="route" data-lot="c" d="M354 507L339 507L339 261L324 261"/>
+
+        <g class="rlab" data-lot="a">
+          <rect x="214" y="133" width="112" height="26" rx="4"/>
+          <text x="270" y="151" text-anchor="middle">50 公尺・1 分鐘</text>
+        </g>
+        <g class="rlab" data-lot="b">
+          <rect x="345" y="138" width="120" height="26" rx="4"/>
+          <text x="405" y="156" text-anchor="middle">140 公尺・2 分鐘</text>
+        </g>
+        <g class="rlab" data-lot="c">
+          <rect x="210" y="487" width="120" height="26" rx="4"/>
+          <text x="270" y="505" text-anchor="middle">190 公尺・3 分鐘</text>
+        </g>
       </g>
 
       <!-- 診所。貼在永樂街與平和街19巷那一角的橫長方形，**直角、不留縫**。
@@ -790,15 +875,15 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     </g>
   </svg>
 
-  <figcaption class="map-note">街廓與距離大致依 Google 地圖的實際比例，標記本身放大以便閱讀。停車場全名：斗六永樂站停車場、合廷停車場、壹車房－中華路停車場。</figcaption>
+  <figcaption class="map-note">點停車場看步行距離與時間（Google 地圖的實際值）。街廓與距離大致依實際比例，標記本身放大以便閱讀。停車場全名：斗六永樂站停車場、合廷停車場、壹車房－中華路停車場。</figcaption>
 </figure>
 </template>
 
 <!-- ⚠ 切換條與底下這支 JS 都是提案用的，定案後整段刪掉，不要跟著搬進 index.html -->
 <div class="sw" id="sw">
   <div><b>畫法</b>
+    <button data-k="style" data-v="line">線（路是線・定）</button>
     <button data-k="style" data-v="plate">面（白色的路）</button>
-    <button data-k="style" data-v="line">線（路是線）</button>
   </div>
   <div><b>放哪</b>
     <button data-k="pos" data-v="card">自成一張卡</button>
@@ -846,7 +931,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
 <script>
 (function () {
   var OPTS = {
-    style: ['plate', 'line'],
+    style: ['line', 'plate'],
     pos:   ['card', 'addr'],
     shape: ['round', 'blob', 'circle'],
     mark:  ['plot', 'logo', 'bean'],
@@ -887,6 +972,36 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     Object.keys(OPTS).forEach(function (k) { p.set(k, root.dataset[k]); });
     history.replaceState(null, '', location.pathname + '?' + p.toString());
   }
+
+  // ---- 停車場的點選：點一下亮起來並帶出路線，再點一下收回 -----------------
+  // 桌機另外吃 hover（預覽），滑開就回到「釘住」的那一個。
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var pinned = null, hovered = null;
+  function paintLots() {
+    var id = hovered || pinned;
+    fig.querySelectorAll('.lot').forEach(function (g) {
+      var on = g.dataset.lot === id;
+      g.classList.toggle('on', on);
+      g.setAttribute('aria-pressed', String(g.dataset.lot === pinned));
+    });
+    fig.querySelectorAll('.route, .rlab').forEach(function (el) {
+      el.classList.toggle('on', el.dataset.lot === id);
+    });
+  }
+  fig.querySelectorAll('.lot').forEach(function (g) {
+    var id = g.dataset.lot;
+    g.addEventListener('click', function (e) { e.stopPropagation(); pinned = (pinned === id ? null : id); paintLots(); });
+    g.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pinned = (pinned === id ? null : id); paintLots(); }
+    });
+    if (fine) {
+      g.addEventListener('mouseenter', function () { hovered = id; paintLots(); });
+      g.addEventListener('mouseleave', function () { hovered = null; paintLots(); });
+    }
+  });
+  // 點地圖的其他地方＝收回
+  fig.querySelector('.map-svg').addEventListener('click', function () { pinned = null; paintLots(); });
+  paintLots();
 
   document.getElementById('sw').addEventListener('click', function (e) {
     var b = e.target.closest('button');
