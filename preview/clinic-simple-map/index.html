@@ -781,9 +781,23 @@
          ・現在整塊落在 (192~308, 300~328)：上半在診所底下那塊空街廓裡，
            下緣壓到 **平和街33巷**（321~333）—— 那條巷子圖上刻意不標名字，
            蓋到不影響判讀。使用者說的「無名的街道」就是它。
-         ・尾巴多了第三種方向 **朝上**，尖端 y=281 進到綠色裡 6 個單位。
+         ・尾巴多了第三種方向 **朝上**。
            ⚠ `data-gap` 的符號和朝下那一支**相反**：朝下是「尖端比目標高 GAP」，
              朝上是「尖端比目標低 GAP」。
+
+         ⚠⚠ **第三十二輪把這支尾巴改成斜的、並且不再插進綠色裡**
+           （使用者：「那個三角形的指標被區塊壓到了，三角形要開一點；
+           你現在那個三角是做成往下，我想要左下一點，不要這麼直」）。
+           ・**尖端 (272, 287) 正好停在綠色的下緣**，不再往裡插 6 個單位。
+             插進去的時候，尖端和綠色是同一個綠 —— 疊在一起就融成一塊，
+             「三角形」整個看不出來，那正是使用者說的「被區塊壓到」。
+           ・**底邊的位置和尖端分開給**（`data-bx` / `data-tx`），兩個不一樣
+             就長出一支斜的尾巴：底邊中心 x=236、尖端 x=272，所以它從
+             右上斜到左下。原本兩個都是 250，是一支正下方的直尾巴。
+           ・**底邊加寬一倍**（`data-bw` 7 → 14，共 28 個單位）＝「開一點」。
+             斜的尾巴在視覺上會比同寬的直尾巴細，不加寬會更像一根刺。
+           ・名牌因此跟著往左挪（中心 250 → 226），尖端才有斜出去的空間。
+             左緣 157 仍然遠離平和街的直排字（x 109±12）。
          ⚠ **左右兩邊都是量過的**：左緣 192 遠離平和街的直排字（x 109±12），
            右緣 308 沒碰到永樂街（324 起）—— 那一欄是路線的點在走的地方，
            碰到就會跟虛線打架。
@@ -1322,10 +1336,10 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
            ⚠ 尾巴改成**朝上**（第三種方向），尖端 y=281，**進到綠色裡 6 個單位**
              （綠色到 287 為止），x=250 落在診所的 228~324 之間。
              路線那三塊牌子的尾巴是停在線外 12 的（`data-gap`），這一塊是 0。 -->
-      <g class="clab" data-dir="up" data-tx="250" data-ty="281" data-gap="0">
+      <g class="clab" data-dir="up" data-tx="272" data-ty="287" data-bx="236" data-bw="14" data-gap="0">
         <rect rx="6"/><path class="tail"/>
         <g class="rl-body">
-          <text class="cl-nm" x="250" y="319" text-anchor="middle">芳仁牙醫診所</text>
+          <text class="cl-nm" x="226" y="319" text-anchor="middle">芳仁牙醫診所</text>
         </g>
       </g>
 
@@ -1510,8 +1524,14 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
       } else if (g.dataset.dir === 'up') {
         // 診所的名牌在下面、尖端朝上。⚠ GAP 的符號和朝下那一支相反：
         //   朝下是「尖端比目標高 GAP」，朝上是「尖端比目標低 GAP」。
+        // ⚠ 底邊的位置（`data-bx`）和尖端（`data-tx`）**是分開給的**，
+        //   兩個不一樣就會長出一支**斜的**尾巴（2026-08-14 使用者：
+        //   「現在那個三角是做成往下，我想要左下一點，不要這麼直」）。
+        //   沒給 data-bx 就退回正下方，行為和原本一樣。
         var ux = +g.dataset.tx, top = b.y - padY, utip = +g.dataset.ty + GAP;
-        tail.setAttribute('d', 'M' + (ux - 7) + ' ' + (top + 1) + 'H' + (ux + 7) + 'L' + ux + ' ' + utip + 'Z');
+        var bx = g.dataset.bx === undefined ? ux : +g.dataset.bx;
+        var bw = g.dataset.bw === undefined ? 7 : +g.dataset.bw;
+        tail.setAttribute('d', 'M' + (bx - bw) + ' ' + (top + 1) + 'H' + (bx + bw) + 'L' + ux + ' ' + utip + 'Z');
       } else {
         var cx = +g.dataset.tx, bottom = b.y + b.height + padY, tipY = +g.dataset.ty - GAP;
         tail.setAttribute('d', 'M' + (cx - 7) + ' ' + (bottom - 1) + 'H' + (cx + 7) + 'L' + cx + ' ' + tipY + 'Z');
