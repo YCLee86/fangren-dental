@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>head-flash｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>head-flash</h1>
+<p class="meta">
+  原網址 <code>/preview/head-flash/</code>（已刪除 2026-08-15）<br>
+  整頁還原：<code>git show d68b8c4:preview/head-flash/index.html</code><br>
+  切換條 <code>?opt=abcdefghi</code>（九顆獨立開關，可疊），六版、定案 <code>a d e f g i</code> 並上線
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者 2026-08-14：「右上三個標籤切換的時候會有畫面閃跳的感覺。」
+附 iPad 直放的螢幕錄影。之後又給了三支 iPhone 錄影，逐幀對照到定案。
+
+這一頁和以往的提案頁不同的地方：**這件事只有 WebKit 會發生。**
+容器裡只有 Chromium，重現不了，所以提案頁做成「一頁可以現場切換」，
+由使用者在真機上判斷，我這邊只負責（一）從錄影逐幀量出發生什麼事、
+（二）證明每個候選在正常情況下沒有動到畫面。</pre></div>
+
+<h2>逐幀量出來的三件事（不是一件）</h2>
+<div class="note"><pre>把錄影拆成 30 fps 逐幀比對（頁首那一條取平均亮度做時間上的離群偵測，
+再把三顆標籤的框內亮度逐幀追蹤判斷哪一項亮著）：
+
+① **整條頁首漏畫 1~2 幀**（33~67ms）。白字落在紙色 #e2e5e6 上，對比度剩 1.1，
+   等於憑空消失再出現。頁首那一條的平均亮度從 63.1 跳到 232.3。
+   ⚠ 關鍵的排除法：閃的那幾幀放大看，**其他東西全都還在** —— 三個玻璃框、
+     那塊底（.nav-lamp）、品牌與所有白字都照常畫出來，而且燈已經移到剛點的
+     那一項。再把三顆標籤橫著並排比前後五幀，**垂直位置一模一樣**，
+     所以也不是 html.scrolled 掉了、不是版面問題。
+     不見的只有整個頁首裡唯一帶 backdrop-filter 的那一層。
+     沒有這一步會往 scrollspy 的節流或 scroll-behavior 的方向找很久。
+
+② **頁首的深淺慢一幀。** 內容已經跳到目的地了，頁首還套著出發點那一段的
+   玻璃狀態（alpha .84、遮罩 92%），套在紙色上就是一條上深下淺的板
+   （第 243 幀）。頁首的深淺是 JS 在 scroll 的 rAF 裡寫的，
+   主執行緒本來就比合成器晚一幀 —— 內容先到、頁首後到。
+
+③ **選單的燈回跳一幀。** 第 62 幀醫師介紹、63 幀又變回診所資訊、64 幀才穩定。
+   pick() 是捲動位置的純函數，理論上不會來回；會來回是因為 iOS 的捲動由
+   UI 行程驅動，某一幀讀到的 getBoundingClientRect 還是上一個捲動位置。
+
+第四支錄影（475 幀）的完整追蹤，可以看出範圍：
+  1~64 全部文章／65~94 診所資訊／95~114 全部文章／115~131 診所資訊／
+  132~150 全部文章／151~165 診所資訊／166~184 全部文章／185~204 診所資訊／
+  205~242 全部文章／243~263 醫師介紹／264~283 全部文章／284~305 醫師介紹／
+  306~331 全部文章／332~354 診所資訊／355~372 醫師介紹／373~388 診所資訊／
+  389~404 醫師介紹／405~447 診所資訊／448~475 全部文章
+燈的回跳已經沒有（e 生效）；剩下的異常**全部只發生在「全部文章」那一邊** ——
+醫師介紹 ↔ 診所資訊 那十八次一幀都沒事。原因是 #topics 那個落點的頁首
+還壓在窄帶上，那是當時唯一還留著濾鏡的落點。</pre></div>
+
+<h2>九個候選、定案六個</h2>
+<div class="note"><pre>a 紙色區拆玻璃      ✔ 定案（後來被 i 的 band-solid 涵蓋，規則合併掉了）
+                    捲過窄帶之後 --glass 的 alpha 是 1、--head-fade 是 100%，
+                    模糊與遮罩都不做事了，所以整組拆掉。
+                    逐像素驗過與改動前相同（三個視窗 × 兩個位置，背景 0 個像素有差）。
+b 底色搬到 ::after  ✘ 落選。想法對、位置錯：::before 和 ::after **都是負 z-index
+                    的那一組，WebKit 是整組一起丟的** —— 錄影第 198 幀兩層一起不見。
+                    在 Chromium 上把兩個偽元素一起 display:none 就重現了那張圖。
+c 釘住那一層        ✘ 落選，**實測更糟**。給 ::before 常駐 will-change ＋
+                    translateZ(0) 之後，連品牌標誌與「芳仁牙醫診所」那幾個字都會
+                    整幀不見（第 455、562 幀）。多一個合成層 ＝ 多一個會掉的東西。
+d 那三個標籤瞬間跳  ✔ 定案。原本是診斷用，後來升格 —— 有一種閃**不是漏畫**：
+                    捲動太快，中間剛好只有一幀落在「窄帶還在頁首底下」那一段，
+                    那一幀就合法地長成玻璃的樣子（第 153 幀）。沒有中間那幾幀就沒有。
+e 點了就先亮        ✔ 定案。治 ③。順帶治好一件本來就不太對的事：改動前點下去要等
+                    約 380ms（實測 23 幀）燈才移過去，現在是點的當下就到。
+f 點了就先算好      ✔ 定案。治 ②。點的當下就用**目的地的捲動位置**算一次頁首
+                    （paint 多收一個 vy 參數，把所有 rect 減掉位移量），
+                    捲動停下來之前不讓逐幀的 paint 蓋回去。
+g 底色畫在頁首上    ✔ 定案。b 的正確版：畫在**頁首自己的 background** 上，
+                    用漸層自己做出下緣淡出（三個色停 ＝ 原本那個遮罩）。
+                    那一層在負 z-index 那組之前就畫完，丟不掉。
+h 只拆濾鏡          ✘ 半成品，但**它是關鍵的診斷**。使用者實測：加了 h 就不閃了
+                    → 濾鏡確定是元凶。代價也如預期看得見：「捲動到窄帶的時候
+                    底下的字突然變得比較清楚」（390 上最大差 65 階）。
+i 窄帶收成實色      ✔ 定案。h 的完成版：拆濾鏡的同時把薄色收到不透明，
+                    底下就沒有東西透得上來。</pre></div>
+
+<h2>定案的六項怎麼寫（照這個順序讀 index.html）</h2>
+<div class="note"><pre>1. **薄色畫在頁首自己的 background 上**，用漸層做出下緣淡出。
+   html.scrolled .site-head { background-image: linear-gradient(180deg,
+     var(--glass) 0%, var(--glass) var(--head-fade), rgba(25,22,20,0) 100%) }
+   ::before 因此只剩模糊與遮罩，不再有 background。
+2. **薄色收滿的地方把濾鏡與遮罩整組拆掉**：html.band-solid .site-head::before。
+   band-solid **涵蓋 past-band**（窄帶上緣過了畫面頂 ⊇ 下緣過了畫面頂），
+   所以紙色區也吃得到，原本 a 那兩條規則就合併進來了。
+3. **窄帶壓上來就把薄色收到不透明**（JS）：
+     k     = clamp((頁首高 - 窄帶.top) / 頁首高, 0, 1)
+     kk    = k*k*(3-2*k)
+     alpha = alpha + (1 - alpha) * kk
+     fade  = fade  + (100 - fade)  * kk
+     blur  = blur * (1 - kk)
+     k >= 1 → 掛 band-solid
+4. **點選單先用目的地的捲動位置算一次**：paint(vy)，dy = vy - scrollY，
+   band 與 photo 的 rect 都減掉 dy。
+5. **那三個標籤瞬間跳**：點下去把 root.style.scrollBehavior 設成 auto，
+   捲動停下來再交還給 CSS。
+6. **點下去就先亮**：scrollspy 的 paintNav 拆成 paintNav / setHere 兩半，
+   點擊時直接 setHere(那一項) 並上鎖。</pre></div>
+
+<h2>不要違反的（都是踩過或量過的）</h2>
+<div class="note"><pre>⚠ **薄色不要同時畫在兩個地方。** 中間版本 background-color（a）與
+  background-image（g）兩條都在頁首身上，平常 alpha 是 1 看不出來，
+  但跳一格那一幀 class 與變數短暫不同步就會**暗一階**。現在只有漸層那一條。
+⚠ **band-solid 的門檻要跟著頁首高走，不要用 t 的門檻。**
+  #topics 那個落點的 t 只有 0.88~0.92（390／834／1440 三個視窗都是），
+  第一版寫 t >= 1，手機與 iPad 過關但電腦版 1440 沒到（落點還留著 blur 5.25px）——
+  而那正是唯一會出事的落點。門檻跟著頁首高走，九個落點才全部是 none。
+⚠ **薄色要 ramp 不要直接切。** band-solid 起點那一刻 alpha 只有 .44，
+  直接切成 1 的話，正在滑進條子底下的那幾行字會啪一下消失。
+⚠ **不要 preventDefault 自己 scrollTo。** 讓瀏覽器照常跑錨點導覽，
+  上一頁才還會回到上一節。只把這一次的 scroll-behavior 改成 auto。
+⚠ **瞬間跳只給頁首那三個標籤。** 頁尾導覽、往下看的指標、跳過導覽
+  都還是平滑捲動，那些沒有這個問題。
+⚠ **不要給 ::before 加 will-change / translateZ(0) 想把它釘住。** 見上面的 c。
+⚠ **HERO 那一屏（條子底下是照片）的玻璃一個值都沒動。**</pre></div>
+
+<h2>逐像素的驗證</h2>
+<div class="note"><pre>新版 index.html 對「改動前的線上版」，量頁首那一條（三個視窗 × 八個捲動位置）：
+
+  y=0     HERO 頂（還沒有玻璃）   0 個像素有差
+  HERO 照片                      最大 3~4 階
+  窄帶交界                       最大 3~4 階
+  紙色區                         92934 個像素差 1~2 階，只有 3 個像素超過 8
+
+那 1~4 階從哪來：薄色現在畫在模糊**下面**（頁首自己的 background）而不是
+**裡面**（::before 的 background），合成順序換了；以及紙色區的 alpha
+從 .997 收成 1.000。兩者都在看不出來的量級。
+
+另外做過的驗證：
+・用 display:none 把 ::before（以及 ::after）整層藏起來，模擬漏畫的那一幀。
+  改動前條子整條消失、重現了錄影裡那張白底鬼影；改動後條子仍然是深的。
+・沿著 past-band 的分界前後各 60px 掃 13 個位置，改動前後的中位數亮度
+  一位小數都一樣。
+・三個視窗 × 三個落點共九個，點下去的**同一個同步區段**裡燈已經到位、
+  band-solid 已經掛上、濾鏡已經是 none。</pre></div>
+
+<h2>做這一頁本身踩到的兩個坑</h2>
+<div class="note"><pre>⚠ **提案頁是 index.html 的複本時，srcset 要另外處理。**
+  相對路徑往上兩層那條比對式寫 (href|src)=" 吃不到 srcset="，
+  而 srcset 贏過 src —— HERO 那張照片會 404。
+
+⚠ **要動到頁面裡某一段 JS 的時候，錨點一定要挑只出現一次的那一段。**
+  var tick = false; 這一站有兩處（頁首玻璃與 scrollspy 都是同一個節流寫法），
+  String.replace 只換第一個 —— 第一版把 e 的程式碼插進了玻璃那支的閉包裡，
+  那裡沒有 links／spots，整支 scrollspy 會壞。
+  錨點改成連 paintNav 一起比對，並斷言只有一處。</pre></div>
+
+<footer>
+  芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a>　<a href="/">回首頁</a>
+</footer>
+</div></body>
+</html>

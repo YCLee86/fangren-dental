@@ -788,11 +788,13 @@ a { color: var(--teal); }
 .site-nav { justify-self: end; }
 html.scrolled .site-head .shell { height: var(--head-h-sm); }
 
-/* 玻璃放在 ::before 而不是頁首自己身上，才能用 opacity 平滑淡入 ——
-   backdrop-filter 本身沒辦法漸進開關。 */
+/* ⚠ **薄色不在這一層，在頁首自己的 background 上**（2026-08-15 搬走的，
+   見底下「點選單那一下不要閃跳」那一整段）。這一層現在只剩模糊與遮罩。
+   原因：`::before` 是負 z-index 的那一組，WebKit 會**整組一起丟**，
+   顏色掛在這裡就會跟著一起消失。頁首自己的 background 在那一組之前就畫完了。
+   ⚠ 這一層仍然要留著 opacity 的淡入 —— backdrop-filter 沒辦法漸進開關。 */
 .site-head::before {
   content: ''; position: absolute; inset: 0; z-index: -1;
-  background: var(--glass, transparent);
   /* 模糊量不是固定的 —— 見下面「招牌之前不要那麼糊」那一段與底下 JS 的 headBlur。
      **變數沒被設過就是 6px**，所以沒有 JS 的時候完全等於 2026-08-11 之前的樣子。 */
   -webkit-backdrop-filter: blur(var(--head-blur, 6px)) saturate(1.08);
@@ -814,60 +816,81 @@ html.scrolled .site-head .shell { height: var(--head-h-sm); }
 html.scrolled .site-head::before { opacity: 1; }
 
 /* ==========================================================================
-   捲過窄帶之後就不要玻璃了 —— 點選單會閃一下白（2026-08-14）
+   點選單那一下不要閃跳（2026-08-14 ~ 15，六輪，提案頁 preview/head-flash/）
    --------------------------------------------------------------------------
+   ⚠ 這一整段是量出來的，**不要憑感覺改任何一個條件**。完整的推導、
+     每一輪的錄影幀號與落選案在 /history/head-flash.html。
+
    ── 症狀 ──────────────────────────────────────────────────────────────────
    使用者：「右上三個標籤切換的時候會有畫面閃跳的感覺。」
-   iPad 直放的螢幕錄影逐幀拆開（30 fps）：三次點選單、**三次都閃**，
-   每次是 1~2 幀（33~67ms）**整條頁首完全不見** —— 白字落在紙色 #e2e5e6 上，
-   對比度掉到 1.1 左右，等於憑空消失再出現。量頁首那一條的平均亮度：
-   平常 63.1（實心 #393736 ＋ 白字），閃的那幾幀 232.3（＝紙色）。
+   iPad 與 iPhone 的螢幕錄影逐幀拆開（30 fps），量到的其實是**三件不同的事**：
 
-   ── 成因：不見的只有 `::before` 這一層 ────────────────────────────────────
-   閃的那幾幀放大看，**其他東西全都還在**：三個玻璃框（`a::before` 的
-   box-shadow）、那塊底（`.nav-lamp`）、品牌標誌與所有白字都照常畫出來，
-   而且燈已經移到剛點的那一項 —— 也就是 JS 跑完了、版面沒問題。
-   唯一漏掉的是**整個頁首裡唯一帶 `backdrop-filter` ＋ `mask-image` 的那一層**。
+     ① 整條頁首漏畫 1~2 幀。白字落在紙色 #e2e5e6 上，對比度剩 1.1，
+        等於憑空消失再出現。頁首那一條的平均亮度從 63.1 跳到 232.3。
+     ② 頁首的深淺**慢一幀**。內容已經跳到目的地了，頁首還套著出發點那一段的
+        玻璃狀態（alpha .84、遮罩 92%），套在紙色上就是一條上深下淺的板。
+     ③ 選單的燈**回跳一幀**（第 62 幀醫師介紹、63 幀又變回診所資訊、64 幀才穩）。
 
-   WebKit 會把這種元素放進自己的合成層，而且每一幀都要重新取一次背後的畫面。
-   點選單是 `scroll-behavior: smooth` 的錨點跳轉，捲動位置一步跨很遠、
-   背後那張圖整個換掉，那一層來不及重建就會漏畫一到兩幀。
-   **這不是我們的 JS 慢**（燈都跟上了），是那一層的合成問題。
+   ── ① 漏畫的是哪一層 ──────────────────────────────────────────────────
+   閃的那幾幀放大看，**其他東西全都還在**：三個玻璃框、那塊底（.nav-lamp）、
+   品牌與所有白字都照常畫出來，燈也已經移到剛點的那一項 —— JS 跑完了、
+   版面沒問題（把三顆標籤橫著並排比，前後五幀的垂直位置一模一樣）。
+   不見的只有帶 backdrop-filter 的那一層。
 
-   ── 解法：在它不做事的地方，把它拆掉，並且加一層畫不壞的底 ─────────────
-   關鍵是**捲過窄帶之後那兩樣本來就已經不做事了**：
-     ・`--glass` 的 alpha 到 1（實心 #393736），底下糊不糊完全看不出來
-     ・`--head-fade` 到 100%，遮罩整片不透明，等於沒有遮罩
-   兩者都由 `u >= 1` 決定，而 `html.past-band` 正是同一個條件
-   （見底下 JS 的 `paint()`：`u` 到 1 的那一刻 alpha 剛好也到 1）。
-   所以這兩條規則**逐像素等價**，不是「差不多」——
-   1440×900 與 834×1112 兩個視窗、頁首那 64 列全部比對過，0 個像素有差。
+   WebKit 把這種元素放進自己的合成層，捲動一步跨很遠、背後那張圖整個換掉時
+   來不及重建，就會漏畫。**而且它是連著整組負 z-index 一起丟的** ——
+   中間試過把薄色搬到 ::after，第 198 幀兩層一起不見，證明搬到隔壁沒有用。
 
-   兩條一起下，缺一不可：
-     1. `::before` 拿掉 filter 與 mask → 那一層退回一塊普通的實心色，
-        不再需要合成層，也就沒有東西可以漏畫。
-     2. **同一個色也畫在頁首自己身上**。這是保險：頁首自己的 background
-        沒有濾鏡、沒有遮罩，不可能被丟掉。就算 `::before` 又漏了一幀，
-        條子仍然是深的，只會少掉「一層看不出來的東西」，不會閃白。
-        （負 z-index 的 ::before 是畫在**父層 background 之上**的，
-        兩層同色疊起來還是同一個色。）
+   ── 解法（六項，缺一不可）────────────────────────────────────────────────
+   1. **薄色畫在頁首自己的 background 上**，用漸層自己做出下緣淡出
+      （三個色停 ＝ 原本那個遮罩）。那一層沒有濾鏡、沒有遮罩，也不在負
+      z-index 那一組裡，丟不掉。就算 ::before 又漏一幀，條子仍然是深的。
+   2. **薄色收滿的地方就把濾鏡與遮罩整組拆掉**（html.band-solid）。
+      沒有濾鏡就沒有東西可以漏畫。
+   3. **窄帶壓上來的時候把薄色收到不透明**（底下 JS 的 band-solid 那一段）。
+      只做 2 不做 3 的話，窄帶那幾行字（地址電話、1983／9／5）會從
+      糊成一團變成看得清楚，和條子上的字疊在一起 —— 使用者實測回報過。
+   4. **點選單的時候，頁首先用「目的地的捲動位置」算一次**（JS 的 paint(vy)）。
+      治 ②：頁首的深淺是 JS 在 scroll 的 rAF 裡寫的，主執行緒本來就比
+      合成器晚一幀，內容先到、頁首後到。
+   5. **那三個標籤改成瞬間跳**（不走 scroll-behavior: smooth）。
+      沒有中間那幾幀，就沒有「剛好有一幀落在窄帶那一段」那種合法的閃。
+   6. **點下去就先把那一項點亮**（scrollspy 的 lock）。治 ③。
 
-   ⚠ **不要把這兩條的條件從 `past-band` 換成 `scrolled`。** 玻璃區
-     （HERO ＋ 窄帶那一段）alpha 只有 .06~.84，那裡的模糊與遮罩都是看得見的，
-     拆掉就等於把玻璃拿掉了。這一段只治「已經是實心」的那一段。
-   ⚠ 玻璃區**這一輪一個值都沒動**，那三次閃全部發生在紙色區
-     （醫師介紹、診所資訊），紙色區才是白字對白底、看得最清楚的地方。
-     實測跳到 `#topics`（頁首還壓在窄帶上）那一次沒有漏畫。
-   ⚠ 這一段只有首頁有。文章頁走 `assets/style.css`，那邊的頁首本來就是
-     一塊實心 `var(--head)`（沒有照片可以糊），碰不到這件事。
+   ── 不要違反的 ───────────────────────────────────────────────────────────
+   ⚠ **薄色不要同時畫在兩個地方。** 中間版本 background-color 與
+     background-image 兩條都在頁首身上，平常 alpha 是 1 看不出來，
+     跳一格那一幀 class 與變數短暫不同步就會**暗一階**。現在只有漸層那一條。
+   ⚠ **band-solid 的門檻要跟著頁首高走，不要用 t 的門檻。**
+     #topics 那個落點的 t 只有 0.88~0.92（三個視窗都是），
+     寫 t >= 1 會剛好漏掉出事的那個落點 —— 而那正是唯一會出事的落點。
+   ⚠ **薄色要 ramp 不要直接切。** band-solid 起點那一刻 alpha 只有 .44，
+     直接切成 1 的話，正在滑進條子底下的那幾行字會啪一下消失。
+   ⚠ **不要給 ::before 加 will-change / translateZ(0) 想把它釘住。**
+     實測**更糟**：連品牌標誌與「芳仁牙醫診所」那幾個字都會整幀不見。
+     多一個合成層 ＝ 多一個會掉的東西。
+   ⚠ **HERO 那一屏（條子底下是照片）的玻璃一個值都沒動。** 八個捲動位置
+     逐一比對過。換掉的是窄帶上緣滑進條子的那 60px 左右。
+   ⚠ 這一整段只有首頁有。文章頁走 assets/style.css，那邊的頁首本來就是
+     一塊實心 var(--head)（沒有照片可以糊），碰不到這件事。
    ========================================================================== */
-html.past-band .site-head::before {
+/* 薄色。三個色停等於原本那個遮罩：實色到 --head-fade，再淡到全透明。
+   終點寫 rgba(25,22,20,0) 不寫 transparent，免得預乘內插有爭議。 */
+html.scrolled .site-head {
+  background-image: linear-gradient(180deg,
+    var(--glass, transparent) 0%,
+    var(--glass, transparent) var(--head-fade, 76%),
+    rgba(25, 22, 20, 0) 100%);
+}
+/* 薄色已經收到不透明的那一段：濾鏡與遮罩都不做事了，整組拆掉。
+   band-solid 由底下的 JS 掛上，而且它**涵蓋 past-band**
+   （窄帶上緣過了畫面頂 ⊇ 窄帶下緣過了畫面頂），所以紙色區也吃得到。 */
+html.band-solid .site-head::before {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   -webkit-mask-image: none;
   mask-image: none;
 }
-html.past-band .site-head { background-color: var(--glass); }
 
 /* ==========================================================================
    頁首玻璃的深淺 —— 交給底下的東西決定（2026-08-07 第五輪）
@@ -4618,6 +4641,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   var RAMP_PX = 110;            // 招牌之前多少 px 開始升回 FULL
   var FULL = 6;                 // 招牌之後 ＝ 改動之前的樣子
   var flat = 4, lastBlur = null;
+  var blurMul = 1;              // 窄帶收成實色時把模糊一起收掉，見 paint()
 
   function readFlat() {
     var v = parseFloat(getComputedStyle(root).getPropertyValue('--head-blur-flat'));
@@ -4633,9 +4657,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     return .5;                  // center，以及這一站沒用到的 px 值
   }
 
-  function paintBlur(headH) {
+  function paintBlur(headH, dy) {
     if (!photo || !heroImg || !heroImg.naturalWidth) return;
-    var r = photo.getBoundingClientRect();
+    var rp = photo.getBoundingClientRect();
+    var r = { top: rp.top - (dy || 0), width: rp.width, height: rp.height };
     if (!r.height) return;
     var s = Math.max(r.width / heroImg.naturalWidth, r.height / heroImg.naturalHeight);
     var vh01 = Math.min(1, (r.height / s) / heroImg.naturalHeight);
@@ -4648,17 +4673,22 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var b = f <= start ? flat
           : f >= SIGN  ? FULL
           : flat + (FULL - flat) * (f - start) / (SIGN - start);
-    b = Math.round(b * 4) / 4;
+    b = Math.round(b * blurMul * 4) / 4;
     if (b !== lastBlur) {
       root.style.setProperty('--head-blur', b.toFixed(2) + 'px');
       lastBlur = b;
     }
   }
 
-  function paint() {
-    root.classList.toggle('scrolled', scrollY > 4);
+  /* vy：假裝捲到那個位置去算（點選單的時候用目的地的值先算一次，見底下的
+     nav 點擊處理）。不傳就是 0，等同「照現在的捲動位置算」——
+     window.fangrenRepaintHead 也是這樣呼叫的。 */
+  function paint(vy) {
+    var dy = (typeof vy === 'number') ? vy - scrollY : 0;
+    root.classList.toggle('scrolled', (scrollY + dy) > 4);
 
-    var r = band.getBoundingClientRect();
+    var rb = band.getBoundingClientRect();
+    var r = { top: rb.top - dy, bottom: rb.bottom - dy, height: rb.height };
     var h = head.getBoundingClientRect().height || 1;
 
     /* t：窄帶進入並填滿條子（0 → 1）。這段條子底下是夜色。 */
@@ -4670,6 +4700,25 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var a = A_MIN + (A_MAX - A_MIN) * t;          // 玻璃的濃度
     var col = TINT.map(function (v, i) { return Math.round(v + (SOLID[i] - v) * u); });
     var alpha = a + (1 - a) * u;                  // u 到 1 時剛好完全不透明
+    var fadePct = 76 + 24 * t * t * t;            // 下緣淡出的起點，見底下
+
+    /* ---- 窄帶壓上來就收成實色（2026-08-15）--------------------------------
+       濾鏡是整件事的元凶（使用者實測：把它拆掉就不閃了），但**光拆濾鏡不夠** ——
+       窄帶那幾行字會從糊成一團變成看得清楚。所以拆濾鏡的同時把薄色收到不透明，
+       底下就沒有東西透得上來。三件事綁在同一條 smoothstep 上一起走。
+
+       k 從「窄帶上緣碰到條子下緣」起算，到「窄帶上緣碰到畫面頂」剛好走完 ——
+       也就是**窄帶完全蓋住條子的那一刻薄色正好收滿**。
+       ⚠ 門檻要跟著頁首高走。寫死成 t 的門檻會在某些視窗漏掉 #topics 那個落點
+         （量到 t 只有 0.88~0.92），而那正是唯一會出事的落點。
+       ⚠ 要 ramp 不要直接切：起點那一刻 alpha 只有 .44，直接切成 1 的話，
+         正在滑進條子底下的那幾行字會啪一下消失。 */
+    var k = Math.max(0, Math.min(1, (h - r.top) / h));
+    var kk = k * k * (3 - 2 * k);
+    alpha = alpha + (1 - alpha) * kk;
+    fadePct = fadePct + (100 - fadePct) * kk;
+    blurMul = 1 - kk;
+    root.classList.toggle('band-solid', k >= 1);
 
     root.style.setProperty('--glass',
       'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + alpha.toFixed(3) + ')');
@@ -4686,14 +4735,60 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
        收完之後條子下緣是硬邊，但那一刻它正好和「窄帶結束、紙色開始」
        那條原本就存在的邊重合，所以看不出多了一條線。 */
-    root.style.setProperty('--head-fade', (76 + 24 * t * t * t).toFixed(1) + '%');
+    root.style.setProperty('--head-fade', fadePct.toFixed(1) + '%');
 
-    paintBlur(h);               // 招牌之前不要那麼糊，見上面 paintBlur
+    paintBlur(h, dy);           // 招牌之前不要那麼糊，見上面 paintBlur
   }
+
+  /* ---- 點選單那一下（2026-08-15）------------------------------------------
+     兩件事一起做，都是為了「頁首不要慢一幀」：
+       ・那三個標籤**瞬間跳**，不走 scroll-behavior: smooth ——
+         中間沒有幀，就沒有「剛好有一幀落在窄帶那一段」那種合法的閃。
+         ⚠ 只針對頁首那三個標籤。頁尾導覽、往下看的指標、跳過導覽
+           都還是平滑捲動，那些沒有這個問題。
+       ・**先用目的地的捲動位置算一次頁首**，再把逐幀的 paint 擋住，
+         直到捲動真的停下來。不然頁首會晚一幀才換過去。
+     ⚠ 目的地要自己算（那一節的上緣減掉 scroll-padding-top，夾在可捲範圍內），
+       不能等瀏覽器捲完再讀 —— 那就又慢一幀了。 */
+  var navLock = false, navT = 0, navLastY = null;
+  function navSettle() {
+    if (scrollY === navLastY) {
+      navLock = false;
+      root.style.scrollBehavior = '';     // 交還給 CSS，其他連結仍然是平滑的
+      paint();
+      return;
+    }
+    navLastY = scrollY;
+    navT = setTimeout(navSettle, 120);
+  }
+  document.addEventListener('click', function (ev) {
+    var a = ev.target && ev.target.closest && ev.target.closest('.site-nav a[href^="#"]');
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute('href').slice(1));
+    if (!el) return;
+    var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+    var vhNow = (window.visualViewport && visualViewport.height) || innerHeight;
+    var target = Math.max(0, Math.min(root.scrollHeight - vhNow,
+      el.getBoundingClientRect().top + scrollY - pad));
+
+    /* ⚠ **不要 preventDefault 自己 scrollTo。** 讓瀏覽器照常跑錨點導覽，
+       上一頁才還會回到上一節（自己捲的話那一步歷史紀錄就不見了）。
+       這裡只是把這一次的捲動改成瞬間的，捲完再把 scroll-behavior 交還給 CSS。 */
+    root.style.scrollBehavior = 'auto';
+    navLock = false;
+    paint(target);                        // 先把頁首換成目的地的樣子
+    navLock = true;                       // 再把逐幀的 paint 擋住
+    clearTimeout(navT); navLastY = null;
+    navT = setTimeout(navSettle, 120);
+    setTimeout(function () {              // 保險絲
+      navLock = false;
+      root.style.scrollBehavior = '';
+    }, 2500);
+  }, true);
 
   var tick = false;
   function onScroll() {
-    if (tick) return;
+    if (tick || navLock) return;
     tick = true;
     requestAnimationFrame(function () { tick = false; paint(); });
   }
@@ -4801,7 +4896,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
   function paintNav() {
     setPad();
-    var here = pick();
+    /* 點了選單、捲動還沒停：燈黏在剛剛點的那一項上，只跟著版面重量幾何。 */
+    if (lock) { if (current) moveLamp(current.a); return; }
+    setHere(pick());
+  }
+
+  function setHere(here) {
     if (here === current) { if (here) moveLamp(here.a); return; }
     current = here;
     spots.forEach(function (s) {
@@ -4811,6 +4911,33 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     if (here) { root.setAttribute('data-here', here.id); moveLamp(here.a); }
     else root.removeAttribute('data-here');
   }
+
+  /* ---- 點下去就先亮（2026-08-15）------------------------------------------
+     錄影逐幀量到：點「醫師介紹」之後燈已經移過去了，**中間有整整一幀又跳回
+     「診所資訊」**（第 62 幀醫師介紹、63 幀診所資訊、64 幀起才穩定）。
+     pick() 是捲動位置的純函數，理論上不會來回 —— 會來回是因為 iOS 的捲動由
+     UI 行程驅動，某一幀讀到的 getBoundingClientRect 還是上一個捲動位置。
+
+     所以改成**點下去就先把那一項點亮**，捲動停下來之前不理會逐幀的判斷。
+     順帶治好一件本來就不太對的事：改動前點下去要等約 380ms（實測 23 幀）
+     燈才會移過去 —— 它在等捲動跨過判斷線。現在是點的當下就到。 */
+  var lock = false, lockT = 0, lastY = null;
+  function settle() {
+    if (scrollY === lastY) { lock = false; paintNav(); return; }
+    lastY = scrollY;
+    lockT = setTimeout(settle, 120);
+  }
+  links.forEach(function (a) {
+    a.addEventListener('click', function () {
+      var s = null;
+      for (var i = 0; i < spots.length; i++) if (spots[i].a === a) s = spots[i];
+      if (!s) return;
+      lock = true; clearTimeout(lockT); lastY = null;
+      setPad(); setHere(s);
+      lockT = setTimeout(settle, 120);
+      setTimeout(function () { lock = false; }, 2500);   /* 保險絲 */
+    });
+  });
 
   var tick = false;
   function onScroll() {
