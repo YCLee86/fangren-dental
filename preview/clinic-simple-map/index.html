@@ -1322,20 +1322,27 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
            **不是從這張圖上量的** —— 這張圖的南北被壓過（見上面第五、九輪），
            圖上的長短只能當示意。
 
-           ⚠⚠ **終點是 x=330，不是診所的邊 x=324**（2026-08-14 使用者：
-             「虛線原點離診所最近的被切到了，我希望那個圓點是完整的」）。
-             成因是**畫的順序**：診所那塊綠色（.mark-plot）在 DOM 上排在
-             .dots 後面，所以會蓋在點上面。終點原本正好壓在診所右緣，
-             最後那顆點（r 3.5）就被切掉一半。往外挪 6 個單位（約 3 公尺）之後
-             點的左緣落在 326.5，離診所還有 2.5，整顆都在永樂街的路面上。
-             ⚠ 不要改成「把 .mark-plot 搬到 .dots 前面」——那樣點雖然完整，
-               但會疊在診所色塊上，看起來像路線穿進屋子裡。
+           ⚠⚠ **直線段走 x=334，而且到 y=261 就結束，沒有最後那一小段橫的**
+             （2026-08-14 兩輪疊出來的形狀）：
+             ・第一輪：終點原本正好壓在診所右緣 x=324，最後那顆點（r 3.5）
+               被綠色蓋掉一半（`.mark-plot` 在 DOM 上排在 `.dots` 後面）。
+               ⚠ 不要改成「把 .mark-plot 搬到 .dots 前面」——那樣點雖然完整，
+                 但會疊在診所色塊上，看起來像路線穿進屋子裡。
+             ・第二輪：當時的解法是往外挪到 330，於是多出一段**只有 9 個單位
+               的橫向短段**。那一段比點距（14）還短，轉角與終點的兩顆點就變成
+               斜著並排 —— 使用者放大手機截圖看出來：「那個藍色點沒有對齊，
+               歪歪斜斜的」。
+               改成**整條直線走 x=334、到 y=261 收尾**，短段整個不存在。
+               334 仍在永樂街的路面內（324~354），點的左緣 330.5，
+               離診所 6.5，整顆都在路面上。
              ⚠ 起點那一端不必處理：三個停車場的 .lot 排在 .dots 前面，
-               點本來就畫在色塊上面，不會被切。 -->
+               點本來就畫在色塊上面，不會被切。
+             ⚠ 壹車房那塊牌子的 `data-tx` 也跟著從 339 改成 334，
+               不然尾巴的尖端會頂到點上。 -->
       <g class="routes">
-        <path class="route" data-lot="a" d="M235 165L339 165L339 261L330 261"/>
-        <path class="route" data-lot="b" d="M410 188L339 188L339 261L330 261"/>
-        <path class="route" data-lot="c" d="M354 507L339 507L339 261L330 261"/>
+        <path class="route" data-lot="a" d="M235 165L334 165L334 261"/>
+        <path class="route" data-lot="b" d="M410 188L334 188L334 261"/>
+        <path class="route" data-lot="c" d="M354 507L334 507L334 261"/>
         <g class="dots" data-lot="a"></g>
         <g class="dots" data-lot="b"></g>
         <g class="dots" data-lot="c"></g>
@@ -1381,7 +1388,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           </g>
         </g>
         <!-- 這一塊的路線是直的（永樂街），所以尾巴朝右、牌子擺在路線左邊 -->
-        <g class="rlab" data-lot="c" data-dir="right" data-tx="339">
+        <g class="rlab" data-lot="c" data-dir="right" data-tx="334">
           <path class="bub"/><path class="tail"/>
           <g class="rl-body">
             <a class="rl-link" href="https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic" target="_blank" rel="noopener">
@@ -1564,23 +1571,44 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
   // 桌機另外吃 hover（預覽），滑開就回到「釘住」的那一個。
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var pinned = null, hovered = null;
-  // 步行路線的圓點：沿著 .route 的幾何**等距**排。
-  // ⚠ 間距是「總長 ÷ 四捨五入後的顆數」，所以每一條的間隔自己會是均勻的，
-  //   起點與終點都剛好落一顆 —— 用 stroke-dasharray 做不到這件事（轉角會跳相位）。
+  // 步行路線的圓點：**一段一段排，不是沿著整條路徑排**。
+  //
+  // ⚠⚠ 這裡改過兩次，第二次是 2026-08-14 使用者放大手機截圖看出來的
+  //   （「那個藍色點沒有對齊，歪歪斜斜的」）：
+  //     第一版 stroke-dasharray —— 轉角會把相位打亂，間隔看起來不一致。
+  //     第二版 getPointAtLength 沿**整條**路徑等距排 —— 間隔是勻的，
+  //       但**轉角不保證剛好落一顆**：點會跨過轉角，於是轉角附近出現
+  //       兩顆斜著並排的點，看起來就是「歪掉」。
+  //     現在：把折線拆成一段一段，每一段自己算 `n = round(長度/14)`，
+  //       所以**每個轉角一定剛好一顆**，而且同一段之內完全等距。
+  //   ⚠ 代價是不同段的間距可能差幾個百分點 —— 那個看不出來，
+  //     轉角的雙點看得出來。**不要改回沿整條路徑排。**
+  // ⚠ 直接從 `d` 屬性把折線的頂點抓出來（這三條都是 M ＋ 幾個 L，沒有曲線）。
   function buildDots() {
     fig.querySelectorAll('.route').forEach(function (path) {
       var g = fig.querySelector('.dots[data-lot="' + path.dataset.lot + '"]');
       if (!g) return;
       while (g.firstChild) g.removeChild(g.firstChild);
-      var L = path.getTotalLength(), n = Math.max(2, Math.round(L / 14));
-      for (var i = 0; i <= n; i++) {
-        var pt = path.getPointAtLength(L * i / n);
+      var nums = (path.getAttribute('d').match(/-?\d+(?:\.\d+)?/g) || []).map(Number);
+      var P = [];
+      for (var i = 0; i + 1 < nums.length; i += 2) P.push({ x: nums[i], y: nums[i + 1] });
+      if (P.length < 2) return;
+      var pts = [P[0]];
+      for (var s = 1; s < P.length; s++) {
+        var a = P[s - 1], b = P[s];
+        var len = Math.sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
+        var n = Math.max(1, Math.round(len / 14));
+        for (var k = 1; k <= n; k++) {
+          pts.push({ x: a.x + (b.x - a.x) * k / n, y: a.y + (b.y - a.y) * k / n });
+        }
+      }
+      pts.forEach(function (pt) {
         var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         c.setAttribute('cx', pt.x.toFixed(2));
         c.setAttribute('cy', pt.y.toFixed(2));
         c.setAttribute('r', '3.5');
         g.appendChild(c);
-      }
+      });
     });
   }
   buildDots();
