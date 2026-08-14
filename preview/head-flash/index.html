@@ -3180,12 +3180,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         <svg viewBox="0 0 12 6" aria-hidden="true"><path d="m0 0 6 6 6-6"/></svg>
       </a>
 
-      <!-- 瀏覽數。正式站是 data-views-self="home"（會先幫首頁 +1 再取回真值）；
-           **提案頁一定要換成 data-views**，否則每開一次這一頁首頁的計數就多一次。
-           counter.js 的 bump() 第一行是 selfEls[0] 不存在就直接 return，
-           所以整頁沒有任何 [data-views-self] ＝ 一次寫入都沒有。
-           數字本身仍然是 D1 的真值（data-views ＝ 只顯示、不加總），
-           往上數的動畫與 .is-on 也照原樣跑 —— 這一頁上沒有任何寫死的假數字。 -->
+      <!-- 瀏覽數。正式站是 data-views-self="home"（先幫首頁 +1 再取回真值）；
+           **提案頁一定要換成 data-views**，否則每開一次首頁的計數就多一次。
+           counter.js 的 bump() 沒有 [data-views-self] 就直接 return，一次寫入都沒有；
+           數字仍然是 D1 的真值，往上數的動畫照跑 —— 這一頁沒有寫死的假數字。 -->
       <p class="band-views" data-views="home">
         <span class="sr-only"></span>
         <span class="views-n" aria-hidden="true">0</span><small aria-hidden="true">次瀏覽</small>
@@ -4961,95 +4959,148 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 </script>
 
 <!-- ==========================================================================
-     切換條（提案用，定案後連同 data-fix 一起刪掉）
+     切換條（提案用，定案後連同 data-opt 一起刪掉）
      --------------------------------------------------------------------------
-     ?fix=off｜on，正規式寫 [a-z0-9]+（寫 [a-z]+ 會吃不到帶數字的值）。
+     ?opt=<字母> —— 正規式 [a-z0-9]+（寫 [a-z]+ 會吃不到帶數字的值）。
+     四顆**獨立**開關，可以疊著用：
 
-     「改動前」那一案是**把這一輪加的兩條規則抵銷掉**，不是另外寫一套 ——
-     所以兩案的差別剛好就是這次的改動，沒有第三個變因。
-     權重：html[data-fix="off"].past-band 比 html.past-band 多一個屬性選擇器，
-     一定贏，不必靠順序。
+       a 紙色區拆玻璃    已經上線的那一版：捲過窄帶之後 --glass 的 alpha 是 1、
+                        --head-fade 是 100%，模糊與遮罩都不做事了，所以整組拆掉，
+                        並把同一個實心色也畫在頁首自己身上當保險。
+                        逐像素驗過與改動前相同。
+       b 底色搬到頁首上  ::before 只留模糊與遮罩，那層薄色改由 ::after 畫。
+                        這樣**顏色不再掛在有濾鏡的那一層上** —— 就算它漏畫一幀，
+                        少掉的只有「糊」，條子的深淺不會變，也就不會閃。
+                        玻璃區（HERO ＋ 窄帶）也吃得到，a 只管紙色區。
+                        ⚠ 代價：下緣淡出那一小段的合成順序變了（原本是
+                          「薄色疊在糊過的底上」整塊再被遮罩衰減，拆開之後
+                          兩層各自衰減）。差別只在遮罩沒有全不透明的那一段。
+       c 釘住那一層      給 ::before 常駐 will-change ＋ translateZ(0)，
+                        要 WebKit 不要把那個合成層丟掉。零外觀成本，但沒把握。
+       d 點選單瞬間跳    scroll-behavior 改成 auto。用來判斷這件事是不是
+                        smooth 那段動畫造成的 —— 是診斷用，不是候選。
 
-     ⚠ 這條 bar 自己**不准用 backdrop-filter** —— 這一頁在測的就是那個東西
-       漏畫，工具本身再放一層等於自己製造變因。實心色。
+     ⚠ 這條 bar 自己**不准用 backdrop-filter** —— 這一頁在測的就是那個東西漏畫，
+       工具本身再放一層等於自己製造變因。實心色。
      ========================================================================== -->
 <style>
-  html[data-fix="off"].past-band .site-head::before {
+  /* ---- a 關掉時，把已經上線的那兩條規則抵銷掉（＝改動前）---------------- */
+  html:not([data-opt~="a"]).past-band .site-head::before {
     -webkit-backdrop-filter: blur(var(--head-blur, 6px)) saturate(1.08);
     backdrop-filter: blur(var(--head-blur, 6px)) saturate(1.08);
     -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 var(--head-fade, 76%), transparent 100%);
     mask-image: linear-gradient(180deg, #000 0%, #000 var(--head-fade, 76%), transparent 100%);
   }
-  html[data-fix="off"].past-band .site-head { background-color: transparent; }
+  html:not([data-opt~="a"]).past-band .site-head { background-color: transparent; }
+
+  /* ---- b 底色搬到頁首自己的另一層上 ------------------------------------
+     ::after 和 ::before 同一個 z-index，樹序在後 → 畫在模糊那一層上面，
+     疊法和原本「薄色蓋在糊過的底上」一致。 */
+  html[data-opt~="b"] .site-head::before { background: transparent; }
+  html[data-opt~="b"] .site-head::after {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: var(--glass, transparent);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 var(--head-fade, 76%), transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 var(--head-fade, 76%), transparent 100%);
+    opacity: 0; transition: opacity .22s ease;
+    pointer-events: none;
+  }
+  html[data-opt~="b"].scrolled .site-head::after { opacity: 1; }
+  /* 紙色區已經沒有遮罩可言（--head-fade 是 100%），維持和 a 一致。 */
+  html[data-opt~="b"][data-opt~="a"].past-band .site-head::after {
+    -webkit-mask-image: none; mask-image: none;
+  }
+
+  /* ---- c 把那一層釘住 --------------------------------------------------- */
+  html[data-opt~="c"] .site-head::before {
+    will-change: transform, backdrop-filter;
+    transform: translateZ(0);
+  }
+
+  /* ---- d 瞬間跳（診斷用）------------------------------------------------ */
+  html[data-opt~="d"] { scroll-behavior: auto; }
 
   .pv-bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
     background: #191614; color: #e2e5e6;
-    font: 400 13px/1.5 "Noto Sans TC", system-ui, sans-serif;
-    padding: .55rem .8rem calc(.55rem + env(safe-area-inset-bottom));
-    display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .7rem;
+    font: 400 12.5px/1.45 "Noto Sans TC", system-ui, sans-serif;
+    padding: .5rem .7rem calc(.5rem + env(safe-area-inset-bottom));
+    display: flex; flex-wrap: wrap; align-items: center; gap: .38rem .45rem;
     box-shadow: 0 -1px 0 rgba(226, 229, 230, .18);
   }
-  .pv-bar b { font-weight: 700; letter-spacing: .02em; }
-  .pv-bar .pv-hint { color: rgba(226, 229, 230, .62); font-size: 12px; }
-  .pv-bar .pv-state { margin-left: auto; color: rgba(226, 229, 230, .62); font-size: 12px;
-    font-variant-numeric: tabular-nums; }
+  .pv-bar .pv-hint { flex-basis: 100%; color: rgba(226, 229, 230, .6); font-size: 11.5px; }
+  .pv-bar .pv-state { margin-left: auto; color: rgba(226, 229, 230, .6); font-size: 11.5px; }
   .pv-bar button {
-    font: inherit; cursor: pointer; padding: .34rem .7rem; border-radius: 8px;
+    font: inherit; cursor: pointer; padding: .3rem .55rem; border-radius: 8px;
     background: transparent; color: inherit;
-    border: 1px solid rgba(226, 229, 230, .32);
+    border: 1px solid rgba(226, 229, 230, .3);
   }
   .pv-bar button[aria-pressed="true"] {
     background: rgba(226, 229, 230, .92); color: #191614; border-color: transparent; font-weight: 700;
   }
-  /* 條子本身有高度，別把頁尾最後一行蓋掉。實際高度由 JS 量了寫回來
-     （字會折行，手機上是兩列、電腦上一列，寫死一定會在某個寬度不夠）。 */
-  body { padding-bottom: var(--pv-bar-h, 4.2rem); }
+  .pv-bar .pv-reset { border-style: dashed; }
+  body { padding-bottom: var(--pv-bar-h, 5rem); }
 </style>
 <div class="pv-bar" role="group" aria-label="提案切換">
-  <b>頁首閃白</b>
-  <button type="button" data-fix="off" aria-pressed="false">改動前</button>
-  <button type="button" data-fix="on"  aria-pressed="false">改動後</button>
-  <span class="pv-hint">點右上那三個標籤，來回切幾次</span>
-  <span class="pv-state" aria-live="off"></span>
+  <button type="button" data-opt="a" aria-pressed="false">a 紙色區拆玻璃</button>
+  <button type="button" data-opt="b" aria-pressed="false">b 底色搬家</button>
+  <button type="button" data-opt="c" aria-pressed="false">c 釘住圖層</button>
+  <button type="button" data-opt="d" aria-pressed="false">d 瞬間跳</button>
+  <button type="button" class="pv-reset" data-opt="">全關</button>
+  <span class="pv-state"></span>
+  <span class="pv-hint">點右上那三個標籤，來回切幾次。先試 a＋b，還會閃再加 c。</span>
 </div>
 <script>
 (function () {
   var root = document.documentElement;
   var bar = document.querySelector('.pv-bar');
   var state = bar.querySelector('.pv-state');
-  var btns = Array.prototype.slice.call(bar.querySelectorAll('button[data-fix]'));
+  var btns = Array.prototype.slice.call(bar.querySelectorAll('button[data-opt]'));
+  var LETTERS = ['a', 'b', 'c', 'd'];
+  var on = {};
 
-  function apply(v, push) {
-    root.setAttribute('data-fix', v);
-    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.fix === v)); });
+  function serialize() { return LETTERS.filter(function (k) { return on[k]; }).join(''); }
+
+  function apply(push) {
+    /* data-opt 用空白分隔，CSS 那邊才能用 ~= 一項一項比對。 */
+    root.setAttribute('data-opt', LETTERS.filter(function (k) { return on[k]; }).join(' '));
+    btns.forEach(function (b) {
+      if (b.dataset.opt) b.setAttribute('aria-pressed', String(!!on[b.dataset.opt]));
+    });
     if (push) {
       var u = new URL(location.href);
-      u.searchParams.set('fix', v);
+      var s = serialize();
+      if (s) u.searchParams.set('opt', s); else u.searchParams.delete('opt');
       history.replaceState(null, '', u);
     }
     paint();
   }
 
-  /* 現在條子是不是已經在「實心」那一段 —— 這兩條規則只在那時候有作用，
-     所以把它顯示出來，免得在 HERO 那一屏切了半天看不出差別。 */
+  /* 現在條子在哪一段 —— a 只管紙色區，在 HERO 那一屏切 a 是看不出差別的。 */
   function paint() {
-    var on = root.getAttribute('data-fix') !== 'off';
     var past = root.classList.contains('past-band');
-    state.textContent = (past ? '紙色區（這裡才有差）' : 'HERO／窄帶（兩案相同）')
-      + '　' + (on ? '玻璃已拆' : '玻璃還在');
+    var s = serialize();
+    state.textContent = (past ? '紙色區' : 'HERO／窄帶') + '　' + (s ? s : '全關');
   }
 
   function measure() { root.style.setProperty('--pv-bar-h', bar.getBoundingClientRect().height + 'px'); }
 
-  /* ⚠ 這裡要**雙層 rAF**。past-band 是頁首那段 JS 在自己的 rAF 裡掛上去的，
-     兩邊聽的是同一個 scroll 事件 —— 直接在事件裡讀 class 會讀到上一幀的值，
-     捲到醫師介紹了狀態列還寫著「HERO／窄帶」。 */
+  /* ⚠ 雙層 rAF：past-band 是頁首那段 JS 在自己的 rAF 裡掛上去的，
+     兩邊聽同一個 scroll 事件，直接讀會讀到上一幀的值。 */
   function later() { requestAnimationFrame(function () { requestAnimationFrame(paint); }); }
 
-  var m = /[?&]fix=([a-z0-9]+)/.exec(location.search);
-  apply(m && m[1] === 'off' ? 'off' : 'on', false);
-  btns.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.fix, true); }); });
+  var m = /[?&]opt=([a-z0-9]+)/.exec(location.search);
+  var init = m ? m[1] : 'a';
+  LETTERS.forEach(function (k) { on[k] = init.indexOf(k) >= 0; });
+  apply(false);
+
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (b.dataset.opt === '') LETTERS.forEach(function (k) { on[k] = false; });
+      else on[b.dataset.opt] = !on[b.dataset.opt];
+      apply(true);
+    });
+  });
   addEventListener('scroll', later, { passive: true });
   addEventListener('resize', function () { measure(); later(); });
   addEventListener('load', function () { measure(); later(); });
