@@ -4205,7 +4205,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
   function paintNav() {
     setPad();
-    var here = pick();
+    /* e 開著而且還在鎖定中：燈黏在剛剛點的那一項上，只跟著版面重量幾何。 */
+    if (lock) { if (current) moveLamp(current.a); return; }
+    setHere(pick());
+  }
+
+  function setHere(here) {
     if (here === current) { if (here) moveLamp(here.a); return; }
     current = here;
     spots.forEach(function (s) {
@@ -4215,6 +4220,28 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     if (here) { root.setAttribute('data-here', here.id); moveLamp(here.a); }
     else root.removeAttribute('data-here');
   }
+
+  /* ---- 提案 e：點了就先亮（定案後這一段連同 data-opt 一起刪掉）---------- */
+  var lock = false, lockT = 0, lastY = null;
+  function optE() { return root.matches('[data-opt~="e"]'); }
+  function settle() {
+    if (scrollY === lastY) { lock = false; paintNav(); return; }
+    lastY = scrollY;
+    lockT = setTimeout(settle, 120);
+  }
+  links.forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (!optE()) return;
+      var s = null;
+      for (var i = 0; i < spots.length; i++) if (spots[i].a === a) s = spots[i];
+      if (!s) return;
+      lock = true; clearTimeout(lockT); lastY = null;
+      setPad(); setHere(s);
+      lockT = setTimeout(settle, 120);
+      /* 保險絲：捲動因為任何理由沒有停下來的訊號時，別把燈鎖死。 */
+      setTimeout(function () { lock = false; }, 2500);
+    });
+  });
 
   var tick = false;
   function onScroll() {
@@ -4979,6 +5006,11 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                         要 WebKit 不要把那個合成層丟掉。零外觀成本，但沒把握。
        d 點選單瞬間跳    scroll-behavior 改成 auto。用來判斷這件事是不是
                         smooth 那段動畫造成的 —— 是診斷用，不是候選。
+       e 點了就先亮      另一件事，和玻璃無關：錄影裡點「醫師介紹」之後，
+                        燈移過去了卻**有整整一幀又跳回「診所資訊」**。
+                        iOS 的捲動由 UI 行程驅動，逐幀判斷會讀到上一個位置。
+                        e 改成點下去就先把那一項點亮、捲動停下來之前不理會
+                        逐幀判斷。這一段動到的是 scrollspy 本身，不是 CSS。
 
      ⚠ 這條 bar 自己**不准用 backdrop-filter** —— 這一頁在測的就是那個東西漏畫，
        工具本身再放一層等於自己製造變因。實心色。
@@ -5046,9 +5078,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   <button type="button" data-opt="b" aria-pressed="false">b 底色搬家</button>
   <button type="button" data-opt="c" aria-pressed="false">c 釘住圖層</button>
   <button type="button" data-opt="d" aria-pressed="false">d 瞬間跳</button>
+  <button type="button" data-opt="e" aria-pressed="false">e 點了就先亮</button>
   <button type="button" class="pv-reset" data-opt="">全關</button>
   <span class="pv-state"></span>
-  <span class="pv-hint">點右上那三個標籤，來回切幾次。先試 a＋b，還會閃再加 c。</span>
+  <span class="pv-hint">點右上那三個標籤，來回切幾次。先試 a＋b＋e，還會閃再加 c。</span>
 </div>
 <script>
 (function () {
@@ -5056,7 +5089,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   var bar = document.querySelector('.pv-bar');
   var state = bar.querySelector('.pv-state');
   var btns = Array.prototype.slice.call(bar.querySelectorAll('button[data-opt]'));
-  var LETTERS = ['a', 'b', 'c', 'd'];
+  var LETTERS = ['a', 'b', 'c', 'd', 'e'];
   var on = {};
 
   function serialize() { return LETTERS.filter(function (k) { return on[k]; }).join(''); }
@@ -5090,7 +5123,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   function later() { requestAnimationFrame(function () { requestAnimationFrame(paint); }); }
 
   var m = /[?&]opt=([a-z0-9]+)/.exec(location.search);
-  var init = m ? m[1] : 'a';
+  var init = m ? m[1] : 'abe';
   LETTERS.forEach(function (k) { on[k] = init.indexOf(k) >= 0; });
   apply(false);
 
