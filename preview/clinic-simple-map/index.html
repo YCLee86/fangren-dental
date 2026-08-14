@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW" data-pos="card" data-style="plate" data-shape="round" data-mark="plot" data-hue="brick" data-block="warm" data-park="tile" data-key="on">
+<html lang="zh-Hant-TW" data-pos="card" data-style="plate" data-shape="round" data-mark="plot" data-hue="brick" data-txt="ink" data-block="warm" data-park="tile" data-key="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -327,6 +327,23 @@
      ⚠ 街名一律**壓在自己那條路的路面上**（使用者指定）。橫的三條本來就是，
        直的三條在路的中心線上；路窄成 30 之後，22px 的字仍然放得進去。
 
+     ---- 2026-08-14 第七輪：街名的輕重四案（使用者：「文字有點顯眼」）------
+     切換條多一列「街名」，四案只動 `--map-ink` 與 `--lbl-op` 兩個變數，
+     **只作用在街名**（停車場那三個 P 一律維持白字站在深藍上 13.5:1）：
+
+       墨色 ink    #2a2c27          路面 11.9:1　街廓 9.12:1　← 目前
+       柔墨 soft   #5c5f57          路面 5.92:1　街廓 4.32:1
+       刷淡 fade   墨色 45% 透明    路面 3.35:1　街廓 2.86:1
+       白字 white  #ffffff          路面 1.03:1　街廓 1.37:1
+
+     ⚠⚠ **後兩案都低於 AA 的 4.5，白字更是幾乎看不見**（街名多半壓在路面上，
+       而路面就是卡色 #f4f4f5，白字對它只有 1.03）。
+       這一頁把它們做出來是因為使用者要求「做給我看」，
+       **不是說它們可以直接上線** —— 真要用的話，這張圖對讀不到字的人
+       等於只剩形狀，得先想清楚：站上其他地方一律守 AA
+       （PALETTE.md 第六節的規矩），這是第一個例外。
+       折衷案是「柔墨」：4.32:1 只差一點，而且它就是站上內文次要字的顏色。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -372,6 +389,13 @@ html[data-park="ortho"] { --map-park: #4478b5; }        /* 齒顎矯正的套色
 html[data-park="ink"]   { --map-park: var(--ink-soft); }
 html[data-park="off"]   .map-park { display: none; }
 /* 三案二不顯示。⚠ 預設是 plot（面），和停車場同一種語彙 */
+/* 街名的四種輕重（2026-08-14 使用者要求做出來比一比）。
+   ⚠ 只作用在**街名**（.lbl／.lbl-s），停車場那三個 P 一律維持白字站在深藍上。 */
+html[data-txt="ink"]   { --map-ink: var(--ink);      --lbl-op: 1; }
+html[data-txt="soft"]  { --map-ink: var(--ink-soft); --lbl-op: 1; }
+html[data-txt="fade"]  { --map-ink: var(--ink);      --lbl-op: .45; }
+html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
+
 html[data-mark="plot"] .mark-logo, html[data-mark="plot"] .mark-bean { display: none; }
 html[data-mark="logo"] .mark-plot, html[data-mark="logo"] .mark-bean { display: none; }
 html[data-mark="bean"] .mark-plot, html[data-mark="bean"] .mark-logo { display: none; }
@@ -420,8 +444,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
 .map-svg { display: block; width: 100%; height: auto; max-width: 480px; font-family: inherit; }
 .card-map .map-svg { max-width: 480px; margin-inline: auto; }
 .map-svg text { fill: var(--map-ink); font-weight: 400; }
-.map-svg .lbl   { font-size: 22px; letter-spacing: .06em; }
-.map-svg .lbl-s { font-size: 20px; letter-spacing: .04em; }
+.map-svg .lbl   { font-size: 22px; letter-spacing: .06em; opacity: var(--lbl-op, 1); }
+.map-svg .lbl-s { font-size: 20px; letter-spacing: .04em; opacity: var(--lbl-op, 1); }
 .map-svg .pk    { font-size: 28px; fill: var(--card); letter-spacing: 0; }
 .map-svg .pk-s  { font-size: 26px; }                      /* 小一號的 P（頂三站那顆圓比較小） */
 .map-svg .pk-nm { font-size: 22px; fill: var(--card); letter-spacing: .06em; }
@@ -603,6 +627,12 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     <button data-k="hue" data-v="teal">深綠松</button>
     <button data-k="hue" data-v="moss">苔綠</button>
   </div>
+  <div><b>街名</b>
+    <button data-k="txt" data-v="ink">墨色（現在）</button>
+    <button data-k="txt" data-v="soft">柔墨</button>
+    <button data-k="txt" data-v="fade">刷淡</button>
+    <button data-k="txt" data-v="white">白字</button>
+  </div>
   <div><b>街廓</b>
     <button data-k="block" data-v="warm">暖</button>
     <button data-k="block" data-v="cool">冷</button>
@@ -624,6 +654,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     shape: ['round', 'blob', 'circle'],
     mark:  ['plot', 'logo', 'bean'],
     hue:   ['brick', 'teal', 'moss'],
+    txt:   ['ink', 'soft', 'fade', 'white'],
     block: ['warm', 'cool', 'deep'],
     park:  ['tile', 'ortho', 'ink', 'off']
   };
