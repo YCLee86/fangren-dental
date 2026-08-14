@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW" data-pos="card" data-style="line" data-shape="round" data-mark="plot" data-hue="green" data-txt="soft" data-corner="edge" data-block="warm" data-park="sign" data-chip="solid" data-key="on">
+<html lang="zh-Hant-TW" data-pos="card" data-style="line" data-shape="round" data-mark="plot" data-hue="green" data-txt="soft" data-corner="edge" data-block="warm" data-park="sign" data-chip="outline" data-clab="on" data-key="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -828,6 +828,31 @@
            踩過的坑是同一個（CLAUDE.md 沒寫，但 index.html 的註解裡有：
            「第一版把釘子的寬高都設成同一個值，它只填滿 75% 的寬」）。
 
+     ---- 2026-08-14 第三十七輪：牌子第三案（全空心）＋ 名牌的一鍵開關 --------
+     使用者：「再做一個版本是淺底藍字，但對話框的三角形也要改成淺底藍色描邊
+     （現在的淺底藍字版本，三角形是實心藍色）。然後這個版本要把芳仁牙醫診所的
+     對話框標籤做成有和沒有的一鍵切換。」
+
+     三案（切換條「牌子」）：
+       outline  淺底 ＋ 藍描邊，**三角形也是空心的**（新，預設）
+       light    淺底 ＋ 藍描邊，三角形實心藍
+       solid    藍底白字
+
+     ⚠⚠ **為了做出空心三角，盒子與尾巴改成畫成「一條路徑」**（`bubblePath()`）。
+       原本是 `<rect>` ＋ 一個三角形 `<path>` 兩件東西疊著 —— 那樣描邊會**橫過
+       尾巴的根部**，畫出一條穿過三角形底邊的線。一條路徑繞一圈就沒有這個問題。
+       ⚠ 路徑固定順時針走（上邊 →、右邊 ↓、下邊 ←、左邊 ↑），
+         尾巴插在哪一邊，那一邊的兩個端點就照該方向的順序寫 —— **寫反會扭成
+         蝴蝶結**（自交，fill 會挖空）。
+       ⚠ 三角形那個 `<path class="tail">` **沒有刪掉**，它疊在盒子上面：
+         `light` 那一案要的「空心盒子 ＋ 實心三角」沒辦法用同一條路徑表達。
+         `outline` 就把它 `display: none`，交給盒子那一圈外框自己收邊。
+       ⚠ 診所的名牌也跟著改用同一支函式 —— 它是實心綠，看起來完全一樣，
+         但**斜尾巴那一段現在也在同一圈外框裡**，日後要給它描邊就不必再改。
+
+     ⚠ 名牌的開關用 `display: none` 不是 `opacity: 0` —— 這是「要不要這塊東西」
+       的比較，留一塊透明的在那裡會讓 hideCovered 那些量測誤判。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -961,20 +986,26 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
      理由就是「和診所一深一淺分得出主次」（第三十輪 (4)）。實的那一案等於
      把這個差別交回給顏色（綠 vs 藍）去分。 */
 .map-svg .rlab .tail { fill: var(--map-park); }
+/* 全空心那一案：三角形不另外實心畫，交給 .bub 那一圈外框自己收邊。 */
+html[data-chip="outline"] .map-svg .rlab .tail { display: none; }
 /* ⚠ 這幾條要寫成 .map-svg …（多一階）—— 只寫 .rlab text 的話
    和後面的 `.map-svg text { fill: var(--map-ink) }` 同權重，後者排在後面會贏。 */
 .map-svg .rlab text { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
 .map-svg .rlab .rl-nm { font-size: 16px; }
 
-html[data-chip="light"] .map-svg .rlab rect {
+html[data-chip="light"]   .map-svg .rlab .bub,
+html[data-chip="outline"] .map-svg .rlab .bub {
   fill: color-mix(in srgb, var(--map-park) 10%, var(--card));
   stroke: var(--map-park); stroke-width: 1.5;
 }
-html[data-chip="light"] .map-svg .rlab text,
-html[data-chip="light"] .map-svg .rl-pin { fill: var(--map-park); }
-html[data-chip="light"] .map-svg .rl-ul  { stroke: var(--map-park); }
+html[data-chip="light"]   .map-svg .rlab text,
+html[data-chip="light"]   .map-svg .rl-pin,
+html[data-chip="outline"] .map-svg .rlab text,
+html[data-chip="outline"] .map-svg .rl-pin { fill: var(--map-park); }
+html[data-chip="light"]   .map-svg .rl-ul,
+html[data-chip="outline"] .map-svg .rl-ul  { stroke: var(--map-park); }
 
-html[data-chip="solid"] .map-svg .rlab rect { fill: var(--map-park); stroke: none; }
+html[data-chip="solid"] .map-svg .rlab .bub { fill: var(--map-park); stroke: none; }
 html[data-chip="solid"] .map-svg .rlab text,
 html[data-chip="solid"] .map-svg .rl-pin { fill: var(--card); }
 html[data-chip="solid"] .map-svg .rl-ul  { stroke: var(--card); }
@@ -986,7 +1017,11 @@ html[data-chip="solid"] .map-svg .rl-ul  { stroke: var(--card); }
 .map-svg .rl-ul  { stroke-width: 1.2; }
 .rl-link { cursor: pointer; }
 /* 診所的名牌：**實心綠底白字**，和停車場那三塊剛好相反（見標記那一段）。 */
-.map-svg .clab rect, .map-svg .clab .tail { fill: var(--map-mark); }
+.map-svg .clab .bub, .map-svg .clab .tail { fill: var(--map-mark); }
+/* 名牌的一鍵開關（2026-08-14 第三十七輪，使用者要「有和沒有」比一比）。
+   ⚠ 用 display 不是 opacity —— 這是「要不要這塊東西」的比較，
+     留一塊透明的在那裡會讓 hideCovered 之類的量測誤判。 */
+html[data-clab="off"] .map-svg .clab { display: none; }
 .map-svg .clab text { fill: var(--card); font-size: 15px; font-weight: 700; letter-spacing: .04em; }
 /* ⚠ **診所的名牌一直都在，點到停車場也不收**（2026-08-14 使用者：
    「還是保留芳仁牙醫診所標籤好了」）。
@@ -1324,7 +1359,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
              ⚠ 連結要 `stopPropagation`：它在 `.rlab` 裡，而地圖底層有一個
                「點空白處＝收回」的 handler，不擋住的話點名字會先把牌子關掉。 -->
         <g class="rlab" data-lot="a" data-dir="down" data-tx="270" data-ty="165">
-          <rect rx="6"/><path class="tail"/>
+          <path class="bub"/><path class="tail"/>
           <g class="rl-body">
             <a class="rl-link" href="https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic" target="_blank" rel="noopener">
               <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
@@ -1335,7 +1370,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
           </g>
         </g>
         <g class="rlab" data-lot="b" data-dir="down" data-tx="400" data-ty="188">
-          <rect rx="6"/><path class="tail"/>
+          <path class="bub"/><path class="tail"/>
           <g class="rl-body">
             <a class="rl-link" href="https://maps.app.goo.gl/tiHLpeKc2gETXRh96?g_st=ic" target="_blank" rel="noopener">
               <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
@@ -1347,7 +1382,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         </g>
         <!-- 這一塊的路線是直的（永樂街），所以尾巴朝右、牌子擺在路線左邊 -->
         <g class="rlab" data-lot="c" data-dir="right" data-tx="339">
-          <rect rx="6"/><path class="tail"/>
+          <path class="bub"/><path class="tail"/>
           <g class="rl-body">
             <a class="rl-link" href="https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic" target="_blank" rel="noopener">
               <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
@@ -1392,7 +1427,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
              （綠色到 287 為止），x=250 落在診所的 228~324 之間。
              路線那三塊牌子的尾巴是停在線外 12 的（`data-gap`），這一塊是 0。 -->
       <g class="clab" data-dir="up" data-tx="264" data-ty="287" data-bx="250" data-bw="12" data-gap="0">
-        <rect rx="6"/><path class="tail"/>
+        <path class="bub"/><path class="tail"/>
         <g class="rl-body">
           <text class="cl-nm" x="226" y="319" text-anchor="middle">芳仁牙醫診所</text>
         </g>
@@ -1468,8 +1503,13 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     <button data-k="park" data-v="off">不顯示</button>
   </div>
   <div><b>牌子</b>
+    <button data-k="chip" data-v="outline">淺底・空心三角</button>
+    <button data-k="chip" data-v="light">淺底・實心三角</button>
     <button data-k="chip" data-v="solid">藍底白字</button>
-    <button data-k="chip" data-v="light">淺底藍字</button>
+  </div>
+  <div><b>診所名牌</b>
+    <button data-k="clab" data-v="on">有</button>
+    <button data-k="clab" data-v="off">沒有</button>
   </div>
 </div>
 
@@ -1485,7 +1525,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     corner: ['edge', 'all'],
     block: ['warm', 'cool', 'deep'],
     park:  ['sign', 'off'],
-    chip:  ['solid', 'light']
+    chip:  ['outline', 'light', 'solid'],
+    clab:  ['on', 'off']
   };
   var root = document.documentElement;
   var tpl  = document.getElementById('map-tpl');
@@ -1565,6 +1606,24 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     if (typeof m.actualBoundingBoxDescent !== 'number') return null;
     return m.actualBoundingBoxDescent / 400 * fs;
   }
+  // 「圓角方 ＋ 一支尾巴」畫成**一條**路徑 —— 這樣整塊只有一圈外框，
+  // 描邊不會橫過尾巴根部（2026-08-14 第三十七輪，全空心那一案需要）。
+  // ⚠ 走的方向固定是順時針：上邊 →、右邊 ↓、下邊 ←、左邊 ↑。
+  //   尾巴插在哪一邊，那一邊的兩個端點就照該方向的順序寫，寫反會扭成蝴蝶結。
+  function bubblePath(x, y, w, h, r, dir, tip, bc, bw) {
+    var n = function (v) { return (+v).toFixed(2); };
+    var x2 = x + w, y2 = y + h, A = 'A' + r + ' ' + r + ' 0 0 1 ';
+    var d = 'M' + n(x + r) + ' ' + n(y);
+    if (dir === 'up') d += 'H' + n(bc - bw) + 'L' + n(tip.x) + ' ' + n(tip.y) + 'L' + n(bc + bw) + ' ' + n(y);
+    d += 'H' + n(x2 - r) + A + n(x2) + ' ' + n(y + r);
+    if (dir === 'right') d += 'V' + n(bc - bw) + 'L' + n(tip.x) + ' ' + n(tip.y) + 'L' + n(x2) + ' ' + n(bc + bw);
+    d += 'V' + n(y2 - r) + A + n(x2 - r) + ' ' + n(y2);
+    if (dir === 'down') d += 'H' + n(bc + bw) + 'L' + n(tip.x) + ' ' + n(tip.y) + 'L' + n(bc - bw) + ' ' + n(y2);
+    d += 'H' + n(x + r) + A + n(x) + ' ' + n(y2 - r);
+    d += 'V' + n(y + r) + A + n(x + r) + ' ' + n(y) + 'Z';
+    return d;
+  }
+
   function sizeLabels() {
     // (1) 先把圖釘與底線擺到名字旁邊／底下 —— 它們的位置要等字量出來才知道
     fig.querySelectorAll('.rl-link').forEach(function (a) {
@@ -1596,35 +1655,42 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
       ul.setAttribute('y1', uy.toFixed(2));
       ul.setAttribute('y2', uy.toFixed(2));
     });
-    // (2) 再量整塊內容，套上矩形與尾巴
+    // (2) 再量整塊內容，套上盒子與尾巴
     fig.querySelectorAll('.rlab, .clab').forEach(function (g) {
-      var body = g.querySelector('.rl-body'), r = g.querySelector('rect'), tail = g.querySelector('.tail');
+      var body = g.querySelector('.rl-body'), bub = g.querySelector('.bub'), tail = g.querySelector('.tail');
       var b = body.getBBox(), padX = 11, padY = 6;
-      r.setAttribute('x', b.x - padX);
-      r.setAttribute('y', b.y - padY);
-      r.setAttribute('width', b.width + padX * 2);
-      r.setAttribute('height', b.height + padY * 2);
+      var bx0 = b.x - padX, by0 = b.y - padY, bw0 = b.width + padX * 2, bh0 = b.height + padY * 2;
       // 尾巴**停在離路線 GAP 的地方**，不要頂到線上（2026-08-14 使用者：
       // 「對話框還是跟路線黏在一起，分開一點」）。朝下或朝右兩種。
       // ⚠ 診所那一塊是 data-gap="0" —— 它的尖端要**進到綠色裡**，不是停在外面。
       var GAP = g.dataset.gap === undefined ? 12 : +g.dataset.gap;
-      if (g.dataset.dir === 'right') {
-        var rx2 = b.x + b.width + padX, cy = b.y + b.height / 2, tipX = +g.dataset.tx - GAP;
-        tail.setAttribute('d', 'M' + (rx2 - 1) + ' ' + (cy - 7) + 'V' + (cy + 7) + 'L' + tipX + ' ' + cy + 'Z');
-      } else if (g.dataset.dir === 'up') {
+      var dir = g.dataset.dir, tip, bc, bw = g.dataset.bw === undefined ? 7 : +g.dataset.bw;
+      if (dir === 'right') {
+        tip = { x: +g.dataset.tx - GAP, y: by0 + bh0 / 2 };
+        bc = by0 + bh0 / 2;
+      } else if (dir === 'up') {
         // 診所的名牌在下面、尖端朝上。⚠ GAP 的符號和朝下那一支相反：
         //   朝下是「尖端比目標高 GAP」，朝上是「尖端比目標低 GAP」。
         // ⚠ 底邊的位置（`data-bx`）和尖端（`data-tx`）**是分開給的**，
         //   兩個不一樣就會長出一支**斜的**尾巴（2026-08-14 使用者：
         //   「現在那個三角是做成往下，我想要左下一點，不要這麼直」）。
-        //   沒給 data-bx 就退回正下方，行為和原本一樣。
-        var ux = +g.dataset.tx, top = b.y - padY, utip = +g.dataset.ty + GAP;
-        var bx = g.dataset.bx === undefined ? ux : +g.dataset.bx;
-        var bw = g.dataset.bw === undefined ? 7 : +g.dataset.bw;
-        tail.setAttribute('d', 'M' + (bx - bw) + ' ' + (top + 1) + 'H' + (bx + bw) + 'L' + ux + ' ' + utip + 'Z');
+        //   沒給 data-bx 就退回正上方。
+        tip = { x: +g.dataset.tx, y: +g.dataset.ty + GAP };
+        bc = g.dataset.bx === undefined ? tip.x : +g.dataset.bx;
       } else {
-        var cx = +g.dataset.tx, bottom = b.y + b.height + padY, tipY = +g.dataset.ty - GAP;
-        tail.setAttribute('d', 'M' + (cx - 7) + ' ' + (bottom - 1) + 'H' + (cx + 7) + 'L' + cx + ' ' + tipY + 'Z');
+        tip = { x: +g.dataset.tx, y: +g.dataset.ty - GAP };
+        bc = g.dataset.bx === undefined ? tip.x : +g.dataset.bx;
+      }
+      bub.setAttribute('d', bubblePath(bx0, by0, bw0, bh0, 6, dir, tip, bc, bw));
+      // 尾巴那個三角**另外再畫一次**，疊在盒子上面。
+      // ⚠ 為的是「淺底＋實心藍三角」那一案：盒子是空心的、三角是實心的，
+      //   兩件事沒辦法用同一條路徑表達。全空心的那一案就把它 display: none。
+      if (dir === 'right') {
+        tail.setAttribute('d', 'M' + (bx0 + bw0 - 1) + ' ' + (bc - bw) + 'V' + (bc + bw) + 'L' + tip.x + ' ' + tip.y + 'Z');
+      } else if (dir === 'up') {
+        tail.setAttribute('d', 'M' + (bc - bw) + ' ' + (by0 + 1) + 'H' + (bc + bw) + 'L' + tip.x + ' ' + tip.y + 'Z');
+      } else {
+        tail.setAttribute('d', 'M' + (bc - bw) + ' ' + (by0 + bh0 - 1) + 'H' + (bc + bw) + 'L' + tip.x + ' ' + tip.y + 'Z');
       }
     });
   }
