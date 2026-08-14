@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW" data-pos="card" data-style="plate" data-shape="round" data-mark="plot" data-hue="brick" data-txt="ink" data-block="warm" data-park="tile" data-key="on">
+<html lang="zh-Hant-TW" data-pos="card" data-style="plate" data-shape="round" data-mark="plot" data-hue="brick" data-txt="soft" data-block="warm" data-park="tile" data-key="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -344,6 +344,19 @@
        （PALETTE.md 第六節的規矩），這是第一個例外。
        折衷案是「柔墨」：4.32:1 只差一點，而且它就是站上內文次要字的顏色。
 
+     ---- 2026-08-14 第八輪：街名定案「柔墨 ＋ 粗體」------------------------
+     使用者：「字用柔墨、粗體。」
+
+       ・`--map-ink` 定在 **--ink-soft #5c5f57**（路面 5.92:1、街廓 4.32:1）。
+       ・`.lbl` 與 `.lbl-s` 加上 **font-weight: 700**。
+
+     ⚠ 粗體不只是造型，它同時是**對 4.32:1 的補償**：WCAG 對「大字」
+       （粗體 ≥18.66px）的下限是 3:1，這張圖畫到 480px 寬時街名等於 18.9px，
+       剛好落在那條線上；手機 295px 上只有 11.6px，仍然屬於一般文字、
+       差 AA 一點點。這是使用者看過四案（含白字 1.03:1）之後的決定。
+     ⚠ 停車場那三個 P 沒有跟著改 —— 它們是白字站在深藍上（13.5:1），
+       原本就是這一張圖裡最清楚的字。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -391,7 +404,7 @@ html[data-park="off"]   .map-park { display: none; }
 /* 三案二不顯示。⚠ 預設是 plot（面），和停車場同一種語彙 */
 /* 街名的四種輕重（2026-08-14 使用者要求做出來比一比）。
    ⚠ 只作用在**街名**（.lbl／.lbl-s），停車場那三個 P 一律維持白字站在深藍上。 */
-html[data-txt="ink"]   { --map-ink: var(--ink);      --lbl-op: 1; }
+html[data-txt="soft"]   { --map-ink: var(--ink);      --lbl-op: 1; }
 html[data-txt="soft"]  { --map-ink: var(--ink-soft); --lbl-op: 1; }
 html[data-txt="fade"]  { --map-ink: var(--ink);      --lbl-op: .45; }
 html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
@@ -444,8 +457,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
 .map-svg { display: block; width: 100%; height: auto; max-width: 480px; font-family: inherit; }
 .card-map .map-svg { max-width: 480px; margin-inline: auto; }
 .map-svg text { fill: var(--map-ink); font-weight: 400; }
-.map-svg .lbl   { font-size: 22px; letter-spacing: .06em; opacity: var(--lbl-op, 1); }
-.map-svg .lbl-s { font-size: 20px; letter-spacing: .04em; opacity: var(--lbl-op, 1); }
+.map-svg .lbl   { font-size: 22px; letter-spacing: .06em; font-weight: 700; opacity: var(--lbl-op, 1); }
+.map-svg .lbl-s { font-size: 20px; letter-spacing: .04em; font-weight: 700; opacity: var(--lbl-op, 1); }
 .map-svg .pk    { font-size: 28px; fill: var(--card); letter-spacing: 0; }
 .map-svg .pk-s  { font-size: 26px; }                      /* 小一號的 P（頂三站那顆圓比較小） */
 .map-svg .pk-nm { font-size: 22px; fill: var(--card); letter-spacing: .06em; }
@@ -628,8 +641,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     <button data-k="hue" data-v="moss">苔綠</button>
   </div>
   <div><b>街名</b>
-    <button data-k="txt" data-v="ink">墨色（現在）</button>
-    <button data-k="txt" data-v="soft">柔墨</button>
+    <button data-k="txt" data-v="soft">柔墨（定）</button>
+    <button data-k="txt" data-v="ink">墨色</button>
     <button data-k="txt" data-v="fade">刷淡</button>
     <button data-k="txt" data-v="white">白字</button>
   </div>
@@ -654,7 +667,7 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     shape: ['round', 'blob', 'circle'],
     mark:  ['plot', 'logo', 'bean'],
     hue:   ['brick', 'teal', 'moss'],
-    txt:   ['ink', 'soft', 'fade', 'white'],
+    txt:   ['soft', 'ink', 'fade', 'white'],
     block: ['warm', 'cool', 'deep'],
     park:  ['tile', 'ortho', 'ink', 'off']
   };
