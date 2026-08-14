@@ -752,9 +752,16 @@
          ・圖釘直接用站上頁尾那顆（Lucide 的 map-pin，24 格見方，描邊不填色）。
          ・名字底下那條線是**畫出來的 `<line>`，不是 text-decoration** ——
            SVG 文字的 text-decoration 各家位置不一致，畫一條線才對得準字面。
-         ・連結指向 Google 地圖的**搜尋網址**（`/maps/search/?api=1&query=…`），
-           ⚠ 不是 place id —— 我們沒有驗證過那三個地點的 id，猜一個等於把人
-           帶到別的地方去。
+         ・連結目前指向 Google 地圖的**搜尋網址**（`/maps/search/?api=1&query=…`）。
+           ⚠⚠ **這是暫時的。** 使用者 2026-08-14 指定「超連結是連到那個停車場
+             在 Google Map 上的連結」＝ 要地點本身那一頁，不是搜尋結果。
+             但**雲端 session 連不到 google.com**（egress proxy 擋掉，實測
+             EGRESS_BLOCKED），拿不到那三個地點的 place id 或分享短網址。
+           ⚠ **不要自己拼一個 place id 或座標。** 猜錯就是把人帶到別的地方去 ——
+             CLAUDE.md 第十節那個 `@fafa070` 的教訓（推出來、沒驗證過，已經換掉）。
+           → **要換的時候只改那三個 `href`**：使用者在手機的 Google 地圖上開那一場
+             → 分享 → 複製連結，貼進來即可（`https://maps.app.goo.gl/…` 或
+             `https://www.google.com/maps/place/…` 都可以）。
          ⚠ 連結要 `stopPropagation`：地圖底層有一個「點空白處＝收回」的 handler。
          ⚠ 牌子長高之後**尾巴會被自己的盒子吃掉** —— 兩塊朝下的牌子因此各往上
            挪 14，尾巴才留得下 16 個單位。加內容的時候要一起檢查這件事。
