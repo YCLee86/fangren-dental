@@ -519,6 +519,18 @@
           那一條 CSS 要寫成 `.map-svg.dim .lbl`（多一階），
           否則蓋不過 `.lbl` 自己的 `opacity: var(--lbl-op)`。
 
+     ---- 2026-08-14 第二十輪：牌子和路線分開 -------------------------------
+     使用者：「路程資訊對話框還是跟路線黏在一起，分開一點，參考 Google map 畫面。」
+
+       ・尾巴**停在離路線 12 個單位的地方**（`GAP`），不再頂到線上；
+         牌子本身也整組往外挪（a 的文字基線 151→136、b 172→159）。
+       ・**壹車房那一塊的路線是直的（永樂街）**，尾巴朝下會直接壓在線上，
+         所以那一塊改成**尾巴朝右、牌子擺在路線左邊**（`data-dir="right"`）。
+         JS 兩種方向各畫一次。
+
+     ⚠ 牌子的位置是「先擺文字、再由 getBBox 長出矩形與尾巴」，所以要挪牌子
+       就改 `<text>` 的 x/y，不要去改矩形 —— 矩形每次開頁都會被重算覆蓋。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -862,17 +874,18 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         <!-- 三塊牌子。⚠ 矩形與小尾巴的座標**是開頁時用 getBBox() 現量出來的**
              （見下面的 JS）—— 寫死寬度會被字級、字型、系統設定改掉，
              第一版就是寫死 112/120，字直接被切掉。 -->
-        <g class="rlab" data-lot="a" data-tx="270" data-ty="165">
+        <g class="rlab" data-lot="a" data-dir="down" data-tx="270" data-ty="165">
           <rect rx="6"/><path class="tail"/>
-          <text x="270" y="151" text-anchor="middle">50 公尺・1 分鐘</text>
+          <text x="270" y="136" text-anchor="middle">50 公尺・1 分鐘</text>
         </g>
-        <g class="rlab" data-lot="b" data-tx="400" data-ty="188">
+        <g class="rlab" data-lot="b" data-dir="down" data-tx="400" data-ty="188">
           <rect rx="6"/><path class="tail"/>
-          <text x="400" y="172" text-anchor="middle">140 公尺・2 分鐘</text>
+          <text x="400" y="159" text-anchor="middle">140 公尺・2 分鐘</text>
         </g>
-        <g class="rlab" data-lot="c" data-tx="339" data-ty="500">
+        <!-- 這一塊的路線是直的（永樂街），所以尾巴朝右、牌子擺在路線左邊 -->
+        <g class="rlab" data-lot="c" data-dir="right" data-tx="339">
           <rect rx="6"/><path class="tail"/>
-          <text x="272" y="480" text-anchor="middle">190 公尺・3 分鐘</text>
+          <text x="243" y="480" text-anchor="middle">190 公尺・3 分鐘</text>
         </g>
       </g>
 
@@ -1014,8 +1027,16 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
       r.setAttribute('y', b.y - padY);
       r.setAttribute('width', b.width + padX * 2);
       r.setAttribute('height', b.height + padY * 2);
-      var tx = +g.dataset.tx, ty = +g.dataset.ty, bottom = b.y + b.height + padY;
-      tail.setAttribute('d', 'M' + (tx - 7) + ' ' + (bottom - 1) + 'H' + (tx + 7) + 'L' + tx + ' ' + ty + 'Z');
+      // 尾巴**停在離路線 GAP 的地方**，不要頂到線上（2026-08-14 使用者：
+      // 「對話框還是跟路線黏在一起，分開一點」）。朝下或朝右兩種。
+      var GAP = 12;
+      if (g.dataset.dir === 'right') {
+        var rx2 = b.x + b.width + padX, cy = b.y + b.height / 2, tipX = +g.dataset.tx - GAP;
+        tail.setAttribute('d', 'M' + (rx2 - 1) + ' ' + (cy - 7) + 'V' + (cy + 7) + 'L' + tipX + ' ' + cy + 'Z');
+      } else {
+        var cx = +g.dataset.tx, bottom = b.y + b.height + padY, tipY = +g.dataset.ty - GAP;
+        tail.setAttribute('d', 'M' + (cx - 7) + ' ' + (bottom - 1) + 'H' + (cx + 7) + 'L' + cx + ' ' + tipY + 'Z');
+      }
     });
   }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeLabels);
