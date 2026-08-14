@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW" data-pos="card" data-style="line" data-shape="round" data-mark="plot" data-hue="green" data-txt="soft" data-corner="edge" data-block="warm" data-park="sign" data-key="on">
+<html lang="zh-Hant-TW" data-pos="card" data-style="line" data-shape="round" data-mark="plot" data-hue="green" data-txt="soft" data-corner="edge" data-block="warm" data-park="sign" data-chip="solid" data-key="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -942,24 +942,42 @@ html[data-txt="white"] { --map-ink: #fff;            --lbl-op: 1; }
 .rlab { opacity: 0; pointer-events: none; transition: opacity .18s ease; }
 .dots.on, .rlab.on { opacity: 1; }
 .rlab.on { pointer-events: auto; }
-/* 牌子：**淺底藍字**（2026-08-14 第三十輪翻過來的，見標記那一段的長註解）。
-   底是路牌藍 10% 混紙卡色，框與尾巴是足額的路牌藍 —— 尾巴是實心的，
-   所以矩形的框線橫過尾巴根部那一段是**藍疊藍**，看不出接縫。 */
-.map-svg .rlab rect {
+/* 牌子的兩案（2026-08-14 第三十四輪，使用者：「停車場的對話框現在是淺底色＋
+   藍邊，做一個藍底色白字的版本，這樣圖釘變成白色」）。切換條最後一排。
+
+     淺（light）  底＝路牌藍 10% 混紙卡色、框 1.5、字與圖釘與底線＝路牌藍（5.84:1）
+     實（solid）  底＝足額路牌藍、無框、字與圖釘與底線＝紙卡色（7.43:1）
+
+   ⚠ **尾巴兩案都是足額的路牌藍。** 淺的那一案因此是「實心尾巴 ＋ 空心盒子」，
+     矩形的框線橫過尾巴根部那一段是藍疊藍，看不出接縫 —— 不必另外處理。
+   ⚠ 兩案的白／藍**只換前景與底，字級、位置、底線的算法完全共用**。
+   ⚠ 診所那塊名牌一直都是實心綠底白字，不吃這個切換 —— 淺的那一案存在的
+     理由就是「和診所一深一淺分得出主次」（第三十輪 (4)）。實的那一案等於
+     把這個差別交回給顏色（綠 vs 藍）去分。 */
+.map-svg .rlab .tail { fill: var(--map-park); }
+/* ⚠ 這幾條要寫成 .map-svg …（多一階）—— 只寫 .rlab text 的話
+   和後面的 `.map-svg text { fill: var(--map-ink) }` 同權重，後者排在後面會贏。 */
+.map-svg .rlab text { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+.map-svg .rlab .rl-nm { font-size: 16px; }
+
+html[data-chip="light"] .map-svg .rlab rect {
   fill: color-mix(in srgb, var(--map-park) 10%, var(--card));
   stroke: var(--map-park); stroke-width: 1.5;
 }
-.map-svg .rlab .tail { fill: var(--map-park); }
-/* ⚠ 這一條要寫成 .map-svg .rlab text（多一階）—— 只寫 .rlab text 的話
-   和後面的 `.map-svg text { fill: var(--map-ink) }` 同權重，後者排在後面會贏。 */
-.map-svg .rlab text { fill: var(--map-park); font-size: 15px; font-weight: 700; letter-spacing: .02em; }
-.map-svg .rlab .rl-nm { font-size: 16px; }
+html[data-chip="light"] .map-svg .rlab text,
+html[data-chip="light"] .map-svg .rl-pin { fill: var(--map-park); }
+html[data-chip="light"] .map-svg .rl-ul  { stroke: var(--map-park); }
+
+html[data-chip="solid"] .map-svg .rlab rect { fill: var(--map-park); stroke: none; }
+html[data-chip="solid"] .map-svg .rlab text,
+html[data-chip="solid"] .map-svg .rl-pin { fill: var(--card); }
+html[data-chip="solid"] .map-svg .rl-ul  { stroke: var(--card); }
 /* 圖釘：**實心那顆**（Font Awesome 的 map-marker，viewBox 384x512），
    = 頁尾地址前面那一顆。2026-08-14 第三十一輪從線條空心換過來，使用者指定。
    注意 和 HERO 窄帶那顆（Lucide 線條版，24 格見方）**是兩個不同的圖示**，
      這一站兩顆都在用，換的時候要看清楚是哪一顆。 */
-.map-svg .rl-pin { fill: var(--map-park); stroke: none; }
-.map-svg .rl-ul  { stroke: var(--map-park); stroke-width: 1.2; }
+.map-svg .rl-pin { stroke: none; }
+.map-svg .rl-ul  { stroke-width: 1.2; }
 .rl-link { cursor: pointer; }
 /* 診所的名牌：**實心綠底白字**，和停車場那三塊剛好相反（見標記那一段）。 */
 .map-svg .clab rect, .map-svg .clab .tail { fill: var(--map-mark); }
@@ -1426,6 +1444,10 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     <button data-k="park" data-v="sign">路牌藍（定案）</button>
     <button data-k="park" data-v="off">不顯示</button>
   </div>
+  <div><b>牌子</b>
+    <button data-k="chip" data-v="solid">藍底白字</button>
+    <button data-k="chip" data-v="light">淺底藍字</button>
+  </div>
 </div>
 
 <script>
@@ -1439,7 +1461,8 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
     txt:   ['soft', 'ink', 'fade', 'white'],
     corner: ['edge', 'all'],
     block: ['warm', 'cool', 'deep'],
-    park:  ['sign', 'off']
+    park:  ['sign', 'off'],
+    chip:  ['solid', 'light']
   };
   var root = document.documentElement;
   var tpl  = document.getElementById('map-tpl');
