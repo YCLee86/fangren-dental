@@ -1997,11 +1997,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .brand-text b, .brand-text small { display: block; }
   .brand-text small { padding-left: 0; }
   .brand-text small::before { display: none; }
-  /* 兩行的左右緣都要切齊。區塊寬度是 max-content ＝ 較寬的那一行，
-     兩行都 text-align-last: justify，較窄的那一行把字距拉開填滿同一個寬度。
-     ⚠ 兩行都要寫（2026-08-14 跟著 index.html 一起修）——
-       只寫副標的前提是「標題比較寬」，2026-08-13 副標抬一階之後不再成立。 */
-  .brand-text b,
+  /* 副標撐齊標題的右緣。區塊寬度由較寬的那一行（標題）決定，
+     text-align-last: justify 讓副標把字距拉開填滿同一個寬度，兩行右緣才會切齊。
+     這一條原本只在手機版的 preview 裡，搬過來的時候漏了。 */
   .brand-text small { text-align: justify; text-align-last: justify; }
 
   /* ---- HERO：照片一塊、窄帶接在下面 --------------------------------- */
@@ -5004,10 +5002,22 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                         ⚠ 代價：下緣淡出那一小段的合成順序變了（原本是
                           「薄色疊在糊過的底上」整塊再被遮罩衰減，拆開之後
                           兩層各自衰減）。差別只在遮罩沒有全不透明的那一段。
-       c 釘住那一層      給 ::before 常駐 will-change ＋ translateZ(0)，
-                        要 WebKit 不要把那個合成層丟掉。零外觀成本，但沒把握。
-       d 點選單瞬間跳    scroll-behavior 改成 auto。用來判斷這件事是不是
-                        smooth 那段動畫造成的 —— 是診斷用，不是候選。
+       c 釘住那一層      給 ::before 常駐 will-change ＋ translateZ(0)。
+                        ⚠ **實測更糟，預設關著**：08-15 01:28 的錄影裡開了 c
+                        之後，連品牌標誌與「芳仁牙醫診所」那幾個字都會整幀
+                        不見（第 455、562 幀）。多一個合成層 ＝ 多一個會掉的東西。
+       d 點選單瞬間跳    scroll-behavior 改成 auto。**升格成候選了**：
+                        錄影裡有一種「閃」不是漏畫，是捲動太快，中間**剛好只有
+                        一幀**落在「窄帶還在頁首底下」那一段，於是那一幀合法地
+                        長成玻璃的樣子（第 153 幀：條子變淡、下緣還有淡出）。
+                        瞬間跳就沒有中間那幾幀。
+       g 底色畫在頁首上  b 的加強版，也是這一輪的主角。b 把薄色搬到 ::after，
+                        但 ::after 和 ::before 同樣是負 z-index 的那一組 ——
+                        **WebKit 是整組一起丟的**，第 198 幀兩層一起不見。
+                        g 改成畫在**頁首自己的 background** 上（用漸層自己做出
+                        下緣淡出，等同原本那個遮罩），那一層在負 z-index 那組
+                        之前就畫完了，丟不掉。a 已經證明這條路在紙色區有效，
+                        g 只是把它推到全部捲動位置。
        e 點了就先亮      另一件事，和玻璃無關：錄影裡點「醫師介紹」之後，
                         燈移過去了卻**有整整一幀又跳回「診所資訊」**。
                         iOS 的捲動由 UI 行程驅動，逐幀判斷會讀到上一個位置。
@@ -5043,6 +5053,19 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   /* 紙色區已經沒有遮罩可言（--head-fade 是 100%），維持和 a 一致。 */
   html[data-opt~="b"][data-opt~="a"].past-band .site-head::after {
     -webkit-mask-image: none; mask-image: none;
+  }
+
+  /* ---- g 底色畫在頁首自己的 background 上 --------------------------------
+     漸層的三個色停等於原本那個遮罩：實色到 --head-fade，再淡到全透明。
+     終點寫 rgba(25,22,20,0) 而不是 transparent，避免任何預乘內插的爭議。
+     ⚠ 和 b 的差別是**畫在哪一層**：b 在 ::after（負 z-index，和 ::before 同一組），
+       g 在頁首自己身上（那一組之前就畫完）。錄影證明前者會跟著一起被丟掉。 */
+  html[data-opt~="g"] .site-head::before { background: transparent; }
+  html[data-opt~="g"].scrolled .site-head {
+    background-image: linear-gradient(180deg,
+      var(--glass, transparent) 0%,
+      var(--glass, transparent) var(--head-fade, 76%),
+      rgba(25, 22, 20, 0) 100%);
   }
 
   /* ---- c 把那一層釘住 --------------------------------------------------- */
@@ -5081,9 +5104,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   <button type="button" data-opt="c" aria-pressed="false">c 釘住圖層</button>
   <button type="button" data-opt="d" aria-pressed="false">d 瞬間跳</button>
   <button type="button" data-opt="e" aria-pressed="false">e 點了就先亮</button>
+  <button type="button" data-opt="g" aria-pressed="false">g 底色畫在頁首上</button>
   <button type="button" class="pv-reset" data-opt="">全關</button>
   <span class="pv-state"></span>
-  <span class="pv-hint">點右上那三個標籤，來回切幾次。先試 a＋b＋e，還會閃再加 c。</span>
+  <span class="pv-hint">預設就是這一輪要看的那組（a＋d＋e＋g）。c 實測更糟，別開。</span>
 </div>
 <script>
 (function () {
@@ -5091,7 +5115,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   var bar = document.querySelector('.pv-bar');
   var state = bar.querySelector('.pv-state');
   var btns = Array.prototype.slice.call(bar.querySelectorAll('button[data-opt]'));
-  var LETTERS = ['a', 'b', 'c', 'd', 'e'];
+  var LETTERS = ['a', 'b', 'c', 'd', 'e', 'g'];
   var on = {};
 
   function serialize() { return LETTERS.filter(function (k) { return on[k]; }).join(''); }
@@ -5125,7 +5149,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   function later() { requestAnimationFrame(function () { requestAnimationFrame(paint); }); }
 
   var m = /[?&]opt=([a-z0-9]+)/.exec(location.search);
-  var init = m ? m[1] : 'abe';
+  var init = m ? m[1] : 'adeg';
   LETTERS.forEach(function (k) { on[k] = init.indexOf(k) >= 0; });
   apply(false);
 
