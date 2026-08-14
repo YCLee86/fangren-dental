@@ -235,6 +235,18 @@
        使用者指定「頂三站拿掉」，所以這裡先留「斗六永樂站」這個名字。
        **要改名的話只有使用者能定。**
 
+     ---- 2026-08-14 第二輪：三處停車場的位置再對一次 ---------------------
+     使用者：「地圖的城頂三就是永樂站的舊名。永樂站的位置是和平和街19巷
+     平行的隔壁巷。合廷在永安路上，沒有連到永樂街。」
+
+       ・**名字定了**：Google 上的「斗六城頂三站停車場」＝「斗六永樂站停車場」，
+         同一座、舊名。圖上維持「斗六永樂站」。
+       ・**19 巷北邊補了一條平行的細巷**（y 114~126，和 19 巷同樣跨在
+         平和街與永樂街之間），**永樂站就開在那條巷子上**。
+         沒有查到那條巷子的名字，所以照規則不標路名。
+       ・**合廷貼到永安路上**（x 388~430）：它開在永安路，西邊和永樂街之間
+         還隔著一整排建物，原本畫成佔滿整格（360~428）是錯的。
+
      ⚠ 定案之後**切換條與所有 data-* 一起刪掉**，只把選上的那一案搬進 index.html，
        這一頁刪除、推導文字搬進 history/clinic-simple-map.html（CLAUDE.md 第八節）。
      ========================================================================== -->
@@ -416,6 +428,9 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
         <rect x="-20" y="473" width="600" height="38"/> <!-- 大同路 -->
         <rect x="-20" y="785" width="600" height="46"/> <!-- 中華路 -->
         <rect x="126" y="171" width="194" height="17"/> <!-- 平和街19巷 -->
+        <!-- 細：和 19 巷平行的隔壁巷（19 巷北邊那一條）。使用者 2026-08-14：
+             「永樂站的位置是和平和街19巷平行的隔壁巷」。沒有查到名字，不標。 -->
+        <rect x="126" y="114" width="194" height="12"/>
         <rect x="-20" y="192" width="112" height="12"/> <!-- 細：平和街12巷 -->
         <rect x="358" y="208" width="222" height="12"/> <!-- 細：永安路14巷 -->
         <rect x="-20" y="366" width="378" height="12"/> <!-- 細：平和街33巷 -->
@@ -447,15 +462,17 @@ h2 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1.1rem; letter-spacing: .
              一條中央通道、貼著永樂街往北延伸的長條，長邊和永樂街平行。
              量法：那張截圖的比例尺 20 公尺 ≒ 150px，車陣對角 513px ≒ 68 公尺。 -->
       <g class="map-park">
-        <!-- 斗六永樂站停車場：19 巷以北 -->
-        <rect x="206" y="118" width="58" height="34" rx="4" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="235" y="144" text-anchor="middle">P</text>
-        <text class="lbl-s" x="196" y="142" text-anchor="end">斗六永樂站</text>
+        <!-- 斗六永樂站停車場（Google 上的舊名是「斗六城頂三站」，同一座）：
+             就在 19 巷北邊那條平行的巷子旁邊，不是散在街廓中間 -->
+        <rect x="206" y="130" width="58" height="34" rx="4" fill="var(--map-park)"/>
+        <text class="pk pk-s" x="235" y="156" text-anchor="middle">P</text>
+        <text class="lbl-s" x="196" y="154" text-anchor="end">斗六永樂站</text>
 
-        <!-- 合廷停車場：永樂街以東、14 巷以南，幾乎佔滿整個街廓 -->
-        <rect x="360" y="224" width="68" height="62" rx="4" fill="var(--map-park)"/>
-        <text class="pk pk-s" x="394" y="264" text-anchor="middle">P</text>
-        <text class="lbl-s" x="394" y="310" text-anchor="middle">合廷</text>
+        <!-- 合廷停車場：**開在永安路上、沒有連到永樂街**（使用者 2026-08-14 指正）。
+             所以西邊留一整條建物的空隙，東緣才貼著永安路。 -->
+        <rect x="388" y="224" width="42" height="76" rx="4" fill="var(--map-park)"/>
+        <text class="pk pk-s" x="409" y="268" text-anchor="middle">P</text>
+        <text class="lbl-s" x="409" y="324" text-anchor="middle">合廷</text>
 
         <!-- 壹車房－中華路停車場：貼著永樂街東側的長條，南端抵中華路 -->
         <rect x="360" y="649" width="48" height="136" rx="4" fill="var(--map-park)"/>
