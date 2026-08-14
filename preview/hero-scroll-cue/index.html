@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW" data-cue="on" data-shape="chev" data-size="s2" data-gap="g1" data-ink="k2" data-frame="on" data-box="b2" data-mob="off">
+<html lang="zh-Hant-TW" data-cue="on" data-shape="chev" data-size="s2" data-gap="g1" data-ink="k2" data-frame="on" data-box="b2" data-lit="fill" data-fill="f2" data-mob="off">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -904,15 +904,26 @@ html[data-here] .nav-lamp { opacity: 1; }
    使用者看過提案頁之後說「比較喜歡切換條那個介面 —— 沒點到的時候有一個隱隱約約
    導圓角的方框，游標移到方框會亮」。所以角形外面常駐一圈框，游標經過整圈變濃。
 
-   **值一個都不是新的，整組照抄頁首選單那三個玻璃框**（2026-08-11 定案）：
-     圓角 `--frame-r`（8px，和頁首吃同一個變數，不要另外寫死）
-     靜止 `inset 0 0 0 .75px rgba(226, 229, 230, .26)`
-     hover `inset 0 0 0 .75px rgba(226, 229, 230, .40)`
-     轉場 `.25s ease`（框）＋ `.18s ease`（角形的顏色）
-   ⚠ 框是**紙色不是白**。頁首那三個框站在同一張照片上，這一顆離它們只隔一個
-      螢幕高度，用同一組值它們才會讀成同一種東西；換成白就變成第三個白了。
-   ⚠ 不要學「亮起來」那一態（.55／1px ＋ 一塊底）—— 那是頁首用來表示
-      「你現在在這一節」的，這一顆沒有節可以對應，借過來只會讓人以為它被選中。
+   第二輪（同一天）使用者再指定：「不是只有線條框框變的，整個都要套色。」
+   所以 hover **整塊亮起來**，不是只有那條線變濃。
+
+   **值一個都不是新的，整組照抄頁首選單那三個玻璃框**（2026-08-11 定案），
+   連「亮起來」那一態都照抄：
+     圓角　　`--frame-r`（8px，和頁首吃同一個變數，不要另外寫死）
+     靜止　　`inset 0 0 0 .75px rgba(226, 229, 230, .26)`，沒有底
+     亮起來　底 `rgba(226, 229, 230, .24)`（＝`.nav-lamp` 那塊底）
+             ＋ 框 `inset 0 0 0 1px rgba(226, 229, 230, .55)`
+             ＋ 角形轉**純白**（＝頁首 `a[aria-current]` 的字）
+     轉場　　`.25s ease`（框與底）＋ `.18s ease`（角形的顏色）
+   ⚠ 框與底是**紙色不是白**。頁首那三個框站在同一張照片上，這一顆離它們只隔一個
+      螢幕高度，用同一組值它們才會讀成同一種東西。
+   ⚠ 角形 hover 的純白**是第三階**（靜止 .65 → 純白），嚴格說超出「這條帶子上
+      只准兩個白」那條規則 —— 但那條規則管的是**窄帶裡面**的東西，而這一顆站在
+      窄帶外面、屬於頁首玻璃框那一族，頁首的 `aria-current` 本來就是純白。
+      使用者 2026-08-14 第三輪明確指定「整個都要套色」，這是他的決定。
+   ⚠ 這一態在頁首是用來表示「你現在在這一節」的，這一顆借的是**同一個樣子、
+      不同的意思**（游標在我身上）。所以它只在 hover／focus 出現，
+      **不要**讓它常駐，也不要跟著捲動掛上去。
 
    ---- 位置 ----
    **框的下緣**離窄帶上緣 4px（使用者第二輪從 4／8／12／18 裡挑的）。
@@ -954,9 +965,10 @@ html[data-here] .nav-lamp { opacity: 1; }
      ⚠ 改內距等於改框的大小，「離窄帶 4px」是量框的下緣，不會跟著變。 */
   padding: 8px 12px;
   border-radius: var(--frame-r);            /* ＝頁首那三個玻璃框，同一個變數 */
+  background: transparent;                  /* 靜止沒有底，亮起來才長出來 */
   box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .26);
   color: rgba(255, 255, 255, .65);          /* ＝「部定專科」那一階，見上面第②條 */
-  transition: color .18s ease, box-shadow .25s ease;
+  transition: color .18s ease, box-shadow .25s ease, background-color .25s ease;
 }
 .hero-cue svg {
   display: block; width: 16px; height: 8px; overflow: visible;
@@ -965,24 +977,30 @@ html[data-here] .nav-lamp { opacity: 1; }
   filter: drop-shadow(0 1px 2px rgba(25, 22, 20, .45));
 }
 .hero-cue svg path { vector-effect: non-scaling-stroke; }
-/* 游標經過**框與角形一起亮**：角形的顏色走地址電話那一組（.65 → .95），
-   框走頁首選單那一組（紙色 .26 → .40）。兩個都是站上已經在用的值。
+/* 游標經過**整塊亮起來**：底、框、角形三樣一起換，值全部照抄頁首選單
+   「你現在在這一節」那一態（底紙色 .24 ＝ .nav-lamp、框 .55／1px、字純白）。
+   ⚠ 底要寫 `background-color` 不要寫 `background` —— 簡寫會把 background-image
+      一起重設，這一顆現在沒有背景圖，但簡寫在轉場清單裡也對不上
+      （`transition` 認的是 background-color 這個長寫屬性）。
    ⚠ hover 關在 `(hover: hover) and (pointer: fine)` 裡（同頁首選單那一條）：
       沒有游標的裝置點下去會把亮起來的那一態黏住，而這一顆點完就捲走了、
       黏住看不到但也改不掉。地址電話那一組沒有這層保護，是因為它 ≤720
       就整組不顯示；這一顆在 iPad 橫放（>720、有觸控）看得到，所以要擋。 */
 @media (hover: hover) and (pointer: fine) {
   .hero-cue:hover {
-    color: rgba(255, 255, 255, .95);
-    box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .40);
+    color: #fff;
+    background-color: rgba(226, 229, 230, .24);
+    box-shadow: inset 0 0 0 1px rgba(226, 229, 230, .55);
   }
 }
-/* 鍵盤走到的時候和 hover 同一態，另外再加一圈 outline —— 框本身太輕，
-   單靠它當焦點指示看不出來。⚠ 這裡**不要**再寫 border-radius，
-   元素自己已經是 `--frame-r`，寫第二次日後改頁首圓角就會有一顆對不上。 */
+/* 鍵盤走到的時候和 hover 完全同一態，另外再加一圈 outline —— 那塊底很輕，
+   單靠它當焦點指示在亮一點的畫面上看不出來。
+   ⚠ 這裡**不要**再寫 border-radius，元素自己已經是 `--frame-r`，
+      寫第二次日後改頁首圓角就會有一顆對不上。 */
 .hero-cue:focus-visible {
-  color: rgba(255, 255, 255, .95);
-  box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .40);
+  color: #fff;
+  background-color: rgba(226, 229, 230, .24);
+  box-shadow: inset 0 0 0 1px rgba(226, 229, 230, .55);
   outline: 2px solid rgba(255, 255, 255, .8); outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) { .hero-cue { transition: none; } }
@@ -2755,7 +2773,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
    每一列標「定」的那一格＝正式站現在跑的值：角形 16px・離窄帶 4・筆畫 1.3・
    框有・框中。 */
 :root { --cue-w: 16px; --cue-ar: .5; --cue-gap: 4px; --cue-sw: 1.3;
-        --cue-pb: 8px; --cue-px: 12px; --cue-op: .26; --cue-lift: 0px; }
+        --cue-pb: 8px; --cue-px: 12px; --cue-op: .26; --cue-fill: .24; --cue-lift: 0px; }
 html[data-size="s1"] { --cue-w: 14px; }
 html[data-size="s2"] { --cue-w: 16px; }
 html[data-size="s3"] { --cue-w: 18px; }
@@ -2787,9 +2805,19 @@ html[data-box="b3"] { --cue-pb: 11px; --cue-px: 16px; }   /* 框 48×30 */
 }
 html[data-frame="off"] { --cue-lift: var(--cue-pb); }
 html[data-frame="off"] .hero-cue { box-shadow: none; }
-/* hover 的框比靜止濃 .14（＝頁首選單 .26 → .40 那一階）。 */
+html[data-fill="f1"] { --cue-fill: .16; }
+html[data-fill="f2"] { --cue-fill: .24; }
+html[data-fill="f3"] { --cue-fill: .34; }
+/* 亮起來的兩案：
+     fill（定）＝ 整塊套色，底＋框＋角形三樣一起換（＝頁首 aria-current 那一態）
+     line　　　＝ 只有框變濃 .14（＝頁首 hover 那一態），角形 .95、沒有底 */
 @media (hover: hover) and (pointer: fine) {
-  .hero-cue:hover { box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, calc(var(--cue-op) + .14)); }
+  .hero-cue:hover { background-color: rgba(226, 229, 230, var(--cue-fill)); }
+  html[data-lit="line"] .hero-cue:hover {
+    color: rgba(255, 255, 255, .95);
+    background-color: transparent;
+    box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, calc(var(--cue-op) + .14));
+  }
   html[data-frame="off"] .hero-cue:hover { box-shadow: none; }
 }
 /* 手機那一格：只是為了讓你在手機上也看得到這顆東西長什麼樣，**不是提案**。
@@ -4219,6 +4247,15 @@ html[data-cue="off"] .hero-cue { display: none; }
       <button data-k="box" data-v="b2">中 40×24（定）</button>
       <button data-k="box" data-v="b3">鬆 48×30</button>
     </div>
+    <div class="sw-row"><b>亮起來</b>
+      <button data-k="lit" data-v="fill">整塊套色（定）</button>
+      <button data-k="lit" data-v="line">只有框變濃</button>
+    </div>
+    <div class="sw-row"><b>底濃度</b>
+      <button data-k="fill" data-v="f1">.16</button>
+      <button data-k="fill" data-v="f2">.24（定）</button>
+      <button data-k="fill" data-v="f3">.34</button>
+    </div>
     <div class="sw-row"><b>筆畫</b>
       <button data-k="ink" data-v="k1">1.1</button>
       <button data-k="ink" data-v="k2">1.3（定）</button>
@@ -4230,14 +4267,14 @@ html[data-cue="off"] .hero-cue { display: none; }
     </div>
 
     <p class="note">
-      那圈框的顏色、粗細、圓角、hover 加多少，整組照抄頁首選單那三個玻璃框
-      （紙色 .26 → .40、.75px、圓角吃同一個 --frame-r）。兩者只隔一個螢幕高度、
-      站在同一張照片上，用同一組值才會讀成同一種東西，所以不做成選項。
+      框與底的顏色、粗細、圓角整組照抄頁首選單那三個玻璃框（紙色、.75px、
+      圓角吃同一個 --frame-r）。「整塊套色」那一態就是頁首「你現在在這一節」
+      那一態：底紙色 .24、框 .55／1px、角形轉純白。兩者只隔一個螢幕高度、
+      站在同一張照片上，用同一組值才會讀成同一種東西，所以顏色本身不做成選項。
     </p>
     <p class="note">
-      角形的顏色也不做成選項：這條帶子上只准兩個白 —— 靜止 .65（＝「部定專科」那排標籤
-      與右邊的地址電話）、游標經過 .95（＝1983／9／6）。多開一階就是第三個白，
-      2026-08-10 那一輪已經被你否決過一次。
+      角形靜止一律 .65（＝「部定專科」那排標籤與右邊的地址電話），不做成選項。
+      亮起來才轉純白 —— 那是頁首 aria-current 的字色，不是窄帶裡的第三個白。
     </p>
     <p class="note">
       這一顆只做電腦版。手機那一版的「第一屏的下面還有」2026-08-13 在 cta-mobile
@@ -4267,6 +4304,8 @@ html[data-cue="off"] .hero-cue { display: none; }
     ink:   ['k1', 'k2', 'k3'],
     frame: ['on', 'off'],
     box:   ['b1', 'b2', 'b3'],
+    lit:   ['fill', 'line'],
+    fill:  ['f1', 'f2', 'f3'],
     mob:   ['off', 'on']
   };
   var root = document.documentElement;

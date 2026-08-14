@@ -1480,15 +1480,26 @@ html[data-here] .nav-lamp { opacity: 1; }
    使用者看過提案頁之後說「比較喜歡切換條那個介面 —— 沒點到的時候有一個隱隱約約
    導圓角的方框，游標移到方框會亮」。所以角形外面常駐一圈框，游標經過整圈變濃。
 
-   **值一個都不是新的，整組照抄頁首選單那三個玻璃框**（2026-08-11 定案）：
-     圓角 `--frame-r`（8px，和頁首吃同一個變數，不要另外寫死）
-     靜止 `inset 0 0 0 .75px rgba(226, 229, 230, .26)`
-     hover `inset 0 0 0 .75px rgba(226, 229, 230, .40)`
-     轉場 `.25s ease`（框）＋ `.18s ease`（角形的顏色）
-   ⚠ 框是**紙色不是白**。頁首那三個框站在同一張照片上，這一顆離它們只隔一個
-      螢幕高度，用同一組值它們才會讀成同一種東西；換成白就變成第三個白了。
-   ⚠ 不要學「亮起來」那一態（.55／1px ＋ 一塊底）—— 那是頁首用來表示
-      「你現在在這一節」的，這一顆沒有節可以對應，借過來只會讓人以為它被選中。
+   第二輪（同一天）使用者再指定：「不是只有線條框框變的，整個都要套色。」
+   所以 hover **整塊亮起來**，不是只有那條線變濃。
+
+   **值一個都不是新的，整組照抄頁首選單那三個玻璃框**（2026-08-11 定案），
+   連「亮起來」那一態都照抄：
+     圓角　　`--frame-r`（8px，和頁首吃同一個變數，不要另外寫死）
+     靜止　　`inset 0 0 0 .75px rgba(226, 229, 230, .26)`，沒有底
+     亮起來　底 `rgba(226, 229, 230, .24)`（＝`.nav-lamp` 那塊底）
+             ＋ 框 `inset 0 0 0 1px rgba(226, 229, 230, .55)`
+             ＋ 角形轉**純白**（＝頁首 `a[aria-current]` 的字）
+     轉場　　`.25s ease`（框與底）＋ `.18s ease`（角形的顏色）
+   ⚠ 框與底是**紙色不是白**。頁首那三個框站在同一張照片上，這一顆離它們只隔一個
+      螢幕高度，用同一組值它們才會讀成同一種東西。
+   ⚠ 角形 hover 的純白**是第三階**（靜止 .65 → 純白），嚴格說超出「這條帶子上
+      只准兩個白」那條規則 —— 但那條規則管的是**窄帶裡面**的東西，而這一顆站在
+      窄帶外面、屬於頁首玻璃框那一族，頁首的 `aria-current` 本來就是純白。
+      使用者 2026-08-14 第三輪明確指定「整個都要套色」，這是他的決定。
+   ⚠ 這一態在頁首是用來表示「你現在在這一節」的，這一顆借的是**同一個樣子、
+      不同的意思**（游標在我身上）。所以它只在 hover／focus 出現，
+      **不要**讓它常駐，也不要跟著捲動掛上去。
 
    ---- 位置 ----
    **框的下緣**離窄帶上緣 4px（使用者第二輪從 4／8／12／18 裡挑的）。
@@ -1530,9 +1541,10 @@ html[data-here] .nav-lamp { opacity: 1; }
      ⚠ 改內距等於改框的大小，「離窄帶 4px」是量框的下緣，不會跟著變。 */
   padding: 8px 12px;
   border-radius: var(--frame-r);            /* ＝頁首那三個玻璃框，同一個變數 */
+  background: transparent;                  /* 靜止沒有底，亮起來才長出來 */
   box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .26);
   color: rgba(255, 255, 255, .65);          /* ＝「部定專科」那一階，見上面第②條 */
-  transition: color .18s ease, box-shadow .25s ease;
+  transition: color .18s ease, box-shadow .25s ease, background-color .25s ease;
 }
 .hero-cue svg {
   display: block; width: 16px; height: 8px; overflow: visible;
@@ -1541,24 +1553,30 @@ html[data-here] .nav-lamp { opacity: 1; }
   filter: drop-shadow(0 1px 2px rgba(25, 22, 20, .45));
 }
 .hero-cue svg path { vector-effect: non-scaling-stroke; }
-/* 游標經過**框與角形一起亮**：角形的顏色走地址電話那一組（.65 → .95），
-   框走頁首選單那一組（紙色 .26 → .40）。兩個都是站上已經在用的值。
+/* 游標經過**整塊亮起來**：底、框、角形三樣一起換，值全部照抄頁首選單
+   「你現在在這一節」那一態（底紙色 .24 ＝ .nav-lamp、框 .55／1px、字純白）。
+   ⚠ 底要寫 `background-color` 不要寫 `background` —— 簡寫會把 background-image
+      一起重設，這一顆現在沒有背景圖，但簡寫在轉場清單裡也對不上
+      （`transition` 認的是 background-color 這個長寫屬性）。
    ⚠ hover 關在 `(hover: hover) and (pointer: fine)` 裡（同頁首選單那一條）：
       沒有游標的裝置點下去會把亮起來的那一態黏住，而這一顆點完就捲走了、
       黏住看不到但也改不掉。地址電話那一組沒有這層保護，是因為它 ≤720
       就整組不顯示；這一顆在 iPad 橫放（>720、有觸控）看得到，所以要擋。 */
 @media (hover: hover) and (pointer: fine) {
   .hero-cue:hover {
-    color: rgba(255, 255, 255, .95);
-    box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .40);
+    color: #fff;
+    background-color: rgba(226, 229, 230, .24);
+    box-shadow: inset 0 0 0 1px rgba(226, 229, 230, .55);
   }
 }
-/* 鍵盤走到的時候和 hover 同一態，另外再加一圈 outline —— 框本身太輕，
-   單靠它當焦點指示看不出來。⚠ 這裡**不要**再寫 border-radius，
-   元素自己已經是 `--frame-r`，寫第二次日後改頁首圓角就會有一顆對不上。 */
+/* 鍵盤走到的時候和 hover 完全同一態，另外再加一圈 outline —— 那塊底很輕，
+   單靠它當焦點指示在亮一點的畫面上看不出來。
+   ⚠ 這裡**不要**再寫 border-radius，元素自己已經是 `--frame-r`，
+      寫第二次日後改頁首圓角就會有一顆對不上。 */
 .hero-cue:focus-visible {
-  color: rgba(255, 255, 255, .95);
-  box-shadow: inset 0 0 0 .75px rgba(226, 229, 230, .40);
+  color: #fff;
+  background-color: rgba(226, 229, 230, .24);
+  box-shadow: inset 0 0 0 1px rgba(226, 229, 230, .55);
   outline: 2px solid rgba(255, 255, 255, .8); outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) { .hero-cue { transition: none; } }
