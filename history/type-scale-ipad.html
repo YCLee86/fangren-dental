@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>type-scale-ipad｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>type-scale-ipad</h1>
+<p class="meta">
+  原網址 <code>/preview/type-scale-ipad/</code>（已刪除 2026-08-15）<br>
+  整頁還原：<code>git show 420f9b2:preview/type-scale-ipad/index.html</code><br>
+  切換條 <code>?ts=t0|t1|t2|t3|t4&amp;hero=</code>，一輪定案上線（iPad +19%）<br>
+  ⚠ 產生它的一次性腳本沒有進 repo（在暫存區）—— 它做的六件事寫在那一頁
+  <code>&lt;head&gt;</code> 的抬頭註解裡。<br>
+  電腦版那一輪：<a href="/history/type-scale.html">/history/type-scale.html</a>（同一天，+12%）
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者：「iPad 版的字級也偏小，做放大的預覽給我看。」
+（電腦版 +12% 當天稍早已經上線。）</pre></div>
+
+<h2>一、五段（834×1112 實測，單位 px）</h2>
+<div class="note"><pre>              根字級  卡片標題  卡片摘要  科別標記 字/塊高  選單   HERO 的詩  窄帶高
+  現況         16     16.32    13.60    14.40 / 34.0    13.76   16.5      126.6
+  +6%          17     17.34    14.45    15.30 / 36.1    14.62   17.6      134.6
+  +12%         18     18.36    15.30    16.20 / 38.2    15.48   18.6      142.8
+  +19%（t3）★  19     19.38    16.15    17.10 / 40.3    16.34   19.4      150.4
+  +25%         20     20.40    17.00    18.00 / 42.5    17.20   20.3      158.0
+  參考站       16     19       15       16    / 44.4    15      —         —
+  電腦版現行   18     18.36    15.30    16.20 / 38.2    15.48   —         105.9
+
+★ ＝ 使用者選的。**比電腦版再大一階** —— 電腦版是 +12%。
+卡片標題 19.38 正好落在參考站 blog.ichentsai.tw 的 19 上。</pre></div>
+
+<h2>二、涵蓋哪些裝置</h2>
+<div class="note"><pre>站上直式平板本來就是分開的兩段，這一輪合成一道 `max-aspect-ratio: 9/10`
+（寬 ≥ 721px）：
+
+  A 段（比例 2/3 ~ 9/10）　iPad 直放：.hero 直向 flex、照片吃「一屏扣掉窄帶」
+  B 段（比例 ≤ 2/3）　　　 直立螢幕、**iPad mini 直放 744×1133 ＝ 0.657**：
+                          照片 100svh、窄帶壓在照片上
+
+⚠ **iPad 橫放不吃這一段** —— 比例 > 1，它落在電腦版那一段（＝ +12%）。
+⚠ 比例正好 0.9 的視窗兩段都命中（電腦版寫的是 min-aspect-ratio: 9/10），
+  iPad 這一段排在後面所以贏。和站上原本的分段行為一致，不是新的例外。
+⚠ 手機（≤ 720px）完全沒有被動到（實測 390×844：根字級 16px、--type-scale
+  未定義）。</pre></div>
+
+<h2>三、iPad 特有的三個坑</h2>
+<div class="note"><pre>① **兩段各有一個寫死的 126px**（＝當初量出來的窄帶高度），要跟著倍率長：
+     A 段　`--ph: calc(100svh - 126px)`　　→ 乘上倍率
+           --ph 是「照片高度」，詩的字級與位置都按它等比例算；不乘的話
+           詩的比例會算錯。
+     B 段　`--band-h: 126px`　　　　　　　 → 乘上倍率
+           收尾句讓開的量是 `calc(var(--band-h) + clamp(1rem,3vh,2rem))`，
+           不乘的話收尾句會被窄帶蓋住。
+   實測窄帶 126.6 → 150.4px，估值與實際差 0.4px，可以接受。
+
+② **「往下滑」那顆指標**：大小（44×39.5）與兩條角形**不放大** —— 那是觸控
+   下限與圖形，不是字。但它的垂直位置是「距窄帶下緣 34.9px」＝ 對齊
+   「5個／部定專科」那一列的中線，而窄帶裡全是 rem，字一放大那一列就往上移。
+   所以 34.9 要跟著長：`bottom: calc(34.9px * 倍率 - 39.5px / 2)`。
+   四個尺寸 × 五段實測，對齊偏差都在 ±0.3px 以內。
+
+③ **窄帶長高會吃掉照片**（A 段照片是 flex 吃剩下的高度）：
+   834×1112 上照片 985.4 → 961.6px（一屏的 88.6% → 86.5%），
+   「照片＋窄帶正好一屏」維持 ±0.0px。這是 flex 的正常行為，不是破圖。</pre></div>
+
+<h2>四、破圖檢查（四個尺寸 × 五段）</h2>
+<div class="note"><pre>  尺寸           段  現況→+19%
+  834×1112（Air）A   照片 985.4→961.6　窄帶 126.6→150.4　一屏差 0.0
+                     品牌→選單 262.2→167.1　收尾句→窄帶 2.5→3.0　指標 +0.1
+  744×1133（mini）B  窄帶 126.6→150.4　一屏差 0.0　詩 19.3→22.9
+                     品牌→選單 192.6→**94.6**　收尾句→窄帶 33.1→35.0
+  820×1180       A   照片 1053.4→1029.6　一屏差 0.0　品牌→選單 249.0→153.9
+  1024×1366（12.9）A 照片 1239.4→1215.6　一屏差 0.0　品牌→選單 440.8→345.7
+                     收尾句→窄帶 1.0→0.3（那一格本來就貼著照片下緣）
+
+  水平捲動 0、門診表不溢出、文章卡標題仍最多 2 行、
+  **和現況比沒有新增任何元素溢出**（五段皆然）。
+  ⚠ 溢出要和現況比：現況本來就有二十來項在「溢出」（選單那三個玻璃框的
+    ::before 故意畫到 a 的外面、.sr-only、窄帶那兩顆外擴的觸控目標）。
+
+  HERO 白字疊在照片上（834×1112，每列取中位數、取最亮那一列）：
+      詩　　　5.34 → 5.31 : 1
+      收尾句　6.79 → 6.92 : 1
+  詩 ÷ 照片高　1.70% → 2.02%（電腦版 +12% 之後是 1.88%）
+
+  **最緊的一格是最小那台 iPad 的「品牌 → 選單」**：744 寬上 192.6 → 94.6px。
+  還很寬，但 +25% 那一段會掉到 60.4 —— 再往上加就是這一格先出事。</pre></div>
+
+<h2>五、量測面板學到的一件（下次一定會再踩）</h2>
+<div class="note"><pre>**把版面暫時切到「現況」量一次再切回來的時候，一定要先把 transition 關掉。**
+
+頁首的高（`.site-head .shell`）與標誌的 flex-basis 都掛著 .2s 的過場，
+切過去的那一瞬間 getBoundingClientRect 讀到的還是**舊值** —— 量出來的
+「現況」會等於「放大後」。踩到的症狀：iPad 這一頁的「頁首 → 詩」現況量成
+8.08%（正確是 10.00%），因為頁首高在三個狀態下都讀到同一個數字。
+
+    var st = document.createElement('style');
+    st.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
+    document.head.appendChild(st);
+    ...切狀態、量、切回來...
+    st.remove();
+
+⚠ 同一件事也會騙過「調整視窗大小之後直接量」：那時過場也在跑。
+  用瀏覽器工具驗證跨斷點的改動時，**改完視窗要重新載入再量**。</pre></div>
+
+<h2>六、留下來的一件（還沒做）</h2>
+<div class="note"><pre>**文章頁（posts/，走 assets/style.css）還沒跟上。** 首頁的頁首現在是
+電腦 +12%／iPad +19%，文章頁還是原本的大小，所以 2026-08-15 上午那條
+「首頁切到文章頁，頁首不要變」目前不成立。要補就是把同一段搬進
+assets/style.css 的對應斷點。
+
+⚠ **手機（≤ 720px）不在這一條裡** —— 同一天由另一台走另一條路做完了
+（commit c541d54「手機字級定案 Ⓑ」：文章卡標題 22.4／摘要 17.6，並推到
+醫師介紹、看診時段、位置與周邊停車的內文）。那一輪是**逐項改 rem 值**，
+不是像電腦／iPad 這樣換根字級 —— 兩種做法並存是現況，不是誰漏做。</pre></div>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>
