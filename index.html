@@ -1260,16 +1260,28 @@ html[data-here] .nav-lamp { opacity: 1; }
      那個設計重點。所以另外包一層只裝 <img> 的 .hero-shot。
      它是 position:absolute; inset:0，幾何和原本一模一樣，版面零影響。
 
-   ---- 參數：**電腦與手機是兩組不同的值**（使用者各挑各的）-----------------
+   ---- 參數：**三段各一組，使用者在各自的裝置上一段一段挑的**--------------
 
-     電腦　放大 6%　12 秒　　　　　(min-width:721px) and (min-aspect-ratio:9/10)
-     手機　放大 10%　6 秒　　　　　(max-width:720px)
-     兩邊共用 cubic-bezier(.22,.61,.36,1)（先快後慢）、原點下緣、一次就停。
+     電腦　　放大 6%　12 秒　(min-width:721px) and (min-aspect-ratio:9/10)
+     iPad　　放大 10%　8 秒　(min-width:721px) and (max-aspect-ratio:9/10)
+     手機　　放大 10%　6 秒　(max-width:720px)
+     三段共用 cubic-bezier(.22,.61,.36,1)（先快後慢）、原點下緣、一次就停。
 
-   看起來手機比較「重」，但**在手機上這一組才等於電腦版那一組的力道**：
-   電腦版每秒走 0.5%，手機這一組每秒走 1.67% —— 差別是**手機第一屏的照片
-   只有 719px 高、寬 390px**，同樣的百分比換算成位移遠比電腦版少，
-   而且手機是滑過去就走，沒有人會在第一屏停 12 秒。使用者兩台各看過才挑的。
+   ⚠ **iPad 那一條同時涵蓋「直放」與「直立螢幕」兩段**（版面那邊是兩道
+     @media，這裡合成一道 max-aspect-ratio:9/10）—— 兩段的縮放參數相同，
+     沒有理由拆開。⚠ 但**版面的兩段不要跟著合併**，那兩段的照片高度、
+     窄帶位置、詩的比例都不一樣。
+
+   ⚠ 9/10 這個邊界上電腦與 iPad 兩條**都會命中**，寫在後面的 iPad 贏。
+     這和版面那幾段的既有行為一致（iPad 的 @media 也排在電腦版後面），
+     **不要為了「乾淨」去加 (min-aspect-ratio) 把邊界切開** —— 那會讓
+     縮放與版面在正好 0.9 的螢幕上分屬不同段。
+
+   手機與 iPad 的百分比比電腦大，但**在那兩個裝置上這才等於電腦版的力道**：
+   電腦每秒走 0.5%、iPad 1.25%、手機 1.67%。差別是**第一屏的照片小很多**
+   （手機 390×719、iPad 744~834 寬），同樣的百分比換算成位移遠比電腦少；
+   而且手機與 iPad 是滑過去就走，沒有人會在第一屏停 12 秒。
+   三個數字都是使用者在各自的實機上看過畫面才挑的。
 
    2% 在手機上幾乎看不出來。一次就停不做來回呼吸 ——
    一張靜止的建築照片來回縮放看起來像壞掉，而且永遠不會停在定案的構圖上。
@@ -1282,10 +1294,12 @@ html[data-here] .nav-lamp { opacity: 1; }
      第一版（電腦版上線那次）把它寫在電腦版那道 @media 裡面，手機吃不到、
      會退回預設的 50% 50% —— 接縫就跑掉了。手機上線時才發現。
 
-   ⚠ **iPad 直放（9/10~2/3）與直立螢幕（≤2/3）都還沒開。** 那兩段的裁法
-     與版型都不一樣（照片是 flex 撐開的、窄帶的位置也不同），而且那兩段
-     **本來就有一個會動的東西**（「往下滑」的指標會慢速浮動），
-     第一屏同時兩件事在動要看過才知道行不行。提案頁在 /preview/hero-zoom/。
+   ⚠ **iPad 的第一屏同時有兩件事在動，這是看過畫面才定的。**
+     那兩段本來就有「往下滑」的指標在慢速浮動（heroCueBob，4px／2.4 秒，
+     刻意連 prefers-reduced-motion 都不看）。提案頁做了一排開關可以把它
+     先停住比一比，使用者比過之後選**維持浮動** —— 兩者的量級差很遠
+     （指標是 4px 的來回、照片是十幾秒才走完的單向推進），不會互相搶。
+     **不要因為「兩個動畫」就順手拿掉其中一個。**
 
    ⚠ 結束時多放大一個幅度，等於 srcset 挑到的那張要多撐那麼多。實測不影響選檔
      （電腦 1440 DPR1 需要 1361 → 1443，兩邊都挑 1600w；手機挑 2000w，
@@ -1303,16 +1317,20 @@ html[data-here] .nav-lamp { opacity: 1; }
 /* ⚠ 無條件，見上面那一條。放在 @media 裡會讓沒被覆蓋到的版型退回 50% 50%。 */
 .hero-photo img { transform-origin: 50% 100%; }
 
-@keyframes hero-push-in    { from { transform: scale(1); } to { transform: scale(1.06); } }
-@keyframes hero-push-in-sm { from { transform: scale(1); } to { transform: scale(1.10); } }
+/* 名字帶的是幅度不是裝置 —— iPad 與手機同樣是 10%，只有時長不同。 */
+@keyframes hero-push-6  { from { transform: scale(1); } to { transform: scale(1.06); } }
+@keyframes hero-push-10 { from { transform: scale(1); } to { transform: scale(1.10); } }
 
-@media (min-width: 721px) and (min-aspect-ratio: 9/10) {
-  .hero-photo img { animation: hero-push-in 12s cubic-bezier(.22, .61, .36, 1) both; }
+@media (min-width: 721px) and (min-aspect-ratio: 9/10) {          /* 電腦 */
+  .hero-photo img { animation: hero-push-6 12s cubic-bezier(.22, .61, .36, 1) both; }
 }
-@media (max-width: 720px) {
-  .hero-photo img { animation: hero-push-in-sm 6s cubic-bezier(.22, .61, .36, 1) both; }
+@media (min-width: 721px) and (max-aspect-ratio: 9/10) {          /* iPad 直放＋直立 */
+  .hero-photo img { animation: hero-push-10 8s cubic-bezier(.22, .61, .36, 1) both; }
 }
-/* ⚠ 這一條要排在上面兩條後面（同權重，後面的贏）。 */
+@media (max-width: 720px) {                                       /* 手機 */
+  .hero-photo img { animation: hero-push-10 6s cubic-bezier(.22, .61, .36, 1) both; }
+}
+/* ⚠ 這一條要排在上面三條後面（同權重，後面的贏）。 */
 @media (prefers-reduced-motion: reduce) {
   .hero-photo img { animation: none; }
 }
