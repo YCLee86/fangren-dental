@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>插畫風格指引・預覽 — 芳仁牙醫診所</title>
+
+<!--
+  提案頁：插畫風格指引（2026-08-15）
+  ─────────────────────────────────────────────────────────────────────────
+  這一頁是 ILLUSTRATION.md 的可視化版本，給使用者在手機上看。
+  定案之後照 CLAUDE.md 第八節：刪掉這個資料夾，推導文字搬進 history/。
+
+  ⚠ 這一頁是**自己寫的獨立頁**，不是 index.html 的複本 ——
+    所以第八節那四個陷阱（相對路徑、counter.js、切換條插入位置、dist）
+    一個都沒踩到。做小元件的提案頁照這個做法比複製整份 index.html 省事。
+    唯一要顧的是 dist：tools/dist.mjs 的 OPTIONAL 已經列了 preview/。
+
+  ⚠⚠ 範例圖一律**外連到原網站的圖床，沒有存進 repo**。
+    十一組全是他人的版權作品（Behance／Squarespace），
+    CLAUDE.md 第一節第 7 條要求第三方素材符合 CC BY —— 這些都不是。
+    代價：對方擋外連或換網址就會破圖。每張圖下面都留了原始出處連結。
+    **定案之後不要把這些圖複製進 assets/。**
+
+  ⚠ 顏色全部取自 PALETTE.md 既有的值，這一頁沒有新增任何色：
+    紙 #e2e5e6・卡 #f4f4f5・墨 #2a2c27・柔墨 #5c5f57・線 #cdd0d2・
+    頁首 #393736・一般牙科綠 #3f654a／#2c5238（拿來標「可以拿」）・
+    顯微根管紅 #ae4f4d／#89202d（拿來標「不要拿」）。
+    ⚠ 綠與紅在這裡是「要／不要」的意思，不是科別的意思 —— 這一頁沒有科別。
+
+  切換條：?show=all|good|bad　&size=l|s
+  正規式寫 [a-z0-9]+（CLAUDE.md 第八節：寫 [a-z]+ 會吃不到帶數字的值）。
+-->
+
+<style>
+:root{
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  --ink:#2a2c27; --ink-soft:#5c5f57; --head:#393736;
+  --yes:#3f654a; --yes-deep:#2c5238;
+  --no:#ae4f4d;  --no-deep:#89202d;
+  --wide:1160px; --pad:clamp(1.25rem,3vw,2.5rem); --radius:12px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.75; letter-spacing:.01em;
+  /* 讓切換條不要蓋到最後一段。⚠ 這個值要跟著切換條實際折幾行走，**要逐視窗量**：
+     電腦版一行 54px，但 375 和 320 都會折成三行（兩者實測都是 106px）——
+     只留 5.5rem（88px）的話，最後那段字會被蓋掉一截。 */
+  padding-bottom:7rem;
+}
+@media (max-width:420px){ body{ padding-bottom:9.5rem } }
+.shell{max-width:var(--wide); margin-inline:auto; padding-inline:var(--pad)}
+
+/* ── 頁首 ───────────────────────────────────────────────────────── */
+.top{background:var(--head); color:#fff; padding-block:2.2rem 2rem}
+.top h1{margin:0 0 .5rem; font-size:clamp(1.35rem,4.6vw,2rem); line-height:1.4; letter-spacing:.02em}
+.top p{margin:.35rem 0; color:#d8dad6; font-size:clamp(.85rem,2.9vw,.95rem)}
+.top .meta{opacity:.72; font-size:.8rem; margin-top:1rem}
+.top .rev{
+  margin-top:.9rem; padding:.7rem .9rem; border-radius:9px;
+  background:rgba(226,229,230,.12); border:1px solid rgba(226,229,230,.26);
+  color:#e8eae6; font-size:clamp(.8rem,2.8vw,.88rem);
+}
+.top .rev b{color:#fff}
+/* 「已更正」的標記。⚠ 這裡的綠是一般牙科的套色、紅是顯微根管的深階，
+   在這一頁是「要／不要」與「改過」的意思，不是科別的意思。 */
+.tag-fix{
+  display:inline-block; padding:.08em .5em; border-radius:7px;
+  background:#e2e5e6; color:#89202d; font-size:.78em; font-weight:700; letter-spacing:.02em;
+}
+
+/* ── 通用區塊 ───────────────────────────────────────────────────── */
+section{margin-top:2.6rem}
+h2{
+  font-size:clamp(1.05rem,3.5vw,1.35rem); margin:0 0 1rem;
+  padding-bottom:.5rem; border-bottom:2px solid var(--ink); letter-spacing:.02em;
+}
+h2 small{display:block; font-weight:400; font-size:.76rem; color:var(--ink-soft); letter-spacing:.01em; margin-top:.3rem}
+
+/* ── 三把尺 ─────────────────────────────────────────────────────── */
+.rulers{display:grid; gap:.75rem; grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.ruler{background:var(--card); border-radius:var(--radius); padding:1rem 1.1rem; border:1px solid var(--rule)}
+.ruler b{display:block; font-size:.95rem; margin-bottom:.3rem}
+.ruler .dir{font-size:.86rem; color:var(--yes-deep); font-weight:700}
+.ruler .src{display:block; margin-top:.5rem; font-size:.76rem; color:var(--ink-soft); line-height:1.6}
+
+/* 使用者原話 */
+.quote{
+  background:var(--card); border-left:4px solid var(--head);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:.9rem 1.1rem; margin:.7rem 0; font-size:.92rem;
+}
+.quote em{font-style:normal; color:var(--ink-soft); display:block; font-size:.78rem; margin-bottom:.25rem}
+
+/* ── 一組作品 ───────────────────────────────────────────────────── */
+.item{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--radius);
+  padding:1.1rem var(--pad) 1.3rem; margin-bottom:1.1rem;
+}
+.item > .shell{padding-inline:0}
+.item h3{margin:0 0 .2rem; font-size:1.02rem; letter-spacing:.02em}
+.item h3 .num{
+  display:inline-block; min-width:1.9em; margin-right:.4em; padding:.08em .4em;
+  background:var(--head); color:#fff; border-radius:7px; font-size:.8em; text-align:center;
+}
+.item .src{margin:0 0 .9rem; font-size:.78rem}
+.item .src a{color:#214d48}
+.badge{
+  display:inline-block; margin-left:.5em; padding:.1em .55em; border-radius:7px;
+  font-size:.7rem; font-weight:700; letter-spacing:.02em; vertical-align:.15em;
+  background:var(--head); color:#fff;
+}
+
+/* 圖片列：自己捲，版面不破框 */
+.strip{
+  display:flex; gap:.6rem; overflow-x:auto; padding-bottom:.6rem; margin-bottom:1rem;
+  scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch;
+}
+.strip figure{margin:0; flex:0 0 auto; scroll-snap-align:start; width:var(--fw,240px)}
+.strip img{
+  display:block; width:100%; height:var(--fh,180px); object-fit:cover;
+  border-radius:9px; background:var(--rule); border:1px solid var(--rule);
+}
+.strip figcaption{font-size:.72rem; color:var(--ink-soft); margin-top:.35rem; line-height:1.5}
+body[data-size="l"] .strip{--fw:min(78vw,420px); --fh:auto}
+body[data-size="l"] .strip img{height:auto; aspect-ratio:auto}
+
+/* ✓／✗ 兩欄 */
+.verdict{display:grid; gap:.8rem; grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.box{border-radius:9px; padding:.85rem 1rem; border:1px solid}
+.box.good{border-color:var(--yes); background:rgba(63,101,74,.07)}
+.box.bad {border-color:var(--no);  background:rgba(174,79,77,.07)}
+.box b{display:block; font-size:.83rem; letter-spacing:.03em; margin-bottom:.45rem}
+.box.good b{color:var(--yes-deep)}
+.box.bad  b{color:var(--no-deep)}
+.box ul{margin:0; padding-left:1.15rem}
+.box li{font-size:.86rem; margin-bottom:.4rem; line-height:1.7}
+.box li:last-child{margin-bottom:0}
+/* 被撤掉的條目：畫掉但留著，這樣看得出改過什麼 */
+.box s{color:var(--ink-soft); text-decoration-thickness:1px}
+.note{
+  margin-top:.85rem; font-size:.82rem; line-height:1.7; color:var(--ink-soft);
+  border-top:1px dashed var(--rule); padding-top:.7rem;
+}
+.note b{color:var(--ink)}
+
+/* 篩選 */
+body[data-show="good"] .box.bad,
+body[data-show="bad"]  .box.good{display:none}
+
+/* ── 規格表 ─────────────────────────────────────────────────────── */
+.spec{width:100%; border-collapse:collapse; font-size:.86rem; background:var(--card); border-radius:var(--radius); overflow:hidden}
+.spec th,.spec td{padding:.6rem .75rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--rule)}
+.spec th{width:7.5em; white-space:nowrap; color:var(--ink-soft); font-weight:700}
+.spec tr:last-child th,.spec tr:last-child td{border-bottom:0}
+.swrap{display:block; overflow-x:auto}
+
+/* 紅線 */
+.red{background:rgba(174,79,77,.07); border:1px solid var(--no); border-radius:var(--radius); padding:1rem 1.1rem}
+.red ol{margin:0; padding-left:1.3rem}
+.red li{font-size:.88rem; margin-bottom:.45rem}
+
+/* 待決定 */
+.open{background:var(--card); border:1px solid var(--rule); border-radius:var(--radius); padding:1rem 1.1rem}
+.open ol{margin:0; padding-left:1.3rem}
+.open li{font-size:.88rem; margin-bottom:.7rem; line-height:1.7}
+.open li b{color:var(--no-deep)}
+.open s{color:var(--ink-soft); text-decoration-thickness:1px}
+
+/* ── 切換條 ─────────────────────────────────────────────────────── */
+.bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:50;
+  background:rgba(57,55,54,.96); color:#fff;
+  padding:.6rem var(--pad) calc(.6rem + env(safe-area-inset-bottom));
+  display:flex; gap:1.1rem; align-items:center; flex-wrap:wrap;
+  font-size:.78rem; border-top:1px solid rgba(255,255,255,.16);
+}
+.bar .grp{display:flex; gap:.35rem; align-items:center}
+.bar .lb{opacity:.66; margin-right:.15rem}
+.bar button{
+  font:inherit; color:#fff; background:transparent; cursor:pointer;
+  border:1px solid rgba(226,229,230,.34); border-radius:8px;
+  padding:.3rem .7rem; min-height:34px; letter-spacing:.02em;
+}
+.bar button[aria-pressed="true"]{background:#e2e5e6; color:#2a2c27; border-color:#e2e5e6; font-weight:700}
+.foot{font-size:.78rem; color:var(--ink-soft); line-height:1.8; margin-top:2.5rem}
+</style>
+</head>
+
+<body data-show="all" data-size="s">
+
+<header class="top">
+  <div class="shell">
+    <h1>插畫風格指引<br>—— 十一個作品集看下來的結論</h1>
+    <p>這一頁是 <code>ILLUSTRATION.md</code> 的可視化版本。範例圖是外連原網站的，
+       這個站沒有存任何一張。</p>
+    <p class="rev"><b>第二輪修正（2026-08-15）</b>　你這一輪推翻了我五條判斷，
+      標著 <span class="tag-fix">已更正</span> 的地方就是。三題也結案了：
+      <b>灰階確定不要</b>／<b>質感＝細顆粒為主、乾筆刷當變體</b>／<b>人物以 ② 為準</b>。</p>
+    <p class="meta">2026-08-15・提案中・沒有搜尋引擎索引・拿到網址的人看得到</p>
+  </div>
+</header>
+
+<main class="shell">
+
+<section>
+  <h2>一、三把尺<small>你自己寫的那兩則評語，其實是在講三個可以各自轉動的變數</small></h2>
+
+  <div class="quote"><em>你對 ① The Red Bulletin 說的</em>
+    「這個對於環境的詮釋很有氛圍感　人物的氣勢太強烈我不喜歡」</div>
+  <div class="quote"><em>你對 ② Yuhobika 說的</em>
+    「灰階並不適合我的喜好　但人物描繪比美式寫實一點　很不錯」</div>
+
+  <div class="rulers">
+    <div class="ruler"><b>環境的氛圍</b><span class="dir">要濃</span>
+      <span class="src">霧、光、層次、質感都要做滿。</span></div>
+    <div class="ruler"><b>人物的氣勢</b><span class="dir">要收</span>
+      <span class="src">不當主角、不逆光、不置中、不轉頭看讀者。</span></div>
+    <div class="ruler"><b>人物的畫法</b><span class="dir">要平實</span>
+      <span class="src">看得出年紀與體態的普通人，比美式誇張再寫實一點。</span></div>
+    <div class="ruler"><b>顏色</b><span class="dir">一定要有彩色</span>
+      <span class="src">不做灰階、不做單一無彩色。</span></div>
+  </div>
+
+  <p class="note" style="border-top:0;padding-top:.9rem">
+    <b>「環境要濃」和「人物要收」不衝突，這是整份指引的關鍵。</b>
+    ① 被你嫌的不是它畫得暗、畫得有氣氛，是它把一個佔畫面三分之一的黑色連帽剪影
+    擺在正中間逆光。把那個人拿掉，剩下的霧、燈塔、倒影全都是你要的。
+  </p>
+</section>
+
+<section>
+  <h2>一之二、顯示情境<span class="tag-fix">已更正</span><small>你這一輪指出的，它一口氣撤掉我兩條禁止</small></h2>
+  <div class="quote"><em>你說的</em>
+    「圖片只是其中一塊而已。顯示的時候會是一個縮圖點開，所以我覺得不一定有問題，
+     只是到時候選色配色。」</div>
+  <p class="note" style="border-top:0;padding-top:.9rem">
+    我第一版對 ③ 和 ⑦ 都寫了「顏色太滿、太飽和會把整頁吃掉」——
+    <b>那是把插圖想成滿版背景了，它其實不是。</b>
+    首頁卡片上是縮圖，文章頁的 HERO 也只有內文欄那麼寬（375 上 335px、1440 上 624px），
+    四周都是紙色。<b>一張高彩的圖被紙色包著，和一片高彩鋪滿螢幕是兩件事。</b><br><br>
+    <b>所以「顏色太強」不是否決的理由，是調節的理由</b> ——
+    先問「能不能降彩度」或「能不能縮小面積」。<br>
+    ⚠ 但它有邊界：前提是「圖只佔畫面一塊」。哪天要做滿版的插畫背景，這條就不成立。
+  </p>
+</section>
+
+<section>
+  <h2>二、十一組，一組一組看<small>底下的切換條可以只看「可以拿」或只看「不要拿」</small></h2>
+
+  <!-- ① -->
+  <article class="item">
+    <h3><span class="num">①</span>The Red Bulletin／interactive novel<span class="badge">你評過</span></h3>
+    <p class="src"><a href="https://www.behance.net/gallery/248285405/" target="_blank" rel="noopener">behance.net/gallery/248285405</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/c9e28b248285405.69ee4505e7467.png" alt="霧中的燈塔小島夜景">
+        <figcaption>環境：霧分三層、單一暖光源、整張顆粒</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/1179d0248285405.69ee4505e838b.png" alt="雜誌跨頁，前景是連帽人物剪影">
+        <figcaption>問題就在這張：剪影佔畫面三分之一</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/310a37248285405.69ee4505e55d5.png" alt="三張速寫肖像">
+        <figcaption>速寫筆觸，情緒很強</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>霧當分層工具</b> —— 不用線、不用明暗，靠一層層的霧把遠中近推開。</li>
+        <li><b>整張只有一個暖光源</b>（燈塔、窗戶），其餘全部落在冷側。暖色的稀有性就是氛圍。</li>
+        <li>顆粒質感鋪滿全張，連天空這種本來沒東西的地方也鋪。</li>
+        <li>倒影：同一個光在水面再出現一次，畫面就有縱深。</li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿</b><ul>
+        <li><b>把人放大成剪影當主角、電影海報式的英雄構圖。</b>你明說不喜歡的就是這個。</li>
+        <li>肖像那幾張又快又亂的速寫線。</li>
+        <li>深色底＋金屬高光的六角徽章。</li>
+      </ul></div>
+    </div>
+  </article>
+
+  <!-- ② -->
+  <article class="item">
+    <h3><span class="num">②</span>Yuhobika Magazine<span class="badge">你評過</span></h3>
+    <p class="src"><a href="https://www.behance.net/gallery/119040357/" target="_blank" rel="noopener">behance.net/gallery/119040357</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/ea5b0d119040357.609526522fb03.jpg" alt="診間裡醫師與病人對談的線稿">
+        <figcaption>醫病同框、視線平行、坐姿等高</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/4377c3119040357.60952652303fe.jpg" alt="戴耳機看螢幕的女性線稿">
+        <figcaption>五官極簡，但頭身比例完全正常</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>人物的「平實」</b> —— 沒有誇張頭身比、沒有戲劇表情、沒有時尚體態。</li>
+        <li><b>醫病同框、視線平行、坐姿高度相同</b>：沒有誰高誰低。我們是牙醫診所，這件事有意義。</li>
+        <li>手繪感的線：粗細有變化、收筆帶飛白，不是尺規畫出來的。</li>
+        <li>四角小十字那種極輕的版面裝飾。</li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿</b><ul>
+        <li><b>灰階。</b>你明說不適合。</li>
+        <li>用網點當唯一的階調工具。</li>
+      </ul></div>
+    </div>
+    <p class="note"><b>十一組裡，情境和我們最接近的就是這一組</b>（診間、醫師與病人對談）。
+      它的<b>人</b>要，它的<b>顏色</b>不要。</p>
+  </article>
+
+  <!-- ③ -->
+  <article class="item">
+    <h3><span class="num">③</span>WIRED Consulting Report<span class="tag-fix">已更正</span></h3>
+    <p class="src"><a href="https://www.behance.net/gallery/166603639/" target="_blank" rel="noopener">behance.net/gallery/166603639</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/f5dea3166603639.641b08403d903.jpg" alt="紫底封面，三個戴 VR 頭盔的人">
+        <figcaption>前景人物只到胸口、側面、不看讀者</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/d13630166603639.641b084041314.jpg" alt="一點透視的室內大景，背景散佈許多小人">
+        <figcaption>一個大場景，幾十件事同時在發生</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>一個大場景裡塞很多「同時在發生的小事」</b> —— 讀者會停下來一個一個看。</li>
+        <li><b>前景人物只到胸口、側面、不看讀者</b>：「人物氣勢要收」的具體作法。</li>
+        <li>顆粒質感（同 ①）。</li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿 —— 沒有，兩條都撤掉了</b><ul>
+        <li><s>滿版高彩紫會把整頁吃掉</s> —— 見上面「顯示情境」。</li>
+        <li><s>科技感的節點連線、頭像氣泡</s> —— 你說：「未來文章有其他風格或其他內容跟科技，
+          或是跟一些想法、一些意境很有關的話，用這樣也沒有什麼關係。」</li>
+      </ul></div>
+    </div>
+    <p class="note"><b>這一組先整組保留，不列任何禁止項。</b>顏色的事留到選色配色那一步再處理。</p>
+  </article>
+
+  <!-- ④ -->
+  <article class="item">
+    <h3><span class="num">④</span>WIRED Events</h3>
+    <p class="src"><a href="https://www.behance.net/gallery/102311027/" target="_blank" rel="noopener">behance.net/gallery/102311027</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/8fdb2b102311027.5f33aadc19737.jpg" alt="平塗向量人物圍著一本翻開的雜誌">
+        <figcaption>米白底＋四色；元素拼成一個大物件</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/a6ae50102311027.5f33aadc1a734.jpg" alt="多個螢幕與人物組成的平面構圖">
+        <figcaption>線寬完全均勻、零質感</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>米白底＋四色</b>的克制。色數少反而好看，和這個站的紙色底相容。</li>
+        <li>把很多元素拼成<b>一個大物件</b>的構圖。</li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿</b><ul>
+        <li><b>無臉人物、誇張肢體</b> —— 這正好落在你說的「美式」那一側，是 ② 的反面。</li>
+        <li>完全均勻的向量線與零質感。</li>
+      </ul></div>
+    </div>
+    <p class="note"><b>④ 和 ② 是光譜的兩端，不要同時抄。</b>人物照 ②，構圖可以看 ④。</p>
+  </article>
+
+  <!-- ⑤ -->
+  <article class="item">
+    <h3><span class="num">⑤</span>WIRED World 2025 — Health &amp; Technology<span class="tag-fix">已更正</span></h3>
+    <p class="src"><a href="https://www.behance.net/gallery/213945667/" target="_blank" rel="noopener">behance.net/gallery/213945667</a>
+      ・作者 <a href="https://www.behance.net/jankovicandjela" target="_blank" rel="noopener">Anđela Janković</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/7a2c13213945667.674f4ff117f78.jpg" alt="綠洋裝的人站在橘粉漸層前；藍襯衫側臉在蜜桃色背景上">
+        <figcaption><b>✓ 你說的就是這個</b>：衣服和背景當成一組色來配</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/5e0f48213945667.674f4ff640d99.jpg" alt="高彩虹漸層的六格拼貼封面">
+        <figcaption>✓ 用色大膽（但可以收一階，不必到魔幻）</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/5b2ff1213945667.674f4ff30a12b.jpg" alt="灰階畫面，一個小男孩站在巨大手機螢幕之間">
+        <figcaption>✗ 灰階：構圖很好，但這個調性不要</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/a98e11213945667.674f4ff3bc259.jpg" alt="堆疊成山的針筒">
+        <figcaption>這張是紅線：醫療器械密集特寫</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>它的用色。</b>「用色很大膽，然後用在人上面那個衣服、背景，那些顏色配色都很特別，
+          可以保留下來。」—— <b>人物的衣服和背景是當成一組色配的</b>，不是各自挑色。</li>
+        <li><b>比例關係</b>：一個巨大的場景配一個很小的人。這比 ③ 把「人物氣勢要收」做得更徹底。</li>
+        <li><b>漸層當光用，不當裝飾用。</b></li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿</b><ul>
+        <li><b>灰階。</b>（你這一輪確認的）</li>
+        <li><b>強度收一階</b> ——「甚至有點鬧、魔幻，也許我們不要這麼〔強〕」。
+          用色的膽量要，但不必到魔幻。</li>
+        <li>虹彩／鉻金屬漸層。</li>
+        <li><b>那張針筒堆。</b>來看牙的人不該先看到那個。</li>
+      </ul></div>
+    </div>
+    <p class="note"><b>我原本說「判斷不出來你喜歡哪一半」，這一輪問清楚了：灰階不要、彩色的用色要。</b>
+      我當時只挑了兩張灰階當範例，你指出「其實 ⑤ 裡面有很多有顏色的圖片」——
+      <b>是我取樣取偏了</b>，不是這一組真的以灰階為主。第一張已經換成彩色的那一組。</p>
+  </article>
+
+  <!-- ⑥ -->
+  <article class="item">
+    <h3><span class="num">⑥</span>Modern struggles<span class="badge" style="background:var(--yes-deep)">題材最近</span><span class="tag-fix">已更正</span></h3>
+    <p class="src"><a href="https://www.behance.net/gallery/252886609/" target="_blank" rel="noopener">behance.net/gallery/252886609</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/2ffaf3252886609.6a5a3c755115f.jpg" alt="被擠出來的牙膏，粉紅與松綠">
+        <figcaption>一支被擠出來的牙膏 —— 離我們最近的一張</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/365cf7252886609.6a5a3f75dcd5b.jpg" alt="一疊書變成背景橫條，人坐在中間">
+        <figcaption>日常物件放大成整個環境</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/18a1e3252886609.6a5a42edc68fd.jpg" alt="拿著牙刷與滾輪的人物，背景是棕櫚葉">
+        <figcaption>乾筆刷＋畫布織紋，沒有黑外框線</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>質感</b>：乾筆刷＋畫布織紋。十一組裡質感做得最好的一組。</li>
+        <li><b>把一個日常物件放大成整個環境</b> —— 不是「畫個物件擺在畫面裡」，是「物件就是場景」。</li>
+        <li><b>配色的「主體性」</b>（你特別指出的）：色數少、選擇克制，
+          但<b>主題色一出現就很凸顯</b>。「不一定要像前面講的顏色那麼多選擇，
+          但是他用到主題色的時候，那個凸顯性、主題的意義是蠻好的。」</li>
+        <li>人被環境包住，不是站在環境前面。</li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿 —— 改成有條件的了</b><ul>
+        <li><s>人物那種厭世／疲憊的表情與姿態</s> —— 你說：「其實也不一定，
+          尤其我們未來文章也會提到一些病患的心情、選擇之類的……只是也許特定主題才需要，
+          可能不是每個文章很需要。」</li>
+      </ul></div>
+    </div>
+    <p class="note"><b>情緒性的姿態變成「特定主題才用」的工具，不是禁止項。</b>
+      講牙科恐懼、講要不要治療這種<b>病患心情</b>的文章可以用；一般衛教不需要。
+      <b>預設不用，要用的時候是刻意的。</b><br>
+      另外：⑥ 的「克制」和 ⑤ 的「大膽」是兩條不同的用色路線，<b>兩條都留著</b>，看那一篇要哪一種。</p>
+  </article>
+
+  <!-- ⑦ -->
+  <article class="item">
+    <h3><span class="num">⑦</span>WIND BLOWING<span class="badge" style="background:var(--yes-deep)">你評價最高</span><span class="tag-fix">已更正</span></h3>
+    <p class="src"><a href="https://www.behance.net/gallery/250284695/" target="_blank" rel="noopener">behance.net/gallery/250284695</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/e9d2e3250284695.6a1be2bb4b1fa.jpg" alt="藍底上的鯉魚旗與白色手繪風紋">
+        <figcaption>用白線畫看不見的東西：風</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>那個線條本身。</b>「我是很喜歡 ⑦ 的這個線條的感覺……雖然說畫的是物品、
+          不是人不是動物，但是我覺得這個風格非常好，我也很喜歡。」
+          —— <b>這是整份指引裡你主動說「非常好、我也很喜歡」的唯一一項。</b></li>
+        <li><b>用線畫看不見的東西</b>（風、氣流、呼吸）—— 可以直接借去畫漱口水、氣流、
+          刷牙的動線這類本來看不到的東西。</li>
+        <li>單一飽和底色撐起整張，其餘全是同色系的深淺。</li>
+        <li>白色手繪線當唯一的裝飾層。</li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿 —— 沒有，彩度問題有解</b><ul>
+        <li><s>那個藍太飽和，直接搬會打架</s> —— 你說：「我覺得會不會真的打架也不一定……
+          彩度可以稍微降一些，或是說〔底〕不要這麼滿版的出現，也許就沒有這個問題，
+          不是說完全不能用。」</li>
+      </ul></div>
+    </div>
+    <p class="note"><b>兩個調節鈕，任選一個或一起用：</b>①<b>彩度降一階</b>（色相與明度不動）；
+      ②<b>不要滿版</b>，讓底色只佔畫面一部分，其餘留給紙色。<br>
+      ⚠ <b>這是一條通則，不只適用於 ⑦</b>：遇到「這個顏色太強」，
+      先問「能不能降彩度或縮小面積」，不要直接把整組否決掉。③ 的滿版紫被撤掉也是同一個道理。</p>
+  </article>
+
+  <!-- ⑧ -->
+  <article class="item">
+    <h3><span class="num">⑧</span>春日少年</h3>
+    <p class="src"><a href="https://www.behance.net/gallery/116690141/" target="_blank" rel="noopener">behance.net/gallery/116690141</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/3b5bd2116690141.6066ecdc0d04f.jpg" alt="一排走路的年輕人，黃色星形爆點">
+        <figcaption>橫向排列的節奏，單一點綴色串起來</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>橫向排列的節奏感</b> —— 很適合做卡片列或章節之間的裝飾條。</li>
+        <li>單一點綴色反覆出現（那個黃）把整排串起來。</li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿</b><ul>
+        <li>無臉／誇張比例（同 ④）。</li>
+      </ul></div>
+    </div>
+  </article>
+
+  <!-- ⑨ -->
+  <article class="item">
+    <h3><span class="num">⑨</span>Health Magazine Illustration<span class="badge" style="background:var(--no-deep)">我判斷錯了</span><span class="tag-fix">已更正</span></h3>
+    <p class="src"><a href="https://www.behance.net/gallery/139615933/" target="_blank" rel="noopener">behance.net/gallery/139615933</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/0da817139615933.6232959022ab5.png" alt="拉麵攤，老先生、店主與客人">
+        <figcaption>有年紀、有體態、有生活感，但完全不寫實到毛孔</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>筆觸。</b>「我喜歡的是這個筆觸。」—— 邊緣是毛的、留白處讓白底透出來、
+          色鉛筆／淡彩的那種下筆感。</li>
+        <li><b>用色帶出來的氛圍感。</b>「還有它的顏色、用色帶出的那個氛圍感。」
+          暖紅＋綠＋米，一個拉麵攤就有了溫度 ——
+          <b>氛圍不一定要靠霧和光（①），也可以純靠色。</b></li>
+        <li><b>白底＋圓角＋不填滿</b>，和這個站的卡片版型直接相容。</li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿</b><ul>
+        <li><b>人物。太寫實了。</b>「⑨ 的人物太寫實了，那個風格不是那麼的插畫風，
+          所以我反而沒有很喜歡。」</li>
+      </ul></div>
+    </div>
+    <p class="note"><b>我原本把這一組定成「人物以這組為準」，被你推翻了。</b><br>
+      <b>我推錯的地方</b>：你說過「人物描繪比美式寫實一點很不錯」（②），
+      我把「比美式寫實一點」一路外推，找到十一組裡最寫實的那一組就當成標準。
+      但那句話的重點是<b>「一點」</b> —— 是相對 ② 那種簡化線稿往寫實挪一小步，
+      不是往寫實那一端走到底。<br>
+      <b>所以人物的準是 ②。⑨ 太寫實、④⑧⑪ 太抽象，② 在中間。</b></p>
+  </article>
+
+  <!-- ⑩ -->
+  <article class="item">
+    <h3><span class="num">⑩</span>2C illustrations for Halmek</h3>
+    <p class="src"><a href="https://www.behance.net/gallery/227883039/" target="_blank" rel="noopener">behance.net/gallery/227883039</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/0f5bea227883039.6848e296a73bb.jpg" alt="單色綠的人物線稿，印在淺綠底上">
+        <figcaption>一色＋白就能成立，沒有任何陰影</figcaption></figure>
+      <figure><img loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/4ad6b0227883039.6848e2973253b.jpg" alt="綠色線條畫的筆記本、卡片、對話泡泡">
+        <figcaption>小物件散置，適合放在內文中間</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>一色＋白就能成立</b> —— 這點對這個站特別有用：每篇文章本來就有自己的科別色，
+          這種插畫可以<b>直接吃那一篇的顏色</b>，六篇自動長得不一樣又同一套。</li>
+        <li>小物件散置當版面裝飾。</li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿</b><ul>
+        <li>人物那種無鼻無眼的極簡。<b>人物一律回 ② 那一組</b>
+          （更正：這裡原本寫「衝突時選 ⑨」，但 ⑨ 已被你判定太寫實）。</li>
+      </ul></div>
+    </div>
+  </article>
+
+  <!-- ⑪ -->
+  <article class="item">
+    <h3><span class="num">⑪</span>Linn Fritz<span class="badge" style="background:var(--no-deep)">有矛盾</span></h3>
+    <p class="src"><a href="https://www.linnfritz.com/" target="_blank" rel="noopener">linnfritz.com</a>
+      ・<a href="https://www.instagram.com/linnfritz/" target="_blank" rel="noopener">instagram.com/linnfritz</a></p>
+    <div class="strip">
+      <figure><img loading="lazy" src="https://images.squarespace-cdn.com/content/v1/540eb39ce4b0169f85a815f7/9a06d328-bdcc-4bb1-8387-93ee8f243b4d/Fortune-Magazine_july_a01-02.jpg?format=1000w" alt="粉紅底上的等距透視手機泳池">
+        <figcaption>粗黑均勻外框線、高飽和平塗、零質感</figcaption></figure>
+      <figure><img loading="lazy" src="https://images.squarespace-cdn.com/content/v1/540eb39ce4b0169f85a815f7/7da6e8c8-b0ff-4579-8b9b-f27288a54684/Winebar%401.5x%401.5x.jpg?format=1000w" alt="一桌喝酒的人，有對話泡泡">
+        <figcaption>物件擬人化＋對話泡泡 —— 這兩項可以拿</figcaption></figure>
+      <figure><img loading="lazy" src="https://images.squarespace-cdn.com/content/v1/540eb39ce4b0169f85a815f7/fed2d642-db98-4a5d-95f0-37381535d73c/icecream3.jpg?format=1000w" alt="真實冰淇淋照片上坐著插畫小人">
+        <figcaption>照片拼貼＋插畫混搭</figcaption></figure>
+      <figure><img loading="lazy" src="https://images.squarespace-cdn.com/content/v1/540eb39ce4b0169f85a815f7/0afd5380-7127-4026-8fff-2de17979562c/_Master_Pictogram_1-60.jpg?format=1000w" alt="等距透視的小物件圖標一組">
+        <figcaption>成套的小物件圖標</figcaption></figure>
+    </div>
+    <div class="verdict">
+      <div class="box good"><b>✓ 可以拿</b><ul>
+        <li><b>物件擬人化的幽默</b>：酒瓶、番茄醬上畫一張小臉。很輕的手法，用一點就有效果。</li>
+        <li><b>對話泡泡與手寫字</b>當插畫的一部分。</li>
+        <li><b>照片拼貼＋插畫混搭</b> —— 這一項對我們特別有用：診所有自己的實景照片，
+          在照片上加幾筆插畫，比從零畫一張場景省事得多，也沒有版權問題。</li>
+        <li>那組等距小物件圖標的成套感。</li>
+      </ul></div>
+      <div class="box bad"><b>✗ 不要拿</b><ul>
+        <li><b>無臉人物、麵條四肢、誇張比例</b> —— 你說的「美式」那一側最典型的樣子。</li>
+        <li>七八支高飽和色＋高彩滿版底。</li>
+        <li>粗且均勻的黑外框線，以及零質感。</li>
+      </ul></div>
+    </div>
+    <p class="note"><b>這一組和 ⑨ 在「人物」這一項上完全相反</b>，而規格是照 ⑨ 定的。
+      你說「都覺得很不錯」，但那句話涵蓋的是整體印象 ——
+      ①「人物的氣勢太強烈我不喜歡」已經示範過「喜歡一組作品」和「喜歡它的人物畫法」是兩件事。
+      <b>所以這一組我取的是它的手法（擬人、拼貼、對話泡泡），不是它的人。</b>
+      如果你其實喜歡這種畫法，人物那一條要整條重寫。</p>
+  </article>
+</section>
+
+<section>
+  <h2>三、合起來的規格<small>這是可以直接拿去畫的那一份</small></h2>
+  <span class="swrap"><table class="spec">
+    <tr><th>線</th><td>手繪感的實線，粗細有變化、收筆可以飛白。<b>不要</b>尺規式的均勻向量線，也<b>不要</b>速寫式的亂線。（要 ②／不要 ④⑪／不要 ①肖像）</td></tr>
+    <tr><th>面</th><td>平塗為主。階調用<b>同一色的兩三階</b>，不用漸層。（⑥⑩）</td></tr>
+    <tr><th>漸層</th><td><b>只用來描述光</b>，不當裝飾。（⑤內頁）</td></tr>
+    <tr><th>質感</th><td><b>一定要有。以細顆粒為主</b>，<b>乾筆刷是局部或特定文章的變體</b> ——
+      見下面那張三層表，<b>這不是二選一</b>。（①③ 顆粒 ＋ ⑥ 乾筆刷）</td></tr>
+    <tr><th>用色</th><td><b>兩條路都留著，看那一篇要哪一種</b>：<b>(a) 克制</b> —— 色數少、但主題色一出現就很凸顯（⑥）／
+      <b>(b) 大膽</b> —— 用色強，<b>人物的衣服和背景當成一組色來配</b>（⑤）。⚠ 具體色票還沒定，見第五節。</td></tr>
+    <tr><th>彩度太強</th><td><b>降彩度</b>（色相與明度不動）<b>或縮小面積</b>，不要整組否決。（⑦③ 的教訓）</td></tr>
+    <tr><th>灰階</th><td><b>不做。</b>（你的原話，這一輪再確認一次）</td></tr>
+    <tr><th>人</th><td><b>以 ② 為準</b>：簡化的線稿人物，五官極簡但<b>頭身比例自然</b>、看得出年紀。
+      ⚠ <b>⑨ 太寫實、④⑧⑪ 太抽象，兩端都不是。</b></td></tr>
+    <tr><th>人的份量</th><td><b>人物高度不超過畫面的二分之一</b>；不逆光、不置中、不轉頭看讀者。（① 的教訓、③⑤ 的作法）</td></tr>
+    <tr><th>誰是主角</th><td><b>場景或物件</b>，不是人。（⑥⑤）</td></tr>
+    <tr><th>構圖</th><td>二選一：<b>(a) 一個放大的日常物件當整個環境</b>（⑥）／<b>(b) 一個大場景塞很多小事</b>（③）。</td></tr>
+    <tr><th>光</th><td>整張<b>只有一個光源</b>，暖色；其餘落在冷／中性側。（①）</td></tr>
+    <tr><th>氛圍怎麼來</th><td>兩條路：<b>霧與光</b>（①）／<b>純靠用色</b>（⑨ 的筆觸與色）。不必每張都做霧。</td></tr>
+    <tr><th>情緒</th><td>預設安定、日常、有人味。<b>情緒性的姿態（疲憊、猶豫）是特定主題才用的工具</b>
+      —— 講病患心情、講要不要治療的文章可以用，一般衛教不需要。<b>不是禁止項，但預設不用。</b></td></tr>
+    <tr><th>背景</th><td>可以留白讓紙色透出來，不必填滿。（⑨）</td></tr>
+    <tr><th>線畫抽象</th><td><b>用線去畫看不見的東西</b>（風、氣流、呼吸、刷牙的動線）。你對這一項的評價最高。（⑦）</td></tr>
+  </table></span>
+
+  <h2 style="margin-top:2rem">質感：細顆粒為主，乾筆刷當變體<span class="tag-fix">已更正</span>
+    <small>我原本寫「擇一，全站統一」，你的答案是不要二選一</small></h2>
+  <div class="quote"><em>你說的</em>
+    「我應該會比較偏向細顆粒。但是……有偶爾可以某一些特定的文章採用這個 ⑥ 的風格，
+     或是說我們用細顆粒、但是在某些部分換成 ⑥ 的乾筆〔刷〕，或許會有一些不錯的效果。
+     所以並不是二選一。」</div>
+  <span class="swrap"><table class="spec">
+    <tr><th>底</th><td><b>細顆粒</b> —— 預設，全站一致。</td></tr>
+    <tr><th>局部</th><td>細顆粒為底，<b>某幾塊換成乾筆刷</b> —— 想讓某個元素跳出來的時候。</td></tr>
+    <tr><th>整篇</th><td><b>整張走 ⑥ 的乾筆刷</b> —— 特定主題的文章，刻意換調性。</td></tr>
+  </table></span>
+  <p class="note">⚠ <b>「不是二選一」不等於「隨便混」</b> —— 底層仍然只有一種（細顆粒），
+    乾筆刷是<b>加上去的重音</b>。兩種質感在同一張圖裡各佔一半，就會變成沒有調性。</p>
+</section>
+
+<section>
+  <h2>四、紅線<small>畫出來就不要</small></h2>
+  <p class="note" style="border-top:0;padding-top:0;margin-bottom:1rem">
+    ⚠⚠ <b>這裡分兩種，看清楚再引用。A 類是你親口說的，B 類是我從圖推的。</b>
+    B 類<b>可以被推翻，而且這一輪已經翻掉四條</b>（③ 的滿版紫、③ 的節點連線、
+    ⑥ 的疲憊表情、⑦ 的飽和藍）。<b>覺得綁手綁腳就說一聲，不要當鐵律。</b></p>
+
+  <div class="red"><b style="display:block;margin-bottom:.5rem;color:var(--no-deep)">A 類 —— 你的原話</b><ol>
+    <li><b>灰階或單一無彩色。</b>（② 說過一次，⑤ 這一輪再確認一次）</li>
+    <li><b>人物剪影當主角、逆光英雄構圖。</b>（①「人物的氣勢太強烈我不喜歡」）</li>
+    <li><b>人物太寫實、失去插畫感。</b>（⑨「那個風格不是那麼的插畫風，我反而沒有很喜歡」）</li>
+    <li><b>無臉人物、誇張頭身比。</b>（和上一條是同一把尺的兩端）</li>
+  </ol></div>
+
+  <div class="red" style="margin-top:.9rem;background:rgba(92,95,87,.07);border-color:var(--rule)">
+    <b style="display:block;margin-bottom:.5rem;color:var(--ink-soft)">B 類 —— 我推的，可以被推翻</b><ol start="5">
+    <li>深色底＋金屬高光。（① 的徽章）</li>
+    <li>虹彩／鉻金屬漸層。（⑤ 封面）</li>
+    <li><b>醫療器械的密集特寫</b>（針筒、探針、鑽針堆疊）。來看牙的人不該先看到那個。</li>
+    <li>血、疼痛、恐懼的暗示。</li>
+    <li>寫實到照片級的口腔內部。</li>
+  </ol></div>
+</section>
+
+<section>
+  <h2>五、結案的與還沒決定的<small>這一輪結掉三題，剩五題</small></h2>
+
+  <div class="open" style="background:rgba(63,101,74,.07);border-color:var(--yes)">
+    <b style="display:block;margin-bottom:.5rem;color:var(--yes-deep)">已經結案（不要再問）</b><ol>
+    <li><s>⑤ 你喜歡的是彩色封面還是灰階內頁？</s> → <b>灰階不要，彩色的用色要。</b>「不做灰階」是硬紅線。</li>
+    <li><s>質感選乾筆刷還是細顆粒？</s> → <b>細顆粒為主、乾筆刷當局部或特定文章的變體，不是二選一。</b></li>
+    <li><s>人物要 ⑨ 還是 ⑪？</s> → <b>兩個都不是，是 ②。</b>⑨ 太寫實、⑪ 太抽象。</li>
+  </ol></div>
+
+  <div class="open" style="margin-top:.9rem"><b style="display:block;margin-bottom:.5rem">還沒決定</b><ol start="4">
+    <li><b>具體色票還沒定。</b>規格現在留了兩條路（⑥ 的克制／⑤ 的大膽），
+      但「一張圖用幾支色、能不能超出 <code>PALETTE.md</code> 現有那幾顆」還沒答案。
+      你說「只是到時候選色配色」—— 這一題是<b>被推遲，不是被忽略</b>。<br>
+      ⚠ 這會牽動 <code>PALETTE.md</code>：插畫若要用大膽的色，等於這個站要多一組
+      <b>只給插圖用的色票</b>，和版面用色分開。<b>我不會自己開始加色。</b></li>
+    <li><b>這個風格要用在哪？</b>文章 HERO？首頁？文章內文的小插圖？
+      三個地方的尺寸、色數限制、和文字的關係都不一樣。</li>
+    <li><b>現有那六張 HERO 要不要重畫？</b>
+      現在的 <code>hero-*.svg</code> 是手刻的平塗幾何示意圖，沒質感、沒環境、沒人，
+      也沒吃科別色 —— 照這份規格<b>每一項都不符合</b>。</li>
+    <li><b>要不要走點陣？</b>
+      ⚠ <b>這一題現在更明確了</b>：你選了細顆粒當底層質感，而<b>細顆粒手刻 SVG 做不出來</b>。
+      所以這已經不只是偏好問題，是<b>規格本身要求的</b>。
+      HERO 要從 SVG 變成點陣圖，會動到 <code>og-images.mjs</code> 那條管線和檔案大小。
+      這是成本最高的一題。</li>
+    <li><b>「縮圖點開」是指什麼互動？</b>你說插圖「顯示的時候會是一個縮圖點開」，
+      但站上<b>現在沒有點開放大的功能</b> —— 首頁卡片的縮圖點下去是連到文章，
+      文章頁的 HERO 點下去沒有反應。若真要「點開看大圖」，那是一個新元件（燈箱）。
+      <b>我不確定你是在描述現況，還是在描述你想要的東西。</b></li>
+  </ol></div>
+</section>
+
+<p class="foot">
+  範例圖全部<b>外連到原網站的圖床</b>，這個站沒有存任何一張 ——
+  十一組都是他人的版權作品，而專案規則要求第三方素材需符合 CC BY，這些都不是。
+  代價是對方擋外連或換網址就會破圖，每一組的原始出處都在標題底下。<br>
+  這一頁是提案頁：沒有搜尋引擎索引，也沒有任何連結指過來，但拿到網址的人看得到。
+</p>
+
+</main>
+
+<div class="bar" role="group" aria-label="切換條">
+  <span class="grp"><span class="lb">顯示</span>
+    <button type="button" data-k="show" data-v="all">全部</button>
+    <button type="button" data-k="show" data-v="good">只看可以拿</button>
+    <button type="button" data-k="show" data-v="bad">只看不要拿</button>
+  </span>
+  <span class="grp"><span class="lb">範例圖</span>
+    <button type="button" data-k="size" data-v="s">小</button>
+    <button type="button" data-k="size" data-v="l">大</button>
+  </span>
+</div>
+
+<script>
+(function () {
+  var body = document.body;
+  var q = new URLSearchParams(location.search);
+  // ⚠ 正規式一定要寫 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到帶數字的值，
+  //   比對失敗後會悄悄退回預設，等於參數沒作用（CLAUDE.md 第八節，踩過一次）。
+  var ok = /^[a-z0-9]+$/;
+  ['show', 'size'].forEach(function (k) {
+    var v = q.get(k);
+    if (v && ok.test(v)) body.dataset[k] = v;
+  });
+
+  function paint() {
+    document.querySelectorAll('.bar button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(body.dataset[b.dataset.k] === b.dataset.v));
+    });
+  }
+  document.querySelectorAll('.bar button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      body.dataset[b.dataset.k] = b.dataset.v;
+      var p = new URLSearchParams(location.search);
+      p.set(b.dataset.k, b.dataset.v);
+      history.replaceState(null, '', location.pathname + '?' + p);
+      paint();
+    });
+  });
+  paint();
+})();
+</script>
+</body>
+</html>
