@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <!-- <title> 不只給 Google —— Safari 分頁、書籤、加到主畫面、iOS 的分享面板
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
@@ -32,9 +33,9 @@
 <meta property="og:image:height" content="1058">
 <meta property="og:image:alt" content="芳仁牙醫診所外觀，入夜後的永樂街街角">
 <link rel="canonical" href="https://fangren.net/">
-<link rel="icon" href="assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，兩者刻意分開 ——
-     差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
+     差別與理由寫在 ../../assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
      apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
 
      ⚠⚠ **只宣告這一個尺寸，而且是 192 —— 這是照別站的成功案例做的，不要改。**
@@ -871,7 +872,7 @@ html.scrolled .site-head::before { opacity: 1; }
      多一個合成層 ＝ 多一個會掉的東西。
    ⚠ **HERO 那一屏（條子底下是照片）的玻璃一個值都沒動。** 八個捲動位置
      逐一比對過。換掉的是窄帶上緣滑進條子的那 60px 左右。
-   ⚠ 這一整段只有首頁有。文章頁走 assets/style.css，那邊的頁首本來就是
+   ⚠ 這一整段只有首頁有。文章頁走 ../../assets/style.css，那邊的頁首本來就是
      一塊實心 var(--head)（沒有照片可以糊），碰不到這件事。
    ========================================================================== */
 /* 薄色。三個色停等於原本那個遮罩：實色到 --head-fade，再淡到全透明。
@@ -2049,7 +2050,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .views small { font-size: inherit; margin-left: .3em; }
 /* 數字還沒回來時是一個「—」，先壓淡；API 掛掉（或沒有 JS）就整個收掉，
    連前面那顆分隔點一起 —— 只留一個孤零零的「・」比沒有還糟。
-   和 assets/style.css 裡文章頁的規則同一套寫法。 */
+   和 ../../assets/style.css 裡文章頁的規則同一套寫法。 */
 .views[data-state="loading"] .views-n { opacity: .45; }
 .views[data-state="error"] { display: none; }
 .card-date:has(.views[data-state="error"]) .dot { display: none; }
@@ -2574,7 +2575,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    （相切＝最遠就到邊界），不會蓋到旁邊的字，版面、尺寸、--gutter 一個值都沒動。
    ⚠ 不要改成「把 viewBox 加 padding」—— 那會讓 --logo-w 連帶 --gutter 一起變大，
       地址與電話兩行的起點就要重算，見上面那一段。
-   ⚠ 這份和 assets/style.css 裡那份必須一模一樣，改一邊就要改另一邊。 */
+   ⚠ 這份和 ../../assets/style.css 裡那份必須一模一樣，改一邊就要改另一邊。 */
 .brand-mark svg,
 .foot-brand svg,
 .foot-addr .ico svg,
@@ -2838,7 +2839,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      （見上面 .hero-copy 與 .hero-poem 的註解）；手機版難在**照片本身**。
 
      ---- 為什麼手機不能只是「往下推」 ----------------------------------
-     把 assets/hero-clinic-night.jpg 畫進 canvas 逐列掃描（藍減紅 > 8 分辨
+     把 ../../assets/hero-clinic-night.jpg 畫進 canvas 逐列掃描（藍減紅 > 8 分辨
      夜空與建物），換算成 390px 寬時的畫面座標，可以寫字的天空是一個**楔形**：
 
          畫面 y      能寫字的左界 → 右界      擋住的東西
@@ -3165,83 +3166,59 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 
 /* ==========================================================================
-   「往下滑」的指標：兩段直式平板都放（2026-08-15，第五輪定案）
+   「往下滑」的指標：兩段直式平板都放（2026-08-15 定案）
    --------------------------------------------------------------------------
    使用者：「iPad 版需要這個往下滑的暗示，才知道要往下滑，因為這個螢幕看起來
-   很大、好像就卡在這邊。」
+   很大、好像就卡在這邊。你之前做那個角型只是一個勾尾，看起來其實有點不太在
+   幹嘛，再多一點點暗示性 —— 那個暗示性也不要真的太強。」
 
-   定案 ＝ **窄帶右下角、兩條一模一樣的角形 ＋ 一塊套色的底 ＋ 慢速浮動**。
+   定案 ＝ **一條往下漸濃的細線 ＋ 角形 ＋ 一顆沿著線慢慢往下走的小點**。
+   ・線和角形合起來才讀得出是「↓」；單一個角形太像打勾（使用者的原話）。
+   ・會動的只有那顆 2px 的點，角形完全不動 —— 這是「多一點點、但不要太強」。
 
-   ---- 前面三版為什麼不行（都量過，不要再走回去）----------------------------
-   ① 線＋角＋小點，放在照片上（上線過一天）：使用者「完全看不到、看不出來
-      那個有什麼意思」。把指標藏起來量它正下方那一塊 44×59 的背景：
-
-          裝置          最暗    平均    最亮
-          iPad 746×977  L* 0    L* 15   L* 45
-          iPad Pro 11   L* 0    L*  7   L* 52
-          iPad 12.9     L* 0    L*  3   L* 52
-
-      **同一塊裡背景從 L* 0（門口那根深色柱子）跳到 L* 52（亮著的門）** ——
-      不是「不夠亮」，是**變異太大**：白線落在亮處不見、暗暈落在暗處也不見。
-      加上那條線只有 1px、上端還淡出，本來就接近雜訊。
-   ② 把手／圓鈕／字＋角：使用者都不喜歡，「圓圈跟整個網站的主題不搭」。
-   ③ 方框（有框線）：使用者要的是**和電腦版一樣的套色底，不要框**。
-
-   ---- 這一版怎麼解的 ------------------------------------------------------
-   ・**位置搬到窄帶上**（不是照片上）：窄帶是一整片乾淨的深色，上面那個
-     「同一塊裡差 52 個 L*」的問題直接消失，不必再靠暗暈硬撐。
-   ・垂直對齊「5 個／部定專科」那一列的中線 —— 實測四個尺寸**都是距窄帶下緣
-     34.9px**（窄帶的內容不會重排，所以是常數）。
-   ・水平貼版心右緣（`right: var(--pad)`），比第三格再往右 31~174px。
-   ・**兩條角形用同一張 SVG 畫兩次**，尺寸粗細端點逐像素相同。
-     ⚠ 上一版一條用 CSS 邊框（13×13 轉 45 度 ＝ 水平跨距 18.4px）、一條用 SVG
-       （18px），使用者一眼看出「長度好像不太一樣」。
-     ⚠ data URI 的 SVG **一定要寫 width/height**，只有 viewBox 的話 Safari
-       當背景圖時有時直接不畫（CLAUDE.md 第九節，橫捲提示那一輪踩過同一條）。
-   ・底 ＝ 電腦版那一塊（`rgba(226,229,230,.10)` ＋ `--frame-r` 的圓角），沒有框線。
-
-   ---- 定案的四個值（都是使用者一階一階挑的）------------------------------
-   間距 1.5px ／ 白 .36 ／ 淺底 .10 ／ 慢速浮動。
-   ⚠ 記號是**裝飾性圖形**，門檻看非文字的 3:1。實測窄帶在記號那一塊是 L* 15.2，
-     加上 .10 的底之後底是 L* 37.0，白 .36 → **3.2:1**（過）。
-     **如果日後有人想把底換成更濃的（.16），白就不能低於 .45**（.36 只剩 2.6:1）。
-     底愈濃、白反而愈不明顯 —— 因為底本身把周圍提亮了。
-   ⚠ 觸控目標 44×39.5。
+   ⚠ 位置：電腦版那顆是 `bottom: calc(100% + 4px)`（貼著窄帶上緣），在 iPad
+      直放會落進**照片最後 84px 的接縫**裡（模糊層與柏油層正好在那裡）——
+      那正是 2026-08-14 在那一段把它關掉的原因。這裡抬到離窄帶上緣 110px，
+      整顆站在乾淨的照片上。五個尺寸實測：都在照片內、和收尾句不重疊。
+   ⚠ **一定要自己帶「地」。** 指標落在亮著燈的門面正上方：逐格量那一區 60×60
+      的背景（三個尺寸 × 離下緣 40~300px），平均是暗的（L* 4~29），但**最亮的
+      那一格一路都在 L* 46~64**（白字對比只有 2.7~5.3）。電腦版用的是淺色底塊，
+      但淺色底塊在亮處會不見；這裡改用**暗暈**（drop-shadow），亮處暗處都成立，
+      而且看起來像路面自己暗下去，不像多一個框（同收尾句 Ⓔ2 那塊暗斑的手法）。
+   ⚠ drop-shadow 跟著 alpha 形狀走，掛在 `a` 上會同時罩住線與角形，不必多加元素。
+   ⚠ 觸控目標 44px 寬（padding 12px ＋ 角形 20px），高 59px。
    ⚠ 會動的東西要看 prefers-reduced-motion —— 這一站另外三處 CSS 也都看。
-   ⚠ **點下去是原生的錨點導覽**（`<a href="#topics">`）＋ CSS 的
-     `scroll-behavior: smooth`，所以會平滑捲到「主題與科別」。
-     逐幀量過：0 → 18 → 132 → 300 → 518 → 689 → 891 → 1034 → 1106 → 1118，
-     約 500ms。**不要改成 preventDefault 自己 scrollTo** —— 那會把那一步歷史
-     紀錄弄丟，上一頁就回不到第一屏（CLAUDE.md 第九節第 13 條同一條）。
    ========================================================================== */
 @media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
   .hero-cue {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 1.5px;                       /* 兩條角形之間 */
-    width: 44px; height: 39.5px;      /* 9 ＋ 1.5 ＋ 9 ＋ 上下各 10 */
-    padding: 0; border: 0; filter: none;
-    /* 貼版心右緣、對齊三格那一列的中線 */
-    left: auto; right: var(--pad); transform: none;
-    bottom: calc(34.9px - 39.5px / 2);
-    background-color: rgba(226, 229, 230, .10);   /* ＝電腦版那一塊底 */
-    border-radius: var(--frame-r);
+    display: flex; flex-direction: column; gap: 7px;
+    bottom: calc(100% + 110px);
+    background-color: transparent; padding: 6px 12px;
+    filter: drop-shadow(0 0 7px rgba(25, 22, 20, .9)) drop-shadow(0 1px 3px rgba(25, 22, 20, .75));
   }
-  .hero-cue svg { display: none; }    /* 兩條角形都由偽元素畫，保證一模一樣 */
-  .hero-cue::before,
+  /* 線：上端淡出、往下漸濃，所以不會看起來像一根釘子 */
+  .hero-cue::before {
+    content: ''; width: 1px; height: 30px; border-radius: 1px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .5) 100%);
+  }
+  .hero-cue svg { width: 20px; height: 10px; stroke-width: 1.2; }
+  /* 沿著線往下走的那顆點 */
+  @keyframes heroCueDot {
+    0%   { transform: translate(-50%, 0);    opacity: 0; }
+    18%  { opacity: 1; }
+    72%  { opacity: 1; }
+    100% { transform: translate(-50%, 26px); opacity: 0; }
+  }
   .hero-cue::after {
-    content: ''; display: block; width: 18px; height: 9px; opacity: .36;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='9' viewBox='0 0 18 9' fill='none' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l8 7 8-7'/%3E%3C/svg%3E") center / 18px 9px no-repeat;
+    content: ''; position: absolute; left: 50%; top: 6px;
+    width: 2px; height: 2px; border-radius: 50%; background: rgba(255, 255, 255, .95);
+    animation: heroCueDot 2.8s cubic-bezier(.4, 0, .5, 1) infinite;
   }
-  /* 慢速浮動。⚠ 這一段的 transform 是 none（不是 translateX(-50%)），
-     所以 keyframes 只寫 translateY，不要照抄電腦版那一組。 */
-  @keyframes heroCueBob {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(4px); }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cue::after { animation: none; opacity: .85; }
   }
-  .hero-cue { animation: heroCueBob 2.4s ease-in-out infinite; }
-  @media (prefers-reduced-motion: reduce) { .hero-cue { animation: none; } }
-  /* 游標經過整塊亮起來那一套（電腦版的 .hero-cue:hover）在平板上沒有游標，
-     不生效也不必特別關。 */
+  /* 游標經過時整塊亮起來那一套（電腦版的 .hero-cue:hover）在平板上沒有游標，
+     底塊也已經拿掉，所以那條規則在這裡自然不生效，不必特別關。 */
 }
 
 /* ==========================================================================
@@ -4097,10 +4074,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            .hero-copy 一起裁，收尾句底下那塊 blur 的暗斑會裁出一條硬邊。
            完整理由在上面樣式表「HERO 照片：緩慢的推進」那一段。 -->
       <span class="hero-shot">
-      <img src="assets/hero-clinic-night.jpg"
-           srcset="assets/hero-clinic-night-800.jpg 800w,
-                   assets/hero-clinic-night.jpg 1600w,
-                   assets/hero-clinic-night-2000.jpg 2000w"
+      <img src="../../assets/hero-clinic-night.jpg"
+           srcset="../../assets/hero-clinic-night-800.jpg 800w,
+                   ../../assets/hero-clinic-night.jpg 1600w,
+                   ../../assets/hero-clinic-night-2000.jpg 2000w"
            sizes="calc(1.512 * 100vh)"
            alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
            width="1600" height="1058" fetchpriority="high">
@@ -4147,7 +4124,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         <svg viewBox="0 0 12 6" aria-hidden="true"><path d="m0 0 6 6 6-6"/></svg>
       </a>
 
-      <!-- 瀏覽數。data-views-self="home" 是 assets/counter.js 的掛勾：它先幫首頁 +1，
+      <!-- 瀏覽數。data-views-self="home" 是 ../../assets/counter.js 的掛勾：它先幫首頁 +1，
            再從 D1 取回真實數字，然後呼叫 window.fangrenCountUp(n) 跑往上數的動畫。
            **self** 不能寫成 data-views —— 後者只顯示不加總，首頁的數字就永遠不會長。
 
@@ -4156,7 +4133,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
            數字跑動時一直在變，讓螢幕閱讀器跟著念沒有意義，所以動的那一段整個
            aria-hidden，另外放一句 .sr-only 講最終結果（由 JS 填）。 -->
-      <p class="band-views" data-views-self="home">
+      <p class="band-views" data-count="203">
         <span class="sr-only"></span>
         <span class="views-n" aria-hidden="true">0</span><small aria-hidden="true">次瀏覽</small>
       </p>
@@ -4252,7 +4229,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
       <a class="card" href="posts/kids-arch-expansion/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
@@ -4265,7 +4242,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/regular-checkup/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">定期檢查</span>
           <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
@@ -4278,7 +4255,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/missing-tooth/" data-spec="prosth">
-        <img class="card-thumb" src="assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">缺牙重建</span>
           <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
@@ -4291,7 +4268,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/kids-first-visit/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
@@ -4304,7 +4281,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/gum-bleeding/" data-spec="perio">
-        <img class="card-thumb" src="assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">牙周照護</span>
           <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
@@ -4317,7 +4294,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/bass-brushing/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">日常保健</span>
           <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
@@ -4815,12 +4792,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       </div>
       <div class="gallery">
         <figure>
-          <img src="assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
+          <img src="../../assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
                alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
           <figcaption>獨立診療空間，每張診療椅旁都配有影像螢幕，方便看診時一起討論。</figcaption>
         </figure>
         <figure>
-          <img src="assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
+          <img src="../../assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
                alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
           <figcaption>診療區以隔屏分隔，保留採光也維持看診時的隱私。</figcaption>
         </figure>
@@ -5814,7 +5791,6 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 })();
 </script>
 
-<script src="assets/counter.js" defer></script>
 
 <script>
 /* 位置與周邊停車：點停車場帶出步行路線與時間。推導見 /history/clinic-simple-map.html */
@@ -5976,12 +5952,18 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       var own = a.closest('[data-pin-k], [data-ink-gap]');
       var fs = parseFloat(getComputedStyle(nm).fontSize) || 16;
       var k = own && own.dataset.pinK ? +own.dataset.pinK : 1;
-      var ph = PIN_EM * fs * k, ps = ph / PIN_VB_H, pw = PIN_VB_W * ps;
+      var VB = { w: PIN_VB_W, h: PIN_VB_H, x: 0, y: 0 };          /* 提案頁：線條版現量 */
+      if (pin.classList.contains('pin-line')) {
+        var pbb = pin.getBBox(), kid0 = pin.firstElementChild;
+        var sw0 = kid0 ? (parseFloat(getComputedStyle(kid0).strokeWidth) || 0) : 0;
+        VB = { w: pbb.width + sw0, h: pbb.height + sw0, x: pbb.x - sw0 / 2, y: pbb.y - sw0 / 2 };
+      }
+      var ph = PIN_EM * fs * k, ps = ph / VB.h, pw = VB.w * ps;
       var gap = (own && own.dataset.inkGap)
         ? Math.max(0, +own.dataset.inkGap - inkLeft(nm))
         : GAP_EM * fs;
       pin.setAttribute('transform',
-        'translate(' + (b.x - pw - gap).toFixed(2) + ' ' + (b.y + b.height / 2 - ph / 2).toFixed(2) +
+        'translate(' + (b.x - pw - gap - VB.x * ps).toFixed(2) + ' ' + (b.y + b.height / 2 - ph / 2 - VB.y * ps).toFixed(2) +
         ') scale(' + ps.toFixed(5) + ')');
       // 底線自己畫，不用 text-decoration（各家瀏覽器位置不一致）。
       // ⚠⚠ **y 要對「字面」不是對 bbox**（2026-08-14 使用者：「底線和停車場
@@ -6055,6 +6037,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   fig.querySelectorAll('.rl-link').forEach(function (a) {
     a.addEventListener('click', function (e) { e.stopPropagation(); });
   });
+  window.__sizeLabels = sizeLabels;   /* 提案頁：切換條要重跑 */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeLabels);
   sizeLabels();
 
@@ -6120,6 +6103,103 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   fig.addEventListener('click', function () { pinned = null; paintLots(); });
   paintLots();
 
+})();
+</script>
+
+<!-- ================= 提案用的切換條（定案後連同 .pin-line 一起刪掉）=========== -->
+<style>
+.pvbar{position:fixed;left:0;right:0;bottom:0;z-index:99;background:rgba(20,19,18,.92);
+  color:#f4f4f5;font:500 13px/1.5 system-ui,sans-serif;padding:.55rem .7rem .7rem;
+  display:flex;flex-direction:column;gap:.4rem;backdrop-filter:blur(6px)}
+.pvbar .row{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap}
+.pvbar b{font-weight:600;opacity:.72;min-width:3.6em}
+.pvbar button{font:inherit;color:inherit;background:transparent;border:1px solid rgba(244,244,245,.32);
+  border-radius:8px;padding:.28rem .6rem;cursor:pointer}
+.pvbar button[aria-pressed="true"]{background:#f4f4f5;color:#141312;border-color:#f4f4f5}
+.pvbar .num{font:400 11px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;opacity:.66;white-space:pre}
+body{padding-bottom:10.5rem}
+/* 線條版的圖釘。⚠ 要多一階才蓋得過 .map-svg .clab .rl-pin 那條 fill。 */
+.map-svg .clab .rl-pin.pin-line{fill:none;stroke:var(--card);stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+</style>
+<div class="pvbar">
+  <div class="row"><b>樣式</b>
+    <button data-k="pin" data-v="solid">實心</button>
+    <button data-k="pin" data-v="line">線條</button>
+  </div>
+  <div class="row"><b>圖釘大小</b>
+    <button data-k="ps" data-v="0.84">84%</button>
+    <button data-k="ps" data-v="0.88">88%</button>
+    <button data-k="ps" data-v="0.92">92%</button>
+    <button data-k="ps" data-v="1">100%</button>
+  </div>
+  <div class="row"><b>間距</b>
+    <button data-k="gp" data-v="3.25">3.25</button>
+    <button data-k="gp" data-v="3.5">3.5</button>
+    <button data-k="gp" data-v="3.75">3.75</button>
+    <button data-k="gp" data-v="4">4.0</button>
+  </div>
+  <div class="row num" id="pvnum"></div>
+</div>
+<script>
+/* 三排都只作用在**診所那一塊**。預設值直接讀 .clab 身上的 data-*，
+   所以這一頁一開啟就是正式站現在的樣子（實心／92%／字面間距 3.75）。
+   ⚠ 網址參數的正規式要能吃到小數點與數字，不要寫成 [a-z]+。 */
+(function () {
+  var clab = document.querySelector('.clab'), pin = clab.querySelector('.rl-pin');
+  var SOLID = pin.innerHTML;
+  /* 線條版 ＝ Lucide 的 map-pin（站上 HERO 窄帶那組線條圖示就是同一家）。 */
+  var LINE = '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>';
+  var q = new URLSearchParams(location.search);
+  var st = /^(solid|line)$/.test(q.get('pin') || '') ? q.get('pin') : 'solid';
+  var ps = /^[0-9.]+$/.test(q.get('ps') || '') ? q.get('ps') : (clab.dataset.pinK || '1');
+  var gp = /^[0-9.]+$/.test(q.get('gp') || '') ? q.get('gp') : (clab.dataset.inkGap || '3.75');
+
+  function paint() {
+    pin.innerHTML = st === 'line' ? LINE : SOLID;
+    pin.classList.toggle('pin-line', st === 'line');
+    clab.dataset.pinK = ps;
+    clab.dataset.inkGap = gp;
+    window.__sizeLabels();
+    document.querySelectorAll('.pvbar button').forEach(function (b) {
+      var cur = b.dataset.k === 'pin' ? st : (b.dataset.k === 'ps' ? ps : gp);
+      b.setAttribute('aria-pressed', String(+b.dataset.v === +cur || b.dataset.v === cur));
+    });
+    history.replaceState(null, '', '?pin=' + st + '&ps=' + ps + '&gp=' + gp);
+    measure();
+  }
+  /* 現場量測。⚠⚠ **不要用 getBoundingClientRect()** —— Chrome 對 <g> 回傳的是
+     幾何外框、**不含描邊**，線條版會少算一整個描邊寬（實測 14.49 vs 真正的 15.94）。
+     ⚠ 間距要量到**字面**（第一個字的左側空白要加回去）：四塊牌子的 box 間距都是 3，
+       看得到的空隙卻是 3.75／3.25／3.76／3.05 —— 使用者看到的就是這 0.7。 */
+  var CTX = document.createElement('canvas').getContext('2d');
+  function measure() {
+    var out = [];
+    document.querySelectorAll('.map-fig .rl-link').forEach(function (a) {
+      var nm = a.querySelector('.rl-nm, .cl-nm'), p = a.querySelector('.rl-pin');
+      var cs = getComputedStyle(nm), fs = parseFloat(cs.fontSize);
+      CTX.font = cs.fontStyle + ' ' + cs.fontWeight + ' 400px ' + cs.fontFamily;
+      var lsb = -CTX.measureText(nm.textContent.charAt(0)).actualBoundingBoxLeft / 400 * fs;
+      var kid = p.firstElementChild, ks = kid ? getComputedStyle(kid) : null;
+      var sw = (ks && ks.stroke !== 'none') ? (parseFloat(ks.strokeWidth) || 0) : 0;
+      var bb = p.getBBox(), m = p.getAttribute('transform').match(/translate\(([-\d.]+) ([-\d.]+)\) scale\(([\d.]+)\)/);
+      var tx = +m[1], s = +m[3];
+      var ph = (bb.height + sw) * s, g = nm.getBBox().x + lsb - (tx + (bb.x + bb.width + sw / 2) * s);
+      out.push(nm.textContent.slice(0, 4) + '  字' + fs + '  釘高 ' + ph.toFixed(2) +
+               '（' + (ph / fs).toFixed(3) + 'em）  字面間距 ' + g.toFixed(2));
+    });
+    document.getElementById('pvnum').textContent = out.join('\n');
+  }
+  document.querySelectorAll('.pvbar button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (b.dataset.k === 'pin') st = b.dataset.v;
+      else if (b.dataset.k === 'ps') ps = b.dataset.v;
+      else gp = b.dataset.v;
+      paint();
+    });
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(paint);
+  paint();
 })();
 </script>
 </body>
