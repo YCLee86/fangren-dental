@@ -4453,9 +4453,9 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      ⚠ 想再更大就只能動標籤自己的字級，但那三塊牌子是固定幾何的 path，
        字一放大就會撐出牌子外（實測 +8% 就頂到邊）—— 那要連牌子一起重畫。 */
   .map-svg                                   { aspect-ratio: .694; border-radius: 12px; }
-  .map-svg .rlab text                        { font-size: 18.75px; }
-  .map-svg .rlab .rl-nm                      { font-size: 20px; }
-  .map-svg .clab text                        { font-size: 18.75px; }
+  .map-svg .rlab text                        { font-size: 21px; }
+  .map-svg .rlab .rl-nm                      { font-size: 22.4px; }
+  .map-svg .clab text                        { font-size: 21px; }
   /* 站上這一條自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
      所以這裡也要 important 才蓋得掉。 */
   .info-note                                 { font-size: 1rem !important; }
@@ -5087,10 +5087,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                     <g class="rl-body">
                       <a class="rl-link" href="https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic" target="_blank" rel="noopener">
                         <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
-                        <text class="rl-nm" x="247" y="486" text-anchor="middle">壹車房停車場</text>
+                        <text class="rl-nm" x="247" y="468" text-anchor="middle">壹車房停車場</text>
                         <line class="rl-ul"/>
                       </a>
-                      <text class="rl-d" x="243" y="509" text-anchor="middle">190 公尺・3 分鐘</text>
+                      <text class="rl-d" x="243" y="485" text-anchor="middle">190 公尺・3 分鐘</text>
                     </g>
                   </g>
                 </g>
@@ -5139,8 +5139,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                      ⚠ 圖釘長在名字**左邊**，所以整塊牌子往左長約 16 個單位
                        （192 → 約 176）。右緣 308 沒動，仍然沒碰到永樂街（324 起）；
                        左緣離平和街那三個直排字（x 109±11）還有 55 個單位。 -->
-                <g class="clab" data-dir="up" data-tx="258" data-ty="287" data-bx="250" data-bw="12" data-gap="0"
-                   data-pin-k="0.92" data-ink-gap="3.75">
+                <g class="clab" data-dir="up" data-tx="258" data-ty="287" data-bx="250" data-bw="12" data-gap="0" data-tail="11"
+                   data-pin-k="0.92" data-ink-gap=".25em">
                   <path class="bub"/><path class="tail"/>
                   <g class="rl-body">
                     <a class="rl-link" href="https://maps.app.goo.gl/bKSrVyS2Qu2xvnMj7" target="_blank" rel="noopener">
@@ -6415,9 +6415,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       var fs = parseFloat(getComputedStyle(nm).fontSize) || 16;
       var k = own && own.dataset.pinK ? +own.dataset.pinK : 1;
       var ph = PIN_EM * fs * k, ps = ph / PIN_VB_H, pw = PIN_VB_W * ps;
-      var gap = (own && own.dataset.inkGap)
-        ? Math.max(0, +own.dataset.inkGap - inkLeft(nm))
-        : GAP_EM * fs;
+      // ⚠ `data-ink-gap` 可以寫 `.25em`（跟著字級走）或純數字（絕對單位）。
+      //   2026-08-15 把診所那塊從 `3.75` 改成 `.25em` —— 3.75 是在 15px 上量的，
+      //   ÷15 就是 .25em，所以電腦版一個單位都沒變，變的是放大之後仍然等比例。
+      var rawGap = own && own.dataset.inkGap;
+      var want = rawGap ? (/em$/.test(rawGap) ? parseFloat(rawGap) * fs : +rawGap) : null;
+      var gap = want !== null ? Math.max(0, want - inkLeft(nm)) : GAP_EM * fs;
       pin.setAttribute('transform',
         'translate(' + (b.x - pw - gap).toFixed(2) + ' ' + (b.y + b.height / 2 - ph / 2).toFixed(2) +
         ') scale(' + ps.toFixed(5) + ')');
@@ -6440,8 +6443,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       //     比 .172em 那條深線還多將近 3 個單位。
       // ⚠ 要在 400px 上量再等比例縮 —— Blink 回來的值顆粒很粗
       //   （CLAUDE.md 第九節第 9 條，量字面框那一段）。
+      //   ⚠⚠ **2026-08-15：那兩個常數改成跟著字級走。** 使用者把牌子的字放大
+      //     之後回報「超連結的底線和字快黏在一起了……感覺都跑掉了」——
+      //     2.2 是在 16px 上調出來的，換算成比例是 .1375em；字放大到 22.4px
+      //     還是用 2.2，比例就掉到 .098em（−29%）。改成 .1375em 之後，
+      //     .1375em 在 16px 下就是原本的 2.2；但使用者同一句話還要求「拉開一點」，
+      //     所以取 **.16em**（16px 下 2.56、22.4px 下 3.58）。
+      //     另一支（bbox 那條後備路徑）同比例：2.5 → .18em。
       var d = inkDescent(nm);
-      var uy = (+nm.getAttribute('y')) + (d === null ? b.y + b.height - +nm.getAttribute('y') + 2.5 : d + 2.2);
+      var uy = (+nm.getAttribute('y')) +
+        (d === null ? b.y + b.height - +nm.getAttribute('y') + .18 * fs : d + .16 * fs);
       ul.setAttribute('x1', b.x.toFixed(2));
       ul.setAttribute('x2', (b.x + b.width).toFixed(2));
       ul.setAttribute('y1', uy.toFixed(2));
@@ -6450,6 +6461,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     // (2) 再量整塊內容，套上盒子與尾巴
     fig.querySelectorAll('.rlab, .clab').forEach(function (g) {
       var body = g.querySelector('.rl-body'), bub = g.querySelector('.bub'), tail = g.querySelector('.tail');
+      // ⚠⚠ **第二行的 y 由這裡算，不要寫死在 markup 裡**（2026-08-15）。
+      //   牌子的字放大之後使用者回報「超連結的底線和文字間隔都處理一下，
+      //   感覺都跑掉了」—— 兩行的距離原本是 markup 上的 23（16px 下調的），
+      //   字級一放大就沒跟著長，底線與下一行整個擠在一起。
+      //   23 ÷ 16 ＝ 1.4375em，改成跟著名字的字級走，每一個字級都等比例。
+      var nm2 = g.querySelector('.rl-nm, .cl-nm'), dl = g.querySelector('.rl-d');
+      if (nm2 && dl) {
+        dl.setAttribute('y',
+          (+nm2.getAttribute('y') + 1.4375 * (parseFloat(getComputedStyle(nm2).fontSize) || 16)).toFixed(2));
+      }
       // ⚠ 只有診所那塊名牌有實心三角；停車場那三塊是全空心的，沒有 .tail
       var b = body.getBBox(), padX = 11, padY = 6;
       var bx0 = b.x - padX, by0 = b.y - padY, bw0 = b.width + padX * 2, bh0 = b.height + padY * 2;
@@ -6474,6 +6495,25 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         tip = { x: +g.dataset.tx, y: +g.dataset.ty - GAP };
         bc = g.dataset.bx === undefined ? tip.x : +g.dataset.bx;
       }
+      // ⚠⚠ **盒子要貼著尖端，不是停在 markup 給的絕對位置**（2026-08-15）。
+      //   牌子的大小是量內容算出來的，字級一變盒子就跟著變 —— 而尖端是釘死的，
+      //   所以尾巴的長度會亂跑：壹車房那塊在手機放大到 ×1.4 之後，盒子的右緣
+      //   （338.4）已經**越過**尖端（332），尾巴變成反向的一個缺口
+      //   （使用者：「壹車房的對話標籤形狀很怪」）。
+      //   改成由這裡把整個 `.rl-body` 沿尾巴的方向平移，讓「盒子邊到尖端」
+      //   固定是 `data-tail`（預設 14 ＝ 原本 16px 下量到的長度，所以電腦版
+      //   的三塊一個單位都沒有動）。診所那塊寫 `data-tail="11"` ——
+      //   使用者：「芳仁牙醫診所的標籤看起來和診所套色區塊有點擠，再拉開一點」。
+      //   ⚠ `getBBox()` 不吃元素**自己**的 transform，所以這個平移不會回頭
+      //     影響下一次量測，sizeLabels() 跑幾次結果都一樣。
+      var TAIL = g.dataset.tail === undefined ? 14 : +g.dataset.tail;
+      var dx = 0, dy = 0;
+      if (dir === 'right')   dx = (tip.x - TAIL) - (bx0 + bw0);
+      else if (dir === 'up') dy = (tip.y + TAIL) - by0;
+      else                   dy = (tip.y - TAIL) - (by0 + bh0);
+      body.setAttribute('transform', 'translate(' + dx.toFixed(2) + ' ' + dy.toFixed(2) + ')');
+      bx0 += dx; by0 += dy;
+      if (dir === 'right') { tip.y = by0 + bh0 / 2; bc = tip.y; }
       bub.setAttribute('d', bubblePath(bx0, by0, bw0, bh0, 6, dir, tip, bc, bw));
       if (!tail) return;
       // 尾巴那個三角**另外再畫一次**，疊在盒子上面。
