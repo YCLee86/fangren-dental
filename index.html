@@ -4569,7 +4569,15 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        約 0.35% 的邊緣像素有差（最大 47 階）。用外層視窗裁就完全不碰它。
      ⚠ 圓角改畫在視窗上（SVG 自己的 clipPath 圓角已經被裁到看不見了）。 */
   .map-win                                   { display: block; overflow: hidden; border-radius: 12px; }
-  .map-svg                                   { width: 130.2326%; max-width: none; margin-left: -17.558%; }
+  /* ⚠⚠ **選擇器要寫 `.card-map .map-svg`（0,2,0）、而且要用 `margin-inline`。**
+     上面那條 `.card-map .map-svg { margin-inline: auto }` 是 0,2,0 的**邏輯**
+     屬性；我原本寫 `.map-svg { margin-left: … }`（0,1,0 的**實體**屬性），
+     **Chromium 讓後寫的實體屬性贏、WebKit 讓權重高的邏輯屬性贏** ——
+     結果是 iPhone 上完全沒有位移，可見範圍變成 user x 0~430，
+     「永安路」與「永安路14巷」被切掉（2026-08-15 使用者回報「地圖怎麼變這樣」）。
+     ⚠ 也因此**不要用 getBoundingClientRect() 驗裁切** —— 被 overflow 裁掉的
+       部分仍然算在 rect 裡，量出來會以為好好的。要拿 `.map-win` 的盒子去交集。 */
+  .card-map .map-svg                         { width: 130.2326%; max-width: none; margin-inline: -17.558% 0; }
   /* ⚠⚠ **地圖這一整組只在手機生效**（2026-08-15 使用者定稿：「手機版就這樣
        上線，電腦版和 iPad 版都不動」）。所以凡是會被電腦版看到的東西 ——
        viewBox、clipPath、markup 的座標、JS 的預設常數 —— 一律沒有動，
