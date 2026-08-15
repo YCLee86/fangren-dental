@@ -16,8 +16,17 @@
 
 :root {
   --content: 44rem;          /* 內文可讀寬度上限，圖片寬度不得超過此值 */
-  --wide: 68rem;
-  --pad: clamp(1rem, 4vw, 2rem);
+  /* ⚠ 這兩個值**必須和首頁的 `--shell` / `--pad` 逐字相同**（2026-08-15 對齊）。
+     原本是 68rem（1088px）／clamp(1rem, 4vw, 2rem)，和首頁的 1160px／
+     clamp(1.25rem, 3vw, 2.5rem) 差 4px（手機）到 28px（1440）——
+     從首頁點進文章，標誌會往左跳、選單會往右跳。頁首要對得上首頁，
+     版心就得是同一條；而版心只改頁首的話，同一頁的頁尾又對不上頁首。
+     所以整頁一起換：頁首、延伸閱讀、頁尾、內文欄全部走這一組。
+     ⚠ 內文欄因此窄了一點（手機 343 → 335、電腦 640 → 624），這是使用者
+       2026-08-15 選的那一案，不是漏算。`.post-hero` 吃同一個 `--pad`，
+       所以「圖寬 ＝ 內文欄寬」仍然成立。 */
+  --wide: 1160px;
+  --pad: clamp(1.25rem, 3vw, 2.5rem);
 
   /* ---- N3 藍灰調（PALETTE.md 第四節 B）------------------------------------
      卡要往純白推，紙才讀得出是灰 —— 階差 1.152:1，照診所自己的 LINE 看板走。 */
@@ -179,6 +188,40 @@ a:hover { color: var(--accent); }
    --------------------------------------------------------------------------
    首頁的頁首會隨捲動從毛玻璃變成實色 #393736；文章頁底下沒有照片，
    所以它直接就是那個實色。品牌、選單、字級、間距全部和首頁相同。
+
+   ⚠⚠ **要對的是首頁「捲動後」那一組（`html.scrolled`），不是它一開始那一組。**
+     2026-08-15 使用者錄影回報「首頁切到文章頁的時候 banner 有變化」，逐幀比對
+     ＋ 九個寬度逐項量出來，這一段抄到的是首頁**還沒捲動**的尺寸 ——
+     可是使用者是從**捲到下面**的首頁點進來的，那時首頁已經整組縮一階。
+     375 上量到的差（首頁捲動後 → 改動前的文章頁）：
+
+       頁首高　　59.17 → 62　　　　標誌　27.73 → 30（＋8.2%）
+       診所名　　12.86 → 14.25（＋10.8%）　副標　10 → 10
+       標誌左緣　20 → 16（往左跳 4）　　　選單右緣　20 → 16（往右跳 4）
+
+     1440 上更大：標誌左緣 180 → 208（跳 28px）、標誌 32 → 36、
+     診所名 15.36 → 17，而且**首頁是一行（診所名｜地名），這裡是兩行**。
+     ⚠ 那三個玻璃框本來就是對的（框高 31.80／圓角 8／線 .26 兩邊相同），
+       2026-08-12 搬過來那一輪沒有問題 —— 壞的是它周圍的每一項。
+
+   ⚠ **下面每一個數字都是從 index.html 逐字抄的，不要各憑感覺改。**
+     來源就兩處：`html.scrolled` 的那幾條（電腦版）與 index.html
+     `@media (max-width: 720px)` 裡的頁首那一段（手機版）。兩邊是**複本**，
+     要改就兩邊一起改，改完拿實測對一次（九個寬度逐項相同才算過）。
+   ⚠ 首頁那一份多出來的東西這裡一個都不要帶：`transition`（尺寸不會變，
+     沒有東西可以過渡）、`html.scrolled`（這一頁永遠是那一態）、
+     毛玻璃與模糊那幾層（底下沒有照片可以糊）。
+
+   ── 對完之後還剩一格 0.14px，是刻意不追的 ────────────────────────────────
+   選單那一列的總寬比首頁多 **0.14px**（每個連結 0.047px，九個寬度都一樣多）。
+   成因是 `letter-spacing: .01em` 在兩頁的 body 上算出來的**絕對值**不同 ——
+   首頁 body 是 16px（→ 0.16px），這一頁是 17px（→ 0.17px，內文要讀得舒服，
+   那是這一頁的本體，不能為了頁首去改）。字距是以計算值繼承下去的，
+   所以整頁的字都吃到 0.17。
+   ⚠ **不要為了補這 0.14 去寫 `letter-spacing: .16px`。** 那是把首頁的 body
+     字級硬編進這一份，日後誰動首頁的 16px 都不會有人記得回來改這裡。
+     0.14px ＝ 227px 的 0.06%，DPR 3 上不到半個裝置像素，看不出來。
+     選單是**靠右對齊**的，所以差的是左緣、右緣兩頁完全對齊。
    ========================================================================== */
 .site-header {
   background: var(--head); color: #fff;
@@ -187,57 +230,101 @@ a:hover { color: var(--accent); }
 /* grid 的 max-content 軌道，不要用 flex 的自動尺寸 ——
    `.brand` 是 display:flex 的 <a>，當它同時是 flex 項目、flex-basis:auto、
    width:auto 時 Blink 給內容寬度、WebKit 給可用寬度，差到會把選單擠出畫面。
-   詳見 PALETTE.md 第六之五節。 */
+   詳見 PALETTE.md 第六之五節。
+   ⚠ 高度是**固定 60px（＝首頁的 `--head-h-sm`），不是 min-height**。
+     寫 min-height 的話這一頁會比首頁高 2px，捲動位置也會差 2px。 */
 .site-header .wrap {
   display: grid; grid-template-columns: max-content minmax(0, 1fr);
-  align-items: center; gap: 1.4rem;
-  min-height: 62px;
+  align-items: center; gap: 2rem;
+  height: 60px;
 }
 .brand {
-  display: flex; align-items: center; gap: .7rem;
+  display: flex; align-items: center; gap: .75rem;
   text-decoration: none; color: #fff; min-width: 0;
 }
 /* SVG 一定要有 width／height 屬性，否則 WebKit 用預設的 300×150 當內在尺寸，
    這個 flex 項目就縮不下去（PALETTE.md 第六之五節）。標記那邊已經補上。 */
 .brand-mark {
-  flex: 0 0 clamp(30px, 8vw, 36px); min-width: 0;
+  flex: 0 0 32px; min-width: 0;
   display: block; color: rgba(255, 255, 255, .95); background: none;
 }
 .brand-mark svg { display: block; width: 100%; max-width: 100%; height: auto; }
-.brand-text { display: block; min-width: 0; }
+/* 電腦版是「診所名｜地名」橫排，中間那條線是首頁那一條，逐字搬過來
+   （2026-08-15 使用者指定跟首頁一致；改動前這一頁在電腦上是兩行疊著）。
+   手機版在底下的 @media 裡改回兩行。 */
+.brand-text { display: flex; align-items: baseline; gap: .7rem; min-width: 0; }
 .brand-text b {
-  display: block; white-space: nowrap;
-  font-weight: 700; font-size: clamp(14px, 3.8vw, 17px); line-height: 1.25;
-  letter-spacing: 0; color: rgba(255, 255, 255, .95);
+  white-space: nowrap;
+  font-weight: 700; font-size: .96rem; line-height: 1.3;
+  letter-spacing: .01em; color: rgba(255, 255, 255, .95);
 }
-/* 兩行的左右緣切齊：區塊寬度是 max-content ＝ 較寬的那一行，
-   兩行都 text-align-last: justify，較窄的那一行用字距填滿同一個寬度。
-   ⚠ **兩行都要寫，不能只寫副標**（2026-08-14 補）。只寫副標的前提是
-     「標題一定比較寬」—— 標題 6 個字、副標 8 個字，要
-     **副標字級 ÷ 標題字級 ≤ 6/8 ＝ 0.75** 才成立。首頁 2026-08-13
-     把副標抬到 0.774 就翻船了（標題那一行短 5.4~6.9px，見 index.html 那一段）。
-     這一份的比值是 2.6 ÷ 3.8 ＝ 0.684、上下限 0.706／0.714，目前還沒翻，
-     補上這一條是為了日後誰動字級都不會再壞。
-   ⚠ 標題的 white-space: nowrap 不要拿掉，justify 在 nowrap 的行上照樣生效。 */
-.brand-text b,
-.brand-text small { text-align: justify; text-align-last: justify; }
 .brand-text small {
-  display: block; font-weight: 400; font-size: clamp(10px, 2.6vw, 12px); line-height: 1.25;
-  letter-spacing: 0; color: rgba(255, 255, 255, .65);
+  position: relative; padding-left: .7rem;
+  font-size: .74rem; line-height: 1.3;
+  letter-spacing: .04em; color: rgba(255, 255, 255, .65);
+}
+.brand-text small::before {
+  content: ''; position: absolute; left: 0; top: .1em; bottom: .1em;
+  border-left: 1px solid rgba(255, 255, 255, .28);
 }
 
 .site-nav {
   display: flex; flex-wrap: nowrap; justify-self: end; min-width: 0;
   /* 間距只寫在這一個地方 —— 底下的 --lamp-pad 要拿它算「框與框留得住 5px 嗎」，
      兩處各寫一份必然會有一天對不起來。 */
-  --nav-gap: clamp(.7rem, 3.2vw, 1.6rem);
+  --nav-gap: 1.9rem;
   gap: var(--nav-gap);
-  font-size: clamp(11px, 3.2vw, 13.5px);
+  font-size: .86rem;
 }
 .site-nav a {
   /* z-index 1：字要壓在框上面（框是 z-index:-1 的 ::before）。 */
   position: relative; z-index: 1;
   color: rgba(255, 255, 255, .88); text-decoration: none; white-space: nowrap;
+  /* ⚠ `.35rem` 是**點擊範圍**，首頁也有，不是排版用的 —— 它會把 `a` 的盒子
+     撐到 33.4px，格線的列高跟著變，框的垂直中心才會落在和首頁同一列上。
+     拿掉的話框會往上跑 1px。框自己的高度不吃它（框是 `--frame-em` × 字級
+     對盒子置中），這是兩件事。 */
+  padding-block: .35rem;
+}
+
+/* ---- 手機（≤ 720px）：整組縮一階，逐字抄 index.html 的手機頁首 ----------
+   ⚠ 那幾個小數（3.736vw／3.1472vw／7.39728vw／3.429648vw／2.35368vw）
+     不是隨手寫的，是首頁手機版從 cqw 換算過來的定案值，**不要「化簡」**。
+     首頁那一段的註解寫得很清楚：底部內距 3.1472vw 是為了補回選單的
+     padding-top，動了它首頁 HERO 那首詩的 8.0px 空隙就會跟著跑。
+     這一頁沒有詩，但**高度必須和首頁一樣是 59.17（375）**，所以照抄。 */
+@media (max-width: 720px) {
+  .site-header .wrap { height: auto; gap: 3vw; padding-block: 3.736vw 3.1472vw; }
+  .brand-mark { flex-basis: clamp(27px, 7.39728vw, 36px); }
+  /* 手機的品牌是兩行。兩個子元素都要 display: block —— 只把 .brand-text
+     改成 block 不夠，b 與 small 仍是行內元素，會排成同一行。 */
+  .brand-text { display: block; }
+  .brand-text b, .brand-text small { display: block; }
+  .brand-text b { font-size: clamp(12.6px, 3.429648vw, 16.2px); }
+  /* ⚠ 副標**不是** `clamp(9px, 2.35368vw, 11.25px)` —— 那是首頁那一段
+     原本的值，2026-08-13「手機的可讀性」那十二項把它抬了一階
+     （index.html 手機字級那一段的 `html.scrolled .brand-text small`）。
+     抄的時候要抄抬過的這一組，不然 375 上會比首頁小 1px。 */
+  .brand-text small {
+    font-size: clamp(10px, 2.66vw, 11.7px);
+    padding-left: 0;
+  }
+  .brand-text small::before { display: none; }
+  /* 兩行的左右緣切齊：區塊寬度是 max-content ＝ 較寬的那一行，
+     兩行都 text-align-last: justify，較窄的那一行用字距填滿同一個寬度。
+     ⚠⚠ **兩行都要寫，不能只寫副標**（2026-08-14 補）。只寫副標的前提是
+       「標題一定比較寬」—— 標題 6 個字、副標 8 個字，要
+       **副標字級 ÷ 標題字級 ≤ 6/8 ＝ 0.75** 才成立，而**現在這一組已經翻了**：
+       2.66 ÷ 3.429648 ＝ 0.776、下限 10 ÷ 12.6 ＝ 0.794（副標抬過一階之後
+       比較寬的是副標那一行）。兩行都寫就不必管誰寬誰窄，窄的那一行自己
+       把字距拉開去填滿 max-content —— 首頁 2026-08-13 就是漏了這一條才翻船
+       （標題那一行短 5.4~6.9px）。**不要因為「用不到」把其中一行拿掉。**
+     ⚠ 標題的 white-space: nowrap 不要拿掉，justify 在 nowrap 的行上照樣生效。
+     ⚠ **這一條只在手機。** 電腦版是橫排一行，justify 會把那一行的字距拉開。 */
+  .brand-text b, .brand-text small { text-align: justify; text-align-last: justify; }
+  /* 間距從電腦版的 1.9rem（30.4px）收到 3.2vw（375 上是 12px），
+     省下來的寬度還給字級：11 → 13px 的 clamp。 */
+  .site-nav { --nav-gap: 3.2vw; font-size: clamp(11px, 3.2vw, 13px); }
 }
 
 /* ==========================================================================
@@ -267,8 +354,8 @@ a:hover { color: var(--accent); }
      進位到整數 px，`.75px` 寫上去量回來是 `1px`。inset 陰影吃得到小數，
      而且一樣跟著 border-radius 走。
    ⚠ **框高必須是「字級的倍數 ＋ 對 a 垂直置中」**，不能回去用 `inset` 外擴。
-     這裡的 `a` 沒有 padding-block（首頁有 .35rem），但兩邊的 line-height
-     都是 1.85em、框都是 2.65em 對盒子置中 —— 幾何完全相同。
+     `a` 的 line-height 是 1.85em、padding-block .35rem，框是 2.65em 對盒子
+     置中 —— 和首頁逐項相同（那 .35rem 是 2026-08-15 補齊的，見上面頁首那一段）。
      只寫 top/height/transform，**不要改成 `inset` 簡寫**：簡寫會把 left/right
      一起重設，那兩邊是 --lamp-pad 在管的。
 
@@ -280,7 +367,10 @@ a:hover { color: var(--accent); }
        max(2px, min(半個字, (選單間距 − 5px) ÷ 2))
 
    實測與首頁對得上：375 上 3.50px（間距 12px，框與框剛好留 5px）、
-   320 上 2.62px、電腦版 6.75px（間距 25.6px，半個字贏）。
+   320 上 2.62px、電腦版 6.88px（間距 30.4px，半個字贏）。
+   ⚠ 電腦版那一格 2026-08-15 從 6.75 變成 6.88 —— 不是重挑，是那一輪把
+     選單間距與字級改成和首頁相同（25.6 → 30.4px、13.5 → 13.76px），
+     半個字跟著變。式子一個字都沒動。
    ⚠ **走過的死路是「把手機的選單間距開大」** —— 320 上會撞到品牌。
      讓外擴量自己讓步，版面一個字都不動。
    ========================================================================== */
