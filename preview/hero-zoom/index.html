@@ -3048,10 +3048,95 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    那個結果也還可以看，所以不另外處理。
    ========================================================================== */
 @media (min-width: 721px) and (max-aspect-ratio: 2 / 3) {
-  .hero-photo { height: 62svh; }
-  /* 詩與收尾句共用同一個字級（Ⓕ2 定案 2026-08-12）。改動前收尾句是
-     clamp(13px, .95svh, 18px)，1080×1920 上只有詩的 .82。 */
-  :root { --hero-fs: clamp(15px, 1.15svh, 24px); }
+  /* ---- 2026-08-15：照片整屏（＝這一段的「抵下緣」）----------------------
+     改動前是 62svh，第一屏底下露出 431px ＝ **38% 的紙色**，是全站最鬆的一格。
+     ⚠ **iPad mini 直放（744×1133 ＝ 0.657）落在這一段**，不是上面那一段 ——
+        比例比 2/3 還瘦。所以最小的那台 iPad 反而套到最小的照片。
+     ⚠ 這一段的窄帶是**壓在照片上**的（和電腦版一樣），所以照片 100svh
+        就已經是「照片＋窄帶正好一屏」，不必像上面那一段做 flex。 */
+  .hero-photo { height: 100svh; }
+  :root { --ph: 100svh; }
+  /* 詩：同上面那一段的定案，跟著照片等比例。 */
+  :root { --hero-fs: clamp(15px, calc(var(--ph) * .0170), 24px); }
+  .hero-copy { padding-top: calc(var(--head-h) + var(--ph) * .100); }
+
+  /* ---- 順便修掉的破圖（2026-08-15，和照片高度無關，改動前就有）----------
+     這一段的窄帶沿用電腦版：地址電話絕對定位貼在版心外緣、和 1983／9／5 同一列。
+     電腦版 1440 上剛好差 −2.6px 不會撞，但這一段的視窗只有 721~900 寬，實測
+     **撞在一起**：744×1133 水平重疊 92.9px（垂直 32.7px）、900×1600 重疊 19.5px
+     ——「部定專科」直接被電話蓋住。
+     修法直接抄 iPad 直放那一段：地址電話改成 static、一行置中，
+     照標記順序自然落在瀏覽數與三格之間。
+     ⚠ 選擇器要寫 `body .contact-pair`（0,1,1）—— 上面 `@media (max-width: 1159px)`
+        那條「退成兩行」就是這個權重，只寫 `.contact-pair`（0,1,0）會整條被蓋掉。
+     ⚠ 窄帶因此從 84px 長到 126px，收尾句要跟著讓開。`.hero-copy` 的
+        padding-bottom 本來就是 `calc(var(--band-h) + clamp(1rem,3vh,2rem))`，
+        所以**只要把 --band-h 換成量到的 126px**，讓開的量自己會跟上 ——
+        不要寫死 padding。不改的話收尾句會被窄帶蓋掉 9px。 */
+  body .contact-pair {
+    position: static;
+    flex-direction: row; align-items: center; gap: 1.9rem;
+  }
+  .hero-contact a { gap: .45rem; }
+  .hero-contact .ico { flex: 0 0 auto; }
+  .band .shell { gap: .8rem; padding-block: 1rem; }
+  :root { --band-h: 126px; }
+}
+
+/* ==========================================================================
+   「往下滑」的指標：兩段直式平板都放（2026-08-15 定案）
+   --------------------------------------------------------------------------
+   使用者：「iPad 版需要這個往下滑的暗示，才知道要往下滑，因為這個螢幕看起來
+   很大、好像就卡在這邊。你之前做那個角型只是一個勾尾，看起來其實有點不太在
+   幹嘛，再多一點點暗示性 —— 那個暗示性也不要真的太強。」
+
+   定案 ＝ **一條往下漸濃的細線 ＋ 角形 ＋ 一顆沿著線慢慢往下走的小點**。
+   ・線和角形合起來才讀得出是「↓」；單一個角形太像打勾（使用者的原話）。
+   ・會動的只有那顆 2px 的點，角形完全不動 —— 這是「多一點點、但不要太強」。
+
+   ⚠ 位置：電腦版那顆是 `bottom: calc(100% + 4px)`（貼著窄帶上緣），在 iPad
+      直放會落進**照片最後 84px 的接縫**裡（模糊層與柏油層正好在那裡）——
+      那正是 2026-08-14 在那一段把它關掉的原因。這裡抬到離窄帶上緣 110px，
+      整顆站在乾淨的照片上。五個尺寸實測：都在照片內、和收尾句不重疊。
+   ⚠ **一定要自己帶「地」。** 指標落在亮著燈的門面正上方：逐格量那一區 60×60
+      的背景（三個尺寸 × 離下緣 40~300px），平均是暗的（L* 4~29），但**最亮的
+      那一格一路都在 L* 46~64**（白字對比只有 2.7~5.3）。電腦版用的是淺色底塊，
+      但淺色底塊在亮處會不見；這裡改用**暗暈**（drop-shadow），亮處暗處都成立，
+      而且看起來像路面自己暗下去，不像多一個框（同收尾句 Ⓔ2 那塊暗斑的手法）。
+   ⚠ drop-shadow 跟著 alpha 形狀走，掛在 `a` 上會同時罩住線與角形，不必多加元素。
+   ⚠ 觸控目標 44px 寬（padding 12px ＋ 角形 20px），高 59px。
+   ⚠ 會動的東西要看 prefers-reduced-motion —— 這一站另外三處 CSS 也都看。
+   ========================================================================== */
+@media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
+  .hero-cue {
+    display: flex; flex-direction: column; gap: 7px;
+    bottom: calc(100% + 110px);
+    background-color: transparent; padding: 6px 12px;
+    filter: drop-shadow(0 0 7px rgba(25, 22, 20, .9)) drop-shadow(0 1px 3px rgba(25, 22, 20, .75));
+  }
+  /* 線：上端淡出、往下漸濃，所以不會看起來像一根釘子 */
+  .hero-cue::before {
+    content: ''; width: 1px; height: 30px; border-radius: 1px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .5) 100%);
+  }
+  .hero-cue svg { width: 20px; height: 10px; stroke-width: 1.2; }
+  /* 沿著線往下走的那顆點 */
+  @keyframes heroCueDot {
+    0%   { transform: translate(-50%, 0);    opacity: 0; }
+    18%  { opacity: 1; }
+    72%  { opacity: 1; }
+    100% { transform: translate(-50%, 26px); opacity: 0; }
+  }
+  .hero-cue::after {
+    content: ''; position: absolute; left: 50%; top: 6px;
+    width: 2px; height: 2px; border-radius: 50%; background: rgba(255, 255, 255, .95);
+    animation: heroCueDot 2.8s cubic-bezier(.4, 0, .5, 1) infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cue::after { animation: none; opacity: .85; }
+  }
+  /* 游標經過時整塊亮起來那一套（電腦版的 .hero-cue:hover）在平板上沒有游標，
+     底塊也已經拿掉，所以那條規則在這裡自然不生效，不必特別關。 */
 }
 
 /* ==========================================================================
@@ -3105,19 +3190,38 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
       收尾句「到巷口的芳仁」就落在那一段，不抬的話它會跟著被糊掉。
    ========================================================================== */
 @media (min-width: 721px) and (min-aspect-ratio: 2 / 3) and (max-aspect-ratio: 9 / 10) {
-  .hero-photo { height: 70svh; }
-  /* 詩與收尾句共用同一個字級（Ⓕ2 定案 2026-08-12）。改動前收尾句是
-     clamp(13px, .95svh, 18px)，1080×1920 上只有詩的 .82。 */
-  :root { --hero-fs: clamp(15px, 1.15svh, 24px); }
+  /* ---- 2026-08-15：照片改成「抵下緣」（和手機、電腦版同一個做法）--------
+     改動前是 `height: 70svh`，第一屏底下會露出 18~21% 的紙色
+     （834×1194 上 232px、1024×1366 上 283px）。使用者：「iPad 版也有類似的問題。」
+     現在照片吃掉「一屏扣掉窄帶」的高度，照片＋窄帶正好一屏。
+     ⚠ 用 flex 讓照片吃剩下的高度，不要寫死「100svh 減幾 px」—— 窄帶是內容
+        撐出來的（這一段實測 126px）。
+     ⚠ **不要改成整屏 100svh**：窄帶會被整條推出第一屏，電話就要捲一下才看得到。
+     ⚠ 接縫**不必動**：手機那一輪要換起點色是因為手機沒有柏油層；這一段的柏油層
+        在最後 24% 已經收到 alpha 1，接縫色由它自己決定 —— 三個尺寸 × 現況／
+        抵下緣六組實測，照片最後一列都是 #161413，一個位元都沒變。 */
+  .hero { display: flex; flex-direction: column; height: 100svh; }
+  .hero-photo { height: auto; flex: 1 1 auto; min-height: 0; }
+  /* --ph ＝ 照片高度，詩的位置與字級按它等比例算（見下面兩行）。窄帶實測 126px。 */
+  :root { --ph: calc(100svh - 126px); }
+
+  /* ---- 詩：跟著照片等比例，把電腦版的兩個比值追回來 --------------------
+     改動前 `clamp(15px, 1.15svh, 24px)` 在所有 iPad 上都撞在 15px 的下限，
+     而 `.hero-copy` 的 padding-top 也撞在 5.4rem 的上限（空隙固定 95.4px）——
+     照片一拉高，兩者的絕對值不變、比例就掉了。定案這一組（提案頁的 低②＋大③）
+     是唯一同時對上電腦版兩個比值的：
+
+         　　　　　　　字÷照片   空隙÷照片   空隙÷字高
+         電腦 1440     1.67%     10.0%       6.00
+         iPad 改動前   1.41%      8.9%       6.36
+         iPad 定案     1.70%     11.0%       6.49
+
+     ⚠ 短一點的 iPad（例如 Safari 有分頁列、只剩 977 高）字級會被 15px 的下限
+        接住，那是刻意的，不是沒吃到。 */
+  :root { --hero-fs: clamp(15px, calc(var(--ph) * .0170), 24px); }
+  .hero-copy { padding-top: calc(var(--head-h) + var(--ph) * .100); }
   /* 收尾句原本要讓開疊上來的窄帶，窄帶搬走之後不必了 */
   .hero-copy { padding-bottom: 0; z-index: 4; }
-
-  /* 「往下看」那顆角形（2026-08-14）在這個版型上關掉。它是 `bottom: 100%`
-     ＝貼著窄帶上緣往上長，而**這一版的窄帶不是壓在照片上、是接在照片下面**，
-     那個位置會落在照片最後那 84px 的接縫裡（模糊層與柏油層正好在那裡）。
-     旋轉螢幕那一段沒有關，因為它的窄帶仍然壓在照片下緣、幾何和電腦版一模一樣。
-     ⚠ 這不是漏做 —— 使用者指定的是電腦版，iPad 直放這個樣子還沒給他看過。 */
-  .hero-cue { display: none; }
 
   .hero > .band { position: relative; }
   /* 窄帶從 #161413 起跑（＝柏油層現在收到的顏色，見下面那一段），
