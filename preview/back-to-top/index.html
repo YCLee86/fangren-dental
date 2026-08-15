@@ -4206,7 +4206,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 </style>
 
 <!-- ==========================================================================
-     「回到最上面」的按鈕・提案（2026-08-15）
+     「回到最上面」的按鈕・提案（2026-08-15，第二輪）
      ── 這一段與頁尾的按鈕、切換條，定案後一起處理
      --------------------------------------------------------------------------
      這一頁是 index.html 的完整複本，由 scratchpad/make-back-to-top.mjs 產生。
@@ -4223,133 +4223,172 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        6. 切換條**即時套用**不重新載入（這一輪沒有任何值會影響站上那三支
           「開頁量一次」的 JS：--sk-padT／--role-padT／--lamp-pad）
 
-     定案之後要做的事：把選上的那一案寫進 index.html，**沒選上的兩個記號、
-     兩個底、以及整條切換條一個都不要帶過去**，再把這一頁刪掉、
+     第二輪換掉的兩件（使用者第一輪的回饋）：
+       ・記號固定成**兩條角形**，數字逐項抄自首頁 .hero-cue（每條 18×9、
+         path M1 1l8 7 8-7、筆畫 1.4、兩條間距 1.5px），往上翻過來。
+         不再是候選 —— 全箭頭與單角形已經刪掉。
+       ・底整組換成**半透明的淡灰玻璃**（Ⓐ 實心、Ⓑ 墨玻璃、Ⓒ 實心深綠松
+         三案都被否決），改成四支可以各自調的尺：色／濃／模糊／框線。
+
+     定案之後要做的事：把選上的那一格寫進 index.html，**沒選上的值與整條
+     切換條一個都不要帶過去**，再把這一頁刪掉、
      推導文字搬進 /history/back-to-top.html（CLAUDE.md 第八節第 3 條）。
      ========================================================================== -->
 <style>
 /* ==========================================================================
-   「回到最上面」的按鈕（提案用，2026-08-15）── 定案之後這一段連同切換條一起刪掉
+   「回到最上面」的按鈕（提案用，2026-08-15 第二輪）
+   ── 定案之後這一段連同切換條一起刪掉
    --------------------------------------------------------------------------
-   起因：使用者拿 blog.ichentsai.tw 的手機螢幕錄影說「做一個往上（回到最上面）
-   的按鈕，像影片那樣」。
+   第一輪使用者看過 Ⓐ 紙上的卡／Ⓑ 墨玻璃／Ⓒ 深綠松 之後給了三件事：
 
-   ---- 影片那一顆量出來是什麼（逐幀解 PNG，1126×2436、DPR 3）--------------
-   ・方框 **48×48 CSS px**（實測 144×144 裝置像素，寬高相同）
-   ・**離螢幕右緣 13px**（右緣 x=1087／1126）—— 它是對著**視窗**定位的，
-     不是對著卡片：那張文章卡的右緣在 1076，按鈕整個超出去 11px。
-   ・圓角導得很開，目測落在站上 8~12px 那一族裡。
-   ・記號是**全箭頭**（桿 ＋ 頭，不是這一站慣用的角形）：桿高 14px、
-     頭寬 12.7px、筆畫 2px ＝ 一顆 24px 的 lucide arrow-up。
-   ・底是**很淡的一層白**，不是實心 —— 壓在木紋插圖上時底下的紋路整片透出來，
-     只有微微提亮；壓在白卡上時就只看得到一圈很輕的陰影。
-   ・沒有文字、沒有框線、不會動。捲到大約第二張卡才出現。
+     ① 「角形的形狀要比對首頁那個往下滑翻過來，現在只有一條，要做成兩條，
+        大小也要比照首頁現在的。」
+     ② 「底色是實的我不喜歡，還是要有點透；但墨玻璃又太重了。
+        比較好的效果應該是**比較淡的淡灰色玻璃感**。」
+     ③ 「點下去要會變亮。」
 
-   ---- 這一輪要決定的事 ----------------------------------------------------
-   影片那顆的底是「很淡的白」，那是因為**那一站的底色是白的**。
-   芳仁的紙色是 `--paper` #e2e5e6（L 89），淡白底在紙上幾乎看不見，
-   所以底要重挑 —— 切換條第一段的三案就是在挑這個。其餘四段是尺寸、圓角、
-   出現時機、離角落多遠，一段一段比。
+   ---- ① 記號：直接抄首頁那一組，不再是候選 ------------------------------
+   `.hero-cue`（直式平板那一段）畫的是**兩條角形**，逐字抄過來：
+       每一條 18×9、path `M1 1l8 7 8-7`、stroke-width 1.4、圓頭圓角
+       兩條之間 1.5px　→　整組 18 × 19.5
+   這裡是往上，所以路徑上下翻成 `M1 8 9 1l8 7`；第二條往下位移 10.5。
+   ⚠ **兩條一定要用同一張 SVG 畫**（這裡是同一個 svg 裡的兩條 path）——
+      CLAUDE.md 記過：上一次一條用 SVG、一條用 CSS 邊框，跨距 18 vs 18.4px，
+      使用者一眼就看出「長度好像不太一樣」。
+   ⚠ 記號的尺寸是**定值 18×19.5**，不跟著方框大小縮放 —— 使用者要的就是
+      「和首頁現在那個一樣大」。方框從 44 換到 52 時，變的是留白不是記號。
+   ⚠ 首頁那一組是白色、站在窄帶的深底上；這一顆站在紙上，所以吃 `currentColor`
+      （墨色）。形狀、尺寸、筆畫一個值都沒動，只有顏色不同。
 
-   ⚠ 這一段整個排在原樣式**後面**：權重相同時靠順序決勝（CLAUDE.md 第八節）。
-   ⚠ 切換條是**即時套用**不重新載入 —— 這一輪沒有任何值會影響站上那三支
-      「開頁量一次」的 JS（--sk-padT／--role-padT／--lamp-pad）。
+   ---- ② 底：淡灰色的玻璃 -------------------------------------------------
+   第一輪三案為什麼不行：
+     Ⓐ 紙上的卡 —— `--card` 是**不透明**的，使用者說「實的我不喜歡」。
+     Ⓑ 墨玻璃　 —— 墨色 .72 太重。
+     Ⓒ 深綠松　 —— 實心，同 Ⓐ 的問題，而且份量更重。
+   這一輪整顆改成半透明 ＋ `backdrop-filter`，並且**把「哪一種淡灰」拆成四支
+   可以各自調的尺**（色／濃／模糊／框線），讓使用者自己走到他要的那一格：
+
+       色　　偏白 #f4f4f5 ／ 紙色 #e2e5e6 ／ 偏墨 #5c5f57
+       濃　　淡 ／ 中 ／ 濃
+       模糊　6px ／ 12px ／ 20px
+       框線　無 ／ 細墨線 .10 ／ 細白線 .55
+
+   ⚠⚠ **「濃」這一段的數字是跟著「色」換的**，不是同一組 alpha：
+      偏白／紙色是**亮色**疊在紙上（.45／.62／.80 才看得出是一塊板子），
+      偏墨是**暗色**疊在紙上（.10／.16／.24，＝站上頁首玻璃與 `.nav-lamp`
+      那一支既有的值）。同一組 alpha 套兩邊的話，偏墨 .80 會變成一塊黑板，
+      墨色記號直接不見。
+   ⚠ 四支尺都調到底也不會失手：最差的一格（偏墨・濃 .24）合成出來是 L* 74，
+      墨色記號對它 7.9:1，遠高於裝飾性圖形的 3:1。面板底下有現場量測。
+   ⚠ `backdrop-filter` 只作用在元素自己的框裡，框的邊緣本身就是一條可見的線
+      （CLAUDE.md 第九節第 1 條）。頁首那一層要靠 `mask-image` 把模糊淡出，
+      **這一顆不必** —— 它是一個實體的小方塊，邊緣本來就要被看見。
+   ⚠ 紙色是一整片平的，玻璃在紙上看不出模糊；真正看得出來的是它壓在文章卡的
+      插圖、地圖、那兩排標記上的時候。這是預期的。
+
+   ---- ③ 點下去變亮 -------------------------------------------------------
+   三階可選（微／中／明顯），共同的一件是**底變濃 1.35 倍**。
+   ⚠⚠ **亮起來要撐滿整段捲動（620ms），不是 300ms。**
+      第一輪抄了 `.hero-cue` 那一段的寫法：加上 `.is-lit` → 掛一個 300ms 的
+      timeout 把它拿掉 → 捲動結束時再 `clearTimeout`。但那個 timeout 在
+      **第 300ms 就已經燒掉了**，捲動還在跑（620ms），所以實際上只亮了不到一半，
+      而且那半段畫面正在飛，等於看不到 —— 這就是使用者說「點下去要會變亮」的原因。
+      改成：**要捲的時候不掛 timeout**，由捲動結束那一刻拿掉；只有「不捲」
+      （開了減少動態、或已經在最上面）才用 timeout 收尾。
+      ⚠ 站上的 `.hero-cue` 目前仍是舊寫法，那是另一件事，這一輪沒有動它。
    ========================================================================== */
 :root {
-  --btt-size: 48px;      /* 方框邊長。44 是觸控下限（2026-08-13 那一輪定的） */
-  --btt-r: 8px;          /* 圓角。預設 ＝ --frame-r，和頁首那三個玻璃框同一族 */
-  --btt-edge: 16px;      /* 離螢幕右緣與下緣（再加 safe-area） */
+  --btt-size: 44px;      /* 方框邊長。44 是觸控下限（2026-08-13 那一輪定的） */
+  --btt-r: 8px;          /* 圓角。＝ --frame-r，和頁首那三個玻璃框同一族 */
+  --btt-edge: 20px;      /* 離螢幕右緣與下緣（再加 safe-area） */
   --btt-rise: 6px;       /* 進場時從下面浮上來多少 */
+  --btt-rgb: 244 244 245;                    /* 玻璃的色：偏白 ＝ --card */
+  --btt-a: .62;                              /* 底多濃 */
+  --btt-blur: 12px;
+  --btt-line: 1px solid rgba(42, 44, 39, .10);
 }
+/* 玻璃的色。⚠ 用空白分隔的 rgb 分量，才能在下面用 `rgb(var(--x) / alpha)`
+   把顏色與透明度拆開調 —— 寫成 #hex 就沒辦法只換其中一項。 */
+[data-btt-tint="paper"] { --btt-rgb: 226 229 230; }   /* ＝ --paper */
+[data-btt-tint="ink"]   { --btt-rgb:  92  95  87; }   /* ＝ --ink-soft */
+/* 底多濃：亮色與暗色是兩組數字，理由見上面的 ⚠⚠。 */
+[data-btt-tint="white"][data-btt-a="a1"], [data-btt-tint="paper"][data-btt-a="a1"] { --btt-a: .45; }
+[data-btt-tint="white"][data-btt-a="a2"], [data-btt-tint="paper"][data-btt-a="a2"] { --btt-a: .62; }
+[data-btt-tint="white"][data-btt-a="a3"], [data-btt-tint="paper"][data-btt-a="a3"] { --btt-a: .80; }
+[data-btt-tint="ink"][data-btt-a="a1"] { --btt-a: .10; }   /* ＝頁首玻璃靜止那一階 */
+[data-btt-tint="ink"][data-btt-a="a2"] { --btt-a: .16; }
+[data-btt-tint="ink"][data-btt-a="a3"] { --btt-a: .24; }   /* ＝ .nav-lamp 那一階 */
+[data-btt-blur="b1"] { --btt-blur:  6px; }
+[data-btt-blur="b2"] { --btt-blur: 12px; }
+[data-btt-blur="b3"] { --btt-blur: 20px; }
+[data-btt-line="n"] { --btt-line: 0; }
+[data-btt-line="d"] { --btt-line: 1px solid rgba(42, 44, 39, .10); }
+[data-btt-line="w"] { --btt-line: 1px solid rgba(255, 255, 255, .55); }
 
 .btt {
   position: fixed; z-index: 20;      /* 頁首是 30，兩者不會相交，留給頁首在上面 */
   /* ⚠ 一定要加 env(safe-area-inset-*)：iPhone 底下那條 home indicator ＋
-     Safari 的工具列會吃掉一截，只寫 16px 在瀏海機上會被壓到邊。 */
+     Safari 的工具列會吃掉一截，只寫 20px 在瀏海機上會被壓到邊。 */
   right: calc(var(--btt-edge) + env(safe-area-inset-right, 0px));
   bottom: calc(var(--btt-edge) + env(safe-area-inset-bottom, 0px));
   width: var(--btt-size); height: var(--btt-size);
   display: flex; align-items: center; justify-content: center;
-  padding: 0; border: 0; border-radius: var(--btt-r);
+  padding: 0; border: var(--btt-line); border-radius: var(--btt-r);
   cursor: pointer; -webkit-tap-highlight-color: transparent;
+  /* ⚠ 上面那一行是**後備**：`rgb(r g b / a)` 這個語法要 Safari 15 以上，
+     舊的瀏覽器會整條丟掉 —— 沒有後備的話底就變成完全透明，只剩框與陰影。
+     兩行都寫，新的贏（後面那一行），舊的退回前面那一行。 */
+  background-color: rgba(244, 244, 245, .62);
+  background-color: rgb(var(--btt-rgb) / var(--btt-a));
+  -webkit-backdrop-filter: blur(var(--btt-blur)) saturate(1.15);
+          backdrop-filter: blur(var(--btt-blur)) saturate(1.15);
+  box-shadow: var(--card-shadow);
+  color: var(--ink);
   /* 沒出現的時候用 visibility 收掉，不是只有 opacity ——
      只設 opacity 的話它還在 tab 順序裡，鍵盤會走到一顆看不見的按鈕。 */
   opacity: 0; visibility: hidden; transform: translateY(var(--btt-rise));
   transition: opacity .22s ease, transform .22s ease, visibility .22s,
-              background-color .18s ease, box-shadow .22s ease,
-              border-color .18s ease, color .18s ease;
+              background-color .18s ease, box-shadow .22s ease, color .18s ease;
 }
 .btt.is-on { opacity: 1; visibility: visible; transform: translateY(0); }
 
-/* 記號。三個候選都放在標記裡，用 CSS 決定顯示哪一個 —— 切換時不必動 DOM。
+/* ---- 記號：首頁那兩條角形，翻過來 ---------------------------------------
    ⚠ non-scaling-stroke 要下在 path 上，不是下在 svg 上（這個屬性不會繼承）。
-   ⚠ overflow: visible 不要拿掉：viewBox 貼著圖形，圓頭的筆畫會往外探出半個筆寬。 */
+   ⚠ overflow: visible 不要拿掉：viewBox 貼著圖形，圓頭的筆畫會往外探出半個筆寬
+      （0.7px），裁掉的話四個端點會變成平的。 */
 .btt svg {
-  display: none; overflow: visible;
-  fill: none; stroke: currentColor;
+  display: block; width: 18px; height: 19.5px; overflow: visible;
+  fill: none; stroke: currentColor; stroke-width: 1.4;
   stroke-linecap: round; stroke-linejoin: round;
 }
 .btt svg path { vector-effect: non-scaling-stroke; }
-[data-btt-icon="i1"] .btt .ic1,
-[data-btt-icon="i2"] .btt .ic2,
-[data-btt-icon="i3"] .btt .ic3 { display: block; }
-/* 大小跟著方框等比例，比值取自影片那一顆：箭頭 14 高、方框 48 → **.35 倍**。
-   換方框大小時記號會自己跟著走，不必再開一組值。
-   ⚠ 筆畫用 non-scaling-stroke，所以數字就是 CSS px。①③ 取 1.5~1.6（＝地圖那張
-      圖的線寬，站上最重的一支），② 取 1.3（＝ `.hero-cue` 那顆角形，同一個圖形
-      就用同一個重量）。影片那顆是 2px —— 那一站的線本來就比較重，照抄會和這一
-      站其他的線打架。 */
-.btt .ic1 { width: calc(var(--btt-size) * .35);  height: calc(var(--btt-size) * .35);  stroke-width: 1.6; }
-.btt .ic2 { width: calc(var(--btt-size) * .333); height: calc(var(--btt-size) * .167); stroke-width: 1.3; }
-.btt .ic3 { width: calc(var(--btt-size) * .35);  height: calc(var(--btt-size) * .30);  stroke-width: 1.5; }
 
-/* ---- Ⓐ 紙上的卡 ---------------------------------------------------------
-   ＝ 站上文章卡那一族（`--card` ＋ `--rule` 的框 ＋ `--card-shadow`）。
-   最接近影片：一塊比紙亮一階的板子，靠陰影浮起來。
-   點到就走卡片 hover 那一階（`--card-shadow-hover` ＋ 框轉重點色）。 */
-[data-btt-look="a"] .btt {
-  background-color: var(--card); border: 1px solid var(--rule);
-  box-shadow: var(--card-shadow); color: var(--ink);
-}
-[data-btt-look="a"] .btt.is-lit {
-  box-shadow: var(--card-shadow-hover); border-color: var(--teal); color: var(--teal);
-}
-
-/* ---- Ⓑ 墨玻璃 -----------------------------------------------------------
-   墨色半透明 ＋ 毛玻璃，白記號。反差最大，壓在照片、門診表、紙色上都站得住。
-   ⚠ backdrop-filter 只作用在元素自己的框裡，框的邊緣本身就是一條可見的線 ——
-      這一顆是實心的小方塊、邊緣本來就要看得見，所以不必像頁首那樣做遮罩。 */
-[data-btt-look="b"] .btt {
-  background-color: rgba(42, 44, 39, .72);
-  -webkit-backdrop-filter: blur(10px) saturate(1.1);
-          backdrop-filter: blur(10px) saturate(1.1);
-  color: #fff; box-shadow: 0 2px 10px rgba(42, 44, 39, .16);
-}
-[data-btt-look="b"] .btt.is-lit {
-  background-color: rgba(42, 44, 39, .9); box-shadow: var(--card-shadow-hover);
-}
-
-/* ---- Ⓒ 深綠松 -----------------------------------------------------------
-   `--teal` #214D48 實心 ＋ 白記號。那是全站的連結色與「診所資訊」那一支，
-   份量最重，也最明確地說「這是一顆可以按的東西」。 */
-[data-btt-look="c"] .btt {
-  background-color: var(--teal); color: #fff; box-shadow: var(--card-shadow);
-}
-[data-btt-look="c"] .btt.is-lit {
-  background-color: color-mix(in srgb, var(--teal) 84%, #fff);
-  box-shadow: var(--card-shadow-hover);
+/* ---- 點下去變亮 ---------------------------------------------------------
+   共同：底變濃 1.35 倍。三階再往上疊。
+   ⚠ 底一律寫 `background-color` 不要寫 `background` —— transition 認的是
+      background-color 這個長寫屬性，寫簡寫轉場會對不上、變成瞬間切換
+      （CLAUDE.md，`.hero-cue` 那一輪記過同一條）。 */
+.btt.is-lit { background-color: rgb(var(--btt-rgb) / calc(var(--btt-a) * 1.35)); }
+[data-btt-lit="l2"] .btt.is-lit,
+[data-btt-lit="l3"] .btt.is-lit { color: var(--teal); }
+/* 「明顯」再多一層深綠松的淡色水洗 ＋ 卡片 hover 那一階的陰影。
+   ⚠ 用 inset 的 box-shadow 當水洗層，不用第二個背景 —— 它會自己跟著
+      border-radius 走，也不必再開一個偽元素。 */
+[data-btt-lit="l3"] .btt.is-lit {
+  box-shadow: var(--card-shadow-hover), inset 0 0 0 999px rgba(33, 77, 72, .10);
 }
 
 /* 游標經過 ＝ 點到的那一階。關在 (hover: hover) 裡：沒有游標的裝置點下去
-   會把那一態黏住（CLAUDE.md 第九節，.hero-cue 同一條）。 */
+   會把那一態黏住（CLAUDE.md 第九節，`.hero-cue` 同一條）。 */
 @media (hover: hover) and (pointer: fine) {
-  [data-btt-look="a"] .btt:hover { box-shadow: var(--card-shadow-hover); border-color: var(--teal); color: var(--teal); }
-  [data-btt-look="b"] .btt:hover { background-color: rgba(42, 44, 39, .9); box-shadow: var(--card-shadow-hover); }
-  [data-btt-look="c"] .btt:hover { background-color: color-mix(in srgb, var(--teal) 84%, #fff); box-shadow: var(--card-shadow-hover); }
+  .btt:hover { background-color: rgb(var(--btt-rgb) / calc(var(--btt-a) * 1.35)); }
+  [data-btt-lit="l2"] .btt:hover,
+  [data-btt-lit="l3"] .btt:hover { color: var(--teal); }
+  [data-btt-lit="l3"] .btt:hover {
+    box-shadow: var(--card-shadow-hover), inset 0 0 0 999px rgba(33, 77, 72, .10);
+  }
 }
 .btt:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
-[data-btt-look="b"] .btt:focus-visible,
-[data-btt-look="c"] .btt:focus-visible { outline-color: var(--ink); }
 
 /* 開關：進場不要上移（只淡入） */
 [data-btt-rise="0"] { --btt-rise: 0px; }
@@ -4357,9 +4396,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 @media (min-width: 721px) { [data-btt-desk="0"] .btt { display: none; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .btt { transition: opacity .22s ease, visibility .22s; transform: none; }
+  .btt { transition: opacity .22s ease, visibility .22s, background-color .18s ease; transform: none; }
 }
-
 </style>
 
 </head>
@@ -6538,33 +6576,29 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 </script>
 
 <!-- ==========================================================================
-     「回到最上面」的按鈕（提案用，2026-08-15）── 定案之後這一段一起刪掉
+     「回到最上面」的按鈕（提案用，2026-08-15 第二輪）── 定案之後這一段一起刪掉
      --------------------------------------------------------------------------
      ⚠ 用 <button> 不是 <a href="#top">：這一顆的目的地不是「某一節」，
         用連結會在歷史紀錄裡塞一格空的 hash，按上一頁會變成「回到剛剛的位置」
         而不是「回到上一頁」。反過來說，因為它本來就沒有導覽行為，
         preventDefault 弄丟歷史那一條（CLAUDE.md 第九節第 13 條）在這裡不成立。
      ⚠ 圖形 aria-hidden，可讀的內容由 aria-label 給（＝ .hero-cue 的做法）。
-     ⚠ 三個記號候選都在標記裡，由 CSS 決定顯示哪一個。定案時把沒選上的兩個刪掉。
+     ⚠ **兩條角形是同一張 SVG 裡的兩條 path**，尺寸筆畫端點保證一模一樣 ——
+        上一次一條用 SVG、一條用 CSS 邊框，使用者一眼看出長度不同。
+     ⚠ 數字直接抄首頁 `.hero-cue`（直式平板那一段）：每條 18×9、
+        `M1 1l8 7 8-7`、stroke 1.4、兩條間距 1.5px。這裡往上，所以路徑上下翻成
+        `M1 8 9 1l8 7`，第二條往下位移 10.5，整組 viewBox 18×19.5。
      ========================================================================== -->
 <button class="btt" type="button" aria-label="回到最上面">
-  <!-- ① 全箭頭（＝影片那顆）：桿 11.6／14 ＝ 0.83 個框高 -->
-  <svg class="ic1" viewBox="0 0 14 14" aria-hidden="true">
-    <path d="M7 13.2V1.6"/><path d="M1.4 7.2 7 1.6l5.6 5.6"/>
-  </svg>
-  <!-- ② 單角形（＝站上 .hero-cue 那顆，上下翻過來） -->
-  <svg class="ic2" viewBox="0 0 12 6" aria-hidden="true">
-    <path d="M0 6 6 0l6 6"/>
-  </svg>
-  <!-- ③ 角形＋短桿：介於 ① 與 ② 之間 -->
-  <svg class="ic3" viewBox="0 0 14 12" aria-hidden="true">
-    <path d="M7 11.2V2.6"/><path d="M1.4 8.2 7 2.6l5.6 5.6"/>
+  <svg viewBox="0 0 18 19.5" aria-hidden="true">
+    <path d="M1 8 9 1l8 7"/>
+    <path d="M1 18.5 9 11.5l8 7"/>
   </svg>
 </button>
 
 <script>
 /* ==========================================================================
-   出現／隱藏 ＋ 點下去捲回最上面
+   出現／隱藏 ＋ 點下去捲回最上面 ＋ 點下去變亮
    --------------------------------------------------------------------------
    ⚠ 捲動用自己的 rAF，不是 window.scrollTo({behavior:'smooth'})：
       **iOS Safari 對這一種捲動不吃 `scroll-behavior: smooth`**（2026-08-15
@@ -6574,7 +6608,15 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
    ⚠ 開了「減少動態效果」就整段不接手，交還給原生的瞬間跳轉 —— 平滑捲動
       正是那個設定要關掉的東西（站上另外四處也都看它）。
    ⚠ 「點到會亮」要寫在減少動態那條 return **之前**：那是回饋，和要不要平滑
-      捲動是兩件事（第一版寫在後面，開了減少動態的人點下去完全沒反應）。
+      捲動是兩件事。
+
+   ⚠⚠ **亮起來要撐滿整段捲動，不要掛那個 300ms 的 timeout。**
+      第一輪抄了 `.hero-cue` 的寫法 —— 加上 `.is-lit`、掛一個 300ms 的 timeout
+      拿掉它、捲動結束時才 `clearTimeout`。可是那個 timeout 在第 300ms 就燒掉了，
+      捲動要跑 620ms，所以只亮了不到一半、而且那半段畫面正在飛，等於看不到。
+      現在改成：**要捲的時候根本不掛 timeout**，由捲動結束那一刻拿掉；
+      只有「不捲」（開了減少動態、或已經在最上面）才用 timeout 收尾。
+
    ⚠ 判斷「捲進畫面了沒」用 visualViewport.height 不是 innerHeight ——
       iOS 的 innerHeight 是工具列收起後的大視窗高，會高估（CLAUDE.md 第八節）。
    ========================================================================== */
@@ -6588,13 +6630,13 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
   /* 出現門檻。三案：半屏／一屏／捲過 HERO（照片＋窄帶，＝第一屏的實際高度）。 */
   function threshold() {
-    var mode = root.getAttribute('data-btt-when') || 'w2';
-    if (mode === 'w1') return vh() * 0.5;
+    var mode = root.getAttribute('data-btt-when') || 'w1';
+    if (mode === 'w2') return vh();
     if (mode === 'w3') {
       var hero = document.querySelector('.hero');
       return hero ? hero.getBoundingClientRect().height : vh();
     }
-    return vh();
+    return vh() * 0.5;
   }
 
   function paint() {
@@ -6620,12 +6662,13 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   btn.addEventListener('click', function () {
     btn.classList.add('is-lit');
     clearTimeout(litT);
-    litT = setTimeout(function () { btn.classList.remove('is-lit'); }, 300);
+    /* 只有「這一次不會捲」才需要 timeout 幫忙收尾，見上面的 ⚠⚠。 */
+    function litOff() { litT = setTimeout(function () { btn.classList.remove('is-lit'); }, 320); }
 
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { window.scrollTo(0, 0); return; }
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { window.scrollTo(0, 0); litOff(); return; }
 
     var from = window.pageYOffset;
-    if (from < 1) return;
+    if (from < 1) { litOff(); return; }
     var dur = 620, t0 = 0, prev = root.style.scrollBehavior;
     root.style.scrollBehavior = 'auto';
 
@@ -6636,7 +6679,6 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       window.scrollTo(0, from * (1 - e));
       if (t < 1) { requestAnimationFrame(step); return; }
       root.style.scrollBehavior = prev;
-      clearTimeout(litT);
       btn.classList.remove('is-lit');   /* 亮到捲完為止 */
     }
     requestAnimationFrame(step);
@@ -6645,13 +6687,15 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 </script>
 
 <!-- ==========================================================================
-     切換條（提案用）── 定案之後連同上面那一段 <style> 與按鈕的兩個落選記號一起刪掉
+     切換條（提案用）── 定案之後連同上面那一段 <style> 一起刪掉
      --------------------------------------------------------------------------
      ⚠ 面板放**左**下角：這一輪要看的東西就在右下角。
      ⚠ 這一輪是**即時套用**不重新載入 —— 沒有任何值會影響站上那三支
        「開頁量一次」的 JS（--sk-padT／--role-padT／--lamp-pad）。
-     ⚠ 網址參數的正規式一律寫 `[a-z0-9]+`。寫成 `[a-z]+` 會吃不到 `i1` 這種
+     ⚠ 網址參數的正規式一律寫 `[a-z0-9]+`。寫成 `[a-z]+` 會吃不到 `a1` 這種
        帶數字的值，比對失敗後悄悄退回預設，等於參數沒作用（CLAUDE.md 記過）。
+     ⚠ 第二輪的預設值 ＝ 使用者第一輪最後停在的那一組（44px／8px／半屏／20px），
+       只有「底」與「記號」照他的回饋整組換掉了。
      ========================================================================== -->
 <style>
 .fr-tg, .fr-tg * { box-sizing: border-box; }
@@ -6679,8 +6723,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   box-shadow: 0 12px 34px rgba(0,0,0,.45);
 }
 .fr-tg[data-open="1"] .fr-tg-panel { display: flex; }
-/* 這一輪的控制項比 type-scale 那一頁多（六段 ＋ 三個開關），整個面板放不下 ——
-   所以控制項自己捲，量測那一塊釘在面板下緣、超過 44% 才自己捲。
+/* 控制項自己捲，量測那一塊釘在面板下緣、超過 44% 才自己捲。
    ⚠ flex 項目要捲一定要配 min-height: 0，預設的 auto 會讓它撐開父層而不是出現捲軸。 */
 .fr-tg-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 .fr-tg-g {
@@ -6720,6 +6763,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 .fr-tg-foot .m.good b { color: #8fd6a4; }
 .fr-tg-foot .m.warn b { color: #f2cf87; }
 .fr-tg-note { margin: 6px 11px 0; color: #8f8a84; font-size: 11px; }
+/* 「點下去變亮」的預覽鈕：不用真的捲整頁也能看那一階長什麼樣。 */
+.fr-tg-lit { padding: 8px 10px 10px; border-top: 1px solid rgba(255,255,255,.1); }
+.fr-tg-lit button {
+  width: 100%; min-height: 44px; padding: 8px;
+  background: rgba(255,255,255,.07); color: #cfc9c2;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 6px;
+  font: inherit; font-size: 12.5px; cursor: pointer;
+}
 @media print { .fr-tg { display: none; } }
 </style>
 
@@ -6737,32 +6788,47 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
   /* 一段 ＝ 一組互斥的候選；attr 是寫到 <html> 上的 data-*，也是網址參數名。 */
   var SEGS = [
-    { attr: 'look', pm: 'look', g: '底：這一顆長什麼樣', def: 'a', opts: [
-      { k: 'a', lb: 'Ⓐ 紙上的卡', nt: '--card ＋ 框 ＋ 卡片陰影' },
-      { k: 'b', lb: 'Ⓑ 墨玻璃',   nt: '墨色 .72 ＋ 毛玻璃・白記號' },
-      { k: 'c', lb: 'Ⓒ 深綠松',   nt: '--teal 實心・白記號' }
+    { attr: 'tint', g: '玻璃偏哪一色', def: 'white', opts: [
+      { k: 'white', lb: '偏白', nt: '#f4f4f5・＝卡色' },
+      { k: 'paper', lb: '紙色', nt: '#e2e5e6・＝底色' },
+      { k: 'ink',   lb: '偏墨', nt: '#5c5f57・灰一點' }
     ]},
-    { attr: 'icon', pm: 'icon', g: '記號', def: 'i1', opts: [
-      { k: 'i1', lb: '① 全箭頭', nt: '桿＋頭（影片那顆）' },
-      { k: 'i2', lb: '② 角形',   nt: '＝站上那顆往下滑' },
-      { k: 'i3', lb: '③ 角形＋桿', nt: '兩者之間' }
+    { attr: 'a', g: '底多濃（亮色與偏墨是兩組數字）', def: 'a2', opts: [
+      { k: 'a1', lb: '淡', nt: '.45／.10' },
+      { k: 'a2', lb: '中', nt: '.62／.16' },
+      { k: 'a3', lb: '濃', nt: '.80／.24' }
     ]},
-    { attr: 'size', pm: 'size', g: '方框多大', def: '48', opts: [
+    { attr: 'blur', g: '玻璃的模糊', def: 'b2', opts: [
+      { k: 'b1', lb: '6px',  nt: '幾乎只是一層色' },
+      { k: 'b2', lb: '12px', nt: '中間' },
+      { k: 'b3', lb: '20px', nt: '很糊' }
+    ]},
+    { attr: 'line', g: '框線', def: 'd', opts: [
+      { k: 'n', lb: '無',   nt: '只靠陰影' },
+      { k: 'd', lb: '細墨線', nt: '墨 .10' },
+      { k: 'w', lb: '細白線', nt: '白 .55・玻璃感' }
+    ]},
+    { attr: 'lit', g: '點下去多亮', def: 'l2', opts: [
+      { k: 'l1', lb: '微',   nt: '只有底變濃' },
+      { k: 'l2', lb: '中',   nt: '＋角形轉深綠松' },
+      { k: 'l3', lb: '明顯', nt: '＋整塊套色・陰影加重' }
+    ]},
+    { attr: 'size', g: '方框多大', def: '44', opts: [
       { k: '44', lb: '44px', nt: '觸控下限' },
       { k: '48', lb: '48px', nt: '影片那顆' },
       { k: '52', lb: '52px', nt: '再大一階' }
     ]},
-    { attr: 'r', pm: 'r', g: '圓角', def: '8', opts: [
+    { attr: 'r', g: '圓角', def: '8', opts: [
       { k: '8',  lb: '8px',  nt: '＝頁首玻璃框' },
       { k: '10', lb: '10px', nt: '中間' },
       { k: '12', lb: '12px', nt: '＝文章卡' }
     ]},
-    { attr: 'when', pm: 'when', g: '捲多遠才出現', def: 'w2', opts: [
+    { attr: 'when', g: '捲多遠才出現', def: 'w1', opts: [
       { k: 'w1', lb: '半屏', nt: '很早就出現' },
       { k: 'w2', lb: '一屏', nt: '過了第一屏' },
       { k: 'w3', lb: '過 HERO', nt: '照片＋窄帶之後' }
     ]},
-    { attr: 'edge', pm: 'edge', g: '離右下角', def: '16', opts: [
+    { attr: 'edge', g: '離右下角', def: '20', opts: [
       { k: '12', lb: '12px', nt: '≈ 影片（13）' },
       { k: '16', lb: '16px', nt: '中間' },
       { k: '20', lb: '20px', nt: '再讓開一點' }
@@ -6770,11 +6836,11 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   ];
 
   var SW = [
-    { attr: 'rise', pm: 'rise', def: '1', lb: '進場時從下面浮上來 6px',
+    { attr: 'rise', def: '1', lb: '進場時從下面浮上來 6px',
       nt: '關掉就只有淡入。開了「減少動態效果」時這一項自動不生效。' },
-    { attr: 'desk', pm: 'desk', def: '1', lb: '電腦版也放這一顆',
+    { attr: 'desk', def: '1', lb: '電腦版也放這一顆',
       nt: '電腦有 Home 鍵與捲軸，可以只給手機／平板。關掉 ＝ ≥721px 不顯示。' },
-    { attr: 'foot', pm: 'foot', def: '0', lb: '捲到頁尾就收起來',
+    { attr: 'foot', def: '0', lb: '捲到頁尾就收起來',
       nt: '頁尾有導覽連結與電話，這一顆浮在上面可能會擋到。' }
   ];
 
@@ -6791,8 +6857,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var m = new RegExp('[?&]' + name + '=([a-z0-9]+)').exec(qs);
     return (m && allow.indexOf(m[1]) >= 0) ? m[1] : def;
   }
-  SEGS.forEach(function (s) { state[s.attr] = readParam(s.pm, s.opts.map(function (o) { return o.k; }), s.def); });
-  SW.forEach(function (s) { state[s.attr] = readParam(s.pm, ['0', '1'], s.def); });
+  SEGS.forEach(function (s) { state[s.attr] = readParam(s.attr, s.opts.map(function (o) { return o.k; }), s.def); });
+  SW.forEach(function (s) { state[s.attr] = readParam(s.attr, ['0', '1'], s.def); });
 
   function apply() {
     SEGS.concat(SW).forEach(function (s) { root.setAttribute('data-btt-' + s.attr, state[s.attr]); });
@@ -6803,10 +6869,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       b.setAttribute('aria-pressed', String(state[b.dataset.a] === b.dataset.k));
     });
     var q = SEGS.concat(SW).filter(function (s) { return state[s.attr] !== s.def; })
-                .map(function (s) { return s.pm + '=' + state[s.attr]; }).join('&');
+                .map(function (s) { return s.attr + '=' + state[s.attr]; }).join('&');
     history.replaceState(null, '', location.pathname + (q ? '?' + q : ''));
-    btn.querySelector('b').textContent =
-      state.look.toUpperCase() + state.icon.slice(1) + '・' + state.size + 'px';
+    var TN = { white: '白', paper: '紙', ink: '墨' }, AN = { a1: '淡', a2: '中', a3: '濃' };
+    btn.querySelector('b').textContent = TN[state.tint] + AN[state.a] + '・' + state.size + 'px';
     measure();
   }
 
@@ -6824,6 +6890,21 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       row.appendChild(b);
     });
     body.appendChild(g); body.appendChild(row);
+    /* 「點下去多亮」那一段底下多一顆預覽鈕：按住不放就一直亮著，
+       不必真的捲整頁才看得到那一階。 */
+    if (s.attr === 'lit') {
+      var wrap = document.createElement('div'); wrap.className = 'fr-tg-lit';
+      var pv = document.createElement('button');
+      pv.type = 'button'; pv.textContent = '按住這裡 → 右下角那顆會維持亮起來的樣子';
+      var el0 = document.querySelector('.btt');
+      var on = function (ev) { ev.preventDefault(); el0.classList.add('is-lit'); };
+      var off = function () { el0.classList.remove('is-lit'); };
+      pv.addEventListener('pointerdown', on);
+      pv.addEventListener('pointerup', off);
+      pv.addEventListener('pointerleave', off);
+      pv.addEventListener('pointercancel', off);
+      wrap.appendChild(pv); body.appendChild(wrap);
+    }
   });
   var gsw = document.createElement('div'); gsw.className = 'fr-tg-g'; gsw.textContent = '開關';
   body.appendChild(gsw);
@@ -6845,9 +6926,9 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   });
 
   /* ---- 現場量測 ---------------------------------------------------------
-     ⚠ 對比度是**估算**：Ⓑ 的底是半透明 ＋ 毛玻璃，這裡一律合成在紙色
-        `--paper` 上算。真正壓在照片上時底下會更暗、對比反而更好，
-        所以這個數字是保守的那一側。
+     ⚠ 對比度是**估算**：底是半透明 ＋ 毛玻璃，這裡一律合成在紙色 `--paper`
+        上算。真正壓在文章卡的插圖上時底下更亮或更暗都有可能，這個數字是
+        「站在紙上」那一格。
      ⚠ 記號是裝飾性圖形，門檻看非文字的 **3:1**（不是文字的 4.5）。 */
   var el = document.querySelector('.btt');
   function rgb(str) {
@@ -6865,6 +6946,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     if (l1 < l2) { var t = l1; l1 = l2; l2 = t; }
     return (l1 + .05) / (l2 + .05);
   }
+  function Lstar(c) { var y = lum(c); return y > 0.008856 ? 116 * Math.pow(y, 1 / 3) - 16 : 903.3 * y; }
   var lastY = 0, lastT = 0, lastOn = false;
   window.bttReport = function (y, t, on) { lastY = y; lastT = t; lastOn = on; measure(); };
 
@@ -6875,22 +6957,23 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var plate = over(rgb(cs.backgroundColor), paper);
     var ink   = over(rgb(cs.color), plate);
     var cr    = ratio(ink, plate);
-    var sv    = Array.prototype.filter.call(el.querySelectorAll('svg'), function (s) {
-      return getComputedStyle(s).display !== 'none';
-    })[0];
-    var sr = sv ? sv.getBoundingClientRect() : { width: 0, height: 0 };
+    var sv    = el.querySelector('svg');
+    var sr    = sv ? sv.getBoundingClientRect() : { width: 0, height: 0 };
     var vw = innerWidth, vhh = (window.visualViewport && visualViewport.height) || innerHeight;
     var hidden = cs.display === 'none';
 
     var rows = [
       ['方框', r.width.toFixed(1) + ' × ' + r.height.toFixed(1) + ' px', r.width >= 44 ? 'good' : 'bad'],
       ['圓角', cs.borderRadius, ''],
+      ['底（合成在紙上）', 'L* ' + Lstar(plate).toFixed(1), ''],
+      ['底的透明度', cs.backgroundColor.indexOf('rgba') === 0 ? cs.backgroundColor.split(',')[3].replace(')', '').trim() : '1（不透明）', ''],
+      ['模糊', cs.backdropFilter || cs.webkitBackdropFilter || '—', ''],
+      ['框線', cs.borderTopWidth === '0px' ? '無' : cs.borderTopWidth + ' ' + cs.borderTopColor, ''],
       ['離螢幕右緣', hidden ? '—' : (vw - r.right).toFixed(1) + ' px', ''],
       ['離螢幕下緣', hidden ? '—' : (vhh - r.bottom).toFixed(1) + ' px', ''],
       ['觸控目標', r.width.toFixed(0) + ' × ' + r.height.toFixed(0) + (r.width >= 44 && r.height >= 44 ? '（過 44）' : '（不足 44）'), r.width >= 44 && r.height >= 44 ? 'good' : 'bad'],
-      ['記號', sr.width.toFixed(1) + ' × ' + sr.height.toFixed(1) + ' px', ''],
+      ['角形（兩條）', sr.width.toFixed(1) + ' × ' + sr.height.toFixed(1) + ' px', ''],
       ['筆畫', (sv ? getComputedStyle(sv).strokeWidth : '—'), ''],
-      ['記號 ÷ 方框', r.width ? (sr.width / r.width * 100).toFixed(1) + '%' : '—', ''],
       ['記號對底（估）', cr.toFixed(2) + ':1' + (cr >= 3 ? '' : '（低於 3）'), cr >= 4.5 ? 'good' : cr >= 3 ? 'warn' : 'bad'],
       ['出現門檻', Math.round(lastT) + ' px', ''],
       ['目前捲動', Math.round(lastY) + ' px', ''],
@@ -6900,8 +6983,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     foot.innerHTML = '<div class="fr-tg-g">現場量測</div>' + rows.map(function (x) {
       return '<div class="m ' + x[2] + '"><span>' + x[0] + '</span><b>' + x[1] + '</b></div>';
     }).join('') +
-    '<p class="fr-tg-note">對比度是把底合成在紙色 #e2e5e6 上估的（Ⓑ 半透明＋毛玻璃無法直接量）。記號是裝飾性圖形，門檻看 3:1。</p>' +
-    '<p class="fr-tg-note">選好的組合會寫進網址，直接把網址傳回來就知道是哪一案。</p>';
+    '<p class="fr-tg-note">角形 18 × 19.5 是**定值**，換方框大小時變的是留白不是記號 —— 數字逐項抄自首頁那顆往下滑（每條 18×9、筆畫 1.4、間距 1.5）。</p>' +
+    '<p class="fr-tg-note">選好的組合會寫進網址，直接把網址傳回來就知道是哪一格。</p>';
   }
 
   apply();
