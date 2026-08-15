@@ -1219,6 +1219,87 @@ html[data-here] .nav-lamp { opacity: 1; }
   object-position: 50% 100%;   /* ← 整個做法就是這一行：下緣貼齊 */
 }
 
+/* ==========================================================================
+   HERO 照片：緩慢的推進（2026-08-15 定案上線，**只有電腦版**）
+   --------------------------------------------------------------------------
+   起因是使用者看到三宅一生官網的主視覺「微微的放大、緩慢在動，感覺像有一個
+   視覺集中在暗示你往中間的圖片看過去，但力道不強」。
+   （順帶查證：isseymiyake.com 現在那一頁其實**沒有**這個效果 —— 背景圖的
+   transform／animation 都是 none，會動的是往下第四段的一支 Vimeo 背景影片。
+   所以下面每一個數字都是自己訂的，沒有現成的可以抄。）
+
+   ---- 為什麼是放大不是縮小 ----------------------------------------------
+
+   緩慢縮放時，眼睛讀的是**運動向量的匯聚點**：放大時畫面裡每樣東西都往外飄，
+   唯一不動的是原點，視線就被留在那裡 —— 這正是使用者描述的效果。
+   縮小則是東西往內收、邊緣露出更多，語意是「退開、交代環境」。
+   HERO 是巷口那棟建築，收尾句是「到巷口的芳仁　一起想辦法」，同向的是放大。
+
+   代價講清楚：**放大 ＝ 第一幀是對的（＝現況）、停下來時偏 6%；
+   縮小 ＝ 第一幀偏 6%（而那是 LCP 那一幀）、停下來時是對的。**
+   使用者選了放大。
+
+   ---- transform-origin 一定要 50% 100%，這一條不能動 --------------------
+
+   原點決定「哪一列不動」。照片的 object-position 就是 50% 100%（下緣貼齊），
+   而**照片與窄帶的接縫是四輪定案的成果**（窄帶從 #181614 起跑，那是照片最後
+   一列的實測中位數）。原點放下緣，那一列就完全不動。提案頁量到的：
+
+       原點下緣　6%　接縫 ΔL* 0.00（手機）／+0.39（電腦，只剩橫向取樣範圍的差）
+       原點正中　6%　接縫 #1b1817 → #2a2521，ΔL* +6.42  ← 接縫直接毀掉
+
+   ⚠ 縮放全部發生在往上的方向，那裡蓋著 .hero-photo::after 那層 46% 的暗漸層。
+
+   ---- 為什麼要多包一層 .hero-shot ---------------------------------------
+
+   <img> 是 position:absolute; inset:0，放大之後會整片溢出 <figure>，
+   蓋到窄帶與底下的「主題與科別」，所以一定要有一層 overflow:hidden。
+   ⚠ **不能把 overflow 加在 .hero-photo 上** —— .hero-copy 也在那個框裡，
+     收尾句底下那塊 blur(26px) 的暗斑（.hero-sign::before，inset -1.3em/-1.7em）
+     會被一起裁掉，裁出一條硬邊，正好毀掉「看不出是一個框、只是路面自己暗下去」
+     那個設計重點。所以另外包一層只裝 <img> 的 .hero-shot。
+     它是 position:absolute; inset:0，幾何和原本一模一樣，版面零影響。
+
+   ---- 參數與它們的理由 ---------------------------------------------------
+
+     幅度 6%　時長 12 秒　cubic-bezier(.22,.61,.36,1)（先快後慢）　一次就停
+
+   2% 幾乎看不出來，10% 就從「暗示」變成「效果」。一次就停不做來回呼吸 ——
+   一張靜止的建築照片來回縮放看起來像壞掉，而且永遠不會停在定案的構圖上。
+
+   ⚠ **這裡看 prefers-reduced-motion**（和窄帶那個往上數的數字**不同**，
+     那一件 2026-08-08 使用者定了不看，理由在本檔 .band-views 那一段）。
+     一張滿版照片的縮放正是那個設定針對的東西（位移／視差／縮放）。
+
+   ⚠ **只開在電腦版**：(min-width:721px) and (min-aspect-ratio:9/10)。
+     手機（≤720）、iPad 直放（9/10~2/3）、直立螢幕（≤2/3）三段都還沒定案 ——
+     那三種裁法不一樣，詩底下換到的像素也不一樣，要各自量過再開。
+     提案頁在 /preview/hero-zoom/。
+
+   ⚠ 結束時多放大 6%，等於 srcset 挑到的那張要多撐 6%。實測不影響選檔
+     （1440 DPR1 需要 1361 → 1443，兩邊都挑 1600w），所以 sizes 沒有跟著改。
+     **日後若把幅度加大，要回頭重驗 sizes**（本檔第九節第 15 條）。
+
+   ⚠ 頁首的模糊有跟著補償：paintBlur() 是用盒子的幾何推「條子底下是照片的
+     哪一列」，它看不到 CSS transform。實測不補的話「招牌」那個門檻會晚到
+     10~15px（六個電腦版尺寸：1280×800 10、1440×900 11、1920×1080 15），
+     相對於 110px 的斜坡其實看不出來 —— 但補償只是三行，就一起做了。
+     寫在那支 JS 的 paintBlur() 裡。
+   ========================================================================== */
+.hero-shot { position: absolute; inset: 0; overflow: hidden; }
+
+@keyframes hero-push-in { from { transform: scale(1); } to { transform: scale(1.06); } }
+
+@media (min-width: 721px) and (min-aspect-ratio: 9/10) {
+  .hero-photo img {
+    transform-origin: 50% 100%;
+    animation: hero-push-in 12s cubic-bezier(.22, .61, .36, 1) both;
+  }
+}
+@media (min-width: 721px) and (min-aspect-ratio: 9/10) and (prefers-reduced-motion: reduce) {
+  .hero-photo img { animation: none; }
+}
+
 /* 頂部的一層淡漸層。滿版之後頁首會壓在照片的任意位置上 ——
    1900px 寬時右上角正好落在建築的淺色水泥牆，白字幾乎讀不到（實測那塊 L* 約 42）。
    先前的版本沒有這個問題，是因為裁切位置讓上緣一直是天空。
@@ -3979,6 +4060,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            要完全不放大得要 2400~3200px 寬。
            ⚠ width/height 仍然寫 1600×1058（＝ src 那一張），比例和 2000 那張
               差 0.04%，不影響版面保留（aspect-ratio 用的是這兩個值）。 -->
+      <!-- .hero-shot 只是一層 overflow:hidden（position:absolute; inset:0，
+           幾何和沒有它時一模一樣）。照片緩慢推進時 <img> 會溢出 <figure>，
+           要夾住；**不能把 overflow 加在 .hero-photo 上** —— 那會連
+           .hero-copy 一起裁，收尾句底下那塊 blur 的暗斑會裁出一條硬邊。
+           完整理由在上面樣式表「HERO 照片：緩慢的推進」那一段。 -->
+      <span class="hero-shot">
       <img src="assets/hero-clinic-night.jpg"
            srcset="assets/hero-clinic-night-800.jpg 800w,
                    assets/hero-clinic-night.jpg 1600w,
@@ -3986,6 +4073,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            sizes="calc(1.512 * 100vh)"
            alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
            width="1600" height="1058" fetchpriority="high">
+      </span>
 
       <!-- 詩與收尾句放在 <figure> 裡面、不是外面 —— 這樣照片的框如果被限制寬度
            （見下面 HERO 的三種裁切模式），文字會自動跟著照片走，不會飄到旁邊的暗底上。 -->
@@ -4883,12 +4971,20 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     lastBlur = null;            // 換了平段就得重寫一次，不能被上一格擋掉
   }
 
-  function objPosY() {
-    var v = getComputedStyle(heroImg).objectPosition.split(/\s+/)[1] || '50%';
-    if (v.slice(-1) === '%') return parseFloat(v) / 100;
-    if (v === 'top') return 0;
-    if (v === 'bottom') return 1;
-    return .5;                  // center，以及這一站沒用到的 px 值
+  /* objectPosition 的縱向分量 ＋ 目前的縮放倍率，一次讀完。
+     ⚠ 兩個值都要**讀 computed style**：電腦版的 `50% 100%` 與其他版型的裁法
+       都自動算對；倍率則是 2026-08-15 上線的「緩慢推進」在動的東西
+       （見上面樣式表「HERO 照片：緩慢的推進」）。
+     ⚠ 合成同一次 getComputedStyle —— 這個函式每一幀都會被呼叫，讀兩次等於
+       多一次強制樣式重算。 */
+  function imgState() {
+    var cs = getComputedStyle(heroImg);
+    var v = cs.objectPosition.split(/\s+/)[1] || '50%';
+    var y = v.slice(-1) === '%' ? parseFloat(v) / 100
+          : v === 'top' ? 0 : v === 'bottom' ? 1 : .5;   // center，以及沒用到的 px 值
+    var m = /matrix\(([^,]+),/.exec(cs.transform);
+    var k = m ? parseFloat(m[1]) : 1;
+    return { y: y, k: (isFinite(k) && k > 0) ? k : 1 };
   }
 
   function paintBlur(headH, dy) {
@@ -4896,9 +4992,21 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var rp = photo.getBoundingClientRect();
     var r = { top: rp.top - (dy || 0), width: rp.width, height: rp.height };
     if (!r.height) return;
+    var st = imgState();
     var s = Math.max(r.width / heroImg.naturalWidth, r.height / heroImg.naturalHeight);
     var vh01 = Math.min(1, (r.height / s) / heroImg.naturalHeight);
-    var top01 = objPosY() * (1 - vh01);
+    var top01 = st.y * (1 - vh01);
+
+    /* 緩慢推進的補償。transform 不會反映在 getBoundingClientRect 上，
+       不補的話「招牌」那個門檻會晚到 10~15px（六個電腦版尺寸實測）。
+       原點是 50% 100%，所以**畫面下緣是檔案的哪一列不變**，
+       看得到的高度縮成 1/k，上緣往下追。 */
+    if (st.k !== 1) {
+      var bottom01 = top01 + vh01;
+      vh01 = vh01 / st.k;
+      top01 = bottom01 - vh01;
+    }
+
     var f = Math.max(0, Math.min(1, top01 + vh01 * ((headH - r.top) / r.height)));
 
     var signScroll = ((SIGN - top01) / vh01) * r.height - headH;
