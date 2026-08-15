@@ -4452,7 +4452,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      ⚠ **viewBox 沒有動，SVG 的座標一個字都沒改。** 那張圖排了四十二輪。
      ⚠ 想再更大就只能動標籤自己的字級，但那三塊牌子是固定幾何的 path，
        字一放大就會撐出牌子外（實測 +8% 就頂到邊）—— 那要連牌子一起重畫。 */
-  .map-svg                                   { aspect-ratio: .694; }
+  .map-svg                                   { aspect-ratio: .694; border-radius: 12px; }
+  .map-svg .rlab text                        { font-size: 18.75px; }
+  .map-svg .rlab .rl-nm                      { font-size: 20px; }
+  .map-svg .clab text                        { font-size: 18.75px; }
   /* 站上這一條自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
      所以這裡也要 important 才蓋得掉。 */
   .info-note                                 { font-size: 1rem !important; }
@@ -4876,13 +4879,13 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                    viewBox 本身一個字都沒動 —— 那張圖排了四十二輪，不要動它的座標。
                    電腦版與 iPad 沒有設 aspect-ratio，盒子的比例 ＝ viewBox 的比例，
                    這時 slice 和 meet 完全等價，所以那兩邊不受影響。 -->
-              <svg class="map-svg" viewBox="0 0 560 620" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="mt md">
+              <svg class="map-svg" viewBox="10.5 0 560 620" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="mt md">
               <title id="mt">芳仁牙醫診所簡易地圖</title>
               <desc id="md">診所位在永樂街與平和街19巷交會的那一角，門面朝永樂街；街區北接文化路，往南依序是平和街33巷、大同路與中華路。附近三處停車場：19巷北邊那條平行巷上的斗六永樂站、永安路上的合廷，以及中華路上的壹車房。</desc>
 
               <defs>
                 <!-- 外框：圓角方（三案裡選上的那一個，另兩案是有機色塊與正圓）。 -->
-                <clipPath id="clip-round"><rect x="0" y="0" width="560" height="620" rx="18"/></clipPath>
+                <clipPath id="clip-round"><rect x="10.5" y="0" width="560" height="620" rx="18"/></clipPath>
               </defs>
 
               <g id="map-clip" clip-path="url(#clip-round)">
