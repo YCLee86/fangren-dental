@@ -4453,7 +4453,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      ⚠ **viewBox 沒有動，SVG 的座標一個字都沒改。** 那張圖排了四十二輪。
      ⚠ 想再更大就只能動標籤自己的字級，但那三塊牌子是固定幾何的 path，
        字一放大就會撐出牌子外（實測 +8% 就頂到邊）—— 那要連牌子一起重畫。 */
-  .map-svg                                   { aspect-ratio: .694; }
+  .map-svg                                   { aspect-ratio: .694; border-radius: 12px; }
+  .map-svg .rlab text                        { font-size: 18.75px; }
+  .map-svg .rlab .rl-nm                      { font-size: 20px; }
+  .map-svg .clab text                        { font-size: 18.75px; }
   /* 站上這一條自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
      所以這裡也要 important 才蓋得掉。 */
   .info-note                                 { font-size: 1rem !important; }
@@ -4877,13 +4880,13 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                    viewBox 本身一個字都沒動 —— 那張圖排了四十二輪，不要動它的座標。
                    電腦版與 iPad 沒有設 aspect-ratio，盒子的比例 ＝ viewBox 的比例，
                    這時 slice 和 meet 完全等價，所以那兩邊不受影響。 -->
-              <svg class="map-svg" viewBox="0 0 560 620" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="mt md">
+              <svg class="map-svg" viewBox="10.5 0 560 620" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="mt md">
               <title id="mt">芳仁牙醫診所簡易地圖</title>
               <desc id="md">診所位在永樂街與平和街19巷交會的那一角，門面朝永樂街；街區北接文化路，往南依序是平和街33巷、大同路與中華路。附近三處停車場：19巷北邊那條平行巷上的斗六永樂站、永安路上的合廷，以及中華路上的壹車房。</desc>
 
               <defs>
                 <!-- 外框：圓角方（三案裡選上的那一個，另兩案是有機色塊與正圓）。 -->
-                <clipPath id="clip-round"><rect x="0" y="0" width="560" height="620" rx="18"/></clipPath>
+                <clipPath id="clip-round"><rect x="10.5" y="0" width="560" height="620" rx="18"/></clipPath>
               </defs>
 
               <g id="map-clip" clip-path="url(#clip-round)">
@@ -6764,6 +6767,18 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      ⚠ 415 已經是**極限**：永安路那三個字在 x 459~483，再裁就切到了。
      ⚠ viewBox 一個字都沒動。圖會跟著變高（390 上 342.8 → 446px）。
 
+     第六輪（同一天）使用者：「左右剩下的空間不一致，左邊還保留比較多，調成
+     兩邊都一樣。標籤大一點，這樣字才能跟著一起大」。兩件：
+       ・**viewBox 的 x 從 0 改成 10.5**（clipPath 的 rect 一起），內容本來就
+         不在 viewBox 的正中間（需要的範圍 94~487，中心 290.5 vs 280）。
+         改完手機的左右餘裕都是 18.6 單位，電腦版也一起變成 83.5／83.5。
+       ・**牌子的字放大 ×1.25**（停車場名 16→20、距離 15→18.75、診所 15→18.75）。
+         牌子的矩形是 JS 現量內容外框畫出來的（padX 11、padY 6），所以字一大
+         牌子自己就跟著長 —— 不必重畫 path。第六條切換條四段可以比。
+     ⚠ 那一條**要重新載入**：牌子是開頁時 sizeLabels() 量一次畫出來的。
+     ⚠ 裁切之後圓角會不見（clipPath 的圓角在可見範圍外），所以手機那一段
+       另外給了 border-radius: 12px。
+
      第四輪（同一天）使用者：「看診時段的點可以大一點」。.56rem → .75rem
      （8.96 → 12px），第四條切換條可以比 8.96 / 11.2 / 12 / 13.6 四段。
      列高不受影響（62.6px 四段都一樣，那是 tbody th 上下各 1rem 撐的）。
@@ -6826,6 +6841,19 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   html[data-map="m0"] .map-svg { aspect-ratio: auto;  }   /* 560，不裁 */
   html[data-map="m1"] .map-svg { aspect-ratio: .79;   }   /* 490 */
   html[data-map="m3"] .map-svg { aspect-ratio: .6694; }   /* 415，極限 */
+
+  /* ---- 牌子的字，四段（l2 ＝ 這個複本本身 20/18.75，不必寫）-------------
+     ⚠ 這一條**要重新載入** —— 牌子的矩形是開頁時 sizeLabels() 量內容外框
+       畫出來的，字級即時改，牌子不會跟著重畫。 */
+  html[data-lab="l0"] .map-svg .rlab text   { font-size: 15px; }
+  html[data-lab="l0"] .map-svg .rlab .rl-nm { font-size: 16px; }
+  html[data-lab="l0"] .map-svg .clab text   { font-size: 15px; }
+  html[data-lab="l1"] .map-svg .rlab text   { font-size: 17.25px; }
+  html[data-lab="l1"] .map-svg .rlab .rl-nm { font-size: 18.4px; }
+  html[data-lab="l1"] .map-svg .clab text   { font-size: 17.25px; }
+  html[data-lab="l3"] .map-svg .rlab text   { font-size: 21px; }
+  html[data-lab="l3"] .map-svg .rlab .rl-nm { font-size: 22.4px; }
+  html[data-lab="l3"] .map-svg .clab text   { font-size: 21px; }
 }
 /* ⚠ 早／午／晚拿掉之後，Ⓑ 在 320 上也放得下了（左欄 7.4rem，日子欄餘裕
    4.1px），所以當初為 ≤359 寫的那一段退階規則不必再帶進來。 */
@@ -6910,6 +6938,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <div class="fr-tg-scale fr-tg-dot"></div>
       <div class="fr-tg-g">地圖裁掉左右多少（立刻換）</div>
       <div class="fr-tg-scale fr-tg-map"></div>
+      <div class="fr-tg-g">地圖牌子的字（會重新載入）</div>
+      <div class="fr-tg-scale fr-tg-lab"></div>
       <div class="fr-tg-sw"></div>
     </div>
     <div class="fr-tg-foot"></div>
@@ -6943,6 +6973,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     { k: 'm2', lb: '大',   nt: '430' },
     { k: 'm3', lb: '極限', nt: '415' }
   ];
+  var LABS = [
+    { k: 'l0', lb: '現況', nt: '16' },
+    { k: 'l1', lb: '×1.15', nt: '18.4' },
+    { k: 'l2', lb: '×1.25', nt: '20' },
+    { k: 'l3', lb: '×1.4',  nt: '22.4' }
+  ];
   var SW = [
     { k: 'date', def: 'on', lb: '日期那一列抬一階（已定案）',
       nt: '13.12px。關掉回到 12.16。參考站那一列量到約 13.5 —— 標記（12.8）沒有動，兩顆本來就不同級。' }
@@ -6967,6 +7003,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   root.setAttribute('data-dot', dot);
   var map = q.get('map'); if (!MAPS.some(function (l) { return l.k === map; })) map = 'm2';
   root.setAttribute('data-map', map);
+  var lab = q.get('lab'); if (!LABS.some(function (l) { return l.k === lab; })) lab = 'l2';
+  root.setAttribute('data-lab', lab);
   SW.forEach(function (s) {
     var v = q.get(s.k);
     root.setAttribute('data-' + s.k, v === '1' || v === 'on' ? 'on' : (v === '0' || v === 'off' ? 'off' : s.def));
@@ -7008,6 +7046,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     b.addEventListener('click', function () { root.setAttribute('data-map', l.k); sync(); });
     b.dataset.k = l.k;
     mapBox.appendChild(b);
+  });
+  var labBox = box.querySelector('.fr-tg-lab');
+  LABS.forEach(function (l) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<b>' + l.lb + '</b><i>' + l.nt + '</i>';
+    /* 重新載入 —— 牌子是開頁量一次畫的。 */
+    b.addEventListener('click', function () { go('lab', l.k); });
+    b.dataset.k = l.k;
+    labBox.appendChild(b);
   });
   SW.forEach(function (s) {
     var lab = document.createElement('label');
@@ -7088,6 +7136,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     [].forEach.call(dotBox.children, function (b) {
       b.setAttribute('aria-pressed', b.dataset.k === dk ? 'true' : 'false');
     });
+    var lk = root.getAttribute('data-lab');
+    [].forEach.call(labBox.children, function (b) {
+      b.setAttribute('aria-pressed', b.dataset.k === lk ? 'true' : 'false');
+    });
     var mk = root.getAttribute('data-map');
     [].forEach.call(mapBox.children, function (b) {
       b.setAttribute('aria-pressed', b.dataset.k === mk ? 'true' : 'false');
@@ -7132,8 +7184,15 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       ['地圖・路名 / 停車場名', (function () {
         var svg = document.querySelector('.map-svg');
         var sc = svg.getScreenCTM().a;
-        return f1(22 * sc) + ' / ' + f1(16 * sc) + ' px';
+        var nm = svg.querySelector('.rlab .rl-nm');
+        return f1(22 * sc) + ' / ' + f1(parseFloat(gs(nm).fontSize) * sc) + ' px';
       })(), ''],
+      ['地圖・左右餘裕', (function () {
+        var svg = document.querySelector('.map-svg');
+        var bx = svg.getBoundingClientRect(), ctm = svg.getScreenCTM();
+        var x0 = (bx.left - ctm.e) / ctm.a, x1 = (bx.right - ctm.e) / ctm.a;
+        return f1(94 - x0) + ' / ' + f1(x1 - 487) + ' 單位';
+      })(), 'good'],
       ['地圖・可見寬 / 高', (function () {
         var svg = document.querySelector('.map-svg');
         var bx = svg.getBoundingClientRect(), sc = svg.getScreenCTM().a;
@@ -7176,7 +7235,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       }).join('') +
       (narrow ? '' : '<div class="fr-tg-note hot">這一輪只動 ≤720px 的手機版型 —— 現在這個寬度看到的是電腦版（2026-08-15 已經整體 +12%），按了不會變。用手機看，或把視窗調窄。</div>') +
       '<div class="fr-tg-note">「早／午／晚」三個字是直接從 markup 拿掉的，三段都一樣沒有。</div>' +
-      '<div class="fr-tg-note">網址可直接帶參數：?cs=c0|c1|c2|c3&amp;sec=s0|s1|s2&amp;dot=d0..d3&amp;map=m0..m3&amp;date=0</div>';
+      '<div class="fr-tg-note">網址可直接帶參數：?cs=c0|c1|c2|c3&amp;sec=s0|s1|s2&amp;dot=d0..d3&amp;map=m0..m3&amp;lab=l0..l3&amp;date=0</div>';
   }
 
   addEventListener('resize', sync);
