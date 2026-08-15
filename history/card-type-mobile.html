@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>card-type-mobile｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>card-type-mobile</h1>
+<p class="meta">
+  原網址 <code>/preview/card-type-mobile/</code>（已刪除 2026-08-15）<br>
+  整頁還原：<code>git show b1cd8d1:preview/card-type-mobile/index.html</code><br>
+  切換條 <code>?cs=c0|c1|c2|c3&amp;sec=s0|s1|s2&amp;dot=d0..d3&amp;map=m0..m3&amp;lab=l0..l3&amp;date=0</code>，七輪定案上線
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者拿 apex.innovarad.tw 的手機截圖：「文章卡片瀏覽時，目前字級偏小，
+比照這個大小調整給我看」。在那之前同一天還有一件（同一輪一起做的）：
+拿 blog.ichentsai.tw 的截圖說「文章卡片邊框比照片窄，比照這個，照片寬一點」。</pre></div>
+
+<h2>參考站量出來是多少（不能只用看的）</h2>
+<div class="note"><pre>螢幕截圖 923px 寬 ÷ iPhone 的 393 CSS px ＝ 2.348 倍，再用整行字反推：
+
+  摘要　第一行 16 個全形字橫跨 303.6 CSS px → 每字 18.97 ＝ 字級約 19px
+  標題　第一行「從對話框走進 Code 的那一」橫跨 301.5
+        ＝ 9 個全形字 ＋ Code（約 2.38em）＋ 兩個半形空白 → 約 25px
+  標記與日期那一列約 12.5~13.5px —— **站上本來就是 12.8／12.16，這一列不必動**
+
+站上（改動前）：標題 15.68、摘要 13.44、標記 12.8、日期 12.16。</pre></div>
+
+<h2>七輪，使用者每一輪挑的</h2>
+<div class="note"><pre>一、文章卡的標題／摘要　四段：改動前 15.7/13.4 ／ Ⓐ 19.8/16 ／ Ⓑ 22.4/17.6 ／
+    Ⓒ 25/19（＝參考站原尺寸）。**選 Ⓑ**（比參考站收一階，摘要一行 17 個字）。
+    標題行高跟著 1.55 → 1.5，摘要的 1.8 沒動。卡片高 435.7 → 515.8px。
+
+二、「把這個字級推到 醫師介紹 看診時段 位置與周邊停車場 的內文」
+    第一版照 Ⓑ 做（內文 17.6），使用者：「字好像抬太大了，先抬到 Ⓐ 就好」。
+    **定案 16px**。文章卡仍然是 Ⓑ —— 兩者刻意不同級。
+
+三、「日期抬一階」　12.16 → 13.12。
+
+四、「早午晚 的字拿掉，一那一行和時間的間隔縮短一點，不然一到五感覺都擠在一起」
+    看過之後再一次：「禮拜一那一直行和時間的間隔可以再縮短嗎？」
+    左欄 8.4 → 6.8 → **6rem**。
+
+五、「看診時段的點可以大一點」　.56 → **.75rem**（8.96 → 12px）。
+
+六、「地圖可以保留到照片的範圍就好，這樣才有餘裕空間把標籤的字放大，現在好小」
+    裁掉左右 → 可見寬度 560 → **430 單位**。接著：「左右剩下的空間不一致，
+    左邊還保留比較多，調成兩邊都一樣」→ 左右各 18.5 單位。
+    再接著：「標籤大一點，這樣字才能跟著一起大」→ 牌子的字 **×1.4**。
+
+七、「芳仁牙醫診所的標籤和診所套色區塊有點擠／超連結的底線和字快黏在一起／
+    壹車房的對話標籤形狀很怪／間隔感覺都跑掉了」—— 見下面那一節，
+    四件是同一個成因。
+
+最後：「定稿，手機版就這樣上線，電腦版和 iPad 版都不動。」</pre></div>
+
+<h2>定案的值（全部只在 ≤720px）</h2>
+<div class="note"><pre>文章卡　　標題 22.4／行高 1.5、摘要 17.6／行高 1.8、日期 13.12
+          縮圖蓋過卡片框線（border 改成 inset box-shadow，照片 333 → 335px）
+醫師介紹　專長／資歷／學歷 16、標籤 15.62（維持 0.976 的比值）、醫師名 19.84
+          --sk-fs 跟著 16（專長標記與內文同級是既有定案，動一個要動兩個）
+          .doc-role 的抬升量重算 .158 → .21em（實測不對稱 −0.02px）
+看診時段　表格 16、說明 16、左欄 col.lab 6rem、點 .75rem、早午晚 display: none
+位置與周邊停車　說明 16、地圖裁到 430 單位、牌子的字 ×1.4（停車場名 22.4、
+          距離與診所名牌 21）、診所名牌的尾巴 8.5 → 13、壹車房整塊往上 18</pre></div>
+
+<h2>踩到的坑</h2>
+<div class="note"><pre>① `overflow: hidden` 切的是**內距框**，所以卡片的框線永遠在照片外面一圈，
+   照片一定比卡窄 2px。要讓照片蓋過框線不能用負 margin（會被切掉），
+   也不能改成 `overflow: visible`（圓角裁切會沒了、照片上面兩角會方出來）。
+   改成 border: 0 ＋ inset box-shadow —— inset 陰影畫在自己的背景之上、
+   子元素之下，所以照片那幾列被 <img> 蓋住、卡身那幾列照舊看得到。
+
+② 門診表是 `table-layout: fixed`、左欄寫死，而 `tbody th` 是 `white-space: nowrap`
+   —— 字一大就會**橫著蓋到第一格的點上**（表格不會撐破卡，所以沒有水平捲動，
+   症狀是重疊）。左欄的寬度要跟著字級重算，而且要留餘裕：那是拿 Noto Sans TC
+   量的，iOS 上是 PingFang，數字寬度不會一模一樣。
+
+③ 「間隔縮短」這條路**報酬遞減**：間隔 ＝（左欄 − 時間字寬）＋（日子欄 − 點）÷2。
+   左欄每收 8px，日子欄就跟著變寬，而點是置中的 —— 實際只少 7px。
+   再往下就要改成「點靠左」，那是版面決定不是微調。
+
+④⚠⚠ **牌子的幾何有一半寫死在絕對單位上**，字級一放大就全部不成比例。
+   使用者第七輪回報的四件其實是同一個成因：
+     底線離字面　2.2（在 16px 上調的 ＝ .1375em）→ 22.4px 還用 2.2 就掉到 .098em
+     兩行的距離　markup 寫死 23 → 沒跟著長，底線和下一行擠在一起
+     盒子貼不到尖端　牌子的大小是量內容算的、尖端是釘死的，
+       壹車房那塊在 ×1.4 時盒子右緣 338.4 已經**越過**尖端 332，
+       尾巴變成反向的缺口 —— 那就是「形狀很怪」
+   三處都改成跟著字級走（比例、比例、由 JS 沿尾巴方向平移把盒子貼回尖端）。
+
+⑤⚠⚠ **`preserveAspectRatio="slice"` 是 markup 屬性，電腦版也吃得到。**
+   盒子高 531.43 是小數，slice 會因為浮點誤差多縮放千分之一，
+   逐像素比對量到整張地圖約 0.35% 的邊緣像素有差（最大 47 階）。
+   裁切改成用外層 `.map-win` 當視窗（電腦版 `display: contents`，不產生盒子），
+   SVG 畫 130.2326% 再往左推 17.558%。
+
+⑥ `translate(0 0)` 也會讓那一段重新光柵化 —— 位移是 0 就**不要留 transform**。
+
+⑦ 診所名牌的字是 15px、停車場那三塊是 16px，所以同一個絕對值 2.2 換算成比例
+   是 .14667em 與 .1375em —— **兩個不一樣**。統一寫 .1375 的話電腦版那條底線
+   會往上跑 0.14 個單位，逐像素比對抓得到（486 個子像素、最大 17 階）。</pre></div>
+
+<h2>「電腦版和 iPad 都不動」是怎麼驗的</h2>
+<div class="note"><pre>fullPage 截圖、DPR 1，對 origin/main 逐像素相減：
+
+  1440×900　　　　　0 / 23410080 個子像素有差
+  1280×800　　　　　0 / 20252160
+  1024×768　　　　　0 / 19433472
+  834×1194（iPad 直放）0 / 15417324
+  721×1000　　　　　落在截圖雜訊裡
+
+⚠ 721 那一格不是零，但**同一份程式碼跑兩次的差是 974875**，
+  而新舊比對只有 608860 —— 雜訊來源是 HERO 那顆會浮動的指標與窄帶的數字動畫。
+  驗這種事一定要先跑一次「同一份程式碼、兩次截圖」當基準，否則會追著鬼跑。</pre></div>
+
+<h2>落選的</h2>
+<div class="note"><pre>文章卡字級　Ⓐ 19.8/16、Ⓒ 25/19（＝參考站原尺寸，卡片會長到 594px）
+三塊內文　　17.6（第一版，使用者說太大）
+點的大小　　11.2、13.6、16（16 已經不像「點」）
+地圖裁切　　不裁 560、490、極限 415（415 之後永安路那三個字就會被切）
+牌子的字　　16（現況）、18.4、20
+日期　　　　維持 12.16</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>
