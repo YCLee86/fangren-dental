@@ -4204,7 +4204,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        頁尾導覽　　14　　　13.12　　　　　14.76
 
    ⚠ **這一段整組關在電腦版那道 @media 裡**（＝ min-width:721 ＋ 直橫比 ≥ 9/10）。
-     手機與 iPad 的字級還沒做，而那兩段的 `--band-h`、`--hero-fs`、HERO 版型
+     ⚠ **iPad／直式平板另外有一段，倍率不同（+19%），寫在本檔最後面。**
+       手機的字級還沒做，而手機那一段的 `--band-h`、`--hero-fs`、HERO 版型
      都是另一套值，一起改會踩到它們。
 
    ⚠ **排在整份樣式表的最後是刻意的。** 下面覆寫的每一條（`:root` 的四個變數、
@@ -4300,6 +4301,97 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 @media (min-width: 721px) and (max-width: 1159px) and (min-aspect-ratio: 9/10) {
   .hero-contact a    { gap: .45rem; }
   .hero-contact .ico { flex: 0 0 auto; }
+}
+
+/* ==========================================================================
+   iPad／直式平板：整體字級放大 19%（2026-08-15 定案上線）
+   --------------------------------------------------------------------------
+   使用者：「iPad 版的字級也偏小。」同一把五段尺（現況／+6／+12／+19／+25%）
+   在 iPad 上比過之後選 **+19%** —— 比電腦版的 +12% 再大一階，是使用者挑的。
+
+       　　　　　　改動前　改動後（×1.1875）　電腦版現在　參考站
+       文章卡標題　16.32　　19.38　　　　　　18.36　　　　19
+       文章卡摘要　13.60　　16.15　　　　　　15.30　　　　15
+       科別標記　　14.40　　17.10　　　　　　16.20　　　　16
+       頁首選單　　13.76　　16.34　　　　　　15.48　　　　15
+       HERO 的詩　 16.5 　　19.6（834×1112 上）
+
+   ⚠ **這一段涵蓋兩段直式平板**（站上是分開寫的，這裡合成一道
+     `max-aspect-ratio: 9/10`），底下兩塊再各自處理它們寫死的那個 126px：
+       A 段（比例 2/3 ~ 9/10）iPad 直放：照片吃「一屏扣掉窄帶」的高度
+       B 段（比例 ≤ 2/3）　　 直立螢幕、**iPad mini 直放 744×1133 ＝ 0.657**
+     ⚠ 比例正好 0.9 的視窗兩段都命中（電腦版那一段是 min-aspect-ratio: 9/10）——
+       這一段排在後面所以贏，和站上原本的分段行為一致，不是新的例外。
+     ⚠ **iPad 橫放不吃這一段**，它落在電腦版那一段（比例 > 1）＝ +12%。
+
+   量過的四個尺寸（834×1112／744×1133／820×1180／1024×1366）× 五段：
+   「照片＋窄帶正好一屏」維持 ±0.0px、水平捲動 0、和現況比**沒有新增任何
+   元素溢出**。834×1112 上詩壓在照片上的對比 5.34 → **5.31**、收尾句
+   6.79 → **6.92**（每列取中位數、取最亮的那一列）。
+   詩÷照片 1.70% → **2.02%**（電腦版 +12% 之後是 1.88%，所以 iPad 的詩
+   相對比電腦版再大一點點 —— 使用者挑的就是這一階）。
+   最緊的一格是最小那台 iPad（744 寬）的「品牌 → 選單」：192.6 → **94.6px**。
+
+   推導、五段的完整量測與落選案：/history/type-scale-ipad.html
+   ========================================================================== */
+@media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
+
+  :root { --type-scale: 1.1875; }           /* 根字級 16 → 19px */
+  html { font-size: calc(16px * var(--type-scale)); }
+  body { font-size: 1rem; }
+
+  /* ⚠ 這幾個變數站上是掛在 `:root`（0,1,0）上的，**不能寫 `html`**（0,0,1）——
+       權重比較低，排在後面也贏不了。 */
+  :root {
+    --head-h:    calc(76px * var(--type-scale));    /* 90.25px */
+    --head-h-sm: calc(60px * var(--type-scale));    /* 71.25px */
+    --frame-r:   calc(8px  * var(--type-scale));
+  }
+  .brand-mark               { flex-basis: calc(38px * var(--type-scale)); }
+  html.scrolled .brand-mark { flex-basis: calc(32px * var(--type-scale)); }
+  #doctors .sec-head h2::before,
+  #clinic  .sec-head h2::before { flex: 0 0 calc(3px * var(--type-scale)); }
+
+  /* 藥丸的塊高 34 → 40.4。內距維持回推式，不要換算成 px。 */
+  .chips button,
+  .hours-filter button { padding-block: calc((34px * var(--type-scale) - 1.6em - 2px) / 2); }
+  .card-map h3         { padding: calc((34px * var(--type-scale) - 1.6em - 2px) / 2) .7rem; }
+
+  .chips button, .hours-filter button, .topic-search input,
+  .card, .doc, .info-card, .gallery img { border-radius: calc(12px * var(--type-scale)); }
+  .doc dt                 { border-radius: calc(6px   * var(--type-scale)); }
+  .doc-role, .sk.tag-on   { border-radius: calc(8px   * var(--type-scale)); }
+  .card-tag               { border-radius: calc(8.5px * var(--type-scale)); }
+  .info-card h3           { border-radius: calc(9px   * var(--type-scale)); }
+  #clinic .info-card .big { border-radius: calc(10px  * var(--type-scale)); }
+  /* ⚠ 排在 `.info-card h3` 後面：地圖那張卡是 `info-card card-map`，兩條都命中。 */
+  .card-map h3            { border-radius: calc(12px * var(--type-scale)); }
+
+  /* 詩與收尾句共用 --hero-fs（iPad 的那條是「跟著照片高度等比例」），乘一次就好。 */
+  .hero-poem, .hero-sign { font-size: calc(var(--hero-fs) * var(--type-scale)); }
+
+  /* ---- 「往下滑」的指標 ------------------------------------------------
+     44×39.5 的觸控目標與那兩條角形**不放大**（觸控下限與圖形，不是字），
+     但它的垂直位置是「距窄帶下緣 34.9px」＝ 對齊「5個／部定專科」那一列的
+     中線，而窄帶裡全是 rem，字一放大那一列就往上移 —— 34.9 要跟著長。
+     ⚠ 四個尺寸實測對齊偏差 ±0.3px 以內。 */
+  .hero-cue { bottom: calc(34.9px * var(--type-scale) - 39.5px / 2); }
+}
+
+/* A 段（iPad 直放）：`--ph` ＝ 照片高度，詩的字級與位置都按它等比例算。
+   站上寫的是 `calc(100svh - 126px)`，126 是**量出來的窄帶高度** —— 窄帶裡
+   全是 rem，字一放大它就跟著長（實測 126.6 → 150.4），所以這個估值也要乘上
+   倍率，不然詩的比例會算錯。⚠ 這一段仍然吃 `.hero` 的 flex，照片的實際高度
+   是「一屏扣掉真的窄帶」，這個常數只影響詩的比例。 */
+@media (min-width: 721px) and (min-aspect-ratio: 2 / 3) and (max-aspect-ratio: 9 / 10) {
+  :root { --ph: calc(100svh - 126px * var(--type-scale)); }
+}
+
+/* B 段（直立螢幕、iPad mini 直放）：窄帶是**壓在照片上**的，高度寫在
+   `--band-h`。收尾句讓開的量 `calc(var(--band-h) + clamp(1rem,3vh,2rem))`
+   讀它，不跟著長的話收尾句會被窄帶蓋住。 */
+@media (min-width: 721px) and (max-aspect-ratio: 2 / 3) {
+  :root { --band-h: calc(126px * var(--type-scale)); }
 }
 </style>
 </head>
