@@ -11,8 +11,14 @@ const ROOT = path.resolve(new URL('..', import.meta.url).pathname);
 const OUTDIR = path.join(ROOT, 'preview/hero-ipad-fullbleed');
 let h = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 
-/* ---- 1. 相對路徑往上兩層。絕對網址（og:image、JSON-LD）一個都不能動 ---- */
-h = h.replace(/="assets\//g, '="../../assets/').replace(/, assets\//g, ', ../../assets/');
+/* ---- 1. 相對路徑往上兩層。絕對網址（og:image、JSON-LD）一個都不能動 ----
+   ⚠ 2026-08-15 踩過：原本寫死兩種形狀（`="assets/` 與 `, assets/`）。
+      同一天 srcset 補上第三個候選、改成**多行**之後，分隔就變成「逗號＋換行＋
+      一堆空白」，後面兩個候選整個沒被改到 → 提案頁的照片 404、整張破圖
+      （正式站沒事，它本來就用根目錄的相對路徑）。
+      改成「前面是引號、逗號或空白」就一律換 —— 絕對網址是
+      `https://fangren.net/assets/`，前面是斜線，吃不到。 */
+h = h.replace(/(["'\s,])assets\//g, '$1../../assets/');
 
 /* ---- 2. robots 換成 noindex ---- */
 h = h.replace(/<meta name="robots" content="[^"]*">/,

@@ -34,7 +34,7 @@
 <link rel="canonical" href="https://fangren.net/">
 <link rel="icon" href="../../assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，兩者刻意分開 ——
-     差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
+     差別與理由寫在 ../../assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
      apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
 
      ⚠⚠ **只宣告這一個尺寸，而且是 192 —— 這是照別站的成功案例做的，不要改。**
@@ -871,7 +871,7 @@ html.scrolled .site-head::before { opacity: 1; }
      多一個合成層 ＝ 多一個會掉的東西。
    ⚠ **HERO 那一屏（條子底下是照片）的玻璃一個值都沒動。** 八個捲動位置
      逐一比對過。換掉的是窄帶上緣滑進條子的那 60px 左右。
-   ⚠ 這一整段只有首頁有。文章頁走 assets/style.css，那邊的頁首本來就是
+   ⚠ 這一整段只有首頁有。文章頁走 ../../assets/style.css，那邊的頁首本來就是
      一塊實心 var(--head)（沒有照片可以糊），碰不到這件事。
    ========================================================================== */
 /* 薄色。三個色停等於原本那個遮罩：實色到 --head-fade，再淡到全透明。
@@ -1968,7 +1968,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .views small { font-size: inherit; margin-left: .3em; }
 /* 數字還沒回來時是一個「—」，先壓淡；API 掛掉（或沒有 JS）就整個收掉，
    連前面那顆分隔點一起 —— 只留一個孤零零的「・」比沒有還糟。
-   和 assets/style.css 裡文章頁的規則同一套寫法。 */
+   和 ../../assets/style.css 裡文章頁的規則同一套寫法。 */
 .views[data-state="loading"] .views-n { opacity: .45; }
 .views[data-state="error"] { display: none; }
 .card-date:has(.views[data-state="error"]) .dot { display: none; }
@@ -2493,7 +2493,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    （相切＝最遠就到邊界），不會蓋到旁邊的字，版面、尺寸、--gutter 一個值都沒動。
    ⚠ 不要改成「把 viewBox 加 padding」—— 那會讓 --logo-w 連帶 --gutter 一起變大，
       地址與電話兩行的起點就要重算，見上面那一段。
-   ⚠ 這份和 assets/style.css 裡那份必須一模一樣，改一邊就要改另一邊。 */
+   ⚠ 這份和 ../../assets/style.css 裡那份必須一模一樣，改一邊就要改另一邊。 */
 .brand-mark svg,
 .foot-brand svg,
 .foot-addr .ico svg,
@@ -2757,7 +2757,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      （見上面 .hero-copy 與 .hero-poem 的註解）；手機版難在**照片本身**。
 
      ---- 為什麼手機不能只是「往下推」 ----------------------------------
-     把 assets/hero-clinic-night.jpg 畫進 canvas 逐列掃描（藍減紅 > 8 分辨
+     把 ../../assets/hero-clinic-night.jpg 畫進 canvas 逐列掃描（藍減紅 > 8 分辨
      夜空與建物），換算成 390px 寬時的畫面座標，可以寫字的天空是一個**楔形**：
 
          畫面 y      能寫字的左界 → 右界      擋住的東西
@@ -3971,8 +3971,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
               差 0.04%，不影響版面保留（aspect-ratio 用的是這兩個值）。 -->
       <img src="../../assets/hero-clinic-night.jpg"
            srcset="../../assets/hero-clinic-night-800.jpg 800w,
-                   assets/hero-clinic-night.jpg 1600w,
-                   assets/hero-clinic-night-2000.jpg 2000w"
+                   ../../assets/hero-clinic-night.jpg 1600w,
+                   ../../assets/hero-clinic-night-2000.jpg 2000w"
            sizes="calc(1.512 * 100vh)"
            alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
            width="1600" height="1058" fetchpriority="high">
@@ -4018,7 +4018,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         <svg viewBox="0 0 12 6" aria-hidden="true"><path d="m0 0 6 6 6-6"/></svg>
       </a>
 
-      <!-- 瀏覽數。data-views-self="home" 是 assets/counter.js 的掛勾：它先幫首頁 +1，
+      <!-- 瀏覽數。data-views-self="home" 是 ../../assets/counter.js 的掛勾：它先幫首頁 +1，
            再從 D1 取回真實數字，然後呼叫 window.fangrenCountUp(n) 跑往上數的動畫。
            **self** 不能寫成 data-views —— 後者只顯示不加總，首頁的數字就永遠不會長。
 
