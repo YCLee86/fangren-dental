@@ -4432,6 +4432,27 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      ⚠ `.d.hit` 的 scale(1.16) 沒有動 —— 點到那一科時會變成 13.9px。
      ⚠ 電腦版與 iPad 維持 .56rem（那邊 rem 是 18px，點本來就 10.08）。 */
   .hours-grid .d                             { width: .75rem; height: .75rem; }
+
+  /* ---- 地圖裁窄，讓字變大（2026-08-15）--------------------------------
+     使用者：「地圖可以保留到照片的範圍就好。這樣才有餘裕空間把標籤的字
+     放大，現在好小」。量到的成因：SVG 是 560 單位寬、在手機上只畫成
+     309.6px（比例 0.5529），所以 22 單位的路名只剩 12.2 CSS px、
+     16 單位的停車場名只剩 8.8、15 單位的診所名牌只剩 8.3。
+
+     解法是**裁掉圖的左右兩側**（那兩側只有街廓，沒有任何標籤）：
+     給它一個比 viewBox 更瘦的 aspect-ratio，preserveAspectRatio 的
+     slice 就會保留中間、裁掉兩邊，圖裡的一切（含字）等比例放大。
+       可見寬度 560 → 430 單位（x 64.9~495.1），比例 0.5529 → 0.7195（＋30%）
+       路名 12.2 → 15.8　停車場名 8.8 → 11.5　距離 8.3 → 10.8　P 15.5 → 20.1
+     ⚠ 內容全部還在：需要的範圍是 x 94（平和街）~487（永安路），
+       裁完剩 64.9~495.1，左右各還有 29 與 8 單位的餘。**再裁下去
+       永安路那三個字就會被切到**（它在 459~483）。
+     ⚠ 圖會變高（390 上 342.8 → 446px）—— 寬度是版面給的，裁窄等於放大，
+       高度就得長出來。這是這個做法的代價，不是漏算。
+     ⚠ **viewBox 沒有動，SVG 的座標一個字都沒改。** 那張圖排了四十二輪。
+     ⚠ 想再更大就只能動標籤自己的字級，但那三塊牌子是固定幾何的 path，
+       字一放大就會撐出牌子外（實測 +8% 就頂到邊）—— 那要連牌子一起重畫。 */
+  .map-svg                                   { aspect-ratio: .694; }
   /* 站上這一條自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
      所以這裡也要 important 才蓋得掉。 */
   .info-note                                 { font-size: 1rem !important; }
@@ -4850,7 +4871,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         <div class="info-card card-map">
           <h3>位置與周邊停車</h3>
           <figure class="map-fig">
-            <svg class="map-svg" viewBox="0 0 560 620" role="img" aria-labelledby="mt md">
+            <!-- ⚠ preserveAspectRatio 是 slice（2026-08-15）：手機那一段 CSS 給了它一個比
+                   viewBox 更瘦的 aspect-ratio，slice 就會**裁掉左右兩側**、讓中間那塊放大。
+                   viewBox 本身一個字都沒動 —— 那張圖排了四十二輪，不要動它的座標。
+                   電腦版與 iPad 沒有設 aspect-ratio，盒子的比例 ＝ viewBox 的比例，
+                   這時 slice 和 meet 完全等價，所以那兩邊不受影響。 -->
+              <svg class="map-svg" viewBox="0 0 560 620" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="mt md">
               <title id="mt">芳仁牙醫診所簡易地圖</title>
               <desc id="md">診所位在永樂街與平和街19巷交會的那一角，門面朝永樂街；街區北接文化路，往南依序是平和街33巷、大同路與中華路。附近三處停車場：19巷北邊那條平行巷上的斗六永樂站、永安路上的合廷，以及中華路上的壹車房。</desc>
 
