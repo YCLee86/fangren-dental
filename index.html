@@ -4424,6 +4424,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   .hours-grid col.lab                        { width: 6rem; }
   .hours-grid thead th, .hours-grid tbody th { font-size: 1rem; }
   .info-card p, .map-note                    { font-size: 1rem; }
+  /* 「看診時段的點可以大一點」（2026-08-15）：.56rem → .75rem ＝ 8.96 → 12px。
+     ⚠ 列高不受影響（62.6px 五個尺寸都一樣）—— 那是 `tbody th` 的上下內距
+       各 1rem 撐出來的，點只是躺在 td 的行框裡。
+     ⚠ 點與點的水平距離 33.8 → 30.7px、時間到第一顆點 24.4 → 22.8px，
+       兩個都還很鬆。1rem（16px ＝ 和字一樣大）試過，那已經不像「點」了。
+     ⚠ `.d.hit` 的 scale(1.16) 沒有動 —— 點到那一科時會變成 13.9px。
+     ⚠ 電腦版與 iPad 維持 .56rem（那邊 rem 是 18px，點本來就 10.08）。 */
+  .hours-grid .d                             { width: .75rem; height: .75rem; }
   /* 站上這一條自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
      所以這裡也要 important 才蓋得掉。 */
   .info-note                                 { font-size: 1rem !important; }
