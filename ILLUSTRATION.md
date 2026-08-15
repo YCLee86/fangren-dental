@@ -489,14 +489,84 @@
 6. **這個風格要用在哪？** 文章 HERO？首頁？文章內文的小插圖？
    三個地方的尺寸、色數限制、和文字的關係都不一樣，先定用途才好定規格。
 7. **現有那六張 HERO 要不要重畫？** 見第五節的落差說明。
-8. **要不要走點陣？** 見第五節第二個警告。
-   ⚠ **這一題現在更明確了**：使用者選了細顆粒當底層質感，而**細顆粒手刻 SVG 做不出來**。
-   所以「要不要走點陣」已經不只是偏好問題，是**規格本身要求的**。
-   這是成本最高的一題。
+8. ~~**要不要走點陣？**~~ —— **2026-08-15 使用者用行動回答了：走點陣。**
+   他當天直接給了一張畫好的點陣插畫（貝氏刷牙法那篇），並指定
+   「**所有的文章都做好再一次換**」。見**第七節**。
+   > 原本的推論仍然成立，留著看：使用者選了細顆粒當底層質感，而
+   > **細顆粒手刻 SVG 做不出來**，所以走點陣不只是偏好問題，是規格本身要求的。
+   > ⚠ **但管線還沒改**（`tools/og-images.mjs` 現在仍然是「SVG → PNG」），
+   > 那是六篇湊齊、真的上線那一天要處理的事 —— 見第七節的上線清單。
 9. **「縮圖點開」是指什麼互動？** 使用者說插圖「顯示的時候會是一個縮圖點開」。
    站上現在**沒有點開放大的功能** —— 首頁卡片的縮圖點下去是連到文章，
    文章頁的 HERO 點下去沒有反應。若真要「點開看大圖」，那是一個新元件（燈箱）。
    **這一條沒有問過，我不確定他是在描述現況還是在描述他想要的東西。**
+
+---
+
+## 七、進行中：六篇文章的 HERO 換點陣插畫（2026-08-15 起）
+
+使用者 2026-08-15 給了第一張畫好的點陣插畫（貝氏刷牙法那篇），看過提案頁之後說：
+
+> 「這個看起來沒什麼問題，但我要**所有的文章都做好再一次換**。
+> 　先存起來等我其他文章都做好，再一次一起上線。」
+
+**所以：圖一張一張進來，正式站一個字都不要動，六篇湊齊那一天才一起換。**
+⚠ **不要因為某一篇「已經好了」就先把它套進 `posts/` 或首頁** —— 那正是使用者
+說不要的。中途的東西全部只存在於 `preview/`。
+
+### 現況
+
+| 文章 | 現況那張 | 新圖 | 狀態 |
+| --- | --- | --- | --- |
+| `bass-brushing` 貝氏刷牙法 | `hero-brushing.svg` | `hero-brushing-photo-*.jpg` | **已備妥**（2026-08-15） |
+| `gum-bleeding` 牙齦流血 | `hero-gum.svg` | — | 等使用者給圖 |
+| `kids-arch-expansion` 擴張牙弓 | `hero-arch.svg` | — | 等使用者給圖 |
+| `kids-first-visit` 第一次看牙 | `hero-kids.svg` | — | 等使用者給圖 |
+| `missing-tooth` 缺牙重建 | `hero-implant.svg` | — | 等使用者給圖 |
+| `regular-checkup` 定期檢查 | `hero-checkup.svg` | — | 等使用者給圖 |
+
+### 收到新圖要做的事
+
+1. **存三個尺寸**到 `assets/`，命名照站上的慣例「後綴＝寬度」：
+   `<photo>-800.jpg`、`-1600.jpg`、`-2000.jpg`。
+   > **為什麼是這三個**：文章內文欄最寬 624px，DPR3 要到 1872（所以要有 2000）；
+   > 首頁縮圖 375 上 335px、DPR2 要 670（所以要有 800）。
+   > ⚠ 這一站沒有任何 npm 依賴，縮圖是用 PowerShell 的 `System.Drawing`
+   > （`HighQualityBicubic`、JPEG 品質 82）做的，不是 sharp。
+2. **在 `tools/hero-photo-preview.mjs` 的 `READY` 加一筆**（slug、photo、oldHero、alt、來源檔名），
+   然後 `node tools/hero-photo-preview.mjs`。它會產生：
+   - `preview/hero-photos-cards/` —— 首頁複本，`READY` 裡每一篇的卡片縮圖都換掉
+   - `preview/hero-photos-<slug>/` —— 文章頁複本，一篇一頁，只換 `.post-hero`
+
+   兩種頁面都有切換條可以和現況的幾何 SVG 對比（`?img=old|new`）。
+   ⚠ **那幾頁是快照，不要手改** —— 要改就改那支腳本再跑一次。
+3. **alt 要描述圖裡實際有什麼**，不是抄文章標題。
+
+### 六篇湊齊、真的上線那一天要做的事
+
+這一份寫在這裡，是因為**中間有好幾件不是「換一行 src」那麼單純**：
+
+1. `posts/<slug>/index.html` 的 `.post-hero` 換成新的 `<img>`（帶 `srcset` ＋ `sizes`）。
+   ⚠ `sizes` 寫 `(min-width: 1160px) 624px, calc(100vw - 2 * clamp(1.25rem, 3vw, 2.5rem))`
+   —— **不要寫 `100vw`**，那會讓高 DPR 的手機挑到太小的檔再放大（[CLAUDE.md](CLAUDE.md) 第九節第 15 條）。
+2. `index.html` 六張卡的 `.card-thumb` 同上，`sizes` 是
+   `(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw`。
+   ⚠ 那一段在 `<!-- POSTS:START -->` 裡面、**是 build 產生的**，
+   要改的是 `tools/build.mjs` 產生卡片的那一段，不是手改 `index.html`。
+3. **`post-meta` 的 `hero` 欄位**（現在是 `"hero": "hero-brushing.svg"`）要跟著換。
+   ⚠ 改到 `post-meta` 就會動到內容雜湊，**六篇的「最後更新」會一起跳成當天**、
+   排序也會亂 —— 照 [CLAUDE.md](CLAUDE.md) 第五節那個陷阱的程序，
+   build 之後手動把 `tools/build-manifest.json` 的日期改回去，再跑一次 build。
+   **這一件是這次改動最容易出事的地方。**
+4. **分享圖**。`og:image` 現在指向 `assets/hero-<name>-1600.png`，那是
+   `tools/og-images.mjs` 從 SVG 轉出來的。走點陣之後那支工具**失去用途或要改寫**
+   ——最省事的做法是讓 `og:image` 直接指向 `-1600.jpg`（爬蟲吃 JPEG，只是不吃 SVG），
+   然後把 `og-images.mjs` 連同六個 `-1600.png` 一起刪掉。**先問使用者。**
+5. `sitemap.xml` 的圖片擴充（`<image:loc>`）會跟著 build 自己更新，不必手動。
+6. 舊的六張 `assets/hero-*.svg` 要不要刪：**先留著**，切換條的「現況」那一半靠它們。
+   等 `preview/` 那幾頁刪掉之後再一起處理。
+7. 最後才刪 `preview/hero-photos-*` 與 `tools/hero-photo-preview.mjs`，
+   推導搬進 `history/`（[CLAUDE.md](CLAUDE.md) 第八節）。
 
 ---
 

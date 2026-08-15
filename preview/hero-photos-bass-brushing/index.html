@@ -253,11 +253,20 @@
       <h1>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h1>
     </div>
     <figure class="post-hero">
-      <img id="pv-img" src="../../assets/hero-brushing-photo-1600.jpg"
-           srcset="../../assets/hero-brushing-photo-800.jpg 800w, ../../assets/hero-brushing-photo-1600.jpg 1600w"
-           sizes="(min-width: 1160px) 624px, calc(100vw - 2 * clamp(1.25rem, 3vw, 2.5rem))"
-           data-sizes="(min-width: 1160px) 624px, calc(100vw - 2 * clamp(1.25rem, 3vw, 2.5rem))"
-           alt="洗手台前一整排人各自對著鏡子刷牙：踩著小凳的男孩、背書包的學生、上班族、長輩，還有一位長者站在前面用牙線；上方三個放大圈畫出刷毛斜靠在牙齦溝上、以及小幅度來回的方向" width="1600" height="893">
+      <img src="../../assets/hero-brushing-photo-1600.jpg"
+             srcset="../../assets/hero-brushing-photo-800.jpg 800w, ../../assets/hero-brushing-photo-1600.jpg 1600w, ../../assets/hero-brushing-photo-2000.jpg 2000w"
+             sizes="(min-width: 1160px) 624px, calc(100vw - 2 * clamp(1.25rem, 3vw, 2.5rem))"
+             alt="洗手台前一整排人各自對著鏡子刷牙：踩著小凳的男孩、背書包的學生、上班族、長輩，還有一位長者站在前面用牙線；上方三個放大圈畫出刷毛斜靠在牙齦溝上、以及小幅度來回的方向"
+             width="1600" height="893"
+             data-pv-sizes="(min-width: 1160px) 624px, calc(100vw - 2 * clamp(1.25rem, 3vw, 2.5rem))"
+             data-pv-new-src="../../assets/hero-brushing-photo-1600.jpg"
+             data-pv-new-srcset="../../assets/hero-brushing-photo-800.jpg 800w, ../../assets/hero-brushing-photo-1600.jpg 1600w, ../../assets/hero-brushing-photo-2000.jpg 2000w"
+             data-pv-new-alt="洗手台前一整排人各自對著鏡子刷牙：踩著小凳的男孩、背書包的學生、上班族、長輩，還有一位長者站在前面用牙線；上方三個放大圈畫出刷毛斜靠在牙齦溝上、以及小幅度來回的方向"
+             data-pv-new-w="1600" data-pv-new-h="893"
+             data-pv-old-src="../../assets/hero-brushing.svg"
+             data-pv-old-srcset=""
+             data-pv-old-alt="牙刷與牙齒的示意插圖"
+             data-pv-old-w="800" data-pv-old-h="450">
     </figure>
   </div>
 
@@ -449,7 +458,8 @@
 </footer>
 
 <style>
-/* ── 提案用的切換條。定案後連同這一段、下面那支 script 與 data-* 一起刪掉。 ── */
+/* ── 提案用的切換條。定案後連同這一段、下面那支 script 與 data-pv-* 一起消失
+      （這幾頁整個會被刪掉，不會有東西留到正式站）。 ── */
 .pv-bar{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);
   z-index:9999;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;justify-content:center;
   max-width:calc(100vw - 24px);padding:.5rem .7rem;border-radius:12px;
@@ -464,29 +474,26 @@
 @media (max-width:420px){.pv-bar{font-size:.78rem;gap:.35rem;padding:.45rem .55rem}}
 </style>
 <div class="pv-bar" role="group" aria-label="提案切換">
-  <b>貝氏刷牙法的圖</b>
+  <b>bass-brushing 的圖</b>
   <button type="button" data-img="old" aria-pressed="false">現況（幾何 SVG）</button>
   <button type="button" data-img="new" aria-pressed="true">新圖（點陣插畫）</button>
 </div>
 <script>
-(function(){
-  var img = document.getElementById('pv-img');
-  if (!img) return;
-  var OLD = { src: '../../assets/hero-brushing.svg', srcset: '', sizes: '',
-              alt: '牙刷與牙齒的示意插圖', w: '800', h: '450' };
-  var NEW = { src: '../../assets/hero-brushing-photo-1600.jpg',
-              srcset: "../../assets/hero-brushing-photo-800.jpg 800w, ../../assets/hero-brushing-photo-1600.jpg 1600w",
-              sizes: img.getAttribute('data-sizes') || '100vw',
-              alt: "洗手台前一整排人各自對著鏡子刷牙：踩著小凳的男孩、背書包的學生、上班族、長輩，還有一位長者站在前面用牙線；上方三個放大圈畫出刷毛斜靠在牙齦溝上、以及小幅度來回的方向", w: '1600', h: '893' };
-  function apply(v){
-    var d = v === 'old' ? OLD : NEW;
-    if (d.srcset) img.setAttribute('srcset', d.srcset); else img.removeAttribute('srcset');
-    if (d.sizes)  img.setAttribute('sizes',  d.sizes);  else img.removeAttribute('sizes');
-    img.setAttribute('src', d.src);
-    img.setAttribute('alt', d.alt);
-    img.setAttribute('width', d.w);
-    img.setAttribute('height', d.h);
-    document.querySelectorAll('.pv-bar button[data-img]').forEach(function(b){
+(function () {
+  var imgs = document.querySelectorAll('img[data-pv-new-src]');
+  if (!imgs.length) return;
+  function apply(v) {
+    imgs.forEach(function (img) {
+      var p = 'data-pv-' + v + '-';
+      var set = img.getAttribute(p + 'srcset');
+      if (set) { img.setAttribute('srcset', set); img.setAttribute('sizes', img.getAttribute('data-pv-sizes')); }
+      else { img.removeAttribute('srcset'); img.removeAttribute('sizes'); }
+      img.setAttribute('src', img.getAttribute(p + 'src'));
+      img.setAttribute('alt', img.getAttribute(p + 'alt'));
+      img.setAttribute('width', img.getAttribute(p + 'w'));
+      img.setAttribute('height', img.getAttribute(p + 'h'));
+    });
+    document.querySelectorAll('.pv-bar button[data-img]').forEach(function (b) {
       b.setAttribute('aria-pressed', String(b.getAttribute('data-img') === v));
     });
     var u = new URL(location.href); u.searchParams.set('img', v);
@@ -494,8 +501,8 @@
   }
   var m = /[?&]img=([a-z0-9]+)/.exec(location.search);
   apply(m && m[1] === 'old' ? 'old' : 'new');
-  document.querySelectorAll('.pv-bar button[data-img]').forEach(function(b){
-    b.addEventListener('click', function(){ apply(b.getAttribute('data-img')); });
+  document.querySelectorAll('.pv-bar button[data-img]').forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.getAttribute('data-img')); });
   });
 })();
 </script>
