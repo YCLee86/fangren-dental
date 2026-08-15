@@ -4090,6 +4090,118 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 .mn-first { display: block; margin-bottom: .35rem; }
 
 
+/* ==========================================================================
+   電腦版：整體字級放大 12%（2026-08-15 定案上線）
+   --------------------------------------------------------------------------
+   使用者拿 blog.ichentsai.tw 當參考站，要「幾個放大的版本」比過之後選了 +12%。
+   那一站在 1425 上量到的值，和我們改動前的對照：
+
+       　　　　　　參考站　我們（改動前）　改動後（×1.125）
+       文章卡標題　19　　　16.32　　　　　18.36
+       文章卡摘要　15　　　13.60　　　　　15.30
+       文章卡日期　14　　　12.48　　　　　14.04
+       科別標記　　16　　　14.40　　　　　16.20
+       頁首選單　　15　　　13.76　　　　　15.48
+       頁尾導覽　　14　　　13.12　　　　　14.76
+
+   ⚠ **這一段整組關在電腦版那道 @media 裡**（＝ min-width:721 ＋ 直橫比 ≥ 9/10）。
+     手機與 iPad 的字級還沒做，而那兩段的 `--band-h`、`--hero-fs`、HERO 版型
+     都是另一套值，一起改會踩到它們。
+
+   ⚠ **排在整份樣式表的最後是刻意的。** 下面覆寫的每一條（`:root` 的四個變數、
+     `body` 的字級、圓角族、藥丸內距）和站上原本那條**權重相同**，靠順序決勝。
+     往前搬就會失效。
+
+   怎麼放大 ──────────────────────────────────────────────────────────────
+   全站的字級、內距、間距幾乎都是 rem，所以主尺只要改一個 `html { font-size }`
+   就整組跟著長 —— **行距、內距、卡片留白會等比例跟上**，不是只有字變大。
+   剩下三類要另外處理：
+
+     ・**寫死 px 的幾何**：頁首高 76／60、窄帶高 84、兩排藥丸的塊高 34、
+       圓角族 6~12px、頁首標誌 38／32。不接上倍率的話就變成「字大了框沒變」。
+     ・**HERO 那首詩**：它不是 rem，是 `--hero-fs` 那條 clamp。乘上去就好，
+       **不要再給 .hero-poem／.hero-sign 各寫一條 font-size**（2026-08-12 的坑）。
+       放大後量過白字疊在照片上的對比：詩 5.76 → 5.37:1、收尾句 3.94 → 3.92:1
+       （收尾句那個數字改動前就是這樣，放大沒有讓它變差）。
+     ・**地圖 SVG 裡的字**（路名、停車場牌子、P）：那些是 viewBox 內的使用者單位，
+       跟著圖一起縮放、**不跟根字級走**。刻意不動 —— 那張圖 42 輪才把每個標籤
+       擺進不會互相蓋到的位置，字一放大就會壓到路和街廓。
+
+   ⚠ **搜尋框的 `min-height: 44px` 沒有跟著放大**：那是觸控目標的下限、不是造型。
+     藥丸從 34 長到 38.25，兩者反而愈來愈齊。
+
+   推導、五段的完整量測與落選案：/history/type-scale.html
+   ========================================================================== */
+@media (min-width: 721px) and (min-aspect-ratio: 9/10) {
+
+  :root { --type-scale: 1.125; }            /* 根字級 16 → 18px */
+  html { font-size: calc(16px * var(--type-scale)); }
+  /* body 原本寫死 16px，改成 1rem 讓沒有另外指定字級的元素跟著走。 */
+  body { font-size: 1rem; }
+
+  /* ---- 寫死 px 的幾何跟著長 ------------------------------------------- */
+  :root {
+    --head-h:    calc(76px * var(--type-scale));    /* 85.5px */
+    --head-h-sm: calc(60px * var(--type-scale));    /* 67.5px */
+    --band-h:    calc(84px * var(--type-scale));    /* 94.5px */
+    --frame-r:   calc(8px  * var(--type-scale));    /* 頁首三個玻璃框，框與底同一個 */
+  }
+  /* 頁首標誌是寫死的 38／32px（捲動後收一階）。頁尾那顆是 rem，本來就會跟。 */
+  .brand-mark               { flex-basis: calc(38px * var(--type-scale)); }
+  html.scrolled .brand-mark { flex-basis: calc(32px * var(--type-scale)); }
+  /* 小節標題前那一小段枝條：高是 1.05em 自己會長，寬寫死 3px。 */
+  #doctors .sec-head h2::before,
+  #clinic  .sec-head h2::before { flex: 0 0 calc(3px * var(--type-scale)); }
+
+  /* 兩排藥丸與那顆長得像藥丸的地圖卡標題：塊高 34 → 38.25。
+     ⚠ 內距仍然是「目標高回推」的式子，**不要換算成 px** —— 字級一改就會被頂開。
+       字級天花板是 (38.25 − 2) / 1.6 = 22.7px，現在最大的是 chips 的 16.2px。 */
+  .chips button,
+  .hours-filter button { padding-block: calc((34px * var(--type-scale) - 1.6em - 2px) / 2); }
+  .card-map h3         { padding: calc((34px * var(--type-scale) - 1.6em - 2px) / 2) .7rem; }
+
+  /* 圓角族：比例對齊（基準是醫師藥丸的 半徑÷框高 = 0.384），一起等比例放大。 */
+  .chips button, .hours-filter button, .topic-search input,
+  .card, .doc, .info-card, .gallery img { border-radius: calc(12px * var(--type-scale)); }
+  .doc dt                 { border-radius: calc(6px   * var(--type-scale)); }
+  .doc-role, .sk.tag-on   { border-radius: calc(8px   * var(--type-scale)); }
+  .card-tag               { border-radius: calc(8.5px * var(--type-scale)); }
+  .info-card h3           { border-radius: calc(9px   * var(--type-scale)); }
+  #clinic .info-card .big { border-radius: calc(10px  * var(--type-scale)); }
+  /* ⚠ 地圖卡的標題要排在 `.info-card h3` **後面** —— 那張卡是
+       `<div class="info-card card-map">`，兩條都命中它，同權重靠順序決勝。 */
+  .card-map h3            { border-radius: calc(12px * var(--type-scale)); }
+
+  /* HERO 的詩與收尾句共用 --hero-fs，乘一次就好（見本段抬頭）。 */
+  .hero-poem, .hero-sign { font-size: calc(var(--hero-fs) * var(--type-scale)); }
+
+  /* ---- 窄帶：地址電話改成自己一列 --------------------------------------
+     這是放大之後**唯一真的會破圖**的地方，不是順手改的。
+     地址電話原本是絕對定位、右緣貼版心外緣，和「1983／9位／5個」站同一列 ——
+     三格的字往右長、它的字往左長，1440 上量出來兩者之間：
+
+         改動前 81.4px ／ +6% 50.1 ／ **+12% 18.9** ／ +19% −12.3（疊到字）
+
+     18.9 已經比**群內**那 1.9rem（30.4px）還窄 —— 窄帶要讀成「三格 ＋ 一組
+     聯絡方式」靠的就是群外 > 群內（2026-08-10 那一輪定的，見 PALETTE.md
+     第六之十七節），所以 +12% 這一階雖然還沒疊到，分組已經不成立了。
+
+     改法照**手機／iPad 已經在用的排法**：不參與絕對定位，置中一列夾在
+     瀏覽數與三格之間。窄帶因此從 84 長到 105.9px（那本來就會隨字級長）。
+     ⚠ 選擇器要寫 `body .contact-pair` 才蓋得過 `@media (max-width:1159px)`
+       那條「退成兩行」（CLAUDE.md 記過：只寫 .contact-pair 權重不夠）。 */
+  body .contact-pair {
+    position: static; align-self: center; align-items: center;
+    flex-direction: row; gap: 1.9rem;
+    right: auto; bottom: auto; margin-top: .35rem;
+  }
+}
+/* 視窗窄過 1160 的電腦版：上面那條把它拉回一列了，所以那條「兩行版」順手
+   設的溝（.ico 固定寬 ＋ 連結 gap: 0）也要一起還原成一行版的值。 */
+@media (min-width: 721px) and (max-width: 1159px) and (min-aspect-ratio: 9/10) {
+  .hero-contact a    { gap: .45rem; }
+  .hero-contact .ico { flex: 0 0 auto; }
+}
 </style>
 </head>
 <body>

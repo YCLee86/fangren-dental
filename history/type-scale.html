@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>type-scale｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>type-scale</h1>
+<p class="meta">
+  原網址 <code>/preview/type-scale/</code>（已刪除 2026-08-15）<br>
+  整頁還原：<code>git show f973298:preview/type-scale/index.html</code><br>
+  切換條 <code>?ts=t0|t1|t2|t3|t4&amp;hero=&amp;band=&amp;shell=</code>，一輪定案上線（電腦版 +12%）<br>
+  ⚠ 產生它的一次性腳本沒有進 repo（在暫存區）—— 它做的六件事寫在那一頁
+  <code>&lt;head&gt;</code> 的抬頭註解裡，用上面那行 <code>git show</code> 就看得到。
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者：「https://blog.ichentsai.tw/ 參考這個網站的字級，把診所網站的文字做幾個
+放大的版本預覽看看。要注意不是只有單純文字放大，是否遮到圖片、功能鍵形狀大小
+也要隨著改變。先做電腦版。」</pre></div>
+
+<h2>一、參考站量到什麼（blog.ichentsai.tw，1425px 桌機）</h2>
+<div class="note"><pre>卡片標題 19 / 1.5 w700　　卡片摘要 15 / 1.8　　卡片日期 14　　分類籤 12 / 700
+chips 16（塊高 44.4、內距 10/18、圓角 10）　選單 15　標誌字 17　頁尾 14
+文章內文 17 / 行高 2.0，欄寬 670px　　首頁 h1 48　　卡片寬 395（三欄 1232）
+
+和我們改動前的比值：卡片標題 ×1.16、摘要 ×1.10、日期 ×1.12、chips ×1.11、
+選單 ×1.09、頁尾 ×1.07 —— 整體落在 1.07~1.16，所以尺就做在這個帶子裡。</pre></div>
+
+<h2>二、五段（1440×900 實測，單位 px）</h2>
+<div class="note"><pre>                根字級  卡片標題  卡片摘要  科別標記 字/塊高  選單   頁首高  窄帶高
+  現況           16     16.32    13.60    14.40 / 34.0    13.76   76     84
+  +6%（t1）      17     17.34    14.45    15.30 / 36.1    14.62   80.8   89.3
+  +12%（t2）★    18     18.36    15.30    16.20 / 38.2    15.48   85.5   94.5→105.9
+  +19%（t3）     19     19.38    16.15    17.10 / 40.3    16.34   90.3   99.8
+  +25%（t4）     20     20.40    17.00    18.00 / 42.5    17.20   95.0   105.0
+  參考站         16     19       15       16    / 44.4    15      —      —
+
+★ ＝ 使用者選的。+12% 幾乎逐項壓在參考站上（摘要 15.3 vs 15、標記 16.2 vs 16、
+選單 15.5 vs 15），只有卡片標題還小 0.64px；要連標題也追平就是 +19%。
+窄帶高的第二個數字是「地址電話改成自己一列」之後的（見第五節）。</pre></div>
+
+<h2>三、怎麼放大 —— 三類東西</h2>
+<div class="note"><pre>① rem 的（全站九成）：改一個 html { font-size } 就整組跟著長，
+   **行距、內距、卡片留白會等比例跟上**，不是只有字變大。
+   ⚠ body 原本寫死 16px，要改成 1rem，不然沒有另外指定字級的元素不會跟。
+   ⚠ 覆寫 :root 的變數時，選擇器**不能寫 html** —— :root 是虛擬類別（0,1,0），
+     權重比 html（0,0,1）高，排在後面也贏不了。第一版寫成 html，
+     量出來頁首高原封不動停在 76.0 就是這個原因。
+
+② 寫死 px 的幾何（不接上倍率就變成「字大了框沒變」）：
+   頁首高 76／60、窄帶高 84、兩排藥丸塊高 34、圓角族 6~12px、頁首標誌 38／32、
+   小節標題前那段枝條的寬 3px。
+   ⚠ 藥丸內距維持 calc((34px × 倍率 − 1.6em − 2px) / 2) 那條回推式，
+     **不要換算成 px** —— 字級一改塊高就被頂開。字級天花板 (38.25−2)/1.6 = 22.7px。
+   ⚠ 地圖卡標題（.card-map h3）的圓角規則要排在 .info-card h3 **後面** ——
+     那張卡是 class="info-card card-map"，兩條都命中它，同權重靠順序決勝。
+     第一版把它併進 12px 那組，反而被 9px 蓋掉，「現況」那一段就對不上線上。
+
+③ 不跟著放大的（刻意）：
+   ・地圖 SVG 裡的路名、停車場牌子、P —— 那是 viewBox 內的使用者單位，
+     跟著圖一起縮放。那張圖 42 輪才把每個標籤擺進不會互相蓋到的位置。
+   ・搜尋框的 min-height: 44px —— 觸控目標的下限，不是造型。
+     藥丸從 34 長到 38.25，兩者反而愈來愈齊。</pre></div>
+
+<h2>四、破圖檢查（1440／1280／1024 三個寬度，五段都跑過）</h2>
+<div class="note"><pre>整頁水平捲動 0；**放大之後新增的元素溢出：沒有**（五段皆然）。門診表不溢出，
+文章卡標題仍是最多 2 行（版心 1160 不動）。
+
+⚠ 溢出一定要和**現況**比，不能看絕對值：現況本來就有九項在「溢出」——
+  選單那三個玻璃框（::before 故意畫到 a 的外面）、.sr-only 六個、
+  窄帶地址電話那兩顆外擴的觸控目標。那些是設計，不是破圖。
+
+HERO 的白字疊在照片上（每一列取中位數、取最亮的那一列，不取平均 ——
+幾顆路燈就能把平均拉高 4 個 L*）：
+
+    詩　　　現況 5.76 → +12% 5.37 → +25% 5.25 : 1
+    收尾句　現況 3.94 → +12% 3.92 → +25% 4.04 : 1
+
+收尾句那一格本來就是這個數字，放大沒有讓它變差。
+⚠ 量的時候一定要看 img.complete —— 照片還在解碼時 drawImage 畫出來是空的，
+  對比度會假的好（實測差了一整級）。
+
+其他量到的間距（現況 → +12%）：
+    詩 → 收尾句　482.7 → 443.5　　收尾句 → 窄帶　30.1 → 19.6
+    頁首 → 詩　　 66.8 → 74.2　　 品牌 → 選單　　542.6 → 503.4
+⚠ 頁首是 fixed，量「頁首 → 詩」要用文件座標（詩的上緣減頁首高），
+  直接相減會得到「捲了多少」那個數字。</pre></div>
+
+<h2>五、唯一真的會破圖的地方：窄帶</h2>
+<div class="note"><pre>地址電話是**絕對定位**、右緣貼版心外緣，和「1983／9位／5個」那三格站同一列。
+三格的字往右長、它的字往左長，1440 上兩者之間（量的是**字**不是盒子 ——
+三格每格左右各有 4rem 內距，盒子早就疊到了，字還沒有）：
+
+    現況 81.4px ／ +6% 50.1 ／ **+12% 18.9** ／ +19% −12.3（疊到字）／ +25% −43.4
+
+18.9 已經比**群內**那 1.9rem（30.4px）還窄 —— 窄帶要讀成「三格 ＋ 一組聯絡方式」
+靠的就是群外 > 群內（2026-08-10 定的，PALETTE.md 第六之十七節），
+所以 +12% 這一階雖然還沒疊到，分組已經不成立了。
+
+定案的改法：照**手機／iPad 已經在用的排法** —— 不參與絕對定位，置中一列夾在
+瀏覽數與三格之間。窄帶因此從 84 長到 105.9px（那本來就會隨字級長）。
+⚠ 選擇器要寫 body .contact-pair 才蓋得過 @media (max-width:1159px) 的兩行版。
+⚠ 那條兩行版還順手設了一條溝（.ico 固定寬 ＋ 連結 gap: 0），拉回一列之後
+  要在 721~1159 那一段把 gap: .45rem 與 .ico flex: 0 0 auto 還原。
+
+試過但沒有走的兩條路：
+  ・三格的 padding-inline 不跟著放大（4rem 固定成 64px）—— +12% 只回到 29.1px，
+    不夠，而且 +19% 起仍然疊。
+  ・padding-inline 收成 2rem —— 全段都不會疊（+25% 還有 20.6px），
+    但那等於回到 2026-08-07 被淘汰的 1.9rem，是動到已經定案的值。</pre></div>
+
+<h2>六、提案頁本身留下來的做法（下次做同一類提案可以照抄）</h2>
+<div class="note"><pre>・**尺（多段）＋ 開關（獨立項目）並存**：主尺五段選幅度，兩顆開關管
+  「HERO 那首詩跟不跟」「版心跟不跟」，第三顆是修法（窄帶）。
+  ⚠ 「現況」那一段要 :not() 掉修法那顆 —— 基準必須和線上一模一樣，
+    不然拿它比就沒有意義。逐項量過：t0 對線上 index.html 的 37 個元素
+    位置、字級、圓角全部相同，只差窄帶那個示範用的瀏覽數字寬度。
+・**換一段是重新載入，不是即時套用**：站上有三支「開頁量一次」的 JS
+  （--sk-padT／--role-padT／--lamp-pad），即時改根字級會讓那三個值留在舊字級上。
+  ⚠ 捲動位置存 sessionStorage 接回來，捲之前要把 scroll-behavior 設成 auto，
+    並把 history.scrollRestoration 設成 manual，不然瀏覽器會再歸零一次。
+・**面板底下掛現場量測**，而且每一格都和現況並列（「16.3 → 18.4（參考站 19）」），
+  破圖那一區還會暫時把版面切到現況量一次再切回來，只報「新增的」。</pre></div>
+
+<h2>七、留下來的一件（還沒做）</h2>
+<div class="note"><pre>**文章頁（posts/，走 assets/style.css）沒有跟著放大。** 2026-08-15 上午才定案
+「首頁切到文章頁，頁首不要變」，而這一輪只改了首頁，所以那一條又不成立了：
+
+    標誌 36 vs 32　品牌名 17.28 vs 15.36　選單 15.48 vs 13.76　頁首高（捲動後）67.5 vs 60
+
+要補就是把同一段（倍率 1.125 ＋ 那幾個寫死 px 的幾何）搬進 assets/style.css 的
+電腦版，文章內文會從 16.8 變成 18.9px。手機與 iPad 也都還沒做。</pre></div>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>
