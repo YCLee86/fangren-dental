@@ -6122,5 +6122,75 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
 })();
 </script>
+
+<script>
+/* ==========================================================================
+   「往下滑」那顆指標：自己做平滑捲動（2026-08-15）
+   --------------------------------------------------------------------------
+   使用者拿 iPad 的螢幕錄影回報：「點下去看起來不是平滑捲動，比較像切換。」
+
+   ⚠ 成因不是這一站寫錯了。`html { scroll-behavior: smooth }` 在 Chromium 上
+      確實會動 —— 逐幀量過 0 → 32 → 132 → 300 → 518 → 689 → 891 → 1034 →
+      1106 → 1118，約 500ms。**但 iOS Safari 對「點錨點連結」這一種捲動不吃
+      那條 CSS**，直接跳到位。所以這一顆改成自己用 rAF 捲。
+
+   ⚠⚠ **一定要把那一步歷史紀錄補回去，而且要在動畫「之前」推。**
+      CLAUDE.md 第九節第 13 條記過：preventDefault 之後自己 scrollTo，會把錨點
+      導覽那一步的歷史弄丟，「上一頁」就回不到原本那一節。這裡用
+      history.pushState 把 #topics 補上 —— 但**推的時機很要命**：
+      放在動畫結束才推，瀏覽器記在「上一步」那一格的捲動位置已經被更新成
+      目的地了，按上一頁只會清掉 hash、畫面停在原地（實測）。先推就正確。
+   ⚠ 自己捲的時候要先把 scroll-behavior 設成 auto —— 不然瀏覽器會對每一幀的
+      scrollTo 再做一次平滑，兩個動畫互相打架（頁首那三個標籤用的是同一招）。
+   ⚠ 開了「減少動態效果」就整段不接手，交還給瀏覽器原生的瞬間跳轉 ——
+      那是使用者自己的系統設定，這一站另外四處也都看它。
+   ⚠ 這一段**不分版型**：電腦版那顆角形本來就走原生的平滑捲動（約 500ms），
+      改成自己捲之後是 620ms，差別看不出來，但兩邊只剩一條程式路徑好維護。
+   ========================================================================== */
+(function () {
+  var cue = document.querySelector('.hero-cue');
+  if (!cue) return;
+  var root = document.documentElement;
+
+  cue.addEventListener('click', function (ev) {
+    if (ev.defaultPrevented || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button > 0) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;   /* 交還給原生 */
+    var el = document.getElementById('topics');
+    if (!el) return;
+
+    ev.preventDefault();
+    var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+    /* iOS 的 innerHeight 是工具列收起後的大視窗高，會高估；visualViewport 才是
+       眼睛看得到的（CLAUDE.md 第八節那條「捲進畫面了沒」踩過同一個坑）。 */
+    var vh = (window.visualViewport && visualViewport.height) || innerHeight;
+    var from = window.pageYOffset;
+    var to = Math.max(0, Math.min(root.scrollHeight - vh,
+      el.getBoundingClientRect().top + from - pad));
+    var dist = to - from;
+    if (Math.abs(dist) < 1) return;
+
+    /* ⚠ **pushState 要在動畫「之前」推**（實測踩過）。放在動畫結束才推的話，
+       瀏覽器記在「上一步」那一格的捲動位置已經被更新成目的地了 ——
+       按上一頁 hash 會清掉、但畫面停在原地不動。先推就正確：上一步那一格
+       記著的還是第一屏。pushState 本身不會捲動（和寫 location.hash 不同）。 */
+    if (history.pushState) history.pushState(null, '', '#topics');
+
+    var dur = 620, t0 = 0, prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';        /* 不要讓瀏覽器對每一幀再平滑一次 */
+
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var t = Math.min(1, (ts - t0) / dur);
+      /* ease-in-out cubic：起步與收尾都慢，中間快 —— 讀起來像「捲下去」，
+         不像「跳過去」。 */
+      var e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      window.scrollTo(0, from + dist * e);
+      if (t < 1) { requestAnimationFrame(step); return; }
+      root.style.scrollBehavior = prev;
+    }
+    requestAnimationFrame(step);
+  });
+})();
+</script>
 </body>
 </html>
