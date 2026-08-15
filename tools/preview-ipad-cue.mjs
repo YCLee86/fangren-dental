@@ -48,7 +48,15 @@ const HEADNOTE = `
      ② **如果一定要放在照片上，就要一塊不透明的地**（藥丸／圓鈕），
         讓背景的變異完全不影響它。
 
-     ---- 六案 ------------------------------------------------------------
+     ---- 第四輪的四案（第三輪的 Ⓑ~Ⓔ 使用者都不喜歡，已拿掉）--------------
+     位置　　　右下（＝「5 個／部定專科」那一列的中線、貼版心右緣）｜ 置中（上一版）
+     Ⓖ 雙角　　兩條角形疊著，沒有底也沒有框
+     Ⓗ 框＋單角　方框導圓（8px，抄頁首那三個玻璃框）＋ 一條角形
+     Ⓘ 框＋雙角　同上，裡面兩條角形
+     不放　　　只留「露一角」
+     要不要動　不動 ｜ 慢速移動
+
+     ---- 第三輪的六案（留著看推導，已從切換條拿掉）------------------------
      露一角　　　第一屏底下露出 44px 的紙色（**獨立開關，可以和記號並用**）。
                  最不著痕跡的做法：看得到下一段的邊，本來就知道還有東西。
                  代價是照片不再「正好一屏」。
@@ -85,73 +93,94 @@ const BAR = `
 }
 
 @media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
-  /* ===== 共用：Ⓑ~Ⓔ 都拿掉上一版那條細線與小點 ========================= */
-  html:not([data-k="f"]) .hero-cue::before,
+  /* ===== 第四輪：位置搬到右下，記號只留「兩條角形」與「方框導圓」==========
+     使用者：「目前的腳型我都不是很喜歡，第一個它的位置在那邊非常突兀。
+     如果 iPad 版面夠的話，可以把那個腳型移到右下，就是在那個『5 個專科』的高度
+     再往右一點，這樣感覺比較有暗示性、但是也看得到效果。
+     另外那個腳型幫我做兩個：一個是雙角，但上面那個雙角很複雜，只要兩條角形的
+     樣子疊在一起就好；另外一個是加框 —— 我不喜歡那個圓圈，圓圈跟整個網站的
+     主題不搭，網站的主題是方框導圓，還是做成方框導圓的樣子。再一個是方框導圓
+     ＋ 雙角的樣子。」
+
+     ---- 位置：右下（預設）----
+     ⚠ 這一下把「底」的問題整個解掉了：記號從照片搬到**窄帶**上，
+        窄帶是一整片乾淨的深色，不再有 L*0 跳到 L*52 的問題。
+     ⚠ 垂直對齊「5 個／部定專科」那一列的中線 —— 實測**四個尺寸都是距窄帶
+        下緣 34.9px**（窄帶的內容不會重排，所以是常數，可以寫死）。
+     ⚠ 水平貼版心右緣，比第三格再往右（第三格右緣離螢幕還有 107~246px）。
+     ⚠ 「置中」那一格留著，就是上一版那個位置，用來對照。 */
+
+  /* 位置 */
+  html[data-p="br"] .hero-cue {
+    left: auto; right: var(--pad); transform: none;   /* 貼版心右緣，不是螢幕邊 */
+    bottom: calc(34.9px - var(--cue-h, 30px) / 2);
+    filter: none;
+  }
+  html[data-p="mid"] .hero-cue {
+    left: 50%; right: auto; transform: translateX(-50%);
+    bottom: calc(100% + 96px);
+  }
+
+  /* 記號：共用 —— 上一版那條細線與小點全部拿掉 */
   html:not([data-k="f"]) .hero-cue::after { content: none; }
-
-  /* ===== Ⓑ 窄帶把手：一塊小圓角片騎在窄帶上緣 ========================= */
-  html[data-k="b"] .hero-cue {
-    display: flex; bottom: calc(100% - 9px);
-    padding: 3px 20px 5px;
-    border-radius: 10px 10px 0 0;
-    background-color: #161413;          /* ＝窄帶接縫那一列的實測色，和窄帶同一塊 */
-    filter: none;
+  html:not([data-k="f"]) .hero-cue {
+    flex-direction: column; align-items: center; gap: 0;
+    background-color: transparent; border: 0; border-radius: 0; padding: 0;
+    backdrop-filter: none; -webkit-backdrop-filter: none;
   }
-  html[data-k="b"] .hero-cue svg { width: 22px; height: 11px; stroke-width: 1.5; }
+  html:not([data-k="f"]) .hero-cue::before { content: none; }
 
-  /* ===== Ⓒ 圓鈕：44px 的半透明圓，毛玻璃＋細框 ======================== */
-  html[data-k="c"] .hero-cue {
-    display: flex; bottom: calc(100% + 96px);
-    width: 44px; height: 44px; padding: 0; border-radius: 50%;
-    background-color: rgba(20, 19, 18, .42);
-    border: 1px solid rgba(226, 229, 230, .34);
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-    filter: none;
-  }
-  html[data-k="c"] .hero-cue svg { width: 20px; height: 10px; stroke-width: 1.5; }
-
-  /* ===== Ⓓ 字＋角：「往下」兩個小字 ＋ 角形，共用一塊藥丸底 ============ */
-  html[data-k="d"] .hero-cue {
-    display: flex; flex-direction: row; align-items: center; gap: .5rem;
-    bottom: calc(100% + 96px);
-    padding: 7px 14px 7px 16px; border-radius: 100px;
-    background-color: rgba(20, 19, 18, .48);
-    border: 1px solid rgba(226, 229, 230, .26);
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-    filter: none;
-    font-size: .78rem; letter-spacing: .28em; color: rgba(255, 255, 255, .88);
-  }
-  html[data-k="d"] .hero-cue::before {
-    content: '往下'; display: block; width: auto; height: auto;
+  /* Ⓖ 兩條角形疊著（沒有底、沒有框）*/
+  html[data-k="g"] { --cue-h: 24px; }
+  html[data-k="g"] .hero-cue { padding: 4px 12px; }
+  html[data-k="g"] .hero-cue::before {
+    content: ''; display: block; width: 12px; height: 12px; margin-bottom: -5px;
+    /* ⚠ background 與 border-radius 一定要歸零 —— 正式站的 .hero-cue::before
+       是那條 1px 的細線（帶 linear-gradient），不清掉這裡會變成一顆實心菱形。 */
     background: none; border-radius: 0;
-  }
-  html[data-k="d"] .hero-cue svg { width: 16px; height: 8px; stroke-width: 1.5; }
-
-  /* ===== Ⓔ 雙角形：兩個加粗的角形上下排 ＋ 藥丸底 ＋ 慢速浮動 ========== */
-  html[data-k="e"] .hero-cue {
-    display: flex; flex-direction: column; gap: 0;
-    bottom: calc(100% + 96px);
-    padding: 8px 14px 10px; border-radius: 100px;
-    background-color: rgba(20, 19, 18, .45);
-    border: 1px solid rgba(226, 229, 230, .26);
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-    filter: none;
-  }
-  /* 第二個角形用 CSS 邊框畫（同「主題與科別」那排橫捲提示的手法，
-     只有 viewBox 沒有寬高的 SVG 當背景圖，Safari 有時直接不畫）。 */
-  html[data-k="e"] .hero-cue::before {
-    content: ''; display: block; width: 13px; height: 13px; margin-bottom: -4px;
-    border-right: 1.6px solid rgba(255, 255, 255, .42);
-    border-bottom: 1.6px solid rgba(255, 255, 255, .42);
+    border-right: 1.4px solid rgba(255, 255, 255, .62);
+    border-bottom: 1.4px solid rgba(255, 255, 255, .62);
     transform: rotate(45deg);
   }
-  html[data-k="e"] .hero-cue svg { width: 22px; height: 11px; stroke-width: 1.6; }
-  @keyframes cueBob { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 4px); } }
-  html[data-k="e"][data-mo="1"] .hero-cue { animation: cueBob 2.4s ease-in-out infinite; }
+  html[data-k="g"] .hero-cue svg { width: 18px; height: 9px; stroke-width: 1.4; }
 
-  /* Ⓒ／Ⓓ 也可以開浮動 */
-  html[data-k="c"][data-mo="1"] .hero-cue,
-  html[data-k="d"][data-mo="1"] .hero-cue { animation: cueBob 2.4s ease-in-out infinite; }
+  /* Ⓗ 方框導圓 ＋ 一條角形。框與圓角抄頁首那三個玻璃框（--frame-r ＝ 8px、
+     .75px 的紙色線），這一站的「框」就是這一種，不是圓圈。 */
+  html[data-k="h"] { --cue-h: 32px; }
+  html[data-k="h"] .hero-cue {
+    width: 42px; height: 32px; padding: 0;
+    border: .75px solid rgba(226, 229, 230, .34);
+    border-radius: var(--frame-r, 8px);
+  }
+  html[data-k="h"] .hero-cue svg { width: 18px; height: 9px; stroke-width: 1.4; }
+
+  /* Ⓘ 方框導圓 ＋ 兩條角形 */
+  html[data-k="i"] { --cue-h: 40px; }
+  html[data-k="i"] .hero-cue {
+    width: 42px; height: 40px; padding: 0;
+    border: .75px solid rgba(226, 229, 230, .34);
+    border-radius: var(--frame-r, 8px);
+  }
+  html[data-k="i"] .hero-cue::before {
+    content: ''; display: block; width: 12px; height: 12px; margin-bottom: -5px;
+    /* ⚠ background 與 border-radius 一定要歸零 —— 正式站的 .hero-cue::before
+       是那條 1px 的細線（帶 linear-gradient），不清掉這裡會變成一顆實心菱形。 */
+    background: none; border-radius: 0;
+    border-right: 1.4px solid rgba(255, 255, 255, .62);
+    border-bottom: 1.4px solid rgba(255, 255, 255, .62);
+    transform: rotate(45deg);
+  }
+  html[data-k="i"] .hero-cue svg { width: 18px; height: 9px; stroke-width: 1.4; }
+
+  /* 不放 */
+  html[data-k="a"] .hero-cue { display: none; }
+
+  /* 慢速移動：右下那個位置不能用 translateX（transform 已經 none），
+     所以兩個位置各寫一組。 */
+  @keyframes cueBobBR { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+  @keyframes cueBobMid { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 4px); } }
+  html[data-p="br"][data-mo="1"] .hero-cue { animation: cueBobBR 2.4s ease-in-out infinite; }
+  html[data-p="mid"][data-mo="1"] .hero-cue { animation: cueBobMid 2.4s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) {
     html[data-mo="1"] .hero-cue { animation: none; }
   }
@@ -176,8 +205,10 @@ body { padding-bottom: 150px; }
   <button class="x" type="button" data-x>收起</button>
   <div class="r" data-k="rv"><b>露一角</b>
     <button type="button" data-v="0">不露</button><button type="button" data-v="1">露 44px</button></div>
+  <div class="r" data-k="p"><b>位置</b>
+    <button type="button" data-v="br">右下</button><button type="button" data-v="mid">置中（上一版）</button></div>
   <div class="r" data-k="k"><b>記號</b>
-    <button type="button" data-v="a">不放</button><button type="button" data-v="b">Ⓑ把手</button><button type="button" data-v="c">Ⓒ圓鈕</button><button type="button" data-v="d">Ⓓ字＋角</button><button type="button" data-v="e">Ⓔ雙角</button><button type="button" data-v="f">Ⓕ現況</button></div>
+    <button type="button" data-v="a">不放</button><button type="button" data-v="g">Ⓖ雙角</button><button type="button" data-v="h">Ⓗ框＋單角</button><button type="button" data-v="i">Ⓘ框＋雙角</button><button type="button" data-v="f">現況</button></div>
   <div class="r" data-k="mo"><b>要不要動</b>
     <button type="button" data-v="0">不動</button><button type="button" data-v="1">慢速浮動</button></div>
   <p class="m" id="swm"></p>
@@ -187,7 +218,7 @@ body { padding-bottom: 150px; }
 (function () {
   var root = document.documentElement;
   /* 正規式一定要 [a-z0-9]+ */
-  var q = location.search, def = { rv: '1', k: 'c', mo: '0' };
+  var q = location.search, def = { rv: '0', p: 'br', k: 'i', mo: '0' };
   Object.keys(def).forEach(function (kk) {
     var m = q.match(new RegExp('[?&]' + kk + '=([a-z0-9]+)'));
     root.setAttribute('data-' + kk, m ? m[1] : def[kk]);
