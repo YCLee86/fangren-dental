@@ -50,10 +50,9 @@ const HEADNOTE = `
 
      ---- 第四輪的四案（第三輪的 Ⓑ~Ⓔ 使用者都不喜歡，已拿掉）--------------
      位置　　　右下（＝「5 個／部定專科」那一列的中線、貼版心右緣）｜ 置中（上一版）
-     Ⓖ 雙角　　兩條角形疊著，沒有底也沒有框
-     Ⓗ 框＋單角　方框導圓（8px，抄頁首那三個玻璃框）＋ 一條角形
-     Ⓘ 框＋雙角　同上，裡面兩條角形
-     不放　　　只留「露一角」
+     記號　　　不放 ｜ 單角 ｜ 雙角（兩條逐像素相同的 SVG）
+     底　　　　無 ｜ 淺（＝電腦版 rgba(226,229,230,.10)）｜ 稍濃 .16　**都沒有框線**
+     雙角間距　緊 3px ｜ 中 5px ｜ 鬆 8px
      要不要動　不動 ｜ 慢速移動
 
      ---- 第三輪的六案（留著看推導，已從切換條拿掉）------------------------
@@ -93,90 +92,77 @@ const BAR = `
 }
 
 @media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
-  /* ===== 第四輪：位置搬到右下，記號只留「兩條角形」與「方框導圓」==========
-     使用者：「目前的腳型我都不是很喜歡，第一個它的位置在那邊非常突兀。
-     如果 iPad 版面夠的話，可以把那個腳型移到右下，就是在那個『5 個專科』的高度
-     再往右一點，這樣感覺比較有暗示性、但是也看得到效果。
-     另外那個腳型幫我做兩個：一個是雙角，但上面那個雙角很複雜，只要兩條角形的
-     樣子疊在一起就好；另外一個是加框 —— 我不喜歡那個圓圈，圓圈跟整個網站的
-     主題不搭，網站的主題是方框導圓，還是做成方框導圓的樣子。再一個是方框導圓
-     ＋ 雙角的樣子。」
+  /* ===== 第五輪：兩條一模一樣的角形 ＋ 套色的底（不要框）=================
+     使用者：「那個雙角有點靠得太近，而且看起來長度好像不太一樣。我想要的雙角
+     應該是兩個平行的雙角，長度大小應該是一樣的。然後目前是做成方框嗎？
+     我想要跟電腦版一樣是個底色，有套一點顏色上去的底，不要有框。」
 
-     ---- 位置：右下（預設）----
-     ⚠ 這一下把「底」的問題整個解掉了：記號從照片搬到**窄帶**上，
-        窄帶是一整片乾淨的深色，不再有 L*0 跳到 L*52 的問題。
-     ⚠ 垂直對齊「5 個／部定專科」那一列的中線 —— 實測**四個尺寸都是距窄帶
-        下緣 34.9px**（窄帶的內容不會重排，所以是常數，可以寫死）。
-     ⚠ 水平貼版心右緣，比第三格再往右（第三格右緣離螢幕還有 107~246px）。
-     ⚠ 「置中」那一格留著，就是上一版那個位置，用來對照。 */
+     ---- 為什麼上一版兩條不一樣長（成因）----
+     上面那條是**用 CSS 邊框畫的**（13×13 的方塊轉 45 度），下面那條是**SVG**
+     —— 兩種畫法本來就不同：邊框那條的水平跨距是 13×√2 ≈ 18.4px、
+     SVG 那條是 18px，粗細的視覺重量也不一樣（斜線 vs 直接描邊）。
+     這一版**兩條都用同一張 SVG**（data URI，帶明確的 width/height），
+     所以尺寸、粗細、端點全部逐像素相同，而且 flex 的 gap 就是真正看到的間距。
+     ⚠ data URI 的 SVG 一定要寫 width/height，只有 viewBox 的話 Safari
+        當背景圖時有時直接不畫（CLAUDE.md 第九節，橫捲提示那一輪踩過）。
+
+     ---- 底 ----
+     改成和電腦版同一塊底：rgba(226, 229, 230, .10) ＋ --frame-r 的圓角，
+     **沒有框線**。切換條多一格「稍濃 .16」，因為窄帶比照片暗，.10 可能偏淡。
+     ========================================================================= */
 
   /* 位置 */
   html[data-p="br"] .hero-cue {
     left: auto; right: var(--pad); transform: none;   /* 貼版心右緣，不是螢幕邊 */
     bottom: calc(34.9px - var(--cue-h, 30px) / 2);
-    filter: none;
   }
   html[data-p="mid"] .hero-cue {
     left: 50%; right: auto; transform: translateX(-50%);
     bottom: calc(100% + 96px);
   }
 
-  /* 記號：共用 —— 上一版那條細線與小點全部拿掉 */
-  html:not([data-k="f"]) .hero-cue::after { content: none; }
+  /* 記號本體：兩條角形都用同一張 SVG，尺寸粗細完全相同 */
   html:not([data-k="f"]) .hero-cue {
-    flex-direction: column; align-items: center; gap: 0;
-    background-color: transparent; border: 0; border-radius: 0; padding: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: var(--cue-gap, 5px);
+    border: 0; filter: none;
+    border-radius: var(--frame-r, 8px);
     backdrop-filter: none; -webkit-backdrop-filter: none;
+    width: 44px; padding: 0;
   }
-  html:not([data-k="f"]) .hero-cue::before { content: none; }
-
-  /* Ⓖ 兩條角形疊著（沒有底、沒有框）*/
-  html[data-k="g"] { --cue-h: 24px; }
-  html[data-k="g"] .hero-cue { padding: 4px 12px; }
-  html[data-k="g"] .hero-cue::before {
-    content: ''; display: block; width: 12px; height: 12px; margin-bottom: -5px;
-    /* ⚠ background 與 border-radius 一定要歸零 —— 正式站的 .hero-cue::before
-       是那條 1px 的細線（帶 linear-gradient），不清掉這裡會變成一顆實心菱形。 */
-    background: none; border-radius: 0;
-    border-right: 1.4px solid rgba(255, 255, 255, .62);
-    border-bottom: 1.4px solid rgba(255, 255, 255, .62);
-    transform: rotate(45deg);
+  html:not([data-k="f"]) .hero-cue svg { display: none; }
+  html:not([data-k="f"]) .hero-cue::before,
+  html:not([data-k="f"]) .hero-cue::after {
+    content: ''; display: block; width: 18px; height: 9px; margin: 0;
+    /* ⚠ 一定要把正式站那兩個偽元素的舊值全部歸零：::before 是 1px 的細線
+       （有 background 與 border-radius），::after 是那顆會動的點
+       （position:absolute; left:50%; top:6px）。少歸零一項，兩條角形就會
+       一上一下錯開 —— 第一版就是這樣（::after 還吊在 absolute 上）。 */
+    position: static; left: auto; top: auto; right: auto; bottom: auto;
+    border: 0; border-radius: 0; opacity: .68;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='9' viewBox='0 0 18 9' fill='none' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l8 7 8-7'/%3E%3C/svg%3E") center / 18px 9px no-repeat;
+    animation: none;
   }
-  html[data-k="g"] .hero-cue svg { width: 18px; height: 9px; stroke-width: 1.4; }
-
-  /* Ⓗ 方框導圓 ＋ 一條角形。框與圓角抄頁首那三個玻璃框（--frame-r ＝ 8px、
-     .75px 的紙色線），這一站的「框」就是這一種，不是圓圈。 */
-  html[data-k="h"] { --cue-h: 32px; }
-  html[data-k="h"] .hero-cue {
-    width: 42px; height: 32px; padding: 0;
-    border: .75px solid rgba(226, 229, 230, .34);
-    border-radius: var(--frame-r, 8px);
-  }
-  html[data-k="h"] .hero-cue svg { width: 18px; height: 9px; stroke-width: 1.4; }
-
-  /* Ⓘ 方框導圓 ＋ 兩條角形 */
-  html[data-k="i"] { --cue-h: 40px; }
-  html[data-k="i"] .hero-cue {
-    width: 42px; height: 40px; padding: 0;
-    border: .75px solid rgba(226, 229, 230, .34);
-    border-radius: var(--frame-r, 8px);
-  }
-  html[data-k="i"] .hero-cue::before {
-    content: ''; display: block; width: 12px; height: 12px; margin-bottom: -5px;
-    /* ⚠ background 與 border-radius 一定要歸零 —— 正式站的 .hero-cue::before
-       是那條 1px 的細線（帶 linear-gradient），不清掉這裡會變成一顆實心菱形。 */
-    background: none; border-radius: 0;
-    border-right: 1.4px solid rgba(255, 255, 255, .62);
-    border-bottom: 1.4px solid rgba(255, 255, 255, .62);
-    transform: rotate(45deg);
-  }
-  html[data-k="i"] .hero-cue svg { width: 18px; height: 9px; stroke-width: 1.4; }
-
-  /* 不放 */
+  /* 單角：只留下面那一條 */
+  html[data-k="h"] .hero-cue::before { display: none; }
+  html[data-k="h"] { --cue-h: 30px; }
+  html[data-k="h"] .hero-cue { height: 30px; }
+  /* 雙角：兩條，間距由 --cue-gap 決定（高度 ＝ 9＋gap＋9 ＋ 上下各 10） */
+  html[data-k="g"] { --cue-h: calc(38px + var(--cue-gap, 5px)); }
+  html[data-k="g"] .hero-cue { height: calc(38px + var(--cue-gap, 5px)); }
   html[data-k="a"] .hero-cue { display: none; }
 
-  /* 慢速移動：右下那個位置不能用 translateX（transform 已經 none），
-     所以兩個位置各寫一組。 */
+  /* 底：淺（＝電腦版 .10）／稍濃 .16／無 */
+  html[data-bg="n"]  .hero-cue { background-color: transparent; }
+  html[data-bg="l"]  .hero-cue { background-color: rgba(226, 229, 230, .10); }
+  html[data-bg="m"]  .hero-cue { background-color: rgba(226, 229, 230, .16); }
+
+  /* 兩條角形的間距 */
+  html[data-gp="s"] { --cue-gap: 3px; }
+  html[data-gp="m"] { --cue-gap: 5px; }
+  html[data-gp="l"] { --cue-gap: 8px; }
+
+  /* 慢速移動。右下那格的 transform 是 none，所以兩個位置各寫一組。 */
   @keyframes cueBobBR { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
   @keyframes cueBobMid { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 4px); } }
   html[data-p="br"][data-mo="1"] .hero-cue { animation: cueBobBR 2.4s ease-in-out infinite; }
@@ -208,7 +194,11 @@ body { padding-bottom: 150px; }
   <div class="r" data-k="p"><b>位置</b>
     <button type="button" data-v="br">右下</button><button type="button" data-v="mid">置中（上一版）</button></div>
   <div class="r" data-k="k"><b>記號</b>
-    <button type="button" data-v="a">不放</button><button type="button" data-v="g">Ⓖ雙角</button><button type="button" data-v="h">Ⓗ框＋單角</button><button type="button" data-v="i">Ⓘ框＋雙角</button><button type="button" data-v="f">現況</button></div>
+    <button type="button" data-v="a">不放</button><button type="button" data-v="h">單角</button><button type="button" data-v="g">雙角</button></div>
+  <div class="r" data-k="bg"><b>底</b>
+    <button type="button" data-v="n">無</button><button type="button" data-v="l">淺（電腦版）</button><button type="button" data-v="m">稍濃</button></div>
+  <div class="r" data-k="gp"><b>雙角間距</b>
+    <button type="button" data-v="s">緊 3</button><button type="button" data-v="m">中 5</button><button type="button" data-v="l">鬆 8</button></div>
   <div class="r" data-k="mo"><b>要不要動</b>
     <button type="button" data-v="0">不動</button><button type="button" data-v="1">慢速浮動</button></div>
   <p class="m" id="swm"></p>
@@ -218,7 +208,7 @@ body { padding-bottom: 150px; }
 (function () {
   var root = document.documentElement;
   /* 正規式一定要 [a-z0-9]+ */
-  var q = location.search, def = { rv: '0', p: 'br', k: 'i', mo: '0' };
+  var q = location.search, def = { rv: '0', p: 'br', k: 'g', bg: 'l', gp: 'm', mo: '0' };
   Object.keys(def).forEach(function (kk) {
     var m = q.match(new RegExp('[?&]' + kk + '=([a-z0-9]+)'));
     root.setAttribute('data-' + kk, m ? m[1] : def[kk]);
