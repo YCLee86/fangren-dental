@@ -7,7 +7,7 @@
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>芳仁牙醫診所｜雲林斗六・永樂街</title>
+<title>提案：往下滑的指標要往左多少 — 芳仁牙醫診所</title>
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
 <meta name="description" content="芳仁牙醫診所，1983 年創立，現址雲林縣斗六市永樂街。這裡整理刷牙、牙周、兒童牙科、缺牙重建與定期檢查的衛教文章。">
@@ -32,9 +32,9 @@
 <meta property="og:image:height" content="1058">
 <meta property="og:image:alt" content="芳仁牙醫診所外觀，入夜後的永樂街街角">
 <link rel="canonical" href="https://fangren.net/">
-<link rel="icon" href="assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，兩者刻意分開 ——
-     差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
+     差別與理由寫在 ../../assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
      apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
 
      ⚠⚠ **只宣告這一個尺寸，而且是 192 —— 這是照別站的成功案例做的，不要改。**
@@ -76,7 +76,7 @@
        · 座標、sameAs、郵遞區號、國碼電話 → clinic.json（頁面上沒有的才放那裡）
      所以要改看診時間就改那張卡，不要來改這裡。 -->
 <!-- SEO:START — 由 tools/build.mjs 產生，請勿手動編輯 -->
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
@@ -871,7 +871,7 @@ html.scrolled .site-head::before { opacity: 1; }
      多一個合成層 ＝ 多一個會掉的東西。
    ⚠ **HERO 那一屏（條子底下是照片）的玻璃一個值都沒動。** 八個捲動位置
      逐一比對過。換掉的是窄帶上緣滑進條子的那 60px 左右。
-   ⚠ 這一整段只有首頁有。文章頁走 assets/style.css，那邊的頁首本來就是
+   ⚠ 這一整段只有首頁有。文章頁走 ../../assets/style.css，那邊的頁首本來就是
      一塊實心 var(--head)（沒有照片可以糊），碰不到這件事。
    ========================================================================== */
 /* 薄色。三個色停等於原本那個遮罩：實色到 --head-fade，再淡到全透明。
@@ -2049,7 +2049,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .views small { font-size: inherit; margin-left: .3em; }
 /* 數字還沒回來時是一個「—」，先壓淡；API 掛掉（或沒有 JS）就整個收掉，
    連前面那顆分隔點一起 —— 只留一個孤零零的「・」比沒有還糟。
-   和 assets/style.css 裡文章頁的規則同一套寫法。 */
+   和 ../../assets/style.css 裡文章頁的規則同一套寫法。 */
 .views[data-state="loading"] .views-n { opacity: .45; }
 .views[data-state="error"] { display: none; }
 .card-date:has(.views[data-state="error"]) .dot { display: none; }
@@ -2574,7 +2574,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    （相切＝最遠就到邊界），不會蓋到旁邊的字，版面、尺寸、--gutter 一個值都沒動。
    ⚠ 不要改成「把 viewBox 加 padding」—— 那會讓 --logo-w 連帶 --gutter 一起變大，
       地址與電話兩行的起點就要重算，見上面那一段。
-   ⚠ 這份和 assets/style.css 裡那份必須一模一樣，改一邊就要改另一邊。 */
+   ⚠ 這份和 ../../assets/style.css 裡那份必須一模一樣，改一邊就要改另一邊。 */
 .brand-mark svg,
 .foot-brand svg,
 .foot-addr .ico svg,
@@ -2838,7 +2838,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      （見上面 .hero-copy 與 .hero-poem 的註解）；手機版難在**照片本身**。
 
      ---- 為什麼手機不能只是「往下推」 ----------------------------------
-     把 assets/hero-clinic-night.jpg 畫進 canvas 逐列掃描（藍減紅 > 8 分辨
+     把 ../../assets/hero-clinic-night.jpg 畫進 canvas 逐列掃描（藍減紅 > 8 分辨
      夜空與建物），換算成 390px 寬時的畫面座標，可以寫字的天空是一個**楔形**：
 
          畫面 y      能寫字的左界 → 右界      擋住的東西
@@ -4056,6 +4056,39 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
 
 </style>
+
+<!-- ==========================================================================
+     提案：iPad「往下滑」指標的水平位置（2026-08-15）
+     --------------------------------------------------------------------------
+     使用者（看過上線版之後）：「有了。角形的位置太右下，往左一點。」
+
+     ---- 現況 ------------------------------------------------------------
+     .hero-cue 是 right: var(--pad)，也就是**貼齊窄帶內容的右緣**。
+     --pad 是 clamp(1.25rem, 3vw, 2.5rem)，所以離螢幕右緣只有 21.6~30.7px：
+
+         視窗        --pad    離螢幕右緣   離「5個／部定專科」字尾
+         721x1200    21.6     21.6         93.1
+         744x1133    22.3     22.3         103.9
+         746x977     22.4     22.4         104.9
+         768x1024    23.0     23.0         115.2
+         820x1180    24.6     24.6         139.6
+         834x1194    25.0     25.0         146.2
+         1024x1366   30.7     30.7         235.5
+
+     ---- 這一頁在比什麼 --------------------------------------------------
+     只有一個變數：**往左再讓開多少 px**。
+     right: calc(var(--pad) + N)，N ∈ {0, 16, 28, 44, 64}。
+
+     ⚠ 為什麼是「固定 px」不是「對齊第三格」：第三格字尾到版心右緣的距離
+       隨視窗從 93px 一路變到 235px（窄帶三格是置中的，版心卻是滿版），
+       用它當錨點的話，同一條規則在 iPad mini 和 12.9 吋上會差一倍以上。
+       使用者感覺到的是「離右下角多遠」，那是離**螢幕邊**的距離，所以用定值。
+
+     ⚠ 垂直位置一個字都沒動（仍然是距窄帶下緣 34.9px ＝「5個／部定專科」
+       那一列的中線）—— 使用者只說「往左」。
+
+     ⚠ 44px 的觸控目標、慢速浮動、點到會亮、點下去自己 rAF 捲，全部照舊。
+     ========================================================================== -->
 </head>
 <body>
 
@@ -4125,10 +4158,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            .hero-copy 一起裁，收尾句底下那塊 blur 的暗斑會裁出一條硬邊。
            完整理由在上面樣式表「HERO 照片：緩慢的推進」那一段。 -->
       <span class="hero-shot">
-      <img src="assets/hero-clinic-night.jpg"
-           srcset="assets/hero-clinic-night-800.jpg 800w,
-                   assets/hero-clinic-night.jpg 1600w,
-                   assets/hero-clinic-night-2000.jpg 2000w"
+      <img src="../../assets/hero-clinic-night.jpg"
+           srcset="../../assets/hero-clinic-night-800.jpg 800w,
+                   ../../assets/hero-clinic-night.jpg 1600w,
+                   ../../assets/hero-clinic-night-2000.jpg 2000w"
            sizes="calc(1.512 * 100vh)"
            alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
            width="1600" height="1058" fetchpriority="high">
@@ -4175,7 +4208,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         <svg viewBox="0 0 12 6" aria-hidden="true"><path d="m0 0 6 6 6-6"/></svg>
       </a>
 
-      <!-- 瀏覽數。data-views-self="home" 是 assets/counter.js 的掛勾：它先幫首頁 +1，
+      <!-- 瀏覽數。data-views-self="home" 是 ../../assets/counter.js 的掛勾：它先幫首頁 +1，
            再從 D1 取回真實數字，然後呼叫 window.fangrenCountUp(n) 跑往上數的動畫。
            **self** 不能寫成 data-views —— 後者只顯示不加總，首頁的數字就永遠不會長。
 
@@ -4184,9 +4217,9 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
            數字跑動時一直在變，讓螢幕閱讀器跟著念沒有意義，所以動的那一段整個
            aria-hidden，另外放一句 .sr-only 講最終結果（由 JS 填）。 -->
-      <p class="band-views" data-views-self="home">
+      <p class="band-views is-on">
         <span class="sr-only"></span>
-        <span class="views-n" aria-hidden="true">0</span><small aria-hidden="true">次瀏覽</small>
+        <span class="views-n" aria-hidden="true">1275</span><small aria-hidden="true">次瀏覽</small>
       </p>
 
       <!-- 地址與電話。**電腦版**：絕對定位貼在版心外緣，看起來在窄帶右側，
@@ -4280,7 +4313,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
       <a class="card" href="posts/kids-arch-expansion/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
@@ -4293,7 +4326,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/regular-checkup/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-checkup.svg" alt="定期口腔檢查與洗牙的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">定期檢查</span>
           <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
@@ -4306,7 +4339,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/missing-tooth/" data-spec="prosth">
-        <img class="card-thumb" src="assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-implant.svg" alt="植牙與假牙重建的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">缺牙重建</span>
           <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
@@ -4319,7 +4352,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/kids-first-visit/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-kids.svg" alt="兒童牙齒保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
@@ -4332,7 +4365,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/gum-bleeding/" data-spec="perio">
-        <img class="card-thumb" src="assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">牙周照護</span>
           <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
@@ -4345,7 +4378,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/bass-brushing/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="../../assets/hero-brushing.svg" alt="牙刷與牙齒的示意插圖" width="800" height="450" loading="lazy">
         <div class="card-body">
           <span class="card-tag">日常保健</span>
           <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
@@ -4843,12 +4876,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       </div>
       <div class="gallery">
         <figure>
-          <img src="assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
+          <img src="../../assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
                alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
           <figcaption>獨立診療空間，每張診療椅旁都配有影像螢幕，方便看診時一起討論。</figcaption>
         </figure>
         <figure>
-          <img src="assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
+          <img src="../../assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
                alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
           <figcaption>診療區以隔屏分隔，保留採光也維持看診時的隱私。</figcaption>
         </figure>
@@ -5842,8 +5875,6 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 })();
 </script>
 
-<script src="assets/counter.js" defer></script>
-
 <script>
 /* 位置與周邊停車：點停車場帶出步行路線與時間。推導見 /history/clinic-simple-map.html */
 (function () {
@@ -6228,6 +6259,123 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     }
     requestAnimationFrame(step);
   });
+})();
+</script>
+
+<style>
+/* ---- 提案：指標往左讓開多少（只作用在平板／直立那一段）---- */
+@media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
+  html[data-x="x0"] .hero-cue { right: var(--pad); }
+  html[data-x="x1"] .hero-cue { right: calc(var(--pad) + 16px); }
+  html[data-x="x2"] .hero-cue { right: calc(var(--pad) + 28px); }
+  html[data-x="x3"] .hero-cue { right: calc(var(--pad) + 44px); }
+  html[data-x="x4"] .hero-cue { right: calc(var(--pad) + 64px); }
+}
+/* 切換條自己 */
+#sw { position: fixed; left: 0; right: 0; bottom: 0; z-index: 99;
+  background: rgba(20, 19, 18, .93); color: #e8e6e2; padding: 7px 8px 9px;
+  font: 12px/1.35 -apple-system, "Noto Sans TC", sans-serif;
+  backdrop-filter: blur(8px); box-shadow: 0 -1px 0 rgba(255, 255, 255, .12); }
+#sw .r { display: flex; align-items: center; gap: 4px; margin: 3px 0; }
+#sw .r > b { flex: 0 0 4.6em; font-weight: 600; opacity: .72; font-size: 11px; }
+#sw button { flex: 1 1 auto; min-width: 0; appearance: none; border: 1px solid rgba(255,255,255,.28);
+  background: transparent; color: inherit; border-radius: 7px; padding: 6px 2px;
+  font: inherit; font-size: 11.5px; letter-spacing: .01em; }
+#sw button[aria-pressed="true"] { background: #e8e6e2; color: #191614; border-color: #e8e6e2; font-weight: 700; }
+#sw .m { font-size: 10.5px; opacity: .62; margin-top: 5px; font-variant-numeric: tabular-nums; }
+#sw .x { position: absolute; right: 6px; top: -30px; background: rgba(20,19,18,.93);
+  border: 0; color: #e8e6e2; border-radius: 7px; padding: 5px 9px; font: inherit; }
+#sw .more { width: 100%; margin-top: 5px; border-style: dashed; }
+#swn { max-height: 46svh; overflow: auto; margin-top: 6px; padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.18); font-size: 11.5px; line-height: 1.6; }
+#swn p { margin: 0 0 .7em; }
+#swn code { font-size: 11px; opacity: .85; }
+#swn .fine { opacity: .65; }
+body { padding-bottom: 112px; }
+</style>
+
+<div id="sw">
+  <button class="x" type="button" data-x>收起</button>
+  <div class="r" data-k="x"><b>往左讓開</b>
+    <button type="button" data-v="x0">原本</button><button type="button" data-v="x1">16</button><button type="button" data-v="x2">28 現行</button><button type="button" data-v="x3">44</button><button type="button" data-v="x4">64</button></div>
+  <p class="m" id="swm"></p>
+  <button class="more" type="button" data-more>說明 &#x25be;</button>
+  <div id="swn" hidden>
+    <p><b>28 已經上線了</b>（這一頁打開就是它，正式站現在也是這個）。
+      原本離螢幕右緣只有 22~31px，
+      比它自己的寬度（44px）還窄 —— 眼睛讀起來就是「卡在角落」。
+      讓開 28 之後離邊 50~59px，大約是它自己的一個身寬，看起來是刻意擺的，
+      而不是被擠到底。</p>
+    <p><b>為什麼是固定 px、不是對齊第三格。</b>窄帶的三格是置中的，版心卻是滿版，
+      所以「5個／部定專科」的字尾到右緣，從 iPad mini 的 104px 到 12.9 吋的 236px
+      差了一倍以上。拿它當錨點，同一條規則在兩台 iPad 上會差很多；
+      而使用者感覺到的「太右下」是離**螢幕角落**多遠。</p>
+    <p><b>44 和 64 也留著比。</b>44 ＝ 讓開一個身寬（離邊 66~75px）、
+      64 ＝ 讓開一個半（離邊 86~95px）。再往左就會開始靠近「5個／部定專科」，
+      在最窄的 721 上只剩 29px。</p>
+    <p class="fine">※ 垂直位置一個字都沒動（距窄帶下緣 34.9px ＝ 三格那一列的中線）。
+      觸控目標 44×39.5、慢速浮動、點到會亮、點下去自己捲，全部照舊。</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  /* 網址參數。正規式一定要 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到 x2 這種帶數字的值。 */
+  var q = location.search, def = { x: 'x2' };
+  Object.keys(def).forEach(function (k) {
+    var m = q.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
+    root.setAttribute('data-' + k, m ? m[1] : def[k]);
+  });
+
+  function paint() {
+    var cue = document.querySelector('.hero-cue');
+    var m = document.getElementById('swm');
+    if (!cue || getComputedStyle(cue).display === 'none') { m.textContent = '（這個尺寸看不到指標 —— 要用 iPad 直放或把視窗轉成直的）'; return; }
+    var r = cue.getBoundingClientRect();
+    var li = document.querySelectorAll('.stats li')[2];
+    var ink = 0;
+    if (li) { var rg = document.createRange(); rg.selectNodeContents(li); ink = rg.getBoundingClientRect().right; }
+    m.textContent = '離螢幕右緣 ' + (innerWidth - r.right).toFixed(1) + 'px'
+      + '　離「部定專科」字尾 ' + (r.left - ink).toFixed(1) + 'px'
+      + '　指標 ' + r.width.toFixed(0) + '×' + r.height.toFixed(0)
+      + '　視窗 ' + innerWidth + '×' + innerHeight;
+  }
+
+  document.querySelectorAll('#sw .r').forEach(function (row) {
+    var k = row.dataset.k;
+    row.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        root.setAttribute('data-' + k, b.dataset.v);
+        sync(); paint();
+        var u = new URL(location.href); u.searchParams.set(k, b.dataset.v);
+        history.replaceState(null, '', u);
+      });
+    });
+  });
+  function sync() {
+    document.querySelectorAll('#sw .r').forEach(function (row) {
+      var v = root.getAttribute('data-' + row.dataset.k);
+      row.querySelectorAll('button').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.v === v));
+      });
+    });
+  }
+  document.querySelector('#sw [data-more]').addEventListener('click', function () {
+    var n = document.getElementById('swn');
+    n.hidden = !n.hidden;
+    this.textContent = n.hidden ? '說明 ▾' : '說明 ▴';
+  });
+  document.querySelector('#sw [data-x]').addEventListener('click', function () {
+    var sw = document.getElementById('sw');
+    var off = sw.style.transform === 'translateY(78%)';
+    sw.style.transform = off ? '' : 'translateY(78%)';
+    this.textContent = off ? '收起' : '打開';
+  });
+  sync(); paint();
+  addEventListener('resize', paint);
+  addEventListener('orientationchange', function () { setTimeout(paint, 250); });
+  addEventListener('load', paint);
 })();
 </script>
 </body>
