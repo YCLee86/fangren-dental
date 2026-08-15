@@ -1260,25 +1260,37 @@ html[data-here] .nav-lamp { opacity: 1; }
      那個設計重點。所以另外包一層只裝 <img> 的 .hero-shot。
      它是 position:absolute; inset:0，幾何和原本一模一樣，版面零影響。
 
-   ---- 參數與它們的理由 ---------------------------------------------------
+   ---- 參數：**電腦與手機是兩組不同的值**（使用者各挑各的）-----------------
 
-     幅度 6%　時長 12 秒　cubic-bezier(.22,.61,.36,1)（先快後慢）　一次就停
+     電腦　放大 6%　12 秒　　　　　(min-width:721px) and (min-aspect-ratio:9/10)
+     手機　放大 10%　6 秒　　　　　(max-width:720px)
+     兩邊共用 cubic-bezier(.22,.61,.36,1)（先快後慢）、原點下緣、一次就停。
 
-   2% 幾乎看不出來，10% 就從「暗示」變成「效果」。一次就停不做來回呼吸 ——
+   看起來手機比較「重」，但**在手機上這一組才等於電腦版那一組的力道**：
+   電腦版每秒走 0.5%，手機這一組每秒走 1.67% —— 差別是**手機第一屏的照片
+   只有 719px 高、寬 390px**，同樣的百分比換算成位移遠比電腦版少，
+   而且手機是滑過去就走，沒有人會在第一屏停 12 秒。使用者兩台各看過才挑的。
+
+   2% 在手機上幾乎看不出來。一次就停不做來回呼吸 ——
    一張靜止的建築照片來回縮放看起來像壞掉，而且永遠不會停在定案的構圖上。
 
    ⚠ **這裡看 prefers-reduced-motion**（和窄帶那個往上數的數字**不同**，
      那一件 2026-08-08 使用者定了不看，理由在本檔 .band-views 那一段）。
      一張滿版照片的縮放正是那個設定針對的東西（位移／視差／縮放）。
 
-   ⚠ **只開在電腦版**：(min-width:721px) and (min-aspect-ratio:9/10)。
-     手機（≤720）、iPad 直放（9/10~2/3）、直立螢幕（≤2/3）三段都還沒定案 ——
-     那三種裁法不一樣，詩底下換到的像素也不一樣，要各自量過再開。
-     提案頁在 /preview/hero-zoom/。
+   ⚠ **transform-origin 是無條件的，不要再搬回任何一個 @media 裡。**
+     第一版（電腦版上線那次）把它寫在電腦版那道 @media 裡面，手機吃不到、
+     會退回預設的 50% 50% —— 接縫就跑掉了。手機上線時才發現。
 
-   ⚠ 結束時多放大 6%，等於 srcset 挑到的那張要多撐 6%。實測不影響選檔
-     （1440 DPR1 需要 1361 → 1443，兩邊都挑 1600w），所以 sizes 沒有跟著改。
-     **日後若把幅度加大，要回頭重驗 sizes**（本檔第九節第 15 條）。
+   ⚠ **iPad 直放（9/10~2/3）與直立螢幕（≤2/3）都還沒開。** 那兩段的裁法
+     與版型都不一樣（照片是 flex 撐開的、窄帶的位置也不同），而且那兩段
+     **本來就有一個會動的東西**（「往下滑」的指標會慢速浮動），
+     第一屏同時兩件事在動要看過才知道行不行。提案頁在 /preview/hero-zoom/。
+
+   ⚠ 結束時多放大一個幅度，等於 srcset 挑到的那張要多撐那麼多。實測不影響選檔
+     （電腦 1440 DPR1 需要 1361 → 1443，兩邊都挑 1600w；手機挑 2000w，
+     DPR3 上 1.63 → 1.79 倍，仍在 2 倍以內），所以 sizes 沒有跟著改。
+     **日後若再把幅度加大，要回頭重驗 sizes**（本檔第九節第 15 條）。
 
    ⚠ 頁首的模糊有跟著補償：paintBlur() 是用盒子的幾何推「條子底下是照片的
      哪一列」，它看不到 CSS transform。實測不補的話「招牌」那個門檻會晚到
@@ -1288,15 +1300,20 @@ html[data-here] .nav-lamp { opacity: 1; }
    ========================================================================== */
 .hero-shot { position: absolute; inset: 0; overflow: hidden; }
 
-@keyframes hero-push-in { from { transform: scale(1); } to { transform: scale(1.06); } }
+/* ⚠ 無條件，見上面那一條。放在 @media 裡會讓沒被覆蓋到的版型退回 50% 50%。 */
+.hero-photo img { transform-origin: 50% 100%; }
+
+@keyframes hero-push-in    { from { transform: scale(1); } to { transform: scale(1.06); } }
+@keyframes hero-push-in-sm { from { transform: scale(1); } to { transform: scale(1.10); } }
 
 @media (min-width: 721px) and (min-aspect-ratio: 9/10) {
-  .hero-photo img {
-    transform-origin: 50% 100%;
-    animation: hero-push-in 12s cubic-bezier(.22, .61, .36, 1) both;
-  }
+  .hero-photo img { animation: hero-push-in 12s cubic-bezier(.22, .61, .36, 1) both; }
 }
-@media (min-width: 721px) and (min-aspect-ratio: 9/10) and (prefers-reduced-motion: reduce) {
+@media (max-width: 720px) {
+  .hero-photo img { animation: hero-push-in-sm 6s cubic-bezier(.22, .61, .36, 1) both; }
+}
+/* ⚠ 這一條要排在上面兩條後面（同權重，後面的贏）。 */
+@media (prefers-reduced-motion: reduce) {
   .hero-photo img { animation: none; }
 }
 
