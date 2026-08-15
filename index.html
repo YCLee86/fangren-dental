@@ -2438,10 +2438,16 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   letter-spacing: 0; white-space: nowrap; padding: 1rem .6rem 1rem 0;
   border-top: 1px solid var(--rule);
 }
-/* 2026-08-15：早／午／晚三個字由使用者拿掉了（「早午晚 的字拿掉」），
-   所以原本那條 `#clinic .hours-grid tbody th b` 也一併移除 —— 那顆 <b> 已經
-   不存在。時段仍然讀得出來（時間本身就是），tools/schema.mjs 讀的是
-   <th scope="row"> 裡的「數字:數字–數字:數字」，和那個 <b> 無關。 */
+/* 早／午／晚三個字要維持墨色 —— 上面 `#clinic .info-card b` 把 b 染成強調色，
+   那條是給電話與「週一至週五」用的，這裡要蓋回去。
+   ⚠ 2026-08-15：使用者說「早午晚 的字拿掉」，但同一天定稿時指定
+     「電腦版和 iPad 版都不動」—— 所以**那三個字還在 markup 裡**，
+     只有手機那一段用 display: none 收起來（見樣式表最後）。
+     tools/schema.mjs 讀的是 <th scope="row"> 裡的時間，和這顆 <b> 無關。 */
+#clinic .hours-grid tbody th b {
+  color: var(--ink); font-size: .82rem; font-weight: 400;
+  margin-right: .5em; letter-spacing: .06em;
+}
 .hours-grid tbody td { border-top: 1px solid var(--rule); text-align: center; }
 .hours-grid .d {
   display: inline-block; width: .56rem; height: .56rem; border-radius: 50%;
@@ -4034,6 +4040,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 .rl-link { cursor: pointer; }
 /* 診所的名牌：**實心綠底白字**，和停車場那三塊剛好相反（見標記那一段）。 */
 .map-svg .clab .bub, .map-svg .clab .tail { fill: var(--map-mark); }
+/* ⚠ 這一塊的底線間隙比例和停車場那三塊不同 —— 原本那個 2.2 是**絕對單位**，
+   而這一塊的字是 15px（那三塊是 16px），所以換算成比例是 2.2÷15 ＝ .14667em。
+   寫錯成 .1375 的話電腦版的底線會往上跑 0.14 個單位（逐像素比對抓得到）。 */
+.map-svg .clab { --map-ul-gap: .14667; }
 .map-svg .clab text { fill: var(--card); font-size: 15px; font-weight: 700; letter-spacing: .04em; }
 /* 診所名牌上的圖釘與底線（2026-08-15）：**白的**，因為底是實心綠。
    ⚠ 這兩條非有不可 —— 上面 `.map-svg .rl-pin` / `.map-svg .rl-ul` 是給停車場那三塊
@@ -4100,6 +4110,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
 /* ---- 地圖本體 ---------------------------------------------------------- */
 .map-fig { margin: 0; }
+/* ⚠ 這一層只有手機用得到（見樣式表最後那一段：裁掉左右）。
+   電腦版與 iPad 是 `display: contents` —— 它不產生任何盒子，SVG 等於直接
+   掛在 <figure> 底下，和 2026-08-15 之前逐像素相同。 */
+.map-win { display: contents; }
 .map-svg { display: block; width: 100%; height: auto; max-width: 480px; font-family: inherit; }
 .card-map .map-svg { margin-inline: auto; }
 .map-svg text { fill: var(--map-ink); font-weight: 400; }
@@ -4421,6 +4435,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        viewBox 裡的使用者單位，那張圖排了四十二輪；同 2026-08-15 電腦版那一輪。
      ⚠ 兩排科別標記（`.hours-filter`／`.chips`）也沒有動：塊高 34px 是
        08-13 定的，字級上限 (34−2)÷1.6 ＝ 20px，而它們是**標記不是內文**。 */
+  #clinic .hours-grid tbody th b             { display: none; }
   .hours-grid col.lab                        { width: 6rem; }
   .hours-grid thead th, .hours-grid tbody th { font-size: 1rem; }
   .info-card p, .map-note                    { font-size: 1rem; }
@@ -4452,7 +4467,29 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      ⚠ **viewBox 沒有動，SVG 的座標一個字都沒改。** 那張圖排了四十二輪。
      ⚠ 想再更大就只能動標籤自己的字級，但那三塊牌子是固定幾何的 path，
        字一放大就會撐出牌子外（實測 +8% 就頂到邊）—— 那要連牌子一起重畫。 */
-  .map-svg                                   { aspect-ratio: .694; border-radius: 12px; }
+  /* 裁掉左右：外面那層當視窗，SVG 自己畫寬一點再往左推。
+     可見寬度 430 單位（x 75.5~505.5，內容 94~487 的左右餘裕各 18.5）：
+       寬　　　560 ÷ 430 ＝ 130.2326%
+       左推　　75.5 ÷ 430 ＝ 17.558%
+     ⚠ **不要改用 `preserveAspectRatio="slice"` ＋ aspect-ratio 去裁** ——
+       那個屬性是寫在 markup 上的，電腦版也吃得到：盒子的高是 531.43 這種
+       小數，slice 會因為浮點誤差多縮放千分之一，逐像素比對量到整張地圖
+       約 0.35% 的邊緣像素有差（最大 47 階）。用外層視窗裁就完全不碰它。
+     ⚠ 圓角改畫在視窗上（SVG 自己的 clipPath 圓角已經被裁到看不見了）。 */
+  .map-win                                   { display: block; overflow: hidden; border-radius: 12px; }
+  .map-svg                                   { width: 130.2326%; max-width: none; margin-left: -17.558%; }
+  /* ⚠⚠ **地圖這一整組只在手機生效**（2026-08-15 使用者定稿：「手機版就這樣
+       上線，電腦版和 iPad 版都不動」）。所以凡是會被電腦版看到的東西 ——
+       viewBox、clipPath、markup 的座標、JS 的預設常數 —— 一律沒有動，
+       要改的四件全部走 CSS 變數，只在這一段覆寫：
+         --map-ul-gap  底線離字面（.1375 → .16）
+         --map-tail    盒子邊到尖端（診所那塊 1 → 11 ＝「和綠塊拉開」）
+         --map-dy      整塊再位移（壹車房 0 → −18 ＝「往上一點」）
+       裁切本身則由外面那層視窗做（見下面）—— 左右餘裕因此可以直接算，
+       內容的中心 290.5 和 viewBox 的中心 280 差 10.5 那件事也一併吸收掉。 */
+  .map-svg, .map-svg .clab                   { --map-ul-gap: .16; }
+  .map-svg .clab                             { --map-tail: 13; }
+  .map-svg .rlab[data-lot="c"]               { --map-dy: -18; }
   .map-svg .rlab text                        { font-size: 21px; }
   .map-svg .rlab .rl-nm                      { font-size: 22.4px; }
   .map-svg .clab text                        { font-size: 21px; }
@@ -4879,13 +4916,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                    viewBox 本身一個字都沒動 —— 那張圖排了四十二輪，不要動它的座標。
                    電腦版與 iPad 沒有設 aspect-ratio，盒子的比例 ＝ viewBox 的比例，
                    這時 slice 和 meet 完全等價，所以那兩邊不受影響。 -->
-              <svg class="map-svg" viewBox="10.5 0 560 620" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="mt md">
+              <div class="map-win">
+              <svg class="map-svg" viewBox="0 0 560 620" role="img" aria-labelledby="mt md">
               <title id="mt">芳仁牙醫診所簡易地圖</title>
               <desc id="md">診所位在永樂街與平和街19巷交會的那一角，門面朝永樂街；街區北接文化路，往南依序是平和街33巷、大同路與中華路。附近三處停車場：19巷北邊那條平行巷上的斗六永樂站、永安路上的合廷，以及中華路上的壹車房。</desc>
 
               <defs>
                 <!-- 外框：圓角方（三案裡選上的那一個，另兩案是有機色塊與正圓）。 -->
-                <clipPath id="clip-round"><rect x="10.5" y="0" width="560" height="620" rx="18"/></clipPath>
+                <clipPath id="clip-round"><rect x="0" y="0" width="560" height="620" rx="18"/></clipPath>
               </defs>
 
               <g id="map-clip" clip-path="url(#clip-round)">
@@ -5059,7 +5097,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                          畫一條線才對得準字面。
                        ⚠ 連結要 `stopPropagation`：它在 `.rlab` 裡，而地圖底層有一個
                          「點空白處＝收回」的 handler，不擋住的話點名字會先把牌子關掉。 -->
-                  <g class="rlab" data-lot="a" data-dir="down" data-tx="270" data-ty="165">
+                  <g class="rlab" data-lot="a" data-dir="down" data-tx="270" data-ty="165" data-tail="15.33">
                     <path class="bub"/>
                     <g class="rl-body">
                       <a class="rl-link" href="https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic" target="_blank" rel="noopener">
@@ -5070,7 +5108,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                       <text class="rl-d" x="270" y="127" text-anchor="middle">50 公尺・1 分鐘</text>
                     </g>
                   </g>
-                  <g class="rlab" data-lot="b" data-dir="down" data-tx="400" data-ty="188">
+                  <g class="rlab" data-lot="b" data-dir="down" data-tx="400" data-ty="188" data-tail="15.33">
                     <path class="bub"/>
                     <g class="rl-body">
                       <a class="rl-link" href="https://maps.app.goo.gl/tiHLpeKc2gETXRh96?g_st=ic" target="_blank" rel="noopener">
@@ -5082,15 +5120,15 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                     </g>
                   </g>
                   <!-- 這一塊的路線是直的（永樂街），所以尾巴朝右、牌子擺在路線左邊 -->
-                  <g class="rlab" data-lot="c" data-dir="right" data-tx="344">
+                  <g class="rlab" data-lot="c" data-dir="right" data-tx="344" data-tail="17.8">
                     <path class="bub"/>
                     <g class="rl-body">
                       <a class="rl-link" href="https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic" target="_blank" rel="noopener">
                         <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
-                        <text class="rl-nm" x="247" y="468" text-anchor="middle">壹車房停車場</text>
+                        <text class="rl-nm" x="247" y="486" text-anchor="middle">壹車房停車場</text>
                         <line class="rl-ul"/>
                       </a>
-                      <text class="rl-d" x="243" y="485" text-anchor="middle">190 公尺・3 分鐘</text>
+                      <text class="rl-d" x="243" y="509" text-anchor="middle">190 公尺・3 分鐘</text>
                     </g>
                   </g>
                 </g>
@@ -5139,7 +5177,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                      ⚠ 圖釘長在名字**左邊**，所以整塊牌子往左長約 16 個單位
                        （192 → 約 176）。右緣 308 沒動，仍然沒碰到永樂街（324 起）；
                        左緣離平和街那三個直排字（x 109±11）還有 55 個單位。 -->
-                <g class="clab" data-dir="up" data-tx="258" data-ty="287" data-bx="250" data-bw="12" data-gap="0" data-tail="11"
+                <g class="clab" data-dir="up" data-tx="258" data-ty="287" data-bx="250" data-bw="12" data-gap="0" data-tail="8.5"
                    data-pin-k="0.92" data-ink-gap=".25em">
                   <path class="bub"/><path class="tail"/>
                   <g class="rl-body">
@@ -5155,6 +5193,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
               </g>
             </svg>
+              </div>
 
             <!-- ⚠⚠ **圖說 2026-08-14 第三十八輪整段換成使用者逐字給的句子**
                  （「圖片附註太長了」），第三十九輪他又改過一次：順序對調、
@@ -5227,19 +5266,19 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                   <th scope="col">四</th><th scope="col">五</th></tr>
             </thead>
             <tbody>
-              <tr><th scope="row">08:45–11:30</th>
+              <tr><th scope="row"><b>早</b>08:45–11:30</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general endo"></span></td>
                   <td><span class="d" data-in="general perio"></span></td>
                   <td><span class="d" data-in="general prosth"></span></td></tr>
-              <tr><th scope="row">13:45–16:30</th>
+              <tr><th scope="row"><b>午</b>13:45–16:30</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general kids"></span></td>
                   <td><span class="d" data-in="general kids prosth endo"></span></td>
                   <td><span class="d" data-in="surg kids"></span></td>
                   <td><span class="d" data-in="general prosth perio"></span></td></tr>
-              <tr><th scope="row">17:45–20:00</th>
+              <tr><th scope="row"><b>晚</b>17:45–20:00</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="ortho kids perio"></span></td>
                   <td><span class="d" data-in="general ortho kids endo"></span></td>
@@ -6450,9 +6489,11 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       //     .1375em 在 16px 下就是原本的 2.2；但使用者同一句話還要求「拉開一點」，
       //     所以取 **.16em**（16px 下 2.56、22.4px 下 3.58）。
       //     另一支（bbox 那條後備路徑）同比例：2.5 → .18em。
+      // 底線離字面的比例：`--map-ul-gap`（電腦版 .1375 ＝ 原本的 2.2÷16，手機 .16）
+      var ulk = parseFloat(getComputedStyle(nm).getPropertyValue('--map-ul-gap')) || .1375;
       var d = inkDescent(nm);
       var uy = (+nm.getAttribute('y')) +
-        (d === null ? b.y + b.height - +nm.getAttribute('y') + .18 * fs : d + .16 * fs);
+        (d === null ? b.y + b.height - +nm.getAttribute('y') + ulk * 1.125 * fs : d + ulk * fs);
       ul.setAttribute('x1', b.x.toFixed(2));
       ul.setAttribute('x2', (b.x + b.width).toFixed(2));
       ul.setAttribute('y1', uy.toFixed(2));
@@ -6501,17 +6542,30 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       //   （338.4）已經**越過**尖端（332），尾巴變成反向的一個缺口
       //   （使用者：「壹車房的對話標籤形狀很怪」）。
       //   改成由這裡把整個 `.rl-body` 沿尾巴的方向平移，讓「盒子邊到尖端」
-      //   固定是 `data-tail`（預設 14 ＝ 原本 16px 下量到的長度，所以電腦版
-      //   的三塊一個單位都沒有動）。診所那塊寫 `data-tail="11"` ——
+      //   固定是 `data-tail`。**每一塊的 data-tail 就是原本 16px 下量到的長度**
+      //   （15.33／15.33／17.8／診所 8.5），所以電腦版與 iPad 逐像素沒有動；
+      //   手機那一段再用 `--map-tail` 覆寫診所那塊（8.5 → 13）——
       //   使用者：「芳仁牙醫診所的標籤看起來和診所套色區塊有點擠，再拉開一點」。
       //   ⚠ `getBBox()` 不吃元素**自己**的 transform，所以這個平移不會回頭
       //     影響下一次量測，sizeLabels() 跑幾次結果都一樣。
-      var TAIL = g.dataset.tail === undefined ? 14 : +g.dataset.tail;
+      // 尾巴長度與整塊的位移都可以用 CSS 變數依版型覆寫（見樣式表最後那一段）：
+      //   --map-tail  盒子邊到尖端（預設 14；診所那塊電腦版 1、手機 11）
+      //   --map-dy    整塊沿「非尾巴方向」再移動多少（壹車房手機 −18）
+      var cs2 = getComputedStyle(g);
+      var TAIL = parseFloat(cs2.getPropertyValue('--map-tail'));
+      if (isNaN(TAIL)) TAIL = g.dataset.tail === undefined ? 14 : +g.dataset.tail;
+      var off = parseFloat(cs2.getPropertyValue('--map-dy')) || 0;
       var dx = 0, dy = 0;
-      if (dir === 'right')   dx = (tip.x - TAIL) - (bx0 + bw0);
-      else if (dir === 'up') dy = (tip.y + TAIL) - by0;
-      else                   dy = (tip.y - TAIL) - (by0 + bh0);
-      body.setAttribute('transform', 'translate(' + dx.toFixed(2) + ' ' + dy.toFixed(2) + ')');
+      if (dir === 'right')   { dx = (tip.x - TAIL) - (bx0 + bw0); dy = off; }
+      else if (dir === 'up') { dy = (tip.y + TAIL) - by0;        dx = off; }
+      else                   { dy = (tip.y - TAIL) - (by0 + bh0); dx = off; }
+      // ⚠ 不動就**不要留 transform**：`translate(0 0)` 也會讓那一段重新光柵化，
+      //   電腦版逐像素比對量到約 0.35% 的邊緣像素會差（最大 47 階）。
+      if (Math.abs(dx) > .005 || Math.abs(dy) > .005) {
+        body.setAttribute('transform', 'translate(' + dx.toFixed(2) + ' ' + dy.toFixed(2) + ')');
+      } else {
+        body.removeAttribute('transform');
+      }
       bx0 += dx; by0 += dy;
       if (dir === 'right') { tip.y = by0 + bh0 / 2; bc = tip.y; }
       bub.setAttribute('d', bubblePath(bx0, by0, bw0, bh0, 6, dir, tip, bc, bw));
