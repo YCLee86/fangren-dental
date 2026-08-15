@@ -3820,15 +3820,91 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      退一步的話選「三分二 ＋ 街景多」：第一屏底下還會露出一點紙色區，
      品牌份量少一階，但完全不必討論「第一屏要不要提示下面還有」。
 
+     ==========================================================================
+     第二輪（同一天）：詩還是和 logo 黏在一起
+     --------------------------------------------------------------------------
+     使用者看過第一輪：「你這樣設計很不錯欸。不過我發現詩可以再鬆一點或是
+     再往下一點，還是字可以再大一點，因為就算鬆兩階，看起來和 logo 還是有點近、
+     黏在一起的感覺。」
+
+     ---- 十一、量出來是「距離」差 2.2 倍，字其實已經不小 ------------------
+     拿電腦版（使用者說「效果很好」的那個）當基準，量頁首下緣到詩第一行
+     ink 上緣的空隙。用 Range 量 ink，不要量 span 的 rect —— 那個框含
+     line-height 的半行距，會多算幾 px：
+
+         版型                空隙     ÷詩的字高   ÷照片高   詩÷診所名
+         電腦 1280x800       80.0px     5.95       10.0%     0.792
+         電腦 1440x900       90.0px     6.00       10.0%     0.884
+         手機 現況（線上）   11.7px     1.02        4.0%     0.774
+         手機 第一輪鬆兩階   38.6px     2.67        5.4%     0.972
+
+     ・**空隙差 2.2 倍**（2.67 對 6.00）—— 這就是「黏在一起」，量得出來。
+     ・**字反而已經偏大**：詩÷照片高，手機 2.01%、電腦 1.67%；
+       詩÷診所名手機 0.97、電腦 0.88 —— 再放大就和 logo 一樣大，
+       那正是 2026-08-09 朋友回報「兩塊字大小差不多、看起來 noisy」的成因。
+     ⚠ 兩個比值會指向不同答案（÷字高 說差 2.2 倍、÷照片高 說差 1.85 倍），
+        因為手機的字相對照片本來就比較大。「黏在一起」是**字與字的關係**，
+        所以以 ÷字高 ＝ 6.0 為準。
+     ・所以切換條從「鬆一階／鬆兩階」兩個套餐，拆成**位置、字級、鬆緊三把尺**
+       ＋一把「上緣壓深」，各自可以單獨動。
+
+     ---- 十二、⚠⚠ 這一輪推翻了一個沿用五天的前提 -------------------------
+     Ⓢ1（2026-08-10）把「詩不准碰到房子」當成硬約束，整組字距與位置都是照
+     天空那個楔形解出來的。第一輪也照著用（餘裕表就是它）。
+     **但那個約束真正的理由是對比度** —— 而它是在照片只有 291px、牆又小又花的
+     前提下訂的。照片拉到 719px、又是夜景之後，牆自己就夠暗了。
+     逐行取 ink bbox 裡最亮的一格換算白字對比度（詩 15.5px、坐到第⑤階）：
+
+         上緣壓深                 第一行   第二行   第三行   六個視窗最低
+         不放                     8.49     6.54     5.88     5.00
+         電腦版那層 46% .52/.30  10.54     7.97     6.85     5.53
+         厚一階 58% .62/.40      12.05     9.46     8.23     6.74
+
+     **連「不放」都全部過 AA（4.5）。** 所以詩不必再擠在天空裡 —— 這是這一輪
+     最大的解鎖，位置與字級因此可以一路推到和電腦版同一個空隙比。
+     ⚠ 數字過關不等於好看：牆上有窗框與亮著的窗，「花」是主觀的，所以做成
+        開關讓使用者自己看。預設開電腦版那一層（和電腦版一致，也最保守）。
+     ⚠ 那一層在電腦版本來就有，手機版是刻意關掉的，理由寫在 index.html：
+        「手機的頁首壓在天空上，不需要，留著只會讓天空變濁」——
+        那句話在照片只有 291px 的時候成立，滿版之後不成立了。
+
+     ---- 十三、位置 x 字級 x 鬆緊的階梯（390x844、抵下緣、街景多）---------
+         位置階  字級階  鬆緊階   字級    空隙     ÷字高   第一行右緣
+         ②      ②      ③      14.5px  38.7px   2.68    307.7
+         ③      ③      ④      15.5px  57.2px   3.70    346.2
+         ④      ③      ④      15.5px  74.4px   4.81    346.2
+         ⑤      ③      ④      15.5px  91.7px   5.93    346.2  <- 建議
+         ⑤      ④      ④      16.5px  92.7px   5.62    368.5
+         ⑥      ④      ④      16.5px  110px    6.67    368.5
+     ⚠ 字級只到第③階（15.5px）：第④階的第一行右緣 368.5px，390 寬上離右緣
+        只剩 21.5px（左內距是 20px），看起來就滿出去了。
+     ⚠ 短螢幕（320x568、375x667）字級會被 min(12px, 3.8vw) 的下限接住 ＝ 12px，
+        空隙比因此只有 4.68 ~ 4.7 —— 那是照片本身只有 443／542px 高，
+        再往下就要壓到門面了。這是刻意的，不是漏改。
+
+     ---- 十四、第二輪的建議 ----------------------------------------------
+     **抵下緣 ＋ 街景多 ＋ 位置⑤ ＋ 字級③ ＋ 鬆緊④（電腦版）＋ 上緣壓深「電腦版」**
+     （這一頁打開就是它）。
+     ・空隙 91.7px ＝ 5.93 個字高，電腦版是 6.00 —— 兩邊第一次同一個關係。
+     ・字距／行高／全形空格／首行後間隔**和電腦版逐字相同**（.32em／2.45／1em／.9em）。
+     ・字級 15.5px（線上 11.5px），電腦版 15px。
+     使用者的三個方向（再鬆、再往下、字再大）**三個都做了**，主力是「往下」。
+
      ---- 定案要帶進 index.html 的東西（別漏）-----------------------------
      1. 窄帶那個假數字 1275 與 .is-on **不要帶**，真值只能來自 D1。
-     2. data-h／data-crop／data-poem／data-cue 與整條切換條刪掉，
+     2. data-h／data-crop／data-pos／data-size／data-air／data-veil／data-cue
+        與整條切換條刪掉，
         選上那一組的值直接寫死進 @media (max-width: 720px)。
      3. object-position 若定案在「街景多」，390 上是 50% 50% —— 但**不要寫死**，
         它會隨螢幕高度變（320x568 是 50%、430x932 也是 50%，因為 50% 那一格
         剛好落在夾限外側；改成「平衡」就一定要留 JS 或改用固定的裁切檔）。
      4. --ph 那段 JS 要一起搬，或改成純 CSS 的近似值（100svh - 窄帶高）。
      5. Ⓔ2 那塊暗斑與 hero-cue 的預設狀態照使用者選的來。
+     6. 上緣那層 .hero-photo::after 在手機版目前是 display:none，選了「壓深」
+        就要把那條 none 拿掉（並把 index.html 裡那句「手機不需要」的註解改掉）。
+     7. CLAUDE.md 第九節第 6 項與 /history/hero-mobile-skyline.html 的
+        「詩不准碰到房子」那條約束要標成**只適用於 291px 那個版型**，
+        不然下一個人又會照那張楔形表去解字距。
 
      完整的提案頁留在 git，還原：
        git show <commit>:preview/hero-mobile-fullbleed/index.html > /tmp/x.html
@@ -5833,10 +5909,30 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   html[data-h="fit"] .band,
   html[data-h="full"] .band { background-image: linear-gradient(180deg, #181614 0%, #181614 10%, #181615 20%, #191716 30%, #1b1a19 40%, #1d1d1d 50%, #212122 60%, #252629 70%, #282a2f 80%, #2c2e35 90%, #2d3037 100%); }
 
-  /* ---- 尺③　詩 -----------------------------------------------------------
-     現況那一組（Ⓢ1，2026-08-10）是被 291px 的照片逼出來的：字距只剩 .131em
-     （電腦版 .32em）、全形空格收到 .65em、行高 1.75（電腦版 2.45）。
-     照片拉高之後天空的楔形整個放大，這些額度可以還回去。 */
+  /* ---- 尺③④⑤　詩：位置、字級、鬆緊三把尺分開 ---------------------------
+     第一版把三件事綁成「鬆一階／鬆兩階」兩個套餐，使用者看過之後：
+     「詩可以再鬆一點或是再往下一點，還是字可以再大一點，因為就算鬆兩階，
+       看起來和 logo 還是有點近、黏在一起的感覺。」
+     所以拆成三把尺，各自可以單獨動。
+
+     ---- 量出來是「距離」不夠，不是字太小 ----
+     拿電腦版（使用者說「效果很好」的那個）當基準，量頁首下緣到詩第一行
+     ink 上緣的空隙：
+
+         版型              空隙     ÷詩的字高   ÷照片高    詩÷診所名
+         電腦 1440x900     90.0px     6.00       10.0%      0.884
+         電腦 1280x800     80.0px     5.95       10.0%      0.792
+         手機 現況         11.7px     1.02        4.0%      0.774
+         手機 第一版鬆兩階 38.6px     2.67        5.4%      0.972
+
+     ・**空隙差了 2.2 倍**（2.67 對 6.00）—— 這就是「黏在一起」。
+     ・**字其實已經不小**：詩÷照片高，手機 2.01%、電腦 1.67%，手機還比較大；
+       而詩÷診所名手機已經 0.97（電腦 0.88），再放大會和 logo **一樣大**，
+       那正是 2026-08-09 朋友回報「兩塊字大小差不多、看起來 noisy」的成因。
+       所以主力給位置，字級只留兩階小幅上調（給使用者自己比）。
+     ⚠ 兩個比值（÷字高、÷照片高）在手機上會指向不同的答案，因為手機的字
+        相對照片本來就比較大。「黏在一起」是**字與字之間的關係**，
+        所以以 ÷字高 ＝ 6.0 為準（位置的第④階正好落在那裡）。 */
   /* ---- --ph ＝ 照片實際高度 ------------------------------------------------
      詩的位置與字級都按這個等比例算（見下面兩組）。CSS 這裡先給一個算得出來的
      近似值，開頁不會閃；JS 再用量到的實際高度覆寫（窄帶多高都對得上）。 */
@@ -5856,17 +5952,65 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                               svh 只對「照片高＝一屏扣窄帶」那一格準。
      第三版（現在這一版）：位置與字級**一律按 --ph（照片實際高度）等比例**，
      再用 vw 與絕對上下限夾住。這樣照片多高、詩就多大、坐多低，五格都成立。 */
-  html[data-poem="p2"] { --hero-fs: clamp(min(11.5px, 3.20vw), calc(var(--ph) * .0181), 13px); }
-  html[data-poem="p2"] .hero-copy { padding-top: calc(var(--ph) * .108); }
-  html[data-poem="p2"] .hero-poem { letter-spacing: .19em; line-height: 2.00; }
-  html[data-poem="p2"] .hero-poem .g { font-size: .80em; }
-  html[data-poem="p2"] .hero-poem .lead { margin-bottom: .70em; }
+  /* 尺③　位置（詩往下坐多少）。因為 .hero-copy 是 inset:0，padding-top 的 %
+     會拿**寬度**去算，所以一律寫 calc(var(--ph) * k) 用照片高度算。 */
+  html[data-pos="d0"] .hero-copy { padding-top: calc(var(--ph) * .108); }
+  html[data-pos="d1"] .hero-copy { padding-top: calc(var(--ph) * .129); }
+  html[data-pos="d2"] .hero-copy { padding-top: calc(var(--ph) * .152); }
+  html[data-pos="d3"] .hero-copy { padding-top: calc(var(--ph) * .176); }
+  html[data-pos="d4"] .hero-copy { padding-top: calc(var(--ph) * .200); }
+  html[data-pos="d5"] .hero-copy { padding-top: calc(var(--ph) * .225); }
 
-  html[data-poem="p3"] { --hero-fs: clamp(min(11.5px, 3.60vw), calc(var(--ph) * .0201), 14.5px); }
-  html[data-poem="p3"] .hero-copy { padding-top: calc(var(--ph) * .129); }
-  html[data-poem="p3"] .hero-poem { letter-spacing: .25em; line-height: 2.20; }
-  html[data-poem="p3"] .hero-poem .g { font-size: .92em; }
-  html[data-poem="p3"] .hero-poem .lead { margin-bottom: .82em; }
+  /* 尺⑥　上緣壓深（詩壓到清水模牆上時用）------------------------------------
+     ⚠⚠ 這一格推翻了一個從 2026-08-10 沿用到現在的前提。
+     Ⓢ1 那一輪把「詩不准碰到房子」當成硬約束，整組字距／位置都是照那個楔形
+     解出來的。但**那個約束的真正理由是對比度，而 291px 高的照片上牆很小又很花**。
+     照片拉到 719px、而且是夜景之後，牆自己就夠暗了 —— 逐行取 ink bbox 裡
+     最亮的一格換算白字對比度（390x844、詩 15.5px、坐到第⑤階）：
+
+         上緣的深化層            第一行   第二行   第三行
+         不放                    8.49     6.54     5.88
+         電腦版那層 46% .52/.30  10.54    7.97     6.85
+         厚一階 58% .62/.40      12.05    9.46     8.23
+
+     **連「不放」都全部過 AA（4.5）**，五個視窗最低是 320x568 的第三行 5.00。
+     所以詩不必再擠在天空裡 —— 這是這一輪最大的解鎖，位置與字級因此可以一路
+     推到「和電腦版同一個空隙比」。
+     ⚠ 數字過關不等於好看：牆上有窗框與亮著的窗，**花**是主觀的，所以做成開關
+        讓使用者自己看。預設開電腦版那一層（和電腦版一致，而且最保守）。
+     ⚠ 這一層在電腦版本來就有（.hero-photo::after，46% .52/.30），手機版
+        2026-08-10 之前刻意關掉，理由是「手機的頁首壓在天空上，不需要，
+        留著只會讓天空變濁」—— 那句話在照片只有 291px 的時候成立。 */
+  html[data-veil="v1"] .hero-photo::after { display: block; }
+  html[data-veil="v2"] .hero-photo::after {
+    display: block; height: 58%;
+    background: linear-gradient(180deg,
+      rgba(25, 22, 20, .62) 0%, rgba(25, 22, 20, .40) 42%, rgba(25, 22, 20, 0) 100%);
+  }
+
+  /* 尺④　字級 */
+  html[data-size="s0"] { --hero-fs: clamp(min(11.5px, 3.20vw), calc(var(--ph) * .0181), 13px); }
+  html[data-size="s1"] { --hero-fs: clamp(min(11.5px, 3.60vw), calc(var(--ph) * .0201), 14.5px); }
+  html[data-size="s2"] { --hero-fs: clamp(min(12px, 3.80vw), calc(var(--ph) * .0215), 15.5px); }
+  html[data-size="s3"] { --hero-fs: clamp(min(12px, 4.00vw), calc(var(--ph) * .0230), 16.5px); }
+
+  /* 尺⑤　鬆緊（字距、行高、全形空格、首行後間隔一起走）。
+     a3 ＝ 和電腦版逐字相同（.32em／2.45／全形空格不縮／首行後 .9em）。 */
+  html[data-air="a0"] .hero-poem { letter-spacing: .131em; line-height: 1.75; }
+  html[data-air="a0"] .hero-poem .g { font-size: .65em; }
+  html[data-air="a0"] .hero-poem .lead { margin-bottom: .55em; }
+
+  html[data-air="a1"] .hero-poem { letter-spacing: .19em; line-height: 2.00; }
+  html[data-air="a1"] .hero-poem .g { font-size: .80em; }
+  html[data-air="a1"] .hero-poem .lead { margin-bottom: .70em; }
+
+  html[data-air="a2"] .hero-poem { letter-spacing: .25em; line-height: 2.20; }
+  html[data-air="a2"] .hero-poem .g { font-size: .92em; }
+  html[data-air="a2"] .hero-poem .lead { margin-bottom: .82em; }
+
+  html[data-air="a3"] .hero-poem { letter-spacing: .32em; line-height: 2.45; }
+  html[data-air="a3"] .hero-poem .g { font-size: 1em; }
+  html[data-air="a3"] .hero-poem .lead { margin-bottom: .90em; }
 
   /* ---- 開關　往下看的角形 -------------------------------------------------
      ⚠ 這一項 2026-08-13 在 cta-mobile 的十九項裡**落選過**（「第一屏的下面還有」）。
@@ -5888,7 +6032,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   background: transparent; color: inherit; border-radius: 7px; padding: 6px 2px;
   font: inherit; font-size: 11.5px; letter-spacing: .01em; }
 #sw button[aria-pressed="true"] { background: #e8e6e2; color: #191614; border-color: #e8e6e2; font-weight: 700; }
-#sw .m { font-size: 10.5px; opacity: .62; margin-top: 5px; font-variant-numeric: tabular-nums; }
+#sw .m { font-size: 10.5px; opacity: .62; margin-top: 5px; font-variant-numeric: tabular-nums;
+  white-space: pre-line; }
 #sw .x { position: absolute; right: 6px; top: -30px; background: rgba(20,19,18,.93);
   border: 0; color: #e8e6e2; border-radius: 7px; padding: 5px 9px; font: inherit; }
 #sw .more { width: 100%; margin-top: 5px; border-style: dashed; }
@@ -5912,15 +6057,32 @@ body { padding-bottom: 168px; }
     <button type="button" data-v="now">現況</button><button type="button" data-v="half">半屏</button><button type="button" data-v="two3">三分二</button><button type="button" data-v="fit">抵下緣</button><button type="button" data-v="full">整屏</button></div>
   <div class="r" data-k="crop"><b>裁切</b>
     <button type="button" data-v="street">街景多</button><button type="button" data-v="mid">平衡</button><button type="button" data-v="bldg">建築滿</button></div>
-  <div class="r" data-k="poem"><b>詩</b>
-    <button type="button" data-v="p1">現況</button><button type="button" data-v="p2">鬆一階</button><button type="button" data-v="p3">鬆兩階</button></div>
+  <div class="r" data-k="pos"><b>詩·低</b>
+    <button type="button" data-v="d0">①</button><button type="button" data-v="d1">②</button><button type="button" data-v="d2">③</button><button type="button" data-v="d3">④</button><button type="button" data-v="d4">⑤</button><button type="button" data-v="d5">⑥</button></div>
+  <div class="r" data-k="size"><b>詩·大</b>
+    <button type="button" data-v="s0">①</button><button type="button" data-v="s1">②</button><button type="button" data-v="s2">③</button><button type="button" data-v="s3">④</button></div>
+  <div class="r" data-k="air"><b>詩·鬆</b>
+    <button type="button" data-v="a0">①</button><button type="button" data-v="a1">②</button><button type="button" data-v="a2">③</button><button type="button" data-v="a3">④電腦版</button></div>
+  <div class="r" data-k="veil"><b>壓深</b>
+    <button type="button" data-v="v0">不放</button><button type="button" data-v="v1">電腦版</button><button type="button" data-v="v2">厚一階</button></div>
   <div class="r" data-k="cue"><b>角形</b>
     <button type="button" data-v="0">不放</button><button type="button" data-v="1">放</button></div>
   <p class="m" id="swm"></p>
   <button class="more" type="button" data-more>評分與建議 ▾</button>
   <div id="swn" hidden>
-    <p><b>結論：建議「抵下緣 ＋ 街景多 ＋ 詩鬆兩階」</b>（這一頁打開就是它）。照片從一屏的 34% 變成 85%，照片＋窄帶剛好一屏 ——
+    <p><b>結論：照片用「抵下緣 ＋ 街景多」，詩用「位置⑤ ＋ 字級③ ＋ 鬆緊④ ＋ 壓深電腦版」</b>
+      （這一頁打開就是它）。照片從一屏的 34% 變成 85%，照片＋窄帶剛好一屏 ——
       和電腦版「照片一整屏、窄帶壓在下緣」是同一個做法。</p>
+    <p><b>詩和 logo 為什麼會黏在一起 —— 量出來差 2.2 倍。</b>頁首下緣到詩第一行的空隙，
+      除以詩自己的字高：電腦版 <b>6.00</b>、線上手機 <b>1.02</b>、第一版鬆兩階 <b>2.67</b>、
+      這一版 <b>5.93</b>。字其實已經不小 —— 詩÷診所名，手機 0.97、電腦 0.88，
+      再放大就和 logo 一樣大了，那反而是 noisy 的來源。所以主力給「往下」，
+      字級只加一階到 15.5px，鬆緊直接抄電腦版（字距 .32em、行高 2.45）。</p>
+    <p><b>順帶解掉一條沿用五天的限制。</b>詩原本不准碰到房子（2026-08-10 Ⓢ1 那一輪的
+      前提），但那條的真正理由是對比度，而它是在照片只有 291px 時訂的。
+      夜景的清水模牆自己就夠暗：詩壓在牆上，白字對比度 <b>5.5 ~ 10.5</b>（AA 是 4.5），
+      六個視窗最低 5.53。所以詩可以坐到和電腦版同一個位置。
+      「壓深」那把尺是給眼睛用的 —— 牆上有窗框，花不花是主觀的。</p>
     <table>
       <tr><th></th><th>品牌<br>份量</th><th>詩與<br>照片相合</th><th>讀得<br>清楚</th><th>找資訊<br>的效率</th><th>風險<br>相容</th><th>總分</th></tr>
       <tr><td>現況 34%</td><td>2.0</td><td>4.0</td><td>2.5</td><td>5.0</td><td>5.0</td><td>18.5</td></tr>
@@ -5938,6 +6100,10 @@ body { padding-bottom: 168px; }
       的縮放倍率由<b>高度</b>決定 —— 所以垂直方向永遠是整張照片（天空在上、街面在下
       一列都沒少），拉高只是往左右裁。天空的楔形因此整個<b>放大</b>，詩反而變寬鬆：
       抵下緣那一格三行的餘裕是 +80／+78／+53px（現況只有 +22／+28／+16）。</p>
+    <p><b>四種都試過的三個方向。</b>「詩·低」①→⑥ 是往下坐（空隙 1.0 → 6.7 個字高）、
+      「詩·大」①→④ 是字級（13 → 16.5px 上限）、「詩·鬆」①→④ 是字距與行高
+      （④ 就是電腦版逐字相同）。字級不建議到第④階：第一行右緣會到 368.5px，
+      390 寬上離右緣只剩 21.5px，看起來滿出去。</p>
     <p><b>順便修掉的一件。</b>「巷口」那兩個字壓在對街車頭燈上（2026-08-10 為它加了
       Ⓔ2 那塊暗斑）。新裁法把那盞燈整個裁掉了：收尾句底下最亮的一列從
       L*97 掉到 L*40，白字對比度 1.09 → 6.50。</p>
@@ -5953,7 +6119,15 @@ body { padding-bottom: 168px; }
 (function () {
   var root = document.documentElement;
   /* 網址參數。正規式一定要 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到 p2 這種帶數字的值。 */
-  var q = location.search, def = { h: 'fit', crop: 'street', poem: 'p3', cue: '0' };
+  var q = location.search;
+  var def = { h: 'fit', crop: 'street', pos: 'd4', size: 's2', air: 'a3', veil: 'v1', cue: '0' };
+  /* 舊網址相容：第一版的 poem=p1|p2|p3 是三件事綁在一起的套餐，拆成三把尺之後
+     還是要吃得到（已經把連結給過使用者了）。 */
+  var OLD = { p1: { pos: 'd0', size: 's0', air: 'a0', veil: 'v0' },
+              p2: { pos: 'd0', size: 's0', air: 'a1', veil: 'v0' },
+              p3: { pos: 'd1', size: 's1', air: 'a2', veil: 'v0' } };
+  var old = q.match(/[?&]poem=([a-z0-9]+)/);
+  if (old && OLD[old[1]]) Object.keys(OLD[old[1]]).forEach(function (k) { def[k] = OLD[old[1]][k]; });
   Object.keys(def).forEach(function (k) {
     var m = q.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
     root.setAttribute('data-' + k, m ? m[1] : def[k]);
@@ -5977,12 +6151,21 @@ body { padding-bottom: 168px; }
       p = Math.max(0, Math.min(SW - vis, xc * SW - vis / 2)) / (SW - vis) * 100;
     } else p = 50;
     img.style.objectPosition = p.toFixed(2) + '% 50%';
+    /* 現場量「頁首下緣到詩第一行 ink 上緣」的空隙。用 Range 量 ink，
+       不要量 <span> 的 rect —— 那個框含 line-height 的半行距，會多算幾 px。 */
     var band = document.querySelector('.band');
+    var hd = document.querySelector('header').getBoundingClientRect();
+    var rg = document.createRange();
+    rg.selectNodeContents(document.querySelector('.hero-poem > span'));
+    var l1 = rg.getBoundingClientRect();
+    var fs = parseFloat(getComputedStyle(document.querySelector('.hero-poem')).fontSize);
+    var gap = l1.top - hd.bottom;
     document.getElementById('swm').textContent =
       '照片 ' + H.toFixed(0) + 'px（一屏的 ' + (H / innerHeight * 100).toFixed(0) + '%）'
       + '　窄帶 ' + band.getBoundingClientRect().height.toFixed(0) + 'px'
-      + '　裁切 ' + p.toFixed(1) + '%（看得到原圖寬的 ' + (vis / SW * 100).toFixed(0) + '%）'
-      + '　詩 ' + getComputedStyle(document.querySelector('.hero-poem')).fontSize;
+      + '　裁切 ' + p.toFixed(1) + '%（原圖寬的 ' + (vis / SW * 100).toFixed(0) + '%）'
+      + '\n詩 ' + fs.toFixed(1) + 'px　離頁首 ' + gap.toFixed(1) + 'px'
+      + '　＝ ' + (gap / fs).toFixed(2) + ' 個字高（電腦版 6.00、改動前 1.02）';
   }
 
   document.querySelectorAll('#sw .r').forEach(function (row) {
