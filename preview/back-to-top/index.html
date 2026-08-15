@@ -4236,7 +4236,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      ========================================================================== -->
 <style>
 /* ==========================================================================
-   「回到最上面」的按鈕（提案用，2026-08-15 第二輪）
+   「回到最上面」的按鈕（提案用，2026-08-15 第二／三輪）
    ── 定案之後這一段連同切換條一起刪掉
    --------------------------------------------------------------------------
    第一輪使用者看過 Ⓐ 紙上的卡／Ⓑ 墨玻璃／Ⓒ 深綠松 之後給了三件事：
@@ -4257,8 +4257,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       使用者一眼就看出「長度好像不太一樣」。
    ⚠ 記號的尺寸是**定值 18×19.5**，不跟著方框大小縮放 —— 使用者要的就是
       「和首頁現在那個一樣大」。方框從 44 換到 52 時，變的是留白不是記號。
-   ⚠ 首頁那一組是白色、站在窄帶的深底上；這一顆站在紙上，所以吃 `currentColor`
-      （墨色）。形狀、尺寸、筆畫一個值都沒動，只有顏色不同。
+   ⚠ 首頁那一組是白色、站在窄帶的深底上；這一顆站在紙上，所以吃 `currentColor`。
+      形狀、尺寸、筆畫一個值都沒動，只有顏色不同 —— 顏色見下面第三輪那一段。
 
    ---- ② 底：淡灰色的玻璃 -------------------------------------------------
    第一輪三案為什麼不行：
@@ -4279,7 +4279,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       那一支既有的值）。同一組 alpha 套兩邊的話，偏墨 .80 會變成一塊黑板，
       墨色記號直接不見。
    ⚠ 四支尺都調到底也不會失手：最差的一格（偏墨・濃 .24）合成出來是 L* 74，
-      墨色記號對它 7.9:1，遠高於裝飾性圖形的 3:1。面板底下有現場量測。
+      柔墨的角形對它仍有 3:1 以上（裝飾性圖形的門檻）。面板底下有現場量測。
    ⚠ `backdrop-filter` 只作用在元素自己的框裡，框的邊緣本身就是一條可見的線
       （CLAUDE.md 第九節第 1 條）。頁首那一層要靠 `mask-image` 把模糊淡出，
       **這一顆不必** —— 它是一個實體的小方塊，邊緣本來就要被看見。
@@ -4296,6 +4296,20 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       改成：**要捲的時候不掛 timeout**，由捲動結束那一刻拿掉；只有「不捲」
       （開了減少動態、或已經在最上面）才用 timeout 收尾。
       ⚠ 站上的 `.hero-cue` 目前仍是舊寫法，那是另一件事，這一輪沒有動它。
+
+   ---- 第三輪（同日）：角形要灰的，不要黑的 -------------------------------
+   使用者看過第二輪：「大概是這樣。不過角形的線條現在看起來是黑色，
+   要改成灰色才不突兀。」
+
+   第二輪吃的是內文的墨 `--ink` #2a2c27 —— 那是**內文字**的顏色，
+   放在一顆小小的裝飾記號上確實太重。改成**柔墨 `--ink-soft` #5c5f57**。
+   ⚠ 這不是新挑的灰：站上「紙上的小角形」本來就用這一支 ——
+      首頁那兩顆橫捲提示 `.swrap::before/::after` 是
+      `border-color: var(--ink-soft)` ＋ `opacity: .7`。
+      所以第三輪多開一段尺（柔墨 1 ／ .82 ／ .70），最後那一格就是
+      **和首頁那兩顆一模一樣的做法**。
+   ⚠ 這一輪同時把切換條的預設值換成使用者第二輪最後停在的那一組：
+      偏白・中（.62）／模糊 20px／框線無／點下去「微」／44px／8px／半屏／20px。
    ========================================================================== */
 :root {
   --btt-size: 44px;      /* 方框邊長。44 是觸控下限（2026-08-13 那一輪定的） */
@@ -4304,9 +4318,18 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   --btt-rise: 6px;       /* 進場時從下面浮上來多少 */
   --btt-rgb: 244 244 245;                    /* 玻璃的色：偏白 ＝ --card */
   --btt-a: .62;                              /* 底多濃 */
-  --btt-blur: 12px;
-  --btt-line: 1px solid rgba(42, 44, 39, .10);
+  --btt-blur: 20px;
+  --btt-line: 0;
+  /* 角形的顏色。⚠ 用**柔墨 `--ink-soft` #5c5f57**，不是內文的墨 `--ink` #2a2c27 ——
+     使用者 2026-08-15 第三輪：「角形的線條現在看起來是黑色，要改成灰色才不突兀。」
+     柔墨正是站上「紙上的小角形」既有的那一支：首頁那兩顆橫捲提示
+     （`.swrap::before/::after`）就是 `border-color: var(--ink-soft)` ＋ `opacity: .7`。
+     ⚠ 分量寫成空白分隔，才能在下面用 `rgb(var(--x) / a)` 只調透明度。 */
+  --btt-ink: 92 95 87;
+  --btt-ink-a: 1;
 }
+[data-btt-ink="k2"] { --btt-ink-a: .82; }
+[data-btt-ink="k3"] { --btt-ink-a: .70; }   /* ＝首頁那兩顆橫捲提示的實際做法 */
 /* 玻璃的色。⚠ 用空白分隔的 rgb 分量，才能在下面用 `rgb(var(--x) / alpha)`
    把顏色與透明度拆開調 —— 寫成 #hex 就沒辦法只換其中一項。 */
 [data-btt-tint="paper"] { --btt-rgb: 226 229 230; }   /* ＝ --paper */
@@ -4343,7 +4366,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   -webkit-backdrop-filter: blur(var(--btt-blur)) saturate(1.15);
           backdrop-filter: blur(var(--btt-blur)) saturate(1.15);
   box-shadow: var(--card-shadow);
-  color: var(--ink);
+  color: #5c5f57;                              /* 後備，同下面那一行的理由 */
+  color: rgb(var(--btt-ink) / var(--btt-ink-a));
   /* 沒出現的時候用 visibility 收掉，不是只有 opacity ——
      只設 opacity 的話它還在 tab 順序裡，鍵盤會走到一顆看不見的按鈕。 */
   opacity: 0; visibility: hidden; transform: translateY(var(--btt-rise));
@@ -6694,8 +6718,9 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        「開頁量一次」的 JS（--sk-padT／--role-padT／--lamp-pad）。
      ⚠ 網址參數的正規式一律寫 `[a-z0-9]+`。寫成 `[a-z]+` 會吃不到 `a1` 這種
        帶數字的值，比對失敗後悄悄退回預設，等於參數沒作用（CLAUDE.md 記過）。
-     ⚠ 第二輪的預設值 ＝ 使用者第一輪最後停在的那一組（44px／8px／半屏／20px），
-       只有「底」與「記號」照他的回饋整組換掉了。
+     ⚠ 預設值 ＝ 使用者上一輪最後停在的那一組。第三輪是：
+       偏白・中（.62）／模糊 20px／框線無／點下去「微」／44px／8px／半屏／20px，
+       角形改吃柔墨 #5c5f57（第三輪新增的那一段尺）。
      ========================================================================== -->
 <style>
 .fr-tg, .fr-tg * { box-sizing: border-box; }
@@ -6798,17 +6823,22 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       { k: 'a2', lb: '中', nt: '.62／.16' },
       { k: 'a3', lb: '濃', nt: '.80／.24' }
     ]},
-    { attr: 'blur', g: '玻璃的模糊', def: 'b2', opts: [
+    { attr: 'blur', g: '玻璃的模糊', def: 'b3', opts: [
       { k: 'b1', lb: '6px',  nt: '幾乎只是一層色' },
       { k: 'b2', lb: '12px', nt: '中間' },
       { k: 'b3', lb: '20px', nt: '很糊' }
     ]},
-    { attr: 'line', g: '框線', def: 'd', opts: [
+    { attr: 'line', g: '框線', def: 'n', opts: [
       { k: 'n', lb: '無',   nt: '只靠陰影' },
       { k: 'd', lb: '細墨線', nt: '墨 .10' },
       { k: 'w', lb: '細白線', nt: '白 .55・玻璃感' }
     ]},
-    { attr: 'lit', g: '點下去多亮', def: 'l2', opts: [
+    { attr: 'ink', g: '角形的灰', def: 'k1', opts: [
+      { k: 'k1', lb: '柔墨',    nt: '#5c5f57・站上柔墨' },
+      { k: 'k2', lb: '柔墨 .82', nt: '再淡一點' },
+      { k: 'k3', lb: '柔墨 .70', nt: '＝首頁橫捲提示' }
+    ]},
+    { attr: 'lit', g: '點下去多亮', def: 'l1', opts: [
       { k: 'l1', lb: '微',   nt: '只有底變濃' },
       { k: 'l2', lb: '中',   nt: '＋角形轉深綠松' },
       { k: 'l3', lb: '明顯', nt: '＋整塊套色・陰影加重' }
@@ -6872,7 +6902,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                 .map(function (s) { return s.attr + '=' + state[s.attr]; }).join('&');
     history.replaceState(null, '', location.pathname + (q ? '?' + q : ''));
     var TN = { white: '白', paper: '紙', ink: '墨' }, AN = { a1: '淡', a2: '中', a3: '濃' };
-    btn.querySelector('b').textContent = TN[state.tint] + AN[state.a] + '・' + state.size + 'px';
+    var KN = { k1: '灰1', k2: '灰2', k3: '灰3' };
+    btn.querySelector('b').textContent = TN[state.tint] + AN[state.a] + KN[state.ink] + '・' + state.size + 'px';
     measure();
   }
 
@@ -6974,6 +7005,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       ['觸控目標', r.width.toFixed(0) + ' × ' + r.height.toFixed(0) + (r.width >= 44 && r.height >= 44 ? '（過 44）' : '（不足 44）'), r.width >= 44 && r.height >= 44 ? 'good' : 'bad'],
       ['角形（兩條）', sr.width.toFixed(1) + ' × ' + sr.height.toFixed(1) + ' px', ''],
       ['筆畫', (sv ? getComputedStyle(sv).strokeWidth : '—'), ''],
+      ['角形的顏色（合成後）', 'rgb(' + ink.map(function (v) { return Math.round(v); }).join(', ') + ')・L* ' + Lstar(ink).toFixed(1), ''],
       ['記號對底（估）', cr.toFixed(2) + ':1' + (cr >= 3 ? '' : '（低於 3）'), cr >= 4.5 ? 'good' : cr >= 3 ? 'warn' : 'bad'],
       ['出現門檻', Math.round(lastT) + ' px', ''],
       ['目前捲動', Math.round(lastY) + ' px', ''],
@@ -6983,6 +7015,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     foot.innerHTML = '<div class="fr-tg-g">現場量測</div>' + rows.map(function (x) {
       return '<div class="m ' + x[2] + '"><span>' + x[0] + '</span><b>' + x[1] + '</b></div>';
     }).join('') +
+    '<p class="fr-tg-note">角形是柔墨 #5c5f57，不是內文的墨 #2a2c27 —— 站上「紙上的小角形」本來就用這一支（首頁那兩顆橫捲提示是柔墨 ＋ .7）。</p>' +
     '<p class="fr-tg-note">角形 18 × 19.5 是**定值**，換方框大小時變的是留白不是記號 —— 數字逐項抄自首頁那顆往下滑（每條 18×9、筆畫 1.4、間距 1.5）。</p>' +
     '<p class="fr-tg-note">選好的組合會寫進網址，直接把網址傳回來就知道是哪一格。</p>';
   }
