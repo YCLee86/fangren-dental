@@ -1,0 +1,345 @@
+
+<!-- ==========================================================================
+     切換條（提案專用，定案時連同 data-* 一起刪掉）
+     ========================================================================== -->
+<style>
+/* 面板本身 —— 刻意用系統字與純黑白，不要跟站上的配色搶 */
+.zbar{position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  font:13px/1.5 system-ui,-apple-system,"Noto Sans TC",sans-serif;
+  background:rgba(18,18,18,.93);color:#f2f2f2;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border-top:1px solid rgba(255,255,255,.14);
+  padding:.55rem .7rem calc(.55rem + env(safe-area-inset-bottom));
+  max-height:64svh;overflow:auto;overscroll-behavior:contain}
+.zbar[hidden]{display:none}
+.zrow{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;margin:.22rem 0}
+.zrow b{font-weight:600;opacity:.62;min-width:3.4em;font-size:12px;letter-spacing:.04em}
+.zbar button{font:inherit;font-size:12.5px;color:#f2f2f2;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);border-radius:7px;padding:.28rem .58rem;
+  cursor:pointer;-webkit-appearance:none;appearance:none;line-height:1.3}
+.zbar button[aria-pressed=true]{background:#f2f2f2;color:#121212;border-color:#f2f2f2;font-weight:600}
+.zbar .zact{margin-left:auto;display:flex;gap:.3rem}
+.zbar .zact button{background:transparent}
+.zm{margin-top:.5rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.14);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(9.2rem,1fr));gap:.3rem .8rem;
+  font-variant-numeric:tabular-nums}
+.zm div{display:flex;justify-content:space-between;gap:.5rem;font-size:12px}
+.zm div>span:first-child{opacity:.58;white-space:nowrap}
+.zm div>span:last-child{font-weight:600;text-align:right}
+.zm .bad{color:#ff9d8a}
+.zm .ok{color:#8ee7a1}
+.znote{font-size:11.5px;opacity:.52;margin:.45rem 0 0;line-height:1.6}
+.zopen{position:fixed;right:.6rem;bottom:.6rem;z-index:9999;
+  font:600 12px/1 system-ui,sans-serif;color:#f2f2f2;background:rgba(18,18,18,.86);
+  border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:.55rem .85rem;cursor:pointer}
+.zopen[hidden]{display:none}
+
+/* ---- 效果本體：整個提案就是這幾行 -------------------------------------
+   ⚠ 一定要有一層 overflow:hidden —— <img> 是 position:absolute; inset:0，
+     放大之後會整片溢出 <figure>，蓋到窄帶與底下的「主題與科別」。
+     這裡**不把 overflow 加在 .hero-photo 上**，而是另外包一層 .zwrap：
+     .hero-copy 也在 .hero-photo 裡，而收尾句底下那塊 blur(26px) 的暗斑
+     （.hero-sign::before，inset -1.3em/-1.7em）會被一起裁掉，
+     裁出一條硬邊，正好毀掉「看不出是一個框」那個設計重點。
+   ⚠ transform-origin 預設 50% 100%（＝ object-position 的值），
+     照片最後一列因此完全不動，接縫零風險。 */
+.hero-photo .zwrap{position:absolute;inset:0;overflow:hidden}
+.hero-photo img{transform-origin:50% 100%}
+html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
+</style>
+
+<button class="zopen" hidden>設定</button>
+<div class="zbar">
+  <div class="zrow"><b>方向</b>
+    <button data-k="z" data-v="in">逐漸放大</button>
+    <button data-k="z" data-v="out">逐漸縮小</button>
+    <button data-k="z" data-v="off">不動（現況）</button>
+    <span class="zact"><button class="zreplay">↻ 重播</button><button class="zhide">收起</button></span>
+  </div>
+  <div class="zrow"><b>幅度</b>
+    <button data-k="amt" data-v="2">2%</button>
+    <button data-k="amt" data-v="4">4%</button>
+    <button data-k="amt" data-v="6">6%</button>
+    <button data-k="amt" data-v="10">10%</button>
+  </div>
+  <div class="zrow"><b>時長</b>
+    <button data-k="dur" data-v="6">6 秒</button>
+    <button data-k="dur" data-v="12">12 秒</button>
+    <button data-k="dur" data-v="20">20 秒</button>
+    <button data-k="dur" data-v="40">40 秒</button>
+  </div>
+  <div class="zrow"><b>曲線</b>
+    <button data-k="ease" data-v="linear">等速</button>
+    <button data-k="ease" data-v="out">先快後慢</button>
+    <button data-k="ease" data-v="inout">兩頭都慢</button>
+  </div>
+  <div class="zrow"><b>原點</b>
+    <button data-k="org" data-v="bottom">下緣（接縫不動）</button>
+    <button data-k="org" data-v="center">正中</button>
+  </div>
+  <div class="zrow"><b>循環</b>
+    <button data-k="loop" data-v="once">一次就停</button>
+    <button data-k="loop" data-v="breathe">來回呼吸</button>
+  </div>
+
+  <div class="zm">
+    <div><span>目前倍率</span><span class="zv-k">—</span></div>
+    <div><span>幀率／最差幀</span><span class="zv-fps">—</span></div>
+    <div><span>詩對比 現在／不動</span><span class="zv-poem">—</span></div>
+    <div><span>接縫那一列</span><span class="zv-seam">—</span></div>
+    <div><span>照片放大倍率</span><span class="zv-res">—</span></div>
+    <div><span>照片盒／DPR</span><span class="zv-box">—</span></div>
+  </div>
+  <p class="znote">量測都是現場從 2000w 原檔取樣算的，cover 的裁切、transform、
+    電腦版那層 46% 的暗漸層全部算進去。<b>兩個數字都跟「不動的時候」對照 ——
+    這一頁要回答的是「縮放把數字往哪邊推」，不是絕對值。</b>
+    詩的對比取框裡第 99 百分位的亮點對白字 65%（AA 4.5）——
+    這是**保守值**：整個文字框都算，含行距與行尾的空隙，所以會低於
+    2026-08-15 那一輪「只量字身」量到的 5.0~8.7，看的是它往哪邊動；
+    接縫取照片最後一列的中位數，原點放下緣時 ΔL* 應該恆為 0。
+    這一頁不看系統的「減少動態效果」，定案版會看。</p>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var bar  = document.querySelector('.zbar');
+  var open = document.querySelector('.zopen');
+  var fig  = document.querySelector('.hero-photo');
+  var img  = fig && fig.querySelector('img');
+  if (!img) return;
+
+  var DEF = { z: 'in', amt: '4', dur: '20', ease: 'out', org: 'bottom', loop: 'once' };
+  var S = {};
+  /* ⚠ 正規式一定要 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 踩過） */
+  Object.keys(DEF).forEach(function (k) {
+    var m = new RegExp('[?&]' + k + '=([a-z0-9]+)').exec(location.search);
+    S[k] = m ? m[1] : DEF[k];
+  });
+
+  var EASE = {
+    linear: 'linear',
+    out:    'cubic-bezier(.22,.61,.36,1)',
+    inout:  'cubic-bezier(.45,0,.55,1)'
+  };
+
+  /* 換 keyframes 的名字才保證重新開始 —— 只改 @keyframes 的內容，
+     瀏覽器不一定會把正在跑的動畫重來一次。 */
+  var kfEl = document.createElement('style');
+  document.head.appendChild(kfEl);
+  var flip = 0;
+
+  function apply() {
+    root.setAttribute('data-zorg', S.org);
+    var amt = parseFloat(S.amt) / 100;
+    var a = S.z === 'out' ? 1 + amt : 1;
+    var b = S.z === 'out' ? 1 : 1 + amt;
+    var name = 'fzoom' + (flip = 1 - flip);
+
+    kfEl.textContent = S.z === 'off'
+      ? '.hero-photo img{animation:none;transform:none}'
+      : '@keyframes ' + name + '{from{transform:scale(' + a.toFixed(4) + ')}' +
+        'to{transform:scale(' + b.toFixed(4) + ')}}' +
+        '.hero-photo img{animation:' + name + ' ' + S.dur + 's ' + EASE[S.ease] +
+        ' both ' + (S.loop === 'breathe' ? 'infinite alternate' : '1 normal') + '}';
+
+    [].forEach.call(bar.querySelectorAll('button[data-k]'), function (btn) {
+      btn.setAttribute('aria-pressed', String(S[btn.dataset.k] === btn.dataset.v));
+    });
+
+    history.replaceState(null, '', location.pathname + '?' +
+      Object.keys(S).map(function (k) { return k + '=' + S[k]; }).join('&'));
+
+    setTimeout(measure, 80);
+  }
+
+  bar.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('button');
+    if (!btn) return;
+    if (btn.classList.contains('zhide'))   { bar.hidden = true; open.hidden = false; return; }
+    if (btn.classList.contains('zreplay')) { apply(); return; }
+    if (!btn.dataset.k) return;
+    S[btn.dataset.k] = btn.dataset.v;
+    apply();
+  });
+  open.addEventListener('click', function () { bar.hidden = false; open.hidden = true; measure(); });
+
+  /* ------------------------------------------------------------------ 幀率 */
+  var frames = [], worst = 0, last = 0;
+  requestAnimationFrame(function tick(t) {
+    if (last) {
+      var d = t - last;
+      frames.push(d); if (frames.length > 90) frames.shift();
+      if (d > worst) worst = d;
+    }
+    last = t;
+    requestAnimationFrame(tick);
+  });
+  setInterval(function () {
+    if (bar.hidden || !frames.length) return;
+    var avg = frames.reduce(function (s, v) { return s + v; }, 0) / frames.length;
+    put('zv-fps', (1000 / avg).toFixed(0) + ' fps ／ ' + worst.toFixed(0) + ' ms',
+        worst > 34 ? 'bad' : 'ok');
+    put('zv-k', curK().toFixed(4) + ' ×');
+    worst = 0;
+  }, 1000);
+
+  function put(cls, txt, extra) {
+    var el = bar.querySelector('.' + cls);
+    if (!el) return;
+    el.textContent = txt;
+    el.className = cls + (extra ? ' ' + extra : '');
+  }
+
+  function curK() {
+    var m = getComputedStyle(img).transform;
+    if (!m || m === 'none') return 1;
+    var n = /matrix\(([^,]+),/.exec(m);
+    return n ? parseFloat(n[1]) : 1;
+  }
+
+  /* -------------------------------------------------------------------- 量測 */
+  /* 原圖畫進一張離屏 canvas（同源，不會被污染），之後所有取樣都讀這份像素。
+     ⚠⚠ **不能拿 <img> 自己去畫** —— srcset 用 w 描述子時，naturalWidth 回的是
+       「除以密度之後」的 CSS 尺寸（這一台實測 1088×719，不是 1600×1058），
+       畫出來的 canvas 解析度被壓掉一半，接縫那一列會取樣到錯的地方。
+       另外開一個 Image 直接指定 2000w 的原檔，數字才是真的。
+       （同一個坑 CLAUDE.md 第九節第 15 條已經記過一次。） */
+  var dataW = 0, dataH = 0, buf = null, src = new Image();
+  src.src = '../../assets/hero-clinic-night-2000.jpg';
+  function ensureCanvas() {
+    if (buf) return true;
+    if (!src.complete || !src.naturalWidth) return false;
+    var cv = document.createElement('canvas');
+    dataW = cv.width = src.naturalWidth;
+    dataH = cv.height = src.naturalHeight;
+    var cx = cv.getContext('2d', { willReadFrequently: true });
+    cx.drawImage(src, 0, 0);
+    try { buf = cx.getImageData(0, 0, dataW, dataH).data; } catch (e) { return false; }
+    return true;
+  }
+
+  function srgb(v) { v /= 255; return v <= .04045 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }
+  function lum(c) { return .2126 * srgb(c[0]) + .7152 * srgb(c[1]) + .0722 * srgb(c[2]); }
+  function lstar(Y) { return Y <= 216 / 24389 ? Y * 24389 / 27 : 116 * Math.pow(Y, 1 / 3) - 16; }
+  function hex2(v) { return ('0' + Math.round(v).toString(16)).slice(-2); }
+  function median(a) { a = a.slice().sort(function (x, y) { return x - y; }); return a[a.length >> 1]; }
+
+  function measure() {
+    if (!ensureCanvas()) { setTimeout(measure, 400); return; }
+    var box = fig.getBoundingClientRect();
+    if (!box.height) return;
+    var k = curK();
+    var s = Math.max(box.width / dataW, box.height / dataH);        /* cover 的倍率 */
+    var dw = dataW * s, dh = dataH * s;
+    var op = getComputedStyle(img).objectPosition.split(/\s+/);
+    var opx = (parseFloat(op[0]) || 0) / 100, opy = (parseFloat(op[1]) || 0) / 100;
+    var offX = (box.width - dw) * opx, offY = (box.height - dh) * opy;
+    var ox = box.width / 2, oy = (S.org === 'center' ? box.height / 2 : box.height);
+
+    /* 螢幕上（框座標）的一點 → 原圖的哪一個像素。
+       倍率當參數傳，這樣同一組式子可以順便算一次「不動的時候」拿來對照 ——
+       這一頁真正要回答的是「縮放把數字往哪邊推」，不是絕對值。
+       ⚠ 邊界要夾住不要回 null：cover 保證看得到的範圍一定在圖裡面，
+         但「照片最後一列」算出來正好是 dataH（差一格），不夾的話整排取不到。 */
+    function picker(kk) {
+      return function (qx, qy) {
+        var px = ox + (qx - ox) / kk, py = oy + (qy - oy) / kk;
+        var sx = Math.round((px - offX) / s), sy = Math.round((py - offY) / s);
+        if (sx < -2 || sy < -2 || sx > dataW + 1 || sy > dataH + 1) return null;
+        sx = Math.min(dataW - 1, Math.max(0, sx));
+        sy = Math.min(dataH - 1, Math.max(0, sy));
+        var i = (sy * dataW + sx) * 4;
+        return [buf[i], buf[i + 1], buf[i + 2]];
+      };
+    }
+
+    /* 電腦版還蓋著 .hero-photo::after（上面 46%，#191614 從 .52 → .30 → 0）。
+       詩就坐在那一層底下，不把它算進去，電腦版的對比會被低估一大截。
+       手機版那一層是 display:none，這個函式就回 0。 */
+    var ovDisp = getComputedStyle(fig, '::after').display;
+    function overlayAlpha(qy) {
+      if (ovDisp === 'none') return 0;
+      var p = qy / (box.height * .46);
+      if (p >= 1 || p < 0) return 0;
+      return p <= .42 ? .52 + (.30 - .52) * (p / .42)
+                      : .30 + (0 - .30) * ((p - .42) / .58);
+    }
+    function overlay(c, qy) {
+      var a = overlayAlpha(qy);
+      if (!a) return c;
+      return [0, 1, 2].map(function (i) { return [25, 22, 20][i] * a + c[i] * (1 - a); });
+    }
+
+    /* --- 詩底下的對比度 ----------------------------------------------------
+       白字怕的是亮點（2026-08-10「巷口」壓在車頭燈上就是這樣被抓到的），
+       所以取框內**很亮的那一端**、不是平均。用第 99 百分位不用絕對最大值：
+       字之間有空隙，框裡難免掃到一顆窗戶的高光，一顆像素不該定生死。
+       合成要**逐通道**做，不能拿亮度直接內插 —— alpha 是在 sRGB 空間疊的。 */
+    var poem = document.querySelector('.hero-poem');
+    var pr = poem && poem.getBoundingClientRect();
+    function poemRatio(kk) {
+      var p = picker(kk), rows = [];
+      for (var y = pr.top; y < pr.bottom; y += 2) {
+        for (var x = pr.left; x < pr.right; x += 2) {
+          var c = p(x - box.left, y - box.top);
+          if (c) { c = overlay(c, y - box.top); rows.push([lum(c), c]); }
+        }
+      }
+      if (!rows.length) return null;
+      rows.sort(function (a, b) { return a[0] - b[0]; });
+      var hit = rows[Math.min(rows.length - 1, Math.floor(rows.length * .99))];
+      var Yb = hit[0], bg = hit[1];
+      var txt = [0, 1, 2].map(function (i) { return 255 * .65 + bg[i] * .35; });
+      var Yt = lum(txt);
+      return (Math.max(Yt, Yb) + .05) / (Math.min(Yt, Yb) + .05);
+    }
+    if (pr && pr.width > 0) {
+      var rNow = poemRatio(k), rBase = poemRatio(1);
+      if (rNow != null) {
+        put('zv-poem', rNow.toFixed(2) + ' ／ 不動 ' + rBase.toFixed(2),
+            rNow >= 4.5 ? 'ok' : (rNow >= rBase - .05 ? '' : 'bad'));
+      }
+    }
+
+    /* --- 接縫：照片最後一列的中位數 ----------------------------------------
+       ⚠ 一定要取中位數不要取平均：那一列有路燈與車頭燈，
+         幾顆亮點就能把平均拉高 4 個 L*（CLAUDE.md 第九節第 11 條）。
+       ⚠ 這裡比的是「和不動的時候差多少」，**不是**和定案的 #181614 比 ——
+         那個值是在**手機**的裁切上量的（只看得到中間 36% 的寬），
+         電腦版看得到整張，同一列的中位數本來就不一樣。 */
+    function seamRow(kk) {
+      var p = picker(kk), R = [], G = [], B = [], L = [];
+      for (var qx = 2; qx < box.width; qx += 3) {
+        var c = p(qx, box.height - 0.5);
+        if (!c) continue;
+        R.push(c[0]); G.push(c[1]); B.push(c[2]); L.push(lstar(lum(c)));
+      }
+      return L.length ? { hex: '#' + hex2(median(R)) + hex2(median(G)) + hex2(median(B)),
+                          L: median(L) } : null;
+    }
+    var sNow = seamRow(k), sBase = seamRow(1);
+    if (sNow && sBase) {
+      var d = sNow.L - sBase.L;
+      put('zv-seam', sNow.hex + '　ΔL* ' + (d >= 0 ? '+' : '') + d.toFixed(2),
+          Math.abs(d) < .3 ? 'ok' : 'bad');
+    }
+
+    /* --- 解析度：挑到的那一張被放大幾倍 ------------------------------------
+       需要的裝置像素 ＝ 整張照片在畫面上的寬 × DPR × 目前倍率。
+       ⚠ 不能用 img.naturalWidth 去算（srcset 用 w 描述子時，
+         那個值已經是「除以密度之後」的 CSS 尺寸，永遠算出 1.00 倍）。 */
+    var f = /-(\d+)\.jpg/.exec(img.currentSrc || '');
+    var fileW = f ? parseInt(f[1], 10) : 1600;
+    var up = (dw * (window.devicePixelRatio || 1) * k) / fileW;
+    put('zv-res', up.toFixed(2) + ' 倍　（挑到 ' + fileW + 'w）', up > 2.3 ? 'bad' : 'ok');
+    put('zv-box', Math.round(box.width) + '×' + Math.round(box.height) +
+        '　DPR ' + (window.devicePixelRatio || 1));
+    void dh;
+  }
+
+  window.addEventListener('resize', function () { setTimeout(measure, 200); });
+  img.addEventListener('load', measure);
+  apply();
+})();
+</script>
