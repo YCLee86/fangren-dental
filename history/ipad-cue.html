@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>ipad-cue｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>ipad-cue</h1>
+<p class="meta">
+  原網址 <code>/preview/ipad-cue/</code>（已刪除 2026-08-15）<br>
+  整頁還原：<code>git show 9eace51:preview/ipad-cue/index.html</code><br>
+  產生它的一次性腳本：<code>git show 9eace51:tools/preview-ipad-cue.mjs</code><br>
+  切換條 <code>?rv=&amp;p=&amp;k=&amp;bg=&amp;gp=&amp;op=&amp;mo=</code>，五輪定案上線
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者：「iPad 版需要這個往下滑的暗示，才知道要往下滑，因為這個螢幕看起來很大、
+好像就卡在這邊。」
+
+第一版（線＋角＋小點，放在照片上）上線一天之後：
+「那個往下的暗示很不明顯，放在柱子上，那個角型上還一條線，其實真的完全看不到、
+看不出來那個有什麼意思。我覺得這樣做好像不太對，你再想幾個辦法看看。」</pre></div>
+
+<h2>一、為什麼看不見（量出來的，這一輪的關鍵）</h2>
+<div class="note"><pre>把指標藏起來，量它**正下方那一塊 44×59** 的背景：
+
+    裝置           最暗    平均    最亮
+    iPad 746×977   L* 0    L* 15   L* 45
+    iPad Pro 11    L* 0    L*  7   L* 52
+    iPad 12.9      L* 0    L*  3   L* 52
+
+**同一塊 44×59 裡，背景從 L* 0（門口那根深色柱子）跳到 L* 52（亮著的門）。**
+所以問題不是「亮度不夠」而是**變異太大**：白色的細線落在亮處就不見，
+暗暈落在暗處也不見。加上那條線只有 1px、上端還淡出，本來就接近雜訊。
+
+結論是兩條路：
+① 不要把記號放在照片上 —— 改放在乾淨的底上（窄帶），或改用版面暗示。
+② 一定要放照片上，就要一塊不透明的地，讓背景的變異完全不影響它。</pre></div>
+
+<h2>二、落選的做法（都給使用者看過）</h2>
+<div class="note"><pre>第三輪（六案，放在照片上或版面）
+    露一角　　第一屏底下露出 44px 的紙色，完全不放記號
+    Ⓑ 把手　　小圓角片騎在窄帶上緣
+    Ⓒ 圓鈕　　44px 半透明圓（毛玻璃＋細框）＋ 角形
+    Ⓓ 字＋角　「往下」兩個小字 ＋ 角形（會多兩個字，屬文案決定）
+    Ⓔ 雙角　　兩個加粗角形 ＋ 藥丸底
+    Ⓕ 現況　　線＋角＋小點
+  → 使用者：「目前的腳型我都不是很喜歡，第一個它的位置在那邊非常突兀。」
+     圓鈕特別點名：「圓圈跟現在整個主題都不搭，網站主題是方框導圓。」
+
+第四輪（搬到右下 ＋ 方框導圓）
+    Ⓖ 雙角（無框）｜ Ⓗ 框＋單角 ｜ Ⓘ 框＋雙角
+  → 使用者：「那個雙角有點靠得太近，而且看起來長度好像不太一樣。」
+     「目前是做成方框嗎？我想要跟電腦版一樣是個底色，有套一點顏色上去的底，
+       不要有框。」
+     ⚠ 長度不一樣的成因：上面那條是 CSS 邊框畫的（13×13 方塊轉 45 度，
+       水平跨距 13×√2 ≈ 18.4px），下面那條是 SVG（18px）—— 兩種畫法的尺寸與
+       視覺重量本來就不同。使用者一眼看出來。</pre></div>
+
+<h2>三、定案</h2>
+<div class="note"><pre>**窄帶右下角、兩條一模一樣的角形 ＋ 套色的底 ＋ 慢速浮動**
+
+位置　貼版心右緣（right: var(--pad)）、垂直對齊「5 個／部定專科」那一列的中線
+      —— 實測四個尺寸都是**距窄帶下緣 34.9px**（窄帶的內容不會重排，是常數）
+記號　兩條角形都用**同一張 SVG**（data URI）畫，尺寸粗細端點逐像素相同
+間距　1.5px　　白　.36　　底　rgba(226,229,230,.10) ＋ --frame-r 的圓角，沒有框線
+動　　慢速浮動（translateY 4px、2.4 秒），看 prefers-reduced-motion
+觸控目標　44×39.5
+
+⚠ data URI 的 SVG 一定要寫 width/height，只有 viewBox 的話 Safari 當背景圖時
+   有時直接不畫（CLAUDE.md 第九節，橫捲提示那一輪踩過同一條）。
+⚠ 記號是**裝飾性圖形**，門檻看非文字的 3:1。實測窄帶在記號那一塊是 L* 15.2：
+
+    底            底的 L*   白.68    白.55    白.45    白.36
+    無底           15.2     10.6     8.8      7.3      6.1
+    淺底 .10       37.0      5.2     4.4      3.8      3.2   ← 定案這一格
+    稍濃 .16       44.4      4.1     3.5      3.0      2.6
+
+   **日後若把底換成 .16，白就不能低於 .45**（.36 只剩 2.6:1）。
+   底愈濃、白反而愈不明顯 —— 因為底本身把周圍提亮了。
+⚠ 點下去是**原生的錨點導覽**（a href="#topics"）＋ CSS 的 scroll-behavior: smooth，
+   會平滑捲到「主題與科別」。逐幀量過：0 → 32 → 132 → 300 → 518 → 689 → 891
+   → 1034 → 1106 → 1118，約 500ms。**不要改成 preventDefault 自己 scrollTo**
+   —— 那會把那一步歷史紀錄弄丟（CLAUDE.md 第九節第 13 條同一條）。</pre></div>
+
+<h2>四、實作上踩到的三個坑</h2>
+<div class="note"><pre>1. **偽元素的舊值要全部歸零。** 正式站的 .hero-cue::before 是那條 1px 的細線
+   （有 background 與 border-radius）、::after 是那顆會動的點
+   （position:absolute; left:50%; top:6px）。拿它們來畫兩條角形時只清了 background、
+   忘了清 position，結果兩條角形**一上一下錯開成階梯**。
+2. **keyframes 不能照抄電腦版。** 電腦版那顆是 transform: translateX(-50%)，
+   所以它的浮動 keyframes 寫 translate(-50%, 4px)。右下這顆的 transform 是 none，
+   照抄會讓它突然往左跳半個身。這裡只寫 translateY。
+3. **提案頁的抬頭註解結尾寫成 CSS 的結束記號**（星號＋斜線）而不是 HTML 的 -->，
+   註解沒有關起來，把後面整個 header 都吃掉了（querySelector("header") 回 null、
+   hero.top 從 0 變 90）。和「CSS 註解裡不能出現註解的結束記號」是同一類的坑。</pre></div>
+
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md 第九節定案表〕
+- **iPad 的「往下滑」指標** — **窄帶右下角、兩條一模一樣的角形 ＋ 套色的底 ＋
+  慢速浮動**（2026-08-15，五輪）。間距 1.5px、白 .36、底 rgba(226,229,230,.10)、
+  圓角 --frame-r、沒有框線、觸控 44×39.5。
+  ⚠⚠ **記號不要放在照片上**：量過指標正下方那一塊，背景在同一塊裡從 L* 0
+    （深色柱子）跳到 L* 52（亮著的門），白線與暗暈都會有一半的位置不見。
+    窄帶是一整片乾淨的深色，放上去就沒有這個問題。
+  ⚠ 垂直對齊三格那一列的中線 ＝ 距窄帶下緣 34.9px（四個尺寸都一樣，是常數）。
+  ⚠ 兩條角形要用**同一張 SVG** 畫，不要一條 SVG 一條 CSS 邊框（跨距差 0.4px、
+    視覺重量也不同，使用者一眼看出「長度不一樣」）。
+  ⚠ 白 .36 配 .10 的底是 3.2:1（裝飾性圖形門檻 3:1）。底換濃就要把白拉回 .45。
+  ⚠ 落選：圓鈕（「圓圈跟網站主題不搭」）、字＋角、窄帶把手、方框有框線、
+    放在照片上的線＋角＋小點。</pre></div>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

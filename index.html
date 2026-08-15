@@ -3165,59 +3165,83 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 
 /* ==========================================================================
-   「往下滑」的指標：兩段直式平板都放（2026-08-15 定案）
+   「往下滑」的指標：兩段直式平板都放（2026-08-15，第五輪定案）
    --------------------------------------------------------------------------
    使用者：「iPad 版需要這個往下滑的暗示，才知道要往下滑，因為這個螢幕看起來
-   很大、好像就卡在這邊。你之前做那個角型只是一個勾尾，看起來其實有點不太在
-   幹嘛，再多一點點暗示性 —— 那個暗示性也不要真的太強。」
+   很大、好像就卡在這邊。」
 
-   定案 ＝ **一條往下漸濃的細線 ＋ 角形 ＋ 一顆沿著線慢慢往下走的小點**。
-   ・線和角形合起來才讀得出是「↓」；單一個角形太像打勾（使用者的原話）。
-   ・會動的只有那顆 2px 的點，角形完全不動 —— 這是「多一點點、但不要太強」。
+   定案 ＝ **窄帶右下角、兩條一模一樣的角形 ＋ 一塊套色的底 ＋ 慢速浮動**。
 
-   ⚠ 位置：電腦版那顆是 `bottom: calc(100% + 4px)`（貼著窄帶上緣），在 iPad
-      直放會落進**照片最後 84px 的接縫**裡（模糊層與柏油層正好在那裡）——
-      那正是 2026-08-14 在那一段把它關掉的原因。這裡抬到離窄帶上緣 110px，
-      整顆站在乾淨的照片上。五個尺寸實測：都在照片內、和收尾句不重疊。
-   ⚠ **一定要自己帶「地」。** 指標落在亮著燈的門面正上方：逐格量那一區 60×60
-      的背景（三個尺寸 × 離下緣 40~300px），平均是暗的（L* 4~29），但**最亮的
-      那一格一路都在 L* 46~64**（白字對比只有 2.7~5.3）。電腦版用的是淺色底塊，
-      但淺色底塊在亮處會不見；這裡改用**暗暈**（drop-shadow），亮處暗處都成立，
-      而且看起來像路面自己暗下去，不像多一個框（同收尾句 Ⓔ2 那塊暗斑的手法）。
-   ⚠ drop-shadow 跟著 alpha 形狀走，掛在 `a` 上會同時罩住線與角形，不必多加元素。
-   ⚠ 觸控目標 44px 寬（padding 12px ＋ 角形 20px），高 59px。
+   ---- 前面三版為什麼不行（都量過，不要再走回去）----------------------------
+   ① 線＋角＋小點，放在照片上（上線過一天）：使用者「完全看不到、看不出來
+      那個有什麼意思」。把指標藏起來量它正下方那一塊 44×59 的背景：
+
+          裝置          最暗    平均    最亮
+          iPad 746×977  L* 0    L* 15   L* 45
+          iPad Pro 11   L* 0    L*  7   L* 52
+          iPad 12.9     L* 0    L*  3   L* 52
+
+      **同一塊裡背景從 L* 0（門口那根深色柱子）跳到 L* 52（亮著的門）** ——
+      不是「不夠亮」，是**變異太大**：白線落在亮處不見、暗暈落在暗處也不見。
+      加上那條線只有 1px、上端還淡出，本來就接近雜訊。
+   ② 把手／圓鈕／字＋角：使用者都不喜歡，「圓圈跟整個網站的主題不搭」。
+   ③ 方框（有框線）：使用者要的是**和電腦版一樣的套色底，不要框**。
+
+   ---- 這一版怎麼解的 ------------------------------------------------------
+   ・**位置搬到窄帶上**（不是照片上）：窄帶是一整片乾淨的深色，上面那個
+     「同一塊裡差 52 個 L*」的問題直接消失，不必再靠暗暈硬撐。
+   ・垂直對齊「5 個／部定專科」那一列的中線 —— 實測四個尺寸**都是距窄帶下緣
+     34.9px**（窄帶的內容不會重排，所以是常數）。
+   ・水平貼版心右緣（`right: var(--pad)`），比第三格再往右 31~174px。
+   ・**兩條角形用同一張 SVG 畫兩次**，尺寸粗細端點逐像素相同。
+     ⚠ 上一版一條用 CSS 邊框（13×13 轉 45 度 ＝ 水平跨距 18.4px）、一條用 SVG
+       （18px），使用者一眼看出「長度好像不太一樣」。
+     ⚠ data URI 的 SVG **一定要寫 width/height**，只有 viewBox 的話 Safari
+       當背景圖時有時直接不畫（CLAUDE.md 第九節，橫捲提示那一輪踩過同一條）。
+   ・底 ＝ 電腦版那一塊（`rgba(226,229,230,.10)` ＋ `--frame-r` 的圓角），沒有框線。
+
+   ---- 定案的四個值（都是使用者一階一階挑的）------------------------------
+   間距 1.5px ／ 白 .36 ／ 淺底 .10 ／ 慢速浮動。
+   ⚠ 記號是**裝飾性圖形**，門檻看非文字的 3:1。實測窄帶在記號那一塊是 L* 15.2，
+     加上 .10 的底之後底是 L* 37.0，白 .36 → **3.2:1**（過）。
+     **如果日後有人想把底換成更濃的（.16），白就不能低於 .45**（.36 只剩 2.6:1）。
+     底愈濃、白反而愈不明顯 —— 因為底本身把周圍提亮了。
+   ⚠ 觸控目標 44×39.5。
    ⚠ 會動的東西要看 prefers-reduced-motion —— 這一站另外三處 CSS 也都看。
+   ⚠ **點下去是原生的錨點導覽**（`<a href="#topics">`）＋ CSS 的
+     `scroll-behavior: smooth`，所以會平滑捲到「主題與科別」。
+     逐幀量過：0 → 18 → 132 → 300 → 518 → 689 → 891 → 1034 → 1106 → 1118，
+     約 500ms。**不要改成 preventDefault 自己 scrollTo** —— 那會把那一步歷史
+     紀錄弄丟，上一頁就回不到第一屏（CLAUDE.md 第九節第 13 條同一條）。
    ========================================================================== */
 @media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
   .hero-cue {
-    display: flex; flex-direction: column; gap: 7px;
-    bottom: calc(100% + 110px);
-    background-color: transparent; padding: 6px 12px;
-    filter: drop-shadow(0 0 7px rgba(25, 22, 20, .9)) drop-shadow(0 1px 3px rgba(25, 22, 20, .75));
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.5px;                       /* 兩條角形之間 */
+    width: 44px; height: 39.5px;      /* 9 ＋ 1.5 ＋ 9 ＋ 上下各 10 */
+    padding: 0; border: 0; filter: none;
+    /* 貼版心右緣、對齊三格那一列的中線 */
+    left: auto; right: var(--pad); transform: none;
+    bottom: calc(34.9px - 39.5px / 2);
+    background-color: rgba(226, 229, 230, .10);   /* ＝電腦版那一塊底 */
+    border-radius: var(--frame-r);
   }
-  /* 線：上端淡出、往下漸濃，所以不會看起來像一根釘子 */
-  .hero-cue::before {
-    content: ''; width: 1px; height: 30px; border-radius: 1px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .5) 100%);
-  }
-  .hero-cue svg { width: 20px; height: 10px; stroke-width: 1.2; }
-  /* 沿著線往下走的那顆點 */
-  @keyframes heroCueDot {
-    0%   { transform: translate(-50%, 0);    opacity: 0; }
-    18%  { opacity: 1; }
-    72%  { opacity: 1; }
-    100% { transform: translate(-50%, 26px); opacity: 0; }
-  }
+  .hero-cue svg { display: none; }    /* 兩條角形都由偽元素畫，保證一模一樣 */
+  .hero-cue::before,
   .hero-cue::after {
-    content: ''; position: absolute; left: 50%; top: 6px;
-    width: 2px; height: 2px; border-radius: 50%; background: rgba(255, 255, 255, .95);
-    animation: heroCueDot 2.8s cubic-bezier(.4, 0, .5, 1) infinite;
+    content: ''; display: block; width: 18px; height: 9px; opacity: .36;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='9' viewBox='0 0 18 9' fill='none' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l8 7 8-7'/%3E%3C/svg%3E") center / 18px 9px no-repeat;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-cue::after { animation: none; opacity: .85; }
+  /* 慢速浮動。⚠ 這一段的 transform 是 none（不是 translateX(-50%)），
+     所以 keyframes 只寫 translateY，不要照抄電腦版那一組。 */
+  @keyframes heroCueBob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(4px); }
   }
-  /* 游標經過時整塊亮起來那一套（電腦版的 .hero-cue:hover）在平板上沒有游標，
-     底塊也已經拿掉，所以那條規則在這裡自然不生效，不必特別關。 */
+  .hero-cue { animation: heroCueBob 2.4s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .hero-cue { animation: none; } }
+  /* 游標經過整塊亮起來那一套（電腦版的 .hero-cue:hover）在平板上沒有游標，
+     不生效也不必特別關。 */
 }
 
 /* ==========================================================================
