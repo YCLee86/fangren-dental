@@ -52,7 +52,19 @@ const HEADNOTE = `
      位置　　　右下（＝「5 個／部定專科」那一列的中線、貼版心右緣）｜ 置中（上一版）
      記號　　　不放 ｜ 單角 ｜ 雙角（兩條逐像素相同的 SVG）
      底　　　　無 ｜ 淺（＝電腦版 rgba(226,229,230,.10)）｜ 稍濃 .16　**都沒有框線**
-     雙角間距　緊 3px ｜ 中 5px ｜ 鬆 8px
+     雙角間距　貼 0 ｜ 1.5 ｜ 3 ｜ 5（第一版是 3／5／8，使用者說要更緊）
+     角形的白　.68（＝電腦版那一階）｜ .55 ｜ .45 ｜ .36（使用者說白得有點突兀）
+
+     ---- 白 × 底 的對比度（實測窄帶在記號那一塊是 L* 15.2）------------------
+     記號是**裝飾性圖形**，門檻看的是非文字的 3:1，不是文字的 4.5:1。
+
+         底            底的 L*   白.68    白.55    白.45    白.36
+         無底           15.2     10.6     8.8      7.3      6.1
+         淺底 .10       37.0      5.2     4.4      3.8      3.2
+         稍濃 .16       44.4      4.1     3.5      3.0      2.6   <- 這一列要小心
+
+     ⚠ **選「稍濃」的話白不要低於 .45**（.36 只剩 2.6:1，低於 3）。
+        「淺底」與「無底」四階都過。
      要不要動　不動 ｜ 慢速移動
 
      ---- 第三輪的六案（留著看推導，已從切換條拿掉）------------------------
@@ -139,7 +151,7 @@ const BAR = `
        （position:absolute; left:50%; top:6px）。少歸零一項，兩條角形就會
        一上一下錯開 —— 第一版就是這樣（::after 還吊在 absolute 上）。 */
     position: static; left: auto; top: auto; right: auto; bottom: auto;
-    border: 0; border-radius: 0; opacity: .68;
+    border: 0; border-radius: 0; opacity: var(--cue-op, .68);
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='9' viewBox='0 0 18 9' fill='none' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l8 7 8-7'/%3E%3C/svg%3E") center / 18px 9px no-repeat;
     animation: none;
   }
@@ -157,10 +169,21 @@ const BAR = `
   html[data-bg="l"]  .hero-cue { background-color: rgba(226, 229, 230, .10); }
   html[data-bg="m"]  .hero-cue { background-color: rgba(226, 229, 230, .16); }
 
-  /* 兩條角形的間距 */
-  html[data-gp="s"] { --cue-gap: 3px; }
-  html[data-gp="m"] { --cue-gap: 5px; }
-  html[data-gp="l"] { --cue-gap: 8px; }
+  /* 兩條角形的間距。使用者第二輪：「可以比緊 3 再緊一點」，所以整組往下挪，
+     0 就是兩個 18×9 的框貼在一起（SVG 的墨跡填滿整個框，所以視覺上就是
+     上面那條的尖端頂著下面那條的兩臂）。 */
+  html[data-gp="x"] { --cue-gap: 0px; }
+  html[data-gp="s"] { --cue-gap: 1.5px; }
+  html[data-gp="m"] { --cue-gap: 3px; }
+  html[data-gp="l"] { --cue-gap: 5px; }
+
+  /* 角形的白。使用者：「那個角型的白看起來有點亮，可以再降低一些，
+     不然好像很突兀。」原本是 .68（＝電腦版 .hero-cue 的 color rgba(255,255,255,.65)
+     那一階）。窄帶比照片乾淨，所以可以壓得比電腦版低。 */
+  html[data-op="a"] { --cue-op: .68; }
+  html[data-op="b"] { --cue-op: .55; }
+  html[data-op="c"] { --cue-op: .45; }
+  html[data-op="d"] { --cue-op: .36; }
 
   /* 慢速移動。右下那格的 transform 是 none，所以兩個位置各寫一組。 */
   @keyframes cueBobBR { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
@@ -198,7 +221,9 @@ body { padding-bottom: 150px; }
   <div class="r" data-k="bg"><b>底</b>
     <button type="button" data-v="n">無</button><button type="button" data-v="l">淺（電腦版）</button><button type="button" data-v="m">稍濃</button></div>
   <div class="r" data-k="gp"><b>雙角間距</b>
-    <button type="button" data-v="s">緊 3</button><button type="button" data-v="m">中 5</button><button type="button" data-v="l">鬆 8</button></div>
+    <button type="button" data-v="x">貼 0</button><button type="button" data-v="s">1.5</button><button type="button" data-v="m">3</button><button type="button" data-v="l">5</button></div>
+  <div class="r" data-k="op"><b>角形的白</b>
+    <button type="button" data-v="a">.68</button><button type="button" data-v="b">.55</button><button type="button" data-v="c">.45</button><button type="button" data-v="d">.36</button></div>
   <div class="r" data-k="mo"><b>要不要動</b>
     <button type="button" data-v="0">不動</button><button type="button" data-v="1">慢速浮動</button></div>
   <p class="m" id="swm"></p>
@@ -208,7 +233,7 @@ body { padding-bottom: 150px; }
 (function () {
   var root = document.documentElement;
   /* 正規式一定要 [a-z0-9]+ */
-  var q = location.search, def = { rv: '0', p: 'br', k: 'g', bg: 'l', gp: 'm', mo: '0' };
+  var q = location.search, def = { rv: '0', p: 'br', k: 'g', bg: 'l', gp: 's', op: 'c', mo: '0' };
   Object.keys(def).forEach(function (kk) {
     var m = q.match(new RegExp('[?&]' + kk + '=([a-z0-9]+)'));
     root.setAttribute('data-' + kk, m ? m[1] : def[kk]);
@@ -221,6 +246,8 @@ body { padding-bottom: 150px; }
     document.getElementById('swm').textContent =
       '第一屏底下露出紙色 ' + Math.max(0, innerHeight - hero.bottom).toFixed(0) + 'px'
       + '　窄帶 ' + bd.height.toFixed(0) + 'px'
+      + '\\n白 ' + (getComputedStyle(document.documentElement).getPropertyValue('--cue-op') || '.68').trim()
+      + '　間距 ' + (getComputedStyle(document.documentElement).getPropertyValue('--cue-gap') || '-').trim()
       + '\\n記號 ' + (cs.display === 'none' ? '不放'
           : r.width.toFixed(0) + '×' + r.height.toFixed(0) + '　離窄帶上緣 ' + (bd.top - r.bottom).toFixed(0) + 'px'
             + '　底 ' + (cs.backgroundColor === 'rgba(0, 0, 0, 0)' ? '無' : cs.backgroundColor));
