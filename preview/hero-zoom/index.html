@@ -1260,25 +1260,37 @@ html[data-here] .nav-lamp { opacity: 1; }
      那個設計重點。所以另外包一層只裝 <img> 的 .hero-shot。
      它是 position:absolute; inset:0，幾何和原本一模一樣，版面零影響。
 
-   ---- 參數與它們的理由 ---------------------------------------------------
+   ---- 參數：**電腦與手機是兩組不同的值**（使用者各挑各的）-----------------
 
-     幅度 6%　時長 12 秒　cubic-bezier(.22,.61,.36,1)（先快後慢）　一次就停
+     電腦　放大 6%　12 秒　　　　　(min-width:721px) and (min-aspect-ratio:9/10)
+     手機　放大 10%　6 秒　　　　　(max-width:720px)
+     兩邊共用 cubic-bezier(.22,.61,.36,1)（先快後慢）、原點下緣、一次就停。
 
-   2% 幾乎看不出來，10% 就從「暗示」變成「效果」。一次就停不做來回呼吸 ——
+   看起來手機比較「重」，但**在手機上這一組才等於電腦版那一組的力道**：
+   電腦版每秒走 0.5%，手機這一組每秒走 1.67% —— 差別是**手機第一屏的照片
+   只有 719px 高、寬 390px**，同樣的百分比換算成位移遠比電腦版少，
+   而且手機是滑過去就走，沒有人會在第一屏停 12 秒。使用者兩台各看過才挑的。
+
+   2% 在手機上幾乎看不出來。一次就停不做來回呼吸 ——
    一張靜止的建築照片來回縮放看起來像壞掉，而且永遠不會停在定案的構圖上。
 
    ⚠ **這裡看 prefers-reduced-motion**（和窄帶那個往上數的數字**不同**，
      那一件 2026-08-08 使用者定了不看，理由在本檔 .band-views 那一段）。
      一張滿版照片的縮放正是那個設定針對的東西（位移／視差／縮放）。
 
-   ⚠ **只開在電腦版**：(min-width:721px) and (min-aspect-ratio:9/10)。
-     手機（≤720）、iPad 直放（9/10~2/3）、直立螢幕（≤2/3）三段都還沒定案 ——
-     那三種裁法不一樣，詩底下換到的像素也不一樣，要各自量過再開。
-     提案頁在 /preview/hero-zoom/。
+   ⚠ **transform-origin 是無條件的，不要再搬回任何一個 @media 裡。**
+     第一版（電腦版上線那次）把它寫在電腦版那道 @media 裡面，手機吃不到、
+     會退回預設的 50% 50% —— 接縫就跑掉了。手機上線時才發現。
 
-   ⚠ 結束時多放大 6%，等於 srcset 挑到的那張要多撐 6%。實測不影響選檔
-     （1440 DPR1 需要 1361 → 1443，兩邊都挑 1600w），所以 sizes 沒有跟著改。
-     **日後若把幅度加大，要回頭重驗 sizes**（本檔第九節第 15 條）。
+   ⚠ **iPad 直放（9/10~2/3）與直立螢幕（≤2/3）都還沒開。** 那兩段的裁法
+     與版型都不一樣（照片是 flex 撐開的、窄帶的位置也不同），而且那兩段
+     **本來就有一個會動的東西**（「往下滑」的指標會慢速浮動），
+     第一屏同時兩件事在動要看過才知道行不行。提案頁在 /preview/hero-zoom/。
+
+   ⚠ 結束時多放大一個幅度，等於 srcset 挑到的那張要多撐那麼多。實測不影響選檔
+     （電腦 1440 DPR1 需要 1361 → 1443，兩邊都挑 1600w；手機挑 2000w，
+     DPR3 上 1.63 → 1.79 倍，仍在 2 倍以內），所以 sizes 沒有跟著改。
+     **日後若再把幅度加大，要回頭重驗 sizes**（本檔第九節第 15 條）。
 
    ⚠ 頁首的模糊有跟著補償：paintBlur() 是用盒子的幾何推「條子底下是照片的
      哪一列」，它看不到 CSS transform。實測不補的話「招牌」那個門檻會晚到
@@ -1288,15 +1300,20 @@ html[data-here] .nav-lamp { opacity: 1; }
    ========================================================================== */
 .hero-shot { position: absolute; inset: 0; overflow: hidden; }
 
-@keyframes hero-push-in { from { transform: scale(1); } to { transform: scale(1.06); } }
+/* ⚠ 無條件，見上面那一條。放在 @media 裡會讓沒被覆蓋到的版型退回 50% 50%。 */
+.hero-photo img { transform-origin: 50% 100%; }
+
+@keyframes hero-push-in    { from { transform: scale(1); } to { transform: scale(1.06); } }
+@keyframes hero-push-in-sm { from { transform: scale(1); } to { transform: scale(1.10); } }
 
 @media (min-width: 721px) and (min-aspect-ratio: 9/10) {
-  .hero-photo img {
-    transform-origin: 50% 100%;
-    animation: hero-push-in 12s cubic-bezier(.22, .61, .36, 1) both;
-  }
+  .hero-photo img { animation: hero-push-in 12s cubic-bezier(.22, .61, .36, 1) both; }
 }
-@media (min-width: 721px) and (min-aspect-ratio: 9/10) and (prefers-reduced-motion: reduce) {
+@media (max-width: 720px) {
+  .hero-photo img { animation: hero-push-in-sm 6s cubic-bezier(.22, .61, .36, 1) both; }
+}
+/* ⚠ 這一條要排在上面兩條後面（同權重，後面的贏）。 */
+@media (prefers-reduced-motion: reduce) {
   .hero-photo img { animation: none; }
 }
 
@@ -3165,59 +3182,111 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 
 /* ==========================================================================
-   「往下滑」的指標：兩段直式平板都放（2026-08-15 定案）
+   「往下滑」的指標：兩段直式平板都放（2026-08-15，第五輪定案）
    --------------------------------------------------------------------------
    使用者：「iPad 版需要這個往下滑的暗示，才知道要往下滑，因為這個螢幕看起來
-   很大、好像就卡在這邊。你之前做那個角型只是一個勾尾，看起來其實有點不太在
-   幹嘛，再多一點點暗示性 —— 那個暗示性也不要真的太強。」
+   很大、好像就卡在這邊。」
 
-   定案 ＝ **一條往下漸濃的細線 ＋ 角形 ＋ 一顆沿著線慢慢往下走的小點**。
-   ・線和角形合起來才讀得出是「↓」；單一個角形太像打勾（使用者的原話）。
-   ・會動的只有那顆 2px 的點，角形完全不動 —— 這是「多一點點、但不要太強」。
+   定案 ＝ **窄帶右下角、兩條一模一樣的角形 ＋ 一塊套色的底 ＋ 慢速浮動**。
 
-   ⚠ 位置：電腦版那顆是 `bottom: calc(100% + 4px)`（貼著窄帶上緣），在 iPad
-      直放會落進**照片最後 84px 的接縫**裡（模糊層與柏油層正好在那裡）——
-      那正是 2026-08-14 在那一段把它關掉的原因。這裡抬到離窄帶上緣 110px，
-      整顆站在乾淨的照片上。五個尺寸實測：都在照片內、和收尾句不重疊。
-   ⚠ **一定要自己帶「地」。** 指標落在亮著燈的門面正上方：逐格量那一區 60×60
-      的背景（三個尺寸 × 離下緣 40~300px），平均是暗的（L* 4~29），但**最亮的
-      那一格一路都在 L* 46~64**（白字對比只有 2.7~5.3）。電腦版用的是淺色底塊，
-      但淺色底塊在亮處會不見；這裡改用**暗暈**（drop-shadow），亮處暗處都成立，
-      而且看起來像路面自己暗下去，不像多一個框（同收尾句 Ⓔ2 那塊暗斑的手法）。
-   ⚠ drop-shadow 跟著 alpha 形狀走，掛在 `a` 上會同時罩住線與角形，不必多加元素。
-   ⚠ 觸控目標 44px 寬（padding 12px ＋ 角形 20px），高 59px。
+   ---- 前面三版為什麼不行（都量過，不要再走回去）----------------------------
+   ① 線＋角＋小點，放在照片上（上線過一天）：使用者「完全看不到、看不出來
+      那個有什麼意思」。把指標藏起來量它正下方那一塊 44×59 的背景：
+
+          裝置          最暗    平均    最亮
+          iPad 746×977  L* 0    L* 15   L* 45
+          iPad Pro 11   L* 0    L*  7   L* 52
+          iPad 12.9     L* 0    L*  3   L* 52
+
+      **同一塊裡背景從 L* 0（門口那根深色柱子）跳到 L* 52（亮著的門）** ——
+      不是「不夠亮」，是**變異太大**：白線落在亮處不見、暗暈落在暗處也不見。
+      加上那條線只有 1px、上端還淡出，本來就接近雜訊。
+   ② 把手／圓鈕／字＋角：使用者都不喜歡，「圓圈跟整個網站的主題不搭」。
+   ③ 方框（有框線）：使用者要的是**和電腦版一樣的套色底，不要框**。
+
+   ---- 這一版怎麼解的 ------------------------------------------------------
+   ・**位置搬到窄帶上**（不是照片上）：窄帶是一整片乾淨的深色，上面那個
+     「同一塊裡差 52 個 L*」的問題直接消失，不必再靠暗暈硬撐。
+   ・垂直對齊「5 個／部定專科」那一列的中線 —— 實測四個尺寸**都是距窄帶下緣
+     34.9px**（窄帶的內容不會重排，所以是常數）。
+   ・水平貼版心右緣（`right: var(--pad)`），比第三格再往右 31~174px。
+   ・**兩條角形用同一張 SVG 畫兩次**，尺寸粗細端點逐像素相同。
+     ⚠ 上一版一條用 CSS 邊框（13×13 轉 45 度 ＝ 水平跨距 18.4px）、一條用 SVG
+       （18px），使用者一眼看出「長度好像不太一樣」。
+     ⚠ data URI 的 SVG **一定要寫 width/height**，只有 viewBox 的話 Safari
+       當背景圖時有時直接不畫（CLAUDE.md 第九節，橫捲提示那一輪踩過同一條）。
+   ・底 ＝ 電腦版那一塊（`rgba(226,229,230,.10)` ＋ `--frame-r` 的圓角），沒有框線。
+
+   ---- 定案的四個值（都是使用者一階一階挑的）------------------------------
+   間距 1.5px ／ 白 .36 ／ 淺底 .10 ／ 慢速浮動。
+   ⚠ 記號是**裝飾性圖形**，門檻看非文字的 3:1。實測窄帶在記號那一塊是 L* 15.2，
+     加上 .10 的底之後底是 L* 37.0，白 .36 → **3.2:1**（過）。
+     **如果日後有人想把底換成更濃的（.16），白就不能低於 .45**（.36 只剩 2.6:1）。
+     底愈濃、白反而愈不明顯 —— 因為底本身把周圍提亮了。
+   ⚠ 觸控目標 44×39.5。
    ⚠ 會動的東西要看 prefers-reduced-motion —— 這一站另外三處 CSS 也都看。
+   ⚠ **點下去是原生的錨點導覽**（`<a href="#topics">`）＋ CSS 的
+     `scroll-behavior: smooth`，所以會平滑捲到「主題與科別」。
+     逐幀量過：0 → 18 → 132 → 300 → 518 → 689 → 891 → 1034 → 1106 → 1118，
+     約 500ms。**不要改成 preventDefault 自己 scrollTo** —— 那會把那一步歷史
+     紀錄弄丟，上一頁就回不到第一屏（CLAUDE.md 第九節第 13 條同一條）。
    ========================================================================== */
 @media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
   .hero-cue {
-    display: flex; flex-direction: column; gap: 7px;
-    bottom: calc(100% + 110px);
-    background-color: transparent; padding: 6px 12px;
-    filter: drop-shadow(0 0 7px rgba(25, 22, 20, .9)) drop-shadow(0 1px 3px rgba(25, 22, 20, .75));
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.5px;                       /* 兩條角形之間 */
+    width: 44px; height: 39.5px;      /* 9 ＋ 1.5 ＋ 9 ＋ 上下各 10 */
+    padding: 0; border: 0; filter: none;
+    /* 對齊三格那一列的中線；水平離版心右緣再讓開 28px（2026-08-15）——
+       使用者：「角形的位置太右下，往左一點。」
+       ⚠ 讓開的量是**定值**不是對齊第三格：窄帶三格置中、版心滿版，
+         「5個／部定專科」的字尾到右緣從 iPad mini 的 104px 一路到 12.9 吋的
+         236px，拿它當錨點的話同一條規則在兩台 iPad 上會差一倍以上。
+         使用者感覺到的「太右下」是離**螢幕角落**多遠，所以用定值。
+       離螢幕右緣因此從 21.6~30.7px 變成 49.6~58.7px（≈ 它自己的一個身寬）。
+       ⚠ 垂直位置一個字都沒動。 */
+    left: auto; right: calc(var(--pad) + 28px); transform: none;
+    bottom: calc(34.9px - 39.5px / 2);
+    background-color: rgba(226, 229, 230, .10);   /* ＝電腦版那一塊底 */
+    border-radius: var(--frame-r);
   }
-  /* 線：上端淡出、往下漸濃，所以不會看起來像一根釘子 */
-  .hero-cue::before {
-    content: ''; width: 1px; height: 30px; border-radius: 1px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .5) 100%);
-  }
-  .hero-cue svg { width: 20px; height: 10px; stroke-width: 1.2; }
-  /* 沿著線往下走的那顆點 */
-  @keyframes heroCueDot {
-    0%   { transform: translate(-50%, 0);    opacity: 0; }
-    18%  { opacity: 1; }
-    72%  { opacity: 1; }
-    100% { transform: translate(-50%, 26px); opacity: 0; }
-  }
+  .hero-cue svg { display: none; }    /* 兩條角形都由偽元素畫，保證一模一樣 */
+  .hero-cue::before,
   .hero-cue::after {
-    content: ''; position: absolute; left: 50%; top: 6px;
-    width: 2px; height: 2px; border-radius: 50%; background: rgba(255, 255, 255, .95);
-    animation: heroCueDot 2.8s cubic-bezier(.4, 0, .5, 1) infinite;
+    content: ''; display: block; width: 18px; height: 9px; opacity: .36;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='9' viewBox='0 0 18 9' fill='none' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l8 7 8-7'/%3E%3C/svg%3E") center / 18px 9px no-repeat;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-cue::after { animation: none; opacity: .85; }
+  /* 慢速浮動。⚠ 這一段的 transform 是 none（不是 translateX(-50%)），
+     所以 keyframes 只寫 translateY，不要照抄電腦版那一組。 */
+  @keyframes heroCueBob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(4px); }
   }
-  /* 游標經過時整塊亮起來那一套（電腦版的 .hero-cue:hover）在平板上沒有游標，
-     底塊也已經拿掉，所以那條規則在這裡自然不生效，不必特別關。 */
+  /* ⚠⚠ **這一條刻意不看 prefers-reduced-motion**（2026-08-15，使用者回報
+     「那個角形按鈕在 iPad 上沒有慢速浮動」）。iOS 的「減少動態效果」很多人
+     開著，看它就等於這顆永遠不動 —— 而它會動正是它存在的理由（不動的角形
+     使用者已經說過「看不出在幹嘛」）。
+     判準和窄帶那個往上數的數字同一條（CLAUDE.md 第九節的定案表）：那個設定
+     針對的是位移／視差／縮放這種會讓人不舒服的大動作，**原地上下 4px、
+     2.4 秒一次**不屬於那一類。
+     ⚠ **點下去的捲動仍然看那個設定** —— 平滑捲動正是它要關掉的東西，
+        那一段在頁尾的 JS 裡，不要一起改掉。 */
+  .hero-cue { animation: heroCueBob 2.4s ease-in-out infinite; }
+
+  /* ---- 點到的時候亮起來（2026-08-15）--------------------------------
+     使用者：「點到的時候要加變亮效果。」平板沒有游標，所以電腦版那條
+     `.hero-cue:hover` 不會生效 —— 這裡改用 `:active`（iOS 對連結會給），
+     再加一個 `.is-lit`，由頁尾那段捲動的 JS 掛著、捲完才拿掉，
+     這樣**整段 620ms 的捲動過程它都是亮的**，不會手一放就暗掉。
+     亮起來的值直接抄電腦版 hover 那一階：底 .10 → **.24**（＝ .nav-lamp 那一階），
+     角形 .36 → **.85**。 */
+  .hero-cue:active,
+  .hero-cue.is-lit { background-color: rgba(226, 229, 230, .24); }
+  .hero-cue:active::before, .hero-cue:active::after,
+  .hero-cue.is-lit::before, .hero-cue.is-lit::after { opacity: .85; }
+  .hero-cue::before, .hero-cue::after { transition: opacity .18s ease; }
+  /* 游標經過整塊亮起來那一套（電腦版的 .hero-cue:hover）在平板上沒有游標，
+     不生效也不必特別關。 */
 }
 
 /* ==========================================================================
@@ -4055,45 +4124,54 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      使用者選了放大。
 
      ==========================================================================
-     ★ 現況（2026-08-15 稍晚）：**電腦版已經定案上線**
+     ★ 現況（2026-08-15）：**電腦版與手機版都定案上線了，這一輪在比 iPad**
      ==========================================================================
 
-       放大・6%・12 秒・cubic-bezier(.22,.61,.36,1)・原點 50% 100%・一次就停
-       只開在 (min-width: 721px) and (min-aspect-ratio: 9/10)
+       電腦　放大 6%　12 秒　(min-width:721px) and (min-aspect-ratio:9/10)
+       手機　放大 10%　6 秒　(max-width:720px)
+       共用 cubic-bezier(.22,.61,.36,1)、原點 50% 100%、一次就停。
 
-     手機（≤720）、iPad 直放（9/10~2/3）、直立螢幕（≤2/3）**都還沒開** ——
-     三種裁法不一樣，詩底下換到的像素也不一樣，要各自量過。
-     **這一頁現在是在比手機那一段**，所以它把電腦版那道 @media 拆掉、
-     讓所有寬度都吃得到，切換條的預設值就是電腦版定案的那一組。
+     **iPad 直放（9/10~2/3）與直立螢幕（≤2/3）還沒開。**
+     這一頁把三道 @media 全拆掉，讓每一段都吃得到；**切換條的預設值跟著裝置走** ——
+     已經上線的兩段直接放定案值（打開就是線上的樣子），iPad 兩段放
+     電腦與手機的中間值 **8%／8 秒** 當起點。面板最後一格會告訴你這台落在哪一段。
 
-     ---- 手機這一輪已經量到的東西 ------------------------------------------
+     ---- iPad 這一輪要看的，其實是「第一屏會有兩件事在動」------------------
 
-     詩的對比（保守值，見下面「量法」那一段；括號是相對於不動時的掉幅）：
+     iPad 兩段本來就有一個會動的東西：**「往下滑」的指標會慢速浮動**
+     （heroCueBob，translateY 4px／2.4 秒，2026-08-15 定案，
+     刻意連 prefers-reduced-motion 都不看，因為「會動」正是它存在的理由）。
+     照片再加一個緩慢推進，第一屏就是兩個動作。所以切換條多了一排
+     **指標：浮動（現況）／先停住**，把它關掉比一比就知道會不會互相搶。
 
-         視窗        不動    2%           4%           6%
-         320×568     3.52    —            3.36 (-4.5%)  3.24 (-8.0%)
-         375×812     3.85    3.70 (-3.9%) 3.54 (-8.1%)  3.49 (-9.4%)
-         390×844     3.85    3.69 (-4.2%) 3.52 (-8.6%)  3.49 (-9.4%)
+     ⚠ 手機沒有這個問題（.hero-cue 在 ≤720 是 display:none）；
+       電腦版有指標但它不浮動，也沒有這個問題。**只有 iPad 兩段要判斷。**
 
-     把掉幅套到 2026-08-15 那一輪「只量字身」量到的**六視窗最低 5.00**
-     （那一格就在 320×568）：
+     ---- 已經量到的（詩的對比是保守值，見下面「量法」）--------------------
 
-         4% → 4.77　　6% → 4.60　　AA 是 4.5
+     手機（已定 10%）：
 
-     **所以 6% 過得去，但餘量從 0.50 掉到 0.10。** 這是手機這一輪唯一真正要
-     決定的事：要不要為了留餘量，手機用比電腦版小一階的幅度。
-     ⚠ 這是換算不是實測 —— 真的要定 6%，值得回頭照那一輪的方法逐字重量一次。
+         視窗        不動    4%            6%            10%
+         320×568     3.52    3.36 (-4.5%)  3.24 (-8.0%)  —
+         375×812     3.85    3.54 (-8.1%)  3.49 (-9.4%)  —
+         390×844     3.85    3.52 (-8.6%)  3.49 (-9.4%)  3.41 (-11.4%)
 
-     接縫：原點放下緣時 ΔL* 是 **0.00 ~ +0.51**（最大值出現在 320 的 6%
-     與 390 的 10%）。那點差來自**橫向**取樣範圍縮小，不是那一列換了。
+     iPad 兩段的**底子比手機好很多** —— 照片相對更高，詩底下多半還是天空：
+
+         視窗                    不動    8%            10%
+         834×1194（A 段）        4.93    4.61 (-6.5%)  4.53 (-8.1%)
+         744×1133（B 段・mini）  4.95    4.62 (-6.7%)  4.56 (-7.9%)
+
+     ⚠ 這些是保守值（整個文字框都算）。要對照 AA 4.5 得換算回
+       2026-08-15 那一輪「只量字身」的數字，方法見下面。
+
+     接縫：原點放下緣時 iPad 兩段是 **+0.12 / +0.13**（手機是 0.00~+0.51）。
+     那點差來自**橫向**取樣範圍縮小，不是那一列換了。
      對照組：原點放正中時 6% 就是 +6.42。接縫那一輪在乎的量級是 2.7，
      所以下緣這一側完全安全。
 
-     解析度：手機挑到的是 2000w。DPR2 的 390 上 1.09 → 1.15 倍（6%），
-     DPR3 上 1.63 → 1.73 倍。**不是新問題，是本來就在放大**，6% 只是多 6%。
-
-     ⚠ 手機沒有「往下滑」那個指標（.hero-cue 在 ≤720 是 display:none），
-       所以第一屏上不會有兩個東西同時在動 —— 那個顧慮只在 iPad／電腦。
+     解析度：全部挑 2000w。iPad 834 DPR2 是 1.62 → 1.75 倍（8%），
+     手機 DPR3 1.63 → 1.79 倍（10%）。**不是新問題，是本來就在放大。**
 
      ---- 原點一定要放在照片下緣，不要放正中 --------------------------------
 
@@ -4126,22 +4204,34 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        「多一個合成層 ＝ 多一個會掉的東西」。面板的 fps 是真的在量，
        **請在手機上開著看最差幀**（電腦上量到 111 fps／最差 21ms）。
 
-     ---- 這一頁的預設值 ＝ 電腦版定案的那一組 ------------------------------
+     ・**保守值怎麼換算回 AA。** 拿掉幅去乘那一輪「只量字身」的最低值：
+       手機那一輪最低 5.00（在 320×568），10% 掉 11.4% → 約 **4.43**，
+       **低於 AA 4.5**。使用者在兩個裝置上看過畫面之後仍然選 10%，
+       所以這是**知情的取捨**，不是漏掉的。
+       ⚠ 但這是換算不是實測 —— 值得回頭照那一輪的方法逐字重量一次。
+         真的不夠的話，最省事的解不是把幅度收回來，而是把
+         .hero-poem 的 text-shadow 加一層（現在是 0 1px 2px/.5 ＋ 0 0 4px/.28），
+         那是局部的、不會動到構圖，2026-08-10「巷口」那一次就是這樣解的。
 
-       方向 放大　幅度 6%　時長 12 秒　曲線 先快後慢　原點 下緣　一次就停
+     ---- 這一頁的預設值：**跟著裝置走** ------------------------------------
 
-     手機要比的是「同一組搬過來夠不夠」。可以先看 6% 對 4%（詩的餘量差 0.17），
-     以及 12 秒對 20 秒（同樣的幅度攤得更慢 ＝ 更像暗示、更不像效果）。
-     幅度 2% 在手機上幾乎看不出來，10% 就從「暗示」變成「效果」了。
+       手機（≤720）　　　　　放大 10%／6 秒　　← 已上線，打開就是線上的樣子
+       電腦（≥721 且 ≥9/10）放大 6%／12 秒　　← 已上線，同上
+       iPad 兩段　　　　　　 放大 8%／8 秒　　　← 提案中，取中間值當起點
+
+     曲線先快後慢、原點下緣、一次就停三段都一樣。
+     iPad 可以先比 8% 對 6%／10%，再比 8 秒對 12 秒（攤得更慢 ＝ 更像暗示），
+     然後把「指標」那一排關掉一次，看看少了浮動是不是比較不吵。
 
      ⚠ 這一頁**不看**系統的「減少動態效果」，不然開著那個設定的人（iOS 很多）
-       會什麼都看不到。**定案版要看** —— 一張滿版照片的縮放正是那個設定針對的
-       東西（位移／視差／縮放），和窄帶那個「原地長大的數字」不同類
-       （那一條 2026-08-08 使用者定了不看，理由寫在 index.html 第 5116 行）。
+       會什麼都看不到。**上線版會看** —— 一張滿版照片的縮放正是那個設定針對的
+       東西（位移／視差／縮放），和窄帶那個「原地長大的數字」、
+       以及指標的浮動都不同類（那兩件都是刻意不看的）。
 
      網址參數（正規式一律 [a-z0-9]+）：
-       ?z=in|out|off  &amt=2|4|6|10  &dur=6|12|20|40
+       ?z=in|out|off  &amt=2|4|6|8|10  &dur=6|8|12|20|40
        &ease=linear|out|inout  &org=bottom|center  &loop=once|breathe
+       &cue=on|off
      ========================================================================== -->
 </head>
 <body>
@@ -4816,7 +4906,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                      ⚠ 圖釘長在名字**左邊**，所以整塊牌子往左長約 16 個單位
                        （192 → 約 176）。右緣 308 沒動，仍然沒碰到永樂街（324 起）；
                        左緣離平和街那三個直排字（x 109±11）還有 55 個單位。 -->
-                <g class="clab" data-dir="up" data-tx="258" data-ty="287" data-bx="250" data-bw="12" data-gap="0">
+                <g class="clab" data-dir="up" data-tx="258" data-ty="287" data-bx="250" data-bw="12" data-gap="0"
+                   data-pin-k="0.92" data-ink-gap="3.75">
                   <path class="bub"/><path class="tail"/>
                   <g class="rl-body">
                     <a class="rl-link" href="https://maps.app.goo.gl/bKSrVyS2Qu2xvnMj7" target="_blank" rel="noopener">
@@ -6002,7 +6093,32 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   //   圖釘＋名字＋底線＋距離四樣東西。`getBBox()` 對群組回傳的是**含子元素
   //   transform 的聯集**，所以圖釘那個 scale() 也算得進去。
   // 圖釘原圖是 384x512（實心水滴，= 頁尾那顆）。先定高，寬按 .75 的比例跟著走。
-  var PIN_H = 17, PIN_S = PIN_H / 512, PIN_W = 384 * PIN_S;
+  // ⚠⚠ **高與間距都是「名字字級的倍數」，不是寫死的單位**（2026-08-15 使用者：
+  //   「那個芳仁牙醫診所圖釘，那個相對距離跟停車場好像不太一樣」——量出來是真的）。
+  //   成因：停車場那三塊的名字是 16px，診所那塊是 15px（`.clab text` 自己一條），
+  //   而圖釘的高 17 與間距 3 原本是寫死的 —— 同樣的絕對值配上小一號的字，
+  //   相對量就大了 6.7%（1.1332em vs 1.0624em、0.2002em vs 0.1876em）。
+  // ⚠ 兩個比值**定義在停車場那三塊上**（17/16、3/16），所以那三顆一個單位都沒動；
+  //   會跟著變的只有診所那一顆（17 → 15.94、間距 3 → 2.81）。
+  // ⚠ 盒子用圖釘自己的 **viewBox 384×512**，不要改成 `getBBox()` 量出來的
+  //   ink box（實測 384×510.675，水滴尖端是圓的）—— 那會讓停車場那三顆一起長 0.26%。
+  //
+  // ⚠⚠ **診所那一塊有自己的兩個值，寫在它的 `data-pin-k` 與 `data-ink-gap` 上**
+  //   （2026-08-15 使用者選定：實心、92%、「圖釘和芳有點近，要和停車場的一樣」）：
+  //   ・`data-pin-k="0.92"` —— 圖釘縮到標準的 92%（15.94 → 14.66）。使用者從
+  //     100／92／84／76 四階裡挑的，理由是「覺得那個圖釘很搶眼」。
+  //   ・`data-ink-gap="3.75"` —— 間距改成**對字面量**，不是對 `getBBox()` 量。
+  //     ⚠ 這是同一輪查出來的第二件事：`getBBox().x` 是**字的排版起點**，
+  //       第一個字自己的左側空白（left side bearing）要另外算進去，
+  //       而它每個字都不一樣 —— 實測「斗」「壹」是 .75、「合」.25、「芳」只有 .234。
+  //       所以四塊牌子的 box 間距都是 3，看得到的空隙卻是 3.75／3.25／3.76／3.05
+  //       —— 診所那塊最小，使用者看到的就是這 0.7。
+  //     ⚠ 3.75 ＝ 斗六永樂站與壹車房那兩塊的實測值（三塊裡的多數）。
+  //       **停車場那三塊一個值都沒動**：它們自己就不一致（合廷 3.25），
+  //       那是定案過的東西，為了「一致」去動它等於改掉別人簽過的版。
+  //     ⚠ 這個數字是**絕對單位不是 em** —— 四塊牌子在同一張圖、同一個縮放上並排，
+  //       眼睛比的是實際的空白寬度。
+  var PIN_EM = 17 / 16, GAP_EM = 3 / 16, PIN_VB_W = 384, PIN_VB_H = 512;
 
   // 字面下緣離基線多遠（單位＝該元素的 user unit）。量不到就回 null。
   var CTX = (function () {
@@ -6017,6 +6133,18 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var m = CTX.measureText(el.textContent);
     if (typeof m.actualBoundingBoxDescent !== 'number') return null;
     return m.actualBoundingBoxDescent / 400 * fs;
+  }
+  // **第一個字**的左側空白：排版起點（getBBox().x）到看得到的第一筆墨有多遠。
+  // ⚠ 量的是第一個字不是整串 —— 要的是左邊那一端，後面的字不影響。
+  // ⚠ 同樣在 400px 上量再縮（理由同上）。量不到就回 0（退回原本對 bbox 的量法）。
+  function inkLeft(el) {
+    if (!CTX) return 0;
+    var cs = getComputedStyle(el), fs = parseFloat(cs.fontSize);
+    if (!fs || !el.textContent) return 0;
+    CTX.font = cs.fontStyle + ' ' + cs.fontWeight + ' 400px ' + cs.fontFamily;
+    var m = CTX.measureText(el.textContent.charAt(0));
+    if (typeof m.actualBoundingBoxLeft !== 'number') return 0;
+    return -m.actualBoundingBoxLeft / 400 * fs;
   }
   // 「圓角方 ＋ 一支尾巴」畫成**一條**路徑 —— 這樣整塊只有一圈外框，
   // 描邊不會橫過尾巴根部（2026-08-14 第三十七輪，全空心那一案需要）。
@@ -6046,9 +6174,20 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       var b = nm.getBBox();
       // 圖釘：字面中線對齊。⚠ 對的是 bbox 的中線不是基線 ——
       //   圖釘是個對稱的水滴，跟著基線走會整顆偏高。
+      // ⚠ 高與間距跟著**這一塊自己的字級**走（見上面 PIN_EM／GAP_EM 那一段）。
+      // ⚠ 牌子自己可以覆寫這兩件事（目前只有診所那一塊有，見上面）：
+      //     data-pin-k    圖釘高的倍率
+      //     data-ink-gap  改成對「字面」量的間距（絕對單位）
+      var own = a.closest('[data-pin-k], [data-ink-gap]');
+      var fs = parseFloat(getComputedStyle(nm).fontSize) || 16;
+      var k = own && own.dataset.pinK ? +own.dataset.pinK : 1;
+      var ph = PIN_EM * fs * k, ps = ph / PIN_VB_H, pw = PIN_VB_W * ps;
+      var gap = (own && own.dataset.inkGap)
+        ? Math.max(0, +own.dataset.inkGap - inkLeft(nm))
+        : GAP_EM * fs;
       pin.setAttribute('transform',
-        'translate(' + (b.x - PIN_W - 3).toFixed(2) + ' ' + (b.y + b.height / 2 - PIN_H / 2).toFixed(2) +
-        ') scale(' + PIN_S.toFixed(5) + ')');
+        'translate(' + (b.x - pw - gap).toFixed(2) + ' ' + (b.y + b.height / 2 - ph / 2).toFixed(2) +
+        ') scale(' + ps.toFixed(5) + ')');
       // 底線自己畫，不用 text-decoration（各家瀏覽器位置不一致）。
       // ⚠⚠ **y 要對「字面」不是對 bbox**（2026-08-14 使用者：「底線和停車場
       //   名稱好像有點遠，是我的錯覺嗎」—— 不是錯覺）。
@@ -6189,6 +6328,86 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 })();
 </script>
 
+<script>
+/* ==========================================================================
+   「往下滑」那顆指標：自己做平滑捲動（2026-08-15）
+   --------------------------------------------------------------------------
+   使用者拿 iPad 的螢幕錄影回報：「點下去看起來不是平滑捲動，比較像切換。」
+
+   ⚠ 成因不是這一站寫錯了。`html { scroll-behavior: smooth }` 在 Chromium 上
+      確實會動 —— 逐幀量過 0 → 32 → 132 → 300 → 518 → 689 → 891 → 1034 →
+      1106 → 1118，約 500ms。**但 iOS Safari 對「點錨點連結」這一種捲動不吃
+      那條 CSS**，直接跳到位。所以這一顆改成自己用 rAF 捲。
+
+   ⚠⚠ **一定要把那一步歷史紀錄補回去，而且要在動畫「之前」推。**
+      CLAUDE.md 第九節第 13 條記過：preventDefault 之後自己 scrollTo，會把錨點
+      導覽那一步的歷史弄丟，「上一頁」就回不到原本那一節。這裡用
+      history.pushState 把 #topics 補上 —— 但**推的時機很要命**：
+      放在動畫結束才推，瀏覽器記在「上一步」那一格的捲動位置已經被更新成
+      目的地了，按上一頁只會清掉 hash、畫面停在原地（實測）。先推就正確。
+   ⚠ 自己捲的時候要先把 scroll-behavior 設成 auto —— 不然瀏覽器會對每一幀的
+      scrollTo 再做一次平滑，兩個動畫互相打架（頁首那三個標籤用的是同一招）。
+   ⚠ 開了「減少動態效果」就整段不接手，交還給瀏覽器原生的瞬間跳轉 ——
+      那是使用者自己的系統設定，這一站另外四處也都看它。
+   ⚠ 這一段**不分版型**：電腦版那顆角形本來就走原生的平滑捲動（約 500ms），
+      改成自己捲之後是 620ms，差別看不出來，但兩邊只剩一條程式路徑好維護。
+   ========================================================================== */
+(function () {
+  var cue = document.querySelector('.hero-cue');
+  if (!cue) return;
+  var root = document.documentElement, litT = 0;
+
+  cue.addEventListener('click', function (ev) {
+    if (ev.defaultPrevented || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button > 0) return;
+
+    /* ⚠ 亮起來要在**最前面**（在減少動態那一條 return 之前）。
+       「點到會亮」是使用者要的回饋，和「要不要平滑捲動」是兩件事 ——
+       第一版寫在 return 後面，開了減少動態的人點下去完全沒有反應。 */
+    cue.classList.add('is-lit');
+    clearTimeout(litT);
+    litT = setTimeout(function () { cue.classList.remove('is-lit'); }, 300);
+
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;   /* 捲動交還給原生 */
+    var el = document.getElementById('topics');
+    if (!el) return;
+
+    ev.preventDefault();
+    var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+    /* iOS 的 innerHeight 是工具列收起後的大視窗高，會高估；visualViewport 才是
+       眼睛看得到的（CLAUDE.md 第八節那條「捲進畫面了沒」踩過同一個坑）。 */
+    var vh = (window.visualViewport && visualViewport.height) || innerHeight;
+    var from = window.pageYOffset;
+    var to = Math.max(0, Math.min(root.scrollHeight - vh,
+      el.getBoundingClientRect().top + from - pad));
+    var dist = to - from;
+    if (Math.abs(dist) < 1) return;
+
+    /* ⚠ **pushState 要在動畫「之前」推**（實測踩過）。放在動畫結束才推的話，
+       瀏覽器記在「上一步」那一格的捲動位置已經被更新成目的地了 ——
+       按上一頁 hash 會清掉、但畫面停在原地不動。先推就正確：上一步那一格
+       記著的還是第一屏。pushState 本身不會捲動（和寫 location.hash 不同）。 */
+    if (history.pushState) history.pushState(null, '', '#topics');
+
+    var dur = 620, t0 = 0, prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';        /* 不要讓瀏覽器對每一幀再平滑一次 */
+
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var t = Math.min(1, (ts - t0) / dur);
+      /* ease-in-out cubic：起步與收尾都慢，中間快 —— 讀起來像「捲下去」，
+         不像「跳過去」。 */
+      var e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      window.scrollTo(0, from + dist * e);
+      if (t < 1) { requestAnimationFrame(step); return; }
+      root.style.scrollBehavior = prev;
+      clearTimeout(litT);
+      cue.classList.remove('is-lit');     /* 亮到捲完為止 */
+    }
+    requestAnimationFrame(step);
+  });
+})();
+</script>
+
 <!-- ==========================================================================
      切換條（提案專用，定案時連同 data-* 一起刪掉）
      ========================================================================== -->
@@ -6235,6 +6454,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
    ⚠ 手機定案上線時，那一行要搬出 @media 或再寫一份 —— 別忘了。 */
 html[data-zorg=bottom] .hero-photo img{transform-origin:50% 100%}
 html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
+/* 「往下滑」的指標本來就會慢速浮動（heroCueBob）。iPad 這一輪要判斷的是
+   「第一屏同時兩件事在動」行不行，所以做成可以先把它停住比一比。 */
+html[data-zcue=off] .hero-cue,
+html[data-zcue=off] .hero-cue svg{animation:none !important}
 </style>
 
 <button class="zopen" hidden>設定</button>
@@ -6249,10 +6472,12 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
     <button data-k="amt" data-v="2">2%</button>
     <button data-k="amt" data-v="4">4%</button>
     <button data-k="amt" data-v="6">6%</button>
+    <button data-k="amt" data-v="8">8%</button>
     <button data-k="amt" data-v="10">10%</button>
   </div>
   <div class="zrow"><b>時長</b>
     <button data-k="dur" data-v="6">6 秒</button>
+    <button data-k="dur" data-v="8">8 秒</button>
     <button data-k="dur" data-v="12">12 秒</button>
     <button data-k="dur" data-v="20">20 秒</button>
     <button data-k="dur" data-v="40">40 秒</button>
@@ -6270,6 +6495,12 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
     <button data-k="loop" data-v="once">一次就停</button>
     <button data-k="loop" data-v="breathe">來回呼吸</button>
   </div>
+  <!-- 只有 iPad／直立螢幕看得到「往下滑」的指標，而它本來就會慢速浮動。
+       這一排是為了讓使用者判斷「第一屏同時兩件事在動」行不行。 -->
+  <div class="zrow"><b>指標</b>
+    <button data-k="cue" data-v="on">浮動（現況）</button>
+    <button data-k="cue" data-v="off">先停住</button>
+  </div>
 
   <div class="zm">
     <div><span>目前倍率</span><span class="zv-k">—</span></div>
@@ -6278,6 +6509,7 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
     <div><span>接縫那一列</span><span class="zv-seam">—</span></div>
     <div><span>照片放大倍率</span><span class="zv-res">—</span></div>
     <div><span>照片盒／DPR</span><span class="zv-box">—</span></div>
+    <div><span>這台落在哪一段</span><span class="zv-seg">—</span></div>
   </div>
   <p class="znote">量測都是現場從 2000w 原檔取樣算的，cover 的裁切、transform、
     電腦版那層 46% 的暗漸層全部算進去。<b>兩個數字都跟「不動的時候」對照 ——
@@ -6298,9 +6530,18 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
   var img  = fig && fig.querySelector('img');
   if (!img) return;
 
-  /* 預設 ＝ 電腦版 2026-08-15 上線的那一組。手機這一輪要決定的是
-     「同一組數字搬過來夠不夠，還是要另外調」，所以起點就放定案值。 */
-  var DEF = { z: 'in', amt: '6', dur: '12', ease: 'out', org: 'bottom', loop: 'once' };
+  /* 預設值跟著裝置走：已經上線的那兩段直接放定案值（打開就是線上的樣子），
+     還沒定的 iPad 兩段放電腦與手機的中間值當起點。
+     ⚠ 這裡的分段條件要和 index.html 那三道 @media 一字不差。 */
+  function shipped() {
+    var w = innerWidth, r = w / (innerHeight || 1);
+    if (w <= 720)   return { amt: '10', dur: '6',  kind: '手機（已上線）' };
+    if (r >= 9 / 10) return { amt: '6',  dur: '12', kind: '電腦（已上線）' };
+    return { amt: '8', dur: '8', kind: (r > 2 / 3 ? 'iPad 直放' : '直立螢幕') + '（提案中）' };
+  }
+  var SHIP = shipped();
+  var DEF = { z: 'in', amt: SHIP.amt, dur: SHIP.dur, ease: 'out',
+              org: 'bottom', loop: 'once', cue: 'on' };
   var S = {};
   /* ⚠ 正規式一定要 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 踩過） */
   Object.keys(DEF).forEach(function (k) {
@@ -6322,6 +6563,7 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
 
   function apply() {
     root.setAttribute('data-zorg', S.org);
+    root.setAttribute('data-zcue', S.cue);
     var amt = parseFloat(S.amt) / 100;
     var a = S.z === 'out' ? 1 + amt : 1;
     var b = S.z === 'out' ? 1 : 1 + amt;
@@ -6526,6 +6768,8 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
     put('zv-res', up.toFixed(2) + ' 倍　（挑到 ' + fileW + 'w）', up > 2.3 ? 'bad' : 'ok');
     put('zv-box', Math.round(box.width) + '×' + Math.round(box.height) +
         '　DPR ' + (window.devicePixelRatio || 1));
+    var sh = shipped();
+    put('zv-seg', sh.kind + '　' + sh.amt + '%／' + sh.dur + '秒');
     void dh;
   }
 

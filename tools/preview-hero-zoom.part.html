@@ -45,6 +45,10 @@
    ⚠ 手機定案上線時，那一行要搬出 @media 或再寫一份 —— 別忘了。 */
 html[data-zorg=bottom] .hero-photo img{transform-origin:50% 100%}
 html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
+/* 「往下滑」的指標本來就會慢速浮動（heroCueBob）。iPad 這一輪要判斷的是
+   「第一屏同時兩件事在動」行不行，所以做成可以先把它停住比一比。 */
+html[data-zcue=off] .hero-cue,
+html[data-zcue=off] .hero-cue svg{animation:none !important}
 </style>
 
 <button class="zopen" hidden>設定</button>
@@ -59,10 +63,12 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
     <button data-k="amt" data-v="2">2%</button>
     <button data-k="amt" data-v="4">4%</button>
     <button data-k="amt" data-v="6">6%</button>
+    <button data-k="amt" data-v="8">8%</button>
     <button data-k="amt" data-v="10">10%</button>
   </div>
   <div class="zrow"><b>時長</b>
     <button data-k="dur" data-v="6">6 秒</button>
+    <button data-k="dur" data-v="8">8 秒</button>
     <button data-k="dur" data-v="12">12 秒</button>
     <button data-k="dur" data-v="20">20 秒</button>
     <button data-k="dur" data-v="40">40 秒</button>
@@ -80,6 +86,12 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
     <button data-k="loop" data-v="once">一次就停</button>
     <button data-k="loop" data-v="breathe">來回呼吸</button>
   </div>
+  <!-- 只有 iPad／直立螢幕看得到「往下滑」的指標，而它本來就會慢速浮動。
+       這一排是為了讓使用者判斷「第一屏同時兩件事在動」行不行。 -->
+  <div class="zrow"><b>指標</b>
+    <button data-k="cue" data-v="on">浮動（現況）</button>
+    <button data-k="cue" data-v="off">先停住</button>
+  </div>
 
   <div class="zm">
     <div><span>目前倍率</span><span class="zv-k">—</span></div>
@@ -88,6 +100,7 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
     <div><span>接縫那一列</span><span class="zv-seam">—</span></div>
     <div><span>照片放大倍率</span><span class="zv-res">—</span></div>
     <div><span>照片盒／DPR</span><span class="zv-box">—</span></div>
+    <div><span>這台落在哪一段</span><span class="zv-seg">—</span></div>
   </div>
   <p class="znote">量測都是現場從 2000w 原檔取樣算的，cover 的裁切、transform、
     電腦版那層 46% 的暗漸層全部算進去。<b>兩個數字都跟「不動的時候」對照 ——
@@ -108,9 +121,18 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
   var img  = fig && fig.querySelector('img');
   if (!img) return;
 
-  /* 預設 ＝ 電腦版 2026-08-15 上線的那一組。手機這一輪要決定的是
-     「同一組數字搬過來夠不夠，還是要另外調」，所以起點就放定案值。 */
-  var DEF = { z: 'in', amt: '6', dur: '12', ease: 'out', org: 'bottom', loop: 'once' };
+  /* 預設值跟著裝置走：已經上線的那兩段直接放定案值（打開就是線上的樣子），
+     還沒定的 iPad 兩段放電腦與手機的中間值當起點。
+     ⚠ 這裡的分段條件要和 index.html 那三道 @media 一字不差。 */
+  function shipped() {
+    var w = innerWidth, r = w / (innerHeight || 1);
+    if (w <= 720)   return { amt: '10', dur: '6',  kind: '手機（已上線）' };
+    if (r >= 9 / 10) return { amt: '6',  dur: '12', kind: '電腦（已上線）' };
+    return { amt: '8', dur: '8', kind: (r > 2 / 3 ? 'iPad 直放' : '直立螢幕') + '（提案中）' };
+  }
+  var SHIP = shipped();
+  var DEF = { z: 'in', amt: SHIP.amt, dur: SHIP.dur, ease: 'out',
+              org: 'bottom', loop: 'once', cue: 'on' };
   var S = {};
   /* ⚠ 正規式一定要 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 踩過） */
   Object.keys(DEF).forEach(function (k) {
@@ -132,6 +154,7 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
 
   function apply() {
     root.setAttribute('data-zorg', S.org);
+    root.setAttribute('data-zcue', S.cue);
     var amt = parseFloat(S.amt) / 100;
     var a = S.z === 'out' ? 1 + amt : 1;
     var b = S.z === 'out' ? 1 : 1 + amt;
@@ -336,6 +359,8 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
     put('zv-res', up.toFixed(2) + ' 倍　（挑到 ' + fileW + 'w）', up > 2.3 ? 'bad' : 'ok');
     put('zv-box', Math.round(box.width) + '×' + Math.round(box.height) +
         '　DPR ' + (window.devicePixelRatio || 1));
+    var sh = shipped();
+    put('zv-seg', sh.kind + '　' + sh.amt + '%／' + sh.dur + '秒');
     void dh;
   }
 
