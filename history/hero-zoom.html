@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>hero-zoom｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>hero-zoom</h1>
+<p class="meta">
+  原網址 <code>/preview/hero-zoom/</code>（已刪除 2026-08-15）<br>
+  整頁還原：<code>git show 49e8dc1:preview/hero-zoom/index.html</code><br>
+  產生它的一次性腳本：<code>git show 49e8dc1:tools/preview-hero-zoom.mjs</code>
+  與 <code>git show 49e8dc1:tools/preview-hero-zoom.part.html</code><br>
+  切換條 <code>?z=&amp;amt=&amp;dur=&amp;ease=&amp;org=&amp;loop=&amp;cue=</code>，三輪定案上線
+  （電腦 → 手機 → iPad，各在自己的實機上挑）
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者：「https://www.isseymiyake.com/#section0 像這個三宅一生的網站，點進去
+之後那個微微的放大、緩慢在動，會讓你感覺好像有一個視覺集中要強調這個地方，
+但也不是很強，因為就是一個暗示性的、讓你的視線不自覺往中間的圖片看過去。
+我在想也可以用在首頁的那個 hero 的圖片上。到底是出一個逐漸放大的效果、
+還是說一個逐漸縮小的效果，你分析看看然後做預覽頁給我看。」</pre></div>
+
+<h2>零、先講一件事實：那個站現在其實沒有這個效果</h2>
+<div class="note"><pre>2026-08-15 實際打開量過（1280×720，Chromium）：
+
+  ・#section0 的 .section__background &gt; picture &gt; img，
+    computed transform 是 none、animation 是 none。
+  ・整份樣式表 32 組 @keyframes，含 scale 的只有 topscroll / bar1 兩個
+    （那是頁首的橫線，scaleY 0↔1），沒有任何一條指到主視覺。
+  ・把 #main 底下 160 個元素的 transform / object-position / width / clip-path
+    連續取樣 3 秒，0 個有變化。
+  ・整頁唯一自己在動的東西是 #section4 裡的一支 Vimeo 背景影片
+    （player.vimeo.com/video/1215400391，background=1&amp;loop=1，位置 y≈2940）。
+
+所以那個「微微放大」多半是那支影片自己的鏡頭推進，或是站方換過版。
+想要的知覺效果很清楚、CSS 幾行就能做，但**沒有現成的數字可以抄**，
+下面每一個值都是自己訂的。
+
+⚠ 這一段留著的用意：日後有人說「照某個站做」，先去量一次那個站真的在做什麼。</pre></div>
+
+<h2>一、放大還是縮小：差別不是方向，是「靜止點」與「第一幀」</h2>
+<div class="note"><pre>知覺上，一個緩慢的縮放，眼睛讀到的是**運動向量的匯聚點**：
+
+  ・放大（push-in）：畫面裡每一樣東西都往外飄，唯一不動的是原點 ——
+    眼睛被留在原點上。這正是使用者說的「不自覺往中間看過去」。
+    語意是靠近、注視、進去。
+  ・縮小（pull-back）：東西往內收、邊緣露出更多。語意是退開、看全貌，
+    是「交代環境」的鏡頭，不是「請你看這裡」的鏡頭。
+
+這一站的 HERO 是巷口的那棟建築，收尾句是「到巷口的芳仁　一起想辦法」。
+兩者同向的是放大。
+
+技術上剛好相反，兩件：
+
+  ① 解析度。2026-08-15 才修好 srcset 的 sizes（CLAUDE.md 第九節第 15 條）。
+     放大版的**結束狀態**會再多放大一個幅度；
+     縮小版的**第一幀**才是最糊的那一幀 —— 而那正是 LCP 那一幀。
+  ② 靜止狀態。這一頁 99% 的時間是停著的。縮小版停在 scale 1.0
+     ＝ 和改動前逐像素相同，接縫、詩的對比、招牌 79.9% 全部原封不動；
+     放大版停在 1.06~1.10，那些數字要重量一次。
+
+取捨：**放大 ＝ 第一眼是對的、久了偏一個幅度；
+       縮小 ＝ 第一眼偏一個幅度、久了是對的。**
+使用者選了放大。</pre></div>
+
+<h2>二、transform-origin 一定要 50% 100%，這一條不能動</h2>
+<div class="note"><pre>原點決定「哪一列不動」。照片的 object-position 就是 50% 100%（下緣貼齊），
+而照片與窄帶的接縫是四輪定案的成果（窄帶從 #181614 起跑，那是照片最後
+一列的實測中位數，見 /history/hero-band-seam.html）。原點放下緣，那一列就不動。
+
+實測（接縫那一列的中位數 L*，對照同一視窗「不動的時候」）：
+
+    原點      幅度   ΔL*
+    下緣      6%     0.00（手機）／+0.39（電腦）
+    下緣      8%     +0.12（iPad 834）／+0.13（iPad mini 744）
+    下緣     10%     0.00 ~ +0.51（各手機視窗）
+    正中      6%     +6.42　← #1b1817 → #2a2521，接縫直接毀掉
+
+下緣那一側剩下的那點差來自**橫向**取樣範圍縮小，不是那一列換了。
+接縫那一輪在乎的量級是 2.7，所以完全安全。
+
+⚠⚠ 第一次上線（電腦版）把 transform-origin 寫在電腦版那道 @media 裡面，
+   手機吃不到、會退回預設的 50% 50% —— 接縫就跑掉了。手機上線那天才發現。
+   現在是無條件的一條，**不要再搬回任何一個 @media 裡**。</pre></div>
+
+<h2>三、overflow 要包在只裝 &lt;img&gt; 的那一層</h2>
+<div class="note"><pre>&lt;img&gt; 是 position:absolute; inset:0，放大之後會整片溢出 &lt;figure&gt;，
+蓋到窄帶與底下的「主題與科別」，所以一定要有一層 overflow:hidden。
+
+⚠ **不能把 overflow 加在 .hero-photo 上** —— .hero-copy 也在那個框裡，
+  收尾句底下那塊 blur(26px) 的暗斑（.hero-sign::before，inset -1.3em/-1.7em）
+  會被一起裁掉，裁出一條硬邊，正好毀掉「看不出是一個框、只是路面自己暗下去」
+  那個設計重點。
+
+所以另外包一層 .hero-shot（position:absolute; inset:0; overflow:hidden），
+幾何和原本一模一樣。390×844 上照片盒與 .hero-shot 都是 390×719.31、
+窄帶 124.69、詩與收尾句位置一格都沒動。</pre></div>
+
+<h2>四、定案：三段各一組</h2>
+<div class="note"><pre>    電腦　 放大 6%　12 秒　(min-width:721px) and (min-aspect-ratio:9/10)
+    iPad　 放大 10%　8 秒　(min-width:721px) and (max-aspect-ratio:9/10)
+    手機　 放大 10%　6 秒　(max-width:720px)
+
+三段共用 cubic-bezier(.22,.61,.36,1)（先快後慢）、原點 50% 100%、一次就停。
+keyframes 叫 hero-push-6 / hero-push-10（名字帶幅度不帶裝置 ——
+iPad 與手機同樣是 10%，只有時長不同）。
+
+手機與 iPad 的百分比比電腦大，但**在那兩個裝置上這才等於電腦版的力道**：
+
+    每秒走　電腦 0.5%　iPad 1.25%　手機 1.67%
+
+差別是第一屏的照片小很多（手機 390×719、iPad 744~834 寬），同樣的百分比
+換算成位移遠比電腦少；而且手機與 iPad 是滑過去就走，沒有人會在第一屏停 12 秒。
+三個數字都是使用者在各自的實機上看過畫面才挑的，不是推算的。
+
+⚠ iPad 那一條同時涵蓋「直放」與「直立螢幕」（版面那邊是兩道 @media，
+  這裡合成一道 max-aspect-ratio:9/10）—— 兩段的縮放參數相同，沒有理由拆開。
+  但**版面的兩段不要跟著合併**，那兩段的照片高度、窄帶位置、詩的比例都不一樣。
+⚠ 9/10 這個邊界上電腦與 iPad 兩條都會命中，寫在後面的 iPad 贏。這和版面那幾段
+  的既有行為一致（iPad 的 @media 也排在電腦版後面）。**不要為了「乾淨」去加
+  (min-aspect-ratio) 把邊界切開** —— 那會讓縮放與版面在正好 0.9 的螢幕上分屬不同段。
+
+落選：2%（手機上幾乎看不出來）、來回呼吸（一張靜止的建築照片來回縮放看起來
+像壞掉，而且永遠不會停在定案的構圖上）、等速與兩頭都慢、原點正中。</pre></div>
+
+<h2>五、詩的對比度 —— 這是唯一真的有代價的一項</h2>
+<div class="note"><pre>照片一縮放，詩底下就換成另一批像素。提案頁的面板是**現場從 2000w 原檔
+取樣**算的（cover 的裁切、transform、電腦版那層 46% 的暗漸層全部算進去），
+取文字框裡第 99 百分位的亮點對白字 65%。
+
+⚠ 這是**保守值**：整個文字框都算，含行距與行尾的空隙，所以會低於
+  2026-08-15 那一輪「只量字身」量到的 5.0~8.7。看的是它往哪邊動、掉多少。
+
+    視窗                    不動    4%            6%            8%            10%
+    320×568（手機）         3.52    3.36 (-4.5%)  3.24 (-8.0%)  —             —
+    375×812（手機）         3.85    3.54 (-8.1%)  3.49 (-9.4%)  —             —
+    390×844（手機）         3.85    3.52 (-8.6%)  3.49 (-9.4%)  —             3.41 (-11.4%)
+    834×1194（iPad A 段）   4.93    —             4.61 (-6.5%)  4.61 (-6.5%)  4.53 (-8.1%)
+    744×1133（iPad B 段）   4.95    —             —             4.62 (-6.7%)  4.56 (-7.9%)
+    1440×900（電腦）        4.66    4.58 (-1.7%)  —             —             4.17 (-10.5%)
+
+iPad 的底子比手機好很多 —— 照片相對更高，詩底下多半還是天空。
+
+換算回 AA：拿掉幅去乘那一輪「只量字身」的最低值。手機那一輪最低 5.00
+（在 320×568），10% 掉 11.4% → 約 **4.43，低於 AA 4.5**。
+
+⚠ 使用者是在兩個裝置上看過畫面之後才選 10% 的，所以這是**知情的取捨**，
+  不是漏掉的。而且這是換算不是實測，值得回頭照那一輪的方法逐字重量一次。
+⚠ 真的不夠的話，**最省事的解不是把幅度收回來**，而是把 .hero-poem 的
+  text-shadow 加一層（現在是 0 1px 2px/.5 ＋ 0 0 4px/.28）——
+  那是局部的、不會動到構圖，2026-08-10「巷口」壓在車頭燈上那一次就是這樣解的。</pre></div>
+
+<h2>六、頁首的模糊要跟著補償</h2>
+<div class="note"><pre>paintBlur() 是用 photo.getBoundingClientRect() ＋ naturalWidth 推
+「條子底下是照片的哪一列」，它**看不到 CSS transform**。
+
+實測不補的話「招牌」（檔案高度 79.9% 那一列）的門檻會晚到：
+
+    1280×800  10px      1440×900  11px      1920×1080 15px
+    1024×1024 12px      1600×900  13px      820×900   11px
+
+升起的斜坡本身有 110px，所以其實看不出來 —— 但補償只是三行，就一起做了。
+原點是 50% 100%，所以「畫面下緣是檔案的哪一列」不變，看得到的高度縮成 1/k、
+上緣往下追：
+
+    if (k !== 1) { var bottom01 = top01 + vh01; vh01 = vh01 / k; top01 = bottom01 - vh01; }
+
+順帶把 objPosY() 併成 imgState()：一次 getComputedStyle 讀完 objectPosition
+與 transform。那個函式每一幀都會被呼叫，讀兩次等於多一次強制樣式重算。</pre></div>
+
+<h2>七、解析度與效能</h2>
+<div class="note"><pre>解析度。結束時多放大一個幅度，等於 srcset 挑到的那張要多撐那麼多。
+實測**不影響選檔**：
+
+    電腦 1440 DPR1　需要 1361 → 1443，兩邊都挑 1600w
+    手機 DPR3　　　 挑 2000w，1.63 → 1.79 倍
+    iPad 834 DPR2 　挑 2000w，1.62 → 1.75 倍
+
+所以 sizes 沒有跟著改。**日後若再把幅度加大，要回頭重驗**（CLAUDE.md 第九節第 15 條）。
+
+⚠ 不能用 img.naturalWidth 去驗放大倍率 —— srcset 用 w 描述子時，
+  那個值是「除以密度之後」的 CSS 尺寸（這一輪實測回 1088×719，不是 1600×1058），
+  算出來會剛好都是 1.00 倍。提案頁的面板因此另開一個 Image 直接指 2000w 的原檔，
+  取樣與倍率都從那一張算。
+
+效能。一個滿版的圖層連續動十幾秒，正上方就是帶 backdrop-filter 的頁首，
+等於逼它每一幀重採樣（CLAUDE.md 第九節第 13 條：多一個合成層 ＝ 多一個會掉的東西）。
+提案頁的面板放了真的在量的 fps：電腦 111 fps／最差 21ms、
+使用者的 iPhone 60 fps／最差 22ms、iPad 60 fps／最差 19ms。沒有問題。
+⚠ 沒有加 will-change / translateZ(0) —— 那一條在 head-flash 那一輪實測更糟。</pre></div>
+
+<h2>八、prefers-reduced-motion：這一件要看</h2>
+<div class="note"><pre>一張滿版照片的縮放正是那個設定針對的東西（位移／視差／縮放），所以看它。
+
+這和站上另外兩件刻意**不看**的不同類，三者放在一起才看得出界線：
+
+    窄帶那個往上數的數字　不看（2026-08-08）——「原地長大的數字」不屬於那一類
+    往下滑指標的浮動　　　不看（2026-08-15）—— 原地上下 4px，而且「會動」
+                          正是那顆存在的理由；但它**點下去的捲動仍然看**
+    HERO 照片的推進　　　 **看**　　　　　　—— 整片畫面在縮放，就是那一類
+
+提案頁自己不看（不然開著那個設定的人會什麼都看不到），上線版看。</pre></div>
+
+<h2>九、iPad 的額外一題：第一屏會有兩件事在動</h2>
+<div class="note"><pre>iPad 兩段本來就有「往下滑」的指標在慢速浮動（heroCueBob，translateY 4px／
+2.4 秒，見 /history/ipad-cue.html）。照片再加一個緩慢推進，第一屏就是兩個動作。
+
+提案頁因此多了一排「指標：浮動（現況）／先停住」，把它關掉比一比。
+使用者比過之後選**維持浮動** —— 兩者的量級差很遠（指標是 4px 的來回、
+照片是八秒才走完的單向推進），不會互相搶。
+
+⚠ **不要因為「兩個動畫」就順手拿掉其中一個。** 這是比過畫面才定的。
+⚠ 手機沒有這個問題（.hero-cue 在 ≤720 是 display:none）；
+  電腦版有指標但它不浮動。只有 iPad 兩段需要判斷。</pre></div>
+
+<h2>十、提案頁本身的做法（下次要開提案頁可以照抄）</h2>
+<div class="note"><pre>・切換條的**預設值跟著裝置走**：已經上線的那幾段直接放定案值（打開就是
+  線上的樣子），還沒定的那一段放中間值當起點。面板多一格「這台落在哪一段」，
+  分段條件和 index.html 的 @media 一字不差。
+  三輪都用同一頁、同一支腳本，只改預設值與量測欄位 —— 比每一輪開新頁省事很多。
+・提案頁把正式站的三道 @media 全拆掉，讓每一段都吃得到，切換條才有得比。
+  那幾條排在正式站那一條後面、選擇器權重相同，所以贏的是提案頁。
+・量測一律**跟「不動的時候」對照**，不要只報絕對值 ——
+  這種提案要回答的是「改動把數字往哪邊推」。
+・接縫取中位數不取平均：那一列有路燈與車頭燈，幾顆亮點就能把平均拉高
+  4 個 L*（CLAUDE.md 第九節第 11 條）。
+・詩的對比取第 99 百分位不取絕對最大值：字之間有空隙，框裡難免掃到一顆
+  窗戶的高光，一顆像素不該定生死。
+・合成白字要**逐通道**做，不能拿亮度直接內插 —— alpha 是在 sRGB 空間疊的。</pre></div>
+
+<footer>
+  芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a>　<a href="/">回首頁</a>
+</footer>
+</div></body>
+</html>
