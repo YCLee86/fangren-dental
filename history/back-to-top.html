@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>back-to-top｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>back-to-top</h1>
+<p class="meta">
+  原網址 <code>/preview/back-to-top/</code>（已刪除 2026-08-15）<br>
+  整頁還原：<code>git show 225b7cf:preview/back-to-top/index.html</code><br>
+  切換條 <code>?tint=&amp;a=&amp;blur=&amp;line=&amp;ink=&amp;lit=&amp;size=&amp;r=&amp;when=&amp;edge=</code>，三輪收斂，已定案上線
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者拿 blog.ichentsai.tw 的手機螢幕錄影（1126×2436、DPR 3、9.43 秒）：
+「在診所網站首頁做一個往上（回到最上面）的按鈕，像影片那樣。」</pre></div>
+
+<h2>影片那一顆逐幀量出來是什麼</h2>
+<div class="note"><pre>容器裡沒有 ffmpeg、沒有 PIL、沒有 ImageMagick。做法：npm 裝 ffmpeg-static 抽幀，
+再用 zlib 自己解 PNG（8-bit RGB、非交錯），逐列掃亮度找出那一顆的邊界。
+⚠ 影片是 HEVC（hvc1）的 iPhone 螢幕錄影，Playwright 的 Chromium 解不了，
+  不要指望用瀏覽器讀。
+
+    方框    48×48 CSS px（實測 144×144 裝置像素，正方形）
+    位置    離螢幕右緣 13px —— 它是對著**視窗**定位的，不是對著卡片：
+            那張文章卡的右緣在 x=1076，按鈕右緣在 1087，整個超出去 11px
+    記號    全箭頭（桿 14 高、頭 12.7 寬、筆畫 2px ＝ 一顆 24px 的 lucide arrow-up）
+    底      很淡的一層白，不是實心 —— 壓在木紋插圖上時底下的紋路整片透出來
+    其他    沒有文字、沒有框線、不會動；捲到大約第二張卡才出現
+
+⚠ 白按鈕壓在白卡上是看不見的，只能靠**陰影的環**反推邊界（量到 240 那一圈）。
+  一開始誤把照片裡的樹枝當成箭頭，繞了一圈。</pre></div>
+
+<h2>三輪的收斂</h2>
+<div class="note"><pre>第一輪：底三案 Ⓐ 紙上的卡（--card 不透明 ＋ 框 ＋ 卡片陰影）／Ⓑ 墨玻璃（墨色 .72
+        ＋ 毛玻璃）／Ⓒ 深綠松（--teal 實心）；記號三案 全箭頭／單角形／角形＋短桿；
+        再加方框、圓角、出現時機、離右下角四段。
+        → 使用者停在「Ⓐ・角形・44px・8px・半屏・20px」，並給了三件事。
+
+第二輪：① 角形要比對首頁那個往下滑翻過來，現在只有一條要做成兩條，大小也要
+           比照首頁現在的
+        ② 底色是實的我不喜歡，還是要有點透；但墨玻璃又太重了，比較好的效果
+           應該是比較淡的淡灰色玻璃感
+        ③ 點下去要會變亮
+        → 記號固定成兩條角形（不再是候選）；底整組改成半透明 ＋ backdrop-filter，
+          並把「哪一種淡灰」拆成四支各自可調的尺（色／濃／模糊／框線）；
+          點下去三階（微／中／明顯）。
+        → 使用者停在「偏白・中(.62)・20px・框線無・微」。
+
+第三輪：「大概是這樣。不過角形的線條現在看起來是黑色，要改成灰色才不突兀。」
+        → 角形從內文的墨 --ink #2a2c27 改成柔墨 --ink-soft #5c5f57，
+          並開一段尺（柔墨 1／.82／.70）。
+
+定案：偏白 .80 ／ 模糊 6px ／ 框線無 ／ 柔墨 .82 ／ 點下去「微」／
+      44px ／ 8px ／ 半屏 ／ 離右下角 20px。</pre></div>
+
+<h2>定案的每一個值</h2>
+<div class="note"><pre>底      rgba(244, 244, 245, .8)          ＝ --card 的 .80
+模糊    blur(6px) saturate(1.15)
+框線    無（只靠 --card-shadow 浮起來）
+角形    rgba(92, 95, 87, .82)            ＝ --ink-soft 的 .82
+        18 × 19.5（每條 18×9、間距 1.5、筆畫 1.4）
+方框    44 × 44、圓角 var(--frame-r)
+位置    right/bottom: calc(20px + env(safe-area-inset-*))
+出現    pageYOffset > visualViewport.height × 0.5，淡入 ＋ 上浮 6px
+點到    底收成不透明（var(--card)）；捲動整段 620ms 都亮著</pre></div>
+
+<h2>落選的（不要再走回去）</h2>
+<div class="note"><pre>底：Ⓐ 紙上的卡（不透明）、Ⓑ 墨玻璃（墨色 .72 ＋ 毛玻璃）、Ⓒ 深綠松（--teal 實心）
+    ⚠ 三案的共同問題是「實的」或「太重」。使用者要的是**半透明的淡灰玻璃**。
+    ⚠ 影片那一顆的「很淡的一層白」不能照抄：那一站的頁面底色是白的，淡白底才
+      看得見；這一站的紙色是 --paper #e2e5e6，同一層淡白在紙上等於沒有。
+記號：全箭頭（＝影片那顆）、單角形、角形＋短桿。
+    ⚠ 定案是首頁那顆「往下滑」的兩條角形翻過來，形狀尺寸筆畫間距逐項相同。
+角形的顏色：內文的墨 --ink #2a2c27（「看起來是黑色，太突兀」）。
+圓形：**一次都沒做**。2026-08-15 iPad 那顆指標時使用者已經說過
+      「圓圈跟網站主題不搭，主題是方框導圓」，所以圓角三案全部落在 8~12px 那一族。
+模糊 12px／20px、框線「細墨線 .10」／「細白線 .55」、底「淡 .45」／「中 .62」、
+角形「柔墨 1」／「柔墨 .70」、點下去「中」（＋角形轉深綠松）／「明顯」（＋整塊套色）、
+方框 48／52、圓角 10／12、出現「一屏」／「過 HERO」、離角 12／16。
+三個開關：進場不浮上來、電腦版不放、捲到頁尾就收起來 —— **都沒有選**
+（所以電腦版也有這一顆，捲到頁尾也不會收）。</pre></div>
+
+<h2>這一輪學到、很容易再踩的</h2>
+<div class="note"><pre>1. **「點下去會亮」抄錯了一個現成的寫法。**
+   `.hero-cue` 的做法是：加 .is-lit → 掛一個 300ms 的 timeout 拿掉它 →
+   捲動結束時才 clearTimeout。但那個 timeout 在**第 300ms 就已經燒掉了**，
+   而捲動要跑 620ms —— 所以實際上只亮了不到一半，而且那半段畫面正在飛，
+   等於看不到。使用者第二輪就是因此說「點下去要會變亮」。
+   改法：**要捲的時候根本不掛 timeout**，由捲動結束那一刻拿掉；
+   只有「這一次不會捲」（開了減少動態、或已經在最上面）才用 timeout 收尾。
+   ⚠ 站上的 .hero-cue 目前仍是舊寫法（實際只亮 300ms）。**那是另一件事，
+     這一輪沒有動它** —— 日後要修就是同一個改法。
+
+2. **這一站的逐像素比對讀不出訊號，要改比版面地標。**
+   前兩輪報「差異像素 15 萬」看起來像回歸，實際上**同一頁自己對自己**在
+   DPR 1 下就有 152,354 個像素有差（次像素抗鋸齒 ＋ 合成層時序）。
+   同一組比對重跑兩次，834 那一格從 702,477 跳到 1,922。
+   改成比對 13 個版面地標（.sticky-head／.hero／.band／#topics／.chips／
+   .cards／.card／.doc／#clinic／.info-card／.gallery／.foot ＋ scrollHeight）
+   的 x/y/寬/高，四個視窗全部逐項相同 —— 那個是確定的。
+
+3. **顏色不要另外挑，先找站上有沒有同一種東西。**
+   「紙上的小角形」站上本來就有：首頁那兩顆橫捲提示 .swrap::before/::after
+   是 border-color: var(--ink-soft) ＋ opacity: .7。第二輪自己挑了 --ink
+   （那是**內文字**的顏色），使用者一眼就說太黑。
+
+4. **`rgb(r g b / a)` 這個語法要 Safari 15 以上**，舊的會把整條宣告丟掉、
+   底變成完全透明。提案頁那一版前面補了一行 rgba() 當後備。
+   （正式站定案的值是寫死的 rgba()，沒有這個問題。）
+
+5. **圓角吃 --frame-r 這個變數、方框寫死 44px，兩者刻意不同。**
+   電腦版那一段把 --frame-r 乘上 --type-scale（8 → 9px），所以圓角會自動
+   跟著頁首那三個玻璃框走；44px 是**觸控目標的下限不是造型**，和
+   .topic-search 的 min-height: 44px 同一條，電腦版那一段也沒有動它。</pre></div>
+
+<h2>文件裡怎麼記這一件</h2>
+<div class="note"><pre>〔CLAUDE.md 第九節・定案表〕
+**「回到最上面」的按鈕** — 三輪定案上線（2026-08-15）。整段推導在這一頁。
+
+〔index.html〕
+樣式在 .btt 那一段（排在電腦版字級那一段**之前**，不要往後搬），
+標記與 JS 在最後一個結束標籤之前。</pre></div>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>

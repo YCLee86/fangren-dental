@@ -4091,6 +4091,105 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
 
 /* ==========================================================================
+   「回到最上面」的按鈕（2026-08-15 三輪定案上線）
+   --------------------------------------------------------------------------
+   起因：使用者拿 blog.ichentsai.tw 的手機螢幕錄影 ——「做一個往上（回到最上面）
+   的按鈕，像影片那樣」。推導、三輪的落選案與量測見 /history/back-to-top.html。
+
+   ---- 影片那一顆量出來是什麼（逐幀解 PNG，1126×2436、DPR 3）--------------
+   方框 48×48、**離螢幕右緣 13px**（對著視窗定位，比那張文章卡的右緣還多探出去
+   11px）、記號是全箭頭（桿 14 高、頭 12.7 寬、筆畫 2px ＝ 24px 的 lucide
+   arrow-up）、底是很淡的一層白、沒有文字、不會動。
+
+   ⚠⚠ **底不能照抄。** 那一站的頁面底色是白的，淡白底才看得見；這一站的紙色是
+      `--paper` #e2e5e6，同一層淡白在紙上等於沒有。所以底是重新挑的（下面）。
+   ⚠ **記號也沒有照抄。** 使用者指定改成**首頁那顆「往下滑」的兩條角形翻過來**，
+      形狀、尺寸、筆畫、間距逐項相同 —— 見下面 `.btt svg`。
+
+   ---- 定案的每一個值（使用者一段一段挑的）--------------------------------
+       底　　　`--card` #f4f4f5 的 **.80**（半透明）＋ `blur(6px) saturate(1.15)`
+       框線　　**無**（只靠卡片那組陰影浮起來）
+       角形　　柔墨 `--ink-soft` #5c5f57 的 **.82**
+       方框　　**44×44**（觸控下限）、圓角 **8px**（＝ `--frame-r`）
+   ⚠ 圓角吃 `--frame-r` 這個**變數**不是寫死的 8px —— 電腦版那一段把它乘上
+      `--type-scale`（8 → 9px），所以這一顆在電腦上會自動跟著頁首那三個玻璃框走。
+   ⚠ 反過來，**方框的 44px 是寫死的、刻意不跟著放大**：那是觸控目標的下限、
+      不是造型（同 `.topic-search` 的 `min-height: 44px`，電腦版那一段也沒有動它）。
+       位置　　離螢幕右下角 **20px** ＋ safe-area
+       出現　　捲過**半個螢幕**才淡入（同時往上浮 6px）
+       點到　　底收成不透明（.80 × 1.35 已經超過 1，等於實色 `--card`）
+
+   ⚠ **底是半透明的，不要換成實色。** 第一輪給過三案 Ⓐ 紙上的卡（不透明）、
+      Ⓑ 墨玻璃（墨色 .72）、Ⓒ 深綠松（實心），**三案全部被否決**：
+      「底色是實的我不喜歡，還是要有點透；但墨玻璃又太重了，比較好的效果應該是
+      比較淡的淡灰色玻璃感。」
+   ⚠ **角形是柔墨不是墨。** 第二輪用內文的墨 `--ink` #2a2c27，使用者：
+      「角形的線條現在看起來是黑色，要改成灰色才不突兀。」柔墨正是站上「紙上的
+      小角形」既有的那一支 —— 首頁那兩顆橫捲提示（`.swrap::before/::after`）
+      就是 `border-color: var(--ink-soft)` ＋ `opacity: .7`。
+   ⚠ **模糊只有 6px 是刻意的**（三案 6／12／20 裡挑的）。紙色是一整片平的，
+      玻璃在紙上本來就看不出模糊；真正看得出來的是它壓在文章卡插圖、地圖、
+      那兩排科別標記上的時候，6px 只讓底下的東西「軟一階」而不是糊掉。
+   ⚠ `backdrop-filter` 只作用在元素自己的框裡，框的邊緣本身就是一條可見的線
+      （第九節第 1 條）。頁首那一層要靠 `mask-image` 把模糊淡出，**這一顆不必**
+      —— 它是一個實體的小方塊，邊緣本來就要被看見。
+   ⚠ **不要拿掉 `env(safe-area-inset-*)`**：iPhone 底下那條 home indicator 與
+      Safari 的工具列會吃掉一截，只寫 20px 在瀏海機上會被壓到邊。
+   ========================================================================== */
+.btt {
+  position: fixed; z-index: 20;      /* 頁首是 30。兩者不會相交，留給頁首在上面 */
+  right: calc(20px + env(safe-area-inset-right, 0px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0; border: 0; border-radius: var(--frame-r);   /* ＝頁首那三個玻璃框 */
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  background-color: rgba(244, 244, 245, .8);              /* ＝ --card 的 .80 */
+  -webkit-backdrop-filter: blur(6px) saturate(1.15);
+          backdrop-filter: blur(6px) saturate(1.15);
+  box-shadow: var(--card-shadow);
+  color: rgba(92, 95, 87, .82);                           /* ＝ --ink-soft 的 .82 */
+  /* 沒出現的時候用 visibility 收掉，不是只有 opacity —— 只設 opacity 的話它還在
+     tab 順序裡，鍵盤會走到一顆看不見的按鈕。 */
+  opacity: 0; visibility: hidden; transform: translateY(6px);
+  transition: opacity .22s ease, transform .22s ease, visibility .22s,
+              background-color .18s ease, box-shadow .22s ease;
+}
+.btt.is-on { opacity: 1; visibility: visible; transform: translateY(0); }
+/* 兩條角形。數字逐項抄首頁 `.hero-cue`（直式平板那一段）：每條 18×9、
+   path `M1 1l8 7 8-7`、stroke-width 1.4、兩條間距 1.5px → 整組 18×19.5。
+   這裡往上，所以路徑上下翻成 `M1 8 9 1l8 7`，第二條往下位移 10.5。
+   ⚠ **兩條一定要用同一張 SVG 畫**（這裡是同一個 svg 裡的兩條 path）——
+      2026-08-15 iPad 那顆指標一條用 SVG、一條用 CSS 邊框，跨距 18 vs 18.4px，
+      使用者一眼就看出「長度好像不太一樣」。
+   ⚠ 尺寸是**定值**，不跟著方框大小算 —— 使用者要的就是「和首頁那個一樣大」。
+   ⚠ non-scaling-stroke 要下在 path 上，不是下在 svg 上（這個屬性不會繼承）。
+   ⚠ `overflow: visible` 不要拿掉：viewBox 貼著圖形，圓頭的筆畫會往外探出半個
+      筆寬（0.7px），裁掉的話四個端點會變成平的。 */
+.btt svg {
+  display: block; width: 18px; height: 19.5px; overflow: visible;
+  fill: none; stroke: currentColor; stroke-width: 1.4;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.btt svg path { vector-effect: non-scaling-stroke; }
+/* 點下去 ＝ 底收成不透明。⚠ 一律寫 `background-color` 不要寫 `background` ——
+   transition 認的是 background-color 這個長寫屬性，寫簡寫轉場會對不上、
+   變成瞬間切換（`.hero-cue` 那一輪記過同一條）。
+   ⚠ hover 關在 `(hover: hover)` 裡：沒有游標的裝置點下去會把那一態黏住。 */
+.btt.is-lit { background-color: var(--card); }
+@media (hover: hover) and (pointer: fine) {
+  .btt:hover { background-color: var(--card); box-shadow: var(--card-shadow-hover); }
+}
+.btt:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+/* 減少動態：進場只淡入，不要浮上來。⚠ `.is-on` 的權重（0,2,0）比這裡高，
+   所以出現之後仍然是 translateY(0)，只有「還沒出現」那一態被拉平。 */
+@media (prefers-reduced-motion: reduce) {
+  .btt { transition: opacity .22s ease, visibility .22s, background-color .18s ease;
+         transform: none; }
+}
+
+
+/* ==========================================================================
    電腦版：整體字級放大 12%（2026-08-15 定案上線）
    --------------------------------------------------------------------------
    使用者拿 blog.ichentsai.tw 當參考站，要「幾個放大的版本」比過之後選了 +12%。
@@ -6372,6 +6471,86 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       root.style.scrollBehavior = prev;
       clearTimeout(litT);
       cue.classList.remove('is-lit');     /* 亮到捲完為止 */
+    }
+    requestAnimationFrame(step);
+  });
+})();
+</script>
+
+<!-- 「回到最上面」。⚠ 用 <button> 不是 <a href="#top">：這一顆的目的地不是
+     「某一節」，用連結會在歷史紀錄裡塞一格空的 hash，按上一頁會變成「回到剛剛
+     的位置」而不是「回到上一頁」。反過來說，因為它本來就沒有導覽行為，
+     「preventDefault 會弄丟歷史」那一條（第九節第 13 條）在這裡不成立。
+     ⚠ 圖形 aria-hidden，可讀的內容由 aria-label 給（＝ .hero-cue 的做法）。
+     ⚠ 沒有 JS 就一直是 visibility: hidden —— 那是刻意的：這一顆的全部價值就是
+     那段捲動，沒有 JS 的話它按下去不會有任何事發生，不如不要出現。 -->
+<button class="btt" type="button" aria-label="回到最上面">
+  <svg viewBox="0 0 18 19.5" aria-hidden="true">
+    <path d="M1 8 9 1l8 7"/>
+    <path d="M1 18.5 9 11.5l8 7"/>
+  </svg>
+</button>
+
+<script>
+/* ==========================================================================
+   「回到最上面」：捲過半個螢幕才出現，點下去自己捲回頂端
+   --------------------------------------------------------------------------
+   ⚠ 捲動用自己的 rAF，不是 `window.scrollTo({behavior:'smooth'})` ——
+      **iOS Safari 對這一種捲動不吃 `scroll-behavior: smooth`**（2026-08-15 為了
+      iPad 那顆指標查出來的，第九節）。時長與曲線抄那一顆：620ms、ease-in-out cubic。
+   ⚠ 自己捲之前要把 scroll-behavior 設成 auto，不然瀏覽器會對每一幀再平滑一次。
+   ⚠ 開了「減少動態效果」就整段不接手，交還給原生的瞬間跳轉 —— 平滑捲動正是那個
+      設定要關掉的東西（站上另外四處也都看它）。
+   ⚠ 「點到會亮」寫在減少動態那條 return **之前**：那是回饋，和要不要平滑捲動
+      是兩件事。
+   ⚠⚠ **亮起來要撐滿整段捲動（620ms），所以「要捲」的時候不掛 timeout。**
+      提案第一輪抄了 `.hero-cue` 的寫法（加 `.is-lit` → 掛 300ms 的 timeout 拿掉
+      → 捲動結束才 clearTimeout），但那個 timeout 在**第 300ms 就燒掉了**，
+      捲動還在跑，實際上只亮了不到一半、而且那半段畫面正在飛，等於看不到。
+      現在只有「這一次不會捲」（減少動態、或已經在最上面）才用 timeout 收尾。
+      ⚠ 站上的 `.hero-cue` 目前仍是那個舊寫法，那是另一件事，這一輪沒有動它。
+   ⚠ 「捲進畫面了沒」用 visualViewport.height 不是 innerHeight —— iOS 的
+      innerHeight 是工具列收起後的大視窗高，會高估（第八節）。
+   ========================================================================== */
+(function () {
+  var btn = document.querySelector('.btt');
+  if (!btn) return;
+  var root = document.documentElement, litT = 0, tick = false;
+
+  function vh() { return (window.visualViewport && visualViewport.height) || innerHeight; }
+
+  function paint() { btn.classList.toggle('is-on', window.pageYOffset > vh() * 0.5); }
+
+  addEventListener('scroll', function () {
+    if (tick) return;
+    tick = true;
+    requestAnimationFrame(function () { tick = false; paint(); });
+  }, { passive: true });
+  addEventListener('resize', paint);
+  paint();
+
+  btn.addEventListener('click', function () {
+    btn.classList.add('is-lit');
+    clearTimeout(litT);
+    function litOff() { litT = setTimeout(function () { btn.classList.remove('is-lit'); }, 320); }
+
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { window.scrollTo(0, 0); litOff(); return; }
+
+    var from = window.pageYOffset;
+    if (from < 1) { litOff(); return; }
+    var dur = 620, t0 = 0, prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var t = Math.min(1, (ts - t0) / dur);
+      /* ease-in-out cubic：起步與收尾都慢，中間快 —— 讀起來像「捲上去」，
+         不像「跳過去」。 */
+      var e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      window.scrollTo(0, from * (1 - e));
+      if (t < 1) { requestAnimationFrame(step); return; }
+      root.style.scrollBehavior = prev;
+      btn.classList.remove('is-lit');     /* 亮到捲完為止 */
     }
     requestAnimationFrame(step);
   });
