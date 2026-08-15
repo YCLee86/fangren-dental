@@ -2438,12 +2438,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   letter-spacing: 0; white-space: nowrap; padding: 1rem .6rem 1rem 0;
   border-top: 1px solid var(--rule);
 }
-/* 早／午／晚三個字要維持墨色 —— 上面 `#clinic .info-card b` 把 b 染成強調色，
-   那條是給電話與「週一至週五」用的，這裡要蓋回去 */
-#clinic .hours-grid tbody th b {
-  color: var(--ink); font-size: .82rem; font-weight: 400;
-  margin-right: .5em; letter-spacing: .06em;
-}
+/* 2026-08-15：早／午／晚三個字由使用者拿掉了（「早午晚 的字拿掉」），
+   所以原本那條 `#clinic .hours-grid tbody th b` 也一併移除 —— 那顆 <b> 已經
+   不存在。時段仍然讀得出來（時間本身就是），tools/schema.mjs 讀的是
+   <th scope="row"> 裡的「數字:數字–數字:數字」，和那個 <b> 無關。 */
 .hours-grid tbody td { border-top: 1px solid var(--rule); text-align: center; }
 .hours-grid .d {
   display: inline-block; width: .56rem; height: .56rem; border-radius: 50%;
@@ -4398,23 +4396,27 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      兩張卡的內文：門診表的星期、時段與時間，以及底下那兩句說明。
      ⚠ 「早／午／晚」那三個字（`b`）按原本的比值 13.12 ÷ 12.8 ＝ 1.025
        跟上，不然時間會比它大。
-     ⚠⚠ **`col.lab` 要一起加寬。** 表格是 `table-layout: fixed`，左欄寫死
-       6.3rem；而 `tbody th` 是 `white-space: nowrap`，字一大就會**橫著蓋到
-       第一格的點上**（表格本身不會撐破卡，所以不會有水平捲動，症狀是重疊）。
-       16px 時左欄的字實需 123.7（早 16.4 ＋ 字距 ＋ 08:45–11:30 ＋ 右內距 .6rem），
-       8.4rem ＝ 134.4 留 10.7px 餘裕 —— **不要壓到剛好**：那是拿 Noto Sans TC
-       量的，iOS 上是 PingFang，數字寬度不會一模一樣。
-     ⚠ 六個寬度實測：左欄餘裕一律 10.71px，五個日子欄 2.8（320）~24.8（430），
-       左欄文字到第一顆點 26.4~37.4px。**最緊的是 320 的日子欄 2.8px** ——
-       再往上加一階（17.6）那一格就會變成 −1.6，所以那一階當時要另外
-       為 ≤359 寫一段退回 16px；現在整組就是 16，那一段因此拿掉了。
+     ⚠⚠ **`col.lab` 要跟著字級調。** 表格是 `table-layout: fixed`，左欄寬度
+       寫死；而 `tbody th` 是 `white-space: nowrap`，左欄太窄，時間就會**橫著
+       蓋到第一格的點上**（表格本身不會撐破卡，所以不會有水平捲動，症狀是重疊）。
+     ⚠ 2026-08-15 使用者把「早／午／晚」三個字拿掉了（見那三個 `<th scope="row">`），
+       左欄的字因此從 123.7 掉到 **88.5px**。同一句話的後半是
+       「一那一行和時間的間隔縮短一點，不然一到五感覺都擠在一起」——
+       所以左欄從 8.4rem 收到 **6.8rem（108.8）**，實測：
+
+         左欄　　8.4rem → 6.8rem　　字的餘裕 36.3 → 10.7px
+         時間到第一顆點　390 上 58.9 → 35.9px（−39%）
+         日子欄寬　390 上 35.0 → 40.2px、320 上 21.0 → 26.2px
+
+       10.7px 的餘裕是刻意留的 —— 那是拿 Noto Sans TC 量的，iOS 上是
+       PingFang，數字寬度不會一模一樣。**不要再往下收到 6.3rem**（餘裕只剩 2.7）。
+     ⚠ 320 那一檔的日子欄餘裕 2.8 → 7.9px，最緊的那一格反而變寬了。
      ⚠ 地圖 SVG 裡的字（路名、停車場牌子、P）**刻意不跟著放大** —— 那是
        viewBox 裡的使用者單位，那張圖排了四十二輪；同 2026-08-15 電腦版那一輪。
      ⚠ 兩排科別標記（`.hours-filter`／`.chips`）也沒有動：塊高 34px 是
        08-13 定的，字級上限 (34−2)÷1.6 ＝ 20px，而它們是**標記不是內文**。 */
-  .hours-grid col.lab                        { width: 8.4rem; }
+  .hours-grid col.lab                        { width: 6.8rem; }
   .hours-grid thead th, .hours-grid tbody th { font-size: 1rem; }
-  #clinic .hours-grid tbody th b             { font-size: 1.025rem; }
   .info-card p, .map-note                    { font-size: 1rem; }
   /* 站上這一條自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
      所以這裡也要 important 才蓋得掉。 */
@@ -5182,19 +5184,19 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                   <th scope="col">四</th><th scope="col">五</th></tr>
             </thead>
             <tbody>
-              <tr><th scope="row"><b>早</b>08:45–11:30</th>
+              <tr><th scope="row">08:45–11:30</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general endo"></span></td>
                   <td><span class="d" data-in="general perio"></span></td>
                   <td><span class="d" data-in="general prosth"></span></td></tr>
-              <tr><th scope="row"><b>午</b>13:45–16:30</th>
+              <tr><th scope="row">13:45–16:30</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general kids"></span></td>
                   <td><span class="d" data-in="general kids prosth endo"></span></td>
                   <td><span class="d" data-in="surg kids"></span></td>
                   <td><span class="d" data-in="general prosth perio"></span></td></tr>
-              <tr><th scope="row"><b>晚</b>17:45–20:00</th>
+              <tr><th scope="row">17:45–20:00</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="ortho kids perio"></span></td>
                   <td><span class="d" data-in="general ortho kids endo"></span></td>
