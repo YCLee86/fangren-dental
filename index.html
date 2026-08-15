@@ -3100,9 +3100,31 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .card p { font-size: .84rem; }
   .card-tag { margin-bottom: .35rem; }
   .card-date { margin-top: .5rem !important; font-size: .76rem !important; }
+
+  /* ---- 縮圖蓋過卡片的框線（2026-08-15）---------------------------------
+     使用者拿參考站的手機截圖：「文章卡片邊框比照片窄，比照這個 照片寬一點」。
+     量出來改動前是**反過來的**：375 上卡片外緣 335px、縮圖只有 333px ——
+     `overflow: hidden` 切的是**內距框**，框線因此永遠在照片外面一圈，
+     照片一定比卡窄 2px（390 上 350／348、430 上 390／388，三個寬度同一件事）。
+     參考站量到的是照片的左緣比框線還外面約 1px（截圖 923px ÷ 393 CSS px
+     ＝ 2.348 倍：框線 x≈42、照片 x≈40），也就是照片直接蓋過那條框線。
+
+     改法：**手機這一段把 border 拿掉，那圈框線改用 inset 的 box-shadow 畫。**
+     inset 陰影畫在自己的背景之上、但在子元素之下，所以一次滿足兩邊：
+       ・照片那幾列 —— 被 <img> 蓋住，框線不出現（＝框比照片窄）
+       ・卡身那幾列 —— 照舊看得到那圈 1px --rule
+     縮圖因此 333 → 335px（內距框 ＝ 邊框框），左右各多 1px，卡片外緣沒動。
+     ⚠ **不要改成負 margin 讓照片凸出卡外** —— `overflow: hidden` 會直接切掉；
+       改成 `overflow: visible` 又會失去圓角裁切，照片的上面兩角會方出來。
+     ⚠ 圓角仍然是 12px（內距框 ＝ 邊框框，半徑不必補償）。
+     ⚠ 電腦版與 iPad 沒有動（使用者指定手機版）。
+     ⚠ 下面那條「手機沒有 hover」也要把這圈 inset 一起寫回去，
+       不然點下去（黏住的 :hover）整圈框線會不見。 */
+  .card { border: 0; box-shadow: var(--card-shadow), inset 0 0 0 1px var(--rule); }
+
   /* 手機沒有游標：卡片只有靜止陰影，沒有 hover。
      :hover 在觸控裝置上會在點下去之後黏住，看起來像卡片壞掉。 */
-  .card:hover { transform: none; box-shadow: var(--card-shadow); border-color: var(--rule); }
+  .card:hover { transform: none; box-shadow: var(--card-shadow), inset 0 0 0 1px var(--rule); }
   .card:hover .card-thumb { transform: none; }
 }
 
