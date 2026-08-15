@@ -4425,6 +4425,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   .hours-grid col.lab                        { width: 6rem; }
   .hours-grid thead th, .hours-grid tbody th { font-size: 1rem; }
   .info-card p, .map-note                    { font-size: 1rem; }
+  /* 「看診時段的點可以大一點」（2026-08-15）：.56rem → .75rem ＝ 8.96 → 12px。
+     ⚠ 列高不受影響（62.6px 五個尺寸都一樣）—— 那是 `tbody th` 的上下內距
+       各 1rem 撐出來的，點只是躺在 td 的行框裡。
+     ⚠ 點與點的水平距離 33.8 → 30.7px、時間到第一顆點 24.4 → 22.8px，
+       兩個都還很鬆。1rem（16px ＝ 和字一樣大）試過，那已經不像「點」了。
+     ⚠ `.d.hit` 的 scale(1.16) 沒有動 —— 點到那一科時會變成 13.9px。
+     ⚠ 電腦版與 iPad 維持 .56rem（那邊 rem 是 18px，點本來就 10.08）。 */
+  .hours-grid .d                             { width: .75rem; height: .75rem; }
   /* 站上這一條自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
      所以這裡也要 important 才蓋得掉。 */
   .info-note                                 { font-size: 1rem !important; }
@@ -6721,6 +6729,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      （原本 58.9）。**報酬遞減**：左欄每收 8px，間隔只少 7px —— 日子欄
      會跟著變寬，而點是置中的。
 
+     第四輪（同一天）使用者：「看診時段的點可以大一點」。.56rem → .75rem
+     （8.96 → 12px），第四條切換條可以比 8.96 / 11.2 / 12 / 13.6 四段。
+     列高不受影響（62.6px 四段都一樣，那是 tbody th 上下各 1rem 撐的）。
+
      ⚠ 這一段只在 ≤720px 生效（電腦版 2026-08-15 已經整體 +12%，不在這一輪裡）。
      ⚠ 這份複本同時帶著今天稍早那一項：手機的縮圖蓋過卡片框線（照片 +2px）。
      ⚠ 切換條是**即時套用**，不重新載入 —— 這一輪沒有任何值會影響站上那三支
@@ -6769,6 +6781,11 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   html[data-sec="s2"] .info-card p,
   html[data-sec="s2"] .map-note { font-size: 1.1rem; }
   html[data-sec="s2"] .info-note { font-size: 1.1rem !important; }
+
+  /* ---- 門診表的點，四段（d2 ＝ 這個複本本身 12px，不必寫）--------------- */
+  html[data-dot="d0"] .hours-grid .d { width: .56rem; height: .56rem; }
+  html[data-dot="d1"] .hours-grid .d { width: .7rem;  height: .7rem;  }
+  html[data-dot="d3"] .hours-grid .d { width: .85rem; height: .85rem; }
 }
 /* ⚠ 早／午／晚拿掉之後，Ⓑ 在 320 上也放得下了（左欄 7.4rem，日子欄餘裕
    4.1px），所以當初為 ≤359 寫的那一段退階規則不必再帶進來。 */
@@ -6849,6 +6866,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <div class="fr-tg-scale"></div>
       <div class="fr-tg-g">三塊的內文：醫師介紹 / 看診時段 / 位置與周邊停車（會重新載入）</div>
       <div class="fr-tg-scale fr-tg-sec"></div>
+      <div class="fr-tg-g">門診表那些點的大小（立刻換）</div>
+      <div class="fr-tg-scale fr-tg-dot"></div>
       <div class="fr-tg-sw"></div>
     </div>
     <div class="fr-tg-foot"></div>
@@ -6870,6 +6889,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     { k: 's1', lb: 'Ⓐ',     nt: '16.0' },
     { k: 's2', lb: 'Ⓑ',     nt: '17.6' }
   ];
+  var DOTS = [
+    { k: 'd0', lb: '現況', nt: '8.96' },
+    { k: 'd1', lb: '中',   nt: '11.2' },
+    { k: 'd2', lb: '大',   nt: '12.0' },
+    { k: 'd3', lb: '更大', nt: '13.6' }
+  ];
   var SW = [
     { k: 'date', def: 'on', lb: '日期那一列抬一階（已定案）',
       nt: '13.12px。關掉回到 12.16。參考站那一列量到約 13.5 —— 標記（12.8）沒有動，兩顆本來就不同級。' }
@@ -6890,6 +6915,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   root.setAttribute('data-cs', cs);
   var sec = q.get('sec'); if (!SECS.some(function (l) { return l.k === sec; })) sec = 's1';
   root.setAttribute('data-sec', sec);
+  var dot = q.get('dot'); if (!DOTS.some(function (l) { return l.k === dot; })) dot = 'd2';
+  root.setAttribute('data-dot', dot);
   SW.forEach(function (s) {
     var v = q.get(s.k);
     root.setAttribute('data-' + s.k, v === '1' || v === 'on' ? 'on' : (v === '0' || v === 'off' ? 'off' : s.def));
@@ -6912,6 +6939,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     b.addEventListener('click', function () { go('sec', l.k); });
     b.dataset.k = l.k;
     secBox.appendChild(b);
+  });
+  var dotBox = box.querySelector('.fr-tg-dot');
+  DOTS.forEach(function (l) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<b>' + l.lb + '</b><i>' + l.nt + '</i>';
+    /* 點的大小不影響任何「開頁量一次」的值，所以即時套用就好。 */
+    b.addEventListener('click', function () { root.setAttribute('data-dot', l.k); sync(); });
+    b.dataset.k = l.k;
+    dotBox.appendChild(b);
   });
   SW.forEach(function (s) {
     var lab = document.createElement('label');
@@ -6988,6 +7025,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     [].forEach.call(secBox.children, function (b) {
       b.setAttribute('aria-pressed', b.dataset.k === sk ? 'true' : 'false');
     });
+    var dk = root.getAttribute('data-dot');
+    [].forEach.call(dotBox.children, function (b) {
+      b.setAttribute('aria-pressed', b.dataset.k === dk ? 'true' : 'false');
+    });
     var sv = SECS.filter(function (l) { return l.k === sk; })[0];
     btn.querySelector('b').textContent = (lv ? lv.lb : '') + ' / ' + (sv ? sv.lb : '');
 
@@ -7025,6 +7066,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         var r = document.createRange(); r.selectNodeContents(th);
         return f1(dot.getBoundingClientRect().left - r.getBoundingClientRect().right) + ' px';
       })(), ''],
+      ['點的大小 / 點距', (function () {
+        var ds = [].slice.call(document.querySelectorAll('.hours-grid tbody tr:first-child .d'));
+        var w = ds[0].getBoundingClientRect().width;
+        var gapx = ds[1].getBoundingClientRect().left - ds[0].getBoundingClientRect().right;
+        return f1(w) + ' / ' + f1(gapx) + ' px';
+      })(), ''],
       ['日子欄餘裕', (function () {
         var days = [].slice.call(document.querySelectorAll('.hours-grid thead th'));
         var m = Math.min.apply(null, days.map(function (e) {
@@ -7056,7 +7103,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       }).join('') +
       (narrow ? '' : '<div class="fr-tg-note hot">這一輪只動 ≤720px 的手機版型 —— 現在這個寬度看到的是電腦版（2026-08-15 已經整體 +12%），按了不會變。用手機看，或把視窗調窄。</div>') +
       '<div class="fr-tg-note">「早／午／晚」三個字是直接從 markup 拿掉的，三段都一樣沒有。</div>' +
-      '<div class="fr-tg-note">網址可直接帶參數：?cs=c0|c1|c2|c3&amp;sec=s0|s1|s2&amp;date=0</div>';
+      '<div class="fr-tg-note">網址可直接帶參數：?cs=c0|c1|c2|c3&amp;sec=s0|s1|s2&amp;dot=d0|d1|d2|d3&amp;date=0</div>';
   }
 
   addEventListener('resize', sync);
