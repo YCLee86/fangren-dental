@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>map-pin｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>map-pin</h1>
+<p class="meta">
+  原網址 <code>/preview/map-pin/</code>（已刪除 2026-08-15）<br>
+  整頁還原：<code>git show 15a4e0f:preview/map-pin/index.html</code><br>
+  切換條 <code>?pin=solid|line&amp;ps=&amp;gp=</code>（三排：樣式／圖釘大小／間距），三輪定案上線<br>
+  ⚠ 產生它的一次性腳本**沒有進版控**（跑在 scratchpad 裡）。它做的事就是
+  CLAUDE.md 第八節那四件 ＋ 讓地圖那支腳本吃得到線條版的盒子，內容都寫在下面第六節。
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者（第一則）：「現在那個診所資訊那個位置與周邊停車，有一個圖嘛，他那個圖
+我們有做了一個芳仁牙醫診所的標對話框在那邊，你幫我做一個那個芳仁牙醫診所像那個
+停車場一樣有一個下底線的超連結，然後前面要加一個圖釘，現在是綠底的話那個圖釘
+應該是白色的實心圖釘，然後那個超連結是要點到 Google Map 上的牙醫診所的那個地址。」
+
+使用者（第二則）：「那個芳仁牙醫診所圖釘，那個相對距離跟停車場好像不太一樣，
+然後我覺得那個圖釘不知道為什麼覺得很搶眼，是可以把那個圖釘稍微縮小一點呢，
+還是另外做一個是線條，變成是用白線條取代成現在白實心的樣子，都做看看我比較一下。」
+
+使用者（第三則）：「實心 92%，但我還是覺得圖釘和芳有點近，要和停車場的一樣。」</pre></div>
+
+<h2>一、名牌變成連結</h2>
+<div class="note"><pre>「芳仁牙醫診所」那塊實心綠底白字的名牌（2026-08-14 第三十輪加的），
+現在和停車場那三塊淺底藍字的牌子結構完全一樣：
+
+    &lt;a class="rl-link" href="…"&gt;
+      &lt;g class="rl-pin"&gt;…實心水滴…&lt;/g&gt;
+      &lt;text class="cl-nm"&gt;芳仁牙醫診所&lt;/text&gt;
+      &lt;line class="rl-ul"/&gt;
+    &lt;/a&gt;
+
+・class 沿用停車場那三塊的 rl-link／rl-pin／rl-ul，所以圖釘的擺位、底線的
+  算法（對字面下緣 +2.2）、以及「連結要 stopPropagation」那一條全部自動繼承。
+  ⚠ stopPropagation 非有不可：地圖底層有一個「點空白處＝收回」的 handler，
+    不擋的話點名字會先把牌子關掉，連結還沒開就沒了。
+・顏色在 CSS 多寫一階換掉（.map-svg .clab .rl-pin / .rl-ul）：
+  停車場那三塊是路牌藍 #365685，診所這塊的底是實心綠，所以圖釘與底線都要
+  紙卡色 --card。⚠ 不要寫 #fff —— 同一塊綠上那顆牙齒標誌用的就是 --card，
+  一塊綠上只准一個白。
+・JS 的第 (1) 步選擇器要從 .rl-nm 改成 .rl-nm, .cl-nm —— 診所那塊的文字
+  class 一直叫 cl-nm（字級 15 與字距 .04em 都和停車場那三塊不同，本來就沒共用）。
+  漏掉的話那顆圖釘會留在原點 (0,0)。
+
+連結指到 clinic.json 的 sameAs[0]：
+    https://maps.app.goo.gl/bKSrVyS2Qu2xvnMj7
+⚠ 那是 2026-08-10 使用者本人分享出來的短網址，和停車場那三條同一種來源。
+  不要換成 clinic.json 的 hasMap（?api=1&amp;query=… 的搜尋網址）——
+  那條是給機器的後備。
+
+版面影響（量過，390 寬）：
+    牌子左緣  168.2 → 153.7   （圖釘長在名字左邊）
+    牌子右緣  283.8            不動，離永樂街那三個直排字（327.3 起）還很遠
+    上下      287 ~ 329.7      尾巴的尖端仍然是 287、進到綠色裡
+    平和街的直排字右緣 120.7，離牌子左緣還有 33 個單位</pre></div>
+
+<h2>二、第一次回報：相對距離</h2>
+<div class="note"><pre>量出來是真的。成因是圖釘的高 17 與間距 3 原本是**寫死的絕對值**，
+而兩種牌子的字級不一樣（停車場 16px、診所 15px，.clab text 自己一條）：
+
+                字級   釘高        間距
+    停車場 ×3   16px   1.0624em    0.1876em
+    診所（改前）15px   1.1332em    0.2002em    ← 都大 6.7%
+
+改成「名字字級的倍數」：PIN_EM = 17/16、GAP_EM = 3/16。
+⚠ 兩個比值**定義在停車場那三塊上**，所以那三顆一個單位都沒動
+  （transform 逐字比對：scale(0.03320)、間距 3.00）。會變的只有診所那一顆：
+  17 → 15.94、間距 3 → 2.81。
+⚠ 盒子用圖釘自己的 viewBox 384×512，**不要**改成 getBBox() 量出來的
+  ink box（實測 384×510.675，水滴的尖端是圓的）—— 那會讓停車場那三顆
+  一起長 0.26%。</pre></div>
+
+<h2>三、第二次回報：「圖釘和芳有點近」</h2>
+<div class="note"><pre>第二輪把相對量對齊之後，使用者仍然說近。量出來也是真的，而且是另一件事：
+
+**間距一直是量到 getBBox().x，那是字的排版起點，不是看得到的第一筆墨。**
+第一個字自己的左側空白（left side bearing）每個字都不一樣：
+
+    牌子          第一個字   左側空白   box 間距   看得到的空隙
+    斗六永樂站      斗        0.75       3.00       3.75
+    合廷            合        0.25       3.00       3.25
+    壹車房          壹        0.75       3.00       3.76
+    芳仁牙醫診所    芳        0.234      2.82       3.05   ← 全場最小
+
+「芳」的字幾乎撐滿字身、左邊幾乎沒有空白，所以同樣的 box 間距，
+看起來就比停車場那三塊近了 0.7。
+
+定案：診所那塊的間距改成**對字面量**，JS 用 canvas 現量第一個字的左側空白
+再補回去（data-ink-gap="3.75"）。3.75 ＝ 斗六永樂站與壹車房的實測值，
+是三塊裡的多數。改完是 3.75／3.25／3.76／3.75。
+
+⚠ **停車場那三塊一個值都沒動。** 它們自己就不一致（合廷 3.25，因為「合」的
+  左側空白大），但那是定案過的東西 —— 為了「一致」去動它，等於改掉別人簽過的版。
+⚠ 這個 3.75 是**絕對單位不是 em**。和上一節「圖釘大小用 em」剛好相反，
+  理由是：四塊牌子在同一張圖、同一個縮放上並排，眼睛比的是實際的空白寬度。
+⚠ 量左側空白的方法和量字面下緣同一套（CLAUDE.md 第九節第 9 條）：
+  canvas 的 actualBoundingBoxLeft，**在 400px 上量再等比例縮回去**
+  （Blink 在小字級回來的值顆粒很粗）。量的是第一個字不是整串。</pre></div>
+
+<h2>四、定案</h2>
+<div class="note"><pre>樣式    實心（＝停車場那三塊同一顆水滴，也就是頁尾那顆）
+大小    data-pin-k="0.92"     釘高 15.94 → 14.63（0.975em）
+間距    data-ink-gap="3.75"   對字面量，box 間距因此是 3.51
+
+兩個值都寫在 .clab 這個元素身上，不是寫在 JS 的常數裡 ——
+牌子自己的例外就放在牌子自己的標籤上，日後 grep 得到。
+
+四塊牌子定案後的實測：
+
+    牌子          字級   釘高            字面間距
+    斗六永樂站    16px   16.95（1.060em）  3.75
+    合廷          16px   16.95（1.060em）  3.25
+    壹車房        16px   16.95（1.060em）  3.76
+    芳仁牙醫診所  15px   14.63（0.975em）  3.75</pre></div>
+
+<h2>五、落選：線條版的圖釘</h2>
+<div class="note"><pre>使用者問「還是另外做一個是線條，變成是用白線條取代成現在白實心的樣子」，
+所以提案頁做了一版 Lucide 的 map-pin（站上 HERO 窄帶那組線條圖示就是同一家），
+描邊 2、圓角端點，顏色一樣是紙卡色。使用者選了實心。
+
+⚠ 線條版的**盒子不能用 384×512**：那是實心水滴的 viewBox，Lucide 是 24×24，
+  而且畫出來的東西只占 (4,2)~(20,22)。要把「看得到的輪廓」對齊實心版的高度，
+  盒子得現量：getBBox() ＋ 描邊寬（getBBox 不含描邊）。
+⚠⚠ **不要用 getBoundingClientRect() 量 &lt;g&gt; 的大小** —— Chrome 回傳的是
+  幾何外框、不含描邊，線條版會少算一整個描邊寬（實測 14.49 vs 真正的 15.94）。
+  第一版的現場量測就是這樣量的，數字整個是錯的。</pre></div>
+
+<h2>六、提案頁踩到的兩件</h2>
+<div class="note"><pre>⚠⚠ **把 data-views-self 換成 data-count 的時候，要比對整個標籤。**
+  index.html 在那個 &lt;p&gt; 上面有一段註解，裡面就先出現了一次
+  data-views-self="home"。只比對屬性字串的話，String.replace 會改到**註解**，
+  真正的屬性原封不動留在頁面上 —— 症狀是「看起來都對，但提案頁還是會把首頁
+  的計數 +1」。這和 CLAUDE.md 第八節那條「切換條要用 lastIndexOf 找 &lt;/body&gt;」
+  是同一種坑：這一站的註解很長，要換的字串常常在註解裡先出現一次。
+  改成比對 &lt;p class="band-views" data-views-self="home"&gt; 整串，
+  換完再 assert 一次頁面上沒有殘留。
+
+⚠ **本機預覽伺服器是別的 session 開的，它一關網址就死。** 使用者回報
+  「無法開啟」，查出來不是頁面的問題 —— 8791 沒有人在聽。
+  自己開一台再把網址給他。</pre></div>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>
