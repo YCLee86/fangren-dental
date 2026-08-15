@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>hero-ipad-fullbleed｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>hero-ipad-fullbleed</h1>
+<p class="meta">
+  原網址 <code>/preview/hero-ipad-fullbleed/</code>（已刪除 2026-08-15）<br>
+  整頁還原：<code>git show 2af3c0f:preview/hero-ipad-fullbleed/index.html</code><br>
+  產生它的一次性腳本：<code>git show 2af3c0f:tools/preview-hero-ipad.mjs</code><br>
+  切換條 <code>?h=&amp;crop=&amp;band=&amp;cue=&amp;pos=&amp;size=</code>，兩輪定案上線
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者：「iPad 版也有類似的問題。」
+—— 同一天手機版剛把照片從一屏的 34% 改成 85% 並上線
+（/history/hero-mobile-fullbleed.html）。</pre></div>
+
+<h2>一、現況：兩個分支都留了一大塊紙色在第一屏</h2>
+<div class="note"><pre>這一站的平板有兩段 @media，一台 iPad 只會落在其中一段：
+
+  A. iPad 直放（min-width 721 ＋ 比例 (2/3, 9/10]）　照片 70svh、窄帶接在下面
+  B. 直立螢幕（min-width 721 ＋ 比例 ≤ 2/3）　　　　照片 62svh、窄帶壓在照片下緣
+
+⚠ **iPad mini 直放（744×1133 ＝ 0.657）其實落在 B**，不是 A —— 比例比 2/3 還瘦。
+   所以最小的那台 iPad 反而套到最小的照片。
+
+    裝置                     比例   分支  照片        露出紙色
+    iPad mini 744×1133      0.657   B    702px 62%   431px（38%）
+    iPad 9.7 768×1024       0.750   A    717px 70%   181px（18%）
+    iPad Air 820×1180       0.695   A    826px 70%   228px（19%）
+    iPad Pro 11 834×1194    0.698   A    836px 70%   232px（19%）
+    iPad Pro 12.9 1024×1366 0.750   A    956px 70%   283px（21%）
+
+和手機那一輪同一句話：**問題不在照片，在框的高度。**</pre></div>
+
+<h2>二、詩在 iPad 上本來就是對的</h2>
+<div class="note"><pre>空隙（頁首下緣 → 詩第一行 ink 上緣）÷ 詩的字高：
+
+    電腦 1440      6.00
+    iPad 直放      6.36（各尺寸都一樣）
+    手機（改動前）  1.02   ← 手機那一輪要修的是這個
+
+iPad 這一格本來就對，因為 .hero-copy 的 padding-top 是
+calc(var(--head-h) + clamp(2.6rem, 9vh, 5.4rem))，在所有 iPad 上都撞到
+5.4rem 的上限 ＝ 86.4px，所以空隙固定 95.4px；字級 clamp(15px, 1.15svh, 24px)
+也一路撞在 15px 的下限。
+
+⚠ 但照片一拉高，兩者的**絕對值不變、比例就掉了**：空隙÷照片 11.4% → 8.9%
+   （電腦版 10.0%）、字÷照片 1.41%（電腦版 1.67%）。
+   定案那一組（提案頁的 詩·低② ＋ 詩·大③）就是把這兩個比值追回來：
+
+    　　　　　　  字÷照片   空隙÷照片   空隙÷字高
+    電腦 1440     1.67%     10.0%       6.00
+    iPad 改動前   1.41%      8.9%       6.36
+    iPad 定案     1.70%     11.0%       6.49</pre></div>
+
+<h2>三、順便修掉的破圖（和照片高度無關，改動前就有）</h2>
+<div class="note"><pre>B 段的窄帶沿用電腦版：地址電話絕對定位貼在版心外緣、和 1983／9／5 同一列。
+電腦版 1440 上剛好差 −2.6px 不會撞，但 B 段的視窗只有 721~900 寬：
+
+    744×1133（iPad mini 直放）  水平重疊 92.9px、垂直重疊 32.7px
+    900×1600（旋轉螢幕）        水平重疊 19.5px、垂直重疊 32.7px
+    721×1200（邊界）            水平重疊 103.7px
+
+「部定專科」直接被電話蓋住。修法抄 A 段：地址電話改成 static、一行置中。
+⚠ 選擇器要寫 body .contact-pair（0,1,1）—— ≤1159 那段「退成兩行」就是這個
+   權重，只寫 .contact-pair（0,1,0）會整條被蓋掉。
+⚠ 窄帶因此從 84px 長到 126px，收尾句要跟著讓開。.hero-copy 的 padding-bottom
+   本來就是 calc(var(--band-h) + clamp(1rem,3vh,2rem))，所以**只要把 --band-h
+   換成量到的 126px**，讓開的量自己會跟上 —— 不要寫死 padding。
+   不改的話收尾句會被窄帶蓋掉 9px（744×1133 實測）。</pre></div>
+
+<h2>四、窄帶接縫這一輪不用動</h2>
+<div class="note"><pre>手機那一輪要把起點色從 #151311 換成 #181614，是因為手機沒有柏油層、接縫直接
+吃照片的像素。A 段有柏油層，而且它在最後 24% 已經收到 alpha 1 —— 接縫色由柏油層
+自己決定。實測（照片最後一列的中位數，含兩層）：834×1194／1024×1366／768×1024
+× 現況／抵下緣，六組全部都是 #161413，一個位元都沒變。
+B 段（窄帶壓在照片上）本來就沒有接縫，和電腦版一樣。</pre></div>
+
+<h2>五、「往下滑」的指標（第二輪）</h2>
+<div class="note"><pre>使用者：「iPad 版需要這個往下滑的暗示，才知道要往下滑，因為這個螢幕看起來很大、
+好像就卡在這邊。你之前做那個角型只是一個勾尾，看起來其實有點不太在幹嘛，
+再多一點點暗示性 —— 那個暗示性也不要真的太強。」
+
+五案：
+  ① 現況（16×8 角形 ＋ 淺色底塊）＝ 電腦版那顆
+  ② 大一號的角形（26×13、線收細）＋ 暗暈，沒有底塊
+  ③ ② ＋ 慢速上下浮動（2.6 秒、位移 5px）
+  ④ 細直線（1px×30，上端淡出）＋ 角形 ＋ 暗暈，靜止
+  ⑤ ④ ＋ 一顆 2px 的點沿著線慢慢往下走（2.8 秒）   ← 定案
+
+・線和角形合起來才讀得出是「↓」；單一個角形太像打勾（使用者的原話）。
+・會動的只有那顆點，角形完全不動 —— 這就是「多一點點、但不要太強」。
+
+⚠ 位置：電腦版那顆是 bottom: calc(100% + 4px)（貼著窄帶上緣），在 A 段會落進
+   **照片最後 84px 的接縫**裡（模糊層與柏油層正好在那裡）—— 那正是 2026-08-14
+   在 A 段把它關掉的原因。這一輪抬到離窄帶上緣 110px，整顆站在乾淨的照片上。
+   五個尺寸實測：都在照片內、和收尾句不重疊。
+⚠⚠ **一定要自己帶「地」。** 指標落在亮著燈的門面正上方。逐格量那一區 60×60 的
+   背景（三個尺寸 × 離下緣 40~300px）：平均是暗的（L* 4~29），但**最亮的那一格
+   一路都在 L* 46~64**（白字對比只有 2.7~5.3）。第一版只是「拿掉底塊」，
+   結果幾乎看不見。
+   電腦版用淺色底塊，但淺色底塊在亮處會不見；這裡改用**暗暈**（drop-shadow），
+   亮處暗處都成立，而且看起來像路面自己暗下去、不像多一個框
+   （同收尾句 Ⓔ2 那塊暗斑的手法）。
+⚠ drop-shadow 跟著 alpha 形狀走，掛在 a 上會同時罩住線與角形，不必多加元素。
+⚠ 觸控目標 44×59（padding 12px ＋ 角形 20px）。
+⚠ 會動的東西要看 prefers-reduced-motion —— 這一站另外三處 CSS 也都看。</pre></div>
+
+<h2>六、照片不夠大（唯一沒解完的一件）</h2>
+<div class="note"><pre>提案當下的原圖是 1600×1058，抵下緣在 iPad Pro 12.9 上要 1240px 高、DPR 2 之下
+等於 2.34 倍放大。**使用者當天提供了 2000×1323 的原檔**，一併換上去
+（同時修掉 sizes="100vw" 低估的問題，見 CLAUDE.md 第九節第 15 條）：
+
+    裝置                改動前            換檔＋修 sizes 之後
+    iPhone 14 Pro DPR3  1600w／2.04 倍    2000w／1.63 倍
+    DPR2 的手機          800w／2.72 倍     2000w／1.09 倍
+    iPad Pro 11 DPR2    1600w／1.58 倍    2000w／1.26 倍
+    iPad 12.9 DPR2      1600w／1.81 倍    2000w／1.45 倍（抵下緣後 1.87 倍）
+
+要完全不放大，需要 2400~3200px 寬的原檔。</pre></div>
+
+<h2>定案（2026-08-15 上線）</h2>
+<div class="note"><pre>A 段（iPad 直放）
+  .hero { display:flex; flex-direction:column; height:100svh }
+  .hero-photo { height:auto; flex:1 1 auto; min-height:0 }
+  --ph: calc(100svh - 126px)
+B 段（直立螢幕／iPad mini 直放）
+  .hero-photo { height:100svh }（窄帶本來就壓在照片上，這樣就已經是一屏）
+  --ph: 100svh
+  ＋ 地址電話一行置中（修重疊）、--band-h: 126px
+兩段共用
+  --hero-fs: clamp(15px, calc(var(--ph) * .0170), 24px)
+  .hero-copy { padding-top: calc(var(--head-h) + var(--ph) * .100) }
+  指標：細線 ＋ 角形 ＋ 暗暈 ＋ 沿線往下的小點，離窄帶上緣 110px
+裁切
+  置中（＝改動前，這一段本來就沒有寫 object-position）
+
+實測（十一個視窗）：照片佔一屏 87~100%、露出紙色 0px、詩 15~24px、
+空隙÷字高 6.27~7.29、指標 44×59 且都在照片內、沒有任何重疊、沒有橫向捲動。
+手機（390×844）、電腦（1440×900）、iPad 橫放（1194×834）逐項量過 0 差異。</pre></div>
+
+<h2>文件裡怎麼記這一頁</h2>
+<div class="note"><pre>〔CLAUDE.md 第九節定案表〕
+- **iPad／直立螢幕的 HERO** — **兩段都改成「照片＋窄帶正好一屏」**（2026-08-15
+  兩輪上線）。A 段（比例 2/3~9/10）70svh → flex 吃滿；B 段（≤2/3）62svh → 100svh。
+  ⚠ **iPad mini 直放 0.657 落在 B 段**，不是 A —— 最小的 iPad 原本照片最小。
+  ⚠ 詩改成跟著 --ph 等比例（.0170／.100），把電腦版的兩個比值追回來。
+  ⚠ 順便修掉 B 段「地址電話和三格重疊」的破圖（744 上 92.9px），
+    並把 --band-h 改成 126px 讓收尾句自己讓開。
+  ⚠ 指標（往下滑）在兩段都放：細線＋角形＋暗暈＋沿線往下的小點，
+    離窄帶上緣 110px。**不要只拿掉底塊** —— 它落在亮著燈的門面上，
+    背景最亮處 L* 46~64，沒有「地」就看不見。
+  ⚠ 接縫不必動（A 段的柏油層收到 alpha 1，六組實測都是 #161413）。</pre></div>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>
