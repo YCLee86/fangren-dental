@@ -3238,8 +3238,29 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
     0%, 100% { transform: translateY(0); }
     50%      { transform: translateY(4px); }
   }
+  /* ⚠⚠ **這一條刻意不看 prefers-reduced-motion**（2026-08-15，使用者回報
+     「那個角形按鈕在 iPad 上沒有慢速浮動」）。iOS 的「減少動態效果」很多人
+     開著，看它就等於這顆永遠不動 —— 而它會動正是它存在的理由（不動的角形
+     使用者已經說過「看不出在幹嘛」）。
+     判準和窄帶那個往上數的數字同一條（CLAUDE.md 第九節的定案表）：那個設定
+     針對的是位移／視差／縮放這種會讓人不舒服的大動作，**原地上下 4px、
+     2.4 秒一次**不屬於那一類。
+     ⚠ **點下去的捲動仍然看那個設定** —— 平滑捲動正是它要關掉的東西，
+        那一段在頁尾的 JS 裡，不要一起改掉。 */
   .hero-cue { animation: heroCueBob 2.4s ease-in-out infinite; }
-  @media (prefers-reduced-motion: reduce) { .hero-cue { animation: none; } }
+
+  /* ---- 點到的時候亮起來（2026-08-15）--------------------------------
+     使用者：「點到的時候要加變亮效果。」平板沒有游標，所以電腦版那條
+     `.hero-cue:hover` 不會生效 —— 這裡改用 `:active`（iOS 對連結會給），
+     再加一個 `.is-lit`，由頁尾那段捲動的 JS 掛著、捲完才拿掉，
+     這樣**整段 620ms 的捲動過程它都是亮的**，不會手一放就暗掉。
+     亮起來的值直接抄電腦版 hover 那一階：底 .10 → **.24**（＝ .nav-lamp 那一階），
+     角形 .36 → **.85**。 */
+  .hero-cue:active,
+  .hero-cue.is-lit { background-color: rgba(226, 229, 230, .24); }
+  .hero-cue:active::before, .hero-cue:active::after,
+  .hero-cue.is-lit::before, .hero-cue.is-lit::after { opacity: .85; }
+  .hero-cue::before, .hero-cue::after { transition: opacity .18s ease; }
   /* 游標經過整塊亮起來那一套（電腦版的 .hero-cue:hover）在平板上沒有游標，
      不生效也不必特別關。 */
 }
@@ -6150,11 +6171,19 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 (function () {
   var cue = document.querySelector('.hero-cue');
   if (!cue) return;
-  var root = document.documentElement;
+  var root = document.documentElement, litT = 0;
 
   cue.addEventListener('click', function (ev) {
     if (ev.defaultPrevented || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button > 0) return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;   /* 交還給原生 */
+
+    /* ⚠ 亮起來要在**最前面**（在減少動態那一條 return 之前）。
+       「點到會亮」是使用者要的回饋，和「要不要平滑捲動」是兩件事 ——
+       第一版寫在 return 後面，開了減少動態的人點下去完全沒有反應。 */
+    cue.classList.add('is-lit');
+    clearTimeout(litT);
+    litT = setTimeout(function () { cue.classList.remove('is-lit'); }, 300);
+
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;   /* 捲動交還給原生 */
     var el = document.getElementById('topics');
     if (!el) return;
 
@@ -6187,6 +6216,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       window.scrollTo(0, from + dist * e);
       if (t < 1) { requestAnimationFrame(step); return; }
       root.style.scrollBehavior = prev;
+      clearTimeout(litT);
+      cue.classList.remove('is-lit');     /* 亮到捲完為止 */
     }
     requestAnimationFrame(step);
   });
