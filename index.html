@@ -3096,8 +3096,24 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .topic-search { margin-top: .6rem; }
   .topic-search input { font-size: 16px; padding-block: .3rem; }
   .topic-search input::placeholder { font-size: .82rem; }
-  .card h3 { font-size: .98rem; margin-bottom: .35rem; }
-  .card p { font-size: .84rem; }
+  /* ---- 文章卡的字級（2026-08-15）--------------------------------------
+     使用者：「文章卡片瀏覽時 目前字級偏小，比照這個大小調整」＋ apex.innovarad.tw
+     的手機截圖。從那張截圖量回去（923px 寬 ÷ 393 CSS px ＝ 2.348 倍）：
+       摘要　第一行 16 個全形字、橫跨 303.6 CSS px　→ 每字 18.97 ＝ 字級約 19px
+       標題　第一行「從對話框走進 Code 的那一」橫跨 301.5 CSS px
+             ＝ 9 個全形字 ＋ Code（約 2.38em）＋ 兩個半形空白 → 約 25px
+       標記與日期那一列約 12.5~13.5px —— **這一列本來就對得上**
+             （站上標記 12.8、日期 12.16），所以這一輪只動標題與摘要。
+     改動前 15.68／13.44 → 24.96／19.04（×1.59／×1.41）。
+     驗算：390 寬時內文欄 313px，摘要一行正好 16 個字、標題一行 12 個字，
+     和參考站逐字相同。卡片高度 435.7 → 595px。
+
+     ⚠ 行高跟著收：字一大，1.55／1.8 會鬆得像兩段獨立的文字
+       （參考站量到的是標題約 1.3、摘要約 1.75）。標題收到 1.4 是取中間值。
+     ⚠ 只動手機（≤720px）。電腦版 2026-08-15 已經整體 +12%，那一段沒有動到。
+     ⚠ 標記 `.card-tag` 的 .8rem 是 2026-08-13 那一輪定的，這裡刻意不碰。 */
+  .card h3 { font-size: 1.56rem; line-height: 1.4; margin-bottom: .35rem; }
+  .card p { font-size: 1.19rem; line-height: 1.75; }
   .card-tag { margin-bottom: .35rem; }
   .card-date { margin-top: .5rem !important; font-size: .76rem !important; }
 
