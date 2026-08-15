@@ -34,17 +34,16 @@
   border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:.55rem .85rem;cursor:pointer}
 .zopen[hidden]{display:none}
 
-/* ---- 效果本體：整個提案就是這幾行 -------------------------------------
-   ⚠ 一定要有一層 overflow:hidden —— <img> 是 position:absolute; inset:0，
-     放大之後會整片溢出 <figure>，蓋到窄帶與底下的「主題與科別」。
-     這裡**不把 overflow 加在 .hero-photo 上**，而是另外包一層 .zwrap：
-     .hero-copy 也在 .hero-photo 裡，而收尾句底下那塊 blur(26px) 的暗斑
-     （.hero-sign::before，inset -1.3em/-1.7em）會被一起裁掉，
-     裁出一條硬邊，正好毀掉「看不出是一個框」那個設計重點。
-   ⚠ transform-origin 預設 50% 100%（＝ object-position 的值），
-     照片最後一列因此完全不動，接縫零風險。 */
-.hero-photo .zwrap{position:absolute;inset:0;overflow:hidden}
-.hero-photo img{transform-origin:50% 100%}
+/* ---- 效果本體 -----------------------------------------------------------
+   夾住溢出的那一層（.hero-shot）與 transform-origin 正式站已經有了，
+   這裡只要把電腦版那道 @media 拆掉，讓手機／iPad 也吃得到，好讓切換條有得比。
+   ⚠ 這幾條排在正式站那一條後面、選擇器權重相同，所以贏的是這裡。
+   ⚠ 正式站上線的是 **放大 6%／12 秒／先快後慢／原點下緣／一次就停**，
+     只開在 (min-width:721px) and (min-aspect-ratio:9/10)。 */
+/* ⚠ transform-origin 在正式站是寫在**電腦版那道 @media 裡面**的，
+   手機吃不到、會退回預設的 50% 50%（＝接縫會跑掉）。這裡兩態都自己寫一次。
+   ⚠ 手機定案上線時，那一行要搬出 @media 或再寫一份 —— 別忘了。 */
+html[data-zorg=bottom] .hero-photo img{transform-origin:50% 100%}
 html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
 </style>
 
@@ -109,7 +108,9 @@ html[data-zorg=center] .hero-photo img{transform-origin:50% 50%}
   var img  = fig && fig.querySelector('img');
   if (!img) return;
 
-  var DEF = { z: 'in', amt: '4', dur: '20', ease: 'out', org: 'bottom', loop: 'once' };
+  /* 預設 ＝ 電腦版 2026-08-15 上線的那一組。手機這一輪要決定的是
+     「同一組數字搬過來夠不夠，還是要另外調」，所以起點就放定案值。 */
+  var DEF = { z: 'in', amt: '6', dur: '12', ease: 'out', org: 'bottom', loop: 'once' };
   var S = {};
   /* ⚠ 正規式一定要 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 踩過） */
   Object.keys(DEF).forEach(function (k) {
