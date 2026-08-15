@@ -3854,9 +3854,32 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
   <div class="hero">
     <figure class="hero-photo">
+      <!-- ⚠⚠ sizes 不能寫 100vw（2026-08-15 修）。
+           照片是 object-fit: cover 而框比它瘦，**縮放倍率是由高度那一項決定的** ——
+           瀏覽器挑 srcset 卻只看版面寬度（100vw ＝ 390px），於是嚴重低估。
+           改動前那一天量到的實況：
+
+               裝置                     挑到的檔        實際需要   放大
+               iPhone 14 Pro DPR3      1600w（1058列）  2157 列    2.04 倍
+               DPR2 的手機              800w（529列）    1438 列    2.72 倍  ← 最慘
+               iPad Pro 11 DPR2        1600w            1672 列    1.58 倍
+
+           正確的請求寬度 ＝ 照片**整張**在畫面上有多寬 ＝ 1.512 × 照片高度
+           （1.512 ＝ 2000/1323，原圖的長寬比）。照片高度在各版型是
+           62svh ~ 100svh，統一用 100vh 去估，最多高估 18%，換來一條式子走遍全站。
+           ⚠ 這裡要用 vh 不是 svh —— sizes 是在版面之前算的，svh 支援度沒有 vh 廣。
+           ⚠ 電腦版 1440×900 DPR1 算出 1361 → 仍然挑 1600w，沒有被迫多載。
+
+           2000w 是使用者 2026-08-15 提供的原檔（2000×1323），**沒有重新壓過**。
+           要再更好只能換更大的原檔：DPR2/3 的手機與 iPad 現在仍在放大 1.6~1.9 倍，
+           要完全不放大得要 2400~3200px 寬。
+           ⚠ width/height 仍然寫 1600×1058（＝ src 那一張），比例和 2000 那張
+              差 0.04%，不影響版面保留（aspect-ratio 用的是這兩個值）。 -->
       <img src="assets/hero-clinic-night.jpg"
-           srcset="assets/hero-clinic-night-800.jpg 800w, assets/hero-clinic-night.jpg 1600w"
-           sizes="100vw"
+           srcset="assets/hero-clinic-night-800.jpg 800w,
+                   assets/hero-clinic-night.jpg 1600w,
+                   assets/hero-clinic-night-2000.jpg 2000w"
+           sizes="calc(1.512 * 100vh)"
            alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
            width="1600" height="1058" fetchpriority="high">
 
