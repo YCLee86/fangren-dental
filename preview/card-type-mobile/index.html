@@ -3119,7 +3119,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   .card h3 { font-size: 1.4rem; line-height: 1.5; margin-bottom: .35rem; }
   .card p { font-size: 1.1rem; }
   .card-tag { margin-bottom: .35rem; }
-  .card-date { margin-top: .5rem !important; font-size: .76rem !important; }
+  /* 日期抬一階（2026-08-15，使用者指定）：12.16 → 13.12。參考站那一列
+     量到約 13.5，而摘要放大之後 12.16 在旁邊已經明顯偏小。
+     ⚠ 標記 `.card-tag` 的 12.8 沒有動 —— 兩顆本來就不同級。 */
+  .card-date { margin-top: .5rem !important; font-size: .82rem !important; }
 
   /* ---- 縮圖蓋過卡片的框線（2026-08-15）---------------------------------
      使用者拿參考站的手機截圖：「文章卡片邊框比照片窄，比照這個 照片寬一點」。
@@ -4345,11 +4348,13 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 }
 
 /* ==========================================================================
-   2026-08-15 —— 手機的內文一律 17.6px（醫師介紹／看診時段／位置與周邊停車）
+   2026-08-15 —— 手機的內文一律 16px（醫師介紹／看診時段／位置與周邊停車）
    --------------------------------------------------------------------------
    使用者在 preview/card-type-mobile/ 選了文章卡的 Ⓑ（標題 22.4／摘要 17.6）
    之後：「把這個字級推到 醫師介紹 看診時段 位置與周邊停車場 的內文」。
-   所以這一段把那三塊的**內文**對齊 17.6，藥丸與標記維持 2026-08-13 的值。
+   第一版照 Ⓑ 做（內文 17.6），使用者看了說「字好像抬太大了，先抬到 Ⓐ 就好」，
+   **所以這三塊是 Ⓐ 的 16，文章卡仍然是 Ⓑ 的 22.4／17.6**（兩者刻意不同級）。
+   藥丸與兩排科別標記維持 2026-08-13 的值。
 
    ⚠⚠ **這一段一定要留在整份樣式表的最後面。** 2026-08-13 那一批
      （`.doc dt`、`.hours-grid tbody th, .hours-grid thead th`…）是同權重的
@@ -4359,36 +4364,36 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 @media (max-width: 720px) {
 
   /* ---- 醫師介紹 --------------------------------------------------------
-     內文 ＝ 專長／資歷／學歷那三列（`.doc dd`）13.28 → 17.6。
+     內文 ＝ 專長／資歷／學歷那三列（`.doc dd`）13.28 → 16。
      ⚠ `--sk-fs` 一定要跟著動 —— 它就是專長標記的字級，站上的定案是
        「套色之後那幾個字和沒套色的內文一樣大，完全不縮」。動一個就要動兩個。
        用 `:root`（0,1,0）覆寫，不要寫 `html`（0,0,1）—— 站上那條就是 `html`，
        但同權重靠順序決勝太脆弱，`:root` 一定贏。
        標記的內距是 em ＋ 由 JS 現量（--sk-padT/padB），字一大就自己跟著長。
      ⚠ 標籤（`.doc dt`）按原本的比值 12.96 ÷ 13.28 ＝ 0.976 等比例跟上，
-       否則一句話裡標籤會小掉四分之一。1.07rem × 0.976 ≈ 17.15。
+       否則一句話裡標籤會小掉四分之一。1rem × 0.976 ＝ 15.62。
        `.doc dl` 的標籤欄是 3.2em（＝ 卡片字級 16px 的 51.2px，不隨標籤變），
-       兩個字 34.3 ＋ 內距 12.8 ＝ 47.1，還在 51.2 裡面。
-     ⚠ **醫師名跟著抬到 22.4**（＝文章卡標題那一級）：不抬的話 16.8 的名字
-       比 17.6 的內文還小，卡片的層級是反的。這是連動，不是另外一件事。
+       兩個字 31.2 ＋ 內距 12.8 ＝ 44，還在 51.2 裡面。
+     ⚠ **醫師名跟著抬到 19.84**（＝ Ⓐ 的標題那一級）：不抬的話 16.8 的名字
+       只比 16 的內文大 0.8，卡片的層級幾乎沒有了。這是連動，不是另外一件事。
      ⚠ 醫師名一變大，專科藥丸的抬升量就要重算（CLAUDE.md 第九節第 9 條）。
-       公式（字對字）＝ 0.345 ×（22.4 − 12.8）÷ 12.8 ＝ .259em，
+       公式（字對字）＝ 0.345 ×（19.84 − 12.8）÷ 12.8 ＝ .190em，
        但**這一顆要對的是「塊」不是「字」**，所以照那一節的方法實測：
        零寬探針插在藥丸**後面**量出那一行的基線，再用 canvas 的
        actualBoundingBox 量「李柄輝」的字面框，比「塊上緣比字面上緣高多少」
        與「塊下緣比字面下緣低多少」——
 
-           .158em（站上舊值）　−3.32px　  .259em（公式）　−0.73px
-           .275em　　　　　　　−0.32px　  .285em　　　　　−0.07px  ← 取這個
-                                          .290em　　　　　+0.05px
+           .158em（站上舊值）　−1.86px　  .190em（公式）　−0.55px
+           .205em　　　　　　　−0.17px　  .210em　　　　　−0.02px  ← 取這個
+                                          .220em　　　　　+0.23px
 
-       沿用舊的 .158em 會低 3.3px，那是一眼看得出來的（2026-08-11 那一輪
-       1.99px 就被抓到了）。**藥丸自己的字級沒有動，動的是抬升量。** */
-  .doc h3    { font-size: 1.4rem; }
-  .doc dd    { font-size: 1.1rem; }
-  :root      { --sk-fs: 1.1rem; }
-  .doc dt    { font-size: 1.07rem; }
-  .doc-role  { vertical-align: .285em; }
+       ⚠ 這個值跟著醫師名走：內文若改回 17.6（名字 22.4），要換成 .285em。
+       **藥丸自己的字級沒有動，動的是抬升量。** */
+  .doc h3    { font-size: 1.24rem; }
+  .doc dd    { font-size: 1rem; }
+  :root      { --sk-fs: 1rem; }
+  .doc dt    { font-size: .976rem; }
+  .doc-role  { vertical-align: .21em; }
 
   /* ---- 看診時段（門診表）＋ 位置與周邊停車 -----------------------------
      兩張卡的內文：門診表的星期、時段與時間，以及底下那兩句說明。
@@ -4397,31 +4402,24 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      ⚠⚠ **`col.lab` 要一起加寬。** 表格是 `table-layout: fixed`，左欄寫死
        6.3rem；而 `tbody th` 是 `white-space: nowrap`，字一大就會**橫著蓋到
        第一格的點上**（表格本身不會撐破卡，所以不會有水平捲動，症狀是重疊）。
-       量出來左欄要 139px（早 18.05 ＋ 字距 ＋ 08:45–11:30 ＋ 右內距 .6rem），
-       所以 9.2rem ＝ 147.2 留 8px 餘裕 —— **不要壓到剛好 8.7rem**：那是拿
-       Noto Sans TC 量的，iOS 上是 PingFang，數字寬度不會一模一樣。
-     ⚠⚠ **320 這一檔放不下 17.6。** 左欄 147.2 之後五個日子欄只剩 18.5px，
-       而 17.6 的「一」加上 .14em 字距要 20.1 —— 會蓋到。所以 ≤359 退一階到
-       16px（左欄 8.4rem），量下來左欄與日子欄各留 8 與 2.7px 的餘裕。
-       360 以上（含 iPhone SE2/13 mini 的 375）都吃得下 17.6。
+       16px 時左欄的字實需 123.7（早 16.4 ＋ 字距 ＋ 08:45–11:30 ＋ 右內距 .6rem），
+       8.4rem ＝ 134.4 留 10.7px 餘裕 —— **不要壓到剛好**：那是拿 Noto Sans TC
+       量的，iOS 上是 PingFang，數字寬度不會一模一樣。
+     ⚠ 六個寬度實測：左欄餘裕一律 10.71px，五個日子欄 2.8（320）~24.8（430），
+       左欄文字到第一顆點 26.4~37.4px。**最緊的是 320 的日子欄 2.8px** ——
+       再往上加一階（17.6）那一格就會變成 −1.6，所以那一階當時要另外
+       為 ≤359 寫一段退回 16px；現在整組就是 16，那一段因此拿掉了。
      ⚠ 地圖 SVG 裡的字（路名、停車場牌子、P）**刻意不跟著放大** —— 那是
        viewBox 裡的使用者單位，那張圖排了四十二輪；同 2026-08-15 電腦版那一輪。
      ⚠ 兩排科別標記（`.hours-filter`／`.chips`）也沒有動：塊高 34px 是
        08-13 定的，字級上限 (34−2)÷1.6 ＝ 20px，而它們是**標記不是內文**。 */
-  .hours-grid col.lab                        { width: 9.2rem; }
-  .hours-grid thead th, .hours-grid tbody th { font-size: 1.1rem; }
-  #clinic .hours-grid tbody th b             { font-size: 1.128rem; }
-  .info-card p, .map-note                    { font-size: 1.1rem; }
-  /* 站上這一條自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
-     所以這裡也要 important 才蓋得掉。 */
-  .info-note                                 { font-size: 1.1rem !important; }
-}
-
-/* 最窄的那一檔：門診表退回 16px。理由與數字寫在上面那一段。 */
-@media (max-width: 359px) {
   .hours-grid col.lab                        { width: 8.4rem; }
   .hours-grid thead th, .hours-grid tbody th { font-size: 1rem; }
   #clinic .hours-grid tbody th b             { font-size: 1.025rem; }
+  .info-card p, .map-note                    { font-size: 1rem; }
+  /* 站上這一條自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
+     所以這裡也要 important 才蓋得掉。 */
+  .info-note                                 { font-size: 1rem !important; }
 }
 </style>
 </head>
@@ -6695,13 +6693,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        Ⓒ　　　24.96 / 19.04（＝ 參考站原尺寸）
 
      第二輪（同一天）使用者：「把這個字級推到 醫師介紹 看診時段
-     位置與周邊停車場 的內文」。那三塊的內文因此一律 17.6，連動三件：
-     醫師名 16.8→22.4、專科藥丸的抬升量 .158→.285em（實測不對稱
-     −3.32→−0.07px）、門診表左欄 6.3→9.2rem（不加寬，時間會蓋到第一顆點）。
-     切換條的「三塊的內文放大」可以整組關掉回到改動前，兩邊互看。
-     ⚠ 那一顆**是重新載入**不是即時套用：專長標記的上下內距
+     位置與周邊停車場 的內文」。第一版照 Ⓑ 做（內文 17.6），使用者看了說
+     **「字好像抬太大了，先抬到 Ⓐ 就好」**，所以那三塊現在是 Ⓐ 的 16，
+     文章卡仍然是 Ⓑ 的 22.4／17.6 —— 兩者刻意不同級。第二條切換條有三段：
+       改動前　13.28（醫師名 16.8、藥丸抬升 .158em、左欄 6.3rem）
+       Ⓐ　　　16.00（醫師名 19.84、.21em、8.4rem）← 目前
+       Ⓑ　　　17.60（醫師名 22.40、.285em、9.2rem，≤359 表格退回 16px）
+     連動的三件（醫師名、藥丸抬升量、門診表左欄）都跟著那一段一起換。
+     ⚠ 第二條切換條**是重新載入**不是即時套用：專長標記的上下內距
        （--sk-padT/padB）是開頁量一次的，而 --sk-fs 正是它量的對象。
-     另外一顆開關：日期那一列 12.16 → 13.12，看要不要跟著抬。
+     日期那一列 12.16 → 13.12 **已經定案打開**，開關留著是為了互看。
 
      ⚠ 這一段只在 ≤720px 生效（電腦版 2026-08-15 已經整體 +12%，不在這一輪裡）。
      ⚠ 這份複本同時帶著今天稍早那一項：手機的縮圖蓋過卡片框線（照片 +2px）。
@@ -6719,31 +6720,48 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   html[data-cs="c3"] .card h3 { font-size: 1.56rem; line-height: 1.4;  }
   html[data-cs="c3"] .card p  { font-size: 1.19rem; line-height: 1.75; }
 
-  /* 日期那一列。站上兩條都帶 !important（.card-date 與手機那一段），
-     所以這裡要用更高的權重 ＋ !important 才蓋得掉。 */
-  html[data-date="on"] .card-date { font-size: .82rem !important; }
+  /* 日期那一列。站上已經是 13.12（.82rem），關掉才回到 12.16。
+     站上兩條都帶 !important，所以這裡也要 important。 */
+  html[data-date="off"] .card-date { font-size: .76rem !important; }
 
-  /* ---- 三塊的內文：關掉 ＝ 回到 2026-08-15 之前 -------------------------
-     html[data-sec="off"]（0,1,1）壓得過站上那幾條（0,1,0 / 0,1,2 的用同權重
-     加 html 前綴補上）。--sk-fs 站上寫在 :root（0,1,0），這裡也蓋得掉。 */
-  html[data-sec="off"] .doc h3   { font-size: 1.05rem; }
-  html[data-sec="off"] .doc dd   { font-size: .83rem; }
-  html[data-sec="off"]           { --sk-fs: .83rem; }
-  html[data-sec="off"] .doc dt   { font-size: .81rem; }
-  html[data-sec="off"] .doc-role { vertical-align: .158em; }
-  html[data-sec="off"] .hours-grid col.lab { width: 6.3rem; }
-  html[data-sec="off"] .hours-grid thead th,
-  html[data-sec="off"] .hours-grid tbody th { font-size: .8rem; }
-  html[data-sec="off"] #clinic .hours-grid tbody th b { font-size: .82rem; }
-  html[data-sec="off"] .info-card p { font-size: .93rem; }
-  html[data-sec="off"] .map-note    { font-size: .8rem; }
-  html[data-sec="off"] .info-note   { font-size: .8rem !important; }
+  /* ---- 三塊的內文，三段 ------------------------------------------------
+     s1（Ⓐ）＝ 這個複本本身，不必寫。s0 是改動前，s2 是第一版的 Ⓑ。
+     html[data-sec=…]（0,1,1）壓得過站上那幾條；--sk-fs 站上寫在
+     :root（0,1,0），這裡也蓋得掉。連動的三件（醫師名、藥丸抬升量、
+     門診表左欄）跟著一起換 —— 那正是要一起看的東西。 */
+  html[data-sec="s0"] .doc h3   { font-size: 1.05rem; }
+  html[data-sec="s0"] .doc dd   { font-size: .83rem; }
+  html[data-sec="s0"]           { --sk-fs: .83rem; }
+  html[data-sec="s0"] .doc dt   { font-size: .81rem; }
+  html[data-sec="s0"] .doc-role { vertical-align: .158em; }
+  html[data-sec="s0"] .hours-grid col.lab { width: 6.3rem; }
+  html[data-sec="s0"] .hours-grid thead th,
+  html[data-sec="s0"] .hours-grid tbody th { font-size: .8rem; }
+  html[data-sec="s0"] #clinic .hours-grid tbody th b { font-size: .82rem; }
+  html[data-sec="s0"] .info-card p { font-size: .93rem; }
+  html[data-sec="s0"] .map-note    { font-size: .8rem; }
+  html[data-sec="s0"] .info-note   { font-size: .8rem !important; }
+
+  html[data-sec="s2"] .doc h3   { font-size: 1.4rem; }
+  html[data-sec="s2"] .doc dd   { font-size: 1.1rem; }
+  html[data-sec="s2"]           { --sk-fs: 1.1rem; }
+  html[data-sec="s2"] .doc dt   { font-size: 1.07rem; }
+  html[data-sec="s2"] .doc-role { vertical-align: .285em; }
+  html[data-sec="s2"] .hours-grid col.lab { width: 9.2rem; }
+  html[data-sec="s2"] .hours-grid thead th,
+  html[data-sec="s2"] .hours-grid tbody th { font-size: 1.1rem; }
+  html[data-sec="s2"] #clinic .hours-grid tbody th b { font-size: 1.128rem; }
+  html[data-sec="s2"] .info-card p,
+  html[data-sec="s2"] .map-note { font-size: 1.1rem; }
+  html[data-sec="s2"] .info-note { font-size: 1.1rem !important; }
 }
+/* Ⓑ 在 320 上放不下：左欄之後五個日子欄只剩 18.5px，而 17.6 的「一」
+   加 .14em 字距要 20.1。當初那一版就是為此另外寫的一段，這裡照搬。 */
 @media (max-width: 359px) {
-  html[data-sec="off"] .hours-grid col.lab { width: 6.3rem; }
-  html[data-sec="off"] .hours-grid thead th,
-  html[data-sec="off"] .hours-grid tbody th { font-size: .8rem; }
-  html[data-sec="off"] #clinic .hours-grid tbody th b { font-size: .82rem; }
+  html[data-sec="s2"] .hours-grid col.lab { width: 8.4rem; }
+  html[data-sec="s2"] .hours-grid thead th,
+  html[data-sec="s2"] .hours-grid tbody th { font-size: 1rem; }
+  html[data-sec="s2"] #clinic .hours-grid tbody th b { font-size: 1.025rem; }
 }
 </style>
 
@@ -6818,8 +6836,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   <button class="fr-tg-btn" type="button" aria-expanded="false">卡片字級 <b></b></button>
   <div class="fr-tg-panel">
     <div class="fr-tg-body">
-      <div class="fr-tg-g">標題 / 摘要（按下去立刻換，不重新載入）</div>
+      <div class="fr-tg-g">文章卡的標題 / 摘要（立刻換）</div>
       <div class="fr-tg-scale"></div>
+      <div class="fr-tg-g">三塊的內文：醫師介紹 / 看診時段 / 位置與周邊停車（會重新載入）</div>
+      <div class="fr-tg-scale fr-tg-sec"></div>
       <div class="fr-tg-sw"></div>
     </div>
     <div class="fr-tg-foot"></div>
@@ -6836,11 +6856,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     { k: 'c2', lb: 'Ⓑ',     nt: '22.4 / 17.6' },
     { k: 'c3', lb: 'Ⓒ',     nt: '25.0 / 19.0' }
   ];
+  var SECS = [
+    { k: 's0', lb: '改動前', nt: '13.3' },
+    { k: 's1', lb: 'Ⓐ',     nt: '16.0' },
+    { k: 's2', lb: 'Ⓑ',     nt: '17.6' }
+  ];
   var SW = [
-    { k: 'sec', def: 'on', reload: true, lb: '三塊的內文也放大（醫師介紹／看診時段／位置與周邊停車）',
-      nt: '內文一律 17.6。連動：醫師名 16.8→22.4、專科藥丸抬升 .158→.285em、門診表左欄 6.3→9.2rem（≤359 退回 16px）。關掉 ＝ 回到改動前。⚠ 這一顆會重新載入 —— 專長標記的內距是開頁量一次的。' },
-    { k: 'date', def: 'off', lb: '日期那一列也抬一階',
-      nt: '12.16 → 13.12px。參考站那一列量到約 13.5，站上是 12.16 —— 標記（12.8）沒有動，兩顆本來就不同級。' }
+    { k: 'date', def: 'on', lb: '日期那一列抬一階（已定案）',
+      nt: '13.12px。關掉回到 12.16。參考站那一列量到約 13.5 —— 標記（12.8）沒有動，兩顆本來就不同級。' }
   ];
   /* 參考站 apex.innovarad.tw，2026-08-15 從手機截圖量的（393 CSS px 寬）。 */
   var REF = { title: 25, excerpt: 19, meta: 13.5, chars: 16 };
@@ -6856,6 +6879,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   var q = new URLSearchParams(location.search);
   var cs = q.get('cs'); if (!LEVELS.some(function (l) { return l.k === cs; })) cs = 'c2';
   root.setAttribute('data-cs', cs);
+  var sec = q.get('sec'); if (!SECS.some(function (l) { return l.k === sec; })) sec = 's1';
+  root.setAttribute('data-sec', sec);
   SW.forEach(function (s) {
     var v = q.get(s.k);
     root.setAttribute('data-' + s.k, v === '1' || v === 'on' ? 'on' : (v === '0' || v === 'off' ? 'off' : s.def));
@@ -6868,6 +6893,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     b.addEventListener('click', function () { root.setAttribute('data-cs', l.k); sync(); });
     b.dataset.k = l.k;
     scale.appendChild(b);
+  });
+  var secBox = box.querySelector('.fr-tg-sec');
+  SECS.forEach(function (l) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<b>' + l.lb + '</b><i>' + l.nt + '</i>';
+    /* 這一條要重新載入 —— --sk-padT/padB 是開頁量一次的，而它量的就是 --sk-fs。 */
+    b.addEventListener('click', function () { go('sec', l.k); });
+    b.dataset.k = l.k;
+    secBox.appendChild(b);
   });
   SW.forEach(function (s) {
     var lab = document.createElement('label');
@@ -6889,7 +6924,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        scrollRestoration 設成 manual，不然瀏覽器會再歸零一次。 */
   function go(k, v) {
     var u = new URL(location.href);
-    u.searchParams.set(k, v === 'on' ? '1' : '0');
+    u.searchParams.set(k, v === 'on' ? '1' : (v === 'off' ? '0' : v));
     u.searchParams.set('cs', root.getAttribute('data-cs'));
     u.searchParams.set('open', '1');
     try { sessionStorage.setItem('fr-cs-y', String(scrollY)); } catch (e) {}
@@ -6940,7 +6975,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       b.setAttribute('aria-pressed', b.dataset.k === k ? 'true' : 'false');
     });
     var lv = LEVELS.filter(function (l) { return l.k === k; })[0];
-    btn.querySelector('b').textContent = lv ? lv.lb : '';
+    var sk = root.getAttribute('data-sec');
+    [].forEach.call(secBox.children, function (b) {
+      b.setAttribute('aria-pressed', b.dataset.k === sk ? 'true' : 'false');
+    });
+    var sv = SECS.filter(function (l) { return l.k === sk; })[0];
+    btn.querySelector('b').textContent = (lv ? lv.lb : '') + ' / ' + (sv ? sv.lb : '');
 
     var card = document.querySelector('.card:not(.is-filtered-out)');
     if (!card) { foot.innerHTML = ''; return; }
@@ -6964,7 +7004,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        firstLine(p) === REF.chars ? 'good' : ''],
       ['卡片高', f1(card.getBoundingClientRect().height) + ' px', ''],
       ['參考站', '標題 25 ・摘要 19 ・每行 16 字', ''],
-      ['— 三塊的內文 —', root.getAttribute('data-sec') === 'on' ? '放大' : '改動前', ''],
+      ['— 三塊的內文 —', (SECS.filter(function (l) { return l.k === root.getAttribute('data-sec'); })[0] || {}).lb || '', ''],
       ['醫師名 / 專長', f1(parseFloat(gs(document.querySelector('.doc h3')).fontSize)) + ' / ' +
        f1(parseFloat(gs(document.querySelector('.doc dd')).fontSize)), ''],
       ['專長標記 / 藥丸', f1(parseFloat(gs(document.querySelector('.sk')).fontSize)) + ' / ' +
@@ -6990,7 +7030,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         return '<div class="m' + (r[2] ? ' ' + r[2] : '') + '"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>';
       }).join('') +
       (narrow ? '' : '<div class="fr-tg-note hot">這一輪只動 ≤720px 的手機版型 —— 現在這個寬度看到的是電腦版（2026-08-15 已經整體 +12%），按了不會變。用手機看，或把視窗調窄。</div>') +
-      '<div class="fr-tg-note">網址可直接帶參數：?cs=c0|c1|c2|c3&amp;sec=0&amp;date=1</div>';
+      '<div class="fr-tg-note">網址可直接帶參數：?cs=c0|c1|c2|c3&amp;sec=s0|s1|s2&amp;date=0</div>';
   }
 
   addEventListener('resize', sync);
