@@ -42,6 +42,16 @@ const READY = [
       "還有一位長者站在前面用牙線；上方三個放大圈畫出刷毛斜靠在牙齦溝上、以及小幅度來回的方向",
     src: "Gemini_Generated_Image_38gyk538gyk538gy.jpg（2752×1536，使用者 2026-08-15 提供）",
   },
+  {
+    slug: "gum-bleeding",
+    photo: "hero-gum-photo",
+    oldHero: "hero-gum.svg",
+    alt:
+      "四格連續的畫面：一位女性坐在床邊搧著扇子、手扶著臉頰；到櫃檯前買一杯冰的飲料；" +
+      "側躺在沙發上吹電扇、拿冰袋敷著臉；最後站在鏡子前掀開嘴唇看自己的牙齦。" +
+      "四格都畫著代表悶熱與火氣的白色波紋",
+    src: "Gemini_Generated_Image_6kmbxu6kmbxu6kmb.jpg（2752×1536，使用者 2026-08-16 提供）",
+  },
 ];
 
 /* 窄帶與文章卡的瀏覽數。counter.js 在提案頁要整支拿掉（不然每開一次首頁就 +1），

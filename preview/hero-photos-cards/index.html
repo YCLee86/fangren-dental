@@ -4569,7 +4569,15 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        約 0.35% 的邊緣像素有差（最大 47 階）。用外層視窗裁就完全不碰它。
      ⚠ 圓角改畫在視窗上（SVG 自己的 clipPath 圓角已經被裁到看不見了）。 */
   .map-win                                   { display: block; overflow: hidden; border-radius: 12px; }
-  .map-svg                                   { width: 130.2326%; max-width: none; margin-left: -17.558%; }
+  /* ⚠⚠ **選擇器要寫 `.card-map .map-svg`（0,2,0）、而且要用 `margin-inline`。**
+     上面那條 `.card-map .map-svg { margin-inline: auto }` 是 0,2,0 的**邏輯**
+     屬性；我原本寫 `.map-svg { margin-left: … }`（0,1,0 的**實體**屬性），
+     **Chromium 讓後寫的實體屬性贏、WebKit 讓權重高的邏輯屬性贏** ——
+     結果是 iPhone 上完全沒有位移，可見範圍變成 user x 0~430，
+     「永安路」與「永安路14巷」被切掉（2026-08-15 使用者回報「地圖怎麼變這樣」）。
+     ⚠ 也因此**不要用 getBoundingClientRect() 驗裁切** —— 被 overflow 裁掉的
+       部分仍然算在 rect 裡，量出來會以為好好的。要拿 `.map-win` 的盒子去交集。 */
+  .card-map .map-svg                         { width: 130.2326%; max-width: none; margin-inline: -17.558% 0; }
   /* ⚠⚠ **地圖這一整組只在手機生效**（2026-08-15 使用者定稿：「手機版就這樣
        上線，電腦版和 iPad 版都不動」）。所以凡是會被電腦版看到的東西 ——
        viewBox、clipPath、markup 的座標、JS 的預設常數 —— 一律沒有動，
@@ -4870,7 +4878,21 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="../../posts/gum-bleeding/" data-spec="perio">
-        <img class="card-thumb" src="../../assets/hero-gum.svg" alt="牙齦與牙周保健的示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb"
+             src="../../assets/hero-gum-photo-1600.jpg"
+             srcset="../../assets/hero-gum-photo-800.jpg 800w, ../../assets/hero-gum-photo-1600.jpg 1600w, ../../assets/hero-gum-photo-2000.jpg 2000w"
+             sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw"
+             alt="四格連續的畫面：一位女性坐在床邊搧著扇子、手扶著臉頰；到櫃檯前買一杯冰的飲料；側躺在沙發上吹電扇、拿冰袋敷著臉；最後站在鏡子前掀開嘴唇看自己的牙齦。四格都畫著代表悶熱與火氣的白色波紋"
+             width="1600" height="893"
+             data-pv-sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw"
+             data-pv-new-src="../../assets/hero-gum-photo-1600.jpg"
+             data-pv-new-srcset="../../assets/hero-gum-photo-800.jpg 800w, ../../assets/hero-gum-photo-1600.jpg 1600w, ../../assets/hero-gum-photo-2000.jpg 2000w"
+             data-pv-new-alt="四格連續的畫面：一位女性坐在床邊搧著扇子、手扶著臉頰；到櫃檯前買一杯冰的飲料；側躺在沙發上吹電扇、拿冰袋敷著臉；最後站在鏡子前掀開嘴唇看自己的牙齦。四格都畫著代表悶熱與火氣的白色波紋"
+             data-pv-new-w="1600" data-pv-new-h="893"
+             data-pv-old-src="../../assets/hero-gum.svg"
+             data-pv-old-srcset=""
+             data-pv-old-alt="牙齦與牙周保健的示意插圖"
+             data-pv-old-w="800" data-pv-old-h="450">
         <div class="card-body">
           <span class="card-tag">牙周照護</span>
           <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
@@ -6940,7 +6962,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 @media (max-width:420px){.pv-bar{font-size:.78rem;gap:.35rem;padding:.45rem .55rem}}
 </style>
 <div class="pv-bar" role="group" aria-label="提案切換">
-  <b>bass-brushing 的圖</b>
+  <b>2 篇的圖</b>
   <button type="button" data-img="old" aria-pressed="false">現況（幾何 SVG）</button>
   <button type="button" data-img="new" aria-pressed="true">新圖（點陣插畫）</button>
   <a href="#articles">跳到文章列表</a>

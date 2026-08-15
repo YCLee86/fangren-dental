@@ -519,7 +519,7 @@
 | 文章 | 現況那張 | 新圖 | 狀態 |
 | --- | --- | --- | --- |
 | `bass-brushing` 貝氏刷牙法 | `hero-brushing.svg` | `hero-brushing-photo-*.jpg` | **已備妥**（2026-08-15） |
-| `gum-bleeding` 牙齦流血 | `hero-gum.svg` | — | 等使用者給圖 |
+| `gum-bleeding` 牙齦流血 | `hero-gum.svg` | `hero-gum-photo-*.jpg` | **已備妥**（2026-08-16） |
 | `kids-arch-expansion` 擴張牙弓 | `hero-arch.svg` | — | 等使用者給圖 |
 | `kids-first-visit` 第一次看牙 | `hero-kids.svg` | — | 等使用者給圖 |
 | `missing-tooth` 缺牙重建 | `hero-implant.svg` | — | 等使用者給圖 |
