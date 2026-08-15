@@ -2439,12 +2439,10 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   letter-spacing: 0; white-space: nowrap; padding: 1rem .6rem 1rem 0;
   border-top: 1px solid var(--rule);
 }
-/* 早／午／晚三個字要維持墨色 —— 上面 `#clinic .info-card b` 把 b 染成強調色，
-   那條是給電話與「週一至週五」用的，這裡要蓋回去 */
-#clinic .hours-grid tbody th b {
-  color: var(--ink); font-size: .82rem; font-weight: 400;
-  margin-right: .5em; letter-spacing: .06em;
-}
+/* 2026-08-15：早／午／晚三個字由使用者拿掉了（「早午晚 的字拿掉」），
+   所以原本那條 `#clinic .hours-grid tbody th b` 也一併移除 —— 那顆 <b> 已經
+   不存在。時段仍然讀得出來（時間本身就是），tools/schema.mjs 讀的是
+   <th scope="row"> 裡的「數字:數字–數字:數字」，和那個 <b> 無關。 */
 .hours-grid tbody td { border-top: 1px solid var(--rule); text-align: center; }
 .hours-grid .d {
   display: inline-block; width: .56rem; height: .56rem; border-radius: 50%;
@@ -4399,23 +4397,27 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      兩張卡的內文：門診表的星期、時段與時間，以及底下那兩句說明。
      ⚠ 「早／午／晚」那三個字（`b`）按原本的比值 13.12 ÷ 12.8 ＝ 1.025
        跟上，不然時間會比它大。
-     ⚠⚠ **`col.lab` 要一起加寬。** 表格是 `table-layout: fixed`，左欄寫死
-       6.3rem；而 `tbody th` 是 `white-space: nowrap`，字一大就會**橫著蓋到
-       第一格的點上**（表格本身不會撐破卡，所以不會有水平捲動，症狀是重疊）。
-       16px 時左欄的字實需 123.7（早 16.4 ＋ 字距 ＋ 08:45–11:30 ＋ 右內距 .6rem），
-       8.4rem ＝ 134.4 留 10.7px 餘裕 —— **不要壓到剛好**：那是拿 Noto Sans TC
-       量的，iOS 上是 PingFang，數字寬度不會一模一樣。
-     ⚠ 六個寬度實測：左欄餘裕一律 10.71px，五個日子欄 2.8（320）~24.8（430），
-       左欄文字到第一顆點 26.4~37.4px。**最緊的是 320 的日子欄 2.8px** ——
-       再往上加一階（17.6）那一格就會變成 −1.6，所以那一階當時要另外
-       為 ≤359 寫一段退回 16px；現在整組就是 16，那一段因此拿掉了。
+     ⚠⚠ **`col.lab` 要跟著字級調。** 表格是 `table-layout: fixed`，左欄寬度
+       寫死；而 `tbody th` 是 `white-space: nowrap`，左欄太窄，時間就會**橫著
+       蓋到第一格的點上**（表格本身不會撐破卡，所以不會有水平捲動，症狀是重疊）。
+     ⚠ 2026-08-15 使用者把「早／午／晚」三個字拿掉了（見那三個 `<th scope="row">`），
+       左欄的字因此從 123.7 掉到 **88.5px**。同一句話的後半是
+       「一那一行和時間的間隔縮短一點，不然一到五感覺都擠在一起」——
+       所以左欄從 8.4rem 收到 **6.8rem（108.8）**，實測：
+
+         左欄　　8.4rem → 6.8rem　　字的餘裕 36.3 → 10.7px
+         時間到第一顆點　390 上 58.9 → 35.9px（−39%）
+         日子欄寬　390 上 35.0 → 40.2px、320 上 21.0 → 26.2px
+
+       10.7px 的餘裕是刻意留的 —— 那是拿 Noto Sans TC 量的，iOS 上是
+       PingFang，數字寬度不會一模一樣。**不要再往下收到 6.3rem**（餘裕只剩 2.7）。
+     ⚠ 320 那一檔的日子欄餘裕 2.8 → 7.9px，最緊的那一格反而變寬了。
      ⚠ 地圖 SVG 裡的字（路名、停車場牌子、P）**刻意不跟著放大** —— 那是
        viewBox 裡的使用者單位，那張圖排了四十二輪；同 2026-08-15 電腦版那一輪。
      ⚠ 兩排科別標記（`.hours-filter`／`.chips`）也沒有動：塊高 34px 是
        08-13 定的，字級上限 (34−2)÷1.6 ＝ 20px，而它們是**標記不是內文**。 */
-  .hours-grid col.lab                        { width: 8.4rem; }
+  .hours-grid col.lab                        { width: 6.8rem; }
   .hours-grid thead th, .hours-grid tbody th { font-size: 1rem; }
-  #clinic .hours-grid tbody th b             { font-size: 1.025rem; }
   .info-card p, .map-note                    { font-size: 1rem; }
   /* 站上這一條自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
      所以這裡也要 important 才蓋得掉。 */
@@ -5183,19 +5185,19 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                   <th scope="col">四</th><th scope="col">五</th></tr>
             </thead>
             <tbody>
-              <tr><th scope="row"><b>早</b>08:45–11:30</th>
+              <tr><th scope="row">08:45–11:30</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general endo"></span></td>
                   <td><span class="d" data-in="general perio"></span></td>
                   <td><span class="d" data-in="general prosth"></span></td></tr>
-              <tr><th scope="row"><b>午</b>13:45–16:30</th>
+              <tr><th scope="row">13:45–16:30</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="general kids"></span></td>
                   <td><span class="d" data-in="general kids prosth endo"></span></td>
                   <td><span class="d" data-in="surg kids"></span></td>
                   <td><span class="d" data-in="general prosth perio"></span></td></tr>
-              <tr><th scope="row"><b>晚</b>17:45–20:00</th>
+              <tr><th scope="row">17:45–20:00</th>
                   <td><span class="d" data-in="general"></span></td>
                   <td><span class="d" data-in="ortho kids perio"></span></td>
                   <td><span class="d" data-in="general ortho kids endo"></span></td>
@@ -6704,6 +6706,11 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        （--sk-padT/padB）是開頁量一次的，而 --sk-fs 正是它量的對象。
      日期那一列 12.16 → 13.12 **已經定案打開**，開關留著是為了互看。
 
+     第三輪（同一天）使用者：「早午晚 的字拿掉，一那一行和時間的間隔縮短
+     一點，不然一到五感覺都擠在一起」。**那三個字是 markup 拿掉的，所以
+     三段都一樣沒有**（切換條換不回來）。左欄跟著各段重新量：
+       改動前 6.3rem ／ Ⓐ 6.8rem ／ Ⓑ 7.4rem —— 字的餘裕都留 10px 上下。
+
      ⚠ 這一段只在 ≤720px 生效（電腦版 2026-08-15 已經整體 +12%，不在這一輪裡）。
      ⚠ 這份複本同時帶著今天稍早那一項：手機的縮圖蓋過卡片框線（照片 +2px）。
      ⚠ 切換條是**即時套用**，不重新載入 —— 這一輪沒有任何值會影響站上那三支
@@ -6737,7 +6744,6 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   html[data-sec="s0"] .hours-grid col.lab { width: 6.3rem; }
   html[data-sec="s0"] .hours-grid thead th,
   html[data-sec="s0"] .hours-grid tbody th { font-size: .8rem; }
-  html[data-sec="s0"] #clinic .hours-grid tbody th b { font-size: .82rem; }
   html[data-sec="s0"] .info-card p { font-size: .93rem; }
   html[data-sec="s0"] .map-note    { font-size: .8rem; }
   html[data-sec="s0"] .info-note   { font-size: .8rem !important; }
@@ -6747,22 +6753,15 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   html[data-sec="s2"]           { --sk-fs: 1.1rem; }
   html[data-sec="s2"] .doc dt   { font-size: 1.07rem; }
   html[data-sec="s2"] .doc-role { vertical-align: .285em; }
-  html[data-sec="s2"] .hours-grid col.lab { width: 9.2rem; }
+  html[data-sec="s2"] .hours-grid col.lab { width: 7.4rem; }
   html[data-sec="s2"] .hours-grid thead th,
   html[data-sec="s2"] .hours-grid tbody th { font-size: 1.1rem; }
-  html[data-sec="s2"] #clinic .hours-grid tbody th b { font-size: 1.128rem; }
   html[data-sec="s2"] .info-card p,
   html[data-sec="s2"] .map-note { font-size: 1.1rem; }
   html[data-sec="s2"] .info-note { font-size: 1.1rem !important; }
 }
-/* Ⓑ 在 320 上放不下：左欄之後五個日子欄只剩 18.5px，而 17.6 的「一」
-   加 .14em 字距要 20.1。當初那一版就是為此另外寫的一段，這裡照搬。 */
-@media (max-width: 359px) {
-  html[data-sec="s2"] .hours-grid col.lab { width: 8.4rem; }
-  html[data-sec="s2"] .hours-grid thead th,
-  html[data-sec="s2"] .hours-grid tbody th { font-size: 1rem; }
-  html[data-sec="s2"] #clinic .hours-grid tbody th b { font-size: 1.025rem; }
-}
+/* ⚠ 早／午／晚拿掉之後，Ⓑ 在 320 上也放得下了（左欄 7.4rem，日子欄餘裕
+   4.1px），所以當初為 ≤359 寫的那一段退階規則不必再帶進來。 */
 </style>
 
 <style>
@@ -6857,7 +6856,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     { k: 'c3', lb: 'Ⓒ',     nt: '25.0 / 19.0' }
   ];
   var SECS = [
-    { k: 's0', lb: '改動前', nt: '13.3' },
+    { k: 's0', lb: '改動前', nt: '13.3' },   /* ⚠ 早午晚是 markup 拿掉的，這一段也沒有 */
     { k: 's1', lb: 'Ⓐ',     nt: '16.0' },
     { k: 's2', lb: 'Ⓑ',     nt: '17.6' }
   ];
@@ -7009,8 +7008,24 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
        f1(parseFloat(gs(document.querySelector('.doc dd')).fontSize)), ''],
       ['專長標記 / 藥丸', f1(parseFloat(gs(document.querySelector('.sk')).fontSize)) + ' / ' +
        f1(parseFloat(gs(document.querySelector('.doc-role')).fontSize)), ''],
-      ['門診表 / 早午晚', f1(parseFloat(gs(document.querySelector('.hours-grid tbody th')).fontSize)) + ' / ' +
-       f1(parseFloat(gs(document.querySelector('.hours-grid tbody th b')).fontSize)), ''],
+      ['門診表', f1(parseFloat(gs(document.querySelector('.hours-grid tbody th')).fontSize)), ''],
+      ['時間到第一顆點', (function () {
+        var th = document.querySelector('.hours-grid tbody th');
+        var dot = document.querySelector('.hours-grid tbody td .d');
+        var r = document.createRange(); r.selectNodeContents(th);
+        return f1(dot.getBoundingClientRect().left - r.getBoundingClientRect().right) + ' px';
+      })(), ''],
+      ['日子欄餘裕', (function () {
+        var days = [].slice.call(document.querySelectorAll('.hours-grid thead th'));
+        var m = Math.min.apply(null, days.map(function (e) {
+          var c = gs(e), r = document.createRange(); r.selectNodeContents(e);
+          var rs = [].slice.call(r.getClientRects());
+          var ink = rs.length ? Math.max.apply(null, rs.map(function (x) { return x.right; })) -
+                                Math.min.apply(null, rs.map(function (x) { return x.left; })) : 0;
+          return e.getBoundingClientRect().width - parseFloat(c.paddingLeft) - parseFloat(c.paddingRight) - ink;
+        }));
+        return f1(m) + ' px';
+      })(), 'good'],
       ['兩句說明', f1(parseFloat(gs(document.querySelector('.info-note')).fontSize)) + ' / ' +
        f1(parseFloat(gs(document.querySelector('.map-note')).fontSize)), ''],
       ['門診表左欄餘裕', (function () {
@@ -7030,6 +7045,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         return '<div class="m' + (r[2] ? ' ' + r[2] : '') + '"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>';
       }).join('') +
       (narrow ? '' : '<div class="fr-tg-note hot">這一輪只動 ≤720px 的手機版型 —— 現在這個寬度看到的是電腦版（2026-08-15 已經整體 +12%），按了不會變。用手機看，或把視窗調窄。</div>') +
+      '<div class="fr-tg-note">「早／午／晚」三個字是直接從 markup 拿掉的，三段都一樣沒有。</div>' +
       '<div class="fr-tg-note">網址可直接帶參數：?cs=c0|c1|c2|c3&amp;sec=s0|s1|s2&amp;date=0</div>';
   }
 
