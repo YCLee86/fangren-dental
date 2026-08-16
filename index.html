@@ -2160,10 +2160,28 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      標準的 `line-clamp` 一起寫著，日後瀏覽器跟上就自動接手。
    ⚠ 三行是**視覺**上的截斷，字還在 DOM 裡 —— 搜尋框那個純前端篩選
      讀的是文字內容，不受影響。
+
+   ---- 標題長的時候摘要收成兩行（2026-08-16 當天第二輪）--------------------
+   使用者拿 iPad 直放的截圖：「標題比較長多幾行的話，內文是不是要再減、
+   維持卡片的高度比較好？」量出來確實是這樣（744×1133，兩欄）：
+
+     標題 3 行 ＋ 摘要 3 行 → 卡高 517
+     標題 2 行 ＋ 摘要 3 行 → 卡高 517，但摘要與日期之間空著 37.1px
+
+   同一列的卡本來就會被 grid 拉成等高（日期靠 `margin-top: auto` 貼底），
+   所以問題不是「不等高」，是**列與列之間差 37px、而且短標題那張卡中間空一塊**。
+   定案：**標題 ＋ 摘要 ＝ 五行**（標題 3 行 → 摘要 2 行；標題 2 行 → 摘要 3 行），
+   文字塊高度因此是定值，那 37px 的空隙與列高落差一起消失。
+
+   ⚠ 行數只能由 JS 現量（CSS 讀不到另一個元素折了幾行），寫進 `--card-clamp`。
+     **方向是「JS 只會讓它變好」**：沒有 JS ＝ 變數不存在 ＝ 退回定值 3 行，
+     和上一輪完全相同 —— 同 HERO 那支 `hero-hold` 的寫法。
+   ⚠ 下限 2 行、上限 3 行：標題 1 行時不讓摘要長到 4 行（使用者要的是「最多三行」）。
+   ⚠ 被篩掉的卡量到高度 0，那時**不要寫**，維持上一次算好的值。
    ---------------------------------------------------------------------------- */
 .card-body > p:not(.card-date) {
   display: -webkit-box; -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3; line-clamp: 3;
+  -webkit-line-clamp: var(--card-clamp, 3); line-clamp: var(--card-clamp, 3);
   overflow: hidden;
 }
 /* 日期那一列推到卡底。三欄並排時摘要長短不一，不推底的話三張卡的
@@ -6533,6 +6551,30 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   /* 字型還沒下載完時量到的是後備字型，好了再量一次；換裝置像素比也要重量。 */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(skFit);
   addEventListener('resize', skFit);
+
+  /* 卡片的文字塊固定五行：標題折幾行，摘要就補到五行（2~3 行）。
+     理由與量到的數字見上面 CSS 「標題長的時候摘要收成兩行」那一段。
+     ⚠ 這一支是**加強**不是必要條件：不跑（沒有 JS、或量到 0）的時候
+       `--card-clamp` 不存在，CSS 自己退回定值 3 行。
+     ⚠ 冪等：讀的是標題的高度，和摘要收成幾行無關，跑幾次都是同一個答案。
+     ⚠ 篩選只是把卡藏起來（`is-filtered-out`），欄寬沒變、標題不會重新折行，
+       所以不必掛在 apply() 上；藏起來的卡量到 0，那時直接跳過。 */
+  function cardClamp() {
+    if (!window.getComputedStyle) return;
+    Array.prototype.forEach.call(document.querySelectorAll('.cards .card'), function (card) {
+      var h3 = card.querySelector('h3');
+      var p  = card.querySelector('.card-body > p:not(.card-date)');
+      if (!h3 || !p) return;
+      var lh = parseFloat(getComputedStyle(h3).lineHeight);
+      var hh = h3.getBoundingClientRect().height;
+      if (!(lh > 0) || !(hh > 0)) return;
+      var lines = Math.round(hh / lh);
+      p.style.setProperty('--card-clamp', Math.min(3, Math.max(2, 5 - lines)));
+    });
+  }
+  cardClamp();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(cardClamp);
+  addEventListener('resize', cardClamp);
 
   if (input) {
     input.addEventListener('input', apply);
