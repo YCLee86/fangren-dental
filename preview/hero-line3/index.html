@@ -7149,11 +7149,23 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      字級 15.46 → 斷點 20.41px，1.32 × 15.46 ＝ 20.41 ✓。
    分階直接用**空格本身的寬度**：全形 1em ／ 四分之三 ／ 半形 ／ 四分之一，
    從 letter-spacing 扣掉差額就是。中文排版的次級斷句本來就是半形。 */
-.hero-poem .pv-g2 { letter-spacing: calc(.32em + var(--pv-gap2, 0em)); }
+.hero-poem .pv-g2 { letter-spacing: calc(var(--pv-ls) + var(--pv-gap2, 0em)); }
 :root[data-gap="100"] { --pv-gap2: 0em; }
 :root[data-gap="75"]  { --pv-gap2: -.25em; }
 :root[data-gap="50"]  { --pv-gap2: -.5em; }
 :root[data-gap="25"]  { --pv-gap2: -.75em; }
+
+/* 字距。站上現況：詩 .32em、收尾句 .12em —— **差 2.67 倍**，這就是使用者
+   看到「上面三句間隔很大、第四句沒那麼大」的成因。
+   ⚠ 詩的 .32em 是 2026-08-09 電腦版那一輪（提案 Ⓒ 鬆）從 .2em 放寬的定案，
+     手機版的 @media 裡又寫了一次同樣的值 —— 所以要蓋掉它得比 (0,1,0) 高，
+     這裡在前面加一個 :root ＝ (0,2,0)。
+   ⚠ .pv-g2 那條直接寫在元素身上，繼承蓋不過它，順序不影響。 */
+:root { --pv-ls: .32em; --pv-sls: .12em; }
+:root[data-ls="tight"] { --pv-ls: .12em; }   /* 三句收成跟收尾句一樣 */
+:root[data-ls="wide"]  { --pv-sls: .32em; }  /* 收尾句放成跟三句一樣 */
+:root .hero-poem { letter-spacing: var(--pv-ls); }
+:root .hero-sign { letter-spacing: var(--pv-sls); }
 
 .pvbar, .pvbar * { box-sizing: border-box; }
 .pvbar {
@@ -7226,6 +7238,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         <button type="button" data-v="50">Ⓒ<small>半形</small></button>
         <button type="button" data-v="25">Ⓓ<small>1/4 形<br>快貼在一起</small></button>
       </div>
+      <div class="pvbar-g">字距　<em>詩 .32em ／ 收尾句 .12em，差 2.67 倍</em></div>
+      <div class="pvbar-row" data-k="ls">
+        <button type="button" data-v="now">Ⓐ<small>現況<br>上三句寬、第四句窄</small></button>
+        <button type="button" data-v="tight">Ⓑ<small>三句收窄<br>全部照第四句 .12</small></button>
+        <button type="button" data-v="wide">Ⓒ<small>第四句放寬<br>全部照三句 .32</small></button>
+      </div>
     </div>
     <div class="pvbar-foot"></div>
   </div>
@@ -7238,9 +7256,9 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   var btn  = box.querySelector('.pvbar-btn');
   var foot = box.querySelector('.pvbar-foot');
   /* ⚠ 用明確的字串清單比對，不要用 [a-z]+ 那種正規式 —— 吃不到 glass1 這種值。 */
-  var KEYS = { l3: ['a', 'b'], gap: ['100', '75', '50', '25'] };
-  var DEF  = { l3: 'b', gap: '50' };
-  var st   = { l3: DEF.l3, gap: DEF.gap };
+  var KEYS = { l3: ['a', 'b'], gap: ['100', '75', '50', '25'], ls: ['now', 'tight', 'wide'] };
+  var DEF  = { l3: 'b', gap: '25', ls: 'now' };
+  var st   = { l3: DEF.l3, gap: DEF.gap, ls: DEF.ls };
 
   var qs = new URLSearchParams(location.search);
   Object.keys(KEYS).forEach(function (k) {
@@ -7251,6 +7269,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   function apply() {
     root.setAttribute('data-l3', st.l3);
     root.setAttribute('data-gap', st.gap);
+    root.setAttribute('data-ls', st.ls);
     Object.keys(KEYS).forEach(function (k) {
       var row = box.querySelector('.pvbar-row[data-k="' + k + '"]');
       Array.prototype.forEach.call(row.querySelectorAll('button'), function (b) {
@@ -7260,7 +7279,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var q = new URLSearchParams();
     Object.keys(KEYS).forEach(function (k) { if (st[k] !== DEF[k]) q.set(k, st[k]); });
     history.replaceState(null, '', q.toString() ? '?' + q : location.pathname);
-    btn.querySelector('b').textContent = st.l3 === 'a' ? '現況' : st.gap + '%';
+    btn.querySelector('b').textContent = (st.l3 === 'a' ? '現況' : st.gap + '%') +
+      (st.ls === 'now' ? '' : st.ls === 'tight' ? '／收窄' : '／放寬');
     measure();
   }
 
@@ -7374,7 +7394,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var sr = poem.closest('.shell').getBoundingClientRect();
     var over = document.documentElement.scrollWidth - document.documentElement.clientWidth;
     var out = '<div class="m"><span>視窗寬</span><b>' + window.innerWidth + '</b></div>' +
-              '<div class="m"><span>詩的字級</span><b>' + n(fs) + 'px</b></div>';
+              '<div class="m"><span>詩的字級</span><b>' + n(fs) + 'px</b></div>' +
+              '<div class="m"><span>字距　詩／收尾句</span><b>' +
+              n(parseFloat(getComputedStyle(poem).letterSpacing)) + ' ／ ' +
+              n(parseFloat(getComputedStyle(sign).letterSpacing)) + 'px</b></div>';
     var names = ['第一行', '第二行', '第三行'];
     for (var i = 0; i < 3; i++) {
       var rw = rows(i === 2 ? l3 : lines[i]);
@@ -7400,6 +7423,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                '<div class="m"><span>　②÷①</span><b>' + n(g2 / g1 * 100) + '%</b></div>' +
                '<div class="m"><span>　一般字距</span><b>' + n(parseFloat(getComputedStyle(poem).letterSpacing)) + 'px</b></div>';
       }
+    }
+    var sw = rows(sign), swide = 0;
+    sw.forEach(function (q) { swide = Math.max(swide, q.right - q.left); });
+    if (sw.length) {
+      out += '<div class="m ' + (sw.length > 1 ? 'bad' : '') + '"><span>收尾句' +
+             (sw.length > 1 ? '　⚠折 ' + sw.length + ' 行' : '') + '</span><b>' + n(swide) + 'px</b></div>';
     }
     out += '<hr>';
     function row(label, v) {
