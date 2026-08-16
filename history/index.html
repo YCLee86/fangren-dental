@@ -37,7 +37,7 @@
 <body><div class="wrap">
 <h1>改版紀錄（原 /preview/ 的推導文字）</h1>
 <p class="meta">
-  98 個提案頁的推導、量測與落選案。前 79 個是 2026-08-12 從 <code>/preview/</code> 一次搬過來的，
+  99 個提案頁的推導、量測與落選案。前 79 個是 2026-08-12 從 <code>/preview/</code> 一次搬過來的，
   之後定案的一頁一頁補進來。<br>
   <strong>提案頁本身已經刪掉了</strong> —— 定案上線之後就不再保留，只留下這些文字。
   要看整頁請用 <code>git show &lt;sha&gt;:preview/&lt;名稱&gt;/index.html</code>，
@@ -72,6 +72,7 @@
   <li><a href="/history/hero-ipad-fullbleed.html">hero-ipad-fullbleed</a><span>〔CLAUDE.md〕 - `preview/hero-ipad-fullbleed/` — iPad／直立螢幕的 HERO 照片要多大，兩輪定案上線（2026-08-15）。使用者：「iPad 版也有類似的問題。」兩段平板 @media 都改成「照片＋窄帶正好一屏」（A 段 70svh → flex 吃滿、B 段 62svh → 100svh）；iPad mini 直放 0.657 其實落在 B 段。順便修掉 B 段地址電話和三格重疊 92.9px 的破圖，並補上「往下滑」的指標（細線＋角形＋暗暈＋沿線往下的小點）…</span></li>
   <li><a href="/history/hero-ipad.html">hero-ipad</a><span>〔PALETTE.md〕 推導：`preview/hero-ipad/`（照片高度四階）→ `preview/hero-ipad-band/`（接縫與地址位置， 定案後已換成正式站的複本）。…</span></li>
   <li><a href="/history/hero-ipad-band.html">hero-ipad-band</a><span>〔PALETTE.md〕 推導：`preview/hero-ipad/`（照片高度四階）→ `preview/hero-ipad-band/`（接縫與地址位置， 定案後已換成正式站的複本）。…</span></li>
+  <li><a href="/history/hero-line3.html">hero-line3</a><span>〔COPY.md〕 - `preview/hero-line3/` — HERO 詩的第三行改寫，以及四句的字距，當天開、當天定案上線（2026-08-16）。「有跟著換的　也有一直顧的」→「裡裡外外都在換　講究　顧牢牢」。六輪換詞，每一個字都是使用者退掉前一版換來的：「機器」太窄、「硬體」不夠白話、「顧招牌」是顧自己的名聲不是病患的需求、「顧的還是人」等於廢話、「品質」太直白、「品質一直顧」聲音會斷掉。裡面有「顧」這個台語動詞的受詞規則、兩個斷點為什麼不能同階（四分之一形，36.5%），以及四句字距統一成 .18em 那一輪 —— 改動前詩 .32em、收尾句 .12em 差 2.67 倍，這一改一半推翻了 2026-08-09 的「Ⓒ 鬆」…</span></li>
   <li><a href="/history/hero-motion-mobile.html">hero-motion-mobile</a><span>〔CLAUDE.md〕 - `preview/hero-motion-mobile/` — 手機版 HERO 的動態，一輪定案上線（2026-08-16）。起因是使用者說「手機版打開的時候 HERO 圖片都不會動，可以稍微動一下，但畫面小，動得太誇張也不好，先做三個版本」。**先查為什麼不會動，不要直接再加一個動畫**：站上前一天（08-15）就已經有 hero-push-10（10%／6 秒），量出兩個成因 —— ① 開了「減少動態效果」時 scale 從頭到尾 1.0000（旁證：08-15 他回報「iPad 上沒有慢速浮動」是同一個設定）；② 4x CPU ＋ 4Mbps 節流下照片 1756ms 才解好，那一刻 10% 的行程已經走掉 37%，而先快後慢被吃掉的正是最快那一段。提案頁給 Ⓐ 4%／10 秒等速、Ⓑ 7%／12 秒等速、Ⓒ 跟著捲動 8%、現況、不動 ＋ 三條尺 ＋「要不要跟著減少動態效果」。**使用者選了現況＋不跟 —— 幅度時間曲線一個數字都沒改**，上線的是兩件修復：拿掉那條 @media，以及 html.hero-hold 讓動畫等照片畫出來才開跑（沒有 JS 就退回原本行為，不要反過來寫成預設 paused）。⚠ 只解除照片這一條，其餘每一處 prefers-reduced-motion 都沒動。⚠ 提案頁的 class 撞到站上的 .foot，整條切換條被染成白色的一大塊…</span></li>
   <li><a href="/history/hero-mobile-fullbleed.html">hero-mobile-fullbleed</a><span>〔CLAUDE.md〕 - `preview/hero-mobile-fullbleed/` — 手機版 HERO 的照片要多大，兩輪定案上線（2026-08-15）。使用者：「電腦版滿版效果很好，手機上照片就縮小了。」照片從一屏的 34% 變成 85%（抵下緣＝照片＋窄帶正好一屏）；cover 在直式框上垂直永遠是整張照片，拉高只往左右裁。第二輪量出詩和 logo 的空隙比電腦版差 2.2 倍，並推翻了「詩不准碰到房子」那條約束…</span></li>
   <li><a href="/history/hero-mobile-skyline.html">hero-mobile-skyline</a><span>〔CLAUDE.md〕 6. 手機版 HERO 的詩要怎麼排（2026-08-09 起）。起因是使用者的朋友說 「左上角 logo 的字跟 cover image 的字大小差不多，看起來會比較…</span></li>
