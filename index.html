@@ -2147,6 +2147,25 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 .card h3 { margin: 0 0 .4rem; font-size: 1.02rem; line-height: 1.55; }
 .card p { margin: 0; font-size: .85rem; line-height: 1.8; color: var(--ink-soft); }
+/* ---- 摘要固定最多三行（2026-08-16）----------------------------------------
+   使用者拿手機截圖：卡片上的內文要控制在 3 行。手機把摘要抬到 17.6px 之後
+   一行只剩 17 個字，長一點的摘要會攤到五、六行，整張卡被文字吃掉、
+   一屏只看得到一張半。截斷之後多的字用刪節號收尾（`text-overflow` 在
+   `-webkit-box` 上是瀏覽器自己加的，不必寫）。
+
+   ⚠ 選擇器不能寫 `.card p` —— 日期那一列也是 `<p>`（`.card-date`），
+     它自己是 `display: flex`，被 `-webkit-box` 蓋掉的話「日期・幾次瀏覽」
+     那一列的對齊與間距整組失效。所以這裡只挑卡身裡沒有 class 的那一顆。
+   ⚠ `-webkit-line-clamp` 至今仍是所有瀏覽器唯一支援的寫法（含 Firefox），
+     標準的 `line-clamp` 一起寫著，日後瀏覽器跟上就自動接手。
+   ⚠ 三行是**視覺**上的截斷，字還在 DOM 裡 —— 搜尋框那個純前端篩選
+     讀的是文字內容，不受影響。
+   ---------------------------------------------------------------------------- */
+.card-body > p:not(.card-date) {
+  display: -webkit-box; -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; line-clamp: 3;
+  overflow: hidden;
+}
 /* 日期那一列推到卡底。三欄並排時摘要長短不一，不推底的話三張卡的
    日期會各自停在不同高度，一排看過去就散了。 */
 .card-date {
