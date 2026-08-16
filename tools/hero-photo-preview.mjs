@@ -63,6 +63,18 @@ const READY = [
     src: "Gemini_Generated_Image_oumxajoumxajoumx.jpg（2752×1536，使用者 2026-08-16 提供）",
   },
   {
+    slug: "kids-arch-expansion",
+    photo: "hero-arch-photo",
+    oldHero: "hero-arch.svg",
+    alt:
+      "三格連續的畫面：男孩踩著小凳站在浴室鏡前，用手指掀開上唇看自己的門牙，" +
+      "上方一個放大圈畫出擠在一起、彼此重疊的上排門牙與微微紅腫的牙齦，" +
+      "媽媽抱著手站在門口皺著眉看；夜裡他仰躺著張嘴睡，白線畫出一道氣流；" +
+      "隔天早上他背著書包坐在玄關的鞋凳上垂著頭、眼睛睜不太開，" +
+      "媽媽蹲在旁邊遞水壺、爸爸站在門邊，兩人的神情都有點擔心",
+    src: "Gemini_Generated_Image_rlpoj4rlpoj4rlpo.jpg（2752×1536，使用者 2026-08-16 提供）",
+  },
+  {
     slug: "regular-checkup",
     photo: "hero-checkup-photo",
     oldHero: "hero-checkup.svg",

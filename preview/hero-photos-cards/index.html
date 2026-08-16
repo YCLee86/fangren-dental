@@ -642,7 +642,7 @@
         "@id": "https://fangren.net/#dentist"
       },
       "inLanguage": "zh-Hant-TW",
-      "dateModified": "2026-08-15",
+      "dateModified": "2026-08-16",
       "primaryImageOfPage": {
         "@type": "ImageObject",
         "url": "https://fangren.net/assets/hero-clinic-night.jpg"
@@ -4451,6 +4451,110 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 }
 
 /* ==========================================================================
+   iPad／直式平板：文章卡、醫師卡、診所資訊再抬一階（2026-08-16 定案上線）
+   --------------------------------------------------------------------------
+   使用者拿三張 iPad mini 直放的截圖：「你幫我做像手機那樣放大字級的幾個版本。」
+   上面那一段（+19%）動的是**主尺**；手機 2026-08-15 那一輪走的是另一條路 ——
+   主尺不動、**逐區塊**再抬。這一段就是後者。
+
+   提案頁給了四條尺（主尺 ＋ 三個區塊），使用者選的是
+   **主尺維持 +19%（一個值都沒動）＋ 文章卡 Ⓒ ＋ 醫師卡 Ⓑ ＋ 診所資訊 Ⓒ**：
+
+       　　　　　　　　　　改動前　改動後　　手機現在　電腦版現在
+       文章卡標題　　　　　19.38　 23.94　　 22.4　　　18.36
+       文章卡摘要　　　　　16.15　 18.62　　 17.6　　　15.30
+       文章卡日期　　　　　14.82　 15.96　　 13.12
+       醫師名　　　　　　　19.95　 22.40　　 19.84
+       醫師卡內文＋標記　　15.77　 17.59　　 16
+       醫師卡的灰標籤　　　15.39　 17.10　　 15.62
+       門診表的時間　　　　15.20　 18.62　　 16
+       門診表的點　　　　　10.63　 13.30　　 12
+       兩句說明・停車・照說明 15.20　18.62　　16
+
+   ⚠⚠ **主尺（頁首、選單、兩排科別標記、卡片留白）一個值都沒動，是使用者選的。**
+     +25% 那一格量過沒有破圖，但有兩件他看過之後決定不走：
+       ・744 寬那台 iPad mini 的「品牌 → 選單」94.9 → 60.9px（+31% 只剩 26.9）
+       ・首頁與**文章頁**的頁首落差會從 2.88 拉到 3.84px（診所名）——
+         2026-08-15 才定案「首頁切到文章頁，頁首不要變」，而文章頁那份樣式表
+         還沒接上任何放大。主尺不動，那條定案就維持原狀。
+   ⚠ **地圖 SVG 裡的字（路名 18.9／停車場名 13.7／距離 12.9／診所名牌 12.9）
+     這一輪沒有動**，它們是 viewBox 內的使用者單位、跟版面寬度走不跟根字級走。
+     所以旁邊的說明長到 18.62 之後，地圖的字相對變小了。手機那一輪的解法是
+     「把圖左右裁掉 ＝ 等於放大 30%」，iPad 還沒做 —— 這是已知的落差，不是漏做。
+   ⚠ 這一段排在 iPad 那三段**後面**、手機那段（≤720px）**前面**：
+     它覆寫的 `.doc dt`／`.hours-grid ... th` 是 2026-08-13 那一批同權重（0,1,0）
+     的全域規則，靠順序決勝；而手機那段是 `max-width: 720px`，和這一段互斥，
+     所以「手機那段留在最後」那條規則沒有被破壞。
+   ⚠ 逐項量過（744×1068／744×1133／834×1112／820×1180／1024×1366／768×1024）：
+     水平捲動 0、和現況比**沒有新增任何元素溢出**、門診表「時間 → 第一顆點」
+     45 → 42px（沒有蓋到）。整頁長 7111 → 7679px（最長的文章卡標題從兩行變三行）。
+
+   推導、四條尺的完整量測與落選案：/history/type-scale-ipad-2.html
+   ========================================================================== */
+@media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
+
+  /* ---- 文章卡 Ⓒ --------------------------------------------------------
+     落選 Ⓐ 20.9/17.1、Ⓑ 22.4/17.6（＝和手機一模一樣大）。
+     ⚠ 日期那一條站上自己帶 !important（它要壓過 `.card-body > .card-date`
+       那條推底的規則），所以這裡也要 important 才蓋得掉。 */
+  .card h3   { font-size: 1.26rem; }
+  .card p    { font-size: .98rem; }
+  .card-date { font-size: .84rem !important; }
+
+  /* ---- 醫師卡 Ⓑ --------------------------------------------------------
+     ⚠ `--sk-fs` 一定要跟著 `.doc dd` 動 —— 它就是專長標記的字級，站上的定案是
+       「套色之後那幾個字和沒套色的內文一樣大，完全不縮」。動一個就要動兩個。
+       用 `:root`（0,1,0）覆寫，站上那條是 `html`（0,0,1），一定贏。
+       標記的上下內距是 em ＋ 由 JS 現量（--sk-padT/padB），字一大自己會跟上。
+     ⚠ 灰標籤（`.doc dt`）按原本的比值 .81 ÷ .83 ＝ 0.976 等比例跟上。 */
+  .doc h3 { font-size: 1.179rem; }
+  .doc dd { font-size: .926rem; }
+  :root   { --sk-fs: .926rem; }
+  .doc dt { font-size: .90rem; }
+  /* 醫師名一變大，專科藥丸的抬升量就要重算（CLAUDE.md 第九節第 9 條）：
+
+       .158em（站上的值）　＋　0.345 × 1.05rem ÷ .8rem × (1.179/1.05 − 1)
+       ＝ .158 ＋ .4528 × .12286 ＝ **.2136em**
+
+     ⚠ **這個式子是「保留站上現在的偏差」，不是「算出正確值」** —— 站上那個
+       .158em 本來就比公式高 .05em（2026-08-13 抬字級時刻意沒跟著改，理由寫在
+       本檔上面 `.doc-role { font-size: .8rem }` 那一段）。實測九張醫師卡：
+
+           現況（名 19.95・.158em）　　塊比字面偏高 **+1.49px**
+           這一版（名 22.40・.2136em）　偏高 **+1.48px**　← 原封不動
+           若改用公式的 .158em 　　　　 −0.17px（會變成「對齊了」）
+
+       三種 DPR（1／2／3）量到的數字一模一樣。**取 .2136em** —— 提案頁上
+       使用者看到並點頭的就是這一個，把它「修正」成 .158em 等於上線的東西
+       和他看過的不一樣。要重新對齊是另外一件事，要先問他。
+     ⚠ 量法：零寬探針插在藥丸**後面**（插前面的話標記換行時會留在上一行）量
+       那一行的基線，再用 canvas 的 actualBoundingBox 在 400px 上量「李柄輝」
+       的字面框、等比例縮回來，比「塊上緣高多少」與「塊下緣低多少」。 */
+  .doc-role { vertical-align: .2136em; }
+
+  /* ---- 診所資訊 Ⓒ（門診表 ＋ 兩句說明 ＋ 停車 ＋ 診間照說明）------------
+     ⚠⚠ **`col.lab` 一定要跟著字級長。** 表格是 `table-layout: fixed` ＋
+       `tbody th` 是 `white-space: nowrap`，左欄太窄**不會**有水平捲動，
+       時間會橫著蓋到第一顆點上。6.3rem × (.98 ÷ .8) ＝ 7.72rem。
+       實測「時間 → 第一顆點」45 → 42px，還很鬆。
+     ⚠ 「早／午／晚」按站上原本的比值 .82 ÷ .8 ＝ 1.025 跟上（.98 × 1.025），
+       不然時間會比它大。⚠ 那三個字**只有手機收起來**，iPad 與電腦版都看得到。
+     ⚠ 站上 `.info-note` 自己帶 !important（那一輪要壓過 #clinic 的紅字規則），
+       所以這裡也要。
+     ⚠ `.info-card p` 沒有列進來是刻意的：這一頁上它只命中
+       `.info-note` 那一句，而那一句由上面那條 important 決定，寫了也不會生效。
+     ⚠ 兩排科別標記（`.hours-filter`／`.chips`）沒有動 —— 它們是**標記不是內文**，
+       塊高 34px × 主尺，跟著主尺走就好。 */
+  .hours-grid thead th,
+  .hours-grid tbody th           { font-size: .98rem; }
+  #clinic .hours-grid tbody th b { font-size: 1.0045rem; }
+  .hours-grid col.lab            { width: 7.72rem; }
+  .hours-grid .d                 { width: .70rem; height: .70rem; }
+  .map-note, .gallery figcaption { font-size: .98rem; }
+  .info-note                     { font-size: .98rem !important; }
+}
+
+/* ==========================================================================
    2026-08-15 —— 手機的內文一律 16px（醫師介紹／看診時段／位置與周邊停車）
    --------------------------------------------------------------------------
    使用者在 preview/card-type-mobile/ 選了文章卡的 Ⓑ（標題 22.4／摘要 17.6）
@@ -4826,7 +4930,21 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
       <a class="card" href="../../posts/kids-arch-expansion/" data-spec="kids">
-        <img class="card-thumb" src="../../assets/hero-arch.svg" alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖" width="800" height="450" loading="lazy">
+        <img class="card-thumb"
+             src="../../assets/hero-arch-photo-1600.jpg"
+             srcset="../../assets/hero-arch-photo-800.jpg 800w, ../../assets/hero-arch-photo-1600.jpg 1600w, ../../assets/hero-arch-photo-2000.jpg 2000w"
+             sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw"
+             alt="三格連續的畫面：男孩踩著小凳站在浴室鏡前，用手指掀開上唇看自己的門牙，上方一個放大圈畫出擠在一起、彼此重疊的上排門牙與微微紅腫的牙齦，媽媽抱著手站在門口皺著眉看；夜裡他仰躺著張嘴睡，白線畫出一道氣流；隔天早上他背著書包坐在玄關的鞋凳上垂著頭、眼睛睜不太開，媽媽蹲在旁邊遞水壺、爸爸站在門邊，兩人的神情都有點擔心"
+             width="1600" height="893"
+             data-pv-sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw"
+             data-pv-new-src="../../assets/hero-arch-photo-1600.jpg"
+             data-pv-new-srcset="../../assets/hero-arch-photo-800.jpg 800w, ../../assets/hero-arch-photo-1600.jpg 1600w, ../../assets/hero-arch-photo-2000.jpg 2000w"
+             data-pv-new-alt="三格連續的畫面：男孩踩著小凳站在浴室鏡前，用手指掀開上唇看自己的門牙，上方一個放大圈畫出擠在一起、彼此重疊的上排門牙與微微紅腫的牙齦，媽媽抱著手站在門口皺著眉看；夜裡他仰躺著張嘴睡，白線畫出一道氣流；隔天早上他背著書包坐在玄關的鞋凳上垂著頭、眼睛睜不太開，媽媽蹲在旁邊遞水壺、爸爸站在門邊，兩人的神情都有點擔心"
+             data-pv-new-w="1600" data-pv-new-h="893"
+             data-pv-old-src="../../assets/hero-arch.svg"
+             data-pv-old-srcset=""
+             data-pv-old-alt="狹窄的 V 型牙弓與擴張後 U 型牙弓的對照示意插圖"
+             data-pv-old-w="800" data-pv-old-h="450">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
@@ -5547,7 +5665,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-08-15">2026 年 8 月 15 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-08-16">2026 年 8 月 16 日</time></span>
     </div>
   </div>
 </footer>
@@ -6990,7 +7108,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 @media (max-width:420px){.pv-bar{font-size:.78rem;gap:.35rem;padding:.45rem .55rem}}
 </style>
 <div class="pv-bar" role="group" aria-label="提案切換">
-  <b>4 篇的圖</b>
+  <b>5 篇的圖</b>
   <button type="button" data-img="old" aria-pressed="false">現況（幾何 SVG）</button>
   <button type="button" data-img="new" aria-pressed="true">新圖（點陣插畫）</button>
   <a href="#articles">跳到文章列表</a>
