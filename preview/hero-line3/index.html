@@ -7139,11 +7139,21 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 .pv-l3a, .pv-l3b { display: none; }
 :root[data-l3="a"] .pv-l3a { display: inline; }
 :root[data-l3="b"] .pv-l3b { display: inline; }
-/* 「講究」與「顧牢牢」之間那個全形空格的額外寬度。詩的基底字距是 .32em，
-   letter-spacing 加在字元後面，所以加在這個空格上就是把那個斷點拉開。 */
+/* 「講究」與「顧牢牢」之間那個斷點要比第一個斷點小 —— 兩者等寬的話，
+   一行三段等距，會被讀成三件並列的事；第二個收窄，「講究　顧牢牢」才是
+   一整句裡的一口氣。
+   ⚠ 字元本身**還是那個全形空格 U+3000**，兩個斷點複製出來、螢幕閱讀器念的
+     都一樣，收窄的只有畫出來的寬度（這正是 .g 這個包裝當初留下來的用途）。
+   ⚠ 斷點量出來的視覺寬度是 **1.32em**（全形空格 1em ＋ 空格自己的字距 .32em），
+     不是 1.64em —— 前一個字的字距已經算在那個字的選取框裡了。390 上實測
+     字級 15.46 → 斷點 20.41px，1.32 × 15.46 ＝ 20.41 ✓。
+   分階直接用**空格本身的寬度**：全形 1em ／ 四分之三 ／ 半形 ／ 四分之一，
+   從 letter-spacing 扣掉差額就是。中文排版的次級斷句本來就是半形。 */
 .hero-poem .pv-g2 { letter-spacing: calc(.32em + var(--pv-gap2, 0em)); }
-:root[data-gap="5"]  { --pv-gap2: .5em; }
-:root[data-gap="10"] { --pv-gap2: 1em; }
+:root[data-gap="100"] { --pv-gap2: 0em; }
+:root[data-gap="75"]  { --pv-gap2: -.25em; }
+:root[data-gap="50"]  { --pv-gap2: -.5em; }
+:root[data-gap="25"]  { --pv-gap2: -.75em; }
 
 .pvbar, .pvbar * { box-sizing: border-box; }
 .pvbar {
@@ -7209,11 +7219,12 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         <button type="button" data-v="a">Ⓐ<small>現況<br>有跟著換的　也有一直顧的</small></button>
         <button type="button" data-v="b">Ⓑ<small>定案<br>裡裡外外都在換　講究　顧牢牢</small></button>
       </div>
-      <div class="pvbar-g">「講究」和「顧牢牢」之間　<em>只影響 Ⓑ</em></div>
+      <div class="pvbar-g">第二個斷點　<em>「講究」和「顧牢牢」之間・只影響 Ⓑ</em></div>
       <div class="pvbar-row" data-k="gap">
-        <button type="button" data-v="0">Ⓐ<small>一個全形空格<br>和其他斷句同階</small></button>
-        <button type="button" data-v="5">Ⓑ<small>＋0.5<br>看得出比較開</small></button>
-        <button type="button" data-v="10">Ⓒ<small>＋1.0<br>等於兩個空格</small></button>
+        <button type="button" data-v="100">Ⓐ<small>全形<br>三段等距</small></button>
+        <button type="button" data-v="75">Ⓑ<small>3/4 形</small></button>
+        <button type="button" data-v="50">Ⓒ<small>半形</small></button>
+        <button type="button" data-v="25">Ⓓ<small>1/4 形<br>快貼在一起</small></button>
       </div>
     </div>
     <div class="pvbar-foot"></div>
@@ -7227,8 +7238,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   var btn  = box.querySelector('.pvbar-btn');
   var foot = box.querySelector('.pvbar-foot');
   /* ⚠ 用明確的字串清單比對，不要用 [a-z]+ 那種正規式 —— 吃不到 glass1 這種值。 */
-  var KEYS = { l3: ['a', 'b'], gap: ['0', '5', '10'] };
-  var DEF  = { l3: 'b', gap: '0' };
+  var KEYS = { l3: ['a', 'b'], gap: ['100', '75', '50', '25'] };
+  var DEF  = { l3: 'b', gap: '50' };
   var st   = { l3: DEF.l3, gap: DEF.gap };
 
   var qs = new URLSearchParams(location.search);
@@ -7249,7 +7260,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     var q = new URLSearchParams();
     Object.keys(KEYS).forEach(function (k) { if (st[k] !== DEF[k]) q.set(k, st[k]); });
     history.replaceState(null, '', q.toString() ? '?' + q : location.pathname);
-    btn.querySelector('b').textContent = (st.l3 === 'a' ? '現況' : 'Ⓑ') + (st.gap === '0' ? '' : '／＋' + (st.gap / 10));
+    btn.querySelector('b').textContent = st.l3 === 'a' ? '現況' : st.gap + '%';
     measure();
   }
 
@@ -7373,6 +7384,22 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       out += '<div class="m ' + (rw.length > 1 ? 'bad' : '') + '"><span>' + names[i] +
              (rw.length > 1 ? '　⚠折 ' + rw.length + ' 行' : '') + '</span><b>' + n(wide) + 'px</b></div>';
       if (i === 2) out += '<div class="m"><span>　右緣離版心右緣</span><b>' + n(sr.right - right) + 'px</b></div>';
+    }
+    /* 兩個斷點實際畫出來的空白（「換」的右緣到「講」的左緣、「究」的右緣到
+       「顧」的左緣），不是屬性值 —— 要比的就是這兩個數字的落差。 */
+    if (st.l3 === 'b') {
+      var t = [];
+      Array.prototype.forEach.call(document.querySelector('.pv-l3b').childNodes, function (nd) {
+        if (nd.nodeType === 3 && nd.textContent.trim()) t.push(nd);
+      });
+      if (t.length === 3) {
+        var rc = t.map(function (nd) { var g = document.createRange(); g.selectNodeContents(nd); return g.getBoundingClientRect(); });
+        var g1 = rc[1].left - rc[0].right, g2 = rc[2].left - rc[1].right;
+        out += '<div class="m"><span>斷點① 換→講</span><b>' + n(g1) + 'px</b></div>' +
+               '<div class="m"><span>斷點② 究→顧</span><b>' + n(g2) + 'px</b></div>' +
+               '<div class="m"><span>　②÷①</span><b>' + n(g2 / g1 * 100) + '%</b></div>' +
+               '<div class="m"><span>　一般字距</span><b>' + n(parseFloat(getComputedStyle(poem).letterSpacing)) + 'px</b></div>';
+      }
     }
     out += '<hr>';
     function row(label, v) {
