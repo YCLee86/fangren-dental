@@ -758,6 +758,26 @@
    站好、只有切端高低差一點點。有效的是**比喻 ＋ 逐顆點名**：
    「像塞太滿的書架」，然後一顆往前傾蓋住鄰居三分之一、一顆被擠到後排只剩一半、
    一顆幾乎轉 90 度、切端連線斷成鋸齒。**同一條也是第 15 條（比喻要一眼可讀）的正面用法。**
+19. ⚠⚠⚠ **改圖要從「定稿那份提示詞」改，不要從零重寫一份。** 這是上面三輪
+   （17、18 兩條）真正的根本原因。使用者第三輪把定稿的提示詞貼出來，並說：
+   > 「小朋友的臉部細節　嘴唇嘟嘟的　精神不繼的樣子更清楚　新版的還是簡化不少
+   > 　而且顏色彩度提高有點太多」
+
+   對照之下一目了然：定稿那份有一整段 `THE CHILD'S FACE`（下半臉前突、上唇厚而外翻、
+   **嘴唇永遠合不攏**、下巴短而後縮、三格都要一模一樣），還有 `COLOUR` 段的
+   `Desaturated throughout`／`nothing heavy`／`no orange or amber cast`。
+   **我從零重寫的版本把這兩段整個弄丟了** —— 於是臉變普通、彩度被我自己指定的
+   鵝黃外套與粉上衣推高。
+   ・**規則**：拿到回饋只換**出問題的那一段**，其餘逐字保留。
+     第 16 條說「每一輪都要輸出完整的一份」仍然成立，但**完整 ≠ 重寫**。
+   ・⚠ **定稿的提示詞要留在 repo 裡**，不能只在使用者手上 —— 這一次就是因為
+     那份不在 repo，我才會一路重寫。〈擴張牙弓〉那份已逐字存在本節最後的「附」。
+     **日後每一張圖定案，提示詞跟著存。**
+   ・⚠ 同一輪確認**參考照有用**：使用者附了三張真實的擁擠牙齒照片說「參考圖片的
+     牙齒擁擠程度」。可讀的特徵是**側門牙整顆退到後排（只剩一半）＋ 犬齒往外上方
+     突出高過鄰牙 ＋ 中門牙重疊旋轉 ＋ 切端連線斷成鋸齒** —— 寫進提示詞比寫
+     `severely crowded` 有效。⚠ 但 inset 仍然要維持
+     `simple and illustrative, not a photorealistic mouth interior`（B 類紅線第 9 條）。
 
 ### 上線那天實際做了什麼（2026-08-16，七件）
 
@@ -788,6 +808,106 @@
 
 驗收：375／900／1280 三個寬度 —— 水平捲動 0、圖寬 ≤ 內文欄寬（375 上 335.3px，
 正好等於欄寬）、比例 1.79、DPR3 的手機挑到 1600w 那一張。
+
+---
+
+### 附：〈擴張牙弓〉定稿的提示詞（逐字，2026-08-16 由使用者提供）
+
+這是產生站上現在那張 `assets/hero-arch-photo-*.jpg` 的提示詞，**逐字保存、不要改寫**。
+之所以留在這裡，是因為第 19 條那個教訓：**改圖要從這一份改，不要從零重寫。**
+
+> ⚠ 已知要動的兩處（2026-08-16 使用者回饋，尚未重生成完成）：
+> ・`MIDDLE PANEL` 的 `a thick restless white hand-drawn line ... loops in the air above him`
+>   —— 那個 `loops above him` 就是「靈魂出竅」的來源，改法見第 17 條。
+> ・`INSET` 的擁擠程度不足，改法見第 18 條末與第 19 條（照參考照逐顆點名）。
+> **其餘每一段都是通過的，尤其 `THE CHILD'S FACE` 與 `COLOUR`，不要動。**
+
+```
+Editorial illustration, 16:9 landscape.
+
+STRUCTURE — One illustration divided into three equal vertical panels by thin hand-drawn
+lines. The three panels are one continuous story running left to right across a single
+night and the next morning: the same 9-year-old boy in all three, the same home.
+
+LEFT PANEL — evening, the family bathroom. The boy stands up on his toes at the washbasin,
+leaning in close to the mirror, using one finger to lift his upper lip so he can look at
+his own front teeth. His expression is curious and a little unsure. We see both his face
+and his reflection. Behind him, his mother stands in the doorway with her arms loosely
+folded, watching him with a faint frown — concerned and puzzled, not angry, not scolding.
+INSET IN THIS PANEL: a round circular close-up, ringed with a thin hand-drawn line and
+joined to the mirror by three small dots, floating in the upper part of the panel. Inside
+it, drawn large and clear: his upper front teeth are CROWDED — the row packed tight with
+no gaps anywhere, one central incisor rotated and overlapping in front of its neighbour,
+the tooth beside it tipped back behind the line, the whole arch narrow so the teeth jostle
+each other. Along the edge of these teeth the gum is slightly puffy and a soft pink-red,
+gently inflamed. The teeth themselves are clean and white — no decay, no dark spots, no
+missing teeth, no blood. Keep the inset simple and illustrative, not a photorealistic
+mouth interior.
+
+MIDDLE PANEL — the same night, his bedroom. He is asleep on his back, head tipped back,
+mouth wide open, blanket kicked half off. A thick restless white hand-drawn line of breath
+rises from his open mouth and loops in the air above him. A small warm night light on the
+bedside table is the only light source.
+
+RIGHT PANEL — the next morning, the entryway. He sits slumped on the low shoe bench with
+one shoe only half pulled on, his backpack already on both shoulders and dragging them
+down. His back is rounded, his head droops forward and tilts to one side, his arms hang
+loose with one hand resting flat on the bench beside him. He is barely awake: both eyes
+are heavy-lidded, narrowed to sleepy slits and almost closed, with faint soft shadows
+beneath them; his mouth rests open in his usual way. He is DROWSY AND SLUGGISH, NOT UPSET
+— his eyebrows stay relaxed and level, never raised or angled in the middle. NO tears, no
+screwed-up face, no wide downturned crying mouth. He is NOT rubbing his eyes, NOT covering
+his face, and NOT holding his hands anywhere near his eyes. His mother crouches in front
+of him holding out a water bottle, and his father stands at the open door with a hand on
+the frame; the two of them exchange the same quiet worried look. Cool pale morning light
+through the doorway.
+
+THE CHILD'S FACE — Draw this STRONGLY and IDENTICALLY in all three panels. His whole lower
+face pushes forward from the nose down. The upper lip is thick, full and rolled outward,
+sitting clearly in front of the lower lip, giving him a distinctly pouty, protruding mouth.
+His lips never fully close — in the mirror panel and the morning panel they rest apart with
+the edge of the front teeth showing between them. The chin is short and set back with a
+soft crease beneath the lower lip. The nose reads small against the pushed-forward mouth.
+This must be unmistakable at a glance in every panel, asleep and awake.
+Keep it a real child's face: normal head size and normal head-to-body proportions, no
+rubber-hose or bug-eyed cartoon styling, never mocking. He is an ordinary, well-cared-for
+child who is simply tired and curious — never sad, never crying, never ill-looking, never
+being told off. No arrows, circles, spotlights or labels pointing at his face other than
+the one round inset described above. No comparison with a differently-shaped child.
+
+PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes,
+a simple line mouth, a small nose), natural realistic head-to-body proportions, believable
+ages. Not photorealistic. Not faceless. No oversized heads, no noodle limbs. Nobody looks
+at the viewer.
+
+STYLE — Contemporary printed-magazine editorial illustration. Linework in warm dark brown
+or soft charcoal, NEVER pure black: thin, hand-drawn, weight varies, strokes taper and
+sometimes break. Colour applied like soft coloured pencil and light marker — airy and
+high-key, with plenty of the pale paper left showing through; colour edges a little loose,
+not always meeting the line. Flat fills with two or three tones per hue, no smooth
+decorative gradients. A fine even paper grain over the whole image. The white breath line
+has a soft chalk quality, clearly hand-made.
+
+COLOUR — Light, muted and gentle: pale cream and off-white as the ground, dusty sage and
+mint, soft powder blue, muted rose and clay, pale butter yellow, warm grey. Desaturated
+throughout — nothing heavy, nothing brown-dominant, no orange or amber cast, no neon.
+Colour throughout — never greyscale. The night panel is low key but stays clean and never
+turns murky or black. The inflamed gum is a soft muted pink-red, gentle, never a strong
+alarming red.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, panel labels, numeral clock faces or watermarks, in any language. The
+backpack, pyjamas and all clothing carry no printed text; toothpaste tubes, bottles and
+packaging in the bathroom are blank; book spines are blank; any screen or mirror sticker
+is blank; there are no arrows or labels between the panels. Where writing would normally
+appear, leave the surface plain.
+
+AVOID — greyscale; photorealism; a photorealistic open mouth; faceless or noodle-limbed
+figures; thick uniform black outlines; chrome or iridescent gradients; decayed, dark,
+broken or missing teeth; blood; pain or fear; a crying child, tears, a screwed-up crying
+face, hands rubbing or covering the eyes; parents who look angry or scolding; any
+before-and-after or good-versus-bad comparison.
+```
 
 ---
 
