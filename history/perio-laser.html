@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>perio-laser｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>perio-laser</h1>
+<p class="meta">
+  原網址 <code>/preview/perio-laser/</code>（已刪除 2026-08-16）<br>
+  整頁還原：<code>git show 02fdc03:preview/perio-laser/index.html</code><br>
+  <strong>這一頁是「文章草稿的預覽」，不是設計提案</strong> —— 定案後直接變成正式文章
+  <code>/posts/perio-laser/</code>，不是把某幾項套進版型
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者在別的地方寫好一篇牙周病的衛教文章（含健保治療與自費水雷射的比較表、
+牙周再生手術的流程與優缺點），連同當天定稿的 HERO 插畫一起丟過來：
+
+  「圖片做好了把文章跟圖片整理做成預覽頁給我看。文章是在其他地方寫的，
+   所以上面會有一些什麼診所名稱、預約專線、找誰，這個都可以去掉，
+   就像網站文章一樣整理成一個牙周病治療然後用鐳射輔助的文案。」
+
+隔一輪看過預覽頁之後：「換成這張　上線」（附上重生成、機器上沒有品牌字的版本）。</pre></div>
+
+<h2>文案整理了什麼</h2>
+<div class="note"><pre>1. **拿掉原稿結尾的診所名稱、預約專線、地址** —— 站上每一頁的頁尾都有，同一頁講第三次沒有必要。
+   結尾那段「這篇衛教文章可以根據您的使用情境進一步調整（轉成 FB 貼文／補充術後護理）」
+   也拿掉，那是給作者看的備註不是內容。
+2. 分成五節 ＋ 一節收尾：為什麼會得牙周病／身體給的訊號／第一步永遠是清創／
+   水雷射能幫上什麼（比較表）／骨頭已經流失時：牙周再生手術／治療結束才是真正的開始。
+   原稿的優缺點沒有刪，改寫成「能換到什麼／要考慮什麼」兩段。
+3. 用詞對齊站上既有文章：牙槽骨 → **齒槽骨**、牙根刮治術 → **牙根整平術**（括號保留原名）。
+4. ⚠ **比較表裡的絕對療效說法收斂過**：「殺菌率高」「大幅減少疼痛與出血」
+   改成「較輕、較快、個別差異仍然存在」。療效宣稱寫太滿在醫療廣告上有風險。
+   使用者看過沒有要求改回去。
+5. 收尾沒有寫「歡迎來問」那類句子 —— COPY.md 第三節的紅線（診所給的是燈，不是答案）。</pre></div>
+
+<h2>那張圖（六輪）</h2>
+<div class="note"><pre>概念從第一版就定了：**醫師與病人一起拿著雷射槍打細菌**（使用者自己提的，他很喜歡）。
+六輪修的都不是概念，是可讀性：
+
+  ① 人物風格不是站上那一套（偏動漫）、雷射光太亮的螢光綠、槍像火箭筒、背包式主機、
+     環境空白得像在整修的公寓 → 人物回 ILLUSTRATION.md 第三節、光束改牙周的青綠
+     #317d78、機器從背上拿下來、補完整的診間
+  ② 太平靜，「看起來不像在打仗」；細菌太可愛沒有威脅性 → 前傾的架式、細菌變兇
+  ③ 細菌太兇「不像快輸了」；病患站太前面、手搭在醫師肩上 → 只留一兩隻硬撐、
+     其餘兵敗逃竄；病患退到最左後方、手不碰任何人、由助理的盾擋著
+  ④ 雷射打在牙齒上「像要把牙齒打破」 → **THE TARGET 段開頭改寫成
+     「牙齒是被救的，不是被打的」**，牙面上長出結痂的斑塊、旁邊留一塊已經清乾淨的亮面，
+     光束打斑塊的邊緣、碎屑往外剝落。⚠ 上一版牙面上什麼都沒有，模型沒有東西可打，
+     只好打在牙齒本身 —— **要它打什麼，就要先把那個東西畫出來。**
+  ⑤ 病患是中年婦女、穿得像上班族套裝、表情有點得意 → 改成 30~50 歲的男性上班族、
+     休閒但不邋遢，表情改成「安心、被保護、期待勝利」
+  ⑥ 定稿。使用者指定「星際大戰那樣」的雷射槍、醫師戴護目鏡、病患戴面罩、
+     助理舉防護盾一起護著病患。⚠ 星戰只能取氣質，提示詞裡明講不要任何現有作品
+     可辨識的角色、頭盔、道具（版權）。
+
+⚠⚠ **品牌字**：中間好幾版模型都在機器上長出 BIOLASE／Waterlase／express
+（使用者給了 Waterlase Express 的 brochure 當造型參考，模型連字一起學走）。
+站規是全圖不准有字，而且那是別人的商標。
+・先做過一次**局部模糊**（沒有重生成）：在原圖 2752×1536 上就地處理四處，
+  三處用半徑 5~7 的方框模糊跑三趟、邊緣羽化 5px；機身側面那一塊糊完像一片髒污，
+  改成取上方乾淨面板的平均色填平。矩形以外一個像素沒動。
+  ⚠ 那一版踩到一個坑：**PowerShell 變數不分大小寫**，用 $w/$h 當區域寬高會把
+  圖寬 $W/$H 蓋掉，後三塊被寫成黑色方塊。母檔要用 $imgW/$imgH 與 $rw/$rh。
+・最後使用者自己重生成了一張沒有字的，上線的是那一張，模糊那一版沒有用到。</pre></div>
+
+<h2>上線做了什麼（2026-08-16）</h2>
+<div class="note"><pre>1. 圖存三個尺寸 assets/hero-perio-photo-{800,1600,2000}.jpg
+   （來源 2752×1536，比例 1.7917，和前六張一樣 —— 直接縮，不必裁）。
+   ⚠ 四邊量過：上 57 列、下 49 列是平的（標準差 ~1、亮度 252），但**左右的內容一路到邊**。
+   那是室內的白牆與地板，不是〈牙齦流血〉那種四邊都有的烘白框，所以沒有裁。
+   判準仍然是 ILLUSTRATION.md 第七節那條：**白框的特徵是四邊都有而且亮度一致。**
+2. preview/perio-laser/ 轉成 posts/perio-laser/：加回 post-meta、瀏覽數的
+   data-views-self、counter.js，拿掉 noindex 與提案頁備註那一塊，
+   上一篇接擴張牙弓（＝原本最新的那篇）。
+   ⚠ **沒有去改擴張牙弓的「下一篇」** —— post-nav 在 &lt;main&gt; 裡面，改它會動到內容雜湊，
+   那一篇的「最後更新」會跳成今天。少一條指回來的連結，換不動六篇的日期，划算。
+3. node tools/build.mjs：首頁卡片、sitemap、allowed-slugs、SEO 區塊、延伸閱讀全部自己跟上。
+   七篇文章，這一篇排第一（2026-08-16）。其餘六篇的日期一個都沒動。</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>
