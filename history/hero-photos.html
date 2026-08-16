@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>hero-photos｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>hero-photos</h1>
+<p class="meta">
+  原網址 <code>/preview/hero-photos-cards/</code> 與 <code>/preview/hero-photos-&lt;slug&gt;/</code>（六篇，已刪除 2026-08-16）<br>
+  整頁還原：<code>git show ba16125:preview/hero-photos-cards/index.html</code>（其餘六頁同一個 sha）<br>
+  產生器：<code>git show ba16125:tools/hero-photo-preview.mjs</code>（一併刪除）<br>
+  切換條 <code>?img=old|new</code>（和現況的幾何 SVG 對比），六篇湊齊後一次定案上線
+</p>
+
+<h2>起因與規則</h2>
+<div class="note"><pre>2026-08-15 使用者拿了一張自己生成的點陣插畫（貝氏刷牙法那篇）過來，看過提案頁之後說：
+
+  「這個看起來沒什麼問題，但我要**所有的文章都做好再一次換**。
+   先存起來等我其他文章都做好，再一次一起上線。」
+
+所以整整兩天的規則是：**圖一張一張進來，正式站一個字都不要動。**
+中途的東西全部只存在於 preview/，某一篇「已經好了」也不准先套進 posts/ 或首頁。
+
+這同時回答了 ILLUSTRATION.md 第六節第 8 項「要不要走點陣」——**走**。
+理由不只是偏好：第三節要求「一定要有質感（細顆粒）」，而**手刻 SVG 做不出細顆粒**
+（濾鏡湊出來的檔案會爆掉，各家瀏覽器還不一致）。走點陣是規格本身要求的。</pre></div>
+
+<h2>六張圖</h2>
+<div class="note"><pre>    文章                     舊的（幾何 SVG）      新的                       日期
+    bass-brushing            hero-brushing.svg     hero-brushing-photo-*.jpg  2026-08-15
+    gum-bleeding             hero-gum.svg          hero-gum-photo-*.jpg       2026-08-16
+    kids-first-visit         hero-kids.svg         hero-kids-photo-*.jpg      2026-08-16
+    kids-arch-expansion      hero-arch.svg         hero-arch-photo-*.jpg      2026-08-16
+    regular-checkup          hero-checkup.svg      hero-checkup-photo-*.jpg   2026-08-16
+    missing-tooth            hero-implant.svg      hero-implant-photo-*.jpg   2026-08-16
+
+每一張都存三個尺寸（後綴＝寬度）：-800.jpg、-1600.jpg、-2000.jpg。
+    為什麼是這三個：文章內文欄最寬 624px，DPR3 要到 1872（所以要有 2000）；
+    首頁縮圖 375 上 335px、DPR2 要 670（所以要有 800）。
+    這站沒有任何 npm 依賴，縮圖是 PowerShell 的 System.Drawing
+    （HighQualityBicubic、JPEG 品質 82），不是 sharp。
+原圖都是 2752×1536，縮出來 800×447 / 1600×893 / 2000×1116（比例 1.7917，不是正 16:9）。</pre></div>
+
+<h2>寫提示詞學到的事</h2>
+<div class="note"><pre>完整版留在 ILLUSTRATION.md 第七節（十六條），這裡只記最貴的幾條：
+
+1. **梗不要放在「畫不畫得出來有疑問」的細節上。** 牙縫、白一階、腫起來、發炎的紅，
+   模型畫不穩。梗要放在**姿勢、重複、關係**上 —— 那三樣畫得很好。
+2. **「同一個機位重複、只有一件事在變」是最好讀的手法。**
+3. **診所場景要自己列識別物**，不然會長得像健身房或學校：只有圖沒有字的牙齒海報、
+   透明的牙齒模型、牙刷架、門內露出的診療椅一角、淺色刷手服。
+4. ⚠⚠ **「no text」要寫得非常重。** 只寫一句 no text 沒有用，第一版海報上長出了
+   Brashriashing／Rowch teeth 這種亂碼英文。有效的寫法是獨立一段大寫的
+   CRITICAL — NO WRITING ANYWHERE，逐項點名（海報、卡片、資料夾、包裝、螢幕、
+   夜市招牌）並補一句「該有字的地方留白」。
+5. **人物的動作要交代目的。** 「一個小女孩跪在長椅上」被畫成跪在地上面對櫃子，
+   使用者一眼就說「不知道他跪在地上幹嘛」。
+6. **色調要指定時間與明度，不能只說 warm** —— 出來的一律是黃昏。
+7. ⚠⚠ **「揉眼睛」＋「嘴角往下的張嘴」＝ 哭，不是睏。** 睏要用「撐不開」去畫。
+8. **顏色寫太細會走鐘**（我一度指定 amber／caramel，整張變棕）。第六節第 5 項
+   明明寫著色票還沒定、不要自己加色。
+9. **牙齒的擁擠畫得出來，但要給它一個放大圈** —— 像素夠就穩了。</pre></div>
+
+<h2>最後一篇（缺牙重建）的六輪，整條路都留著</h2>
+<div class="note"><pre>這一篇最難，因為**它的主體就是一個洞**，而洞正好是模型畫不穩的東西。六輪如下：
+
+第一輪（四案）
+  Ⓐ 少了一本書的書架（兩側的書往空隙倒、上層一本滑下來卡住 ＝ 鄰牙傾倒＋對咬牙伸長）
+  Ⓑ 診間三選一（活動假牙／牙橋／植體三個模型並排，醫師與家屬在討論）
+  Ⓒ 同一面浴室鏡前的三格（三種方案「以後每天長什麼樣」）
+  Ⓓ 一家人吃飯，只有一邊在嚼
+  使用者：「書的暗示性太遠了，要看很久」，而且指出書掉下來會**砸到小孩**。
+  → 比喻要當場讀得懂，讀者不該需要翻譯。飯桌那案方向對，但有三個問題。
+
+第二輪（四案，全部改成飯桌方向）
+  使用者第一輪指出的三件：
+    ① 「看起來很像其他人在嘲笑那個爺爺」（奶奶笑得開心、女兒的手指）
+    ② 「爺爺應該要瘦一點，因為缺牙的話理論上會比較瘦、營養不足」
+    ③ ⚠⚠ 「爺爺的意象太明顯」——「其實很多中年人或年輕人缺牙，
+        只是年紀不大比較不符合刻板印象」
+  → Ⓔ 同事聚餐（沒有人發現）／Ⓕ 家庭晚餐反轉（阿公啃玉米、中年爸爸只能吃軟的）／
+    Ⓖ 三個年紀同一個動作／Ⓗ 自助餐夾菜台前。
+  使用者：「意境都好，但連結度還是不夠 —— 自助餐那個根本看不出來，
+  那個人特別瘦其實也看不太出來。」
+
+第三輪（定案的結構）
+  使用者自己給了畫面：「桌上有很多肉類、海鮮，誇張也可以，龍蝦、鮑魚什麼的，
+  大家都鼓勵他吃，但這個人非常的瘦，做出有點尷尬然後推辭的樣子，
+  他露出牙齒可以畫出缺幾顆牙，這樣意思就蠻明顯的。」
+  ＋「另外一個做成三個，男性女性、中年年輕都有，各自不同的吃飯場景，
+  火鍋、鹹酥雞這種台灣最常見的。」
+
+第四輪 ⚠⚠ **缺牙不要畫在門牙上、也不要畫在笑容裡。**
+  照上面做出來，三個人都是門牙缺一排，使用者當場退回：
+  「缺牙在門牙有點太明顯，而且這個意象太強烈。有沒有辦法他不一定笑出來有這種明顯，
+  但是他推辭尷尬的那個笑臉，然後畫個心裡想的泡泡，他自己知道他有缺牙的狀況。」
+  → 嘴巴只做**閉嘴的尷尬微笑**，缺牙搬進**思考泡泡**（做法同 kids-arch-expansion 那張）。
+  同一輪還指出：**三個主角都在框的右邊，太對稱、太刻意。**
+  → 提示詞獨立寫一段 VARY THE PLACEMENT：右／左／**從桌子的另一側看**
+    （兩個親人背對鏡頭坐在前景）。背對鏡頭的前景人物是打破對稱最有效的一招。
+
+第五輪 **同一種東西不要三格都一樣。** 第一版三個泡泡全是同一張缺牙示意圖，
+  使用者：「那個圖有點太學術了，是我們看模型或書上才會出現的樣子，三個都想這樣有點奇怪。」
+  → 定案三件不同的事：**咬不動的苦惱／照鏡子發現後排少一顆／晚上回家只能喝粥**。
+
+第六輪　定稿。
+
+⚠ 這一輪同時推翻了第七節第 1 條的一半：**缺牙畫得出來**，
+  只是不能畫在門牙、不能畫成示意圖、也不能三格都畫。</pre></div>
+
+<h2>使用者對提示詞本身的要求</h2>
+<div class="note"><pre>「你如果要改那個提示詞的話，我還要複製貼上然後修改上去，因為都是英文，
+　要找在哪裡其實很〔麻煩〕。如果你覺得版本不一樣稍微微調也沒關係，
+　重新做一個新的提示詞就好。」
+
+→ **每一輪都輸出一整段完整、可以直接複製貼上的新提示詞**，即使只改一句話。
+  不要給「把 THOUGHT BUBBLES 那段換成下面這版」這種片段。備案也要寫成完整的第二份。</pre></div>
+
+<h2>上線那天做了什麼（2026-08-16）</h2>
+<div class="note"><pre>1. 六篇 posts/&lt;slug&gt;/index.html 的 .post-hero 換成 &lt;img srcset sizes&gt;。
+   ⚠ sizes 一律不准寫 100vw（CLAUDE.md 第九節第 15 條）。
+   ⚠⚠ 而且**要量過再寫**：文章欄寬上限是 --content 44rem ＝ 704px，
+     所以 721~1159 那一段圖**不會跟著視窗長** —— 原本照文件寫的
+     calc(100vw - 2*--pad) 在 900 上算出 846，實際只有 650，高估 30%。
+     定案寫成三段：(min-width:1160px) 624px, (min-width:721px) 660px, calc(...)。
+2. 首頁六張卡與文章底部「延伸閱讀」三張卡的 srcset：改 tools/build.mjs 產生卡片那一段，
+   不是手改 index.html。延伸閱讀那三張實測 ≥1160 是 346px、721~1159 約 29vw。
+3. post-meta 的 hero 換成 &lt;photo&gt;-1600.jpg（另外兩個尺寸由 build.mjs 從檔名推）。
+   ⚠⚠ **這一步會動到內容雜湊，六篇的「最後更新」全部跳成當天、排序也亂掉。**
+     照 CLAUDE.md 第五節的程序：build 之後手動把 tools/build-manifest.json 那六筆的
+     updated 改回原本的日期（雜湊留新的），再跑一次 build。這一輪做了兩次
+     （改完 sizes 又動到一次雜湊），最後用 build --check 確認完全沒有變動才收工。
+4. 分享圖：og:image 直接指向 -1600.jpg（爬蟲不吃的是 SVG，JPEG 本來就沒問題），
+   不再需要 tools/og-images.mjs 轉的 PNG 複本。
+   ⚠ og:image:width/height 不能沿用原本寫死的 1600×900 —— 這批是 1600×**893**。
+     build.mjs 因此多了一支 jpegSize()：自己掃 JPEG 檔頭的 SOF 標記讀寬高
+     （這站沒有任何 npm 依賴，不能用 sharp）。
+5. sitemap 的 &lt;image:loc&gt; 跟著 build 自己更新，沒有手動改。
+6. 舊的六張 assets/hero-*.svg、六張 hero-*-1600.png 與 tools/og-images.mjs
+   **先留著沒刪** —— 那是萬一要退回去的路，刪不刪是另一個決定。
+7. 刪掉 preview/hero-photos-*（七頁）與 tools/hero-photo-preview.mjs，文字搬進這一頁。
+
+驗收：375／900／1280 三個寬度量過 —— 水平捲動 0、圖寬 ≤ 內文欄寬（375 上 335.3px，
+正好等於欄寬）、比例 1.79、DPR3 的手機挑到 1600w 那一張。</pre></div>
+
+<h2>還沒決定的</h2>
+<div class="note"><pre>1. **六張的明暗沒有統一**，使用者 2026-08-16 看過提案頁之後說「就這樣一起上線」：
+     刷牙＝明亮浴室、定期檢查＝明亮白天、牙齦＝偏暖、擴弓＝白天與夜晚混合、
+     換牙＝夜晚吊燈、缺牙＝夜晚暖燈與夜市。
+   要統一的話是**回頭重生成，不是後製調色**。
+2. 舊的 hero-*.svg／hero-*-1600.png／tools/og-images.mjs 要不要一起清掉（見上面第 6 條）。
+3. ILLUSTRATION.md 第六節第 9 項「縮圖點開」是什麼互動，仍然沒問過 ——
+   站上現在沒有燈箱，卡片縮圖點下去是連到文章。</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>

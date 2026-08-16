@@ -35,9 +35,57 @@ const CLINIC_FILE = path.join(ROOT, "clinic.json");
 
 const CHECK_ONLY = process.argv.includes("--check");
 
-/* 分享圖的尺寸。tools/og-images.mjs 產出的就是這個大小，兩邊要一致。 */
+/* 分享圖的尺寸。tools/og-images.mjs 產出的就是這個大小，兩邊要一致。
+   ⚠ 2026-08-16 六篇的 HERO 換成點陣插畫之後，這兩個常數只剩「hero 還是 .svg」
+     那條舊路在用（現在六篇都不是了）。點陣的 HERO 直接拿 -1600.jpg 當分享圖，
+     寬高由 jpegSize() 讀檔頭算出來，不是寫死的。 */
 const OG_WIDTH = 1600;
 const OG_HEIGHT = 900;
+
+/* 點陣 HERO 的三個寬度（後綴＝寬度，和 assets/ 裡的檔名一致）。
+   post-meta 的 hero 只寫 -1600.jpg 那一張，另外兩張由檔名推出來。 */
+const HERO_WIDTHS = [800, 1600, 2000];
+
+/* 各個位置的 sizes。⚠ 一律不准寫 100vw —— 高 DPR 的手機會挑到太小的檔再放大，
+   版面看起來沒問題但照片是糊的（CLAUDE.md 第九節第 15 條踩過）。
+   ⚠ 這幾個值是在瀏覽器裡**量出來的**，不是估的：文章頁的欄寬上限是 --content 44rem
+     ＝ 704px，所以 721~1159 那一段圖不會跟著視窗長（實測 900 上是 650 不是 846）。
+     延伸閱讀那三張在 ≥1160 是 346px、721~1159 約 29vw。 */
+const SIZES_THUMB = "(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw";
+const SIZES_REL = "(min-width: 1160px) 350px, (min-width: 721px) 30vw, calc(100vw - 2 * clamp(1.25rem, 3vw, 2.5rem))";
+
+/* hero 檔名 → srcset。hero 不是 -1600.jpg 這種點陣檔（例如還是 .svg）就回空字串，
+   呼叫端會退回只有 src 的舊寫法。 */
+const heroSrcset = (hero, prefix) => {
+  const m = /^(.*)-1600\.jpg$/.exec(hero || "");
+  if (!m) return "";
+  return HERO_WIDTHS.map((w) => `${prefix}${m[1]}-${w}.jpg ${w}w`).join(", ");
+};
+
+/* srcset 有值才寫這兩個屬性；hero 還是 .svg 的話整組省略，維持舊寫法。 */
+const srcsetAttr = (srcset, sizes) => (srcset ? ` srcset="${srcset}" sizes="${sizes}"` : "");
+
+/* JPEG 的寬高：掃檔頭的 SOF 標記。這站沒有任何 npm 依賴，所以自己讀。
+   og:image:width / og:image:height 寫錯的話，分享出去的卡片比例會歪。 */
+const jpegSize = (file) => {
+  let b;
+  try { b = fs.readFileSync(file); } catch { return null; }
+  if (b.length < 4 || b[0] !== 0xff || b[1] !== 0xd8) return null;
+  let i = 2;
+  while (i < b.length - 9) {
+    if (b[i] !== 0xff) { i++; continue; }
+    const marker = b[i + 1];
+    if (marker === 0xd8 || marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) { i += 2; continue; }
+    const len = b.readUInt16BE(i + 2);
+    // SOF0~SOF15，但 c4（DHT）、c8（JPG）、cc（DAC）不是
+    if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
+      return { height: b.readUInt16BE(i + 5), width: b.readUInt16BE(i + 7) };
+    }
+    if (len < 2) return null;
+    i += 2 + len;
+  }
+  return null;
+};
 
 /* ---------- 小工具 ---------- */
 
@@ -240,16 +288,30 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
      ⚠ 分享圖不能用 HERO 那張 SVG。**Facebook 與 LINE 的爬蟲不吃 SVG**，
        og:image 指到 .svg 等於沒設，對方看到的卡片是空的、或爬蟲自己從頁面亂撿一張。
        首頁 2026 年就踩過這個坑（見 index.html 的 og:image 註解），當時只補了首頁。
-       點陣複本由 tools/og-images.mjs 產生，命名沿用「後綴＝寬度」的慣例。 */
+
+     2026-08-16 起六篇的 HERO 是**點陣插畫**，所以分享圖直接就是那張 -1600.jpg
+     （爬蟲不吃的是 SVG，JPEG 從來沒問題），不必再轉一份 PNG。
+     hero 還是 .svg 的話走舊路：tools/og-images.mjs 轉出來的 PNG 複本。 */
   if (siteUrl && clinic) {
     const url = `${siteUrl}/posts/${meta.slug}/`;
-    const png = meta.hero.replace(/\.svg$/, `-${OG_WIDTH}.png`);
-    const hasPng = fs.existsSync(path.join(ROOT, "assets", png));
-    if (!hasPng) {
-      console.warn(`  ⚠ 找不到 assets/${png}，${meta.slug} 不會有分享圖。跑一次 node tools/og-images.mjs`);
+    const isVector = /\.svg$/.test(meta.hero);
+    const shareFile = isVector ? meta.hero.replace(/\.svg$/, `-${OG_WIDTH}.png`) : meta.hero;
+    const sharePath = path.join(ROOT, "assets", shareFile);
+    const hasShare = fs.existsSync(sharePath);
+    if (!hasShare) {
+      console.warn(`  ⚠ 找不到 assets/${shareFile}，${meta.slug} 不會有分享圖。` +
+        (isVector ? "跑一次 node tools/og-images.mjs" : ""));
     }
-    const image = hasPng
-      ? { url: `${siteUrl}/assets/${png}`, width: OG_WIDTH, height: OG_HEIGHT, alt: meta.heroAlt || meta.title }
+    /* 點陣的寬高從檔頭讀，不要沿用 OG_WIDTH/OG_HEIGHT ——
+       這批插畫是 1600×893（16:8.93），寫成 900 高就是錯的。 */
+    const px = hasShare && !isVector ? jpegSize(sharePath) : null;
+    const image = hasShare
+      ? {
+          url: `${siteUrl}/assets/${shareFile}`,
+          width: px?.width ?? OG_WIDTH,
+          height: px?.height ?? OG_HEIGHT,
+          alt: meta.heroAlt || meta.title,
+        }
       : null;
 
     const seo = [
@@ -330,7 +392,7 @@ const relCard = (p) => {
   const spec = SPEC[p.tag];
   return `        <li class="rel-card"${spec ? ` data-spec="${spec}"` : ""}>
           <a href="../${esc(p.slug)}/">
-            <img src="../../assets/${esc(p.hero)}" alt="" width="800" height="450" loading="lazy">
+            <img src="../../assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "../../assets/"), SIZES_REL)} alt="" width="2000" height="1116" loading="lazy">
             <span class="rel-body">
               <span class="rel-tag">${esc(p.tag)}</span>
               <span class="rel-title">${esc(p.title)}</span>
@@ -379,7 +441,7 @@ const card = (p) => {
   const spec = SPEC[p.tag];
   if (!spec) console.warn(`  ⚠ 標籤「${p.tag}」沒有對應的科別代碼，${p.slug} 不會被主題與科別篩到`);
   return `      <a class="card" href="posts/${esc(p.slug)}/"${spec ? ` data-spec="${spec}"` : ""}>
-        <img class="card-thumb" src="assets/${esc(p.hero)}" alt="${esc(p.heroAlt || p.title)}" width="800" height="450" loading="lazy">
+        <img class="card-thumb" src="assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "assets/"), SIZES_THUMB)} alt="${esc(p.heroAlt || p.title)}" width="2000" height="1116" loading="lazy">
         <div class="card-body">
           <span class="card-tag">${esc(p.tag)}</span>
           <h3>${esc(p.title)}</h3>

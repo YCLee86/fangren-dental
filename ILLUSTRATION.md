@@ -465,15 +465,16 @@
    （[CLAUDE.md](CLAUDE.md) 第十節第 4 條）
 4. **手機版不可破框**（第一節第 6 條），改完用 375px 寬檢查。
 
-### ⚠ 現況和這份指引差很遠，這是已知的
+### ~~⚠ 現況和這份指引差很遠，這是已知的~~ → 2026-08-16 已經補上了
 
-現有六張文章 HERO（`assets/hero-arch.svg`、`-brushing`、`-checkup`、`-gum`、
+原本六張文章 HERO（`assets/hero-arch.svg`、`-brushing`、`-checkup`、`-gum`、
 `-implant`、`-kids`）是**手刻的平塗幾何示意圖**：沒有質感、沒有環境、沒有人，
-線是均勻的向量線，用的是自己寫死的色值（例如 `hero-gum.svg` 裡的 `#1a8f95`、`#f0a5a0`），
-**沒有吃科別色**。
+線是均勻的向量線，用的是自己寫死的色值，**沒有吃科別色** —— 照這份指引的規格
+每一項都不符合。
 
-照這份指引的規格，它們六張**每一項都不符合**。這不是漏掉 —— 是這份指引寫出來
-之後才產生的落差。**要不要重畫是另一個決定，見第六節。**
+**2026-08-16 六張全部換成點陣插畫並上線**（`assets/hero-*-photo-{800,1600,2000}.jpg`），
+推導在 `/history/hero-photos.html`。那六張 SVG **還留在 repo 裡但已經沒有人引用**，
+要不要清掉是另一個決定（見第七節最後）。
 
 ### ⚠⚠ 質感做不進 SVG，這會動到管線
 
@@ -526,35 +527,41 @@
 
 ---
 
-## 七、進行中：六篇文章的 HERO 換點陣插畫（2026-08-15 起）
+## 七、六篇文章的 HERO 換點陣插畫 —— ✅ 2026-08-16 全部上線
 
 使用者 2026-08-15 給了第一張畫好的點陣插畫（貝氏刷牙法那篇），看過提案頁之後說：
 
 > 「這個看起來沒什麼問題，但我要**所有的文章都做好再一次換**。
 > 　先存起來等我其他文章都做好，再一次一起上線。」
 
-**所以：圖一張一張進來，正式站一個字都不要動，六篇湊齊那一天才一起換。**
-⚠ **不要因為某一篇「已經好了」就先把它套進 `posts/` 或首頁** —— 那正是使用者
-說不要的。中途的東西全部只存在於 `preview/`。
+所以整整兩天的規則是「圖一張一張進來，正式站一個字都不要動」。
+**2026-08-16 六篇湊齊，使用者說「就這樣　一起上線」，當天全部換掉。**
+七頁提案頁與產生器 `tools/hero-photo-preview.mjs` 已刪除，
+完整推導（含最後一篇〈缺牙重建〉那六輪、上線那天的七件事）在
+**`/history/hero-photos.html`**。
 
-### 現況
+### 現況（已上線）
 
-| 文章 | 現況那張 | 新圖 | 狀態 |
-| --- | --- | --- | --- |
-| `bass-brushing` 貝氏刷牙法 | `hero-brushing.svg` | `hero-brushing-photo-*.jpg` | **已備妥**（2026-08-15） |
-| `gum-bleeding` 牙齦流血 | `hero-gum.svg` | `hero-gum-photo-*.jpg` | **已備妥**（2026-08-16） |
-| `kids-arch-expansion` 擴張牙弓 | `hero-arch.svg` | `hero-arch-photo-*.jpg` | **已備妥**（2026-08-16） |
-| `kids-first-visit` 第一次看牙 | `hero-kids.svg` | `hero-kids-photo-*.jpg` | **已備妥**（2026-08-16） |
-| `missing-tooth` 缺牙重建 | `hero-implant.svg` | `hero-implant-photo-*.jpg` | **已備妥**（2026-08-16） |
-| `regular-checkup` 定期檢查 | `hero-checkup.svg` | `hero-checkup-photo-*.jpg` | **已備妥**（2026-08-16） |
+| 文章 | 站上現在那張 | 原本那張（還在 repo，沒有人引用） |
+| --- | --- | --- |
+| `bass-brushing` 貝氏刷牙法 | `hero-brushing-photo-{800,1600,2000}.jpg` | `hero-brushing.svg` |
+| `gum-bleeding` 牙齦流血 | `hero-gum-photo-*.jpg` | `hero-gum.svg` |
+| `kids-arch-expansion` 擴張牙弓 | `hero-arch-photo-*.jpg` | `hero-arch.svg` |
+| `kids-first-visit` 第一次看牙 | `hero-kids-photo-*.jpg` | `hero-kids.svg` |
+| `missing-tooth` 缺牙重建 | `hero-implant-photo-*.jpg` | `hero-implant.svg` |
+| `regular-checkup` 定期檢查 | `hero-checkup-photo-*.jpg` | `hero-checkup.svg` |
 
-> ✅ **2026-08-16：六篇全部備妥。** 下一步是本節最後那份上線清單 —— 但**要等使用者說上線
-> 才動正式站**，六張現在只存在於 `preview/`。
-> ⚠ 上線前還有一題沒問過：**六張的明暗要不要統一**（刷牙＝明亮浴室、牙齦＝偏暖、
-> 換牙＝夜晚吊燈、擴弓＝白天與夜晚混合、定期檢查＝明亮白天、缺牙＝夜晚暖燈與夜市）。
-> 要統一就是回頭重生成，不是後製調色。
+> ⚠ **六張的明暗沒有統一，那是使用者看過之後選的**（他說「就這樣　一起上線」）：
+> 刷牙＝明亮浴室、定期檢查＝明亮白天、牙齦＝偏暖、擴弓＝白天與夜晚混合、
+> 換牙＝夜晚吊燈、缺牙＝夜晚暖燈與夜市。**這不是漏做**，日後要統一是回頭重生成、
+> 不是後製調色。
+>
+> ⚠⚠ **舊的六張 `hero-*.svg`、六張 `hero-*-1600.png` 與 `tools/og-images.mjs`
+> 都還留著沒刪，而且那六張 SVG 現在還有一個真的用途** —— 進行中的提案頁
+> `preview/post-cta/` 是舊版文章頁的**快照**，裡面四個 `<img>` 還指著它們。
+> **在那一頁定案刪掉之前，不要刪那六張 SVG**，不然提案頁會破圖。
 
-### 收到新圖要做的事
+### 收到新圖要做的事（下一批文章沿用）
 
 1. **存三個尺寸**到 `assets/`，命名照站上的慣例「後綴＝寬度」：
    `<photo>-800.jpg`、`-1600.jpg`、`-2000.jpg`。
@@ -562,14 +569,28 @@
    > 首頁縮圖 375 上 335px、DPR2 要 670（所以要有 800）。
    > ⚠ 這一站沒有任何 npm 依賴，縮圖是用 PowerShell 的 `System.Drawing`
    > （`HighQualityBicubic`、JPEG 品質 82）做的，不是 sharp。
-2. **在 `tools/hero-photo-preview.mjs` 的 `READY` 加一筆**（slug、photo、oldHero、alt、來源檔名），
-   然後 `node tools/hero-photo-preview.mjs`。它會產生：
-   - `preview/hero-photos-cards/` —— 首頁複本，`READY` 裡每一篇的卡片縮圖都換掉
-   - `preview/hero-photos-<slug>/` —— 文章頁複本，一篇一頁，只換 `.post-hero`
+2. **`post-meta` 的 `hero` 寫 `<photo>-1600.jpg`**（只寫這一張），
+   另外兩個尺寸由 `tools/build.mjs` 的 `heroSrcset()` 從檔名推出來 ——
+   首頁卡片、延伸閱讀三張卡、`og:image`、sitemap 的 `<image:loc>` 全部自動跟上。
+   `.post-hero` 的 `<img>` 是手寫在每一篇裡的，`srcset` 三張、`sizes` 三段：
 
-   兩種頁面都有切換條可以和現況的幾何 SVG 對比（`?img=old|new`）。
-   ⚠ **那幾頁是快照，不要手改** —— 要改就改那支腳本再跑一次。
-3. **alt 要描述圖裡實際有什麼**，不是抄文章標題。
+   ```
+   sizes="(min-width: 1160px) 624px, (min-width: 721px) 660px,
+          calc(100vw - 2 * clamp(1.25rem, 3vw, 2.5rem))"
+   ```
+
+   ⚠⚠ **中間那一段不能省**：文章欄寬上限是 `--content` 44rem ＝ 704px，
+   721~1159 的圖**不會跟著視窗長**（900 上實測 650，寫成 `calc(100vw - …)` 會算成 846）。
+   ⚠ **`sizes` 一律不准寫 `100vw`**（[CLAUDE.md](CLAUDE.md) 第九節第 15 條）。
+3. ⚠⚠ **改到 `post-meta` 就會動到內容雜湊，那幾篇的「最後更新」會跳成當天。**
+   照 [CLAUDE.md](CLAUDE.md) 第五節的程序：build 之後手動把
+   `tools/build-manifest.json` 那幾筆的 `updated` 改回原本的日期（雜湊留新的），
+   再跑一次 build，最後用 `--check` 確認完全沒有變動。
+4. **alt 要描述圖裡實際有什麼**，不是抄文章標題。
+   `post-meta` 的 `heroAlt` 放**一句話**（首頁卡片與 `og:image:alt` 讀它），
+   文章頁 `.post-hero` 的 `alt` 放**完整描述**。
+5. 提案頁的產生器 `tools/hero-photo-preview.mjs` 已於 2026-08-16 隨定案刪除。
+   下一批要做提案頁的話，用 `git show ba16125:tools/hero-photo-preview.mjs` 拿回來改。
 
 ### 寫提示詞學到的事（2026-08-16，前四篇打下來的）
 
@@ -652,31 +673,35 @@
    給他「把某一段換成下面這版」等於要他自己在英文裡找位置。
    **即使只改一句話，也輸出一整段可以直接複製貼上的新提示詞。**
 
-### 六篇湊齊、真的上線那一天要做的事
+### 上線那天實際做了什麼（2026-08-16，七件）
 
-這一份寫在這裡，是因為**中間有好幾件不是「換一行 src」那麼單純**：
+留著這一份，是因為**中間有好幾件不是「換一行 src」那麼單純**，下次換圖會再遇到：
 
-1. `posts/<slug>/index.html` 的 `.post-hero` 換成新的 `<img>`（帶 `srcset` ＋ `sizes`）。
-   ⚠ `sizes` 寫 `(min-width: 1160px) 624px, calc(100vw - 2 * clamp(1.25rem, 3vw, 2.5rem))`
-   —— **不要寫 `100vw`**，那會讓高 DPR 的手機挑到太小的檔再放大（[CLAUDE.md](CLAUDE.md) 第九節第 15 條）。
-2. `index.html` 六張卡的 `.card-thumb` 同上，`sizes` 是
-   `(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw`。
-   ⚠ 那一段在 `<!-- POSTS:START -->` 裡面、**是 build 產生的**，
-   要改的是 `tools/build.mjs` 產生卡片的那一段，不是手改 `index.html`。
-3. **`post-meta` 的 `hero` 欄位**（現在是 `"hero": "hero-brushing.svg"`）要跟著換。
-   ⚠ 改到 `post-meta` 就會動到內容雜湊，**六篇的「最後更新」會一起跳成當天**、
-   排序也會亂 —— 照 [CLAUDE.md](CLAUDE.md) 第五節那個陷阱的程序，
-   build 之後手動把 `tools/build-manifest.json` 的日期改回去，再跑一次 build。
-   **這一件是這次改動最容易出事的地方。**
-4. **分享圖**。`og:image` 現在指向 `assets/hero-<name>-1600.png`，那是
-   `tools/og-images.mjs` 從 SVG 轉出來的。走點陣之後那支工具**失去用途或要改寫**
-   ——最省事的做法是讓 `og:image` 直接指向 `-1600.jpg`（爬蟲吃 JPEG，只是不吃 SVG），
-   然後把 `og-images.mjs` 連同六個 `-1600.png` 一起刪掉。**先問使用者。**
-5. `sitemap.xml` 的圖片擴充（`<image:loc>`）會跟著 build 自己更新，不必手動。
-6. 舊的六張 `assets/hero-*.svg` 要不要刪：**先留著**，切換條的「現況」那一半靠它們。
-   等 `preview/` 那幾頁刪掉之後再一起處理。
-7. 最後才刪 `preview/hero-photos-*` 與 `tools/hero-photo-preview.mjs`，
-   推導搬進 `history/`（[CLAUDE.md](CLAUDE.md) 第八節）。
+1. 六篇 `posts/<slug>/index.html` 的 `.post-hero` 換成 `<img srcset sizes>`。
+   ⚠⚠ **`sizes` 要量過再寫。** 原本這份文件寫的
+   `(min-width: 1160px) 624px, calc(100vw - 2 * clamp(…))` **在 721~1159 是錯的** ——
+   文章欄寬上限是 `--content` 44rem ＝ 704px，圖不會跟著視窗長（900 上實測 650，
+   那條式子算出 846，高估 30%）。定案是三段式，見上面「收到新圖要做的事」第 2 條。
+2. 首頁六張卡與文章底部「延伸閱讀」三張卡：改 `tools/build.mjs` 產生卡片那一段
+   （那是 `<!-- POSTS:START -->` 與 `<!-- RELATED:START -->` 裡的產物，**不要手改**）。
+   實測延伸閱讀那三張 ≥1160 是 346px、721~1159 約 29vw，所以 `sizes` 寫
+   `(min-width: 1160px) 350px, (min-width: 721px) 30vw, calc(…)`。
+3. `post-meta` 的 `hero` 換成 `<photo>-1600.jpg`、`heroAlt` 換成新的一句話。
+   ⚠⚠ **六篇的「最後更新」全部跳成當天** —— 照第五節的陷阱程序還原
+   （這一輪做了兩次：改完 `sizes` 又動到一次雜湊）。**這件是最容易出事的地方。**
+4. **分享圖**：`og:image` 直接指向 `-1600.jpg`（爬蟲不吃的是 SVG，JPEG 沒問題），
+   不再需要 `tools/og-images.mjs` 轉的 PNG。
+   ⚠ `og:image:width/height` **不能沿用寫死的 1600×900** —— 這批是 1600×**893**。
+   `build.mjs` 因此多了一支 `jpegSize()`，自己掃 JPEG 檔頭的 SOF 標記讀寬高
+   （這站沒有 npm 依賴，不能用 sharp）。
+5. `sitemap.xml` 的 `<image:loc>` 跟著 build 自己更新，沒有手動改。
+6. 舊的六張 `assets/hero-*.svg`、六張 `hero-*-1600.png` 與 `tools/og-images.mjs`
+   **先留著沒刪**（退回去的路）。要不要清掉還沒問過使用者。
+7. 刪掉 `preview/hero-photos-*`（七頁）與 `tools/hero-photo-preview.mjs`，
+   推導搬進 `/history/hero-photos.html`（[CLAUDE.md](CLAUDE.md) 第八節）。
+
+驗收：375／900／1280 三個寬度 —— 水平捲動 0、圖寬 ≤ 內文欄寬（375 上 335.3px，
+正好等於欄寬）、比例 1.79、DPR3 的手機挑到 1600w 那一張。
 
 ---
 
