@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>post-cta｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>post-cta</h1>
+<p class="meta">
+  原網址 <code>/preview/post-cta/</code>（已刪除 2026-08-16）<br>
+  整頁還原：<code>git show 5cb6c1e:preview/post-cta/index.html</code><br>
+  切換條 <code>?cta=&amp;bar=&amp;fs=&amp;hit=&amp;crumb=&amp;footline=&amp;hit2=</code>（七項各自開關）<br>
+  <strong>⚠ 這一頁不是定案上線，是收掉的。</strong>使用者 2026-08-16：
+  「這個工作可以先關掉了，目前沒有要繼續，之後要的話再另外呼叫紀錄就好。」
+  七項<strong>一項都沒有套進正式站</strong>，`posts/` 與 `assets/style.css` 一個字都沒動。
+</p>
+
+<h2>這一頁在做什麼</h2>
+<div class="note"><pre>文章頁（posts/&lt;slug&gt;/）的盤點，做法完全照首頁那一輪（/history/cta-mobile.html）：
+一頁複本、七項各掛一個 &lt;html data-*&gt;、右上角切換條分別開關，
+關掉＝現況、打開＝提案。選擇器一律 html[data-x="on"] .foo（0,2,1），沒有用 !important。
+
+    第一批（2026-08-13）  data-cta       文章的收尾區塊
+                          data-fs        字級抬一階
+                          data-hit       觸控目標（選單、頁尾導覽）
+                          data-bar       手機行動條
+    第二批（同日）        data-crumb     麵包屑那一列拆成兩行
+                          data-footline  頁尾補上 LINE
+                          data-hit2      頁尾地址與電話的命中區
+
+首頁那一輪十九項最後選了十二項上線；這一頁的七項使用者沒有回，
+2026-08-16 直接收掉。</pre></div>
+
+<h2>一、文章的收尾區塊（data-cta）</h2>
+<div class="note"><pre>為什麼要有：讀完兩千字之後，畫面上沒有任何一句話告訴人下一步該做什麼。
+免責聲明那一句「請由醫師評估」正好是個開口，但它後面接的是上下篇。
+
+⚠ 位置刻意放在 &lt;/main&gt; **外面**，和「延伸閱讀」同一個理由：
+  內容雜湊涵蓋 &lt;main&gt;，放進去的話六篇文章的「最後更新」會一起跳成今天、
+  排序跟著亂掉（CLAUDE.md 第五節那個陷阱）。
+  順序因此是：內文 → 上下篇 → 收尾區塊 → 延伸閱讀。
+  「先讓想找人的人找到人，再給還想讀的人更多文章」，這個順序是對的。
+
+⚠ 顏色一顆都沒有新增：整塊吃該篇自己的 --accent／--accent-deep
+  （寫在 &lt;body data-spec="…"&gt; 上，本來就存在）。所以牙周那篇是青綠、
+  兒牙那篇是焦糖，自動跟著走。
+
+⚠ **沒有重抄看診時間。** CLAUDE.md 的規矩是「資料不重抄」——
+  六篇各放一份時間表，遲早會有一份跟首頁不一樣而且沒有人發現。
+  這裡只放一個連結指回首頁那張門診表（../../#clinic）。
+
+⚠ 文案守 COPY.md 的紅線：不寫「問到飽」「來這裡問到懂」「不做也沒關係」。
+  「來一趟才有辦法一起決定」刻意回收 HERO 收尾句的「一起想辦法」。
+
+當時放在牙周那篇上的文案（示範用，其他五篇要各自換醫師與科別）：
+
+    牙周這一科，在芳仁是李侑津醫師看的
+    牙周的狀況要靠探測與 X 光才判斷得出來，這篇文章只能幫你知道該問什麼。
+    要不要處理、怎麼處理，來一趟才有辦法一起決定。
+    〔打電話 (05)5339-369〕〔LINE 詢問〕
+    看診時間與各科門診表 →
+
+⚠ 真要做的話，這段 HTML **應該由 tools/build.mjs 產生**（六篇共用一份模板，
+  醫師與科別從 post-meta 的 tag 對回首頁的 #doctors），不是六篇各手寫一份。
+  CSS 則併進 assets/style.css。</pre></div>
+
+<h2>二、字級抬一階（data-fs）</h2>
+<div class="note"><pre>門檻同首頁那一輪：10 抬到 12、11.x 抬到 12.8。
+文章頁改動前的手機實測：
+
+    品牌副標      10.14
+    延伸閱讀標籤  11.52
+    延伸閱讀日期  11.84
+    文章科別藥丸  12.0
+
+⚠ 內文 .post-body p 本來就夠大，沒有動。
+⚠ 注意這是 2026-08-13 量的。之後首頁做過電腦版 +12%、iPad +19%
+  （/history/type-scale.html、type-scale-ipad.html），**文章頁一個值都沒接** ——
+  所以這幾個數字現在仍然成立，但「文章頁的字級」已經是另一個更大的問題了。</pre></div>
+
+<h2>三、觸控目標（data-hit / data-hit2）</h2>
+<div class="note"><pre>文章頁的選單只有 23.1px 高 —— 比首頁的 34.3 還小，連 WCAG 2.5.8 的 24 都差一點。
+做法同首頁：用看不見的 ::after 撐命中區，不加內距、版面一個像素不動。
+⚠ ::before 是那圈玻璃框（2026-08-12 補上線的那一版），所以只能用 ::after。
+
+    html[data-hit="on"] .site-nav a::after { content:''; position:absolute; inset:-11px -4px; }
+
+頁尾（data-hit2）：地址與電話量到 27.4px，而兩行之間只有 5.6px（.35rem），
+::after 外擴 8.3px 就會疊到隔壁那一行 —— 所以這一批只能把元素自己長高
+（padding-block: 8.5px，順便把 margin 收掉，命中區本來就該連續）。
+⚠ 取 8.5 不是 8.3：27.4 是量出來的，字型載入前後會差零點幾。</pre></div>
+
+<h2>四、麵包屑那一列拆成兩行（data-crumb）</h2>
+<div class="note"><pre>⚠ **這一項就是第一批留著沒解的那一件。** 麵包屑維持 23.7px，::after 外擴與
+  inline-block 都試過、量出來還是 23.7 —— 因為那一列**四個東西擠在同一行**
+  （首頁 › 科別藥丸　日期　瀏覽數），命中區往上下撐會直接疊到鄰居。
+  當時的結論是「真要解得把那一列改成兩行，那是版面決定」。這一項就是那個版面決定。
+
+做法：日期與瀏覽數包在一個 .crumb-meta 裡，**平常是 display: contents**
+（這一層在版面上不存在，兩者仍是 .crumbs 的直接 flex 項目，關掉時和現況
+一個像素都不差），打開才變成 flex-basis: 100% 的項目，一起落到第二行。
+第一行剩下「首頁 › 牙周照護」，這時 &lt;a&gt; 才有上下的空間可以長到 44。
+
+⚠ **不要只給 &lt;time&gt; 寫 flex-basis: 100%** —— 第一版那樣做，瀏覽數被擠到
+  第三行，量出來 107.3px 而不是預期的 76。flex-basis: 100% 的項目會獨佔一整列。
+⚠ 用 flex-basis 而不是插一個看不見的換行元素：這一列本來就是 flex-wrap: wrap，
+  有一個項目要求 100%，它前面就自動斷行。
+⚠ 順便把「首頁」加上底線。理由同 2026-08-09 頁尾地址那一輪：手機沒有 hover，
+  只靠 :hover 才表態的連結，對多數訪客等於從來不宣告自己是連結。
+⚠ 代價：標題往下移一行的高度（約 33px）。</pre></div>
+
+<h2>五、手機行動條（data-bar）與頁尾的 LINE（data-footline）</h2>
+<div class="note"><pre>兩項都是「和首頁那一頁同一份」，定案的話兩邊要共用同一段 CSS。
+
+行動條：固定在畫面底、兩格（打電話／LINE）、墨玻璃 rgba(25,22,20,.88) ＋ blur(14px)、
+每格 min-height 56px、body 補 padding-bottom 讓內容不被蓋住、吃 safe-area-inset-bottom。
+⚠ 首頁那一輪十九項裡，**手機行動條是沒選上的七項之一**（/history/cta-mobile.html）。
+  文章頁這一份如果要重啟，要先確認那個決定有沒有改變。
+
+頁尾的 LINE：全站唯一提到 LINE 的地方是 JSON-LD 的 sameAs，畫面上一個連結都沒有。
+⚠ 顏色寫死 #3f654a 不用 var(--accent) —— 文章頁的 --accent 是該篇的科別色，
+  LINE 這種全站性的東西不該跟著文章變色。
+⚠ 首頁那一輪「頁尾補上 LINE」同樣**沒有選上**。</pre></div>
+
+<h2>收掉的時候長什麼樣</h2>
+<div class="note"><pre>2026-08-16 刪掉這一頁時，它是 preview/ 裡最後一頁「複製整份文章頁」的提案頁，
+而且是**唯一還指著舊 HERO SVG 的地方** —— 同一天六篇文章的 HERO 換成點陣插畫
+（/history/hero-photos.html），舊的 assets/hero-*.svg 因此只剩這一頁在引用。
+這一頁刪掉之後，那六張 SVG、六張 hero-*-1600.png 與 tools/og-images.mjs
+就完全沒有人用了，但**還留在 repo 裡** —— 要不要清掉還沒問過使用者。
+
+⚠ 這一頁的快照停在 2026-08-13 的版面。之後正式站改過很多
+（08-15 文章頁的頁首整組對齊首頁、08-16 HERO 換點陣），
+**要重啟的話不要直接 git show 拿回來用**，那份複本已經和站上長得不一樣了。
+正確做法是：拿這一頁的推導（就是這份文字），照當時的做法在新的複本上重做一次。</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>
