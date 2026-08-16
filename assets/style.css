@@ -334,6 +334,25 @@ a:hover { color: var(--accent); }
   .site-nav { --nav-gap: 3.2vw; font-size: clamp(11px, 3.2vw, 13px); }
 }
 
+/* ---- 直式平板（≥721px 且比例 ≤ 9/10）：品牌也用手機那種兩行 --------------
+   2026-08-16。使用者在 iPad 上看到「診所名｜地名」擠不下時只有地名掉到第二行、
+   那條直立分隔線還留著：「這樣斷行很沒水準，那你還不如做成手機的樣式就好。」
+   所以直式平板也改成兩行式：分隔線收掉、兩行都 justify 對齊左右緣。
+   ⚠ **字級不動**（這一頁的頁首本來就是首頁「捲動後」那一階），只換排法。
+   ⚠ 這一段是跟著 index.html 一起改的 —— 2026-08-15 定案的
+     「首頁切到文章頁，頁首不要變」還在，只改一邊就等於把它打破。
+     成因、為什麼是「一律兩行」而不是「擠不下才兩行」，都寫在 index.html
+     同名的那一段（那一份是準）。
+   ⚠ iPad 橫放不吃這一段（比例 > 9/10），仍然是一行。 */
+@media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
+  .brand-text { display: block; }
+  .brand-text b, .brand-text small { display: block; }
+  .brand-text small { padding-left: 0; }
+  .brand-text small::before { display: none; }
+  .brand-text b,
+  .brand-text small { text-align: justify; text-align-last: justify; }
+}
+
 /* ==========================================================================
    選單那三個玻璃框 —— 和首頁同一組幾何（2026-08-12 補上）
    --------------------------------------------------------------------------
