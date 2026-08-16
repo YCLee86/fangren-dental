@@ -227,20 +227,25 @@ a:hover { color: var(--accent); }
   background: var(--head); color: #fff;
   position: sticky; top: 0; z-index: 20;
 }
-/* grid 的 max-content 軌道，不要用 flex 的自動尺寸 ——
-   `.brand` 是 display:flex 的 <a>，當它同時是 flex 項目、flex-basis:auto、
+/* `.brand` 是 display:flex 的 <a>，當它同時是 flex 項目、flex-basis:auto、
    width:auto 時 Blink 給內容寬度、WebKit 給可用寬度，差到會把選單擠出畫面。
    詳見 PALETTE.md 第六之五節。
    ⚠ 高度是**固定 60px（＝首頁的 `--head-h-sm`），不是 min-height**。
-     寫 min-height 的話這一頁會比首頁高 2px，捲動位置也會差 2px。 */
+     寫 min-height 的話這一頁會比首頁高 2px，捲動位置也會差 2px。
+   ⚠⚠ 2026-08-16：欄序與首頁一起換成「品牌 1fr（可縮）／選單 max-content（不讓步）」，
+     並補上 `width: max-content`、副標 nowrap、`flex-wrap`。
+     成因與三條的理由寫在 index.html 的 `.site-head .shell` 上面（那一份是準）。
+     這一頁沒有回報過斷行，但版型是逐字抄首頁的，同一個坑一定也在。 */
 .site-header .wrap {
-  display: grid; grid-template-columns: max-content minmax(0, 1fr);
-  align-items: center; gap: 2rem;
+  display: grid; grid-template-columns: minmax(0, 1fr) max-content;
+  /* gap 只在「擠到不夠」時才看得出來，見 index.html 的同一條。2rem → 1rem。 */
+  align-items: center; gap: 1rem;
   height: 60px;
 }
 .brand {
   display: flex; align-items: center; gap: .75rem;
   text-decoration: none; color: #fff; min-width: 0;
+  width: max-content; max-width: 100%;
 }
 /* SVG 一定要有 width／height 屬性，否則 WebKit 用預設的 300×150 當內在尺寸，
    這個 flex 項目就縮不下去（PALETTE.md 第六之五節）。標記那邊已經補上。 */
@@ -252,7 +257,7 @@ a:hover { color: var(--accent); }
 /* 電腦版是「診所名｜地名」橫排，中間那條線是首頁那一條，逐字搬過來
    （2026-08-15 使用者指定跟首頁一致；改動前這一頁在電腦上是兩行疊著）。
    手機版在底下的 @media 裡改回兩行。 */
-.brand-text { display: flex; align-items: baseline; gap: .7rem; min-width: 0; }
+.brand-text { display: flex; align-items: baseline; gap: .7rem; min-width: 0; flex-wrap: wrap; }
 .brand-text b {
   white-space: nowrap;
   font-weight: 700; font-size: .96rem; line-height: 1.3;
@@ -262,6 +267,8 @@ a:hover { color: var(--accent); }
   position: relative; padding-left: .7rem;
   font-size: .74rem; line-height: 1.3;
   letter-spacing: .04em; color: rgba(255, 255, 255, .65);
+  /* 地名是一個詞，擠的時候整串一起讓步，不准斷成「永樂／街」（2026-08-16）。 */
+  white-space: nowrap;
 }
 .brand-text small::before {
   content: ''; position: absolute; left: 0; top: .1em; bottom: .1em;

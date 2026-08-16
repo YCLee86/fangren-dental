@@ -771,17 +771,39 @@ a { color: var(--teal); }
      從來沒有被設過 background，玻璃一直都在 ::before 上。） */
   transition: padding .2s ease;
 }
-/* ---- 用 grid 的 max-content 軌道，不要靠 flex 項目的自動尺寸 ---------------
+/* ---- 品牌用 width: max-content，可縮的那一欄留給品牌 -----------------------
    `.brand` 是 display:flex 的 <a>。當它同時是 flex 項目、flex-basis: auto、
    width: auto 時，**Blink 給它內容寬度、WebKit 給可用寬度** —— 真機上量到
    .brand w = 395.5（視窗只有 375），整列因此比視窗寬，品牌被擠成兩行、
    選單被推出畫面，頁面還可以左右拉。
-   grid 的 max-content 軌道兩邊都實作得很紮實，沒有解讀空間。
-   minmax(0, 1fr)：右欄下限 0，不會反過來把格線撐寬。
-   詳見 PALETTE.md 第六之五節。 */
+   詳見 PALETTE.md 第六之五節。
+
+   ⚠⚠ **2026-08-16 換過一次：`max-content minmax(0,1fr)` → `minmax(0,1fr) max-content`。**
+   使用者在 iPad 上回報「左上角的雲林斗六・永樂街斷行了」（斷在「永樂／街」中間）。
+   成因是**放不下的時候誰讓步**：原本品牌那一欄是 max-content、選單那一欄是
+   minmax(0,1fr)，軌道演算法會先把 max-content 那一欄長到滿，剩下的才給 fr ——
+   所以擠的時候是**選單**被壓（Chromium 實測會直接疊到品牌上，最多重疊 209px），
+   而品牌自己那個 `<small>` 是唯一沒有 nowrap 的東西，就在那裡斷成兩行。
+   ⚠ 這一格本來就是全站最緊的（[CLAUDE.md](CLAUDE.md) 第九節：iPad +19% 之後
+     744 上「品牌 → 選單」只剩 94.6px），真機再套上瀏覽器的「最小字級／文字縮放」
+     就會不夠 —— 實測最小字級設 20px 時那一格只剩 9.3px。
+   現在反過來：**選單 max-content（絕不讓步，它是三個固定寬的框），品牌 1fr（可縮）**，
+   品牌再靠底下三條讓步得好看一點：
+     ・`.brand { width: max-content; max-width: 100% }`
+       —— 有空間時和原本完全一樣（內容寬），不夠時才跟著軌道縮。
+       ⚠ **`width: max-content` 不能省** —— 只寫 1fr 的話 `<a>` 會撐滿整欄，
+         頁首右邊那一大片空白會變成「點了會回首頁」的熱區。
+     ・`.brand-text small { white-space: nowrap }` —— 地名是一個詞，不准從中間斷。
+     ・`.brand-text { flex-wrap: wrap }` —— 真的擠不下時，副標**整串**掉到第二行
+       （＝手機那一段本來就在用的兩行式），不是斷字。 */
 .site-head .shell {
-  display: grid; grid-template-columns: max-content minmax(0, 1fr);
-  align-items: center; gap: 2rem;
+  display: grid; grid-template-columns: minmax(0, 1fr) max-content;
+  /* gap 是「品牌與選單之間至少留多少」。品牌靠左、選單靠右（justify-self: end），
+     有空間的時候這個值**一個像素都看不出來**（實測 744 上兩者實際相距 94.9px）——
+     它只有在擠到不夠的時候才生效。2026-08-16 從 2rem 收到 1rem，
+     等於在最緊的那一格（iPad 直放）多還 19px 給品牌，讓它晚一點才需要折成兩行。
+     十四個寬度 × 兩頁 × 捲動前後逐像素比對過：沒有任何一格因為這一改而不同。 */
+  align-items: center; gap: 1rem;
   height: var(--head-h);
   transition: height .2s ease;
 }
@@ -968,7 +990,12 @@ html.band-solid .site-head::before {
 :root { --head-blur-flat: 4px; }
 @media (min-aspect-ratio: 1/1) { :root { --head-blur-flat: 5px; } }
 
-.brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; min-width: 0; }
+.brand {
+  display: flex; align-items: center; gap: .75rem; text-decoration: none; min-width: 0;
+  /* 見上面那一段：有空間時＝內容寬（和 2026-08-16 之前完全一樣），
+     不夠時才跟著 1fr 的軌道縮，縮出來的讓步由 .brand-text 的 flex-wrap 接。 */
+  width: max-content; max-width: 100%;
+}
 .brand-text b { white-space: nowrap; }
 .brand-mark { flex: 0 0 38px; display: block; color: rgba(255, 255, 255, .95); min-width: 0; }
 html.scrolled .brand-mark { flex-basis: 32px; }
@@ -976,7 +1003,7 @@ html.scrolled .brand-mark { flex-basis: 32px; }
 .brand-mark svg { display: block; width: 100%; max-width: 100%; height: auto; }
 /* 品牌名與地名同一行。中間那條線是 --night-faint 混窄帶色，
    和窄帶裡三格之間的分隔線同一個做法，不是另外挑的灰。 */
-.brand-text { display: flex; align-items: baseline; gap: .7rem; }
+.brand-text { display: flex; align-items: baseline; gap: .7rem; flex-wrap: wrap; }
 .brand-text b {
   font-weight: 700; font-size: 1.06rem; line-height: 1.3; letter-spacing: .01em;
   color: rgba(255, 255, 255, .95);
@@ -985,6 +1012,9 @@ html.scrolled .brand-mark { flex-basis: 32px; }
   position: relative; padding-left: .7rem;
   font-size: .78rem; line-height: 1.3; letter-spacing: .04em;
   color: rgba(255, 255, 255, .65);
+  /* 「雲林斗六・永樂街」是一個詞，擠的時候要整串一起讓步，不准斷成「永樂／街」。
+     和上面 `b` 那條 nowrap 是同一件事，2026-08-16 補的。 */
+  white-space: nowrap;
 }
 .brand-text small::before {
   content: ''; position: absolute; left: 0; top: .1em; bottom: .1em;
