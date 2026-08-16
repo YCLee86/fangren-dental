@@ -6,3 +6,9 @@ hero-preview.html
 Thumbs.db
 *.log
 .github/
+
+# Google 服務帳號金鑰 —— 這個 repo 是 public，金鑰進版控等於外洩。
+# 說明見 ANALYTICS.md 第三節。
+gsc-key*.json
+*-service-account*.json
+secrets/
