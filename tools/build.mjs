@@ -50,9 +50,14 @@ const HERO_WIDTHS = [800, 1600, 2000];
    版面看起來沒問題但照片是糊的（CLAUDE.md 第九節第 15 條踩過）。
    ⚠ 這幾個值是在瀏覽器裡**量出來的**，不是估的：文章頁的欄寬上限是 --content 44rem
      ＝ 704px，所以 721~1159 那一段圖不會跟著視窗長（實測 900 上是 650 不是 846）。
-     延伸閱讀那三張在 ≥1160 是 346px、721~1159 約 29vw。 */
-const SIZES_THUMB = "(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw";
-const SIZES_REL = "(min-width: 1160px) 350px, (min-width: 721px) 30vw, calc(100vw - 2 * clamp(1.25rem, 3vw, 2.5rem))";
+     延伸閱讀那三張在 ≥1041 是 395.73px、721~1040 約 29vw。
+   ⚠ **2026-08-16 版心 1160 → 1280、內距 → 24px 之後這兩個值重量過**（斷點也跟著
+     從 1160 換成 **1041**，那是三欄的下界，和兩份樣式表的 @media 同一個數字）：
+     首頁縮圖 1440 上實測 392.53（原本寫 373，那個數字在 +12% 那一輪就已經對不上了），
+     延伸閱讀 395.73（原本 350）。兩者在 ≥1041 都是「1041 偏小、1280 以上封頂」，
+     所以寫封頂值 —— 高估只會多載一點，低估會糊。 */
+const SIZES_THUMB = "(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw";
+const SIZES_REL = "(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 2 * clamp(1.25rem, 3vw, 2.5rem))";
 
 /* hero 檔名 → srcset。hero 不是 -1600.jpg 這種點陣檔（例如還是 .svg）就回空字串，
    呼叫端會退回只有 src 的舊寫法。 */

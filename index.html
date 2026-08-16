@@ -677,7 +677,8 @@
    ========================================================================== */
 :root {
   --pad: clamp(1.25rem, 3vw, 2.5rem);
-  --shell: 1160px;                       /* 版心。三欄卡片各約 365px */
+  --shell: 1160px;                       /* 版心。⚠ ≥1041px 另有一組（1280／24px），
+                                            寫在本檔最後那一段 @media，見那裡的註解 */
 
   /* ↓↓↓ 以下整段與 preview/home-mobile-n3/ 完全相同，一個值都沒有改 ↓↓↓ */
 
@@ -4487,6 +4488,65 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 }
 
 /* ==========================================================================
+   三欄那一段：版心 1160 → 1280、左右內距 → 24px（2026-08-16 定案上線）
+   --------------------------------------------------------------------------
+   使用者拿 blog.ichentsai.tw 的截圖：「電腦版顯示的卡片版面明顯比蔡依橙 2.0 小，
+   比對調整成一樣的版面大小。」
+
+   ⚠ **先量再做。** 兩站在同一個視窗裡逐項比對之後，差的其實**只有一件事**：
+
+                            芳仁（改動前）   蔡依橙（參考站）
+     版心 max-width          1160            1280
+     左右內距                43.2（3vw）      24
+     欄距                    25.2（1.4rem）   24
+     ── 卡片寬（1440 上）     341.08          394.66      ← 差 53.6（15.7%）
+     縮圖比例                16:9            16:9
+     卡片圓角                13.5            14
+     卡片框線                1px             1px
+     標題字級／行高          18.36／28.46    19／28.5
+     摘要字級／行高          15.30／27.54    15／27
+     日期字級                14.04           14
+
+   **字級那四列 2026-08-15「電腦版整體放大 12%」那一輪已經對齊了**（就是拿同一個
+   參考站比出來的），圓角、框線、縮圖比例本來就一樣。**剩下沒對上的只有卡片寬度**，
+   而它不是一條可以直接寫的值，是版心與左右內距算出來的：
+
+       卡片寬 ＝（版心 − 左右內距 × 2 − 欄距 × 2）÷ 3
+
+   ⚠ **所以改的是版心與內距，不是卡片寬度。** 直接寫死 .card 的寬會讓卡片脫離版心，
+     和上面的「主題與科別」、下面的醫師卡與診所資訊對不齊。
+
+   定案 1280 ／ 24px，實測（欄距維持 1.4rem ＝ 25.2px，沒有跟著改成 24）：
+
+       視窗          卡片寬     參考站    差
+       1280（版面 1265）  388.87    389.66   −0.79
+       1440（版面 1425）  393.88    394.66   −0.78
+
+     欄距那 1.2px 的差刻意不追 —— 1.4rem 是全站的間距族，為了 0.8px 把它換成
+     寫死的 px，等於在這裡開一個沒有人會記得的例外。
+
+   ⚠ **版心是整站的骨架，不是只有卡片在用。** 這一改同時動到頁首、頁尾、HERO 窄帶、
+     主題與科別、醫師介紹（三欄）與診所資訊（兩欄）—— 這是刻意的，只放寬卡片
+     會讓它比同一頁的其他區塊寬出一截。
+
+   ⚠⚠ **文章頁（assets/style.css）的 --wide／--pad 要逐字照抄，兩邊同一個斷點。**
+     2026-08-15 定案「首頁切到文章頁，頁首不要變」靠的就是兩份樣式表的版心相同，
+     只改這一份的話那條定案立刻失效（1440 上頁首會差 60px）。
+
+   ⚠ **斷點取 1041px** —— 那正是卡片還是三欄的下界（上面 `@media (max-width: 1040px)`
+     一到 1040 就收成兩欄）。手機與 iPad 直放一個值都不會動。
+
+   ⚠ **文章卡的 sizes 要跟著重算**（tools/build.mjs 的 SIZES_THUMB／SIZES_REL）。
+     那兩個字串是量出來的，不是估的：版心一寬，縮圖也跟著寬。
+   ========================================================================== */
+@media (min-width: 1041px) {
+  :root {
+    --shell: 1280px;
+    --pad: 24px;
+  }
+}
+
+/* ==========================================================================
    iPad／直式平板：整體字級放大 19%（2026-08-15 定案上線）
    --------------------------------------------------------------------------
    使用者：「iPad 版的字級也偏小。」同一把五段尺（現況／+6／+12／+19／+25%）
@@ -5118,7 +5178,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
       <a class="card" href="posts/perio-laser/" data-spec="perio">
-        <img class="card-thumb" src="assets/hero-perio-photo-1600.jpg" srcset="assets/hero-perio-photo-800.jpg 800w, assets/hero-perio-photo-1600.jpg 1600w, assets/hero-perio-photo-2000.jpg 2000w" sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw" alt="診間裡醫師握著細長的水雷射手機，射出青綠色光束打掉巨大臼齒表面結痂的牙結石，助理舉著防護盾護著後方的病患，細菌四散逃竄" width="2000" height="1116" loading="lazy">
+        <img class="card-thumb" src="assets/hero-perio-photo-1600.jpg" srcset="assets/hero-perio-photo-800.jpg 800w, assets/hero-perio-photo-1600.jpg 1600w, assets/hero-perio-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="診間裡醫師握著細長的水雷射手機，射出青綠色光束打掉巨大臼齒表面結痂的牙結石，助理舉著防護盾護著後方的病患，細菌四散逃竄" width="2000" height="1116" loading="lazy">
         <div class="card-body">
           <span class="card-tag">牙周照護</span>
           <h3>牙周病治療：清創、水雷射與再生手術</h3>
@@ -5131,7 +5191,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/kids-arch-expansion/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-arch-photo-1600.jpg" srcset="assets/hero-arch-photo-800.jpg 800w, assets/hero-arch-photo-1600.jpg 1600w, assets/hero-arch-photo-2000.jpg 2000w" sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw" alt="三格畫面：男孩在鏡前看擠在一起的上排門牙、夜裡張著嘴睡、隔天早上在玄關垂著頭沒什麼精神" width="2000" height="1116" loading="lazy">
+        <img class="card-thumb" src="assets/hero-arch-photo-1600.jpg" srcset="assets/hero-arch-photo-800.jpg 800w, assets/hero-arch-photo-1600.jpg 1600w, assets/hero-arch-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="三格畫面：男孩在鏡前看擠在一起的上排門牙、夜裡張著嘴睡、隔天早上在玄關垂著頭沒什麼精神" width="2000" height="1116" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
@@ -5144,7 +5204,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/regular-checkup/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-checkup-photo-1600.jpg" srcset="assets/hero-checkup-photo-800.jpg 800w, assets/hero-checkup-photo-1600.jpg 1600w, assets/hero-checkup-photo-2000.jpg 2000w" sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw" alt="明亮的診所櫃檯前，老太太的集章卡被蓋上新的一格，小男孩踮著腳仰頭看，候診區坐著各個年紀的人" width="2000" height="1116" loading="lazy">
+        <img class="card-thumb" src="assets/hero-checkup-photo-1600.jpg" srcset="assets/hero-checkup-photo-800.jpg 800w, assets/hero-checkup-photo-1600.jpg 1600w, assets/hero-checkup-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="明亮的診所櫃檯前，老太太的集章卡被蓋上新的一格，小男孩踮著腳仰頭看，候診區坐著各個年紀的人" width="2000" height="1116" loading="lazy">
         <div class="card-body">
           <span class="card-tag">定期檢查</span>
           <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
@@ -5157,7 +5217,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/missing-tooth/" data-spec="prosth">
-        <img class="card-thumb" src="assets/hero-implant-photo-1600.jpg" srcset="assets/hero-implant-photo-800.jpg 800w, assets/hero-implant-photo-1600.jpg 1600w, assets/hero-implant-photo-2000.jpg 2000w" sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw" alt="三格畫面：火鍋、夜市與家族聚餐上被熱情勸食卻舉手推辭的三個人，思考泡泡裡分別是咬不動、後排少一顆牙、只能喝粥" width="2000" height="1116" loading="lazy">
+        <img class="card-thumb" src="assets/hero-implant-photo-1600.jpg" srcset="assets/hero-implant-photo-800.jpg 800w, assets/hero-implant-photo-1600.jpg 1600w, assets/hero-implant-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="三格畫面：火鍋、夜市與家族聚餐上被熱情勸食卻舉手推辭的三個人，思考泡泡裡分別是咬不動、後排少一顆牙、只能喝粥" width="2000" height="1116" loading="lazy">
         <div class="card-body">
           <span class="card-tag">缺牙重建</span>
           <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
@@ -5170,7 +5230,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/kids-first-visit/" data-spec="kids">
-        <img class="card-thumb" src="assets/hero-kids-photo-1600.jpg" srcset="assets/hero-kids-photo-800.jpg 800w, assets/hero-kids-photo-1600.jpg 1600w, assets/hero-kids-photo-2000.jpg 2000w" sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw" alt="一家人圍在餐桌旁，中間的孩子高舉著剛掉下來的乳牙張嘴大笑，爸媽與兩個手足湊過來一起看" width="2000" height="1116" loading="lazy">
+        <img class="card-thumb" src="assets/hero-kids-photo-1600.jpg" srcset="assets/hero-kids-photo-800.jpg 800w, assets/hero-kids-photo-1600.jpg 1600w, assets/hero-kids-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="一家人圍在餐桌旁，中間的孩子高舉著剛掉下來的乳牙張嘴大笑，爸媽與兩個手足湊過來一起看" width="2000" height="1116" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
           <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
@@ -5183,7 +5243,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/gum-bleeding/" data-spec="perio">
-        <img class="card-thumb" src="assets/hero-gum-photo-1600.jpg" srcset="assets/hero-gum-photo-800.jpg 800w, assets/hero-gum-photo-1600.jpg 1600w, assets/hero-gum-photo-2000.jpg 2000w" sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw" alt="四格畫面：悶熱的一天裡搧著扇子、買一杯冰飲、吹電扇冰敷臉頰，最後在鏡子前掀開嘴唇看牙齦" width="2000" height="1116" loading="lazy">
+        <img class="card-thumb" src="assets/hero-gum-photo-1600.jpg" srcset="assets/hero-gum-photo-800.jpg 800w, assets/hero-gum-photo-1600.jpg 1600w, assets/hero-gum-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="四格畫面：悶熱的一天裡搧著扇子、買一杯冰飲、吹電扇冰敷臉頰，最後在鏡子前掀開嘴唇看牙齦" width="2000" height="1116" loading="lazy">
         <div class="card-body">
           <span class="card-tag">牙周照護</span>
           <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
@@ -5196,7 +5256,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
       </a>
       <a class="card" href="posts/bass-brushing/" data-spec="general">
-        <img class="card-thumb" src="assets/hero-brushing-photo-1600.jpg" srcset="assets/hero-brushing-photo-800.jpg 800w, assets/hero-brushing-photo-1600.jpg 1600w, assets/hero-brushing-photo-2000.jpg 2000w" sizes="(min-width: 1160px) 373px, (min-width: 721px) 46vw, 92vw" alt="洗手台前一整排人各自對著鏡子刷牙，上方三個放大圈畫出刷毛斜靠在牙齦溝上與小幅度來回的方向" width="2000" height="1116" loading="lazy">
+        <img class="card-thumb" src="assets/hero-brushing-photo-1600.jpg" srcset="assets/hero-brushing-photo-800.jpg 800w, assets/hero-brushing-photo-1600.jpg 1600w, assets/hero-brushing-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="洗手台前一整排人各自對著鏡子刷牙，上方三個放大圈畫出刷毛斜靠在牙齦溝上與小幅度來回的方向" width="2000" height="1116" loading="lazy">
         <div class="card-body">
           <span class="card-tag">日常保健</span>
           <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>

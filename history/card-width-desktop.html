@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>card-width-desktop｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>card-width-desktop — 電腦版的版心與卡片寬度</h1>
+<p class="meta">
+  2026-08-16・提案頁當天開、當天定案上線<br>
+  原網址 <code>/preview/card-width-desktop/</code>（已刪除 2026-08-16）<br>
+  整頁還原：<code>git show cb77942:preview/card-width-desktop/index.html</code><br>
+  切換條 <code>?w=1160|1240|1280|1360</code>、<code>?p=0|32|24</code>
+</p>
+
+<h2>定案</h2>
+<div class="note"><pre>@media (min-width: 1041px) { :root { --shell: 1280px; --pad: 24px; } }
+
+・index.html 與 assets/style.css **兩份都要**，斷點與值逐字相同
+・欄距維持 1.4rem（25.2px），沒有跟著參考站改成 24px
+・卡片寬度本身沒有被寫死 —— 它是版心與內距算出來的</pre></div>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者拿兩張同一個視窗的截圖（fangren.net 與 blog.ichentsai.tw）：
+「目前診所網站電腦版顯示的卡片版面明顯比蔡依橙 2.0 要小，
+  比對調整成蔡依橙 2.0 的版面大小。」</pre></div>
+
+<h2>先量再做 —— 兩站逐項比對，差的只有一件事</h2>
+<div class="note"><pre>                       芳仁（改動前）    蔡依橙（參考站）
+  版心 max-width        1160             1280
+  左右內距              43.2（3vw）       24
+  欄距                  25.2（1.4rem）    24
+  ── 卡片寬（1440 上）   341.08           394.66     ← 差 53.6（15.7%）
+  縮圖比例              16:9             16:9
+  卡片圓角              13.5             14
+  卡片框線              1px              1px
+  標題字級／行高        18.36／28.46     19／28.5
+  摘要字級／行高        15.30／27.54     15／27
+  日期字級              14.04            14
+
+字級那四列 2026-08-15「電腦版整體放大 12%」那一輪已經對齊了（就是拿同一個
+參考站比出來的），圓角、框線、縮圖比例本來就一樣。
+**剩下沒對上的只有卡片寬度。**
+
+而卡片寬不是一條可以直接寫的值：
+
+    卡片寬 ＝（版心 − 左右內距 × 2 − 欄距 × 2）÷ 3
+
+所以切換條做的是**版心**與**左右內距**兩條尺，不是「卡片大小」那條尺 ——
+直接寫死 .card 的寬會讓卡片脫離版心，和上面的「主題與科別」、
+下面的醫師卡與診所資訊對不齊。</pre></div>
+
+<h2>兩條尺在 1440×900 上算出來的卡片寬（括號是與參考站 394.66 的差）</h2>
+<div class="note"><pre>          內距 43.2（現況）   內距 32          內距 24（參考站）
+  1160     341.06  −53.60    348.53 −46.13    353.86 −40.80
+  1240     367.73  −26.93    375.20 −19.46    380.53 −14.13
+  1280     381.06  −13.60    388.53  −6.13    393.86  −0.80   ← 定案
+  1360     407.73  +13.07    415.20 +20.54    420.53 +25.87
+
+十二格全部沒有水平捲動（1440 與 1280 兩個視窗都量過）。</pre></div>
+
+<h2>上線後的實測（本機，兩站同一個視窗逐項量）</h2>
+<div class="note"><pre>  視窗            芳仁（改動後）   蔡依橙     差
+  1280（版面 1265）  388.88        389.66    −0.78
+  1440（版面 1425）  393.88        394.66    −0.78
+
+那 0.78px 就是欄距的差（25.2 vs 24）÷ 1.5，刻意不追 ——
+1.4rem 是全站的間距族，為了 0.8px 把它換成寫死的 px，
+等於在這裡開一個沒有人會記得的例外。
+
+版心與內距在 1280 這個視窗上和參考站完全相同：
+卡片群的左緣都是 24，右緣都是「版面寬 − 24」。</pre></div>
+
+<h2>要一起知道的五件事</h2>
+<div class="note"><pre>① **版心是整站的骨架，不是只有卡片在用。** 這一改同時動到頁首、頁尾、
+   HERO 窄帶、主題與科別、醫師介紹（三欄）與診所資訊（兩欄）。
+   這是刻意的 —— 只把卡片放寬，它就會比同一頁的其他區塊寬出一截。
+
+② **文章頁要跟著改，而且是同一個斷點、同一組值。**
+   2026-08-15 定案「首頁切到文章頁，頁首不要變」靠的就是兩份樣式表的
+   版心與內距逐字相同（頁首、頁尾都吃 .wrap）。只改首頁的話，
+   1440 上標誌的左緣會差 60px，那條定案立刻失效。
+   驗收：1280 上兩頁的標誌左緣都是 24、選單右緣都是 1241。
+
+③ **內文欄跟著寬了 32px。** --content 44rem（704px）沒有動，但它的左右
+   內距吃同一個 --pad，所以 ≥1041 的字欄從 624 回到 656px
+   （2026-08-15 那一輪是 640 → 624，那時的內距是 clamp 的上限 40px）。
+   手機與 iPad 直放一個像素都沒動。`.post-hero` 吃的也是同一個 --pad，
+   所以「圖寬 ＝ 內文欄寬」仍然成立。
+
+④ **三個 sizes 都重量過**（版心一寬，縮圖也跟著寬）：
+     首頁文章卡   (min-width: 1160px) 373px → (min-width: 1041px) 393px
+     延伸閱讀     (min-width: 1160px) 350px → (min-width: 1041px) 396px
+     文章 HERO    (min-width: 1160px) 624px → (min-width: 1041px) 656px
+   斷點跟著換成 **1041** —— 那是三欄的下界，和兩份樣式表的 @media 同一個數字。
+   ⚠ 原本那個 373 在 2026-08-15「+12%」那一輪就已經對不上了（實測 341）。
+   ⚠ 三處在 DPR 1／2／3 都不會改變瀏覽器挑哪一張檔（800／1600／2000），
+     所以這一項是把量測值寫對，不是修 bug。
+   ⚠ 文章 HERO 那一行在 &lt;main&gt; 裡面，改它會動到內容雜湊 ——
+     七篇的「最後更新」因此照 CLAUDE.md 第五節的程序還原過（改 build-manifest
+     的日期再 build 一次）。
+
+⑤ **斷點取 1041px** ——那正是卡片還是三欄的下界（`@media (max-width: 1040px)`
+   一到 1040 就收成兩欄）。手機與 iPad 直放（834 寬）整段吃不到。
+   ⚠ **iPad 橫放（1112）吃得到**：那裡版心本來就被視窗限制住，只有內距從
+     33.36 收到 24，卡片 326.63 → 332.88（+1.9%），無水平捲動。</pre></div>
+
+<h2>還沒做的（不是這一輪漏掉的）</h2>
+<div class="note"><pre>文章頁的字級還停在根字級 16px，首頁電腦版是 18px（2026-08-15 的 +12%）。
+所以「首頁切到文章頁，頁首不要變」目前只有**位置**對上了，
+標誌大小（42.75 vs 32）、品牌名與選單字級（15.48 vs 13.76）仍然有落差。
+那是 2026-08-15 就記在 CLAUDE.md 裡的已知缺口，要補是把電腦版那一段
+type-scale 搬進 assets/style.css，和這一輪是兩件事。</pre></div>
+
+<footer>
+  <a href="/history/">← 改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>
