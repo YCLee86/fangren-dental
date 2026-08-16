@@ -1286,9 +1286,14 @@ html[data-here] .nav-lamp { opacity: 1; }
    2% 在手機上幾乎看不出來。一次就停不做來回呼吸 ——
    一張靜止的建築照片來回縮放看起來像壞掉，而且永遠不會停在定案的構圖上。
 
-   ⚠ **這裡看 prefers-reduced-motion**（和窄帶那個往上數的數字**不同**，
-     那一件 2026-08-08 使用者定了不看，理由在本檔 .band-views 那一段）。
-     一張滿版照片的縮放正是那個設定針對的東西（位移／視差／縮放）。
+   ⚠⚠ **這裡刻意不看 prefers-reduced-motion**（2026-08-16 使用者定的，
+     推導在 /history/hero-motion-mobile.html）。原本是看的 ——
+     「一張滿版照片的縮放正是那個設定針對的東西」這個理由本身沒有錯，
+     錯的是它的實際後果：**使用者自己的 iPhone 與 iPad 都開著那個設定**
+     （08-15 他回報「iPad 上沒有慢速浮動」是同一個成因），所以這組動畫
+     從上線那天起，在他手上就是完全不存在的。他看過三案之後選了「不跟」。
+     ⚠ 這**只解除照片這一條**。本檔其餘每一處 prefers-reduced-motion
+       （scroll-behavior、各種 transition、往下滑那顆的捲動）**一個都沒動**。
 
    ⚠ **transform-origin 是無條件的，不要再搬回任何一個 @media 裡。**
      第一版（電腦版上線那次）把它寫在電腦版那道 @media 裡面，手機吃不到、
@@ -1330,10 +1335,25 @@ html[data-here] .nav-lamp { opacity: 1; }
 @media (max-width: 720px) {                                       /* 手機 */
   .hero-photo img { animation: hero-push-10 6s cubic-bezier(.22, .61, .36, 1) both; }
 }
-/* ⚠ 這一條要排在上面三條後面（同權重，後面的贏）。 */
-@media (prefers-reduced-motion: reduce) {
-  .hero-photo img { animation: none; }
-}
+/* ⚠⚠ 這裡原本有一條 @media (prefers-reduced-motion: reduce) 把動畫整個關掉，
+   2026-08-16 定案拿掉了 —— 理由見上面那一段。**不要順手加回去。**
+
+   ---- 等照片真的畫出來才開跑（同一天一起做的第二件事）------------------
+
+   CSS 動畫是「元素一被排版就開跑」，可是照片要等下載＋解碼。實測 390x844、
+   4x CPU ＋ 4Mbps 節流：照片 1756ms 才解好，**那一刻 10% 的行程已經走掉 37%**，
+   而且 cubic-bezier(.22,.61,.36,1) 是先快後慢，被吃掉的正是最快的那一段 ——
+   使用者看到的只剩每秒零點幾個百分點的尾巴。這是「感覺不會動」的第二個成因。
+
+   做法：<img> 後面那支 inline 腳本在照片還沒好的時候，先給 <html> 掛 hero-hold，
+   照片一好（或保險絲到期）就拿掉。
+
+   ⚠ **方向是「JS 只會讓它變好，壞掉就退回原本的行為」**：沒有 JS ＝ 這個 class
+     永遠不會被掛上，動畫照舊立刻開跑，和 08-15 上線的那一版完全一樣。
+     所以絕對不要反過來寫成「預設 paused、等 JS 來解」——
+     那會讓沒有 JS 的人永遠停在 scale(1)。
+   ⚠ 保險絲是 3 秒：圖再慢也不要讓照片一直不動。 */
+html.hero-hold .hero-photo img { animation-play-state: paused; }
 
 /* 頂部的一層淡漸層。滿版之後頁首會壓在照片的任意位置上 ——
    1900px 寬時右上角正好落在建築的淺色水泥牆，白字幾乎讀不到（實測那塊 L* 約 42）。
@@ -4779,6 +4799,29 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
            width="1600" height="1058" fetchpriority="high">
       </span>
+
+      <!-- 照片還沒畫出來就先把緩慢推進按住（2026-08-16）。
+           完整理由在樣式表 html.hero-hold 那一段：節流下量到照片 1756ms 才解好，
+           那一刻 10% 的行程已經走掉 37%，而且用掉的是先快後慢裡最快的那一段。
+
+           ⚠ 這支要**緊接在 <img> 後面**，不能搬到頁尾那一堆腳本裡 ——
+             搬過去的話，中間那幾百毫秒的動畫已經先跑掉了。
+           ⚠ 只在「照片還沒好」時才掛 class。快取命中時 img.complete 已經是 true，
+             一次都不會掛上，不會多一次重排。
+           ⚠ 沒有 JS 就整支不執行 ＝ class 永遠不會出現 ＝ 動畫照舊立刻開跑，
+             退回 2026-08-15 上線的行為。不要把預設改成 paused。 -->
+      <script>
+      (function () {
+        var img = document.currentScript.previousElementSibling.querySelector('img');
+        if (!img || (img.complete && img.naturalWidth)) return;
+        var root = document.documentElement;
+        root.classList.add('hero-hold');
+        var go = function () { root.classList.remove('hero-hold'); };
+        img.addEventListener('load', go, { once: true });
+        img.addEventListener('error', go, { once: true });
+        setTimeout(go, 3000);        /* 保險絲：圖再慢也要讓照片開始動 */
+      })();
+      </script>
 
       <!-- 詩與收尾句放在 <figure> 裡面、不是外面 —— 這樣照片的框如果被限制寬度
            （見下面 HERO 的三種裁切模式），文字會自動跟著照片走，不會飄到旁邊的暗底上。 -->

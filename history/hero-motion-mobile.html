@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>hero-motion-mobile｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>hero-motion-mobile — 手機版 HERO 的動態</h1>
+<p class="meta">
+  2026-08-16・一輪定案上線<br>
+  原網址 <code>/preview/hero-motion-mobile/</code>（已刪除 2026-08-16）<br>
+  整頁還原：<code>git show 49eb9e0:preview/hero-motion-mobile/index.html</code><br>
+  產生器 <code>tools/hero-motion-preview.mjs</code>（一次性，同日一併刪除）<br>
+  切換條 <code>?m=&amp;am=&amp;dur=&amp;cv=&amp;rm=</code>
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者：「目前手機版本打開的時候 HERO 圖片都不會動，好像也是可以稍微動一下，
+但因為手機的畫面比較小，所以動得太誇張或是動的幅度太大好像也不是很好，
+不然你先做三個版本給我看一下。」</pre></div>
+
+<h2>先查「為什麼不會動」，不要直接再加一個動畫</h2>
+<div class="note"><pre>站上其實**已經有**一組放大動畫，而且手機那一段也在
+（hero-push-10，10%／6 秒，2026-08-15 commit fe1baab 上線，前一天的事）。
+所以問題不是沒做，是**在他的手機上沒跑**。
+
+Playwright 390×844 DPR3，逐 100ms 取樣 computed transform 的 scale：
+
+    情境                    結果
+    一般（不節流）           6 秒走完 10%，正常
+    開了「減少動態效果」      scale 從頭到尾 1.0000，完全不動   ← ①
+    4x CPU ＋ 4Mbps         照片 1756ms 才解好，那一刻 10% 的行程已經走掉 37%  ← ②
+
+① prefers-reduced-motion。樣式表最後一段是
+  @media (prefers-reduced-motion: reduce) 底下的 .hero-photo img { animation: none }。
+  **旁證**：2026-08-15 使用者回報「在 iPad 上沒有慢速浮動」，成因就是同一個設定
+  （那一輪的解法是讓 .hero-cue 不看它）。所以他的手機與 iPad 都開著這個設定，
+  這組動畫從上線那天起，在他手上就是完全不存在的。
+
+② 起跑點。CSS 動畫是「元素一被排版就開跑」，可是照片要等下載＋解碼。
+  而 cubic-bezier(.22,.61,.36,1) 是先快後慢 —— **被吃掉的正是最快的那一段**，
+  剩下的尾巴每秒只走零點幾個百分點。就算沒有①，這一項也會讓人覺得「不會動」。
+
+⚠ 這一輪最重要的一步是「先量再做」。如果照字面理解「不會動」就再加一個動畫，
+  會變成兩組動畫疊在一起，而且在他的手機上兩組都被同一個設定關掉。</pre></div>
+
+<h2>提案頁給了什麼</h2>
+<div class="note"><pre>五顆一按就重播的預設 ＋ 三條尺 ＋ 一排開關：
+
+    Ⓐ 輕        放大 4%／10 秒／等速     頂緣共走 28.8px，2.9px 每秒
+    Ⓑ 中        放大 7%／12 秒／等速     頂緣共走 50.3px，4.2px 每秒
+    Ⓒ 跟著捲動  放大 8%，第一屏捲完走完   手指停它就停
+    現況        放大 10%／6 秒／先快後慢  頂緣共走 71.9px，開頭約 20px 每秒
+    不動        比較用
+
+    尺：幅度 3／4／5／7／10%　時間 6／8／10／12／16 秒　快慢 等速／先快後慢
+    開關：要不要跟著手機的「減少動態效果」
+
+三案都改掉②（等 <img> 真的畫出來才開跑）。Ⓐ Ⓑ 改成等速的理由是：
+先快後慢把大部分位移集中在使用者還沒看到的頭兩秒，在手機上等於白走。
+
+⚠ 沒有做「來回呼吸」。那是 2026-08-15 電腦版那一輪就否決過的
+  （一張靜止的建築照片來回縮放看起來像壞掉，而且永遠不會停在定案的構圖上）。
+⚠ transform-origin 維持 50% 100%，五個候選都沒動 —— 原點放下緣，照片最後一列
+  完全不動，那一列的顏色（#181614）是照片與窄帶接縫四輪定案的依據。
+  原點改成正中的話接縫直接毀掉（提案頁量到 ΔL 星號 +6.42）。</pre></div>
+
+<h2>定案</h2>
+<div class="note"><pre>使用者選的是 **現況（10%／6 秒／先快後慢）＋ 不跟減少動態效果**。
+
+也就是說：**幅度、時間、曲線一個數字都沒改**，落選的是 Ⓐ Ⓑ Ⓒ 三個新案。
+真正上線的是兩件「修好它讓它跑起來」的事：
+
+  1. 拿掉 @media (prefers-reduced-motion: reduce) 那一條（照片這一條，
+     三個斷點一起解除）。
+  2. 照片還沒畫出來就先按住動畫：html.hero-hold { animation-play-state: paused }，
+     由緊接在 <img> 後面的 inline 腳本掛上、圖一好就拿掉，3 秒保險絲。
+
+驗收（Playwright，逐 100ms 取樣）：
+
+    情境                              改動前          改動後
+    手機・減少動態效果開著              1.0000 不動     6 秒走完 10%
+    手機・4x CPU ＋ 4Mbps             畫出來時已走 37%  畫出來時 0%，1739ms 起跑
+    手機・關閉 JavaScript              立刻開跑        立刻開跑（不變）
+    電腦 1440・減少動態效果開著         1.0000 不動     12 秒走完 6%
+    iPad 834・減少動態效果開著          1.0000 不動     8 秒走完 10%
+
+    版面：390×844／375×812／834×1112／1440×900 四個視窗、23 個選擇器逐項
+          比對舊新版 **0 項有差**，水平捲動 0px。</pre></div>
+
+<h2>留下來的規則</h2>
+<div class="note"><pre>1. **「這裡看 prefers-reduced-motion」那條註解已經反過來了，不要照舊版加回去。**
+   原本的理由（「一張滿版照片的縮放正是那個設定針對的東西」）本身沒有錯，
+   錯的是它的實際後果 —— 站方唯一的使用者自己就開著那個設定。
+   ⚠ 這**只解除照片這一條**。index.html 其餘每一處 prefers-reduced-motion
+     （scroll-behavior、各種 transition、往下滑那顆指標的捲動）**一個都沒動**，
+     assets/style.css 也沒動。
+
+2. **hero-hold 的方向是「JS 只會讓它變好」。**
+   沒有 JS ＝ class 永遠不會掛上 ＝ 動畫照舊立刻開跑，退回 08-15 的行為。
+   ⚠ **絕對不要反過來寫成「預設 paused、等 JS 來解」** —— 那會讓沒有 JS 的人
+     永遠停在 scale(1)。
+   ⚠ 那支腳本要**緊接在 <img> 後面**，不能搬到頁尾那一堆腳本裡；搬過去的話
+     中間那幾百毫秒的動畫已經先跑掉了。
+   ⚠ 快取命中時 img.complete 已經是 true，一次都不會掛上 class。
+
+3. **這一站有兩個「不看減少動態效果」的先例，理由不一樣，不要混為一談。**
+   ・窄帶那個往上數的數字（2026-08-08）—— 理由是「原地長大的數字不屬於
+     位移／視差／縮放那一類」。
+   ・iPad 那顆指標的慢速浮動（2026-08-15）—— 理由是「會動正是這顆存在的理由」。
+   ・照片的緩慢推進（這一輪）—— **它確實屬於那一類**，理由純粹是使用者
+     看過之後自己選的。日後若有第三方無障礙檢查提到這一項，這是已知的取捨。
+
+4. **提案頁的 class 一律加 pv 前綴。** 第一版用了 .foot，和站上的頁尾撞名
+   （站上的 .foot 帶著卡片底色與 padding-block: 2.4rem），整條切換條被染成
+   白色的一大塊、按鈕的字還直排。撞名的是 .foot，其餘 .row/.note/.meter/.seg
+   目前沒撞，但一併加了前綴。
+
+5. **切換條在手機上不能吃掉半個畫面。** 第一版把五個預設 ＋ 三條尺 ＋ 一排開關
+   全部攤開，量到 238px ＝ 一屏的 28%（第一版更高），照片剩不到一半 ——
+   而這一頁要判斷的正是「照片動得夠不夠」。改成預設只留三案那一排 ＋ 一行提示
+   ＋ 底下那條（162px ＝ 19%），尺收進「細調」。
+   ⚠ 這和 2026-08-16 type-scale-ipad-2 那一輪的教訓是同一條，
+     只是那邊的解法是「收起縮成右下角一顆小鈕」（這一頁也留著）。
+
+6. **提案頁的切換條預設「不跟」減少動態效果。** 否則使用者在自己的手機上
+   什麼都看不到，整個提案頁就失去意義。日後只要提案的東西「會動」，
+   都要先想這件事。</pre></div>
+
+<h2>文件裡怎麼記這一件</h2>
+<div class="note"><pre>〔CLAUDE.md 第九節・定案表〕
+**手機版 HERO 的動態** — 維持 10%／6 秒／先快後慢，改成不看減少動態效果
+＋ 等照片畫出來才開跑（2026-08-16）。整段推導在這一頁。
+
+〔index.html〕
+樣式在「HERO 照片：緩慢的推進」那一長段的結尾（html.hero-hold），
+腳本緊接在 HERO 的 <img> 後面。</pre></div>
+
+<footer>
+  芳仁牙醫診所・改版紀錄。這裡是純文字存檔，不是提案頁本身 ——
+  提案頁在定案上線之後就刪掉了（2026-08-12 起的規則）。
+  <a href="/history/">回目錄</a>・<a href="/">回首頁</a>
+</footer>
+</div></body></html>
