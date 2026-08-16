@@ -734,9 +734,10 @@
    ⚠ 兩個落選的替代路：**放大圈剖面**（第 10 條那招）會變成使用者嫌過的
    「太學術」（第 11 條）；**純靠物理證據**（嘴唇乾裂之類）落在第 1 條
    「畫不穩的細節」裡。**線本身沒有錯，錯的是它只有一條而且會漂。**
-   ⚠ **站上那張還沒換**（`assets/hero-arch-photo-*.jpg`）—— 等重生成的圖進來再照
-   本節「收到新圖要做的事」換掉；只換圖檔、不動 `post-meta` 與 `<main>`，
-   那一篇的「最後更新」不會跳（雜湊不涵蓋圖檔內容）。
+   ✅ **2026-08-16 九輪之後定案並換上線**（`assets/hero-arch-photo-*.jpg`）。
+   只換了圖檔、`post-meta` 與 `<main>` 一個字都沒動，所以那一篇的「最後更新」
+   仍然是 2026-08-02（雜湊不涵蓋圖檔內容）—— 修圖不是內容更新，這是對的。
+   最終的提示詞逐字存在本節最後的「附」。
 18. ⚠⚠ **提示詞為了修內容越寫越長，風格就會被擠掉。**〈擴張牙弓〉重生成第一輪，
    使用者：
    > 「有兩個問題　第一個　風格被簡化了　另外　牙齒不夠凌亂」
@@ -854,16 +855,19 @@
 
 ---
 
-### 附：〈擴張牙弓〉定稿的提示詞（逐字，2026-08-16 由使用者提供）
+### 附：〈擴張牙弓〉的提示詞（逐字）
 
-這是產生站上現在那張 `assets/hero-arch-photo-*.jpg` 的提示詞，**逐字保存、不要改寫**。
-之所以留在這裡，是因為第 19 條那個教訓：**改圖要從這一份改，不要從零重寫。**
+**下面這一份就是站上現在那張 `assets/hero-arch-photo-*.jpg`**（2026-08-16 第二版，
+九輪定案）。**逐字保存、不要改寫**；要再改圖就從這一份改，只換出問題的那一段
+（第 19 條）。
 
-> ⚠ 已知要動的兩處（2026-08-16 使用者回饋，尚未重生成完成）：
-> ・`MIDDLE PANEL` 的 `a thick restless white hand-drawn line ... loops in the air above him`
->   —— 那個 `loops above him` 就是「靈魂出竅」的來源，改法見第 17 條。
-> ・`INSET` 的擁擠程度不足，改法見第 18 條末與第 19 條（照參考照逐顆點名）。
-> **其餘每一段都是通過的，尤其 `THE CHILD'S FACE` 與 `COLOUR`，不要動。**
+> **這一版相對於第一版（2026-08-16 上午上線的那張）改了什麼**，對照第 17~19 條：
+> ① 氣息從「一條會繞圈的長白帶」改成三四條短平行弧（原本讀成靈魂出竅）；
+> ② `INSET` 的擁擠逐顆點名並照使用者給的三張參考照加重，牙齦紅腫改用「邊緣鼓起、
+> 乳突最腫」的形狀描述；③ 夜晚那一格明講比另外兩格暗、牆不可以留白，`COLOUR` 段把
+> high-key 限定在第一、三格；④ 上唇加厚；⑤ 房間與玄關逐項列出道具；
+> ⑥ `PEOPLE` 拆成 `CLOTHING, COLOUR`（逐人指派顏色）與 `CLOTHING, RENDERING`
+> （兩三階、皺褶與領口袖口）。**第一版的原文若要回看，見 `git show e43982a:ILLUSTRATION.md`。**
 
 ```
 Editorial illustration, 16:9 landscape.
@@ -879,39 +883,94 @@ and his reflection. Behind him, his mother stands in the doorway with her arms l
 folded, watching him with a faint frown — concerned and puzzled, not angry, not scolding.
 INSET IN THIS PANEL: a round circular close-up, ringed with a thin hand-drawn line and
 joined to the mirror by three small dots, floating in the upper part of the panel. Inside
-it, drawn large and clear: his upper front teeth are CROWDED — the row packed tight with
-no gaps anywhere, one central incisor rotated and overlapping in front of its neighbour,
-the tooth beside it tipped back behind the line, the whole arch narrow so the teeth jostle
-each other. Along the edge of these teeth the gum is slightly puffy and a soft pink-red,
-gently inflamed. The teeth themselves are clean and white — no decay, no dark spots, no
-missing teeth, no blood. Keep the inset simple and illustrative, not a photorealistic
-mouth interior.
+it, drawn large and clear: his upper front teeth are SEVERELY CROWDED, as crowded as a
+real orthodontic "before" photograph — not mildly uneven, not a tidy row. The dental arch
+is plainly too narrow for the teeth, so they fight each other for room:
+  • the two central incisors OVERLAP — one is rotated and sits clearly in front of the
+    other, covering a third of it;
+  • one lateral incisor is shoved right BACK behind the row, so far back that its
+    neighbours close over it and barely half of it can be seen;
+  • on the other side the canine is pushed UP AND OUTWARD, erupting high and in front of
+    the row, its point standing clearly above and over the teeth beside it;
+  • the biting edges sit at obviously different heights and form a broken zig-zag line,
+    never a smooth even curve;
+  • there is no gap anywhere — every tooth presses hard against the next.
+THE GUM HERE IS CLEARLY INFLAMED, and this must be easy to see: along the edge of these
+crowded teeth the gum is a deep rosy red, distinctly redder than healthy pale pink gum,
+and visibly SWOLLEN — the margin is puffed and rounded so it bulges a little over the
+edges of the teeth, and the small triangles of gum squeezed between the overlapping teeth
+are the reddest and most swollen of all, plainly tender. The redness is strongest exactly
+where the teeth are jammed together and eases back towards calmer pink away from them. It
+is a rich muted rose-red — never a glaring neon or blood red, and no blood, no bleeding,
+no wound. The teeth themselves are clean and white — no decay, no dark spots, no missing
+teeth. Keep the inset simple and illustrative, not a photorealistic mouth interior.
 
-MIDDLE PANEL — the same night, his bedroom. He is asleep on his back, head tipped back,
-mouth wide open, blanket kicked half off. A thick restless white hand-drawn line of breath
-rises from his open mouth and loops in the air above him. A small warm night light on the
-bedside table is the only light source.
+MIDDLE PANEL — the same night, his bedroom. IT IS THE MIDDLE OF THE NIGHT AND THE ROOM IS
+DARK — this panel must read as clearly, obviously darker than the two panels beside it.
+The wall behind the bed, the bedding and the air are deep dusty blue in shadow; do NOT
+leave the wall pale, cream, white or empty. The ONLY light is a SMALL night light on the
+bedside table — no bigger than the boy's fist, a little low lamp, NOT a tall shaded
+bedside lamp — throwing a soft warm pool over the pillow, over his face and over the near
+edge of the quilt, then falling away quickly into the blue darkness so the rest of the
+room sinks into shadow. Low key but clean and luminous — never murky, never flat black.
+THIS IS A 9-YEAR-OLD BOY'S ROOM AND IT MUST LOOK LIVED IN, not a bare spare room:
+  • on the wall above and beside the bed — a picture poster with NO writing on it (a
+    dinosaur, or the planets of the solar system), a string of small blank triangular
+    pennants, and — at most three or four — small, very faint glow-in-the-dark star
+    stickers, gathered in ONE upper corner only. The wall stays mostly plain dark blue;
+    the stars are a barely-there hint, never a starry sky and never scattered across the
+    whole wall;
+  • on the bedside table beside the little lamp, and on a small shelf on the wall — FIVE
+    OR SIX SMALL TOY FIGURES of the kind boys of that age like: a chunky jointed robot, a
+    green tyrannosaur, a small astronaut, a little racing car, two round-eyed capsule-toy
+    monsters. They are all invented, generic toys — NOT copies of any real branded
+    character, franchise or mascot, and they carry no logos and no writing;
+  • on and around the bed — a patterned quilt (small stars or a check), a soft stuffed
+    animal tucked against the pillow, a book lying face-down on the floor with a blank
+    cover and blank spine, slippers by the bed, his school bag slumped against the table;
+  • only the things nearest the night light catch its warm glow; everything further away
+    is a soft blue silhouette. His face stays the brightest thing in the panel — the
+    clutter must never compete with him.
+He is asleep on his back, head tipped back, mouth wide open, blanket kicked half off. From
+his open mouth, THREE OR FOUR SHORT PARALLEL WHITE HAND-DRAWN ARCS of breath begin right
+at his lips, touching them, and fan gently upward and forward, fading out within about one
+head-width — soft chalk quality, solid at the lips and thinning to dry flecks at the far
+end, all running the same way and evenly spaced. This is moving air, not an object: it
+must NOT be one long continuous ribbon, must NOT loop or curl back on itself, must NOT
+wander across the panel, must NOT grow larger as it travels away from him, and must NOT
+resemble smoke, steam, a wisp, a spirit or a soul leaving the body. Keep the whole marking
+small, no taller than his head.
 
-RIGHT PANEL — the next morning, the entryway. He sits slumped on the low shoe bench with
-one shoe only half pulled on, his backpack already on both shoulders and dragging them
-down. His back is rounded, his head droops forward and tilts to one side, his arms hang
-loose with one hand resting flat on the bench beside him. He is barely awake: both eyes
-are heavy-lidded, narrowed to sleepy slits and almost closed, with faint soft shadows
-beneath them; his mouth rests open in his usual way. He is DROWSY AND SLUGGISH, NOT UPSET
-— his eyebrows stay relaxed and level, never raised or angled in the middle. NO tears, no
-screwed-up face, no wide downturned crying mouth. He is NOT rubbing his eyes, NOT covering
-his face, and NOT holding his hands anywhere near his eyes. His mother crouches in front
-of him holding out a water bottle, and his father stands at the open door with a hand on
-the frame; the two of them exchange the same quiet worried look. Cool pale morning light
-through the doorway.
+RIGHT PANEL — the next morning, the entryway of the flat. THIS MUST READ UNMISTAKABLY AS A
+FAMILY ENTRANCE HALL, not a bare white corner — furnish it: a row of wall hooks beside the
+door carrying two or three coats and a shoulder bag; a low shoe cabinet or shoe rack under
+the bench, filled with several pairs of shoes, some lined up and some kicked over; house
+slippers waiting on the floor; a doormat just inside the door; an umbrella leaning in the
+corner; a small tray or dish for keys on a narrow console; a potted plant; a light switch
+on the wall; a small framed picture with a simple wordless image. The walls and floor must
+not be left empty, and the floor is a real surface (wood or tile), not blank white.
+He sits slumped on the low shoe bench with one shoe only half pulled on, his backpack
+already on both shoulders and dragging them down. His back is rounded, his head droops
+forward and tilts to one side, his arms hang loose with one hand resting flat on the bench
+beside him. He is barely awake: both eyes are heavy-lidded, narrowed to sleepy slits and
+almost closed, with faint soft shadows beneath them; his mouth rests open in his usual way.
+He is DROWSY AND SLUGGISH, NOT UPSET — his eyebrows stay relaxed and level, never raised
+or angled in the middle. NO tears, no screwed-up face, no wide downturned crying mouth. He
+is NOT rubbing his eyes, NOT covering his face, and NOT holding his hands anywhere near
+his eyes. His mother crouches in front of him holding out a water bottle, and his father
+stands at the open door with a hand on the frame; the two of them exchange the same quiet
+worried look. Cool pale morning light through the doorway.
 
 THE CHILD'S FACE — Draw this STRONGLY and IDENTICALLY in all three panels. His whole lower
-face pushes forward from the nose down. The upper lip is thick, full and rolled outward,
-sitting clearly in front of the lower lip, giving him a distinctly pouty, protruding mouth.
-His lips never fully close — in the mirror panel and the morning panel they rest apart with
-the edge of the front teeth showing between them. The chin is short and set back with a
-soft crease beneath the lower lip. The nose reads small against the pushed-forward mouth.
-This must be unmistakable at a glance in every panel, asleep and awake.
+face pushes forward from the nose down. The upper lip is VERY THICK — deep and pillowy
+from top to bottom, noticeably fuller than an ordinary child's, clearly a soft rounded
+volume and never a thin drawn line — and it rolls outward and sits distinctly in front of
+the lower lip, giving him a strongly pouty, protruding mouth. Both lips are full, with the
+upper the thicker of the two. His lips never fully close — in the mirror panel and the
+morning panel they rest apart with the edge of the front teeth showing between them. The
+chin is short and set back with a soft crease beneath the lower lip. The nose reads small
+against the pushed-forward mouth. This must be unmistakable at a glance in every panel,
+asleep and awake.
 Keep it a real child's face: normal head size and normal head-to-body proportions, no
 rubber-hose or bug-eyed cartoon styling, never mocking. He is an ordinary, well-cared-for
 child who is simply tired and curious — never sad, never crying, never ill-looking, never
@@ -922,6 +981,19 @@ PEOPLE — Simplified illustrative people: minimal features (small dot or short-
 a simple line mouth, a small nose), natural realistic head-to-body proportions, believable
 ages. Not photorealistic. Not faceless. No oversized heads, no noodle limbs. Nobody looks
 at the viewer.
+CLOTHING, COLOUR — the three of them must be easy to tell apart at a glance, so give each
+one a clearly DIFFERENT colour; no two family members wear the same hue, and nobody wears
+the same colour family as the boy: the BOY in pale sage green top and trousers; his MOTHER
+in a muted dusty rose top with warm grey trousers; his FATHER in a soft powder blue shirt.
+Keep each person in their own colour in every panel.
+CLOTHING, RENDERING — clothes are NEVER flat single-tone shapes. Model every garment with
+two or three tones of its own colour: soft coloured-pencil shading in the folds, along the
+sleeves, under the collar, at the hem and wherever the fabric gathers or bunches, so the
+cloth has weight and drape. Draw the garment's real details — collar, cuffs, sleeve seam,
+hem line, button placket, a pocket, the ribbing at a waistband. The pyjamas hang and crease
+differently from the mother's knitted top and the father's shirt. Keep the colours at the
+saturation described in COLOUR — clearly coloured and readable, never washed out into
+almost-white pastels — but always with visible shading and fabric detail inside them.
 
 STYLE — Contemporary printed-magazine editorial illustration. Linework in warm dark brown
 or soft charcoal, NEVER pure black: thin, hand-drawn, weight varies, strokes taper and
@@ -934,22 +1006,28 @@ has a soft chalk quality, clearly hand-made.
 COLOUR — Light, muted and gentle: pale cream and off-white as the ground, dusty sage and
 mint, soft powder blue, muted rose and clay, pale butter yellow, warm grey. Desaturated
 throughout — nothing heavy, nothing brown-dominant, no orange or amber cast, no neon.
-Colour throughout — never greyscale. The night panel is low key but stays clean and never
-turns murky or black. The inflamed gum is a soft muted pink-red, gentle, never a strong
-alarming red.
+Colour throughout — never greyscale. The airy high-key treatment applies to the first and
+third panels; the night panel is genuinely dark and low key — clean and luminous, but
+plainly darker than the others, and never murky or black. The inflamed gum inside the
+inset is the ONE place the picture is allowed to be strong: a deep rosy red that clearly
+reads as swollen and sore, richer than anything else in the image — still a muted rose-red
+rather than a neon or blood red.
 
 CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
 signage, captions, panel labels, numeral clock faces or watermarks, in any language. The
 backpack, pyjamas and all clothing carry no printed text; toothpaste tubes, bottles and
-packaging in the bathroom are blank; book spines are blank; any screen or mirror sticker
-is blank; there are no arrows or labels between the panels. Where writing would normally
-appear, leave the surface plain.
+packaging in the bathroom are blank; book spines are blank; the bedroom poster, pennants
+and toys carry no writing of any kind; the framed picture in the entryway is wordless; any
+screen or mirror sticker is blank; there are no arrows or labels between the panels. Where
+writing would normally appear, leave the surface plain.
 
 AVOID — greyscale; photorealism; a photorealistic open mouth; faceless or noodle-limbed
 figures; thick uniform black outlines; chrome or iridescent gradients; decayed, dark,
 broken or missing teeth; blood; pain or fear; a crying child, tears, a screwed-up crying
 face, hands rubbing or covering the eyes; parents who look angry or scolding; any
-before-and-after or good-versus-bad comparison.
+before-and-after or good-versus-bad comparison; recognisable branded, franchise or
+licensed characters, mascots or logos on the toys, bedding, posters or clothing; flat
+untextured single-tone clothing; bare empty rooms with nothing in them.
 ```
 
 ---
