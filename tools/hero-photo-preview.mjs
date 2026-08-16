@@ -52,6 +52,16 @@ const READY = [
       "四格都畫著代表悶熱與火氣的白色波紋",
     src: "Gemini_Generated_Image_6kmbxu6kmbxu6kmb.jpg（2752×1536，使用者 2026-08-16 提供）",
   },
+  {
+    slug: "kids-first-visit",
+    photo: "hero-kids-photo",
+    oldHero: "hero-kids.svg",
+    alt:
+      "一家人圍在餐桌旁：中間的孩子高舉著手裡剛掉下來的乳牙，張嘴大笑、下排門牙缺了一顆；" +
+      "媽媽伸手輕輕撥開他的嘴唇湊近看，爸爸笑著指過去，兩個手足分別攀在椅背上探頭；" +
+      "桌上有碗筷和一顆咬過的蘋果，頭頂一盞吊燈，白線畫出滿屋子的笑聲",
+    src: "Gemini_Generated_Image_oumxajoumxajoumx.jpg（2752×1536，使用者 2026-08-16 提供）",
+  },
 ];
 
 /* 窄帶與文章卡的瀏覽數。counter.js 在提案頁要整支拿掉（不然每開一次首頁就 +1），
