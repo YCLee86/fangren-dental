@@ -19,12 +19,16 @@
     "hash": "0f5e1246f8daed75",
     "updated": "2026-06-02"
   },
+  "perio-laser": {
+    "hash": "c97aee0317dec683",
+    "updated": "2026-08-16"
+  },
   "regular-checkup": {
     "hash": "3c4ac9e4b7afce32",
     "updated": "2026-07-08"
   },
   "/": {
-    "hash": "83a474b725cd9a2e",
+    "hash": "532d48990250eed8",
     "updated": "2026-08-16"
   }
 }
