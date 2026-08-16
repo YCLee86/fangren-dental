@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>type-scale-ipad-2｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>type-scale-ipad-2</h1>
+<p class="meta">
+  原網址 <code>/preview/type-scale-ipad-2/</code>（已刪除 2026-08-16）<br>
+  整頁還原：<code>git show e6a96b2:preview/type-scale-ipad-2/index.html</code><br>
+  產生器：<code>git show e6a96b2:tools/ipad-type-preview.mjs</code>（一併刪除）<br>
+  切換條 <code>?r=&amp;c=&amp;d=&amp;i=</code>（四條尺），一輪選完，已定案上線
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者拿三張 iPad 直放的截圖（文章卡、醫師介紹、診所資訊）：
+「這幾張是 iPad 打開的樣子，你幫我做像手機那樣放大字級的幾個版本，我來看看那個效果。」
+
+⚠ iPad 2026-08-15 才剛整站放大 19%（/history/type-scale-ipad.html），所以這一輪
+  要問的不是「要不要放大」，而是**沿哪一條路放大**：
+
+    主尺這條      改一個 html { font-size }，頁首、選單、兩排科別標記、
+                  卡片留白整組跟著長 —— 那是 08-15 走過的路
+    逐區塊這條    主尺不動，只抬內容 —— 手機 2026-08-15（card-type-mobile）
+                  走的就是這條（文章卡 22.4/17.6、三塊內文 16、門診表、地圖）
+
+  提案頁把兩條都放上去，四條尺各自可選。</pre></div>
+
+<h2>iPad 現在到底哪裡小 —— 先量再做</h2>
+<div class="note"><pre>把 iPad（根字級 19px）逐項和手機 2026-08-15 定案的值並排，答案很清楚：
+
+                     iPad 現況   手機定案   差
+    文章卡標題        19.38      22.4      **iPad 小 13%**  ← 只有這一塊真的小
+    文章卡摘要        16.15      17.6      **小 8%**
+    醫師卡內文        15.77      16         −1.5%（幾乎一樣）
+    醫師名            19.95      19.84      +0.6%（一樣）
+    門診表的時間      15.20      16         −5%
+    兩句說明          15.20      16         −5%
+
+⚠ 也就是說 08-15 那一輪的 +19% 已經把「醫師卡」與「診所資訊」拉到手機的水準了，
+  **剩下沒跟上的是文章卡**。所以提案頁的每一條尺都放一格「Ⓑ 手機同尺」當錨點。</pre></div>
+
+<h2>四條尺</h2>
+<div class="note"><pre>全部寫成 rem，所以區塊的尺會跟著主尺一起長；面板顯示的是現場量到的 px。
+
+  全站主尺   r0 現況 +19%（根 19）／ r1 +25%（根 20）／ r2 +31%（根 21）
+  文章卡     c0 現況 19.4/16.2/14.8 ／ c1 Ⓐ 20.9/17.1/15.2
+             c2 Ⓑ 22.4/17.6/15.2（手機同尺）／ c3 Ⓒ 23.9/18.6/16.0
+  醫師卡     d0 現況 20.0/15.8/15.4 ／ d1 Ⓐ 21.3/16.7/16.3
+             d2 Ⓑ 22.4/17.6/17.1 ／ d3 Ⓒ 23.9/18.6/18.1
+  診所資訊   i0 現況 15.2・點 10.6 ／ i1 Ⓐ 16.3・11.4 ／ i2 Ⓑ 17.6・12.4 ／ i3 Ⓒ 18.6・13.3
+
+⚠ **按一下會重新載入，不是即時套用。** 這一站有三支「開頁量一次」的 JS：
+  有底色的小標籤（--sk-padT／--role-padT 的 FIT）、選單那顆燈的 --lamp-pad、
+  以及頁首高度連動的量測。字級一改它們全部要重算。
+  （back-to-top 那一輪可以即時套用，是因為那一輪不動任何字級 —— CLAUDE.md
+   第八節寫著「要先確認這件事再決定哪一種」。）
+⚠ 收起做成右下角一顆小鈕、不是變矮的一條：iPad 的 HERO 是「照片＋窄帶正好一屏」，
+  整條的切換條會把窄帶（地址、電話、1983／9／5）整個蓋掉。</pre></div>
+
+<h2>使用者第一次選的：主尺 +25% ＋ 文章卡 Ⓒ ＋ 醫師卡 Ⓑ ＋ 診所資訊 Ⓒ</h2>
+<div class="note"><pre>他說「我選這樣但我看不出什麼問題，你先幫我檢查一下」。量出來沒有破圖
+（六個尺寸水平捲動 0、和現況比沒有新增任何元素溢出、門診表時間到第一顆點
+45 → 40px），但主尺那一格有兩件他看過之後決定不走：
+
+  ① 744 寬那台 iPad mini 的「品牌 → 選單」94.9 → **60.9px**
+     （+31% 只剩 26.9 —— 那是這條路的盡頭，和 08-15 那一輪量到的一致）
+
+  ② **首頁與文章頁的頁首落差會變大**（744 上，首頁捲動後 vs 文章頁）：
+
+         項目      首頁現況   首頁+25%   文章頁    落差
+         頁首高    71.25      74.98      60        11.25 → 14.98
+         標誌      38         39.98      32        6 → 7.98
+         診所名    18.24      19.20      15.36     2.88 → 3.84
+         選單字    16.34      17.20      13.76     2.58 → 3.44
+
+     ⚠ 2026-08-15 上午才定案「首頁切到文章頁，頁首不要變」，但那一輪之後的
+       放大（電腦版 +12%、iPad +19%）**只做了首頁**，`assets/style.css` 一個
+       值都沒接。所以落差現在就有，+25% 只是把它拉得更開。
+
+順帶量到、這一輪沒有處理的一件：
+
+  ③ **地圖 SVG 裡的字不跟著長**（路名 18.9／停車場名 13.7／距離與時間 12.9／
+     診所名牌 12.9）—— 那是 viewBox 內的使用者單位，跟版面寬度走、不跟根字級走，
+     所以現況與放大後**完全一樣**。但旁邊的說明從 15.2 長到 18.6，對比之下
+     地圖的字相對變小了。手機那一輪的解法是「裁掉左右 ＝ 等於放大 30%」
+     （560 → 430 單位），iPad 還沒做。**已知的落差，不是漏做。**
+
+使用者看完之後：「主尺維持 +19%、只留文章卡 Ⓒ ＋ 醫師卡 Ⓑ ＋ 診所資訊 Ⓒ，
+這個蠻好的。」→ ①② 兩件因此都不存在了。</pre></div>
+
+<h2>定案（2026-08-16 上線）</h2>
+<div class="note"><pre>主尺 r0（一個值都沒動）＋ 文章卡 Ⓒ ＋ 醫師卡 Ⓑ ＋ 診所資訊 Ⓒ
+
+                       改動前   改動後   手機現在   電腦版現在
+    文章卡標題          19.38    23.94    22.4       18.36
+    文章卡摘要          16.15    18.62    17.6       15.30
+    文章卡日期          14.82    15.96    13.12
+    醫師名              19.95    22.40    19.84
+    醫師卡內文＋標記    15.77    17.59    16
+    醫師卡的灰標籤      15.39    17.10    15.62
+    門診表的時間        15.20    18.62    16
+    門診表的點          10.63    13.30    12
+    兩句說明・停車・照說明 15.20  18.62    16
+
+CSS 寫在 index.html 樣式表裡、iPad 那三段的**後面**、手機那段（≤720px）的**前面**：
+它覆寫的 .doc dt／.hours-grid ... th 是 2026-08-13 那一批同權重（0,1,0）的全域規則，
+靠順序決勝；而手機那段是 max-width: 720px、和這一段互斥，所以「手機那段留在最後」
+那條規則沒有被破壞。</pre></div>
+
+<h2>專科藥丸的抬升量：這一輪最值得記的一格</h2>
+<div class="note"><pre>醫師名一變大，藥丸（.doc-role）的 vertical-align 就要重算（CLAUDE.md 第九節第 9 條）。
+公式：
+
+    .158em（站上的值） ＋ 0.345 × 1.05rem ÷ .8rem × (1.179/1.05 − 1)
+    ＝ .158 ＋ .4528 × .12286 ＝ **.2136em**
+
+⚠⚠ **這個式子是「保留站上現在的偏差」，不是「算出正確值」。**
+   站上那個 .158em 本來就比公式高約 .05em —— 2026-08-13 把 .doc-role 從 .72rem
+   抬到 .8rem 時刻意沒跟著改（理由：提案頁上使用者看過並定案的就是那個組合）。
+
+實測九張醫師卡（零寬探針插在藥丸**後面**量那一行的基線，再用 canvas 的
+actualBoundingBox 在 400px 上量「李柄輝」的字面框、等比例縮回來，
+比「塊上緣比字面上緣高多少」與「塊下緣比字面下緣低多少」）：
+
+    現況（名 19.95・.158em）　　　塊比字面偏高 **+1.49px**
+    這一版（名 22.40・.2136em）　 偏高 **+1.48px**   ← 原封不動
+    若改用公式的 .158em　　　　　 **−0.17px**（會變成「對齊了」）
+
+    候選表（名 22.40，三種 DPR 量到的數字一模一樣）：
+      .158em  上 2.71 下 2.87 差 −0.17      .21em   上 3.51 下 2.08 差 1.43
+      .18em   上 3.05 下 2.53 差  0.52      .2136em 上 3.55 下 2.03 差 1.52
+      .20em   上 3.35 下 2.23 差  1.11      .24em   上 3.96 下 1.62 差 2.33
+
+**取 .2136em** —— 提案頁上使用者看到並點頭的就是這一個。把它「修正」成 .158em
+等於上線的東西和他看過的不一樣。要重新對齊全站那幾顆藥丸是另外一件事，要先問他。
+⚠ 這是這一輪唯一「算出來的正確值和該上線的值不同」的地方，不要看到 −0.17 就去改。</pre></div>
+
+<h2>驗收</h2>
+<div class="note"><pre>① **電腦版、手機版、iPad 橫放一個值都沒動。** 32 個選擇器 ×（字級／寬／高／
+   vertical-align／內距／圓角／位置）在 1440×900、1160×820、390×844、375×812、
+   1112×834（iPad 橫放）五個視窗逐項比對舊版與新版：**0 項有差**。
+   iPad 直放三個視窗（744×1068／834×1112／1024×1366）只有該動的那 23 項動了 ——
+   頁首（.site-nav a／.brand-text）、兩排標記（.chips／.hours-filter）、
+   .card-tag、.info-card h3、HERO 的詩與窄帶、頁尾全部沒動。
+
+② **上線的值 ＝ 使用者看到的那一頁**：把 index.html 和提案頁
+   `?r=r0&c=c3&d=d2&i=i3` 並排量十九個選擇器，只有 .doc-role 的
+   vertical-align 差 **0.00045px**（計算式改寫成 .2136em 的捨入），其餘完全相同。
+
+③ 沒有破圖：六個 iPad 尺寸水平捲動 0、和現況比沒有新增任何元素溢出。
+   門診表「時間 → 第一顆點」45 → **42px**（col.lab 跟著字級長到 7.72rem）。
+
+④ 整頁長 744 上 6921 → **7468px**（最長的那則文章卡標題從兩行變三行）。</pre></div>
+
+<h2>留下來的三件</h2>
+<div class="note"><pre>1. **地圖 SVG 裡的字沒有跟著長**（見上面第 ③ 點）。要不要照手機那樣裁窄，還沒問。
+2. **文章頁（posts/，走 assets/style.css）完全沒有這一套**，而且連 08-15 的
+   主尺放大也沒有 —— 所以「首頁切到文章頁，頁首不要變」那條定案目前仍然不成立
+   （744 上診所名差 2.88px）。這一輪把主尺留在 +19%，等於沒有讓它更糟。
+3. **文章卡標題 23.94 現在比醫師名 22.40 大**（改動前是反過來的 19.38 < 19.95）。
+   使用者選的就是文章卡 Ⓒ 配醫師卡 Ⓑ、差一階，不是漏改。
+   要讓醫師名重新變成全站最大的名字，醫師卡要跟著選 Ⓒ。</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄 — <a href="/history/">回目錄</a></footer>
+</div></body>
+</html>
