@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-len="std" data-clinic="on">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>提案：科別著陸頁（牙周治療） — 芳仁牙醫診所</title>
+<meta name="theme-color" content="#12656a">
+<link rel="icon" href="../../assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/style.css">
+
+<!-- =============================================================================
+     提案：科別著陸頁（第一頁，牙周治療）　2026-08-18
+     -----------------------------------------------------------------------------
+     這是什麼、為什麼要做
+     -----------------------------------------------------------------------------
+     首頁「主題與科別」那七顆標記是**前端篩選，沒有網址** —— 按下去 fangren.net/
+     從頭到尾沒變。所以對 Google 與 AI 搜尋來說，這個站只有一個首頁加七篇文章，
+     **沒有任何一頁是為「斗六 牙周病治療」這種查詢寫的**。
+
+     著陸頁就是把 /topics/perio/ 變成真的存在的一頁。九成是現成的東西重新組合
+     （醫師資料、文章卡、看診時間都已經在首頁上），真正要新寫的只有開場那幾段。
+
+     這一頁是七頁裡條件最好的一頁（一位主治醫師 ＋ 兩篇文章），拿它當第一個樣本。
+
+     -----------------------------------------------------------------------------
+     四個要使用者決定的事（切換條）
+     -----------------------------------------------------------------------------
+     ① 開場的份量：精簡／標準／完整
+        這一格真正要解的是**矯正那一頁**：它有兩位部定專科醫師，但一篇文章都沒有。
+        如果開場只有一段話加兩張醫師卡，Google 會判定成「內容太薄」，做了等於沒做。
+        所以先在資料最齊的這一頁上，讓使用者看清楚三個份量各是什麼感覺。
+     ② 底部要不要放「看診時間與位置」
+        放 → 找診所的人不必再跳回首頁，對「斗六 牙周」這種在地查詢有幫助。
+        不放 → 頁面短、乾淨，而且不必在七頁上各重複一份看診時間。
+        ⚠ COPY.md 第六之二節有一條相關的判準：「這一格在別的頁面上是不是唯一的一份」。
+          這裡和頁尾的情況不同 —— 頁尾只有地址電話，沒有看診時間。
+
+     -----------------------------------------------------------------------------
+     文字這一側守了什麼
+     -----------------------------------------------------------------------------
+     ・**沒有一句是行銷腔。** COPY.md 第六節否決過六輪「太行銷／太用力」的句子，
+       第三節那條紅線是「診所給的是燈，不是答案」。所以這一頁不寫「專業團隊」
+       「頂尖設備」「歡迎諮詢」，也不承諾任何療效。
+     ・**所有醫療說法都來自站上已經有的兩篇文章**（〈牙周病治療〉〈牙齦流血〉），
+       一句新的都沒有加。這一頁是入口，不是第三篇文章。
+     ・**醫師資料逐字取自首頁的 #doctors**，沒有改寫、沒有加頭銜。
+       ⚠ 李柄輝醫師會出現在這裡，是因為他的**專長欄**寫著「牙周照護」
+         （COPY.md 第八之四節），和站上 2026-08-11 那一輪「專長命中也會亮」一致。
+         他的藥丸仍然是「創辦醫師」，不是專科 —— 那條規則在 COPY.md 第八之一節。
+
+     -----------------------------------------------------------------------------
+     還沒做、定案後才要做的事
+     -----------------------------------------------------------------------------
+     ・這一頁的 CSS 現在內嵌在下面（class 一律 tp- 前綴）。定案後搬進
+       assets/style.css，切換條與 pv- 那些一起刪掉。
+     ・網址要從 /preview/topic-perio/ 換成 /topics/perio/，並補上 canonical、
+       JSON-LD（MedicalWebPage ＋ MedicalProcedure ＋ 指回 #dentist）、
+       sitemap 一筆、以及首頁那七顆標記各自連過來。**那些都還沒做。**
+     ・七頁要不要都做、每一頁的開場誰寫，也還沒定。
+     ============================================================================= -->
+
+<style>
+/* 提案頁自己的樣式。定案後搬進 assets/style.css。
+   ⚠ class 一律 tp- 前綴（切換條用 pv-）—— CLAUDE.md 第八節：短名字幾乎一定
+     會撞到站上既有的 class。這一頁吃的是 assets/style.css，.section／.wrap／
+     .wrap-text／.related／.rel-card 都是那一份現成的，沒有重寫。 */
+
+/* ---- 開場 ---- */
+.tp-head { padding-block: clamp(1.6rem, 5vw, 2.6rem) 0; }
+.tp-head h1 { margin: .2rem 0 .3rem; font-size: clamp(1.6rem, 5.4vw, 2.3rem); line-height: 1.35; color: var(--ink); }
+.tp-sub { margin: 0 0 1.2rem; color: var(--ink-soft); font-size: .95rem; letter-spacing: .02em; }
+
+/* ---- 一般段落（沿用文章頁的節奏，但不吃 .post-body，避免和文章互相污染） ---- */
+.tp-body { padding-block: 0 clamp(1.4rem, 4vw, 2rem); }
+.tp-body h2 {
+  display: flex; align-items: baseline; gap: .6rem;
+  margin: 2rem 0 .8rem; font-size: clamp(1.12rem, 3.4vw, 1.34rem);
+  color: var(--ink); line-height: 1.55;
+}
+.tp-body h2::before {
+  content: ''; flex: 0 0 3px; align-self: center;
+  height: 1.05em; border-radius: 2px; background: var(--accent);
+}
+.tp-body p { margin: 0 0 1.05rem; }
+.tp-body ul { margin: 0 0 1.2rem; padding-left: 1.35rem; }
+.tp-body li { margin-bottom: .5rem; }
+.tp-body strong { color: var(--ink); font-weight: 700; }
+
+/* ---- 醫師 ---- */
+.tp-docs { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.tp-doc {
+  background: var(--card); border: 1px solid var(--rule); border-radius: var(--radius);
+  padding: 1rem 1.1rem 1.1rem; box-shadow: var(--shadow);
+}
+.tp-doc h3 { margin: 0 0 .7rem; font-size: 1.12rem; color: var(--ink); display: flex; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+/* 藥丸：和首頁那顆同一個做法（套色填滿＋白字），值取自 --accent。 */
+.tp-role {
+  font-size: .74rem; font-weight: 400; letter-spacing: .04em; line-height: 1;
+  padding: .42em .6rem; border-radius: 999px;
+  background: var(--accent); color: var(--on-fill); vertical-align: .21em;
+}
+.tp-doc dl { margin: 0; display: grid; grid-template-columns: 3.4em 1fr; gap: .35rem .7rem; font-size: .93rem; }
+.tp-doc dt {
+  margin: 0; justify-self: start; align-self: start;
+  font-size: .76rem; line-height: 1; padding: .38em .5em; border-radius: 6px;
+  background: var(--paper); color: var(--ink-soft);
+}
+.tp-doc dd { margin: 0; color: var(--ink); line-height: 1.75; }
+
+/* ---- 看診時間與位置 ---- */
+.tp-clinic {
+  background: var(--card); border: 1px solid var(--rule); border-radius: var(--radius);
+  padding: 1rem 1.1rem 1.1rem; box-shadow: var(--shadow);
+}
+.tp-hours { width: 100%; border-collapse: collapse; font-size: .95rem; margin-bottom: .6rem; }
+.tp-hours th, .tp-hours td { text-align: left; padding: .42rem .3rem; border-bottom: 1px solid var(--rule); }
+.tp-hours th { font-weight: 400; color: var(--ink-soft); white-space: nowrap; }
+.tp-hours tr:last-child th, .tp-hours tr:last-child td { border-bottom: 0; }
+.tp-hours b { color: var(--ink); font-weight: 700; margin-right: .5em; }
+.tp-note { margin: 0 0 1rem; font-size: .86rem; color: var(--ink-soft); }
+.tp-contact { display: grid; gap: .5rem; margin: 0; font-size: .95rem; }
+.tp-contact a { text-decoration: none; }
+.tp-contact a:hover { text-decoration: underline; }
+
+/* 切換條開著的時候，底下墊高一點，最後一段不會被蓋住 */
+html.pv-bar-open body { padding-bottom: 8.5rem; }
+</style>
+</head>
+
+<!-- data-spec="perio" —— 整頁的重點色跟著牙周走，和文章頁同一個機制 -->
+<body data-spec="perio">
+<a class="skip-link" href="#main">跳到主要內容</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">
+      <span class="brand-mark">
+        <svg width="44.2873" height="21.8244" viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="translate(-232.8729 -333.8286)">
+              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
+            </g>
+          </svg>
+      </span>
+      <span class="brand-text">
+        <b>芳仁牙醫診所</b>
+        <small>雲林斗六・永樂街</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="主選單">
+      <a href="../../#topics">全部文章</a>
+      <a href="../../#doctors">醫師介紹</a>
+      <a href="../../#clinic">診所資訊</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="tp-head wrap-text">
+    <p class="crumbs">
+      <a href="../../">首頁</a>
+      <span class="sep" aria-hidden="true">&rsaquo;</span>
+      <a href="../../#topics">主題與科別</a>
+      <span class="sep" aria-hidden="true">&rsaquo;</span>
+      <span class="post-tag" data-spec="perio">牙周治療</span>
+    </p>
+    <h1>牙周治療</h1>
+    <p class="tp-sub">雲林斗六・芳仁牙醫診所</p>
+  </div>
+
+  <div class="tp-body wrap-text">
+
+    <p class="lede">牙齦流血、口臭、牙齒開始有點搖 —— 這些多半不是火氣大，是牙周組織正在發炎。牙周病幾乎不會痛，等到感覺不對勁，齒槽骨往往已經流失一半以上。</p>
+
+    <!-- 標準與完整才有 -->
+    <div class="tp-when-std">
+      <h2>牙周治療在處理什麼</h2>
+      <p>牙齒像一棵樹，牙周組織 —— 牙齦與齒槽骨 —— 是托著它的那塊土壤。樹再健康，土鬆了、被慢慢掏空了，還是會開始晃。牙周治療要處理的從來不是牙齒本身，是牙齒站著的那塊地。</p>
+      <p>成因是牙菌斑。清不乾淨的地方細菌會結成一層生物膜，時間拉長和唾液中的礦物質結合成牙結石，持續釋放毒素刺激牙齦、侵蝕齒槽骨。牙結石刷不掉，而且表面粗糙、更容易讓新的牙菌斑附著上去 —— 它不是清潔問題，是必須由器械清除的東西。</p>
+    </div>
+
+    <h2>什麼時候該來一趟</h2>
+    <ul>
+      <li>刷牙或用牙線<strong>持續流血超過兩週</strong>。</li>
+      <li>牙齦由粉紅轉為<strong>暗紅、腫脹</strong>，或按壓會有分泌物。</li>
+      <li>牙齦萎縮、<strong>牙根外露怕酸</strong>，牙齒看起來變長。</li>
+      <li><strong>持續性口臭</strong>，刷完牙沒多久又出現。</li>
+      <li>牙縫變大、開始<strong>塞食物</strong>，原本不會卡的地方天天卡。</li>
+      <li>咬東西使不上力，或<strong>牙齒開始搖動、位移</strong>。</li>
+    </ul>
+
+    <!-- 完整才有 -->
+    <div class="tp-when-full">
+      <h2>治療分成幾層</h2>
+      <p>第一步永遠是<strong>清創</strong>，而且沒有捷徑 —— 後面所有進階的療程都是加在它上面，不是拿來取代它。</p>
+      <ul>
+        <li><strong>檢查與牙周探測</strong>：量每顆牙六個點的囊袋深度，搭配 X 光評估骨頭高度，確認嚴重程度。</li>
+        <li><strong>洗牙</strong>：清除牙齦上方看得見的牙結石。健保成人每半年給付一次。</li>
+        <li><strong>牙根整平術</strong>：局部麻醉、分區進行，清除藏在牙周囊袋裡的結石與感染組織，讓牙齦重新貼合牙根。健保給付。</li>
+        <li><strong>水雷射（自費輔助）</strong>：進到手動器械不易貼到的狹窄囊袋與死角，出血與術後不適一般較輕。它提高的是舒適度與死角的完整度，不能取代上面的物理清創。</li>
+        <li><strong>牙周再生手術（自費）</strong>：骨缺損嚴重且不規則時，翻瓣清創後填入骨粉、覆蓋再生膜，接下來六到九個月讓骨頭與牙周韌帶長回一部分。效果取決於缺損的形狀。</li>
+        <li><strong>維護期</strong>：牙周病是慢性、會復發的疾病，治療結束後每三到六個月回診量囊袋、清掉新長的結石。</li>
+      </ul>
+      <p>哪一層適合你，要經過牙周探測與 X 光檢查才能判定 —— 這一頁只能幫你認得訊號，判斷得由醫師來。</p>
+    </div>
+
+    <p class="note">本頁為一般口腔衛教資訊，不能取代臨床診斷。牙周狀況需經牙周探測與 X 光檢查才能判定，治療方式也要由醫師依實際狀況評估後決定。</p>
+
+  </div>
+
+  <div class="tp-body wrap-text">
+    <h2>這一科的醫師</h2>
+    <ul class="tp-docs">
+      <li class="tp-doc">
+        <h3>李侑津 <span class="tp-role">醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>牙周病治療、牙周再生手術、水雷射牙周治療、植牙手術、固定假牙、活動假牙</dd>
+          <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
+          <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>國立陽明交通大學牙醫學碩士</dd>
+        </dl>
+      </li>
+      <li class="tp-doc">
+        <h3>李柄輝 <span class="tp-role">創辦醫師</span></h3>
+        <dl>
+          <dt>專長</dt><dd>口腔檢查、一般牙科治療、牙周照護</dd>
+          <dt>資歷</dt><dd>台灣國際植牙醫師學會專科醫師（ATIOI）<br>國際牙醫學院院士（TICD）<br>衛生福利部家庭牙醫專科</dd>
+          <dt>學歷</dt><dd>中山醫學大學牙醫學學士、碩士、博士</dd>
+        </dl>
+      </li>
+    </ul>
+  </div>
+
+</main>
+
+<aside class="related" aria-label="這一科的文章">
+  <div class="wrap">
+    <h2 class="sr-only">牙周治療的文章</h2>
+    <ul class="rel-list">
+      <li class="rel-card" data-spec="perio">
+        <a href="../../posts/perio-laser/">
+          <img src="../../assets/hero-perio-photo-1600.jpg" srcset="../../assets/hero-perio-photo-800.jpg 800w, ../../assets/hero-perio-photo-1600.jpg 1600w, ../../assets/hero-perio-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 605px, (min-width: 721px) 46vw, calc(100vw - 28px)" alt="" width="2000" height="1116" loading="lazy">
+          <span class="rel-body">
+            <span class="rel-tag">牙周照護</span>
+            <span class="rel-title">牙周病治療：清創、水雷射與再生手術</span>
+            <time class="rel-date" datetime="2026-08-16">2026/08/16</time>
+          </span>
+        </a>
+      </li>
+      <li class="rel-card" data-spec="perio">
+        <a href="../../posts/gum-bleeding/">
+          <img src="../../assets/hero-gum-photo-1600.jpg" srcset="../../assets/hero-gum-photo-800.jpg 800w, ../../assets/hero-gum-photo-1600.jpg 1600w, ../../assets/hero-gum-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 605px, (min-width: 721px) 46vw, calc(100vw - 28px)" alt="" width="2000" height="1116" loading="lazy">
+          <span class="rel-body">
+            <span class="rel-tag">牙周照護</span>
+            <span class="rel-title">牙齦流血不是火氣大：牙周病的早期訊號</span>
+            <time class="rel-date" datetime="2026-04-15">2026/04/15</time>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
+
+<section class="tp-when-clinic section" aria-label="看診時間與位置">
+  <div class="wrap-text">
+    <div class="tp-clinic">
+      <table class="tp-hours">
+        <caption class="sr-only">看診時間，週一至週五</caption>
+        <tbody>
+          <tr><th scope="row"><b>早</b>08:45–11:30</th><td>週一至週五</td></tr>
+          <tr><th scope="row"><b>午</b>13:45–16:30</th><td>週一至週五</td></tr>
+          <tr><th scope="row"><b>晚</b>17:45–20:00</th><td>週一至週五</td></tr>
+        </tbody>
+      </table>
+      <p class="tp-note">國定假日與各科特別門診請來電確認。</p>
+      <p class="tp-contact">
+        <a href="tel:+88655339369">電話　<data value="05-533-9369">(05)5339-369</data></a>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">地址　雲林縣斗六市永樂街 70 號</a>
+        <a href="../../#clinic">診所資訊與周邊停車 &rsaquo;</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4 class="foot-brand">
+          <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true"><g transform="translate(-232.8729 -333.8286)"><path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9658 351.1677 C 264.3395 351.0569 264.4797 351.0334 264.8417 351.1677 C 265.087 351.2612 265.4141 351.2438 265.6594 351.1677 C 266.4418 350.9226 267.2185 349.375 267.0726 347.4069 C 266.9324 345.4389 261.8635 345.7134 261.8693 347.4069 C 261.8693 348.756 262.354 350.4963 263.0255 350.9692 C 263.3118 351.1736 263.522 351.2963 263.9658 351.1677 Z"/></g></svg>
+          芳仁牙醫診所
+        </h4>
+        <p class="foot-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
+          <span class="ico"><svg viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg></span>
+          <span class="txt">雲林縣斗六市永樂街&nbsp;70&nbsp;號</span>
+        </a></p>
+        <p class="foot-tel"><a href="tel:+88655339369">
+          <span class="ico"><svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></span>
+          <data class="num" value="05-533-9369">(05)5339-369</data>
+        </a></p>
+      </div>
+      <div>
+        <h4>站內導覽</h4>
+        <ul class="foot-nav">
+          <li><a href="../../#topics">全部文章</a></li>
+          <li><a href="../../#doctors">醫師介紹</a></li>
+          <li><a href="../../#clinic">診所資訊</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>關於這些文章</h4>
+        <p>本站文章為一般口腔衛教資訊，用意在於幫助讀者理解常見狀況，不能取代臨床診斷。實際狀況請就診由醫師評估。</p>
+        <p class="credit">照片與插圖為芳仁牙醫診所自有或本站自製，未經同意請勿轉載。</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 芳仁牙醫診所</span>
+      <span>雲林縣斗六市</span>
+    </div>
+  </div>
+</footer>
+
+<!-- =============================================================================
+     切換條（提案用，定案時連同 tp-when-* 的顯示規則一起刪掉）
+     -----------------------------------------------------------------------------
+     ⚠ 手機上不能吃掉半個畫面 —— 這一頁要判斷的正是「份量夠不夠」，
+       切換條佔太多就看不出來了。所以只留兩排 ＋ 一行量測，尺寸壓到最小，
+       右下角一顆小鈕可以整個收起來。
+     ⚠ 網址參數的正規式寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 第八節）。
+     ⚠ 字數是**現場量**可見中文字，不是估的 —— 這一格是拿來回答
+       「矯正那一頁只有兩位醫師、零篇文章的話會剩多少」。
+     ============================================================================= -->
+<style>
+/* 份量：精簡只留開場＋徵兆；標準加「在處理什麼」；完整再加「治療分成幾層」 */
+html[data-len="brief"] .tp-when-std,
+html[data-len="brief"] .tp-when-full,
+html[data-len="std"]   .tp-when-full { display: none; }
+html[data-clinic="off"] .tp-when-clinic { display: none; }
+
+.pv-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+  background: rgba(244,244,245,.94); backdrop-filter: blur(8px) saturate(1.15);
+  border-top: 1px solid var(--rule);
+  padding: .55rem max(.7rem, env(safe-area-inset-left)) calc(.55rem + env(safe-area-inset-bottom));
+  font-size: .8rem; color: var(--ink);
+}
+html.pv-bar-closed .pv-bar { display: none; }
+.pv-row { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin-bottom: .35rem; }
+.pv-row:last-of-type { margin-bottom: .3rem; }
+.pv-lab { color: var(--ink-soft); flex: 0 0 auto; font-size: .76rem; }
+.pv-bar button {
+  font: inherit; font-size: .78rem; cursor: pointer;
+  padding: .3rem .6rem; border-radius: 7px;
+  border: 1px solid var(--rule); background: #fff; color: var(--ink);
+}
+.pv-bar button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-fill); }
+.pv-meter { font-size: .74rem; color: var(--ink-soft); line-height: 1.6; }
+.pv-meter b { color: var(--ink); font-weight: 700; }
+.pv-toggle {
+  position: fixed; right: max(.7rem, env(safe-area-inset-right));
+  bottom: calc(.7rem + env(safe-area-inset-bottom)); z-index: 91;
+  font: inherit; font-size: .74rem; cursor: pointer;
+  padding: .34rem .6rem; border-radius: 8px;
+  border: 1px solid var(--rule); background: rgba(244,244,245,.94); color: var(--ink-soft);
+  backdrop-filter: blur(8px);
+}
+html:not(.pv-bar-closed) .pv-toggle { display: none; }
+</style>
+
+<div class="pv-bar" id="pvbar">
+  <div class="pv-row">
+    <span class="pv-lab">開場份量</span>
+    <button type="button" data-k="len" data-v="brief">精簡</button>
+    <button type="button" data-k="len" data-v="std">標準</button>
+    <button type="button" data-k="len" data-v="full">完整</button>
+    <button type="button" id="pvclose" style="margin-left:auto">收起</button>
+  </div>
+  <div class="pv-row">
+    <span class="pv-lab">看診時間與位置</span>
+    <button type="button" data-k="clinic" data-v="on">放</button>
+    <button type="button" data-k="clinic" data-v="off">不放</button>
+  </div>
+  <div class="pv-meter" id="pvmeter">—</div>
+</div>
+<button type="button" class="pv-toggle" id="pvopen">切換條</button>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var KEYS = { len: ['brief', 'std', 'full'], clinic: ['on', 'off'] };
+
+  /* 網址參數 → 狀態。正規式一定要含數字，見上面的註解。 */
+  var q = location.search;
+  Object.keys(KEYS).forEach(function (k) {
+    var m = new RegExp('[?&]' + k + '=([a-z0-9]+)').exec(q);
+    if (m && KEYS[k].indexOf(m[1]) >= 0) root.setAttribute('data-' + k, m[1]);
+  });
+
+  function paint() {
+    document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {
+      b.setAttribute('aria-pressed', root.getAttribute('data-' + b.dataset.k) === b.dataset.v);
+    });
+    measure();
+  }
+
+  /* 現場量可見的中文字數。用 Range 逐節點看，display:none 的區塊自然不算。
+     扣掉頁首、頁尾與切換條自己 —— 要判斷的是「內容有多少」。 */
+  function measure() {
+    var n = 0, imgs = 0, links = 0;
+    ['main', 'aside.related', 'section.tp-when-clinic'].forEach(function (sel) {
+      document.querySelectorAll(sel).forEach(function (el) {
+        if (!el.offsetParent && el.offsetHeight === 0) return;
+        el.querySelectorAll('*').forEach(function (c) {
+          if (c.tagName === 'IMG' && c.offsetHeight) imgs++;
+          if (c.tagName === 'A' && c.offsetHeight) links++;
+        });
+        n += (el.innerText || '').replace(/\s/g, '').length;
+      });
+    });
+    var verdict = n >= 800 ? '夠厚，不會被當成薄內容'
+                : n >= 450 ? '可以，但矯正那頁（0 篇文章）會更少'
+                : '偏薄，Google 可能不當一回事';
+    document.getElementById('pvmeter').innerHTML =
+      '可見字數 <b>' + n + '</b>　圖 <b>' + imgs + '</b>　連結 <b>' + links + '</b>　→ ' + verdict;
+  }
+
+  document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      root.setAttribute('data-' + b.dataset.k, b.dataset.v);
+      var p = new URLSearchParams(location.search);
+      p.set(b.dataset.k, b.dataset.v);
+      history.replaceState(null, '', location.pathname + '?' + p);
+      paint();
+    });
+  });
+  document.getElementById('pvclose').addEventListener('click', function () { root.classList.add('pv-bar-closed'); });
+  document.getElementById('pvopen').addEventListener('click', function () { root.classList.remove('pv-bar-closed'); });
+
+  root.classList.add('pv-bar-open');
+  paint();
+  addEventListener('load', measure);
+})();
+</script>
+</body>
+</html>
