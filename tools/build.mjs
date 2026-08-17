@@ -287,7 +287,11 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
     html = html.replace(/("updated"\s*:\s*")[^"]*"/, `$1${updated}"`);
     meta.updated = updated;
   }
-  // 同步文章頁面上顯示的「最後更新」
+  /* 舊版在文章頁上也印一次「最後更新」，靠這個 class 找到它。
+     現在**畫面上不再有任何一處顯示 updated**（2026-08-18，見下面第 3 節的長註解）：
+     文章頁 crumbs 那個 <time> 是手寫的上架日期、沒有這個 class，所以這一行
+     現在是空轉的。留著是因為它無害，而且日後若要在文章頁補一行「最後更新」，
+     加上 class 就會自動接上。 */
   html = html.replace(
     /<time class="post-updated"[^>]*>[^<]*<\/time>/,
     `<time class="post-updated" datetime="${updated}">${zhDate(updated)}</time>`
@@ -359,10 +363,27 @@ if (!posts.length) {
   process.exit(1);
 }
 
-/* ---------- 3. 排序並產生卡片 ---------- */
+/* ---------- 3. 排序並產生卡片 ----------
+   -----------------------------------------------------------------------------
+   **依上架日期排，不是最後更新日期**（2026-08-18 使用者定案，推翻原本的排法）。
+
+   起因：那一天七篇同時補上「重點整理」，updated 一起跳成當天，
+   於是首頁七張卡的日期全變成同一天。使用者：
+   「文章卡片上的日期應該是上架時間，而不是最後更新時間。」
+
+   ⚠ **日期與排序一定要用同一個欄位。** 卡片印 published 卻依 updated 排，
+     日後改一篇兩年前的舊文，它會跳到第一張、卡片上卻寫著兩年前的日期 ——
+     讀起來就是壞掉。所以這兩件事是綁在一起改的，不要只改其中一個。
+
+   ⚠ **updated 沒有被廢掉，只是不再出現在畫面上。** 它仍然由內容雜湊維護，
+     而且是三個機器讀的欄位的唯一來源：sitemap 的 lastmod、JSON-LD 的
+     dateModified、頁尾那句「網站最後更新」。那三處**不要**改成 published ——
+     它們的語意本來就是「這一頁最後改於何時」，是給爬蟲看的。
+
+   ⚠ 同一天上架的兩篇，用 updated 當第二順位（原本的主鍵降級成 tie-break）。 */
 
 posts.sort((a, b) =>
-  b.updated.localeCompare(a.updated) || b.published.localeCompare(a.published)
+  b.published.localeCompare(a.published) || b.updated.localeCompare(a.updated)
 );
 
 /* ---------- 2.9 每篇文章底下的「延伸閱讀」 ----------
@@ -408,7 +429,7 @@ const relCard = (p) => {
             <span class="rel-body">
               <span class="rel-tag">${esc(p.tag)}</span>
               <span class="rel-title">${esc(p.title)}</span>
-              <time class="rel-date" datetime="${p.updated}">${slashDate(p.updated)}</time>
+              <time class="rel-date" datetime="${p.published}">${slashDate(p.published)}</time>
             </span>
           </a>
         </li>`;
@@ -459,7 +480,7 @@ const card = (p) => {
           <h3>${esc(p.title)}</h3>
           <p>${esc(p.excerpt)}</p>
           <p class="card-date">
-            <span><span class="sr-only">更新 </span><time datetime="${p.updated}">${slashDate(p.updated)}</time></span>
+            <span><span class="sr-only">上架 </span><time datetime="${p.published}">${slashDate(p.published)}</time></span>
             <span class="dot" aria-hidden="true">・</span>
             <span class="views" data-views="${esc(p.slug)}" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
           </p>
