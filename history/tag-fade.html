@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>tag-fade｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>tag-fade — 橫捲那排標記的邊緣淡出</h1>
+<p class="meta">
+  2026-08-17 開、當天定案上線<br>
+  原網址 <code>/preview/tag-fade/</code>（已刪除 2026-08-17）<br>
+  整頁還原：<code>git show 4b3f73f:preview/tag-fade/index.html</code><br>
+  切換條 <code>?len=16|12|10|8&amp;curve=s|lin&amp;start=grow|jump</code><br>
+  產生器 <code>gen-preview.mjs</code> 在暫存區（一次性、沒進版控）
+</p>
+
+<h2>定案</h2>
+<div class="note"><pre>長度 10px　＋　S 曲線（smoothstep）　＋　起步「跟著捲動」
+
+只動 index.html 一份（那一排只有首頁有，文章頁沒有橫捲的標記）：
+
+  .chips, .hours-filter:not(.hours-filter-top) {
+    --fade-len: 10px;      /* 這條尺唯一的出處，JS 讀的就是它 */
+    --fade-l: 0px;         /* 沒有 JS 時 ＝ 改動前的起點那一態 */
+    --fade-r: var(--fade-len);
+    mask-image: linear-gradient(90deg, …八個色停逼近 smoothstep…);
+  }
+
+JS 那一側：
+  --fade-l ＝ min(--fade-len, scrollLeft)
+  --fade-r ＝ min(--fade-len, scrollWidth − clientWidth − scrollLeft)
+  data-sx（start／mid／end／none）整個拿掉，全站沒有別的地方用它。</pre></div>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者放大截圖：
+
+  「標籤的模糊不自然，看起來不是連續的漸層，
+    我放大看從『主』這個字的右緣就開始模糊了，覺得拖太長。」
+
+他量的位置**逐字正確**：改動前斜坡終點在 30px，標題「主」的右緣在
+32.27px，差 2.3px。使用者報位置的時候會拿旁邊那一行字當尺，
+那種座標量得出來也對得上 —— 先照他給的錨點量一次，
+不要當成模糊的形容詞。</pre></div>
+
+<h2>一句話裡有三件事，而且是三個不同的成因</h2>
+<div class="note"><pre>「淡出」這種東西有三個獨立的量，使用者一句話會同時講到三個：
+
+  ・長度怎麼出現（跳出來 vs 跟著捲動長出來）
+  ・曲線的形狀（線性 vs smoothstep）
+  ・長度本身（16 vs 10px）
+
+三個各自有一句抱怨，**修一個不會治好另外兩個**。
+
+① 「不是連續的漸層」之一 —— 長度是跳出來的
+   改動前用 data-sx 換四張固定 16px 的線性遮罩，
+   scrollLeft > 1 那一刻左緣的淡出**整段 16px 瞬間出現**。
+   他那張截圖正是 scrollLeft ≈ 2：左邊什麼都還沒捲掉、
+   「全部」整顆看得見，卻已經被洗掉 16px。往回捲回 0 也是整段瞬間消失。
+
+② 「不是連續的漸層」之二 —— 線性漸層的兩端各是一條可見的線
+   alpha 從 0 起跑、到 1 停住，值連續但**一階導數跳階**（馬赫帶）。
+   這一站 2026-08-12 在照片與窄帶的接縫上已經記過同一條
+   （CLAUDE.md 第九節第 10 條）。
+
+③ 「拖太長」 —— 16px 會吃進第一個字
+   「全部」那顆只有 56.4px 寬、左右內距各 12.8px，
+   375／393 上「全」的左緣正好落在斜坡裡。</pre></div>
+
+<h2>為什麼「字糊掉」比「塊淡掉」先被看見</h2>
+<div class="note"><pre>遮罩壓在**有底色**的標記上時，字會比色塊先不見：
+
+  填色標記的字是白的（255），褪到紙色（226）幾乎沒有距離；
+  色塊（95）還有 131 階可以走。
+
+同一條 alpha 斜坡，眼睛先看到「字糊了」再看到「塊淡了」——
+所以使用者說的是「標籤的模糊」而不是「切口收軟」。
+
+**判準因此不是「斜坡多長好看」，是「斜坡會不會碰到字面」。**
+這一排左內距 12.8px，10px 的斜坡剛好停在第一個字之前。
+提案頁的量測面板就是照這個判準寫的：現場印「字在 11.8px」，
+再直接回答「沒碰到字」或「⚠ 蓋到 4.2」，使用者不必自己減。</pre></div>
+
+<h2>smoothstep 的實作與實測</h2>
+<div class="note"><pre>alpha 換成 3t² − 2t³，用八個色停逼近（每一側）：
+  t     0    .08   .20   .40   .60   .80   .92   1
+  alpha 0   .018  .104  .352  .648  .896  .982  1
+
+端點斜率 1.00 → 0.22。**顏色一個都沒動**，改的是 alpha 的形狀。
+
+實測（393 寬、DPR 3、捲到 20px 以後，逐 1 CSS px 的 alpha 差）：
+  改動前（16px 線性）
+    .061 .061 .061 … .061 .053 │ 0.000  ← 這一步就是那條看得見的線
+  改動後（10px smoothstep）
+    .046 .076 .122 .122 .153 .145 .122 .107 .069 .031 │ 0.000
+
+相對於平均斜率，端點的落差從 85% 降到 31%（2.7 倍）。
+
+⚠ 用 CSS 變數控制長度的漸層，**每一個色停都要寫成 calc(var(--len) * k)**。
+  長度收到 0 時所有色停疊在同一點、後面那個贏，等於「這一側不淡」——
+  不必再為「不淡」另外寫一張 mask-image: none
+  （實測 1112×834 那一格對改動前逐像素 0 個有差）。</pre></div>
+
+<h2>「起步」那條尺（使用者問過的那一題）</h2>
+<div class="note"><pre>問：跟著捲動、立刻整段的差異是什麼？
+
+差別只在**開始捲的那前 10px**（以及捲到底之前的最後 10px），
+超過就逐像素相同：
+
+  捲了多少   立刻整段        跟著捲動
+    0px      不淡            不淡
+    1px      不淡            淡 1px
+    2px      淡 10px ←整段   淡 2px
+    4px      淡 10px         淡 4px
+   10px 以後 淡 10px         淡 10px
+
+**凡是「跟著捲動」的效果，長度／濃度都要是捲動量的連續函數**，
+不要用門檻換整張。
+
+順帶一個一致性的理由：旁邊那兩顆小角形（--ar-fl／--ar-fr）
+2026-08-13 起本來就是這樣寫的 —— 透明度跟著各自那一側的餘量
+連續變化。舊的遮罩用門檻，等於同一排上兩個提示各講各的：
+捲 2px 時角形才 4%（幾乎看不見），遮罩卻已經滿了。</pre></div>
+
+<h2>落選</h2>
+<div class="note"><pre>長度 16px（＝改動前）、12px、8px　—— 使用者選 10px
+曲線 直線（＝改動前）　　　　　　—— 使用者選 S 曲線
+起步 立刻整段（＝改動前）　　　　—— 使用者選 跟著捲動
+
+三條尺使用者全部選在提案的預設那一格，等於把「對照現況」
+那一組（16 ＋ 直線 ＋ 立刻）整組否決掉。</pre></div>
+
+<h2>驗收</h2>
+<div class="note"><pre>・scrollLeft 0 → 453 逐格量 --fade-l／--fade-r：連續、無跳階。
+・1112×834（八顆排得下、沒有溢出那一格）對改動前**逐像素 0 個有差**
+  —— 證明「沒有溢出時不淡」這一態沒有被色停疊在同一點的寫法弄壞。
+・393／834 的 .chips 與門診表那排：只有右緣最後 48 裝置 px
+  （＝舊的 16px 斜坡）有差，其餘 0。
+・七個視窗（393／375／744／834／1112／1280／1440）逐項比對版面
+  0 項有差、無水平捲動。
+・關掉 JavaScript：--fade-l／--fade-r 停在 0px／10px
+  ＝ 改動前的起點那一態，不會壞。
+・console 無錯誤（本機只有計數器 API 的 404，那是預期的）。</pre></div>
+
+<h2>提案頁本身學到的兩件</h2>
+<div class="note"><pre>① **切換條的「量測面板」可以直接下判斷，不要只印數字。**
+   這一輪真正的判準是「斜坡會不會碰到第一個字」，面板因此現場算出
+   「字在 11.8px」再回答「沒碰到字／⚠ 蓋到 4.2」。
+   ⚠ 第一顆捲出畫面之後那個判斷就沒有意義了（字從斜坡底下經過本來
+     就是這個效果該有的樣子），面板要改印「第一顆已捲出畫面」，
+     不要硬算 —— 第一版沒有擋，捲到 120px 時印出「⚠ 蓋到 122.2」。
+
+② **提案期間可以只把提案頁推上 main，修正本身留在分支上。**
+   這一頁是從「已經修好的」index.html 抓的快照，而 main 上的
+   index.html 還是舊的 —— 所以「對照現況」按下去才真的等於正式站。
+   定案時要做的只有兩件：分支併進 main、把這一頁刪掉。
+   ⚠ 中途 main 被另一台推了東西（地圖的點擊高亮），
+     分支 rebase 之後**提案頁那份快照要跟著重抓**，
+     否則使用者在提案頁上點地圖會看到和正式站不一樣的行為。</pre></div>
+
+<footer>
+  <a href="/history/">← 改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>
