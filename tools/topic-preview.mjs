@@ -141,44 +141,21 @@ const countLine = (n, d) => {
 };
 
 const introBlock = (spec, t, cnt) => `
-      <!-- ===== 科別介紹（提案中）=====================================
-           使用者 2026-08-18：「篩選點下去…其實是開了另外一個網頁」＋
-           「主題與科別標籤繼續做在新開啟的網頁上」。所以這一塊就長在
-           標記那一排底下，其餘版面和首頁完全一樣。
-           ⚠ 這是**新的對外文字**，要逐字看過再上。文案在 tools/topic-copy.mjs。 -->
+      <!-- ===== 科別介紹（2026-08-18 版面定案）==========================
+           走到這個版面經過使用者七輪修正，推導寫在 COPY.md 第九節。
+           順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
+           ⚠ 文字在 tools/topic-copy.mjs，**不要改這裡**。 -->
       <div class="tp-intro">
         <h1>${t.h1}</h1>
-        <!-- Ⓑ h1 底下當副標 -->
-        <p class="tp-count tp-count-b">${countLine(cnt.a, cnt.d)}</p>
+        <p class="tp-count">${countLine(cnt.a, cnt.d)}</p>
 ${t.cases.map((x) => `        <p class="tp-case">${todo(x)}</p>`).join("\n")}
         <p class="tp-stance">${todo(t.stance)}</p>
 
-        <!-- 症狀清單：**預設不顯示**。它讓人自我檢查，不是讓人覺得被理解 ——
-             是健檢問卷的聲音，不是陪伴的聲音。留成切換條的一格讓使用者選。 -->
-        <div class="tp-checks">
-          <p class="tp-checks-h">這些狀況，該來看一下</p>
-          <ul>
-${t.checks.map((c) => `            <li>${todo(c)}</li>`).join("\n")}
-          </ul>
-        </div>
-
-        <!-- Ⓒ 開場之後、內容之前：當作往下的路標，兩個數字都是錨點連結 -->
-        <p class="tp-count tp-count-c">${countLine(cnt.a, cnt.d)}</p>
-
-        <!-- 拉力版（預設）：描述第一步長什麼樣，而不是先攤開代價。
-             2026-08-18 使用者：「這個卡片資訊給出來的感覺對病患是推力而非拉力。」 -->
         <div class="tp-first">
           <p class="tp-first-h">第一次來，大概是這樣</p>
 ${t.firstVisit.map((x) => `          <p>${todo(x)}</p>`).join("\n")}
         </div>
-
-        <!-- 推力版（三題問答）。留著給提案頁比對，**預設不顯示**，定案時刪掉。 -->
-        <dl class="tp-qa">
-${t.qa.map(([q, a]) => `          <dt>${q}</dt>\n          <dd>${todo(a)}</dd>`).join("\n\n")}
-        </dl>
-
       </div>
-
 `;
 
 /* ---------- 主流程 ---------- */
@@ -254,15 +231,11 @@ for (const spec of SPECS) {
                      || new RegExp(`class="sk" data-spec="${spec}"`).test(m)).length,
   };
 
-  /* 順序：chips → Ⓓ 計數 → .filter-note → 開場那一整塊。
-     ⚠ Ⓓ 要在 introBlock **之前**（它的位置就是「標記正下方」）——
-       第一版寫在後面，結果跑到整段開場的下面去了。
+  /* 順序：chips → .filter-note → 開場那一整塊。
      ⚠ `.filter-note` 一定要留著：搜尋時的結果摘要（「牙周」：n 篇、m 位）
        是寫進那個元素的，拿掉的話搜尋框打字就沒有任何回饋了。 */
   const NOTE = '      <p class="filter-note" hidden></p>';
   h = h.replace(NOTE,
-    '      <!-- Ⓓ chips 正下方，＝首頁 .filter-note 原本的位置 -->\n' +
-    `      <p class="tp-count tp-count-d">${countLine(cnt.a, cnt.d)}</p>\n` +
     NOTE + '\n' +
     introBlock(spec, t, cnt));
 
@@ -291,7 +264,7 @@ for (const spec of SPECS) {
      2026-08-18 使用者說「字太多、篇幅太長」之後搬的：它是必要的但不是他要看的，
      擺在開場裡等於在他問的問題前面先擋一段免責。 */
   h = h.replace('  <section id="clinic">',
-    '  <p class="tp-note wrap-note">本頁為一般口腔衛教資訊，不能取代臨床診斷。實際狀況需經檢查後由醫師評估。</p>\n\n  <section id="clinic">');
+    '  <p class="tp-note">本頁為一般口腔衛教資訊，不能取代臨床診斷。實際狀況需經檢查後由醫師評估。</p>\n\n  <section id="clinic">');
 
   /* 6. 文章：不是這一科的**真的刪掉**（不是藏起來，理由見檔頭） */
   h = h.replace(/\n\s*<a class="card"[\s\S]*?<\/a>/g, (m) => {
@@ -331,10 +304,12 @@ for (const spec of SPECS) {
   h = h.replace(/<!-- SEO:START[\s\S]*?<!-- SEO:END -->/, "<!-- 提案頁不產生 SEO 區塊 -->");
   h = h.replace("<head>", '<head>\n<meta name="robots" content="noindex, nofollow, noarchive">\n' + headNote(spec, t));
 
-  /* 11. 樣式與切換條，插在**最後一個** </body> 前面 */
-  const bar = fs.readFileSync(path.join(ROOT, "tools", "topic-preview-bar.html"), "utf8");
+  /* 11. 樣式插在**最後一個** </body> 前面。
+     ⚠ 一定要用 lastIndexOf —— 這一站的註解裡就寫著 </body> 這幾個字
+       （`.nav-lamp` 那一段），String.replace 會換到註解裡那一個。 */
+  const style = fs.readFileSync(path.join(ROOT, "tools", "topic-preview-style.html"), "utf8");
   const b = h.lastIndexOf("</body>");
-  h = h.slice(0, b) + bar + h.slice(b);
+  h = h.slice(0, b) + style + h.slice(b);
 
   const dir = path.join(ROOT, "preview", `topic-${spec}`);
   fs.mkdirSync(dir, { recursive: true });
@@ -342,6 +317,10 @@ for (const spec of SPECS) {
 
   const text = h.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<style[\s\S]*?<\/style>/g, "")
                 .replace(/<!--[\s\S]*?-->/g, "").replace(/<[^>]*>/g, " ").replace(/\s/g, "");
+  if (t.ask && t.ask.length) {
+    console.log(`  ⚠ 這一科還有 ${t.ask.length} 件要先問過診所才寫得下去：`);
+    t.ask.forEach((q) => console.log(`     ・${q}`));
+  }
   console.log(`preview/topic-${spec}/  文章 ${(h.match(/class="card"/g) || []).length} 篇・` +
               `醫師 ${(h.match(/class="doc"/g) || []).length} 位・可見字約 ${text.length}`);
 }
