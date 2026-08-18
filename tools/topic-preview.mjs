@@ -169,6 +169,20 @@ for (const spec of SPECS) {
   h = h.slice(0, hs) + `  <!-- HERO 在著陸頁上拿掉：那張照片與那首詩是全站的門面，
        七頁各放一次會把它稀釋掉，而且會把真正的內容推到很下面。 -->\n` + h.slice(he);
 
+  /* 2.5 <body> 加 data-topic。用途有二：
+     ① 讓「拿掉 HERO 之後要讓開固定頁首」那條規則只作用在著陸頁 ——
+        **首頁的 HERO 是刻意鑽到頁首底下的**，同一條規則套上去會把它推下來。
+     ② 定案搬進 index.html 的樣式表時，選擇器不必再改一次。 */
+  /* ⚠⚠ **這裡不能用 `h.replace("<body>", …)`** —— 和 CLAUDE.md 第八節那個
+     `</body>` 的坑是同一個，只是開頭標籤版：index.html 的 CSS 註解裡就寫著
+     「見 <body> 裡的註解」（`.hero-poem .g` 那一段），字面上先出現，
+     String.replace 只換第一個，於是屬性被塞進註解裡、真正的 <body> 原封不動。
+     **症狀是完全不報錯**：規則解析得好好的，只是永遠選不到東西。
+     真正的 <body> 是**整行只有它**，所以用行首錨點的正規式。 */
+  const bodyRe = /^<body>$/m;
+  if (!bodyRe.test(h)) throw new Error("找不到行首的 <body>，index.html 的結構可能改過了");
+  h = h.replace(bodyRe, `<body data-topic="${spec}">`);
+
   /* 3. 首頁那個 sr-only 的 h1 拿掉 —— 這一頁的 h1 是科別名（在介紹那一塊裡） */
   h = h.replace(/\s*<h1 class="sr-only">[^<]*<\/h1>/, "");
 
@@ -197,6 +211,26 @@ for (const spec of SPECS) {
 
   /* 5. 科別介紹插在標記那一排底下（.filter-note 之前） */
   h = h.replace('      <p class="filter-note" hidden></p>', introBlock(spec, t) + '      <p class="filter-note" hidden></p>');
+
+  /* 5.2 搜尋框搬到「主題與科別」那一列、靠右（2026-08-18 使用者：
+     「搜尋欄佔了版面很大空間，看起來可以移到主題與科別的高度，然後靠右一點」）。
+     手機上它原本自己佔一整列（≤720 的 `.topic-tools { display: block }`），
+     連內距大約 60px —— 而那一列的右邊本來就是空的。
+     ⚠ `.sec-head` 是「主題與科別／醫師介紹／診所資訊」三節共用的，
+       樣式一定要限定 `#topics .sec-head`，不然另外兩節的標題也會被改成兩欄。
+     ⚠ 手機的 `font-size: 16px` 不能動 —— 低於 16 的話 iOS Safari 一聚焦
+       就會把整頁放大（站上那段註解寫著這件事）。 */
+  const SEARCH_BLOCK = `        <div class="topic-search">
+          <label class="sr-only" for="q">搜尋文章與醫師</label>
+          <input id="q" type="search" placeholder="搜尋文章與醫師" autocomplete="off" spellcheck="false">
+        </div>\n`;
+  if (h.includes(SEARCH_BLOCK)) {
+    h = h.replace(SEARCH_BLOCK, "");
+    h = h.replace("        <h2>主題與科別</h2>\n",
+      "        <h2>主題與科別</h2>\n" + SEARCH_BLOCK);
+  } else {
+    throw new Error("找不到搜尋框那一段，index.html 的結構可能改過了");
+  }
 
   /* 5.5 免責聲明放在頁面內容的最後（診所資訊之前），不要卡在開場的答案前面 ——
      文章頁本來就是這樣排的（.note 是 .post-body 的最後一個元素）。
