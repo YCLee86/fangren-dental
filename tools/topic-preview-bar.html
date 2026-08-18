@@ -1,16 +1,19 @@
 
 <!-- =============================================================================
      提案用的樣式與切換條。定案時：把 .tp-* 搬進 index.html 的樣式表，
-     這一整段（.pv-*、.tp-legacy、.tp-todo）連同對照按鈕一起刪掉。
+     這一整段（.pv-*、.tp-todo、以及症狀清單的顯示規則）一起刪掉。
      ⚠ class 一律 tp-／pv- 前綴 —— 這一頁是 index.html 的完整複本，
        站上有的 class 全部都在，短名字幾乎一定會撞（CLAUDE.md 第八節）。
      ============================================================================= -->
 <style>
-.tp-intro, .tp-legacy { margin: 1.4rem 0 0; max-width: 46rem; }
+.tp-intro { margin: 1.4rem 0 0; max-width: 46rem; }
 .tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
 .tp-lede { margin: 0 0 1.1rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink-soft); }
 
-/* 「這些狀況該來看一下」：讓他自己對號入座，所以要短、要好掃 */
+/* 「這些狀況該來看一下」。
+   ⚠ **預設不顯示**（2026-08-18）——它讓人自我檢查，不是讓人覺得被理解，
+     是健檢問卷的聲音不是陪伴的聲音。留成切換條的一格讓使用者自己決定。 */
+html:not([data-shape="checks"]) .tp-checks { display: none; }
 .tp-checks { margin: 0 0 1.15rem; }
 .tp-checks-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
 .tp-checks ul { margin: 0; padding-left: 1.3rem; }
@@ -42,17 +45,6 @@
   padding: .05em .25em; color: var(--ink);
 }
 .tp-todo::before { content: "⚠ "; }
-
-/* 對照舊版 */
-.tp-legacy .tp-sec { margin: 0 0 1.2rem; }
-.tp-legacy h2 {
-  display: flex; align-items: baseline; gap: .6rem;
-  margin: 1.5rem 0 .7rem; font-size: clamp(1.05rem, 3vw, 1.24rem); line-height: 1.55; color: var(--ink);
-}
-.tp-legacy h2::before { content: ''; flex: 0 0 3px; align-self: center; height: 1.05em; border-radius: 2px; background: var(--accent); }
-.tp-legacy p { margin: 0 0 .95rem; line-height: 1.95; }
-html[data-shape="old"] .tp-intro { display: none; }
-html[data-shape="old"] .tp-legacy { display: block !important; }
 
 /* chips 從 button 換成 a：外觀沿用站上那一組規則，這裡只補連結本身的重置 */
 .chips a { display: inline-block; text-decoration: none; }
@@ -88,8 +80,8 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
 <div class="pv-bar">
   <div class="pv-row">
     <span class="pv-lab">開場的形狀</span>
-    <button type="button" data-k="shape" data-v="new">新（短）</button>
-    <button type="button" data-k="shape" data-v="old">對照舊版</button>
+    <button type="button" data-k="shape" data-v="new">短（預設）</button>
+    <button type="button" data-k="shape" data-v="checks">＋症狀清單</button>
     <button type="button" id="pvclose" style="margin-left:auto">收起</button>
   </div>
   <div class="pv-meter" id="pvmeter">—</div>
@@ -101,20 +93,19 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
   var root = document.documentElement;
   if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
   var m = /[?&]shape=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
-  if (m && ['new', 'old'].indexOf(m[1]) >= 0) root.setAttribute('data-shape', m[1]);
+  if (m && ['new', 'checks'].indexOf(m[1]) >= 0) root.setAttribute('data-shape', m[1]);
 
   /* 量的是「開場那一塊」自己，不是整頁 —— 使用者說的「字太多」指的就是它。
      屏數用 visualViewport（iOS 的 innerHeight 比看得到的高，第九節第 6 條）。 */
   function measure() {
-    var box = root.getAttribute('data-shape') === 'old'
-      ? document.querySelector('.tp-legacy') : document.querySelector('.tp-intro');
+    var box = document.querySelector('.tp-intro');
     var n = (box.innerText || '').replace(/\s/g, '').length;
     var vh = (window.visualViewport && visualViewport.height) || innerHeight;
     var screens = (box.getBoundingClientRect().height / vh).toFixed(1);
     var left = document.querySelectorAll('.tp-intro .tp-todo').length;
     document.getElementById('pvmeter').innerHTML =
       '開場 <b>' + n + '</b> 字　手機上 <b>' + screens + '</b> 屏　'
-      + (screens <= 1.25 ? '一屏之內 ✓' : '⚠ 超過一屏')
+      + (screens <= 0.85 ? '不到一屏 ✓' : screens <= 1.25 ? '約一屏' : '⚠ 超過一屏')
       + '　待填 <b>' + left + '</b> 格';
   }
   function paint() {

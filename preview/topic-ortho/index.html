@@ -4598,13 +4598,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            ⚠ 這是**新的對外文字**，要逐字看過再上。文案在 tools/topic-copy.mjs。 -->
       <div class="tp-intro">
         <h1>齒顎矯正</h1>
-        <p class="tp-lede">牙齒不整齊這件事，多數人是想過很多次又放下很多次。真正卡住的往往不是要不要做，是「要戴多久」「會不會很痛」「是不是一定得拔牙」這幾題一直沒人講清楚。</p>
+        <p class="tp-lede">想過很多次，也放下很多次。問過朋友、查過網路，可是要戴幾年、會不會痛、是不是一定得拔牙 —— 每個人講的都不一樣。</p>
+        <p class="tp-lede">因為這幾題的答案，真的要看過你的牙才說得準。先讓醫師看一次，你會知道自己面對的是什麼、大概要付出多少；剩下的再慢慢決定。</p>
 
+        <!-- 症狀清單：**預設不顯示**。它讓人自我檢查，不是讓人覺得被理解 ——
+             是健檢問卷的聲音，不是陪伴的聲音。留成切換條的一格讓使用者選。 -->
         <div class="tp-checks">
           <p class="tp-checks-h">這些狀況，該來看一下</p>
           <ul>
             <li>門牙<strong>擠在一起</strong>，或有明顯的縫</li>
-            <li>咬起來<strong>上下排對不上</strong>（暴牙、戽斗、開咬、深咬）</li>
+            <li>咬起來<strong>上下排對不上</strong></li>
             <li>習慣<strong>只用一邊咀嚼</strong></li>
             <li>孩子換牙，<strong>恆牙一長出來就擠在一起</strong></li>
           </ul>
@@ -4614,36 +4617,15 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <dt>一定要拔牙嗎？</dt>
           <dd>不一定。空間可以從好幾個地方挪，拔牙只是其中一種；要照過 X 光才知道。</dd>
 
-          <dt>小孩幾歲該來看？</dt>
-          <dd>六到十二歲顎骨還沒定型，這段期間可以引導它長寬一點。不是急著做，是先知道有沒有非趁早不可的部分。</dd>
-
           <dt>要戴多久？多久回診一次？</dt>
           <dd><span class="tp-todo">要你確認：一般療程大約多久、回診間隔</span></dd>
 
           <dt>有哪些方式可以選？</dt>
           <dd><span class="tp-todo">要你確認：診所實際提供哪些矯正方式。目前站上查得到的只有隱適美、兒童隱適美與肌功能矯正</span></dd>
-
-          <dt>拆掉就結束了嗎？</dt>
-          <dd>還沒。牙齒會想回到原來的位置，所以要戴維持器 —— 這一步做不好，前面那一兩年會白費。</dd>
         </dl>
 
       </div>
 
-      <!-- 對照用的舊版（825 字那一版）。**定案時連同切換條一起刪掉。** -->
-      <div class="tp-legacy" hidden>
-        <div class="tp-sec">
-          <p>牙齒排列不整齊，影響的不只是好不好看。咬合對不上的時候，某幾顆牙會長期承擔過多的力量，某些位置則怎麼刷都刷不乾淨 —— 蛀牙與牙周問題常常就是從那裡開始的。</p>
-        </div>
-        <div class="tp-sec">
-          <h2>矯正在處理什麼</h2>
-          <p>矯正是用持續而輕微的力量，讓牙齒在齒槽骨裡慢慢移動到該在的位置。受力的一側骨頭吸收、另一側重建，牙齒就這樣一點一點被帶過去。所以它需要時間，也急不得。</p>
-          <p>要移動就得有空間。空間從哪裡來，是矯正計畫裡最關鍵的一題。</p>
-        </div>
-        <div class="tp-sec">
-          <h2>大人和小孩不是同一件事</h2>
-          <p>六到十二歲是顎骨還沒定型的階段，上顎中間的骨縫尚未完全癒合，對外力的反應比成年後好得多。成年之後顎骨已經定型，能移動的是牙齒本身，不是骨架，療程也通常比較長。</p>
-        </div>
-      </div>
       <p class="filter-note" hidden></p>
     </div>
   </section>
@@ -6658,16 +6640,19 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
 <!-- =============================================================================
      提案用的樣式與切換條。定案時：把 .tp-* 搬進 index.html 的樣式表，
-     這一整段（.pv-*、.tp-legacy、.tp-todo）連同對照按鈕一起刪掉。
+     這一整段（.pv-*、.tp-todo、以及症狀清單的顯示規則）一起刪掉。
      ⚠ class 一律 tp-／pv- 前綴 —— 這一頁是 index.html 的完整複本，
        站上有的 class 全部都在，短名字幾乎一定會撞（CLAUDE.md 第八節）。
      ============================================================================= -->
 <style>
-.tp-intro, .tp-legacy { margin: 1.4rem 0 0; max-width: 46rem; }
+.tp-intro { margin: 1.4rem 0 0; max-width: 46rem; }
 .tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
 .tp-lede { margin: 0 0 1.1rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink-soft); }
 
-/* 「這些狀況該來看一下」：讓他自己對號入座，所以要短、要好掃 */
+/* 「這些狀況該來看一下」。
+   ⚠ **預設不顯示**（2026-08-18）——它讓人自我檢查，不是讓人覺得被理解，
+     是健檢問卷的聲音不是陪伴的聲音。留成切換條的一格讓使用者自己決定。 */
+html:not([data-shape="checks"]) .tp-checks { display: none; }
 .tp-checks { margin: 0 0 1.15rem; }
 .tp-checks-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
 .tp-checks ul { margin: 0; padding-left: 1.3rem; }
@@ -6699,17 +6684,6 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   padding: .05em .25em; color: var(--ink);
 }
 .tp-todo::before { content: "⚠ "; }
-
-/* 對照舊版 */
-.tp-legacy .tp-sec { margin: 0 0 1.2rem; }
-.tp-legacy h2 {
-  display: flex; align-items: baseline; gap: .6rem;
-  margin: 1.5rem 0 .7rem; font-size: clamp(1.05rem, 3vw, 1.24rem); line-height: 1.55; color: var(--ink);
-}
-.tp-legacy h2::before { content: ''; flex: 0 0 3px; align-self: center; height: 1.05em; border-radius: 2px; background: var(--accent); }
-.tp-legacy p { margin: 0 0 .95rem; line-height: 1.95; }
-html[data-shape="old"] .tp-intro { display: none; }
-html[data-shape="old"] .tp-legacy { display: block !important; }
 
 /* chips 從 button 換成 a：外觀沿用站上那一組規則，這裡只補連結本身的重置 */
 .chips a { display: inline-block; text-decoration: none; }
@@ -6745,8 +6719,8 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
 <div class="pv-bar">
   <div class="pv-row">
     <span class="pv-lab">開場的形狀</span>
-    <button type="button" data-k="shape" data-v="new">新（短）</button>
-    <button type="button" data-k="shape" data-v="old">對照舊版</button>
+    <button type="button" data-k="shape" data-v="new">短（預設）</button>
+    <button type="button" data-k="shape" data-v="checks">＋症狀清單</button>
     <button type="button" id="pvclose" style="margin-left:auto">收起</button>
   </div>
   <div class="pv-meter" id="pvmeter">—</div>
@@ -6758,20 +6732,19 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
   var root = document.documentElement;
   if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
   var m = /[?&]shape=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
-  if (m && ['new', 'old'].indexOf(m[1]) >= 0) root.setAttribute('data-shape', m[1]);
+  if (m && ['new', 'checks'].indexOf(m[1]) >= 0) root.setAttribute('data-shape', m[1]);
 
   /* 量的是「開場那一塊」自己，不是整頁 —— 使用者說的「字太多」指的就是它。
      屏數用 visualViewport（iOS 的 innerHeight 比看得到的高，第九節第 6 條）。 */
   function measure() {
-    var box = root.getAttribute('data-shape') === 'old'
-      ? document.querySelector('.tp-legacy') : document.querySelector('.tp-intro');
+    var box = document.querySelector('.tp-intro');
     var n = (box.innerText || '').replace(/\s/g, '').length;
     var vh = (window.visualViewport && visualViewport.height) || innerHeight;
     var screens = (box.getBoundingClientRect().height / vh).toFixed(1);
     var left = document.querySelectorAll('.tp-intro .tp-todo').length;
     document.getElementById('pvmeter').innerHTML =
       '開場 <b>' + n + '</b> 字　手機上 <b>' + screens + '</b> 屏　'
-      + (screens <= 1.25 ? '一屏之內 ✓' : '⚠ 超過一屏')
+      + (screens <= 0.85 ? '不到一屏 ✓' : screens <= 1.25 ? '約一屏' : '⚠ 超過一屏')
       + '　待填 <b>' + left + '</b> 格';
   }
   function paint() {
