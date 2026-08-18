@@ -6764,6 +6764,37 @@ body[data-topic] #main { padding-top: calc(var(--topic-pad, var(--head-h)) + 1.1
 #topics .sec-head h2 { flex: 0 0 auto; }
 #topics .sec-head .topic-search { flex: 0 1 15rem; min-width: 0; margin-top: 0; }
 
+/* ---- 搜尋框的視覺重量（2026-08-18 三格待選）------------------------------
+   使用者：「移上去了，但搜尋欄位很大，比例上會讓我覺得很搶眼、好像要去點。」
+   ⚠ 這不只是大小，是**重量**：站上原本的樣式是 `background: var(--card)`
+     ＝ #f4f4f5，比周圍的紙 #e2e5e6 **更亮**，等於往前站一階；再加一圈框，
+     讀起來就是一顆等著被按的按鈕。它在這一頁是次要功能，不該搶。
+   ⚠ 三格共同守住的兩件（都不准動）：
+     ・框高 44px —— 觸控目標下限，不是造型。
+     ・手機字級 16px —— 低於 16 的話 iOS Safari 一聚焦就把整頁放大。 */
+
+/* Ⓐ 現況：卡色底 ＋ 框 ＋ 15rem */
+html[data-search="a"] #topics .sec-head .topic-search { flex: 0 1 15rem; }
+
+/* Ⓑ 淡：底色收成透明（讓它退回紙面）、框改用更淡的一階、收窄到 11rem */
+html[data-search="b"] #topics .sec-head .topic-search { flex: 0 1 11rem; }
+html[data-search="b"] #topics .topic-search input {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--rule) 62%, var(--paper));
+}
+html[data-search="b"] #topics .topic-search input:hover,
+html[data-search="b"] #topics .topic-search input:focus { border-color: var(--ink-soft); }
+
+/* Ⓒ 只有一條底線：整個盒子拿掉，只留下緣那一條。44px 的高度留著（觸控） */
+html[data-search="c"] #topics .sec-head .topic-search { flex: 0 1 10rem; }
+html[data-search="c"] #topics .topic-search input {
+  background: transparent; border-radius: 0;
+  border: 0; border-bottom: 1px solid color-mix(in srgb, var(--rule) 72%, var(--paper));
+  padding-inline: .15rem;
+}
+html[data-search="c"] #topics .topic-search input:hover,
+html[data-search="c"] #topics .topic-search input:focus { border-bottom-color: var(--ink-soft); }
+
 /* chips 從 button 換成 a：外觀沿用站上那一組規則，這裡只補連結本身的重置 */
 .chips a { display: inline-block; text-decoration: none; }
 .chips a[data-todo] { opacity: .45; pointer-events: none; }
@@ -6796,6 +6827,12 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
 </style>
 
 <div class="pv-bar">
+  <div class="pv-row">
+    <span class="pv-lab">搜尋框</span>
+    <button type="button" data-k="search" data-v="a">現況</button>
+    <button type="button" data-k="search" data-v="b">淡</button>
+    <button type="button" data-k="search" data-v="c">只有底線</button>
+  </div>
   <div class="pv-row">
     <span class="pv-lab">開場之後</span>
     <button type="button" data-k="after" data-v="first">第一次來（拉力）</button>
@@ -6830,6 +6867,9 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
   var root = document.documentElement;
   if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
   if (!root.getAttribute('data-after')) root.setAttribute('data-after', 'first');
+  if (!root.getAttribute('data-search')) root.setAttribute('data-search', 'b');
+  var ms = /[?&]search=([a-z0-9]+)/.exec(location.search);
+  if (ms && ['a', 'b', 'c'].indexOf(ms[1]) >= 0) root.setAttribute('data-search', ms[1]);
   var ma = /[?&]after=([a-z0-9]+)/.exec(location.search);
   if (ma && ['first', 'qa'].indexOf(ma[1]) >= 0) root.setAttribute('data-after', ma[1]);
   var m = /[?&]shape=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
