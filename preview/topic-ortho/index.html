@@ -6734,6 +6734,16 @@ html[data-after="qa"] .tp-first { display: none; }
      沒有 JS 時退回 `--head-h`：偏大一點但不會破圖。 */
 body[data-topic] #main { padding-top: var(--topic-pad, var(--head-h)); }
 
+/* ---- 頁首到「主題與科別」的空隙（2026-08-18 三格待選）--------------------
+   使用者拿兩張截圖比：直接開啟的空隙太大，往下捲一點之後那個距離才對。
+   ⚠ 這個空隙**不是** #main 的上內距（那一格已經收成剛好等於頁首高，
+     多一分內容就會鑽到固定頁首底下）。剩下的全部來自 `#topics` 自己的
+     `padding-top: 2.4rem` —— 那是首頁的區塊節奏，用來和上面的 HERO 隔開。
+     著陸頁上面是頁首不是 HERO，不需要那麼多。 */
+html[data-gap="a"] body[data-topic] #topics { padding-top: 2.4rem; }   /* 現況，空隙約 47px */
+html[data-gap="b"] body[data-topic] #topics { padding-top: 1rem; }     /* 約 25px */
+html[data-gap="c"] body[data-topic] #topics { padding-top: .4rem; }    /* 約 16px */
+
 /* ⚠⚠ 著陸頁的頁首要自己變成實心（2026-08-18）。
    首頁的頁首是**玻璃**：`--glass` 由 JS 依 HERO 的捲動位置算出來，
    字是白的因為它壓在那張夜景照片上。著陸頁沒有 HERO，那支 JS 算不出東西，
@@ -6875,6 +6885,12 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
 
 <div class="pv-bar">
   <div class="pv-row">
+    <span class="pv-lab">頁首下空隙</span>
+    <button type="button" data-k="gap" data-v="a">現況</button>
+    <button type="button" data-k="gap" data-v="b">中</button>
+    <button type="button" data-k="gap" data-v="c">緊</button>
+  </div>
+  <div class="pv-row">
     <span class="pv-lab">幾篇幾位</span>
     <button type="button" data-k="count" data-v="off">不放</button>
     <button type="button" data-k="count" data-v="b">h1 底下</button>
@@ -6918,6 +6934,9 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
   /* 搜尋框已定案「框＋窄」（Ⓓ），切換條那一排收掉了，這裡直接寫死。 */
   root.setAttribute('data-search', 'd');
   if (!root.getAttribute('data-count')) root.setAttribute('data-count', 'b');
+  if (!root.getAttribute('data-gap')) root.setAttribute('data-gap', 'b');
+  var mg = /[?&]gap=([a-z0-9]+)/.exec(location.search);
+  if (mg && ['a', 'b', 'c'].indexOf(mg[1]) >= 0) root.setAttribute('data-gap', mg[1]);
 
   var mc = /[?&]count=([a-z0-9]+)/.exec(location.search);
   if (mc && ['off', 'b', 'c', 'd'].indexOf(mc[1]) >= 0) root.setAttribute('data-count', mc[1]);
