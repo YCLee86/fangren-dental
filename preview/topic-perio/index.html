@@ -4598,8 +4598,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            ⚠ 這是**新的對外文字**，要逐字看過再上。文案在 tools/topic-copy.mjs。 -->
       <div class="tp-intro">
         <h1>牙周治療</h1>
-        <p class="tp-lede">牙齦流血、刷牙有血絲、牙齒好像有點會動 —— 這些你大概已經查過了。有人說洗牙就好，有人說要開刀，也有人叫你再觀察看看。會愈查愈混亂，是正常的。</p>
-        <p class="tp-lede">牙周病每個人骨頭剩多少都不一樣，所以在量過之前，誰講的都只是可能。先讓醫師量一次，你會知道自己在哪一階、有哪些選擇 —— 要不要做、什麼時候做，你決定。</p>
+        <p class="tp-case">有人是刷牙有血看了好幾年，問過的人都說「很常見」「我也有啊」—— 於是就這樣過去了。</p>
+        <p class="tp-case">有人是查過很多說法：有人叫你洗牙就好，有人說要開刀，也有人叫你再觀察看看，愈查愈亂。</p>
+        <p class="tp-case">也有人是牙齒一年掉一顆，早就覺得沒救了，只是照常回去洗一洗。</p>
+        <p class="tp-stance">這三種我們都常遇到。<strong>常見不等於沒事，嚴重也不等於沒救</strong> —— 但在量過之前，誰講的都只是可能。先讓醫師量一次，你會知道自己在哪一階、有哪些選擇；要不要做、什麼時候做，你決定。</p>
 
         <!-- 症狀清單：**預設不顯示**。它讓人自我檢查，不是讓人覺得被理解 ——
              是健檢問卷的聲音，不是陪伴的聲音。留成切換條的一格讓使用者選。 -->
@@ -6673,7 +6675,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 <style>
 .tp-intro { margin: 1.4rem 0 0; max-width: 46rem; }
 .tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
-.tp-lede { margin: 0 0 1.1rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink-soft); }
+/* 三段處境是「他們」，用柔墨；底下那句回應是「我們」，用墨。
+   ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** —— 一加就變回症狀清單的樣子。 */
+.tp-case {
+  margin: 0 0 .7rem; font-size: 1.0rem; line-height: 1.85; color: var(--ink-soft);
+  padding-left: .85rem; border-left: 2px solid var(--rule);
+}
+.tp-stance { margin: 1.05rem 0 1.15rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink); }
+.tp-stance strong { color: var(--accent-deep); font-weight: 700; }
 
 /* 「這些狀況該來看一下」。
    ⚠ **預設不顯示**（2026-08-18）——它讓人自我檢查，不是讓人覺得被理解，

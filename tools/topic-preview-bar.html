@@ -8,7 +8,14 @@
 <style>
 .tp-intro { margin: 1.4rem 0 0; max-width: 46rem; }
 .tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
-.tp-lede { margin: 0 0 1.1rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink-soft); }
+/* 三段處境是「他們」，用柔墨；底下那句回應是「我們」，用墨。
+   ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** —— 一加就變回症狀清單的樣子。 */
+.tp-case {
+  margin: 0 0 .7rem; font-size: 1.0rem; line-height: 1.85; color: var(--ink-soft);
+  padding-left: .85rem; border-left: 2px solid var(--rule);
+}
+.tp-stance { margin: 1.05rem 0 1.15rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink); }
+.tp-stance strong { color: var(--accent-deep); font-weight: 700; }
 
 /* 「這些狀況該來看一下」。
    ⚠ **預設不顯示**（2026-08-18）——它讓人自我檢查，不是讓人覺得被理解，
