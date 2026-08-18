@@ -212,6 +212,9 @@ assets/
   icon.svg              主畫面圖示的**來源檔**（不透明底、一色、牙洞原始比例）。
                         ⚠ 和 favicon.svg 是兩件事，不要合併 —— 見 PALETTE.md 第六之二十節
   icon-*.png            由 tools/app-icons.mjs 從 icon.svg 算出來，已進版控，勿手改
+  logo.png              給 Google 的 Organization logo（透明底、品牌真值 #3f654a）。
+                        由 tools/logo-png.mjs 算出來，已進版控，勿手改。
+                        ⚠ 站上任何一頁都不會顯示它，只出現在 JSON-LD 裡
 posts/<slug>/index.html 一篇文章一個資料夾
 history/<name>.html     改版紀錄（原提案頁的推導文字，定案後只留這個。見第八節）
 history/index.html      改版紀錄的目錄
@@ -232,6 +235,9 @@ tools/
                         只有改過 favicon 的顏色或幾何時才要跑，npm run build 不會呼叫它
   app-icons.mjs         從 assets/icon.svg 產生 assets/icon-*.png（主畫面圖示）。
                         同上，只有改過 icon.svg 才要跑；--check 只比對不寫檔
+  logo-png.mjs          從 index.html 頁首的標誌路徑產生 assets/logo.png
+                        （給 Google 的 Organization logo，**站上不顯示**）。
+                        只有改過頁首那條路徑或要換顏色時才要跑；--check 只比對
   build-manifest.json   內容雜湊紀錄，build 自動維護，勿手改
 .claude/
   settings.json         SessionStart hook：開啟專案時自動同步（隨 git 走，兩台都生效）
@@ -1296,6 +1302,40 @@ git pull
      不必再為「不淡」寫一張 `mask-image: none`（實測 1112 那一格對改動前
      逐像素 0 個有差）。
 
+18. **用 Chromium 產圖，一定要挑 `headless_shell`，不能挑完整版 `chrome`**（2026-08-19，
+   做 `assets/logo.png` 時踩到）。這個容器裡兩支都在：
+
+       /opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell   ✅
+       /opt/pw-browsers/chromium-1194/chrome-linux/chrome                          ❌
+
+   完整版**實際畫出來的高度比 `--window-size` 少 87px**（視窗外框），四種尺寸實測
+   都是固定 87：600→513、800→713、512→425。
+   ⚠⚠ **而 PNG 仍然輸出完整尺寸**，底部那一截靜靜地變成空白，
+     **Chromium 不報錯、Node 不報錯、檔案大小也很正常**。症狀是「形狀下緣被平切」，
+     而且只有把圖放大看才看得出來 —— 這一次是使用者看圖發現的，我的三道檢查
+     （透明比例、顏色、牙洞有沒有挖穿）全部通過。
+   ⚠ `tools/app-icons.mjs` 與 `tools/favicon-ico.mjs` **沒有這個問題**：它們的
+     `chromeCandidates()` 本來就把 `headless_shell` 排在整份清單最前面。
+     新寫產生器時直接照抄那份清單，不要自己寫死路徑。
+   ⚠⚠ **檢查要檢查「形狀對不對」，不是只檢查「顏色和透明度對不對」。**
+     `tools/logo-png.mjs` 因此加了兩道：① 標誌的長寬比要等於 2.02918（±0.02）
+     ② 最下面四列的寬度要收窄（末列 < 首列的一半）。被平切時最後一列會突然很寬，
+     第 ② 道抓得到第 ① 道漏掉的邊界情況。實測故意用完整版 chrome 跑，
+     會停在「標誌長寬比 2.1739 對不上 2.02918」並拒絕寫檔。
+
+19. **`assets/icon.svg` 的註解說「牙洞放大 1.18 倍」，實測方向相反**（2026-08-19 量到，
+   **還沒查清楚，先記著**）。用真貝茲極值量三條路徑：
+
+       index.html 頁首   外框長寬比 2.02926   牙洞寬 ÷ 外框寬 0.102514
+       assets/icon.svg   外框長寬比 2.02918   牙洞寬 ÷ 外框寬 0.093080  ← 小 9.2%
+
+   外框形狀兩者完全相同（小數五位都一樣），差的只有牙洞：`icon.svg` 那顆是頁首的
+   **×0.908**，不是註解寫的 ×1.18。
+   ⚠ 可能的解釋是「×1.18 是相對於 AI 原始檔，而頁首那顆放得更大」，但沒有 AI 檔
+     可以驗證。**在查清楚之前，不要依那句註解去改任何一個檔** ——
+     兩顆圖示現在各自是對的（線上的 `icon-192.png` 完整、比例正確）。
+   ⚠ `assets/logo.png` 取的是**頁首那一條**，理由見第十節第 2 項。
+
 ### 提案頁的切換條
 
 `home-desktop-*` 幾頁都有切換條，網址可帶參數直接開到某一案
@@ -1359,9 +1399,17 @@ git pull
 
 1. ~~座標~~ —— **2026-08-10 已填**：`23.7101740, 120.5468936`（使用者在 Google 地圖上
    長按診所位置取得）。`clinic.json` 的 `geo`，只出現在首頁的 `Dentist` 節點上。
-2. **點陣 logo**（`clinic.json` 的 `logo`）—— Google 的 Organization logo 要 PNG／JPG，
-   站上只有 `assets/favicon.svg`。直接放大不行，它的牙洞位置是為了 16px 分頁列調過的
-   （PALETTE.md 第六之七節）。要補得先決定用哪個綠、底色與留白 —— 那是配色的決定。
+2. ~~點陣 logo~~ —— **2026-08-19 補上並上線**：`assets/logo.png`（透明底 PNG、
+   1200×600、品牌真值 `#3f654a`），由 `tools/logo-png.mjs` 從 **index.html 頁首那條
+   標誌路徑**算出來（路徑不抄第二份）。`clinic.json` 的 `logo` 已填。
+   > ⚠ **不能拿 `assets/icon-192.png` 代替** —— 那張的綠是被 iOS 玻璃效果補償過的
+   > `#205533`（Google 不套那層效果，送過去就是偏暗的錯誤綠），底也是不透明白。
+   > ⚠ **牙洞取「頁首那一條」的比例（0.102514），不是 `icon.svg` 的（0.093080）** ——
+   > 使用者從兩案挑了前者。理由同上：`icon.svg` 的洞是為了扛 iOS 柔化調過的，
+   > 那是裝置補償，不該帶進通用標誌檔。
+   > ⚠ **已知取捨**：標誌是暗綠，**深色底上會偏弱**。使用者看過四種底色的對照表
+   > 之後接受了。要解是另做一個深色底專用的亮色版（得先回 PALETTE.md 挑階），
+   > 不是把這一張改一改。**不要自己動手加白底。**
 3. **文章 `about` 的 `sameAs`** —— 六篇的 `about` 已於 2026-08-10 填好
    （`post-meta` 的 `about` 欄位，實體全部是從各篇自己的 `<h2>` 與內文挑的），
    但**沒有填 Wikidata 的 `sameAs`**：雲端 session 連不到 wikidata.org，
