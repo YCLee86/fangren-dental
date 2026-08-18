@@ -119,6 +119,13 @@ html[data-search="c"] #topics .topic-search input {
 html[data-search="c"] #topics .topic-search input:hover,
 html[data-search="c"] #topics .topic-search input:focus { border-bottom-color: var(--ink-soft); }
 
+/* Ⓓ 框 ＋ 窄（2026-08-18 定案方向）：使用者看過三格之後
+   ——「現在這個版本的寬度差不多，但我覺得用原來的框框版本就好」。
+   ＝ Ⓒ 的寬度（10rem）配站上原本的框（卡色底 ＋ 一圈框），
+   所以這一格**不覆寫任何顏色**，只給寬度 —— 框的樣式就是 index.html 裡那一份。
+   收窄之後 390 上從 240px → 160px，重量自然就下來了。 */
+html[data-search="d"] #topics .sec-head .topic-search { flex: 0 1 10rem; }
+
 /* chips 從 button 換成 a：外觀沿用站上那一組規則，這裡只補連結本身的重置 */
 .chips a { display: inline-block; text-decoration: none; }
 .chips a[data-todo] { opacity: .45; pointer-events: none; }
@@ -156,6 +163,7 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
     <button type="button" data-k="search" data-v="a">現況</button>
     <button type="button" data-k="search" data-v="b">淡</button>
     <button type="button" data-k="search" data-v="c">只有底線</button>
+    <button type="button" data-k="search" data-v="d">框＋窄</button>
   </div>
   <div class="pv-row">
     <span class="pv-lab">開場之後</span>
@@ -191,9 +199,9 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
   var root = document.documentElement;
   if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
   if (!root.getAttribute('data-after')) root.setAttribute('data-after', 'first');
-  if (!root.getAttribute('data-search')) root.setAttribute('data-search', 'b');
+  if (!root.getAttribute('data-search')) root.setAttribute('data-search', 'd');
   var ms = /[?&]search=([a-z0-9]+)/.exec(location.search);
-  if (ms && ['a', 'b', 'c'].indexOf(ms[1]) >= 0) root.setAttribute('data-search', ms[1]);
+  if (ms && ['a', 'b', 'c', 'd'].indexOf(ms[1]) >= 0) root.setAttribute('data-search', ms[1]);
   var ma = /[?&]after=([a-z0-9]+)/.exec(location.search);
   if (ma && ['first', 'qa'].indexOf(ma[1]) >= 0) root.setAttribute('data-after', ma[1]);
   var m = /[?&]shape=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
