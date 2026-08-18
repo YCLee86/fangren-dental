@@ -219,6 +219,8 @@ posts/<slug>/index.html 一篇文章一個資料夾
 history/<name>.html     改版紀錄（原提案頁的推導文字，定案後只留這個。見第八節）
 history/index.html      改版紀錄的目錄
 preview/<name>/index.html  進行中的提案頁；定案上線後刪掉、文字搬進 history/
+prompts/<名字>.txt      插畫的提示詞，一張圖一份（ILLUSTRATION.md 第七節第 19 條：
+                        定稿的提示詞要留在 repo 裡，改圖從那一份改、不要重寫）
 tools/
   build.mjs             產生首頁卡片、更新日期、排序、sitemap、allowed-slugs、結構化資料
   schema.mjs            JSON-LD 產生器（被 build.mjs 匯入，不單獨執行）。
@@ -238,6 +240,10 @@ tools/
   logo-png.mjs          從 index.html 頁首的標誌路徑產生 assets/logo.png
                         （給 Google 的 Organization logo，**站上不顯示**）。
                         只有改過頁首那條路徑或要換顏色時才要跑；--check 只比對
+  gemini-image.mjs      直接呼叫 Gemini API 產插畫，不必再手動貼到網頁上。
+                        提示詞放 prompts/<名字>.txt，圖落在 gen/（兩者都不進版控）。
+                        金鑰讀 GEMINI_API_KEY 或根目錄的 .gemini-key。
+                        ⚠ repo 是 public，金鑰不要 commit。見 ILLUSTRATION.md 第九節
   build-manifest.json   內容雜湊紀錄，build 自動維護，勿手改
 .claude/
   settings.json         SessionStart hook：開啟專案時自動同步（隨 git 走，兩台都生效）
