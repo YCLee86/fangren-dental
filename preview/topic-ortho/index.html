@@ -4590,6 +4590,9 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
              ＊按鈕上的字要和 tools/build.mjs 的 SPEC 對照表用同一個詞
                （「顯微根管」「口腔外科」），日後那兩科的文章才篩得到。 -->
       </div>
+      <!-- Ⓓ chips 正下方，＝首頁 .filter-note 原本的位置 -->
+      <p class="tp-count tp-count-d"><a href="#doctors">2 位醫師</a></p>
+      <p class="filter-note" hidden></p>
 
       <!-- ===== 科別介紹（提案中）=====================================
            使用者 2026-08-18：「篩選點下去…其實是開了另外一個網頁」＋
@@ -4598,6 +4601,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            ⚠ 這是**新的對外文字**，要逐字看過再上。文案在 tools/topic-copy.mjs。 -->
       <div class="tp-intro">
         <h1>齒顎矯正</h1>
+        <!-- Ⓑ h1 底下當副標 -->
+        <p class="tp-count tp-count-b">2 位醫師</p>
         <p class="tp-case">有人是從小就這樣，早就習慣了 —— 只覺得拍照時想遮，沒想過它和某幾顆牙特別容易蛀有關。</p>
         <p class="tp-case">有人是想過很多次也放下很多次，問過朋友查過網路，可是要戴幾年、會不會痛、是不是一定得拔牙，每個人講的都不一樣。</p>
         <p class="tp-case">也有人是覺得年紀已經過了，矯正是小孩子的事。</p>
@@ -4614,6 +4619,9 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
             <li>孩子換牙，<strong>恆牙一長出來就擠在一起</strong></li>
           </ul>
         </div>
+
+        <!-- Ⓒ 開場之後、內容之前：當作往下的路標，兩個數字都是錨點連結 -->
+        <p class="tp-count tp-count-c">往下有 <a href="#doctors">2 位醫師</a></p>
 
         <!-- 拉力版（預設）：描述第一步長什麼樣，而不是先攤開代價。
              2026-08-18 使用者：「這個卡片資訊給出來的感覺對病患是推力而非拉力。」 -->
@@ -4637,7 +4645,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
       </div>
 
-      <p class="filter-note" hidden></p>
+
     </div>
   </section>
 
@@ -6776,6 +6784,34 @@ html[data-search="c"] #topics .topic-search input:focus { border-bottom-color: v
    收窄之後 390 上從 240px → 160px，重量自然就下來了。 */
 html[data-search="d"] #topics .sec-head .topic-search { flex: 0 1 10rem; }
 
+/* ---- 「幾篇文章、幾位醫師」放哪裡（2026-08-18 四格待選）------------------
+   首頁上這個註記是 .filter-note：按下標記才出現、印「兒童牙科：3 篇文章、
+   2 位醫師」。著陸頁沒有「按下去」這件事（標記是連結），所以它一直不會出現。
+   ⚠ 科別名不必再印一次 —— 那已經是這一頁的 h1 了。
+   ⚠ 0 的那一項整個不寫（矯正是 0 篇文章）。判斷在產生器裡，不是這裡。 */
+.tp-count { margin: 0; }
+html:not([data-count="b"]) .tp-count-b,
+html:not([data-count="c"]) .tp-count-c,
+html:not([data-count="d"]) .tp-count-d { display: none; }
+.tp-count:empty { display: none !important; }
+.tp-dot { margin: 0 .45em; color: var(--rule); }
+.tp-count a { color: var(--accent-deep); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent-deep) 30%, transparent); }
+.tp-count a:hover { border-bottom-color: var(--accent-deep); }
+
+/* Ⓑ h1 底下當副標：最安靜，純文字不帶連結 */
+.tp-count-b {
+  margin: -.15rem 0 .75rem; font-size: .84rem; letter-spacing: .02em;
+  color: var(--ink-soft);
+}
+/* Ⓒ 開場之後、內容之前：當往下的路標，所以兩個數字是錨點連結 */
+.tp-count-c {
+  margin: 0 0 1.15rem; padding-top: .95rem; font-size: .88rem;
+  color: var(--ink-soft); border-top: 1px solid var(--rule);
+}
+.tp-count-c a { font-weight: 700; }
+/* Ⓓ chips 正下方＝首頁 .filter-note 原本的位置 */
+.tp-count-d { margin: .85rem 0 0; font-size: .82rem; color: var(--ink-soft); }
+
 /* chips 從 button 換成 a：外觀沿用站上那一組規則，這裡只補連結本身的重置 */
 .chips a { display: inline-block; text-decoration: none; }
 .chips a[data-todo] { opacity: .45; pointer-events: none; }
@@ -6808,6 +6844,13 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
 </style>
 
 <div class="pv-bar">
+  <div class="pv-row">
+    <span class="pv-lab">幾篇幾位</span>
+    <button type="button" data-k="count" data-v="off">不放</button>
+    <button type="button" data-k="count" data-v="b">h1 底下</button>
+    <button type="button" data-k="count" data-v="c">開場之後</button>
+    <button type="button" data-k="count" data-v="d">標記下方</button>
+  </div>
   <div class="pv-row">
     <span class="pv-lab">搜尋框</span>
     <button type="button" data-k="search" data-v="a">現況</button>
@@ -6850,6 +6893,9 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
   if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
   if (!root.getAttribute('data-after')) root.setAttribute('data-after', 'first');
   if (!root.getAttribute('data-search')) root.setAttribute('data-search', 'd');
+  if (!root.getAttribute('data-count')) root.setAttribute('data-count', 'c');
+  var mc = /[?&]count=([a-z0-9]+)/.exec(location.search);
+  if (mc && ['off', 'b', 'c', 'd'].indexOf(mc[1]) >= 0) root.setAttribute('data-count', mc[1]);
   var ms = /[?&]search=([a-z0-9]+)/.exec(location.search);
   if (ms && ['a', 'b', 'c', 'd'].indexOf(ms[1]) >= 0) root.setAttribute('data-search', ms[1]);
   var ma = /[?&]after=([a-z0-9]+)/.exec(location.search);
