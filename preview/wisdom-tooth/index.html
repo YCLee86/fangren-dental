@@ -46,13 +46,6 @@
   max-width: var(--content); margin: 0 auto; padding: .8rem var(--pad) 0;
   font-size: .82rem; line-height: 1.7; color: var(--ink-soft);
 }
-.pv-hero-slot {
-  aspect-ratio: 2000 / 1116; border: 1.5px dashed var(--rule); border-radius: var(--radius);
-  background: var(--card); display: flex; flex-direction: column; gap: .4rem;
-  align-items: center; justify-content: center; text-align: center; padding: 1rem;
-}
-.pv-hero-slot span { font-size: .95rem; color: var(--ink-soft); letter-spacing: .04em; }
-.pv-hero-slot small { font-size: .78rem; color: var(--ink-soft); opacity: .8; }
 </style>
 
 
@@ -127,7 +120,7 @@
 <main id="main">
 <article>
 
-  <p class="pv-note">提案預覽 · 這一頁是〈拔智齒之後〉的快照，還沒上線。HERO 圖等圖檔進 repo 之後補上；瀏覽數計數器已拿掉。</p>
+  <p class="pv-note">提案預覽 · 這一頁是〈拔智齒之後〉的快照，還沒上線。瀏覽數計數器已拿掉。</p>
 
   <div class="post-head">
     <div class="wrap-text">
@@ -140,10 +133,12 @@
       <h1>拔智齒之後：傷口填補、術後照顧與保險怎麼問</h1>
     </div>
     <figure class="post-hero">
-      <div class="pv-hero-slot">
-        <span>HERO 圖尚未進 repo</span>
-        <small>圖檔放進 assets/ 之後，這一格就是那張插畫（比例 2000 × 1116）</small>
-      </div>
+      <img src="../../assets/hero-wisdom-photo-1600.jpg"
+           srcset="../../assets/hero-wisdom-photo-800.jpg 800w,
+                   ../../assets/hero-wisdom-photo-1600.jpg 1600w,
+                   ../../assets/hero-wisdom-photo-2000.jpg 2000w"
+           sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+           alt="插畫分成左右兩格。左格是明亮的診間：鮑伯頭的女醫師坐在圓凳上攤開手掌解說，穿芥末黃毛衣的年輕男生坐在診療椅邊緣、一手扶著微微泛紅的臉頰聽著，後方另一位工作人員在檯面整理器械。上方一個大思考泡泡分成三段：左段一排牙齒最後面那顆往前傾倒、擠著前面那顆，縫裡卡著食物碎屑；中段那顆拔掉後的窩洞裡有血塊、四周牙齦泛紅，上方一個紅色叉叉，牙刷停在旁邊不敢靠近；右段窩洞裡填進一塊淺藍色方塊、牙齦覆蓋縫合並縫上幾針，旁邊的牙齒比出讚。右格是幾天後的同一個人走在街上，一手拎著菜、一手拿著紅豆餅邊走邊吃，哼著歌，店家與路人在旁邊" width="2000" height="1116">
     </figure>
   </div>
 
