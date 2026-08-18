@@ -117,12 +117,23 @@ const todo = (t) => t.replace(/\[\[([^\]]*)\]\]/g, '<span class="tp-todo">$1</sp
      首頁那個 .filter-note 會印 0 是因為它是「你剛按下去的篩選結果」，
      著陸頁的身分不同 —— 這一頁是那一科的門面。 */
 const countLine = (n, d, opts) => {
-  const link = (href, text) => (opts.links ? `<a href="${href}">${text}</a>` : text);
-  const parts = [];
-  if (n) parts.push(link("#articles", `${n} 篇文章`));
-  if (d) parts.push(link("#doctors", `${d} 位醫師`));
-  if (!parts.length) return "";
-  return (opts.lead || "") + parts.join('<span class="tp-dot" aria-hidden="true">・</span>');
+  const link = (href, text) => `<a href="${href}">${text}</a>`;
+  const dot = '<span class="tp-dot" aria-hidden="true">・</span>';
+  /* 三種措辭。差別不是長度，是**數字擺哪裡**：
+     「2 篇文章」把數字放最前面，讀起來像在宣告這一科的內容就是那兩篇；
+     「文章 2 篇」是目錄的講法，數字退到後面，那一行就變回入口。
+     使用者 2026-08-18：「這裡寫 2 篇文章，會誤以為這個著陸頁的科別內容就是文章。」 */
+  const word = {
+    noun: () => [n && link("#articles", `文章 ${n} 篇`), d && link("#doctors", `醫師 ${d} 位`)],
+    dir:  () => [n && link("#articles", `${n} 篇文章`), d && link("#doctors", `${d} 位醫師`)],
+    plain:() => [n && link("#articles", `${n} 篇文章`), d && link("#doctors", `${d} 位醫師`)],
+  };
+  return Object.entries(word).map(([k, f]) => {
+    const parts = f().filter(Boolean);
+    if (!parts.length) return "";
+    const lead = k === "dir" ? "往下有 " : "";
+    return `<span class="tp-w tp-w-${k}">${lead}${parts.join(dot)}</span>`;
+  }).join("");
 };
 
 const introBlock = (spec, t, cnt) => `
@@ -134,7 +145,7 @@ const introBlock = (spec, t, cnt) => `
       <div class="tp-intro">
         <h1>${t.h1}</h1>
         <!-- Ⓑ h1 底下當副標 -->
-        <p class="tp-count tp-count-b">${countLine(cnt.a, cnt.d, { links: false })}</p>
+        <p class="tp-count tp-count-b">${countLine(cnt.a, cnt.d)}</p>
 ${t.cases.map((x) => `        <p class="tp-case">${todo(x)}</p>`).join("\n")}
         <p class="tp-stance">${todo(t.stance)}</p>
 
@@ -148,7 +159,7 @@ ${t.checks.map((c) => `            <li>${todo(c)}</li>`).join("\n")}
         </div>
 
         <!-- Ⓒ 開場之後、內容之前：當作往下的路標，兩個數字都是錨點連結 -->
-        <p class="tp-count tp-count-c">${countLine(cnt.a, cnt.d, { links: true, lead: "往下有 " })}</p>
+        <p class="tp-count tp-count-c">${countLine(cnt.a, cnt.d)}</p>
 
         <!-- 拉力版（預設）：描述第一步長什麼樣，而不是先攤開代價。
              2026-08-18 使用者：「這個卡片資訊給出來的感覺對病患是推力而非拉力。」 -->
@@ -200,7 +211,7 @@ for (const spec of SPECS) {
      真正的 <body> 是**整行只有它**，所以用行首錨點的正規式。 */
   const bodyRe = /^<body>$/m;
   if (!bodyRe.test(h)) throw new Error("找不到行首的 <body>，index.html 的結構可能改過了");
-  h = h.replace(bodyRe, `<body data-topic="${spec}">`);
+  h = h.replace(bodyRe, `<body data-topic="${spec}" data-spec="${spec}">`);
 
   /* 3. 首頁那個 sr-only 的 h1 拿掉 —— 這一頁的 h1 是科別名（在介紹那一塊裡） */
   h = h.replace(/\s*<h1 class="sr-only">[^<]*<\/h1>/, "");
@@ -247,7 +258,7 @@ for (const spec of SPECS) {
   const NOTE = '      <p class="filter-note" hidden></p>';
   h = h.replace(NOTE,
     '      <!-- Ⓓ chips 正下方，＝首頁 .filter-note 原本的位置 -->\n' +
-    `      <p class="tp-count tp-count-d">${countLine(cnt.a, cnt.d, { links: true })}</p>\n` +
+    `      <p class="tp-count tp-count-d">${countLine(cnt.a, cnt.d)}</p>\n` +
     NOTE + '\n' +
     introBlock(spec, t, cnt));
 
