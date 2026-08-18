@@ -4590,61 +4590,26 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
              ＊按鈕上的字要和 tools/build.mjs 的 SPEC 對照表用同一個詞
                （「顯微根管」「口腔外科」），日後那兩科的文章才篩得到。 -->
       </div>
-      <!-- Ⓓ chips 正下方，＝首頁 .filter-note 原本的位置 -->
-      <p class="tp-count tp-count-d"><a href="#doctors"><span class="tp-n">2 位</span><span class="tp-t">醫師</span></a></p>
       <p class="filter-note" hidden></p>
 
-      <!-- ===== 科別介紹（提案中）=====================================
-           使用者 2026-08-18：「篩選點下去…其實是開了另外一個網頁」＋
-           「主題與科別標籤繼續做在新開啟的網頁上」。所以這一塊就長在
-           標記那一排底下，其餘版面和首頁完全一樣。
-           ⚠ 這是**新的對外文字**，要逐字看過再上。文案在 tools/topic-copy.mjs。 -->
+      <!-- ===== 科別介紹（2026-08-18 版面定案）==========================
+           走到這個版面經過使用者七輪修正，推導寫在 COPY.md 第九節。
+           順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
+           ⚠ 文字在 tools/topic-copy.mjs，**不要改這裡**。 -->
       <div class="tp-intro">
         <h1>齒顎矯正</h1>
-        <!-- Ⓑ h1 底下當副標 -->
-        <p class="tp-count tp-count-b"><a href="#doctors"><span class="tp-n">2 位</span><span class="tp-t">醫師</span></a></p>
+        <p class="tp-count"><a href="#doctors"><span class="tp-n">2 位</span><span class="tp-t">醫師</span></a></p>
         <p class="tp-case">有人是從小就這樣，早就習慣了 —— 只覺得拍照時想遮，沒想過它和某幾顆牙特別容易蛀有關。</p>
         <p class="tp-case">有人是想過很多次也放下很多次，問過朋友查過網路，可是要戴幾年、會不會痛、是不是一定得拔牙，每個人講的都不一樣。</p>
         <p class="tp-case">也有人是覺得年紀已經過了，矯正是小孩子的事。</p>
         <p class="tp-stance">這三種我們都常遇到。<strong>不整齊不只是好不好看，年紀也不是絕對的門檻</strong> —— 但這幾題的答案真的要看過你的牙才說得準。先讓醫師看一次，你會知道自己面對的是什麼、大概要付出多少；剩下的再慢慢決定。</p>
 
-        <!-- 症狀清單：**預設不顯示**。它讓人自我檢查，不是讓人覺得被理解 ——
-             是健檢問卷的聲音，不是陪伴的聲音。留成切換條的一格讓使用者選。 -->
-        <div class="tp-checks">
-          <p class="tp-checks-h">這些狀況，該來看一下</p>
-          <ul>
-            <li>門牙<strong>擠在一起</strong>，或有明顯的縫</li>
-            <li>咬起來<strong>上下排對不上</strong></li>
-            <li>習慣<strong>只用一邊咀嚼</strong></li>
-            <li>孩子換牙，<strong>恆牙一長出來就擠在一起</strong></li>
-          </ul>
-        </div>
-
-        <!-- Ⓒ 開場之後、內容之前：當作往下的路標，兩個數字都是錨點連結 -->
-        <p class="tp-count tp-count-c"><a href="#doctors"><span class="tp-n">2 位</span><span class="tp-t">醫師</span></a></p>
-
-        <!-- 拉力版（預設）：描述第一步長什麼樣，而不是先攤開代價。
-             2026-08-18 使用者：「這個卡片資訊給出來的感覺對病患是推力而非拉力。」 -->
         <div class="tp-first">
           <p class="tp-first-h">第一次來，大概是這樣</p>
           <p>醫師會拍照、照 X 光，看你的上下排怎麼咬在一起，再告訴你有哪些做法、各要花多久。</p>
           <p>看完你會知道自己面對的是什麼、大概要付出多少，以及如果要做，會從哪一步開始。</p>
         </div>
-
-        <!-- 推力版（三題問答）。留著給提案頁比對，**預設不顯示**，定案時刪掉。 -->
-        <dl class="tp-qa">
-          <dt>一定要拔牙嗎？</dt>
-          <dd>不一定。空間可以從好幾個地方挪，拔牙只是其中一種；要照過 X 光才知道。</dd>
-
-          <dt>要戴多久？多久回診一次？</dt>
-          <dd><span class="tp-todo">要你確認：一般療程大約多久、回診間隔</span></dd>
-
-          <dt>有哪些方式可以選？</dt>
-          <dd><span class="tp-todo">要你確認：診所實際提供哪些矯正方式。目前站上查得到的只有隱適美、兒童隱適美與肌功能矯正</span></dd>
-        </dl>
-
       </div>
-
 
     </div>
   </section>
@@ -4688,7 +4653,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     </div>
   </section>
 
-  <p class="tp-note wrap-note">本頁為一般口腔衛教資訊，不能取代臨床診斷。實際狀況需經檢查後由醫師評估。</p>
+  <p class="tp-note">本頁為一般口腔衛教資訊，不能取代臨床診斷。實際狀況需經檢查後由醫師評估。</p>
 
   <section id="clinic">
     <div class="shell">
@@ -6658,104 +6623,47 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 </script>
 
 <!-- =============================================================================
-     提案用的樣式與切換條。定案時：把 .tp-* 搬進 index.html 的樣式表，
-     這一整段（.pv-*、.tp-todo、以及症狀清單的顯示規則）一起刪掉。
-     ⚠ class 一律 tp-／pv- 前綴 —— 這一頁是 index.html 的完整複本，
-       站上有的 class 全部都在，短名字幾乎一定會撞（CLAUDE.md 第八節）。
+     科別著陸頁的樣式（2026-08-18 版面定案）
+     -----------------------------------------------------------------------------
+     這一段由 tools/topic-preview.mjs 插在提案頁最後一個 </body> 之前。
+     **正式上線時整段搬進 index.html 的樣式表**，選擇器不必再改一次 ——
+     所有只該作用在著陸頁的規則都已經限定 `[data-topic]`。
+
+     ⚠ class 一律 tp- 前綴。這一頁是 index.html 的完整複本，站上有的 class
+       全部都在，短名字幾乎一定會撞（CLAUDE.md 第八節）。
+
+     ⚠ **切換條已經全部拆掉**（2026-08-18 使用者：「中 ok，先這樣把版面確定了」）。
+       走到這個版面經過七輪修正，每一輪的推導與落選案寫在 COPY.md 第九節。
      ============================================================================= -->
 <style>
-.tp-intro { margin: 1.4rem 0 0; max-width: 46rem; }
-.tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
-/* 三段處境是「他們」，用柔墨；底下那句回應是「我們」，用墨。
-   ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** —— 一加就變回症狀清單的樣子。 */
-.tp-case {
-  margin: 0 0 .7rem; font-size: 1.0rem; line-height: 1.85; color: var(--ink-soft);
-  padding-left: .85rem; border-left: 2px solid var(--rule);
-}
-.tp-stance { margin: 1.05rem 0 1.15rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink); }
-.tp-stance strong { color: var(--accent-deep); font-weight: 700; }
+/* ==========================================================================
+   一、著陸頁沒有 HERO，要補兩件首頁靠 HERO 完成的事
+   ========================================================================== */
 
-/* 「這些狀況該來看一下」。
-   ⚠ **預設不顯示**（2026-08-18）——它讓人自我檢查，不是讓人覺得被理解，
-     是健檢問卷的聲音不是陪伴的聲音。留成切換條的一格讓使用者自己決定。 */
-html:not([data-shape="checks"]) .tp-checks { display: none; }
-.tp-checks { margin: 0 0 1.15rem; }
-.tp-checks-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
-.tp-checks ul { margin: 0; padding-left: 1.3rem; }
-.tp-checks li { margin-bottom: .34rem; line-height: 1.85; }
-.tp-checks strong { color: var(--ink); font-weight: 700; }
-
-/* 「第一次來，大概是這樣」——拉力版，預設。
-   ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明。
-     這裡要的是把話接著講下去，所以就是接在開場後面的兩段。 */
-.tp-first { margin: 0 0 1.15rem; }
-.tp-first-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
-.tp-first p { margin: 0 0 .7rem; line-height: 1.85; color: var(--ink-soft); }
-.tp-first p:last-child { margin-bottom: 0; }
-
-/* 推力版的三題問答。**預設不顯示** —— 問題本身就是三個障礙（痛／時間／錢），
-   答案再溫和，問句已經先把代價攤在讀者面前。留成切換條的一格給使用者比對。 */
-html:not([data-after="qa"]) .tp-qa { display: none; }
-html[data-after="qa"] .tp-first { display: none; }
-.tp-qa {
-  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
-  padding: 1.05rem 1.15rem; margin: 0 0 1rem;
-}
-.tp-qa dt { margin: .95rem 0 .28rem; font-weight: 700; color: var(--accent-deep); line-height: 1.65; }
-.tp-qa dt:first-child { margin-top: 0; }
-.tp-qa dd { margin: 0; color: var(--ink); line-height: 1.85; }
-
-.tp-note {
-  margin: 0 0 .4rem; font-size: .84rem; line-height: 1.8; color: var(--ink-soft);
-  background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .8rem .95rem;
-}
-
-/* 免責聲明搬到頁面最後（診所資訊之前）之後，它不在 .shell 裡了，要自己吃版心。 */
-.tp-note.wrap-note { max-width: 46rem; margin: 0 auto 1.6rem; padding-inline: 1rem; }
-
-/* 還沒問過使用者的待填格。**提案專用，正式站不會有這個樣子** */
-.tp-todo {
-  display: inline; background: rgba(175, 76, 82, .10);
-  border-bottom: 1.5px dashed var(--brick); border-radius: 3px;
-  padding: .05em .25em; color: var(--ink);
-}
-.tp-todo::before { content: "⚠ "; }
-
-/* ⚠⚠ 拿掉 HERO 之後要自己讓開固定的頁首。
+/* 1-1 讓開固定的頁首。
    `header.site-head` 是 position: fixed，首頁靠 HERO 佔位（而且 HERO 是**刻意**
    鑽到頁首底下的，那是設計的一部分）。著陸頁沒有 HERO，#topics 就從 y=0 開始，
-   「主題與科別」那一列被蓋掉 14~42px（390／834／1440 實測）。
+   「主題與科別」那一列會被蓋掉 14~42px（390／834／1440 實測）。
    ⚠ 一定要限定 `[data-topic]` —— 套到首頁會把 HERO 整個推下來。
    ⚠⚠ **不能只用 `var(--head-h)`** —— 手機（≤720）的頁首是
-     `.site-head .shell { height: auto }`＋`padding-block: 3.736vw 3.1472vw`，
-     高度由內容撐，和 `--head-h` 無關（390 上實際 61px，變數卻是 76px，高估 15px）。
-     所以照這個 repo 既有的做法**開頁量一次寫進 CSS 變數**
-     （`--lamp-pad`、`--ar-y` 都是這樣，CLAUDE.md 第九節第 9 條）。
-     沒有 JS 時退回 `--head-h`：偏大一點但不會破圖。 */
+     `.site-head .shell { height: auto }` ＋ `padding-block: 3.736vw`，
+     高度由內容撐，和那個變數無關（390 上實際 61px，變數卻是 76px，高估 15px）。
+     所以照這個 repo 既有的做法**開頁量一次寫進 CSS 變數**（`--lamp-pad`、
+     `--ar-y` 都是這樣，CLAUDE.md 第九節第 9 條）。沒有 JS 時退回 `--head-h`：
+     偏大一點，但不會破圖。 */
 body[data-topic] #main { padding-top: var(--topic-pad, var(--head-h)); }
 
-/* ---- 頁首到「主題與科別」的空隙（2026-08-18 三格待選）--------------------
-   使用者拿兩張截圖比：直接開啟的空隙太大，往下捲一點之後那個距離才對。
-   ⚠ 這個空隙**不是** #main 的上內距（那一格已經收成剛好等於頁首高，
-     多一分內容就會鑽到固定頁首底下）。剩下的全部來自 `#topics` 自己的
-     `padding-top: 2.4rem` —— 那是首頁的區塊節奏，用來和上面的 HERO 隔開。
-     著陸頁上面是頁首不是 HERO，不需要那麼多。 */
-html[data-gap="a"] body[data-topic] #topics { padding-top: 2.4rem; }   /* 現況，空隙約 47px */
-html[data-gap="b"] body[data-topic] #topics { padding-top: 1rem; }     /* 約 25px */
-html[data-gap="c"] body[data-topic] #topics { padding-top: .4rem; }    /* 約 16px */
-
-/* ⚠⚠ 著陸頁的頁首要自己變成實心（2026-08-18）。
-   首頁的頁首是**玻璃**：`--glass` 由 JS 依 HERO 的捲動位置算出來，
-   字是白的因為它壓在那張夜景照片上。著陸頁沒有 HERO，那支 JS 算不出東西，
-   頁首就一直是 `background: rgba(0,0,0,0)` —— **白字直接洗在紙色上**，
-   而且那一整塊看起來是空的，使用者因此覺得「和 banner 間隔很大」。
-
-   做法照文章頁：`assets/style.css` 的 `.site-header { background: var(--head); color: #fff }`。
-   #393736 不是新的顏色，就是那個 `--head`（＝暗夜 #191614 以 .84 疊在紙色上的合成色，
-   index.html 的 JS 裡那個 SOLID 算出來的也是它）。
-   ⚠ `::before`／`::after` 是玻璃那一層（負 z-index 的同一組），一起關掉，
-     不然模糊與遮罩還會疊在實心色上。**選單那三個玻璃框是 `.site-nav a::before`，
-     不同的元素，不受影響。** */
+/* 1-2 頁首自己要變成實心。
+   首頁的頁首是**玻璃**：染色濃度由 JS 依 HERO 的捲動位置算出來，字是白的
+   因為它壓在那張夜景照片上。著陸頁沒有 HERO，那支 JS 算不出東西，頁首就一直是
+   `background: rgba(0,0,0,0)` —— **白字直接洗在紙色上，對比度 1.13**，
+   而且那一整塊看起來是空的。
+   做法照文章頁：`assets/style.css` 的 `.site-header { background: var(--head) }`。
+   #393736 不是新顏色，就是那個 `--head`（暗夜 #191614 以 .84 疊在紙色上的合成色，
+   index.html 那支 JS 算出來的 SOLID 也是它）。白字對它 10.58。
+   ⚠ `::before`／`::after` 是玻璃那一層（負 z-index 的同一組）一起關掉，
+     不然模糊與遮罩還會疊在實心色上。
+     **選單那三個玻璃框是 `.site-nav a::before`，不同元素，不受影響。** */
 body[data-topic] { --head: #393736; }
 body[data-topic] .site-head {
   background: var(--head);
@@ -6764,69 +6672,64 @@ body[data-topic] .site-head {
 body[data-topic] .site-head::before,
 body[data-topic] .site-head::after { display: none; }
 
-/* 搜尋框搬到「主題與科別」那一列、靠右（2026-08-18）。
-   ⚠ 一定要限定 #topics —— .sec-head 是三個小節共用的元件。
-   ⚠ 站上原本的 `.topic-search { flex: 0 1 15rem; min-width: 11rem }` 是給
-     「和 chips 同一列」用的，搬上來之後 min-width 11rem 在 375 寬會把標題擠掉，
-     所以這裡重新給一組。 */
+/* 1-3 頁首到「主題與科別」的空隙。
+   `#topics` 原本的 `padding-top: 2.4rem` 是首頁的區塊節奏，用來和上面的 HERO
+   隔開；著陸頁上面是頁首，不需要那麼多。**1rem 是使用者 2026-08-18 從三格
+   （2.4rem／1rem／.4rem ＝ 47／25／15px）挑的那一格。**
+   ⚠ 這個空隙不能改用 `#main` 的上內距去調 —— 那一格已經等於頁首高，
+     再少內容就會鑽到固定頁首底下。 */
+body[data-topic] #topics { padding-top: 1rem; }
+
+/* ==========================================================================
+   二、「主題與科別」那一列：搜尋框搬上來、靠右
+   --------------------------------------------------------------------------
+   使用者 2026-08-18：「搜尋欄佔了版面很大空間，可以移到主題與科別的高度，
+   然後靠右一點。」手機上它原本自己佔一整列（≤720 的
+   `.topic-tools { display: block }`），而那一列右邊本來就是空的。
+   ⚠ `.sec-head` 是「主題與科別／醫師介紹／診所資訊」三節共用的元件，
+     一定要限定 `#topics`。
+   ⚠ 寬度收到 10rem（390 上 240 → 160px）。使用者一開始說它「很搶眼、好像
+     要去點」，比過「透明底」「只有底線」之後選的是**收窄**、框和底色都不動。
+   ⚠ 框高 44px 與手機字級 16px 都沒動：前者是觸控下限，後者低於 16 的話
+     iOS Safari 一聚焦就會把整頁放大。
+   ⚠ 站上原本的 `min-width: 11rem` 是給「和 chips 同一列」用的，
+     搬上來之後在 375 寬會把標題擠掉，所以這裡改成 0。 */
 #topics .sec-head {
   display: flex; align-items: center; justify-content: space-between;
   gap: .8rem 1rem; flex-wrap: nowrap;
 }
 #topics .sec-head h2 { flex: 0 0 auto; }
-#topics .sec-head .topic-search { flex: 0 1 15rem; min-width: 0; margin-top: 0; }
+#topics .sec-head .topic-search { flex: 0 1 10rem; min-width: 0; margin-top: 0; }
 
-/* ---- 搜尋框的視覺重量（2026-08-18 三格待選）------------------------------
-   使用者：「移上去了，但搜尋欄位很大，比例上會讓我覺得很搶眼、好像要去點。」
-   ⚠ 這不只是大小，是**重量**：站上原本的樣式是 `background: var(--card)`
-     ＝ #f4f4f5，比周圍的紙 #e2e5e6 **更亮**，等於往前站一階；再加一圈框，
-     讀起來就是一顆等著被按的按鈕。它在這一頁是次要功能，不該搶。
-   ⚠ 三格共同守住的兩件（都不准動）：
-     ・框高 44px —— 觸控目標下限，不是造型。
-     ・手機字級 16px —— 低於 16 的話 iOS Safari 一聚焦就把整頁放大。 */
+/* chips 從 <button> 換成 <a>（爬蟲點不下去按鈕，連結才有網址）。
+   外觀沿用站上那一組規則 —— 產生器把 `.chips button` 一律換成
+   `.chips :is(button,a)`，權重不變。這裡只補連結本身的重置。 */
+.chips a { display: inline-block; text-decoration: none; }
+.chips a[data-todo] { opacity: .45; pointer-events: none; }
 
-/* Ⓐ 現況：卡色底 ＋ 框 ＋ 15rem */
-html[data-search="a"] #topics .sec-head .topic-search { flex: 0 1 15rem; }
+/* ==========================================================================
+   三、科別介紹
+   --------------------------------------------------------------------------
+   順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
+   文字在 tools/topic-copy.mjs，寫作規則在 COPY.md 第九節。
+   ========================================================================== */
+.tp-intro { margin: 1.4rem 0 0; max-width: 46rem; }
+.tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
 
-/* Ⓑ 淡：底色收成透明（讓它退回紙面）、框改用更淡的一階、收窄到 11rem */
-html[data-search="b"] #topics .sec-head .topic-search { flex: 0 1 11rem; }
-html[data-search="b"] #topics .topic-search input {
-  background: transparent;
-  border-color: color-mix(in srgb, var(--rule) 62%, var(--paper));
+/* 3-1「2 位醫師・2 篇文章」。
+   ⚠ 科別名不再印一次（首頁那個 .filter-note 會印「兒童牙科：…」）——
+     那已經是這一頁的 h1 了。
+   ⚠ 0 的那一項整個不寫（矯正是 0 篇文章，印出來等於自曝其短）。判斷在產生器裡。
+   ⚠⚠ 連結範圍與視覺**刻意不一樣**：`<a>` 包整串「2 位醫師」（55px，觸控夠），
+     但顏色與底線只上在名詞（27px）。使用者：「連結底線放在醫師、文章，
+     數字不要套標籤顏色。」
+   ⚠ 底線用 `border-bottom` 不用 `text-decoration` —— 後者會傳給子元素而且
+     **取消不掉**，數字會跟著被畫線。 */
+.tp-count {
+  margin: -.15rem 0 .75rem; font-size: .84rem; letter-spacing: .02em;
+  color: var(--ink-soft);
 }
-html[data-search="b"] #topics .topic-search input:hover,
-html[data-search="b"] #topics .topic-search input:focus { border-color: var(--ink-soft); }
-
-/* Ⓒ 只有一條底線：整個盒子拿掉，只留下緣那一條。44px 的高度留著（觸控） */
-html[data-search="c"] #topics .sec-head .topic-search { flex: 0 1 10rem; }
-html[data-search="c"] #topics .topic-search input {
-  background: transparent; border-radius: 0;
-  border: 0; border-bottom: 1px solid color-mix(in srgb, var(--rule) 72%, var(--paper));
-  padding-inline: .15rem;
-}
-html[data-search="c"] #topics .topic-search input:hover,
-html[data-search="c"] #topics .topic-search input:focus { border-bottom-color: var(--ink-soft); }
-
-/* Ⓓ 框 ＋ 窄（2026-08-18 定案方向）：使用者看過三格之後
-   ——「現在這個版本的寬度差不多，但我覺得用原來的框框版本就好」。
-   ＝ Ⓒ 的寬度（10rem）配站上原本的框（卡色底 ＋ 一圈框），
-   所以這一格**不覆寫任何顏色**，只給寬度 —— 框的樣式就是 index.html 裡那一份。
-   收窄之後 390 上從 240px → 160px，重量自然就下來了。 */
-html[data-search="d"] #topics .sec-head .topic-search { flex: 0 1 10rem; }
-
-/* ---- 「幾篇文章、幾位醫師」放哪裡（2026-08-18 四格待選）------------------
-   首頁上這個註記是 .filter-note：按下標記才出現、印「兒童牙科：3 篇文章、
-   2 位醫師」。著陸頁沒有「按下去」這件事（標記是連結），所以它一直不會出現。
-   ⚠ 科別名不必再印一次 —— 那已經是這一頁的 h1 了。
-   ⚠ 0 的那一項整個不寫（矯正是 0 篇文章）。判斷在產生器裡，不是這裡。 */
-.tp-count { margin: 0; }
-html:not([data-count="b"]) .tp-count-b,
-html:not([data-count="c"]) .tp-count-c,
-html:not([data-count="d"]) .tp-count-d { display: none; }
-.tp-count:empty { display: none !important; }
 .tp-dot { margin: 0 .45em; color: var(--rule); }
-/* 數字用內文的柔墨、名詞才是連結的樣子。⚠ 底線用 border-bottom：
-   text-decoration 會傳給子元素而且取消不掉，數字會跟著被畫線。 */
 .tp-count a { color: inherit; text-decoration: none; }
 .tp-count .tp-n { color: var(--ink-soft); }
 .tp-count .tp-t {
@@ -6834,87 +6737,48 @@ html:not([data-count="d"]) .tp-count-d { display: none; }
   border-bottom: 1px solid color-mix(in srgb, var(--accent-deep) 55%, transparent);
 }
 .tp-count a:hover .tp-t { border-bottom-color: var(--accent-deep); }
-/* ⚠ **不要底線。** 站上的連結本來就是只有顏色（`a { color: var(--teal) }`），
-   底線是我多加的，而且使用者 2026-08-18 明確說「數字不要有連結底線」。 */
 
-/* Ⓑ h1 底下當副標。⚠ **要帶連結** —— 純文字那一版讀起來是「這一頁的規格」，
-   帶連結才讀得出是入口（使用者 2026-08-18 指出少了連結功能）。 */
-.tp-count-b {
-  margin: -.15rem 0 .75rem; font-size: .84rem; letter-spacing: .02em;
-  color: var(--ink-soft);
+/* 3-2 三段處境是「他們」，用柔墨；底下那句回應是「我們」，用墨。
+   ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** ——
+     一加就變回被否決的「症狀清單」的樣子（COPY.md 第九之七節）。 */
+.tp-case {
+  margin: 0 0 .7rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
+  padding-left: .85rem; border-left: 2px solid var(--rule);
 }
-/* Ⓒ 開場之後、內容之前：當往下的路標，所以兩個數字是錨點連結 */
-.tp-count-c {
-  margin: 0 0 1.15rem; padding-top: .95rem; font-size: .88rem;
-  color: var(--ink-soft); border-top: 1px solid var(--rule);
-}
-.tp-count-c a { font-weight: 700; }
-/* Ⓓ chips 正下方＝首頁 .filter-note 原本的位置 */
-.tp-count-d { margin: .85rem 0 0; font-size: .82rem; color: var(--ink-soft); }
+.tp-stance { margin: 1.05rem 0 1.15rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink); }
+.tp-stance strong { color: var(--accent-deep); font-weight: 700; }
 
-/* chips 從 button 換成 a：外觀沿用站上那一組規則，這裡只補連結本身的重置 */
-.chips a { display: inline-block; text-decoration: none; }
-.chips a[data-todo] { opacity: .45; pointer-events: none; }
+/* 3-3「第一次來，大概是這樣」。
+   ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明；
+     這裡要的是把話接著講下去，所以就是接在開場後面的兩段。
+     （COPY.md 第九之九節：推力 vs 拉力。） */
+.tp-first { margin: 0 0 1.15rem; }
+.tp-first-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
+.tp-first p { margin: 0 0 .7rem; line-height: 1.85; color: var(--ink-soft); }
+.tp-first p:last-child { margin-bottom: 0; }
 
-/* ---- 切換條 ---- */
-.pv-bar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
-  background: rgba(244,244,245,.94); backdrop-filter: blur(8px) saturate(1.15);
-  border-top: 1px solid var(--rule);
-  padding: .55rem max(.7rem, env(safe-area-inset-left)) calc(.55rem + env(safe-area-inset-bottom));
-  font-size: .8rem; color: var(--ink);
+/* 3-4 免責聲明放在頁面內容的最後（診所資訊之前），不要卡在開場的答案前面 ——
+   文章頁本來就是這樣排的（`.note` 是 `.post-body` 的最後一個元素）。
+   它搬出 `.shell` 之後要自己吃版心。 */
+.tp-note {
+  max-width: 46rem; margin: 0 auto 1.6rem; padding: .8rem 1rem;
+  font-size: .84rem; line-height: 1.8; color: var(--ink-soft);
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
 }
-html.pv-closed .pv-bar { display: none; }
-.pv-row { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin-bottom: .3rem; }
-.pv-lab { color: var(--ink-soft); flex: 0 0 auto; font-size: .76rem; }
-.pv-bar button {
-  font: inherit; font-size: .78rem; cursor: pointer; padding: .3rem .6rem; border-radius: 7px;
-  border: 1px solid var(--rule); background: #fff; color: var(--ink);
+
+/* 3-5 還沒問過使用者的待填格。**提案專用，正式站不會有這個樣子。** */
+.tp-todo {
+  display: inline; background: rgba(175, 76, 82, .10);
+  border-bottom: 1.5px dashed var(--brick); border-radius: 3px;
+  padding: .05em .25em; color: var(--ink);
 }
-.pv-bar button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-fill); }
-.pv-meter { font-size: .74rem; color: var(--ink-soft); line-height: 1.6; }
-.pv-meter b { color: var(--ink); font-weight: 700; }
-.pv-open {
-  position: fixed; right: max(.7rem, env(safe-area-inset-right)); bottom: calc(.7rem + env(safe-area-inset-bottom));
-  z-index: 91; font: inherit; font-size: .74rem; cursor: pointer; padding: .34rem .6rem; border-radius: 8px;
-  border: 1px solid var(--rule); background: rgba(244,244,245,.94); color: var(--ink-soft); backdrop-filter: blur(8px);
-}
-html:not(.pv-closed) .pv-open { display: none; }
-html:not(.pv-closed) body { padding-bottom: 7.5rem; }
+.tp-todo::before { content: "⚠ "; }
 </style>
 
-<div class="pv-bar">
-  <div class="pv-row">
-    <span class="pv-lab">頁首下空隙</span>
-    <button type="button" data-k="gap" data-v="a">現況</button>
-    <button type="button" data-k="gap" data-v="b">中</button>
-    <button type="button" data-k="gap" data-v="c">緊</button>
-  </div>
-  <div class="pv-row">
-    <span class="pv-lab">幾篇幾位</span>
-    <button type="button" data-k="count" data-v="off">不放</button>
-    <button type="button" data-k="count" data-v="b">h1 底下</button>
-    <button type="button" data-k="count" data-v="c">開場之後</button>
-    <button type="button" data-k="count" data-v="d">標記下方</button>
-  </div>
-  <div class="pv-row">
-    <span class="pv-lab">開場之後</span>
-    <button type="button" data-k="after" data-v="first">第一次來（拉力）</button>
-    <button type="button" data-k="after" data-v="qa">三題問答（推力）</button>
-  </div>
-  <div class="pv-row">
-    <span class="pv-lab">開場的形狀</span>
-    <button type="button" data-k="shape" data-v="new">短（預設）</button>
-    <button type="button" data-k="shape" data-v="checks">＋症狀清單</button>
-    <button type="button" id="pvclose" style="margin-left:auto">收起</button>
-  </div>
-  <div class="pv-meter" id="pvmeter">—</div>
-</div>
-<button type="button" class="pv-open" id="pvopen">切換條</button>
-
 <script>
-/* 著陸頁讓開固定頁首的量。量的是**未捲動那一態**（捲動後頁首會收合，
-   那不是我們要讓開的高度），所以 scrollY 不在頂端時就不更新。 */
+/* 著陸頁讓開固定頁首的量（上面 1-1 那一段）。
+   量的是**未捲動那一態** —— 捲動後頁首會收合，那不是我們要讓開的高度，
+   所以 scrollY 不在頂端時就不更新。 */
 (function () {
   var hd = document.querySelector('header.site-head');
   if (!hd) return;
@@ -6925,56 +6789,6 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
   set();
   addEventListener('load', set);
   addEventListener('resize', set);
-})();
-
-(function () {
-  var root = document.documentElement;
-  if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
-  if (!root.getAttribute('data-after')) root.setAttribute('data-after', 'first');
-  /* 搜尋框已定案「框＋窄」（Ⓓ），切換條那一排收掉了，這裡直接寫死。 */
-  root.setAttribute('data-search', 'd');
-  if (!root.getAttribute('data-count')) root.setAttribute('data-count', 'b');
-  if (!root.getAttribute('data-gap')) root.setAttribute('data-gap', 'b');
-  var mg = /[?&]gap=([a-z0-9]+)/.exec(location.search);
-  if (mg && ['a', 'b', 'c'].indexOf(mg[1]) >= 0) root.setAttribute('data-gap', mg[1]);
-
-  var mc = /[?&]count=([a-z0-9]+)/.exec(location.search);
-  if (mc && ['off', 'b', 'c', 'd'].indexOf(mc[1]) >= 0) root.setAttribute('data-count', mc[1]);
-  var ma = /[?&]after=([a-z0-9]+)/.exec(location.search);
-  if (ma && ['first', 'qa'].indexOf(ma[1]) >= 0) root.setAttribute('data-after', ma[1]);
-  var m = /[?&]shape=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
-  if (m && ['new', 'checks'].indexOf(m[1]) >= 0) root.setAttribute('data-shape', m[1]);
-
-  /* 量的是「開場那一塊」自己，不是整頁 —— 使用者說的「字太多」指的就是它。
-     屏數用 visualViewport（iOS 的 innerHeight 比看得到的高，第九節第 6 條）。 */
-  function measure() {
-    var box = document.querySelector('.tp-intro');
-    var n = (box.innerText || '').replace(/\s/g, '').length;
-    var vh = (window.visualViewport && visualViewport.height) || innerHeight;
-    var screens = (box.getBoundingClientRect().height / vh).toFixed(1);
-    var left = document.querySelectorAll('.tp-intro .tp-todo').length;
-    document.getElementById('pvmeter').innerHTML =
-      '開場 <b>' + n + '</b> 字　手機上 <b>' + screens + '</b> 屏　'
-      + (screens <= 0.85 ? '不到一屏 ✓' : screens <= 1.25 ? '約一屏' : '⚠ 超過一屏')
-      + '　待填 <b>' + left + '</b> 格';
-  }
-  function paint() {
-    document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {
-      b.setAttribute('aria-pressed', root.getAttribute('data-' + b.dataset.k) === b.dataset.v);
-    });
-    measure();
-  }
-  document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      root.setAttribute('data-' + b.dataset.k, b.dataset.v);
-      var p = new URLSearchParams(location.search); p.set(b.dataset.k, b.dataset.v);
-      history.replaceState(null, '', location.pathname + '?' + p);
-      paint();
-    });
-  });
-  document.getElementById('pvclose').addEventListener('click', function () { root.classList.add('pv-closed'); });
-  document.getElementById('pvopen').addEventListener('click', function () { root.classList.remove('pv-closed'); });
-  paint(); addEventListener('load', measure);
 })();
 </script>
 </body>

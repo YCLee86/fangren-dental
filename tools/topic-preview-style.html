@@ -1,0 +1,170 @@
+
+<!-- =============================================================================
+     科別著陸頁的樣式（2026-08-18 版面定案）
+     -----------------------------------------------------------------------------
+     這一段由 tools/topic-preview.mjs 插在提案頁最後一個 </body> 之前。
+     **正式上線時整段搬進 index.html 的樣式表**，選擇器不必再改一次 ——
+     所有只該作用在著陸頁的規則都已經限定 `[data-topic]`。
+
+     ⚠ class 一律 tp- 前綴。這一頁是 index.html 的完整複本，站上有的 class
+       全部都在，短名字幾乎一定會撞（CLAUDE.md 第八節）。
+
+     ⚠ **切換條已經全部拆掉**（2026-08-18 使用者：「中 ok，先這樣把版面確定了」）。
+       走到這個版面經過七輪修正，每一輪的推導與落選案寫在 COPY.md 第九節。
+     ============================================================================= -->
+<style>
+/* ==========================================================================
+   一、著陸頁沒有 HERO，要補兩件首頁靠 HERO 完成的事
+   ========================================================================== */
+
+/* 1-1 讓開固定的頁首。
+   `header.site-head` 是 position: fixed，首頁靠 HERO 佔位（而且 HERO 是**刻意**
+   鑽到頁首底下的，那是設計的一部分）。著陸頁沒有 HERO，#topics 就從 y=0 開始，
+   「主題與科別」那一列會被蓋掉 14~42px（390／834／1440 實測）。
+   ⚠ 一定要限定 `[data-topic]` —— 套到首頁會把 HERO 整個推下來。
+   ⚠⚠ **不能只用 `var(--head-h)`** —— 手機（≤720）的頁首是
+     `.site-head .shell { height: auto }` ＋ `padding-block: 3.736vw`，
+     高度由內容撐，和那個變數無關（390 上實際 61px，變數卻是 76px，高估 15px）。
+     所以照這個 repo 既有的做法**開頁量一次寫進 CSS 變數**（`--lamp-pad`、
+     `--ar-y` 都是這樣，CLAUDE.md 第九節第 9 條）。沒有 JS 時退回 `--head-h`：
+     偏大一點，但不會破圖。 */
+body[data-topic] #main { padding-top: var(--topic-pad, var(--head-h)); }
+
+/* 1-2 頁首自己要變成實心。
+   首頁的頁首是**玻璃**：染色濃度由 JS 依 HERO 的捲動位置算出來，字是白的
+   因為它壓在那張夜景照片上。著陸頁沒有 HERO，那支 JS 算不出東西，頁首就一直是
+   `background: rgba(0,0,0,0)` —— **白字直接洗在紙色上，對比度 1.13**，
+   而且那一整塊看起來是空的。
+   做法照文章頁：`assets/style.css` 的 `.site-header { background: var(--head) }`。
+   #393736 不是新顏色，就是那個 `--head`（暗夜 #191614 以 .84 疊在紙色上的合成色，
+   index.html 那支 JS 算出來的 SOLID 也是它）。白字對它 10.58。
+   ⚠ `::before`／`::after` 是玻璃那一層（負 z-index 的同一組）一起關掉，
+     不然模糊與遮罩還會疊在實心色上。
+     **選單那三個玻璃框是 `.site-nav a::before`，不同元素，不受影響。** */
+body[data-topic] { --head: #393736; }
+body[data-topic] .site-head {
+  background: var(--head);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+body[data-topic] .site-head::before,
+body[data-topic] .site-head::after { display: none; }
+
+/* 1-3 頁首到「主題與科別」的空隙。
+   `#topics` 原本的 `padding-top: 2.4rem` 是首頁的區塊節奏，用來和上面的 HERO
+   隔開；著陸頁上面是頁首，不需要那麼多。**1rem 是使用者 2026-08-18 從三格
+   （2.4rem／1rem／.4rem ＝ 47／25／15px）挑的那一格。**
+   ⚠ 這個空隙不能改用 `#main` 的上內距去調 —— 那一格已經等於頁首高，
+     再少內容就會鑽到固定頁首底下。 */
+body[data-topic] #topics { padding-top: 1rem; }
+
+/* ==========================================================================
+   二、「主題與科別」那一列：搜尋框搬上來、靠右
+   --------------------------------------------------------------------------
+   使用者 2026-08-18：「搜尋欄佔了版面很大空間，可以移到主題與科別的高度，
+   然後靠右一點。」手機上它原本自己佔一整列（≤720 的
+   `.topic-tools { display: block }`），而那一列右邊本來就是空的。
+   ⚠ `.sec-head` 是「主題與科別／醫師介紹／診所資訊」三節共用的元件，
+     一定要限定 `#topics`。
+   ⚠ 寬度收到 10rem（390 上 240 → 160px）。使用者一開始說它「很搶眼、好像
+     要去點」，比過「透明底」「只有底線」之後選的是**收窄**、框和底色都不動。
+   ⚠ 框高 44px 與手機字級 16px 都沒動：前者是觸控下限，後者低於 16 的話
+     iOS Safari 一聚焦就會把整頁放大。
+   ⚠ 站上原本的 `min-width: 11rem` 是給「和 chips 同一列」用的，
+     搬上來之後在 375 寬會把標題擠掉，所以這裡改成 0。 */
+#topics .sec-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .8rem 1rem; flex-wrap: nowrap;
+}
+#topics .sec-head h2 { flex: 0 0 auto; }
+#topics .sec-head .topic-search { flex: 0 1 10rem; min-width: 0; margin-top: 0; }
+
+/* chips 從 <button> 換成 <a>（爬蟲點不下去按鈕，連結才有網址）。
+   外觀沿用站上那一組規則 —— 產生器把 `.chips button` 一律換成
+   `.chips :is(button,a)`，權重不變。這裡只補連結本身的重置。 */
+.chips a { display: inline-block; text-decoration: none; }
+.chips a[data-todo] { opacity: .45; pointer-events: none; }
+
+/* ==========================================================================
+   三、科別介紹
+   --------------------------------------------------------------------------
+   順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
+   文字在 tools/topic-copy.mjs，寫作規則在 COPY.md 第九節。
+   ========================================================================== */
+.tp-intro { margin: 1.4rem 0 0; max-width: 46rem; }
+.tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
+
+/* 3-1「2 位醫師・2 篇文章」。
+   ⚠ 科別名不再印一次（首頁那個 .filter-note 會印「兒童牙科：…」）——
+     那已經是這一頁的 h1 了。
+   ⚠ 0 的那一項整個不寫（矯正是 0 篇文章，印出來等於自曝其短）。判斷在產生器裡。
+   ⚠⚠ 連結範圍與視覺**刻意不一樣**：`<a>` 包整串「2 位醫師」（55px，觸控夠），
+     但顏色與底線只上在名詞（27px）。使用者：「連結底線放在醫師、文章，
+     數字不要套標籤顏色。」
+   ⚠ 底線用 `border-bottom` 不用 `text-decoration` —— 後者會傳給子元素而且
+     **取消不掉**，數字會跟著被畫線。 */
+.tp-count {
+  margin: -.15rem 0 .75rem; font-size: .84rem; letter-spacing: .02em;
+  color: var(--ink-soft);
+}
+.tp-dot { margin: 0 .45em; color: var(--rule); }
+.tp-count a { color: inherit; text-decoration: none; }
+.tp-count .tp-n { color: var(--ink-soft); }
+.tp-count .tp-t {
+  color: var(--accent-deep);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent-deep) 55%, transparent);
+}
+.tp-count a:hover .tp-t { border-bottom-color: var(--accent-deep); }
+
+/* 3-2 三段處境是「他們」，用柔墨；底下那句回應是「我們」，用墨。
+   ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** ——
+     一加就變回被否決的「症狀清單」的樣子（COPY.md 第九之七節）。 */
+.tp-case {
+  margin: 0 0 .7rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
+  padding-left: .85rem; border-left: 2px solid var(--rule);
+}
+.tp-stance { margin: 1.05rem 0 1.15rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink); }
+.tp-stance strong { color: var(--accent-deep); font-weight: 700; }
+
+/* 3-3「第一次來，大概是這樣」。
+   ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明；
+     這裡要的是把話接著講下去，所以就是接在開場後面的兩段。
+     （COPY.md 第九之九節：推力 vs 拉力。） */
+.tp-first { margin: 0 0 1.15rem; }
+.tp-first-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
+.tp-first p { margin: 0 0 .7rem; line-height: 1.85; color: var(--ink-soft); }
+.tp-first p:last-child { margin-bottom: 0; }
+
+/* 3-4 免責聲明放在頁面內容的最後（診所資訊之前），不要卡在開場的答案前面 ——
+   文章頁本來就是這樣排的（`.note` 是 `.post-body` 的最後一個元素）。
+   它搬出 `.shell` 之後要自己吃版心。 */
+.tp-note {
+  max-width: 46rem; margin: 0 auto 1.6rem; padding: .8rem 1rem;
+  font-size: .84rem; line-height: 1.8; color: var(--ink-soft);
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+}
+
+/* 3-5 還沒問過使用者的待填格。**提案專用，正式站不會有這個樣子。** */
+.tp-todo {
+  display: inline; background: rgba(175, 76, 82, .10);
+  border-bottom: 1.5px dashed var(--brick); border-radius: 3px;
+  padding: .05em .25em; color: var(--ink);
+}
+.tp-todo::before { content: "⚠ "; }
+</style>
+
+<script>
+/* 著陸頁讓開固定頁首的量（上面 1-1 那一段）。
+   量的是**未捲動那一態** —— 捲動後頁首會收合，那不是我們要讓開的高度，
+   所以 scrollY 不在頂端時就不更新。 */
+(function () {
+  var hd = document.querySelector('header.site-head');
+  if (!hd) return;
+  function set() {
+    if (scrollY > 4) return;
+    document.documentElement.style.setProperty('--topic-pad', hd.getBoundingClientRect().height + 'px');
+  }
+  set();
+  addEventListener('load', set);
+  addEventListener('resize', set);
+})();
+</script>
