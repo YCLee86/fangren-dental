@@ -691,7 +691,10 @@ if (!CHECK_ONLY) {
 
 console.log(`${CHECK_ONLY ? "[檢查]" : "[建置]"} 共 ${posts.length} 篇文章，排序後：`);
 for (const p of posts) {
-  console.log(`  ${p.updated}  ${p.slug.padEnd(20)} ${p.title}`);
+  /* 印的是「上架日期」——2026-08-18 起卡片顯示與排序都吃 published。
+     後面括號裡是 updated，它仍然是 sitemap 的 lastmod 與 JSON-LD 的
+     dateModified 的來源，所以一起印出來對得上。 */
+  console.log(`  ${p.published}（更新 ${p.updated}）  ${p.slug.padEnd(20)} ${p.title}`);
 }
 console.log(`\n首頁 lastmod：${homeUpdated}${homeChanged ? "（內容有變動，已換成今天）" : "（內容沒動，沿用）"}`);
 if (changed.length) console.log(`內容有變動、已換成今天(${today()})的：${changed.join(", ")}`);
