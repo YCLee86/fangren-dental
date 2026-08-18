@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>wisdom-tooth｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .86rem; margin: .6rem 0 1rem; }
+  th, td { border: 1px solid var(--rule); padding: .4rem .55rem; text-align: left; vertical-align: top; }
+  th { background: var(--card); }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>wisdom-tooth</h1>
+<p class="meta">
+  原網址 <code>/preview/wisdom-tooth/</code>（已刪除 2026-08-18）<br>
+  整頁還原：<code>git show eaf674c:preview/wisdom-tooth/index.html</code><br>
+  上線頁面：<a href="/posts/wisdom-tooth/">/posts/wisdom-tooth/</a>　科別：口腔外科（這一科原本一篇文章都沒有）
+</p>
+
+<div class="note">
+  <p>這一輪的提案頁**沒有切換條**——它不是版型提案，是**文章與 HERO 圖的定稿預覽**：
+  posts/wisdom-tooth/ 的快照，只把計數器拿掉、同層文章的連結改指
+  <code>../../posts/&lt;slug&gt;/</code>、SEO 區塊換成 noindex。
+  用途是讓使用者在手機上逐輪看圖與文案，一共重做十七次。</p>
+</div>
+
+<h2>一、起點</h2>
+<p>使用者丟進來一則社群貼文（拔智齒的衛教文，emoji 很多、含保險理賠的段落）
+＋ 一張之前在別的頁面用過的動畫風方圖，說「整理一下」。
+文章整理成站上格式當天就做完；<strong>十七輪全部花在 HERO 圖與文案的語氣上</strong>。</p>
+
+<h2>二、HERO 圖：梗換過三次才定案</h2>
+<table>
+  <tr><th>版本</th><th>做法</th><th>使用者退回的理由</th></tr>
+  <tr><td>使用者原圖</td><td>動畫風、1024×1024、醫師指著 X 光片</td><td>（我提的）風格和站上其他七篇差很多、比例也不對</td></tr>
+  <tr><td>Ⓐ 診間看 X 光片</td><td>照原圖的梗重畫成站上的線稿風</td><td>「這個圖片可以應用在任何場景」——梗沒有長在智齒上</td></tr>
+  <tr><td>Ⓑ 牙齒擬人四格</td><td>擠 → 洞 → 填補 → 吃東西，全部是牙齒角色</td><td>「都只有牙齒算是很抽象，還是要有人」</td></tr>
+  <tr><td>Ⓒ 人 ＋ 分格泡泡</td><td>醫師與病患對話，上方一個大泡泡分三段講完療程；右邊獨立一格是「幾天之後的他」</td><td><strong>定案</strong></td></tr>
+</table>
+
+<p>Ⓒ 之後又修了九輪，每一輪都對應提示詞裡的一條 <code>AVOID</code>。整理成規則寫進
+<strong>ILLUSTRATION.md 第八節</strong>，最要緊的三條：</p>
+<ol>
+  <li><strong>三分之四側臉裡指定不了「他的右手／右臉」。</strong>連三輪都失敗，模型每次解讀不同。
+    有效的寫法是改用畫面上的位置：靠近觀者那隻手 → 靠近觀者那邊臉頰 →
+    「紅暈就在那隻手掌底下，手拿開的話紅暈會正好在手掌原本的位置」。</li>
+  <li><strong>概念外溢。</strong>描述最詳細、又在 AVOID 重複最多次的東西，會跑到畫面裡
+    <em>任何內容未指定的表面</em>上——這一張的地板中間偏右憑空長出一整組窩洞與藍色棉塊。
+    成因是提示詞裡有「一張只有圖沒有字的海報」（沒指定畫什麼）＋ 架上一顆透明牙齒模型
+    （房裡已經有一顆牙）。三件一起做才治好：把海報內容寫死、加一段
+    <code>KEEP THE DIAGRAM INSIDE THE BUBBLE</code>、把 AVOID 裡重複的窩洞描述併成一條。</li>
+  <li><strong>A 類紅線「不要血的暗示」被使用者推翻。</strong>他指定窩洞裡要有血塊、
+    周圍牙齦要紅腫，理由是那是整篇最重要的一句（血塊不能碰）。
+    限度：只在窩洞裡、不滴出來、不畫亮紅。
+    ⚠ 我先前想規避成「粉紅色的小枕頭」，被退：「一個深坑裡放一個枕頭，看起來蠻詭異的。」</li>
+</ol>
+
+<p>其餘幾條：智齒一定<strong>往前傾</strong>（模型會畫成往後倒）、它的右邊<strong>不准有牙</strong>、
+牙齒角色只放 3～4 顆（加到六七顆表情就消失了，而「擠」要靠左端留一顆正常間隙的當對照）、
+藍色棉塊要<strong>埋進牙齦</strong>而且<strong>沒有手</strong>（比讚的是旁邊那顆牙）、
+縫線縫在<strong>牙齦上</strong>而不是浮在棉塊上方。</p>
+
+<h2>三、顏色：來源是使用者拍的實物照片</h2>
+<p>他傳了兩張台北 101 賣店的照片（肥皂禮盒與杯墊）說「顏色很豐富，把那個豐富感放進來」。
+歸納出兩件事：<strong>多色但每一個色都壓得很低</strong>（磚紅、芥末、鼠尾草綠、青、灰紫、奶油白），
+以及<strong>白線是畫在色塊上面的</strong>，不是留白。</p>
+<p>⚠ 這是第一次把 PALETTE.md 的<strong>科別色帶進插畫裡</strong>：這篇是口腔外科，
+所以 accent 用 <code>#8e6299</code>／<code>#784e84</code>，只當點綴（一面牆的一條帶、一扇櫃門、
+一條毛巾、遮陽棚的一條），並在 AVOID 明講「不准整張罩上紫、不要淡紫色的皮膚或地板」。
+效果是文章頁的框線、標籤與圖變成同一家人。<strong>日後其他科別可以照這個做法。</strong></p>
+<p>⚠ 加完色的第一版，使用者：「牙齒也被加重，看起來黃黃的。」
+要補一條 <code>KEEP THE TEETH OUT OF IT</code>：牙一律乾淨的近白，不吃這一輪的顏色。</p>
+
+<h2>四、檔案處理</h2>
+<pre>原檔 2000×1116（第一次定稿時只有 1376，那一版的 1600／2000 是放大的）
+四邊逐列／逐行掃亮度標準差 &lt; 12 → 上緣 32 列、下緣 8 列是天花板與地板的平色，
+左右各 0 列。白框的特徵是四邊都有，這裡不是 → 不裁。
+輸出 assets/hero-wisdom-photo-{800,1600,2000}.jpg（77／237／409KB），
+用 Chromium 的 canvas 縮放（imageSmoothingQuality high、JPEG 0.82~0.86）——
+容器裡沒有 PIL 也沒有 ImageMagick，這站又不能有 npm 依賴。
+og:image 由 build.mjs 的 jpegSize() 讀出 1600×893。
+實測挑檔：電腦版 656px 欄寬挑 800w、手機 390 DPR2 需要 724 也挑 800w。</pre>
+<p>⚠ <strong>使用者上傳的圖一直都在容器裡</strong>（<code>/root/.claude/uploads/&lt;session&gt;/</code>）。
+這一輪我一度回答「聊天裡的圖存不進 repo，請你自己上傳到 GitHub」——那是錯的，
+沒有去找就下結論。<strong>下次先 <code>find</code> 過再說。</strong>
+（更晚的版本沒有落到 uploads/，是從
+<code>/root/.claude/projects/&lt;dir&gt;/&lt;session&gt;.jsonl</code> 裡把 base64 抽出來的。）</p>
+
+<h2>五、文案：兩條規則是這一輪定下來的</h2>
+<p>圖定案之後使用者逐句退了兩輪文字，兩條規則已寫進 <strong>COPY.md 第十節</strong>：</p>
+
+<p><strong>（一）主詞不能是空的。</strong></p>
+<blockquote>「你寫『這一步是為了避開麻煩』——不能說避開麻煩，因為看不清楚是誰的麻煩：
+是醫師的麻煩還是病人的麻煩？理論上應該是為了病人好，但這樣寫會讓人覺得是醫師
+為了避免自己的麻煩。」</blockquote>
+<p>定案：「多這一步，是為了讓手術過程更有效率、減少術後的併發症，也降低傷到神經的風險。」
+同一條掃出另外八處（「比拔完再問省事很多」「這幾天沒辦法好好照顧自己」
+「什麼情況會建議」…）。</p>
+
+<p><strong>（二）貼近在地 ≠ 口語化。</strong></p>
+<blockquote>「賠不賠這種有點像菜市場道聽途說……這種講話語，會讓人覺得說，
+哎，其實這診所好像有點隨便吧。」<br>
+「我們診所的品牌形象是貼近在地、陪伴病患沒有錯，但不代表文章就要口語化。
+文章還是要有一定的溫度，然後注意邏輯、文法，講得清楚。」</blockquote>
+<p>照這條把全篇用詞換過一輪（賠不賠→理賠條件、壓不太住→不易緩解、
+一天比一天大→逐日加劇、不是客套話→並不是形式上的提醒、撞出蛀洞→抵住…蛀蝕、
+放點東西幫忙→放入填補材料、鼓起腮幫子→用力漱口……），
+<strong>但保留第二人稱「你」、生活場景、以及「敷料」「鷹架」兩個比喻</strong>——那才是溫度。
+判準：<strong>這句話會不會出現在菜市場的閒聊裡。</strong></p>
+
+<div class="note">
+  <p>⚠⚠ 同一輪抓到一件比文體更嚴重的事：術後照顧原本寫
+  「用溫鹽水或<strong>醫師開立的漱口水</strong>含著讓它流過」——
+  <strong>這間診所並不會開漱口水</strong>，寫了就等於在官網上承諾一個不存在的服務。
+  定案改成「可以用<strong>清水</strong>含著讓它流過」。</p>
+  <p>最後一句也連改兩次：「診所這邊會把…寫清楚」→「診所端會將…載明於…」→
+  <strong>「手術方式與使用的材料，將載明於病歷與診斷證明書。」</strong>
+  使用者：「診所端也是有一點多餘。」——講「為什麼要多做這一步」時受益者一定要寫出來，
+  但講「文件上會有什麼」時執行者可以省略，因為除了診所也不會有別人寫。</p>
+</div>
+
+<h2>六、文章本身</h2>
+<p>社群貼文的內容重寫成站上格式：拿掉 emoji 與行銷句，補上判斷依據
+（不是每顆智齒都要拔、血塊與乾性齒槽炎、兩種填補材料各自在補什麼），
+保險那一段改成「術前先問保單、要準備哪些單據」，<strong>不寫金額</strong>（COPY.md 第九之四節），
+並在結尾加一段「順序不要顛倒」——先看牙齒需不需要材料，再看保單的理賠條件。</p>
+<p>刻意<strong>沒有</strong>加 <code>FAQPage</code> 結構化資料（CLAUDE.md 第十節：Google 2026-05 起不顯示）。
+<code>about</code> 四個實體都從本文自己的 h2 與內文挑：智齒拔除、阻生智齒、乾性齒槽炎、齒槽骨保存術。</p>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>
