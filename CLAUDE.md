@@ -5,11 +5,13 @@
 
 這份檔案是給 AI 助理看的。人類用的說明在 [README.md](README.md)。
 
-> ## ⚠ 2026-08-18：有一輪工作正在進行中，**還沒上線**
+> ## 2026-08-18：SEO／GEO 這一輪的三件成品**已經上線**
 >
-> SEO／GEO 那一輪的產出在分支 **`claude/google-search-visibility-ok34xt`** 上
-> （文章的「重點整理」、上線版去掉註解、卡片改顯示上架日期），
-> 提案中的科別著陸頁在 <https://fangren.net/preview/topic-perio/> 與 `topic-ortho/`。
+> 文章的「重點整理」、卡片改顯示上架日期、上線版剝掉註解 ——
+> 分支 `claude/google-search-visibility-ok34xt` 已併進 `main`，那條分支可以不用管了。
+>
+> **還在進行中的只剩科別著陸頁的文案**，提案頁在
+> <https://fangren.net/preview/topic-perio/> 與 `topic-ortho/`。
 >
 > **接手前先讀[第九之〇節](#九之〇seogeo-這一輪20260817-18-新的聊天從這裡接手)。**
 > 要寫著陸頁的文案，先讀 **[COPY.md](COPY.md) 第九節**（站上那兩頁的文字是反例）。
@@ -594,36 +596,33 @@ tools/
 
 ### 九之〇、SEO／GEO 這一輪（2026-08-17～18）——⚠ 新的聊天從這裡接手
 
-起點是使用者收到 Search Console 的兩封信。整輪的產出分成三處，**都還沒定案上線**。
+起點是使用者收到 Search Console 的兩封信。三件技術面的成品 **2026-08-18 已上線**，
+剩下的是科別著陸頁的文案。
 
 #### 現在東西在哪
 
 | | |
 | --- | --- |
-| 工作分支 | **`claude/google-search-visibility-ok34xt`**（兩個 commit，**還沒併進 `main`**） |
-| 已在 `main` 上 | 只有兩個提案頁與產生器（Cloudflare 只建置 main，不推使用者看不到） |
+| 三件成品 | **已於 2026-08-18 併進 `main` 並上線**（分支 `claude/google-search-visibility-ok34xt` 功成身退） |
+| 還在進行 | 科別著陸頁的**文案**（版面已定案，見下面） |
 | 提案頁 | <https://fangren.net/preview/topic-perio/>、<https://fangren.net/preview/topic-ortho/> |
 
-```bash
-git fetch origin claude/google-search-visibility-ok34xt
-git checkout claude/google-search-visibility-ok34xt
-```
-
-#### 分支上有、還沒上線的兩件
+#### 已經上線的三件（2026-08-18）
 
 1. **七篇文章文末各加一塊「重點整理」**（四到五組問答，`.keypoints`）。
    內文一個字沒改，答案全部從那一篇自己說過的話濃縮。刻意**沒有**加 `FAQPage`
    結構化資料（Google 2026-05 起不顯示）。顏色沒新增，問句用 `--accent-deep`。
 2. **`tools/dist.mjs` 在組 `_site/` 時剝掉 HTML/CSS 註解**（新增 `tools/strip-comments.mjs`）。
-   原始檔一個字不動。首頁 brotli **130.7KB → 44.3KB**、樣式表 17.0 → 3.5KB。
-   驗過 `_site` 對原始檔逐像素 0 差異。**JS 註解刻意不碰。**
+   原始檔一個字不動。上線當天重量一次：首頁 raw 477.8 → 189.2KB、
+   brotli **133.1 → 44.7KB（−66%）**；樣式表 brotli 17.8 → 3.5KB（−80%）。
+   首頁首屏要下載的 HTML＋CSS 合計 **160.3 → 55.3KB**。
+   驗收：首頁／兩篇文章／404 × 四個視窗（1440／1112／390／375）**逐像素相同、
+   每個元素的 computed style 0 項有差、body 文字逐字相同**；八頁的 JSON-LD
+   （首頁 @graph 12 節點、每篇 5 節點）逐字相同，canonical／robots／og 十項數量不變。
+   **JS 註解刻意不碰。**
 
 3. **卡片改顯示上架日期、首頁依 published 排序**（使用者：「文章卡片上的日期
    應該是上架時間，而不是最後更新時間。」）。
-
-⚠⚠ **第一節第 3 條與第五節那兩段已經照第 3 件改寫了，但那是分支上的狀態** ——
-`main` 上的 `tools/build.mjs` 仍然是「卡片顯示 `updated`、依 `updated` 排序」。
-分支併進 `main` 之後這句話就可以刪掉。**不要因為看到規範和程式對不上就去改程式。**
 
 #### Search Console 那一側（使用者自己做的，已完成）
 
