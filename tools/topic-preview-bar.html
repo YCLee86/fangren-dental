@@ -1,38 +1,62 @@
 
 <!-- =============================================================================
      提案用的樣式與切換條。定案時：把 .tp-* 搬進 index.html 的樣式表，
-     這一整段（.pv-* 與底下的腳本）連同 tp-when-* 的顯示規則一起刪掉。
+     這一整段（.pv-*、.tp-legacy、.tp-todo）連同對照按鈕一起刪掉。
      ⚠ class 一律 tp-／pv- 前綴 —— 這一頁是 index.html 的完整複本，
        站上有的 class 全部都在，短名字幾乎一定會撞（CLAUDE.md 第八節）。
      ============================================================================= -->
 <style>
-/* ---- 科別介紹 ---- */
-.tp-intro { margin: 1.4rem 0 0; }
-.tp-intro h1 { margin: 0 0 .5rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
-.tp-lede { margin: 0 0 1.3rem; font-size: 1.02rem; line-height: 1.95; color: var(--ink-soft); max-width: 46rem; }
-.tp-sec { margin: 0 0 1.3rem; max-width: 46rem; }
-.tp-sec h2 {
-  display: flex; align-items: baseline; gap: .6rem;
-  margin: 1.6rem 0 .7rem; font-size: clamp(1.05rem, 3vw, 1.24rem); line-height: 1.55; color: var(--ink);
+.tp-intro, .tp-legacy { margin: 1.4rem 0 0; max-width: 46rem; }
+.tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
+.tp-lede { margin: 0 0 1.1rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink-soft); }
+
+/* 「這些狀況該來看一下」：讓他自己對號入座，所以要短、要好掃 */
+.tp-checks { margin: 0 0 1.15rem; }
+.tp-checks-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
+.tp-checks ul { margin: 0; padding-left: 1.3rem; }
+.tp-checks li { margin-bottom: .34rem; line-height: 1.85; }
+.tp-checks strong { color: var(--ink); font-weight: 700; }
+
+/* 一問一答。**刻意和文章末尾那塊「重點整理」同一個語彙** —— 短、好掃，
+   而且 AI 搜尋抓的正是這種段落。底框同站上的卡，問句用該科的深階字色。 */
+.tp-qa {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 1.05rem 1.15rem; margin: 0 0 1rem;
 }
-.tp-sec h2::before { content: ''; flex: 0 0 3px; align-self: center; height: 1.05em; border-radius: 2px; background: var(--accent); }
-.tp-sec p { margin: 0 0 .95rem; line-height: 1.95; }
-.tp-sec ul { margin: 0 0 1rem; padding-left: 1.35rem; }
-.tp-sec li { margin-bottom: .5rem; line-height: 1.9; }
-.tp-sec strong { color: var(--ink); font-weight: 700; }
+.tp-qa dt { margin: .95rem 0 .28rem; font-weight: 700; color: var(--accent-deep); line-height: 1.65; }
+.tp-qa dt:first-child { margin-top: 0; }
+.tp-qa dd { margin: 0; color: var(--ink); line-height: 1.85; }
+
 .tp-note {
-  max-width: 46rem; margin: 0 0 .4rem; font-size: .84rem; line-height: 1.8; color: var(--ink-soft);
+  margin: 0 0 .4rem; font-size: .84rem; line-height: 1.8; color: var(--ink-soft);
   background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .8rem .95rem;
 }
 
-/* chips 從 button 換成 a：外觀完全沿用站上那一組規則，這裡只補連結本身的重置 */
+/* 免責聲明搬到頁面最後（診所資訊之前）之後，它不在 .shell 裡了，要自己吃版心。 */
+.tp-note.wrap-note { max-width: 46rem; margin: 0 auto 1.6rem; padding-inline: 1rem; }
+
+/* 還沒問過使用者的待填格。**提案專用，正式站不會有這個樣子** */
+.tp-todo {
+  display: inline; background: rgba(175, 76, 82, .10);
+  border-bottom: 1.5px dashed var(--brick); border-radius: 3px;
+  padding: .05em .25em; color: var(--ink);
+}
+.tp-todo::before { content: "⚠ "; }
+
+/* 對照舊版 */
+.tp-legacy .tp-sec { margin: 0 0 1.2rem; }
+.tp-legacy h2 {
+  display: flex; align-items: baseline; gap: .6rem;
+  margin: 1.5rem 0 .7rem; font-size: clamp(1.05rem, 3vw, 1.24rem); line-height: 1.55; color: var(--ink);
+}
+.tp-legacy h2::before { content: ''; flex: 0 0 3px; align-self: center; height: 1.05em; border-radius: 2px; background: var(--accent); }
+.tp-legacy p { margin: 0 0 .95rem; line-height: 1.95; }
+html[data-shape="old"] .tp-intro { display: none; }
+html[data-shape="old"] .tp-legacy { display: block !important; }
+
+/* chips 從 button 換成 a：外觀沿用站上那一組規則，這裡只補連結本身的重置 */
 .chips a { display: inline-block; text-decoration: none; }
 .chips a[data-todo] { opacity: .45; pointer-events: none; }
-
-/* 份量 */
-html[data-len="brief"] .tp-when-std,
-html[data-len="brief"] .tp-when-full,
-html[data-len="std"]   .tp-when-full { display: none; }
 
 /* ---- 切換條 ---- */
 .pv-bar {
@@ -58,15 +82,14 @@ html.pv-closed .pv-bar { display: none; }
   border: 1px solid var(--rule); background: rgba(244,244,245,.94); color: var(--ink-soft); backdrop-filter: blur(8px);
 }
 html:not(.pv-closed) .pv-open { display: none; }
-html:not(.pv-closed) body { padding-bottom: 8rem; }
+html:not(.pv-closed) body { padding-bottom: 7.5rem; }
 </style>
 
 <div class="pv-bar">
   <div class="pv-row">
-    <span class="pv-lab">科別介紹的份量</span>
-    <button type="button" data-k="len" data-v="brief">精簡</button>
-    <button type="button" data-k="len" data-v="std">標準</button>
-    <button type="button" data-k="len" data-v="full">完整</button>
+    <span class="pv-lab">開場的形狀</span>
+    <button type="button" data-k="shape" data-v="new">新（短）</button>
+    <button type="button" data-k="shape" data-v="old">對照舊版</button>
     <button type="button" id="pvclose" style="margin-left:auto">收起</button>
   </div>
   <div class="pv-meter" id="pvmeter">—</div>
@@ -76,18 +99,23 @@ html:not(.pv-closed) body { padding-bottom: 8rem; }
 <script>
 (function () {
   var root = document.documentElement;
-  if (!root.getAttribute('data-len')) root.setAttribute('data-len', 'full');
-  var m = /[?&]len=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
-  if (m && ['brief', 'std', 'full'].indexOf(m[1]) >= 0) root.setAttribute('data-len', m[1]);
+  if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
+  var m = /[?&]shape=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
+  if (m && ['new', 'old'].indexOf(m[1]) >= 0) root.setAttribute('data-shape', m[1]);
 
+  /* 量的是「開場那一塊」自己，不是整頁 —— 使用者說的「字太多」指的就是它。
+     屏數用 visualViewport（iOS 的 innerHeight 比看得到的高，第九節第 6 條）。 */
   function measure() {
-    var main = document.getElementById('main');
-    var n = (main.innerText || '').replace(/\s/g, '').length;
-    var cards = document.querySelectorAll('.cards .card').length;
-    var docs = document.querySelectorAll('.docs .doc').length;
-    var v = n >= 900 ? '夠厚' : n >= 600 ? '可以，但偏薄' : '太薄，Google 可能不當一回事';
+    var box = root.getAttribute('data-shape') === 'old'
+      ? document.querySelector('.tp-legacy') : document.querySelector('.tp-intro');
+    var n = (box.innerText || '').replace(/\s/g, '').length;
+    var vh = (window.visualViewport && visualViewport.height) || innerHeight;
+    var screens = (box.getBoundingClientRect().height / vh).toFixed(1);
+    var left = document.querySelectorAll('.tp-intro .tp-todo').length;
     document.getElementById('pvmeter').innerHTML =
-      '這一頁可見字 <b>' + n + '</b>　文章 <b>' + cards + '</b> 篇　醫師 <b>' + docs + '</b> 位　→ ' + v;
+      '開場 <b>' + n + '</b> 字　手機上 <b>' + screens + '</b> 屏　'
+      + (screens <= 1.25 ? '一屏之內 ✓' : '⚠ 超過一屏')
+      + '　待填 <b>' + left + '</b> 格';
   }
   function paint() {
     document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {
