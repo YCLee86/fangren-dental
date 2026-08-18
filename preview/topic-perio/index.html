@@ -4510,7 +4510,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 }
 </style>
 </head>
-<body data-topic="perio">
+<body data-topic="perio" data-spec="perio">
 
 
 <a class="skip-link" href="#main">跳到主要內容</a>
@@ -4591,7 +4591,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
                （「顯微根管」「口腔外科」），日後那兩科的文章才篩得到。 -->
       </div>
       <!-- Ⓓ chips 正下方，＝首頁 .filter-note 原本的位置 -->
-      <p class="tp-count tp-count-d"><a href="#articles">2 篇文章</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">2 位醫師</a></p>
+      <p class="tp-count tp-count-d"><span class="tp-w tp-w-noun"><a href="#articles">文章 2 篇</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">醫師 2 位</a></span><span class="tp-w tp-w-dir">往下有 <a href="#articles">2 篇文章</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">2 位醫師</a></span><span class="tp-w tp-w-plain"><a href="#articles">2 篇文章</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">2 位醫師</a></span></p>
       <p class="filter-note" hidden></p>
 
       <!-- ===== 科別介紹（提案中）=====================================
@@ -4602,7 +4602,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <div class="tp-intro">
         <h1>牙周治療</h1>
         <!-- Ⓑ h1 底下當副標 -->
-        <p class="tp-count tp-count-b">2 篇文章<span class="tp-dot" aria-hidden="true">・</span>2 位醫師</p>
+        <p class="tp-count tp-count-b"><span class="tp-w tp-w-noun"><a href="#articles">文章 2 篇</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">醫師 2 位</a></span><span class="tp-w tp-w-dir">往下有 <a href="#articles">2 篇文章</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">2 位醫師</a></span><span class="tp-w tp-w-plain"><a href="#articles">2 篇文章</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">2 位醫師</a></span></p>
         <p class="tp-case">有人是刷牙有血看了好幾年，問過的人都說「很常見」「我也有啊」—— 於是就這樣過去了。</p>
         <p class="tp-case">有人是查過很多說法：有人叫你洗牙就好，有人說要開刀，也有人叫你再觀察看看，愈查愈亂。</p>
         <p class="tp-case">也有人是牙齒一年掉一顆，早就覺得沒救了，只是照常回去洗一洗。</p>
@@ -4621,7 +4621,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         </div>
 
         <!-- Ⓒ 開場之後、內容之前：當作往下的路標，兩個數字都是錨點連結 -->
-        <p class="tp-count tp-count-c">往下有 <a href="#articles">2 篇文章</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">2 位醫師</a></p>
+        <p class="tp-count tp-count-c"><span class="tp-w tp-w-noun"><a href="#articles">文章 2 篇</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">醫師 2 位</a></span><span class="tp-w tp-w-dir">往下有 <a href="#articles">2 篇文章</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">2 位醫師</a></span><span class="tp-w tp-w-plain"><a href="#articles">2 篇文章</a><span class="tp-dot" aria-hidden="true">・</span><a href="#doctors">2 位醫師</a></span></p>
 
         <!-- 拉力版（預設）：描述第一步長什麼樣，而不是先攤開代價。
              2026-08-18 使用者：「這個卡片資訊給出來的感覺對病患是推力而非拉力。」 -->
@@ -6821,10 +6821,14 @@ html:not([data-count="c"]) .tp-count-c,
 html:not([data-count="d"]) .tp-count-d { display: none; }
 .tp-count:empty { display: none !important; }
 .tp-dot { margin: 0 .45em; color: var(--rule); }
+html:not([data-word="noun"]) .tp-w-noun,
+html:not([data-word="dir"]) .tp-w-dir,
+html:not([data-word="plain"]) .tp-w-plain { display: none; }
 .tp-count a { color: var(--accent-deep); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent-deep) 30%, transparent); }
 .tp-count a:hover { border-bottom-color: var(--accent-deep); }
 
-/* Ⓑ h1 底下當副標：最安靜，純文字不帶連結 */
+/* Ⓑ h1 底下當副標。⚠ **要帶連結** —— 純文字那一版讀起來是「這一頁的規格」，
+   帶連結才讀得出是入口（使用者 2026-08-18 指出少了連結功能）。 */
 .tp-count-b {
   margin: -.15rem 0 .75rem; font-size: .84rem; letter-spacing: .02em;
   color: var(--ink-soft);
@@ -6878,11 +6882,10 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
     <button type="button" data-k="count" data-v="d">標記下方</button>
   </div>
   <div class="pv-row">
-    <span class="pv-lab">搜尋框</span>
-    <button type="button" data-k="search" data-v="a">現況</button>
-    <button type="button" data-k="search" data-v="b">淡</button>
-    <button type="button" data-k="search" data-v="c">只有底線</button>
-    <button type="button" data-k="search" data-v="d">框＋窄</button>
+    <span class="pv-lab">怎麼寫</span>
+    <button type="button" data-k="word" data-v="noun">文章 2 篇</button>
+    <button type="button" data-k="word" data-v="dir">往下有…</button>
+    <button type="button" data-k="word" data-v="plain">2 篇文章</button>
   </div>
   <div class="pv-row">
     <span class="pv-lab">開場之後</span>
@@ -6918,12 +6921,14 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
   var root = document.documentElement;
   if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
   if (!root.getAttribute('data-after')) root.setAttribute('data-after', 'first');
-  if (!root.getAttribute('data-search')) root.setAttribute('data-search', 'd');
-  if (!root.getAttribute('data-count')) root.setAttribute('data-count', 'c');
+  /* 搜尋框已定案「框＋窄」（Ⓓ），切換條那一排收掉了，這裡直接寫死。 */
+  root.setAttribute('data-search', 'd');
+  if (!root.getAttribute('data-count')) root.setAttribute('data-count', 'b');
+  if (!root.getAttribute('data-word')) root.setAttribute('data-word', 'noun');
+  var mw = /[?&]word=([a-z0-9]+)/.exec(location.search);
+  if (mw && ['noun', 'dir', 'plain'].indexOf(mw[1]) >= 0) root.setAttribute('data-word', mw[1]);
   var mc = /[?&]count=([a-z0-9]+)/.exec(location.search);
   if (mc && ['off', 'b', 'c', 'd'].indexOf(mc[1]) >= 0) root.setAttribute('data-count', mc[1]);
-  var ms = /[?&]search=([a-z0-9]+)/.exec(location.search);
-  if (ms && ['a', 'b', 'c', 'd'].indexOf(ms[1]) >= 0) root.setAttribute('data-search', ms[1]);
   var ma = /[?&]after=([a-z0-9]+)/.exec(location.search);
   if (ma && ['first', 'qa'].indexOf(ma[1]) >= 0) root.setAttribute('data-after', ma[1]);
   var m = /[?&]shape=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
