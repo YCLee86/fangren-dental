@@ -4510,7 +4510,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 }
 </style>
 </head>
-<body>
+<body data-topic="perio">
 
 
 <a class="skip-link" href="#main">跳到主要內容</a>
@@ -4554,6 +4554,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     <div class="shell">
       <div class="sec-head">
         <h2>主題與科別</h2>
+        <div class="topic-search">
+          <label class="sr-only" for="q">搜尋文章與醫師</label>
+          <input id="q" type="search" placeholder="搜尋文章與醫師" autocomplete="off" spellcheck="false">
+        </div>
       </div>
       <div class="topic-tools">
         <!-- 「全部」不是一個科別，是「不篩選」。所以它用中性的墨色，不是任何一個科別色 ——
@@ -4585,10 +4589,6 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
              ＊按鈕上的字要和 tools/build.mjs 的 SPEC 對照表用同一個詞
                （「顯微根管」「口腔外科」），日後那兩科的文章才篩得到。 -->
-        <div class="topic-search">
-          <label class="sr-only" for="q">搜尋文章與醫師</label>
-          <input id="q" type="search" placeholder="搜尋文章與醫師" autocomplete="off" spellcheck="false">
-        </div>
       </div>
 
       <!-- ===== 科別介紹（提案中）=====================================
@@ -6739,6 +6739,31 @@ html[data-after="qa"] .tp-first { display: none; }
 }
 .tp-todo::before { content: "⚠ "; }
 
+/* ⚠⚠ 拿掉 HERO 之後要自己讓開固定的頁首。
+   `header.site-head` 是 position: fixed，首頁靠 HERO 佔位（而且 HERO 是**刻意**
+   鑽到頁首底下的，那是設計的一部分）。著陸頁沒有 HERO，#topics 就從 y=0 開始，
+   「主題與科別」那一列被蓋掉 14~42px（390／834／1440 實測）。
+   ⚠ 一定要限定 `[data-topic]` —— 套到首頁會把 HERO 整個推下來。
+   ⚠⚠ **不能只用 `var(--head-h)`** —— 手機（≤720）的頁首是
+     `.site-head .shell { height: auto }`＋`padding-block: 3.736vw 3.1472vw`，
+     高度由內容撐，和 `--head-h` 無關（390 上實際 61px，變數卻是 76px，高估 15px）。
+     所以照這個 repo 既有的做法**開頁量一次寫進 CSS 變數**
+     （`--lamp-pad`、`--ar-y` 都是這樣，CLAUDE.md 第九節第 9 條）。
+     沒有 JS 時退回 `--head-h`：偏大一點但不會破圖。 */
+body[data-topic] #main { padding-top: calc(var(--topic-pad, var(--head-h)) + 1.1rem); }
+
+/* 搜尋框搬到「主題與科別」那一列、靠右（2026-08-18）。
+   ⚠ 一定要限定 #topics —— .sec-head 是三個小節共用的元件。
+   ⚠ 站上原本的 `.topic-search { flex: 0 1 15rem; min-width: 11rem }` 是給
+     「和 chips 同一列」用的，搬上來之後 min-width 11rem 在 375 寬會把標題擠掉，
+     所以這裡重新給一組。 */
+#topics .sec-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .8rem 1rem; flex-wrap: nowrap;
+}
+#topics .sec-head h2 { flex: 0 0 auto; }
+#topics .sec-head .topic-search { flex: 0 1 15rem; min-width: 0; margin-top: 0; }
+
 /* chips 從 button 換成 a：外觀沿用站上那一組規則，這裡只補連結本身的重置 */
 .chips a { display: inline-block; text-decoration: none; }
 .chips a[data-todo] { opacity: .45; pointer-events: none; }
@@ -6787,6 +6812,20 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
 <button type="button" class="pv-open" id="pvopen">切換條</button>
 
 <script>
+/* 著陸頁讓開固定頁首的量。量的是**未捲動那一態**（捲動後頁首會收合，
+   那不是我們要讓開的高度），所以 scrollY 不在頂端時就不更新。 */
+(function () {
+  var hd = document.querySelector('header.site-head');
+  if (!hd) return;
+  function set() {
+    if (scrollY > 4) return;
+    document.documentElement.style.setProperty('--topic-pad', hd.getBoundingClientRect().height + 'px');
+  }
+  set();
+  addEventListener('load', set);
+  addEventListener('resize', set);
+})();
+
 (function () {
   var root = document.documentElement;
   if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
