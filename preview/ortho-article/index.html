@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>〈牙齒矯正〉文章預覽 — 芳仁牙醫診所</title>
+<meta name="author" content="芳仁牙醫診所 編輯室">
+<meta name="theme-color" content="#12656a">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="芳仁牙醫診所">
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，兩者刻意分開 ——
+     差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
+     apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
+
+     ⚠⚠ **只宣告這一個尺寸，而且是 192 —— 這是照別站的成功案例做的，不要改。**
+     iPhone 主畫面要 180（60pt × @3x）。192 比它大 6%，iOS 只需要縮一點點；
+     **放大會糊，大幅縮小也會糊，只有「幾乎不用縮」才銳利。**
+     前面試過 180（1:1 竟然還是糊，因為 iOS 其實去拿了 manifest 裡更大的那張）
+     和 1024（縮 5.7 倍，更糊）。
+     ⚠ **不要好心多補幾個尺寸**（57／76／120／152／512／1024）——
+       候選一多，iOS 會挑錯那張再縮放，這正是前五輪一直糊的原因。
+       整個站現在能被 iOS 找到的 any 版就只有這一張。
+     ⚠ sizes 屬性只是宣告，iOS 不會驗證 —— 檔案實際像素必須真的是 192×192
+       （tools/app-icons.mjs 產生時會檢查尺寸，改不動它就不會過）。
+
+     ⚠ 主畫面那顆是**按下「加入」的當下**存進捷徑的，之後不會自己更新。
+     換了圖要把 ?v= 加一，並且**把主畫面上那顆刪掉重加**，兩件都要做。 -->
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192.png?v=10">
+<!-- Android 的「加到主螢幕」讀這一份（iOS 不需要它也能加）。
+     manifest 裡 display 是 "browser" 不是 "standalone"，是刻意的：
+     這是一個會連出去（Google 地圖、LINE）的內容網站，
+     standalone 會把網址列與上一頁一起收掉，等於把人關在裡面。 -->
+<link rel="manifest" href="/site.webmanifest?v=20260812d">
+<!-- 主畫面圖示底下顯示的名字。不寫的話 iOS 會拿 <title> 去截，
+     首頁那一句是「芳仁牙醫診所｜雲林斗六・永樂街」，截完會變成半句。 -->
+<meta name="apple-mobile-web-app-title" content="芳仁牙醫">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+<meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+<!-- data-spec：這一篇的科別，讓 assets/style.css 把重點色換成首頁
+     「主題與科別」標記的同一個顏色。標籤 → 代碼的對照表在 tools/build.mjs。 -->
+<body data-spec="ortho">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<p style="margin:0;padding:.7rem 1rem;background:#244369;color:#fff;font-size:.82rem;line-height:1.7;text-align:center">
+  這是<b>提案頁</b>：〈牙齒矯正〉文章預覽。文章本身還在分支上，尚未上線。
+</p>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand-mark">
+        <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai。牙那條子路徑依自己的中心放大 1.3 倍、
+             再往上移 0.50 個單位（2026-08-07 定案），嘴一個節點都沒改。
+             一個路徑、兩條子路徑，用奇偶填充規則讓中間那顆牙成為真正的洞。
+             width／height 屬性不能省 —— 少了它 WebKit 用預設的 300×150 當內在尺寸，
+             這個 flex 項目就縮不下去，整條頁首會被撐寬。 -->
+        <svg width="44.2873" height="21.8244" viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="translate(-232.8729 -333.8286)">
+              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
+            </g>
+          </svg>
+      </span>
+      <span class="brand-text">
+        <b>芳仁牙醫診所</b>
+        <small>雲林斗六・永樂街</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="主選單">
+      <a href="/#topics">全部文章</a>
+      <a href="/#doctors">醫師介紹</a>
+      <a href="/#clinic">診所資訊</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article>
+
+  <div class="post-head">
+    <div class="wrap-text">
+      <p class="crumbs">
+        <a href="/">首頁</a>
+        <span class="sep" aria-hidden="true">&rsaquo;</span>
+        <span class="post-tag" data-spec="ortho">齒顎矯正</span>
+        <time datetime="2026-08-20">2026 年 8 月 20 日</time>
+      </p>
+      <h1>牙齒矯正：年齡、矯正器與第一次諮詢</h1>
+    </div>
+    <figure class="post-hero" style="display:grid;place-items:center;min-height:clamp(160px,28vw,260px);border:1px dashed var(--rule);border-radius:12px;background:var(--card)">
+      <figcaption style="color:var(--ink-soft);font-size:.9rem;text-align:center;padding:1.2rem 1.6rem;line-height:1.9">
+        HERO 插畫還沒畫，這一格是它未來的位置與比例（2000&times;1116）。<br>
+        正式上線前會補上，圖的內容要等這篇文案定了再發包。
+      </figcaption>
+  </div>
+
+  <div class="post-body wrap-text">
+    <p class="lede">會開始想矯正這件事的人，心裡通常不是卡在「要不要變好看」，而是幾個沒問出口的問題：我這個年紀還來得及嗎、金屬和隱形到底差在哪、要花多久、第一次去諮詢會不會當場就被要求決定。這一篇把這幾件事一次講清楚。</p>
+
+    <h2>矯正不只是把牙齒排整齊</h2>
+    <p>很多人是為了外觀走進來的，這沒有什麼好不好意思。但牙齒的位置一改變，跟著改變的還有幾件平常不太被提起的事：</p>
+    <ul>
+      <li><strong>清潔變得容易</strong>：<strong>齒列擁擠</strong>的地方，牙刷的刷毛進不去、牙線也不好通過，那些位置往往就是蛀牙與牙周病最早開始的地方。牙齒排開之後，同樣的刷牙時間能清到的面積比以前多。</li>
+      <li><strong>咬合的力量分配得比較平均</strong>：<strong>咬合不正</strong>時，少數幾顆牙承擔了大部分的咀嚼力量，長期下來容易磨耗，也可能牽動顳顎關節，出現張口有聲音或酸痛的情形。</li>
+      <li><strong>讓比較複雜的狀況有辦法接手</strong>：例如恆牙遲遲沒有萌發、或牙齒埋在骨頭裡（阻生齒），矯正可以先把空間騰出來，再把牙齒引導到它該在的位置。</li>
+      <li><strong>笑的時候不必先想一下</strong>：這一項不會寫在病歷上，但它是很多人真正的理由，也不必為了聽起來比較「正當」而不講。</li>
+    </ul>
+
+    <h2>幾歲可以開始</h2>
+    <p><strong>兒童與青少年</strong>的骨骼還在生長，這段時間可以引導上下顎的發育方向與恆牙萌發的位置；有些單靠排列已經處理不了的擁擠，早一點介入，有機會用比較單純的方式解決。站上另一篇〈<a href="/posts/kids-arch-expansion/">別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</a>〉講的就是這一段。</p>
+    <p><strong>成年人</strong>的牙齒並不會因為年紀而失去移動的能力，真正的前提是<strong>牙周組織健康</strong>——牙齦與齒槽骨是牙齒移動時的地基。地基還在發炎，就要先把牙周處理到穩定，再談矯正的順序（〈<a href="/posts/gum-bleeding/">牙齦流血不是火氣大</a>〉與〈<a href="/posts/perio-laser/">牙周病治療</a>〉兩篇有比較完整的說明）。這一步不是拖延，而是為了讓牙齒在能夠承受的環境裡移動，減少矯正過程中牙齦萎縮與牙齒動搖的風險。</p>
+
+    <h2>金屬矯正器與隱形矯正，差在哪</h2>
+    <p>兩種都是把牙齒移動到規劃好的位置，差別在於用什麼方式移動、以及日常生活要配合什麼：</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>比較項目</th><th>金屬矯正器</th><th>隱形矯正</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>是什麼</td>
+            <td>把矯正器固定在牙齒表面，以矯正線帶動牙齒移動。</td>
+            <td>依療程規劃製作一系列透明牙套，依序更換，每一副負責移動一小段。</td>
+          </tr>
+          <tr>
+            <td>適用範圍</td>
+            <td>技術成熟，各種複雜狀況都有相對應的做法。</td>
+            <td>適不適用需要經矯正專科醫師評估，部分狀況仍會建議搭配其他方式處理。</td>
+          </tr>
+          <tr>
+            <td>外觀</td>
+            <td>看得出來。</td>
+            <td>幾乎看不出來。</td>
+          </tr>
+          <tr>
+            <td>舒適度</td>
+            <td>初期需要一段時間適應異物感，嘴唇與黏膜也需要習慣。</td>
+            <td>表面平滑，適應期較短。</td>
+          </tr>
+          <tr>
+            <td>清潔</td>
+            <td>刷牙需要搭配牙間刷等工具，繞著矯正器耐心清潔。</td>
+            <td>可以自行取下，刷牙與用餐維持原本的習慣。</td>
+          </tr>
+          <tr>
+            <td>需要你配合的事</td>
+            <td>固定在牙齒上，不會有忘記戴的問題；按時回診調整。</td>
+            <td>每天配戴的時間要足夠——取下的時間裡牙齒不會移動，這一段由你自己掌握。</td>
+          </tr>
+          <tr>
+            <td>治療時間</td>
+            <td>約 2 至 3 年。</td>
+            <td>約 3 至 4 年。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <p><b>醫師小叮嚀。</b>這兩種做法沒有一種是「比較好的那個」，只有哪一種比較適合你的牙齒狀況與生活方式。最終方案會由<strong>矯正專科醫師</strong>在檢查與影像評估之後，和你一起討論決定；不必因為身邊的人選了哪一種，就跟著選。</p>
+    </div>
+
+    <h2>時間與費用：為什麼很難先報一個數字</h2>
+    <p>費用取決於牙齒排列的複雜程度與所選擇的方式，每個人的條件不同，價格也就不會一樣。先確認自己的狀況，再談費用，會比先聽到一個數字再回頭套用在自己身上準確。</p>
+    <p>整體療程通常介於 <strong>2 至 4 年</strong>，實際長度取決於兩件事：牙齒移動的難易度，以及你能配合到什麼程度——按時回診、依醫囑配戴橡皮筋、隱形牙套每天戴滿該戴的時數。前者由醫師評估，後者在你手上，而它對療程長短的影響往往比多數人想像的大。</p>
+
+    <h2>第一次諮詢會做哪些事</h2>
+    <p>踏出第一步只需要預約一次諮詢。在諮詢中，矯正專科醫師會為你進行：</p>
+    <ol>
+      <li><strong>口內與臉部檢查</strong>：看牙齒的排列與咬合，也看嘴唇、側臉與中線的關係。</li>
+      <li><strong>必要的 X 光片拍攝</strong>：牙根的方向、齒槽骨的高度、還沒萌發的牙齒各在什麼位置，這些從外觀看不出來。</li>
+      <li><strong>提供初步的治療方向</strong>：可行的做法有哪些、大致需要多久、費用的區間。</li>
+    </ol>
+    <p>諮詢結束時，你手上會有一份對自己牙齒的具體了解與可行方向。接下來的功課——不同做法的費用與時間、自己這幾年的生活能配合到什麼程度——需要你回去想清楚再決定。這一步不必在診間當場完成。</p>
+
+    <h2>矯正過程需要其他科的時候</h2>
+    <p>矯正很少是單獨進行的一件事。牙周發炎要先治療到穩定、蛀牙要先處理、有些位置需要拔牙或把埋在骨頭裡的牙齒露出來，療程結束後原本缺牙的空間可能接著要做假牙或植牙。</p>
+    <p>芳仁的門診同時有矯正、牙周、贋復假牙與口腔外科的醫師，這些銜接可以在同一個地方安排。對你來說，差別在於不必自己在幾家診所之間轉述病情、也不必重複拍一次片子。</p>
+
+    <h2>重點整理</h2>
+    <dl class="keypoints">
+      <dt>矯正是不是只有外觀上的差別？</dt>
+      <dd>不是。齒列擁擠的地方牙刷與牙線都不容易進去，那些位置往往是蛀牙與牙周病最早開始的地方；咬合不正時，少數幾顆牙承擔了大部分的咀嚼力量，長期下來容易磨耗，也可能牽動顳顎關節。外觀是很多人來的理由，但改變的不只是外觀。</dd>
+
+      <dt>成年之後還能矯正嗎？</dt>
+      <dd>可以。牙齒不會因為年紀而失去移動的能力，真正的前提是牙周組織健康——牙齦與齒槽骨是牙齒移動時的地基。地基還在發炎，就要先把牙周處理到穩定再開始，這是為了減少矯正過程中牙齦萎縮與牙齒動搖的風險。</dd>
+
+      <dt>金屬矯正器和隱形矯正該怎麼選？</dt>
+      <dd>金屬矯正器技術成熟、各種複雜狀況都有對應做法，固定在牙齒上，沒有忘記戴的問題；隱形矯正幾乎看不出來、可以取下，刷牙與用餐維持原本的習慣，但每天要戴滿足夠的時數，取下的時間裡牙齒不會移動。隱形矯正適不適用需要經矯正專科醫師評估。</dd>
+
+      <dt>要花多久、大概多少錢？</dt>
+      <dd>整體療程通常介於 2 至 4 年，金屬矯正器約 2 至 3 年、隱形矯正約 3 至 4 年，實際長度取決於牙齒移動的難易度與你的配合程度。費用則因牙齒複雜度與選擇的方式而異，需要醫師檢查之後才給得出準確的評估。</dd>
+
+      <dt>第一次諮詢會做什麼？要當場決定嗎？</dt>
+      <dd>矯正專科醫師會進行口內與臉部檢查、必要的 X 光片拍攝，並提供初步的治療方向。諮詢結束時你會拿到對自己牙齒的具體了解與可行方向；費用、時間與自己能配合的程度，回去想清楚再決定，不必在診間當場完成。</dd>
+    </dl>
+
+    <p class="note">本文為一般口腔衛教資訊，不能取代臨床診斷。適不適合矯正、選擇哪一種矯正方式、需要多長時間，都要經矯正專科醫師檢查與 X 光評估後決定。</p>
+
+    <div class="post-foot">
+      <nav class="post-nav" aria-label="文章導覽">
+        <a class="btn btn-ghost" href="/posts/wisdom-tooth/">&larr; 上一篇：拔智齒之後</a>
+        <a class="btn" href="/#articles">回文章列表 &rarr;</a>
+      </nav>
+    </div>
+  </div>
+
+
+</article>
+</main>
+
+<!-- RELATED:START — 由 tools/build.mjs 產生，請勿手動編輯 -->
+<aside class="related" aria-label="延伸閱讀">
+  <div class="wrap">
+    <ul class="rel-list">
+        <li class="rel-card" data-spec="perio">
+          <a href="/posts/perio-laser/">
+            <img src="/assets/hero-perio-photo-1600.jpg" srcset="/assets/hero-perio-photo-800.jpg 800w, /assets/hero-perio-photo-1600.jpg 1600w, /assets/hero-perio-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="2000" height="1116" loading="lazy">
+            <span class="rel-body">
+              <span class="rel-tag">牙周照護</span>
+              <span class="rel-title">牙周病治療：清創、水雷射與再生手術</span>
+              <time class="rel-date" datetime="2026-08-16">2026/08/16</time>
+            </span>
+          </a>
+        </li>
+        <li class="rel-card" data-spec="kids">
+          <a href="/posts/kids-arch-expansion/">
+            <img src="/assets/hero-arch-photo-1600.jpg" srcset="/assets/hero-arch-photo-800.jpg 800w, /assets/hero-arch-photo-1600.jpg 1600w, /assets/hero-arch-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="2000" height="1116" loading="lazy">
+            <span class="rel-body">
+              <span class="rel-tag">兒童牙科</span>
+              <span class="rel-title">別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</span>
+              <time class="rel-date" datetime="2026-08-02">2026/08/02</time>
+            </span>
+          </a>
+        </li>
+        <li class="rel-card" data-spec="general">
+          <a href="/posts/regular-checkup/">
+            <img src="/assets/hero-checkup-photo-1600.jpg" srcset="/assets/hero-checkup-photo-800.jpg 800w, /assets/hero-checkup-photo-1600.jpg 1600w, /assets/hero-checkup-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="2000" height="1116" loading="lazy">
+            <span class="rel-body">
+              <span class="rel-tag">定期檢查</span>
+              <span class="rel-title">半年一次的洗牙：健保給付的那一次，到底在做什麼</span>
+              <time class="rel-date" datetime="2026-07-08">2026/07/08</time>
+            </span>
+          </a>
+        </li>
+    </ul>
+  </div>
+</aside>
+<!-- RELATED:END -->
+
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <!-- 名稱＋地址＋電話留著：文章頁沒有「診所資訊」那一節，
+           這裡是這六頁上**唯一**的聯絡資訊。看診時間與地圖不放 ——
+           那是內容不是落款，想看的人會點進診所資訊。COPY.md 第六之二節。
+           「雲林縣斗六市・在地經營超過四十年」已拿掉：同一句在首頁與頁首都講過，
+           而且它是形容詞、主詞是診所。 -->
+      <div>
+        <h4 class="foot-brand">
+          <!-- 診所標誌。**牙那條子路徑和頁首那顆不一樣，是刻意的** ——
+               這裡只有 12.5px 高（比 favicon 還小），洞橫向只剩約 2px，抗鋸齒會把它吃掉。
+               所以牙依自己的中心放大 1.15 倍、再往上移 1.4 個單位（2026-08-09 定案，B 案）。
+               **嘴一個節點都沒改**，fill-rule="evenodd" 讓那顆牙成為真正的洞，
+               頁尾的卡片底色直接透過來。
+
+               ⚠ **這一顆沒有遵守 PALETTE.md 第六之七節「把洞下方的肉還原成原標誌」那條規則。**
+               同一支逐像素掃描量下來：頁首那顆最薄處 3.13 個單位，這一顆 4.13 ——
+               肉多了一個單位（32%），牙比那條規則規定的位置**高**。
+               這是使用者在實際大小逐案看過之後挑的，不是從那條規則推出來的。
+               規則的用意是「放大時不要讓外觀走樣」，這裡是刻意讓它走樣一點點。
+
+               ⚠ 另外更正一筆會誤導後人的話：牙的底部本來就有一道分叉，那是**牙自己的輪廓**，
+               不是嘴的邊緣被切開。原始比例下洞的下方一直有 3.13 個單位的實心肉，沒有破。 -->
+          <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true"><g transform="translate(-232.8729 -333.8286)"><path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9658 351.1677 C 264.3395 351.0569 264.4797 351.0334 264.8417 351.1677 C 265.087 351.2612 265.4141 351.2438 265.6594 351.1677 C 266.4418 350.9226 267.2185 349.375 267.0726 347.4069 C 266.9324 345.4389 261.8635 345.7134 261.8693 347.4069 C 261.8693 348.756 262.354 350.4963 263.0255 350.9692 C 263.3118 351.1736 263.522 351.2963 263.9658 351.1677 Z"/></g></svg>
+          芳仁牙醫診所
+        </h4>
+        <p class="foot-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
+          <!-- 實心地圖釘。和話筒同一套：Font Awesome Free 6 "location-dot"，
+               圖示部分授權 CC BY 4.0，https://fontawesome.com/license/free ——
+               這一行註解就是署名，改圖或搬檔的時候不要刪。 -->
+          <span class="ico"><svg viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg></span>
+          <span class="txt">雲林縣斗六市永樂街&nbsp;70&nbsp;號</span>
+        </a></p>
+        <p class="foot-tel"><a href="tel:+88655339369">
+          <!-- 實心話筒。路徑直接內嵌，不引任何外部檔（站上沒有圖示字型，也不該為了一顆去載）。
+               素材出處：Font Awesome Free 6 "phone"，圖示部分授權 CC BY 4.0，
+               https://fontawesome.com/license/free —— 這一行註解就是署名，改圖或搬檔的時候不要刪。
+               aria-hidden：號碼本身已經是連結的可讀內容，圖示再念一次是重複。 -->
+          <span class="ico"><svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></span>
+          <data class="num" value="05-533-9369">(05)5339-369</data>
+        </a></p>
+      </div>
+      <div>
+        <h4>站內導覽</h4>
+        <ul class="foot-nav">
+          <li><a href="/#topics">全部文章</a></li>
+          <li><a href="/#doctors">醫師介紹</a></li>
+          <li><a href="/#clinic">診所資訊</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>關於這些文章</h4>
+        <p>本站文章為一般口腔衛教資訊，用意在於幫助讀者理解常見狀況，不能取代臨床診斷。實際狀況請就診由醫師評估。</p>
+        <p class="credit">照片與插圖為芳仁牙醫診所自有或本站自製，未經同意請勿轉載。</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 芳仁牙醫診所</span>
+      <span>雲林縣斗六市</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
