@@ -9,6 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { stripHtml, stripCss } from "./strip-comments.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "_site");
@@ -63,4 +64,32 @@ const files = [];
   }
 })(OUT);
 
-console.log(`_site/ 已產生：${count} 個項目、共 ${files.length} 個檔案`);
+/* ---------------------------------------------------------------------------
+   註解只留在 repo 裡，不要送給訪客（2026-08-17）
+   ---------------------------------------------------------------------------
+   這一站的註解長得不尋常，那是刻意的（兩台電腦＋手機 session 靠它交接）。
+   但它會跟著 HTML／CSS 一起下載：首頁 53%、樣式表 56% 的位元組是註解，
+   brotli 之後仍然是 131KB vs 33KB 的差別。
+
+   ⚠ **只剝 _site/ 這一份。** 原始檔一個字都不動 —— 這個資料夾每次建置都是
+      砍掉重建的，tools/build.mjs 讀寫的也一律是 repo 根目錄。
+   ⚠ JS 的註解不碰，剝除器的檔頭寫了為什麼。
+   --------------------------------------------------------------------------- */
+let before = 0;
+let after = 0;
+for (const p of files) {
+  const ext = path.extname(p).toLowerCase();
+  if (ext !== ".html" && ext !== ".css") continue;
+
+  const src = fs.readFileSync(p, "utf8");
+  const out = ext === ".html" ? stripHtml(src) : stripCss(src);
+  before += Buffer.byteLength(src);
+  after += Buffer.byteLength(out);
+  fs.writeFileSync(p, out, "utf8");
+}
+
+const saved = before ? ((1 - after / before) * 100).toFixed(0) : 0;
+console.log(
+  `_site/ 已產生：${count} 個項目、共 ${files.length} 個檔案\n` +
+    `HTML/CSS 去註解：${(before / 1024).toFixed(0)}KB → ${(after / 1024).toFixed(0)}KB（少 ${saved}%）`
+);

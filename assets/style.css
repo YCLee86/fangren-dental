@@ -565,6 +565,30 @@ a:hover { color: var(--accent); }
 .callout p:last-child { margin-bottom: 0; }
 .callout b { color: var(--ink); }
 
+/* 重點整理：每篇文末的四組問答（2026-08-17）
+   -----------------------------------------------------------------------------
+   為什麼是「問句 ＋ 一句話回答」而不是條列摘要：AI 搜尋（Google 的 AI 概覽、
+   ChatGPT、Perplexity）在找可引用的段落時，靠的是問題與標題的字面對應。
+   這一站的 h2 寫得很好看但很含蓄（「那條關鍵的分界線」「流血從哪裡來」），
+   有人問「牙齦流血是不是火氣大」時對不上。這一塊是**不動內文一個字**
+   補上那條對應 —— 每一組的答案都只從那一篇自己說過的話濃縮，沒有新增說法。
+
+   ⚠ **刻意沒有加 FAQPage 結構化資料。** Google 2026-05 起就不顯示 FAQ 複合式
+      搜尋結果了（CLAUDE.md 第十節），標了不會有回報。純 HTML 的 dl 本來就讀得懂。
+   ⚠ 用 <dl> 不用 <h3>＋<p>：dt 是「詞」、dd 是「解釋」，問答正好是這個結構，
+      而且不會多出七篇 × 四個 h3 把大綱灌爆。
+   ⚠ 顏色一顆都沒新增：底與框同 .callout，dt 用 --accent-deep（＝ .post-body h3
+      已經在用的那一階，PALETTE.md 裡它的角色就是「白底上的字」）。 */
+.keypoints {
+  background: var(--card); border: 1px solid var(--rule);
+  border-radius: var(--radius); padding: 1.05rem 1.15rem;
+  margin: 0 auto 1.4rem; box-shadow: var(--shadow);
+}
+/* dd 的預設 margin-inline-start 是 40px，這裡不要那個縮排 */
+.keypoints dt { margin: 1.1rem 0 .3rem; font-weight: 700; color: var(--accent-deep); }
+.keypoints dt:first-child { margin-top: 0; }
+.keypoints dd { margin: 0; color: var(--ink); }
+
 /* 免責聲明那一段：卡色底、次要字級。它是全文唯一不需要被讀完的東西。 */
 .note {
   font-size: .84rem; color: var(--ink-soft); background: var(--card);
