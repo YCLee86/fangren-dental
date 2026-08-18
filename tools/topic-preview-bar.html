@@ -74,7 +74,27 @@ html[data-after="qa"] .tp-first { display: none; }
      所以照這個 repo 既有的做法**開頁量一次寫進 CSS 變數**
      （`--lamp-pad`、`--ar-y` 都是這樣，CLAUDE.md 第九節第 9 條）。
      沒有 JS 時退回 `--head-h`：偏大一點但不會破圖。 */
-body[data-topic] #main { padding-top: calc(var(--topic-pad, var(--head-h)) + 1.1rem); }
+body[data-topic] #main { padding-top: var(--topic-pad, var(--head-h)); }
+
+/* ⚠⚠ 著陸頁的頁首要自己變成實心（2026-08-18）。
+   首頁的頁首是**玻璃**：`--glass` 由 JS 依 HERO 的捲動位置算出來，
+   字是白的因為它壓在那張夜景照片上。著陸頁沒有 HERO，那支 JS 算不出東西，
+   頁首就一直是 `background: rgba(0,0,0,0)` —— **白字直接洗在紙色上**，
+   而且那一整塊看起來是空的，使用者因此覺得「和 banner 間隔很大」。
+
+   做法照文章頁：`assets/style.css` 的 `.site-header { background: var(--head); color: #fff }`。
+   #393736 不是新的顏色，就是那個 `--head`（＝暗夜 #191614 以 .84 疊在紙色上的合成色，
+   index.html 的 JS 裡那個 SOLID 算出來的也是它）。
+   ⚠ `::before`／`::after` 是玻璃那一層（負 z-index 的同一組），一起關掉，
+     不然模糊與遮罩還會疊在實心色上。**選單那三個玻璃框是 `.site-nav a::before`，
+     不同的元素，不受影響。** */
+body[data-topic] { --head: #393736; }
+body[data-topic] .site-head {
+  background: var(--head);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+body[data-topic] .site-head::before,
+body[data-topic] .site-head::after { display: none; }
 
 /* 搜尋框搬到「主題與科別」那一列、靠右（2026-08-18）。
    ⚠ 一定要限定 #topics —— .sec-head 是三個小節共用的元件。
