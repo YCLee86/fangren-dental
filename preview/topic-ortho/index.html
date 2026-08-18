@@ -4592,46 +4592,57 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       </div>
 
       <!-- ===== 科別介紹（提案中）=====================================
-           使用者 2026-08-18：「篩選點下去 版面就像我剛才說的 但其實是開了
-           另外一個網頁」＋「主題與科別標籤繼續做在新開啟的網頁上」。
-           所以這一塊就長在標記那一排底下，其餘版面和首頁完全一樣。
-           ⚠ 這是**新的對外文字**，要逐字看過再上。 -->
+           使用者 2026-08-18：「篩選點下去…其實是開了另外一個網頁」＋
+           「主題與科別標籤繼續做在新開啟的網頁上」。所以這一塊就長在
+           標記那一排底下，其餘版面和首頁完全一樣。
+           ⚠ 這是**新的對外文字**，要逐字看過再上。文案在 tools/topic-copy.mjs。 -->
       <div class="tp-intro">
         <h1>齒顎矯正</h1>
-        <p class="tp-lede">牙齒排列不整齊，影響的不只是好不好看。咬合對不上的時候，某幾顆牙會長期承擔過多的力量，某些位置則怎麼刷都刷不乾淨 —— 蛀牙與牙周問題常常就是從那裡開始的。</p>
-        <div class="tp-sec tp-when-std">
-          <h2>矯正在處理什麼</h2>
-          <p>矯正是用持續而輕微的力量，讓牙齒在齒槽骨裡慢慢移動到該在的位置。受力的一側骨頭吸收、另一側重建，牙齒就這樣一點一點被帶過去。所以它需要時間，也急不得 —— 力量下得太重，牙根與骨頭都會受傷。</p>
-          <p>要移動就得有空間。空間從哪裡來，是矯正計畫裡最關鍵的一題：小朋友的顎骨還沒定型，可以把牙弓引導得寬一點；成人的骨架已經固定，就得從別的地方挪。</p>
+        <p class="tp-lede">牙齒不整齊這件事，多數人是想過很多次又放下很多次。真正卡住的往往不是要不要做，是「要戴多久」「會不會很痛」「是不是一定得拔牙」這幾題一直沒人講清楚。</p>
+
+        <div class="tp-checks">
+          <p class="tp-checks-h">這些狀況，該來看一下</p>
+          <ul>
+            <li>門牙<strong>擠在一起</strong>，或有明顯的縫</li>
+            <li>咬起來<strong>上下排對不上</strong>（暴牙、戽斗、開咬、深咬）</li>
+            <li>習慣<strong>只用一邊咀嚼</strong></li>
+            <li>孩子換牙，<strong>恆牙一長出來就擠在一起</strong></li>
+          </ul>
+        </div>
+
+        <dl class="tp-qa">
+          <dt>一定要拔牙嗎？</dt>
+          <dd>不一定。空間可以從好幾個地方挪，拔牙只是其中一種；要照過 X 光才知道。</dd>
+
+          <dt>小孩幾歲該來看？</dt>
+          <dd>六到十二歲顎骨還沒定型，這段期間可以引導它長寬一點。不是急著做，是先知道有沒有非趁早不可的部分。</dd>
+
+          <dt>要戴多久？多久回診一次？</dt>
+          <dd><span class="tp-todo">要你確認：一般療程大約多久、回診間隔</span></dd>
+
+          <dt>有哪些方式可以選？</dt>
+          <dd><span class="tp-todo">要你確認：診所實際提供哪些矯正方式。目前站上查得到的只有隱適美、兒童隱適美與肌功能矯正</span></dd>
+
+          <dt>拆掉就結束了嗎？</dt>
+          <dd>還沒。牙齒會想回到原來的位置，所以要戴維持器 —— 這一步做不好，前面那一兩年會白費。</dd>
+        </dl>
+
+      </div>
+
+      <!-- 對照用的舊版（825 字那一版）。**定案時連同切換條一起刪掉。** -->
+      <div class="tp-legacy" hidden>
+        <div class="tp-sec">
+          <p>牙齒排列不整齊，影響的不只是好不好看。咬合對不上的時候，某幾顆牙會長期承擔過多的力量，某些位置則怎麼刷都刷不乾淨 —— 蛀牙與牙周問題常常就是從那裡開始的。</p>
         </div>
         <div class="tp-sec">
-          <h2>什麼時候該來一趟</h2>
-          <ul>
-            <li>門牙<strong>重疊、擁擠</strong>，或有明顯的縫。</li>
-            <li>咬起來上下排<strong>對不上</strong>（暴牙、戽斗、開咬、深咬）。</li>
-            <li>習慣只用<strong>單側咀嚼</strong>，或咬合時特定一顆牙先撞到。</li>
-            <li>孩子換牙期間，<strong>恆牙一長出來就擠在一起</strong>。</li>
-            <li>已經在治療牙周，醫師建議<strong>排整齊之後比較好清潔</strong>。</li>
-          </ul>
+          <h2>矯正在處理什麼</h2>
+          <p>矯正是用持續而輕微的力量，讓牙齒在齒槽骨裡慢慢移動到該在的位置。受力的一側骨頭吸收、另一側重建，牙齒就這樣一點一點被帶過去。所以它需要時間，也急不得。</p>
+          <p>要移動就得有空間。空間從哪裡來，是矯正計畫裡最關鍵的一題。</p>
         </div>
-        <div class="tp-sec tp-when-full">
+        <div class="tp-sec">
           <h2>大人和小孩不是同一件事</h2>
-          <ul>
-            <li><strong>6 到 12 歲</strong>是顎骨還沒定型的階段，上顎中間的骨縫尚未完全癒合，對外力的反應比成年後好得多。這時候能做的是<strong>引導骨骼發育</strong> —— 把牙弓帶寬，讓後面要長出來的恆牙有位置站，長大後需要拔牙矯正的機率也跟著降低。</li>
-            <li><strong>成年之後</strong>顎骨已經定型，能移動的是牙齒本身，不是骨架。同樣的擁擠，這時候要挪出空間就得靠別的辦法，療程也通常比較長。</li>
-            <li>這是為什麼矯正這件事，早一點評估往往比較省事 —— 不是急著做，是先知道有沒有非趁早不可的部分。</li>
-          </ul>
+          <p>六到十二歲是顎骨還沒定型的階段，上顎中間的骨縫尚未完全癒合，對外力的反應比成年後好得多。成年之後顎骨已經定型，能移動的是牙齒本身，不是骨架，療程也通常比較長。</p>
         </div>
-        <div class="tp-sec tp-when-full">
-          <h2>這裡怎麼做</h2>
-          <p>兩位醫師都是<strong>衛生福利部齒顎矯正專科</strong>。透明牙套（隱適美）與兒童的早期矯正（兒童隱適美、肌功能矯正）都有在做，實際適合哪一種，要照 X 光與口內檢查之後才知道。</p>
-          <p>矯正是一段長期的關係，中間要固定回診調整。開始之前把療程長度、總費用與分期方式問清楚，比什麼都重要。</p>
-        </div>
-        <div class="tp-sec tp-when-full">
-          <h2>拆掉之後才是一半</h2>
-          <p>牙齒有回到原來位置的傾向，所以矯正結束不等於結束 —— 維持器要戴多久、怎麼戴，由醫師依個別狀況決定。這一步做不好，前面那一兩年會白費。</p>
-        </div>
-        <p class="tp-note">本段為一般口腔衛教資訊，不能取代臨床診斷。實際狀況需經檢查後由醫師評估。</p>
       </div>
       <p class="filter-note" hidden></p>
     </div>
@@ -4675,6 +4686,8 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <p class="empty-note" data-for="doctors" hidden>這一科目前沒有駐診醫師。</p>
     </div>
   </section>
+
+  <p class="tp-note wrap-note">本頁為一般口腔衛教資訊，不能取代臨床診斷。實際狀況需經檢查後由醫師評估。</p>
 
   <section id="clinic">
     <div class="shell">
@@ -6645,38 +6658,62 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
 <!-- =============================================================================
      提案用的樣式與切換條。定案時：把 .tp-* 搬進 index.html 的樣式表，
-     這一整段（.pv-* 與底下的腳本）連同 tp-when-* 的顯示規則一起刪掉。
+     這一整段（.pv-*、.tp-legacy、.tp-todo）連同對照按鈕一起刪掉。
      ⚠ class 一律 tp-／pv- 前綴 —— 這一頁是 index.html 的完整複本，
        站上有的 class 全部都在，短名字幾乎一定會撞（CLAUDE.md 第八節）。
      ============================================================================= -->
 <style>
-/* ---- 科別介紹 ---- */
-.tp-intro { margin: 1.4rem 0 0; }
-.tp-intro h1 { margin: 0 0 .5rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
-.tp-lede { margin: 0 0 1.3rem; font-size: 1.02rem; line-height: 1.95; color: var(--ink-soft); max-width: 46rem; }
-.tp-sec { margin: 0 0 1.3rem; max-width: 46rem; }
-.tp-sec h2 {
-  display: flex; align-items: baseline; gap: .6rem;
-  margin: 1.6rem 0 .7rem; font-size: clamp(1.05rem, 3vw, 1.24rem); line-height: 1.55; color: var(--ink);
+.tp-intro, .tp-legacy { margin: 1.4rem 0 0; max-width: 46rem; }
+.tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
+.tp-lede { margin: 0 0 1.1rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink-soft); }
+
+/* 「這些狀況該來看一下」：讓他自己對號入座，所以要短、要好掃 */
+.tp-checks { margin: 0 0 1.15rem; }
+.tp-checks-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
+.tp-checks ul { margin: 0; padding-left: 1.3rem; }
+.tp-checks li { margin-bottom: .34rem; line-height: 1.85; }
+.tp-checks strong { color: var(--ink); font-weight: 700; }
+
+/* 一問一答。**刻意和文章末尾那塊「重點整理」同一個語彙** —— 短、好掃，
+   而且 AI 搜尋抓的正是這種段落。底框同站上的卡，問句用該科的深階字色。 */
+.tp-qa {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 1.05rem 1.15rem; margin: 0 0 1rem;
 }
-.tp-sec h2::before { content: ''; flex: 0 0 3px; align-self: center; height: 1.05em; border-radius: 2px; background: var(--accent); }
-.tp-sec p { margin: 0 0 .95rem; line-height: 1.95; }
-.tp-sec ul { margin: 0 0 1rem; padding-left: 1.35rem; }
-.tp-sec li { margin-bottom: .5rem; line-height: 1.9; }
-.tp-sec strong { color: var(--ink); font-weight: 700; }
+.tp-qa dt { margin: .95rem 0 .28rem; font-weight: 700; color: var(--accent-deep); line-height: 1.65; }
+.tp-qa dt:first-child { margin-top: 0; }
+.tp-qa dd { margin: 0; color: var(--ink); line-height: 1.85; }
+
 .tp-note {
-  max-width: 46rem; margin: 0 0 .4rem; font-size: .84rem; line-height: 1.8; color: var(--ink-soft);
+  margin: 0 0 .4rem; font-size: .84rem; line-height: 1.8; color: var(--ink-soft);
   background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .8rem .95rem;
 }
 
-/* chips 從 button 換成 a：外觀完全沿用站上那一組規則，這裡只補連結本身的重置 */
+/* 免責聲明搬到頁面最後（診所資訊之前）之後，它不在 .shell 裡了，要自己吃版心。 */
+.tp-note.wrap-note { max-width: 46rem; margin: 0 auto 1.6rem; padding-inline: 1rem; }
+
+/* 還沒問過使用者的待填格。**提案專用，正式站不會有這個樣子** */
+.tp-todo {
+  display: inline; background: rgba(175, 76, 82, .10);
+  border-bottom: 1.5px dashed var(--brick); border-radius: 3px;
+  padding: .05em .25em; color: var(--ink);
+}
+.tp-todo::before { content: "⚠ "; }
+
+/* 對照舊版 */
+.tp-legacy .tp-sec { margin: 0 0 1.2rem; }
+.tp-legacy h2 {
+  display: flex; align-items: baseline; gap: .6rem;
+  margin: 1.5rem 0 .7rem; font-size: clamp(1.05rem, 3vw, 1.24rem); line-height: 1.55; color: var(--ink);
+}
+.tp-legacy h2::before { content: ''; flex: 0 0 3px; align-self: center; height: 1.05em; border-radius: 2px; background: var(--accent); }
+.tp-legacy p { margin: 0 0 .95rem; line-height: 1.95; }
+html[data-shape="old"] .tp-intro { display: none; }
+html[data-shape="old"] .tp-legacy { display: block !important; }
+
+/* chips 從 button 換成 a：外觀沿用站上那一組規則，這裡只補連結本身的重置 */
 .chips a { display: inline-block; text-decoration: none; }
 .chips a[data-todo] { opacity: .45; pointer-events: none; }
-
-/* 份量 */
-html[data-len="brief"] .tp-when-std,
-html[data-len="brief"] .tp-when-full,
-html[data-len="std"]   .tp-when-full { display: none; }
 
 /* ---- 切換條 ---- */
 .pv-bar {
@@ -6702,15 +6739,14 @@ html.pv-closed .pv-bar { display: none; }
   border: 1px solid var(--rule); background: rgba(244,244,245,.94); color: var(--ink-soft); backdrop-filter: blur(8px);
 }
 html:not(.pv-closed) .pv-open { display: none; }
-html:not(.pv-closed) body { padding-bottom: 8rem; }
+html:not(.pv-closed) body { padding-bottom: 7.5rem; }
 </style>
 
 <div class="pv-bar">
   <div class="pv-row">
-    <span class="pv-lab">科別介紹的份量</span>
-    <button type="button" data-k="len" data-v="brief">精簡</button>
-    <button type="button" data-k="len" data-v="std">標準</button>
-    <button type="button" data-k="len" data-v="full">完整</button>
+    <span class="pv-lab">開場的形狀</span>
+    <button type="button" data-k="shape" data-v="new">新（短）</button>
+    <button type="button" data-k="shape" data-v="old">對照舊版</button>
     <button type="button" id="pvclose" style="margin-left:auto">收起</button>
   </div>
   <div class="pv-meter" id="pvmeter">—</div>
@@ -6720,18 +6756,23 @@ html:not(.pv-closed) body { padding-bottom: 8rem; }
 <script>
 (function () {
   var root = document.documentElement;
-  if (!root.getAttribute('data-len')) root.setAttribute('data-len', 'full');
-  var m = /[?&]len=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
-  if (m && ['brief', 'std', 'full'].indexOf(m[1]) >= 0) root.setAttribute('data-len', m[1]);
+  if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
+  var m = /[?&]shape=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
+  if (m && ['new', 'old'].indexOf(m[1]) >= 0) root.setAttribute('data-shape', m[1]);
 
+  /* 量的是「開場那一塊」自己，不是整頁 —— 使用者說的「字太多」指的就是它。
+     屏數用 visualViewport（iOS 的 innerHeight 比看得到的高，第九節第 6 條）。 */
   function measure() {
-    var main = document.getElementById('main');
-    var n = (main.innerText || '').replace(/\s/g, '').length;
-    var cards = document.querySelectorAll('.cards .card').length;
-    var docs = document.querySelectorAll('.docs .doc').length;
-    var v = n >= 900 ? '夠厚' : n >= 600 ? '可以，但偏薄' : '太薄，Google 可能不當一回事';
+    var box = root.getAttribute('data-shape') === 'old'
+      ? document.querySelector('.tp-legacy') : document.querySelector('.tp-intro');
+    var n = (box.innerText || '').replace(/\s/g, '').length;
+    var vh = (window.visualViewport && visualViewport.height) || innerHeight;
+    var screens = (box.getBoundingClientRect().height / vh).toFixed(1);
+    var left = document.querySelectorAll('.tp-intro .tp-todo').length;
     document.getElementById('pvmeter').innerHTML =
-      '這一頁可見字 <b>' + n + '</b>　文章 <b>' + cards + '</b> 篇　醫師 <b>' + docs + '</b> 位　→ ' + v;
+      '開場 <b>' + n + '</b> 字　手機上 <b>' + screens + '</b> 屏　'
+      + (screens <= 1.25 ? '一屏之內 ✓' : '⚠ 超過一屏')
+      + '　待填 <b>' + left + '</b> 格';
   }
   function paint() {
     document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {
