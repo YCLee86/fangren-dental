@@ -19,6 +19,10 @@
     "hash": "4620874f47e4467a",
     "updated": "2026-08-18"
   },
+  "orthodontics": {
+    "hash": "d91726f9da27eaa8",
+    "updated": "2026-08-20"
+  },
   "perio-laser": {
     "hash": "d642f6db32cf5cec",
     "updated": "2026-08-18"
@@ -32,7 +36,7 @@
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "7b3bb071d509865d",
+    "hash": "33bb3d940887230c",
     "updated": "2026-08-19"
   }
 }
