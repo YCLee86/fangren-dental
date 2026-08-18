@@ -117,27 +117,27 @@ const todo = (t) => t.replace(/\[\[([^\]]*)\]\]/g, '<span class="tp-todo">$1</sp
      首頁那個 .filter-note 會印 0 是因為它是「你剛按下去的篩選結果」，
      著陸頁的身分不同 —— 這一頁是那一科的門面。 */
 const countLine = (n, d) => {
-  const link = (href, text) => `<a href="${href}">${text}</a>`;
+  /* 形式：`2 位醫師 ・ 2 篇文章`（2026-08-18 使用者定案）。
+     走到這裡改過三輪，每一輪解掉一件事：
+       ①「2 篇文章・2 位醫師」→ 文章排第一，讀起來像在宣告這一科的內容就是那兩篇。
+       ②「文章 2 篇・醫師 2 位」→ 數字退後了，但「文章」還是第一個名詞。
+       ③「駐診醫師 2 位…」→ 醫師排到前面，方向對了，但限定詞多餘。
+       ④ 定案：**醫師在前、數字用平常的講法**，其餘什麼都不加。
+
+     ⚠⚠ 連結範圍與視覺**刻意不一樣**：
+       ・`<a>` 包整串「2 位醫師」—— 只包兩個字的話觸控目標太小。
+       ・顏色與底線**只上在名詞**（.tp-t），數字（.tp-n）維持內文的柔墨。
+         使用者：「連結底線放在醫師、文章，數字不要套標籤顏色。」
+     ⚠ 底線用 `border-bottom` 不用 `text-decoration` —— text-decoration 會
+       傳給所有子元素，而且子元素**沒辦法**用 `text-decoration: none` 取消掉，
+       數字那一段會跟著被畫線。 */
+  const link = (href, num, noun) =>
+    `<a href="${href}"><span class="tp-n">${num}</span><span class="tp-t">${noun}</span></a>`;
   const dot = '<span class="tp-dot" aria-hidden="true">・</span>';
-  /* ⚠⚠ 三種措辭的差別不是長度，是**誰排在前面、名詞夠不夠具體**。
-     使用者 2026-08-18 連退兩次：
-       「2 篇文章・2 位醫師」→ 數字在最前面，像在宣告這一科的內容就是那兩篇。
-       「文章 2 篇・醫師 2 位」→ 名詞在前好一些，但「文章」還是排第一，
-         「目前的選擇看起來還是有點像把科別內容著陸頁當成文章的感覺」。
-     所以三種都改成**醫師（人）在前**：一項診療是「有人在做的事」，
-     不是「一個文章分類」。文章退到後面，變成附帶的延伸。 */
-  const shapes = {
-    lead:  { pre: "這一頁還有 ", d: `醫師 ${d} 位`, a: `文章 ${n} 篇` },
-    qual:  { pre: "",           d: `駐診醫師 ${d} 位`, a: `相關文章 ${n} 篇` },
-    plain: { pre: "",           d: `醫師 ${d} 位`, a: `文章 ${n} 篇` },
-  };
-  return Object.entries(shapes).map(([k, v]) => {
-    const parts = [];
-    if (d) parts.push(link("#doctors", v.d));
-    if (n) parts.push(link("#articles", v.a));
-    if (!parts.length) return "";
-    return `<span class="tp-w tp-w-${k}">${v.pre}${parts.join(dot)}</span>`;
-  }).join("");
+  const parts = [];
+  if (d) parts.push(link("#doctors", `${d} 位`, "醫師"));
+  if (n) parts.push(link("#articles", `${n} 篇`, "文章"));
+  return parts.length ? parts.join(dot) : "";
 };
 
 const introBlock = (spec, t, cnt) => `
