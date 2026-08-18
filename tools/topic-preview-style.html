@@ -90,7 +90,7 @@ body[data-topic] #topics { padding-top: 1rem; }
    順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
    文字在 tools/topic-copy.mjs，寫作規則在 COPY.md 第九節。
    ========================================================================== */
-.tp-intro { margin: 1.4rem 0 0; max-width: 46rem; }
+.tp-intro { margin: 1.1rem 0 0; max-width: 46rem; }
 .tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
 
 /* 3-1「2 位醫師・2 篇文章」。
@@ -103,7 +103,7 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠ 底線用 `border-bottom` 不用 `text-decoration` —— 後者會傳給子元素而且
      **取消不掉**，數字會跟著被畫線。 */
 .tp-count {
-  margin: -.15rem 0 .75rem; font-size: .84rem; letter-spacing: .02em;
+  margin: -.15rem 0 .6rem; font-size: .84rem; letter-spacing: .02em;
   color: var(--ink-soft);
 }
 .tp-dot { margin: 0 .45em; color: var(--rule); }
@@ -119,19 +119,45 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** ——
      一加就變回被否決的「症狀清單」的樣子（COPY.md 第九之七節）。 */
 .tp-case {
-  margin: 0 0 .7rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
+  margin: 0 0 .34rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
   padding-left: .85rem; border-left: 2px solid var(--rule);
 }
-.tp-stance { margin: 1.05rem 0 1.15rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink); }
+/* ⚠ 段距 2026-08-18 從 .7rem 收到 .42rem —— 使用者：「這三句中間還有很多留白」。
+     三句各自收成一行之後，原本那個間距讀起來就變成三塊分開的東西了。 */
+/* ⚠ 字級 2026-08-18 從 1.02rem 收回 1rem（＝內文）：放大只換到「大一點點」，
+     卻讓每行少一個字、整句多一行。這一句的重量已經由顏色與粗體給了。 */
+.tp-stance { margin: .75rem 0 .8rem; font-size: 1rem; line-height: 1.85; color: var(--ink); }
 .tp-stance strong { color: var(--accent-deep); font-weight: 700; }
+
+/* 3-2b 流程：一步一行。標籤是那一科的深階色，內容維持柔墨。
+   ⚠ 標籤與內容**不做成兩欄 grid** —— 欄一開，內容能用的寬度就少掉 50px，
+     18 個字的句子會開始折行，等於為了對齊多賠一行。用一個全形空格分開就好。
+   ⚠ 不加項目符號、不加框：加了就變成一張流程表／表單，和被否決的那張
+     問答卡是同一個毛病（COPY.md 第九之九節）。 */
+.tp-step {
+  margin: 0 0 .2rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
+}
+.tp-step b {
+  color: var(--accent-deep); font-weight: 700;
+  margin-right: .55em;
+}
+/* 收尾那一句是「我們」，回到墨色 —— 和上面那句回應同一個聲音。 */
+.tp-close { margin: .45rem 0 0; font-size: 1rem; line-height: 1.85; color: var(--ink); }
 
 /* 3-3「第一次來，大概是這樣」。
    ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明；
      這裡要的是把話接著講下去，所以就是接在開場後面的兩段。
      （COPY.md 第九之九節：推力 vs 拉力。） */
-.tp-first { margin: 0 0 1.15rem; }
-.tp-first-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
-.tp-first p { margin: 0 0 .7rem; line-height: 1.85; color: var(--ink-soft); }
+/* ⚠ 下緣只留 .4rem：這一塊收完，下一區（文章卡）要在手機上**露出一角** ——
+     2026-08-18 使用者：「要讓他覺得下面還有東西往下滑。」
+     留白太多的話，一屏的結尾看起來就像整頁的結尾。 */
+.tp-first { margin: 0 0 .4rem; }
+
+/* 3-2c 文章那一區往上收一點（只有著陸頁）：介紹收在一屏之後，
+   下一區要在同一屏**露出一角**，那一角才是「往下還有」的暗示。
+   ⚠ 只動上緣的間距，卡片本身、欄距、圓角都沒有碰。 */
+#topics { padding-bottom: 1.5rem; }
+.tp-first-h { margin: 0 0 .3rem; font-weight: 700; color: var(--ink); }
 .tp-first p:last-child { margin-bottom: 0; }
 
 /* 3-4 免責聲明放在頁面內容的最後（診所資訊之前），不要卡在開場的答案前面 ——

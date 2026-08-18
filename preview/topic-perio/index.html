@@ -4594,20 +4594,29 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
       <!-- ===== 科別介紹（2026-08-18 版面定案）==========================
            走到這個版面經過使用者七輪修正，推導寫在 COPY.md 第九節。
-           順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
+           順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 來一趟大概是這樣。
+           ⚠⚠ **整塊要收在手機的一屏之內**（2026-08-18 使用者第二輪）：
+             「這樣子的內容我希望在這個版面上能都放進去，而且要讓他覺得下面還有
+               東西往下滑 —— 著陸頁的文案不能超過這個版面。」
+             所以每一步一行、三種處境也各一行。改文案之後要重量一次，
+             量法與基準寫在 COPY.md 第九之十節。
            ⚠ 文字在 tools/topic-copy.mjs，**不要改這裡**。 -->
       <div class="tp-intro">
         <h1>牙周治療</h1>
         <p class="tp-count"><a href="#doctors"><span class="tp-n">2 位</span><span class="tp-t">醫師</span></a><span class="tp-dot" aria-hidden="true">・</span><a href="#articles"><span class="tp-n">2 篇</span><span class="tp-t">文章</span></a></p>
-        <p class="tp-case">刷牙流血，這幾年一直是這樣。問過的人都說「很常見」「我也有啊」—— 於是就這樣過去了。</p>
-        <p class="tp-case">查過很多說法，「洗牙就好」「要開刀」「再觀察看看」，每個人講的都不一樣，愈查愈亂。</p>
-        <p class="tp-case">牙齒一年掉一顆，早就覺得沒救了，只是照常回去洗一洗。</p>
-        <p class="tp-stance">這三種我們都常遇到。<strong>常見不等於沒事，嚴重也不等於沒救</strong> —— 但在量過之前，誰講的都只是可能。先讓醫師量一次，你會知道自己在哪一階、有哪些選擇；要不要做、什麼時候做，你決定。</p>
+        <p class="tp-case">刷牙流血好幾年，問到的都說「很常見」。</p>
+        <p class="tp-case">有人說洗牙就好，有人說要開刀，愈查愈亂。</p>
+        <p class="tp-case">牙齒一年掉一顆，早就覺得沒救了。</p>
+        <p class="tp-stance">這三種我們都常遇到。<strong>常見不等於沒事，嚴重也不等於沒救</strong> —— 量過才知道。</p>
 
         <div class="tp-first">
-          <p class="tp-first-h">第一次來，大概是這樣</p>
-          <p>醫師會用探針量每一顆牙的牙齦溝有多深，配一張 X 光看骨頭剩多少，然後把量到的數字講給你聽。</p>
-          <p>量完你會知道自己在哪一階 —— 有些人清一清就好，有些人要分區慢慢處理，也有人需要手術。那時候再談怎麼做。</p>
+          <p class="tp-first-h">來一趟，大概是這樣</p>
+          <p class="tp-step"><b>檢查</b>量每顆牙的囊袋深度、拍一張 X 光。</p>
+          <p class="tp-step"><b>說明</b>當場把數字講給你聽，你在哪一階。</p>
+          <p class="tp-step"><b>治療</b>清創健保有給付，局部麻醉、分區做。</p>
+          <p class="tp-step"><b>進階</b>深處可加水雷射，骨頭缺損有再生手術。</p>
+          <p class="tp-step"><b>時間</b><span class="tp-todo">第一次多久、分幾次做完？</span></p>
+          <p class="tp-close">走到哪一步，量完再一起決定。</p>
         </div>
       </div>
 
@@ -6739,7 +6748,7 @@ body[data-topic] #topics { padding-top: 1rem; }
    順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
    文字在 tools/topic-copy.mjs，寫作規則在 COPY.md 第九節。
    ========================================================================== */
-.tp-intro { margin: 1.4rem 0 0; max-width: 46rem; }
+.tp-intro { margin: 1.1rem 0 0; max-width: 46rem; }
 .tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
 
 /* 3-1「2 位醫師・2 篇文章」。
@@ -6752,7 +6761,7 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠ 底線用 `border-bottom` 不用 `text-decoration` —— 後者會傳給子元素而且
      **取消不掉**，數字會跟著被畫線。 */
 .tp-count {
-  margin: -.15rem 0 .75rem; font-size: .84rem; letter-spacing: .02em;
+  margin: -.15rem 0 .6rem; font-size: .84rem; letter-spacing: .02em;
   color: var(--ink-soft);
 }
 .tp-dot { margin: 0 .45em; color: var(--rule); }
@@ -6768,19 +6777,45 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** ——
      一加就變回被否決的「症狀清單」的樣子（COPY.md 第九之七節）。 */
 .tp-case {
-  margin: 0 0 .7rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
+  margin: 0 0 .34rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
   padding-left: .85rem; border-left: 2px solid var(--rule);
 }
-.tp-stance { margin: 1.05rem 0 1.15rem; font-size: 1.02rem; line-height: 1.85; color: var(--ink); }
+/* ⚠ 段距 2026-08-18 從 .7rem 收到 .42rem —— 使用者：「這三句中間還有很多留白」。
+     三句各自收成一行之後，原本那個間距讀起來就變成三塊分開的東西了。 */
+/* ⚠ 字級 2026-08-18 從 1.02rem 收回 1rem（＝內文）：放大只換到「大一點點」，
+     卻讓每行少一個字、整句多一行。這一句的重量已經由顏色與粗體給了。 */
+.tp-stance { margin: .75rem 0 .8rem; font-size: 1rem; line-height: 1.85; color: var(--ink); }
 .tp-stance strong { color: var(--accent-deep); font-weight: 700; }
+
+/* 3-2b 流程：一步一行。標籤是那一科的深階色，內容維持柔墨。
+   ⚠ 標籤與內容**不做成兩欄 grid** —— 欄一開，內容能用的寬度就少掉 50px，
+     18 個字的句子會開始折行，等於為了對齊多賠一行。用一個全形空格分開就好。
+   ⚠ 不加項目符號、不加框：加了就變成一張流程表／表單，和被否決的那張
+     問答卡是同一個毛病（COPY.md 第九之九節）。 */
+.tp-step {
+  margin: 0 0 .2rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
+}
+.tp-step b {
+  color: var(--accent-deep); font-weight: 700;
+  margin-right: .55em;
+}
+/* 收尾那一句是「我們」，回到墨色 —— 和上面那句回應同一個聲音。 */
+.tp-close { margin: .45rem 0 0; font-size: 1rem; line-height: 1.85; color: var(--ink); }
 
 /* 3-3「第一次來，大概是這樣」。
    ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明；
      這裡要的是把話接著講下去，所以就是接在開場後面的兩段。
      （COPY.md 第九之九節：推力 vs 拉力。） */
-.tp-first { margin: 0 0 1.15rem; }
-.tp-first-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
-.tp-first p { margin: 0 0 .7rem; line-height: 1.85; color: var(--ink-soft); }
+/* ⚠ 下緣只留 .4rem：這一塊收完，下一區（文章卡）要在手機上**露出一角** ——
+     2026-08-18 使用者：「要讓他覺得下面還有東西往下滑。」
+     留白太多的話，一屏的結尾看起來就像整頁的結尾。 */
+.tp-first { margin: 0 0 .4rem; }
+
+/* 3-2c 文章那一區往上收一點（只有著陸頁）：介紹收在一屏之後，
+   下一區要在同一屏**露出一角**，那一角才是「往下還有」的暗示。
+   ⚠ 只動上緣的間距，卡片本身、欄距、圓角都沒有碰。 */
+#topics { padding-bottom: 1.5rem; }
+.tp-first-h { margin: 0 0 .3rem; font-weight: 700; color: var(--ink); }
 .tp-first p:last-child { margin-bottom: 0; }
 
 /* 3-4 免責聲明放在頁面內容的最後（診所資訊之前），不要卡在開場的答案前面 ——

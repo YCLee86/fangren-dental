@@ -143,7 +143,12 @@ const countLine = (n, d) => {
 const introBlock = (spec, t, cnt) => `
       <!-- ===== 科別介紹（2026-08-18 版面定案）==========================
            走到這個版面經過使用者七輪修正，推導寫在 COPY.md 第九節。
-           順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
+           順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 來一趟大概是這樣。
+           ⚠⚠ **整塊要收在手機的一屏之內**（2026-08-18 使用者第二輪）：
+             「這樣子的內容我希望在這個版面上能都放進去，而且要讓他覺得下面還有
+               東西往下滑 —— 著陸頁的文案不能超過這個版面。」
+             所以每一步一行、三種處境也各一行。改文案之後要重量一次，
+             量法與基準寫在 COPY.md 第九之十節。
            ⚠ 文字在 tools/topic-copy.mjs，**不要改這裡**。 -->
       <div class="tp-intro">
         <h1>${t.h1}</h1>
@@ -152,8 +157,9 @@ ${t.cases.map((x) => `        <p class="tp-case">${todo(x)}</p>`).join("\n")}
         <p class="tp-stance">${todo(t.stance)}</p>
 
         <div class="tp-first">
-          <p class="tp-first-h">第一次來，大概是這樣</p>
-${t.firstVisit.map((x) => `          <p>${todo(x)}</p>`).join("\n")}
+          <p class="tp-first-h">來一趟，大概是這樣</p>
+${t.flow.map(([k, v]) => `          <p class="tp-step"><b>${k}</b>${todo(v)}</p>`).join("\n")}
+          <p class="tp-close">${todo(t.close)}</p>
         </div>
       </div>
 `;
