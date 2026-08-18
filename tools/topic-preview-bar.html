@@ -1,0 +1,110 @@
+
+<!-- =============================================================================
+     提案用的樣式與切換條。定案時：把 .tp-* 搬進 index.html 的樣式表，
+     這一整段（.pv-* 與底下的腳本）連同 tp-when-* 的顯示規則一起刪掉。
+     ⚠ class 一律 tp-／pv- 前綴 —— 這一頁是 index.html 的完整複本，
+       站上有的 class 全部都在，短名字幾乎一定會撞（CLAUDE.md 第八節）。
+     ============================================================================= -->
+<style>
+/* ---- 科別介紹 ---- */
+.tp-intro { margin: 1.4rem 0 0; }
+.tp-intro h1 { margin: 0 0 .5rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
+.tp-lede { margin: 0 0 1.3rem; font-size: 1.02rem; line-height: 1.95; color: var(--ink-soft); max-width: 46rem; }
+.tp-sec { margin: 0 0 1.3rem; max-width: 46rem; }
+.tp-sec h2 {
+  display: flex; align-items: baseline; gap: .6rem;
+  margin: 1.6rem 0 .7rem; font-size: clamp(1.05rem, 3vw, 1.24rem); line-height: 1.55; color: var(--ink);
+}
+.tp-sec h2::before { content: ''; flex: 0 0 3px; align-self: center; height: 1.05em; border-radius: 2px; background: var(--accent); }
+.tp-sec p { margin: 0 0 .95rem; line-height: 1.95; }
+.tp-sec ul { margin: 0 0 1rem; padding-left: 1.35rem; }
+.tp-sec li { margin-bottom: .5rem; line-height: 1.9; }
+.tp-sec strong { color: var(--ink); font-weight: 700; }
+.tp-note {
+  max-width: 46rem; margin: 0 0 .4rem; font-size: .84rem; line-height: 1.8; color: var(--ink-soft);
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .8rem .95rem;
+}
+
+/* chips 從 button 換成 a：外觀完全沿用站上那一組規則，這裡只補連結本身的重置 */
+.chips a { display: inline-block; text-decoration: none; }
+.chips a[data-todo] { opacity: .45; pointer-events: none; }
+
+/* 份量 */
+html[data-len="brief"] .tp-when-std,
+html[data-len="brief"] .tp-when-full,
+html[data-len="std"]   .tp-when-full { display: none; }
+
+/* ---- 切換條 ---- */
+.pv-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+  background: rgba(244,244,245,.94); backdrop-filter: blur(8px) saturate(1.15);
+  border-top: 1px solid var(--rule);
+  padding: .55rem max(.7rem, env(safe-area-inset-left)) calc(.55rem + env(safe-area-inset-bottom));
+  font-size: .8rem; color: var(--ink);
+}
+html.pv-closed .pv-bar { display: none; }
+.pv-row { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin-bottom: .3rem; }
+.pv-lab { color: var(--ink-soft); flex: 0 0 auto; font-size: .76rem; }
+.pv-bar button {
+  font: inherit; font-size: .78rem; cursor: pointer; padding: .3rem .6rem; border-radius: 7px;
+  border: 1px solid var(--rule); background: #fff; color: var(--ink);
+}
+.pv-bar button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-fill); }
+.pv-meter { font-size: .74rem; color: var(--ink-soft); line-height: 1.6; }
+.pv-meter b { color: var(--ink); font-weight: 700; }
+.pv-open {
+  position: fixed; right: max(.7rem, env(safe-area-inset-right)); bottom: calc(.7rem + env(safe-area-inset-bottom));
+  z-index: 91; font: inherit; font-size: .74rem; cursor: pointer; padding: .34rem .6rem; border-radius: 8px;
+  border: 1px solid var(--rule); background: rgba(244,244,245,.94); color: var(--ink-soft); backdrop-filter: blur(8px);
+}
+html:not(.pv-closed) .pv-open { display: none; }
+html:not(.pv-closed) body { padding-bottom: 8rem; }
+</style>
+
+<div class="pv-bar">
+  <div class="pv-row">
+    <span class="pv-lab">科別介紹的份量</span>
+    <button type="button" data-k="len" data-v="brief">精簡</button>
+    <button type="button" data-k="len" data-v="std">標準</button>
+    <button type="button" data-k="len" data-v="full">完整</button>
+    <button type="button" id="pvclose" style="margin-left:auto">收起</button>
+  </div>
+  <div class="pv-meter" id="pvmeter">—</div>
+</div>
+<button type="button" class="pv-open" id="pvopen">切換條</button>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  if (!root.getAttribute('data-len')) root.setAttribute('data-len', 'full');
+  var m = /[?&]len=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
+  if (m && ['brief', 'std', 'full'].indexOf(m[1]) >= 0) root.setAttribute('data-len', m[1]);
+
+  function measure() {
+    var main = document.getElementById('main');
+    var n = (main.innerText || '').replace(/\s/g, '').length;
+    var cards = document.querySelectorAll('.cards .card').length;
+    var docs = document.querySelectorAll('.docs .doc').length;
+    var v = n >= 900 ? '夠厚' : n >= 600 ? '可以，但偏薄' : '太薄，Google 可能不當一回事';
+    document.getElementById('pvmeter').innerHTML =
+      '這一頁可見字 <b>' + n + '</b>　文章 <b>' + cards + '</b> 篇　醫師 <b>' + docs + '</b> 位　→ ' + v;
+  }
+  function paint() {
+    document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {
+      b.setAttribute('aria-pressed', root.getAttribute('data-' + b.dataset.k) === b.dataset.v);
+    });
+    measure();
+  }
+  document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      root.setAttribute('data-' + b.dataset.k, b.dataset.v);
+      var p = new URLSearchParams(location.search); p.set(b.dataset.k, b.dataset.v);
+      history.replaceState(null, '', location.pathname + '?' + p);
+      paint();
+    });
+  });
+  document.getElementById('pvclose').addEventListener('click', function () { root.classList.add('pv-closed'); });
+  document.getElementById('pvopen').addEventListener('click', function () { root.classList.remove('pv-closed'); });
+  paint(); addEventListener('load', measure);
+})();
+</script>
