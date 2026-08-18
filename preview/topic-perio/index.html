@@ -4615,6 +4615,15 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           </ul>
         </div>
 
+        <!-- 拉力版（預設）：描述第一步長什麼樣，而不是先攤開代價。
+             2026-08-18 使用者：「這個卡片資訊給出來的感覺對病患是推力而非拉力。」 -->
+        <div class="tp-first">
+          <p class="tp-first-h">第一次來，大概是這樣</p>
+          <p>醫師會用探針量每一顆牙的牙齦溝有多深，配一張 X 光看骨頭剩多少，然後把量到的數字講給你聽。</p>
+          <p>量完你會知道自己在哪一階 —— 有些人清一清就好，有些人要分區慢慢處理，也有人需要手術。那時候再談怎麼做。</p>
+        </div>
+
+        <!-- 推力版（三題問答）。留著給提案頁比對，**預設不顯示**，定案時刪掉。 -->
         <dl class="tp-qa">
           <dt>會不會很痛？</dt>
           <dd>深層清潔會局部麻醉，過程不太有感覺；術後幾天可能酸軟，通常一兩週緩解。</dd>
@@ -6694,8 +6703,18 @@ html:not([data-shape="checks"]) .tp-checks { display: none; }
 .tp-checks li { margin-bottom: .34rem; line-height: 1.85; }
 .tp-checks strong { color: var(--ink); font-weight: 700; }
 
-/* 一問一答。**刻意和文章末尾那塊「重點整理」同一個語彙** —— 短、好掃，
-   而且 AI 搜尋抓的正是這種段落。底框同站上的卡，問句用該科的深階字色。 */
+/* 「第一次來，大概是這樣」——拉力版，預設。
+   ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明。
+     這裡要的是把話接著講下去，所以就是接在開場後面的兩段。 */
+.tp-first { margin: 0 0 1.15rem; }
+.tp-first-h { margin: 0 0 .5rem; font-weight: 700; color: var(--ink); }
+.tp-first p { margin: 0 0 .7rem; line-height: 1.85; color: var(--ink-soft); }
+.tp-first p:last-child { margin-bottom: 0; }
+
+/* 推力版的三題問答。**預設不顯示** —— 問題本身就是三個障礙（痛／時間／錢），
+   答案再溫和，問句已經先把代價攤在讀者面前。留成切換條的一格給使用者比對。 */
+html:not([data-after="qa"]) .tp-qa { display: none; }
+html[data-after="qa"] .tp-first { display: none; }
 .tp-qa {
   background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
   padding: 1.05rem 1.15rem; margin: 0 0 1rem;
@@ -6753,6 +6772,11 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
 
 <div class="pv-bar">
   <div class="pv-row">
+    <span class="pv-lab">開場之後</span>
+    <button type="button" data-k="after" data-v="first">第一次來（拉力）</button>
+    <button type="button" data-k="after" data-v="qa">三題問答（推力）</button>
+  </div>
+  <div class="pv-row">
     <span class="pv-lab">開場的形狀</span>
     <button type="button" data-k="shape" data-v="new">短（預設）</button>
     <button type="button" data-k="shape" data-v="checks">＋症狀清單</button>
@@ -6766,6 +6790,9 @@ html:not(.pv-closed) body { padding-bottom: 7.5rem; }
 (function () {
   var root = document.documentElement;
   if (!root.getAttribute('data-shape')) root.setAttribute('data-shape', 'new');
+  if (!root.getAttribute('data-after')) root.setAttribute('data-after', 'first');
+  var ma = /[?&]after=([a-z0-9]+)/.exec(location.search);
+  if (ma && ['first', 'qa'].indexOf(ma[1]) >= 0) root.setAttribute('data-after', ma[1]);
   var m = /[?&]shape=([a-z0-9]+)/.exec(location.search);   /* 正規式要含數字，CLAUDE.md 第八節 */
   if (m && ['new', 'checks'].indexOf(m[1]) >= 0) root.setAttribute('data-shape', m[1]);
 
