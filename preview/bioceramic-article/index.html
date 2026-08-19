@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>〈生物陶瓷〉文章預覽 — 芳仁牙醫診所</title>
+<meta name="author" content="芳仁牙醫診所 編輯室">
+<meta name="theme-color" content="#12656a">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="芳仁牙醫診所">
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，兩者刻意分開 ——
+     差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
+     apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
+
+     ⚠⚠ **只宣告這一個尺寸，而且是 192 —— 這是照別站的成功案例做的，不要改。**
+     iPhone 主畫面要 180（60pt × @3x）。192 比它大 6%，iOS 只需要縮一點點；
+     **放大會糊，大幅縮小也會糊，只有「幾乎不用縮」才銳利。**
+     前面試過 180（1:1 竟然還是糊，因為 iOS 其實去拿了 manifest 裡更大的那張）
+     和 1024（縮 5.7 倍，更糊）。
+     ⚠ **不要好心多補幾個尺寸**（57／76／120／152／512／1024）——
+       候選一多，iOS 會挑錯那張再縮放，這正是前五輪一直糊的原因。
+       整個站現在能被 iOS 找到的 any 版就只有這一張。
+     ⚠ sizes 屬性只是宣告，iOS 不會驗證 —— 檔案實際像素必須真的是 192×192
+       （tools/app-icons.mjs 產生時會檢查尺寸，改不動它就不會過）。
+
+     ⚠ 主畫面那顆是**按下「加入」的當下**存進捷徑的，之後不會自己更新。
+     換了圖要把 ?v= 加一，並且**把主畫面上那顆刪掉重加**，兩件都要做。 -->
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192.png?v=10">
+<!-- Android 的「加到主螢幕」讀這一份（iOS 不需要它也能加）。
+     manifest 裡 display 是 "browser" 不是 "standalone"，是刻意的：
+     這是一個會連出去（Google 地圖、LINE）的內容網站，
+     standalone 會把網址列與上一頁一起收掉，等於把人關在裡面。 -->
+<link rel="manifest" href="/site.webmanifest?v=20260812d">
+<!-- 主畫面圖示底下顯示的名字。不寫的話 iOS 會拿 <title> 去截，
+     首頁那一句是「芳仁牙醫診所｜雲林斗六・永樂街」，截完會變成半句。 -->
+<meta name="apple-mobile-web-app-title" content="芳仁牙醫">
+<link rel="stylesheet" href="/assets/style.css">
+
+<meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+<!-- data-spec：這一篇的科別，讓 assets/style.css 把重點色換成首頁
+     「主題與科別」標記的同一個顏色。標籤 → 代碼的對照表在 tools/build.mjs。 -->
+<body data-spec="endo">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<p style="margin:0;padding:.7rem 1rem;background:#89202d;color:#fff;font-size:.82rem;line-height:1.7;text-align:center">
+  這是<b>提案頁</b>：〈根管治療的生物陶瓷〉文章預覽。文章本身還在分支上，尚未上線。
+</p>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand-mark">
+        <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai。牙那條子路徑依自己的中心放大 1.3 倍、
+             再往上移 0.50 個單位（2026-08-07 定案），嘴一個節點都沒改。
+             一個路徑、兩條子路徑，用奇偶填充規則讓中間那顆牙成為真正的洞。
+             width／height 屬性不能省 —— 少了它 WebKit 用預設的 300×150 當內在尺寸，
+             這個 flex 項目就縮不下去，整條頁首會被撐寬。 -->
+        <svg width="44.2873" height="21.8244" viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="translate(-232.8729 -333.8286)">
+              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
+            </g>
+          </svg>
+      </span>
+      <span class="brand-text">
+        <b>芳仁牙醫診所</b>
+        <small>雲林斗六・永樂街</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="主選單">
+      <a href="/#topics">全部文章</a>
+      <a href="/#doctors">醫師介紹</a>
+      <a href="/#clinic">診所資訊</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<article>
+
+  <div class="post-head">
+    <div class="wrap-text">
+      <p class="crumbs">
+        <a href="/">首頁</a>
+        <span class="sep" aria-hidden="true">&rsaquo;</span>
+        <span class="post-tag" data-spec="endo">顯微根管</span>
+        <time datetime="2026-08-21">2026 年 8 月 21 日</time>
+      </p>
+      <h1>根管治療的生物陶瓷：MTA 與 Biodentine 是什麼</h1>
+    </div>
+    <figure class="post-hero" style="display:grid;place-items:center;min-height:clamp(160px,28vw,260px);border:1px dashed var(--rule);border-radius:12px;background:var(--card)">
+      <figcaption style="color:var(--ink-soft);font-size:.9rem;text-align:center;padding:1.2rem 1.6rem;line-height:1.9">
+        HERO 插畫還沒畫，這一格是它未來的位置與比例（2000&times;1116）。<br>
+        正式上線前會補上，圖的內容要等這篇文案定了再發包。
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="post-body wrap-text">
+    <p class="lede">從別的診所轉診過來的人，坐下來第一句話常常是這幾個之一：「聽說根管治療有一種材料，像水泥一樣厲害？」「醫師說我的牙根尖沒有閉合，要先做一層地板？」「根尖手術切完之後要用一種生物材料填起來，那是什麼？」講的其實是同一類東西——生物陶瓷。</p>
+
+    <h2>生物陶瓷不是一種材料，是一整類</h2>
+    <p>美國牙髓病學會（AAE）的說法很簡單：生物陶瓷指的是在醫學與牙科領域中，<strong>能夠與人體組織直接接觸</strong>的生物材料。這一類材料裡，有些會被身體慢慢吸收（例如磷酸鈣類的骨替代材料），有些不會（例如矽酸鈣類）。</p>
+    <p>牙科目前常用到的有兩種：<strong>MTA</strong>（三氧礦化物）與 <strong>Biodentine</strong>（矽酸鈣基底材料）。MTA 在 1990 年代問世，可以視為第一代的牙科生物陶瓷；後來陸續出現的材料，多半是在改善它的缺點。</p>
+    <p>「像水泥」這個說法其實沒有講錯：MTA 源自波特蘭水泥，經過一連串精密加工製成，主成分是三鈣矽酸鹽、二鈣矽酸鹽、三鈣鋁酸鹽、四鈣鐵鋁酸鹽與氧化鉍。最後那一項讓它在 X 光片上顯影——醫師回診追蹤時，才看得到它填在哪裡、填得完不完整。</p>
+
+    <h2>醫師選它的三個理由</h2>
+    <ul>
+      <li><strong>生物相容性</strong>：材料與周圍的組織相處得來，不容易引起排斥或過敏，能促成比較好的癒合反應。在組織學的觀察裡，牙周組織區會形成新的牙骨質、牙髓的發炎反應低，並且長出<strong>牙本質橋</strong>——那層新的硬組織，等於牙齒自己把破口補了起來。</li>
+      <li><strong>密封性</strong>：根管治療與根尖手術，最後都要把通道封起來。封得愈密合，細菌愈不容易再回到裡面；治療後又發炎的牙齒，問題常常出在沒封緊的那一道縫。</li>
+      <li><strong>抗菌力</strong>：MTA 反應之後會形成高鹼性的環境，本身就不利於細菌生存。密合加上抗菌，牙齒復原的機會才會提高。</li>
+    </ul>
+    <p>Biodentine 還多一項：除了牙根尖的處置之外，它可以<strong>直接當作填補材料</strong>，用來填補牙齒本身的缺損，顏色也比較接近真牙。</p>
+
+    <h2>哪些情況會用到</h2>
+    <ol>
+      <li><strong>活髓治療（覆髓術）</strong>：蛀得很深、牙髓已經露出來，但還沒有壞死的時候，把材料蓋在牙髓上替它擋住外界，讓它有機會自己修復。目的是把神經留下來——留著神經的牙齒，比抽掉神經的牙齒耐用。</li>
+      <li><strong>根尖成形</strong>：恆牙還在發育的過程中，如果牙髓因為外傷或蛀牙壞死，牙根會停止生長、牙根尖沒有閉合，根管末端變成一個開口，一般的填充材料填進去會直接漏到骨頭裡。生物陶瓷可以在那裡人工做出一道屏障，先把底封起來——就是病人聽到的那句「地板」。</li>
+      <li><strong>根尖手術的逆向充填</strong>：顯微根尖手術會把感染的牙根尖端切除，切面留下一個開口，再從這個方向緻密地封填起來。</li>
+      <li><strong>穿孔修補</strong>：根管系統或牙根壁上的破洞，可以用生物陶瓷補起來。</li>
+      <li><strong>牙根吸收</strong>：牙根被吸收得嚴重時，有可能導致牙齒脫落。把病灶清乾淨之後，缺損的位置可以用生物陶瓷修補。</li>
+      <li><strong>再生性牙髓治療</strong>：牙根還沒發育完成就壞死的年輕恆牙，有機會讓牙根繼續發育、繼續長。</li>
+    </ol>
+    <p>另外還有一類是做成<strong>根管封填糊劑</strong>，用在一般根管治療的最後一步。它穩定、不容易溶解，也能貼合形狀多變的根管。</p>
+
+    <h2>MTA 與 Biodentine 差在哪</h2>
+    <p>兩者的化學基礎接近，臨床上的差別主要在硬化的速度、外觀的疑慮，以及能不能兼作填補材料：</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>比較項目</th><th>MTA（三氧礦化物）</th><th>Biodentine（矽酸鈣基底）</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>出現的時間</td>
+            <td>1990 年代問世，可視為第一代牙科生物陶瓷。</td>
+            <td>較晚出現，設計上針對 MTA 的幾個缺點改良。</td>
+          </tr>
+          <tr>
+            <td>硬化時間</td>
+            <td>較長，療程常需要分次進行。</td>
+            <td>較短。</td>
+          </tr>
+          <tr>
+            <td>變色疑慮</td>
+            <td>早期配方有讓牙齒變色的可能，位置在前牙時會影響外觀；近年的配方已改良許多。</td>
+            <td>較低，顏色也比較接近真牙。</td>
+          </tr>
+          <tr>
+            <td>主要用在哪</td>
+            <td>根管內與牙根尖的處置：覆髓、根尖成形、逆向充填、穿孔修補。</td>
+            <td>上述處置同樣適用，另外可以直接作為填補材料使用。</td>
+          </tr>
+          <tr>
+            <td>操作條件</td>
+            <td>對濕度與酸性環境較敏感，部分根管治療用的藥劑也會影響它的反應。</td>
+            <td>對操作條件的要求相對沒有那麼嚴格。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <p><b>醫師小叮嚀。</b>沒有一種材料是十全十美的。MTA 與 Biodentine 各自有適合的位置，選哪一種不是誰比較高級，而是<strong>醫師依照牙齒的實際狀況與治療需求判斷</strong>的結果——牙齒在前牙還是後牙、牙髓還活著還是已經壞死、這一次要封的是根尖還是牙冠上的破洞，答案都不一樣。</p>
+    </div>
+
+    <h2>它也有做不到的事</h2>
+    <ul>
+      <li><strong>它需要時間，也需要條件</strong>：MTA 硬化需要的時間比較長；發炎的區域環境偏酸，會影響它硬化之後的強度；操作時對濕度的控制也比較嚴格。所以用到它的療程常常會<strong>分次進行</strong>，中間的等待不是拖延，是材料本身需要那一段時間。</li>
+      <li><strong>變色的疑慮還沒有完全消失</strong>：早期配方的 MTA 有讓牙齒變色的可能，如果那顆牙在前牙區，外觀上會看得出來。近幾年的配方已針對這一點改良許多，機率大幅降低，但仍然不是零。</li>
+      <li><strong>健保沒有給付</strong>：這一類材料屬於自費項目，需要用到它的治療通常也要搭配顯微鏡與比較長的診療時間。實際會用到哪一種材料、費用如何計算，會在治療計畫確定的時候一併說明。</li>
+    </ul>
+
+    <h2>治療之後，換你這邊做的事</h2>
+    <p>用到這類材料的療程有一個共同點：<strong>結果不會在當天揭曉</strong>。材料要時間反應、牙根尖的病灶要時間癒合、年輕恆牙的牙根要時間繼續長。這段期間唯一看得到進度的方式，是<strong>依醫囑回診拍 X 光片追蹤</strong>——這些變化從外面看不出來，通常也不會痛，而不痛並不等於已經好了。</p>
+    <p>所以醫囑裡的回診時間並不是形式上的提醒。中途覺得沒什麼感覺就沒有再回來的牙齒，往往就是幾年後才發現病灶還在的那幾顆。</p>
+
+    <h2>什麼時候會走到這一步</h2>
+    <p>需要用到生物陶瓷的狀況，多半是牙髓已經出問題才被發現的：蛀牙一路蛀到神經、牙齒受過外傷、或者根管治療過的牙齒過了幾年又出現病灶。這些狀況<strong>早一點被看見，能保留的空間就大一點</strong>——蛀牙還沒碰到神經的時候，處理起來遠比活髓治療單純（〈<a href="/posts/regular-checkup/">半年一次的洗牙：健保給付的那一次，到底在做什麼</a>〉講的就是這件事）。</p>
+    <p>芳仁的顯微根管門診由受過牙髓病專科訓練的醫師看診，處理的正是活髓治療、根尖手術與這一類材料的使用。療程結束之後，抽過神經的牙齒通常還需要做牙套保護起來，這一段由贋復假牙的醫師接手，在同一個地方安排就好。真的留不住的那些，才會走到<a href="/posts/missing-tooth/">缺牙之後的重建</a>那條路——先盡力留住自己的牙齒，順序是這樣。</p>
+
+    <h2>重點整理</h2>
+    <dl class="keypoints">
+      <dt>生物陶瓷到底是什麼？</dt>
+      <dd>它不是單一一種材料，而是一整類「能與人體組織直接接觸」的生物材料。牙科常用的有 MTA（三氧礦化物）與 Biodentine（矽酸鈣基底材料）；MTA 源自波特蘭水泥並經過精密加工，所以「像水泥」這個說法沒有講錯。</dd>
+
+      <dt>醫師說要在牙根尖「做一層地板」，那是在做什麼？</dt>
+      <dd>那是根尖成形。恆牙在發育中如果牙髓壞死，牙根會停止生長、牙根尖沒有閉合，根管末端變成一個開口，一般的填充材料會直接漏到骨頭裡。生物陶瓷可以在那個位置人工做出一道屏障，把底先封起來，後面的療程才有辦法接下去。</dd>
+
+      <dt>MTA 和 Biodentine 哪一種比較好？</dt>
+      <dd>沒有哪一種比較好，只有哪一種適合這顆牙。MTA 硬化時間較長、早期配方有變色疑慮；Biodentine 硬化較快、顏色較接近真牙，還能直接當填補材料。實際用哪一種由醫師依牙齒的位置、牙髓的狀態與這一次要處理的問題判斷。</dd>
+
+      <dt>為什麼要自費？</dt>
+      <dd>健保沒有給付這一類材料，需要用到它的療程通常也要搭配顯微鏡與較長的診療時間。實際會用到哪一種、費用怎麼算，會在治療計畫確定時一併說明。</dd>
+
+      <dt>材料填完就結束了嗎？</dt>
+      <dd>沒有。材料要時間反應、牙根尖的病灶要時間癒合，這些變化從外面看不出來，也通常不會痛——不痛不代表已經好了。唯一能確認進度的方式是依醫囑回診拍 X 光片追蹤。</dd>
+    </dl>
+
+    <p class="note">本文為一般口腔衛教資訊，不能取代臨床診斷。牙齒的狀況適不適合使用這一類材料、要用哪一種、需要分幾次完成，都要經醫師檢查與 X 光評估後決定。</p>
+
+    <div class="post-foot">
+      <nav class="post-nav" aria-label="文章導覽">
+        <a class="btn btn-ghost" href="/posts/orthodontics/">&larr; 上一篇：牙齒矯正</a>
+        <a class="btn" href="/#articles">回文章列表 &rarr;</a>
+      </nav>
+    </div>
+  </div>
+</article>
+</main>
+
+<!-- RELATED:START — 由 tools/build.mjs 產生，請勿手動編輯 -->
+<aside class="related" aria-label="延伸閱讀">
+  <div class="wrap">
+    <ul class="rel-list">
+        <li class="rel-card" data-spec="surg">
+          <a href="/posts/wisdom-tooth/">
+            <img src="/assets/hero-wisdom-photo-1600.jpg" srcset="/assets/hero-wisdom-photo-800.jpg 800w, /assets/hero-wisdom-photo-1600.jpg 1600w, /assets/hero-wisdom-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="2000" height="1116" loading="lazy">
+            <span class="rel-body">
+              <span class="rel-tag">口腔外科</span>
+              <span class="rel-title">拔智齒之後：傷口填補、術後照顧與保險怎麼問</span>
+              <time class="rel-date" datetime="2026-08-19">2026/08/19</time>
+            </span>
+          </a>
+        </li>
+        <li class="rel-card" data-spec="perio">
+          <a href="/posts/perio-laser/">
+            <img src="/assets/hero-perio-photo-1600.jpg" srcset="/assets/hero-perio-photo-800.jpg 800w, /assets/hero-perio-photo-1600.jpg 1600w, /assets/hero-perio-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="2000" height="1116" loading="lazy">
+            <span class="rel-body">
+              <span class="rel-tag">牙周照護</span>
+              <span class="rel-title">牙周病治療：清創、水雷射與再生手術</span>
+              <time class="rel-date" datetime="2026-08-16">2026/08/16</time>
+            </span>
+          </a>
+        </li>
+        <li class="rel-card" data-spec="kids">
+          <a href="/posts/kids-arch-expansion/">
+            <img src="/assets/hero-arch-photo-1600.jpg" srcset="/assets/hero-arch-photo-800.jpg 800w, /assets/hero-arch-photo-1600.jpg 1600w, /assets/hero-arch-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="2000" height="1116" loading="lazy">
+            <span class="rel-body">
+              <span class="rel-tag">兒童牙科</span>
+              <span class="rel-title">別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</span>
+              <time class="rel-date" datetime="2026-08-02">2026/08/02</time>
+            </span>
+          </a>
+        </li>
+    </ul>
+  </div>
+</aside>
+<!-- RELATED:END -->
+
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <!-- 名稱＋地址＋電話留著：文章頁沒有「診所資訊」那一節，
+           這裡是這六頁上**唯一**的聯絡資訊。看診時間與地圖不放 ——
+           那是內容不是落款，想看的人會點進診所資訊。COPY.md 第六之二節。
+           「雲林縣斗六市・在地經營超過四十年」已拿掉：同一句在首頁與頁首都講過，
+           而且它是形容詞、主詞是診所。 -->
+      <div>
+        <h4 class="foot-brand">
+          <!-- 診所標誌。**牙那條子路徑和頁首那顆不一樣，是刻意的** ——
+               這裡只有 12.5px 高（比 favicon 還小），洞橫向只剩約 2px，抗鋸齒會把它吃掉。
+               所以牙依自己的中心放大 1.15 倍、再往上移 1.4 個單位（2026-08-09 定案，B 案）。
+               **嘴一個節點都沒改**，fill-rule="evenodd" 讓那顆牙成為真正的洞，
+               頁尾的卡片底色直接透過來。
+
+               ⚠ **這一顆沒有遵守 PALETTE.md 第六之七節「把洞下方的肉還原成原標誌」那條規則。**
+               同一支逐像素掃描量下來：頁首那顆最薄處 3.13 個單位，這一顆 4.13 ——
+               肉多了一個單位（32%），牙比那條規則規定的位置**高**。
+               這是使用者在實際大小逐案看過之後挑的，不是從那條規則推出來的。
+               規則的用意是「放大時不要讓外觀走樣」，這裡是刻意讓它走樣一點點。
+
+               ⚠ 另外更正一筆會誤導後人的話：牙的底部本來就有一道分叉，那是**牙自己的輪廓**，
+               不是嘴的邊緣被切開。原始比例下洞的下方一直有 3.13 個單位的實心肉，沒有破。 -->
+          <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true"><g transform="translate(-232.8729 -333.8286)"><path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9658 351.1677 C 264.3395 351.0569 264.4797 351.0334 264.8417 351.1677 C 265.087 351.2612 265.4141 351.2438 265.6594 351.1677 C 266.4418 350.9226 267.2185 349.375 267.0726 347.4069 C 266.9324 345.4389 261.8635 345.7134 261.8693 347.4069 C 261.8693 348.756 262.354 350.4963 263.0255 350.9692 C 263.3118 351.1736 263.522 351.2963 263.9658 351.1677 Z"/></g></svg>
+          芳仁牙醫診所
+        </h4>
+        <p class="foot-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
+          <!-- 實心地圖釘。和話筒同一套：Font Awesome Free 6 "location-dot"，
+               圖示部分授權 CC BY 4.0，https://fontawesome.com/license/free ——
+               這一行註解就是署名，改圖或搬檔的時候不要刪。 -->
+          <span class="ico"><svg viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg></span>
+          <span class="txt">雲林縣斗六市永樂街&nbsp;70&nbsp;號</span>
+        </a></p>
+        <p class="foot-tel"><a href="tel:+88655339369">
+          <!-- 實心話筒。路徑直接內嵌，不引任何外部檔（站上沒有圖示字型，也不該為了一顆去載）。
+               素材出處：Font Awesome Free 6 "phone"，圖示部分授權 CC BY 4.0，
+               https://fontawesome.com/license/free —— 這一行註解就是署名，改圖或搬檔的時候不要刪。
+               aria-hidden：號碼本身已經是連結的可讀內容，圖示再念一次是重複。 -->
+          <span class="ico"><svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></span>
+          <data class="num" value="05-533-9369">(05)5339-369</data>
+        </a></p>
+      </div>
+      <div>
+        <h4>站內導覽</h4>
+        <ul class="foot-nav">
+          <li><a href="/#topics">全部文章</a></li>
+          <li><a href="/#doctors">醫師介紹</a></li>
+          <li><a href="/#clinic">診所資訊</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>關於這些文章</h4>
+        <p>本站文章為一般口腔衛教資訊，用意在於幫助讀者理解常見狀況，不能取代臨床診斷。實際狀況請就診由醫師評估。</p>
+        <p class="credit">照片與插圖為芳仁牙醫診所自有或本站自製，未經同意請勿轉載。</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 芳仁牙醫診所</span>
+      <span>雲林縣斗六市</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
