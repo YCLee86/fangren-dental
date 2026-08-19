@@ -7,7 +7,8 @@
   "scripts": {
     "build": "node tools/build.mjs && node tools/dist.mjs",
     "check": "node tools/build.mjs --check",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "image": "node tools/gemini-image.mjs"
   },
   "engines": {
     "node": ">=20"
