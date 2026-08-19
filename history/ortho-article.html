@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>ortho-article｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>ortho-article — 〈牙齒矯正：年齡、矯正器與第一次諮詢〉</h1>
+<p class="meta">
+  2026-08-19 開、當天定案上線・<strong>文章草稿的預覽，不是設計提案</strong>（同 <code>perio-laser</code> 那一種）<br>
+  原網址 <code>/preview/ortho-article/</code>（已刪除 2026-08-19）<br>
+  整頁還原：<code>git show 35a31da:preview/ortho-article/index.html</code><br>
+  成品 <code>/posts/orthodontics/</code>（齒顎矯正，站上第九篇）<br>
+  沒有切換條 —— 這一頁的用途只是「讓使用者在手機上讀完整篇」
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者把診所臉書那則矯正的貼文整則貼進來：
+
+「這是在臉書上放出來的關於矯正的介紹，把它整理成依照網站其他文章的
+　風格整理成適合網站的文章內容。」
+
+那則貼文是社群體：emoji 開頭的小標、✅／🔹／🔸 的條列、
+「歡迎私訊或來電」的 CTA、九個 hashtag。</pre></div>
+
+<h2>改寫時動到什麼（照 COPY.md 第十節）</h2>
+<div class="note"><pre>第十節那條分界是「貼近在地是**語氣**，口語化是**文體**」，兩者不衝突。
+所以留下來的是語氣，換掉的是用詞層級與結構：
+
+  emoji／hashtag／私訊 CTA        整組拿掉
+  ✅🔹🔸 的條列                  換成站上既有的結構
+                                （lede → h2 → 表格 → callout → keypoints → 免責 → 上下篇）
+  「減少腸胃負擔」                 改成咀嚼效率與顳顎關節 —— 腸胃那一句撐不住
+  「完美的治療」                   拿掉
+  「最安全且有效的協同治療」        拿掉
+  「成功完成了矯正夢想」            拿掉
+
+⚠ 後三句是 COPY.md 第三節那道紅線（診所給的是燈，不是答案），
+　 也是醫療廣告最容易出事的地方 —— 那三句都在承諾結果。
+　 跨科那一段因此改寫成講得出來的好處，而且主詞是病患：
+　 「不必自己在幾家診所之間轉述病情、也不必重複拍一次片子。」
+
+**臉書原文的事實一件都沒刪**：兩種矯正器的七項差別、整體 2~4 年、
+諮詢的三件事、跨科銜接的四科，全部保留。</pre></div>
+
+<h2>這一篇同時補上齒顎矯正的內部連結</h2>
+<div class="note"><pre>改動前齒顎矯正**站上零篇文章** —— 七顆科別標記裡唯一一顆點下去沒有文章的。
+這一篇因此刻意往三篇既有的文章接：
+
+  「幾歲可以開始」的兒童那一段 → /posts/kids-arch-expansion/（擴張牙弓）
+  成年那一段的牙周前提       → /posts/gum-bleeding/、/posts/perio-laser/
+
+錨點文字就是那幾篇自己的標題，不是「點這裡」。</pre></div>
+
+<h2>提出來、由使用者定案的三件</h2>
+<div class="note"><pre>① **金屬 2~3 年、隱形 3~4 年**（臉書原文的數字）
+   這個方向和一般認知相反（多數說法是隱形較短或相當）。提出來問過，
+   使用者說「定案」，所以**照原文留著**。
+   ⚠ 日後若確認是貼文打反了，要改的是表格最後一列與「重點整理」第四題。
+
+② **右下那一格的牙套盒**（見下一段）—— 同樣提出來問過，維持原樣。
+
+③ published 給 2026-08-20（比上線當天多一天）。
+   ⚠ 這不是隨手填的：〈拔智齒之後〉也是 08-18 做、published 寫 08-19，
+     站上本來就是這個習慣。</pre></div>
+
+<h2>⚠ 已知的取捨：右下那一格，畫面和內文的方向相反</h2>
+<div class="note"><pre>HERO 右下角是夜裡的房間，他睡著了，床頭櫃上放著**闔上的**牙套盒。
+讀起來是「睡覺前把牙套取下來收好」。
+
+但隱形矯正正好相反 —— 睡覺那段時間是配戴時數的大宗，
+而這一篇自己就寫著「取下的時間裡牙齒不會移動」。
+
+這件事在上線前提出來過，使用者選擇維持原樣，所以**它是取捨不是漏看**。
+右上那一格（吃飯前取下、盒子打開著）是對的，沒有問題。
+
+⚠ 日後要修的話，最省事的是只動一個道具：床頭櫃上不要有盒子，
+　 或盒子打開著、裡面是空的（＝牙套在嘴裡）。不必重畫整格。
+⚠ 這一類「圖在示範內文叫人不要做的事」和〈拔智齒〉那次的珍奶配吸管
+　 是同一種（ILLUSTRATION.md 第八節第 4 條）。</pre></div>
+
+<h2>HERO 插畫（另一台畫的，六條規格在 ILLUSTRATION.md 第九節）</h2>
+<div class="note"><pre>收到原檔之後量到的兩件事，都讓後面省了工：
+
+  ・原檔**正好就是 2000×1116** ＝ 站上的規格，不必裁。
+  ・四邊**沒有烘進去的白框**。這是量出來的不是看出來的 ——
+    逐列逐行算亮度標準差，第 0 列就已經 ≥12（〈牙齦流血〉那張踩過的坑，
+    ILLUSTRATION.md 第七節第 6 條）。
+
+所以 2000 那張**直接沿用原檔**，沒有再壓一次（省掉一代的失真）。
+1600×893 與 800×447 用 Chromium 的 canvas 縮：
+
+    imageSmoothingQuality = "high"、toDataURL("image/jpeg", 0.82)
+
+⚠ 這站沒有任何 npm 依賴，容器裡也沒有 PIL 與 ImageMagick，
+　 所以不能用 sharp，PowerShell 那條路（System.Drawing）在雲端也沒有。
+⚠ 產生器一律挑 headless_shell，不要挑完整版 chrome（CLAUDE.md 第九節第 18 條）。
+
+檔案大小 289KB／93KB／405KB，和既有六張同一個級距。
+
+對第九節那六條逐條看過（**圖是另一台在畫的，這一輪只負責接進來**）：
+橡皮筋沒有跑到嘴外（這一版根本沒畫橡皮筋，只有矯正器與弓絲，
+在嘴裡）、三格都是華人面孔、餐廳那一格的比例沒動、表情是自然的微笑
+與安穩的睡臉。</pre></div>
+
+<h2>srcset：要實測挑到哪一張，不要用算的</h2>
+<div class="note"><pre>CLAUDE.md 第九節第 15 條。文章 HERO 的 sizes 三段
+（1041+ → 656px、721+ → 660px、其餘 calc(100vw - 28px)）沿用既有八篇，
+五個情境實測：
+
+    390×844  DPR3   → hero-ortho-photo-1600.jpg   （版面 362px）
+    390×844  DPR2   → hero-ortho-photo-800.jpg
+    834×1112 DPR2   → 1600
+    1440×900 DPR1   → 800                          （版面 656px）
+    1440×900 DPR2   → 1600
+
+五個都對，而且七個視窗都沒有水平捲動。</pre></div>
+
+<h2>上線那天做的四件</h2>
+<div class="note"><pre>1. **updated 手動改回 2026-08-20 再 build 一次**（CLAUDE.md 第五節的程序）。
+   接圖時動到 post-meta 的 hero／heroAlt，雜湊變了，build 把 updated
+   換成當天的 08-19 —— 可是 published 是 08-20，
+   **這一篇從來沒上線過，dateModified 不該早於 datePublished**。
+   改完再 build、再 --check 確認收斂。
+
+2. 提案頁刪掉，文字搬進這裡（第八節第 3 條）。
+
+3. 分支 rebase 到 origin/main —— 中途另一台把七科著陸頁整批推上去了，
+   落差 27 個 commit。**沒有衝突**（那一批動的是 index.html 的著陸頁與
+   tools/topic-*，這一條動的是 posts/ 與 assets/），build 也不必重跑。
+
+4. ⚠ 過程中用過「**只把提案頁推上 main**」那個做法（第八節那條）：
+   提案期間 main 上只有 preview/ortho-article/ 與三張圖，
+   posts/orthodontics/ 一直留在分支上，所以首頁的文章列表在定案之前
+   都還是八張卡。</pre></div>
+
+<footer>
+  規則：<code>CLAUDE.md</code> 第八節（提案頁定案後刪掉、文字搬進 <code>history/</code>）。
+  文體規範：<code>COPY.md</code> 第十節。插畫：<code>ILLUSTRATION.md</code> 第七、九節。
+</footer>
+
+</div></body>
+</html>

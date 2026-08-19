@@ -37,7 +37,7 @@
 <body><div class="wrap">
 <h1>改版紀錄（原 /preview/ 的推導文字）</h1>
 <p class="meta">
-  99 個提案頁的推導、量測與落選案。前 79 個是 2026-08-12 從 <code>/preview/</code> 一次搬過來的，
+  106 個提案頁的推導、量測與落選案。前 79 個是 2026-08-12 從 <code>/preview/</code> 一次搬過來的，
   之後定案的一頁一頁補進來。<br>
   <strong>提案頁本身已經刪掉了</strong> —— 定案上線之後就不再保留，只留下這些文字。
   要看整頁請用 <code>git show &lt;sha&gt;:preview/&lt;名稱&gt;/index.html</code>，
@@ -133,6 +133,7 @@
   <li><a href="/history/nav-scrollspy.html">nav-scrollspy</a><span>〔CLAUDE.md〕 - `preview/nav-scrollspy/` — 頁首選單「捲到哪一節哪一項就亮」，定案 Ⓓ2 玻璃並已上線（2026-08-10）。 起因是使用者回報「右上三…</span></li>
   <li><a href="/history/perio-laser.html">perio-laser</a><span>〔文章草稿的預覽，不是設計提案〕 - `preview/perio-laser/` — 牙周病治療（清創／水雷射／再生手術）那一篇的文案與 HERO，六輪定案後直接變成正式文章 /posts/perio-laser/（2026-08-16）。文案從別處寫好的原稿整理成站上的樣子：拿掉診所名稱、預約專線、地址與作者備註，齒槽骨與牙根整平術對齊既有用詞，比較表裡「殺菌率高」「大幅減少疼痛」這類絕對療效說法收斂過。圖是「醫師與病人一起拿雷射槍打細菌」，六輪修的都是可讀性：光束改牙周青綠、槍從火箭筒改成精密手機、細菌從「太可愛」到「太兇」再到「兵敗逃竄」、病患退到最後方由助理的盾護著；⚠ 第四輪查出「雷射打在牙齒上像要打破牙齒」的成因是牙面上根本沒有髒東西可打 —— 要它打什麼就要先把那個東西畫出來。⚠ 機器上一直長出 BIOLASE／Waterlase 的品牌字（brochure 當參考時連字一起學走），做過一次局部模糊、最後改用重生成的乾淨版…</span></li>
   <li><a href="/history/night-calibrated.html">night-calibrated</a><span>〔CLAUDE.md〕 - `preview/night-calibrated/` — 全暗版（2026-08-04），內文區也是暗的。留著對照用。 〔PALETTE.md〕 - 對應的預覽頁…</span></li>
+  <li><a href="/history/ortho-article.html">ortho-article</a><span>〔文章草稿的預覽，不是設計提案〕 - `preview/ortho-article/` — 〈牙齒矯正：年齡、矯正器與第一次諮詢〉那一篇的文案與 HERO，當天開、當天定案上線（2026-08-19），成品是 /posts/orthodontics/（齒顎矯正，站上第九篇）。起點是使用者把診所臉書那則矯正貼文整則貼進來要求「整理成適合網站的文章內容」：emoji／hashtag／私訊 CTA 整組拿掉，✅🔹🔸 的條列換成站上既有的結構，「完美的治療」「最安全且有效」「成功完成矯正夢想」三句承諾性的話拿掉（COPY.md 第三節那道紅線），跨科那一段改寫成主詞是病患的具體好處。臉書原文的事實一件都沒刪。這一篇同時補上齒顎矯正的內部連結 —— 改動前那一科站上零篇文章，是七顆標記裡唯一點下去沒有文章的。⚠ 兩件提出來由使用者定案維持原樣的：金屬 2~3 年／隱形 3~4 年（方向和一般認知相反，照臉書原文留著）、以及 HERO 右下那一格 —— 他睡著了、床頭櫃上放著闔上的牙套盒，讀起來是「睡前取下」，而內文正好寫著「取下的時間裡牙齒不會移動」，是取捨不是漏看。⚠ 圖是另一台畫的（六條規格在 ILLUSTRATION.md 第九節），這一輪只負責接進來：原檔正好 2000×1116 且四邊沒有白框（逐列逐行量標準差確認過），所以 2000 那張直接沿用、不再壓一次…</span></li>
   <li><a href="/history/post-cta.html">post-cta</a><span>〔CLAUDE.md〕 - `preview/post-cta/` — 文章頁的盤點，七項各自可切換（文章收尾區塊、字級抬一階、觸控目標、手機行動條、麵包屑拆兩行、頁尾補 LINE、頁尾命中區）。⚠ **這一頁不是定案上線，是 2026-08-16 收掉的**（使用者：「這個工作可以先關掉了，目前沒有要繼續」）—— 七項一項都沒有套進正式站。留著的推導：收尾區塊要放在 &lt;/main&gt; 外面（不然六篇的「最後更新」會一起跳）、不要重抄看診時間只放連結、整塊吃該篇的科別色、麵包屑那一列要用 display:contents ＋ flex-basis:100% 拆行（只給 &lt;time&gt; 寫會被擠到第三行）、頁尾兩行間距只有 5.6px 所以只能長高不能外擴。⚠ 那份快照停在 2026-08-13 的版面，之後站上改過很多（頁首對齊、HERO 換點陣），要重啟不要直接還原來用…</span></li>
   <li><a href="/history/spec-endo-red.html">spec-endo-red</a><span>〔PALETTE.md〕 最新的提案頁是 `preview/spec-endo-red-all/`（十一案 × 兩條切換條，`?l=6&amp;f=11`）。 `preview/spec-endo-r…</span></li>
   <li><a href="/history/spec-endo-red-all.html">spec-endo-red-all</a><span>〔CLAUDE.md〕 （兒牙白字那一件已經結案了，見上面的定案表。口腔外科的紫已定案 `#8e6299`／`#784e84`， 見 PALETTE.md 第六之九節與 `preview/sp…</span></li>
