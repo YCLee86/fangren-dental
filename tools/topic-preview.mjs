@@ -143,7 +143,14 @@ const countLine = (n, d) => {
 const introBlock = (spec, t, cnt) => `
       <!-- ===== 科別介紹（2026-08-18 版面定案）==========================
            走到這個版面經過使用者七輪修正，推導寫在 COPY.md 第九節。
-           順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 流程（標題在 topic-copy.mjs 的 flowTitle）。
+           順序：h1 → 幾位醫師幾篇文章 →〔開場句 lead〕→ 三個處境 →〔一句回應 stance〕
+           → 流程（標題在 topic-copy.mjs 的 flowTitle）→ 收尾。
+           ⚠⚠ **lead 與 stance 是兩種節奏，一科只挑一種**（2026-08-19）：
+             ・stance 在後 ＝ 先讓他對號入座，再一句話回完（牙周）。
+             ・lead 在前 ＝ 先把最重要的那句話講掉，再舉例（兒牙：家長最想聽的
+               是「這不是孩子的體質」，那句話擺後面就太晚了）。
+             **不要兩個都給** —— 那會變成同一件事講兩次，而且七頁長得一模一樣
+             就是使用者說的「看起來像複製貼上」。
            ⚠⚠ **整塊要收在手機的一屏之內**（2026-08-18 使用者第二輪）：
              「這樣子的內容我希望在這個版面上能都放進去，而且要讓他覺得下面還有
                東西往下滑 —— 著陸頁的文案不能超過這個版面。」
@@ -153,8 +160,9 @@ const introBlock = (spec, t, cnt) => `
       <div class="tp-intro">
         <h1>${t.h1}</h1>
         <p class="tp-count">${countLine(cnt.a, cnt.d)}</p>
+${t.lead ? `        <p class="tp-lead">${todo(t.lead)}</p>\n` : ""}\
 ${t.cases.map((x) => `        <p class="tp-case">${todo(x)}</p>`).join("\n")}
-        <p class="tp-stance">${todo(t.stance)}</p>
+${t.stance ? `        <p class="tp-stance">${todo(t.stance)}</p>\n` : ""}\
 
         <div class="tp-first">
           <p class="tp-first-h">${t.flowTitle}</p>

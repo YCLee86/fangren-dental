@@ -4594,7 +4594,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
 
       <!-- ===== 科別介紹（2026-08-18 版面定案）==========================
            走到這個版面經過使用者七輪修正，推導寫在 COPY.md 第九節。
-           順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 流程（標題在 topic-copy.mjs 的 flowTitle）。
+           順序：h1 → 幾位醫師幾篇文章 →〔開場句 lead〕→ 三個處境 →〔一句回應 stance〕
+           → 流程（標題在 topic-copy.mjs 的 flowTitle）→ 收尾。
+           ⚠⚠ **lead 與 stance 是兩種節奏，一科只挑一種**（2026-08-19）：
+             ・stance 在後 ＝ 先讓他對號入座，再一句話回完（牙周）。
+             ・lead 在前 ＝ 先把最重要的那句話講掉，再舉例（兒牙：家長最想聽的
+               是「這不是孩子的體質」，那句話擺後面就太晚了）。
+             **不要兩個都給** —— 那會變成同一件事講兩次，而且七頁長得一模一樣
+             就是使用者說的「看起來像複製貼上」。
            ⚠⚠ **整塊要收在手機的一屏之內**（2026-08-18 使用者第二輪）：
              「這樣子的內容我希望在這個版面上能都放進去，而且要讓他覺得下面還有
                東西往下滑 —— 著陸頁的文案不能超過這個版面。」
@@ -4604,19 +4611,18 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
       <div class="tp-intro">
         <h1>兒童牙科</h1>
         <p class="tp-count"><a href="#doctors"><span class="tp-n">2 位</span><span class="tp-t">醫師</span></a><span class="tp-dot" aria-hidden="true">・</span><a href="#articles"><span class="tp-n">2 篇</span><span class="tp-t">文章</span></a></p>
-        <p class="tp-case">乳牙蛀了會換掉，應該還好吧。</p>
-        <p class="tp-case">聽說要塗氟，也聽說要封填，幾歲該做？</p>
-        <p class="tp-case">上次哭到看不完，還能怎麼辦？</p>
-        <p class="tp-stance">這三種我們都常遇到。<strong>乳牙會換，不代表不用顧；孩子會怕，不代表看不了</strong>。</p>
+        <p class="tp-lead">帶去看過、補過了，還是一直出問題 —— <strong>那多半不是孩子的體質</strong>。</p>
+        <p class="tp-case">「小朋友不配合，我們沒辦法處理。」</p>
+        <p class="tp-case">補好的那顆掉了，過一陣子又說痛。</p>
+        <p class="tp-case">蛀了好幾顆，醫師說要麻醉才做得完。</p>
 
         <div class="tp-first">
-          <p class="tp-first-h">從第一次看牙到換牙，大概會這樣走</p>
-          <p class="tp-step"><b>檢查</b>有沒有蛀牙、牙齒怎麼長，看完告訴你。</p>
-          <p class="tp-step"><b>預防</b>塗氟、窩溝封填，健保都有給付。</p>
-          <p class="tp-step"><b>治療</b>從不痛的先做，太怕的孩子有鎮靜麻醉。</p>
+          <p class="tp-first-h">兒童牙科多做的，是這幾件</p>
+          <p class="tp-step"><b>補得住</b>把蛀掉的清乾淨再補，清潔一起顧。</p>
+          <p class="tp-step"><b>慢慢來</b>先做不痛的、分次做，需要才談鎮靜。</p>
+          <p class="tp-step"><b>早一點</b>半年一次，小狀況在變大之前先看到。</p>
           <p class="tp-step"><b>換牙</b>排不下的時候，早期矯正是一個選項。</p>
-          <p class="tp-step"><b>之後</b>半年回來一次，換牙期特別留意。</p>
-          <p class="tp-close">我們要的是讓孩子不怕看牙 —— 蛀牙處理得完，習慣要一起慢慢養。</p>
+          <p class="tp-close">我們要的是孩子敢來、也不必一補再補 —— 剩下的習慣一起養。</p>
         </div>
       </div>
 
@@ -6779,6 +6785,12 @@ body[data-topic] #topics { padding-top: 1rem; }
 /* 3-2 三段處境是「他們」，用柔墨；底下那句回應是「我們」，用墨。
    ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** ——
      一加就變回被否決的「症狀清單」的樣子（COPY.md 第九之七節）。 */
+/* 3-1b 開場句（lead）：排在三個處境**之前**，是「我們」的聲音，所以用墨。
+   ⚠ 有 lead 的科就不要再寫 stance（規則見產生器檔頭）——
+     一頁只需要一句要被記住的話，講兩次就兩句都不會被記住。 */
+.tp-lead { margin: 0 0 .6rem; font-size: 1rem; line-height: 1.85; color: var(--ink); }
+.tp-lead strong { color: var(--accent-deep); font-weight: 700; }
+
 .tp-case {
   margin: 0 0 .22rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
   padding-left: .85rem; border-left: 2px solid var(--rule);
@@ -6814,7 +6826,9 @@ body[data-topic] #topics { padding-top: 1rem; }
 /* ⚠ 下緣只留 .4rem：這一塊收完，下一區（文章卡）要在手機上**露出一角** ——
      2026-08-18 使用者：「要讓他覺得下面還有東西往下滑。」
      留白太多的話，一屏的結尾看起來就像整頁的結尾。 */
-.tp-first { margin: 0 0 .3rem; }
+/* ⚠ 上緣留 .5rem：有 lead 的科（兒牙）沒有 stance 那一段當緩衝，
+     三個處境會直接頂到流程的標題上。 */
+.tp-first { margin: .5rem 0 .3rem; }
 
 /* 3-2c 文章那一區往上收一點（只有著陸頁）：介紹收在一屏之後，
    下一區要在同一屏**露出一角**，那一角才是「往下還有」的暗示。
