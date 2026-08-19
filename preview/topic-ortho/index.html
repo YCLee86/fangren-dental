@@ -4575,7 +4575,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <li><a href="#" data-spec="general" data-todo="還沒做這一頁">一般牙科・定期檢查</a></li>
           <li><a href="../topic-perio/" data-spec="perio">牙周治療</a></li>
           <li><a href="#" data-spec="endo" data-todo="還沒做這一頁">顯微根管</a></li>
-          <li><a href="#" data-spec="kids" data-todo="還沒做這一頁">兒童牙科</a></li>
+          <li><a href="../topic-kids/" data-spec="kids">兒童牙科</a></li>
           <li><a href="../topic-ortho/" data-spec="ortho" aria-current="page">齒顎矯正</a></li>
           <li><a href="#" data-spec="prosth" data-todo="還沒做這一頁">植牙・假牙重建</a></li>
           <li><a href="#" data-spec="surg" data-todo="還沒做這一頁">口腔外科</a></li>
@@ -6826,6 +6826,29 @@ body[data-topic] #topics { padding-top: 1rem; }
   set();
   addEventListener('load', set);
   addEventListener('resize', set);
+})();
+
+/* 手機上那一排科別標記是橫捲的（≤720 時 .chips 自己是捲動列）。
+   開頁時**目前這一科**可能排在右邊、整顆在畫面外 —— 讀者第一眼看不到
+   自己在哪一科（兒童牙科排第四顆就已經看不到了）。
+   ⚠ 只動那一列自己的 scrollLeft，**不要用 scrollIntoView** —— 那會連整頁
+     一起捲，著陸頁的 h1 會被推到畫面外。
+   ⚠ 沒有 JS 也不會壞：那一排本來就捲得動，只是要自己滑。 */
+(function () {
+  var row = document.querySelector('#topics .chips');
+  var cur = row && row.querySelector('[aria-current="page"]');
+  if (!row || !cur) return;
+  function bring() {
+    if (row.scrollWidth <= row.clientWidth + 1) return;   /* 排得下就不必動 */
+    var li = cur.parentNode;
+    /* 左邊留一顆的餘裕，讓人看得出「左邊還有」，而不是貼齊邊緣。 */
+    var pad = Math.min(48, row.clientWidth * 0.12);
+    var want = li.offsetLeft - pad;
+    var max = row.scrollWidth - row.clientWidth;
+    row.scrollLeft = Math.max(0, Math.min(want, max));
+  }
+  bring();
+  addEventListener('load', bring);
 })();
 </script>
 </body>
