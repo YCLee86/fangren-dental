@@ -1127,6 +1127,99 @@ untextured single-tone clothing; bare empty rooms with nothing in them.
 
 ---
 
+## 九、〈牙齒矯正〉那一張（2026-08-19，進行中）—— 六條修改規格
+
+⚠ **圖是另一台在做的**（文章在 `preview/ortho-article/`，HERO 目前還是佔位框）。
+這一節是使用者 2026-08-19 對某一版的六點回饋，**已經翻成可以直接貼進提示詞的段落**。
+每一段都對應一個他指名的問題，不要當模板照抄，要知道它在擋什麼。
+
+### 1. 背景密度要取「中間值」
+
+使用者：「前一版是周圍都沒有人、沒有其他東西，這一版是周圍人很多東西很多，
+**我覺得要取一個中間值**。」——傳統矯正那一格的人物比例因此被背景壓小了。
+
+```
+CROWD DENSITY — the street behind them sits between empty and busy: at most ONE small
+group of three people and ONE parked scooter in the middle distance, plus one scooter on
+the road. Nothing else — no food stall with customers, no queue, no second row of
+pedestrians. The friends in the foreground own at least the lower two thirds of the panel;
+every background figure is drawn smaller, with fewer lines and lighter colour, and none of
+them overlaps a friend's head.
+AVOID: a crowded market street; more than four background figures; background figures as
+large or as detailed as the friends.
+```
+
+### 2. ⚠⚠ 橡皮筋畫錯了 —— 它在**嘴巴裡**
+
+那一版的橡皮筋跑到嘴外，使用者：「好像臉上掛著什麼麵條還是口水，很奇怪。」
+他傳了實拍照當依據：上下顎都有金屬矯正器，橡皮筋**掛在上排後牙的鉤子上、
+往前下方拉到下排前側的鉤子**，兩側各一條，在張開的嘴裡看得到。
+
+```
+THE ELASTICS ARE INSIDE THE MOUTH. Each elastic is a short thin band stretched INSIDE the
+open mouth: it hooks onto a bracket on an UPPER BACK tooth and runs down and forward to a
+bracket on a LOWER FRONT-SIDE tooth, one on each side, following the curve of the arch.
+Both ends are attached to teeth and the band is straight and taut. If the lower teeth are
+hidden behind the lower lip, draw the band disappearing behind the lower lip near the
+corner of the mouth and let a hint of the lower front teeth show, so it is clear the band
+ends on teeth.
+AVOID: any band on the lips, cheeks, chin or anywhere outside the mouth; a band hanging
+loose like a noodle or a strand of saliva; a band across the tongue; headgear straps;
+a band looped around the face.
+```
+
+### 3. 人物要是華人／亞洲面孔
+
+使用者：「隱形矯正這個人是黑人，**我們是台灣、亞洲地區，還是要華人的樣子**。」
+
+```
+PEOPLE — everyone in every panel is East Asian (Taiwanese), black or dark brown hair. The
+young man in the aligner panels is the SAME East Asian man in both the restaurant and the
+bedroom, same face, same hair, same clothes colour family.
+AVOID: a Black or white character; the main character's face or skin tone changing between
+panels.
+```
+
+### 4. 表情：自然、溫和，而且屬於那個場合
+
+使用者：「你現在畫這個人眼睛瞇瞇的，好像在做自己的事，**看起來有點不高興、有點詭異**，
+跟這個環境沒有很融入」「吃飯或睡覺那個點看起來都不是很開心、很臭 ——
+**跟我們網站呈現的風格蠻不一樣的**。」要的是「慢慢地微笑，把自己的隱形矯正器收起來」。
+
+```
+His expression is calm and softly smiling, eyes open and relaxed. He glances down at the
+aligner case in his hands for just a moment while the meal goes on around him; his
+shoulders and body are turned towards the table so he is plainly part of the group. In the
+bedroom panel his sleeping face is peaceful and softened, mouth closed, brows relaxed.
+AVOID: squinting or narrowed eyes; a frown, grimace, sour or unhappy face; a secretive
+expression; turning away from the table as if hiding something; a tense sleeping face.
+```
+
+### 5. 餐廳那一格的比例**不要動**
+
+使用者：「這個餐廳的人的比例、環境周圍的比例還不錯，還可以。」——**保留。**
+
+### 6. 睡覺那一格：房間要收，讓盒子看得見
+
+使用者：「房間整個比例太（多），反而會看不清楚床頭櫃的隱形矯正器盒子，
+**周遭的描繪可以再少一點，才會聚焦在盒子上**。」
+⚠ 注意這一條和〈擴張牙弓〉那張的臥室**方向相反**（那一張是刻意堆到「像有人住」），
+因為那一格的主角是睡著的孩子，這一格的主角是**桌上那個盒子**。
+
+```
+BEDROOM — keep the room simple: bed, bedside table, one small warm lamp, one window with
+night sky. Nothing else on the walls or shelves — no plant, no framed picture, no books,
+no patterned rug, no mug, no chair with clothes on it. The clear aligner case sits open on
+the bedside table catching the lamp light, drawn LARGER than any other object in the panel
+and placed nearest the viewer; after his sleeping face it is the brightest thing here.
+AVOID: a decorated or cluttered bedroom; more props than bed, table, lamp and window; the
+case small, dark, tilted away or half hidden behind other objects.
+```
+
+> **這一輪學到的一句話**：同一張圖裡，**每一格的背景密度要各自決定** ——
+> 密度是用來把視線推向那一格的主角的，不是整張圖統一的風格參數。
+> 街上那一格要「有人但不吵」，臥室那一格要「幾乎沒有東西」。
+
 ## 附：那十二組的圖是怎麼看的
 
 2026-08-15 用瀏覽器逐頁把 `project_modules` 底下的圖檔位址抓出來、下載到暫存資料夾再讀圖。
