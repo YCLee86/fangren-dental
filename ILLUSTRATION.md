@@ -1202,6 +1202,15 @@ node tools/gemini-image.mjs prompts/perio.txt --ref assets/hero-arch-photo-1600.
 - `aistudio.google.com`（網頁介面）在雲端 session 裡是**被網路政策擋掉的**，
   但 `generativelanguage.googleapis.com`（API）**通**。所以只有這條路走得通，
   不要試著去驅動網頁版。
+- ⚠⚠ **免費層完全不含產圖**（2026-08-19 實測）。七個產圖模型逐一試過，回的都是
+  `limit: 0`（不是「今天用完了」，是這個層級對產圖的額度本來就是零）：
+
+      Quota exceeded for metric: …/generate_content_free_tier_requests, limit: 0
+
+  **同一支金鑰的文字模型是通的**（`gemini-3.6-flash` 正常回應），所以看到這個錯誤
+  不要以為金鑰壞了或 `--check` 說謊 —— `--check` 打的是列模型那支免費端點，
+  它會過。**要真的產圖，那個 Google Cloud 專案得開啟帳單。**
+  ⚠ 順帶一筆：`gemini-2.5-flash`（文字）已經對新使用者下架，改叫 `gemini-3.6-flash`。
 - 免費層有每日配額，用完會回 `RESOURCE_EXHAUSTED`，腳本會直接講白。
 
 ---
