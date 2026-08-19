@@ -4633,7 +4633,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
           <p class="tp-step"><b>不再掉</b>補不住的就換個做法，讓它撐到換牙。</p>
           <p class="tp-step"><b>留位置</b>乳牙留不住，先幫恆牙留著位置。</p>
           <p class="tp-step"><b>先試過</b>能配合多少先試，不行才談舒眠。</p>
-          <p class="tp-close">孩子願意來、牙齒撐得住，其他我們一起來努力。</p>
+          <p class="tp-close">孩子願意來、牙齒撐得住，其他的我們一起來努力。</p>
         </div>
       </div>
 
@@ -6768,7 +6768,14 @@ body[data-topic] #topics { padding-top: 1rem; }
    順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
    文字在 tools/topic-copy.mjs，寫作規則在 COPY.md 第九節。
    ========================================================================== */
-.tp-intro { margin: .9rem 0 0; max-width: 46rem; }
+/* ⚠⚠ 行距 2026-08-19：介紹區從站上內文的 1.85 收到 **1.72**。
+   使用者要把收尾那句的「的」加回來（「唸起來比較順」），而那一句在他的手機上
+   會折成兩行、整塊多 30px 掉出一屏 —— 他選擇**用行距換回那個空間**。
+   ⚠ **只有這一塊**（`.tp-intro` 底下那幾個 tp-* 段落）收，文章卡、醫師卡、
+     門診表與全站 body 的 1.85 **一個字都沒動** —— COPY.md 第九之六節那條
+     「行高跟著站上的 1.85」講的是整站的節奏，不是這一塊的例外。
+   ⚠ 要調回去只改這一個變數。 */
+.tp-intro { margin: .9rem 0 0; max-width: 46rem; --tp-lh: 1.72; }
 .tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
 
 /* 3-1「2 位醫師・2 篇文章」。
@@ -6799,11 +6806,11 @@ body[data-topic] #topics { padding-top: 1rem; }
 /* 3-1b 開場句（lead）：排在三個處境**之前**，是「我們」的聲音，所以用墨。
    ⚠ 有 lead 的科就不要再寫 stance（規則見產生器檔頭）——
      一頁只需要一句要被記住的話，講兩次就兩句都不會被記住。 */
-.tp-lead { margin: 0 0 .6rem; font-size: 1rem; line-height: 1.85; color: var(--ink); }
+.tp-lead { margin: 0 0 .55rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
 .tp-lead strong { color: var(--accent-deep); font-weight: 700; }
 
 .tp-case {
-  margin: 0 0 .22rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
+  margin: 0 0 .2rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink-soft);
   padding-left: .85rem; border-left: 2px solid var(--rule);
 }
 /* ⚠ 段距 2026-08-18 兩輪收到 .22rem（.7 → .42 → .34 → .22）——
@@ -6812,14 +6819,14 @@ body[data-topic] #topics { padding-top: 1rem; }
      ⚠ 這三句現在是**同一個人心裡的三句話**（都是自問），收緊才連得起來。 */
 /* ⚠ 字級 2026-08-18 從 1.02rem 收回 1rem（＝內文）：放大只換到「大一點點」，
      卻讓每行少一個字、整句多一行。這一句的重量已經由顏色與粗體給了。 */
-.tp-stance { margin: .6rem 0 .65rem; font-size: 1rem; line-height: 1.85; color: var(--ink); }
+.tp-stance { margin: .6rem 0 .65rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
 .tp-stance strong { color: var(--accent-deep); font-weight: 700; }
 
 /* 3-2a 每一組現場後面那句回應（groups 模式）。和 .tp-stance 同一個聲音，
    但上下距要小 —— 它緊跟著自己那一組，不是整段的結論。
    ⚠ 兩組之間靠這一句隔開就夠了，**不要再加線或標題**。 */
 .tp-reply {
-  margin: .3rem 0 .7rem; font-size: 1rem; line-height: 1.85; color: var(--ink);
+  margin: .28rem 0 .62rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink);
 }
 .tp-reply:last-of-type { margin-bottom: .2rem; }
 .tp-reply strong { color: var(--accent-deep); font-weight: 700; }
@@ -6830,14 +6837,14 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠ 不加項目符號、不加框：加了就變成一張流程表／表單，和被否決的那張
      問答卡是同一個毛病（COPY.md 第九之九節）。 */
 .tp-step {
-  margin: 0 0 .12rem; font-size: 1rem; line-height: 1.85; color: var(--ink-soft);
+  margin: 0 0 .1rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink-soft);
 }
 .tp-step b {
   color: var(--accent-deep); font-weight: 700;
   margin-right: .55em;
 }
 /* 收尾那一句是「我們」，回到墨色 —— 和上面那句回應同一個聲音。 */
-.tp-close { margin: .38rem 0 0; font-size: 1rem; line-height: 1.85; color: var(--ink); }
+.tp-close { margin: .35rem 0 0; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
 
 /* 3-3「第一次來，大概是這樣」。
    ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明；
