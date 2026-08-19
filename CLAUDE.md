@@ -551,6 +551,21 @@ tools/
    `5390136` 是 `preview/` 還在的最後一個 commit。每一頁的 `history/` 存檔上面
    都寫著這行指令。
 
+### ⚠ 2026-08-19：新的提案頁上線後在正式站 404（狀況記錄）
+
+`preview/topic-general/` 推進 `main` 之後 42 分鐘，`https://fangren.net/preview/topic-general/`
+仍然回站內的 404 頁。**查過的地方都正常**，所以問題只可能在 Cloudflare 那一次建置：
+
+- 檔案在 repo 也在 `main`（`git ls-tree origin/main preview/` 看得到）
+- 本機 `node tools/build.mjs && node tools/dist.mjs` 跑完，`_site/preview/` 底下
+  六個資料夾都在（含 `topic-general`），179 個檔案
+- `tools/dist.mjs` 的 `OPTIONAL` 有 `preview`
+- `src/worker.js` 對 `/preview/*` **沒有任何白名單**，只是把 ASSETS 的 404 轉成 404 頁
+
+**判斷是哪一種的最快方法**：開另一頁已經上線的提案頁，看它是不是最新的文字 ——
+如果連舊頁的最新修改都沒上去，就是**整條建置卡住**，不是單一檔案的問題。
+雲端 session 連不出去（`curl` 回 000），Cloudflare 後台的部署紀錄只有使用者打得開。
+
 ### 網址
 
 | | |
