@@ -137,6 +137,15 @@ body[data-topic] #topics { padding-top: 1rem; }
 .tp-stance { margin: .6rem 0 .65rem; font-size: 1rem; line-height: 1.85; color: var(--ink); }
 .tp-stance strong { color: var(--accent-deep); font-weight: 700; }
 
+/* 3-2a 每一組現場後面那句回應（groups 模式）。和 .tp-stance 同一個聲音，
+   但上下距要小 —— 它緊跟著自己那一組，不是整段的結論。
+   ⚠ 兩組之間靠這一句隔開就夠了，**不要再加線或標題**。 */
+.tp-reply {
+  margin: .3rem 0 .7rem; font-size: 1rem; line-height: 1.85; color: var(--ink);
+}
+.tp-reply:last-of-type { margin-bottom: .2rem; }
+.tp-reply strong { color: var(--accent-deep); font-weight: 700; }
+
 /* 3-2b 流程：一步一行。標籤是那一科的深階色，內容維持柔墨。
    ⚠ 標籤與內容**不做成兩欄 grid** —— 欄一開，內容能用的寬度就少掉 50px，
      18 個字的句子會開始折行，等於為了對齊多賠一行。用一個全形空格分開就好。

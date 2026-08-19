@@ -4596,6 +4596,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
            走到這個版面經過使用者七輪修正，推導寫在 COPY.md 第九節。
            順序：h1 → 幾位醫師幾篇文章 →〔開場句 lead〕→ 三個處境 →〔一句回應 stance〕
            → 流程（標題在 topic-copy.mjs 的 flowTitle）→ 收尾。
+           ⚠⚠ 第三種節奏（2026-08-19，兒牙用的）：**groups** ——
+             把現場分成兩組，**每一組後面各接一句回應**（一組 cases ＋ 一個 reply）。
+             適合「這一科其實有兩種很不一樣的人」的時候：
+             兒牙是「沒喊痛但怪怪的」與「已經很痛又不肯配合」。
+             ⚠ 用 groups 就不要再寫 lead —— 兩種都想收的那一句話會寫成
+               「苦的香的我們都有賣」（使用者的原話），那是攤販不是診所。
+             ⚠⚠ 這一段註解裡**不要出現反引號** —— 它在模板字串裡面
+               （CLAUDE.md 第八節那個坑，hero-line3 那一輪踩過）。
            ⚠⚠ **lead 與 stance 是兩種節奏，一科只挑一種**（2026-08-19）：
              ・stance 在後 ＝ 先讓他對號入座，再一句話回完（牙周）。
              ・lead 在前 ＝ 先把最重要的那句話講掉，再舉例（兒牙：家長最想聽的
@@ -4614,7 +4622,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         <p class="tp-case">從小就這樣，早就習慣了，只有拍照時想遮。</p>
         <p class="tp-case">想過很多次也放下很多次，說法都不一樣。</p>
         <p class="tp-case">覺得年紀已經過了，矯正是小孩子的事。</p>
-        <p class="tp-stance">這三種我們都常遇到。<strong>不整齊不只是好看，年紀也不是門檻</strong> —— 但要看過才說得準。</p>
+        <p class="tp-reply">這三種我們都常遇到。<strong>不整齊不只是好看，年紀也不是門檻</strong> —— 但要看過才說得準。</p>
 
         <div class="tp-first">
           <p class="tp-first-h">從檢查到維持器，大概會這樣走</p>
@@ -6775,6 +6783,15 @@ body[data-topic] #topics { padding-top: 1rem; }
      卻讓每行少一個字、整句多一行。這一句的重量已經由顏色與粗體給了。 */
 .tp-stance { margin: .6rem 0 .65rem; font-size: 1rem; line-height: 1.85; color: var(--ink); }
 .tp-stance strong { color: var(--accent-deep); font-weight: 700; }
+
+/* 3-2a 每一組現場後面那句回應（groups 模式）。和 .tp-stance 同一個聲音，
+   但上下距要小 —— 它緊跟著自己那一組，不是整段的結論。
+   ⚠ 兩組之間靠這一句隔開就夠了，**不要再加線或標題**。 */
+.tp-reply {
+  margin: .3rem 0 .7rem; font-size: 1rem; line-height: 1.85; color: var(--ink);
+}
+.tp-reply:last-of-type { margin-bottom: .2rem; }
+.tp-reply strong { color: var(--accent-deep); font-weight: 700; }
 
 /* 3-2b 流程：一步一行。標籤是那一科的深階色，內容維持柔墨。
    ⚠ 標籤與內容**不做成兩欄 grid** —— 欄一開，內容能用的寬度就少掉 50px，

@@ -145,6 +145,14 @@ const introBlock = (spec, t, cnt) => `
            走到這個版面經過使用者七輪修正，推導寫在 COPY.md 第九節。
            順序：h1 → 幾位醫師幾篇文章 →〔開場句 lead〕→ 三個處境 →〔一句回應 stance〕
            → 流程（標題在 topic-copy.mjs 的 flowTitle）→ 收尾。
+           ⚠⚠ 第三種節奏（2026-08-19，兒牙用的）：**groups** ——
+             把現場分成兩組，**每一組後面各接一句回應**（一組 cases ＋ 一個 reply）。
+             適合「這一科其實有兩種很不一樣的人」的時候：
+             兒牙是「沒喊痛但怪怪的」與「已經很痛又不肯配合」。
+             ⚠ 用 groups 就不要再寫 lead —— 兩種都想收的那一句話會寫成
+               「苦的香的我們都有賣」（使用者的原話），那是攤販不是診所。
+             ⚠⚠ 這一段註解裡**不要出現反引號** —— 它在模板字串裡面
+               （CLAUDE.md 第八節那個坑，hero-line3 那一輪踩過）。
            ⚠⚠ **lead 與 stance 是兩種節奏，一科只挑一種**（2026-08-19）：
              ・stance 在後 ＝ 先讓他對號入座，再一句話回完（牙周）。
              ・lead 在前 ＝ 先把最重要的那句話講掉，再舉例（兒牙：家長最想聽的
@@ -161,8 +169,13 @@ const introBlock = (spec, t, cnt) => `
         <h1>${t.h1}</h1>
         <p class="tp-count">${countLine(cnt.a, cnt.d)}</p>
 ${t.lead ? `        <p class="tp-lead">${todo(t.lead)}</p>\n` : ""}\
-${t.cases.map((x) => `        <p class="tp-case">${todo(x)}</p>`).join("\n")}
-${t.stance ? `        <p class="tp-stance">${todo(t.stance)}</p>\n` : ""}\
+${(t.groups || [{ cases: t.cases, reply: t.stance }])
+  .map(
+    (g) =>
+      g.cases.map((x) => `        <p class="tp-case">${todo(x)}</p>`).join("\n") +
+      (g.reply ? `\n        <p class="tp-reply">${todo(g.reply)}</p>` : "")
+  )
+  .join("\n")}
 
         <div class="tp-first">
           <p class="tp-first-h">${t.flowTitle}</p>
