@@ -1,6 +1,6 @@
 # Facebook 粉絲專頁橫幅：永樂街街景插畫（提示詞）
 
-> ⚠ **目前要用的是第十二節那一份（第七輪）**。第三／七／八／九／十／十一節是第一到六輪，留著看改了什麼。
+> ⚠ **目前要用的是第十三節那一份（第八輪）**。第三／七～十二節是第一到七輪，留著看改了什麼。
 
 用途：**Facebook 粉絲專頁的封面橫幅**（不是文章 HERO，所以不進 `assets/`、
 也不跑 `tools/hero-resize.mjs` —— 那支鎖死 2000×1116 的比例）。
@@ -1748,3 +1748,302 @@ steam or spirit-like lines; text of any kind.
     透出來的室內有沒有畫太細或長出設備。
 20. **樓上樓下那條線**：小孩有沒有抬頭揮手、媽媽有沒有跟著往上看 ——
     這一條沒有做到的話，樓上那兩位就只是背景裡的兩個人。
+
+
+---
+
+## 十三、第八輪（2026-08-20）—— 窗戶有玻璃，只有一個人探得出來
+
+### 1. ⚠⚠ 兩個人同時把頭伸出同一扇窗 —— 物理上不成立
+
+使用者：「二樓探頭有兩個人，窗戶應該有玻璃，另外一個人應該是沒辦法把頭探出來。」
+他說得完全正確：那是一扇**兩片橫拉窗**，推開一片，**另一片還是玻璃** ——
+第七輪那張圖兩個人各從一片探出來，等於那扇窗整個是空的、玻璃不見了。
+
+**改法（這是一條可以推廣的通則）：**
+
+> **「兩個人在同一個開口」要先問那個開口實際能過幾個人。**
+> 橫拉窗 ＝ 一半開、一半是玻璃 ＝ **只有一個人探得出來**。
+
+定案：
+・**助理**從**推開的那一半**探出來（手肘撐窗台、頭肩在窗外）；
+・**女醫師**站在**還關著的那片玻璃後面**，手貼著玻璃或窗框往下看，
+  **整個人都在室內、沒有任何部位穿過玻璃**；
+・那片玻璃要畫**兩三道斜的白色反光**，讓人一眼看出「她在玻璃後面」，
+  並且**把她畫得比探出來那位淡一點、柔一點**（隔著玻璃看的樣子）。
+
+⚠ 這一條同時解決一件事：**兩個人一前一後有了層次**，比兩顆頭並排好看。
+
+### 2. ⚠ 騎士的問題找到了 —— 是我自己的提示詞前後矛盾
+
+第七輪他還是被切掉。回頭看提示詞，**同一段裡我寫了兩件相反的事**：
+
+    in the NEAR FOREGROUND just below the kerb   ← 近景 ＝ 靠近觀者 ＝ 在畫面下方
+    HIS WHEELS SIT ONLY A LITTLE BELOW THE SHOES ← 又要他貼著人行道
+
+模型當然照前面那句畫。**「近景」這個詞是罪魁禍首**，第八輪整個拿掉，
+改成**貼著緣石的那條車道**：
+
+> 他騎在**最靠近人行道的那條車道上，緊貼緣石** ——
+> 輪子和緣石之間的距離**不到一個輪子寬**。他不在路中央，也不在近景。
+> **整張圖沒有任何東西比他的輪子更低。**
+
+⚠ 通則（第四次踩到同一格）：**提示詞裡不要同時出現兩個會互相打架的空間詞**。
+給位置就給一個系統：**要嘛全部用「貼著什麼」，要嘛全部用百分比，不要混。**
+
+### 提示詞（第八輪完整版，直接複製）
+
+⚠ 餵三張：`facade-yongle-ref.jpg`、`facade-side-ref.jpg`、**第七輪那張圖**
+（「畫風、街道、二樓與人物都對了，只改下面指出的兩件」）。
+
+```
+Editorial illustration for a wide banner, 16:9 landscape. A lively neighbourhood street in
+front of a real building — the street outside a small family dental clinic. THE BUILDING IS
+GIVEN IN THE ATTACHED PHOTOGRAPHS and must be followed closely; everything else — the
+people, the street life, the light — is invented around it.
+
+STYLE — READ THIS SECTION FIRST, IT MATTERS MORE THAN ANYTHING ELSE BELOW.
+Contemporary printed-magazine editorial illustration, clearly hand-drawn — never a
+photograph, never 3D, never a flat vector graphic. Linework in warm dark brown or soft
+charcoal, NEVER pure black: thin, hand-drawn, the weight visibly varies along each stroke,
+strokes taper and sometimes break. Colour applied like soft coloured pencil and light
+marker; flat fills with two or three tones per hue; no smooth decorative gradients — a
+gradient may only ever describe light. A fine even paper grain sits over every surface of
+the whole image. No wall, awning, garment or road is a flat single-tone shape: each carries
+visible pencil texture and two or three tones of its own colour.
+FACES ARE THE ONE EXCEPTION to the two-or-three-tones rule: skin is a single flat tone with
+NO shading, NO wrinkles, NO nasolabial lines, NO cheekbone or jaw modelling. On each face
+draw only six things — the outline of the head, the eyes, the eyebrows, a small nose, a
+simple line mouth, the ears. Everyone looks their own age and nobody looks old or tired.
+
+THE BUILDING — copy the attached photograph of the frontage: a Taiwanese street building
+seen almost straight on, flat elevation, no dramatic wide-angle perspective.
+  • ground floor: pale warm grey terrazzo / granite-chip render, with a slightly darker
+    plinth along the bottom and dark-framed square windows;
+  • second floor: panels of muted red brick set between pale grey concrete columns and a
+    deep beam, dark aluminium sliding windows, and one smaller window directly above the
+    entrance;
+  • THE ENTRANCE APPEARS ONLY ONCE IN THE WHOLE PICTURE: a single pair of tall doors in
+    warm reddish-brown wood with slim dark frames, standing OPEN, with soft warm light
+    spilling out onto the pavement. There is NO second wooden door anywhere — every other
+    doorway along the row is a narrow DARK METAL door;
+  • a boxy water heater and meter boxes on the left-hand wall, two round electricity meters
+    on the wall to the right of the entrance;
+  • a concrete pavement with a low kerb and one square drain grate, and asphalt road along
+    the bottom;
+  • this is a terraced row: the same facade repeats in the neighbouring units and runs off
+    both edges of the picture.
+THE BUILDING IS THREE STOREYS TALL, and the third floor is IDENTICAL to the second — the
+same red brick panels between the same concrete columns, the same dark aluminium windows.
+In this picture the THIRD FLOOR IS CUT OFF BY THE TOP EDGE OF THE FRAME: along the very top
+we see only the deep concrete beam beneath it and the lowest strip of that identical wall,
+so it is obvious the building carries on upward beyond the picture. Do NOT draw a roofline,
+a parapet, a steel roof canopy, a water tank or a complete third floor, and do NOT leave sky
+above the building: the facade fills the entire top edge.
+THERE ARE NO POWER LINES, NO CABLES AND NO WIRES ANYWHERE IN THIS PICTURE. The only lines
+crossing the air are the white hand-drawn ones described below.
+
+THE SECOND FLOOR IS ALIVE, NOT A ROW OF DARK PANES. Most of the upstairs windows still read
+as dark glass, but THREE of them show a hint of the rooms behind: one has a pale curtain
+half drawn, one has a small potted plant standing on the sill, and one glows with soft warm
+lamplight. Only a hint — never a detailed interior, no furniture drawn in perspective, no
+equipment, no writing on anything.
+ONE UPSTAIRS WINDOW HAS BEEN SLID OPEN — the window DIRECTLY ABOVE THE OPEN DOORWAY, so the
+two floors line up. IT IS AN ORDINARY TWO-PANEL HORIZONTAL SLIDING WINDOW, SO ONLY ONE HALF
+IS AN OPENING: that half is a clear rectangular gap with nothing in it, and THE OTHER HALF IS
+STILL A CLOSED GLAZED PANEL WITH GLASS IN IT.
+  • ONLY ONE PERSON LEANS OUT, and only through the open half: a DENTAL ASSISTANT of about
+    30 in PALE SAND-YELLOW scrubs (#d7cab7, shaded with #b8ab99), both forearms resting on
+    the sill, head and shoulders outside the window, smiling and waving DOWN at the street;
+  • THE SECOND PERSON STAYS INSIDE, BEHIND THE CLOSED GLASS: a WOMAN DENTIST of about 45 in
+    an open WHITE COAT (pale rose scrubs beneath it) stands at the closed half with one hand
+    flat against the glass, looking down at the street and smiling. Her head, shoulders and
+    arms are ALL behind the pane — no part of her passes through the glass, and she is NOT
+    leaning out. Draw two or three soft diagonal white highlights across that pane so it
+    unmistakably reads as glass in front of her, and draw her a little paler and softer than
+    the assistant, the way someone looks through glass.
+Both are turned DOWNWARD towards the pavement — never facing the viewer, never posed like a
+portrait, never waving at us.
+AND THE STREET ANSWERS THEM: down at the doorway the five-year-old boy has stopped, turned
+his face UP towards the open window and is waving back with one arm high, and his mother has
+paused mid-step and is also looking up, smiling. This vertical line between the window and
+the child is the quiet centre of the picture.
+
+COMPOSITION — the open wooden doorway sits SLIGHTLY RIGHT OF CENTRE. This banner will be
+cropped along the top and the bottom, so:
+  • the TOP SEVENTH holds the cut-off third floor and nothing else that matters;
+  • the middle holds everything important: the open upstairs window and the two people at
+    it, the open door, every face, the whole of every person and every vehicle;
+  • THE LOWEST FIFTH OF THE IMAGE IS EMPTY ASPHALT ROAD — nothing in it but road surface and
+    soft shadows. THIS EMPTY BAND IS DELIBERATE; do not fill it, do not put anybody in it,
+    and do not enlarge the figures until they reach it;
+  • the LOWER LEFT CORNER, about one sixth of the width, stays quiet.
+
+STREET LIFE — the street is busy, colourful and cheerful, but easy to read. Everyone is East
+Asian (Taiwanese) with black or dark brown hair. Draw EXACTLY these people and nobody else.
+
+THE NEIGHBOURS:
+  • a man of about 45 RIDING A SCOOTER along the road, moving from left to right, roughly a
+    third of the way in from the left. HE RIDES IN THE LANE CLOSEST TO THE PAVEMENT, HUGGING
+    THE KERB: the gap between his wheels and the kerb is less than the width of one wheel.
+    He is NOT out in the middle of the road and NOT down in the foreground near the viewer.
+    He is drawn at THE SAME SCALE as the people standing on the pavement, and NOTHING IN THE
+    WHOLE PICTURE IS LOWER THAN HIS WHEELS. He and the whole scooter, both wheels included,
+    are completely inside the frame, seen from behind and slightly to the side. NEVER small,
+    NEVER drawn on or against the building wall, NEVER floating, NEVER cropped;
+  • at the doorway, a mother of about 35 and her five-year-old boy, both paused on the
+    doormat and looking UP at the open upstairs window as described above;
+  • a man of about 70 and a woman of about 65 a few steps to the left of the entrance, in
+    the middle of a HAPPY conversation — mouths open in easy laughter, eyes crinkled, one of
+    her hands raised as she talks, his head tipped back a little as he laughs. She holds a
+    cloth bag with spring onions in it; he keeps a hand on a parked bicycle;
+  • two schoolgirls of about twelve with backpacks walking briskly towards the right, one
+    wheeling a bicycle, both talking and smiling;
+  • a woman of about 28 with a small paper bag, who has stopped left of centre and bent
+    slightly forward, smiling down at the little dog;
+  • at the right-hand side, a young mother walking hand in hand with a toddler towards the
+    doorway;
+  • a shopkeeper of about 50 at the far left edge, half cut off by the frame, watering potted
+    plants outside her own doorway;
+  • a small short-haired dog on the pavement near the bicycles, tail wagging.
+
+THE CLINIC PEOPLE ON THE STREET — SIX more of the people down on this street work at the
+clinic (eight altogether, counting the two at the window). THE WHOLE POINT IS THAT THEY ARE
+PART OF THE NEIGHBOURHOOD, NOT A STAFF GROUP: five of the six are busy with a NEIGHBOUR, and
+only ONE pair of colleagues walks together. They are spread right across the width of the
+picture, never gathered, never in a row, never posed, never facing the viewer. They wear
+SCRUBS — a simple short-sleeved V-neck top and matching trousers — and TWO of the six wear
+an open, knee-length WHITE COAT over the scrubs. Nobody wears a mask, nobody wears gloves,
+nobody carries any instrument.
+  • A WOMAN DENTIST of about 40 with a short neat bob, in PALE BLUE scrubs (#b7c6d7, shaded
+    with #99a7b8) under an OPEN WHITE COAT. She stands on the pavement immediately to the
+    LEFT of the open doorway, turned three-quarters away from us towards the elderly couple,
+    laughing along with their conversation, one hand resting lightly on the door frame;
+  • A MAN DENTIST of about 35 in PALE GREEN scrubs (#b7d7c0, shaded with #99b8a2) under an
+    OPEN WHITE COAT, walking back towards the clinic along the pavement from the right, a
+    lidded drink cup in one hand, talking to the assistant beside him — this is the one pair
+    of colleagues;
+  • A DENTAL ASSISTANT of about 28 in PALE YELLOW scrubs (#d7d2b7, shaded with #b8b399), no
+    coat, walking beside him and laughing at what he is saying;
+  • A DENTAL ASSISTANT of about 30 in PALE ROSE scrubs (#d7b7b7, shaded with #b89999), no
+    coat, crouched down on the pavement left of centre with one hand out to the little dog,
+    while the neighbour with the paper bag stands over them both, smiling at the dog too;
+  • A DENTAL ASSISTANT of about 26 in PALE TEAL scrubs (#b7d7d5, shaded with #99b8b6), no
+    coat, standing under the striped awning at the far left, chatting with the shopkeeper as
+    she waters her plants, one hand in a pocket;
+  • A MALE DENTAL ASSISTANT of about 45 in PALE VIOLET scrubs (#d1b7d7, shaded with #b299b8),
+    no coat, at the kerb left of centre where he has just parked his own scooter, straight-
+    ening up and raising one hand to greet the man riding past.
+The white coats are a soft warm off-white, softly shaded, never glaring white, and completely
+PLAIN — no badge, no name tag, no embroidery, no logo, no writing of any kind. All the scrub
+colours are different from each other and from the neighbours' clothes.
+Nobody looks at the viewer. Nobody is a dark silhouette. Nobody is mocking or arguing. NO
+figure is taller than half the height of the image. Keep the men and women roughly balanced.
+
+PROPS along the street: at the far left, over the neighbour's doorway, a STRIPED plastic
+awning in green and cream; two parked scooters angled to the kerb at the left edge, one with
+a brightly coloured helmet hooked on its mirror — helmets hang there and nowhere else; one
+bicycle leaning by the wall; seven or eight potted plants of different sizes by the doorways,
+two or three FLOWERING in warm pink and orange; a small folding stool; a rolled hose; a stack
+of plastic crates in red, blue and green. They all sit on the pavement above the kerb line,
+never cover a face, and never enter the empty bottom band.
+
+MOOD — an ordinary weekday afternoon in a small town where people know each other, and the
+clinic is simply one of the doors on the street. Warm, busy, unhurried, neighbourly, and
+just a little noisy in a good way.
+
+WHITE HAND-DRAWN LINES — these are the life of the picture and there should be PLENTY of
+them, all in the same white chalky hand-drawn line sitting on top of the colour, solid where
+they begin and thinning into dry chalk flecks. Two kinds, different rules.
+(A) LONG ATMOSPHERE ARCS — FIVE TO SEVEN long shallow arcs of moving air sweeping right
+across the picture at three different heights: two or three high across the third-floor
+strip, two across the second floor, one or two lower down passing over the heads of the
+people. They vary in length and weight; some run almost the full width, some are short, some
+break into a dashed run of flecks. They travel the same general direction, never cross, never
+loop, never close into a shape, and never read as smoke, steam or a spirit. None of them
+crosses the open upstairs window or the two people at it.
+(B) SMALL MOTION AND SOUND MARKS — the light shorthand a comic uses for movement and
+cheerful noise, at exactly these points:
+  • beside the waving assistant at the open half of the upstairs window: a small cluster of
+    short radiating strokes and two or three tiny curved ticks, floating just outside the
+    window;
+  • beside the boy's raised hand below, a matching but smaller cluster, so the two answer
+    each other;
+  • floating in the air BETWEEN the heads of the laughing elderly couple and the woman
+    dentist beside them: another small cluster;
+  • a smaller cluster between the walking dentist and the assistant beside him;
+  • a small one between the teal-scrub assistant and the shopkeeper under the awning;
+  • a couple of short strokes by the raised hand of the man greeting the rider;
+  • behind the moving scooter: four or five short straight parallel speed lines;
+  • a few short curved strokes fanning off the rider's shoulders, none longer than his head;
+  • behind the two schoolgirls: two short curved motion lines at shoulder height;
+  • at the spokes of the wheeled bicycle: three tiny arcs showing it turning;
+  • at the dog's tail: two small arcs showing it wagging;
+  • from the shopkeeper's watering can: a short group of parallel strokes for the water;
+  • around the open doorway: a few short strokes radiating outward from the warm light.
+Every mark in group (B) is small and thin, none longer than one head width, and none of them
+touches or comes out of anyone's mouth or nose.
+NO speech balloons, NO thought bubbles, NO written sound effects or onomatopoeia, NO letters
+or symbols, NO stars, hearts, musical notes or exclamation marks, and NO large radiating
+"impact" burst. This is an editorial illustration borrowing a little comic shorthand — it
+must not turn into a comic panel.
+
+LIGHT AND COLOUR — bright mid-to-late AFTERNOON DAYLIGHT, unmistakably daytime and airy.
+NOT sunset, NOT dusk, NOT night, no lamplight over the street, no long orange shadows, no
+orange or amber cast over the whole image, no neon. Soft short shadows under the people and
+the scooters. The warm accents are the light from the open doorway and the one glowing
+upstairs window.
+The picture should feel COLOURFUL and lively, not dusty: most colour areas sit around HSL
+saturation 30–50 with lightness 70–85, and clearly more than half of the picture is
+genuinely coloured rather than neutral grey. No sky is visible here, so the colour has to
+come from the building, the people and the street clutter. At least EIGHT clearly different
+colours must be visible: muted brick red on the brick panels; warm pale grey on the render;
+warm reddish-brown on the wooden doors; deep warm charcoal on the window frames and the
+narrow metal side doors; cool pale blue-grey in the window glass; green and cream stripes on
+the awning; red, blue and green on the plastic crates; warm pink and orange on the flowering
+plants; the clinic people in the pale scrub colours given above; and the neighbours in dusty
+rose, pale butter yellow, soft powder blue, sage green, muted clay and warm grey — no two
+people side by side in the same hue.
+A muted forest green (#3f654a) appears ONLY as small accents: the doormat at the entrance,
+the small plaque beside the door, and one plant pot. Do NOT tint the whole image green, no
+bright emerald, no green skin or green road.
+
+THE PLAQUE — the small rectangular plaque on the wall beside the entrance is COMPLETELY
+BLANK: a plain panel with no letters, no numbers, no symbols and no logo.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos, shop
+signs, banners, posters, stickers, captions, sound effects, name badges or watermarks, in any
+language. The plaque beside the door is blank; the white coats are blank; the awning and any
+signboard or shutter is blank; scooters and bicycles carry NO number plates and no badges;
+the crates, bags, drink cups and packaging are blank; the schoolbags carry no printing; there
+are no street signs, no house numbers, no notices taped to the wall. Where writing would
+normally appear, leave the surface plain.
+
+AVOID — two people leaning out of the same window; anybody's head, shoulder or arm passing
+through a closed pane of glass; an upstairs window drawn with no glass in it at all; an
+upstairs floor of identical dark empty windows with nobody in them; the people at the window
+facing the viewer, waving at us, or drawn as a posed portrait; a detailed interior or any
+equipment visible through the windows; clinic staff gathered together, lined up, posing, or
+standing apart from the neighbours as a group; more than one pair of colleagues side by side;
+fewer than six people in scrubs on the street; surgical masks, gloves, or any dental
+instrument, tooth model, giant tooth or medical diagram anywhere in the picture; name badges,
+embroidery or writing on the coats; power lines, cables, wires or utility poles; a second
+wooden door or more than one entrance; the scooter rider drawn small, drawn against the
+building wall, floating, cut off by the frame, placed in the middle of the road, or pushed
+down into the foreground at the bottom of the picture; anything standing in the empty bottom
+band of road; feet, wheels or plant pots cut off by the bottom edge; greyscale or a
+single-colour image; photorealism or a 3D render; thick uniform black outlines; flat
+untextured vector shapes; faceless people, noodle limbs, oversized heads or exaggerated
+cartoon proportions; anyone looking at the viewer; a large backlit figure or silhouette; a
+crowd, a queue, a market with stalls, or more people than the ones listed; a complete third
+floor, a roofline, a parapet, a steel roof canopy, a rooftop water tank or sky above the
+building; speech balloons, thought bubbles, written sound effects, stars, hearts or impact
+bursts; comic panel borders; blood, pain, illness or distress; sunset, night, neon, heavy
+shadow; rain; a Western or European street; wrinkles and heavy facial shading; smoke, steam
+or spirit-like lines; text of any kind.
+```
+
+### 第四節的檢查清單再多一項
+
+21. **窗**：關著那一片是不是還看得到玻璃（有沒有反光）、裡面那位有沒有任何部位
+    穿過玻璃、兩位是不是一前一後而不是兩顆頭並排。
