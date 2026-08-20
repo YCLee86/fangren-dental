@@ -106,6 +106,26 @@ git add -A && git commit -m "..." && git push
 push 到 `main` 之後 Cloudflare 會自動建置部署，幾分鐘內上線。
 **不需要**手動跑 `wrangler deploy`，也不需要 Cloudflare token。
 
+> ## ⚠⚠ 2026-08-20：**推工作分支也會上線**（原本以為只建置 `main`）
+>
+> 使用者在手機上看到 fangren.net 的**首頁**出現一篇還沒寫完的文章卡片、HERO 是破圖：
+> 「這邊還沒寫好誒怎麼被推上線的趕快拿下來」。
+> 查過的地方全部正常 —— `origin/main` 沒有那個 `posts/` 資料夾、`index.html` 裡沒有那張卡、
+> `allowed-slugs` 也沒有那個 slug；推上 `main` 的只有 `preview/` 一個檔
+> （每次都用 `git diff --stat origin/main HEAD` 確認過）。
+> **所以那張卡只可能來自工作分支的建置。** 容器連不出去（`curl` 回 000），
+> 無法直接驗證線上內容；Cloudflare 後台的建置設定只有使用者打得開。
+>
+> **在確認之前，一律照這個做：**
+>
+> - **沒定案的文章草稿放 `drafts/`，不要放 `posts/`。**
+>   `tools/dist.mjs` 的 `ALWAYS`／`OPTIONAL` 都沒有 `drafts`，所以它進不了 `_site`；
+>   `build.mjs` 也掃不到（只掃 `posts/*/`），首頁卡、sitemap、allowed-slugs、
+>   延伸閱讀全都不會冒出來。定案那天再 `git mv` 回 `posts/<slug>/index.html`。
+> - **推分支之前先確認建置產物**：
+>   `git diff origin/main -- . ':!drafts' ':!preview'` 應該是空的。
+> - 提案頁不受影響（`preview/` 本來就有三道 noindex，而且是刻意要讓使用者看的）。
+
 因為 `index.html` 和 `tools/build-manifest.json` 是 build 產物，兩人同時改必然衝突 —
 所以「改完 → build → 立刻 push」，不要累積一堆本機 commit。
 
@@ -219,6 +239,9 @@ posts/<slug>/index.html 一篇文章一個資料夾
 history/<name>.html     改版紀錄（原提案頁的推導文字，定案後只留這個。見第八節）
 history/index.html      改版紀錄的目錄
 preview/<name>/index.html  進行中的提案頁；定案上線後刪掉、文字搬進 history/
+drafts/                 **還沒定案的草稿**（文章、提示詞、參考圖）。不會進 _site，
+                        build.mjs 也掃不到 —— 見第二節那個 2026-08-20 的警告。
+                        定案那天用 git mv 搬進 posts/<slug>/index.html
 tools/
   build.mjs             產生首頁卡片、更新日期、排序、sitemap、allowed-slugs、結構化資料
   schema.mjs            JSON-LD 產生器（被 build.mjs 匯入，不單獨執行）。
@@ -235,6 +258,10 @@ tools/
                         只有改過 favicon 的顏色或幾何時才要跑，npm run build 不會呼叫它
   app-icons.mjs         從 assets/icon.svg 產生 assets/icon-*.png（主畫面圖示）。
                         同上，只有改過 icon.svg 才要跑；--check 只比對不寫檔
+  hero-resize.mjs       文章 HERO 的原檔 → assets/hero-<name>-{2000,1600,800}.jpg
+                        （Chromium canvas、JPEG 0.82）。出圖前擋兩件：四邊有沒有烘進去的
+                        白框、長寬比對不對得上 2000×1116。⚠ 對話裡貼的圖落在
+                        /root/.claude/uploads/<session-id>/，不在 /tmp
   logo-png.mjs          從 index.html 頁首的標誌路徑產生 assets/logo.png
                         （給 Google 的 Organization logo，**站上不顯示**）。
                         只有改過頁首那條路徑或要換顏色時才要跑；--check 只比對
@@ -529,6 +556,20 @@ tools/
 > ・**提案期間「只把提案頁推上 `main`」那條可以連資產一起推**：這一輪 `main` 上先後
 >   只有 `preview/ortho-article/` 與三張 HERO 圖，`posts/orthodontics/` 一直留在分支上，
 >   所以定案之前首頁的文章列表都還是八張卡。
+
+> **2026-08-20：`bioceramic-article`（〈根管治療的生物陶瓷〉的文章預覽）定案上線並刪除**，
+> 文字在 `/history/bioceramic-article.html`，成品是 `/posts/bioceramic/`
+> （顯微根管，站上第十篇 —— **那一科原本零篇文章**）。
+> 和 `ortho-article`、`perio-laser` 同一種：**文章草稿的預覽，不是設計提案**。
+> 這一輪多出三件值得記的：
+> ・⚠⚠ **中途分支的建置跑到正式站的首頁上了**（見第二節那個警告）。
+>   處理方式是草稿改放 `drafts/`，定案才搬回 `posts/` —— 下一篇照這個做。
+> ・**插畫十二輪，最後靠兩張參考圖收尾**：標誌與根管的形狀各自用文字描述失敗三到四輪，
+>   改成給圖之後一次就中。通則寫在 ILLUSTRATION.md 第十之一節：
+>   **形狀不要用文字描述，用參考圖。**
+> ・**縮圖固定成 `tools/hero-resize.mjs`**，不再每次臨時寫。
+>
+> **`preview/` 現在剩八頁**：`illustration-style/` 與七科的著陸頁 `topic-*`。
 
 ### 規則（要新開一個提案的時候照這個做）
 
