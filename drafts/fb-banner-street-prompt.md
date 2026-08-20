@@ -1,6 +1,6 @@
 # Facebook 粉絲專頁橫幅：永樂街街景插畫（提示詞）
 
-> ⚠ **目前要用的是第八節那一份（第三輪）**。第三節是第一輪、第七節是第二輪，留著看改了什麼。
+> ⚠ **目前要用的是第九節那一份（第四輪）**。第三／七／八節是第一到三輪，留著看改了什麼。
 
 用途：**Facebook 粉絲專頁的封面橫幅**（不是文章 HERO，所以不進 `assets/`、
 也不跑 `tools/hero-resize.mjs` —— 那支鎖死 2000×1116 的比例）。
@@ -667,3 +667,260 @@ and heavy facial shading; smoke, steam or spirit-like lines; text of any kind.
 11. **騎士**：整個人與整台車在不在畫面裡、離下緣夠不夠遠。
 12. **白線**：有沒有變成對話框／狀聲字／集中線；有沒有從嘴巴長出來；
     是不是仍然「小、細、安靜」——它是重音，不是主角。
+
+
+---
+
+## 九、第四輪（2026-08-20）—— 拿掉電線、騎士貼在牆上、白線再豐富
+
+第三輪的圖使用者三件回饋，另外我自己量到兩件。
+
+### 1. ⚠⚠ 騎機車那位「變得很小、跑到牆壁上」
+
+使用者：「騎機車的人變得很小，然後跑到牆壁上，好好笑，怎麼變這樣。」
+
+**成因是我自己寫的**：第二輪為了讓他不被下緣切掉，把他改成
+`in the MIDDLE DISTANCE towards the left and drawn small`。可是這張是**正面平立面**，
+**畫面裡根本沒有「遠方」可以放他** —— 街道沒有往裡面延伸的透視，唯一的「深處」就是牆。
+模型只好把他縮小貼在立面上。
+
+**改法：不要用「遠近」解決構圖問題，用「站的位置」。** 他回到**前景的路面上**、
+**和人行道上的人同一個大小**，輪子踩在柏油上、離下緣還有一段。
+⚠ 這一條是 ILLUSTRATION.md 第八節第 5 條那個教訓的近親：
+**指定不了的東西就換一種指定方式** —— 那次是左右手改成「靠近觀者那一邊」，
+這次是遠近改成「腳踩在哪」。
+
+### 2. 電線拿掉（使用者決定）
+
+使用者：「圖上有兩條黑色，那些是電線，那乾脆就不需要電線了。」
+第二輪把電線從天空移到立面前面，是因為天空沒有了、電線在照片上本來就橫過立面。
+既然拿掉，那條位置就整條讓給白線。
+
+### 3. ⚠ 白線要再豐富一點
+
+使用者：「黑線旁邊應該有白線、那個動感氛圍的樣子，那個白線可以再豐富一點試試看。」
+第三輪的白線只有兩三條長弧＋六個小記號，份量偏輕。第四輪拆成**兩層**並各自加量：
+
+| 層 | 第三輪 | 第四輪 |
+| --- | --- | --- |
+| 氛圍（長弧） | 2~3 條，只在上三分之一 | **5~7 條**，分三個高度（第三層那條帶、二樓、人的頭上），長短粗細各不同，可以斷成虛線 |
+| 動感與聲音（小記號） | 六個定點 | **九個定點**（多了澆花的水、腳踏車輪、機車騎士身後的氣流） |
+
+⚠ **兩層的規則不同，不要混在一起寫**（第十之六節）：長弧可以掃過整個畫面，
+但**不能從人身上長出來**；從人身上或物件上出來的（水、輪子、氣流）一律是**一群同向的短線**。
+⚠ **豐富 ≠ 變重**：線還是細的、白堊質、可以飛白，禁止項一條都沒有放寬
+（不要對話框、不要狀聲字、不要集中線爆點、不要星星愛心）。
+
+### 4. ⚠ 中間多了一扇關著的木門（我量到的，使用者沒提）
+
+真實的房子**只有一扇木門**，其餘是深色的金屬窄門。第三輪的圖在中央多畫了一扇關著的木門、
+右邊又一扇開著的 —— 等於把診所的門畫成兩個入口。第四輪寫死：**整張圖只有一扇木門，
+而且就是開著的那一扇**。
+
+### 5. ⚠⚠ 腳還是被切掉（第三輪也沒過）
+
+實測第三輪那張：地面線在畫面高度 **86%**，電腦版只留到 84% —— 又是一整排沒有腳的人。
+第二、三輪寫的是「地面線在五分之四、底下六分之一留白」，模型兩次都把畫面塞滿。
+第四輪改成**用命令句寫成一件「刻意留白」的事**，並把數字放寬到 **78%／底下五分之一**。
+
+> **如果第四輪還是塞滿**：不必再重生成 —— 那條柏油是一片平的灰，
+> 我可以直接把它接長（複製最底下幾列往下延伸），等於把整排人往上抬。
+> 這是後製，不是重畫，十秒鐘的事。
+
+### 提示詞（第四輪完整版，直接複製）
+
+⚠ 餵三張：`facade-yongle-ref.jpg`（正面立面）、`facade-side-ref.jpg`（三樓）、
+**第三輪那張圖**（風格、人物與配色都已經對了：「維持這個畫風、這些人與這組顏色，
+只改下面指出的幾件」）。
+
+```
+Editorial illustration for a wide banner, 16:9 landscape. A lively neighbourhood street in
+front of a real building. THE BUILDING IS GIVEN IN THE ATTACHED PHOTOGRAPHS and must be
+followed closely; everything else — the people, the street life, the light — is invented
+around it.
+
+STYLE — READ THIS SECTION FIRST, IT MATTERS MORE THAN ANYTHING ELSE BELOW.
+Contemporary printed-magazine editorial illustration, clearly hand-drawn — never a
+photograph, never 3D, never a flat vector graphic. Linework in warm dark brown or soft
+charcoal, NEVER pure black: thin, hand-drawn, the weight visibly varies along each stroke,
+strokes taper and sometimes break. Colour applied like soft coloured pencil and light
+marker; flat fills with two or three tones per hue; no smooth decorative gradients — a
+gradient may only ever describe light. A fine even paper grain sits over every surface of
+the whole image. No wall, awning, garment or road is a flat single-tone shape: each carries
+visible pencil texture and two or three tones of its own colour. Colour throughout — never
+greyscale, never monochrome, never washed out into near-white pastels.
+FACES ARE THE ONE EXCEPTION to the two-or-three-tones rule: skin is a single flat tone with
+NO shading, NO wrinkles, NO nasolabial lines, NO cheekbone or jaw modelling. On each face
+draw only six things — the outline of the head, the eyes, the eyebrows, a small nose, a
+simple line mouth, the ears. Everyone looks their own age and nobody looks old or tired.
+
+THE BUILDING — copy the attached photograph of the frontage: a Taiwanese street building
+seen almost straight on, flat elevation, no dramatic wide-angle perspective.
+  • ground floor: pale warm grey terrazzo / granite-chip render, with a slightly darker
+    plinth along the bottom and dark-framed square windows;
+  • second floor: panels of muted red brick set between pale grey concrete columns and a
+    deep beam, dark aluminium sliding windows, and one smaller window directly above the
+    entrance;
+  • THE ENTRANCE APPEARS ONLY ONCE IN THE WHOLE PICTURE: a single pair of tall doors in
+    warm reddish-brown wood with slim dark frames, standing OPEN, with soft warm light
+    spilling out onto the pavement. There is NO second wooden door anywhere — every other
+    doorway along the row is a narrow DARK METAL door;
+  • a boxy water heater and meter boxes on the left-hand wall, two round electricity meters
+    on the wall to the right of the entrance;
+  • a concrete pavement with a low kerb and one square drain grate, and asphalt road along
+    the bottom;
+  • this is a terraced row: the same facade repeats in the neighbouring units and runs off
+    both edges of the picture.
+THE BUILDING IS THREE STOREYS TALL, and the third floor is IDENTICAL to the second — the
+same red brick panels between the same concrete columns, the same dark aluminium windows.
+In this picture the THIRD FLOOR IS CUT OFF BY THE TOP EDGE OF THE FRAME: along the very top
+we see only the deep concrete beam beneath it and the lowest strip of that identical wall,
+so it is obvious the building carries on upward beyond the picture. Do NOT draw a roofline,
+a parapet, a steel roof canopy, a water tank or a complete third floor, and do NOT leave sky
+above the building: the facade fills the entire top edge.
+THERE ARE NO POWER LINES, NO CABLES AND NO WIRES ANYWHERE IN THIS PICTURE — not across the
+top, not in front of the facade, not between the buildings. The only lines crossing the air
+are the white hand-drawn ones described below.
+Keep the proportions and the rhythm of the doors and windows as in the photograph; simplify
+the detail but do NOT invent extra shopfronts or a different building.
+
+COMPOSITION — the open wooden doorway sits SLIGHTLY RIGHT OF CENTRE. This banner will be
+cropped along the top and the bottom, so:
+  • the TOP SEVENTH holds the cut-off third floor and nothing else that matters;
+  • the middle holds everything important: the open door, every face, the whole of every
+    person and every vehicle;
+  • THE LOWEST FIFTH OF THE IMAGE IS EMPTY ASPHALT ROAD. Nothing stands in it: no people,
+    no shoes, no wheels, no pots, no dog — only road surface and soft shadows. THIS EMPTY
+    BAND IS DELIBERATE; do not fill it, do not extend the pavement into it, and do not
+    enlarge the figures until they reach it. The ground the people stand on sits at about
+    78% of the image height, and every shoe, wheel, pot and tail is ABOVE that line;
+  • the LOWER LEFT CORNER, about one sixth of the width, stays quiet: plain pavement and
+    road with nothing important in it.
+
+STREET LIFE — the street is busy, colourful and cheerful, but easy to read. Draw EXACTLY
+these people and nothing more, all East Asian (Taiwanese), black or dark brown hair, all in
+different clothing colours:
+  • a man of about 45 RIDING A SCOOTER along the road, moving from left to right, placed in
+    the NEAR FOREGROUND on the road surface just below the kerb, roughly a third of the way
+    in from the left. He is drawn at THE SAME SCALE as the people standing on the pavement —
+    his head reaches about the same height as theirs — and he and the whole scooter,
+    including both wheels, are completely inside the picture, with the wheels sitting on the
+    road ABOVE the empty bottom band. He is seen from behind and slightly to the side. He is
+    NEVER small, NEVER drawn on or against the building wall, NEVER floating in the air, and
+    NEVER cropped;
+  • just right of the open door, a mother of about 35 holding the hand of a five-year-old
+    boy, both stepping in through the doorway, seen three-quarters from behind; the boy
+    looks up at her and she looks down at him;
+  • a man of about 70 and a woman of about 65 standing a few steps to the left of the
+    entrance, in the middle of a HAPPY conversation: both plainly enjoying it, mouths open
+    in easy laughter, eyes crinkled, one of her hands raised in a small gesture as she
+    talks, his head tipped back a little as he laughs. She holds a cloth bag with spring
+    onions and a radish sticking out of it; he keeps one hand on the handlebar of a parked
+    bicycle;
+  • two schoolgirls of about twelve with backpacks walking briskly along the pavement
+    towards the right, one of them wheeling a bicycle, both talking and smiling;
+  • a woman of about 28 walking away from the entrance towards the left, a small paper bag
+    in one hand, her face calm and softly smiling;
+  • at the right-hand side, a young mother walking hand in hand with a toddler, the two of
+    them heading towards the doorway;
+  • a shopkeeper of about 50 at the far left edge, half cut off by the frame, bending to
+    water a row of potted plants outside her own doorway;
+  • a small short-haired dog sitting on the pavement near the bicycles, tail wagging.
+Nobody looks at the viewer. Nobody is a dark silhouette. Nobody is mocking or arguing. NO
+figure is taller than half the height of the image. Keep the men and women roughly balanced.
+
+PROPS along the street: at the far left, over the neighbour's doorway, a STRIPED plastic
+awning in green and cream; two parked scooters angled to the kerb at the left edge, one with
+a brightly coloured helmet hooked on its mirror — helmets hang on those scooters and nowhere
+else; one bicycle leaning by the wall; seven or eight potted plants of different sizes by the
+doorways, two or three of them FLOWERING in warm pink and orange; a small folding stool; a
+rolled hose; a stack of plastic crates in red, blue and green. They all sit on the pavement
+above the ground line, never cover a face, and never enter the empty bottom band.
+
+MOOD — an ordinary weekday afternoon in a small town where people know each other. Warm,
+busy, unhurried, neighbourly, and just a little noisy in a good way. This is a clinic that
+has been on this street for a long time.
+
+WHITE HAND-DRAWN LINES — these are the life of the picture and there should be PLENTY of
+them. All of them are drawn in the same white chalky hand-drawn line, sitting on top of the
+colour, solid where they begin and thinning into dry chalk flecks. They come in TWO KINDS
+and the two follow different rules.
+(A) LONG ATMOSPHERE ARCS — FIVE TO SEVEN long shallow arcs of moving air sweeping right
+across the picture at three different heights: two or three high up across the third-floor
+strip, two across the second floor, and one or two lower down passing over the heads of the
+people. They vary in length and weight — some run almost the full width, some are short,
+some break into a dashed run of flecks. They all travel the same general direction, they
+never cross each other, never loop, never close into a shape, and never read as smoke, steam
+or a spirit. These arcs replace the power lines that used to cross the picture.
+(B) SMALL MOTION AND SOUND MARKS — the light shorthand a comic uses for movement and
+cheerful noise, placed at exactly these nine points:
+  • floating in the air BETWEEN the heads of the laughing elderly couple: a small cluster of
+    short radiating strokes and two or three tiny curved ticks;
+  • behind the moving scooter: four or five short straight parallel speed lines trailing
+    horizontally;
+  • a few short curved strokes fanning off the rider's shoulders to show the air he moves
+    through — short, all running the same way, none longer than his head;
+  • behind the two schoolgirls: two short curved motion lines at shoulder height;
+  • at the spokes of the wheeled bicycle: three tiny arcs showing it turning;
+  • at the boy's stepping foot: one or two tiny arcs of movement;
+  • at the dog's tail: two small arcs showing it wagging;
+  • from the shopkeeper's watering can: a short group of parallel strokes for the falling
+    water;
+  • around the open doorway: a few short strokes radiating outward from the warm light.
+Every mark in group (B) is small and thin, none longer than one head width, and none of them
+touches or comes out of anyone's mouth or nose.
+NO speech balloons, NO thought bubbles, NO written sound effects or onomatopoeia, NO letters
+or symbols, NO stars, hearts, musical notes or exclamation marks, and NO large radiating
+"impact" burst. This is an editorial illustration borrowing a little comic shorthand — it
+must not turn into a comic panel.
+
+LIGHT AND COLOUR — bright mid-to-late AFTERNOON DAYLIGHT, unmistakably daytime and airy.
+NOT sunset, NOT dusk, NOT night, no lamplight over the street, no long orange shadows, no
+orange or amber cast over the whole image, no neon. Soft short shadows under the people and
+the scooters. The one warm accent is the light coming out of the open doorway.
+The picture should feel COLOURFUL and lively, not dusty: most colour areas sit around HSL
+saturation 30–50 with lightness 70–85, and clearly more than half of the picture is
+genuinely coloured rather than neutral grey. No sky is visible here, so the colour has to
+come from the building, the people and the street clutter. At least EIGHT clearly different
+colours must be visible: muted brick red on the brick panels; warm pale grey on the render;
+warm reddish-brown on the wooden doors; deep warm charcoal on the window frames and the
+narrow metal side doors; cool pale blue-grey in the window glass; green and cream stripes on
+the awning; red, blue and green on the plastic crates; warm pink and orange on the flowering
+plants; and the people in dusty rose, pale butter yellow, soft powder blue, sage green,
+muted clay and warm grey — no two of them in the same hue.
+A muted forest green (#3f654a) appears ONLY as small accents: the doormat at the entrance,
+the small plaque beside the door, and one plant pot. Do NOT tint the whole image green, no
+bright emerald, no green skin or green road.
+
+THE PLAQUE — the small rectangular plaque on the wall beside the entrance is COMPLETELY
+BLANK: a plain panel with no letters, no numbers, no symbols and no logo.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos, shop
+signs, banners, posters, stickers, captions, sound effects or watermarks, in any language.
+The plaque beside the door is blank; the awning and any signboard or shutter is blank;
+scooters and bicycles carry NO number plates and no badges; the crates, bags, packaging and
+the paper bag are blank; the schoolbags carry no printing; there are no street signs, no
+house numbers, no notices taped to the wall, no menu boards. Where writing would normally
+appear, leave the surface plain.
+
+AVOID — power lines, cables, wires or utility poles of any kind; a second wooden door or
+more than one entrance; the scooter rider drawn small, drawn against or on top of the
+building wall, floating, or cut off by the frame; anything standing in the empty bottom band
+of road; feet, wheels or plant pots cut off by the bottom edge; greyscale or a single-colour
+image; photorealism or a 3D render; thick uniform black outlines; flat untextured vector
+shapes; faceless people, noodle limbs, oversized heads or exaggerated cartoon proportions;
+anyone looking at the viewer; a large backlit figure or silhouette; a crowd, a queue, a
+market with stalls, or more people than the ones listed; a complete third floor, a roofline,
+a parapet, a steel roof canopy, a rooftop water tank or sky above the building; speech
+balloons, thought bubbles, written sound effects, stars, hearts or impact bursts; comic panel
+borders; anybody in medical uniform, masks, gloves, or any dental instrument, tooth model,
+giant tooth or medical diagram; blood, pain, illness or distress; sunset, night, neon, heavy
+shadow; rain; a Western or European street; wrinkles and heavy facial shading; smoke, steam
+or spirit-like lines; text of any kind.
+```
+
+### 第四節的檢查清單再多三項
+
+13. **電線**：有沒有殘留任何黑色的線、電線桿。
+14. **木門**：整張圖是不是只有一扇，而且是開著的那一扇。
+15. **騎士**：大小和人行道上的人差不多嗎、輪子在不在柏油上、有沒有貼在牆上。
