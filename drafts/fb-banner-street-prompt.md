@@ -1,6 +1,6 @@
 # Facebook 粉絲專頁橫幅：永樂街街景插畫（提示詞）
 
-> ⚠ **目前要用的是第十六節那一份（第十一輪，短指令）**。第三／七～十五節是第一到十輪，留著看改了什麼。
+> ⚠ **目前要用的是第十八節那一份（第十二輪，微調指令）**。第三／七～十七節是前面各輪，留著看改了什麼。
 
 用途：**Facebook 粉絲專頁的封面橫幅**（不是文章 HERO，所以不進 `assets/`、
 也不跑 `tools/hero-resize.mjs` —— 那支鎖死 2000×1116 的比例）。
@@ -2813,3 +2813,85 @@ clothing, do not add or remove people.
 
 ⚠ **標誌白色、牌子深綠**，牌子本來就是圖裡畫好的那一塊，沒有另外加底。
 要放大標誌或把牌子畫大一點都可以，改 `<標誌寬度>` 那個參數即可。
+
+
+---
+
+## 十八、第十二輪（2026-08-20）—— 標誌要有插畫感、騎士要戴安全帽
+
+使用者兩件：「Logo 好像太白了，需要一點插畫風格」「台灣騎機車要帶安全帽」。
+
+### 1. 標誌太白 —— 後製那一版已經改好（`ink` 模式）
+
+`drafts/banner-logo-stamp.mjs` 多一個參數：
+
+    node drafts/banner-logo-stamp.mjs <插圖> <輸出> <中心x> <中心y> <寬度> [flat|ink]
+
+・`flat`＝原本的純白平塗（留著當對照）。
+・**`ink`（預設）**＝ 三件一起做：**暖白 `#f4f1e9` 不是純白**、
+  **整體不透明度降到 .90 並加依座標決定的顆粒**（底下的綠會透一點上來）、
+  **邊緣那一圈再軟一階**（alpha < .9 的像素乘 .82）。
+  出來就是「畫在小牌子上」的樣子，不是貼上去的向量貼紙。
+・成品：`drafts/fb-banner-v11-logo-ink.png`、放大圖 `fb-banner-logo-zoom-ink.png`。
+
+⚠ **雜訊用的是固定種子的 `sin` 雜湊，不是 `Math.random()`** —— 同一張圖重跑結果一樣。
+
+### 2. 安全帽 —— 台灣騎機車一定要戴
+
+圖上騎車那位沒戴。這不只是寫實問題：**診所的粉專放一張沒戴安全帽的圖，
+等於在示範違規**（同 ILLUSTRATION.md 第九節那個「盒子闔著＝示範文章叫人不要做的事」）。
+
+順帶一致性：**剛停好車的那位男助理手上要拿著安全帽** —— 他既然騎車來，就該有一頂。
+
+### 提示詞（第十二輪，微調形式）
+
+⚠ 這一份**刻意寫成「只改兩件、其餘全部不准動」**，不是整份重畫的規格 ——
+理由見第十六節：長提示詞等於叫模型從頭再骰一次。
+
+**附兩張**：① **最新那張插圖**（**還沒貼 logo 的原圖**，不要附我後製過的那張，
+否則模型會把那個純白一起學走）；② **標誌那張圖**（黑底白牙那張）。
+
+```
+Take the attached street illustration and keep it EXACTLY as it is: the same wide framing,
+the same hand-drawn editorial style, the same warm brown linework and paper grain, the same
+colours, the same building, the same people in the same poses and the same clothes, the same
+white chalk motion lines, the same daylight, and the same two people at the open upstairs
+window. Change ONLY the two things below. Redraw nothing else.
+
+CHANGE 1 — THE MAN RIDING THE SCOOTER MUST WEAR A CRASH HELMET. In Taiwan a helmet is
+required by law, so he wears one: a plain OPEN-FACE half-shell helmet with a short peak, in
+a muted warm grey, with a thin chin strap under his jaw and his hair showing below the back
+rim. NO logos, stripes, numbers or graphics on it. Draw it the same way as everything else in
+the picture — hand-drawn outline, two or three flat tones, paper grain over it — never a
+glossy or 3D helmet. He is still seen from behind and slightly to the side, still riding in
+the lane hugging the kerb, still drawn at the same size, and still completely inside the
+picture with both wheels and his whole body visible.
+For the same reason, the male assistant in pale violet scrubs who has just parked his own
+scooter at the kerb now holds his helmet under one arm.
+
+CHANGE 2 — PUT THE CLINIC'S MARK ON THE SMALL GREEN PLAQUE. The plaque is the small dark
+green rectangle on the wall immediately to the LEFT of the open wooden door. Its shape is
+given in the SECOND attached picture: copy that shape exactly — a soft horizontal blob made
+of two rounded lobes joined by a low waist, with one small rounded notch cut out of it
+towards the lower right. Centre it on the plaque at about three quarters of the plaque's
+width. There is NOTHING else on the plaque: no letters, no numbers, no border, no symbols.
+IT MUST LOOK PAINTED BY HAND, NOT LIKE A STICKER: fill it with a WARM OFF-WHITE, the colour
+of the pale paper in this picture — NEVER a bright pure white. The edge is very slightly
+uneven the way a drawn edge is; the fill is not perfectly flat, so a little of the green
+shows through in places; and the same paper grain runs across it. No outline around it, no
+drop shadow, no glow, and no highlight.
+
+EVERYTHING ELSE STAYS THE SAME. No text or writing anywhere in the picture. Do not change
+the framing, do not redraw the building, do not change anyone's face, hair or clothing, do
+not add or remove people, do not move anything.
+
+AVOID — the rider bare-headed; a full-face racing helmet, a visor, a strap across the mouth,
+or any logo or racing stripe on the helmet; a helmet that hides his whole head shape; a flat
+pure-white vector logo, a glowing logo, a logo with an outline or a drop shadow; letters,
+numbers or a second sign on the plaque; any other change to the picture.
+```
+
+### 這一輪要記的一條
+
+**「該有的安全裝備」要當成紅線寫進提示詞**，不是等看到才補。
+診所的對外圖片示範違規（沒戴安全帽、闔著的牙套盒）是內容問題，不是美感問題。
