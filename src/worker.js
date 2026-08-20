@@ -12,11 +12,21 @@
      POST /api/views   body: { "slug": "home" } → { "slug": "home", "views": 13 }
      其他                                        → 靜態檔，沒有就給 404 頁
 
+   另有一個排程（wrangler.toml 的 [triggers]，每小時一次）：sitemap 變了就
+   通知 Google Search Console。見下方 syncSitemap()。
+
    只接受 src/allowed-slugs.js 裡列出的代碼，那份清單由 tools/build.mjs
    依實際文章自動產生，所以外部無法灌入不存在的頁面、把資料表塞爆。
    ============================================================================= */
 
 import { ALLOWED } from "./allowed-slugs.js";
+import {
+  accessToken,
+  parseServiceAccount,
+  resolveSite,
+  sha256,
+  submitSitemap,
+} from "./gsc.js";
 
 const allowed = new Set(ALLOWED);
 
@@ -113,6 +123,80 @@ async function notFound(request, env) {
   });
 }
 
+/* =============================================================================
+   排程：sitemap 變了就重新提交給 Google Search Console
+   -----------------------------------------------------------------------------
+   為什麼要這一段 —— sitemap.xml 本來就會在每次 build 時重新產生（tools/build.mjs），
+   但**產生**不等於**Google 知道**。Google 在 2023-06 關掉了 sitemap 的 ping 端點，
+   現在唯一的程式化通知方式是 Search Console API 的 sitemaps.submit。
+
+   為什麼放在 Worker 而不是建置流程 —— 這個 repo 沒有 GitHub Actions
+   （gh token 沒有 workflow scope，.gitignore 也排除了 .github/），
+   Cloudflare 的建置流程這一側我們碰不到。Worker 本來就跟著每次 push 部署，
+   加一個 cron 是唯一不需要新基礎設施的做法。
+
+   ⚠ 每小時只是「檢查」，不是「每小時提交一次」——
+      sitemap 的內容雜湊沒變就直接跳過，一個 API 都不會打。
+      所以實際提交次數 ≈ 發文次數，不會吃掉 Search Console 的額度。
+
+   ⚠ 沒有設定 GSC_SERVICE_ACCOUNT 這個 secret 時整段直接跳過，不當成錯誤。
+      設定步驟見 README.md「Search Console 自動提交」那一節。
+
+   ⚠ 這一段**絕對不能影響 fetch()**。wrangler.toml 開了 run_worker_first，
+      Worker 掛掉會連帶整站掛掉，所以 scheduled() 裡每一步都包在 try 裡，
+      而且這裡不做任何 top-level 的事。
+   ============================================================================= */
+
+/* 正式網址。site.json 是給建置腳本讀的，Worker 讀不到那個檔，所以寫在這裡。
+   換網域時兩邊都要改。 */
+const SITE_ORIGIN = "https://fangren.net";
+
+/* 提交狀態存這裡：上次提交的 sitemap 雜湊、時間、結果。
+   要查就跑：
+     wrangler d1 execute fangren-dental-views --remote --command "SELECT * FROM gsc_state" */
+const STATE_TABLE = `CREATE TABLE IF NOT EXISTS gsc_state (
+  key        TEXT PRIMARY KEY,
+  value      TEXT,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+)`;
+
+async function readState(env, key) {
+  const row = await env.DB.prepare("SELECT value FROM gsc_state WHERE key = ?").bind(key).first();
+  return row ? row.value : null;
+}
+
+const writeState = (env, key, value) =>
+  env.DB.prepare(
+    `INSERT INTO gsc_state (key, value, updated_at) VALUES (?, ?, datetime('now'))
+       ON CONFLICT (key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`
+  )
+    .bind(key, value)
+    .run();
+
+async function syncSitemap(env) {
+  if (!env.GSC_SERVICE_ACCOUNT) return "略過：沒有設定 GSC_SERVICE_ACCOUNT";
+
+  /* 表格自己建，這樣忘了套 d1-schema.sql 也不會整段失效 */
+  await env.DB.prepare(STATE_TABLE).run();
+
+  /* 讀的是已經部署出去的那一份，不是 repo 裡的 —— 我們要確認的是
+     「Google 現在去抓會拿到什麼」，所以要問資產伺服器。 */
+  const res = await env.ASSETS.fetch(new URL("/sitemap.xml", SITE_ORIGIN));
+  if (!res.ok) throw new Error(`讀不到 /sitemap.xml（${res.status}）`);
+  const hash = await sha256(await res.text());
+
+  if ((await readState(env, "sitemap_hash")) === hash) return "略過：sitemap 沒有變動";
+
+  const token = await accessToken(parseServiceAccount(env.GSC_SERVICE_ACCOUNT));
+  const site = await resolveSite(token, SITE_ORIGIN);
+  await submitSitemap(token, site, `${SITE_ORIGIN}/sitemap.xml`);
+
+  /* 雜湊最後才寫。中途任何一步失敗都不會寫進去，下一個整點會自己再試一次。 */
+  await writeState(env, "sitemap_hash", hash);
+  await writeState(env, "last_site", site);
+  return `已提交 ${SITE_ORIGIN}/sitemap.xml 到 ${site}`;
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -154,5 +238,20 @@ export default {
 
     const asset = await env.ASSETS.fetch(request);
     return asset.status === 404 ? notFound(request, env) : asset;
+  },
+
+  /* Cloudflare 依 wrangler.toml 的 cron 呼叫這裡。
+     失敗只記在 D1 與 log 裡，不往外丟 —— 排程失敗不該影響任何一個訪客。 */
+  async scheduled(event, env, ctx) {
+    try {
+      console.log("[gsc]", await syncSitemap(env));
+    } catch (err) {
+      console.error("[gsc] 失敗：", err.message);
+      try {
+        await writeState(env, "last_error", `${new Date().toISOString()} ${err.message}`);
+      } catch {
+        /* D1 也壞掉的話就只剩 log，不要再往上丟 */
+      }
+    }
   },
 };

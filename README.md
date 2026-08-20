@@ -233,6 +233,108 @@ node tools/sync.mjs
 
 ---
 
+## Search Console 自動提交
+
+**sitemap.xml 本來就是自動產生的** —— 每次 `node tools/build.mjs` 都會依實際文章重寫，
+新文章上線時它已經在裡面了。這一節講的是後面那一半：**讓 Google 知道它變了**。
+
+> Google 在 2023 年 6 月把 sitemap 的 ping 端點（`google.com/ping?sitemap=`）關掉了，
+> 現在唯一能用程式通知 Google 的方法是 Search Console API 的 `sitemaps.submit`，
+> 而它要求以「這個資源的擁有者」身分帶 OAuth token 呼叫。
+
+### 它怎麼運作
+
+Cloudflare Worker 每小時的第 17 分醒來一次（`wrangler.toml` 的 `[triggers]`）：
+
+1. 抓已經上線的 `/sitemap.xml`，算 SHA-256。
+2. 和 D1 裡存的上一次比對 —— **一樣就直接結束，一個 Google API 都不會打。**
+3. 不一樣（＝有新文章或改過文章）才去換 token、提交 sitemap，成功後才把新雜湊寫回 D1。
+
+所以「每小時」是檢查的頻率，實際提交次數約等於發文次數。
+中途任何一步失敗都不會寫入雜湊，下一個整點會自己再試一次。
+
+**沒有設定金鑰時整段直接跳過，不算錯誤，網站完全不受影響。**
+
+### 要設定的三件事（只做一次）
+
+**① Google Cloud：建一個服務帳戶**
+
+1. 開 <https://console.cloud.google.com/> ，建一個專案（或用既有的）。
+2. 「API 和服務」→「程式庫」→ 搜尋 **Google Search Console API** → 啟用。
+3. 「API 和服務」→「憑證」→「建立憑證」→「服務帳戶」，名字隨意（例如 `fangren-sitemap`）。
+   角色不必給，這裡的權限是在 Search Console 那一側給的。
+4. 進入剛建好的服務帳戶 →「金鑰」→「新增金鑰」→「建立新的金鑰」→ **JSON** → 下載。
+
+下載到的檔案長這樣，裡面的 `client_email` 就是下一步要用的：
+
+```json
+{ "type": "service_account", "client_email": "fangren-sitemap@專案.iam.gserviceaccount.com", ... }
+```
+
+> ⚠ **這個 repo 是 public 的，金鑰檔絕對不要 commit 進來**（推上去等於公開，
+> Google 偵測到也會直接停用它）。最保險是放在 repo 外面，例如 `~/gsc-key.json`。
+> `.gitignore` 已經擋掉幾個常見檔名，但那只是第二道保險。
+
+**② Search Console：把這個服務帳戶加成使用者**
+
+<https://search.google.com/search-console> → 選 fangren.net → 左下「設定」→
+「使用者和權限」→「新增使用者」→ 貼上上面那個 `client_email` →
+權限選 **擁有者**（至少要「完整」，「受限」不能提交 sitemap）。
+
+**③ Cloudflare：把金鑰放進 Worker 的 secret**
+
+```bash
+npx wrangler secret put GSC_SERVICE_ACCOUNT
+```
+
+它會要你貼上內容 —— **把整份 JSON 檔的內容原封不動貼進去**（不是路徑，是檔案內容）。
+設完之後 push 一次讓 Worker 重新部署，排程就開始跑了。
+
+順便把 D1 的狀態表建起來（Worker 自己也會建，跑這一行只是讓它一開始就在）：
+
+```bash
+npx wrangler d1 execute fangren-dental-views --remote --file=d1-schema.sql
+```
+
+### 確認有沒有在動
+
+```bash
+node tools/gsc-submit.mjs --key ~/gsc-key.json --status
+```
+
+看得到「資源」「上次提交」「上次下載」就表示三件事都設對了。
+
+要看 Worker 那一側的紀錄：
+
+```bash
+npx wrangler d1 execute fangren-dental-views --remote \
+  --command "SELECT * FROM gsc_state"
+```
+
+`sitemap_hash` 有值就代表提交成功過；`last_error` 有值代表某一次失敗了（訊息在裡面）。
+即時的 log 用 `npx wrangler tail`，排程跑的時候會印 `[gsc] …`。
+
+### 手動指令
+
+平常不必用，Worker 會自己做。這幾個是需要時的後路：
+
+| 指令 | 作用 |
+| --- | --- |
+| `node tools/gsc-submit.mjs` | 立刻提交 sitemap，然後印 Google 那一側的狀態 |
+| `node tools/gsc-submit.mjs --status` | 只看狀態，不提交 |
+| `node tools/gsc-submit.mjs --inspect` | 逐一查 sitemap 裡每個網址收錄了沒 |
+| `node tools/gsc-submit.mjs --inspect <網址>` | 只查一個網址 |
+
+金鑰的來源依序是 `--key <路徑>`、環境變數 `GSC_SERVICE_ACCOUNT`（整份 JSON）、
+`GOOGLE_APPLICATION_CREDENTIALS`（檔案路徑）。
+
+> **提交 ≠ 馬上被收錄。** 提交只是告訴 Google「這份清單變了」，
+> 真正的檢索與建立索引仍然由 Google 排程，落後幾天到幾週都是正常的
+> （見 [CLAUDE.md](CLAUDE.md) 第七節）。要更快只有 Search Console 後台的
+> 「網址審查 → 要求建立索引」，那個沒有對應的公開 API。
+
+---
+
 ## 診所資訊
 
 - 地址：雲林縣斗六市永樂街 70 號

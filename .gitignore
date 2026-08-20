@@ -6,3 +6,11 @@ hero-preview.html
 Thumbs.db
 *.log
 .github/
+
+# Google 服務帳戶金鑰（Search Console 自動提交用）。
+# 這個 repo 是 public 的，金鑰一旦推上去等於公開，Google 也會自動停用它。
+# 最保險是把檔案放在 repo 外面，這幾條只是第二道保險。
+gsc-key.json
+service-account*.json
+*-service-account.json
+*.gsc.json

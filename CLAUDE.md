@@ -225,7 +225,11 @@ wrangler.toml           Worker、靜態資產、自訂網域、D1 綁定
 d1-schema.sql           計數器資料表定義，執行一次即可
 src/
   worker.js             計數器 API ＋ www 轉址 ＋ /history/* 的 noindex
+                        ＋ scheduled()：每小時檢查 sitemap 有沒有變（見第十之一節）
   allowed-slugs.js      白名單，由 build 產生，勿手改
+  gsc.js                Google Search Console 的服務帳戶登入與 API 呼叫。
+                        ⚠ **Worker 與 Node 共用同一份**，所以只准用兩邊都有的東西
+                        （fetch／crypto.subtle／TextEncoder／atob），不要引入 node: 模組
 assets/
   style.css             全站樣式
   counter.js            前端計數器
@@ -252,6 +256,8 @@ tools/
   dist.mjs              把上線檔案組進 _site/
   serve.mjs             本機預覽伺服器
   sync.mjs              同步遠端（SessionStart hook 自動呼叫）
+  gsc-submit.mjs        手動提交 sitemap 給 Search Console／看狀態／查哪幾篇收錄了。
+                        平常不必跑，Worker 每小時會自己做。設定步驟見 README.md
   setup.ps1 / setup.sh  新電腦一鍵環境設定
   palette-measure.ps1   從照片實測取色（k-means ＋ 局部裁切），配色改動的依據來源
   favicon-ico.mjs       從 assets/favicon.svg 產生根目錄的 favicon.ico。
@@ -1626,3 +1632,73 @@ git pull
 全站（首頁三處、六篇文章頁尾、404）都已經改好，JSON-LD 是 `+886-5-533-9369`。
 數字一個都沒變，`tel:+88655339369` 也沒動。推導與實測數字在
 [PALETTE.md](PALETTE.md) 第六之十七節。
+
+---
+
+## 十之一、Search Console 自動提交（2026-08-20）
+
+**sitemap.xml 本來就是自動產生的**（`tools/build.mjs` 第 5 段），這一節講的是後面
+那一半：**新文章上線後讓 Google 知道 sitemap 變了**。使用者 2026-08-20 要求的。
+
+完整的設定步驟寫在 **[README.md](README.md)「Search Console 自動提交」那一節**，
+這裡只記接手時會需要的判斷。
+
+### 怎麼運作
+
+`src/worker.js` 的 `scheduled()`，由 `wrangler.toml` 的 `[triggers] crons = ["17 * * * *"]`
+每小時叫醒一次：抓已上線的 `/sitemap.xml` → 算 SHA-256 → 和 D1 `gsc_state` 裡的
+上一次比對 → **一樣就結束**，不一樣才換 token、呼叫 `sitemaps.submit`，
+**成功之後才**把新雜湊寫回去。
+
+### 為什麼是這個做法（不要「順手改善」掉）
+
+1. **不能用 ping。** Google 2023-06 把 `google.com/ping?sitemap=` 關掉了，
+   那條路現在回 404。唯一的程式化通知方式是 Search Console API 的 `sitemaps.submit`，
+   而它要 OAuth。
+2. **不能用 GitHub Actions。** `.gitignore` 排除了 `.github/`，開發機的 gh token
+   也沒有 `workflow` scope（第三節）。Cloudflare 的建置流程這一側我們碰不到，
+   所以 Worker 的 cron 是唯一不需要新基礎設施的位置。
+3. **不能改成「每次 build 就提交」。** build 在開發機上跑，那台機器不該放金鑰；
+   而且 build 跑完不代表已經部署，提交一份 Google 還抓不到的 sitemap 是反效果。
+4. **服務帳戶，不是 OAuth refresh token。** 後者會過期、要有人按同意鈕。
+
+### ⚠ 不要違反的規則
+
+- **`scheduled()` 絕對不能影響 `fetch()`。** `wrangler.toml` 開著 `run_worker_first`，
+  Worker 掛掉會連帶整站掛掉（第七節）。所以 `scheduled()` 整段包在 try 裡、
+  `src/gsc.js` 沒有任何 top-level 副作用。**改這兩個檔之後一定要 `node --check`。**
+- **`src/gsc.js` 是 Worker 與 Node 共用的**，只准用兩邊都有的 API
+  （`fetch`／`crypto.subtle`／`TextEncoder`／`atob`／`btoa`）。
+  **不要 import `node:crypto`**，Worker 那邊沒有；也不要加 npm 依賴（這個 repo 零依賴）。
+- **雜湊要最後才寫。** 中途失敗就不寫，下一個整點自己重試。
+  寫在提交之前的話，一次失敗會讓那一版 sitemap 永遠不再被提交。
+- **不要把 cron 改成「每小時提交一次」。** 每小時是**檢查**的頻率；
+  雜湊沒變就一個 API 都不打，實際提交次數約等於發文次數。
+- **`SITE_ORIGIN` 在 `src/worker.js` 裡寫死。** Worker 讀不到 `site.json`
+  （那是給建置腳本用的），換網域時兩邊都要改。
+- **資源代碼不要寫死。** `resolveSite()` 會問 Google 這個服務帳戶看得到什麼，
+  網域資源（`sc-domain:fangren.net`）優先於網址前置字元（`https://fangren.net/`）。
+  寫死其中一種，另一種設定的站就會整段失效。
+- ⚠⚠ **服務帳戶的 JSON 金鑰不要 commit。** 這個 repo 是 **public** 的，
+  推上去等於公開（Google 偵測到也會直接停用那把金鑰）。
+  金鑰只存在兩個地方：使用者電腦上 repo 外的檔案，以及 Cloudflare 的 secret
+  `GSC_SERVICE_ACCOUNT`。`.gitignore` 擋了幾個常見檔名，那只是第二道保險。
+
+### 目前的狀態
+
+程式碼已經就位，**但還沒有金鑰** —— 使用者要自己做 README 那三件事
+（建服務帳戶、在 Search Console 加使用者、`wrangler secret put`）。
+沒設 secret 時 `scheduled()` 會直接跳過並在 log 印「略過：沒有設定
+GSC_SERVICE_ACCOUNT」，**不是錯誤，網站也完全不受影響。**
+
+雲端 session **連得到** `oauth2.googleapis.com` 與 `searchconsole.googleapis.com`
+（2026-08-20 實測，回 404 而不是 000 —— 第七節那句「容器連不出去」對 Google 這兩個
+網域不成立）。所以拿到金鑰之後可以在 session 裡直接驗證。
+
+### 順帶做的一件
+
+`tools/gsc-submit.mjs --inspect` 會用 URL Inspection API 逐一查 sitemap 裡
+每個網址收錄了沒（唯讀，每天 2000 次額度）。這是回答「那篇新文章 Google 收了嗎」
+最直接的方法，比在後台一頁一頁點快。
+⚠ **提交 ≠ 收錄**，落後幾天到幾週是正常的（第七節），不要因為 `--inspect`
+顯示未收錄就去動 `index.html`。

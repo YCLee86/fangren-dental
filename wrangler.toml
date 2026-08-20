@@ -37,3 +37,19 @@ custom_domain = true
 binding = "DB"
 database_name = "fangren-dental-views"
 database_id = "17f4c65d-bf4b-4c49-830e-f155a79d56a8"
+
+# -----------------------------------------------------------------------------
+# 排程：每小時的第 17 分檢查 sitemap.xml 有沒有變，變了就重新提交給
+# Google Search Console（見 src/worker.js 的 syncSitemap）。
+#
+# 「每小時」是檢查的頻率，不是提交的頻率——內容雜湊沒變就直接跳過，
+# 一個 Google API 都不會打。所以實際提交次數約等於發文次數。
+#
+# 挑第 17 分而不是整點：整點是所有人的預設值，Cloudflare 那一刻最塞。
+#
+# ⚠ 要它真的動起來，還要設一個 secret：
+#     wrangler secret put GSC_SERVICE_ACCOUNT
+#   沒設的話 scheduled() 會直接跳過，不會報錯，網站也完全不受影響。
+# -----------------------------------------------------------------------------
+[triggers]
+crons = ["17 * * * *"]
