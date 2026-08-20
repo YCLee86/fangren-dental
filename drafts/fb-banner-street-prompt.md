@@ -1,6 +1,6 @@
 # Facebook 粉絲專頁橫幅：永樂街街景插畫（提示詞）
 
-> ⚠ **目前要用的是第十五節那一份（第十輪）**。第三／七～十四節是第一到九輪，留著看改了什麼。
+> ⚠ **目前要用的是第十六節那一份（第十一輪，短指令）**。第三／七～十五節是第一到十輪，留著看改了什麼。
 
 用途：**Facebook 粉絲專頁的封面橫幅**（不是文章 HERO，所以不進 `assets/`、
 也不跑 `tools/hero-resize.mjs` —— 那支鎖死 2000×1116 的比例）。
@@ -2707,3 +2707,76 @@ or spirit-like lines; text of any kind.
 
 23. **三樓**：柱樑格子與紅磚嵌板是不是和二樓一模一樣、窗有沒有上下對齊；
     有沒有跟著施工照畫出裸露的洞或鋼筋。
+
+
+---
+
+## 十六、第十一輪（2026-08-20）—— 停止重畫，改用「微調指令」
+
+使用者看第十輪的結果：「感覺差更遠了。」**確實更遠了，而且是我兩個決定造成的。**
+
+### 1. ⚠⚠ 施工照把立面帶歪了
+
+那張照片是**還沒完工的空殼**：整片紅磚裸露、開口沒有門窗、牆面是素灰。
+模型把它當成「這棟房子長什麼樣」的依據之一，於是第十輪的圖出現四件走鐘：
+
+| 真實的房子 | 第十輪畫成 |
+| --- | --- |
+| 一樓是**洗石子**（灰底帶顆粒）＋底下一條較深的勒腳 | 一片平的素灰牆，勒腳不見 |
+| 木門是**凹進去的雙開門**，兩側各一根方柱 | 一扇窄的單開門，貼在牆面上 |
+| 二三樓的紅磚是**窗與窗之間的直立塊**，上下有灰色的樑帶 | 整片紅磚牆，窗只剩細細的磚框 |
+| 柱子細、與牆同面 | 又寬又平的灰色柱帶 |
+
+⚠ **通則：參考圖不是愈多愈好。** 一張「狀態不同」的照片（施工中、不同季節、
+不同角度）會把已經對的東西一起帶走。施工照的用途只是回答「三樓和二樓一不一樣」，
+那句話**寫在文字裡就夠了**，不必附圖 —— 何況三樓在這張構圖裡九成被切掉。
+
+### 2. ⚠⚠ 長提示詞 ＝ 重畫；要微調就用短指令
+
+第九、十輪我都給**整份兩萬字的提示詞**去要一件很小的事（退遠一點）。
+**整份提示詞等於叫模型從頭畫一張**，於是每次都重骰一次建築、人物與構圖 ——
+退遠沒拿到，反而把已經對的東西弄丟。
+
+**改法：拿使用者已經說「好很多了」的那一張，配一段短指令，只講要改的那一件事。**
+
+### 第十一輪要做的（照這個做）
+
+**附兩張**：
+① **你說「好很多了」的那一張**（二樓探頭、玻璃已經修好的那一版）——**這是主體**；
+② `facade-yongle-ref.jpg`（正面立面照）——只當「建築不要跑掉」的對照。
+**不要附施工照，也不要附側拍照。**
+
+指令用這一段就好（英文，短的）：
+
+```
+Take the attached illustration and change ONE thing only: pull the camera back so that the
+view is about 25% wider. One more window bay becomes visible at the left edge and one more at
+the right edge, and everything in the picture is drawn correspondingly smaller. Add more empty
+asphalt road along the bottom rather than cropping anyone.
+
+EVERYTHING ELSE MUST STAY EXACTLY AS IT IS: the same hand-drawn editorial style, the same
+warm brown linework, the same paper grain, the same colours, the same people in the same
+poses and the same clothes, the same white chalk lines, the same daylight.
+
+Keep the building exactly as it is drawn in the attached illustration and in the reference
+photograph: a pale grey terrazzo ground floor with a slightly darker plinth, dark-framed
+windows, ONE wooden double door standing open in its recessed bay between two slim concrete
+columns, and upstairs panels of red brick standing BETWEEN the windows with pale grey
+concrete beams above and below them — not a solid brick wall. The third floor is still cut
+off by the top edge.
+Keep the two people at the open upstairs window, one leaning out through the open half and
+one behind the closed glass pane.
+
+No text or writing anywhere. Do not redraw the building, do not change anybody's face or
+clothing, do not add or remove people.
+```
+
+⚠ 如果它還是重畫：**就地放棄退遠這件事**。第八輪那張的取景使用者本來就說「好很多了」，
+兩者的差距（門佔畫面寬 13% vs 10%）遠小於「建築跑掉」的損失。
+
+### 這一輪學到的兩條，寫進通則
+
+1. **參考圖要挑「同一個狀態」的**。施工中的空殼、不同角度、不同季節的照片，
+   會把已經對的細節一起換掉。
+2. **「重畫」與「微調」是兩種指令**：要重畫才給整份提示詞；
+   只改一件事就給**一張圖 ＋ 三五句話**，並且把「其餘全部不准動」寫進去。
