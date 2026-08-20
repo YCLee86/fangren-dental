@@ -1014,3 +1014,276 @@ the patient's eyes, forehead or hair; a muted grey-beige picture with only one r
 colour; flat empty off-white areas; grey or black linework; pale waxy lifeless skin; a pale, washed-out or high-key right-hand panel; walls left white or empty; empty
 bare rooms.
 ```
+
+---
+
+# 第六輪（2026-08-20）：v6 —— 六件修正
+
+使用者看過 v5 生出來的圖（四件都中了：分支收在牙根裡、糊劑六七分滿、器械在嘴巴、
+左格顏色變多）之後，點名六件：
+
+1. **診間不要那麼昏暗** —— 保留顯微鏡的光，但房間本身要是正常照明的現代診間
+   （他給的 Micro-Endodontics 那張照片）。右格從「夜景」改成
+   「亮的診間 ＋ 一小攤更暖更亮的顯微鏡光」，`LIFE` 段右格的顏色清單跟著換掉。
+2. **泡泡裡的注射器不要手** —— 只留器械本身。
+3. **病患年紀太大、臉太臭** —— 三十五歲上下，表情是「聽懂了、覺得安心」的微笑。
+4. **諮詢室沒有專業感** —— 沙發抱枕矮几換成諮詢桌、辦公椅、整面排齊的資料夾、
+   側放的空白螢幕（他給的兩張醫師諮詢照片就是這個樣子）。
+5. ⚠⚠ **氛圍白線要長** —— **這推翻了第七節第 17 條的一半**：那一條要求
+   「一群同向短線」，但成因是**從嘴巴出來的氣流**畫成長曲線會被讀成靈魂出竅。
+   氛圍線不是從身體出來的（〈半年一次的洗牙〉橫過天花板那幾條本來就是長的）。
+   v6 分成兩種：**氛圍線可以長；只有從人身上出來的氣流才必須是一群短線。**
+6. **病患嘴上要有橡皮障** —— 照 Denpedia 那張，但**照片是綠色的、插畫畫成粉紅**。
+
+⚠ 使用者說還會再傳幾張醫療資訊的照片，收到再對一次。
+
+```
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS SECTION FIRST, IT MATTERS MORE THAN ANYTHING ELSE BELOW.
+Contemporary printed-magazine editorial illustration, clearly hand-drawn. Linework in warm
+dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly varies
+along each stroke, strokes taper and sometimes break. Colour applied like soft coloured
+pencil and light marker; flat fills with two or three tones per hue; no smooth decorative
+gradients — a gradient may only ever describe light. A fine even paper grain sits over
+every surface of the whole image. No garment, wall or floor is a flat single-tone shape:
+each carries visible pencil texture and two or three tones of its own colour, with shading
+in the folds, along the sleeves, under a collar, at a hem. Colour throughout — never
+greyscale, never monochrome, never washed out into near-white pastels. The two diagrams
+described below are drawn in this SAME hand-drawn pencil style — they are friendly
+illustrations, never glossy 3D medical renderings and never textbook plates.
+
+LIFE AND COLOUR ENERGY — READ THIS TOGETHER WITH THE STYLE SECTION ABOVE; the previous
+attempt failed here. The picture must feel ALIVE, warm and inhabited — a bright, friendly
+editorial illustration, NOT a muted grey-beige one. Concretely:
+  • EACH PANEL must contain AT LEAST FIVE clearly different, easily readable colours, and
+    they must be assigned to real objects rather than to a general wash. In the left panel:
+    the potted plant's green leaves and its terracotta pot, a mustard-yellow cushion on one
+    chair, a stack of folders in teal and clay on the shelf, the patient's powder blue
+    shirt, the dentist's dusty rose scrubs, a warm honey-coloured wooden table and floor.
+    In the right panel: pale honey wood on the cabinets, soft blue-grey walls, a sage-green
+    blanket over the patient, a clay-red mug, a mustard coat on the hook, a small green
+    plant, and the warm amber pool of the microscope light over the working area;
+  • the colours are still muted and pencil-like, but they are SATURATED ENOUGH TO BE NAMED
+    AT A GLANCE in a small thumbnail. Nothing is beige-on-beige, nothing is grey, nothing is
+    muddy, and no large area is left as flat empty off-white;
+  • WARM DAYLIGHT IS VISIBLE, not implied: in the left panel a clear warm patch of sunlight
+    falls across the floor and up one wall, with a soft warm rim along the near edges of the
+    table, the chairs and the two people;
+  • the PEOPLE look healthy and alive: warm skin tones with a faint blush on the cheeks and
+    the nose, soft warmth under the jaw, eyes clearly drawn and awake, relaxed natural
+    posture. Nobody is pale, waxy, grey or stiff;
+  • the linework is WARM DARK BROWN, never grey and never black.
+The mood is professional and supportive, and it is carried by warmth and attentiveness: she
+is engaged, leaning in, with a small kind smile; he is listening and beginning to relax.
+Quietly warm — never sombre, never clinical, never gloomy.
+
+STRUCTURE — One illustration divided into TWO EQUAL panels by a single thin hand-drawn
+vertical line. Left panel: a consultation. Right panel: the treatment itself, on a later
+day. The SAME woman dentist and the SAME male patient appear in both panels.
+
+LEFT PANEL — a small, quiet consultation room in a neighbourhood dental clinic, daytime.
+The two of them sit FACING EACH OTHER across a small low table, both seen in three-quarter
+view: the DENTIST is on the LEFT of this panel, the PATIENT is on the RIGHT. Never put the
+patient on the left. She is an East Asian woman of about 40; she leans slightly forward
+with one hand open, palm up, resting on the table, explaining something without hurrying.
+He is an East Asian man in his mid THIRTIES — young, with smooth unlined skin, dark hair
+with no grey and a slim upright build; do not draw him middle-aged or older. He sits leaning
+slightly forward with his hands together on the desk, following what she says, and HIS FACE
+IS PLEASANT AND OPEN: a small genuine smile, eyebrows relaxed and level, eyes attentive —
+the look of someone who is understanding something and finding it reassuring, perhaps just
+about to nod. He is NOT worried, NOT sour, NOT frowning, NOT gloomy, NOT frightened.
+Neither of them looks at the viewer.
+THIS ROOM MUST READ AS A PROFESSIONAL MEDICAL CONSULTING OFFICE, not a living room. Use a
+proper CONSULTATION DESK between them, not a low coffee table, and give them office chairs,
+not armchairs — no sofa, no cushions, no rug. On the desk: a small solid tooth model, a
+closed document folder, a pen, a glass of water, and a slim monitor turned slightly away
+with a plain dark blank screen. Behind her, floor-to-ceiling shelving neatly filled with
+rows of uniform blank-spined binders and a few boxes, all tidy and squared up. A tall potted
+plant in a terracotta pot in the corner, a framed picture on the wall carrying ONLY an
+abstract drawing of low mountains and no writing whatsoever, clean bright pale walls, and a
+large window with warm daylight. Everything is orderly and cared for — the room itself
+should say that this is somebody who knows their job.
+
+RIGHT PANEL — the treatment room of the same clinic. IT IS A PROPERLY LIT, MODERN CLINICAL
+ROOM — NOT a night scene and NOT a dark room: the walls are a light soft blue-grey, the
+cabinets pale honey wood, and there is enough general light everywhere for every object in
+the room to be clearly seen and clearly coloured. It is a little cooler and calmer than the
+sunlit left panel, but never gloomy, never murky and never in deep shadow. The one thing
+that IS dramatic is the microscope's own light: a compact, distinctly warmer and brighter
+pool falling on the working area around the patient's mouth and on the dentist's hands, so
+the eye goes there first. The dentist sits bent forward with both eyes to
+the eyepieces of a dental operating microscope. HER HANDS AND THE SLENDER INSTRUMENT SHE
+HOLDS ARE AT THE PATIENT'S MOUTH — the working tips rest just at his slightly parted lips,
+level with the LOWER THIRD of his face. Her hands must never be up beside his eyes, his
+forehead, his temple or his hair, and the instrument never points at his eyes. Draw a clear
+vertical gap between her hands and his eyes. ACROSS HIS MOUTH IS A RUBBER DAM: a small square sheet of soft PINK rubber lying over the
+lower half of his face, held taut by a thin light-coloured frame, with ONE small round
+opening in the middle through which a single tooth is isolated. The instrument tips go to
+that opening. Draw it simply and small — a flat pink square with a clean edge, one hole, one
+tiny tooth showing; no teeth, tongue, lips or mouth interior are drawn anywhere else, and
+the sheet is a calm dusty pink, never bright, never magenta. Her
+posture is quiet, careful concentration. Below her the patient lies back in the treatment
+chair with his eyes closed, his eyebrows smooth and relaxed and his hands resting loosely
+on his stomach, a soft blanket over him to the waist — he is calm and unafraid, NOT
+grimacing, NOT in pain. His mouth is not shown in close-up. Around them, ordinary lived-in
+clinic detail kept quiet in the shadow: a low cabinet, a transparent tooth model, a mug, a
+coat on a hook, a stool.
+
+THE TOOTH — This same tooth is drawn TWICE, once inside each panel's bubble, at the SAME
+size, the SAME angle and the SAME position within its bubble, so the two bubbles read as
+the same tooth before and after.
+Draw it the way a clear anatomical model looks, not the way a cut-open diagram looks: ONE
+lower molar seen from the side, crown at the top and TWO roots going down, its whole outer
+shell drawn as a THIN-LINED TRANSLUCENT PALE SHELL — a faint near-white wash with a soft
+edge, like frosted glass — so that everything inside is fully visible through it. No gum, no
+jawbone, no other teeth, no face, no cut edge, no hatching.
+Inside that shell, the canal system is a SINGLE CONNECTED SOLID FORM, not a set of drawn
+lines, and it is the point of the entire picture. Build it exactly like this:
+  • it begins as a broad flattened chamber inside the crown and runs down into BOTH roots;
+  • the two main canals are FLATTENED RIBBONS, not round tubes — wide and tape-like near
+    the crown, tapering as they descend, each one bending slightly and differently;
+  • between the two canals, in the upper and middle thirds, stretches a THIN CONNECTING WEB
+    of the same material, and that web is PIERCED BY SEVERAL OVAL HOLES of clearly
+    different sizes and spacings — three to six of them, some round, some long and narrow.
+    These holes are the single most recognisable feature of the whole form and must be
+    clearly visible;
+  • from the middle third down to the tips, MANY VERY FINE HAIR-THIN BRANCHES leave the
+    main ribbons at irregular angles, exactly like the fine complicated roots of a plant:
+    some curve back and rejoin the canal or reach across to the other root, others simply
+    taper away and end. They vary in length and are never evenly spaced;
+  • at each root tip the form splits into THREE TO SIX tiny separate branches that end in
+    separate openings, not one single hole;
+  • ⚠ EVERY PART OF THE CANAL SYSTEM STAYS COMPLETELY INSIDE THE TOOTH. This is the single
+    most important rule about the drawing. The canal system is a hollow space carved inside
+    the tooth, not a plant rooted in soil: NOTHING crosses the outline of the root, nothing
+    hangs below the root tips, nothing sprouts out of the sides. Every one of the fine
+    hair-thin branches STOPS SHORT of the outer surface and ends inside the root, with a
+    clear margin of pale tooth substance still visible between the end of each branch and
+    the outline of the root. The tiny branches at the tips likewise stop just inside the
+    tip. Draw the translucent tooth outline FIRST and treat it as a hard boundary that the
+    red-brown canal form is never allowed to touch or cross;
+  • the two roots are NOT mirror images of each other — one carries more branches than the
+    other, and the whole thing is irregular and organic.
+The impression to aim for is a fine natural network — part complicated tree root, part
+pierced web — never a tidy symmetrical Y, never two smooth empty tubes, never a neat
+diagram.
+
+THE LEFT BUBBLE — before treatment. In the upper part of the left panel, ONE rounded
+thought bubble with a hand-drawn outline, joined to the two people by three small dots.
+Inside it, the tooth as described above, with: the ENTIRE canal system — the chamber, both
+ribbons, the pierced web and every one of the fine branches — filled with a dull, murky
+YELLOW-OCHRE matter, densest where the branches crowd together; and, just beyond the tip of
+one root, a rounded ABSCESS POCKET about as big as the root tip itself, a soft irregular
+blob of the same dull yellow-ochre with a slightly darker edge. Around the tips the
+surrounding area is faintly warm-toned. Keep this restrained and illustrative: the yellow is
+muted and chalky, never bright, never glossy, never wet-looking; it never drips, never
+spreads outside the bubble, and NO BLOOD is drawn anywhere. Nothing is drawn on the
+patient's face or cheek.
+
+THE RIGHT BUBBLE — during treatment. In the upper part of the right panel, ONE rounded
+thought bubble with a hand-drawn outline, joined to the microscope by three small dots.
+Inside it, the SAME tooth at the same size and angle, with:
+  • a single dental sealer SYRINGE entering from above, ON ITS OWN, with NO HAND holding it
+    and no fingers, arm or glove anywhere in the bubble. Draw just the instrument: a short
+    slim barrel, a small finger flange, and ONE fine slightly-curved nozzle whose tip is
+    already inside the opening at the top of the crown. It is a paste applicator, not a
+    hypodermic injection needle, and there is only ONE of them — no tray of instruments, no
+    row of syringes, no drill;
+  • a soft PALE DUSTY PINK paste being injected from that nozzle, and — this is important —
+    the canal system is only about TWO THIRDS FULL, so that the filling is visibly still
+    happening. The paste has already reached the bottom: both root tips, the tiny branches
+    at the tips and the lower fine branches are filled. From there it rises to a CLEARLY
+    VISIBLE CURVED UPPER EDGE roughly one third of the way down from the crown, a soft
+    rounded meniscus with a slightly darker rim. ABOVE that edge the canal and the upper
+    part of the pierced web are STILL EMPTY and show the pale hollow interior of the tooth,
+    so the difference between filled and unfilled is obvious at a glance. A small bead of
+    the same pink paste sits at the nozzle tip, just about to join the rest. Draw the filled
+    part as one continuous connected mass with two tones of pencil shading;
+  • the yellow matter and the abscess of the left bubble are completely GONE, replaced at
+    the root tips by a faint warm halo.
+No yellow anywhere in this bubble. No blood.
+
+KEEP THE DIAGRAMS INSIDE THE BUBBLES. Nothing resembling a tooth, a canal, a branching
+network, yellow matter, pink paste or a syringe may appear anywhere else in the picture —
+not on the walls, not on the framed picture, not on the table, not on the floor, not on the
+cabinet. The tooth model on the consultation table is a plain solid model with no visible
+interior.
+
+LIGHT — One warm light source per panel and no more: the window in the left panel; the
+microscope's small lamp in the right panel, throwing a compact pool of warm light over the
+patient's face and the dentist's hands and falling away quickly into blue shadow. ATMOSPHERE LINES — In BOTH panels, draw the loose white hand-drawn atmosphere lines this
+illustrator uses in clinic scenes: TWO OR THREE LONG, SLOW, SWEEPING WHITE ARCS that travel
+right across the upper part of the panel, following the ceiling and the top of the far wall,
+gently overlapping and drifting apart. They are generous and calm — clearly longer than a
+head-width, chalk-textured, solid in the middle and fading to dry flecks at both ends. They
+sit above and behind the people and touch nothing. They are AIR AND LIGHT IN THE ROOM, so
+they must NEVER start at a person's mouth, nose, hands or body, must never wrap around
+anyone, and must never look like smoke, steam, a wisp or a spirit leaving a body. They must
+not cross the dividing line between the two panels — each panel has its own set.
+
+PEOPLE — Simplified illustrative people, both East Asian / Taiwanese: minimal features
+(small dot or short-line eyes, a simple line mouth, a small nose), natural realistic
+head-to-body proportions, believable ages. Not photorealistic. Not faceless. No oversized
+heads, no noodle limbs. Nobody looks at the viewer. Expressions are natural and gentle and
+belong to the moment — nobody grins, nobody is frightened, nobody is mocking anyone.
+THE DENTIST'S HAIR — a SHORT, NEAT, CLOSE-CROPPED BOB that lies flat against the head and
+ends at or above the jawline. It is deliberately NOT thick, NOT voluminous, NOT bouncy and
+NOT long: a slim silhouette that follows the shape of her skull, tucked behind the ear on
+the side nearest the viewer, with no heavy fringe. Identical in both panels.
+
+CLOTHING AND HAIR COLOUR — This article's colour family is RED, and it is carried by her
+scrubs and her hair exactly the way the clinic's green article carries sage-green ones. Use
+these colours precisely; they are the measured green ones with the hue moved to red and the
+lightness and saturation left untouched:
+  • her SCRUBS are a soft chalky DUSTY ROSE, #d7b7b7, shaded with #b89999 in the folds and
+    under the sleeves — a pale, low-saturation, high-lightness clothing colour, clearly
+    readable as coloured cloth; never bright, never hot pink, never scarlet, never a
+    saturated red, never darker than the shade given;
+  • her HAIR is a very dark warm brown-black with a distinct red cast, #483837, with #392928
+    in the shadowed mass and #4f4040 where the light catches it. It must still read as
+    believable natural hair — never orange, never ginger, never obviously dyed, never
+    lighter than the tones given.
+The patient wears a soft powder blue shirt in both panels so the two of them never share a
+colour. Model every garment with two or three tones of its own colour, with collar, cuffs,
+folds and hem drawn.
+
+COLOUR — Muted and multi-coloured, every colour kept low: cream and off-white as the ground
+in the left panel, deep dusty blue in the right, plus warm grey, dusty sage, powder blue,
+pale butter yellow and clay. Beyond the scrubs and hair, the brick red #ae4f4d and its
+deeper tone #89202d appear ONLY as small accents on objects — a narrow stripe along the
+lower wall, the frame of the picture, the fabric of the stool, the mug, the pot of the
+plant. Never wash the whole picture in red, never a bright or neon red, never red skin,
+never red light, never red gums, and no red inside anybody's mouth. The translucent tooth
+shells in both bubbles stay clean near-white. THERE IS NO BLOOD ANYWHERE IN THIS IMAGE.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, panel labels, measurement markings, scale numbers, numeral clock faces
+or watermarks, in any language. THE SYRINGE IS COMPLETELY BLANK — no brand name, no
+lettering, no printed graduations, no dosage numbers on its barrel or flange. The framed
+picture shows only the abstract mountains; folders, packaging, bottles, tubes, the mug, the
+scrubs and all clothing are blank; any screen is blank; there are no arrows, labels or panel
+titles anywhere, and no words printed under the panels. Where writing would normally appear,
+leave the surface plain.
+
+AVOID — greyscale; photorealism; a glossy 3D or CT-scan style medical render; a textbook
+anatomical plate with pointer lines; a photorealistic mouth interior; the patient's open
+mouth in close-up; a dense close-up or a row of dental instruments, drills or hypodermic
+needles; blood, bleeding or a wound; pain, fear or tears; a frightened or grimacing patient;
+a thick voluminous or long hairstyle on the dentist; bright pink, scarlet or saturated red
+clothing; anyone looking at the viewer; faceless or noodle-limbed figures; oversized heads;
+thick uniform black outlines; chrome or iridescent gradients; decayed, dark, broken or
+missing teeth; a canal system drawn as two smooth empty tubes or as a tidy symmetrical Y; a
+canal system drawn as thin outlined lines instead of one solid connected form; a canal
+system with no oval holes and no fine branches; a solid opaque tooth that hides its own
+interior; any branch, root tip or canal that crosses, touches or hangs outside the outline
+of the tooth; a canal system drawn like a plant with roots spreading into soil; a completely
+filled canal system with no visible unfilled part; the dentist's hands or instrument beside
+the patient's eyes, forehead or hair; a muted grey-beige picture with only one readable
+colour; flat empty off-white areas; grey or black linework; pale waxy lifeless skin; walls left white or
+empty; empty bare rooms; a dark, dim or night-time treatment room; a hand, fingers or a
+glove holding the syringe inside the bubble; a consultation room that looks like a living
+room, with a sofa, armchairs, cushions or a low coffee table; a middle-aged or elderly
+patient; a sour, glum, worried or frowning face on the patient in the left panel; short
+choppy atmosphere lines.
+```
