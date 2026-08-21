@@ -299,7 +299,7 @@ const BAR = `
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時連同 data-* 屬性一起刪掉，不要留到正式站。
      網址可帶參數直接開到某一格（正規式一律 [a-z0-9]+）：
-       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r
+       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r  ?sun=a|b|c
        ?fs=16|18|20  ?cmp=now|new
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
@@ -352,6 +352,12 @@ const BAR = `
       <button data-k="shadow" data-v="s3">重</button>
       <button data-k="shadow" data-v="s4">最重</button>
     </div>
+    <div class="pv-row">
+      <span class="pv-lab">光向</span>
+      <button data-k="sun" data-v="a">斜 45°</button>
+      <button data-k="sun" data-v="b">60°</button>
+      <button data-k="sun" data-v="c">高 75°</button>
+    </div>
   </div>
   <div class="pv-panel" id="pvPanel">量測中…</div>
 </div>
@@ -387,12 +393,18 @@ const BAR = `
   var WAIST = { b: 50, c: 40, d: 30 };
   /* 尖端的圓角，用頭的半徑的倍數給。s＝接近參考圖那種尖、r＝接近 Google 那種圓。 */
   var TIP = { s: .06, m: .11, r: .18 };
+  /* 光向：影子往哪個方向倒，角度從**水平**算起（45＝右下 45 度、90＝正下方）。
+     ⚠ 太陽愈高，影子愈短**而且愈接近正下方** —— 2026-08-21 第六輪使用者：
+       「影子長度夠了，但這個影子偏移的角度太少，看起來光源不是從很高的位置
+       照下來。」量過參考圖那顆：影子集中在 0~90 度那三個扇形、最濃在
+       30~60 度，所以 45 度那一格保留，另外給更陡的兩格。 */
+  var SUN = { a: 45, b: 60, c: 75 };
   var SIZE = { s: 52, m: 60, l: 68 };
   var POS  = { c: 276, r: 294, rr: 312 };
   var TIPY = 238;                 /* 尖端進到綠塊裡 2 個單位（綠塊上緣 236） */
   var PLOT = { x: 228, y: 236, w: 96, h: 51 };
 
-  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', neck: 'c', tip: 'm', cmp: 'new' };
+  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', neck: 'c', tip: 'm', sun: 'b', cmp: 'new' };
   var st = {};
   var q = location.search;
   Object.keys(DEF).forEach(function (k) {
@@ -410,10 +422,10 @@ const BAR = `
        （s1 從 54 階跳到 81）。換算式：a_new ＝ 1−(1−a_old)^(舊層數/新層數)。 */
   var SH = {
     off: null,
-    s1: { a: .022, off: .05, sp: .07, max: 61, area: 72 },
-    s2: { a: .032, off: .09, sp: .11, max: 91, area: 154 },
-    s3: { a: .041, off: .13, sp: .15, max: 97, area: 240 },
-    s4: { a: .051, off: .18, sp: .20, max: 121, area: 346 }
+    s1: { a: .022, off: .10, sp: .035, max: 71, area: 76 },
+    s2: { a: .032, off: .16, sp: .050, max: 91, area: 137 },
+    s3: { a: .041, off: .22, sp: .070, max: 97, area: 205 },
+    s4: { a: .051, off: .30, sp: .090, max: 121, area: 291 }
   };
 
   /* 釘身的路徑。三個參數：
@@ -436,7 +448,11 @@ const BAR = `
     var vx = 0 - PX, vy = tcy - PY, dist = Math.hypot(vx, vy);
     var th = Math.acos(Math.min(1, rt / dist));           /* 切點與連心線的夾角 */
     var base = Math.atan2(PY - tcy, PX - 0);              /* 小圓心 → 腰點 */
-    var a1 = base - th;                                   /* 右側那個切點 */
+    /* ⚠⚠ 兩個切點要取**右邊**那一個（cos 為正）。取錯邊的話輪廓會從尖端
+       折回去，畫出來就是「末端有奇怪的分岔」—— 2026-08-21 第六輪使用者
+       回報的正是它（腰身愈細、尖端半徑愈大，那個分岔愈明顯）。 */
+    var a1 = base + th;
+    if (Math.cos(a1) < 0) a1 = base - th;                 /* 保險：真的取到左邊就換一個 */
     var qx = 0 + rt * Math.cos(a1), qy = tcy + rt * Math.sin(a1);
     /* 左邊鏡射；沿順時針（角度遞增）從右切點繞過底部到左切點 */
     var a2 = Math.PI - a1;
@@ -479,6 +495,8 @@ const BAR = `
     for (var i = 0; i < LAYERS; i++) {
       var t = i / (LAYERS - 1);
       var sc = 1 + sh.sp * t, k = sh.off * R * (0.4 + 0.6 * t);
+      var ang = (SUN[st.sun] || SUN.b) * Math.PI / 180;
+      var kx = k * Math.cos(ang) / Math.SQRT1_2, ky = k * Math.sin(ang) / Math.SQRT1_2;
       var p = document.createElementNS(NS, 'path');
       p.setAttribute('d', dAttr);
       p.setAttribute('opacity', sh.a.toFixed(3));
@@ -489,9 +507,14 @@ const BAR = `
          ⚠ 第五輪再收一次（使用者：「範例看起來是從更高的角度照下來，
            所以不用像你畫的那麼長」）：off 與 sp 整組砍一半，影子貼著
            右下緣就收掉，覆蓋面積從 315 降到 154 CSS px²（「中」那一階）。
+         ⚠⚠ 第六輪再改一次配比：**位移要壓過擴散**。第五輪是 off .09 配 sp .11
+           —— 擴散比位移還大，影子就往四面八方長，看起來又變回「在背後暈開」，
+           使用者：「這個影子偏移的角度太少，看起來光源不是從很高的位置照下來。」
+           現在「中」是 off .16 配 sp .05，影子是一彎明確的月牙，不是一圈暈；
+           倒的方向另外由「光向」那條尺給（45／60／75 度，預設 60）。
          ⚠ 以頭的圓心 (0, -d) 為中心放大，不是以尖端 —— 以尖端放大的話
            影子會整個往下長，看起來像倒影。 */
-      p.setAttribute('transform', 'translate(' + n(k) + ' ' + n(k) + ') translate(0 ' + n(-d) +
+      p.setAttribute('transform', 'translate(' + n(kx) + ' ' + n(ky) + ') translate(0 ' + n(-d) +
         ') scale(' + sc.toFixed(4) + ') translate(0 ' + n(d) + ')');
       shg.appendChild(p);
     }
