@@ -1,0 +1,51 @@
+<body data-orient="w" data-size="p" data-lotcolor="blue">
+
+<div class="sheet">
+  <div class="sh-head">
+    <b>停車資訊</b>
+    <span>芳仁牙醫診所・雲林斗六・永樂街</span>
+  </div>
+
+  <div class="sh-map">
+<!--MAP-->
+  </div>
+
+  <ul class="sh-lots">
+    <li><span class="no">1</span><span class="nm">斗六永樂站停車場</span><span class="du">50 公尺・步行 1 分鐘</span></li>
+    <li><span class="no">2</span><span class="nm">合廷停車場</span><span class="du">140 公尺・步行 2 分鐘</span></li>
+    <li><span class="no">3</span><span class="nm">壹車房－中華路停車場</span><span class="du">190 公尺・步行 3 分鐘</span></li>
+  </ul>
+
+  <p class="sh-note">周邊路段另有畫設之路邊停車格。停車計價方式依各業者現場標示為準。</p>
+
+  <div class="sh-foot">
+    <span><b>芳仁牙醫診所</b>　雲林縣斗六市永樂街 70 號</span>
+    <span>(05)533-9369</span>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     切換條（提案用）。⚠ 定案時整段刪掉。
+     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off
+     ========================================================================== -->
+<div class="pv-bar" id="pvBar">
+  <div class="pv-row">
+    <span class="pv-lab">方向</span>
+    <button data-k="orient" data-v="w">正對診所（西在上）</button>
+    <button data-k="orient" data-v="e">往外看（東在上）</button>
+    <button data-k="orient" data-v="n">北在上</button>
+    <button data-k="orient" data-v="s">南在上</button>
+  </div>
+  <div class="pv-row">
+    <span class="pv-lab">紙張</span>
+    <button data-k="size" data-v="p">A4 直</button>
+    <button data-k="size" data-v="l">A4 橫</button>
+    <span class="pv-lab">停車場</span>
+    <button data-k="lotcolor" data-v="blue">三個都上藍</button>
+    <button data-k="lotcolor" data-v="grey">維持灰</button>
+    <span class="pv-lab">標記</span>
+    <button data-k="you" data-v="on">您在這裡</button>
+    <button data-k="you" data-v="off">不放</button>
+  </div>
+  <div class="pv-panel" id="pvPanel">量測中…</div>
+</div>

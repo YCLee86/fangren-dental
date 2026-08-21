@@ -1,0 +1,94 @@
+/* ==========================================================================
+   門口那張停車參考圖（提案）
+   ⚠ 這一段是這張海報自己的樣式；底下那一大段是從 index.html 原封不動抽出來的
+     地圖樣式。兩者的分界寫在中間那一行註解。
+   ========================================================================== */
+:root {
+  --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2;
+  --ink: #2a2c27; --ink-soft: #5c5f57;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 1.2rem .8rem 14rem; background: #d8dbdd; color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* A4 直式（210×297mm）。螢幕上用同一個比例縮到版面寬度。 */
+.sheet {
+  width: min(100%, 210mm); aspect-ratio: 210 / 297; margin: 0 auto;
+  background: var(--card); color: var(--ink);
+  padding: 7mm 8mm 6mm; display: flex; flex-direction: column;
+  box-shadow: 0 1px 2px rgba(42,44,39,.07), 0 4px 10px rgba(42,44,39,.09);
+  container-type: inline-size;
+}
+body[data-size="l"] .sheet { aspect-ratio: 297 / 210; width: min(100%, 297mm); }
+
+/* 字級一律用 cqw（相對於紙張寬度），這樣螢幕預覽和實際列印是同一個版面。 */
+.sh-head { display: flex; align-items: baseline; gap: 2.2cqw; border-bottom: .35cqw solid var(--map-mark, #3f654a); padding-bottom: 1.6cqw; }
+.sh-head b { font-size: 7.2cqw; letter-spacing: .04em; color: #3f654a; }
+.sh-head span { font-size: 3.4cqw; color: var(--ink-soft); letter-spacing: .06em; }
+
+.sh-map { flex: 1; display: grid; place-items: center; margin: 2.4cqw 0 0; min-height: 0; overflow: hidden; }
+.sh-map .map-fig { width: 100%; height: 100%; display: grid; place-items: center; }
+/* ⚠ 高度也要夾住：紙張的比例和地圖的 viewBox（560×620）不一樣，
+   只給寬度的話圖會長到把底下的清單擠出紙外。 */
+.sh-map .map-svg { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+/* 圖說（周邊路段另有畫設…）海報上不畫 —— 同樣的兩句話改放在清單底下。 */
+.sh-map .map-note { display: none; }
+.sh-note { margin: 2.2cqw 0 0; font-size: 2.9cqw; line-height: 1.6; color: var(--ink-soft); }
+
+/* 三個停車場：一行一個，字要大到站在門口就讀得到 */
+.sh-lots { display: grid; gap: 1.6cqw; margin: 3cqw 0 0; padding: 0; list-style: none; }
+.sh-lots li { display: grid; grid-template-columns: 7cqw 1fr auto; align-items: baseline; gap: 2cqw;
+              font-size: 4.2cqw; line-height: 1.4; }
+.sh-lots .no { width: 7cqw; height: 7cqw; border-radius: 50%; background: #365685; color: var(--card);
+               display: grid; place-items: center; font-size: 4cqw; font-weight: 700; align-self: center; }
+.sh-lots .nm { font-weight: 700; letter-spacing: .02em; }
+.sh-lots .du { color: var(--ink-soft); font-size: 3.8cqw; white-space: nowrap; }
+
+.sh-foot { margin-top: 3cqw; padding-top: 2cqw; border-top: 1px solid var(--rule);
+           display: flex; justify-content: space-between; align-items: baseline; gap: 2cqw;
+           font-size: 3.2cqw; color: var(--ink-soft); letter-spacing: .02em; }
+.sh-foot b { color: var(--ink); font-size: 3.6cqw; }
+
+/* 印出來的時候：整頁只留紙張本身 */
+@page { size: A4 portrait; margin: 0; }
+@media print {
+  body { background: #fff; padding: 0; }
+  .pv-bar { display: none !important; }
+  .sheet { width: 210mm; height: 297mm; aspect-ratio: auto; box-shadow: none; }
+}
+
+/* ---- 切換條（提案用，定案時整段刪掉） ---- */
+.pv-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 999;
+  background: rgba(244,244,245,.94); backdrop-filter: blur(8px) saturate(1.1);
+  border-top: 1px solid var(--rule); padding: .5rem .7rem calc(.5rem + env(safe-area-inset-bottom));
+  font-size: 12px; line-height: 1.4; max-height: 46vh; overflow: auto;
+}
+.pv-row { display: flex; align-items: center; gap: .3rem; flex-wrap: wrap; margin-bottom: .34rem; }
+.pv-row:last-child { margin-bottom: 0; }
+.pv-lab { width: 3.4em; flex: none; color: var(--ink-soft); }
+.pv-bar button { font: inherit; padding: .28rem .5rem; border-radius: 8px; cursor: pointer;
+                 border: 1px solid var(--rule); background: #fff; color: var(--ink); }
+.pv-bar button[aria-pressed="true"] { background: #3f654a; border-color: #3f654a; color: #fff; }
+.pv-panel { margin-top: .4rem; padding-top: .4rem; border-top: 1px dashed var(--rule);
+            color: var(--ink-soft); font-size: 11.5px; }
+.pv-panel b { color: var(--ink); }
+
+/* ---- 地圖本身的幾件事：這一頁是靜態的，三個停車場全部亮著 ---- */
+.sh-map .lot { pointer-events: none; }
+.sh-map .dots, .sh-map .rlab { opacity: 1; }
+.sh-map .map-svg.dim .lbl, .sh-map .map-svg.dim .lbl-s, .sh-map .map-svg.dim .lbl-xs { opacity: 1; }
+.sh-map .lbl.hide, .sh-map .lbl-s.hide, .sh-map .lbl-xs.hide { opacity: 1; }
+/* ⚠⚠ 「您在這裡」與號碼牌的字色**一定要用 CSS 寫**，不能只寫 fill 屬性 ——
+   index.html 那段地圖樣式裡有一條 `.map-svg text { fill: var(--map-ink) }`，
+   **CSS 規則贏過 presentation attribute**，所以寫在標籤上的 fill="#f4f4f5"
+   會被那條蓋掉，字就變成街名的柔墨色（實測 rgb(92,95,87)）。
+   font-weight 同理（那條寫了 400）。 */
+.sh-map .map-svg .you text { fill: var(--card); font-weight: 700; }
+.sh-map .map-svg .bdg text { fill: var(--card); font-weight: 700; }
+/* 指北針 */
+.sh-map .nsw path { fill: var(--ink-soft); }
+.sh-map .map-svg .nsw text { fill: var(--ink-soft); font-size: 15px; font-weight: 700; }

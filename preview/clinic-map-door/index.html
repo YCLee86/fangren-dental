@@ -1,0 +1,1279 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>提案：門口的停車參考圖｜芳仁牙醫</title>
+<style>
+/* ==========================================================================
+   門口那張停車參考圖（提案）
+   ⚠ 這一段是這張海報自己的樣式；底下那一大段是從 index.html 原封不動抽出來的
+     地圖樣式。兩者的分界寫在中間那一行註解。
+   ========================================================================== */
+:root {
+  --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2;
+  --ink: #2a2c27; --ink-soft: #5c5f57;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 1.2rem .8rem 14rem; background: #d8dbdd; color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* A4 直式（210×297mm）。螢幕上用同一個比例縮到版面寬度。 */
+.sheet {
+  width: min(100%, 210mm); aspect-ratio: 210 / 297; margin: 0 auto;
+  background: var(--card); color: var(--ink);
+  padding: 7mm 8mm 6mm; display: flex; flex-direction: column;
+  box-shadow: 0 1px 2px rgba(42,44,39,.07), 0 4px 10px rgba(42,44,39,.09);
+  container-type: inline-size;
+}
+body[data-size="l"] .sheet { aspect-ratio: 297 / 210; width: min(100%, 297mm); }
+
+/* 字級一律用 cqw（相對於紙張寬度），這樣螢幕預覽和實際列印是同一個版面。 */
+.sh-head { display: flex; align-items: baseline; gap: 2.2cqw; border-bottom: .35cqw solid var(--map-mark, #3f654a); padding-bottom: 1.6cqw; }
+.sh-head b { font-size: 7.2cqw; letter-spacing: .04em; color: #3f654a; }
+.sh-head span { font-size: 3.4cqw; color: var(--ink-soft); letter-spacing: .06em; }
+
+.sh-map { flex: 1; display: grid; place-items: center; margin: 2.4cqw 0 0; min-height: 0; overflow: hidden; }
+.sh-map .map-fig { width: 100%; height: 100%; display: grid; place-items: center; }
+/* ⚠ 高度也要夾住：紙張的比例和地圖的 viewBox（560×620）不一樣，
+   只給寬度的話圖會長到把底下的清單擠出紙外。 */
+.sh-map .map-svg { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+/* 圖說（周邊路段另有畫設…）海報上不畫 —— 同樣的兩句話改放在清單底下。 */
+.sh-map .map-note { display: none; }
+.sh-note { margin: 2.2cqw 0 0; font-size: 2.9cqw; line-height: 1.6; color: var(--ink-soft); }
+
+/* 三個停車場：一行一個，字要大到站在門口就讀得到 */
+.sh-lots { display: grid; gap: 1.6cqw; margin: 3cqw 0 0; padding: 0; list-style: none; }
+.sh-lots li { display: grid; grid-template-columns: 7cqw 1fr auto; align-items: baseline; gap: 2cqw;
+              font-size: 4.2cqw; line-height: 1.4; }
+.sh-lots .no { width: 7cqw; height: 7cqw; border-radius: 50%; background: #365685; color: var(--card);
+               display: grid; place-items: center; font-size: 4cqw; font-weight: 700; align-self: center; }
+.sh-lots .nm { font-weight: 700; letter-spacing: .02em; }
+.sh-lots .du { color: var(--ink-soft); font-size: 3.8cqw; white-space: nowrap; }
+
+.sh-foot { margin-top: 3cqw; padding-top: 2cqw; border-top: 1px solid var(--rule);
+           display: flex; justify-content: space-between; align-items: baseline; gap: 2cqw;
+           font-size: 3.2cqw; color: var(--ink-soft); letter-spacing: .02em; }
+.sh-foot b { color: var(--ink); font-size: 3.6cqw; }
+
+/* 印出來的時候：整頁只留紙張本身 */
+@page { size: A4 portrait; margin: 0; }
+@media print {
+  body { background: #fff; padding: 0; }
+  .pv-bar { display: none !important; }
+  .sheet { width: 210mm; height: 297mm; aspect-ratio: auto; box-shadow: none; }
+}
+
+/* ---- 切換條（提案用，定案時整段刪掉） ---- */
+.pv-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 999;
+  background: rgba(244,244,245,.94); backdrop-filter: blur(8px) saturate(1.1);
+  border-top: 1px solid var(--rule); padding: .5rem .7rem calc(.5rem + env(safe-area-inset-bottom));
+  font-size: 12px; line-height: 1.4; max-height: 46vh; overflow: auto;
+}
+.pv-row { display: flex; align-items: center; gap: .3rem; flex-wrap: wrap; margin-bottom: .34rem; }
+.pv-row:last-child { margin-bottom: 0; }
+.pv-lab { width: 3.4em; flex: none; color: var(--ink-soft); }
+.pv-bar button { font: inherit; padding: .28rem .5rem; border-radius: 8px; cursor: pointer;
+                 border: 1px solid var(--rule); background: #fff; color: var(--ink); }
+.pv-bar button[aria-pressed="true"] { background: #3f654a; border-color: #3f654a; color: #fff; }
+.pv-panel { margin-top: .4rem; padding-top: .4rem; border-top: 1px dashed var(--rule);
+            color: var(--ink-soft); font-size: 11.5px; }
+.pv-panel b { color: var(--ink); }
+
+/* ---- 地圖本身的幾件事：這一頁是靜態的，三個停車場全部亮著 ---- */
+.sh-map .lot { pointer-events: none; }
+.sh-map .dots, .sh-map .rlab { opacity: 1; }
+.sh-map .map-svg.dim .lbl, .sh-map .map-svg.dim .lbl-s, .sh-map .map-svg.dim .lbl-xs { opacity: 1; }
+.sh-map .lbl.hide, .sh-map .lbl-s.hide, .sh-map .lbl-xs.hide { opacity: 1; }
+/* ⚠⚠ 「您在這裡」與號碼牌的字色**一定要用 CSS 寫**，不能只寫 fill 屬性 ——
+   index.html 那段地圖樣式裡有一條 `.map-svg text { fill: var(--map-ink) }`，
+   **CSS 規則贏過 presentation attribute**，所以寫在標籤上的 fill="#f4f4f5"
+   會被那條蓋掉，字就變成街名的柔墨色（實測 rgb(92,95,87)）。
+   font-weight 同理（那條寫了 400）。 */
+.sh-map .map-svg .you text { fill: var(--card); font-weight: 700; }
+.sh-map .map-svg .bdg text { fill: var(--card); font-weight: 700; }
+/* 指北針 */
+.sh-map .nsw path { fill: var(--ink-soft); }
+.sh-map .map-svg .nsw text { fill: var(--ink-soft); font-size: 15px; font-weight: 700; }
+
+/* ---- 以下整段是從 index.html 抽出來的地圖樣式，一個字都沒改 ---- */
+/* ==========================================================================
+   位置與周邊停車（2026-08-14 定案上線）
+   --------------------------------------------------------------------------
+   四十二輪的推導、每一個落選案的數字、踩過的坑，全部在
+   /history/clinic-simple-map.html。要還原提案頁（有切換條的那一版）：
+     git show <定案前最後一個 commit>:preview/clinic-simple-map/index.html > /tmp/x.html
+
+   定案的那一組：線的畫法／圓角方外框／面的診所標記／一般牙科綠 #3f654a／
+   停車場路牌藍 #365685（只給「點到」那一態）／牌子淺底藍字空心三角／
+   街名柔墨／只導壓到街廓角的那幾角。切換條與所有 data-* 都已經刪掉。
+   ========================================================================== */
+:root {
+  /* 地圖自己的值，全部指回站上既有的變數 —— 只有路牌藍是這一輪新增的 */
+  --map-bg:    var(--card);       /* 街廓 */
+  --map-road:  var(--rule);       /* 路面 */
+  --map-ink:   var(--ink-soft);   /* 街名 */
+  --map-mark:  #3f654a;           /* 診所 ＝ 一般牙科的套色 */
+  --map-park:  #365685;           /* 停車場「點到」那一態 ＝ 路牌藍 */
+  --lbl-op: 1;
+}
+/* 一般牙科・創辦醫師那一支的套色（PALETTE.md 第六之十一節第七小節）。
+   ⚠ 這顆也是主畫面圖示在用的綠 —— 站上「牙科本身」的顏色就是它。
+   ⚠ 它和停車場的地磚深藍 #252d4a 差 22 個 L*、色相也不同（綠 vs 藍），
+     所以兩種深色塊分得出來；當初改用磚紅就是怕深綠松 #214D48 分不出來，
+     那顆比這顆暗一階。 */
+/* 停車場的藍 ＝ **路牌藍 `#365685`**（2026-08-14 使用者從五階裡挑的，見上面第
+   二十七、二十八輪）。L* 36.2，亮度最接近台灣路牌的 #0058a8（37.5）。
+   落選：地磚深藍 #252d4a（太深）、深藍二 #2d4065、中藍 #314b75、
+        矯正藍 #4478b5（太淺，而且點到看不出來）。
+   ⚠ 它**只出現在「點到」那一態**，平常那三塊是柔墨，見下面 `.lot` 那一段。 */
+/* 停車場：平常淺墨，點到（或滑鼠停著）才變成停車場的藍並帶出路線。 */
+/* ⚠ 點下去那一瞬間的黑影是 iOS 自己畫的，已經在下面 `.map-fig` 那一條關掉了
+     （2026-08-17）。**不要在這裡再寫一次**，那個屬性會繼承。 */
+.lot { cursor: pointer; }
+/* 熄滅時是**柔墨 `--ink-soft`，不是淡一階的藍**（2026-08-14 第二十八輪定案，
+   使用者：「路牌藍好，但只有點到的才要變色，其他不用。」）。
+   ⚠ **藍是「點到」的意思，不是「停車場」的意思** —— 三塊都上藍的話，
+     藍就只剩深淺兩階可以表達點沒點到，那正是前一輪量到越淺落差越小的死路。
+     改成灰底之後，點下去是**換色相**（灰→藍），不必再靠亮度。
+   ⚠ 兩態的亮度**幾乎一樣**（柔墨 L star 39.8、路牌藍 36.2，對比只有 1.14），
+     所以整塊不會忽明忽暗地跳，只有顏色變 —— 這是刻意的。
+   ⚠ **P 兩態都是白的**（熄滅 4.18、路牌藍上 7.43），不必再像淡藍那一版
+     熄滅時翻成深藍。
+   ⚠⚠ **熄滅態是柔墨混 80% 卡色（#7a7d77），不是足額的柔墨**
+     （2026-08-14 第三十輪，使用者：「停車場沒點的時候這個深灰色有點太搶眼了，
+     會覺得跟診所在互相搶戲」）。足額柔墨 #5c5f57 對路面 4.20:1，
+     和診所那塊綠（4.70:1）幾乎一樣重，三塊灰又比一塊綠多 —— 灰反而贏了。
+     混到 80% 之後對路面剩 2.70:1，明顯退到第二層，而白 P 還有 4.18:1。
+   ⚠ **不能再更淡**：白 P 的下限（大字粗體）是 3:1，混到 70% 只剩 3.41、
+     65% 只剩 3.10、60% 就破線。要更淡就得把 P 改成深色，那和「像路上的停車標誌那樣反白」
+     的指定衝突。
+   ⚠ 這一輪同時把診所加了一塊實心綠名牌 —— 層次是**兩件事一起做**才成立的，
+     只調灰不加名牌的話，圖上會變成三塊淡灰加一塊綠、誰都不突出。 */
+.lot rect, .lot path { fill: color-mix(in srgb, var(--ink-soft) 80%, var(--card)); transition: fill .16s ease; }
+.lot.on rect, .lot.on path { fill: var(--map-park); }
+/* 入口指標：**導航 App 那種箭頭**（尖頭 ＋ 尾端內凹的實心四邊形，
+   使用者指定「像 Apple 地圖那顆」）。2026-08-14 從「角形（＞）」換掉 ——
+   角形在這個尺寸下看不出朝哪邊。填色，所以跟著 `.lot path` 一起深淺變化，
+   只要不另外指定 fill 就好。方向用 `rotate()` 給：0＝朝北、180＝朝南、-90＝朝西。 */
+/* P 一律白色反白，比照路上的停車標誌（使用者指定）。
+   ⚠ **再粗一階靠的是描邊，不是 font-weight**（2026-08-14 第三十輪，使用者：
+     「P 還可以再更粗一點，現在這個還是有一點細」）。這一站**不載任何網頁字型**，
+     中文吃系統字：iOS/macOS 的 PingFang TC 最重只到 Semibold，
+     Windows 的微軟正黑只有 Regular/Bold —— 寫 `font-weight: 900` 在那些機器上
+     一個像素都不會變。
+   ⚠ `paint-order: stroke` 是關鍵：描邊先畫、填色後畫蓋在上面，
+     所以只有**外側那一半**留得下來 —— 字往外長 1.1，**字腔（P 的那個洞）
+     不會被吃掉**。不寫 paint-order 的話描邊蓋在填色上，洞會縮成一條縫。 */
+.map-svg .lot .pk {
+  fill: var(--card); stroke: var(--card); stroke-width: 1.6;
+  paint-order: stroke; stroke-linejoin: round;
+}
+/* 對焦框。⚠ **滑鼠點下去不可以出現**（2026-08-14 使用者：「電腦版點下去
+   停車場有奇怪的框框」）。`:focus-visible` 本來就是為了這件事，但**帶
+   `tabindex` 的非原生可聚焦元素，Chrome 用滑鼠點也會判定成 focus-visible**
+   —— 這三塊 `<g role="button" tabindex="0">` 正是那種。
+   所以點完之後主動 `blur()`（見下面的 JS）：滑鼠使用者不留焦點，
+   用 Tab 走過來的還是會亮框（那不是 click 來的）。 */
+.lot:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* 步行路線：Google 那種點狀線。dasharray 的 0.1 ＋ round 端點 ＝ 圓點。 */
+/* ⚠ 路線**不畫線**，它只是「幾何來源」：底下的 JS 沿著它等距排圓點。
+   原本用 stroke-dasharray 排點，轉角會把相位打亂，看起來就是間隔不一致、
+   靠近診所那一段還會像歪掉（2026-08-14 使用者指出兩次）。 */
+.route { fill: none; stroke: none; }
+.dots { opacity: 0; transition: opacity .18s ease; }
+.dots circle { fill: var(--map-park); }
+.rlab { opacity: 0; pointer-events: none; transition: opacity .18s ease; }
+.dots.on, .rlab.on { opacity: 1; }
+.rlab.on { pointer-events: auto; }
+/* 牌子的兩案（2026-08-14 第三十四輪，使用者：「停車場的對話框現在是淺底色＋
+   藍邊，做一個藍底色白字的版本，這樣圖釘變成白色」）。切換條最後一排。
+
+     淺（light）  底＝路牌藍 10% 混紙卡色、框 1.5、字與圖釘與底線＝路牌藍（5.84:1）
+     實（solid）  底＝足額路牌藍、無框、字與圖釘與底線＝紙卡色（7.43:1）
+
+   ⚠ **尾巴兩案都是足額的路牌藍。** 淺的那一案因此是「實心尾巴 ＋ 空心盒子」，
+     矩形的框線橫過尾巴根部那一段是藍疊藍，看不出接縫 —— 不必另外處理。
+   ⚠ 兩案的白／藍**只換前景與底，字級、位置、底線的算法完全共用**。
+   ⚠ 診所那塊名牌一直都是實心綠底白字，不吃這個切換 —— 淺的那一案存在的
+     理由就是「和診所一深一淺分得出主次」（第三十輪 (4)）。實的那一案等於
+     把這個差別交回給顏色（綠 vs 藍）去分。 */
+/* ⚠ 這幾條要寫成 .map-svg …（多一階）—— 只寫 .rlab text 的話
+   和後面的 `.map-svg text { fill: var(--map-ink) }` 同權重，後者排在後面會贏。 */
+.map-svg .rlab text { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+.map-svg .rlab .rl-nm { font-size: 16px; }
+
+.map-svg .rlab .bub {
+  fill: color-mix(in srgb, var(--map-park) 10%, var(--card));
+  stroke: var(--map-park); stroke-width: 1.5;
+}
+.map-svg .rlab text, .map-svg .rl-pin { fill: var(--map-park); }
+.map-svg .rl-ul { stroke: var(--map-park); }
+
+.rl-link { cursor: pointer; }
+/* 診所的標記：綠塊寫「芳仁牙醫」＋ 站在上面的一顆圖釘（2026-08-21 定案，
+   十輪的推導與每一條尺的落選格在 /history/clinic-map-pin.html）。
+   ⚠ 顏色一顆都沒新增：綠 ＝ 一般牙科的套色 --map-mark、字與圈 ＝ 紙卡色 --card、
+     影子 ＝ 站上卡片陰影那一支 --ink。同一塊綠上仍然只有一個白。
+   ⚠ 這一段取代了 2026-08-14~15 那個「綠底白字的對話框（.clab）」——
+     那一塊連同它的圖釘、底線、尾巴與 data-* 都已經刪掉，不要再加回來。 */
+.cm-link { cursor: pointer; }
+.map-svg .cm-plot  { fill: var(--map-mark); }
+.map-svg .cm-solid { fill: var(--map-mark); }
+.map-svg .cm-disc  { fill: var(--card); }
+.map-svg .cm-logo  { fill: var(--map-mark); }
+/* 影子那十六層。⚠ 每層的濃度很低，疊起來才是一整片 ——
+   總濃度是 1−(1−α)^層數，不是 α×層數，改層數就要重算 α。 */
+.map-svg .cm-sh use { fill: var(--ink); opacity: .026; }
+/* 綠塊裡那四個字。⚠ 選擇器要兩階（0,2,0）才蓋得過 `.map-svg text { fill: var(--map-ink) }`。
+   ⚠ 字級 20 時那四個字寬 83.7 個單位、綠塊 96，兩邊各剩 6 —— 這是量過的上限，
+     要再放大就得連綠塊一起改。手機不另外放大（整張圖在手機是裁窄放大的，字跟著大）。 */
+.map-svg .cm-nm { fill: var(--card); font-size: 20px; font-weight: 700; letter-spacing: .04em; }
+.map-svg .cm-ul { stroke: var(--card); stroke-width: 1.2; }
+/* 有停車場亮著的時候，街名淡下去 —— 不然點狀路線壓在街名上很難辨認
+   （2026-08-14 使用者指出）。⚠ 這一條要比 .map-svg .lbl 那條多一階才蓋得過
+   它自己的 opacity: var(--lbl-op)。 */
+.map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: opacity .18s ease; }
+.map-svg.dim .lbl, .map-svg.dim .lbl-s, .map-svg.dim .lbl-xs { opacity: .28; }
+/* **被路線或牌子壓到的那幾個街名直接不見**（2026-08-14 使用者：「點下去有
+   虛線路線後，若壓到路名，這個模式下路名可拿掉」）。哪幾個是壓到的
+   由 JS 現算（見底下 hideCovered），不是寫死 —— 路線或牌子挪位置就會自己跟著變。
+   ⚠ 這一條要排在上面那條 .dim 後面（同權重，後者贏）。 */
+.map-svg .lbl.hide, .map-svg .lbl-s.hide, .map-svg .lbl-xs.hide { opacity: 0; }
+/* 入口指標：**平常不出現，點到那一塊才出現**（2026-08-14 第二十九輪，使用者：
+   「入口其實不用一開始就標示，是點下去才要 —— 壹車房跟合廷有兩條路，
+   會不知道要從哪邊進去；永樂站只有一條路，一看就知道，不需要標示。」）。
+   ⚠ 這是**資訊分層**，不是為了畫面乾淨：三顆箭頭一直亮著的時候，
+     它們和「點我」是同一個視覺重量，反而看不出哪一顆是回答問題的。
+   ⚠ 用 `visibility` 不是 `display`：`display:none` 的元素量不到外框，
+     底下 hideCovered 那一段會拿不到它的 rect。
+   ⚠ 永樂站那顆**留著**，不必特別為它寫規則 —— 它點下去之後會被自己那條
+     路線壓到，下面那條 `.hide` 就會把它收掉（2026-08-14 上一輪的機制）。 */
+.map-svg .ent { visibility: hidden; opacity: 0; transition: opacity .18s ease; }
+.map-svg .lot.on .ent { visibility: visible; opacity: 1; }
+.map-svg .lot.on .ent.hide { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .lot rect, .lot path, .lot .pk, .dots, .rlab,
+  .map-svg .lbl, .map-svg .lbl-s, .map-svg .lbl-xs { transition: none; }
+}
+
+
+.card-map { grid-column: 1 / -1; }
+/* 標籤**整個比照「開診時段」**（2026-08-14 使用者兩輪指定：先是「套色跟看診
+   時段一樣」，再來「標籤格式要比照開診時段」）。所以連幾何一起抄，不只顏色：
+
+     套色      實心 `#5f5d5c` ＋ 白字。⚠ **不是新顏色** —— 就是首頁「全部」與
+               門診表「開診時段」在用的那一階（`[data-spec="all"]`）。
+     字級      .88rem（門診表那排 2026-08-13 抬過的值，不是基底的 .8rem）
+     圓角      12px（`.hours-filter button`，不是 `.info-card h3` 的 9px）
+     字距      normal（`.info-card h3` 原本有 .08em，這裡要拿掉）
+     左右內距  .7rem
+
+   ⚠⚠ **上下內距一定要寫 `calc((34px - 1.6em - 2px) / 2)`，不要換算成 px。**
+     34 是那一排藥丸的塊高、1.6 是 line-height、1em 是**自己當下的字級**、
+     2 是上下框線。寫死之後字級一改塊高就被頂開 —— 這條規則 index.html 裡
+     也有（CLAUDE.md 第九節「手機的可讀性與橫捲標記」那一條）。
+   ⚠ 它仍然是 `<h3>` 卡片標題，不是可以按的鈕 —— 抄的是外觀，不是行為。 */
+.card-map h3 {
+  font-size: .88rem; line-height: 1.6; letter-spacing: normal;
+  padding: calc((34px - 1.6em - 2px) / 2) .7rem;
+  border-radius: 12px;
+  background: #5f5d5c; color: #fff; border: 1px solid #5f5d5c;
+}
+
+/* ---- 地圖本體 ---------------------------------------------------------- */
+/* ⚠⚠ **整張地圖要關掉 iOS 的點擊高亮**（2026-08-17，使用者的螢幕錄影：
+     「停車場切換的時候會很快速短暫的出現黑影」）。那片黑影**不是這一站的
+     任何一條規則畫的**，是 iOS Safari 的 `-webkit-tap-highlight-color`
+     （預設是半透明的黑）。1126×2436、60fps 的錄影逐幀量過：
+     ・四次切換（斗六永樂站／合廷／壹車房）**每一次都有**，位置各自跟著
+       被點的那一塊走，**5 幀（約 83ms）**之後淡掉 —— 正是「很快速短暫」。
+     ・色塊右邊那一條實測從 200.6 掉到 **142.0**（差 58 階，≈ 黑 29%）。
+   ⚠⚠ **它蓋的是 `<g class="lot">` 的外框，所以會比看得到的方塊大一圈** ——
+     入口箭頭 `.ent` 也在那個群組裡（而且是 `visibility: hidden` 不是
+     `display: none`，見上面那一段，所以一直算在外框內），黑影因此往箭頭
+     那一側凸出去一塊。畫面上讀起來就是「方塊旁邊多出一塊黑影」，
+     不是方塊自己變深。
+   ⚠ **不是** `:focus-visible` 那圈外框（那是 2px 的線，而且點完就 `blur()` 了），
+     也**不是** `.lot rect` 換色那條過場（那條只換色相，兩態亮度差 1.14）。
+   ⚠ 寫在 `.map-fig` 上是因為這個屬性**會繼承** —— 三顆停車場、牌子上那三個
+     連結、以及「點空白處＝收回」的那一層（handler 就掛在這個 `<figure>` 上）
+     一次全部涵蓋，它們的黑影是同一件事、同一個成因。
+   ⚠ 回饋不會因此不見：點下去色塊換色、路線與牌子帶出來，本來就看得見。
+   ⚠ 這一站已經有一顆這樣做了 —— 「回到最上面」那顆 `.btt`，做法相同。 */
+.map-fig { margin: 0; -webkit-tap-highlight-color: transparent; }
+/* ⚠ 這一層只有手機用得到（見樣式表最後那一段：裁掉左右）。
+   電腦版與 iPad 是 `display: contents` —— 它不產生任何盒子，SVG 等於直接
+   掛在 <figure> 底下，和 2026-08-15 之前逐像素相同。 */
+.map-win { display: contents; }
+.map-svg { display: block; width: 100%; height: auto; max-width: 480px; font-family: inherit; }
+.card-map .map-svg { margin-inline: auto; }
+.map-svg text { fill: var(--map-ink); font-weight: 400; }
+.map-svg .lbl   { font-size: 22px; letter-spacing: .06em; font-weight: 700; opacity: var(--lbl-op, 1); }
+.map-svg .lbl-xs{ font-size: 16px; letter-spacing: .02em; font-weight: 700; opacity: var(--lbl-op, 1); }
+.map-svg .lbl-s { font-size: 20px; letter-spacing: .04em; font-weight: 700; opacity: var(--lbl-op, 1); }
+/* 停車場的 P：**粗體**，比照路上停車標誌的份量（2026-08-14 使用者指定）。
+   ⚠⚠ **這個 P 不吃全站的中文字型堆疊，自己指定 Arial/Helvetica**
+     （2026-08-14 第三十六輪，使用者：「電腦版停車場的 P 好胖」，手機版沒事）。
+     成因是**同一個 `font-weight: 800` 在不同系統落在不同地方**：
+     iOS/macOS 的 PingFang TC 最重只到 Semibold，要 800 就給 Semibold；
+     Windows 的微軟正黑只有 Regular/Bold，要 800 會**合成假粗體**
+     （瀏覽器自己把字塗厚），再加上我們的描邊就腫成一塊。
+     P 是拉丁字母，改指定 Arial／Helvetica —— 三個平台都有**真的 Bold**，
+     不必合成，粗細因此各平台一致。
+   ⚠ 描邊跟著從 2.2 收到 1.6：Arial Bold 本身就比 PingFang Semibold 重，
+     維持 2.2 會變成另一種胖。`paint-order: stroke` 的道理不變（見下面）。
+   ⚠ 這也更接近路上的停車標誌 —— 那個 P 本來就是無襯線的拉丁字。 */
+.map-svg .pk    { font-family: Arial, Helvetica, "Helvetica Neue", sans-serif;
+                  font-size: 31px; font-weight: 700; fill: var(--card); letter-spacing: 0; }
+.map-svg .pk-s  { font-size: 28px; }                      /* 小一號的 P（頂三站那顆圓比較小） */
+.map-svg .pk-nm { font-size: 22px; fill: var(--card); letter-spacing: .06em; }
+.map-svg .nm    { font-size: 24px; letter-spacing: .08em; font-weight: 500; }
+
+.map-note { margin-top: .5rem; font-size: .8rem; line-height: 1.7; color: var(--ink-soft); }
+.card-map .map-note { max-width: 480px; margin-inline: auto; }
+/* 撇清關係那一句自己一段、不加粗也不變色 —— 它是要看得到，不是要跳出來喊。
+   ⚠ 不要用 --brick：這張卡上一個紅字都沒有，那顆紅在首頁本來就沒在用了
+   （CLAUDE.md 第九節「看診時間本身」那一條）。 */
+.mn-first { display: block; margin-bottom: .35rem; }
+</style>
+</head>
+<body data-orient="w" data-size="p" data-lotcolor="blue">
+
+<div class="sheet">
+  <div class="sh-head">
+    <b>停車資訊</b>
+    <span>芳仁牙醫診所・雲林斗六・永樂街</span>
+  </div>
+
+  <div class="sh-map">
+<figure class="map-fig">
+            <!-- ⚠ preserveAspectRatio 是 slice（2026-08-15）：手機那一段 CSS 給了它一個比
+                   viewBox 更瘦的 aspect-ratio，slice 就會**裁掉左右兩側**、讓中間那塊放大。
+                   viewBox 本身一個字都沒動 —— 那張圖排了四十二輪，不要動它的座標。
+                   電腦版與 iPad 沒有設 aspect-ratio，盒子的比例 ＝ viewBox 的比例，
+                   這時 slice 和 meet 完全等價，所以那兩邊不受影響。 -->
+              <div class="map-win">
+              <!-- ⚠⚠ 這張圖的名字用 `aria-label` 給，**不要用 `<title>`**（2026-08-21）。
+                     `<title>` 同時是無障礙名稱**和**桌機的原生提示框 —— 滑鼠停在圖上任何
+                     沒有自己 `<title>` 的地方（含三塊牌子），就會跳出「芳仁牙醫診所簡易地圖」
+                     那個框。使用者：「為什麼會出現這個附註框」。
+                     改成 aria-label 之後螢幕閱讀器照樣讀得到，畫面上不再跳框。
+                   ⚠ `<desc>` 不會變成提示框，所以留著，用 `aria-describedby` 接上去。
+                   ⚠ 底下三塊停車場色塊（`g.lot`）自己的 `<title>` **是刻意留的** ——
+                     名字從圖上拿掉之後，滑鼠停著是唯一看得到全名與步行時間的地方。 -->
+              <svg class="map-svg" viewBox="0 0 560 620" role="img"
+                   aria-label="芳仁牙醫診所簡易地圖" aria-describedby="md">
+              <desc id="md">診所位在永樂街與平和街19巷交會的那一角，門面朝永樂街；街區北接文化路，往南依序是平和街33巷、大同路與中華路。附近三處停車場：19巷北邊那條平行巷上的斗六永樂站、永安路上的合廷，以及中華路上的壹車房。</desc>
+
+              <defs>
+                <!-- 外框：圓角方（三案裡選上的那一個，另兩案是有機色塊與正圓）。 -->
+                <clipPath id="clip-round"><rect x="0" y="0" width="560" height="620" rx="18"/></clipPath>
+
+                <!-- 診所那顆圖釘的釘身（2026-08-21 定案，推導在 /history/clinic-map-pin.html）。
+                     放在 defs 裡是因為影子要拿同一條路徑疊十六層 —— 用 <use> 引用，
+                     不要把這串座標抄十七遍。
+                     幾何全部是算出來的（頭的半徑 R＝24.48、尖端離圓心 1.55R、
+                     腰身 30 度、尖端圓角 .06R），演算法與四條尺的落選格見那一頁。 -->
+                <path id="cm-body" d="M-12.24 -16.74A24.48 24.48 0 1 1 12.24 -16.74L1.21 -0.64A1.47 1.47 0 0 1 -1.21 -0.64Z"/>
+              </defs>
+
+              <g id="map-clip" clip-path="url(#clip-round)"><g id="geo">
+                <rect width="560" height="620" fill="var(--map-road)"/>
+
+                <!-- ⚠⚠ 2026-08-14 第九輪**畫法整個反過來**：底色鋪的是**路**，
+                     街廓一塊一塊畫上去 —— 使用者：「每個街區導一點點圓角」。
+                     街廓是路與路之間的空白，沒有自己的形狀，所以圓角只能用畫的。
+                     rx=4（2026-08-14 使用者指定從 6 收到 4；畫到 480px 寬時約 3.4px）。
+
+                     ⚠ 顏色變數的用途因此對調：底色用 `--map-road`、街廓用 `--map-bg`。
+                       兩種畫法照舊只換那兩個變數：
+                         面 plate  底＝卡色（路）　街廓＝米灰
+                         線 line   底＝--rule（路）街廓＝卡色
+                     ⚠ 街廓的兩端一律接到路的邊（-20／580 是往框外多留一點，
+                       免得圓角在畫面邊緣露出一小塊背景）。
+                     ⚠ 巷子只在自己那幾欄切開：19 巷與平行巷只切平和街～永樂街那一欄、
+                       12 巷只切最西邊那一欄、14 巷切永樂街以東兩欄、33 巷切西邊三欄。 -->
+                <g fill="var(--map-bg)">
+                  <!-- 平和街以西 -->
+                  <rect x="-20" y="-20" width="114" height="41" rx="4"/>
+                  <rect x="-20" y="59" width="114" height="116" rx="4"/>
+                  <rect x="-20" y="187" width="114" height="216" rx="4"/>
+                  <rect x="-20" y="441" width="114" height="100" rx="4"/>
+                  <rect x="-20" y="587" width="114" height="53" rx="4"/>
+                  <!-- 平和街～永樂街 -->
+                  <rect x="124" y="-20" width="200" height="41" rx="4"/>
+                  <rect x="124" y="59" width="200" height="100" rx="4"/>
+                  <rect x="124" y="171" width="200" height="48" rx="4"/>
+                  <rect x="124" y="236" width="200" height="85" rx="4"/>
+                  <rect x="124" y="333" width="200" height="70" rx="4"/>
+                  <rect x="124" y="441" width="200" height="100" rx="4"/>
+                  <rect x="124" y="587" width="200" height="53" rx="4"/>
+                  <!-- 永樂街～永安路 -->
+                  <rect x="354" y="-20" width="101" height="41" rx="4"/>
+                  <rect x="354" y="59" width="101" height="121" rx="4"/>
+                  <rect x="354" y="197" width="101" height="206" rx="4"/>
+                  <rect x="354" y="441" width="101" height="100" rx="4"/>
+                  <rect x="354" y="587" width="101" height="53" rx="4"/>
+                  <!-- 永安路以東 -->
+                  <rect x="487" y="-20" width="93" height="41" rx="4"/>
+                  <rect x="487" y="59" width="93" height="344" rx="4"/>
+                  <rect x="487" y="441" width="93" height="100" rx="4"/>
+                  <rect x="487" y="587" width="93" height="53" rx="4"/>
+                </g>
+
+                <!-- 街名。七條，全部壓在自己那條路的路面上。
+                     ⚠ 2026-08-14：三條直排街名**對齊到同一組基線（308／334／360）**
+                       —— 使用者：「垂直的道路可能要同一個水平對齊比較整齊」。
+                       那一段（286~360）是三條路上唯一同時避開四個標記的區間：
+                       合廷 155~231、診所 236~276、壹車房 474~541，
+                       以及橫向的 33 巷 321~333 與大同路 403~441（壓過巷子沒關係，
+                       壓到標記才會打架）。永樂街原本在 250 起跑，正好貼著診所那一塊，
+                       使用者說「辨識有點打架」。
+                     ⚠ **19 巷的字縮一階（20→16）並往西挪到 x176**，離開診所那一頭
+                       —— 使用者：「應該不會有人從 19 巷來找」。它留著是為了說明
+                       診所那一格的北緣，不是拿來指路的。 -->
+                <text class="lbl" x="200" y="49"  text-anchor="middle">文化路</text>
+                <text class="lbl" x="200" y="431" text-anchor="middle">大同路</text>
+                <text class="lbl" x="200" y="569" text-anchor="middle">中華路</text>
+                <text class="lbl" x="109" y="308" text-anchor="middle"><tspan x="109">平</tspan><tspan x="109" dy="26">和</tspan><tspan x="109" dy="26">街</tspan></text>
+                <text class="lbl" x="339" y="308" text-anchor="middle"><tspan x="339">永</tspan><tspan x="339" dy="26">樂</tspan><tspan x="339" dy="26">街</tspan></text>
+                <text class="lbl" x="471" y="308" text-anchor="middle"><tspan x="471">永</tspan><tspan x="471" dy="26">安</tspan><tspan x="471" dy="26">路</tspan></text>
+                <text class="lbl-xs" x="176" y="232" text-anchor="middle">平和街19巷</text>
+                <text class="lbl-xs" x="402" y="192" text-anchor="middle">永安路14巷</text>
+
+                <!-- 停車場。三處，只留 P，**名字 2026-08-14 由使用者指定拿掉**
+                     （全名還留在圖底下那一行）。
+                     ⚠ 三塊都是**直角、而且緊貼著自己臨的那條路，一點縫都不留**（使用者指定）：
+                       ・永樂站  緊貼平行巷的下緣 ＋ 永樂街的西緣（從永樂街轉進那條巷子就是）
+                       ・合廷    緊貼 14 巷的下緣 ＋ 永安路的西緣
+                       ・壹車房  緊貼中華路的上緣 ＋ 永樂街的東緣
+                     ⚠ **壹車房的高度 ＝ 它那一格的 2/3**（格高 100 → 67）。
+                       上一版 80 ≒ 5/6，使用者指出太長。 -->
+                <!-- 停車場。三處，各自是一顆可以點的東西（data-lot=a/b/c）。
+                     ⚠ 平常是**淺墨** `--ink-soft`，點下去才變成停車場的藍 `--map-park`，
+                       同時把那一條步行路線與時間叫出來（2026-08-14 使用者指定，
+                       概念照 Google 地圖）。白色的 P 在兩種底上都讀得到：
+                       淺墨 6.5:1、地磚深藍 13.5:1。
+                     ⚠ 名字從圖上拿掉之後，`<title>` 是唯一還帶著名字的地方 ——
+                       滑鼠停著會顯示，螢幕閱讀器也讀得到，**不要刪**。 -->
+                <g class="map-park">
+                  <!-- 斗六永樂站停車場：19 巷北邊那條平行巷的南側。
+                       ⚠ 它只貼著巷子、左右都在街廓中間，所以「只導壓到街廓角的」那一案
+                         一個角都不導（.c-edge 就是原本的直角矩形）。 -->
+                  <g class="lot" data-lot="a" role="button" tabindex="0"
+                     aria-label="斗六永樂站停車場，步行 1 分鐘、50 公尺">
+                    <title>斗六永樂站停車場・步行 1 分鐘（50 公尺）</title>
+                    <rect x="206" y="171" width="58" height="34"/>
+                    <!-- 入口：從北邊那條平行巷進去（朝下）。位置偏右 -->
+                    <path class="ent" transform="translate(249 161) rotate(180)" d="M0 -9L7 8L0 3.5L-7 8Z"/>
+                    <text class="pk pk-s" x="235" y="197" text-anchor="middle">P</text>
+                  </g>
+
+                  <!-- 合廷停車場：永安路上，北緣貼著 14 巷 -->
+                  <g class="lot" data-lot="b" role="button" tabindex="0"
+                     aria-label="合廷停車場，步行 2 分鐘、140 公尺">
+                    <title>合廷停車場・步行 2 分鐘（140 公尺）</title>
+                    <!-- 只有右上角壓在街廓的右上角（永安路 × 14 巷）上 -->
+                    <path d="M388 197H451A4 4 0 0 1 455 201V273H388Z"/>
+                    <!-- 入口：從永安路進去（朝西）。位置偏下 -->
+                    <path class="ent" transform="translate(466 253) rotate(-90)" d="M0 -9L7 8L0 3.5L-7 8Z"/>
+                    <text class="pk pk-s" x="421" y="241" text-anchor="middle">P</text>
+                  </g>
+
+                  <!-- 壹車房－中華路停車場：中華路與永樂街的那一角 -->
+                  <g class="lot" data-lot="c" role="button" tabindex="0"
+                     aria-label="壹車房－中華路停車場，步行 3 分鐘、190 公尺">
+                    <title>壹車房－中華路停車場・步行 3 分鐘（190 公尺）</title>
+                    <!-- 只有左下角壓在街廓的左下角（永樂街 × 中華路）上 -->
+                    <path d="M354 474H402V541H358A4 4 0 0 1 354 537Z"/>
+                    <!-- 入口：從中華路進去（朝北）。位置偏右 -->
+                    <path class="ent" transform="translate(388 552)" d="M0 -9L7 8L0 3.5L-7 8Z"/>
+                    <text class="pk pk-s" x="378" y="515" text-anchor="middle">P</text>
+                  </g>
+                </g>
+
+                <!-- 步行路線與時間。三條都沿著路的中心線走，最後都收在診所朝永樂街那一側
+                     的門口。⚠ 時間與距離是 Google 地圖給的實際值，
+                     **不是從這張圖上量的** —— 這張圖的南北被壓過（見上面第五、九輪），
+                     圖上的長短只能當示意。
+
+                     ⚠⚠ **直線段走 x=334，而且到 y=261 就結束，沒有最後那一小段橫的**
+                       （2026-08-14 兩輪疊出來的形狀）：
+                       ・第一輪：終點原本正好壓在診所右緣 x=324，最後那顆點（r 3.5）
+                         被綠色蓋掉一半（`.mark-plot` 在 DOM 上排在 `.dots` 後面）。
+                         ⚠ 不要改成「把 .mark-plot 搬到 .dots 前面」——那樣點雖然完整，
+                           但會疊在診所色塊上，看起來像路線穿進屋子裡。
+                       ・第二輪：當時的解法是往外挪到 330，於是多出一段**只有 9 個單位
+                         的橫向短段**。那一段比點距（14）還短，轉角與終點的兩顆點就變成
+                         斜著並排 —— 使用者放大手機截圖看出來：「那個藍色點沒有對齊，
+                         歪歪斜斜的」。當時把短段整個拿掉、直線收在 y=261。
+                       ・第三輪：使用者要**把轉折留著**（「還是要保留診所前面那一點有個
+                         轉折，現在的版本排成一直線」）。所以短段回來了，但**直線段從
+                         339 移到 344**，讓最後那一段正好是 `344 − 330 = 14` ＝**一個點距**。
+                         ⚠ 這是關鍵：轉角與終點因此各一顆、間距和其他地方一模一樣，
+                           不會再看起來像兩顆黏在一起。**要動這條路線，先確認最後一段
+                           仍然是 14 的整數倍。**
+                         ⚠ 代價在另一端：壹車房那條的第一段變成 `354 − 344 = 10`。
+                           那一顆有一半疊在停車場色塊上（同色，看不太出來），
+                           而使用者在意的是診所這一端，所以把 14 給了診所這邊。
+                         344 仍在永樂街的路面內（324~354）。終點 330 沒動，
+                         點的左緣 326.5、離診所 2.5，整顆都在路面上。
+                       ⚠ 起點那一端不必處理：三個停車場的 .lot 排在 .dots 前面，
+                         點本來就畫在色塊上面，不會被切。
+                       ⚠ 壹車房那塊牌子的 `data-tx` 跟著直線段走（339 → 334 → 344），
+                         不然尾巴的尖端會頂到點上。 -->
+                <g class="routes">
+                  <path class="route" data-lot="a" d="M235 165L344 165L344 261L330 261"/>
+                  <path class="route" data-lot="b" d="M410 188L344 188L344 261L330 261"/>
+                  <path class="route" data-lot="c" d="M354 507L344 507L344 261L330 261"/>
+                  <g class="dots" data-lot="a"></g>
+                  <g class="dots" data-lot="b"></g>
+                  <g class="dots" data-lot="c"></g>
+
+                  <!-- 三塊牌子。⚠ 矩形、小尾巴、圖釘、底線的座標**全部是開頁時
+                       用 getBBox() 現量出來的**（見下面的 JS）—— 寫死寬度會被字級、
+                       字型、系統設定改掉，第一版就是寫死 112/120，字直接被切掉。
+
+                       ⚠⚠ **這塊牌子第三十輪從「藍底白字」翻成「淺底藍字」**
+                         （2026-08-14 使用者：「停車場名字旁邊可以加一個圖釘的標記，
+                         顏色就是用那個已經選好的那個藍色」）。圖釘要是藍的，
+                         底就不能是藍的。翻過來之後：
+                         ・底 ＝ 路牌藍 10% 混紙卡色、框 ＝ 路牌藍、字與圖釘 ＝ 路牌藍。
+                         ・**診所那塊牌子反過來，維持實心綠底白字** —— 一深一淺才分得出
+                           「這是目的地」與「這是可選的停車場」，也才不會互相搶。
+                           使用者同一輪說的「停車場的深灰有點太搶眼，會覺得跟診所互相搶戲」
+                           講的就是這件事。
+                       ⚠ 名字底下那條線是**畫出來的 `<line>`，不是 text-decoration** ——
+                         SVG 文字的 text-decoration 在各家瀏覽器上位置不一致，
+                         畫一條線才對得準字面。
+                       ⚠ 連結要 `stopPropagation`：它在 `.rlab` 裡，而地圖底層有一個
+                         「點空白處＝收回」的 handler，不擋住的話點名字會先把牌子關掉。 -->
+                  <g class="rlab" data-lot="a" data-dir="down" data-tx="270" data-ty="165" data-tail="15.33">
+                    <path class="bub"/>
+                    <g class="rl-body">
+                      <a class="rl-link" href="https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic" target="_blank" rel="noopener"
+                         aria-label="斗六永樂站停車場・50 公尺、步行 1 分鐘・在 Google 地圖上開啟">
+                        <title>斗六永樂站停車場・在 Google 地圖上開啟</title>
+                        <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
+                        <text class="rl-nm" x="274" y="104" text-anchor="middle">斗六永樂站停車場</text>
+                        <line class="rl-ul"/>
+                      </a>
+                      <text class="rl-d" x="270" y="127" text-anchor="middle">50 公尺・1 分鐘</text>
+                    </g>
+                  </g>
+                  <g class="rlab" data-lot="b" data-dir="down" data-tx="400" data-ty="188" data-tail="15.33">
+                    <path class="bub"/>
+                    <g class="rl-body">
+                      <a class="rl-link" href="https://maps.app.goo.gl/tiHLpeKc2gETXRh96?g_st=ic" target="_blank" rel="noopener"
+                         aria-label="合廷停車場・140 公尺、步行 2 分鐘・在 Google 地圖上開啟">
+                        <title>合廷停車場・在 Google 地圖上開啟</title>
+                        <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
+                        <text class="rl-nm" x="404" y="127" text-anchor="middle">合廷停車場</text>
+                        <line class="rl-ul"/>
+                      </a>
+                      <text class="rl-d" x="400" y="150" text-anchor="middle">140 公尺・2 分鐘</text>
+                    </g>
+                  </g>
+                  <!-- 這一塊的路線是直的（永樂街），所以尾巴朝右、牌子擺在路線左邊 -->
+                  <g class="rlab" data-lot="c" data-dir="right" data-tx="344" data-tail="17.8">
+                    <path class="bub"/>
+                    <g class="rl-body">
+                      <a class="rl-link" href="https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic" target="_blank" rel="noopener"
+                         aria-label="壹車房－中華路停車場・190 公尺、步行 3 分鐘・在 Google 地圖上開啟">
+                        <title>壹車房－中華路停車場・在 Google 地圖上開啟</title>
+                        <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
+                        <text class="rl-nm" x="247" y="486" text-anchor="middle">壹車房停車場</text>
+                        <line class="rl-ul"/>
+                      </a>
+                      <text class="rl-d" x="243" y="509" text-anchor="middle">190 公尺・3 分鐘</text>
+                    </g>
+                  </g>
+                </g>
+
+                <!-- 診所：綠塊寫店名 ＋ 一顆站在上面的圖釘（2026-08-21 定案）。
+                     ⚠ 這一塊 2026-08-21 換過一輪：原本是「綠塊裡放標誌 ＋ 底下一個
+                       綠底白字的對話框」，使用者拿 cizoo.com 的截圖說喜歡圖釘那種樣子，
+                       所以標誌搬進圖釘頭上的圓圈、綠塊改成直接寫「芳仁牙醫」，
+                       對話框整塊取消。十輪的推導、落選的每一格與量測值都在
+                       **/history/clinic-map-pin.html**。
+                     ⚠ 顏色一顆都沒有新增：綠是一般牙科的套色 --map-mark、字與圈是紙卡色
+                       --card、影子是站上卡片陰影那一支 --ink。
+                     ⚠ 綠塊自己的路徑（M228 236…）從 2026-08-14 那一輪起一個單位都沒動。 -->
+                <a class="cm-link" href="https://maps.app.goo.gl/bKSrVyS2Qu2xvnMj7" target="_blank" rel="noopener"
+                   aria-label="芳仁牙醫診所・在 Google 地圖上開啟">
+                  <!-- 提示框（桌機滑鼠停著才出現）。⚠ 內容和上面的 aria-label 逐字相同 ——
+                       看得到的人和聽得到的人拿到同一句話。 -->
+                  <title>芳仁牙醫診所・在 Google 地圖上開啟</title>
+                  <g class="cmark">
+                    <!-- 只有右上角壓在街廓的右上角（永樂街 × 19 巷）上 -->
+                    <path class="cm-plot" d="M228 236H320A4 4 0 0 1 324 240V287H228Z"/>
+                    <!-- ⚠ y 的基準是算出來的：綠塊中線 261.5 ＋ 讓「字 ＋ 底線」那一整塊置中的
+                         偏移（字面上緣 .862em、下緣 .172em、底線再往下 --map-ul-gap）＝ 267。
+                       ⚠⚠ **再往下 1.5 個單位 ＝ 268.5**（2026-08-21 上線後兩輪：先是「芳仁牙醫
+                         的字和圖釘有點近，字可以再往下移一點點」，下移 3 之後「太多了，回去
+                         一點點」）。釘尖落在 y245，字面上緣原本 249.8 只差 4.8 個單位
+                         （電腦版 4.1px）；現在是 6.3（5.4px），底線離綠塊下緣還有
+                         12.6 個單位（10.8px），上下都不擠。
+                         **這個 3 是「置中之外刻意加的偏移」，不是算式的一部分** ——
+                         改字級的話先回去算 267 那個基準，再加這 3。
+                       ⚠ 底線的 x 與 y 由底下那支 sizeLabels() 現量（同停車場那三塊的做法，
+                         不要改用 text-decoration —— 各家瀏覽器的位置不一致）。 -->
+                    <text class="cm-nm" x="276" y="268.5" text-anchor="middle">芳仁牙醫</text>
+                    <line class="cm-ul"/>
+                    <!-- 圖釘。translate 的那個 y 就是**尖端落在哪一列**（綠塊上緣 236，
+                         這裡進去 9 個單位）；整顆圖釘掛在尖端上，要上下移動改這個數字。 -->
+                    <g class="cm-pin" transform="translate(294 245)">
+                      <!-- ⚠⚠ 影子是**投影**不是位移：這張圖是俯視圖、圖釘是站在桌面上的，
+                           所以尖端（接觸點）不動，愈高的部分被推得愈遠。
+                           矩陣 matrix(1 0 −L·cos φ  −L·sin φ 0 0) 就是那個投影，
+                           L ＝ cot(太陽高度 65°) ＝ .4663、φ ＝ 影子往右上 30 度。
+                           十六層以尖端為原點逐層放大（1.0000 → 1.1400）＝ 接觸處銳利、
+                           愈遠愈糊；每層都很淡（CSS 的 .cm-sh use）。
+                         ⚠ 不要改用 CSS 的 filter: drop-shadow() —— 這張 SVG 整個在
+                           clip-path 底下，**iOS Safari 會把那層濾鏡整個丟掉**
+                           （實測：切在最重那一階和「無」逐幀比對只差 3.3 階）。 -->
+                      <g class="cm-sh" aria-hidden="true">
+                      <use href="#cm-body" transform="scale(1.0000) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.0093) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.0187) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.0280) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.0373) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.0467) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.0560) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.0653) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.0747) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.0840) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.0933) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.1027) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.1120) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.1213) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.1307) matrix(1 0 -.4038 .2332 0 0)"/>
+                      <use href="#cm-body" transform="scale(1.1400) matrix(1 0 -.4038 .2332 0 0)"/>
+                      </g>
+                      <use class="cm-solid" href="#cm-body"/>
+                      <circle class="cm-disc" cx="0" cy="-37.94" r="17.63"/>
+                      <path class="cm-logo" fill-rule="evenodd" transform="translate(-12.87 -44.28) scale(.58105) translate(-232.8729 -333.8286)" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
+                    </g>
+                  </g>
+                </a>
+
+                </g>
+
+              </g></g>
+            </svg>
+              </div>
+
+            <!-- ⚠⚠ **圖說 2026-08-14 第三十八輪整段換成使用者逐字給的句子**
+                 （「圖片附註太長了」），第三十九輪他又改過一次：順序對調、
+                 「各停車場」→「各業者」，並且分成兩行。
+                 ⚠ **逐字照抄，不要潤飾、不要補句號、不要合成一句。**
+                 ⚠ 跟著被拿掉的幾件，是他自己決定的，**不要自作主張加回去**：
+                   ・「與本診所無特約或合作關係」—— 第二十九輪他自己要求加的撇清語。
+                   ・「點停車場看步行距離與時間」—— 可以點的提示。
+                   ・停車場全名、以及「街廓與距離大致依實際比例」。
+                 要加回去先問他。 -->
+            <figcaption class="map-note"><span class="mn-first">周邊路段另有畫設之路邊停車格</span>停車計價方式依各業者現場標示為準</figcaption>
+          </figure>
+  </div>
+
+  <ul class="sh-lots">
+    <li><span class="no">1</span><span class="nm">斗六永樂站停車場</span><span class="du">50 公尺・步行 1 分鐘</span></li>
+    <li><span class="no">2</span><span class="nm">合廷停車場</span><span class="du">140 公尺・步行 2 分鐘</span></li>
+    <li><span class="no">3</span><span class="nm">壹車房－中華路停車場</span><span class="du">190 公尺・步行 3 分鐘</span></li>
+  </ul>
+
+  <p class="sh-note">周邊路段另有畫設之路邊停車格。停車計價方式依各業者現場標示為準。</p>
+
+  <div class="sh-foot">
+    <span><b>芳仁牙醫診所</b>　雲林縣斗六市永樂街 70 號</span>
+    <span>(05)533-9369</span>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     切換條（提案用）。⚠ 定案時整段刪掉。
+     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off
+     ========================================================================== -->
+<div class="pv-bar" id="pvBar">
+  <div class="pv-row">
+    <span class="pv-lab">方向</span>
+    <button data-k="orient" data-v="w">正對診所（西在上）</button>
+    <button data-k="orient" data-v="e">往外看（東在上）</button>
+    <button data-k="orient" data-v="n">北在上</button>
+    <button data-k="orient" data-v="s">南在上</button>
+  </div>
+  <div class="pv-row">
+    <span class="pv-lab">紙張</span>
+    <button data-k="size" data-v="p">A4 直</button>
+    <button data-k="size" data-v="l">A4 橫</button>
+    <span class="pv-lab">停車場</span>
+    <button data-k="lotcolor" data-v="blue">三個都上藍</button>
+    <button data-k="lotcolor" data-v="grey">維持灰</button>
+    <span class="pv-lab">標記</span>
+    <button data-k="you" data-v="on">您在這裡</button>
+    <button data-k="you" data-v="off">不放</button>
+  </div>
+  <div class="pv-panel" id="pvPanel">量測中…</div>
+</div>
+
+<script>
+/* 位置與周邊停車：點停車場帶出步行路線與時間。推導見 /history/clinic-simple-map.html */
+(function () {
+  var fig = document.querySelector('.map-fig');
+  if (!fig) return;
+
+  // ---- 停車場的點選：一次總有一個亮著，點另一個就換過去 -------------------
+  // 桌機另外吃 hover（預覽），滑開就回到「釘住」的那一個。
+  //
+  // ⚠⚠ **開頁就先亮壹車房，而且沒有「全部熄滅」那一態**
+  //   （2026-08-14 使用者：「現在的顯示是全部都是深灰色，我想改成直接顯示
+  //   壹車房，然後彼此間可以互相點選」）。
+  //   ・原本開頁是三塊都熄滅，等使用者發現可以點。那一態當開場沒有回答任何
+  //     問題 —— 圖上只有三塊灰，路線與距離全部藏著。所以改成開頁就先亮一個。
+  //   ・**但「全部熄滅」那一態要留著**（第四十二輪使用者當場退回我拿掉它的做法：
+  //     「全部熄滅不要拿掉啊，如果點這個圖片的停車場以外的地方，還是可以變成
+  //     全部，還是比較知道道路的資訊」）—— 亮著的時候街名會淡下去、還會被
+  //     路線壓掉幾個，要看清楚路名就得有一個「什麼都沒選」的狀態。
+  //   ・所以：點一塊 ＝ 換到那一塊（**不是點第二下就收回**），
+  //     點停車場以外的地方 ＝ 全部熄滅、街名回到滿的。
+  //   ⚠ 預設是**壹車房**（使用者指定），不是最近的永樂站（50 公尺）。
+  //     要換預設就改 DEFAULT_LOT 這一個字母。
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var DEFAULT_LOT = 'c';
+  var pinned = DEFAULT_LOT, hovered = null;
+  // 步行路線的圓點：**一段一段排，不是沿著整條路徑排**。
+  //
+  // ⚠⚠ 這裡改過兩次，第二次是 2026-08-14 使用者放大手機截圖看出來的
+  //   （「那個藍色點沒有對齊，歪歪斜斜的」）：
+  //     第一版 stroke-dasharray —— 轉角會把相位打亂，間隔看起來不一致。
+  //     第二版 getPointAtLength 沿**整條**路徑等距排 —— 間隔是勻的，
+  //       但**轉角不保證剛好落一顆**：點會跨過轉角，於是轉角附近出現
+  //       兩顆斜著並排的點，看起來就是「歪掉」。
+  //     現在：把折線拆成一段一段，每一段自己算 `n = round(長度/14)`，
+  //       所以**每個轉角一定剛好一顆**，而且同一段之內完全等距。
+  //   ⚠ 代價是不同段的間距可能差幾個百分點 —— 那個看不出來，
+  //     轉角的雙點看得出來。**不要改回沿整條路徑排。**
+  // ⚠ 直接從 `d` 屬性把折線的頂點抓出來（這三條都是 M ＋ 幾個 L，沒有曲線）。
+  function buildDots() {
+    fig.querySelectorAll('.route').forEach(function (path) {
+      var g = fig.querySelector('.dots[data-lot="' + path.dataset.lot + '"]');
+      if (!g) return;
+      while (g.firstChild) g.removeChild(g.firstChild);
+      var nums = (path.getAttribute('d').match(/-?\d+(?:\.\d+)?/g) || []).map(Number);
+      var P = [];
+      for (var i = 0; i + 1 < nums.length; i += 2) P.push({ x: nums[i], y: nums[i + 1] });
+      if (P.length < 2) return;
+      var pts = [P[0]];
+      for (var s = 1; s < P.length; s++) {
+        var a = P[s - 1], b = P[s];
+        var len = Math.sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
+        var n = Math.max(1, Math.round(len / 14));
+        for (var k = 1; k <= n; k++) {
+          pts.push({ x: a.x + (b.x - a.x) * k / n, y: a.y + (b.y - a.y) * k / n });
+        }
+      }
+      pts.forEach(function (pt) {
+        var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c.setAttribute('cx', pt.x.toFixed(2));
+        c.setAttribute('cy', pt.y.toFixed(2));
+        c.setAttribute('r', '3.5');
+        g.appendChild(c);
+      });
+    });
+  }
+  buildDots();
+
+  // 牌子的矩形與尾巴：用內容的實際外框現量（字級、字型、系統縮放都吃得到）
+  // ⚠ 量的是 `.rl-body` 這個群組不是單一個 <text> —— 停車場那三塊現在有
+  //   圖釘＋名字＋底線＋距離四樣東西。`getBBox()` 對群組回傳的是**含子元素
+  //   transform 的聯集**，所以圖釘那個 scale() 也算得進去。
+  // 圖釘原圖是 384x512（實心水滴，= 頁尾那顆）。先定高，寬按 .75 的比例跟著走。
+  // ⚠⚠ **高與間距都是「名字字級的倍數」，不是寫死的單位**（2026-08-15 使用者：
+  //   「那個芳仁牙醫診所圖釘，那個相對距離跟停車場好像不太一樣」——量出來是真的）。
+  //   成因：停車場那三塊的名字是 16px，診所那塊是 15px（`.clab text` 自己一條），
+  //   而圖釘的高 17 與間距 3 原本是寫死的 —— 同樣的絕對值配上小一號的字，
+  //   相對量就大了 6.7%（1.1332em vs 1.0624em、0.2002em vs 0.1876em）。
+  // ⚠ 兩個比值**定義在停車場那三塊上**（17/16、3/16），所以那三顆一個單位都沒動；
+  //   會跟著變的只有診所那一顆（17 → 15.94、間距 3 → 2.81）。
+  // ⚠ 盒子用圖釘自己的 **viewBox 384×512**，不要改成 `getBBox()` 量出來的
+  //   ink box（實測 384×510.675，水滴尖端是圓的）—— 那會讓停車場那三顆一起長 0.26%。
+  //
+  // ⚠ 2026-08-21：診所那一塊名牌換成圖釘之後，這裡**只剩停車場那三塊**在用。
+  //   原本它有自己的 `data-pin-k`（圖釘縮到 92%）與 `data-ink-gap`（間距改成對字面量）
+  //   兩個覆寫，已經連同那一塊一起刪掉；那一輪的推導留在 /history/clinic-simple-map.html。
+  var PIN_EM = 17 / 16, GAP_EM = 3 / 16, PIN_VB_W = 384, PIN_VB_H = 512;
+
+  // 字面下緣離基線多遠（單位＝該元素的 user unit）。量不到就回 null。
+  var CTX = (function () {
+    try { return document.createElement('canvas').getContext('2d'); } catch (e) { return null; }
+  })();
+  function inkDescent(el) {
+    if (!CTX) return null;
+    var cs = getComputedStyle(el), fs = parseFloat(cs.fontSize);
+    if (!fs) return null;
+    // 在 400px 上量再等比例縮回去（Blink 在小字級回來的值顆粒很粗）
+    CTX.font = cs.fontStyle + ' ' + cs.fontWeight + ' 400px ' + cs.fontFamily;
+    var m = CTX.measureText(el.textContent);
+    if (typeof m.actualBoundingBoxDescent !== 'number') return null;
+    return m.actualBoundingBoxDescent / 400 * fs;
+  }
+  // ⚠ 2026-08-21 拿掉了 inkLeft()（量第一個字的左側空白）—— 它只有診所那塊
+  //   名牌的 `data-ink-gap` 在用，那一塊已經換成圖釘了。要看當初為什麼需要它，
+  //   見 /history/clinic-simple-map.html。
+  // 「圓角方 ＋ 一支尾巴」畫成**一條**路徑 —— 這樣整塊只有一圈外框，
+  // 描邊不會橫過尾巴根部（2026-08-14 第三十七輪，全空心那一案需要）。
+  // ⚠ 走的方向固定是順時針：上邊 →、右邊 ↓、下邊 ←、左邊 ↑。
+  //   尾巴插在哪一邊，那一邊的兩個端點就照該方向的順序寫，寫反會扭成蝴蝶結。
+  function bubblePath(x, y, w, h, r, dir, tip, bc, bw) {
+    var n = function (v) { return (+v).toFixed(2); };
+    var x2 = x + w, y2 = y + h, A = 'A' + r + ' ' + r + ' 0 0 1 ';
+    var d = 'M' + n(x + r) + ' ' + n(y);
+    if (dir === 'up') d += 'H' + n(bc - bw) + 'L' + n(tip.x) + ' ' + n(tip.y) + 'L' + n(bc + bw) + ' ' + n(y);
+    d += 'H' + n(x2 - r) + A + n(x2) + ' ' + n(y + r);
+    if (dir === 'right') d += 'V' + n(bc - bw) + 'L' + n(tip.x) + ' ' + n(tip.y) + 'L' + n(x2) + ' ' + n(bc + bw);
+    d += 'V' + n(y2 - r) + A + n(x2 - r) + ' ' + n(y2);
+    if (dir === 'down') d += 'H' + n(bc + bw) + 'L' + n(tip.x) + ' ' + n(tip.y) + 'L' + n(bc - bw) + ' ' + n(y2);
+    d += 'H' + n(x + r) + A + n(x) + ' ' + n(y2 - r);
+    d += 'V' + n(y + r) + A + n(x + r) + ' ' + n(y) + 'Z';
+    return d;
+  }
+
+  function sizeLabels() {
+    // (1) 先把圖釘與底線擺到名字旁邊／底下 —— 它們的位置要等字量出來才知道
+    fig.querySelectorAll('.rl-link').forEach(function (a) {
+      var nm = a.querySelector('.rl-nm'), pin = a.querySelector('.rl-pin'), ul = a.querySelector('.rl-ul');
+      var b = nm.getBBox();
+      // 圖釘：字面中線對齊。⚠ 對的是 bbox 的中線不是基線 ——
+      //   圖釘是個對稱的水滴，跟著基線走會整顆偏高。
+      // ⚠ 高與間距跟著**這一塊自己的字級**走（見上面 PIN_EM／GAP_EM 那一段）。
+      var fs = parseFloat(getComputedStyle(nm).fontSize) || 16;
+      var ph = PIN_EM * fs, ps = ph / PIN_VB_H, pw = PIN_VB_W * ps;
+      var gap = GAP_EM * fs;
+      pin.setAttribute('transform',
+        'translate(' + (b.x - pw - gap).toFixed(2) + ' ' + (b.y + b.height / 2 - ph / 2).toFixed(2) +
+        ') scale(' + ps.toFixed(5) + ')');
+      // 底線自己畫，不用 text-decoration（各家瀏覽器位置不一致）。
+      // ⚠⚠ **y 要對「字面」不是對 bbox**（2026-08-14 使用者：「底線和停車場
+      //   名稱好像有點遠，是我的錯覺嗎」—— 不是錯覺）。
+      //   SVG 文字的 `getBBox()` 高度是**字型的 ascent＋descent**，
+      //   而中文方塊字用不到下伸部，所以 bbox 下緣比字的實際下緣低一截：
+      //   Noto Sans TC 的 descent 約 .29em，16px 下就是 4.6 個單位的空白，
+      //   再加 2.5 的間隙，底線等於離字 7.1 —— 看起來就是「有點遠」。
+      //   改成用 canvas 量**字面**下緣（actualBoundingBoxDescent），
+      //   底線落在字面下 2.2 個單位（16px 下離基線 4.95）。
+      //   ⚠ **這個數字來回調過兩次，不要再憑感覺動**：
+      //     bbox＋2.5 ＝ 離基線 6.0 → 使用者「有點遠」；
+      //     字面＋1   ＝ 離基線 3.75 → 使用者「幾乎黏在一起」；
+      //     字面＋2.2 ＝ 離基線 4.95 → 現行（大約落在兩者中間）。
+      //   ⚠ 這個字型的字面下緣是 .172em（畫布逐像素掃出來 .157em，對得上）——
+      //     中文方塊字大多平底停在基線上，只有像「車」那種豎筆會探下去，
+      //     所以**眼睛量到的空隙比數字小**：看起來的空隙是從平底那一列算的，
+      //     比 .172em 那條深線還多將近 3 個單位。
+      // ⚠ 要在 400px 上量再等比例縮 —— Blink 回來的值顆粒很粗
+      //   （CLAUDE.md 第九節第 9 條，量字面框那一段）。
+      //   ⚠⚠ **2026-08-15：那兩個常數改成跟著字級走。** 使用者把牌子的字放大
+      //     之後回報「超連結的底線和字快黏在一起了……感覺都跑掉了」——
+      //     2.2 是在 16px 上調出來的，換算成比例是 .1375em；字放大到 22.4px
+      //     還是用 2.2，比例就掉到 .098em（−29%）。改成 .1375em 之後，
+      //     .1375em 在 16px 下就是原本的 2.2；但使用者同一句話還要求「拉開一點」，
+      //     所以取 **.16em**（16px 下 2.56、22.4px 下 3.58）。
+      //     另一支（bbox 那條後備路徑）同比例：2.5 → .18em。
+      // 底線離字面的比例：`--map-ul-gap`（電腦版 .1375 ＝ 原本的 2.2÷16，手機 .16）
+      var ulk = parseFloat(getComputedStyle(nm).getPropertyValue('--map-ul-gap')) || .1375;
+      var d = inkDescent(nm);
+      var uy = (+nm.getAttribute('y')) +
+        (d === null ? b.y + b.height - +nm.getAttribute('y') + ulk * 1.125 * fs : d + ulk * fs);
+      ul.setAttribute('x1', b.x.toFixed(2));
+      ul.setAttribute('x2', (b.x + b.width).toFixed(2));
+      ul.setAttribute('y1', uy.toFixed(2));
+      ul.setAttribute('y2', uy.toFixed(2));
+    });
+    // (2) 再量整塊內容，套上盒子與尾巴
+    fig.querySelectorAll('.rlab').forEach(function (g) {
+      var body = g.querySelector('.rl-body'), bub = g.querySelector('.bub'), tail = g.querySelector('.tail');
+      // ⚠⚠ **第二行的 y 由這裡算，不要寫死在 markup 裡**（2026-08-15）。
+      //   牌子的字放大之後使用者回報「超連結的底線和文字間隔都處理一下，
+      //   感覺都跑掉了」—— 兩行的距離原本是 markup 上的 23（16px 下調的），
+      //   字級一放大就沒跟著長，底線與下一行整個擠在一起。
+      //   23 ÷ 16 ＝ 1.4375em，改成跟著名字的字級走，每一個字級都等比例。
+      var nm2 = g.querySelector('.rl-nm'), dl = g.querySelector('.rl-d');
+      if (nm2 && dl) {
+        dl.setAttribute('y',
+          (+nm2.getAttribute('y') + 1.4375 * (parseFloat(getComputedStyle(nm2).fontSize) || 16)).toFixed(2));
+      }
+      // ⚠ 只有診所那塊名牌有實心三角；停車場那三塊是全空心的，沒有 .tail
+      var b = body.getBBox(), padX = 11, padY = 6;
+      var bx0 = b.x - padX, by0 = b.y - padY, bw0 = b.width + padX * 2, bh0 = b.height + padY * 2;
+      // 尾巴**停在離路線 GAP 的地方**，不要頂到線上（2026-08-14 使用者：
+      // 「對話框還是跟路線黏在一起，分開一點」）。朝下或朝右兩種。
+      // ⚠ 診所那一塊是 data-gap="0" —— 它的尖端要**進到綠色裡**，不是停在外面。
+      var GAP = g.dataset.gap === undefined ? 12 : +g.dataset.gap;
+      var dir = g.dataset.dir, tip, bc, bw = g.dataset.bw === undefined ? 7 : +g.dataset.bw;
+      if (dir === 'right') {
+        tip = { x: +g.dataset.tx - GAP, y: by0 + bh0 / 2 };
+        bc = by0 + bh0 / 2;
+      } else if (dir === 'up') {
+        // 診所的名牌在下面、尖端朝上。⚠ GAP 的符號和朝下那一支相反：
+        //   朝下是「尖端比目標高 GAP」，朝上是「尖端比目標低 GAP」。
+        // ⚠ 底邊的位置（`data-bx`）和尖端（`data-tx`）**是分開給的**，
+        //   兩個不一樣就會長出一支**斜的**尾巴（2026-08-14 使用者：
+        //   「現在那個三角是做成往下，我想要左下一點，不要這麼直」）。
+        //   沒給 data-bx 就退回正上方。
+        tip = { x: +g.dataset.tx, y: +g.dataset.ty + GAP };
+        bc = g.dataset.bx === undefined ? tip.x : +g.dataset.bx;
+      } else {
+        tip = { x: +g.dataset.tx, y: +g.dataset.ty - GAP };
+        bc = g.dataset.bx === undefined ? tip.x : +g.dataset.bx;
+      }
+      // ⚠⚠ **盒子要貼著尖端，不是停在 markup 給的絕對位置**（2026-08-15）。
+      //   牌子的大小是量內容算出來的，字級一變盒子就跟著變 —— 而尖端是釘死的，
+      //   所以尾巴的長度會亂跑：壹車房那塊在手機放大到 ×1.4 之後，盒子的右緣
+      //   （338.4）已經**越過**尖端（332），尾巴變成反向的一個缺口
+      //   （使用者：「壹車房的對話標籤形狀很怪」）。
+      //   改成由這裡把整個 `.rl-body` 沿尾巴的方向平移，讓「盒子邊到尖端」
+      //   固定是 `data-tail`。**每一塊的 data-tail 就是原本 16px 下量到的長度**
+      //   （15.33／15.33／17.8／診所 8.5），所以電腦版與 iPad 逐像素沒有動；
+      //   手機那一段再用 `--map-tail` 覆寫診所那塊（8.5 → 13）——
+      //   使用者：「芳仁牙醫診所的標籤看起來和診所套色區塊有點擠，再拉開一點」。
+      //   ⚠ `getBBox()` 不吃元素**自己**的 transform，所以這個平移不會回頭
+      //     影響下一次量測，sizeLabels() 跑幾次結果都一樣。
+      // 尾巴長度與整塊的位移都可以用 CSS 變數依版型覆寫（見樣式表最後那一段）：
+      //   --map-tail  盒子邊到尖端（預設 14；診所那塊電腦版 1、手機 11）
+      //   --map-dy    整塊沿「非尾巴方向」再移動多少（壹車房手機 −18）
+      var cs2 = getComputedStyle(g);
+      var TAIL = parseFloat(cs2.getPropertyValue('--map-tail'));
+      if (isNaN(TAIL)) TAIL = g.dataset.tail === undefined ? 14 : +g.dataset.tail;
+      var off = parseFloat(cs2.getPropertyValue('--map-dy')) || 0;
+      var dx = 0, dy = 0;
+      if (dir === 'right')   { dx = (tip.x - TAIL) - (bx0 + bw0); dy = off; }
+      else if (dir === 'up') { dy = (tip.y + TAIL) - by0;        dx = off; }
+      else                   { dy = (tip.y - TAIL) - (by0 + bh0); dx = off; }
+      // ⚠ 不動就**不要留 transform**：`translate(0 0)` 也會讓那一段重新光柵化，
+      //   電腦版逐像素比對量到約 0.35% 的邊緣像素會差（最大 47 階）。
+      if (Math.abs(dx) > .005 || Math.abs(dy) > .005) {
+        body.setAttribute('transform', 'translate(' + dx.toFixed(2) + ' ' + dy.toFixed(2) + ')');
+      } else {
+        body.removeAttribute('transform');
+      }
+      bx0 += dx; by0 += dy;
+      if (dir === 'right') { tip.y = by0 + bh0 / 2; bc = tip.y; }
+      bub.setAttribute('d', bubblePath(bx0, by0, bw0, bh0, 6, dir, tip, bc, bw));
+      if (!tail) return;
+      // 尾巴那個三角**另外再畫一次**，疊在盒子上面。
+      // ⚠ 為的是「淺底＋實心藍三角」那一案：盒子是空心的、三角是實心的，
+      //   兩件事沒辦法用同一條路徑表達。全空心的那一案就把它 display: none。
+      if (dir === 'right') {
+        tail.setAttribute('d', 'M' + (bx0 + bw0 - 1) + ' ' + (bc - bw) + 'V' + (bc + bw) + 'L' + tip.x + ' ' + tip.y + 'Z');
+      } else if (dir === 'up') {
+        tail.setAttribute('d', 'M' + (bc - bw) + ' ' + (by0 + 1) + 'H' + (bc + bw) + 'L' + tip.x + ' ' + tip.y + 'Z');
+      } else {
+        tail.setAttribute('d', 'M' + (bc - bw) + ' ' + (by0 + bh0 - 1) + 'H' + (bc + bw) + 'L' + tip.x + ' ' + tip.y + 'Z');
+      }
+    });
+
+    // (3) 診所那塊綠色標記裡「芳仁牙醫」底下的底線（2026-08-21）。
+    //     ⚠ 同停車場那三塊的做法：位置現量，不用 text-decoration。
+    //       字的基線 y 是寫死在 markup 上的（那一塊的大小固定，不像牌子會長大），
+    //       這裡只算底線落在哪一列：字面下緣 ＋ `--map-ul-gap`（電腦 .1375、手機 .16）。
+    //     ⚠ 沒有 JS 或量不到字面時，底線的四個座標都是空的 ＝ 那條線不會畫出來，
+    //       其餘（綠塊、字、圖釘、影子）全部是靜態的，照樣完整 —— 方向和站上
+    //       別處一樣：JS 只會讓它更好，不會是「少了 JS 就壞掉」。
+    var cnm = fig.querySelector('.cm-nm'), cul = fig.querySelector('.cm-ul');
+    if (cnm && cul) {
+      var cb = cnm.getBBox(), cfs = parseFloat(getComputedStyle(cnm).fontSize) || 20;
+      var cgap = parseFloat(getComputedStyle(cnm).getPropertyValue('--map-ul-gap')) || .1375;
+      var cy0 = +cnm.getAttribute('y'), cdesc = inkDescent(cnm);
+      var cy = cdesc === null ? cb.y + cb.height + cgap * 1.125 * cfs : cy0 + cdesc + cgap * cfs;
+      cul.setAttribute('x1', cb.x.toFixed(2));
+      cul.setAttribute('x2', (cb.x + cb.width).toFixed(2));
+      cul.setAttribute('y1', cy.toFixed(2));
+      cul.setAttribute('y2', cy.toFixed(2));
+    }
+  }
+  // 牌子上的連結：**一定要擋住冒泡** —— 地圖底層有一個「點空白處＝收回」的
+  // handler，不擋的話點名字會先把牌子關掉，連結還沒開就沒了。
+  fig.querySelectorAll('.rl-link, .cm-link').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.stopPropagation(); });
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeLabels);
+  sizeLabels();
+
+  // 被亮起來的那條路線／那塊牌子壓到的街名，這個模式下整個藏起來。
+  // 兩個外框相交就算壓到（各留 2 個單位的餘裕）。
+  function hideCovered(id) {
+    var labels = fig.querySelectorAll('.lbl, .lbl-s, .lbl-xs, .ent');
+    if (!id) { labels.forEach(function (l) { l.classList.remove('hide'); }); return; }
+    // ⚠ 這裡用 getBoundingClientRect() 不是 getBBox()：
+    //   `getBBox()` **不吃元素自己的 transform**，而入口箭頭是用
+    //   `transform="translate() rotate()"` 擺位置的 —— 用 getBBox 比對，
+    //   永樂站那顆的外框會停在原點附近，永遠比對不到（第一版就是這樣，沒作用）。
+    //   螢幕座標對所有元素都一致，同一張 SVG 裡比對是安全的。
+    var boxes = [];
+    ['.dots', '.rlab'].forEach(function (sel) {
+      var el = fig.querySelector(sel + '[data-lot="' + id + '"]');
+      if (el) boxes.push(el.getBoundingClientRect());
+    });
+    labels.forEach(function (l) {
+      var b = l.getBoundingClientRect();
+      var hit = boxes.some(function (o) {
+        return !(b.right < o.left - 2 || b.left > o.right + 2 ||
+                 b.bottom < o.top - 2 || b.top > o.bottom + 2);
+      });
+      l.classList.toggle('hide', hit);
+    });
+  }
+
+  function paintLots() {
+    var id = hovered || pinned;
+    fig.querySelector('.map-svg').classList.toggle('dim', !!id);
+    hideCovered(id);
+    fig.querySelectorAll('.lot').forEach(function (g) {
+      var on = g.dataset.lot === id;
+      g.classList.toggle('on', on);
+      g.setAttribute('aria-pressed', String(g.dataset.lot === pinned));
+    });
+    fig.querySelectorAll('.dots, .rlab').forEach(function (el) {
+      el.classList.toggle('on', el.dataset.lot === id);
+    });
+  }
+  fig.querySelectorAll('.lot').forEach(function (g) {
+    var id = g.dataset.lot;
+    // ⚠ 點完 blur()：不然 Chrome 會把滑鼠點擊也算成 focus-visible，
+    //   在停車場外面畫一個框（使用者 2026-08-14 回報）。鍵盤走過來的不受影響。
+    g.addEventListener('click', function (e) {
+      e.stopPropagation(); pinned = id; paintLots(); g.blur();
+    });
+    g.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pinned = id; paintLots(); }
+    });
+    if (fine) {
+      g.addEventListener('mouseenter', function () { hovered = id; paintLots(); });
+      g.addEventListener('mouseleave', function () { hovered = null; paintLots(); });
+    }
+  });
+  // 點地圖的其他地方＝收回。
+  // ⚠ 掛在 <figure> 上不是掛在 <svg> 上：SVG 的命中測試是**逐個圖形**做的，
+  //   圓角裁切外面那一圈、以及任何沒有圖形畫在上面的位置都收不到事件。
+  //   <figure> 是一般的 HTML 盒子，連圖說那幾行字一起算進來，整塊都收得回。
+  //   ⚠ 停車場自己的 handler 有 stopPropagation，牌子上那三個連結也有，
+  //     所以不會互踩。
+  fig.addEventListener('click', function () { pinned = null; paintLots(); });
+  paintLots();
+
+})();
+</script>
+<script>
+/* ==========================================================================
+   門口那張停車參考圖：轉向 ＋ 海報化（提案用，定案時整段刪掉）
+   --------------------------------------------------------------------------
+   ⚠ 核心那一招：**父層轉、子層各自轉回來**。
+     父：g#geo 整組 rotate(θ, 280, 310)　（街廓、路、停車場色塊、路線、綠塊）
+     子：要保持直立的東西各自 rotate(−θ, 自己的錨點)
+         —— 父轉 ∘ 子反轉 ＝ 在錨點附近只剩位移，所以字與標記跟著搬到轉過去的
+            位置、但不會歪。
+   ⚠ 主要街名還要**換一種排法**：路的走向轉了 90 度，直排／橫排要跟著換，
+     不然字會沿著路豎著讀。六條主街的中心點與字串寫在下面 STREETS。
+   ⚠ 這一頁是靜態海報，所以：三塊停車場全部亮著、對話框整組不畫（改成
+     ①②③ 的號碼牌，名稱與距離交給圖底下那張清單），街名不淡出。
+   ========================================================================== */
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var body = document.body, fig = document.querySelector('.map-fig');
+  if (!fig) return;
+  var svg = fig.querySelector('.map-svg'), geo = svg.querySelector('#geo');
+  var CX = 280, CY = 310;                      /* viewBox 的中心 */
+  var ANG = { n: 0, e: -90, w: 90, s: 180 };   /* 哪一邊朝上 → 整張圖轉幾度 */
+
+  /* 六條主街：中心點（＝原本中間那一列的基線）、字串、走向 */
+  var STREETS = [
+    { cx: 200, cy: 49,  s: '文化路', dir: 'ew' },
+    { cx: 200, cy: 431, s: '大同路', dir: 'ew' },
+    { cx: 200, cy: 569, s: '中華路', dir: 'ew' },
+    { cx: 109, cy: 334, s: '平和街', dir: 'ns' },
+    { cx: 339, cy: 334, s: '永樂街', dir: 'ns' },
+    { cx: 471, cy: 334, s: '永安路', dir: 'ns' }
+  ];
+  var LANES = [
+    { cx: 176, cy: 232, s: '平和街19巷', dir: 'ew' },
+    { cx: 402, cy: 192, s: '永安路14巷', dir: 'ew' }
+  ];
+  /* 三個停車場的號碼牌：貼在各自色塊的一個角上 */
+  var BADGES = [
+    { n: '1', x: 206, y: 171 },
+    { n: '2', x: 388, y: 197 },
+    { n: '3', x: 354, y: 474 }
+  ];
+
+  var lbl = svg.querySelectorAll('.lbl');
+  var lblXs = svg.querySelectorAll('.lbl-xs');
+
+  /* ---- 一次性：加上「您在這裡」、指北針、號碼牌 ------------------------- */
+  function add(tag, attrs, parent, text) {
+    var el = document.createElementNS(NS, tag);
+    Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+    if (text !== undefined) el.textContent = text;
+    (parent || svg).appendChild(el);
+    return el;
+  }
+  /* 「您在這裡」：一塊直立的小綠牌，掛在診所綠塊的旁邊。
+     ⚠ 要放進 #geo（跟著整張圖轉到對的位置），再各自反轉回來保持直立。
+     ⚠ 綠塊裡原本那四個字（.cm-nm）在海報上不畫 —— 整張圖一轉，那塊
+       footprint 就變成 51 寬 × 96 高，橫排的「芳仁牙醫」（84 個單位）塞不進去。
+       名字在海報抬頭已經有了，圖上只要「您在這裡」。 */
+  var you = add('g', { class: 'you' }, geo);
+  add('rect', { x: 232, y: 292, width: 88, height: 26, rx: 7, fill: '#3f654a' }, you);
+  add('text', { x: 276, y: 310.5, 'text-anchor': 'middle', fill: '#f4f4f5',
+                'font-size': 17, 'font-weight': 700, 'letter-spacing': '.06em' }, you, '您在這裡');
+  var badges = BADGES.map(function (b) {
+    var g = add('g', { class: 'bdg' }, geo);
+    add('circle', { cx: b.x, cy: b.y, r: 14, fill: '#365685' }, g);
+    add('text', { x: b.x, y: b.y + 6.2, 'text-anchor': 'middle', fill: '#f4f4f5',
+                  'font-size': 18, 'font-weight': 700, 'font-family': 'Arial, Helvetica, sans-serif' }, g, b.n);
+    g.dataset.x = b.x; g.dataset.y = b.y;
+    return g;
+  });
+  /* 指北針：畫在右上角，**跟著轉**（它要指出北方轉到哪裡去了），
+     只有「北」那個字反轉回來保持直立。 */
+  var nsw = add('g', { class: 'nsw' }, svg);
+  var nswArrow = add('g', {}, nsw);
+  add('path', { d: 'M0 -26L7.5 -6H-7.5Z' }, nswArrow);
+  add('path', { d: 'M0 -6V14', stroke: 'currentColor', 'stroke-width': 0 }, nswArrow);
+  var nswTxt = add('text', { x: 0, y: 30, 'text-anchor': 'middle' }, nsw, '北');
+  nsw.setAttribute('transform', 'translate(505 70)');
+
+  /* ---- 排字：單行 ↔ 直排 ------------------------------------------------ */
+  function typeset(t, str, cx, cy, stacked, dy) {
+    while (t.firstChild) t.removeChild(t.firstChild);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('x', cx);
+    if (!stacked) { t.setAttribute('y', cy); t.textContent = str; return; }
+    var n = str.length, y0 = cy - dy * (n - 1) / 2;
+    t.setAttribute('y', y0);
+    for (var i = 0; i < n; i++) {
+      var s = document.createElementNS(NS, 'tspan');
+      s.setAttribute('x', cx);
+      if (i) s.setAttribute('dy', dy);
+      s.textContent = str.charAt(i);
+      t.appendChild(s);
+    }
+  }
+  function upright(el, th, ax, ay, keep) {
+    var base = keep || '';
+    if (!th) { if (base) el.setAttribute('transform', base); else el.removeAttribute('transform'); return; }
+    el.setAttribute('transform', 'rotate(' + (-th) + ' ' + ax + ' ' + ay + ')' + (base ? ' ' + base : ''));
+  }
+
+  var clipRect = svg.querySelector('#clip-round rect');
+  function paint() {
+    var th = ANG[body.dataset.orient] || 0;
+    geo.setAttribute('transform', th ? 'rotate(' + th + ' ' + CX + ' ' + CY + ')' : '');
+    /* ⚠⚠ 轉 90 度之後圖變成「橫的」（620 寬 × 560 高），viewBox 與圓角裁切框
+       都要跟著換一組，不然四個角會被切掉（第一版就是這樣，永安路整條不見）。
+       轉完的內容佔 x −30~590、y 30~590（繞 (280,310) 轉的結果）。 */
+    var side = Math.abs(th) === 90;
+    svg.setAttribute('viewBox', side ? '-30 30 620 560' : '0 0 560 620');
+    if (clipRect) {
+      clipRect.setAttribute('x', side ? -30 : 0);
+      clipRect.setAttribute('y', side ? 30 : 0);
+      clipRect.setAttribute('width', side ? 620 : 560);
+      clipRect.setAttribute('height', side ? 560 : 620);
+    }
+
+    /* 街名：走向轉了就換排法（|θ|=90 的時候東西向變成上下向） */
+    var flip = Math.abs(th) === 90;
+    STREETS.forEach(function (st, i) {
+      var t = lbl[i]; if (!t) return;
+      var vertical = st.dir === 'ew' ? flip : !flip;
+      typeset(t, st.s, st.cx, st.cy, vertical, 26);
+      upright(t, th, st.cx, st.cy);
+    });
+    /* ⚠ LANES 留著沒有用到 —— 巷名在海報上是關掉的（見 poster()）。
+       日後要放回來就把 poster() 那一行拿掉、這裡照 STREETS 那樣排一次。 */
+
+    /* 停車場的 P、號碼牌、「您在這裡」：直立 */
+    svg.querySelectorAll('.pk').forEach(function (t) {
+      upright(t, th, +t.getAttribute('x'), +t.getAttribute('y'));
+    });
+    badges.forEach(function (g) { upright(g, th, +g.dataset.x, +g.dataset.y); });
+    upright(you, th, 276, 305);
+
+    /* 診所：綠塊跟著轉（那是建築物的footprint），字、底線、圖釘直立 */
+    var nm = svg.querySelector('.cm-nm'), ul = svg.querySelector('.cm-ul'), pin = svg.querySelector('.cm-pin');
+    if (nm) upright(nm, th, 276, 268.5);
+    if (ul) upright(ul, th, 276, 268.5);
+    if (pin) upright(pin, th, 294, 245, 'translate(294 245)');
+
+    /* 指北針：整組跟著轉，字反轉回來 */
+    nsw.setAttribute('transform', 'translate(505 70)' + (th ? ' rotate(' + th + ')' : ''));
+    upright(nswTxt, th, 0, 30);
+
+    measure(th);
+  }
+
+  /* ---- 海報化：三個停車場全部亮著、對話框不畫 ---------------------------- */
+  function poster() {
+    svg.classList.remove('dim');
+    svg.querySelectorAll('.lbl, .lbl-s, .lbl-xs, .ent').forEach(function (l) { l.classList.remove('hide'); });
+    svg.querySelectorAll('.dots').forEach(function (d) { d.classList.add('on'); });
+    svg.querySelectorAll('.rlab').forEach(function (r) { r.style.display = 'none'; });
+    /* 巷名（平和街19巷／永安路14巷）海報上不畫 —— 一轉向就會壓到停車場與路線，
+       而且門口這張圖只要「哪一條路、哪一個停車場」。 */
+    svg.querySelectorAll('.lbl-xs').forEach(function (t) { t.style.display = 'none'; });
+    /* 綠塊裡那四個字與底線不畫，改由旁邊那塊「您在這裡」講（見上面）。 */
+    ['.cm-nm', '.cm-ul'].forEach(function (sel) {
+      var el = svg.querySelector(sel); if (el) el.style.display = 'none';
+    });
+    svg.querySelectorAll('.ent').forEach(function (e) { e.style.visibility = 'visible'; });
+    var blue = body.dataset.lotcolor !== 'grey';
+    svg.querySelectorAll('.lot').forEach(function (g) { g.classList.toggle('on', blue); });
+    you.style.display = body.dataset.you === 'off' ? 'none' : '';
+  }
+
+  function measure(th) {
+    var p = document.getElementById('pvPanel');
+    var r = svg.getBoundingClientRect(), k = r.width / 560;
+    var names = { w: '西（正對診所）', e: '東（站門口往外看）', n: '北', s: '南' };
+    var sheet = document.querySelector('.sheet').getBoundingClientRect();
+    p.innerHTML =
+      '朝上的方向：<b>' + names[body.dataset.orient] + '</b>（整張圖轉 ' + th + '°）<br>' +
+      '紙張 ' + (body.dataset.size === 'l' ? 'A4 橫' : 'A4 直') +
+      '　螢幕上 ' + sheet.width.toFixed(0) + '×' + sheet.height.toFixed(0) + 'px' +
+      '　地圖 1 個單位 ＝ ' + k.toFixed(3) + 'px<br>' +
+      '街名字級 ' + (22 * k).toFixed(1) + 'px、清單那三行 ' + (0.042 * sheet.width).toFixed(1) + 'px' +
+      '（A4 實寬 210mm 時 ≈ ' + (0.042 * 210).toFixed(1) + 'mm 高的字）';
+  }
+
+  document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      body.dataset[b.dataset.k] = b.dataset.v;
+      document.querySelectorAll('.pv-bar button[data-k]').forEach(function (x) {
+        x.setAttribute('aria-pressed', String(body.dataset[x.dataset.k] === x.dataset.v));
+      });
+      poster(); paint();
+    });
+  });
+  document.querySelectorAll('.pv-bar button[data-k]').forEach(function (x) {
+    x.setAttribute('aria-pressed', String(body.dataset[x.dataset.k] === x.dataset.v));
+  });
+
+  /* 網址參數 */
+  ['orient', 'size', 'lotcolor', 'you'].forEach(function (k) {
+    var m = new RegExp('[?&]' + (k === 'lotcolor' ? 'lot' : k) + '=([a-z0-9]+)').exec(location.search);
+    if (m) body.dataset[k] = m[1];
+  });
+
+  function go() { poster(); paint(); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
+  addEventListener('load', function () { setTimeout(go, 60); });
+  go();
+})();
+
+</script>
+</body>
+</html>
