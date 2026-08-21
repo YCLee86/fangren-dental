@@ -299,7 +299,7 @@ const BAR = `
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時連同 data-* 屬性一起刪掉，不要留到正式站。
      網址可帶參數直接開到某一格（正規式一律 [a-z0-9]+）：
-       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r  ?sun=a|b|c
+       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r  ?sun=p|q|a|b|c
        ?fs=16|18|20  ?cmp=now|new
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
@@ -354,7 +354,9 @@ const BAR = `
     </div>
     <div class="pv-row">
       <span class="pv-lab">光向</span>
-      <button data-k="sun" data-v="a">斜 45°</button>
+      <button data-k="sun" data-v="p">平 20°</button>
+      <button data-k="sun" data-v="q">30°</button>
+      <button data-k="sun" data-v="a">45°</button>
       <button data-k="sun" data-v="b">60°</button>
       <button data-k="sun" data-v="c">高 75°</button>
     </div>
@@ -398,13 +400,20 @@ const BAR = `
        「影子長度夠了，但這個影子偏移的角度太少，看起來光源不是從很高的位置
        照下來。」量過參考圖那顆：影子集中在 0~90 度那三個扇形、最濃在
        30~60 度，所以 45 度那一格保留，另外給更陡的兩格。 */
-  var SUN = { a: 45, b: 60, c: 75 };
+  /* ⚠ 2026-08-21 第七輪：使用者選在 45 度那一格說「還不夠」，
+     所以往**更平**的方向再開兩格（20／30）。五格由平到高：
+       20  影子幾乎躺在右邊（太陽很低、很斜）
+       30
+       45  ＝ 參考圖那顆量出來的方位（影子集中在 0~90 度、最濃 30~60）
+       60
+       75  影子幾乎在正下方（太陽很高） */
+  var SUN = { p: 20, q: 30, a: 45, b: 60, c: 75 };
   var SIZE = { s: 52, m: 60, l: 68 };
   var POS  = { c: 276, r: 294, rr: 312 };
   var TIPY = 238;                 /* 尖端進到綠塊裡 2 個單位（綠塊上緣 236） */
   var PLOT = { x: 228, y: 236, w: 96, h: 51 };
 
-  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', neck: 'c', tip: 'm', sun: 'b', cmp: 'new' };
+  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', neck: 'c', tip: 'm', sun: 'a', cmp: 'new' };
   var st = {};
   var q = location.search;
   Object.keys(DEF).forEach(function (k) {
@@ -511,7 +520,7 @@ const BAR = `
            —— 擴散比位移還大，影子就往四面八方長，看起來又變回「在背後暈開」，
            使用者：「這個影子偏移的角度太少，看起來光源不是從很高的位置照下來。」
            現在「中」是 off .16 配 sp .05，影子是一彎明確的月牙，不是一圈暈；
-           倒的方向另外由「光向」那條尺給（45／60／75 度，預設 60）。
+           倒的方向另外由「光向」那條尺給（20／30／45／60／75 度，預設 45）。
          ⚠ 以頭的圓心 (0, -d) 為中心放大，不是以尖端 —— 以尖端放大的話
            影子會整個往下長，看起來像倒影。 */
       p.setAttribute('transform', 'translate(' + n(kx) + ' ' + n(ky) + ') translate(0 ' + n(-d) +
@@ -611,7 +620,8 @@ const BAR = `
                (cText < 4.5 ? ' <span class="pv-bad">字沒過 AA</span>' : '') +
                (cLogo < 3 ? ' <span class="pv-bad">標誌低於圖形的 3:1</span>' : ''));
     var sh = SH[st.shadow];
-    lines.push('影子：' + (sh ? '最深讓底下暗 <b>' + sh.max + '</b> 階（0~255）、覆蓋約 ' + sh.area + ' CSS px²'
+    lines.push('影子：' + (sh ? '最深讓底下暗 <b>' + sh.max + '</b> 階（0~255）、覆蓋約 ' + sh.area +
+                                ' CSS px²，往右下 <b>' + (SUN[st.sun] || SUN.a) + '°</b> 倒'
                               : '沒有'));
     lines.push('圖釘壓到：' + (hits.length ? '<span class="pv-bad">' + hits.join('、') + '</span>' : '沒有壓到別的東西'));
     p.innerHTML = lines.join('<br>');
