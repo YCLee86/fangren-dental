@@ -7999,7 +7999,7 @@ body { padding-bottom: 12rem; }
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時連同 data-* 屬性一起刪掉，不要留到正式站。
      網址可帶參數直接開到某一格（正規式一律 [a-z0-9]+）：
-       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r  ?sun=p|q|a|b|c
+       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r  ?sun=a|b|c|d
        ?fs=16|18|20  ?cmp=now|new
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
@@ -8053,12 +8053,11 @@ body { padding-bottom: 12rem; }
       <button data-k="shadow" data-v="s4">最重</button>
     </div>
     <div class="pv-row">
-      <span class="pv-lab">光向</span>
-      <button data-k="sun" data-v="p">平 20°</button>
-      <button data-k="sun" data-v="q">30°</button>
-      <button data-k="sun" data-v="a">45°</button>
-      <button data-k="sun" data-v="b">60°</button>
-      <button data-k="sun" data-v="c">高 75°</button>
+      <span class="pv-lab">日高</span>
+      <button data-k="sun" data-v="a">很高 75°</button>
+      <button data-k="sun" data-v="b">高 65°</button>
+      <button data-k="sun" data-v="c">中 55°</button>
+      <button data-k="sun" data-v="d">低 45°</button>
     </div>
   </div>
   <div class="pv-panel" id="pvPanel">量測中…</div>
@@ -8100,20 +8099,32 @@ body { padding-bottom: 12rem; }
        「影子長度夠了，但這個影子偏移的角度太少，看起來光源不是從很高的位置
        照下來。」量過參考圖那顆：影子集中在 0~90 度那三個扇形、最濃在
        30~60 度，所以 45 度那一格保留，另外給更陡的兩格。 */
-  /* ⚠ 2026-08-21 第七輪：使用者選在 45 度那一格說「還不夠」，
-     所以往**更平**的方向再開兩格（20／30）。五格由平到高：
-       20  影子幾乎躺在右邊（太陽很低、很斜）
-       30
-       45  ＝ 參考圖那顆量出來的方位（影子集中在 0~90 度、最濃 30~60）
-       60
-       75  影子幾乎在正下方（太陽很高） */
-  var SUN = { p: 20, q: 30, a: 45, b: 60, c: 75 };
+  /* ⚠⚠⚠ 2026-08-21 第八輪，使用者一句話點破前面七輪都在做錯的事：
+       「你把整張地圖當成貼在牆壁上、光源照下去，但我想要的是**地圖平貼在
+        桌上**、光源照下去的感覺。」
+     前面那幾版是把整條釘身的剪影**整個平移**再疊淡 —— 那是「貼在牆上的貼紙」
+     的影子（物體和牆平行，影子就是自己往旁邊挪一點）。
+     這張圖是**俯視圖**，圖釘是**站在桌面上**的：
+       ・尖端碰到桌面 → 那一點的影子就在原地，影子從那裡長出來
+       ・頭離桌面最遠 → 它的影子被推得最遠
+     所以影子是把釘身**投影**到桌面上：離尖端愈高的部分，影子往光的反方向
+     推得愈遠。用一個矩陣就寫得完（以尖端為原點）：
+         x' = x − L·cos(方位) · y
+         y' =   − L·sin(方位) · y      （y 是往上為負，所以要取負號）
+       L ＝ cot(太陽高度) —— 太陽愈高 L 愈小、影子愈短。
+     ⚠ 圓形的頭被投影之後會變成**橢圓**，而且是斜的 —— 那正是站著的東西
+       從正上方看下去該有的樣子，不是畫錯。
+     ⚠ 尖端（接觸點）永遠不動，所以影子那一端是尖的、貼著釘子；模糊只往
+       遠端長（以尖端為原點放大），這也是真實影子的樣子：接觸處銳利、
+       愈遠愈糊。 */
+  var SUNH = { a: 75, b: 65, c: 55, d: 45 };   /* 太陽高度（度）。愈小影子愈長 */
+  var AZ = 45;                                  /* 光從左上打來 → 影子往右下 45 度 */
   var SIZE = { s: 52, m: 60, l: 68 };
   var POS  = { c: 276, r: 294, rr: 312 };
   var TIPY = 238;                 /* 尖端進到綠塊裡 2 個單位（綠塊上緣 236） */
   var PLOT = { x: 228, y: 236, w: 96, h: 51 };
 
-  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', neck: 'c', tip: 'm', sun: 'a', cmp: 'new' };
+  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', neck: 'c', tip: 'm', sun: 'b', cmp: 'new' };
   var st = {};
   var q = location.search;
   Object.keys(DEF).forEach(function (k) {
@@ -8131,10 +8142,10 @@ body { padding-bottom: 12rem; }
        （s1 從 54 階跳到 81）。換算式：a_new ＝ 1−(1−a_old)^(舊層數/新層數)。 */
   var SH = {
     off: null,
-    s1: { a: .022, off: .10, sp: .035, max: 71, area: 76 },
-    s2: { a: .032, off: .16, sp: .050, max: 91, area: 137 },
-    s3: { a: .041, off: .22, sp: .070, max: 97, area: 205 },
-    s4: { a: .051, off: .30, sp: .090, max: 121, area: 291 }
+    s1: { a: .018, sp: .10, max: 58, area: 300 },
+    s2: { a: .026, sp: .14, max: 81, area: 318 },
+    s3: { a: .034, sp: .18, max: 91, area: 340 },
+    s4: { a: .044, sp: .24, max: 107, area: 372 }
   };
 
   /* 釘身的路徑。三個參數：
@@ -8201,30 +8212,18 @@ body { padding-bottom: 12rem; }
     var sh = SH[st.shadow];
     while (shg.firstChild) shg.removeChild(shg.firstChild);
     if (!sh) return;
+    var elev = SUNH[st.sun] || SUNH.b, L = 1 / Math.tan(elev * Math.PI / 180);
+    var az = AZ * Math.PI / 180;
+    var mc = -L * Math.cos(az), md = -L * Math.sin(az);
     for (var i = 0; i < LAYERS; i++) {
       var t = i / (LAYERS - 1);
-      var sc = 1 + sh.sp * t, k = sh.off * R * (0.4 + 0.6 * t);
-      var ang = (SUN[st.sun] || SUN.b) * Math.PI / 180;
-      var kx = k * Math.cos(ang) / Math.SQRT1_2, ky = k * Math.sin(ang) / Math.SQRT1_2;
+      var sc = 1 + sh.sp * t;               /* 以尖端為原點放大 ＝ 愈遠愈糊 */
       var p = document.createElementNS(NS, 'path');
       p.setAttribute('d', dAttr);
       p.setAttribute('opacity', sh.a.toFixed(3));
-      /* ⚠ 往**右下**挪，x 與 y 一樣多（＝光從左上打下來，45 度）——
-         2026-08-21 第四輪使用者指出：參考圖那顆的影子是有角度的，
-         我做的是「在背後暈開」。量過那張截圖：影子整團貼在圖釘的右下緣，
-         往外約 10~14px（那顆頭的半徑 32px ＝ 0.31~0.44 R），左上角乾淨。
-         ⚠ 第五輪再收一次（使用者：「範例看起來是從更高的角度照下來，
-           所以不用像你畫的那麼長」）：off 與 sp 整組砍一半，影子貼著
-           右下緣就收掉，覆蓋面積從 315 降到 154 CSS px²（「中」那一階）。
-         ⚠⚠ 第六輪再改一次配比：**位移要壓過擴散**。第五輪是 off .09 配 sp .11
-           —— 擴散比位移還大，影子就往四面八方長，看起來又變回「在背後暈開」，
-           使用者：「這個影子偏移的角度太少，看起來光源不是從很高的位置照下來。」
-           現在「中」是 off .16 配 sp .05，影子是一彎明確的月牙，不是一圈暈；
-           倒的方向另外由「光向」那條尺給（20／30／45／60／75 度，預設 45）。
-         ⚠ 以頭的圓心 (0, -d) 為中心放大，不是以尖端 —— 以尖端放大的話
-           影子會整個往下長，看起來像倒影。 */
-      p.setAttribute('transform', 'translate(' + n(kx) + ' ' + n(ky) + ') translate(0 ' + n(-d) +
-        ') scale(' + sc.toFixed(4) + ') translate(0 ' + n(d) + ')');
+      /* ⚠ 順序是「先投影、再放大」：SVG 的 transform 列表是右邊先作用。 */
+      p.setAttribute('transform', 'scale(' + sc.toFixed(4) + ') matrix(1 0 ' +
+        mc.toFixed(4) + ' ' + md.toFixed(4) + ' 0 0)');
       shg.appendChild(p);
     }
   }
@@ -8320,8 +8319,11 @@ body { padding-bottom: 12rem; }
                (cText < 4.5 ? ' <span class="pv-bad">字沒過 AA</span>' : '') +
                (cLogo < 3 ? ' <span class="pv-bad">標誌低於圖形的 3:1</span>' : ''));
     var sh = SH[st.shadow];
-    lines.push('影子：' + (sh ? '最深讓底下暗 <b>' + sh.max + '</b> 階（0~255）、覆蓋約 ' + sh.area +
-                                ' CSS px²，往右下 <b>' + (SUN[st.sun] || SUN.a) + '°</b> 倒'
+    var elev = SUNH[st.sun] || SUNH.b;
+    lines.push('影子：' + (sh ? '太陽 <b>' + elev + '°</b>（影子長 ' +
+                                (1 / Math.tan(elev * Math.PI / 180) * g.H * k).toFixed(1) +
+                                'px ＝ 圖釘高的 ' + (1 / Math.tan(elev * Math.PI / 180)).toFixed(2) +
+                                ' 倍），最深暗 <b>' + sh.max + '</b> 階、覆蓋約 ' + sh.area + ' CSS px²'
                               : '沒有'));
     lines.push('圖釘壓到：' + (hits.length ? '<span class="pv-bad">' + hits.join('、') + '</span>' : '沒有壓到別的東西'));
     p.innerHTML = lines.join('<br>');
