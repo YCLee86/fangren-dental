@@ -20,6 +20,17 @@
      ⚠ 地圖的 viewBox 與街廓、路名、停車場的座標**一個單位都沒有動**（那張圖排了
        四十二輪）。綠塊自己的路徑 M228 236… 也原封不動，改的只有塊裡放什麼。
 
+     ⚠⚠⚠ **影子不可以用 CSS 的 filter: drop-shadow()**（2026-08-21 第三輪查出來的）。
+     第二輪用的是它，Chromium 上四階都畫得好好的，**iOS Safari 上一階都沒有畫**。
+     使用者的螢幕錄影（1126x2436、60fps）逐幀量：切在「重」的那一幀對切在「無」
+     的那一幀，最深只差 3.3 階、有感的像素只有 2 個 —— 等於完全沒有畫
+     （同一組值在 Chromium 上是 90 階、2000 CSS px²）。
+     成因是這張 SVG 的每一樣東西都在「g id=map-clip」那個 clip-path 底下，
+     WebKit 對「被裁切的群組裡再套 CSS filter」會整個丟掉。
+     現在的影子是**畫出來的**：同一條釘身路徑疊十六層，每層往下挪一點、
+     以頭的圓心為中心放大一點、每層都很淡。沒有用到任何 filter。
+     ⚠ 疊起來的總濃度是 1−(1−a)^層數，不是 a×層數 —— 層數一改 a 要跟著換算。
+
      切換條上的三條尺（都可以用網址參數直接開，正規式 [a-z0-9]+）：
        樣式 ?pin=a|b|c   Ⓐ 綠釘＋白圈＋圈裡綠標誌（＝參考圖的長相）
                          Ⓑ 綠釘＋標誌直接反白（沒有內圈，標誌可以放到最大 21px）
@@ -5379,27 +5390,24 @@ body[data-pin="c"] .cm-logo { fill: var(--map-mark); }
 body[data-pin="c"] .cm-disc { display: none; }
 
 /* 影子：圖釘是「浮在圖上」的東西，和地圖上其他都貼平的色塊不同。
-   ⚠⚠ 2026-08-21 第二輪，使用者：「陰影很不明顯」—— 量出來他是對的：
-     原本那一階（第一版的唯一一階，現在叫「輕」）最深只讓底下暗 36 階、
-     覆蓋 318 CSS px²，在這種淺灰街廓上幾乎看不出來。所以這條尺拆成四階，
-     每一階都量過（DPR3 逐像素，只取底色本來就均勻的那些像素比對）：
-
-       輕　最深 36 階・318 px²　（＝第一版）
-       中　最深 73 階・1091 px²
-       重　最深 90 階・1999 px²
-       最重 最深 99 階・3092 px²
-
-   ⚠ 墨色改用站上卡片陰影那一支 rgba(42, 44, 39, ·)（＝ --ink），
-     不要再自己調一個 28,28,26 —— 這一站的陰影只有那一顆墨。
-   ⚠ 中以上都是**兩層**（緊貼的接觸影 ＋ 散開的那一層），做法照
-     --card-shadow／--card-shadow-hover：一層的影子拉大只會糊成一塊灰。 */
-body[data-shadow="s1"] .cm-pin { filter: drop-shadow(0 1.6px 2.4px rgba(42, 44, 39, .38)); }
-body[data-shadow="s2"] .cm-pin { filter: drop-shadow(0 2.5px 3px rgba(42, 44, 39, .5))
-                                         drop-shadow(0 5px 9px rgba(42, 44, 39, .22)); }
-body[data-shadow="s3"] .cm-pin { filter: drop-shadow(0 3.5px 4px rgba(42, 44, 39, .58))
-                                         drop-shadow(0 8px 14px rgba(42, 44, 39, .3)); }
-body[data-shadow="s4"] .cm-pin { filter: drop-shadow(0 5px 5px rgba(42, 44, 39, .62))
-                                         drop-shadow(0 11px 20px rgba(42, 44, 39, .35)); }
+   ⚠⚠⚠ 2026-08-21 第三輪：**不可以用 filter: drop-shadow()**。
+     第二輪用的是 CSS 的 drop-shadow，Chromium 上四階都畫得好好的，
+     **iOS Safari 上一階都沒有畫**。使用者的螢幕錄影（1126x2436、60fps）
+     逐幀量出來：切在「重」的那一幀對切在「無」的那一幀，最深只差 3.3 階、
+     有感的像素只有 2 個 —— 也就是完全沒有畫（同一組值在 Chromium 上是
+     90 階、2000 CSS px²）。成因是這張 SVG 的每一個東西都在
+     「g id=map-clip」那個 clip-path 底下，WebKit 對「被裁切的群組裡再套
+     CSS filter」會整個丟掉。
+   ⚠ 所以影子改成**畫出來的**：同一條釘身路徑疊十六層，每一層往下挪一點、
+     以頭的圓心為中心放大一點、每層都很淡 —— 疊起來就是一圈由濃到淡的暈，
+     完全沒有用到 filter，Safari／Chromium 都一定畫得出來。
+     ⚠⚠ 十六層是量過的下限：十層時「最重」那一階的暈上緣看得出一圈一圈的台階
+       （放大截圖比對得到），十六層就看不出來了（同 CLAUDE.md
+       第九節第 10 條那個馬赫帶，只是這裡是台階不是斜坡）。
+   ⚠ 墨色用站上卡片陰影那一支 --ink（rgba 42,44,39），不要自己再調一顆。
+   四階的參數與實測強度都在底下那支腳本的 SH 表裡。 */
+.map-svg .cm-sh path { fill: var(--ink); }
+body[data-shadow="off"] .cm-sh { display: none; }
 
 /* ==========================================================================
    切換條（提案用，定案時整段刪掉）
@@ -6289,6 +6297,7 @@ body { padding-bottom: 12rem; }
                     <text class="cm-nm" x="276" y="268" text-anchor="middle">芳仁牙醫</text>
                     <line class="cm-ul"/>
                     <g class="cm-pin">
+                      <g class="cm-sh" aria-hidden="true"></g>
                       <path class="cm-body"/>
                       <circle class="cm-disc" cx="0" cy="0" r="0"/>
                       <path class="cm-logo" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
@@ -8047,6 +8056,7 @@ body { padding-bottom: 12rem; }
   var svg  = fig.querySelector('.map-svg');
   var pin  = fig.querySelector('.cm-pin'),  pbody = fig.querySelector('.cm-body');
   var disc = fig.querySelector('.cm-disc'), logo  = fig.querySelector('.cm-logo');
+  var shg  = fig.querySelector('.cm-sh');
   var nm   = fig.querySelector('.cm-nm'),   ul    = fig.querySelector('.cm-ul');
 
   /* 標誌的原始外框（量出來的，見 /history/ 那一頁）：2.02926:1 */
@@ -8069,6 +8079,20 @@ body { padding-bottom: 12rem; }
 
   function n(v) { return (+v).toFixed(2); }
 
+  /* 影子四階。a＝每一層的不透明度、dy＝整體往下挪幾個單位、sp＝最外層放大多少。
+     max／area 是 Chromium DPR3 逐像素量到的（最深讓底下暗幾階／覆蓋幾 CSS px²），
+     ⚠ 改了 a/dy/sp 就要重量一次，不要沿用舊數字。
+     ⚠⚠ **層數一改，a 也要跟著改** —— 疊起來的總濃度是 1−(1−a)^層數，
+       不是 a×層數。十層換成十六層時忘了換算，四階整組黑掉一倍
+       （s1 從 54 階跳到 81）。換算式：a_new ＝ 1−(1−a_old)^(舊層數/新層數)。 */
+  var SH = {
+    off: null,
+    s1: { a: .022, dy: 1.5, sp: .18, max: 61, area: 295 },
+    s2: { a: .032, dy: 2.5, sp: .30, max: 86, area: 575 },
+    s3: { a: .041, dy: 3.5, sp: .42, max: 93, area: 849 },
+    s4: { a: .051, dy: 5.0, sp: .55, max: 120, area: 1172 }
+  };
+
   function drawPin() {
     var H = SIZE[st.size] || SIZE.m, R = 0.36 * H, d = H - R;
     var L = Math.sqrt(d * d - R * R);
@@ -8086,7 +8110,29 @@ body { padding-bottom: 12rem; }
       'translate(' + n(-w / 2) + ' ' + n(-d - hh / 2) + ') scale(' + s.toFixed(5) +
       ') translate(' + (-LX) + ' ' + (-LY) + ')');
     pin.setAttribute('transform', 'translate(' + (POS[st.pos] || POS.r) + ' ' + TIPY + ')');
+    drawShadow(pbody.getAttribute('d'), d);
     return { H: H, R: R, w: w };
+  }
+
+  /* 影子：同一條釘身路徑疊 LAYERS 層（16），往下挪 ＋ 以頭的圓心為中心放大。
+     ⚠ 不要改回 CSS 的 drop-shadow —— iOS 在 clip-path 底下不畫（見樣式那一段）。 */
+  var NS = 'http://www.w3.org/2000/svg', LAYERS = 16;
+  function drawShadow(dAttr, d) {
+    var sh = SH[st.shadow];
+    while (shg.firstChild) shg.removeChild(shg.firstChild);
+    if (!sh) return;
+    for (var i = 0; i < LAYERS; i++) {
+      var t = i / (LAYERS - 1);
+      var sc = 1 + sh.sp * t, oy = sh.dy * (0.35 + 0.65 * t);
+      var p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', dAttr);
+      p.setAttribute('opacity', sh.a.toFixed(3));
+      /* 以頭的圓心 (0, -d) 為中心放大，不是以尖端 —— 以尖端放大的話
+         影子會整個往下長，看起來像倒影不像影子。 */
+      p.setAttribute('transform', 'translate(0 ' + n(oy) + ') translate(0 ' + n(-d) +
+        ') scale(' + sc.toFixed(4) + ') translate(0 ' + n(d) + ')');
+      shg.appendChild(p);
+    }
   }
 
   /* 字面下緣（單位＝該元素的 user unit）。做法同站上那三塊牌子。 */
@@ -8177,11 +8223,8 @@ body { padding-bottom: 12rem; }
     lines.push('對比：白字對綠 <b>' + cText.toFixed(2) + '</b>:1、標誌對釘身 <b>' + cLogo.toFixed(2) + '</b>:1' +
                (cText < 4.5 ? ' <span class="pv-bad">字沒過 AA</span>' : '') +
                (cLogo < 3 ? ' <span class="pv-bad">標誌低於圖形的 3:1</span>' : ''));
-    /* 影子那一階的實測強度（DPR3 逐像素量的，只取底色均勻的那些像素）。
-       ⚠ 這四組數字是量出來的，不是估的；改上面那四條 filter 就要重量一次。 */
-    var SH = { off: null, s1: [36, 318], s2: [73, 1091], s3: [90, 1999], s4: [99, 3092] };
     var sh = SH[st.shadow];
-    lines.push('影子：' + (sh ? '最深讓底下暗 <b>' + sh[0] + '</b> 階（0~255）、覆蓋約 ' + sh[1] + ' CSS px²'
+    lines.push('影子：' + (sh ? '最深讓底下暗 <b>' + sh.max + '</b> 階（0~255）、覆蓋約 ' + sh.area + ' CSS px²'
                               : '沒有'));
     lines.push('圖釘壓到：' + (hits.length ? '<span class="pv-bad">' + hits.join('、') + '</span>' : '沒有壓到別的東西'));
     p.innerHTML = lines.join('<br>');
