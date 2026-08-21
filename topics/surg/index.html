@@ -4830,7 +4830,13 @@ body[data-topic] #topics { padding-top: 1rem; }
              而 display: contents 只拿掉盒子、不擋繼承，整排標記的字會變斜的。 -->
         <span class="swrap">
         <ul class="chips">
-          <li><a href="/" data-spec="all">全部</a></li>
+          <!-- ⚠ 「全部」指的是 `/#topics` 不是 `/` —— 從著陸頁按回來的人要回到的是
+               「主題與科別」這一排，不是首頁最上面的 HERO。落在 HERO 的話他還要
+               自己再往下滑一屏才看得到文章，等於按了等於沒按（2026-08-21 使用者回報）。
+               頁首那顆「全部文章」本來就指 `#topics`，這一顆跟它一致。
+               ⚠ 在首頁上按它會捲到這一排（它自己），那是對的：這一顆的意思一直都是
+               「不篩選」，而不篩選的畫面就是這一頁。 -->
+          <li><a href="/#topics" data-spec="all">全部</a></li>
           <li><a href="/topics/general/" data-spec="general" >一般牙科・定期檢查</a></li>
           <li><a href="/topics/perio/" data-spec="perio"   >牙周治療</a></li>
           <li><a href="/topics/endo/" data-spec="endo"    >顯微根管</a></li>
@@ -6389,6 +6395,7 @@ body[data-topic] #topics { padding-top: 1rem; }
 })();
 </script>
 
+<script src="../../assets/counter.js" defer></script>
 
 <script>
 /* 位置與周邊停車：點停車場帶出步行路線與時間。推導見 /history/clinic-simple-map.html */

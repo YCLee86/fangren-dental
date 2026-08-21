@@ -22,8 +22,10 @@
    這支做了什麼（每一項都是為了避開 CLAUDE.md 第八節那幾個陷阱）
    -----------------------------------------------------------------------------
    1. 相對路徑往上兩層。**不用 <base href="/">** —— 那會讓 #topics 這種錨點跳回首頁。
-   2. 拿掉 assets/counter.js。窄帶連同 data-views-self 一起隨 HERO 消失，
-      所以不會發生「每開一次提案頁首頁計數就多一次」。
+   2. ⚠ **counter.js 留著**（2026-08-21 改的，原本是拿掉）。這七頁是正式站的頁，
+      文章卡上的瀏覽次數不能印成一條「—」。安全是因為 HERO 拿掉時
+      data-views-self 跟著消失了 —— 只剩唯讀的 data-views，不會替任何一篇 +1。
+      第 9 步有兩條 assert 在守這件事。
    3. 切換條插在**最後一個** </body> 前面（用 lastIndexOf）——
       這一站的註解裡就寫著那幾個字，String.replace 會換到註解裡那一個。
    4. class 一律 pv- 前綴（切換條）／tp-（科別介紹），避開站上既有的短名字。
@@ -421,14 +423,31 @@ for (const spec of SPECS) {
        .join('.chips :is(button[aria-pressed="true"],a[aria-current="page"])');
 
   /* 8. 篩選 JS：選擇器放寬（否則搜尋框會一起失效），並且不要在連結上掛 click */
-  h = h.replace(".chips button[data-spec]", ".chips [data-spec]");
-  h = h.replace(
-    "Array.prototype.forEach.call(chips, function (btn) {\n    btn.addEventListener('click'",
-    "Array.prototype.forEach.call([], function (btn) {   /* 提案頁：chips 是連結，不掛 click */\n    btn.addEventListener('click'"
-  );
+  /* ⚠ 2026-08-21 上線之後，篩選 JS 的那兩處**已經直接改在 index.html 裡**
+     （選擇器放寬成 `.chips [data-spec]`、chips 的 click 迴圈改成掛在空陣列上），
+     所以這裡原本那兩條 String.replace 變成空操作，已經刪掉 ——
+     留著空操作正是 aria-current 那個坑的成因（看起來有做，其實沒有）。
+     改回按鈕的話 index.html 那兩處要一起改。 */
 
-  /* 9. counter.js 拿掉 */
-  h = h.replace(/\n<script src="\.\.\/\.\.\/assets\/counter\.js" defer><\/script>/, "");
+  /* 9. 瀏覽次數：counter.js **要留著**。
+     -----------------------------------------------------------------------
+     ⚠⚠ 這一步 2026-08-21 反過來了。還是提案頁的時候它是被拿掉的
+       （CLAUDE.md 第八節：提案頁不拿掉的話，每開一次首頁的計數就多一次）。
+       但這七頁現在是**正式站的頁**，文章卡上那個數字是站上的一部分 ——
+       拿掉的話七頁的卡片全都印一條「—」（2026-08-21 使用者回報）。
+     ⚠ 安全的理由是 **HERO 拿掉時 data-views-self 跟著消失了**：
+       counter.js 只有看到 data-views-self 才會 POST +1，這一頁只剩
+       data-views（唯讀），所以顯示得出數字、又不會灌任何一篇的計數。
+       下面那條 assert 就是在守這件事 —— 哪天著陸頁又長回窄帶，它會擋下來。 */
+  if (/data-views-self/.test(h)) {
+    throw new Error(
+      `topics/${spec}/ 裡出現了 data-views-self —— 著陸頁掛上 counter.js 之後，` +
+      `那會讓每開一次這一頁就替某一篇 +1。要嘛把它拿掉，要嘛這一頁別載 counter.js。`
+    );
+  }
+  if (!/<script src="\.\.\/\.\.\/assets\/counter\.js" defer><\/script>/.test(h)) {
+    throw new Error(`topics/${spec}/ 沒有 counter.js —— 文章卡的瀏覽次數會印成一條「—」。`);
+  }
 
   /* 10. <head>：這一頁自己的 title／description／canonical／JSON-LD。
      -----------------------------------------------------------------------
