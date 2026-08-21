@@ -299,7 +299,7 @@ const BAR = `
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時連同 data-* 屬性一起刪掉，不要留到正式站。
      網址可帶參數直接開到某一格（正規式一律 [a-z0-9]+）：
-       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4
+       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r
        ?fs=16|18|20  ?cmp=now|new
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
@@ -320,6 +320,13 @@ const BAR = `
     <button data-k="pos" data-v="rr">更右</button>
   </div>
   <div class="pv-row">
+    <span class="pv-lab">釘型</span>
+    <button data-k="neck" data-v="a">Ⓐ 相切</button>
+    <button data-k="neck" data-v="b">Ⓑ 微收</button>
+    <button data-k="neck" data-v="c">Ⓒ 明顯</button>
+    <button data-k="neck" data-v="d">Ⓓ 很細</button>
+  </div>
+  <div class="pv-row">
     <span class="pv-lab">底線</span>
     <button data-k="ul" data-v="on">有</button>
     <button data-k="ul" data-v="off">無</button>
@@ -332,6 +339,10 @@ const BAR = `
       <button data-k="fs" data-v="16">16</button>
       <button data-k="fs" data-v="18">18</button>
       <button data-k="fs" data-v="20">20</button>
+      <span class="pv-lab">尖端</span>
+      <button data-k="tip" data-v="s">尖</button>
+      <button data-k="tip" data-v="m">中</button>
+      <button data-k="tip" data-v="r">圓</button>
     </div>
     <div class="pv-row">
       <span class="pv-lab">陰影</span>
@@ -372,12 +383,16 @@ const BAR = `
 
   /* ⚠ 三格都要是「選了就能上線」的（CLAUDE.md：尺的下界要先量過再給）：
      52 以下標誌只剩 13px、洞就糊成一點；68 以上頭頂會頂出街廓的上緣。 */
+  /* 腰身（度，離正下方）。愈小 ＝ 釘子愈細。a 那一格用相切（＝原本的水滴）。 */
+  var WAIST = { b: 50, c: 40, d: 30 };
+  /* 尖端的圓角，用頭的半徑的倍數給。s＝接近參考圖那種尖、r＝接近 Google 那種圓。 */
+  var TIP = { s: .06, m: .11, r: .18 };
   var SIZE = { s: 52, m: 60, l: 68 };
   var POS  = { c: 276, r: 294, rr: 312 };
   var TIPY = 238;                 /* 尖端進到綠塊裡 2 個單位（綠塊上緣 236） */
   var PLOT = { x: 228, y: 236, w: 96, h: 51 };
 
-  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', cmp: 'new' };
+  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', neck: 'c', tip: 'm', cmp: 'new' };
   var st = {};
   var q = location.search;
   Object.keys(DEF).forEach(function (k) {
@@ -395,31 +410,63 @@ const BAR = `
        （s1 從 54 階跳到 81）。換算式：a_new ＝ 1−(1−a_old)^(舊層數/新層數)。 */
   var SH = {
     off: null,
-    s1: { a: .022, off: .12, sp: .10, max: 71, area: 168 },
-    s2: { a: .032, off: .20, sp: .16, max: 91, area: 315 },
-    s3: { a: .041, off: .28, sp: .22, max: 97, area: 444 },
-    s4: { a: .051, off: .38, sp: .30, max: 121, area: 645 }
+    s1: { a: .022, off: .05, sp: .07, max: 61, area: 72 },
+    s2: { a: .032, off: .09, sp: .11, max: 91, area: 154 },
+    s3: { a: .041, off: .13, sp: .15, max: 97, area: 240 },
+    s4: { a: .051, off: .18, sp: .20, max: 121, area: 346 }
   };
+
+  /* 釘身的路徑。三個參數：
+       R    頭那個圓的半徑（圓心在 (0, -d)，尖端在原點）
+       phi  **腰身**：頭與釘子交接的那兩個點，離「正下方」幾度。
+            phi 愈小 ＝ 釘子愈細、頭與釘子的分界愈明顯。
+            ⚠ 相切（＝原本那顆水滴）就是 phi ＝ acos(R/d)：那時交接處
+              完全平順、看不出哪裡是圓哪裡是釘子 —— 2026-08-21 第五輪
+              使用者指出的正是這件事（「目前診所的圖釘從圓形標籤外框到
+              釘子的部分是整個連在一起」）。
+       rt   尖端的圓角半徑（用 R 的倍數給）。參考圖那顆很尖，使用者不要；
+            Google 那顆太圓潤，也不要 —— 中間那一格是預設。
+     做法：頭的大弧 → 右腰點拉一條**切線**到尖端的小圓 → 繞過小圓 → 左腰點收回。
+     ⚠ 切線要用算的，不能用「連到尖端再導圓角」——那樣兩側會在尖端附近凸出來。 */
+  function pinPath(R, d, phiDeg, rtK) {
+    var phi = phiDeg * Math.PI / 180, cy = -d;
+    var PX = R * Math.sin(phi), PY = cy + R * Math.cos(phi);
+    var rt = Math.max(0.02, rtK) * R, tcy = -rt;          /* 尖端小圓的圓心 */
+    /* 右腰點對小圓的切點 */
+    var vx = 0 - PX, vy = tcy - PY, dist = Math.hypot(vx, vy);
+    var th = Math.acos(Math.min(1, rt / dist));           /* 切點與連心線的夾角 */
+    var base = Math.atan2(PY - tcy, PX - 0);              /* 小圓心 → 腰點 */
+    var a1 = base - th;                                   /* 右側那個切點 */
+    var qx = 0 + rt * Math.cos(a1), qy = tcy + rt * Math.sin(a1);
+    /* 左邊鏡射；沿順時針（角度遞增）從右切點繞過底部到左切點 */
+    var a2 = Math.PI - a1;
+    var delta = a2 - a1; while (delta < 0) delta += 2 * Math.PI;
+    var big = delta > Math.PI ? 1 : 0;
+    return 'M' + n(-PX) + ' ' + n(PY) +
+           'A' + n(R) + ' ' + n(R) + ' 0 1 1 ' + n(PX) + ' ' + n(PY) +
+           'L' + n(qx) + ' ' + n(qy) +
+           'A' + n(rt) + ' ' + n(rt) + ' 0 ' + big + ' 1 ' + n(-qx) + ' ' + n(qy) +
+           'Z';
+  }
 
   function drawPin() {
     var H = SIZE[st.size] || SIZE.m, R = 0.36 * H, d = H - R;
-    var L = Math.sqrt(d * d - R * R);
-    var x0 = R * L / d, y0 = -d + R * R / d;
-    pbody.setAttribute('d',
-      'M' + n(-x0) + ' ' + n(y0) +
-      'A' + n(R) + ' ' + n(R) + ' 0 1 1 ' + n(x0) + ' ' + n(y0) + 'L0 0Z');
+    var tanPhi = Math.acos(R / d) * 180 / Math.PI;        /* 相切那一格（原本的水滴） */
+    var phi = st.neck === 'a' ? tanPhi : (WAIST[st.neck] || WAIST.c);
+    var rtK = TIP[st.tip] || TIP.m;
+    pbody.setAttribute('d', pinPath(R, d, phi, st.neck === 'a' ? 0.02 : rtK));
     var dr = 0.72 * R;
     disc.setAttribute('r', n(dr));
     disc.setAttribute('cy', n(-d));
     /* Ⓐ 的標誌關在白圈裡，所以基準換成內圈的半徑 */
     var w = st.pin === 'a' ? 1.46 * dr : 1.30 * R;
-    var s = w / LW, hh = LH * s;
+    var sc = w / LW, hh = LH * sc;
     logo.setAttribute('transform',
-      'translate(' + n(-w / 2) + ' ' + n(-d - hh / 2) + ') scale(' + s.toFixed(5) +
+      'translate(' + n(-w / 2) + ' ' + n(-d - hh / 2) + ') scale(' + sc.toFixed(5) +
       ') translate(' + (-LX) + ' ' + (-LY) + ')');
     pin.setAttribute('transform', 'translate(' + (POS[st.pos] || POS.r) + ' ' + TIPY + ')');
     drawShadow(pbody.getAttribute('d'), d, R);
-    return { H: H, R: R, w: w };
+    return { H: H, R: R, w: w, phi: phi, neck: 2 * R * Math.sin(phi * Math.PI / 180) };
   }
 
   /* 影子：同一條釘身路徑疊 LAYERS 層（16），往下挪 ＋ 以頭的圓心為中心放大。
@@ -439,6 +486,9 @@ const BAR = `
          2026-08-21 第四輪使用者指出：參考圖那顆的影子是有角度的，
          我做的是「在背後暈開」。量過那張截圖：影子整團貼在圖釘的右下緣，
          往外約 10~14px（那顆頭的半徑 32px ＝ 0.31~0.44 R），左上角乾淨。
+         ⚠ 第五輪再收一次（使用者：「範例看起來是從更高的角度照下來，
+           所以不用像你畫的那麼長」）：off 與 sp 整組砍一半，影子貼著
+           右下緣就收掉，覆蓋面積從 315 降到 154 CSS px²（「中」那一階）。
          ⚠ 以頭的圓心 (0, -d) 為中心放大，不是以尖端 —— 以尖端放大的話
            影子會整個往下長，看起來像倒影。 */
       p.setAttribute('transform', 'translate(' + n(k) + ' ' + n(k) + ') translate(0 ' + n(-d) +
@@ -529,6 +579,8 @@ const BAR = `
     var lines = [];
     lines.push('圖釘 <b>' + g.H + '</b> 單位＝<b>' + (g.H * k).toFixed(1) + 'px</b>' +
                '（頭 ⌀' + (2 * g.R * k).toFixed(1) + '、標誌寬 ' + (g.w * k).toFixed(1) + 'px）');
+    lines.push('釘型：腰身 ' + g.phi.toFixed(1) + '°，頭與釘子的交接處寬 <b>' +
+               (g.neck * k).toFixed(1) + 'px</b>（＝頭的 ' + (g.neck / (2 * g.R) * 100).toFixed(0) + '%）');
     lines.push('綠塊的字 ' + tb.width.toFixed(1) + ' / ' + PLOT.w + ' 單位 —— ' +
                (over ? '<span class="pv-bad">撐出綠塊了</span>' : '兩邊各留 ' +
                 ((PLOT.w - tb.width) / 2).toFixed(1) + ' 單位'));
