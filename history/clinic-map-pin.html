@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>clinic-map-pin｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>clinic-map-pin — 診所在地圖上改用圖釘標示</h1>
+<p class="meta">
+  2026-08-21 開、當天十輪定案上線<br>
+  原網址 <code>/preview/clinic-map-pin/</code>（已刪除 2026-08-21）<br>
+  整頁還原：<code>git show 69de26a:preview/clinic-map-pin/index.html</code><br>
+  產生器 <code>tools/map-pin-preview.mjs</code>（同一個 commit，已刪除）<br>
+  切換條 <code>?pin=a|b|c&amp;size=s|m|l&amp;pos=c|r|rr&amp;neck=a|b|c|d&amp;tail=a|b|c|d&amp;dy=a|b|c|d&amp;ul=on|off&amp;fs=16|18|20&amp;tip=s|m|r&amp;shadow=off|s1|s2|s3|s4&amp;sun=a|b|c|d&amp;az=u30|u20|r0|d45</code>
+</p>
+
+<h2>起因</h2>
+<div class="note"><p>使用者拿 cizoo.com 的一張手機截圖：「我喜歡這個圖釘釘在地圖上的樣子。我們目前診所的圖是用對話框標示診所名稱，我把那個診所地圖改成用圖釘標示，然後圖釘上圓圈就放診所的 logo，那個綠色的區塊就直接寫芳仁牙醫。」</p>
+<p>改動前是 2026-08-14~15 那一輪的做法：綠塊裡放標誌 ＋ 底下一塊綠底白字的對話框（<code>.clab</code>，含白色圖釘、底線、朝上的尾巴）。這一輪把兩者互換並取消對話框。</p></div>
+
+<h2>定案（十輪之後）</h2>
+<div class="note"><pre>樣式  Ⓐ 綠釘 ＋ 白圈 ＋ 圈裡綠標誌
+大小  大（頭的半徑 R ＝ 24.48 個單位 ＝ .36 × 68）
+位置  右（尖端 x ＝ 294）
+釘型  Ⓓ 很細（腰身 30 度 ＝ 頭與釘子的交接處寬 0.5 個頭）
+釘長  短（尖端離頭的圓心 1.55 R）
+高低  再下（尖端 y ＝ 245，綠塊上緣是 236）
+尖端  尖（圓角 .06 R）
+底線  有（「芳仁牙醫」仍然是連到 Google 地圖的連結）
+字級  20（那四個字寬 83.7 單位、綠塊 96，兩邊各剩 6）
+陰影  中（十六層、每層 α .026）
+日高  高 65 度　影向  右上 30 度
+
+畫出來就是（index.html，defs 裡放釘身、標記本體在地圖的 map-clip 群組裡）：
+  #cm-body   M-12.24 -16.74A24.48 24.48 0 1 1 12.24 -16.74L1.21 -0.64A1.47 1.47 0 0 1 -1.21 -0.64Z
+  .cm-pin    transform="translate(294 245)"
+  .cm-disc   cx=0 cy=-37.94 r=17.63
+  .cm-logo   translate(-12.87 -44.28) scale(.58105) translate(-232.8729 -333.8286)
+  .cm-sh     十六個 &lt;use href="#cm-body"&gt;，
+             transform="scale(1.0000~1.1400) matrix(1 0 -.4038 .2332 0 0)"
+  .cm-nm     x=276 y=267（底線的座標由 sizeLabels() 現量）</pre></div>
+
+<h2>十輪各修了什麼</h2>
+<div class="note"><pre> 1  三案 ＋ 大小／位置／底線／字級／陰影的第一版切換條
+ 2  「陰影很不明顯」→ 量出來原本那一階最深只讓底下暗 36 階、覆蓋 318 CSS px²，
+    拆成四階（36／73／90／99）
+ 3  「陰影還是看不出來欸」＋螢幕錄影 → **不是太淡，是 iOS 根本沒畫**
+ 4  「陰影是有角度的，像太陽從左上照下去，你做的是在背後暈開」
+ 5  「範例是從更高的角度照下來，不用那麼長」→ 位移與擴散砍一半
+ 6  「釘型末端有奇怪的分岔」＋「偏移的角度太少」→ 切點取錯邊；擴散大於位移
+ 7  「45 度還不夠，再給我幾個選擇」→ 光向開到五格
+ 8  「你把整張地圖當成貼在牆壁上，我想要的是地圖平貼在桌上」→ 影子改成投影
+ 9  「影子往右上 20 度和 30 度」「釘子還有點長」→ 方位一條尺、釘長一條尺
+10  「整支圖釘往下移一點」→ 高低一條尺，四格都量過離字面多遠</pre></div>
+
+<h2>⚠⚠ 影子不可以用 CSS 的 filter: drop-shadow()</h2>
+<div class="note"><p>第二輪用的是它，Chromium 上四階都畫得好好的，<b>iOS Safari 上一階都沒有畫</b>。使用者的螢幕錄影（1126×2436、60fps）逐幀量：切在「重」的那一幀對切在「無」的那一幀，最深只差 <b>3.3 階、有感的像素只有 2 個</b>（同一組值在 Chromium 上是 90 階、2000 CSS px²）。</p>
+<p>成因是這張 SVG 的每一樣東西都在 <code>&lt;g id="map-clip"&gt;</code> 那個 clip-path 底下，WebKit 對「被裁切的群組裡再套 CSS filter」會整個丟掉。</p>
+<p>改成<b>畫出來的</b>：同一條釘身路徑疊十六層、每層都很淡。完全沒有用到 filter，兩邊都一定畫得出來。</p></div>
+
+<h2>⚠⚠⚠ 影子是投影，不是位移（第八輪，整輪掉頭）</h2>
+<div class="note"><p>使用者：「你把整張地圖當成貼在牆壁上、光源照下去，但我想要的是<b>地圖平貼在桌上</b>、光源照下去的感覺。」</p>
+<p>前七輪都是把剪影<b>整個平移</b>再疊淡 —— 那是「貼在牆上的貼紙」的影子（物體和牆平行）。這張圖是俯視圖、圖釘是<b>站在桌面上</b>的：尖端碰到桌面所以影子從那裡長出來，頭離桌面最遠所以被推得最遠。</p>
+<pre>以尖端為原點：
+  x' = x − L·cos(方位)·y
+  y' =   − L·sin(方位)·y        （y 往上為負，所以取負號）
+  L  = cot(太陽高度)            （太陽愈高 L 愈小、影子愈短）
+
+寫成 SVG 就是 matrix(1 0 −L·cos φ  −L·sin φ 0 0)。</pre>
+<p>圓形的頭投影之後會變成<b>斜的橢圓</b> —— 那是站著的東西從正上方看下去該有的樣子，不是畫錯。接觸點永遠不動，所以影子那一端是尖的、貼著釘子；模糊只往遠端長（以尖端為原點逐層放大）＝ 接觸處銳利、愈遠愈糊。</p></div>
+
+<h2>做的時候踩到、值得記住的</h2>
+<div class="note"><pre>・**疊出來的模糊，總濃度是 1−(1−α)^層數，不是 α×層數。**
+  十層改十六層時忘了換算，四階整組黑掉一倍（s1 從 54 階跳到 81）。
+
+・**釘子兩側要對「尖端那顆小圓」拉切線，而且要取右邊那個切點。**
+  取錯邊時輪廓會從尖端折回去 —— 就是使用者說的「末端有奇怪的分岔」，
+  腰身愈細、尖端圓角愈大愈明顯。另一種做法（連到尖端再導圓角）
+  會讓兩側在尖端附近凸出一塊。
+
+・**影子要讀得出方向，位移就必須壓過擴散。**
+  第五輪 off .09 配 sp .11（擴散比位移大），影子往四面八方長，
+  看起來又變回「在背後暈開」。
+
+・**兩張擷圖逐像素比對，不能直接相減。**
+  各自重新載入之間有 ±1 個裝置像素的取樣差，落在硬邊上會量到 155 階，
+  那全是位移不是影子。要嘛只取「底色本來就均勻」的像素（3×3 鄰域
+  最大最小差 < 3），要嘛同一個 page 只按按鈕切。
+  ⚠ 提案頁的切換條是 fixed 的，元素截圖照樣拍得到它 ——
+    不先藏起來的話會量到 22% 的像素有差，那全是切換條。
+
+・**新的連結不能掛 rl-link。** 站上那支 sizeLabels() 會對每一個 .rl-link
+  找 .rl-nm/.rl-pin/.rl-ul，混進去會在 nm.getBBox() 那一行整支掛掉，
+  連停車場那三塊牌子都不會畫。提案期間新案自己一套 cm-* 前綴。
+
+・**現況與新案兩組標記同時放在圖上時要用 opacity 切，不能用 display:none。**
+  sizeLabels() 靠 getBBox() 量牌子，量到 0 的話「對照現況」那一按
+  對話框會塌成一條線。</pre></div>
+
+<h2>上線時一起做掉的</h2>
+<div class="note"><pre>・.clab 那一整塊（對話框、白色圖釘、底線、尾巴與所有 data-*）刪除，
+  CSS 與手機那一段的 --map-ul-gap／--map-tail／font-size 覆寫一起清掉。
+・sizeLabels() 裡專門為那一塊寫的兩個掛勾（data-pin-k、data-ink-gap）
+  與只有它在用的 inkLeft() 一併移除 —— 停車場那三塊的結果逐值相同。
+・新增的只有一段：綠塊裡那四個字底下的底線，做法沿用同一支 sizeLabels()
+  （字面下緣 ＋ --map-ul-gap，電腦 .1375、手機 .16）。沒有 JS 時那條線
+  不畫，其餘全部是靜態的。
+・驗收：電腦版 1440 逐像素比對提案頁定稿那一組，**只有 1 個像素差 3 階**；
+  手機 393 的差全部落在文字的抗鋸齒上（連地圖底下那兩行圖說也一起差，
+  那是兩頁捲動位置不同造成的次像素差，不是版面）。
+  點停車場、路線、牌子、街名淡出全部照舊。</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+
+</div></body>
+</html>
