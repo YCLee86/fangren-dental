@@ -241,6 +241,26 @@
    兩頁一起退，免得只有一頁保留、之後又被抄回去。 */
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* 換頁的交叉淡入（2026-08-21）。使用者：「點標籤的時候會有頁面切換那種閃跳的感覺，
+   跟之前單純在首頁裡篩選的時候很順的切換很不一樣。」
+   科別標記從按鈕變成連結之後，那一下就從「同一頁換內容」變成「換一份文件」，
+   中間必然有一刀。這一條把那一刀換成 .18 秒的交叉淡入。
+   ⚠ **這一條不負責治閃跳** —— 錄影裡那兩下是位置晚一步才對（回首頁時先出現整屏
+     HERO、著陸頁的標記列先畫在沒捲的位置），治它們的是提早跑的那兩支腳本。
+     這一條只負責「不要硬切」。兩件事要分開看，不然會以為加了淡入就沒事了。
+   ⚠ **這是全站的**：點文章卡、頁尾連結也會淡。不要就把這一段刪掉，
+     其他東西一個都不受影響 —— 瀏覽器不支援時它本來就等於不存在
+     （新舊兩份文件都要有這一條才會生效，而全站的頁面都吃這份樣式表）。
+   ⚠ @view-transition 只能寫在樣式表的最外層，**不能包在 @media 裡** ——
+     所以「減少動態效果」是靠下面那一條把動畫關掉，不是靠關掉這一條。
+     這一項跟著那個設定走是刻意的：它是不折不扣的轉場效果，
+     和窄帶那個往上數的數字（第八節，刻意不看）不是同一類。 */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .18s; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+}
 body {
   margin: 0; background: var(--paper); color: var(--ink);
   font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
@@ -4804,6 +4824,25 @@ body[data-topic] #topics { padding-top: 1rem; }
     </nav>
   </div>
 </header>
+<script>
+/* 著陸頁讓開固定頁首的量（`body[data-topic] #main` 的上內距讀 --topic-pad）。
+   ⚠ 這一段刻意緊接在 </header> 底下、不在頁尾那一堆 —— 它決定的是整個 #main
+     從哪裡開始，晚一步套用整頁就會往下移一次，那也是一種「閃跳」。
+   ⚠ 量的是**未捲動那一態**：捲動後頁首會收合，那不是要讓開的高度。
+   ⚠ 首頁沒有 data-topic，整段等於不存在；沒有 JS 就退回 --head-h（偏大但不破圖）。 */
+(function () {
+  if (!document.body.dataset.topic) return;
+  var hd = document.querySelector('header.site-head');
+  if (!hd) return;
+  function set() {
+    if (scrollY > 4) return;
+    document.documentElement.style.setProperty('--topic-pad', hd.getBoundingClientRect().height + 'px');
+  }
+  set();
+  addEventListener('load', set);
+  addEventListener('resize', set);
+})();
+</script>
 
 <main id="main">
 
@@ -4846,6 +4885,73 @@ body[data-topic] #topics { padding-top: 1rem; }
           <li><a href="/topics/surg/" data-spec="surg"    >口腔外科</a></li>
         </ul>
         </span>
+<script>
+/* =============================================================================
+   ⚠⚠ 這一段刻意放在標記那一排的**正下方**，不在頁尾那一堆腳本裡。
+   -----------------------------------------------------------------------------
+   它要做的兩件事都是「第一幀就要對」，晚一步就會被看見（2026-08-21 使用者的
+   螢幕錄影，逐幀量過）：
+   ・首頁：從著陸頁按「全部」回來，網址是 /#topics。交給瀏覽器自己跳的話，
+     實測 **scrollY 一直是 0 到 load 之後**，再過約 320ms 才開始動，而且因為
+     `html { scroll-behavior: smooth }`，那一段是**滑下來的**（74→296→571→740→768，
+     約 400ms）。使用者看到的就是「先出現整屏 HERO（照片還沒解好時是一片深色），
+     停一下才滑到主題與科別」。這裡在解析到這一行時就先捲好，第一幀就在定位。
+   ・著陸頁：把目前這一科捲進那一排的可視範圍。原本這支在頁尾，iOS 會先畫一張
+     「還沒捲」的畫面、下一幀才跳過去。
+   ⚠ 沒有 JS 也不會壞：瀏覽器本來就會跳到 #topics，那一排本來也捲得動。
+   ============================================================================= */
+(function () {
+  var row = document.querySelector('#topics .chips');
+  if (!row) return;
+
+  /* ── 著陸頁 ────────────────────────────────────────────────────────────
+     手機上那一排是橫捲的，目前這一科可能整顆在畫面外（兒童牙科排第四顆
+     就已經看不到了），讀者第一眼會找不到自己在哪一科。
+     ⚠ 只動那一列自己的 scrollLeft，**不要用 scrollIntoView** —— 那會連整頁
+       一起捲，著陸頁的 h1 會被推出畫面。 */
+  if (document.body.dataset.topic) {
+    var bring = function () {
+      var cur = row.querySelector('[aria-current="page"]');
+      if (!cur) return;
+      if (row.scrollWidth <= row.clientWidth + 1) return;   /* 排得下就不必動 */
+      var pad = Math.min(48, row.clientWidth * 0.12);       /* 左邊留一顆的餘裕，
+                                                               讓人看得出「左邊還有」 */
+      var max = row.scrollWidth - row.clientWidth;
+      row.scrollLeft = Math.max(0, Math.min(cur.parentNode.offsetLeft - pad, max));
+    };
+    bring();
+    addEventListener('load', bring);
+    return;
+  }
+
+  /* ── 首頁，而且是從「全部」回來的 ─────────────────────────────────────── */
+  if (location.hash !== '#topics') return;
+  /* ⚠ 只在「真的去了一趟」的時候才自己捲。重新整理與上一頁／下一頁交給瀏覽器
+     自己的捲動位置還原 —— 那時使用者可能已經捲到醫師介紹了，硬把他拉回
+     主題與科別是另一種「跳」。 */
+  try {
+    var navs = performance.getEntriesByType('navigation');
+    if (navs.length && navs[0].type !== 'navigate') return;
+  } catch (e) {}
+  var root = document.documentElement, sec = document.getElementById('topics');
+  var keep = root.style.scrollBehavior;
+  /* ⚠ 一定要先關掉 smooth，否則這一次也會變成滑的（就是要治的那個症狀）。 */
+  root.style.scrollBehavior = 'auto';
+  /* ⚠ 這一刻文件才解析到這裡，**高度還不夠捲**（HERO 一屏 ＋ 這一節的開頭而已），
+     不撐高的話 scrollIntoView 會被夾在半路。等內容都進來了再拿掉，
+     那時真正的高度遠大於它，拿掉不會動到位置（首頁約 11000px vs 250svh 約 2100px）。 */
+  root.style.minHeight = '250svh';
+  sec.scrollIntoView();
+  addEventListener('load', function () {
+    requestAnimationFrame(function () {
+      var y = scrollY;
+      root.style.minHeight = '';
+      scrollTo(0, y);                     /* 保險：萬一內容比 250svh 還短 */
+      root.style.scrollBehavior = keep;   /* 之後的錨點捲動照舊是滑的 */
+    });
+  });
+})();
+</script>
         <!-- 顯微根管與口腔外科是 2026-08-09 補的。這兩科目前一篇文章都沒有，
              但 chips 同時篩**文章與醫師**，兩科各有一位駐診醫師（陳芷鈴、許馨文），
              按下去會顯示「0 篇文章、1 位醫師」，文章那一區出現空狀態的句子 ——
@@ -6945,58 +7051,12 @@ body[data-topic] #topics { padding-top: 1rem; }
   });
 })();
 </script>
-<!-- =============================================================================
-     科別著陸頁 /topics/<spec>/ 專用的兩支小腳本
-     -----------------------------------------------------------------------------
-     2026-08-21 上線時從 tools/topic-preview-style.html 搬進來（那個檔已刪除）。
-     ⚠⚠ **兩支都用 `document.body.dataset.topic` 擋住** —— 首頁沒有那個屬性，
-       整段等於不存在。第一次搬的時候只搬了 CSS、漏掉這一段，
-       七頁的頁首讓開量全部退回 `--head-h`（76px，比實測高 17px），
-       而且三個視窗變成同一個值 —— **量出來才發現**。
-     ⚠ 沒有 JS 也不會壞：讓開量退回 `--head-h`（偏大但不破圖），
-       那一排標記本來就捲得動。
-     ============================================================================= -->
-<script>
-if (document.body.dataset.topic) {
-
-/* 著陸頁讓開固定頁首的量（上面 1-1 那一段）。
-   量的是**未捲動那一態** —— 捲動後頁首會收合，那不是我們要讓開的高度，
-   所以 scrollY 不在頂端時就不更新。 */
-(function () {
-  var hd = document.querySelector('header.site-head');
-  if (!hd) return;
-  function set() {
-    if (scrollY > 4) return;
-    document.documentElement.style.setProperty('--topic-pad', hd.getBoundingClientRect().height + 'px');
-  }
-  set();
-  addEventListener('load', set);
-  addEventListener('resize', set);
-})();
-
-/* 手機上那一排科別標記是橫捲的（≤720 時 .chips 自己是捲動列）。
-   開頁時**目前這一科**可能排在右邊、整顆在畫面外 —— 讀者第一眼看不到
-   自己在哪一科（兒童牙科排第四顆就已經看不到了）。
-   ⚠ 只動那一列自己的 scrollLeft，**不要用 scrollIntoView** —— 那會連整頁
-     一起捲，著陸頁的 h1 會被推到畫面外。
-   ⚠ 沒有 JS 也不會壞：那一排本來就捲得動，只是要自己滑。 */
-(function () {
-  var row = document.querySelector('#topics .chips');
-  var cur = row && row.querySelector('[aria-current="page"]');
-  if (!row || !cur) return;
-  function bring() {
-    if (row.scrollWidth <= row.clientWidth + 1) return;   /* 排得下就不必動 */
-    var li = cur.parentNode;
-    /* 左邊留一顆的餘裕，讓人看得出「左邊還有」，而不是貼齊邊緣。 */
-    var pad = Math.min(48, row.clientWidth * 0.12);
-    var want = li.offsetLeft - pad;
-    var max = row.scrollWidth - row.clientWidth;
-    row.scrollLeft = Math.max(0, Math.min(want, max));
-  }
-  bring();
-  addEventListener('load', bring);
-})();
-}
-</script>
+<!-- 科別著陸頁 /topics/<spec>/ 專用的那兩支小腳本**不在這裡**。
+     2026-08-21 上線時從 tools/topic-preview-style.html 搬進來，當天稍晚就
+     各自往前搬了：讓開量那一支在 </header> 底下，標記那一排的橫捲定位在
+     #topics 的標記列底下。理由一樣 —— **它們決定的是第一幀長什麼樣**，
+     放在頁尾的話 iOS 會先畫一張還沒定位的畫面，下一幀才跳過去
+     （使用者的螢幕錄影裡看得到）。
+     ⚠ 兩支都用 `document.body.dataset.topic` 擋住，首頁上等於不存在。 -->
 </body>
 </html>
