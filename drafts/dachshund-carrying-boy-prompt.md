@@ -34,6 +34,24 @@
 ⚠ 給了 hex 就**不要**在旁邊再寫色名（ILLUSTRATION.md 第十之二節：色值和形容詞
 打架時模型跟形容詞走）。下面那份提示詞已經照這條寫。
 
+## 修改紀錄
+
+**第二版（2026-08-21）—— 只改 `COMPOSITION` 一段。** 使用者看第一版的圖：
+「大小錯了。狗太大隻 要像圖片那樣的比例」。量過兩張才確定他指的是**畫面佔比**，
+不是狗與人的相對大小（人相對狗其實已經比原作的鵝相對熊還大）：
+
+| | 參考照 | 第一版 |
+| --- | --- | --- |
+| 主體高 ÷ 畫面高 | 熊 **67%**（熊＋鵝 71%） | 狗 **82%** |
+| 主體寬 ÷ 畫面寬 | 43% | 43%（本來就對） |
+| 上方留白 | 15% | 13% |
+| 下方留白 | 13% | **5.5%**（後腳幾乎頂到畫面底） |
+
+⚠ **「小一點」要給比例與四邊留白，不要只寫 smaller** —— 模型對「佔畫面幾分之幾」
+與「上下各留幾分之一」讀得懂，對形容詞讀不懂。同時在 `AVOID` 補三條擋回去：
+特寫、狗佔滿整個畫面、耳朵或腳被裁掉。
+⚠ 量法：Chromium canvas 讀原始像素抓遮罩的 bounding box（狗＝暖金、熊＝棕）。
+
 ## 用法
 
 **把照片二與照片三一起餵進去當參考圖**（第十之一節：形狀不要用文字描述，用參考圖）。
@@ -61,7 +79,15 @@ blush, no highlights. He must read as a relaxed man in his late twenties, never 
 COMPOSITION — Seen from DIRECTLY ABOVE, flat-lay: the two of them are lying on a cloth
 spread flat, but they are drawn as if standing, so the picture reads exactly like a photo
 of two small standing figures laid on a bedsheet. Symmetrical and centred, both facing the
-viewer straight on. They fill most of the frame, with a margin of plain cloth all round.
+viewer straight on.
+THEY ARE SMALL IN THE FRAME — this matters as much as anything else here. The dog is a
+little figure lying on a large sheet, NOT a close-up: from the top of its head to the tips
+of its hind feet it takes up only about TWO THIRDS of the picture height, and its body is
+about two fifths of the picture width. Leave a wide, empty margin of plain cloth all the
+way round — roughly a sixth of the picture height as bare cloth above the top of its head,
+a sixth as bare cloth below its feet, and a broad band of cloth down each side. Nothing is
+cropped and nothing touches the edge: the whole animal, both ears, all four paws and the
+man's shoes sit comfortably inside the frame with cloth to spare.
 The cloth is very pale mint green with soft white stripes running diagonally across the
 whole background, evenly spaced, drawn by hand so they wobble slightly.
 
@@ -110,7 +136,8 @@ huge glossy anime eyes or a human expression; an open mouth, visible teeth, fang
 growl, a bite mark, a wound or blood; any suggestion of pain, fear or distress; a faceless
 or noodle-limbed man; exaggerated head-to-body proportions on the man himself; a wooden,
 carved, ceramic or plastic toy surface; a drop shadow or product-photography lighting;
-extra animals, hands, props or furniture.
+extra animals, hands, props or furniture; a close-up or a tightly cropped composition;
+the dog filling the frame from edge to edge; ears, paws or feet running off the picture.
 ```
 
 ---
