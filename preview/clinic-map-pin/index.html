@@ -27,8 +27,16 @@
      （同一組值在 Chromium 上是 90 階、2000 CSS px²）。
      成因是這張 SVG 的每一樣東西都在「g id=map-clip」那個 clip-path 底下，
      WebKit 對「被裁切的群組裡再套 CSS filter」會整個丟掉。
-     現在的影子是**畫出來的**：同一條釘身路徑疊十六層，每層往下挪一點、
+     現在的影子是**畫出來的**：同一條釘身路徑疊十六層，每層往右下挪一點、
      以頭的圓心為中心放大一點、每層都很淡。沒有用到任何 filter。
+
+     ⚠⚠ **影子要有角度，不是在背後暈開**（2026-08-21 第四輪，使用者：
+     「你仔細看他的陰影是有角度的，像太陽從左上照下去，你做的陰影是在背後
+     暈開怪怪的」）。回頭量那張參考截圖（1488x2266）：那顆圖釘的頭半徑 32px，
+     影子整團**貼在右下緣**、往外約 10~14px（＝ 0.31~0.44 個半徑），
+     左上那一側乾淨到量不出東西（低於底色 6 階的像素只有 2~3px）。
+     所以每一層是往**右下**挪，x 與 y 挪一樣多（45 度 ＝ 光從左上打下來），
+     挪多少用「半徑的倍數」寫，圖釘一放大影子才會跟著等比例。
      ⚠ 疊起來的總濃度是 1−(1−a)^層數，不是 a×層數 —— 層數一改 a 要跟著換算。
 
      切換條上的三條尺（都可以用網址參數直接開，正規式 [a-z0-9]+）：
@@ -8087,10 +8095,10 @@ body { padding-bottom: 12rem; }
        （s1 從 54 階跳到 81）。換算式：a_new ＝ 1−(1−a_old)^(舊層數/新層數)。 */
   var SH = {
     off: null,
-    s1: { a: .022, dy: 1.5, sp: .18, max: 61, area: 295 },
-    s2: { a: .032, dy: 2.5, sp: .30, max: 86, area: 575 },
-    s3: { a: .041, dy: 3.5, sp: .42, max: 93, area: 849 },
-    s4: { a: .051, dy: 5.0, sp: .55, max: 120, area: 1172 }
+    s1: { a: .022, off: .12, sp: .10, max: 71, area: 168 },
+    s2: { a: .032, off: .20, sp: .16, max: 91, area: 315 },
+    s3: { a: .041, off: .28, sp: .22, max: 97, area: 444 },
+    s4: { a: .051, off: .38, sp: .30, max: 121, area: 645 }
   };
 
   function drawPin() {
@@ -8110,26 +8118,30 @@ body { padding-bottom: 12rem; }
       'translate(' + n(-w / 2) + ' ' + n(-d - hh / 2) + ') scale(' + s.toFixed(5) +
       ') translate(' + (-LX) + ' ' + (-LY) + ')');
     pin.setAttribute('transform', 'translate(' + (POS[st.pos] || POS.r) + ' ' + TIPY + ')');
-    drawShadow(pbody.getAttribute('d'), d);
+    drawShadow(pbody.getAttribute('d'), d, R);
     return { H: H, R: R, w: w };
   }
 
   /* 影子：同一條釘身路徑疊 LAYERS 層（16），往下挪 ＋ 以頭的圓心為中心放大。
      ⚠ 不要改回 CSS 的 drop-shadow —— iOS 在 clip-path 底下不畫（見樣式那一段）。 */
   var NS = 'http://www.w3.org/2000/svg', LAYERS = 16;
-  function drawShadow(dAttr, d) {
+  function drawShadow(dAttr, d, R) {
     var sh = SH[st.shadow];
     while (shg.firstChild) shg.removeChild(shg.firstChild);
     if (!sh) return;
     for (var i = 0; i < LAYERS; i++) {
       var t = i / (LAYERS - 1);
-      var sc = 1 + sh.sp * t, oy = sh.dy * (0.35 + 0.65 * t);
+      var sc = 1 + sh.sp * t, k = sh.off * R * (0.4 + 0.6 * t);
       var p = document.createElementNS(NS, 'path');
       p.setAttribute('d', dAttr);
       p.setAttribute('opacity', sh.a.toFixed(3));
-      /* 以頭的圓心 (0, -d) 為中心放大，不是以尖端 —— 以尖端放大的話
-         影子會整個往下長，看起來像倒影不像影子。 */
-      p.setAttribute('transform', 'translate(0 ' + n(oy) + ') translate(0 ' + n(-d) +
+      /* ⚠ 往**右下**挪，x 與 y 一樣多（＝光從左上打下來，45 度）——
+         2026-08-21 第四輪使用者指出：參考圖那顆的影子是有角度的，
+         我做的是「在背後暈開」。量過那張截圖：影子整團貼在圖釘的右下緣，
+         往外約 10~14px（那顆頭的半徑 32px ＝ 0.31~0.44 R），左上角乾淨。
+         ⚠ 以頭的圓心 (0, -d) 為中心放大，不是以尖端 —— 以尖端放大的話
+           影子會整個往下長，看起來像倒影。 */
+      p.setAttribute('transform', 'translate(' + n(k) + ' ' + n(k) + ') translate(0 ' + n(-d) +
         ') scale(' + sc.toFixed(4) + ') translate(0 ' + n(d) + ')');
       shg.appendChild(p);
     }
