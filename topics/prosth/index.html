@@ -5087,8 +5087,16 @@ body[data-topic] #topics { padding-top: 1rem; }
                    電腦版與 iPad 沒有設 aspect-ratio，盒子的比例 ＝ viewBox 的比例，
                    這時 slice 和 meet 完全等價，所以那兩邊不受影響。 -->
               <div class="map-win">
-              <svg class="map-svg" viewBox="0 0 560 620" role="img" aria-labelledby="mt md">
-              <title id="mt">芳仁牙醫診所簡易地圖</title>
+              <!-- ⚠⚠ 這張圖的名字用 `aria-label` 給，**不要用 `<title>`**（2026-08-21）。
+                     `<title>` 同時是無障礙名稱**和**桌機的原生提示框 —— 滑鼠停在圖上任何
+                     沒有自己 `<title>` 的地方（含三塊牌子），就會跳出「芳仁牙醫診所簡易地圖」
+                     那個框。使用者：「為什麼會出現這個附註框」。
+                     改成 aria-label 之後螢幕閱讀器照樣讀得到，畫面上不再跳框。
+                   ⚠ `<desc>` 不會變成提示框，所以留著，用 `aria-describedby` 接上去。
+                   ⚠ 底下三塊停車場色塊（`g.lot`）自己的 `<title>` **是刻意留的** ——
+                     名字從圖上拿掉之後，滑鼠停著是唯一看得到全名與步行時間的地方。 -->
+              <svg class="map-svg" viewBox="0 0 560 620" role="img"
+                   aria-label="芳仁牙醫診所簡易地圖" aria-describedby="md">
               <desc id="md">診所位在永樂街與平和街19巷交會的那一角，門面朝永樂街；街區北接文化路，往南依序是平和街33巷、大同路與中華路。附近三處停車場：19巷北邊那條平行巷上的斗六永樂站、永安路上的合廷，以及中華路上的壹車房。</desc>
 
               <defs>
@@ -5277,7 +5285,9 @@ body[data-topic] #topics { padding-top: 1rem; }
                   <g class="rlab" data-lot="a" data-dir="down" data-tx="270" data-ty="165" data-tail="15.33">
                     <path class="bub"/>
                     <g class="rl-body">
-                      <a class="rl-link" href="https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic" target="_blank" rel="noopener">
+                      <a class="rl-link" href="https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic" target="_blank" rel="noopener"
+                         aria-label="斗六永樂站停車場・50 公尺、步行 1 分鐘・在 Google 地圖上開啟">
+                        <title>斗六永樂站停車場・在 Google 地圖上開啟</title>
                         <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
                         <text class="rl-nm" x="274" y="104" text-anchor="middle">斗六永樂站停車場</text>
                         <line class="rl-ul"/>
@@ -5288,7 +5298,9 @@ body[data-topic] #topics { padding-top: 1rem; }
                   <g class="rlab" data-lot="b" data-dir="down" data-tx="400" data-ty="188" data-tail="15.33">
                     <path class="bub"/>
                     <g class="rl-body">
-                      <a class="rl-link" href="https://maps.app.goo.gl/tiHLpeKc2gETXRh96?g_st=ic" target="_blank" rel="noopener">
+                      <a class="rl-link" href="https://maps.app.goo.gl/tiHLpeKc2gETXRh96?g_st=ic" target="_blank" rel="noopener"
+                         aria-label="合廷停車場・140 公尺、步行 2 分鐘・在 Google 地圖上開啟">
+                        <title>合廷停車場・在 Google 地圖上開啟</title>
                         <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
                         <text class="rl-nm" x="404" y="127" text-anchor="middle">合廷停車場</text>
                         <line class="rl-ul"/>
@@ -5300,7 +5312,9 @@ body[data-topic] #topics { padding-top: 1rem; }
                   <g class="rlab" data-lot="c" data-dir="right" data-tx="344" data-tail="17.8">
                     <path class="bub"/>
                     <g class="rl-body">
-                      <a class="rl-link" href="https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic" target="_blank" rel="noopener">
+                      <a class="rl-link" href="https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic" target="_blank" rel="noopener"
+                         aria-label="壹車房－中華路停車場・190 公尺、步行 3 分鐘・在 Google 地圖上開啟">
+                        <title>壹車房－中華路停車場・在 Google 地圖上開啟</title>
                         <g class="rl-pin"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></g>
                         <text class="rl-nm" x="247" y="486" text-anchor="middle">壹車房停車場</text>
                         <line class="rl-ul"/>
@@ -5321,6 +5335,9 @@ body[data-topic] #topics { padding-top: 1rem; }
                      ⚠ 綠塊自己的路徑（M228 236…）從 2026-08-14 那一輪起一個單位都沒動。 -->
                 <a class="cm-link" href="https://maps.app.goo.gl/bKSrVyS2Qu2xvnMj7" target="_blank" rel="noopener"
                    aria-label="芳仁牙醫診所・在 Google 地圖上開啟">
+                  <!-- 提示框（桌機滑鼠停著才出現）。⚠ 內容和上面的 aria-label 逐字相同 ——
+                       看得到的人和聽得到的人拿到同一句話。 -->
+                  <title>芳仁牙醫診所・在 Google 地圖上開啟</title>
                   <g class="cmark">
                     <!-- 只有右上角壓在街廓的右上角（永樂街 × 19 巷）上 -->
                     <path class="cm-plot" d="M228 236H320A4 4 0 0 1 324 240V287H228Z"/>
@@ -5565,7 +5582,7 @@ body[data-topic] #topics { padding-top: 1rem; }
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-08-21">2026 年 8 月 21 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-08-22">2026 年 8 月 22 日</time></span>
     </div>
   </div>
 </footer>
