@@ -159,8 +159,28 @@ body[data-pin="c"] .cm-body { fill: var(--card); stroke: var(--map-mark); stroke
 body[data-pin="c"] .cm-logo { fill: var(--map-mark); }
 body[data-pin="c"] .cm-disc { display: none; }
 
-/* 影子：圖釘是「浮在圖上」的東西，和地圖上其他都貼平的色塊不同。 */
-body[data-shadow="on"] .cm-pin { filter: drop-shadow(0 1.6px 2.4px rgba(28, 28, 26, .38)); }
+/* 影子：圖釘是「浮在圖上」的東西，和地圖上其他都貼平的色塊不同。
+   ⚠⚠ 2026-08-21 第二輪，使用者：「陰影很不明顯」—— 量出來他是對的：
+     原本那一階（第一版的唯一一階，現在叫「輕」）最深只讓底下暗 36 階、
+     覆蓋 318 CSS px²，在這種淺灰街廓上幾乎看不出來。所以這條尺拆成四階，
+     每一階都量過（DPR3 逐像素，只取底色本來就均勻的那些像素比對）：
+
+       輕　最深 36 階・318 px²　（＝第一版）
+       中　最深 73 階・1091 px²
+       重　最深 90 階・1999 px²
+       最重 最深 99 階・3092 px²
+
+   ⚠ 墨色改用站上卡片陰影那一支 rgba(42, 44, 39, ·)（＝ --ink），
+     不要再自己調一個 28,28,26 —— 這一站的陰影只有那一顆墨。
+   ⚠ 中以上都是**兩層**（緊貼的接觸影 ＋ 散開的那一層），做法照
+     --card-shadow／--card-shadow-hover：一層的影子拉大只會糊成一塊灰。 */
+body[data-shadow="s1"] .cm-pin { filter: drop-shadow(0 1.6px 2.4px rgba(42, 44, 39, .38)); }
+body[data-shadow="s2"] .cm-pin { filter: drop-shadow(0 2.5px 3px rgba(42, 44, 39, .5))
+                                         drop-shadow(0 5px 9px rgba(42, 44, 39, .22)); }
+body[data-shadow="s3"] .cm-pin { filter: drop-shadow(0 3.5px 4px rgba(42, 44, 39, .58))
+                                         drop-shadow(0 8px 14px rgba(42, 44, 39, .3)); }
+body[data-shadow="s4"] .cm-pin { filter: drop-shadow(0 5px 5px rgba(42, 44, 39, .62))
+                                         drop-shadow(0 11px 20px rgba(42, 44, 39, .35)); }
 
 /* ==========================================================================
    切換條（提案用，定案時整段刪掉）
@@ -220,7 +240,7 @@ const NOTE = `<!-- =============================================================
        大小 ?size=s|m|l  52／60／68 單位（手機上 45／51／58 CSS px）
        位置 ?pos=c|r|rr  尖端落在綠塊的 x=276／294／312
        底線 ?ul=on|off   綠塊那四個字要不要保留超連結的底線
-       細調 ?fs=16|18|20 綠塊的字級　?shadow=on|off 圖釘要不要浮起來的陰影
+       細調 ?fs=16|18|20 綠塊的字級　?shadow=off|s1|s2|s3|s4 影子四階（量過的，見樣式那一段）
        另有「對照現況」一鍵切回站上現在跑的那一版（對話框那一案）。
 
      量測面板現場算四件（不是印數字而已，會直接下判斷）：
@@ -262,7 +282,7 @@ const BAR = `
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時連同 data-* 屬性一起刪掉，不要留到正式站。
      網址可帶參數直接開到某一格（正規式一律 [a-z0-9]+）：
-       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=on|off
+       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4
        ?fs=16|18|20  ?cmp=now|new
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
@@ -295,9 +315,14 @@ const BAR = `
       <button data-k="fs" data-v="16">16</button>
       <button data-k="fs" data-v="18">18</button>
       <button data-k="fs" data-v="20">20</button>
+    </div>
+    <div class="pv-row">
       <span class="pv-lab">陰影</span>
-      <button data-k="shadow" data-v="on">有</button>
       <button data-k="shadow" data-v="off">無</button>
+      <button data-k="shadow" data-v="s1">輕</button>
+      <button data-k="shadow" data-v="s2">中</button>
+      <button data-k="shadow" data-v="s3">重</button>
+      <button data-k="shadow" data-v="s4">最重</button>
     </div>
   </div>
   <div class="pv-panel" id="pvPanel">量測中…</div>
@@ -334,7 +359,7 @@ const BAR = `
   var TIPY = 238;                 /* 尖端進到綠塊裡 2 個單位（綠塊上緣 236） */
   var PLOT = { x: 228, y: 236, w: 96, h: 51 };
 
-  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 'off', fs: '18', cmp: 'new' };
+  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', cmp: 'new' };
   var st = {};
   var q = location.search;
   Object.keys(DEF).forEach(function (k) {
@@ -452,6 +477,12 @@ const BAR = `
     lines.push('對比：白字對綠 <b>' + cText.toFixed(2) + '</b>:1、標誌對釘身 <b>' + cLogo.toFixed(2) + '</b>:1' +
                (cText < 4.5 ? ' <span class="pv-bad">字沒過 AA</span>' : '') +
                (cLogo < 3 ? ' <span class="pv-bad">標誌低於圖形的 3:1</span>' : ''));
+    /* 影子那一階的實測強度（DPR3 逐像素量的，只取底色均勻的那些像素）。
+       ⚠ 這四組數字是量出來的，不是估的；改上面那四條 filter 就要重量一次。 */
+    var SH = { off: null, s1: [36, 318], s2: [73, 1091], s3: [90, 1999], s4: [99, 3092] };
+    var sh = SH[st.shadow];
+    lines.push('影子：' + (sh ? '最深讓底下暗 <b>' + sh[0] + '</b> 階（0~255）、覆蓋約 ' + sh[1] + ' CSS px²'
+                              : '沒有'));
     lines.push('圖釘壓到：' + (hits.length ? '<span class="pv-bad">' + hits.join('、') + '</span>' : '沒有壓到別的東西'));
     p.innerHTML = lines.join('<br>');
   }
