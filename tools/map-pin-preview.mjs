@@ -299,7 +299,7 @@ const BAR = `
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時連同 data-* 屬性一起刪掉，不要留到正式站。
      網址可帶參數直接開到某一格（正規式一律 [a-z0-9]+）：
-       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r  ?sun=a|b|c|d  ?az=u30|u20|r0|d45  ?tail=a|b|c|d
+       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r  ?sun=a|b|c|d  ?az=u30|u20|r0|d45  ?tail=a|b|c|d  ?dy=a|b|c|d
        ?fs=16|18|20  ?cmp=now|new
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
@@ -332,6 +332,13 @@ const BAR = `
     <button data-k="tail" data-v="b">短</button>
     <button data-k="tail" data-v="c">更短</button>
     <button data-k="tail" data-v="d">最短</button>
+  </div>
+  <div class="pv-row">
+    <span class="pv-lab">高低</span>
+    <button data-k="dy" data-v="a">原本</button>
+    <button data-k="dy" data-v="b">下一點</button>
+    <button data-k="dy" data-v="c">再下</button>
+    <button data-k="dy" data-v="d">最下</button>
   </div>
   <div class="pv-row">
     <span class="pv-lab">底線</span>
@@ -445,11 +452,18 @@ const BAR = `
   var TAIL = { a: 1.78, b: 1.55, c: 1.35, d: 1.18 };
   var SIZE = { s: 52, m: 60, l: 68 };
   var POS  = { c: 276, r: 294, rr: 312 };
-  var TIPY = 238;                 /* 尖端進到綠塊裡 2 個單位（綠塊上緣 236） */
+  /* 尖端落在哪一列（綠塊上緣是 236、下緣 287）。
+     ⚠ 2026-08-21 第十輪使用者：「我想要整支圖釘往下移一點。」
+       整支圖釘是掛在尖端上的，所以往下移 ＝ 把尖端這個數字加大；
+       頭會跟著往下壓進綠塊上緣。面板會現場算釘尖離「芳仁牙醫」那四個字
+       的字面還有幾 px，太近就標紅。 */
+  var TIPYS = { a: 238, b: 242, c: 245, d: 248 };
+  /* ⚠ 最下那一格（248）釘尖離字面只剩 2.3px，再往下就壓到字了 ——
+     四格都要是「選了就能上線」的，所以 253 那一格拿掉沒有給出去。 */
   var PLOT = { x: 228, y: 236, w: 96, h: 51 };
 
   var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', neck: 'c', tip: 'm',
-              sun: 'b', az: 'u20', tail: 'b', cmp: 'new' };
+              sun: 'b', az: 'u20', tail: 'b', dy: 'b', cmp: 'new' };
   var st = {};
   var q = location.search;
   Object.keys(DEF).forEach(function (k) {
@@ -527,9 +541,10 @@ const BAR = `
     logo.setAttribute('transform',
       'translate(' + n(-w / 2) + ' ' + n(-d - hh / 2) + ') scale(' + sc.toFixed(5) +
       ') translate(' + (-LX) + ' ' + (-LY) + ')');
-    pin.setAttribute('transform', 'translate(' + (POS[st.pos] || POS.r) + ' ' + TIPY + ')');
+    var ty = TIPYS[st.dy] === undefined ? TIPYS.b : TIPYS[st.dy];
+    pin.setAttribute('transform', 'translate(' + (POS[st.pos] || POS.r) + ' ' + ty + ')');
     drawShadow(pbody.getAttribute('d'), d, R);
-    return { H: H, R: R, d: d, w: w, phi: phi, neck: 2 * R * Math.sin(phi * Math.PI / 180) };
+    return { H: H, R: R, d: d, w: w, phi: phi, ty: ty, neck: 2 * R * Math.sin(phi * Math.PI / 180) };
   }
 
   /* 影子：同一條釘身路徑疊 LAYERS 層（16），往下挪 ＋ 以頭的圓心為中心放大。
@@ -566,6 +581,7 @@ const BAR = `
     return { a: m.actualBoundingBoxAscent / 400 * fs, d: m.actualBoundingBoxDescent / 400 * fs, fs: fs };
   }
 
+  var nmInkTop = null;
   function placeText() {
     var fs = +st.fs || 18;
     svg.style.setProperty('--cm-fs', fs + 'px');
@@ -577,6 +593,7 @@ const BAR = `
     var y = cy + (i.a - low) / 2;
     nm.setAttribute('y', n(y));
     var b = nm.getBBox();
+    nmInkTop = y - i.a;                 /* 那四個字的字面上緣（給面板算距離用） */
     var uy = y + i.d + ulk * fs;
     ul.setAttribute('x1', n(b.x)); ul.setAttribute('x2', n(b.x + b.width));
     ul.setAttribute('y1', n(uy));  ul.setAttribute('y2', n(uy));
@@ -639,6 +656,13 @@ const BAR = `
                '、釘子 ' + ((g.d - g.R) * k).toFixed(1) + '、標誌寬 ' + (g.w * k).toFixed(1) + 'px）');
     lines.push('釘型：腰身 ' + g.phi.toFixed(1) + '°，頭與釘子的交接處寬 <b>' +
                (g.neck * k).toFixed(1) + 'px</b>（＝頭的 ' + (g.neck / (2 * g.R) * 100).toFixed(0) + '%）');
+    /* 釘尖進到綠塊裡幾個單位、離那四個字的字面上緣還有多遠 */
+    var inPlot = g.ty - PLOT.y, toText = (nmInkTop === null ? null : nmInkTop - g.ty);
+    lines.push('高低：釘尖在綠塊上緣下方 <b>' + (inPlot * k).toFixed(1) + 'px</b>' +
+      (toText === null ? '' : '，離「芳仁牙醫」的字面 ' +
+        (toText <= 0 ? '<span class="pv-bad">已經壓到字了</span>'
+                     : (toText * k < 2 ? '<span class="pv-bad">' + (toText * k).toFixed(1) + 'px（太近）</span>'
+                                       : '<b>' + (toText * k).toFixed(1) + 'px</b>'))));
     lines.push('綠塊的字 ' + tb.width.toFixed(1) + ' / ' + PLOT.w + ' 單位 —— ' +
                (over ? '<span class="pv-bad">撐出綠塊了</span>' : '兩邊各留 ' +
                 ((PLOT.w - tb.width) / 2).toFixed(1) + ' 單位'));
