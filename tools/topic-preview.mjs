@@ -306,6 +306,36 @@ for (const spec of SPECS) {
     return own || skill ? m : "";
   });
 
+  /* 7.5 **把首頁按下那一科時的「亮起來」靜態套上去**（2026-08-21 使用者：
+     「這個預覽頁沒有像之前首頁篩選那樣把醫師專長的效果套上去，這個也要做」）。
+     -----------------------------------------------------------------------
+     首頁那三件是 JS 在按下 chip 時掛的 class（index.html 那支篩選 IIFE）：
+       ・`.doc-role`（專科藥丸）→ 不是這一科就加 `tag-off`（退成白底字套色）
+       ・`.sk`（專長標記）→ 命中這一科就加 `tag-on`（淡色填滿）
+       ・`.card-tag`（文章卡的主題標籤）→ 是這一科就加 `tag-on`（套色填滿）
+     ⚠⚠ **著陸頁上那支 JS 不會跑到這一段** —— 它是「按下 chip」才觸發的，
+       而這一頁的 chips 已經換成連結、沒有人按。所以要在**產生時就寫進 HTML**，
+       這也和第一節第 1 條的精神一致（爬蟲與無 JS 都要看得到）。
+     ⚠ 規則和站上那支**逐條對齊**，不是另外發明一套：
+       篩選留下來的醫師有兩種（專科就是這一科／專長命中這一科），
+       前者藥丸不動、後者藥丸要 tag-off —— 正是「專科藥丸 ≠ 那一科就退一階」。
+     ⚠ 這一步要放在第 6、7 步**之後**：那兩步已經把別科的卡與醫師刪掉了，
+       這裡處理的都是留下來的，不必再判斷一次要不要顯示。 */
+  h = h.replace(/\n\s*<article class="doc"[\s\S]*?<\/article>/g, (m) => {
+    const own = new RegExp(`<article class="doc" data-spec="${spec}"`).test(m);
+    let out = m;
+    /* 專科藥丸：這一位的專科不是本頁這一科 → tag-off */
+    if (!own) out = out.replace('<span class="doc-role">', '<span class="doc-role tag-off">');
+    /* 專長標記：命中本頁這一科的那幾顆 → tag-on */
+    out = out.replace(
+      new RegExp(`<span class="sk" data-spec="${spec}">`, "g"),
+      `<span class="sk tag-on" data-spec="${spec}">`
+    );
+    return out;
+  });
+  /* 文章卡：這一步的當下留下來的每一張都是本頁這一科，所以一律 tag-on */
+  h = h.replace(/<span class="card-tag">/g, '<span class="card-tag tag-on">');
+
   /* 8.5 樣式：站上所有 chips 的規則都寫 `.chips button`，換成連結之後會整組掉光
      （第一版就是這樣，標記變成一排純文字）。用 :is(button,a) 一次涵蓋兩種，
      ⚠ 而且**權重不變** —— :is() 取參數裡最高的那一個，button 與 a 都是型別選擇器。
