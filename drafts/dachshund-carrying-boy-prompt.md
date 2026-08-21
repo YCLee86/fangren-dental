@@ -9,9 +9,12 @@
 
 | 原作 | 這一張 |
 | --- | --- |
-| 直立的棕熊 | **奶油金色的長毛臘腸**（照片二，那張去背貼圖） |
-| 頭上那隻鵝 | **叼在嘴裡的圓框眼鏡男生**（照片三） |
+| 直立的棕熊（大的那隻） | **站直的圓框眼鏡男生**（照片三） |
+| 頭上那隻鵝（小的那隻） | **被叼在嘴裡、垂著四肢的小臘腸**（照片二） |
 | 木雕質感、實物照片 | **診所網站的插畫風格**（ILLUSTRATION.md 第三節） |
+
+⚠⚠ **大小關係是「人大狗小」，不要再畫成一隻巨大的狗叼著小人**（第一、二版都畫錯了，
+見下面的修改紀錄）。
 
 ## 三件刻意破例的事（不是漏看）
 
@@ -35,6 +38,20 @@
 打架時模型跟形容詞走）。下面那份提示詞已經照這條寫。
 
 ## 修改紀錄
+
+**第三版（2026-08-21）—— 兩段主角對調。** 使用者：「狗要像鵝小小的　人像熊那樣叼著
+被拎起來的樣子」。前兩版把**狗當成熊**（大的那隻）是根本性的讀錯，難怪改畫面佔比
+也治不好 —— **他要的是人站在熊的位置、狗站在鵝的位置**。
+
+| 從原作量到的 | 這一張照著寫 |
+| --- | --- |
+| 熊高 ÷ 畫面高 **67%** | 人的身高 ＝ 畫面高的三分之二 |
+| 鵝高 ÷ 熊高 **28%** | 狗的身長 ＝ 人身高的四分之一（＝真實臘腸對成年人的比例，好畫） |
+
+⚠ 對調之後 `AVOID` 要補「狗比人的軀幹還大」「像被掐著脖子吊起來」那幾條 ——
+被叼的一方從人換成狗，「不能讀成受傷」那條的對象也要跟著換。
+⚠ 風格、顏色、無文字三段**一個字都沒動**（第 19 條：只換出問題的那一段）。
+
 
 **第二版（2026-08-21）—— 只改 `COMPOSITION` 一段。** 使用者看第一版的圖：
 「大小錯了。狗太大隻 要像圖片那樣的比例」。量過兩張才確定他指的是**畫面佔比**，
@@ -78,44 +95,47 @@ blush, no highlights. He must read as a relaxed man in his late twenties, never 
 
 COMPOSITION — Seen from DIRECTLY ABOVE, flat-lay: the two of them are lying on a cloth
 spread flat, but they are drawn as if standing, so the picture reads exactly like a photo
-of two small standing figures laid on a bedsheet. Symmetrical and centred, both facing the
+of two small figures laid out on a bedsheet. Symmetrical and centred, both facing the
 viewer straight on.
-THEY ARE SMALL IN THE FRAME — this matters as much as anything else here. The dog is a
-little figure lying on a large sheet, NOT a close-up: from the top of its head to the tips
-of its hind feet it takes up only about TWO THIRDS of the picture height, and its body is
-about two fifths of the picture width. Leave a wide, empty margin of plain cloth all the
-way round — roughly a sixth of the picture height as bare cloth above the top of its head,
-a sixth as bare cloth below its feet, and a broad band of cloth down each side. Nothing is
-cropped and nothing touches the edge: the whole animal, both ears, all four paws and the
-man's shoes sit comfortably inside the frame with cloth to spare.
+SIZE — read this carefully, it is the thing most likely to go wrong. THE MAN IS THE BIG
+ONE AND THE DOG IS THE SMALL ONE. The man stands in the middle of the picture and, from
+the top of his head to his shoes, takes up about TWO THIRDS of the picture height. The dog
+is a small animal he is carrying: from nose to rump it is only about A QUARTER OF THE MAN'S
+HEIGHT — roughly the real size of a dachshund next to a grown adult. The dog is never
+larger than the man's chest, and it is never the biggest thing in the picture.
+THEY ARE SMALL IN THE FRAME — the man is a little figure lying on a large sheet, NOT a
+close-up. Leave a wide, empty margin of plain cloth all the way round: roughly a sixth of
+the picture height as bare cloth above his head, a sixth as bare cloth below his shoes,
+and a broad band of cloth down each side. Nothing is cropped and nothing touches the edge.
 The cloth is very pale mint green with soft white stripes running diagonally across the
 whole background, evenly spaced, drawn by hand so they wobble slightly.
 
-THE DOG — A long-haired dachshund, standing upright on its hind legs and facing the
-viewer, filling the middle of the frame from top to bottom. Its two front paws hang loose
-and relaxed in front of its chest, slightly apart, the way a standing bear figurine holds
-its arms. Long low body, short sturdy legs, big rounded feathered ears hanging down beside
-its cheeks and reaching below its jaw, a long feathered tail, a long fine muzzle and a
-small dark nose. Round dark friendly eyes, calm and soft, looking straight out at the
-viewer. The coat is long and silky: draw its direction with fine hand-drawn strokes that
-follow the body and break into feathery fringes at the ears, the chest, the backs of the
-legs and the tail. The coat colours are EXACTLY these and nothing else — the lit fur
-#e8d0b0, the deeper fur along the back, the top of the head and the ears #d8b088, the
-shadowed fur #b0a090, and the chest and belly #f0ece4. Its mouth is CLOSED and gentle, with
-no teeth showing at all.
+THE MAN — A man standing upright and facing the viewer, straight on and symmetrical, in
+exactly the pose of a small standing carved bear: feet together and pointing forward, legs
+straight, both arms hanging loose and slightly away from his sides with the hands relaxed
+and open, shoulders soft. He is calm and pleased with himself, looking straight out at the
+viewer. An east-Asian man in his late twenties, ordinary build, with very short dark spiky
+hair, ROUND black-rimmed glasses, an olive-green crew-neck t-shirt and dark trousers, plain
+dark shoes. Normal adult head-to-body proportions. Clothes are never flat single-tone
+shapes: model the t-shirt and trousers with two or three tones of their own colour, with
+soft coloured-pencil shading in the folds, at the collar, the sleeve hems, the waist and
+wherever the fabric gathers.
 
-THE MAN — Held crosswise in the dog's closed mouth, exactly the way a dog carries a soft
-toy: the dog holds a fold at the middle of his t-shirt, so he hangs horizontally across the
-muzzle, arms and legs dangling loose and heavy, completely relaxed. He is about one quarter
-of the dog's height — a small figure, but with entirely normal adult head-to-body
-proportions. An east-Asian man in his late twenties with very short dark spiky hair, ROUND
-black-rimmed glasses, an olive-green crew-neck t-shirt and dark trousers. He is perfectly
-happy about this: eyes open, a small closed-mouth smile, looking straight out at the viewer
-alongside the dog. He is NOT struggling, NOT frightened, NOT hurt, and the dog is NOT
-biting him — this is affectionate and funny, like a dog proudly carrying its favourite
-thing. Clothes are never flat single-tone shapes: model the t-shirt and trousers with two
-or three tones of their own colour, with soft coloured-pencil shading in the folds, at the
-collar, the sleeve hems and wherever the fabric gathers as it hangs.
+THE DOG — A SMALL long-haired dachshund, carried crosswise in the man's mouth, hanging in
+front of his chest: the man holds a soft fold of the loose fur across the dog's shoulders
+between his closed lips, and the little dog hangs there completely relaxed and content —
+short legs dangling straight down, long body horizontal, tail loose, ears hanging, its
+head turned to face the viewer with round dark friendly eyes and a calm soft expression.
+It is enjoying this, the way a puppy carried by its mother goes soft and still. Long low
+body, short sturdy legs, big rounded feathered ears reaching below its jaw, a long
+feathered tail, a long fine muzzle and a small dark nose. The coat is long and silky: draw
+its direction with fine hand-drawn strokes that follow the body and break into feathery
+fringes at the ears, the chest, the backs of the legs and the tail. The coat colours are
+EXACTLY these and nothing else — the lit fur #e8d0b0, the deeper fur along the back, the
+top of the head and the ears #d8b088, the shadowed fur #b0a090, and the chest and belly
+#f0ece4. The man's lips are CLOSED and gentle around the fur, with no teeth showing at
+all; the dog is NOT held by its neck or throat, is NOT limp or lifeless, is NOT hurt and
+is NOT frightened.
 
 COLOUR — Clear and lively, never dull. Most colour areas should sit around HSL saturation
 30–50 and lightness 70–85, and roughly half of the picture should be genuinely coloured
@@ -132,9 +152,12 @@ appear, leave the surface plain.
 
 AVOID — greyscale; photorealism; a photographic or 3D-rendered look; thick uniform black
 outlines; chrome, metallic or iridescent gradients; a cartoon dog with an oversized head,
-huge glossy anime eyes or a human expression; an open mouth, visible teeth, fangs, a
-growl, a bite mark, a wound or blood; any suggestion of pain, fear or distress; a faceless
-or noodle-limbed man; exaggerated head-to-body proportions on the man himself; a wooden,
+huge glossy anime eyes or a human expression; a dog bigger than the man's chest, a giant
+dog, or the dog as the largest thing in the picture; an open mouth, visible teeth, fangs, a
+bite mark, a wound or blood; a dog held by its neck or throat, a dog hanging limp,
+lifeless or choking, a frightened dog with flattened ears and wide white eyes; any
+suggestion of pain, fear or distress; a faceless or noodle-limbed man; exaggerated
+head-to-body proportions on the man himself; a wooden,
 carved, ceramic or plastic toy surface; a drop shadow or product-photography lighting;
 extra animals, hands, props or furniture; a close-up or a tightly cropped composition;
 the dog filling the frame from edge to edge; ears, paws or feet running off the picture.
@@ -155,3 +178,16 @@ photograph or a 3D render.
 
 ⚠ 這一版和 `THE DOG` 段那句「毛用細線畫出方向、耳與胸有羽狀飛白」互相打架，
 要換就把那句一起拿掉（毛的層次改由鑿痕負責）。
+
+## 另一個位置（要更貼原作的話）
+
+原作的鵝是**站在熊頭上**、沒有用嘴叼。想完全照那個構圖，就把 `THE DOG` 段開頭那句
+`carried crosswise in the man's mouth, hanging in front of his chest` 換成：
+
+```
+standing on top of the man's head, its four short legs planted on his hair and its long
+body lying along the top of his head, facing the viewer in the same direction he is
+```
+
+同一段裡「嘴唇合著咬住毛」那幾句要一起刪掉（沒有嘴這件事了），`AVOID` 裡咬傷那幾條
+可以留著當保險。
