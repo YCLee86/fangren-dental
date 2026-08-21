@@ -24,7 +24,7 @@ const OUT = path.join(ROOT, "_site");
 /* ⚠ 根目錄**刻意沒有** apple-touch-icon.png（2026-08-12 第六輪拿掉）。
    那條慣例路徑等於多給 iOS 一個候選，而「候選一多就挑錯那張再縮放」
    正是圖示一直糊掉的原因。整站的 any 版現在只有 assets/icon-192.png 一張。 */
-const ALWAYS = ["index.html", "404.html", "favicon.ico", "site.webmanifest",
+const ALWAYS = ["index.html", "404.html", "favicon.ico", "site.webmanifest", "topics",
   "assets", "posts"];
 /* history/ 是改版紀錄（原 preview/ 的推導文字），沒有也不影響建置。
    preview/ 是**進行中**的提案頁：定案上線後那一頁會被刪掉、文字搬進 history/，

@@ -1,48 +1,36 @@
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
 <head>
-<meta name="robots" content="noindex, nofollow, noarchive">
 <!-- =============================================================================
-     提案：科別著陸頁　牙周治療（preview/topic-perio/）　2026-08-18
+     科別著陸頁　顯微根管　/topics/endo/
      -----------------------------------------------------------------------------
-     這一頁由 tools/topic-preview.mjs 從 index.html 產生，**是快照，不要手改** ——
-     要改內容改那支裡的 TOPICS，要改版型改 index.html 再重跑。
+     ⚠⚠ **這一頁是產生出來的，不要手改。**
+       由 tools/topics.mjs 從 index.html 產生（是那一份的快照）。
+       ・要改**文字** → tools/topic-copy.mjs
+       ・要改**版型或樣式** → index.html（著陸頁的樣式在它樣式表的最後一段）
+       改完跑 `node tools/topics.mjs`，七頁一起重產。
 
-     怎麼走到這個做法的（使用者四輪修正）
+     為什麼是「index.html 的快照」而不是自己寫一頁（2026-08-18 使用者定案）
      -----------------------------------------------------------------------------
-     ① 第一版是自己寫的一頁獨立頁（走 assets/style.css）。使用者：
-        「這個跟我首頁已經有的篩選很像欸，以 SEO 或 GEO 來說我覺得還是我的篩選
-          其實不太符合 SEO GEO 要件。」——他兩件都說對了。
-     ② 「或是篩選點下去，版面就像我剛才說的，但其實是開了另外一個網頁？」
-        ＝ chips 從 <button> 換成 <a>。這是整件事的關鍵：按鈕沒有網址，
-        爬蟲點不下去、AI 引用不了、也分享不出去；連結才有。
-     ③ 「把主題與科別標籤繼續做在新開啟的網頁上」＝ 那一排變成全站的科別導覽列，
-        每一頁都帶著它、目前在哪一科就哪一顆亮。這一補把 chips 變連結原本會失去的
-        「即時切換」補回來了，而且長出一張內部連結網（八頁互連，錨點文字正好是科別名）。
-     ④ 「搜尋框還是留著，現在首頁怎麼做的著陸頁就怎麼做，只是增加篩選下的
-          科別說明或介紹而已。」＝ 所以這一頁是 index.html 的快照，不是另外寫的版型。
+     「現在首頁怎麼做的著陸頁就怎麼做，只是增加篩選下的科別說明或介紹而已。」
+     照這個做法，chips、搜尋框、醫師卡、門診表、地圖的 CSS 與 JS 全部沿用，
+     不必抄第二份、也不會走樣。
 
      兩個和 SEO 有關、不能省的處理
      -----------------------------------------------------------------------------
-     ・文章與醫師是**真的刪掉**，不是靠 JS 藏起來 —— 靠 JS 篩的話 Google 抓到的
-       仍然是七科全部，這一頁就不是這一科的頁了，繞回原點（同第一節第 1 條的精神）。
-     ・HERO 拿掉：那張照片與那首詩是全站門面，七頁各放一次會稀釋掉它，
-       也會把真正的內容推到很下面。
+     ・**別科的文章與醫師是真的刪掉，不是靠 JS 藏起來** —— 靠 JS 篩的話
+       Google 抓到的仍然是七科全部，這一頁就不是這一科的頁了，繞回原點
+       （同 CLAUDE.md 第一節第 1 條的精神）。
+     ・**chips 是 <a> 不是 <button>** —— 按鈕沒有網址，爬蟲點不下去、
+       AI 引用不了、也分享不出去。那一排同時是全站的科別導覽列，
+       八頁互連，錨點文字正好是科別名。
 
-     切換條：科別介紹的份量（精簡／標準／完整），面板現場量 #main 的可見字數。
-     這一格真正要解的是**矯正這一頁**——它一篇文章都沒有，全靠文字撐。
+     ⚠ 「按下那一科」的套色（醫師專長淡色填滿、專科藥丸退階、文章標籤套色）
+       是在**產生時就寫進 HTML** 的（第 7.5 步）—— 那三件在首頁是 JS 掛的 class，
+       而這一頁的 chips 已經是連結、沒有人按，JS 不會跑到那一段。
 
-     定案後要做的（都還沒做）
-     -----------------------------------------------------------------------------
-     ・網址 /preview/topic-<spec>/ → /topics/<spec>/，補 canonical、JSON-LD
-       （MedicalWebPage ＋ 指回 #dentist）、sitemap 各一筆。
-     ・首頁那一排 chips 也要換成同一組連結（不然同一個東西在首頁是篩選、
-       在別頁是換頁，行為不一致）。
-     ・七科要全部寫完才切換 —— 標記連到空頁比現在還糟。
-     ・tp-* 的樣式搬進 index.html 的樣式表，pv-* 與 tp-when-* 一起刪掉。
-     ⚠ 矯正那頁「這裡怎麼做」那一段只寫得出站上有憑據的（王俊偉醫師專長欄的
-       「隱適美」、〈擴張牙弓〉提到的兒童隱適美與肌功能矯正）。
-       **診所實際提供哪些方式要使用者確認之後才能補。**
+     文字的推導、每一科被退回幾次、為什麼這樣寫：COPY.md 第九節（九之一 ~ 九之十九），
+     方法的總表在第九之十七節「著陸頁的檢查表」。
      ============================================================================= -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -50,10 +38,9 @@
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>提案：科別著陸頁（牙周治療） — 芳仁牙醫診所</title>
+<title>顯微根管 — 芳仁牙醫診所（雲林斗六）</title>
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
-<meta name="description" content="芳仁牙醫診所，1983 年創立，現址雲林縣斗六市永樂街。這裡整理刷牙、牙周、兒童牙科、缺牙重建與定期檢查的衛教文章。">
 <meta name="theme-color" content="#12656a">
 <!-- 分享到 LINE／FB 時對方看到的卡片。這幾行畫面上看不到，只有各家的爬蟲會讀。
      og:description 壓在 20 字上下，因為訊息 app 的氣泡只露兩行（實測 27 個全形字），
@@ -117,7 +104,70 @@
        · 服務項目 → 讀下面 #topics 的 chips
        · 座標、sameAs、郵遞區號、國碼電話 → clinic.json（頁面上沒有的才放那裡）
      所以要改看診時間就改那張卡，不要來改這裡。 -->
-<!-- 提案頁不產生 SEO 區塊 -->
+<!-- SEO:START — 由 tools/topics.mjs 產生，請勿手動編輯 -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="description" content="顯微根管｜這顆還留得住嗎？—— 在顯微鏡下看清楚，它就多一次機會。蛀得比想像中深，被說要抽神經。以前抽過神經，同一顆又腫了。">
+<link rel="canonical" href="https://fangren.net/topics/endo/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://fangren.net/topics/endo/">
+<meta property="og:title" content="顯微根管 — 芳仁牙醫診所（雲林斗六）">
+<meta property="og:description" content="顯微根管｜這顆還留得住嗎？—— 在顯微鏡下看清楚，它就多一次機會。蛀得比想像中深，被說要抽神經。以前抽過神經，同一顆又腫了。">
+<meta property="og:locale" content="zh_TW">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MedicalWebPage",
+      "@id": "https://fangren.net/topics/endo/#webpage",
+      "url": "https://fangren.net/topics/endo/",
+      "name": "顯微根管 — 芳仁牙醫診所（雲林斗六）",
+      "description": "顯微根管｜這顆還留得住嗎？—— 在顯微鏡下看清楚，它就多一次機會。蛀得比想像中深，被說要抽神經。以前抽過神經，同一顆又腫了。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": {
+        "@id": "https://fangren.net/#website"
+      },
+      "about": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "breadcrumb": {
+        "@id": "https://fangren.net/topics/endo/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://fangren.net/topics/endo/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首頁",
+          "item": "https://fangren.net/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "顯微根管"
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://fangren.net/#website",
+      "url": "https://fangren.net/",
+      "name": "芳仁牙醫診所",
+      "inLanguage": "zh-Hant-TW"
+    },
+    {
+      "@type": "Dentist",
+      "@id": "https://fangren.net/#dentist",
+      "name": "芳仁牙醫診所",
+      "url": "https://fangren.net/"
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
 <style>:root { color-scheme: light; }
 </style>
 <style>
@@ -4508,9 +4558,218 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      所以這裡也要 important 才蓋得掉。 */
   .info-note                                 { font-size: 1rem !important; }
 }
+
+/* ==========================================================================
+   科別著陸頁 /topics/<spec>/　（2026-08-21 上線時從 tools/topic-preview-style.html
+   整段搬進來，那個檔已刪除）
+   --------------------------------------------------------------------------
+   頁面由 tools/topics.mjs 產生，是這一份 index.html 的快照；文字在
+   tools/topic-copy.mjs，寫作規則在 COPY.md 第九節。
+   ⚠⚠ 只該作用在著陸頁的規則**一律限定 `[data-topic]`** —— 那個屬性只有
+     著陸頁的 <body> 有。上線那天就是靠這一條在守：`#topics .sec-head` 與
+     `#topics` 的下內距原本沒限定，套到首頁會改到首頁版面。
+   ⚠ `.tp-*` 那些不必限定：那些 class 只有著陸頁才有。
+   ⚠ `.chips a` 刻意**不限定** —— 2026-08-21 起首頁那一排也是連結。
+   ⚠⚠ 這一段放在整份樣式表的最後，和它原本注入在 </body> 前的位置等效
+     （都在其他規則之後）。**不要往前搬。**
+   ========================================================================== */
+/* ==========================================================================
+   一、著陸頁沒有 HERO，要補兩件首頁靠 HERO 完成的事
+   ========================================================================== */
+
+/* 1-1 讓開固定的頁首。
+   `header.site-head` 是 position: fixed，首頁靠 HERO 佔位（而且 HERO 是**刻意**
+   鑽到頁首底下的，那是設計的一部分）。著陸頁沒有 HERO，#topics 就從 y=0 開始，
+   「主題與科別」那一列會被蓋掉 14~42px（390／834／1440 實測）。
+   ⚠ 一定要限定 `[data-topic]` —— 套到首頁會把 HERO 整個推下來。
+   ⚠⚠ **不能只用 `var(--head-h)`** —— 手機（≤720）的頁首是
+     `.site-head .shell { height: auto }` ＋ `padding-block: 3.736vw`，
+     高度由內容撐，和那個變數無關（390 上實際 61px，變數卻是 76px，高估 15px）。
+     所以照這個 repo 既有的做法**開頁量一次寫進 CSS 變數**（`--lamp-pad`、
+     `--ar-y` 都是這樣，CLAUDE.md 第九節第 9 條）。沒有 JS 時退回 `--head-h`：
+     偏大一點，但不會破圖。 */
+body[data-topic] #main { padding-top: var(--topic-pad, var(--head-h)); }
+
+/* 1-2 頁首自己要變成實心。
+   首頁的頁首是**玻璃**：染色濃度由 JS 依 HERO 的捲動位置算出來，字是白的
+   因為它壓在那張夜景照片上。著陸頁沒有 HERO，那支 JS 算不出東西，頁首就一直是
+   `background: rgba(0,0,0,0)` —— **白字直接洗在紙色上，對比度 1.13**，
+   而且那一整塊看起來是空的。
+   做法照文章頁：`assets/style.css` 的 `.site-header { background: var(--head) }`。
+   #393736 不是新顏色，就是那個 `--head`（暗夜 #191614 以 .84 疊在紙色上的合成色，
+   index.html 那支 JS 算出來的 SOLID 也是它）。白字對它 10.58。
+   ⚠ `::before`／`::after` 是玻璃那一層（負 z-index 的同一組）一起關掉，
+     不然模糊與遮罩還會疊在實心色上。
+     **選單那三個玻璃框是 `.site-nav a::before`，不同元素，不受影響。** */
+body[data-topic] { --head: #393736; }
+body[data-topic] .site-head {
+  background: var(--head);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+body[data-topic] .site-head::before,
+body[data-topic] .site-head::after { display: none; }
+
+/* 1-3 頁首到「主題與科別」的空隙。
+   `#topics` 原本的 `padding-top: 2.4rem` 是首頁的區塊節奏，用來和上面的 HERO
+   隔開；著陸頁上面是頁首，不需要那麼多。**1rem 是使用者 2026-08-18 從三格
+   （2.4rem／1rem／.4rem ＝ 47／25／15px）挑的那一格。**
+   ⚠ 這個空隙不能改用 `#main` 的上內距去調 —— 那一格已經等於頁首高，
+     再少內容就會鑽到固定頁首底下。 */
+body[data-topic] #topics { padding-top: 1rem; }
+
+/* ==========================================================================
+   二、「主題與科別」那一列：搜尋框搬上來、靠右
+   --------------------------------------------------------------------------
+   使用者 2026-08-18：「搜尋欄佔了版面很大空間，可以移到主題與科別的高度，
+   然後靠右一點。」手機上它原本自己佔一整列（≤720 的
+   `.topic-tools { display: block }`），而那一列右邊本來就是空的。
+   ⚠ `.sec-head` 是「主題與科別／醫師介紹／診所資訊」三節共用的元件，
+     一定要限定 `#topics`。
+   ⚠ 寬度收到 10rem（390 上 240 → 160px）。使用者一開始說它「很搶眼、好像
+     要去點」，比過「透明底」「只有底線」之後選的是**收窄**、框和底色都不動。
+   ⚠ 框高 44px 與手機字級 16px 都沒動：前者是觸控下限，後者低於 16 的話
+     iOS Safari 一聚焦就會把整頁放大。
+   ⚠ 站上原本的 `min-width: 11rem` 是給「和 chips 同一列」用的，
+     搬上來之後在 375 寬會把標題擠掉，所以這裡改成 0。 */
+/* ⚠⚠ 這三條**一定要限定 [data-topic]** —— 首頁也有 #topics .sec-head，
+   不限定的話首頁那一列會跟著變成 flex（而首頁的搜尋框不在裡面）。
+   2026-08-21 上線時才發現，原本在提案頁上看不出來（那時這段只在提案頁生效）。 */
+[data-topic] #topics .sec-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .8rem 1rem; flex-wrap: nowrap;
+}
+[data-topic] #topics .sec-head h2 { flex: 0 0 auto; }
+[data-topic] #topics .sec-head .topic-search { flex: 0 1 10rem; min-width: 0; margin-top: 0; }
+
+/* chips 從 <button> 換成 <a>（爬蟲點不下去按鈕，連結才有網址）。
+   外觀沿用站上那一組規則 —— 產生器把 `.chips :is(button,a)` 一律換成
+   `.chips :is(button,a)`，權重不變。這裡只補連結本身的重置。 */
+.chips a { display: inline-block; text-decoration: none; }
+/* （`.chips a[data-todo]` 那一條 2026-08-21 刪掉：七科全部上線，不會再有死鏈。） */
+
+/* ==========================================================================
+   三、科別介紹
+   --------------------------------------------------------------------------
+   順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
+   文字在 tools/topic-copy.mjs，寫作規則在 COPY.md 第九節。
+   ========================================================================== */
+/* ⚠⚠ 行距 2026-08-19：介紹區從站上內文的 1.85 收到 **1.72**。
+   使用者要把收尾那句的「的」加回來（「唸起來比較順」），而那一句在他的手機上
+   會折成兩行、整塊多 30px 掉出一屏 —— 他選擇**用行距換回那個空間**。
+   ⚠ **只有這一塊**（`.tp-intro` 底下那幾個 tp-* 段落）收，文章卡、醫師卡、
+     門診表與全站 body 的 1.85 **一個字都沒動** —— COPY.md 第九之六節那條
+     「行高跟著站上的 1.85」講的是整站的節奏，不是這一塊的例外。
+   ⚠ 要調回去只改這一個變數。 */
+.tp-intro { margin: .9rem 0 0; max-width: 46rem; --tp-lh: 1.72; }
+.tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
+
+/* 3-1「2 位醫師・2 篇文章」。
+   ⚠ 科別名不再印一次（首頁那個 .filter-note 會印「兒童牙科：…」）——
+     那已經是這一頁的 h1 了。
+   ⚠ 0 的那一項整個不寫（矯正是 0 篇文章，印出來等於自曝其短）。判斷在產生器裡。
+   ⚠⚠ 連結範圍與視覺**刻意不一樣**：`<a>` 包整串「2 位醫師」（55px，觸控夠），
+     但顏色與底線只上在名詞（27px）。使用者：「連結底線放在醫師、文章，
+     數字不要套標籤顏色。」
+   ⚠ 底線用 `border-bottom` 不用 `text-decoration` —— 後者會傳給子元素而且
+     **取消不掉**，數字會跟著被畫線。 */
+.tp-count {
+  margin: -.15rem 0 .5rem; font-size: .84rem; letter-spacing: .02em;
+  color: var(--ink-soft);
+}
+.tp-dot { margin: 0 .45em; color: var(--rule); }
+.tp-count a { color: inherit; text-decoration: none; }
+.tp-count .tp-n { color: var(--ink-soft); }
+.tp-count .tp-t {
+  color: var(--accent-deep);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent-deep) 55%, transparent);
+}
+.tp-count a:hover .tp-t { border-bottom-color: var(--accent-deep); }
+
+/* 3-2 三段處境是「他們」，用柔墨；底下那句回應是「我們」，用墨。
+   ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** ——
+     一加就變回被否決的「症狀清單」的樣子（COPY.md 第九之七節）。 */
+/* 3-1b 開場句（lead）：排在三個處境**之前**，是「我們」的聲音，所以用墨。
+   ⚠ 有 lead 的科就不要再寫 stance（規則見產生器檔頭）——
+     一頁只需要一句要被記住的話，講兩次就兩句都不會被記住。 */
+.tp-lead { margin: 0 0 .55rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
+.tp-lead strong { color: var(--accent-deep); font-weight: 700; }
+
+.tp-case {
+  margin: 0 0 .2rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink-soft);
+  padding-left: .85rem; border-left: 2px solid var(--rule);
+}
+/* ⚠ 段距 2026-08-18 兩輪收到 .22rem（.7 → .42 → .34 → .22）——
+     使用者第二次仍說「間隔比較開，好像看不到下面的文章」。
+     三句各自收成一行之後，原本那個間距讀起來就變成三塊分開的東西了。
+     ⚠ 這三句現在是**同一個人心裡的三句話**（都是自問），收緊才連得起來。 */
+/* ⚠ 字級 2026-08-18 從 1.02rem 收回 1rem（＝內文）：放大只換到「大一點點」，
+     卻讓每行少一個字、整句多一行。這一句的重量已經由顏色與粗體給了。 */
+.tp-stance { margin: .6rem 0 .65rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
+.tp-stance strong { color: var(--accent-deep); font-weight: 700; }
+
+/* 3-2a 每一組現場後面那句回應（groups 模式）。和 .tp-stance 同一個聲音，
+   但上下距要小 —— 它緊跟著自己那一組，不是整段的結論。
+   ⚠ 兩組之間靠這一句隔開就夠了，**不要再加線或標題**。 */
+.tp-reply {
+  margin: .28rem 0 .62rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink);
+}
+.tp-reply:last-of-type { margin-bottom: .2rem; }
+.tp-reply strong { color: var(--accent-deep); font-weight: 700; }
+
+/* 3-2b 流程：一步一行。標籤是那一科的深階色，內容維持柔墨。
+   ⚠ 標籤與內容**不做成兩欄 grid** —— 欄一開，內容能用的寬度就少掉 50px，
+     18 個字的句子會開始折行，等於為了對齊多賠一行。用一個全形空格分開就好。
+   ⚠ 不加項目符號、不加框：加了就變成一張流程表／表單，和被否決的那張
+     問答卡是同一個毛病（COPY.md 第九之九節）。 */
+.tp-step {
+  margin: 0 0 .1rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink-soft);
+}
+.tp-step b {
+  color: var(--accent-deep); font-weight: 700;
+  margin-right: .55em;
+}
+/* 收尾那一句是「我們」，回到墨色 —— 和上面那句回應同一個聲音。 */
+.tp-close { margin: .35rem 0 0; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
+
+/* 3-3「第一次來，大概是這樣」。
+   ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明；
+     這裡要的是把話接著講下去，所以就是接在開場後面的兩段。
+     （COPY.md 第九之九節：推力 vs 拉力。） */
+/* ⚠ 下緣只留 .4rem：這一塊收完，下一區（文章卡）要在手機上**露出一角** ——
+     2026-08-18 使用者：「要讓他覺得下面還有東西往下滑。」
+     留白太多的話，一屏的結尾看起來就像整頁的結尾。 */
+/* ⚠ 上緣留 .5rem：有 lead 的科（兒牙）沒有 stance 那一段當緩衝，
+     三個處境會直接頂到流程的標題上。 */
+.tp-first { margin: .5rem 0 .3rem; }
+
+/* 3-2c 文章那一區往上收一點（只有著陸頁）：介紹收在一屏之後，
+   下一區要在同一屏**露出一角**，那一角才是「往下還有」的暗示。
+   ⚠ 只動上緣的間距，卡片本身、欄距、圓角都沒有碰。 */
+/* ⚠⚠ **只在著陸頁**（COPY.md 第九之十一節：「這一輪為了②把 #topics 的
+   下內距收掉，只在著陸頁，首頁沒有動」）。不限定就會改到首頁。 */
+[data-topic] #topics { padding-bottom: 1.1rem; }
+.tp-first-h { margin: 0 0 .24rem; font-weight: 700; color: var(--ink); }
+.tp-first p:last-child { margin-bottom: 0; }
+
+/* 3-4 免責聲明放在頁面內容的最後（診所資訊之前），不要卡在開場的答案前面 ——
+   文章頁本來就是這樣排的（`.note` 是 `.post-body` 的最後一個元素）。
+   它搬出 `.shell` 之後要自己吃版心。 */
+.tp-note {
+  max-width: 46rem; margin: 0 auto 1.6rem; padding: .8rem 1rem;
+  font-size: .84rem; line-height: 1.8; color: var(--ink-soft);
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+}
+
+/* 3-5 還沒問過使用者的待填格。**提案專用，正式站不會有這個樣子。** */
+.tp-todo {
+  display: inline; background: rgba(175, 76, 82, .10);
+  border-bottom: 1.5px dashed var(--brick); border-radius: 3px;
+  padding: .05em .25em; color: var(--ink);
+}
+.tp-todo::before { content: "⚠ "; }
 </style>
 </head>
-<body data-topic="perio" data-spec="perio">
+<body data-topic="endo" data-spec="endo">
 
 
 <a class="skip-link" href="#main">跳到主要內容</a>
@@ -4571,14 +4830,14 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
              而 display: contents 只拿掉盒子、不擋繼承，整排標記的字會變斜的。 -->
         <span class="swrap">
         <ul class="chips">
-          <li><a href="../../" data-spec="all">全部</a></li>
-          <li><a href="../topic-general/" data-spec="general">一般牙科・定期檢查</a></li>
-          <li><a href="../topic-perio/" data-spec="perio" aria-current="page">牙周治療</a></li>
-          <li><a href="../topic-endo/" data-spec="endo">顯微根管</a></li>
-          <li><a href="../topic-kids/" data-spec="kids">兒童牙科</a></li>
-          <li><a href="../topic-ortho/" data-spec="ortho">齒顎矯正</a></li>
-          <li><a href="../topic-prosth/" data-spec="prosth">植牙・假牙重建</a></li>
-          <li><a href="../topic-surg/" data-spec="surg">口腔外科</a></li>
+          <li><a href="/" data-spec="all">全部</a></li>
+          <li><a href="/topics/general/" data-spec="general" >一般牙科・定期檢查</a></li>
+          <li><a href="/topics/perio/" data-spec="perio"   >牙周治療</a></li>
+          <li><a href="/topics/endo/" data-spec="endo" aria-current="page"    >顯微根管</a></li>
+          <li><a href="/topics/kids/" data-spec="kids"    >兒童牙科</a></li>
+          <li><a href="/topics/ortho/" data-spec="ortho"   >齒顎矯正</a></li>
+          <li><a href="/topics/prosth/" data-spec="prosth"  >植牙・假牙重建</a></li>
+          <li><a href="/topics/surg/" data-spec="surg"    >口腔外科</a></li>
         </ul>
         </span>
         <!-- 顯微根管與口腔外科是 2026-08-09 補的。這兩科目前一篇文章都沒有，
@@ -4617,21 +4876,21 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
              量法與基準寫在 COPY.md 第九之十節。
            ⚠ 文字在 tools/topic-copy.mjs，**不要改這裡**。 -->
       <div class="tp-intro">
-        <h1>牙周治療</h1>
-        <p class="tp-count"><a href="#doctors"><span class="tp-n">2 位</span><span class="tp-t">醫師</span></a><span class="tp-dot" aria-hidden="true">・</span><a href="#articles"><span class="tp-n">2 篇</span><span class="tp-t">文章</span></a></p>
-        <p class="tp-case">刷牙偶爾出血，應該很正常吧。</p>
-        <p class="tp-case">聽說洗一洗就好，也聽說要開刀，哪個才對？</p>
-        <p class="tp-case">牙齒一年掉一顆，還有救嗎？</p>
-        <p class="tp-reply">這三種我們都常遇到。<strong>常見不等於沒事，嚴重也不等於沒救</strong> —— 檢查過才知道。</p>
+        <h1>顯微根管</h1>
+        <p class="tp-count"><a href="#doctors"><span class="tp-n">1 位</span><span class="tp-t">醫師</span></a><span class="tp-dot" aria-hidden="true">・</span><a href="#articles"><span class="tp-n">1 篇</span><span class="tp-t">文章</span></a></p>
+        <p class="tp-lead">這顆還留得住嗎？—— <strong>在顯微鏡下看清楚，它就多一次機會</strong>。</p>
+        <p class="tp-case">蛀得比想像中深，被說要抽神經。</p>
+        <p class="tp-case">以前抽過神經，同一顆又腫了。</p>
+        <p class="tp-case">想留，可是怕做完還是白做。</p>
 
         <div class="tp-first">
-          <p class="tp-first-h">從檢查到維護，大概會這樣走</p>
-          <p class="tp-step"><b>檢查</b>牙齒的地基還剩多少，X 光一顆顆確認。</p>
-          <p class="tp-step"><b>說明</b>檢查完告訴你數字，牙周病到第幾期。</p>
-          <p class="tp-step"><b>治療</b>深層牙結石刮除，帶你找到刷牙的死角。</p>
-          <p class="tp-step"><b>進階</b>深處可加水雷射，骨頭缺損有再生手術。</p>
-          <p class="tp-step"><b>之後</b>牙周要長期維護，回診和刷牙一起顧。</p>
-          <p class="tp-close">我們要的是把牙周病控制好 —— 靠治療，也靠你每天的清潔，檢查完一起安排。</p>
+          <p class="tp-first-h">多的那一次機會，是這樣來的</p>
+          <p class="tp-step"><b>活髓</b>神經還健康的，有機會不抽掉。</p>
+          <p class="tp-step"><b>少磨一點</b>開的洞小一點，牙齒才撐得住。</p>
+          <p class="tp-step"><b>清得到</b>又細又彎的牙髓，放大了才找得到。</p>
+          <p class="tp-step"><b>再治療</b>抽過又發作的，重做或從牙根尖處理。</p>
+          <p class="tp-step"><b>留不住</b>真的不行，原因和下一步都會講。</p>
+          <p class="tp-close">留下來要能用得久，才算真的留住 —— 看到什麼都會告訴你，再一起決定。</p>
         </div>
       </div>
 
@@ -4644,29 +4903,16 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     <div class="shell">
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
-      <a class="card" href="../../posts/perio-laser/" data-spec="perio">
-        <img class="card-thumb" src="../../assets/hero-perio-photo-1600.jpg" srcset="../../assets/hero-perio-photo-800.jpg 800w, ../../assets/hero-perio-photo-1600.jpg 1600w, ../../assets/hero-perio-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="診間裡醫師握著細長的水雷射手機，射出青綠色光束打掉巨大臼齒表面結痂的牙結石，助理舉著防護盾護著後方的病患，細菌四散逃竄" width="2000" height="1116" loading="lazy">
+      <a class="card" href="../../posts/bioceramic/" data-spec="endo">
+        <img class="card-thumb" src="../../assets/hero-bioceramic-photo-1600.jpg" srcset="../../assets/hero-bioceramic-photo-800.jpg 800w, ../../assets/hero-bioceramic-photo-1600.jpg 1600w, ../../assets/hero-bioceramic-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="左邊是明亮的診間諮詢室，短髮的女醫師隔著桌子向年輕的男病患解說，上方的思考泡泡裡是一顆牙齒的剖面，根管內滿是黃濁的膿、根尖下方的骨頭裡有一個膿包；右邊是治療室，同一位醫師伏在顯微鏡前工作，病患嘴上蓋著粉紅色的橡皮障，泡泡裡的同一顆牙正被注射器灌入淡粉紅色的糊劑" width="2000" height="1116" loading="lazy">
         <div class="card-body">
-          <span class="card-tag tag-on">牙周照護</span>
-          <h3>牙周病治療：清創、水雷射與再生手術</h3>
-          <p>牙齒像一棵樹，牙周組織是托著它的那塊土壤。牙周治療分成三個層次：健保的基礎清創、自費水雷射能補上什麼，以及骨頭已經流失時的牙周再生手術。</p>
+          <span class="card-tag tag-on">顯微根管</span>
+          <h3>根管治療的生物陶瓷：它多做了什麼</h3>
+          <p>「都已經抽過神經了，牙齦怎麼又長膿包？」根管末端的分支往往比器械到得了的地方複雜。生物陶瓷在根管治療裡做三件事：封填的糊劑、活髓治療的修復材料、根管破孔的修補——這一篇聊聊它的密封與鹼性環境多做了什麼，以及什麼樣的牙齒用得上。</p>
           <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-08-16">2026/08/16</time></span>
+            <span><span class="sr-only">上架 </span><time datetime="2026-08-21">2026/08/21</time></span>
             <span class="dot" aria-hidden="true">・</span>
-            <span class="views" data-views="perio-laser" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="../../posts/gum-bleeding/" data-spec="perio">
-        <img class="card-thumb" src="../../assets/hero-gum-photo-1600.jpg" srcset="../../assets/hero-gum-photo-800.jpg 800w, ../../assets/hero-gum-photo-1600.jpg 1600w, ../../assets/hero-gum-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="四格畫面：悶熱的一天裡搧著扇子、買一杯冰飲、吹電扇冰敷臉頰，最後在鏡子前掀開嘴唇看牙齦" width="2000" height="1116" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag tag-on">牙周照護</span>
-          <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
-          <p>健康的牙齦被牙刷碰到不會出血。流血代表牙齦正在發炎，而發炎和退火無關，是牙菌斑長期堆積的結果。認識牙齦炎與牙周炎那條關鍵的分界線。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-04-15">2026/04/15</time></span>
-            <span class="dot" aria-hidden="true">・</span>
-            <span class="views" data-views="gum-bleeding" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="views" data-views="bioceramic" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
           </p>
         </div>
       </a>
@@ -4682,20 +4928,15 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         <h2>醫師介紹</h2>
       </div>
       <div class="docs">
-        <article class="doc" data-spec="general">
-          <h3>李柄輝<span class="doc-role tag-off">創辦醫師</span></h3>
+        <article class="doc" data-spec="endo">
+          <!-- 藥丸寫「顯微根管」不是「顯微根管專科醫師」：2026-08-09 使用者把資歷裡的
+               「衛生福利部牙髓病專科」換成「成大醫院牙髓病專科訓練」—— 那是**訓練**不是
+               部定專科，所以藥丸上的「專科醫師」跟著拿掉。規則見 COPY.md 第八之一節。 -->
+          <h3>陳芷鈴<span class="doc-role">顯微根管</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="general">口腔檢查</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><span class="sep">、</span><span class="sk tag-on" data-spec="perio">牙周照護</span></dd>
-            <dt>資歷</dt><dd>台灣國際植牙醫師學會專科醫師（ATIOI）<br>國際牙醫學院院士（TICD）<br>衛生福利部家庭牙醫專科</dd>
-            <dt>學歷</dt><dd>中山醫學大學牙醫學學士<br>中山醫學大學牙醫學碩士<br>中山醫學大學牙醫學博士</dd>
-          </dl>
-        </article>
-        <article class="doc" data-spec="perio">
-          <h3>李侑津<span class="doc-role">醫師</span></h3>
-          <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk tag-on" data-spec="perio">牙周病治療</span><span class="sep">、</span><span class="sk tag-on" data-spec="perio">牙周再生手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">植牙手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">活動假牙</span><span class="sep">、</span><span class="sk tag-on" data-spec="perio">水雷射牙周治療</span></dd>
-            <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
-            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>國立陽明交通大學牙醫學碩士</dd>
+            <dt>專長</dt><dd class="skills"><span class="sk tag-on" data-spec="endo">顯微根管</span><span class="sep">、</span><span class="sk tag-on" data-spec="endo">根尖手術</span><span class="sep">、</span><span class="sk tag-on" data-spec="endo">活髓治療</span></dd>
+            <dt>資歷</dt><dd>成大醫院牙髓病專科訓練<br>成大醫院口腔醫學部總醫師<br>臺北榮民總醫院</dd>
+            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
           </dl>
         </article>
       </div>
@@ -5760,7 +6001,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
         但他的專長寫著「牙周照護」，按牙周治療時他也會出現。
         亮起來的那顆標記就是理由。文章那一邊沒有改，仍然是一篇一科。 */
 (function () {
-  var chips = document.querySelectorAll('.chips :is(button,a)[data-spec]');
+  var chips = document.querySelectorAll('.chips [data-spec]');
   if (!chips.length) return;
 
   var cards  = document.querySelectorAll('.cards .card[data-spec]');
@@ -5859,7 +6100,10 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
     note.innerHTML = head + '：' + nA + ' 篇' + a + '、' + nD + ' 位' + d + '。';
   }
 
-  Array.prototype.forEach.call([], function (btn) {   /* 提案頁：chips 是連結，不掛 click */
+  /* 2026-08-21：chips 換成連結，點下去就換頁，不再掛 click。
+     ⚠ 這一圈**不能整段刪掉** —— 搜尋框 #q 和它在同一個 IIFE 裡，
+       上面那句 `if (!chips.length) return;` 也還要靠 chips 抓得到東西。 */
+  Array.prototype.forEach.call([], function (btn) {
     btn.addEventListener('click', function () {
       var spec = btn.getAttribute('data-spec');
       /* 再點同一顆＝取消，回到「全部」。「全部」自己點下去永遠是「全部」。 */
@@ -6671,213 +6915,20 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   });
 })();
 </script>
-
 <!-- =============================================================================
-     科別著陸頁的樣式（2026-08-18 版面定案）
+     科別著陸頁 /topics/<spec>/ 專用的兩支小腳本
      -----------------------------------------------------------------------------
-     這一段由 tools/topic-preview.mjs 插在提案頁最後一個 </body> 之前。
-     **正式上線時整段搬進 index.html 的樣式表**，選擇器不必再改一次 ——
-     所有只該作用在著陸頁的規則都已經限定 `[data-topic]`。
-
-     ⚠ class 一律 tp- 前綴。這一頁是 index.html 的完整複本，站上有的 class
-       全部都在，短名字幾乎一定會撞（CLAUDE.md 第八節）。
-
-     ⚠ **切換條已經全部拆掉**（2026-08-18 使用者：「中 ok，先這樣把版面確定了」）。
-       走到這個版面經過七輪修正，每一輪的推導與落選案寫在 COPY.md 第九節。
+     2026-08-21 上線時從 tools/topic-preview-style.html 搬進來（那個檔已刪除）。
+     ⚠⚠ **兩支都用 `document.body.dataset.topic` 擋住** —— 首頁沒有那個屬性，
+       整段等於不存在。第一次搬的時候只搬了 CSS、漏掉這一段，
+       七頁的頁首讓開量全部退回 `--head-h`（76px，比實測高 17px），
+       而且三個視窗變成同一個值 —— **量出來才發現**。
+     ⚠ 沒有 JS 也不會壞：讓開量退回 `--head-h`（偏大但不破圖），
+       那一排標記本來就捲得動。
      ============================================================================= -->
-<style>
-/* ==========================================================================
-   一、著陸頁沒有 HERO，要補兩件首頁靠 HERO 完成的事
-   ========================================================================== */
-
-/* 1-1 讓開固定的頁首。
-   `header.site-head` 是 position: fixed，首頁靠 HERO 佔位（而且 HERO 是**刻意**
-   鑽到頁首底下的，那是設計的一部分）。著陸頁沒有 HERO，#topics 就從 y=0 開始，
-   「主題與科別」那一列會被蓋掉 14~42px（390／834／1440 實測）。
-   ⚠ 一定要限定 `[data-topic]` —— 套到首頁會把 HERO 整個推下來。
-   ⚠⚠ **不能只用 `var(--head-h)`** —— 手機（≤720）的頁首是
-     `.site-head .shell { height: auto }` ＋ `padding-block: 3.736vw`，
-     高度由內容撐，和那個變數無關（390 上實際 61px，變數卻是 76px，高估 15px）。
-     所以照這個 repo 既有的做法**開頁量一次寫進 CSS 變數**（`--lamp-pad`、
-     `--ar-y` 都是這樣，CLAUDE.md 第九節第 9 條）。沒有 JS 時退回 `--head-h`：
-     偏大一點，但不會破圖。 */
-body[data-topic] #main { padding-top: var(--topic-pad, var(--head-h)); }
-
-/* 1-2 頁首自己要變成實心。
-   首頁的頁首是**玻璃**：染色濃度由 JS 依 HERO 的捲動位置算出來，字是白的
-   因為它壓在那張夜景照片上。著陸頁沒有 HERO，那支 JS 算不出東西，頁首就一直是
-   `background: rgba(0,0,0,0)` —— **白字直接洗在紙色上，對比度 1.13**，
-   而且那一整塊看起來是空的。
-   做法照文章頁：`assets/style.css` 的 `.site-header { background: var(--head) }`。
-   #393736 不是新顏色，就是那個 `--head`（暗夜 #191614 以 .84 疊在紙色上的合成色，
-   index.html 那支 JS 算出來的 SOLID 也是它）。白字對它 10.58。
-   ⚠ `::before`／`::after` 是玻璃那一層（負 z-index 的同一組）一起關掉，
-     不然模糊與遮罩還會疊在實心色上。
-     **選單那三個玻璃框是 `.site-nav a::before`，不同元素，不受影響。** */
-body[data-topic] { --head: #393736; }
-body[data-topic] .site-head {
-  background: var(--head);
-  backdrop-filter: none; -webkit-backdrop-filter: none;
-}
-body[data-topic] .site-head::before,
-body[data-topic] .site-head::after { display: none; }
-
-/* 1-3 頁首到「主題與科別」的空隙。
-   `#topics` 原本的 `padding-top: 2.4rem` 是首頁的區塊節奏，用來和上面的 HERO
-   隔開；著陸頁上面是頁首，不需要那麼多。**1rem 是使用者 2026-08-18 從三格
-   （2.4rem／1rem／.4rem ＝ 47／25／15px）挑的那一格。**
-   ⚠ 這個空隙不能改用 `#main` 的上內距去調 —— 那一格已經等於頁首高，
-     再少內容就會鑽到固定頁首底下。 */
-body[data-topic] #topics { padding-top: 1rem; }
-
-/* ==========================================================================
-   二、「主題與科別」那一列：搜尋框搬上來、靠右
-   --------------------------------------------------------------------------
-   使用者 2026-08-18：「搜尋欄佔了版面很大空間，可以移到主題與科別的高度，
-   然後靠右一點。」手機上它原本自己佔一整列（≤720 的
-   `.topic-tools { display: block }`），而那一列右邊本來就是空的。
-   ⚠ `.sec-head` 是「主題與科別／醫師介紹／診所資訊」三節共用的元件，
-     一定要限定 `#topics`。
-   ⚠ 寬度收到 10rem（390 上 240 → 160px）。使用者一開始說它「很搶眼、好像
-     要去點」，比過「透明底」「只有底線」之後選的是**收窄**、框和底色都不動。
-   ⚠ 框高 44px 與手機字級 16px 都沒動：前者是觸控下限，後者低於 16 的話
-     iOS Safari 一聚焦就會把整頁放大。
-   ⚠ 站上原本的 `min-width: 11rem` 是給「和 chips 同一列」用的，
-     搬上來之後在 375 寬會把標題擠掉，所以這裡改成 0。 */
-#topics .sec-head {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: .8rem 1rem; flex-wrap: nowrap;
-}
-#topics .sec-head h2 { flex: 0 0 auto; }
-#topics .sec-head .topic-search { flex: 0 1 10rem; min-width: 0; margin-top: 0; }
-
-/* chips 從 <button> 換成 <a>（爬蟲點不下去按鈕，連結才有網址）。
-   外觀沿用站上那一組規則 —— 產生器把 `.chips button` 一律換成
-   `.chips :is(button,a)`，權重不變。這裡只補連結本身的重置。 */
-.chips a { display: inline-block; text-decoration: none; }
-.chips a[data-todo] { opacity: .45; pointer-events: none; }
-
-/* ==========================================================================
-   三、科別介紹
-   --------------------------------------------------------------------------
-   順序固定：h1 → 幾位醫師幾篇文章 → 三種處境 → 一句回應 → 第一次來。
-   文字在 tools/topic-copy.mjs，寫作規則在 COPY.md 第九節。
-   ========================================================================== */
-/* ⚠⚠ 行距 2026-08-19：介紹區從站上內文的 1.85 收到 **1.72**。
-   使用者要把收尾那句的「的」加回來（「唸起來比較順」），而那一句在他的手機上
-   會折成兩行、整塊多 30px 掉出一屏 —— 他選擇**用行距換回那個空間**。
-   ⚠ **只有這一塊**（`.tp-intro` 底下那幾個 tp-* 段落）收，文章卡、醫師卡、
-     門診表與全站 body 的 1.85 **一個字都沒動** —— COPY.md 第九之六節那條
-     「行高跟著站上的 1.85」講的是整站的節奏，不是這一塊的例外。
-   ⚠ 要調回去只改這一個變數。 */
-.tp-intro { margin: .9rem 0 0; max-width: 46rem; --tp-lh: 1.72; }
-.tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
-
-/* 3-1「2 位醫師・2 篇文章」。
-   ⚠ 科別名不再印一次（首頁那個 .filter-note 會印「兒童牙科：…」）——
-     那已經是這一頁的 h1 了。
-   ⚠ 0 的那一項整個不寫（矯正是 0 篇文章，印出來等於自曝其短）。判斷在產生器裡。
-   ⚠⚠ 連結範圍與視覺**刻意不一樣**：`<a>` 包整串「2 位醫師」（55px，觸控夠），
-     但顏色與底線只上在名詞（27px）。使用者：「連結底線放在醫師、文章，
-     數字不要套標籤顏色。」
-   ⚠ 底線用 `border-bottom` 不用 `text-decoration` —— 後者會傳給子元素而且
-     **取消不掉**，數字會跟著被畫線。 */
-.tp-count {
-  margin: -.15rem 0 .5rem; font-size: .84rem; letter-spacing: .02em;
-  color: var(--ink-soft);
-}
-.tp-dot { margin: 0 .45em; color: var(--rule); }
-.tp-count a { color: inherit; text-decoration: none; }
-.tp-count .tp-n { color: var(--ink-soft); }
-.tp-count .tp-t {
-  color: var(--accent-deep);
-  border-bottom: 1px solid color-mix(in srgb, var(--accent-deep) 55%, transparent);
-}
-.tp-count a:hover .tp-t { border-bottom-color: var(--accent-deep); }
-
-/* 3-2 三段處境是「他們」，用柔墨；底下那句回應是「我們」，用墨。
-   ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** ——
-     一加就變回被否決的「症狀清單」的樣子（COPY.md 第九之七節）。 */
-/* 3-1b 開場句（lead）：排在三個處境**之前**，是「我們」的聲音，所以用墨。
-   ⚠ 有 lead 的科就不要再寫 stance（規則見產生器檔頭）——
-     一頁只需要一句要被記住的話，講兩次就兩句都不會被記住。 */
-.tp-lead { margin: 0 0 .55rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
-.tp-lead strong { color: var(--accent-deep); font-weight: 700; }
-
-.tp-case {
-  margin: 0 0 .2rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink-soft);
-  padding-left: .85rem; border-left: 2px solid var(--rule);
-}
-/* ⚠ 段距 2026-08-18 兩輪收到 .22rem（.7 → .42 → .34 → .22）——
-     使用者第二次仍說「間隔比較開，好像看不到下面的文章」。
-     三句各自收成一行之後，原本那個間距讀起來就變成三塊分開的東西了。
-     ⚠ 這三句現在是**同一個人心裡的三句話**（都是自問），收緊才連得起來。 */
-/* ⚠ 字級 2026-08-18 從 1.02rem 收回 1rem（＝內文）：放大只換到「大一點點」，
-     卻讓每行少一個字、整句多一行。這一句的重量已經由顏色與粗體給了。 */
-.tp-stance { margin: .6rem 0 .65rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
-.tp-stance strong { color: var(--accent-deep); font-weight: 700; }
-
-/* 3-2a 每一組現場後面那句回應（groups 模式）。和 .tp-stance 同一個聲音，
-   但上下距要小 —— 它緊跟著自己那一組，不是整段的結論。
-   ⚠ 兩組之間靠這一句隔開就夠了，**不要再加線或標題**。 */
-.tp-reply {
-  margin: .28rem 0 .62rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink);
-}
-.tp-reply:last-of-type { margin-bottom: .2rem; }
-.tp-reply strong { color: var(--accent-deep); font-weight: 700; }
-
-/* 3-2b 流程：一步一行。標籤是那一科的深階色，內容維持柔墨。
-   ⚠ 標籤與內容**不做成兩欄 grid** —— 欄一開，內容能用的寬度就少掉 50px，
-     18 個字的句子會開始折行，等於為了對齊多賠一行。用一個全形空格分開就好。
-   ⚠ 不加項目符號、不加框：加了就變成一張流程表／表單，和被否決的那張
-     問答卡是同一個毛病（COPY.md 第九之九節）。 */
-.tp-step {
-  margin: 0 0 .1rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink-soft);
-}
-.tp-step b {
-  color: var(--accent-deep); font-weight: 700;
-  margin-right: .55em;
-}
-/* 收尾那一句是「我們」，回到墨色 —— 和上面那句回應同一個聲音。 */
-.tp-close { margin: .35rem 0 0; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
-
-/* 3-3「第一次來，大概是這樣」。
-   ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明；
-     這裡要的是把話接著講下去，所以就是接在開場後面的兩段。
-     （COPY.md 第九之九節：推力 vs 拉力。） */
-/* ⚠ 下緣只留 .4rem：這一塊收完，下一區（文章卡）要在手機上**露出一角** ——
-     2026-08-18 使用者：「要讓他覺得下面還有東西往下滑。」
-     留白太多的話，一屏的結尾看起來就像整頁的結尾。 */
-/* ⚠ 上緣留 .5rem：有 lead 的科（兒牙）沒有 stance 那一段當緩衝，
-     三個處境會直接頂到流程的標題上。 */
-.tp-first { margin: .5rem 0 .3rem; }
-
-/* 3-2c 文章那一區往上收一點（只有著陸頁）：介紹收在一屏之後，
-   下一區要在同一屏**露出一角**，那一角才是「往下還有」的暗示。
-   ⚠ 只動上緣的間距，卡片本身、欄距、圓角都沒有碰。 */
-#topics { padding-bottom: 1.1rem; }
-.tp-first-h { margin: 0 0 .24rem; font-weight: 700; color: var(--ink); }
-.tp-first p:last-child { margin-bottom: 0; }
-
-/* 3-4 免責聲明放在頁面內容的最後（診所資訊之前），不要卡在開場的答案前面 ——
-   文章頁本來就是這樣排的（`.note` 是 `.post-body` 的最後一個元素）。
-   它搬出 `.shell` 之後要自己吃版心。 */
-.tp-note {
-  max-width: 46rem; margin: 0 auto 1.6rem; padding: .8rem 1rem;
-  font-size: .84rem; line-height: 1.8; color: var(--ink-soft);
-  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
-}
-
-/* 3-5 還沒問過使用者的待填格。**提案專用，正式站不會有這個樣子。** */
-.tp-todo {
-  display: inline; background: rgba(175, 76, 82, .10);
-  border-bottom: 1.5px dashed var(--brick); border-radius: 3px;
-  padding: .05em .25em; color: var(--ink);
-}
-.tp-todo::before { content: "⚠ "; }
-</style>
-
 <script>
+if (document.body.dataset.topic) {
+
 /* 著陸頁讓開固定頁首的量（上面 1-1 那一段）。
    量的是**未捲動那一態** —— 捲動後頁首會收合，那不是我們要讓開的高度，
    所以 scrollY 不在頂端時就不更新。 */
@@ -6915,6 +6966,7 @@ body[data-topic] #topics { padding-top: 1rem; }
   bring();
   addEventListener('load', bring);
 })();
+}
 </script>
 </body>
 </html>

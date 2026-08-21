@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>topic-pages｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>科別著陸頁　<code>preview/topic-*</code> → <code>/topics/&lt;spec&gt;/</code></h1>
+<p class="meta">2026-08-18 開提案　→　2026-08-21 七科定案上線，七頁提案頁刪除。<br>
+還原任何一頁：<code>git show fca42ad:preview/topic-perio/index.html &gt; /tmp/topic-perio.html</code></p>
+
+<div class="note">
+<p><strong>⚠ 這一頁只留「提案頁本身」的紀錄。</strong>文案的推導 ——
+每一科被退回幾次、每一句為什麼這樣寫、哪些寫法被否決 —— 全部在
+<strong>COPY.md 第九節（九之一 ~ 九之十九）</strong>，那裡比這一頁詳細得多，
+而且還在用（後面要改任何一科都得先讀）。方法的總表在
+<strong>第九之十七節「著陸頁的檢查表」</strong>。</p>
+</div>
+
+<h2>這件事在解什麼</h2>
+<p>首頁「主題與科別」那七顆標記是 <code>.is-filtered-out</code> 純 CSS 隱藏，
+<strong>網址從頭到尾不變</strong>。實測那一節只有 121 個字，整個首頁 2362 字要代表七科，
+「口腔外科」全首頁只出現 2 次 —— 所以站上沒有任何一頁接得到「斗六 牙周病治療」。</p>
+
+<h2>做法（使用者四輪修正之後定下來的）</h2>
+<pre>① chips 從 &lt;button&gt; 換成 &lt;a&gt; —— 按鈕沒有網址，爬蟲點不下去、AI 引用不了、也分享不出去。
+② 那一排同時變成全站的科別導覽列，八頁互連，錨點文字正好是科別名。
+③ 著陸頁是 index.html 的快照（使用者：「現在首頁怎麼做的著陸頁就怎麼做，
+   只是增加篩選下的科別說明或介紹而已」），搜尋框留著。
+④ 別科的文章與醫師是**在產生時真的刪掉**，不是靠 JS 藏起來 ——
+   靠 JS 篩的話 Google 抓到的仍是七科全部，繞回原點。
+⑤ HERO 拿掉：那張照片與那首詩是全站門面，七頁各放一次會稀釋掉它。</pre>
+
+<h2>上線那天（2026-08-21）做的六件</h2>
+<pre>① 網址 /preview/topic-&lt;spec&gt;/ → /topics/&lt;spec&gt;/（產生器 tools/topic-preview.mjs 改名 tools/topics.mjs）
+② 拿掉 noindex，補 canonical
+③ 每頁自己的 &lt;title&gt; 與 description（description 用那一頁開場自己的話接起來，不另外寫行銷文案）
+④ JSON-LD：MedicalWebPage ＋ BreadcrumbList ＋ WebSite ＋ 指回 #dentist
+⑤ tp-* 那段樣式與兩支小腳本整段搬進 index.html（tools/topic-preview-style.html 刪除）
+⑥ 首頁 chips 也換成 &lt;a&gt;，導覽列同時打開</pre>
+
+<h2>上線那天踩到、修掉的四個坑</h2>
+<pre>⚠ 樣式搬進 index.html 時，兩條沒有限定 [data-topic] 的規則會改到首頁：
+    #topics .sec-head（會把首頁那一列變成 flex）與 #topics 的下內距
+    （COPY.md 第九之十一節寫明「只在著陸頁，首頁沒有動」）。
+  → 只該作用在著陸頁的規則一律限定 [data-topic]。
+
+⚠⚠ 那個檔案是 .html，裡面除了 &lt;style&gt; 還有一段 &lt;script&gt;（頁首讓開量的實測、
+    橫捲標記列捲到目前這一科）。第一次只搬了 CSS，七頁的讓開量全部退回
+    --head-h（76px，比實測高 17px），而且三個視窗變成同一個值。
+  → **量出來才發現**。搬檔案之前先看那個檔到底有幾種東西。
+
+⚠ &lt;title&gt; 和 &lt;body&gt;／&lt;/body&gt; 是同一個坑：index.html 的註解裡就寫著 &lt;title&gt;。
+    這一次沒出事是因為正規式要求 &lt;title&gt;[^&lt;]*&lt;/title&gt;（註解那一段中間有 &lt;），
+    但驗證用的正規式漏寫了結束標籤，一度以為 title 產錯了。
+  ⚠ 地圖裡還有三個 SVG &lt;title&gt;（停車場的無障礙標籤），只換第一個才不會動到它們。
+
+⚠ 首頁 chips 換成連結之後，產生器第 4 步的工作變了：快照下來已經是 &lt;a&gt;、href 也對，
+    但 aria-current="page" 帶著的是**首頁那一顆（「全部」）** —— 照抄的話七頁都會
+    宣稱自己是首頁。現在那一步只做一件事：把 aria-current 搬到這一科身上。</pre>
+
+<h2>上線的驗收</h2>
+<pre>・首頁對改動前逐項比對（4 個視窗 × 23 個選擇器 × 15 個 computed 屬性 ＋ bbox）：
+  **只有 1 項有差** —— chips 的寬 55.59 → 55.92px（+0.33px，&lt;button&gt; 換成 &lt;a&gt; 的字寬差）。
+  高度、內距、顏色、圓角、位置、整頁高度、有無水平捲動全部相同。
+  同「選單總寬 0.14px」那一格，刻意不追。
+・七頁的一屏量測和提案頁**逐項相同**（430／390／375 三個視窗）。
+・首頁搜尋仍然可用（chips 不再掛 click，但 #q 和它在同一個 IIFE 裡，那一圈改成空陣列）。
+・七頁的 canonical、title、description、JSON-LD 逐頁檢查過，noindex 全部拿掉。
+・sitemap.xml 多七筆（priority 0.9，lastmod 跟著首頁）。robots.txt 沒有擋 /topics/。</pre>
+
+<h2>還沒做的</h2>
+<pre>・**每一頁要不要配一張圖**（CLAUDE.md 第九節第 19 項）—— 目前七頁都沒有 og:image，
+  分享到 LINE／FB 是一張空白卡。判斷是「要配，而且要新畫」，但還沒問過使用者。
+・各科的 ask（療程幾次、自費結構、實際提供哪些方式…）都還沒問到，
+  所以頁面上一個數字都沒有。清單在 tools/topic-copy.mjs，跑產生器會印出來。</pre>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div>
+</body>
+</html>

@@ -1,8 +1,17 @@
 #!/usr/bin/env node
 /* =============================================================================
-   提案頁產生器：科別著陸頁　preview/topic-<spec>/index.html
+   科別著陸頁產生器：topics/<spec>/index.html（七科，2026-08-21 上線）
    -----------------------------------------------------------------------------
-   用法：node tools/topic-preview.mjs
+   用法：node tools/topics.mjs
+
+   ⚠⚠ **這支不是一次性腳本，也不是提案頁產生器了。** 它產出的七頁就是正式站上的
+     /topics/<spec>/，所以：
+     ・**改完 index.html 之後要自己跑一次這支**（build.mjs 不會呼叫它），
+       否則七頁會停在舊版 —— 首頁新增文章、改版面、改頁尾都算。
+     ・**topics/ 底下的 HTML 不要手改**，下次重跑就沒了。文案改 topic-copy.mjs、
+       版型改這一支。
+     ・原名 tools/topic-preview.mjs（產出到 preview/topic-<spec>/、帶 noindex），
+       上線那天改名並改輸出路徑。舊名字在 COPY.md／history 裡還看得到。
 
    為什麼是「拿 index.html 當底」而不是自己寫一頁：
    使用者 2026-08-18 定案 ——「搜尋框還是留著，現在首頁怎麼做的著陸頁就怎麼做，
@@ -49,48 +58,108 @@ import { TOPICS } from "./topic-copy.mjs";
 
 const SPECS = Object.keys(TOPICS);
 
+/* 正式站網址（sitemap、canonical、JSON-LD 都要）。和 build.mjs 讀同一份，
+   ⚠ 不要在這裡寫死網域 —— site.json 是唯一的出處。 */
+const SITE = JSON.parse(fs.readFileSync(path.join(ROOT, "site.json"), "utf8")).url.replace(/\/$/, "");
+if (!SITE) throw new Error("site.json 沒有 url，著陸頁的 canonical 與 JSON-LD 產不出來");
+
+/* 純文字（給 description 與 JSON-LD 用）：把 <strong> 這類標記拿掉。 */
+const plain = (x) => String(x).replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+
+/* 每一頁自己的 description。
+   ⚠⚠ **不要另外寫一份行銷文案** —— 用這一頁開場那幾句自己的話接起來，
+     頁面上寫什麼、搜尋結果就顯示什麼，兩邊不可能對不起來（同 build.mjs
+     從 <main> 取 description 的做法）。
+   ⚠ Google 大約在 155~160 個半形字元截斷，中文抓 78 字左右。 */
+const descOf = (t) => {
+  const head = t.lead ? plain(t.lead) : plain(t.stance || "");
+  const body = (t.groups ? t.groups[0].cases : t.cases).slice(0, 2).map(plain).join("");
+  const d = `${t.h1}｜${head}${body}`.replace(/。。/g, "。");
+  return d.length > 78 ? d.slice(0, 77) + "…" : d;
+};
+
+/* 這一頁的 <head> SEO 區塊。快照下來的那一段是 build.mjs 為**首頁**產的，
+   整段換掉，否則七頁會一起宣告自己是首頁。
+   ⚠ 用 MedicalWebPage：這一頁確實是在描述一個醫療科別，而且它**不宣告
+     lastReviewed**（CLAUDE.md 第十節第 2 條：宣告一個沒有人做的審閱等於造假）。
+   ⚠ 診所節點只放 @id 指回首頁的 #dentist，不重抄一份（第十節第 1 條）。
+   ⚠ **沒有 og:image** —— 著陸頁目前一張圖都沒有（CLAUDE.md 第九節第 19 項
+     還沒定案）。寧可不給，也不要拿別科文章的 HERO 頂。 */
+const seoBlock = (spec, t, canonical, cnt) => {
+  const desc = descOf(t);
+  const title = `${t.h1} — 芳仁牙醫診所（雲林斗六）`;
+  const ld = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "MedicalWebPage",
+        "@id": `${canonical}#webpage`,
+        url: canonical,
+        name: title,
+        description: desc,
+        inLanguage: "zh-Hant-TW",
+        isPartOf: { "@id": `${SITE}/#website` },
+        about: { "@id": `${SITE}/#dentist` },
+        breadcrumb: { "@id": `${canonical}#breadcrumb` },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${canonical}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "首頁", item: `${SITE}/` },
+          { "@type": "ListItem", position: 2, name: t.label },
+        ],
+      },
+      { "@type": "WebSite", "@id": `${SITE}/#website`, url: `${SITE}/`, name: "芳仁牙醫診所", inLanguage: "zh-Hant-TW" },
+      { "@type": "Dentist", "@id": `${SITE}/#dentist`, name: "芳仁牙醫診所", url: `${SITE}/` },
+    ],
+  };
+  return `<!-- SEO:START — 由 tools/topics.mjs 產生，請勿手動編輯 -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="description" content="${desc}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${canonical}">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${desc}">
+<meta property="og:locale" content="zh_TW">
+<script type="application/ld+json">
+${JSON.stringify(ld, null, 2)}
+</script>
+<!-- SEO:END -->`;
+};
+
 /* ---------- 提案頁自己的推導（定案後整段搬進 history/topic-pages.html） ---------- */
 const headNote = (spec, t) => `<!-- =============================================================================
-     提案：科別著陸頁　${t.label}（preview/topic-${spec}/）　2026-08-18
+     科別著陸頁　${t.label}　/topics/${spec}/
      -----------------------------------------------------------------------------
-     這一頁由 tools/topic-preview.mjs 從 index.html 產生，**是快照，不要手改** ——
-     要改內容改那支裡的 TOPICS，要改版型改 index.html 再重跑。
+     ⚠⚠ **這一頁是產生出來的，不要手改。**
+       由 tools/topics.mjs 從 index.html 產生（是那一份的快照）。
+       ・要改**文字** → tools/topic-copy.mjs
+       ・要改**版型或樣式** → index.html（著陸頁的樣式在它樣式表的最後一段）
+       改完跑 \`node tools/topics.mjs\`，七頁一起重產。
 
-     怎麼走到這個做法的（使用者四輪修正）
+     為什麼是「index.html 的快照」而不是自己寫一頁（2026-08-18 使用者定案）
      -----------------------------------------------------------------------------
-     ① 第一版是自己寫的一頁獨立頁（走 assets/style.css）。使用者：
-        「這個跟我首頁已經有的篩選很像欸，以 SEO 或 GEO 來說我覺得還是我的篩選
-          其實不太符合 SEO GEO 要件。」——他兩件都說對了。
-     ② 「或是篩選點下去，版面就像我剛才說的，但其實是開了另外一個網頁？」
-        ＝ chips 從 <button> 換成 <a>。這是整件事的關鍵：按鈕沒有網址，
-        爬蟲點不下去、AI 引用不了、也分享不出去；連結才有。
-     ③ 「把主題與科別標籤繼續做在新開啟的網頁上」＝ 那一排變成全站的科別導覽列，
-        每一頁都帶著它、目前在哪一科就哪一顆亮。這一補把 chips 變連結原本會失去的
-        「即時切換」補回來了，而且長出一張內部連結網（八頁互連，錨點文字正好是科別名）。
-     ④ 「搜尋框還是留著，現在首頁怎麼做的著陸頁就怎麼做，只是增加篩選下的
-          科別說明或介紹而已。」＝ 所以這一頁是 index.html 的快照，不是另外寫的版型。
+     「現在首頁怎麼做的著陸頁就怎麼做，只是增加篩選下的科別說明或介紹而已。」
+     照這個做法，chips、搜尋框、醫師卡、門診表、地圖的 CSS 與 JS 全部沿用，
+     不必抄第二份、也不會走樣。
 
      兩個和 SEO 有關、不能省的處理
      -----------------------------------------------------------------------------
-     ・文章與醫師是**真的刪掉**，不是靠 JS 藏起來 —— 靠 JS 篩的話 Google 抓到的
-       仍然是七科全部，這一頁就不是這一科的頁了，繞回原點（同第一節第 1 條的精神）。
-     ・HERO 拿掉：那張照片與那首詩是全站門面，七頁各放一次會稀釋掉它，
-       也會把真正的內容推到很下面。
+     ・**別科的文章與醫師是真的刪掉，不是靠 JS 藏起來** —— 靠 JS 篩的話
+       Google 抓到的仍然是七科全部，這一頁就不是這一科的頁了，繞回原點
+       （同 CLAUDE.md 第一節第 1 條的精神）。
+     ・**chips 是 <a> 不是 <button>** —— 按鈕沒有網址，爬蟲點不下去、
+       AI 引用不了、也分享不出去。那一排同時是全站的科別導覽列，
+       八頁互連，錨點文字正好是科別名。
 
-     切換條：科別介紹的份量（精簡／標準／完整），面板現場量 #main 的可見字數。
-     這一格真正要解的是**矯正這一頁**——它一篇文章都沒有，全靠文字撐。
+     ⚠ 「按下那一科」的套色（醫師專長淡色填滿、專科藥丸退階、文章標籤套色）
+       是在**產生時就寫進 HTML** 的（第 7.5 步）—— 那三件在首頁是 JS 掛的 class，
+       而這一頁的 chips 已經是連結、沒有人按，JS 不會跑到那一段。
 
-     定案後要做的（都還沒做）
-     -----------------------------------------------------------------------------
-     ・網址 /preview/topic-<spec>/ → /topics/<spec>/，補 canonical、JSON-LD
-       （MedicalWebPage ＋ 指回 #dentist）、sitemap 各一筆。
-     ・首頁那一排 chips 也要換成同一組連結（不然同一個東西在首頁是篩選、
-       在別頁是換頁，行為不一致）。
-     ・七科要全部寫完才切換 —— 標記連到空頁比現在還糟。
-     ・tp-* 的樣式搬進 index.html 的樣式表，pv-* 與 tp-when-* 一起刪掉。
-     ⚠ 矯正那頁「這裡怎麼做」那一段只寫得出站上有憑據的（王俊偉醫師專長欄的
-       「隱適美」、〈擴張牙弓〉提到的兒童隱適美與肌功能矯正）。
-       **診所實際提供哪些方式要使用者確認之後才能補。**
+     文字的推導、每一科被退回幾次、為什麼這樣寫：COPY.md 第九節（九之一 ~ 九之十九），
+     方法的總表在第九之十七節「著陸頁的檢查表」。
      ============================================================================= -->`;
 
 /* ---------- 產生「科別介紹」那一塊 ----------
@@ -224,27 +293,33 @@ for (const spec of SPECS) {
   /* 3. 首頁那個 sr-only 的 h1 拿掉 —— 這一頁的 h1 是科別名（在介紹那一塊裡） */
   h = h.replace(/\s*<h1 class="sr-only">[^<]*<\/h1>/, "");
 
-  /* 4. chips：<button> → <a>，指到各自的提案頁；目前這一科標成 current
-     ⚠⚠ **只能換 <ul class="chips"> 裡面那一排。** 門診表底下還有一排長得幾乎一樣的
-        科別標記（.hours-filter），它是那張表自己的篩選器，換成連結會讓人一點就被
-        帶去別的頁 —— 第一版沒有限定範圍，8 顆全部被改掉了。 */
+  /* 4. chips：把「目前這一頁」從首頁的「全部」移到這一科。
+     -----------------------------------------------------------------------
+     ⚠⚠ **2026-08-21 上線之後這一步的工作變了。** 上線前 index.html 的 chips
+       還是 <button>，這一步負責把它們換成 <a> 並補 href；上線那天首頁自己
+       也換成連結了（六件事的第 ⑥ 件），所以快照下來就已經是
+       `<a href="/topics/…">`，**href 不必再補**。
+       剩下唯一要做的是**把 aria-current="page" 搬過來** ——
+       快照帶著的是首頁那一顆（「全部」），照抄的話七頁都會宣稱自己是首頁。
+     ⚠⚠ **只能動 <ul class="chips"> 裡面那一排。** 門診表底下還有一排長得
+       幾乎一樣的科別標記（.hours-filter），那是那張表自己的篩選器 ——
+       第一版沒有限定範圍，8 顆全部被改掉了。 */
   const cs = h.indexOf('<ul class="chips">');
   const ce = h.indexOf("</ul>", cs);
   if (cs === -1 || ce === -1) throw new Error("找不到 chips 那一排");
-  const chipsHtml = h.slice(cs, ce).replace(
-    /<button type="button" data-spec="([a-z]+)"\s*aria-pressed="(?:true|false)">([^<]*)<\/button>/g,
-    (_m, s, label) => {
-      const href = s === "all" ? "../../" : `../${"topic-" + s}/`;
-      const cur = s === spec;
-      const known = s === "all" || SPECS.includes(s);
-      /* ⚠ 連結上**不要**寫 aria-pressed —— 那是給 role="button" 用的，
-         放在 <a> 上是無效的 ARIA。連結的「目前這一頁」是 aria-current="page"。
-         樣式那一側由下面第 8.5 步把 CSS 選擇器一起改掉，外觀完全不變。 */
-      return `<a href="${known ? href : "#"}" data-spec="${s}"` +
-             (cur ? ' aria-current="page"' : "") +
-             (known ? "" : ' data-todo="還沒做這一頁"') + `>${label}</a>`;
-    }
+  let chipsHtml = h.slice(cs, ce);
+  if (/<button[^>]*data-spec=/.test(chipsHtml))
+    throw new Error("chips 還是 <button> —— index.html 應該在 2026-08-21 就換成 <a> 了");
+  /* 先把快照帶來的 aria-current 一律拿掉，再只掛在這一科身上。
+     ⚠ 連結上**不要**寫 aria-pressed —— 那是給 role="button" 用的，
+       放在 <a> 上是無效的 ARIA。連結的「目前這一頁」就是 aria-current。 */
+  chipsHtml = chipsHtml.replace(/\s*aria-current="page"/g, "");
+  chipsHtml = chipsHtml.replace(
+    new RegExp(`(<a\\b[^>]*\\bdata-spec="${spec}")`),
+    '$1 aria-current="page"'
   );
+  if (!chipsHtml.includes('aria-current="page"'))
+    throw new Error(`chips 那一排找不到 data-spec="${spec}"，index.html 的科別可能改過了`);
   h = h.slice(0, cs) + chipsHtml + h.slice(ce);
 
   /* 5. 科別介紹插在標記那一排底下（.filter-note 之前） */
@@ -355,20 +430,26 @@ for (const spec of SPECS) {
   /* 9. counter.js 拿掉 */
   h = h.replace(/\n<script src="\.\.\/\.\.\/assets\/counter\.js" defer><\/script>/, "");
 
-  /* 10. <head>：noindex、標題、拿掉 canonical 與 SEO 產生區塊 */
-  h = h.replace(/<title>[^<]*<\/title>/, `<title>提案：科別著陸頁（${t.label}） — 芳仁牙醫診所</title>`);
+  /* 10. <head>：這一頁自己的 title／description／canonical／JSON-LD。
+     -----------------------------------------------------------------------
+     ⚠⚠ 快照下來的 <head> 裡那一整段 SEO:START~SEO:END 是 **build.mjs 為首頁產的**
+       （首頁的 canonical、og:url、WebSite/WebPage/Dentist 的 @graph…）。
+       原封不動留著的話，七頁會一起對外宣告自己是首頁 —— 整段換掉。
+     ⚠ 這一步刻意**不走 build.mjs 的 SEO 區塊**：那一支是為首頁與文章寫的，
+       著陸頁的節點組成不一樣（MedicalWebPage ＋ 指回 #dentist），
+       塞進去反而要在 build.mjs 裡多一條分支。 */
+  const canonical = `${SITE}/topics/${spec}/`;
+  h = h.replace(/<title>[^<]*<\/title>/, `<title>${t.h1} — 芳仁牙醫診所（雲林斗六）</title>`);
   h = h.replace(/<link rel="canonical"[^>]*>\n?/, "");
-  h = h.replace(/<!-- SEO:START[\s\S]*?<!-- SEO:END -->/, "<!-- 提案頁不產生 SEO 區塊 -->");
-  h = h.replace("<head>", '<head>\n<meta name="robots" content="noindex, nofollow, noarchive">\n' + headNote(spec, t));
+  h = h.replace(/<meta name="description"[^>]*>\n?/, "");
+  h = h.replace(/<!-- SEO:START[\s\S]*?<!-- SEO:END -->/, seoBlock(spec, t, canonical, cnt));
+  h = h.replace("<head>", "<head>\n" + headNote(spec, t));
 
-  /* 11. 樣式插在**最後一個** </body> 前面。
-     ⚠ 一定要用 lastIndexOf —— 這一站的註解裡就寫著 </body> 這幾個字
-       （`.nav-lamp` 那一段），String.replace 會換到註解裡那一個。 */
-  const style = fs.readFileSync(path.join(ROOT, "tools", "topic-preview-style.html"), "utf8");
-  const b = h.lastIndexOf("</body>");
-  h = h.slice(0, b) + style + h.slice(b);
+  /* 11. ⚠ 樣式**不再注入** —— 2026-08-21 上線時整段搬進 index.html 的樣式表了
+     （tools/topic-preview-style.html 已刪除）。這一頁是 index.html 的快照，
+     所以自動就帶著那一段。 */
 
-  const dir = path.join(ROOT, "preview", `topic-${spec}`);
+  const dir = path.join(ROOT, "topics", spec);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"), h, "utf8");
 
@@ -378,6 +459,6 @@ for (const spec of SPECS) {
     console.log(`  ⚠ 這一科還有 ${t.ask.length} 件要先問過診所才寫得下去：`);
     t.ask.forEach((q) => console.log(`     ・${q}`));
   }
-  console.log(`preview/topic-${spec}/  文章 ${(h.match(/class="card"/g) || []).length} 篇・` +
+  console.log(`topics/${spec}/  文章 ${(h.match(/class="card"/g) || []).length} 篇・` +
               `醫師 ${(h.match(/class="doc"/g) || []).length} 位・可見字約 ${text.length}`);
 }

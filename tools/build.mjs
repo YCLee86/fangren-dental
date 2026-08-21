@@ -658,9 +658,24 @@ if (siteUrl && !CHECK_ONLY) {
   const homeImages = ["hero-clinic-night.jpg", "clinic-room-1-600.jpg", "clinic-room-2-600.jpg"]
     .filter((f) => fs.existsSync(path.join(ROOT, "assets", f)));
 
+  /* 科別著陸頁 /topics/<spec>/（2026-08-21 上線）。
+     ⚠ 它們是 index.html 的快照，內容跟著首頁與文案走 ——
+       所以 lastmod 直接用**首頁那一個**，不另外算一份雜湊。
+     ⚠ 目錄不存在就整段略過（還沒跑過 tools/topics.mjs 的環境）。
+     ⚠ 沒有 <image:image>：著陸頁目前一張自己的圖都沒有
+       （CLAUDE.md 第九節第 19 項還沒定案），不要拿別科文章的 HERO 頂。 */
+  const topicsDir = path.join(ROOT, "topics");
+  const topics = fs.existsSync(topicsDir)
+    ? fs.readdirSync(topicsDir).filter((d) =>
+        fs.existsSync(path.join(topicsDir, d, "index.html"))).sort()
+    : [];
+
   const urls = [
     `  <url><loc>${siteUrl}/</loc><lastmod>${homeUpdated}</lastmod><priority>1.0</priority>` +
       `${homeImages.map(img).join("")}</url>`,
+    ...topics.map(
+      (d) => `  <url><loc>${siteUrl}/topics/${d}/</loc><lastmod>${homeUpdated}</lastmod><priority>0.9</priority></url>`
+    ),
     ...posts.map(
       (p) => `  <url><loc>${siteUrl}/posts/${p.slug}/</loc><lastmod>${p.updated}</lastmod><priority>0.8</priority>` +
              `${p.hero ? img(p.hero) : ""}</url>`
