@@ -299,7 +299,7 @@ const BAR = `
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時連同 data-* 屬性一起刪掉，不要留到正式站。
      網址可帶參數直接開到某一格（正規式一律 [a-z0-9]+）：
-       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r  ?sun=a|b|c|d
+       ?pin=a|b|c  ?size=s|m|l  ?pos=c|r|rr  ?ul=on|off  ?shadow=off|s1|s2|s3|s4  ?neck=a|b|c|d  ?tip=s|m|r  ?sun=a|b|c|d  ?az=u30|u20|r0|d45  ?tail=a|b|c|d
        ?fs=16|18|20  ?cmp=now|new
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
@@ -325,6 +325,13 @@ const BAR = `
     <button data-k="neck" data-v="b">Ⓑ 微收</button>
     <button data-k="neck" data-v="c">Ⓒ 明顯</button>
     <button data-k="neck" data-v="d">Ⓓ 很細</button>
+  </div>
+  <div class="pv-row">
+    <span class="pv-lab">釘長</span>
+    <button data-k="tail" data-v="a">原本</button>
+    <button data-k="tail" data-v="b">短</button>
+    <button data-k="tail" data-v="c">更短</button>
+    <button data-k="tail" data-v="d">最短</button>
   </div>
   <div class="pv-row">
     <span class="pv-lab">底線</span>
@@ -358,6 +365,13 @@ const BAR = `
       <button data-k="sun" data-v="b">高 65°</button>
       <button data-k="sun" data-v="c">中 55°</button>
       <button data-k="sun" data-v="d">低 45°</button>
+    </div>
+    <div class="pv-row">
+      <span class="pv-lab">影向</span>
+      <button data-k="az" data-v="u30">右上 30°</button>
+      <button data-k="az" data-v="u20">右上 20°</button>
+      <button data-k="az" data-v="r0">正右</button>
+      <button data-k="az" data-v="d45">右下 45°</button>
     </div>
   </div>
   <div class="pv-panel" id="pvPanel">量測中…</div>
@@ -417,14 +431,25 @@ const BAR = `
      ⚠ 尖端（接觸點）永遠不動，所以影子那一端是尖的、貼著釘子；模糊只往
        遠端長（以尖端為原點放大），這也是真實影子的樣子：接觸處銳利、
        愈遠愈糊。 */
+  var AZLAB = { d45: '右下 45°', r0: '正右', u20: '右上 20°', u30: '右上 30°' };
   var SUNH = { a: 75, b: 65, c: 55, d: 45 };   /* 太陽高度（度）。愈小影子愈長 */
-  var AZ = 45;                                  /* 光從左上打來 → 影子往右下 45 度 */
+  /* 影子往哪個方位倒（度，正的往下、負的往上；0 ＝ 正右）。
+     ⚠ 2026-08-21 第九輪使用者指定要「往右上 20 度」與「30 度」——
+       那等於光從**左下**打過來。影子會有一部分躲到圖釘自己後面（俯視圖裡
+       圖釘是往上長的），露出來的是右側那一半，這是這個方位本來就會這樣。 */
+  var AZM = { d45: 45, r0: 0, u20: -20, u30: -30 };
+  /* 釘子的長度 ＝ 尖端離頭的圓心幾個「頭的半徑」。
+     ⚠ 2026-08-21 第九輪使用者：「現在圖釘的釘子還有點長，縮短一點。」
+       頭的大小不動，只把尖端往上收 —— 所以整顆圖釘會跟著變矮，
+       面板印的是實際的總高。原本那一顆是 1.78（＝相切水滴的比例）。 */
+  var TAIL = { a: 1.78, b: 1.55, c: 1.35, d: 1.18 };
   var SIZE = { s: 52, m: 60, l: 68 };
   var POS  = { c: 276, r: 294, rr: 312 };
   var TIPY = 238;                 /* 尖端進到綠塊裡 2 個單位（綠塊上緣 236） */
   var PLOT = { x: 228, y: 236, w: 96, h: 51 };
 
-  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', neck: 'c', tip: 'm', sun: 'b', cmp: 'new' };
+  var DEF = { pin: 'a', size: 'm', pos: 'r', ul: 'on', shadow: 's2', fs: '18', neck: 'c', tip: 'm',
+              sun: 'b', az: 'u20', tail: 'b', cmp: 'new' };
   var st = {};
   var q = location.search;
   Object.keys(DEF).forEach(function (k) {
@@ -442,10 +467,10 @@ const BAR = `
        （s1 從 54 階跳到 81）。換算式：a_new ＝ 1−(1−a_old)^(舊層數/新層數)。 */
   var SH = {
     off: null,
-    s1: { a: .018, sp: .10, max: 58, area: 300 },
-    s2: { a: .026, sp: .14, max: 81, area: 318 },
-    s3: { a: .034, sp: .18, max: 91, area: 340 },
-    s4: { a: .044, sp: .24, max: 107, area: 372 }
+    s1: { a: .018, sp: .10, max: 52, area: 131 },
+    s2: { a: .026, sp: .14, max: 71, area: 142 },
+    s3: { a: .034, sp: .18, max: 78, area: 153 },
+    s4: { a: .044, sp: .24, max: 89, area: 172 }
   };
 
   /* 釘身的路徑。三個參數：
@@ -486,7 +511,9 @@ const BAR = `
   }
 
   function drawPin() {
-    var H = SIZE[st.size] || SIZE.m, R = 0.36 * H, d = H - R;
+    /* R（頭的半徑）跟著「大小」走；d（尖端到頭的圓心）另外由「釘長」給。 */
+    var R = 0.36 * (SIZE[st.size] || SIZE.m);
+    var d = (TAIL[st.tail] || TAIL.b) * R, H = R + d;
     var tanPhi = Math.acos(R / d) * 180 / Math.PI;        /* 相切那一格（原本的水滴） */
     var phi = st.neck === 'a' ? tanPhi : (WAIST[st.neck] || WAIST.c);
     var rtK = TIP[st.tip] || TIP.m;
@@ -502,7 +529,7 @@ const BAR = `
       ') translate(' + (-LX) + ' ' + (-LY) + ')');
     pin.setAttribute('transform', 'translate(' + (POS[st.pos] || POS.r) + ' ' + TIPY + ')');
     drawShadow(pbody.getAttribute('d'), d, R);
-    return { H: H, R: R, w: w, phi: phi, neck: 2 * R * Math.sin(phi * Math.PI / 180) };
+    return { H: H, R: R, d: d, w: w, phi: phi, neck: 2 * R * Math.sin(phi * Math.PI / 180) };
   }
 
   /* 影子：同一條釘身路徑疊 LAYERS 層（16），往下挪 ＋ 以頭的圓心為中心放大。
@@ -513,7 +540,7 @@ const BAR = `
     while (shg.firstChild) shg.removeChild(shg.firstChild);
     if (!sh) return;
     var elev = SUNH[st.sun] || SUNH.b, L = 1 / Math.tan(elev * Math.PI / 180);
-    var az = AZ * Math.PI / 180;
+    var az = (AZM[st.az] === undefined ? AZM.u20 : AZM[st.az]) * Math.PI / 180;
     var mc = -L * Math.cos(az), md = -L * Math.sin(az);
     for (var i = 0; i < LAYERS; i++) {
       var t = i / (LAYERS - 1);
@@ -608,8 +635,8 @@ const BAR = `
     var hits = overlaps();
     var over = tb.width > PLOT.w - 12;
     var lines = [];
-    lines.push('圖釘 <b>' + g.H + '</b> 單位＝<b>' + (g.H * k).toFixed(1) + 'px</b>' +
-               '（頭 ⌀' + (2 * g.R * k).toFixed(1) + '、標誌寬 ' + (g.w * k).toFixed(1) + 'px）');
+    lines.push('圖釘總高 <b>' + (g.H * k).toFixed(1) + 'px</b>（頭 ⌀' + (2 * g.R * k).toFixed(1) +
+               '、釘子 ' + ((g.d - g.R) * k).toFixed(1) + '、標誌寬 ' + (g.w * k).toFixed(1) + 'px）');
     lines.push('釘型：腰身 ' + g.phi.toFixed(1) + '°，頭與釘子的交接處寬 <b>' +
                (g.neck * k).toFixed(1) + 'px</b>（＝頭的 ' + (g.neck / (2 * g.R) * 100).toFixed(0) + '%）');
     lines.push('綠塊的字 ' + tb.width.toFixed(1) + ' / ' + PLOT.w + ' 單位 —— ' +
@@ -623,7 +650,8 @@ const BAR = `
     lines.push('影子：' + (sh ? '太陽 <b>' + elev + '°</b>（影子長 ' +
                                 (1 / Math.tan(elev * Math.PI / 180) * g.H * k).toFixed(1) +
                                 'px ＝ 圖釘高的 ' + (1 / Math.tan(elev * Math.PI / 180)).toFixed(2) +
-                                ' 倍），最深暗 <b>' + sh.max + '</b> 階、覆蓋約 ' + sh.area + ' CSS px²'
+                                ' 倍），往' + AZLAB[st.az] + '倒，最深暗 <b>' + sh.max +
+                                '</b> 階、覆蓋約 ' + sh.area + ' CSS px²'
                               : '沒有'));
     lines.push('圖釘壓到：' + (hits.length ? '<span class="pv-bad">' + hits.join('、') + '</span>' : '沒有壓到別的東西'));
     p.innerHTML = lines.join('<br>');
