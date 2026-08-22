@@ -108,6 +108,8 @@ const locIdx = args.indexOf("--loc");
 const LOC = locIdx >= 0 ? args[locIdx + 1] : "none";  // none／city（雲林斗六）／full（雲林斗六・永樂街）
 const LOC_TEXT = { none: "", city: "雲林斗六", full: "雲林斗六・永樂街" }[LOC];
 if (LOC_TEXT === undefined) { console.error("--loc 只能是 none / city / full"); process.exit(1); }
+const lpIdx = args.indexOf("--locpos");
+const LOCPOS = lpIdx >= 0 ? args[lpIdx + 1] : "right";   // right＝跟著診所名（同首頁）／left＝跟著科別名
 const shadeIdx = args.indexOf("--shade");
 const SHADE = shadeIdx >= 0 ? args[shadeIdx + 1] : "deep";     // deep＝深階（預設，對比撐得住）／accent＝套色
 const posIdx = args.indexOf("--pos");
@@ -154,8 +156,7 @@ const LOGO_GAP = 10;       // 標誌與六個字之間
 
 /* 玻璃帶的幾何（1200×628 上）。⚠ 字級照 250px 的卡片回推：
    科別名 46px → 卡片上 9.6px、診所名 30px → 6.3px（和標誌一起讀）。 */
-const BAND_H = LOC === "none" ? 104 : 128;
-const G_LOC_FS = 27;
+const BAND_H = 104;
 const BAND_PAD = 38;
 const G_NAME_FS = 46;
 const G_CLINIC_FS = 30;
@@ -185,14 +186,25 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
   backdrop-filter:blur(18px) saturate(1.12);
   -webkit-backdrop-filter:blur(18px) saturate(1.12);
   border-bottom:1px solid rgba(${pr},${pg_},${pb},.30)}
-.left{display:flex;flex-direction:column;gap:9px}
-.loc{font-family:"NotoTC";font-weight:500;font-size:${G_LOC_FS}px;line-height:1;
-  color:${PAPER};opacity:.82;letter-spacing:.10em;white-space:nowrap;
-  text-shadow:0 1px 2px rgba(20,24,20,.28)}
+/* ⚠ 地名的排法**逐項照首頁 .brand-text 量來的**（2026-08-22 使用者：
+   「BC 的位置很刻意，首頁上的擺放看起來就不刻意、很講究」）：
+   ・同一條 baseline 並排，不是上下兩行
+   ・中間一條 1px 細豎線（rgba(紙,.28)），上下各內縮 .1em
+   ・地名字級 ＝ 主名的 73.6%（首頁 .78rem ÷ 1.06rem）
+   ・地名透明度 .65／主名 .95（首頁是白，這裡換成紙色） */
+.pair{display:flex;align-items:baseline;gap:${(0.37).toFixed(2)}em}
+.loc{position:relative;font-family:"NotoTC";font-weight:500;line-height:1.3;
+  letter-spacing:.04em;white-space:nowrap;opacity:.65;color:${PAPER};
+  padding-left:.37em;text-shadow:0 1px 2px rgba(20,24,20,.28)}
+.loc::before{content:"";position:absolute;left:0;top:.1em;bottom:.1em;
+  border-left:1px solid rgba(${pr},${pg_},${pb},.28)}
+.left .loc{font-size:${(G_NAME_FS * 0.736).toFixed(1)}px}
+.right .loc{font-size:${(G_CLINIC_FS * 0.736).toFixed(1)}px}
 .name{font-family:"NotoTC";font-weight:700;font-size:${G_NAME_FS}px;line-height:1;
   color:${PAPER};letter-spacing:.03em;white-space:nowrap;
   text-shadow:0 1px 2px rgba(20,24,20,.28)}
 .right{display:flex;align-items:center;gap:10px}
+.right .pair{align-items:baseline}
 .right svg{height:${G_LOGO_H}px;width:${(G_LOGO_H * 2.02918).toFixed(2)}px;display:block;
   filter:drop-shadow(0 1px 2px rgba(20,24,20,.28))}
 .clinic{font-family:"NotoTC";font-weight:500;font-size:${G_CLINIC_FS}px;line-height:1;
@@ -201,13 +213,16 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
 </style>
 <img class="bg" src="${imgUri}">
 <div class="band">
-  <span class="left">
+  <span class="left pair">
     <span class="name">${label}</span>
-    ${LOC_TEXT ? `<span class="loc">${LOC_TEXT}</span>` : ""}
+    ${LOC_TEXT && LOCPOS === "left" ? `<span class="loc">${LOC_TEXT}</span>` : ""}
   </span>
   <span class="right">
     <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true" style="color:${PAPER}">${logoInner}</svg>
-    <span class="clinic">芳仁牙醫診所</span>
+    <span class="pair">
+      <span class="clinic">芳仁牙醫診所</span>
+      ${LOC_TEXT && LOCPOS === "right" ? `<span class="loc">${LOC_TEXT}</span>` : ""}
+    </span>
   </span>
 </div>`;
 

@@ -109,7 +109,17 @@ const ogImage = (spec) => {
 
 const seoBlock = (spec, t, canonical, cnt) => {
   const desc = descOf(t);
-  const title = `${t.h1} — 芳仁牙醫診所（雲林斗六）`;
+  /* ⚠⚠ 兩個標題刻意不一樣（2026-08-22 使用者指定）：
+     ・<title>（下面步驟 10）＝ `… — 芳仁牙醫診所（雲林斗六）`
+       地名留著，那是給搜尋引擎與分頁列看的（首頁那一條「牙醫診所＋斗六」
+       正是真正在被搜尋的字，見 index.html 開頭的註解）。
+     ・og:title ＝ **不帶地名**。使用者：「訊息標題有（雲林斗六），
+       這個應該是在網站裡的，可以拿掉不要在這裡顯示嗎」——
+       分享卡上地名已經壓在圖裡的玻璃帶上了（tools/og-plate.mjs），
+       卡片標題再寫一次就是同一句話講兩遍。
+     ⚠ JSON-LD 的 name 跟著 <title> 那一版（機器讀的東西要完整）。 */
+  const titleFull = `${t.h1} — 芳仁牙醫診所（雲林斗六）`;
+  const title = `${t.h1} — 芳仁牙醫診所`;
   const og = ogImage(spec);
   const ld = {
     "@context": "https://schema.org",
@@ -118,7 +128,7 @@ const seoBlock = (spec, t, canonical, cnt) => {
         "@type": "MedicalWebPage",
         "@id": `${canonical}#webpage`,
         url: canonical,
-        name: title,
+        name: titleFull,
         description: desc,
         inLanguage: "zh-Hant-TW",
         isPartOf: { "@id": `${SITE}/#website` },
