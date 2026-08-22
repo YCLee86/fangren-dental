@@ -1,6 +1,6 @@
 # 分享圖提示詞：一般牙科・定期檢查（`og-topic-general`）
 
-**狀態：第四版提案（還沒生成）。第一～三版都被退回，理由與量測留在下面。**
+**狀態：第五版提案。第四版使用者說「很棒我非常喜歡」，只提兩件事要改（見第五版那一節）。**
 規格依 [ILLUSTRATION.md](../ILLUSTRATION.md) 第十一節（250px 判準）與
 [TEAM.md](../TEAM.md) 第一節第 9 號（插畫師的三個交件門檻）。
 文案脈絡見 COPY.md 第九之十四節。
@@ -97,6 +97,223 @@ ILLUSTRATION.md 第十一之二節。**這一版的設計依據是使用者自�
 
 > ⚠ 生成時**把第二版那張圖一起附上當風格參考**，並註明：
 > 「**保留這張的畫風、乾淨程度、配色與光線**，只把鏡頭推近、人物放大。」
+
+## 第五版（現行）—— 立面換成真的芳仁 ＋ 有人回應小孩
+
+**第四版使用者：「這個很棒我非常喜歡」**，只提兩件：
+
+1. **左邊小孩的視線與動作沒有人回應** —— 他指定：**最右邊那兩個醫療人員來回應**，
+   「一個對著小孩招手，另一個會意地笑著對小孩和媽媽」。
+   ⚠⚠ 這修掉第四版一條我自己寫的規則：`each group … not looking at the others`。
+   **通則：三組各做各的事會活，但如果有一組做出「指向另一組」的動作（指、喊、招手），
+   就一定要有人接。沒人接的指向動作，看起來是那個人在自言自語。**
+2. **診所的外觀是有實景照的，可以拿照片的局部來當插圖背景。**
+
+### ⚠⚠ 前四版的立面全是我編的，不是芳仁
+
+實景照拆出來，這棟樓真正的辨識特徵是**六件**，一件都對不上我前四版寫的
+「木頭雙開門＋紅磚柱」：
+
+| # | 真的長這樣 | 我前四版寫的 |
+| --- | --- | --- |
+| 1 | 一樓**退縮成騎樓**，兩根**深咖啡色金屬方柱**撐起上面樓層 | 紅磚柱 |
+| 2 | 整面**落地玻璃**（深色細框），玻璃後看得到候診區的木家具與暖燈 | 木頭雙開門 |
+| 3 | 招牌是**一條細鋼樑上的細白字**（左英文、右中文） | 空白招牌板 |
+| 4 | 二、三樓是**清水模灰牆** ＋ **成對突出的深色金屬窗盒**（往外挑，像盒子） | 紅磚與奶油色灰泥 |
+| 5 | 頂樓有**深出挑的鋼構大屋簷** | 淺雨庇 |
+| 6 | 隔壁右邊是**紅招牌的火鍋店棚架**，左邊是老瓦房 | 沒有鄰居 |
+
+### 抓背景：抓哪一段、怎麼抓（`drafts/og-photo-crop.mjs`）
+
+**抓「騎樓帶」** —— 從招牌那條橫樑到人行道，上緣留一排窗盒的下半。
+正面照（7322×6271）上的座標是 **`1853, 4108, 3727, 1950`**，
+剛好是 1.91:1，縮成 1200×628 不必變形。
+
+為什麼是這一段：**分享卡的人是站在一條橫帶上的**，而這一段同時有
+柱、玻璃、招牌樑、窗盒、人行道 —— 五樣辨識物齊了，而且高度正好吃掉畫面上三分之二。
+
+### 用照片還是重畫？兩案，數字在這裡
+
+| | 平均彩度 S | 平均明度 L |
+| --- | --- | --- |
+| 第四版那張插畫 | **43.6** | 61.6 |
+| 實景照（原） | **10.6** | 54.0 |
+| 實景照（提亮＋暖罩＋去雜訊後） | **12.4** | 62.9 |
+
+⚠⚠ **明度可以拉齊，彩度拉不上來** —— 那棟樓本來就是清水模灰＋深咖啡鋼＋深色玻璃，
+**它沒有顏色可以提**。把照片當底、插畫人物疊上去，兩邊彩度差 3.5 倍，人會像貼紙。
+
+- **A 案（建議）：照片當參考圖，插畫重畫那棟樓。**
+  上面那六個特徵原封不動搬進插畫，用我們的線與暖色重畫；
+  暖色不從牆來，從**玻璃裡透出來的燈光、人物的衣服、隔壁的紅棚架**來。
+  好處：認得出是芳仁，而且和站上另外十張插畫是同一家人。
+  ⚠ 這正是 ILLUSTRATION.md 第十之一節那條「形狀不要用文字描述，用參考圖」。
+- **B 案：照片局部真的當底，插畫人物疊上去**（ILLUSTRATION.md ⑪ 的照片拼貼）。
+  要先做三件事：提亮到 L≈63、罩一層暖色、把玻璃裡的反射與室內雜訊糊掉；
+  人物要加一圈淺描邊才站得住。**而且要先確認照片的授權** ——
+  那看起來是建築攝影師拍的（打光與透視矯正都是專業的），
+  不是診所隨手拍的（CLAUDE.md 第一節第 7 條）。
+
+**第五版的提示詞走 A 案**，並把那張騎樓帶的裁切當參考圖一起餵進去。
+
+## 提示詞（第五版，逐字，可直接複製）
+
+> ⚠ 生成時附**兩張**參考圖，並講清楚各是什麼：
+> ① **第四版那張插畫** —— 「畫風、配色、線的實度、人物比例、氣氛，全部照這張」
+> ② **`drafts/og-facade-ref.png`（騎樓帶的照片裁切）** ——
+> 　 「**這是這間診所真正的樣子，建築照這張畫**：騎樓方柱、大面玻璃、招牌橫樑、
+> 　 清水模灰牆、突出的深色窗盒。**只參考建築，不要參考它的顏色調性、不要照抄照片質感、
+> 　 招牌上的字一律拿掉。**」
+
+```
+Editorial illustration for a social-media preview card, 1200 x 628 landscape (1.91:1).
+
+READ THIS FIRST — THIS IMAGE WILL BE SEEN AT ABOUT 250 PIXELS WIDE, the size of a
+thumbnail in a chat message. Big simple shapes, no fine detail, no panels, no speech
+bubbles, no insets, no icons, no arrows, no diagrams.
+
+THE FEELING — an ordinary weekday afternoon on a quiet lane in a small town in central
+Taiwan. The dental clinic is simply part of this street, and its people are OUT ON THE
+PAVEMENT among the neighbours. SEVERAL SMALL THINGS ARE HAPPENING AT THE SAME TIME.
+Nobody is posing, nobody is performing a welcome, nobody looks at the viewer. The mood is
+warm, easy and alive — the opposite of a quiet, empty, staged picture.
+
+THE BUILDING — this is a REAL building; follow the photograph reference closely for its
+architecture, but draw it entirely in the illustration style described below, never as a
+photograph. It is a renovated old townhouse, immaculately kept and quietly modern:
+  • the ground floor is SET BACK under the upper storeys, forming a covered walkway
+    carried by TWO SQUARE COLUMNS clad in dark chocolate-brown metal;
+  • between the columns the front is ONE BIG SHEET OF GLASS in slim dark frames, and
+    through it we can see the softly lit waiting area — warm lamplight, pale wood
+    furniture — so the glass GLOWS warm and is the brightest thing in the picture;
+  • a slim dark steel BEAM runs across above the glass carrying a completely BLANK sign
+    panel — no letters of any kind;
+  • above that, a smooth PALE WARM-GREY CONCRETE wall, and along it a ROW OF DARK METAL
+    WINDOW BOXES that project outward from the wall like open boxes, in pairs — this is
+    the most recognisable feature of the building and must be clearly drawn;
+  • the picture is cropped by the TOP EDGE just above those window boxes: no roof, no
+    sky.
+Old means renovated and cared for: no peeling paint, no cracks, no stains, no rust, no
+litter, nothing derelict.
+NEIGHBOURS — at the right edge, cropped, the corner of the next shop: a simple awning in
+a warm red, no writing on it. At the left edge, cropped, the low tiled roof of an old
+neighbouring house. They show this is a real street, nothing more.
+
+FRAMING — a straight-on street-level view. The lit glass front sits at the CENTRE-RIGHT
+and is the anchor of the picture. The people stand along the covered walkway and the
+pavement in one horizontal band across the lower two thirds.
+
+SCALE — THE ADULTS ARE BIG: each standing adult is about 70% of the picture height, drawn
+from head to foot. Their heads must be large enough to read as faces in a small thumbnail.
+
+THE CAST — SIX people in THREE groups, spread left to right with clear gaps between them:
+  1. CENTRE, in front of the lit glass — THE MAIN GROUP, the largest figures. A CLINIC
+     MEMBER in pale sage-green scrubs stands talking with an OLD MAN who has stopped
+     beside his bicycle, one hand on the handlebar and the other raised mid-sentence.
+     They face each other in three-quarter view, in the middle of an easy everyday
+     conversation between neighbours.
+  2. LEFT — a YOUNG MOTHER in her thirties with a SMALL BOY of about five. The boy is up
+     on his toes, arm stretched out, waving and pointing across towards the two clinic
+     colleagues at the right; he is delighted. His mother bends slightly, holding his
+     other hand, looking where he points and smiling.
+  3. RIGHT — TWO CLINIC COLLEAGUES walking along the pavement, one in a white coat over
+     scrubs, the other in scrubs holding a cold drink. THEY BOTH NOTICE THE BOY AND
+     ANSWER HIM: the one in the white coat has turned towards him and is WAVING BACK,
+     hand up and open, smiling; the other has turned her head to the boy and his mother
+     with a knowing, amused smile, as if to say "there he is again". Their bodies still
+     face the direction they are walking; only their heads and one arm turn.
+     A SCHOOLGIRL rides past on a bicycle in front of them, cut off by the right edge.
+THE BOY'S WAVE AND THE COLLEAGUES' ANSWER ARE THE ONE CONNECTION ACROSS THE PICTURE.
+Everyone else stays inside their own group. Nobody is greeting a customer, nobody holds
+out an inviting palm, nobody bows, nobody queues, nobody is being escorted inside.
+
+EVERYONE LOOKS DIFFERENT — no two people in this picture may look alike. Give each a
+clearly different age, build, hairstyle and clothing colour: the old man is thin with
+short grey hair and a brown polo shirt; the young mother has shoulder-length dark hair, a
+coral top and jeans; the small boy has a round face and a pale blue tee; the clinic member
+in the centre wears her hair tied back; the colleague in the white coat has short hair;
+the colleague with the drink has a low ponytail; the schoolgirl has a high ponytail, white
+school shirt and navy skirt. There is only ONE old person. Never draw the same face twice.
+
+EVERY PERSON IS DRAWN WITH EXACTLY THE SAME LINE WEIGHT, THE SAME LINE DARKNESS AND THE
+SAME SOLIDITY OF COLOUR. A figure further away is made secondary ONLY by being smaller or
+partly overlapped — NEVER by pale, thin, faint, washed-out, semi-transparent or
+outline-only drawing. Nobody wears a mask, nobody holds any dental instrument.
+
+WHAT ELSE IS IN THE PICTURE — a few large, simple things: two healthy potted plants
+against the wall, a low wooden stool, the old man's bicycle, a scooter parked and cropped
+by the LEFT edge, and the warm light from the glass spilling onto the walkway. Nothing
+small or fussy: no posters, no meter boxes, no hanging cables, no bins, no banners.
+
+MOVEMENT MARKS — small white hand-drawn strokes, two or three short lines at a time,
+placed just outside a moving thing: beside the boy's waving arm, beside the schoolgirl's
+wheel, beside a waving hand. Chalk-like, light and quick. They NEVER emerge from anyone's
+mouth, nose or body, never loop, never cross, never form a long ribbon.
+
+KEEP THE LOWER LEFT CORNER QUIET — the rectangle covering the LEFT 34% of the width and
+the BOTTOM 30% of the height holds only the swept pavement, a soft shadow and the cropped
+body of the parked scooter: large calm shapes, no face, no hands, no small detail. Quiet
+does NOT mean empty or colourless.
+
+FILL THE FRAME — the picture must never look empty or still. No large flat blank field
+anywhere; no single area of one flat colour may take up more than about a tenth of the
+picture.
+
+LIGHT — clean, bright mid-afternoon daylight outside, gentle and even. The ONE warm light
+is the glow from inside the glass front, falling on the people nearest it and on the
+walkway floor. NOT a sunset, no orange sky, no long orange shadows, no night scene, no
+dramatic contrast, no gloom.
+
+STYLE — Contemporary printed-magazine editorial illustration. Linework in warm dark brown
+or soft charcoal, NEVER pure black: thin, hand-drawn, weight varies, strokes taper and
+sometimes break. Colour applied like soft coloured pencil and light marker, edges a little
+loose and not always meeting the line. Flat fills with two or three tones per hue, no
+smooth decorative gradients. A fine even paper grain over the whole image. The building is
+drawn the same way as the people — hand-drawn and simplified, NEVER photographic, no
+photo texture, no reflections, no perspective distortion.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face is a single flat tone
+with no modelling. A face carries only six things — its outline, eyes, eyebrows, nose,
+mouth and ears. No wrinkles, no cheekbone or jaw shading, no shadow under the eyes, no
+nose-to-mouth lines, no blush. Eyes are simple dots or short lines.
+
+COLOUR — clear, warm and lively, never dull and never washed out: most colour blocks sit
+around HSL saturation 30-50 and lightness 65-82, and well over half of the picture carries
+real colour. The building itself is quiet — pale warm grey concrete, dark chocolate-brown
+metal columns and window boxes — so THE COLOUR MUST COME FROM EVERYTHING ELSE: the warm
+amber glow through the glass and the pale honey wood inside; clinic scrubs in pale sage
+(#bfd7b7 with #99b899 in the folds); the old man in warm brown; the young mother in muted
+coral; the small boy in pale blue; the schoolgirl in white and navy; deep green foliage; a
+warm red awning at the right edge; a warm sandy pavement. Keep the concrete WARM grey,
+never a cold blue-grey, and never let the whole picture go grey — at least seven distinct
+colours must be readable at thumbnail size. Hair is very dark and warm-toned (#374840,
+shading to #283930, with #404f47 highlights) — never flat pure black, never brown or
+auburn, except the old man's grey hair. Clothes are never flat single-tone shapes: two or
+three tones each, with folds, collar, cuffs and hem drawn.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions or watermarks, in any language. THE SIGN PANEL ABOVE THE GLASS IS
+COMPLETELY BLANK, and so is the neighbour's awning — even though the real building has
+lettering there, leave both surfaces plain and empty. The scooter, the drink cup, the
+school bag and all clothing carry no writing.
+
+AVOID — a still, quiet, staged or empty picture; only one thing happening; a child
+pointing or waving with nobody answering him; a shop-front welcome, an inviting open palm,
+a bow, a queue, a customer being received; two people who look alike; every patient being
+elderly; a faded, pale, translucent or ghostly figure; any person drawn with lighter or
+thinner lines than the others; small distant figures; large empty walls or pavement;
+photographic rendering of the building, photo texture, glass reflections, lens
+perspective; peeling paint, cracks, stains, rust, litter; a derelict or melancholy
+atmosphere; a cold grey overall cast; panels or split screens; speech bubbles; magnified
+insets; arrows or icons; a dense crowd or more than six people; anything small and fussy
+in the lower-left corner; teeth, tooth models, dental chairs, instruments, X-rays or
+clinical equipment; masks; anyone looking at the viewer; greyscale; photorealism; thick
+uniform black outlines; chrome or iridescent gradients; faceless figures, oversized heads
+or noodle limbs; blood, pain or fear; sunset or night lighting.
+```
+
+## 第四版的提示詞（使用者說「很棒」，第五版是從這一份改的，只換了立面與右邊那組）
+
+<details><summary>展開</summary>
 
 ## 提示詞（第四版，逐字，可直接複製）
 
@@ -240,6 +457,8 @@ any kind; masks; anyone looking at the viewer; greyscale; photorealism; thick un
 black outlines; chrome or iridescent gradients; faceless figures, oversized heads or
 noodle limbs; blood, pain or fear; sunset or night lighting.
 ```
+
+</details>
 
 ## 第三版的提示詞（已作廢，留著看推導）
 
