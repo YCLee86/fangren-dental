@@ -227,8 +227,30 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
      只寫地名等於沒事做、反而是診所名那行短一截（站上 2026-08-14 修過同一件事）
    ・字級比值 ＝ 手機版的 2.95vw ÷ 3.81072vw ＝ **0.774**（電腦版是 .736，不一樣）
    ⚠ white-space: nowrap 留著不影響 justify（站上實測仍是一行）。 */
+/* ⚠⚠ 下面每一個係數都是**在 390×844 上打開 index.html 量回來的**
+   （2026-08-22 使用者拿他手機的截圖對照：「跟我手機上看到的很不一樣」）。
+   第一版是照著記憶中的規則寫的，四項全錯，而且錯的都是**比例**：
+
+     量到的（未捲動，主名 14.8618px）        第一版      現在
+     標誌寬 ÷ 主名字級      2.156            1.759      2.156
+     標誌與字的間距 ÷ 主名  0.807            0.333      0.807
+     主名的字重            700               500        700
+     主名的字距            .01em             .06em      .01em
+     地名的字重            400               500        500（只有 500/700 兩個子集）
+     行高                  兩行都 1.3、緊貼    1 ＋ 4.8px margin   兩行都 1.3、緊貼
+
+   ⚠ 標誌小了 18%、間距只有一半 —— 那兩項是「看起來不一樣」的主因，
+     不是字級（字級比值 0.774 第一版就是對的）。
+   ⚠ 主名的字距從 .06 改回 .01em 不是美感，是**讓 justify 回到首頁那個狀態**：
+     .01em 時主名 181.8 比地名 193 窄，被撐開的是主名、每格 0.073em
+     （首頁量到 0.076em）；.06em 時兩行剛好一樣寬，justify 等於沒作用。
+   ⚠ 地名站上是 400，這裡只有 500 —— 子集只做了 500/700 兩個字重，
+     而且 250px 的卡片上細一階反而更難讀，刻意不補。
+   ⚠ 站上宣告的是 "Noto Sans TC" 但**沒有載任何 webfont**，所以使用者的 iPhone
+     其實是 PingFang。這一支用 Noto Sans TC（宣告的第一順位），字形本來就會有差。 */
 .stack{display:inline-block;width:max-content}
 .stack .clinic,.stack .loc{display:block;text-align:justify;text-align-last:justify}
+.stack .clinic{font-weight:700;letter-spacing:.01em;line-height:1.3}
 /* ⚠⚠ 窄的那一行被撐開太多的時候就不要 justify（下面那段量測會自己掛上這個 class）——
    首頁上兩行的自然寬只差 6%（地名 8 個字比診所名 6 個字**還寬一點**，
    被拉開的是診所名、每格只多 0.076em，看不出來）；
@@ -236,9 +258,13 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
    讀起來是「雲　林　斗　六」四個孤字。 */
 body.nojustify .stack .loc{text-align-last:right}
 body.nojustify-clinic .stack .clinic{text-align-last:right}
-.stack .loc{position:static;padding-left:0;font-size:${(G_CLINIC_FS * 0.774).toFixed(1)}px;
-  line-height:1.3;margin-top:${(G_CLINIC_FS * 0.16).toFixed(1)}px}
+.stack .loc{position:static;padding-left:0;font-size:${(G_CLINIC_FS * 0.774).toFixed(2)}px;
+  line-height:1.3;letter-spacing:.04em;margin-top:0}
 .stack .loc::before{display:none}
+/* 標誌與間距整組跟著主名的字級長（係數同上表）。 */
+.right.stacked{gap:${(G_CLINIC_FS * 0.807).toFixed(1)}px}
+.right.stacked svg{height:${(G_CLINIC_FS * 2.156 / 2.02918).toFixed(2)}px;
+  width:${(G_CLINIC_FS * 2.156).toFixed(2)}px}
 </style>
 <img class="bg" src="${imgUri}">
 <div class="band">
@@ -246,7 +272,7 @@ body.nojustify-clinic .stack .clinic{text-align-last:right}
     <span class="name">${label}</span>
     ${LOC_TEXT && LOCPOS === "left" ? `<span class="loc">${LOC_TEXT}</span>` : ""}
   </span>
-  <span class="right">
+  <span class="right${LOCPOS === "stack" && LOC_TEXT ? " stacked" : ""}">
     <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true" style="color:${PAPER}">${logoInner}</svg>
     <span class="${LOCPOS === "stack" && LOC_TEXT ? "stack" : "pair"}">
       <span class="clinic">芳仁牙醫診所</span>
