@@ -104,6 +104,10 @@ const tintIdx = args.indexOf("--tint");
 const TINT = tintIdx >= 0 ? Number(args[tintIdx + 1]) : 0.70;  // 玻璃的濃度（實測值，見檔頭）
 const inkIdx = args.indexOf("--ink");
 const INK = inkIdx >= 0 ? Number(args[inkIdx + 1]) : 0.18;     // 玻璃底下墊的那層墨（撐對比用）
+const locIdx = args.indexOf("--loc");
+const LOC = locIdx >= 0 ? args[locIdx + 1] : "none";  // none／city（雲林斗六）／full（雲林斗六・永樂街）
+const LOC_TEXT = { none: "", city: "雲林斗六", full: "雲林斗六・永樂街" }[LOC];
+if (LOC_TEXT === undefined) { console.error("--loc 只能是 none / city / full"); process.exit(1); }
 const shadeIdx = args.indexOf("--shade");
 const SHADE = shadeIdx >= 0 ? args[shadeIdx + 1] : "deep";     // deep＝深階（預設，對比撐得住）／accent＝套色
 const posIdx = args.indexOf("--pos");
@@ -150,7 +154,8 @@ const LOGO_GAP = 10;       // 標誌與六個字之間
 
 /* 玻璃帶的幾何（1200×628 上）。⚠ 字級照 250px 的卡片回推：
    科別名 46px → 卡片上 9.6px、診所名 30px → 6.3px（和標誌一起讀）。 */
-const BAND_H = 104;
+const BAND_H = LOC === "none" ? 104 : 128;
+const G_LOC_FS = 27;
 const BAND_PAD = 38;
 const G_NAME_FS = 46;
 const G_CLINIC_FS = 30;
@@ -180,6 +185,10 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
   backdrop-filter:blur(18px) saturate(1.12);
   -webkit-backdrop-filter:blur(18px) saturate(1.12);
   border-bottom:1px solid rgba(${pr},${pg_},${pb},.30)}
+.left{display:flex;flex-direction:column;gap:9px}
+.loc{font-family:"NotoTC";font-weight:500;font-size:${G_LOC_FS}px;line-height:1;
+  color:${PAPER};opacity:.82;letter-spacing:.10em;white-space:nowrap;
+  text-shadow:0 1px 2px rgba(20,24,20,.28)}
 .name{font-family:"NotoTC";font-weight:700;font-size:${G_NAME_FS}px;line-height:1;
   color:${PAPER};letter-spacing:.03em;white-space:nowrap;
   text-shadow:0 1px 2px rgba(20,24,20,.28)}
@@ -192,7 +201,10 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
 </style>
 <img class="bg" src="${imgUri}">
 <div class="band">
-  <span class="name">${label}</span>
+  <span class="left">
+    <span class="name">${label}</span>
+    ${LOC_TEXT ? `<span class="loc">${LOC_TEXT}</span>` : ""}
+  </span>
   <span class="right">
     <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true" style="color:${PAPER}">${logoInner}</svg>
     <span class="clinic">芳仁牙醫診所</span>
