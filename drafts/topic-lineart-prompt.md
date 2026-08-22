@@ -1,8 +1,39 @@
 # 著陸頁的線稿底圖・提示詞（`lineart-general`）
 
-**狀態：待出圖（2026-08-22 立）。** 這是**改用生成**的第一版 ——
+**狀態：第二版待出圖（2026-08-22）。** 這是**改用生成**的路線 ——
 前面兩輪走的是「從既有插畫抽線稿」，使用者看過之後：
 **「我覺得這不是我要的，跟我找的範例還是差很多。你們做成圖片提示詞好了。」**
+
+## 第一版（`drafts/lineart-general-v1.jpg`）的結果：**風格過了，內容錯了**
+
+使用者：**「風格對了，不過細節跑掉了。右邊女生的髮型和表情、左邊男生的姿勢，
+現在變成彼此互看，而且男生這個對前方招手很像選舉看板，
+跟原圖輕鬆親切的和別人打招呼不一樣。」**
+
+風格這一側**每一格都過**（`node drafts/lineart-measure.mjs drafts/lineart-general-v1.jpg`）：
+
+| | v1 | 門檻 |
+| --- | --- | --- |
+| 線佔畫面 | 6.4% | 4~6%（略高） |
+| 筆畫寬中位 | 6.8‰ | 4~6‰（略粗） |
+| **粗細一致（p90 ÷ 中位）** | **1.43** | < 2.5 ✅ |
+| 實心填色 | 0 塊（最高填滿率 .13） | 0 ✅ |
+| 四角 | 0／0／0／0 | 沒有墨 ✅ |
+
+⚠⚠ **四件錯的裡面有三件是我自己的提示詞寫出來的**，不是模型亂畫 ——
+下一版的修法就是把這三句改掉：
+
+| 使用者說的 | 我原本寫的那一句 | 為什麼會變那樣 |
+| --- | --- | --- |
+| 「彼此互看」 | `turned slightly towards the dentist, mid-conversation` | 我叫她轉向他。原圖裡**兩個人都看著畫面外的左邊，誰都沒有看誰** |
+| 「很像選舉看板」 | `one hand raised in a relaxed, everyday wave` | 「relaxed」是形容詞，擋不住**正面、對稱、五指張開的平掌**。要寫**幾何**：手只抬到肩膀高、手肘收在身側、掌心斜的、手指鬆 |
+| 「髮型」 | `Hair is drawn as an OUTLINE ONLY` | 只講了畫法，**沒講是什麼髮型**。原圖是**紮起來的低馬尾**，v1 給了一頭放下來的鮑伯 |
+| 「表情」 | （沒寫） | 原圖她**嘴巴是張開的，正在講話**；v1 是閉著嘴微笑 |
+
+⚠ 通則：**動作、髮型、視線方向這種「形狀」，用文字形容一定會漂**
+（ILLUSTRATION.md 第十之一節）。第二版一律**附參考圖**：
+`drafts/lineart-pose-ref.png`（原圖那兩個人的乾淨裁切，774×990，**含腿**，
+腿留著是因為「走著」這件事是靠步伐讀出來的）。
 
 用途：一般牙科著陸頁 `/topics/general/` 介紹區塊右邊那塊空白的**底圖**。
 規格與位置的推導在 `/history/topic-lineart.html`（定案後），
@@ -73,7 +104,10 @@
 > ⚠ **一定要把使用者那五張參考圖一起附上**，並註明：
 > 「**只參考這幾張的線條畫法**（均勻粗細、無濃淡、無陰影、無材質、大量留白）；
 > 　**不要參考它們的題材、人物、道具**。」
-> ⚠ 另外附 `assets/og-topic-general.jpg`（或 `drafts/og-topic-general-src.jpg`），註明：
+> ⚠⚠ **第二版一定要附 `drafts/lineart-pose-ref.png`**（原圖那兩個人的乾淨裁切），
+> 並註明：「**姿勢、視線方向、髮型、表情、手的高度與角度，完全照這張**；
+> 　但**畫法照那五張線稿**，而且**畫到腰就好，不要畫腿**。」
+> ⚠ 另附 `assets/og-topic-general.jpg`（或 `drafts/og-topic-general-src.jpg`），註明：
 > 「**人物長相、服裝、年齡層照這張**，但**畫法完全不同** —— 那張是上色插畫，
 > 　這一張要的是上面那五張的線稿畫法。」
 
@@ -89,23 +123,49 @@ NO SHADING OF ANY KIND — no hatching, no cross-hatching, no stippling, no scre
 no gradients, no grey tones, no drop shadows, no cast shadows on the ground, no highlights.
 Outline only. Do not fill any area with solid colour, including hair and clothing.
 
-WHO — two clinic staff of a small Taiwanese neighbourhood dental clinic, standing side by
-side, seen from the WAIST UP:
-  - LEFT: a dentist in an open white coat over a plain V-neck top, one hand raised in a
-    relaxed, everyday wave — a greeting to someone passing by, not a posed salute.
-  - RIGHT: a dental assistant in plain short-sleeved scrubs, holding a drink cup in one
-    hand, turned slightly towards the dentist, mid-conversation, smiling.
-Both are ordinary Taiwanese adults in their thirties, relaxed and natural, mid-motion.
-They are talking to someone OFF-FRAME to the left; neither looks at the viewer.
+WHO — two staff of a small Taiwanese neighbourhood dental clinic, WALKING FORWARD side by
+side, seen from the WAIST UP. Follow the attached photo-reference for pose, gaze, hair and
+expression EXACTLY; only the drawing style comes from the line-art references.
 
-FACES — extremely simple: eyes are small solid dots or short curved strokes, the mouth is
-one short line, the nose is one tiny stroke or omitted. No eyebrows detail, no eyelashes,
-no blush, no wrinkles. Hair is drawn as an OUTLINE ONLY with a few interior strokes for
-the parting — it must not be filled in.
+  - LEFT — a male dentist, mid-thirties, short dark hair, in an OPEN white coat worn over a
+    V-neck scrub top. He is mid-stride: his body is in THREE-QUARTER view, one shoulder
+    forward, NOT square to the viewer. His near arm is raised in a small, casual wave to
+    someone OFF-FRAME beyond the LEFT EDGE of the picture:
+      * the elbow stays bent and close to his side;
+      * the hand rises only to about the height of his own chin, NOT above his head;
+      * the palm is turned outward at an ANGLE, seen partly edge-on, not flat to the viewer;
+      * the fingers are relaxed and slightly curved, close together, NOT a stiff spread fan.
+    His other hand rests near his coat pocket. He is looking in the direction he is waving —
+    forward and off to the LEFT — with a small open-mouthed smile.
+
+  - RIGHT — a female dental assistant, mid-thirties, in a plain short-sleeved V-neck scrub
+    top. Her hair is TIED BACK IN A LOW PONYTAIL that falls over one shoulder, with a
+    side-parted fringe — it is NOT loose, NOT a bob, NOT shoulder-length hanging hair. She
+    holds a lidded iced-drink cup in one hand at chest height. Her MOUTH IS OPEN, a small
+    oval — she is in the middle of saying something. She is also facing FORWARD AND TO THE
+    LEFT, walking alongside him.
+
+⚠ CRITICAL — THE TWO PEOPLE DO NOT LOOK AT EACH OTHER. Both faces point the same way:
+forward and off-frame to the LEFT. Neither turns towards the other, and neither looks at
+the viewer. This is two colleagues walking past and greeting someone they know, caught in
+passing — NOT a portrait, NOT a posed pair, NOT a conversation between the two of them.
+
+⚠ CRITICAL — NOT A CAMPAIGN-POSTER WAVE. Do not draw a frontal, symmetrical figure with a
+straight arm and an open flat palm held up beside the head. That is a politician's salute
+and it is wrong. The wave is small, low, angled and off-hand.
+
+FACES — extremely simple: eyes are small solid dots or short curved strokes, the nose is
+one tiny stroke or omitted. No eyebrow detail, no eyelashes, no blush, no wrinkles.
+The man's mouth is a short open curve (smiling, talking); the woman's mouth is a small
+open oval (mid-speech). Hair is drawn as an OUTLINE ONLY with a few interior strokes for
+the parting and the ponytail — it must not be filled in.
 
 COMPOSITION — the two figures together occupy the middle of the square and about 70% of
-its height. Generous empty margin on all four sides. They are cropped at the waist by a
-clean horizontal edge at the bottom of their bodies — no legs, no belt line detail.
+its height, overlapping slightly as walking companions do (he is a little ahead of her).
+Generous empty margin on all four sides. They are cropped at the waist by a clean
+horizontal edge at the bottom of their bodies — no legs, no belt line detail.
+Optionally, two or three short arc strokes beside the raised hand to suggest the movement,
+as in the photo-reference. Nothing else.
 
 BACKGROUND — completely empty. No room, no doorway, no window, no wall, no floor, no
 furniture, no plants, no street, no clinic sign, no speech bubbles, no icons, no arrows,
@@ -130,14 +190,29 @@ with a lot of white space.
 
 ## 交件前要過的門檻（出圖後自己量，不過就重生）
 
+### 風格這一側 —— 跑腳本
+
+    node drafts/lineart-measure.mjs drafts/lineart-general-v2.jpg
+
 | | 門檻 | 怎麼量 |
 | --- | --- | --- |
-| 線佔畫面 | **4~6%** | 亮度 < 128 的像素比例 |
-| 筆畫寬中位 | **畫面寬的 4~6‰** | 每一列連續暗像素的長度取中位 |
-| 粗細一致 | 90 百分位 ÷ 中位 **< 2.5** | 同上（參考圖是 2.0~3.6，含交叉處） |
-| 明顯的灰階 | **越少越好** | 亮度直方圖裡佔比 > 0.05% 的階數 |
-| 有沒有實心填色 | **0 塊** | 連通的暗區域面積 > 畫面 0.5% 就是填色 |
+| 線佔畫面 | **4~6%** | 底色與純黑之間 35% 處當門檻，數暗像素比例 |
+| 筆畫寬中位 | **畫面寬的 4~6‰** | 每個墨像素取「橫向連續長」與「縱向連續長」**較小的那個**，再取中位 |
+| 粗細一致 | 90 百分位 ÷ 中位 **< 2.5** | 同上（v1 是 1.43） |
+| 明顯的灰階 | **越少越好** | 亮度直方圖裡佔比 > 0.05% 的階數（JPEG 的抗鋸齒會佔掉二三十階，正常） |
+| 有沒有實心填色 | **0 塊** | ⚠ **不能只看面積** —— 一整個人的輪廓也是一大塊連通區域，但它是空心的。要看**填滿自己外接矩形多少**，> 0.5 才算填色（v1 最高 0.13） |
 | 背景乾淨 | 四角各 10% 的方塊裡**沒有墨** | 直接取那四塊算 |
+
+⚠ 筆畫寬**不能只掃橫向** —— 一條水平的線在橫向會量成「整條線那麼長」。
+取橫縱較小值才是真正的筆畫寬。
+
+### 內容這一側 —— 逐條看圖（v1 就是這四條全錯）
+
+1. **兩個人的臉朝同一個方向（畫面外的左邊），誰都沒有看誰。**
+2. **男生的手只抬到下巴高、手肘收在身側、掌心是斜的、手指鬆。**
+   正面對稱的平掌 ＝ 選舉看板 ＝ 重生。
+3. **女生的頭髮是紮起來的低馬尾**（不是放下來的鮑伯）。
+4. **女生的嘴巴是張開的**（正在講話），不是閉著微笑。
 
 ---
 
