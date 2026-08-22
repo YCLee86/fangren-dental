@@ -109,7 +109,11 @@ const LOC = locIdx >= 0 ? args[locIdx + 1] : "none";  // none／city（雲林斗
 const LOC_TEXT = { none: "", city: "雲林斗六", full: "雲林斗六・永樂街" }[LOC];
 if (LOC_TEXT === undefined) { console.error("--loc 只能是 none / city / full"); process.exit(1); }
 const lpIdx = args.indexOf("--locpos");
-const LOCPOS = lpIdx >= 0 ? args[lpIdx + 1] : "right";   // right＝跟著診所名（同首頁）／left＝跟著科別名
+/* right＝跟著診所名並排（＝首頁**電腦版**的 .brand-text）
+   left ＝跟著科別名並排
+   stack＝**手機版首頁**那種上下兩行（見下面 .stack 那一段的註解） */
+const LOCPOS = lpIdx >= 0 ? args[lpIdx + 1] : "right";
+if (!["right", "left", "stack"].includes(LOCPOS)) { console.error("--locpos 只能是 right / left / stack"); process.exit(1); }
 const shadeIdx = args.indexOf("--shade");
 const SHADE = shadeIdx >= 0 ? args[shadeIdx + 1] : "deep";     // deep＝深階（預設，對比撐得住）／accent＝套色
 const posIdx = args.indexOf("--pos");
@@ -210,6 +214,31 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
 .clinic{font-family:"NotoTC";font-weight:500;font-size:${G_CLINIC_FS}px;line-height:1;
   color:${PAPER};letter-spacing:.06em;white-space:nowrap;
   text-shadow:0 1px 2px rgba(20,24,20,.28)}
+/* ⚠ --locpos stack ＝ **手機版首頁**那一種排法，四件事都是照 index.html
+   max-width: 720px 那一段逐條抄的（2026-08-22）。
+   ⚠ 這一段是模板字串裡的 CSS 註解，**不能出現反引號**（CLAUDE.md 第九節）：
+   ・上下兩行（.brand-text 改成 display:block，b 與 small **都要**改成 block ——
+     只改外層的話兩個行內元素仍然排在同一行，那是站上踩過的坑）
+   ・**細豎線與左內距一起拿掉**（small::before 設成 display:none）——
+     豎線是「並排」才需要的分隔，疊成兩行還留著就變成一條沒有意義的線
+   ・**兩行都要 text-align-last: justify**，區塊寬 ＝ 較寬的那一行，
+     窄的那一行把字距拉開填滿 → 左右緣切齊。⚠ 兩行都要寫：
+     地名 8 個字、診所名 6 個字，比值 0.774 > 6/8，**較寬的是地名那一行**，
+     只寫地名等於沒事做、反而是診所名那行短一截（站上 2026-08-14 修過同一件事）
+   ・字級比值 ＝ 手機版的 2.95vw ÷ 3.81072vw ＝ **0.774**（電腦版是 .736，不一樣）
+   ⚠ white-space: nowrap 留著不影響 justify（站上實測仍是一行）。 */
+.stack{display:inline-block;width:max-content}
+.stack .clinic,.stack .loc{display:block;text-align:justify;text-align-last:justify}
+/* ⚠⚠ 窄的那一行被撐開太多的時候就不要 justify（下面那段量測會自己掛上這個 class）——
+   首頁上兩行的自然寬只差 6%（地名 8 個字比診所名 6 個字**還寬一點**，
+   被拉開的是診所名、每格只多 0.076em，看不出來）；
+   換成「雲林斗六」四個字就反過來，每格要多 1.35em ＝ 首頁的十八倍，
+   讀起來是「雲　林　斗　六」四個孤字。 */
+body.nojustify .stack .loc{text-align-last:right}
+body.nojustify-clinic .stack .clinic{text-align-last:right}
+.stack .loc{position:static;padding-left:0;font-size:${(G_CLINIC_FS * 0.774).toFixed(1)}px;
+  line-height:1.3;margin-top:${(G_CLINIC_FS * 0.16).toFixed(1)}px}
+.stack .loc::before{display:none}
 </style>
 <img class="bg" src="${imgUri}">
 <div class="band">
@@ -219,9 +248,9 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
   </span>
   <span class="right">
     <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true" style="color:${PAPER}">${logoInner}</svg>
-    <span class="pair">
+    <span class="${LOCPOS === "stack" && LOC_TEXT ? "stack" : "pair"}">
       <span class="clinic">芳仁牙醫診所</span>
-      ${LOC_TEXT && LOCPOS === "right" ? `<span class="loc">${LOC_TEXT}</span>` : ""}
+      ${LOC_TEXT && (LOCPOS === "right" || LOCPOS === "stack") ? `<span class="loc">${LOC_TEXT}</span>` : ""}
     </span>
   </span>
 </div>`;
@@ -262,6 +291,41 @@ const pg = await browser.newPage({ viewport: { width: W, height: H }, deviceScal
 await pg.setContent(STYLE === "glass" ? glassHtml : html, { waitUntil: "load" });
 await pg.evaluate(() => document.fonts.ready);
 await pg.evaluate(() => Promise.all(Array.from(document.images).map((i) => i.decode().catch(() => {}))));
+
+/* --locpos stack：量兩行的**自然寬**，算出 justify 會在每一格塞多少。
+   ⚠ 量法是把那一行複製到畫面外、關掉 justify、寬度設成 max-content ——
+     直接讀 scrollWidth 沒有用，那一行已經被撐滿了，讀回來的就是容器寬。
+   門檻 0.15em ＝ 首頁那 0.076em 的兩倍，留一點餘裕但擋得住四個字的情形。 */
+if (STYLE === "glass" && LOCPOS === "stack" && LOC_TEXT) {
+  const m = await pg.evaluate(() => {
+    /* ⚠ 複本一定要掛在**原本那個父層底下**（2026-08-22 踩過）：
+       掛到 document.body 上，`.stack .loc` 這種後代選擇器就不再命中，
+       字級掉回 body 的 16px —— 量到的寬度是錯的（地名量成 139 而不是 193），
+       算出來的撐開量因此偏大，門檻永遠過不了。 */
+    const nat = (el) => {
+      const c = el.cloneNode(true);
+      c.style.cssText += ";position:absolute;left:-9999px;top:0;display:inline-block;width:max-content;text-align-last:auto;text-align:left";
+      el.parentNode.appendChild(c);
+      const w = c.getBoundingClientRect().width;
+      c.remove();
+      return w;
+    };
+    const one = (sel) => {
+      const el = document.querySelector(sel);
+      return { w: nat(el), gaps: el.textContent.trim().length - 1, fs: parseFloat(getComputedStyle(el).fontSize) };
+    };
+    return { clinic: one(".stack .clinic"), loc: one(".stack .loc") };
+  });
+  /* 被撐開的是**窄的那一行**，所以兩個方向都要看（首頁上被撐的其實是診所名）。 */
+  const narrow = m.clinic.w < m.loc.w ? "clinic" : "loc";
+  const extra = Math.abs(m.clinic.w - m.loc.w) / m[narrow].gaps / m[narrow].fs;
+  console.log(`兩行自然寬：診所名 ${m.clinic.w.toFixed(1)} ・地名 ${m.loc.w.toFixed(1)}` +
+              `　→ ${narrow === "loc" ? "地名" : "診所名"}每格要撐 ${extra.toFixed(3)}em（首頁是 0.076em）`);
+  if (extra > 0.15) {
+    await pg.evaluate((n) => document.body.classList.add(n === "loc" ? "nojustify" : "nojustify-clinic"), narrow);
+    console.log("  ⚠ 超過 0.15em，那一行不 justify，改成靠右切齊（不然會變成一排孤字）");
+  }
+}
 
 /* 驗一件：牌子有沒有壓到臉或手 —— 構圖時左下角就留成安靜區，
    這裡量牌子佔畫面多大，超過一半就是版面出事了。 */
