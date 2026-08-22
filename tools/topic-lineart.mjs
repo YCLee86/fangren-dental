@@ -14,7 +14,20 @@
  *   **「比周圍暗多少」**（局部平均 − 自己）：大片暗區裡的局部平均也是暗的，
  *   差值自然小，所以只有**筆畫**留得下來。
  *
- * ⚠ 四邊要淡出（smoothstep），不然它是一個有邊的方塊，貼在頁面上很突兀。
+ * ⚠⚠ **線一律平塗，alpha 只有 0 或 1**（2026-08-22 使用者看過五張參考圖之後指定：
+ *   「注意到這些風格的類似相同特色 —— 他們的線條沒有分濃度，我要的是這樣。
+ *     把線條再單純一點，主題色的濃淡效果我來選」）。
+ *   第一版用軟漸變（alpha 跟著「暗多少」連續變化），做出來是**鉛筆素描**不是線稿。
+ *   ⚠ 濃淡由**頁面那一側的 opacity** 統一控制，不要回到圖裡做。
+ *
+ * ⚠⚠ **要先放大再取線，取完再侵蝕收細。** 原圖那一段只有 228px 寬、筆畫本身
+ *   就佔 2~3px，直接取線的話線寬佔畫面 1/76，而參考圖大約是 1/300 —— 太粗。
+ *   做法：裁切放大 4 倍（局部平均的半徑與取樣間隔跟著乘）→ 二值化 → 侵蝕 3 次。
+ *   **輸出留在放大後的解析度**，擺到頁面上（約 300px 寬）筆畫才會細。
+ *   ⚠ 侵蝕 5 次以上淡的線會先斷掉（男醫師的五官會不見），3 是實測的上限。
+ *
+ * ⚠ **不做四邊淡出** —— 淡出本身就是一種濃淡變化，和「線不分濃度」互相矛盾。
+ *   參考圖也都是規規矩矩的長方形，內容自己收在裡面。
  *
  * ⚠ 顏色取 PALETTE.md 各科的**套色**那一階 —— 這是「填在頁面上的圖形」不是
  *   白底上的字，用深階會太重。實際濃度由頁面那一側的 opacity 控制。
@@ -45,9 +58,11 @@ const REGIONS = {
   },
 };
 
-/* 線稿的參數。三組都試過，中間那一組線最完整又不糊（見 /history/topic-lineart.html）。 */
-const P = { r: 7, t0: 12, t1: 56, gamma: 1.0 };
-const FADE_X = 0.18, FADE_Y = 0.14;   // 四邊淡出佔的比例
+/* 線稿的參數（都是實測出來的，見上面檔頭）：
+   SCALE 放大倍率／R 局部平均的半徑（在放大後的解析度上）／
+   T 二值化門檻（愈高，愈細的紋理線愈早消失）／ERODE 侵蝕幾次（收細）／
+   MIN_INK 清雜點：連通區域小於這個大小就丟掉。 */
+const SCALE = 4, R_MEAN = 7, T = 22, ERODE = 3;
 
 const args = process.argv.slice(2);
 const spec = args[0];
@@ -87,45 +102,71 @@ const browser = await chromium.launch({ executablePath: chromePath });
 const pg = await browser.newPage();
 const uri = `data:image/jpeg;base64,${fs.readFileSync(SRC).toString("base64")}`;
 
-const res = await pg.evaluate(async ({ uri, R, P, rgb, FADE_X, FADE_Y }) => {
+const res = await pg.evaluate(async ({ uri, R, rgb, SCALE, R_MEAN, T, ERODE }) => {
   const im = new Image(); im.src = uri; await im.decode();
   if (R.x + R.w > im.naturalWidth || R.y + R.h > im.naturalHeight) {
     return { err: `區塊超出原檔（原檔 ${im.naturalWidth}×${im.naturalHeight}）` };
   }
-  const c = document.createElement("canvas"); c.width = R.w; c.height = R.h;
+  const W = R.w * SCALE, H = R.h * SCALE;
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
   const g = c.getContext("2d", { willReadFrequently: true });
-  g.drawImage(im, R.x, R.y, R.w, R.h, 0, 0, R.w, R.h);
-  const d = g.getImageData(0, 0, R.w, R.h).data;
-  const L = new Float32Array(R.w * R.h);
+  g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high";
+  g.drawImage(im, R.x, R.y, R.w, R.h, 0, 0, W, H);
+  const d = g.getImageData(0, 0, W, H).data;
+  const L = new Float32Array(W * H);
   for (let i = 0, j = 0; i < d.length; i += 4, j++) L[j] = d[i] * .299 + d[i + 1] * .587 + d[i + 2] * .114;
-  /* 局部平均（方框，半徑 r，隔一格取樣就夠） */
-  const mean = new Float32Array(R.w * R.h);
-  for (let y = 0; y < R.h; y++) for (let x = 0; x < R.w; x++) {
+  /* 局部平均。⚠ 半徑與取樣間隔都要跟著放大倍率走，否則放大之後等於在看更細的尺度。 */
+  const r = R_MEAN * SCALE, step = SCALE;
+  const mean = new Float32Array(W * H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     let s = 0, n = 0;
-    for (let dy = -P.r; dy <= P.r; dy += 2) for (let dx = -P.r; dx <= P.r; dx += 2) {
+    for (let dy = -r; dy <= r; dy += step) for (let dx = -r; dx <= r; dx += step) {
       const yy = y + dy, xx = x + dx;
-      if (yy < 0 || yy >= R.h || xx < 0 || xx >= R.w) continue;
-      s += L[yy * R.w + xx]; n++;
+      if (yy < 0 || yy >= H || xx < 0 || xx >= W) continue;
+      s += L[yy * W + xx]; n++;
     }
-    mean[y * R.w + x] = s / n;
+    mean[y * W + x] = s / n;
   }
-  const S = (t) => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
-  const out = g.createImageData(R.w, R.h);
-  let ink = 0;
-  for (let j = 0, k = 0; j < L.length; j++, k += 4) {
-    let a = (mean[j] - L[j] - P.t0) / (P.t1 - P.t0);
-    a = Math.pow(Math.max(0, Math.min(1, a)), P.gamma);
-    const x = j % R.w, y = (j / R.w) | 0;
-    const fx = Math.min(S(x / (R.w * FADE_X)), S((R.w - 1 - x) / (R.w * FADE_X)));
-    const fy = Math.min(S(y / (R.h * FADE_Y)), S((R.h - 1 - y) / (R.h * FADE_Y)));
-    const A = a * fx * fy;
-    if (A > 0.5) ink++;
-    out.data[k] = rgb[0]; out.data[k + 1] = rgb[1]; out.data[k + 2] = rgb[2];
-    out.data[k + 3] = Math.round(A * 255);
+  /* 二值化 —— alpha 只有 0 或 1 */
+  let on = new Uint8Array(W * H);
+  for (let j = 0; j < L.length; j++) on[j] = (mean[j] - L[j]) > T ? 1 : 0;
+  /* 侵蝕收細（4 鄰域） */
+  for (let it = 0; it < ERODE; it++) {
+    const nx = new Uint8Array(W * H);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const j = y * W + x; if (!on[j]) continue;
+      const u = y > 0 ? on[j - W] : 0, dn = y < H - 1 ? on[j + W] : 0;
+      const l = x > 0 ? on[j - 1] : 0, rr = x < W - 1 ? on[j + 1] : 0;
+      nx[j] = (u && dn && l && rr) ? 1 : 0;
+    }
+    on = nx;
+  }
+  /* 清雜點：連通區域太小的丟掉（門檻跟著面積的倍率走） */
+  const lab = new Int32Array(W * H).fill(-1), size = [], st = new Int32Array(W * H);
+  let nl = 0;
+  for (let j = 0; j < on.length; j++) {
+    if (!on[j] || lab[j] >= 0) continue;
+    let sp = 0; st[sp++] = j; lab[j] = nl; let cnt = 0;
+    while (sp) {
+      const q = st[--sp]; cnt++; const qx = q % W, qy = (q / W) | 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const yy = qy + dy, xx = qx + dx;
+        if (yy < 0 || yy >= H || xx < 0 || xx >= W) continue;
+        const k = yy * W + xx; if (on[k] && lab[k] < 0) { lab[k] = nl; st[sp++] = k; }
+      }
+    }
+    size.push(cnt); nl++;
+  }
+  const MIN_INK = 14 * SCALE * SCALE / 3;
+  const out = g.createImageData(W, H); let ink = 0;
+  for (let j = 0, k = 0; j < on.length; j++, k += 4) {
+    const a = (on[j] && size[lab[j]] >= MIN_INK) ? 255 : 0;
+    if (a) ink++;
+    out.data[k] = rgb[0]; out.data[k + 1] = rgb[1]; out.data[k + 2] = rgb[2]; out.data[k + 3] = a;
   }
   g.putImageData(out, 0, 0);
-  return { data: c.toDataURL("image/png"), ink: ink / L.length };
-}, { uri, R, P, rgb, FADE_X, FADE_Y });
+  return { data: c.toDataURL("image/png"), ink: ink / (W * H), W, H };
+}, { uri, R, rgb, SCALE, R_MEAN, T, ERODE });
 await browser.close();
 
 if (res.err) { console.error("× " + res.err); process.exit(1); }
@@ -136,5 +177,5 @@ if (res.ink < 0.02) {
 }
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, Buffer.from(res.data.split(",")[1], "base64"));
-console.log(`${rk} ${R.name}　原檔 x${R.x} y${R.y} ${R.w}×${R.h}　線佔 ${(res.ink * 100).toFixed(1)}%`);
-console.log(`✓ ${path.relative(ROOT, OUT)}  ${R.w}×${R.h}  ${(fs.statSync(OUT).size / 1024).toFixed(1)}KB`);
+console.log(`${rk} ${R.name}　原檔 x${R.x} y${R.y} ${R.w}×${R.h} → 輸出 ${res.W}×${res.H}（放大 ${SCALE}×）　線佔 ${(res.ink * 100).toFixed(1)}%`);
+console.log(`✓ ${path.relative(ROOT, OUT)}  ${res.W}×${res.H}  ${(fs.statSync(OUT).size / 1024).toFixed(1)}KB`);
