@@ -43,16 +43,30 @@
      1983 年開的是中華路那間。 -->
 <meta name="theme-color" content="#12656a">
 <!-- 分享到 LINE／FB 時對方看到的卡片。這幾行畫面上看不到，只有各家的爬蟲會讀。
-     og:description 壓在 20 字上下，因為訊息 app 的氣泡只露兩行（實測 27 個全形字），
-     長度是收訊那一端決定的，我們只能控制字串本身。「1983年創立」擺最後，
-     接的是「巷口牙醫」不是「永樂街」—— 診所 1983 年是在中華路開的，順序寫反會讀錯。 -->
+     ⚠⚠ 2026-08-22 整組換掉了（推導在 /history/og-home.html）。
+     原本是「雲林斗六・永樂街｜巷口牙醫｜1983年創立」，三個問題：
+     ① 那是名錄式的三段並列，而站上現在的聲音是 HERO 那四句詩；
+     ② 「巷口牙醫」「創立」這兩個詞**站上一個字都沒有**（站上寫的是
+        「1983年 中華路開業」與「到巷口的芳仁　一起想辦法」）；
+     ③ 地名與 1983 那些事實**現在印在圖上了**，卡片上再寫一次是浪費那兩行。
+     現在只留詩的第四句，逐字取自站上已上線的那一行。
+     ⚠ 氣泡只露兩行（實測 27 個全形字），這一句 12 個字，一行就放得下。 -->
 <!-- 分隔符有兩階，不是隨便挑的：全形直線切三個並列的段落，
      中點只用在地址內部（縣市／街名）—— 那是同一段裡的細分，不該和上一階同重量。
      試過並否決的：全形空格（像 HERO 那首詩的斷句，刻意留白感）、
      連續兩個半形空格（以 HTML 解析的爬蟲會併成一個，寬度不保證）、
      整句都用中點（三顆同重量的點，讀起來碎）。 -->
 <meta property="og:site_name" content="芳仁牙醫診所">
-<!-- 原本沒設 og:image，那張夜景是 LINE 自己從頁面裡撿的 —— 版面一改就可能變成別張。 -->
+<!-- 原本沒設 og:image，那張夜景是 LINE 自己從頁面裡撿的 —— 版面一改就可能變成別張。
+     ⚠⚠ 2026-08-22 換成專門做的 assets/og-home.jpg（由 tools/og-home.mjs 產生）。
+     原本直接指 hero-clinic-night.jpg，量出來兩個問題：
+     ① **比例不對** —— 1600×1058 ＝ 1.512:1，而訊息卡是 1.91:1。
+        LINE **不裁圖**、照原比例顯示（從使用者的截圖量的：635×426 ＝ 1.491:1），
+        所以那張會長成一張**又高又暗**的卡：平均 L* 21.3、幾乎全黑 48.0%、
+        邊緣密度 16.9%，比 ILLUSTRATION.md 第十一節那張「像鬼屋欸」的失敗版還低。
+     ② **沒有識別** —— 照片裡診所自己的招牌在 212px 的卡上只有幾個像素寬，
+        而圖會單獨旅行（轉存再轉發時只剩圖），圖上的字是唯一還在的識別。
+     ⚠ 換圖或換那三格的數字要重跑 `node tools/og-home.mjs`。 -->
 <link rel="icon" href="../../assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，兩者刻意分開 ——
      差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
@@ -105,10 +119,10 @@
 <meta property="og:title" content="齒顎矯正 — 芳仁牙醫診所">
 <meta property="og:description" content="齒顎矯正｜排整齊只是一半 —— 咬得不對，拆掉之後很容易又跑回去。笑起來總想把嘴閉上，想弄很久了。矯正過一次，後來又跑掉了。">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://fangren.net/assets/hero-clinic-night.jpg">
-<meta property="og:image:width" content="1600">
-<meta property="og:image:height" content="1058">
-<meta property="og:image:alt" content="芳仁牙醫診所外觀，入夜後的永樂街街角">
+<meta property="og:image" content="https://fangren.net/assets/og-home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta property="og:image:alt" content="入夜後的永樂街街角，芳仁牙醫診所的清水模建築與亮著燈的騎樓；左上是診所標誌與名稱，下緣一條深色帶寫著 1983年中華路開業、9位醫師駐診、5個部定專科">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

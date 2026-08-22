@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>og-home｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>og-home — 分享首頁時對方看到的那張卡</h1>
+<p class="meta">
+  2026-08-22 開、當天定案上線<br>
+  原網址 <code>/preview/og-home/</code>（已刪除 2026-08-22）<br>
+  整頁還原：<code>git show 4102d6f:preview/og-home/index.html</code><br>
+  切換條 <code>?crop=now|wide|mid|full&amp;mark=none|tl&amp;stats=off|s12|s14|s16|s18</code><br>
+  產生器 <code>tools/og-home-preview.mjs</code>（一次性，定案時一併刪除）<br>
+  成品 <code>assets/og-home.jpg</code>，產圖 <code>tools/og-home.mjs</code>（**留在版控裡**，換照片或換那三格的數字要重跑）
+</p>
+
+<h2>定案</h2>
+<div class="note"><pre>裁切「寬」　＋　左上的標示　＋　下緣三格 1.8×
+描述文字：到巷口的芳仁　一起想辦法
+
+  node tools/og-home.mjs        （裡面就是那兩步：裁 1200×628 → 疊標示與三格）
+
+index.html 手寫的那組 og 一起改掉：
+  og:description  雲林斗六・永樂街｜巷口牙醫｜1983年創立  →  到巷口的芳仁　一起想辦法
+  og:image        hero-clinic-night.jpg（1600×1058）      →  og-home.jpg（1200×628）
+tools/topics.mjs 的 OG_FALLBACK 也一起換成 og-home.jpg（見最後一節）。
+
+⚠ 上線的那一張和提案頁 img-wide-tl-s18.jpg **逐位元組相同**（定案前比對過）。</pre></div>
+
+<h2>起因</h2>
+<p>使用者把 fangren.net 分享到 LINE 的截圖丟過來：
+「分享首頁時的圖片……除了圖片，顯示的文字內容也不是現在上面的文字。」</p>
+<p>⚠⚠ <strong>先查清楚：那張卡不是舊的，也不是快取。</strong>
+它逐字就是 <code>index.html</code> 當時宣告的 <code>og:title</code>／<code>og:description</code>／<code>og:image</code>。
+<strong>問題在標籤本身，不在 LINE。</strong></p>
+
+<h2>⚠⚠ 我一開始講錯、量了才知道的一件事：LINE 沒有裁圖</h2>
+<p>從使用者的截圖直接量（1125×2436、DPR 3）：卡片的圖佔 x 422~1056、y 594~1019
+＝ <strong>635×426 ＝ 1.491:1</strong>，和原檔 1600×1058（1.512:1）一樣 —— <strong>它照原比例顯示</strong>。</p>
+<p>所以「LINE 自己裁、我們控制不了」是錯的。真正的差別是
+<strong>1.51:1 的圖會長出一張又高又暗的卡</strong>，1.91:1 才是訊息卡那種寬扁的樣子。</p>
+<p>⚠ 順帶量到：卡片實際寬度是 635 ÷ 3 ＝ <strong>約 212 CSS px</strong>，比一般說的 250 還小。
+判斷字級大小時要用這個數字。</p>
+
+<h2>圖：現況為什麼不及格</h2>
+<pre>                              平均 L*   幾乎全黑   邊緣密度
+現況 hero-clinic-night 1600×1058  21.3    48.0%     16.9%
+定案 og-home 1200×628             24.5    45.9%     25.8%
+著陸頁那張（對照組）               54.2     3.0%     33.7%</pre>
+<p>⚠ ILLUSTRATION.md 第十一節記著：邊緣密度 <strong>19.3%</strong> 是那張被使用者說
+「像鬼屋欸」的失敗版，他給的參考圖是 41.1%。<strong>現況這張 16.9%，比那張失敗版還低。</strong></p>
+<p>⚠ <strong>它是夜景，25.8% 就是天花板</strong> —— 裁切能把它從不及格拉到還可以，
+但只要還是這張照片就到不了著陸頁那張的水準。要到那個水準得另外畫一張，那是另一件事。</p>
+
+<h2>⚠⚠ 走了三輪冤枉路：三格壓在騎樓入口上</h2>
+<p>使用者：「三格字剛好壓在診所一樓騎樓入口上，感覺可把裁切改到寬和現況之間。」
+量過之後 —— <strong>拉寬反而更糟，那不是有效的那條槓桿。</strong></p>
+<p>亮著的騎樓在原檔 y 860~1220（20×20 逐格掃、格平均亮度 &gt;110），
+<strong>幾乎貼到照片底邊（1323），底下只剩 103px 的路面</strong>。
+三格在 1.8× 時佔畫面 y 514~590：</p>
+<pre>1500 寬・底 1250（原本的「寬」）  比例尺 .800  騎樓 y 316~604  壓過三格 90px
+1500 寬・底 1323                 .800         y 258~546       壓過 32px
+1700 寬・底 1323                 .706         y 301~556       壓過 41px
+2000 寬・底 1323                 .600         y 350~566       壓過 52px</pre>
+<p><strong>成因</strong>：框下緣固定時，「騎樓下緣到框下緣」那段距離在<strong>原檔裡是定值</strong>，
+而框愈寬、比例尺愈小 —— 同一段距離在畫面上就愈短。把框往下移到照片底邊
+最多只能把 90 收到 32，<strong>怎麼裁都還是壓到門面</strong>。</p>
+
+<h2>使用者點出正解：站上早就解過同一題</h2>
+<div class="note">「你們看電腦版、手機版、iPad 可以發現，我為了不要壓到門面，
+甚至在圖片下另外加深色橫帶。」</div>
+<p>站上 iPad 直放與手機版就是這樣做的（CLAUDE.md 第六之十八節）：
+<code>.hero</code> 直向 flex、照片 <code>flex:1</code>、<strong>窄帶脫離照片接在下面</strong>。</p>
+<p>⚠ 第一版照抄成 <code>--statspos below</code>（照片縮成 1200×(628−帶高)）——<strong>被退回</strong>：
+「往下加的部分太多了，建築上半部被切掉太多，氣勢沒了。」</p>
+<p>⚠⚠ <strong>成因是照片被重新裁過，不是帶子本身</strong>：比例從 1.91 變成 2.4，
+<code>object-position: 50% 100%</code> 從天空那頭再裁一次，屋頂跟著沒了。</p>
+<p>定案改用 <code>--statspos plate</code>：<strong>照片維持 1200×628 那個 1.91 的裁法（建築完整）</strong>，
+帶子是一塊板疊在下緣，蓋掉的是路面。兩者露出的照片高度差不多，
+<strong>差別在露的是哪一段</strong>。上下留白同時從每邊 26 收到 14。</p>
+
+<h2>帶子的上緣要淡進來</h2>
+<p>使用者：「這樣比較好，不過帶子好黑，和圖片銜接的地方做漸層吧。」</p>
+<pre>前 42%：顏色固定在接縫色，alpha 用 smoothstep 從 0 長到 1
+之後  ：alpha 已經是 1，顏色用 S(t^1.6) 走到 --band-bot #2d3037</pre>
+<p>⚠ <strong>為什麼站上那條窄帶不必淡入、這裡必須</strong>：站上窄帶的正上方<strong>本來就是暗的路面</strong>，
+顏色與亮度都接得上；這張圖的帶子正上方是<strong>亮著的騎樓</strong>，同一個做法會切出一條線。
+「帶子好黑」的真正來源不是帶子的顏色，是它旁邊太亮。</p>
+<p>⚠ 接縫色是<strong>現場量照片最後一列的中位數</strong>（取中位不取平均：路燈與門口的燈
+幾顆亮點就能把平均拉高 4 個 L*）。後半那條 S(t^1.6) 和站上手機版窄帶逐字相同 ——
+驗證方式：把站上的 <code>#181614</code> 代進同一條式子，50% 那一停算出 <code>#1d1d1d</code>，
+和站上寫的一模一樣。</p>
+<p>淡入之後三格底下的白字對比：中位 <strong>19.45</strong>・最亮處 <strong>15.21</strong>。</p>
+
+<h2>三格：字、字重、字距全部是量回來的</h2>
+<p>在 1200 寬的視窗上打開 <code>index.html</code>（首頁 ≥1041 那一段根字級 18px，
+和這張圖同寬，量到的 px 可以直接用）：</p>
+<pre>.stats b       21.24px／700／字距 −.01em／行高 1.15／白 .95／**襯線**
+.stats b small 12.6px／400／字距 0／左邊 .15em／**黑體**
+.stats span    12.6px／400／字距 .18px／白 .65
+.stats li      左右內距各 72px（＝ 4rem）
+分隔線         1px、色 rgb(100,99,97)、上下貫穿整格</pre>
+<p>驗證：1× 產出來三格寬 <strong>603px</strong>，站上量到 <strong>603.375px</strong>。</p>
+<p>⚠ <strong>數字是襯線、單位「年／位／個」是黑體</strong> —— 站上 2026-08-08 定的，
+襯線只留給數字，兩層才分得開。容器裡沒有 Times New Roman，
+用度量相容的 <strong>Liberation Serif</strong> 當替身，只子集 0~9、1.2KB。</p>
+<p>⚠ 倍率是為了<strong>訊息卡那個尺寸</strong>存在的：1× 的數字在 212px 的卡上只有 3.8px，
+那是紋理不是字。四格 1.2×（帶高 79）／1.4×（87）／1.6×（96）／<strong>1.8×（104）</strong>，
+使用者選最大的那一格。</p>
+<p>⚠ 內距<strong>不跟著字級等比例長</strong>（乘 1.8 會把三格推出畫面），取平方根，
+另有一道量測擋住溢出。</p>
+
+<h2>文字：不是錯的，但不是站上現在的話</h2>
+<pre>卡片上寫的        站上實際的字
+巷口牙醫          詩的第四句「到巷口的芳仁　一起想辦法」
+1983年創立        窄帶「1983年 中華路開業」</pre>
+<p>「創立」「巷口牙醫」這兩個詞<strong>站上一個字都沒有</strong>。事實沒錯，
+而且 <code>index.html</code> 的註解記著順序是刻意的（「1983年創立」接在「巷口牙醫」後面
+而不是「永樂街」後面，免得讀成「1983 年在永樂街創立」）—— <strong>那道防護有效</strong>。
+問題是它整句是名錄式的三段並列，而站上現在的聲音是那四句詩。</p>
+<p>候選一律<strong>只從站上已經有的字組，不新寫句子</strong>。定案只留詩的第四句；
+「雲林斗六・永樂街」拿掉不是因為不重要，是因為<strong>它現在印在圖上了</strong>，
+卡片上出現兩次是浪費那兩行。</p>
+
+<h2>⚠⚠ 順帶查出一個已經上線的缺字 bug</h2>
+<p>做三格時去讀字型子集的 cmap，發現那 34 個字裡<strong>根本沒有「雲林斗六永樂街」</strong>。
+<code>og-plate.mjs</code> 的 CSS 是 <code>font-family:"NotoTC"</code>、<strong>沒有後備</strong>，
+缺字時瀏覽器不報錯，直接去撿系統字（這個容器裡是文泉驛）。</p>
+<p>所以前一天定稿上線的科別分享卡，<strong>同一行裡「芳仁牙醫診所」是思源黑體、
+「雲林斗六・永樂街」是文泉驛</strong>。三道檢查（透明度、顏色、版面）全部通過。</p>
+<p>修了兩件，缺一不可：子集重做（字表獨立成 <code>tools/fonts/glyphs.txt</code>，34 → 63 字）、
+<code>og-plate</code> 加 <code>assertGlyphs()</code> 逐字比對，缺了就 throw。
+並重產了 <code>assets/og-topic-general.jpg</code>。</p>
+
+<h2>順手改掉的：科別頁的 og 退路</h2>
+<p><code>tools/topics.mjs</code> 的 <code>OG_FALLBACK</code> 從 <code>hero-clinic-night.jpg</code>
+換成 <code>og-home.jpg</code>。理由同上面那一節：前者是 1.512:1 會長成又高又暗的卡，
+而且照片裡的招牌在 212px 上只有幾個像素寬，等於沒有識別。
+還沒畫圖的六科現在退到 <code>og-home.jpg</code>，至少認得出是誰。</p>
+
+<footer>
+  <a href="/history/">← 改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>
