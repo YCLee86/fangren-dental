@@ -123,6 +123,17 @@ if (!["right", "left", "stack"].includes(LOCPOS)) { console.error("--locpos 只�
      index.html 量回來的**，不是照記憶寫的（首頁在 ≥1041 那一段根字級是 18px，
      和這張圖同寬，所以量到的 px 可以直接用，不必換算）。 */
 /* --nomark：--style plain 時整個不畫左上那組標示（只留下緣的三格）。 */
+/* --statspos over|below
+   over ＝ 三格壓在照片下緣（第一版）
+   below＝**照片縮短，三格放進照片底下另外一條深色帶**（2026-08-22 使用者指定：
+          「你們看電腦版、手機版、iPad 可以發現，我為了不要壓到門面，
+            甚至在圖片下另外加深色橫帶」）。
+   ⚠⚠ 這正是站上 iPad 直放與手機版在做的事（CLAUDE.md 第六之十八節、
+     PALETTE.md 第六之十九節）：`.hero` 直向 flex、照片 flex:1、**窄帶脫離照片接在下面**。
+     壓在上面那一版怎麼裁都會蓋到亮著的騎樓 —— 因為那塊亮區在原檔裡就幾乎貼著底邊。 */
+const spIdx = args.indexOf("--statspos");
+const STATSPOS = spIdx >= 0 ? args[spIdx + 1] : "over";
+if (!["over", "below"].includes(STATSPOS)) { console.error("--statspos 只能是 over 或 below"); process.exit(1); }
 const NOMARK = args.includes("--nomark");
 const STATS = args.includes("--stats");
 /* --statscale：三格整組放大幾倍（1 ＝ 和站上 1200 寬時逐項相同）。
@@ -222,7 +233,10 @@ const G_CLINIC_FS = 30;
 const G_LOGO_H = 26;
 /* 下緣那三格：漸層攤在最後 170px 上（三格本身高 ≈ 42，離下緣 38，
    剩下的留給漸層從透明長到 .88 —— 太短會看得出一條邊，同第九節第 10 條）。 */
-const SBAND_H = 170;   // ⚠ 實際高度會跟著 --statscale 長，見 plainHtml
+const SBAND_H = 170;   // ⚠ over 模式的漸層高度，會跟著 --statscale 長，見 plainHtml
+/* below 模式：帶高 ＝ 三格的塊高 ＋ 上下留白。塊高 ＝ 數字行(21.24×1.15) ＋ 間距 5 ＋ 標籤 12.6，
+   整組乘 --statscale；留白取 26px（和 BAND_PAD 38 比稍緊，因為這條帶子本身就是留白）。 */
+const BAND_BOT = "#2d3037";   // ＝ 站上的 --band-bot，接住紙色那一頭的明度
 
 const hex2rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const [ar, ag, ab] = hex2rgb(SHADE === "deep" ? DEEP[spec] : accent);
@@ -347,12 +361,28 @@ body.nojustify-clinic .stack .clinic{text-align-last:right}
      （COPY.md 第一節：兩層、陰影色用 #191614 不用純黑）。這裡字級是詩的約 1.9 倍，
      所以兩層都按同一個倍率放大：0 1px 2px → 0 2px 4px、0 0 4px → 0 0 8px。
      **不要自己另外調一組** —— 那首詩壓的就是這張照片，已經驗過了。 */
-const plainHtml = `<!doctype html><meta charset="utf-8"><style>
+const plainHtmlOf = (SEAM, PH, BH) => `<!doctype html><meta charset="utf-8"><style>
 ${fontFace(700)}${fontFace(500)}${STATS ? serifFace() : ""}
 *{margin:0;padding:0;box-sizing:border-box}
 body{width:${W}px;height:${H}px;position:relative;overflow:hidden}
-img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
+/* ⚠ below 模式照片變矮，cover 會裁掉一部分 —— **裁天空，不要裁路面**，
+   這就是站上這張照片一直在用的規則（index.html：object-position: 50% 100%，
+   「下緣貼齊、要切切天空」）。裁到路面的話下面那條帶子就接不到地了。 */
+img.bg{width:${W}px;height:${STATSPOS === "below" ? PH : H}px;display:block;
+  object-fit:cover;object-position:50% 100%}
 .mark{position:absolute;left:${BAND_PAD}px;top:${BAND_PAD}px;display:flex;align-items:center}
+/* ---- below：照片底下另外一條深色帶（＝站上 iPad／手機版的做法）--------------
+   ⚠⚠ **接縫在窄帶那一側解決，照片不准動**（PALETTE.md 第六之十九節，
+     2026-08-12 那一輪被使用者退過一次才學到的）。所以帶子的起點色不是隨便挑的，
+     是**現場量照片最後一列的中位數**（取中位不取平均：路燈與門口的燈幾顆亮點
+     就能把平均拉高 4 個 L*）。
+   ⚠ 漸層的形狀是 **S(t^1.6)**，S(x)=3x²−2x³ —— 和站上手機版窄帶逐字相同的曲線：
+     頭尾斜率都是 0（接縫那一側自動是平的，不會長出馬赫帶），
+     而 1.6 次方讓「還算黑」的範圍撐到帶子的一半以上。
+     用同一條式子從量到的接縫色算到 --band-bot #2d3037。 */
+.sbelow{position:absolute;left:0;right:0;bottom:0;height:${BH}px;
+  display:flex;align-items:center;justify-content:center;
+  background-image:linear-gradient(180deg,${SEAM});}
 .pair{display:flex;align-items:baseline;gap:0.37em}
 .loc{position:relative;font-family:"NotoTC";font-weight:500;line-height:1.3;
   letter-spacing:.04em;white-space:nowrap;opacity:.72;color:${PAPER};padding-left:.37em}
@@ -415,7 +445,7 @@ ${NOMARK ? "" : `<div class="mark">
     </span>
   </span>
 </div>`}
-${STATS ? `<div class="sband"><ul class="stats">${STATS_CELLS.map((c) =>
+${STATS ? `<div class="${STATSPOS === "below" ? "sbelow" : "sband"}"><ul class="stats">${STATS_CELLS.map((c) =>
   `<li><b>${c.n}<small>${c.u}</small></b><span>${c.s}</span></li>`).join("")}</ul></div>` : ""}`;
 
 const html = `<!doctype html><meta charset="utf-8"><style>
@@ -451,6 +481,39 @@ if (!chrome) { console.error("× 找不到 Chromium"); process.exit(1); }
 
 const browser = await chromium.launch({ executablePath: chrome });
 const pg = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
+/* below 模式：先把照片畫進 1200×PH 量最後一列的中位色，再組頁面。
+   ⚠ 要量的是**畫進去之後**那一列，不是原檔的最後一列 —— 中間隔著一次 cover 縮放。 */
+let PH = H, BH = 0, SEAM_STOPS = "";
+if (STATS && STATSPOS === "below") {
+  const blk = (21.24 * 1.15 + 5 + 12.6) * SS;
+  BH = Math.round(blk + 52);
+  PH = H - BH;
+  const seam = await pg.evaluate(async ({ uri, W, PH }) => {
+    const im = new Image(); im.src = uri; await im.decode();
+    const c = document.createElement("canvas"); c.width = W; c.height = PH;
+    const g = c.getContext("2d", { willReadFrequently: true });
+    g.imageSmoothingQuality = "high";
+    /* 和頁面上 object-fit: cover 同一個裁法 */
+    const s = Math.max(W / im.naturalWidth, PH / im.naturalHeight);
+    const dw = im.naturalWidth * s, dh = im.naturalHeight * s;
+    g.drawImage(im, (W - dw) / 2, (PH - dh) / 2, dw, dh);
+    const d = g.getImageData(0, PH - 1, W, 1).data;
+    const ch = [[], [], []];
+    for (let i = 0; i < d.length; i += 4) { ch[0].push(d[i]); ch[1].push(d[i + 1]); ch[2].push(d[i + 2]); }
+    return ch.map((a) => { a.sort((x, y) => x - y); return a[Math.floor(a.length / 2)]; });
+  }, { uri: imgUri, W, PH });
+  const bot = [1, 3, 5].map((i) => parseInt(BAND_BOT.slice(i, i + 2), 16));
+  const S = (x) => 3 * x * x - 2 * x * x * x;
+  const stops = [];
+  for (let i = 0; i <= 10; i++) {
+    const p = i / 10, k = S(Math.pow(p, 1.6));
+    const c = seam.map((v, j) => Math.round(v + k * (bot[j] - v)));
+    stops.push(`rgb(${c.join(",")}) ${(p * 100).toFixed(0)}%`);
+  }
+  SEAM_STOPS = stops.join(", ");
+  console.log(`接縫色（照片最後一列的中位數）rgb(${seam.join(",")}) → ${BAND_BOT}　帶高 ${BH}px・照片 ${PH}px`);
+}
+const plainHtml = plainHtmlOf(SEAM_STOPS, PH, BH);
 await pg.setContent(STYLE === "glass" ? glassHtml : STYLE === "plain" ? plainHtml : html, { waitUntil: "load" });
 await pg.evaluate(() => document.fonts.ready);
 await pg.evaluate(() => Promise.all(Array.from(document.images).map((i) => i.decode().catch(() => {}))));
@@ -511,7 +574,7 @@ if (STATS) {
 
 /* 驗一件：牌子有沒有壓到臉或手 —— 構圖時左下角就留成安靜區，
    這裡量牌子佔畫面多大，超過一半就是版面出事了。 */
-const sel = STYLE === "glass" ? ".band" : STYLE === "plain" ? (NOMARK ? ".sband" : ".mark") : ".plate";
+const sel = STYLE === "glass" ? ".band" : STYLE === "plain" ? (NOMARK ? (STATSPOS === "below" ? ".sbelow" : ".sband") : ".mark") : ".plate";
 const box = await pg.evaluate((sel) => {
   const r = document.querySelector(sel).getBoundingClientRect();
   return { w: r.width, h: r.height, left: r.left, top: r.top };

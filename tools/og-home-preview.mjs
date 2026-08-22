@@ -57,26 +57,34 @@ if (!fs.existsSync(SRC)) throw new Error(`找不到原檔 ${path.relative(ROOT, 
 /* 亮處重心量出來是 (1054, 767)。**亮著的騎樓在原檔 y 860~1220**（20×20 逐格掃，
    格平均亮度 >110），也就是說它幾乎貼到照片底邊（1323），底下只剩 103px 的路面。
 
-   ⚠⚠ **2026-08-22：使用者回報「三格剛好壓在騎樓入口上」，並建議「把裁切改到
-   寬和現況之間」。量過之後 —— 拉寬反而更糟，那不是有效的那條槓桿。**
-   三格在 1.8× 時佔畫面 y 514~590，騎樓下緣比它低多少：
+   ⚠⚠ **2026-08-22：三格「壓在照片上」那條路走不通，整個換掉了。**
+   使用者先回報「三格剛好壓在騎樓入口上」，建議「把裁切改到寬和現況之間」——
+   量過之後拉寬**反而更糟**（框下緣固定時，騎樓下緣到框下緣在原檔裡是定值，
+   框愈寬比例尺愈小、那段距離在畫面上就愈短）：
 
-       1500 寬・底 1250（原本的「寬」）  比例尺 .800   騎樓 y 316~604   壓過 90px
-       1500 寬・底 1323                 .800          y 258~546        壓過 32px  ← 定案
-       1700 寬・底 1323                 .706          y 301~556        壓過 41px
-       2000 寬・底 1323                 .600          y 350~566        壓過 52px
+       1500 寬・底 1250  比例尺 .800  騎樓 y 316~604  壓過三格 90px
+       1500 寬・底 1323  .800         y 258~546       壓過 32px
+       1700 寬・底 1323  .706         y 301~556       壓過 41px
+       2000 寬・底 1323  .600         y 350~566       壓過 52px
 
-   成因：框的下緣固定在某個位置時，「騎樓下緣到框下緣」那段距離在原檔裡是定值，
-   **框愈寬、比例尺愈小，那段距離在畫面上就愈短** —— 所以往「現況」方向拉是反的。
-   真正有用的是**把框往下移到照片底邊**（底 1250 → 1323），一口氣多出 58px：
-   那 103px 的路面全部進來，三格因此落在路面上而不是壓在亮著的門口上。 */
+   把框往下移到照片底邊最多只能把 90 收到 32，**怎麼裁都還是壓到門面**。
+   使用者因此點出正解：「你們看電腦版、手機版、iPad 可以發現，我為了不要壓到門面，
+   甚至在圖片下另外加深色橫帶。」—— 站上 iPad 直放與手機版就是這樣做的
+   （CLAUDE.md 第六之十八節：`.hero` 直向 flex、照片 flex:1、**窄帶脫離照片接在下面**）。
+   現在 `--statspos below` 照抄那個做法：照片縮短、三格放進自己的帶子，
+   **門面一個像素都沒有被蓋到**。
+   ⚠ 照片變矮之後 cover 要**裁天空不裁路面**（`object-position: 50% 100%`），
+     那是站上這張照片一直在用的規則；裁到路面的話帶子就接不到地。
+   ⚠ 帶子的起點色是**現場量照片最後一列的中位數**（取中位不取平均：路燈與門口的燈
+     幾顆亮點就能把平均拉高 4 個 L*），再用 S(t^1.6) 走到 --band-bot #2d3037 ——
+     和站上手機版窄帶逐字相同的曲線。接縫因此是平的，不會長出馬赫帶。 */
 const CROPS = {
   wide:  { name: "寬", w: 1500, cx: 1120, bottom: 1323,
-           note: "整棟樓 ＋ 亮著的騎樓 ＋ 招牌，框下緣貼照片底邊，三格落在路面上。" },
+           note: "整棟樓 ＋ 亮著的騎樓 ＋ 招牌，左邊留得住街屋與停在路邊的車。" },
   mid:   { name: "中", w: 1700, cx: 1100, bottom: 1323,
-           note: "往「現況」方向退一階。⚠ 騎樓壓過三格 41px，比「寬」還多 —— 拉寬是反的。" },
+           note: "往「現況」方向退一階，街屋與路口進來得更多，建築相對小一點。" },
   full:  { name: "全寬", w: 2000, cx: 1000, bottom: 1323,
-           note: "整張照片的寬度。⚠ 壓過 52px，最糟的一格；建築也縮得最小。" },
+           note: "整張照片的寬度，建築縮得最小、街景最多。" },
 };
 /* 2026-08-22 使用者定了三件：不要有顏色的帶子、標示從右上移到左上、
    描述文字拿掉「雲林斗六・永樂街」（那組字現在在圖上了）。
@@ -94,11 +102,11 @@ const MARKS = {
    ⚠ 倍率是為了**訊息卡那個尺寸**存在的，不是為了原尺寸好看：
      1× 的數字在 212px 的卡上只有 3.8px，那是紋理不是字。 */
 const STATSCALE = {
-  off: { name: "不放", ss: null, note: "下緣什麼都不加。" },
+  off: { name: "不放", ss: null, note: "下緣什麼都不加，照片佔滿整張。" },
   s1:  { name: "照站上", ss: 1,
-         note: "和首頁 1200 寬時逐項相同（三格 603px）。卡上數字 3.8px ——** 讀不出來**，只是紋理。" },
-  s14: { name: "1.4×", ss: 1.4, note: "卡上數字 5.2px。三格 748px，離畫面邊緣 226px。" },
-  s18: { name: "1.8×", ss: 1.8, note: "卡上數字 6.8px。三格 883px，離畫面邊緣 159px。" },
+         note: "和首頁 1200 寬時逐項相同（三格 603px）。帶高 89px。⚠ 卡上數字只有 3.8px，讀不出來。" },
+  s14: { name: "1.4×", ss: 1.4, note: "帶高 111px、照片 517px。卡上數字 5.2px。" },
+  s18: { name: "1.8×", ss: 1.8, note: "帶高 128px、照片 500px。卡上數字 6.8px。" },
 };
 /* 描述文字 2026-08-22 定了：**只留詩的收尾句**。
    ⚠ 「雲林斗六・永樂街」拿掉不是因為不重要，是因為**它現在印在圖上**了 ——
@@ -164,7 +172,7 @@ for (const ck of Object.keys(CROPS)) {
         "--label", "", "--out", rel];
       if (mk2.style) a.push("--loc", "full", "--locpos", "stack");
       else a.push("--nomark", "--loc", "none");
-      if (sk2.ss) a.push("--stats", "--statscale", String(sk2.ss));
+      if (sk2.ss) a.push("--stats", "--statscale", String(sk2.ss), "--statspos", "below");
       execFileSync(process.execPath, a, { cwd: ROOT, encoding: "utf8" });
     }
   }
@@ -172,29 +180,36 @@ for (const ck of Object.keys(CROPS)) {
 console.log(`圖 ${fs.readdirSync(OUT).filter((n) => n.endsWith(".jpg")).length} 張`);
 
 /* 標示壓在照片上（沒有帶子墊底）的對比度 —— 量的是**標示底下那塊照片**，
-   所以讀的是同一個裁切**沒有標示**的那一張的同一塊（標示框 left 38・top 38・280×69）。
-   ⚠ 這是保守值：字自己還帶著兩層陰影（站上 HERO 那首詩的同一組），
-     實際讀起來比這個數字好。 */
+   所以讀的是**同一格但沒有標示**的那一張（標示框 left 38・top 38・280×69）。
+   ⚠⚠ 它要按 (裁切 × 三格倍率) 各量一次，不能只按裁切量：
+     below 模式下三格愈大、照片愈矮，`object-position: 50% 100%` 就從天空那一頭
+     裁掉愈多 —— **左上角那塊照片會換成另一段天空**，對比度跟著變。
+     第一版只按裁切量了一次，切到別的倍率時面板印的是別格的數字。
+   ⚠ 這是保守值：字自己還帶著兩層陰影（站上 HERO 那首詩的同一組）。 */
 const MARKC = {};
 {
   const br = await chromium.launch({ executablePath: chromePath });
   const p2 = await br.newPage();
   for (const ck of Object.keys(CROPS)) {
-    const u = `data:image/jpeg;base64,${fs.readFileSync(path.join(OUT, `img-${ck}-none.jpg`)).toString("base64")}`;
-    MARKC[ck] = await p2.evaluate(async (u) => {
-      const im = new Image(); im.src = u; await im.decode();
-      const c = document.createElement("canvas"); c.width = 1200; c.height = 628;
-      const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(im, 0, 0);
-      const d = g.getImageData(38, 38, 280, 69).data;
-      const lin = (v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
-      const L = [];
-      for (let i = 0; i < d.length; i += 4) L.push(0.2126 * lin(d[i]) + 0.7152 * lin(d[i + 1]) + 0.0722 * lin(d[i + 2]));
-      L.sort((a, b) => a - b);
-      const P = 0.2126 * lin(0xe2) + 0.7152 * lin(0xe5) + 0.0722 * lin(0xe6);
-      const r = (l) => (P + 0.05) / (l + 0.05);
-      return { mid: r(L[Math.floor(L.length * 0.5)]), hi: r(L[Math.floor(L.length * 0.9)]) };
-    }, u);
-    console.log(`  ${CROPS[ck].name} 標示底下：中位對比 ${MARKC[ck].mid.toFixed(2)}　最亮處 ${MARKC[ck].hi.toFixed(2)}`);
+    for (const sk of Object.keys(STATSCALE)) {
+      const f = STATSCALE[sk].ss ? `img-${ck}-none-${sk}.jpg` : `img-${ck}-none.jpg`;
+      const u = `data:image/jpeg;base64,${fs.readFileSync(path.join(OUT, f)).toString("base64")}`;
+      MARKC[ck + "-" + sk] = await p2.evaluate(async (u) => {
+        const im = new Image(); im.src = u; await im.decode();
+        const c = document.createElement("canvas"); c.width = 1200; c.height = 628;
+        const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(im, 0, 0);
+        const d = g.getImageData(38, 38, 280, 69).data;
+        const lin = (v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+        const L = [];
+        for (let i = 0; i < d.length; i += 4) L.push(0.2126 * lin(d[i]) + 0.7152 * lin(d[i + 1]) + 0.0722 * lin(d[i + 2]));
+        L.sort((a, b) => a - b);
+        const P = 0.2126 * lin(0xe2) + 0.7152 * lin(0xe5) + 0.0722 * lin(0xe6);
+        const r = (l) => (P + 0.05) / (l + 0.05);
+        return { mid: r(L[Math.floor(L.length * 0.5)]), hi: r(L[Math.floor(L.length * 0.9)]) };
+      }, u);
+    }
+    const m = MARKC[ck + "-s18"];
+    console.log(`  ${CROPS[ck].name}（三格 1.8×）標示底下：中位 ${m.mid.toFixed(2)}　最亮處 ${m.hi.toFixed(2)}`);
   }
   await br.close();
 }
@@ -460,7 +475,7 @@ function apply(push) {
                     : CROPS[cur.c].note;
   document.getElementById("m-note").textContent = cnote + "　" + bnote;
   document.getElementById("m-from").textContent = "描述文字：" + ${JSON.stringify(DESC_FROM)};
-  var mc = (!isNow && cur.b === "tl") ? MARKC[cur.c] : null;
+  var mc = (!isNow && cur.b === "tl") ? MARKC[cur.c + "-" + cur.s] : null;
   document.getElementById("m-mark").textContent = mc
     ? "中位 " + mc.mid.toFixed(2) + "　最亮處 " + mc.hi.toFixed(2) +
       (mc.hi >= 4.5 ? "　✓" : "　⚠ 最亮處低於 4.5（字自己還有兩層陰影，這是保守值）")
