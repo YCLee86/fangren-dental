@@ -63,25 +63,20 @@ const CROPS = {
   tight: { name: "緊", w: 1300, cx: 1150, bottom: 1250,
            note: "再往內一階，招牌更大，但左邊的街屋剩不多。" },
 };
-const BANDS = {
-  none:  { name: "不放", label: null,
-           note: "只換裁切。識別仍然只靠照片裡那塊招牌 —— 250px 下它只有幾個像素寬。" },
-  bare:  { name: "空的", label: "",
-           note: "帶子只放標誌 ＋ 芳仁牙醫診所 ＋ 雲林斗六・永樂街，左邊留白。" },
-  alley: { name: "左寫巷口牙醫", label: "巷口牙醫",
-           note: "左邊那行取自現在的 og:description。⚠ 站上沒有這四個字，詩寫的是「到巷口的芳仁」。" },
+/* 2026-08-22 使用者定了三件：不要有顏色的帶子、標示從右上移到左上、
+   描述文字拿掉「雲林斗六・永樂街」（那組字現在在圖上了）。
+   ⚠ 綠色的帶子那一案**已經被退掉了，不要再放回這一頁當候選**。 */
+const MARKS = {
+  none: { name: "不放", style: null,
+          note: "只換裁切。識別仍然只靠照片裡那塊招牌 —— 212px 下它只有幾個像素寬。" },
+  tl:   { name: "左上", style: "plain",
+          note: "標誌 ＋ 芳仁牙醫診所 ＋ 雲林斗六・永樂街，直接壓在照片左上角，沒有帶子。" },
 };
-/* ⚠ 每一個候選都標明每一段出自站上哪裡。不要在這裡發明新句子。 */
-const TEXTS = {
-  a: { name: "Ａ 現況", s: "雲林斗六・永樂街｜巷口牙醫｜1983年創立",
-       from: "現在站上宣告的那一組。「巷口牙醫」「創立」站上沒有這些字。" },
-  b: { name: "Ｂ 詩的收尾句", s: "雲林斗六・永樂街｜到巷口的芳仁　一起想辦法",
-       from: "後半逐字取自 HERO 第四句（站上已上線）。前半是窄帶的地址。" },
-  c: { name: "Ｃ 四十多年", s: "從中華路到永樂街　四十多年｜雲林斗六的巷口牙醫",
-       from: "前半逐字取自 HERO 第二句。順帶把「1983 ＋ 永樂街」那個誤讀的風險整個拿掉。" },
-  d: { name: "Ｄ 事實三段", s: "雲林斗六・永樂街｜1983年中華路開業｜9位醫師駐診",
-       from: "三段全部逐字取自首頁窄帶（1983年 中華路開業／9位 醫師駐診）。" },
-};
+/* 描述文字 2026-08-22 定了：**只留詩的收尾句**。
+   ⚠ 「雲林斗六・永樂街」拿掉不是因為不重要，是因為**它現在印在圖上**了 ——
+     卡片上同一組字出現兩次是浪費那兩行。 */
+const DESC = "到巷口的芳仁　一起想辦法";
+const DESC_FROM = "逐字取自 HERO 第四句（站上已上線）。原本的「雲林斗六・永樂街」移到圖上，不再重複。";
 
 const chromePath = (() => {
   const pw = process.env.PLAYWRIGHT_BROWSERS_PATH || "/opt/pw-browsers";
@@ -100,6 +95,10 @@ let chromium = null;
 for (const p of pwPaths) { try { ({ chromium } = (await import(p)).default ?? (await import(p))); if (chromium) break; } catch {} }
 if (!chromium) throw new Error("找不到 Playwright");
 
+/* ⚠ 先把舊的圖清掉再產。這一頁的候選會被退掉（綠色的帶子那一案就是），
+   不清的話被退掉的圖還留在資料夾裡，下面那段量測會把它們一起量進 STATS，
+   面板上看不出來、但檔案跟著推上線 —— 而且 /preview/* 是 no-store，白白多載。 */
+fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
 fs.copyFileSync(NOW, path.join(OUT, "img-now.jpg"));
 
@@ -124,19 +123,47 @@ for (const [k, c] of Object.entries(CROPS)) {
 }
 await browser.close();
 
-/* 帶子沿用 tools/og-plate.mjs（＝著陸頁那七張用的同一支），
-   顏色取 general 的深階 #2c5238 —— 那是品牌綠，也是主畫面圖示那一顆。
-   ⚠ --label 覆寫左邊那行字，不帶的話會掛「一般牙科・定期檢查」，首頁不是科別。 */
-for (const [ck] of Object.entries(CROPS)) {
-  for (const [bk, bnd] of Object.entries(BANDS)) {
-    if (bnd.label === null) continue;
-    const rel = `preview/og-home/img-${ck}-${bk}.jpg`;
+/* 標示沿用 tools/og-plate.mjs（＝著陸頁那七張用的同一支）的 --style plain：
+   沒有帶子，標誌與名字直接壓在照片左上角。
+   ⚠ 一定要帶 --label ""，不帶的話會掛「一般牙科・定期檢查」——**首頁不是科別**。 */
+for (const ck of Object.keys(CROPS)) {
+  for (const [mk, mk2] of Object.entries(MARKS)) {
+    if (!mk2.style) continue;
+    const rel = `preview/og-home/img-${ck}-${mk}.jpg`;
     execFileSync(process.execPath, [path.join(ROOT, "tools", "og-plate.mjs"), "general",
-      "--from", `preview/og-home/img-${ck}-none.jpg`,
-      "--loc", "full", "--locpos", "stack", "--label", bnd.label, "--out", rel],
+      "--from", `preview/og-home/img-${ck}-none.jpg`, "--style", mk2.style,
+      "--loc", "full", "--locpos", "stack", "--label", "", "--out", rel],
       { cwd: ROOT, encoding: "utf8" });
-    console.log(`帶子 ${CROPS[ck].name}・${bnd.name} → ${rel}`);
+    console.log(`標示 ${CROPS[ck].name}・${mk2.name} → ${rel}`);
   }
+}
+
+/* 標示壓在照片上（沒有帶子墊底）的對比度 —— 量的是**標示底下那塊照片**，
+   所以讀的是同一個裁切**沒有標示**的那一張的同一塊（標示框 left 38・top 38・280×69）。
+   ⚠ 這是保守值：字自己還帶著兩層陰影（站上 HERO 那首詩的同一組），
+     實際讀起來比這個數字好。 */
+const MARKC = {};
+{
+  const br = await chromium.launch({ executablePath: chromePath });
+  const p2 = await br.newPage();
+  for (const ck of Object.keys(CROPS)) {
+    const u = `data:image/jpeg;base64,${fs.readFileSync(path.join(OUT, `img-${ck}-none.jpg`)).toString("base64")}`;
+    MARKC[ck] = await p2.evaluate(async (u) => {
+      const im = new Image(); im.src = u; await im.decode();
+      const c = document.createElement("canvas"); c.width = 1200; c.height = 628;
+      const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(im, 0, 0);
+      const d = g.getImageData(38, 38, 280, 69).data;
+      const lin = (v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+      const L = [];
+      for (let i = 0; i < d.length; i += 4) L.push(0.2126 * lin(d[i]) + 0.7152 * lin(d[i + 1]) + 0.0722 * lin(d[i + 2]));
+      L.sort((a, b) => a - b);
+      const P = 0.2126 * lin(0xe2) + 0.7152 * lin(0xe5) + 0.0722 * lin(0xe6);
+      const r = (l) => (P + 0.05) / (l + 0.05);
+      return { mid: r(L[Math.floor(L.length * 0.5)]), hi: r(L[Math.floor(L.length * 0.9)]) };
+    }, u);
+    console.log(`  ${CROPS[ck].name} 標示底下：中位對比 ${MARKC[ck].mid.toFixed(2)}　最亮處 ${MARKC[ck].hi.toFixed(2)}`);
+  }
+  await br.close();
 }
 
 /* ---- 每一張圖的數字在**產生的時候**就量好，寫死進頁面 --------------------
@@ -244,7 +271,7 @@ const html = `<!doctype html>
 :root{
   --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2; --note:#f9f9fa;
   --ink:#2a2c27; --ink-soft:#5c5f57; --accent:#3f654a; --accent-deep:#2c5238;
-  --bar-h:132px;
+  --bar-h:106px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -308,7 +335,7 @@ h2{font-size:.94rem;letter-spacing:.04em;margin:1.8em 0 .6em;
 <body>
 <div class="pv-wrap">
   <h1>分享 fangren.net 時，對方看到的那張卡</h1>
-  <p class="pv-lede">底下三排切換。卡片寬度 <b>212px</b> 是從你那張 LINE 截圖量到的真實值
+  <p class="pv-lede">底下兩排切換。卡片寬度 <b>212px</b> 是從你那張 LINE 截圖量到的真實值
     （635 裝置 px ÷ DPR 3）。⚠ 圖的高度跟著那張圖自己的比例走 ——
     <b>LINE 沒有裁圖</b>，所以現況那張 1.51:1 會長成一張又高又暗的卡。</p>
 
@@ -319,7 +346,7 @@ h2{font-size:.94rem;letter-spacing:.04em;margin:1.8em 0 .6em;
       <div class="pv-thumb"><img id="pv-img-s" src="img-now.jpg" alt=""></div>
       <div class="pv-meta">
         <div class="pv-t">芳仁牙醫診所</div>
-        <div class="pv-d" id="pv-desc"></div>
+        <div class="pv-d">${DESC}</div>
         <div class="pv-u">fangren.net</div>
       </div>
     </div>
@@ -335,7 +362,7 @@ h2{font-size:.94rem;letter-spacing:.04em;margin:1.8em 0 .6em;
       <dt>平均亮度</dt><dd id="m-l">—</dd>
       <dt>幾乎全黑的像素</dt><dd id="m-dark">—</dd>
       <dt>邊緣密度（細節）</dt><dd id="m-edge">—</dd>
-      <dt>描述的字數</dt><dd id="m-len">—</dd>
+      <dt>標示壓在照片上</dt><dd id="m-mark">—</dd>
     </dl>
     <div class="pv-verdict" id="m-verdict">—</div>
     <p class="pv-note" id="m-note">—</p>
@@ -344,7 +371,8 @@ h2{font-size:.94rem;letter-spacing:.04em;margin:1.8em 0 .6em;
   <p class="pv-note">「邊緣密度」＝ 縮到小圖之後還有多少相鄰像素亮度差得出來，也就是
     <b>還看得見多少細節</b>。ILLUSTRATION.md 第十一節記著：<b>19.3%</b> 是那張被你說
     「像鬼屋欸」的失敗版，你給的參考圖是 41.1%。<br>
-    描述的長度：訊息 app 的氣泡只露兩行（實測約 27 個全形字），超過就被截掉。</p>
+    描述那兩行：訊息 app 的氣泡只露兩行（實測約 27 個全形字），
+    現在的「到巷口的芳仁　一起想辦法」是 12 個字，一行就放得下。</p>
 </div>
 
 <div class="pv-bar">
@@ -352,10 +380,8 @@ h2{font-size:.94rem;letter-spacing:.04em;margin:1.8em 0 .6em;
     <span class="pv-seg" id="seg-c">
       <button type="button" data-row="c" data-k="now" aria-pressed="true">現況</button>
       ${seg("c", CROPS, "")}</span></div>
-  <div class="pv-row"><span class="pv-lab">帶子</span>
-    <span class="pv-seg" id="seg-b">${seg("b", BANDS, "none")}</span></div>
-  <div class="pv-row"><span class="pv-lab">文字</span>
-    <span class="pv-seg" id="seg-t">${seg("t", TEXTS, "a")}</span></div>
+  <div class="pv-row"><span class="pv-lab">標示</span>
+    <span class="pv-seg" id="seg-b">${seg("b", MARKS, "none")}</span></div>
   <p class="pv-hint" id="pv-hint"></p>
 </div>
 
@@ -363,15 +389,14 @@ h2{font-size:.94rem;letter-spacing:.04em;margin:1.8em 0 .6em;
 /* ⚠ 網址參數的正規式要寫 [a-z0-9]+（CLAUDE.md 第八節）—— 寫 [a-z]+ 會吃不到
    帶數字的值，比對失敗後悄悄退回預設，等於參數沒作用。 */
 var CROPS = ${JSON.stringify(CROPS)};
-var BANDS = ${JSON.stringify(BANDS)};
-var TEXTS = ${JSON.stringify(TEXTS)};
+var MARKS = ${JSON.stringify(MARKS)};
+var MARKC = ${JSON.stringify(MARKC)};
 var STATS = ${JSON.stringify(STATS)};   /* 產生時就量好的，見產生器裡那段註解 */
-var cur = { c: "now", b: "none", t: "a" };
+var cur = { c: "now", b: "none" };
 (function () {
   var q = location.search, m;
   m = q.match(/[?&]crop=([a-z0-9]+)/);  if (m && (m[1] === "now" || CROPS[m[1]])) cur.c = m[1];
-  m = q.match(/[?&]band=([a-z0-9]+)/);  if (m && BANDS[m[1]]) cur.b = m[1];
-  m = q.match(/[?&]text=([a-z0-9]+)/);  if (m && TEXTS[m[1]]) cur.t = m[1];
+  m = q.match(/[?&]mark=([a-z0-9]+)/);  if (m && MARKS[m[1]]) cur.b = m[1];
 })();
 
 var imgS = document.getElementById("pv-img-s"), imgL = document.getElementById("pv-img-l");
@@ -381,27 +406,28 @@ function file() {
 }
 
 function apply(push) {
-  /* 現況那張是 1.51:1，帶子是為 1.91 的卡設計的 —— 兩個不能疊，把帶子那排關掉。 */
+  /* 現況那張是 1.51:1，標示是為 1.91 的卡做的 —— 把標示那排關掉。 */
   var isNow = cur.c === "now";
   document.querySelectorAll("#seg-b button").forEach(function (b) { b.disabled = isNow; });
   var f = file();
   imgS.src = f; imgL.src = f;
-  ["c","b","t"].forEach(function (r) {
+  ["c","b"].forEach(function (r) {
     document.querySelectorAll("#seg-" + r + " button").forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.dataset.k === cur[r])); });
   });
-  var tx = TEXTS[cur.t];
-  document.getElementById("pv-desc").textContent = tx.s;
-  document.getElementById("m-len").textContent = tx.s.replace(/\\s/g,"").length + " 字" +
-    (tx.s.replace(/\\s/g,"").length > 27 ? "（超過兩行，會被截掉）" : "（兩行放得下）");
-  document.getElementById("m-from").textContent = "文字出處：" + tx.from;
-  var bnote = isNow ? "現況那張比例 1.51:1，帶子是為 1.91 的卡做的，兩個不能疊。"
-                    : BANDS[cur.b].note;
+  var bnote = isNow ? "現況那張比例 1.51:1，標示是為 1.91 的卡做的。"
+                    : MARKS[cur.b].note;
   var cnote = isNow ? "原檔 1600×1058 直接送出去，LINE 照原比例顯示。"
                     : CROPS[cur.c].note;
   document.getElementById("m-note").textContent = cnote + "　" + bnote;
+  document.getElementById("m-from").textContent = "描述文字：" + ${JSON.stringify(DESC_FROM)};
+  var mc = (!isNow && cur.b === "tl") ? MARKC[cur.c] : null;
+  document.getElementById("m-mark").textContent = mc
+    ? "中位 " + mc.mid.toFixed(2) + "　最亮處 " + mc.hi.toFixed(2) +
+      (mc.hi >= 4.5 ? "　✓" : "　⚠ 最亮處低於 4.5（字自己還有兩層陰影，這是保守值）")
+    : "—";
   document.getElementById("pv-hint").textContent =
-    (isNow ? "現況" : CROPS[cur.c].name + "・" + BANDS[cur.b].name) + "・" + tx.name + "　" + cnote;
+    (isNow ? "現況" : CROPS[cur.c].name + "・標示" + MARKS[cur.b].name) + "　" + cnote;
 
   var s = STATS[f];
   document.getElementById("m-ratio").textContent =
@@ -417,7 +443,7 @@ function apply(push) {
   else if (s.edge < 30) v.innerHTML = '邊緣密度 ' + s.edge.toFixed(1) +
     '%　比失敗版（19.3%）好，但還沒到你給的參考圖（41.1%）—— 它是夜景，這是天花板';
   else v.innerHTML = '<span class="pv-ok">邊緣密度 ' + s.edge.toFixed(1) + '%</span>　夜景能到的上緣';
-  if (push) history.replaceState(null, "", "?crop=" + cur.c + "&band=" + cur.b + "&text=" + cur.t);
+  if (push) history.replaceState(null, "", "?crop=" + cur.c + "&mark=" + cur.b);
 }
 
 document.querySelector(".pv-bar").addEventListener("click", function (e) {
@@ -430,7 +456,7 @@ apply(false);
 addEventListener("load", function () {
   setTimeout(function () {
     var all = ["img-now.jpg"];
-    Object.keys(CROPS).forEach(function (c) { Object.keys(BANDS).forEach(function (b) {
+    Object.keys(CROPS).forEach(function (c) { Object.keys(MARKS).forEach(function (b) {
       all.push("img-" + c + "-" + b + ".jpg"); }); });
     all.forEach(function (f) { if (f !== file()) { var i = new Image(); i.src = f; } });
   }, 400);

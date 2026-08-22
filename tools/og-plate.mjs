@@ -98,8 +98,11 @@ const spec = args[0];
 const fromIdx = args.indexOf("--from");
 const fromArg = fromIdx >= 0 ? args[fromIdx + 1] : null;
 const styleIdx = args.indexOf("--style");
-const STYLE = styleIdx >= 0 ? args[styleIdx + 1] : "glass";  // glass＝頂部玻璃帶（預設）／solid＝實心牌
-if (!["glass", "solid"].includes(STYLE)) { console.error("--style 只能是 glass 或 solid"); process.exit(1); }
+const STYLE = styleIdx >= 0 ? args[styleIdx + 1] : "glass";
+/* glass＝頂部玻璃帶（預設，七科的著陸頁用這個）
+   plain＝**不放帶子**，標示直接壓在照片左上角（首頁那張夜景用這個，2026-08-22 使用者指定）
+   solid＝最早那塊實心牌，已被退回，留著只是退路 */
+if (!["glass", "solid", "plain"].includes(STYLE)) { console.error("--style 只能是 glass / plain / solid"); process.exit(1); }
 const tintIdx = args.indexOf("--tint");
 const TINT = tintIdx >= 0 ? Number(args[tintIdx + 1]) : 0.70;  // 玻璃的濃度（實測值，見檔頭）
 const inkIdx = args.indexOf("--ink");
@@ -285,6 +288,51 @@ body.nojustify-clinic .stack .clinic{text-align-last:right}
   </span>
 </div>`;
 
+/* --style plain：沒有帶子，標示直接壓在照片左上角（2026-08-22 使用者指定：
+   「不要有顏色的帶子；圖片現在右上有 logo ＋ 診所名稱 ＋ 雲林斗六・永樂街，移到左上」）。
+   ⚠ 版面（標誌大小、間距、字重、字距、兩行的 justify）**和 glass 那一版逐項相同** ——
+     差的只有「有沒有那條帶子」與「擺左上還是右上」，不要順手改成另一組比例。
+   ⚠⚠ 沒有帶子墊底，字就直接壓在照片上，**陰影要用站上 HERO 那首詩的同一組**
+     （COPY.md 第一節：兩層、陰影色用 #191614 不用純黑）。這裡字級是詩的約 1.9 倍，
+     所以兩層都按同一個倍率放大：0 1px 2px → 0 2px 4px、0 0 4px → 0 0 8px。
+     **不要自己另外調一組** —— 那首詩壓的就是這張照片，已經驗過了。 */
+const plainHtml = `<!doctype html><meta charset="utf-8"><style>
+${fontFace(700)}${fontFace(500)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:${W}px;height:${H}px;position:relative;overflow:hidden}
+img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
+.mark{position:absolute;left:${BAND_PAD}px;top:${BAND_PAD}px;display:flex;align-items:center}
+.pair{display:flex;align-items:baseline;gap:0.37em}
+.loc{position:relative;font-family:"NotoTC";font-weight:500;line-height:1.3;
+  letter-spacing:.04em;white-space:nowrap;opacity:.72;color:${PAPER};padding-left:.37em}
+.loc::before{content:"";position:absolute;left:0;top:.1em;bottom:.1em;
+  border-left:1px solid rgba(${pr},${pg_},${pb},.28)}
+.right{display:flex;align-items:center;gap:${(G_CLINIC_FS * 0.807).toFixed(1)}px}
+.right svg{height:${(G_CLINIC_FS * 2.156 / 2.02918).toFixed(2)}px;
+  width:${(G_CLINIC_FS * 2.156).toFixed(2)}px;display:block;
+  filter:drop-shadow(0 2px 4px rgba(25,22,20,.5)) drop-shadow(0 0 8px rgba(25,22,20,.28))}
+.clinic,.loc{text-shadow:0 2px 4px rgba(25,22,20,.5), 0 0 8px rgba(25,22,20,.28)}
+.clinic{font-family:"NotoTC";font-weight:700;font-size:${G_CLINIC_FS}px;line-height:1.3;
+  color:${PAPER};letter-spacing:.01em;white-space:nowrap}
+.stack{display:inline-block;width:max-content}
+.stack .clinic,.stack .loc{display:block;text-align:justify;text-align-last:justify}
+.stack .loc{position:static;padding-left:0;font-size:${(G_CLINIC_FS * 0.774).toFixed(2)}px;
+  line-height:1.3;letter-spacing:.04em;margin-top:0}
+.stack .loc::before{display:none}
+body.nojustify .stack .loc{text-align-last:right}
+body.nojustify-clinic .stack .clinic{text-align-last:right}
+</style>
+<img class="bg" src="${imgUri}">
+<div class="mark">
+  <span class="right">
+    <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true" style="color:${PAPER}">${logoInner}</svg>
+    <span class="${LOCPOS === "stack" && LOC_TEXT ? "stack" : "pair"}">
+      <span class="clinic">芳仁牙醫診所</span>
+      ${LOC_TEXT ? `<span class="loc">${LOC_TEXT}</span>` : ""}
+    </span>
+  </span>
+</div>`;
+
 const html = `<!doctype html><meta charset="utf-8"><style>
 ${fontFace(700)}${fontFace(500)}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -318,7 +366,7 @@ if (!chrome) { console.error("× 找不到 Chromium"); process.exit(1); }
 
 const browser = await chromium.launch({ executablePath: chrome });
 const pg = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
-await pg.setContent(STYLE === "glass" ? glassHtml : html, { waitUntil: "load" });
+await pg.setContent(STYLE === "glass" ? glassHtml : STYLE === "plain" ? plainHtml : html, { waitUntil: "load" });
 await pg.evaluate(() => document.fonts.ready);
 await pg.evaluate(() => Promise.all(Array.from(document.images).map((i) => i.decode().catch(() => {}))));
 
@@ -326,7 +374,7 @@ await pg.evaluate(() => Promise.all(Array.from(document.images).map((i) => i.dec
    ⚠ 量法是把那一行複製到畫面外、關掉 justify、寬度設成 max-content ——
      直接讀 scrollWidth 沒有用，那一行已經被撐滿了，讀回來的就是容器寬。
    門檻 0.15em ＝ 首頁那 0.076em 的兩倍，留一點餘裕但擋得住四個字的情形。 */
-if (STYLE === "glass" && LOCPOS === "stack" && LOC_TEXT) {
+if ((STYLE === "glass" || STYLE === "plain") && LOCPOS === "stack" && LOC_TEXT) {
   const m = await pg.evaluate(() => {
     /* ⚠ 複本一定要掛在**原本那個父層底下**（2026-08-22 踩過）：
        掛到 document.body 上，`.stack .loc` 這種後代選擇器就不再命中，
@@ -359,7 +407,7 @@ if (STYLE === "glass" && LOCPOS === "stack" && LOC_TEXT) {
 
 /* 驗一件：牌子有沒有壓到臉或手 —— 構圖時左下角就留成安靜區，
    這裡量牌子佔畫面多大，超過一半就是版面出事了。 */
-const sel = STYLE === "glass" ? ".band" : ".plate";
+const sel = STYLE === "glass" ? ".band" : STYLE === "plain" ? ".mark" : ".plate";
 const box = await pg.evaluate((sel) => {
   const r = document.querySelector(sel).getBoundingClientRect();
   return { w: r.width, h: r.height, left: r.left, top: r.top };
@@ -376,5 +424,5 @@ await browser.close();
 const outIdx = args.indexOf("--out");
 const out = outIdx >= 0 ? path.resolve(ROOT, args[outIdx + 1]) : path.join(ROOT, "assets", `og-topic-${spec}.jpg`);
 fs.writeFileSync(out, buf);
-console.log(`牌子 ${box.w.toFixed(0)}×${box.h.toFixed(0)}（佔畫面寬 ${(100 * box.w / W).toFixed(1)}%・高 ${(100 * box.h / H).toFixed(1)}%）`);
+console.log(`標示 ${box.w.toFixed(0)}×${box.h.toFixed(0)}（佔畫面寬 ${(100 * box.w / W).toFixed(1)}%・高 ${(100 * box.h / H).toFixed(1)}%）`);
 console.log(`✓ ${path.relative(ROOT, out)}  ${W}×${H}  ${(fs.statSync(out).size / 1024).toFixed(1)}KB`);
