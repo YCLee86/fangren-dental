@@ -126,8 +126,12 @@ if (!spec || !ACCENT[spec]) {
 }
 
 const { TOPICS } = await import("./topic-copy.mjs");
-const label = TOPICS[spec]?.label;
-if (!label) throw new Error(`topic-copy.mjs 裡沒有 ${spec}`);
+/* --label 覆寫左邊那行字（空字串 ＝ 整個不放）。
+   ⚠ 給**首頁**的分享卡用的 —— 首頁不是科別，掛「一般牙科・定期檢查」是錯的。
+   科別的卡一律不要帶這個旗標，讓它自己去 topic-copy.mjs 拿。 */
+const labIdx = args.indexOf("--label");
+const label = labIdx >= 0 ? args[labIdx + 1] : TOPICS[spec]?.label;
+if (label === undefined) throw new Error(`topic-copy.mjs 裡沒有 ${spec}`);
 
 const base = fromArg ? path.resolve(ROOT, fromArg) : path.join(ROOT, "assets", `og-topic-${spec}.jpg`);
 if (!fs.existsSync(base)) {
