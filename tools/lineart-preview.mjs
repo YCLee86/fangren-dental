@@ -144,7 +144,25 @@ const bar = `
   cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 .25em}
 .pv-seg button[aria-pressed="true"]{background:#3f654a;border-color:#3f654a;color:#f4f4f5;font-weight:500}
 .pv-hint{font-size:.7rem;color:#5c5f57;margin-top:4px;line-height:1.45}
-body{padding-bottom:132px}
+body{padding-bottom:150px}
+/* ---- 電腦版預覽 ---------------------------------------------------------
+   ⚠⚠ 這一塊是 2026-08-22 補的。第一版沒有，使用者在手機上打開只看到一片空白
+     （「好像沒有欸」）—— **側邊那一格只在 ≥1200 出現**，而他所有東西都用手機看。
+     做法和訊息卡那幾張一樣：**擺真的東西，然後縮到看得到的尺寸**，
+     用 iframe 載同一頁、寬度鎖 1440，再用 transform 縮到手機寬。
+   ⚠ iframe 裡帶 frame=1，那一態不再畫這一塊也不畫切換條 —— 否則會遞迴。 */
+/* ⚠ 頁首是固定的，所以這一塊要自己讓開它 —— 讀站上同一個 --topic-pad
+     （著陸頁 #main 的上內距就是讀它，由頁面裡那支腳本現量寫入）。
+   ⚠ 讓開之後 #main 自己那份上內距就多餘了，這一頁把它收掉，不然中間會空一大塊。
+   ⚠⚠ 這是模板字串裡的 CSS 註解，**不能出現反引號**（CLAUDE.md 第九節第 8 條）。 */
+.pv-frame{margin:0;padding:calc(var(--topic-pad, 70px) + 12px) 12px 10px;
+  background:#dfe3e5;border-bottom:1px solid #cdd0d2}
+body[data-topic] #main{ padding-top: 1rem; }
+.pv-fl{font-size:.72rem;color:#5c5f57;line-height:1.5;margin-bottom:8px}
+.pv-fw{position:relative;width:100%;overflow:hidden;border-radius:8px;
+  box-shadow:0 1px 4px rgba(20,24,20,.16);background:#e2e5e6}
+.pv-fw iframe{width:1440px;height:760px;border:0;display:block;
+  transform-origin:0 0;transform:scale(var(--pv-k,1))}
 </style>
 <div class="pv-bar">
   <div class="pv-row"><span class="pv-lab">區塊</span><span class="pv-seg" id="pv-r">${
@@ -174,14 +192,53 @@ function apply(push){
       x.setAttribute("aria-pressed", String(x.dataset.k===cur[k])); }); });
   document.getElementById("pv-hint").textContent =
     R[cur.r].name + "・" + S[cur.s].name + "・" + I[cur.i].name + "　" + R[cur.r].note + "　" + S[cur.s].note;
+  syncFrame();
   if(push) history.replaceState(null,"","?region="+cur.r+"&spot="+cur.s+"&ink="+cur.i);
 }
+/* iframe 的縮放：外框寬 ÷ 1440。高度要跟著縮，不然下面會空一大塊。 */
+function sizeFrame(){
+  var w=document.querySelector(".pv-fw"); if(!w) return;
+  var k=w.clientWidth/1440;
+  w.style.setProperty("--pv-k",k);
+  w.style.height=Math.round(760*k)+"px";
+}
+function syncFrame(){
+  var f=document.getElementById("pv-if"); if(!f) return;
+  var u="?frame=1&region="+cur.r+"&spot=side&ink="+cur.i;
+  if(f.getAttribute("src")!==u) f.setAttribute("src",u);
+}
+addEventListener("resize",sizeFrame);
 document.querySelector(".pv-bar").addEventListener("click",function(e){
   var t=e.target.closest("button[data-row]"); if(!t) return;
   cur[t.dataset.row]=t.dataset.k; apply(true);
 });
+/* frame=1 ＝ 被自己嵌在 iframe 裡的那一份：不畫預覽框也不畫切換條。 */
+if (/[?&]frame=1/.test(location.search)) {
+  var fr=document.getElementById("pv-frame"); if(fr) fr.remove();
+  var br=document.querySelector(".pv-bar"); if(br) br.remove();
+  document.body.style.paddingBottom="0";
+}
 apply(false);
+sizeFrame(); syncFrame();
 </script>`;
+/* ⚠⚠ 電腦版預覽要插在 **<body> 的開頭**，不是切換條旁邊。
+   第一版跟著切換條放在 </body> 前面 —— 那是整頁的最底下，使用者在手機上
+   打開只看到原本的著陸頁、什麼都沒有（「好像沒有欸」）。 */
+/* ⚠⚠ **`<body>` 這幾個字在 `<head>` 的註解裡出現四次**（CLAUDE.md 第八節那個坑）——
+   直接 match 會抓到註解裡的第一個，整塊就插進樣式表中間、完全不會顯示，
+   而且**不報錯**（第一版就是這樣：使用者在手機上看只看到原本的頁）。
+   所以從 `</head>` 之後才開始找。 */
+const afterHead = html.indexOf("</head>");
+if (afterHead < 0) throw new Error("找不到 </head>");
+const bodyTag = html.slice(afterHead).match(/<body[^>]*>/);
+if (!bodyTag) throw new Error("找不到真正的 <body>");
+const frameBlock = `
+<div class="pv-frame" id="pv-frame">
+  <div class="pv-fl">電腦版（1440 寬）縮進來看 —— 側邊那一格只在 ≥1200 出現，用手機直接看是看不到的。底下那一整頁是手機版本身。</div>
+  <div class="pv-fw"><iframe id="pv-if" title="電腦版預覽" scrolling="no"></iframe></div>
+</div>`;
+html = html.slice(0, afterHead) + html.slice(afterHead).replace(bodyTag[0], bodyTag[0] + frameBlock);
+
 const i = html.lastIndexOf("</body>");
 if (i < 0) throw new Error("找不到 </body>");
 html = html.slice(0, i) + bar + "\n" + html.slice(i);
