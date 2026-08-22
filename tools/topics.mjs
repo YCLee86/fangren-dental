@@ -85,8 +85,12 @@ const descOf = (t) => {
    ⚠ 用 MedicalWebPage：這一頁確實是在描述一個醫療科別，而且它**不宣告
      lastReviewed**（CLAUDE.md 第十節第 2 條：宣告一個沒有人做的審閱等於造假）。
    ⚠ 診所節點只放 @id 指回首頁的 #dentist，不重抄一份（第十節第 1 條）。
-   ⚠ **沒有 og:image** —— 著陸頁目前一張圖都沒有（CLAUDE.md 第九節第 19 項
-     還沒定案）。寧可不給，也不要拿別科文章的 HERO 頂。 */
+   ⚠ **這裡不產 og:image** —— 分享圖沿用 index.html <head> 裡那張診所夜景
+     （`assets/hero-clinic-night.jpg`，1600×1058，快照下來就帶著了），
+     所以七頁分享到 LINE／FB 都有圖，不是空白卡。
+     著陸頁**自己專屬的圖**還沒做（CLAUDE.md 第九節第 19 項還沒定案）——
+     真要做的時候是在這裡多產一組 og:image，並把步驟 10 的白名單放行它。
+     ⚠ 在那之前不要拿別科文章的 HERO 頂：會缺圖的正好是文章最少的那幾科。 */
 const seoBlock = (spec, t, canonical, cnt) => {
   const desc = descOf(t);
   const title = `${t.h1} — 芳仁牙醫診所（雲林斗六）`;
@@ -461,6 +465,28 @@ for (const spec of SPECS) {
   h = h.replace(/<title>[^<]*<\/title>/, `<title>${t.h1} — 芳仁牙醫診所（雲林斗六）</title>`);
   h = h.replace(/<link rel="canonical"[^>]*>\n?/, "");
   h = h.replace(/<meta name="description"[^>]*>\n?/, "");
+
+  /* ⚠⚠ 手寫的那一組 og:* 也要拿掉（2026-08-22 修）。
+     index.html 的 <head> 裡有一組**手寫**的 og:type／og:title／og:description／
+     og:url，位置在 SEO:START 那一段的**前面** —— 而 Facebook 與 LINE 的爬蟲
+     遇到重複的 og 屬性一律取**第一個**，所以在這一步之前，七頁分享出去全部
+     顯示的是首頁的標題與描述，og:url 還寫著 https://fangren.net/，
+     和同一頁正確的 canonical（/topics/<spec>/）互相矛盾 ——
+     等於對 LINE、FB 說「這一頁其實是首頁」。
+     ⚠ 這一步一定要排在下面那條 SEO 區塊的替換**之前**：替換之後
+       seoBlock 自己也會產這四個屬性，那時就分不出誰是誰了。
+     ⚠ og:site_name 與 og:image* 刻意**留著** —— seoBlock 沒有產這兩組，
+       分享圖現在就是沿用首頁那張診所夜景。
+     ⚠ 出現次數不是 1 就 throw：index.html 的 og 區日後改過（多一個、
+       或搬進 SEO 區塊裡）這一步就會失準，寧可讓產生器出聲。 */
+  for (const prop of ["og:type", "og:title", "og:description", "og:url"]) {
+    const re = new RegExp(`<meta property="${prop}"[^>]*>\n?`, "g");
+    const hits = (h.match(re) || []).length;
+    if (hits !== 1) {
+      throw new Error(`<head> 裡 ${prop} 出現 ${hits} 次（預期 1）—— index.html 的 og 區改過了，步驟 10 要跟著改`);
+    }
+    h = h.replace(re, "");
+  }
   h = h.replace(/<!-- SEO:START[\s\S]*?<!-- SEO:END -->/, seoBlock(spec, t, canonical, cnt));
   h = h.replace("<head>", "<head>\n" + headNote(spec, t));
 
