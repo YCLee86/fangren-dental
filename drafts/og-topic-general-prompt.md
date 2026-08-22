@@ -1,6 +1,6 @@
 # 分享圖提示詞：一般牙科・定期檢查（`og-topic-general`）
 
-**狀態：第五版提案。第四版使用者說「很棒我非常喜歡」，只提兩件事要改（見第五版那一節）。**
+**狀態：第六版提案。第四版使用者說「很棒我非常喜歡」，第五、六版都是在那一版上逐項修。**
 規格依 [ILLUSTRATION.md](../ILLUSTRATION.md) 第十一節（250px 判準）與
 [TEAM.md](../TEAM.md) 第一節第 9 號（插畫師的三個交件門檻）。
 文案脈絡見 COPY.md 第九之十四節。
@@ -191,7 +191,7 @@ ILLUSTRATION.md 第十一之二節。**這一版的設計依據是使用者自�
 2. 二樓是**直立細長窗**，成對嵌在往外挑的深色金屬窗盒裡（前幾版只寫「窗盒」）。
 3. 玻璃白天是**深灰綠、反著天光**，不是暖黃發光。
 
-提示詞逐字見本檔最後（第六版）。
+提示詞逐字見下面那一段（第六版）。
 
 ## 提示詞（第五版，已作廢，第六版是從這一份改的）
 
@@ -657,3 +657,169 @@ figures, oversized heads or noodle limbs; blood, pain or fear; sunset or night l
 
 另外還要看：四邊有沒有烘進去的白框（ILLUSTRATION.md 第七節第 6 條，
 `tools/hero-resize.mjs` 會自動擋）、色牌疊上去之後左下角讀不讀得下去。
+
+## 提示詞（第六版，逐字，可直接複製）
+
+> ⚠ 生成時附**兩張**參考圖：① **第四版那張插畫**（`drafts/og-topic-general-v4.jpg`）——
+> 「畫風、配色、線的實度、人物比例、氣氛照這張」；② **`drafts/og-facade-ref.png`** ——
+> 「建築照這張畫，招牌的字拿掉，不要照抄照片的顏色調性與質感」。
+
+```
+Editorial illustration for a social-media preview card, 1200 x 628 landscape (1.91:1).
+
+READ THIS FIRST — THIS IMAGE WILL BE SEEN AT ABOUT 250 PIXELS WIDE, the size of a
+thumbnail in a chat message. Big simple shapes, no fine detail, no panels, no speech
+bubbles, no insets, no icons, no arrows, no diagrams.
+
+IT IS THE MIDDLE OF A BRIGHT AFTERNOON — READ THIS BEFORE ANYTHING ELSE. Daylight outside
+is STRONGER than any light indoors. The pavement, the concrete wall and the sky are the
+brightest things in the picture; the glass shopfront is DARKER than the wall around it,
+quietly reflecting the pale sky, with only a soft hint of the lit waiting room deep
+inside. Shadows are short, soft and slightly cool. This is NOT evening: no glowing orange
+windows, no amber light spilling onto the pavement, no golden or sunset cast over the
+picture, no lamps as the brightest thing, no dusk sky.
+
+THE FEELING — an ordinary weekday afternoon on a quiet lane in a small town in central
+Taiwan. The dental clinic is simply part of this street, and its people are OUT ON THE
+PAVEMENT among the neighbours. SEVERAL SMALL THINGS ARE HAPPENING AT THE SAME TIME.
+Nobody is posing, nobody is performing a welcome, nobody looks at the viewer. The mood is
+warm, easy and alive — the opposite of a quiet, empty, staged picture.
+
+THE BUILDING — this is a REAL building; follow the photograph reference closely for its
+architecture, but draw it entirely in the illustration style described below, never as a
+photograph. It is a renovated old townhouse, immaculately kept and quietly modern:
+  • the ground floor is SET BACK under the upper storeys, forming a covered walkway
+    carried by THREE SQUARE COLUMNS clad in dark chocolate-brown metal, making TWO BAYS;
+  • between the columns the front is FULL-HEIGHT GLASS in slim dark frames. In daylight
+    this glass reads DARK and slightly cool — a deep grey-green, with soft pale
+    reflections of the sky across it. Through it, faint and low-contrast, we can just
+    make out a calm waiting area: pale wood furniture and a soft warm light far inside.
+    The glass must NEVER be a bright glowing orange panel;
+  • a slim dark steel BEAM runs across above the glass carrying a completely BLANK sign
+    panel — no letters of any kind;
+  • above that, a smooth PALE WARM-GREY CONCRETE wall with TALL NARROW VERTICAL WINDOWS
+    set in DARK METAL BOXES that project outward from the wall, arranged in PAIRS — this
+    is the most recognisable feature of the building and must be clearly drawn;
+  • the picture is cropped by the TOP EDGE just above the first row of window boxes: a
+    thin strip of pale blue sky may show at the very top left, no roof.
+Old means renovated and cared for: no peeling paint, no cracks, no stains, no rust, no
+litter, nothing derelict.
+
+THE CLINIC IS ON A CORNER — this matters and must be drawn correctly. The building ENDS
+at the RIGHT-HAND SIDE of the picture: the last column is the corner of the building, and
+beyond it there is NO neighbouring shopfront and NO covered walkway — the ground opens
+into a side road running away to the right, with a low kerb and open sky above it. Far
+back across that road, small and pale, a dark maroon canopy and a couple of parked cars
+suggest the rest of the town. At the LEFT edge, cropped, the low tiled roof of an old
+neighbouring house sits against the clinic. Left = attached old neighbour, right = open
+corner and street.
+
+FRAMING — a straight-on street-level view. The two glass bays sit at the CENTRE of the
+picture. The people stand along the covered walkway and the pavement in one horizontal
+band across the lower two thirds.
+
+SCALE — THE ADULTS ARE BIG: each standing adult is about 70% of the picture height, drawn
+from head to foot. Their heads must be large enough to read as faces in a small thumbnail.
+
+THE CAST — SIX people in THREE groups, spread left to right with clear gaps between them:
+  1. CENTRE, in front of the glass — THE MAIN GROUP, the largest figures. A DENTIST
+     wearing an OPEN WHITE COAT OVER pale sage-green scrubs stands talking with an OLD
+     MAN who has stopped beside his bicycle, one hand on the handlebar and the other
+     raised mid-sentence. They face each other in three-quarter view, in the middle of an
+     easy everyday conversation between neighbours. The white coat makes her clearly the
+     clinic's doctor.
+  2. LEFT — a YOUNG MOTHER in her thirties with a SMALL BOY of about five. The boy is up
+     on his toes, arm stretched out, waving and pointing across towards the two clinic
+     colleagues at the right; he is delighted. His mother bends slightly, holding his
+     other hand, looking where he points and smiling.
+  3. RIGHT, at the corner — TWO CLINIC COLLEAGUES walking along the pavement, one in a
+     white coat over scrubs, the other in scrubs holding a cold drink. THEY BOTH NOTICE
+     THE BOY AND ANSWER HIM: the one in the white coat has turned towards him and is
+     WAVING BACK, hand up and open, smiling; the other has turned her head to the boy and
+     his mother with a knowing, amused smile. Their bodies still face the direction they
+     are walking; only their heads and one arm turn.
+     A SCHOOLGIRL rides past on a bicycle in front of them, cut off by the right edge.
+THE BOY'S WAVE AND THE COLLEAGUES' ANSWER ARE THE ONE CONNECTION ACROSS THE PICTURE.
+Everyone else stays inside their own group. Nobody is greeting a customer, nobody holds
+out an inviting palm, nobody bows, nobody queues, nobody is being escorted inside.
+
+EVERYONE LOOKS DIFFERENT — no two people in this picture may look alike. Give each a
+clearly different age, build, hairstyle and clothing colour: the old man is thin with
+short grey hair and a brown polo shirt; the young mother has shoulder-length dark hair, a
+coral top and jeans; the small boy has a round face and a pale blue tee; the dentist in
+the centre wears her hair tied back; the colleague in the white coat has short hair; the
+colleague with the drink has a low ponytail; the schoolgirl has a high ponytail, white
+school shirt and navy skirt. There is only ONE old person. Never draw the same face twice.
+
+EVERY PERSON IS DRAWN WITH EXACTLY THE SAME LINE WEIGHT, THE SAME LINE DARKNESS AND THE
+SAME SOLIDITY OF COLOUR. A figure further away is made secondary ONLY by being smaller or
+partly overlapped — NEVER by pale, thin, faint, washed-out, semi-transparent or
+outline-only drawing. Nobody wears a mask, nobody holds any dental instrument.
+
+WHAT ELSE IS IN THE PICTURE — a few large, simple things: two healthy potted plants
+against the wall, a low wooden stool, the old man's bicycle, a scooter parked and cropped
+by the LEFT edge. Nothing small or fussy: no posters, no meter boxes, no hanging cables,
+no bins, no banners.
+
+MOVEMENT MARKS — small white hand-drawn strokes, two or three short lines at a time,
+placed just outside a moving thing: beside the boy's waving arm, beside the schoolgirl's
+wheel, beside a waving hand. Chalk-like, light and quick. They NEVER emerge from anyone's
+mouth, nose or body, never loop, never cross, never form a long ribbon.
+
+KEEP THE LOWER LEFT CORNER QUIET — the rectangle covering the LEFT 34% of the width and
+the BOTTOM 30% of the height holds only the swept pavement, a soft shadow and the cropped
+body of the parked scooter: large calm shapes, no face, no hands, no small detail. Quiet
+does NOT mean empty or colourless.
+
+FILL THE FRAME — the picture must never look empty or still. No large flat blank field
+anywhere; no single area of one flat colour may take up more than about a tenth of the
+picture.
+
+STYLE — Contemporary printed-magazine editorial illustration. Linework in warm dark brown
+or soft charcoal, NEVER pure black: thin, hand-drawn, weight varies, strokes taper and
+sometimes break. Colour applied like soft coloured pencil and light marker, edges a little
+loose and not always meeting the line. Flat fills with two or three tones per hue, no
+smooth decorative gradients. A fine even paper grain over the whole image. The building is
+drawn the same way as the people — hand-drawn and simplified, NEVER photographic, no photo
+texture, no mirror-like reflections, no lens perspective.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face is a single flat tone
+with no modelling. A face carries only six things — its outline, eyes, eyebrows, nose,
+mouth and ears. No wrinkles, no cheekbone or jaw shading, no shadow under the eyes, no
+nose-to-mouth lines, no blush. Eyes are simple dots or short lines.
+
+COLOUR — clear, warm and lively, never dull and never washed out: most colour blocks sit
+around HSL saturation 30-50 and lightness 65-82, and well over half of the picture carries
+real colour. The building itself is quiet — pale warm grey concrete, dark chocolate-brown
+metal columns and window boxes, deep grey-green glass — so THE COLOUR MUST COME FROM THE
+PEOPLE AND THE STREET: white coats; clinic scrubs in pale sage (#bfd7b7 with #99b899 in
+the folds); the old man in warm brown; the young mother in muted coral; the small boy in
+pale blue; the schoolgirl in white and navy; deep green foliage; a warm sandy pavement; a
+thin strip of pale blue sky. Keep the concrete WARM grey, never a cold blue-grey, and
+never let the whole picture go grey — at least seven distinct colours must be readable at
+thumbnail size. Hair is very dark and warm-toned (#374840, shading to #283930, with
+#404f47 highlights) — never flat pure black, never brown or auburn, except the old man's
+grey hair. Clothes are never flat single-tone shapes: two or three tones each, with folds,
+collar, cuffs and hem drawn.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions or watermarks, in any language. THE SIGN PANEL ABOVE THE GLASS IS
+COMPLETELY BLANK, and so is the distant canopy across the road — even though the real
+building has lettering there, leave both surfaces plain and empty. The scooter, the drink
+cup, the school bag and all clothing carry no writing.
+
+AVOID — evening or sunset light; glowing orange or amber windows; interior light brighter
+than daylight; a golden cast over the picture; long orange shadows; a dark sky; a still,
+quiet, staged or empty picture; only one thing happening; a child waving with nobody
+answering him; a shop-front welcome, an inviting open palm, a bow, a queue, a customer
+being received; a neighbouring shop or covered walkway continuing past the right edge of
+the building; two people who look alike; every patient being elderly; a faded, pale,
+translucent or ghostly figure; any person drawn with lighter or thinner lines than the
+others; small distant figures; large empty walls or pavement; photographic rendering,
+photo texture, mirror reflections, lens perspective; peeling paint, cracks, stains, rust,
+litter; a cold grey overall cast; panels or split screens; speech bubbles; magnified
+insets; arrows or icons; a dense crowd or more than six people; anything small and fussy
+in the lower-left corner; teeth, tooth models, dental chairs, instruments, X-rays or
+clinical equipment; masks; anyone looking at the viewer; greyscale; photorealism; thick
+uniform black outlines; chrome or iridescent gradients; faceless figures, oversized heads
+or noodle limbs; blood, pain or fear.
+```
