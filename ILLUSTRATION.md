@@ -1540,14 +1540,33 @@ Google 搜尋結果**不看** `og:image`，網站頁面上也不顯示它 ——
   —— 這同時是 COPY.md 第九之十四節那一頁的內容（那一頁同時寫給在地長輩**和**
   人在外地的子女）。
 
-### 管線
+### 管線 —— ✅ 2026-08-22 建好並跑過一次（general）
 
-原檔（≥1200 寬）放 `drafts/`，用 `tools/hero-resize.mjs` 的同一條 Chromium 路徑
-產出 `assets/og-topic-<spec>.jpg`；`tools/topics.mjs` 的 `seoBlock` 補上
-`og:image`／`:width`／`:height`／`:alt`。
-⚠⚠ **補 `og:image` 的同時，步驟 10 要把 `index.html` 手寫的那組 `og:image*`
-一起刪掉** —— 理由同 2026-08-22 那一輪：重複的 og 屬性，爬蟲取第一個，
-不刪的話七頁還是會顯示首頁那張夜景。
-⚠ 容器裡**沒有站上用的思源黑體**（只有文泉驛），色牌上的字要正確，
-得先把字型檔進版控（Noto Sans TC，OFL 授權可隨 repo 散布），
-否則兩台電腦產出來的字不一樣。
+原檔放 `drafts/og-topic-<spec>-src.jpg`，跑：
+
+    node tools/og-resize.mjs drafts/og-topic-general-src.jpg general
+    → assets/og-topic-general.jpg（1200×628、JPEG 0.82）
+
+⚠ **不要共用 `tools/hero-resize.mjs`** —— 那一支鎖死文章 HERO 的 2000×1116，
+比例對不上就拒絕寫檔。分享卡是另一套規格，所以另開 `tools/og-resize.mjs`：
+它允許**往內裁**到 1.91:1（只裁不變形，超過 8% 就 throw），
+並沿用白框那道守門 —— ⚠ **薄白邊（≤4 列）自動裁掉**（出圖模型常在下緣留 1~2 列，
+general 這張就有 2 列），厚的仍然 throw。
+
+`tools/topics.mjs` 的 `seoBlock` 產 `og:image`／`:width`／`:height`／`:alt`，
+規則一條：**`assets/og-topic-<spec>.jpg` 存在就用它，沒有就退回診所夜景**
+（`hero-clinic-night.jpg` 1600×1058），所以還沒畫圖的科目照樣有圖。
+alt 寫在 `topics.mjs` 的 `OG_ALT`，**要描述圖裡實際有什麼**（第七節第 4 條）。
+⚠⚠ **同一輪已把步驟 10 的剝除清單補上 `og:image*` 四條** —— 重複的 og 屬性
+爬蟲取第一個，不剝的話各科的圖等於白做。
+
+### ⚠ 色牌還沒做（2026-08-22 的現況）
+
+第十一節原本要求疊一塊科別色的牌子（科別名 ＋ 標誌 ＋ 芳仁牙醫診所）。
+**general 這張上線時沒有疊**，兩個理由，待使用者裁決：
+1. **容器裡沒有站上用的思源黑體**（只有文泉驛），字型不對就不該把字燒進圖裡；
+   要做得先把 Noto Sans TC（OFL）進版控。
+2. **LINE／FB 的卡片本來就會把 `og:title` 印在圖旁邊**（「一般牙科・定期檢查 —
+   芳仁牙醫診所（雲林斗六）」），色牌等於再說一次同樣的話。
+⚠ 第十一節那條「250px 下標誌單獨出現認不出是誰」仍然成立 ——
+**要放就要放「標誌＋六個字」，不要只放標誌。**

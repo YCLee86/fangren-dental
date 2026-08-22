@@ -85,15 +85,32 @@ const descOf = (t) => {
    ⚠ 用 MedicalWebPage：這一頁確實是在描述一個醫療科別，而且它**不宣告
      lastReviewed**（CLAUDE.md 第十節第 2 條：宣告一個沒有人做的審閱等於造假）。
    ⚠ 診所節點只放 @id 指回首頁的 #dentist，不重抄一份（第十節第 1 條）。
-   ⚠ **這裡不產 og:image** —— 分享圖沿用 index.html <head> 裡那張診所夜景
-     （`assets/hero-clinic-night.jpg`，1600×1058，快照下來就帶著了），
-     所以七頁分享到 LINE／FB 都有圖，不是空白卡。
-     著陸頁**自己專屬的圖**還沒做（CLAUDE.md 第九節第 19 項還沒定案）——
-     真要做的時候是在這裡多產一組 og:image，並把步驟 10 的白名單放行它。
-     ⚠ 在那之前不要拿別科文章的 HERO 頂：會缺圖的正好是文章最少的那幾科。 */
+   ⚠⚠ **og:image 2026-08-22 起由這裡產**（原本沿用 index.html 手寫的那張夜景）。
+     規則只有一條：**`assets/og-topic-<spec>.jpg` 存在就用它，沒有就退回診所夜景**
+     （`assets/hero-clinic-night.jpg`，1600×1058），所以還沒畫圖的科目照樣有圖、
+     不是空白卡。目前只有 general 有自己的圖（2026-08-22 定稿，十六輪）。
+     ⚠ 尺寸寫死 1200×628 是**分享卡的規格**（ILLUSTRATION.md 第十一節），
+       和文章 HERO 的 2000×1116 是兩套，不要互相套用。圖用 tools/og-resize.mjs 產。
+     ⚠ 既然這裡開始產 og:image，**步驟 10 就必須把手寫的那組一起刪掉** ——
+       重複的 og 屬性，FB／LINE 一律取第一個（2026-08-22 那一輪的教訓）。
+     ⚠ 不要拿別科文章的 HERO 頂：會缺圖的正好是文章最少的那幾科。 */
+const OG_FALLBACK = { file: "assets/hero-clinic-night.jpg", w: 1600, h: 1058,
+                      alt: "芳仁牙醫診所外觀，入夜後的永樂街街角" };
+/* ⚠ alt 要描述**圖裡實際有什麼**，不是抄標題（ILLUSTRATION.md 第七節第 4 條）。 */
+const OG_ALT = {
+  general: "白天的永樂街轉角，芳仁牙醫診所的騎樓前：醫師和牽著腳踏車的老先生站著聊天，"
+         + "小男孩向對街的醫師揮手，學生騎車經過。",
+};
+const ogImage = (spec) => {
+  const rel = `assets/og-topic-${spec}.jpg`;
+  if (!fs.existsSync(path.join(ROOT, rel))) return OG_FALLBACK;
+  return { file: rel, w: 1200, h: 628, alt: OG_ALT[spec] || OG_FALLBACK.alt };
+};
+
 const seoBlock = (spec, t, canonical, cnt) => {
   const desc = descOf(t);
   const title = `${t.h1} — 芳仁牙醫診所（雲林斗六）`;
+  const og = ogImage(spec);
   const ld = {
     "@context": "https://schema.org",
     "@graph": [
@@ -129,6 +146,10 @@ const seoBlock = (spec, t, canonical, cnt) => {
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${desc}">
 <meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="${SITE}/${og.file}">
+<meta property="og:image:width" content="${og.w}">
+<meta property="og:image:height" content="${og.h}">
+<meta property="og:image:alt" content="${og.alt}">
 <script type="application/ld+json">
 ${JSON.stringify(ld, null, 2)}
 </script>
@@ -475,11 +496,14 @@ for (const spec of SPECS) {
      等於對 LINE、FB 說「這一頁其實是首頁」。
      ⚠ 這一步一定要排在下面那條 SEO 區塊的替換**之前**：替換之後
        seoBlock 自己也會產這四個屬性，那時就分不出誰是誰了。
-     ⚠ og:site_name 與 og:image* 刻意**留著** —— seoBlock 沒有產這兩組，
-       分享圖現在就是沿用首頁那張診所夜景。
+     ⚠⚠ **og:image* 2026-08-22 起也要剝掉** —— 那一天 seoBlock 開始產自己的
+       og:image（各科自己的分享圖，沒有的退回夜景）。不剝的話同一頁會有兩組，
+       爬蟲取第一個 ＝ 永遠顯示夜景，各科的圖等於白做。
+     ⚠ og:site_name 仍然留著 —— seoBlock 沒有產它，而它七頁都一樣。
      ⚠ 出現次數不是 1 就 throw：index.html 的 og 區日後改過（多一個、
        或搬進 SEO 區塊裡）這一步就會失準，寧可讓產生器出聲。 */
-  for (const prop of ["og:type", "og:title", "og:description", "og:url"]) {
+  for (const prop of ["og:type", "og:title", "og:description", "og:url",
+                      "og:image", "og:image:width", "og:image:height", "og:image:alt"]) {
     const re = new RegExp(`<meta property="${prop}"[^>]*>\n?`, "g");
     const hits = (h.match(re) || []).length;
     if (hits !== 1) {
