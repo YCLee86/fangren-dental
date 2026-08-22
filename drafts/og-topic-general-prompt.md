@@ -1124,4 +1124,168 @@ chairs, X-rays or teeth.
 ④ **地上的影子全部同一個方向**，給地面一個方向感。
 ⚠ 一兩片被風帶著跑的葉子就夠，不要鋪滿。
 
-提示詞逐字見下面（第十版）。
+提示詞逐字見本檔最後（第十版）。
+
+## 提示詞（第十版，逐字，可直接複製）
+
+> ⚠ 參考圖三張：① `drafts/og-topic-general-v9.jpg`（畫風、配色、線的實度、人物比例）
+> ② `drafts/og-facade-ref.png`（正面細節，招牌的字拿掉）
+> ③ `drafts/og-corner-ref.png`（轉角怎麼轉、長向立面）。
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview
+card. It will be seen at about 250 pixels wide, so everything must read at thumbnail size:
+big simple shapes, few large objects, one continuous scene.
+
+THE FIVE THINGS THAT MATTER MOST, IN ORDER:
+
+1. BRIGHT MIDDAY LIGHT UNDER A BLUE SKY. Daylight outside is stronger than any light
+   indoors. The sky is a soft clear blue with two or three thin white clouds drifting
+   across it — never a blank white sky, never a colourless one. The pavement, the concrete
+   wall and that blue sky are the brightest things in the picture. The glass shopfront is
+   one step darker than the wall — never black, never empty.
+2. THE PEOPLE STAND IN THE FOREGROUND AND THEY ARE LARGE. They are on the near edge of the
+   pavement, close to us, with the whole building set back behind them. USE THIS ANCHOR
+   rather than a percentage: the top of each standing adult's head reaches about the height
+   of the dark sign beam above the shopfront, and their feet come close to the bottom edge
+   of the picture. If they cannot be that large, move the people closer to the viewer — do
+   NOT shrink the building's window boxes and do NOT crop them away.
+3. THE STREET IS IN MOTION. Several small things are happening at the same time and the
+   air is moving through the picture; nothing is posed or frozen.
+4. THE REAL BUILDING behind them, drawn from the photograph references, ON A CORNER: the
+   front elevation faces us, and at the RIGHT-HAND SIDE it turns the corner. ONE FULL ROW
+   OF THE DARK PROJECTING WINDOW BOXES IS VISIBLE ABOVE THE SIGN BEAM — they are the
+   building's signature and must never be cropped out.
+5. NO WRITING ANYWHERE in the image, in any language.
+
+MOVEMENT AND AIR — this is what makes the picture feel alive, so draw all four:
+  • THREE OR FOUR LONG WHITE HAND-DRAWN LINES sweep right across the upper part of the
+    picture, above the people and across the sky and the wall — soft chalk quality,
+    tapering to dry flecks at their ends, all running the same way, suggesting a light
+    breeze passing down the street. They are drawn in the open air only and NEVER touch or
+    emerge from any person's mouth, nose, hands or body.
+  • SMALL WHITE MOVEMENT MARKS, two or three short strokes at a time, beside four
+    different things that are moving: the boy's raised arm, the waving colleague's raised
+    hand, the schoolgirl's front wheel, and the mother's skirt hem.
+  • THE BREEZE TOUCHES THE PEOPLE: loose strands of hair and the hems of coats and shirts
+    lift slightly, all blown the same way; the schoolgirl leans forward as she pedals; the
+    waving colleague is caught MID-STRIDE with his back heel off the ground; one or two
+    small leaves tumble along the pavement. Keep it to that — no swirling debris.
+  • EVERY SHADOW ON THE GROUND FALLS THE SAME WAY, short and soft, giving the pavement one
+    clear direction.
+
+THE BUILDING — a renovated old townhouse in a small town in central Taiwan, immaculately
+kept and quietly modern. Draw it in the illustration style described below, hand-drawn and
+simplified, never photographic.
+  • The ground floor is SET BACK under the upper storeys, forming a covered walkway carried
+    by SQUARE COLUMNS clad in dark chocolate-brown metal — three columns across the front,
+    making two bays.
+  • Between the columns the front is FULL-HEIGHT GLASS in slim dark frames. The glass is a
+    soft deep grey-green, one step darker than the concrete wall, and YOU CAN CLEARLY SEE
+    THE WAITING ROOM THROUGH IT: two or three pale wood chairs, a small framed picture on
+    the back wall, a potted plant, and one warm lamp glowing softly in the depth of the
+    room. Draw those things plainly, in muted colour — the glass is a window into a calm
+    room, not a dark panel. A few pale diagonal sky reflections cross it.
+  • A slim dark steel BEAM runs across above the glass carrying a completely BLANK sign
+    panel.
+  • ABOVE THE BEAM, a band of smooth pale warm-grey concrete carrying ONE COMPLETE ROW of
+    TALL NARROW VERTICAL WINDOWS set in DARK METAL BOXES that project out from the wall,
+    arranged in pairs. This whole row is inside the frame, uncropped, with the blue sky
+    above it. No roof, no second row of windows.
+  • THE CORNER, at the RIGHT: the last column of the front is the corner of the building.
+    From there a SHORT stretch of the LONG SIDE ELEVATION recedes to the right in gentle
+    perspective — the same pale concrete, one more dark projecting window box, and TWO
+    WHITE CYLINDRICAL PLANTERS with small green shrubs along its base. A narrow side lane
+    runs past it out of frame.
+  • AT THE LEFT EDGE, filling what would otherwise be an empty corner: the low tiled roof
+    and pale wall of the old neighbouring house, cropped by the frame, with a small street
+    tree beside it whose leaves catch the same breeze. Blue sky and one thin cloud show
+    above them.
+
+THE PEOPLE — six, all East Asian (Taiwanese), in three groups with clear gaps between them:
+  1. CENTRE, in front of the glass, the largest figures: a WOMAN DENTIST — female, in her
+     forties, her dark hair gathered in a low bun, wearing an OPEN WHITE COAT over pale
+     sage-green scrubs — stands talking with an OLD MAN who has stopped beside his bicycle,
+     one hand on the handlebar and the other raised mid-sentence. They face each other in
+     three-quarter view, in the middle of an easy everyday conversation.
+  2. LEFT: a YOUNG MOTHER in her thirties with a SMALL BOY of about five. The boy is up on
+     his toes, arm stretched out, waving across at the two clinic colleagues on the right,
+     delighted. His mother bends slightly, holding his other hand, looking where he waves
+     and smiling.
+  3. RIGHT, at the corner: TWO CLINIC COLLEAGUES who were walking along the pavement
+     together — A MAN in a white coat over scrubs, and a WOMAN in scrubs holding a cold
+     drink. THEIR OWN CONVERSATION HAS STOPPED — they have both noticed the little boy and
+     are answering him, and this must be unmistakable at thumbnail size:
+     • THE MAN — a Taiwanese man in his thirties with short black hair, clean-shaven, a
+       white coat open over pale sage-green scrubs — has stopped mid-stride, back heel off
+       the ground, and turned his HEAD, SHOULDERS AND CHEST to his left, squarely towards
+       the boy on the far side of the picture. He raises the arm nearest the boy high, well
+       above his shoulder, palm open, elbow bent, WAVING BACK at him, grinning. His whole
+       silhouette leans the boy's way.
+     • THE WOMAN WITH THE DRINK has turned her head the same way, chin towards the boy and
+       his mother, smiling — she is watching her colleague answer the child. She still
+       holds the cup, but she is no longer facing her colleague.
+     • NEITHER OF THEM FACES THE OTHER any more; both are turned across the picture towards
+       the boy, and nothing stands between them and him.
+     A SCHOOLGIRL rides past on a bicycle in front of them, cut off by the right edge.
+This exchange — the boy waving and the two colleagues turning and waving back across the
+street — is the one connection that spans the picture. Everyone else stays inside their own
+group. Read it from the turn of the bodies and the angle of the arms, not from the eyes: at
+thumbnail size the eyes are only a dot.
+
+EVERYONE LOOKS DIFFERENT — every person has a clearly different age, build, hairstyle and
+clothing colour: the old man is thin with short grey hair and a brown polo shirt; the young
+mother has shoulder-length dark hair, a coral top and jeans; the small boy has a round face
+and a pale blue tee; the woman dentist in the centre has a low bun; the man in the white
+coat has short black hair; the colleague with the drink has a low ponytail; the schoolgirl
+has a high ponytail, white school shirt and navy skirt. Exactly one elderly person appears.
+Every face is drawn once.
+
+DRAW EVERY PERSON WITH THE SAME LINE WEIGHT, THE SAME LINE DARKNESS AND THE SAME SOLIDITY
+OF COLOUR AS EVERY OTHER PERSON. Distance is shown by size and by overlapping, and by
+nothing else — every figure is fully drawn and fully coloured.
+
+ALSO IN THE PICTURE, all large and simple: two potted plants against the front wall, a low
+wooden stool, the old man's bicycle, and a scooter parked and cropped by the LEFT edge.
+
+THE LOWER LEFT CORNER STAYS CALM — the area covering the left third of the width and the
+bottom third of the height holds only the swept pavement, a soft shadow and the cropped
+body of the parked scooter: large quiet shapes carrying warm colour, no faces, no hands, no
+small detail.
+
+STYLE — contemporary printed-magazine editorial illustration. Linework in warm dark brown
+or soft charcoal, thin and hand-drawn, weight varying, strokes tapering and sometimes
+breaking. Colour applied like soft coloured pencil and light marker, edges a little loose
+and not always meeting the line. Flat fills with two or three tones per hue. A fine even
+paper grain over the whole image. Skin is the one exception to the two-or-three-tones rule:
+each face is a single flat tone, carrying only its outline, eyes, eyebrows, nose, mouth and
+ears; eyes are simple dots or short lines.
+
+COLOUR — clear, warm and lively. Most colour blocks sit around HSL saturation 30-50 and
+lightness 65-82, and well over half the picture carries real colour. The building is quiet
+— pale WARM grey concrete, dark chocolate-brown metal, deep grey-green glass — so the
+colour comes from the sky, the people, the street and the lit room behind the glass: a soft
+blue sky with white clouds; white coats; pale sage scrubs (#bfd7b7 with #99b899 in the
+folds); the old man in warm brown; the mother in muted coral; the boy in pale blue; the
+schoolgirl in white and navy; deep green foliage in the pots, planters and street tree; a
+warm sandy pavement; the honey wood and warm lamplight inside the waiting room. At least
+seven distinct colours are readable at thumbnail size. Hair is very dark and warm-toned
+(#374840, shading to #283930, with #404f47 highlights), except the old man's grey hair.
+Clothes carry two or three tones each, with folds, collar, cuffs and hem drawn.
+
+NO WRITING ANYWHERE IN THE IMAGE — no text, letters, words, numbers, logos, signage,
+captions or watermarks, in any language. The sign panel above the glass is a plain empty
+surface, even though the real building carries lettering there. The scooter, the drink cup,
+the school bag, the framed picture inside and all clothing are blank.
+
+AVOID — a blank white or colourless sky; a still, posed or frozen street; everyone standing
+upright and motionless; dark, black, empty or mirror-like glass with nothing visible behind
+it; the row of projecting window boxes cropped away or reduced to a thin sliver; small
+distant figures; an empty corner at the left edge; evening, sunset or lamplight outdoors;
+glowing orange windows; the two colleagues on the right facing each other or absorbed in
+their own conversation; a child waving with nobody answering him; a shopfront welcome or an
+inviting open palm; a neighbouring shop or covered walkway continuing past the right-hand
+corner; any figure drawn pale, faint, translucent or in outline only; two people who look
+alike; a crowd; greyscale; photorealism; thick uniform black outlines; dental instruments,
+chairs, X-rays or teeth.
+```
