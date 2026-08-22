@@ -529,11 +529,25 @@ if (STATS && (STATSPOS === "below" || STATSPOS === "plate")) {
   }, { uri: imgUri, W, PH, H, plate: STATSPOS === "plate" });
   const bot = [1, 3, 5].map((i) => parseInt(BAND_BOT.slice(i, i + 2), 16));
   const S = (x) => 3 * x * x - 2 * x * x * x;
+  /* ⚠⚠ 上緣要**淡進來**，不能是一條硬邊（2026-08-22 使用者：「帶子好黑，
+     和圖片銜接的地方做漸層吧」）。站上那條窄帶之所以不必淡入，是因為它上面
+     那一段照片**本來就是暗的路面**；這張圖不一樣 —— 帶子正上方是**亮著的騎樓**，
+     所以同一個做法在這裡會切出一條線。
+     ・前 FADE 段：顏色固定在接縫色，**alpha 用 smoothstep 從 0 長到 1**
+       （頭尾斜率都是 0，兩端都找不到起點，同第九節第 10 條）。照片因此
+       是「漸漸沉進帶子裡」，不是被一條邊切斷。
+     ・FADE 之後：alpha 已經是 1，顏色再用 S(t^1.6) 走到 --band-bot ——
+       那是站上手機版窄帶逐字相同的曲線。 */
+  const FADE = 0.42;
   const stops = [];
-  for (let i = 0; i <= 10; i++) {
-    const p = i / 10, k = S(Math.pow(p, 1.6));
+  for (let i = 0; i <= 7; i++) {
+    const p = (i / 7) * FADE;
+    stops.push(`rgba(${seam.join(",")},${S(i / 7).toFixed(3)}) ${(p * 100).toFixed(1)}%`);
+  }
+  for (let i = 1; i <= 8; i++) {
+    const t = i / 8, p = FADE + t * (1 - FADE), k = S(Math.pow(t, 1.6));
     const c = seam.map((v, j) => Math.round(v + k * (bot[j] - v)));
-    stops.push(`rgb(${c.join(",")}) ${(p * 100).toFixed(0)}%`);
+    stops.push(`rgb(${c.join(",")}) ${(p * 100).toFixed(1)}%`);
   }
   SEAM_STOPS = stops.join(", ");
   console.log(`接縫色（照片最後一列的中位數）rgb(${seam.join(",")}) → ${BAND_BOT}　帶高 ${BH}px・照片 ${PH}px`);
