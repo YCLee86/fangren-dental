@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>og-topic-card｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>og-topic-card — 科別分享卡的玻璃濃度與地名排法</h1>
+<p class="meta">
+  2026-08-22 開、當天定案上線<br>
+  原網址 <code>/preview/og-topic-card/</code>（已刪除 2026-08-22）<br>
+  整頁還原：<code>git show 856500d:preview/og-topic-card/index.html</code><br>
+  切換條 <code>?glass=a|b|c&amp;loc=n|d|g|h</code>（十二格，擺的是十二張真的產出檔）<br>
+  產生器 <code>tools/og-card-preview.mjs</code>（一次性，定案時一併刪除）<br>
+  成品 <code>assets/og-topic-general.jpg</code>，產生器 <code>tools/og-plate.mjs</code>（留在版控裡，其餘六科要用）
+</p>
+
+<h2>定案</h2>
+<div class="note"><pre>玻璃「中」　＋　地名「兩行＋街名」（手機版首頁那一套）
+
+  node tools/og-resize.mjs drafts/og-topic-general-src.jpg general
+  node tools/og-plate.mjs general --tint 0.70 --ink 0.18 --loc full --locpos stack
+
+⚠ 兩步一定要照順序、而且每次都從第一步跑 —— og-plate.mjs 讀寫同一個檔，
+  只跑第二步兩次會把玻璃帶疊兩層。
+⚠ 上線的那一張和提案頁 card-hb.jpg **逐位元組相同**（定案前比對過）。</pre></div>
+
+<h2>起點</h2>
+<p>ILLUSTRATION.md 第十一節。分享卡在訊息 app 裡只有 250px，<strong>標誌單獨出現認不出是誰</strong>，
+所以識別必須燒進圖裡。使用者先問過「卡片上的標題能不能不要出現」——
+<strong>不行</strong>，LINE／FB／iMessage 一律會顯示標題，拿掉 <code>og:title</code>
+只會退回 <code>&lt;title&gt;</code> 或網址。圖被轉存再轉發時只剩圖，
+<strong>圖上的字是唯一還在的識別</strong>，這才是把字燒進去的真正理由。</p>
+
+<h2>為什麼是玻璃不是實心色牌</h2>
+<p>第一版做的是左下角一塊實心的科別色牌。使用者退回：</p>
+<div class="note">「你們做的色牌忽略了一個很重要的要素 —— <strong>不搶戲、和諧</strong>，
+這也是診所品牌的核心概念之一。我建議把這段改成透明感的遮罩或是玻璃概念，壓在圖片的上緣。」</div>
+<p>改成頂部的玻璃帶，做法照站上頁首那條玻璃（PALETTE.md 第六之三節）：
+模糊 ＋ 低透明度的套色 ＋ 一條細邊。</p>
+
+<h2>玻璃要用哪一階色、要不要墊墨（量出來的，不是挑的）</h2>
+<pre>紙色字壓在玻璃上的對比度（站上門檻 4.5）
+
+  套色 .34            中位 3.12 ・最亮處 1.74   ✗ 白字幾乎看不見
+  套色 .72 ＋墨 .16   中位 4.93 ・最亮處 3.78   ✗
+  深階 .70 ＋墨 .18   中位 5.90 ・最亮處 4.40   ← 定案的「中」
+  深階 .76 ＋墨 .16   中位 6.13 ・最亮處 4.79</pre>
+<p>⚠ <strong>要用深階不是套色</strong> —— 套色是給填實的塊用的，紙色字壓在套色玻璃上撐不住。
+⚠ 「最亮處」是<strong>天空從玻璃後面透上來</strong>的那一段，是整條帶子最難讀的地方，要單獨量。
+⚠ 量法：只取兩段文字<strong>中間</strong>那塊沒有字的玻璃（x 48%~62%），
+否則會把紙色的字本身算進背景裡、底色量得太亮 —— 第一版就是這樣量錯的。</p>
+
+<h2>淡／中／濃：兩個相反的要求在拔河</h2>
+<pre>玻璃  底色中位  最亮處  壓暗      照片還剩
+淡    5.01     3.32   L* −21.1   24%
+中    5.90     4.40   L* −26.3   16%   ← 定案
+濃    6.83     5.73   L* −31.1   10%</pre>
+<p>「照片還剩」＝ 玻璃帶那一塊的 L* 標準差 ÷ 底圖的，也就是照片的細節有沒有被壓平 ——
+<strong>那就是「搶不搶戲」的量</strong>。</p>
+<p>⚠ <strong>只有「濃」過得了 4.5，定案的「中」是 4.40，差一點。</strong>
+這是使用者看過三格之後自己選的，不是漏看：濃只剩 10% 的照片，
+玻璃帶已經接近一條實心的板 —— 而實心的板正是他上一輪退回的東西。
+<strong>日後有人拿對比度來「訂正」這一格之前，先讀這一段。</strong></p>
+
+<h2>地名：放不放、放什麼</h2>
+<p>使用者的兩個考量：① 對受眾有沒有辨識度、有沒有幫助
+② 「台灣對醫療診所並沒有限制不能取同名，我如果寫了雲林斗六 永樂街，以後會不會有台中芳仁」。</p>
+<p>三件查得到的事實：</p>
+<div class="note">
+・<strong>街名會過期</strong> —— 診所 1983 年是在<strong>中華路</strong>開的，已經搬過一次，
+首頁窄帶自己就寫著「1983年 中華路開業」。<br>
+・<strong>圖會單獨旅行</strong> —— 卡片被轉存再轉發時只剩圖，圖上的字是唯一還在的識別。<br>
+・<strong>真正被搜的詞是「牙醫診所 ＋ 斗六」</strong>（index.html 自己的註解記著）。
+</div>
+<p>我的建議是「只寫雲林斗六、不寫街名」（街名會過期），
+<strong>使用者選的是「兩行＋街名」</strong> —— 見下面那一節，那一格是唯一完整重現首頁的一格。</p>
+
+<h2>訊息卡的標題拿掉了地名</h2>
+<p>使用者：「訊息標題有（雲林斗六），這個應該是在網站裡的，可以拿掉不要在這裡顯示嗎。」</p>
+<pre>tools/topics.mjs 的 seoBlock()：兩個標題刻意不一樣
+
+  &lt;title&gt;      一般牙科・定期檢查 — 芳仁牙醫診所（雲林斗六）   ← 地名留著
+  og:title      一般牙科・定期檢查 — 芳仁牙醫診所              ← 不帶地名
+  JSON-LD name  跟著 &lt;title&gt; 那一版（機器讀的東西要完整）</pre>
+
+<h2>地名的排法為什麼走了三輪</h2>
+<p>第一版把地名疊在診所名底下。使用者：
+「BC 的雲林斗六的位置我都不喜歡，感覺都很刻意不好看，<strong>首頁上的擺放看起來就不刻意、很講究</strong>。」</p>
+<p>去量首頁才發現原因 —— <strong>首頁根本不是把地名疊在診所名底下</strong>：</p>
+<pre>電腦版首頁的 .brand-text
+  ・同一條 baseline 並排，不是上下兩行
+  ・中間一條 1px 細豎線（rgba(白,.28)），上下各內縮 .1em
+  ・地名字級 ＝ 主名的 73.6%（.78rem ÷ 1.06rem）
+  ・地名透明度 .65／主名 .95</pre>
+<p>照抄之後就是切換條上的「並排」。接著使用者要「像手機版首頁的排法」，那是<strong>另一套</strong>。</p>
+
+<h2>⚠⚠ 手機版那一套第一版四項全錯，而且錯的都是比例</h2>
+<p>使用者拿他手機的截圖對照：「你們做的看起來跟我手機上看到的很不一樣。」
+在 390×844 上打開 <code>index.html</code> 量回來：</p>
+<pre>                      量到的   第一版   改正後
+標誌寬 ÷ 主名字級      2.156    1.759   2.156
+標誌與字的間距 ÷ 主名  0.807    0.333   0.807
+主名字重              700      500     700
+主名字距              .01em    .06em   .01em
+地名字重              400      500     500（只有 500/700 兩個子集）
+行高                  兩行都 1.3、緊貼  1 ＋ 4.8px margin  兩行都 1.3、緊貼</pre>
+<p><strong>標誌小了 18%、間距只有一半</strong>才是「看起來不一樣」的主因，
+不是字級（字級比值 0.774 第一版就是對的）。
+⚠ <strong>通則：說「照首頁那樣做」的時候，要去把首頁量一次，不要照記憶中的規則寫。</strong></p>
+<p>主名字距從 .06 改回 .01em 不是美感，是<strong>讓 justify 回到首頁那個機制</strong>：
+.01em 時主名 181.8 比地名 191.4 窄，被撐開的是<strong>主名</strong>、每格 0.064em
+（首頁量到 0.076em）；寫 .06em 時兩行剛好等寬，justify 等於沒作用，
+「左右緣切齊」是巧合不是機制。</p>
+
+<h2>⚠ 兩行的排法只有帶街名才成立</h2>
+<pre>兩行自然寬與 justify 要撐開的量（窄的那一行）
+
+  雲林斗六・永樂街   主名 181.8 ・地名 191.4  →  主名每格撐 0.064em  ✓
+  雲林斗六           主名 181.8 ・地名  95.7  →  地名每格撐 1.366em  ✗ 首頁的十八倍</pre>
+<p>首頁那個排法之所以好看，是因為<strong>地名 8 個字乘 0.774 之後，寬度剛好等於診所名 6 個字</strong> ——
+兩行天然一樣長，justify 幾乎沒事做。字一少那個巧合就沒了，硬 justify 會變成
+「雲　林　斗　六」四個孤字。<code>tools/og-plate.mjs</code> 因此加了一道量測：
+撐開量超過 <strong>0.15em</strong> 就不 justify、改成靠右切齊。</p>
+<p>⚠ 量自然寬的複本<strong>要掛在原本那個父層底下</strong>（踩過）：掛到 <code>document.body</code> 上，
+<code>.stack .loc</code> 這種後代選擇器就不再命中，字級掉回 body 的 16px，
+地名量成 139 而不是 191，算出來的撐開量永遠過不了門檻。</p>
+
+<h2>兩件修不掉的，寫在這裡免得日後有人再追</h2>
+<div class="note">
+・<strong>字形本身不一樣。</strong> 站上 <code>font-family</code> 第一順位是 Noto Sans TC，
+但全站<strong>沒有載任何 webfont</strong>，使用者的 iPhone 上實際渲染的是 <strong>PingFang</strong>。
+產圖用的是 Noto Sans TC（宣告的第一順位），筆畫本來就會有差；
+要完全一致得把 PingFang 打進圖裡，那是 Apple 的字型、不能散布。<br>
+・<strong>地名的字重。</strong> 站上算出來是 400，子集只做了 500／700 兩個字重。
+刻意不補：250px 的卡片上細一階更難讀，而這一輪的硬條件就是 250px。
+</div>
+
+<h2>這一頁的做法本身（下次做提案頁可以照抄）</h2>
+<div class="note">
+⚠⚠ <strong>擺的是十二張真的產出檔，不是用 CSS 再做一次玻璃帶。</strong>
+① 用 CSS 重寫一份，哪天 <code>og-plate.mjs</code> 改了這一頁就開始說謊；
+② 真實的訊息卡是把 1200 的 JPEG 縮下來的<strong>點陣圖</strong>，
+用 CSS 縮放的向量文字會比實際清楚 —— 而這一輪要判斷的正是 250px 讀不讀得懂，
+等於在騙自己。<br>
+⚠ 卡片上的標題與描述<strong>從 <code>topics/&lt;spec&gt;/index.html</code> 的 og:* 讀回來</strong>，
+不照 <code>topic-copy.mjs</code> 自己拼 —— 自己拼會拼出一個訊息 app 上不會出現的東西。<br>
+⚠ Worker 對 <code>/preview/*</code> 設 <code>no-store</code>，切換不能指望快取：
+先畫目前選的那一張，其餘十一張等 <code>load</code> 之後在背景預抓。<br>
+⚠ 量測面板<strong>直接印出判斷</strong>（「最亮處 4.40 過不了 4.5」／「≥ 4.5，整條帶子都讀得到」），
+不是只印數字。切換條兩排 ＋ 一行提示，390 上佔一屏 <strong>15.5%</strong>、無水平捲動。
+</div>
+
+<h2>還沒做的</h2>
+<div class="note">
+其餘六科（牙周／兒牙／顯微根管／植牙／口外／矯正）<strong>還沒有自己的插畫</strong>，
+<code>og:image</code> 目前退回診所夜景 <code>assets/hero-clinic-night.jpg</code>。
+圖到齊之後，每一科跑同樣那兩行指令就好（<code>og-plate.mjs</code> 會自己抓那一科的深階色）。<br>
+⚠ <strong>頁面上要不要顯示這張圖是另一題</strong> —— 使用者 2026-08-22 判斷
+「頁面上不要放圖」（手機版已經很擠，會壓到下面的文章卡），之後再討論。
+<code>og:image</code> 是 <code>&lt;head&gt;</code> 裡的 meta，本來就不會在頁面上顯示，兩件事不必取捨。
+</div>
+
+<footer>
+  <a href="/history/">← 改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>
