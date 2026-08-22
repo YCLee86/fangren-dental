@@ -133,7 +133,17 @@ if (!["right", "left", "stack"].includes(LOCPOS)) { console.error("--locpos 只�
      壓在上面那一版怎麼裁都會蓋到亮著的騎樓 —— 因為那塊亮區在原檔裡就幾乎貼著底邊。 */
 const spIdx = args.indexOf("--statspos");
 const STATSPOS = spIdx >= 0 ? args[spIdx + 1] : "over";
-if (!["over", "below"].includes(STATSPOS)) { console.error("--statspos 只能是 over 或 below"); process.exit(1); }
+if (!["over", "below", "plate"].includes(STATSPOS)) { console.error("--statspos 只能是 over / plate / below"); process.exit(1); }
+/* --bandh：plate 模式的帶高（px）。不給就用「塊高 ＋ 52」。
+   ⚠⚠ plate 與 below 的差別是**照片有沒有被重新裁過**：
+     below —— 照片縮成 1200×(628−帶高)，比例從 1.91 變成 2.2~2.4，
+              cover 會從天空那頭再裁一次，**建築上半跟著被切掉**
+              （2026-08-22 使用者：「往下加的部分太多了，建築上半部被切掉太多，氣勢沒了」）。
+     plate  —— 照片**維持 1200×628 那個 1.91 的裁法**（建築完整），
+              帶子是一塊不透明的板疊在下緣，蓋掉的是路面。
+     兩者在畫面上露出的照片高度一樣，差在**露的是哪一段**。 */
+const bhIdx = args.indexOf("--bandh");
+const BANDH_ARG = bhIdx >= 0 ? Number(args[bhIdx + 1]) : null;
 const NOMARK = args.includes("--nomark");
 const STATS = args.includes("--stats");
 /* --statscale：三格整組放大幾倍（1 ＝ 和站上 1200 寬時逐項相同）。
@@ -445,7 +455,7 @@ ${NOMARK ? "" : `<div class="mark">
     </span>
   </span>
 </div>`}
-${STATS ? `<div class="${STATSPOS === "below" ? "sbelow" : "sband"}"><ul class="stats">${STATS_CELLS.map((c) =>
+${STATS ? `<div class="${STATSPOS === "over" ? "sband" : "sbelow"}"><ul class="stats">${STATS_CELLS.map((c) =>
   `<li><b>${c.n}<small>${c.u}</small></b><span>${c.s}</span></li>`).join("")}</ul></div>` : ""}`;
 
 const html = `<!doctype html><meta charset="utf-8"><style>
@@ -484,24 +494,39 @@ const pg = await browser.newPage({ viewport: { width: W, height: H }, deviceScal
 /* below 模式：先把照片畫進 1200×PH 量最後一列的中位色，再組頁面。
    ⚠ 要量的是**畫進去之後**那一列，不是原檔的最後一列 —— 中間隔著一次 cover 縮放。 */
 let PH = H, BH = 0, SEAM_STOPS = "";
-if (STATS && STATSPOS === "below") {
+if (STATS && (STATSPOS === "below" || STATSPOS === "plate")) {
   const blk = (21.24 * 1.15 + 5 + 12.6) * SS;
-  BH = Math.round(blk + 52);
+  /* 上下留白：plate 的帶子是疊在照片上的一塊板，留白要**比 below 薄**——
+     below 那一版（每邊 26）被使用者退回：「往下加的部分太多了」。
+     plate 每邊 14，帶子因此薄 24px，露出的照片多 24px。 */
+  BH = BANDH_ARG !== null ? Math.round(BANDH_ARG) : Math.round(blk + (STATSPOS === "plate" ? 28 : 52));
+  if (BH < blk + 8) {
+    console.error(`× --bandh ${BH} 太小，三格本身就要 ${blk.toFixed(0)}px（上下至少各留 4px）。`);
+    process.exit(1);
+  }
   PH = H - BH;
-  const seam = await pg.evaluate(async ({ uri, W, PH }) => {
+  const seam = await pg.evaluate(async ({ uri, W, PH, H, plate }) => {
     const im = new Image(); im.src = uri; await im.decode();
-    const c = document.createElement("canvas"); c.width = W; c.height = PH;
+    const c = document.createElement("canvas"); c.width = W; c.height = plate ? H : PH;
     const g = c.getContext("2d", { willReadFrequently: true });
     g.imageSmoothingQuality = "high";
-    /* 和頁面上 object-fit: cover 同一個裁法 */
-    const s = Math.max(W / im.naturalWidth, PH / im.naturalHeight);
-    const dw = im.naturalWidth * s, dh = im.naturalHeight * s;
-    g.drawImage(im, (W - dw) / 2, (PH - dh) / 2, dw, dh);
+    /* 和頁面上 object-fit: cover ＋ object-position: 50% 100% 同一個裁法 */
+    /* plate：照片沒有被重新裁過，所以要量的是**全高照片的第 PH 列**；
+       below：照片被縮成 1200×PH（cover、下緣貼齊），量它的最後一列。 */
+    if (plate) {
+      const s = Math.max(W / im.naturalWidth, H / im.naturalHeight);
+      const dw = im.naturalWidth * s, dh = im.naturalHeight * s;
+      g.drawImage(im, (W - dw) / 2, H - dh, dw, dh);
+    } else {
+      const s = Math.max(W / im.naturalWidth, PH / im.naturalHeight);
+      const dw = im.naturalWidth * s, dh = im.naturalHeight * s;
+      g.drawImage(im, (W - dw) / 2, PH - dh, dw, dh);
+    }
     const d = g.getImageData(0, PH - 1, W, 1).data;
     const ch = [[], [], []];
     for (let i = 0; i < d.length; i += 4) { ch[0].push(d[i]); ch[1].push(d[i + 1]); ch[2].push(d[i + 2]); }
     return ch.map((a) => { a.sort((x, y) => x - y); return a[Math.floor(a.length / 2)]; });
-  }, { uri: imgUri, W, PH });
+  }, { uri: imgUri, W, PH, H, plate: STATSPOS === "plate" });
   const bot = [1, 3, 5].map((i) => parseInt(BAND_BOT.slice(i, i + 2), 16));
   const S = (x) => 3 * x * x - 2 * x * x * x;
   const stops = [];
@@ -574,7 +599,7 @@ if (STATS) {
 
 /* 驗一件：牌子有沒有壓到臉或手 —— 構圖時左下角就留成安靜區，
    這裡量牌子佔畫面多大，超過一半就是版面出事了。 */
-const sel = STYLE === "glass" ? ".band" : STYLE === "plain" ? (NOMARK ? (STATSPOS === "below" ? ".sbelow" : ".sband") : ".mark") : ".plate";
+const sel = STYLE === "glass" ? ".band" : STYLE === "plain" ? (NOMARK ? (STATSPOS === "over" ? ".sband" : ".sbelow") : ".mark") : ".plate";
 const box = await pg.evaluate((sel) => {
   const r = document.querySelector(sel).getBoundingClientRect();
   return { w: r.width, h: r.height, left: r.left, top: r.top };

@@ -71,10 +71,14 @@ if (!fs.existsSync(SRC)) throw new Error(`找不到原檔 ${path.relative(ROOT, 
    使用者因此點出正解：「你們看電腦版、手機版、iPad 可以發現，我為了不要壓到門面，
    甚至在圖片下另外加深色橫帶。」—— 站上 iPad 直放與手機版就是這樣做的
    （CLAUDE.md 第六之十八節：`.hero` 直向 flex、照片 flex:1、**窄帶脫離照片接在下面**）。
-   現在 `--statspos below` 照抄那個做法：照片縮短、三格放進自己的帶子，
-   **門面一個像素都沒有被蓋到**。
-   ⚠ 照片變矮之後 cover 要**裁天空不裁路面**（`object-position: 50% 100%`），
-     那是站上這張照片一直在用的規則；裁到路面的話帶子就接不到地。
+   第一版用 `--statspos below`（照片縮成 1200×(628−帶高)）——**使用者退回**：
+   「往下加的部分太多了，建築上半部被切掉太多，氣勢沒了。」
+   ⚠⚠ 成因是**照片被重新裁過**：比例從 1.91 變成 2.4，`object-position: 50% 100%`
+     從天空那頭再裁一次，屋頂跟著沒了。
+   現在改用 `--statspos plate`：**照片維持 1200×628 那個 1.91 的裁法（建築完整）**，
+   帶子是一塊不透明的板疊在下緣，蓋掉的是路面。
+   兩者在畫面上露出的照片高度差不多，**差別在露的是哪一段**。
+   ⚠ plate 的上下留白也收薄了（每邊 26 → 14），帶子再少 24px。
    ⚠ 帶子的起點色是**現場量照片最後一列的中位數**（取中位不取平均：路燈與門口的燈
      幾顆亮點就能把平均拉高 4 個 L*），再用 S(t^1.6) 走到 --band-bot #2d3037 ——
      和站上手機版窄帶逐字相同的曲線。接縫因此是平的，不會長出馬赫帶。 */
@@ -102,11 +106,11 @@ const MARKS = {
    ⚠ 倍率是為了**訊息卡那個尺寸**存在的，不是為了原尺寸好看：
      1× 的數字在 212px 的卡上只有 3.8px，那是紋理不是字。 */
 const STATSCALE = {
-  off: { name: "不放", ss: null, note: "下緣什麼都不加，照片佔滿整張。" },
-  s1:  { name: "照站上", ss: 1,
-         note: "和首頁 1200 寬時逐項相同（三格 603px）。帶高 89px。⚠ 卡上數字只有 3.8px，讀不出來。" },
-  s14: { name: "1.4×", ss: 1.4, note: "帶高 111px、照片 517px。卡上數字 5.2px。" },
-  s18: { name: "1.8×", ss: 1.8, note: "帶高 128px、照片 500px。卡上數字 6.8px。" },
+  off:  { name: "不放", ss: null, note: "下緣什麼都不加，照片佔滿整張。" },
+  s12:  { name: "1.2×", ss: 1.2, note: "帶高 79px、照片露 549px。卡上數字 4.5px。" },
+  s14:  { name: "1.4×", ss: 1.4, note: "帶高 87px、照片露 541px。卡上數字 5.2px。" },
+  s16:  { name: "1.6×", ss: 1.6, note: "帶高 96px、照片露 532px。卡上數字 6.0px。" },
+  s18:  { name: "1.8×", ss: 1.8, note: "帶高 104px、照片露 524px。卡上數字 6.8px。" },
 };
 /* 描述文字 2026-08-22 定了：**只留詩的收尾句**。
    ⚠ 「雲林斗六・永樂街」拿掉不是因為不重要，是因為**它現在印在圖上**了 ——
@@ -172,7 +176,7 @@ for (const ck of Object.keys(CROPS)) {
         "--label", "", "--out", rel];
       if (mk2.style) a.push("--loc", "full", "--locpos", "stack");
       else a.push("--nomark", "--loc", "none");
-      if (sk2.ss) a.push("--stats", "--statscale", String(sk2.ss), "--statspos", "below");
+      if (sk2.ss) a.push("--stats", "--statscale", String(sk2.ss), "--statspos", "plate");
       execFileSync(process.execPath, a, { cwd: ROOT, encoding: "utf8" });
     }
   }
