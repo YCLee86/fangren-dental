@@ -98,3 +98,28 @@ THE ONLY CHANGE IS IN THE RIGHT-HAND QUARTER OF THE PICTURE, to the RIGHT of tha
 
 Everything else in the picture stays pixel-for-pixel identical. No writing anywhere.
 ```
+
+## ⚠ 後棟三樓：使用者 2026-08-22 決定收掉
+
+編輯五之後仍然變成兩層樓，使用者：「哈哈算了，結果都變成兩層樓，那不要了，我退回前一版。」
+**後棟維持現況，不再細修** —— 在 250px 的分享卡上那一塊只有指甲大，
+而每編輯一次，前面已經對的東西就多一次被弄壞的機會（編輯四、五就是活例）。
+⚠ **通則：修圖要看那一塊在最終尺寸上佔多大。看不到的地方不值得冒險。**
+
+## 編輯六（現行）：男醫師 ＋ 柏油路顏色
+
+使用者：「把對小孩招手示意的男醫療人員改回來就好。另外，街道柏油路顏色還是要接近一點，
+**現在很像泥土道路**。」底圖＝ `drafts/og-topic-general-v16-base.jpg`。
+
+```
+Here is a finished illustration. Make exactly TWO changes and leave everything else pixel-for-pixel identical — the building, the shopfront, the glass, the sign band, the sky, the clouds, the white air lines, the plants, the scooter, the bicycles, and every other person including the woman doctor in the centre, the mother and boy on the left, and the schoolgirl on the right.
+
+CHANGE 1 — THE PERSON IN THE WHITE COAT WITH THE RAISED HAND, standing to the RIGHT of the dark corner column, becomes a MAN. A Taiwanese man in his thirties: short black hair, clean-shaven, slightly broader shoulders, wearing the same open white coat over the same pale sage-green scrubs, drawn with exactly the same line weight, the same colours and the same simple face style as everyone else. He keeps his hand raised, and he is turned to face LEFT — his head, shoulders and chest all point across the picture towards the little boy on the far left, and he is smiling at that child, waving back to him. Do not move him, do not resize him, do not change anyone standing next to him.
+
+CHANGE 2 — THE ROAD SURFACE IS THE WRONG COLOUR. The wide ground in the lower part of the picture currently looks like sandy soil or a dirt track. It is a paved ASPHALT street: make it a neutral mid grey, roughly #8d8f90, slightly cooler than the buildings, with two or three soft tones of the same grey and a slightly darker band where it meets the kerb. Keep the illustration style exactly the same — flat coloured-pencil fills, the same paper grain, the same soft shadows falling the same way, the same tumbling leaves.
+KEEP THE RAISED PAVEMENT AND THE COVERED WALKWAY IN FRONT OF THE SHOP their present pale WARM grey concrete, so the warm pavement and the cool grey road read as two different surfaces with a clear kerb line between them.
+
+Nothing else changes. No writing anywhere in the image.
+```
+
+⚠ 兩件一起下若出問題，就拆成兩輪：**先做路面（大面積的色），再做醫師**。
