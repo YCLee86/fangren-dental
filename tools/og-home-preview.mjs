@@ -72,6 +72,19 @@ const MARKS = {
   tl:   { name: "左上", style: "plain",
           note: "標誌 ＋ 芳仁牙醫診所 ＋ 雲林斗六・永樂街，直接壓在照片左上角，沒有帶子。" },
 };
+/* 下緣那三格（＝首頁窄帶的 1983年 中華路開業／9位 醫師駐診／5個 部定專科）。
+   ⚠ 字、字重、字距、分隔線、內距**全部是在 1200 寬的視窗上打開 index.html 量的**
+     （首頁 ≥1041 那一段根字級 18px，和這張圖同寬，量到的 px 可以直接用）。
+     1× 產出來的三格寬 603px，站上量到 603.375px —— 對得上。
+   ⚠ 倍率是為了**訊息卡那個尺寸**存在的，不是為了原尺寸好看：
+     1× 的數字在 212px 的卡上只有 3.8px，那是紋理不是字。 */
+const STATSCALE = {
+  off: { name: "不放", ss: null, note: "下緣什麼都不加。" },
+  s1:  { name: "照站上", ss: 1,
+         note: "和首頁 1200 寬時逐項相同（三格 603px）。卡上數字 3.8px ——** 讀不出來**，只是紋理。" },
+  s14: { name: "1.4×", ss: 1.4, note: "卡上數字 5.2px。三格 748px，離畫面邊緣 226px。" },
+  s18: { name: "1.8×", ss: 1.8, note: "卡上數字 6.8px。三格 883px，離畫面邊緣 159px。" },
+};
 /* 描述文字 2026-08-22 定了：**只留詩的收尾句**。
    ⚠ 「雲林斗六・永樂街」拿掉不是因為不重要，是因為**它現在印在圖上**了 ——
      卡片上同一組字出現兩次是浪費那兩行。 */
@@ -124,19 +137,24 @@ for (const [k, c] of Object.entries(CROPS)) {
 await browser.close();
 
 /* 標示沿用 tools/og-plate.mjs（＝著陸頁那七張用的同一支）的 --style plain：
-   沒有帶子，標誌與名字直接壓在照片左上角。
+   沒有帶子，標誌與名字直接壓在照片左上角；--stats 加下緣那三格。
    ⚠ 一定要帶 --label ""，不帶的話會掛「一般牙科・定期檢查」——**首頁不是科別**。 */
 for (const ck of Object.keys(CROPS)) {
   for (const [mk, mk2] of Object.entries(MARKS)) {
-    if (!mk2.style) continue;
-    const rel = `preview/og-home/img-${ck}-${mk}.jpg`;
-    execFileSync(process.execPath, [path.join(ROOT, "tools", "og-plate.mjs"), "general",
-      "--from", `preview/og-home/img-${ck}-none.jpg`, "--style", mk2.style,
-      "--loc", "full", "--locpos", "stack", "--label", "", "--out", rel],
-      { cwd: ROOT, encoding: "utf8" });
-    console.log(`標示 ${CROPS[ck].name}・${mk2.name} → ${rel}`);
+    for (const [sk, sk2] of Object.entries(STATSCALE)) {
+      if (!mk2.style && !sk2.ss) continue;          // 兩個都不放 ＝ 就是 -none 那張
+      const rel = `preview/og-home/img-${ck}-${mk}-${sk}.jpg`;
+      const a = [path.join(ROOT, "tools", "og-plate.mjs"), "general",
+        "--from", `preview/og-home/img-${ck}-none.jpg`, "--style", "plain",
+        "--label", "", "--out", rel];
+      if (mk2.style) a.push("--loc", "full", "--locpos", "stack");
+      else a.push("--nomark", "--loc", "none");
+      if (sk2.ss) a.push("--stats", "--statscale", String(sk2.ss));
+      execFileSync(process.execPath, a, { cwd: ROOT, encoding: "utf8" });
+    }
   }
 }
+console.log(`圖 ${fs.readdirSync(OUT).filter((n) => n.endsWith(".jpg")).length} 張`);
 
 /* 標示壓在照片上（沒有帶子墊底）的對比度 —— 量的是**標示底下那塊照片**，
    所以讀的是同一個裁切**沒有標示**的那一張的同一塊（標示框 left 38・top 38・280×69）。
@@ -271,7 +289,7 @@ const html = `<!doctype html>
 :root{
   --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2; --note:#f9f9fa;
   --ink:#2a2c27; --ink-soft:#5c5f57; --accent:#3f654a; --accent-deep:#2c5238;
-  --bar-h:106px;
+  --bar-h:132px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -335,7 +353,7 @@ h2{font-size:.94rem;letter-spacing:.04em;margin:1.8em 0 .6em;
 <body>
 <div class="pv-wrap">
   <h1>分享 fangren.net 時，對方看到的那張卡</h1>
-  <p class="pv-lede">底下兩排切換。卡片寬度 <b>212px</b> 是從你那張 LINE 截圖量到的真實值
+  <p class="pv-lede">底下三排切換。卡片寬度 <b>212px</b> 是從你那張 LINE 截圖量到的真實值
     （635 裝置 px ÷ DPR 3）。⚠ 圖的高度跟著那張圖自己的比例走 ——
     <b>LINE 沒有裁圖</b>，所以現況那張 1.51:1 會長成一張又高又暗的卡。</p>
 
@@ -382,6 +400,8 @@ h2{font-size:.94rem;letter-spacing:.04em;margin:1.8em 0 .6em;
       ${seg("c", CROPS, "")}</span></div>
   <div class="pv-row"><span class="pv-lab">標示</span>
     <span class="pv-seg" id="seg-b">${seg("b", MARKS, "none")}</span></div>
+  <div class="pv-row"><span class="pv-lab">三格</span>
+    <span class="pv-seg" id="seg-s">${seg("s", STATSCALE, "off")}</span></div>
   <p class="pv-hint" id="pv-hint"></p>
 </div>
 
@@ -391,32 +411,36 @@ h2{font-size:.94rem;letter-spacing:.04em;margin:1.8em 0 .6em;
 var CROPS = ${JSON.stringify(CROPS)};
 var MARKS = ${JSON.stringify(MARKS)};
 var MARKC = ${JSON.stringify(MARKC)};
+var STATSCALE = ${JSON.stringify(STATSCALE)};
 var STATS = ${JSON.stringify(STATS)};   /* 產生時就量好的，見產生器裡那段註解 */
-var cur = { c: "now", b: "none" };
+var cur = { c: "now", b: "none", s: "off" };
 (function () {
   var q = location.search, m;
   m = q.match(/[?&]crop=([a-z0-9]+)/);  if (m && (m[1] === "now" || CROPS[m[1]])) cur.c = m[1];
   m = q.match(/[?&]mark=([a-z0-9]+)/);  if (m && MARKS[m[1]]) cur.b = m[1];
+  m = q.match(/[?&]stats=([a-z0-9]+)/); if (m && STATSCALE[m[1]]) cur.s = m[1];
 })();
 
 var imgS = document.getElementById("pv-img-s"), imgL = document.getElementById("pv-img-l");
 function file() {
   if (cur.c === "now") return "img-now.jpg";
-  return "img-" + cur.c + "-" + cur.b + ".jpg";
+  /* 標示與三格都不放 ＝ 就是那張只換裁切的底圖，沒有另外產一份。 */
+  if (cur.b === "none" && cur.s === "off") return "img-" + cur.c + "-none.jpg";
+  return "img-" + cur.c + "-" + cur.b + "-" + cur.s + ".jpg";
 }
 
 function apply(push) {
   /* 現況那張是 1.51:1，標示是為 1.91 的卡做的 —— 把標示那排關掉。 */
   var isNow = cur.c === "now";
-  document.querySelectorAll("#seg-b button").forEach(function (b) { b.disabled = isNow; });
+  document.querySelectorAll("#seg-b button, #seg-s button").forEach(function (b) { b.disabled = isNow; });
   var f = file();
   imgS.src = f; imgL.src = f;
-  ["c","b"].forEach(function (r) {
+  ["c","b","s"].forEach(function (r) {
     document.querySelectorAll("#seg-" + r + " button").forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.dataset.k === cur[r])); });
   });
-  var bnote = isNow ? "現況那張比例 1.51:1，標示是為 1.91 的卡做的。"
-                    : MARKS[cur.b].note;
+  var bnote = isNow ? "現況那張比例 1.51:1，標示與三格都是為 1.91 的卡做的。"
+                    : MARKS[cur.b].note + "　" + STATSCALE[cur.s].note;
   var cnote = isNow ? "原檔 1600×1058 直接送出去，LINE 照原比例顯示。"
                     : CROPS[cur.c].note;
   document.getElementById("m-note").textContent = cnote + "　" + bnote;
@@ -427,7 +451,7 @@ function apply(push) {
       (mc.hi >= 4.5 ? "　✓" : "　⚠ 最亮處低於 4.5（字自己還有兩層陰影，這是保守值）")
     : "—";
   document.getElementById("pv-hint").textContent =
-    (isNow ? "現況" : CROPS[cur.c].name + "・標示" + MARKS[cur.b].name) + "　" + cnote;
+    (isNow ? "現況" : CROPS[cur.c].name + "・標示" + MARKS[cur.b].name + "・三格" + STATSCALE[cur.s].name) + "　" + cnote;
 
   var s = STATS[f];
   document.getElementById("m-ratio").textContent =
@@ -443,7 +467,7 @@ function apply(push) {
   else if (s.edge < 30) v.innerHTML = '邊緣密度 ' + s.edge.toFixed(1) +
     '%　比失敗版（19.3%）好，但還沒到你給的參考圖（41.1%）—— 它是夜景，這是天花板';
   else v.innerHTML = '<span class="pv-ok">邊緣密度 ' + s.edge.toFixed(1) + '%</span>　夜景能到的上緣';
-  if (push) history.replaceState(null, "", "?crop=" + cur.c + "&mark=" + cur.b);
+  if (push) history.replaceState(null, "", "?crop=" + cur.c + "&mark=" + cur.b + "&stats=" + cur.s);
 }
 
 document.querySelector(".pv-bar").addEventListener("click", function (e) {
@@ -456,8 +480,12 @@ apply(false);
 addEventListener("load", function () {
   setTimeout(function () {
     var all = ["img-now.jpg"];
-    Object.keys(CROPS).forEach(function (c) { Object.keys(MARKS).forEach(function (b) {
-      all.push("img-" + c + "-" + b + ".jpg"); }); });
+    Object.keys(CROPS).forEach(function (c) {
+      all.push("img-" + c + "-none.jpg");
+      Object.keys(MARKS).forEach(function (b) { Object.keys(STATSCALE).forEach(function (st) {
+        if (b === "none" && st === "off") return;
+        all.push("img-" + c + "-" + b + "-" + st + ".jpg"); }); });
+    });
     all.forEach(function (f) { if (f !== file()) { var i = new Image(); i.src = f; } });
   }, 400);
 });

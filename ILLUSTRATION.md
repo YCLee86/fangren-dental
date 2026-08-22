@@ -1580,6 +1580,34 @@ alt 寫在 `topics.mjs` 的 `OG_ALT`，**要描述圖裡實際有什麼**（第�
 ⚠⚠ **同一輪已把步驟 10 的剝除清單補上 `og:image*` 四條** —— 重複的 og 屬性
 爬蟲取第一個，不剝的話各科的圖等於白做。
 
+### ⚠⚠ 字型子集缺字會**靜靜地換一種字體**（2026-08-22 踩到，而且已經上線了）
+
+`og-plate.mjs` 的 CSS 寫的是 `font-family:"NotoTC"`，**沒有後備**。
+子集缺字時瀏覽器不會報錯，它就去撿系統字 —— 這個容器裡是**文泉驛**。
+症狀：同一行裡「芳仁牙醫診所」是思源黑體、緊接著的「雲林斗六・永樂街」
+是另一種字。三道檢查（透明度、顏色、版面）**全部通過**，肉眼掃過也很容易放過。
+
+發現的過程是去讀子集的 cmap，才看到那 34 個字裡**根本沒有**「雲林斗六永樂街」。
+`assets/og-topic-general.jpg` 上線的第一版就是這樣，當天重產修掉。
+
+**修法有兩件，缺一不可：**
+
+1. `tools/fonts/glyphs.txt` 是子集的**唯一字表**，改完重跑：
+
+       pyftsubset nototc-{500,700}.ttf --text-file=glyphs.txt --flavor=woff2 \
+         --layout-features='' --no-hinting --desubroutinize \
+         --output-file=tools/fonts/NotoSansTC-{500,700}-subset.woff2
+
+2. `og-plate.mjs` **逐字比對一次**，缺了就 throw（`assertGlyphs()`）。
+   ⚠ 沒有這道守門，下次加字還是會靜靜地掉到系統字。
+
+⚠ 首頁窄帶那三格的**數字是襯線**（站上 `.stats b` 的字族是
+`"Noto Serif TC","Source Han Serif TC","Times New Roman",Times,serif`，
+使用者的 iPhone 上實際命中 **Times New Roman**）。容器裡沒有它，
+用 **Liberation Serif**（度量相容、字形極接近）當替身，只子集 0~9、1.2KB，
+授權在 `tools/fonts/LiberationSerif-LICENSE.txt`。
+**單位「年／位／個」維持黑體** —— 站上 2026-08-08 定的，襯線只留給數字。
+
 ### ✅ 帶子做好了（2026-08-22 當天定案上線）
 
 上面那兩個「還沒做」的理由都解掉了：

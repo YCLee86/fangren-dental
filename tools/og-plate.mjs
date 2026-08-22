@@ -117,6 +117,26 @@ const lpIdx = args.indexOf("--locpos");
    stack＝**手機版首頁**那種上下兩行（見下面 .stack 那一段的註解） */
 const LOCPOS = lpIdx >= 0 ? args[lpIdx + 1] : "right";
 if (!["right", "left", "stack"].includes(LOCPOS)) { console.error("--locpos 只能是 right / left / stack"); process.exit(1); }
+/* --stats：把首頁窄帶那三格（1983年 中華路開業／9位 醫師駐診／5個 部定專科）
+   加在圖片下緣。2026-08-22 使用者指定，只給首頁那張用。
+   ⚠ 三格的字、字級、字重、字距、內距、分隔線**全部是在 1200 寬的視窗上打開
+     index.html 量回來的**，不是照記憶寫的（首頁在 ≥1041 那一段根字級是 18px，
+     和這張圖同寬，所以量到的 px 可以直接用，不必換算）。 */
+/* --nomark：--style plain 時整個不畫左上那組標示（只留下緣的三格）。 */
+const NOMARK = args.includes("--nomark");
+const STATS = args.includes("--stats");
+/* --statscale：三格整組放大幾倍（1 ＝ 和站上 1200 寬時逐項相同）。
+   ⚠ 1 倍在訊息卡（實測 212px 寬）上，數字只有 21.24 × 212/1200 ＝ **3.8px**，
+     標籤 2.2px —— 那是紋理不是字。放大是為了那個尺寸，不是為了原尺寸好看。 */
+const ssIdx = args.indexOf("--statscale");
+const SS = ssIdx >= 0 ? Number(args[ssIdx + 1]) : 1;
+if (!(SS > 0)) { console.error("--statscale 要是正數"); process.exit(1); }
+const STATS_CELLS = [
+  { n: "1983", u: "年", s: "中華路開業" },
+  { n: "9",    u: "位", s: "醫師駐診" },
+  { n: "5",    u: "個", s: "部定專科" },
+];
+const STATS_TEXT = STATS_CELLS.map((c) => c.n + c.u + c.s).join("");
 const shadeIdx = args.indexOf("--shade");
 const SHADE = shadeIdx >= 0 ? args[shadeIdx + 1] : "deep";     // deep＝深階（預設，對比撐得住）／accent＝套色
 const posIdx = args.indexOf("--pos");
@@ -148,6 +168,34 @@ const fontFace = (weight) => {
   if (!fs.existsSync(f)) throw new Error(`找不到字型子集 ${path.relative(ROOT, f)}`);
   return `@font-face{font-family:"NotoTC";font-weight:${weight};src:url(data:font/woff2;base64,${fs.readFileSync(f).toString("base64")}) format("woff2");}`;
 };
+/* 窄帶那三格的數字，站上用的是襯線（.stats b 的字族是
+   "Noto Serif TC","Source Han Serif TC","Times New Roman",Times,serif）——
+   使用者的 iPhone 上實際命中的是 **Times New Roman**。容器裡沒有它，
+   用 **Liberation Serif**（和 Times New Roman 度量相容、字形極接近）當替身，
+   只子集 0~9 十個字，1.2KB。授權在 tools/fonts/LiberationSerif-LICENSE.txt。 */
+const serifFace = () => {
+  const f = path.join(ROOT, "tools", "fonts", "LiberationSerif-700-digits.woff2");
+  if (!fs.existsSync(f)) throw new Error(`找不到 ${path.relative(ROOT, f)}`);
+  return `@font-face{font-family:"NumSerif";font-weight:700;src:url(data:font/woff2;base64,${fs.readFileSync(f).toString("base64")}) format("woff2");}`;
+};
+
+/* ⚠⚠ **子集缺字會靜靜地換一種字體，不會報錯**（2026-08-22 踩到，而且已經上線了）：
+   `font-family:"NotoTC"` 沒有後備，缺字時瀏覽器就去撿系統字 —— 這個容器裡是
+   文泉驛。症狀是「芳仁牙醫診所」是思源黑體、緊接著的「雲林斗六・永樂街」
+   卻是另一種字，同一行兩種字體，而三道檢查（透明度、顏色、版面）全部過。
+   所以這裡逐字比對一次，缺了就 throw ——
+   要加字就把字補進 tools/fonts/glyphs.txt 再重跑 pyftsubset。 */
+const GLYPHS = new Set(fs.readFileSync(path.join(ROOT, "tools", "fonts", "glyphs.txt"), "utf8").trim());
+const assertGlyphs = (text, where) => {
+  const miss = [...new Set(text)].filter((c) => !/\s/.test(c) && !GLYPHS.has(c));
+  if (miss.length) {
+    console.error(`× 字型子集缺字：${miss.join(" ")}（出現在${where}）`);
+    console.error("  補進 tools/fonts/glyphs.txt 再重跑 pyftsubset，不要放著讓它掉到系統字。");
+    process.exit(1);
+  }
+};
+
+assertGlyphs(String(label) + "芳仁牙醫診所" + LOC_TEXT + (STATS ? STATS_TEXT : ""), "圖上的字");
 
 const imgUri = `data:image/jpeg;base64,${fs.readFileSync(base).toString("base64")}`;
 const accent = ACCENT[spec];
@@ -172,6 +220,9 @@ const BAND_PAD = 38;
 const G_NAME_FS = 46;
 const G_CLINIC_FS = 30;
 const G_LOGO_H = 26;
+/* 下緣那三格：漸層攤在最後 170px 上（三格本身高 ≈ 42，離下緣 38，
+   剩下的留給漸層從透明長到 .88 —— 太短會看得出一條邊，同第九節第 10 條）。 */
+const SBAND_H = 170;   // ⚠ 實際高度會跟著 --statscale 長，見 plainHtml
 
 const hex2rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const [ar, ag, ab] = hex2rgb(SHADE === "deep" ? DEEP[spec] : accent);
@@ -297,7 +348,7 @@ body.nojustify-clinic .stack .clinic{text-align-last:right}
      所以兩層都按同一個倍率放大：0 1px 2px → 0 2px 4px、0 0 4px → 0 0 8px。
      **不要自己另外調一組** —— 那首詩壓的就是這張照片，已經驗過了。 */
 const plainHtml = `<!doctype html><meta charset="utf-8"><style>
-${fontFace(700)}${fontFace(500)}
+${fontFace(700)}${fontFace(500)}${STATS ? serifFace() : ""}
 *{margin:0;padding:0;box-sizing:border-box}
 body{width:${W}px;height:${H}px;position:relative;overflow:hidden}
 img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
@@ -321,9 +372,41 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
 .stack .loc::before{display:none}
 body.nojustify .stack .loc{text-align-last:right}
 body.nojustify-clinic .stack .clinic{text-align-last:right}
+/* ---- 下緣那三格（--stats）------------------------------------------------
+   每一個值都是在 1200 寬的視窗上打開 index.html 量回來的（≥1041 那一段
+   根字級 18px，和這張圖同寬，所以量到的 px 直接用）：
+     .stats b       21.24px／700／字距 −.01em／行高 1.15／白 .95／**襯線**
+     .stats b small 12.6px／400／字距 0／左邊 .15em／**黑體**
+     .stats span    12.6px／400／字距 .18px／白 .65
+     .stats li      左右內距各 72px（＝ 4rem）
+     分隔線         1px、色 rgb(100,99,97)、上下貫穿整格
+   ⚠ **數字是襯線、單位「年／位／個」是黑體** —— 站上 2026-08-08 定的，
+     襯線只留給數字，兩層才分得開。照抄，不要圖方便全用黑體。
+   ⚠ 底下那層柏油漸層是 .band::after 的同一組色停（rgba(34,30,28,0) →
+     rgba(22,20,19,.88)），只是攤在這一條上。**顏色一個都沒有新挑。** */
+.sband{position:absolute;left:0;right:0;bottom:0;height:${Math.round(SBAND_H * (1 + (SS - 1) * 0.6))}px;
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:${BAND_PAD}px;
+  background-image:linear-gradient(180deg,
+    rgba(34,30,28,0) 0%, rgba(34,30,28,.048) 14%, rgba(34,30,28,.167) 28%,
+    rgba(31,27,25,.325) 42%, rgba(25,22,21,.502) 56%, rgba(22,20,19,.686) 70%,
+    rgba(22,20,19,.810) 84%, rgba(22,20,19,.88) 100%)}
+.stats{display:flex;list-style:none}
+/* ⚠ 內距**不跟著字級等比例長**：72px 是站上 1200 寬時的留白，
+     字放大 1.8 倍時內距也乘 1.8 會把三格推到畫面邊緣（實測會溢出）。
+     取平方根當折衷，並在下面加一道量測擋住溢出。 */
+.stats li{position:relative;padding-inline:${(72 * Math.sqrt(SS)).toFixed(1)}px;text-align:center}
+.stats li + li::before{content:"";position:absolute;left:0;top:0;bottom:0;
+  border-left:1px solid rgb(100,99,97)}
+.stats b{display:block;font-family:"NumSerif","NotoTC",serif;font-weight:700;
+  font-size:${(21.24 * SS).toFixed(2)}px;line-height:1.15;letter-spacing:-.01em;
+  color:rgba(255,255,255,.95);font-variant-numeric:tabular-nums}
+.stats b small{font-family:"NotoTC";font-weight:500;font-size:${(12.6 * SS).toFixed(2)}px;
+  letter-spacing:0;margin-left:.15em}
+.stats span{display:block;font-family:"NotoTC";font-weight:500;font-size:${(12.6 * SS).toFixed(2)}px;
+  line-height:1;letter-spacing:${(0.18 * SS).toFixed(2)}px;color:rgba(255,255,255,.65);margin-top:${(5 * SS).toFixed(1)}px}
 </style>
 <img class="bg" src="${imgUri}">
-<div class="mark">
+${NOMARK ? "" : `<div class="mark">
   <span class="right">
     <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true" style="color:${PAPER}">${logoInner}</svg>
     <span class="${LOCPOS === "stack" && LOC_TEXT ? "stack" : "pair"}">
@@ -331,7 +414,9 @@ body.nojustify-clinic .stack .clinic{text-align-last:right}
       ${LOC_TEXT ? `<span class="loc">${LOC_TEXT}</span>` : ""}
     </span>
   </span>
-</div>`;
+</div>`}
+${STATS ? `<div class="sband"><ul class="stats">${STATS_CELLS.map((c) =>
+  `<li><b>${c.n}<small>${c.u}</small></b><span>${c.s}</span></li>`).join("")}</ul></div>` : ""}`;
 
 const html = `<!doctype html><meta charset="utf-8"><style>
 ${fontFace(700)}${fontFace(500)}
@@ -374,7 +459,7 @@ await pg.evaluate(() => Promise.all(Array.from(document.images).map((i) => i.dec
    ⚠ 量法是把那一行複製到畫面外、關掉 justify、寬度設成 max-content ——
      直接讀 scrollWidth 沒有用，那一行已經被撐滿了，讀回來的就是容器寬。
    門檻 0.15em ＝ 首頁那 0.076em 的兩倍，留一點餘裕但擋得住四個字的情形。 */
-if ((STYLE === "glass" || STYLE === "plain") && LOCPOS === "stack" && LOC_TEXT) {
+if ((STYLE === "glass" || (STYLE === "plain" && !NOMARK)) && LOCPOS === "stack" && LOC_TEXT) {
   const m = await pg.evaluate(() => {
     /* ⚠ 複本一定要掛在**原本那個父層底下**（2026-08-22 踩過）：
        掛到 document.body 上，`.stack .loc` 這種後代選擇器就不再命中，
@@ -405,9 +490,28 @@ if ((STYLE === "glass" || STYLE === "plain") && LOCPOS === "stack" && LOC_TEXT) 
   }
 }
 
+/* --stats：三格不能溢出畫面（字放大時最先出事的就是這裡）。 */
+if (STATS) {
+  const sb = await pg.evaluate(() => {
+    const u = document.querySelector('.stats').getBoundingClientRect();
+    const li = [...document.querySelectorAll('.stats li + li')].map((e) =>
+      getComputedStyle(e, '::before').borderLeftWidth);
+    return { w: u.width, left: u.left, right: u.right, rules: li };
+  });
+  console.log(`三格 ${sb.w.toFixed(0)}px（左 ${sb.left.toFixed(0)}・右 ${(W - sb.right).toFixed(0)}）　分隔線 ${sb.rules.join(' / ')}`);
+  if (sb.left < BAND_PAD || W - sb.right < BAND_PAD) {
+    console.error(`× 三格離畫面邊緣不到 ${BAND_PAD}px —— --statscale 調太大了。`);
+    process.exit(1);
+  }
+  if (sb.rules.some((r) => parseFloat(r) < 0.5)) {
+    console.error('× 三格之間的分隔線沒有畫出來。');
+    process.exit(1);
+  }
+}
+
 /* 驗一件：牌子有沒有壓到臉或手 —— 構圖時左下角就留成安靜區，
    這裡量牌子佔畫面多大，超過一半就是版面出事了。 */
-const sel = STYLE === "glass" ? ".band" : STYLE === "plain" ? ".mark" : ".plate";
+const sel = STYLE === "glass" ? ".band" : STYLE === "plain" ? (NOMARK ? ".sband" : ".mark") : ".plate";
 const box = await pg.evaluate((sel) => {
   const r = document.querySelector(sel).getBoundingClientRect();
   return { w: r.width, h: r.height, left: r.left, top: r.top };
