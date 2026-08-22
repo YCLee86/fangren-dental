@@ -48,3 +48,27 @@ Keep it simple and quiet — it is background: fewer lines, no extra doors, no s
 編輯版對第十版：無彩空白 0.5% vs 0.5%、邊緣密度 37.5% vs 37.4%、
 左半密度 35.9% vs 35.8%、暖色 24.6% vs 24.6% —— **四項幾乎逐項相同**，
 證明「只編輯一小塊」真的不會動到其他地方。
+
+## 編輯四：後棟是三層樓，要畫出三樓與深出簷的屋頂
+
+使用者：「後面那棟是三層樓，**照這個透視感過去，後棟的三樓應該會出現，而且還有上面的屋頂**。」
+—— 編輯三把後棟畫成兩層平頂，看起來像另一棟矮房子。
+⚠ 通則：**前景的量體被上緣裁掉時，往後退的量體反而會「長」進畫面裡** ——
+遠的東西在透視上更靠近消失點、頂端會落回畫面內。補背景量體時要算這一件。
+
+```
+Here is a finished illustration. Make ONE correction and leave everything else untouched — all the people, the pavement, the sky, the clouds, the white air lines, the shopfront, the glass, the sign band, the corner block itself, the colours and the drawing style must stay exactly as they are.
+
+THE CORRECTION — the rear section of the building, the part that continues past the corner and recedes towards the right edge, is drawn too short. In reality it is THREE STOREYS, the same height as the corner block. Because it recedes away from us, its upper part comes into view inside the frame, so draw it properly:
+  • give it a THIRD STOREY above the floor already drawn, carrying the same dark metal window boxes projecting from the pale concrete wall, getting smaller as they recede;
+  • above that, give it its own ROOF: a thin dark steel eave with a DEEP OVERHANG, projecting well out from the wall and casting a soft shadow under it, its line sloping gently down towards the right as it goes away from us — the same kind of roof the real building has;
+  • the whole rear section stays slightly lower and paler than the corner block, and remains quiet background: fewer lines, softer colour, nothing that competes with the people in front.
+Keep the corner block exactly as it is, still cropped by the top edge of the picture. No writing anywhere, no extra buildings, no shops, no signs.
+```
+
+### 還沒做完的（順序）
+
+1. ✅ 換成男醫師（編輯一，已完成）
+2. ✅ 補後棟（編輯三，已完成但太矮）
+3. ⬜ **後棟的三樓與屋頂**（編輯四，這一份）
+4. ⬜ **男醫師的臉轉向小孩**（編輯二，還沒做到）
