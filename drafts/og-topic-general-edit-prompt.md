@@ -72,3 +72,29 @@ Keep the corner block exactly as it is, still cropped by the top edge of the pic
 2. ✅ 補後棟（編輯三，已完成但太矮）
 3. ⬜ **後棟的三樓與屋頂**（編輯四，這一份）
 4. ⬜ **男醫師的臉轉向小孩**（編輯二，還沒做到）
+
+## 編輯五：⚠⚠ 用畫面座標指代，不要用「前棟／後棟」
+
+編輯四的結果：**模型把屋頂加到「前棟」上、還把前棟的三樓砍掉**，後棟一點都沒動。
+使用者：「後棟的三樓沒補上去，反而把前棟的三樓砍掉，還加了屋頂。」
+
+⚠⚠ **成因是指代不明。** 「後棟」「前棟」「the rear section」對模型是**語意標籤**，
+它會自己挑一個最像的量體套上去。
+**這是第八節第 5 條的同一類**（三分之四側臉裡指定不了「他的右手」，要改用畫面上的位置）——
+**通則：凡是指某一塊東西，一律用「畫面上的位置」講，不要用名字或語意標籤。**
+而且要**明確保護不准動的那一半**（「這根柱子左邊的一切都不准變」）。
+
+⚠ 執行時先**退回編輯四之前那張**（後棟太矮、但前棟三樓還在），不要拿失敗那張當底。
+
+```
+Here is a finished illustration. There is a tall dark vertical corner column at roughly the centre-right of the picture, where the building turns the corner.
+
+EVERYTHING TO THE LEFT OF THAT CORNER COLUMN IS FINISHED AND MUST NOT CHANGE IN ANY WAY — the people, the shopfront, the glass, the sign band, the concrete wall above it and its two rows of dark projecting window boxes, and the flat top edge where that wall is cropped by the top edge of the picture. DO NOT add a roof, an eave, a roofline or any overhang anywhere on the left of that column. DO NOT remove or shorten any floor there. That block must keep exactly the same number of storeys it has now, still running off the top of the frame.
+
+THE ONLY CHANGE IS IN THE RIGHT-HAND QUARTER OF THE PICTURE, to the RIGHT of that corner column, where the wall runs away from us down the side lane. That wall is currently drawn too short, as if it were a lower building. Make it as tall as the block on the left:
+  • extend that right-hand wall UPWARD by one more band of wall, above the row of window boxes already drawn there, carrying the same dark projecting window boxes, drawn smaller as they recede towards the right edge;
+  • above that new band — and ONLY on this right-hand side — draw a thin dark steel eave with a deep overhang, its line sloping gently downwards towards the right edge as it recedes, with a soft shadow underneath it;
+  • keep this whole right-hand part quiet background: paler colour, fewer lines, nothing that competes with the people.
+
+Everything else in the picture stays pixel-for-pixel identical. No writing anywhere.
+```
