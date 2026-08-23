@@ -133,10 +133,14 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
      ③ 補一點字距（.02em）—— 粗體收掉之後兩個字元會顯得黏在一起。
    ⚠ 站上那顆單獨的 P 一個字都沒動，這一段只作用在海報上。 */
 .sh-map .map-svg .lot .pk { stroke-width: .8; font-weight: 400; letter-spacing: .02em; }
-/* 指北針。⚠ 線寬要對得上針的粗細（半寬 5 個單位），3 太粗、而且
-   stroke-linejoin: round 會把尖端磨成一顆球 —— 第一版被退回的原因之一。
-   miter 才收得出尖的那一點；字級由 JS 的 NSW.fs 寫在元素上，這裡不再定。 */
+/* 指北針。⚠ 線寬要對得上針的粗細（半寬 7.3 個單位），3 太粗。
+   ⚠⚠ **這是內描邊**：線寬開兩倍（2.2 ＝ 看得到的 1.1 的兩倍），
+     外側那一半由 JS 掛的 clip-path 切掉 —— 所以空心那半的外緣和實心那半
+     逐點相同，尖端收成乾淨的一點。一般的描邊會往外長半個線寬，
+     兩半在尖端接不起來，而且銳角的 miter 會再戳出一根刺（使用者看到的那一絲絲）。
+   ⚠ 因為外側已經被切掉，linejoin 寫什麼都不影響外緣。
+   字級由 JS 的 NSW.fs 寫在元素上，這裡不再定。 */
 .sh-map .nsw .nsw-solid  { fill: var(--ink-soft); }
-.sh-map .nsw .nsw-hollow { fill: none; stroke: var(--ink-soft); stroke-width: 1.1;
+.sh-map .nsw .nsw-hollow { fill: none; stroke: var(--ink-soft); stroke-width: 2.2;
                            stroke-linejoin: miter; stroke-miterlimit: 12; }
 .sh-map .map-svg .nsw text { fill: var(--ink-soft); font-weight: 700; letter-spacing: 0; }

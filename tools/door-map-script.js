@@ -112,7 +112,18 @@
   var nsw = add('g', { class: 'nsw' }, svg);
   var nswArrow = add('g', {}, nsw);
   var nswSolid = add('path', { class: 'nsw-solid' }, nswArrow);
-  var nswHollow = add('path', { class: 'nsw-hollow' }, nswArrow);
+  /* ⚠⚠ 空心那半**不能用一般的描邊**（使用者：「針尖好像不是很乾淨的角形結束，
+     還稍微往下拉長了一絲絲」）。原因：描邊是**跨在路徑上**的，往外長半個線寬，
+     所以空心那半的外緣比實心那半寬 0.55 個單位，兩半在尖端接不起來；
+     而且尖端的夾角很銳，miter 會從那一點再戳出一根長刺（那一絲絲就是它）。
+     改用**內描邊**：線寬開兩倍、再用同一條路徑當 clip 把外側那一半切掉 ——
+     外緣因此和實心那半逐點相同，尖端收成乾淨的一點。
+     ⚠ linejoin 改回 round 也沒用，那只是把刺磨圓，外緣還是寬 0.55。 */
+  var nswClipId = 'nsw-clip';
+  var nswClip = add('clipPath', { id: nswClipId },
+    svg.querySelector('defs') || add('defs', {}, svg));
+  var nswClipPath = add('path', {}, nswClip);
+  var nswHollow = add('path', { class: 'nsw-hollow', 'clip-path': 'url(#' + nswClipId + ')' }, nswArrow);
   /* ⚠ 「北」要和尖端**同一個水平**（使用者指定），所以錨點就放在尖端那條線上、
      再沿著針的方向往外推 NSW.gap。⚠⚠ 中文的字面中心在基線上方 0.345em，
      光把錨點對齊還是會看起來偏高 —— dy 那一項就是把它壓回來（同街名那一套）。 */
@@ -280,7 +291,9 @@
     nsGeom();
     var nsWw = NSW.w;
     nswSolid.setAttribute('d', 'M0 ' + nswA + 'L' + nsWw + ' ' + nswB + 'L0 ' + nswN + 'Z');
-    nswHollow.setAttribute('d', 'M0 ' + nswA + 'L0 ' + nswN + 'L' + (-nsWw) + ' ' + nswB + 'Z');
+    var dH = 'M0 ' + nswA + 'L0 ' + nswN + 'L' + (-nsWw) + ' ' + nswB + 'Z';
+    nswHollow.setAttribute('d', dH);
+    nswClipPath.setAttribute('d', dH);
     /* 字沿著針的方向往外推：轉之前是「尖端再往上 gap」，轉了就跟著走。 */
     var nsTip = orot(0, nswA, th), nsTx = orot(0, nswA - NSW.gap, th);
     var nsA = [[0, nswA], [nsWw, nswB], [0, nswN], [-nsWw, nswB]]
