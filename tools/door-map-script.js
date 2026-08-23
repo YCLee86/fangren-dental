@@ -38,15 +38,23 @@
     { lot: 'b', tag: 'P2', cx: 421.5, cy: 235 },
     { lot: 'c', tag: 'P1', cx: 378,   cy: 507.5 }
   ];
-  /* ⚠ 三條路線本來都走 x=344 那一條線（永樂街的中線），三組圓點整段疊在一起
-     （使用者：「永樂站和合廷到診所的圓點擠在一起」）。改成三條各走各的：
-     336 / 344 / 352（永樂街寬 324~354，三條都在路面裡，間距 8 ＞ 圓點直徑 7），
-     終點也錯開成綠塊東側的三個高度，看起來就是三條路各自到門口。 */
-  var ROUTES = {
-    a: 'M235 165L336 165L336 252L330 252',
-    b: 'M410 188L344 188L344 264L330 264',
-    c: 'M354 507L352 507L352 276L330 276'
-  };
+  /* 路線。⚠⚠ 第二輪把三條拆成三條並行（336／344／352），使用者回報「更混亂了，
+     原來那個比較好，只是圓點有點重複」。所以第三輪**回到同一條中線**，改成
+     把三條路線的**線段聯集**只畫一次：永樂街上那一段從最北的入口一路畫到最南，
+     三個岔口各自一小段，交會處靠「離已經放好的點太近就不放」把重複的圓點濾掉。 */
+  var ROUTE_SEGS = [
+    [[344, 165], [344, 507]],   /* 永樂街上的共同路段：一次畫完 */
+    [[344, 261], [330, 261]],   /* 轉進診所門口 */
+    [[235, 165], [344, 165]],   /* P3 斗六永樂站 → 永樂街 */
+    [[410, 188], [344, 188]],   /* P2 合廷 → 永樂街 */
+    [[354, 507], [344, 507]]    /* P1 壹車房 → 永樂街 */
+  ];
+  var DOT_GAP = 14, DOT_MIN = 9;   /* 間距／兩點之間至少要離多遠（濾掉交會處的重複） */
+  /* 圖釘的幾何（index.html 那顆定案的值）：頭的半徑與圓心離尖端多遠。
+     ⚠ 用它算「頭要整顆浮在綠塊外面」的位置 —— 尖端放在綠塊上緣往下 (d − R)
+       的地方，頭的下緣就正好貼著上緣。 */
+  var PIN = { R: 24.48, d: 37.94 };
+
   /* 診所那塊綠色 footprint 的四角 —— 圖釘與「現在位置」都照它轉過去的樣子擺 */
   var PLOT = { x0: 228, y0: 236, x1: 324, y1: 287 };
 
@@ -150,20 +158,27 @@
       var g = svg.querySelector('.lot[data-lot="' + L.lot + '"]');
       var t = g && g.querySelector('.pk');
       if (!t) return;
-      /* ⚠ 「P3」比原本的「P」寬一倍，最小那塊（永樂站 58×34）會被擠到邊或凸出去
-         —— 使用者回報的正是這件事。做法：先照色塊的短邊給一個上限，
-         再量實際的字寬，超過就再縮。 */
-      var box = g.getBBox();
-      var fs = Math.min(28, (Math.min(box.width, box.height) - 8) * 0.62);
+      /* ⚠ 色塊轉過去之後長寬會對調，所以要拿**轉過去的螢幕矩形**來量 ——
+         字是直立的，寬度要看螢幕的寬、高度看螢幕的高。
+         ⚠ 「P3」那一塊只有 58×34，第二輪照短邊給字級、又留著站上那圈
+         1.6 的描邊，看起來又粗又快擠出去（使用者回報）。這一版：描邊拿掉、
+         字級照「短邊的 46%」給，再用實際的字寬夾一次，兩邊各留 6 個單位。 */
+      var b = g.getBBox();
+      var C = [[b.x, b.y], [b.x + b.width, b.y], [b.x + b.width, b.y + b.height], [b.x, b.y + b.height]]
+        .map(function (p) { return rot(p[0], p[1], th); });
+      var bw = Math.max.apply(null, C.map(function (p) { return p.x; })) - Math.min.apply(null, C.map(function (p) { return p.x; }));
+      var bh = Math.max.apply(null, C.map(function (p) { return p.y; })) - Math.min.apply(null, C.map(function (p) { return p.y; }));
+      var fs = Math.min(26, Math.min(bw, bh) * 0.46);
       t.style.fontSize = fs.toFixed(1) + 'px';
       typeset(t, L.tag, L.cx, L.cy, false, 0, fs);
-      var w = t.getBBox().width, room = Math.max(10, Math.min(box.width, box.height) - 10);
+      var w = t.getBBox().width, room = bw - 12;
       if (w > room) {
         fs = fs * room / w;
         t.style.fontSize = fs.toFixed(1) + 'px';
         typeset(t, L.tag, L.cx, L.cy, false, 0, fs);
       }
       upright(t, th, L.cx, L.cy);
+      L.fs = fs; L.bw = bw; L.bh = bh; L.w = t.getBBox().width;
     });
 
     /* 診所：綠塊跟著轉（那是建築物），圖釘與「現在位置」照**轉過去的矩形**擺。
@@ -174,10 +189,13 @@
     var sx0 = Math.min(c1.x, c2.x, c3.x, c4.x), sx1 = Math.max(c1.x, c2.x, c3.x, c4.x);
     var sy0 = Math.min(c1.y, c2.y, c3.y, c4.y), sy1 = Math.max(c1.y, c2.y, c3.y, c4.y);
     var midX = (sx0 + sx1) / 2, H = sy1 - sy0;
-    /* 圖釘的尖端：綠塊高度的 40%（原本落在 69%，使用者：「圖釘應該要往上移一點」）
-       文字的字面中心：72% —— 兩行字（約 37 高）整個在綠塊裡。 */
-    var pinP = unrot(midX, sy0 + H * 0.40, th);
-    var youP = unrot(midX, sy0 + H * 0.72, th);
+    /* ⚠⚠ 圖釘的尖端放在綠塊上緣**往下 (d − R) ＝ 13.5 個單位**的地方 ——
+       這樣頭的下緣正好貼著綠塊上緣、整顆圓浮在綠色外面。
+       第二輪放在高度的 40%（96 高 → 38），圓還埋在綠塊裡，使用者：
+       「那個圓形還在框框裡面，人家看不太出來」。
+       文字的字面中心跟著往上到 55%（原本 72%，貼著下緣）。 */
+    var pinP = unrot(midX, sy0 + (PIN.d - PIN.R), th);
+    var youP = unrot(midX, sy0 + H * 0.55, th);
     var pin = svg.querySelector('.cm-pin');
     if (pin) upright(pin, th, pinP.x, pinP.y, 'translate(' + pinP.x.toFixed(2) + ' ' + pinP.y.toFixed(2) + ')');
     var fsY = parseFloat(getComputedStyle(you).fontSize) || 17, gap = 20;
@@ -213,22 +231,28 @@
   }
 
   /* ---- 海報化：三條路線各走各的、三個停車場全部亮著、對話框不畫 ---------- */
-  function rebuildDots(lot, d) {
-    var path = svg.querySelector('.route[data-lot="' + lot + '"]');
-    var g = svg.querySelector('.dots[data-lot="' + lot + '"]');
-    if (!path || !g) return;
-    path.setAttribute('d', d);
-    var nums = (d.match(/-?\d+(?:\.\d+)?/g) || []).map(Number), P = [];
-    for (var i = 0; i + 1 < nums.length; i += 2) P.push({ x: nums[i], y: nums[i + 1] });
-    while (g.firstChild) g.removeChild(g.firstChild);
-    var pts = [P[0]];
-    for (var s = 1; s < P.length; s++) {
-      var a = P[s - 1], b = P[s];
-      var len = Math.hypot(b.x - a.x, b.y - a.y), n = Math.max(1, Math.round(len / 14));
-      for (var k = 1; k <= n; k++) pts.push({ x: a.x + (b.x - a.x) * k / n, y: a.y + (b.y - a.y) * k / n });
-    }
-    pts.forEach(function (pt) {
-      add('circle', { cx: pt.x.toFixed(2), cy: pt.y.toFixed(2), r: 3.5 }, g);
+  function rebuildDots() {
+    var keep = [], a = svg.querySelector('.dots[data-lot="a"]');
+    ['a', 'b', 'c'].forEach(function (k) {
+      var g = svg.querySelector('.dots[data-lot="' + k + '"]');
+      if (g) while (g.firstChild) g.removeChild(g.firstChild);
+      var r = svg.querySelector('.route[data-lot="' + k + '"]');
+      if (r) r.setAttribute('d', 'M0 0');            /* 路線本身不畫，只是幾何來源 */
+    });
+    ROUTE_SEGS.forEach(function (seg) {
+      var p0 = seg[0], p1 = seg[1];
+      var len = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]);
+      var n = Math.max(1, Math.round(len / DOT_GAP));
+      for (var i = 0; i <= n; i++) {
+        var x = p0[0] + (p1[0] - p0[0]) * i / n, y = p0[1] + (p1[1] - p0[1]) * i / n;
+        /* ⚠ 交會處會有兩段各放一顆，靠這一條濾掉 —— 這就是使用者說的
+           「圓點有點重複」。 */
+        var tooClose = keep.some(function (q) { return Math.hypot(q[0] - x, q[1] - y) < DOT_MIN; });
+        if (!tooClose) keep.push([x, y]);
+      }
+    });
+    keep.forEach(function (q) {
+      add('circle', { cx: q[0].toFixed(2), cy: q[1].toFixed(2), r: 3.5 }, a);
     });
   }
 
@@ -247,7 +271,7 @@
     var blue = body.dataset.lotcolor !== 'grey';
     svg.querySelectorAll('.lot').forEach(function (g) { g.classList.toggle('on', blue); });
     you.style.display = body.dataset.you === 'off' ? 'none' : '';
-    Object.keys(ROUTES).forEach(function (k) { rebuildDots(k, ROUTES[k]); });
+    rebuildDots();
   }
 
   function measure(th, w, h) {
@@ -264,7 +288,12 @@
       '綠塊轉過來是 <b>' + pl.w.toFixed(0) + '×' + pl.h.toFixed(0) + '</b> 個單位，' +
       '「現在位置」佔 ' + yb.width.toFixed(0) + '×' + yb.height.toFixed(0) +
       (yb.width < pl.w - 4 && yb.height < pl.h - 4 ? '　<b>整塊在綠色裡</b>' : '　<span style="color:#89202d">超出綠塊</span>') + '<br>' +
-      '街名字級 ' + (22 * k).toFixed(1) + 'px、清單那三行 ' + (0.042 * sheet.width).toFixed(1) + 'px';
+      '街名字級 ' + (22 * k).toFixed(1) + 'px　停車場代號：' +
+      LOTS.map(function (L) {
+        return L.tag + ' ' + (L.fs || 0).toFixed(1) + 'px（色塊 ' + (L.bw || 0).toFixed(0) + '×' +
+               (L.bh || 0).toFixed(0) + '，字寬 ' + (L.w || 0).toFixed(0) + '，兩邊各留 ' +
+               (((L.bw || 0) - (L.w || 0)) / 2).toFixed(0) + '）';
+      }).join('、');
   }
 
   document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {

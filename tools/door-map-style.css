@@ -120,6 +120,9 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 /* 街名壓在點狀路線上會亂 —— 補一圈和路面同色的描邊（做法同停車場那個 P：
    paint-order: stroke 讓描邊先畫、字後畫，字腔不會被吃掉）。 */
 .sh-map .map-svg .lbl { paint-order: stroke; stroke: var(--map-road); stroke-width: 5; stroke-linejoin: round; }
+/* ⚠ 停車場的代號：站上那個 P 靠 1.6 的同色描邊加粗，換成「P3」兩個字之後
+   看起來又粗又擠（使用者回報）。海報上把描邊拿掉，粗細交給字重就好。 */
+.sh-map .map-svg .pk { stroke-width: 0; font-weight: 700; }
 /* 指北針 */
 .sh-map .nsw path { fill: var(--ink-soft); }
 .sh-map .map-svg .nsw text { fill: var(--ink-soft); font-size: 15px; font-weight: 700; }
