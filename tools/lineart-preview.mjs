@@ -9,6 +9,13 @@
  * 2026-08-23 圖定稿之後他說：「現在來把它放到著陸頁，做幾個不同大小的版本給我看，
  * 但也要考慮到文字的可讀性，在濃淡上做調整。」→ 這一版的主軸從「區塊」換成「大小」。
  *
+ * ✅ **2026-08-23：手機那一格定了 —— 特大・右下・極淡**（使用者：「手機版這樣，
+ *   其他我再來看看」）。切換條的預設已經改成這一組，他回來看平板與電腦時
+ *   開頁就是他選好的那一格。
+ *   ⚠⚠ **平板與電腦還沒定，而且那兩邊沒有理由跟著極淡** —— 「右下」在 ≥834
+ *     一個字都不會壓到（實測 0%），濃度在那裡純粹是美感。定案時很可能是
+ *     「手機 .10、≥834 另一個值」兩段，用一道 @media 分開寫，**不是一個值走到底**。
+ *
  * ⚠⚠ **「大小」不影響對比度，「位置」才影響。** 這是這一輪最要緊的一句：
  *   字壓在線上時，最壞情況的底色 ＝ 紙色與套色按濃度混合，**和圖多大完全無關**；
  *   圖變大只是**讓更多字落在那個底色上**。所以可讀性的關卡掛在**濃度**，
@@ -114,7 +121,7 @@ const css = `
    線稿底圖 —— 掛在 .tp-intro 的 ::before／::after 上，**不動任何 markup**，
    所以版面高度一個像素都不會變（使用者：「放進來會壓縮到版面，我不要那樣」）。
    ============================================================================ */
-:root{ --pv-ink: .20; --pv-w: min(52%, 240px); --pv-ar: ${AR}; }
+:root{ --pv-ink: .10; --pv-w: min(76%, 360px); --pv-ar: ${AR}; }
 
 /* ---- 介紹右側（電腦版）--------------------------------------------------
    ⚠ 只在 ≥1200 開：1041 上介紹右邊只剩 189px（扣掉間距剩 162），
@@ -202,17 +209,17 @@ body[data-topic] #main{ padding-top: 1rem; }
 </style>
 <div class="pv-bar">
   <div class="pv-row"><span class="pv-lab">大小</span><span class="pv-seg" id="pv-z">${
-    Object.entries(SIZES).map(([k, s]) => `<button type="button" data-row="z" data-k="${k}" aria-pressed="${k === "m"}">${s.name}</button>`).join("")}</span></div>
+    Object.entries(SIZES).map(([k, s]) => `<button type="button" data-row="z" data-k="${k}" aria-pressed="${k === "x"}">${s.name}</button>`).join("")}</span></div>
   <div class="pv-row"><span class="pv-lab">位置</span><span class="pv-seg" id="pv-s">${
     Object.entries(SPOTS).map(([k, s]) => `<button type="button" data-row="s" data-k="${k}" aria-pressed="${k === "mark"}">${s.name}</button>`).join("")}</span></div>
   <div class="pv-row"><span class="pv-lab">濃度</span><span class="pv-seg" id="pv-i">${
-    Object.entries(INKS).map(([k, i]) => `<button type="button" data-row="i" data-k="${k}" aria-pressed="${k === "i1"}">${i.name}</button>`).join("")}</span></div>
+    Object.entries(INKS).map(([k, i]) => `<button type="button" data-row="i" data-k="${k}" aria-pressed="${k === "i0"}">${i.name}</button>`).join("")}</span></div>
   <p class="pv-hint" id="pv-hint"></p>
 </div>
 <script>
 /* ⚠ 網址參數的正規式要寫 [a-z0-9]+（第八節）—— 寫 [a-z]+ 會吃不到帶數字的值。 */
 var Z = ${JSON.stringify(SIZES)}, S = ${JSON.stringify(SPOTS)}, I = ${JSON.stringify(INKS)};
-var cur = { z: "m", s: "mark", i: "i1" };
+var cur = { z: "x", s: "mark", i: "i0" };
 (function(){ var q=location.search,m;
   m=q.match(/[?&]size=([a-z0-9]+)/); if(m&&Z[m[1]]) cur.z=m[1];
   m=q.match(/[?&]spot=([a-z0-9]+)/); if(m&&S[m[1]]) cur.s=m[1];
