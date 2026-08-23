@@ -84,14 +84,26 @@
 
   /* 指北針（2026-08-21 使用者給了參考圖）：**細長的三角形，右半實心、左半空心**，
      字在上面、而且是「北」不是 N。
-     幾何：尖端 (0,−34)、底左 (−14,22)、底右 (14,22)、底邊中間往上收到 (0,10)
-     —— 那個往上收的缺口就是這種指北針看起來會「站著」的原因。
+     ⚠⚠ **第一版被退回：「太大了 而且比例不對 也不夠精緻」** —— 三件事：
+       ① 太胖：寬 28 高 56 ＝ 1:2，製圖用的指北針是 **1:4 以上**的細針。
+       ② 太大：整組 28×78 個單位，比街名（22）還醒目，它是次要標記不該搶戲。
+       ③ 太糙：空心那半的線寬 3 個單位畫在 14 寬的形狀上，等於三分之一都是線，
+         而且 stroke-linejoin: round 把尖端磨成一顆球。
+     現在整組由下面這五個數字算出來，**要改大小只改 NSW，不要去動 path 字串**：
+       h 針長／w 半寬（h ÷ 2w ＝ 4.0）／notch 底邊往上收多少／fs 字級／gap 字離尖端多遠
      ⚠ 整組跟著地圖轉（它要指出北方轉到哪去了），只有「北」那個字反轉回來。 */
+  var NSW = { h: 40, w: 5, notch: 8, fs: 12, gap: 7 };
+  var nswA = -NSW.h * 0.75, nswB = NSW.h * 0.25;      /* 尖端 y、底邊 y */
+  var nswN = nswB - NSW.notch;                        /* 缺口的頂點 y */
   var nsw = add('g', { class: 'nsw' }, svg);
   var nswArrow = add('g', {}, nsw);
-  add('path', { class: 'nsw-solid', d: 'M0 -34L14 22L0 10Z' }, nswArrow);
-  add('path', { class: 'nsw-hollow', d: 'M0 -34L0 10L-14 22Z' }, nswArrow);
-  var nswTxt = add('text', { x: 0, y: -44, 'text-anchor': 'middle' }, nsw, '北');
+  add('path', { class: 'nsw-solid',
+    d: 'M0 ' + nswA + 'L' + NSW.w + ' ' + nswB + 'L0 ' + nswN + 'Z' }, nswArrow);
+  add('path', { class: 'nsw-hollow',
+    d: 'M0 ' + nswA + 'L0 ' + nswN + 'L' + (-NSW.w) + ' ' + nswB + 'Z' }, nswArrow);
+  var nswTy = nswA - NSW.gap;
+  var nswTxt = add('text', { x: 0, y: nswTy, 'text-anchor': 'middle',
+    'font-size': NSW.fs }, nsw, '北');
 
   /* ---- 幾何小工具 -------------------------------------------------------- */
   function rot(x, y, th) {
@@ -236,19 +248,20 @@
          轉 90 度時箭頭的尖端會從上面跑到右邊，「北」那個字跟著跑出畫布外
          （第一版就是這樣，右上角只看得到半個字）。做法是把整組的四個角
          與那個字的方框各自轉一次，取聯集，再把整組貼到右上角、留 10 個單位。 */
-    var nsA = [[0, -34], [14, 22], [0, 10], [-14, 22]].map(function (q) { return orot(q[0], q[1], th); });
-    var nsT = orot(0, -44, th);
+    var nsA = [[0, nswA], [NSW.w, nswB], [0, nswN], [-NSW.w, nswB]]
+      .map(function (q) { return orot(q[0], q[1], th); });
+    var nsT = orot(0, nswTy, th);
     var nx0 = Math.min.apply(null, nsA.map(function (q) { return q.x; }));
     var nx1 = Math.max.apply(null, nsA.map(function (q) { return q.x; }));
     var ny0 = Math.min.apply(null, nsA.map(function (q) { return q.y; }));
     var ny1 = Math.max.apply(null, nsA.map(function (q) { return q.y; }));
-    nx0 = Math.min(nx0, nsT.x - 11); nx1 = Math.max(nx1, nsT.x + 11);
-    ny0 = Math.min(ny0, nsT.y - 14); ny1 = Math.max(ny1, nsT.y + 4);
+    nx0 = Math.min(nx0, nsT.x - NSW.fs / 2 - 1); nx1 = Math.max(nx1, nsT.x + NSW.fs / 2 + 1);
+    ny0 = Math.min(ny0, nsT.y - NSW.fs); ny1 = Math.max(ny1, nsT.y + 2);
     var nsm = 10;
     nsw.setAttribute('transform',
       'translate(' + (vx1 - nsm - nx1).toFixed(1) + ' ' + (vy0 + nsm - ny0).toFixed(1) + ')' +
       (th ? ' rotate(' + th + ')' : ''));
-    upright(nswTxt, th, 0, -44);
+    upright(nswTxt, th, 0, nswTy);
 
     fit();
     measure(th, sx1 - sx0, H);
