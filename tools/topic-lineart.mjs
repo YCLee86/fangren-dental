@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 /* 從科別插畫裡抽一段人物出來，做成**只有線條**的綠色 PNG → assets/lineart-<spec>.png
  *
- *   node tools/topic-lineart.mjs <spec> [--region A|B] [--out <檔>]
+ *   node tools/topic-lineart.mjs <spec> [--region A|B] [--out <檔>]      ← 從插畫抽線（舊路）
+ *   node tools/topic-lineart.mjs <spec> --art <線稿檔> [--out <檔>]      ← 接生成的線稿（現行）
+ *
+ * ⚠⚠ **2026-08-22：抽線那條路使用者退回了**（「這不是我要的，跟我找的範例還是差很多，
+ *   你們做成圖片提示詞好了」）。成因是方法本身不是參數：從**有陰影、有材質**的插畫上
+ *   撿邊，筆畫的粗細跟著原圖明暗走、材質與皺褶也會變成線 —— 後製拿不掉。
+ *   **要一個「畫出來的」風格就得畫。** 提示詞在 drafts/topic-lineart-prompt.md。
+ *   抽線的程式碼留著（--region 那條），是為了記住那條路長什麼樣，不是還在用。
  *
  * 2026-08-22 使用者提的：著陸頁上沒有那張分享圖，但「把圖片放進來會壓縮到版面，
  * 我不要那樣。我想到把圖片的某個部分做成頁面的底，但只要保留線條，
@@ -71,12 +78,23 @@ if (!spec || !ACCENT[spec]) {
   console.error("spec：" + Object.keys(ACCENT).join(" / "));
   process.exit(1);
 }
+const artIdx = args.indexOf("--art");
+const ART = artIdx >= 0 ? path.resolve(ROOT, args[artIdx + 1]) : null;
+/* --crop x,y,w,h：先在原圖上裁一塊再處理（只有 --art 那條路吃它）。
+   ⚠ 生成的線稿常常會多畫一條「地面線」，還會留一大圈空白 ——
+     那條橫線擺到頁面上會變成一條莫名其妙的橫槓，空白則讓定位很難算。
+     裁掉之後圖檔就等於內容本身，頁面那一側只要管大小與位置。 */
+const cIdx = args.indexOf("--crop");
+const CROP = cIdx >= 0 ? args[cIdx + 1].split(",").map(Number) : null;
+if (CROP && (CROP.length !== 4 || CROP.some((n) => !Number.isFinite(n)))) {
+  console.error("× --crop 要四個數字：x,y,w,h"); process.exit(1);
+}
 const rIdx = args.indexOf("--region");
 const rk = rIdx >= 0 ? args[rIdx + 1] : "B";
-const R = REGIONS[spec]?.[rk];
-if (!R) { console.error(`× ${spec} 沒有區塊 ${rk}（有的：${Object.keys(REGIONS[spec] || {}).join(" / ") || "無"}）`); process.exit(1); }
+const R = ART ? null : REGIONS[spec]?.[rk];
+if (!ART && !R) { console.error(`× ${spec} 沒有區塊 ${rk}（有的：${Object.keys(REGIONS[spec] || {}).join(" / ") || "無"}）`); process.exit(1); }
 
-const SRC = path.join(ROOT, "drafts", `og-topic-${spec}-src.jpg`);
+const SRC = ART || path.join(ROOT, "drafts", `og-topic-${spec}-src.jpg`);
 if (!fs.existsSync(SRC)) { console.error(`× 找不到原檔 ${path.relative(ROOT, SRC)}`); process.exit(1); }
 const oIdx = args.indexOf("--out");
 const OUT = oIdx >= 0 ? path.resolve(ROOT, args[oIdx + 1]) : path.join(ROOT, "assets", `lineart-${spec}.png`);
@@ -100,9 +118,51 @@ if (!chromium) throw new Error("找不到 Playwright");
 const rgb = [1, 3, 5].map((i) => parseInt(ACCENT[spec].slice(i, i + 2), 16));
 const browser = await chromium.launch({ executablePath: chromePath });
 const pg = await browser.newPage();
-const uri = `data:image/jpeg;base64,${fs.readFileSync(SRC).toString("base64")}`;
+const mime = /\.png$/i.test(SRC) ? "image/png" : "image/jpeg";
+const uri = `data:${mime};base64,${fs.readFileSync(SRC).toString("base64")}`;
 
-const res = await pg.evaluate(async ({ uri, R, rgb, SCALE, R_MEAN, T, ERODE }) => {
+/* ---- --art：來源**本來就是線稿**（模型生成的，近白底、單色線）------------
+   只做一件事：把底色變透明、把線統一成該科的套色。
+   ⚠⚠ **不要再做局部平均或侵蝕** —— 那些是為了「從有陰影的插畫上撿邊」而存在的，
+     來源已經是平的，再處理只會把它弄壞（線會斷、邊會啃掉一圈）。
+   ⚠ alpha 直接由亮度反推：白 → 全透明、線 → 不透明。
+     只在最靠近門檻的一小段留過渡，讓邊緣不要有鋸齒 —— 那是抗鋸齒，不是濃淡。 */
+const artRes = ART ? await pg.evaluate(async ({ uri, rgb, CROP }) => {
+  const im = new Image(); im.src = uri; await im.decode();
+  if (CROP && (CROP[0] + CROP[2] > im.naturalWidth || CROP[1] + CROP[3] > im.naturalHeight)) {
+    return { err: `--crop 超出原檔（原檔 ${im.naturalWidth}×${im.naturalHeight}）` };
+  }
+  const W = CROP ? CROP[2] : im.naturalWidth, H = CROP ? CROP[3] : im.naturalHeight;
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
+  const g = c.getContext("2d", { willReadFrequently: true });
+  if (CROP) g.drawImage(im, CROP[0], CROP[1], W, H, 0, 0, W, H);
+  else g.drawImage(im, 0, 0);
+  const d = g.getImageData(0, 0, W, H).data;
+  /* ⚠ 來源必須是**不透明**的（模型生成的就是）。餵透明底的 PNG 進來的話，
+     透明處讀出來是黑的，底色會量成 0、整張變成全透明 —— 而且不報錯。 */
+  let clear = 0;
+  for (let i = 3; i < d.length; i += 4) if (d[i] < 250) clear++;
+  if (clear / (W * H) > 0.02) return { err: "這張有透明區（" + (100 * clear / (W * H)).toFixed(1) + "%）——--art 要的是模型生成的**不透明**線稿（近白底、深色線）" };
+  /* 先量底色（出現最多的亮度），門檻取「底色往下」 */
+  const hist = new Array(256).fill(0);
+  for (let i = 0; i < d.length; i += 4) hist[Math.round(d[i] * .299 + d[i + 1] * .587 + d[i + 2] * .114)]++;
+  let bg = 0; for (let v = 0; v < 256; v++) if (hist[v] > hist[bg]) bg = v;
+  const hi = bg * 0.90, lo = bg * 0.62;
+  const out = g.createImageData(W, H); let ink = 0, mid = 0;
+  for (let i = 0, k = 0; i < d.length; i += 4, k += 4) {
+    const L = d[i] * .299 + d[i + 1] * .587 + d[i + 2] * .114;
+    let a = (hi - L) / (hi - lo);
+    a = Math.max(0, Math.min(1, a));
+    if (a > 0.5) ink++;
+    if (a > 0.1 && a < 0.9) mid++;
+    out.data[k] = rgb[0]; out.data[k + 1] = rgb[1]; out.data[k + 2] = rgb[2];
+    out.data[k + 3] = Math.round(a * 255);
+  }
+  g.putImageData(out, 0, 0);
+  return { data: c.toDataURL("image/png"), ink: ink / (W * H), mid: mid / (W * H), bg, W, H };
+}, { uri, rgb, CROP }) : null;
+
+const res = artRes || await pg.evaluate(async ({ uri, R, rgb, SCALE, R_MEAN, T, ERODE }) => {
   const im = new Image(); im.src = uri; await im.decode();
   if (R.x + R.w > im.naturalWidth || R.y + R.h > im.naturalHeight) {
     return { err: `區塊超出原檔（原檔 ${im.naturalWidth}×${im.naturalHeight}）` };
@@ -177,5 +237,15 @@ if (res.ink < 0.02) {
 }
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, Buffer.from(res.data.split(",")[1], "base64"));
-console.log(`${rk} ${R.name}　原檔 x${R.x} y${R.y} ${R.w}×${R.h} → 輸出 ${res.W}×${res.H}（放大 ${SCALE}×）　線佔 ${(res.ink * 100).toFixed(1)}%`);
+if (ART) {
+  /* ⚠ 交件門檻（drafts/topic-lineart-prompt.md）：線佔 4~6%。
+     過渡帶（半透明的像素）太多就表示來源不是平的線稿 —— 那多半是拿錯圖。 */
+  console.log(`線稿 ${path.relative(ROOT, SRC)}　底色亮度 ${res.bg}　線佔 ${(res.ink * 100).toFixed(1)}%　過渡帶 ${(res.mid * 100).toFixed(2)}%`);
+  /* ⚠ 這個門檻是對「整張未裁的圖」說的 —— 裁掉四周的空白之後，同樣的線會佔到
+     兩倍以上，那不是變糟。所以有 --crop 時不比。 */
+  if (!CROP && res.ink > 0.12) console.log("  ⚠ 線佔超過 12% —— 參考圖量到的是 4~6%，這張可能有填色或陰影。");
+  if (res.mid > 0.06) console.log("  ⚠ 過渡帶偏多 —— 來源可能不是平塗的線稿（有濃淡或模糊）。");
+} else {
+  console.log(`${rk} ${R.name}　原檔 x${R.x} y${R.y} ${R.w}×${R.h} → 輸出 ${res.W}×${res.H}（放大 ${SCALE}×）　線佔 ${(res.ink * 100).toFixed(1)}%`);
+}
 console.log(`✓ ${path.relative(ROOT, OUT)}  ${res.W}×${res.H}  ${(fs.statSync(OUT).size / 1024).toFixed(1)}KB`);

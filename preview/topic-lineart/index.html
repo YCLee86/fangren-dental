@@ -4734,54 +4734,59 @@ body[data-topic] #topics { padding-top: 1rem; }
 
 <style id="pv-lineart">
 /* ============================================================================
-   線稿底圖 —— 掛在 .tp-intro 的 ::after／background 上，**不動任何 markup**，
+   線稿底圖 —— 掛在 .tp-intro 的 ::before／::after 上，**不動任何 markup**，
    所以版面高度一個像素都不會變（使用者：「放進來會壓縮到版面，我不要那樣」）。
    ============================================================================ */
-:root{ --pv-line: url("line-b.png"); --pv-ink: .45; }
-body[data-pv-region="a"]{ --pv-line: url("line-a.png"); }
-body[data-pv-region="b"]{ --pv-line: url("line-b.png"); }
+:root{ --pv-ink: .20; --pv-w: min(52%, 240px); --pv-ar: 832 / 788; }
 
 /* ---- 介紹右側（電腦版）--------------------------------------------------
-   ⚠ 只在 ≥1200 開：1041 上介紹右邊只剩 189px（扣掉間距 27 剩 162），
+   ⚠ 只在 ≥1200 開：1041 上介紹右邊只剩 189px（扣掉間距剩 162），
      塞進去會擠成一條；834 以下根本沒有側邊空間。
-   ⚠ 寬度用 vw 跟著長，並用 min() 夾住上限 —— 寫死 px 在 1200 會溢出版心。 */
+   ⚠ 寬度用 calc 跟著視窗長並夾上限 —— 寫死 px 在 1200 會溢出版心。 */
 @media (min-width: 1200px) {
   body[data-pv-spot="side"] .tp-intro { position: relative; }
   body[data-pv-spot="side"] .tp-intro::after {
     content: ""; position: absolute; left: 100%; top: 50%;
     transform: translateY(-50%); margin-left: 1.6rem;
-    width: min(22vw, 340px); aspect-ratio: var(--pv-ar);
-    background: var(--pv-line) center / contain no-repeat;
+    width: var(--pv-w); aspect-ratio: var(--pv-ar);
+    background: url("../../assets/lineart-general.png") center / contain no-repeat;
     opacity: var(--pv-ink); pointer-events: none;
   }
 }
 /* ---- 介紹右下的浮水印（所有寬度都能用）----------------------------------
-   ⚠⚠ **不能用 background-image**（第一版就是，踩到了）：background 吃不到
-     opacity，濃度那條尺對它完全沒作用 —— 手機上它是**全濃度**壓在內文底下，
-     量出來「改變的面積 0.0%」就是那個徵兆。改用 ::before ＋ opacity。
-   ⚠ 它是 absolute 的偽元素，**不佔高度也不影響換行** —— 這正是「不壓縮版面」的做法。
-   ⚠ .tp-intro 站上沒有用到 ::before／::after（grep 過），所以借用是安全的；
-     側邊那一格用 ::after，兩個不會打架。 */
-body[data-pv-spot="mark"] .tp-intro { position: relative; }
+   ⚠⚠ **不能用 background-image 直接掛在 .tp-intro 身上**（第一版就是，踩到了）：
+     background 吃不到 opacity，濃度那條尺對它完全沒作用 —— 手機上它是**全濃度**
+     壓在內文底下，量出來「改變的面積 0.0%」就是那個徵兆。改用 ::before ＋ opacity。
+   ⚠ 它是 absolute 的偽元素，**不佔高度也不影響換行** —— 這正是「不壓縮版面」的做法。 */
+body[data-pv-spot="mark"] .tp-intro,
+body[data-pv-spot="mark2"] .tp-intro { position: relative; }
 body[data-pv-spot="mark"] .tp-intro::before {
   /* ⚠ right 不能給負值：手機上介紹區已經貼著版心，往外凸就會多出水平捲動
      （踩過，390 上 -1rem 直接讓整頁可以左右拉）。 */
   content: ""; position: absolute; right: 0; bottom: 0;
-  width: min(58%, 260px); aspect-ratio: var(--pv-ar);
-  background: var(--pv-line) center / contain no-repeat;
+  width: var(--pv-w); aspect-ratio: var(--pv-ar);
+  background: url("../../assets/lineart-general.png") center / contain no-repeat;
   opacity: var(--pv-ink); pointer-events: none; z-index: 0;
 }
+/* mark2 ＝ 同一件事，但只在 ≥834（手機不放，那是唯一會壓到字的寬度） */
+@media (min-width: 834px) {
+  body[data-pv-spot="mark2"] .tp-intro::before {
+    content: ""; position: absolute; right: 0; bottom: 0;
+    width: var(--pv-w); aspect-ratio: var(--pv-ar);
+    background: url("../../assets/lineart-general.png") center / contain no-repeat;
+    opacity: var(--pv-ink); pointer-events: none; z-index: 0;
+  }
+}
 /* ⚠ 內文要壓在浮水印上面，否則字會被蓋住 */
-body[data-pv-spot="mark"] .tp-intro > * { position: relative; z-index: 1; }
+body[data-pv-spot="mark"] .tp-intro > *,
+body[data-pv-spot="mark2"] .tp-intro > * { position: relative; z-index: 1; }
 /* ⚠⚠ **side 在 <1200 直接不放，不要退成浮水印。**
-   量過：浮水印墊在內文底下，那一區的中位對比 —— 濃度 .10 是 4.65（剛過站上的 4.5）、
-   .28 掉到 4.09、.45 掉到 3.62；而且線最濃的 2% 會把次要文字壓到 1.2~1.5。
-   手機的介紹區是一整塊密排的字、沒有空白可借，**放什麼都在吃可讀性**。 */
+   手機的介紹區是一整塊密排的字、沒有空白可借，退成浮水印等於偷偷換掉使用者選的東西。 */
 </style>
 </head>
 <body data-topic="general" data-spec="general">
 <div class="pv-frame" id="pv-frame">
-  <div class="pv-fl">電腦版（1440 寬）縮進來看 —— 側邊那一格只在 ≥1200 出現，用手機直接看是看不到的。底下那一整頁是手機版本身。</div>
+  <div class="pv-fl">電腦版（1440 寬）縮進來看 —— <b>側邊那一格只在 ≥1200 出現</b>，用手機直接看是看不到的。底下那一整頁是手機版本身（切到「介紹右下」就會出現在那裡）。</div>
   <div class="pv-fw"><iframe id="pv-if" title="電腦版預覽" scrolling="no"></iframe></div>
 </div>
 
@@ -7085,65 +7090,126 @@ body[data-pv-spot="mark"] .tp-intro > * { position: relative; z-index: 1; }
   background:#f4f4f5;color:#2a2c27;border-radius:8px;font:inherit;font-size:.76rem;
   cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 .25em}
 .pv-seg button[aria-pressed="true"]{background:#3f654a;border-color:#3f654a;color:#f4f4f5;font-weight:500}
-.pv-hint{font-size:.7rem;color:#5c5f57;margin-top:4px;line-height:1.45}
-body{padding-bottom:150px}
+.pv-hint{font-size:.7rem;color:#5c5f57;margin-top:5px;line-height:1.5}
+.pv-ok{color:#2c5238;font-weight:700}
+.pv-no{color:#8a3b2f;font-weight:700}
+body{padding-bottom:186px}
 /* ---- 電腦版預覽 ---------------------------------------------------------
-   ⚠⚠ 這一塊是 2026-08-22 補的。第一版沒有，使用者在手機上打開只看到一片空白
-     （「好像沒有欸」）—— **側邊那一格只在 ≥1200 出現**，而他所有東西都用手機看。
-     做法和訊息卡那幾張一樣：**擺真的東西，然後縮到看得到的尺寸**，
-     用 iframe 載同一頁、寬度鎖 1440，再用 transform 縮到手機寬。
-   ⚠ iframe 裡帶 frame=1，那一態不再畫這一塊也不畫切換條 —— 否則會遞迴。 */
-/* ⚠ 頁首是固定的，所以這一塊要自己讓開它 —— 讀站上同一個 --topic-pad
-     （著陸頁 #main 的上內距就是讀它，由頁面裡那支腳本現量寫入）。
-   ⚠ 讓開之後 #main 自己那份上內距就多餘了，這一頁把它收掉，不然中間會空一大塊。
-   ⚠⚠ 這是模板字串裡的 CSS 註解，**不能出現反引號**（CLAUDE.md 第九節第 8 條）。 */
+   ⚠⚠ 使用者所有東西都用手機看，而**側邊那一格只在 ≥1200 出現** ——
+     沒有這一塊他會打開只看到一片空白（2026-08-22 踩過，他說「好像沒有欸」）。
+     做法：擺真的東西，用 iframe 載同一頁、寬度鎖 1440，再用 transform 縮到手機寬。
+   ⚠ iframe 裡帶 frame=1，那一態不再畫這一塊也不畫切換條 —— 否則會遞迴。
+   ⚠ 頁首是固定的，所以這一塊要自己讓開它（讀站上同一個 --topic-pad）；
+     讓開之後 #main 自己那份上內距就多餘了，這一頁把它收掉。 */
 .pv-frame{margin:0;padding:calc(var(--topic-pad, 70px) + 12px) 12px 10px;
   background:#dfe3e5;border-bottom:1px solid #cdd0d2}
 body[data-topic] #main{ padding-top: 1rem; }
 .pv-fl{font-size:.72rem;color:#5c5f57;line-height:1.5;margin-bottom:8px}
 .pv-fw{position:relative;width:100%;overflow:hidden;border-radius:8px;
   box-shadow:0 1px 4px rgba(20,24,20,.16);background:#e2e5e6}
-.pv-fw iframe{width:1440px;height:760px;border:0;display:block;
+.pv-fw iframe{width:1440px;height:820px;border:0;display:block;
   transform-origin:0 0;transform:scale(var(--pv-k,1))}
 </style>
 <div class="pv-bar">
-  <div class="pv-row"><span class="pv-lab">區塊</span><span class="pv-seg" id="pv-r"><button type="button" data-row="r" data-k="a" aria-pressed="false">中間・對話</button><button type="button" data-row="r" data-k="b" aria-pressed="true">右邊・打招呼</button></span></div>
-  <div class="pv-row"><span class="pv-lab">位置</span><span class="pv-seg" id="pv-s"><button type="button" data-row="s" data-k="side" aria-pressed="true">介紹右側</button><button type="button" data-row="s" data-k="mark" aria-pressed="false">介紹右下</button><button type="button" data-row="s" data-k="none" aria-pressed="false">不放</button></span></div>
-  <div class="pv-row"><span class="pv-lab">濃度</span><span class="pv-seg" id="pv-i"><button type="button" data-row="i" data-k="s0" aria-pressed="false">極淡</button><button type="button" data-row="i" data-k="s1" aria-pressed="false">淡</button><button type="button" data-row="i" data-k="s2" aria-pressed="true">中</button><button type="button" data-row="i" data-k="s3" aria-pressed="false">濃</button></span></div>
+  <div class="pv-row"><span class="pv-lab">大小</span><span class="pv-seg" id="pv-z"><button type="button" data-row="z" data-k="s" aria-pressed="false">小</button><button type="button" data-row="z" data-k="m" aria-pressed="true">中</button><button type="button" data-row="z" data-k="l" aria-pressed="false">大</button><button type="button" data-row="z" data-k="x" aria-pressed="false">特大</button></span></div>
+  <div class="pv-row"><span class="pv-lab">位置</span><span class="pv-seg" id="pv-s"><button type="button" data-row="s" data-k="side" aria-pressed="false">右側</button><button type="button" data-row="s" data-k="mark" aria-pressed="true">右下</button><button type="button" data-row="s" data-k="mark2" aria-pressed="false">右下（平板以上）</button><button type="button" data-row="s" data-k="none" aria-pressed="false">不放</button></span></div>
+  <div class="pv-row"><span class="pv-lab">濃度</span><span class="pv-seg" id="pv-i"><button type="button" data-row="i" data-k="i0" aria-pressed="false">極淡</button><button type="button" data-row="i" data-k="i1" aria-pressed="true">淡</button><button type="button" data-row="i" data-k="i2" aria-pressed="false">中</button><button type="button" data-row="i" data-k="i3" aria-pressed="false">濃</button></span></div>
   <p class="pv-hint" id="pv-hint"></p>
 </div>
 <script>
 /* ⚠ 網址參數的正規式要寫 [a-z0-9]+（第八節）—— 寫 [a-z]+ 會吃不到帶數字的值。 */
-var R = {"a":{"key":"A","name":"中間・對話","w":312,"h":196,"note":"女醫師與老先生在門口說話。⚠ 兩人中間隔著騎樓的窗與椅子，線比較多。"},"b":{"key":"B","name":"右邊・打招呼","w":228,"h":196,"note":"兩位醫事人員。背景只有門框的直線，最乾淨的一段。"}}, S = {"side":{"name":"介紹右側","note":"電腦版介紹右邊那塊空白（1200 上有 348px 完全是空的）。⚠ 只在 ≥1200 出現 —— 1041 只剩 189px、834 以下沒有側邊空間。"},"mark":{"name":"介紹右下","note":"⚠⚠ 墊在內文底下。量出來：濃度 .10 時那一區的中位對比 4.65（剛過 4.5）、.28 掉到 4.09、.45 掉到 3.62；而且線最濃的 2% 會把次要文字壓到 1.2~1.5。**只有「極淡」撐得住。**"},"none":{"name":"不放","note":"手機與 iPad 沒有空白可用，不放是誠實的選項。"}}, I = {"s0":{"name":"極淡","v":0.1},"s1":{"name":"淡","v":0.28},"s2":{"name":"中","v":0.45},"s3":{"name":"濃","v":0.62}};
-var cur = { r: "b", s: "side", i: "s2" };
+var Z = {"s":{"name":"小","side":"min(200px, calc(100vw - 884px))","mark":"min(40%, 180px)"},"m":{"name":"中","side":"min(260px, calc(100vw - 884px))","mark":"min(52%, 240px)"},"l":{"name":"大","side":"min(320px, calc(100vw - 884px))","mark":"min(64%, 300px)"},"x":{"name":"特大","side":"min(400px, calc(100vw - 884px))","mark":"min(76%, 360px)"}}, S = {"side":{"name":"右側","min":1200,"note":"圖在文字欄外面。⚠ 只在 ≥1200 出現。"},"mark":{"name":"右下","min":0,"note":"墊在介紹區右下角。**手機會壓到字**（大小愈大壓愈多），平板以上不會。"},"mark2":{"name":"右下（平板以上）","min":834,"note":"同上，但**手機不放** —— 手機是唯一會壓到字的寬度。"},"none":{"name":"不放","min":99999,"note":"誠實的選項。"}}, I = {"i0":{"name":"極淡","v":0.1},"i1":{"name":"淡","v":0.2},"i2":{"name":"中","v":0.32},"i3":{"name":"濃","v":0.48}};
+var cur = { z: "m", s: "mark", i: "i1" };
 (function(){ var q=location.search,m;
-  m=q.match(/[?&]region=([a-z0-9]+)/); if(m&&R[m[1]]) cur.r=m[1];
-  m=q.match(/[?&]spot=([a-z0-9]+)/);   if(m&&S[m[1]]) cur.s=m[1];
-  m=q.match(/[?&]ink=([a-z0-9]+)/);    if(m&&I[m[1]]) cur.i=m[1];
+  m=q.match(/[?&]size=([a-z0-9]+)/); if(m&&Z[m[1]]) cur.z=m[1];
+  m=q.match(/[?&]spot=([a-z0-9]+)/); if(m&&S[m[1]]) cur.s=m[1];
+  m=q.match(/[?&]ink=([a-z0-9]+)/);  if(m&&I[m[1]]) cur.i=m[1];
 })();
+
+/* ---- 現場算對比度（閉式解，不必抓像素）--------------------------------
+   最壞情況 ＝ 字正好壓在**全濃度的線**上：底色 ＝ 紙色與套色按 opacity 混合。
+   ⚠ 這和圖多大無關 —— 大小只決定「多少字落在那個底色上」。 */
+function lum(c){var f=c.map(function(v){v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});
+  return 0.2126*f[0]+0.7152*f[1]+0.0722*f[2];}
+function cr(a,b){var l1=lum(a),l2=lum(b);return (Math.max(l1,l2)+0.05)/(Math.min(l1,l2)+0.05);}
+var PAPER=[226,229,230], ACC=[63,101,74], INK=[42,44,39], SOFT=[92,95,87];
+function ratios(al){
+  var bg=PAPER.map(function(p,k){return p*(1-al)+ACC[k]*al;});
+  return { ink: cr(INK,bg), soft: cr(SOFT,bg) };
+}
+/* ---- 大小真正改變的那個量：**有多少字落在圖上** -------------------------
+   對比度和圖多大無關，但「多少字會踩到那個底色」完全是大小決定的。
+   量法：把介紹區每一段文字的行框拿出來，和浮水印的矩形取交集，除以行框總面積。
+   ⚠ 探針要插在 .tp-intro 裡面 —— 寬度是 min(64%, 300px) 這種式子，
+     百分比要對得上正確的父層才算得對（掛到 body 上會算成整頁的 64%）。 */
+function overlapPct(){
+  var it=document.querySelector(".tp-intro"); if(!it) return null;
+  var v=getComputedStyle(document.body).getPropertyValue("--pv-w").trim(); if(!v) return null;
+  var probe=document.createElement("div");
+  probe.style.cssText="position:absolute;visibility:hidden;height:0;width:"+v;
+  it.appendChild(probe);
+  var w=probe.getBoundingClientRect().width;
+  it.removeChild(probe);
+  if(!w) return null;
+  var h=w*788/832;
+  var r=it.getBoundingClientRect();
+  var art={left:r.right-w, top:r.bottom-h, right:r.right, bottom:r.bottom};
+  var total=0, hit=0, walker=document.createTreeWalker(it, NodeFilter.SHOW_TEXT), n, rng=document.createRange();
+  while((n=walker.nextNode())){
+    if(!n.nodeValue.trim()) continue;
+    rng.selectNodeContents(n);
+    var rects=rng.getClientRects();
+    for(var i=0;i<rects.length;i++){
+      var bx=rects[i], ar=bx.width*bx.height; if(!ar) continue; total+=ar;
+      var ox=Math.max(0, Math.min(bx.right,art.right)-Math.max(bx.left,art.left));
+      var oy=Math.max(0, Math.min(bx.bottom,art.bottom)-Math.max(bx.top,art.top));
+      hit+=ox*oy;
+    }
+  }
+  return total ? 100*hit/total : 0;
+}
+
 function apply(push){
-  var b=document.body;
-  b.dataset.pvRegion=cur.r; b.dataset.pvSpot=cur.s;
+  var b=document.body, sp=S[cur.s], sz=Z[cur.z];
+  b.dataset.pvSpot=cur.s;
   b.style.setProperty("--pv-ink", I[cur.i].v);
-  b.style.setProperty("--pv-ar", R[cur.r].w + " / " + R[cur.r].h);
-  ["r","s","i"].forEach(function(k){
+  b.style.setProperty("--pv-w", cur.s.indexOf("mark")===0 ? sz.mark : sz.side);
+  ["z","s","i"].forEach(function(k){
     document.querySelectorAll("#pv-"+k+" button").forEach(function(x){
       x.setAttribute("aria-pressed", String(x.dataset.k===cur[k])); }); });
-  document.getElementById("pv-hint").textContent =
-    R[cur.r].name + "・" + S[cur.s].name + "・" + I[cur.i].name + "　" + R[cur.r].note + "　" + S[cur.s].note;
+
+  var r=ratios(I[cur.i].v), head=sz.name+"・"+sp.name+"・"+I[cur.i].name+"　";
+  var msg, vw=innerWidth;
+  if(cur.s==="none"){ msg="不放。"; }
+  else if(vw < sp.min){
+    msg="這個寬度（"+vw+"px）<b>不放</b> —— 這一格只在 ≥"+sp.min+" 出現，用上面那個電腦版預覽看。";
+  } else {
+    /* ⚠⚠ 判準是**有沒有字落在圖上**，不是濃度本身。濃度只決定「壓到的時候有多糟」。 */
+    var ov=(cur.s.indexOf("mark")===0) ? overlapPct() : 0;
+    if(!ov){
+      msg="這個寬度<b class='pv-ok'>沒有任何字落在圖上</b>（0%）—— 濃度只影響好不好看，不影響可讀性。";
+    } else {
+      msg="有 <b>"+ov.toFixed(0)+"%</b> 的字落在圖上。壓到的地方最壞的底色："+
+        "主文 "+r.ink.toFixed(2)+"、<b>次要文字（柔墨）"+r.soft.toFixed(2)+"</b>　"+
+        (r.soft>=4.5 ? "<b class='pv-ok'>過</b> 4.5" : "<b class='pv-no'>沒過</b> 4.5 —— 那幾個現場與流程會變糊")+
+        "（紙上本來 5.14，臨界濃度 .101）。";
+    }
+  }
+  document.getElementById("pv-hint").innerHTML = head + msg + "　" + sp.note.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
   syncFrame();
-  if(push) history.replaceState(null,"","?region="+cur.r+"&spot="+cur.s+"&ink="+cur.i);
+  if(push) history.replaceState(null,"","?size="+cur.z+"&spot="+cur.s+"&ink="+cur.i);
 }
 /* iframe 的縮放：外框寬 ÷ 1440。高度要跟著縮，不然下面會空一大塊。 */
 function sizeFrame(){
   var w=document.querySelector(".pv-fw"); if(!w) return;
   var k=w.clientWidth/1440;
   w.style.setProperty("--pv-k",k);
-  w.style.height=Math.round(760*k)+"px";
+  w.style.height=Math.round(820*k)+"px";
 }
 function syncFrame(){
   var f=document.getElementById("pv-if"); if(!f) return;
-  var u="?frame=1&region="+cur.r+"&spot=side&ink="+cur.i;
+  /* ⚠ 預覽框裡是 1440 —— side 與 mark/mark2 在那個寬度都成立，直接照使用者選的那一格。 */
+  var u="?frame=1&size="+cur.z+"&spot="+cur.s+"&ink="+cur.i;
   if(f.getAttribute("src")!==u) f.setAttribute("src",u);
 }
 addEventListener("resize",sizeFrame);
