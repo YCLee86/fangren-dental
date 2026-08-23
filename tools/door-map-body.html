@@ -1,4 +1,4 @@
-<body data-orient="w" data-size="l" data-lotcolor="blue" data-ns="b" data-nw="b">
+<body data-orient="w" data-size="l" data-lotcolor="blue" data-ns="b" data-nw="b" data-qr="on">
 
 <!-- ==========================================================================
      門口的告示（A4 橫）。⚠⚠ 2026-08-23 用途整個換掉了：
@@ -45,6 +45,14 @@
       </ul>
 
       <p class="sh-note">停車計價方式依各業者現場標示為準。</p>
+
+      <!-- ⚠ QR 指向 fangren.net 的「診所資訊」那一節：那裡有可以點的地圖，
+           三個停車場各自連到 Google 地圖，掃一次三個都拿得到。
+           **不要做成三顆小 QR** —— 量過右欄只有約 120mm 寬，
+           三顆 20mm 的碼會把停車場名字擠到折行。
+           ⚠ 碼是 tools/qr.mjs 產的向量 path（零依賴、印多大都不糊），
+           由 door-map-preview.mjs 在產生的時候塞進來。 -->
+      <div class="nt-qr"><!--QR--><span>掃這裡看地圖<br>與停車場位置</span></div>
       <!-- ⚠ 收尾那一句（「不用急，先把車停好　我們等你」）2026-08-23 由使用者
            拿掉：這是一張告示，不是一封信。 -->
     </div>
@@ -53,7 +61,7 @@
 
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時整段刪掉。
-     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off　?ns=a|b|c|d　?nw=a|b|c|d
+     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off　?ns=a|b|c|d　?nw=a|b|c|d　?qr=on|off
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
   <div class="pv-row">
@@ -70,6 +78,9 @@
     <span class="pv-lab">停車場</span>
     <button data-k="lotcolor" data-v="blue">三個都上藍</button>
     <button data-k="lotcolor" data-v="grey">維持灰</button>
+    <span class="pv-lab">QR</span>
+    <button data-k="qr" data-v="on">放</button>
+    <button data-k="qr" data-v="off">不放</button>
     <span class="pv-lab">標記</span>
     <button data-k="you" data-v="on">現在位置</button>
     <button data-k="you" data-v="off">不放</button>

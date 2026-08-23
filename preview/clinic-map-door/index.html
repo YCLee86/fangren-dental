@@ -110,6 +110,18 @@ body[data-size="l"] .sh-lots .du { grid-column: 2; font-size: 2.3cqw; }
 .sh-note { margin: 2.2cqw 0 0; font-size: 2.9cqw; line-height: 1.6; color: var(--ink-soft); }
 body[data-size="l"] .sh-note { font-size: 2cqw; margin-top: 1.8cqw; }
 
+/* ---- QR ----
+   ⚠ 靜區（quiet zone，四邊各 4 格）做在 viewBox 裡（見 door-map-preview.mjs）——
+     **不要用 CSS 的百分比 padding**，那是照父層寬度算的，會把碼擠成一塊白方塊。
+   ⚠ 顏色只准黑白那一階：QR 靠對比度活著，用柔墨或紙色會掉辨識率。 */
+.nt-qr { display: flex; align-items: center; gap: 2.4cqw; margin: 3cqw 0 0; }
+.nt-qr svg { width: 20cqw; height: 20cqw; flex: none; }
+.nt-qr span { font-size: 3cqw; line-height: 1.55; color: var(--ink-soft); letter-spacing: .02em; }
+body[data-size="l"] .nt-qr { margin-top: 2.6cqw; gap: 1.8cqw; }
+body[data-size="l"] .nt-qr svg { width: 8.2cqw; height: 8.2cqw; }   /* 297mm × 8.2% ≈ 24mm */
+body[data-size="l"] .nt-qr span { font-size: 2.1cqw; }
+body[data-qr="off"] .nt-qr { display: none; }
+
 /* ---- 收尾：整張紙唯一一句「我們」的話，用診所的綠 ---- */
 .nt-close { margin: 3.4cqw 0 0; font-size: 4cqw; letter-spacing: .06em;
             color: var(--map-mark, #3f654a); font-weight: 700; }
@@ -426,7 +438,7 @@ body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
 .mn-first { display: block; margin-bottom: .35rem; }
 </style>
 </head>
-<body data-orient="w" data-size="l" data-lotcolor="blue" data-ns="b" data-nw="b">
+<body data-orient="w" data-size="l" data-lotcolor="blue" data-ns="b" data-nw="b" data-qr="on">
 
 <!-- ==========================================================================
      門口的告示（A4 橫）。⚠⚠ 2026-08-23 用途整個換掉了：
@@ -800,6 +812,14 @@ body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
       </ul>
 
       <p class="sh-note">停車計價方式依各業者現場標示為準。</p>
+
+      <!-- ⚠ QR 指向 fangren.net 的「診所資訊」那一節：那裡有可以點的地圖，
+           三個停車場各自連到 Google 地圖，掃一次三個都拿得到。
+           **不要做成三顆小 QR** —— 量過右欄只有約 120mm 寬，
+           三顆 20mm 的碼會把停車場名字擠到折行。
+           ⚠ 碼是 tools/qr.mjs 產的向量 path（零依賴、印多大都不糊），
+           由 door-map-preview.mjs 在產生的時候塞進來。 -->
+      <div class="nt-qr"><svg viewBox="-4 -4 37 37" role="img" aria-label="掃描開啟 https://fangren.net/#clinic"><rect x="-4" y="-4" width="37" height="37" fill="#fff"/><path fill="#111" d="M0 0h7v1h-7zM9 0h1v1h-1zM12 0h1v1h-1zM15 0h6v1h-6zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM12 1h1v1h-1zM20 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM18 2h2v1h-2zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 3h5v1h-5zM16 3h2v1h-2zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h1v1h-1zM13 4h3v1h-3zM17 4h4v1h-4zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h4v1h-4zM18 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM8 7h6v1h-6zM15 7h1v1h-1zM19 7h1v1h-1zM0 8h1v1h-1zM2 8h5v1h-5zM9 8h3v1h-3zM14 8h2v1h-2zM17 8h1v1h-1zM22 8h5v1h-5zM3 9h2v1h-2zM7 9h2v1h-2zM15 9h5v1h-5zM22 9h3v1h-3zM28 9h1v1h-1zM0 10h5v1h-5zM6 10h1v1h-1zM9 10h2v1h-2zM17 10h1v1h-1zM20 10h2v1h-2zM23 10h1v1h-1zM0 11h5v1h-5zM8 11h5v1h-5zM14 11h1v1h-1zM16 11h1v1h-1zM18 11h8v1h-8zM27 11h1v1h-1zM0 12h2v1h-2zM4 12h1v1h-1zM6 12h1v1h-1zM8 12h1v1h-1zM10 12h1v1h-1zM16 12h2v1h-2zM19 12h1v1h-1zM25 12h2v1h-2zM0 13h1v1h-1zM2 13h4v1h-4zM11 13h5v1h-5zM17 13h3v1h-3zM21 13h4v1h-4zM28 13h1v1h-1zM2 14h3v1h-3zM6 14h1v1h-1zM9 14h1v1h-1zM11 14h1v1h-1zM13 14h4v1h-4zM18 14h1v1h-1zM25 14h2v1h-2zM1 15h1v1h-1zM7 15h1v1h-1zM10 15h1v1h-1zM12 15h2v1h-2zM15 15h1v1h-1zM20 15h1v1h-1zM23 15h1v1h-1zM27 15h1v1h-1zM1 16h7v1h-7zM9 16h1v1h-1zM11 16h2v1h-2zM14 16h2v1h-2zM17 16h1v1h-1zM20 16h1v1h-1zM25 16h2v1h-2zM0 17h4v1h-4zM7 17h2v1h-2zM15 17h2v1h-2zM18 17h7v1h-7zM26 17h1v1h-1zM28 17h1v1h-1zM0 18h1v1h-1zM2 18h3v1h-3zM6 18h1v1h-1zM8 18h4v1h-4zM17 18h2v1h-2zM20 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM0 19h1v1h-1zM7 19h2v1h-2zM12 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM20 19h3v1h-3zM24 19h1v1h-1zM27 19h1v1h-1zM0 20h1v1h-1zM2 20h1v1h-1zM5 20h4v1h-4zM11 20h2v1h-2zM16 20h1v1h-1zM18 20h1v1h-1zM20 20h5v1h-5zM26 20h3v1h-3zM8 21h3v1h-3zM13 21h3v1h-3zM17 21h2v1h-2zM20 21h1v1h-1zM24 21h5v1h-5zM0 22h7v1h-7zM9 22h2v1h-2zM12 22h6v1h-6zM19 22h2v1h-2zM22 22h1v1h-1zM24 22h3v1h-3zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h2v1h-2zM12 23h2v1h-2zM15 23h1v1h-1zM17 23h4v1h-4zM24 23h1v1h-1zM28 23h1v1h-1zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM8 24h1v1h-1zM10 24h2v1h-2zM14 24h2v1h-2zM20 24h5v1h-5zM26 24h3v1h-3zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM8 25h1v1h-1zM12 25h1v1h-1zM15 25h2v1h-2zM18 25h1v1h-1zM20 25h2v1h-2zM25 25h2v1h-2zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h2v1h-2zM13 26h2v1h-2zM18 26h10v1h-10zM0 27h1v1h-1zM6 27h1v1h-1zM9 27h3v1h-3zM13 27h1v1h-1zM16 27h1v1h-1zM20 27h1v1h-1zM22 27h1v1h-1zM25 27h1v1h-1zM27 27h1v1h-1zM0 28h7v1h-7zM8 28h4v1h-4zM16 28h1v1h-1zM18 28h2v1h-2zM21 28h4v1h-4zM26 28h1v1h-1z"/></svg><span>掃這裡看地圖<br>與停車場位置</span></div>
       <!-- ⚠ 收尾那一句（「不用急，先把車停好　我們等你」）2026-08-23 由使用者
            拿掉：這是一張告示，不是一封信。 -->
     </div>
@@ -808,7 +828,7 @@ body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
 
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時整段刪掉。
-     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off　?ns=a|b|c|d　?nw=a|b|c|d
+     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off　?ns=a|b|c|d　?nw=a|b|c|d　?qr=on|off
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
   <div class="pv-row">
@@ -825,6 +845,9 @@ body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
     <span class="pv-lab">停車場</span>
     <button data-k="lotcolor" data-v="blue">三個都上藍</button>
     <button data-k="lotcolor" data-v="grey">維持灰</button>
+    <span class="pv-lab">QR</span>
+    <button data-k="qr" data-v="on">放</button>
+    <button data-k="qr" data-v="off">不放</button>
     <span class="pv-lab">標記</span>
     <button data-k="you" data-v="on">現在位置</button>
     <button data-k="you" data-v="off">不放</button>
@@ -1629,7 +1652,7 @@ body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
       poster(); paint();
     });
   });
-  ['orient', 'size', 'lotcolor', 'you', 'ns', 'nw'].forEach(function (k) {
+  ['orient', 'size', 'lotcolor', 'you', 'ns', 'nw', 'qr'].forEach(function (k) {
     var m = new RegExp('[?&]' + (k === 'lotcolor' ? 'lot' : k) + '=([a-z0-9]+)').exec(location.search);
     if (m) body.dataset[k] = m[1];
   });

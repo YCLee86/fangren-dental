@@ -19,6 +19,7 @@
    ⚠ 這支是模板字串，註解裡不可以出現反引號 —— 一律用 「」。
    ========================================================================== */
 import fs from 'node:fs';
+import { qrPath } from './qr.mjs';
 
 const SRC = 'index.html';
 const OUT = 'preview/clinic-map-door/index.html';
@@ -47,6 +48,18 @@ if (!/id="geo"/.test(fig)) throw new Error('geo 包不進去');
 
 const CSS = fs.readFileSync('tools/door-map-style.css', 'utf8');
 const BODY = fs.readFileSync('tools/door-map-body.html', 'utf8');
+
+/* QR：向量的 path，產生的時候塞進去（見 tools/qr.mjs 檔頭的驗證方式）。
+   ⚠ 指向「診所資訊」那一節 —— 那裡有可以點的地圖與三個停車場的連結。 */
+const QR_URL = 'https://fangren.net/#clinic';
+const { n: qrN, d: qrD } = qrPath(QR_URL, 'M');
+/* ⚠⚠ 靜區（quiet zone，四邊各 4 格）**做在 viewBox 裡**，不要用 CSS 的
+   padding 百分比 —— 百分比的 padding 是**照父層的寬度**算的，
+   父層寬 450px、碼只有 30px 的話，內距會算成 50px，內容被擠成 0，
+   畫面上就是一塊**空白的白方塊**（踩過，看起來像 QR 沒產出來）。 */
+const qrSvg = `<svg viewBox="-4 -4 ${qrN + 8} ${qrN + 8}" role="img" aria-label="掃描開啟 ${QR_URL}">`
+  + `<rect x="-4" y="-4" width="${qrN + 8}" height="${qrN + 8}" fill="#fff"/>`
+  + `<path fill="#111" d="${qrD}"/></svg>`;
 const JS = fs.readFileSync('tools/door-map-script.js', 'utf8');
 
 const html = `<!doctype html>
@@ -62,7 +75,7 @@ ${CSS}
 ${MAPCSS}
 </style>
 </head>
-${BODY.replace('<!--MAP-->', fig)}
+${BODY.replace('<!--MAP-->', fig).replace('<!--QR-->', qrSvg)}
 <script>
 ${MAPJS}
 </script>

@@ -102,6 +102,18 @@ body[data-size="l"] .sh-lots .du { grid-column: 2; font-size: 2.3cqw; }
 .sh-note { margin: 2.2cqw 0 0; font-size: 2.9cqw; line-height: 1.6; color: var(--ink-soft); }
 body[data-size="l"] .sh-note { font-size: 2cqw; margin-top: 1.8cqw; }
 
+/* ---- QR ----
+   ⚠ 靜區（quiet zone，四邊各 4 格）做在 viewBox 裡（見 door-map-preview.mjs）——
+     **不要用 CSS 的百分比 padding**，那是照父層寬度算的，會把碼擠成一塊白方塊。
+   ⚠ 顏色只准黑白那一階：QR 靠對比度活著，用柔墨或紙色會掉辨識率。 */
+.nt-qr { display: flex; align-items: center; gap: 2.4cqw; margin: 3cqw 0 0; }
+.nt-qr svg { width: 20cqw; height: 20cqw; flex: none; }
+.nt-qr span { font-size: 3cqw; line-height: 1.55; color: var(--ink-soft); letter-spacing: .02em; }
+body[data-size="l"] .nt-qr { margin-top: 2.6cqw; gap: 1.8cqw; }
+body[data-size="l"] .nt-qr svg { width: 8.2cqw; height: 8.2cqw; }   /* 297mm × 8.2% ≈ 24mm */
+body[data-size="l"] .nt-qr span { font-size: 2.1cqw; }
+body[data-qr="off"] .nt-qr { display: none; }
+
 /* ---- 收尾：整張紙唯一一句「我們」的話，用診所的綠 ---- */
 .nt-close { margin: 3.4cqw 0 0; font-size: 4cqw; letter-spacing: .06em;
             color: var(--map-mark, #3f654a); font-weight: 700; }

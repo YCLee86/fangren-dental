@@ -434,7 +434,7 @@
       poster(); paint();
     });
   });
-  ['orient', 'size', 'lotcolor', 'you', 'ns', 'nw'].forEach(function (k) {
+  ['orient', 'size', 'lotcolor', 'you', 'ns', 'nw', 'qr'].forEach(function (k) {
     var m = new RegExp('[?&]' + (k === 'lotcolor' ? 'lot' : k) + '=([a-z0-9]+)').exec(location.search);
     if (m) body.dataset[k] = m[1];
   });
