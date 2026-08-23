@@ -8,7 +8,8 @@
 | | |
 | --- | --- |
 | 已完成 | `general`（`assets/lineart-general.png` 832×788，2026-08-23 上線） |
-| 待做 | `perio` 牙周／`kids` 兒牙／`endo` 顯微根管／`prosth` 植牙・假牙重建／`surg` 口腔外科／`ortho` 齒顎矯正 |
+| 進行中 | `perio` 牙周 —— **分享圖已上線，線稿的提示詞與姿勢參考已備妥**：[`drafts/lineart-perio-prompt.md`](lineart-perio-prompt.md)，等出圖 |
+| 待做 | `kids` 兒牙／`endo` 顯微根管／`prosth` 植牙・假牙重建／`surg` 口腔外科／`ortho` 齒顎矯正 |
 | 產生器 | `tools/topic-lineart.mjs`（永久） |
 | 門檻量測 | `drafts/lineart-measure.mjs` |
 | 風格參考圖 | `drafts/lineart-ref-1-walking.png` ~ `-5-bubbles.png`（已裁掉 app 介面，進版控） |
