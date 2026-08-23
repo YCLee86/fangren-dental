@@ -1,4 +1,4 @@
-<body data-orient="w" data-size="p" data-lotcolor="blue">
+<body data-orient="w" data-size="p" data-lotcolor="blue" data-ns="b">
 
 <div class="sheet">
   <div class="sh-head">
@@ -26,7 +26,7 @@
 
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時整段刪掉。
-     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off
+     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off　?ns=a|b|c|d
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
   <div class="pv-row">
@@ -46,6 +46,13 @@
     <span class="pv-lab">標記</span>
     <button data-k="you" data-v="on">您在這裡</button>
     <button data-k="you" data-v="off">不放</button>
+  </div>
+  <div class="pv-row">
+    <span class="pv-lab">指北針</span>
+    <button data-k="ns" data-v="a">Ⓐ 胖 1:2.2</button>
+    <button data-k="ns" data-v="b">Ⓑ 1:2.6</button>
+    <button data-k="ns" data-v="c">Ⓒ 1:3.0</button>
+    <button data-k="ns" data-v="d">Ⓓ 細 1:3.6</button>
   </div>
   <div class="pv-panel" id="pvPanel">量測中…</div>
 </div>

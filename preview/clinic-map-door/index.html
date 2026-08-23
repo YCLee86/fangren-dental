@@ -130,7 +130,7 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 .sh-map .map-svg .lbl { paint-order: stroke; stroke: var(--map-road); stroke-width: 5; stroke-linejoin: round; }
 /* ⚠⚠ 停車場的代號：站上那個 P 靠 1.6 的同色描邊加粗，換成「P1／P2／P3」
    兩個字之後看起來又粗又擠（使用者回報兩次）。三件事一起改才夠：
-     ① 描邊拿掉（stroke-width: 0）—— ⚠⚠ **選擇器要寫到 `.lot` 那一層**：
+     ① 描邊從 1.6 收到 **0.8**（第三輪整個關掉，使用者說太細了）—— ⚠⚠ **選擇器要寫到 `.lot` 那一層**：
         站上那條是 `.map-svg .lot .pk`（三個 class），寫 `.sh-map .map-svg .pk`
         權重一模一樣、又排在前面，描邊**根本沒有被關掉**（實測 computed
         strokeWidth 還是 1.6px）。這就是使用者說「還是太粗」的真正成因 ——
@@ -140,7 +140,7 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
         真正只有 400（細）與 700（粗）兩格可選，中間沒有東西。
      ③ 補一點字距（.02em）—— 粗體收掉之後兩個字元會顯得黏在一起。
    ⚠ 站上那顆單獨的 P 一個字都沒動，這一段只作用在海報上。 */
-.sh-map .map-svg .lot .pk { stroke-width: 0; font-weight: 400; letter-spacing: .02em; }
+.sh-map .map-svg .lot .pk { stroke-width: .8; font-weight: 400; letter-spacing: .02em; }
 /* 指北針。⚠ 線寬要對得上針的粗細（半寬 5 個單位），3 太粗、而且
    stroke-linejoin: round 會把尖端磨成一顆球 —— 第一版被退回的原因之一。
    miter 才收得出尖的那一點；字級由 JS 的 NSW.fs 寫在元素上，這裡不再定。 */
@@ -391,7 +391,7 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 .mn-first { display: block; margin-bottom: .35rem; }
 </style>
 </head>
-<body data-orient="w" data-size="p" data-lotcolor="blue">
+<body data-orient="w" data-size="p" data-lotcolor="blue" data-ns="b">
 
 <div class="sheet">
   <div class="sh-head">
@@ -746,7 +746,7 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時整段刪掉。
-     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off
+     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off　?ns=a|b|c|d
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
   <div class="pv-row">
@@ -766,6 +766,13 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
     <span class="pv-lab">標記</span>
     <button data-k="you" data-v="on">您在這裡</button>
     <button data-k="you" data-v="off">不放</button>
+  </div>
+  <div class="pv-row">
+    <span class="pv-lab">指北針</span>
+    <button data-k="ns" data-v="a">Ⓐ 胖 1:2.2</button>
+    <button data-k="ns" data-v="b">Ⓑ 1:2.6</button>
+    <button data-k="ns" data-v="c">Ⓒ 1:3.0</button>
+    <button data-k="ns" data-v="d">Ⓓ 細 1:3.6</button>
   </div>
   <div class="pv-panel" id="pvPanel">量測中…</div>
 </div>
@@ -1203,26 +1210,27 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 
   /* 指北針（2026-08-21 使用者給了參考圖）：**細長的三角形，右半實心、左半空心**，
      字在上面、而且是「北」不是 N。
-     ⚠⚠ **第一版被退回：「太大了 而且比例不對 也不夠精緻」** —— 三件事：
-       ① 太胖：寬 28 高 56 ＝ 1:2，製圖用的指北針是 **1:4 以上**的細針。
-       ② 太大：整組 28×78 個單位，比街名（22）還醒目，它是次要標記不該搶戲。
-       ③ 太糙：空心那半的線寬 3 個單位畫在 14 寬的形狀上，等於三分之一都是線，
-         而且 stroke-linejoin: round 把尖端磨成一顆球。
-     現在整組由下面這五個數字算出來，**要改大小只改 NSW，不要去動 path 字串**：
-       h 針長／w 半寬（h ÷ 2w ＝ 4.0）／notch 底邊往上收多少／fs 字級／gap 字離尖端多遠
-     ⚠ 整組跟著地圖轉（它要指出北方轉到哪去了），只有「北」那個字反轉回來。 */
-  var NSW = { h: 40, w: 5, notch: 8, fs: 12, gap: 7 };
+     ⚠⚠ 走過兩次極端，兩次都被退回：
+       第一版 1:2（寬 28 高 56）——「太大了 而且比例不對 也不夠精緻」
+       第二版 1:4（寬 10 高 40）——「圖案本身太細長 好奇怪 我給你的圖不是這樣」
+     所以**寬高比改成一條尺**（NS_W 那四格，針長固定 38、只換半寬），
+     讓使用者自己指一格，不要再由我猜。網址 ?ns=a|b|c|d。
+     ⚠ 針長固定、只動寬度，是因為「太大」與「太細」是兩件事 ——
+       上一輪把兩件混在一起改，結果從一個極端跳到另一個極端。 */
+  var NS_W = { a: 8.6, b: 7.3, c: 6.3, d: 5.3 };      /* 半寬 → 比例 2.2／2.6／3.0／3.6 */
+  var NSW = { h: 38, notch: 8.4, fs: 12, gap: 15 };
   var nswA = -NSW.h * 0.75, nswB = NSW.h * 0.25;      /* 尖端 y、底邊 y */
   var nswN = nswB - NSW.notch;                        /* 缺口的頂點 y */
+  var nswTy = nswA;                                   /* 字的錨點：**和尖端同一個水平** */
   var nsw = add('g', { class: 'nsw' }, svg);
   var nswArrow = add('g', {}, nsw);
-  add('path', { class: 'nsw-solid',
-    d: 'M0 ' + nswA + 'L' + NSW.w + ' ' + nswB + 'L0 ' + nswN + 'Z' }, nswArrow);
-  add('path', { class: 'nsw-hollow',
-    d: 'M0 ' + nswA + 'L0 ' + nswN + 'L' + (-NSW.w) + ' ' + nswB + 'Z' }, nswArrow);
-  var nswTy = nswA - NSW.gap;
+  var nswSolid = add('path', { class: 'nsw-solid' }, nswArrow);
+  var nswHollow = add('path', { class: 'nsw-hollow' }, nswArrow);
+  /* ⚠ 「北」要和尖端**同一個水平**（使用者指定），所以錨點就放在尖端那條線上、
+     再沿著針的方向往外推 NSW.gap。⚠⚠ 中文的字面中心在基線上方 0.345em，
+     光把錨點對齊還是會看起來偏高 —— dy 那一項就是把它壓回來（同街名那一套）。 */
   var nswTxt = add('text', { x: 0, y: nswTy, 'text-anchor': 'middle',
-    'font-size': NSW.fs }, nsw, '北');
+    'font-size': NSW.fs, dy: (INK * NSW.fs).toFixed(2) }, nsw, '北');
 
   /* ---- 幾何小工具 -------------------------------------------------------- */
   function rot(x, y, th) {
@@ -1276,16 +1284,19 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
        空的街廓，海報上等於浪費紙。做法：把「有內容的範圍」（平和街~永安路、
        文化路~中華路：94~487 × 21~587）四個角轉過去，取外框再各留 8 個單位。 */
     var C = [[94, 21], [487, 21], [487, 587], [94, 587]].map(function (p) { return rot(p[0], p[1], th); });
-    var vx0 = Math.min.apply(null, C.map(function (p) { return p.x; })) - 8;
-    var vx1 = Math.max.apply(null, C.map(function (p) { return p.x; })) + 8;
-    var vy0 = Math.min.apply(null, C.map(function (p) { return p.y; })) - 8;
-    var vy1 = Math.max.apply(null, C.map(function (p) { return p.y; })) + 8;
+    var mx0 = Math.min.apply(null, C.map(function (p) { return p.x; })) - 8;
+    var mx1 = Math.max.apply(null, C.map(function (p) { return p.x; })) + 8;
+    var my0 = Math.min.apply(null, C.map(function (p) { return p.y; })) - 8;
+    var my1 = Math.max.apply(null, C.map(function (p) { return p.y; })) + 8;
+    /* m* ＝ 街廓自己的外框（裁切框吃這一組）；v* ＝ 整張圖的外框，
+       底下指北針那一段會把 vy0 再往上開一條帶子出去。 */
+    var vx0 = mx0, vx1 = mx1, vy0 = my0, vy1 = my1;
     svg.setAttribute('viewBox', [vx0, vy0, vx1 - vx0, vy1 - vy0].map(function (v) { return v.toFixed(1); }).join(' '));
     if (clipRect) {
-      clipRect.setAttribute('x', vx0.toFixed(1));
-      clipRect.setAttribute('y', vy0.toFixed(1));
-      clipRect.setAttribute('width', (vx1 - vx0).toFixed(1));
-      clipRect.setAttribute('height', (vy1 - vy0).toFixed(1));
+      clipRect.setAttribute('x', mx0.toFixed(1));
+      clipRect.setAttribute('y', my0.toFixed(1));
+      clipRect.setAttribute('width', (mx1 - mx0).toFixed(1));
+      clipRect.setAttribute('height', (my1 - my0).toFixed(1));
     }
     var side = Math.abs(th) === 90;
 
@@ -1316,14 +1327,18 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
       /* ⚠ 色塊轉過去之後長寬會對調，所以要拿**轉過去的螢幕矩形**來量 ——
          字是直立的，寬度要看螢幕的寬、高度看螢幕的高。
          ⚠ 「P3」那一塊只有 58×34，第二輪照短邊給字級、又留著站上那圈
-         1.6 的描邊，看起來又粗又快擠出去（使用者回報）。這一版：描邊拿掉、
-         字級照「短邊的 46%」給，再用實際的字寬夾一次，兩邊各留 6 個單位。 */
+         1.6 的描邊，看起來又粗又快擠出去（使用者回報）。
+         ⚠⚠ 第三輪把描邊整個關掉 ＋ 字重 400，使用者：「改過之後太細了，
+         把字變小一點 稍微加粗」—— 現在是**字級照短邊的 40%**（原本 46%、
+         上限 26 → 23），加粗那半格回到描邊：**0.8**（站上是 1.6，這裡取一半）。
+         ⚠ 加粗只能靠描邊，Arial 只有 Regular／Bold 兩支，400 與 700 中間
+         沒有東西 —— 那正是上一輪一放手就掉到「太細」的原因。 */
       var b = g.getBBox();
       var C = [[b.x, b.y], [b.x + b.width, b.y], [b.x + b.width, b.y + b.height], [b.x, b.y + b.height]]
         .map(function (p) { return rot(p[0], p[1], th); });
       var bw = Math.max.apply(null, C.map(function (p) { return p.x; })) - Math.min.apply(null, C.map(function (p) { return p.x; }));
       var bh = Math.max.apply(null, C.map(function (p) { return p.y; })) - Math.min.apply(null, C.map(function (p) { return p.y; }));
-      var fs = Math.min(26, Math.min(bw, bh) * 0.46);
+      var fs = Math.min(23, Math.min(bw, bh) * 0.40);
       t.style.fontSize = fs.toFixed(1) + 'px';
       typeset(t, L.tag, L.cx, L.cy, false, 0, fs);
       var w = t.getBBox().width, room = bw - 12;
@@ -1363,24 +1378,35 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
     upright(you, th, youP.x, youP.y);
 
     /* 指北針：整組跟著轉（它要指出北方轉到哪去了），只有「北」那個字反轉回來。
-       ⚠⚠ **擺的位置要照「轉過去之後」的外框算，不能寫死一個角落的座標** ——
-         轉 90 度時箭頭的尖端會從上面跑到右邊，「北」那個字跟著跑出畫布外
-         （第一版就是這樣，右上角只看得到半個字）。做法是把整組的四個角
-         與那個字的方框各自轉一次，取聯集，再把整組貼到右上角、留 10 個單位。 */
-    var nsA = [[0, nswA], [NSW.w, nswB], [0, nswN], [-NSW.w, nswB]]
+       ⚠⚠ **它不可以壓在路上**（使用者指定）—— 所以不是塞進地圖的角落，
+         而是**在地圖上面另外開一條帶子**：viewBox 的上緣往外推，
+         指北針站在那條帶子裡，靠右對齊街廓的右緣。
+       ⚠⚠ 擺的位置要照「轉過去之後」的外框算，不能寫死一個角落的座標 ——
+         轉 90 度時箭頭的尖端會從上面跑到右邊，「北」那個字跟著跑出畫布外。 */
+    var nsWw = NS_W[body.dataset.ns] || NS_W.b;
+    nswSolid.setAttribute('d', 'M0 ' + nswA + 'L' + nsWw + ' ' + nswB + 'L0 ' + nswN + 'Z');
+    nswHollow.setAttribute('d', 'M0 ' + nswA + 'L0 ' + nswN + 'L' + (-nsWw) + ' ' + nswB + 'Z');
+    /* 字沿著針的方向往外推：轉之前是「尖端再往上 gap」，轉了就跟著走。 */
+    var nsTip = orot(0, nswA, th), nsTx = orot(0, nswA - NSW.gap, th);
+    var nsA = [[0, nswA], [nsWw, nswB], [0, nswN], [-nsWw, nswB]]
       .map(function (q) { return orot(q[0], q[1], th); });
-    var nsT = orot(0, nswTy, th);
     var nx0 = Math.min.apply(null, nsA.map(function (q) { return q.x; }));
     var nx1 = Math.max.apply(null, nsA.map(function (q) { return q.x; }));
     var ny0 = Math.min.apply(null, nsA.map(function (q) { return q.y; }));
     var ny1 = Math.max.apply(null, nsA.map(function (q) { return q.y; }));
-    nx0 = Math.min(nx0, nsT.x - NSW.fs / 2 - 1); nx1 = Math.max(nx1, nsT.x + NSW.fs / 2 + 1);
-    ny0 = Math.min(ny0, nsT.y - NSW.fs); ny1 = Math.max(ny1, nsT.y + 2);
-    var nsm = 10;
-    nsw.setAttribute('transform',
-      'translate(' + (vx1 - nsm - nx1).toFixed(1) + ' ' + (vy0 + nsm - ny0).toFixed(1) + ')' +
+    nx0 = Math.min(nx0, nsTx.x - NSW.fs / 2 - 1); nx1 = Math.max(nx1, nsTx.x + NSW.fs / 2 + 1);
+    ny0 = Math.min(ny0, nsTx.y - NSW.fs / 2 - 1); ny1 = Math.max(ny1, nsTx.y + NSW.fs / 2 + 1);
+    var nsTop = my0 - 4;                              /* 帶子的下緣：離街廓 4 個單位 */
+    var nsx = mx1 - nx1, nsy = nsTop - ny1;
+    nsw.setAttribute('transform', 'translate(' + nsx.toFixed(1) + ' ' + nsy.toFixed(1) + ')' +
       (th ? ' rotate(' + th + ')' : ''));
-    upright(nswTxt, th, 0, nswTy);
+    nswTxt.setAttribute('x', 0); nswTxt.setAttribute('y', nswA - NSW.gap);
+    upright(nswTxt, th, 0, nswA - NSW.gap);
+    /* viewBox 的上緣往外開到帶子上面（留 6）。⚠ 裁切框不跟著開 ——
+       那是地圖自己的圓角，開上去會多一塊空白的圓角。 */
+    vy0 = Math.min(vy0, nsy + ny0 - 6);
+    svg.setAttribute('viewBox', [vx0, vy0, vx1 - vx0, vy1 - vy0]
+      .map(function (v) { return v.toFixed(1); }).join(' '));
 
     fit();
     measure(th, sx1 - sx0, H);
@@ -1481,7 +1507,7 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
       poster(); paint();
     });
   });
-  ['orient', 'size', 'lotcolor', 'you'].forEach(function (k) {
+  ['orient', 'size', 'lotcolor', 'you', 'ns'].forEach(function (k) {
     var m = new RegExp('[?&]' + (k === 'lotcolor' ? 'lot' : k) + '=([a-z0-9]+)').exec(location.search);
     if (m) body.dataset[k] = m[1];
   });
