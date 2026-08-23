@@ -54,7 +54,10 @@ body[data-size="l"] .nt-head em { font-size: 2.5cqw; }
 /* ---- 底下：橫式兩欄、直式一欄 ---- */
 .nt-main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 body[data-size="l"] .nt-main {
-  display: grid; grid-template-columns: 1.1fr 1fr; column-gap: 4cqw;
+  /* ⚠ 收尾那一句拿掉之後右欄變短，左欄再給寬一點讓地圖長大 ——
+     地圖是**寬度受限**的（它比欄位矮），欄位變寬它才會變大。
+     ⚠ 再往上加右欄就會開始折行（「走幾步就有停車場…」是最長的一句）。 */
+  display: grid; grid-template-columns: 1.22fr 1fr; column-gap: 3.4cqw;
   align-items: stretch; overflow: hidden;
 }
 .nt-side { display: flex; flex-direction: column; justify-content: center; }
@@ -773,11 +776,13 @@ body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
     </div>
 
     <div class="nt-side">
-      <!-- ⚠ 三句的分工：① 先說出他心裡那句話（不是指責）② 這幾天真的變了
-           ③ 出路在哪。⚠ 第一句不要重複抬頭那一句 —— 第一版寫「門口這一段
-           劃了紅線」，和抬頭逐字重疊，等於浪費掉整張紙最好的一行。 -->
+      <!-- ⚠ 三句的分工：① 事實對照（平常沒車 vs 是紅線）② 這幾天真的變了
+           ③ 出路在哪。
+           ⚠⚠ 第一句是**使用者逐字指定的**：「平常車不多，但門口是紅線」。
+             我原本寫「看起來停一下沒關係」，被退回 —— 那是替他把僥倖的念頭
+             講出來，等於幫他找了個理由。**只擺事實，不要替讀者配旁白。** -->
       <ul class="nt-points">
-        <li>這裡平常車不多，看起來停一下沒關係。</li>
+        <li>平常車不多，但<b>門口是紅線</b>。</li>
         <!-- ⚠ 「在門口」拿掉了：抬頭已經寫著門口，留著只會讓「門／口」被斷行拆開。 -->
         <li>以前多半是柔性勸導，前幾天已經有人<b>被直接開單</b>。</li>
         <li>走幾步就有停車場，最近的一分鐘就到。</li>
@@ -790,8 +795,8 @@ body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
       </ul>
 
       <p class="sh-note">周邊路段另有畫設之路邊停車格。停車計價方式依各業者現場標示為準。</p>
-      <!-- ⚠ 收尾要對著「他為什麼會停在紅線上」講 —— 是趕時間，不是不守規矩。 -->
-      <p class="nt-close">不用急，先把車停好　我們等你</p>
+      <!-- ⚠ 收尾那一句（「不用急，先把車停好　我們等你」）2026-08-23 由使用者
+           拿掉：這是一張告示，不是一封信。 -->
     </div>
   </div>
 </div>
