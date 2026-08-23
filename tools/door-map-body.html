@@ -1,26 +1,46 @@
-<body data-orient="w" data-size="p" data-lotcolor="blue" data-ns="b" data-nw="b">
+<body data-orient="w" data-size="l" data-lotcolor="blue" data-ns="b" data-nw="b">
 
+<!-- ==========================================================================
+     門口的告示（A4 橫）。⚠⚠ 2026-08-23 用途整個換掉了：
+     原本是「停車參考圖」，使用者說明實情之後改成**紅線提醒**——
+     門口那一段劃了紅線，以前多半柔性勸導，前幾天警察到場直接開單。
+     ⚠ 抬頭那塊「停車資訊 ＋ 診所名稱」與頁尾的地址電話**都拿掉了**
+       （使用者指定）：這張紙貼在自家門口，看的人就站在門口，不必自我介紹。
+     ⚠ 「車主在拖吊車來之前出現就不會被拖吊」**刻意不寫** ——
+       那等於教人賭一把，而這張紙的目的正好相反。
+     ========================================================================== -->
 <div class="sheet">
-  <div class="sh-head">
-    <b>停車資訊</b>
-    <span>芳仁牙醫診所・雲林斗六・永樂街</span>
+  <div class="nt-head">
+    <b>門口這一段是紅線</b>
+    <em>最近有警察到現場直接開單</em>
   </div>
 
-  <div class="sh-map">
+  <div class="nt-main">
+    <div class="sh-map">
 <!--MAP-->
-  </div>
+    </div>
 
-  <ul class="sh-lots">
-    <li><span class="no">P1</span><span class="nm">壹車房－中華路停車場</span><span class="du">190 公尺・步行 3 分鐘</span></li>
-    <li><span class="no">P2</span><span class="nm">合廷停車場</span><span class="du">140 公尺・步行 2 分鐘</span></li>
-    <li><span class="no">P3</span><span class="nm">斗六永樂站停車場</span><span class="du">50 公尺・步行 1 分鐘</span></li>
-  </ul>
+    <div class="nt-side">
+      <!-- ⚠ 三句的分工：① 先說出他心裡那句話（不是指責）② 這幾天真的變了
+           ③ 出路在哪。⚠ 第一句不要重複抬頭那一句 —— 第一版寫「門口這一段
+           劃了紅線」，和抬頭逐字重疊，等於浪費掉整張紙最好的一行。 -->
+      <ul class="nt-points">
+        <li>這裡平常車不多，看起來停一下沒關係。</li>
+        <!-- ⚠ 「在門口」拿掉了：抬頭已經寫著門口，留著只會讓「門／口」被斷行拆開。 -->
+        <li>以前多半是柔性勸導，前幾天已經有人<b>被直接開單</b>。</li>
+        <li>走幾步就有停車場，最近的一分鐘就到。</li>
+      </ul>
 
-  <p class="sh-note">周邊路段另有畫設之路邊停車格。停車計價方式依各業者現場標示為準。</p>
+      <ul class="sh-lots">
+        <li><span class="no">P1</span><span class="nm">壹車房－中華路停車場</span><span class="du">190 公尺・步行 3 分鐘</span></li>
+        <li><span class="no">P2</span><span class="nm">合廷停車場</span><span class="du">140 公尺・步行 2 分鐘</span></li>
+        <li><span class="no">P3</span><span class="nm">斗六永樂站停車場</span><span class="du">50 公尺・步行 1 分鐘</span></li>
+      </ul>
 
-  <div class="sh-foot">
-    <span><b>芳仁牙醫診所</b>　雲林縣斗六市永樂街 70 號</span>
-    <span>(05)533-9369</span>
+      <p class="sh-note">周邊路段另有畫設之路邊停車格。停車計價方式依各業者現場標示為準。</p>
+      <!-- ⚠ 收尾要對著「他為什麼會停在紅線上」講 —— 是趕時間，不是不守規矩。 -->
+      <p class="nt-close">不用急，先把車停好　我們等你</p>
+    </div>
   </div>
 </div>
 
@@ -38,13 +58,13 @@
   </div>
   <div class="pv-row">
     <span class="pv-lab">紙張</span>
-    <button data-k="size" data-v="p">A4 直</button>
     <button data-k="size" data-v="l">A4 橫</button>
+    <button data-k="size" data-v="p">A4 直</button>
     <span class="pv-lab">停車場</span>
     <button data-k="lotcolor" data-v="blue">三個都上藍</button>
     <button data-k="lotcolor" data-v="grey">維持灰</button>
     <span class="pv-lab">標記</span>
-    <button data-k="you" data-v="on">您在這裡</button>
+    <button data-k="you" data-v="on">現在位置</button>
     <button data-k="you" data-v="off">不放</button>
   </div>
   <div class="pv-row">
