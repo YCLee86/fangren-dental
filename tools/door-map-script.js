@@ -29,7 +29,12 @@
     { cx: 200, cy: 422, s: '大同路', dir: 'ew' },
     { cx: 200, cy: 564, s: '中華路', dir: 'ew' },
     { cx: 109, cy: 326, s: '平和街', dir: 'ns' },
-    { cx: 339, cy: 326, s: '永樂街', dir: 'ns' },
+    /* ⚠ 永樂街的字原本在 y 326（街的正中間），正好壓在那條點狀路線上
+       （使用者：「永樂街的文字擋在路線圓點上，移到右邊去」）。路線在 y 165~507，
+       所以往北挪到 118 —— 那一段是文化路到 P3 岔路之間，一顆點都沒有。
+       ⚠ 「右邊」是**轉過去之後**的右邊：轉 90° 時螢幕 x ＝ −map y，
+         所以 y 變小就是往右。 */
+    { cx: 339, cy: 118, s: '永樂街', dir: 'ns' },
     { cx: 471, cy: 326, s: '永安路', dir: 'ns' }
   ];
   /* 巷名。⚠ 給的一樣是「字面中心要落在哪裡」：19 巷那條帶是 y 219~236，中心 227.5。 */
@@ -91,10 +96,18 @@
      讓使用者自己指一格，不要再由我猜。網址 ?ns=a|b|c|d。
      ⚠ 針長固定、只動寬度，是因為「太大」與「太細」是兩件事 ——
        上一輪把兩件混在一起改，結果從一個極端跳到另一個極端。 */
-  var NS_W = { a: 8.6, b: 7.3, c: 6.3, d: 5.3 };      /* 半寬 → 比例 2.2／2.6／3.0／3.6 */
-  var NSW = { h: 38, notch: 8.4, fs: 12, gap: 15 };
-  var nswA = -NSW.h * 0.75, nswB = NSW.h * 0.25;      /* 尖端 y、底邊 y */
-  var nswN = nswB - NSW.notch;                        /* 缺口的頂點 y */
+  /* ⚠⚠ 第四輪使用者：「胖還勉強可以 但太長」—— 所以**寬度定住不再動**
+     （7.3 ＝ 上一輪的 Ⓑ），那條尺改成量**針長**。針長一縮缺口也要跟著縮，
+     不然底下那兩隻腳會變成兩根刺。 */
+  var LANE_FS = 12.5;                                /* 巷名字級（站上是 16） */
+  var NS_H = { a: 34, b: 29, c: 25, d: 21 };         /* 針長 → 比例 2.3／2.0／1.7／1.4 */
+  var NSW = { w: 7.3, fs: 12, gap: 15 };
+  var nswA = 0, nswB = 0, nswN = 0;                   /* 尖端 y／底邊 y／缺口頂點 y，paint() 現算 */
+  function nsGeom() {
+    var h = NS_H[body.dataset.ns] || NS_H.b;
+    nswA = -h * 0.75; nswB = h * 0.25; nswN = nswB - h * 0.22;
+  }
+  nsGeom();
   var nswTy = nswA;                                   /* 字的錨點：**和尖端同一個水平** */
   var nsw = add('g', { class: 'nsw' }, svg);
   var nswArrow = add('g', {}, nsw);
@@ -131,12 +144,16 @@
       s0.textContent = str; t.appendChild(s0);
       return;
     }
-    var n = str.length, first = base - dyLine * (n - 1) / 2;
+    /* ⚠⚠ 直排是一個字一行，但**數字與拉丁字母要黏成一個單位** ——
+       「平和街19巷」拆成六行的話 1 和 9 會被斷開（使用者回報）。
+       所以先切成「詞」：連續的 0-9／A-Z／a-z 算一個，其餘一個字一個。 */
+    var U = str.match(/[0-9A-Za-z]+|[\s\S]/g) || [];
+    var n = U.length, first = base - dyLine * (n - 1) / 2;
     for (var i = 0; i < n; i++) {
       var sp = document.createElementNS(NS, 'tspan');
       sp.setAttribute('x', cx);
       sp.setAttribute('dy', (i === 0 ? first : dyLine).toFixed(2));
-      sp.textContent = str.charAt(i);
+      sp.textContent = U[i];
       t.appendChild(sp);
     }
   }
@@ -188,7 +205,10 @@
        永安路14巷沒有留 —— 那一條和三個停車場、路線都無關，標了只是雜訊。 */
     LANES.forEach(function (st, i) {
       var t = lblXs[i]; if (!t || st.off) return;
-      var fs = parseFloat(getComputedStyle(t).fontSize) || 16;
+      /* ⚠ 巷名比街名小兩階（使用者：「整個巷名的字級再小一點」）——
+         它是輔助資訊，和街名一樣大會搶戲。站上是 16，海報上收成 12.5。 */
+      var fs = LANE_FS;
+      t.style.fontSize = fs + 'px';
       typeset(t, st.s, st.cx, st.cy, st.dir === 'ew' ? flip : !flip, fs * 1.18, fs);
       upright(t, th, st.cx, st.cy);
     });
@@ -257,7 +277,8 @@
          指北針站在那條帶子裡，靠右對齊街廓的右緣。
        ⚠⚠ 擺的位置要照「轉過去之後」的外框算，不能寫死一個角落的座標 ——
          轉 90 度時箭頭的尖端會從上面跑到右邊，「北」那個字跟著跑出畫布外。 */
-    var nsWw = NS_W[body.dataset.ns] || NS_W.b;
+    nsGeom();
+    var nsWw = NSW.w;
     nswSolid.setAttribute('d', 'M0 ' + nswA + 'L' + nsWw + ' ' + nswB + 'L0 ' + nswN + 'Z');
     nswHollow.setAttribute('d', 'M0 ' + nswA + 'L0 ' + nswN + 'L' + (-nsWw) + ' ' + nswB + 'Z');
     /* 字沿著針的方向往外推：轉之前是「尖端再往上 gap」，轉了就跟著走。 */
