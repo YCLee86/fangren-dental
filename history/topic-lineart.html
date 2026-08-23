@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>topic-lineart｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .84rem; margin: .6rem 0 1rem; }
+  th, td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 500; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92em; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>topic-lineart — 一般牙科著陸頁的線稿底圖</h1>
+<p class="meta">
+  2026-08-22 開、2026-08-23 定案上線<br>
+  原網址 <code>/preview/topic-lineart/</code>（已刪除 2026-08-23）<br>
+  整頁還原：<code>git show f102bc2:preview/topic-lineart/index.html</code><br>
+  切換條 <code>?size=s|m|l|x&amp;spot=side|mark|mark2|none&amp;ink=i0|i1|i2|i3</code><br>
+  成品 <code>assets/lineart-general.png</code>（832×788，透明底、一般牙科的套色 <code>#3f654a</code>）<br>
+  產生器 <code>tools/topic-lineart.mjs</code>（永久）<br>
+  提案頁的產生器 <code>tools/lineart-preview.mjs</code>（一次性，已刪除；
+  <code>git show f102bc2:tools/lineart-preview.mjs</code>）
+</p>
+
+<h2>起因</h2>
+<p>使用者 2026-08-22：「一般牙科的著陸頁並沒有我們剛剛做好的那張圖片，但那個圖片放進來
+<b>會壓縮到版面，我不要那樣</b>。我想到把圖片的某個部分做成頁面的底，但只要保留線條，
+而且是做成一般牙科的主題綠。你們幫我找看看圖片的區塊哪邊適合（我想到是畫面中間的
+女醫事人員和老先生對話的部分，或是右邊兩個醫事人員輕鬆自然和其他人打招呼的樣子，
+應該節錄他們的半身就好）和放在著陸頁上的位置。」</p>
+
+<h2>⚠⚠ 走錯的第一條路：從既有插畫「抽線稿」</h2>
+<p>做了兩版都不對，而且<b>成因是方法本身，不是參數沒調好</b>：</p>
+<table>
+  <tr><th></th><th>抽線稿</th><th>使用者的參考圖</th></tr>
+  <tr><td>筆畫怎麼來的</td><td>從<b>有陰影、有材質</b>的插畫上「撿邊」</td><td>一開始就是<b>畫出來的</b>均勻筆畫</td></tr>
+  <tr><td>粗細</td><td>跟著原圖明暗走，同一條線忽粗忽細</td><td>從頭到尾同一個寬度</td></tr>
+  <tr><td>雜訊</td><td>牆面材質、衣服皺褶、頭髮都變成線</td><td>只有輪廓</td></tr>
+  <tr><td>曲線</td><td>二值化後帶鋸齒（原檔是 JPEG）</td><td>平滑</td></tr>
+</table>
+<p>第二版已經做到「平塗 ＋ 放大四倍 ＋ 侵蝕收細」，線的<b>濃度</b>確實統一了，
+但<b>粗細的不規則與材質雜訊留在原檔裡，不是後製拿得掉的</b>。使用者：
+「我覺得這不是我要的，跟我找的範例還是差很多。你們做成圖片提示詞好了。」</p>
+<div class="note">
+<p>⚠ <b>通則：要一個「畫出來的」風格，就得畫，不能從別的畫上撿。</b>
+（ILLUSTRATION.md 第十之一節那條的反面：形狀要用參考圖，但<b>風格不能靠後製湊</b>。）</p>
+<p>抽線那條路的程式碼留在 <code>tools/topic-lineart.mjs</code> 的 <code>--region</code> 分支，
+是為了記住那條路長什麼樣，不是還在用。</p>
+</div>
+
+<h2>改用生成：第一版風格全過、內容四件全錯</h2>
+<p>使用者：「<b>風格對了</b>，不過細節跑掉了。右邊女生的髮型和表情、左邊男生的姿勢，
+現在變成彼此互看，而且男生這個對前方招手<b>很像選舉看板</b>，跟原圖輕鬆親切的
+和別人打招呼不一樣。」</p>
+<p>風格這一側每一格都過（<code>node drafts/lineart-measure.mjs</code>）：
+線佔畫面 6.4%、筆畫寬中位 6.8‰、<b>粗細一致（p90÷中位）1.43</b>（門檻 2.5）、
+實心填色 0 塊（最高填滿率 .13）、四角乾淨。</p>
+<div class="note">
+<p>⚠⚠ <b>四件錯的裡面有三件是提示詞自己寫出來的</b>，不是模型亂畫：</p>
+<table>
+  <tr><th>使用者說的</th><th>原本寫的那一句</th><th>為什麼會變那樣</th></tr>
+  <tr><td>彼此互看</td><td><code>turned slightly towards the dentist, mid-conversation</code></td><td>我叫她轉向他。原圖裡<b>兩個人都看著畫面外的左邊，誰都沒有看誰</b></td></tr>
+  <tr><td>很像選舉看板</td><td><code>one hand raised in a relaxed, everyday wave</code></td><td>「relaxed」是形容詞，擋不住<b>正面、對稱、五指張開的平掌</b>。要寫<b>幾何</b>：手只抬到下巴高、手肘收在身側、掌心斜的、手指鬆</td></tr>
+  <tr><td>髮型</td><td><code>Hair is drawn as an OUTLINE ONLY</code></td><td>只講了畫法，<b>沒講是什麼髮型</b>。原圖是紮起來的低馬尾</td></tr>
+  <tr><td>表情</td><td>（沒寫）</td><td>原圖她<b>嘴巴是張開的，正在講話</b></td></tr>
+</table>
+<p>⚠ 通則：<b>動作、髮型、視線方向這種「形狀」，用文字形容一定會漂</b>
+（ILLUSTRATION.md 第十之一節）。第二版加附 <code>drafts/lineart-pose-ref.png</code>
+（原圖那兩個人的乾淨裁切，<b>含腿</b> —— 腿留著是因為「走著」這件事是靠步伐讀出來的），
+一次就中。</p>
+<p><b>要附的七張分三組，說明必須分開寫</b>：五張線稿參考只提供<b>畫法</b>、
+姿勢參考圖只提供<b>姿勢・視線・髮型・表情</b>、
+<code>assets/og-topic-general.jpg</code> 只提供<b>長相・服裝・年齡層</b>。
+第一版就是少了中間那一張。</p>
+<p>⚠ 使用者那五張參考圖裡的第 3、4、5 張<b>有實心黑的頭髮，我們這張不要</b> ——
+量出來它們的「粗細一致」是 13.6／9.3／19.3（第 1 張只有 1.2），超出來的全是那幾團填色。
+我們這張要當<b>頁面的底、還要降透明度</b>，一團實心色塊會變成一塊礙眼的綠斑。</p>
+</div>
+
+<h2>⚠ 生成的線稿要先裁</h2>
+<p>模型多畫了一條<b>地面線</b>（1024 寬上的第 912~917 列，橫跨畫面 64%），四周還留一大圈空白。
+那條橫線擺到頁面上會變成一條莫名其妙的橫槓，空白則讓定位很難算。
+<code>tools/topic-lineart.mjs</code> 因此加了 <code>--crop x,y,w,h</code>，裁完圖檔就等於內容本身：</p>
+<pre>node tools/topic-lineart.mjs general --art drafts/lineart-general-v2.jpg \
+  --crop 97,123,832,788 --out assets/lineart-general.png</pre>
+<p>⚠ 那個「線佔超過 12%」的警告只對<b>未裁的整張圖</b>說話 —— 裁掉四周空白之後同樣的線會佔到
+兩倍以上，那不是變糟。所以有 <code>--crop</code> 時不比。</p>
+
+<h2>⚠⚠ 這一輪最要緊的兩句</h2>
+<div class="note">
+<p><b>一、大小不影響對比度，位置才影響。</b>
+字壓在線上時最壞的底色 ＝ 紙色與套色按濃度混合，<b>和圖多大完全無關</b>；
+圖變大只是讓<b>更多字</b>落在那個底色上。</p>
+<p><b>二、卡住的是柔墨的次要文字，不是主文。</b>閉式解（紙 <code>#e2e5e6</code>、套色 <code>#3f654a</code>）：</p>
+<table>
+  <tr><th></th><th>紙上</th><th>.20</th><th>.32</th><th>.48</th><th>掉到 4.5 的臨界</th></tr>
+  <tr><td>主文 <code>--ink</code> #2a2c27</td><td>11.15</td><td>8.53</td><td>7.16</td><td>5.65</td><td>.58</td></tr>
+  <tr><td>次要 <code>--ink-soft</code> #5c5f57</td><td><b>5.14</b></td><td>3.94</td><td>3.30</td><td>2.58</td><td><b>.101</b></td></tr>
+</table>
+<p><code>.tp-case</code>／<code>.tp-flow</code>（那幾個現場與流程）用的正是柔墨，
+它在紙上本來就只剩 0.64 的餘裕。<b>所以「有字壓到」的那一段天花板是 .10，不是「看起來淡不淡」。</b></p>
+</div>
+
+<h2>⚠⚠ 而「有沒有字壓到」完全是寬度決定的</h2>
+<p>提案頁現場量「有多少比例的字落在圖上」（把介紹區每一段文字的行框拿出來，
+和浮水印的矩形取交集，除以行框總面積）：</p>
+<table>
+  <tr><th>寬度</th><th>小</th><th>中</th><th>大</th><th>特大</th></tr>
+  <tr><td>1440／1200／1041／<b>834</b></td><td><b>0%</b></td><td><b>0%</b></td><td><b>0%</b></td><td><b>0%</b></td></tr>
+  <tr><td>430</td><td>8%</td><td>20%</td><td>33%</td><td>46%</td></tr>
+  <tr><td>390</td><td>11%</td><td>20%</td><td>33%</td><td>46%</td></tr>
+  <tr><td>375</td><td>11%</td><td>21%</td><td>27%</td><td>42%</td></tr>
+</table>
+<p>那幾行文字都<b>比介紹區窄</b>（iPad 上一行約 420px、區塊寬 784px），
+所以右下角在平板以上是<b>真的空白</b>，<b>只有手機才會壓到字</b>。</p>
+<div class="note">
+<p>⚠ <b>切換條的量測面板要直接下判斷，不要只印數字</b>（同 tag-fade 那一輪）：
+面板先算「有多少字落在圖上」，0% 就直接說「濃度只影響好不好看，不影響可讀性」，
+不會死板地印一個過不了的對比度。</p>
+</div>
+
+<h2>定案</h2>
+<p>使用者分兩次選：先「<b>手機版這樣，其他我再來看看</b>」（特大・右下・極淡），
+再「<b>你們分析的很有道理，而且這樣平板、電腦上看效果很好，就這樣吧</b>」（≥834 用濃）。</p>
+<pre>[data-topic="general"] .tp-intro { position: relative; }
+[data-topic="general"] .tp-intro::before {
+  content: ""; position: absolute; right: 0; bottom: 0;
+  width: min(76%, 360px); aspect-ratio: 832 / 788;
+  background: url("assets/lineart-general.png") center / contain no-repeat;
+  opacity: .10; pointer-events: none; z-index: 0;
+}
+@media (min-width: 834px) { [data-topic="general"] .tp-intro::before { opacity: .48; } }
+[data-topic="general"] .tp-intro &gt; * { position: relative; z-index: 1; }</pre>
+<p><b>⚠ 濃度分兩段是量出來的，不要收成一個值</b>：手機 390 壓到 46% 的字 → 只能 .10
+（實測 4.51，剛好過）；≥834 壓到 0% → 濃度純粹是美感，使用者選 .48。</p>
+
+<h2>落選 / 沒選上的</h2>
+<ul>
+  <li><b>位置「右側」</b>（介紹右邊那塊空白，≥1200 才出現）—— 電腦上很好看，
+    但它在平板與手機完全不存在，而「右下」在平板以上一樣不壓到字、還多涵蓋了 834~1199。</li>
+  <li><b>位置「右下（平板以上）」</b>（手機不放）—— 使用者要手機也有。</li>
+  <li><b>位置「不放」</b>。</li>
+  <li><b>大小 小／中／大</b>（<code>min(40%,180px)</code>／<code>min(52%,240px)</code>／<code>min(64%,300px)</code>）。</li>
+  <li><b>濃度 淡 .20／中 .32</b>（手機那一段這兩格都沒過 4.5）。</li>
+</ul>
+
+<h2>踩過的坑</h2>
+<div class="note">
+<p>⚠⚠ <b><code>background-image</code> 吃不到 <code>opacity</code>。</b>
+第一版把圖直接掛在 <code>.tp-intro</code> 身上，濃度那條尺對它完全沒作用 ——
+手機上它是<b>全濃度</b>壓在內文底下，量出來「改變的面積 0.0%」就是那個徵兆。
+改用 <code>::before</code> ＋ <code>opacity</code>。</p>
+<p>⚠ <b><code>right</code> 不能給負值</b>：手機上介紹區已經貼著版心，往外凸就會多出水平捲動
+（390 上 <code>-1rem</code> 直接讓整頁可以左右拉）。</p>
+<p>⚠⚠ <b>提案頁第一版在手機上一片空白</b>（使用者：「好像沒有欸」）——
+側邊那一格只在 ≥1200 出現，而他所有東西都用手機看。做法和訊息卡那幾張一樣：
+<b>擺真的東西，然後縮到看得到的尺寸</b>（iframe 載同一頁、寬度鎖 1440，
+再用 transform 縮到手機寬，iframe 裡帶 <code>frame=1</code> 那一態不畫預覽框也不畫切換條）。</p>
+<p>⚠⚠ 那一版真正的成因是<b>插錯位置而且不報錯</b>：<code>&lt;body&gt;</code> 這幾個字
+在 <code>&lt;head&gt;</code> 的註解裡出現四次，<code>String.replace</code> 會抓到註解裡的第一個，
+整塊就插進樣式表中間、完全不會顯示。要從 <code>&lt;/head&gt;</code> 之後才開始找。</p>
+<p>⚠ <code>&lt;!-- SEO:START</code> 後面還跟著一句「由 tools/topics.mjs 產生，請勿手動編輯」，
+<b>不能用整串比對</b>，只找前綴。</p>
+<p>⚠ <b>模板字串裡的 CSS 註解不能出現反引號</b>（CLAUDE.md 第九節第 8 條的近親）——
+寫了就把樣板提早關掉，整支腳本語法錯誤。這一輪踩了兩次。</p>
+<p>⚠⚠ <b>CSS 裡的 <code>url()</code> 在做著陸頁快照時也要改路徑。</b>
+<code>tools/topics.mjs</code> 原本只換 <code>href=</code>／<code>src=</code>／<code>srcset=</code>，
+而樣式表整段是從 <code>index.html</code> 照抄過來的 ——
+<code>url("assets/…")</code> 在 <code>/topics/&lt;spec&gt;/</code> 底下會解成
+<code>/topics/&lt;spec&gt;/assets/…</code> 而 404，<b>而且瀏覽器不會報錯，只是圖不見</b>。
+⚠ 不要改用根目錄絕對路徑 <code>/assets/…</code> 代替 —— 舊站
+<code>yclee86.github.io/fangren-dental/</code> 還活著，那邊會壞。</p>
+<p>⚠ <b>量筆畫寬不能只掃橫向</b>：一條水平的線在橫向會量成「整條線那麼長」。
+每個墨像素要取「橫向連續長」與「縱向連續長」<b>較小的那個</b>再取中位。</p>
+<p>⚠ <b>量「有沒有實心填色」不能只看面積</b>：一整個人的輪廓也是一大塊連通區域，
+但它是空心的。要看<b>填滿自己外接矩形多少</b>（&gt; 0.5 才算填色）。</p>
+<p>⚠ 量寬度用的探針要<b>插在 <code>.tp-intro</code> 裡面</b> —— 寬度是
+<code>min(76%, 360px)</code> 這種式子，百分比要對得上正確的父層才算得對。</p>
+</div>
+
+<h2>驗收</h2>
+<p>九個寬度（1440／1280／1200／1041／834／430／390／375／320）介紹區高度與加圖之前
+<b>逐格相同</b>（546.2／546.2／546.2／546.2／546.2／473.6／473.6／501.1／693.7），
+沒有任何水平捲動。使用者那句「放進來會壓縮到版面，我不要那樣」是靠
+<b>absolute 的偽元素</b>達成的，markup 一個字都沒動。
+其餘六科與首頁逐頁確認<b>沒有畫出這個偽元素</b>。</p>
+
+<h2>其餘六科</h2>
+<p>牙周／兒牙／顯微根管／植牙／口外／矯正<b>還沒有自己的線稿</b>。
+畫好之後：跑一次 <code>tools/topic-lineart.mjs &lt;spec&gt; --art &lt;檔&gt; --crop …</code>，
+再把 <code>[data-topic="&lt;spec&gt;"]</code> 加進上面那三條選擇器的清單裡。
+<b>不要改成 <code>[data-topic]</code> 一網打盡</b> —— 沒有圖的科目會畫出一個空的偽元素。
+提示詞的骨架在 <code>drafts/topic-lineart-prompt.md</code>，換人物與場景就好，
+風格那幾段一個字都不用改。</p>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>

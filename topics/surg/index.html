@@ -4693,6 +4693,46 @@ body[data-topic] #topics { padding-top: 1rem; }
 .tp-intro { margin: .9rem 0 0; max-width: 46rem; --tp-lh: 1.72; }
 .tp-intro h1 { margin: 0 0 .55rem; font-size: clamp(1.5rem, 4.6vw, 2.05rem); line-height: 1.35; color: var(--ink); }
 
+/* 3-0 介紹區右下角的線稿底圖（2026-08-23 定案上線，推導在 /history/topic-lineart.html）
+   --------------------------------------------------------------------------
+   使用者：「那個圖片放進來會壓縮到版面，我不要那樣。我想到把圖片的某個部分
+   做成頁面的底，但只要保留線條，而且是做成一般牙科的主題綠。」
+
+   ⚠⚠ **不動任何 markup —— 用 absolute 的偽元素。** 這正是「不壓縮版面」的做法：
+     它不佔高度、也不影響換行。驗收時九個寬度（1440~320）介紹區高度與加圖之前
+     **逐格相同**，也沒有任何水平捲動。
+   ⚠ `.tp-intro` 站上沒有別的地方用到 ::before（grep 過），借用是安全的。
+   ⚠ 內文要 `z-index: 1` 壓在上面，否則字會被蓋住。
+   ⚠ right 不能給負值：手機上介紹區已經貼著版心，往外凸就會多出水平捲動
+     （踩過，390 上 -1rem 直接讓整頁可以左右拉）。
+
+   ⚠⚠ **濃度分兩段，這是量出來的、不是美感的取捨：**
+     字壓在線上時最壞的底色 ＝ 紙色與套色按濃度混合，**和圖多大完全無關**；
+     圖變大只是讓更多字落在那個底色上。閉式解（紙 #e2e5e6、套色 #3f654a）：
+       --ink      #2a2c27　紙上 11.15 → .58 才掉到 4.5
+       --ink-soft #5c5f57　紙上 **5.14** → **濃度 .101 就掉到 4.5**
+     `.tp-case`／`.tp-flow` 用的正是柔墨，它在紙上本來就只剩 0.64 的餘裕。
+     而「有沒有字壓到」完全是寬度決定的 —— 實測那幾行文字都比介紹區窄
+     （iPad 上一行約 420px、區塊寬 784px），所以：
+       手機 390　壓到 46% 的字　→ 只能 **.10**（實測 4.51，剛好過）
+       ≥834　　　壓到 **0%**　　→ 濃度純粹是美感，使用者選 **.48**
+     **所以不要把兩段收成一個值。** 要改就改這兩個數字。
+
+   ⚠ 顏色不在這裡挑 —— 圖檔本身已經是該科的**套色**（PALETTE.md），
+     由 `node tools/topic-lineart.mjs <spec> --art <線稿檔> --crop x,y,w,h` 上色。
+   ⚠⚠ **目前只有一般牙科有圖。** 其餘六科畫好之後，把 `[data-topic="perio"]` 這種
+     選擇器加進下面那一條的清單裡，不要改成 `[data-topic]` 一網打盡 ——
+     沒有圖的科目會畫出一個空的偽元素。 */
+[data-topic="general"] .tp-intro { position: relative; }
+[data-topic="general"] .tp-intro::before {
+  content: ""; position: absolute; right: 0; bottom: 0;
+  width: min(76%, 360px); aspect-ratio: 832 / 788;
+  background: url("../../assets/lineart-general.png") center / contain no-repeat;
+  opacity: .10; pointer-events: none; z-index: 0;
+}
+@media (min-width: 834px) { [data-topic="general"] .tp-intro::before { opacity: .48; } }
+[data-topic="general"] .tp-intro > * { position: relative; z-index: 1; }
+
 /* 3-1「2 位醫師・2 篇文章」。
    ⚠ 科別名不再印一次（首頁那個 .filter-note 會印「兒童牙科：…」）——
      那已經是這一頁的 h1 了。
@@ -5589,7 +5629,7 @@ body[data-topic] #topics { padding-top: 1rem; }
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-08-22">2026 年 8 月 22 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-08-23">2026 年 8 月 23 日</time></span>
     </div>
   </div>
 </footer>

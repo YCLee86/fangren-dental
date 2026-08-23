@@ -311,6 +311,13 @@ for (const spec of SPECS) {
      ⚠ 不用 <base href="/"> 代替 —— 那會讓 #topics 這種錨點跳回首頁。 */
   h = h.replace(/(\s(?:href|src)=")(assets\/|posts\/|site\.webmanifest)/g, "$1../../$2");
   h = h.replace(/srcset="([^"]*)"/g, (m, v) => `srcset="${v.replace(/(^|,\s*)assets\//g, "$1../../assets/")}"`);
+  /* ⚠⚠ **CSS 裡的 url() 也要換**（2026-08-23 補，線稿底圖那一輪）——
+     它不是 href 也不是 src，上面兩條都抓不到。樣式表整段是從 index.html
+     照抄過來的，`url("assets/…")` 在 /topics/<spec>/ 底下會解成
+     /topics/<spec>/assets/… 而 404，**而且瀏覽器不會報錯，只是圖不見**。
+     ⚠ 不要改用根目錄絕對路徑 `/assets/…` 代替 —— 舊站
+     https://yclee86.github.io/fangren-dental/ 還活著（第七節），那邊會壞。 */
+  h = h.replace(/url\((["']?)assets\//g, "url($1../../assets/");
 
   /* 2. HERO 整塊拿掉（窄帶、詩、瀏覽計數的掛勾都在裡面一起消失） */
   const hs = h.indexOf('  <div class="hero">');
