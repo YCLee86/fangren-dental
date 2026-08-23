@@ -1,130 +1,108 @@
-# 著陸頁的線稿底圖・提示詞（`lineart-general`）
+# 著陸頁的線稿底圖・提示詞與交接（`lineart-<spec>`）
 
-**狀態：第二版待出圖（2026-08-22）。** 這是**改用生成**的路線 ——
-前面兩輪走的是「從既有插畫抽線稿」，使用者看過之後：
-**「我覺得這不是我要的，跟我找的範例還是差很多。你們做成圖片提示詞好了。」**
+**狀態（2026-08-23）：一般牙科已上線，其餘六科待做。**
+這一份現在是**可以重複使用的模板**，不是那一輪的紀錄 ——
+一般牙科整輪的推導在 **`/history/topic-lineart.html`**，通則在
+**ILLUSTRATION.md 第十二節**，定案的規格在 **CLAUDE.md 定案表「著陸頁的線稿底圖」那一列**。
 
-## 第一版（`drafts/lineart-general-v1.jpg`）的結果：**風格過了，內容錯了**
-
-使用者：**「風格對了，不過細節跑掉了。右邊女生的髮型和表情、左邊男生的姿勢，
-現在變成彼此互看，而且男生這個對前方招手很像選舉看板，
-跟原圖輕鬆親切的和別人打招呼不一樣。」**
-
-風格這一側**每一格都過**（`node drafts/lineart-measure.mjs drafts/lineart-general-v1.jpg`）：
-
-| | v1 | 門檻 |
-| --- | --- | --- |
-| 線佔畫面 | 6.4% | 4~6%（略高） |
-| 筆畫寬中位 | 6.8‰ | 4~6‰（略粗） |
-| **粗細一致（p90 ÷ 中位）** | **1.43** | < 2.5 ✅ |
-| 實心填色 | 0 塊（最高填滿率 .13） | 0 ✅ |
-| 四角 | 0／0／0／0 | 沒有墨 ✅ |
-
-⚠⚠ **四件錯的裡面有三件是我自己的提示詞寫出來的**，不是模型亂畫 ——
-下一版的修法就是把這三句改掉：
-
-| 使用者說的 | 我原本寫的那一句 | 為什麼會變那樣 |
-| --- | --- | --- |
-| 「彼此互看」 | `turned slightly towards the dentist, mid-conversation` | 我叫她轉向他。原圖裡**兩個人都看著畫面外的左邊，誰都沒有看誰** |
-| 「很像選舉看板」 | `one hand raised in a relaxed, everyday wave` | 「relaxed」是形容詞，擋不住**正面、對稱、五指張開的平掌**。要寫**幾何**：手只抬到肩膀高、手肘收在身側、掌心斜的、手指鬆 |
-| 「髮型」 | `Hair is drawn as an OUTLINE ONLY` | 只講了畫法，**沒講是什麼髮型**。原圖是**紮起來的低馬尾**，v1 給了一頭放下來的鮑伯 |
-| 「表情」 | （沒寫） | 原圖她**嘴巴是張開的，正在講話**；v1 是閉著嘴微笑 |
-
-⚠ 通則：**動作、髮型、視線方向這種「形狀」，用文字形容一定會漂**
-（ILLUSTRATION.md 第十之一節）。第二版一律**附參考圖**：
-`drafts/lineart-pose-ref.png`（原圖那兩個人的乾淨裁切，774×990，**含腿**，
-腿留著是因為「走著」這件事是靠步伐讀出來的）。
-
-用途：一般牙科著陸頁 `/topics/general/` 介紹區塊右邊那塊空白的**底圖**。
-規格與位置的推導在 `/history/topic-lineart.html`（定案後），
-版面量測見 `tools/lineart-preview.mjs` 的檔頭。
+| | |
+| --- | --- |
+| 已完成 | `general`（`assets/lineart-general.png` 832×788，2026-08-23 上線） |
+| 待做 | `perio` 牙周／`kids` 兒牙／`endo` 顯微根管／`prosth` 植牙・假牙重建／`surg` 口腔外科／`ortho` 齒顎矯正 |
+| 產生器 | `tools/topic-lineart.mjs`（永久） |
+| 門檻量測 | `drafts/lineart-measure.mjs` |
+| 風格參考圖 | `drafts/lineart-ref-1-walking.png` ~ `-5-bubbles.png`（已裁掉 app 介面，進版控） |
 
 ---
 
-## ⚠⚠ 為什麼「抽線稿」這條路必須放棄（記著，不要再試）
+## ⚠⚠ 開工前先確認順序：**分享圖在前，線稿在後**
 
-我做了兩版，兩版都不對，而且**成因是方法本身，不是參數沒調好**：
+每一科其實有**兩張不同的圖**，不要搞混：
 
-| | 抽線稿 | 使用者的參考圖 |
+| | 分享圖 | 線稿底圖 |
 | --- | --- | --- |
-| 筆畫怎麼來的 | 從**有陰影、有材質**的插畫上「撿邊」 | 一開始就是**畫出來的**均勻筆畫 |
-| 粗細 | 跟著原圖的明暗走，同一條線會忽粗忽細 | 從頭到尾同一個寬度 |
-| 雜訊 | 牆面材質、衣服皺褶、頭髮都會變成線 | 只有輪廓，沒有材質 |
-| 曲線 | 二值化後帶鋸齒（原檔是 JPEG） | 平滑 |
+| 檔案 | `assets/og-topic-<spec>.jpg` 1200×628 | `assets/lineart-<spec>.png` |
+| 風格 | 彩色插畫 | 單色線稿、透明底 |
+| 出現在哪 | **只在訊息卡上**（`og:image`，頁面上看不到） | **只在頁面上**（介紹區右下角的底） |
+| 規格 | ILLUSTRATION.md 第十一節 | ILLUSTRATION.md 第十二節（＋這一份） |
 
-第二版已經做到「平塗 ＋ 放大四倍 ＋ 侵蝕收細」，線的**濃度**確實統一了，
-但**粗細的不規則與材質雜訊留在原檔裡，不是後製拿得掉的**。
-⚠ 通則：**要一個「畫出來的」風格，就得畫，不能從別的畫上撿。**
-（同 ILLUSTRATION.md 第十之一節那條的反面：形狀要用參考圖，
-但**風格不能靠後製湊**。）
-
----
-
-## 這一張要講的事
-
-使用者原本指定的那一段（從既有插畫上挑的）：
-**「右邊兩個醫事人員輕鬆自然和其他人打招呼的樣子，應該節錄他們的半身就好」**。
-現在改成生成，主題不變 —— 對上那一頁在講的事（COPY.md 第九之十四節）：
-**這一頁回答的是「為什麼是這一間」**，所以畫的是**這間診所的人平常的樣子**，
-不是療程、不是器械、不是牙齒。
-
-⚠ 人物設定要接得上站上既有的插畫（ILLUSTRATION.md 第三節）：
-**白袍的醫師 ＋ 綠色刷手服的助理**，台灣人，日常、不擺拍。
+**⚠⚠ 六科現在兩張都沒有**（`og:image` 退回 `assets/og-home.jpg`）。
+**先做分享圖，再做線稿** —— 理由是下面那個「姿勢參考圖」：
+一般牙科那一輪是從**已經畫好的分享圖**裡裁一段當姿勢參考的
+（`drafts/lineart-pose-ref.png`），有它才一次就中；沒有它就得用文字描述動作，
+而**文字描述動作一定會漂**（下面那張表就是證據）。
 
 ---
 
-## 風格規格 —— 從使用者那五張參考圖**量出來的**
+## 風格規格 —— 從使用者那五張參考圖量出來的（**這一段每一科都一樣，不要改**）
 
-量法：Chromium canvas 讀像素（同 ILLUSTRATION.md 第十之四節）。
-腳本在暫存區，數字如下（取插畫區、不含 app 介面）：
-
-| | ENGWE | AI峰哥・對話 | 定案要求 |
+| | ENGWE | AI峰哥・對話 | 要求 |
 | --- | --- | --- | --- |
 | 線佔畫面 | 4.0% | 6.2% | **4~6%** |
 | 筆畫寬（中位） | 畫面寬的 **5.3‰** | **4.4‰** | **4~6‰**（1200 寬 → 5~7px） |
 | 底色 | rgb(248,248,248) | rgb(248,248,248) | **接近純白** |
 
-**換句話說**：一張 1200px 寬的圖，筆畫是 **5~7px 的均勻線**，整張**只有 4~6% 的面積有墨**。
-⚠ 這兩個數字是交件門檻，出圖後要量（腳本照 `drafts/og-measure-ink.mjs` 改）。
+**換句話說**：一張 1200px 寬的圖，筆畫是 **5~7px 的均勻線**，整張只有 4~6% 的面積有墨。
 
 ### 五張參考圖共同的特徵（使用者自己指出的那一條擺第一）
 
-1. ⚠⚠ **線沒有濃淡。** 每一條線都是同一個顏色、同一個粗細，
-   沒有粗細變化、沒有壓感、沒有素描感。
+1. ⚠⚠ **線沒有濃淡。** 每一條線同一個顏色、同一個粗細，沒有壓感、沒有素描感。
 2. **只有輪廓，沒有材質。** 沒有排線、沒有網點、沒有陰影、沒有漸層。
 3. **沒有投影。** 人物底下不畫影子。
-4. **留白很大方。** 人物之間、人物與邊界之間都留得很空。
+4. **留白很大方。**
 5. **五官極簡。** 眼睛是小圓點或短弧，嘴是一條短線，鼻子一小筆或不畫。
-6. **背景幾乎沒有。** 頂多一兩件必要的道具，沒有房間、沒有街景。
+6. **背景幾乎沒有。** 頂多一兩件必要的道具。
+
+⚠⚠ **參考圖裡的第 3、4、5 張有實心黑的頭髮，我們這張不要。**
+量出來它們的「粗細一致」是 13.6／9.3／19.3，純線稿那張只有 1.2 —— 超出來的全是那幾團填色。
+底圖要**降透明度**壓在頁面上，一團實心色塊會變成一塊礙眼的色斑。
+**畫法上最接近我們要的是第 1 張**（走路看手機那個男生）。
 
 ---
 
-## 要附哪幾張圖（七張，三組，每一組講的事不一樣）
+## ⚠⚠ 為什麼不能「從既有插畫抽線稿」（記著，不要再試）
 
-⚠⚠ **三組的說明一定要分開寫**。第一版沒有附姿勢參考圖，
-結果姿勢、視線、髮型、表情四件全跑掉了。
+前面兩輪走過這條路，兩版都被退回，而且**成因是方法本身，不是參數沒調好**：
 
-| # | 檔案 | 這一張要它提供什麼 | 附圖時要寫的話 |
+| | 抽線稿 | 參考圖 |
+| --- | --- | --- |
+| 筆畫怎麼來的 | 從**有陰影、有材質**的插畫上「撿邊」 | 一開始就是**畫出來的**均勻筆畫 |
+| 粗細 | 跟著原圖明暗走，同一條線忽粗忽細 | 從頭到尾同一個寬度 |
+| 雜訊 | 牆面材質、衣服皺褶、頭髮都會變成線 | 只有輪廓 |
+
+第二版已經做到「平塗 ＋ 放大四倍 ＋ 侵蝕收細」，濃度統一了，
+但**粗細的不規則與材質雜訊留在原檔裡，不是後製拿得掉的**。
+
+⚠ 通則：**要一個「畫出來的」風格，就得畫，不能從別的畫上撿。**
+抽線的程式碼留在 `tools/topic-lineart.mjs` 的 `--region` 分支，是紀錄，不是還在用。
+
+---
+
+## 要附哪幾張圖（七張，三組，**每一組的說明一定要分開寫**）
+
+⚠⚠ 一般牙科第一版**只附了畫法與長相兩組、沒附姿勢**，
+結果姿勢、視線、髮型、表情四件全跑掉，而且**其中三件是提示詞自己寫出來的**：
+
+| 錯的 | 原本寫的那一句 | 為什麼會變那樣 |
+| --- | --- | --- |
+| 兩人彼此互看 | `turned slightly towards the dentist` | 我叫她轉向他 |
+| 「很像選舉看板」 | `a relaxed, everyday wave` | **形容詞擋不住正面對稱的平掌**。要寫**幾何**：手抬到下巴高、手肘收在身側、掌心斜的、手指鬆 |
+| 髮型不對 | `Hair is drawn as an OUTLINE ONLY` | 只講了畫法，**沒講是什麼髮型** |
+| 表情不對 | （沒寫） | 沒講「嘴巴張開正在講話」 |
+
+| # | 檔案 | 這一張只提供 | 附圖時要寫的話 |
 | --- | --- | --- | --- |
-| 1 | `drafts/lineart-ref-1-walking.png` | **畫法** | 只參考線條畫法（均勻粗細、無濃淡、無陰影、無材質、大量留白）。**不要參考題材、人物、道具。** |
-| 2 | `drafts/lineart-ref-2-engwe.png` | 同上 | 同上 |
-| 3 | `drafts/lineart-ref-3-talking.png` | 同上 | 同上 |
-| 4 | `drafts/lineart-ref-4-laptop.png` | 同上 | 同上 |
-| 5 | `drafts/lineart-ref-5-bubbles.png` | 同上 | 同上 |
-| 6 | **`drafts/lineart-pose-ref.png`** | **姿勢・視線・髮型・表情** | **姿勢、視線方向、髮型、表情、手的高度與角度，完全照這張。**但畫法照 1~5，而且**畫到腰就好，不要畫腿**。 |
-| 7 | `assets/og-topic-general.jpg` | **長相・服裝・年齡層** | 人物長相、服裝、年齡層照這張，但**畫法完全不同** —— 那張是上色插畫。 |
+| 1~5 | `drafts/lineart-ref-1-walking.png` ~ `-5-bubbles.png` | **畫法** | 「**只參考線條畫法**（均勻粗細、無濃淡、無陰影、無材質、大量留白）；**不要參考題材、人物、道具**。」 |
+| 6 | 那一科的**姿勢參考**（從該科分享圖裁一段，做法見下） | **姿勢・視線・髮型・表情** | 「**姿勢、視線方向、髮型、表情、手的高度與角度，完全照這張**；但畫法照 1~5，而且**畫到腰就好，不要畫腿**。」 |
+| 7 | `assets/og-topic-<spec>.jpg` | **長相・服裝・年齡層** | 「人物長相、服裝、年齡層照這張，但**畫法完全不同** —— 那張是上色插畫。」 |
 
-五張參考圖是使用者傳的手機截圖，已經裁掉 app 介面存進 `drafts/`
-（`node drafts/lineart-refs-crop.mjs` 可以重跑，座標在腳本裡）。
+**姿勢參考怎麼做**：在該科的分享圖原檔上挑一段（人物 ＋ **含腿**，
+腿留著是因為「走著／站著」這件事是靠下半身讀出來的），放大三倍存成 PNG。
+一般牙科那次是 `x958 y336 258×330 → ×3 → 774×990`。
 
-⚠⚠ **第 3、4、5 張有實心黑的頭髮，我們這一張不要。**
-量出來它們的「粗細一致」是 13.6／9.3／19.3（第 1 張只有 1.2）——
-超出來的全是那幾團填色，不是筆畫真的忽粗忽細。
-**我們這張是要當頁面的底、還要降透明度**，一團實心色塊會變成一塊礙眼的綠斑，
-所以提示詞裡「頭髮也不准填色」那一句要留著。
-**畫法上最接近我們要的是第 1 張**（線佔 3.05%、粗細一致 1.2、完全沒有填色）。
+---
 
-## 提示詞（逐字，可直接複製）
+## 提示詞（模板；**只有 WHO 與 COMPOSITION 要換，其餘逐字照用**）
 
 ```
 A single-colour LINE DRAWING, square, 1200 x 1200, on a plain near-white background.
@@ -138,6 +116,49 @@ NO SHADING OF ANY KIND — no hatching, no cross-hatching, no stippling, no scre
 no gradients, no grey tones, no drop shadows, no cast shadows on the ground, no highlights.
 Outline only. Do not fill any area with solid colour, including hair and clothing.
 
+WHO — ⚠ 這一段每一科要重寫。照抄一般牙科那一版的寫法（見下面那個範例），
+規則有三條：
+  ・先寫一句「Follow the attached photo-reference for pose, gaze, hair and expression
+    EXACTLY; only the drawing style comes from the line-art references.」
+  ・動作寫成**幾何**（角度、高度、朝向），不要寫形容詞。
+  ・髮型、表情、視線方向**逐項寫出來**，不要以為參考圖會自己傳達。
+
+⚠ 兩條 CRITICAL 每一科都要留（改成該科的情境）：
+  ・視線方向：說清楚兩個人是不是看同一個方向、有沒有看鏡頭。
+  ・把最容易畫錯的那個姿勢**明講不要**（一般牙科那次是「NOT A CAMPAIGN-POSTER WAVE」）。
+
+FACES — extremely simple: eyes are small solid dots or short curved strokes, the nose is
+one tiny stroke or omitted. No eyebrow detail, no eyelashes, no blush, no wrinkles.
+⚠ 嘴巴的形狀要寫（張開講話／閉著微笑），不要留空。
+Hair is drawn as an OUTLINE ONLY with a few interior strokes for the parting — it must
+not be filled in. ⚠ 髮型本身要寫（低馬尾／短髮／…）。
+
+COMPOSITION — the figures together occupy the middle of the square and about 70% of its
+height. Generous empty margin on all four sides. They are cropped at the waist by a clean
+horizontal edge at the bottom of their bodies — no legs, no belt line detail.
+
+BACKGROUND — completely empty. No room, no doorway, no window, no wall, no floor, no
+furniture, no plants, no street, no clinic sign, no speech bubbles, no icons, no arrows,
+no text, no logo, no decorative sparkles, no frame or border.
+
+COLOUR — the drawing is in ONE colour only: <該科的套色 hex>, on a near-white background,
+hex #f7f8f7. Nothing else is coloured. No second colour anywhere.
+
+The result should read as a calm, friendly, extremely clean editorial line illustration
+with a lot of white space.
+```
+
+### 各科的套色（PALETTE.md，和 `tools/topic-lineart.mjs` 的 `ACCENT` 同一組）
+
+`general #3f654a`　`perio #317d78`　`kids #c28229`　`endo #ae4f4d`
+`prosth #335b8b`　`surg #8e6299`　`ortho #4478b5`
+
+⚠ 提示詞裡雖然指定了 hex，模型不保證給得準，所以 `topic-lineart.mjs` **一律重新上色**。
+⚠ **給了 hex 就不要在旁邊再寫色名**（ILLUSTRATION.md 第十之二節）。
+
+### WHO 那一段的範例（一般牙科定案的那一版，照這個結構寫）
+
+```
 WHO — two staff of a small Taiwanese neighbourhood dental clinic, WALKING FORWARD side by
 side, seen from the WAIST UP. Follow the attached photo-reference for pose, gaze, hair and
 expression EXACTLY; only the drawing style comes from the line-art references.
@@ -162,87 +183,86 @@ expression EXACTLY; only the drawing style comes from the line-art references.
 
 ⚠ CRITICAL — THE TWO PEOPLE DO NOT LOOK AT EACH OTHER. Both faces point the same way:
 forward and off-frame to the LEFT. Neither turns towards the other, and neither looks at
-the viewer. This is two colleagues walking past and greeting someone they know, caught in
-passing — NOT a portrait, NOT a posed pair, NOT a conversation between the two of them.
+the viewer.
 
 ⚠ CRITICAL — NOT A CAMPAIGN-POSTER WAVE. Do not draw a frontal, symmetrical figure with a
 straight arm and an open flat palm held up beside the head. That is a politician's salute
 and it is wrong. The wave is small, low, angled and off-hand.
-
-FACES — extremely simple: eyes are small solid dots or short curved strokes, the nose is
-one tiny stroke or omitted. No eyebrow detail, no eyelashes, no blush, no wrinkles.
-The man's mouth is a short open curve (smiling, talking); the woman's mouth is a small
-open oval (mid-speech). Hair is drawn as an OUTLINE ONLY with a few interior strokes for
-the parting and the ponytail — it must not be filled in.
-
-COMPOSITION — the two figures together occupy the middle of the square and about 70% of
-its height, overlapping slightly as walking companions do (he is a little ahead of her).
-Generous empty margin on all four sides. They are cropped at the waist by a clean
-horizontal edge at the bottom of their bodies — no legs, no belt line detail.
-Optionally, two or three short arc strokes beside the raised hand to suggest the movement,
-as in the photo-reference. Nothing else.
-
-BACKGROUND — completely empty. No room, no doorway, no window, no wall, no floor, no
-furniture, no plants, no street, no clinic sign, no speech bubbles, no icons, no arrows,
-no text, no logo, no decorative sparkles, no frame or border.
-
-COLOUR — the drawing is in ONE colour only: a dark desaturated green, hex #3f654a, on a
-near-white background, hex #f7f8f7. Nothing else is coloured. No second colour anywhere.
-
-The result should read as a calm, friendly, extremely clean editorial line illustration
-with a lot of white space.
 ```
 
-### ⚠ 兩個給模型的擋門（照 ILLUSTRATION.md 第十之二節的教訓寫）
+### 這一科要畫什麼？
 
-- **給了 hex 就不要在旁邊再寫色名** —— 上面只寫 `#3f654a`，沒有寫 "forest green"。
-- **「簡單」不等於「空」的反面也要擋**：這裡是真的要空背景，所以
-  背景那一段是**逐項列出不要什麼**，不是只寫 "simple background"
-  （第十一之一節第 3 條：「背景簡單」不等於「畫面空」—— 那一次是反過來吃虧，
-  這一次是刻意要空，所以要寫死）。
+⚠⚠ **畫的是「病患的處境」或「這間診所的人平常的樣子」，不是牙齒解剖圖、不是器械示意圖。**
+題材要對上那一科著陸頁**開場那一幕**：文案在 `tools/topic-copy.mjs`，
+七科的節奏對照表在 **COPY.md 第九之十五節**。
+⚠ 人物設定要接得上站上既有的插畫（ILLUSTRATION.md 第三節）：**白袍的醫師 ＋ 綠色刷手服的助理**，
+台灣人，日常、不擺拍。
 
 ---
 
-## 交件前要過的門檻（出圖後自己量，不過就重生）
+## 交件前要過的門檻
 
-### 風格這一側 —— 跑腳本
+    node drafts/lineart-measure.mjs <圖檔>
 
-    node drafts/lineart-measure.mjs drafts/lineart-general-v2.jpg
-
-| | 門檻 | 怎麼量 |
+| | 門檻 | ⚠ |
 | --- | --- | --- |
-| 線佔畫面 | **4~6%** | 底色與純黑之間 35% 處當門檻，數暗像素比例 |
-| 筆畫寬中位 | **畫面寬的 4~6‰** | 每個墨像素取「橫向連續長」與「縱向連續長」**較小的那個**，再取中位 |
-| 粗細一致 | 90 百分位 ÷ 中位 **< 2.5** | 同上（v1 是 1.43） |
-| 明顯的灰階 | **越少越好** | 亮度直方圖裡佔比 > 0.05% 的階數（JPEG 的抗鋸齒會佔掉二三十階，正常） |
-| 有沒有實心填色 | **0 塊** | ⚠ **不能只看面積** —— 一整個人的輪廓也是一大塊連通區域，但它是空心的。要看**填滿自己外接矩形多少**，> 0.5 才算填色（v1 最高 0.13） |
-| 背景乾淨 | 四角各 10% 的方塊裡**沒有墨** | 直接取那四塊算 |
+| 線佔畫面 | **4~6%**（未裁的整張） | 裁掉四周空白之後會佔到兩倍以上，那不是變糟 |
+| 筆畫寬中位 | 畫面寬的 **4~6‰** | **不能只掃橫向** —— 一條水平線在橫向會量成整條線那麼長。要取橫縱**較小值** |
+| 粗細一致 | p90 ÷ 中位 **< 2.5** | 一般牙科定案那張是 1.43 |
+| 有沒有實心填色 | **0 塊** | **不能只看面積** —— 一整個人的輪廓也是一大塊連通區域，但它是空心的。要看**填滿自己外接矩形多少**（> 0.5 才算） |
+| 明顯的灰階 | 越少越好 | JPEG 的抗鋸齒會佔掉二三十階，正常 |
+| 背景乾淨 | 四角各 10% 的方塊裡**沒有墨** | |
 
-⚠ 筆畫寬**不能只掃橫向** —— 一條水平的線在橫向會量成「整條線那麼長」。
-取橫縱較小值才是真正的筆畫寬。
-
-### 內容這一側 —— 逐條看圖（v1 就是這四條全錯）
-
-1. **兩個人的臉朝同一個方向（畫面外的左邊），誰都沒有看誰。**
-2. **男生的手只抬到下巴高、手肘收在身側、掌心是斜的、手指鬆。**
-   正面對稱的平掌 ＝ 選舉看板 ＝ 重生。
-3. **女生的頭髮是紮起來的低馬尾**（不是放下來的鮑伯）。
-4. **女生的嘴巴是張開的**（正在講話），不是閉著微笑。
+⚠ **內容這一側要逐條看圖**，門檻過了不代表對（一般牙科第一版就是門檻全過、內容四件全錯）：
+視線方向、動作的角度與高度、髮型、表情。
 
 ---
 
 ## 出圖之後怎麼接（管線）
 
-生成的是**近白底、深綠線**的 PNG／JPEG。上到頁面之前要轉成**透明底**的 PNG：
+**1. 轉成透明底、上該科的套色，順便裁掉地面線與空白**
 
-    node tools/topic-lineart.mjs general --art drafts/lineart-general-src.png
+```
+node tools/topic-lineart.mjs <spec> --art drafts/lineart-<spec>-v1.jpg \
+  --crop x,y,w,h
+```
 
-⚠ `--art` 是**給「本來就是線稿」的圖用的**，和原本那條「從插畫抽線」的路徑不同：
-它只做一件事 —— **把底色變透明、把線統一成該科的套色**，不做局部平均、不做侵蝕。
-因為來源已經是平的，**再處理只會把它弄壞**。
+⚠⚠ **生成的線稿幾乎一定會多畫一條「地面線」**，還會留一大圈空白。
+那條橫線擺到頁面上會變成一條莫名其妙的橫槓。裁完圖檔就等於內容本身，
+頁面那一側只要管大小與位置。裁切座標自己量（一般牙科那次是 `97,123,832,788`）。
 
-⚠ 顏色仍然回 PALETTE.md 拿（`general` 是套色 `#3f654a`）。
-提示詞裡雖然已經指定了同一個 hex，但模型不保證給得準，所以**一律重新上色**。
+⚠ `--art` 只做一件事：**把底色變透明、把線統一成該科的套色**，
+不做局部平均、不做侵蝕 —— 來源已經是平的，再處理只會把它弄壞。
+⚠ **不要餵透明底的 PNG 進來**（有一道守門會擋）。
 
-⚠ 濃淡（頁面上的 opacity）**不在圖裡做** —— 那是使用者要自己選的那一格
-（提案頁的「濃度」那條尺）。
+**2. 把該科加進 `index.html` 那三條選擇器**
+
+`index.html` 搜尋 `3-0 介紹區右下角的線稿底圖`，把 `[data-topic="<spec>"]` 加進去：
+
+```css
+[data-topic="general"] .tp-intro,
+[data-topic="perio"]   .tp-intro { position: relative; }
+```
+
+⚠⚠ **不要改成 `[data-topic]` 一網打盡** —— 沒有圖的科目會畫出一個空的偽元素。
+
+⚠ 大小與濃度**不要重挑**，一般牙科已經定案而且是量出來的：
+`min(76%, 360px)`、手機 `.10`、`@media (min-width: 834px)` `.48`。
+理由（`--ink-soft` 紙上只剩 5.14、臨界濃度 .101；≥834 實測 0% 的字落在圖上）
+寫在 `index.html` 那段註解與 `/history/topic-lineart.html` 裡。
+⚠ `aspect-ratio` 要換成那一科圖檔自己的長寬。
+
+**3. 重跑產生器與 build**
+
+```
+node tools/topics.mjs && node tools/build.mjs
+```
+
+⚠⚠ `tools/topics.mjs` 會把 CSS 裡的 `url("assets/…")` 換成 `../../assets/` ——
+**不要改用根目錄絕對路徑 `/assets/…`**，舊站 `yclee86.github.io` 還活著，那邊會壞。
+
+**4. 驗收（一定要做）**
+
+・九個寬度（1440／1280／1200／1041／834／430／390／375／320）
+　**介紹區高度和加圖之前逐格相同**、無水平捲動。
+・其餘沒有圖的科目與首頁**沒有畫出那個偽元素**。

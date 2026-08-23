@@ -1708,6 +1708,13 @@ node tools/topic-lineart.mjs <spec> --art <線稿檔> --crop x,y,w,h
 
 ### 其餘六科
 
+⚠⚠ **開新對話從 `drafts/topic-lineart-prompt.md` 接手** —— 那一份是模板
+（風格規格、要附哪七張圖、提示詞、門檻、管線、驗收），不是一般牙科那一輪的紀錄。
+
+⚠⚠ **順序：分享圖在前、線稿在後。** 線稿要附一張**姿勢參考圖**才畫得準，
+而那張是從**已經畫好的分享圖**裡裁一段來的（人物＋含腿，放大三倍）。
+沒有它就得用文字描述動作，而文字描述動作一定會漂。
+
 畫好之後跑一次上面那行，再把 `[data-topic="<spec>"]` 加進 `index.html` 那三條選擇器的清單裡
 （`.tp-intro` / `.tp-intro::before` / `.tp-intro > *`），然後 `node tools/topics.mjs`。
 ⚠ **不要改成 `[data-topic]` 一網打盡** —— 沒有圖的科目會畫出一個空的偽元素。
