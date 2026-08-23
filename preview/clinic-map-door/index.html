@@ -772,11 +772,11 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
     <button data-k="you" data-v="off">不放</button>
   </div>
   <div class="pv-row">
-    <span class="pv-lab">指北針長</span>
-    <button data-k="ns" data-v="a">Ⓐ 長 34</button>
-    <button data-k="ns" data-v="b">Ⓑ 29</button>
-    <button data-k="ns" data-v="c">Ⓒ 25</button>
-    <button data-k="ns" data-v="d">Ⓓ 短 21</button>
+    <span class="pv-lab">指北針</span>
+    <button data-k="ns" data-v="a">Ⓐ 大 42</button>
+    <button data-k="ns" data-v="b">Ⓑ 36</button>
+    <button data-k="ns" data-v="c">Ⓒ 31</button>
+    <button data-k="ns" data-v="d">Ⓓ 小 26</button>
   </div>
   <div class="pv-panel" id="pvPanel">量測中…</div>
 </div>
@@ -1224,19 +1224,28 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
        第二版 1:4（寬 10 高 40）——「圖案本身太細長 好奇怪 我給你的圖不是這樣」
      所以**寬高比改成一條尺**（NS_W 那四格，針長固定 38、只換半寬），
      讓使用者自己指一格，不要再由我猜。網址 ?ns=a|b|c|d。
-     ⚠ 針長固定、只動寬度，是因為「太大」與「太細」是兩件事 ——
-       上一輪把兩件混在一起改，結果從一個極端跳到另一個極端。 */
-  /* ⚠⚠ 第四輪使用者：「胖還勉強可以 但太長」—— 所以**寬度定住不再動**
-     （7.3 ＝ 上一輪的 Ⓑ），那條尺改成量**針長**。針長一縮缺口也要跟著縮，
-     不然底下那兩隻腳會變成兩根刺。 */
+     ⚠ 「太大」與「太細」是兩件事，一次只動一件 —— 混在一起改的那一輪
+       直接從一個極端跳到另一個極端。 */
+  /* ⚠⚠ 第四輪把比例定下來了（使用者：「胖還勉強可以 但太長」→ 針長 29、
+     半寬 7.3 ＝ **1:2.0**）。第五輪他說「指北針和北可以再大一點」，所以那條尺
+     從「只量針長」改成**整組的大小**：半寬、字級、字距全部按 29 那一組
+     等比例算出來 —— **比例因此鎖死在 1:2.0**，不會又跑回「太長」或「太胖」。
+     ⚠ 針長一改缺口也跟著按比例縮，不然底下那兩隻腳會變成兩根刺。 */
   var LANE_FS = 12.5;                                /* 巷名字級（站上是 16） */
-  var NS_H = { a: 34, b: 29, c: 25, d: 21 };         /* 針長 → 比例 2.3／2.0／1.7／1.4 */
-  var NSW = { w: 7.3, fs: 12, gap: 15 };
+  var NS_H = { a: 42, b: 36, c: 31, d: 26 };         /* 整組大小（＝針長），比例固定 1:2.0 */
+  var NS_R = { w: 7.3 / 29, fs: 12 / 29, gap: 15 / 29 };
+  var NSW = { w: 7.3, fs: 12, gap: 15 };             /* 由 nsGeom() 現算 */
   var nswA = 0, nswB = 0, nswN = 0;                   /* 尖端 y／底邊 y／缺口頂點 y，paint() 現算 */
   function nsGeom() {
     var h = NS_H[body.dataset.ns] || NS_H.b;
     nswA = -h * 0.75; nswB = h * 0.25; nswN = nswB - h * 0.22;
+    NSW.w = h * NS_R.w; NSW.fs = h * NS_R.fs; NSW.gap = h * NS_R.gap;
+    if (nswTxt) {
+      nswTxt.setAttribute('font-size', NSW.fs.toFixed(2));
+      nswTxt.setAttribute('dy', (INK * NSW.fs).toFixed(2));
+    }
   }
+  var nswTxt = null;
   nsGeom();
   var nswTy = nswA;                                   /* 字的錨點：**和尖端同一個水平** */
   var nsw = add('g', { class: 'nsw' }, svg);
@@ -1257,8 +1266,8 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
   /* ⚠ 「北」要和尖端**同一個水平**（使用者指定），所以錨點就放在尖端那條線上、
      再沿著針的方向往外推 NSW.gap。⚠⚠ 中文的字面中心在基線上方 0.345em，
      光把錨點對齊還是會看起來偏高 —— dy 那一項就是把它壓回來（同街名那一套）。 */
-  var nswTxt = add('text', { x: 0, y: nswTy, 'text-anchor': 'middle',
-    'font-size': NSW.fs, dy: (INK * NSW.fs).toFixed(2) }, nsw, '北');
+  nswTxt = add('text', { x: 0, y: nswTy, 'text-anchor': 'middle',
+    'font-size': NSW.fs.toFixed(2), dy: (INK * NSW.fs).toFixed(2) }, nsw, '北');
 
   /* ---- 幾何小工具 -------------------------------------------------------- */
   function rot(x, y, th) {
@@ -1434,8 +1443,10 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
     var ny1 = Math.max.apply(null, nsA.map(function (q) { return q.y; }));
     nx0 = Math.min(nx0, nsTx.x - NSW.fs / 2 - 1); nx1 = Math.max(nx1, nsTx.x + NSW.fs / 2 + 1);
     ny0 = Math.min(ny0, nsTx.y - NSW.fs / 2 - 1); ny1 = Math.max(ny1, nsTx.y + NSW.fs / 2 + 1);
-    var nsTop = my0 - 4;                              /* 帶子的下緣：離街廓 4 個單位 */
-    var nsx = mx1 - nx1, nsy = nsTop - ny1;
+    /* ⚠ 第五輪使用者：「位置可以往左上移一點」—— 往左 20、往上 14
+       （原本右緣貼齊街廓、下緣只離街廓 4）。 */
+    var nsTop = my0 - 18;                             /* 帶子的下緣：離街廓 18 個單位 */
+    var nsx = mx1 - nx1 - 20, nsy = nsTop - ny1;
     nsw.setAttribute('transform', 'translate(' + nsx.toFixed(1) + ' ' + nsy.toFixed(1) + ')' +
       (th ? ' rotate(' + th + ')' : ''));
     nswTxt.setAttribute('x', 0); nswTxt.setAttribute('y', nswA - NSW.gap);
