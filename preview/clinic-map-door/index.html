@@ -128,9 +128,19 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 /* 街名壓在點狀路線上會亂 —— 補一圈和路面同色的描邊（做法同停車場那個 P：
    paint-order: stroke 讓描邊先畫、字後畫，字腔不會被吃掉）。 */
 .sh-map .map-svg .lbl { paint-order: stroke; stroke: var(--map-road); stroke-width: 5; stroke-linejoin: round; }
-/* ⚠ 停車場的代號：站上那個 P 靠 1.6 的同色描邊加粗，換成「P3」兩個字之後
-   看起來又粗又擠（使用者回報）。海報上把描邊拿掉，粗細交給字重就好。 */
-.sh-map .map-svg .pk { stroke-width: 0; font-weight: 700; }
+/* ⚠⚠ 停車場的代號：站上那個 P 靠 1.6 的同色描邊加粗，換成「P1／P2／P3」
+   兩個字之後看起來又粗又擠（使用者回報兩次）。三件事一起改才夠：
+     ① 描邊拿掉（stroke-width: 0）—— ⚠⚠ **選擇器要寫到 `.lot` 那一層**：
+        站上那條是 `.map-svg .lot .pk`（三個 class），寫 `.sh-map .map-svg .pk`
+        權重一模一樣、又排在前面，描邊**根本沒有被關掉**（實測 computed
+        strokeWidth 還是 1.6px）。這就是使用者說「還是太粗」的真正成因 ——
+        字重明明已經是 400 了，粗的是那圈 1.6 的同色描邊。
+     ② **字重 700 → 400** —— Arial 只有 Regular 與 Bold 兩支，
+        CSS 的字重匹配對 400~500 會往下找，所以寫 500 也還是 Regular，
+        真正只有 400（細）與 700（粗）兩格可選，中間沒有東西。
+     ③ 補一點字距（.02em）—— 粗體收掉之後兩個字元會顯得黏在一起。
+   ⚠ 站上那顆單獨的 P 一個字都沒動，這一段只作用在海報上。 */
+.sh-map .map-svg .lot .pk { stroke-width: 0; font-weight: 400; letter-spacing: .02em; }
 /* 指北針。⚠ 線寬要對得上針的粗細（半寬 5 個單位），3 太粗、而且
    stroke-linejoin: round 會把尖端磨成一顆球 —— 第一版被退回的原因之一。
    miter 才收得出尖的那一點；字級由 JS 的 NSW.fs 寫在元素上，這裡不再定。 */
