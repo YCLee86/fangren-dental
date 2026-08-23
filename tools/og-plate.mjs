@@ -158,6 +158,43 @@ const STATS_CELLS = [
   { n: "5",    u: "個", s: "部定專科" },
 ];
 const STATS_TEXT = STATS_CELLS.map((c) => c.n + c.u + c.s).join("");
+/* --blend alpha|multiply（2026-08-23 加）
+   ⚠⚠ **alpha 疊色一定會把科別色往背景的方向拉。** 使用者：「帶子的顏色看起來和
+     牙周標籤的主題色很不一樣」—— 量出來色相是對的（171 vs 176），**彩度只有一半**
+     （20 vs 44）。成因是 alpha 是加權平均，而牙周那張的牆是暖色的淺牆，
+     青綠混進去就被拉回中性。濃度只能救到 s29（而且照片只剩 5%）。
+   `multiply`（相乘）不會稀釋顏色：結果 ＝ 來源色 × 背景亮度，
+     **色相與彩度留住，背景的明暗照樣透出來**。實測（牙周那張，量帶子中段）：
+       alpha .78/.22   #4C726C  h171 s20  字的對比 4.21  變異量 1.02
+       multiply 套色   #2E6B60  h170 s40  字的對比 4.82  變異量 2.54   ← 三項全贏
+   ⚠⚠ **`mix-blend-mode` 不能放在有 `backdrop-filter` 的元素裡面**（踩過）：
+     那個元素會自成一個堆疊脈絡，上色層只跟它自己混，結果是一塊**完全不透明**的板
+     （量出來變異量 0.00，而顏色剛好等於來源色 —— 那正是「沒有在混」的徵兆）。
+     所以模糊、上色、文字要拆成三層，上色層和 <img> 在同一層。
+   ⚠ `mix-blend-mode: color` 那條路要放棄：它把亮度沿用背景，亮牆上整條變成
+     淺薄荷綠，字的對比只剩 1.33。
+   ⚠ 相乘會讓各通道乘上背景（藍色衰減最多），所以色相會往綠偏約 5°、明度低一階。
+     要對回站上的色票就用 --tintcolor 給一個**預先調亮的來源色**
+     （同 assets/icon.svg 補償 iOS 玻璃的做法）。 */
+const blendIdx = args.indexOf("--blend");
+const BLEND = blendIdx >= 0 ? args[blendIdx + 1] : "alpha";
+if (!["alpha", "multiply"].includes(BLEND)) { console.error("--blend 只能是 alpha / multiply"); process.exit(1); }
+const tcIdx = args.indexOf("--tintcolor");
+const TINT_COLOR = tcIdx >= 0 ? args[tcIdx + 1] : null;
+if (TINT_COLOR && !/^#[0-9a-f]{6}$/i.test(TINT_COLOR)) { console.error("--tintcolor 要是 #rrggbb"); process.exit(1); }
+/* --blur：玻璃的模糊半徑（px，預設 18 ＝ 站上頁首那條玻璃）。
+   ⚠⚠ 在 --blend multiply 底下，**模糊是唯一免費的透明度旋鈕**：
+     顏色與字的對比完全不受影響，變的只有「背景的形狀透出來多少」。實測（牙周那張）：
+       blur 18 → 變異量 3.05 ／ 10 → 3.47 ／ 6 → 3.88 ／ 3 → 4.28 ／ 0 → 6.74
+     （六格的合成色一律 #317d78、對比一律 3.72，一個字都沒變。）
+   ⚠ 對照：把來源色調亮想換透明度，變異量只到 4.16，卻把彩度打回 40、對比掉到 3.26 ——
+     因為 multiply 底下「降不透明度」和「把來源調亮」在數學上是同一件事
+     （結果 ＝ 背景 ×[(1−a) + a×來源]），等於把剛修好的彩度again 稀釋掉。
+   ⚠ 模糊調小是有前提的：**帶子後面要是乾淨的背景**。這一張的上緣是一面素牆，
+     所以 blur 0 也不影響可讀性（對比量出來一模一樣）；換一張上緣很花的圖就不成立。 */
+const blurIdx = args.indexOf("--blur");
+const BLUR = blurIdx >= 0 ? Number(args[blurIdx + 1]) : 18;
+if (!(BLUR >= 0)) { console.error("--blur 要是 >= 0 的數字"); process.exit(1); }
 const shadeIdx = args.indexOf("--shade");
 const SHADE = shadeIdx >= 0 ? args[shadeIdx + 1] : "deep";     // deep＝深階（預設，對比撐得住）／accent＝套色
 const posIdx = args.indexOf("--pos");
@@ -238,6 +275,25 @@ const LOGO_GAP = 10;       // 標誌與六個字之間
    科別名 46px → 卡片上 9.6px、診所名 30px → 6.3px（和標誌一起讀）。 */
 const BAND_H = 104;
 const BAND_PAD = 38;
+/* ⚠⚠ 帶子裡的字**左右要用這個**，不是 BAND_PAD（2026-08-23，使用者拿手機截圖回報
+   「帶子上的字都被裁到了」）。訊息 app **會把 1.91:1 的圖左右裁掉**：
+
+     從截圖實測（iPhone 1125×2436，量帶高÷卡片寬再和原圖的 104/1200 比）
+       LINE      卡片寬 683px・帶高 66px → 只看得到原圖寬度的 **89.7%**（左右各裁 5.2% ≈ 62px）
+       iMessage  卡片寬 581px・帶高 64px → 只看得到原圖寬度的 **78.7%**（左右各裁 10.7% ≈ 128px）
+     兩邊都是**對稱**裁：LINE 切掉「一」與「診所／永樂街」，iMessage 切掉「一般牙」與同樣那幾個字。
+     ⚠⚠ **2026-08-24 更正：兩個 app 的名字我一度標反了。** 裁得最兇的是 **iMessage**（78.7%），
+       不是 LINE（89.7%）。安全區 160px 的結論沒有變（本來就照最壞的 78.7% 訂），錯的只有標籤。
+       辨認方法：**LINE 的泡泡是綠的（rgb 109,230,123）、卡片底下沒有網址；iMessage 是灰泡泡、
+       底下有一行 fangren.net**。下次量之前先看泡泡顏色，不要照檔名順序猜。
+
+   ⚠⚠ 這推翻了 ILLUSTRATION.md 第十一節原本寫的「**LINE 不裁圖**」。那一條是 2026-08-22
+     量首頁那張 **1.512:1** 的照片得到的，而 **LINE 的卡片槽本身就約 1.5:1** ——
+     它剛好等於槽的比例才沒被裁。1.91:1 的圖一定會被切掉兩邊。
+
+   所以字要收在**畫面中央 73% 之內**：160 ＝ 1200 的 13.3%，比 iMessage 實測的 10.7% 多 2.6%
+   當餘裕（144 試過，最長的「一般牙科・定期檢查」離裁切線只剩 10px，太緊）。⚠ 帶子的**底色仍然滿版**（left:0/right:0），只有內容退進來。 */
+const BAND_PAD_X = 160;
 const G_NAME_FS = 46;
 const G_CLINIC_FS = 30;
 const G_LOGO_H = 26;
@@ -251,27 +307,35 @@ const BAND_BOT = "#2d3037";   // ＝ 站上的 --band-bot，接住紙色那一�
 const hex2rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const [ar, ag, ab] = hex2rgb(SHADE === "deep" ? DEEP[spec] : accent);
 const [pr, pg_, pb] = hex2rgb(PAPER);
+/* multiply 那一層的來源色：--tintcolor 優先，沒給就用該科的套色 */
+const [mr, mg, mb] = hex2rgb(TINT_COLOR || accent);
 
 const glassHtml = `<!doctype html><meta charset="utf-8"><style>
 ${fontFace(700)}${fontFace(500)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{width:${W}px;height:${H}px;position:relative;overflow:hidden}
+body{width:${W}px;height:${H}px;position:relative;overflow:hidden;isolation:isolate}
 img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
 /* 頁首那條玻璃的做法（PALETTE.md 第六之三節）：模糊 ＋ 低透明度的套色 ＋ 一條細邊。
    ⚠ 底下再墊一層很淡的深色漸層，只為了讓紙色的字撐得住對比 —— 不是裝飾。 */
 .band{position:absolute;left:0;right:0;top:0;height:${BAND_H}px;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 ${BAND_PAD}px;
-  background:
+  padding:0 ${BAND_PAD_X}px;
+  ${BLEND === "alpha" ? `background:
     linear-gradient(180deg, rgba(42,44,39,${(INK + 0.06).toFixed(3)}) 0%,
                             rgba(42,44,39,${INK.toFixed(3)}) 55%,
                             rgba(42,44,39,${Math.max(0, INK - 0.06).toFixed(3)}) 100%),
     linear-gradient(180deg, rgba(${ar},${ag},${ab},${(TINT + 0.05).toFixed(3)}) 0%,
                             rgba(${ar},${ag},${ab},${TINT.toFixed(3)}) 62%,
                             rgba(${ar},${ag},${ab},${(TINT - 0.05).toFixed(3)}) 100%);
-  backdrop-filter:blur(18px) saturate(1.12);
-  -webkit-backdrop-filter:blur(18px) saturate(1.12);
+  backdrop-filter:blur(${BLUR}px) saturate(1.12);
+  -webkit-backdrop-filter:blur(${BLUR}px) saturate(1.12);` : ``}
   border-bottom:1px solid rgba(${pr},${pg_},${pb},.30)}
+/* --blend multiply：模糊／上色／文字拆成三層，上色那一層必須在
+   backdrop-filter 元素**外面**，否則它只跟自己混（見上面 --blend 的註解）。 */
+.bandblur,.bandtint,.bandink{position:absolute;left:0;right:0;top:0;height:${BAND_H}px}
+.bandblur{backdrop-filter:blur(${BLUR}px) saturate(1.12);-webkit-backdrop-filter:blur(${BLUR}px) saturate(1.12)}
+.bandtint{background:rgb(${mr},${mg},${mb});mix-blend-mode:multiply}
+.bandink{background:rgba(42,44,39,${INK.toFixed(3)})}
 /* ⚠ 地名的排法**逐項照首頁 .brand-text 量來的**（2026-08-22 使用者：
    「BC 的位置很刻意，首頁上的擺放看起來就不刻意、很講究」）：
    ・同一條 baseline 並排，不是上下兩行
@@ -349,6 +413,7 @@ body.nojustify-clinic .stack .clinic{text-align-last:right}
   width:${(G_CLINIC_FS * 2.156).toFixed(2)}px}
 </style>
 <img class="bg" src="${imgUri}">
+${BLEND === "multiply" ? `<div class="bandblur"></div><div class="bandtint"></div>${INK > 0 ? `<div class="bandink"></div>` : ``}` : ``}
 <div class="band">
   <span class="left pair">
     <span class="name">${label}</span>
@@ -589,6 +654,27 @@ if ((STYLE === "glass" || (STYLE === "plain" && !NOMARK)) && LOCPOS === "stack" 
   if (extra > 0.15) {
     await pg.evaluate((n) => document.body.classList.add(n === "loc" ? "nojustify" : "nojustify-clinic"), narrow);
     console.log("  ⚠ 超過 0.15em，那一行不 justify，改成靠右切齊（不然會變成一排孤字）");
+  }
+}
+
+/* ⚠⚠ 帶子裡的字一定要待在安全區內 —— 訊息 app 會把 1.91:1 的圖左右裁掉
+   （成因與實測見 BAND_PAD_X 的註解）。2026-08-23 加，因為 general 那張是
+   **已經上線之後**才被使用者用手機截圖抓到「帶子上的字都被裁到了」。 */
+if (STYLE === "glass") {
+  const g = await pg.evaluate(() => {
+    const l = document.querySelector(".band .left").getBoundingClientRect();
+    const r = document.querySelector(".band .right").getBoundingClientRect();
+    return { la: l.left, lb: l.right, ra: r.left, rb: r.right };
+  });
+  const leftIn = g.la, rightIn = W - g.rb, gap = g.ra - g.lb;
+  console.log(`帶子安全區：左 ${leftIn.toFixed(1)}px・右 ${rightIn.toFixed(1)}px（要 ≥ ${BAND_PAD_X}）　中間空隙 ${gap.toFixed(1)}px`);
+  if (leftIn < BAND_PAD_X - 1 || rightIn < BAND_PAD_X - 1) {
+    console.error(`× 帶子裡的字超出安全區（要離畫面邊緣 ≥ ${BAND_PAD_X}px）—— LINE 會把它裁掉。`);
+    process.exit(1);
+  }
+  if (gap < 24) {
+    console.error(`× 科別名和診所名之間只剩 ${gap.toFixed(1)}px —— 科別名太長或字級調過頭。`);
+    process.exit(1);
   }
 }
 

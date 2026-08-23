@@ -106,6 +106,21 @@ const OG_FALLBACK = { file: "assets/og-home.jpg", w: 1200, h: 628,
 const OG_ALT = {
   general: "白天的永樂街轉角，芳仁牙醫診所的騎樓前：醫師和牽著腳踏車的老先生站著聊天，"
          + "小男孩向對街的醫師揮手，學生騎車經過。",
+  perio: "診間裡，戴著護目鏡的醫師握著一支粗水管，用青綠色的水柱沖洗一顆站在土堆裡的大牙齒；"
+       + "牙齒瞇著眼笑，被沖到的那一側已經乾淨發亮，一群細菌狼狽地往右邊逃。",
+};
+/* ⚠⚠ **訊息卡的描述可以和搜尋結果的描述不一樣**（2026-08-24 使用者指定）。
+   兩者原本共用同一個字串（descOf() 從那一頁自己的開場拼出來的），但它們的工作不同：
+   ・`<meta name="description">` → **Google 搜尋結果**那兩行，要有科別名與關鍵字，
+     Google 大約 78 個中文字截斷。**這個不要動。**
+   ・`og:description` → **訊息 app 的預覽卡**那兩行，讀的人已經看到圖與標題了，
+     這裡該放的是一句想讓他記住的話。
+   所以下面這一份只覆寫 og:description，沒填的科目照舊沿用 descOf()。
+   ⚠ 兩句都是**站上原本就有的字**（牙周的 close、一般牙科的 flowTitle），不是另外寫的文案 ——
+     動它之前先讀 COPY.md 第九節。 */
+const OG_DESC = {
+  general: "在芳仁，我們是這樣想的",
+  perio: "把牙周病控制好 —— 靠治療，也靠你每天的清潔，檢查完一起安排。",
 };
 const ogImage = (spec) => {
   const rel = `assets/og-topic-${spec}.jpg`;
@@ -160,7 +175,7 @@ const seoBlock = (spec, t, canonical, cnt) => {
 <meta property="og:type" content="website">
 <meta property="og:url" content="${canonical}">
 <meta property="og:title" content="${title}">
-<meta property="og:description" content="${desc}">
+<meta property="og:description" content="${OG_DESC[spec] || desc}">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="${SITE}/${og.file}">
 <meta property="og:image:width" content="${og.w}">
