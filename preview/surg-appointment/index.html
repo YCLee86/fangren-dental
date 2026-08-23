@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>提案：口腔外科約診規則｜芳仁牙醫</title>
+<style>
+/* ==========================================================================
+   提案（2026-08-23 開）：**口腔外科的約診規則**（A4 一張）
+   使用者：「關於口腔外科約診 要制訂新的約診規則 —— 口外：約診前一週會打電話
+   通知，若當下未接電話，到隔天也未回撥電話就會取消預約；前兩天 Line 也會再
+   提醒，未回覆就會取消預約。參考附圖是診所已經有的表單和約診相關協議。」
+
+   ⚠ 這一頁是**自己寫的獨立頁**，不是 index.html 的複本 ——
+     所以 CLAUDE.md 第八節那四個坑（相對路徑、計數器、切換條插在哪、
+     preview 進不進得了 _site）只有最後一個要管，而那一個本來就已經就位。
+     做法同 /history/clinic-schedule.html 那一輪。
+
+   ⚠ 顏色一律回 PALETTE.md 拿，**沒有新增任何色值**：
+       口腔外科 套色 #8e6299（只當填色，白字 4.82）
+       口腔外科 深階 #784e84（卡上的字 5.93）
+       磚紅 --brick #AF4C52（卡上的字 4.80）＝ 官方色票，門口那張告示也是用它標紅線
+       紙 #e2e5e6／卡 #f4f4f5／線 #cdd0d2／墨 #2a2c27／柔墨 #5c5f57
+     ⚠ #8e6299 在卡色上只有 4.38，**不可以拿來當字**（PALETTE.md 第六之九節）。
+
+   ⚠⚠ 版面只有**一個旋鈕 --u**：所有字級、間距、內距都寫成 calc(k * var(--u))。
+     預設 --u ＝ 1cqw；.sheet 是 container，A4 直式扣掉左右內距各 10mm 之後
+     內容寬 190mm，所以 1cqw ＝ 1.90mm。
+     **約診單版整組縮到 .88cqw** —— 那一版多了簽名欄，不縮會超出 A4 77mm
+     （第一版量到的）。要調鬆緊只改那一個數字，不要逐條改字級。
+
+   跑法：直接開檔。量測面板在切換條裡，會現場印出 mm／pt 與「離下緣還剩幾 mm」。
+   ========================================================================== */
+:root {
+  --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --note: #f9f9fa;
+  --ink: #2a2c27; --ink-soft: #5c5f57; --brick: #AF4C52;
+  --accent: #8e6299; --accent-deep: #784e84;
+  --u: 1cqw;
+}
+/* 強調色切成「墨」那一組：黑白影印時用（診所常常是黑白印） */
+body[data-ink="mono"] { --accent: #4c4948; --accent-deep: #2a2c27; --brick: #2a2c27; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 1.2rem .8rem 15rem; background: #d8dbdd; color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ---- A4 直式（210×297mm）。螢幕上照同一個比例縮到版面寬度 ---- */
+.sheet {
+  width: min(100%, 210mm); aspect-ratio: 210 / 297; margin: 0 auto;
+  background: var(--card); color: var(--ink);
+  padding: 12mm 10mm 9mm; display: flex; flex-direction: column;
+  box-shadow: 0 1px 2px rgba(42,44,39,.07), 0 4px 10px rgba(42,44,39,.09);
+  container-type: inline-size;
+}
+body[data-bg="white"] .sheet { background: #fff; }
+body[data-ver="post"] .sheet { --u: 1.06cqw; }   /* 貼牆上要遠一點看得到；1.06 量出來離頁尾還有 12mm。
+                                                    ⚠ 1.10 只剩 1.8mm，換一套字型多折一行就會撞上頁尾。 */
+body[data-ver="slip"] .sheet { --u: .85cqw; }    /* 多了簽名欄，不縮會超出 A4 77mm（第一版量到的）。
+                                                    ⚠ .90 剛好貼到頁尾（餘 0mm）、.88 只餘 1.6mm ——
+                                                    容器裡是 WQY 正黑、診所的電腦是微軟正黑／PingFang，
+                                                    折行不會一樣，所以留 11mm（約一行半）當餘裕。 */
+
+/* ---- 抬頭：診所名在最上面一行，標題自己一段 ----
+   曝光原則第 2 題（TEAM.md 第六節）：這張紙會被帶回家、會被拍照傳給家人，
+   所以**標誌旁邊一定要有「芳仁牙醫診所」六個字**，不能只放一團形狀。 */
+.ap-brand { display: flex; align-items: center; gap: calc(2 * var(--u)); color: var(--ink); }
+.ap-brand svg { width: calc(11.6 * var(--u)); height: auto; display: block; }
+.ap-brand b { font-size: calc(2.9 * var(--u)); letter-spacing: .06em; font-weight: 700; }
+.ap-brand small { font-size: calc(2 * var(--u)); letter-spacing: .06em; color: var(--ink-soft); }
+
+.ap-title { margin: calc(4.4 * var(--u)) 0 0; padding-bottom: calc(2.4 * var(--u));
+            border-bottom: calc(.35 * var(--u)) solid var(--accent); }
+.ap-title b { display: block; font-size: calc(6.6 * var(--u)); line-height: 1.15;
+              letter-spacing: .06em; color: var(--accent-deep); font-weight: 700; }
+.ap-title em { display: block; margin-top: calc(1.6 * var(--u)); font-style: normal;
+               font-size: calc(2.7 * var(--u)); letter-spacing: .05em; color: var(--ink); }
+
+/* ---- 前言：為什麼有這張紙。講的是「時段」，不是「規定」 ---- */
+.ap-why { margin: calc(3.2 * var(--u)) 0 0; font-size: calc(2.25 * var(--u));
+          line-height: 1.85; letter-spacing: .01em; color: var(--ink); }
+
+/* ---- 三步：前一週、前兩天、當天 ----
+   ⚠ 左欄是時間，右欄是內容。時間用**填色的塊**（白字 4.82 過 AA），
+     「會取消」那一句用磚紅（卡上 4.80 過 AA）。 */
+.ap-steps { margin: calc(3.4 * var(--u)) 0 0; padding: 0; list-style: none;
+            display: grid; gap: calc(2.6 * var(--u)); }
+.ap-step { display: grid; grid-template-columns: calc(21 * var(--u)) 1fr;
+           column-gap: calc(3.4 * var(--u)); align-items: start; }
+.ap-when { text-align: center; }
+.ap-when b { display: block; background: var(--accent); color: var(--card);
+             border-radius: calc(1.6 * var(--u)); padding: .55em 0;
+             font-size: calc(2.3 * var(--u)); letter-spacing: .04em; font-weight: 700; }
+.ap-when .ico { display: block; margin: calc(1.4 * var(--u)) auto 0;
+                width: calc(6.4 * var(--u)); height: calc(6.4 * var(--u)); color: var(--accent-deep); }
+.ap-when .ico svg { width: 100%; height: 100%; display: block;
+                    fill: none; stroke: currentColor; stroke-width: 1.7;
+                    stroke-linecap: round; stroke-linejoin: round; }
+.ap-body h3 { margin: 0; font-size: calc(3.1 * var(--u)); line-height: 1.3;
+              letter-spacing: .03em; color: var(--ink); font-weight: 700; }
+.ap-body p { margin: calc(1.2 * var(--u)) 0 0; font-size: calc(2.25 * var(--u));
+             line-height: 1.8; letter-spacing: .01em; color: var(--ink); }
+.ap-body .warn { margin-top: calc(1.4 * var(--u)); font-size: calc(2.25 * var(--u));
+                 line-height: 1.7; color: var(--brick); font-weight: 700;
+                 display: flex; gap: calc(1.4 * var(--u)); }
+.ap-body .warn::before { content: ""; flex: none; width: calc(.5 * var(--u));
+                         border-radius: calc(.25 * var(--u)); background: var(--brick); }
+/* ⚠ 強調的詞加 nowrap：不加的話斷點會落在詞中間（「未回／撥」），
+     紅字被切成兩截就不像一個詞了。加了之後斷點自然落到它前面。 */
+.ap-body .warn b { white-space: nowrap; }
+
+/* ---- 改期與取消：沿用診所現有的〈預約協議〉，不是新規定 ---- */
+.ap-change { margin: calc(3.4 * var(--u)) 0 0; background: var(--note);
+             border: calc(.18 * var(--u)) solid var(--rule);
+             border-left: calc(.8 * var(--u)) solid var(--accent);
+             border-radius: calc(1.2 * var(--u)); padding: calc(2.2 * var(--u)) calc(2.8 * var(--u)); }
+.ap-change h3 { margin: 0; font-size: calc(2.5 * var(--u)); letter-spacing: .04em;
+                color: var(--accent-deep); }
+.ap-change p { margin: calc(1.2 * var(--u)) 0 0; font-size: calc(2.15 * var(--u));
+               line-height: 1.8; color: var(--ink); }
+.ap-change b { color: var(--brick); }
+
+/* ---- 收尾：一句話，把好處留給他 ---- */
+.ap-close { margin: calc(3.4 * var(--u)) 0 0; font-size: calc(2.5 * var(--u));
+            line-height: 1.7; letter-spacing: .04em; color: var(--accent-deep); font-weight: 700; }
+
+/* ---- 約診單版才有的那一塊：預約資訊 ＋ 簽名 ----
+   ⚠ 欄位的名字逐字照診所現有的兩份表單（初診病歷表、根管治療同意書）：
+     姓名／齒位／病歷號碼／聯絡電話，日期寫「民國　年　月　日」。 */
+.ap-slip { margin: calc(3.2 * var(--u)) 0 0;
+           border-top: calc(.18 * var(--u)) dashed var(--rule); padding-top: calc(2.6 * var(--u)); }
+body[data-ver="post"] .ap-slip { display: none; }
+.ap-slip h3 { margin: 0 0 calc(2 * var(--u)); font-size: calc(2.4 * var(--u));
+              letter-spacing: .04em; color: var(--accent-deep); }
+.ap-row { display: flex; align-items: baseline; gap: calc(3 * var(--u));
+          margin-bottom: calc(2.2 * var(--u)); font-size: calc(2.05 * var(--u)); }
+.ap-row label { display: flex; align-items: baseline; gap: calc(1 * var(--u));
+                white-space: nowrap; flex: 1 1 auto; }
+.ap-row i { font-style: normal; color: var(--ink-soft); flex: none; }
+.ap-row u { flex: 1 1 auto; min-width: calc(6 * var(--u)); text-decoration: none;
+            border-bottom: calc(.18 * var(--u)) solid var(--ink-soft); height: 1.4em; }
+.ap-confirm { margin: 0; font-size: calc(2.05 * var(--u)); line-height: 1.75; }
+.ap-qr { float: right; width: calc(13 * var(--u)); margin: 0 0 calc(1 * var(--u)) calc(2.6 * var(--u));
+         text-align: center; }
+body[data-qr="off"] .ap-qr { display: none; }
+.ap-qr svg { width: 100%; height: auto; display: block; }
+.ap-qr small { display: block; margin-top: calc(.7 * var(--u)); font-size: calc(1.6 * var(--u));
+               line-height: 1.35; color: var(--ink-soft); }
+
+/* ---- 頁尾：地址與電話（他要回撥的就是這一支） ---- */
+.ap-foot { margin-top: auto; padding-top: calc(2.6 * var(--u));
+           border-top: calc(.18 * var(--u)) solid var(--rule);
+           display: flex; align-items: baseline; gap: calc(2.4 * var(--u)); flex-wrap: wrap;
+           font-size: calc(1.95 * var(--u)); letter-spacing: .02em; color: var(--ink-soft); }
+.ap-foot b { color: var(--ink); font-size: calc(2.15 * var(--u)); }
+.ap-foot .tel { color: var(--accent-deep); font-weight: 700; font-size: calc(2.4 * var(--u)); }
+
+/* ---- 印出來的時候：整頁只留紙張本身 ---- */
+@page { size: A4 portrait; margin: 0; }
+@media print {
+  body { background: #fff; padding: 0; }
+  .pv-bar { display: none !important; }
+  .sheet { width: 210mm; height: 297mm; aspect-ratio: auto; box-shadow: none; }
+}
+
+/* ---- 切換條（提案用，定案時整段刪掉） ---- */
+.pv-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 999;
+  background: rgba(244,244,245,.94); backdrop-filter: blur(8px) saturate(1.1);
+  border-top: 1px solid var(--rule); padding: .5rem .7rem calc(.5rem + env(safe-area-inset-bottom));
+  font-size: 12px; line-height: 1.4; max-height: 46vh; overflow: auto;
+}
+.pv-row { display: flex; align-items: center; gap: .3rem; flex-wrap: wrap; margin-bottom: .34rem; }
+.pv-row:last-child { margin-bottom: 0; }
+.pv-lab { width: 3.4em; flex: none; color: var(--ink-soft); }
+.pv-bar button { font: inherit; padding: .28rem .5rem; border-radius: 8px; cursor: pointer;
+                 border: 1px solid var(--rule); background: #fff; color: var(--ink); }
+.pv-bar button[aria-pressed="true"] { background: #784e84; border-color: #784e84; color: #fff; }
+.pv-panel { margin-top: .4rem; padding-top: .4rem; border-top: 1px dashed var(--rule);
+            color: var(--ink-soft); font-size: 11.5px; }
+.pv-panel b { color: var(--ink); }
+</style>
+</head>
+<body data-ver="slip" data-bg="paper" data-ink="spec" data-qr="on">
+
+<div class="sheet" id="sheet">
+
+  <div class="ap-brand">
+    <!-- 標誌取自 index.html 頁首那一條（原廠向量），一個節點都沒有改。 -->
+    <svg viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g transform="translate(-232.8729 -333.8286)">
+        <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
+      </g>
+    </svg>
+    <b>芳仁牙醫診所</b>
+    <small>雲林斗六・永樂街</small>
+  </div>
+
+  <div class="ap-title">
+    <b>口腔外科　約診規則</b>
+    <em>約好的那個時段，會留給您</em>
+  </div>
+
+  <p class="ap-why">口腔外科的診次不是每天都有，一個時段一次只能留給一位。所以約好之後到看診當天，診所會再和您確認兩次 —— 一次電話、一次 LINE。</p>
+
+  <ol class="ap-steps">
+
+    <li class="ap-step">
+      <div class="ap-when">
+        <b>前一週</b>
+        <span class="ico"><!-- 線條空心的話筒。素材出處：Lucide "phone"，ISC 授權，https://lucide.dev
+             —— 這一行註解就是署名，改圖或搬檔的時候不要刪。這一條和站上窄帶那支逐字相同。 -->
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 0 1-2.1 1.9 18.8 18.8 0 0 1-8.2-2.9 18.5 18.5 0 0 1-5.7-5.7A18.8 18.8 0 0 1 2.6 4.7 1.9 1.9 0 0 1 4.5 2.6h2.8a1.9 1.9 0 0 1 1.9 1.6c.1.9.3 1.8.7 2.7a1.9 1.9 0 0 1-.4 2L8.3 10.1a15.2 15.2 0 0 0 5.7 5.7l1.2-1.2a1.9 1.9 0 0 1 2-.4c.9.4 1.8.6 2.7.7a1.9 1.9 0 0 1 1.6 2Z"/></svg>
+        </span>
+      </div>
+      <div class="ap-body">
+        <h3>診所會打電話跟您確認</h3>
+        <p>看診前一週，診所會撥電話跟您確認這一次的約診。當下不方便接沒有關係，看到未接來電再回撥就好。</p>
+        <p class="warn"><span>到<b>隔天仍未回撥</b>，這次的預約會取消。</span></p>
+      </div>
+    </li>
+
+    <li class="ap-step">
+      <div class="ap-when">
+        <b>前兩天</b>
+        <span class="ico"><!-- 訊息框。素材出處：Lucide "message-square"，ISC 授權，https://lucide.dev -->
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+        </span>
+      </div>
+      <div class="ap-body">
+        <h3>LINE 會再提醒一次</h3>
+        <p>看診前兩天，診所會用 LINE 再提醒一次時間。收到訊息回覆一下，讓診所知道您會來。</p>
+        <p class="warn"><span><b>沒有回覆</b>，這次的預約會取消。</span></p>
+      </div>
+    </li>
+
+    <li class="ap-step">
+      <div class="ap-when">
+        <b>當天</b>
+        <span class="ico"><!-- 時鐘。素材出處：Lucide "clock"，ISC 授權，https://lucide.dev -->
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 6.6V12l3.6 2.1"/></svg>
+        </span>
+      </div>
+      <div class="ap-body">
+        <h3>提前抵達、準時治療</h3>
+        <p>口腔外科的處置需要完整的時間，療程倉促必然影響醫療品質。請提前一點到診所，讓治療能準時開始。</p>
+      </div>
+    </li>
+
+  </ol>
+
+  <div class="ap-change">
+    <h3>需要改期或取消</h3>
+    <p>請至少<b>兩天前（不含假日）</b>打電話通知診所，改期或取消<b>限一次</b>。這一條和診所現行的〈預約協議〉相同。</p>
+  </div>
+
+  <p class="ap-close">一通電話、一則回覆，這個時段就穩穩留著。</p>
+
+  <div class="ap-slip">
+    <h3>約診確認</h3>
+    <div class="ap-row">
+      <label style="flex:1.2"><i>姓名</i><u></u></label>
+      <label><i>齒位</i><u></u></label>
+      <label><i>病歷號碼</i><u></u></label>
+    </div>
+    <div class="ap-row">
+      <label style="flex:2"><i>看診時間　民國</i><u></u><i>年</i><u></u><i>月</i><u></u><i>日</i><u></u><i>時</i><u></u><i>分</i></label>
+      <label style="flex:1.4"><i>聯絡電話</i><u></u></label>
+    </div>
+    <p class="ap-confirm">
+      <span class="ap-qr">
+        <!-- LINE 官方帳號的 QR。網址逐字取自 clinic.json 的 sameAs（使用者提供、已確認的系統 ID），不要改成 @fafa070。
+             重產：node -e "import('./tools/qr.mjs').then(m=>{const{n,d}=m.qrPath('https://line.me/R/ti/p/@445rpiiv','M');console.log(n,d)})" -->
+        <svg viewBox="-4 -4 37 37" role="img" aria-label="掃描加芳仁牙醫診所的 LINE"><rect x="-4" y="-4" width="37" height="37" fill="#fff"/><path fill="#111" d="M0 0h7v1h-7zM8 0h3v1h-3zM12 0h4v1h-4zM17 0h3v1h-3zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h4v1h-4zM13 1h1v1h-1zM16 1h1v1h-1zM18 1h1v1h-1zM20 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM9 2h2v1h-2zM16 2h1v1h-1zM18 2h2v1h-2zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 3h1v1h-1zM10 3h2v1h-2zM14 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM10 4h2v1h-2zM14 4h1v1h-1zM16 4h2v1h-2zM19 4h1v1h-1zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM9 5h1v1h-1zM12 5h2v1h-2zM15 5h2v1h-2zM19 5h2v1h-2zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM8 7h1v1h-1zM10 7h2v1h-2zM15 7h3v1h-3zM19 7h1v1h-1zM0 8h1v1h-1zM2 8h2v1h-2zM5 8h3v1h-3zM9 8h1v1h-1zM11 8h3v1h-3zM15 8h1v1h-1zM17 8h1v1h-1zM22 8h1v1h-1zM25 8h1v1h-1zM27 8h2v1h-2zM0 9h5v1h-5zM8 9h1v1h-1zM11 9h1v1h-1zM13 9h3v1h-3zM19 9h1v1h-1zM21 9h2v1h-2zM24 9h1v1h-1zM28 9h1v1h-1zM3 10h4v1h-4zM8 10h1v1h-1zM13 10h1v1h-1zM16 10h3v1h-3zM21 10h2v1h-2zM26 10h2v1h-2zM0 11h2v1h-2zM3 11h1v1h-1zM7 11h2v1h-2zM10 11h3v1h-3zM16 11h1v1h-1zM19 11h1v1h-1zM23 11h1v1h-1zM28 11h1v1h-1zM2 12h1v1h-1zM6 12h1v1h-1zM8 12h1v1h-1zM10 12h2v1h-2zM14 12h2v1h-2zM17 12h3v1h-3zM25 12h2v1h-2zM4 13h2v1h-2zM7 13h3v1h-3zM12 13h1v1h-1zM14 13h1v1h-1zM16 13h4v1h-4zM22 13h1v1h-1zM26 13h3v1h-3zM3 14h1v1h-1zM5 14h4v1h-4zM10 14h1v1h-1zM12 14h2v1h-2zM15 14h2v1h-2zM18 14h2v1h-2zM21 14h1v1h-1zM24 14h1v1h-1zM26 14h3v1h-3zM1 15h5v1h-5zM7 15h2v1h-2zM11 15h1v1h-1zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM20 15h1v1h-1zM23 15h1v1h-1zM27 15h1v1h-1zM0 16h1v1h-1zM6 16h3v1h-3zM10 16h3v1h-3zM14 16h2v1h-2zM21 16h1v1h-1zM23 16h3v1h-3zM27 16h1v1h-1zM1 17h1v1h-1zM3 17h1v1h-1zM10 17h1v1h-1zM14 17h1v1h-1zM16 17h1v1h-1zM18 17h1v1h-1zM20 17h1v1h-1zM23 17h1v1h-1zM25 17h3v1h-3zM0 18h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM13 18h3v1h-3zM20 18h1v1h-1zM23 18h2v1h-2zM26 18h1v1h-1zM2 19h2v1h-2zM8 19h2v1h-2zM12 19h8v1h-8zM21 19h1v1h-1zM23 19h2v1h-2zM26 19h1v1h-1zM1 20h2v1h-2zM5 20h2v1h-2zM9 20h6v1h-6zM17 20h2v1h-2zM20 20h7v1h-7zM8 21h1v1h-1zM10 21h3v1h-3zM16 21h1v1h-1zM20 21h1v1h-1zM24 21h5v1h-5zM0 22h7v1h-7zM8 22h1v1h-1zM10 22h3v1h-3zM14 22h1v1h-1zM16 22h1v1h-1zM19 22h2v1h-2zM22 22h1v1h-1zM24 22h2v1h-2zM27 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h2v1h-2zM11 23h4v1h-4zM16 23h1v1h-1zM19 23h2v1h-2zM24 23h2v1h-2zM28 23h1v1h-1zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM9 24h2v1h-2zM12 24h1v1h-1zM17 24h1v1h-1zM20 24h5v1h-5zM26 24h2v1h-2zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM8 25h1v1h-1zM10 25h4v1h-4zM15 25h4v1h-4zM23 25h3v1h-3zM28 25h1v1h-1zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h2v1h-2zM12 26h1v1h-1zM19 26h1v1h-1zM23 26h1v1h-1zM26 26h1v1h-1zM28 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM13 27h3v1h-3zM18 27h2v1h-2zM22 27h1v1h-1zM24 27h2v1h-2zM27 27h1v1h-1zM0 28h7v1h-7zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h2v1h-2zM15 28h1v1h-1zM18 28h5v1h-5zM24 28h1v1h-1zM27 28h1v1h-1z"/></svg>
+        <small>加診所 LINE<br>收約診提醒</small>
+      </span>
+      我已了解上述約診規則，上面留的電話與 LINE 都可以聯絡到我；若前一週的電話未回撥、或前兩天的 LINE 未回覆，同意診所取消這一次的預約。
+    </p>
+    <div class="ap-row" style="margin-top:calc(2.4 * var(--u)); margin-bottom:0">
+      <label style="flex:1.4"><i>簽名</i><u></u></label>
+      <label><i>日期　民國</i><u></u><i>年</i><u></u><i>月</i><u></u><i>日</i></label>
+    </div>
+  </div>
+
+  <div class="ap-foot">
+    <b>芳仁牙醫診所</b>
+    <span>雲林縣斗六市永樂街&nbsp;70&nbsp;號</span>
+    <span class="tel">(05)5339-369</span>
+  </div>
+
+</div>
+
+<!-- ==========================================================================
+     切換條（提案用）。⚠ 定案時整段刪掉。
+     ?ver=post|slip　?bg=paper|white　?ink=spec|mono　?qr=on|off
+     ⚠ 正規式寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 第九節）。
+     ========================================================================== -->
+<div class="pv-bar" id="pvBar">
+  <div class="pv-row">
+    <span class="pv-lab">版本</span>
+    <button data-k="ver" data-v="slip">約診單（有簽名欄，給病人帶走）</button>
+    <button data-k="ver" data-v="post">公告（貼櫃檯／診間）</button>
+  </div>
+  <div class="pv-row">
+    <span class="pv-lab">底色</span>
+    <button data-k="bg" data-v="paper">紙色</button>
+    <button data-k="bg" data-v="white">純白（省墨）</button>
+    <span class="pv-lab">強調</span>
+    <button data-k="ink" data-v="spec">口外紫</button>
+    <button data-k="ink" data-v="mono">墨（黑白印）</button>
+  </div>
+  <div class="pv-row">
+    <span class="pv-lab">QR</span>
+    <button data-k="qr" data-v="on">放 LINE</button>
+    <button data-k="qr" data-v="off">不放</button>
+  </div>
+  <div class="pv-panel" id="pvPanel">量測中…</div>
+</div>
+
+<script>
+/* 切換條 ＋ 量測面板。
+   ⚠ 這一頁要判斷的第一件事是「內容有沒有超出 A4」—— 螢幕上 .sheet 是用
+     aspect-ratio 撐的，內容超出去只會**溢出**、不會把紙撐高，肉眼很容易看不出來
+     （尤其手機上整張紙縮得很小）。所以面板直接印「還剩幾 mm／超出幾 mm」。
+   ⚠ 字級一律換算成 mm 與 pt 再印：cqw 對使用者沒有意義，他要判斷的是
+     「印出來看不看得清楚」。 */
+(function () {
+  var body = document.body, sheet = document.getElementById('sheet'), panel = document.getElementById('pvPanel');
+
+  function mmPerPx() { return 210 / sheet.getBoundingClientRect().width; }
+  function fs(sel) {
+    var el = document.querySelector(sel);
+    return el ? parseFloat(getComputedStyle(el).fontSize) * mmPerPx() : null;
+  }
+  function paint() {
+    var k = mmPerPx();
+    var box = sheet.getBoundingClientRect();
+    var padB = parseFloat(getComputedStyle(sheet).paddingBottom);
+    var foot = document.querySelector('.ap-foot').getBoundingClientRect();
+    /* 最後一塊看得見的內容（公告版是收尾句，約診單版是簽名那一塊） */
+    var blocks = [].slice.call(sheet.children).filter(function (e) {
+      return !e.classList.contains('ap-foot') && e.offsetParent !== null;
+    });
+    var lastBottom = blocks[blocks.length - 1].getBoundingClientRect().bottom;
+    var left = (foot.top - lastBottom) * k;
+    var used = (foot.bottom - box.top) * k;
+    var mm = function (x) { return x.toFixed(1) + 'mm'; };
+    var pt = function (x) { return (x / 25.4 * 72).toFixed(1) + 'pt'; };
+    var sizes = [['大標', '.ap-title b'], ['小標', '.ap-body h3'], ['內文', '.ap-body p'],
+                 ['時間塊', '.ap-when b'], ['簽名欄', '.ap-confirm'], ['頁尾', '.ap-foot span']]
+      .map(function (p) { var v = fs(p[1]); return v ? p[0] + ' ' + mm(v) + '／' + pt(v) : ''; })
+      .filter(Boolean).join('　');
+    panel.innerHTML =
+      '版本 <b>' + (body.dataset.ver === 'post' ? '公告' : '約診單') + '</b>' +
+      '　A4 直 210×297mm，縮放旋鈕 --u ＝ ' +
+      getComputedStyle(sheet).getPropertyValue('--u').trim() + '<br>' +
+      '內容高 <b>' + mm(used) + '</b>，' +
+      (left >= 0 ? '內容與頁尾之間空 <b>' + mm(left) + '</b>'
+                 : '<span style="color:#89202d">超出 A4 <b>' + mm(-left) + '</b></span>') + '<br>' +
+      sizes + '<br>' +
+      '對比度（卡色 #f4f4f5 上）：紫字 5.93、磚紅 4.80、白字壓紫塊 4.82 —— <b>三項都過 AA 4.5</b>';
+  }
+
+  document.querySelectorAll('.pv-bar button[data-k]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      body.dataset[b.dataset.k] = b.dataset.v;
+      document.querySelectorAll('.pv-bar button[data-k]').forEach(function (x) {
+        x.setAttribute('aria-pressed', String(body.dataset[x.dataset.k] === x.dataset.v));
+      });
+      paint();
+    });
+  });
+  ['ver', 'bg', 'ink', 'qr'].forEach(function (k) {
+    var m = new RegExp('[?&]' + k + '=([a-z0-9]+)').exec(location.search);
+    if (m) body.dataset[k] = m[1];
+  });
+  document.querySelectorAll('.pv-bar button[data-k]').forEach(function (x) {
+    x.setAttribute('aria-pressed', String(body.dataset[x.dataset.k] === x.dataset.v));
+  });
+
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(paint);
+  addEventListener('load', paint);
+  addEventListener('resize', paint);
+  paint();
+})();
+</script>
+</body>
+</html>
