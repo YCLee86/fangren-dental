@@ -49,17 +49,27 @@ if (!/id="geo"/.test(fig)) throw new Error('geo 包不進去');
 const CSS = fs.readFileSync('tools/door-map-style.css', 'utf8');
 const BODY = fs.readFileSync('tools/door-map-body.html', 'utf8');
 
-/* QR：向量的 path，產生的時候塞進去（見 tools/qr.mjs 檔頭的驗證方式）。
-   ⚠ 指向「診所資訊」那一節 —— 那裡有可以點的地圖與三個停車場的連結。 */
-const QR_URL = 'https://fangren.net/#clinic';
-const { n: qrN, d: qrD } = qrPath(QR_URL, 'M');
-/* ⚠⚠ 靜區（quiet zone，四邊各 4 格）**做在 viewBox 裡**，不要用 CSS 的
-   padding 百分比 —— 百分比的 padding 是**照父層的寬度**算的，
-   父層寬 450px、碼只有 30px 的話，內距會算成 50px，內容被擠成 0，
-   畫面上就是一塊**空白的白方塊**（踩過，看起來像 QR 沒產出來）。 */
-const qrSvg = `<svg viewBox="-4 -4 ${qrN + 8} ${qrN + 8}" role="img" aria-label="掃描開啟 ${QR_URL}">`
-  + `<rect x="-4" y="-4" width="${qrN + 8}" height="${qrN + 8}" fill="#fff"/>`
-  + `<path fill="#111" d="${qrD}"/></svg>`;
+/* QR：三個停車場各一顆，掃了直接開那一場的 Google 地圖。
+   ⚠ 網址逐字取自 index.html 的三個 .rl-link（使用者自己分享的短網址），
+     **不要自己拼或去掉查詢字串** —— 那三條是他驗證過會開對地方的。
+   ⚠⚠ 靜區（quiet zone，四邊各 4 格）**做在 viewBox 裡**，不要用 CSS 的
+     padding 百分比 —— 百分比的 padding 是照父層的寬度算的，父層寬 450px、
+     碼只有 30px 的話，內距會算成 50px，內容被擠成 0，畫面上就是一塊
+     **空白的白方塊**（踩過，看起來像 QR 沒產出來）。
+   ⚠ 等級用 M：這一張紙貼在門口，不會被弄髒到需要 Q/H，而等級愈高格數愈多、
+     每一格就愈小（同樣 22mm 下 M 是 0.59mm、Q 是 0.53mm）。
+   驗證方式見 tools/qr.mjs 的檔頭 —— **不能用眼睛驗收，要真的掃**。 */
+const QR_LOTS = [
+  ['P1', 'https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic', '壹車房－中華路停車場'],
+  ['P2', 'https://maps.app.goo.gl/tiHLpeKc2gETXRh96?g_st=ic', '合廷停車場'],
+  ['P3', 'https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic', '斗六永樂站停車場'],
+];
+const qrSvgs = QR_LOTS.map(([tag, url, nm]) => {
+  const { n, d } = qrPath(url, 'M');
+  return `<svg viewBox="-4 -4 ${n + 8} ${n + 8}" role="img" aria-label="掃描開啟 ${nm}的 Google 地圖">`
+    + `<rect x="-4" y="-4" width="${n + 8}" height="${n + 8}" fill="#fff"/>`
+    + `<path fill="#111" d="${d}"/></svg>`;
+});
 const JS = fs.readFileSync('tools/door-map-script.js', 'utf8');
 
 const html = `<!doctype html>
@@ -75,7 +85,10 @@ ${CSS}
 ${MAPCSS}
 </style>
 </head>
-${BODY.replace('<!--MAP-->', fig).replace('<!--QR-->', qrSvg)}
+${BODY.replace('<!--MAP-->', fig)
+  .replace('<!--QR1-->', qrSvgs[0])
+  .replace('<!--QR2-->', qrSvgs[1])
+  .replace('<!--QR3-->', qrSvgs[2])}
 <script>
 ${MAPJS}
 </script>

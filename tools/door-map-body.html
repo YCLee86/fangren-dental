@@ -38,23 +38,33 @@
         <li>周邊路段另有畫設之路邊停車格。</li>
       </ul>
 
-      <ul class="sh-lots">
-        <li><span class="no">P1</span><span class="nm">壹車房－中華路停車場</span><span class="du">190 公尺・步行 3 分鐘</span></li>
-        <li><span class="no">P2</span><span class="nm">合廷停車場</span><span class="du">140 公尺・步行 2 分鐘</span></li>
-        <li><span class="no">P3</span><span class="nm">斗六永樂站停車場</span><span class="du">50 公尺・步行 1 分鐘</span></li>
-      </ul>
-
       <p class="sh-note">停車計價方式依各業者現場標示為準。</p>
+    </div>
+  </div>
 
-      <!-- ⚠ QR 指向 fangren.net 的「診所資訊」那一節：那裡有可以點的地圖，
-           三個停車場各自連到 Google 地圖，掃一次三個都拿得到。
-           **不要做成三顆小 QR** —— 量過右欄只有約 120mm 寬，
-           三顆 20mm 的碼會把停車場名字擠到折行。
-           ⚠ 碼是 tools/qr.mjs 產的向量 path（零依賴、印多大都不糊），
-           由 door-map-preview.mjs 在產生的時候塞進來。 -->
-      <div class="nt-qr"><!--QR--><span>掃這裡看地圖<br>與停車場位置</span></div>
-      <!-- ⚠ 收尾那一句（「不用急，先把車停好　我們等你」）2026-08-23 由使用者
-           拿掉：這是一張告示，不是一封信。 -->
+  <!-- ⚠⚠ 三個停車場搬到底下這一條、橫跨整張紙 —— 使用者要的是
+       **掃了直接開那一個停車場**，所以一場一顆 QR。
+       ⚠ 一場一顆的風險是「相機對錯」：三顆碼擠在一起時，手機可能抓到旁邊那一顆。
+         治法是**拉開距離**，不是把碼做小 —— 三張卡各佔紙寬的三分之一，
+         碼與碼的中心相距約 90mm（碼本身 22mm），相機要退到很遠才會同時框到兩顆，
+         而那時候正中間的仍然是想掃的那一顆。
+         每顆碼自己還有四格的靜區 ＋ 一圈白底，邊界很清楚。
+       ⚠ 順序（P1 190m／P2 140m／P3 50m）**刻意不是照距離排**，是使用者排的。 -->
+  <div class="nt-lots">
+    <div class="nt-lot">
+      <div class="nt-code"><!--QR1--></div>
+      <p class="nt-nm"><span class="no">P1</span>壹車房－中華路停車場</p>
+      <p class="nt-du">190 公尺・步行 3 分鐘</p>
+    </div>
+    <div class="nt-lot">
+      <div class="nt-code"><!--QR2--></div>
+      <p class="nt-nm"><span class="no">P2</span>合廷停車場</p>
+      <p class="nt-du">140 公尺・步行 2 分鐘</p>
+    </div>
+    <div class="nt-lot">
+      <div class="nt-code"><!--QR3--></div>
+      <p class="nt-nm"><span class="no">P3</span>斗六永樂站停車場</p>
+      <p class="nt-du">50 公尺・步行 1 分鐘</p>
     </div>
   </div>
 </div>

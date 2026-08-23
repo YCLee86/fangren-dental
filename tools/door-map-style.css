@@ -80,39 +80,34 @@ body[data-size="l"] .nt-points { margin-top: 0; gap: 1.1cqw; }
 body[data-size="l"] .nt-points li { font-size: 2.6cqw; padding-left: 2cqw; line-height: 1.7; }
 body[data-size="l"] .nt-points li::before { width: .95cqw; height: .95cqw; }
 
-/* ---- 三個停車場：一行一個，字要大到站在門口就讀得到 ---- */
-.sh-lots { display: grid; gap: 1.6cqw; margin: 3cqw 0 0; padding: 0; list-style: none; }
-.sh-lots li { display: grid; grid-template-columns: 10cqw 1fr auto; align-items: baseline; gap: 2cqw;
-              font-size: 4.2cqw; line-height: 1.4; }
-/* ⚠ 「P1」放不進圓形，改成圓角方（和地圖上色塊裡的字同一個代號）。 */
-.sh-lots .no { width: 10cqw; height: 6.4cqw; border-radius: 1.6cqw; background: #365685; color: var(--card);
-               display: grid; place-items: center; font-size: 3.9cqw; font-weight: 700; align-self: center;
-               font-family: Arial, Helvetica, sans-serif; letter-spacing: .02em; }
-.sh-lots .nm { font-weight: 700; letter-spacing: .02em; }
-.sh-lots .du { color: var(--ink-soft); font-size: 3.8cqw; white-space: nowrap; }
-/* ⚠⚠ 橫式的右欄只有紙寬的四成多，「壹車房－中華路停車場」＋距離排一行會折行
-   （使用者的截圖上就折了）。改成**兩行**：名字一行、距離退到第二行靠左，
-   號碼牌跨兩行置中。 */
-body[data-size="l"] .sh-lots { gap: 1.1cqw; margin-top: 2.2cqw; }
-body[data-size="l"] .sh-lots li { grid-template-columns: 6.1cqw 1fr; row-gap: .2cqw; font-size: 2.85cqw; }
-body[data-size="l"] .sh-lots .no { width: 6.1cqw; height: 4cqw; border-radius: 1cqw;
-                                   font-size: 2.5cqw; grid-row: 1 / span 2; }
-body[data-size="l"] .sh-lots .du { grid-column: 2; font-size: 2.3cqw; }
-
-.sh-note { margin: 2.2cqw 0 0; font-size: 2.9cqw; line-height: 1.6; color: var(--ink-soft); }
-body[data-size="l"] .sh-note { font-size: 2cqw; margin-top: 1.8cqw; }
-
-/* ---- QR ----
-   ⚠ 靜區（quiet zone，四邊各 4 格）做在 viewBox 裡（見 door-map-preview.mjs）——
-     **不要用 CSS 的百分比 padding**，那是照父層寬度算的，會把碼擠成一塊白方塊。
-   ⚠ 顏色只准黑白那一階：QR 靠對比度活著，用柔墨或紙色會掉辨識率。 */
-.nt-qr { display: flex; align-items: center; gap: 2.4cqw; margin: 3cqw 0 0; }
-.nt-qr svg { width: 20cqw; height: 20cqw; flex: none; }
-.nt-qr span { font-size: 3cqw; line-height: 1.55; color: var(--ink-soft); letter-spacing: .02em; }
-body[data-size="l"] .nt-qr { margin-top: 2.6cqw; gap: 1.8cqw; }
-body[data-size="l"] .nt-qr svg { width: 8.2cqw; height: 8.2cqw; }   /* 297mm × 8.2% ≈ 24mm */
-body[data-size="l"] .nt-qr span { font-size: 2.1cqw; }
-body[data-qr="off"] .nt-qr { display: none; }
+/* ---- 底下那一條：三個停車場，一場一顆 QR ----
+   ⚠⚠ 一場一顆的風險是「相機對錯」。治法是**拉開距離**，不是把碼做小：
+     三張卡各佔紙寬的三分之一，碼與碼的中心相距約 90mm（碼本身 22mm）。
+     手機要退到很遠才會同時框到兩顆，而那時候正中間的仍然是想掃的那一顆。
+   ⚠ 靜區（四邊各 4 格）做在 viewBox 裡（見 door-map-preview.mjs），
+     **不要用 CSS 的百分比 padding** —— 那是照父層寬度算的，會把碼擠成一塊白方塊。
+   ⚠ 碼只准黑白那一階：QR 靠對比度活著，用柔墨或紙色會掉辨識率。 */
+.nt-lots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3cqw;
+           margin: 3cqw 0 0; }
+.nt-lot { text-align: center; }
+.nt-code svg { width: 22cqw; height: 22cqw; }
+body[data-size="l"] .nt-code svg { width: 7.4cqw; height: 7.4cqw; }   /* 297mm × 7.4% ≈ 22mm */
+.nt-nm { margin: 1.4cqw 0 0; font-size: 3.2cqw; font-weight: 700; letter-spacing: .02em;
+         display: flex; align-items: center; justify-content: center; gap: 1.4cqw; }
+.nt-nm .no { background: #365685; color: var(--card); border-radius: 1.2cqw;
+             padding: .3em .7em; font-size: .82em; font-weight: 700;
+             font-family: Arial, Helvetica, sans-serif; letter-spacing: .02em; }
+.nt-du { margin: .7cqw 0 0; font-size: 2.8cqw; color: var(--ink-soft); }
+body[data-size="l"] .nt-lots { gap: 2.4cqw; margin-top: 2.4cqw; }
+/* ⚠ 卡片寬 ＝（297 − 左右內距 20 − 兩道間距）÷ 3 ≈ 88mm。
+   最長的「壹車房－中華路停車場」10 個字，加上號碼牌與間距要塞進 88mm，
+   字級上限就是 2.2cqw（6.5mm）—— 2.5cqw 會折行，而且一折行號碼牌
+   就跟著掉到中間去（踩過）。 */
+body[data-size="l"] .nt-nm { font-size: 2.2cqw; margin-top: 1cqw; gap: .9cqw;
+                             white-space: nowrap; }
+body[data-size="l"] .nt-nm .no { border-radius: .8cqw; }
+body[data-size="l"] .nt-du { font-size: 2cqw; margin-top: .6cqw; }
+body[data-qr="off"] .nt-code { display: none; }
 
 /* ---- 收尾：整張紙唯一一句「我們」的話，用診所的綠 ---- */
 .nt-close { margin: 3.4cqw 0 0; font-size: 4cqw; letter-spacing: .06em;
