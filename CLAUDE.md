@@ -296,7 +296,11 @@ tools/
                         只有改過頁首那條路徑或要換顏色時才要跑；--check 只比對
   build-manifest.json   內容雜湊紀錄，build 自動維護，勿手改
 .claude/
-  settings.json         SessionStart hook：開啟專案時自動同步（隨 git 走，兩台都生效）
+  settings.json         SessionStart hook：開啟專案時自動同步（隨 git 走，兩台都生效）。
+                        另有 remoteControlAtStartup: false（2026-08-23 加）——
+                        在電腦上開這個專案的 CLI session 不再自動註冊成遙控 session，
+                        手機清單因此只會看到雲端的。⚠ 這**不是**「改成在雲端執行」，
+                        沒有那種設定；要在雲端跑就用 claude --cloud。見第十一節
   launch.json           本機預覽伺服器的啟動設定
 ```
 
@@ -1992,3 +1996,57 @@ topics/<spec>/         ← 產出。**不要手改**，重跑就沒了
 全站（首頁三處、六篇文章頁尾、404）都已經改好，JSON-LD 是 `+886-5-533-9369`。
 數字一個都沒變，`tel:+88655339369` 也沒動。推導與實測數字在
 [PALETTE.md](PALETTE.md) 第六之十七節。
+
+---
+
+## 十一、session 跑在哪裡 —— 雲端 vs 電腦（2026-08-23）
+
+使用者在手機上看到有些對話「顯示電腦的圖示，點進去說無法連線」，
+而且**他每次開新對話的方式都一樣**，不知道為什麼那幾筆不一樣。查出來的結論：
+
+### 兩種 session，執行的地方不同
+
+| | 雲端 session | 遙控（Remote Control）session |
+| --- | --- | --- |
+| `origin` | `ios`／`web_claude_ai`／`desktop_app` | **`claude_code_cli`** |
+| `environment_kind` | `anthropic_cloud` | **`bridge`**（標籤 `remote-control-sdk`） |
+| 東西在哪跑 | Anthropic 的容器 | **使用者自己的電腦** |
+| 手機清單上 | 沒有圖示 | **電腦圖示**（線上時多一顆綠點） |
+| 電腦關機時 | 照常打得開 | `computer_unreachable`／「無法連線」 |
+
+⚠ **綠點不代表它換到雲端跑了** —— 官方文件逐字：「Remote Control sessions show a
+computer icon with a green status dot when online.」綠 ＝ 那台電腦此刻連著，
+手機只是那個本機 session 的一扇窗，執行、檔案、指令全都還在電腦上。
+
+### 使用者沒有做錯什麼
+
+那幾筆的 `origin` 是 `claude_code_cli` —— **是電腦上的終端機建立的，不是他在手機上開的**，
+只是因為遙控自動連線把它們註冊進同一張清單，看起來就像混在一起。
+旁證：`SPSS 檔案讀取` 那一筆連 git repo 都沒掛，雲端容器裡沒有那些檔案，
+那件事只可能發生在他自己的電腦上。
+
+### ⚠⚠ 沒有「預設在雲端執行」這個設定
+
+整份 settings 逐項看過，跟雲端有關的只有 `remote.defaultEnvironmentId`，
+而它管的是「`--cloud` 要用哪一個雲端環境」，**不是「要不要用雲端」**。
+而且官方文件明講從 CLI 的交接是**單向的**：雲端可以拉回本機（`--teleport`），
+**本機不能推上雲端**（桌面版 App 的「Continue in」選單是唯一例外）。
+
+所以：
+
+- `claude` ＝ 本機
+- `claude --cloud "任務"` ＝ 雲端
+- 從手機／網頁開新對話 ＝ 雲端
+
+**已經建立的 session 改不了執行位置**，不要再花時間找那個開關。
+
+### 這個 repo 已經做的（2026-08-23）
+
+`.claude/settings.json` 加了 **`"remoteControlAtStartup": false`** ——
+在電腦上開這個專案的 CLI session 不再自動註冊成遙控 session，
+手機清單因此只會看到雲端的那些，不會再有點不進去的。
+
+⚠ 它**只關掉「自動」連線**，`/remote-control` 手動下還是能用（要臨時遙控時照下）。
+⚠ 它**只作用在這個 repo**。使用者電腦上其他資料夾（例如 SPSS 那次）不受影響，
+要全部關掉得改他自己的 `~/.claude/settings.json`，**那個檔在他電腦上，雲端 session 碰不到**。
+⚠ 專案設定只認 `false`，寫 `true` 會被忽略（官方刻意的：checked-in 的檔不能替別人打開遙控）。
