@@ -143,4 +143,7 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 .sh-map .nsw .nsw-solid  { fill: var(--ink-soft); }
 .sh-map .nsw .nsw-hollow { fill: none; stroke: var(--ink-soft); stroke-width: 2.2;
                            stroke-linejoin: miter; stroke-miterlimit: 12; }
+/* ⚠ 針身加粗之後，空心那半的輪廓要跟著加一點才不會顯得比實心那半輕
+   （2.5 ÷ 2 ＝ 看得到的 1.25）。 */
+.sh-map .nsw .nsw-hollow { stroke-width: 2.5; }
 .sh-map .map-svg .nsw text { fill: var(--ink-soft); font-weight: 700; letter-spacing: 0; }
