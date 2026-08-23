@@ -80,6 +80,15 @@ if (!spec || !ACCENT[spec]) {
 }
 const artIdx = args.indexOf("--art");
 const ART = artIdx >= 0 ? path.resolve(ROOT, args[artIdx + 1]) : null;
+/* --crop x,y,w,h：先在原圖上裁一塊再處理（只有 --art 那條路吃它）。
+   ⚠ 生成的線稿常常會多畫一條「地面線」，還會留一大圈空白 ——
+     那條橫線擺到頁面上會變成一條莫名其妙的橫槓，空白則讓定位很難算。
+     裁掉之後圖檔就等於內容本身，頁面那一側只要管大小與位置。 */
+const cIdx = args.indexOf("--crop");
+const CROP = cIdx >= 0 ? args[cIdx + 1].split(",").map(Number) : null;
+if (CROP && (CROP.length !== 4 || CROP.some((n) => !Number.isFinite(n)))) {
+  console.error("× --crop 要四個數字：x,y,w,h"); process.exit(1);
+}
 const rIdx = args.indexOf("--region");
 const rk = rIdx >= 0 ? args[rIdx + 1] : "B";
 const R = ART ? null : REGIONS[spec]?.[rk];
@@ -118,12 +127,16 @@ const uri = `data:${mime};base64,${fs.readFileSync(SRC).toString("base64")}`;
      來源已經是平的，再處理只會把它弄壞（線會斷、邊會啃掉一圈）。
    ⚠ alpha 直接由亮度反推：白 → 全透明、線 → 不透明。
      只在最靠近門檻的一小段留過渡，讓邊緣不要有鋸齒 —— 那是抗鋸齒，不是濃淡。 */
-const artRes = ART ? await pg.evaluate(async ({ uri, rgb }) => {
+const artRes = ART ? await pg.evaluate(async ({ uri, rgb, CROP }) => {
   const im = new Image(); im.src = uri; await im.decode();
-  const W = im.naturalWidth, H = im.naturalHeight;
+  if (CROP && (CROP[0] + CROP[2] > im.naturalWidth || CROP[1] + CROP[3] > im.naturalHeight)) {
+    return { err: `--crop 超出原檔（原檔 ${im.naturalWidth}×${im.naturalHeight}）` };
+  }
+  const W = CROP ? CROP[2] : im.naturalWidth, H = CROP ? CROP[3] : im.naturalHeight;
   const c = document.createElement("canvas"); c.width = W; c.height = H;
   const g = c.getContext("2d", { willReadFrequently: true });
-  g.drawImage(im, 0, 0);
+  if (CROP) g.drawImage(im, CROP[0], CROP[1], W, H, 0, 0, W, H);
+  else g.drawImage(im, 0, 0);
   const d = g.getImageData(0, 0, W, H).data;
   /* ⚠ 來源必須是**不透明**的（模型生成的就是）。餵透明底的 PNG 進來的話，
      透明處讀出來是黑的，底色會量成 0、整張變成全透明 —— 而且不報錯。 */
@@ -147,7 +160,7 @@ const artRes = ART ? await pg.evaluate(async ({ uri, rgb }) => {
   }
   g.putImageData(out, 0, 0);
   return { data: c.toDataURL("image/png"), ink: ink / (W * H), mid: mid / (W * H), bg, W, H };
-}, { uri, rgb }) : null;
+}, { uri, rgb, CROP }) : null;
 
 const res = artRes || await pg.evaluate(async ({ uri, R, rgb, SCALE, R_MEAN, T, ERODE }) => {
   const im = new Image(); im.src = uri; await im.decode();
@@ -228,7 +241,9 @@ if (ART) {
   /* ⚠ 交件門檻（drafts/topic-lineart-prompt.md）：線佔 4~6%。
      過渡帶（半透明的像素）太多就表示來源不是平的線稿 —— 那多半是拿錯圖。 */
   console.log(`線稿 ${path.relative(ROOT, SRC)}　底色亮度 ${res.bg}　線佔 ${(res.ink * 100).toFixed(1)}%　過渡帶 ${(res.mid * 100).toFixed(2)}%`);
-  if (res.ink > 0.12) console.log("  ⚠ 線佔超過 12% —— 參考圖量到的是 4~6%，這張可能有填色或陰影。");
+  /* ⚠ 這個門檻是對「整張未裁的圖」說的 —— 裁掉四周的空白之後，同樣的線會佔到
+     兩倍以上，那不是變糟。所以有 --crop 時不比。 */
+  if (!CROP && res.ink > 0.12) console.log("  ⚠ 線佔超過 12% —— 參考圖量到的是 4~6%，這張可能有填色或陰影。");
   if (res.mid > 0.06) console.log("  ⚠ 過渡帶偏多 —— 來源可能不是平塗的線稿（有濃淡或模糊）。");
 } else {
   console.log(`${rk} ${R.name}　原檔 x${R.x} y${R.y} ${R.w}×${R.h} → 輸出 ${res.W}×${res.H}（放大 ${SCALE}×）　線佔 ${(res.ink * 100).toFixed(1)}%`);
