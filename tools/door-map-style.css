@@ -123,6 +123,7 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 /* ⚠ 停車場的代號：站上那個 P 靠 1.6 的同色描邊加粗，換成「P3」兩個字之後
    看起來又粗又擠（使用者回報）。海報上把描邊拿掉，粗細交給字重就好。 */
 .sh-map .map-svg .pk { stroke-width: 0; font-weight: 700; }
-/* 指北針 */
-.sh-map .nsw path { fill: var(--ink-soft); }
+/* 指北針：右半實心、左半空心（照使用者給的參考圖）。顏色用街名那一支柔墨。 */
+.sh-map .nsw .nsw-solid  { fill: var(--ink-soft); }
+.sh-map .nsw .nsw-hollow { fill: none; stroke: var(--ink-soft); stroke-width: 3; stroke-linejoin: round; }
 .sh-map .map-svg .nsw text { fill: var(--ink-soft); font-size: 15px; font-weight: 700; }

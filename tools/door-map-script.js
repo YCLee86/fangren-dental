@@ -32,6 +32,12 @@
     { cx: 339, cy: 326, s: '永樂街', dir: 'ns' },
     { cx: 471, cy: 326, s: '永安路', dir: 'ns' }
   ];
+  /* 巷名。⚠ 給的一樣是「字面中心要落在哪裡」：19 巷那條帶是 y 219~236，中心 227.5。 */
+  var LANES = [
+    { cx: 176, cy: 227.5, s: '平和街19巷', dir: 'ew' },
+    { cx: 402, cy: 188,   s: '永安路14巷', dir: 'ew', off: true }
+  ];
+  var lblXs = svg.querySelectorAll('.lbl-xs');
   /* 停車場的代號與色塊中心（使用者指定：P1 壹車房、P2 合廷、P3 永樂站）。 */
   var LOTS = [
     { lot: 'a', tag: 'P3', cx: 235,   cy: 188 },
@@ -76,13 +82,16 @@
   var youL1 = add('tspan', {}, you, '現在');
   var youL2 = add('tspan', { dy: 20 }, you, '位置');
 
-  /* 指北針：畫在右上角，**跟著轉**（它要指出北方轉到哪裡去了），
-     只有「北」那個字反轉回來保持直立。 */
+  /* 指北針（2026-08-21 使用者給了參考圖）：**細長的三角形，右半實心、左半空心**，
+     字在上面、而且是「北」不是 N。
+     幾何：尖端 (0,−34)、底左 (−14,22)、底右 (14,22)、底邊中間往上收到 (0,10)
+     —— 那個往上收的缺口就是這種指北針看起來會「站著」的原因。
+     ⚠ 整組跟著地圖轉（它要指出北方轉到哪去了），只有「北」那個字反轉回來。 */
   var nsw = add('g', { class: 'nsw' }, svg);
   var nswArrow = add('g', {}, nsw);
-  add('path', { d: 'M0 -24L7.5 -5H-7.5Z' }, nswArrow);
-  /* ⚠ 「北」離箭頭原本 30 個單位，使用者說太遠 —— 收到 12。 */
-  var nswTxt = add('text', { x: 0, y: 12, 'text-anchor': 'middle' }, nsw, '北');
+  add('path', { class: 'nsw-solid', d: 'M0 -34L14 22L0 10Z' }, nswArrow);
+  add('path', { class: 'nsw-hollow', d: 'M0 -34L0 10L-14 22Z' }, nswArrow);
+  var nswTxt = add('text', { x: 0, y: -44, 'text-anchor': 'middle' }, nsw, '北');
 
   /* ---- 幾何小工具 -------------------------------------------------------- */
   function rot(x, y, th) {
@@ -90,6 +99,11 @@
     return { x: CX + (x - CX) * c - (y - CY) * s, y: CY + (x - CX) * s + (y - CY) * c };
   }
   function unrot(x, y, th) { return rot(x, y, -th); }
+  /* 繞原點轉（指北針那一組是相對自己的原點量的，不繞地圖中心） */
+  function orot(x, y, th) {
+    var r = th * Math.PI / 180, c = Math.cos(r), s2 = Math.sin(r);
+    return { x: x * c - y * s2, y: x * s2 + y * c };
+  }
 
   /* ---- 排字：單行 ↔ 直排，位置用「字面中心」給 --------------------------- */
   function typeset(t, str, cx, cy, stacked, dyLine, fs) {
@@ -153,6 +167,16 @@
       upright(t, th, st.cx, st.cy);
     });
 
+    /* 巷名：只留「平和街19巷」（2026-08-21 使用者指定要標）。
+       ⚠ 它是診所那一格的北緣，看的人靠它確認自己在哪一格。
+       永安路14巷沒有留 —— 那一條和三個停車場、路線都無關，標了只是雜訊。 */
+    LANES.forEach(function (st, i) {
+      var t = lblXs[i]; if (!t || st.off) return;
+      var fs = parseFloat(getComputedStyle(t).fontSize) || 16;
+      typeset(t, st.s, st.cx, st.cy, st.dir === 'ew' ? flip : !flip, fs * 1.18, fs);
+      upright(t, th, st.cx, st.cy);
+    });
+
     /* 停車場：色塊正中央寫 P1／P2／P3 */
     LOTS.forEach(function (L) {
       var g = svg.querySelector('.lot[data-lot="' + L.lot + '"]');
@@ -207,10 +231,24 @@
     youL2.setAttribute('dy', gap);
     upright(you, th, youP.x, youP.y);
 
-    /* 指北針：整組跟著轉，字反轉回來 */
-    nsw.setAttribute('transform', 'translate(' + (vx1 - 42).toFixed(1) + ' ' + (vy0 + 46).toFixed(1) + ')' +
+    /* 指北針：整組跟著轉（它要指出北方轉到哪去了），只有「北」那個字反轉回來。
+       ⚠⚠ **擺的位置要照「轉過去之後」的外框算，不能寫死一個角落的座標** ——
+         轉 90 度時箭頭的尖端會從上面跑到右邊，「北」那個字跟著跑出畫布外
+         （第一版就是這樣，右上角只看得到半個字）。做法是把整組的四個角
+         與那個字的方框各自轉一次，取聯集，再把整組貼到右上角、留 10 個單位。 */
+    var nsA = [[0, -34], [14, 22], [0, 10], [-14, 22]].map(function (q) { return orot(q[0], q[1], th); });
+    var nsT = orot(0, -44, th);
+    var nx0 = Math.min.apply(null, nsA.map(function (q) { return q.x; }));
+    var nx1 = Math.max.apply(null, nsA.map(function (q) { return q.x; }));
+    var ny0 = Math.min.apply(null, nsA.map(function (q) { return q.y; }));
+    var ny1 = Math.max.apply(null, nsA.map(function (q) { return q.y; }));
+    nx0 = Math.min(nx0, nsT.x - 11); nx1 = Math.max(nx1, nsT.x + 11);
+    ny0 = Math.min(ny0, nsT.y - 14); ny1 = Math.max(ny1, nsT.y + 4);
+    var nsm = 10;
+    nsw.setAttribute('transform',
+      'translate(' + (vx1 - nsm - nx1).toFixed(1) + ' ' + (vy0 + nsm - ny0).toFixed(1) + ')' +
       (th ? ' rotate(' + th + ')' : ''));
-    upright(nswTxt, th, 0, 12);
+    upright(nswTxt, th, 0, -44);
 
     fit();
     measure(th, sx1 - sx0, H);
@@ -261,13 +299,19 @@
     svg.querySelectorAll('.lbl, .lbl-s, .lbl-xs, .ent').forEach(function (l) { l.classList.remove('hide'); });
     svg.querySelectorAll('.dots').forEach(function (d) { d.classList.add('on'); });
     svg.querySelectorAll('.rlab').forEach(function (r) { r.style.display = 'none'; });
-    /* 巷名海報上不畫 —— 一轉向就會壓到停車場與路線。 */
-    svg.querySelectorAll('.lbl-xs').forEach(function (t) { t.style.display = 'none'; });
+    /* 巷名只留「平和街19巷」（見上面 LANES 那一段）。 */
+    Array.prototype.forEach.call(lblXs, function (t, i) {
+      t.style.display = (LANES[i] && LANES[i].off) ? 'none' : '';
+    });
+    /* ⚠ P3（斗六永樂站）不畫入口箭頭 —— 使用者指定；那一場從巷子進去只有一條路，
+       站上那段註解本來就寫著「一看就知道，不需要標示」。 */
+    svg.querySelectorAll('.ent').forEach(function (e) { e.style.visibility = 'visible'; });
+    var entA = svg.querySelector('.lot[data-lot="a"] .ent');
+    if (entA) entA.style.visibility = 'hidden';
     /* 綠塊裡原本那四個字與底線不畫，改成「現在位置」。 */
     ['.cm-nm', '.cm-ul'].forEach(function (sel) {
       var el = svg.querySelector(sel); if (el) el.style.display = 'none';
     });
-    svg.querySelectorAll('.ent').forEach(function (e) { e.style.visibility = 'visible'; });
     var blue = body.dataset.lotcolor !== 'grey';
     svg.querySelectorAll('.lot').forEach(function (g) { g.classList.toggle('on', blue); });
     you.style.display = body.dataset.you === 'off' ? 'none' : '';
