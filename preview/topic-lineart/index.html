@@ -4737,7 +4737,7 @@ body[data-topic] #topics { padding-top: 1rem; }
    線稿底圖 —— 掛在 .tp-intro 的 ::before／::after 上，**不動任何 markup**，
    所以版面高度一個像素都不會變（使用者：「放進來會壓縮到版面，我不要那樣」）。
    ============================================================================ */
-:root{ --pv-ink: .20; --pv-w: min(52%, 240px); --pv-ar: 832 / 788; }
+:root{ --pv-ink: .10; --pv-w: min(76%, 360px); --pv-ar: 832 / 788; }
 
 /* ---- 介紹右側（電腦版）--------------------------------------------------
    ⚠ 只在 ≥1200 開：1041 上介紹右邊只剩 189px（扣掉間距剩 162），
@@ -7111,15 +7111,15 @@ body[data-topic] #main{ padding-top: 1rem; }
   transform-origin:0 0;transform:scale(var(--pv-k,1))}
 </style>
 <div class="pv-bar">
-  <div class="pv-row"><span class="pv-lab">大小</span><span class="pv-seg" id="pv-z"><button type="button" data-row="z" data-k="s" aria-pressed="false">小</button><button type="button" data-row="z" data-k="m" aria-pressed="true">中</button><button type="button" data-row="z" data-k="l" aria-pressed="false">大</button><button type="button" data-row="z" data-k="x" aria-pressed="false">特大</button></span></div>
+  <div class="pv-row"><span class="pv-lab">大小</span><span class="pv-seg" id="pv-z"><button type="button" data-row="z" data-k="s" aria-pressed="false">小</button><button type="button" data-row="z" data-k="m" aria-pressed="false">中</button><button type="button" data-row="z" data-k="l" aria-pressed="false">大</button><button type="button" data-row="z" data-k="x" aria-pressed="true">特大</button></span></div>
   <div class="pv-row"><span class="pv-lab">位置</span><span class="pv-seg" id="pv-s"><button type="button" data-row="s" data-k="side" aria-pressed="false">右側</button><button type="button" data-row="s" data-k="mark" aria-pressed="true">右下</button><button type="button" data-row="s" data-k="mark2" aria-pressed="false">右下（平板以上）</button><button type="button" data-row="s" data-k="none" aria-pressed="false">不放</button></span></div>
-  <div class="pv-row"><span class="pv-lab">濃度</span><span class="pv-seg" id="pv-i"><button type="button" data-row="i" data-k="i0" aria-pressed="false">極淡</button><button type="button" data-row="i" data-k="i1" aria-pressed="true">淡</button><button type="button" data-row="i" data-k="i2" aria-pressed="false">中</button><button type="button" data-row="i" data-k="i3" aria-pressed="false">濃</button></span></div>
+  <div class="pv-row"><span class="pv-lab">濃度</span><span class="pv-seg" id="pv-i"><button type="button" data-row="i" data-k="i0" aria-pressed="true">極淡</button><button type="button" data-row="i" data-k="i1" aria-pressed="false">淡</button><button type="button" data-row="i" data-k="i2" aria-pressed="false">中</button><button type="button" data-row="i" data-k="i3" aria-pressed="false">濃</button></span></div>
   <p class="pv-hint" id="pv-hint"></p>
 </div>
 <script>
 /* ⚠ 網址參數的正規式要寫 [a-z0-9]+（第八節）—— 寫 [a-z]+ 會吃不到帶數字的值。 */
 var Z = {"s":{"name":"小","side":"min(200px, calc(100vw - 884px))","mark":"min(40%, 180px)"},"m":{"name":"中","side":"min(260px, calc(100vw - 884px))","mark":"min(52%, 240px)"},"l":{"name":"大","side":"min(320px, calc(100vw - 884px))","mark":"min(64%, 300px)"},"x":{"name":"特大","side":"min(400px, calc(100vw - 884px))","mark":"min(76%, 360px)"}}, S = {"side":{"name":"右側","min":1200,"note":"圖在文字欄外面。⚠ 只在 ≥1200 出現。"},"mark":{"name":"右下","min":0,"note":"墊在介紹區右下角。**手機會壓到字**（大小愈大壓愈多），平板以上不會。"},"mark2":{"name":"右下（平板以上）","min":834,"note":"同上，但**手機不放** —— 手機是唯一會壓到字的寬度。"},"none":{"name":"不放","min":99999,"note":"誠實的選項。"}}, I = {"i0":{"name":"極淡","v":0.1},"i1":{"name":"淡","v":0.2},"i2":{"name":"中","v":0.32},"i3":{"name":"濃","v":0.48}};
-var cur = { z: "m", s: "mark", i: "i1" };
+var cur = { z: "x", s: "mark", i: "i0" };
 (function(){ var q=location.search,m;
   m=q.match(/[?&]size=([a-z0-9]+)/); if(m&&Z[m[1]]) cur.z=m[1];
   m=q.match(/[?&]spot=([a-z0-9]+)/); if(m&&S[m[1]]) cur.s=m[1];
