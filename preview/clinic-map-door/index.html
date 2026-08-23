@@ -37,7 +37,7 @@ body {
   box-shadow: 0 1px 2px rgba(42,44,39,.07), 0 4px 10px rgba(42,44,39,.09);
   container-type: inline-size;
 }
-/* A4 橫式：抬頭橫跨整頁，底下地圖擺左、提醒擺右。
+/* A4 橫式：地圖擺左、提醒擺右（抬頭 2026-08-23 拿掉了）。
    ⚠ 橫式如果沿用直式那種「上下堆疊」，抬頭＋清單＋圖說會把高度吃光，
      地圖只剩一條（踩過，第一版就是這樣）。 */
 body[data-size="l"] .sheet { aspect-ratio: 297 / 210; width: min(100%, 297mm); }
@@ -85,8 +85,8 @@ body[data-size="l"] .nt-main {
    加了之後斷點自然落到它前面，整個詞留在同一行。 */
 .nt-points b { color: var(--brick); font-weight: 700; white-space: nowrap; }
 body[data-size="l"] .nt-points { margin-top: 0; gap: 1.1cqw; }
-body[data-size="l"] .nt-points li { font-size: 2.25cqw; padding-left: 1.7cqw; line-height: 1.7; }
-body[data-size="l"] .nt-points li::before { width: .85cqw; height: .85cqw; }
+body[data-size="l"] .nt-points li { font-size: 2.6cqw; padding-left: 2cqw; line-height: 1.7; }
+body[data-size="l"] .nt-points li::before { width: .95cqw; height: .95cqw; }
 
 /* ---- 三個停車場：一行一個，字要大到站在門口就讀得到 ---- */
 .sh-lots { display: grid; gap: 1.6cqw; margin: 3cqw 0 0; padding: 0; list-style: none; }
@@ -102,13 +102,13 @@ body[data-size="l"] .nt-points li::before { width: .85cqw; height: .85cqw; }
    （使用者的截圖上就折了）。改成**兩行**：名字一行、距離退到第二行靠左，
    號碼牌跨兩行置中。 */
 body[data-size="l"] .sh-lots { gap: 1.1cqw; margin-top: 2.2cqw; }
-body[data-size="l"] .sh-lots li { grid-template-columns: 5.4cqw 1fr; row-gap: .2cqw; font-size: 2.5cqw; }
-body[data-size="l"] .sh-lots .no { width: 5.4cqw; height: 3.5cqw; border-radius: .9cqw;
-                                   font-size: 2.2cqw; grid-row: 1 / span 2; }
-body[data-size="l"] .sh-lots .du { grid-column: 2; font-size: 2.05cqw; }
+body[data-size="l"] .sh-lots li { grid-template-columns: 6.1cqw 1fr; row-gap: .2cqw; font-size: 2.85cqw; }
+body[data-size="l"] .sh-lots .no { width: 6.1cqw; height: 4cqw; border-radius: 1cqw;
+                                   font-size: 2.5cqw; grid-row: 1 / span 2; }
+body[data-size="l"] .sh-lots .du { grid-column: 2; font-size: 2.3cqw; }
 
 .sh-note { margin: 2.2cqw 0 0; font-size: 2.9cqw; line-height: 1.6; color: var(--ink-soft); }
-body[data-size="l"] .sh-note { font-size: 1.8cqw; margin-top: 1.6cqw; }
+body[data-size="l"] .sh-note { font-size: 2cqw; margin-top: 1.8cqw; }
 
 /* ---- 收尾：整張紙唯一一句「我們」的話，用診所的綠 ---- */
 .nt-close { margin: 3.4cqw 0 0; font-size: 4cqw; letter-spacing: .06em;
@@ -438,11 +438,9 @@ body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
        那等於教人賭一把，而這張紙的目的正好相反。
      ========================================================================== -->
 <div class="sheet">
-  <div class="nt-head">
-    <b>門口這一段是紅線</b>
-    <em>最近有警察到現場直接開單</em>
-  </div>
-
+  <!-- ⚠⚠ 抬頭（「門口這一段是紅線／最近有警察到現場直接開單」）2026-08-23
+       由使用者拿掉 —— 這張紙就貼在那一段紅線旁邊，標題只是把四點提醒又講一次。
+       樣式 .nt-head 還留在樣式表裡，要放回來把這一段補回去就好。 -->
   <div class="nt-main">
     <div class="sh-map">
 <figure class="map-fig">
@@ -785,7 +783,12 @@ body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
         <li>平常車不多，但<b>門口是紅線</b>。</li>
         <!-- ⚠ 「在門口」拿掉了：抬頭已經寫著門口，留著只會讓「門／口」被斷行拆開。 -->
         <li>以前多半是柔性勸導，前幾天已經有人<b>被直接開單</b>。</li>
-        <li>走幾步就有停車場，最近的一分鐘就到。</li>
+        <!-- ⚠ 原本是「走幾步就有停車場，最近的一分鐘就到。」，18 個字會折行
+             留下「就到。」三個孤字。收成 13 個字剛好一行，意思一樣具體。 -->
+        <li>最近的停車場走一分鐘就到。</li>
+        <!-- ⚠ 這一條原本在停車場清單底下當小字，2026-08-23 使用者要求提上來
+             當第四點 —— 路邊停車格對只停一下的人比停車場更有用。 -->
+        <li>周邊路段另有畫設之路邊停車格。</li>
       </ul>
 
       <ul class="sh-lots">
@@ -794,7 +797,7 @@ body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
         <li><span class="no">P3</span><span class="nm">斗六永樂站停車場</span><span class="du">50 公尺・步行 1 分鐘</span></li>
       </ul>
 
-      <p class="sh-note">周邊路段另有畫設之路邊停車格。停車計價方式依各業者現場標示為準。</p>
+      <p class="sh-note">停車計價方式依各業者現場標示為準。</p>
       <!-- ⚠ 收尾那一句（「不用急，先把車停好　我們等你」）2026-08-23 由使用者
            拿掉：這是一張告示，不是一封信。 -->
     </div>
