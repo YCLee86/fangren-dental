@@ -44,7 +44,13 @@ body[data-size="l"] .nt-head b  { font-size: 5.2cqw; }
 body[data-size="l"] .nt-head em { font-size: 2.5cqw; }
 
 /* ---- 底下：橫式兩欄、直式一欄 ---- */
+/* ⚠⚠ 2026-08-23 使用者最後定的是**直式**：三段提醒在最上面、地圖在中間、
+   三顆 QR 在最下面。DOM 的順序是「地圖 → 提醒」（橫式要的），
+   直式用 order 把提醒調到前面，**不要為了排版去改 DOM 順序** ——
+   橫式那一組還要用同一份 markup。 */
 .nt-main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+body[data-size="p"] .nt-side { order: -1; }
+body[data-size="p"] .sh-map { flex: 1; margin-top: 3cqw; }
 body[data-size="l"] .nt-main {
   /* ⚠ 收尾那一句拿掉之後右欄變短，左欄再給寬一點讓地圖長大 ——
      地圖是**寬度受限**的（它比欄位矮），欄位變寬它才會變大。
@@ -92,8 +98,18 @@ body[data-size="l"] .nt-points li::before { width: .95cqw; height: .95cqw; }
 .nt-lot { text-align: center; }
 .nt-code svg { width: 22cqw; height: 22cqw; }
 body[data-size="l"] .nt-code svg { width: 7.4cqw; height: 7.4cqw; }   /* 297mm × 7.4% ≈ 22mm */
+/* ⚠ 直式的卡片只有約 59mm 寬（210 − 內距 20 − 兩道間距 12.6，再除以 3），
+   「壹車房－中華路停車場」10 個字加上號碼牌排一行塞不下 ——
+   直式把**號碼牌放到自己一行**，名字才有整張卡的寬度可以用。 */
 .nt-nm { margin: 1.4cqw 0 0; font-size: 3.2cqw; font-weight: 700; letter-spacing: .02em;
          display: flex; align-items: center; justify-content: center; gap: 1.4cqw; }
+body[data-size="p"] .nt-nm { display: block; font-size: 2.7cqw; margin-top: 1.2cqw;
+                             white-space: nowrap; }
+body[data-size="p"] .nt-nm .no { display: block; width: fit-content;
+                                 margin: 0 auto 1.2cqw; font-size: 2.4cqw; }
+body[data-size="p"] .nt-du { font-size: 2.4cqw; margin-top: .8cqw; }
+body[data-size="p"] .nt-code svg { width: 15cqw; height: 15cqw; }   /* 210mm × 15% ≈ 31mm */
+body[data-size="p"] .nt-lots { gap: 3cqw; margin-top: 4cqw; }
 .nt-nm .no { background: #365685; color: var(--card); border-radius: 1.2cqw;
              padding: .3em .7em; font-size: .82em; font-weight: 700;
              font-family: Arial, Helvetica, sans-serif; letter-spacing: .02em; }
@@ -115,11 +131,13 @@ body[data-qr="off"] .nt-code { display: none; }
 body[data-size="l"] .nt-close { font-size: 2.5cqw; margin-top: 2.2cqw; }
 
 /* 印出來的時候：整頁只留紙張本身 */
-@page { size: A4 landscape; margin: 0; }
+/* ⚠ @page 不能跟著 class 走，所以它跟著**定案的那一種**（直式）。
+   要印橫式的就把這裡與底下的 .sheet 一起換成 landscape／297×210。 */
+@page { size: A4 portrait; margin: 0; }
 @media print {
   body { background: #fff; padding: 0; }
   .pv-bar { display: none !important; }
-  .sheet { width: 297mm; height: 210mm; aspect-ratio: auto; box-shadow: none; }
+  .sheet { width: 210mm; height: 297mm; aspect-ratio: auto; box-shadow: none; }
 }
 
 /* ---- 切換條（提案用，定案時整段刪掉） ---- */
