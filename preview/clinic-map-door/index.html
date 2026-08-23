@@ -398,7 +398,7 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 .mn-first { display: block; margin-bottom: .35rem; }
 </style>
 </head>
-<body data-orient="w" data-size="p" data-lotcolor="blue" data-ns="b">
+<body data-orient="w" data-size="p" data-lotcolor="blue" data-ns="b" data-nw="c">
 
 <div class="sheet">
   <div class="sh-head">
@@ -753,7 +753,7 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 
 <!-- ==========================================================================
      切換條（提案用）。⚠ 定案時整段刪掉。
-     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off　?ns=a|b|c|d
+     ?orient=w|e|n|s　?size=p|l　?lot=blue|grey　?you=on|off　?ns=a|b|c|d　?nw=a|b|c|d
      ========================================================================== -->
 <div class="pv-bar" id="pvBar">
   <div class="pv-row">
@@ -780,6 +780,13 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
     <button data-k="ns" data-v="b">Ⓑ 36</button>
     <button data-k="ns" data-v="c">Ⓒ 31</button>
     <button data-k="ns" data-v="d">Ⓓ 小 26</button>
+  </div>
+  <div class="pv-row">
+    <span class="pv-lab">針胖瘦</span>
+    <button data-k="nw" data-v="a">Ⓐ 最胖 1:1.3</button>
+    <button data-k="nw" data-v="b">Ⓑ 1:1.5</button>
+    <button data-k="nw" data-v="c">Ⓒ 現況 1:1.73</button>
+    <button data-k="nw" data-v="d">Ⓓ 瘦 1:2.0</button>
   </div>
   <div class="pv-panel" id="pvPanel">量測中…</div>
 </div>
@@ -1236,16 +1243,18 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
      ⚠ 針長一改缺口也跟著按比例縮，不然底下那兩隻腳會變成兩根刺。 */
   var LANE_FS = 12.5;                                /* 巷名字級（站上是 16） */
   var NS_H = { a: 42, b: 36, c: 31, d: 26 };         /* 整組大小（＝針長），比例固定 */
-  /* 第五輪定案：大小取 Ⓑ 36。第六輪「再粗一點」→ 半寬從 36×0.2517（＝9.06，
-     比例 1:2.0）加到 36×0.2889（＝10.4，**比例 1:1.73**）。
-     ⚠ 這一顆是這條尺唯一的出處，改胖瘦只改 NS_R.w，不要去動 path 字串。 */
-  var NS_R = { w: 0.2889, fs: 12 / 29, gap: 15 / 29 };
+  /* 胖瘦是**另一條尺**（?nw=a|b|c|d），值是「半寬 ÷ 針長」＝ 1÷(2×比例)。
+     ⚠ 大小與胖瘦刻意分成兩條尺 —— 早期把兩件混在一起改，一次就從
+       「太大」跳到「太細」。字級與字距只跟著**大小**走，不跟胖瘦。 */
+  var NS_W_R = { a: 1 / 2.6, b: 1 / 3.0, c: 0.2889, d: 0.25 };  /* 比例 1:1.3／1.5／1.73／2.0 */
+  var NS_R = { fs: 12 / 29, gap: 15 / 29 };
   var NSW = { w: 7.3, fs: 12, gap: 15 };             /* 由 nsGeom() 現算 */
   var nswA = 0, nswB = 0, nswN = 0;                   /* 尖端 y／底邊 y／缺口頂點 y，paint() 現算 */
   function nsGeom() {
     var h = NS_H[body.dataset.ns] || NS_H.b;
     nswA = -h * 0.75; nswB = h * 0.25; nswN = nswB - h * 0.22;
-    NSW.w = h * NS_R.w; NSW.fs = h * NS_R.fs; NSW.gap = h * NS_R.gap;
+    NSW.w = h * (NS_W_R[body.dataset.nw] || NS_W_R.c);
+    NSW.fs = h * NS_R.fs; NSW.gap = h * NS_R.gap;
     if (nswTxt) {
       nswTxt.setAttribute('font-size', NSW.fs.toFixed(2));
       nswTxt.setAttribute('dy', (INK * NSW.fs).toFixed(2));
@@ -1562,7 +1571,7 @@ body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
       poster(); paint();
     });
   });
-  ['orient', 'size', 'lotcolor', 'you', 'ns'].forEach(function (k) {
+  ['orient', 'size', 'lotcolor', 'you', 'ns', 'nw'].forEach(function (k) {
     var m = new RegExp('[?&]' + (k === 'lotcolor' ? 'lot' : k) + '=([a-z0-9]+)').exec(location.search);
     if (m) body.dataset[k] = m[1];
   });
