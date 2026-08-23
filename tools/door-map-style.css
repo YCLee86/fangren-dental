@@ -22,7 +22,30 @@ body {
   box-shadow: 0 1px 2px rgba(42,44,39,.07), 0 4px 10px rgba(42,44,39,.09);
   container-type: inline-size;
 }
-body[data-size="l"] .sheet { aspect-ratio: 297 / 210; width: min(100%, 297mm); }
+/* A4 橫式：地圖擺左邊、資訊擺右邊。
+   ⚠ 橫式如果沿用直式那種「上下堆疊」，抬頭＋清單＋圖說＋頁尾會把高度吃光，
+     地圖只剩一條（踩過，第一版就是這樣）。 */
+body[data-size="l"] .sheet {
+  aspect-ratio: 297 / 210; width: min(100%, 297mm);
+  display: grid; column-gap: 6cqw;
+  grid-template-columns: 1.45fr 1fr;
+  grid-template-rows: auto 1fr auto auto;
+  grid-template-areas: "head head" "map lots" "map note" "map foot";
+}
+body[data-size="l"] .sh-head { grid-area: head; }
+body[data-size="l"] .sh-map  { grid-area: map; margin: 2cqw 0 0; }
+body[data-size="l"] .sh-lots { grid-area: lots; align-content: center; margin: 0; }
+body[data-size="l"] .sh-note { grid-area: note; }
+body[data-size="l"] .sh-foot { grid-area: foot; }
+/* 橫式的紙比較寬，同樣的 cqw 會太大 —— 字級整組收一階。 */
+body[data-size="l"] .sh-head b { font-size: 5.4cqw; }
+body[data-size="l"] .sh-head span { font-size: 2.5cqw; }
+body[data-size="l"] .sh-lots li { grid-template-columns: 7cqw 1fr; row-gap: .6cqw; font-size: 3cqw; }
+body[data-size="l"] .sh-lots .no { width: 7cqw; height: 4.6cqw; border-radius: 1.1cqw; font-size: 2.8cqw; }
+body[data-size="l"] .sh-lots .du { grid-column: 2; font-size: 2.6cqw; }
+body[data-size="l"] .sh-note { font-size: 2.1cqw; }
+body[data-size="l"] .sh-foot { font-size: 2.2cqw; flex-direction: column; align-items: flex-start; gap: .6cqw; }
+body[data-size="l"] .sh-foot b { font-size: 2.6cqw; }
 
 /* 字級一律用 cqw（相對於紙張寬度），這樣螢幕預覽和實際列印是同一個版面。 */
 .sh-head { display: flex; align-items: baseline; gap: 2.2cqw; border-bottom: .35cqw solid var(--map-mark, #3f654a); padding-bottom: 1.6cqw; }
@@ -31,19 +54,23 @@ body[data-size="l"] .sheet { aspect-ratio: 297 / 210; width: min(100%, 297mm); }
 
 .sh-map { flex: 1; display: grid; place-items: center; margin: 2.4cqw 0 0; min-height: 0; overflow: hidden; }
 .sh-map .map-fig { width: 100%; height: 100%; display: grid; place-items: center; }
-/* ⚠ 高度也要夾住：紙張的比例和地圖的 viewBox（560×620）不一樣，
-   只給寬度的話圖會長到把底下的清單擠出紙外。 */
-.sh-map .map-svg { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+/* ⚠⚠ 地圖的尺寸**由 JS 現算**（見 door-map-script 的 fit()）：viewBox 會隨著
+   轉向重算，紙張又有直橫兩種，純 CSS 很難兩邊都「盡量大又不溢出」——
+   A4 橫那一版就是這樣被裁成只剩最上面一條（max-height 沒有夾住 width:100%）。
+   這裡只留「不要自己撐開」的保險。 */
+.sh-map .map-svg { max-width: 100%; max-height: 100%; }
 /* 圖說（周邊路段另有畫設…）海報上不畫 —— 同樣的兩句話改放在清單底下。 */
 .sh-map .map-note { display: none; }
 .sh-note { margin: 2.2cqw 0 0; font-size: 2.9cqw; line-height: 1.6; color: var(--ink-soft); }
 
 /* 三個停車場：一行一個，字要大到站在門口就讀得到 */
 .sh-lots { display: grid; gap: 1.6cqw; margin: 3cqw 0 0; padding: 0; list-style: none; }
-.sh-lots li { display: grid; grid-template-columns: 7cqw 1fr auto; align-items: baseline; gap: 2cqw;
+.sh-lots li { display: grid; grid-template-columns: 10cqw 1fr auto; align-items: baseline; gap: 2cqw;
               font-size: 4.2cqw; line-height: 1.4; }
-.sh-lots .no { width: 7cqw; height: 7cqw; border-radius: 50%; background: #365685; color: var(--card);
-               display: grid; place-items: center; font-size: 4cqw; font-weight: 700; align-self: center; }
+/* ⚠ 「P1」放不進圓形，改成圓角方（和地圖上色塊裡的字同一個代號）。 */
+.sh-lots .no { width: 10cqw; height: 6.4cqw; border-radius: 1.6cqw; background: #365685; color: var(--card);
+               display: grid; place-items: center; font-size: 3.9cqw; font-weight: 700; align-self: center;
+               font-family: Arial, Helvetica, sans-serif; letter-spacing: .02em; }
 .sh-lots .nm { font-weight: 700; letter-spacing: .02em; }
 .sh-lots .du { color: var(--ink-soft); font-size: 3.8cqw; white-space: nowrap; }
 
@@ -87,8 +114,12 @@ body[data-size="l"] .sheet { aspect-ratio: 297 / 210; width: min(100%, 297mm); }
    **CSS 規則贏過 presentation attribute**，所以寫在標籤上的 fill="#f4f4f5"
    會被那條蓋掉，字就變成街名的柔墨色（實測 rgb(92,95,87)）。
    font-weight 同理（那條寫了 400）。 */
-.sh-map .map-svg .you text { fill: var(--card); font-weight: 700; }
-.sh-map .map-svg .bdg text { fill: var(--card); font-weight: 700; }
+/* ⚠ 「現在位置」現在是 text 元素本身（不是群組），選擇器要跟著改 —— 
+   寫成 `.you text` 會選不到，字就會掉回街名的柔墨色。 */
+.sh-map .map-svg text.you { fill: var(--card); font-weight: 700; letter-spacing: .06em; }
+/* 街名壓在點狀路線上會亂 —— 補一圈和路面同色的描邊（做法同停車場那個 P：
+   paint-order: stroke 讓描邊先畫、字後畫，字腔不會被吃掉）。 */
+.sh-map .map-svg .lbl { paint-order: stroke; stroke: var(--map-road); stroke-width: 5; stroke-linejoin: round; }
 /* 指北針 */
 .sh-map .nsw path { fill: var(--ink-soft); }
 .sh-map .map-svg .nsw text { fill: var(--ink-soft); font-size: 15px; font-weight: 700; }
