@@ -14,16 +14,26 @@ const mod = await import("/opt/node22/lib/node_modules/playwright/index.js");
 const { chromium } = mod.default ?? mod;
 const chrome = "/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell";
 
+/* ⚠ 後兩張的來源是**使用者 2026-08-24 傳來的兩張手機截圖**（Google 圖片搜尋
+ *   「醫師帽」與「兒童牙科 刷手服」），那兩個檔在容器的暫存區、不會留下來 ——
+ *   **裁好的成品已經進版控**，所以來源不在時自動略過那兩筆，不要當成壞掉。
+ *   截圖裡有搜尋介面與商品文字，一律裁掉：參考圖上有字，模型會把字畫進畫面。 */
+const UP = "/root/.claude/uploads/5abb3e14-d84b-5393-bf9a-8c45f9ed7983";
 const JOBS = [
   { src: "assets/og-topic-general.jpg", out: "drafts/kids-child-ref.jpg",
     box: [150, 330, 225, 265], scale: 3.2, name: "小孩・分享卡尺寸下的畫法與頭身比" },
   { src: "assets/og-topic-perio.jpg",   out: "drafts/kids-chair-ref.jpg",
     box: [35, 190, 235, 390], scale: 2.6, name: "診療椅・形狀（只看形狀）" },
+  { src: `${UP}/1fe994e9-image.png`,    out: "drafts/kids-cap-ref.jpg",
+    box: [140, 1075, 330, 345], scale: 3.0, name: "綁帶式手術帽・形狀與印花的尺度" },
+  { src: `${UP}/edffdb56-image.png`,    out: "drafts/kids-scrub-print-ref.jpg",
+    box: [805, 1210, 275, 410], scale: 3.0, name: "印花刷手服・圖案大小與疏密" },
 ];
 
 const browser = await chromium.launch({ executablePath: fs.existsSync(chrome) ? chrome : undefined });
 const pg = await browser.newPage();
 for (const j of JOBS) {
+  if (!fs.existsSync(j.src)) { console.log("略過（來源不在）", j.out); continue; }
   const uri = `data:image/jpeg;base64,${fs.readFileSync(j.src).toString("base64")}`;
   const b64 = await pg.evaluate(async ({ uri, box, s }) => {
     const img = new Image(); img.src = uri; await img.decode();
