@@ -96,7 +96,7 @@ const BAR = `
   <div class="pv-row" data-k="op">
     <span class="pv-lab">濃度</span>
     <button type="button" data-v="1">基準</button>
-    <button type="button" data-v="2" id="pvOp2">濃</button>
+    <button type="button" data-v="2">濃</button>
     <button type="button" data-v="3">更濃</button>
     <button type="button" data-v="4">最濃</button>
   </div>
@@ -110,11 +110,22 @@ const BAR = `
   var root = document.documentElement;
   var ACCENT = [0xae, 0x4f, 0x4d];
   var IMG_W = ${IMG.w}, IMG_H = ${IMG.h};
-  var W  = { a: "min(76%, 360px)", b: "min(86%, 410px)", c: "min(93%, 440px)", d: "min(100%, 480px)" };
+  /* ⚠⚠ 兩段的「大小」是**兩把不同的尺**（2026-08-24 第二輪）：使用者看過 iPad 那一段
+     360／.48 之後說「好像太大了　而且太濃」，所以 ≥721 這一段整把尺往下移
+     —— 原本的第一格 360 變成這一段的**最後一格**，另外三格全是比它小的。
+     手機那把沒有動（他已經選定 a ＝ min(76%,360px) ＋ .107）。 */
+  var WM = { a: "min(76%, 360px)", b: "min(86%, 410px)", c: "min(93%, 440px)", d: "min(100%, 480px)" };
+  var WD = { a: "min(52%, 250px)", b: "min(62%, 300px)", c: "min(70%, 330px)", d: "min(76%, 360px)" };
+  var WDPX = { a: "250", b: "300", c: "330", d: "360" };
   /* ⚠ 手機第二格 .107 是**算出來的 AA 上限**（柔墨 #5c5f57 壓在 #ae4f4d 上剛好 4.5）。
      第三、四格已經在 4.5 底下，面板會即時標出來。 */
   var OPM = { "1": .10, "2": .107, "3": .13, "4": .15 };  /* 手機（<721） */
-  var OPD = { "1": .48, "2": .56, "3": .64, "4": .72 };   /* iPad／電腦（≥721） */
+  /* ≥721 這一段整組往下移（同上）：原本的第一格 .48 退到最後一格。
+     ⚠ 這一段被壓到的只有深墨（.tp-reply／.tp-close），濃度上限 .665，
+     所以四格都過得了 AA —— 這條尺純粹是美感，不是可讀性。
+     ⚠ 牙周 ≥721 定案是 .15，一般牙科 ≥834 是 .48，兩支差很多，本來就不必一致。 */
+  var OPD = { "1": .15, "2": .22, "3": .30, "4": .48 };   /* iPad／電腦（≥721） */
+  var OPDTXT = { "1": ".15", "2": ".22", "3": ".30", "4": ".48（剛才那個）" };
   /* ⚠⚠ 手機與 ≥721 是**兩組獨立的值**（站上本來就分兩段）——
      牙周那一輪量出來：iPad 的文字比較長（字級 +19%），同一組值在那一段會讓
      流程那幾行（柔墨）壓到線。所以大小也要分兩段記，不能只分濃度。
@@ -122,7 +133,7 @@ const BAR = `
      **mini 直放 744**，用 834 分會把他那台歸到「手機」那一段，
      他看到的和定案的就不是同一件事。 */
   /* 手機那一段 2026-08-24 使用者已經選定：基準大小 ＋ .107（AA 上限）。 */
-  var st = { wM: "a", opM: "2", wD: "a", opD: "1", fig: "on" };
+  var st = { wM: "a", opM: "2", wD: "b", opD: "1", fig: "on" };
   var q = location.search;
   ["w", "op"].forEach(function (k) {
     var m = q.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
@@ -137,7 +148,7 @@ const BAR = `
 
   function paint() {
     root.dataset.pvfig = st.fig;
-    root.style.setProperty("--pv-w", W[get("w")] || W.a);
+    root.style.setProperty("--pv-w", (isWide() ? WD : WM)[get("w")] || WM.a);
     root.style.setProperty("--pv-op", String(opVal()));
     document.querySelectorAll(".pv-row[data-k]").forEach(function (row) {
       var k = row.dataset.k;
@@ -147,7 +158,19 @@ const BAR = `
     });
     var seg = isWide() ? "iPad／電腦" : "手機";
     document.getElementById("pvSeg").textContent = "調的是「" + seg + "」這一段（兩段各記各的）";
-    document.getElementById("pvOp2").textContent = isWide() ? "濃" : "濃（AA 上限）";
+    /* ⚠ 按鈕上直接印實際值（牙周那一輪的做法）——「大」「更大」這種相對詞
+       在兩段的尺不一樣時會騙人。 */
+    var wBt = document.querySelectorAll('.pv-row[data-k="w"] button');
+    var oBt = document.querySelectorAll('.pv-row[data-k="op"] button');
+    if (isWide()) {
+      wBt.forEach(function (bt) { bt.textContent = WDPX[bt.dataset.v] + "px"; });
+      oBt.forEach(function (bt) { bt.textContent = OPDTXT[bt.dataset.v]; });
+    } else {
+      var mw = { a: "基準", b: "大", c: "更大", d: "最大" };
+      var mo = { "1": "基準", "2": "濃（AA 上限）", "3": "更濃", "4": "最濃" };
+      wBt.forEach(function (bt) { bt.textContent = mw[bt.dataset.v]; });
+      oBt.forEach(function (bt) { bt.textContent = mo[bt.dataset.v]; });
+    }
     meas();
   }
 
