@@ -4854,13 +4854,14 @@ body[data-topic] #topics { padding-top: 1rem; }
    var(--pv-*) 換成選中的定值。 */
 [data-topic="kids"] .tp-intro { position: relative; }
 [data-topic="kids"] .tp-intro::before {
-  content: ""; position: absolute; right: calc(-1 * var(--pv-dx, 0px)); bottom: 0;
-  width: var(--pv-w, min(76%, 360px)); aspect-ratio: 998 / 857;
-  background-image: url("../../assets/lineart-kids.png");
-  background-repeat: no-repeat; background-size: contain;
-  background-position: var(--pv-bp, center) center;
-  opacity: var(--pv-op, .12); pointer-events: none; z-index: 0;
-  transform: var(--pv-flip, none); transform-origin: center;
+  content: ""; position: absolute; right: calc(-1 * var(--pv-dx, 14px)); bottom: 0;
+  width: var(--pv-w, min(85.6%, 419px));
+  aspect-ratio: calc(998 - var(--pv-cut, 144)) / 857;
+  /* ⚠ 牙周那一套：**框窄一截 ＋ 圖照高度撐滿靠左**，多出來的被框裁掉。
+     比例尺不變（auto 100% 是按高度算的），只是整張往右移。
+     ⚠ 翻轉已經烘進圖檔（tools/topic-lineart.mjs --flip），這裡不再用 transform。 */
+  background: url("../../assets/lineart-kids.png") left center / auto 100% no-repeat;
+  opacity: var(--pv-op, .152); pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) { [data-topic="kids"] .tp-intro::before { opacity: var(--pv-op, .15); } }
 [data-topic="kids"] .tp-intro > * { position: relative; z-index: 1; }
@@ -7193,17 +7194,12 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
     <button type="button" data-v="4">最濃</button>
   </div>
   <div class="pv-row" data-k="dx">
-    <span class="pv-lab">往右</span>
+    <span class="pv-lab">裁掉</span>
     <button type="button" data-v="0">＋40</button>
     <button type="button" data-v="1">＋</button>
     <button type="button" data-v="2">＋＋</button>
     <button type="button" data-v="3">＋＋＋</button>
     <button type="button" data-v="4">最右</button>
-  </div>
-  <div class="pv-row" data-k="flip">
-    <span class="pv-lab">方向</span>
-    <button type="button" data-v="off">原方向（醫師在左）</button>
-    <button type="button" data-v="on">翻轉（醫師在右）</button>
   </div>
   <div class="pv-row">
     <button type="button" id="pvReset">把圖關掉／打開（看版面有沒有被動到）</button>
@@ -7219,9 +7215,14 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
      360／.48 之後說「好像太大了　而且太濃」，所以 ≥721 這一段整把尺往下移
      —— 原本的第一格 360 變成這一段的**最後一格**，另外三格全是比它小的。
      手機那把沒有動（他已經選定 a ＝ min(76%,360px) ＋ .107）。 */
-  var WM = { a: "min(81.25%, 390px)", b: "min(90%, 430px)", c: "min(96%, 460px)", d: "min(100%, 490px)" };
-  var WD = { a: "min(76%, 400px)", b: "min(88%, 460px)", c: "min(96%, 520px)", d: "min(100%, 580px)" };
+  var WMP = { a: 81.25, b: 90, c: 96, d: 100 }, WMX = { a: 390, b: 430, c: 460, d: 490 };
+  var WDP = { a: 76, b: 88, c: 96, d: 100 },     WDX = { a: 400, b: 460, c: 520, d: 580 };
   var WDPX = { a: "400", b: "460", c: "520", d: "580" };
+  function widthCSS() {
+    var cut = +((isWide() ? CUTD : CUTM)[get("dx")] || 144), k = (998 - cut) / 998;
+    var P = isWide() ? WDP : WMP, X = isWide() ? WDX : WMX, g = get("w");
+    return "min(" + (P[g] * k).toFixed(1) + "%, " + Math.round(X[g] * k) + "px)";
+  }
   var WMTXT = { a: "現況", b: "大", c: "更大", d: "最大" };
   /* ⚠ 手機第二格 .107 是**算出來的 AA 上限**（柔墨 #5c5f57 壓在 #ae4f4d 上剛好 4.5）。
      第三、四格已經在 4.5 底下，面板會即時標出來。 */
@@ -7240,20 +7241,24 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
   /* ⚠⚠ 「貼齊螢幕邊」之後還要更右，只能讓**圖在框裡往右移**（出血），
      框本身不能再推 —— 再推就凸出螢幕、整頁可以左右拉（CLAUDE.md 記著踩過）。
      出血的部分被偽元素的框裁掉，不會產生水平捲動；等於牙周那張「裁右」的鏡像。 */
+  /* 「裁多少」＝ 從圖檔右緣（翻轉後是醫師的背）切掉幾欄原圖。
+     ⚠ 框的寬度要跟著等比例縮，**比例尺才不會變** —— 這是牙周那一輪的做法：
+       框寬 ＝ 原本的寬 × (998 − 裁量) ÷ 998，圖用 auto 100% 靠左，超出的被框裁掉。
+     使用者 2026-08-24 在 375 上選的是「出血 50 rendered px」＝ 原圖 144 欄。 */
+  var CUTM = { "0": "96", "1": "144", "2": "192", "3": "240", "4": "288" };
   var DXM = { "0": "14px", "1": "14px", "2": "14px", "3": "14px", "4": "14px" };
-  var BLM = { "0": "40px", "1": "50px", "2": "60px", "3": "70px", "4": "80px" };
   /* ⚠⚠ ≥721 的上限**不是版心留白，是最窄的那台**：實測 721 上介紹區離螢幕邊只有
      23.8px、iPad mini 744 只有 22.5px，推 32px 就多出水平捲動（1041 以上有 189px 以上，
      完全不是限制）。所以這一段最後一格收在 20px。 */
+  var CUTD = { "0": "96", "1": "144", "2": "192", "3": "240", "4": "288" };
   var DXD = { "0": "20px", "1": "20px", "2": "20px", "3": "20px", "4": "20px" };
-  var BLD = { "0": "50px", "1": "65px", "2": "80px", "3": "95px", "4": "110px" };
   /* ⚠⚠ 手機與 ≥721 是**兩組獨立的值**（站上本來就分兩段）——
      牙周那一輪量出來：iPad 的文字比較長（字級 +19%），同一組值在那一段會讓
      流程那幾行（柔墨）壓到線。所以大小也要分兩段記，不能只分濃度。
      ⚠⚠ **分段用 721 不是 834**（牙周定案時同一件事）：使用者的 iPad 是
      **mini 直放 744**，用 834 分會把他那台歸到「手機」那一段，
      他看到的和定案的就不是同一件事。 */
-  var st = { wM: "d", opM: "2", wD: "b", opD: "2", dxM: "2", dxD: "2", fig: "on", flip: "on" };
+  var st = { wM: "d", opM: "2", wD: "b", opD: "2", dxM: "1", dxD: "1", fig: "on" };
   var q = location.search;
   ["w", "op", "dx"].forEach(function (k) {
     var m = q.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
@@ -7269,17 +7274,11 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
 
   function paint() {
     root.dataset.pvfig = st.fig;
-    root.style.setProperty("--pv-flip", st.flip === "on" ? "scaleX(-1)" : "none");
-    document.querySelectorAll('.pv-row[data-k="flip"] button').forEach(function (bt) {
-      bt.setAttribute("aria-pressed", String(bt.dataset.v === st.flip));
-    });
-    root.style.setProperty("--pv-w", (isWide() ? WD : WM)[get("w")] || WM.a);
+
+    root.style.setProperty("--pv-w", widthCSS());
+    root.style.setProperty("--pv-cut", (isWide() ? CUTD : CUTM)[get("dx")] || "144");
     root.style.setProperty("--pv-dx", (isWide() ? DXD : DXM)[get("dx")] || "0px");
-    var bl = (isWide() ? BLD : BLM)[get("dx")] || "0px";
-    /* ⚠⚠ 翻轉是 scaleX(-1)：畫面上的「往右」在未翻轉的座標裡是「往左」，
-       所以出血的方向要跟著鏡射，不然按下去圖會往反方向跑。 */
-    root.style.setProperty("--pv-bp", bl === "0px" ? "center"
-      : (st.flip === "on" ? "calc(0% - " + bl + ")" : "calc(100% + " + bl + ")"));
+
     root.style.setProperty("--pv-op", String(opVal()));
     document.querySelectorAll(".pv-row[data-k]").forEach(function (row) {
       var k = row.dataset.k;
@@ -7295,8 +7294,8 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
     var oBt = document.querySelectorAll('.pv-row[data-k="op"] button');
     var dBt = document.querySelectorAll('.pv-row[data-k="dx"] button');
     dBt.forEach(function (bt) {
-      var v = (isWide() ? DXD : DXM)[bt.dataset.v], b = (isWide() ? BLD : BLM)[bt.dataset.v];
-      bt.textContent = "＋" + b;
+      
+      bt.textContent = (isWide() ? CUTD : CUTM)[bt.dataset.v] + " 欄";
     });
     if (isWide()) {
       wBt.forEach(function (bt) { bt.textContent = WDPX[bt.dataset.v] + "px"; });
@@ -7346,7 +7345,8 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
         cv.width = Math.max(1, Math.round(fw)); cv.height = Math.max(1, Math.round(fh));
         var g = cv.getContext("2d", { willReadFrequently: true });
         g.clearRect(0, 0, cv.width, cv.height);
-        g.drawImage(img, 0, 0, cv.width, cv.height);   /* 和 CSS 的 contain 同一個做法 */
+        /* 和 CSS 那條 auto 100% 靠左 同一個做法：先按高度撐滿，再靠左、超出的不畫 */
+        g.drawImage(img, 0, 0, Math.round(fh * 998 / 857), Math.round(fh));
         ink = g.getImageData(0, 0, cv.width, cv.height).data;
       } catch (e) { ink = null; }
     }
@@ -7359,9 +7359,7 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
         if (rr.width < 2 || rr.height < 2) return;
         lines++;
         if (!on || !ink) return;
-        var rx0 = rr.left - fig.left, rx1 = rr.right - fig.left;
-        if (st.flip === "on") { var t = cv.width - rx1; rx1 = cv.width - rx0; rx0 = t; }  /* ⚠ scaleX(-1) 之後座標要鏡射 */
-        var x0 = Math.max(0, Math.floor(rx0)), x1 = Math.min(cv.width, Math.ceil(rx1));
+        var x0 = Math.max(0, Math.floor(rr.left - fig.left)), x1 = Math.min(cv.width, Math.ceil(rr.right - fig.left));
         var y0 = Math.max(0, Math.floor(rr.top - fig.top)), y1 = Math.min(cv.height, Math.ceil(rr.bottom - fig.top));
         if (x1 <= x0 || y1 <= y0) return;
         var n = 0;
@@ -7391,7 +7389,7 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
     var gap = innerWidth - fig.right;   /* 圖的右緣離螢幕右邊多遠 */
     var txt = "視窗 " + Math.round(innerWidth) + "×" + Math.round(innerHeight) +
       "　圖 " + Math.round(fw) + "×" + Math.round(fh) + "（" + IMG_W + "×" + IMG_H + "）" +
-      "　濃度 " + al.toFixed(3) + "　" + (st.flip === "on" ? "翻轉" : "原方向") +
+      "　濃度 " + al.toFixed(3) + "　裁 " + ((isWide() ? CUTD : CUTM)[get("dx")]) + " 欄" +
       "\n壓到線的字 " + hit + "／" + lines + " 行";
     if (hit) {
       txt += "　最差對比 " + (worst >= 4.5 ? worst.toFixed(2) + " ✓" : "<b>" + worst.toFixed(2) + " ⚠ 低於 4.5</b>") +
