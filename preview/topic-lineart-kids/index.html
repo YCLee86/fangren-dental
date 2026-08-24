@@ -7194,7 +7194,7 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
   </div>
   <div class="pv-row" data-k="dx">
     <span class="pv-lab">往右</span>
-    <button type="button" data-v="0">貼齊</button>
+    <button type="button" data-v="0">＋40</button>
     <button type="button" data-v="1">＋</button>
     <button type="button" data-v="2">＋＋</button>
     <button type="button" data-v="3">＋＋＋</button>
@@ -7241,19 +7241,19 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
      框本身不能再推 —— 再推就凸出螢幕、整頁可以左右拉（CLAUDE.md 記著踩過）。
      出血的部分被偽元素的框裁掉，不會產生水平捲動；等於牙周那張「裁右」的鏡像。 */
   var DXM = { "0": "14px", "1": "14px", "2": "14px", "3": "14px", "4": "14px" };
-  var BLM = { "0": "0px",  "1": "40px", "2": "80px", "3": "120px", "4": "160px" };
+  var BLM = { "0": "40px", "1": "50px", "2": "60px", "3": "70px", "4": "80px" };
   /* ⚠⚠ ≥721 的上限**不是版心留白，是最窄的那台**：實測 721 上介紹區離螢幕邊只有
      23.8px、iPad mini 744 只有 22.5px，推 32px 就多出水平捲動（1041 以上有 189px 以上，
      完全不是限制）。所以這一段最後一格收在 20px。 */
   var DXD = { "0": "20px", "1": "20px", "2": "20px", "3": "20px", "4": "20px" };
-  var BLD = { "0": "0px",  "1": "50px", "2": "100px", "3": "150px", "4": "200px" };
+  var BLD = { "0": "50px", "1": "65px", "2": "80px", "3": "95px", "4": "110px" };
   /* ⚠⚠ 手機與 ≥721 是**兩組獨立的值**（站上本來就分兩段）——
      牙周那一輪量出來：iPad 的文字比較長（字級 +19%），同一組值在那一段會讓
      流程那幾行（柔墨）壓到線。所以大小也要分兩段記，不能只分濃度。
      ⚠⚠ **分段用 721 不是 834**（牙周定案時同一件事）：使用者的 iPad 是
      **mini 直放 744**，用 834 分會把他那台歸到「手機」那一段，
      他看到的和定案的就不是同一件事。 */
-  var st = { wM: "d", opM: "2", wD: "b", opD: "2", dxM: "1", dxD: "1", fig: "on", flip: "on" };
+  var st = { wM: "d", opM: "2", wD: "b", opD: "2", dxM: "2", dxD: "2", fig: "on", flip: "on" };
   var q = location.search;
   ["w", "op", "dx"].forEach(function (k) {
     var m = q.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
@@ -7296,7 +7296,7 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
     var dBt = document.querySelectorAll('.pv-row[data-k="dx"] button');
     dBt.forEach(function (bt) {
       var v = (isWide() ? DXD : DXM)[bt.dataset.v], b = (isWide() ? BLD : BLM)[bt.dataset.v];
-      bt.textContent = b === "0px" ? "貼齊" : "＋" + b;
+      bt.textContent = "＋" + b;
     });
     if (isWide()) {
       wBt.forEach(function (bt) { bt.textContent = WDPX[bt.dataset.v] + "px"; });
