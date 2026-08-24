@@ -7,9 +7,9 @@
 
 | | |
 | --- | --- |
-| 已完成 | `general`（`assets/lineart-general.png` 832×788，2026-08-23 上線） |
-| 進行中 | `perio` 牙周 —— **分享圖已上線，線稿的提示詞與姿勢參考已備妥**：[`drafts/lineart-perio-prompt.md`](lineart-perio-prompt.md)，等出圖 |
-| 待做 | `kids` 兒牙／`endo` 顯微根管／`prosth` 植牙・假牙重建／`surg` 口腔外科／`ortho` 齒顎矯正 |
+| 已完成 | `general`（`assets/lineart-general.png` 832×788，2026-08-23 上線）、`perio`（`assets/lineart-perio.png` 1024×755，2026-08-24 上線，[`drafts/lineart-perio-prompt.md`](lineart-perio-prompt.md)） |
+| 進行中 | `endo` 顯微根管 —— **分享圖已上線，線稿的提示詞與參考圖已備妥**：[`drafts/lineart-endo-prompt.md`](lineart-endo-prompt.md)，等出圖 |
+| 待做 | `kids` 兒牙／`prosth` 植牙・假牙重建／`surg` 口腔外科／`ortho` 齒顎矯正 |
 | 產生器 | `tools/topic-lineart.mjs`（永久） |
 | 門檻量測 | `drafts/lineart-measure.mjs` |
 | 風格參考圖 | `drafts/lineart-ref-1-walking.png` ~ `-5-bubbles.png`（已裁掉 app 介面，進版控） |
@@ -27,7 +27,9 @@
 | 出現在哪 | **只在訊息卡上**（`og:image`，頁面上看不到） | **只在頁面上**（介紹區右下角的底） |
 | 規格 | ILLUSTRATION.md 第十一節 | ILLUSTRATION.md 第十二節（＋這一份） |
 
-**⚠⚠ 六科現在兩張都沒有**（`og:image` 退回 `assets/og-home.jpg`）。
+**⚠⚠ 2026-08-24 的現況**：分享圖有 `general`／`perio`／`endo` 三張，線稿有
+`general`／`perio` 兩張；**兒牙／植牙／口外／矯正四科兩張都沒有**
+（`og:image` 退回 `assets/og-home.jpg`）。
 **先做分享圖，再做線稿** —— 理由是下面那個「姿勢參考圖」：
 一般牙科那一輪是從**已經畫好的分享圖**裡裁一段當姿勢參考的
 （`drafts/lineart-pose-ref.png`），有它才一次就中；沒有它就得用文字描述動作，
@@ -247,10 +249,20 @@ node tools/topic-lineart.mjs <spec> --art drafts/lineart-<spec>-v1.jpg \
 
 ⚠⚠ **不要改成 `[data-topic]` 一網打盡** —— 沒有圖的科目會畫出一個空的偽元素。
 
-⚠ 大小與濃度**不要重挑**，一般牙科已經定案而且是量出來的：
-`min(76%, 360px)`、手機 `.10`、`@media (min-width: 834px)` `.48`。
-理由（`--ink-soft` 紙上只剩 5.14、臨界濃度 .101；≥834 實測 0% 的字落在圖上）
-寫在 `index.html` 那段註解與 `/history/topic-lineart.html` 裡。
+⚠⚠ **大小與濃度不要憑感覺挑，但也不要互抄** —— 已經有兩組值，是使用者各自逐格挑的：
+
+| | 一般牙科 | 牙周 |
+| --- | --- | --- |
+| 分段 | `@media (min-width: 834px)` | **721px**（他是在 iPad mini 直放 744 上定的） |
+| 大小 | `min(76%, 360px)` | 手機 `min(81.25%, 390px)`／≥721 `min(100%, 480px)` |
+| 濃度 | `.10`／`.48` | `.115`／`.15` |
+
+⚠ **臨界濃度跟著該科的套色走**（愈淺愈寬鬆）：一般牙科 `#3f654a` 是 **.101**、
+牙周 `#317d78` 是 **.115** —— 卡住的是柔墨 `--ink-soft` 的次要文字，不是主文。
+新的一科**先量一次臨界濃度再給值**。理由與量法寫在 `index.html` 那段註解、
+`/history/topic-lineart.html` 與 `/history/topic-lineart-perio.html` 裡。
+⚠ **大小是免費的、濃度不是**：圖變大不改變對比度（最壞底色只看濃度），
+所以「想更明顯」先走大小那一條。
 ⚠ `aspect-ratio` 要換成那一科圖檔自己的長寬。
 
 **3. 重跑產生器與 build**
