@@ -4814,7 +4814,7 @@ body[data-topic] #topics { padding-top: 1rem; }
   background: url("../../assets/lineart-endo.png") center / contain no-repeat;
   opacity: var(--pv-op, .10); pointer-events: none; z-index: 0;
 }
-@media (min-width: 834px) { [data-topic="endo"] .tp-intro::before { opacity: var(--pv-op, .48); } }
+@media (min-width: 721px) { [data-topic="endo"] .tp-intro::before { opacity: var(--pv-op, .48); } }
 [data-topic="endo"] .tp-intro > * { position: relative; z-index: 1; }
 html[data-pvfig="off"] [data-topic="endo"] .tp-intro::before { display: none; }
 
@@ -7128,12 +7128,16 @@ html[data-pvfig="off"] [data-topic="endo"] .tp-intro::before { display: none; }
   var W  = { a: "min(76%, 360px)", b: "min(86%, 410px)", c: "min(93%, 440px)", d: "min(100%, 480px)" };
   /* ⚠ 手機第二格 .107 是**算出來的 AA 上限**（柔墨 #5c5f57 壓在 #ae4f4d 上剛好 4.5）。
      第三、四格已經在 4.5 底下，面板會即時標出來。 */
-  var OPM = { "1": .10, "2": .107, "3": .13, "4": .15 };  /* 手機（<834） */
-  var OPD = { "1": .48, "2": .56, "3": .64, "4": .72 };   /* iPad／電腦（≥834） */
-  /* ⚠⚠ 手機與 ≥834 是**兩組獨立的值**（站上本來就分兩段）——
-     牙周那一輪量出來：iPad 的文字比較長（字級 +19%），同一組值在 834 上會讓
-     流程那幾行（柔墨）壓到線。所以大小也要分兩段記，不能只分濃度。 */
-  var st = { wM: "a", opM: "1", wD: "a", opD: "1", fig: "on" };
+  var OPM = { "1": .10, "2": .107, "3": .13, "4": .15 };  /* 手機（<721） */
+  var OPD = { "1": .48, "2": .56, "3": .64, "4": .72 };   /* iPad／電腦（≥721） */
+  /* ⚠⚠ 手機與 ≥721 是**兩組獨立的值**（站上本來就分兩段）——
+     牙周那一輪量出來：iPad 的文字比較長（字級 +19%），同一組值在那一段會讓
+     流程那幾行（柔墨）壓到線。所以大小也要分兩段記，不能只分濃度。
+     ⚠⚠ **分段用 721 不是 834**（牙周定案時同一件事）：使用者的 iPad 是
+     **mini 直放 744**，用 834 分會把他那台歸到「手機」那一段，
+     他看到的和定案的就不是同一件事。 */
+  /* 手機那一段 2026-08-24 使用者已經選定：基準大小 ＋ .107（AA 上限）。 */
+  var st = { wM: "a", opM: "2", wD: "a", opD: "1", fig: "on" };
   var q = location.search;
   ["w", "op"].forEach(function (k) {
     var m = q.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
@@ -7141,7 +7145,7 @@ html[data-pvfig="off"] [data-topic="endo"] .tp-intro::before { display: none; }
   });
   var mf = q.match(/[?&]fig=([a-z0-9]+)/); if (mf) st.fig = mf[1];
 
-  function isWide() { return matchMedia("(min-width: 834px)").matches; }
+  function isWide() { return matchMedia("(min-width: 721px)").matches; }
   function key(k) { return k + (isWide() ? "D" : "M"); }
   function get(k) { return st[key(k)]; }
   function opVal() { return (isWide() ? OPD : OPM)[get("op")] || (isWide() ? .48 : .10); }
