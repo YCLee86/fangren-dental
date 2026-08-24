@@ -1,6 +1,7 @@
 # 分享圖提示詞：兒童牙科（`og-topic-kids`）
 
-**狀態：⏳ 梗已定（2026-08-24，使用者選 Ⓑ 並改了三件），第五節是可以直接貼的第一版提示詞。**
+**狀態：⏳ 第二版提示詞（2026-08-24）。第一版的梗、姿勢、兩人同高、媽媽的位置全部一次就對，
+使用者退回四件（安靜／褲子沒印花／椅子顏色／像倉庫）—— 量測與改法在第五之〇節，提示詞在第五節。**
 規格依 [ILLUSTRATION.md](../ILLUSTRATION.md) 第十一節（250px 判準）與
 [TEAM.md](../TEAM.md) 第一節第 9 號（插畫師的三個交件門檻）。
 文案脈絡見 COPY.md 第九之十三節與 `tools/topic-copy.mjs` 的 `kids`。
@@ -133,7 +134,45 @@
 
 ---
 
-## 五、提示詞（第一版，逐字，可直接複製）
+## 五之〇、第一版的量測與使用者的四件（2026-08-24，使用者：「蠻好的　不過…」）
+
+原檔 `drafts/og-topic-kids-v1.jpg`。**梗、姿勢、兩人同高、媽媽的位置全部一次就對了**，
+四件回饋逐字：「畫面有點安靜」「醫師的褲子也要和帽子上衣同樣花色」
+「椅子顏色也要改成兒童牙科主題色系」「診所空間環境很像倉庫　太空曠了　不像診間」。
+
+| | v1 | 門檻 | |
+| --- | --- | --- | --- |
+| 邊緣密度 | **21.4%** | ≥ 30% | ❌ **不過** |
+| 無彩空白（S<12 且 L>80） | 0.1% | < 5% | ✅ |
+| 頂 17% 的邊緣密度 | 2.8% | 乾淨 | ✅ |
+| 頂 17% 的中位色 | R245 G237 B219 | R ≥ 228 | ✅ 有餘裕（`--tintcolor` 會是 `#eda030`） |
+
+**「太空曠」量得出來，而且量得出在哪裡。** 把畫面切成 6×3 格看邊緣密度：
+
+    上排　 0.0　 0.0　 4.8　 0.1　24.1　 0.4   ← 除了媽媽那一格，整條上半部沒有東西
+    中排　 9.8　12.1　38.5　40.1　41.5　25.4
+    下排　12.1　23.4　41.9　47.6　36.7　26.1
+
+→ **成因是我自己寫的那一條**：「背景只有牆與地板，加一條低櫃線；不要海報、不要盆栽、
+不要器械推車」。那條是為 250px 寫的，但它把 ILLUSTRATION.md 第十一之一節第 3 條
+（**「背景簡單」不等於「畫面空」—— 簡單要靠元素少而大**）做反了。
+第二版改成**放五樣大東西**（窗、治療台的臂與托盤、長檯面與洗手台、牆上三片大雲、
+收起來的診療燈），不是放很多小東西。
+
+⚠ **頂 17% 要保住 2.8% 那個成績** —— 窗框、燈臂、牆貼一律壓在那條線以下。
+
+### 這一版的四件改動
+
+| 使用者說 | 改法 |
+| --- | --- |
+| 畫面有點安靜 | 新增一段「**同時要有三個小動作**」（孩子晃腳、妹妹跪起來探頭、後面的護理師在放紙杯），並把組數從三組變成三組五人（媽媽與妹妹算同一組） |
+| 褲子也要同花色 | 帽子＋上衣＋**褲子**寫成「同一塊布」，白袍**敞開**讓印花露得出來 |
+| 椅子換兒牙色系 | 鼠尾草綠 → **焦糖 `#d2a161`**（深階 `#a97a3c`）；護理師改穿素面鼠尾草綠，把站上那一支綠留在畫面裡 |
+| 像倉庫、不像診間 | 五樣大東西（見上），目標邊緣密度 21.4% → **≥30%** |
+
+---
+
+## 五、提示詞（第二版，逐字，可直接複製）
 
 ```
 Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
@@ -142,18 +181,19 @@ simple shapes, few large objects, ONE single continuous scene, no panels, no div
 no inset boxes.
 
 THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: a bright, calm, warm
-children's dental room at midday. The back wall is a WARM CREAM WHITE (#f2e6d2) that keeps a
-clear hint of warmth in it - never grey, never blue-white, never pure white, never mustard.
-The floor is light warm wood. The whole picture is friendly and unhurried. NOTHING here is
-frightening: no needle, no drill, no blood, no tears.
+children's dental clinic at midday, WITH THINGS GOING ON IN IT. The back wall is a WARM CREAM
+WHITE (#f2e6d2) that keeps a clear hint of warmth in it - never grey, never blue-white, never
+pure white, never mustard. The floor is light warm wood. Nothing here is frightening: no
+needle, no drill, no blood, no tears.
 
 THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is
-plain warm cream wall only - no head, no hand, no lamp, no shelf, no cable, no sign.
+plain warm cream wall only - no head, no hand, no lamp, no lamp arm, no window frame, no
+shelf, no cable, no sign. Everything else in the room starts below that line.
 
 THE PICTURE IS ABOUT TWO FACES AT THE SAME HEIGHT. A dentist has come all the way down to a
-small child's level, and the child is delighted. Everything below serves that one idea.
+small child's level, and the child is delighted. Everything else serves that one idea.
 
-THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
 
 1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
    linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
@@ -164,65 +204,84 @@ THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
    SOLIDITY - nobody is paler, softer, thinner or more transparent than anybody else.
 
 2. THE CHILD IS SITTING UP ON THE DENTAL CHAIR AND HE IS ENJOYING HIMSELF. A boy of about
-   five. THE CHAIR IS UPRIGHT AND LOWERED TO ITS LOWEST POSITION, sage green (#8fae9b), with
-   the shape of the reference chair; he sits on it with his legs dangling over the front edge.
-   He leans forward towards the dentist, ONE SMALL HAND POINTING AT THE LITTLE ROUND MIRROR
-   SHE IS HOLDING, the other hand resting on the armrest. His mouth is open in a happy laugh
-   and his eyes are on the dentist. HIS IS THE BIGGEST FACE IN THE PICTURE, near the
+   five in a soft blue t-shirt and khaki shorts. THE CHAIR IS UPRIGHT AND LOWERED TO ITS
+   LOWEST POSITION, and ITS UPHOLSTERY IS WARM CARAMEL (#d2a161, shaded with #a97a3c, with
+   cream piping along the seams) - not green, not blue, not grey. He sits on it with his legs
+   dangling over the front edge and HE IS SWINGING BOTH FEET, with two or three small motion
+   lines beside his shoes. He leans forward towards the dentist, ONE SMALL HAND POINTING AT
+   THE LITTLE ROUND MIRROR SHE IS HOLDING, the other hand on the armrest, mouth open in a
+   happy laugh, eyes on the dentist. HIS IS THE BIGGEST FACE IN THE PICTURE, near the
    horizontal centre, the top of his head about one third down from the top edge.
 
 3. THE DENTIST IS DOWN ON ONE KNEE BESIDE THE CHAIR, AND HER EYES ARE EXACTLY LEVEL WITH HIS.
    A woman kneeling on her right knee to the LEFT of the chair, back straight, leaning in a
-   little. SHE HOLDS A SMALL ROUND DENTAL MIRROR LOW BETWEEN THEM, angled so the child can
-   see into it, and her other hand rests easily on her own knee. Her eyes are on the child and
-   she is smiling with him. THE TOP OF HER HEAD IS AT THE SAME HEIGHT AS THE TOP OF HIS HEAD -
-   this equal height is the single most important thing in the picture. She is NOT standing,
-   NOT bending over him, NOT reaching towards his mouth, NOT offering him a gift, and SHE
-   WEARS NO FACE MASK - her whole face is visible.
+   little. SHE HOLDS A SMALL ROUND DENTAL MIRROR LOW BETWEEN THEM, angled so the child can see
+   into it; her other hand rests easily on her own knee. Her eyes are on the child and she is
+   smiling with him. THE TOP OF HER HEAD IS AT THE SAME HEIGHT AS THE TOP OF HIS HEAD - this
+   equal height is the single most important thing in the picture. She is NOT standing, NOT
+   bending over him, NOT reaching towards his mouth, NOT offering him a gift, and SHE WEARS NO
+   FACE MASK - her whole face is visible.
 
-4. WHAT THE DENTIST IS WEARING (this is a brand detail, draw it carefully). A TIE-BACK
-   SURGICAL CAP covering her hair completely, with the fabric gathered and knotted into short
-   ties at the back of her head, exactly the shape of the reference photograph of the cap. Over
-   printed scrubs she wears an OPEN WHITE COAT, so the printed V-neck top, the printed sleeves
-   and the printed trousers all stay visible. THE CAP AND THE SCRUBS ARE THE SAME PRINTED
-   FABRIC: a warm off-white cloth (#f4ead8) scattered with SIMPLE FLAT CHILDLIKE DOODLES -
-   little bears, chicks, clouds, stars and small flowers - drawn in ONLY TWO COLOURS, amber
-   (#c28229) and deep caramel (#9e6301). THE DOODLES ARE BIG AND FEW, NOT SMALL AND BUSY:
-   each doodle is about a quarter of the width of the cap, with a clear gap of about the same
-   size between them. No letters, no numbers and no words in the pattern.
+4. WHAT THE DENTIST IS WEARING (this is a brand detail, draw it carefully). HER CAP, HER TOP
+   AND HER TROUSERS ARE ALL CUT FROM ONE AND THE SAME PRINTED FABRIC. On her head, a TIE-BACK
+   SURGICAL CAP covering her hair completely, the fabric gathered and knotted into short ties
+   at the back of her head, exactly the shape of the reference photograph of the cap. Over the
+   printed scrubs she wears a WHITE COAT HANGING OPEN AND UNBUTTONED, so that the printed
+   V-neck top, the printed short sleeves AND THE PRINTED TROUSERS DOWN TO HER SHOES are all
+   clearly visible. THE FABRIC: warm off-white cloth (#f4ead8) scattered with SIMPLE FLAT
+   CHILDLIKE DOODLES - little bears, chicks, clouds, stars and small flowers - drawn in ONLY
+   TWO COLOURS, amber (#c28229) and deep caramel (#9e6301). THE DOODLES ARE BIG AND FEW, NOT
+   SMALL AND BUSY: each doodle is about a quarter of the width of the cap, with a clear gap of
+   about the same size between them, and the same doodles run over cap, top and trousers alike.
+   No letters, no numbers and no words in the pattern.
 
-5. THE MOTHER IS THE TALL FIGURE ON THE RIGHT AND SHE HAS LET GO. She stands with her full
-   height about 70% of the picture height - the top of her head just below the empty top
-   strip, her shoes close to the bottom edge - her bag still hanging from one arm, the other
-   hand resting on the back of the chair, shoulders dropped, watching her child and smiling.
-   She is NOT holding him, NOT restraining him, NOT anxious, and she does not look at the
-   viewer. Keep her well inside the right edge, not touching it.
+5. THIS ROOM MUST READ AS A CHILDREN'S DENTAL CLINIC, NOT AN EMPTY HALL. Fill it with FIVE
+   LARGE, SIMPLE THINGS - large and few, never many and small:
+   • A WINDOW in the left half of the back wall, its frame beginning below the empty top strip,
+     with warm daylight slanting in through it.
+   • THE DENTAL DELIVERY UNIT behind the chair: one thick curved arm and a small instrument
+     tray holding two paper cups and a folded cloth; its arm stays low, well below the top
+     strip.
+   • THE OPERATING LIGHT folded down and parked low behind the chair, its head pointing at the
+     floor, its arm never rising into the top strip.
+   • A LONG LOW WOODEN COUNTER along the back wall with a sink and tap, a stack of small paper
+     cups, a lidded jar and one round potted plant on it.
+   • THREE BIG AMBER CLOUD SHAPES AND TWO STARS stuck on the wall between the counter and the
+     empty top strip - flat, simple, no outlines around them, no letters.
 
-6. THREE SEPARATE THINGS HAPPEN AT ONCE, spread along one horizontal band on the same floor
-   with clear gaps between the groups: (a) the dentist and the child over the little mirror,
-   left of centre; (b) the mother, on the right; (c) far right and slightly behind her, a
-   smaller girl of about three sits on a low stool swinging her legs and looking at a picture
-   book on her knees. Nobody looks at anybody outside their own group and nobody looks at the
-   viewer.
+6. AT LEAST THREE SMALL THINGS ARE MOVING AT ONCE - this is what makes the picture feel alive.
+   (a) the boy swinging his feet and pointing; (b) the little girl on the right rising up onto
+   her knees on her stool, leaning towards her brother with her picture book still in one hand;
+   (c) A DENTAL NURSE IN PLAIN SAGE-GREEN SCRUBS (no coat, no print) standing at the counter in
+   the background, half turned away from us, setting a paper cup down on a tray. Nobody looks
+   at the viewer.
 
-7. LIGHT AND COLOUR. One warm light source from outside the frame at the upper left, so the
-   light pools on the two faces and on the little mirror between them and softens towards the
-   edges; NO LAMP IS DRAWN INSIDE THE PICTURE. The colours are warm: amber and caramel for the
-   printed cap and scrubs, white for the coat, sage green for the chair, light warm wood for
-   the floor, warm cream for the wall. Fine paper grain over the whole image and loose
-   hand-drawn shading strokes; no large flat empty areas anywhere.
+7. THE MOTHER IS THE TALL FIGURE ON THE RIGHT AND SHE HAS LET GO. She stands with her full
+   height about 70% of the picture height - the top of her head just below the empty top strip,
+   her shoes close to the bottom edge - in a muted coral top and denim jeans, her bag still
+   hanging from one arm, the other hand resting on the back of the chair, shoulders dropped,
+   watching her child and smiling. She is NOT holding him, NOT restraining him, NOT anxious.
+   THE LITTLE GIRL SITS CLOSE BESIDE HER so that mother and daughter read as one group. Keep
+   them both well inside the right edge, not touching it.
 
-COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width;
-the chair base and the mother's shoes sit close to the bottom edge; the background is only
-two things - the wall and the floor - plus a single low cabinet line behind them. No posters,
-no shelves, no plants, no wall toys, no equipment trolley, no screens, no monitors.
+8. LIGHT AND COLOUR. Warm daylight comes from the window on the left, so the light pools on the
+   two faces and on the little mirror between them and softens towards the edges. The colours
+   are warm: amber and caramel for the printed cap, top and trousers and for the chair; white
+   for the open coat; sage green only on the nurse; light warm wood for the floor and counter;
+   warm cream for the wall. Fine paper grain over the whole image and loose hand-drawn shading
+   strokes; NO LARGE FLAT EMPTY AREAS ANYWHERE - if a part of the picture has nothing in it,
+   put one of the five large things there instead.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
+chair base, the dentist's knee and the mother's shoes sit close to the bottom edge; the top 17%
+stays completely empty.
 
 AVOID: any text, letters, numbers or logos anywhere in the image; panels, frames, insets,
 speech bubbles, arrows, small icons; anybody drawn faded, translucent, ghostly or outline-only;
-anybody looking at the viewer; needles, syringes, drills, blood, tears; face masks; a child
-who looks frightened or is hiding; grey or blue-white walls; an overall yellow or sepia cast;
-tiny busy multicoloured patterns; large empty white areas; photorealism; 3D rendering; heavy
-even black outlines.
+anybody looking at the viewer; needles, syringes, drills, blood, tears; face masks; a child who
+looks frightened or is hiding; a green, blue or grey dental chair; grey or blue-white walls; an
+overall yellow or sepia cast; tiny busy multicoloured patterns; posters or charts on the wall;
+large empty white areas; photorealism; 3D rendering; heavy even black outlines.
 ```
 
 ---
@@ -252,7 +311,8 @@ even black outlines.
 
 ## 八、還要問使用者的
 
-1. 右後方那個看繪本的妹妹要不要留（我傾向留：畫面才有「好幾件事同時在發生」）。
+1. ~~妹妹要不要留~~ —— 第一版使用者沒有反對，留著，第二版讓她跪起來探頭（比坐著看書有動作）。
+1.5 護理師是第二版才加的（為了「太安靜」），組數因此是三組五人。**不要再往上加人**。
 2. 印花的圖案要不要指定成診所自己的東西（例如站上那顆標誌的形狀）——
    目前寫的是通用的小熊／小雞／雲／星星／小花。
 3. 這一張定案之後才做**線稿底圖**（從這張裁一段當姿勢參考）。
