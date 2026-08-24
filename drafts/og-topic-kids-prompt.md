@@ -238,8 +238,8 @@ no inset boxes.
 THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: a bright, calm, warm
 children's dental clinic at midday, WITH THINGS GOING ON IN IT. The back wall is a WARM CREAM
 WHITE (#f2e6d2) that keeps a clear hint of warmth in it - the wall is never grey, never
-blue-white, never pure white and never mustard-yellow. The floor is light warm wood. Nothing here is frightening: no
-needle, no drill, no blood, no tears.
+blue-white, never pure white and never mustard-yellow. The floor is light warm wood. Nothing
+here is frightening: no needle, no drill, no blood, no tears.
 
 THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is
 plain warm cream wall only - no head, no hand, no lamp, no lamp arm, no window frame, no
@@ -329,10 +329,10 @@ THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
    two faces and on the little mirror between them and softens towards the edges. The colours
    are warm: amber and caramel for the printed cap, top and trousers and for the chair; white
    for the open coat; the nurse in the same off-white cloth with mustard dots; green only in the
-   potted plants; light
-   warm wood for the floor and counter; warm cream for the wall. Fine paper grain over the whole image and loose hand-drawn shading
-   strokes; NO LARGE FLAT EMPTY AREAS ANYWHERE - if a part of the picture has nothing in it,
-   put one of the five large things there instead.
+   potted plants; light warm wood for the floor and counter; warm cream for the wall. Fine paper
+   grain over the whole image and loose hand-drawn shading strokes; NO LARGE FLAT EMPTY AREAS
+   ANYWHERE - if a part of the picture has nothing in it, put one of the five large things there
+   instead.
 
 COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
 chair base, the dentist's knee and the mother's shoes sit close to the bottom edge; the top 17%
@@ -343,8 +343,9 @@ speech bubbles, arrows, small icons; anybody drawn faded, translucent, ghostly o
 anybody looking at the viewer; needles, syringes, drills, blood, tears; face masks; a child who
 looks frightened or is hiding; a green, blue or grey dental chair; sage-green or blue scrubs on
 the nurse; a nurse dressed in a solid mustard, ochre or yellow uniform; a nurse wearing the
-dentist's doodle print; grey or blue-white walls; an overall yellow or sepia cast; tiny busy multicoloured patterns; posters or charts on the wall;
-large empty white areas; photorealism; 3D rendering; heavy even black outlines.
+dentist's doodle print; grey or blue-white walls; an overall yellow or sepia cast; tiny busy
+multicoloured patterns; posters or charts on the wall; large empty white areas; photorealism;
+3D rendering; heavy even black outlines.
 ```
 
 ---
