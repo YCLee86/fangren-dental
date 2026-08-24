@@ -132,7 +132,7 @@ const OG_DESC = {
   perio: "把牙周病控制好 —— 靠治療，也靠你每天的清潔，檢查完一起安排。",
   endo: "這顆牙還留得住嗎？顯微鏡下看清楚。",
   kids: "孩子願意來、牙齒撐得住，其他的我們一起來努力。",
-  ortho: "排整齊只是一半，咬得不對，拆掉之後很容易又跑回去。",
+  ortho: "排整齊只是一半；咬得不對，拆掉之後很容易又跑回去。",
 };
 const ogImage = (spec) => {
   const rel = `assets/og-topic-${spec}.jpg`;
