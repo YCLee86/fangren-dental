@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>topic-lineart-perio｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .84rem; margin: .6rem 0 1rem; }
+  th, td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 500; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92em; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>topic-lineart-perio — 牙周著陸頁的線稿底圖</h1>
+<p class="meta">
+  2026-08-24 當天開、當天定案上線<br>
+  原網址 <code>/preview/topic-lineart-perio/</code>（已刪除 2026-08-24）<br>
+  整頁還原：<code>git show fa4f6b6:preview/topic-lineart-perio/index.html</code><br>
+  切換條 <code>?w=a|b|c|d&amp;op=1|2|3|4&amp;cut=0|1|2|3&amp;y=0|1|2&amp;fig=on|off</code><br>
+  成品 <code>assets/lineart-perio.png</code>（1024×755，透明底、牙周的套色 <code>#317d78</code>）<br>
+  產生器 <code>tools/topic-lineart.mjs</code>（永久，這一輪新增 <code>--flip</code>）<br>
+  提案頁的產生器 <code>drafts/lineart-perio-preview.mjs</code>（留在 drafts，下一科複製它改三個常數）<br>
+  提示詞與量測 <code>drafts/lineart-perio-prompt.md</code>
+</p>
+
+<div class="note">
+<p><b>一句話</b>：牙周這一張<b>四個值和一般牙科全部不一樣</b> —— 分段 721 不是 834、
+圖是橫的、手機那一段從右緣裁掉 192、濃度 .115／.15 不是 .10／.48。
+<b>那不是漏改成一致，是使用者在自己的手機與 iPad 上逐格挑的。</b></p>
+</div>
+
+<h2>起因與順序</h2>
+<p>使用者 2026-08-23：「牙周的線稿底圖 <b>但我覺得只要抓 醫師噴水 細菌被嚇跑噴走的部分就好</b>
+你們先做看看」。順序照 ILLUSTRATION.md 第十二節：<b>分享圖在前、線稿在後</b> ——
+姿勢參考圖是從前一天定案的 <code>assets/og-topic-perio.jpg</code> 原檔裁的
+（<code>drafts/lineart-perio-refs-crop.mjs</code>：醫師含腿 1446×1893、細菌 951×1268，
+倍率 1.5 ＝ 一般牙科那次 ×3 的等效放大）。</p>
+
+<h2>提示詞一次就過</h2>
+<p>八張參考圖分三組（五張只提供畫法、兩張只提供姿勢與表情、一張只提供長相與服裝），
+和模板刻意不同的兩處寫在 <code>drafts/lineart-perio-prompt.md</code>：<b>畫到鞋子不切在腰</b>
+（這一張的動作整個寫在下半身：前腳弓、後腳蹬、身體後仰）、<b>姿勢參考兩張</b>
+（細菌的翻滾與回頭也是姿勢）。門檻：線佔 6.34%、筆畫 4.9‰、粗細一致 1.60、
+<b>實心填色 0 塊</b>、四角乾淨（左下那 492 是水管，不是雜點）。</p>
+
+<h2>翻轉：<code>--flip</code></h2>
+<p>使用者：「把這張照一般牙科的方式合到著陸頁上 <b>不過要左右水平翻轉</b>」。
+理由是圖擺在介紹區的<b>右下角</b>，人物面向右邊等於背對整頁的文字、朝著版心外面噴。
+<code>tools/topic-lineart.mjs</code> 因此新增 <code>--flip</code>，實作是<b>先裁再翻</b>，
+所以 <code>--crop</code> 的座標一律在原圖上量：</p>
+<pre>node tools/topic-lineart.mjs perio --art drafts/lineart-perio-v1.jpg --crop 0,180,1024,755 --flip</pre>
+
+<h2>⚠⚠ 三件量出來、下一科會再遇到的事</h2>
+<h3>一、大小是免費的，濃度不是</h3>
+<p>最壞底色 ＝ 紙色與套色按濃度混合，<b>和圖多大無關</b>；圖變大只是讓更多字落在上面。
+所以「想更明顯」要<b>先走大小那一條</b>。手機實測（390）：大小現況→最大，
+壓到線的行數 7→8→12→19，<b>對比一格都沒動</b>；而濃度 .10→.20 就從 4.58 掉到 4.05。</p>
+<table>
+<tr><th>手機濃度</th><th>.10</th><th>.115</th><th>.15</th><th>.20</th></tr>
+<tr><td>柔墨 <code>#5c5f57</code> 壓在線上</td><td>4.58 ✓</td><td><b>4.50 ✓</b></td><td>4.32 ⚠</td><td>4.05 ⚠</td></tr>
+</table>
+<p>那個 <b>.116 的上限是算出來的</b>（二分逼近），牙周比一般牙科的 .101 寬鬆一點，
+因為 <code>#317d78</code> 比 <code>#3f654a</code> 淺。</p>
+
+<h3>二、圖檔的右緣不是人物的邊</h3>
+<p>使用者：「線稿一直往中間移 感覺可以是現在的位置往右一點 因為右邊比較有空位
+<b>醫師右後 應該可以被裁掉一些沒關係</b>」。翻轉之後醫師背後還有飛起來的白袍下襬
+與水管尾巴（第 830~1024 欄），<b>靠右對齊會對齊到那一截空白</b>，人就縮在中間。
+裁法是<b>框窄一截 ＋ 圖照高度撐滿靠左</b>（<code>background: left center / auto 100%</code>），
+<b>比例尺不變</b>，只是往右移 —— 九個寬度實測高度一格都沒動。</p>
+<table>
+<tr><th>375 上</th><th>現況</th><th>+64</th><th>+128</th><th>+192（定案）</th></tr>
+<tr><td>人物往右移</td><td>0</td><td>22px</td><td>43px</td><td><b>65px</b></td></tr>
+<tr><td>壓到線的行數</td><td>18／37</td><td>14／37</td><td>9／37</td><td>9／37</td></tr>
+</table>
+
+<h3>三、⚠⚠ iPad 不能照抄手機那一組，而且分段要 721 不是 834</h3>
+<p>把手機定案那組（最大 ＋ 裁右 192 ＋ .115）搬到 834 上，對比掉到 <b>2.86</b> ——
+成因是 <b>iPad 的字級 +19%</b>，流程那五行往右伸得更遠，所以會壓到<b>柔墨</b>
+（1024 與橫放 1112 反而沒事，版心更寬、文字相對更短）。</p>
+<p>更要緊的是<b>分段的界線</b>：使用者是在 <b>iPad mini 直放 744</b> 上定的「iPad 版」，
+而一般牙科那條線是 834 —— 用 834 的話那台會被歸到手機那一段，
+他看到的和定案的就不是同一件事。<b>所以牙周這一科的分段是 721px</b>
+（＝站上既有的平板界線）。</p>
+
+<h2>定案的值</h2>
+<pre>[data-topic="perio"] .tp-intro::before {
+  width: min(81.25%, 390px); aspect-ratio: 832 / 755;   /* ＝ 1024 裁掉右邊 192 */
+  background: url("assets/lineart-perio.png") left center / auto 100% no-repeat;
+  opacity: .115;
+}
+@media (min-width: 721px) {
+  [data-topic="perio"] .tp-intro::before {
+    width: min(100%, 480px); aspect-ratio: 1024 / 755; opacity: .15;
+  }
+}</pre>
+<p>使用者：「定稿 都上線 <b>電腦版照 iPad 版</b>」—— 所以 721 以上（含電腦）
+吃的是他在 iPad 上挑的那一組：不裁、最大、.15。</p>
+
+<div class="note">
+<p><b>⚠⚠ 已知的取捨（不要拿對比度來「訂正」它）</b>：≥721 那一段的 <b>.15</b> 是
+使用者看過數字之後選的。744 上有 11 行字壓到線，其中柔墨那幾行對比 <b>4.32</b>，
+低於 4.5；1440 上是 7 行（柔墨 3 行），一樣 4.32。同性質的前例有兩筆：
+兒牙填色上的白字 3.22、科別分享卡玻璃帶最亮處 4.40。
+手機那一段他選的是 <b>.115 ＝ AA 上限</b>（4.50 ✓）。</p>
+</div>
+
+<h2>驗收</h2>
+<p>十二個寬度（1440／1280／1200／1041／834／744／721／720／430／390／375／320）
+介紹區高度與「把偽元素關掉」<b>逐格相同</b>、沒有任何水平捲動；
+其餘六科與首頁沒有畫出這個偽元素（規則都用 <code>[data-topic="perio"]</code> 關著）。
+斷點兩側（721／720）各量過一次，確認換段時只換該換的四個值。</p>
+
+<h2>下一科（兒牙／顯微根管／植牙／口外／矯正）</h2>
+<p>模板在 <code>drafts/topic-lineart-prompt.md</code>，提示詞照 <code>lineart-perio-prompt.md</code>
+的結構改 WHO 與 COMPOSITION。<b>大小與濃度不要沿用一般牙科那組</b> ——
+牙周這一輪證明了它跟圖的長寬、人物在圖裡的位置、以及那一科文字的長度都有關，
+一律用提案頁讓使用者在自己的機器上挑，面板要能自己算出「這一格的濃度上限」。</p>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>

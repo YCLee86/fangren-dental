@@ -4733,6 +4733,36 @@ body[data-topic] #topics { padding-top: 1rem; }
 @media (min-width: 834px) { [data-topic="general"] .tp-intro::before { opacity: .48; } }
 [data-topic="general"] .tp-intro > * { position: relative; z-index: 1; }
 
+/* 牙周（2026-08-24 定案上線，推導在 /history/topic-lineart-perio.html）
+   ⚠⚠ **這一科的四個值和一般牙科都不一樣，是使用者在自己的手機與 iPad 上逐格挑的**，
+     不是漏改成一致：
+       ・分段用 **721px**，不是一般牙科的 834 —— 使用者是在 **iPad mini 直放 744**
+         上定的「iPad 版」，834 會把那台歸到手機那一段。
+       ・圖是**橫的**（1024×755，一般牙科近正方 832×788），所以同樣的寬度矮很多，
+         但橫向伸得更進文字裡。
+       ・手機那一段**從圖的右緣裁掉 192**（1024 的 18.75%）—— 圖檔右緣不是人物的邊，
+         醫師背後還有白袍下襬與水管尾巴，靠右對齊會對齊到那一截空白，
+         人看起來就縮在中間（使用者：「線稿一直往中間移」）。
+         裁法是「框窄一截 ＋ 圖照高度撐滿靠左」，**比例尺不變**，只是往右移。
+       ・≥721 不裁 —— 那一段版心寬，人物本來就靠著右邊。
+   ⚠ 濃度 .115 是**算出來的 AA 上限**（柔墨 #5c5f57 壓在牙周套色上剛好 4.5）。
+   ⚠⚠ ≥721 的 **.15 是使用者看過數字之後選的取捨**：744 上有 11 行字壓到線，
+     其中柔墨那幾行對比 **4.32**，低於 4.5。**不要拿對比度來「訂正」它**
+     （同兒牙填色白字 3.22、分享卡帶子 4.40 那兩筆）。1024 以上就沒有柔墨壓到了。 */
+[data-topic="perio"] .tp-intro { position: relative; }
+[data-topic="perio"] .tp-intro::before {
+  content: ""; position: absolute; right: 0; bottom: 0;
+  width: min(81.25%, 390px); aspect-ratio: 832 / 755;   /* ＝ 1024 裁掉右邊 192 */
+  background: url("../../assets/lineart-perio.png") left center / auto 100% no-repeat;
+  opacity: .115; pointer-events: none; z-index: 0;
+}
+@media (min-width: 721px) {
+  [data-topic="perio"] .tp-intro::before {
+    width: min(100%, 480px); aspect-ratio: 1024 / 755; opacity: .15;
+  }
+}
+[data-topic="perio"] .tp-intro > * { position: relative; z-index: 1; }
+
 /* 3-1「2 位醫師・2 篇文章」。
    ⚠ 科別名不再印一次（首頁那個 .filter-note 會印「兒童牙科：…」）——
      那已經是這一頁的 h1 了。

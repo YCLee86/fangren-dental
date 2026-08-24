@@ -1,6 +1,7 @@
 # 著陸頁線稿底圖・牙周治療（`lineart-perio`）
 
-**狀態（2026-08-24）：一次就過，成品 `assets/lineart-perio.png`（1024×755），提案頁做好了。**
+**狀態（2026-08-24）：✅ 定案上線。** 成品 `assets/lineart-perio.png`（1024×755），
+提案頁已刪除，推導存進 `/history/topic-lineart-perio.html`。定案的值見本檔第十二節。
 第一版提示詞生出來的圖就是定案候選（`drafts/lineart-perio-v1.jpg`），
 使用者：「一次就做好了……把這張照一般牙科的方式合到著陸頁上 **不過要左右水平翻轉** 先做成預覽給我看」。
 提案頁 `preview/topic-lineart-perio/index.html`（產生器 `drafts/lineart-perio-preview.mjs`）——
@@ -382,3 +383,35 @@ node tools/topic-lineart.mjs perio --art drafts/lineart-perio-v1.jpg --crop 0,18
 
 ⚠ ≥834 這一段壓到的只剩深墨（`.tp-reply`／`.tp-close`），**濃度上限 .710**，
 所以 .48 → .64 都還過得了 4.5，.72 是 4.44 ⚠。
+
+
+---
+
+## 十二、✅ 定案（2026-08-24）
+
+使用者：「定稿 都上線 **電腦版照 iPad 版**」。他在手機上挑的是一組、在
+**iPad mini 直放 744** 上挑的是另一組，電腦跟 iPad 走：
+
+```
+[data-topic="perio"] .tp-intro::before {
+  width: min(81.25%, 390px); aspect-ratio: 832 / 755;   /* ＝ 1024 裁掉右邊 192 */
+  background: url("assets/lineart-perio.png") left center / auto 100% no-repeat;
+  opacity: .115;
+}
+@media (min-width: 721px) {
+  [data-topic="perio"] .tp-intro::before {
+    width: min(100%, 480px); aspect-ratio: 1024 / 755; opacity: .15;
+  }
+}
+```
+
+⚠⚠ **分段是 721 不是一般牙科的 834** —— 使用者定「iPad 版」用的那台是 744 寬，
+834 會把它歸到手機那一段。
+⚠⚠ **≥721 的 `.15` 是看過數字之後的取捨**：744 上 11 行壓到線、柔墨 4.32（< 4.5），
+1440 上 7 行、一樣 4.32。手機那一段是 AA 上限 `.115`（4.50 ✓）。
+
+驗收：十二個寬度（1440／1280／1200／1041／834／744／**721／720**／430／390／375／320）
+介紹區高度與「把偽元素關掉」逐格相同、無水平捲動；其餘六科與首頁沒有畫出偽元素。
+
+**下一科要做什麼**：複製 `drafts/lineart-perio-preview.mjs`（改 `SRC`／`OUT` 與
+那三條 CSS 的 spec 名），提案頁的兩條尺與量測面板直接沿用。
