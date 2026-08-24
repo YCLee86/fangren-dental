@@ -1,9 +1,9 @@
 # 分享圖提示詞：顯微根管（`og-topic-endo`）
 
-**狀態：第三版提示詞（2026-08-24）。已經生成過兩次。**
-v1 的量測與退回理由在第五之〇節、v2 的在第五之二節；
-**梗（放大圈）在 v2 已經被使用者接受**（「好多了」），v3 只改房間的亮度、
-醫師的坐姿與顯微鏡／燈光的方向。
+**狀態：第四版提示詞（2026-08-24）。已經生成過三次。**
+v1 的量測在第五之〇節、v2 在第五之二節、v3 在第五之三節。
+**梗（放大圈）v2 就被接受了**，**房間、坐姿、鏡頭與燈光 v3 也過了**——
+v4 只改兩件：**牙齒和醫師的關係**（不要置身事外）與**細菌要多、要鬧**。
 規格依 [ILLUSTRATION.md](../ILLUSTRATION.md) 第十一節（250px 判準）與
 [TEAM.md](../TEAM.md) 第一節第 9 號（插畫師的三個交件門檻）。
 文案脈絡見 COPY.md 第九之十六節與 `tools/topic-copy.mjs` 的 `endo`。
@@ -206,7 +206,65 @@ v1 的量測與退回理由在第五之〇節、v2 的在第五之二節；
 櫃子畫出**門片分割與檯面邊線**、牙齒表面多幾道**彎曲的排線**、
 新加的**醫師椅**（椅腳、輪子、椅背本身就是線）。
 
-## 五、提示詞（第三版，逐字，可直接複製）
+## 五之三、第三版的量測與使用者的兩件（2026-08-24，使用者：「大部分都改了很棒」）
+
+生成圖 `drafts/og-topic-endo-v3.jpg`。**上一輪那三件全部過了** ——
+房間白了（牆 `#e9e2d8`、無彩空白 1.21%）、醫師坐在醫師椅上、鏡頭與光都對著牙齒。
+
+| | v1 | v2 | v3 | 門檻 |
+| --- | --- | --- | --- | --- |
+| 無彩空白 | 0.03% | 4.18% | **1.21%** | < 5% ✅ ⚠ 房間改亮**沒有**讓這一格惡化（暖色留住了） |
+| 邊緣密度 | 16.5% | 21.7% | **21.5%** | ≥ 30% ❌ 三版都沒過 |
+| 頂 17% 牆色中位 | `#d6c1ac` | `#d9b9a1` | **`#e9e2d8`**（R 233） | R ≥ 203 ✅ |
+| 頂 104px 有東西伸進來 | 6.5% | 14.6% | **12.6%** | ≈ 0 ❌ **第三次** |
+
+### 使用者的兩件
+
+> 「牙齒看起來有點置身事外欸，蠻奇怪的。牙齒應該會有兩種狀況：
+> 　1. 知道自己生病了希望醫師救救他　2. 知道醫師正在努力救他，覺得放心信任安心。
+> 　另外細菌有點少，而且看起來很安靜，要激烈調皮作怪的樣子」
+
+**① 「置身事外」的成因是三件同時發生的**（v3 的牙齒：眼睛看著鏡頭／圈、身體正面朝觀眾、
+兩隻手擺在身前沒有指涉）—— **沒有任何一條線把牠和醫師連起來**，所以牠只是站在那裡。
+v4 因此把**眼神線**當成最重要的一條寫死：眼睛看醫師（不是看鏡頭、不是看圈），
+身體轉向醫師，**一隻手按在自己那塊髒污上**（＝牠知道自己哪裡出問題），另一隻手放鬆。
+
+⚠⚠ **兩種狀況我選第 2 種（信任），第 1 種只保留「牠知道自己生病了」那一半。**
+理由是牙周那一輪已經走過同一題：使用者當時給的兩案裡，
+**「牙齒喊救命」被否決**（推導在本篇第三節的來源、`og-topic-perio-prompt.md` 第三節）——
+分享卡是最先被看到的東西，**開場先求救就是推力不是拉力**。
+而「知道哪裡有問題 ＋ 相信有人在處理」正好把兩種狀況合起來，也接得住那一頁的收尾
+（「看到什麼都會告訴你，再一起決定」）。
+
+**② 「細菌很安靜」的成因也量得出來**：五隻、**均勻分布**、**直立站著**、
+只有表情沒有動作。v4 改成 **九隻（四大五小）、擠成兩三團、每一隻都在做一件事**
+（往縫裡鏟土、扭打翻滾、頭下腳上鑽進去、被拖著走、扮鬼臉、被光嚇得跳起來、
+沿著縫狂奔），加**短動線**與飛起來的土屑，並寫死一句
+「牠們玩得很開心，還不知道自己被發現了」。
+⚠ 仍然守著：**只在圈裡**、不尖刺不噁心、不拿工具。
+
+### ⚠⚠ ③ 頂 17% 連三次踩到 —— 改用機械修法，不要再靠提示詞
+
+三版的提示詞都寫了「頂端留白」，三版都失敗（6.5%／14.6%／12.6%），
+而且**在 212px 的卡上看得見**：v3 那條顯微鏡的臂變成一道劃過「顯微根管」四個字的
+髒污（`drafts/endo-v3-thumb212.jpg`）。牙周那次的解法是「把整張往下推」，
+但這一張**推不得** —— 底部就是醫師椅的輪子與地板，推下去會切掉。
+
+所以新增 **`drafts/og-topclean.mjs`**：把頂 17% 那一條**重畫成牆**
+（那一條本來就被帶子整片蓋住，看不見的東西不必留）。
+
+    node drafts/og-topclean.mjs <原檔> <輸出> --cols 0.375,0.48
+
+實測 v3：帶子從「有一顆深色的旋鈕壓在字上」變成乾淨的一條
+（`drafts/endo-v3-clean-card-preview.jpg`）。**兩件踩過的坑寫在那支的檔頭**：
+
+- ⚠⚠ **不要重畫整條** —— 第一次沒給 `--cols`，把**放大圈的上緣一起抹平**，
+  變成一條切齊的橫線。**只有「伸進去的是背景物件」才可以抹**，臉、手、圈這種
+  有意義的東西要回頭改構圖（v4 因此多寫一句「整個圈都要在頂 17% 以下」）。
+- ⚠⚠ **逐欄各自往上外插會長出直條紋** —— 每一欄的取樣各自帶雜訊，外插一百多列
+  就放大成一條一條。改成**橫向先平滑、斜率取整段平均並夾在 ±6 階**之後才乾淨。
+
+## 五、提示詞（第四版，逐字，可直接複製）
 
 ```
 Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview
@@ -251,40 +309,65 @@ THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
    the picture. Light colour #f7e3c0, fading to #f6ecd6 at its edges; soft-edged, NOT a solid
    yellow wedge, NOT a laser beam, NOT a spotlight ring on the floor.
 
-4. THE TOOTH IS WHOLE AND CLOSED. One big molar standing on the floor on two short
-   root-legs, its crown reaching the dentist's eye level. Warm ivory (#f2e7d5, shaded with
-   #ddcbb0 and #c9b294), WITH PLENTY OF LOOSE HAND-DRAWN SHADING STROKES CURVING OVER ITS
-   SURFACE so it never reads as a flat white shape. IT IS NOT CUT OPEN: no window, no door,
-   no opening, no hatch, no cross-section, and the viewer never sees its inside. It has two
-   short stubby arms and a simple face: eyes open and looking UP AT THE BIG CIRCLE, eyebrows
-   lifted, a small closed smile, curious and a little surprised - not frightened, not in
-   pain, not grateful. HIGH ON THE UPPER RIGHT SHOULDER OF THE TOOTH there is ONE SMALL DULL
-   BROWNISH SMUDGE about a tenth of the tooth's width, sitting in a shallow groove - so faint
-   that you would barely notice it. That smudge is the only mark on the tooth; the rest of
-   the tooth is clean.
+4. THE TOOTH IS WHOLE AND CLOSED, AND IT IS PART OF WHAT IS HAPPENING. One big molar
+   standing on the floor on two short root-legs, its crown reaching the dentist's eye level.
+   Warm ivory (#f2e7d5, shaded with #ddcbb0 and #c9b294), WITH PLENTY OF LOOSE HAND-DRAWN
+   SHADING STROKES CURVING OVER ITS SURFACE so it never reads as a flat white shape. IT IS
+   NOT CUT OPEN: no window, no door, no opening, no hatch, no cross-section, and the viewer
+   never sees its inside. HIGH ON ITS UPPER RIGHT SHOULDER there is ONE SMALL DULL BROWNISH
+   SMUDGE about a tenth of the tooth's width, sitting in a shallow groove - so faint that you
+   would barely notice it. That smudge is the only mark on the tooth.
+
+   ITS WHOLE ATTITUDE IS "SOMETHING IS WRONG WITH ME, AND SHE IS ON IT". Draw all four of
+   these together, or the tooth will look like a bystander:
+   • ITS BODY IS TURNED TOWARDS THE DENTIST, leaning very slightly her way, not square to
+     the viewer.
+   • ITS EYES ARE ON THE DENTIST - looking across at her, NOT at the viewer, NOT at the
+     circle, NOT into the distance. This eye-line is the most important part.
+   • ONE STUBBY ARM IS RAISED AND ITS HAND RESTS ON ITS OWN SMUDGE, the way a person touches
+     the spot that hurts - it knows exactly where its problem is. The other arm hangs
+     relaxed, NOT clasped, NOT wringing, NOT held out begging.
+   • ITS FACE IS TRUSTING AND RELIEVED: eyebrows lifted a little at the inner ends, eyes
+     softly open, a small closed smile, shoulders down and easy. It is being looked after
+     and it knows it. It is NOT frightened, NOT crying, NOT pleading, NOT in pain, NOT
+     grinning wildly and NOT indifferent.
 
 5. THE BIG ROUND MAGNIFIED VIEW IS THE SECOND HERO OF THIS PICTURE. It is a large circle
    whose diameter is about three fifths of the picture height, hanging in the UPPER RIGHT of
    the picture, its lower left edge touching and slightly overlapping the tooth's upper right
    shoulder, DIRECTLY ABOVE THE SMALL BROWN SMUDGE - so that it reads as that one patch of
-   tooth surface enormously enlarged. It is NOT what the light is pointed at. Its rim is a
+   tooth surface enormously enlarged. THE WHOLE CIRCLE, INCLUDING THE TOP OF ITS RIM, SITS
+   BELOW THE TOP SIXTH OF THE PICTURE. It is NOT what the light is pointed at. Its rim is a
    clean pale cream-and-chrome ring, evenly thick, with a soft shadow behind it, a thin
    brick-red (#ae4f4d) inner line, and a faint pale halo around it. It has NO handle, NO
    stalk and NO bubble tail: it is what the microscope sees, not a hand lens and not a
    thought bubble. INSIDE THE CIRCLE, hugely magnified: the ivory tooth surface drawn with
    fine texture, and ONE NARROW DARK CREVICE running across it in a soft curve, with soft
-   brown dirt caught along it, and FIVE COMIC GERMS - two sitting on the surface with their
-   hands over their eyes, two half way down inside the crevice with only their heads and
-   hands showing, and one at the rim about to scurry out of the circle. Each germ is about a
-   quarter of the circle's diameter. A light scatter of much smaller specks may sit behind
-   them as texture, INSIDE THE CIRCLE ONLY. The circle is the busiest, most detailed area of
-   the picture.
+   brown dirt caught along it. THE CIRCLE IS CROWDED, BUSY AND FULL OF MOVEMENT - it is the
+   noisiest, most detailed part of the whole picture, and it is where all the mischief is.
 
-6. THE GERMS: each is a simple rounded blob with two dot eyes, a small open mouth and short
-   stick arms and legs, in brick red, olive, mustard and dusty plum, two tones each, comic
-   and clumsy, never frightening. They have NO spikes, NO bristles, NO hair, NO fangs and NO
-   tentacles. THEY EXIST ONLY INSIDE THE CIRCLE - there is not a single germ anywhere else in
-   the picture, because to the naked eye they cannot be seen. That is the whole point.
+6. THE GERMS ARE A ROWDY LITTLE GANG AND THEY ARE MAKING A MESS. THERE ARE NINE OF THEM,
+   ALL INSIDE THE CIRCLE, IN TWO SIZES: FOUR BIG ONES (each about a quarter of the circle's
+   diameter) and FIVE SMALLER ONES. THEY ARE NOT STANDING IN A ROW AND THEY ARE NOT EVENLY
+   SPREAD - they are bunched into TWO OR THREE OVERLAPPING CLUMPS with gaps between the
+   clumps, and every single one of them is caught in the middle of DOING SOMETHING:
+   • one shovelling brown dirt into the crevice with both hands, bottom up;
+   • two wrestling and tumbling over each other on the surface, legs in the air;
+   • one diving head-first into the crevice with only its legs still showing, kicking;
+   • one hanging on to that one's leg and being dragged in;
+   • one standing at the crevice's edge pulling a face and sticking its tongue out;
+   • one jumping in fright as the light hits it, arms up, feet off the ground;
+   • two scampering along the crevice, leaning far forward as they run.
+   Give the movement SHORT HAND-DRAWN MOTION STROKES beside the ones that are moving, a few
+   small crumbs of dirt flying, and tilt their bodies - nobody stands upright and still.
+   THEY ARE HAVING A WONDERFUL TIME AND THEY DO NOT KNOW THEY HAVE BEEN FOUND.
+   Each germ is a simple rounded blob with two dot eyes, an open mouth and short stick arms
+   and legs, in brick red, olive, mustard and dusty plum, two tones each, comic, clumsy and
+   naughty, never frightening and never disgusting. They have NO spikes, NO bristles, NO
+   hair, NO fangs and NO tentacles, and they hold NO tools. A light scatter of much smaller
+   specks and crumbs sits behind them as texture, INSIDE THE CIRCLE ONLY. THEY EXIST ONLY
+   INSIDE THE CIRCLE - there is not a single germ anywhere else in the picture, because to
+   the naked eye they cannot be seen. That is the whole point.
 
 7. NO WRITING ANYWHERE in the image, in any language.
 
@@ -293,7 +376,8 @@ BIG AND SIMPLE: a pair of angled binocular eyepieces, a boxy body with two big d
 focus knobs and two curved dark-grey handles, and a white jointed arm. ONLY THE LOWER PART OF
 ITS FLOOR STAND IS VISIBLE at the far left, cropped by the left edge, and its arm reaches in
 from the LEFT EDGE at about one third of the way down the picture. THE WHOLE MACHINE -
-EYEPIECES, BODY, ARM AND STAND - STAYS BELOW THE TOP SIXTH OF THE PICTURE. Its housing is a
+EYEPIECES, BODY, ARM AND STAND - STAYS BELOW THE TOP SIXTH OF THE PICTURE, AND NO PART OF IT
+IS EVER HIGHER THAN THE TOP OF THE DENTIST'S HEAD. Its housing is a
 clean pale cream-white with a light grey underside, its knobs and handles are dark warm grey,
 and there is ONE BRICK-RED RING (#ae4f4d) around the objective housing - that ring is the only
 saturated red on the machine. Big simple shapes only: no screws, no scales, no small buttons,
@@ -361,7 +445,12 @@ washed out, dusty or pastel.
 NO WRITING ANYWHERE IN THE IMAGE - no text, letters, words, numbers, logos, signage, captions
 or watermarks, in any language.
 
-AVOID - an overall yellow, amber, golden or sepia cast over the picture; a cream, beige, tan,
+AVOID - a tooth that looks like a bystander: staring at the viewer, staring at the circle,
+gazing into the distance, standing square-on with both arms hanging or folded, or showing no
+reaction to what is happening; a tooth that is begging, praying, crying, screaming or
+frightened; germs standing in a row, evenly spaced, standing still, standing upright or
+posing for the viewer; only a handful of germs; an overall yellow, amber, golden or sepia
+cast over the picture; a cream, beige, tan,
 mustard or yellow wall; honey, orange or golden-oak wood; a dim, gloomy or evening room; a
 dentist who is crouching, squatting, kneeling, half-standing or bending over with straight
 legs; a dentist standing up; a stool with no base, no column or no castors; light that fans
@@ -406,17 +495,22 @@ Windows 那台請用 `drafts/og-measure-win.ps1`（必須是 UTF-8 with BOM）�
 
 ---
 
-## 七、管線（圖回來之後，兩行）
+## 七、管線（圖回來之後，最多三步）
 
 原檔存成 `drafts/og-topic-endo-src.jpg`（**原始出圖另存
 `-src-raw.jpg`，不要覆蓋掉**），然後：
 
+    node drafts/og-topclean.mjs drafts/og-topic-endo-src-raw.jpg drafts/og-topic-endo-src.jpg --cols <x0,x1>
     node tools/og-resize.mjs drafts/og-topic-endo-src.jpg endo
-    node tools/og-plate.mjs endo --blend multiply --tintcolor #e26467 --ink 0.18 --blur 6 \
+    node tools/og-plate.mjs endo --blend multiply --tintcolor #de6265 --ink 0.18 --blur 6 \
       --loc full --locpos stack
 
-⚠ 上面那個 `#e26467` 是照 **v3 要求的牆色 `#e5ded4`** 算的（實測落在 `#af4f4c`、對比 4.10）。
-v1 的牆是 `#d7c1ac` → `#f17380`、v2 的是 `#d9b9a1` → `#f27285`。**牆一變就要重算**：
+⚠ 第一步只有在**頂 17% 真的被東西佔到**時才跑（連三版都被佔到，見第五之三節）；
+`--cols` 要先量出是哪幾欄，**不要整條重畫**。
+
+⚠ 上面那個 `#de6265` 是照 **v3 實際的牆色 `#e9e2d8`** 算的。
+v1 `#d7c1ac` → `#f17380`、v2 `#d9b9a1` → `#f27285`、提示詞裡寫的目標 `#e5ded4` → `#e26467`。
+**牆一變就要重算**：
 
     M(每個通道) = ((#ae4f4d 的該通道 − 0.18 × 墨) ÷ 0.82) × 255 ÷ 牆的該通道
     （墨 ＝ rgb(42,44,39)；分子固定是 R 203.0 / G 86.7 / B 85.3）
@@ -436,7 +530,8 @@ v1 的牆是 `#d7c1ac` → `#f17380`、v2 的是 `#d9b9a1` → `#f27285`。**牆
 
 1. **醫師畫成女性** —— v1 就是女醫師（陳芷鈴醫師是這一科的專長掛的人），使用者沒有異議，
    **當作定了**。服裝與頭髮沿用 ILLUSTRATION.md 第十之三節量出來的那一組磚紅系。
-2. ⚠⚠ **「表面的髒汙」在語彙上其實比較靠近牙周／洗牙** —— 顯微根管真正藏東西的地方
+2. ✅ **已經默認過了（v2、v3 都在畫面裡，使用者說「好多了」「很棒」）**：
+   ⚠⚠ **「表面的髒汙」在語彙上其實比較靠近牙周／洗牙** —— 顯微根管真正藏東西的地方
    是牙齒**裡面**（那一頁寫的是「又細又彎的牙髓，放大了才找得到」）。
    v2 的折衷是：放大圈裡**不是單純的牙菌斑**，而是**一條細縫 ＋ 細菌正往裡面鑽** ——
    「看不到的地方才是問題所在」這件事仍然成立，而且不必把牙齒剖開。
@@ -447,5 +542,9 @@ v1 的牆是 `#d7c1ac` → `#f17380`、v2 的是 `#d9b9a1` → `#f27285`。**牆
 4. **放大圈推翻了 250px 那條「不放放大圈」的硬規格**（ILLUSTRATION.md 第十一節第 6 條）。
    我沒有整條拿掉，是加了四個條件（圈要大、內容要少、沒有握把、沒有泡泡尾巴）——
    **這一張定案之後我會把它寫回 ILLUSTRATION.md**，日後其他科才知道界線在哪。
-5. **這張定案之後，它同時是顯微根管線稿底圖的姿勢參考圖**
+5. ✅ **牙齒的兩種狀況（2026-08-24）已經照第五之三節判了**：取第 2 種（信任），
+   第 1 種只留「牠知道自己生病了」那一半（手按在自己的髒污上）——
+   「喊救命」在牙周那一輪已經被否決過，分享卡開場求救是推力。
+   **若你要的其實是第 1 種（求救）**，說一聲，我把那四條眼神／姿勢改掉就好。
+6. **這張定案之後，它同時是顯微根管線稿底圖的姿勢參考圖**
    （順序是分享圖在前、線稿在後）—— 線稿那一輪要從這張裁一段含腿的人物出來。
