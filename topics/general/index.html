@@ -4791,20 +4791,33 @@ body[data-topic] #topics { padding-top: 1rem; }
 }
 [data-topic="endo"] .tp-intro > * { position: relative; z-index: 1; }
 
-/* 兒童牙科（2026-08-24 進行中 —— 大小、濃度、要不要翻轉還沒定案，等使用者挑）
-   ⚠ 圖是 998×857（橫的，接近牙周那張的形狀）。
-   ⚠ 臨界濃度現算：柔墨 #5c5f57 壓在兒牙套色 #c28229 上，**濃度 .152** 才掉到 4.5 ——
-     四科裡最寬鬆的（一般牙科 .101／牙周 .116／顯微根管 .107），因為 #c28229 最淺。
-   ⚠ 下面這一組是**暫定值**（照牙周那張橫圖的起點），定案要換成使用者挑的那一格。 */
+/* 兒童牙科（2026-08-24 上線 —— **手機那一段是定案的，≥721 那一段還是暫定**）
+   ⚠⚠ 這一科的做法和牙周同一套（不是一般牙科／顯微根管那套 contain）：
+     **框窄一截 ＋ 圖照高度撐滿靠左**，多出來的一截被框裁掉 ——
+     比例尺不變，只是整張往右移。使用者要的就是「再往右一點」。
+       ・圖檔 998×857，**從右緣裁掉 144 欄**（翻轉後右邊是醫師的背）→ aspect 854/857。
+       ・框寬因此是「未裁的寬 × (998−144)/998」＝ min(100%,490px) × 0.8557 = min(85.6%, 419px)。
+   ⚠⚠ **翻轉是烘進圖檔的**（node tools/topic-lineart.mjs kids --art … --flip），
+     不要改用 transform：CSS 翻轉之後「往右」在未翻轉的座標裡是「往左」，
+     背景位置與量測都要跟著鏡射，很容易寫反（提案頁那一版就踩過）。
+   ⚠⚠ **right 給負值 −14px**（把圖推到貼齊螢幕邊）。手機的頁面內距就是 14px，
+     再多就凸出螢幕、整頁可以左右拉（CLAUDE.md 第九節記過）。
+     ≥721 那一段量出來只有 22.5px 的餘裕（iPad mini 744）——**上限不是版心留白，是最窄的那台**。
+   ⚠ 濃度 .152 是這一科**算出來的 AA 上限**（柔墨 #5c5f57 壓在 #c28229 上剛好 4.50）：
+     四科各不同 —— 一般牙科 .101／牙周 .116／顯微根管 .107／兒牙 **.152**（套色最淺所以最寬鬆）。
+   ⚠ ≥721 的 min(75.3%, 394px) 與 .22 **還沒定案**（使用者只在手機上挑過），
+     提案頁 /preview/topic-lineart-kids/ 還開著。定案時只改這三個數字。 */
 [data-topic="kids"] .tp-intro { position: relative; }
 [data-topic="kids"] .tp-intro::before {
-  content: ""; position: absolute; right: 0; bottom: 0;
-  width: min(81.25%, 390px); aspect-ratio: 998 / 857;
-  background: url("../../assets/lineart-kids.png") center / contain no-repeat;
-  opacity: .12; pointer-events: none; z-index: 0;
+  content: ""; position: absolute; right: -14px; bottom: 0;
+  width: min(85.6%, 419px); aspect-ratio: 854 / 857;
+  background: url("../../assets/lineart-kids.png") left center / auto 100% no-repeat;
+  opacity: .152; pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) {
-  [data-topic="kids"] .tp-intro::before { width: min(100%, 480px); opacity: .15; }
+  [data-topic="kids"] .tp-intro::before {
+    right: -20px; width: min(75.3%, 394px); opacity: .22;
+  }
 }
 [data-topic="kids"] .tp-intro > * { position: relative; z-index: 1; }
 
