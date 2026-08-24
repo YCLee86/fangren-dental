@@ -1,6 +1,7 @@
 # 分享圖提示詞：兒童牙科（`og-topic-kids`）
 
-**狀態：⏳ 第三版提示詞（2026-08-24）。第一版的梗、姿勢、兩人同高、媽媽的位置全部一次就對，
+**狀態：✅ 定案上線（2026-08-24，第三版：使用者「可以了　就用這版」）。成品 `assets/og-topic-kids.jpg`。
+舊註：第一版的梗、姿勢、兩人同高、媽媽的位置全部一次就對，
 使用者退回四件（安靜／褲子沒印花／椅子顏色／像倉庫）—— 量測與改法在第五之〇節，提示詞在第五節。**
 規格依 [ILLUSTRATION.md](../ILLUSTRATION.md) 第十一節（250px 判準）與
 [TEAM.md](../TEAM.md) 第一節第 9 號（插畫師的三個交件門檻）。
@@ -321,6 +322,44 @@ looks frightened or is hiding; a green, blue or grey dental chair; sage-green, b
 scrubs on the nurse; grey or blue-white walls; an overall yellow or sepia cast; tiny busy multicoloured patterns; posters or charts on the wall;
 large empty white areas; photorealism; 3D rendering; heavy even black outlines.
 ```
+
+---
+
+## 五之二、定案那一張的實際數字與指令（2026-08-24）
+
+原檔 `drafts/og-topic-kids-src.jpg`（1424×752），**兩步都跑過**：
+
+    node tools/og-resize.mjs drafts/og-topic-kids-src.jpg kids
+    node tools/og-plate.mjs kids --blend multiply --tintcolor '#c17900' \
+      --ink 0.18 --blur 6 --loc full --locpos stack
+
+| | 值 | 門檻 |
+| --- | --- | --- |
+| 裁切 | 左右 0.00%／上下 −0.90%（只往內裁） | < 8% ✅ |
+| 邊緣密度（疊帶子前） | **33.5%** | ≥ 30% ✅ |
+| 無彩空白 | 0.1% | < 5% ✅ |
+| 頂 17% 的邊緣密度（疊帶子前） | 2.4% | 乾淨 ✅ |
+| 頂 17% 的中位色 | R242 G234 B215 | R ≥ 228 ✅ |
+| 帶子落在 | `rgb(158,99,7)` ＝ 深階 `#9e6301` | 見下 |
+| 紙色字對帶子 | **3.91** | 見下 |
+| 帶子安全區 | 左右各 160px、兩組字之間 410px | ≥ 160 ✅ |
+
+### ⚠⚠ 這一科的帶子**不能落在套色上**（七科第一次）
+
+紙色字壓在兒牙套色 `#c28229` 上只有 **2.54** —— 三格並排在 212px 下看，
+「兒童牙科」四個字明顯比另外兩格糊（Ⓐ 套色 2.53／Ⓑ 深階 3.91／Ⓒ 再深一階 4.83）。
+**定案取 Ⓑ 深階 `#9e6301`**：它是站上兒牙的字與框色（不是新色），
+對比和顯微根管那張已上線的 4.12 同一級，而且第十一節開頭寫的本來就是
+「**玻璃要用深階不是套色**」。Ⓒ 雖然過得了 4.5，但那個棕色站上不存在。
+⚠ 七科的對比表在 ILLUSTRATION.md 第十一節，**下一科動手前先查那張表**。
+
+### 順帶做掉的兩件
+
+・`tools/topics.mjs` 的 `OG_ALT.kids`（描述圖裡實際有什麼）與
+  `OG_DESC.kids`＝ 那一頁自己的收尾句「孩子願意來、牙齒撐得住，其他的我們一起來努力。」
+  —— **兩句都是站上原本就有的字**，不是另外寫的文案。
+・裁切驗收：iMessage 中央 78.7%、LINE 中央 89.7%，兩種都模擬過 ——
+  科別名、標誌、診所名、地名**全部留得住**；被切掉的是媽媽的包包與半邊身體，臉還在。
 
 ---
 
