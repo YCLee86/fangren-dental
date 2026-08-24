@@ -4805,8 +4805,14 @@ body[data-topic] #topics { padding-top: 1rem; }
      ≥721 那一段量出來只有 22.5px 的餘裕（iPad mini 744）——**上限不是版心留白，是最窄的那台**。
    ⚠ 濃度 .152 是這一科**算出來的 AA 上限**（柔墨 #5c5f57 壓在 #c28229 上剛好 4.50）：
      四科各不同 —— 一般牙科 .101／牙周 .116／顯微根管 .107／兒牙 **.152**（套色最淺所以最寬鬆）。
-   ⚠ ≥721 的 min(75.3%, 394px) 與 .22 **還沒定案**（使用者只在手機上挑過），
-     提案頁 /preview/topic-lineart-kids/ 還開著。定案時只改這三個數字。 */
+   ⚠⚠ **兩段的裁量不一樣**（手機 144 欄、≥721 **192 欄**），所以 `aspect-ratio` 與寬度
+     係數要各自算 —— 這和牙周那張「手機裁 192、≥721 不裁」是同一件事的鏡像。
+     ・手機　 aspect 854/857、框 min(100%,490px) × 0.8557 = min(85.6%, 419px)、濃度 .152
+     ・≥721　 aspect 806/857、框 min(96%,520px) × 0.8076 = min(77.5%, 420px)、濃度 .22
+   ⚠ ≥721 的 .22 對比 **4.24**（低於站上的 4.5），是使用者看過四格數字之後選的取捨 ——
+     和牙周那張的 4.32 同一級。**不要拿對比度來訂正它。**
+   ⚠ 這一科的濃度上限是 .152，所以 ≥721 只要超過它就會低於 4.5；
+     壓到線的是 8 行（744 上），全部是柔墨的 .tp-case／.tp-flow。 */
 [data-topic="kids"] .tp-intro { position: relative; }
 [data-topic="kids"] .tp-intro::before {
   content: ""; position: absolute; right: -14px; bottom: 0;
@@ -4816,7 +4822,7 @@ body[data-topic] #topics { padding-top: 1rem; }
 }
 @media (min-width: 721px) {
   [data-topic="kids"] .tp-intro::before {
-    right: -20px; width: min(75.3%, 394px); opacity: .22;
+    right: -20px; width: min(77.5%, 420px); aspect-ratio: 806 / 857; opacity: .22;
   }
 }
 [data-topic="kids"] .tp-intro > * { position: relative; z-index: 1; }
