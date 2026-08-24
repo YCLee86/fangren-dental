@@ -502,3 +502,251 @@ a warm yellow or sepia overall cast; cream, beige or tan walls; pure flat white 
 ⚠ Ⓕ 和牙周那張的差別要寫死在提示詞裡：**牙齒沒有臉、沒有手腳**（牙周與顯微根管
 已經各用過一次擬人牙齒，第三次就是同一個模子），而且**動作不同**
 （牙周是噴水趕細菌，這裡是**把一顆牙扶到位**）。
+
+---
+
+## 五之三、Ⓓ 的提示詞（咬不上的那一副，2026-08-24）
+
+**共同的三道守門**（Ⓓ Ⓔ 都寫進去了，是上一輪退回的三件）：
+① **牙齒一定要是亂的** —— 這是整張圖最重要的內容，不是背景細節。
+② **不准出現沒有身體的手** —— 每一隻手都要接得到看得見的手臂與人。
+③ **不准畫顱骨** —— 骷髏在 212px 的縮圖上先被讀到，那是推力。
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview
+card. It will be seen at about 250 pixels wide, so everything must read at thumbnail size:
+big simple shapes, few large objects, one single continuous scene, no panels and no dividing
+lines.
+
+THE WHOLE PICTURE IS BRIGHT, CLEAN AND COOL - a corner of a dental clinic by day, daylight
+from a tall window. The walls are a very light COOL off-white with a faint blue in them,
+about #e6ebf0 - never cream, never beige, never tan, never yellow, and never a neutral dead
+grey either. DO NOT PUT AN OVERALL WARM, AMBER OR SEPIA CAST OVER THE IMAGE.
+
+THE MOST IMPORTANT CONTENT OF THIS PICTURE IS THAT THE TEETH ARE CROOKED AND THE TWO JAWS DO
+NOT MEET PROPERLY. If a viewer sees this image at thumbnail size and cannot tell that the
+teeth are untidy, the illustration has failed. Draw that first, then everything else.
+
+THE SIX THINGS THAT MATTER MOST, IN ORDER:
+
+1. THE PAIR OF PLASTER JAW MODELS IS THE HERO AND IT IS BIG. The two models stand together
+   on a low counter in the MIDDLE OF THE PICTURE, TOGETHER ABOUT FORTY-FIVE PER CENT OF THE
+   PICTURE HEIGHT and nearer to us than anything else. The lower model rests on the counter
+   with its horseshoe arch facing up; the upper model sits above it, arch facing down, held
+   steady by the dentist. Each model is a simple chalky block: a plain TRAPEZOID BASE with a
+   horseshoe row of large, clearly separated teeth on it. THE PLASTER IS A WARM OFF-WHITE
+   (#efe9df, shaded with #ddd5c6) WITH LOOSE HAND-DRAWN SHADING STROKES - never pure white,
+   never flat. They are study models, NOT dentures: no pink gum-coloured acrylic, no metal
+   clasps, no braces, no brackets, no wires.
+
+2. HOW THE TEETH ARE WRONG - DRAW ALL THREE OF THESE, LARGE AND OBVIOUS:
+   • CROWDING: in the upper front row, TWO NEIGHBOURING TEETH ARE ROTATED AND OVERLAP EACH
+     OTHER - one pushed forward out of the line, the one beside it tucked in behind it. One
+     more tooth further along leans at a clear angle. THE FRONT EDGE OF THE ROW IS UNEVEN AND
+     WAVY, never a straight tidy line.
+   • THE UPPER ARCH SITS FORWARD OF THE LOWER ONE: the upper front teeth overhang the lower
+     front teeth by about the width of one tooth, so the two arches plainly do not line up.
+   • AN OPEN WEDGE: at the BACK of the arches on the side nearest us, the upper and lower
+     teeth DO NOT TOUCH. There is a clear wedge-shaped gap between them, narrow at the front
+     and widening towards the back, big enough to see instantly at thumbnail size.
+   The lower row is untidy too, but less so. NOTHING about these two rows should look neat,
+   finished or corrected.
+
+3. THE DENTIST IS STANDING BEHIND THE MODELS AND POINTING INTO THAT GAP. A Taiwanese man in
+   his late thirties, short black hair, clean-shaven, standing upright behind the counter,
+   turned three-quarters towards the seated patient. BOTH OF HIS ARMS ARE FULLY VISIBLE AND
+   BOTH CONNECT TO HIS BODY: one hand rests on top of the upper model, steadying it; the
+   other arm comes forward with the INDEX FINGER EXTENDED, its tip stopping just at the open
+   wedge between the back teeth. HIS EYES ARE ON THAT GAP, not on us and not on the patient.
+   He is explaining something quietly, mouth slightly open. THERE IS NO HAND ANYWHERE IN THIS
+   PICTURE THAT DOES NOT BELONG TO A VISIBLE PERSON - no floating hand, no cropped forearm
+   entering from outside the frame, exactly two hands on the dentist. USE THIS ANCHOR:
+   standing, the top of his head sits just below the top sixth of the picture and the counter
+   crosses the picture at about two thirds of its height.
+
+4. THE PATIENT IS SITTING ON A ROUND STOOL TO THE RIGHT, LEANING IN TO LOOK. A Taiwanese man
+   or woman of about forty - an ordinary working adult, NOT a teenager and NOT a student. He
+   sits on a simple round stool, KNEES TOGETHER AND BODY CLEARLY TIPPED FORWARD FROM THE HIPS
+   towards the models, forearms on his thighs, a small sheaf of three or four printed A4
+   sheets in one hand (grey text-like marks only, NO readable writing). HIS EYES ARE ON THE
+   GAP BETWEEN THE TWO ARCHES. HIS EXPRESSION IS "THIS TIME I WANT TO UNDERSTAND IT
+   PROPERLY": mouth closed and calm, the inner ends of his eyebrows very slightly drawn
+   together in concentration. He is NOT sad, NOT regretful, NOT anxious, NOT smiling broadly,
+   and he is NOT touching his own mouth or jaw.
+
+5. A THIRD PERSON IS BUSY WITH SOMETHING ELSE IN THE BACKGROUND, AND SHE IS NOT LOOKING AT
+   THEM. Further back on the LEFT, smaller because she is further away but drawn with exactly
+   the same line weight, a dental nurse walks past pushing a small clinic trolley - a simple
+   box on castors with one folded cloth on its top shelf. She is absorbed in her own task.
+   THREE PEOPLE, TWO SEPARATE THINGS HAPPENING AT ONCE, nobody posing for us.
+
+6. NO WRITING ANYWHERE in the image, in any language, and NO NUMBERS.
+
+DRAW THE PEOPLE EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATION OF THE DENTIST. Thin
+hand-drawn linework whose weight varies and sometimes breaks - NOT a thick even outline. Each
+face is ONE FLAT SKIN TONE with no shading, no modelling, no cheekbones and no jaw shadow. On
+the face there is only: the outline, two eyes drawn as small simple dots with NO whites, NO
+pupils and NO highlights, two short eyebrows, a tiny nose mark, a small mouth line and an ear.
+Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN WITH
+EXACTLY THE SAME LINE WEIGHT AND SOLIDITY, including the one furthest away. The three people
+differ clearly in age, build, hair and clothing colour, and no two faces are alike.
+
+COLOUR. The clinic blue of this speciality is #4478b5 and it appears in only three places:
+the dentist's scrubs under his open white coat (a soft dusty blue, #6a94c4, with a slightly
+deeper trim), the cool sky in the window, and one thin blue line along the counter edge.
+Everything else is quiet: the patient wears a warm oatmeal shirt (#d8cdbb) over dark slate
+trousers, the nurse pale slate blue-grey, the shelving pale wood-grey. The picture must NOT
+become an all-blue image: it is a bright white room with a few blue things in it.
+
+THE ROOM - FOUR LARGE SIMPLE OBJECTS AND NOTHING ELSE: a TALL WINDOW on the left with a plain
+cool sky beyond it; an OPEN SHELVING UNIT on the right holding two or three more pairs of
+plaster models; the long counter the models stand on; and the round stool. The floor is a
+pale seamless clinic vinyl, slightly cooler than the wall, softly reflective with a few long
+horizontal strokes, meeting the wall in a CONTINUOUS COVED SKIRTING. The room is SIMPLE
+BECAUSE THE THINGS IN IT ARE FEW AND LARGE, NOT because it is empty: no bare unbroken expanse
+of wall in the lower two thirds. NO posters, NO framed pictures, NO plants, NO instrument
+trays, NO cabinets of small bottles, NO dental chair.
+
+THE TOP SIXTH OF THE PICTURE IS PLAIN WALL AND NOTHING ELSE - no heads, no hands, no models,
+no shelves, no window frame, nothing darker or brighter inside that strip.
+
+TEXTURE AND FINISH - fine even paper grain over the whole image, flat colour areas with a few
+loose hand-drawn shading strokes, gentle and warm-hearted, the look of a printed editorial
+illustration.
+
+AVOID: neat, straight, evenly spaced teeth; two arches that meet perfectly; dentures, pink
+gum acrylic, metal clasps; braces, brackets, wires or aligners; a skull, a skeleton or an
+X-ray; a floating hand or a forearm with no body; a giant single tooth; a cartoon tooth with
+a face; a calendar, a clock or a progress bar; any before-and-after comparison, panel or
+dividing line; a dental chair with someone being treated in it; anyone waving, greeting or
+presenting to the viewer; anyone looking at the camera; a faded or ghostly background figure;
+readable text or numbers; a crowded room; a warm yellow or sepia cast; cream, beige or tan
+walls; pure flat white plaster.
+```
+
+---
+
+## 五之四、Ⓔ 的提示詞（描圖線的側顱片，2026-08-24）
+
+⚠⚠ 片子上畫的**不是 X 光照片，是描圖**（tracing）—— 這一版把顱骨整個換成
+「透光片上的幾條線」，一來骷髏消失，二來**描圖本身就是矯正專科在做的事**。
+⚠ 線要**少而長**（三條 ＋ 一個角），212px 下才不會糊成一團；角度旁邊**不准有數字**。
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview
+card. It will be seen at about 250 pixels wide, so everything must read at thumbnail size:
+big simple shapes, few large objects, one single continuous scene, no panels and no dividing
+lines.
+
+THE WHOLE PICTURE IS BRIGHT, CLEAN AND COOL - a corner of a dental clinic by day. The walls
+are a very light COOL off-white with a faint blue in them, about #e6ebf0 - never cream, never
+beige, never tan, never yellow, and never a neutral dead grey either. DO NOT PUT AN OVERALL
+WARM, AMBER OR SEPIA CAST OVER THE IMAGE.
+
+THE MOST IMPORTANT CONTENT OF THIS PICTURE IS THE LIT TRACING ON THE VIEWER: a side view of a
+jaw whose front teeth are visibly crowded and tilted, with a few long analysis lines drawn
+over it. If a viewer sees this image at thumbnail size and cannot tell that the teeth are
+untidy, the illustration has failed. Draw that first, then everything else.
+
+THE SIX THINGS THAT MATTER MOST, IN ORDER:
+
+1. THE LIT VIEWER IS THE HERO AND IT IS BIG. An upright rectangular light box standing on a
+   low counter in the MIDDLE of the picture, TALLER THAN IT IS WIDE, its glowing face ABOUT
+   SIXTY PER CENT OF THE PICTURE HEIGHT. Its face glows an even cool white (#f4f8fb),
+   spilling soft light onto the counter, the wall behind it and both faces, so it is obvious
+   that both people are lit by it. ONE SINGLE SHEET is clipped to it - never two, never a
+   row, never a before-and-after pair.
+
+2. WHAT IS ON THAT SHEET - THIS IS A LINE TRACING, NOT A PHOTOGRAPH AND NOT AN X-RAY IMAGE.
+   Drawn in soft medium-grey hand-drawn lines on the glowing ground, large and simple:
+   • THE OUTLINE OF A FACE IN PROFILE, facing left: forehead, nose, lips and chin as ONE
+     CONTINUOUS SOFT LINE. NO skull, NO bone, NO eye socket, NO cheekbone, NO teeth roots
+     and NO texture - just the profile line.
+   • BELOW AND BEHIND IT, THE SIMPLE OUTLINE OF THE UPPER AND LOWER JAW as two smooth
+     shapes, one above the other.
+   • THE TEETH ARE THE POINT AND THEY ARE DRAWN LARGER THAN LIFE: a row of clearly separated
+     teeth along each jaw. AT THE FRONT, THREE TEETH LEAN FORWARD AT AN OBVIOUS ANGLE AND
+     TWO OF THEM OVERLAP EACH OTHER, so the front of the row is uneven and wavy; the upper
+     front teeth also stick out well in front of the lower ones. NOTHING about this row
+     should look neat, straight or corrected.
+   • OVER ALL OF THAT, EXACTLY THREE LONG STRAIGHT ANALYSIS LINES IN THIN CLINIC BLUE
+     (#4478b5): one running along the upper jaw, one along the lower jaw, and one from the
+     bridge of the nose down past the chin - two of them crossing near the nose so that a
+     clear ANGLE is visible between them. The angle is marked with ONE small blue arc and
+     NOTHING ELSE: no numbers, no letters, no labels, no arrows, no measuring ticks, no grid.
+     THESE THREE LINES AND THE ARC ARE THE ONLY BLUE MARKS ON THE SHEET.
+
+3. THE DENTIST IS STANDING TO THE LEFT OF THE VIEWER, DRAWING ONE OF THOSE LINES. A Taiwanese
+   man in his late thirties, short black hair, clean-shaven, standing upright, turned
+   three-quarters towards the sheet. BOTH OF HIS ARMS ARE FULLY VISIBLE AND BOTH CONNECT TO
+   HIS BODY: the near arm is raised to about chest height, elbow bent and close to his body,
+   holding a SLIM PENCIL whose tip TOUCHES the sheet at the end of one of the blue lines, as
+   if he has just drawn it; the other arm hangs relaxed at his side. HIS EYES ARE ON THE
+   SHEET, not on us and not on the patient. He is explaining something quietly, mouth
+   slightly open. HE IS NOT WAVING, NOT PRESENTING WITH AN OPEN PALM AND NOT GREETING ANYONE.
+   THERE IS NO HAND ANYWHERE IN THIS PICTURE THAT DOES NOT BELONG TO A VISIBLE PERSON. USE
+   THIS ANCHOR: standing, the top of his head sits just below the top sixth of the picture
+   and his legs are cropped by the bottom edge.
+
+4. THE PATIENT IS SITTING ON A ROUND STOOL TO THE RIGHT, LEANING IN TO LOOK. A Taiwanese man
+   or woman of about forty - an ordinary working adult, NOT a teenager and NOT a student. He
+   sits on a simple round stool, KNEES TOGETHER AND BODY CLEARLY TIPPED FORWARD FROM THE HIPS
+   towards the sheet, forearms on his thighs, a small sheaf of three or four printed A4
+   sheets in one hand (grey text-like marks only, NO readable writing). HIS EYES ARE ON THE
+   CROWDED FRONT TEETH. HIS EXPRESSION IS "THIS TIME I WANT TO UNDERSTAND IT PROPERLY": mouth
+   closed and calm, the inner ends of his eyebrows very slightly drawn together in
+   concentration. He is NOT sad, NOT regretful, NOT anxious, NOT smiling broadly, and he is
+   NOT touching his own mouth or jaw.
+
+5. A THIRD PERSON IS BUSY WITH SOMETHING ELSE IN THE BACKGROUND, AND SHE IS NOT LOOKING AT
+   THEM. Further back on the RIGHT, smaller because she is further away but drawn with
+   exactly the same line weight, a dental nurse stands side-on at an open shelving unit,
+   BOTH HANDS PLACING A PAIR OF PLASTER JAW MODELS onto a shelf where two or three more pairs
+   already sit. She is absorbed in her own task. THREE PEOPLE, TWO SEPARATE THINGS HAPPENING
+   AT ONCE, nobody posing for us.
+
+6. NO WRITING ANYWHERE in the image, in any language, and NO NUMBERS - not on the sheet, not
+   on the papers, not on the wall, not on the shelves.
+
+DRAW THE PEOPLE EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATION OF THE DENTIST. Thin
+hand-drawn linework whose weight varies and sometimes breaks - NOT a thick even outline. Each
+face is ONE FLAT SKIN TONE with no shading, no modelling, no cheekbones and no jaw shadow. On
+the face there is only: the outline, two eyes drawn as small simple dots with NO whites, NO
+pupils and NO highlights, two short eyebrows, a tiny nose mark, a small mouth line and an ear.
+Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN WITH
+EXACTLY THE SAME LINE WEIGHT AND SOLIDITY, including the one furthest away. The three people
+differ clearly in age, build, hair and clothing colour, and no two faces are alike.
+
+COLOUR. The clinic blue of this speciality is #4478b5 and it appears in only three places:
+the three analysis lines on the sheet, the dentist's scrubs under his open white coat (a soft
+dusty blue, #6a94c4), and one thin blue line along the counter edge. Everything else is
+quiet: the patient wears a warm oatmeal shirt (#d8cdbb) over dark slate trousers, the nurse
+pale slate blue-grey, the shelving pale wood-grey, the plaster models chalky warm off-white.
+The picture must NOT become an all-blue image: it is a bright white room with a few blue
+things in it.
+
+THE ROOM - FOUR LARGE SIMPLE OBJECTS AND NOTHING ELSE: the light box on its low counter; the
+open shelving unit with plaster models on the right; a tall window with a plain cool sky on
+the left, cropped by the picture edge; and the round stool. The floor is a pale seamless
+clinic vinyl, slightly cooler than the wall, softly reflective with a few long horizontal
+strokes, meeting the wall in a CONTINUOUS COVED SKIRTING. The room is SIMPLE BECAUSE THE
+THINGS IN IT ARE FEW AND LARGE, NOT because it is empty: no bare unbroken expanse of wall in
+the lower two thirds. NO posters, NO framed pictures, NO plants, NO instrument trays, NO
+cabinets of small bottles, NO dental chair.
+
+THE TOP SIXTH OF THE PICTURE IS PLAIN WALL AND NOTHING ELSE - no heads, no hands, no light
+box, no shelves, no window frame, nothing darker or brighter inside that strip.
+
+TEXTURE AND FINISH - fine even paper grain over the whole image, flat colour areas with a few
+loose hand-drawn shading strokes, gentle and warm-hearted, the look of a printed editorial
+illustration.
+
+AVOID: a skull, a skeleton, an eye socket, bone texture or anything that looks like a real
+X-ray photograph; neat, straight, evenly spaced teeth; numbers, letters, labels, arrows,
+measuring ticks or a grid anywhere on the sheet; more than three blue lines; a second sheet
+or any before-and-after comparison; panels or dividing lines; a floating hand or a forearm
+with no body; a giant single tooth; a cartoon tooth with a face; a calendar, a clock or a
+progress bar; a dental chair with someone being treated in it; anyone waving, greeting or
+presenting to the viewer; anyone looking at the camera; a faded or ghostly background figure;
+readable text; a crowded room; a warm yellow or sepia cast; cream, beige or tan walls.
+```
