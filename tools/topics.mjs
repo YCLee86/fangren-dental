@@ -124,7 +124,7 @@ const OG_ALT = {
 const OG_DESC = {
   general: "在芳仁，我們是這樣想的",
   perio: "把牙周病控制好 —— 靠治療，也靠你每天的清潔，檢查完一起安排。",
-  endo: "這顆還留得住嗎？—— 顯微鏡下看清楚，牙齒就多一次機會。",
+  endo: "這顆牙還留得住嗎？顯微鏡下看清楚。",
 };
 const ogImage = (spec) => {
   const rel = `assets/og-topic-${spec}.jpg`;
