@@ -262,6 +262,9 @@ preview/<name>/index.html  進行中的提案頁；定案上線後刪掉、文�
 drafts/                 **還沒定案的草稿**（文章、提示詞、參考圖）。不會進 _site，
                         build.mjs 也掃不到 —— 見第二節那個 2026-08-20 的警告。
                         定案那天用 git mv 搬進 posts/<slug>/index.html
+  door-notice/          **門口的停車告示**（2026-08-23）。⚠ 成品是要印出來貼在
+                        門口的 A4，**刻意不放在網站上**（使用者指定），所以住在
+                        drafts/。兩行指令重做，推導與定案的值都在它的 README.md
 tools/
   build.mjs             產生首頁卡片、更新日期、排序、sitemap、allowed-slugs、結構化資料
   schema.mjs            JSON-LD 產生器（被 build.mjs 匯入，不單獨執行）。
@@ -294,6 +297,9 @@ tools/
   logo-png.mjs          從 index.html 頁首的標誌路徑產生 assets/logo.png
                         （給 Google 的 Organization logo，**站上不顯示**）。
                         只有改過頁首那條路徑或要換顏色時才要跑；--check 只比對
+  qr.mjs                QR code 產生器（純 JS、零依賴、吐 SVG 的 path，向量）。
+                        ⚠ 驗收不能用眼睛 —— 格式資訊反過來的話畫面一模一樣但掃不出來。
+                        驗證方式寫在它的檔頭（臨時裝 segno ＋ opencv 真的掃一次）
   build-manifest.json   內容雜湊紀錄，build 自動維護，勿手改
 .claude/
   settings.json         SessionStart hook：開啟專案時自動同步（隨 git 走，兩台都生效）
@@ -689,7 +695,19 @@ tools/
 > ・**提案頁若有一格只在大螢幕出現，一定要嵌一個縮小的電腦版預覽** ——
 >   使用者只用手機看（2026-08-22 已經踩過一次「好像沒有欸」）。
 >
-> **`preview/` 現在剩 `clinic-map-door/` 與 `illustration-style/` 兩頁。**
+> **`preview/` 現在只剩 `illustration-style/` 一頁。**
+>
+> **⚠⚠ 2026-08-23：`clinic-map-door/`（門口的停車告示）不是定案上線，也不是收掉，
+> 是「做完了但刻意不放在網站上」** —— 使用者：「這個專案內容不需要放在診所網站上，
+> 都刪除，但 Claude 以後要做還找得到就好。」這是**第三種結局**，前兩種是
+> 「定案上線」與「喊停」，`history/` 的條目寫法對它都不適用（`history/` 本身也在站上）。
+> 做法：提案頁 `preview/clinic-map-door/` 刪掉，四個產生器從 `tools/` 搬進
+> **`drafts/door-notice/`**（drafts 進不了 `_site`、build 也掃不到），
+> 推導與定案的值寫在那個資料夾的 `README.md` 裡，**`history/` 不開條目**。
+> 成品是貼在診所門口的 A4 告示（紅線提醒 ＋ 簡易地圖 ＋ 三顆掃了直接導航的 QR），
+> 兩行指令就能重做，見該 README。
+> ⚠ QR 的產生器 `tools/qr.mjs` **留在 `tools/`**：它是零依賴的通用工具，
+> 站上日後要用得到，和這一輪的告示是兩件事。
 
 ### 規則（要新開一個提案的時候照這個做）
 

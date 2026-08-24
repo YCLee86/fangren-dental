@@ -1,5 +1,5 @@
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
-const OUT = __dirname + '/';
+const OUT = process.cwd() + '/drafts/door-notice/';
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
   /* ⚠⚠ 版面的高度是 JS 現算的（door-map-script 的 fit()），而 pdf() 會用 A4 的
@@ -9,7 +9,7 @@ const OUT = __dirname + '/';
      發一次 resize 讓 fit() 用正確的盒子重算，然後才輸出。 */
   const p = await b.newPage({ viewport: { width: 794, height: 1123 } });
   const errs = []; p.on('pageerror', e => errs.push(e.message));
-  await p.goto('file:///home/user/fangren-dental/preview/clinic-map-door/index.html?orient=w', { waitUntil: 'load' });
+  await p.goto('file:///home/user/fangren-dental/drafts/door-notice/preview.html?orient=w', { waitUntil: 'load' });
   await p.emulateMedia({ media: 'print' });
   await p.waitForTimeout(800);
   await p.evaluate(() => window.dispatchEvent(new Event('resize')));

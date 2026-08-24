@@ -1,22 +1,64 @@
-# 門口停車告示 —— 輸出 PDF 的腳本（暫存，不進 _site）
+# 門口的停車告示（2026-08-23）
 
-提案頁：`preview/clinic-map-door/`（A4 直、`?orient=w`）
+診所門口那一段被劃設紅線，以前多為柔性勸導、近來常有直接開單。
+這是要貼在門口的 **A4 直式**告示：四點提醒 → 簡易地圖（現在位置 ＋ 三個停車場）
+→ 三顆 QR（一場一顆，掃了直接開那一場的 Google 地圖）。
+
+> ⚠⚠ **這一份刻意不放在診所網站上**（使用者 2026-08-23：「這個專案內容不需要
+> 放在診所網站上，都刪除，但 Claude 以後要做還找得到就好」）。
+> 所以它住在 `drafts/`：`tools/dist.mjs` 的 `ALWAYS`／`OPTIONAL` 都沒有 drafts，
+> `tools/build.mjs` 也掃不到，**進不了 `_site/`、fangren.net 上找不到**。
+> 原本的提案頁 `preview/clinic-map-door/` 已刪除。
+
+## 怎麼重做
 
 ```bash
-node tools/door-map-preview.mjs      # 先重新產生提案頁
-node drafts/door-notice/pdf2.cjs     # 輸出兩份 PDF（原色底／白底）
+node drafts/door-notice/gen.mjs      # → drafts/door-notice/preview.html
+node drafts/door-notice/pdf2.cjs     # → 兩份 A4 PDF（原色底／白底）
 ```
 
-⚠⚠ **版面的高度是 JS 現算的**（`tools/door-map-script.js` 的 `fit()`），
-而 `page.pdf()` 會用 A4 的版面重排一次 —— 只呼叫 `emulateMedia('print')` 的話，
-`fit()` 用的還是螢幕那個視窗的盒子，地圖會比紙高、被 `.sh-map` 的
-`overflow: hidden` 切掉下緣。做法是：
+產出的 `preview.html` 與 PDF **沒有進版控**（可以重跑，不必留）。
+`preview.html` 直接用瀏覽器打開就好，底下有切換條：
+`?orient=w|e|n|s`（朝上的方向，w ＝ 正對診所）`?size=p|l`（A4 直／橫）
+`?lot=blue|grey` `?you=on|off` `?ns=a|b|c|d`（指北針大小）
+`?nw=a|b|c|d`（指北針胖瘦）`?qr=on|off`
 
-1. 視窗先調成 **A4 在 96dpi 的像素大小（794×1123）**
-2. 再切 `print` 媒體
-3. 發一次 `resize` 讓 `fit()` 用正確的盒子重算
-4. 然後才 `pdf({ preferCSSPageSize: true })`
+## 檔案
 
-⚠ **驗收不能只看檔案有沒有產出來**：用 pymupdf 把 PDF 轉成 300dpi 的點陣，
-再用 opencv 的 `detectAndDecodeMulti` 把三顆 QR 真的掃一次。
-（兩個套件都是**驗證用**，不是專案依賴：`pip install pymupdf opencv-python-headless`）
+| | |
+| --- | --- |
+| `gen.mjs` | 產生器。從 `index.html` 抽出地圖的 markup／CSS／JS，包一層旋轉，再接上底下三份 |
+| `body.html` | 告示自己的 markup（四點提醒、三張停車場卡）＋ 切換條 |
+| `style.css` | 告示自己的樣式（A4 直／橫兩套） |
+| `script.js` | 旋轉、街名重排、路線圓點、指北針、QR 開關 |
+| `pdf.cjs` / `pdf2.cjs` | 輸出 PDF（`pdf2` 一次出原色底與白底兩份） |
+
+QR 的碼由 **`tools/qr.mjs`**（零依賴、留在 tools/）產生，向量、印多大都不糊。
+
+## 定案的值（使用者一項一項選過的）
+
+- 方向 **正對診所（西在上）**、紙張 **A4 直**
+- 指北針：大小 36、胖瘦 1:1.5、「北」字級 ＝ 針長 × 0.52、位置在地圖上方帶子的右側
+- 三顆 QR：**28.5mm、中心相距 65.2mm** —— 「相機會不會對錯」的治法是**拉開距離**，
+  不是把碼做小
+- 停車場順序 **P1 190m／P2 140m／P3 50m**，**刻意不是照距離排**：
+  最近的 P3（斗六永樂站）很不好進出，列出來是為了完整、不是推薦
+
+## 幾件不要再走回去的
+
+- **抬頭與診所名稱都拿掉了**：紙貼在自家門口，看的人就站在門口。
+- **「車主在拖吊車來之前出現就不會被拖吊」不寫** —— 那等於教人賭一把。
+- 「這裡平常車不多，**看起來停一下沒關係**」被退回 ——
+  那是替讀者把僥倖的念頭講出來，等於幫他找了個理由。**只擺事實，不要配旁白。**
+- 第二句要寫成**現在的常態**（「近來常有直接開單情形」），
+  不要寫成單一事件（「前幾天已經有人被開單」），嚇阻力差很多。
+
+## 踩過、下次還會踩的
+
+- **輸出 PDF 前要把視窗調成 A4 在 96dpi 的像素（794×1123）再切 print 媒體**，
+  並發一次 `resize` —— 版面高度是 JS 現算的（`fit()`），只切媒體的話它用的還是
+  螢幕那個視窗的盒子，地圖會比紙高、下緣被 `overflow: hidden` 切掉。
+- **量測腳本要先把切換條 `display:none`** —— 它是 fixed 的，
+  Playwright 的元素截圖照樣拍得到（直式的紙比較高，QR 帶正好落在它底下）。
+- **驗收 QR 不能用眼睛**：把 PDF 轉成 300dpi 點陣，用解碼器真的掃一次。
+  驗證用的兩個套件不是專案依賴：`pip install pymupdf opencv-python-headless`

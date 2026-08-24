@@ -1,11 +1,13 @@
 /* ==========================================================================
-   tools/door-map-preview.mjs　—— 產生 preview/clinic-map-door/index.html
+   drafts/door-notice/gen.mjs　—— 產生 drafts/door-notice/preview.html
    --------------------------------------------------------------------------
    提案（2026-08-21 開）：**貼在診所門口的停車參考圖**。
    使用者：「我想要製作一張正對診所角度版本的地圖，用意是放在診所門口的
    停車場參考。」
 
-   跑法：node tools/door-map-preview.mjs　（在 repo 根目錄）
+   跑法：node drafts/door-notice/gen.mjs　（在 repo 根目錄）
+   ⚠⚠ 這一份**刻意不放在 preview/ 底下** —— 使用者 2026-08-23 指定
+     「這個專案內容不需要放在診所網站上」。drafts/ 不進 _site、build 也掃不到。
 
    做法：**不重畫一張地圖** —— 直接把 index.html 那張（排了四十二輪的）
    整個抽出來，只做三件事：
@@ -19,10 +21,10 @@
    ⚠ 這支是模板字串，註解裡不可以出現反引號 —— 一律用 「」。
    ========================================================================== */
 import fs from 'node:fs';
-import { qrPath } from './qr.mjs';
+import { qrPath } from '../../tools/qr.mjs';
 
 const SRC = 'index.html';
-const OUT = 'preview/clinic-map-door/index.html';
+const OUT = 'drafts/door-notice/preview.html';
 const src = fs.readFileSync(SRC, 'utf8');
 
 /* ---- 1. 從 index.html 抽三塊：地圖的 markup、CSS、JS ---------------------- */
@@ -46,8 +48,8 @@ const fig = FIG.replace('<g id="map-clip" clip-path="url(#clip-round)">',
                .replace(/(\s*)<\/g>(\s*)<\/svg>/, '$1</g></g>$2</svg>');
 if (!/id="geo"/.test(fig)) throw new Error('geo 包不進去');
 
-const CSS = fs.readFileSync('tools/door-map-style.css', 'utf8');
-const BODY = fs.readFileSync('tools/door-map-body.html', 'utf8');
+const CSS = fs.readFileSync('drafts/door-notice/style.css', 'utf8');
+const BODY = fs.readFileSync('drafts/door-notice/body.html', 'utf8');
 
 /* QR：三個停車場各一顆，掃了直接開那一場的 Google 地圖。
    ⚠ 網址逐字取自 index.html 的三個 .rl-link（使用者自己分享的短網址），
@@ -70,7 +72,7 @@ const qrSvgs = QR_LOTS.map(([tag, url, nm]) => {
     + `<rect x="-4" y="-4" width="${n + 8}" height="${n + 8}" fill="#fff"/>`
     + `<path fill="#111" d="${d}"/></svg>`;
 });
-const JS = fs.readFileSync('tools/door-map-script.js', 'utf8');
+const JS = fs.readFileSync('drafts/door-notice/script.js', 'utf8');
 
 const html = `<!doctype html>
 <html lang="zh-Hant-TW">
@@ -98,6 +100,5 @@ ${JS}
 </body>
 </html>
 `;
-fs.mkdirSync('preview/clinic-map-door', { recursive: true });
 fs.writeFileSync(OUT, html);
 console.log('寫出', OUT, (html.length / 1024).toFixed(1) + 'KB');
