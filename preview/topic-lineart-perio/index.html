@@ -4780,8 +4780,12 @@ body[data-topic] #topics { padding-top: 1rem; }
 [data-topic="perio"] .tp-intro { position: relative; }
 [data-topic="perio"] .tp-intro::before {
   content: ""; position: absolute; right: 0; bottom: calc(-1 * var(--pv-y, 0px));
-  width: var(--pv-w, min(76%, 360px)); aspect-ratio: 1024 / 755;
-  background: url("../../assets/lineart-perio.png") center / contain no-repeat;
+  /* 「裁右」是用 CSS 模擬的：框變窄、圖照高度撐滿、靠左對齊 →
+     右邊那一段被框切掉，**比例尺不變**，所以人物只是往右移，不會變大。
+     定案時是真的重裁 PNG（--crop 的 x 往右挪），頁面這一側就回到單純的 contain。 */
+  width: calc(var(--pv-w, min(76%, 360px)) * var(--pv-k, 1));
+  aspect-ratio: calc(1024 - var(--pv-cut, 0)) / 755;
+  background: url("../../assets/lineart-perio.png") left center / auto 100% no-repeat;
   opacity: var(--pv-op, .10); pointer-events: none; z-index: 0;
 }
 @media (min-width: 834px) { [data-topic="perio"] .tp-intro::before { opacity: var(--pv-op, .48); } }
@@ -7090,12 +7094,12 @@ html[data-pvfig="off"] [data-topic="perio"] .tp-intro::before { display: none; }
      ⚠ 兩支都用 `document.body.dataset.topic` 擋住，首頁上等於不存在。 -->
 
 <div class="pv-bar">
-  <div class="pv-row" data-k="w">
-    <span class="pv-lab">大小</span>
-    <button type="button" data-v="a">現況</button>
-    <button type="button" data-v="b">大</button>
-    <button type="button" data-v="c">更大</button>
-    <button type="button" data-v="d">最大</button>
+  <div class="pv-row" data-k="cut">
+    <span class="pv-lab">裁右</span>
+    <button type="button" data-v="0">現況</button>
+    <button type="button" data-v="1">往右</button>
+    <button type="button" data-v="2">再往右</button>
+    <button type="button" data-v="3">最右</button>
   </div>
   <div class="pv-row" data-k="op">
     <span class="pv-lab" id="pvOpLab">濃度</span>
@@ -7103,6 +7107,13 @@ html[data-pvfig="off"] [data-topic="perio"] .tp-intro::before { display: none; }
     <button type="button" data-v="2" id="pvOp2">濃</button>
     <button type="button" data-v="3">更濃</button>
     <button type="button" data-v="4">最濃</button>
+  </div>
+  <div class="pv-row pv-fine" data-k="w" hidden>
+    <span class="pv-lab">大小</span>
+    <button type="button" data-v="a">現況</button>
+    <button type="button" data-v="b">大</button>
+    <button type="button" data-v="c">更大</button>
+    <button type="button" data-v="d">最大</button>
   </div>
   <div class="pv-row pv-fine" data-k="y" hidden>
     <span class="pv-lab">下沉</span>
@@ -7126,9 +7137,12 @@ html[data-pvfig="off"] [data-topic="perio"] .tp-intro::before { display: none; }
   var OPM = { "1": .10, "2": .115, "3": .15, "4": .20 };  /* 手機（<834） */
   var OPD = { "1": .48, "2": .56, "3": .64, "4": .72 };   /* iPad／電腦（≥834） */
   var Y   = { "0": "0px", "1": "12px", "2": "24px" };
-  var st = { w: "a", op: "1", y: "0", fig: "on" };
+  /* 裁右：從圖的**右緣**切掉幾個像素（圖檔 1024 寬）。切掉的是醫師的右後方
+     ——飛起來的白袍下襬與水管的尾巴，使用者說可以裁。 */
+  var CUT = { "0": 0, "1": 64, "2": 128, "3": 192 };
+  var st = { w: "d", op: "3", y: "0", cut: "0", fig: "on" };   /* 預設 ＝ 使用者現在看到的那一格 */
   var q = location.search;
-  ["w", "op", "y", "fig"].forEach(function (k) {
+  ["w", "op", "y", "cut", "fig"].forEach(function (k) {
     var m = q.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
     if (m) st[k] = m[1];
   });
@@ -7141,6 +7155,9 @@ html[data-pvfig="off"] [data-topic="perio"] .tp-intro::before { display: none; }
     root.style.setProperty("--pv-w", W[st.w] || W.a);
     root.style.setProperty("--pv-op", String(opVal()));
     root.style.setProperty("--pv-y", Y[st.y] || "0px");
+    var cut = CUT[st.cut] || 0;
+    root.style.setProperty("--pv-cut", String(cut));
+    root.style.setProperty("--pv-k", String((1024 - cut) / 1024));
     document.querySelectorAll(".pv-row[data-k]").forEach(function (row) {
       var k = row.dataset.k;
       row.querySelectorAll("button").forEach(function (bt) {
@@ -7190,7 +7207,8 @@ html[data-pvfig="off"] [data-topic="perio"] .tp-intro::before { display: none; }
         cv.width = Math.max(1, Math.round(fw)); cv.height = Math.max(1, Math.round(fh));
         var g = cv.getContext("2d", { willReadFrequently: true });
         g.clearRect(0, 0, cv.width, cv.height);
-        g.drawImage(img, 0, 0, cv.width, cv.height);
+        /* 和 CSS 同一個做法：照高度撐滿、靠左，右邊被框切掉 */
+        g.drawImage(img, 0, 0, cv.height * img.naturalWidth / img.naturalHeight, cv.height);
         ink = g.getImageData(0, 0, cv.width, cv.height).data;
       } catch (e) { ink = null; }
     }
@@ -7229,8 +7247,11 @@ html[data-pvfig="off"] [data-topic="perio"] .tp-intro::before { display: none; }
     }
 
     var sw = root.scrollWidth > innerWidth;
+    var cutPx = CUT[st.cut] || 0;
+    var shift = cutPx * (fh / 755);   /* 裁掉之後人物往右移多少（畫面 px） */
     var txt = "視窗 " + Math.round(innerWidth) + "×" + Math.round(innerHeight) +
-      "　圖 " + Math.round(fw) + "×" + Math.round(fh) + "（" + (fw / ir.width * 100).toFixed(0) + "% 寬）" +
+      "　圖 " + Math.round(fw) + "×" + Math.round(fh) +
+      "　裁右 " + cutPx + "（往右 " + shift.toFixed(0) + "px）" +
       "　濃度 " + al.toFixed(2) +
       "\n壓到線的字 " + hit + "／" + lines + " 行";
     if (hit) {
@@ -7247,7 +7268,7 @@ html[data-pvfig="off"] [data-topic="perio"] .tp-intro::before { display: none; }
     bt.addEventListener("click", function () { st[bt.parentElement.dataset.k] = bt.dataset.v; st.fig = "on"; paint(); });
   });
   document.getElementById("pvReset").addEventListener("click", function () {
-    st.w = "a"; st.op = "1"; st.y = "0"; st.fig = st.fig === "off" ? "on" : "off"; paint();
+    st.w = "a"; st.op = "1"; st.y = "0"; st.cut = "0"; st.fig = st.fig === "off" ? "on" : "off"; paint();
   });
   document.getElementById("pvMore").addEventListener("click", function () {
     var f = document.querySelector(".pv-fine"); f.hidden = !f.hidden;
