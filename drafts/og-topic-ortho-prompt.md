@@ -2370,3 +2370,19 @@ LINE 模擬在 `drafts/ortho-line-mock-paper.png`（紙色字）與 `-white.png`
 判準（ILLUSTRATION.md 第十一節）：暖色底用純白、冷色與深色用紙色 → 矯正是冷色，**預設紙色**；
 但 3.61 是七科第二低，所以做成實際的卡片讓使用者挑（同兒牙那次）。
 目前 `assets/og-topic-ortho.jpg` 裡是**紙色字**那一版。
+
+### ✅ 定案（2026-08-24）
+
+**字色：紙色**（使用者選的）。`assets/og-topic-ortho.jpg` 就是那一版，
+白字版留在 `drafts/ortho-band-white.jpg` 當紀錄（主名 4.57／地名 4.33）。
+
+**訊息卡的描述**（使用者指定）：`tools/topics.mjs` 的 `OG_DESC.ortho` ＝
+**「排整齊只是一半 —— 咬得不對，拆掉之後很容易又跑回去。」**
+＝ 那一頁 `stance` 的原句（COPY.md 第九之十六節，整頁的重心）。
+⚠ 使用者寫來的是「一半 ，咬得不對」，這裡沿用**站上定稿的破折號**寫法；
+要改成逗號只改 `OG_DESC.ortho` 再跑 `node tools/topics.mjs`。
+⚠ `<meta name="description">`（Google 搜尋結果那兩行）**沒有動** —— 兩者刻意不同。
+
+**順帶修掉一件沒人注意到的**：`OG_ALT` 少了 `ortho`，所以 `og:image:alt` 一直沿用
+退回值（診所夜景的描述），和這張圖對不上。已補上，內容照第七節第 4 條
+「要描述圖裡實際有什麼」。
