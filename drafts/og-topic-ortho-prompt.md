@@ -319,3 +319,137 @@ a warm yellow or sepia overall cast; cream, beige or tan walls.
 3. **病人設定成「矯正過一次又跑掉」的那一位**（使用者已選），
    但頁面上沒有任何一句寫「上一次在哪裡做的」—— 圖上也**刻意不留痕跡**。
    這一點如果他想再明確一點，只能靠表情，不能靠道具。
+
+---
+
+## 五之一、Ⓑ 的提示詞（2026-08-24，使用者另外要的一版）
+
+⚠ **這是另一個梗，不是 Ⓐ 的修改版** —— 兩份提示詞各自完整，可以各生一張比。
+病人的設定沿用使用者已選的 Ⓒ 情緒（矯正過一次又跑掉、這次想弄清楚），
+所以兩張的差別**只有梗本身**：Ⓐ 看的是片子（骨頭、拔不拔），Ⓑ 看的是**上下咬合**
+（＝那一頁的重心那句話「排整齊只是一半」）。
+
+**250px 下會讀到的五塊**：① 中央一雙手捧著的兩塊白色牙弓，正要合起來
+② 左邊穿白袍的人 ③ 右邊坐著前傾的人 ④ 背景一扇亮的窗 ⑤ 遠處推著小車的人。
+
+⚠⚠ **Ⓑ 特有的三個風險**（提示詞裡逐條擋掉了）：
+・**模型被讀成活動假牙** → 寫死 plaster study models on trapezoid bases，
+  沒有粉紅色牙齦壓克力、沒有金屬鉤。
+・**無彩空白爆表** → 石膏是白的、牆也是白的，兩塊加起來很容易超過 5%。
+  石膏因此寫成**帶暖的米白 `#efe9df`**（S 約 33）、牆是**帶藍的冷白 `#e6ebf0`**（S 約 22），
+  兩塊都不准是純白或中性灰。
+・**變成裝置展示** → 模型上**不畫矯正器與弓絲**（那一頁刻意沒寫戴什麼）。
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview
+card. It will be seen at about 250 pixels wide, so everything must read at thumbnail size:
+big simple shapes, few large objects, one single continuous scene, no panels and no dividing
+lines.
+
+THE WHOLE PICTURE IS BRIGHT, CLEAN AND COOL - a corner of a dental clinic by day, with
+daylight coming in from a tall window. The walls are a very light COOL off-white with a
+faint blue in them, about #e6ebf0 - never cream, never beige, never tan and never yellow, and
+never a neutral dead grey either. DO NOT PUT AN OVERALL WARM, AMBER OR SEPIA CAST OVER THE
+IMAGE. Read this paragraph as the mood of the whole image before drawing anything else.
+
+THE SIX THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW THE PEOPLE EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATION OF THE DENTIST.
+   Thin hand-drawn linework whose weight varies and sometimes breaks - NOT a thick even
+   outline. Each face is ONE FLAT SKIN TONE with no shading, no modelling, no cheekbones and
+   no jaw shadow. On the face there is only: the outline, two eyes drawn as small simple
+   dots with NO whites, NO pupils and NO highlights, two short eyebrows, a tiny nose mark, a
+   small mouth line and an ear. Hair is a flat shape in two tones with no individual strands.
+   EVERY PERSON IN THIS PICTURE IS DRAWN WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME
+   SOLIDITY, including the one furthest away. This is the single most important instruction.
+
+2. THE PAIR OF PLASTER JAW MODELS IS THE HERO, AND THEY ARE BEING CLOSED TOGETHER. Held in
+   the dentist's two hands in the MIDDLE of the picture, at his chest height, NEAREST TO US
+   AND LARGER THAN ANYTHING ELSE IN THE SCENE - together they stand about a third of the
+   picture height. THE UPPER MODEL IS IN HIS UPPER HAND WITH ITS ARCH OF TEETH FACING DOWN;
+   THE LOWER MODEL IS IN HIS LOWER HAND WITH ITS ARCH FACING UP; the two arches are aligned
+   and almost meeting, with a NARROW GAP still open between them, so it is obvious he is in
+   the act of closing them onto each other. Each model is a simple chalky block: a plain
+   TRAPEZOID BASE with a horseshoe row of teeth on it, the individual teeth drawn as a row
+   of simple rounded shapes, big and readable. THE PLASTER IS A WARM OFF-WHITE (#efe9df,
+   shaded with #ddd5c6) WITH LOOSE HAND-DRAWN SHADING STROKES ON IT - never pure white and
+   never flat. THE MODELS ARE PLAIN PLASTER: no braces, no brackets, no wires, no pink gum
+   acrylic, no metal clasps, no springs - they are study models, NOT dentures.
+
+3. THE DENTIST IS STANDING BEHIND THE MODELS, SHOWING HOW THEY MEET. A Taiwanese man in his
+   late thirties, short black hair, clean-shaven, standing upright and slightly turned
+   towards the seated patient, his weight even and easy. HIS HANDS, EXACTLY: both forearms
+   come up in front of his chest, elbows bent and staying close to his body; one hand holds
+   the upper model from above, the other holds the lower model from below; THE INDEX FINGER
+   OF THE LOWER HAND IS EXTENDED AND POINTS AT THE BACK TEETH, where the two arches meet at
+   the side. HIS EYES ARE ON THE MODELS, not on us and not on the patient. He is explaining
+   something quietly, mouth slightly open. HE IS NOT PRESENTING THE MODELS TO THE VIEWER,
+   NOT HOLDING THEM UP LIKE A TROPHY, NOT WAVING AND NOT GREETING ANYONE. USE THIS ANCHOR:
+   standing, the top of his head sits just below the top sixth of the picture and his legs
+   are cropped by the bottom edge, so he is drawn large and close to us.
+
+4. THE PATIENT IS SITTING ON A ROUND STOOL TO THE RIGHT, LEANING IN TO LOOK. A Taiwanese man
+   or woman of about forty - an ordinary working adult, NOT a teenager and NOT a student. He
+   sits on a simple round stool, KNEES TOGETHER AND BODY CLEARLY TIPPED FORWARD FROM THE HIPS
+   towards the models, forearms resting on his thighs. IN BOTH HANDS HE HOLDS A SMALL SHEAF
+   OF PRINTED PAPER - three or four loose A4 sheets with a few grey lines of text-like marks
+   on them (marks only, NO readable writing) - resting on his knees, as if he has brought his
+   own homework with him. HIS EYES ARE ON THE GAP BETWEEN THE TWO MODELS.
+   HIS EXPRESSION IS "THIS TIME I WANT TO UNDERSTAND IT PROPERLY": mouth closed and calm,
+   the inner ends of his eyebrows drawn very slightly together in concentration, chin
+   slightly lifted towards the models. He is ATTENTIVE AND ENGAGED. He is NOT sad, NOT
+   regretful, NOT sighing, NOT anxious, NOT frowning hard, NOT smiling broadly, and he is
+   NOT touching his own mouth, teeth or jaw with his hand.
+
+5. A THIRD PERSON IS BUSY WITH SOMETHING ELSE IN THE BACKGROUND, AND SHE IS NOT LOOKING AT
+   THEM. Further back on the LEFT, smaller because she is further away but drawn with exactly
+   the same line weight, a dental nurse walks past pushing a small clinic trolley - a simple
+   box on castors with one folded cloth on its top shelf. She is absorbed in her own small
+   task and does not look at the other two. This is what makes the picture feel alive: THREE
+   PEOPLE, TWO SEPARATE THINGS HAPPENING AT ONCE, nobody posing for us.
+
+6. NO WRITING ANYWHERE in the image, in any language - not on the papers, not on the wall,
+   not on the trolley, not on the shelves.
+
+EVERYONE LOOKS DIFFERENT. The three people differ clearly in age, build, hair and clothing
+colour: the dentist is tall and slim in a white coat; the patient is stockier, in everyday
+clothes; the nurse is shorter with her hair tied up. No two faces are alike.
+
+COLOUR. The clinic blue of this speciality is #4478b5 and it appears in only three places:
+the dentist's scrubs under his open white coat (a soft dusty blue, #6a94c4, with a slightly
+deeper blue trim), the cool sky in the window, and one thin blue line along the edge of the
+counter. Everything else is quiet: the patient's clothes are a warm oatmeal shirt (#d8cdbb)
+over dark slate trousers, the nurse's scrubs are pale slate blue-grey, the shelving is pale
+wood-grey. The picture must NOT become an all-blue image: it is a bright white room with a
+few blue things in it.
+
+THE ROOM - IMPORTANT AND EXACT. FOUR LARGE, SIMPLE OBJECTS AND NOTHING ELSE: a TALL WINDOW
+on the left with a plain cool sky beyond it, its lower half behind the nurse; an OPEN
+SHELVING UNIT on the right holding two or three more pairs of plaster models, big and simple;
+a long clean counter running behind them; and the round stool. The floor is a pale seamless
+clinic vinyl, slightly cooler than the wall, softly reflective with a few long horizontal
+reflection strokes, meeting the wall in a CONTINUOUS COVED SKIRTING that curves up the wall.
+The room is SIMPLE BECAUSE THE THINGS IN IT ARE FEW AND LARGE, NOT because it is empty:
+there must be no bare unbroken expanse of wall in the lower two thirds of the picture. NO
+posters, NO framed pictures, NO plants, NO instrument trays, NO cabinets full of small
+bottles, NO dental chair.
+
+THE TOP SIXTH OF THE PICTURE IS PLAIN WALL AND NOTHING ELSE - no heads, no hands, no models,
+no shelves, no window frame, and nothing darker or brighter anywhere inside that strip.
+
+TEXTURE AND FINISH - fine even paper grain over the whole image, flat colour areas with a
+few loose hand-drawn shading strokes, gentle and warm-hearted, the look of a printed
+editorial illustration.
+
+AVOID: dentures, partial dentures, pink gum-coloured acrylic, metal clasps; braces, brackets,
+wires or aligners anywhere; a giant single tooth; a cartoon tooth with a face; a calendar, a
+clock, a progress bar or any hint of how long treatment takes; any before-and-after
+comparison, any panel or dividing line; a dental chair with someone being treated in it;
+anyone waving, greeting or presenting to the viewer; anyone looking at the camera; a faded,
+translucent or ghostly background figure; readable text or numbers anywhere; a crowded room;
+a warm yellow or sepia overall cast; cream, beige or tan walls; pure flat white plaster.
+```
+
+⚠ Ⓑ 的房間比 Ⓐ 少一件（沒有燈箱），所以**邊緣密度更容易不足** ——
+窗、架上的模型、推車、檯面那條線是撐密度的四樣，第一版若低於 30%
+先看是不是把架子畫空了。
