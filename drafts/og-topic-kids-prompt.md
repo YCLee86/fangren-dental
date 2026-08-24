@@ -214,8 +214,8 @@ no inset boxes.
 
 THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: a bright, calm, warm
 children's dental clinic at midday, WITH THINGS GOING ON IN IT. The back wall is a WARM CREAM
-WHITE (#f2e6d2) that keeps a clear hint of warmth in it - never grey, never blue-white, never
-pure white, never mustard. The floor is light warm wood. Nothing here is frightening: no
+WHITE (#f2e6d2) that keeps a clear hint of warmth in it - the wall is never grey, never
+blue-white, never pure white and never mustard-yellow. The floor is light warm wood. Nothing here is frightening: no
 needle, no drill, no blood, no tears.
 
 THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is
@@ -306,8 +306,7 @@ THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
    two faces and on the little mirror between them and softens towards the edges. The colours
    are warm: amber and caramel for the printed cap, top and trousers and for the chair; white
    for the open coat; solid mustard amber for the nurse; green only in the potted plants; light
-   warm wood for the floor and counter;
-   warm cream for the wall. Fine paper grain over the whole image and loose hand-drawn shading
+   warm wood for the floor and counter; warm cream for the wall. Fine paper grain over the whole image and loose hand-drawn shading
    strokes; NO LARGE FLAT EMPTY AREAS ANYWHERE - if a part of the picture has nothing in it,
    put one of the five large things there instead.
 
@@ -318,9 +317,8 @@ stays completely empty.
 AVOID: any text, letters, numbers or logos anywhere in the image; panels, frames, insets,
 speech bubbles, arrows, small icons; anybody drawn faded, translucent, ghostly or outline-only;
 anybody looking at the viewer; needles, syringes, drills, blood, tears; face masks; a child who
-looks frightened or is hiding; a green, blue or grey dental chair; sage-green, blue or white scrubs on the nurse;
-grey or blue-white walls; an
-overall yellow or sepia cast; tiny busy multicoloured patterns; posters or charts on the wall;
+looks frightened or is hiding; a green, blue or grey dental chair; sage-green, blue or white
+scrubs on the nurse; grey or blue-white walls; an overall yellow or sepia cast; tiny busy multicoloured patterns; posters or charts on the wall;
 large empty white areas; photorealism; 3D rendering; heavy even black outlines.
 ```
 
