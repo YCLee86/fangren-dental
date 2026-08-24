@@ -4791,6 +4791,23 @@ body[data-topic] #topics { padding-top: 1rem; }
 }
 [data-topic="endo"] .tp-intro > * { position: relative; z-index: 1; }
 
+/* 兒童牙科（2026-08-24 進行中 —— 大小、濃度、要不要翻轉還沒定案，等使用者挑）
+   ⚠ 圖是 998×857（橫的，接近牙周那張的形狀）。
+   ⚠ 臨界濃度現算：柔墨 #5c5f57 壓在兒牙套色 #c28229 上，**濃度 .152** 才掉到 4.5 ——
+     四科裡最寬鬆的（一般牙科 .101／牙周 .116／顯微根管 .107），因為 #c28229 最淺。
+   ⚠ 下面這一組是**暫定值**（照牙周那張橫圖的起點），定案要換成使用者挑的那一格。 */
+[data-topic="kids"] .tp-intro { position: relative; }
+[data-topic="kids"] .tp-intro::before {
+  content: ""; position: absolute; right: 0; bottom: 0;
+  width: min(81.25%, 390px); aspect-ratio: 998 / 857;
+  background: url("../../assets/lineart-kids.png") center / contain no-repeat;
+  opacity: .12; pointer-events: none; z-index: 0;
+}
+@media (min-width: 721px) {
+  [data-topic="kids"] .tp-intro::before { width: min(100%, 480px); opacity: .15; }
+}
+[data-topic="kids"] .tp-intro > * { position: relative; z-index: 1; }
+
 /* 3-1「2 位醫師・2 篇文章」。
    ⚠ 科別名不再印一次（首頁那個 .filter-note 會印「兒童牙科：…」）——
      那已經是這一頁的 h1 了。
