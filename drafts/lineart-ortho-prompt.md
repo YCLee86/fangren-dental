@@ -18,7 +18,7 @@
 | # | 檔案 | 附圖時要寫的話 |
 | --- | --- | --- |
 | 1~5 | `drafts/lineart-ref-1-walking.png` ~ `-5-bubbles.png` | 「**只參考線條畫法**（均勻粗細、無濃淡、無陰影、無材質、大量留白）；**不要參考題材、人物、道具**。」 |
-| 6 | `drafts/lineart-ref-ortho-pose.png` | 「**姿勢、視線方向、髮型、表情、兩隻手的高度與角度、螢幕的位置與傾斜，完全照這張**；但畫法照 1~5，畫到腰就好。⚠ **右下角那隻手是別人的，不要畫**；⚠ 左邊和下面那幾張小螢幕、還有那些光弧**都不要畫**。」 |
+| 6 | `drafts/lineart-ref-ortho-pose.png` | 「**姿勢、視線方向、髮型、兩隻手的高度與角度、螢幕的位置與傾斜，完全照這張**；但畫法照 1~5，畫到腰就好。⚠⚠ **表情不要照這張** —— 那張是他在對病人講話（嘴巴張開），線稿裡沒有病人，表情照提示詞寫的「專注但放鬆的淺笑」。⚠ **右下角那隻手是別人的，不要畫**；⚠ 左邊和下面那幾張小螢幕、還有那些光弧**都不要畫**。」 |
 | 7 | `assets/og-topic-ortho.jpg` | 「人物長相、服裝、年齡層照這張，但**畫法完全不同** —— 那張是上色插畫。」 |
 
 姿勢參考的做法：從 `assets/og-topic-ortho.jpg` 裁 `x200 y108 600×520` → ×2 → 1200×1040。
@@ -44,8 +44,12 @@ three-quarters towards the RIGHT, where a large screen floats in front of him. H
 from the waist up.
 HIS HAIR is short, side-parted, with a little volume at the front and short sideburns —
 drawn as an OUTLINE ONLY with two or three interior strokes for the parting, never filled in.
-HIS MOUTH IS SLIGHTLY OPEN, as if speaking a few quiet words. HIS EYES LOOK DOWN AND
-FORWARD AT HIS OWN POINTING FINGERTIP on the screen.
+HIS EXPRESSION IS ABSORBED BUT AT EASE — he is enjoying this piece of work. THE MOUTH IS
+ONE SHORT LINE CURVING GENTLY UPWARDS AT BOTH ENDS: a small, closed, relaxed smile. It is
+NOT open, he is NOT speaking, and it is NOT a wide grin or a straight flat line. HIS EYES
+LOOK DOWN AND FORWARD AT HIS OWN POINTING FINGERTIP on the screen, drawn as two short
+strokes that curve softly, not as hard round dots. HIS HEAD TILTS A LITTLE TOWARDS THE
+SCREEN and HIS SHOULDERS ARE LOW AND RELAXED, never squared or hunched.
 HIS ARMS, EXACTLY:
   • THE FAR ARM (his left, higher in the picture) is raised to SHOULDER HEIGHT, the elbow
     bent and kept close to his body, the forearm angled up and forward, THE HAND OPEN WITH
@@ -64,7 +68,7 @@ drawing: no patient, no assistant, no second pair of hands.
 
 FACES — extremely simple: eyes are small solid dots or short curved strokes, the nose is
 one tiny stroke or omitted. No eyebrow detail, no eyelashes, no blush, no wrinkles. The
-mouth is one small open oval, slightly parted, as described above.
+mouth is one short gently upward-curving line — a small closed smile, as described above.
 
 THE SCREEN — a single large rounded rectangle floating in the air in front of him, on the
 RIGHT of the picture, TILTED very slightly so its left edge is nearer to us. Its frame is
