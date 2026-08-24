@@ -63,7 +63,16 @@ const DEEP = {
   general: "#2c5238", perio: "#2a6d69", kids: "#9e6301", endo: "#89202d",
   prosth: "#182f4b", surg: "#784e84", ortho: "#244369",
 };
-const PAPER = "#e2e5e6";   // --paper：牌子上的字與標誌
+/* 牌子上的字與標誌的顏色。預設是站上的紙色 `--paper`。
+   ⚠⚠ **暖色系的帶子要用 `--fg #ffffff`**（2026-08-24 兒牙那張）：紙色 #e2e5e6 是偏冷的灰，
+     壓在琥珀／芥末這種暖底上會讀成「髒髒的灰」，而不是白。冷色與深色的帶子（牙周、
+     顯微根管、一般牙科）維持紙色，那是站上的顏色，不要為了一致順手全改。
+   ⚠ `--locop` 是地名那一行的不透明度（預設 .65／.72）。它在暖底上要調高 ——
+     .65 的紙色疊在 #9e6301 上合成 rgb(202,184,152)，對帶子只有 2.49。 */
+const FG_IDX = process.argv.indexOf("--fg");
+const PAPER = FG_IDX >= 0 ? process.argv[FG_IDX + 1] : "#e2e5e6";
+const LOCOP_IDX = process.argv.indexOf("--locop");
+const LOCOP = LOCOP_IDX >= 0 ? Number(process.argv[LOCOP_IDX + 1]) : null;
 
 const strip = (s) => s.replace(/<!--[\s\S]*?-->/g, "");
 
@@ -344,7 +353,7 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
    ・地名透明度 .65／主名 .95（首頁是白，這裡換成紙色） */
 .pair{display:flex;align-items:baseline;gap:${(0.37).toFixed(2)}em}
 .loc{position:relative;font-family:"NotoTC";font-weight:500;line-height:1.3;
-  letter-spacing:.04em;white-space:nowrap;opacity:.65;color:${PAPER};
+  letter-spacing:.04em;white-space:nowrap;opacity:${LOCOP ?? .65};color:${PAPER};
   padding-left:.37em;text-shadow:0 1px 2px rgba(20,24,20,.28)}
 .loc::before{content:"";position:absolute;left:0;top:.1em;bottom:.1em;
   border-left:1px solid rgba(${pr},${pg_},${pb},.28)}
@@ -460,7 +469,7 @@ img.bg{width:${W}px;height:${STATSPOS === "below" ? PH : H}px;display:block;
   background-image:linear-gradient(180deg,${SEAM});}
 .pair{display:flex;align-items:baseline;gap:0.37em}
 .loc{position:relative;font-family:"NotoTC";font-weight:500;line-height:1.3;
-  letter-spacing:.04em;white-space:nowrap;opacity:.72;color:${PAPER};padding-left:.37em}
+  letter-spacing:.04em;white-space:nowrap;opacity:${LOCOP ?? .72};color:${PAPER};padding-left:.37em}
 .loc::before{content:"";position:absolute;left:0;top:.1em;bottom:.1em;
   border-left:1px solid rgba(${pr},${pg_},${pb},.28)}
 .right{display:flex;align-items:center;gap:${(G_CLINIC_FS * 0.807).toFixed(1)}px}
