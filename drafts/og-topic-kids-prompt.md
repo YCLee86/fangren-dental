@@ -1,6 +1,6 @@
 # 分享圖提示詞：兒童牙科（`og-topic-kids`）
 
-**狀態：⏳ 第二版提示詞（2026-08-24）。第一版的梗、姿勢、兩人同高、媽媽的位置全部一次就對，
+**狀態：⏳ 第三版提示詞（2026-08-24）。第一版的梗、姿勢、兩人同高、媽媽的位置全部一次就對，
 使用者退回四件（安靜／褲子沒印花／椅子顏色／像倉庫）—— 量測與改法在第五之〇節，提示詞在第五節。**
 規格依 [ILLUSTRATION.md](../ILLUSTRATION.md) 第十一節（250px 判準）與
 [TEAM.md](../TEAM.md) 第一節第 9 號（插畫師的三個交件門檻）。
@@ -172,7 +172,39 @@
 
 ---
 
-## 五、提示詞（第二版，逐字，可直接複製）
+## 五之一、第二版的量測與使用者的一件（2026-08-24，使用者：「很不錯欸　我喜歡」）
+
+原檔 `drafts/og-topic-kids-v2.jpg`。**四件回饋全部治好了，而且量得出來：**
+
+| | v1 | **v2** | 門檻 |
+| --- | --- | --- | --- |
+| 邊緣密度 | 21.4% | **30.2%** | ≥ 30% ✅（中央 73% 內是 31.0%） |
+| 無彩空白 | 0.1% | **0.1%** | < 5% ✅ |
+| 頂 17% 的邊緣密度 | 2.8% | **2.0%** | 乾淨 ✅（窗框、燈臂、牆貼都壓在線下了） |
+| 頂 17% 的中位色 | R245 | **R244 G236 B217** | R ≥ 228 ✅ → `--tintcolor` 會是 `#eea131` |
+
+6×3 格的邊緣密度，上排從 `0 / 0 / 4.8 / 0.1 / 24.1 / 0.4` 變成
+`9.9 / 11.3 / 5.7 / 6.9 / 10.4 / 14.5` —— **倉庫感就是那一排 0 造成的，補上五樣大東西之後整排都活了。**
+
+⚠ **兩人頭頂差那一項沒有可靠的自動量法**：牆上的雲和星星和醫師的頭在同一欄，
+偵測到的最上緣是牆貼不是帽子。眼睛的高度目視是平的（使用者也接受了這一版），
+**這一項改成用眼睛驗，不要拿那個偵測值當數據。**
+
+⚠ 裁切模擬（iMessage 中央 78.7%、LINE 中央 89.7%，都縮到 212px 再放大檢查）：
+**五塊該讀到的東西全部留得住**，iMessage 那一刀會切掉媽媽的包包與半邊身體，
+臉還在畫面裡 —— 可以接受，第三版不動構圖。
+
+### 第三版只改一件
+
+使用者：「左邊的助理刷手服顏色也要是和醫師類似的黃色主題色　但花紋圖案和顏色不要和醫師一樣」
+→ 護理師從**素面鼠尾草綠**換成**素面芥末琥珀 `#dda85a`（深階 `#b3812f`）＋奶油白小圓點
+＋奶油白領口滾邊**，**沒有塗鴉圖案**（熊／小雞／雲／星／花是醫師那塊布的專屬）。
+⚠ 站上那支鼠尾草綠因此完全離開這張圖，綠只剩兩盆盆栽 —— 那是刻意的，
+畫面現在整組落在兒牙的琥珀色系裡。
+
+---
+
+## 五、提示詞（第三版，逐字，可直接複製）
 
 ```
 Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
@@ -252,9 +284,15 @@ THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
 6. AT LEAST THREE SMALL THINGS ARE MOVING AT ONCE - this is what makes the picture feel alive.
    (a) the boy swinging his feet and pointing; (b) the little girl on the right rising up onto
    her knees on her stool, leaning towards her brother with her picture book still in one hand;
-   (c) A DENTAL NURSE IN PLAIN SAGE-GREEN SCRUBS (no coat, no print) standing at the counter in
-   the background, half turned away from us, setting a paper cup down on a tray. Nobody looks
-   at the viewer.
+   (c) A DENTAL NURSE standing at the counter in the background, half turned away from us,
+   setting a paper cup down on a tray. Nobody looks at the viewer.
+   WHAT THE NURSE WEARS - SAME COLOUR FAMILY AS THE DENTIST, BUT CLEARLY NOT THE SAME OUTFIT:
+   plain scrubs (no coat, no cap) in a SOLID WARM MUSTARD AMBER (#dda85a, shaded #b3812f) with
+   a cream trim along the V-neck and pocket and A SPRINKLE OF SMALL CREAM POLKA DOTS (#f6ecd9)
+   as her only pattern. HER FABRIC IS NOT THE DENTIST'S FABRIC: no bears, no chicks, no clouds,
+   no stars and no flowers on her, and her ground colour is a clear step deeper than the
+   dentist's off-white cloth, so that at a glance the two women are obviously wearing different
+   things from the same family.
 
 7. THE MOTHER IS THE TALL FIGURE ON THE RIGHT AND SHE HAS LET GO. She stands with her full
    height about 70% of the picture height - the top of her head just below the empty top strip,
@@ -267,7 +305,8 @@ THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
 8. LIGHT AND COLOUR. Warm daylight comes from the window on the left, so the light pools on the
    two faces and on the little mirror between them and softens towards the edges. The colours
    are warm: amber and caramel for the printed cap, top and trousers and for the chair; white
-   for the open coat; sage green only on the nurse; light warm wood for the floor and counter;
+   for the open coat; solid mustard amber for the nurse; green only in the potted plants; light
+   warm wood for the floor and counter;
    warm cream for the wall. Fine paper grain over the whole image and loose hand-drawn shading
    strokes; NO LARGE FLAT EMPTY AREAS ANYWHERE - if a part of the picture has nothing in it,
    put one of the five large things there instead.
@@ -279,7 +318,8 @@ stays completely empty.
 AVOID: any text, letters, numbers or logos anywhere in the image; panels, frames, insets,
 speech bubbles, arrows, small icons; anybody drawn faded, translucent, ghostly or outline-only;
 anybody looking at the viewer; needles, syringes, drills, blood, tears; face masks; a child who
-looks frightened or is hiding; a green, blue or grey dental chair; grey or blue-white walls; an
+looks frightened or is hiding; a green, blue or grey dental chair; sage-green, blue or white scrubs on the nurse;
+grey or blue-white walls; an
 overall yellow or sepia cast; tiny busy multicoloured patterns; posters or charts on the wall;
 large empty white areas; photorealism; 3D rendering; heavy even black outlines.
 ```
