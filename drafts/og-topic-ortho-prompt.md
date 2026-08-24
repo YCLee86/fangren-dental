@@ -788,3 +788,137 @@ readable text; a crowded room; a warm yellow or sepia cast; cream, beige or tan 
 
 ⚠ **不是 before/after**：畫面上只有**一排**牙齒與**一條參考線**，
 有幾顆已經貼上線、有幾顆還離得遠 —— 那是**正在進行中**，不是兩個時間點的對照。
+
+## 五之六、Ⓖ 的提示詞（隔空把牙齒排好，2026-08-24）
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview
+card. It will be seen at about 250 pixels wide, so everything must read at thumbnail size:
+big simple shapes, few large objects, one single continuous scene, no panels and no dividing
+lines.
+
+THE WHOLE PICTURE IS BRIGHT, CLEAN AND COOL - a corner of a dental clinic by day, daylight
+from a tall window. The walls are a very light COOL off-white with a faint blue in them,
+about #e6ebf0 - never cream, never beige, never tan, never yellow, and never a neutral dead
+grey either. DO NOT PUT AN OVERALL WARM, AMBER OR SEPIA CAST OVER THE IMAGE. THIS IS A WARM,
+HAND-DRAWN EDITORIAL ILLUSTRATION, NOT A SCIENCE-FICTION IMAGE: there is no glowing
+interface, no grid, no hologram panel, no particles and no futuristic technology anywhere.
+
+THE MOST IMPORTANT CONTENT OF THIS PICTURE IS A ROW OF LARGE TEETH FLOATING IN THE AIR, SOME
+OF THEM CLEARLY OUT OF LINE, WITH THE DENTIST ARRANGING THEM WITH HIS BARE HANDS. If a viewer
+sees this image at thumbnail size and cannot tell that some teeth are crooked and that the
+man is putting them into place, the illustration has failed. Draw that first, then everything
+else.
+
+THE SIX THINGS THAT MATTER MOST, IN ORDER:
+
+1. THE FLOATING ROW OF TEETH IS THE HERO AND IT IS HUGE. Filling the MIDDLE of the picture,
+   ABOUT HALF THE PICTURE HEIGHT and about two fifths of its width: TWELVE INDIVIDUAL TEETH
+   hanging in the air, each one a simple rounded tooth shape with a short root, drawn in warm
+   off-white (#efe9df, shaded with #ddd5c6) with loose hand-drawn shading strokes - never
+   pure white, never flat. THEY HAVE NO FACES, NO EYES AND NO ARMS - they are teeth, not
+   characters. They are all roughly the same size, each one big enough to read on its own,
+   and they simply float in the air in front of the dentist with a little space between them,
+   casting a soft shadow on the counter below. NO glass, NO screen, NO frame, NO glow, NO
+   grid, NO sparkles around them.
+
+2. HOW THE ROW IS ARRANGED - THIS IS WHERE THE WHOLE MEANING IS. A single THIN CURVED BLUE
+   GUIDE LINE (#4478b5) sweeps across the air from left to right, the shape of a dental arch:
+   that line is where the teeth are supposed to sit.
+   • ABOUT SEVEN OF THE TEETH ALREADY SIT NEATLY ON THAT CURVE, evenly spaced and upright.
+   • THE OTHER FIVE ARE PLAINLY OUT OF PLACE: one is tipped over at a steep angle, one is
+     rotated so we see its side, two are drifting well ABOVE and BELOW the curve, and one has
+     drifted forward towards us, overlapping its neighbour. The difference between the tidy
+     ones and the stray ones must be obvious at thumbnail size.
+   • Near the left end, TWO SHORT STRAIGHT BLUE LINES cross to make ONE CLEAR ANGLE, marked
+     with a single small blue arc - a measurement being taken. THAT ARC, THE TWO SHORT LINES
+     AND THE CURVE ARE THE ONLY BLUE MARKS IN THE AIR. No numbers, no letters, no labels, no
+     arrows, no ticks, no dotted rulers, no floating panels.
+
+3. THE DENTIST IS WORKING WITH HIS TWO BARE HANDS IN MID-AIR. A Taiwanese man in his late
+   thirties, short black hair, clean-shaven, standing on the LEFT, turned three-quarters
+   towards the floating row, feet planted and shoulders level. BOTH ARMS ARE RAISED IN FRONT
+   OF HIS CHEST, ELBOWS BENT, BOTH FULLY VISIBLE AND BOTH CONNECTED TO HIS BODY:
+   • HIS NEAR HAND PINCHES ONE STRAY TOOTH between thumb and index finger and is lifting it
+     back towards the curve - the tooth is caught in mid-move, a hand's width from its place.
+   • HIS OTHER HAND IS OPEN, palm towards the row, fingers relaxed and slightly spread,
+     hovering beside the teeth as if holding the rest of the row steady.
+   HIS EYES ARE ON THE TOOTH BETWEEN HIS FINGERS, not on us and not on the patient. His mouth
+   is slightly open, explaining quietly as he works. He is calm, absorbed and completely in
+   control - a craftsman at work, NOT a magician, NOT a presenter, NOT a performer. HIS HANDS
+   ARE BARE: no gloves, no wires, no gadgets, nothing on his fingertips. THERE IS NO HAND
+   ANYWHERE IN THIS PICTURE THAT DOES NOT BELONG TO A VISIBLE PERSON. USE THIS ANCHOR:
+   standing, the top of his head sits just below the top sixth of the picture and his legs
+   are cropped by the bottom edge.
+
+4. THE PATIENT IS SITTING ON A ROUND STOOL ON THE RIGHT, LOOKING UP AT THE TEETH, AND HE IS
+   LOOKING FORWARD TO THIS. A Taiwanese man or woman of about forty - an ordinary working
+   adult, NOT a teenager and NOT a student. He sits on a simple round stool, body tipped
+   slightly forward, hands resting easily on his knees with a small sheaf of three or four
+   printed A4 sheets under one hand (grey text-like marks only, NO readable writing). HIS
+   CHIN IS LIFTED AND HIS EYES ARE ON THE FLOATING TEETH.
+   HIS EXPRESSION IS HOPEFUL AND TRUSTING - EYEBROWS LIFTED A LITTLE AT THE INNER ENDS, EYES
+   OPEN AND SOFT, THE BEGINNING OF A SMALL CLOSED SMILE, SHOULDERS DOWN AND RELAXED. He looks
+   like someone who can finally see how this is going to work. He is NOT anxious, NOT
+   frowning, NOT sad, NOT astonished, NOT laughing, and he is NOT touching his own mouth.
+
+5. A THIRD PERSON IS BUSY WITH SOMETHING ELSE IN THE BACKGROUND, AND SHE IS NOT LOOKING AT
+   THEM. Far back on the RIGHT, small because she is distant but drawn with exactly the same
+   line weight, a dental nurse stands side-on at an open shelving unit, BOTH HANDS PLACING A
+   PAIR OF PLASTER JAW MODELS onto a shelf where two or three more pairs already sit. She is
+   absorbed in her own task. THREE PEOPLE, TWO SEPARATE THINGS HAPPENING AT ONCE, nobody
+   posing for us.
+
+6. NO WRITING ANYWHERE in the image, in any language, and NO NUMBERS.
+
+DRAW THE PEOPLE EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATION OF THE DENTIST. Thin
+hand-drawn linework whose weight varies and sometimes breaks - NOT a thick even outline. Each
+face is ONE FLAT SKIN TONE with no shading, no modelling, no cheekbones and no jaw shadow. On
+the face there is only: the outline, two eyes drawn as small simple dots with NO whites, NO
+pupils and NO highlights, two short eyebrows, a tiny nose mark, a small mouth line and an ear.
+Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN WITH
+EXACTLY THE SAME LINE WEIGHT AND SOLIDITY, including the one furthest away. The three people
+differ clearly in age, build, hair and clothing colour, and no two faces are alike.
+
+COLOUR. The clinic blue of this speciality is #4478b5 and it appears in only four places: the
+curved guide line and the small angle in the air, the dentist's scrubs under his open white
+coat (a soft dusty blue, #6a94c4), the cool sky in the window, and one thin blue line along
+the counter edge. Everything else is quiet: the patient wears a warm oatmeal shirt (#d8cdbb)
+over dark slate trousers, the nurse pale slate blue-grey, the shelving pale wood-grey. The
+picture must NOT become an all-blue image and it must NOT look lit by blue light: it is a
+bright white room with a few blue things in it.
+
+THE ROOM - FOUR LARGE SIMPLE OBJECTS AND NOTHING ELSE: a TALL WINDOW on the left with a plain
+cool sky beyond it; a long clean counter running behind the floating teeth at about two
+thirds of the picture height; an OPEN SHELVING UNIT with plaster models far back on the
+right; and the round stool. The floor is a pale seamless clinic vinyl, slightly cooler than
+the wall, softly reflective with a few long horizontal strokes, meeting the wall in a
+CONTINUOUS COVED SKIRTING. The room is SIMPLE BECAUSE THE THINGS IN IT ARE FEW AND LARGE, NOT
+because it is empty: no bare unbroken expanse of wall in the lower two thirds. NO posters, NO
+framed pictures, NO plants, NO instrument trays, NO cabinets of small bottles, NO dental
+chair, NO monitors and NO screens.
+
+THE TOP SIXTH OF THE PICTURE IS PLAIN WALL AND NOTHING ELSE - no heads, no hands, NO FLOATING
+TEETH, no guide line, no shelves, no window frame, nothing darker or brighter inside that
+strip. The whole floating row stays below that strip.
+
+TEXTURE AND FINISH - fine even paper grain over the whole image, flat colour areas with a few
+loose hand-drawn shading strokes, gentle and warm-hearted, the look of a printed editorial
+illustration.
+
+AVOID: holograms, glowing screens, glass panels, HUDs, grids, wireframes, scan lines, data
+readouts, particles, sparkles, light beams, gloves, wires or any futuristic technology; a
+blue glow over the room; teeth with faces, eyes or limbs; a whole row of perfectly tidy
+teeth; a second row of teeth or any before-and-after comparison; panels or dividing lines;
+numbers, letters, labels, arrows or measuring ticks; a floating hand or a forearm with no
+body; a skull, a skeleton or an X-ray; a dental chair with someone being treated in it;
+anyone waving, greeting or presenting to the viewer; anyone looking at the camera; a faded or
+ghostly background figure; readable text; a crowded room; a warm yellow or sepia cast; cream,
+beige or tan walls; pure flat white teeth.
+```
+
+⚠ **這一版最可能出事的三件**（回圖先看這三個）：
+① **牙齒飄進頂 17%** —— 浮空的東西最容易往上跑，提示詞寫了兩次，仍要量。
+② **變成科幻** —— 只要出現發光介面或藍光染整張，就是品牌那一關過不了，要重生成。
+③ **十二顆牙被畫成一整排整齊的** —— 前四版都栽在這裡；驗收時先數「明顯離線的有幾顆」，
+   少於三顆就重生成。
