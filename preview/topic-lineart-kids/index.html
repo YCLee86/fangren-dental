@@ -4856,7 +4856,9 @@ body[data-topic] #topics { padding-top: 1rem; }
 [data-topic="kids"] .tp-intro::before {
   content: ""; position: absolute; right: calc(-1 * var(--pv-dx, 0px)); bottom: 0;
   width: var(--pv-w, min(76%, 360px)); aspect-ratio: 998 / 857;
-  background: url("../../assets/lineart-kids.png") center / contain no-repeat;
+  background-image: url("../../assets/lineart-kids.png");
+  background-repeat: no-repeat; background-size: contain;
+  background-position: var(--pv-bp, center) center;
   opacity: var(--pv-op, .12); pointer-events: none; z-index: 0;
   transform: var(--pv-flip, none); transform-origin: center;
 }
@@ -7194,8 +7196,9 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
     <span class="pv-lab">往右</span>
     <button type="button" data-v="0">0</button>
     <button type="button" data-v="1">＋</button>
-    <button type="button" data-v="2">＋＋</button>
-    <button type="button" data-v="3">貼齊螢幕邊</button>
+    <button type="button" data-v="2">貼齊</button>
+    <button type="button" data-v="3">出血</button>
+    <button type="button" data-v="4">出血＋</button>
   </div>
   <div class="pv-row" data-k="flip">
     <span class="pv-lab">方向</span>
@@ -7234,11 +7237,16 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
      因為手機的頁面內距只有 14px，推超過它就凸出螢幕。
      所以手機那一段的最後一格就是 14px（剛好貼齊螢幕邊），不再多。
      ≥721 版心兩側留白很寬，可以推遠一點。 */
-  var DXM = { "0": "0px", "1": "6px", "2": "10px", "3": "14px" };
+  /* ⚠⚠ 「貼齊螢幕邊」之後還要更右，只能讓**圖在框裡往右移**（出血），
+     框本身不能再推 —— 再推就凸出螢幕、整頁可以左右拉（CLAUDE.md 記著踩過）。
+     出血的部分被偽元素的框裁掉，不會產生水平捲動；等於牙周那張「裁右」的鏡像。 */
+  var DXM = { "0": "0px", "1": "10px", "2": "14px", "3": "14px", "4": "14px" };
+  var BLM = { "0": "0px", "1": "0px",  "2": "0px",  "3": "18px", "4": "36px" };
   /* ⚠⚠ ≥721 的上限**不是版心留白，是最窄的那台**：實測 721 上介紹區離螢幕邊只有
      23.8px、iPad mini 744 只有 22.5px，推 32px 就多出水平捲動（1041 以上有 189px 以上，
      完全不是限制）。所以這一段最後一格收在 20px。 */
-  var DXD = { "0": "0px", "1": "8px", "2": "16px", "3": "20px" };
+  var DXD = { "0": "0px", "1": "12px", "2": "20px", "3": "20px", "4": "20px" };
+  var BLD = { "0": "0px", "1": "0px",  "2": "0px",  "3": "24px", "4": "48px" };
   /* ⚠⚠ 手機與 ≥721 是**兩組獨立的值**（站上本來就分兩段）——
      牙周那一輪量出來：iPad 的文字比較長（字級 +19%），同一組值在那一段會讓
      流程那幾行（柔墨）壓到線。所以大小也要分兩段記，不能只分濃度。
@@ -7267,6 +7275,11 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
     });
     root.style.setProperty("--pv-w", (isWide() ? WD : WM)[get("w")] || WM.a);
     root.style.setProperty("--pv-dx", (isWide() ? DXD : DXM)[get("dx")] || "0px");
+    var bl = (isWide() ? BLD : BLM)[get("dx")] || "0px";
+    /* ⚠⚠ 翻轉是 scaleX(-1)：畫面上的「往右」在未翻轉的座標裡是「往左」，
+       所以出血的方向要跟著鏡射，不然按下去圖會往反方向跑。 */
+    root.style.setProperty("--pv-bp", bl === "0px" ? "center"
+      : (st.flip === "on" ? "calc(0% - " + bl + ")" : "calc(100% + " + bl + ")"));
     root.style.setProperty("--pv-op", String(opVal()));
     document.querySelectorAll(".pv-row[data-k]").forEach(function (row) {
       var k = row.dataset.k;
@@ -7282,8 +7295,8 @@ html[data-pvfig="off"] [data-topic="kids"] .tp-intro::before { display: none; }
     var oBt = document.querySelectorAll('.pv-row[data-k="op"] button');
     var dBt = document.querySelectorAll('.pv-row[data-k="dx"] button');
     dBt.forEach(function (bt) {
-      var v = (isWide() ? DXD : DXM)[bt.dataset.v];
-      bt.textContent = bt.dataset.v === "3" ? v + (isWide() ? "" : "（貼齊螢幕邊）") : v;
+      var v = (isWide() ? DXD : DXM)[bt.dataset.v], b = (isWide() ? BLD : BLM)[bt.dataset.v];
+      bt.textContent = b === "0px" ? v : "＋" + b;
     });
     if (isWide()) {
       wBt.forEach(function (bt) { bt.textContent = WDPX[bt.dataset.v] + "px"; });
