@@ -75,6 +75,7 @@ html[data-pvfig="off"] [data-topic="perio"] .tp-intro::before { display: none; }
   border: 1px solid rgba(244,244,245,.32); background: transparent; color: inherit;
   font: 500 12.5px/1 system-ui, "Noto Sans TC", sans-serif; padding: 0; }
 .pv-row button[aria-pressed="true"] { background: #317d78; border-color: #317d78; }
+.pv-seg { opacity: .6; font-size: 11px; margin-bottom: .3rem; }
 .pv-meas { margin-top: .35rem; opacity: .82; font-size: 11px; white-space: pre-line; }
 .pv-meas b { color: #ffd9d0; font-weight: 700; }
 .pv-fine[hidden] { display: none; }
@@ -87,15 +88,16 @@ h = h.replace("</head>", CSS + "</head>");
 /* 3. 切換條 ＋ 現場量測（插在最後一個 </body> 前面） */
 const BAR = `
 <div class="pv-bar">
+  <div class="pv-seg" id="pvSeg"></div>
   <div class="pv-row" data-k="cut">
     <span class="pv-lab">裁右</span>
     <button type="button" data-v="0">現況</button>
-    <button type="button" data-v="1">往右</button>
-    <button type="button" data-v="2">再往右</button>
-    <button type="button" data-v="3">最右</button>
+    <button type="button" data-v="1">＋</button>
+    <button type="button" data-v="2">＋＋</button>
+    <button type="button" data-v="3">＋＋＋</button>
   </div>
   <div class="pv-row" data-k="op">
-    <span class="pv-lab" id="pvOpLab">濃度</span>
+    <span class="pv-lab">濃度</span>
     <button type="button" data-v="1">現況</button>
     <button type="button" data-v="2" id="pvOp2">濃</button>
     <button type="button" data-v="3">更濃</button>
@@ -132,33 +134,53 @@ const BAR = `
   var Y   = { "0": "0px", "1": "12px", "2": "24px" };
   /* 裁右：從圖的**右緣**切掉幾個像素（圖檔 1024 寬）。切掉的是醫師的右後方
      ——飛起來的白袍下襬與水管的尾巴，使用者說可以裁。 */
-  var CUT = { "0": 0, "1": 64, "2": 128, "3": 192 };
-  var st = { w: "d", op: "3", y: "0", cut: "0", fig: "on" };   /* 預設 ＝ 使用者現在看到的那一格 */
+  /* ⚠⚠ 手機與 ≥834 是**兩組獨立的值**（站上本來就分兩段）——
+     2026-08-24 量出來：iPad 的文字比較長，同一組值在 834 上會讓流程那五行
+     （柔墨）壓到線，對比掉到 2.86。所以大小、裁右也要分兩段記，不能只分濃度。
+     裁右的格子兩段不一樣：手機 0/64/128/192、≥834 0/128/192/256。 */
+  var CUTM = { "0": 0, "1": 64, "2": 128, "3": 192 };
+  var CUTD = { "0": 0, "1": 128, "2": 192, "3": 256 };
+  var st = {
+    /* 手機：使用者 2026-08-24 選的那一格（最大 ＋ 濃(上限) ＋ 最右） */
+    wM: "d", opM: "2", cutM: "3", yM: "0",
+    /* ≥834：同樣最大，裁右再多一格（那是唯一柔墨不壓到線的組合），濃度先給現況 */
+    wD: "d", opD: "1", cutD: "3", yD: "0",
+    fig: "on"
+  };
   var q = location.search;
-  ["w", "op", "y", "cut", "fig"].forEach(function (k) {
+  ["w", "op", "y", "cut"].forEach(function (k) {
     var m = q.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
-    if (m) st[k] = m[1];
+    if (m) { st[k + "M"] = m[1]; st[k + "D"] = m[1]; }
   });
+  var mf = q.match(/[?&]fig=([a-z0-9]+)/); if (mf) st.fig = mf[1];
+  function key(k) { return k + (isWide() ? "D" : "M"); }
+  function get(k) { return st[key(k)]; }
 
   function isWide() { return matchMedia("(min-width: 834px)").matches; }
-  function opVal() { return (isWide() ? OPD : OPM)[st.op] || (isWide() ? .48 : .10); }
+  function opVal() { return (isWide() ? OPD : OPM)[get("op")] || (isWide() ? .48 : .10); }
+  function cutVal() { return (isWide() ? CUTD : CUTM)[get("cut")] || 0; }
 
   function paint() {
     root.dataset.pvfig = st.fig;
-    root.style.setProperty("--pv-w", W[st.w] || W.a);
+    root.style.setProperty("--pv-w", W[get("w")] || W.a);
     root.style.setProperty("--pv-op", String(opVal()));
-    root.style.setProperty("--pv-y", Y[st.y] || "0px");
-    var cut = CUT[st.cut] || 0;
+    root.style.setProperty("--pv-y", Y[get("y")] || "0px");
+    var cut = cutVal();
     root.style.setProperty("--pv-cut", String(cut));
     root.style.setProperty("--pv-k", String((1024 - cut) / 1024));
     document.querySelectorAll(".pv-row[data-k]").forEach(function (row) {
       var k = row.dataset.k;
       row.querySelectorAll("button").forEach(function (bt) {
-        bt.setAttribute("aria-pressed", String(bt.dataset.v === st[k]));
+        bt.setAttribute("aria-pressed", String(bt.dataset.v === get(k)));
       });
     });
-    document.getElementById("pvOpLab").textContent = "濃度";
+    var seg = isWide() ? "iPad／電腦" : "手機";
+    document.getElementById("pvSeg").textContent = "調的是「" + seg + "」這一段（兩段各記各的）";
     document.getElementById("pvOp2").textContent = isWide() ? "濃" : "濃（上限）";
+    var cm = isWide() ? CUTD : CUTM;
+    document.querySelectorAll('.pv-row[data-k="cut"] button').forEach(function (bt) {
+      bt.textContent = cm[bt.dataset.v] === 0 ? "現況" : "+" + cm[bt.dataset.v];
+    });
     meas();
   }
 
@@ -240,7 +262,7 @@ const BAR = `
     }
 
     var sw = root.scrollWidth > innerWidth;
-    var cutPx = CUT[st.cut] || 0;
+    var cutPx = cutVal();
     var shift = cutPx * (fh / 755);   /* 裁掉之後人物往右移多少（畫面 px） */
     var txt = "視窗 " + Math.round(innerWidth) + "×" + Math.round(innerHeight) +
       "　圖 " + Math.round(fw) + "×" + Math.round(fh) +
@@ -258,10 +280,11 @@ const BAR = `
   }
 
   document.querySelectorAll(".pv-row[data-k] button").forEach(function (bt) {
-    bt.addEventListener("click", function () { st[bt.parentElement.dataset.k] = bt.dataset.v; st.fig = "on"; paint(); });
+    bt.addEventListener("click", function () { st[key(bt.parentElement.dataset.k)] = bt.dataset.v; st.fig = "on"; paint(); });
   });
   document.getElementById("pvReset").addEventListener("click", function () {
-    st.w = "a"; st.op = "1"; st.y = "0"; st.cut = "0"; st.fig = st.fig === "off" ? "on" : "off"; paint();
+    st[key("w")] = "a"; st[key("op")] = "1"; st[key("y")] = "0"; st[key("cut")] = "0";
+    st.fig = st.fig === "off" ? "on" : "off"; paint();
   });
   document.getElementById("pvMore").addEventListener("click", function () {
     var f = document.querySelector(".pv-fine"); f.hidden = !f.hidden;
