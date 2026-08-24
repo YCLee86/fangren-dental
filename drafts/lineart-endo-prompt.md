@@ -1,8 +1,12 @@
 # 著陸頁線稿底圖・顯微根管（`lineart-endo`）
 
-**狀態（2026-08-24）：提示詞與參考圖已備妥，等出圖。**
-容器裡沒有 Gemini 的金鑰，出圖要在使用者那一側跑 —— 把第四節整段貼進去、
-附第三節那八張圖，回傳的圖存成 `drafts/lineart-endo-v1.jpg` 就能接第六節的管線。
+**狀態（2026-08-24）：✅ 定案上線。** 成品 `assets/lineart-endo.png`（887×949），
+提案頁已刪除，推導存進 `/history/topic-lineart-endo.html`，定案的值見 CLAUDE.md 定案表
+「顯微根管的線稿底圖」那一列。第一版提示詞生出來的圖就是定案的那一張
+（`drafts/lineart-endo-v1.jpg`，門檻：線佔 6.4%、筆畫 4.9‰、粗細一致 1.40、實心填色 0 塊）。
+
+定案的值：手機（<721）`min(76%, 360px)`／`.107`，≥721 `min(70%, 330px)`／`.30`，
+`aspect-ratio: 887 / 949`、`center / contain`，**沒有 `--flip`、沒有裁右**。
 
 模板在 [`drafts/topic-lineart-prompt.md`](topic-lineart-prompt.md)（風格規格、門檻、管線都在那裡，
 **這一份只寫顯微根管這一科不一樣的地方**）。通則在 ILLUSTRATION.md 第十二節，

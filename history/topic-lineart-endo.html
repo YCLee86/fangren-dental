@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>topic-lineart-endo｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  h3 { font-size: .9rem; margin: 1.3rem 0 .4rem; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .84rem; margin: .6rem 0 1rem; }
+  th, td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 500; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92em; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>topic-lineart-endo — 顯微根管著陸頁的線稿底圖</h1>
+<p class="meta">
+  2026-08-24 當天開、當天定案上線<br>
+  原網址 <code>/preview/topic-lineart-endo/</code>（已刪除 2026-08-24）<br>
+  整頁還原：<code>git show abb4db0:preview/topic-lineart-endo/index.html</code><br>
+  切換條 <code>?w=a|b|c|d&amp;op=1|2|3|4&amp;fig=on|off</code>（兩段各記各的）<br>
+  成品 <code>assets/lineart-endo.png</code>（887×949，透明底、顯微根管的套色 <code>#ae4f4d</code>）<br>
+  產生器 <code>tools/topic-lineart.mjs</code>（永久）<br>
+  提案頁的產生器 <code>drafts/lineart-endo-preview.mjs</code>（留在 drafts）<br>
+  提示詞與量測 <code>drafts/lineart-endo-prompt.md</code>、參考圖 <code>drafts/lineart-endo-refs-crop.mjs</code>
+</p>
+
+<div class="note">
+<p><b>一句話</b>：這是第三科，而它的值<b>又和前兩科都不一樣</b> ——
+近正方的圖（887×949）、沒有裁右、沒有翻轉、手機 360／.107、iPad 與電腦 330／.30。
+<b>三科三組值不是誰漏改成一致，是每一輪都讓使用者在自己的機器上逐格挑的。</b></p>
+</div>
+
+<h2>起因與取材</h2>
+<p>使用者 2026-08-24：「顯微根管的著陸頁圖片已經上線
+<b>用那個圖片中醫師和顯微鏡的部分</b> 製作線稿 你們給我提示詞」。
+所以這一張只有兩樣東西：<b>坐在醫師椅上的醫師 ＋ 吊臂式顯微鏡</b>；
+分享圖裡的大臼齒、放大圈裡那九隻細菌、櫃子、診療椅、牆與地板全部不畫。
+順序照 ILLUSTRATION.md 第十二節：<b>分享圖在前、線稿在後</b> ——
+姿勢參考是從同一天上線的 <code>drafts/og-topic-endo-src.jpg</code>（原檔，不是疊了玻璃帶的成品）
+裁出來的，×3 放大。</p>
+
+<h2>和模板不一樣的三處</h2>
+<table>
+<tr><th>模板</th><th>這一科</th><th>為什麼</th></tr>
+<tr><td>畫到腰就好</td><td><b>畫到鞋子，含醫師椅</b></td>
+    <td>動作是「坐著、上身從髖部前傾湊到目鏡」，坐姿整個寫在下半身與那張椅子上</td></tr>
+<tr><td>姿勢參考一張</td><td><b>兩張</b>（醫師、顯微鏡）</td>
+    <td>器械的形狀不要用文字描述（ILLUSTRATION.md 第十之一節）。關節臂、鏡頭、目鏡的相對長度用圖給</td></tr>
+<tr><td>人物 ＋ 道具</td><td>多一個<b>光錐</b></td>
+    <td>唯一交代「往一個看不見的地方看進去」的東西，只花兩條線。規格寫死成兩條直線、裡面是空的、盡頭什麼都沒有 —— 不寫死一定會長出放射線與亮點</td></tr>
+</table>
+<p>提示詞裡最要緊的一條 <b>⚠ CRITICAL</b> 是「<b>不是桌上型實驗室顯微鏡</b>」：
+<code>microscope</code> 這個字的預設解就是那一台，一旦畫成那個，桌子、載玻片、對焦輪會一起長出來，
+整張圖的意思就變了。</p>
+
+<h2>出圖一次就過</h2>
+<p>門檻（<code>node drafts/lineart-measure.mjs</code>）：線佔 <b>6.4%</b>、筆畫 <b>4.9‰</b>、
+粗細一致 <b>1.40</b>、<b>實心填色 0 塊</b>。左上角量到墨是關節臂穿出去、左下角是光線穿出去，
+兩處都是提示詞要它們那樣走的，不是雜點。內容六件逐條看過：吊臂式不是桌上型、
+上身前傾兩腳踩地、光是空心的兩條線、沒有偷長牙齒／診療椅／地面線、頭髮與白袍沒填實、
+側面朝左沒看鏡頭。</p>
+<pre>node tools/topic-lineart.mjs endo --art drafts/lineart-endo-v1.jpg --crop 0,53,887,949</pre>
+<p><b>⚠ 這一科不必 <code>--flip</code></b> —— 分享圖裡的醫師本來就面向左，
+也就是朝版心裡面。（牙周那次要翻，是因為那張的醫師朝右、等於背對整頁的文字。
+<b>開工前先想一次朝向</b>，這是每一科都要各自判斷的一件事。）</p>
+<p><b>⚠ 也不必裁右</b> —— 墨的最右端（第 886 欄）就是醫師椅的椅背本身，
+靠右對齊對到的就是人。牙周那次要裁 192，是因為翻轉後醫師背後還有白袍下襬與水管尾巴。</p>
+
+<h2>⚠⚠ 這一輪新學到的：近正方的圖，卡住的是<b>高度</b>不是對比度</h2>
+<p>前兩科的圖一橫一近方，寬度給到 480px 都還好；這一張 887×949 更接近直的，
+同樣的寬度<b>高很多</b>：</p>
+<table>
+<tr><th>寬度</th><th>250</th><th>300</th><th>330（定案）</th><th>360</th><th>480</th></tr>
+<tr><td>算出來的高</td><td>267</td><td>321</td><td><b>353</b></td><td>385</td><td>514</td></tr>
+<tr><td>對介紹區（1440 上 480.7）</td><td>收得住</td><td>收得住</td><td>收得住</td><td>收得住</td><td><b>凸出 33px ⚠</b></td></tr>
+</table>
+<p>偽元素是 <code>bottom: 0</code>，比介紹區高就會往上凸到 h1 那一區。
+提案頁的量測面板因此比前兩科多一行判斷：現場拿圖高減介紹區高，凸出去就標紅
+（744 凸 13px、834 凸 7px、1041 以上凸 33px）。
+<b>下一科如果又是直的，這條要先看。</b></p>
+
+<h2>兩段的尺是兩把不同的尺</h2>
+<p>第一版沿用前兩科的做法，iPad 那一段從 360／.48 起跳，使用者：
+「<b>好像太大了 而且太濃</b>」。所以 ≥721 那一段<b>整把尺往下移</b> ——
+原本的第一格 360 退成最後一格，濃度也一樣（.48 退到最後）。
+按鈕上因此改印<b>實際值</b>（<code>330px</code>、<code>.30</code>），
+不再寫「大／更大」：兩段的尺不一樣時，相對詞會騙人。</p>
+<table>
+<tr><th></th><th>手機（&lt;721）</th><th>iPad／電腦（≥721）</th></tr>
+<tr><td>大小四格</td><td>360／410／440／480px</td><td>250／300／<b>330</b>／360px</td></tr>
+<tr><td>濃度四格</td><td>.10／<b>.107</b>／.13／.15</td><td>.15／.22／<b>.30</b>／.48</td></tr>
+<tr><td>使用者選的</td><td><b>360px ＋ .107</b></td><td><b>330px ＋ .30</b></td></tr>
+</table>
+
+<h3>濃度：手機是可讀性、iPad 是美感</h3>
+<p>最壞底色 ＝ 紙色與套色按濃度混合，<b>和圖多大無關</b>（一般牙科那一輪量出來的通則）。
+差別在<b>被壓到的是哪一種字</b>：</p>
+<table>
+<tr><th></th><th>壓到的字</th><th>濃度上限</th><th>定案那一格實測</th></tr>
+<tr><td>手機 390</td><td><b>柔墨</b> <code>#5c5f57</code>（流程那幾行）</td><td><b>.107</b></td><td>.107 → <b>4.50 ✓</b>（剛好）</td></tr>
+<tr><td>iPad 744／電腦</td><td>深墨 <code>#2a2c27</code>（回應句與收尾句，1~3 行）</td><td><b>.665</b></td><td>.30 → <b>7.59 ✓</b></td></tr>
+</table>
+<p>三支套色的臨界濃度各不同，<b>愈深愈緊</b>：一般牙科 <code>#3f654a</code> 是 .101、
+牙周 <code>#317d78</code> 是 .116、顯微根管 <code>#ae4f4d</code> 是 <b>.107</b>。
+所以下一科<b>不要直接抄別科的數字</b>，用二分逼近現算一次。</p>
+<p>另外這一科 iPad 那一段<b>完全沒有柔墨被壓到</b>（圖是直的，橫向伸不到流程那幾行），
+和牙周正好相反 —— 牙周在 834 上會壓到柔墨、對比只剩 2.86。
+<b>「iPad 會壓到柔墨」不是通則，是那一張圖的形狀造成的。</b></p>
+
+<h2>定案的值</h2>
+<pre>[data-topic="endo"] .tp-intro::before {
+  width: min(76%, 360px); aspect-ratio: 887 / 949;
+  background: url("assets/lineart-endo.png") center / contain no-repeat;
+  opacity: .107;
+}
+@media (min-width: 721px) {
+  [data-topic="endo"] .tp-intro::before { width: min(70%, 330px); opacity: .30; }
+}</pre>
+<p>分段跟著牙周用 <b>721px</b>（不是一般牙科的 834）——
+使用者是在 <b>iPad mini 直放 744</b> 上挑的，用 834 那台會被歸到手機那一段，
+他看到的和定案的就不是同一件事。</p>
+
+<h2>驗收</h2>
+<p>十二個寬度（1440／1280／1200／1041／834／744／721／720／430／390／375／320）
+介紹區高度與加圖之前<b>逐格完全相同</b>（480.69／500.92／499.52／427.25／470.41／580.47…），
+沒有任何水平捲動，圖在每一格都收在介紹區裡；
+其餘四科（兒牙／植牙／口外／矯正）與首頁<b>沒有畫出這個偽元素</b>。
+斷點兩側（721／720）各量過一次，確認換段時只換該換的兩個值。</p>
+
+<h2>下一科（兒牙／植牙／口外／矯正）</h2>
+<p>模板在 <code>drafts/topic-lineart-prompt.md</code>，提示詞照
+<code>drafts/lineart-endo-prompt.md</code> 或 <code>lineart-perio-prompt.md</code> 的結構改 WHO 與 COMPOSITION。
+三科走下來可以確定的是：<b>大小、濃度、分段、要不要翻轉、要不要裁</b> 五件事
+每一科都要重新判斷 —— 它們跟圖的長寬、人物在圖裡的位置、朝向、以及那一科文字的長度都有關。
+提案頁照抄 <code>drafts/lineart-endo-preview.mjs</code>（改三個常數：<code>SRC</code>、<code>IMG</code>、套色），
+面板要能自己算出「這一格的濃度上限」，並比一次「圖有沒有比介紹區高」。</p>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>

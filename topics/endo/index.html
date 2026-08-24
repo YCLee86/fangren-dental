@@ -4720,7 +4720,8 @@ body[data-topic] #topics { padding-top: 1rem; }
 
    ⚠ 顏色不在這裡挑 —— 圖檔本身已經是該科的**套色**（PALETTE.md），
      由 `node tools/topic-lineart.mjs <spec> --art <線稿檔> --crop x,y,w,h` 上色。
-   ⚠⚠ **目前只有一般牙科有圖。** 其餘六科畫好之後，把 `[data-topic="perio"]` 這種
+   ⚠⚠ **目前有圖的是一般牙科、牙周、顯微根管三科**（2026-08-24）。
+     其餘四科（兒牙／植牙／口外／矯正）畫好之後，把 `[data-topic="kids"]` 這種
      選擇器加進下面那一條的清單裡，不要改成 `[data-topic]` 一網打盡 ——
      沒有圖的科目會畫出一個空的偽元素。 */
 [data-topic="general"] .tp-intro { position: relative; }
@@ -4762,6 +4763,33 @@ body[data-topic] #topics { padding-top: 1rem; }
   }
 }
 [data-topic="perio"] .tp-intro > * { position: relative; z-index: 1; }
+
+/* 顯微根管（2026-08-24 定案上線，推導在 /history/topic-lineart-endo.html）
+   ⚠⚠ **這一科的值又和前兩科都不一樣，一樣是使用者逐格挑的**，不是漏改成一致：
+       ・分段跟著牙周用 **721px**（他是在 iPad mini 直放 744 上挑的）。
+       ・圖是**近正方**（887×949；一般牙科 832×788、牙周 1024×755 是橫的），
+         所以同樣的寬度**高很多** —— 480px 寬會算出 514px 高，比介紹區
+         （1440 上 480.7）還高，會往上凸到 h1 那一區。定案的 330／360 都收得住。
+       ・**沒有裁右** —— 圖檔右緣（第 886 欄）就是醫師椅的椅背本身，
+         靠右對齊對到的就是人，沒有空白可以裁（牙周那次要裁 192 是因為
+         醫師背後還有白袍下襬與水管尾巴）。
+       ・**沒有 --flip** —— 分享圖裡的醫師本來就面向左，也就是朝版心裡面。
+   ⚠ 手機 **.107** 是算出來的 AA 上限（柔墨 #5c5f57 壓在 #ae4f4d 上剛好 4.50）：
+     三支套色各不同，一般牙科 .101／牙周 .116／這一支 **.107**（愈深愈緊）。
+   ⚠ ≥721 的 **.30** 純粹是美感，不是可讀性的取捨 —— 那一段被壓到的只有
+     深墨（.tp-reply／.tp-close，1~3 行），**濃度上限是 .665**，實測 .30 時是 7.59。
+     使用者看過 360／.48 之後說「太大而且太濃」，尺整把往下移才挑到這一格。 */
+[data-topic="endo"] .tp-intro { position: relative; }
+[data-topic="endo"] .tp-intro::before {
+  content: ""; position: absolute; right: 0; bottom: 0;
+  width: min(76%, 360px); aspect-ratio: 887 / 949;
+  background: url("../../assets/lineart-endo.png") center / contain no-repeat;
+  opacity: .107; pointer-events: none; z-index: 0;
+}
+@media (min-width: 721px) {
+  [data-topic="endo"] .tp-intro::before { width: min(70%, 330px); opacity: .30; }
+}
+[data-topic="endo"] .tp-intro > * { position: relative; z-index: 1; }
 
 /* 3-1「2 位醫師・2 篇文章」。
    ⚠ 科別名不再印一次（首頁那個 .filter-note 會印「兒童牙科：…」）——
