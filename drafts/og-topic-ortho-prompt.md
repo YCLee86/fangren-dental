@@ -1946,3 +1946,162 @@ flare, sparkles, particles, floating dust, light beams; a large blank area of wa
 | 病患太單調 | ① 穿著加層次（**赭色針織外套 ＋ 淺色襯衫**，不是單一件米色）② 動作：一手撐膝、**另一手抬起指著螢幕上那顆牙**（他在問「這顆嗎」）③ 表情：嘴微張、眉稍揚，是**參與**不是旁觀 |
 | 木質感不搭 | 換成**無把手的淺色櫃體＋霧面石白檯面＋牆上一條凹槽燈帶**，木紋完全拿掉 |
 | 加流星／光電訊號 | **三到四條長光弧**（亮頭＋漸淡的尾），繞在他與螢幕之間，**長度至少一個頭寬**。⚠ 少而大，不是一片小點 —— 小點在 212px 上就是雜訊 |
+
+## 五之十八、Ⓗ v5 的提示詞（頭髮帶藍、雙手都在操作、病患有戲、現代診間、光弧，2026-08-24）
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview
+card. It will be seen at about 250 pixels wide, so everything must read at thumbnail size:
+big simple shapes, one single continuous scene, no comic-strip panels.
+
+THE STYLE COMES FROM THE REFERENCE ILLUSTRATIONS OF THE CLINIC. Match them exactly:
+• LINE: every outline is drawn in WARM DARK BROWN INK (#4a3a30), NEVER black, never cold grey.
+  Clearly hand-drawn - the thickness varies, it wobbles slightly, it breaks in places. NOT a
+  thin even vector line.
+• FACES ARE DRAWN WITH AS FEW MARKS AS POSSIBLE:
+  - THE NOSE IS ONE VERY SHORT, VERY THIN LINE, SHORTER THAN AN EYE IS WIDE - no nostrils, no
+    wings, no tip, no shading, no colour. IF IN DOUBT, DRAW LESS NOSE.
+  - BLUSH IS ALMOST INVISIBLE: at most an edgeless warm tint on the cheekbone, a shade warmer
+    than the skin. IT MUST NOT BE VISIBLE AT 250 PIXELS WIDE. Never a circle, never orange,
+    never two round dots. IF IN DOUBT, LEAVE IT OUT.
+  - Eyes are small dark dots, no whites, no pupils. Eyebrows two short strokes. Mouth one
+    short line. Ear one small curve. Skin a flat pale warm ivory (#f6e6d8) with no modelling,
+    no cheekbones, no jaw line.
+  - COUNT THE MARKS: two eye dots, two eyebrow strokes, one tiny nose line, one mouth line,
+    one ear curve. NOTHING ELSE.
+• PEOPLE HAVE NORMAL ADULT PROPORTIONS, gently simplified - about seven heads tall. NOT chibi,
+  NOT big-headed.
+• FINE PAPER GRAIN over the whole image, flat colour, loose hand-drawn hatching for shadows.
+Draw a futuristic subject in that warm, hand-drawn storybook style. NOT a 3D render, NOT a
+photo, NOT neon cyberpunk, NOT a clean vector infographic.
+
+THE ROOM IS A MODERN, CALM CONSULTING ROOM - BRIGHT AND WARM BUT WITHOUT ANY WOOD.
+THE BACK WALL IS A VERY LIGHT, ALMOST NEUTRAL WARM WHITE (#f4f2ee) - bright, barely warm,
+and NEVER yellow, NEVER cream, NEVER beige, NEVER tan, NEVER sand. Along the back runs a
+SEAMLESS PALE CABINET RUN WITH NO HANDLES AND NO DOOR PANELS - just one long dark shadow gap
+beneath a matt stone-white countertop. ONE RECESSED LIGHT LINE glows softly along the wall
+above the counter. The floor is a pale seamless resin floor with LONG SOFT HORIZONTAL
+REFLECTIONS, meeting the wall in a continuous coved skirting. NO wood grain, NO wooden doors,
+NO cabinet handles, NO panelled furniture, NO plants, NO posters, NO dental chair.
+The room stays bright: the only cold blue things are the floating screens and the gloves.
+
+THE PICTURE IN ONE LINE: A CONFIDENT ORTHODONTIST STANDS INSIDE A CURVED CLOUD OF GLOWING
+SCREENS SHOWING HOW TEETH ARE MOVED, WORKING TWO SCREENS AT ONCE WITH BOTH GLOVED HANDS,
+WHILE HIS PATIENT LEANS IN, POINTS AT ONE TOOTH AND ASKS ABOUT IT.
+
+THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
+
+1. THE SCREENS ARE MANY AND THEY CURVE AROUND HIM - ONE BIG, SEVEN SMALL. Panels of dark
+   translucent blue glass (#2b4a72, the room faintly visible through them), each with ONE thin
+   bright cyan-white edge line (#bcdcff), softly rounded corners and a gentle halo. They hang
+   at different depths and angles, SWEEPING IN A WIDE ARC FROM HIS UPPER LEFT, ACROSS IN FRONT
+   OF HIM, DOWN TO HIS LOWER RIGHT, so he stands INSIDE his own workspace. THE MAIN SCREEN is
+   in front of him, slightly left of centre, about FIFTY PER CENT of the picture height. THE
+   SEVEN SMALL ONES are between a fifth and two fifths of its size, ALL DIFFERENT SIZES, tilted
+   at different angles, some overlapping, the further ones smaller and fainter. No neat grid,
+   no straight row, no two the same size.
+
+2. EVERY SCREEN SHOWS TEETH - AND MOST SHOW HOW TEETH ARE MOVED. All screen content is GLOWING
+   PALE CYAN-WHITE LINE ART (#bcdcff), big and simple:
+   • MAIN SCREEN: A DENTAL ARCH SEEN FROM ABOVE - a horseshoe of TWELVE teeth. THREE ARE
+     PLAINLY OUT OF LINE: one rotated sideways, one tipped over, one pushed inwards. TWO THICK
+     SHORT CURVED ARROWS show which way two of them must travel.
+   • THREE SMALL SCREENS ARE CLOSE-UP DIAGRAMS OF TEETH BEING MOVED, from the reference
+     photographs of orthodontic mechanics: FOUR OR FIVE LARGE TEETH in a row, each with a SMALL
+     SQUARE BRACKET on it and A SINGLE WIRE THROUGH ALL THE BRACKETS. On one, the wire has a
+     clear U-SHAPED OR T-SHAPED LOOP bent into it; on another, ONE TOOTH SLIDES ALONG THE WIRE
+     with a straight arrow behind it; on the third, TWO CURVED ARROWS around one tooth show it
+     rotating upright. Brackets and wire drawn LARGE AND SIMPLE.
+   • THE OTHER FOUR: a SIDE PROFILE of a face in glowing line (no skull, no eye socket); UPPER
+     AND LOWER TEETH FROM THE SIDE with the upper front teeth clearly sticking out; a SECOND
+     ARCH, simpler; and ONE SINGLE TOOTH in three-quarter view with a rotation arrow.
+   ⚠ Extra marks are PURELY GEOMETRIC - tick marks, small round nodes, one angle with an arc,
+   corner brackets. THERE ARE NO LETTERS, NO NUMBERS, NO WORDS AND NOTHING RESEMBLING WRITING
+   ANYWHERE. Every screen has teeth or a face on it.
+
+3. SLOW LIGHT STREAKS CURVE THROUGH THE AIR AROUND HIM - THIS IS WHAT MAKES THE PICTURE MOVE.
+   THREE OR FOUR long, thin streaks of cyan-white light (#dff0ff) arc slowly between the
+   screens and around his shoulders, passing behind and in front of him: each streak is a small
+   bright head with a SOFT TAPERING TAIL AT LEAST AS LONG AS HIS HEAD IS WIDE, curving gently
+   like a slow comet. THEY ARE FEW, LARGE AND CALM - never a spray of dots, never sparkles,
+   never confetti, never glitter, never a cloud of particles, and they never cross his face.
+
+4. HE IS WORKING TWO SCREENS AT ONCE, WITH BOTH GLOVED HANDS. BOTH ARMS ARE RAISED, ELBOWS
+   BENT, BOTH FULLY VISIBLE AND BOTH CONNECTED TO HIS BODY - NEITHER ARM HANGS IDLE AT HIS
+   SIDE:
+   • HIS NEAR HAND is on the main screen: thumb and index finger PINCHING one of the crooked
+     teeth and sliding it along the horseshoe towards the empty place where it belongs, with a
+     SHORT SOFT TRAIL OF LIGHT behind that tooth. The tooth REMAINS part of the glowing line
+     art - he does NOT pull anything out and NO solid tooth floats anywhere.
+   • HIS OTHER HAND is on a smaller screen beside him, fingers spread and palm flat against the
+     glass, SWEEPING IT UPWARDS AND ASIDE so that screen tilts and lifts away from him.
+   AT HIS FINGERTIPS THERE IS A SMALL BRIGHT GLOW: a soft cyan-white halo (#dff0ff) no bigger
+   than a fingertip on both hands, brightest where the fingers touch the glass. THE GLOW IS
+   ONLY AT THE FINGERTIPS, ON THE SCREENS AND IN THE STREAKS - no beams, no light on the walls
+   or floor, and his face keeps its warm daylight colour, never blue.
+
+5. THE DENTIST - CONFIDENT AND IN COMMAND. A Taiwanese man in his late thirties, clean-shaven,
+   drawn with the minimal face above. HIS SHORT HAIR IS A DEEP BLUE-BLACK (#2a3342, catching
+   light at #3c4a5e) - clearly cool and blue-tinged, the same way the endodontist in the
+   reference illustration has a warm red-brown tint in hers. HE WEARS A LONG WHITE DOCTOR\'S
+   COAT REACHING BELOW HIS KNEES, open at the front, over BLUE SCRUBS (#6a94c4) - V-neck top
+   and matching trousers - and CLOSE-FITTING GLOVES IN THE DEEPER CLINIC BLUE (#4478b5) with a
+   soft rolled cuff; the gloves are MORE SATURATED than the scrubs, plain, with no pattern, no
+   wires, no sensors, no lights. He stands on the LEFT, turned three-quarters towards the
+   screens, feet planted, shoulders level and open, calm and unhurried - a specialist doing
+   what he does every day. NOT a magician, NOT a performer. HIS EYES ARE ON THE TOOTH HE IS
+   MOVING; his mouth is slightly open, explaining as he works.
+   THERE IS NO HAND ANYWHERE IN THIS PICTURE THAT DOES NOT BELONG TO A VISIBLE PERSON.
+
+6. THE PATIENT IS TAKING PART, NOT JUST WATCHING. A Taiwanese man of about forty - an ordinary
+   working adult, NOT a teenager - sitting on a round stool on the RIGHT, LEANING WELL FORWARD
+   FROM THE HIPS towards the screens. ONE FOREARM RESTS ON HIS THIGH taking his weight; HIS
+   OTHER ARM IS RAISED AND HIS INDEX FINGER POINTS UP AT ONE PARTICULAR TOOTH on the main
+   screen - he is in the middle of asking about that tooth. HIS MOUTH IS SLIGHTLY OPEN, his
+   eyebrows lifted a little, his eyes bright and on the screen: interested, hopeful, taking
+   part. He is NOT anxious, NOT frowning, NOT astonished, NOT laughing.
+   HIS CLOTHES HAVE LAYERS AND COLOUR: an OPEN OCHRE-TERRACOTTA KNITTED CARDIGAN (#b6764a)
+   over a PALE SAGE COLLARED SHIRT (#d8ddd0), with DARK SLATE TROUSERS and simple shoes. He is
+   NOT dressed in one flat beige colour.
+
+7. THE NURSE IS FAR BACK ON THE RIGHT, SORTING THE RECORDS, AND SHE IS NOT LOOKING AT THEM.
+   Small because she is distant, but drawn with exactly the same line weight and the same
+   minimal face: she stands side-on in front of HER OWN CLUSTER OF FOUR SMALL FLOATING SCREENS
+   - one hand sliding one screen aside, the other resting on a second, two more already stacked
+   behind them like filed cards. She wears the same blue scrubs. Absorbed in her own task. TWO
+   SEPARATE PIECES OF WORK HAPPENING AT ONCE, nobody posing for us.
+
+8. NO WRITING ANYWHERE in the image, in any language, and NO NUMBERS.
+
+EVERYONE LOOKS DIFFERENT: the three people differ clearly in age, build, hair and clothing, and
+no two faces are alike. EVERY PERSON IS DRAWN WITH EXACTLY THE SAME LINE WEIGHT AND SOLIDITY,
+including the one furthest away.
+
+THERE MUST BE NO LARGE EMPTY AREA ANYWHERE BELOW THE TOP STRIP - every part of the picture
+carries a person, a screen with teeth on it, a light streak, or clearly drawn furniture (the
+counter, its shadow gap, the light line, the floor reflections). Nothing is cramped: the
+screens keep visible gaps between them.
+
+THE TOP SIXTH OF THE PICTURE IS PLAIN BRIGHT WALL AND NOTHING ELSE - every screen, every glow,
+every light streak, both people\'s heads, the counter, the light line and the nurse\'s screens
+ALL STAY BELOW THAT STRIP. That strip must stay light and neutral-warm, never yellow.
+
+AVOID: wood, wood grain, wooden cabinets, cabinet handles, panelled doors; a yellow, cream,
+beige, tan or sandy wall; a visible blush; round, pink, orange or red cheeks; a nose with
+nostrils, wings, a tip or shading; face shading, cheekbones or a jaw line; big-headed chibi
+proportions; black outlines; thin even vector lines; a short waist-length white coat; one arm
+hanging idle at his side; a patient sitting still with both hands on his knees; a patient
+dressed in a single flat colour; sparkles, glitter, confetti, a spray of dots, a cloud of
+particles, lens flare, light beams across the room; a dark or night-time room; blue light on
+faces or walls; a 3D render, a photograph, neon cyberpunk; letters, numbers, words or anything
+resembling writing on the screens; menus, buttons, sliders, charts, dashboards; a screen with
+only abstract symbols and no teeth; a neat grid or straight row of equal screens; more than
+eight screens; a solid three-dimensional tooth floating in the air; teeth with faces, eyes or
+limbs; an arch of perfectly tidy teeth; pink gums; a skull, a skeleton or an X-ray photograph;
+anything in the patient\'s hands; a floating hand or a forearm with no body; anyone waving or
+looking at the camera; a large blank area of wall or floor.
+```
+
+⚠ 回圖要量四件：① 頂 17% 的 **B ≥ 225**（v10 只有 212，剛好在懸崖邊；牆偏黃就會掉）
+② **邊緣密度 ≥ 22%**（這一版靠凹槽燈帶、長溝縫、地板反光、光弧撐）
+③ 光弧是不是**三到四條大的**，不是一片小點 ④ 病患有沒有在指螢幕、衣服有沒有層次
