@@ -194,9 +194,9 @@ THE SIX THINGS THAT MATTER MOST, IN ORDER:
    SOLIDITY, including the one furthest away. This is the single most important instruction.
 
 2. THE LIT X-RAY VIEWER IS THE HERO AND THE ONLY BRIGHT THING IN THE PICTURE. A single
-   upright rectangular light box standing on a low counter in the MIDDLE of the picture, its
-   glowing face about two fifths of the picture height and clearly wider than it is tall is
-   NOT required - draw it upright, taller than wide, and BIG. Its face glows an even cool
+   upright rectangular light box standing on a low counter in the MIDDLE of the picture,
+   TALLER THAN IT IS WIDE, its glowing face about two fifths of the picture height. DRAW IT
+   BIG - after the two people it is the largest thing here. Its face glows an even cool
    white (#f4f8fb), spilling soft light onto the counter, onto the wall behind it and onto
    both faces, so it is obvious that both people are lit by it. ONE SINGLE FILM is clipped to
    it - never two, never a row, never a before-and-after pair. On the film, drawn in soft
