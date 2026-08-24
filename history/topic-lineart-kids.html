@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>topic-lineart-kids｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .84rem; margin: .6rem 0 1rem; }
+  th, td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 500; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92em; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>topic-lineart-kids — 兒童牙科著陸頁的線稿底圖</h1>
+<p class="meta">
+  2026-08-24 當天開、當天定案上線（手機先上，iPad 當天稍晚定案）<br>
+  原網址 <code>/preview/topic-lineart-kids/</code>（已刪除 2026-08-24）<br>
+  整頁還原：<code>git show 5ce4df2:preview/topic-lineart-kids/index.html</code><br>
+  切換條 <code>?w=a|b|c|d&amp;op=1|2|3|4&amp;dx=0|1|2|3|4&amp;fig=on|off</code><br>
+  成品 <code>assets/lineart-kids.png</code>（998×857，透明底、兒牙的套色 <code>#c28229</code>，<b>翻轉已烘進圖檔</b>）<br>
+  產生器 <code>tools/topic-lineart.mjs</code>（永久）<br>
+  提案頁的產生器 <code>drafts/lineart-kids-preview.mjs</code>（留在 drafts）<br>
+  提示詞與量測 <code>drafts/lineart-kids-prompt.md</code>
+</p>
+
+<div class="note">
+<p><b>一句話</b>：這一張的四個值又和前三科都不一樣 ——
+手機裁 144 欄／框 <code>min(85.6%, 419px)</code>／<code>right: -14px</code>／濃度 <b>.152</b>，
+iPad 裁 <b>192</b> 欄／框 <code>min(77.5%, 420px)</code>／<code>right: -20px</code>／濃度 <b>.22</b>。
+<b>連「裁多少」都是兩段各一個值</b>（前三科的裁量兩段相同），所以
+<code>aspect-ratio</code> 也要分兩段寫。</p>
+</div>
+
+<h2>起因與順序</h2>
+<p>使用者：「線稿圖就選<b>醫師和治療椅的小孩</b>　治療椅不需要整個畫進來」。
+順序照 ILLUSTRATION.md 第十二節：<b>分享圖在前、線稿在後</b> —— 姿勢參考是從當天上線的
+<code>assets/og-topic-kids.jpg</code> 裁的（<code>x395 y175 470×440 ×3</code>）。
+提示詞一次就過，門檻：筆畫 <b>5.9‰</b>、粗細一致 <b>1.33</b>、實心填色 <b>0 塊</b>；
+線佔 8.53%（高於指引的 4~6%，成因是衣服上那些塗鴉圖案，是刻意留的品牌細節）。
+四角有墨那一項是生成的<b>地面線</b>，裁掉了（<code>--crop 26,128,998,857</code>）。</p>
+
+<h2>⚠⚠ 這一輪最值得記住的：往右是三段不同的機制</h2>
+<p>使用者連要三次「再往右」，每一次能用的手段都不一樣：</p>
+<table>
+<tr><th>階段</th><th>手段</th><th>上限是什麼</th></tr>
+<tr><td>① 框貼齊螢幕邊</td><td><code>right</code> 給負值</td>
+    <td><b>手機的頁面內距 14px</b>；≥721 是<b>最窄的那台</b>（721 只有 23.8、iPad mini 744 只有 22.5px）——
+        不是版心留白（1041 以上有 189px 以上）。給 32px 在 744 上直接多出 10px 水平捲動。</td></tr>
+<tr><td>② 出血</td><td>框不動，<code>background-position</code> 把圖往右推</td>
+    <td>沒有硬上限（超出的被框裁掉，不會有水平捲動），但推到 +160 之後<b>醫師整個出畫面</b>，
+        只剩小孩 —— 那是內容問題不是版面問題。</td></tr>
+<tr><td>③ <b>定案</b>：真的裁掉</td><td>牙周那一套：<b>框窄一截 ＋ 圖照高度撐滿靠左</b></td>
+    <td>比例尺不變，只是整張往右移。使用者選的「出血 +50」換算成圖檔 ＝ <b>裁掉右邊 144 欄</b>
+        （50 × 998 ÷ 347），框寬跟著乘 <code>(998−144)/998 = 0.8557</code>，逐像素等於出血版。</td></tr>
+</table>
+<p>⚠ <b>翻轉這一輪是烘進圖檔的</b>（<code>--flip</code>），不要用 CSS 的 <code>transform: scaleX(-1)</code>：
+翻轉之後「畫面上的往右」在未翻轉的座標裡是<b>往左</b>，背景位置與量測都要跟著鏡射，
+提案頁那一版就踩過（按下去圖往反方向跑）。</p>
+
+<h2>兩段的值（定案）</h2>
+<table>
+<tr><th></th><th>手機（&lt;721）</th><th>iPad／電腦（≥721）</th></tr>
+<tr><td>裁掉</td><td>144 欄 → <code>aspect-ratio: 854/857</code></td><td><b>192 欄</b> → <code>aspect-ratio: 806/857</code></td></tr>
+<tr><td>框寬</td><td><code>min(85.6%, 419px)</code>（＝ min(100%,490) × .8557）</td><td><code>min(77.5%, 420px)</code>（＝ min(96%,520) × .8076）</td></tr>
+<tr><td>離右緣</td><td><code>right: -14px</code>（貼齊螢幕邊）</td><td><code>right: -20px</code></td></tr>
+<tr><td>濃度</td><td><b>.152</b>（＝算出來的 AA 上限，柔墨剛好 4.50）</td><td><b>.22</b>（實測 4.24 ⚠）</td></tr>
+<tr><td>實際畫出來</td><td>375 上 297×298</td><td>744 上 420×447，壓到線的字 8／40 行</td></tr>
+</table>
+<p>⚠ <b>iPad 那 .22 低於站上的 4.5，是使用者看過四格數字之後選的取捨</b>
+（.15 是唯一過關的一格，4.51）—— 和牙周那張的 4.32、兒牙填色上的白字 3.22、
+分享卡帶子的 4.40 同一類。<b>不要拿對比度來訂正它。</b></p>
+<p>⚠ 四科的臨界濃度（柔墨 <code>#5c5f57</code> 掉到 4.5 的那一格）跟著套色走，<b>愈淺愈寬鬆</b>：
+一般牙科 <code>#3f654a</code> .101／牙周 <code>#317d78</code> .116／顯微根管 <code>#ae4f4d</code> .107／
+<b>兒牙 <code>#c28229</code> .152</b>。<b>每一科現算一次，不要抄。</b></p>
+
+<h2>提案頁本身學到的兩件</h2>
+<p>① <b>切換條在手機上不能吃掉半個畫面</b>：第一版量到 26.6%，收緊按鈕高度與字級之後 24%，
+並加了一顆「收起」縮成右下角一小塊。<br>
+② <b>產生器是模板字串，註解裡不能出現反引號</b>（CLAUDE.md 第九節第 8 條的近親）——
+寫了一句帶反引號的中文註解，整支腳本語法錯誤。</p>
+
+<h2>驗收</h2>
+<p>十二個寬度（1440／1280／1200／1041／834／744／721／720／430／390／375／320）
+介紹區高度和「把圖關掉」<b>逐格相同</b>、全部沒有水平捲動；其餘六科與首頁沒有畫出那個偽元素
+（選擇器限定 <code>[data-topic="kids"]</code>）。</p>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>

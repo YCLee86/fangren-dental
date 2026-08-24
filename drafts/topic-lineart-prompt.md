@@ -1,14 +1,14 @@
 # 著陸頁的線稿底圖・提示詞與交接（`lineart-<spec>`）
 
-**狀態（2026-08-24）：一般牙科、牙周、顯微根管已上線，其餘四科待做。**
+**狀態（2026-08-24）：一般牙科、牙周、顯微根管、兒童牙科已上線，其餘三科待做。**
 這一份現在是**可以重複使用的模板**，不是那一輪的紀錄 ——
 一般牙科整輪的推導在 **`/history/topic-lineart.html`**，通則在
 **ILLUSTRATION.md 第十二節**，定案的規格在 **CLAUDE.md 定案表「著陸頁的線稿底圖」那一列**。
 
 | | |
 | --- | --- |
-| 已完成 | `general`（832×788，2026-08-23）、`perio`（1024×755，2026-08-24，[提示詞](lineart-perio-prompt.md)）、`endo`（887×949，2026-08-24，[提示詞](lineart-endo-prompt.md)） |
-| 待做 | `kids` 兒牙／`prosth` 植牙・假牙重建／`surg` 口腔外科／`ortho` 齒顎矯正（四科的**分享圖也都還沒做**，順序見下面那一節） |
+| 已完成 | `general`（832×788，2026-08-23）、`perio`（1024×755，2026-08-24，[提示詞](lineart-perio-prompt.md)）、`endo`（887×949，2026-08-24，[提示詞](lineart-endo-prompt.md)）、`kids`（998×857，2026-08-24，[提示詞](lineart-kids-prompt.md)，翻轉烘進檔案＋兩段不同裁量） |
+| 待做 | `prosth` 植牙・假牙重建／`surg` 口腔外科／`ortho` 齒顎矯正（四科的**分享圖也都還沒做**，順序見下面那一節） |
 | 產生器 | `tools/topic-lineart.mjs`（永久） |
 | 門檻量測 | `drafts/lineart-measure.mjs` |
 | 風格參考圖 | `drafts/lineart-ref-1-walking.png` ~ `-5-bubbles.png`（已裁掉 app 介面，進版控） |
