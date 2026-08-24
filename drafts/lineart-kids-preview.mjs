@@ -43,7 +43,7 @@ const CSS = `
    var(--pv-*) 換成選中的定值。 */
 [data-topic="kids"] .tp-intro { position: relative; }
 [data-topic="kids"] .tp-intro::before {
-  content: ""; position: absolute; right: 0; bottom: 0;
+  content: ""; position: absolute; right: calc(-1 * var(--pv-dx, 0px)); bottom: 0;
   width: var(--pv-w, min(76%, 360px)); aspect-ratio: ${IMG.w} / ${IMG.h};
   background: url("../../assets/lineart-kids.png") center / contain no-repeat;
   opacity: var(--pv-op, .12); pointer-events: none; z-index: 0;
@@ -95,6 +95,13 @@ const BAR = `
     <button type="button" data-v="3">更濃</button>
     <button type="button" data-v="4">最濃</button>
   </div>
+  <div class="pv-row" data-k="dx">
+    <span class="pv-lab">往右</span>
+    <button type="button" data-v="0">0</button>
+    <button type="button" data-v="1">＋</button>
+    <button type="button" data-v="2">＋＋</button>
+    <button type="button" data-v="3">貼齊螢幕邊</button>
+  </div>
   <div class="pv-row" data-k="flip">
     <span class="pv-lab">方向</span>
     <button type="button" data-v="off">原方向（醫師在左）</button>
@@ -127,15 +134,25 @@ const BAR = `
      ⚠ 牙周 ≥721 定案是 .15，一般牙科 ≥834 是 .48，兩支差很多，本來就不必一致。 */
   var OPD = { "1": .15, "2": .22, "3": .30, "4": .42 };   /* iPad／電腦（≥721） */
   var OPDTXT = { "1": ".15", "2": ".22", "3": ".30", "4": ".42" };
+  /* ⚠⚠ 「往右」＝ 把偽元素推出版心（right 給負值）。
+     CLAUDE.md 記著踩過：390 上 -1rem（16px）就讓整頁可以左右拉 ——
+     因為手機的頁面內距只有 14px，推超過它就凸出螢幕。
+     所以手機那一段的最後一格就是 14px（剛好貼齊螢幕邊），不再多。
+     ≥721 版心兩側留白很寬，可以推遠一點。 */
+  var DXM = { "0": "0px", "1": "6px", "2": "10px", "3": "14px" };
+  /* ⚠⚠ ≥721 的上限**不是版心留白，是最窄的那台**：實測 721 上介紹區離螢幕邊只有
+     23.8px、iPad mini 744 只有 22.5px，推 32px 就多出水平捲動（1041 以上有 189px 以上，
+     完全不是限制）。所以這一段最後一格收在 20px。 */
+  var DXD = { "0": "0px", "1": "8px", "2": "16px", "3": "20px" };
   /* ⚠⚠ 手機與 ≥721 是**兩組獨立的值**（站上本來就分兩段）——
      牙周那一輪量出來：iPad 的文字比較長（字級 +19%），同一組值在那一段會讓
      流程那幾行（柔墨）壓到線。所以大小也要分兩段記，不能只分濃度。
      ⚠⚠ **分段用 721 不是 834**（牙周定案時同一件事）：使用者的 iPad 是
      **mini 直放 744**，用 834 分會把他那台歸到「手機」那一段，
      他看到的和定案的就不是同一件事。 */
-  var st = { wM: "b", opM: "2", wD: "b", opD: "2", fig: "on", flip: "off" };
+  var st = { wM: "d", opM: "2", wD: "b", opD: "2", dxM: "0", dxD: "0", fig: "on", flip: "on" };
   var q = location.search;
-  ["w", "op"].forEach(function (k) {
+  ["w", "op", "dx"].forEach(function (k) {
     var m = q.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
     if (m) { st[k + "M"] = m[1]; st[k + "D"] = m[1]; }
   });
@@ -154,6 +171,7 @@ const BAR = `
       bt.setAttribute("aria-pressed", String(bt.dataset.v === st.flip));
     });
     root.style.setProperty("--pv-w", (isWide() ? WD : WM)[get("w")] || WM.a);
+    root.style.setProperty("--pv-dx", (isWide() ? DXD : DXM)[get("dx")] || "0px");
     root.style.setProperty("--pv-op", String(opVal()));
     document.querySelectorAll(".pv-row[data-k]").forEach(function (row) {
       var k = row.dataset.k;
@@ -167,6 +185,11 @@ const BAR = `
        在兩段的尺不一樣時會騙人。 */
     var wBt = document.querySelectorAll('.pv-row[data-k="w"] button');
     var oBt = document.querySelectorAll('.pv-row[data-k="op"] button');
+    var dBt = document.querySelectorAll('.pv-row[data-k="dx"] button');
+    dBt.forEach(function (bt) {
+      var v = (isWide() ? DXD : DXM)[bt.dataset.v];
+      bt.textContent = bt.dataset.v === "3" ? v + (isWide() ? "" : "（貼齊螢幕邊）") : v;
+    });
     if (isWide()) {
       wBt.forEach(function (bt) { bt.textContent = WDPX[bt.dataset.v] + "px"; });
       oBt.forEach(function (bt) { bt.textContent = OPDTXT[bt.dataset.v]; });
@@ -257,6 +280,7 @@ const BAR = `
 
     var sw = root.scrollWidth > innerWidth;
     var over = fh - ir.height;   /* > 0 ＝ 圖比介紹區高，會往上凸到 h1 那邊 */
+    var gap = innerWidth - fig.right;   /* 圖的右緣離螢幕右邊多遠 */
     var txt = "視窗 " + Math.round(innerWidth) + "×" + Math.round(innerHeight) +
       "　圖 " + Math.round(fw) + "×" + Math.round(fh) + "（" + IMG_W + "×" + IMG_H + "）" +
       "　濃度 " + al.toFixed(3) + "　" + (st.flip === "on" ? "翻轉" : "原方向") +
