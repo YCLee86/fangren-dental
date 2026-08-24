@@ -1,6 +1,8 @@
 # 分享圖提示詞：顯微根管（`og-topic-endo`）
 
-**狀態：第一版提示詞（2026-08-24），還沒生成過。**
+**狀態：第二版提示詞（2026-08-24）。第一版已生成過一次，使用者：
+「風格和品質蠻好的　我很喜歡」，但退回「牙齒開膛剖腹」那個意象 —— 量測與
+三件要修的在第五之〇節，新概念在第五之一節。**
 規格依 [ILLUSTRATION.md](../ILLUSTRATION.md) 第十一節（250px 判準）與
 [TEAM.md](../TEAM.md) 第一節第 9 號（插畫師的三個交件門檻）。
 文案脈絡見 COPY.md 第九之十六節與 `tools/topic-copy.mjs` 的 `endo`。
@@ -26,8 +28,8 @@
 | --- | --- |
 | 顯微鏡下 | 一台真的牙科顯微鏡，大、在畫面左半，醫師的眼睛貼在目鏡上 |
 | 看清楚 | 一道暖金色的**光錐**打在牙齒上；**光裡面的東西畫得清楚、光外面的收暗** |
-| 多一次機會 | 牙齒**裡面**那條又細又彎的管子第一次被照亮，躲在最裡面的兩隻細菌被抓到 |
-| 「留下來要能用得久」 | 牙齒的表情是**鬆一口氣**，不是得救、不是道謝（close 沒有承諾留得住） |
+| 多一次機會 | 牙齒表面只有一小塊暗暗的東西，**放大圈裡**才看得到那底下有一條細縫、細菌正往裡面鑽（⚠ 第二版換過，原本是把牙齒剖開，見第五之一節） |
+| 「留下來要能用得久」 | 牙齒的表情是**好奇 ＋ 有點意外**（抬頭看那個圈），不是得救、不是道謝（close 沒有承諾留得住） |
 
 ⚠⚠ **不要畫成「治療中」** —— 那會踩到那一頁最要緊的一條禁令：這一科
 **不准出現任何和「快」有關的暗示**，而「正在做」的畫面必然引出「要做多久」。
@@ -41,8 +43,9 @@
 就是這樣被退回的），所以畫面裡同時有三組各自在做自己的事：
 
 1. **醫師 ＋ 顯微鏡**（主組）—— 貼著目鏡、手在調焦、眉毛揚起來。
-2. **牙齒**（次組）—— 低頭看自己被照亮的裡面，一隻短手指著那條細管。
-3. **細菌**（第三組）—— 被光抓到，一隻當場僵住摀眼睛、一隻連滾帶爬往右溜。
+2. **牙齒**（次組）—— 抬頭看那個放大圈，眉毛揚起來、嘴角有一點笑。
+3. **細菌**（第三組，**只出現在圈裡**）—— 兩隻在表面被光照到摀眼睛、兩隻正往細縫裡鑽、
+   一隻要溜出圈外。**圈外面一隻都沒有** —— 肉眼本來就看不到，這正是這張圖要講的事。
 
 ---
 
@@ -86,15 +89,17 @@
 訊息卡實測只有 **212 CSS px** 寬。這張圖縮到那個尺寸時，能活下來的只有四塊：
 
     ① 左半一台白色的機器（顯微鏡）　② 一個穿白袍的人貼在它上面
-    ③ 一道從機器斜下來的暖光　　　　④ 光底下一顆亮著的大牙齒
+    ③ 一道從機器斜下來的暖光　　　　④ 光底下一顆大牙齒
+    ⑤ 壓在牙齒上的一個**大圓**（放大圈），圈裡有幾隻看得出形狀的細菌
 
-細菌、細管、櫃子在那個尺寸都是「有東西在那裡」而已 —— **那沒關係，但它們不能是
+櫃子、地板、牆在那個尺寸都是「有東西在那裡」而已 —— **那沒關係，但它們不能是
 畫面的重點**。所以：光錐要**大**（斜跨畫面約三分之一寬）、牙齒要**大**、
-顯微鏡要**大而簡單**（不要畫小零件、不要畫刻度、不要畫螺絲）。
+顯微鏡要**大而簡單**（不要畫小零件、不要畫刻度、不要畫螺絲），
+**放大圈的直徑要有畫面高的六成**（212px 的卡上約 67px，圈裡五隻細菌各約 17px）。
 
 ---
 
-## 四、參考圖清單（四張，用途要分開標）
+## 四、參考圖清單（五張，用途要分開標）
 
 ⚠ 不標用途的參考圖會被整張抄走（風格、顏色、構圖一起）——TEAM.md 第一節第 10 號。
 
@@ -104,6 +109,7 @@
 | ② | `drafts/endo-face-ref.jpg` | **人的畫法與比例**：線的實度、平塗的臉、白袍與刷手服的形狀、全身高度佔畫面多少 | **顏色**（那張是一般牙科的綠，這一張要換成磚紅系）、姿勢 |
 | ③ | `drafts/canal-ref.png` | **根管的形狀**：細、彎、有分支，**每一條末端到輪廓都留著一段牙質**（不穿出去） | 它的畫法（那是結構圖不是插畫）、顏色、格數 |
 | ④ | `assets/og-topic-perio.jpg` | **整體色調、紙紋、密度**，以及**細菌的畫法**（圓身體、兩點眼睛、短手短腳、兩階色、滑稽不嚇人） | **構圖**（那張是動作場面）、人數、水的語彙 |
+| ⑤ | `drafts/endo-zoom-concept-ref.jpg` | **概念**：肉眼只看到一點東西，放大之後才看到細菌 | **風格全部不要**（粗黑等寬外框、上百隻小菌、紅腫牙齦、紅箭頭）、構圖、顏色 |
 
 ⚠ ①②③ 的來源都是站上自己的圖，所以「風格對齊站上」這件事是**用圖對齊的，
 不是用形容詞對齊的**（ILLUSTRATION.md 第十之一節）。
@@ -111,7 +117,59 @@
 
 ---
 
-## 五、提示詞（第一版，逐字，可直接複製）
+## 五之〇、第一版的量測（2026-08-24，使用者：「風格和品質蠻好的　我很喜歡」）
+
+生成圖存成 `drafts/og-topic-endo-v1.jpg`（1424×752），疊上帶子的預覽是
+`drafts/endo-v1-card-preview.jpg`，**212px 的訊息卡實況**是
+`drafts/endo-v1-thumb212.jpg`（放大三倍檢視）。
+
+| | v1 | 門檻 | |
+| --- | --- | --- | --- |
+| 無彩空白（S<12 且 L>80） | **0%** | < 5% | ✅ |
+| 邊緣密度（縮到 1200×628 再量） | **16.5%** | ≥ 30% | ❌ **這一格差最多**（牙周那張 31.6%） |
+| 各角色的線一樣實（最暗 5 百分位） | 原尺寸 **相差 16.0**（醫師 25.3／牙齒 34.7／細菌 18.7／顯微鏡 26.4）；縮到卡片尺寸 20.2 | < 20 階 | ✅ 沒有鬼魂 |
+| 頂 17% 的牆・中位 | **`#d7c1ac`**（R 215） | R ≥ 203 | ✅ 落在算出來的窗口裡 |
+| 頂 17% 有沒有東西伸進來 | **有：6.54% 的像素不是牆，橫跨 212 欄，從 y=0 就開始** | 0 | ❌ 顯微鏡的臂爬到畫面最上面 |
+
+⚠ 那 20.2 是**框沒框好**造成的，不是有人被畫淡：牙齒那個框幾乎整片是亮色塊、線只佔一點點，最暗 5 百分位就被拉高了。**框要框在有線的地方**（臉、輪廓、衣褶），不要整個角色連背景一起框。
+
+**所以要修的是三件（不是風格，風格保留）：**
+
+1. ⚠⚠ **牙齒不要開膛剖腹。** 使用者：「牙齒被開膛剖腹的意象有點可怕＋詭異。」
+   —— 這一條同時解掉 250px 的問題：那扇打開的門在訊息卡上只是一片白，讀不出來
+   （見 `endo-v1-thumb212.jpg`）。
+2. ⚠⚠ **顯微鏡的臂爬進頂 17%。** 提示詞第五版就寫了「臂從左緣進來」，模型沒照做
+   （牙周那張也發生過，那是通則不是個案）。v2 把顯微鏡改成**落地的支架**，
+   臂從左緣進來、整台的最高點在畫面 25% 以下；若還是爬上去，就照第七節那一步
+   機械地把整張往下推。
+3. ⚠ **密度只有門檻的一半。** 成因是大面積的平塗：牆、地板、牙齒本體幾乎沒有筆觸。
+   v2 靠三件補回來：**放大圈本身**（紋理 ＋ 細菌 ＋ 圈的邊）、
+   **櫃子畫出門片分割與檯面邊線**、**牆與地板要看得見手繪顆粒**。
+
+## 五之一、使用者給的新概念（2026-08-24，逐字）
+
+> 「我找到一張　牙齒上肉眼看起來好像有東西　但放大看上面很多細菌　可以參考這個概念
+> 　而且也不用一定要把牙齒開膛剖腹　可以是牙齒表面的髒汙放大看到細菌們」
+
+參考圖存成 `drafts/endo-zoom-concept-ref.jpg`。⚠ **只取「概念」，不取風格** ——
+量過那張：邊緣密度 15.8%、無彩空白 5.1%、粗黑等寬外框、上百隻小菌、
+紅腫的牙齦、三支紅箭頭。**後四項站上一項都不能要**（紅腫與箭頭各自踩一條紅線）。
+
+⚠⚠ **這一改推翻了 ILLUSTRATION.md 第十一節硬規格第 6 條的一半**（「不放放大圈」）。
+那一條的理由是「250px 下會變成雜點」，所以**推翻是有條件的**：
+
+- 圈要**大** —— 直徑 ≥ 畫面高的 60%（1200×628 上約 380px，212px 的卡上約 67px）。
+  小圈就是那一條原本要擋的東西。
+- 圈裡**只准五隻大細菌 ＋ 一條縫**，不准像參考圖那樣塞滿上百隻。
+- 圈是**顯微鏡看到的東西**，不是手持放大鏡（沒有握把）——這張圖的主角是顯微鏡。
+- 這一站本來就有「圓圈裝放大的內容」這個語彙（〈生物陶瓷〉那張 HERO 的兩個泡泡），
+  所以它不是新東西，只是**不能有泡泡的尾巴**（尾巴＝在想什麼，這裡是在看什麼）。
+
+**梗因此往前挪了一步，而且更貼那一頁的軸**：肉眼只看到牙齒上一小塊暗暗的東西，
+放大之後才看到**那底下有一條細縫、細菌正往裡面鑽** ——
+「看不到的地方才是問題所在，放大了才找得到」正是顯微根管在賣的那一件事。
+
+## 五、提示詞（第二版，逐字，可直接複製）
 
 ```
 Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview
@@ -132,63 +190,72 @@ THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
 2. A CLEAN, BRIGHT DENTAL TREATMENT ROOM IN THE MIDDLE OF THE DAY. A dentist leans into the
    eyepieces of a BIG DENTAL OPERATING MICROSCOPE on the LEFT. Its lamp throws ONE WIDE CONE
    OF WARM GOLDEN LIGHT down to the right onto A GIANT MOLAR TOOTH standing on the floor in
-   the CENTRE-RIGHT. This is the moment of FINDING something, not the moment of treating
-   anything: nobody is holding a drill, a syringe or any hand instrument.
+   the CENTRE. Floating over the tooth, at the end of that light, there is ONE BIG ROUND
+   MAGNIFIED VIEW - a circle showing a small patch of the tooth's own surface enormously
+   enlarged. This is the moment of FINDING something, not the moment of treating anything:
+   nobody is holding a drill, a syringe or any hand instrument.
 
-3. THE MICROSCOPE IS BUILT EXACTLY LIKE THE ONE IN THE REFERENCE IMAGE OF THE MICROSCOPE,
+3. THE TOOTH IS WHOLE AND CLOSED. One big molar standing on the floor on two short
+   root-legs, its crown reaching the dentist's shoulder. Warm ivory (#f2e7d5, shaded with
+   #ddcbb0 and #c9b294), with plenty of loose hand-drawn shading strokes curving over its
+   surface so it never reads as a flat white shape. IT IS NOT CUT OPEN. There is no window,
+   no door, no opening, no hatch, no cross-section and no view of its inside - the viewer
+   never sees the inside of this tooth. It has two short stubby arms and a simple face: eyes
+   open and looking UP AT THE BIG CIRCLE, eyebrows lifted, a small closed smile, curious and
+   a little surprised - not frightened, not in pain, not grateful. LOW DOWN ON THE SIDE OF
+   THE TOOTH THAT FACES THE LIGHT there is ONE SMALL DULL BROWNISH SMUDGE about a tenth of
+   the tooth's width, sitting in a shallow groove - so faint that you would barely notice it.
+   That smudge is the only mark on the tooth; the rest of the tooth is clean.
+
+4. THE BIG ROUND MAGNIFIED VIEW IS THE SECOND HERO OF THIS PICTURE. It is a large circle
+   whose diameter is about three fifths of the picture height, hanging in front of the
+   tooth's upper right and overlapping it, in the path of the light. Its rim is a clean pale
+   cream-and-chrome ring, evenly thick, with a soft shadow behind it and a thin brick-red
+   (#ae4f4d) inner line. It has NO handle, NO stalk and NO bubble tail: it is what the
+   microscope sees, not a hand lens and not a thought bubble. INSIDE THE CIRCLE, hugely
+   magnified and warmly lit: the ivory tooth surface drawn with fine texture, and ONE NARROW
+   DARK CREVICE running across it in a soft curve, with soft brown dirt caught along it, and
+   FIVE COMIC GERMS - two sitting on the surface caught in the light with their hands over
+   their eyes, two half way down inside the crevice with only their heads and hands showing,
+   and one at the rim about to scurry out of the circle. Each germ is about a quarter of the
+   circle's diameter. A light scatter of much smaller specks may sit behind them as texture,
+   INSIDE THE CIRCLE ONLY. The circle is the busiest, most detailed area of the picture.
+
+5. THE GERMS: each is a simple rounded blob with two dot eyes, a small open mouth and short
+   stick arms and legs, in brick red, olive, mustard and dusty plum, two tones each, comic
+   and clumsy, never frightening. They have NO spikes, NO bristles, NO hair, NO fangs and NO
+   tentacles. THEY EXIST ONLY INSIDE THE CIRCLE - there is not a single germ anywhere else
+   in the picture, because to the naked eye they cannot be seen. That is the whole point.
+
+6. THE MICROSCOPE IS BUILT EXACTLY LIKE THE ONE IN THE REFERENCE IMAGE OF THE MICROSCOPE,
    but drawn BIG AND SIMPLE: a pair of angled binocular eyepieces, a boxy body with two big
-   dark-grey focus knobs and two curved dark-grey handles, and a white jointed arm. It is
-   about as tall as the dentist. ITS ARM ENTERS FROM THE LEFT EDGE OF THE PICTURE, never
-   from the top. Its housing is a clean pale cream-white with a light grey underside, its
-   knobs and handles are dark warm grey, and there is ONE BRICK-RED RING (#ae4f4d) around
-   the lens housing at the bottom - that ring is the only saturated red on the machine. Big
-   simple shapes only: no screws, no scales, no small buttons, no cables, no dials.
-
-4. THE LIGHT IS THE STORY. A wide cone of warm golden light (#f7e3c0, fading to #f6ecd6 at
-   its edges) leaves the bottom of the microscope and falls across to the tooth, lighting
-   the tooth, the floor around its feet and a little of the wall behind it. EVERYTHING
-   INSIDE THE CONE IS BRIGHT AND CLEARLY DRAWN; everything outside it is the same colours
-   but a little deeper and quieter. The cone is soft-edged light, NOT a solid yellow wedge,
-   NOT a laser beam, NOT a spotlight ring on the floor.
-
-5. THE TOOTH IS A CHARACTER WITH ITS INSIDE LIT UP. One big molar standing on the floor on
-   two short root-legs, its crown reaching the dentist's shoulder. Warm ivory (#f2e7d5,
-   shaded with #ddcbb0 and #c9b294), with hand-drawn shading strokes curving over its
-   surface so it never reads as a flat white shape. THE FRONT OF ITS BODY IS OPEN LIKE A
-   LIT DOORWAY - a soft rounded opening about a third of its width - and inside that opening
-   you can see, warmly lit by the cone: a wide chamber at the top, TWO STRAIGHT PASSAGES
-   running down into the roots, and ONE EXTRA VERY THIN, STRONGLY CURVED PASSAGE branching
-   off to the side and running down deep into the back root, exactly like the thin curved
-   canals in the reference diagram. That thin curved passage is the thing the light has just
-   found: it is the brightest, cleanest line inside the tooth. THE INSIDE IS WARM CREAM AND
-   PALE GOLD, LIKE A LIT CORRIDOR IN A HOUSE - it is NOT pink, NOT red, NOT flesh, there is
-   no gum, no blood and no anatomical cross-section hatching. The tooth has two short stubby
-   arms and a simple face: eyes open and looking DOWN at its own lit inside, eyebrows lifted,
-   a small relieved closed smile, one stubby arm pointing at the thin curved passage. It is
-   relieved and curious - not frightened, not in pain, not grateful, not cheering.
-
-6. TWO COMIC GERMS ARE CAUGHT IN THE LIGHT, drawn exactly like the germs in the reference
-   share card. ONE is deep inside the thin curved passage, only its head and two little
-   hands showing, frozen and squinting at the light. THE OTHER is bigger, about as tall as
-   the dentist's head, standing on the floor just outside the tooth at the RIGHT, caught
-   mid-step with both hands over its eyes, about to scramble away to the right. A THIRD,
-   smaller one is already running out through the right edge and is cropped by it. Each germ
-   is a simple rounded blob with two dot eyes, a small open mouth and short stick arms and
-   legs, in brick red, olive, mustard and dusty plum, two tones each, comic and clumsy,
-   never frightening, never spread evenly across the picture and never drawn as small dots
-   or specks.
+   dark-grey focus knobs and two curved dark-grey handles, and a white jointed arm. IT
+   STANDS ON A FLOOR STAND at the far left, and its arm reaches in from the LEFT EDGE of the
+   picture and bends down to the eyepieces. THE WHOLE MACHINE, INCLUDING EVERY PART OF ITS
+   ARM AND ITS STAND, STAYS BELOW THE TOP QUARTER OF THE PICTURE - nothing of it ever rises
+   into the top of the picture. Its housing is a clean pale cream-white with a light grey
+   underside, its knobs and handles are dark warm grey, and there is ONE BRICK-RED RING
+   (#ae4f4d) around the lens housing at the bottom - that ring is the only saturated red on
+   the machine. Big simple shapes only: no screws, no scales, no small buttons, no dials.
 
 7. NO WRITING ANYWHERE in the image, in any language.
 
+THE LIGHT. A wide cone of warm golden light (#f7e3c0, fading to #f6ecd6 at its edges) leaves
+the bottom of the microscope and falls across to the tooth and the circle, lighting the
+tooth, the smudge, the inside of the circle and the floor around the tooth's feet.
+EVERYTHING INSIDE THE CONE IS BRIGHT AND CLEARLY DRAWN; everything outside it is the same
+colours but a little deeper and quieter. The cone is soft-edged light, NOT a solid yellow
+wedge, NOT a laser beam, NOT a spotlight ring on the floor.
+
 THE WALL AND THE TOP OF THE PICTURE - IMPORTANT AND EXACT. The wall is a clean WARM CLAY
-colour, about #d9cfc4: light, but clearly warm and clearly coloured, never white, never a
-neutral grey, never beige-grey and never brown. THE TOP SEVENTH OF THE PICTURE IS THAT WALL
-AND NOTHING ELSE - no faces, no hands, no objects, no microscope, no microscope arm, no
-lamp, no window, no shelf, no light cone and nothing darker or brighter anywhere inside that
-strip. Keep that strip as even as a plain wall, with only the fine paper grain on it. The
-floor is a PALE SEAMLESS VINYL CLINIC FLOOR in warm sand, softly reflective, lighter than
-the wall, and it meets the wall in a CONTINUOUS COVED SKIRTING that curves up the wall - not
-a bare concrete slab and not an open hall floor.
+colour, about #d7c1ac: light, but clearly warm and clearly coloured, never white, never a
+neutral grey and never brown. THE TOP SIXTH OF THE PICTURE IS THAT WALL AND NOTHING ELSE -
+no faces, no hands, no objects, no microscope, no microscope arm, no circle, no light cone
+and nothing darker or brighter anywhere inside that strip. Keep that strip as even as a
+plain wall, with only a fine hand-drawn grain on it. The floor is a PALE SEAMLESS VINYL
+CLINIC FLOOR in warm sand, softly reflective with a few long horizontal reflection strokes,
+lighter than the wall, and it meets the wall in a CONTINUOUS COVED SKIRTING that curves up
+the wall - not a bare concrete slab and not an open hall floor.
 
 THE DENTIST - a Taiwanese woman in her thirties with a soft, slightly rounded young face and
 dark hair in a low ponytail. Her hair is very dark and warm-toned (#483837, shading to
@@ -198,8 +265,7 @@ stands at the LEFT, side-on to us, bending slightly forward from the waist with 
 pressed to the eyepieces, one hand resting on the big focus knob and the other steadying the
 arm of the microscope. Her eyebrows are lifted and she wears a small, delighted, private
 smile - she has just found something. USE THIS ANCHOR rather than a percentage: the top of
-her head sits just below the top seventh of the picture, and her shoes come close to the
-bottom edge.
+her head sits below the top sixth of the picture, and her shoes come close to the bottom edge.
 
 THE ROOM - THIS IS UNMISTAKABLY A DENTAL SURGERY, NOT A LABORATORY, A GALLERY, A SHOWROOM OR
 AN EMPTY HALL. Besides the microscope it is built from exactly TWO large clinic objects, both
@@ -208,56 +274,60 @@ FULLY COLOURED, WITH THE SAME LINE WEIGHT AND THE SAME LINE DARKNESS AS THE PEOP
 secondary only because they are further away and partly hidden - NEVER because they are pale,
 faint, greyed out, thinly outlined or unpainted.
   • A LONG LOW RUN OF CLINIC CABINETS along the wall, running the whole width of the picture
-    behind everything and cropped by both edges: plain pale-wood doors with NO handles, under
-    one continuous pale worktop with NOTHING standing on it. It sits low, behind everything,
-    with the wall showing above it. This cabinet run is the main thing that says "clinic".
+    behind everything and cropped by both edges: plain pale-wood doors with NO handles, but
+    WITH VISIBLE DIVISIONS BETWEEN THE DOORS AND A CLEAR EDGE LINE ALONG THE WORKTOP, and
+    NOTHING standing on the worktop. It sits low, behind everything, with the wall showing
+    above it. This cabinet run is the main thing that says "clinic".
   • A DENTAL CHAIR at the RIGHT, fully coloured in pale sage upholstery on a light grey base,
     with a headrest and a padded backrest, standing at a slight angle, cropped by the right
-    edge and half hidden behind the tooth and the germs. It is EMPTY - nobody is lying in it.
+    edge. It is EMPTY - nobody is lying in it.
 There is nothing else in the room: no window, no poster, no shelf, no bottles, no tray of
 instruments, no monitor, no plant, nothing standing on the worktop.
+
+DENSITY - THE PICTURE MUST NOT BE EMPTY. Every surface carries drawing: a fine hand-drawn
+grain over the whole image, loose shading strokes on the tooth, grain on the wall,
+reflection strokes on the floor, panel lines on the cabinets, and the dense texture inside
+the circle. No empty patch of flat colour is wider than a tenth of the picture.
 
 STYLE - contemporary printed-magazine editorial illustration, exactly as in the reference
 image of the dentist. Colour applied like soft coloured pencil and light marker, edges a
 little loose and not always meeting the line. Flat fills with two or three tones per hue -
-EXCEPT SKIN, which is always one single flat tone. A fine even paper grain over the whole
-image, so no area is ever empty or flat, and no empty patch of flat colour is wider than a
-tenth of the picture.
+EXCEPT SKIN, which is always one single flat tone.
 
-DRAW THE DENTIST, THE TOOTH, EVERY GERM, THE MICROSCOPE, THE CABINETS AND THE CHAIR WITH THE
-SAME LINE WEIGHT, THE SAME LINE DARKNESS AND THE SAME SOLIDITY OF COLOUR. Distance is shown
-by size and by overlapping, and by nothing else. Nothing in this picture is a pale outline.
+DRAW THE DENTIST, THE TOOTH, EVERY GERM, THE MICROSCOPE, THE CIRCLE, THE CABINETS AND THE
+CHAIR WITH THE SAME LINE WEIGHT, THE SAME LINE DARKNESS AND THE SAME SOLIDITY OF COLOUR.
+Distance is shown by size and by overlapping, and by nothing else. Nothing in this picture is
+a pale outline.
 
 COLOUR - CLEAR, WARM AND NOTICEABLY COLOURFUL. This picture is livelier and more saturated
-than a muted pastel illustration: most colour areas sit around HSL saturation 40-60, and
-well over half the picture carries real colour. Warm golden light, warm ivory tooth, dusty
-rose scrubs, white coat, warm clay wall, warm sand floor, pale wood cabinets, pale sage
-chair, and germs in brick red, olive, mustard and dusty plum. THE WALL IS THE ONE CALM THING
-- it stays a light warm clay and does not get more saturated. At least seven distinct colours
-are readable at thumbnail size.
+than a muted pastel illustration: most colour areas sit around HSL saturation 40-60, and well
+over half the picture carries real colour. Warm golden light, warm ivory tooth, dusty rose
+scrubs, white coat, warm clay wall, warm sand floor, pale wood cabinets, pale sage chair, and
+germs in brick red, olive, mustard and dusty plum. THE WALL IS THE ONE CALM THING - it stays
+a light warm clay and does not get more saturated. At least seven distinct colours are
+readable at thumbnail size.
 
 NO WRITING ANYWHERE IN THE IMAGE - no text, letters, words, numbers, logos, signage, captions
 or watermarks, in any language.
 
-AVOID - thick even outlines like an American comic book; any shading, modelling, blush
-rendering or highlight on a face; eyes with whites, pupils or catchlights; a face that looks
-older than the thirties; a laboratory microscope standing on a bench; the microscope or its
-arm entering from the top of the picture; anything at all inside the top seventh; a hard
-yellow wedge, a laser beam or a spotlight ring instead of soft light; a magnifying glass, a
-magnifying circle, a lens flare, sparkles or stars; speech bubbles, thought bubbles, arrows,
-icons or diagrams; a pink, red or flesh-coloured inside of the tooth; gums, blood, nerves or
-an anatomical cross-section; a textbook diagram; a patient lying in the chair; a drill, a
+AVOID - a tooth that is cut open, opened, hinged, hollowed, sectioned or has a window, door
+or hatch in it; any view of the inside of a tooth; gums, blood, nerves, pulp or anything
+anatomical; red or pink inflamed tissue; arrows; a magnifying glass with a handle or a stalk;
+a bubble tail on the circle; a small circle; several circles; germs anywhere outside the
+circle; germs with spikes, bristles, hair, fangs or tentacles; hundreds of tiny germs;
+thick even outlines like an American comic book; any shading, modelling, blush rendering or
+highlight on a face; eyes with whites, pupils or catchlights; a face that looks older than
+the thirties; a laboratory microscope standing on a bench; the microscope, its arm or its
+stand rising into the top of the picture; anything at all inside the top sixth; a hard yellow
+wedge, a laser beam or a spotlight ring instead of soft light; lens flare, sparkles or stars;
+speech bubbles, thought bubbles, icons or diagrams; a patient lying in the chair; a drill, a
 syringe, a needle, tweezers or any hand instrument; a face mask or goggles on the dentist; a
-white, pale, neutral grey, brown or beige-grey WALL; a dark, gloomy or dim room; a window or
-any bright opening; furniture drawn pale, faint, greyed out, thinly outlined or left
-unpainted; a bare wall with nothing standing along it; a bare concrete floor; a large empty
-area of flat colour; germs spread evenly across the picture or drawn as dots and specks; a
-screaming, crying or frightened tooth; a tooth that is bowing or saying thank you; any figure
-drawn pale, faint, translucent or in outline only; muted, washed-out, dusty or pastel colour
-overall; greyscale; photorealism.
+white, pale, neutral grey or brown WALL; a dark, gloomy or dim room; a window or any bright
+opening; furniture drawn pale, faint, greyed out, thinly outlined or left unpainted; a bare
+wall with nothing standing along it; a bare concrete floor; a large empty area of flat
+colour; a screaming, crying or frightened tooth; any figure drawn pale, faint, translucent or
+in outline only; muted, washed-out, dusty or pastel colour overall; greyscale; photorealism.
 ```
-
----
 
 ## 六、交件前要過的門檻（插畫師自己跑，不過就不拿出來）
 
@@ -283,10 +353,11 @@ Windows 那台請用 `drafts/og-measure-win.ps1`（必須是 UTF-8 with BOM）�
 `-src-raw.jpg`，不要覆蓋掉**），然後：
 
     node tools/og-resize.mjs drafts/og-topic-endo-src.jpg endo
-    node tools/og-plate.mjs endo --blend multiply --tintcolor #ef6b6f --ink 0.18 --blur 6 \
+    node tools/og-plate.mjs endo --blend multiply --tintcolor #f17380 --ink 0.18 --blur 6 \
       --loc full --locpos stack
 
-⚠⚠ **`--tintcolor` 要照實際的牆重算**，不要照抄上面那個值：
+⚠ 上面那個 `#f17380` 是照 **v1 實際的牆色 `#d7c1ac`** 算的（實測落在 `#b04f4c`、
+對比 4.08）。**v2 的牆若有變就要重算**：
 
     M(每個通道) = ((#ae4f4d 的該通道 − 0.18 × 墨) ÷ 0.82) × 255 ÷ 牆的該通道
     （墨 ＝ rgb(42,44,39)；分子固定是 R 203.0 / G 86.7 / B 85.3）
@@ -304,19 +375,18 @@ Windows 那台請用 `drafts/og-measure-win.ps1`（必須是 UTF-8 with BOM）�
 
 ## 八、還要問使用者的
 
-1. **醫師畫成女性** —— 這一科的專長掛在陳芷鈴醫師身上（顯微根管／根尖手術／活髓治療），
-   而且牙周那張已經是男醫師，七張卡不要都同一個人。**建議：女性。**
-   ⚠ 服裝與頭髮用的是 ILLUSTRATION.md 第十之三節**量出來**的那一組磚紅系
-   （刷手服 `#d7b7b7`／`#b89999`、頭髮 `#483837`／`#392928`／`#4f4040`），
-   和〈根管治療的生物陶瓷〉那張 HERO 同一組，不是新挑的。
-2. **牙齒要不要「看得到裡面」** —— 那是這張圖唯一在講「顯微」的東西，
-   但它也最靠近「牙齒解剖圖」那條紅線。**建議：保留，但畫成「亮起來的走廊」**
-   （暖米白＋暖金光、不畫粉紅牙髓、不畫牙齦與血）。
-   ⚠ 這一條使用者說不要的話，退路是**把光錐打在牙齒表面**、細管改成只有細菌的頭
-   從一個小洞口探出來 —— 梗還在，只是少了「多出來的那條管子」。
-3. **細菌沿用牙周那張的畫法** —— 同一組角色跨兩張卡是好事（品牌一致），
-   但也可能讓兩張看起來像同一張。**建議：沿用畫法、換配置**（牙周是被沖走的一群，
-   這裡是被光抓到的兩三隻）。
-4. **這張定案之後，它同時是顯微根管線稿底圖的姿勢參考圖**
-   （ILLUSTRATION.md 第十二節：分享圖在前、線稿在後）——
-   線稿那一輪要從這張裁一段含腿的人物出來。
+1. **醫師畫成女性** —— v1 就是女醫師（陳芷鈴醫師是這一科的專長掛的人），使用者沒有異議，
+   **當作定了**。服裝與頭髮沿用 ILLUSTRATION.md 第十之三節量出來的那一組磚紅系。
+2. ⚠⚠ **「表面的髒汙」在語彙上其實比較靠近牙周／洗牙** —— 顯微根管真正藏東西的地方
+   是牙齒**裡面**（那一頁寫的是「又細又彎的牙髓，放大了才找得到」）。
+   v2 的折衷是：放大圈裡**不是單純的牙菌斑**，而是**一條細縫 ＋ 細菌正往裡面鑽** ——
+   「看不到的地方才是問題所在」這件事仍然成立，而且不必把牙齒剖開。
+   **建議：保留那條細縫。** 若你要更純粹的「表面髒汙」，我就把細縫拿掉，
+   但那張圖會和牙周那一頁的意象靠得很近。
+3. **細菌只出現在放大圈裡，圈外一隻都沒有** —— 這是刻意的（肉眼看不到才需要顯微鏡），
+   也順便解掉 v1 那幾隻大細菌看起來有點恐怖的問題。**建議：這樣。**
+4. **放大圈推翻了 250px 那條「不放放大圈」的硬規格**（ILLUSTRATION.md 第十一節第 6 條）。
+   我沒有整條拿掉，是加了四個條件（圈要大、內容要少、沒有握把、沒有泡泡尾巴）——
+   **這一張定案之後我會把它寫回 ILLUSTRATION.md**，日後其他科才知道界線在哪。
+5. **這張定案之後，它同時是顯微根管線稿底圖的姿勢參考圖**
+   （順序是分享圖在前、線稿在後）—— 線稿那一輪要從這張裁一段含腿的人物出來。
