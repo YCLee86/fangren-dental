@@ -1,6 +1,7 @@
 # 分享圖提示詞：兒童牙科（`og-topic-kids`）
 
-**狀態：✅ 定案上線（2026-08-24，第三版：使用者「可以了　就用這版」）。成品 `assets/og-topic-kids.jpg`。
+**狀態：⏳ 第四版（2026-08-24）。第三版產圖、疊帶子、驗收都做完了（第五之二節），
+但使用者疊完帶子之後退一步：「畫面太多黃色」—— 助理的衣服要換，見第五之三節。**
 舊註：第一版的梗、姿勢、兩人同高、媽媽的位置全部一次就對，
 使用者退回四件（安靜／褲子沒印花／椅子顏色／像倉庫）—— 量測與改法在第五之〇節，提示詞在第五節。**
 規格依 [ILLUSTRATION.md](../ILLUSTRATION.md) 第十一節（250px 判準）與
@@ -205,7 +206,28 @@
 
 ---
 
-## 五、提示詞（第三版，逐字，可直接複製）
+## 五之三、疊上帶子之後退一步（2026-08-24，使用者：「套帶子之後我覺得畫面太多黃色」）
+
+⚠⚠ **這是這一輪最值得記住的一件：底圖單獨看可以，疊上帶子之後可能就不行了。**
+帶子是一整條深琥珀（`#9e6301`）壓在畫面最上面 17%，等於**又加了一大塊黃**，
+而底圖裡本來就有焦糖椅、琥珀牆貼、印花制服、木頭檯面 —— 第三版的助理還整件芥末黃。
+**驗收要看疊完帶子的那一張，不要只看底圖。**
+
+改法（只動助理一個人）：
+
+| | 第三版 | **第四版** |
+| --- | --- | --- |
+| 底色 | 芥末琥珀 `#dda85a`（整件） | **和醫師同一塊暖白布 `#f4ead8`** |
+| 圖案 | 奶油白小圓點 `#f6ecd9` | **芥末琥珀小圓點 `#dda85a`**（＝她原本的底色） |
+| 滾邊 | 奶油白 | 芥末琥珀（白底配白邊會消失） |
+
+→ 她和醫師的區別從「**一大塊不同顏色**」變成「**同一塊布、不同圖案**」
+（塗鴉 vs 圓點），黃色的面積因此少掉一整個人。
+⚠ 醫師、椅子、牆貼、帶子**一個值都沒動**。
+
+---
+
+## 五、提示詞（第四版，逐字，可直接複製）
 
 ```
 Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
@@ -287,13 +309,13 @@ THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
    her knees on her stool, leaning towards her brother with her picture book still in one hand;
    (c) A DENTAL NURSE standing at the counter in the background, half turned away from us,
    setting a paper cup down on a tray. Nobody looks at the viewer.
-   WHAT THE NURSE WEARS - SAME COLOUR FAMILY AS THE DENTIST, BUT CLEARLY NOT THE SAME OUTFIT:
-   plain scrubs (no coat, no cap) in a SOLID WARM MUSTARD AMBER (#dda85a, shaded #b3812f) with
-   a cream trim along the V-neck and pocket and A SPRINKLE OF SMALL CREAM POLKA DOTS (#f6ecd9)
-   as her only pattern. HER FABRIC IS NOT THE DENTIST'S FABRIC: no bears, no chicks, no clouds,
-   no stars and no flowers on her, and her ground colour is a clear step deeper than the
-   dentist's off-white cloth, so that at a glance the two women are obviously wearing different
-   things from the same family.
+   WHAT THE NURSE WEARS - THE SAME CLOTH AS THE DENTIST, BUT A DIFFERENT PATTERN ON IT:
+   plain scrubs (no coat, no cap) cut from THE SAME WARM OFF-WHITE CLOTH (#f4ead8) as the
+   dentist's, patterned with A SPRINKLE OF SMALL MUSTARD-AMBER POLKA DOTS (#dda85a) and a
+   narrow mustard-amber trim along the V-neck and the pocket. HER PATTERN IS NOT THE DENTIST'S
+   PATTERN: dots only - no bears, no chicks, no clouds, no stars and no flowers on her. The two
+   women read as the same team in the same fabric, told apart by the pattern, NOT by a block of
+   solid colour: her clothes must NOT be a solid mustard, ochre or yellow garment.
 
 7. THE MOTHER IS THE TALL FIGURE ON THE RIGHT AND SHE HAS LET GO. She stands with her full
    height about 70% of the picture height - the top of her head just below the empty top strip,
@@ -306,7 +328,8 @@ THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
 8. LIGHT AND COLOUR. Warm daylight comes from the window on the left, so the light pools on the
    two faces and on the little mirror between them and softens towards the edges. The colours
    are warm: amber and caramel for the printed cap, top and trousers and for the chair; white
-   for the open coat; solid mustard amber for the nurse; green only in the potted plants; light
+   for the open coat; the nurse in the same off-white cloth with mustard dots; green only in the
+   potted plants; light
    warm wood for the floor and counter; warm cream for the wall. Fine paper grain over the whole image and loose hand-drawn shading
    strokes; NO LARGE FLAT EMPTY AREAS ANYWHERE - if a part of the picture has nothing in it,
    put one of the five large things there instead.
@@ -318,8 +341,9 @@ stays completely empty.
 AVOID: any text, letters, numbers or logos anywhere in the image; panels, frames, insets,
 speech bubbles, arrows, small icons; anybody drawn faded, translucent, ghostly or outline-only;
 anybody looking at the viewer; needles, syringes, drills, blood, tears; face masks; a child who
-looks frightened or is hiding; a green, blue or grey dental chair; sage-green, blue or white
-scrubs on the nurse; grey or blue-white walls; an overall yellow or sepia cast; tiny busy multicoloured patterns; posters or charts on the wall;
+looks frightened or is hiding; a green, blue or grey dental chair; sage-green or blue scrubs on
+the nurse; a nurse dressed in a solid mustard, ochre or yellow uniform; a nurse wearing the
+dentist's doodle print; grey or blue-white walls; an overall yellow or sepia cast; tiny busy multicoloured patterns; posters or charts on the wall;
 large empty white areas; photorealism; 3D rendering; heavy even black outlines.
 ```
 
