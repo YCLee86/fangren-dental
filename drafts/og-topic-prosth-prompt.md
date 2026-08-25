@@ -942,6 +942,161 @@ outlines.
 但**分享卡只有 250px**，菱形和方框的差別在那個尺寸下不存在。
 ⚠ **「哪一種圖比較專業」和「哪一種圖在縮圖下還讀得出來」是兩個問題。**
 
+## 二之九、第六輪：階梯本身變成畫面（2026-08-25）——⚠ 這是整個梗的第三次轉向
+
+使用者（附「成長階梯」的搜尋截圖，特別是那張手繪的螺旋階梯）：
+
+> 「我喜歡**階梯感**，這個階梯也可以**稍微有點旋轉**的感覺，**每隔幾階就有人在那邊
+> 　加油打氣、支持**，可以是醫療人員也可以是家人，然後**要治療的病患正在一步一步
+> 　往上往前走**，如果**年紀大一點，可能有人牽著或扶著一起走**。」
+
+⚠⚠ **這一版不再是「診間裡有一塊板子」，階梯自己就是整個畫面。**
+四段階梯 ＝ 四個治療階段（第二之八節），但**圖上不寫字、不寫數字** ——
+階段的資訊藏在**顏色的四階**與**段間的平台**裡。
+
+**構圖參考圖：`drafts/prosth-stair-ref.png`**（畫布就是 1200×628，位置可以直接對上）。
+那張只給**階梯的形狀、四段的分界、平台在哪、人站在哪、多大**。
+
+### 這一版的五個硬條件（都是算過的，不是感覺）
+
+1. ⚠⚠ **頂端一定要是一個「大平台」，而且要有人已經站在上面。**
+   第二之八節那條「不可以看起來沒有終點」在這一版靠它成立 ——
+   階梯若一路往上出畫面，讀起來就是「走不完」。
+2. ⚠⚠ **近大遠小。** 主角在畫面左下前景（高約畫面的 40%），越往上的人越小
+   （頂端那位約 20%）。這同時解決兩件事：**縱深＝「還要往上」**，
+   以及**頂端的人頭遠低於頂 17% 的安靜區**（實測那條線在 105px，
+   頂端平台落在 y≈310、人高 122 → 頭頂 188 ✓）。
+3. ⚠ **「旋轉」用段與段的斜度變化做**（緩→陡→緩→陡），不要真的畫成螺旋樓梯 ——
+   250px 下螺旋會糊成一團麻花。Ⓞ 那一版是「轉四分之一圈的縱深」，不是繞圈。
+4. ⚠⚠ **加油打氣不可以變成勵志海報**：不舉拳、不歡呼、不撒花、不逆光剪影
+   （ILLUSTRATION.md 第四節 A 類第 2 條是使用者親口說的紅線）。
+   只能是**伸手招呼、拍手、微笑點頭**這種日常的動作。
+5. ⚠ **圖上完全沒有牙科**（沒有牙、器械、診療椅、白袍）。診所的線索只剩
+   **兩位穿刷手服的人**；科別由帶子上那六個字承擔（第二之一節第 3 條）。
+
+## 二之十、第六輪的兩份提示詞
+
+⚠ 兩版都附 **`drafts/prosth-stair-ref.png`**（構圖）＋ 風格那三張（`style-ref-*.jpg`）。
+⚠ 牙模、流程圖那幾張**都不要附了**。
+
+### Ⓝ 一步一步往上（側視・微彎・最好讀）
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE IDEA IN ONE SENTENCE: a wide, gentle STAIRCASE climbing from the lower left to the upper
+right, with people at intervals cheering the climbers on - and at the top, a broad landing where
+someone has already arrived. It is calm and everyday, NOT a motivational poster.
+
+THE STAIRCASE IS THE MAIN SUBJECT, EXACTLY AS IN THE COMPOSITION-REFERENCE DRAWING. It is built
+in FOUR CLEARLY SEPARATE FLIGHTS, each flight three broad steps, and BETWEEN THE FLIGHTS THERE IS
+A SMALL FLAT LANDING. The four flights are coloured in four steps of the same blue, getting
+deeper as they rise: #7d9cc0, then #5f83ab, then #476e97, then #335b8b. The flights lean at
+slightly different angles - gentle, steeper, gentle, steeper - so the whole staircase reads as a
+soft S-curve rather than a straight ramp. AT THE TOP RIGHT IT ENDS IN A WIDE FLAT LANDING, about
+twice as deep as the others: THIS IS THE DESTINATION AND IT MUST LOOK LIKE ONE. The staircase
+does NOT continue past it and does NOT run off the edge of the picture.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+pale warm background only - no head, no step, no landing, no plant, no cloud, no sign. The top
+landing and everybody standing on it sit well below that line.
+
+DEPTH: FIGURES GET SMALLER AS THEY GO UP. The people at the bottom are the biggest, those on the
+top landing are the smallest - this is what makes the staircase feel long.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. EVERYONE LOOKS DIFFERENT: different age, hair, build and
+   clothes. Fine paper grain over the whole image.
+
+2. BOTTOM LEFT, THE BIGGEST FIGURES: AN OLD MAN BEING WALKED UP THE FIRST STEP. A man of about
+   SEVENTY-FIVE in a soft blue-grey shirt, one hand on a simple handrail, lifting one foot onto
+   the first step; BESIDE HIM HIS DAUGHTER, about forty-five, in a moss-green top (#8a9a72),
+   HOLDING HIS FOREARM WITH ONE HAND AND STEADYING HIS BACK WITH THE OTHER, climbing WITH him,
+   not pulling him. He is about 36% of the picture height. THEY ARE CALM AND ORDINARY: he is not
+   struggling, not stooped over, not being carried.
+
+3. HALFWAY UP, THE MAIN CLIMBER - A MIDDLE-AGED MAN WHO IS WALKING UP BY HIMSELF. A man of about
+   FIFTY in a warm ochre polo shirt (#c08a5c), mid-stride on the second flight, one foot on the
+   step above, body leaning slightly forward, looking UP towards the landing ahead. He is about
+   30% of the picture height. HE IS THE ONE THE PICTURE IS ABOUT: give him the clearest silhouette
+   and the most open space around him.
+
+4. PEOPLE ARE WAITING AT THE LANDINGS TO CHEER THEM ON - QUIETLY. On the FIRST landing, A CLINIC
+   WORKER in muted blue-grey scrubs (#b7c5d7, shaded #99a7b8, no white coat, no mask, no gloves)
+   half-turned back down the stairs, ONE ARM EXTENDED IN AN EASY WELCOMING GESTURE towards the old
+   man. On the THIRD landing, A YOUNG WOMAN IN HER TWENTIES clapping softly, and beside her A
+   SECOND CLINIC WORKER in the same scrubs, one hand raised in a small wave. NOBODY punches the
+   air, NOBODY shouts, NOBODY throws confetti, NOBODY holds a banner.
+
+5. ON THE TOP LANDING, SOMEONE HAS ALREADY ARRIVED. A woman of about thirty-five standing
+   relaxed on the wide top landing, hands at her sides, TURNED BACK TO LOOK DOWN THE STAIRS with
+   a quiet smile - she has finished, and she is waiting for the others. She is the smallest
+   figure, about 20% of the picture height, and her head stays far below the empty top strip.
+
+6. THE SPACE AROUND THE STAIRCASE IS WARM AND SIMPLE BUT NEVER EMPTY. A soft warm off-white
+   background (#e7e4dd) with clear bright daylight; A GENTLE POOL OF WARM LIGHT around the top
+   landing so the eye travels up towards it. Fill the empty corners with a FEW LARGE SOFT SHAPES
+   ONLY: two or three big rounded plants growing beside the staircase, one broad soft cloud-like
+   band of colour behind it, and the simple wooden handrail running up the whole flight. No
+   buildings, no rooms, no furniture, no clinic, no street, no sky full of detail.
+
+7. COLOUR AND LIGHT. The four blues of the flights are the anchor; everything else is warm:
+   off-white background, warm wood handrail, ochre shirt, moss-green top, blue-grey scrubs and
+   shirt, green plants. At least six clearly different colours; most colour blocks sit around HSL
+   saturation 30-50 and lightness 70-85. Flat fills in two or three steps per colour, no
+   gradients except to describe light. NO LARGE FLAT EMPTY AREAS ANYWHERE; no dusk, no golden
+   hour, no orange cast, no dark corners, no dramatic shadows.
+
+COMPOSITION ANCHORS: the staircase runs from the lower left corner to the upper right; everything
+that must be read sits inside the middle 73% of the width; the bottom of the first flight and the
+two biggest figures sit close to the bottom edge; the top landing sits in the right third, well
+below the empty top strip.
+
+AVOID: any text, letters, numbers, logos, arrows or icons anywhere in the image; teeth, dentures,
+toothbrushes, dental instruments, dental chairs, white coats, face masks, gloves, clinics,
+hospitals, X-rays or screens; a motivational-poster feeling; anybody punching the air, cheering
+loudly, jumping, holding a banner, a flag, a trophy, balloons or confetti; a silhouette against a
+bright sky; a heroic backlit figure; a mountain summit; a ladder; a spiral staircase that coils
+around itself; stairs that run off the top edge of the picture; anybody drawn faded, translucent,
+ghostly or outline-only; anybody looking at the viewer; a frail old man being carried or dragged;
+a cast of only elderly people; panels, insets, speech bubbles; dusk, sunset, golden hour, an
+orange or sepia cast; bare empty backgrounds; grey or blue-white walls; photorealism; 3D
+rendering; heavy even black outlines.
+```
+
+### Ⓞ 轉上去的階梯（多一點旋轉與縱深）
+
+⚠ 和 Ⓝ **只有兩處不同**：staircase 那一段，以及 AVOID 裡放行「轉四分之一圈」。
+其餘七點、構圖錨點逐字相同。
+
+staircase 那一段換成：
+
+```
+THE STAIRCASE IS THE MAIN SUBJECT, EXACTLY AS IN THE COMPOSITION-REFERENCE DRAWING, BUT IT TURNS
+AS IT RISES. It is built in FOUR CLEARLY SEPARATE FLIGHTS of three broad steps each, with a SMALL
+FLAT LANDING between the flights, coloured in four steps of the same blue as they rise: #7d9cc0,
+#5f83ab, #476e97, #335b8b. THE FIRST TWO FLIGHTS COME TOWARDS US FROM THE LOWER LEFT; AT THE
+SECOND LANDING THE STAIRCASE TURNS ABOUT A QUARTER TURN and the last two flights climb away from
+us towards the upper right, so we see them slightly from the side and they get visibly smaller.
+It is ONE SINGLE TURN, wide and easy - NOT a spiral, NOT a coil, NOT a helix, and the steps never
+overlap or pass behind each other. AT THE TOP IT ENDS IN A WIDE FLAT LANDING, about twice as deep
+as the others: THIS IS THE DESTINATION AND IT MUST LOOK LIKE ONE. The staircase does NOT continue
+past it and does NOT run off the edge of the picture.
+```
+
+在 AVOID 裡把 `a spiral staircase that coils around itself` 保留（那條仍然要擋），
+其餘不動。
+
 ---
 
 ## 三、五案共用的東西（顏色、參考圖、門檻）
