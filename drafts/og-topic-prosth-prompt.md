@@ -1,6 +1,7 @@
 # 分享圖提示詞：植牙・假牙重建（`og-topic-prosth`）
 
-**狀態：⏳ 梗提案中（2026-08-25，五案待使用者挑）。還沒生圖、還沒寫提示詞。**
+**狀態：⏳ 梗提案中（2026-08-25，五案待使用者挑）。**
+**五案的提示詞都已寫好（第四節，可直接複製）**，形狀參考圖 `drafts/prosth-model-ref.png` 已產出。還沒生圖。
 規格依 [ILLUSTRATION.md](../ILLUSTRATION.md) 第十一節（250px 判準）與
 [TEAM.md](../TEAM.md) 第一節第 9 號（插畫師的三個交件門檻）。
 文案脈絡見 COPY.md 第九之十六、十七節與 `tools/topic-copy.mjs` 的 `prosth`。
@@ -147,10 +148,494 @@
 
 ---
 
-## 三、選定之後要跑的
+## 三、五案共用的東西（顏色、參考圖、門檻）
 
-1. 提示詞（AI 專家重排：正面敘述在前、AVOID 收成最後一小段）＋ 參考圖分組標用途
-   （風格參考 `drafts/style-ref-*.jpg`、姿勢參考另外裁）。
+### 顏色（**量出來的，不是挑的** —— ILLUSTRATION.md 第十之三節）
+
+植牙套色 `#335b8b` 的色相是 **212.7°**。照〈半年一次的洗牙〉那張的實測值同明度同彩度
+把色相移過來，得到這一科的人物色：
+
+| | 一般牙科（站上實測） | → 植牙・假牙重建 |
+| --- | --- | --- |
+| 刷手服・主色 | `#bfd7b7` HSL(105, 29, 78) | **`#b7c5d7`** |
+| 刷手服・陰影 | `#99b899` HSL(120, 18, 66) | **`#99a7b8`** |
+| 頭髮・主色 | `#374840` HSL(150, 13, 25) | **`#373f48`** |
+| 頭髮・暗處 | `#283930` | **`#283039`** |
+| 頭髮・亮處 | `#404f47` | **`#40474f`** |
+
+其餘固定值：**牆 `#e7e4dd`**（頂 17% 用它，補償色算出來 58/113/186，過關）、
+地板與桌面淺暖木、白袍純白、**牙模石膏 `#efeae1`／底座 `#e3dbcd`／線 `#7d766b`**。
+病人的衣服走暖側（赭 `#c08a5c`、苔綠 `#8a9a72`、暗紅 `#a05a52` 任選）——
+整張要**至少五個看得出來的顏色**，多數色塊落在 HSL S 30~50、L 70~85
+（第十之四節：「暗淡」的成因是整片只有一個顏色，不是彩度不夠）。
+
+### 參考圖（餵圖的時候用途要分開講）
+
+| 檔案 | 怎麼說 |
+| --- | --- |
+| `drafts/style-ref-waiting-room.jpg`、`style-ref-endo-consult.jpg`、`style-ref-perio-full.jpg` | **「參考它的乾淨程度、線的實度、密度與氛圍，不要參考構圖與人數」** |
+| **`drafts/prosth-model-ref.png`**（2026-08-25 新畫） | **「牙模就是這個形狀」** —— 左＝下顎模型俯視（馬蹄形牙弓、右後方缺兩顆）／右＝上下顎對咬的側面。⚠ 第十之一節：**形狀不要用文字描述，用參考圖**；五案有四案手上／桌上有牙模 |
+| 姿勢參考 | 目前沒有。第一版若姿勢跑掉（人的角度、手的位置），再從既有的分享圖裁一張補上，**不要用更多文字去描述動作**（一般牙科那次文字描述動作四件全錯） |
+
+### 交件門檻（不過就不拿出來）
+
+無彩空白 **< 5%**／邊緣密度 **≥ 30%**／每個人的線相差 **< 20 階**
+（`drafts/og-measure.mjs`、`og-measure-ink.mjs`）；**頂 17% 的 B 通道實測 ≥ 161**。
+
+---
+
+## 四、五份提示詞（2026-08-25，可直接複製）
+
+⚠ 五份都是完整的，不必互相拼接。**每一份的第 1 點（STYLE）與最後的 AVOID 段逐字相同**，
+差別只在中間的畫面 —— 那是刻意的：臉的規則放在 STYLE 段裡權重最高（第十之五節），
+AVOID 段收在最後一小段（TEAM.md 第 10 號的排法）。
+
+### Ⓐ 坐下來，先看全口
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: a calm, bright, unhurried
+consultation corner in a small neighbourhood dental clinic in the afternoon, WITH THINGS GOING
+ON IN IT. The back wall is a soft warm off-white (#e7e4dd) - never grey, never blue-white, never
+pure white, never wood-coloured and never dark. The floor and the furniture are light warm wood.
+Nothing here is frightening and nothing is being treated: no drill, no needle, no blood, no
+open mouth, no dental chair in use.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+warm off-white wall only - no head, no hand, no lamp, no lamp arm, no shelf, no cable, no sign,
+no window frame. Everything else starts below that line.
+
+THE PICTURE IS ABOUT TWO PEOPLE SITTING DOWN TOGETHER AND LOOKING AT A WHOLE SET OF TEETH. A
+dentist and an older patient are on either side of a small table; between them lies one large
+plaster study model of a full dental arch. Everything else serves that one idea.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. Fine paper grain over the whole image.
+
+2. THE PLASTER MODEL ON THE TABLE IS THE CENTRE OF THE PICTURE. One large horseshoe-shaped
+   plaster model of a lower dental arch, EXACTLY THE SHAPE OF THE SHAPE-REFERENCE DRAWING: a
+   horseshoe of simple rounded teeth on a smooth plaster base, with A GAP WHERE TWO BACK TEETH
+   ARE MISSING on one side. It lies flat on the table, tilted slightly towards the viewer, and it
+   is BIG - about 30% of the picture height, larger than either person's head. Plaster cream
+   (#efeae1) with a warmer base (#e3dbcd) and soft grey-brown outlines (#7d766b). Draw only the
+   overall horseshoe, the row of simple teeth and the gap - NO grooves, NO numbers, NO markings,
+   NO tiny detail on the teeth.
+
+3. THE DENTIST IS SEATED ON THE LEFT, TURNED TOWARDS THE PATIENT. A woman in her thirties or
+   forties sitting at an angle to the table, leaning in a little. She holds a slim pen and ITS
+   TIP RESTS ON THE MODEL AT THE GAP; her other palm is turned upwards on the table as she
+   explains. She looks at the model, not at us. She wears plain scrubs in muted blue-grey
+   (#b7c5d7, shaded #99a7b8) under AN OPEN WHITE COAT, hair (#373f48) tied back, NO FACE MASK.
+
+4. THE PATIENT IS SEATED ON THE RIGHT AND HE IS LEANING IN. A man of about sixty-five, upright
+   and healthy-looking - NOT frail, NOT stooped, NOT sad - in a warm ochre polo shirt (#c08a5c),
+   both hands resting on the table edge, body clearly tipped forward towards the model, eyebrows
+   slightly raised as if he has just understood something. HIS EYES ARE ON THE MODEL. He has
+   come to sort things out; he is not being comforted.
+
+5. AT LEAST TWO MORE SMALL THINGS ARE HAPPENING AT ONCE - this is what makes the picture feel
+   alive, and nobody looks at the viewer. (a) A DENTAL NURSE in the same blue-grey scrubs stands
+   at a low counter in the background, half turned away, setting a second plaster model down on a
+   tray; (b) beyond her an open doorway shows a sliver of the corridor with a person walking past.
+   Both are SMALLER and FURTHER AWAY, never fainter - same line weight as everyone else.
+
+6. FILL THE ROOM WITH FOUR LARGE SIMPLE THINGS, never many small ones: the small wooden table
+   itself; a long low counter along the back wall with a potted plant and a stack of paper cups;
+   two simple wooden chairs; and a wide window on the left whose frame begins BELOW the empty top
+   strip, letting warm afternoon light slant across the table. No posters, no charts, no shelves
+   of instruments, no cabinets full of small objects.
+
+7. LIGHT AND COLOUR. One warm light source from the window on the left; the light pools on the
+   plaster model between the two people and softens towards the edges. At least five clearly
+   different colours: warm off-white wall, light warm wood floor and table, blue-grey scrubs,
+   white coat, ochre shirt, cream plaster, one green plant. Most colour blocks sit around HSL
+   saturation 30-50 and lightness 70-85. Flat fills in two or three steps per colour, no
+   gradients except to describe light. NO LARGE FLAT EMPTY AREAS ANYWHERE - if a part of the
+   picture has nothing in it, put one of the four large things there instead.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
+table edge and both people's knees sit close to the bottom edge; the top 17% stays completely
+empty.
+
+AVOID: any text, letters, numbers or logos anywhere in the image; panels, frames, insets, speech
+bubbles, arrows, small icons; anybody drawn faded, translucent, ghostly or outline-only; anybody
+looking at the viewer; a dental chair with a patient lying in it; a dentist sitting on an
+operator stool beside a reclined patient; a glowing screen, light box, X-ray or monitor; rows of
+instruments, drills, needles, syringes, implant screws, cross-sections or diagrams; a mouth being
+treated; missing teeth or damaged teeth shown in a real mouth; three different treatment options
+lined up for comparison; before-and-after pairs; calendars, price tags, money, invoices; a
+night-time or street-food scene; cartoon teeth with faces; face masks; grey or blue-white walls;
+an overall yellow or sepia cast; large empty white areas; photorealism; 3D rendering; heavy even
+black outlines.
+```
+
+### Ⓑ 上下對得上（模型在手上）
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: a calm, bright, unhurried
+corner of a small neighbourhood dental clinic in the afternoon, WITH THINGS GOING ON IN IT. The
+back wall is a soft warm off-white (#e7e4dd) - never grey, never blue-white, never pure white,
+never wood-coloured and never dark. The floor and furniture are light warm wood. Nothing is
+being treated: no drill, no needle, no blood, no open mouth, no dental chair in use.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+warm off-white wall only - no head, no hand, no lamp, no lamp arm, no shelf, no cable, no sign,
+no window frame. Everything else starts below that line.
+
+THE PICTURE IS ABOUT TWO PLASTER MODELS BEING CLOSED TOGETHER IN A DENTIST'S HANDS, AND A
+PATIENT LEANING IN TO SEE HOW THEY MEET. Everything else serves that one idea.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. Fine paper grain over the whole image.
+
+2. THE TWO MODELS IN HER HANDS ARE THE CENTRE OF THE PICTURE AND THEY ARE BIG. An upper and a
+   lower plaster arch, EXACTLY THE SHAPE OF THE SHAPE-REFERENCE DRAWING (the right-hand view:
+   two horseshoe arches seen from the side, their simple rounded teeth meeting tip to tip on a
+   smooth plaster base). She holds one in each hand and is CLOSING THEM TOGETHER so that the back
+   teeth meet. Together they are about 35% of the picture height - clearly larger than her head.
+   Plaster cream (#efeae1), warmer base (#e3dbcd), soft grey-brown outlines (#7d766b). Draw only
+   the arches, the base and the simple row of teeth - NO grooves, NO numbers, NO markings.
+
+3. THE DENTIST IS STANDING, SLIGHTLY LEFT OF CENTRE, HOLDING THE MODELS AT CHEST HEIGHT. A woman
+   in her thirties or forties, standing three-quarters towards us, elbows in, forearms raised so
+   that the two models are held up between her and the patient. ONE INDEX FINGER POINTS AT THE
+   PLACE WHERE THE BACK TEETH MEET. Her eyes are on the models. Plain scrubs in muted blue-grey
+   (#b7c5d7, shaded #99a7b8) under AN OPEN WHITE COAT, hair (#373f48) tied back, NO FACE MASK.
+
+4. THE PATIENT STANDS ON THE RIGHT AND LEANS IN TO LOOK. A woman of about sixty, upright and
+   healthy-looking - NOT frail, NOT sad - in a soft moss-green cardigan (#8a9a72), one hand
+   holding a folded printed leaflet she has brought with her, the other hand at her side, head
+   tipped towards the models, eyebrows slightly raised. HER EYES ARE ON THE MODELS, not on us.
+
+5. AT LEAST TWO MORE SMALL THINGS ARE HAPPENING AT ONCE, and nobody looks at the viewer. (a) A
+   DENTAL NURSE in the same blue-grey scrubs is at a low counter behind them, half turned away,
+   arranging two more plaster models on a wooden tray; (b) a second patient is seated further
+   back on a bench by the wall, reading. Both are SMALLER and FURTHER AWAY, never fainter - the
+   same line weight as everyone else.
+
+6. FILL THE ROOM WITH FOUR LARGE SIMPLE THINGS, never many small ones: a long low wooden counter
+   along the back wall with a sink and one round potted plant; a wooden bench; a wide window on
+   the left whose frame begins BELOW the empty top strip; and a tall narrow cabinet on the far
+   right. No posters, no charts, no trays of instruments, no shelves full of small objects.
+
+7. LIGHT AND COLOUR. One warm light source from the window on the left; the light falls on the
+   two plaster models held between the women and softens towards the edges. At least five clearly
+   different colours: warm off-white wall, light warm wood, blue-grey scrubs, white coat,
+   moss-green cardigan, cream plaster, one green plant. Most colour blocks sit around HSL
+   saturation 30-50 and lightness 70-85. Flat fills in two or three steps per colour, no
+   gradients except to describe light. NO LARGE FLAT EMPTY AREAS ANYWHERE.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; both
+women's feet sit close to the bottom edge; the models are at the exact vertical centre of the
+picture; the top 17% stays completely empty.
+
+AVOID: any text, letters, numbers or logos anywhere in the image; panels, frames, insets, speech
+bubbles, arrows, small icons; anybody drawn faded, translucent, ghostly or outline-only; anybody
+looking at the viewer; a dental chair with a patient lying in it; a dentist sitting on an
+operator stool beside a reclined patient; a glowing screen, light box, X-ray or monitor; rows of
+instruments, drills, needles, syringes, implant screws, cross-sections or diagrams; a mouth being
+treated; missing teeth or damaged teeth shown in a real mouth; three different treatment options
+lined up for comparison; before-and-after pairs; calendars, price tags, money, invoices; a
+night-time or street-food scene; cartoon teeth with faces; face masks; grey or blue-white walls;
+an overall yellow or sepia cast; large empty white areas; photorealism; 3D rendering; heavy even
+black outlines.
+```
+
+### Ⓒ 一直靠另一邊
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: a calm, bright, unhurried
+consultation corner in a small neighbourhood dental clinic in the afternoon, WITH THINGS GOING
+ON IN IT. The back wall is a soft warm off-white (#e7e4dd) - never grey, never blue-white, never
+pure white, never wood-coloured and never dark. The floor and furniture are light warm wood.
+NOTHING HERE IS PAINFUL: no drill, no needle, no blood, no open mouth, no dental chair in use,
+and nobody is wincing or suffering.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+warm off-white wall only - no head, no hand, no lamp, no lamp arm, no shelf, no cable, no sign,
+no window frame. Everything else starts below that line.
+
+THE PICTURE IS ABOUT A MAN REALISING SOMETHING HE HAD NEVER NOTICED: he has been chewing on one
+side for years, and the dentist is pointing at the OTHER side of the model. His hand happens to
+be resting against the cheek he always chews with. Everything else serves that one idea.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. Fine paper grain over the whole image.
+
+2. THE PATIENT IS THE LARGER FIGURE, SEATED ON THE RIGHT, AND HIS EXPRESSION IS "OH - I SEE". A
+   man of about sixty-five, upright and healthy-looking - NOT frail, NOT stooped, NOT in pain -
+   in a warm ochre polo shirt (#c08a5c). His LEFT HAND RESTS LOOSELY AGAINST HIS OWN LEFT CHEEK,
+   fingers relaxed and open so that they DO NOT COVER HIS FACE - the whole face stays visible.
+   His head is tipped forward towards the model and his eyebrows are slightly raised. HE IS NOT
+   HOLDING HIS JAW IN PAIN, NOT FROWNING, NOT SIGHING.
+
+3. THE PLASTER MODEL BETWEEN THEM CARRIES THE MEANING AND IT IS BIG. One large horseshoe-shaped
+   plaster model of a lower arch, EXACTLY THE SHAPE OF THE SHAPE-REFERENCE DRAWING, held up by
+   the dentist at chest height between the two of them, tilted towards the patient. THE GAP WHERE
+   TWO BACK TEETH ARE MISSING IS ON THE SIDE AWAY FROM THE HAND ON HIS CHEEK, and the dentist's
+   index finger rests in that gap. The model is about 30% of the picture height, larger than
+   either head. Plaster cream (#efeae1), warmer base (#e3dbcd), grey-brown outlines (#7d766b);
+   no grooves, no numbers, no markings.
+
+4. THE DENTIST IS SEATED ON THE LEFT, TURNED TOWARDS HIM. A woman in her thirties or forties,
+   one hand holding the model up, the index finger of the other resting in the gap; she looks at
+   the model, not at us, and she is calm and matter-of-fact - NOT consoling him, NOT touching
+   him. Plain scrubs in muted blue-grey (#b7c5d7, shaded #99a7b8) under AN OPEN WHITE COAT, hair
+   (#373f48) tied back, NO FACE MASK.
+
+5. AT LEAST TWO MORE SMALL THINGS ARE HAPPENING AT ONCE, and nobody looks at the viewer. (a) A
+   DENTAL NURSE in the same blue-grey scrubs stands at a low counter in the background, half
+   turned away, setting a tray down; (b) an open doorway beyond her shows a sliver of corridor
+   with someone walking past. Both are SMALLER and FURTHER AWAY, never fainter - the same line
+   weight as everyone else.
+
+6. FILL THE ROOM WITH FOUR LARGE SIMPLE THINGS, never many small ones: the small wooden table the
+   two of them sit at; a long low counter along the back wall with one round potted plant; two
+   simple wooden chairs; and a wide window on the left whose frame begins BELOW the empty top
+   strip. No posters, no charts, no trays of instruments, no cabinets full of small objects.
+
+7. LIGHT AND COLOUR. One warm light source from the window on the left; the light pools on the
+   model held between them and softens towards the edges. At least five clearly different
+   colours: warm off-white wall, light warm wood, blue-grey scrubs, white coat, ochre shirt,
+   cream plaster, one green plant. Most colour blocks sit around HSL saturation 30-50 and
+   lightness 70-85. Flat fills in two or three steps per colour, no gradients except to describe
+   light. NO LARGE FLAT EMPTY AREAS ANYWHERE.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
+table edge and both people's knees sit close to the bottom edge; the top 17% stays completely
+empty.
+
+AVOID: any text, letters, numbers or logos anywhere in the image; panels, frames, insets, speech
+bubbles, arrows, small icons; anybody drawn faded, translucent, ghostly or outline-only; anybody
+looking at the viewer; a hand that covers the face; a pained, wincing, regretful or sighing
+expression; a dental chair with a patient lying in it; a dentist sitting on an operator stool
+beside a reclined patient; a glowing screen, light box, X-ray or monitor; rows of instruments,
+drills, needles, syringes, implant screws, cross-sections or diagrams; a mouth being treated;
+missing teeth or damaged teeth shown in a real mouth; three different treatment options lined up
+for comparison; before-and-after pairs; calendars, price tags, money, invoices; a night-time or
+street-food scene; cartoon teeth with faces; face masks; grey or blue-white walls; an overall
+yellow or sepia cast; large empty white areas; photorealism; 3D rendering; heavy even black
+outlines.
+```
+
+### Ⓓ 陪他來的那一趟
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: a calm, bright, unhurried
+consultation corner in a small neighbourhood dental clinic in the afternoon, WITH THINGS GOING
+ON IN IT. The back wall is a soft warm off-white (#e7e4dd) - never grey, never blue-white, never
+pure white, never wood-coloured and never dark. The floor and furniture are light warm wood.
+Nothing is being treated: no drill, no needle, no blood, no open mouth, no dental chair in use.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+warm off-white wall only - no head, no hand, no lamp, no lamp arm, no shelf, no cable, no sign,
+no window frame. Everything else starts below that line.
+
+THE PICTURE IS ABOUT AN OLDER MAN WHO HAS BROUGHT HIS GROWN-UP DAUGHTER ALONG, AND THE THREE OF
+THEM ARE WORKING IT OUT TOGETHER. THE FATHER IS THE ONE TALKING. Everything else serves that
+one idea. THE THREE PEOPLE READ AS TWO GROUPS ALONG ONE HORIZONTAL BAND: the dentist on the
+left, father and daughter together on the right, with a clear gap of table between the groups.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. EVERYONE LOOKS DIFFERENT: different age, different hair,
+   different build, different clothes - no two figures resemble each other. Fine paper grain over
+   the whole image.
+
+2. THE FATHER IS SEATED IN THE MIDDLE OF THE RIGHT-HAND GROUP AND HE IS THE ONE SPEAKING. A man
+   of about seventy, upright and healthy-looking - NOT frail, NOT stooped, NOT passive - in a
+   warm ochre shirt (#c08a5c), one hand open in front of him mid-sentence, the other resting on
+   the table beside the plaster model. He looks at the dentist. HE IS THE LARGEST FIGURE ON THAT
+   SIDE and he is clearly in charge of his own visit.
+
+3. THE DAUGHTER STANDS JUST BEHIND HIS CHAIR, LISTENING. A woman of about forty in a soft
+   moss-green top (#8a9a72), a shoulder bag still on her arm, ONE HAND RESTING LIGHTLY ON THE
+   BACK OF HER FATHER'S CHAIR and the other holding a phone down at her side - she is listening,
+   NOT speaking, NOT taking over, NOT holding him. Her head is turned towards the dentist. Her
+   full standing height is about 70% of the picture height, the top of her head just below the
+   empty top strip.
+
+4. THE PLASTER MODEL ON THE TABLE IS THE OBJECT EVERYONE IS TALKING ABOUT. One large
+   horseshoe-shaped plaster model of a lower arch, EXACTLY THE SHAPE OF THE SHAPE-REFERENCE
+   DRAWING, lying flat on the table between the groups with A GAP WHERE TWO BACK TEETH ARE
+   MISSING, about 25% of the picture height. Plaster cream (#efeae1), warmer base (#e3dbcd),
+   grey-brown outlines (#7d766b); no grooves, no numbers, no markings.
+
+5. THE DENTIST IS SEATED ON THE LEFT, LISTENING TO THE FATHER. A woman in her thirties or
+   forties, body turned towards them, one hand resting beside the model, chin slightly down - she
+   is LISTENING, not lecturing. Plain scrubs in muted blue-grey (#b7c5d7, shaded #99a7b8) under
+   AN OPEN WHITE COAT, hair (#373f48) tied back, NO FACE MASK.
+
+6. FILL THE ROOM WITH FOUR LARGE SIMPLE THINGS, never many small ones: the wooden table; a long
+   low counter along the back wall with one round potted plant and a stack of paper cups; two
+   simple wooden chairs; and a wide window on the left whose frame begins BELOW the empty top
+   strip. In the far background a DENTAL NURSE in the same blue-grey scrubs is half turned away
+   at the counter, doing something of her own - smaller and further away, never fainter. Nobody
+   looks at the viewer. No posters, no charts, no trays of instruments.
+
+7. LIGHT AND COLOUR. One warm light source from the window on the left; the light pools on the
+   table and the plaster model and softens towards the edges. At least five clearly different
+   colours: warm off-white wall, light warm wood, blue-grey scrubs, white coat, ochre shirt,
+   moss-green top, cream plaster, one green plant. Most colour blocks sit around HSL saturation
+   30-50 and lightness 70-85. Flat fills in two or three steps per colour, no gradients except to
+   describe light. NO LARGE FLAT EMPTY AREAS ANYWHERE.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
+table edge, the chairs and the daughter's shoes sit close to the bottom edge; the top 17% stays
+completely empty.
+
+AVOID: any text, letters, numbers or logos anywhere in the image; panels, frames, insets, speech
+bubbles, arrows, small icons; anybody drawn faded, translucent, ghostly or outline-only; two
+figures who look alike; anybody looking at the viewer; a daughter speaking for her father or
+holding him; a frail or passive old man; a dental chair with a patient lying in it; a dentist
+sitting on an operator stool beside a reclined patient; a glowing screen, light box, X-ray or
+monitor; rows of instruments, drills, needles, syringes, implant screws, cross-sections or
+diagrams; a mouth being treated; missing teeth or damaged teeth shown in a real mouth; three
+different treatment options lined up for comparison; before-and-after pairs; calendars, price
+tags, money, invoices; a night-time or street-food scene; cartoon teeth with faces; face masks;
+grey or blue-white walls; an overall yellow or sepia cast; large empty white areas; photorealism;
+3D rendering; heavy even black outlines.
+```
+
+### Ⓔ 講究的那一雙手
+
+⚠ 這一份**風險最高**（病人沒有位置、逼近器械特寫那條紅線），提示詞裡因此硬性要求
+背景有病人正走進來。真的要用，建議先看過再決定要不要繼續走這一條。
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: a calm, bright, unhurried
+working corner in a small neighbourhood dental clinic in the afternoon, WITH THINGS GOING ON IN
+IT. The back wall is a soft warm off-white (#e7e4dd) - never grey, never blue-white, never pure
+white, never wood-coloured and never dark. The floor and the workbench are light warm wood. This
+is craft, not surgery: no drill, no needle, no blood, no open mouth, no dental chair in use.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+warm off-white wall only - no head, no hand, no lamp, no lamp arm, no shelf, no cable, no sign,
+no window frame. Everything else starts below that line.
+
+THE PICTURE IS ABOUT A PAIR OF HANDS CHECKING A FINISHED PIECE OF WORK IN GOOD DAYLIGHT, WHILE
+THE PERSON IT WAS MADE FOR IS ALREADY ARRIVING. Everything else serves that one idea.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. Fine paper grain over the whole image.
+
+2. THE HANDS AND THE WORK THEY HOLD ARE THE CENTRE OF THE PICTURE. A dentist stands at a wooden
+   workbench by a window, holding UP a small finished dental bridge - a short row of a few
+   simple ceramic teeth on a plain base, EXACTLY THE SHAPE OF THE TEETH IN THE SHAPE-REFERENCE
+   DRAWING but only three or four teeth wide - in both hands at chest height, turning it slightly
+   towards the light. Together the two hands and the piece are about 25% of the picture height.
+   Cream (#efeae1) with grey-brown outlines (#7d766b); no grooves, no numbers, no markings.
+
+3. THE DENTIST IS STANDING, SLIGHTLY LEFT OF CENTRE, ABSORBED IN THE WORK. A woman in her
+   thirties or forties, three-quarters towards us, shoulders relaxed, head tipped down towards
+   the piece she is holding; her eyes are ON THE WORK. Plain scrubs in muted blue-grey (#b7c5d7,
+   shaded #99a7b8) under AN OPEN WHITE COAT, hair (#373f48) tied back, NO FACE MASK, NO LOUPES,
+   NO GLOVES HOLDING INSTRUMENTS.
+
+4. A COLLEAGUE STANDS BESIDE HER AND LOOKS AT THE SAME PIECE. A dental nurse in the same
+   blue-grey scrubs, half a step behind, leaning in slightly, one hand resting on the bench, a
+   plaster model of a lower arch on the bench in front of her (the shape from the reference
+   drawing). She is smaller in the frame but drawn with exactly the same line weight.
+
+5. THE PATIENT IS ARRIVING IN THE BACKGROUND - THIS IS NOT OPTIONAL. On the right, further back
+   and smaller, an older man of about sixty-five in a warm ochre shirt (#c08a5c) is stepping in
+   through an open doorway, one hand on the door frame, looking towards the bench. He makes the
+   picture about a person, not about an object. He is smaller and further away, never fainter -
+   the same line weight as everyone else. Nobody looks at the viewer.
+
+6. FILL THE ROOM WITH FOUR LARGE SIMPLE THINGS, never many small ones: the long wooden workbench
+   itself; a wide window on the left whose frame begins BELOW the empty top strip, with warm
+   daylight slanting in; a low counter behind with one round potted plant and a stack of paper
+   cups; and the open doorway on the right. NO tray of instruments, NO rows of tools, NO shelves
+   full of small objects, NO posters or charts.
+
+7. LIGHT AND COLOUR. One warm light source from the window on the left; the strongest light falls
+   on the piece in her hands and softens towards the edges. At least five clearly different
+   colours: warm off-white wall, light warm wood bench and floor, blue-grey scrubs, white coat,
+   ochre shirt, cream ceramic and plaster, one green plant. Most colour blocks sit around HSL
+   saturation 30-50 and lightness 70-85. Flat fills in two or three steps per colour, no
+   gradients except to describe light. NO LARGE FLAT EMPTY AREAS ANYWHERE.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
+bench edge and both women's feet sit close to the bottom edge; the piece in her hands is at the
+vertical centre; the top 17% stays completely empty.
+
+AVOID: any text, letters, numbers or logos anywhere in the image; panels, frames, insets, speech
+bubbles, arrows, small icons; anybody drawn faded, translucent, ghostly or outline-only; anybody
+looking at the viewer; a close-up of instruments, drills, needles, syringes, implant screws,
+cross-sections or diagrams; a laboratory bench covered in tools; a dental chair with a patient
+lying in it; a glowing screen, light box, X-ray or monitor; a mouth being treated; missing teeth
+or damaged teeth shown in a real mouth; three different treatment options lined up for
+comparison; before-and-after pairs; calendars, price tags, money, invoices; a night-time or
+street-food scene; cartoon teeth with faces; face masks; grey or blue-white walls; an overall
+yellow or sepia cast; large empty white areas; photorealism; 3D rendering; heavy even black
+outlines.
+```
+
+---
+
+## 五、選定之後要跑的
+
+1. ~~提示詞~~ ✅ **五份都寫好了（第四節）**，參考圖與用途見第三節。
+   選定之後只要把那一份連同四張參考圖一起餵進去。
 2. 交件門檻：無彩空白 < 5%、邊緣密度 ≥ 30%、每個人的線相差 < 20 階
    （`drafts/og-measure.mjs`、`og-measure-ink.mjs`）；頂 17% 的 **B 通道實測 ≥ 161**。
 3. `node tools/og-resize.mjs drafts/og-topic-prosth-src.jpg prosth`
