@@ -3877,3 +3877,284 @@ outlines.
 ⚠ 餵圖同上一輪，第一張是第十三輪那張，用途寫：
 「**線、密度、人物、機器、牙齒的大小與電牌照這一張；只改一件：那顆牙要看起來是
 剛被挖出來的（新挖的凹口、凸出土面、腳下一堆鬆土、燈打在上面），而且四個人都要看著它。**」
+
+---
+
+## 三十三、第十五輪：電線要粗成管線、只露牙冠的前三分之一（2026-08-25）
+
+使用者：「**很不錯不錯。電線好細，粗一點像管線。牙齒除了牙冠前 1/3，其他部分要埋在土裡
+帶一點透視感，像附圖那樣。**」（附了兩張放大截圖，第二張正是他要的透視畫法）
+
+### 實測
+
+| | 第十四輪 | 門檻 |
+| --- | --- | --- |
+| 邊緣密度 | **25.0% ✗**（上一輪 30.4） | ≥ 30% |
+| 無彩空白 | 0.5% ✓ | < 5% |
+| 頂 17% 中位 RGB | 196/183/200 ✓ | 藍 ≥ 178 |
+| 頂 17% 被佔到 | 第 103 列 ✓ | 0 |
+| 圖上有沒有字 | 0 ✓ | 0 |
+| 「剛挖出來」 | ✅ 讀得出來了（凹口、鬆土、燈、視線） | — |
+
+⚠ **密度又掉到 25%**：左半邊的襯砌這次只剩幾條線、天花板的燈少了一盞。
+**每次把注意力集中在某一個元素上，別的地方就會被省掉** ——
+這一輪把襯砌的細節與兩盞燈重新寫回去（第三次寫同一件事了）。
+⚠ 好消息是這一輪要加的兩樣東西**都會補密度**：粗管線的接頭環、以及蓋在牙齒上的土紋。
+
+### 兩個修法
+
+1. **電線改成「埋在地下的管線」**：**約和那根老陶管一樣粗**（比上一版粗三倍），
+   外殼是淡灰紫的管壁、**每隔一段有一圈接頭環**，紫光沿著管身走。
+   ⚠ 不要變成一條發光的細霓虹線 —— 它是**管**，不是光。
+2. **只露牙冠的前三分之一**：使用者附的那張放大圖就是要的效果 ——
+   **前三分之一實心奶白（帶高光）**，一條虛線切過去，**其餘（牙冠後段與整個牙根）
+   在土裡**，用**混了土色的淡一階牙色 ＋ 虛線輪廓**透出來。
+   ⚠ 這是「透視感」不是「消失」：**看得出整顆牙的形狀，但明顯在土的後面。**
+
+（完整提示詞見下一節。其餘每一段和第十四輪逐字相同，只換這三段。）
+
+---
+
+## 三十四、第十五輪的完整提示詞（2026-08-25，全新生成）
+
+```
+Generate a brand-new illustration from scratch. This is not an edit of any earlier picture.
+
+Format: editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview
+card. It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big
+simple shapes, few large objects, one single continuous scene, no panels, no dividing lines, no
+insets.
+
+Very important: the finished picture contains no writing at all. No labels, no captions, no
+letters, no numbers, no sound effects, in any language, anywhere - not on the walls, not on the
+warning plates, not beside anybody's mouth, not in the corners. Every word in this brief is an
+instruction to you, never something to draw.
+
+How the people must be drawn, and this matters as much as anything else in the brief. They are
+drawn in a gentle hand-made picture-book manner, not in a western cartoon or comic manner. Thin
+ink outlines whose weight varies and sometimes breaks. Each face is one flat skin tone with no
+modelling and no shadow on it. The eyes are two small solid dots with no whites, no pupils, no
+highlights and no outlines around them; when someone laughs the eyes become two short upward
+curves. The eyebrows are two short strokes. The nose is a single tiny mark. The mouth is small -
+a short curve when smiling, a small oval when calling out - never a wide toothy grin, never
+visible teeth. A small soft blush oval may sit on a cheek. Hair is a flat shape in two tones with
+no individual strands. The people are East Asian, with natural adult proportions - the head is
+about one seventh of the body height - and soft rounded bodies; they are never big-headed, never
+chibi, never elongated, and never realistic. Every person is drawn with exactly the same line
+weight and solidity, and the four of them look clearly different from each other in age, build,
+hair and clothes.
+
+Style of everything else: flat fills in two or three steps per colour, no gradients except to
+describe light, fine paper grain over the whole image. The picture must stay dense with drawn
+detail from edge to edge - the last version went thin on the left-hand half, which is wrong.
+Across the whole width of the tunnel the lining carries a joint line every couple of metres, a
+row of small round bolt heads along every joint, and a steel rib arch standing proud every few
+metres with a shadow down both sides; the earth is drawn in three clearly different browns with
+strata lines, many small pebbles of two or three sizes, speckles and fine root hairs; the machine
+has panel seams and bolt rows; two ceiling lamps hang from the crown, not one. Apart from the
+calm band at the top, no patch bigger than about a tenth of the picture is flat empty colour, and
+the lining is a mid-tone lilac-grey rather than a washed-out one.
+
+Camera: we look at a tunnel from the side, as if the near wall had been cut away. The lined crown
+runs across the top of the picture; the tunnel floor is a horizontal line about two thirds of the
+way down; below that line the bottom third of the image is cutaway earth, seen in section; the
+far wall stands behind the people; more cutaway earth fills the right-hand end where the tunnel
+has not been dug yet. Every person is seen in full side view or three-quarter view, facing right,
+standing on the same floor line. We are not looking down the bore of the tunnel: no vanishing
+point, no shrinking concentric rings, no one-point perspective, nobody seen from the front or the
+back.
+
+The story in one sentence, and it sets the mood - this is the moment of discovery: deep
+underground in a big reinforced tunnel, a woman oral surgeon with short hair, a violet surgical
+cap, a white coat and scrubs has just broken through the last stretch of soil with a big white
+hand-held tunnel shield, and the tip of an enormous tooth has this second come free of the earth
+in front of everyone. All four people are looking straight at it. The rest of the tooth is still
+packed under solid ground. Below the tunnel floor a thick buried electrical conduit, glowing
+violet and signposted with small warning plates, runs from the left edge to the right edge and
+rises only to skim past the tooth. Everybody is happy and lively. It is the moment of finding,
+not of fighting.
+
+The whole picture is underground: no sky, no grass, no view of the ground surface, no daylight
+opening.
+
+The tooth, and this is the part to get exactly right. Only the front third of the crown is out in
+the open air; everything behind that is still under the soil and is shown with a see-through
+treatment, so a viewer can make out the whole shape of the buried tooth without it looking clean
+or excavated. In detail: the tooth lies flat, its long axis horizontal like a fallen pillar,
+never upright and never tilted; its crown end points left, towards the machine and the people,
+and its two thick roots point right, horizontally, towards the right edge, never downwards. The
+whole tooth, buried part included, is about as long as the whole machine from cutter face to
+grips and about as thick as the machine's cylinder is tall - the biggest single object in the
+picture apart from the tunnel itself. The exposed front third of the crown is drawn solid and
+clean in cream white (#f2ece2, shaded #d9cfc0), with one soft highlight on it, and it is the
+brightest and cleanest thing in the whole picture. A dashed line marks where the soil begins.
+Behind that dashed line, the back two thirds of the crown and the entire root system lie under
+the earth: draw them filled with a paler, soil-tinted version of the tooth colour - the tooth
+colour and the brown of the soil mixed together - and outline them with dashes, with a few of the
+soil's own speckles, pebbles and root hairs drawn over the top of them, so that the soil is
+plainly in front and the tooth is plainly behind it. It must read as a see-through survey drawing
+of something still buried: not clean white, not solid, not sitting in an open hollow or a dark
+cavity, and with no air gap around it.
+
+The find must look as if it happened this very moment, so also do all of these: dig a fresh
+bowl-shaped hollow into the soil face around the exposed crown, with a ragged, freshly cut edge;
+let that exposed third stand right out of the hollow into the open air of the tunnel and cast a
+small soft shadow onto the soil behind it; pile a small heap of loose fresh soil and crumbs on
+the tunnel floor directly below it, with a few crumbs still tumbling; light it with one of the
+two ceiling lamps so a warm pool of light falls straight onto it, and add three or four short
+straight ink strokes radiating from it; and turn every face towards it - the patient points at it
+and looks at it, his friend looks at it, the assistant looks at it, the surgeon looks at it. All
+four sets of eyes converge on that crown; nobody looks at anybody else, nobody looks at the
+viewer, nobody looks away.
+
+The buried conduit must look like a real underground pipe, not a thin neon line - the last
+version drew it far too thin. It is a thick tube, about as thick as the old ceramic pipe lying in
+the same soil, roughly three times thicker than in the last version and about as thick as the
+surgeon's arm. Its casing is a smooth pale lilac-grey pipe wall with a raised collar joint every
+so often along its length, and a band of gently glowing violet light (#b48fc0 with a lighter
+#d6bfdd core) runs along the pipe so it is clearly live. It enters at the left edge well below
+the tunnel floor line, runs right through the cutaway soil, and rises only where it reaches the
+tooth, still inside the earth, to skim around the outside of the tooth before leaving at the
+right edge. It never comes up into the tunnel, never touches the floor and never enters the
+tooth. Place the warning plates so they are spread over the whole width: at least three in the
+left third of the picture, at least three in the middle third and at least three in the right
+third, spaced at roughly even intervals, each planted in the soil beside the conduit. Each plate
+is a simple yellow triangle with a black zigzag lightning bolt inside it, on a short grey stake
+about as tall as a person's hand, and each plate is blank apart from that lightning symbol.
+
+The hydraulic hose must never be confused with that conduit. It is ribbed, dull grey-brown, as
+thick as a person's thigh, and it belongs inside the tunnel: it leaves the left-hand end of the
+machine, sweeps down past the surgeon's legs, passes through the assistant's two hands, lies
+along the tunnel floor and runs off the left-hand edge of the picture. It never dips below the
+floor line, never glows, and never touches or joins the conduit; between the two there is always
+a clearly visible band of drawn soil.
+
+The machine faces right. The round cutter face is the rightmost part of the whole machine: it
+stands at the right-hand end of the cylinder, pressed against the brown soil face, and it faces
+away from everybody, towards the right edge of the picture. To its left come the short thick
+cylindrical shield of the same big diameter, two short hydraulic rams, and a slimmer body. The
+two grips are at the left-hand end of the machine, nearest the surgeon, and the thick hose is
+connected at that same left-hand end. The surgeon stands to the left of the machine and pushes it
+to the right. Nothing whatsoever is attached to the cutter face: no hose, no cable, no grip, no
+hand. The cutter face is a large flat disc, wider than the surgeon's shoulders, seen very
+slightly from the side so it reads as a disc; its face carries a grid of about twenty small round
+disc cutters in two or three concentric rings plus a few radial spokes (#6f6878) and three or
+four slim curved slots, with a ring of soft violet light (#b48fc0) glowing around its rim. The
+shell is off-white with a faint warm sand tint (#e6e3dc), shaded #c4c0b6 with darker #a09a8e in
+the deepest folds - the clean white-grey of an industrial tunnel-boring machine, not lilac, not
+pastel, not flat pure white, with plenty of straight panel seams, rows of small bolt heads and
+clear shading. It is an engineering tool, never a weapon. The machine sits a little above and to
+the left of the fresh hollow, so that it never covers, touches or hides the exposed crown;
+between the cutter face and the crown there is an open gap of undug earth about half the width of
+the shield.
+
+The tunnel is big enough to walk through. Its crown and far wall are lined with curved concrete
+segment panels in mid-tone lilac-grey (#d3cbdd, shaded #b3a9c2). The floor is packed earth with a
+scatter of small pebbles. Two small ceiling lamps hang from the crown; one lights the people, the
+other lights the find. Inside the tunnel everything is clear and tidy: apart from the people, the
+machine, the hose and the fresh heap of soil below the find, nothing is lying about in it.
+
+The top edge of the picture is the tunnel lining itself. Nothing is drawn above it - no soil, no
+rocks, no roots, no strip of earth along the top. The upper 17% of the picture (the top 105
+pixels of 628) is one clean band of that lilac-grey lining, with at most two very faint
+horizontal joint lines and nothing else, and it must be clearly lilac-tinted, never a neutral
+grey, never near-white, never brown. Nothing may cross into it: no head, no cap, no raised hand,
+no tooth, no machine, no lamp, no lamp chain, no rib arch, no rock. Compose so that every head,
+every lamp, the top of the machine and the top of the tooth sit below a line one fifth of the way
+down from the top, about 126 pixels of the 628.
+
+The rough, awkward things that had to be avoided sit in the cutaway earth, below the floor line
+and at the unexcavated right-hand end: several big rounded boulders, one thick old ceramic pipe
+running diagonally, one fat woody root with smaller roots branching off it, two half-buried round
+clay jars, and a scatter of smaller stones. The lined tunnel visibly dips and bends to slip
+between them, just missing each one. None of these objects is inside the tunnel, none appears
+above the lining, and nothing touches them.
+
+The people:
+
+The surgeon is a woman with short hair. She is in her thirties or forties, seen from the side,
+facing right, standing just left of the machine with both hands on the two grips at its left-hand
+end, one foot forward and one braced back. Her hair is a short dark-brown bob ending at the jaw
+with a soft fringe, and the violet cap is worn pushed back on her head so the fringe and the ends
+of the bob show clearly in front of it and below it. The cap is a soft tie-back surgical cap,
+plain, with no pattern, in muted violet (#8e6299, shaded #784e84). She wears an open white coat
+over pale grey-violet scrubs (#c9bcd0). No face mask. She has looked up from her work at the
+crown and is smiling with delight: mouth a small upward curve, eyes creased into two happy upward
+curves, eyebrows raised. She is about 62% of the picture height.
+
+The assistant is at the centre of the picture, in their twenties, in the same violet cap and pale
+grey-violet scrubs, no mask, about 55% of the picture height, in three-quarter view facing right:
+both hands wrapped around the thick hose with one heavy loop over the shoulder, one foot forward,
+body leaning back against its weight, head turned towards the crown, mouth a small open oval of
+delight, eyes creased, eyebrows high.
+
+The patient is a young man of about twenty-five with short dark hair, in a warm ochre sweatshirt,
+blue jeans and trainers, about 52% of the picture height, standing at the left of the picture in
+a warm pool of lamplight, in three-quarter view facing right: one arm thrown up and pointing
+straight at the uncovered crown while he looks at it, the other fist raised beside his chest,
+body leaning forward, one heel lifted mid-step, mouth a small open oval, eyebrows high, eyes
+bright, with two or three short ink strokes beside his raised arm to show the movement. His
+friend is the same age, a young woman with a high ponytail in a soft teal jacket and dark
+trousers, about 50% of the picture height, standing right beside him with one hand on his upper
+arm and the other hand raised open beside her face, laughing and looking at the crown as well.
+Neither of them is anxious, holding a cheek, wearing a hard hat, or looking at the viewer. They
+are the liveliest part of the picture.
+
+Colour and light: warm lamplight from the two ceiling lamps, and the brightest thing in the
+picture is the exposed front third of the crown. Lining mid-tone lilac-grey; machine off-white
+with a third of it in shade; earth warm pale brown (#c8ab86, shaded #a5855f and #8d7250) in three
+clear flat steps; boulders cooler grey-brown; ceramic pipe and clay jars warm terracotta; the
+exposed tooth cream white and the buried part a soil-tinted paler version of it; the patient's
+sweatshirt warm ochre; his friend's jacket soft teal; warning plates warm yellow; hose dull
+grey-brown; conduit casing pale lilac-grey with a violet glowing band. Most colour blocks sit
+around HSL saturation 30-50 and lightness 70-85. No dusk, no orange cast, no black shadows.
+
+Composition anchors: the lilac lining band runs across the very top with nothing above it; the
+tunnel floor line runs across at about two thirds of the height; the bottom third is cutaway
+earth with the thick glowing conduit and its evenly spread warning plates; the young patient and
+his friend stand at the left inside the tunnel with the ribbed hose running out past them off the
+left edge, well above the conduit; the assistant is at the centre hauling that hose; the surgeon
+stands right of centre with both hands on the grips; the machine lies to her right with its
+cutter face pressed into the soil face at about three fifths of the width; the fresh hollow and
+the gleaming front third of the crown are just to the right of it, about three quarters of the
+way across, with the heap of loose soil beneath them; the rest of the tooth continues from there
+to the right edge as a see-through shape under drawn soil; boulders, the ceramic pipe, the root
+and the clay jars sit in the earth below the floor and at the right-hand end; every face in the
+picture is turned towards the crown; everything that must be read sits inside the middle 73% of
+the width.
+
+Avoid: any writing, letters, words, numbers or labels anywhere; writing on the warning plates;
+warning plates bunched into one corner; a thin neon-line conduit; a conduit without a casing or
+collar joints; more than the front third of the crown left uncovered; a whole clean tooth out of
+the ground; a buried part drawn in clean white; a buried part so faint that its shape cannot be
+read; an open cavity or dark void around the tooth; a tooth that looks as if it had always been
+sitting there; no fresh hollow, no loose crumbs, no heap of dug soil; anybody looking away from
+the crown; people looking at each other or at the viewer; a thin or undetailed lining on the left
+half of the picture; only one ceiling lamp; a pale, empty or unfinished-looking picture; a cutter
+face on the left-hand end of the machine; a cutter face pointing at the surgeon or the viewer; a
+hose, cable, grip or hand attached to the cutter face; the machine covering or touching the
+crown; a small tooth; a tooth smaller than the machine; a tooth standing upright; roots pointing
+down; a tooth with a face; the conduit entering the tooth, coming up into the tunnel, or touching
+or joining the hose; a hose that glows; big-headed, chibi, elongated or western-cartoon
+characters; wide toothy grins; visible teeth in anybody's mouth; eyes with whites, pupils or
+highlights; face masks on anybody; an elderly patient; a lone patient with nobody accompanying
+him; a view down the bore of the tunnel; one-point perspective; anybody seen from the front or
+from behind; tiny distant figures; a strip of soil, rocks or roots along the top edge above the
+lining; boulders, roots, jars or debris inside the tunnel; a wheeled trolley or generator on the
+floor; a thin hose; a lilac or pastel machine shell; a flat pure white machine with no seams;
+sky, clouds, grass, daylight; muzzle flash, bullets, cartridges, ammunition belts, military
+uniforms, camouflage, soldiers; rivets, boilers, chimneys, smoke, steam, brass, spoked wheels,
+exposed gears, chains, steampunk machinery; dental pliers, forceps, syringes, needles, scalpels,
+dental drills, trays of instruments, operating theatres; hard hats, high-visibility vests, hazard
+tape; treasure chests, gold coins, jewels, glitter, stars, sparkles, confetti; blood, wounds,
+pain, fear, cracks, decay, stains; a mouth seen from inside; gums, jawbones, labelled anatomy,
+X-ray films; patterned or printed caps; a cap that hides all of the surgeon's hair; anybody
+looking at the viewer; any person drawn faded, translucent, ghostly or outline-only, since the
+see-through treatment belongs only to the buried part of the tooth; panels, insets, frames,
+borders, speech bubbles, arrows, small icons; large flat empty areas; dusk, sunset, golden hour,
+an orange or sepia cast; photorealism; 3D rendering; heavy even black outlines.
+```
+
+⚠ **餵圖**：第一張放第十四輪那張生成圖（「線、人物、機器、鏡頭與整體照這一張」），
+第二張放**使用者那張放大截圖**（「**牙齒埋在土裡的透視畫法照這一張**」），
+再加人物參考圖兩張。
