@@ -93,9 +93,9 @@ const wideBleed = mBlock ? ((mBlock[0].match(/var\(--la-bleed, ([-\d.]+)px\)/) |
 /* 往右：把框推出版心，貼齊螢幕邊。⚠ 上限兩段不同 ——
    手機是頁面內距 14px；≥721 是**最窄的那台**（721 只有 23.8、iPad mini 744 只有 22.5），
    兒牙那次給 32 就在 744 上多出 10px 水平捲動（CLAUDE.md 第九節）。 */
-const BLEEDS = [0, 16, 32, 48, 64];   /* 出血：往右推幾 px（圖的右邊會被裁掉同樣多） */
-const RIGHTS_N = [0, -6, -10, -14];
-const RIGHTS_W = [0, -8, -14, -20];
+const BLEEDS = [-48, -32, -16, 0, 16, 32, 48, 64];   /* 負值＝背景往左推 */   /* 出血：往右推幾 px（圖的右邊會被裁掉同樣多） */
+const RIGHTS_N = [24, 12, 0, -6, -10, -14];   /* 正值＝框往左（離右緣），負值＝推出版心往右 */
+const RIGHTS_W = [48, 32, 16, 0, -8, -14, -20];
 const PCTS = [60, 68, 76, 84, 92];      /* 手機：真正在作用的是百分比 */
 const PXS  = [280, 310, 330, 360, 400];  /* ≥721：介紹區夠寬，卡住的是 px 上限 */
 /* 濃度也依斷點分兩組：手機被柔墨卡住（AA 上限就在 .10~.15 之間），
@@ -123,8 +123,8 @@ const bar = `
 </style>
 <div class="pvbar" id="pvbar">
   <div class="pvrow" id="pvsize"><b>大小</b></div>
-  <div class="pvrow" id="pvright"><b>往右</b></div>
-  <div class="pvrow"><b>出血</b>${BLEEDS.map(v => `<button data-k="b" data-v="${v}">${v ? "+" + v : "0"}</button>`).join("")}</div>
+  <div class="pvrow" id="pvright"><b>左右</b></div>
+  <div class="pvrow"><b>出血</b>${BLEEDS.map(v => `<button data-k="b" data-v="${v}">${v === 0 ? "0" : (v > 0 ? "→" + v : "←" + (-v))}</button>`).join("")}</div>
   <div class="pvrow" id="pvop"><b>濃度</b></div>${hasNoflip ? `
   <div class="pvrow"><b>翻轉</b><button data-k="f" data-v="1">翻（現在）</button><button data-k="f" data-v="0">不翻</button></div>` : ""}
   <div class="pvout" id="pvout">量測中…</div>
@@ -156,8 +156,8 @@ const bar = `
       return '<button data-k="op" data-v="'+v+'">'+v+'</button>';}).join('')
       +'<button data-k="off" data-v="1">關掉圖</button>';
     var r=document.getElementById('pvright');
-    r.innerHTML='<b>往右</b>'+(wide.matches?RW:RN).map(function(v){
-      return '<button data-k="r" data-v="'+v+'">'+(v===0?'0':v)+'px</button>';}).join('');
+    r.innerHTML='<b>左右</b>'+(wide.matches?RW:RN).map(function(v){
+      return '<button data-k="r" data-v="'+v+'">'+(v===0?'0':(v>0?'←'+v:'→'+(-v)))+'</button>';}).join('');
   }
   function cur(k){ return st[k]!=null?st[k]:DEF[k][wide.matches?'wide':'narrow']; }
   function apply(){

@@ -7298,8 +7298,8 @@ body[data-topic] #topics { padding-top: 1rem; }
 </style>
 <div class="pvbar" id="pvbar">
   <div class="pvrow" id="pvsize"><b>大小</b></div>
-  <div class="pvrow" id="pvright"><b>往右</b></div>
-  <div class="pvrow"><b>出血</b><button data-k="b" data-v="0">0</button><button data-k="b" data-v="16">+16</button><button data-k="b" data-v="32">+32</button><button data-k="b" data-v="48">+48</button><button data-k="b" data-v="64">+64</button></div>
+  <div class="pvrow" id="pvright"><b>左右</b></div>
+  <div class="pvrow"><b>出血</b><button data-k="b" data-v="-48">←48</button><button data-k="b" data-v="-32">←32</button><button data-k="b" data-v="-16">←16</button><button data-k="b" data-v="0">0</button><button data-k="b" data-v="16">→16</button><button data-k="b" data-v="32">→32</button><button data-k="b" data-v="48">→48</button><button data-k="b" data-v="64">→64</button></div>
   <div class="pvrow" id="pvop"><b>濃度</b></div>
   <div class="pvout" id="pvout">量測中…</div>
 </div>
@@ -7317,7 +7317,7 @@ body[data-topic] #topics { padding-top: 1rem; }
   ['w','op','r','b','f'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
 
   var PCTS=[60,68,76,84,92], PXS=[280,310,330,360,400];
-  var RN=[0,-6,-10,-14], RW=[0,-8,-14,-20];
+  var RN=[24,12,0,-6,-10,-14], RW=[48,32,16,0,-8,-14,-20];
   var ON=[0.1,0.121,0.15,0.18,0.24], OW=[0.15,0.22,0.3,0.4,0.55];
   function sizes(){ return wide.matches?PXS:PCTS; }
   function unit(){ return wide.matches?'px':'%'; }
@@ -7330,8 +7330,8 @@ body[data-topic] #topics { padding-top: 1rem; }
       return '<button data-k="op" data-v="'+v+'">'+v+'</button>';}).join('')
       +'<button data-k="off" data-v="1">關掉圖</button>';
     var r=document.getElementById('pvright');
-    r.innerHTML='<b>往右</b>'+(wide.matches?RW:RN).map(function(v){
-      return '<button data-k="r" data-v="'+v+'">'+(v===0?'0':v)+'px</button>';}).join('');
+    r.innerHTML='<b>左右</b>'+(wide.matches?RW:RN).map(function(v){
+      return '<button data-k="r" data-v="'+v+'">'+(v===0?'0':(v>0?'←'+v:'→'+(-v)))+'</button>';}).join('');
   }
   function cur(k){ return st[k]!=null?st[k]:DEF[k][wide.matches?'wide':'narrow']; }
   function apply(){
