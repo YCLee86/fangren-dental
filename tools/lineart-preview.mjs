@@ -36,6 +36,11 @@ if (!/noindex/.test(h)) h = h.replace(/<head>/, '<head>\n<meta name="robots" con
       這裡都換成 var()，預設值就是站上現在跑的那一組。 */
 const reW = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)width: min\\(([^,]+), ([^)]+)\\);`);
 const mW = h.match(reW);
+const reRight = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)right: (-?[\\d.]+)px;`);
+const mR = h.match(reRight);
+const baseRight = mR ? mR[2] : "0";
+if (mR) h = h.replace(reRight, `$1right: var(--la-right, ${baseRight}px);`);
+
 const reOp = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)opacity: ([.\\d]+);`);
 const mOp = h.match(reOp);
 if (!mW || !mOp) { console.error("× 找不到該科的線稿規則，先把 CSS 加進 index.html 再跑這一支"); process.exit(1); }
@@ -49,6 +54,11 @@ const wideW = mM ? mM[3].trim() : baseW, wideOp = mM ? mM[4] : baseOp;
 if (mM) h = h.replace(reMedia, `$1width: min(var(--la-pct, ${mM[2].trim()}), var(--la-w, ${wideW})); opacity: var(--la-op, ${wideOp});`);
 
 /* 3. 切換條 ＋ 量測面板。⚠ 這一段是模板字串：CSS 註解裡不可以出現反引號。 */
+/* 往右：把框推出版心，貼齊螢幕邊。⚠ 上限兩段不同 ——
+   手機是頁面內距 14px；≥721 是**最窄的那台**（721 只有 23.8、iPad mini 744 只有 22.5），
+   兒牙那次給 32 就在 744 上多出 10px 水平捲動（CLAUDE.md 第九節）。 */
+const RIGHTS_N = [0, -6, -10, -14];
+const RIGHTS_W = [0, -8, -14, -20];
 const PCTS = [60, 68, 76, 84, 92];      /* 手機：真正在作用的是百分比 */
 const PXS  = [280, 310, 330, 360, 400];  /* ≥721：介紹區夠寬，卡住的是 px 上限 */
 const OPS = [0.10, 0.121, 0.18, 0.24, 0.30, 0.40];
@@ -73,6 +83,7 @@ const bar = `
 </style>
 <div class="pvbar" id="pvbar">
   <div class="pvrow" id="pvsize"><b>大小</b></div>
+  <div class="pvrow" id="pvright"><b>往右</b></div>
   <div class="pvrow"><b>濃度</b>${OPS.map(v => `<button data-k="op" data-v="${v}">${v}</button>`).join("")}
     <button data-k="off" data-v="1">關掉圖</button></div>
   <div class="pvout" id="pvout">量測中…</div>
@@ -82,18 +93,23 @@ const bar = `
 (function(){
   var root=document.documentElement, bar=document.getElementById('pvbar'), out=document.getElementById('pvout');
   var wide=matchMedia('(min-width: 721px)');
-  var DEF={w:{narrow:${mW[2].trim().replace("%","")},wide:${wideW.replace("px","")}},op:{narrow:${baseOp},wide:${wideOp}}};
-  var st={w:null,op:null,off:false};
+  var DEF={w:{narrow:${mW[2].trim().replace("%","")},wide:${wideW.replace("px","")}},
+           op:{narrow:${baseOp},wide:${wideOp}}, r:{narrow:${baseRight},wide:${baseRight}}};
+  var st={w:null,op:null,r:null,off:false};
   var qs=new URLSearchParams(location.search);
-  ['w','op'].forEach(function(k){var v=qs.get(k); if(v&&/^[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
+  ['w','op','r'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
 
   var PCTS=${JSON.stringify(PCTS)}, PXS=${JSON.stringify(PXS)};
+  var RN=${JSON.stringify(RIGHTS_N)}, RW=${JSON.stringify(RIGHTS_W)};
   function sizes(){ return wide.matches?PXS:PCTS; }
   function unit(){ return wide.matches?'px':'%'; }
   function buildSizes(){
     var row=document.getElementById('pvsize');
     row.innerHTML='<b>大小</b>'+sizes().map(function(v){
       return '<button data-k="w" data-v="'+v+'">'+v+unit()+'</button>';}).join('');
+    var r=document.getElementById('pvright');
+    r.innerHTML='<b>往右</b>'+(wide.matches?RW:RN).map(function(v){
+      return '<button data-k="r" data-v="'+v+'">'+(v===0?'0':v)+'px</button>';}).join('');
   }
   function cur(k){ return st[k]!=null?st[k]:DEF[k][wide.matches?'wide':'narrow']; }
   function apply(){
@@ -102,6 +118,7 @@ const bar = `
     if(wide.matches){ root.style.setProperty('--la-pct','100%'); root.style.setProperty('--la-w', cur('w')+'px'); }
     else { root.style.setProperty('--la-pct', cur('w')+'%'); root.style.setProperty('--la-w','9999px'); }
     root.style.setProperty('--la-op', st.off?0:cur('op'));
+    root.style.setProperty('--la-right', cur('r')+'px');
     bar.querySelectorAll('button[data-k]').forEach(function(b){
       var k=b.dataset.k, v=parseFloat(b.dataset.v);
       b.setAttribute('aria-pressed', k==='off' ? String(st.off) : String(Math.abs(cur(k)-v)<1e-6));
@@ -112,7 +129,7 @@ const bar = `
     var b=e.target.closest('button[data-k]'); if(!b) return;
     var k=b.dataset.k;
     if(k==='off') st.off=!st.off; else { st[k]=parseFloat(b.dataset.v); st.off=false; }
-    var u=new URL(location); ['w','op'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
+    var u=new URL(location); ['w','op','r'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
     history.replaceState(null,'',u); apply();
   });
   document.getElementById('pvmin').addEventListener('click', function(){
@@ -167,6 +184,7 @@ const bar = `
                             :'<span class="bad">柔墨 '+crSoft.toFixed(2)+'（低於 4.5）</span>')
               : '<span class="ok">沒有柔墨壓到，濃度不影響可讀性</span>')+
       '　深墨 '+crInk.toFixed(2)+'\\n'+
+      '圖的右緣離螢幕 '+(innerWidth-box.right).toFixed(0)+'px　'+
       '視窗 '+innerWidth+'×'+innerHeight+'　'+(wide.matches?'≥721 那一段':'手機那一段')+
       '　'+(hscroll?'<span class="bad">⚠ 有水平捲動</span>':'<span class="ok">無水平捲動</span>')+
       '　濃度 '+op.toFixed(3);

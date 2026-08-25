@@ -4836,7 +4836,7 @@ body[data-topic] #topics { padding-top: 1rem; }
      壓到線的是 8 行（744 上），全部是柔墨的 .tp-case／.tp-flow。 */
 [data-topic="kids"] .tp-intro { position: relative; }
 [data-topic="kids"] .tp-intro::before {
-  content: ""; position: absolute; right: -14px; bottom: 0;
+  content: ""; position: absolute; right: var(--la-right, -14px); bottom: 0;
   width: min(85.6%, 419px); aspect-ratio: 854 / 857;
   background: url("../../assets/lineart-kids.png") left center / auto 100% no-repeat;
   opacity: .152; pointer-events: none; z-index: 0;
@@ -7243,6 +7243,7 @@ body[data-topic] #topics { padding-top: 1rem; }
 </style>
 <div class="pvbar" id="pvbar">
   <div class="pvrow" id="pvsize"><b>大小</b></div>
+  <div class="pvrow" id="pvright"><b>往右</b></div>
   <div class="pvrow"><b>濃度</b><button data-k="op" data-v="0.1">0.1</button><button data-k="op" data-v="0.121">0.121</button><button data-k="op" data-v="0.18">0.18</button><button data-k="op" data-v="0.24">0.24</button><button data-k="op" data-v="0.3">0.3</button><button data-k="op" data-v="0.4">0.4</button>
     <button data-k="off" data-v="1">關掉圖</button></div>
   <div class="pvout" id="pvout">量測中…</div>
@@ -7252,18 +7253,23 @@ body[data-topic] #topics { padding-top: 1rem; }
 (function(){
   var root=document.documentElement, bar=document.getElementById('pvbar'), out=document.getElementById('pvout');
   var wide=matchMedia('(min-width: 721px)');
-  var DEF={w:{narrow:76,wide:330},op:{narrow:.121,wide:.30}};
-  var st={w:null,op:null,off:false};
+  var DEF={w:{narrow:76,wide:330},
+           op:{narrow:.121,wide:.30}, r:{narrow:-14,wide:-14}};
+  var st={w:null,op:null,r:null,off:false};
   var qs=new URLSearchParams(location.search);
-  ['w','op'].forEach(function(k){var v=qs.get(k); if(v&&/^[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
+  ['w','op','r'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
 
   var PCTS=[60,68,76,84,92], PXS=[280,310,330,360,400];
+  var RN=[0,-6,-10,-14], RW=[0,-8,-14,-20];
   function sizes(){ return wide.matches?PXS:PCTS; }
   function unit(){ return wide.matches?'px':'%'; }
   function buildSizes(){
     var row=document.getElementById('pvsize');
     row.innerHTML='<b>大小</b>'+sizes().map(function(v){
       return '<button data-k="w" data-v="'+v+'">'+v+unit()+'</button>';}).join('');
+    var r=document.getElementById('pvright');
+    r.innerHTML='<b>往右</b>'+(wide.matches?RW:RN).map(function(v){
+      return '<button data-k="r" data-v="'+v+'">'+(v===0?'0':v)+'px</button>';}).join('');
   }
   function cur(k){ return st[k]!=null?st[k]:DEF[k][wide.matches?'wide':'narrow']; }
   function apply(){
@@ -7272,6 +7278,7 @@ body[data-topic] #topics { padding-top: 1rem; }
     if(wide.matches){ root.style.setProperty('--la-pct','100%'); root.style.setProperty('--la-w', cur('w')+'px'); }
     else { root.style.setProperty('--la-pct', cur('w')+'%'); root.style.setProperty('--la-w','9999px'); }
     root.style.setProperty('--la-op', st.off?0:cur('op'));
+    root.style.setProperty('--la-right', cur('r')+'px');
     bar.querySelectorAll('button[data-k]').forEach(function(b){
       var k=b.dataset.k, v=parseFloat(b.dataset.v);
       b.setAttribute('aria-pressed', k==='off' ? String(st.off) : String(Math.abs(cur(k)-v)<1e-6));
@@ -7282,7 +7289,7 @@ body[data-topic] #topics { padding-top: 1rem; }
     var b=e.target.closest('button[data-k]'); if(!b) return;
     var k=b.dataset.k;
     if(k==='off') st.off=!st.off; else { st[k]=parseFloat(b.dataset.v); st.off=false; }
-    var u=new URL(location); ['w','op'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
+    var u=new URL(location); ['w','op','r'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
     history.replaceState(null,'',u); apply();
   });
   document.getElementById('pvmin').addEventListener('click', function(){
@@ -7337,6 +7344,7 @@ body[data-topic] #topics { padding-top: 1rem; }
                             :'<span class="bad">柔墨 '+crSoft.toFixed(2)+'（低於 4.5）</span>')
               : '<span class="ok">沒有柔墨壓到，濃度不影響可讀性</span>')+
       '　深墨 '+crInk.toFixed(2)+'\n'+
+      '圖的右緣離螢幕 '+(innerWidth-box.right).toFixed(0)+'px　'+
       '視窗 '+innerWidth+'×'+innerHeight+'　'+(wide.matches?'≥721 那一段':'手機那一段')+
       '　'+(hscroll?'<span class="bad">⚠ 有水平捲動</span>':'<span class="ok">無水平捲動</span>')+
       '　濃度 '+op.toFixed(3);
