@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /history/
 Disallow: /preview/
+Disallow: /version.txt
 
 Sitemap: https://fangren.net/sitemap.xml

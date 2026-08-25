@@ -693,7 +693,7 @@ if (siteUrl && !CHECK_ONLY) {
      這個檔案每次 build 都整個重寫，所以規則要寫在這裡，手改 robots.txt 會被蓋掉。 */
   fs.writeFileSync(
     path.join(ROOT, "robots.txt"),
-    `User-agent: *\nAllow: /\nDisallow: /history/\nDisallow: /preview/\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
+    `User-agent: *\nAllow: /\nDisallow: /history/\nDisallow: /preview/\nDisallow: /version.txt\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
     "utf8"
   );
 }

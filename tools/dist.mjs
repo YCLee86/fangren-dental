@@ -9,6 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { execSync } from "node:child_process";
 import { stripHtml, stripCss } from "./strip-comments.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -87,6 +88,36 @@ for (const p of files) {
   after += Buffer.byteLength(out);
   fs.writeFileSync(p, out, "utf8");
 }
+
+/* ---------------------------------------------------------------------------
+   _site/version.txt —— 線上到底跑的是哪一版（2026-08-25）
+   ---------------------------------------------------------------------------
+   起因：使用者連著三輪回報「手機／iPad 上看不到線稿」，而 repo、main、
+   `npm run build` 的產物、逐視窗的實際渲染**每一關都是對的** —— 卡在
+   Cloudflare 那一側，而這個雲端 session 連不出去（curl 回 000、代理 403），
+   沒辦法讀線上的內容。當時只能靠「猜一個只有新版才有的檔案，請他去按按看」
+   才判斷出線上跑的是舊建置，來回花了四輪。
+
+   ⚠ 這個檔案不進版控 —— _site/ 每次建置都砍掉重建，所以它永遠是**這一次
+     建置**的真值，不會像寫進 repo 的版本號那樣忘記更新。
+   ⚠ 拿不到 git（有些建置環境是淺複製或根本沒有 .git）就只寫時間，不要讓
+     整個建置失敗 —— 這個檔案的價值遠低於網站本身。
+   ⚠ robots.txt 有一條 Disallow 擋它（那條字串寫在 tools/build.mjs 裡）。
+
+   往後「網站好了嗎」只要開 https://fangren.net/version.txt 就有答案。
+   --------------------------------------------------------------------------- */
+let stamp = "";
+try {
+  stamp = execSync("git log -1 --format=%h%x20%cI%x20%s", { cwd: ROOT })
+    .toString().trim();
+} catch {
+  stamp = "（這次建置讀不到 git）";
+}
+fs.writeFileSync(
+  path.join(OUT, "version.txt"),
+  `${stamp}\nbuilt ${new Date().toISOString()}\n`,
+  "utf8"
+);
 
 const saved = before ? ((1 - after / before) * 100).toFixed(0) : 0;
 console.log(
