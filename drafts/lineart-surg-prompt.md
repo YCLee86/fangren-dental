@@ -334,6 +334,173 @@ with a lot of white space.
 
 ---
 
+## 第五版：整個風格歪掉（2026-08-25）
+
+使用者：「**整個風格歪掉欸，重弄吧，仔細確認提示詞。**」
+
+### v4 的量測 —— 五項門檻其實都過，所以「歪掉」不在數字上
+
+| | v3 | **v4** | 門檻 |
+| --- | --- | --- | --- |
+| 線佔畫面 | 3.88% | 4.56% | 4~6% ✓ |
+| 筆畫寬中位 | 4.9‰ | 4.9‰ | 4~6‰ ✓ |
+| 粗細一致 | 1.20 | **1.60** | < 2.5（變差但沒破） |
+| 實心填色 | 0 | 0 | ✓ |
+| 四角乾淨 | 0 | 0 | ✓ |
+
+**這一輪的教訓就是這個**：`lineart-measure.mjs` 只看得到「線畫得乾不乾淨」，
+看不到「畫的是什麼、誰是主角」。內容那一側只能逐條看圖。
+
+### 歪掉的是四件事，成因同一個
+
+1. ⚠⚠ **機器變成主角。** 墨的界框 185~732 × 60~967，機器橫跨 **547px 寬（畫面的 53%）**、
+   佔掉整個上半部；筒身長度約 **3.9 個頭高**，而提示詞寫的是「＝她的前臂」（約 1.2 個頭）——
+   **大了三倍**。
+2. **尾端那個「slim grip / tail piece」被畫成一根伸到畫面外緣的細長砲管**，
+   整台讀起來是火箭筒或望遠鏡。
+3. **切削端還是正面朝我們的大橢圓**，只是從輻條換成條紋 —— 電風扇沒了，變成砲口。
+4. ⚠ **她轉向畫面右邊了**（v3 是朝左）。底圖擺在介紹區右下角，朝右＝背對整頁的字。
+5. 螺栓畫成幾十顆小圓點、鞋帶與手指的線都變多 —— **細節密度超過那五張風格參考**，
+   這才是「風格歪掉」四個字最直接的來源。
+
+**成因是同一個：我把 THE MACHINE 那一段寫成整份提示詞裡最長的一段**
+（v4 那一段 240 個字，比 WHO 還長）。
+
+⚠⚠⚠ **通則（這一站第一次記下來）：提示詞裡哪一段字最多，模型就把哪一個當主角。**
+上一輪為了治「電風扇」把機器寫得鉅細靡遺，等於同時在說「這張圖是在畫這台機器」。
+**要治造型，靠的是把形狀寫死＋列 AVOID，不是靠字數。**
+
+### 逐條確認提示詞之後，另外抓到三個自己寫壞的地方
+
+1. ⚠ **COMPOSITION 寫的是「the figure and the machine together occupy about 85%」** ——
+   機器一大，人就被擠小，而且完全合乎字面。改成 **「她自己（頭頂到鞋底）佔 85%」**，
+   機器多大都不會壓縮到人。
+2. ⚠ **「a narrow ellipse … no wider than the drum and only about a quarter as wide as it
+   is tall」** —— 橢圓的「寬」在這裡指的是短軸，但這句話同時出現「不比筒身寬」，
+   讀起來像在講外徑。改成拿筒身當尺：**「橫過去的那一道約等於筒身直徑的四分之一」**。
+3. ⚠ **「narrows into a shorter tail piece with a slim grip underneath」** ——
+   「narrow」「slim」「tail」三個字加起來就是一根細管。改成
+   **「筒身的軸線方向不准有任何東西伸出去；握把是筒身底下一小截短粗的把手」**。
+
+### 這一版改的
+
+- **THE MACHINE 收成四句**（比 WHO 短），並在開頭寫明 **她是主角、機器是小道具**。
+- **尺寸鎖死在她身上**：整台（含握把）**不超過她的上臂長、不比她的頭粗**，
+  而且**明講它在畫面裡佔的面積要遠小於她**。
+- **細節上限逐項寫出來**：兩條接縫、約六顆螺栓、一圈凸緣、可見窄面上三四顆小橢圓，
+  **不准再多**。（同一條也治「細節密度超過參考圖」。）
+- **朝向補一道可檢查的敘述**：鼻子、笑容與帽子的前緣都在她頭部的**左半邊**。
+- **AVOID 壓成一行**，電風扇那一族留著，另外補上火箭筒、望遠鏡、砲管。
+- 加一段 **STYLE DISCIPLINE**：細節要比參考圖**少**不要多，寧可空。
+
+### v5 提示詞
+
+```
+A single-colour LINE DRAWING, square, 1200 x 1200, on a plain near-white background.
+
+THE SUBJECT OF THIS DRAWING IS THE WOMAN. The machine she carries is a small prop: it must
+take up far less of the picture than she does.
+
+THE MOST IMPORTANT RULE — EVERY LINE HAS EXACTLY THE SAME WEIGHT AND THE SAME DARKNESS.
+Uniform stroke width throughout, about 5 to 7 pixels at 1200px wide. No thick-and-thin
+strokes, no tapering, no pressure variation, no sketchy or hand-drawn wobble, no double
+lines, no broken lines. Think of a clean vector icon illustration, not a pencil sketch.
+
+STYLE DISCIPLINE — match the black-and-white line-art references for the LEVEL OF DETAIL as
+well as for the line quality. Those references simplify everything: a hand is a soft mitten
+shape with three or four short strokes, a shoe is two clean shapes, clothing has three or
+four folds and nothing else. When in doubt, draw FEWER lines, not more. No rows of tiny
+repeated dots, no rivets scattered over a surface, no shoelace detail, no seams on the
+clothes, no texture anywhere.
+
+NO SHADING OF ANY KIND — no hatching, no cross-hatching, no stippling, no screentone,
+no gradients, no grey tones, no drop shadows, no cast shadows on the ground, no highlights.
+Outline only. Do not fill any area with solid colour, including hair, cap and clothing.
+
+WHO — one woman oral surgeon from a small Taiwanese neighbourhood dental clinic, drawn FULL
+LENGTH from the top of her head to the soles of her shoes, standing still and relaxed,
+carrying a small tunnelling machine on one shoulder. Her face, hair, cap and clothes come
+from the attached colour illustration; the drawing style and the level of detail come only
+from the line-art references; and the POSE and PROPORTIONS below are new — follow the
+geometry exactly, they are not in any reference.
+
+  - PROPORTIONS: she is seven heads tall. The crotch is exactly halfway between the soles of
+    her shoes and the top of her head. The knee is exactly halfway between the crotch and the
+    sole. A short length of ankle shows above the shoe.
+  - SHE FACES THE LEFT OF THE PICTURE. Her shoulders are turned at an angle, not square to
+    the viewer, and her nose, her smile and the front edge of her cap are all on the LEFT
+    half of her head. She is NOT looking at the viewer and NOT facing right.
+  - HER LEFT ARM (the far one, on the right of the picture) IS RAISED TO HER SHOULDER: the
+    upper arm hangs close to her body, the forearm rises so the hand sits just above the
+    shoulder, and the fingers curl over the top of the machine to steady it. The wrist is
+    relaxed.
+  - THE MACHINE RESTS ACROSS THAT SHOULDER like a rolled-up mat, lying at about a 25 degree
+    angle, rising from her shoulder backwards and upwards, so its far end sits just BEHIND
+    HER HEAD, no higher than the top of her cap. Nothing rests on her head.
+  - HER RIGHT ARM (the near one, on the left of the picture) IS ON HER HIP: the hand sits on
+    the waist with the fingers forward and the thumb behind, and the elbow points clearly
+    OUT AND BACK so the arm makes an open triangle with her body.
+  - Her weight is on one leg, so that hip is slightly higher and the other knee is slightly
+    bent and relaxed, with the toes turned a little outwards. The posture is easy and
+    confident: shoulders down and level, chin level, back straight but not stiff. She is
+    NOT straining, NOT leaning under a weight, NOT flexing, NOT posing like a strongman or a
+    superhero.
+
+THE MACHINE — a small hand-held tunnelling shield machine, and a small object in this
+picture: the whole thing is no longer than her upper arm and no thicker than her head, small
+enough that one hand steadies it easily.
+Its main shape is a SHORT FAT DRUM seen from the side, so the two long straight sides of the
+drum are its biggest shape. Nothing sticks out along the drum's axis at either end; the only
+thing underneath it is a short stubby handle.
+The far end, the cutting end, is turned away from us and is seen almost edge on, so it shows
+only as a thin sliver about a quarter as wide across as the drum's diameter, sitting flush
+against the drum with no gap and no shaft. One slightly wider ring runs around it.
+THE WHOLE MACHINE CARRIES AT MOST: two straight seam lines around the drum, about six small
+bolt dots, that one ring, and three or four small ovals on the visible sliver. Nothing more.
+Never draw long thin lines running from a centre point out to a rim: there is no hub, no
+spokes, no blades, no grille.
+AVOID: an electric fan, fan blades, a propeller, a ship's wheel, a bicycle wheel, a sunburst,
+a bazooka, a rocket launcher, a telescope, a cannon barrel.
+It is drawn in OUTLINE ONLY, no filled areas, no glow, no motion lines, no dust, no hose, no
+cable. It is a friendly piece of engineering equipment, never a weapon.
+
+FACES — extremely simple: the eyes are two short upward curves, as in a warm smile; the
+nose is one tiny stroke. No eyebrow detail, no eyelashes, no blush, no wrinkles.
+THE MOUTH IS THE EXCEPTION IN THIS DRAWING AND MUST BE DRAWN AS DESCRIBED: she is smiling
+broadly with her mouth open — a wide, generous curved shape with TWO OR THREE SHORT STROKES
+INSIDE IT to suggest the upper teeth. Nothing is filled in: no black mouth, no shaded
+tongue, no gum line, no individually drawn teeth. It should read as a bright, delighted,
+open smile in pure line.
+
+HAIR AND CAP — she has a SHORT BOB that ends at the jaw with a soft fringe, and she wears a
+soft tie-back surgical cap pushed back on her head so the fringe and the ends of the bob
+show clearly in front of it and below it, with two short ties at the back. Hair and cap are
+drawn as OUTLINES ONLY with a few interior strokes for the parting and the fabric folds —
+neither is filled in.
+
+CLOTHES — an OPEN white coat that ends ABOVE THE KNEE so the whole thigh is visible, worn
+over a V-neck scrub top, with a chest pocket on the coat. Below it, straight scrub trousers
+and plain soft trainers. Outline only, with a few clean folds; no texture, no patterning,
+no filled areas.
+
+COMPOSITION — SHE occupies about 85% of the height of the square, measured from the top of
+her head to the soles of her shoes, and stands in the middle of it with generous empty
+margin on all four sides. The machine sits inside that margin too. Nothing crosses the outer
+margin.
+
+BACKGROUND — completely empty. No tunnel, no soil, no room, no floor, no wall, no ground
+line, no shadow under her shoes, no furniture, no plants, no speech bubbles, no icons, no
+arrows, no text, no logo, no sparkles, no frame or border.
+
+COLOUR — the drawing is in ONE colour only: #8e6299, on a near-white background, hex
+#f7f8f7. Nothing else is coloured. No second colour anywhere.
+
+The result should read as a calm, friendly, extremely clean editorial line illustration
+with a lot of white space.
+```
+
+---
+
 ## 交件前要跑的
 
     node drafts/lineart-measure.mjs drafts/lineart-surg-v1.jpg
