@@ -36,7 +36,9 @@ if (!/noindex/.test(h)) h = h.replace(/<head>/, '<head>\n<meta name="robots" con
       這裡都換成 var()，預設值就是站上現在跑的那一組。 */
 const reW = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)width: min\\(([^,]+), ([^)]+)\\);`);
 const mW = h.match(reW);
-const reRight = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)right: (-?[\\d.]+)px;`);
+/* ⚠ 站上寫的是 `right: 0;`（沒有 px），正規式要求 px 就整條命中不到 ——
+   JS 照樣設了 --la-right，但 CSS 沒人吃它，症狀是「按了沒反應」（2026-08-24 踩過）。 */
+const reRight = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)right: (-?[\\d.]+)(?:px)?;`);
 const mR = h.match(reRight);
 const baseRight = mR ? mR[2] : "0";
 if (mR) h = h.replace(reRight, `$1right: var(--la-right, ${baseRight}px);`);
