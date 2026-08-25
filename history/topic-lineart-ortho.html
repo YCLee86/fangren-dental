@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>topic-lineart-ortho｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  h3 { font-size: .9rem; margin: 1.3rem 0 .4rem; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .84rem; margin: .6rem 0 1rem; }
+  th, td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 500; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92em; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+<h1>齒顎矯正的線稿底圖（與同一輪的分享卡）</h1>
+<p class="meta">2026-08-24 開，2026-08-25 定案上線。提案頁 <code>/preview/topic-lineart-ortho/</code> 已刪除。<br>
+完整的提案頁：<code>git show 6a3d0d1:preview/topic-lineart-ortho/index.html</code>（推導與提示詞另存 <code>drafts/og-topic-ortho-prompt.md</code>、<code>drafts/lineart-ortho-prompt.md</code>，那兩份不會進網站）。</p>
+
+<h2>定案的值</h2>
+<table>
+<tr><th></th><th>手機（&lt;721）</th><th>≥721</th></tr>
+<tr><td>大小</td><td>min(68%, 360px)</td><td>min(70%, <b>360px</b>)</td></tr>
+<tr><td>往右</td><td><b>−10px</b></td><td>0</td></tr>
+<tr><td>出血</td><td><b>+16px</b></td><td>0</td></tr>
+<tr><td>濃度</td><td><b>.121</b>（算出來的 AA 上限）</td><td><b>.15</b></td></tr>
+</table>
+<p>成品 <code>assets/lineart-ortho.png</code>（829×912、翻轉、<code>--crop 119,112,829,912</code>）。
+四個值兩段全部不同，不是漏改成一致：iPad 的介紹區夠寬，圖不必推出版心就已經在右下角；
+而 .15 那一格量到<b>柔墨 0 行被壓到</b>（只壓到深墨 6 行、實測 9.45），所以不受 AA 上限限制。</p>
+
+<h2>「再往右」有兩段機制，第一段推到底才換第二段</h2>
+<p>這一輪把它做成了工具。使用者連兩次說「再往右」，而兩次要動的不是同一個東西：</p>
+<ul>
+<li><b>第一段：框推出版心</b>（<code>right</code> 給負值）。地板是<b>頁面內距 14px</b> ——
+到 −14 圖的右緣正好離螢幕 0px，再往外就會多出水平捲動。</li>
+<li><b>第二段：出血</b>（框不動、<code>background-position</code> 往右推、超出框的被裁掉）。
+不會有水平捲動，代價是圖的右邊被裁掉同樣多。</li>
+</ul>
+<p>手機定案是<b>兩段疊著用</b>（−10 ＋ 16）。兒牙那一輪也是走到第二段才解決的。</p>
+
+<h2>提案頁自己抓出來的三件</h2>
+<ol>
+<li><b>手機上「大小」那把尺原本完全沒作用。</b>規則是 <code>min(76%, 360px)</code>，
+390 手機的介紹區只有 362px 寬，百分比永遠小於 px 上限 ——
+<b>手機真正的尺是百分比，iPad 才是 px</b>。尺因此改成依斷點換單位。</li>
+<li><b>「往右」按了沒反應。</b>站上寫的是 <code>right: 0;</code>（沒有 px），
+而產生器的正規式要求 <code>px</code>，整條沒命中；JS 照樣在設變數，但 CSS 沒人吃它。</li>
+<li><b>我的第一版驗證是假的。</b>八個寬度「全過」是因為只量了有沒有水平捲動 ——
+圖根本沒動，當然不會破框。改成量<b>圖的右緣離螢幕多少</b>之後數字才對得上那兩條上限。</li>
+</ol>
+
+<h2>濃度：兩段的尺要分開給</h2>
+<p>手機被柔墨卡住（.121 就是柔墨 <code>#5c5f57</code> 壓在矯正的 <code>#4478b5</code> 上剛好 4.50 的那一格），
+但 ≥721 那一段多半只壓到深墨，上限寬鬆得多。五科的 iPad 值分別是
+一般牙科 .48／牙周 .15／顯微根管 .30／兒牙 .22／矯正 .15，全都落在手機那把尺的範圍外 ——
+用同一排格子等於讓使用者挑不到該挑的那一格。</p>
+<p>五科的臨界濃度（跟著套色走，愈深愈緊）：一般牙科 .101／牙周 .116／顯微根管 .107／兒牙 .152／<b>矯正 .121</b>。</p>
+
+<h2>驗收</h2>
+<p>十二個寬度（320／375／390／414／430／720／721／744／834／1041／1280／1440）：
+介紹區高度與「把偽元素關掉」<b>逐格相同</b>、圖都收在介紹區裡、無水平捲動。
+最緊的是 720 那一格（68% 撞到 360px 上限，仍留 27px）。</p>
+
+<h2>同一輪的分享卡</h2>
+<p>成品 <code>assets/og-topic-ortho.jpg</code>，十三版。這一科是七科裡唯一走科幻語彙的
+（使用者指定「不要這個嚴格限制不要高科技感」），畫風仍是站上的手繪線與紙紋，變的只有內容。
+三條會再用到的通則已寫進 ILLUSTRATION.md 第十一節：</p>
+<ol>
+<li><b>「亂」只有交給畫面裡最大的那個東西才畫得出來。</b>前四版把它交給片子與模型上的小牙列
+（212px 的卡上只剩 9×5px 與 39×10px），四版全退。</li>
+<li><b>邊緣密度是「邊」給的，不是「深」給的。</b>大面板讓密度從 17.7% 掉到 14.2% ——
+一大片平坦色塊不管亮暗都會拉低密度。</li>
+<li><b>上緣的白框要「填色」不是「外插」。</b><code>og-topclean</code> 逐欄外插把螢幕的深藍拉到頂端，
+安靜區從 0.32% 惡化到 38%；改用新寫的 <code>drafts/og-topfill.mjs</code> 才對。</li>
+</ol>
+<p>帶子：補償色 <code>#5095ed</code>，實測 rgb(68,120,180)，對站上套色 <code>#4478b5</code> 只差 1 階；
+紙色字 3.61（使用者看過純白 4.57 之後選紙色，理由是和另外三張冷色底的卡片一致）。</p>
+
+<h2>留在版控裡的工具（下兩科直接用）</h2>
+<ul>
+<li><code>tools/lineart-preview.mjs &lt;spec&gt;</code> —— 線稿提案頁產生器（前四科每次都臨時重寫）。</li>
+<li><code>drafts/og-measure-band.mjs</code> —— 帶子那一條與邊緣密度的通用量測。</li>
+<li><code>drafts/og-topfill.mjs</code> —— 上緣白框填成牆色。</li>
+</ul>
+
+<p class="meta"><a href="/history/">← 改版紀錄</a></p>
+</div>
+</body>
+</html>

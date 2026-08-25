@@ -5289,8 +5289,11 @@ body[data-topic] #topics { padding-top: 1rem; }
      ・「往右 −10」是第一段機制（框推出版心），地板是頁面內距 14px；
      ・「出血 +16」是第二段（框不動、背景往右推、超出被裁），因為 −14 已經貼齊螢幕邊，
        再往外就會多出水平捲動。兩段機制疊著用，兒牙那一輪也是走到第二段才解決的。
-   ⚠ **≥721 的四個值還沒挑**（先沿用手機的 right／出血，大小與濃度照顯微根管那一格），
-     提案頁 /preview/topic-lineart-ortho/ 還開著。
+   ⚠⚠ **≥721 定案：360px ／ right 0 ／ 出血 0 ／ 濃度 .15**（2026-08-25，使用者在
+     iPad mini 744 上挑的）。**和手機那一段四個值全部不同，不是漏改成一致** ——
+     iPad 的介紹區夠寬，圖不必推出版心就已經在右下角；濃度 .15 那一格量到
+     **柔墨 0 行被壓到**（只壓到深墨 6 行，實測 9.45），所以不受 AA 上限限制。
+   ⚠ 五科的 iPad 段各不相同：一般牙科 .48／牙周 .15／顯微根管 .30／兒牙 .22／矯正 .15。
    ⚠ 圖是近正方（829×912），做法跟顯微根管同一套（contain ＋ right/bottom 0），
      不是牙周／兒牙那套「框窄一截 ＋ 靠左撐滿」——那一套是為了把人往右推，
      這張翻轉後人已經在右緣了。
@@ -5309,8 +5312,8 @@ body[data-topic] #topics { padding-top: 1rem; }
 }
 @media (min-width: 721px) {
   [data-topic="ortho"] .tp-intro::before {
-    width: min(70%, 330px); right: -10px;
-    background-position: calc(50% + 16px) center; opacity: .30;
+    width: min(70%, 360px); right: 0px;
+    background-position: calc(50% + 0px) center; opacity: .15;
   }
 }
 [data-topic="ortho"] .tp-intro > * { position: relative; z-index: 1; }
