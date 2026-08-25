@@ -4802,13 +4802,17 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠ 大小先照顯微根管那一格（近正方、會凸到 h1 的風險相同），等使用者在手機上挑。 */
 [data-topic="ortho"] .tp-intro { position: relative; }
 [data-topic="ortho"] .tp-intro::before {
-  content: ""; position: absolute; right: var(--la-right, 0px); bottom: 0;
-  width: min(var(--la-pct, 76%), var(--la-w, 360px)); aspect-ratio: 829 / 912;
-  background: url("../../assets/lineart-ortho.png") no-repeat; background-size: contain; background-position: calc(50% + var(--la-bleed, 0px)) center;
+  content: ""; position: absolute; right: var(--la-right, -10px); bottom: 0;
+  width: min(var(--la-pct, 68%), var(--la-w, 360px)); aspect-ratio: 829 / 912;
+  background: url("../../assets/lineart-ortho.png") no-repeat; background-size: contain;
+  background-position: calc(50% + 16px) center;
   opacity: var(--la-op, .121); pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) {
-  [data-topic="ortho"] .tp-intro::before { width: min(var(--la-pct, 70%), var(--la-w, 330px)); opacity: var(--la-op, .30); }
+  [data-topic="ortho"] .tp-intro::before {
+    width: min(var(--la-pct, 70%), var(--la-w, 330px)); right: var(--la-right, -10px);
+    background-position: calc(50% + var(--la-bleed, 16px)) center; opacity: var(--la-op, .30);
+  }
 }
 [data-topic="ortho"] .tp-intro > * { position: relative; z-index: 1; }
 
@@ -5753,7 +5757,7 @@ body[data-topic] #topics { padding-top: 1rem; }
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-08-24">2026 年 8 月 24 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-08-25">2026 年 8 月 25 日</time></span>
     </div>
   </div>
 </footer>
@@ -7245,8 +7249,7 @@ body[data-topic] #topics { padding-top: 1rem; }
   <div class="pvrow" id="pvsize"><b>大小</b></div>
   <div class="pvrow" id="pvright"><b>往右</b></div>
   <div class="pvrow"><b>出血</b><button data-k="b" data-v="0">0</button><button data-k="b" data-v="16">+16</button><button data-k="b" data-v="32">+32</button><button data-k="b" data-v="48">+48</button><button data-k="b" data-v="64">+64</button></div>
-  <div class="pvrow"><b>濃度</b><button data-k="op" data-v="0.1">0.1</button><button data-k="op" data-v="0.121">0.121</button><button data-k="op" data-v="0.18">0.18</button><button data-k="op" data-v="0.24">0.24</button><button data-k="op" data-v="0.3">0.3</button><button data-k="op" data-v="0.4">0.4</button>
-    <button data-k="off" data-v="1">關掉圖</button></div>
+  <div class="pvrow" id="pvop"><b>濃度</b></div>
   <div class="pvout" id="pvout">量測中…</div>
 </div>
 <button class="pvmin" id="pvmin">收起</button>
@@ -7254,21 +7257,26 @@ body[data-topic] #topics { padding-top: 1rem; }
 (function(){
   var root=document.documentElement, bar=document.getElementById('pvbar'), out=document.getElementById('pvout');
   var wide=matchMedia('(min-width: 721px)');
-  var DEF={w:{narrow:76,wide:330},
-           op:{narrow:.121,wide:.30}, r:{narrow:0,wide:0},
-           b:{narrow:0,wide:0}};
+  var DEF={w:{narrow:68,wide:330},
+           op:{narrow:.121,wide:.30}, r:{narrow:-10,wide:-10},
+           b:{narrow:16,wide:16}};
   var st={w:null,op:null,r:null,b:null,off:false};
   var qs=new URLSearchParams(location.search);
   ['w','op','r','b'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
 
   var PCTS=[60,68,76,84,92], PXS=[280,310,330,360,400];
   var RN=[0,-6,-10,-14], RW=[0,-8,-14,-20];
+  var ON=[0.1,0.121,0.15,0.18,0.24], OW=[0.15,0.22,0.3,0.4,0.55];
   function sizes(){ return wide.matches?PXS:PCTS; }
   function unit(){ return wide.matches?'px':'%'; }
   function buildSizes(){
     var row=document.getElementById('pvsize');
     row.innerHTML='<b>大小</b>'+sizes().map(function(v){
       return '<button data-k="w" data-v="'+v+'">'+v+unit()+'</button>';}).join('');
+    var o=document.getElementById('pvop');
+    o.innerHTML='<b>濃度</b>'+(wide.matches?OW:ON).map(function(v){
+      return '<button data-k="op" data-v="'+v+'">'+v+'</button>';}).join('')
+      +'<button data-k="off" data-v="1">關掉圖</button>';
     var r=document.getElementById('pvright');
     r.innerHTML='<b>往右</b>'+(wide.matches?RW:RN).map(function(v){
       return '<button data-k="r" data-v="'+v+'">'+(v===0?'0':v)+'px</button>';}).join('');

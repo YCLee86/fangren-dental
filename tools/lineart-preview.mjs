@@ -52,6 +52,7 @@ if (mBg) h = h.replace(reBg,
   `$1background: url("${mBg[2]}") no-repeat; background-size: contain;` +
   ` background-position: calc(50% + var(--la-bleed, 0px)) center;`);
 
+const baseBleed = (h.match(/background-position: calc\(50% \+ ([-\d.]+)px\) center;/) || [,"0"])[1];
 const reOp = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)opacity: ([.\\d]+);`);
 const mOp = h.match(reOp);
 if (!mW || !mOp) { console.error("× 找不到該科的線稿規則，先把 CSS 加進 index.html 再跑這一支"); process.exit(1); }
@@ -59,10 +60,27 @@ const baseW = mW[3].trim(), baseOp = mOp[2];
 h = h.replace(reW, `$1width: min(var(--la-pct, ${mW[2].trim()}), var(--la-w, ${baseW}));`);
 h = h.replace(reOp, `$1opacity: var(--la-op, ${baseOp});`);
 
-const reMedia = new RegExp(`(@media \\(min-width: 721px\\) \\{\\s*\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[^}]*?)width: min\\(([^,]+), ([^)]+)\\); opacity: ([.\\d]+);`);
-const mM = h.match(reMedia);
-const wideW = mM ? mM[3].trim() : baseW, wideOp = mM ? mM[4] : baseOp;
-if (mM) h = h.replace(reMedia, `$1width: min(var(--la-pct, ${mM[2].trim()}), var(--la-w, ${wideW})); opacity: var(--la-op, ${wideOp});`);
+/* ≥721 那一段：**整塊抓出來、在塊內各自替換再放回去**。
+   ⚠ 原本用一個大正規式配 $1/$4 分組拼接，right 與 background-position 會被吃掉
+     （2026-08-24 踩過，症狀是 iPad 段那兩把尺沒東西可調）。 */
+const reMediaBlock = new RegExp(
+  `@media \\(min-width: 721px\\) \\{\\s*\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?\\}\\s*\\}`);
+const mBlock = h.match(reMediaBlock);
+let wideW = baseW, wideOp = baseOp, widePct = mW[2].trim();
+if (mBlock) {
+  let blk = mBlock[0];
+  const mw = blk.match(/width: min\(([^,]+), ([^)]+)\);/);
+  if (mw) { widePct = mw[1].trim(); wideW = mw[2].trim();
+    blk = blk.replace(mw[0], `width: min(var(--la-pct, ${widePct}), var(--la-w, ${wideW}));`); }
+  const mo = blk.match(/opacity: ([.\d]+);/);
+  if (mo) { wideOp = mo[1]; blk = blk.replace(mo[0], `opacity: var(--la-op, ${wideOp});`); }
+  blk = blk.replace(/right: (-?[\d.]+)px;/, (_, v) => `right: var(--la-right, ${v}px);`);
+  blk = blk.replace(/background-position: calc\(50% \+ ([-\d.]+)px\) center;/,
+    (_, v) => `background-position: calc(50% + var(--la-bleed, ${v}px)) center;`);
+  h = h.replace(mBlock[0], blk);
+}
+
+const wideBleed = mBlock ? ((mBlock[0].match(/var\(--la-bleed, ([-\d.]+)px\)/) || [,baseBleed])[1]) : baseBleed;
 
 /* 3. 切換條 ＋ 量測面板。⚠ 這一段是模板字串：CSS 註解裡不可以出現反引號。 */
 /* 往右：把框推出版心，貼齊螢幕邊。⚠ 上限兩段不同 ——
@@ -73,7 +91,10 @@ const RIGHTS_N = [0, -6, -10, -14];
 const RIGHTS_W = [0, -8, -14, -20];
 const PCTS = [60, 68, 76, 84, 92];      /* 手機：真正在作用的是百分比 */
 const PXS  = [280, 310, 330, 360, 400];  /* ≥721：介紹區夠寬，卡住的是 px 上限 */
-const OPS = [0.10, 0.121, 0.18, 0.24, 0.30, 0.40];
+/* 濃度也依斷點分兩組：手機被柔墨卡住（AA 上限就在 .10~.15 之間），
+   ≥721 那一段多半只壓到深墨，上限寬鬆得多（顯微根管定案 .30、兒牙 .22、牙周 .15）。 */
+const OPS_N = [0.10, 0.121, 0.15, 0.18, 0.24];
+const OPS_W = [0.15, 0.22, 0.30, 0.40, 0.55];
 const bar = `
 <style>
 /* pv 前綴：這一份是著陸頁的完整快照，站上有的 class 全都在，短名字會撞 */
@@ -97,8 +118,7 @@ const bar = `
   <div class="pvrow" id="pvsize"><b>大小</b></div>
   <div class="pvrow" id="pvright"><b>往右</b></div>
   <div class="pvrow"><b>出血</b>${BLEEDS.map(v => `<button data-k="b" data-v="${v}">${v ? "+" + v : "0"}</button>`).join("")}</div>
-  <div class="pvrow"><b>濃度</b>${OPS.map(v => `<button data-k="op" data-v="${v}">${v}</button>`).join("")}
-    <button data-k="off" data-v="1">關掉圖</button></div>
+  <div class="pvrow" id="pvop"><b>濃度</b></div>
   <div class="pvout" id="pvout">量測中…</div>
 </div>
 <button class="pvmin" id="pvmin">收起</button>
@@ -107,20 +127,25 @@ const bar = `
   var root=document.documentElement, bar=document.getElementById('pvbar'), out=document.getElementById('pvout');
   var wide=matchMedia('(min-width: 721px)');
   var DEF={w:{narrow:${mW[2].trim().replace("%","")},wide:${wideW.replace("px","")}},
-           op:{narrow:${baseOp},wide:${wideOp}}, r:{narrow:${baseRight},wide:${baseRight}},
-           b:{narrow:0,wide:0}};
+           op:{narrow:${baseOp},wide:${wideOp}}, r:{narrow:${baseRight},wide:${(mBlock && (mBlock[0].match(/right: (-?[\d.]+)px/)||[])[1]) || baseRight}},
+           b:{narrow:${baseBleed},wide:${wideBleed}}};
   var st={w:null,op:null,r:null,b:null,off:false};
   var qs=new URLSearchParams(location.search);
   ['w','op','r','b'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
 
   var PCTS=${JSON.stringify(PCTS)}, PXS=${JSON.stringify(PXS)};
   var RN=${JSON.stringify(RIGHTS_N)}, RW=${JSON.stringify(RIGHTS_W)};
+  var ON=${JSON.stringify(OPS_N)}, OW=${JSON.stringify(OPS_W)};
   function sizes(){ return wide.matches?PXS:PCTS; }
   function unit(){ return wide.matches?'px':'%'; }
   function buildSizes(){
     var row=document.getElementById('pvsize');
     row.innerHTML='<b>大小</b>'+sizes().map(function(v){
       return '<button data-k="w" data-v="'+v+'">'+v+unit()+'</button>';}).join('');
+    var o=document.getElementById('pvop');
+    o.innerHTML='<b>濃度</b>'+(wide.matches?OW:ON).map(function(v){
+      return '<button data-k="op" data-v="'+v+'">'+v+'</button>';}).join('')
+      +'<button data-k="off" data-v="1">關掉圖</button>';
     var r=document.getElementById('pvright');
     r.innerHTML='<b>往右</b>'+(wide.matches?RW:RN).map(function(v){
       return '<button data-k="r" data-v="'+v+'">'+(v===0?'0':v)+'px</button>';}).join('');
