@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>改版紀錄：口腔外科的分享卡帶子要多濃（2026-08-25）</title>
+<style>
+body{max-width:44rem;margin:0 auto;padding:2rem 1.25rem 4rem;background:#e2e5e6;color:#2a2c27;
+ font-family:"Noto Sans TC","PingFang TC",system-ui,sans-serif;line-height:1.8}
+h1{font-size:1.3rem}h2{font-size:1rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;font-size:.9rem;margin:.6rem 0}
+th,td{border-bottom:1px solid #c9cbc5;padding:.35rem .4rem;text-align:left}
+th{color:#5c5f57;font-weight:500}code{font-size:.88em}
+p,li{font-size:.95rem}
+</style>
+</head>
+<body>
+<h1>口腔外科的分享卡：帶子要多濃</h1>
+<p>2026-08-25 當天開、當天定案。提案頁 <code>preview/surg-band/</code> 已刪除，
+完整的一頁可以還原：<code>git show 427b891:preview/surg-band/index.html</code></p>
+
+<h2>起因</h2>
+<p>圖走了十六輪才定稿（推導在 <code>drafts/og-topic-surg-prompt.md</code>）。使用者：
+「<strong>定稿了，做 line 訊息模擬給我看，我要能切換帶子的濃淡。</strong>」</p>
+
+<h2>定稿那張圖的實測（四項門檻全過）</h2>
+<table>
+<tr><th>項目</th><th>值</th><th>門檻</th></tr>
+<tr><td>邊緣密度</td><td>32.2%</td><td>≥ 30%</td></tr>
+<tr><td>無彩空白</td><td>0.2%</td><td>&lt; 5%</td></tr>
+<tr><td>頂 17% 中位色</td><td>rgb(211,199,216)（隧道頂的襯砌）</td><td>藍 ≥ 178</td></tr>
+<tr><td>頂 17% 有沒有被佔到</td><td>第 139 列才有東西</td><td>0</td></tr>
+<tr><td>圖上有沒有字</td><td>0</td><td>0</td></tr>
+</table>
+
+<h2>四格（都是真的產出檔，不是 CSS 疊的）</h2>
+<p>相乘上色的補償色各自從那面牆的實測色現算：
+<code>M = ((目標色 − 0.18×墨) ÷ 0.82) × 255 ÷ 牆</code>。</p>
+<table>
+<tr><th>格</th><th>目標色</th><th>補償色</th><th>帶子實際落在</th><th>紙色字</th><th>白字</th><th>ΔE 對站上標籤</th></tr>
+<tr><td>Ⓐ 淡</td><td>#8e6299 套色</td><td>#c68dd2</td><td>rgb(143,98,153)</td><td>3.79</td><td>4.80</td><td>0.4（＝套色）</td></tr>
+<tr><td>Ⓑ 中</td><td>#83588f <em>新色</em></td><td>#b67dc4</td><td>rgb(131,88,142)</td><td>4.42</td><td>5.60</td><td>4.1</td></tr>
+<tr><td><strong>Ⓒ 濃（定案）</strong></td><td>#784e84 深階</td><td>#a66eb4</td><td>rgb(122,77,132)</td><td><strong>5.15</strong></td><td>6.52</td><td>1.2（＝深階）</td></tr>
+<tr><td>Ⓓ 最濃</td><td>#603e6a <em>新色</em></td><td>#82558f</td><td>rgb(96,63,108)</td><td>6.84</td><td>8.66</td><td>9.3</td></tr>
+</table>
+
+<h2>為什麼是 Ⓒ</h2>
+<p>同植牙那一輪的理由：<strong>Ⓑ／Ⓓ 是內插與外推出來的新色、站上不存在</strong>，
+PALETTE.md 的規則是顏色一律從既有的階拿，所以真正能選的只有 Ⓐ（套色）與 Ⓒ（深階）。
+使用者選 Ⓒ。</p>
+<p>⚠ 這是七科裡<strong>第一張紙色字真的過 4.5 的</strong>（一般 4.40／根管 4.06／矯正 3.61／
+兒牙白字 3.22 都是知情的取捨）。成因是這張圖頂端是一片平整的襯砌 ——
+<strong>「最亮處」和「中位」幾乎一樣（5.12 vs 5.15）</strong>，
+不像前幾張有天空從玻璃後面透上來的那一段。
+<strong>通則：帶子後面那一塊愈均勻，可用的濃度範圍愈寬。</strong></p>
+<p>四格對<strong>矯正</strong>那條帶子都是 ΔE 30 以上，沒有植牙那次的撞色問題。</p>
+
+<h2>順帶定案：og:description</h2>
+<p>其餘六科的訊息卡描述都用那一頁自己的字。口外這一句是使用者
+<strong>2026-08-25 逐字指定</strong>的：<strong>「難拔的牙，交給口腔顎面外科專科醫師。」</strong>
+—— 比那一頁的 close（「難處理的那幾顆，交給口腔顎面外科專科醫師。」）更短更直接，
+實測在 212px 的卡片上是一行。<strong>要動它先問使用者。</strong></p>
+
+<h2>提案頁本身學到的</h2>
+<ul>
+<li><strong>切換條在手機上量到 23.1%</strong>（門檻 ≤24%）—— 第一版 28.5%，
+  是被兩行說明字撐開的；拿掉第二行的標題、把兩排按鈕併在同一個說明底下就收得回來。</li>
+<li>提案頁同時能切 <strong>LINE（中央 89.7%）與 iMessage（78.7%）兩種裁法</strong>，
+  因為要判斷的是「帶子上的字會不會被裁掉」。</li>
+<li>⚠⚠ <strong>推工作分支不會上線</strong>（2026-08-25 當天由另一台查清楚並寫進 CLAUDE.md）。
+  這一輪我照舊觀念把網址給了使用者，他點下去是 404 ——
+  <strong>提案頁一定要推上 <code>main</code> 才看得到</strong>，而且推完要等建置跑完再給網址
+  （第九節第 23 條：404 也會被快取）。</li>
+</ul>
+</body>
+</html>

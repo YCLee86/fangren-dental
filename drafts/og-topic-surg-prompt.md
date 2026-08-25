@@ -4190,3 +4190,25 @@ an orange or sepia cast; photorealism; 3D rendering; heavy even black outlines.
 | 169/157/169（第十五輪） | 247/178/**269** | ✗ |
 | 196/183/200 | 213/153/227 | ✓ |
 | 208/201/217 | 201/139/209 | ✓ |
+
+---
+
+## 三十六、✅ 定稿與上線（2026-08-25）
+
+使用者：「**定稿了**」→「**選中〔Ⓒ 濃〕，文字是：難拔的牙，交給口腔顎面外科專科醫師。**」
+
+- 原檔 `drafts/og-topic-surg-src.jpg`（1424×752），成品 `assets/og-topic-surg.jpg`。
+- 兩行指令（**每次都要從第一步跑，og-plate 讀寫同一個檔**）：
+
+      node tools/og-resize.mjs drafts/og-topic-surg-src.jpg surg
+      node tools/og-plate.mjs surg --blend multiply --tintcolor '#a66eb4' \
+        --ink 0.18 --blur 6 --loc full --locpos stack
+
+- 帶子＝**深階 `#784e84`**，實際落在 rgb(122,77,132)，紙色字 **5.15**（七科第一張真的過 4.5）。
+- `og:description`＝**「難拔的牙，交給口腔顎面外科專科醫師。」**（使用者逐字指定，
+  比那一頁的 close 更短；`tools/topics.mjs` 的 `OG_DESC` 已補上，旁邊寫了「動它先問他」）。
+- `OG_ALT` 也補了口外那一條（描述圖裡實際有什麼）。
+- 提案頁 `preview/surg-band/` 已刪除，推導在 `/history/surg-band.html`。
+
+**這一輪的十六份提示詞留在上面不要刪** —— 口外的**線稿底圖**還沒做，
+那一份要從這張分享圖裁姿勢參考（順序一律「分享圖在前、線稿在後」）。
