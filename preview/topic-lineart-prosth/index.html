@@ -4847,8 +4847,7 @@ body[data-topic] #topics { padding-top: 1rem; }
 [data-topic="prosth"] .tp-intro::before {
   content: ""; position: absolute; right: var(--la-right, 0px); bottom: 0;
   width: min(var(--la-pct, 92%), var(--la-w, 360px)); aspect-ratio: 972 / 896;
-  background: url("../../assets/lineart-prosth.png") no-repeat; background-size: contain;
-  background-position: calc(50% + 48px) center;
+  background-image: var(--la-img, url("../../assets/lineart-prosth.png")); background-repeat: no-repeat; background-size: contain; background-position: calc(50% + var(--la-bleed, 48px)) center;
   opacity: var(--la-op, .121); pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) {
@@ -7315,9 +7314,9 @@ body[data-topic] #topics { padding-top: 1rem; }
   var wide=matchMedia('(min-width: 721px)');
   var DEF={w:{narrow:92,wide:330},
            op:{narrow:.121,wide:.15}, r:{narrow:0,wide:0},
-           b:{narrow:16,wide:16}, f:{narrow:1,wide:1}};
+           b:{narrow:48,wide:48}, f:{narrow:1,wide:1}};
   var st={w:null,op:null,r:null,b:null,f:null,off:false};
-  var IMG={flip:'url("")',noflip:'url("noflip.png")'}, HASF=false;
+  var IMG={flip:'url("../../assets/lineart-prosth.png")',noflip:'url("noflip.png")'}, HASF=false;
   var qs=new URLSearchParams(location.search);
   ['w','op','r','b','f'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
 

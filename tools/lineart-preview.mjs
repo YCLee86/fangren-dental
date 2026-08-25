@@ -46,12 +46,28 @@ if (mR) h = h.replace(reRight, `$1right: var(--la-right, ${baseRight}px);`);
 /* 出血：框不動，背景往右推，超出框的被裁掉 —— 沒有水平捲動。
    ⚠ 這是「再往右」的第二段機制（兒牙 2026-08-24 定案用的就是它的等價寫法）：
      第一段是 right 給負值（上限＝頁面內距），推到底之後只剩這一條路。 */
-const reBg = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)background: url\\("([^"]+)"\\) center / contain no-repeat;`);
-const mBg = h.match(reBg);
-if (mBg) h = h.replace(reBg,
-  `$1background-image: var(--la-img, url("${mBg[2]}")); background-repeat: no-repeat;` +
-  ` background-size: contain;` +
-  ` background-position: calc(50% + var(--la-bleed, 0px)) center;`);
+/* ⚠⚠ 站上這條規則有**兩種寫法**，兩種都要接（2026-08-25 踩過）：
+     ① 一般牙科／顯微根管：`background: url("…") center / contain no-repeat;`
+     ② 矯正／植牙：`background: url("…") no-repeat; background-size: contain;`
+        ＋下一行自己的 `background-position: calc(50% + Npx) center;`
+   只接 ① 的話，②那兩科的「出血」按了完全沒反應、圖永遠停在 CSS 寫死的那個值 ——
+   而植牙的基底正好是 +48px，等於醫師的手指一直被框裁掉，怎麼改裁切都救不回來。
+   底下第 2.5 步有一道守門，接不上就直接 throw。 */
+const reBgShort = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)background: url\\("([^"]+)"\\) center / contain no-repeat;`);
+const reBgLong = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)background: url\\("([^"]+)"\\) no-repeat; background-size: contain;\\s*background-position: calc\\(50% \\+ (-?[\\d.]+)px\\) center;`);
+let mBg = h.match(reBgShort);
+if (mBg) {
+  h = h.replace(reBgShort,
+    `$1background-image: var(--la-img, url("${mBg[2]}")); background-repeat: no-repeat;` +
+    ` background-size: contain;` +
+    ` background-position: calc(50% + var(--la-bleed, 0px)) center;`);
+} else {
+  mBg = h.match(reBgLong);
+  if (mBg) h = h.replace(reBgLong,
+    `$1background-image: var(--la-img, url("${mBg[2]}")); background-repeat: no-repeat;` +
+    ` background-size: contain;` +
+    ` background-position: calc(50% + var(--la-bleed, ${mBg[3]}px)) center;`);
+}
 /* 「沒翻的那一版」：drafts/lineart-<spec>-noflip.png 存在就多一把「翻轉」的尺
    （2026-08-25 植牙那一輪加的 —— 使用者：「做一個沒翻的選項切換」）。
    ⚠ 圖複製進提案頁自己的資料夾，用同層相對路徑，定案時整個資料夾一起刪。 */
@@ -59,7 +75,10 @@ const noflipSrc = path.join(ROOT, "drafts", `lineart-${spec}-noflip.png`);
 const hasNoflip = fs.existsSync(noflipSrc);
 const flipUrl = `url("${mBg ? mBg[2] : ""}")`;
 
-const baseBleed = (h.match(/background-position: calc\(50% \+ ([-\d.]+)px\) center;/) || [,"0"])[1];
+/* ⚠ 這裡要抓的是「這一科自己的」出血預設值，不是整份檔案第一個命中的
+   —— 六科的規則排在同一份樣式表裡，用不限定選擇器的正規式會抓到別科的。 */
+const baseBleed = mBg && mBg[3] != null ? mBg[3]
+  : (h.match(new RegExp(`\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?background-position: calc\\(50% \\+ var\\(--la-bleed, ([-\\d.]+)px\\)\\)`)) || [,"0"])[1];
 const reOp = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)opacity: ([.\\d]+);`);
 const mOp = h.match(reOp);
 if (!mW || !mOp) { console.error("× 找不到該科的線稿規則，先把 CSS 加進 index.html 再跑這一支"); process.exit(1); }
@@ -88,6 +107,21 @@ if (mBlock) {
 }
 
 const wideBleed = mBlock ? ((mBlock[0].match(/var\(--la-bleed, ([-\d.]+)px\)/) || [,baseBleed])[1]) : baseBleed;
+
+/* 2.5 守門：四把尺都要真的接上 CSS。
+   ⚠ 「按了沒反應」這個症狀不報錯、畫面也正常，只有拿數字量才看得出來 ——
+   2026-08-24（right 少了 px）與 2026-08-25（背景那條是另一種寫法）各踩過一次。 */
+const specRule = (h.match(new RegExp(`\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?\\}`)) || [""])[0];
+/* ⚠ 牙周／兒牙走的是另一套機制（框窄一截 ＋ 圖照高度撐滿靠左，`auto 100%`），
+   那兩科本來就沒有「出血」可調 —— 只有 contain 那一套才要檢查它。 */
+const hasBleed = !/auto 100%/.test(specRule);
+for (const [v, name] of [["--la-w", "大小"], ["--la-right", "左右"], ...(hasBleed ? [["--la-bleed", "出血"]] : []), ["--la-op", "濃度"]]) {
+  if (!specRule.includes(v)) {
+    console.error(`× 「${name}」那把尺沒接上（${v} 沒有出現在 ${spec} 的規則裡）——`);
+    console.error(`  index.html 那條規則的寫法和產生器的正規式對不上，先去對一次再跑。`);
+    process.exit(1);
+  }
+}
 
 /* 3. 切換條 ＋ 量測面板。⚠ 這一段是模板字串：CSS 註解裡不可以出現反引號。 */
 /* 往右：把框推出版心，貼齊螢幕邊。⚠ 上限兩段不同 ——
