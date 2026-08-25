@@ -761,3 +761,360 @@ borders, speech bubbles, arrows, small icons; large flat empty areas anywhere ex
 strip; dusk, sunset, golden hour, an orange or sepia cast; photorealism; 3D rendering; heavy even
 black outlines.
 ```
+
+---
+
+## 九、第三輪：機器要高科技，而且**醫師背著挖**（2026-08-25）
+
+使用者：
+
+> 「這個挖掘設備感覺**舊舊的、有點古老**。我放一張比較新的，你們挑戰成
+> 　**比較高科技感**的樣子。**讓醫師背著挖掘。**」
+
+附了一張全斷面隧道鑽掘機（TBM）的照片（slgear.com.tw）。
+
+### 這一輪的實測（Ⓓ 生了兩版）
+
+| | Ⓓ v1（土色蟲洞） | Ⓓ v2（灰色環片） | 門檻 |
+| --- | --- | --- | --- |
+| 邊緣密度 | 18.6% | 16.4% | ≥ 30% |
+| 無彩空白 | 35.3% | **0.3%** | < 5% |
+| 頂 17% 中位 RGB | 238/238/236 ✓ | 234/231/224 ✓ | 藍 ≥ 178 |
+| 頂 17% 被誰佔到 | **醫師的帽子（第 40 列）** | **醫師的帽子（第 45 列）** | 應為 0 |
+
+**兩件通則：**
+
+1. ⚠⚠ **「淨空區」不要靠文字約束人物的位置，要靠構圖讓它不可能發生。**
+   兩版都寫了「頭要在 126px 以下」，兩版都把帽子放到第 40 列。
+   → 這一輪**把醫師整個放到地面以下**：地表線就是天花板，帽子不可能越線。
+2. ⚠ **v1 的無彩空白 35.3%** 是土色被畫得太淡太平（大片沒有東西的淺色土）。
+   v2 把土加了層次與石頭就掉到 0.3% —— **密度與空白是同一件事的兩面。**
+
+### 參考照片的量測（不要用形容詞轉述）
+
+- **機身中位 RGB = 253/251/254 ＝ 幾乎純白。**
+  ⚠⚠ **不要照抄成純白** —— 純白（S<12、L>80）在我們的量測裡直接算「無彩空白」，
+  一台佔畫面兩成的純白機器會讓那一項失守（v1 就是這樣壞的）。
+  **翻譯成「淡紫灰 `#dcd8e4`」**：明度接近、彩度 18% 過得了門檻，而且它同時是這一科的色。
+- **形狀的重點（照片上真的看得到的）**：圓筒狀殼、接縫是**幾條乾淨的細直線**、
+  前端一個**平的圓盤刀盤**、盤面上是**格狀排列的圓形滾刀**（同心圓＋放射狀）、
+  幾道細長的開口、側面兩三支**油壓缸**。
+- **「舊」是哪裡來的**：前兩版畫了**鉚釘、輻條輪、鍋爐狀的圓桶**——那是蒸汽時代的語彙。
+  提示詞要**正面寫死**「接縫是細直線、滾刀是格狀的圓、外緣一圈柔和的紫光」，
+  AVOID 裡再點名鉚釘／輻條／煙囪／黃銅／蒸氣。
+
+### 背負式的裝置（這一輪的新東西）
+
+背包本體是圓角的方塊，面板線 ＋ 一條紫色光帶；**兩支輕巧的關節臂**從肩膀伸到身前，
+前端是一個**小型刀盤**（直徑約醫師肩寬），正在挖；一條細軟管沿著手臂走。
+⚠ 這同時解掉了「人跟潛盾大小差很多」那件事 —— **不縮小機器，改成人穿著它。**
+
+### Ⓕ／Ⓖ 的差別
+
+- **Ⓕ 全景剖面**：地表線壓在 28%，醫師在地下中央偏右背著裝置往右挖，
+  左邊是已經挖好的白色環片隧道通到豎井，地面上兩顆牙在井口探頭。
+- **Ⓖ 近景**：鏡頭推近，醫師佔 70%、刀盤佔 45%，隧道與豎井退到左後方。
+  臉在 250px 的卡上約 14px（Ⓕ 約 11px）。**要最好認就選 Ⓖ，要說明「繞過去」就選 Ⓕ。**
+
+---
+
+## 十、第三輪的兩份完整提示詞（2026-08-25，可直接複製）
+
+（提示詞逐字見對話紀錄與下面兩段，兩份都以「醫師背著裝置、機器是高科技」為前提。）
+
+### Ⓕ 背著裝置，在地下往它挖（全景剖面）
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE STORY IN ONE SENTENCE - READ THIS BEFORE DRAWING ANYTHING: WE ARE LOOKING INTO A CUTAWAY OF
+THE GROUND. An oral surgeon in a violet surgical cap and mask, a white coat and scrubs is DOWN
+INSIDE THE TUNNEL HE IS MAKING, WEARING A SLEEK HIGH-TECH TUNNELLING RIG ON HIS BACK - two light
+jointed arms reach from the backpack to a COMPACT ROUND CUTTING HEAD held in front of him, which
+is quietly boring forward through the earth towards ONE AWKWARD TOOTH THAT IS LYING ON ITS SIDE,
+BURIED, a little ahead of him. Behind him the finished tunnel, lined with clean pale rings, runs
+back to a bright entrance shaft, and the tunnel CLEARLY ARCHES UP AND OVER A GLOWING VIOLET PIPE
+that must not be touched. At the top of the shaft two other teeth lean in and look down,
+delighted that somebody has finally come to get that thing out. It is a calm, precise, modern
+piece of engineering - not a rescue, not an attack, nothing is being yanked.
+
+IT IS ONE SINGLE CONTINUOUS SCENE, NOT TWO PANELS. The surface of the ground runs across the
+picture high up, at about 28% of the height, with plain pale sky above it and the open cutaway of
+the earth below it; the entrance shaft joins the two, so the eye travels down without a break.
+There is NO frame, NO border and NO dividing line; the cutaway edge is soft and hand-drawn.
+
+THE PICTURE IS BUILT AS THREE TIGHT GROUPS, with clear space between them so each reads
+separately at thumbnail size:
+  GROUP A, centre right and NEAREST: the surgeon wearing the rig, with the cutting head in front
+  of him - the surgeon is the biggest figure, about 55% of the picture height.
+  GROUP B, lower right: the buried tooth ahead of the cutting head, about 22% of the picture
+  height.
+  GROUP C, upper left and furthest: the entrance shaft with daylight coming down it, and two
+  tooth characters leaning in over its rim above ground, about 14% of the picture height each.
+
+THE TOP STRIP OF THE PICTURE MUST STAY COMPLETELY EMPTY - THIS IS A HARD RULE AND EVERY PREVIOUS
+VERSION BROKE IT. The upper 17% of the image (the top 105 pixels of 628) is PLAIN PALE SKY and
+nothing else - not earth, not brown, not a tunnel wall. NOTHING may cross that line: not a head,
+not a cap, not a tooth, not a raised hand, not a plant, not a cloud, AND ABSOLUTELY NO BIRDS.
+THE EASIEST WAY TO GUARANTEE THIS IS BUILT INTO THE SCENE: THE SURGEON IS COMPLETELY UNDERGROUND,
+so his cap is far below the sky; the two teeth at the shaft rim are small and sit just above the
+ground line, well below a line one fifth of the way down from the top (about 126 of the 628
+pixels).
+
+THE PICTURE MUST BE FULL OF DRAWN DETAIL - THIS IS THE OTHER THING THE PREVIOUS VERSIONS GOT
+WRONG (they were half as dense as they should be). Apart from the empty sky strip, NO patch of
+the picture bigger than about a tenth of its area may be left as flat empty colour. The earth is
+NOT one flat fill: it carries three or four soft horizontal strata lines, many scattered small
+pebbles of two or three sizes, little root hairs, small soil speckles, and short grass tufts
+along the surface; the finished tunnel is lined with clearly drawn segment rings; the rig and the
+cutting head carry panel seams, bolted flanges and a grid of round disc cutters. Everything is
+drawn with the same thin ink line, so the picture reads as busy and hand-made rather than bare.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERYTHING EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS - the same hand-drawn
+   style as the previous versions, which was right. Thin hand-drawn linework whose weight varies
+   and sometimes breaks - NOT a thick even outline, NOT a ruled vector line. Each human face is
+   ONE FLAT SKIN TONE with no shading: only the outline, two eyes drawn as small simple dots with
+   no whites, two short eyebrows, a tiny nose mark and an ear - no wrinkles, no cheek lines. Hair
+   is a flat shape in two tones. EVERY PERSON AND EVERY TOOTH IS DRAWN WITH EXACTLY THE SAME LINE
+   WEIGHT AND THE SAME SOLIDITY. Flat fills in two or three steps per colour, no gradients except
+   to describe light. Fine paper grain over the whole image.
+
+2. THE SURGEON IS WEARING THE MACHINE, AND HIS CAP AND MASK ARE THE POINT. A person in their
+   forties standing inside the tunnel, seen from the side, leaning forward into the work with one
+   foot ahead of the other, looking at the tunnel face with obvious concentration. THEY WEAR A
+   SOFT TIE-BACK SURGICAL CAP THAT COVERS THE HAIR COMPLETELY, gathered and knotted into short
+   ties at the back of the head, PLAIN, WITH NO PATTERN AT ALL, in a muted violet (#8e6299,
+   shaded #784e84); a MATCHING PLAIN VIOLET SURGICAL MASK over the nose and mouth with a loop
+   over each ear; an OPEN WHITE COAT over pale grey-violet scrubs (#c9bcd0). BECAUSE THE MOUTH IS
+   HIDDEN, THE EXPRESSION COMES FROM THE EYES AND THE BODY: eyes creased into two calm upward
+   curves, eyebrows lifted, shoulders low and unhurried. He is NOT straining, NOT hunched, NOT
+   braced as if against a heavy load - the rig is light.
+
+3. THE RIG ON HIS BACK IS SLEEK AND MODERN - THIS IS THE THING THE LAST VERSION GOT WRONG, WHERE
+   IT LOOKED LIKE AN OLD STEAM BOILER. On his back sits a NEAT ROUNDED-RECTANGLE BACKPACK UNIT
+   about the size of a school bag, its shell drawn as SMOOTH PANELS DIVIDED BY A FEW CLEAN
+   STRAIGHT SEAMS, with ONE SLIM HORIZONTAL LIGHT STRIP glowing soft violet along its side and
+   two small flush round ports. TWO LIGHT JOINTED ARMS - slim, smoothly tapered, with two visible
+   pivot joints each and a thin flexible hose running along them - reach from the top of the
+   backpack over his shoulders to the cutting head in front of him, which he steers with both
+   hands on two compact grips. THE SHELL IS PALE GREY-LILAC (#dcd8e4), shaded #b9b2c6 - NEVER
+   PURE WHITE, NEVER PLAIN GREY. NO rivets, NO bolted plate seams, NO chimney, NO smoke, NO
+   exhaust pipe, NO brass, NO wood, NO spoked wheels, NO exposed gears, NO chains.
+
+4. THE CUTTING HEAD IS DRAWN FROM THE MODERN TUNNEL-BORING MACHINE IN THE PHOTOGRAPH. A FLAT
+   ROUND DISC held in front of him, about as wide as his shoulders, seen slightly turned so it
+   reads as a disc: its FACE CARRIES A GRID OF SMALL ROUND DISC CUTTERS arranged in two or three
+   concentric rings plus a few radial spokes - about twenty small dark circles in an orderly
+   pattern (#6f6878) - with three or four SLIM CURVED SLOTS between them. The rim is a smooth
+   deep band (#a79fb4) with A RING OF SOFT VIOLET LIGHT (#b48fc0) glowing around its outer edge,
+   throwing a gentle cone of light onto the tunnel face. It is turning slowly: a few small crumbs
+   of earth tumbling away from it, and two or three short curved motion strokes. IT HAS NO FACE.
+   It is NOT a drill bit, NOT a saw blade, NOT a weapon, NOT sharp or menacing - it is a calm,
+   precise machine.
+
+5. THE TUNNEL IS THE PROOF THAT HE WENT ROUND THE THING HE MUST NOT TOUCH - DRAW THIS CLEARLY.
+   Behind him the finished tunnel runs back to the LEFT and slightly UP, LINED WITH SEGMENT RINGS
+   in the same pale grey-lilac as the rig - a row of clearly drawn arches, evenly spaced, getting
+   smaller as they recede - and ends at the bright entrance shaft in the upper left. PART WAY
+   ALONG, THE TUNNEL ARCHES UP AND OVER A GLOWING VIOLET PIPE that runs across the lower part of
+   the picture from left to right, WITH AN OBVIOUS OPEN GAP OF EARTH between the pipe and the
+   tunnel floor, about as tall as the cutting head is wide, so a viewer can see at a glance that
+   he went round it on purpose. Nothing touches the pipe.
+
+6. THE BURIED TOOTH HAS NO FACE; THE TWO WATCHING TEETH DO. A little ahead of the cutting head,
+   half embedded in the earth at the lower right, lies ONE LARGE CREAM-WHITE MOLAR (#f2ece2,
+   shaded #d9cfc0) ON ITS SIDE, tilted, its crown towards the machine and its two stubby roots to
+   the right - A PLAIN TOOTH WITH NO EYES, NO MOUTH AND NO FACE, clean and undamaged, simply
+   stuck there. ABOVE GROUND at the top of the entrance shaft, TWO SMALLER TOOTH CHARACTERS WITH
+   FACES lean in over the rim and look down: ONE HAS BOTH LITTLE ARMS RAISED IN A CHEER, mouth
+   open in a happy shout; THE OTHER PRESSES ONE HAND TO ITS CHEEK AND LETS OUT A RELIEVED BREATH,
+   eyes closed into two happy curves. They are pleased and relaxed - NOT frightened, NOT crying,
+   NOT cracked, NOT decayed.
+
+7. COLOUR AND LIGHT. THE UPPER 17% OF THE PICTURE IS A PLAIN, SLIGHTLY COOL OFF-WHITE SKY
+   (#e7e4dd) AND MUST STAY THAT COLOUR ACROSS THE WHOLE WIDTH - never cream, never beige, never
+   brown, never earth, never sunset, never a warm yellow cast, and never darker than that. Bright
+   daylight pours down the entrance shaft; the ring of violet light on the cutting head makes the
+   brightest point underground. The earth is warm pale brown (#c8ab86, shaded #a5855f and #8d7250)
+   in three clear flat steps, with all the strata lines, pebbles and root hairs described above -
+   it must never look like one big empty area. At least six clearly different colours: off-white
+   sky, three browns of earth, cream-white teeth, violet cap and mask, grey-violet scrubs, white
+   coat, pale grey-lilac machine and rings, the pale violet pipe and its light, deep green grass
+   along the surface and one big rounded potted plant at the bottom left corner. Most colour
+   blocks sit around HSL saturation 30-50 and lightness 70-85.
+
+COMPOSITION ANCHORS: the ground surface runs across at about 28% of the height with plain sky
+above it; the entrance shaft comes down at the far left with the two teeth at its rim; the lined
+tunnel recedes from the left towards the centre; the surgeon stands centre-right with his cap
+about 40% of the way down the picture; the cutting head is in front of him at the right; the
+buried tooth is at the lower right; the glowing pipe runs across the bottom fifth; everything
+that must be read sits inside the middle 73% of the width; the top 17% stays completely empty.
+
+AVOID: any text, letters, words, numbers or logos anywhere in the image; birds, clouds or
+anything else in the sky; earth or tunnel wall in the top strip; rivets, riveted plates, boilers,
+chimneys, smoke, steam, brass, copper, wood panelling, spoked wheels, exposed gears, chains,
+levers with round knobs, steampunk or Victorian machinery of any kind; a machine that looks old,
+rusty, worn or improvised; dental pliers, forceps, syringes, needles, scalpels, dental drills,
+trays of instruments, operating theatres; hard hats, high-visibility vests, warning signs, hazard
+tape; anybody gripping, pulling or lifting a tooth by hand; blood, wounds, pain, fear, cracks,
+decay, stains; a face on the buried tooth or on the machine; a mouth seen from inside; gums,
+jawbones, labelled anatomy, X-ray films with visible detail; the cutting head drawn as a saw
+blade, a drill bit or a weapon; the glowing pipe drawn as electricity, lightning, a red channel
+or a hazard marking; the tunnel cutting through or touching the pipe; a pure white or neutral
+grey machine; patterned or printed caps; a mask pulled down under the chin; anybody looking at
+the viewer; anybody drawn faded, translucent, ghostly or outline-only; panels, insets, frames,
+borders, speech bubbles, arrows, small icons; large flat empty areas anywhere except the top
+strip; dusk, sunset, golden hour, an orange or sepia cast; photorealism; 3D rendering; heavy even
+black outlines.
+```
+
+### Ⓖ 同一台裝置，鏡頭推近（臉最大）
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE STORY IN ONE SENTENCE - READ THIS BEFORE DRAWING ANYTHING: CLOSE UP INSIDE A TUNNEL UNDER
+THE GROUND. An oral surgeon in a violet surgical cap and mask, a white coat and scrubs is WEARING
+A SLEEK HIGH-TECH TUNNELLING RIG ON HIS BACK - two light jointed arms reach from the backpack to
+a BIG ROUND CUTTING HEAD held in front of him, quietly boring forward towards ONE AWKWARD TOOTH
+THAT IS LYING ON ITS SIDE, BURIED, just beyond it. Far behind him, small in the distance, the
+finished tunnel curves away over A GLOWING VIOLET PIPE he steered around, towards the bright
+entrance shaft where two other teeth are leaning in and looking down, delighted that somebody has
+finally come to get that thing out. It is a calm, precise, modern piece of engineering.
+
+IT IS ONE SINGLE CONTINUOUS SCENE, NOT TWO PANELS. The ground surface runs across the picture
+high up, at about 25% of the height, with plain pale sky above it and the open cutaway of the
+earth below. There is NO frame, NO border and NO dividing line; the cutaway edge is soft and
+hand-drawn.
+
+THE PICTURE IS BUILT AS THREE TIGHT GROUPS, with clear space between them so each reads
+separately at thumbnail size:
+  GROUP A, centre and NEAREST: the surgeon wearing the rig - the biggest figure, about 70% of the
+  picture height, his head and shoulders the clearest shapes in the picture.
+  GROUP B, right: the big round cutting head, about 45% of the picture height, and just beyond it
+  the buried tooth, about 25%.
+  GROUP C, upper left and FAR AWAY: the receding tunnel, the glowing pipe it arches over, the
+  bright entrance shaft and the two small tooth characters at its rim above ground, each about
+  10% of the picture height.
+
+THE TOP STRIP OF THE PICTURE MUST STAY COMPLETELY EMPTY - THIS IS A HARD RULE AND EVERY PREVIOUS
+VERSION BROKE IT. The upper 17% of the image (the top 105 pixels of 628) is PLAIN PALE SKY and
+nothing else - not earth, not brown, not a tunnel wall. NOTHING may cross that line: not a head,
+not a cap, not a tooth, not a raised hand, not a plant, not a cloud, AND ABSOLUTELY NO BIRDS.
+THIS IS GUARANTEED BY THE SCENE ITSELF: THE SURGEON IS COMPLETELY UNDERGROUND, so his cap is far
+below the sky; the two teeth in the distance are tiny and sit just above the ground line, well
+below a line one fifth of the way down from the top (about 126 of the 628 pixels).
+
+THE PICTURE MUST BE FULL OF DRAWN DETAIL - THIS IS THE OTHER THING THE PREVIOUS VERSIONS GOT
+WRONG (they were half as dense as they should be). Apart from the empty sky strip, NO patch of
+the picture bigger than about a tenth of its area may be left as flat empty colour. The earth is
+NOT one flat fill: it carries three or four soft horizontal strata lines, many scattered small
+pebbles of two or three sizes, little root hairs, small soil speckles, and short grass tufts
+along the surface; the receding tunnel is lined with clearly drawn segment rings; the rig and the
+cutting head carry panel seams, bolted flanges and a grid of round disc cutters. Everything is
+drawn with the same thin ink line, so the picture reads as busy and hand-made rather than bare.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERYTHING EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS - the same hand-drawn
+   style as the previous versions, which was right. Thin hand-drawn linework whose weight varies
+   and sometimes breaks - NOT a thick even outline, NOT a ruled vector line. Each human face is
+   ONE FLAT SKIN TONE with no shading: only the outline, two eyes drawn as small simple dots with
+   no whites, two short eyebrows, a tiny nose mark and an ear - no wrinkles, no cheek lines. Hair
+   is a flat shape in two tones. EVERY PERSON AND EVERY TOOTH IS DRAWN WITH EXACTLY THE SAME LINE
+   WEIGHT AND THE SAME SOLIDITY. Flat fills in two or three steps per colour, no gradients except
+   to describe light. Fine paper grain over the whole image.
+
+2. THE SURGEON IS WEARING THE MACHINE, AND HIS CAP AND MASK ARE THE POINT. A person in their
+   forties standing inside the tunnel, seen from the side and drawn LARGE, leaning forward into
+   the work with one foot ahead of the other, looking at the tunnel face with obvious
+   concentration. THEY WEAR A SOFT TIE-BACK SURGICAL CAP THAT COVERS THE HAIR COMPLETELY,
+   gathered and knotted into short ties at the back of the head, PLAIN, WITH NO PATTERN AT ALL,
+   in a muted violet (#8e6299, shaded #784e84); a MATCHING PLAIN VIOLET SURGICAL MASK over the
+   nose and mouth with a loop over each ear; an OPEN WHITE COAT over pale grey-violet scrubs
+   (#c9bcd0). BECAUSE THE MOUTH IS HIDDEN, THE EXPRESSION COMES FROM THE EYES AND THE BODY: eyes
+   creased into two calm upward curves, eyebrows lifted, shoulders low and unhurried. He is NOT
+   straining, NOT hunched, NOT braced against a heavy load - the rig is light.
+
+3. THE RIG ON HIS BACK IS SLEEK AND MODERN - THIS IS THE THING THE LAST VERSION GOT WRONG, WHERE
+   IT LOOKED LIKE AN OLD STEAM BOILER. On his back sits a NEAT ROUNDED-RECTANGLE BACKPACK UNIT
+   about the size of a school bag, its shell drawn as SMOOTH PANELS DIVIDED BY A FEW CLEAN
+   STRAIGHT SEAMS, with ONE SLIM HORIZONTAL LIGHT STRIP glowing soft violet along its side and
+   two small flush round ports. TWO LIGHT JOINTED ARMS - slim, smoothly tapered, with two visible
+   pivot joints each and a thin flexible hose running along them - reach from the top of the
+   backpack over his shoulders to the cutting head in front of him, which he steers with both
+   hands on two compact grips. THE SHELL IS PALE GREY-LILAC (#dcd8e4), shaded #b9b2c6 - NEVER
+   PURE WHITE, NEVER PLAIN GREY. NO rivets, NO bolted plate seams, NO chimney, NO smoke, NO
+   exhaust pipe, NO brass, NO wood, NO spoked wheels, NO exposed gears, NO chains.
+
+4. THE CUTTING HEAD IS DRAWN FROM THE MODERN TUNNEL-BORING MACHINE IN THE PHOTOGRAPH, AND HERE
+   IT IS BIG. A FLAT ROUND DISC in front of him, wider than his shoulders, seen slightly turned
+   so it reads as a disc: its FACE CARRIES A GRID OF SMALL ROUND DISC CUTTERS arranged in two or
+   three concentric rings plus a few radial spokes - about twenty small dark circles in an orderly
+   pattern (#6f6878) - with three or four SLIM CURVED SLOTS between them. The rim is a smooth
+   deep band (#a79fb4) with A RING OF SOFT VIOLET LIGHT (#b48fc0) glowing around its outer edge,
+   throwing a gentle cone of light onto the tunnel face. It is turning slowly: a few small crumbs
+   of earth tumbling away from it, and two or three short curved motion strokes. IT HAS NO FACE.
+   It is NOT a drill bit, NOT a saw blade, NOT a weapon, NOT sharp or menacing.
+
+5. THE DISTANCE TELLS THE REST OF THE STORY. Behind him, small and clearly further away, the
+   finished tunnel recedes to the upper left, LINED WITH SEGMENT RINGS in the same pale grey-lilac
+   that get smaller as they go, ARCHING UP AND OVER A GLOWING VIOLET PIPE that crosses the picture
+   from left to right, WITH AN OBVIOUS OPEN GAP OF EARTH between the pipe and the tunnel floor,
+   so a viewer can see at a glance that he went round it on purpose. The tunnel ends at the bright
+   entrance shaft in the far upper left. Nothing touches the pipe.
+
+6. THE BURIED TOOTH HAS NO FACE; THE TWO DISTANT TEETH DO. Just beyond the cutting head, half
+   embedded in the earth at the right edge, lies ONE LARGE CREAM-WHITE MOLAR (#f2ece2, shaded
+   #d9cfc0) ON ITS SIDE, tilted, its crown towards the machine and its two stubby roots to the
+   right - A PLAIN TOOTH WITH NO EYES, NO MOUTH AND NO FACE, clean and undamaged, simply stuck
+   there. FAR AWAY at the top of the entrance shaft, TWO SMALL TOOTH CHARACTERS WITH FACES lean
+   in over the rim and look down: one with both little arms raised in a cheer, the other with one
+   hand pressed to its cheek in relief. Even though they are small, they are drawn with the same
+   solid line as everything else - never faint, never a silhouette.
+
+7. COLOUR AND LIGHT. THE UPPER 17% OF THE PICTURE IS A PLAIN, SLIGHTLY COOL OFF-WHITE SKY
+   (#e7e4dd) AND MUST STAY THAT COLOUR ACROSS THE WHOLE WIDTH - never cream, never beige, never
+   brown, never earth, never sunset, never a warm yellow cast, and never darker than that. Bright
+   daylight far away down the entrance shaft; the ring of violet light on the cutting head is the
+   brightest thing near us. The earth is warm pale brown (#c8ab86, shaded #a5855f and #8d7250) in
+   three clear flat steps, with all the strata lines, pebbles and root hairs described above. At
+   least six clearly different colours: off-white sky, three browns of earth, cream-white teeth,
+   violet cap and mask, grey-violet scrubs, white coat, pale grey-lilac machine and rings, the
+   pale violet pipe and its light, and deep green grass along the surface. Most colour blocks sit
+   around HSL saturation 30-50 and lightness 70-85.
+
+COMPOSITION ANCHORS: the ground surface runs across at about 25% of the height with plain sky
+above it; the surgeon stands just left of centre, his cap about 30% of the way down the picture
+and his feet close to the bottom edge; the cutting head fills the right third; the buried tooth
+sits at the lower right beyond it; the receding tunnel, the glowing pipe and the entrance shaft
+are small in the upper left; everything that must be read sits inside the middle 73% of the
+width; the top 17% stays completely empty.
+
+AVOID: any text, letters, words, numbers or logos anywhere in the image; birds, clouds or
+anything else in the sky; earth or tunnel wall in the top strip; rivets, riveted plates, boilers,
+chimneys, smoke, steam, brass, copper, wood panelling, spoked wheels, exposed gears, chains,
+steampunk or Victorian machinery of any kind; a machine that looks old, rusty, worn or
+improvised; dental pliers, forceps, syringes, needles, scalpels, dental drills, trays of
+instruments, operating theatres; hard hats, high-visibility vests, warning signs, hazard tape;
+anybody gripping, pulling or lifting a tooth by hand; blood, wounds, pain, fear, cracks, decay,
+stains; a face on the buried tooth or on the machine; a mouth seen from inside; gums, jawbones,
+labelled anatomy, X-ray films with visible detail; the cutting head drawn as a saw blade, a drill
+bit or a weapon; the glowing pipe drawn as electricity, lightning, a red channel or a hazard
+marking; the tunnel cutting through or touching the pipe; a pure white or neutral grey machine;
+patterned or printed caps; a mask pulled down under the chin; anybody looking at the viewer;
+anybody drawn faded, translucent, ghostly or outline-only; panels, insets, frames, borders,
+speech bubbles, arrows, small icons; large flat empty areas anywhere except the top strip; dusk,
+sunset, golden hour, an orange or sepia cast; photorealism; 3D rendering; heavy even black
+outlines.
+```
+
+⚠ **餵圖時多加一張**：使用者給的 **TBM 照片**，用途寫成
+「**參考刀盤上滾刀的排列、圓筒殼上乾淨的接縫、油壓缸的形狀**；
+**不要**參考它的顏色（那是純白）、材質、比例與背景」。
