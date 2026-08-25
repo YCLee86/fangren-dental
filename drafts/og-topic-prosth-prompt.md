@@ -259,6 +259,208 @@
 - **建議**：不做成分享卡。**它比較適合日後的線稿底圖**（線稿是墊在文字底下的，
   比喻可以慢慢被讀出來，不必一眼就懂）。
 
+## 二之三、第二輪先試兩版（2026-08-25）——Ⓕ 與 Ⓖ 的提示詞
+
+使用者：「你們先試試看，先給我兩版提示詞。」
+選的是 **Ⓕ（桌上一杯茶）與 Ⓖ（桌上一張手畫的順序）** —— 兩版是**同一個場景只換桌上那一件東西**，
+正好把第二之一節那把「距離尺」的兩格實際試出來，回來就知道要停在哪一格。
+
+**兩版共同的三件（和第一輪五案不同的地方）：**
+
+- **醫師不穿白袍**（刷手服 `#b7c5d7`，距離尺的第二格）。
+- **畫面上沒有任何一顆牙、沒有石膏模型、沒有器械、沒有診療椅。**
+  診所的線索只留三樣溫和的：木質櫃台上那疊紙杯、候診的長木凳、窗邊的盆栽。
+- **視覺中心是兩張臉與他們之間那件小東西**，不是物件。
+
+⚠ 參考圖這一輪**只附風格那三張**（`drafts/style-ref-*.jpg`），
+`prosth-model-ref.png` **不要附** —— 附了模型就會被畫進來。
+
+### Ⓕ 都吃些什麼
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: the quiet talking corner of a
+small neighbourhood dental clinic in the afternoon, WITH THINGS GOING ON IN IT. This is a
+conversation, NOT a treatment and NOT an examination. The back wall is a soft warm off-white
+(#e7e4dd) - never grey, never blue-white, never pure white, never wood-coloured and never dark.
+The floor and the furniture are light warm wood. THERE IS NOTHING CLINICAL IN THIS PICTURE: no
+dental chair, no instruments, no gloves, no plaster models, no teeth of any kind, no X-rays, no
+screens, no white coat.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+warm off-white wall only - no head, no hand, no lamp, no shelf, no cable, no sign, no window
+frame. Everything else starts below that line.
+
+THE PICTURE IS ABOUT AN OLDER MAN TELLING SOMEONE WHAT HE USUALLY EATS, AND SOMEBODY REALLY
+LISTENING. Two people sit across a small wooden table; on the table there is only A CUP OF TEA
+and AN OPEN NOTEBOOK. THE TWO FACES ARE THE BIGGEST THINGS IN THE PICTURE. Everything else
+serves that one idea.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. Fine paper grain over the whole image.
+
+2. THE PATIENT IS ON THE RIGHT AND HE IS IN THE MIDDLE OF A SENTENCE. A man of about sixty-five,
+   upright and healthy-looking - NOT frail, NOT stooped, NOT sad, NOT in pain - in a warm ochre
+   polo shirt (#c08a5c). BOTH HIS HANDS ARE UP IN A SMALL EVERYDAY GESTURE just above the table,
+   as if he is describing something he eats; his mouth is slightly open in mid-speech and he is
+   looking at the woman opposite him. He is relaxed, leaning back a little, one elbow near the
+   table edge. Seated, he fills about 65% of the picture height from the top of his head down.
+
+3. THE DENTIST IS ON THE LEFT AND SHE IS LISTENING, NOT WRITING. A woman in her thirties or
+   forties, leaning in slightly, chin a little down, eyes on him, a faint attentive smile. SHE
+   HOLDS A SLIM PEN LOOSELY IN ONE HAND BUT THE PEN IS NOT TOUCHING THE PAPER - she is listening
+   first. Her other forearm rests on the table. SHE WEARS PLAIN SCRUBS in muted blue-grey
+   (#b7c5d7, shaded #99a7b8) - V-neck, short sleeves, NO WHITE COAT, NO FACE MASK, NO GLOVES,
+   NO LANYARD - hair (#373f48) tied back. She looks like a person, not like a specialist.
+
+4. WHAT IS ON THE TABLE - AND NOTHING ELSE. One warm cream cup of tea on a small saucer, sitting
+   nearer the man; one open notebook with plain unmarked pages lying in front of the woman.
+   THAT IS ALL. NO plaster model, NO teeth, NO instruments, NO phone, NO price list, NO folder,
+   NO leaflet. The table is light warm wood and quite small - their hands are close together.
+
+5. AT LEAST TWO MORE SMALL THINGS ARE HAPPENING AT ONCE - this is what makes the picture feel
+   alive, and nobody looks at the viewer. (a) A CLINIC ASSISTANT in the same blue-grey scrubs
+   stands at the window in the background, half turned away, turning a potted plant round on the
+   sill; (b) further back, an older woman waits on a long wooden bench, one bag beside her,
+   looking out of the window. Both are SMALLER and FURTHER AWAY, never fainter - the same line
+   weight as everyone else.
+
+6. THE ROOM MUST STILL READ AS A CLINIC, WITHOUT ONE SINGLE CLINICAL OBJECT. Do it with FOUR
+   LARGE SIMPLE THINGS, large and few: the small wooden table with two simple chairs; a long low
+   wooden counter along the back wall carrying A NEAT STACK OF SMALL PAPER CUPS, a lidded jar and
+   one round potted plant; a LONG WOODEN WAITING BENCH against the right-hand wall; and a wide
+   window on the left whose frame begins BELOW the empty top strip, with warm afternoon light
+   slanting in. No posters, no charts, no cabinets full of small objects, no signage.
+
+7. LIGHT AND COLOUR. One warm light source from the window on the left; the light pools on the
+   two faces and on the tea cup between them and softens towards the edges. At least five
+   clearly different colours: warm off-white wall, light warm wood floor, table and bench,
+   blue-grey scrubs, ochre polo shirt, cream tea cup, one green plant. Most colour blocks sit
+   around HSL saturation 30-50 and lightness 70-85. Flat fills in two or three steps per colour,
+   no gradients except to describe light. NO LARGE FLAT EMPTY AREAS ANYWHERE - if a part of the
+   picture has nothing in it, put one of the four large things there instead.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
+table edge and both people's knees sit close to the bottom edge; the two heads sit just below the
+empty top strip; the top 17% stays completely empty.
+
+AVOID: any text, letters, numbers or logos anywhere in the image; plaster dental models, dental
+casts, teeth, toothbrushes, dental instruments, drills, needles, syringes, implant screws,
+cross-sections or diagrams; a dental chair; a white coat; a face mask; gloves; a glowing screen,
+light box or X-ray; price lists, invoices, calculators, money, calendars; before-and-after pairs;
+panels, frames, insets, speech bubbles, arrows, small icons; anybody drawn faded, translucent,
+ghostly or outline-only; anybody looking at the viewer; a frail, sad or suffering old man; a
+hand covering a face; a night-time or street-food scene; cartoon teeth with faces; grey or
+blue-white walls; an overall yellow or sepia cast; large empty white areas; photorealism; 3D
+rendering; heavy even black outlines.
+```
+
+### Ⓖ 把順序畫在紙上
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: the quiet talking corner of a
+small neighbourhood dental clinic in the afternoon, WITH THINGS GOING ON IN IT. This is two
+people planning something together, NOT a treatment and NOT an examination. The back wall is a
+soft warm off-white (#e7e4dd) - never grey, never blue-white, never pure white, never
+wood-coloured and never dark. The floor and furniture are light warm wood. THERE IS NOTHING
+CLINICAL IN THIS PICTURE: no dental chair, no instruments, no gloves, no plaster models, no
+teeth of any kind, no X-rays, no screens, no white coat.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+warm off-white wall only - no head, no hand, no lamp, no shelf, no cable, no sign, no window
+frame. Everything else starts below that line.
+
+THE PICTURE IS ABOUT SOMEBODY DRAWING THE ORDER OF THINGS ON A SHEET OF PAPER WHILE THE MAN IT
+BELONGS TO POINTS AT ONE STEP AND ASKS ABOUT IT. Two people sit across a small wooden table with
+ONE LARGE SHEET OF PAPER between them. Everything else serves that one idea.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. Fine paper grain over the whole image.
+
+2. THE SHEET OF PAPER IS THE THING BETWEEN THEM, AND WHAT IS DRAWN ON IT IS EXTREMELY SIMPLE.
+   One large sheet of WARM CREAM paper (#f3ece0, never bright white) lying flat on the table,
+   tilted slightly towards the viewer, about a quarter of the picture width. On it, DRAWN IN PEN
+   BY HAND: FOUR OR FIVE BIG EMPTY ROUNDED SQUARES IN A ROW, JOINED BY ONE SIMPLE LINE - like the
+   steps of a plan. THE SQUARES ARE COMPLETELY EMPTY: no writing, no letters, no numbers, no
+   symbols, no ticks, no shading inside them. Nothing else is drawn on the paper - no tables, no
+   grids, no columns of figures, no tooth shapes, no charts.
+
+3. THE DENTIST IS ON THE LEFT, DRAWING THE LAST SQUARE. A woman in her thirties or forties
+   leaning over the paper, PEN TIP TOUCHING THE FAR END OF THE ROW, her other palm flat on the
+   table. She glances up at the man as she draws. SHE WEARS PLAIN SCRUBS in muted blue-grey
+   (#b7c5d7, shaded #99a7b8) - V-neck, short sleeves, NO WHITE COAT, NO FACE MASK, NO GLOVES,
+   NO LANYARD - hair (#373f48) tied back. She looks like a person, not like a specialist.
+
+4. THE PATIENT IS ON THE RIGHT AND HE IS ASKING ABOUT ONE OF THE STEPS. A man of about
+   sixty-five, upright and healthy-looking - NOT frail, NOT stooped, NOT sad - in a warm ochre
+   polo shirt (#c08a5c), body tipped forward, ONE INDEX FINGER RESTING ON ONE OF THE SQUARES IN
+   THE MIDDLE OF THE ROW, his other hand on the table, eyebrows slightly raised, mouth slightly
+   open in mid-question. He looks at the paper. Seated, he fills about 65% of the picture height
+   from the top of his head down.
+
+5. AT LEAST TWO MORE SMALL THINGS ARE HAPPENING AT ONCE - this is what makes the picture feel
+   alive, and nobody looks at the viewer. (a) A CLINIC ASSISTANT in the same blue-grey scrubs
+   stands at the back counter, half turned away, setting two paper cups down; (b) further back,
+   an older woman waits on a long wooden bench, looking out of the window. Both are SMALLER and
+   FURTHER AWAY, never fainter - the same line weight as everyone else.
+
+6. THE ROOM MUST STILL READ AS A CLINIC, WITHOUT ONE SINGLE CLINICAL OBJECT. Do it with FOUR
+   LARGE SIMPLE THINGS, large and few: the small wooden table with two simple chairs; a long low
+   wooden counter along the back wall carrying A NEAT STACK OF SMALL PAPER CUPS, a lidded jar and
+   one round potted plant; a LONG WOODEN WAITING BENCH against the right-hand wall; and a wide
+   window on the left whose frame begins BELOW the empty top strip, with warm afternoon light
+   slanting in. No posters, no charts, no cabinets full of small objects, no signage.
+
+7. LIGHT AND COLOUR. One warm light source from the window on the left; THE LIGHT FALLS ACROSS
+   THE PAPER so that the sheet is warm cream and softly coloured, NEVER a flat white rectangle.
+   At least five clearly different colours: warm off-white wall, light warm wood floor, table and
+   bench, blue-grey scrubs, ochre polo shirt, cream paper, one green plant. Most colour blocks sit
+   around HSL saturation 30-50 and lightness 70-85. Flat fills in two or three steps per colour,
+   no gradients except to describe light. NO LARGE FLAT EMPTY AREAS ANYWHERE - if a part of the
+   picture has nothing in it, put one of the four large things there instead.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
+table edge and both people's knees sit close to the bottom edge; the row of squares runs
+horizontally across the middle of the picture; the top 17% stays completely empty.
+
+AVOID: any text, letters, numbers or logos anywhere in the image, including on the paper;
+anything written or printed inside the squares; tables, grids, forms, charts, columns of figures;
+plaster dental models, dental casts, teeth, toothbrushes, dental instruments, drills, needles,
+syringes, implant screws, cross-sections or diagrams; a dental chair; a white coat; a face mask;
+gloves; a glowing screen, light box or X-ray; price lists, invoices, calculators, money,
+calendars; before-and-after pairs; panels, frames, insets, speech bubbles, arrows, small icons;
+anybody drawn faded, translucent, ghostly or outline-only; anybody looking at the viewer; a
+frail, sad or suffering old man; a night-time or street-food scene; cartoon teeth with faces;
+grey or blue-white walls; an overall yellow or sepia cast; large empty white areas; photorealism;
+3D rendering; heavy even black outlines.
+```
+
+⚠ **兩版回來之後要先量的三件**（不是先看好不好看）：
+無彩空白 < 5%（Ⓖ 那張紙最容易踩）、邊緣密度 ≥ 30%、頂 17% 的 B 通道 ≥ 161。
+
 ---
 
 ## 三、五案共用的東西（顏色、參考圖、門檻）
