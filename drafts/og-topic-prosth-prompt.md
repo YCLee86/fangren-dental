@@ -461,6 +461,255 @@ grey or blue-white walls; an overall yellow or sepia cast; large empty white are
 ⚠ **兩版回來之後要先量的三件**（不是先看好不好看）：
 無彩空白 < 5%（Ⓖ 那張紙最容易踩）、邊緣密度 ≥ 30%、頂 17% 的 B 通道 ≥ 161。
 
+## 二之四、第三輪：方向確認 ＋ 兩條規則被使用者推翻（2026-08-25）
+
+使用者看過 Ⓕ／Ⓖ 兩張之後：
+
+> 「我有一點頭緒了，就是**醫師在跟病患解說順序或流程**，我覺得這個不錯。不過你這個
+> 　順序流程圖**是放在桌上，其實不是很清楚**……比如說**有箭頭啊、或是有數字的概念**，
+> 　這樣比較知道**有流的感覺**，像一般經營管理的 PDCA，一個步驟一個步驟、
+> 　**甚至循環回來**……另外一個很重要的重點：做假牙的**有可能高齡也可能不是**，
+> 　但**通常都是因為自己難以做決定**，我覺得可以加入**家人陪伴一起來了解**，
+> 　有一種**恍然大悟**、或是一邊聽一邊**覺得很有道理、同意**的表情……
+> 　另外也可以是：**吃飯不方便嘛**，所以可以做『牙齒做完之後**全家人高高興興吃飯**』，
+> 　**飯桌上的東西不會只有粥、軟爛的食物**，會是**比較正常人**的，有魚有肉、
+> 　可能有帶骨的、或蝦子海鮮，要像**一般家常**的樣子，甚至可以是家人**正在把剛煮好的
+> 　飯菜端出來**。不過現在都是**小家庭**，所以不見得要放那麼多人。」
+
+**方向確認**：`Ⓖ 講流程` 這條路是對的（Ⓕ 的「一杯茶」那一格沒有被選）。
+
+### ⚠⚠ 兩條硬規格被使用者指定推翻（都是有條件的）
+
+1. **箭頭與數字**（ILLUSTRATION.md 第十一節硬規格 6：「不放泡泡、不放放大圈、
+   不放小圖示、**不放箭頭**」＋ 第 7 條「圖上不放任何字」）。
+   ⚠ **推翻的條件和顯微根管那個放大圈一樣：要大、要少。**
+   限度寫死：**四個大圓 ＋ 只有 1 2 3 4 這四個數字 ＋ 粗箭頭 ＋ 一條繞回來的弧**，
+   除此之外一個字、一個符號都不准。形狀直接給參考圖
+   **`drafts/prosth-flow-ref.png`**（第十之一節：形狀不要用文字描述）。
+2. **牆上的圖表**（第十一節那份 AVOID 有 `posters or charts on the wall`）。
+   那一條擋的是**背景雜訊**；這裡的流程圖是**主體**，而且必須立起來正對讀者
+   —— 平放在桌上會被透視壓扁（Ⓖ 那一版實測就是這個問題）。
+
+### 這一輪確定下來的三件
+
+- **病人不要畫太老**：使用者說「有可能高齡也可能不是」→ 定 **六十歲上下**，
+  和第一輪的六十五歲拉開，也避免七科的長輩看起來都同一個人。
+- **家人一定要在場**，而且是**一起了解**、不是代為決定（同第一輪 Ⓓ 那條：
+  長輩仍然是主導的那一個）。表情是**恍然大悟／點頭同意**。
+- **吃飯那一版的紅線是「食物」**：不准粥、不准軟爛、不准流質、不准嬰兒食物 ——
+  要**魚、帶骨的肉、蝦、青菜、白飯**。⚠ 但**不要畫成大口啃骨頭**（誇張的動作會變成
+  療效宣稱），重點在**那一桌菜是正常的**，不在他咬得多用力。
+
+## 二之五、第三輪的兩份提示詞（2026-08-25）
+
+### Ⓙ 一步一步，還會繞回來（流程圖立起來 ＋ 家人陪伴）
+
+⚠ 這一版要附 **`drafts/prosth-flow-ref.png`**（流程圖的形狀）＋ 風格那三張。
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: the quiet talking corner of a
+small neighbourhood dental clinic in the afternoon, WITH THINGS GOING ON IN IT. This is an
+explanation, NOT a treatment and NOT an examination. The back wall is a soft warm off-white
+(#e7e4dd) - never grey, never blue-white, never pure white, never wood-coloured and never dark.
+The floor and furniture are light warm wood. THERE IS NOTHING CLINICAL IN THIS PICTURE: no
+dental chair, no instruments, no gloves, no plaster models, no teeth of any kind, no X-rays, no
+screens, no white coat.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+warm off-white wall only - no head, no hand, no board, no lamp, no shelf, no cable, no sign.
+Everything else starts below that line.
+
+THE PICTURE IS ABOUT A DENTIST EXPLAINING THE ORDER OF THE STEPS ON A BIG BOARD, AND A MAN AND
+HIS DAUGHTER BOTH GETTING IT AT THE SAME TIME. Everything else serves that one idea.
+
+THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. EVERYONE LOOKS DIFFERENT: different age, hair, build and
+   clothes. Fine paper grain over the whole image.
+
+2. THE BOARD IS THE CENTRE OF THE PICTURE AND IT FACES US SQUARELY. A large flat board in a
+   simple light wooden frame, STANDING UPRIGHT on a plain wooden easel against the back wall,
+   turned straight towards the viewer so nothing on it is foreshortened. It is about 45% of the
+   picture height and its top edge stays BELOW the empty top strip. ON THE BOARD, DRAWN BY HAND
+   IN DARK INK ON WARM CREAM PAPER (#f3ece0), EXACTLY LIKE THE SHAPE-REFERENCE DRAWING: FOUR BIG
+   OPEN CIRCLES IN A ROW, each holding ONE LARGE HANDWRITTEN NUMERAL - 1, 2, 3 and 4 - JOINED BY
+   THREE THICK ARROWS pointing right, and ONE LONG CURVED ARROW SWEEPING BACK UNDERNEATH FROM
+   THE FOURTH CIRCLE TO THE FIRST. THE CIRCLES, THE NUMERALS AND THE ARROWS ARE BIG AND FEW AND
+   THEY MUST BE READABLE AT THUMBNAIL SIZE. THERE IS NOTHING ELSE ON THE BOARD AT ALL: no words,
+   no letters, no other numbers, no dates, no prices, no tooth shapes, no small marks, no
+   handwriting of any kind besides those four numerals.
+
+3. THE DENTIST STANDS AT THE LEFT OF THE BOARD, EXPLAINING. A woman in her thirties or forties,
+   standing beside the easel and turned three-quarters towards the family, ONE OPEN HAND RESTING
+   BESIDE THE SECOND CIRCLE (an open palm, not a pointing stick), her other arm relaxed at her
+   side. She is speaking calmly and looking at the two of them, not at us. SHE WEARS PLAIN SCRUBS
+   in muted blue-grey (#b7c5d7, shaded #99a7b8) - V-neck, short sleeves, NO WHITE COAT, NO FACE
+   MASK, NO GLOVES, NO LANYARD - hair (#373f48) tied back. She looks like a person, not like a
+   specialist.
+
+4. THE PATIENT SITS ON THE RIGHT AND HE HAS JUST UNDERSTOOD SOMETHING. A man of about SIXTY -
+   ordinary, upright and healthy-looking, NOT frail, NOT stooped, NOT sad - in a warm ochre polo
+   shirt (#c08a5c), sitting on a simple wooden chair turned towards the board, body tipped
+   forward, forearms on his knees, EYEBROWS RAISED AND CHIN LIFTED IN A SMALL NOD, mouth slightly
+   open as if he has just said "ah - I see". HIS EYES ARE ON THE BOARD.
+
+5. HIS DAUGHTER STANDS JUST BEHIND HIS CHAIR AND SHE AGREES. A woman of about thirty-five in a
+   soft moss-green top (#8a9a72), a shoulder bag still on her arm, ONE HAND RESTING LIGHTLY ON
+   THE BACK OF HIS CHAIR, head tilted slightly, NODDING - she is following the same explanation,
+   NOT speaking for him, NOT taking over, NOT anxious. Father and daughter read as ONE GROUP on
+   the right; the dentist and the board are the group on the left.
+
+6. ONE MORE SMALL THING IS HAPPENING AT THE SAME TIME, and nobody looks at the viewer: a CLINIC
+   ASSISTANT in the same blue-grey scrubs is at the back counter, half turned away, setting two
+   paper cups down. She is SMALLER and FURTHER AWAY, never fainter - the same line weight as
+   everyone else.
+
+7. THE ROOM MUST STILL READ AS A CLINIC, WITHOUT ONE SINGLE CLINICAL OBJECT. Do it with FOUR
+   LARGE SIMPLE THINGS, large and few: the easel and board; two simple wooden chairs; a long low
+   wooden counter along the back wall carrying A NEAT STACK OF SMALL PAPER CUPS, a lidded jar and
+   one round potted plant; and a wide window on the left whose frame begins BELOW the empty top
+   strip, with warm afternoon light slanting in. No posters, no charts on the walls, no cabinets
+   full of small objects, no signage.
+
+8. LIGHT AND COLOUR. One warm light source from the window on the left; the light falls across
+   the board so the cream paper is warm and softly coloured, NEVER a flat white rectangle. At
+   least five clearly different colours: warm off-white wall, light warm wood floor, easel and
+   counter, blue-grey scrubs, ochre polo shirt, moss-green top, cream board, one green plant.
+   Most colour blocks sit around HSL saturation 30-50 and lightness 70-85. Flat fills in two or
+   three steps per colour, no gradients except to describe light. NO LARGE FLAT EMPTY AREAS
+   ANYWHERE.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
+chair legs, the easel feet and the daughter's shoes sit close to the bottom edge; the row of four
+circles runs across the middle of the picture; the top 17% stays completely empty.
+
+AVOID: any text, letters, words or logos anywhere in the image; any number other than the four
+numerals 1 2 3 4 inside the circles; dates, prices, percentages, tables, grids, forms, charts,
+columns of figures; plaster dental models, dental casts, teeth, toothbrushes, dental instruments,
+drills, needles, syringes, implant screws, cross-sections or diagrams; a dental chair; a white
+coat; a face mask; gloves; a glowing screen, light box or X-ray; a pointer stick or laser
+pointer; before-and-after pairs; calendars; panels, frames, insets, speech bubbles, small icons;
+anybody drawn faded, translucent, ghostly or outline-only; anybody looking at the viewer; a frail
+or passive old man; a daughter speaking for her father; a lecture-hall or classroom feeling; a
+night-time or street-food scene; cartoon teeth with faces; grey or blue-white walls; an overall
+yellow or sepia cast; large empty white areas; photorealism; 3D rendering; heavy even black
+outlines.
+```
+
+### Ⓚ 做完之後，那一桌菜（全家吃飯・食物是主角）
+
+⚠ 這一版**只附風格那三張**參考圖，流程圖那張不要附。
+⚠ 它離「一眼認出是芳仁」最遠（畫面上沒有診所），所以窗外留了一角**老街屋的屋簷**
+當在地線索 —— 呼應一般牙科那張的巷弄，但不畫街景本身。
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: an ordinary family lunch at
+home in a small Taiwanese town, in the middle of the day, warm and cheerful and completely
+undramatic. The wall behind is a soft warm off-white (#e7e4dd) - never grey, never blue-white,
+never pure white and never dark. The floor and furniture are light warm wood. THIS IS NOT A
+CLINIC: no dentist, no scrubs, no white coat, no clinical object of any kind, and NOT ONE TOOTH
+anywhere in the picture.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+warm off-white wall only - no head, no hand, no hanging lamp, no shelf, no picture frame, no
+window frame. Everything else starts below that line.
+
+THE PICTURE IS ABOUT A NORMAL MEAL: THREE PEOPLE AT A TABLE THAT IS PROPERLY LOADED WITH REAL
+FOOD, AND SOMEONE BRINGING ONE MORE DISH IN FROM THE KITCHEN. Everything else serves that one
+idea. THE FOOD ON THE TABLE IS THE SECOND MAIN CHARACTER - it must be unmistakably ordinary
+family cooking, not invalid food.
+
+THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. EVERYONE LOOKS DIFFERENT: different age, hair, build and
+   clothes. Fine paper grain over the whole image.
+
+2. WHAT IS ON THE TABLE - DRAW ALL FIVE, LARGE AND CLEARLY SEPARATE. A WHOLE STEAMED FISH on an
+   oval plate; a plate of BRAISED MEAT ON THE BONE (short ribs or chicken pieces, the bones
+   clearly visible); a plate of WHOLE PRAWNS with their shells and tails on; a plate of GREEN
+   LEAFY VEGETABLES; and INDIVIDUAL BOWLS OF WHITE RICE in front of each person, with chopsticks.
+   Two or three small wisps of steam rise from the dishes. THIS IS ORDINARY FOOD FOR PEOPLE WHO
+   CAN CHEW PROPERLY. THERE IS ABSOLUTELY NO porridge, no congee, no rice soup, no plain broth,
+   no mashed, blended, minced or pureed food, no soft invalid food of any kind, and no medicine
+   on the table.
+
+3. THE OLDER MAN SITS AT THE FAR SIDE OF THE TABLE, EATING NORMALLY AND ENJOYING IT. A man of
+   about SIXTY-FIVE - ordinary, upright, healthy-looking, NOT frail - in a soft blue-grey shirt,
+   holding his chopsticks and JUST LIFTING A PIECE OF FISH FROM THE PLATE, smiling with his mouth
+   closed, eyes on the food. HE IS RELAXED AND UNREMARKABLE - he is NOT being watched, NOT being
+   helped, NOT showing anybody anything, NOT biting hard into a bone, NOT making a big gesture.
+
+4. A WOMAN OF ABOUT THIRTY-FIVE IS BRINGING IN ONE MORE DISH FROM THE KITCHEN. She walks in from
+   the right in a moss-green top (#8a9a72), an oven cloth over one shoulder, CARRYING A SHALLOW
+   DISH OF FRESHLY COOKED FOOD IN BOTH HANDS with steam curling off it, leaning slightly forward
+   as she sets it down. She is mid-step, clearly moving.
+
+5. A THIRD PERSON SITS AT THE NEAR LEFT WITH HIS BACK THREE-QUARTERS TO US. A man of about forty
+   in a warm ochre shirt (#c08a5c), seated at the corner of the table, one hand holding his rice
+   bowl, turning to say something to the older man. WE SEE HIM MOSTLY FROM BEHIND AND TO THE
+   SIDE, so he frames the table without hiding it. THIS IS A SMALL FAMILY: exactly three people
+   at the table, nobody else.
+
+6. NOBODY LOOKS AT THE VIEWER AND NOBODY IS POSING. There is no toast, no raised glasses, no
+   celebration, no birthday, no camera moment - it is just lunch, and it is a good one.
+
+7. THE HOME AROUND THEM: FOUR LARGE SIMPLE THINGS, large and few. The wooden dining table itself,
+   seen slightly from above so the whole spread of dishes is visible; three simple wooden chairs;
+   a low wooden sideboard along the back wall with a teapot and one round potted plant; and A
+   WIDE WINDOW on the left whose frame begins BELOW the empty top strip - THROUGH IT, SMALL AND
+   QUIET IN THE DISTANCE, THE TILED EAVES AND PARAPET OF AN OLD TOWN SHOPHOUSE ACROSS THE LANE.
+   No television, no clutter, no posters, no framed photographs on the wall.
+
+8. LIGHT AND COLOUR. One warm light source: midday daylight through the window on the left,
+   pooling on the dishes in the middle of the table and softening towards the edges. At least
+   five clearly different colours: warm off-white wall, light warm wood floor and table,
+   moss-green top, ochre shirt, blue-grey shirt, the food itself (cream fish, warm brown braised
+   meat, coral prawns, green vegetables), one green plant. Most colour blocks sit around HSL
+   saturation 30-50 and lightness 70-85. Flat fills in two or three steps per colour, no
+   gradients except to describe light. NO LARGE FLAT EMPTY AREAS ANYWHERE.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
+table edge and the chairs sit close to the bottom edge; the loaded table runs across the middle
+of the picture; the three heads sit just below the empty top strip; the top 17% stays completely
+empty.
+
+AVOID: any text, letters, numbers or logos anywhere in the image; porridge, congee, rice soup,
+broth, mashed, blended, minced or pureed food, soft invalid food, medicine, pill bottles;
+dentures, teeth, toothbrushes, dental instruments, a dentist, scrubs, a white coat, a clinic, a
+hospital; before-and-after pairs; anybody biting hard into a bone or opening their mouth wide;
+raised glasses, toasting, a birthday cake, party decorations; anybody looking at the viewer or
+posing for a photograph; panels, frames, insets, speech bubbles, arrows, small icons; anybody
+drawn faded, translucent, ghostly or outline-only; a frail or bedridden old person; a crowded
+table with more than three diners; a night-time or street-food scene; grey or blue-white walls;
+an overall yellow or sepia cast; large empty white areas; photorealism; 3D rendering; heavy even
+black outlines.
+```
+
+⚠ 兩版回來先量三件：無彩空白 < 5%、邊緣密度 ≥ 30%、頂 17% 的 B 通道 ≥ 161。
+⚠ Ⓙ 另外要單獨檢查一件：**板子上有沒有長出 1234 以外的字**（模型最愛在這裡加東西）。
+
 ---
 
 ## 三、五案共用的東西（顏色、參考圖、門檻）
