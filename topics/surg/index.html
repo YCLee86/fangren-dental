@@ -1972,12 +1972,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .info-card { --accent: var(--teal); }
 .info-card[data-hue="taupe"] { --accent: var(--taupe); }
 
-/* 小節標題前的那一小段枝條。只給醫師與診所資訊兩節，文章區不動。 */
-#doctors .sec-head h2, #clinic .sec-head h2 { display: flex; align-items: center; gap: .55rem; }
-#doctors .sec-head h2::before, #clinic .sec-head h2::before {
-  content: ''; flex: 0 0 3px; height: 1.05em; border-radius: 2px; background: var(--teal);
-}
-
 /* ---- 醫師：手機一欄 → 電腦三欄（九位剛好排滿三列）---------------------- */
 .docs { display: grid; gap: 1.2rem; grid-template-columns: repeat(3, 1fr); }
 .doc {
@@ -2761,7 +2755,6 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   /* ---- 內文區：字級與間距收一階 ------------------------------------- */
   .sec-head { margin-bottom: 1.1rem; }
   .sec-head h2 { font-size: 1.12rem; }
-  #doctors .sec-head h2::before, #clinic .sec-head h2::before { flex-basis: 3px; }
   .chips { gap: .45rem; }
   /* 搜尋框自己一列。font-size 一定要 16px 以上，
      不然 iOS Safari 一聚焦就會把整頁放大。 */
@@ -4052,10 +4045,6 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   /* 頁首標誌是寫死的 38／32px（捲動後收一階）。頁尾那顆是 rem，本來就會跟。 */
   .brand-mark               { flex-basis: calc(38px * var(--type-scale)); }
   html.scrolled .brand-mark { flex-basis: calc(32px * var(--type-scale)); }
-  /* 小節標題前那一小段枝條：高是 1.05em 自己會長，寬寫死 3px。 */
-  #doctors .sec-head h2::before,
-  #clinic  .sec-head h2::before { flex: 0 0 calc(3px * var(--type-scale)); }
-
   /* 兩排藥丸與那顆長得像藥丸的地圖卡標題：塊高 34 → 38.25。
      ⚠ 內距仍然是「目標高回推」的式子，**不要換算成 px** —— 字級一改就會被頂開。
        字級天花板是 (38.25 − 2) / 1.6 = 22.7px，現在最大的是 chips 的 16.2px。 */
@@ -4258,9 +4247,6 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   }
   .brand-mark               { flex-basis: calc(38px * var(--type-scale)); }
   html.scrolled .brand-mark { flex-basis: calc(32px * var(--type-scale)); }
-  #doctors .sec-head h2::before,
-  #clinic  .sec-head h2::before { flex: 0 0 calc(3px * var(--type-scale)); }
-
   /* 藥丸的塊高 34 → 40.4。內距維持回推式，不要換算成 px。 */
   .chips :is(button,a),
   .hours-filter button { padding-block: calc((34px * var(--type-scale) - 1.6em - 2px) / 2); }
