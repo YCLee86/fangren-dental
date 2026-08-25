@@ -2739,3 +2739,193 @@ orange or sepia cast; bare empty backgrounds; grey or blue-white walls; photorea
 rendering; heavy even black outlines.
 ```
 
+
+### Ⓦ 奶奶站到桌子左邊（第十三輪・完整版，可直接複製）
+
+⚠ 使用者：**「頭髮對了，但奶奶沒有轉過去」**。
+⚠⚠ 這一輪的判斷：**她不轉身，是因為她的位置讓那個轉身不合理** ——
+前兩版她站在**餐桌後面**，要朝左下喊就得越過整張桌子，模型於是把她畫回正面。
+**改姿勢沒有用，要改位置**：把她移到**餐桌的左側、最靠近樓梯的那一邊**，桌子在她右後方，
+她和樓梯之間什麼都沒有；再用幾何講朝向（**肩、鼻、下巴、視線全部指向左下**，
+「從她嘴巴拉一條直線會沿著樓梯落到那位先生身上」）。
+⚠ 順手把頂端安靜區改成**有餘裕的門檻**：所有的頭、舉起的手、旗尖都要在
+**畫面上方五分之一（628 的 126px）以下** —— 前一版寫「不可以越過 105」，
+模型仍然把奶奶的頭放在約 62px；給一條**比真正的界線更保守的線**才守得住。
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE STORY IN ONE SENTENCE - READ THIS BEFORE DRAWING ANYTHING: a middle-aged man and his wife
+ARE ALREADY PART-WAY UP a short, friendly staircase - the first stretch of it runs away behind
+them into the distance, so we can see how far they have come - and beside them A DENTIST IS
+HOLDING AN OPEN MAP, POINTING UP AHEAD TO SHOW THEM THEY ARE NEARLY THERE. Two landings above
+are little checkpoints where clinic staff hand out supplies and cheer them on, and AT THE TOP HIS
+FAMILY IS ALREADY SITTING AROUND A TABLE FULL OF FOOD, CALLING DOWN TO THEM TO COME AND EAT.
+Everybody wants him to get there, AND HE IS CLOSE. THE WHOLE PICTURE IS ONE LIVELY MOMENT WITH
+THINGS MOVING - it is not a quiet, still scene.
+
+THE PEOPLE ARE THE SUBJECT AND THEY ARE DRAWN BIG. The staircase is only the stage. THE PICTURE
+IS BUILT AS THREE TIGHT GROUPS strung along one diagonal, with clear empty space between the
+groups so each one reads separately at thumbnail size:
+  GROUP A, bottom left and NEAREST: the patient, his wife and the dentist - the biggest figures,
+  about 45% of the picture height.
+  GROUP B, the middle of the staircase: ONE clinic worker on each of TWO LANDINGS - about 30% and
+  26% of the picture height.
+  GROUP C, upper right and furthest: THREE family members around a table of food - about 22% of
+  the picture height.
+
+THE STAIRCASE: a short, friendly HALF-TURN staircase with broad treads and low risers, climbing
+from the lower left to the upper right, seen slightly from the side so we can tell it rises. TWO
+OF THE STEPS ARE MUCH LARGER FLAT LANDINGS, big enough for a person to stand on with room to
+spare, one about a third of the way up and one about two thirds of the way up, and the staircase
+ends at the top landing where the table is.
+
+THE STAIRCASE CONTINUES DOWN AND OUT OF THE PICTURE ON THE LEFT - THIS IS THE PART THEY HAVE
+ALREADY WALKED, AND IT MUST BE PLAINLY VISIBLE. Below and to the left of the couple, FOUR OR FIVE
+MORE STEPS carry on downwards to the left and RUN OFF THE LEFT EDGE OF THE PICTURE, so we never
+see where the staircase began. THIS LOWER STRETCH IS DRAWN AS CLEARLY AS THE REST - it takes up
+roughly the LEFT SIXTH of the image, complete with its own handrail. It is NOT faded, NOT blurred,
+NOT hidden behind a plant, NOT a tiny detail in the corner - a viewer must see at a glance that
+the couple have already come up a good stretch of stairs. THOSE ALREADY-WALKED STEPS ARE THE
+PALEST BLUE (#7d9cc0). The steps the couple are standing on now, and everything above them, get
+deeper as they rise: #5f83ab, then #476e97, then #335b8b, each with a soft dark navy outline
+(#182f4b). A simple warm wooden handrail runs along the outer edge the whole way. Count only
+EIGHT STEPS between the couple and the table - the climb that is LEFT must look SHORT. NO spiral,
+NO helix, NO long flight of many steps, NO ladder.
+
+THE TOP STRIP OF THE PICTURE MUST STAY COMPLETELY EMPTY - THIS IS A HARD RULE AND THE LAST
+VERSION BROKE IT. The upper 17% of the image (the top 105 pixels of 628) is plain pale warm
+background and nothing else. NOTHING may cross that line: not a head, not a raised hand, not a
+strand of hair, not the tip of a flag or its pole, not a step, not a plant, not a bird, not a
+wisp of steam. GIVE YOURSELF A MARGIN: compose so that EVERY head, EVERY raised hand and EVERY
+flag tip sits BELOW A LINE ONE FIFTH OF THE WAY DOWN FROM THE TOP (about 126 of the 628 pixels).
+The grandmother's head and the upper flag are the highest things in the picture and they must
+both start below that line, with a clear band of plain background above everything.
+
+THE NINE THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. EVERYONE LOOKS DIFFERENT: different age, hair, build and
+   clothes. Fine paper grain over the whole image.
+   THE CLINIC PEOPLE ALL HAVE THE SAME BLUE-BLACK HAIR - the dentist and both clinic workers:
+   a flat shape in DEEP BLUE-BLACK (#202d3c), shaded #131b26, WITH ONE CLEAR COOL BLUE HIGHLIGHT
+   (#344a65) across the top of the head - dark, but unmistakably BLUE-black, never neutral black,
+   never brown, never grey. THE PATIENT, HIS WIFE AND THE FAMILY AT THE TABLE KEEP ORDINARY HAIR
+   (warm dark brown, or grey and white for the older ones) - the blue-black hair belongs only to
+   the clinic team.
+
+2. GROUP A - THE PATIENT IS ALREADY ON THE STAIRS AND HE IS CALLING UP TO THE TABLE. A man of
+   about FIFTY-FIVE in a warm ochre polo shirt (#c08a5c), STANDING WITH BOTH FEET ON THE STEPS
+   THEMSELVES, WELL ABOVE THE BOTTOM OF THE PICTURE - never on flat ground, never at the very
+   start of the staircase, with several already-walked steps visible below and behind him - one
+   foot lifting onto the next step, body turned upward,
+   ONE ARM RAISED HIGH WAVING TOWARDS THE TOP OF THE STAIRS, mouth open in a cheerful shout - he
+   is answering the family who are calling him. He is the largest figure in the picture, about
+   45% of the picture height. He is NOT struggling, NOT hunched, NOT nervous.
+
+3. GROUP A - HIS WIFE IS BESIDE HIM ON THE SAME STEP. A woman of about fifty in a moss-green top
+   (#8a9a72), ONE ARM HOOKED THROUGH HIS, her other hand raised in a small wave towards the
+   table, laughing and looking up. Their two bodies clearly lean towards the climb ahead - they
+   are in the middle of walking, not standing still.
+
+4. GROUP A - THE DENTIST IS SHOWING THEM ON A MAP THAT THEY ARE NEARLY THERE. A woman in her
+   forties standing on the step just above them and turned back towards them, WEARING AN OPEN
+   WHITE COAT OVER MUTED BLUE-GREY SCRUBS (#b7c5d7, shaded #99a7b8), no mask, no gloves, hair in the deep blue-black described above, tied back. SHE IS DEFINITELY HOLDING AN OPEN PAPER MAP - THIS IS NOT OPTIONAL - HELD UP
+   IN ONE HAND AND TURNED SO THE COUPLE CAN SEE IT, big enough to read as a map at a glance, AND HER OTHER HAND POINTS UP THE STAIRCASE TOWARDS THE TABLE - the clear message is "we
+   are nearly there". THE MAP IS SIMPLE AND CARRIES NO WRITING AT ALL: just a folded sheet of
+   warm cream paper with ONE WINDING LINE AND THREE OR FOUR SMALL DOTS drawn on it. She is
+   smiling at them, NOT touching them, NOT holding a clipboard, NOT holding any instrument.
+
+5. THE TWO LANDINGS ARE CHECKPOINTS, AND EACH ONE HAS A FLAG WITH A NUMBER ON IT. On the FIRST
+   (lower) landing stands A SMALL TRIANGULAR PENNANT FLAG on a short pole, and the flag carries
+   ONE LARGE CLEAR NUMERAL: 1. On the SECOND (upper) landing an identical pennant carries ONE
+   LARGE CLEAR NUMERAL: 2. THE FLAGS ARE BLOWING SIDEWAYS as if in a light breeze. THESE TWO
+   NUMERALS ARE THE ONLY WRITTEN CHARACTERS ANYWHERE IN THE PICTURE - no words, no letters, no
+   other numbers, nothing written on anything else.
+
+6. GROUP B - A CLINIC WORKER IS WAITING AT EACH CHECKPOINT TO HELP HIM THROUGH IT. On the FIRST
+   landing, a young man in blue-grey scrubs LEANING FORWARD AND HOLDING OUT A SMALL WATER BOTTLE
+   AND A FOLDED TOWEL with both hands, ready to pass them to whoever arrives - like handing out
+   supplies at a checkpoint. On the SECOND landing, a woman in blue-grey scrubs WITH BOTH ARMS UP,
+   CLAPPING AND BECKONING THEM ONWARD, one foot forward, clearly in motion. Both are cheerful and
+   turned back down the stairs towards the couple. NEITHER of them holds any medical instrument.
+
+7. GROUP C - THE FINISH LINE IS A TABLE FULL OF FOOD, AND THE FAMILY IS CALLING THEM UP. On the
+   wide TOP LANDING, a round wooden table properly loaded with ORDINARY FAMILY FOOD: a whole
+   steamed fish on an oval plate, a plate of braised meat on the bone, a plate of whole prawns,
+   a plate of green vegetables and bowls of white rice, with two or three wisps of steam rising.
+   THIS IS NORMAL FOOD FOR PEOPLE WHO CAN CHEW - absolutely no porridge, no congee, no soup-only
+   meal, no mashed or pureed food. Around it: THE GRANDMOTHER - AND WHERE SHE STANDS
+   MATTERS MORE THAN ANYTHING ELSE ABOUT HER. A woman of about seventy STANDING ON THE LEFT-HAND
+   SIDE OF THE TABLE, THE SIDE NEAREST THE STAIRS, WITH THE TABLE BEHIND HER TO HER RIGHT - she
+   is NOT standing behind the table, NOT on the far side of it, NOTHING is between her and the
+   staircase. WE SEE HER IN THREE-QUARTER PROFILE FROM HER RIGHT SIDE: her shoulders, her nose,
+   her chin and her eyes ALL POINT DOWN AND TO THE LEFT, straight along the staircase towards the
+   man in the ochre shirt, who is far below her at the bottom left of the picture. If you could
+   draw a straight line from her mouth it would run down the stairs to him. SHE IS SHOUTING WITH
+   REAL ENERGY - THIS IS THE LIVELIEST FACE IN THE PICTURE: BOTH HANDS OPEN, PALMS FORWARD, HELD
+   BESIDE HER MOUTH LIKE A MEGAPHONE with the fingers spread; HER MOUTH WIDE OPEN IN A BIG ROUND
+   SHOUTING "O" (a clear open oval, the largest mouth in the picture); HER EYEBROWS RAISED HIGH,
+   her eyes creased into cheerful curves; her upper body LEANING FORWARD AND DOWNWARD towards the
+   stairs; and TWO OR THREE SHORT INK STROKES flying off to the LEFT of her mouth, in the
+   direction she is shouting, to show the sound carrying down to him. Keep her face in the house
+   style: ONE FLAT SKIN TONE, no wrinkles, no shading, no lines on the cheeks or forehead - the
+   liveliness comes ENTIRELY from the open mouth, the raised eyebrows, the spread hands, the
+   leaning body and the sound strokes. She must NOT face the viewer, NOT face right, NOT face the
+   table, NOT stand upright and calm; A YOUNG MAN OF ABOUT THIRTY CARRYING ONE MORE STEAMING DISH IN FROM THE side,
+   mid-stride; and A GIRL OF ABOUT TEN kneeling up on her chair and ALSO WAVING DOWN AND TO THE
+   LEFT at the couple with both hands. They are clearly shouting
+   "come and eat" - happy, noisy and welcoming.
+
+8. THE WHOLE SCENE IS IN MOTION - THIS IS WHAT MAKES IT WORK. Everybody is mid-action: a foot
+   lifting onto a step, an arm swinging up, a dish being carried, hands clapping, flags snapping
+   in the breeze, a small brown sparrow flying across the picture. Add a FEW light hand-drawn
+   motion marks - two or three short curved strokes beside a waving arm or a fluttering flag -
+   drawn in the same thin ink line as everything else. Keep them few and light; they are never
+   arrows and never speed stripes.
+
+9. COLOUR AND LIGHT. A soft warm off-white background (#e7e4dd) in clear bright daylight, with a
+   gentle pool of warm light around the top landing and the table so the eye travels up to it.
+   Three or four big rounded potted plants sit on and beside the steps and one large leafy plant
+   leans in from the bottom right corner. At least six clearly different colours: off-white
+   background, warm wood handrail and table, the four blues of the steps, ochre polo shirt,
+   moss-green top, white coat, blue-grey scrubs, green plants, and the warm colours of the food.
+   Most colour blocks sit around HSL saturation 30-50 and lightness 70-85. Flat fills in two or
+   three steps per colour, no gradients except to describe light. NO LARGE FLAT EMPTY AREAS
+   ANYWHERE; no dusk, no golden hour, no orange cast, no dark corners, no long shadows.
+
+COMPOSITION ANCHORS: the staircase runs from the lower left to the upper right and occupies the
+lower two thirds of the picture, with its already-walked stretch trailing away into the distance
+at the lower left; GROUP A stands ON THE STEPS in the lower left quarter, their feet close to the
+bottom edge and their heads reaching about halfway up the picture; the two flagged landings sit
+along the middle of the diagonal; the table and GROUP C sit in the upper right, with their heads
+well below the empty top strip; everything that must be read sits inside the middle 73% of the
+width; the top 17% stays completely empty.
+
+AVOID: any text, letters, words or logos anywhere in the image; any number other than the single
+numerals 1 and 2 on the two flags; scoreboards, health bars, coins, treasure chests, game menus,
+level-up effects, sparkles, stars, trophies, medals, finish-line tape, banners with writing,
+balloons or confetti; teeth, dentures, toothbrushes, dental instruments, dental chairs, syringes,
+X-rays, screens, clipboards, clinics or hospitals; porridge, congee, mashed or pureed food,
+medicine bottles; tiny figures dwarfed by a huge staircase; a long, steep or endless flight of
+stairs; stairs that run off the top edge; a spiral that coils around itself; a ladder; a mountain; a staircase that simply begins at the
+bottom-left corner with nothing below it; the already-walked steps drawn faint, blurred, tiny or
+hidden behind plants; a dentist with empty hands or with the map put away; any writing, letters, place names or
+symbols on the map; a treasure map, a pirate map or a game minimap;
+a motivational-poster feeling; anybody straining, panting, hunched, being carried or dragged;
+anybody punching the air; a silhouette against a bright sky; a heroic backlit figure; anybody
+drawn faded, translucent, ghostly or outline-only; anybody looking at the viewer; anybody calling or waving out of the picture instead of down the
+stairs; a cast of only
+elderly people; panels, insets, speech bubbles, arrows, small icons; dusk, sunset, golden hour, an
+orange or sepia cast; bare empty backgrounds; grey or blue-white walls; photorealism; 3D
+rendering; heavy even black outlines.
+```
+
