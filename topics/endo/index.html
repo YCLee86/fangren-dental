@@ -4791,6 +4791,27 @@ body[data-topic] #topics { padding-top: 1rem; }
 }
 [data-topic="endo"] .tp-intro > * { position: relative; z-index: 1; }
 
+/* 齒顎矯正（2026-08-24，**提案中，還沒定案**）
+   ⚠ 圖是近正方（829×912），做法跟顯微根管同一套（contain ＋ right/bottom 0），
+     不是牙周／兒牙那套「框窄一截 ＋ 靠左撐滿」——那一套是為了把人往右推，
+     這張翻轉後人已經在右緣了。
+   ⚠ **有 --flip**：生成的線稿裡醫師面向右（朝版心外），翻轉之後面向左 ＝ 朝著頁面文字，
+     他手指的方向也跟著指回版心（同牙周那次的理由）。
+   ⚠ 手機 **.121** 是算出來的 AA 上限（柔墨 #5c5f57 壓在 #4478b5 上剛好 4.50）。
+     五支套色各不同：一般牙科 .101／牙周 .116／顯微根管 .107／兒牙 .152／矯正 **.121**。
+   ⚠ 大小先照顯微根管那一格（近正方、會凸到 h1 的風險相同），等使用者在手機上挑。 */
+[data-topic="ortho"] .tp-intro { position: relative; }
+[data-topic="ortho"] .tp-intro::before {
+  content: ""; position: absolute; right: 0; bottom: 0;
+  width: min(76%, 360px); aspect-ratio: 829 / 912;
+  background: url("../../assets/lineart-ortho.png") center / contain no-repeat;
+  opacity: .121; pointer-events: none; z-index: 0;
+}
+@media (min-width: 721px) {
+  [data-topic="ortho"] .tp-intro::before { width: min(70%, 330px); opacity: .30; }
+}
+[data-topic="ortho"] .tp-intro > * { position: relative; z-index: 1; }
+
 /* 兒童牙科（2026-08-24 上線 —— **手機那一段是定案的，≥721 那一段還是暫定**）
    ⚠⚠ 這一科的做法和牙周同一套（不是一般牙科／顯微根管那套 contain）：
      **框窄一截 ＋ 圖照高度撐滿靠左**，多出來的一截被框裁掉 ——
