@@ -278,7 +278,12 @@ const bar = `
     var intro=document.querySelector('.tp-intro'); if(!intro){out.textContent='找不到介紹區';return;}
     var cs=getComputedStyle(intro,'::before'), ib=intro.getBoundingClientRect();
     var w=parseFloat(cs.width), hh=parseFloat(cs.height), op=parseFloat(cs.opacity);
-    var box={left:ib.right-w, right:ib.right, top:ib.bottom-hh, bottom:ib.bottom};
+    /* ⚠ 2026-08-26 修：偽元素的框要把它自己的 right/bottom 算進去。
+       原本寫死「貼齊介紹區右緣」，只要 --la-right 不是 0，
+       「哪幾行的字壓在圖上」與「圖的右緣離螢幕多少」兩個數字就一起偏掉
+       （口外 iPad 那一輪選的是 right: 48px，整整偏了 48px）。 */
+    var rOff=parseFloat(cs.right)||0, bOff=parseFloat(cs.bottom)||0;
+    var box={left:ib.right-rOff-w, right:ib.right-rOff, top:ib.bottom-bOff-hh, bottom:ib.bottom-bOff};
     var hit=lines(intro).filter(function(L){return !(L.right<box.left||L.left>box.right||L.bottom<box.top||L.top>box.bottom);});
     var soft=0, ink=0;
     hit.forEach(function(L){ var c=getComputedStyle(L.el).color;
