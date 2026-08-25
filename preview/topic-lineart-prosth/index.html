@@ -4838,7 +4838,7 @@ body[data-topic] #topics { padding-top: 1rem; }
 [data-topic="prosth"] .tp-intro::before {
   content: ""; position: absolute; right: var(--la-right, 0px); bottom: 0;
   width: min(var(--la-pct, 76%), var(--la-w, 360px)); aspect-ratio: 928 / 800;
-  background: url("../../assets/lineart-prosth.png") no-repeat; background-size: contain; background-position: calc(50% + var(--la-bleed, 0px)) center;
+  background-image: var(--la-img, url("../../assets/lineart-prosth.png")); background-repeat: no-repeat; background-size: contain; background-position: calc(50% + var(--la-bleed, 0px)) center;
   opacity: var(--la-op, .121); pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) {
@@ -7296,6 +7296,7 @@ body[data-topic] #topics { padding-top: 1rem; }
   <div class="pvrow" id="pvright"><b>往右</b></div>
   <div class="pvrow"><b>出血</b><button data-k="b" data-v="0">0</button><button data-k="b" data-v="16">+16</button><button data-k="b" data-v="32">+32</button><button data-k="b" data-v="48">+48</button><button data-k="b" data-v="64">+64</button></div>
   <div class="pvrow" id="pvop"><b>濃度</b></div>
+  <div class="pvrow"><b>翻轉</b><button data-k="f" data-v="1">翻（現在）</button><button data-k="f" data-v="0">不翻</button></div>
   <div class="pvout" id="pvout">量測中…</div>
 </div>
 <button class="pvmin" id="pvmin">收起</button>
@@ -7305,10 +7306,11 @@ body[data-topic] #topics { padding-top: 1rem; }
   var wide=matchMedia('(min-width: 721px)');
   var DEF={w:{narrow:76,wide:330},
            op:{narrow:.121,wide:.15}, r:{narrow:0,wide:0},
-           b:{narrow:16,wide:16}};
-  var st={w:null,op:null,r:null,b:null,off:false};
+           b:{narrow:16,wide:16}, f:{narrow:1,wide:1}};
+  var st={w:null,op:null,r:null,b:null,f:null,off:false};
+  var IMG={flip:'url("../../assets/lineart-prosth.png")',noflip:'url("noflip.png")'}, HASF=true;
   var qs=new URLSearchParams(location.search);
-  ['w','op','r','b'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
+  ['w','op','r','b','f'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
 
   var PCTS=[60,68,76,84,92], PXS=[280,310,330,360,400];
   var RN=[0,-6,-10,-14], RW=[0,-8,-14,-20];
@@ -7336,6 +7338,7 @@ body[data-topic] #topics { padding-top: 1rem; }
     root.style.setProperty('--la-op', st.off?0:cur('op'));
     root.style.setProperty('--la-right', cur('r')+'px');
     root.style.setProperty('--la-bleed', cur('b')+'px');
+    if(HASF) root.style.setProperty('--la-img', cur('f') ? IMG.flip : IMG.noflip);
     bar.querySelectorAll('button[data-k]').forEach(function(b){
       var k=b.dataset.k, v=parseFloat(b.dataset.v);
       b.setAttribute('aria-pressed', k==='off' ? String(st.off) : String(Math.abs(cur(k)-v)<1e-6));
@@ -7346,7 +7349,7 @@ body[data-topic] #topics { padding-top: 1rem; }
     var b=e.target.closest('button[data-k]'); if(!b) return;
     var k=b.dataset.k;
     if(k==='off') st.off=!st.off; else { st[k]=parseFloat(b.dataset.v); st.off=false; }
-    var u=new URL(location); ['w','op','r','b'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
+    var u=new URL(location); ['w','op','r','b','f'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
     history.replaceState(null,'',u); apply();
   });
   document.getElementById('pvmin').addEventListener('click', function(){
