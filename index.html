@@ -5318,6 +5318,31 @@ body[data-topic] #topics { padding-top: 1rem; }
 }
 [data-topic="ortho"] .tp-intro > * { position: relative; z-index: 1; }
 
+/* 植牙・假牙重建（2026-08-25 —— **提案中，兩段都還是暫定值**）
+   ⚠⚠ 這一科的柔墨 AA 上限是 **.097 ＝ 六科裡最緊的一支**（一般牙科 .100／牙周 .115／
+     顯微根管 .107／兒牙 .152／矯正 .120），成因是 #335b8b 是六支套色裡最深的。
+     手機那一段大概只能給到 .09~.10，先擺 .097 等使用者在自己手機上挑。
+   ⚠ 圖是橫的（928×800），做法照顯微根管／矯正那一套（contain ＋ right/bottom 0）。
+   ⚠ **有 --flip**：生成的線稿裡三個人朝右上（朝版心外），翻轉之後朝左上 ＝ 朝著頁面文字，
+     醫師手指的方向也跟著指回版心。
+   ⚠ 這一張是七科裡唯一**畫到腳**的（「正在登階」靠腿與腳下那幾階讀出來），
+     所以人物在框裡佔的高度比別科小、線也比較多（線佔 6.96%）。 */
+[data-topic="prosth"] .tp-intro { position: relative; }
+[data-topic="prosth"] .tp-intro::before {
+  content: ""; position: absolute; right: 0px; bottom: 0;
+  width: min(76%, 360px); aspect-ratio: 928 / 800;
+  background: url("assets/lineart-prosth.png") center / contain no-repeat;
+  opacity: .121; pointer-events: none; z-index: 0;
+}
+@media (min-width: 721px) {
+  [data-topic="prosth"] .tp-intro::before {
+    width: min(70%, 330px); right: 0px;
+    opacity: .15;
+  }
+}
+[data-topic="prosth"] .tp-intro > * { position: relative; z-index: 1; }
+
+
 /* 兒童牙科（2026-08-24 上線 —— **手機那一段是定案的，≥721 那一段還是暫定**）
    ⚠⚠ 這一科的做法和牙周同一套（不是一般牙科／顯微根管那套 contain）：
      **框窄一截 ＋ 圖照高度撐滿靠左**，多出來的一截被框裁掉 ——
