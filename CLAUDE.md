@@ -120,11 +120,13 @@ git add -A && git commit -m "..." && git push
 ```
 
 push 到 `main` 之後 Cloudflare 會自動建置部署，幾分鐘內上線。
-**不需要**手動跑 `wrangler deploy`，也不需要 Cloudflare token。
+⛔ **絕對不要**手動跑 `wrangler deploy` 或 `npm run deploy`，也不需要 Cloudflare token。
+那支指令送的是**本機的工作目錄**、繞過 `main` 也繞過建置，會把別台剛合併上去的東西整個蓋掉 ——
+2026-08-25 就是這樣讓正式站抖了一整晚（見第二節那個 2026-08-20／25 的警告）。
 
 > ## ⚠⚠ 2026-08-20：**推工作分支也會上線**（原本以為只建置 `main`）
 >
-> ### ✅✅ 2026-08-25：**這件事被證實了，而且看到了證據**
+> ### ❌ 2026-08-25：**推翻了 —— 不是分支建置，是有人手動 `wrangler deploy`**
 >
 > 使用者連著七八輪回報「植牙的線稿有時候看得到、重新整理又不見」。
 > repo、`origin/main`、`npm run build` 的產物、`_site` 逐視窗的實際渲染、
@@ -137,13 +139,32 @@ push 到 `main` 之後 Cloudflare 會自動建置部署，幾分鐘內上線。
 > f934eaa5  口外分享圖第十二輪：…   [clau…]  by YCLee86  16m ago
 > ```
 >
-> **那是另一台電腦的工作分支**（標籤是 `claude/…`），而它**直接成為 100% 的
-> 正式部署**。那條分支是從「植牙合併之前」的 `main` 長出來的，所以它建出來的
-> 網站沒有那條 CSS —— 兩台輪流推、輪流蓋掉對方，畫面就是「一下有一下沒有」。
+> 第一眼判成「分支建置也上線」，**錯了**。使用者接著打開 Settings → Build：
+> **生產分支是 `main`、`Builds for non-production branches` 根本沒有勾**。
+> 再回頭追那個 commit：
 >
-> **要治本只有一個地方**：Cloudflare → `fangren-dental` → Settings → Build →
-> Branch control，**生產分支設成 `main`、把非生產分支的建置關掉**。
-> 那是只有使用者打得開的後台。**在確認關掉之前，下面那三條照舊要遵守。**
+> ```
+> 33fc0d9 口外分享圖第十三輪…
+>   → 只存在於 origin/claude/oral-surgery-landing-page-design-gxzvah
+>   → 不在 main 上（git merge-base --is-ancestor 驗過）
+> ```
+>
+> **真正的成因：另一台電腦的 session 自己跑了 `wrangler deploy`。**
+> 那支指令把**當下的工作目錄**直接送上正式站，繞過 `main` 也繞過 Cloudflare 的
+> 建置；而且它會把本機的分支名與 commit 訊息寫進部署紀錄 —— 後台顯示的
+> `clau…` ＋「口外分享圖第十三輪」就是這樣來的，看起來才會像是分支被建置了。
+>
+> ## ⛔ 因此定一條紅線：**永遠不要跑 `wrangler deploy` 或 `npm run deploy`**
+>
+> 上線的唯一路徑是**把東西推進 `main`**，Cloudflare 會自己建置。
+> `wrangler deploy` 的三個後果，這一輪三個都發生了：
+> ・**它送的是本機工作目錄，不是 `main`** —— 別台剛合併上去的東西會整個消失。
+> ・**它繞過建置** —— `tools/build.mjs`／`tools/dist.mjs` 有沒有跑過沒人知道。
+> ・**兩台輪流部署會互相覆蓋**，畫面變成「一下有一下沒有」，而且**每一關都查不出問題**
+>   （repo、`main`、建置產物、實際渲染全部正確），只有 Cloudflare 後台看得出來。
+>
+> wrangler 只有**操作 D1**（計數器資料表）時才會用到。要確認線上跑的是哪一版，
+> 開 `https://fangren.net/version.txt`。
 >
 > ⚠ 這一輪還學到：**「線上看不到」要先分三層查**——① repo／`main` 對不對、
 > ② 建置產物（`_site`）對不對、③ **線上跑的是哪一版**。第三層以前沒有辦法查，
