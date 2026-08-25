@@ -103,15 +103,18 @@ for (const p of files) {
    ⚠ 拿不到 git（有些建置環境是淺複製或根本沒有 .git）就只寫時間，不要讓
      整個建置失敗 —— 這個檔案的價值遠低於網站本身。
    ⚠ robots.txt 有一條 Disallow 擋它（那條字串寫在 tools/build.mjs 裡）。
+   ⚠⚠ **只寫 ASCII，不要把 commit 訊息寫進去**（2026-08-25 第一版踩到）——
+     .txt 沒有地方宣告 charset，Safari 讀不到編碼就把中文顯示成一整排亂碼。
+     要知道那個 commit 是什麼，拿編號回 git 查就好。
 
    往後「網站好了嗎」只要開 https://fangren.net/version.txt 就有答案。
    --------------------------------------------------------------------------- */
 let stamp = "";
 try {
-  stamp = execSync("git log -1 --format=%h%x20%cI%x20%s", { cwd: ROOT })
+  stamp = execSync("git log -1 --format=%h%x20%cI", { cwd: ROOT })
     .toString().trim();
 } catch {
-  stamp = "（這次建置讀不到 git）";
+  stamp = "no-git";
 }
 fs.writeFileSync(
   path.join(OUT, "version.txt"),
