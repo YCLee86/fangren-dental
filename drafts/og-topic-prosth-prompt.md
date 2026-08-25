@@ -1403,6 +1403,178 @@ empty backgrounds; grey or blue-white walls; photorealism; 3D rendering; heavy e
 outlines.
 ```
 
+## 二之十三、第八輪：闖關 ＋ 終點是一桌飯菜（2026-08-25）
+
+三張折返梯都被退：**「感覺是不知道在幹嘛」** —— 階梯畫對了、人也夠大了，
+但**沒有故事**：一群人在樓梯上各自做事，看不出要去哪裡、為什麼要上去。
+
+使用者補上整套意象：
+
+> 「增加一點意象。**終點是一桌的飯菜**，有幾個家人已經坐那邊**呼喚著病人和陪伴家人開飯**。
+> 　病人和陪伴家人在階梯下，**回應著終點的家人**。病人旁邊有**醫師穿著白袍＋刷手服，
+> 　歡迎病患登上階梯**。階梯上有**兩個比較大的平台階，平台階上有標示數字**，
+> 　意思是**第幾關**，可以是旗幟或其他物品標示。平台上有醫護人員等著病人來
+> 　**闖關、考試、或幫病患加裝備、補能量**的概念。大家都是歡迎病患、希望他能成功。
+> 　然後**場面要動感一點**。」
+
+⚠⚠ **這一輪把「終點是一桌飯菜」和「階梯」接起來了** —— 那正是第三輪那個
+被擱置的 Ⓚ（全家吃飯）：它不是另一個梗，是**這個梗的終點**。
+`close` 那句「整理好，**吃得順**、用得久」因此第一次真的畫進畫面裡。
+
+### 使用者這一輪推翻的兩條（都要照做，不要「訂正」回去）
+
+1. ⚠⚠ **白袍回來了。** 第二之一節那把「距離尺」把白袍列為距離最遠的一格，
+   前四輪都刻意不穿；這一輪使用者指定**「醫師穿著白袍＋刷手服」**。
+   照做，但**只有階梯下那位醫師**穿白袍（他是來迎接的那個人），
+   **平台上的醫護仍然只穿刷手服**。
+2. ⚠⚠ **數字回來了。** 第十一節硬規格 6~7（不放小圖示、圖上不放字）
+   在這一輪對**兩面旗子上的 1 和 2** 放行 —— 條件同前：**大、少、只有這兩個數字**。
+
+### 這一輪的三個風險（提示詞裡已經寫死對策）
+
+- **人變多了**（八到九個）→ 250px 下最容易糊。對策：**綁成三組**
+  （階梯下三人一組／兩個平台各一人／頂端餐桌三人一組），組與組之間留空，
+  用階梯本身把三組串成一條斜線。
+- **「闖關」不能變成電玩** → 只用**旗子與數字**，AVOID 點名血條、金幣、寶箱、
+  關卡 UI、獎盃、獎牌。
+- **餐桌不能爬進頂 17%** → 餐桌與家人的頭頂要在 y≈130 以下（安靜區在 105）。
+
+### Ⓡ 闖關去吃飯（第八輪・完整版，可直接複製）
+
+⚠ 參考圖：**風格三張**（`drafts/style-ref-*.jpg`）＋ **上一輪那第三張成品**
+（折返梯的形狀、人物大小與線條都已經對了，這一輪只加故事，附它當構圖底）。
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE STORY IN ONE SENTENCE - READ THIS BEFORE DRAWING ANYTHING: at the bottom of a short, friendly
+staircase a middle-aged man is about to start climbing, his wife beside him and a dentist
+welcoming him up; two landings on the way are little checkpoints where clinic staff hand out
+supplies and cheer; and AT THE TOP, HIS FAMILY IS ALREADY SITTING AROUND A TABLE FULL OF FOOD,
+CALLING DOWN TO THEM TO COME AND EAT. Everybody wants him to get there. THE WHOLE PICTURE IS ONE
+LIVELY MOMENT WITH THINGS MOVING - it is not a quiet, still scene.
+
+THE PEOPLE ARE THE SUBJECT AND THEY ARE DRAWN BIG. The staircase is only the stage. THE PICTURE
+IS BUILT AS THREE TIGHT GROUPS strung along one diagonal, with clear empty space between the
+groups so each one reads separately at thumbnail size:
+  GROUP A, bottom left and NEAREST: the patient, his wife and the dentist - the biggest figures,
+  about 45% of the picture height.
+  GROUP B, the middle of the staircase: ONE clinic worker on each of TWO LANDINGS - about 30% and
+  26% of the picture height.
+  GROUP C, upper right and furthest: THREE family members around a table of food - about 22% of
+  the picture height.
+
+THE STAIRCASE: a short, friendly HALF-TURN staircase with broad treads and low risers - EIGHT
+STEPS IN TOTAL, NO MORE - climbing from the lower left to the upper right, seen slightly from the
+side so we can tell it rises. TWO OF THE STEPS ARE MUCH LARGER FLAT LANDINGS, big enough for a
+person to stand on with room to spare, one about a third of the way up and one about two thirds
+of the way up. The steps are coloured in four steps of the same blue as they go up: #7d9cc0, then
+#5f83ab, then #476e97, then #335b8b, each with a soft dark navy outline (#182f4b); a simple warm
+wooden handrail runs along the outer edge. The staircase ends at the top landing where the table
+is; it does NOT continue past it and does NOT run off the edge of the picture. NO spiral, NO
+helix, NO long flight of many steps, NO ladder.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+pale warm background only - no head, no table, no flag, no step, no plant, no sign. The table and
+everybody's heads sit below that line.
+
+THE NINE THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. EVERYONE LOOKS DIFFERENT: different age, hair, build and
+   clothes. Fine paper grain over the whole image.
+
+2. GROUP A - THE PATIENT IS SETTING OFF, AND HE IS CALLING BACK UP TO THE TABLE. A man of about
+   FIFTY-FIVE in a warm ochre polo shirt (#c08a5c), ONE FOOT ALREADY UP ON THE FIRST STEP, body
+   turned upward, ONE ARM RAISED HIGH WAVING TOWARDS THE TOP OF THE STAIRS, mouth open in a
+   cheerful shout - he is answering the family who are calling him. He is the largest figure in
+   the picture. He is NOT struggling, NOT hunched, NOT nervous.
+
+3. GROUP A - HIS WIFE IS BESIDE HIM, GOING UP WITH HIM. A woman of about fifty in a moss-green
+   top (#8a9a72), ONE ARM HOOKED THROUGH HIS, her other hand raised in a small wave towards the
+   table, laughing and looking up. Their two bodies clearly lean towards the stairs - they are
+   about to move.
+
+4. GROUP A - THE DENTIST IS WELCOMING THEM UP. A woman in her forties standing at the foot of
+   the stairs on the near side, WEARING AN OPEN WHITE COAT OVER MUTED BLUE-GREY SCRUBS (#b7c5d7,
+   shaded #99a7b8), no mask, no gloves, hair (#373f48) tied back. ONE ARM SWEEPS UPWARD ALONG
+   THE LINE OF THE STAIRCASE IN A CLEAR "THIS WAY UP, PLEASE" GESTURE, her other hand open at
+   her side, smiling at the couple. She is NOT touching them, NOT holding a clipboard, NOT
+   holding any instrument.
+
+5. THE TWO LANDINGS ARE CHECKPOINTS, AND EACH ONE HAS A FLAG WITH A NUMBER ON IT. On the FIRST
+   (lower) landing stands A SMALL TRIANGULAR PENNANT FLAG on a short pole, and the flag carries
+   ONE LARGE CLEAR NUMERAL: 1. On the SECOND (upper) landing an identical pennant carries ONE
+   LARGE CLEAR NUMERAL: 2. THE FLAGS ARE BLOWING SIDEWAYS as if in a light breeze. THESE TWO
+   NUMERALS ARE THE ONLY WRITTEN CHARACTERS ANYWHERE IN THE PICTURE - no words, no letters, no
+   other numbers, nothing written on anything else.
+
+6. GROUP B - A CLINIC WORKER IS WAITING AT EACH CHECKPOINT TO HELP HIM THROUGH IT. On the FIRST
+   landing, a young man in blue-grey scrubs LEANING FORWARD AND HOLDING OUT A SMALL WATER BOTTLE
+   AND A FOLDED TOWEL with both hands, ready to pass them to whoever arrives - like handing out
+   supplies at a checkpoint. On the SECOND landing, a woman in blue-grey scrubs WITH BOTH ARMS UP,
+   CLAPPING AND BECKONING THEM ONWARD, one foot forward, clearly in motion. Both are cheerful and
+   turned back down the stairs towards the couple. NEITHER of them holds any medical instrument.
+
+7. GROUP C - THE FINISH LINE IS A TABLE FULL OF FOOD, AND THE FAMILY IS CALLING THEM UP. On the
+   wide TOP LANDING, a round wooden table properly loaded with ORDINARY FAMILY FOOD: a whole
+   steamed fish on an oval plate, a plate of braised meat on the bone, a plate of whole prawns,
+   a plate of green vegetables and bowls of white rice, with two or three wisps of steam rising.
+   THIS IS NORMAL FOOD FOR PEOPLE WHO CAN CHEW - absolutely no porridge, no congee, no soup-only
+   meal, no mashed or pureed food. Around it: A GRANDMOTHER OF ABOUT SEVENTY STANDING UP AND
+   CUPPING BOTH HANDS AROUND HER MOUTH TO CALL DOWN THE STAIRS; A YOUNG MAN OF ABOUT THIRTY
+   CARRYING ONE MORE STEAMING DISH IN FROM THE side, mid-stride; and A GIRL OF ABOUT TEN kneeling
+   up on her chair and waving down at the couple with both hands. They are clearly shouting
+   "come and eat" - happy, noisy and welcoming.
+
+8. THE WHOLE SCENE IS IN MOTION - THIS IS WHAT MAKES IT WORK. Everybody is mid-action: a foot
+   lifting onto a step, an arm swinging up, a dish being carried, hands clapping, flags snapping
+   in the breeze, a small brown sparrow flying across the picture. Add a FEW light hand-drawn
+   motion marks - two or three short curved strokes beside a waving arm or a fluttering flag -
+   drawn in the same thin ink line as everything else. Keep them few and light; they are never
+   arrows and never speed stripes.
+
+9. COLOUR AND LIGHT. A soft warm off-white background (#e7e4dd) in clear bright daylight, with a
+   gentle pool of warm light around the top landing and the table so the eye travels up to it.
+   Three or four big rounded potted plants sit on and beside the steps and one large leafy plant
+   leans in from the bottom right corner. At least six clearly different colours: off-white
+   background, warm wood handrail and table, the four blues of the steps, ochre polo shirt,
+   moss-green top, white coat, blue-grey scrubs, green plants, and the warm colours of the food.
+   Most colour blocks sit around HSL saturation 30-50 and lightness 70-85. Flat fills in two or
+   three steps per colour, no gradients except to describe light. NO LARGE FLAT EMPTY AREAS
+   ANYWHERE; no dusk, no golden hour, no orange cast, no dark corners, no long shadows.
+
+COMPOSITION ANCHORS: the staircase runs from the lower left to the upper right and occupies the
+lower two thirds of the picture; GROUP A stands on the ground at the bottom left with their feet
+close to the bottom edge and their heads reaching about halfway up the picture; the two flagged
+landings sit along the middle of the diagonal; the table and GROUP C sit in the upper right, with
+their heads well below the empty top strip; everything that must be read sits inside the middle
+73% of the width; the top 17% stays completely empty.
+
+AVOID: any text, letters, words or logos anywhere in the image; any number other than the single
+numerals 1 and 2 on the two flags; scoreboards, health bars, coins, treasure chests, game menus,
+level-up effects, sparkles, stars, trophies, medals, finish-line tape, banners with writing,
+balloons or confetti; teeth, dentures, toothbrushes, dental instruments, dental chairs, syringes,
+X-rays, screens, clipboards, clinics or hospitals; porridge, congee, mashed or pureed food,
+medicine bottles; tiny figures dwarfed by a huge staircase; a long, steep or endless flight of
+stairs; stairs that run off the top edge; a spiral that coils around itself; a ladder; a mountain;
+a motivational-poster feeling; anybody straining, panting, hunched, being carried or dragged;
+anybody punching the air; a silhouette against a bright sky; a heroic backlit figure; anybody
+drawn faded, translucent, ghostly or outline-only; anybody looking at the viewer; a cast of only
+elderly people; panels, insets, speech bubbles, arrows, small icons; dusk, sunset, golden hour, an
+orange or sepia cast; bare empty backgrounds; grey or blue-white walls; photorealism; 3D
+rendering; heavy even black outlines.
+```
+
+
 ---
 
 ## 三、五案共用的東西（顏色、參考圖、門檻）
