@@ -5362,6 +5362,32 @@ body[data-topic] #topics { padding-top: 1rem; }
 }
 [data-topic="prosth"] .tp-intro > * { position: relative; z-index: 1; }
 
+/* 口腔外科（2026-08-25 開提案頁，**兩段都還是暫定**，推導在 drafts/lineart-surg-prompt.md）
+   ⚠⚠ 這一科有**兩個候選版本**，使用者要在自己的手機上切換著看：
+     Ａ 半身 `assets/lineart-surg.png` 816×830（近正方）
+     Ｂ 全身 `drafts/lineart-surg-alt.png` 478×943（很直，同一張圖的另一版）
+     下面的預設值是 Ａ 那一版的起點，Ｂ 選上的話大小要重挑
+     —— 直的圖在同一個寬度下高出一倍，卡住的是高度不是對比度（同顯微根管那一輪）。
+   ⚠ 這一科的柔墨 AA 上限是 **.118**（`#8e6299` 比植牙的 `#335b8b` 淺，所以比 .097 寬鬆）。
+     七科各不同（.101／.116／.107／.152／.120／.097／**.118**），**現算一次不要抄**。
+   ⚠ 她在圖裡本來就朝畫面左邊（＝朝版心裡的文字），所以**沒有 `--flip`**。 */
+[data-topic="surg"] .tp-intro { position: relative; }
+[data-topic="surg"] .tp-intro::before {
+  content: ""; position: absolute; right: 0px; bottom: 0;
+  width: min(76%, 360px); aspect-ratio: 816 / 830;
+  background: url("assets/lineart-surg.png") no-repeat; background-size: contain;
+  background-position: calc(50% + 0px) center;
+  opacity: .118; pointer-events: none; z-index: 0;
+}
+@media (min-width: 721px) {
+  [data-topic="surg"] .tp-intro::before {
+    width: min(70%, 330px); right: 0px;
+    background-position: calc(50% + 0px) center;
+    opacity: .30;
+  }
+}
+[data-topic="surg"] .tp-intro > * { position: relative; z-index: 1; }
+
 
 /* 兒童牙科（2026-08-24 上線 —— **手機那一段是定案的，≥721 那一段還是暫定**）
    ⚠⚠ 這一科的做法和牙周同一套（不是一般牙科／顯微根管那套 contain）：

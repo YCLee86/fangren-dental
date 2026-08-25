@@ -21,7 +21,17 @@ import fs from "node:fs";
 import path from "node:path";
 
 const spec = process.argv[2];
-if (!spec) { console.error("用法：node tools/lineart-preview.mjs <spec>"); process.exit(1); }
+if (!spec) { console.error("用法：node tools/lineart-preview.mjs <spec> [--alt <png> --alt-label 名 --main-label 名]"); process.exit(1); }
+/* 「兩個候選版本」的切換（2026-08-25 口外那一輪加的 —— 使用者畫了半身與全身兩張，
+   要在自己的手機上切換著看）。⚠ 兩張的長寬比不一樣，所以 aspect-ratio 也要跟著換，
+   不是只換圖檔（只換圖的話直的那一張會被壓扁）。 */
+const argv = process.argv.slice(3);
+const flag = (n) => { const i = argv.indexOf(n); return i >= 0 ? argv[i + 1] : null; };
+const altSrc = flag("--alt");
+const ALT_LABEL = flag("--alt-label") || "另一版";
+const MAIN_LABEL = flag("--main-label") || "現在這版";
+/* PNG 的寬高就寫在檔頭（IHDR），不必解碼整張圖 */
+const pngSize = (f) => { const b = fs.readFileSync(f); return [b.readUInt32BE(16), b.readUInt32BE(20)]; };
 const ROOT = path.resolve(import.meta.dirname, "..");
 const src = path.join(ROOT, "topics", spec, "index.html");
 if (!fs.existsSync(src)) { console.error(`× 找不到 ${src}`); process.exit(1); }
@@ -79,6 +89,11 @@ const flipUrl = `url("${mBg ? mBg[2] : ""}")`;
    —— 六科的規則排在同一份樣式表裡，用不限定選擇器的正規式會抓到別科的。 */
 const baseBleed = mBg && mBg[3] != null ? mBg[3]
   : (h.match(new RegExp(`\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?background-position: calc\\(50% \\+ var\\(--la-bleed, ([-\\d.]+)px\\)\\)`)) || [,"0"])[1];
+/* 長寬比也要接成變數 —— 兩個候選版本的比例不一樣（見檔頭那一段） */
+const reAr = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)aspect-ratio: ([\\d.]+) / ([\\d.]+);`);
+const mAr = h.match(reAr);
+const baseAr = mAr ? `${mAr[2]} / ${mAr[3]}` : "1 / 1";
+if (mAr) h = h.replace(reAr, `$1aspect-ratio: var(--la-ar, ${baseAr});`);
 const reOp = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)opacity: ([.\\d]+);`);
 const mOp = h.match(reOp);
 if (!mW || !mOp) { console.error("× 找不到該科的線稿規則，先把 CSS 加進 index.html 再跑這一支"); process.exit(1); }
@@ -115,7 +130,7 @@ const specRule = (h.match(new RegExp(`\\[data-topic="${spec}"\\] \\.tp-intro::be
 /* ⚠ 牙周／兒牙走的是另一套機制（框窄一截 ＋ 圖照高度撐滿靠左，`auto 100%`），
    那兩科本來就沒有「出血」可調 —— 只有 contain 那一套才要檢查它。 */
 const hasBleed = !/auto 100%/.test(specRule);
-for (const [v, name] of [["--la-w", "大小"], ["--la-right", "左右"], ...(hasBleed ? [["--la-bleed", "出血"]] : []), ["--la-op", "濃度"]]) {
+for (const [v, name] of [["--la-w", "大小"], ["--la-right", "左右"], ...(altSrc ? [["--la-ar", "版本"]] : []), ...(hasBleed ? [["--la-bleed", "出血"]] : []), ["--la-op", "濃度"]]) {
   if (!specRule.includes(v)) {
     console.error(`× 「${name}」那把尺沒接上（${v} 沒有出現在 ${spec} 的規則裡）——`);
     console.error(`  index.html 那條規則的寫法和產生器的正規式對不上，先去對一次再跑。`);
@@ -130,12 +145,16 @@ for (const [v, name] of [["--la-w", "大小"], ["--la-right", "左右"], ...(has
 const BLEEDS = [-48, -32, -16, 0, 16, 32, 48, 64];   /* 負值＝背景往左推 */   /* 出血：往右推幾 px（圖的右邊會被裁掉同樣多） */
 const RIGHTS_N = [24, 12, 0, -6, -10, -14];   /* 正值＝框往左（離右緣），負值＝推出版心往右 */
 const RIGHTS_W = [48, 32, 16, 0, -8, -14, -20];
-const PCTS = [60, 68, 76, 84, 92];      /* 手機：真正在作用的是百分比 */
-const PXS  = [280, 310, 330, 360, 400];  /* ≥721：介紹區夠寬，卡住的是 px 上限 */
+/* ⚠ 最小的兩格（44/52%、200/240px）是 2026-08-25 口外那一輪加的：
+   **直的線稿在同一個寬度下高出一倍**，76% 就比介紹區高 133px、會凸到 h1 那一區
+   （同顯微根管 2026-08-24 那一輪：近正方或直的圖，卡住的是高度不是對比度）。 */
+const PCTS = [44, 52, 60, 68, 76, 84, 92];      /* 手機：真正在作用的是百分比 */
+const PXS  = [200, 240, 280, 310, 330, 360, 400];  /* ≥721：介紹區夠寬，卡住的是 px 上限 */
 /* 濃度也依斷點分兩組：手機被柔墨卡住（AA 上限就在 .10~.15 之間），
    ≥721 那一段多半只壓到深墨，上限寬鬆得多（顯微根管定案 .30、兒牙 .22、牙周 .15）。 */
 const OPS_N = [0.10, 0.121, 0.15, 0.18, 0.24];
 const OPS_W = [0.15, 0.22, 0.30, 0.40, 0.55];
+const altAr = altSrc ? pngSize(path.join(ROOT, altSrc)).join(" / ") : baseAr;
 const bar = `
 <style>
 /* pv 前綴：這一份是著陸頁的完整快照，站上有的 class 全都在，短名字會撞 */
@@ -159,7 +178,8 @@ const bar = `
   <div class="pvrow" id="pvsize"><b>大小</b></div>
   <div class="pvrow" id="pvright"><b>左右</b></div>
   <div class="pvrow"><b>出血</b>${BLEEDS.map(v => `<button data-k="b" data-v="${v}">${v === 0 ? "0" : (v > 0 ? "→" + v : "←" + (-v))}</button>`).join("")}</div>
-  <div class="pvrow" id="pvop"><b>濃度</b></div>${hasNoflip ? `
+  <div class="pvrow" id="pvop"><b>濃度</b></div>${altSrc ? `
+  <div class="pvrow"><b>版本</b><button data-k="v" data-v="0">${MAIN_LABEL}</button><button data-k="v" data-v="1">${ALT_LABEL}</button></div>` : ""}${hasNoflip ? `
   <div class="pvrow"><b>翻轉</b><button data-k="f" data-v="1">翻（現在）</button><button data-k="f" data-v="0">不翻</button></div>` : ""}
   <div class="pvout" id="pvout">量測中…</div>
 </div>
@@ -170,11 +190,14 @@ const bar = `
   var wide=matchMedia('(min-width: 721px)');
   var DEF={w:{narrow:${mW[2].trim().replace("%","")},wide:${wideW.replace("px","")}},
            op:{narrow:${baseOp},wide:${wideOp}}, r:{narrow:${baseRight},wide:${(mBlock && (mBlock[0].match(/right: (-?[\d.]+)px/)||[])[1]) || baseRight}},
-           b:{narrow:${baseBleed},wide:${wideBleed}}, f:{narrow:1,wide:1}};
-  var st={w:null,op:null,r:null,b:null,f:null,off:false};
+           b:{narrow:${baseBleed},wide:${wideBleed}}, f:{narrow:1,wide:1}, v:{narrow:0,wide:0}};
+  var st={w:null,op:null,r:null,b:null,f:null,v:null,off:false};
   var IMG={flip:'${flipUrl}',noflip:'url("noflip.png")'}, HASF=${hasNoflip};
+  /* 兩個候選版本：圖與長寬比一起換 */
+  var HASV=${altSrc ? "true" : "false"};
+  var VER=[{img:'${flipUrl}',ar:'${baseAr}'},{img:'url("alt.png")',ar:'${altAr}'}];
   var qs=new URLSearchParams(location.search);
-  ['w','op','r','b','f'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
+  ['w','op','r','b','f','v'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
 
   var PCTS=${JSON.stringify(PCTS)}, PXS=${JSON.stringify(PXS)};
   var RN=${JSON.stringify(RIGHTS_N)}, RW=${JSON.stringify(RIGHTS_W)};
@@ -203,6 +226,8 @@ const bar = `
     root.style.setProperty('--la-right', cur('r')+'px');
     root.style.setProperty('--la-bleed', cur('b')+'px');
     if(HASF) root.style.setProperty('--la-img', cur('f') ? IMG.flip : IMG.noflip);
+    if(HASV){ var V=VER[cur('v')?1:0]; root.style.setProperty('--la-img', V.img);
+              root.style.setProperty('--la-ar', V.ar); }
     bar.querySelectorAll('button[data-k]').forEach(function(b){
       var k=b.dataset.k, v=parseFloat(b.dataset.v);
       b.setAttribute('aria-pressed', k==='off' ? String(st.off) : String(Math.abs(cur(k)-v)<1e-6));
@@ -213,7 +238,7 @@ const bar = `
     var b=e.target.closest('button[data-k]'); if(!b) return;
     var k=b.dataset.k;
     if(k==='off') st.off=!st.off; else { st[k]=parseFloat(b.dataset.v); st.off=false; }
-    var u=new URL(location); ['w','op','r','b','f'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
+    var u=new URL(location); ['w','op','r','b','f','v'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
     history.replaceState(null,'',u); apply();
   });
   document.getElementById('pvmin').addEventListener('click', function(){
@@ -288,6 +313,7 @@ const dir = path.join(ROOT, "preview", `topic-lineart-${spec}`);
 fs.mkdirSync(dir, { recursive: true });
 fs.writeFileSync(path.join(dir, "index.html"), h);
 if (hasNoflip) fs.copyFileSync(noflipSrc, path.join(dir, "noflip.png"));
+if (altSrc) fs.copyFileSync(path.join(ROOT, altSrc), path.join(dir, "alt.png"));
 console.log(`✓ preview/topic-lineart-${spec}/index.html`);
 console.log(`  手機那一段預設 ${baseW}／${baseOp}　≥721 預設 ${wideW}／${wideOp}`);
 console.log(`  網址參數：?w=360&op=0.121`);

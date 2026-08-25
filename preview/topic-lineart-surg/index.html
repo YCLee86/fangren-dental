@@ -111,7 +111,7 @@
        · 座標、sameAs、郵遞區號、國碼電話 → clinic.json（頁面上沒有的才放那裡）
      所以要改看診時間就改那張卡，不要來改這裡。 -->
 <!-- SEO:START — 由 tools/topics.mjs 產生，請勿手動編輯 -->
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="description" content="口腔外科｜難拔的，有人專門在拔 —— 智齒、殘根、長不出來的都是。智齒腫過一次，消了就沒再管。牙齒只剩牙根，拔起來很麻煩。">
 <link rel="canonical" href="https://fangren.net/topics/surg/">
 <meta property="og:type" content="website">
@@ -4880,17 +4880,16 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠ 她在圖裡本來就朝畫面左邊（＝朝版心裡的文字），所以**沒有 `--flip`**。 */
 [data-topic="surg"] .tp-intro { position: relative; }
 [data-topic="surg"] .tp-intro::before {
-  content: ""; position: absolute; right: 0px; bottom: 0;
-  width: min(76%, 360px); aspect-ratio: 816 / 830;
-  background: url("../../assets/lineart-surg.png") no-repeat; background-size: contain;
-  background-position: calc(50% + 0px) center;
-  opacity: .118; pointer-events: none; z-index: 0;
+  content: ""; position: absolute; right: var(--la-right, 0px); bottom: 0;
+  width: min(var(--la-pct, 76%), var(--la-w, 360px)); aspect-ratio: var(--la-ar, 816 / 830);
+  background-image: var(--la-img, url("../../assets/lineart-surg.png")); background-repeat: no-repeat; background-size: contain; background-position: calc(50% + var(--la-bleed, 0px)) center;
+  opacity: var(--la-op, .118); pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) {
   [data-topic="surg"] .tp-intro::before {
-    width: min(70%, 330px); right: 0px;
-    background-position: calc(50% + 0px) center;
-    opacity: .30;
+    width: min(var(--la-pct, 70%), var(--la-w, 330px)); right: var(--la-right, 0px);
+    background-position: calc(50% + var(--la-bleed, 0px)) center;
+    opacity: var(--la-op, .30);
   }
 }
 [data-topic="surg"] .tp-intro > * { position: relative; z-index: 1; }
@@ -7297,5 +7296,154 @@ body[data-topic] #topics { padding-top: 1rem; }
      放在頁尾的話 iOS 會先畫一張還沒定位的畫面，下一幀才跳過去
      （使用者的螢幕錄影裡看得到）。
      ⚠ 兩支都用 `document.body.dataset.topic` 擋住，首頁上等於不存在。 -->
+
+<style>
+/* pv 前綴：這一份是著陸頁的完整快照，站上有的 class 全都在，短名字會撞 */
+.pvbar{position:fixed;left:0;right:0;bottom:0;z-index:99;background:rgba(24,22,20,.92);
+  backdrop-filter:blur(8px);color:#e8e6e2;font:500 13px/1.4 system-ui,sans-serif;
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom));max-height:24vh;overflow:auto}
+.pvbar.is-min{max-height:none;padding:4px 10px}
+.pvbar.is-min .pvrow,.pvbar.is-min .pvout{display:none}
+.pvrow{display:flex;gap:5px;align-items:center;margin:4px 0;flex-wrap:nowrap;overflow-x:auto}
+.pvrow b{flex:none;width:2.6em;color:#a8a49e;font-weight:500}
+.pvbar button{flex:none;border:1px solid #4a4642;background:#2a2724;color:#e8e6e2;
+  border-radius:7px;padding:5px 9px;font:inherit;min-height:30px;cursor:pointer}
+.pvbar button[aria-pressed="true"]{background:#e8e6e2;color:#1c1a18;border-color:#e8e6e2}
+.pvout{margin-top:5px;font-size:11.5px;line-height:1.5;color:#c9c5bf;white-space:pre-wrap}
+.pvout .bad{color:#ff9a8a}.pvout .ok{color:#9fd6a0}
+.pvmin{position:fixed;right:10px;bottom:calc(6px + env(safe-area-inset-bottom));z-index:100;
+  border:1px solid #4a4642;background:rgba(24,22,20,.92);color:#e8e6e2;border-radius:8px;
+  padding:5px 9px;font:500 12px system-ui,sans-serif;min-height:30px}
+</style>
+<div class="pvbar" id="pvbar">
+  <div class="pvrow" id="pvsize"><b>大小</b></div>
+  <div class="pvrow" id="pvright"><b>左右</b></div>
+  <div class="pvrow"><b>出血</b><button data-k="b" data-v="-48">←48</button><button data-k="b" data-v="-32">←32</button><button data-k="b" data-v="-16">←16</button><button data-k="b" data-v="0">0</button><button data-k="b" data-v="16">→16</button><button data-k="b" data-v="32">→32</button><button data-k="b" data-v="48">→48</button><button data-k="b" data-v="64">→64</button></div>
+  <div class="pvrow" id="pvop"><b>濃度</b></div>
+  <div class="pvrow"><b>版本</b><button data-k="v" data-v="0">Ａ 半身</button><button data-k="v" data-v="1">Ｂ 全身</button></div>
+  <div class="pvout" id="pvout">量測中…</div>
+</div>
+<button class="pvmin" id="pvmin">收起</button>
+<script>
+(function(){
+  var root=document.documentElement, bar=document.getElementById('pvbar'), out=document.getElementById('pvout');
+  var wide=matchMedia('(min-width: 721px)');
+  var DEF={w:{narrow:76,wide:330},
+           op:{narrow:.118,wide:.30}, r:{narrow:0,wide:0},
+           b:{narrow:0,wide:0}, f:{narrow:1,wide:1}, v:{narrow:0,wide:0}};
+  var st={w:null,op:null,r:null,b:null,f:null,v:null,off:false};
+  var IMG={flip:'url("../../assets/lineart-surg.png")',noflip:'url("noflip.png")'}, HASF=false;
+  /* 兩個候選版本：圖與長寬比一起換 */
+  var HASV=true;
+  var VER=[{img:'url("../../assets/lineart-surg.png")',ar:'816 / 830'},{img:'url("alt.png")',ar:'478 / 943'}];
+  var qs=new URLSearchParams(location.search);
+  ['w','op','r','b','f','v'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
+
+  var PCTS=[44,52,60,68,76,84,92], PXS=[200,240,280,310,330,360,400];
+  var RN=[24,12,0,-6,-10,-14], RW=[48,32,16,0,-8,-14,-20];
+  var ON=[0.1,0.121,0.15,0.18,0.24], OW=[0.15,0.22,0.3,0.4,0.55];
+  function sizes(){ return wide.matches?PXS:PCTS; }
+  function unit(){ return wide.matches?'px':'%'; }
+  function buildSizes(){
+    var row=document.getElementById('pvsize');
+    row.innerHTML='<b>大小</b>'+sizes().map(function(v){
+      return '<button data-k="w" data-v="'+v+'">'+v+unit()+'</button>';}).join('');
+    var o=document.getElementById('pvop');
+    o.innerHTML='<b>濃度</b>'+(wide.matches?OW:ON).map(function(v){
+      return '<button data-k="op" data-v="'+v+'">'+v+'</button>';}).join('')
+      +'<button data-k="off" data-v="1">關掉圖</button>';
+    var r=document.getElementById('pvright');
+    r.innerHTML='<b>左右</b>'+(wide.matches?RW:RN).map(function(v){
+      return '<button data-k="r" data-v="'+v+'">'+(v===0?'0':(v>0?'←'+v:'→'+(-v)))+'</button>';}).join('');
+  }
+  function cur(k){ return st[k]!=null?st[k]:DEF[k][wide.matches?'wide':'narrow']; }
+  function apply(){
+    /* ⚠ 手機那一段被 min() 的百分比卡住、≥721 被 px 上限卡住 ——
+       所以尺要各自設自己那一個變數，另一個放寬，否則按了沒反應（2026-08-24 踩過）。 */
+    if(wide.matches){ root.style.setProperty('--la-pct','100%'); root.style.setProperty('--la-w', cur('w')+'px'); }
+    else { root.style.setProperty('--la-pct', cur('w')+'%'); root.style.setProperty('--la-w','9999px'); }
+    root.style.setProperty('--la-op', st.off?0:cur('op'));
+    root.style.setProperty('--la-right', cur('r')+'px');
+    root.style.setProperty('--la-bleed', cur('b')+'px');
+    if(HASF) root.style.setProperty('--la-img', cur('f') ? IMG.flip : IMG.noflip);
+    if(HASV){ var V=VER[cur('v')?1:0]; root.style.setProperty('--la-img', V.img);
+              root.style.setProperty('--la-ar', V.ar); }
+    bar.querySelectorAll('button[data-k]').forEach(function(b){
+      var k=b.dataset.k, v=parseFloat(b.dataset.v);
+      b.setAttribute('aria-pressed', k==='off' ? String(st.off) : String(Math.abs(cur(k)-v)<1e-6));
+    });
+    measure();
+  }
+  bar.addEventListener('click', function(e){
+    var b=e.target.closest('button[data-k]'); if(!b) return;
+    var k=b.dataset.k;
+    if(k==='off') st.off=!st.off; else { st[k]=parseFloat(b.dataset.v); st.off=false; }
+    var u=new URL(location); ['w','op','r','b','f','v'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
+    history.replaceState(null,'',u); apply();
+  });
+  document.getElementById('pvmin').addEventListener('click', function(){
+    bar.classList.toggle('is-min');
+    this.textContent = bar.classList.contains('is-min') ? '打開' : '收起';
+  });
+
+  /* 對比度：柔墨與深墨壓在「紙色×(1-k) + 套色×k」上 */
+  function lum(c){var s=c.map(function(x){x/=255;return x<=0.03928?x/12.92:Math.pow((x+0.055)/1.055,2.4);});
+    return .2126*s[0]+.7152*s[1]+.0722*s[2];}
+  function cr(a,b){var l1=lum(a),l2=lum(b);return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);}
+  function rgb(v){var m=getComputedStyle(root).getPropertyValue(v).trim();
+    var x=m.match(/\d+/g); return x?x.slice(0,3).map(Number):null;}
+  function hex2(h){return [1,3,5].map(function(i){return parseInt(h.substr(i,2),16);});}
+
+  /* 逐行量：哪幾行的字壓在圖上（Range 取 rect，照 top 分組） */
+  function lines(el){
+    var out=[], w=document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    var n; while((n=w.nextNode())){
+      if(!n.nodeValue.trim()) continue;
+      var r=document.createRange(); r.selectNodeContents(n);
+      Array.prototype.forEach.call(r.getClientRects(), function(x){
+        if(x.width<1||x.height<1) return;
+        var g=out.find(function(o){return Math.abs(o.top-x.top)<4;});
+        if(g){g.left=Math.min(g.left,x.left);g.right=Math.max(g.right,x.right);}
+        else out.push({top:x.top,bottom:x.bottom,left:x.left,right:x.right,el:n.parentElement});
+      });
+    }
+    return out;
+  }
+  function measure(){
+    var intro=document.querySelector('.tp-intro'); if(!intro){out.textContent='找不到介紹區';return;}
+    var cs=getComputedStyle(intro,'::before'), ib=intro.getBoundingClientRect();
+    var w=parseFloat(cs.width), hh=parseFloat(cs.height), op=parseFloat(cs.opacity);
+    var box={left:ib.right-w, right:ib.right, top:ib.bottom-hh, bottom:ib.bottom};
+    var hit=lines(intro).filter(function(L){return !(L.right<box.left||L.left>box.right||L.bottom<box.top||L.top>box.bottom);});
+    var soft=0, ink=0;
+    hit.forEach(function(L){ var c=getComputedStyle(L.el).color;
+      var m=c.match(/\d+/g); if(!m) return;
+      var l=lum(m.slice(0,3).map(Number));
+      if(l>0.10) soft++; else ink++; });
+    var paper=hex2('#e2e5e6'), acc=rgb('--accent')||hex2('#4478b5');
+    var bg=paper.map(function(p,i){return p*(1-op)+acc[i]*op;});
+    var crSoft=cr(hex2('#5c5f57'), bg), crInk=cr(hex2('#2a2c27'), bg);
+    var over=hh-ib.height, hscroll=root.scrollWidth>root.clientWidth;
+    out.innerHTML =
+      '圖 '+w.toFixed(0)+'×'+hh.toFixed(0)+'　介紹區高 '+ib.height.toFixed(0)+
+      '　'+(over>0?'<span class="bad">比介紹區高 '+over.toFixed(0)+'px（會凸到標題那一區）</span>'
+                 :'<span class="ok">收在介紹區裡（還差 '+(-over).toFixed(0)+'px）</span>')+'\n'+
+      '壓到圖的字：柔墨 '+soft+' 行・深墨 '+ink+' 行　'+
+      (soft>0 ? (crSoft>=4.5?'<span class="ok">柔墨 '+crSoft.toFixed(2)+' ✓</span>'
+                            :'<span class="bad">柔墨 '+crSoft.toFixed(2)+'（低於 4.5）</span>')
+              : '<span class="ok">沒有柔墨壓到，濃度不影響可讀性</span>')+
+      '　深墨 '+crInk.toFixed(2)+'\n'+
+      '圖的右緣離螢幕 '+(innerWidth-box.right).toFixed(0)+'px'+
+      (cur('b')>0 ? '　圖被裁掉右邊 '+cur('b')+'px（'+(cur('b')/w*100).toFixed(0)+'%）' : '')+'　'+
+      '視窗 '+innerWidth+'×'+innerHeight+'　'+(wide.matches?'≥721 那一段':'手機那一段')+
+      '　'+(hscroll?'<span class="bad">⚠ 有水平捲動</span>':'<span class="ok">無水平捲動</span>')+
+      '　濃度 '+op.toFixed(3);
+  }
+  wide.addEventListener('change', function(){ st.w=null; buildSizes(); apply(); });
+  addEventListener('resize', function(){clearTimeout(window.__t);window.__t=setTimeout(apply,120);});
+  addEventListener('load', apply);
+  buildSizes(); apply();
+})();
+</script>
 </body>
 </html>
