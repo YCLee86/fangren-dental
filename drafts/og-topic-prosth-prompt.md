@@ -710,6 +710,183 @@ black outlines.
 ⚠ 兩版回來先量三件：無彩空白 < 5%、邊緣密度 ≥ 30%、頂 17% 的 B 通道 ≥ 161。
 ⚠ Ⓙ 另外要單獨檢查一件：**板子上有沒有長出 1234 以外的字**（模型最愛在這裡加東西）。
 
+## 二之六、第四輪：走流程圖，但四件要修（2026-08-25）
+
+使用者看過 Ⓙ／Ⓚ 之後：
+
+> 「我們**走流程圖的概念**好了。首先，**病患和家人人數有點少，圖片上只有老人家**，
+> 　診所的受眾不只這樣。另外，**流程圖太簡陋**，我放幾個參考〔PDCA 與流程圖的搜尋截圖〕。
+> 　**診所環境有點黃昏簡陋感**。另外**要套植牙假牙標籤主題色**。」
+
+**方向定了：Ⓙ 那條路（醫師對著立起來的板子解說 ＋ 家人陪著聽）。** 吃飯那版沒有被選。
+四件要修：
+
+1. ⚠⚠ **卡司的年齡要展開，不能整張都是老人。**
+   植牙假牙的受眾**不等於長輩** —— 病人改成 **五十歲上下**，陪的人是**同齡的太太**，
+   候診區另外坐著**一位七十幾的長輩**與**一位三十幾的上班族**。
+   六個人、三組，年齡從二十幾（助理）到七十幾都有。
+   ⚠ 這和第十一節硬規格 4 不衝突：判準從來不是人數，是**分成 2~3 組、排成一條橫帶、
+   有一個亮的落點**。
+2. ⚠⚠ **流程圖要「像一張真的流程圖」**：色塊、粗箭頭、白數字、看得出有「流」。
+   形狀給兩張參考圖讓使用者選（第十之一節：形狀不要用文字描述）：
+   **`drafts/prosth-flow-ref-linear.png`**（橫向四格 ＋ 繞回第 2 格的弧）與
+   **`drafts/prosth-flow-ref-cycle.png`**（他給的 PDCA 那一種，四段粗弧箭頭圍成環）。
+   ⚠ 上一版那四個空心圓細線就是「簡陋」的成因：**沒有色塊、線太細**。
+   ⚠ 但仍然**只有 1 2 3 4，沒有任何文字** —— 療程分幾階段還沒問到診所（`ask`），
+   寫上去就是編的。
+3. ⚠⚠ **「黃昏簡陋感」有兩個成因，要分開治**：
+   ・**光**：上一版提示詞寫的是 `warm afternoon light slanting in`，模型畫成低角度的
+     橘光 ＝ 黃昏。改成**明亮的上午日光**，並在 AVOID 點名 dusk／golden hour／
+     orange cast／長影子。
+   ・**空**：大片沒有東西的牆＝簡陋（同第十一之一節第 3 條：**「背景簡單」不等於
+     「畫面空」**）。解法不是加很多小東西，是**元素仍然少而大、但要填滿畫面**：
+     整面木格柵層板牆、一株大的垂墜植物、長木凳、櫃台。
+4. ⚠⚠ **主題色要出現在畫面上**（`#335b8b`，站上那顆標籤的顏色）。
+   放三處：**流程圖的色塊**（主場）、**長木凳的坐墊**、**櫃台下方的門片**，
+   合計不超過畫面的 15%。⚠ **刷手服仍然是量出來的淡階 `#b7c5d7`**，
+   那是全站七科共用的規則（第十之三節），不要為了「套主題色」把它改深。
+   ⚠ 頂 17% 那面牆仍然要淺（B ≥ 161），主題色不可以爬進安靜區。
+
+## 二之七、第四輪的兩份提示詞（差別只在板子上那張圖）
+
+⚠ 兩版都要附 **對應的那一張流程圖參考** ＋ 風格那三張（`drafts/style-ref-*.jpg`）。
+⚠ 牙模那張**不要附**。
+
+### Ⓛ 橫向流程（四格 ＋ 繞回來的弧）
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE MOOD OF THE WHOLE IMAGE - READ THIS BEFORE DRAWING ANYTHING: the consultation corner of a
+small, WELL-KEPT, BUSY neighbourhood dental clinic in the BRIGHT LATE MORNING. The light is
+clear, even, daylight-white - NOT dusk, NOT golden hour, NOT orange, no long dramatic shadows,
+no dim corners. The room is warm but tidy and modern: light warm wood, a soft warm off-white
+wall (#e7e4dd), and it is FULL - there is no bare empty wall anywhere. This is an explanation,
+NOT a treatment: no dental chair, no instruments, no gloves, no plaster models, no teeth of any
+kind, no X-rays, no screens, no white coat.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+pale warm off-white wall only - no head, no board, no lamp, no shelf, no plant, no sign. It must
+stay PALE; no dark or strongly coloured object may enter it. Everything else starts below.
+
+THE PICTURE IS ABOUT A DENTIST EXPLAINING THE ORDER OF THE STEPS ON A BIG BOARD, AND A COUPLE
+IN THEIR FIFTIES BOTH GETTING IT AT THE SAME TIME, IN A CLINIC WHERE OTHER PEOPLE OF ALL AGES
+ARE WAITING. Everything else serves that one idea.
+
+THE NINE THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. Fine paper grain over the whole image.
+
+2. THE BOARD IS THE CENTRE OF THE PICTURE AND IT FACES US SQUARELY. A large board in a simple
+   light wooden frame, STANDING UPRIGHT on a wooden easel, turned straight towards the viewer so
+   nothing on it is foreshortened. It is about 45% of the picture height; its top edge stays
+   BELOW the empty top strip. ON THE BOARD, EXACTLY LIKE THE SHAPE-REFERENCE DIAGRAM: FOUR BIG
+   SOLID ROUNDED RECTANGLES IN A ROW, FILLED IN FOUR STEPS OF THE SAME BLUE - #7d9cc0, #5f83ab,
+   #476e97 and #335b8b from left to right - each outlined in dark navy (#182f4b) and each
+   carrying ONE LARGE WHITE NUMERAL: 1, 2, 3, 4. THREE THICK NAVY ARROWS point right between
+   them, and ONE THICK CURVED NAVY ARROW sweeps back underneath from the fourth box to the
+   second. The boxes, numerals and arrows are BIG, SOLID AND FEW so they read at thumbnail size.
+   THERE IS NOTHING ELSE ON THE BOARD AT ALL: no words, no letters, no other numbers, no dates,
+   no prices, no tooth shapes, no small marks, no handwriting besides those four numerals.
+
+3. THE DENTIST STANDS AT THE LEFT OF THE BOARD, EXPLAINING. A woman in her thirties, standing
+   beside the easel, turned three-quarters towards the couple, ONE OPEN PALM RESTING BESIDE THE
+   SECOND BOX, her other arm relaxed. She speaks calmly and looks at them, not at us. SHE WEARS
+   PLAIN SCRUBS in muted blue-grey (#b7c5d7, shaded #99a7b8) - V-neck, short sleeves, NO WHITE
+   COAT, NO FACE MASK, NO GLOVES - hair (#373f48) tied back. She looks like a person, not like a
+   specialist.
+
+4. THE PATIENT SITS ON THE RIGHT AND HE HAS JUST UNDERSTOOD SOMETHING. A man of about FIFTY -
+   middle-aged, NOT elderly, dark hair with a little grey, ordinary and healthy-looking - in a
+   warm ochre polo shirt (#c08a5c), on a simple wooden chair turned towards the board, tipped
+   forward, forearms on his knees, EYEBROWS RAISED AND CHIN LIFTED IN A SMALL NOD, mouth slightly
+   open as if he has just said "ah - I see". HIS EYES ARE ON THE BOARD.
+
+5. HIS WIFE STANDS JUST BEHIND HIS CHAIR AND SHE AGREES. A woman of about forty-eight in a soft
+   moss-green top (#8a9a72), bag still on her arm, ONE HAND LIGHTLY ON THE BACK OF HIS CHAIR,
+   head tilted, NODDING - following the same explanation, NOT speaking for him, NOT anxious.
+   Husband and wife read as ONE GROUP on the right.
+
+6. THE CLINIC IS BUSY AND THE PEOPLE IN IT ARE OF ALL AGES - THIS MATTERS. Behind them, along
+   the back of the room: A LONG WOODEN BENCH with TWO PEOPLE WAITING AT ITS TWO ENDS - at one
+   end A MAN IN HIS SEVENTIES with white hair, hands on his knees, looking out of the window; at
+   the other end A WOMAN IN HER EARLY THIRTIES in a plain shirt, looking down at a book. Further
+   back, A CLINIC ASSISTANT IN HER TWENTIES in the same blue-grey scrubs is at the counter, half
+   turned away, setting paper cups down. All three are SMALLER and FURTHER AWAY, never fainter -
+   the same line weight as everyone else. NOBODY LOOKS AT THE VIEWER. Nobody is old and frail;
+   nobody is being helped to walk.
+
+7. THE ROOM IS FULL, WITH FEW BUT LARGE THINGS - NO BARE WALLS ANYWHERE. Use: the easel and
+   board; the long wooden bench WITH A DEEP BLUE SEAT CUSHION (#335b8b); a long low wooden
+   counter whose lower cupboard doors are the SAME DEEP BLUE (#335b8b), carrying a neat stack of
+   paper cups, a lidded jar and one round potted plant; A FULL-HEIGHT SLATTED WOOD PANEL WALL
+   behind the bench (vertical wooden battens, warm and evenly textured); ONE LARGE TRAILING
+   PLANT on a high shelf at the right, its leaves hanging down; and a wide window on the left
+   whose frame begins BELOW the empty top strip. No posters, no charts on the walls, no signage,
+   no cabinets full of small objects.
+
+8. COLOUR - THE CLINIC'S BLUE MUST BE VISIBLE. The deep blue #335b8b appears in exactly three
+   places: the boxes on the board, the bench cushion, and the counter doors - together no more
+   than about 15% of the picture. Everything else stays warm: light wood floor, walls, ochre
+   shirt, moss-green top, blue-grey scrubs, green plants. At least six clearly different colours
+   in the picture; most colour blocks sit around HSL saturation 30-50 and lightness 70-85. Flat
+   fills in two or three steps per colour, no gradients except to describe light.
+
+9. LIGHT. Clear bright daylight from the window on the left, spread EVENLY through the room; a
+   gentle pool of light on the board and on the couple. No orange cast, no sunset, no heavy
+   shadows, no dark corners, NO LARGE FLAT EMPTY AREAS ANYWHERE.
+
+COMPOSITION ANCHORS: everything that must be read sits inside the middle 73% of the width; the
+easel feet, the chair legs and the wife's shoes sit close to the bottom edge; the row of four
+boxes runs across the middle of the picture; the top 17% stays completely empty and pale.
+
+AVOID: any text, letters, words or logos anywhere in the image; any number other than the four
+numerals 1 2 3 4 in the boxes; dates, prices, percentages, tables, grids, forms, charts, columns
+of figures; plaster dental models, dental casts, teeth, toothbrushes, dental instruments, drills,
+needles, syringes, implant screws, cross-sections or diagrams; a dental chair; a white coat; a
+face mask; gloves; a glowing screen, light box or X-ray; a pointer stick; before-and-after pairs;
+calendars; panels, frames, insets, speech bubbles, small icons; anybody drawn faded, translucent,
+ghostly or outline-only; anybody looking at the viewer; a cast of only elderly people; a frail or
+stooped patient; a classroom or lecture-hall feeling; dusk, sunset, golden hour, an orange or
+sepia cast, long dramatic shadows, dim corners; bare empty walls; a sparse half-furnished room;
+grey or blue-white walls; large empty white areas; photorealism; 3D rendering; heavy even black
+outlines.
+```
+
+### Ⓜ 環形循環（他給的 PDCA 那一種）
+
+⚠ 和 Ⓛ **逐字相同，只有第 2 點換掉**（板子上的圖形），其餘八點與 AVOID 一模一樣。
+
+第 2 點換成：
+
+```
+2. THE BOARD IS THE CENTRE OF THE PICTURE AND IT FACES US SQUARELY. A large board in a simple
+   light wooden frame, STANDING UPRIGHT on a wooden easel, turned straight towards the viewer so
+   nothing on it is foreshortened. It is about 45% of the picture height; its top edge stays
+   BELOW the empty top strip. ON THE BOARD, EXACTLY LIKE THE SHAPE-REFERENCE DIAGRAM: FOUR THICK
+   CURVED ARROWS ARRANGED IN ONE BIG RING, each arrow a quarter of the circle, all running
+   clockwise, with a clear gap between the tail of one and the head of the next, and AN EMPTY
+   CENTRE. The four arrows are FILLED IN FOUR STEPS OF THE SAME BLUE - #7d9cc0, #5f83ab, #476e97
+   and #335b8b clockwise from the top - each outlined in dark navy (#182f4b) and each carrying
+   ONE LARGE WHITE NUMERAL: 1, 2, 3, 4. The ring nearly fills the board. THERE IS NOTHING ELSE
+   ON THE BOARD AT ALL: no words, no letters, no other numbers, no dates, no prices, no tooth
+   shapes, no small marks, nothing written in the empty centre.
+```
+
+⚠ 若要一份可以整段複製的 Ⓜ，就把 Ⓛ 的第 2 點整段換成上面這一段，其餘不動；
+`COMPOSITION ANCHORS` 那行的「the row of four boxes runs across the middle」
+改成「the ring sits at the centre of the board」。
+
+
 ---
 
 ## 三、五案共用的東西（顏色、參考圖、門檻）
