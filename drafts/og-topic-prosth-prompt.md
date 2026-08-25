@@ -1176,6 +1176,159 @@ orange or sepia cast; bare empty backgrounds; grey or blue-white walls; photorea
 rendering; heavy even black outlines.
 ```
 
+## 二之十一、第七輪：前兩版被退，成因是「人小」與「累」（2026-08-25）
+
+> 「這兩個版本都不好。**為了強調樓梯，人都變小了**，而且**看起來好累喔**。
+> 　我傳給你的之前那個**螺旋樓梯是很有趣味的**。」
+> 　（再附三張參考：阿洲仔教室「樓梯類型」的**折返梯／弧形梯**、
+> 　　「十年經驗 vs 一年重複十年」的**弧形階梯上放著東西**、CLIP STUDIO 的方形螺旋。）
+
+**兩個成因，是提示詞自己寫出來的，不是模型亂畫：**
+
+1. ⚠⚠ **「階梯是主角」寫進了提示詞的第一句**（`THE STAIRCASE IS THE MAIN SUBJECT`），
+   模型照辦，於是階梯佔滿畫面、人只好縮到 20~36%。
+   **這一版要整個反過來：人是主角，階梯是舞台。** 主角要到 **40~45%**。
+2. ⚠⚠ **「累」是階數與姿勢一起造成的**：四段十二階 ＝ 一眼看不到頭；
+   而 `mid-stride, leaning forward, looking up` 逐字就是「奮力往上爬」。
+   → **階數砍到 8~9 階、踏面加寬、級高放矮**（一眼看得到頂），
+   **姿勢全部換成輕鬆的**：邊走邊聊、坐在階梯邊晃腳、蹲下來擺盆栽、回頭等人。
+   ⚠ 「加油打氣」不要畫成**一整排人站在平台上對著爬的人加油** ——
+   那個構圖本身就在說「這條路很難」。改成**每個人各自在做一件事**
+   （第十一之二節那條「活潑 ＝ 好幾件小事同時發生」）。
+
+⚠ **形狀不要我自己畫骨架了。** 我試著畫一條「捲上去的緞帶階梯」當參考，
+兩版都畫成**一條平躺的環形跑道**（2D 曲線少了透視就是環，不是升高）——
+**使用者手上那張 CodePro 的螺旋階梯本來就是最好的形狀參考**，直接餵它
+（第十之一節：形狀給圖不給字）。骨架圖 `drafts/prosth-stair-ref-ribbon.png`
+留著當反例，**不要拿去餵模型**。
+
+## 二之十二、第七輪的兩份提示詞
+
+⚠ 參考圖這一輪附三種：**① 風格**（`drafts/style-ref-*.jpg`）、
+**② 階梯的形狀與趣味**（使用者傳的 CodePro 螺旋階梯那張／Ⓠ 版用阿洲仔那張折返梯）、
+**③ 不要附**牙模、流程圖、我畫的緞帶骨架。
+
+### Ⓟ 蜿蜒的階梯（照 CodePro 那張的味道・人是主角）
+
+```
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+THE PEOPLE ARE THE SUBJECT. THE STAIRCASE IS ONLY THE STAGE THEY ARE STANDING ON. Draw the
+people BIG - the nearest figures are about 45% of the picture height - and keep the staircase
+SHORT: eight or nine broad, shallow steps in total, so the whole climb is easy to see at a
+glance. It must NEVER look long, steep or tiring.
+
+THE IDEA IN ONE SENTENCE: a short, wide, GENTLY WINDING staircase - like the friendly hand-drawn
+winding stairs in the shape reference - climbing from the lower left to the upper right, with a
+few people spread along it, EACH DOING SOMETHING DIFFERENT AND RELAXED, and at the top a broad
+landing where someone has already arrived and is turning back to wave. It is warm, everyday and
+a little playful. It is NOT a motivational poster and NOT a hard climb.
+
+THE STAIRCASE: take its winding, playful shape from the shape-reference picture, but make it
+SHORTER and WIDER - broad steps, low risers, one easy S-shaped bend, seen slightly from the
+side so we can tell it rises. The steps are coloured in four steps of the same blue as they go
+up: #7d9cc0, then #5f83ab, then #476e97, then #335b8b, each with a soft dark navy outline
+(#182f4b). A simple warm wooden handrail runs along the outer edge. AT THE TOP IT ENDS IN A WIDE
+FLAT LANDING - the destination - and the staircase does NOT continue past it and does NOT run off
+the edge of the picture. NO spiral that coils around itself, NO helix, NO long flight of many
+steps, NO ladder.
+
+THE TOP STRIP OF THE PICTURE MUST STAY EMPTY: the upper 17% (the top 105 pixels of 628) is plain
+pale warm background only - no head, no step, no landing, no plant, no sign.
+
+THE SEVEN THINGS THAT MATTER MOST, IN ORDER:
+
+1. DRAW EVERY PERSON EXACTLY IN THE STYLE OF THE REFERENCE ILLUSTRATIONS. Thin hand-drawn
+   linework whose weight varies and sometimes breaks - NOT a thick even outline. Each face is
+   ONE FLAT SKIN TONE with no shading and no modelling: on a face there is only the outline, two
+   eyes drawn as small simple dots with no whites and no highlights, two short eyebrows, a tiny
+   nose mark, a small mouth and an ear - nothing else, no wrinkles, no cheek lines, no jaw
+   shading. Hair is a flat shape in two tones with no individual strands. EVERY PERSON IS DRAWN
+   WITH EXACTLY THE SAME LINE WEIGHT AND THE SAME SOLIDITY - nobody is paler, softer, thinner or
+   more transparent than anybody else. EVERYONE LOOKS DIFFERENT: different age, hair, build and
+   clothes. Fine paper grain over the whole image.
+
+2. NEAREST, BOTTOM LEFT - AN OLD MAN AND HIS DAUGHTER, WALKING UP ARM IN ARM AND TALKING. He is
+   about seventy-five in a soft blue-grey shirt, one hand resting on the handrail; she is about
+   forty-five in a moss-green top (#8a9a72), her arm hooked through his. THEY ARE CHATTING, HEADS
+   SLIGHTLY TURNED TOWARDS EACH OTHER, both smiling a little. THEY ARE THE BIGGEST FIGURES, about
+   45% of the picture height. He is NOT struggling, NOT hunched, NOT being pulled.
+
+3. IN THE MIDDLE - THE MAIN CHARACTER, A MAN OF ABOUT FIFTY, WALKING UP EASILY AND LOOKING BACK.
+   In a warm ochre polo shirt (#c08a5c), standing on a step with both feet, TURNED HALF ROUND TO
+   SAY SOMETHING TO THE TWO BEHIND HIM, one hand loose at his side. About 38% of the picture
+   height. HE IS RELAXED - not leaning forward, not straining, not gripping the rail.
+
+4. SOMEONE IS SITTING DOWN, AND THAT IS WHAT MAKES IT FEEL EASY. A young woman of about thirty
+   SITTING ON THE EDGE OF ONE OF THE UPPER STEPS, feet dangling over the side, hands resting
+   beside her, watching the others come up with a small smile. About 30% of the picture height.
+
+5. ONE MORE PERSON IS BUSY WITH SOMETHING OF THEIR OWN. A clinic worker in muted blue-grey scrubs
+   (#b7c5d7, shaded #99a7b8 - no white coat, no mask, no gloves) CROUCHING BESIDE THE STAIRS to
+   set a potted plant straight, half turned away from us. NOBODY IS STANDING IN A ROW CHEERING;
+   nobody punches the air; nobody shouts.
+
+6. AT THE TOP, SOMEONE HAS ALREADY ARRIVED. A woman of about thirty-five standing easily on the
+   wide top landing, one hand raised in a small wave back down the stairs. She is the smallest
+   figure, about 24% of the picture height, and her head stays well below the empty top strip.
+
+7. PLAYFUL DETAILS AND LIGHT - a few, and large. Three or four big rounded potted plants sitting
+   on and beside the steps; one large leafy plant leaning in from the bottom right corner; A
+   SMALL BROWN SPARROW perched on the handrail. A soft warm off-white background (#e7e4dd) in
+   clear bright daylight, with a gentle pool of warm light around the top landing. At least six
+   clearly different colours - off-white background, warm wood handrail, four blues, ochre shirt,
+   moss-green top, blue-grey scrubs, green plants. Most colour blocks sit around HSL saturation
+   30-50 and lightness 70-85. Flat fills in two or three steps per colour, no gradients except to
+   describe light. NO LARGE FLAT EMPTY AREAS ANYWHERE; no dusk, no golden hour, no orange cast,
+   no dark corners, no long shadows.
+
+COMPOSITION ANCHORS: the staircase runs from the lower left to the upper right and occupies the
+lower two thirds of the picture; the two nearest figures stand close to the bottom edge and their
+heads reach roughly halfway up the picture; everything that must be read sits inside the middle
+73% of the width; the top 17% stays completely empty.
+
+AVOID: any text, letters, numbers, logos, arrows or icons anywhere in the image; teeth, dentures,
+toothbrushes, dental instruments, dental chairs, white coats, face masks, gloves, clinics,
+hospitals, X-rays or screens; tiny figures dwarfed by a huge staircase; a long, steep or endless
+flight of stairs; stairs that run off the top edge; a spiral that coils around itself; a ladder;
+a mountain; a motivational-poster feeling; anybody straining, panting, hunched, gripping the rail
+with both hands, being carried or being dragged; anybody punching the air, cheering loudly,
+jumping, holding a banner, a flag, a trophy, balloons or confetti; a row of people standing to
+applaud; a silhouette against a bright sky; a heroic backlit figure; anybody drawn faded,
+translucent, ghostly or outline-only; anybody looking at the viewer; a cast of only elderly
+people; panels, insets, speech bubbles; dusk, sunset, golden hour, an orange or sepia cast; bare
+empty backgrounds; grey or blue-white walls; photorealism; 3D rendering; heavy even black
+outlines.
+```
+
+### Ⓠ 折返梯（照阿洲仔那張第 2 格・人最大、最不累）
+
+⚠ 和 Ⓟ **只有兩段不同**：`THE IDEA IN ONE SENTENCE` 與 `THE STAIRCASE` 那兩段
+換成下面這兩段，其餘七點、構圖錨點與 AVOID 逐字相同。
+形狀參考改附**阿洲仔那張「2. 折返梯」**那一格。
+
+```
+THE IDEA IN ONE SENTENCE: a short HALF-TURN STAIRCASE - two flights with a big square landing
+between them, exactly the type in the shape reference - with a few people spread along it, EACH
+DOING SOMETHING DIFFERENT AND RELAXED, and on the upper landing someone who has already arrived,
+turning back to wave. It is warm, everyday and a little playful. It is NOT a motivational poster
+and NOT a hard climb.
+
+THE STAIRCASE: a HALF-TURN (dog-leg) staircase, the friendly wooden-and-blue kind in the shape
+reference. FOUR broad shallow steps climb from the lower left to a GENEROUS SQUARE LANDING in the
+middle of the picture - the landing is big enough for two people to stand and talk on - then the
+stairs TURN and FOUR more broad steps climb away to the upper right, ending in A WIDE TOP
+LANDING. Eight steps in total, no more. Broad treads, low risers, seen slightly from the side so
+we can tell it rises. The steps are coloured in four steps of the same blue as they go up:
+#7d9cc0, then #5f83ab, then #476e97, then #335b8b, each with a soft dark navy outline (#182f4b),
+and a simple warm wooden handrail runs along the outer edge. The staircase does NOT continue past
+the top landing and does NOT run off the edge of the picture. NO spiral, NO helix, NO long flight
+of many steps, NO ladder.
+```
+
+
 ---
 
 ## 三、五案共用的東西（顏色、參考圖、門檻）
