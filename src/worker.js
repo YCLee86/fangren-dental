@@ -104,12 +104,21 @@ const PREVIEW_PREFIX = "/preview/";
 
 const HISTORY_PREFIX = "/history/";
 
-/* 走到這裡代表沒有對應的檔案，補上自己的 404 頁 */
+/* 走到這裡代表沒有對應的檔案，補上自己的 404 頁。
+   ⚠⚠ **404 一定要 no-store**（2026-08-25 踩過，追了七八輪）——
+   Cloudflare 會把 404 也快取起來，而這一站的網址是**會長出來的**
+   （新文章、新的著陸頁、剛加的 /version.txt）。在檔案還沒上線之前
+   有人先打開過那個網址，那個 404 就被存住了，之後檔案明明已經上線，
+   使用者拿到的還是 404，連無痕視窗都一樣（無痕跳過的是自己手機的快取，
+   跳不過邊緣的）。 */
 async function notFound(request, env) {
   const page = await env.ASSETS.fetch(new URL("/404.html", request.url));
   return new Response(page.body, {
     status: 404,
-    headers: { "Content-Type": "text/html; charset=utf-8" },
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
   });
 }
 
@@ -152,7 +161,39 @@ export default {
       return draft;
     }
 
+    /* -----------------------------------------------------------------------
+       /version.txt —— 這一次建置的真值，絕對不可以被快取（2026-08-25）
+       -----------------------------------------------------------------------
+       它存在的唯一理由是回答「線上現在跑的是哪一版」。被快取住的話它會說謊，
+       而且是在最需要它說實話的時候說謊 —— 這正是它上線那天發生的事：
+       網址在建置完成之前就被打開，拿到 404，那個 404 被邊緣快取住，
+       之後怎麼重新整理（含無痕）都還是 404。 */
+    if (url.pathname === "/version.txt") {
+      const stamp = await env.ASSETS.fetch(request);
+      const fresh = new Response(stamp.body, stamp);
+      fresh.headers.set("Cache-Control", "no-store");
+      fresh.headers.set("Content-Type", "text/plain; charset=utf-8");
+      return fresh;
+    }
+
     const asset = await env.ASSETS.fetch(request);
-    return asset.status === 404 ? notFound(request, env) : asset;
+    if (asset.status === 404) return notFound(request, env);
+
+    /* -----------------------------------------------------------------------
+       HTML 一律「每次都回來問一下」（2026-08-25）
+       -----------------------------------------------------------------------
+       這一站的 HTML 沒有內容雜湊在檔名上（網址就是 /topics/prosth/），
+       所以只要有任何一層把舊的 HTML 存起來，改版就會「有時候看得到、
+       重新整理又不見」——2026-08-25 花了七八輪在追這件事，成因就在這裡。
+       圖片、樣式表、JS 不動（它們改動的頻率低很多，而且改了通常連 HTML
+       一起改）。no-cache 不是「不要快取」，是「可以存，但每次都要回來
+       驗一下有沒有變」——沒變的話回 304，幾乎不花流量。 */
+    const type = asset.headers.get("Content-Type") || "";
+    if (type.includes("text/html")) {
+      const page = new Response(asset.body, asset);
+      page.headers.set("Cache-Control", "no-cache");
+      return page;
+    }
+    return asset;
   },
 };
