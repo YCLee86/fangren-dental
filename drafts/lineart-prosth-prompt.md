@@ -30,10 +30,8 @@
 | # | 檔案 | 說明 |
 | --- | --- | --- |
 | 1~5 | `drafts/lineart-ref-1-walking.png` ~ `-5-bubbles.png` | 「**只參考線條畫法**（均勻粗細、無濃淡、無陰影、無材質、大量留白）；**不要參考題材、人物、道具**。」 |
-| 6 | **`drafts/lineart-pose-prosth.png`**（2026-08-25 從分享圖裁：`x120 y300 560×452 ×2 → 1120×904`） | 「**姿勢、視線方向、髮型、表情、手的高度與角度、腳踩在階梯上的位置，完全照這張**；但畫法照 1~5。⚠ 這一張**要畫到腳**，不是畫到腰。」 |
-| 7 | `assets/og-topic-prosth.jpg` | 「人物長相、服裝、年齡層照這張，但**畫法完全不同** —— 那張是上色插畫。」 |
-
-## 提示詞（可直接複製）
+| 6 | **`drafts/lineart-pose-prosth.png`**（2026-08-25 從分享圖裁：`x120 y300 560×452 ×2 → 1120×904`） | 「**姿勢、視線方向、髮型、表情、手的高度與角度、腳踩在階梯上的位置，完全照這張**；但畫法照 1~5。⚠ 這一張**要畫到腳**，不是畫到腰。⚠⚠ **醫師的表情也照這張 —— 她是笑的**。」 |
+| 7 | `assets/og-topic-prosth.jpg` | 「人物長相、服裝、年齡層照這張，但**## 提示詞（第二版・2026-08-25 修表情，可直接複製）
 
 ```
 A single-colour LINE DRAWING, square, 1200 x 1200, on a plain near-white background.
@@ -76,7 +74,11 @@ from the line-art references.
     PAPER MAP IN ONE HAND at chest height, tilted so the couple can see it; HER OTHER ARM IS
     RAISED AND HER INDEX FINGER POINTS UP AND OFF-FRAME TO THE TOP RIGHT, along the direction
     of the stairs. Her hair is TIED UP IN A SMALL LOW BUN at the back of her head, with a
-    side-parted fringe. Her mouth is slightly open — she is explaining something.
+    side-parted fringe. HER EXPRESSION IS WARM AND CHEERFUL, exactly like the reference photo:
+    HER EYES ARE TWO SHORT UPWARD-CURVING ARCS (smiling eyes, not round staring dots) and HER
+    MOUTH IS A SHORT UPWARD-CURVING ARC WITH THE CORNERS LIFTED — a relaxed open smile. She is
+    happy to be telling them this. Her mouth is NOT a round "O", NOT a flat straight line, and
+    she does NOT look serious, stern, worried or solemn.
     THE MAP IS BLANK: draw only the outline of the folded sheet and ONE simple winding line
     with three small dots on it. No writing, no letters, no numbers, no symbols.
 
@@ -88,9 +90,12 @@ with a straight arm and a flat open palm beside his head. His body is angled, he
 upward, and the wave is thrown up and forward past the top-right corner.
 
 FACES — extremely simple: eyes are small solid dots or short curved strokes, the nose is one
-tiny stroke or omitted. No eyebrow detail, no eyelashes, no blush, no wrinkles. The husband's
-mouth is a wide open oval (calling out); the wife's is a small open smile; the dentist's is a
-small open oval (speaking). Hair is drawn as an OUTLINE ONLY with a few interior strokes for
+tiny stroke or omitted. ⚠ DRAW NO EYEBROWS AT ALL ON ANYBODY — a lowered or angled eyebrow
+instantly makes a face look stern, and that is the one thing this drawing must not be. No
+eyelashes, no blush, no wrinkles, no frown lines. ALL THREE FACES ARE HAPPY: the husband's
+mouth is a wide open oval (calling out) with his eyes curved up; the wife's is a small open
+smile; THE DENTIST'S IS AN UPWARD-CURVING OPEN SMILE WITH SMILING CURVED EYES — she is
+cheerful, not solemn. Hair is drawn as an OUTLINE ONLY with a few interior strokes for
 the parting — it must not be filled in.
 
 COMPOSITION — ⚠ THIS ONE IS DRAWN FULL-LENGTH, DOWN TO THE SHOES — do NOT crop at the waist.
@@ -116,15 +121,24 @@ The result should read as a calm, friendly, extremely clean editorial line illus
 a lot of white space.
 ```
 
-## 生出來之後
+## 第一版的量測與退回的那一件（2026-08-25）
 
-1. 量三個門檻：`node drafts/lineart-measure.mjs <檔>` —— 線佔畫面 4~6%、筆畫寬 4~6‰、
-   粗細一致（實心填色 0 塊）。⚠ 這一張人多又有階梯，**線佔比最可能超標**，
-   超了就把階梯再減（只留兩階、拿掉扶手）。
-2. `node tools/topic-lineart.mjs prosth --art <線稿檔> --crop x,y,w,h [--flip]`
-   ⚠ 生成的線稿幾乎一定會多畫一條地面線，要用 `--crop` 裁掉。
-   ⚠ **要不要 `--flip` 現場判斷**：圖擺在介紹區右下角，人物要朝**版心裡面**（朝左）。
-   這一張的三個人朝右上 → **很可能要翻**，但翻了之後醫師的手指會指向左上（朝版心），
-   反而更好。⚠ `--crop` 的座標一律在**原圖**上量（先裁再翻）。
-3. 大小／濃度／分段四個值做成提案頁讓使用者挑（`tools/lineart-preview.mjs`），
-   手機那一段的濃度上限是 **.097**。
+`drafts/lineart-prosth-v1.jpg`（1024×1024）：
+
+| | 值 | 門檻 |
+| --- | --- | --- |
+| 線佔畫面 | **6.54%** | 4~6%（略超，人多＋階梯；兒牙那張 8.53% 也上線了，可接受） |
+| 筆畫寬 | 3.9‰ | 4~6‰（略細） |
+| 粗細一致 | 1.5 | 越低越好 ✅ |
+| 實心填色 | **0 塊** | 0 ✅ |
+| 四角乾淨 | 0/0/0/0 | ✅ |
+
+⚠⚠ 使用者退回的是**醫師的表情**：「那個醫師的表情看起來像原來那麼開心微笑的樣子，
+感覺好像是很慎重在講什麼」。
+**這是矯正那一輪踩過的同一個坑**（commit `f157457`：「表情改成專注但放鬆的淺笑 ——
+線稿裡沒有病人，講話的表情會顯得嚴肅」）。這一次成因更具體：
+・我在提示詞裡寫的是 `her mouth is slightly open — she is explaining something`
+  → 模型畫成**圓圓的 O 形嘴**，那是「慎重講話」的嘴；
+・模板寫了 `No eyebrow detail`，但模型**還是畫了眉毛而且是下垂的**，一皺就嚴肅。
+→ 第二版把表情寫成**幾何**（眼睛是兩道上彎的弧、嘴是上揚的弧），
+並把「**任何人都不要畫眉毛**」提到 FACES 段的最前面點名。
