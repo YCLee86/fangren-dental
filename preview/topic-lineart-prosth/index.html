@@ -4837,11 +4837,14 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠ **有 --flip**：生成的線稿裡三個人朝右上（朝版心外），翻轉之後朝左上 ＝ 朝著頁面文字，
      醫師手指的方向也跟著指回版心。
    ⚠ 這一張是七科裡唯一**畫到腳**的（「正在登階」靠腿與腳下那幾階讀出來），
-     所以人物在框裡佔的高度比別科小、線也比較多（線佔 6.96%）。 */
+     所以人物在框裡佔的高度比別科小、線也比較多（線佔 6.96%）。
+   ⚠⚠ **裁切要在右邊留白**：原圖的墨到 x=977（畫布 1024），第一版裁到 976，
+     醫師指向右上那隻手的手指**剛好貼在邊界上，看起來像被切掉**（使用者在 iPad 上抓到）。
+     現行 `--crop 36,83,972,800` 左留 11px、右留 31px，手指離邊界有距離。 */
 [data-topic="prosth"] .tp-intro { position: relative; }
 [data-topic="prosth"] .tp-intro::before {
   content: ""; position: absolute; right: var(--la-right, 0px); bottom: 0;
-  width: min(var(--la-pct, 92%), var(--la-w, 360px)); aspect-ratio: 928 / 800;
+  width: min(var(--la-pct, 92%), var(--la-w, 360px)); aspect-ratio: 972 / 800;
   background: url("../../assets/lineart-prosth.png") no-repeat; background-size: contain;
   background-position: calc(50% + 48px) center;
   opacity: var(--la-op, .121); pointer-events: none; z-index: 0;
