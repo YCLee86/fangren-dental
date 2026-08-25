@@ -138,7 +138,7 @@ const OG_DESC = {
   endo: "這顆牙還留得住嗎？顯微鏡下看清楚。",
   kids: "孩子願意來、牙齒撐得住，其他的我們一起來努力。",
   ortho: "排整齊只是一半；咬得不對，拆掉之後很容易又跑回去。",
-  prosth: "要整理的話，順序大概是這樣。",
+  prosth: "整理好，吃得順、用得久；部定專科醫師做過全口評估，幫你安排治療計畫。",
 };
 const ogImage = (spec) => {
   const rel = `assets/og-topic-${spec}.jpg`;
