@@ -49,8 +49,15 @@ if (mR) h = h.replace(reRight, `$1right: var(--la-right, ${baseRight}px);`);
 const reBg = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)background: url\\("([^"]+)"\\) center / contain no-repeat;`);
 const mBg = h.match(reBg);
 if (mBg) h = h.replace(reBg,
-  `$1background: url("${mBg[2]}") no-repeat; background-size: contain;` +
+  `$1background-image: var(--la-img, url("${mBg[2]}")); background-repeat: no-repeat;` +
+  ` background-size: contain;` +
   ` background-position: calc(50% + var(--la-bleed, 0px)) center;`);
+/* 「沒翻的那一版」：drafts/lineart-<spec>-noflip.png 存在就多一把「翻轉」的尺
+   （2026-08-25 植牙那一輪加的 —— 使用者：「做一個沒翻的選項切換」）。
+   ⚠ 圖複製進提案頁自己的資料夾，用同層相對路徑，定案時整個資料夾一起刪。 */
+const noflipSrc = path.join(ROOT, "drafts", `lineart-${spec}-noflip.png`);
+const hasNoflip = fs.existsSync(noflipSrc);
+const flipUrl = `url("${mBg ? mBg[2] : ""}")`;
 
 const baseBleed = (h.match(/background-position: calc\(50% \+ ([-\d.]+)px\) center;/) || [,"0"])[1];
 const reOp = new RegExp(`(\\[data-topic="${spec}"\\] \\.tp-intro::before \\{[\\s\\S]*?)opacity: ([.\\d]+);`);
@@ -118,7 +125,8 @@ const bar = `
   <div class="pvrow" id="pvsize"><b>大小</b></div>
   <div class="pvrow" id="pvright"><b>往右</b></div>
   <div class="pvrow"><b>出血</b>${BLEEDS.map(v => `<button data-k="b" data-v="${v}">${v ? "+" + v : "0"}</button>`).join("")}</div>
-  <div class="pvrow" id="pvop"><b>濃度</b></div>
+  <div class="pvrow" id="pvop"><b>濃度</b></div>${hasNoflip ? `
+  <div class="pvrow"><b>翻轉</b><button data-k="f" data-v="1">翻（現在）</button><button data-k="f" data-v="0">不翻</button></div>` : ""}
   <div class="pvout" id="pvout">量測中…</div>
 </div>
 <button class="pvmin" id="pvmin">收起</button>
@@ -128,10 +136,11 @@ const bar = `
   var wide=matchMedia('(min-width: 721px)');
   var DEF={w:{narrow:${mW[2].trim().replace("%","")},wide:${wideW.replace("px","")}},
            op:{narrow:${baseOp},wide:${wideOp}}, r:{narrow:${baseRight},wide:${(mBlock && (mBlock[0].match(/right: (-?[\d.]+)px/)||[])[1]) || baseRight}},
-           b:{narrow:${baseBleed},wide:${wideBleed}}};
-  var st={w:null,op:null,r:null,b:null,off:false};
+           b:{narrow:${baseBleed},wide:${wideBleed}}, f:{narrow:1,wide:1}};
+  var st={w:null,op:null,r:null,b:null,f:null,off:false};
+  var IMG={flip:'${flipUrl}',noflip:'url("noflip.png")'}, HASF=${hasNoflip};
   var qs=new URLSearchParams(location.search);
-  ['w','op','r','b'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
+  ['w','op','r','b','f'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
 
   var PCTS=${JSON.stringify(PCTS)}, PXS=${JSON.stringify(PXS)};
   var RN=${JSON.stringify(RIGHTS_N)}, RW=${JSON.stringify(RIGHTS_W)};
@@ -159,6 +168,7 @@ const bar = `
     root.style.setProperty('--la-op', st.off?0:cur('op'));
     root.style.setProperty('--la-right', cur('r')+'px');
     root.style.setProperty('--la-bleed', cur('b')+'px');
+    if(HASF) root.style.setProperty('--la-img', cur('f') ? IMG.flip : IMG.noflip);
     bar.querySelectorAll('button[data-k]').forEach(function(b){
       var k=b.dataset.k, v=parseFloat(b.dataset.v);
       b.setAttribute('aria-pressed', k==='off' ? String(st.off) : String(Math.abs(cur(k)-v)<1e-6));
@@ -169,7 +179,7 @@ const bar = `
     var b=e.target.closest('button[data-k]'); if(!b) return;
     var k=b.dataset.k;
     if(k==='off') st.off=!st.off; else { st[k]=parseFloat(b.dataset.v); st.off=false; }
-    var u=new URL(location); ['w','op','r','b'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
+    var u=new URL(location); ['w','op','r','b','f'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
     history.replaceState(null,'',u); apply();
   });
   document.getElementById('pvmin').addEventListener('click', function(){
@@ -243,6 +253,7 @@ h = h.slice(0, i) + bar + h.slice(i);
 const dir = path.join(ROOT, "preview", `topic-lineart-${spec}`);
 fs.mkdirSync(dir, { recursive: true });
 fs.writeFileSync(path.join(dir, "index.html"), h);
+if (hasNoflip) fs.copyFileSync(noflipSrc, path.join(dir, "noflip.png"));
 console.log(`✓ preview/topic-lineart-${spec}/index.html`);
 console.log(`  手機那一段預設 ${baseW}／${baseOp}　≥721 預設 ${wideW}／${wideOp}`);
 console.log(`  網址參數：?w=360&op=0.121`);
