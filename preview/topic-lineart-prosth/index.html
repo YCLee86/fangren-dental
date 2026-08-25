@@ -4833,18 +4833,20 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠⚠ 這一科的柔墨 AA 上限是 **.097 ＝ 六科裡最緊的一支**（一般牙科 .100／牙周 .115／
      顯微根管 .107／兒牙 .152／矯正 .120），成因是 #335b8b 是六支套色裡最深的。
      手機那一段大概只能給到 .09~.10，先擺 .097 等使用者在自己手機上挑。
-   ⚠ 圖是橫的（928×800），做法照顯微根管／矯正那一套（contain ＋ right/bottom 0）。
-   ⚠ **有 --flip**：生成的線稿裡三個人朝右上（朝版心外），翻轉之後朝左上 ＝ 朝著頁面文字，
-     醫師手指的方向也跟著指回版心。
+   ⚠ 圖是橫的（972×896），做法照顯微根管／矯正那一套（contain ＋ right/bottom 0）。
    ⚠ 這一張是七科裡唯一**畫到腳**的（「正在登階」靠腿與腳下那幾階讀出來），
-     所以人物在框裡佔的高度比別科小、線也比較多（線佔 6.96%）。
-   ⚠⚠ **裁切要在右邊留白**：原圖的墨到 x=977（畫布 1024），第一版裁到 976，
+     所以人物在框裡佔的高度比別科小、線也比較多（線佔 8.9%）。
+   ⚠⚠ **裁切要在右邊留白**：原圖的墨到 x=976（畫布 1024），第一版裁到 976，
      醫師指向右上那隻手的手指**剛好貼在邊界上，看起來像被切掉**（使用者在 iPad 上抓到）。
-     現行 `--crop 36,83,972,800` 左留 11px、右留 31px，手指離邊界有距離。 */
+   ⚠⚠ **而下面原本裁掉了 88 列真的畫面**（使用者：「感覺還可以再讓被裁掉的畫面多回來一些」）——
+     原圖的墨到 y=971，第二版只裁到 883，最下面那幾階與扶手的腳整段不見。
+     現行 `--crop 36,83,972,896`：左留 11／右留 32／上留 0／下留 7px，**四邊都沒有切到墨**。
+     ⚠ 那條「生成的線稿一定會多畫一條地面線」的通則**這一張不適用** ——
+     y=910~914 那條橫向的密線是最底下那一階的階緣，不是地面線，裁掉就少一階。 */
 [data-topic="prosth"] .tp-intro { position: relative; }
 [data-topic="prosth"] .tp-intro::before {
   content: ""; position: absolute; right: var(--la-right, 0px); bottom: 0;
-  width: min(var(--la-pct, 92%), var(--la-w, 360px)); aspect-ratio: 972 / 800;
+  width: min(var(--la-pct, 92%), var(--la-w, 360px)); aspect-ratio: 972 / 896;
   background: url("../../assets/lineart-prosth.png") no-repeat; background-size: contain;
   background-position: calc(50% + 48px) center;
   opacity: var(--la-op, .121); pointer-events: none; z-index: 0;
