@@ -2279,3 +2279,253 @@ rendering; heavy even black outlines.
 ④ 白色 TBM 照片 ——「參考**白／灰的機殼與刀盤上滾刀的排列**」。
 ⑤ 高壓電告示牌 ——「**只參考黃三角＋黑閃電這個符號的意思**；
   **絕對不要**參考上面的任何文字（這張圖上一個字都不能有）」。
+
+---
+
+## 二十一、第九輪：把 Ⓐ 的人物和 Ⓑ 的四件合起來（2026-08-25）
+
+第八輪生了兩張，使用者逐項比對之後說得很清楚：
+
+> ・「我比較喜歡**短髮醫師那張圖裡面人物的樣子**。」（＝ Ⓐ 的卡司）
+> ・「另外一張做得比較好的是**那個高壓電牌，他掛了很多個，一路掛到右邊去**，
+>   　我覺得這樣非常好，代表這個是高壓電線、要注意。」
+> ・「Ⓑ 還有個重點：**那個前盾跟牙齒是比較分開來的**，
+>   　所以**牙齒上露出來的那個樣子比較明顯**。」
+> ・「那個**紫色的電線這張圖也畫得比較好** —— 它是**在牙齒周圍、比較靠近牙齒**，
+>   　然後**消失在畫面的右邊**。」
+> ・「**牙齒也是很大一部分埋在土裡，Ⓑ 有畫出來，短髮醫師那個版本裡面沒有。**」
+
+### 兩張的實測
+
+| | Ⓐ 短髮醫師版（人物取這張） | Ⓑ 掛滿電牌版（四件取這張） | 門檻 |
+| --- | --- | --- | --- |
+| 邊緣密度 | 29.9%（差 0.1） | **35.2% ✓** | ≥ 30% |
+| 無彩空白 | 0.5% ✓ | 0.3% ✓ | < 5% |
+| 頂 17% 中位 RGB | 207/198/215 ✓ | 208/199/215 ✓ | 藍 ≥ 178 |
+| 頂 17% 被佔到 | 第 127 列 ✓ | 第 127 列 ✓ | 0 |
+| 圖上有沒有字 | 無 ✓（`OH!` 修掉了） | 無 ✓ | 0 |
+
+⚠ **Ⓑ 密度高出 5.3 個百分點，來源正好是使用者喜歡的那兩件**：一路掛到右邊的電牌、
+以及被土蓋住、有紋理的那半顆牙。**這一輪第三次出現「他要的東西剛好也把數字補上來」** ——
+可以當成通則：**這一站的密度不足，多半不是線畫得不夠細，是畫面裡「該有的東西」還沒到齊。**
+
+### 這一輪要合的四件（Ⓐ 的卡司 ＋ Ⓑ 的這四件）
+
+1. **電牌從左緣一路掛到右緣**，八到十面，包含貼著牙齒那一段。
+2. **前盾與牙齒之間留一段沒挖開的土**（約盾直徑的一半），
+   讓露出來的牙冠**完整可見、不被機器壓到**。
+3. **神經管貼著牙齒外緣走**，然後出右緣。
+4. **牙齒四分之三真的被土蓋住**：土的紋理畫在它上面，虛線只是透出來。
+
+（完整提示詞見下一節。）
+
+---
+
+## 二十二、第九輪的完整提示詞（2026-08-25，全新生成，可直接複製）
+
+```
+Generate a brand-new illustration from scratch (this is not an edit of any earlier picture).
+
+Editorial illustration, landscape 1.91:1 (1200 x 628), for a small social-media preview card.
+It will be seen at about 250 pixels wide, so everything must read at thumbnail size: big simple
+shapes, few large objects, ONE single continuous scene, no panels, no dividing lines, no insets.
+
+NOTHING IN THIS BRIEF MAY BE WRITTEN INTO THE PICTURE. No labels, no captions, no words, no
+letters, no numbers, no exclamations, no sound effects, in any language - not on the walls, not
+on the warning plates, not beside anybody's mouth. Draw feelings with faces and bodies, never
+with written characters.
+
+THE CAMERA: we are looking at a tunnel FROM THE SIDE, as if the near wall had been cut away. The
+lined crown of the tunnel runs as a band across the TOP of the picture, the tunnel floor runs
+across the BOTTOM, the far wall stands behind the people, and the open earth is seen in cutaway
+above the crown, below the floor and at the right-hand end. EVERY PERSON IS SEEN IN FULL SIDE
+VIEW OR THREE-QUARTER VIEW, FACING RIGHT, standing on the same floor line, so every posture and
+face is large and completely readable. We are NOT looking down the bore of the tunnel: no
+vanishing point, no shrinking concentric rings, no one-point perspective, nobody seen from the
+front or the back.
+
+THE STORY IN ONE SENTENCE - THIS IS A TREASURE FIND, AND THAT IS THE WHOLE MOOD: deep underground
+in a big reinforced tunnel, A WOMAN ORAL SURGEON with short hair, a violet surgical cap, a white
+coat and scrubs has driven A BIG WHITE HAND-HELD TUNNEL SHIELD up to the last stretch of soil,
+and THE CROWN OF AN ENORMOUS TOOTH HAS JUST APPEARED IN THE GROUND AHEAD OF HER - the tooth lies
+horizontally with three quarters of it still packed under solid earth - while a GLOWING VIOLET
+HIGH-VOLTAGE NERVE PIPE, hung with warning plates all along its length, curves up to skim right
+past the tooth and runs away off the right-hand edge. Her assistant hauls the very thick
+hydraulic hose behind her, and A YOUNG PATIENT IN HIS TWENTIES WITH A FRIEND OF THE SAME AGE have
+lit up with excitement: there it is. Everybody is happy and lively. It is the moment of FINDING,
+not of fighting.
+
+THE WHOLE PICTURE IS UNDERGROUND: NO sky, NO grass, NO ground surface, NO daylight opening.
+
+THE TUNNEL: big enough to walk through, filling the frame edge to edge. Its crown and far wall
+are lined with CURVED CONCRETE SEGMENT PANELS in pale lilac-grey (#d3cbdd, shaded #b3a9c2) with
+clean joint lines, small round bolt heads and a STEEL RIB ARCH every few metres. The floor is
+packed earth with a scatter of small pebbles. TWO SMALL CEILING LAMPS hang just below the top
+band and throw warm pools of light onto the people. THE INSIDE OF THE TUNNEL IS CLEAR AND TIDY -
+apart from the people, the machine and the hose there is NOTHING lying about in it.
+
+ALL THE ROUGH AND AWKWARD THINGS ARE OUTSIDE THE TUNNEL, IN THE CUTAWAY EARTH: in the brown
+strata ABOVE the lined crown, BELOW the tunnel floor, and in the unexcavated ground at the
+RIGHT-HAND END, embed SEVERAL BIG ROUNDED BOULDERS, A THICK OLD CERAMIC PIPE running diagonally,
+A FAT WOODY TREE ROOT with smaller roots branching off it, TWO HALF-BURIED ROUND CLAY JARS, and a
+scatter of smaller stones and root hairs. The lined tunnel VISIBLY DIPS AND BENDS to slip between
+them, just missing each one. NONE of these objects is inside the tunnel and nothing touches them.
+
+THE TOP STRIP OF THE PICTURE MUST STAY CALM AND EMPTY. The upper 17% (the top 105 pixels of 628)
+is the smooth lined crown: one clean band of PALE LILAC-GREY (#d3cbdd) with at most two very
+faint horizontal joint lines. IT MUST BE DISTINCTLY LILAC-TINTED - never a neutral grey, never
+near-white, never brown. NOTHING may cross into it. Compose so that EVERY head and the top of the
+tooth sit BELOW A LINE ONE FIFTH OF THE WAY DOWN FROM THE TOP (about 126 of the 628 pixels).
+
+THE PICTURE MUST BE FULL OF DRAWN DETAIL: apart from that calm crown band, no patch bigger than
+about a tenth of the picture may be flat empty colour. Everything is drawn with the same thin ink
+line, so it reads as busy and hand-made rather than bare.
+
+THE EIGHT THINGS THAT MATTER MOST, IN ORDER:
+
+1. STYLE. Thin hand-drawn linework whose weight varies and sometimes breaks - NOT a thick even
+   outline, NOT a ruled vector line. Each face is ONE FLAT SKIN TONE with no shading: only the
+   outline, two eyes drawn as small simple dots, two short eyebrows, a tiny nose mark, a small
+   mouth and an ear - no wrinkles, no cheek lines. Hair is a flat shape in two tones. EVERY
+   PERSON IS DRAWN WITH EXACTLY THE SAME LINE WEIGHT AND SOLIDITY. The four people look clearly
+   different: different age, build, hair and clothes. Flat fills in two or three steps per colour,
+   no gradients except to describe light. Fine paper grain over the whole image.
+
+2. NOBODY WEARS A FACE MASK - WE MUST SEE EVERY EXPRESSION. The surgeon and the assistant wear
+   their violet surgical caps but NO masks at all: their whole faces, mouths included, are
+   visible and smiling. No mask on the chin, no mask in the hand, no mask anywhere.
+
+3. THE SURGEON IS A WOMAN WITH SHORT HAIR, DRAWN FROM THE PROVIDED CHARACTER REFERENCE. A woman
+   in her thirties or forties, SEEN FROM THE SIDE, FACING RIGHT, just right of centre, LEANING
+   HER WEIGHT INTO THE MACHINE - one foot forward, one braced back, knees bent, both arms tight
+   to her body. HER HAIR IS A SHORT DARK-BROWN BOB that ends at the jaw, with a soft fringe, and
+   THE VIOLET CAP IS WORN PUSHED BACK ON HER HEAD so the fringe and the ends of the bob show
+   clearly in front of it and below it - a soft tie-back surgical cap, PLAIN, WITH NO PATTERN, in
+   muted violet (#8e6299, shaded #784e84). She wears AN OPEN WHITE COAT over pale grey-violet
+   scrubs (#c9bcd0). SHE IS SMILING WITH DELIGHT: mouth curved up and open a little, eyes creased
+   into two happy upward curves, eyebrows raised. She is about 62% of the picture height, strong
+   and in control, NOT straining painfully, NOT looking at the viewer.
+
+4. THE MACHINE STOPS SHORT OF THE TOOTH - LEAVE A CLEAR GAP BETWEEN THEM. THIS IS IMPORTANT: the
+   big round cutter face must NOT touch, overlap or hide any part of the tooth. Between the front
+   of the shield and the exposed crown there is A CLEAR OPEN GAP OF UNDUG BROWN EARTH about half
+   the width of the shield, so the whole uncovered crown stands free and completely visible with
+   nothing in front of it. The machine is still running - a few loose crumbs and two or three
+   short curved motion strokes at its face - but it is plainly a step away from the find.
+   THE MACHINE ITSELF, from front to back along one straight horizontal axis: (a) A LARGE FLAT
+   ROUND CUTTER FACE, WIDER THAN THE SURGEON'S SHOULDERS and about a third of the picture height
+   across, its face carrying a grid of about twenty small round disc cutters in two or three
+   concentric rings plus a few radial spokes (#6f6878) and three or four slim curved slots, with
+   a ring of soft violet light (#b48fc0) glowing around its rim; (b) A SHORT THICK CYLINDRICAL
+   SHIELD OF THE SAME BIG DIAMETER; (c) TWO SHORT HYDRAULIC RAMS pushing it forward; (d) a
+   slimmer BODY with a FRONT GRIP in her leading hand and a REAR GRIP in her other hand; (e) A
+   VERY THICK RIBBED HYDRAULIC HOSE leaving the back. THE SHELL IS OFF-WHITE WITH A FAINT WARM
+   SAND TINT (#e6e3dc), shaded #c4c0b6 with darker #a09a8e in the deepest folds - the clean
+   white-grey of an industrial tunnel-boring machine, NOT lilac, NOT pastel, NOT flat pure white:
+   plenty of straight panel seams, rows of small bolt heads and clear shading. It is an
+   engineering tool, never a weapon.
+
+5. THE GIANT TOOTH LIES FLAT AND IS PACKED UNDER SOLID EARTH. ITS LONG AXIS IS HORIZONTAL,
+   PARALLEL TO THE TUNNEL FLOOR - lying like a fallen pillar, NOT upright, NOT tilted. THE CROWN
+   END POINTS LEFT towards the machine; THE TWO THICK ROOTS POINT RIGHT, sticking out
+   horizontally towards the right edge, never downwards. ONLY THE CROWN - the left-hand quarter -
+   IS EXPOSED, drawn SOLID CREAM-WHITE (#f2ece2, shaded #d9cfc0), bright and clean, with three or
+   four short straight light strokes radiating from it. THE OTHER THREE QUARTERS ARE COMPLETELY
+   COVERED BY EARTH AND THE EARTH IS DRAWN ON TOP OF THEM: the same brown soil with its own
+   strata lines, pebbles, speckles and root hairs runs right across that part of the tooth, so it
+   is obviously still underground. There is NO cavity, NO air gap, NO open chamber and NO dark
+   void anywhere around it. The buried three quarters are indicated ONLY by a DASHED OR DOTTED
+   OUTLINE showing faintly through that soil, like an excavation survey drawing. Laid out flat
+   the whole tooth is LONGER THAN THE SURGEON IS TALL, spanning most of the right-hand half of
+   the picture, its body about 45% of the picture height thick. IT HAS NO FACE.
+
+6. THE HIGH-VOLTAGE NERVE PIPE HUGS THE TOOTH AND IS SIGNPOSTED ALL THE WAY ACROSS. A smooth
+   rounded pipe filled with gently glowing pale violet light (#b48fc0 with a lighter #d6bfdd
+   core) enters at the LEFT EDGE of the picture below the tunnel floor, runs right through the
+   earth, and where it reaches the tooth IT CURVES UP AND FOLLOWS THE TOOTH'S OUTLINE VERY
+   CLOSELY - skimming along the underside of the crown and then around both roots with only a
+   thin sliver of soil between pipe and tooth - then continues on and LEAVES THE PICTURE AT THE
+   RIGHT-HAND EDGE. IT NEVER ENTERS THE TOOTH: it does not pass through it and does not touch it;
+   it traces around the outside. ALL ALONG THE PIPE, FROM THE LEFT EDGE TO THE RIGHT EDGE, PLANT
+   EIGHT TO TEN SMALL WARNING PLATES IN THE SOIL BESIDE IT, EVENLY SPACED - including on the
+   stretch that curves around the tooth. Each plate is a simple YELLOW TRIANGLE with a BLACK
+   ZIGZAG LIGHTNING BOLT inside it, on a short grey stake, about as tall as a person's hand, and
+   EACH PLATE CARRIES NO WRITING WHATSOEVER - the row of lightning symbols alone says high
+   voltage, keep clear. The pipe itself stays calm and pretty: NOT red, NOT flashing, NOT
+   crackling with sparks.
+
+7. THE HOSE IS FAT AND RUNS RIGHT OUT OF THE PICTURE, AND THE ASSISTANT IS DELIGHTED. The ribbed
+   hydraulic hose is AS THICK AS A PERSON'S THIGH and sweeps from the back of the machine, down
+   past the surgeon's legs, THROUGH THE ASSISTANT'S TWO HANDS, then straight on across the floor
+   AND OFF THE LEFT-HAND EDGE OF THE PICTURE. THERE IS NO WHEELED UNIT, TROLLEY OR GENERATOR ON
+   THE FLOOR. The assistant, at the centre of the picture, is in their twenties, in a violet cap
+   and pale grey-violet scrubs and NO MASK, ABOUT 55% OF THE PICTURE HEIGHT, THREE-QUARTER VIEW
+   FACING RIGHT: both hands wrapped around the thick hose with one heavy loop over the shoulder,
+   one foot forward, body leaning back against its weight, HEAD UP, MOUTH OPEN IN A WIDE HAPPY
+   GRIN, eyes wide, eyebrows high.
+
+8. THE PATIENT IS A YOUNG MAN IN HIS TWENTIES AND HE HAS BROUGHT A FRIEND. At the left of the
+   picture, both standing on the same floor in a warm pool of lamplight, THREE-QUARTER VIEW
+   FACING RIGHT, the young man drawn from the provided character reference:
+   THE PATIENT, about twenty-five, short dark hair, A WARM OCHRE SWEATSHIRT, blue jeans and
+   trainers, ABOUT 52% OF THE PICTURE HEIGHT, ONE ARM THROWN UP AND POINTING STRAIGHT AT THE
+   EXPOSED CROWN, the other fist raised beside his chest, BODY LEANING FORWARD, ONE HEEL LIFTED
+   MID-STEP, mouth wide open in a big round shout of delight, eyebrows high, eyes bright, with
+   two or three short ink strokes beside his raised arm to show the movement;
+   HIS FRIEND, the same age, a young woman with a high ponytail in a soft teal jacket and dark
+   trousers, ABOUT 50% OF THE PICTURE HEIGHT, standing right beside him, ONE HAND ON HIS UPPER
+   ARM and the other hand raised open beside her face, laughing and looking where he points.
+   Neither is anxious, holding a cheek, wearing a hard hat, or looking at the viewer. THEY ARE
+   THE LIVELIEST PART OF THE PICTURE.
+
+COLOUR AND LIGHT. Warm lamplight from the two ceiling lamps; the brightest thing in the picture
+is the newly uncovered crown. Lining pale lilac-grey; machine off-white; earth warm pale brown
+(#c8ab86, shaded #a5855f and #8d7250) in three clear flat steps with strata lines, pebbles and
+root hairs; boulders cooler grey-brown; ceramic pipe and clay jars warm terracotta; tooth
+cream-white; the patient's sweatshirt warm ochre; his friend's jacket soft teal; the warning
+plates warm yellow. Most colour blocks sit around HSL saturation 30-50 and lightness 70-85. No
+large flat empty areas except the calm crown band; no dusk, no orange cast, no black shadows.
+
+COMPOSITION ANCHORS: lilac crown band across the top, tunnel floor across the bottom; the young
+patient and his friend at the left in lamplight with the fat hose running out past them off the
+left edge; the assistant at the centre hauling that hose; the surgeon just right of centre facing
+right, her cap about a third of the way down the picture; the white shield ahead of her with an
+open gap of earth between its cutter face and the tooth; the exposed crown standing clear in that
+gap; the rest of the tooth lying flat to the right under solid soil, dashed; the glowing nerve
+pipe entering low at the left, curving up around the crown and roots and leaving at the right
+edge, with eight to ten lightning-symbol plates spaced along its whole length; boulders, old
+ceramic pipe, tree root and clay jars in the earth above, below and right of the tunnel;
+everything that must be read sits inside the middle 73% of the width.
+
+AVOID: any text, letters, words, numbers, labels or written sound effects anywhere; any writing
+on the warning plates; face masks on anybody; an elderly patient; a lone patient with nobody
+accompanying him; a view down the bore of the tunnel; one-point perspective; anybody seen from
+the front or from behind; tiny distant figures; the cutter face touching, overlapping or hiding
+the tooth; a tooth standing upright; a tooth with its roots pointing down; a tooth with a face;
+an open cavity, hollow or dark void around the buried tooth; a buried part left as bare outline
+with no soil drawn over it; the nerve pipe entering, crossing or vanishing inside the tooth; a
+nerve pipe with only one or two warning plates; boulders, roots, jars or debris inside the
+tunnel; a wheeled trolley or generator on the tunnel floor; a thin hose; a front end made of
+several thin barrels; a lilac or pastel machine shell; a flat pure white machine with no seams;
+sky, clouds, grass, daylight; earth or neutral grey in the top band; muzzle flash, bullets,
+cartridges, ammunition belts, military uniforms, camouflage, soldiers; rivets, boilers, chimneys,
+smoke, steam, brass, spoked wheels, exposed gears, chains, steampunk machinery; dental pliers,
+forceps, syringes, needles, scalpels, dental drills, trays of instruments, operating theatres;
+hard hats, high-visibility vests, hazard tape; treasure chests, gold coins, jewels, glitter,
+stars, sparkles, confetti; blood, wounds, pain, fear, cracks, decay, stains; a mouth seen from
+inside; gums, jawbones, labelled anatomy, X-ray films; patterned or printed caps; a cap that
+hides all of the surgeon's hair; anybody looking at the viewer; ANY PERSON drawn faded,
+translucent, ghostly or outline-only (the dashed treatment is ONLY for the buried part of the
+tooth); panels, insets, frames, borders, speech bubbles, arrows, small icons; large flat empty
+areas; dusk, sunset, golden hour, an orange or sepia cast; photorealism; 3D rendering; heavy even
+black outlines.
+```
+
+⚠ **餵圖（六張，用途分開寫）**：
+① `drafts/surg-doctor-ref.jpg` ②`drafts/surg-patient-ref.jpg`（同上一輪）
+③ **第八輪的 Ⓐ 短髮醫師版** ——「**人物、臉、髮型、服裝、鏡頭與配色照這一張**」
+④ **第八輪的 Ⓑ 掛滿電牌版** ——「**只**參考四件：**電牌一路掛到右邊**、
+   **前盾與牙齒之間留一段土**、**電線貼著牙齒外緣走並出右緣**、
+   **牙齒被土蓋住的畫法**；**不要**參考它的人物與口罩」
+⑤ 白色 TBM 照片（白灰機殼與滾刀排列）
+⑥ 高壓電告示牌（**只**參考黃三角＋黑閃電的符號，**不要**任何文字）
