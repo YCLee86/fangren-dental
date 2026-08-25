@@ -4804,7 +4804,7 @@ body[data-topic] #topics { padding-top: 1rem; }
 [data-topic="ortho"] .tp-intro::before {
   content: ""; position: absolute; right: var(--la-right, 0px); bottom: 0;
   width: min(var(--la-pct, 76%), var(--la-w, 360px)); aspect-ratio: 829 / 912;
-  background: url("../../assets/lineart-ortho.png") center / contain no-repeat;
+  background: url("../../assets/lineart-ortho.png") no-repeat; background-size: contain; background-position: calc(50% + var(--la-bleed, 0px)) center;
   opacity: var(--la-op, .121); pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) {
@@ -7244,6 +7244,7 @@ body[data-topic] #topics { padding-top: 1rem; }
 <div class="pvbar" id="pvbar">
   <div class="pvrow" id="pvsize"><b>大小</b></div>
   <div class="pvrow" id="pvright"><b>往右</b></div>
+  <div class="pvrow"><b>出血</b><button data-k="b" data-v="0">0</button><button data-k="b" data-v="16">+16</button><button data-k="b" data-v="32">+32</button><button data-k="b" data-v="48">+48</button><button data-k="b" data-v="64">+64</button></div>
   <div class="pvrow"><b>濃度</b><button data-k="op" data-v="0.1">0.1</button><button data-k="op" data-v="0.121">0.121</button><button data-k="op" data-v="0.18">0.18</button><button data-k="op" data-v="0.24">0.24</button><button data-k="op" data-v="0.3">0.3</button><button data-k="op" data-v="0.4">0.4</button>
     <button data-k="off" data-v="1">關掉圖</button></div>
   <div class="pvout" id="pvout">量測中…</div>
@@ -7254,10 +7255,11 @@ body[data-topic] #topics { padding-top: 1rem; }
   var root=document.documentElement, bar=document.getElementById('pvbar'), out=document.getElementById('pvout');
   var wide=matchMedia('(min-width: 721px)');
   var DEF={w:{narrow:76,wide:330},
-           op:{narrow:.121,wide:.30}, r:{narrow:0,wide:0}};
-  var st={w:null,op:null,r:null,off:false};
+           op:{narrow:.121,wide:.30}, r:{narrow:0,wide:0},
+           b:{narrow:0,wide:0}};
+  var st={w:null,op:null,r:null,b:null,off:false};
   var qs=new URLSearchParams(location.search);
-  ['w','op','r'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
+  ['w','op','r','b'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
 
   var PCTS=[60,68,76,84,92], PXS=[280,310,330,360,400];
   var RN=[0,-6,-10,-14], RW=[0,-8,-14,-20];
@@ -7279,6 +7281,7 @@ body[data-topic] #topics { padding-top: 1rem; }
     else { root.style.setProperty('--la-pct', cur('w')+'%'); root.style.setProperty('--la-w','9999px'); }
     root.style.setProperty('--la-op', st.off?0:cur('op'));
     root.style.setProperty('--la-right', cur('r')+'px');
+    root.style.setProperty('--la-bleed', cur('b')+'px');
     bar.querySelectorAll('button[data-k]').forEach(function(b){
       var k=b.dataset.k, v=parseFloat(b.dataset.v);
       b.setAttribute('aria-pressed', k==='off' ? String(st.off) : String(Math.abs(cur(k)-v)<1e-6));
@@ -7289,7 +7292,7 @@ body[data-topic] #topics { padding-top: 1rem; }
     var b=e.target.closest('button[data-k]'); if(!b) return;
     var k=b.dataset.k;
     if(k==='off') st.off=!st.off; else { st[k]=parseFloat(b.dataset.v); st.off=false; }
-    var u=new URL(location); ['w','op','r'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
+    var u=new URL(location); ['w','op','r','b'].forEach(function(x){ if(st[x]!=null) u.searchParams.set(x,st[x]); });
     history.replaceState(null,'',u); apply();
   });
   document.getElementById('pvmin').addEventListener('click', function(){
@@ -7344,7 +7347,8 @@ body[data-topic] #topics { padding-top: 1rem; }
                             :'<span class="bad">柔墨 '+crSoft.toFixed(2)+'（低於 4.5）</span>')
               : '<span class="ok">沒有柔墨壓到，濃度不影響可讀性</span>')+
       '　深墨 '+crInk.toFixed(2)+'\n'+
-      '圖的右緣離螢幕 '+(innerWidth-box.right).toFixed(0)+'px　'+
+      '圖的右緣離螢幕 '+(innerWidth-box.right).toFixed(0)+'px'+
+      (cur('b')>0 ? '　圖被裁掉右邊 '+cur('b')+'px（'+(cur('b')/w*100).toFixed(0)+'%）' : '')+'　'+
       '視窗 '+innerWidth+'×'+innerHeight+'　'+(wide.matches?'≥721 那一段':'手機那一段')+
       '　'+(hscroll?'<span class="bad">⚠ 有水平捲動</span>':'<span class="ok">無水平捲動</span>')+
       '　濃度 '+op.toFixed(3);
