@@ -4802,7 +4802,7 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠ 大小先照顯微根管那一格（近正方、會凸到 h1 的風險相同），等使用者在手機上挑。 */
 [data-topic="ortho"] .tp-intro { position: relative; }
 [data-topic="ortho"] .tp-intro::before {
-  content: ""; position: absolute; right: 0; bottom: 0;
+  content: ""; position: absolute; right: var(--la-right, 0px); bottom: 0;
   width: min(var(--la-pct, 76%), var(--la-w, 360px)); aspect-ratio: 829 / 912;
   background: url("../../assets/lineart-ortho.png") center / contain no-repeat;
   opacity: var(--la-op, .121); pointer-events: none; z-index: 0;
@@ -4836,7 +4836,7 @@ body[data-topic] #topics { padding-top: 1rem; }
      壓到線的是 8 行（744 上），全部是柔墨的 .tp-case／.tp-flow。 */
 [data-topic="kids"] .tp-intro { position: relative; }
 [data-topic="kids"] .tp-intro::before {
-  content: ""; position: absolute; right: var(--la-right, -14px); bottom: 0;
+  content: ""; position: absolute; right: -14px; bottom: 0;
   width: min(85.6%, 419px); aspect-ratio: 854 / 857;
   background: url("../../assets/lineart-kids.png") left center / auto 100% no-repeat;
   opacity: .152; pointer-events: none; z-index: 0;
@@ -7254,7 +7254,7 @@ body[data-topic] #topics { padding-top: 1rem; }
   var root=document.documentElement, bar=document.getElementById('pvbar'), out=document.getElementById('pvout');
   var wide=matchMedia('(min-width: 721px)');
   var DEF={w:{narrow:76,wide:330},
-           op:{narrow:.121,wide:.30}, r:{narrow:-14,wide:-14}};
+           op:{narrow:.121,wide:.30}, r:{narrow:0,wide:0}};
   var st={w:null,op:null,r:null,off:false};
   var qs=new URLSearchParams(location.search);
   ['w','op','r'].forEach(function(k){var v=qs.get(k); if(v&&/^-?[a-z0-9.]+$/.test(v)) st[k]=parseFloat(v);});
