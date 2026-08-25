@@ -661,7 +661,7 @@
         "@id": "https://fangren.net/#dentist"
       },
       "inLanguage": "zh-Hant-TW",
-      "dateModified": "2026-08-25",
+      "dateModified": "2026-08-26",
       "primaryImageOfPage": {
         "@type": "ImageObject",
         "url": "https://fangren.net/assets/hero-clinic-night.jpg"
@@ -5362,26 +5362,38 @@ body[data-topic] #topics { padding-top: 1rem; }
 }
 [data-topic="prosth"] .tp-intro > * { position: relative; z-index: 1; }
 
-/* 口腔外科（2026-08-25 開提案頁，**兩段都還是暫定**，推導在 drafts/lineart-surg-prompt.md）
-   ⚠⚠ 這一科有**兩個候選版本**，使用者要在自己的手機上切換著看：
-     Ａ 半身 `assets/lineart-surg.png` 816×830（近正方）
-     Ｂ 全身 `drafts/lineart-surg-alt.png` 478×943（很直，同一張圖的另一版）
-     下面的預設值是 Ａ 那一版的起點，Ｂ 選上的話大小要重挑
-     —— 直的圖在同一個寬度下高出一倍，卡住的是高度不是對比度（同顯微根管那一輪）。
-   ⚠ 這一科的柔墨 AA 上限是 **.118**（`#8e6299` 比植牙的 `#335b8b` 淺，所以比 .097 寬鬆）。
-     七科各不同（.101／.116／.107／.152／.120／.097／**.118**），**現算一次不要抄**。
-   ⚠ 她在圖裡本來就朝畫面左邊（＝朝版心裡的文字），所以**沒有 `--flip`**。 */
+/* 口腔外科（2026-08-25 上線 —— **手機那一段是定案的，≥721 那一段還是暫定**）
+   使用者畫了兩張，在提案頁上切著看，最後選 **Ｂ 全身**（半身那一版落選，
+   來源仍在 drafts/lineart-surg-v1.jpg）：`--crop 274,42,478,943`、**沒有翻轉**
+   （她在圖裡本來就朝畫面左邊 ＝ 朝版心裡的文字）。
+   ⚠⚠ **這一張是七科裡最「直」的**（478×943，比例 0.51；前六科都在 0.87~1.07 之間），
+     所以卡住的完全是**高度**（同顯微根管 2026-08-24 那一輪，但更極端）：
+     同一個寬度下它比近正方的那些高一倍。
+   ⚠⚠ **因此 px 上限不是隨手填的，是量出來的。** 手機那一段吃到 720px 寬，而介紹區
+     **愈寬愈矮**（字少折幾行）——460~520 那一段只有 **381.9px**，是全段最矮的。
+     圖高 ≤ 381.9 → 寬 ≤ 193.6px，取 **188px**：390 上 52% 算出 188.2，min() 仍由
+     百分比決定（＝使用者挑的那一格逐字不變），394 以上才由上限接手，最壞的那一格
+     還餘 11px。**不要把它調大** —— 430 上光用 52% 就已經高出 3px 了。
+   ⚠ 出血 **+32px**（框不動、背景往右推，超出的被框裁掉，沒有水平捲動）——
+     使用者在提案頁上挑的，用意是把人往右推、右邊那台潛盾的刀盤讓框吃掉一截。
+   ⚠ 濃度 **.18**：這一科的柔墨 AA 上限現算是 **.118**（`#8e6299` 比植牙的 `#335b8b` 淺），
+     .18 在那條線之上、實測柔墨 3.99 —— **那是使用者看過數字之後選的取捨**
+     （同牙周 4.32、兒牙 4.24、植牙 4.02），**不要拿對比度來訂正它**。
+     七科的臨界濃度：.101／.116／.107／.152／.120／.097／**.118**，**現算一次不要抄**。
+   ⚠⚠ **≥721 那一段還沒給使用者挑**（他說「定案 手機版上線」）。現在填的 200px／.30
+     是「最大而且不會凸出介紹區」的那一格（744 上圖高 395、介紹區 439）——
+     330px 會高出 211px 凸到 h1 那一區。**那是暫定值，不是定案。** */
 [data-topic="surg"] .tp-intro { position: relative; }
 [data-topic="surg"] .tp-intro::before {
   content: ""; position: absolute; right: 0px; bottom: 0;
-  width: min(76%, 360px); aspect-ratio: 816 / 830;
+  width: min(52%, 188px); aspect-ratio: 478 / 943;
   background: url("assets/lineart-surg.png") no-repeat; background-size: contain;
-  background-position: calc(50% + 0px) center;
-  opacity: .118; pointer-events: none; z-index: 0;
+  background-position: calc(50% + 32px) center;
+  opacity: .18; pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) {
   [data-topic="surg"] .tp-intro::before {
-    width: min(70%, 330px); right: 0px;
+    width: min(70%, 200px); right: 0px;
     background-position: calc(50% + 0px) center;
     opacity: .30;
   }
@@ -6626,7 +6638,7 @@ body[data-topic] #topics { padding-top: 1rem; }
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-08-25">2026 年 8 月 25 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-08-26">2026 年 8 月 26 日</time></span>
     </div>
   </div>
 </footer>

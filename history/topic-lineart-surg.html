@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>topic-lineart-surg｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .84rem; margin: .6rem 0 1rem; }
+  th, td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 500; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92em; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>topic-lineart-surg — 口腔外科著陸頁的線稿底圖</h1>
+<p class="meta">
+  2026-08-25 當天開、當天定案上線（<b>手機那一段定案，≥721 還沒給使用者挑</b>）<br>
+  原網址 <code>/preview/topic-lineart-surg/</code>（已刪除 2026-08-25）<br>
+  整頁還原：<code>git show 7dbdff4:preview/topic-lineart-surg/index.html</code><br>
+  切換條 <code>?w=&amp;op=&amp;r=&amp;b=&amp;v=</code>（大小／濃度／左右／出血／<b>版本</b>，五把尺都是即時套用）<br>
+  成品 <code>assets/lineart-surg.png</code>（478×943，透明底、口外的套色 <code>#8e6299</code>，<b>沒有翻轉</b>）<br>
+  產生器 <code>tools/topic-lineart.mjs</code>（永久）、提案頁 <code>tools/lineart-preview.mjs</code>（永久）<br>
+  提示詞與五輪的量測 <code>drafts/lineart-surg-prompt.md</code>
+</p>
+
+<div class="note">
+<p><b>一句話</b>：這一輪畫了五版，<b>使用者最後選的是第一、二版</b> ——
+中間三版全部在治「潛盾像電風扇」，而那三版一路把圖治壞了。
+成因記在下面那一節：<b>提示詞裡哪一段字最多，模型就把哪一個當主角。</b></p>
+</div>
+
+<h2>定案（手機那一段）</h2>
+<table>
+  <tr><th></th><th>手機（&lt; 721）</th><th>≥ 721</th></tr>
+  <tr><th>版本</th><td colspan="2"><b>Ｂ 全身</b>（Ａ 半身落選，來源仍在 <code>drafts/lineart-surg-v1.jpg</code>）</td></tr>
+  <tr><th>大小</th><td><code>min(52%, 188px)</code></td><td><code>min(70%, 200px)</code> <b>暫定</b></td></tr>
+  <tr><th>左右</th><td><code>right: 0</code></td><td><code>right: 0</code> <b>暫定</b></td></tr>
+  <tr><th>出血</th><td><b>+32px</b></td><td><b>0</b> <b>暫定</b></td></tr>
+  <tr><th>濃度</th><td><b>.18</b></td><td><b>.30</b> <b>暫定</b></td></tr>
+  <tr><th>翻轉</th><td colspan="2"><b>不翻</b>（她在圖裡本來就朝畫面左邊 ＝ 朝版心裡的文字）</td></tr>
+  <tr><th>裁切</th><td colspan="2"><code>--crop 274,42,478,943</code>，兩段共用 <code>aspect-ratio: 478 / 943</code></td></tr>
+</table>
+
+<p>⚠ 使用者說的是「定案　手機版上線」，所以 <b>≥721 那一段是暫定值不是定案</b>：
+填的是「最大而且不會凸出介紹區」的那一格（744 上圖高 395、介紹區 439）——
+提案頁預設的 330px 會高出 211px、凸到 h1 那一區。</p>
+
+<h2>兩個候選版本</h2>
+<table>
+  <tr><th></th><th>Ａ 半身</th><th><b>Ｂ 全身（定案）</b></th></tr>
+  <tr><th>來源</th><td><code>drafts/lineart-surg-v1.jpg</code></td><td><code>drafts/lineart-surg-v2.jpg</code></td></tr>
+  <tr><th>裁切</th><td><code>104,95,816,830</code>（裁掉底下那條地面線）</td><td><code>274,42,478,943</code>（沒有地面線，最後幾列是鞋子）</td></tr>
+  <tr><th>尺寸・比例</th><td>816×830　0.98</td><td>478×943　<b>0.51</b></td></tr>
+  <tr><th>線佔</th><td>10.7%</td><td>8.3%</td></tr>
+  <tr><th>390 上 76%</th><td>275×280</td><td>275×<b>543</b>　⚠ 比介紹區高 133px</td></tr>
+</table>
+
+<p>⚠⚠ <b>這一張是七科裡最「直」的</b>（比例 0.51，前六科都在 0.87~1.07 之間），
+所以卡住的完全是<b>高度</b> —— 同一個寬度下它比近正方的那幾張高一倍。
+這是顯微根管 2026-08-24 那條「近正方或直的圖，卡住的是高度不是對比度」的第二次出現，
+而且更極端。提案頁的大小那把尺因此<b>往下多開了兩格</b>（手機 44／52%、≥721 200／240px）。</p>
+
+<h2>px 上限是量出來的，不是隨手填的</h2>
+<p>手機那一段吃到 720px 寬，而<b>介紹區愈寬愈矮</b>（字少折幾行）。逐格量 430~720：</p>
+<table>
+  <tr><th>視窗寬</th><td>430~450</td><td><b>460~520</b></td><td>530</td><td>600</td><td>720</td></tr>
+  <tr><th>介紹區高</th><td>409.5</td><td><b>381.9</b>（全段最矮）</td><td>382.5</td><td>386.8</td><td>393.8</td></tr>
+</table>
+<p>圖高 ≤ 381.9 → 寬 ≤ <b>193.6px</b>，取 <b>188px</b>：390 上 52% 算出 188.2，
+<code>min()</code> 仍由百分比決定（＝使用者挑的那一格逐字不變），394 以上才由上限接手，
+最壞的那一格還餘 11px。<b>不要把它調大</b> —— 430 上光用 52% 就已經高出 3px 了。</p>
+
+<h2>提案頁：多了「版本」這一把尺（通用，不是口外專用）</h2>
+<pre>node tools/lineart-preview.mjs surg --alt drafts/lineart-surg-alt.png \
+  --main-label "Ａ 半身" --alt-label "Ｂ 全身"</pre>
+<p>⚠⚠ <b>切版本要連 <code>aspect-ratio</code> 一起換，不能只換圖檔</b> ——
+只換圖的話直的那一張會被壓進近正方的框裡整個變形。做法：把 <code>aspect-ratio</code>
+也接成 <code>var(--la-ar, …)</code>，長寬比直接從 PNG 的檔頭（IHDR）讀，不必解碼整張圖。
+守門那一段跟著多一項（<code>--la-ar</code> 沒接上就 throw），同 2026-08-24／25 那兩次
+「按了沒反應、不報錯」的教訓。</p>
+
+<h2>沒有被選上的三版：潛盾像電風扇</h2>
+<p>v3 的比例修好之後，使用者說「<b>比例好多了，但潛盾變得像電風扇</b>」。
+並排量出三個成因，缺一不可：</p>
+<ol>
+  <li><b>刀盤畫成全圖最大的正圓</b>（比她的頭還大），筒身反而縮成一根細管 —— 主體與配件對調。</li>
+  <li><b>細輻條從正中央一個小圓往外放射</b>，圓盤和筒身之間還有一段空隙 ＝ 圓盤架在棒子上。</li>
+  <li><b>刀盤正面朝著我們</b>。正圓 ＋ 輻條 ＋ 正面，就是電風扇的正面照。</li>
+</ol>
+<p>（分享圖那一台其實也有輻條，但它<b>貼在一個又胖又長的鼓身上</b>，所以讀起來是機器。）</p>
+<p>v4 照這個改，結果五項量測全部過門檻，使用者卻說「<b>整個風格歪掉欸</b>」。
+逐條看圖：機器橫跨畫面 <b>53%</b>、筒身約 <b>3.9 個頭高</b>（提示詞寫的是「＝她的前臂」約 1.2 個頭），
+握把被畫成一根伸到畫面邊緣的細砲管，切削端還是正面朝我們，
+<b>她還轉向了畫面右邊</b>（v3 是朝左），螺栓與鞋帶的細節密度也超過那五張風格參考。</p>
+
+<div class="note">
+<p>⚠⚠⚠ <b>通則：提示詞裡哪一段字最多，模型就把哪一個當主角。</b>
+v4 的 <code>THE MACHINE</code> 那一段 240 個字，比 <code>WHO</code> 還長 ——
+等於一邊要它畫人、一邊告訴它「這張圖是在畫這台機器」。
+<b>要治造型，靠的是把形狀寫死＋列 AVOID，不是靠字數。</b></p>
+</div>
+
+<p>v5 把那一段收成四句、尺寸鎖在她的上臂與頭上、細節上限逐項寫死，
+另外逐條重看提示詞還抓到三個自己寫壞的地方：
+<code>COMPOSITION</code> 寫的是「人與機器<b>合佔</b> 85%」（機器一大人就被擠小，而且完全合乎字面）、
+扁橢圓的「寬」拿它自己的高當尺讀起來像在講外徑、
+<code>narrow</code>／<code>slim</code>／<code>tail</code> 三個字加起來就是一根細管。
+—— 但使用者最後<b>選了第一、二版</b>，這三輪的機器修正一版都沒有上線，
+留在 <code>drafts/lineart-surg-prompt.md</code> 只是紀錄。</p>
+
+<h2>已知取捨</h2>
+<p>這一科的柔墨 AA 上限現算是 <b>.118</b>（<code>#8e6299</code> 比植牙的 <code>#335b8b</code> 淺，
+所以比 .097 寬鬆）。定案的 <b>.18</b> 在那條線之上 —— 實測柔墨 <b>4.19</b>（390 上 8 行壓到圖），
+<b>那是使用者看過數字之後選的</b>，同牙周 4.32、兒牙 4.24、植牙 4.02。
+<b>不要拿對比度來訂正它。</b></p>
+<p>七科的臨界濃度：.101／.116／.107／.152／.120／.097／<b>口外 .118</b> —— <b>每一科現算一次不要抄。</b></p>
+
+<h2>驗收</h2>
+<p>十四個寬度（320／360／375／390／414／430／500／600／<b>720／721</b>／744／834／1041／1440）：
+介紹區高度和「把偽元素關掉」<b>逐格完全相同</b>、每一格都<b>沒有水平捲動</b>、
+圖每一格都收在介紹區裡（最緊的一格 500 還餘 11px）。</p>
+
+<footer>
+  芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a>
+</footer>
+
+</div></body>
+</html>
