@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>topic-lineart-prosth｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .84rem; margin: .6rem 0 1rem; }
+  th, td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 500; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92em; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>topic-lineart-prosth — 植牙・假牙重建著陸頁的線稿底圖</h1>
+<p class="meta">
+  2026-08-25 當天開、當天定案上線（手機先定，iPad 當天稍晚定案）<br>
+  原網址 <code>/preview/topic-lineart-prosth/</code>（已刪除 2026-08-25）<br>
+  整頁還原：<code>git show 10e45d3:preview/topic-lineart-prosth/index.html</code><br>
+  切換條 <code>?w=&amp;op=&amp;r=&amp;b=</code>（大小／濃度／左右／出血，四把尺都是即時套用）<br>
+  成品 <code>assets/lineart-prosth.png</code>（972×896，透明底、植牙的套色 <code>#335b8b</code>，<b>沒有翻轉</b>）<br>
+  產生器 <code>tools/topic-lineart.mjs</code>（永久）、提案頁 <code>tools/lineart-preview.mjs</code>（永久）<br>
+  提示詞與量測 <code>drafts/lineart-prosth-prompt.md</code>
+</p>
+
+<div class="note">
+<p><b>一句話</b>：這一輪真正的教訓不在圖，在工具 ——
+<b>提案頁的「出血」那把尺對植牙／矯正從頭到尾沒有接上</b>，
+按了完全沒反應、也不報錯，圖一直停在 CSS 寫死的 <code>+48px</code>。
+使用者連著兩輪說「醫師的手被裁掉了」「還是沒回來欸」，
+我卻連著兩輪去改<b>裁切</b>——那是找錯地方。</p>
+</div>
+
+<h2>定案</h2>
+<table>
+  <tr><th></th><th>手機（&lt; 721）</th><th>≥ 721</th></tr>
+  <tr><th>大小</th><td><code>min(92%, 360px)</code></td><td><code>min(70%, 400px)</code></td></tr>
+  <tr><th>左右</th><td><code>right: 0</code></td><td><code>right: -8px</code></td></tr>
+  <tr><th>出血</th><td><b>+48px</b></td><td><b>0</b></td></tr>
+  <tr><th>濃度</th><td><b>.121</b></td><td><b>.22</b></td></tr>
+  <tr><th>翻轉</th><td colspan="2"><b>不翻</b>（七科第一個）</td></tr>
+  <tr><th>裁切</th><td colspan="2"><code>--crop 36,83,972,896</code>，兩段共用 <code>aspect-ratio: 972 / 896</code></td></tr>
+</table>
+
+<p>⚠⚠ <b>兩段的出血差很多（+48 vs 0），那不是漏改成一致</b>：手機的框只有 333px 寬，
++48 等於把右邊 14% 推出框外（醫師指路的那隻手在框外），他要的就是那個出血的效果；
+iPad 的框 400px、壓到的字也少，整張看得到反而好。</p>
+
+<p>⚠ <b>≥721 那一段一定要自己寫一行 <code>background-position</code></b> ——
+不寫的話會繼承基底的 +48，整張往右推、手指被框裁掉。</p>
+
+<h2>那把壞掉的尺</h2>
+<p>站上這條規則有<b>兩種寫法</b>，而提案頁的產生器只接了其中一種：</p>
+<table>
+  <tr><th>科別</th><th>寫法</th><th>出血這把尺</th></tr>
+  <tr><td>一般牙科・顯微根管</td><td><code>background: url(…) center / contain no-repeat;</code></td><td>有接上 ✓</td></tr>
+  <tr><td><b>矯正・植牙</b></td><td><code>background: url(…) no-repeat; background-size: contain;</code><br>＋下一行自己的 <code>background-position: calc(50% + Npx) center;</code></td><td><b>沒接上 ✗</b></td></tr>
+  <tr><td>牙周・兒牙</td><td><code>background: url(…) left center / auto 100% no-repeat;</code></td><td>本來就沒有出血可調（另一套機制）</td></tr>
+</table>
+
+<p>症狀：<b>按了沒反應、畫面正常、不報錯</b>。植牙的基底正好是 <code>+48px</code>，
+框把右邊 48px 裁掉 —— 換算回圖檔是 140 個原始像素，而右邊的留白只有 32，
+所以醫師指路那隻手被切掉約 108 個原始像素。</p>
+
+<p>修法（<code>tools/lineart-preview.mjs</code>）：加一條 <code>reBgLong</code> 接上第二種寫法，
+出血的預設值改成從<b>該科自己的規則</b>讀（原本用不限定選擇器的正規式，會抓到別科的），
+並新增一道<b>守門</b> —— 四把尺的變數沒有出現在該科的規則裡就直接 throw
+（牙周／兒牙走 <code>auto 100%</code>，那兩科跳過出血這一項）。六科各跑一次確認過。</p>
+
+<p>⚠ 這是同一個症狀第二次出現：2026-08-24 是站上寫 <code>right: 0;</code>（沒有 px）、
+正規式要求 px 就整條命中不到。<b>「按了沒反應」不報錯，只有拿數字量才看得出來</b> ——
+往後改這支產生器，量一次 computed style 再交出去。</p>
+
+<h2>裁切：兩次都改錯地方，但兩次都改對了東西</h2>
+<p>原圖 1024×1024，墨的範圍 x 47~976、y 83~971。</p>
+<table>
+  <tr><th>版本</th><th>裁切</th><th>四邊留白</th><th>起因</th></tr>
+  <tr><td>第一版</td><td><code>36,83,940,800</code></td><td>右 0</td><td>—</td></tr>
+  <tr><td>第二版</td><td><code>36,83,972,800</code></td><td>左 11／右 32／上 0／下 −88</td><td>使用者：「就會看到醫師的手被裁掉了　把它放回来吧」</td></tr>
+  <tr><td><b>定案</b></td><td><code>36,83,972,896</code></td><td>左 11／右 32／上 0／下 7　<b>四邊都沒切到墨</b></td><td>使用者：「感覺還可以再讓被裁掉的畫面多回來一些」</td></tr>
+</table>
+<p>第二、三版<b>本身都是對的</b>（右邊真的貼邊、下面真的少了 88 列：最底下那幾階與扶手的腳），
+只是它們都治不好使用者當下看到的那件事 —— 那件事的成因是上面那把壞掉的尺。</p>
+
+<p>⚠ <code>tools/topic-lineart.mjs</code> 的通則是「生成的線稿一定會多畫一條地面線，要裁掉」，
+<b>這一張不適用</b>：y=910~914 那條橫貫 x 58~724 的密線是<b>最底下那一階的階緣</b>，
+裁掉就少一階。<b>裁之前先看一眼那條線是什麼</b>，不要照通則砍。</p>
+
+<h2>已知取捨</h2>
+<p>≥721 的 <b>.22</b> 實測柔墨 <b>4.02</b>，低於站上的 4.5（744 與 721 上各 1 行；
+834 以上 0 行、濃度不影響可讀性）。<code>.15</code> 是唯一過關的那一格（4.51），
+使用者看過數字之後仍然選 .22。手機定案的 <b>.121</b> 同樣在這一科的 AA 上限
+<b>.097</b> 之上 —— 那是六科裡最緊的一支（<code>#335b8b</code> 是六支套色裡最深的）。</p>
+<p>同牙周 4.32、兒牙 4.24。<b>不要拿對比度來訂正它。</b></p>
+
+<h2>六科的臨界濃度（每一科現算一次，不要抄）</h2>
+<table>
+  <tr><th>一般牙科</th><th>牙周</th><th>顯微根管</th><th>兒牙</th><th>矯正</th><th>植牙</th></tr>
+  <tr><td>.101</td><td>.116</td><td>.107</td><td>.152</td><td>.120</td><td><b>.097</b></td></tr>
+</table>
+<p>愈深的套色愈緊。植牙是目前最緊的一支。</p>
+
+<h2>不翻轉（七科第一個）</h2>
+<p>前五科都把人翻成朝版心裡面。這一張有階梯：<b>不翻的時候「往右上走」和閱讀方向一致，
+翻過來反而是走回去</b>。提案頁那一輪特地加了「翻／不翻」的切換讓使用者在手機上比，他選了不翻。</p>
+<p>⚠ 同一輪也把提案頁的兩把位置尺改成<b>雙向</b>（<code>←48 … 0 … →20</code>），
+起因是使用者：「感覺线稿图的图片可以往左边一点。」——原本兩把尺都只能往右。</p>
+
+<h2>驗收</h2>
+<p>十二個寬度（320／375／390／414／430／720／<b>721</b>／744／834／1041／1200／1440）：
+介紹區高度與「把圖關掉」<b>逐格相同</b>、無水平捲動、每一格都收在介紹區裡。
+出血四格（−48／−16／0／+48）逐格量過 computed <code>background-position</code>，
+左右四格（48／0／−8／−20）逐格量過 computed <code>right</code> 與 <code>scrollWidth</code>。</p>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>
