@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>改版紀錄：植牙・假牙重建的分享卡帶子要多深（2026-08-25）</title>
+<style>
+body{max-width:44rem;margin:0 auto;padding:2rem 1.25rem 4rem;background:#e2e5e6;color:#2a2c27;
+ font-family:"Noto Sans TC","PingFang TC",system-ui,sans-serif;line-height:1.8}
+h1{font-size:1.3rem}h2{font-size:1rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;font-size:.9rem;margin:.6rem 0}
+th,td{border-bottom:1px solid #c9cbc5;padding:.35rem .4rem;text-align:left}
+th{color:#5c5f57;font-weight:500}code{font-size:.88em}
+p,li{font-size:.95rem}
+</style>
+</head>
+<body>
+<h1>植牙・假牙重建的分享卡：帶子要多深</h1>
+<p>2026-08-25 當天開、當天定案。提案頁 <code>preview/prosth-band/</code> 已刪除，
+完整的一頁可以還原：<code>git show a89e86f:preview/prosth-band/index.html</code></p>
+
+<h2>起因</h2>
+<p>使用者看過套色版之後：「<strong>我擔心這個帶子顏色和矯正撞到。把矯正定稿叫出來，
+然後把假牙重建這個做成切換讓我選，要比矯正深的效果。</strong>」</p>
+<p>他的擔心數字上成立，而且文件裡早就記著：CLAUDE.md 第九節第 7 條寫著
+「全站最近的一對是<strong>矯正 × 贋復</strong> ΔE 13.3（填色）／10.5（深階）」——
+這一輪量到套色版的帶子對矯正是 <strong>ΔE 13.7</strong>，就是那一對。</p>
+
+<h2>四格（都是真的產出檔，不是 CSS 疊的）</h2>
+<table>
+<tr><th>格</th><th>目標色</th><th>帶子實際落在</th><th>L*</th><th>比矯正深 ΔL*</th><th>ΔE</th><th>紙色字</th></tr>
+<tr><td>矯正（對照）</td><td>#4478b5</td><td>rgb(68,120,180)</td><td>49.4</td><td>—</td><td>—</td><td>3.61</td></tr>
+<tr><td>Ⓐ 現況</td><td>#335b8b 套色</td><td>rgb(50,91,137)</td><td>37.8</td><td>11.7</td><td>13.7</td><td>5.54</td></tr>
+<tr><td>Ⓑ 深一階</td><td>#2a4c76 <em>新色</em></td><td>rgb(43,76,117)</td><td>31.7</td><td>17.7</td><td>20.3</td><td>6.93</td></tr>
+<tr><td>Ⓒ 再深</td><td>#213e60 <em>新色</em></td><td>rgb(33,62,94)</td><td>25.5</td><td>24.0</td><td>28.1</td><td>8.66</td></tr>
+<tr><td><strong>Ⓓ 深階（定案）</strong></td><td>#182f4b 深階</td><td>rgb(26,47,74)</td><td>19.0</td><td><strong>30.4</strong></td><td><strong>35.2</strong></td><td>10.70</td></tr>
+</table>
+
+<h2>為什麼是 Ⓓ</h2>
+<ul>
+<li><strong>Ⓑ／Ⓒ 是內插出來的新色，站上不存在</strong>。PALETTE.md 的規則是顏色一律從既有的階拿，
+所以真正能選的只有 Ⓐ（套色）與 Ⓓ（深階）。</li>
+<li>Ⓐ 就是使用者擔心的那一格（ΔE 13.7）。</li>
+<li>Ⓓ 是站上白底字用的那一階，<strong>不是新色</strong>；兒童牙科 2026-08-24 也是
+「套色撐不住 → 退深階」，做法一致。</li>
+<li>代價：帶子比自己頁面上那顆標籤深一階。兒牙已經接受過同樣的代價。</li>
+</ul>
+
+<h2>做法（七科通用）</h2>
+<p>補償色 <code>M = ((目標色 − 0.18×墨) ÷ 0.82) × 255 ÷ 頂 17% 那面牆</code>，
+牆的實測中位色是 rgb(233,229,217)，所以 Ⓓ 的補償色是 <code>#163561</code>：</p>
+<pre><code>node drafts/og-shift.mjs drafts/og-topic-prosth-src.jpg prosth --shift 45
+node tools/og-plate.mjs prosth --blend multiply --tintcolor '#163561' \
+  --ink 0.18 --blur 6 --loc full --locpos stack</code></pre>
+
+<h2>順帶定案的兩件</h2>
+<ul>
+<li><strong>圖往下移 45px</strong>（新工具 <code>drafts/og-shift.mjs</code>）：位移是被兩端夾出來的 ——
+頭不能被帶子壓到 → D ≥ 43；左下三人的鞋不能被切 → D ≤ 47。</li>
+<li><strong>og:description 換成那一頁的 <code>close</code></strong>：
+「整理好，吃得順、用得久；部定專科醫師做過全口評估，幫你安排治療計畫。」
+34 字，實測在卡片上剛好兩行、不截斷。破折號改成全形分號（同矯正那張）。</li>
+</ul>
+</body>
+</html>
