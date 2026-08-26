@@ -1,5 +1,5 @@
-#TITLE: 變體 6 之五 —— 腮紅／密度／動感（已被 14 取代）
-#NOTE: v4 太安靜、風格偏離。三個成因：我自己寫的 no blush（站上每張臉都有腮紅）、房間太空（站上是塞滿的）、參考圖把畫風也帶過去了
+#TITLE: 變體 6 之六 —— 醫療人員的髮色改黑藍 ⭐ 現行版本
+#NOTE: 醫師與助理 #222d39（L18，黑到不可能被讀成灰），病患維持暖深棕。上次色相往冷色移、指定 L25 畫出來變 L44 的灰
 ---
 Editorial illustration, 16:9 landscape.
 
@@ -35,8 +35,16 @@ modelling of the face.
 THE PICTURE IS BUSY AND LIVED-IN, not a minimal showroom: every part of the frame has
 something real in it, surfaces carry objects, and there are more people than just the two
 in the foreground.
-HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
-#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair.
+HAIR — the two clinic staff and the patient have DIFFERENT hair, and both must stay very
+dark:
+  • THE DENTIST AND THE ASSISTANT (both in scrubs) have BLUE-BLACK hair — #222d39, its
+    shadowed side #171e27, its lit edge #344151. This is black hair with a cool blue sheen
+    in the light, the way dark Asian hair looks under a window; it must stay nearly black.
+    If in doubt, draw it DARKER.
+  • THE PATIENT has warm dark brown hair — #3f3330, its shadowed side #2e2523, its lit edge
+    #4d403c.
+NEVER grey, silver, white, ash or steel hair on anyone, and never a pale or mid blue-grey:
+the staff's hair is dark enough to read as black at a glance, never as greying hair.
 
 STRUCTURE — ONE single illustration, no panels and no dividing lines. A dental clinic
 consultation room. THE DENTIST SITS ON THE RIGHT SIDE OF THE DESK and the PATIENT SITS ON
@@ -207,8 +215,9 @@ consultation room; a room where the wall band, the cupboard doors or the chair u
 have been left pale instead of blue; every surface in the room turned blue; photorealism; a
 photorealistic mouth, gum or hand; faceless or noodle-limbed figures; thick uniform black
 outlines; even mechanical vector linework; chrome, metallic or iridescent gradients; glow,
-sparkle or lens flare; grey, silver, white or blue-grey hair; wrinkles, cheek shadow or
-facial modelling; the bubble placed above or behind the patient; the bubble's tail pointing
+sparkle or lens flare; grey, silver, white, ash or steel hair; the clinic staff's hair
+drawn pale, mid-toned or grey-blue instead of nearly black; the patient's hair drawn blue;
+wrinkles, cheek shadow or facial modelling; the bubble placed above or behind the patient; the bubble's tail pointing
 at the patient or crossing the picture; the dentist on the left and the patient on the
 right; the patient drawn from behind or with his face hidden; a frightened, upset, pained
 or cartoonishly shocked patient; the dentist without a white coat; pale powder-blue scrubs;
