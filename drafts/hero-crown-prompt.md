@@ -137,3 +137,298 @@
 2. 梗 C 的話，先做**圓餅 ＋ 挖出一顆牙冠的洞**那張參考圖（第十之一節）。
 3. 出圖 → 交件門檻四項 → `hero-resize.mjs` → 換 `post-meta` 的 `hero` 與 `heroAlt`
    → 文章頁補回 `<figure class="post-hero">`（`sizes` 三段，見第七節「收到新圖要做的事」）。
+
+---
+
+## 五、提示詞（2026-08-26，第一版，A 與 C 各一份）
+
+**兩份都是完整可以直接複製貼上的**（第七節第 16 條：即使只改一句也重出整份）。
+出圖用 Gemini。挑定之後**只改出問題的那一段**，然後仍然重出一整份。
+
+### 兩份共用的、已經寫進去的規矩
+
+| 出處 | 寫在哪一段 |
+| --- | --- |
+| 第七節第 18 條：STYLE 放最前面、標成最重要的一段 | `STYLE — READ THIS FIRST` |
+| 第十之五節：皮膚是「兩三階」的唯一例外，臉上只准六樣，而且要放在 STYLE 段裡 | 同上，`SKIN IS THE ONE EXCEPTION` |
+| 第七節第 4 條：`no text` 要寫得很重、逐項點名 | `CRITICAL — NO WRITING ANYWHERE` |
+| 第八節第 6 條：概念外溢 —— 每一個「內容未指定的表面」都是落點 | 牆上那張畫的內容**寫死**（三條色帶的山）＋ `KEEP EVERY TOOTH … INSIDE THE BUBBLE`／`KEEP THE TOOTH SHAPES ON THE BENCH` |
+| 第八節第 5 條：三分之四側臉指定不了左右手 | 一律寫「靠近觀者那隻手」 |
+| 第八節第 2 條：一個大泡泡＋分隔線，**不要箭頭** | A 的 `STRUCTURE`，並在 `AVOID` 再擋一次 |
+| 第十之六節：氛圍白線可以長，但不能從人身上長出來 | `LIGHT AND COLOUR` |
+| 第十之四節：目標帶 HSL S 30–50、L 70–85，每一區至少五個顏色並派給物件 | 同上 |
+| 第八節第 15 條：科別色只當點綴，並擋「整張罩上藍」 | `ACCENT` |
+| 第十之二節：給了 hex 就不要再寫色名 | 五個色值都只給 hex |
+| 第九節第 3、4 條：華人面孔、表情屬於那個場合 | `PEOPLE` |
+| 第八節第 16 條：性別比不要單一 | 兩份都是一女一男 |
+
+### ⚠ 兩份各自最可能出問題的地方（第一版出來先看這裡）
+
+**A**：泡泡裡那兩個剖面。兩半**只有杯壁不一樣**是這張圖的全部，模型很可能把兩半
+畫成不同大小、不同角度，或是在左半也畫一條線。真的畫不出來就照第十之一節
+**做一張參考圖**（同 `drafts/canal-ref.png` 的做法）：兩格對照，把牙的形狀、
+杯壁的厚度、那條交界線與缺角一次畫死。
+
+**C**：那片圓餅。「上面挖出一顆牙冠形狀的洞」是這張圖的命門，
+文字描述失敗的話一樣要做參考圖 —— 但它的幾何比根管簡單得多（一個碟子加一個洞），
+所以第一版先試文字。第二個風險是**整間長得像陶藝教室**，所以識別物逐項列了，
+而且 `AVOID` 直接點名 potter's wheel、clay、glaze buckets。
+
+---
+
+### 梗 A —— 診間對坐 ＋ 一個對照泡泡
+
+```
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end. Colour
+applied like soft coloured pencil and light marker; colour edges a little loose and not
+always meeting the line. Flat fills with two or three tones per hue — no smooth decorative
+gradients, no airbrush, no glow. A fine even paper grain over every surface of the whole
+image. Every person wears a different colour. The room is furnished and lived in.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all — no wrinkles, no lines beside the
+nose, no lines under the eyes, no cheek shadow, no neck shading. Everyone is calm and
+healthy-looking and their real age; nobody is drawn old or tired by extra facial detail.
+
+STRUCTURE — ONE single illustration, not a grid. The lower and left three-quarters of the
+frame is a dental consultation corner with two people at a small table. Floating in the
+upper right of the frame, over the wall behind them, is ONE large rounded-rectangle
+explanation bubble with a thin hand-drawn outline, joined to the dentist by three small
+circles rising from beside her shoulder. The bubble is divided into two halves by ONE thin
+vertical hand-drawn line down its middle. There is no arrow anywhere, and there are never
+two or three separate bubbles — it is one bubble with one dividing line.
+
+THE ROOM — a small, warm, real consultation corner in a dental clinic, plainly furnished
+and clearly in use: a wooden table with rounded corners; two low chairs; a low cabinet
+along the wall with a plain ceramic jar and a small potted plant on top; a folded cloth
+over the back of one chair; a soft rug; a window on the left letting in clean daylight; on
+the wall ONE framed picture whose image is fixed and must be exactly this — soft rounded
+hills in three flat bands of colour, nothing else, no words. The walls and floor are never
+left blank white: the wall carries a colour and the floor is a real wooden surface. Do not
+add any other pictures, charts, diagrams, screens or models to the room.
+
+THE TWO PEOPLE — On the RIGHT of the table sits the DENTIST, a woman in her thirties with
+short hair, seen three-quarters from the front, sitting upright and relaxed. She holds ONE
+small tooth-cap between the thumb and forefinger of the hand nearer the viewer, lifted to
+about chest height and turned slightly so the patient can see it; her other hand rests
+open on the table. Her expression is friendly, attentive and matter-of-fact — she is
+explaining something ordinary, not delivering bad news.
+On the LEFT of the table sits the PATIENT, a man of about forty-five, seen from behind and
+to one side so we read his shoulder, the back of his head and a sliver of his cheek; he
+leans slightly forward, one forearm on the table, listening. Never put the dentist on the
+left and never put the patient on the right. Neither of them looks at the viewer.
+
+THE BUBBLE — CONTENTS. This is the most important content in the picture and must be big
+and clean and easy to read. Both halves show THE SAME simple side view of a single back
+tooth with a cap fitted over it, drawn identically in size, position and outline, so that
+the ONLY difference between the two halves is the wall of the cap itself. In each half:
+a short, simple, pale ivory tooth with two stubby roots stands at the bottom; over its top
+sits a cap like a thick-walled bell, following the tooth's shape and covering the whole
+top and sides; the cap is drawn cut through the middle so its wall thickness is visible.
+  • LEFT HALF — the wall of the cap is ONE single uniform colour all the way through, from
+    its outer surface to its inner surface. No line inside it, no second colour, no layer.
+    It is plainly one solid piece of one material. Its edges are whole and unbroken.
+  • RIGHT HALF — the wall of the cap is plainly TWO layers, and the join must be obvious:
+    an INNER layer of dark grey-blue metal hugging the tooth, and an OUTER layer of a pale
+    warm off-white over it, with ONE clean continuous line running between the two layers
+    all the way round. At the corner of the cap nearer the middle of the bubble, a small
+    piece of the OUTER pale layer has broken away, leaving a chip with a slightly jagged
+    edge, and through that chip the dark inner layer shows plainly. Two small pale flakes
+    have come loose and sit just below the chip, tipped at different angles.
+Keep both halves simple and illustrative — flat colour, clean outlines, no shine, no
+cross-hatching, no photorealism, no gum, no blood, no red, no decay, no dark spots, no
+labels, no numbers, no dotted lines and no arrows. KEEP EVERY TOOTH AND EVERY CAP INSIDE
+THE BUBBLE: the only tooth-shaped object anywhere else in the picture is the single small
+cap held in the dentist's fingers, and no tooth shape may appear on the table, the floor,
+the cabinet, the wall or the framed picture.
+
+PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes, a
+simple line mouth, a small nose), natural realistic head-to-body proportions, believable
+ages, East Asian faces. Not photorealistic. Not faceless. No oversized heads, no noodle
+limbs. Nobody looks at the viewer. Neither figure is taller than half the frame, and
+neither stands in the centre.
+CLOTHING, COLOUR — the dentist wears a short-sleeved clinic top in #b7c5d7, its folds and
+shadows in #99a7b8; her hair is #373f48, its shadowed side #283039 and its lit edge
+#40474f. The patient wears a muted clay-rose knitted top with warm grey trousers, and his
+hair is a warm dark brown — a clearly different colour family from the dentist, so the two
+never blur together.
+CLOTHING, RENDERING — clothes are NEVER flat single-tone shapes. Model every garment with
+two or three tones of its own colour: soft coloured-pencil shading in the folds, along the
+sleeves, under the collar, at the hem and wherever the fabric gathers, so the cloth has
+weight and drape. Draw the real details — collar, cuffs, sleeve seam, hem, the ribbing at
+a cuff, a pocket.
+
+LIGHT AND COLOUR — Ordinary bright indoor daytime. ONE light source only: clean daylight
+from the window on the left, warm and even, no long orange shadows, not sunset, not
+lamplight. Across the upper part of the frame, above the two people and not touching them,
+draw FOUR OR FIVE long, thin, white hand-drawn lines running the same way at the same
+shallow angle, evenly spaced, solid where they begin and thinning to dry flecks — soft
+chalk quality, clearly hand-made, describing the air and the light in the room. These
+lines must never begin at anyone's mouth, nose, hand or body, must never loop or curl back
+on themselves, and must never resemble smoke, steam or breath.
+Most of the coloured areas of the picture sit in the range HSL saturation 30–50 and
+lightness 70–85 — clearly coloured and readable, never washed out into near-white pastels
+and never heavy or muddy. About half the picture is chromatic. Use AT LEAST FIVE clearly
+different colours and give each one to a named object: the clinic top, the patient's top,
+the wall, the wooden table and floor, the potted plant, the rug, the framed hills. Colour
+throughout — never greyscale, never a single-hue picture.
+ACCENT — #335b8b appears in exactly two small places and nowhere else: one door of the low
+cabinet, and a narrow horizontal band running along the wall behind the two people. Do NOT
+wash the whole image in that colour, do NOT tint the skin, the table, the floor or the
+paper with it, and do NOT make it bright or vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, labels, panel titles, clock faces or watermarks, in any language or
+alphabet. The framed picture on the wall is wordless. The ceramic jar, the cabinet, the
+clothing and every other surface are blank. Nothing inside the bubble is labelled or
+numbered. There are no arrows, no plus or minus marks, no ticks and no crosses anywhere.
+Where writing would normally appear, leave the surface plain.
+
+AVOID — greyscale; photorealism; a photorealistic mouth or gum; faceless or noodle-limbed
+figures; thick uniform black outlines; chrome, metallic or iridescent gradients; glow or
+lens flare; two or three separate bubbles instead of one; any arrow, pointer, dotted
+connector or comparison mark between the two halves; a tick on one half and a cross on the
+other; blood, wounds, redness, pain or fear; decayed, dark, broken or missing teeth; a
+tooth shape anywhere outside the bubble except the single cap in the dentist's fingers; a
+clear tooth model, a plaster model, an X-ray, a screen or a poster of teeth in the room;
+anyone looking at the viewer; a whole image tinted blue; flat untextured single-tone
+clothing; a bare empty room; wrinkles, cheek shadow or facial modelling.
+```
+
+---
+
+### 梗 C —— 技工所的工作檯
+
+```
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end. Colour
+applied like soft coloured pencil and light marker; colour edges a little loose and not
+always meeting the line. Flat fills with two or three tones per hue — no smooth decorative
+gradients, no airbrush, no glow. A fine even paper grain over every surface of the whole
+image. Every person wears a different colour. The bench is full of real working things.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all — no wrinkles, no lines beside the
+nose, no lines under the eyes, no cheek shadow, no neck shading. Both people are calm,
+absorbed in their work and their real age; nobody is drawn old or tired by extra detail.
+
+STRUCTURE — ONE single continuous scene, NOT a grid and NOT split by any line. We look
+straight at ONE long wooden workbench that runs the whole width of the frame, in a small
+dental laboratory. Two technicians sit at it, one on the left and one on the right, each
+doing a different job. The bench, the wall behind it and the light are unbroken across the
+whole picture, so the two jobs are plainly happening in the same room at the same time.
+The two halves must read differently at a glance: the LEFT technician sits upright and
+leans back a little, holding something up into the light; the RIGHT technician leans in
+low and close over the bench with his face near his hands.
+
+LEFT — THE ONE-PIECE JOB. A woman in her thirties sits three-quarters turned towards the
+middle of the frame. Lying flat on the bench in front of her is a round white disc, about
+the size of a saucer and roughly one finger thick, plain and uniform white with a clean
+smooth rim. Near the middle of that disc, ONE cap-shaped hollow has been cut clean out of
+it, straight down through the disc — a small rounded cavity with exactly the same
+silhouette as the object she is holding, with clean edges and a plain white cut face. The
+disc has no other holes, no pattern, no grid and no writing. She holds up, in fine
+tweezers in the hand nearer the viewer, ONE small tooth-cap — a little hollow bell shape,
+about the size of a fingertip, a single pale warm off-white ALL OVER with no layers, no
+seam and no second colour anywhere on it. She has lifted it into the light of a small
+angled bench lamp and is looking at it closely, her head tilted slightly. Her free hand
+rests on the bench beside the disc. It must read plainly that the cap in the tweezers came
+out of the hollow in the disc: they are the same size and the same silhouette.
+
+RIGHT — THE LAYERED JOB. A man of about forty sits leaning in low over the bench, his face
+close to his hands, seen three-quarters from the front. In the hand further from the
+viewer he steadies a short upright peg on the bench; mounted on the top of that peg is a
+small dark grey-blue metal cap, the same bell shape and the same size as the one the woman
+is holding. In the hand nearer the viewer he holds a very fine brush, its tip touching the
+cap. Roughly the lower half of that cap is still bare dark metal; the upper half has
+already been covered with a pale warm off-white layer, laid on in several visible
+overlapping strokes so it plainly reads as something built up stroke by stroke, and the
+boundary between the dark part and the pale part is a clear irregular edge partway up the
+cap. Beside his hands on the bench: a small flat white mixing tile with three little pools
+of pale paste on it, a slim spatula, and three squat ceramic jars with plain lids and
+completely blank sides. Nothing here is labelled.
+
+THE BENCH AND THE ROOM — this must plainly be a dental laboratory and not a pottery
+studio, a nail salon or a kitchen, so furnish it: a warm wooden bench top with the grain
+showing; a wooden block holding six or seven fine hand tools standing upright; a small
+angled lamp with a plain ring around its head over the left technician; a shallow tray of
+small blank white caps beside the right technician; ONE small pale plaster block on the
+low shelf behind the bench with a simple row of teeth moulded along its top edge; a row of
+plain ceramic jars on that shelf; a folded cloth; a low stool; an apron hanging on a hook
+on the wall; a window on the left with clean daylight and a small potted plant on the
+sill. The wall carries a colour and the floor is a real surface — neither is left blank
+white. Do not add any screen, monitor, poster, chart, diagram, X-ray or machine of any
+kind to this room. KEEP THE TOOTH SHAPES ON THE BENCH: the only tooth-shaped objects in
+the whole picture are the cap in the tweezers, the cap on the peg, the small blank caps in
+the shallow tray and the single plaster block on the shelf. No tooth shape may appear on
+the wall, the floor, the window, the jars or anywhere else.
+
+PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes, a
+simple line mouth, a small nose), natural realistic head-to-body proportions, believable
+ages, East Asian faces. Not photorealistic. Not faceless. No oversized heads, no noodle
+limbs. Nobody looks at the viewer. Neither figure is taller than half the frame, neither
+stands in the centre of the frame, and the objects on the bench are the subject of the
+picture — the two people are at work inside it, not posing for it.
+CLOTHING, COLOUR — the woman wears a work apron in #b7c5d7 over a warm cream long-sleeved
+top, the apron's folds and shadows in #99a7b8; her hair is #373f48, its shadowed side
+#283039 and its lit edge #40474f. The man wears a muted clay-rose shirt with the sleeves
+rolled up and a warm grey apron, and his hair is a warm dark brown — a clearly different
+colour family from the woman, so the two never blur together.
+CLOTHING, RENDERING — clothes are NEVER flat single-tone shapes. Model every garment with
+two or three tones of its own colour: soft coloured-pencil shading in the folds, along the
+sleeves, at the hem, under the apron strings and wherever the fabric gathers, so the cloth
+has weight and drape. Draw the real details — collar, cuffs, rolled sleeve, apron strap
+and tie, a chest pocket.
+
+LIGHT AND COLOUR — Ordinary bright indoor daytime. ONE light source only: clean daylight
+from the window on the left, warm and even, no long orange shadows, not sunset, not
+night-time. The small bench lamp adds only a soft local brightening on the cap in the
+tweezers; it is not a second light source and it casts no dramatic beam. Across the upper
+part of the frame, above both people and not touching them, draw FOUR OR FIVE long, thin,
+white hand-drawn lines running the same way at the same shallow angle, evenly spaced,
+solid where they begin and thinning to dry flecks — soft chalk quality, clearly hand-made,
+describing the air and the light in the room. These lines must never begin at anyone's
+mouth, nose, hand or body, must never loop or curl back on themselves, and must never
+resemble smoke, steam or breath.
+Most of the coloured areas of the picture sit in the range HSL saturation 30–50 and
+lightness 70–85 — clearly coloured and readable, never washed out into near-white pastels
+and never heavy or muddy. About half the picture is chromatic. Use AT LEAST FIVE clearly
+different colours and give each one to a named object: the woman's apron, the man's shirt,
+the wall, the wooden bench and floor, the potted plant, the folded cloth, the ceramic
+jars. Colour throughout — never greyscale, never a single-hue picture.
+ACCENT — #335b8b appears in exactly two small places and nowhere else: one door of the low
+cabinet under the bench, and a narrow horizontal band running along the wall behind the
+shelf. Do NOT wash the whole image in that colour, do NOT tint the skin, the bench, the
+floor or the paper with it, and do NOT make it bright or vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, labels, measurement marks, scales, clock faces or watermarks, in any
+language or alphabet. The ceramic jars are completely blank — no printed names, no symbols
+and no numbers on their sides or lids. The mixing tile, the tools, the tool block, the
+lamp, the aprons, the shelf and the walls are all blank. There is no shade guide, no
+colour chart and no numbered strip anywhere. Where writing would normally appear, leave
+the surface plain.
+
+AVOID — greyscale; photorealism; faceless or noodle-limbed figures; thick uniform black
+outlines; chrome, metallic or iridescent gradients; glow, sparkle or lens flare; any
+dividing line, frame or panel border between the two halves; any arrow, pointer, dotted
+connector or comparison mark; a tick on one side and a cross on the other; blood, wounds,
+redness, pain or fear; a mouth, gums, lips or a face being treated; decayed, dark, broken
+or missing teeth; a tooth shape anywhere outside the four places named above; any screen,
+monitor, X-ray, poster or diagram; any large machine, robot arm or milling machine; a
+potter's wheel, clay, glaze buckets or anything that reads as a pottery studio; anyone
+looking at the viewer; a whole image tinted blue; flat untextured single-tone clothing; a
+bare empty room; wrinkles, cheek shadow or facial modelling.
+```
+
