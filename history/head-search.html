@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>head-search｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>head-search — 頁首那三個選單右邊的放大鏡</h1>
+<p class="meta">
+  2026-08-26 開、當天兩輪定案上線<br>
+  原網址 <code>/preview/head-search/</code>（已刪除 2026-08-26）<br>
+  整頁還原：<code>git show 7d76231:preview/head-search/index.html</code><br>
+  產生器：<code>git show 7d76231:tools/head-search-preview.mjs</code><br>
+  切換條 第一輪 <code>?qm=in|full|drop&amp;qf=none|frame|text&amp;qs=live|enter|none</code>、
+  第二輪 <code>?qc=off|on&amp;qe=off|on&amp;qr=plain|chips|auto</code>、
+  兩輪共用 <code>?qhide=0|1</code>（對照現況）<br>
+  成品：<code>assets/head-search.js</code> ＋ <code>index.html</code>／<code>assets/style.css</code> 的頁首那一段
+</p>
+
+<div class="note">
+<p><b>起因</b>（使用者，附首頁截圖）：「我想要在右上那三個選單裡面在右邊再增加一個搜尋的欄位，
+因為這樣子搜尋我還要拉回去剛剛那個主題科別標籤下面有點麻煩。那主題科別標籤下面那個搜尋就保留，
+只是在上面那三個元素讓那三個是往左移一點，然後有一個放大鏡的圖案點下去可以按可以變成搜尋頁面。」</p>
+<p>要解的是<b>「搜尋框只有一個、而且在頁面中間」</b> —— 人捲到第七張卡才想到要搜尋，
+就得先往回捲。頁首是 fixed 的、一直都在，入口放在頁首就永遠伸手可及。</p>
+</div>
+
+<h2>第一輪：版面（三條尺）</h2>
+<pre>先量再做 —— 「品牌右緣 → 選單左緣」的餘量，現況與加了放大鏡之後：
+
+           現況      加了放大鏡     選單那一排變寬
+   320      9.59        9.59          +22.88
+   360     29.52       10.80          +24.75
+   375     42.72       16.92          +25.80
+   390     47.41       20.59          +26.81   ← 使用者的手機大約在這一段
+   430     61.19       32.50          +28.69
+   744    135.33       83.34          +51.98
+  1440    668.33      616.34          +51.98
+
+⚠⚠ 320 那一格看起來沒變，是因為讓步的是品牌那個 &lt;a&gt; 的空盒子，不是字。
+   頁首是 grid-template-columns: minmax(0,1fr) max-content（2026-08-16 定案），
+   選單那一欄不讓步、品牌那一欄可縮，而品牌的 &lt;a&gt; 本來就帶著 22.88px 的空盒。
+   八個寬度逐項量過：品牌主名與副標的寬度、行數、頁首高度全部一個字都沒動。
+
+三條尺與定案（使用者挑的那一格用★標）：
+  ① 點下去怎麼展開　　就地／★整條（品牌也讓開）／頁首底下掉一條
+     390 上輸入框實寬：就地 226／整條 362／掉一條 362
+  ② 放大鏡長什麼樣　　★只有圖示／圖示＋玻璃框／圖示＋「搜尋」
+  ③ 打了字之後　　　　★立刻捲到主題與科別／按 Enter 才捲／不捲只報幾筆</pre>
+
+<h2>第二輪：搜不到怎麼辦（三條尺）</h2>
+<div class="note">
+<p>使用者：「如果搜尋 地址、電話 是沒有結果的，或是打醫師也不會出現，
+像這樣你們覺得要怎麼辦？」</p>
+</div>
+<pre>先量再說 —— 十四個查詢實測（首頁當時的現況）：
+
+  地址 0篇0位    電話 0篇0位    看診時間 0篇0位   停車 0篇0位
+  週六 0篇0位    永樂街 0篇0位  預約 0篇0位       假日 0篇0位
+  醫師 1篇9位    矯正 2篇4位    李柄輝 0篇1位     健保 3篇0位
+  費用 1篇0位    洗牙 1篇0位
+
+量出來是三件不同的事，各自要治：
+
+① 範圍太窄。搜尋只索引文章卡與醫師卡，診所資訊那一整區不在裡面 ——
+   「永樂街」「停車」「看診時間」「假日」這些字站上明明就印著，卻一律 0 筆。
+② 有些詞站上根本沒有印。「地址」「電話」在這一站是圖示不是文字
+   （刻意的，見 PALETTE.md 第六之十七節），門診表寫的是「一二三四五」不是
+   「週一／週六」，「預約」全站沒有這兩個字。
+   ⚠⚠ 這一類不可能靠擴大索引解決 —— 索引再大，站上沒有的字就是搜不到。
+③ 「醫師」其實有中，是看不到。實測 1 篇文章、9 位醫師，可是打完字捲到
+   「主題與科別」之後，390×844 上第一位醫師在 y=949 ——在畫面下緣外 105px，
+   畫面上只看得到那 1 張文章卡。結果那一句（.filter-note）在 y=265，
+   13px 的柔墨小字，說了「9 位醫師」而且「醫師」是連結，但份量太輕。
+
+三條尺與定案（★）：
+  ① 診所資訊要不要一起搜　不搜／★一起搜
+  ② 都搜不到的時候　　　　只有那一句話／★給三個出口
+  ③ 結果那一句　　　　　　一句灰字／★可以點的三顆／三顆＋自動去結果最多的那一區
+
+⚠⚠ 為什麼不做「同義詞對照表」（地址→永樂街、電話→05、掛號→…）：
+   這一站的篩選原則是「讀的就是畫面上那句話裡的詞，不是另外維護的隱藏屬性 ——
+   所以『篩得到什麼』和『畫面上寫什麼』不可能對不起來」（index.html 那支 IIFE
+   的註解，2026-08-11 定的）。同義詞表正好違反它：表要人維護、猜錯了沒有人會
+   發現，而且會長成一份和畫面對不起來的第二真相。
+   改用「② 給出口」—— 不猜他打了什麼，直接給這個站上最常被找的三件事。
+
+⚠ 落選的第三格（自動去結果最多的那一區）會猜，而且會猜錯：
+  搜「矯正」是 2 篇文章 4 位醫師，它會把人帶去醫師區，但多半是想看那兩篇。
+  三顆標記把選擇留給看的人，不猜。</pre>
+
+<h2>上線時做的六件</h2>
+<pre>① index.html：樣式接在整份樣式表最後、放大鏡與搜尋列進頁首、.qx 進 #topics、
+   scrollspy 的選擇器改成 .site-nav a:not(.nav-q)[href^="#"]、掛上 head-search.js
+② assets/head-search.js：行為（首頁就地篩、其他頁送回 /?q=…#topics）
+③ assets/style.css：同一段樣式，容器換成 .site-header .wrap
+④ posts/&lt;slug&gt;/index.html × 10：放大鏡 ＋ 搜尋列 ＋ 腳本
+   ⚠ 文章頁一定要有這顆 —— 2026-08-15 定案「首頁切到文章頁，頁首不要變」，
+     少一顆圖示比差 0.14px 嚴重得多。
+⑤ node tools/topics.mjs：七科的著陸頁是 index.html 的快照，要重跑才會跟上
+⑥ 刪掉 preview/head-search/ 與 tools/head-search-preview.mjs
+
+上線時踩到、修掉的一件：
+⚠⚠ assets/style.css 的 .brand-text 帶著 min-width: 0（index.html 那一份沒有），
+   於是那個 flex 項目可以被壓到比內容還窄 —— 頁首多一顆放大鏡之後，320 寬上
+   「芳仁牙醫診所」被裁掉了（實測 scrollWidth 79 &gt; clientWidth 66）。
+   拿掉那一條之後兩份逐項相同、八個寬度都不再裁到。
+   通則：兩份樣式表的頁首要逐項相同，差一個 min-width 平常看不出來，
+   多一個元素就爆出來。</pre>
+
+<h2>做法上不要改掉的三件</h2>
+<pre>① 放大鏡是 &lt;a href="#topics"&gt; 不是 &lt;button&gt;。沒有 JS 的時候它退回
+   「跳到主題與科別」＝ 使用者原本手動在做的事，有 JS 才 preventDefault
+   改成就地展開。方向和 HERO 那條動畫一樣：JS 只會讓它變好。
+   ⚠ 它會被頁首那支 scrollspy 抓到，所以那一行選擇器要排除它，
+     不排除的話它會被當成第四個小節、燈會滑到放大鏡上。
+② 站上那支篩選的 IIFE 一行都沒有改。head-search.js 只是把字寫進 #q 再送一個
+   input 事件，然後在它後面（後掛的後跑）接手改寫那一句話。
+   ⚠ .hs-n（頁首那個筆數）要排到下一個任務再寫 —— push() 是先在 #q 上送
+     input（於是接手那一段同步跑完）再寫 .hs-n，直接寫會被它蓋掉。
+③ 樣式要放在 &lt;head&gt;，不能塞在 &lt;/body&gt; 前面。那個 &lt;form&gt; 在樣式表之前就已經
+   被解析出來了，於是有 180ms 是可見的 —— 關著的搜尋列會在開頁那一瞬間
+   整條閃出來（提案頁第一版就是這樣長出來的）。
+
+其他量到的：
+・輸入框字級 16px 是硬條件不是造型：iOS 對 &lt;16px 的輸入框一聚焦就放大整頁。
+・展開時要淡掉的是 .site-nav 整條，不是三個 &lt;a&gt; —— 那三個玻璃框是 ::before、
+  跟著 a 走沒問題，但滑過去的那塊底（.nav-lamp）是 nav 的直接子元素，
+  只淡 a 的話它會單獨留在半透明的輸入框底下，看得見。
+・門診表那張卡裡那排科別標記（.hours-filter）是控制項不是內容，索引時要剔掉 ——
+  不剔的話「矯正」「兒童牙科」這種查詢每一次都會多命中一次看診時間。
+・顏色一個都沒有新增：搜尋列吃頁首那三個玻璃框那一組（紙色 .16 的底、
+  紙色 .5 的線、--frame-r 的圓角），結果標記與出口吃站上 chip 那一組。
+
+驗收：首頁與文章頁各八個寬度（320~1440）× 25/16 個選擇器 × 16 個 computed 屬性
+＋ bbox，除了「選單整排往左移」（＝這一輪要的）與 .site-head .shell／
+.site-header .wrap 的 position: static → relative（絕對定位要的參考框）之外
+0 項有差；七科著陸頁 × 四個寬度無水平捲動、無裁字、無 JS 錯誤；
+關掉 JavaScript 時放大鏡退回連結、搜尋列不出現。</pre>
+
+<footer>
+  <a href="/history/">← 改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>

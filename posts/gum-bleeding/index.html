@@ -244,7 +244,25 @@
       <a href="../../#topics">全部文章</a>
       <a href="../../#doctors">醫師介紹</a>
       <a href="../../#clinic">診所資訊</a>
+      <!-- 放大鏡。素材出處：Lucide "search"／"x"，ISC 授權，https://lucide.dev ——
+           這一行註解就是署名，改圖或搬檔的時候不要刪。
+           ⚠⚠ **是 <a> 不是 <button>**：沒有 JS 的時候它退回「跳到主題與科別」
+             ＝ 使用者原本手動在做的事，有 JS 才 preventDefault 改成就地展開。
+           ⚠ 它會被底下那支 scrollspy 抓到，所以那一行選擇器加了 :not(.nav-q)。 -->
+      <a class="nav-q" href="../../#topics" aria-label="搜尋文章與醫師" aria-expanded="false" aria-controls="headsearch">
+        <span class="nav-q-i" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.6" cy="10.6" r="7"/><path d="m20.4 20.4-4.85-4.85"/></svg></span>
+      </a>
     </nav>
+    <!-- 頁首的搜尋列。關著的時候 visibility: hidden ＋ inert，**不佔任何版面**
+         （絕對定位），所以收著的頁首和加這一顆之前逐項相同。
+         ⚠ 輸入框字級 16px 是硬條件：iOS 對 <16px 的輸入框會在聚焦時放大整頁。 -->
+    <form class="head-search" id="headsearch" role="search" inert>
+      <span class="hs-ico" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.6" cy="10.6" r="7"/><path d="m20.4 20.4-4.85-4.85"/></svg></span>
+      <input class="hs-in" type="search" placeholder="搜尋文章與醫師" aria-label="搜尋文章與醫師"
+             autocomplete="off" spellcheck="false" enterkeyhint="search">
+      <span class="hs-n" aria-hidden="true"></span>
+      <button class="hs-x" type="button" aria-label="關閉搜尋"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.5 5.5 5.5 18.5M5.5 5.5l13 13"/></svg></button>
+    </form>
   </div>
 </header>
 
@@ -483,5 +501,6 @@
   </div>
 </footer>
 <script src="../../assets/counter.js" defer></script>
+<script src="../../assets/head-search.js" defer></script>
 </body>
 </html>

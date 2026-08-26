@@ -5040,6 +5040,152 @@ body[data-topic] #topics { padding-top: 1rem; }
   padding: .05em .25em; color: var(--ink);
 }
 .tp-todo::before { content: "⚠ "; }
+
+/* ==========================================================================
+   頁首的搜尋入口（2026-08-26 定案上線，提案頁 preview/head-search/）
+   --------------------------------------------------------------------------
+   放大鏡接在三個選單後面（那三個因此自然往左移 ＝ 使用者要的），點下去
+   整條頁首變成一條搜尋列。推導、落選案與每一輪的數字在
+   /history/head-search.html，行為全部在 assets/head-search.js。
+
+   ⚠ 定案的三格（使用者在提案頁上挑的）：**整條** ／ **只有圖示、沒有玻璃框**
+     ／ **打了字立刻捲到主題與科別**。
+   ⚠ 顏色一個都沒有新增：搜尋列吃的是頁首那三個玻璃框那一組（紙色 .16 的底、
+     紙色 .5 的線、--frame-r 的圓角），結果標記吃的是站上 chip 那一組。
+   ========================================================================== */
+
+/* 搜尋列要蓋在頁首上，所以頁首那個版心需要一個定位參考框。
+   ⚠ 只限定頁首裡的那一個 —— 這個 class 是全站共用的。 */
+.site-head .shell { position: relative; }
+
+/* ---- 放大鏡：和三個選單同一列 ------------------------------------------ */
+.site-nav .nav-q {
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255, 255, 255, .88);
+  -webkit-tap-highlight-color: transparent;
+}
+/* ⚠ 定案是「只有圖示」，所以框要關掉 —— 那三個選單的框是 .site-nav a::before，
+   而放大鏡也是 <a>，不關的話它會跟著長出一個框。 */
+.site-nav .nav-q::before { display: none; }
+.nav-q svg {
+  display: block; width: 1.15em; height: 1.15em;
+  fill: none; stroke: currentColor; stroke-width: 1.3;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* ⚠ non-scaling-stroke 要下在圖形上（這個屬性不會繼承）。沒有它，圖示在不同
+   字級的斷點上會畫成不同粗細；有了它就固定 1.3px ＝ 旁邊那幾個字的筆畫重量。
+   素材出處：Lucide "search" 與 "x"，ISC 授權，https://lucide.dev —— 標記那裡
+   的註解就是署名，改圖或搬檔的時候不要刪。 */
+.nav-q svg :is(circle, path) { vector-effect: non-scaling-stroke; }
+
+/* 展開的時候整條選單與品牌一起讓位給輸入框。
+   ⚠ 要淡掉的是 **.site-nav 整條**，不是三個 <a> —— 那三個玻璃框是 ::before、
+     跟著 a 走沒問題，但滑過去的那塊底（.nav-lamp）是 nav 的直接子元素，
+     只淡 a 的話它會單獨留在半透明的輸入框底下，看得見。 */
+html[data-qopen="1"] .site-nav,
+html[data-qopen="1"] .brand { opacity: 0; pointer-events: none; }
+.brand, .site-nav { transition: opacity .18s ease; }
+
+/* ---- 搜尋列 ------------------------------------------------------------ */
+.head-search {
+  position: absolute; z-index: 4;
+  top: 50%; transform: translateY(-50%);
+  left: calc(var(--pad) + var(--hs-left, 0px)); right: var(--pad);
+  display: flex; align-items: center; gap: .45em;
+  /* 字級跟著選單走，框高就自動吃同一個 --frame-em ＝ 和那三個玻璃框一樣高。 */
+  font-size: .86rem;
+  height: calc(var(--frame-em) * 1em);
+  padding-inline: .6em;
+  border-radius: var(--frame-r);
+  background: rgba(226, 229, 230, .16);
+  box-shadow: inset 0 0 0 1px rgba(226, 229, 230, .5);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  color: #fff;
+  /* 關著：不佔版面、拿不到焦點、也讀不到。 */
+  visibility: hidden; opacity: 0; pointer-events: none;
+  transition: opacity .18s ease, visibility 0s linear .18s;
+}
+html[data-qopen="1"] .head-search {
+  visibility: visible; opacity: 1; pointer-events: auto;
+  transition: opacity .18s ease, visibility 0s;
+}
+.hs-ico { display: flex; flex: 0 0 auto; opacity: .82; }
+.hs-ico svg {
+  display: block; width: 1.05em; height: 1.05em;
+  fill: none; stroke: currentColor; stroke-width: 1.3;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.hs-ico svg :is(circle, path) { vector-effect: non-scaling-stroke; }
+.hs-in {
+  flex: 1 1 auto; min-width: 0;
+  /* ⚠⚠ 16px 是硬條件不是造型：iOS 對 <16px 的輸入框一聚焦就把整頁放大。
+     和 .topic-search 手機那一段是同一個理由。 */
+  font: inherit; font-size: 16px; line-height: 1.2;
+  background: none; border: 0; color: #fff; padding: 0;
+}
+.hs-in::placeholder { color: rgba(255, 255, 255, .58); }
+.hs-in:focus { outline: none; }
+/* Safari 自己那顆叉叉會和我們的叉叉重疊。 */
+.hs-in::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.hs-n {
+  flex: 0 0 auto; font-size: .78em; letter-spacing: .02em;
+  color: rgba(255, 255, 255, .72); font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.hs-n:empty { display: none; }
+.hs-x {
+  flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
+  width: 1.75em; height: 1.75em; margin-right: -.3em;
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: rgba(255, 255, 255, .78); border-radius: 999px;
+  -webkit-tap-highlight-color: transparent;
+}
+.hs-x:hover { color: #fff; background: rgba(255, 255, 255, .12); }
+.hs-x svg {
+  display: block; width: .95em; height: .95em;
+  fill: none; stroke: currentColor; stroke-width: 1.5;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.hs-x svg path { vector-effect: non-scaling-stroke; }
+
+/* 手機／窄螢幕：選單字級是 clamp，搜尋列跟著同一條，框高才對得上。 */
+@media (max-width: 720px) {
+  .head-search { font-size: clamp(11px, 3.2vw, 13px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .head-search, .brand, .site-nav { transition: none; }
+}
+
+/* ==========================================================================
+   搜尋結果：三顆可以點的標記，搜不到的時候換成三個出口（2026-08-26 定案）
+   --------------------------------------------------------------------------
+   ⚠ 取代原本那句 13px 的灰字。使用者實測「醫師」其實有 9 位，可是
+     390×844 上第一位醫師在畫面下緣外 105px，而那句話太輕，讀起來就是
+     「沒有結果」。改成三顆之後，哪一區有幾筆、點哪裡去，一眼就看得到。
+   ⚠ 顏色一個都沒有新增：用的是站上 chip 那一組（卡色底、深階字與框、
+     圓角 12px、字級 .82rem、內距 .25/.8rem）。
+   ========================================================================== */
+.qx { margin: .7rem 0 0; }
+.qx-lead { margin: 0 0 .5rem; font-size: .82rem; line-height: 1.7; color: var(--ink-soft); }
+.qx-lead b { color: var(--ink); font-weight: 500; }
+.qx-row { display: flex; flex-wrap: wrap; gap: .55rem; }
+.qx-row :is(a, span) {
+  font: inherit; font-size: .82rem; line-height: 1.6;
+  padding: .25rem .8rem; border-radius: 12px;
+  background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep);
+  text-decoration: none; display: inline-block;
+  transition: background-color .15s ease, color .15s ease;
+}
+.qx-row a:hover { background: color-mix(in srgb, var(--accent) 8%, var(--card)); }
+.qx-row a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* 0 筆的那一顆：退成柔墨的線框 —— 看得出「這裡沒有」，但不搶戲。 */
+.qx-row span { color: var(--ink-soft); border-color: var(--rule); }
+.qx-row b { font-weight: 600; }
+/* 手機上和兩排科別標記同一個塊高（34px），不要自己長成另一種尺寸。 */
+@media (max-width: 720px) {
+  .qx-row :is(a, span) { font-size: .90rem; padding-block: calc((34px - 1.6em - 2px) / 2); }
+}
 </style>
 </head>
 <body data-topic="kids" data-spec="kids">
@@ -5074,7 +5220,25 @@ body[data-topic] #topics { padding-top: 1rem; }
       <a href="#topics">全部文章</a>
       <a href="#doctors">醫師介紹</a>
       <a href="#clinic">診所資訊</a>
+      <!-- 放大鏡。素材出處：Lucide "search"／"x"，ISC 授權，https://lucide.dev ——
+           這一行註解就是署名，改圖或搬檔的時候不要刪。
+           ⚠⚠ **是 <a> 不是 <button>**：沒有 JS 的時候它退回「跳到主題與科別」
+             ＝ 使用者原本手動在做的事，有 JS 才 preventDefault 改成就地展開。
+           ⚠ 它會被底下那支 scrollspy 抓到，所以那一行選擇器加了 :not(.nav-q)。 -->
+      <a class="nav-q" href="#topics" aria-label="搜尋文章與醫師" aria-expanded="false" aria-controls="headsearch">
+        <span class="nav-q-i" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.6" cy="10.6" r="7"/><path d="m20.4 20.4-4.85-4.85"/></svg></span>
+      </a>
     </nav>
+    <!-- 頁首的搜尋列。關著的時候 visibility: hidden ＋ inert，**不佔任何版面**
+         （絕對定位），所以收著的頁首和加這一顆之前逐項相同。
+         ⚠ 輸入框字級 16px 是硬條件：iOS 對 <16px 的輸入框會在聚焦時放大整頁。 -->
+    <form class="head-search" id="headsearch" role="search" inert>
+      <span class="hs-ico" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.6" cy="10.6" r="7"/><path d="m20.4 20.4-4.85-4.85"/></svg></span>
+      <input class="hs-in" type="search" placeholder="搜尋文章與醫師" aria-label="搜尋文章與醫師"
+             autocomplete="off" spellcheck="false" enterkeyhint="search">
+      <span class="hs-n" aria-hidden="true"></span>
+      <button class="hs-x" type="button" aria-label="關閉搜尋"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.5 5.5 5.5 18.5M5.5 5.5l13 13"/></svg></button>
+    </form>
   </div>
 </header>
 <script>
@@ -5262,6 +5426,7 @@ body[data-topic] #topics { padding-top: 1rem; }
         </div>
       </div>
 
+      <div class="qx" hidden></div>
     </div>
   </section>
 
@@ -6168,7 +6333,7 @@ body[data-topic] #topics { padding-top: 1rem; }
   var root  = document.documentElement;
   var head  = document.querySelector('.site-head');
   var nav   = document.querySelector('.site-nav');
-  var links = Array.prototype.slice.call(document.querySelectorAll('.site-nav a[href^="#"]'));
+  var links = Array.prototype.slice.call(document.querySelectorAll('.site-nav a:not(.nav-q)[href^="#"]'));
   if (!head || !nav || !links.length) return;
 
   /* 燈箱由 JS 生出來 —— 標記裡不必多一個純裝飾的空元素。 */
@@ -6815,6 +6980,7 @@ body[data-topic] #topics { padding-top: 1rem; }
 </script>
 
 <script src="../../assets/counter.js" defer></script>
+<script src="../../assets/head-search.js" defer></script>
 
 <script>
 /* 位置與周邊停車：點停車場帶出步行路線與時間。推導見 /history/clinic-simple-map.html */
