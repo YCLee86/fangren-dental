@@ -1,5 +1,5 @@
-#TITLE: 變體 6 之六 —— 醫療人員的髮色改黑藍 ⭐ 現行版本
-#NOTE: 醫師與助理 #222d39（L18，黑到不可能被讀成灰），病患維持暖深棕。上次色相往冷色移、指定 L25 畫出來變 L44 的灰
+#TITLE: ✅ 定案 —— 診間諮詢＋磁磚大樓（2026-08-26，第六版）
+#NOTE: 成品 assets/hero-crown-photo-{800,1600,2000}.jpg，原檔 drafts/hero-crown-final.jpg。出圖要附 ref-chipped-crown.jpg 與 ref-consult-room.jpg
 ---
 Editorial illustration, 16:9 landscape.
 

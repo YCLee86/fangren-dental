@@ -37,7 +37,7 @@ if (/data-views-self/.test(h)) throw new Error("data-views-self 還在");
 
 /* 這一頁是草稿預覽，講一句就好 —— 不然 HERO 那一格空著會看起來像壞掉 */
 h = h.replace('<div class="post-body wrap-text">',
-  '<div class="post-body wrap-text">\n    <p class="note">（這是還沒上線的草稿預覽。文章開頭的 HERO 插畫是另外一輪，還沒畫。）</p>');
+  '<div class="post-body wrap-text">\n    <p class="note">（這是還沒上線的草稿預覽，正式網址會是 /posts/crown-materials/。）</p>');
 
 fs.mkdirSync("preview/crown-materials", { recursive: true });
 fs.writeFileSync(out, h, "utf8");
