@@ -1,0 +1,132 @@
+#TITLE: 變體 6 —— 診間諮詢 ＋ 泡泡帶出貼磁磚的房子 ⭐ 使用者出的梗
+#NOTE: 第六輪。牙齒在手上（畫面是牙科的事），比喻在泡泡裡（不必讀者自己跳）。牙冠刻意畫大；房子要有一整片脫落＋零星東掉西掉
+---
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all — no line beside the nose, no line
+under the eye, no shadow under the cheekbone, no shading on the neck or the hands.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair.
+
+STRUCTURE — ONE single illustration, no panels and no dividing lines. The left two-thirds
+of the frame is a dental consultation corner where a dentist is showing something small to
+a patient. Floating in the upper right of the frame, over the wall behind them, is ONE
+large rounded-rectangle speech bubble with a thin hand-drawn outline and a short tapering
+tail pointing back towards the dentist. The bubble is about two-fifths of the frame wide
+and reaches nearly to the top edge. There is NO arrow anywhere and never more than one
+bubble.
+
+THE CROWN IN HER HAND — This is the first thing the reader must see. The dentist holds it
+between the thumb and forefinger of the hand nearer the viewer, lifted to about the height
+of her chin, turned so its damaged side faces the viewer. DRAW IT MUCH LARGER THAN A REAL
+TOOTH — about the size of a walnut in her fingers — so that every part of it is clearly
+readable; this deliberate change of scale is intended and must not be corrected. It is a
+tooth-shaped cap, a hollow bell shape with a rounded biting top. Its surface is a pale warm
+off-white ceramic, and A LARGE PIECE OF THAT CERAMIC HAS BROKEN AWAY from the upper corner
+nearest the viewer — an irregular patch with a slightly jagged edge, big enough to take a
+clear bite out of the cap's outline. Through the break, DARK GREY-BLUE METAL is exposed
+underneath, strongly dark against the pale ceramic. Along the edge of the break, draw the
+ceramic as a visible THIN LAYER seen edge-on — a fine pale band sitting on top of the dark
+metal — so it is plain that this thing is two materials and the outer one came off. One or
+two small pale ceramic flakes rest in her open other palm below.
+
+THE BUBBLE — WHAT SHE IS DESCRIBING. Inside it, drawn simply and cleanly with plenty of
+room around it: ONE ordinary four-storey Taiwanese townhouse seen straight on from the
+street, some years old and still lived in — laundry poles, a rooftop water tank, window
+grilles, an air-conditioning unit, a covered arcade at the bottom. Its whole front is faced
+with SMALL RECTANGULAR WALL TILES in a regular grid with thin grout lines. THE TILES HAVE
+BEEN COMING OFF FOR YEARS, and this must be shown in TWO different ways at once:
+  • ONE LARGE CONTINUOUS PATCH high on the wall, roughly the size of a window, where the
+    tiles are completely gone and the rough darker grey cement bed underneath is exposed,
+    with a ragged fringe of half-attached tiles around its edge;
+  • AND, spread over the rest of the facade, MANY SINGLE TILES MISSING HERE AND THERE —
+    fifteen or twenty small dark gaps scattered irregularly across the grid, some alone,
+    some in twos and threes, thinning out towards the lower floors. The grid must read as
+    gappy and uneven all over, not damaged in only one place.
+Add faint pale streaks of rain-staining running down from the gaps. On the pavement at the
+foot of the building lie a handful of fallen tiles, one or two snapped in half. The house
+is weathered but plainly still someone's home — it is NOT a ruin, NOT abandoned, NOT
+collapsing, and there is no crack through the structure, no scaffolding and no cordon.
+KEEP THE BUILDING INSIDE THE BUBBLE and keep the tooth outside it: there are no tiles
+anywhere in the room, and no tooth shape anywhere inside the bubble.
+
+THE TWO PEOPLE — On the RIGHT of the small table sits the DENTIST, a woman in her thirties
+with short hair, seen three-quarters from the front, sitting upright. Her expression is
+friendly, attentive and matter-of-fact — she is explaining an ordinary thing, not
+delivering bad news, and she looks towards the patient, never at the viewer.
+On the LEFT sits the PATIENT, a man of about forty-five, seen from behind and to one side
+so we read his shoulder, the back of his head and a sliver of his cheek. He leans forward
+towards the crown in her fingers, one forearm on the table, plainly looking at it. Never
+put the dentist on the left and never put the patient on the right. Neither looks at the
+viewer, and neither is taller than half the frame.
+
+THE ROOM — a small, warm, real consultation corner in a dental clinic, plainly furnished:
+a wooden table with rounded corners, two low chairs, a low cabinet along the wall with a
+plain ceramic jar and a small potted plant on top, a folded cloth over a chair back, a soft
+rug, a window on the left giving clean daylight. The wall carries a colour and the floor is
+a real wooden surface — neither is left blank white. Do NOT add any poster, chart, diagram,
+screen, X-ray, plaster model or picture of teeth or buildings to the room.
+
+PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes, a
+simple line mouth, a small nose), natural realistic head-to-body proportions, believable
+ages, East Asian faces. Not photorealistic. Not faceless. No oversized heads, no noodle
+limbs. Hands are drawn at a normal size, never splayed and never larger than a face.
+CLOTHING — the dentist wears a short-sleeved clinic top in #b7c5d7 with its folds and
+shadows in #99a7b8. The patient wears a muted clay-rose knitted top with warm grey
+trousers — a clearly different colour family, so the two never blur together. Clothes are
+NEVER flat single-tone shapes: model every garment with two or three tones of its own
+colour, with soft coloured-pencil shading in the folds, along the sleeves, under the collar
+and at the hem, and draw the real details — collar, cuff, sleeve seam, hem, a pocket.
+
+LIGHT AND COLOUR — Ordinary bright indoor daytime, ONE light source: clean daylight from
+the window on the left, warm and even. No long orange shadows, not sunset, not lamplight,
+no spotlight on the crown. Across the upper part of the frame, above the two people and
+clear of the bubble, draw FOUR OR FIVE long, thin, white hand-drawn lines running the same
+way at the same shallow angle, evenly spaced, solid where they begin and thinning to dry
+flecks — soft chalk quality, clearly hand-made. They must never begin at anyone's mouth,
+nose, hand or body, must never cross a face, must never loop or curl back on themselves,
+and must never resemble smoke, steam or breath.
+THIS PICTURE MUST NOT GO GREY. The tiled wall and the exposed cement take up a lot of the
+bubble, so the rest has to carry real colour: most coloured areas sit in the range HSL
+saturation 30–50 and lightness 70–85, and at least half the picture is chromatic. Use AT
+LEAST FIVE clearly different colours and give each to a named thing: the clinic top, the
+patient's knitted top, the room wall, the wooden table and floor, the potted plant, the
+rug, the sky and the potted plants on the balconies inside the bubble. Colour throughout —
+never greyscale, never a picture that is mostly grey.
+ACCENT — #335b8b appears in exactly two small places and nowhere else: one door of the low
+cabinet, and a narrow horizontal band along the room wall behind the two people. Do NOT
+wash the image in that colour, do NOT tint the skin, the crown, the table or the paper with
+it, and do NOT make it vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos, shop
+signs, house numbers, banners, posters, stickers, labels, captions or watermarks, in any
+language or alphabet. Inside the bubble, every shopfront, shutter and wall of the building
+is completely blank. In the room, the jar, the cabinet and all clothing are blank. The
+crown carries no marks or numbers. There are no arrows, ticks, crosses, plus or minus signs
+or dotted lines anywhere. Where writing would normally appear, leave the surface plain.
+
+AVOID — greyscale; a picture that reads as mostly grey; photorealism; a photorealistic
+mouth, gum or hand; faceless or noodle-limbed figures; thick uniform black outlines; even
+mechanical vector linework; chrome, metallic or iridescent gradients; glow, sparkle or lens
+flare; grey, silver, white or blue-grey hair; wrinkles, cheek shadow or facial modelling;
+the crown drawn at true life size, small or hard to see; the broken area drawn small, faint,
+or in the middle of the crown instead of biting into its outline; the exposed metal drawn
+pale, grey or the same colour as the ceramic; more than one bubble; any arrow, pointer or
+comparison mark; a second building or a before-and-after comparison inside the bubble; a
+ruined, abandoned or collapsing building, structural cracks, a leaning wall, scaffolding,
+workers, an accident, an injured person, blood, an ambulance, flashing lights or barrier
+tape; blood, wounds, redness, gums or a mouth anywhere; decayed, dark or missing natural
+teeth; any tooth shape inside the bubble; any tile anywhere in the room; anyone looking at
+the viewer; a whole image tinted blue; flat untextured single-tone clothing; a bare empty
+room.
