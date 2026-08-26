@@ -1,0 +1,162 @@
+#TITLE: 變體 6 之二 —— 診間諮詢＋磁磚大樓（七項修正）⭐ 現行版本
+#NOTE: 出圖時「要一起附兩張參考圖」：drafts/ref-chipped-crown.jpg（牙冠的形狀與破法）、drafts/ref-consult-room.jpg（診間長相，顏色不要照抄）
+---
+Editorial illustration, 16:9 landscape.
+
+REFERENCE IMAGES — Two reference pictures are attached. Take ONE thing from each and
+nothing else.
+  • THE PHOTOGRAPH OF A CHIPPED CROWN — take ONLY the shape of the tooth cap and the way
+    the porcelain has broken off it: the large irregular area of exposed DARK GREY metal
+    covering most of the front face, with only a narrow rim of pale porcelain surviving
+    around its edges. Do NOT copy anything else from it — not the photographic look, not
+    the mouth, the lips, the gums, the neighbouring teeth or the yellow staining.
+  • THE DRAWING OF A CLINIC CONSULTATION ROOM — take ONLY the kind of room and its
+    furniture: the ring binders standing in rows on shelving, the pale desk, the wheeled
+    office chairs, the window blinds, the framed picture, the potted plant. Do NOT copy its
+    colours — that room is pink and warm, and this one must follow the COLOUR section
+    below instead.
+
+STYLE — THIS MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair.
+
+STRUCTURE — ONE single illustration, no panels and no dividing lines. The left two-thirds
+of the frame is a dental clinic consultation room where a dentist is showing something to
+a patient across a desk. Floating in the upper right of the frame is ONE large
+rounded-rectangle speech bubble with a thin hand-drawn outline and a short tapering tail
+pointing back towards the dentist. The bubble is about two-fifths of the frame wide and
+reaches nearly to the top edge. There is NO arrow anywhere and never more than one bubble.
+
+THE CROWN IN HER HAND — the first thing the reader must see. The dentist holds it between
+the thumb and forefinger of the hand nearer the viewer, lifted to about the height of her
+chin, turned so its broken face is square to the viewer. DRAW IT MUCH LARGER THAN A REAL
+TOOTH — about the size of a walnut in her fingers — so that every part of it is clearly
+readable; this change of scale is deliberate and must not be corrected.
+IT MUST READ INSTANTLY AS A TOOTH, so give it the shape of a FRONT TOOTH, not a lumpy cap:
+a flat blade-like tooth, wider at its straight biting edge, with two soft rounded corners
+there, the sides tapering gently down to a narrower neck. Not a pebble, not a bean, not a
+shell, not a blob.
+MOST OF ITS FRONT FACE IS BROKEN AWAY. Following the attached photograph: a large irregular
+patch of DARK GREY METAL, taking up roughly two thirds of the tooth's visible face and
+reaching the biting edge, with only a NARROW RIM of pale warm off-white porcelain left
+around it — a band down each side and a thin lip along the bottom. The boundary between
+metal and porcelain is a clearly drawn irregular line, and along that line the porcelain
+shows as a visible THIN LAYER seen edge-on, a fine pale band sitting on top of the metal.
+The dark metal must be strongly dark against the pale porcelain — not grey-white, not
+silver, not shiny. Two or three small pale porcelain flakes lie in her other open palm.
+
+THE BUBBLE — Inside it, drawn simply and cleanly: ONE ordinary Taiwanese apartment block
+seen from the street below at a slight upward angle, five or six storeys, still lived in.
+Its whole facade is faced with SMALL SQUARE WALL TILES in a regular grid — pale warm
+off-white tiles, crossed by TWO OR THREE HORIZONTAL BANDS of tiles in #335b8b running the
+full width of the building between floors, the way Taiwanese apartment blocks use a second
+tile colour as a stripe. Keep the facade simple: plain window openings, a rooftop water
+tank, a few potted plants and a laundry pole on a balcony. DO NOT draw window grilles or
+security bars on the windows.
+THE TILES HAVE BEEN FALLING OFF FOR YEARS, and this must show in THREE ways at once:
+  • ONE LARGE CONTINUOUS PATCH high on the wall, roughly the size of a window, where the
+    tiles are completely gone and the rough darker grey cement bed underneath is exposed,
+    with a ragged fringe of half-attached tiles around its edge;
+  • MANY SINGLE TILES MISSING ALL OVER THE REST OF THE FACADE — thirty or forty small dark
+    square gaps scattered irregularly across the grid, some alone, some in twos and threes,
+    heaviest near the large patch and thinning out lower down, so the whole wall reads
+    speckled and pitted, like a picture with pixels knocked out of it;
+  • THREE OR FOUR TILES CAUGHT IN MID-AIR, falling away from the wall below the large
+    patch, tumbling at different angles — it is still happening right now.
+Add faint pale streaks of rain-staining running down from the gaps. On the pavement at the
+foot of the building: a scatter of fallen tiles, two of them snapped in half, and TWO
+ORANGE-AND-WHITE TRAFFIC CONES with a simple plain barrier rail between them. The building
+is weathered but plainly still someone's home — NOT a ruin, NOT abandoned, NOT collapsing;
+no crack through the structure, no scaffolding, no people underneath, nobody in danger.
+KEEP THE BUILDING INSIDE THE BUBBLE and the tooth outside it: no tiles anywhere in the
+room, and no tooth shape anywhere inside the bubble.
+
+THE TWO PEOPLE — On the RIGHT side of the desk sits the DENTIST, a woman in her thirties
+with short hair, seen three-quarters from the front, sitting upright, wearing clinic
+scrubs. Her expression is friendly, attentive and matter-of-fact — she is explaining an
+ordinary thing, not delivering bad news, and she looks towards the patient.
+On the LEFT sits the PATIENT, a man of about forty-five, TURNED SO THAT WE CLEARLY SEE HIS
+FACE — three-quarters towards the viewer, not from behind and not in profile. He is looking
+at the broken crown in her fingers. HIS EXPRESSION IS THE SECOND MOST IMPORTANT THING IN
+THE PICTURE: he is TAKEN ABACK — mildly astonished that such a thing happens at all. Both
+eyebrows are raised and level, his eyes are open a little wider than usual, his mouth is
+slightly open, and one hand has come up a few inches off the desk, palm turned upward in a
+small unfinished gesture. He is surprised and interested, NOT frightened, NOT upset, NOT in
+pain, NOT comical, NOT open-mouthed in shock. Never put the dentist on the left and never
+put the patient on the right. Neither looks at the viewer.
+
+THE ROOM — A REAL DENTAL CLINIC CONSULTATION OFFICE, not a domestic dining room. It must
+NOT look homely: no wooden dining table, no wooden dining chairs, no rug, no wooden
+floorboards, no kitchen furniture. Instead: a pale smooth desk with a plain rounded edge;
+two wheeled office chairs with low backs; behind the dentist, open shelving with a row of
+upright ring binders and a couple of plain storage boxes; a computer monitor on the desk
+turned away from us so its screen is not visible; a slim window with pale venetian blinds
+on the left giving clean daylight; ONE framed picture on the wall whose image is fixed and
+must be exactly this — soft rounded hills in three flat bands of colour, nothing else; a
+small potted plant; a pale smooth floor. The walls and floor carry colour and are never
+left blank white. Do NOT add any poster, chart, diagram, X-ray, plaster model, visible
+screen content or picture of teeth or buildings to the room.
+
+PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes, a
+simple line mouth, a small nose), natural realistic head-to-body proportions, believable
+ages, East Asian faces. Not photorealistic. Not faceless. No oversized heads, no noodle
+limbs. Hands are drawn at a normal size, never splayed and never larger than a face.
+CLOTHING — the dentist wears short-sleeved clinic scrubs in #b7c5d7 with folds and shadows
+in #99a7b8. The patient wears a muted clay-rose knitted top with warm grey trousers — a
+clearly different colour family. Clothes are NEVER flat single-tone shapes: model every
+garment with two or three tones of its own colour, with soft coloured-pencil shading in the
+folds, and draw the real details — collar, cuff, sleeve seam, hem, a pocket.
+
+LIGHT AND COLOUR — Ordinary bright indoor daytime, ONE light source: clean daylight through
+the blinds on the left, warm and even. No long orange shadows, not sunset, not lamplight,
+no spotlight on the crown. Across the upper part of the frame, above the two people and
+clear of the bubble, draw FOUR OR FIVE long, thin, white hand-drawn lines running the same
+way at the same shallow angle, evenly spaced, solid where they begin and thinning to dry
+flecks — soft chalk quality, clearly hand-made. They must never begin at anyone's mouth,
+nose, hand or body, must never cross a face, must never loop or curl back on themselves,
+and must never resemble smoke, steam or breath.
+THIS PICTURE MUST NOT GO GREY. Most coloured areas sit in the range HSL saturation 30–50
+and lightness 70–85, and at least half the picture is chromatic. Use AT LEAST FIVE clearly
+different colours and give each to a named thing: the scrubs, the patient's knitted top,
+the room wall, the ring binders on the shelf, the potted plant, the framed hills, the sky
+and the balcony plants inside the bubble. Colour throughout — never greyscale.
+ACCENT — the blue #335b8b appears in exactly three places and nowhere else: the horizontal
+tile bands on the building inside the bubble, one panel of the shelving unit, and a narrow
+horizontal band along the room wall. Do NOT wash the image in that colour, do NOT tint the
+skin, the crown, the desk or the paper with it, and do NOT make it vivid. There is NO pink,
+red or warm rose anywhere except the patient's top.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos, shop
+signs, house numbers, labels on the ring binders, captions or watermarks, in any language
+or alphabet. The ring binder spines are completely blank. The monitor screen is not
+visible. Inside the bubble every wall and shutter is blank. The traffic cones and barrier
+carry no writing. There are no arrows, ticks, crosses, plus or minus signs or dotted lines
+anywhere. Where writing would normally appear, leave the surface plain.
+
+AVOID — greyscale; a picture that reads as mostly grey; photorealism; a photorealistic
+mouth, gum or hand; faceless or noodle-limbed figures; thick uniform black outlines; even
+mechanical vector linework; chrome, metallic or iridescent gradients; glow, sparkle or lens
+flare; grey, silver, white or blue-grey hair; wrinkles, cheek shadow or facial modelling;
+the patient drawn from behind or with his face hidden; a frightened, upset, pained or
+cartoonishly shocked patient; the crown drawn at true life size, small, or as a rounded
+pebble, bean or shell; the broken area drawn small or in the middle of the face only; the
+exposed metal drawn pale, silver, shiny or the same colour as the porcelain; a homely
+dining room, wooden dining table, wooden dining chairs, rug or wooden floorboards; window
+grilles or security bars on the building; more than one bubble; any arrow, pointer or
+comparison mark; a second building or a before-and-after comparison inside the bubble; a
+ruined, abandoned or collapsing building, structural cracks, scaffolding, workers, an
+accident, an injured person, blood, an ambulance, flashing lights or barrier tape; people
+standing under the falling tiles; blood, wounds, redness, gums or a mouth anywhere; any
+tooth shape inside the bubble; any tile anywhere in the room; anyone looking at the viewer;
+a whole image tinted blue; flat untextured single-tone clothing; a bare empty room.
