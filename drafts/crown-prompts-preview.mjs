@@ -32,6 +32,7 @@ const SHOTS = {
   "09-consult-tiles": "hero-crown-try8-consult.jpg",
   "10-consult-tiles-v2": "hero-crown-try9-consult2.jpg",
   "11-consult-tiles-v3": "hero-crown-try10-consult3.jpg",
+  "12-consult-tiles-v4": "hero-crown-try11-consult4.jpg",
 };
 
 const items = fs.readdirSync("drafts/prompts").filter((f) => f.endsWith(".txt")).sort()

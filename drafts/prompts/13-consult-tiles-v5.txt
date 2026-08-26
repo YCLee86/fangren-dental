@@ -1,5 +1,5 @@
-#TITLE: 變體 6 之四 —— 診間補回科別色（已被 13 取代）
-#NOTE: v3 把診間畫成全白。成因：ACCENT 寫成抽象的強調色會被丟掉，改寫成 ROOM 段裡三件具體的家具
+#TITLE: 變體 6 之五 —— 補回站上的風格：腮紅、密度、動感 ⭐ 現行版本
+#NOTE: v4 太安靜、風格偏離。三個成因：我自己寫的 no blush（站上每張臉都有腮紅）、房間太空（站上是塞滿的）、參考圖把畫風也帶過去了
 ---
 Editorial illustration, 16:9 landscape.
 
@@ -12,7 +12,10 @@ nothing else.
   • THE DRAWING OF A CLINIC CONSULTATION ROOM — take ONLY the kind of room and its
     furniture: ring binders standing in rows on shelving, a pale desk, wheeled office
     chairs, window blinds, a framed picture, a potted plant. Do NOT copy its colours —
-    that room is pink and warm; this one follows the COLOUR section below.
+    that room is pink and warm; this one follows the COLOUR section below. Do NOT copy how
+    it is drawn or how empty it is: BOTH reference pictures supply CONTENT ONLY, never the
+    drawing style and never the amount of stuff in the room. The finished picture must look
+    like the STYLE section below, and its room must be far fuller than the reference.
 
 STYLE — THIS MATTERS MORE THAN ANY OTHER SECTION.
 Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
@@ -23,9 +26,15 @@ colour edges a little loose and not always meeting the line. Flat fills with two
 tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
 grain over every surface of the whole image.
 SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
-single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
-On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
-the nose, the mouth and the ears. Nothing else at all.
+single flat tone, with no shading, no cheekbones and no jawline. On a face, draw ONLY these
+six things plus blush: the outline of the head, the eyes, the eyebrows, the nose, the mouth,
+the ears — and TWO SOFT ROUND PATCHES OF WARM PINK BLUSH, one high on each cheek, on every
+single person in the picture. The blush is part of the house style and must be drawn; what
+is banned is wrinkles, a line beside the nose, a line under the eye, cheek shadow and any
+modelling of the face.
+THE PICTURE IS BUSY AND LIVED-IN, not a minimal showroom: every part of the frame has
+something real in it, surfaces carry objects, and there are more people than just the two
+in the foreground.
 HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
 #4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair.
 
@@ -110,7 +119,18 @@ fixed and must be exactly this — soft rounded hills in three flat bands of col
 else; a small potted plant; a pale smooth floor. NO computer monitor on the desk — the desk
 in front of them is clear apart from the two porcelain flakes. Do NOT add any poster,
 chart, diagram, X-ray, plaster model, screen or picture of teeth or buildings to the room.
-THE ROOM IS NOT WHITE. THREE THINGS IN IT ARE PAINTED THE DEEP BLUE #335b8b, and they must
+THE ROOM MUST BE FULL — this is the single biggest thing to get right about it. Behind and
+around the desk, all of this is visible and none of it may be left out: the corner of a
+dental chair with its headrest and its overhead operating lamp on a jointed arm, over on
+the right; a low counter with a small sink; on that counter, five or six small ordinary
+things (a stack of paper cups, a tissue box, a small instrument tray, two or three little
+jars, a bottle of hand gel); a SECOND MEMBER OF STAFF in the background — a young dental
+assistant in the same blue scrubs, standing at that counter with her back three-quarters to
+us, quietly tidying an instrument tray, not looking at anyone; three potted plants of
+different sizes, one on the floor, one on the shelf, one on the counter; a small wall clock
+with a blank face; a pale tiled floor with visible tile joints. The room should feel like a
+clinic that is being used right now.
+THREE THINGS IN IT ARE PAINTED THE DEEP BLUE #335b8b, and they must
 all three actually be drawn — they are what ties the room to the rest of the picture, and a
 room without them is wrong:
   • A BROAD HORIZONTAL PAINTED BAND runs along the wall behind the two people at about desk
@@ -138,18 +158,29 @@ folds, and draw the real details — collar, cuff, sleeve seam, hem, a pocket.
 
 LIGHT AND COLOUR — Ordinary bright indoor daytime, ONE light source: clean daylight through
 the blinds on the left, warm and even. No long orange shadows, not sunset, not lamplight,
-no spotlight on the model. Across the upper part of the frame, above the two people and
-clear of the bubble, draw FOUR OR FIVE long, thin, white hand-drawn lines running the same
-way at the same shallow angle, evenly spaced, solid where they begin and thinning to dry
-flecks — soft chalk quality, clearly hand-made. They must never begin at anyone's mouth,
-nose, hand or body, must never cross a face, must never loop or curl back on themselves,
-and must never resemble smoke, steam or breath.
+no spotlight on the model. THE PICTURE NEEDS MOVEMENT IN IT — draw all three of these:
+  • DAYLIGHT COMING IN. From the window at the left, SIX OR SEVEN long white hand-drawn
+    rays fan out diagonally across the upper part of the room, all running the same way,
+    widening as they cross the frame, solid where they start and thinning to dry flecks —
+    soft chalk quality, clearly hand-made. Draw them boldly enough to be plainly visible,
+    not as three faint hairlines. They pass above and behind the people; they never begin
+    at anyone's mouth, nose, hand or body, never cross a face, never loop or curl back on
+    themselves, and never resemble smoke, steam or breath.
+  • THE FALLING TILES ARE MOVING. Behind each tile falling through the air inside the
+    bubble, draw TWO OR THREE SHORT straight motion strokes trailing upward in the
+    direction it came from, all parallel, short and light — the ordinary comic mark for
+    something dropping. Never one long curved ribbon.
+  • THE PATIENT'S GESTURE IS ALIVE. His raised hand is clearly lifted off the desk, palm up
+    and fingers slightly spread, caught in the middle of a movement rather than resting.
 THIS PICTURE MUST NOT GO GREY. Most coloured areas sit in the
 range HSL saturation 30–50 and lightness 70–85, and at least half the picture is chromatic.
-Use AT LEAST FIVE clearly different colours and give each to a named thing: the scrubs, the
-patient's knitted top, the room wall, the ring binders on the shelf, the potted plant, the
-framed hills, the sky and the street trees inside the bubble, the neighbouring houses'
-wall colours.
+The room is warm, not clinical-cold: alongside the blue, use soft mint green, pale butter
+yellow, muted lilac and warm rose on the small things — the ring binders on the shelf are
+several different colours, the paper cups, the tissue box, the little jars, the plant pots,
+the folded towels and the framed hills are each a different one. Use AT LEAST SEVEN clearly
+different colours across the picture and give each to a named thing: the scrubs, the
+patient's knitted top, the room wall, the binders, the plant pots, the counter items, the
+framed hills, the sky and street trees inside the bubble, the neighbouring houses' walls.
 ACCENT — inside the bubble, the same blue #335b8b is used for the horizontal tile bands on
 the middle house, so the building and the room belong to one family. Together with the
 three painted things listed in THE ROOM, that is everywhere this blue appears. Do NOT tint
@@ -163,7 +194,15 @@ every shopfront, shutter and wall is blank. The traffic cones and barrier carry 
 There are no arrows, ticks, crosses, plus or minus signs or dotted lines anywhere. Where
 writing would normally appear, leave the surface plain.
 
-AVOID — greyscale; a picture that reads as mostly grey; an all-white, colourless
+REMEMBER THE STYLE — before anything else, this is a soft hand-drawn coloured-pencil
+editorial illustration with visible paper grain, hand-drawn lines of varying weight, warm
+varied colour and blushing cheeks on every face, and a room full of real objects and a
+third person working in the background. It is NOT a clean flat vector diagram, NOT a sparse
+minimal room, and NOT a copy of the attached reference drawings.
+
+AVOID — greyscale; a picture that reads as mostly grey; flat clean vector artwork; an empty
+or sparse room; only two people in the whole picture; faces without blush; bare surfaces
+with nothing on them; an all-white, colourless
 consultation room; a room where the wall band, the cupboard doors or the chair upholstery
 have been left pale instead of blue; every surface in the room turned blue; photorealism; a
 photorealistic mouth, gum or hand; faceless or noodle-limbed figures; thick uniform black
