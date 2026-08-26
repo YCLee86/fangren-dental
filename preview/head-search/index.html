@@ -140,6 +140,51 @@
 
      另有一顆「對照現況」＝ 整顆放大鏡收起來，等於站上目前跑的那一版。
 
+     ==========================================================================
+     第二輪（2026-08-26 稍晚）：使用者定案 Ⓑ 整條 ／ Ⓐ 只有圖示 ／ Ⓐ 立刻捲過去，
+     並問：「如果搜尋 地址、電話 是沒有結果的，或是打醫師也不會出現，怎麼辦？」
+     --------------------------------------------------------------------------
+     ⚠ **先量再說。** 十四個查詢實測（首頁現況）：
+
+         地址 0篇0位    電話 0篇0位    看診時間 0篇0位   停車 0篇0位
+         週六 0篇0位    永樂街 0篇0位  預約 0篇0位       假日 0篇0位
+         醫師 1篇9位    矯正 2篇4位    李柄輝 0篇1位     健保 3篇0位
+         費用 1篇0位    洗牙 1篇0位
+
+     量出來是**三件不同的事，各自要治**：
+
+     ① **範圍太窄。** 搜尋只索引文章卡與醫師卡，**診所資訊那一整區不在裡面** ——
+        「永樂街」「停車」「看診時間」「假日」這些字站上明明就印著（實測
+        #clinic 整段都有），卻一律 0 筆。
+     ② **有些詞站上根本沒有印。** 「地址」「電話」在這一站是**圖示不是文字**
+        （刻意的，見 PALETTE.md 第六之十七節），「週一／週六」門診表用的是
+        「一二三四五」，「預約」全站沒有這兩個字。
+        ⚠⚠ **這一類不可能靠擴大索引解決** —— 索引再大，站上沒有的字就是搜不到。
+     ③ **「醫師」其實有中，是看不到。** 實測 1 篇文章、9 位醫師，可是打完字捲到
+        「主題與科別」之後，390×844 上第一位醫師在 y=949 ——**在畫面下緣外 105px**，
+        畫面上只看得到那 1 張文章卡，所以讀起來就是「沒有出現」。
+        結果那一句（.filter-note）在 y=265，13px 的柔墨小字，說了「9 位醫師」
+        而且「醫師」是連結，但份量太輕，沒有人會讀。
+
+     ---- 三條尺（第二輪）---------------------------------------------------
+     ① 診所資訊要不要一起搜
+        Ⓐ 不搜（現況）　Ⓑ 一起搜（看診時間、位置與周邊停車那兩張卡）
+     ② 都搜不到的時候
+        Ⓐ 只有那一句「沒有符合的…」（現況）
+        Ⓑ 給三個出口：〔看診時間〕〔位置與停車〕〔撥打 (05)5339-369〕
+     ③ 結果那一句
+        Ⓐ 一句灰字（現況）　Ⓑ 改成三顆看得見、可以點的　Ⓒ Ⓑ ＋ 自動去結果最多的那一區
+
+     ⚠⚠ **為什麼不做「同義詞對照表」**（地址→永樂街、電話→05、掛號→…）：
+        這一站的篩選原則是「讀的就是畫面上那句話裡的詞，不是另外維護的隱藏屬性 ——
+        所以『篩得到什麼』和『畫面上寫什麼』不可能對不起來」（index.html 那支
+        IIFE 的註解，2026-08-11 定的）。同義詞表正好違反它：表要人維護、猜錯了
+        沒有人會發現，而且會長成一份和畫面對不起來的第二真相。
+        **改用「② 給出口」** —— 不猜他打了什麼，直接給這個站上最常被找的三件事。
+
+     ⚠ 出口的三顆用的是站上既有的 chip 語彙（卡色底、深階字與框、圓角 12px），
+       **一個新顏色都沒有加**。
+
      ---- 三件已知的事（不是漏做）-------------------------------------------
      ① **沒有 JavaScript 的時候它仍然可以用。** 這一顆是 <a href="#topics">，
         不是 <button> —— 沒有 JS 就退回「跳到主題與科別」（＝現在使用者手動做的事），
@@ -5739,9 +5784,37 @@ html[data-qm="drop"] .head-search {
   .head-search, .brand, .site-nav, .site-nav a { transition: none; }
 }
 
+/* ==========================================================================
+   結果那一句與「搜不到」的出口（第二輪）
+   --------------------------------------------------------------------------
+   ⚠ 顏色一個都沒有新增：三顆出口與三顆結果標記用的是站上 chip 的那一組
+     （卡色底、深階字與框、圓角 12px、字級 .82rem、內距 .25/.8rem）。
+   ========================================================================== */
+.qx { margin: .7rem 0 0; }
+.qx-lead { margin: 0 0 .5rem; font-size: .82rem; line-height: 1.7; color: var(--ink-soft); }
+.qx-lead b { color: var(--ink); font-weight: 500; }
+.qx-row { display: flex; flex-wrap: wrap; gap: .55rem; }
+.qx-row :is(a, span) {
+  font: inherit; font-size: .82rem; line-height: 1.6;
+  padding: .25rem .8rem; border-radius: 12px;
+  background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep);
+  text-decoration: none; display: inline-block;
+  transition: background-color .15s ease, color .15s ease;
+}
+.qx-row a:hover { background: color-mix(in srgb, var(--accent) 8%, var(--card)); }
+.qx-row a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* 0 筆的那一顆：退成柔墨的線框，看得出「這裡沒有」但不搶戲。 */
+.qx-row span { color: var(--ink-soft); border-color: var(--rule); }
+.qx-row b { font-weight: 600; }
+/* 手機上和兩排標記同一個塊高（34px），不要自己長成另一種尺寸。 */
+@media (max-width: 720px) {
+  .qx-row :is(a, span) { font-size: .90rem; padding-block: calc((34px - 1.6em - 2px) / 2); }
+}
+
 /* 對照現況：整顆收起來，等於站上目前跑的那一版。 */
 html[data-qhide="1"] .nav-q { display: none; }
 html[data-qhide="1"] .head-search { display: none; }
+html[data-qhide="1"] .qx { display: none !important; }
 </style>
 </head>
 <body>
@@ -6098,6 +6171,7 @@ html[data-qhide="1"] .head-search { display: none; }
         </div>
       </div>
       <p class="filter-note" hidden></p>
+      <div class="qx" hidden></div>
     </div>
   </section>
 
@@ -8383,7 +8457,10 @@ html[data-qhide="1"] .head-search { display: none; }
 
   input.addEventListener('input', function () {
     push();
-    if (root.getAttribute('data-qs') === 'live' && input.value.trim() && !scrolled) {
+    /* ⚠ data-qr === 'auto' 那一格由第二支腳本（防抖之後捲到結果最多的那一區）
+       接手，這裡就不要再捲一次 —— 兩支各捲各的會變成連跳兩下。 */
+    if (root.getAttribute('data-qr') !== 'auto' &&
+        root.getAttribute('data-qs') === 'live' && input.value.trim() && !scrolled) {
       scrolled = true; toTopics();
     }
   });
@@ -8412,6 +8489,146 @@ html[data-qhide="1"] .head-search { display: none; }
   addEventListener('resize', function () { if (open) place(); });
   addEventListener('scroll', function () { if (open) place(); }, { passive: true });
   setOpen(false);
+})();
+</script>
+<script>
+/* ==========================================================================
+   搜尋結果：把診所資訊也算進來、搜不到時給出口（提案中，2026-08-26 第二輪）
+   --------------------------------------------------------------------------
+   起因（使用者）：「如果搜尋 地址、電話 是沒有結果的，或是打醫師也不會出現，
+   像這樣你們覺得要怎麼辦？」量出來是三件事，見這一頁 <head> 的推導。
+
+   ⚠⚠ **站上那支篩選的 IIFE 一行都沒有改。** 這一支只是在它後面再掛一個
+     #q 的 input 監聽（後掛的後跑），把它寫好的那一句話接手改寫。
+     定案上線時可以照這個做法整段搬過去，也可以併進那支 —— 兩者等價。
+   ⚠ **沒有做同義詞對照表**（地址→永樂街、電話→05…）。理由寫在推導裡：
+     那會長出一份和畫面對不起來的第二真相，違反這一站「篩得到什麼 ＝
+     畫面上寫什麼」的原則。搜不到就給出口，不猜他打了什麼。
+   ========================================================================== */
+(function () {
+  var root  = document.documentElement;
+  var q     = document.getElementById('q');
+  var note  = document.querySelector('.filter-note');
+  var qx    = document.querySelector('.qx');
+  if (!q || !note || !qx) return;
+
+  /* 診所資訊那兩張卡的文字先算好收起來 —— 做法和站上那支的 indexOf() 一樣：
+     **讀的就是畫面上的字**，不另外維護一份關鍵字。 */
+  var infoIdx = Array.prototype.map.call(
+    document.querySelectorAll('#clinic .info-card'),
+    function (el, i) {
+      if (!el.id) el.id = 'clinic-card-' + i;
+      var h = el.querySelector('h3');
+      /* ⚠ 門診表那張卡裡有一排科別標記（.hours-filter），那是**控制項不是內容** ——
+         不剔掉的話「矯正」「兒童牙科」這種查詢每一次都會多命中一次看診時間，
+         而看的人要的是文章與醫師，不是門診表（實測：矯正 2篇4位＋看診時間 1，
+         最後那一項純粹是雜訊）。 */
+      var clone = el.cloneNode(true);
+      Array.prototype.forEach.call(clone.querySelectorAll('.hours-filter'), function (x) { x.remove(); });
+      return { el: el, id: el.id, name: h ? h.textContent.trim() : '診所資訊',
+               text: (clone.textContent || '').replace(/\s+/g, '').toLowerCase() };
+    });
+
+  function esc(t) {
+    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function counts() {
+    var a = 0, d = 0, i;
+    var cards = document.querySelectorAll('.cards .card');
+    var docs  = document.querySelectorAll('.docs .doc');
+    for (i = 0; i < cards.length; i++) if (!cards[i].classList.contains('is-filtered-out')) a++;
+    for (i = 0; i < docs.length;  i++) if (!docs[i].classList.contains('is-filtered-out')) d++;
+    return { a: a, d: d };
+  }
+  function infoHits(s) {
+    if (root.getAttribute('data-qc') !== 'on' || !s) return [];
+    return infoIdx.filter(function (r) { return r.text.indexOf(s) >= 0; });
+  }
+  function chip(n, label, href) {
+    if (!n) return '<span>' + label.replace('%', '0') + '</span>';
+    return '<a href="' + href + '"><b>' + n + '</b> ' + label.replace('%', '').trim() + '</a>';
+  }
+
+  /* 三顆結果標記。0 的那一顆退成柔墨線框、不能點 —— 「這裡沒有」也是答案。 */
+  function renderChips(raw, c, hits) {
+    var row = chip(c.a, '% 篇文章', '#articles') + chip(c.d, '% 位醫師', '#doctors');
+    if (root.getAttribute('data-qc') === 'on') {
+      row += hits.length
+        ? '<a href="#' + hits[0].id + '">' + esc(hits[0].name) + (hits.length > 1 ? ' 等 ' + hits.length + ' 項' : '') + '</a>'
+        : '<span>診所資訊</span>';
+    }
+    qx.innerHTML = '<p class="qx-lead">搜尋「<b>' + esc(raw) + '</b>」</p><div class="qx-row">' + row + '</div>';
+    qx.hidden = false;
+  }
+
+  /* 搜不到的出口。**不猜他打了什麼** —— 直接給這個站上最常被找的三件事，
+     前兩顆的名字是從診所資訊那兩張卡的 <h3> 讀回來的（畫面上寫什麼就是什麼）。 */
+  function renderExits(raw) {
+    var row = infoIdx.map(function (r) {
+      return '<a href="#' + r.id + '">' + esc(r.name) + '</a>';
+    }).join('');
+    row += '<a href="tel:+88655339369">撥打 (05)5339-369</a>';
+    qx.innerHTML = '<p class="qx-lead">站上搜不到「<b>' + esc(raw) +
+      '</b>」。你可能要找的是：</p><div class="qx-row">' + row + '</div>';
+    qx.hidden = false;
+  }
+
+  /* 落點：捲到**結果最多**的那一區。都沒有就回主題與科別（出口在那裡）。
+     ⚠ 要防抖 —— 打字中每一個字都捲一次，畫面會跳個不停。 */
+  var tid = 0, lastTarget = '';
+  function autoJump(c, hits) {
+    clearTimeout(tid);
+    tid = setTimeout(function () {
+      var best = 'topics', n = 0;
+      if (c.a > n) { best = 'articles'; n = c.a; }
+      if (c.d > n) { best = 'doctors';  n = c.d; }
+      if (hits.length > n) { best = hits[0].id; n = hits.length; }
+      if (best === lastTarget) return;
+      lastTarget = best;
+      var el = document.getElementById(best);
+      if (el) el.scrollIntoView();
+    }, 450);
+  }
+
+  function render() {
+    var raw = q.value.trim();
+    var s   = q.value.replace(/\s+/g, '').toLowerCase();
+    if (!raw) { qx.hidden = true; qx.innerHTML = ''; lastTarget = ''; clearTimeout(tid); return; }
+
+    var c = counts(), hits = infoHits(s), total = c.a + c.d + hits.length;
+    var mode  = root.getAttribute('data-qr');
+    var exits = root.getAttribute('data-qe') === 'on';
+
+    /* 頁首搜尋列裡那個筆數也要把診所資訊算進去 —— 不然「停車」會印
+       「0 篇・0 位」，可是底下明明找到了一項。
+       ⚠⚠ 要排到下一個任務再寫：頁首那支的 push() 是**先**在 #q 上送 input
+         （於是這裡同步跑完）**再**寫 .hs-n，直接寫會被它蓋掉（實測踩過）。 */
+    var kA = c.a, kD = c.d, kI = hits.length;
+    setTimeout(function () {
+      var hs = document.querySelector('.hs-n');
+      if (hs && hs.textContent) {
+        hs.textContent = kA + ' 篇・' + kD + ' 位' + (kI ? '・' + kI + ' 項' : '');
+      }
+    }, 0);
+
+    if (total === 0 && exits) { note.hidden = true; renderExits(raw); }
+    else if (mode === 'plain') {
+      /* 現況那一句。診所資訊有命中的話要補上去，不然「0 篇 0 位」會說謊。 */
+      note.hidden = false; qx.hidden = true; qx.innerHTML = '';
+      if (hits.length) {
+        note.innerHTML = note.innerHTML.replace(/。\s*$/, '') +
+          '、<a href="#' + hits[0].id + '">診所資訊</a> ' + hits.length + ' 項。';
+      }
+    } else { note.hidden = true; renderChips(raw, c, hits); }
+
+    if (mode === 'auto') autoJump(c, hits);
+  }
+
+  /* ⚠ 後掛的後跑：站上那支在解析時就掛好了 input → apply，所以這一支拿到的
+     一定是它算完之後的畫面（.is-filtered-out 都已經套好、note 也已經寫好）。 */
+  q.addEventListener('input', render);
+  /* 切換條改了尺也要重畫一次。 */
+  new MutationObserver(render).observe(root, { attributes: true, attributeFilter: ['data-qc', 'data-qe', 'data-qr', 'data-qhide'] });
 })();
 </script>
 <!-- ==========================================================================
@@ -8483,23 +8700,21 @@ html[data-qhide="1"] .head-search { display: none; }
 <div class="pvbar" data-open="0">
   <div class="pvbar-panel">
     <div class="pvbar-body">
-      <div class="pvbar-g">點下去怎麼展開　<em>放大鏡按下之後</em></div>
-      <div class="pvbar-row" data-k="qm">
-        <button type="button" data-v="in">Ⓐ<small>就地</small></button>
-        <button type="button" data-v="full">Ⓑ<small>整條</small></button>
-        <button type="button" data-v="drop">Ⓒ<small>掉一條</small></button>
+      <div class="pvbar-g">診所資訊要不要一起搜　<em>永樂街・停車・看診時間</em></div>
+      <div class="pvbar-row" data-k="qc">
+        <button type="button" data-v="off">Ⓐ<small>不搜（現況）</small></button>
+        <button type="button" data-v="on">Ⓑ<small>一起搜</small></button>
       </div>
-      <div class="pvbar-g">放大鏡長什麼樣</div>
-      <div class="pvbar-row" data-k="qf">
-        <button type="button" data-v="none">Ⓐ<small>只有圖示</small></button>
-        <button type="button" data-v="frame">Ⓑ<small>圖示＋框</small></button>
-        <button type="button" data-v="text">Ⓒ<small>圖示＋搜尋</small></button>
+      <div class="pvbar-g">都搜不到的時候　<em>像「地址」「電話」</em></div>
+      <div class="pvbar-row" data-k="qe">
+        <button type="button" data-v="off">Ⓐ<small>只有一句話</small></button>
+        <button type="button" data-v="on">Ⓑ<small>給三個出口</small></button>
       </div>
-      <div class="pvbar-g">打了字之後　<em>結果在下面，要不要自動帶過去</em></div>
-      <div class="pvbar-row" data-k="qs">
-        <button type="button" data-v="live">Ⓐ<small>立刻捲過去</small></button>
-        <button type="button" data-v="enter">Ⓑ<small>按 Enter 才捲</small></button>
-        <button type="button" data-v="none">Ⓒ<small>不捲・報幾筆</small></button>
+      <div class="pvbar-g">結果那一句　<em>「醫師」其實有 9 位，只是看不到</em></div>
+      <div class="pvbar-row" data-k="qr">
+        <button type="button" data-v="plain">Ⓐ<small>一句灰字</small></button>
+        <button type="button" data-v="chips">Ⓑ<small>可以點的三顆</small></button>
+        <button type="button" data-v="auto">Ⓒ<small>Ⓑ＋自動帶過去<br>（會猜）</small></button>
       </div>
       <div class="pvbar-g">對照</div>
       <div class="pvbar-row" data-k="qhide">
@@ -8509,7 +8724,7 @@ html[data-qhide="1"] .head-search { display: none; }
     </div>
     <div class="pvbar-foot"></div>
   </div>
-  <button class="pvbar-btn" type="button" aria-expanded="false">頁首搜尋 <b></b></button>
+  <button class="pvbar-btn" type="button" aria-expanded="false">搜尋結果 <b></b></button>
 </div>
 
 <script>
@@ -8518,10 +8733,15 @@ html[data-qhide="1"] .head-search { display: none; }
   var box  = document.querySelector('.pvbar');
   var btn  = box.querySelector('.pvbar-btn');
   var foot = box.querySelector('.pvbar-foot');
-  var KEYS = { qm: ['in','full','drop'], qf: ['none','frame','text'], qs: ['live','enter','none'], qhide: ['0','1'] };
-  var DEF  = { qm: 'in', qf: 'frame', qs: 'live', qhide: '0' };
-  var LBL  = { in: '就地', full: '整條', drop: '掉一條' };
-  var st   = { qm: DEF.qm, qf: DEF.qf, qs: DEF.qs, qhide: DEF.qhide };
+  /* ⚠ 第一輪那三條尺 2026-08-26 已經定案（Ⓑ 整條 ／ Ⓐ 只有圖示 ／ Ⓐ 立刻捲過去），
+     所以它們變成寫死的值、不再出現在切換條上（CLAUDE.md：已定案的事不要重開）。
+     ⚠ 要退回去看那三條，把它們搬回 KEYS 就好，樣式與行為都還在。 */
+  var FIXED = { qm: 'full', qf: 'none', qs: 'live' };
+  var KEYS = { qc: ['off','on'], qe: ['off','on'], qr: ['plain','chips','auto'], qhide: ['0','1'] };
+  var DEF  = { qc: 'on', qe: 'on', qr: 'chips', qhide: '0' };
+  var LBL  = { plain: '一句話', chips: '三顆', auto: '三顆＋帶過去' };
+  var st   = { qc: DEF.qc, qe: DEF.qe, qr: DEF.qr, qhide: DEF.qhide };
+  Object.keys(FIXED).forEach(function (k) { document.documentElement.setAttribute('data-' + k, FIXED[k]); });
 
   var qs = new URLSearchParams(location.search);
   Object.keys(KEYS).forEach(function (k) {
@@ -8540,7 +8760,7 @@ html[data-qhide="1"] .head-search { display: none; }
     var u = new URLSearchParams();
     Object.keys(KEYS).forEach(function (k) { if (st[k] !== DEF[k]) u.set(k, st[k]); });
     history.replaceState(null, '', u.toString() ? '?' + u : location.pathname);
-    btn.querySelector('b').textContent = st.qhide === '1' ? '現況' : LBL[st.qm];
+    btn.querySelector('b').textContent = st.qhide === '1' ? '現況' : LBL[st.qr];
     measure();
   }
 
@@ -8560,6 +8780,26 @@ html[data-qhide="1"] .head-search { display: none; }
      這一頁真正要盯的是**版面夠不夠**，所以面板直接下判斷，不要只印數字
      （2026-08-17 tag-fade 那一輪的教訓）。 */
   function n(x) { return (Math.round(x * 100) / 100).toFixed(2); }
+  /* 這一輪真正要盯的：查了什麼、三個地方各找到幾筆。 */
+  function hits() {
+    var inp = document.getElementById('q');
+    var raw = inp ? inp.value.trim() : '';
+    if (!raw) return '<div class="m"><span>目前的查詢</span><b>（沒有）</b></div>';
+    var s = raw.replace(/s+/g, '').toLowerCase(), i;
+    var cards = document.querySelectorAll('.cards .card'), docs = document.querySelectorAll('.docs .doc');
+    var a = 0, d = 0;
+    for (i = 0; i < cards.length; i++) if (!cards[i].classList.contains('is-filtered-out')) a++;
+    for (i = 0; i < docs.length;  i++) if (!docs[i].classList.contains('is-filtered-out')) d++;
+    var info = Array.prototype.filter.call(document.querySelectorAll('#clinic .info-card'), function (el) {
+      return (el.textContent || '').replace(/s+/g, '').toLowerCase().indexOf(s) >= 0;
+    }).length;
+    var tot = a + d + info;
+    return '<div class="m"><span>目前的查詢</span><b>' + raw + '</b></div>' +
+      '<div class="m ' + (a ? 'good' : '') + '"><span>文章</span><b>' + a + '</b></div>' +
+      '<div class="m ' + (d ? 'good' : '') + '"><span>醫師</span><b>' + d + '</b></div>' +
+      '<div class="m ' + (info ? 'good' : '') + '"><span>診所資訊</span><b>' + info + '</b></div>' +
+      '<div class="m ' + (tot ? 'good' : 'bad') + '"><span>合計</span><b>' + (tot ? tot + ' 筆' : '搜不到 → 看出口') + '</b></div>';
+  }
   function measure() {
     if (box.dataset.open !== '1') return;
     var brand = document.querySelector('.site-head .brand');
@@ -8588,13 +8828,16 @@ html[data-qhide="1"] .head-search { display: none; }
       '<hr>' +
       '<div class="m"><span>搜尋列</span><b>' + (opened ? '展開中 ' + n(fw) + 'px' : '收著') + '</b></div>' +
       '<div class="m ' + (parseFloat(fs) >= 16 ? 'good' : 'bad') + '"><span>輸入框字級</span><b>' + fs + '</b></div>' +
-      '<hr>' +
-      '<div class="pvbar-note">輸入框字級要 ≥16px（iOS 低於 16 會把整頁放大）。' +
-      '八個寬度量過，品牌的字一個都沒被擠到 —— 讓步的是它那個空盒子。</div>';
+      '<hr>' + hits() +
+      '<div class="pvbar-note">「地址」「電話」在這一站是<b>圖示不是文字</b>，' +
+      '「週一／週六」門診表寫的是「一二三四五」—— 這一類<b>擴大索引也搜不到</b>，' +
+      '只能靠出口。</div>';
   }
   addEventListener('resize', measure);
   /* 展開／收合搜尋列之後也要重量一次。 */
   new MutationObserver(measure).observe(root, { attributes: true, attributeFilter: ['data-qopen'] });
+  var qEl = document.getElementById('q');
+  if (qEl) qEl.addEventListener('input', function () { setTimeout(measure, 0); });
   apply();
 })();
 </script>
