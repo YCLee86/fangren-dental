@@ -4,8 +4,12 @@
     "updated": "2026-08-18"
   },
   "bioceramic": {
-    "hash": "a831eaa139843a8c",
+    "hash": "8e5f76bfa40943d5",
     "updated": "2026-08-21"
+  },
+  "crown-materials": {
+    "hash": "8eb7ed652a3eebe9",
+    "updated": "2026-08-27"
   },
   "gum-bleeding": {
     "hash": "c101d8538c06ab1d",
@@ -40,7 +44,7 @@
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "60aa9bc43d9383f1",
-    "updated": "2026-08-26"
+    "hash": "508530f0d7856103",
+    "updated": "2026-08-27"
   }
 }
