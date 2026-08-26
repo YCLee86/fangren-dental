@@ -1,5 +1,5 @@
-#TITLE: 變體 6 之三 —— 醫師拿模型＋街區大樓（已被 12 取代）
-#NOTE: 出圖要一起附兩張參考圖：ref-chipped-crown.jpg（瓷破掉長什麼樣）、ref-consult-room.jpg（診間家具，顏色不要照抄）
+#TITLE: 變體 6 之四 —— 診間補回科別色（牆腰帶／櫃門／椅墊）⭐ 現行版本
+#NOTE: v3 把診間畫成全白。成因：ACCENT 寫成抽象的強調色會被丟掉，改寫成 ROOM 段裡三件具體的家具
 ---
 Editorial illustration, 16:9 landscape.
 
@@ -110,6 +110,20 @@ fixed and must be exactly this — soft rounded hills in three flat bands of col
 else; a small potted plant; a pale smooth floor. NO computer monitor on the desk — the desk
 in front of them is clear apart from the two porcelain flakes. Do NOT add any poster,
 chart, diagram, X-ray, plaster model, screen or picture of teeth or buildings to the room.
+THE ROOM IS NOT WHITE. THREE THINGS IN IT ARE PAINTED THE DEEP BLUE #335b8b, and they must
+all three actually be drawn — they are what ties the room to the rest of the picture, and a
+room without them is wrong:
+  • A BROAD HORIZONTAL PAINTED BAND runs along the wall behind the two people at about desk
+    height, from one edge of the frame to the other, roughly a hand's width tall — a solid
+    band of #335b8b, like the painted dado you see in a clinic corridor. The wall above it
+    and below it stays pale.
+  • THE CLOSED CUPBOARD DOORS in the lower half of the shelving unit behind the dentist are
+    solid #335b8b, with plain slim handles.
+  • THE SEAT CUSHIONS AND BACKRESTS of both wheeled office chairs are upholstered in the
+    same #335b8b.
+Everything else in the room — the walls above and below the band, the desk, the floor, the
+blinds, the shelf frame, the ring binders — stays pale and warm. The blue is on those three
+things and nowhere else in the room.
 
 PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes, a
 simple line mouth, a small nose), natural realistic head-to-body proportions, believable
@@ -130,16 +144,17 @@ way at the same shallow angle, evenly spaced, solid where they begin and thinnin
 flecks — soft chalk quality, clearly hand-made. They must never begin at anyone's mouth,
 nose, hand or body, must never cross a face, must never loop or curl back on themselves,
 and must never resemble smoke, steam or breath.
-THIS PICTURE MUST NOT GO GREY AND MUST NOT GO ALL BLUE. Most coloured areas sit in the
+THIS PICTURE MUST NOT GO GREY. Most coloured areas sit in the
 range HSL saturation 30–50 and lightness 70–85, and at least half the picture is chromatic.
 Use AT LEAST FIVE clearly different colours and give each to a named thing: the scrubs, the
 patient's knitted top, the room wall, the ring binders on the shelf, the potted plant, the
 framed hills, the sky and the street trees inside the bubble, the neighbouring houses'
 wall colours.
-ACCENT — the blue #335b8b appears in exactly three places and nowhere else: the horizontal
-tile bands on the middle house, one panel of the shelving unit, and a narrow horizontal
-band along the room wall. Do NOT tint the skin, the model, the desk, the floor or the paper
-with it. There is NO pink, red or warm rose anywhere except the patient's top.
+ACCENT — inside the bubble, the same blue #335b8b is used for the horizontal tile bands on
+the middle house, so the building and the room belong to one family. Together with the
+three painted things listed in THE ROOM, that is everywhere this blue appears. Do NOT tint
+the skin, the model, the desk, the floor, the sky or the paper with it. There is NO pink,
+red or warm rose anywhere except the patient's top.
 
 CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos, shop
 signs, house numbers, number plates, labels on the ring binders, captions or watermarks, in
@@ -148,7 +163,9 @@ every shopfront, shutter and wall is blank. The traffic cones and barrier carry 
 There are no arrows, ticks, crosses, plus or minus signs or dotted lines anywhere. Where
 writing would normally appear, leave the surface plain.
 
-AVOID — greyscale; a picture that reads as mostly grey or mostly blue; photorealism; a
+AVOID — greyscale; a picture that reads as mostly grey; an all-white, colourless
+consultation room; a room where the wall band, the cupboard doors or the chair upholstery
+have been left pale instead of blue; every surface in the room turned blue; photorealism; a
 photorealistic mouth, gum or hand; faceless or noodle-limbed figures; thick uniform black
 outlines; even mechanical vector linework; chrome, metallic or iridescent gradients; glow,
 sparkle or lens flare; grey, silver, white or blue-grey hair; wrinkles, cheek shadow or
