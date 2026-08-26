@@ -30,6 +30,7 @@ const SHOTS = {
   "06-stone-column": "hero-crown-try6-stone.jpg",
   "07-pans": "hero-crown-try7-pans.jpg",
   "09-consult-tiles": "hero-crown-try8-consult.jpg",
+  "10-consult-tiles-v2": "hero-crown-try9-consult2.jpg",
 };
 
 const items = fs.readdirSync("drafts/prompts").filter((f) => f.endsWith(".txt")).sort()
