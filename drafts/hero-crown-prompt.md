@@ -432,3 +432,440 @@ looking at the viewer; a whole image tinted blue; flat untextured single-tone cl
 bare empty room; wrinkles, cheek shadow or facial modelling.
 ```
 
+---
+
+## 六、第一版兩張都被退：「都沒什麼感覺欸」（2026-08-26）
+
+出圖存在 `drafts/hero-crown-tryA.jpg`（梗 A）與 `drafts/hero-crown-tryC.jpg`（梗 C）。
+
+### ⚠⚠ 先量再改 —— 執行面幾乎全對，是梗本身沒東西
+
+| | try-A | try-C | 站上四張 |
+| --- | --- | --- | --- |
+| 平均 S | 40.9 | 35.9 | 27.8–40.8 ✓ |
+| 平均 L | 73.8 | 68.8 | 66.6–81.3 ✓ |
+| 彩度 >25 的像素 | 82% | 59% | 40–62% ✓ |
+| 顆粒度（相鄰像素亮度差平均） | 9.4 | 12.4 | 11.6–12.2 ✓ |
+
+配色與質感都在站上的範圍內。**所以不要往「風格被簡化了」的方向修**（第七節第 18 條
+那個症狀這次沒有發生）。
+
+### ⚠⚠ 唯一真的壞掉的一項：色相移到冷色，頭髮會變灰
+
+指定 `#373f48`（L 25 的深藍黑），實際畫出來是 **`#687078`** —— L 44 的灰，
+女技師因此讀起來像白髮長者。
+
+**這是 ILLUSTRATION.md 第十之三節那條的邊界：** 顯微根管那次把色相移到**暖色**（紅）
+沒事；移到**冷色**的話，模型會順手把「深藍黑」理解成「灰」再提亮。
+
+**改法（三份新提示詞都已經照做）：頭髮不再跟著科別色走，一律寫死暖深棕**
+`#3f3330`／`#2e2523`／`#4d403c`，並在 `STYLE` 段與 `AVOID` 各擋一次
+「never grey, silver, white, ash, steel or blue-grey hair」。
+⚠ **刷手服／圍裙的 `#b7c5d7`／`#99a7b8` 沒問題，照舊。** 只有頭髮要退出這條規則。
+
+### 梗為什麼沒感覺（診斷）
+
+把站上十張 HERO 排開，成功的每一張都有一個**「那就是我」的人**：
+〈孩子第一次看牙〉一家人為換牙開心／〈拔智齒〉手扶臉頰→幾天後拎菜吃紅豆餅／
+〈缺牙之後〉火鍋夜市上舉手推辭／〈擴張牙弓〉照鏡子→張嘴睡→早上沒精神。
+
+**A 與 C 裡沒有一個人是讀者** —— 兩個技師在上班、一個醫師在解說，讀者站在旁邊看
+別人工作。⚠⚠ **通則：畫面裡要有一個處在讀者處境裡的人，不是一個在示範的人。**
+
+C 還多錯一層：**兩邊是兩個不同的人在做兩件不同的事**，讀者要同時解兩個謎。
+站上最好讀的手法（第七節第 2 條）是「同一個機位重複，只有一件事在變」，第一版沒用上。
+
+---
+
+## 七、第二輪：三份提示詞（2026-08-26，使用者說「1 2 3 都做」）
+
+三份各自治一件事。**三份共用的修正**：頭髮寫死暖深棕（見上一節）、
+主體佔畫面的比例**寫成數字**（第一版最大的問題是牙冠只有指甲大）。
+
+### 方向 ① 手心裡的那兩顆 —— 治「畫面裡沒有讀者」
+
+病人的**手掌是畫面主體**（掌寬約佔畫面一半），掌心兩顆牙冠：左邊一色到底、
+右邊缺一角露出深色的核。他低頭看自己的手，眉頭微聚、嘴抿成一條線 ——
+「要我決定，可是我看不懂」，正是衛教圖第三格「材質看嘸」那個人。
+醫師縮到右後方、被畫框切掉一部分。
+
+```
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all — no wrinkles, no lines beside the
+nose, no lines under the eyes, no cheek shadow, no neck shading.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair on anyone: both people
+here are in their thirties and forties and their hair must read that way.
+
+STRUCTURE — ONE single close-up illustration, no panels and no dividing lines. WE ARE
+CLOSE IN. The subject of this picture is A MAN'S OPEN PALM AND THE TWO SMALL TOOTH-CAPS
+LYING IN IT. His open hand is the biggest thing in the frame: it sits in the lower middle
+of the composition and the palm alone spans about half the width of the whole image. Above
+and behind the hand we see his own head and shoulders, looking down into his palm. Behind
+him and to the right, smaller and partly cut off by the edge of the frame, the dentist has
+just withdrawn her hand and is watching him. Everything else is background.
+
+THE TWO CAPS IN HIS PALM — draw these large, clean and unmistakable; they must still be
+readable when the whole picture is shrunk to the size of a postage stamp. They are two
+small hollow bell-shaped tooth-caps, the size of a fingernail each, lying side by side in
+the middle of the palm, both exactly the same size and the same silhouette so that the
+ONLY difference between them is what they are made of:
+  • THE LEFT CAP is ONE single uniform pale warm off-white all the way through — one solid
+    piece, smooth and whole, no seam, no line, no second colour, its rim unbroken.
+  • THE RIGHT CAP is plainly built of TWO layers: a dark grey-blue core with a pale warm
+    off-white skin over it, and ONE clean continuous line where the two meet, running all
+    the way round. A piece of the pale outer skin has broken away at its rim, leaving a
+    chip with a slightly jagged edge through which the dark core shows plainly; one small
+    pale flake lies loose in the palm beside it.
+The chip on the right cap is the single most important detail in the picture: make the
+dark core inside it clearly dark against the pale skin, so the difference between the two
+caps reads instantly even at a glance.
+
+THE MAN — about forty-five, East Asian. His head is tilted down and we see his face at a
+three-quarter angle from slightly above. He is looking at his own palm, not at the dentist
+and not at the viewer. His expression is the whole point of the picture: HE IS BEING ASKED
+TO DECIDE SOMETHING HE DOES NOT YET UNDERSTAND. His eyebrows are drawn faintly together in
+the middle, his mouth is a small closed straight line slightly pressed, his eyes are steady
+and attentive. He is thoughtful and a little uncertain — NEVER frightened, never unhappy,
+never in pain, never comical, never exaggerated. The hand nearer the viewer is the open
+palm holding the caps; his other hand rests on his knee.
+
+THE DENTIST — a woman in her thirties, East Asian, seen from the chest up behind his
+shoulder on the right, smaller than him and partly cropped by the frame edge. Her hand is
+lowering back down after placing the caps in his palm. Her face is calm, attentive and
+kind — she is waiting, not selling and not lecturing. She does not look at the viewer.
+
+THE SETTING — a small, warm, real consultation corner of a dental clinic, kept soft and
+simple because it is out of focus behind the hand: a plain coloured wall, a low wooden
+cabinet with a plain ceramic jar and a small potted plant, the corner of a chair, a window
+out of frame on the left giving clean daylight. The wall carries a colour and no surface is
+left blank white. Do NOT add any poster, chart, diagram, screen, X-ray, plaster model or
+picture of teeth anywhere in the room. KEEP THE TOOTH SHAPES IN THE PALM: the two caps in
+his hand are the ONLY tooth-shaped objects in the entire image.
+
+PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes, a
+simple line mouth, a small nose), natural realistic head-to-body proportions, believable
+ages, East Asian faces. Not photorealistic. Not faceless. No oversized heads, no noodle
+limbs. Nobody looks at the viewer.
+CLOTHING — the dentist wears a short-sleeved clinic top in #b7c5d7 with its folds and
+shadows in #99a7b8. The man wears a muted clay-rose knitted top — a clearly different
+colour family, so the two never blur together. Clothes are NEVER flat single-tone shapes:
+model every garment with two or three tones of its own colour, with soft coloured-pencil
+shading in the folds, along the sleeves, under the collar and at the hem, and draw the real
+details — collar, cuff, sleeve seam, hem, a pocket.
+
+LIGHT AND COLOUR — Ordinary bright indoor daytime, ONE light source: clean daylight from
+the left, warm and even. No long orange shadows, not sunset, not lamplight, no spotlight
+and no dramatic beam on the hand. Across the upper part of the frame, above both people
+and not touching them, draw FOUR OR FIVE long, thin, white hand-drawn lines running the
+same way at the same shallow angle, evenly spaced, solid where they begin and thinning to
+dry flecks — soft chalk quality, clearly hand-made. These lines must never begin at
+anyone's mouth, nose, hand or body, must never loop or curl back on themselves, and must
+never resemble smoke, steam or breath.
+Most coloured areas sit in the range HSL saturation 30–50 and lightness 70–85 — clearly
+coloured and readable, never washed out into near-white pastels and never heavy or muddy.
+About half the picture is chromatic. Use AT LEAST FIVE clearly different colours and give
+each to a named object: the clinic top, the man's knitted top, the wall, the wooden
+cabinet, the potted plant, the chair. Colour throughout — never greyscale.
+ACCENT — #335b8b appears in exactly two small places and nowhere else: one door of the low
+cabinet and a narrow horizontal band along the wall. Do NOT wash the image in that colour,
+do NOT tint the skin, the hand, the caps or the paper with it, and do NOT make it vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, labels, price tags, clock faces or watermarks, in any language or
+alphabet. The jar, the cabinet, the clothing and every other surface are blank. The two
+caps carry no marks, no numbers and no labels. There are no arrows, no ticks, no crosses,
+no plus or minus signs and no dotted lines anywhere. Where writing would normally appear,
+leave the surface plain.
+
+AVOID — greyscale; photorealism; a photorealistic hand or mouth; faceless or noodle-limbed
+figures; thick uniform black outlines; even mechanical vector linework; chrome, metallic or
+iridescent gradients; glow, sparkle or lens flare; grey, silver, white or blue-grey hair;
+wrinkles, cheek shadow or facial modelling; a frightened, sad, pained or comically confused
+face; blood, wounds, redness or gums; decayed, dark, broken or missing teeth in a mouth;
+any tooth shape outside the palm; a poster, chart, X-ray, screen or plaster model anywhere;
+any arrow, tick, cross or comparison mark; a price tag or a row of options; anyone looking
+at the viewer; a whole image tinted blue; flat untextured single-tone clothing; a bare
+empty room.
+```
+
+### 方向 ② 同一雙手、兩格、只有一件事在變 —— 治「兩個謎要同時解」
+
+**兩格是同一張圖畫兩次**：同一個人、同一個座位、同一張桌、同一個角度、同一道光，
+連衣服髮型表情都一樣。**只有手上的東西不同** —— 左格從白色圓餅裡夾出一顆完整的牙冠，
+右格同一雙手用細筆把瓷粉一層一層堆到深色底冠上。
+⚠ 提示詞裡把這條**重寫了兩次**（`STRUCTURE` 與 `THE ONE-THING-CHANGES RULE`），
+並逐項列出右格只准多什麼、只准少什麼 —— 第一版的教訓就是模型會自作主張換角度。
+
+```
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all — no wrinkles, no lines beside the
+nose, no lines under the eyes, no cheek shadow, no neck shading.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair: she is in her thirties
+and her hair must read that way.
+
+STRUCTURE — ONE illustration divided into TWO equal panels by a single thin hand-drawn
+vertical line. THE TWO PANELS ARE THE SAME PICTURE TWICE. Exactly the same woman, in
+exactly the same seat, at exactly the same bench, seen from exactly the same angle and lit
+by exactly the same light, doing her work at two different moments. The bench top, the
+wall behind her, the shelf, the objects at the back, her posture, her clothes, her hair
+and her face are IDENTICAL in both panels, drawn the same size in the same place. ONE
+THING AND ONLY ONE THING CHANGES BETWEEN THE PANELS: what her hands are doing. A reader
+glancing from left to right must be able to see instantly that everything is the same
+except her hands. Do not vary the angle, do not vary the framing, do not vary the
+background, do not mirror or flip the second panel.
+
+THE SHARED VIEW — In both panels we look slightly down at a warm wooden bench top that
+runs across the bottom half of the panel. The woman sits behind it, seen from the chest up
+and three-quarters turned towards us, her head tilted down, absorbed in her hands, calm
+and unhurried. HER HANDS AND WHAT THEY HOLD ARE THE SUBJECT: they sit in the middle of the
+panel and her two hands together span about two-thirds of the panel's width, drawn large
+and clean. Behind her, kept simple and identical in both panels: a plain coloured wall, a
+low shelf carrying three plain ceramic jars with blank lids and one small pale plaster
+block with a simple row of teeth moulded along its top edge, a folded cloth, and a window
+out of frame on the left giving clean daylight.
+
+LEFT PANEL — TAKEN OUT OF ONE PIECE. Lying flat on the bench in front of her is a round
+white disc about the size of a saucer and roughly one finger thick, plain and uniform
+white with a clean smooth rim. Near its middle, ONE cap-shaped hollow has been cut clean
+out of it, straight down through the disc, with clean edges and a plain white cut face.
+The disc has no other holes, no pattern, no grid. She has just lifted out of that hollow,
+with fine tweezers in the hand nearer the viewer, ONE small hollow bell-shaped tooth-cap.
+She holds it up just above the disc, at about the height of her chin, and looks at it. THE
+CAP IS ONE SINGLE UNIFORM PALE WARM OFF-WHITE ALL OVER — one solid piece, smooth and
+whole, no seam, no line, no second colour anywhere on it. It must read plainly that this
+cap came out of that hollow: same size, same silhouette, and the hollow is directly below
+it.
+
+RIGHT PANEL — BUILT UP LAYER BY LAYER. The disc is gone from the bench. In its place, in
+the same spot, stands a short upright peg which she steadies with the hand further from
+the viewer; mounted on the top of the peg is a small tooth-cap of exactly the same bell
+shape and size as the one in the left panel, but this one has a DARK GREY-BLUE metal core.
+In the hand nearer the viewer, in place of the tweezers, she now holds a very fine brush
+whose tip is touching the cap. Roughly the lower half of that cap is still bare dark
+metal; the upper half has already been covered with a pale warm off-white layer laid on in
+several visible overlapping strokes, so it plainly reads as something being built up
+stroke by stroke, and the boundary between the dark part and the pale part is a clear
+irregular edge partway up. Beside her hands on the bench: a small flat white mixing tile
+with three little pools of pale paste, and a slim spatula. Nothing here is labelled.
+
+THE ONE-THING-CHANGES RULE — restated because it matters more than any other instruction:
+same woman, same clothes, same hair, same face, same posture, same seat, same bench, same
+wall, same shelf, same jars, same plaster block, same window, same light, same colours, in
+both panels. Only the object on the bench and the tool in her near hand differ. Nothing is
+added to the right panel that is not in the left except the peg, the dark cap, the brush,
+the mixing tile and the spatula; nothing is removed from the right panel except the disc
+and the tweezers.
+
+PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes, a
+simple line mouth, a small nose), natural realistic head-to-body proportions, a believable
+age, an East Asian face. Not photorealistic. Not faceless. No oversized head, no noodle
+limbs. She never looks at the viewer.
+CLOTHING — a work apron in #b7c5d7 with its folds and shadows in #99a7b8, over a warm
+cream long-sleeved top. Clothes are NEVER flat single-tone shapes: model the apron and the
+sleeves with two or three tones of their own colour, with soft coloured-pencil shading in
+the folds, and draw the real details — collar, cuff, apron strap and tie, a chest pocket.
+Her clothes are identical in both panels.
+
+LIGHT AND COLOUR — Ordinary bright indoor daytime, ONE light source: clean daylight from
+the left, warm and even, identical in both panels. No long orange shadows, not sunset, not
+lamplight, no spotlight. Across the upper part of the frame, above her head and not
+touching her, draw FOUR OR FIVE long, thin, white hand-drawn lines running the same way at
+the same shallow angle, evenly spaced, solid where they begin and thinning to dry flecks —
+soft chalk quality, clearly hand-made, and continuing at the same angle in both panels but
+never crossing the dividing line. They must never begin at her mouth, nose, hands or body,
+must never loop or curl back on themselves, and must never resemble smoke, steam or breath.
+Most coloured areas sit in the range HSL saturation 30–50 and lightness 70–85 — clearly
+coloured and readable, never washed out into near-white pastels and never heavy or muddy.
+About half the picture is chromatic. Use AT LEAST FIVE clearly different colours and give
+each to a named object: the apron, the cream top, the wall, the wooden bench, the ceramic
+jars, the folded cloth. Colour throughout — never greyscale.
+ACCENT — #335b8b appears in exactly two small places in each panel and nowhere else: one
+door of the low cabinet under the bench and a narrow horizontal band along the wall behind
+the shelf. Do NOT wash the image in that colour, do NOT tint the skin, the bench, the caps
+or the paper with it, and do NOT make it vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, panel titles, labels, measurement marks, scales, clock faces or
+watermarks, in any language or alphabet. The ceramic jars are completely blank — no names,
+no symbols, no numbers on their sides or lids. The mixing tile, the tools, the apron, the
+shelf and the walls are all blank. There is no shade guide, no colour chart and no numbered
+strip. There are no arrows, ticks, crosses, plus or minus signs, and no "before and after"
+marks between the panels. Where writing would normally appear, leave the surface plain.
+
+AVOID — greyscale; photorealism; faceless or noodle-limbed figures; thick uniform black
+outlines; even mechanical vector linework; chrome, metallic or iridescent gradients; glow,
+sparkle or lens flare; grey, silver, white or blue-grey hair; wrinkles, cheek shadow or
+facial modelling; two different people in the two panels; a different angle, a different
+background or a mirrored composition in the second panel; any arrow, tick, cross or
+comparison mark; blood, wounds, redness, gums, lips or a mouth; decayed, dark, broken or
+missing teeth; a tooth shape anywhere except the caps in her hands and the one plaster
+block on the shelf; any screen, monitor, X-ray, poster or diagram; any large machine, robot
+arm or milling machine; a potter's wheel, clay or glaze buckets, or anything that reads as
+a pottery studio; her looking at the viewer; a whole image tinted blue; flat untextured
+single-tone clothing; a bare empty room.
+```
+
+### 方向 ③ 放大到像一座建築 —— 治「主體太小」
+
+兩顆牙冠**大得像建築**站在空地上（合計佔畫面三分之二、頂端幾乎到上緣），
+兩個很小的路人（不是醫護、不穿制服）站在腳下抬頭看。
+左邊那顆整塊雕出來、表面連續；右邊那顆是**一層一層砌上去的**（八九道橫向砌層疊在
+深色核上），靠中間那側頂端崩掉一塊、地上散著幾片。
+⚠ 這是第三節構圖 (a)「一個放大的日常物件當整個環境」，站上還沒有一張是這樣。
+⚠ `AVOID` 特別擋了**基座、聚光燈、展示台、崩塌感** —— 一有那些就變成獎盃或災難片。
+
+```
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair.
+
+STRUCTURE — ONE single illustration, no panels and no dividing lines. A HUGE CHANGE OF
+SCALE is the whole idea of this picture: TWO ENORMOUS TOOTH-CAPS STAND SIDE BY SIDE ON
+OPEN GROUND LIKE TWO BUILDINGS, and TWO ORDINARY PEOPLE, drawn very small, stand at their
+feet looking up at them. The two caps together fill roughly two-thirds of the whole frame
+and their tops reach almost to the upper edge; the two people are no taller than about one
+tenth of the frame height. This is not a diagram and not a comparison chart — it is a
+quiet, slightly wondrous scene in which two everyday objects have become the size of
+architecture, and two people have come to stand and look at them.
+
+THE TWO CAPS — Both are the same simple hollow bell shape, the shape of a cap that fits
+over a back tooth: a rounded top with a slightly wavy biting surface and straight sides
+coming down to an open rim that rests on the ground. Both are EXACTLY the same size, the
+same silhouette and the same distance from the viewer, standing upright a little apart on
+level open ground, so that the ONLY difference between them is what they are made of:
+  • THE LEFT ONE is carved from ONE SINGLE PIECE. It is one uniform pale warm off-white
+    from top to bottom, its surface smooth and continuous, with no seam, no join, no
+    course and no second colour anywhere on it. A few soft faint tool marks curve over its
+    surface, the way a single carved block would show. Its rim and edges are whole and
+    unbroken.
+  • THE RIGHT ONE is BUILT UP over a core. Its core is a dark grey-blue shell that shows
+    at the base and wherever the outer surface is missing; over that core, a pale warm
+    off-white outer surface has been laid on in HORIZONTAL COURSES, about eight or nine of
+    them stacked one above another from the ground to the top, each course a slightly
+    different height so the stacking is obvious and hand-made. ONE clean continuous line
+    runs between the dark core and the pale courses wherever both are visible. Near the
+    top on the side facing the middle of the picture, a patch of the outer courses has
+    come away, leaving a ragged gap through which the dark core shows plainly; three or
+    four pale broken pieces lie scattered on the ground at that side, one of them tipped
+    on its edge.
+Keep both objects simple, flat-coloured and clearly hand-drawn — no shine, no reflections,
+no metallic sheen, no cross-hatching, no photorealism. They are objects standing in
+daylight, not diagrams: they cast soft ordinary shadows on the ground.
+
+THE TWO PEOPLE — Very small, standing together on the ground near the front left, between
+and slightly in front of the two caps, seen from behind and to one side so we mostly read
+their backs and the tilt of their heads. A woman in her thirties and a man of about forty,
+both East Asian, both looking UP at the two caps. One of them has a hand raised, pointing
+loosely towards the ragged gap near the top of the right-hand cap; the other has both
+hands in their pockets, head tipped back. They are unhurried and quietly curious — not
+alarmed, not amazed, not posing. Neither looks at the viewer. They are ordinary people in
+ordinary clothes, NOT dentists, NOT in uniform, NOT in white coats.
+
+THE GROUND AND THE SKY — Keep it open, calm and simple so the two objects read clearly: a
+level ground of soft warm earth colour with a few loose pale stones and a low tuft or two
+of grass near the front; behind, a plain wide sky in two or three flat bands of soft
+colour; along the far horizon a low soft line of distant rounded hills. Nothing else at
+all — no buildings, no road, no vehicles, no clouds shaped like anything, no other objects
+and no other people. KEEP THE TOOTH SHAPES TO THE TWO CAPS: those two, and the broken
+pieces on the ground beside the right one, are the ONLY tooth-shaped objects in the entire
+image.
+
+PEOPLE — Simplified illustrative people: minimal features, natural realistic head-to-body
+proportions, believable ages, East Asian faces where a face is visible at all. Not
+photorealistic. Not faceless. No oversized heads, no noodle limbs.
+CLOTHING — the woman wears a top in #b7c5d7 with its folds and shadows in #99a7b8 and warm
+grey trousers; the man wears a muted clay-rose jacket — a clearly different colour family,
+so the two never blur together. Even at this small size the clothes are NEVER flat
+single-tone shapes: give each garment two or three tones of its own colour with soft
+shading where the fabric gathers.
+
+LIGHT AND COLOUR — Ordinary bright daytime outdoors, ONE light source: soft even daylight
+from the left, warm and gentle. No long orange shadows, not sunset, not night, no
+spotlight, no dramatic beam and no rays coming off the objects. Across the upper part of
+the sky, well clear of the two caps, draw FOUR OR FIVE long, thin, white hand-drawn lines
+running the same way at the same shallow angle, evenly spaced, solid where they begin and
+thinning to dry flecks — soft chalk quality, clearly hand-made, describing moving air.
+They must never begin at anyone's mouth, nose, hand or body, must never touch the two
+caps, must never loop or curl back on themselves, and must never resemble smoke, steam or
+breath.
+Most coloured areas sit in the range HSL saturation 30–50 and lightness 70–85 — clearly
+coloured and readable, never washed out into near-white pastels and never heavy or muddy.
+About half the picture is chromatic. Use AT LEAST FIVE clearly different colours and give
+each to a named thing: the sky bands, the distant hills, the ground, the woman's top, the
+man's jacket, the grass. Colour throughout — never greyscale.
+ACCENT — #335b8b appears in exactly two small places and nowhere else: the lower band of
+the sky along the horizon, and the far hills. Do NOT wash the image in that colour, do NOT
+tint the skin, the ground, the two caps or the paper with it, and do NOT make it vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, labels, measurement marks, scale bars, arrows or watermarks, in any
+language or alphabet. Nothing on the ground, the sky, the two caps or the clothing carries
+a mark of any kind. There are no ticks, no crosses, no plus or minus signs, no dotted
+lines and no leader lines pointing at anything. Where writing would normally appear, leave
+the surface plain.
+
+AVOID — greyscale; photorealism; a photorealistic mouth, gum or tooth; faceless or
+noodle-limbed figures; thick uniform black outlines; even mechanical vector linework;
+chrome, metallic or iridescent gradients; glow, sparkle, halo or lens flare; grey, silver,
+white or blue-grey hair; wrinkles, cheek shadow or facial modelling; a heroic low-angle
+silhouette or backlit figure; people standing dead centre; anyone looking at the viewer;
+the two caps drawn at different sizes or different distances; a tick on one and a cross on
+the other, or any arrow, pointer or comparison mark between them; a plinth, pedestal,
+podium, frame, spotlight or museum display around either of them; the right-hand cap
+looking ruined, collapsing or dangerous; blood, wounds, redness or gums; buildings, roads,
+vehicles, machines, cranes or scaffolding; a whole image tinted blue; flat untextured
+single-tone clothing; an empty white background.
+```
+
+---
+
+## 八、三張回來之後要看什麼
+
+1. **哪一張的「差別」在縮圖上還讀得出來**（把圖縮到 393px 寬 ＝ 首頁卡的寬度再看）。
+2. **哪一張讓人想停下來** —— 這一輪的判準是這個，不是資訊完整度。
+3. 頭髮有沒有再變灰（量一次，不要用看的）。
+4. 四邊有沒有烘進去的白框、長寬比對不對得上 2000×1116。
+
+⚠ 定案之後要把這一節的兩條通則搬進 ILLUSTRATION.md：
+**（a）色相移到冷色時頭髮會變灰**、**（b）畫面裡要有一個處在讀者處境裡的人**。
+現在先留在這裡 —— 還沒定案的東西不寫進正式的規範。
+
