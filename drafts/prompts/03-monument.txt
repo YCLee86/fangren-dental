@@ -1,0 +1,116 @@
+#TITLE: ③ 放大到像一座建築
+#NOTE: 第二輪。治「主體太小」。已出圖 → hero-crown-try3-monument.jpg。**使用者說這個方向有感覺**
+---
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair.
+
+STRUCTURE — ONE single illustration, no panels and no dividing lines. A HUGE CHANGE OF
+SCALE is the whole idea of this picture: TWO ENORMOUS TOOTH-CAPS STAND SIDE BY SIDE ON
+OPEN GROUND LIKE TWO BUILDINGS, and TWO ORDINARY PEOPLE, drawn very small, stand at their
+feet looking up at them. The two caps together fill roughly two-thirds of the whole frame
+and their tops reach almost to the upper edge; the two people are no taller than about one
+tenth of the frame height. This is not a diagram and not a comparison chart — it is a
+quiet, slightly wondrous scene in which two everyday objects have become the size of
+architecture, and two people have come to stand and look at them.
+
+THE TWO CAPS — Both are the same simple hollow bell shape, the shape of a cap that fits
+over a back tooth: a rounded top with a slightly wavy biting surface and straight sides
+coming down to an open rim that rests on the ground. Both are EXACTLY the same size, the
+same silhouette and the same distance from the viewer, standing upright a little apart on
+level open ground, so that the ONLY difference between them is what they are made of:
+  • THE LEFT ONE is carved from ONE SINGLE PIECE. It is one uniform pale warm off-white
+    from top to bottom, its surface smooth and continuous, with no seam, no join, no
+    course and no second colour anywhere on it. A few soft faint tool marks curve over its
+    surface, the way a single carved block would show. Its rim and edges are whole and
+    unbroken.
+  • THE RIGHT ONE is BUILT UP over a core. Its core is a dark grey-blue shell that shows
+    at the base and wherever the outer surface is missing; over that core, a pale warm
+    off-white outer surface has been laid on in HORIZONTAL COURSES, about eight or nine of
+    them stacked one above another from the ground to the top, each course a slightly
+    different height so the stacking is obvious and hand-made. ONE clean continuous line
+    runs between the dark core and the pale courses wherever both are visible. Near the
+    top on the side facing the middle of the picture, a patch of the outer courses has
+    come away, leaving a ragged gap through which the dark core shows plainly; three or
+    four pale broken pieces lie scattered on the ground at that side, one of them tipped
+    on its edge.
+Keep both objects simple, flat-coloured and clearly hand-drawn — no shine, no reflections,
+no metallic sheen, no cross-hatching, no photorealism. They are objects standing in
+daylight, not diagrams: they cast soft ordinary shadows on the ground.
+
+THE TWO PEOPLE — Very small, standing together on the ground near the front left, between
+and slightly in front of the two caps, seen from behind and to one side so we mostly read
+their backs and the tilt of their heads. A woman in her thirties and a man of about forty,
+both East Asian, both looking UP at the two caps. One of them has a hand raised, pointing
+loosely towards the ragged gap near the top of the right-hand cap; the other has both
+hands in their pockets, head tipped back. They are unhurried and quietly curious — not
+alarmed, not amazed, not posing. Neither looks at the viewer. They are ordinary people in
+ordinary clothes, NOT dentists, NOT in uniform, NOT in white coats.
+
+THE GROUND AND THE SKY — Keep it open, calm and simple so the two objects read clearly: a
+level ground of soft warm earth colour with a few loose pale stones and a low tuft or two
+of grass near the front; behind, a plain wide sky in two or three flat bands of soft
+colour; along the far horizon a low soft line of distant rounded hills. Nothing else at
+all — no buildings, no road, no vehicles, no clouds shaped like anything, no other objects
+and no other people. KEEP THE TOOTH SHAPES TO THE TWO CAPS: those two, and the broken
+pieces on the ground beside the right one, are the ONLY tooth-shaped objects in the entire
+image.
+
+PEOPLE — Simplified illustrative people: minimal features, natural realistic head-to-body
+proportions, believable ages, East Asian faces where a face is visible at all. Not
+photorealistic. Not faceless. No oversized heads, no noodle limbs.
+CLOTHING — the woman wears a top in #b7c5d7 with its folds and shadows in #99a7b8 and warm
+grey trousers; the man wears a muted clay-rose jacket — a clearly different colour family,
+so the two never blur together. Even at this small size the clothes are NEVER flat
+single-tone shapes: give each garment two or three tones of its own colour with soft
+shading where the fabric gathers.
+
+LIGHT AND COLOUR — Ordinary bright daytime outdoors, ONE light source: soft even daylight
+from the left, warm and gentle. No long orange shadows, not sunset, not night, no
+spotlight, no dramatic beam and no rays coming off the objects. Across the upper part of
+the sky, well clear of the two caps, draw FOUR OR FIVE long, thin, white hand-drawn lines
+running the same way at the same shallow angle, evenly spaced, solid where they begin and
+thinning to dry flecks — soft chalk quality, clearly hand-made, describing moving air.
+They must never begin at anyone's mouth, nose, hand or body, must never touch the two
+caps, must never loop or curl back on themselves, and must never resemble smoke, steam or
+breath.
+Most coloured areas sit in the range HSL saturation 30–50 and lightness 70–85 — clearly
+coloured and readable, never washed out into near-white pastels and never heavy or muddy.
+About half the picture is chromatic. Use AT LEAST FIVE clearly different colours and give
+each to a named thing: the sky bands, the distant hills, the ground, the woman's top, the
+man's jacket, the grass. Colour throughout — never greyscale.
+ACCENT — #335b8b appears in exactly two small places and nowhere else: the lower band of
+the sky along the horizon, and the far hills. Do NOT wash the image in that colour, do NOT
+tint the skin, the ground, the two caps or the paper with it, and do NOT make it vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, labels, measurement marks, scale bars, arrows or watermarks, in any
+language or alphabet. Nothing on the ground, the sky, the two caps or the clothing carries
+a mark of any kind. There are no ticks, no crosses, no plus or minus signs, no dotted
+lines and no leader lines pointing at anything. Where writing would normally appear, leave
+the surface plain.
+
+AVOID — greyscale; photorealism; a photorealistic mouth, gum or tooth; faceless or
+noodle-limbed figures; thick uniform black outlines; even mechanical vector linework;
+chrome, metallic or iridescent gradients; glow, sparkle, halo or lens flare; grey, silver,
+white or blue-grey hair; wrinkles, cheek shadow or facial modelling; a heroic low-angle
+silhouette or backlit figure; people standing dead centre; anyone looking at the viewer;
+the two caps drawn at different sizes or different distances; a tick on one and a cross on
+the other, or any arrow, pointer or comparison mark between them; a plinth, pedestal,
+podium, frame, spotlight or museum display around either of them; the right-hand cap
+looking ruined, collapsing or dangerous; blood, wounds, redness or gums; buildings, roads,
+vehicles, machines, cranes or scaffolding; a whole image tinted blue; flat untextured
+single-tone clothing; an empty white background.

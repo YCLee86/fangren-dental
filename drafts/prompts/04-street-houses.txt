@@ -1,0 +1,114 @@
+#TITLE: 變體 1 —— 兩棟並排的台灣街屋
+#NOTE: 第三輪，使用者出的梗（貼磁磚 vs 澆注灌漿）。左清水模、右貼二丁掛，右上剝落一片。共鳴最高
+---
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair.
+
+STRUCTURE — ONE single illustration, no panels and no dividing lines. An ordinary Taiwanese
+town street, seen straight on from the pavement across the road. TWO NARROW FOUR-STOREY
+TOWNHOUSES STAND SIDE BY SIDE IN THE MIDDLE OF THE FRAME, touching each other, filling
+roughly two-thirds of the frame width and reaching almost to the top edge. Two ordinary
+people stand small on the pavement in front of them, looking up. The two houses are the
+subject of the picture; everything else is street.
+
+THE TWO HOUSES — They are the same age, the same height, the same width, the same number
+of floors and the same window openings, and both are plainly lived in and well looked
+after: laundry poles, potted plants on the balconies, a rooftop water tank on each, window
+grilles, air-conditioning units, a covered ground-floor arcade running across both. NEITHER
+HOUSE IS RICHER, NEWER, SMARTER OR MORE RUN-DOWN THAN THE OTHER — this is not a comparison
+between a good building and a bad one. The ONLY difference between them is how their front
+wall was made:
+  • THE LEFT HOUSE IS CAST-IN-PLACE FAIR-FACED CONCRETE. Its whole front is one continuous
+    warm pale grey surface, poured as a single mass — no tiles, no panels, no cladding and
+    no joints of any applied material. The only marks on it are the marks the pour itself
+    left: faint horizontal lines where the formwork boards met, and a regular grid of small
+    round tie-holes, evenly spaced across the wall. The surface is smooth, whole and
+    unbroken from the ground to the roof.
+  • THE RIGHT HOUSE IS FACED WITH SMALL RECTANGULAR WALL TILES. Its whole front is covered
+    in a regular grid of small pale warm off-white tiles, each about twice as wide as it is
+    tall, laid in even courses with thin grout lines between them, so that the wall plainly
+    reads as many separate pieces stuck onto something underneath. HIGH ON THE WALL, on the
+    side facing the middle of the picture, A PATCH OF TILES HAS COME AWAY: an irregular
+    area roughly the size of a door, where the tiles are gone and the rough darker grey
+    cement bed underneath is exposed, with a ragged fringe of half-attached tiles around
+    its edge. On the pavement below, five or six loose tiles lie scattered, one or two
+    snapped in half, and a single yellow-and-red traffic cone stands beside them. Nothing
+    else about the house is damaged.
+The contrast to hold onto is: ONE WALL IS THE BUILDING ITSELF; THE OTHER WALL IS A LAYER
+STUCK ONTO THE BUILDING, and that layer is what came off.
+
+THE STREET — an ordinary, warm, everyday Taiwanese street, not a slum and not a showpiece:
+a covered arcade at ground level with plain shopfronts and roller shutters, a scooter or
+two parked at the kerb, a bicycle, potted plants beside a doorway, electricity cables
+running across the top of the frame, a low kerb and a paved pavement, a strip of blue sky
+above the rooftops. Keep it calm and uncluttered — enough to read as a real street, never
+a crowded busy one. No cars in motion, no traffic, no crowd.
+
+THE TWO PEOPLE — Small, standing together on the pavement near the front left, seen from
+behind and to one side so we mostly read their backs and the tilt of their heads. A woman
+in her thirties and a man of about forty, both East Asian, both looking UP at the patch of
+missing tiles. One of them has a hand half-raised, pointing loosely up at it; the other has
+both hands in their pockets, head tipped back. They are unhurried and quietly curious — not
+alarmed, not shocked, not pointing dramatically. Neither looks at the viewer. They are
+ordinary passers-by in ordinary clothes, NOT builders, NOT in uniform, NOT in hard hats.
+
+PEOPLE — Simplified illustrative people: minimal features, natural realistic head-to-body
+proportions, believable ages, East Asian faces where a face is visible at all. Not
+photorealistic. Not faceless. No oversized heads, no noodle limbs.
+CLOTHING — the woman wears a top in #b7c5d7 with its folds and shadows in #99a7b8 and warm
+grey trousers; the man wears a muted clay-rose jacket — a clearly different colour family,
+so the two never blur together. Even at this small size the clothes are NEVER flat
+single-tone shapes: give each garment two or three tones of its own colour with soft
+shading where the fabric gathers.
+
+LIGHT AND COLOUR — Ordinary bright daytime, ONE light source: soft even daylight from the
+left, warm and gentle. No long orange shadows, not sunset, not night, no spotlight, no
+dramatic beam. Across the sky above the rooftops, well clear of the two houses, draw FOUR
+OR FIVE long, thin, white hand-drawn lines running the same way at the same shallow angle,
+evenly spaced, solid where they begin and thinning to dry flecks — soft chalk quality,
+clearly hand-made, describing moving air. They must never begin at anyone's mouth, nose,
+hand or body, must never touch the buildings, must never loop or curl back on themselves,
+and must never resemble smoke, steam or breath.
+Most coloured areas sit in the range HSL saturation 30–50 and lightness 70–85 — clearly
+coloured and readable, never washed out into near-white pastels and never heavy or muddy.
+About half the picture is chromatic. Use AT LEAST FIVE clearly different colours and give
+each to a named thing: the sky, the concrete wall, the tiled wall, the arcade shutters,
+the potted plants, the woman's top, the man's jacket, the scooter. Colour throughout —
+never greyscale.
+ACCENT — #335b8b appears in exactly two small places and nowhere else: the roller shutters
+under the arcade, and the rooftop water tanks. Do NOT wash the image in that colour, do NOT
+tint the skin, the walls, the pavement or the sky with it, and do NOT make it vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. This street would normally be full of signs,
+so be strict: no text, letters, words, numbers, logos, shop signs, banners, house numbers,
+number plates, posters, stickers, captions or watermarks, in any language or alphabet. Every
+shopfront, shutter, awning, sign board, scooter plate and wall is completely blank. The
+traffic cone carries no writing. Where writing would normally appear, leave the surface
+plain.
+
+AVOID — greyscale; photorealism; faceless or noodle-limbed figures; thick uniform black
+outlines; even mechanical vector linework; chrome, metallic or iridescent gradients; glow
+or lens flare; grey, silver, white or blue-grey hair; wrinkles, cheek shadow or facial
+modelling; any suggestion that one house is richer, newer, cleaner or better than the
+other; a luxury villa or an architectural showpiece; a slum, a ruin, a derelict or
+abandoned building; cracks running through the structure, a leaning wall, rubble or
+collapse; an accident, an injured person, blood, an ambulance, a police car, flashing
+lights, barrier tape or a cordon; workers, scaffolding, cranes or hard hats; any arrow,
+tick, cross, label or comparison mark between the two houses; teeth, mouths, gums or any
+dental object anywhere in the picture; anyone looking at the viewer; a whole image tinted
+blue; flat untextured single-tone clothing; an empty white background; a crowded busy
+street.

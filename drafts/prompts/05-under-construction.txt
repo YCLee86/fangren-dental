@@ -1,0 +1,110 @@
+#TITLE: 變體 3 —— 施工中的對照
+#NOTE: 第三輪。直接畫「工法」本身：左邊正在灌漿、右邊正在一片一片貼磁磚
+---
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair.
+
+STRUCTURE — ONE single illustration, no panels and no dividing lines. TWO NARROW HOUSES OF
+THE SAME HEIGHT AND WIDTH STAND SIDE BY SIDE IN THE MIDDLE OF THE FRAME, both still being
+built, filling roughly two-thirds of the frame width and reaching almost to the top edge.
+THE PICTURE IS ABOUT THE TWO DIFFERENT WAYS THEIR WALLS ARE BEING MADE, happening at the
+same moment on the same street. Two ordinary passers-by stand small on the pavement in
+front, watching.
+
+LEFT HOUSE — BEING POURED IN ONE GO. Its front is a tall wall of plywood formwork panels
+tied together with rows of small round tie-rods, standing from the ground right up to the
+top. At the top of the wall, a concrete pump hose curves down over the edge and thick pale
+wet concrete is pouring out of it INTO the space between the boards, filling it as one
+continuous mass. A worker stands on a small platform at the top guiding the hose, and a
+second worker beside him holds a poker vibrator down into the wet concrete. Where the
+formwork has already been struck away at the bottom left of the wall, the finished surface
+is revealed: one continuous warm pale grey face, whole and unbroken, marked only by faint
+horizontal board lines and a grid of small round tie-holes. It is plainly ONE PIECE, made
+in a single pour.
+
+RIGHT HOUSE — BEING TILED PIECE BY PIECE. Its front is a plain grey rendered wall with a
+simple metal scaffold standing against it. On the scaffold, at two different heights, two
+workers are sticking SMALL RECTANGULAR WALL TILES onto the wall ONE AT A TIME: one holds a
+notched trowel and is combing a bed of adhesive across the wall in ridged stripes; the
+other presses a single tile into place with both thumbs, a stack of loose tiles in a
+shallow tray hooked on the scaffold beside him. About the lower two-thirds of the wall is
+already tiled, in even courses with thin grout lines; the top third is still bare grey
+render with the combed adhesive stripes showing, and a ragged uneven edge of the last
+course laid, so it plainly reads as a surface being ADDED ON, course by course, and not yet
+finished. A few spare tiles lie on the pavement below.
+THE CONTRAST TO HOLD ONTO: on the left, the wall IS the building and it is being made all
+at once; on the right, the wall is a skin being stuck onto a building, one piece at a time.
+
+THE STREET — an ordinary, warm, everyday Taiwanese street: a low kerb and paved pavement, a
+parked scooter, electricity cables across the top of the frame, a potted plant by a
+doorway, a strip of blue sky above the rooftops, the plain end wall of a neighbouring
+building at the frame edge. Calm and uncluttered — enough to read as a real street, never
+crowded. No traffic, no crowd, no dust cloud, no chaos.
+
+THE WORKERS AND THE PASSERS-BY — The four workers are calm, competent and unhurried, each
+plainly absorbed in the job in their hands; they wear ordinary work clothes and plain
+hard hats, and none of them looks at the viewer. Two of them are women. The two passers-by
+stand together on the pavement near the front left, seen from behind and to one side, both
+East Asian, one in their thirties and one about forty, looking up at the two walls; one has
+a hand half-raised, the other has both hands in their pockets. They are quietly curious,
+not alarmed. Nobody is in danger, nobody is falling, nothing is going wrong.
+
+PEOPLE — Simplified illustrative people: minimal features, natural realistic head-to-body
+proportions, believable ages, East Asian faces where a face is visible at all. Not
+photorealistic. Not faceless. No oversized heads, no noodle limbs.
+CLOTHING — the passer-by woman wears a top in #b7c5d7 with its folds and shadows in
+#99a7b8 and warm grey trousers; the passer-by man wears a muted clay-rose jacket. The
+workers wear warm sand, olive and clay work clothes — every person a different colour, so
+no two blur together. Clothes are NEVER flat single-tone shapes: give each garment two or
+three tones of its own colour with soft shading where the fabric gathers.
+
+LIGHT AND COLOUR — Ordinary bright daytime, ONE light source: soft even daylight from the
+left, warm and gentle. No long orange shadows, not sunset, not night, no spotlight, no
+dramatic beam. Across the sky above the rooftops, well clear of the two houses, draw FOUR
+OR FIVE long, thin, white hand-drawn lines running the same way at the same shallow angle,
+evenly spaced, solid where they begin and thinning to dry flecks — soft chalk quality,
+clearly hand-made. They must never begin at anyone's mouth, nose, hand or body, must never
+touch the buildings, must never loop or curl back on themselves, and must never resemble
+smoke, steam or breath.
+Most coloured areas sit in the range HSL saturation 30–50 and lightness 70–85 — clearly
+coloured and readable, never washed out into near-white pastels and never heavy or muddy.
+About half the picture is chromatic. Use AT LEAST FIVE clearly different colours and give
+each to a named thing: the sky, the plywood formwork, the grey render, the pale tiles, the
+scaffold, the workers' clothes, the potted plant, the scooter. Colour throughout — never
+greyscale.
+ACCENT — #335b8b appears in exactly two small places and nowhere else: the scaffold tubes
+and one shutter at street level. Do NOT wash the image in that colour, do NOT tint the
+skin, the walls, the pavement or the sky with it, and do NOT make it vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. This street would normally be full of signs,
+so be strict: no text, letters, words, numbers, logos, shop signs, banners, safety notices,
+house numbers, number plates, brand marks on the pump, the tools, the tile trays, the hard
+hats or the clothing, no posters, stickers, captions or watermarks, in any language or
+alphabet. Every surface that would normally carry writing is blank. Where writing would
+normally appear, leave the surface plain.
+
+AVOID — greyscale; photorealism; faceless or noodle-limbed figures; thick uniform black
+outlines; even mechanical vector linework; chrome, metallic or iridescent gradients; glow
+or lens flare; grey, silver, white or blue-grey hair; wrinkles, cheek shadow or facial
+modelling; any suggestion that one house is richer, newer or better than the other; a
+luxury villa or an architectural showpiece; a slum, a ruin or a derelict building; an
+accident, a fall, an injury, blood, an ambulance, flashing lights or barrier tape; a dust
+cloud, spilled concrete, mess or chaos; a huge crane, a tower crane or heavy machinery
+dominating the picture; any arrow, tick, cross, label or comparison mark between the two
+houses; teeth, mouths, gums or any dental object anywhere in the picture; anyone looking at
+the viewer; a whole image tinted blue; flat untextured single-tone clothing; an empty white
+background.

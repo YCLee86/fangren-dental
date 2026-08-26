@@ -1,0 +1,112 @@
+#TITLE: ① 手心裡的那兩顆
+#NOTE: 第二輪。治「畫面裡沒有讀者」。已出圖 → hero-crown-try1-palm.jpg
+---
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all — no wrinkles, no lines beside the
+nose, no lines under the eyes, no cheek shadow, no neck shading.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair on anyone: both people
+here are in their thirties and forties and their hair must read that way.
+
+STRUCTURE — ONE single close-up illustration, no panels and no dividing lines. WE ARE
+CLOSE IN. The subject of this picture is A MAN'S OPEN PALM AND THE TWO SMALL TOOTH-CAPS
+LYING IN IT. His open hand is the biggest thing in the frame: it sits in the lower middle
+of the composition and the palm alone spans about half the width of the whole image. Above
+and behind the hand we see his own head and shoulders, looking down into his palm. Behind
+him and to the right, smaller and partly cut off by the edge of the frame, the dentist has
+just withdrawn her hand and is watching him. Everything else is background.
+
+THE TWO CAPS IN HIS PALM — draw these large, clean and unmistakable; they must still be
+readable when the whole picture is shrunk to the size of a postage stamp. They are two
+small hollow bell-shaped tooth-caps, the size of a fingernail each, lying side by side in
+the middle of the palm, both exactly the same size and the same silhouette so that the
+ONLY difference between them is what they are made of:
+  • THE LEFT CAP is ONE single uniform pale warm off-white all the way through — one solid
+    piece, smooth and whole, no seam, no line, no second colour, its rim unbroken.
+  • THE RIGHT CAP is plainly built of TWO layers: a dark grey-blue core with a pale warm
+    off-white skin over it, and ONE clean continuous line where the two meet, running all
+    the way round. A piece of the pale outer skin has broken away at its rim, leaving a
+    chip with a slightly jagged edge through which the dark core shows plainly; one small
+    pale flake lies loose in the palm beside it.
+The chip on the right cap is the single most important detail in the picture: make the
+dark core inside it clearly dark against the pale skin, so the difference between the two
+caps reads instantly even at a glance.
+
+THE MAN — about forty-five, East Asian. His head is tilted down and we see his face at a
+three-quarter angle from slightly above. He is looking at his own palm, not at the dentist
+and not at the viewer. His expression is the whole point of the picture: HE IS BEING ASKED
+TO DECIDE SOMETHING HE DOES NOT YET UNDERSTAND. His eyebrows are drawn faintly together in
+the middle, his mouth is a small closed straight line slightly pressed, his eyes are steady
+and attentive. He is thoughtful and a little uncertain — NEVER frightened, never unhappy,
+never in pain, never comical, never exaggerated. The hand nearer the viewer is the open
+palm holding the caps; his other hand rests on his knee.
+
+THE DENTIST — a woman in her thirties, East Asian, seen from the chest up behind his
+shoulder on the right, smaller than him and partly cropped by the frame edge. Her hand is
+lowering back down after placing the caps in his palm. Her face is calm, attentive and
+kind — she is waiting, not selling and not lecturing. She does not look at the viewer.
+
+THE SETTING — a small, warm, real consultation corner of a dental clinic, kept soft and
+simple because it is out of focus behind the hand: a plain coloured wall, a low wooden
+cabinet with a plain ceramic jar and a small potted plant, the corner of a chair, a window
+out of frame on the left giving clean daylight. The wall carries a colour and no surface is
+left blank white. Do NOT add any poster, chart, diagram, screen, X-ray, plaster model or
+picture of teeth anywhere in the room. KEEP THE TOOTH SHAPES IN THE PALM: the two caps in
+his hand are the ONLY tooth-shaped objects in the entire image.
+
+PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes, a
+simple line mouth, a small nose), natural realistic head-to-body proportions, believable
+ages, East Asian faces. Not photorealistic. Not faceless. No oversized heads, no noodle
+limbs. Nobody looks at the viewer.
+CLOTHING — the dentist wears a short-sleeved clinic top in #b7c5d7 with its folds and
+shadows in #99a7b8. The man wears a muted clay-rose knitted top — a clearly different
+colour family, so the two never blur together. Clothes are NEVER flat single-tone shapes:
+model every garment with two or three tones of its own colour, with soft coloured-pencil
+shading in the folds, along the sleeves, under the collar and at the hem, and draw the real
+details — collar, cuff, sleeve seam, hem, a pocket.
+
+LIGHT AND COLOUR — Ordinary bright indoor daytime, ONE light source: clean daylight from
+the left, warm and even. No long orange shadows, not sunset, not lamplight, no spotlight
+and no dramatic beam on the hand. Across the upper part of the frame, above both people
+and not touching them, draw FOUR OR FIVE long, thin, white hand-drawn lines running the
+same way at the same shallow angle, evenly spaced, solid where they begin and thinning to
+dry flecks — soft chalk quality, clearly hand-made. These lines must never begin at
+anyone's mouth, nose, hand or body, must never loop or curl back on themselves, and must
+never resemble smoke, steam or breath.
+Most coloured areas sit in the range HSL saturation 30–50 and lightness 70–85 — clearly
+coloured and readable, never washed out into near-white pastels and never heavy or muddy.
+About half the picture is chromatic. Use AT LEAST FIVE clearly different colours and give
+each to a named object: the clinic top, the man's knitted top, the wall, the wooden
+cabinet, the potted plant, the chair. Colour throughout — never greyscale.
+ACCENT — #335b8b appears in exactly two small places and nowhere else: one door of the low
+cabinet and a narrow horizontal band along the wall. Do NOT wash the image in that colour,
+do NOT tint the skin, the hand, the caps or the paper with it, and do NOT make it vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, labels, price tags, clock faces or watermarks, in any language or
+alphabet. The jar, the cabinet, the clothing and every other surface are blank. The two
+caps carry no marks, no numbers and no labels. There are no arrows, no ticks, no crosses,
+no plus or minus signs and no dotted lines anywhere. Where writing would normally appear,
+leave the surface plain.
+
+AVOID — greyscale; photorealism; a photorealistic hand or mouth; faceless or noodle-limbed
+figures; thick uniform black outlines; even mechanical vector linework; chrome, metallic or
+iridescent gradients; glow, sparkle or lens flare; grey, silver, white or blue-grey hair;
+wrinkles, cheek shadow or facial modelling; a frightened, sad, pained or comically confused
+face; blood, wounds, redness or gums; decayed, dark, broken or missing teeth in a mouth;
+any tooth shape outside the palm; a poster, chart, X-ray, screen or plaster model anywhere;
+any arrow, tick, cross or comparison mark; a price tag or a row of options; anyone looking
+at the viewer; a whole image tinted blue; flat untextured single-tone clothing; a bare
+empty room.
