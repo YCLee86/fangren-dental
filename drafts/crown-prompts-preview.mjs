@@ -25,6 +25,8 @@ const SHOTS = {
   "01-palm": "hero-crown-try1-palm.jpg",
   "02-same-hands": "hero-crown-try2-hands.jpg",
   "03-monument": "hero-crown-try3-monument.jpg",
+  "04-street-houses": "hero-crown-try4-street.jpg",
+  "05-under-construction": "hero-crown-try5-building.jpg",
 };
 
 const items = fs.readdirSync("drafts/prompts").filter((f) => f.endsWith(".txt")).sort()

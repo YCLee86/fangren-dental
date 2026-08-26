@@ -1,0 +1,107 @@
+#TITLE: 變體 4 —— 整塊鑿出來的石柱 vs 貼石皮的柱子
+#NOTE: 第四輪。修掉清水模的瑕疵（RC 裡有鋼筋、剝落＝結構受損）。整塊石頭是真的單一材料
+---
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair.
+
+STRUCTURE — ONE single illustration, no panels and no dividing lines. The forecourt of an
+old neighbourhood temple in Taiwan, seen straight on. TWO TALL SQUARE COLUMNS STAND SIDE BY
+SIDE IN THE MIDDLE OF THE FRAME, holding up the edge of a tiled temple roof above. They are
+the same height, the same width and the same age, and they fill roughly two-thirds of the
+frame width, reaching almost to the top edge. Two ordinary people stand small at their feet,
+looking up. The two columns are the subject; everything else is the temple forecourt.
+
+THE TWO COLUMNS — The ONLY difference between them is how each was made:
+  • THE LEFT COLUMN IS CARVED FROM ONE SINGLE BLOCK OF STONE. It is one continuous warm
+    pale grey granite from the ground to the top — the same stone all the way through, with
+    the faint speckle of the stone running unbroken across the whole surface and around its
+    corners. Shallow chisel marks curve over it where it was worked. There is no joint, no
+    panel, no seam and no second material anywhere on it. Along one lower edge a corner has
+    been knocked over the years and is a little rounded — and where it is knocked, the
+    stone underneath is EXACTLY THE SAME STONE, the same colour and the same speckle. It
+    has worn, but nothing has come off it.
+  • THE RIGHT COLUMN IS A CONCRETE COLUMN FACED WITH THIN STONE SLABS. Its surface is made
+    of large flat rectangular stone panels stuck on in a regular pattern, with thin straight
+    joints between them, so it plainly reads as separate pieces applied over something
+    underneath. ABOUT TWO THIRDS OF THE WAY UP, on the side facing the middle of the
+    picture, TWO OF THE SLABS HAVE COME AWAY: the gap left behind shows plain grey concrete
+    with the ridged combed lines of dried adhesive still on it, and one neighbouring slab is
+    half detached and tilted a little out from the face. On the ground at its foot lie two
+    fallen slabs, one cracked across the middle, with a little grey grit around them.
+THE CONTRAST TO HOLD ONTO: the left column IS stone all the way through, so there is
+nothing on it that can come off; the right column is a skin of stone stuck onto something
+else, and the skin is what fell.
+
+THE FORECOURT — an ordinary, warm, everyday Taiwanese temple forecourt, well used and
+cared for, not grand and not derelict: worn stone paving, a low step, a plain stone
+incense burner to one side, two round red paper lanterns hanging under the eaves, the
+carved timber and clay-tiled edge of the temple roof above the columns, a couple of potted
+plants, a bicycle leaning at the edge of the frame, a strip of blue sky. Calm and
+uncluttered. No crowd, no ceremony, no smoke.
+
+THE TWO PEOPLE — Small, standing together on the paving near the front left, seen from
+behind and to one side so we mostly read their backs and the tilt of their heads. A woman
+in her thirties and a man of about forty, both East Asian, both looking UP at the gap where
+the slabs came off. One has a hand half-raised, pointing loosely up at it; the other has
+both hands in their pockets, head tipped back. Unhurried and quietly curious — not alarmed,
+not shocked. Neither looks at the viewer. Ordinary passers-by in ordinary clothes, NOT
+builders, NOT in uniform, NOT worshippers holding incense.
+
+PEOPLE — Simplified illustrative people: minimal features, natural realistic head-to-body
+proportions, believable ages, East Asian faces where a face is visible at all. Not
+photorealistic. Not faceless. No oversized heads, no noodle limbs.
+CLOTHING — the woman wears a top in #b7c5d7 with its folds and shadows in #99a7b8 and warm
+grey trousers; the man wears a muted clay-rose jacket. Clothes are NEVER flat single-tone
+shapes: give each garment two or three tones of its own colour with soft shading where the
+fabric gathers.
+
+LIGHT AND COLOUR — Ordinary bright daytime, ONE light source: soft even daylight from the
+left, warm and gentle. No long orange shadows, not sunset, not night, no spotlight, no
+dramatic beam. Across the sky above the roof, well clear of the columns, draw FOUR OR FIVE
+long, thin, white hand-drawn lines running the same way at the same shallow angle, evenly
+spaced, solid where they begin and thinning to dry flecks — soft chalk quality, clearly
+hand-made. They must never begin at anyone's mouth, nose, hand or body, must never touch
+the columns, must never loop or curl back on themselves, and must never resemble smoke,
+steam or breath.
+THIS PICTURE MUST NOT GO GREY. Stone and concrete take up a lot of the frame, so the rest
+of it has to carry real colour: most coloured areas sit in the range HSL saturation 30–50
+and lightness 70–85, and at least half the picture is chromatic. Use AT LEAST FIVE clearly
+different colours and give each to a named thing: the blue sky, the clay-tiled roof, the
+red paper lanterns, the carved timber under the eaves, the potted plants, the woman's top,
+the man's jacket. Colour throughout — never greyscale, never a picture that is mostly grey.
+ACCENT — #335b8b appears in exactly two small places and nowhere else: the temple door
+panels behind the columns, and one painted timber beam under the eaves. Do NOT wash the
+image in that colour, do NOT tint the skin, the stone or the paving with it, and do NOT
+make it vivid.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. A temple would normally be covered in
+characters and couplets, so be strict: no text, letters, words, numbers, characters,
+couplets, plaques, name boards, banners, logos, posters, stickers, captions or watermarks,
+in any language or script. The lanterns are blank. Every plaque, panel, door and beam is
+blank. Where writing would normally appear, leave the surface plain.
+
+AVOID — greyscale; a picture that reads as mostly grey; photorealism; faceless or
+noodle-limbed figures; thick uniform black outlines; even mechanical vector linework;
+chrome, metallic or iridescent gradients; glow or lens flare; grey, silver, white or
+blue-grey hair; wrinkles, cheek shadow or facial modelling; any suggestion that one column
+is richer, newer or better than the other; a ruin, a derelict or abandoned temple; cracks
+running through either column, a leaning column, rubble or collapse; an accident, an
+injured person, blood, barrier tape or a cordon; scaffolding, workers or hard hats; dragons,
+statues, deities, worshippers, incense smoke or a religious ceremony; any arrow, tick,
+cross, label or comparison mark between the two columns; teeth, mouths, gums or any dental
+object anywhere in the picture; anyone looking at the viewer; a whole image tinted blue;
+flat untextured single-tone clothing; an empty white background.

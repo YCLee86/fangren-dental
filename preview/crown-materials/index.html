@@ -110,7 +110,25 @@
       <a href="../../#topics">全部文章</a>
       <a href="../../#doctors">醫師介紹</a>
       <a href="../../#clinic">診所資訊</a>
+      <!-- 放大鏡。素材出處：Lucide "search"／"x"，ISC 授權，https://lucide.dev ——
+           這一行註解就是署名，改圖或搬檔的時候不要刪。
+           ⚠⚠ **是 <a> 不是 <button>**：沒有 JS 的時候它退回「跳到主題與科別」
+             ＝ 使用者原本手動在做的事，有 JS 才 preventDefault 改成就地展開。
+           ⚠ 它會被底下那支 scrollspy 抓到，所以那一行選擇器加了 :not(.nav-q)。 -->
+      <a class="nav-q" href="../../#topics" aria-label="搜尋文章與醫師" aria-expanded="false" aria-controls="headsearch">
+        <span class="nav-q-i" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.6" cy="10.6" r="7"/><path d="m20.4 20.4-4.85-4.85"/></svg></span>
+      </a>
     </nav>
+    <!-- 頁首的搜尋列。關著的時候 visibility: hidden ＋ inert，**不佔任何版面**
+         （絕對定位），所以收著的頁首和加這一顆之前逐項相同。
+         ⚠ 輸入框字級 16px 是硬條件：iOS 對 <16px 的輸入框會在聚焦時放大整頁。 -->
+    <form class="head-search" id="headsearch" role="search" inert>
+      <span class="hs-ico" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.6" cy="10.6" r="7"/><path d="m20.4 20.4-4.85-4.85"/></svg></span>
+      <input class="hs-in" type="search" placeholder="搜尋文章與醫師" aria-label="搜尋文章與醫師"
+             autocomplete="off" spellcheck="false" enterkeyhint="search">
+      <span class="hs-n" aria-hidden="true"></span>
+      <button class="hs-x" type="button" aria-label="關閉搜尋"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.5 5.5 5.5 18.5M5.5 5.5l13 13"/></svg></button>
+    </form>
   </div>
 </header>
 
@@ -146,6 +164,7 @@
     <p><strong>第一個是兩種材料之間那道交界。</strong>它們的膨脹、收縮與受力反應本來就不一樣，力量會在交界處累積；咬到硬物、夜間磨牙，或是經年累月的咬合疲勞，都可能讓外層的瓷崩掉一角或剝離一片。</p>
     <p><strong>第二個是外層那一層瓷本身。</strong>它是人工一層一層堆出來的，密度不會完全均勻，也可能留下細小的孔洞。那些看不見的地方，就是日後裂紋開始的位置——這一層既是它的外觀，也是它結構上比較弱的一段。</p>
     <p>崩瓷在口內能做的處理有限，多半是磨平、拋光，情況嚴重就要整顆重做。一體成型的牙冠從裡到外是同一塊燒結完成的材料，這兩種壞法都沒有。</p>
+    <p>這不等於它不會壞。一體成型的牙冠一樣可能在咬合力之下裂開或缺一角——但那是整塊材料一起承受之後的結果，不是表面那一層自己脫落。<strong>沒有第二層，就沒有第二層可以掉。</strong></p>
 
     <h2>為什麼這件事會顯示在「要磨掉多少牙」上</h2>
     <p>一頂牙冠要有足夠的厚度才撐得住，而那個厚度是從你自己的牙齒身上讓出來的。醫師修磨掉多少，等於這一種材質需要多厚。</p>
@@ -309,5 +328,6 @@
   </div>
 </footer>
 <script src="../../assets/counter.js" defer></script>
+<script src="../../assets/head-search.js" defer></script>
 </body>
 </html>
