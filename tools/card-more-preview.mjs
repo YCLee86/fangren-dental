@@ -69,6 +69,12 @@ const MORE = '<span class="pv-more" aria-hidden="true"><span class="pv-more-t"><
   + '<svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor"'
   + ' stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>';
 
+/* 那顆分隔點改成「全形／半形」兩個都寫進去，用 CSS 切其中一個顯示。
+   ⚠ 不用 CSS 的 content 直接換元素內容 —— 那在一般元素上（非偽元素）
+     各家支援不一致，提案頁要在使用者的 Safari 上跑，不冒這個險。 */
+h = h.replace(/<span class="dot" aria-hidden="true">・<\/span>/g,
+  '<span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>');
+
 let injected = 0;
 h = h.replace(/(<span class="views" data-views="[^"]*"[\s\S]*?<\/span>\n)(\s*)(<\/p>)/g,
   (m, views, ind, close) => { injected++; return views + ind + "  " + MORE + "\n" + ind + close; });
@@ -157,6 +163,7 @@ h = h.replace("<head>", "<head>\n" + `
        放不下　掉下一行 ／ 掉下一行＋拉開 ／ 不放 ／ 收成只有字
                ⚠ 這一條只在兩欄那一段（721~1040）看得到，其他寬度沒有這個問題
        ── 細調 ──
+       日期　　現況 ／ 收緊 ／ 小點 ／ 不放點　＝ 日期與瀏覽次數之間那一段
        箭頭　　角形（站上語彙）／ →／ 無
        文字　　閱讀更多 ／ 繼續讀 ／ 看這篇
        手機　　也放 ／ 不放
@@ -237,6 +244,44 @@ h = h.replace("<head>", "<head>\n" + `
        row-gap 只作用在行與行之間，所以它只在真的折行時才有效果，
        同一行時一個像素都不會動（實測 390／834／1440 三個視窗
        Ⓐ 與 Ⓑ 逐項相同）。寫 margin-top 的話電腦版也會被推開。
+
+     ---- 第五輪（2026-08-27，使用者：「日期跟瀏覽次數中間間隔還大的，
+          這邊空空看起來怪怪的」）--------------------------------------------
+
+     他指的那一段量出來是這樣（間距 ＋ 全形的那顆點 ＋ 間距）：
+
+       　　　　744    390    1440
+       日期    93.9   77.2   82.7
+       間距     5.7    4.8    5.4
+       那顆點  16.2   13.2   14.2     ← 全形字元，自己就佔 16px
+       間距     5.7    4.8    5.4
+       瀏覽    74.0   60.4   65.0
+       ─────────────────────────
+       那一段  27.6   22.8   25.0
+
+     ⚠⚠ **他指的方向是對的，而且光這一段就夠**：744 上那一組差 18px，
+       而這一段佔 27.6px。第四輪一直在調按鈕本身（字級、文字、樣式），
+       其實真正的餘裕在旁邊那顆點上。
+       **通則：一列擠不下的時候，先把整列每一段都量一次再決定調哪一段** ——
+       不要只盯著新加的那一個。
+
+     744 上四格（.78rem、淡塊、1.85、角形 1.0）：
+
+       格        折行     最緊餘量   那一段
+       現況      11/11    −18.0      27.6
+       收緊       9/11    −12.0      21.5
+       小點       9/11     −7.1      16.6
+       不放點     3/11      0.0       9.5
+
+     配「繼續讀」之後 744 全部收得下（不放點 +15.2、小點 +8.1）。
+     ⚠ 721 仍然最硬：只有「不放點 ＋ 繼續讀 ＋ 無箭頭」能完全清乾淨（+15.4）。
+
+     ⚠⚠ **這一列是站上現在就有的東西**（有沒有那顆按鈕都一樣），
+       所以選現況以外的任何一格，等於連帶改到已經上線的卡片，
+       不只是這顆按鈕。面板會標「已經不是站上現在的樣子」。
+     ⚠ 那顆點在 markup 裡改成全形／半形兩個都寫、用 CSS 切其中一個顯示 ——
+       不用 CSS 的 content 直接換一般元素的內容，那在各家支援不一致，
+       提案頁要在使用者的 Safari 上跑，不冒這個險。
 
      ⚠⚠ 那一列的選擇器要寫 .pv-bar .pv-row-fit（0,2,0），不能只寫
        .pv-row-fit —— 它和 .pv-row 那條 display:flex 同權重（0,1,0），
@@ -320,6 +365,19 @@ const STYLE = `
      所以它只在真的折行時才有效果，同一行的時候一個像素都不會動。
      寫 margin-top 的話電腦版也會被推開。 */
 [data-fit="f2"] .card-date{ row-gap: .55rem; }
+
+/* ---- 日期與瀏覽次數之間那一段（2026-08-27 第五輪）---------------------------
+   使用者（iPad）：「日期跟瀏覽次數中間間隔還大的，這邊空空看起來怪怪的。」
+   量出來那一段（間距 ＋ 全形「・」＋ 間距）在 744 上佔 27.6px，
+   比他那一組差的 24.8px 還多 —— 光收這一段就夠了，不必動按鈕本身。
+   ⚠⚠ 這一列**現在站上就長這樣**（有沒有那顆按鈕都一樣），所以選 Ⓑ/Ⓒ/Ⓓ
+     等於連帶改到已經上線的東西，不只是這顆按鈕。面板會標出來。 */
+.pv-dn{ display: none; }                            /* 半形的點，預設不用 */
+[data-sep="s1"] .card-date{ column-gap: .14rem; }
+[data-sep="s2"] .card-date .pv-dw{ display: none; }
+[data-sep="s2"] .card-date .pv-dn{ display: inline; }
+[data-sep="s3"] .card-date .dot{ display: none; }
+[data-sep="s3"] .card-date{ column-gap: .5rem; }
 @media (min-width: 721px) and (max-width: 1040px){
   [data-fit="f3"] .pv-more{ display: none; }
   [data-fit="f4"] .pv-more{ background: none; padding-inline: 0; }
@@ -433,6 +491,11 @@ const BAR = `
     <button data-v="f4">收成只有字</button></span></div>
 
   <div class="pv-fold" id="pvFold" hidden>
+    <div class="pv-row"><i>日期</i><span style="opacity:.5;font-size:10px">・瀏覽</span><span class="pv-btns" data-k="sep">
+      <button data-v="s0">現況</button>
+      <button data-v="s1">收緊</button>
+      <button data-v="s2">小點</button>
+      <button data-v="s3">不放點</button></span></div>
     <div class="pv-row"><i>箭頭</i><span class="pv-btns" data-k="arrow">
       <button data-v="chev">角形</button>
       <button data-v="arw">&#8594;</button>
@@ -462,9 +525,10 @@ const BAR = `
     mob:   ['on','off'],
     pad:   ['p0','p1','p2','p3'],
     aw:    ['w06','w10','w14','w18'],
-    fit:   ['f1','f2','f3','f4']
+    fit:   ['f1','f2','f3','f4'],
+    sep:   ['s0','s1','s2','s3']
   };
-  var DEF = { shape:'tint', r:'r999', fs:'f95', arrow:'chev', txt:'t1', mob:'on', pad:'p3', aw:'w06', fit:'f1' };
+  var DEF = { shape:'tint', r:'r999', fs:'f95', arrow:'chev', txt:'t1', mob:'on', pad:'p3', aw:'w06', fit:'f1', sep:'s0' };
   var RVAL = { r85:'8.5px', r12:'12px', r999:'999px' };
   var FVAL = { f78:'.78rem', f85:'.85rem', f95:'.95rem' };
   /* 四格的上下內距是從「塊高÷字級」回推的（行高 1.6em）：pv = (目標 − 1.6) / 2。
@@ -633,6 +697,17 @@ const BAR = `
                   : '<span class="pv-ok">✓ 在站上那一族裡（1.80~2.41）</span>'));
       out.push('塊高 ' + px(mh) + 'px　<span style="opacity:.7">' +
         '（這顆是 span 不是連結，44px 觸控下限不適用 —— 可按的是整張卡）</span>');
+
+      /* ③.5 日期與瀏覽之間那一段佔多少。⚠ 這一列是站上現有的東西，
+         動它等於連帶改到已經上線的卡片 —— 面板要講出來，不要讓它靜靜地跟著上線。 */
+      var dt = dateRow.children[0], dot = dateRow.querySelector('.dot');
+      var vv = dateRow.querySelector('.views');
+      var segs = dt.getBoundingClientRect(), vr2 = vv.getBoundingClientRect();
+      var sepW = vr2.left - segs.right;
+      out.push('日期↔瀏覽　那一段佔 <b>' + px(sepW) + 'px</b>' +
+        (dot && getComputedStyle(dot).display !== 'none'
+          ? '（含那顆點 ' + px(dot.getBoundingClientRect().width) + '）' : '（沒有點）') +
+        (state.sep === 's0' ? '' : '　<span class="pv-no">⚠ 已經不是站上現在的樣子</span>'));
 
       /* ④ 角形畫到畫面上到底多粗。⚠ 一定要現場量 —— SVG 裡寫的數字
          要乘上縮放比才是畫面上的粗細，而縮放比跟著字級走。 */

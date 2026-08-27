@@ -80,6 +80,7 @@
        放不下　掉下一行 ／ 掉下一行＋拉開 ／ 不放 ／ 收成只有字
                ⚠ 這一條只在兩欄那一段（721~1040）看得到，其他寬度沒有這個問題
        ── 細調 ──
+       日期　　現況 ／ 收緊 ／ 小點 ／ 不放點　＝ 日期與瀏覽次數之間那一段
        箭頭　　角形（站上語彙）／ →／ 無
        文字　　閱讀更多 ／ 繼續讀 ／ 看這篇
        手機　　也放 ／ 不放
@@ -160,6 +161,44 @@
        row-gap 只作用在行與行之間，所以它只在真的折行時才有效果，
        同一行時一個像素都不會動（實測 390／834／1440 三個視窗
        Ⓐ 與 Ⓑ 逐項相同）。寫 margin-top 的話電腦版也會被推開。
+
+     ---- 第五輪（2026-08-27，使用者：「日期跟瀏覽次數中間間隔還大的，
+          這邊空空看起來怪怪的」）--------------------------------------------
+
+     他指的那一段量出來是這樣（間距 ＋ 全形的那顆點 ＋ 間距）：
+
+       　　　　744    390    1440
+       日期    93.9   77.2   82.7
+       間距     5.7    4.8    5.4
+       那顆點  16.2   13.2   14.2     ← 全形字元，自己就佔 16px
+       間距     5.7    4.8    5.4
+       瀏覽    74.0   60.4   65.0
+       ─────────────────────────
+       那一段  27.6   22.8   25.0
+
+     ⚠⚠ **他指的方向是對的，而且光這一段就夠**：744 上那一組差 18px，
+       而這一段佔 27.6px。第四輪一直在調按鈕本身（字級、文字、樣式），
+       其實真正的餘裕在旁邊那顆點上。
+       **通則：一列擠不下的時候，先把整列每一段都量一次再決定調哪一段** ——
+       不要只盯著新加的那一個。
+
+     744 上四格（.78rem、淡塊、1.85、角形 1.0）：
+
+       格        折行     最緊餘量   那一段
+       現況      11/11    −18.0      27.6
+       收緊       9/11    −12.0      21.5
+       小點       9/11     −7.1      16.6
+       不放點     3/11      0.0       9.5
+
+     配「繼續讀」之後 744 全部收得下（不放點 +15.2、小點 +8.1）。
+     ⚠ 721 仍然最硬：只有「不放點 ＋ 繼續讀 ＋ 無箭頭」能完全清乾淨（+15.4）。
+
+     ⚠⚠ **這一列是站上現在就有的東西**（有沒有那顆按鈕都一樣），
+       所以選現況以外的任何一格，等於連帶改到已經上線的卡片，
+       不只是這顆按鈕。面板會標「已經不是站上現在的樣子」。
+     ⚠ 那顆點在 markup 裡改成全形／半形兩個都寫、用 CSS 切其中一個顯示 ——
+       不用 CSS 的 content 直接換一般元素的內容，那在各家支援不一致，
+       提案頁要在使用者的 Safari 上跑，不冒這個險。
 
      ⚠⚠ 那一列的選擇器要寫 .pv-bar .pv-row-fit（0,2,0），不能只寫
        .pv-row-fit —— 它和 .pv-row 那條 display:flex 同權重（0,1,0），
@@ -5917,6 +5956,19 @@ html[data-qopen="1"] .head-search {
      所以它只在真的折行時才有效果，同一行的時候一個像素都不會動。
      寫 margin-top 的話電腦版也會被推開。 */
 [data-fit="f2"] .card-date{ row-gap: .55rem; }
+
+/* ---- 日期與瀏覽次數之間那一段（2026-08-27 第五輪）---------------------------
+   使用者（iPad）：「日期跟瀏覽次數中間間隔還大的，這邊空空看起來怪怪的。」
+   量出來那一段（間距 ＋ 全形「・」＋ 間距）在 744 上佔 27.6px，
+   比他那一組差的 24.8px 還多 —— 光收這一段就夠了，不必動按鈕本身。
+   ⚠⚠ 這一列**現在站上就長這樣**（有沒有那顆按鈕都一樣），所以選 Ⓑ/Ⓒ/Ⓓ
+     等於連帶改到已經上線的東西，不只是這顆按鈕。面板會標出來。 */
+.pv-dn{ display: none; }                            /* 半形的點，預設不用 */
+[data-sep="s1"] .card-date{ column-gap: .14rem; }
+[data-sep="s2"] .card-date .pv-dw{ display: none; }
+[data-sep="s2"] .card-date .pv-dn{ display: inline; }
+[data-sep="s3"] .card-date .dot{ display: none; }
+[data-sep="s3"] .card-date{ column-gap: .5rem; }
 @media (min-width: 721px) and (max-width: 1040px){
   [data-fit="f3"] .pv-more{ display: none; }
   [data-fit="f4"] .pv-more{ background: none; padding-inline: 0; }
@@ -6350,7 +6402,7 @@ html[data-qopen="1"] .head-search {
           <p>真正把幾種牙冠分開的，是一件不太會出現在價目表上的事：它是一塊材料做出來的，還是兩層堆起來的。那個差別會長出兩個弱點，也決定了要讓出多少自己的齒質。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-27">2026/08/27</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="crown-materials" data-state="ok"><span class="views-n">1284</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -6364,7 +6416,7 @@ html[data-qopen="1"] .head-search {
           <p>「都已經抽過神經了，牙齦怎麼又長膿包？」根管末端的分支往往比器械到得了的地方複雜。生物陶瓷在根管治療裡做三件事：封填的糊劑、活髓治療的修復材料、根管破孔的修補——這一篇聊聊它的密封與鹼性環境多做了什麼，以及什麼樣的牙齒用得上。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-21">2026/08/21</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="bioceramic" data-state="ok"><span class="views-n">973</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -6378,7 +6430,7 @@ html[data-qopen="1"] .head-search {
           <p>為了外觀走進來沒有什麼不好意思，但牙齒的位置一改變，跟著改變的還有清潔與咬合的長期條件。幾歲開始還來得及、金屬與隱形怎麼選、時間與費用怎麼看，以及第一次諮詢會做哪些事。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-20">2026/08/20</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="orthodontics" data-state="ok"><span class="views-n">412</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -6392,7 +6444,7 @@ html[data-qopen="1"] .head-search {
           <p>怕的通常是「拔」的那一下，但決定接下來一週好不好過的，是拔完留下的那個洞。血塊為什麼不能被破壞、膠原蛋白與骨粉各自補足什麼，以及門診手術的保險該問什麼。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-19">2026/08/19</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="wisdom-tooth" data-state="ok"><span class="views-n">2065</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -6406,7 +6458,7 @@ html[data-qopen="1"] .head-search {
           <p>牙齒像一棵樹，牙周組織是托著它的那塊土壤。牙周治療分成三個層次：健保的基礎清創、自費水雷射能補上什麼，以及骨頭已經流失時的牙周再生手術。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-16">2026/08/16</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="perio-laser" data-state="ok"><span class="views-n">158</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -6420,7 +6472,7 @@ html[data-qopen="1"] .head-search {
           <p>牙弓不夠寬，恆牙就像在擠公車，沒位置站只能前後亂鑽。6 到 12 歲顎骨還沒定型，是引導牙弓向外擴張的黃金期。認識兒童隱適美與肌功能矯正，以及爸媽在家就能觀察的三個徵兆。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-02">2026/08/02</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="kids-arch-expansion" data-state="ok"><span class="views-n">87</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -6434,7 +6486,7 @@ html[data-qopen="1"] .head-search {
           <p>洗牙不會把牙齒洗薄，也不是美白。它清的是自己刷不掉的牙結石，順便讓醫師在問題還小的時候先看見它。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-07-08">2026/07/08</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="regular-checkup" data-state="ok"><span class="views-n">640</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -6448,7 +6500,7 @@ html[data-qopen="1"] .head-search {
           <p>缺一顆牙不只是缺一顆牙。旁邊的牙會倒、對面的牙會長長、齒槽骨會流失。三種重建方式各自的原理、代價與限制。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-06-02">2026/06/02</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="missing-tooth" data-state="ok"><span class="views-n">331</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -6462,7 +6514,7 @@ html[data-qopen="1"] .head-search {
           <p>「乳牙反正會換掉」是最常見也最昂貴的誤解。從第一顆牙長出來後的六個月談起，帶爸媽看懂塗氟、窩溝封填與健保給付。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-05-06">2026/05/06</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="kids-first-visit" data-state="ok"><span class="views-n">1120</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -6476,7 +6528,7 @@ html[data-qopen="1"] .head-search {
           <p>健康的牙齦被牙刷碰到不會出血。流血代表牙齦正在發炎，而發炎和退火無關，是牙菌斑長期堆積的結果。認識牙齦炎與牙周炎那條關鍵的分界線。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-04-15">2026/04/15</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="gum-bleeding" data-state="ok"><span class="views-n">46</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -6490,7 +6542,7 @@ html[data-qopen="1"] .head-search {
           <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙，原地來回十次——這是把牙菌斑真正刷掉的方法。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-03-11">2026/03/11</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true"><span class="pv-dw">・</span><span class="pv-dn">·</span></span>
             <span class="views" data-views="bass-brushing" data-state="ok"><span class="views-n">205</span><small>次瀏覽</small></span>
             <span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span><svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
@@ -8630,6 +8682,11 @@ html[data-qopen="1"] .head-search {
     <button data-v="f4">收成只有字</button></span></div>
 
   <div class="pv-fold" id="pvFold" hidden>
+    <div class="pv-row"><i>日期</i><span style="opacity:.5;font-size:10px">・瀏覽</span><span class="pv-btns" data-k="sep">
+      <button data-v="s0">現況</button>
+      <button data-v="s1">收緊</button>
+      <button data-v="s2">小點</button>
+      <button data-v="s3">不放點</button></span></div>
     <div class="pv-row"><i>箭頭</i><span class="pv-btns" data-k="arrow">
       <button data-v="chev">角形</button>
       <button data-v="arw">&#8594;</button>
@@ -8659,9 +8716,10 @@ html[data-qopen="1"] .head-search {
     mob:   ['on','off'],
     pad:   ['p0','p1','p2','p3'],
     aw:    ['w06','w10','w14','w18'],
-    fit:   ['f1','f2','f3','f4']
+    fit:   ['f1','f2','f3','f4'],
+    sep:   ['s0','s1','s2','s3']
   };
-  var DEF = { shape:'tint', r:'r999', fs:'f95', arrow:'chev', txt:'t1', mob:'on', pad:'p3', aw:'w06', fit:'f1' };
+  var DEF = { shape:'tint', r:'r999', fs:'f95', arrow:'chev', txt:'t1', mob:'on', pad:'p3', aw:'w06', fit:'f1', sep:'s0' };
   var RVAL = { r85:'8.5px', r12:'12px', r999:'999px' };
   var FVAL = { f78:'.78rem', f85:'.85rem', f95:'.95rem' };
   /* 四格的上下內距是從「塊高÷字級」回推的（行高 1.6em）：pv = (目標 − 1.6) / 2。
@@ -8830,6 +8888,17 @@ html[data-qopen="1"] .head-search {
                   : '<span class="pv-ok">✓ 在站上那一族裡（1.80~2.41）</span>'));
       out.push('塊高 ' + px(mh) + 'px　<span style="opacity:.7">' +
         '（這顆是 span 不是連結，44px 觸控下限不適用 —— 可按的是整張卡）</span>');
+
+      /* ③.5 日期與瀏覽之間那一段佔多少。⚠ 這一列是站上現有的東西，
+         動它等於連帶改到已經上線的卡片 —— 面板要講出來，不要讓它靜靜地跟著上線。 */
+      var dt = dateRow.children[0], dot = dateRow.querySelector('.dot');
+      var vv = dateRow.querySelector('.views');
+      var segs = dt.getBoundingClientRect(), vr2 = vv.getBoundingClientRect();
+      var sepW = vr2.left - segs.right;
+      out.push('日期↔瀏覽　那一段佔 <b>' + px(sepW) + 'px</b>' +
+        (dot && getComputedStyle(dot).display !== 'none'
+          ? '（含那顆點 ' + px(dot.getBoundingClientRect().width) + '）' : '（沒有點）') +
+        (state.sep === 's0' ? '' : '　<span class="pv-no">⚠ 已經不是站上現在的樣子</span>'));
 
       /* ④ 角形畫到畫面上到底多粗。⚠ 一定要現場量 —— SVG 裡寫的數字
          要乘上縮放比才是畫面上的粗細，而縮放比跟著字級走。 */
