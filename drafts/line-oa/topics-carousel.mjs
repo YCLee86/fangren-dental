@@ -22,6 +22,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { TOPICS } from "../../tools/topic-copy.mjs";
+import { LINE_CASES } from "./topic-copy-line.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "../..");
@@ -53,9 +54,14 @@ const bubbles = chips.map((spec) => {
   const t = TOPICS[spec];
   if (!t) throw new Error(`topic-copy.mjs 沒有 ${spec}`);
 
-  /* 那一句：一般用 cases[0]，兒牙那種分組的用 groups[0].cases[0] */
-  const first = t.cases?.[0] ?? t.groups?.[0]?.cases?.[0];
-  if (!first) throw new Error(`${spec} 既沒有 cases 也沒有 groups，取不到那一句`);
+  /* 那幾句：用 LINE 自己那一份（topic-copy-line.mjs），不是著陸頁的 cases。
+     ⚠ 理由寫在那一份的檔頭：**讀者不同**。加 LINE 的人多半是到診所才加的，
+       對自己的問題已經有基本認識，要的是「我這個狀況該點哪一格」，
+       不是著陸頁那種「讓還沒有病識感的人覺得被看見」。 */
+  const lines = LINE_CASES[spec];
+  if (!Array.isArray(lines) || lines.length !== 3) {
+    throw new Error(`${spec} 在 topic-copy-line.mjs 裡不是三句`);
+  }
 
   const keep = docs.filter((d) => d.spec === spec || d.skills.some(([s]) => s === spec));
   const names = keep.map((d) => d.name);
@@ -85,8 +91,14 @@ const bubbles = chips.map((spec) => {
       type: "box", layout: "vertical", backgroundColor: "#F4F4F5",
       paddingAll: "20px", paddingTop: "16px", spacing: "md",
       contents: [
-        { type: "text", text: `「${plain(first)}」`, color: "#2A2C27", size: "sm", wrap: true },
-        { type: "separator", color: "#CDD0D2", margin: "md" },
+        { type: "text", text: "什麼狀況要找這一科", color: "#5C5F57", size: "xs" },
+        {
+          type: "box", layout: "vertical", spacing: "xs", margin: "sm",
+          contents: lines.map((x) => ({
+            type: "text", text: plain(x), color: "#2A2C27", size: "sm", wrap: true,
+          })),
+        },
+        { type: "separator", color: "#CDD0D2", margin: "lg" },
         { ...row("醫師", names.join("、")), margin: "md" },
         row("專長", skills.join("、")),
       ],
@@ -112,7 +124,7 @@ const size = Buffer.byteLength(JSON.stringify(out));
 console.log(`${bubbles.length} 科　${size} bytes（LINE 上限：carousel 12 格、整包 50KB）`);
 for (const [i, spec] of chips.entries()) {
   const b = bubbles[i];
-  console.log(`  ${spec.padEnd(8)} ${accent[spec]}  ${b.body.contents[0].text}`);
-  console.log(`  ${" ".repeat(8)} 醫師 ${b.body.contents[2].contents[1].text}`);
-  console.log(`  ${" ".repeat(8)} 專長 ${b.body.contents[3].contents[1].text}`);
+  console.log(`  ${spec.padEnd(8)} ${accent[spec]}  ${b.body.contents[1].contents.map((x) => x.text).join(" ／ ")}`);
+  console.log(`  ${" ".repeat(8)} 醫師 ${b.body.contents[3].contents[1].text}`);
+  console.log(`  ${" ".repeat(8)} 專長 ${b.body.contents[4].contents[1].text}`);
 }

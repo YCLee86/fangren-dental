@@ -26,15 +26,43 @@
         "contents": [
           {
             "type": "text",
-            "text": "「上一次看牙是什麼時候，想不太起來。」",
-            "color": "#2A2C27",
-            "size": "sm",
-            "wrap": true
+            "text": "什麼狀況要找這一科",
+            "color": "#5C5F57",
+            "size": "xs"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "很久沒有檢查了",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "沒有不舒服，但想確認一下",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "想幫家人找一間固定看的",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
           },
           {
             "type": "separator",
             "color": "#CDD0D2",
-            "margin": "md"
+            "margin": "lg"
           },
           {
             "type": "box",
@@ -129,15 +157,43 @@
         "contents": [
           {
             "type": "text",
-            "text": "「刷牙偶爾出血，應該很正常吧。」",
-            "color": "#2A2C27",
-            "size": "sm",
-            "wrap": true
+            "text": "什麼狀況要找這一科",
+            "color": "#5C5F57",
+            "size": "xs"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "刷牙容易流血",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "牙齒開始搖，或已經掉過",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "洗牙之外還被說要處理牙周",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
           },
           {
             "type": "separator",
             "color": "#CDD0D2",
-            "margin": "md"
+            "margin": "lg"
           },
           {
             "type": "box",
@@ -232,15 +288,43 @@
         "contents": [
           {
             "type": "text",
-            "text": "「蛀得比想像中深，被說要抽神經。」",
-            "color": "#2A2C27",
-            "size": "sm",
-            "wrap": true
+            "text": "什麼狀況要找這一科",
+            "color": "#5C5F57",
+            "size": "xs"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "蛀得深，被說要抽神經",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "抽過神經的牙又腫起來",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "想把這顆牙留下來",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
           },
           {
             "type": "separator",
             "color": "#CDD0D2",
-            "margin": "md"
+            "margin": "lg"
           },
           {
             "type": "box",
@@ -335,15 +419,43 @@
         "contents": [
           {
             "type": "text",
-            "text": "「吃飯越來越慢、不愛吃，以為只是挑食。」",
-            "color": "#2A2C27",
-            "size": "sm",
-            "wrap": true
+            "text": "什麼狀況要找這一科",
+            "color": "#5C5F57",
+            "size": "xs"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "小孩喊牙痛，或不肯吃東西",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "看過牙，但不配合、沒處理成",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "同一顆補了又掉",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
           },
           {
             "type": "separator",
             "color": "#CDD0D2",
-            "margin": "md"
+            "margin": "lg"
           },
           {
             "type": "box",
@@ -438,15 +550,43 @@
         "contents": [
           {
             "type": "text",
-            "text": "「笑起來總想把嘴閉上，想弄很久了。」",
-            "color": "#2A2C27",
-            "size": "sm",
-            "wrap": true
+            "text": "什麼狀況要找這一科",
+            "color": "#5C5F57",
+            "size": "xs"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "牙齒排得不整齊",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "矯正過，後來又跑回去",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "想知道自己適不適合",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
           },
           {
             "type": "separator",
             "color": "#CDD0D2",
-            "margin": "md"
+            "margin": "lg"
           },
           {
             "type": "box",
@@ -541,15 +681,43 @@
         "contents": [
           {
             "type": "text",
-            "text": "「缺了好幾年，只能用另一邊咬。」",
-            "color": "#2A2C27",
-            "size": "sm",
-            "wrap": true
+            "text": "什麼狀況要找這一科",
+            "color": "#5C5F57",
+            "size": "xs"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "缺牙一段時間了",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "假牙鬆了、不好咬",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "想把整口一起整理",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
           },
           {
             "type": "separator",
             "color": "#CDD0D2",
-            "margin": "md"
+            "margin": "lg"
           },
           {
             "type": "box",
@@ -644,15 +812,43 @@
         "contents": [
           {
             "type": "text",
-            "text": "「智齒腫過一次，消了就沒再管。」",
-            "color": "#2A2C27",
-            "size": "sm",
-            "wrap": true
+            "text": "什麼狀況要找這一科",
+            "color": "#5C5F57",
+            "size": "xs"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "智齒腫過，反覆發作",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "牙齒只剩牙根",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "牙齒長不出來",
+                "color": "#2A2C27",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
           },
           {
             "type": "separator",
             "color": "#CDD0D2",
-            "margin": "md"
+            "margin": "lg"
           },
           {
             "type": "box",
