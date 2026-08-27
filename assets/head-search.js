@@ -125,7 +125,7 @@
     var row = infoIdx.map(function (r) {
       return '<a href="#' + r.id + '">' + esc(r.name) + '</a>';
     }).join('');
-    row += '<a href="tel:+88655339369">撥打 (05)5339-369</a>';
+    row += '<a href="tel:+88655339369">撥打 05-5339369</a>';
     qx.innerHTML = '<p class="qx-lead">站上搜不到「<b>' + esc(raw) +
       '</b>」。你可能要找的是：</p><div class="qx-row">' + row + '</div>';
     qx.hidden = false;
