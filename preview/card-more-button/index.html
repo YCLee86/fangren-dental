@@ -77,6 +77,8 @@
        字級　　.78rem（同日期那一列）／ .85rem（同摘要）／ .95rem（原案）
        胖瘦　　1.85 ／ 2.15 ／ 2.36 ／ 2.88（原案）　＝ 塊高是字級的幾倍
        角形　　0.6（原案）／ 1.0 ／ 1.4 ／ 1.8　＝ 畫到畫面上的實際粗細（px）
+       放不下　掉下一行 ／ 掉下一行＋拉開 ／ 不放 ／ 收成只有字
+               ⚠ 這一條只在兩欄那一段（721~1040）看得到，其他寬度沒有這個問題
        ── 細調 ──
        箭頭　　角形（站上語彙）／ →／ 無
        文字　　閱讀更多 ／ 繼續讀 ／ 看這篇
@@ -129,6 +131,40 @@
      ⚠⚠ **切換條上那四格印的是畫面上的實際粗細，不是 SVG 裡寫的數字**
        （在手機上差 2.5 倍，印錯的那個會騙人）。字級一改縮放比就變，
        所以面板現場量一次再印，不照表念。
+
+     ---- 第四輪（2026-08-27，使用者在 iPad 上：「閱讀更多被斷行了」）--------
+
+     ⚠⚠ 先確認是哪一台。從他截圖的長寬比 0.657 反推是 **iPad mini 744×1133** ——
+       1024 上量過完全不會斷（餘 108px），照那個視窗查會查不到東西。
+       744 是站上一路以來最緊的那一格（CLAUDE.md 第九節那幾輪都是它先出事）。
+
+     兩欄那一段（721~1040）掃過一遍，他當時那一組（淡塊／8.5／.85／1.85／1.0）：
+
+       視窗寬   折行張數   差多少
+       721      11 / 11    −36.3px
+       744      11 / 11    −24.8px   ← 他這台
+       768       9 / 11    −12.8px
+       800       3 / 11     +3.0px
+       834 以上  0 / 11    收得下
+
+     ⚠⚠ **沒有任何一條尺單獨救得回來**：字級 .85→.78 只買 6.8px、
+       箭頭拿掉 12.8、文字換「繼續讀」16.2、樣式換「只有字」20.4。
+       要湊兩條才夠（只有字 ＋ 繼續讀 ＝ +36.6，744 上餘 11.8）。
+       **所以這不是參數沒調對，是那一段的容量問題**，要正面回答
+       「裝不下的時候要怎麼辦」，不要一直往下調參數逼它塞進去。
+
+     ⚠ 721 那一格更硬：連「只有字＋繼續讀」都還有 3 張折行，
+       只有「不放」能完全解決。
+
+     ⚠⚠ Ⓑ「掉下一行＋拉開」用 **row-gap** 不用 margin-top ——
+       row-gap 只作用在行與行之間，所以它只在真的折行時才有效果，
+       同一行時一個像素都不會動（實測 390／834／1440 三個視窗
+       Ⓐ 與 Ⓑ 逐項相同）。寫 margin-top 的話電腦版也會被推開。
+
+     ⚠⚠ 那一列的選擇器要寫 .pv-bar .pv-row-fit（0,2,0），不能只寫
+       .pv-row-fit —— 它和 .pv-row 那條 display:flex 同權重（0,1,0），
+       而那一條排在後面就贏了。症狀是「規則寫了但整列還在」，
+       390 上量到切換條 27.1%（超過站上那條 24%）。修完是 23.2%。
 
      定案之後：把選中的那一組寫進 index.html 的樣式表 ＋ tools/build.mjs
      的卡片模板（多一個 span），這一頁刪掉、推導搬進 history/。
@@ -5873,6 +5909,25 @@ html[data-qopen="1"] .head-search {
   [data-mob="off"] .pv-more{ display: none; }
 }
 
+/* ---- 放不下的時候（2026-08-27 第四輪）---------------------------------------
+   兩欄那一段（721~1040）的日期那一列裝不下這顆：744 上差 24.8px、721 差 36.3px。
+   ⚠ 沒有任何一條尺單獨救得回來（字級 6.8／無箭頭 12.8／繼續讀 16.2／只有字 20.4），
+     所以這不是參數沒調對，是那一段的容量問題，要正面回答「裝不下要怎麼辦」。
+   ⚠⚠ Ⓑ 用 row-gap 不用 margin-top —— row-gap 只作用在**行與行之間**，
+     所以它只在真的折行時才有效果，同一行的時候一個像素都不會動。
+     寫 margin-top 的話電腦版也會被推開。 */
+[data-fit="f2"] .card-date{ row-gap: .55rem; }
+@media (min-width: 721px) and (max-width: 1040px){
+  [data-fit="f3"] .pv-more{ display: none; }
+  [data-fit="f4"] .pv-more{ background: none; padding-inline: 0; }
+}
+/* 這條尺只在兩欄那一段有意義，其他寬度整列收起來 —— 手機上少一行，
+   切換條才收得住（那一段本來就沒有這個問題）。
+   ⚠ 選擇器要寫 .pv-bar .pv-row-fit（0,2,0），不能只寫 .pv-row-fit ——
+     它和底下那條 .pv-row{display:flex} 同權重（0,1,0），而那一條排在後面就贏了。
+     症狀是「規則寫了但整列還在」，390 上量到切換條 27.1%（超過那條 24%）。 */
+@media (max-width: 720px), (min-width: 1041px){ .pv-bar .pv-row-fit{ display: none; } }
+
 /* ====== 切換條 ====== */
 .pv-bar{
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
@@ -8568,6 +8623,12 @@ html[data-qopen="1"] .head-search {
     <button data-v="w14">1.4</button>
     <button data-v="w18">1.8</button></span></div>
 
+  <div class="pv-row pv-row-fit"><i>放不下</i><span class="pv-btns" data-k="fit">
+    <button data-v="f1">掉下一行</button>
+    <button data-v="f2">掉下一行＋拉開</button>
+    <button data-v="f3">不放</button>
+    <button data-v="f4">收成只有字</button></span></div>
+
   <div class="pv-fold" id="pvFold" hidden>
     <div class="pv-row"><i>箭頭</i><span class="pv-btns" data-k="arrow">
       <button data-v="chev">角形</button>
@@ -8597,9 +8658,10 @@ html[data-qopen="1"] .head-search {
     txt:   ['t1','t2','t3'],
     mob:   ['on','off'],
     pad:   ['p0','p1','p2','p3'],
-    aw:    ['w06','w10','w14','w18']
+    aw:    ['w06','w10','w14','w18'],
+    fit:   ['f1','f2','f3','f4']
   };
-  var DEF = { shape:'tint', r:'r999', fs:'f95', arrow:'chev', txt:'t1', mob:'on', pad:'p3', aw:'w06' };
+  var DEF = { shape:'tint', r:'r999', fs:'f95', arrow:'chev', txt:'t1', mob:'on', pad:'p3', aw:'w06', fit:'f1' };
   var RVAL = { r85:'8.5px', r12:'12px', r999:'999px' };
   var FVAL = { f78:'.78rem', f85:'.85rem', f95:'.95rem' };
   /* 四格的上下內距是從「塊高÷字級」回推的（行高 1.6em）：pv = (目標 − 1.6) / 2。
@@ -8737,10 +8799,20 @@ html[data-qopen="1"] .head-search {
         (worstC.r >= 4.5 ? '<span class="pv-ok">✓ 七科都過 4.5</span>'
                          : '<span class="pv-no">⚠ 低於站上的 4.5</span>'));
 
-      /* ② 最緊的那一張：日期那一列擠不擠 */
+      /* ② 最緊的那一張：日期那一列擠不擠。
+         ⚠ 兩欄那一段（721~1040）是全站最緊的，744（iPad mini）與 721 一定裝不下 ——
+           面板要順便說「幾張卡折了」，不然一張折了和十一張全折看起來一樣。 */
+      var band = window.innerWidth >= 721 && window.innerWidth <= 1040 ? '兩欄那一段' : '';
+      var nWrap = 0;
+      cards.forEach(function (c) {
+        var m = c.querySelector('.pv-more'), v = c.querySelector('.views');
+        if (getComputedStyle(m).display === 'none') return;
+        if (m.getBoundingClientRect().top >= v.getBoundingClientRect().bottom) nWrap++;
+      });
       if (worstF.wrapped) {
-        out.push('日期那一列（<b>' + worstF.name + '</b>）　<span class="pv-no">⚠ 已經折成兩行</span>' +
-          '，那一列高 ' + px(worstF.rowH));
+        out.push('日期那一列' + (band ? '（' + band + '）' : '') + '　<span class="pv-no">⚠ ' +
+          nWrap + ' / ' + cards.length + ' 張折成兩行</span>　最緊的 <b>' + worstF.name +
+          '</b> 差 ' + px(-worstF.free) + 'px');
       } else {
         out.push('日期那一列（最緊的 <b>' + worstF.name + '</b>）　<span class="pv-ok">✓ 一行收得下</span>' +
           '　還剩 <b>' + px(worstF.free) + 'px</b>（≈ 再 ' + Math.floor(worstF.free / Math.max(1, worstF.digit)) + ' 位數）');
