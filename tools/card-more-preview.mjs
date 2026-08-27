@@ -147,11 +147,12 @@ h = h.replace("<head>", "<head>\n" + `
        螢幕閱讀器不會多念一句「閱讀更多」（那句話本來就沒有資訊），
        觸控目標也不必另外撐到 44px —— 可按的一直是整張卡。
 
-     ---- 這一頁要決定的（切換條上六條尺）--------------------------------
+     ---- 這一頁要決定的（切換條上七條尺）--------------------------------
 
        樣式　　無（現況）／ 只有字＋角形 ／ 淡色塊（原案）／ 填滿套色
        圓角　　8.5px（同標籤）／ 12px（同卡）／ 999px（原案）
        字級　　.78rem（同日期那一列）／ .85rem（同摘要）／ .95rem（原案）
+       胖瘦　　1.85 ／ 2.15 ／ 2.36 ／ 2.88（原案）　＝ 塊高是字級的幾倍
        ── 細調 ──
        箭頭　　角形（站上語彙）／ →／ 無
        文字　　閱讀更多 ／ 繼續讀 ／ 看這篇
@@ -163,6 +164,27 @@ h = h.replace("<head>", "<head>\n" + `
 
      ⚠ 瀏覽數是**示範值**（正式站是 D1 的真值）。這一頁要量的正是
        日期那一列擠不擠，印一條「—」的話餘量會量得太寬鬆。
+
+     ---- 第二輪（2026-08-27，使用者：「那個閱讀更多的標籤好胖」）----------
+
+     量出來成立，而且兩軸都超出站上那一族 —— 390 上、他當時選的 .78rem：
+
+       　　　　　　　　　塊高÷字級　左右內距÷字級
+       提案這顆　　　　　　2.88　　　　1.36
+       主題與科別 chip　　 2.36　　　　0.89   ← 站上最鬆的那一顆
+       門診表標記　　　　　2.41　　　　0.80
+       文章卡標籤　　　　　1.90　　　　0.63
+       專科藥丸　　　　　　1.84　　　　0.75
+       醫師卡灰標籤　　　　1.80　　　　0.41
+
+     ⚠⚠ 成因是原案的 padding 寫死 px（8px 17px）——**字愈小它愈胖**：
+       .95rem 上塊高÷字級是 2.65，收到 .78rem 反而變成 2.88。
+       他先挑了比較小的字，於是把這個問題放大了，兩件事看起來像一件。
+       改法：內距一律 em（--pv-pv／--pv-ph），塊高÷字級 ＝ 1.6 + 2 × --pv-pv。
+
+     ⚠ 四格的值不是憑感覺配的，左右那一欄直接取站上同一族的實測比值。
+       面板現在直接印「在不在站上那一族裡（1.80~2.41）」，不要只印塊高幾 px ——
+       塊高 36px 這個數字本身說不出胖不胖。
 
      定案之後：把選中的那一組寫進 index.html 的樣式表 ＋ tools/build.mjs
      的卡片模板（多一個 span），這一頁刪掉、推導搬進 history/。
@@ -177,13 +199,17 @@ const STYLE = `
 /* ====== 提案的那顆（pv- 前綴，定案時只有這一段會搬回 index.html）====== */
 .pv-more{
   display: none;                       /* 樣式＝無（現況）時就是這一格 */
-  align-items: center; gap: 7px;
+  align-items: center; gap: .5em;
   margin-left: auto;                   /* ＝ 原案的 justify-content: space-between */
   white-space: nowrap; flex: none;
   font-weight: 700;
   font-size: var(--pv-fs, .95rem);
   line-height: 1.6;
-  padding: 8px 17px;
+  /* ⚠⚠ 內距一定要跟著字級走（em），不可以寫死 px —— 原案是 padding: 8px 17px，
+     字級從 .95 收到 .78 的時候內距沒跟著收，塊高÷字級反而從 2.65 胖到 2.88。
+     同 CLAUDE.md 第九節那條「標記內距是 calc((34px − 1.6em − 2px)/2)，不要寫死 px」。
+     行高是 1.6em，所以 塊高÷字級 = 1.6 + 2 × --pv-pv。 */
+  padding: var(--pv-pv, .64em) var(--pv-ph, 1.36em);
   border-radius: var(--pv-r, 999px);
   color: var(--accent-deep);
   background: color-mix(in srgb, var(--accent) 9%, var(--card));
@@ -306,6 +332,12 @@ const BAR = `
     <button data-v="f85">.85</button>
     <button data-v="f95">.95</button></span></div>
 
+  <div class="pv-row"><i>胖瘦</i><span style="opacity:.5;font-size:10px">塊高÷字</span><span class="pv-btns" data-k="pad">
+    <button data-v="p0">1.85</button>
+    <button data-v="p1">2.15</button>
+    <button data-v="p2">2.36</button>
+    <button data-v="p3">2.88</button></span></div>
+
   <div class="pv-fold" id="pvFold" hidden>
     <div class="pv-row"><i>箭頭</i><span class="pv-btns" data-k="arrow">
       <button data-v="chev">角形</button>
@@ -333,11 +365,20 @@ const BAR = `
     fs:    ['f78','f85','f95'],
     arrow: ['chev','arw','no'],
     txt:   ['t1','t2','t3'],
-    mob:   ['on','off']
+    mob:   ['on','off'],
+    pad:   ['p0','p1','p2','p3']
   };
-  var DEF = { shape:'tint', r:'r999', fs:'f95', arrow:'chev', txt:'t1', mob:'on' };
+  var DEF = { shape:'tint', r:'r999', fs:'f95', arrow:'chev', txt:'t1', mob:'on', pad:'p3' };
   var RVAL = { r85:'8.5px', r12:'12px', r999:'999px' };
   var FVAL = { f78:'.78rem', f85:'.85rem', f95:'.95rem' };
+  /* 四格的上下內距是從「塊高÷字級」回推的（行高 1.6em）：pv = (目標 − 1.6) / 2。
+     左右那一欄直接取站上同一族的實測比值，不是憑感覺配的：
+       1.85 ／ .63em  ＝ 文章卡標籤（1.90）與專科藥丸（1.84）那一族
+       2.15 ／ .75em  ＝ 兩族中間
+       2.36 ／ .89em  ＝ 主題與科別的 chip，站上最鬆的那一顆
+       2.88 ／ 1.36em ＝ 原案（padding: 8px 17px 在 .78rem 上換算回來的） */
+  var PVAL = { p0:['.125em','.63em'], p1:['.275em','.75em'], p2:['.38em','.89em'], p3:['.64em','1.36em'] };
+  var PLABEL = { p0:'≈ 文章卡標籤那一族', p1:'兩族中間', p2:'≈ 主題與科別的 chip', p3:'原案' };
 
   var qs = location.search;
   function fromUrl(k) {
@@ -351,6 +392,8 @@ const BAR = `
     Object.keys(state).forEach(function (k) { B.setAttribute('data-' + k, state[k]); });
     D.style.setProperty('--pv-r', RVAL[state.r]);
     D.style.setProperty('--pv-fs', FVAL[state.fs]);
+    D.style.setProperty('--pv-pv', PVAL[state.pad][0]);
+    D.style.setProperty('--pv-ph', PVAL[state.pad][1]);
     Array.prototype.forEach.call(document.querySelectorAll('.pv-btns'), function (g) {
       var k = g.getAttribute('data-k');
       Array.prototype.forEach.call(g.querySelectorAll('button'), function (b) {
@@ -465,8 +508,17 @@ const BAR = `
           '　還剩 <b>' + px(worstF.free) + 'px</b>（≈ 再 ' + Math.floor(worstF.free / Math.max(1, worstF.digit)) + ' 位數）');
       }
 
-      /* ③ 塊高。⚠ 這顆不是連結，44px 那條觸控下限不適用 —— 可按的一直是整張卡。 */
-      out.push('塊高 ' + px(more.getBoundingClientRect().height) + 'px　<span style="opacity:.7">' +
+      /* ③ 胖瘦。⚠ 判準是「塊高是字級的幾倍」不是「塊高幾 px」——
+         塊高 36px 這個數字本身說不出胖不胖，要和站上同一族的標記比才知道。
+         站上實測：文章卡標籤 1.90／專科藥丸 1.84／醫師卡灰標籤 1.80／
+         門診表 2.41／主題與科別 chip 2.36（最鬆的那一顆）。 */
+      var mh = more.getBoundingClientRect().height, fmm = parseFloat(mcs.fontSize);
+      var k = mh / fmm, kh = parseFloat(mcs.paddingLeft) / fmm;
+      out.push('胖瘦　塊高÷字級 <b>' + (Math.round(k * 100) / 100) + '</b>　左右÷字級 <b>' +
+        (Math.round(kh * 100) / 100) + '</b>　' +
+        (k > 2.41 ? '<span class="pv-no">⚠ 比站上最鬆的那顆還鬆</span>'
+                  : '<span class="pv-ok">✓ 在站上那一族裡（1.80~2.41）</span>'));
+      out.push('塊高 ' + px(mh) + 'px　<span style="opacity:.7">' +
         '（這顆是 span 不是連結，44px 觸控下限不適用 —— 可按的是整張卡）</span>');
 
       /* ④ 字級的順序有沒有反過來 */
