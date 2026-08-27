@@ -88,3 +88,29 @@
    而「約診紀錄查詢」會回「您尚未有任何預約」——代表有外部系統用 Webhook 接管了。
    要換卡就得從那個系統換，不是從 LINE 後台。
 2. 那個預約系統**能不能「約」，還是只能「查」**？（選單那一格現在叫「約診查詢」）
+
+---
+
+## flex-preview.mjs —— 預覽產生器
+
+```bash
+node drafts/line-oa/flex-preview.mjs      # → drafts/line-oa/preview.png
+```
+
+兩張卡並排（帶圖／無圖），畫在 LINE 聊天室的黑底上，mega bubble ＝ 300px，DPR 3。
+
+⚠⚠ **這是模擬，不是 LINE 自己的算繪結果。** 但它是**從那兩份 JSON 讀出來畫的**，
+不是另外用 CSS 重寫一份 —— 理由同 CLAUDE.md 第八節那條「提案頁要擺真的產出檔」：
+手寫一份對照版，哪天 JSON 改了這一頁就開始說謊。
+
+尺寸依 LINE Flex 的公開規格近似（bubble mega 300px／字級 xxs 11 ~ xxl 27／
+間距 xs 2 ~ xxl 20／按鈕高 sm 40）。
+⚠ **原生 `button` 的圓角由 LINE 決定**，這裡畫 6px 近似；
+我們自己用 `box` 做的那顆外框鈕，`cornerRadius: 8px` 是指定的，會照著畫。
+
+踩過兩件（都寫在那支檔頭）：
+・**playwright 是 CommonJS**，ESM 要整包 default import 再解構，具名匯入拿到 undefined。
+・**一定要用 `headless_shell`**，完整版 `chrome` 畫出來會比 `--window-size` 少 87px
+  而且不報錯（CLAUDE.md 第九節第 18 條）。
+・`white-space: nowrap` 的文字要給 `min-width: 0`，否則 flex 容器會被內容撐開，
+  兩張卡就不是同一個寬度了（第一版右邊那張比 300px 寬）。
