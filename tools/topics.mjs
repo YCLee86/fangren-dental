@@ -58,6 +58,17 @@ const SRC = path.join(ROOT, "index.html");
      不是他要做的決定，留著只是讓這一頁變長。 */
 import { TOPICS } from "./topic-copy.mjs";
 
+/* 診所那個節點和文章頁共用同一支產生器（2026-08-27）。
+   原本這裡手寫一個只有 name/url 兩個欄位的殼，結果七頁的 Dentist 節點
+   **沒有 sameAs、沒有電話、沒有地址** —— 首頁與十篇文章都有，只有著陸頁沒有。
+   ⚠ 這裡要的仍然是**精簡版**（營業時間、診療項目、九位醫師都留在首頁），
+     理由與文章頁完全相同，寫在 schema.mjs 的 publisherNode 上面那段註解裡。
+   ⚠ clinic.json 只出頁面上沒有的東西（sameAs、座標、國碼電話），
+     看診時間仍然一律讀 index.html 的 #clinic —— 不在這裡抄第二份。 */
+import { publisherNode } from "./schema.mjs";
+
+const CLINIC = JSON.parse(fs.readFileSync(path.join(ROOT, "clinic.json"), "utf8"));
+
 const SPECS = Object.keys(TOPICS);
 
 /* 正式站網址（sitemap、canonical、JSON-LD 都要）。和 build.mjs 讀同一份，
@@ -190,7 +201,7 @@ const seoBlock = (spec, t, canonical, cnt) => {
         ],
       },
       { "@type": "WebSite", "@id": `${SITE}/#website`, url: `${SITE}/`, name: "芳仁牙醫診所", inLanguage: "zh-Hant-TW" },
-      { "@type": "Dentist", "@id": `${SITE}/#dentist`, name: "芳仁牙醫診所", url: `${SITE}/` },
+      publisherNode(SITE, CLINIC),
     ],
   };
   return `<!-- SEO:START — 由 tools/topics.mjs 產生，請勿手動編輯 -->

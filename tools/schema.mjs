@@ -376,7 +376,7 @@ export function homeGraph({ site, clinic, facts, title, description, updatedToke
    營業時間、診療項目、九位醫師都留在首頁。理由是 2026 年 Google 收緊了資格判定 ——
    複合式搜尋結果只看「描述這一頁主要內容」的結構化資料，
    文章頁的主要內容是那篇文章，把診所的營業時間掛上去屬於離題的補充資料。 */
-function publisherNode(site, clinic) {
+export function publisherNode(site, clinic) {
   const abs = (p) => (/^https?:/.test(p) ? p : `${site}/${p.replace(/^\//, "")}`);
   const node = {
     "@type": "Dentist",
