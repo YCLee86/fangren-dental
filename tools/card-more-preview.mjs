@@ -67,7 +67,7 @@ h = h.replace(/<span class="views" data-views="([^"]*)" data-state="loading"><sp
    整張卡本身就是 <a>，裡面再放一個 <a> 是巢狀連結，HTML 不合法。 */
 const MORE = '<span class="pv-more" aria-hidden="true"><span class="pv-more-t"></span>'
   + '<svg class="pv-arrow" width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor"'
-  + ' stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>';
+  + ' stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>';
 
 let injected = 0;
 h = h.replace(/(<span class="views" data-views="[^"]*"[\s\S]*?<\/span>\n)(\s*)(<\/p>)/g,
@@ -153,6 +153,7 @@ h = h.replace("<head>", "<head>\n" + `
        圓角　　8.5px（同標籤）／ 12px（同卡）／ 999px（原案）
        字級　　.78rem（同日期那一列）／ .85rem（同摘要）／ .95rem（原案）
        胖瘦　　1.85 ／ 2.15 ／ 2.36 ／ 2.88（原案）　＝ 塊高是字級的幾倍
+       角形　　0.6（原案）／ 1.0 ／ 1.4 ／ 1.8　＝ 畫到畫面上的實際粗細（px）
        ── 細調 ──
        箭頭　　角形（站上語彙）／ →／ 無
        文字　　閱讀更多 ／ 繼續讀 ／ 看這篇
@@ -185,6 +186,26 @@ h = h.replace("<head>", "<head>\n" + `
      ⚠ 四格的值不是憑感覺配的，左右那一欄直接取站上同一族的實測比值。
        面板現在直接印「在不在站上那一族裡（1.80~2.41）」，不要只印塊高幾 px ——
        塊高 36px 這個數字本身說不出胖不胖。
+
+     ---- 第三輪（2026-08-27，使用者：「閱讀更多後面的角形 可以粗一點嗎」）----
+
+     ⚠⚠ 角形原本畫到畫面上只有 **0.56px** —— 站上「往下滑」與「回到最上面」
+       那兩顆角形是 1.4px，這裡只有四成。而 SVG 裡寫的數字是 1.4，逐字一樣。
+
+     成因：**stroke-width 是 viewBox 的使用者單位，會跟著圖一起縮。**
+     那兩顆站上的角形是固定 18×9、不縮放，所以寫 1.4 就是 1.4px；
+     這一顆是 inline 的、高度 .58em 跟著字級走，viewBox 高 18 個單位卻只畫
+     7.23px（.78rem 上），縮放比 0.402 —— 1.4 × 0.402 = 0.56px。
+
+       字級      角形高    縮放比    SVG 寫 3.5 → 畫面上
+       .78rem    7.23px    0.402     1.41px
+       .95rem    8.81px    0.490     1.71px
+
+     ⚠ 沒有用 vector-effect: non-scaling-stroke —— 那會讓粗細不跟著字級走，
+       字級一調，角形和旁邊那幾個字的關係就跑掉了。要的是等比例。
+     ⚠⚠ **切換條上那四格印的是畫面上的實際粗細，不是 SVG 裡寫的數字**
+       （在手機上差 2.5 倍，印錯的那個會騙人）。字級一改縮放比就變，
+       所以面板現場量一次再印，不照表念。
 
      定案之後：把選中的那一組寫進 index.html 的樣式表 ＋ tools/build.mjs
      的卡片模板（多一個 span），這一頁刪掉、推導搬進 history/。
@@ -224,7 +245,13 @@ const STYLE = `
 [data-txt="t2"] .pv-more-t::before{ content: "繼續讀"; }
 [data-txt="t3"] .pv-more-t::before{ content: "看這篇"; }
 
-.pv-arrow{ width: auto; height: .58em; flex: none; }
+/* ⚠⚠ SVG 的 stroke-width 是 **viewBox 的使用者單位**，會跟著圖一起縮。
+   這張的 viewBox 高 18 個單位、實際只畫 .58em，所以在 .78rem（12.48px）上
+   縮放比只有 7.24 ÷ 18 = 0.402 —— 照站上那兩顆角形寫 1.4，
+   畫到畫面上只剩 **0.56px**，四成不到。要多粗就要先除以那個縮放比。
+   ⚠ 不用 vector-effect: non-scaling-stroke —— 那會讓粗細不跟著字級走，
+     字級一調，角形和旁邊那幾個字的關係就跑掉了。 */
+.pv-arrow{ width: auto; height: .58em; flex: none; stroke-width: var(--pv-aw, 1.4); }
 [data-arrow="arw"] .pv-arrow,
 [data-arrow="no"]  .pv-arrow{ display: none; }
 [data-arrow="arw"] .pv-more::after{ content: "\\2192"; }
@@ -338,6 +365,12 @@ const BAR = `
     <button data-v="p2">2.36</button>
     <button data-v="p3">2.88</button></span></div>
 
+  <div class="pv-row"><i>角形</i><span style="opacity:.5;font-size:10px">粗細</span><span class="pv-btns" data-k="aw">
+    <button data-v="w06">0.6</button>
+    <button data-v="w10">1.0</button>
+    <button data-v="w14">1.4</button>
+    <button data-v="w18">1.8</button></span></div>
+
   <div class="pv-fold" id="pvFold" hidden>
     <div class="pv-row"><i>箭頭</i><span class="pv-btns" data-k="arrow">
       <button data-v="chev">角形</button>
@@ -366,9 +399,10 @@ const BAR = `
     arrow: ['chev','arw','no'],
     txt:   ['t1','t2','t3'],
     mob:   ['on','off'],
-    pad:   ['p0','p1','p2','p3']
+    pad:   ['p0','p1','p2','p3'],
+    aw:    ['w06','w10','w14','w18']
   };
-  var DEF = { shape:'tint', r:'r999', fs:'f95', arrow:'chev', txt:'t1', mob:'on', pad:'p3' };
+  var DEF = { shape:'tint', r:'r999', fs:'f95', arrow:'chev', txt:'t1', mob:'on', pad:'p3', aw:'w06' };
   var RVAL = { r85:'8.5px', r12:'12px', r999:'999px' };
   var FVAL = { f78:'.78rem', f85:'.85rem', f95:'.95rem' };
   /* 四格的上下內距是從「塊高÷字級」回推的（行高 1.6em）：pv = (目標 − 1.6) / 2。
@@ -378,6 +412,12 @@ const BAR = `
        2.36 ／ .89em  ＝ 主題與科別的 chip，站上最鬆的那一顆
        2.88 ／ 1.36em ＝ 原案（padding: 8px 17px 在 .78rem 上換算回來的） */
   var PVAL = { p0:['.125em','.63em'], p1:['.275em','.75em'], p2:['.38em','.89em'], p3:['.64em','1.36em'] };
+  /* 四格印的是**畫面上的實際粗細**（px），不是 SVG 裡寫的數字 ——
+     後者要再乘上縮放比，在手機上差 2.5 倍，印出來會騙人。
+     使用者單位 ＝ 目標 px ÷ 縮放比，縮放比在 .78rem 上是 0.402。
+     1.4px 那一格 ＝ 站上「往下滑」與「回到最上面」那兩顆角形的粗細。
+     ⚠ 字級一改縮放比就變，所以面板要現場量一次，不能照這張表念。 */
+  var AVAL = { w06:'1.4', w10:'2.5', w14:'3.5', w18:'4.5' };
   var PLABEL = { p0:'≈ 文章卡標籤那一族', p1:'兩族中間', p2:'≈ 主題與科別的 chip', p3:'原案' };
 
   var qs = location.search;
@@ -394,6 +434,7 @@ const BAR = `
     D.style.setProperty('--pv-fs', FVAL[state.fs]);
     D.style.setProperty('--pv-pv', PVAL[state.pad][0]);
     D.style.setProperty('--pv-ph', PVAL[state.pad][1]);
+    D.style.setProperty('--pv-aw', AVAL[state.aw]);
     Array.prototype.forEach.call(document.querySelectorAll('.pv-btns'), function (g) {
       var k = g.getAttribute('data-k');
       Array.prototype.forEach.call(g.querySelectorAll('button'), function (b) {
@@ -521,7 +562,21 @@ const BAR = `
       out.push('塊高 ' + px(mh) + 'px　<span style="opacity:.7">' +
         '（這顆是 span 不是連結，44px 觸控下限不適用 —— 可按的是整張卡）</span>');
 
-      /* ④ 字級的順序有沒有反過來 */
+      /* ④ 角形畫到畫面上到底多粗。⚠ 一定要現場量 —— SVG 裡寫的數字
+         要乘上縮放比才是畫面上的粗細，而縮放比跟著字級走。 */
+      var arw = more.querySelector('.pv-arrow');
+      if (arw && getComputedStyle(arw).display !== 'none') {
+        var ar = arw.getBoundingClientRect();
+        var vb = (arw.getAttribute('viewBox') || '0 0 9 18').split(/\\s+/);
+        var scale = ar.height / parseFloat(vb[3]);
+        var eff = parseFloat(getComputedStyle(arw).strokeWidth) * scale;
+        out.push('角形　畫面上 <b>' + (Math.round(eff * 100) / 100) + 'px</b>' +
+          '（SVG 裡寫 ' + AVAL[state.aw] + '，縮放比 ' + (Math.round(scale * 1000) / 1000) + '）　' +
+          (Math.abs(eff - 1.4) < 0.16 ? '<span class="pv-ok">≈ 站上那兩顆角形（1.4px）</span>'
+            : eff < 1.4 ? '比站上那兩顆細' : '比站上那兩顆粗'));
+      }
+
+      /* ⑤ 字級的順序有沒有反過來 */
       var fm = parseFloat(mcs.fontSize), fs = parseFloat(getComputedStyle(sum).fontSize),
           fd = parseFloat(getComputedStyle(dateRow).fontSize), fh = parseFloat(getComputedStyle(h3).fontSize);
       out.push('字級　這顆 <b>' + px(fm) + '</b>　摘要 ' + px(fs) + '　日期 ' + px(fd) + '　標題 ' + px(fh) +
