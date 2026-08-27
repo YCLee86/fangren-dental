@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>card-more-button｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>card-more-button — 文章卡的「繼續讀」</h1>
+<p class="meta">
+  2026-08-27 開、當天五輪定案上線<br>
+  原網址 <code>/preview/card-more-button/</code>（已刪除 2026-08-27）<br>
+  整頁還原：<code>git show b7e5db2:preview/card-more-button/index.html</code><br>
+  產生器：<code>git show b7e5db2:tools/card-more-preview.mjs</code><br>
+  切換條 <code>?shape=none|text|tint|fill&amp;r=r85|r12|r999&amp;fs=f78|f85|f95&amp;pad=p0|p1|p2|p3&amp;aw=w06|w10|w14|w18&amp;fit=f1|f2|f3|f4&amp;sep=s0|s1|s2|s3&amp;arrow=chev|arw|no&amp;txt=t1|t2|t3&amp;mob=on|off</code><br>
+  成品：<code>index.html</code> 的 <code>.card-more</code> 那一段 ＋ <code>tools/build.mjs</code> 的卡片模板
+</p>
+
+<div class="note">
+<p><b>起因</b>：使用者在一般對話裡做了一版文章卡的版面調整，把 CSS 貼過來要團隊確認：</p>
+<pre>.card .foot{ display:flex; align-items:center; justify-content:space-between;
+             gap:12px; margin-top:14px; }
+.card .date{ white-space:nowrap; }
+.card .more{ display:inline-flex; align-items:center; gap:7px;
+             white-space:nowrap; flex:none; text-decoration:none;
+             color:var(--c); font-weight:700; font-size:.95rem;
+             background:color-mix(in srgb, var(--c) 9%, #fff);
+             padding:8px 17px; border-radius:999px; }
+.card .more:hover{ background:color-mix(in srgb, var(--c) 15%, #fff); }
+.card .more .arrow{ transition:transform .18s ease; }
+.card .more:hover .arrow{ transform:translateX(4px); }</pre>
+<p><b>想法成立，但那段字面貼上去這一站有六處接不上，外加一件不是樣式、是 HTML 的事。</b></p>
+</div>
+
+<h2>六處接不上</h2>
+<pre>① .foot 這個名字站上已經被用掉了 —— index.html:2622 是頁尾：
+     .foot { background: var(--card); border-top: 1px solid var(--rule);
+             padding-block: 2.4rem 1.6rem; }
+   放進卡片裡會同時吃到這一條：日期上面多一條框線、上下多出 64px。
+   （同 hero-motion-mobile 那一輪：提案頁的 class 用了 .foot 撞到頁尾。）
+
+② .date 這個 class 站上不存在，日期那一列叫 .card-date，而且它本來就是
+   flex（align-items:center、flex-wrap:wrap、gap:.3rem），還靠 margin-top:auto
+   推到卡底、把同一列三張卡的日期對齊成一直線。再包一層 .foot 會蓋掉那個機制。
+   → 定案不新增容器：那顆直接放進 .card-date，靠 margin-left:auto 收右，
+     等於原案的 justify-content:space-between，而 markup 只多一個 span。
+
+③ var(--c) 站上不存在。科別色的兩階是 --accent（填實的塊）與 --accent-deep
+   （白底上的字），由每張卡自己的 data-spec 給。
+
+④ #fff 不是這一頁的底色。卡片是 --card #f4f4f5、頁面是 --paper #e2e5e6，
+   color-mix(… 9%, #fff) 在卡片上會是一塊「比卡片還白」的東西。
+   → color-mix(in srgb, var(--accent) 9%, var(--card))。沒有新增任何色值。
+
+⑤ border-radius: 999px 撞到已定案的形狀語彙（2026-08-15 使用者原話：
+   「圓圈跟網站主題不搭，主題是方框導圓」）。站上小標籤是一族 6~12px。
+   → 做成一條尺（8.5／12／999），使用者選 8.5。
+
+⑥ :hover 手機會黏住，而且定案表已經寫著「手機版的卡片只有靜止陰影，沒有 hover」。
+   → 整組關進 @media (hover: hover)，而且觸發的是 .card:hover 不是
+     .card-more:hover —— 這顆不能單獨點，游標在卡上任何地方都該讓它亮。</pre>
+
+<h2>⚠⚠ 這顆不能是連結</h2>
+<pre>文章卡本身就是 &lt;a class="card" href="posts/…"&gt;（整張卡可點）。
+在它裡面再放一個 &lt;a class="more"&gt; 是巢狀連結，HTML 不合法 ——
+瀏覽器會在解析時把內層拆到外面，DOM 被重寫成兩塊，版面直接壞掉。
+
+而且就算改成「卡是 div、標題是連結」那種結構，這顆指的仍然是同一個網址，
+等於同一張卡有兩個指向同一頁的連結，錨點文字還從標題退成「繼續讀」——
+對搜尋是往下走的。
+
+→ 定案做成 &lt;span aria-hidden="true"&gt;：純視覺提示，整張卡照舊是那個連結。
+  順帶解掉兩件：44px 觸控下限不必管（可按的一直是整張卡）、
+  螢幕閱讀器不會多念一句沒有資訊的話。
+
+⚠⚠ 那三個字要用 CSS 的 content 產生，不要寫成文字節點 ——
+  首頁那支篩選讀的是整張卡的 textContent（index.html 那支 IIFE），
+  寫成真文字的話，搜「繼續」或「讀」會命中每一張卡。
+  上線後實測：搜「繼續」「讀」「繼續讀」都是 0 張，搜「矯正」正常回 2 張。</pre>
+
+<h2>第二輪：「那個閱讀更多的標籤好胖」</h2>
+<pre>量出來成立，而且兩軸都超出站上那一族（390、當時選的 .78rem）：
+
+                     塊高÷字級   左右內距÷字級
+  提案這顆              2.88         1.36
+  主題與科別 chip       2.36         0.89   ← 站上最鬆的那一顆
+  門診表標記            2.41         0.80
+  文章卡標籤            1.90         0.63
+  專科藥丸              1.84         0.75
+  醫師卡灰標籤          1.80         0.41
+
+⚠⚠ 成因是原案的 padding 寫死 px（8px 17px）——**字愈小它愈胖**：
+  .95rem 上塊高÷字級是 2.65，收到 .78rem 反而變成 2.88。
+  他先挑了比較小的字，於是把這個問題放大了，兩件事看起來像一件。
+  同 CLAUDE.md 第九節那條「標記內距要 calc 回推，不要寫死 px」。
+
+改法：內距一律 em，塊高÷字級 ＝ 1.6 + 2 × 上下內距（行高 1.6em）。
+四格 1.85／2.15／2.36／2.88，左右那一欄直接取站上同一族的實測比值。
+定案 1.85 ／ .63em ＝ 文章卡標籤那一族。
+
+⚠ 面板要印「在不在站上那一族裡（1.80~2.41）」，不要只印塊高幾 px ——
+  塊高 36px 這個數字本身說不出胖不胖，要和同一族比才知道。
+⚠ 最瘦那一格在 390 上卡片高對現況 ±0px：那顆完全塞進日期那一列原本的高度裡。</pre>
+
+<h2>第三輪：「後面的角形可以粗一點嗎」</h2>
+<pre>⚠⚠ 它畫到畫面上只有 0.56px —— 站上「往下滑」與「回到最上面」那兩顆角形
+  是 1.4px，這裡只有四成。而 SVG 裡寫的數字是 1.4，和站上逐字一樣。
+
+成因：stroke-width 是 viewBox 的使用者單位，會跟著圖一起縮。
+站上那兩顆是固定 18×9、不縮放，寫 1.4 就是 1.4px；這一顆是 inline 的、
+高度 .58em 跟著字級走，viewBox 高 18 個單位卻只畫 7.23px（.78rem 上），
+縮放比 0.402 —— 1.4 × 0.402 = 0.56px。
+
+  字級      角形高    縮放比    SVG 寫 3.5 → 畫面上
+  .78rem    7.23px    0.402     1.41px
+  .95rem    8.81px    0.490     1.71px
+
+⚠⚠ 切換條那四格印的是**畫面上的實際粗細**，不是 SVG 裡寫的數字
+  （在手機上差 2.5 倍，印錯的那個會騙人）。字級一改縮放比就變，
+  所以面板現場量一次再印，不照表念。定案 1.4（SVG 裡寫 3.5）。
+⚠ 沒有用 vector-effect: non-scaling-stroke —— 那會讓粗細不跟著字級走，
+  字級一調，角形和旁邊那幾個字的關係就跑掉了。</pre>
+
+<h2>第四輪：iPad 上被斷行</h2>
+<pre>⚠ 先確認是哪一台：從使用者截圖的長寬比 0.657 反推是 iPad mini 744×1133。
+  1024 上量過完全不會斷（餘 108px），照那個視窗查會查不到東西。
+  744 是站上一路以來最緊的那一格。
+
+兩欄那一段（721~1040）掃過一遍，他當時那一組（淡塊/8.5/.85/1.85/1.0）：
+
+  視窗寬   折行張數   差多少
+  721      11 / 11    −36.3px
+  744      11 / 11    −24.8px   ← 他這台
+  768       9 / 11    −12.8px
+  800       3 / 11     +3.0px
+  834 以上  0 / 11    收得下
+
+⚠⚠ 沒有任何一條尺單獨救得回來：字級 .85→.78 只買 6.8px、箭頭拿掉 12.8、
+  文字換「繼續讀」16.2、樣式換「只有字」20.4。要湊兩條才夠。
+
+加了第六條尺「放不下的時候」四格：掉下一行（現況）／掉下一行＋拉開／不放／
+收成只有字。定案「掉下一行」。
+⚠⚠ 「掉下一行＋拉開」用 row-gap 不用 margin-top —— row-gap 只作用在
+  行與行之間，所以只在真的折行時才有效果，同一行時一個像素都不會動。
+⚠⚠ 那一列的選擇器要寫 .pv-bar .pv-row-fit（0,2,0），不能只寫 .pv-row-fit ——
+  它和 .pv-row 那條 display:flex 同權重，而那一條排在後面就贏了。
+  症狀是「規則寫了但整列還在」，390 上量到切換條 27.1%（超過那條 24%）。</pre>
+
+<h2>第五輪：「日期跟瀏覽次數中間間隔還大的，這邊空空看起來怪怪的」</h2>
+<pre>他指的那一段量出來是這樣：
+
+          744    390    1440
+  日期    93.9   77.2   82.7
+  間距     5.7    4.8    5.4
+  那顆點  16.2   13.2   14.2     ← 全形字元，自己就佔 16px
+  間距     5.7    4.8    5.4
+  瀏覽    74.0   60.4   65.0
+  ─────────────────────────
+  那一段  27.6   22.8   25.0
+
+⚠⚠ 他指的方向是對的，而且光這一段就夠：744 上那一組差 18px，
+  而這一段佔 27.6px。第四輪一直在調按鈕本身（字級、文字、樣式），
+  真正的餘裕其實在旁邊那顆點上。
+  **通則：一列擠不下的時候，先把整列每一段都量一次再決定調哪一段** ——
+  不要只盯著新加的那一個。
+
+744 上四格（.78rem、淡塊、1.85、角形 1.0）：
+
+  格        折行     最緊餘量   那一段
+  現況      11/11    −18.0      27.6
+  收緊       9/11    −12.0      21.5
+  小點       9/11     −7.1      16.6
+  不放點     3/11      0.0       9.5
+
+定案「小點」（全形的 ・ 換成半形的 ·）。配「繼續讀」之後 744 全部收得下。
+⚠ 721 仍然最硬：只有「不放點 ＋ 繼續讀 ＋ 無箭頭」能完全清乾淨。
+⚠⚠ 這一列是站上現在就有的東西（有沒有那顆按鈕都一樣），所以動它等於
+  連帶改到已經上線的每一張卡 —— 面板因此會標「已經不是站上現在的樣子」。
+⚠ 那顆點在提案頁的 markup 裡改成全形／半形兩個都寫、用 CSS 切其中一個顯示 ——
+  不用 CSS 的 content 直接換一般元素的內容，那在各家支援不一致，
+  提案頁要在使用者的 Safari 上跑，不冒這個險。</pre>
+
+<h2>定案的九格</h2>
+<pre>  樣式      淡色塊（9% 的套色混進卡色）
+  圓角      8.5px
+  字級      .78rem
+  胖瘦      1.85（＝上下內距 .125em、左右 .63em）
+  角形      1.4px（SVG 裡寫 3.5）
+  放不下    掉下一行
+  日期・瀏覽 小點（半形 ·）
+  箭頭      角形（站上語彙，M1 1l7 8-7 8）
+  文字      繼續讀
+  手機      也放
+
+落選：無（現況）／只有字／填滿；12px／999px；.85／.95；2.15／2.36／2.88；
+0.6／1.0／1.8；掉下一行＋拉開／不放／收成只有字；現況／收緊／不放點；
+→／無；閱讀更多／看這篇；手機不放。</pre>
+
+<h2>已知取捨與已知行為</h2>
+<pre>⚠ 淡色塊配**兒童牙科**是 4.14，七科裡唯一低於站上那條 4.5 的
+  （贋復 10.86／根管 7.36／矯正 8.26／口外 5.33／牙周 4.91／一般 7.12）。
+  使用者看過數字之後選的，同兒牙填色白字 3.22、線稿 4.24 那幾筆。
+  **不要拿對比度來訂正它。**
+
+⚠ 圓角 8.5px 是定值，刻意沒有加進 index.html 最後那個乘 --type-scale 的圓角族 ——
+  提案頁上使用者點頭的就是 8.5（那一頁沒有乘）。代價是電腦版與 iPad 上
+  它比旁邊的 .card-tag 小 1.06／1.59px，看不出來。要改是另一件事。
+
+⚠ 721 那一格仍有 3 張卡會掉到下一行（靠右），那是定案選的「掉下一行」，
+  不是破圖。744 以上全部一行收得下。
+
+⚠ 延伸閱讀那三張卡（文章頁底部）**沒有這一顆**，也沒有那顆分隔點 ——
+  它們用的是另一套 rel-* class，只有日期、沒有瀏覽次數。這不是漏做。</pre>
+
+<h2>驗收</h2>
+<pre>十二個視窗（320／375／390／430／721／744／768／800／834／1041／1280／1440）：
+・水平捲動 0（含 320）
+・折行只有 721 那一格 3/11，其餘全部 0/11
+・塊高÷字級 每個視窗都是 1.85、角形畫到畫面上 1.41~1.67px
+・搜尋沒有被污染：「繼續」「讀」「繼續讀」各 0 張，「矯正」正常回 2 張
+・七科著陸頁跟上（node tools/topics.mjs 重跑過），那顆與半形的點都在
+
+⚠ 本機驗收時要先把瀏覽數補成真實值再量 —— 本機沒有 Worker，
+  .views 會被 data-state="error" 藏起來，那一列比正式站短，
+  拿它量「擠不擠」會太寬鬆；而且拿 .views 當折行判斷的基準會全部誤判
+  （藏起來的元素 rect 是 0,0,0,0，more.top &gt;= 0 永遠成立）。</pre>
+
+<footer>
+  <a href="/history/">← 改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>

@@ -2247,6 +2247,68 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .views[data-state="error"] { display: none; }
 .card-date:has(.views[data-state="error"]) .dot { display: none; }
 
+/* ---- 文章卡的「繼續讀」（2026-08-27 定案上線）------------------------------
+   起點是使用者在一般對話裡做的一版卡片版面調整（藥丸狀色塊 ＋ 箭頭）。
+   五輪定案，推導與每一輪的量測在 /history/card-more-button.html。
+
+   ⚠⚠ **這顆不是連結，是 <span aria-hidden>。** 文章卡本身就是 <a class="card">，
+     裡面再放一個 <a> 是巢狀連結，瀏覽器會在解析時把它拆到外面。而且它指的
+     是同一個網址，等於一張卡兩個連結、錨點文字還從標題退成「繼續讀」——
+     對搜尋是往下走的。做成純視覺提示之後：可按的一直是整張卡、
+     螢幕閱讀器不會多念一句沒有資訊的話、44px 觸控下限也不必另外處理。
+
+   ⚠⚠ **那幾個字用 CSS 的 content 產生，不要寫成文字節點。**
+     首頁那支篩選讀的是整張卡的 textContent（見本檔那支 IIFE），
+     寫成真文字的話，搜「繼續」或「讀」會命中每一張卡。
+
+   ⚠⚠ **內距一律 em，不可以寫死 px。** 原案是 padding: 8px 17px，字級一收
+     內距不跟著收，塊高÷字級反而從 2.65 胖到 2.88（站上那一族是 1.80~2.41）。
+     行高 1.6em，所以 塊高÷字級 = 1.6 + 2 × 上下內距。定案 1.85 ＝ .125em，
+     左右 .63em ＝ .card-tag 那一族的比值。
+
+   ⚠ 圓角 8.5px 是**定值，刻意沒有加進本檔最後那個乘 --type-scale 的圓角族** ——
+     使用者在提案頁上點頭的就是 8.5（那一頁沒有乘）。代價是電腦版與 iPad 上
+     它比旁邊的 .card-tag 小 1.06／1.59px，看不出來。要改是另一件事。
+
+   ⚠ hover 整組關在 (hover: hover) 裡：手機沒有游標，:hover 會黏住
+     （定案表：手機版的卡片只有靜止陰影，沒有 hover）。觸發的是 .card:hover
+     不是 .card-more:hover —— 這顆不能單獨點，游標在卡上任何地方都該讓它亮。
+
+   ⚠ 已知取捨：淡色塊配**兒童牙科**是 4.14，七科裡唯一低於站上那條 4.5 的
+     （贋復 10.86／根管 7.36／矯正 8.26／口外 5.33／牙周 4.91／一般 7.12）。
+     使用者看過數字之後選的，同兒牙填色白字 3.22、線稿 4.24 那幾筆。
+     **不要拿對比度來訂正它。**
+
+   ⚠ 兩欄那一段（721~1040）的日期那一列裝不下它，會掉到下一行靠右 ——
+     那是使用者選的「掉下一行」。744 上配「小點 ＋ 繼續讀」已經全部收得下，
+     721 上仍有 3 張會掉下去。**那是已知行為，不是破圖。**
+   ---------------------------------------------------------------------------- */
+.card-more {
+  display: inline-flex; align-items: center; gap: .5em;
+  margin-left: auto;                 /* ＝ 原案的 justify-content: space-between */
+  flex: none; white-space: nowrap;
+  font-size: .78rem; font-weight: 700; line-height: 1.6;
+  padding: .125em .63em;
+  border-radius: 8.5px;
+  color: var(--accent-deep);
+  background: color-mix(in srgb, var(--accent) 9%, var(--card));
+}
+.card-more-t::before { content: "繼續讀"; }
+/* ⚠⚠ SVG 的 stroke-width 是 viewBox 的使用者單位，會跟著圖一起縮。
+   站上「往下滑」與「回到最上面」那兩顆角形是固定 18×9、不縮放，寫 1.4 就是
+   1.4px；這一顆高度 .58em 跟著字級走，viewBox 高 18 個單位卻只畫 7.2px，
+   縮放比只有 0.40 —— 照抄 1.4 畫出來只剩 0.56px。3.5 才等於站上那 1.4px。 */
+.card-more svg { width: auto; height: .58em; flex: none; stroke-width: 3.5; }
+@media (hover: hover) {
+  .card-more svg { transition: transform .18s ease; }
+  .card:hover .card-more { background: color-mix(in srgb, var(--accent) 15%, var(--card)); }
+  .card:hover .card-more svg { transform: translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-more svg { transition: none; }
+  .card:hover .card-more svg { transform: none; }
+}
+
 /* ==========================================================================
    六個科別色（PALETTE.md／與手機版完全相同，一個值都沒有改）
    general 一般／perio 牙周・植牙／endo 顯微根管／ortho 齒顎矯正／
@@ -6053,8 +6115,9 @@ html[data-qopen="1"] .head-search {
           <p>真正把幾種牙冠分開的，是一件不太會出現在價目表上的事：它是一塊材料做出來的，還是兩層堆起來的。那個差別會長出兩個弱點，也決定了要讓出多少自己的齒質。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-27">2026/08/27</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="crown-materials" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>
@@ -6066,8 +6129,9 @@ html[data-qopen="1"] .head-search {
           <p>「都已經抽過神經了，牙齦怎麼又長膿包？」根管末端的分支往往比器械到得了的地方複雜。生物陶瓷在根管治療裡做三件事：封填的糊劑、活髓治療的修復材料、根管破孔的修補——這一篇聊聊它的密封與鹼性環境多做了什麼，以及什麼樣的牙齒用得上。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-21">2026/08/21</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="bioceramic" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>
@@ -6079,8 +6143,9 @@ html[data-qopen="1"] .head-search {
           <p>為了外觀走進來沒有什麼不好意思，但牙齒的位置一改變，跟著改變的還有清潔與咬合的長期條件。幾歲開始還來得及、金屬與隱形怎麼選、時間與費用怎麼看，以及第一次諮詢會做哪些事。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-20">2026/08/20</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="orthodontics" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>
@@ -6092,8 +6157,9 @@ html[data-qopen="1"] .head-search {
           <p>怕的通常是「拔」的那一下，但決定接下來一週好不好過的，是拔完留下的那個洞。血塊為什麼不能被破壞、膠原蛋白與骨粉各自補足什麼，以及門診手術的保險該問什麼。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-19">2026/08/19</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="wisdom-tooth" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>
@@ -6105,8 +6171,9 @@ html[data-qopen="1"] .head-search {
           <p>牙齒像一棵樹，牙周組織是托著它的那塊土壤。牙周治療分成三個層次：健保的基礎清創、自費水雷射能補上什麼，以及骨頭已經流失時的牙周再生手術。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-16">2026/08/16</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="perio-laser" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>
@@ -6118,8 +6185,9 @@ html[data-qopen="1"] .head-search {
           <p>牙弓不夠寬，恆牙就像在擠公車，沒位置站只能前後亂鑽。6 到 12 歲顎骨還沒定型，是引導牙弓向外擴張的黃金期。認識兒童隱適美與肌功能矯正，以及爸媽在家就能觀察的三個徵兆。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-08-02">2026/08/02</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="kids-arch-expansion" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>
@@ -6131,8 +6199,9 @@ html[data-qopen="1"] .head-search {
           <p>洗牙不會把牙齒洗薄，也不是美白。它清的是自己刷不掉的牙結石，順便讓醫師在問題還小的時候先看見它。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-07-08">2026/07/08</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="regular-checkup" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>
@@ -6144,8 +6213,9 @@ html[data-qopen="1"] .head-search {
           <p>缺一顆牙不只是缺一顆牙。旁邊的牙會倒、對面的牙會長長、齒槽骨會流失。三種重建方式各自的原理、代價與限制。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-06-02">2026/06/02</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="missing-tooth" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>
@@ -6157,8 +6227,9 @@ html[data-qopen="1"] .head-search {
           <p>「乳牙反正會換掉」是最常見也最昂貴的誤解。從第一顆牙長出來後的六個月談起，帶爸媽看懂塗氟、窩溝封填與健保給付。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-05-06">2026/05/06</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="kids-first-visit" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>
@@ -6170,8 +6241,9 @@ html[data-qopen="1"] .head-search {
           <p>健康的牙齦被牙刷碰到不會出血。流血代表牙齦正在發炎，而發炎和退火無關，是牙菌斑長期堆積的結果。認識牙齦炎與牙周炎那條關鍵的分界線。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-04-15">2026/04/15</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="gum-bleeding" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>
@@ -6183,8 +6255,9 @@ html[data-qopen="1"] .head-search {
           <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙，原地來回十次——這是把牙菌斑真正刷掉的方法。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-03-11">2026/03/11</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="bass-brushing" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>

@@ -470,6 +470,14 @@ const SPEC = {
   "顯微根管": "endo",
 };
 
+/* ⚠ 那顆分隔點 2026-08-27 從全形的「・」換成半形的「·」。
+   起因是使用者在 iPad 上：「日期跟瀏覽次數中間間隔還大的，這邊空空看起來怪怪的。」
+   全形字元自己就佔 16.2px（744 上），換成半形省下 11px 左右，
+   日期那一列因此塞得下右邊那顆「繼續讀」。
+   ⚠ 這一行同時餵首頁與七科著陸頁（著陸頁是 index.html 的快照）——
+     改完 index.html 記得跑 node tools/topics.mjs。
+   ⚠ 「繼續讀」那三個字**不寫在這裡**，由 .card-more-t::before 的 content 產生：
+     寫成文字節點的話，首頁那支篩選會讓「繼續」「讀」命中每一張卡。 */
 const card = (p) => {
   const spec = SPEC[p.tag];
   if (!spec) console.warn(`  ⚠ 標籤「${p.tag}」沒有對應的科別代碼，${p.slug} 不會被主題與科別篩到`);
@@ -481,8 +489,9 @@ const card = (p) => {
           <p>${esc(p.excerpt)}</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="${p.published}">${slashDate(p.published)}</time></span>
-            <span class="dot" aria-hidden="true">・</span>
+            <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="${esc(p.slug)}" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
       </a>`;
