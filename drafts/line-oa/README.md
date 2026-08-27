@@ -114,3 +114,47 @@ node drafts/line-oa/flex-preview.mjs      # → drafts/line-oa/preview.png
   而且不報錯（CLAUDE.md 第九節第 18 條）。
 ・`white-space: nowrap` 的文字要給 `min-width: 0`，否則 flex 容器會被內容撐開，
   兩張卡就不是同一個寬度了（第一版右邊那張比 300px 寬）。
+
+---
+
+## topics-carousel.mjs／.json —— 「診療項目」那一格
+
+```bash
+node drafts/line-oa/topics-carousel.mjs                       # → topics-carousel.json
+node drafts/line-oa/flex-preview.mjs topics-carousel.json     # → preview-topics-carousel.png
+```
+
+七科一格，橫著滑（LINE 的 carousel，上限 12 格／整包 50KB，這一份 9.6KB）。
+每一格：**著陸頁的分享圖 ＋ 那一科第一句病人的話 ＋ 該科的醫師與專長 ＋ 一顆該科顏色的按鈕**。
+
+### 每一格的內容都是讀出來的，這一份不抄第二份
+
+| 元素 | 來源 |
+| --- | --- |
+| 科別順序 | `index.html` 的 `.chips`（＝首頁那一排的順序） |
+| 科別名（按鈕的字） | `topic-copy.mjs` 的 `label`（＝站上 chip 上那幾個字） |
+| 按鈕的底色 | `index.html` 的 `[data-spec="x"] --accent`（＝按下 chip 填滿的那一階） |
+| 那一句 | `topic-copy.mjs` 的 `cases[0]`（兒牙在 `groups[0].cases[0]`） |
+| 醫師與專長 | `index.html` 的 `.doc`，配對規則和 `tools/topics.mjs` 第 7 步**逐字相同**（本科的醫師 ∪ 專長命中本科） |
+| 圖 | `assets/og-topic-<spec>.jpg` |
+
+文案一改、醫師一換、顏色一調，重跑就跟上。產生器有五道守門（chips 不是 7 科、
+醫師不是 9 位、取不到那一句、配不到醫師或專長、圖不存在）任何一項不成立就 throw。
+
+### 那一句為什麼取 `cases[0]`，不取 lead／stance／close
+
+⚠⚠ **`stance` 是「回應上面那三句處境」的，單獨抽出來會失去對象** ——
+牙周的「這三種我們都常遇到」抽到卡片上，沒有人知道是哪三種。
+`cases[0]` 自給自足，而且正是 COPY.md 第九之一節說的那件事：
+會來這一頁的人**不是想認識科別，是帶著一個具體的擔心來的**。
+
+### 已知取捨
+
+・**carousel 的每一格會被 LINE 拉齊成最高的那一格**，短的那幾格（顯微根管、口腔外科）
+  body 底下會空一塊。預覽照著畫了，不是預覽做壞。
+・**按鈕的白字對比**：一般 6.62／植牙 6.98／顯微根管 5.22／牙周 4.84／口外 4.82／
+  矯正 4.57 都過 AA；**兒童牙科 `#c28229` 是 3.22**，低於 4.5 ——
+  那是站上填色 chip 早就在用的同一顆（CLAUDE.md 定案表「兒牙填色上的白字」
+  2026-08-08 使用者看過實際樣子之後決定維持）。**不要拿對比度來訂正它。**
+・**科別名沒有寫在 body 裡**，因為分享圖的帶子上已經有了（同診所資訊卡那張的理由）。
+  按鈕的字才是它，順便讓沒載到圖的人也知道這是哪一科。

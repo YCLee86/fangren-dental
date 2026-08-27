@@ -1,0 +1,726 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-general.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "一般牙科・定期檢查",
+          "uri": "https://fangren.net/topics/general/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "「上一次看牙是什麼時候，想不太起來。」",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "李柄輝、李侑津、楊小瑩、謝耀慶",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "口腔檢查、一般牙科治療",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#3F654A",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "一般牙科・定期檢查",
+              "uri": "https://fangren.net/topics/general/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-perio.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "牙周治療",
+          "uri": "https://fangren.net/topics/perio/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "「刷牙偶爾出血，應該很正常吧。」",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "李柄輝、李侑津",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "牙周照護、牙周病治療、牙周再生手術、水雷射牙周治療",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#317D78",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "牙周治療",
+              "uri": "https://fangren.net/topics/perio/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-endo.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "顯微根管",
+          "uri": "https://fangren.net/topics/endo/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "「蛀得比想像中深，被說要抽神經。」",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "陳芷鈴",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "顯微根管、根尖手術、活髓治療",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#AE4F4D",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "顯微根管",
+              "uri": "https://fangren.net/topics/endo/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-kids.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "兒童牙科",
+          "uri": "https://fangren.net/topics/kids/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "「吃飯越來越慢、不愛吃，以為只是挑食。」",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "林晏妤、謝耀慶",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#C28229",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "兒童牙科",
+              "uri": "https://fangren.net/topics/kids/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-ortho.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "齒顎矯正",
+          "uri": "https://fangren.net/topics/ortho/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "「笑起來總想把嘴閉上，想弄很久了。」",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "王俊偉、廖立揚",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "齒顎矯正、隱適美、阻生齒矯正",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#4478B5",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "齒顎矯正",
+              "uri": "https://fangren.net/topics/ortho/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-prosth.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "植牙・假牙重建",
+          "uri": "https://fangren.net/topics/prosth/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "「缺了好幾年，只能用另一邊咬。」",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "李侑津、楊小瑩、陳芷鈴",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "植牙手術、固定假牙、活動假牙、牙橋、全口重建",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#335B8B",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "植牙・假牙重建",
+              "uri": "https://fangren.net/topics/prosth/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-surg.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "口腔外科",
+          "uri": "https://fangren.net/topics/surg/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "「智齒腫過一次，消了就沒再管。」",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "許馨文",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "阻生齒拔除、齒槽骨保留術",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#8E6299",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "口腔外科",
+              "uri": "https://fangren.net/topics/surg/"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
