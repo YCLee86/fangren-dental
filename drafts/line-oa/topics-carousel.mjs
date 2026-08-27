@@ -22,7 +22,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { TOPICS } from "../../tools/topic-copy.mjs";
-import { LINE_CASES } from "./topic-copy-line.mjs";
+import { LINE_TOPIC } from "./topic-copy-line.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "../..");
@@ -58,10 +58,11 @@ const bubbles = chips.map((spec) => {
      ⚠ 理由寫在那一份的檔頭：**讀者不同**。加 LINE 的人多半是到診所才加的，
        對自己的問題已經有基本認識，要的是「我這個狀況該點哪一格」，
        不是著陸頁那種「讓還沒有病識感的人覺得被看見」。 */
-  const lines = LINE_CASES[spec];
-  if (!Array.isArray(lines) || lines.length !== 3) {
-    throw new Error(`${spec} 在 topic-copy-line.mjs 裡不是三句`);
+  const lt = LINE_TOPIC[spec];
+  if (!lt?.open || !Array.isArray(lt.cases) || lt.cases.length !== 3) {
+    throw new Error(`${spec} 在 topic-copy-line.mjs 裡缺 open 或不是三句`);
   }
+  const lines = lt.cases;
 
   const keep = docs.filter((d) => d.spec === spec || d.skills.some(([s]) => s === spec));
   const names = keep.map((d) => d.name);
@@ -91,11 +92,16 @@ const bubbles = chips.map((spec) => {
       type: "box", layout: "vertical", backgroundColor: "#F4F4F5",
       paddingAll: "20px", paddingTop: "16px", spacing: "md",
       contents: [
-        { type: "text", text: "什麼狀況要找這一科", color: "#5C5F57", size: "xs" },
+        /* 開場是七科各自的一句（不是共用標題），所以它是這張卡最重的一行 */
+        { type: "text", text: plain(lt.open), color: "#2A2C27", size: "sm", weight: "bold", wrap: true },
         {
-          type: "box", layout: "vertical", spacing: "xs", margin: "sm",
+          type: "box", layout: "vertical", spacing: "xs", margin: "md",
           contents: lines.map((x) => ({
-            type: "text", text: plain(x), color: "#2A2C27", size: "sm", wrap: true,
+            type: "box", layout: "baseline", spacing: "xs",
+            contents: [
+              { type: "text", text: "・", color: "#5C5F57", size: "sm", flex: 0 },
+              { type: "text", text: plain(x), color: "#5C5F57", size: "sm", wrap: true },
+            ],
           })),
         },
         { type: "separator", color: "#CDD0D2", margin: "lg" },
@@ -124,7 +130,8 @@ const size = Buffer.byteLength(JSON.stringify(out));
 console.log(`${bubbles.length} 科　${size} bytes（LINE 上限：carousel 12 格、整包 50KB）`);
 for (const [i, spec] of chips.entries()) {
   const b = bubbles[i];
-  console.log(`  ${spec.padEnd(8)} ${accent[spec]}  ${b.body.contents[1].contents.map((x) => x.text).join(" ／ ")}`);
+  console.log(`  ${spec.padEnd(8)} ${accent[spec]}  ${b.body.contents[0].text}`);
+  console.log(`  ${" ".repeat(8)} ・${b.body.contents[1].contents.map((x) => x.contents[1].text).join("　・")}`);
   console.log(`  ${" ".repeat(8)} 醫師 ${b.body.contents[3].contents[1].text}`);
   console.log(`  ${" ".repeat(8)} 專長 ${b.body.contents[4].contents[1].text}`);
 }
