@@ -1086,11 +1086,27 @@
         "contents": [
           {
             "type": "text",
-            "text": "缺的、鬆的、補過的，可以一起看。",
+            "text": "不只一顆要處理時，順序比選哪一種更重要。",
             "color": "#2A2C27",
             "size": "sm",
             "weight": "bold",
             "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "缺牙不會痛，但旁邊的牙會慢慢倒過去、骨頭也會流失；拖得愈久，治療愈複雜。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "做假牙或植牙之前，牙周和蛀牙要先處理好。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
           },
           {
             "type": "box",
@@ -1134,6 +1150,27 @@
                   {
                     "type": "text",
                     "text": "假牙鬆了、不好咬",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "問過幾個地方，說法都不一樣",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
