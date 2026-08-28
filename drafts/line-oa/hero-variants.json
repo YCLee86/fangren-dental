@@ -1,0 +1,541 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-perio-heroa.jpg",
+        "size": "full",
+        "aspectRatio": "1076:562",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "Ⓐ 現況・無框　彩色 11.4%",
+          "uri": "https://fangren.net/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Ⓐ 現況・無框　彩色 11.4%",
+            "size": "xxs",
+            "color": "#8E8E8E",
+            "weight": "bold"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#317D78",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "嚴重牙周有救嗎",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "牙齒為什麼會搖、地基流失是怎麼回事；健保、水雷射、手術各能做到哪裡。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#317D78",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#317D78",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#317D78",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-perio-herob.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "Ⓑ 留外框　彩色 18.6%",
+          "uri": "https://fangren.net/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Ⓑ 留外框　彩色 18.6%",
+            "size": "xxs",
+            "color": "#8E8E8E",
+            "weight": "bold"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#317D78",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "嚴重牙周有救嗎",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "牙齒為什麼會搖、地基流失是怎麼回事；健保、水雷射、手術各能做到哪裡。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#317D78",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#317D78",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#317D78",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-perio-heroc.jpg",
+        "size": "full",
+        "aspectRatio": "1124:842",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "Ⓒ 留外框＋加高 4:3　15.6%",
+          "uri": "https://fangren.net/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Ⓒ 留外框＋加高 4:3　15.6%",
+            "size": "xxs",
+            "color": "#8E8E8E",
+            "weight": "bold"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#317D78",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "嚴重牙周有救嗎",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "牙齒為什麼會搖、地基流失是怎麼回事；健保、水雷射、手術各能做到哪裡。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#317D78",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#317D78",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#317D78",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-perio-herod.jpg",
+        "size": "full",
+        "aspectRatio": "1124:842",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "Ⓓ Ⓒ＋青綠換成牙周的套色",
+          "uri": "https://fangren.net/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Ⓓ Ⓒ＋青綠換成牙周的套色",
+            "size": "xxs",
+            "color": "#8E8E8E",
+            "weight": "bold"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#317D78",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "嚴重牙周有救嗎",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "牙齒為什麼會搖、地基流失是怎麼回事；健保、水雷射、手術各能做到哪裡。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#317D78",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#317D78",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#317D78",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

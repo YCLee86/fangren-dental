@@ -1,0 +1,541 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-wisdom-herob.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "Ⓑ 智齒・原本的青綠",
+          "uri": "https://fangren.net/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Ⓑ 智齒・原本的青綠",
+            "size": "xxs",
+            "color": "#8E8E8E",
+            "weight": "bold"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#8E6299",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "我的智齒該拔嗎",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "哪幾種智齒該處理、術前要看什麼、拔完那一週會怎麼過。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#8E6299",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#8E6299",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#8E6299",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-wisdom-herod.jpg",
+        "size": "full",
+        "aspectRatio": "1124:842",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "Ⓓ 智齒・換成口外的紫",
+          "uri": "https://fangren.net/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Ⓓ 智齒・換成口外的紫",
+            "size": "xxs",
+            "color": "#8E8E8E",
+            "weight": "bold"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#8E6299",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "我的智齒該拔嗎",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "哪幾種智齒該處理、術前要看什麼、拔完那一週會怎麼過。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#8E6299",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#8E6299",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#8E6299",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-xray-herob.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "Ⓑ 輻射・原本的青綠",
+          "uri": "https://fangren.net/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Ⓑ 輻射・原本的青綠",
+            "size": "xxs",
+            "color": "#8E8E8E",
+            "weight": "bold"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#AE4F4D",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "拍片的輻射有多少",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "根尖片、全口片、斷層掃描各是多少；拿搭一趟飛機和日常生活來對照。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#AE4F4D",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#AE4F4D",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#AE4F4D",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-xray-herod.jpg",
+        "size": "full",
+        "aspectRatio": "1124:842",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "Ⓓ 輻射・換成根管的紅",
+          "uri": "https://fangren.net/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Ⓓ 輻射・換成根管的紅",
+            "size": "xxs",
+            "color": "#8E8E8E",
+            "weight": "bold"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#AE4F4D",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "拍片的輻射有多少",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "根尖片、全口片、斷層掃描各是多少；拿搭一趟飛機和日常生活來對照。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#AE4F4D",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#AE4F4D",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#AE4F4D",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
