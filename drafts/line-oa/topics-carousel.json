@@ -487,11 +487,27 @@
         "contents": [
           {
             "type": "text",
-            "text": "這顆還留不留得住，看清楚才知道。",
+            "text": "牙齒留不留得住，關鍵在看不見的那一段。",
             "color": "#2A2C27",
             "size": "sm",
             "weight": "bold",
             "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "神經還沒壞死的，有機會蓋起來留住 —— 留著神經的牙齒，比抽掉的耐用。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "抽過神經又長膿包，多半是末端的細小分支沒清乾淨 —— 重做或從牙根尖處理，還有機會。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
           },
           {
             "type": "box",
@@ -534,7 +550,28 @@
                   },
                   {
                     "type": "text",
-                    "text": "抽過神經的牙又腫起來",
+                    "text": "抽過神經的牙又腫，或長膿包",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "被說留不住，想再確認一次",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
