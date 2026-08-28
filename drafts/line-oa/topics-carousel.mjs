@@ -59,8 +59,8 @@ const bubbles = chips.map((spec) => {
        對自己的問題已經有基本認識，要的是「我這個狀況該點哪一格」，
        不是著陸頁那種「讓還沒有病識感的人覺得被看見」。 */
   const lt = LINE_TOPIC[spec];
-  if (!lt?.open || !Array.isArray(lt.cases) || lt.cases.length !== 3) {
-    throw new Error(`${spec} 在 topic-copy-line.mjs 裡缺 open 或不是三句`);
+  if (!lt?.open || !Array.isArray(lt.cases) || lt.cases.length < 3 || lt.cases.length > 4) {
+    throw new Error(`${spec} 在 topic-copy-line.mjs 裡缺 open，或 cases 不是三到四句`);
   }
   const lines = lt.cases;
 
@@ -94,6 +94,12 @@ const bubbles = chips.map((spec) => {
       contents: [
         /* 開場是七科各自的一句（不是共用標題），所以它是這張卡最重的一行 */
         { type: "text", text: plain(lt.open), color: "#2A2C27", size: "sm", weight: "bold", wrap: true },
+        /* note ＝ 接在開場後面、不加粗的第二句。只有需要多講一件事的科別才有
+           （目前只有一般牙科：多久來一次是看風險）。它是同一個人繼續講話，
+           不是另一個欄位，所以不加標題、不加分隔線。 */
+        ...(lt.note
+          ? [{ type: "text", text: plain(lt.note), color: "#2A2C27", size: "sm", wrap: true, margin: "sm" }]
+          : []),
         {
           type: "box", layout: "vertical", spacing: "xs", margin: "md",
           contents: lines.map((x) => ({
@@ -130,8 +136,14 @@ const size = Buffer.byteLength(JSON.stringify(out));
 console.log(`${bubbles.length} 科　${size} bytes（LINE 上限：carousel 12 格、整包 50KB）`);
 for (const [i, spec] of chips.entries()) {
   const b = bubbles[i];
-  console.log(`  ${spec.padEnd(8)} ${accent[spec]}  ${b.body.contents[0].text}`);
-  console.log(`  ${" ".repeat(8)} ・${b.body.contents[1].contents.map((x) => x.contents[1].text).join("　・")}`);
-  console.log(`  ${" ".repeat(8)} 醫師 ${b.body.contents[3].contents[1].text}`);
-  console.log(`  ${" ".repeat(8)} 專長 ${b.body.contents[4].contents[1].text}`);
+  const bc = b.body.contents;
+  const bullets = bc.find((x) => x.layout === "vertical" && x.contents?.[0]?.layout === "baseline");
+  console.log(`  ${spec.padEnd(8)} ${accent[spec]}  ${bc[0].text}`);
+  if (LINE_TOPIC[spec].note) console.log(`  ${" ".repeat(8)} ${bc[1].text}`);
+  console.log(`  ${" ".repeat(8)} ・${bullets.contents.map((x) => x.contents[1].text).join("　・")}`);
+  /* ⚠ 不要用寫死的索引印 —— note 這一行是選填的，有沒有它索引就會位移
+     （2026-08-27 加 note 那一輪踩過，JSON 是對的、只有這幾行 log 掛掉）。 */
+  for (const r of bc.filter((x) => x.layout === "baseline")) {
+    console.log(`  ${" ".repeat(8)} ${r.contents[0].text} ${r.contents[1].text}`);
+  }
 }

@@ -33,6 +33,14 @@
             "wrap": true
           },
           {
+            "type": "text",
+            "text": "多久洗一次是看風險 —— 有人半年，有人三個月，需要時再加上塗氟。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
             "type": "box",
             "layout": "vertical",
             "spacing": "xs",
@@ -95,6 +103,27 @@
                   {
                     "type": "text",
                     "text": "想帶家裡的人一起來看",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "刷得很認真，還是一直蛀牙或牙周發炎",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
