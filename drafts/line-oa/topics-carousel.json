@@ -699,11 +699,27 @@
         "contents": [
           {
             "type": "text",
-            "text": "孩子能配合多少，先試試看。",
+            "text": "乳牙撐到換牙，恆牙才排得進來。",
             "color": "#2A2C27",
             "size": "sm",
             "weight": "bold",
             "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "不喊痛不代表沒事 —— 吃得慢、不愛吃，多半要檢查才看得出來。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "能配合多少先試，真的不行才談舒眠。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
           },
           {
             "type": "box",
@@ -726,6 +742,27 @@
                   {
                     "type": "text",
                     "text": "小孩喊牙痛，或不肯吃東西",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "乳牙蛀了，不確定要不要處理",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
