@@ -308,6 +308,10 @@ assets/
   logo.png              給 Google 的 Organization logo（透明底、品牌真值 #3f654a）。
                         由 tools/logo-png.mjs 算出來，已進版控，勿手改。
                         ⚠ 站上任何一頁都不會顯示它，只出現在 JSON-LD 裡
+  line-pin.png          LINE 圖卡按鈕上的三顆小圖示（釘子／話筒／標誌）。
+  line-phone.png        由 tools/line-icons.mjs 從 index.html 讀路徑算出來，已進版控。
+  line-logo.png         ⚠ 站上任何一頁都不會顯示它們 —— LINE 的 Flex Message 只吃
+                        HTTPS 的 PNG，不吃 SVG，所以要各存一張。同 logo.png 那一種
 posts/<slug>/index.html 一篇文章一個資料夾
 topics/<spec>/index.html 科別著陸頁（七科，2026-08-21 上線）。**由 tools/topics.mjs
                         產生的 index.html 快照，不要手改** —— 文案改 tools/topic-copy.mjs、
@@ -353,6 +357,10 @@ tools/
   logo-png.mjs          從 index.html 頁首的標誌路徑產生 assets/logo.png
                         （給 Google 的 Organization logo，**站上不顯示**）。
                         只有改過頁首那條路徑或要換顏色時才要跑；--check 只比對
+  line-icons.mjs        產生 assets/line-{pin,phone,logo}.png（LINE 圖卡的按鈕圖示）。
+                        釘子與話筒讀頁尾那兩個 <svg>、標誌讀**頁首**那一條
+                        （＝logo.png 用的那一條）。--check 只比對。
+                        ⚠ 頁首／頁尾／icon.svg 的牙洞是三個不同的比例，見第九節第 19 條
   qr.mjs                QR code 產生器（純 JS、零依賴、吐 SVG 的 path，向量）。
                         ⚠ 驗收不能用眼睛 —— 格式資訊反過來的話畫面一模一樣但掃不出來。
                         驗證方式寫在它的檔頭（臨時裝 segno ＋ opencv 真的掃一次）
@@ -1973,10 +1981,15 @@ topics/<spec>/         ← 產出。**不要手改**，重跑就沒了
    **還沒查清楚，先記著**）。用真貝茲極值量三條路徑：
 
        index.html 頁首   外框長寬比 2.02926   牙洞寬 ÷ 外框寬 0.102514
+       index.html 頁尾   外框長寬比 2.02926   牙洞寬 ÷ 外框寬 0.117891  ← 大 15%
        assets/icon.svg   外框長寬比 2.02918   牙洞寬 ÷ 外框寬 0.093080  ← 小 9.2%
 
-   外框形狀兩者完全相同（小數五位都一樣），差的只有牙洞：`icon.svg` 那顆是頁首的
+   外框形狀三者完全相同（小數五位都一樣），差的只有牙洞：`icon.svg` 那顆是頁首的
    **×0.908**，不是註解寫的 ×1.18。
+   ⚠⚠ **2026-08-28 又量到第三個變體**：`index.html` 的**頁尾**那一顆是頁首的
+     **×1.150**（做 LINE 圖卡的按鈕圖示時量到的）。所以站上同一個標誌實際有
+     **三種牙洞**，外框則完全相同。**不要順手把三處統一** —— 這一筆和上面那筆
+     一樣還沒查清楚，統一等於在猜哪一個才是原始檔。
    ⚠ 可能的解釋是「×1.18 是相對於 AI 原始檔，而頁首那顆放得更大」，但沒有 AI 檔
      可以驗證。**在查清楚之前，不要依那句註解去改任何一個檔** ——
      兩顆圖示現在各自是對的（線上的 `icon-192.png` 完整、比例正確）。

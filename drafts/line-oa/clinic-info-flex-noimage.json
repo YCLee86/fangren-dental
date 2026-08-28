@@ -29,19 +29,48 @@
         "layout": "baseline",
         "spacing": "sm",
         "contents": [
-          { "type": "text", "text": "▍", "color": "#3F654A", "size": "lg", "flex": 0 },
-          { "type": "text", "text": "診所資訊", "color": "#2A2C27", "weight": "bold", "size": "lg" }
+          {
+            "type": "text",
+            "text": "▍",
+            "color": "#3F654A",
+            "size": "lg",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "診所資訊",
+            "color": "#2A2C27",
+            "weight": "bold",
+            "size": "lg"
+          }
         ]
       },
-      { "type": "separator", "color": "#CDD0D2", "margin": "md" },
+      {
+        "type": "separator",
+        "color": "#CDD0D2",
+        "margin": "md"
+      },
       {
         "type": "box",
         "layout": "baseline",
         "spacing": "sm",
         "margin": "lg",
         "contents": [
-          { "type": "text", "text": "電話", "color": "#5C5F57", "size": "sm", "flex": 2 },
-          { "type": "text", "text": "(05)5339-369", "color": "#2A2C27", "size": "sm", "flex": 5, "weight": "bold" }
+          {
+            "type": "text",
+            "text": "電話",
+            "color": "#5C5F57",
+            "size": "sm",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "(05)5339-369",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 5,
+            "weight": "bold"
+          }
         ]
       },
       {
@@ -49,8 +78,21 @@
         "layout": "baseline",
         "spacing": "sm",
         "contents": [
-          { "type": "text", "text": "地址", "color": "#5C5F57", "size": "sm", "flex": 2 },
-          { "type": "text", "text": "雲林縣斗六市永樂街70號", "color": "#2A2C27", "size": "sm", "flex": 5, "wrap": true }
+          {
+            "type": "text",
+            "text": "地址",
+            "color": "#5C5F57",
+            "size": "sm",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "雲林縣斗六市永樂街70號",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 5,
+            "wrap": true
+          }
         ]
       },
       {
@@ -58,8 +100,20 @@
         "layout": "baseline",
         "spacing": "sm",
         "contents": [
-          { "type": "text", "text": "門診", "color": "#5C5F57", "size": "sm", "flex": 2 },
-          { "type": "text", "text": "週一至週五", "color": "#2A2C27", "size": "sm", "flex": 5 }
+          {
+            "type": "text",
+            "text": "門診",
+            "color": "#5C5F57",
+            "size": "sm",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "週一至週五",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 5
+          }
         ]
       },
       {
@@ -73,24 +127,54 @@
             "type": "box",
             "layout": "baseline",
             "contents": [
-              { "type": "text", "text": "", "flex": 2 },
-              { "type": "text", "text": "早診　08:45 – 11:30", "color": "#2A2C27", "size": "sm", "flex": 5 }
+              {
+                "type": "text",
+                "text": "",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "早診　08:45 – 11:30",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 5
+              }
             ]
           },
           {
             "type": "box",
             "layout": "baseline",
             "contents": [
-              { "type": "text", "text": "", "flex": 2 },
-              { "type": "text", "text": "午診　13:45 – 16:30", "color": "#2A2C27", "size": "sm", "flex": 5 }
+              {
+                "type": "text",
+                "text": "",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "午診　13:45 – 16:30",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 5
+              }
             ]
           },
           {
             "type": "box",
             "layout": "baseline",
             "contents": [
-              { "type": "text", "text": "", "flex": 2 },
-              { "type": "text", "text": "晚診　17:45 – 20:00", "color": "#2A2C27", "size": "sm", "flex": 5 }
+              {
+                "type": "text",
+                "text": "",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "晚診　17:45 – 20:00",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 5
+              }
             ]
           }
         ]
@@ -101,8 +185,20 @@
         "spacing": "sm",
         "margin": "md",
         "contents": [
-          { "type": "text", "text": "休診", "color": "#5C5F57", "size": "sm", "flex": 2 },
-          { "type": "text", "text": "週六、週日", "color": "#2A2C27", "size": "sm", "flex": 5 }
+          {
+            "type": "text",
+            "text": "休診",
+            "color": "#5C5F57",
+            "size": "sm",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "週六、週日",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 5
+          }
         ]
       },
       {
@@ -129,22 +225,84 @@
         "spacing": "sm",
         "contents": [
           {
-            "type": "button",
-            "style": "primary",
-            "color": "#3F654A",
-            "height": "sm",
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#3F654A",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
             "action": {
               "type": "uri",
               "label": "地圖導航",
               "uri": "https://www.google.com/maps/search/?api=1&query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F"
-            }
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "image",
+                    "url": "https://fangren.net/assets/line-pin.png",
+                    "size": "12px",
+                    "aspectRatio": "96:128",
+                    "aspectMode": "fit",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "地圖導航",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "button",
-            "style": "primary",
-            "color": "#3F654A",
-            "height": "sm",
-            "action": { "type": "uri", "label": "致電診所", "uri": "tel:+88655339369" }
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#3F654A",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "致電診所",
+              "uri": "tel:+88655339369"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "image",
+                    "url": "https://fangren.net/assets/line-phone.png",
+                    "size": "13px",
+                    "aspectRatio": "104:104",
+                    "aspectMode": "fit",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "致電診所",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -155,15 +313,36 @@
         "borderWidth": "1px",
         "cornerRadius": "8px",
         "paddingAll": "10px",
-        "action": { "type": "uri", "label": "診所網站", "uri": "https://fangren.net/" },
+        "action": {
+          "type": "uri",
+          "label": "診所網站",
+          "uri": "https://fangren.net/"
+        },
         "contents": [
           {
-            "type": "text",
-            "text": "診所網站　fangren.net",
-            "color": "#2C5238",
-            "size": "sm",
-            "weight": "bold",
-            "align": "center"
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "image",
+                "url": "https://fangren.net/assets/line-logo.png",
+                "size": "27px",
+                "aspectRatio": "216:106",
+                "aspectMode": "fit",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "診所網站　fangren.net",
+                "color": "#2C5238",
+                "size": "sm",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
           }
         ]
       }

@@ -68,7 +68,10 @@ function render(n, dir = "vertical", first = false) {
   if (n.type === "image") {
     const [aw, ah] = (n.aspectRatio || "1:1").split(":").map(Number);
     const src = n.url.replace("https://fangren.net/", ROOT + "/");
-    return `<div style="width:100%;aspect-ratio:${aw}/${ah};overflow:hidden;${mg}">
+    /* size 給 px 就是固定寬（按鈕上那三顆小圖示），不給就是撐滿（hero）。 */
+    const w = px(n.size);
+    const box = w != null ? `width:${w}px;flex:0 0 ${w}px` : "width:100%";
+    return `<div style="${box};aspect-ratio:${aw}/${ah};overflow:hidden;${mg}">
       <img src="file://${src}" style="width:100%;height:100%;object-fit:${n.aspectMode === "fit" ? "contain" : "cover"};display:block"></div>`;
   }
 
@@ -89,11 +92,23 @@ function render(n, dir = "vertical", first = false) {
       "display:flex",
       `flex-direction:${horiz ? "row" : "column"}`,
       n.layout === "baseline" ? "align-items:baseline" : "",
+      /* justifyContent／alignItems 是 LINE 的欄位名，值和 CSS 一樣
+         （center／flex-start／flex-end／space-between…），直接照抄。
+         ⚠ alignItems 只在 horizontal／vertical 有意義，baseline 那一種
+           由上面那一行決定，不要被覆寫。 */
+      n.justifyContent ? `justify-content:${n.justifyContent}` : "",
+      n.alignItems && n.layout !== "baseline" ? `align-items:${n.alignItems}` : "",
+      px(n.height) != null ? `height:${px(n.height)}px` : "",
       gap ? `gap:${gap}px` : "",
       n.backgroundColor ? `background:${n.backgroundColor}` : "",
       n.borderColor ? `border:${px(n.borderWidth) || 1}px solid ${n.borderColor}` : "",
       n.cornerRadius ? `border-radius:${px(n.cornerRadius, SP)}px` : "",
-      n.flex === 0 ? "flex:0 0 auto" : (horiz ? "flex:1 1 0;min-width:0" : "flex:0 0 auto"),
+      /* ⚠⚠ 決定要不要撐開的是**父層**的方向，不是自己的 layout。
+         2026-08-28 踩過：綠色按鈕從 button 換成 vertical 的 box 之後，
+         這一行按自己的 layout 判斷，兩顆按鈕就縮成文字寬、不再各佔一半。 */
+      n.flex === 0 ? "flex:0 0 auto"
+        : (dir === "horizontal" || dir === "baseline") ? "flex:1 1 0;min-width:0"
+        : "flex:0 0 auto",
       "box-sizing:border-box;max-width:100%",
       ...pad(n),
       mg,
