@@ -111,7 +111,11 @@ const bubbles = chips.map((spec) => {
           })),
         },
         { type: "separator", color: "#CDD0D2", margin: "lg" },
-        { ...row("醫師", names.join("、")), margin: "md" },
+        /* rows ＝ 該科自己要多列的幾列（目前只有一般牙科：風險 → 做什麼）。
+           ⚠ 擺在「醫師／專長」的**上面**、同一個標籤欄寬，所以整塊讀起來是
+             一串對齊的欄位，不是又多一個區塊。 */
+        ...(lt.rows ?? []).map(([k, v], i) => ({ ...row(k, v), ...(i === 0 ? { margin: "md" } : {}) })),
+        { ...row("醫師", names.join("、")), margin: lt.rows ? "md" : "md" },
         row("專長", skills.join("、")),
       ],
     },
