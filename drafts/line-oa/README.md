@@ -1260,3 +1260,16 @@ drafts/line-oa/handouts/              三張紙本原圖 ＋ 三張 hero
 
 ⚠ Ⓑ 的對比度反而最高（6.09~8.09），而且**他挑的顏色一個值都不動**；
 代價是卡片上多一種按鈕長相（亮底深字，站上那一套都是深底白字）。
+
+#### 兩案的整頁模擬
+
+`health-carousel.mjs` 現在吃一個參數：
+
+```bash
+node drafts/line-oa/health-carousel.mjs      # 案 A（壓暗）      → health-carousel.json
+node drafts/line-oa/health-carousel.mjs b    # 案 B（原色＋深墨字）→ health-carousel-b.json
+node drafts/line-oa/health-carousel.mjs c    # 案 C（壓暗＋飽和滿）→ health-carousel-c.json
+```
+
+⚠ **三案只動「看大圖」那一顆**。外框鈕的字與 ▌ 一律用 `ink`（壓暗過的那一階）——
+原色壓在卡片底 `#F4F4F5` 上只有 1.9，當字根本看不見。

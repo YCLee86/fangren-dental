@@ -30,6 +30,41 @@ const SITE = JSON.parse(fs.readFileSync(path.join(ROOT, "site.json"), "utf8")).u
    這裡不抄第二份。理由與那三個成因寫在 handout-crop.mjs 的檔頭。 */
 const C = JSON.parse(fs.readFileSync(path.join(HERE, "handouts", "colors.json"), "utf8"));
 
+/* 按鈕底色三案（見 button-color.mjs 的檔頭與 README 第四輪）：
+     a 壓暗、飽和度不動、白字（第三輪的算法）
+     b **原色一個值都不動**、字改深墨
+     c 壓暗 ＋ 飽和度拉滿、白字
+   ⚠ 只影響**填色**那一顆；外框鈕的字與 ▌ 一律用 ink
+     （原色壓在卡片底 #F4F4F5 上只有 1.9，當字看不見）。 */
+const SCHEME = (process.argv[2] || "a").replace(/^--/, "");
+if (!"abc".includes(SCHEME) || SCHEME.length !== 1) throw new Error("scheme 只能是 a／b／c");
+const INK = "#2A2C27";
+const hx = (r, g, b) => "#" + [r, g, b].map((v) => Math.round(v).toString(16).padStart(2, "0")).join("").toUpperCase();
+function r2h(r, g, b) { r /= 255; g /= 255; b /= 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2;
+  if (mx === mn) return [0, 0, l];
+  const d = mx - mn, s = l > .5 ? d / (2 - mx - mn) : d / (mx + mn);
+  let h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return [h / 6, s, l]; }
+function h2r(h, s, l) { if (s === 0) { const v = l * 255; return [v, v, v]; }
+  const q = l < .5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+  const f = (t) => { t = (t + 1) % 1;
+    return t < 1 / 6 ? p + (q - p) * 6 * t : t < 1 / 2 ? q : t < 2 / 3 ? p + (q - p) * (2 / 3 - t) * 6 : p; };
+  return [f(h + 1 / 3), f(h), f(h - 1 / 3)].map((v) => v * 255); }
+const lm = (h) => { const c = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255)
+  .map((v) => v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4);
+  return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const RA = (a, b) => { const [x, y] = [lm(a), lm(b)].sort((m, n) => n - m); return (x + .05) / (y + .05); };
+const vivid = (frame) => {
+  const [h, , l] = r2h(...[1, 3, 5].map((i) => parseInt(frame.slice(i, i + 2), 16)));
+  for (let L = l; L >= 0; L -= .004) { const t = hx(...h2r(h, 1, L)); if (RA(t, "#FFFFFF") >= 4.5) return t; }
+  return hx(...h2r(h, 1, 0));
+};
+/* 填色鈕的底與字 */
+const solid = (v) => SCHEME === "b" ? [v.frame, INK]
+  : SCHEME === "c" ? [vivid(v.frame), "#FFFFFF"]
+  : [v.fill, "#FFFFFF"];
+
 const CARDS = [
   { img: "perio", title: "嚴重牙周有救嗎",
     lead: "牙齒為什麼會搖、地基流失是怎麼回事；健保、水雷射、手術各能做到哪裡。",
@@ -56,7 +91,7 @@ const CARDS = [
 
 /* 兩顆按鈕做成「可以點的 box」，不用原生 button —— 原生的放不進圖示，
    而且這一份要和 clinic-info-flex.json 那三顆長一樣（同一套外觀）。 */
-const btn = (label, uri, color, { outline = false } = {}) => ({
+const btn = (label, uri, color, { outline = false, fg = "#FFFFFF" } = {}) => ({
   type: "box", layout: "vertical",
   ...(outline
     ? { borderColor: color, borderWidth: "1px" }
@@ -65,14 +100,15 @@ const btn = (label, uri, color, { outline = false } = {}) => ({
   action: { type: "uri", label, uri },
   contents: [{
     type: "box", layout: "horizontal", justifyContent: "center", alignItems: "center", spacing: "md",
-    contents: [{ type: "text", text: label, color: outline ? color : "#FFFFFF",
+    contents: [{ type: "text", text: label, color: outline ? color : fg,
       size: "md", weight: "bold", flex: 0 }],
   }],
 });
 
 const bubbles = CARDS.map((c) => {
-  const { fill, ink, hero } = C[c.img];
-  const foot = [btn("看大圖", `${SITE}/assets/handout-${c.img}.jpg`, fill)];
+  const { ink, hero } = C[c.img];
+  const [bg, fg] = solid(C[c.img]);
+  const foot = [btn("看大圖", `${SITE}/assets/handout-${c.img}.jpg`, bg, { fg })];
   if (c.post) foot.push(btn("讀文章", SITE + c.post, ink, { outline: true }));
   return {
     type: "bubble", size: "mega",
@@ -125,12 +161,12 @@ bubbles.push({
   footer: {
     type: "box", layout: "vertical", backgroundColor: "#F4F4F5",
     paddingAll: "16px", paddingTop: "0px", spacing: "sm",
-    contents: [btn("到網站看看　fangren.net", `${SITE}/#topics`, GREEN, { outline: true })],
+      contents: [btn("到網站看看　fangren.net", `${SITE}/#topics`, GREEN, { outline: true })],
   },
 });
 
 const out = { type: "carousel", contents: bubbles };
-const file = path.join(HERE, "health-carousel.json");
+const file = path.join(HERE, `health-carousel${SCHEME === "a" ? "" : "-" + SCHEME}.json`);
 fs.writeFileSync(file, JSON.stringify(out, null, 2) + "\n");
-console.log(`${bubbles.length} 格　${Buffer.byteLength(JSON.stringify(out))} bytes（LINE 上限 12 格／50KB）`);
-for (const c of CARDS) console.log(`  ${c.img.padEnd(10)} 框 ${C[c.img].frame} 填 ${C[c.img].fill}  ${c.title.padEnd(11)}→ ${c.post ?? "⚠ 站上沒有對應文章"}`);
+console.log(`案 ${SCHEME.toUpperCase()}　${bubbles.length} 格　${Buffer.byteLength(JSON.stringify(out))} bytes（LINE 上限 12 格／50KB）`);
+for (const c of CARDS) console.log(`  ${c.img.padEnd(10)} 框 ${C[c.img].frame} 填 ${solid(C[c.img])[0]}  ${c.title.padEnd(11)}→ ${c.post ?? "⚠ 站上沒有對應文章"}`);
