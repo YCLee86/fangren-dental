@@ -1270,10 +1270,29 @@ node drafts/line-oa/health-carousel.mjs      # 案 A（壓暗）      → health
 node drafts/line-oa/health-carousel.mjs b    # 案 B（原色＋深墨字）→ health-carousel-b.json
 node drafts/line-oa/health-carousel.mjs c    # 案 C（壓暗＋飽和滿）→ health-carousel-c.json
 node drafts/line-oa/health-carousel.mjs d    # 案 D（原色＋白字）  → health-carousel-d.json
+node drafts/line-oa/health-carousel.mjs bd  # B／D 成對比較（每張兩格，兩欄並排）
 ```
+
+⚠ `bd` 是**比較用**：一張出兩格、body 多一行標記、不放收尾那一格，
+共 16 格（超過 LINE 的 12 格上限，本來就不是拿去上線的）。
+預覽器看到 `-bd.json` 會改排成兩欄，兩案才會左右並排在同一列。
 
 ⚠⚠ **案 D 五支全部過不了 AA**（白字對原色 1.74~2.32），是使用者指名要看的比較版本，
 **不要當成可以直接上線的預設**。黃綠那支 1.74 最糟，白字幾乎浮在色塊上。
 
 ⚠ **三案只動「看大圖」那一顆**。外框鈕的字與 ▌ 一律用 `ink`（壓暗過的那一階）——
 原色壓在卡片底 `#F4F4F5` 上只有 1.9，當字根本看不見。
+
+### 第八張：超大蛀牙生死線（2026-08-28）
+
+`handout-caries.jpg`，對到 `/posts/bioceramic/`（〈根管治療的生物陶瓷〉，
+那一篇提到「活髓」十次，正是這張中間那一列「活髓材料保神經」在講的東西）。
+
+⚠⚠ **這張的框是深橘紅 `#BE441B`，白字直接就是 5.21，過 AA。**
+所以它的 Ⓐ／Ⓑ／Ⓒ／Ⓓ **四案的填色鈕完全一樣**（`handout-crop.mjs` 的
+`darkenUntil` 一步都沒壓）。這件事本身就是證據：**「按鈕變灰」與「白字看不見」
+都只發生在框是淺色的那幾張**，不是做法有問題。
+
+八張的框：`#57BEAD`（牙周／智齒／輻射）、`#55BBA8`（預約協議）、
+`#A2D364`（掛號費用）、`#F4AC64`（假牙）、`#72BDFF`（美白）、
+**`#BE441B`（超大蛀牙，唯一的深色）**。

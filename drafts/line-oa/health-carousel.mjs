@@ -39,7 +39,9 @@ const C = JSON.parse(fs.readFileSync(path.join(HERE, "handouts", "colors.json"),
    ⚠ 只影響**填色**那一顆；外框鈕的字與 ▌ 一律用 ink
      （原色壓在卡片底 #F4F4F5 上只有 1.9，當字看不見）。 */
 const SCHEME = (process.argv[2] || "a").replace(/^--/, "");
-if (!"abcd".includes(SCHEME) || SCHEME.length !== 1) throw new Error("scheme 只能是 a／b／c／d");
+/* bd ＝ 比較用：每一張出兩格（B 一格、D 一格），body 最上面多一行標記。 */
+const PAIR = SCHEME === "bd";
+if (!PAIR && (!"abcd".includes(SCHEME) || SCHEME.length !== 1)) throw new Error("scheme 只能是 a／b／c／d／bd");
 const INK = "#2A2C27";
 const hx = (r, g, b) => "#" + [r, g, b].map((v) => Math.round(v).toString(16).padStart(2, "0")).join("").toUpperCase();
 function r2h(r, g, b) { r /= 255; g /= 255; b /= 255;
@@ -63,15 +65,18 @@ const vivid = (frame) => {
   return hx(...h2r(h, 1, 0));
 };
 /* 填色鈕的底與字 */
-const solid = (v) => SCHEME === "b" ? [v.frame, INK]
-  : SCHEME === "c" ? [vivid(v.frame), "#FFFFFF"]
-  : SCHEME === "d" ? [v.frame, "#FFFFFF"]
+const solid = (v, sc = SCHEME) => sc === "b" ? [v.frame, INK]
+  : sc === "c" ? [vivid(v.frame), "#FFFFFF"]
+  : sc === "d" ? [v.frame, "#FFFFFF"]
   : [v.fill, "#FFFFFF"];
 
 const CARDS = [
   { img: "perio", title: "嚴重牙周有救嗎",
     lead: "牙齒為什麼會搖、地基流失是怎麼回事；健保、水雷射、手術各能做到哪裡。",
     post: "/posts/perio-laser/" },
+  { img: "caries", title: "超大蛀牙生死線",
+    lead: "洞看起來不大、也不太痛，神經卻已經很近；清乾淨之後要填補、保神經，或做牙套。",
+    post: "/posts/bioceramic/" },
   { img: "wisdom", title: "我的智齒該拔嗎",
     lead: "哪幾種智齒該處理、術前要看什麼、拔完那一週會怎麼過。",
     post: "/posts/wisdom-tooth/" },
@@ -108,9 +113,9 @@ const btn = (label, uri, color, { outline = false, fg = "#FFFFFF" } = {}) => ({
   }],
 });
 
-const bubbles = CARDS.map((c) => {
+function make(c, sc, tag) {
   const { ink, hero } = C[c.img];
-  const [bg, fg] = solid(C[c.img]);
+  const [bg, fg] = solid(C[c.img], sc);
   const foot = [btn("看大圖", `${SITE}/assets/handout-${c.img}.jpg`, bg, { fg })];
   if (c.post) foot.push(btn("讀文章", SITE + c.post, ink, { outline: true }));
   return {
@@ -124,6 +129,7 @@ const bubbles = CARDS.map((c) => {
       type: "box", layout: "vertical", backgroundColor: "#F4F4F5",
       paddingAll: "16px", spacing: "md",
       contents: [
+        ...(tag ? [{ type: "text", text: tag, size: "xxs", color: "#8E8E8E", weight: "bold" }] : []),
         { type: "box", layout: "baseline", spacing: "sm", contents: [
           { type: "text", text: "▌", size: "md", color: ink, flex: 0 },
           { type: "text", text: c.title, size: "lg", weight: "bold", color: "#2A2C27", flex: 0 },
@@ -136,12 +142,18 @@ const bubbles = CARDS.map((c) => {
       paddingAll: "16px", paddingTop: "0px", spacing: "sm", contents: foot,
     },
   };
-});
+}
+
+const bubbles = PAIR
+  ? CARDS.flatMap((c) => [make(c, "b", "Ⓑ 原色＋深墨字"), make(c, "d", "Ⓓ 原色＋白字")])
+  : CARDS.map((c) => make(c, SCHEME));
 
 /* 收尾那一格：站上還有另外九篇 */
 const n = fs.readdirSync(path.join(ROOT, "posts")).filter((d) =>
   fs.existsSync(path.join(ROOT, "posts", d, "index.html"))).length;
-/* 收尾那一格不屬於任何一張紙本，用站上一般牙科的套色 */
+/* 收尾那一格不屬於任何一張紙本，用站上一般牙科的套色。
+   ⚠ 比較用的 bd 不要它 —— 那一格沒有紙本、兩案長得一樣，擺進去只是佔位置。 */
+if (!PAIR) {
 const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 const GREEN = html.match(/\[data-spec=["']general["'][^{]*\{[^}]*--accent:\s*(#[0-9a-fA-F]{6})/)[1].toUpperCase();
 bubbles.push({
@@ -167,6 +179,7 @@ bubbles.push({
       contents: [btn("到網站看看　fangren.net", `${SITE}/#topics`, GREEN, { outline: true })],
   },
 });
+}
 
 const out = { type: "carousel", contents: bubbles };
 const file = path.join(HERE, `health-carousel${SCHEME === "a" ? "" : "-" + SCHEME}.json`);

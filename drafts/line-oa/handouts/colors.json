@@ -5,6 +5,12 @@
     "ink": "#317B6D",
     "hero": "1060:554"
   },
+  "caries": {
+    "frame": "#BE441B",
+    "fill": "#BE441B",
+    "ink": "#BE441B",
+    "hero": "1124:588"
+  },
   "fees": {
     "frame": "#A2D364",
     "fill": "#588125",

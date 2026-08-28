@@ -161,7 +161,9 @@ if (!arg) {
   const doc = load(arg);
   if (doc.type === "carousel") {
     cards = doc.contents.map((b, i) => [`${i + 1}／${doc.contents.length}　${b.footer?.contents?.[0]?.action?.label ?? ""}`, b]);
-    cols = 4; dpr = 2; gap = 24;
+    /* 比較用的成對版本（bd）擺成兩欄，兩案就左右並排、同一列 */
+    cols = /-bd\.json$/.test(arg) ? 2 : 4;
+    dpr = 2; gap = 24;
   } else {
     cards = [["", doc]]; cols = 1; dpr = 3; gap = 28;
   }
