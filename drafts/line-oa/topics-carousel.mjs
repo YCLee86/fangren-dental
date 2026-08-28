@@ -97,9 +97,9 @@ const bubbles = chips.map((spec) => {
         /* note ＝ 接在開場後面、不加粗的第二句。只有需要多講一件事的科別才有
            （目前只有一般牙科：多久來一次是看風險）。它是同一個人繼續講話，
            不是另一個欄位，所以不加標題、不加分隔線。 */
-        ...(lt.note
-          ? [{ type: "text", text: plain(lt.note), color: "#2A2C27", size: "sm", wrap: true, margin: "sm" }]
-          : []),
+        ...[lt.note ?? []].flat().map((n) => ({
+          type: "text", text: plain(n), color: "#2A2C27", size: "sm", wrap: true, margin: "sm",
+        })),
         {
           type: "box", layout: "vertical", spacing: "xs", margin: "md",
           contents: lines.map((x) => ({
@@ -143,7 +143,7 @@ for (const [i, spec] of chips.entries()) {
   const bc = b.body.contents;
   const bullets = bc.find((x) => x.layout === "vertical" && x.contents?.[0]?.layout === "baseline");
   console.log(`  ${spec.padEnd(8)} ${accent[spec]}  ${bc[0].text}`);
-  if (LINE_TOPIC[spec].note) console.log(`  ${" ".repeat(8)} ${bc[1].text}`);
+  for (const n of [LINE_TOPIC[spec].note ?? []].flat()) console.log(`  ${" ".repeat(8)} ${n}`);
   console.log(`  ${" ".repeat(8)} ・${bullets.contents.map((x) => x.contents[1].text).join("　・")}`);
   /* ⚠ 不要用寫死的索引印 —— note 這一行是選填的，有沒有它索引就會位移
      （2026-08-27 加 note 那一輪踩過，JSON 是對的、只有這幾行 log 掛掉）。 */

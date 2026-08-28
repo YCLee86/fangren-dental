@@ -275,11 +275,19 @@
         "contents": [
           {
             "type": "text",
-            "text": "牙齦的狀況，檢查過才知道到第幾期。",
+            "text": "牙齒要咬得穩，地基就要顧好。",
             "color": "#2A2C27",
             "size": "sm",
             "weight": "bold",
             "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "咬起來痠軟、使不上力，或有點會搖 —— 多半是牙周出了問題，到第幾期要檢查過才知道。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
           },
           {
             "type": "text",
