@@ -136,8 +136,21 @@ const out = { type: "carousel", contents: bubbles };
 const file = path.join(HERE, "topics-carousel.json");
 fs.writeFileSync(file, JSON.stringify(out, null, 2) + "\n");
 
+/* 每一科另外存一份單張的 bubble（2026-08-28 使用者要的）。
+   ⚠ 這七份是**同一批 bubble 物件**，不是另外寫一份 —— 改文案只改
+   topic-copy-line.mjs、重跑這一支，carousel 與七份單張一定同步。
+   ⚠ 單張沒有 carousel 的齊高效果，所以它們的高度各不相同；
+     要看在 LINE 上真正的樣子（七格一樣高）看 topics-carousel.json 那張預覽。 */
+const dir = path.join(HERE, "topics");
+fs.mkdirSync(dir, { recursive: true });
+for (const [i, spec] of chips.entries()) {
+  fs.writeFileSync(path.join(dir, `topic-${spec}.json`),
+    JSON.stringify(bubbles[i], null, 2) + "\n");
+}
+
 const size = Buffer.byteLength(JSON.stringify(out));
 console.log(`${bubbles.length} 科　${size} bytes（LINE 上限：carousel 12 格、整包 50KB）`);
+console.log(`單張：${path.relative(ROOT, dir)}/topic-<spec>.json　${chips.length} 份`);
 for (const [i, spec] of chips.entries()) {
   const b = bubbles[i];
   const bc = b.body.contents;

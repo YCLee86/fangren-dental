@@ -188,8 +188,10 @@ await page.goto("file://" + outHtml);
 await page.waitForLoadState("networkidle");
 const box = await page.locator(".row").boundingBox();
 await page.setViewportSize({ width: Math.ceil(box.width), height: Math.ceil(box.height) });
+/* 圖存在 JSON 旁邊（給了子資料夾就存進那個子資料夾），
+   不給參數時仍然是 drafts/line-oa/preview.png。 */
 const name = arg ? "preview-" + path.basename(arg, ".json") + ".png" : "preview.png";
-const out = path.join(HERE, name);
+const out = path.join(HERE, arg ? path.dirname(arg) : ".", name);
 await page.screenshot({ path: out });
 await browser.close();
 fs.unlinkSync(outHtml);

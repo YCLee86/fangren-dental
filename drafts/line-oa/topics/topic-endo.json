@@ -1,0 +1,212 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/og-topic-endo.jpg",
+    "size": "full",
+    "aspectRatio": "1200:628",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "label": "顯微根管",
+      "uri": "https://fangren.net/topics/endo/"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "20px",
+    "paddingTop": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "text",
+        "text": "有些根管又細又彎，還會鈣化；X 光片上看不出來，得靠顯微鏡找。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "weight": "bold",
+        "wrap": true
+      },
+      {
+        "type": "text",
+        "text": "抽過神經又長膿包，多半是末端的細小分支沒清乾淨；重做或從牙根尖處理，還有機會。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "text",
+        "text": "蛀得很深、神經還沒受影響的，可以評估能不能保留神經。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "xs",
+        "margin": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "蛀得深，被說要抽神經",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "抽過神經的牙又腫，或長膿包",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "根管太彎、太細或分支多，被說不好處理",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "想把這顆牙留下來",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "separator",
+        "color": "#CDD0D2",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "醫師",
+            "color": "#5C5F57",
+            "size": "xs",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "陳芷鈴",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 7,
+            "wrap": true
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "專長",
+            "color": "#5C5F57",
+            "size": "xs",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "顯微根管、根尖手術、活髓治療",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 7,
+            "wrap": true
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#AE4F4D",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "顯微根管",
+          "uri": "https://fangren.net/topics/endo/"
+        }
+      }
+    ]
+  }
+}

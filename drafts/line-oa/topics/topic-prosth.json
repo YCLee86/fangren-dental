@@ -1,0 +1,212 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/og-topic-prosth.jpg",
+    "size": "full",
+    "aspectRatio": "1200:628",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "label": "植牙・假牙重建",
+      "uri": "https://fangren.net/topics/prosth/"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "20px",
+    "paddingTop": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "text",
+        "text": "不只一顆要處理時，順序比選哪一種更重要。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "weight": "bold",
+        "wrap": true
+      },
+      {
+        "type": "text",
+        "text": "缺牙不會痛，但周圍的牙會慢慢倒過去、骨頭也會流失；拖得愈久，治療愈複雜。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "text",
+        "text": "做假牙或植牙之前，牙周和蛀牙要先處理好。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "xs",
+        "margin": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "缺牙一段時間了",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "假牙鬆了、不好咬",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "問過幾個地方，說法都不一樣",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "想把整口一起整理",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "separator",
+        "color": "#CDD0D2",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "醫師",
+            "color": "#5C5F57",
+            "size": "xs",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "李侑津、楊小瑩、陳芷鈴",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 7,
+            "wrap": true
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "專長",
+            "color": "#5C5F57",
+            "size": "xs",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "植牙手術、固定假牙、活動假牙、牙橋、全口重建",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 7,
+            "wrap": true
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#335B8B",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "植牙・假牙重建",
+          "uri": "https://fangren.net/topics/prosth/"
+        }
+      }
+    ]
+  }
+}

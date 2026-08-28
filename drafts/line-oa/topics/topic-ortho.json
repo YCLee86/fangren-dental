@@ -1,0 +1,199 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/og-topic-ortho.jpg",
+    "size": "full",
+    "aspectRatio": "1200:628",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "label": "齒顎矯正",
+      "uri": "https://fangren.net/topics/ortho/"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "20px",
+    "paddingTop": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "text",
+        "text": "排整齊只是一半：咬得不對，拆掉之後牙齒很容易又跑回去。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "weight": "bold",
+        "wrap": true
+      },
+      {
+        "type": "text",
+        "text": "矯正很少單獨進行：蛀牙、拔牙常常要先處理。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "text",
+        "text": "成年人矯正，還要注意到牙周狀況。牙周顧好，牙齒矯正才順利。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "text",
+        "text": "在芳仁，各科醫師會一起把療程的順序接起來。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "xs",
+        "margin": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "牙齒排得不整齊",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "矯正過，後來又跑回去",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "想知道自己適不適合",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "separator",
+        "color": "#CDD0D2",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "醫師",
+            "color": "#5C5F57",
+            "size": "xs",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "王俊偉、廖立揚",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 7,
+            "wrap": true
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "專長",
+            "color": "#5C5F57",
+            "size": "xs",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "齒顎矯正、隱適美、阻生齒矯正",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 7,
+            "wrap": true
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#4478B5",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "齒顎矯正",
+          "uri": "https://fangren.net/topics/ortho/"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/og-topic-perio.jpg",
+    "size": "full",
+    "aspectRatio": "1200:628",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "label": "牙周治療",
+      "uri": "https://fangren.net/topics/perio/"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "20px",
+    "paddingTop": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "text",
+        "text": "牙齒要咬得穩，地基就要顧好。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "weight": "bold",
+        "wrap": true
+      },
+      {
+        "type": "text",
+        "text": "咬起來痠軟、使不上力，或有點會搖，多半是牙周出了問題；到第幾期要檢查過才知道。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "text",
+        "text": "懷孕期間牙齦容易出狀況：洗牙三個月一次，急性的要趕快處理。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "xs",
+        "margin": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "刷牙容易流血",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "牙齒開始搖，或已經掉過",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "洗牙時被告知牙周有問題",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "懷孕後牙齦變得容易腫",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "separator",
+        "color": "#CDD0D2",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "醫師",
+            "color": "#5C5F57",
+            "size": "xs",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "李柄輝、李侑津",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 7,
+            "wrap": true
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "專長",
+            "color": "#5C5F57",
+            "size": "xs",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "牙周照護、牙周病治療、牙周再生手術、水雷射牙周治療",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 7,
+            "wrap": true
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#317D78",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "牙周治療",
+          "uri": "https://fangren.net/topics/perio/"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/og-topic-surg.jpg",
+    "size": "full",
+    "aspectRatio": "1200:628",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "label": "口腔外科",
+      "uri": "https://fangren.net/topics/surg/"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "20px",
+    "paddingTop": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "text",
+        "text": "難拔的那幾顆，門診多半就能完成；根據 X 光影像，先把狀況說清楚。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "weight": "bold",
+        "wrap": true
+      },
+      {
+        "type": "text",
+        "text": "反覆發炎、抵住前面那顆，都建議早點處理；埋著沒長出來的，久了可能長出囊腫。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "text",
+        "text": "拔完留下的洞，齒槽骨會慢慢流失；需要的話會放填補材料。",
+        "color": "#2A2C27",
+        "size": "sm",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "xs",
+        "margin": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "智齒腫過，反覆發作",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "牙齒只剩牙根",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "長不出來的牙齒",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "xs",
+            "contents": [
+              {
+                "type": "text",
+                "text": "・",
+                "color": "#5C5F57",
+                "size": "sm",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "上次拔牙的感覺，到現在還記得",
+                "color": "#5C5F57",
+                "size": "sm",
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "separator",
+        "color": "#CDD0D2",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "醫師",
+            "color": "#5C5F57",
+            "size": "xs",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "許馨文",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 7,
+            "wrap": true
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "專長",
+            "color": "#5C5F57",
+            "size": "xs",
+            "flex": 2
+          },
+          {
+            "type": "text",
+            "text": "阻生齒拔除、齒槽骨保留術",
+            "color": "#2A2C27",
+            "size": "sm",
+            "flex": 7,
+            "wrap": true
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#8E6299",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "口腔外科",
+          "uri": "https://fangren.net/topics/surg/"
+        }
+      }
+    ]
+  }
+}
