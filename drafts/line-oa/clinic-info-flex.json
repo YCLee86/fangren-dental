@@ -230,7 +230,7 @@
             "justifyContent": "center",
             "action": {
               "type": "uri",
-              "label": "地圖導航",
+              "label": "Google 地圖",
               "uri": "https://www.google.com/maps/search/?api=1&query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F"
             },
             "contents": [
@@ -251,7 +251,7 @@
                   },
                   {
                     "type": "text",
-                    "text": "地圖導航",
+                    "text": "Google 地圖",
                     "color": "#FFFFFF",
                     "size": "md",
                     "weight": "bold",
@@ -270,7 +270,7 @@
             "justifyContent": "center",
             "action": {
               "type": "uri",
-              "label": "致電診所",
+              "label": "打給診所",
               "uri": "tel:+88655339369"
             },
             "contents": [
@@ -291,7 +291,7 @@
                   },
                   {
                     "type": "text",
-                    "text": "致電診所",
+                    "text": "打給診所",
                     "color": "#FFFFFF",
                     "size": "md",
                     "weight": "bold",
@@ -312,7 +312,7 @@
         "paddingAll": "10px",
         "action": {
           "type": "uri",
-          "label": "診所網站",
+          "label": "到網站看看",
           "uri": "https://fangren.net/"
         },
         "contents": [
@@ -333,7 +333,7 @@
               },
               {
                 "type": "text",
-                "text": "診所網站　fangren.net",
+                "text": "到網站看看",
                 "color": "#2C5238",
                 "size": "sm",
                 "weight": "bold",
