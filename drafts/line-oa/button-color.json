@@ -1,0 +1,642 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "text",
+        "text": "按鈕底色的三種算法",
+        "size": "md",
+        "weight": "bold",
+        "color": "#2C5238"
+      },
+      {
+        "type": "text",
+        "text": "Ⓐ 壓暗（現況）　Ⓑ 原色＋深墨字　Ⓒ 壓暗＋飽和度拉滿",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "wrap": true
+      },
+      {
+        "type": "text",
+        "text": "booking　框 #55BBA8",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "weight": "bold",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#348374",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓐ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓐ 看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#55BBA8",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓑ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓑ 看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#00856C",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓒ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓒ 看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": []
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "fees　框 #A2D364",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "weight": "bold",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#588125",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓐ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓐ 看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#A2D364",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓑ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓑ 看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#498300",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓒ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓒ 看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": []
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "perio　框 #57BEAD",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "weight": "bold",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#328275",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓐ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓐ 看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#57BEAD",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓑ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓑ 看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#008670",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓒ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓒ 看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": []
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "prosth　框 #F4AC64",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "weight": "bold",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#B25F0D",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓐ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓐ 看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#F4AC64",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓑ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓑ 看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#B95C00",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓒ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓒ 看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": []
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "whitening　框 #72BDFF",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "weight": "bold",
+        "margin": "lg"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#0076DD",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓐ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓐ 看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#72BDFF",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓑ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓑ 看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#0076DE",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "flex": 1,
+            "action": {
+              "type": "uri",
+              "label": "Ⓒ 看大圖",
+              "uri": "https://fangren.net/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Ⓒ 看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": []
+          }
+        ]
+      }
+    ]
+  }
+}
