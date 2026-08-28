@@ -1298,11 +1298,27 @@
         "contents": [
           {
             "type": "text",
-            "text": "難拔的那幾顆，有醫師專門在處理。",
+            "text": "要不要拔、好不好拔，看的是 X 光片：牙根的形狀、離神經多近。",
             "color": "#2A2C27",
             "size": "sm",
             "weight": "bold",
             "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "怕的多半是拔的那一下；真正決定那一週好不好過的，是拔完留下的傷口。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "拔完留下的洞，齒槽骨會慢慢流失；需要的話會放填補材料。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
           },
           {
             "type": "box",
@@ -1367,6 +1383,27 @@
                   {
                     "type": "text",
                     "text": "牙齒長不出來",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "上次拔牙的感覺，到現在還記得",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
