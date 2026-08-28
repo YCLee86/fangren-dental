@@ -34,10 +34,12 @@ const C = JSON.parse(fs.readFileSync(path.join(HERE, "handouts", "colors.json"),
      a 壓暗、飽和度不動、白字（第三輪的算法）
      b **原色一個值都不動**、字改深墨
      c 壓暗 ＋ 飽和度拉滿、白字
+     d **原色 ＋ 白字** —— ⚠ 對比只有 1.74~2.32，遠低於 AA 的 4.5。
+       這一案是使用者指名要看的，留著比較用，**不要當成可以直接上線的預設**。
    ⚠ 只影響**填色**那一顆；外框鈕的字與 ▌ 一律用 ink
      （原色壓在卡片底 #F4F4F5 上只有 1.9，當字看不見）。 */
 const SCHEME = (process.argv[2] || "a").replace(/^--/, "");
-if (!"abc".includes(SCHEME) || SCHEME.length !== 1) throw new Error("scheme 只能是 a／b／c");
+if (!"abcd".includes(SCHEME) || SCHEME.length !== 1) throw new Error("scheme 只能是 a／b／c／d");
 const INK = "#2A2C27";
 const hx = (r, g, b) => "#" + [r, g, b].map((v) => Math.round(v).toString(16).padStart(2, "0")).join("").toUpperCase();
 function r2h(r, g, b) { r /= 255; g /= 255; b /= 255;
@@ -63,6 +65,7 @@ const vivid = (frame) => {
 /* 填色鈕的底與字 */
 const solid = (v) => SCHEME === "b" ? [v.frame, INK]
   : SCHEME === "c" ? [vivid(v.frame), "#FFFFFF"]
+  : SCHEME === "d" ? [v.frame, "#FFFFFF"]
   : [v.fill, "#FFFFFF"];
 
 const CARDS = [

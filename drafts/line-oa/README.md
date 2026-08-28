@@ -1269,7 +1269,11 @@ drafts/line-oa/handouts/              三張紙本原圖 ＋ 三張 hero
 node drafts/line-oa/health-carousel.mjs      # 案 A（壓暗）      → health-carousel.json
 node drafts/line-oa/health-carousel.mjs b    # 案 B（原色＋深墨字）→ health-carousel-b.json
 node drafts/line-oa/health-carousel.mjs c    # 案 C（壓暗＋飽和滿）→ health-carousel-c.json
+node drafts/line-oa/health-carousel.mjs d    # 案 D（原色＋白字）  → health-carousel-d.json
 ```
+
+⚠⚠ **案 D 五支全部過不了 AA**（白字對原色 1.74~2.32），是使用者指名要看的比較版本，
+**不要當成可以直接上線的預設**。黃綠那支 1.74 最糟，白字幾乎浮在色塊上。
 
 ⚠ **三案只動「看大圖」那一顆**。外框鈕的字與 ▌ 一律用 `ink`（壓暗過的那一階）——
 原色壓在卡片底 `#F4F4F5` 上只有 1.9，當字根本看不見。
