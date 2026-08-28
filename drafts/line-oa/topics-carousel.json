@@ -26,7 +26,7 @@
         "contents": [
           {
             "type": "text",
-            "text": "沒有不舒服也可以來，先看一次比較放心。",
+            "text": "半年一次的洗牙，順便把整口看一遍。",
             "color": "#2A2C27",
             "size": "sm",
             "weight": "bold",
@@ -52,7 +52,7 @@
                   },
                   {
                     "type": "text",
-                    "text": "很久沒有檢查了",
+                    "text": "半年到了，想約洗牙",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
@@ -73,7 +73,7 @@
                   },
                   {
                     "type": "text",
-                    "text": "沒有不舒服，但想確認一下",
+                    "text": "很久沒看牙，想整個檢查一下",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
@@ -94,7 +94,7 @@
                   },
                   {
                     "type": "text",
-                    "text": "想幫家人找一間固定看的",
+                    "text": "想帶家裡的人一起來看",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
