@@ -67,7 +67,14 @@ function render(n, dir = "vertical", first = false) {
 
   if (n.type === "image") {
     const [aw, ah] = (n.aspectRatio || "1:1").split(":").map(Number);
-    const src = n.url.replace("https://fangren.net/", ROOT + "/");
+    /* 網址寫的是**未來的**位置（https://fangren.net/assets/…）；
+       檔案還沒進 assets/ 的話退到 drafts/line-oa/handouts/ 找。
+       ⚠ 這只是預覽的方便，JSON 本身一律寫上線後的網址，不要改成相對路徑。 */
+    let src = n.url.replace("https://fangren.net/", ROOT + "/");
+    if (!fs.existsSync(src)) {
+      const alt = path.join(HERE, "handouts", path.basename(src));
+      if (fs.existsSync(alt)) src = alt;
+    }
     /* size 給 px 就是固定寬（按鈕上那三顆小圖示），不給就是撐滿（hero）。 */
     const w = px(n.size);
     const box = w != null ? `width:${w}px;flex:0 0 ${w}px` : "width:100%";
