@@ -911,11 +911,27 @@
         "contents": [
           {
             "type": "text",
-            "text": "排整齊之外，咬合也要一起看。",
+            "text": "排整齊只是一半：咬得不對，拆掉之後很容易又跑回去。",
             "color": "#2A2C27",
             "size": "sm",
             "weight": "bold",
             "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "年紀不會讓牙齒失去移動的能力；前提是牙周要先穩定。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "矯正很少單獨進行：牙周、蛀牙、拔牙常常要先處理，這幾科在同一個地方接得上。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
           },
           {
             "type": "box",
@@ -959,6 +975,27 @@
                   {
                     "type": "text",
                     "text": "矯正過，後來又跑回去",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "想先問清楚，不想當場就決定",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
