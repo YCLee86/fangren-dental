@@ -1040,3 +1040,20 @@ LINE 原生的 `button` **只有文字、放不進圖示**。所以三顆都改�
 走進芳仁（⚠ 走進去的是**診所**、按下去到的是**網站**，動詞和目的地對不起來）／
 到芳仁看看（接站上收尾句「到巷口的芳仁」的句型）／看看芳仁的四十年（把整個網站
 窄化成歷史）／認識這一間診所／認識醫師與科別（像目錄不像邀請）／認識芳仁。
+
+### 兩張卡各自一份預覽（2026-08-28）
+
+```
+drafts/line-oa/clinic-info-flex.json                 建議版・帶圖
+drafts/line-oa/preview-clinic-info-flex.png          （398×655 CSS px）
+drafts/line-oa/clinic-info-flex-noimage.json         建議版・無圖
+drafts/line-oa/preview-clinic-info-flex-noimage.png  （398×566 CSS px）
+drafts/line-oa/preview.png                           兩張並排（不給參數時的預設）
+```
+
+單張的做法就是把 JSON 的檔名當參數傳給預覽器：
+
+```bash
+node drafts/line-oa/flex-preview.mjs clinic-info-flex.json
+node drafts/line-oa/flex-preview.mjs clinic-info-flex-noimage.json
+```
