@@ -480,7 +480,7 @@
         "paddingAll": "10px",
         "action": {
           "type": "uri",
-          "label": "診所介紹與文章",
+          "label": "走進芳仁",
           "uri": "https://fangren.net/"
         },
         "contents": [
@@ -501,7 +501,7 @@
               },
               {
                 "type": "text",
-                "text": "診所介紹與文章",
+                "text": "走進芳仁",
                 "color": "#2C5238",
                 "size": "sm",
                 "weight": "bold",
@@ -528,7 +528,7 @@
         "paddingAll": "10px",
         "action": {
           "type": "uri",
-          "label": "醫師、科別與文章",
+          "label": "到芳仁看看",
           "uri": "https://fangren.net/"
         },
         "contents": [
@@ -549,7 +549,7 @@
               },
               {
                 "type": "text",
-                "text": "醫師、科別與文章",
+                "text": "到芳仁看看",
                 "color": "#2C5238",
                 "size": "sm",
                 "weight": "bold",
@@ -562,6 +562,150 @@
       {
         "type": "text",
         "text": "Ⓒ5",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "margin": "lg",
+        "weight": "bold"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "borderColor": "#3F654A",
+        "borderWidth": "1px",
+        "cornerRadius": "8px",
+        "paddingAll": "10px",
+        "action": {
+          "type": "uri",
+          "label": "看看芳仁的四十年",
+          "uri": "https://fangren.net/"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "image",
+                "url": "https://fangren.net/assets/line-logo.png",
+                "size": "27px",
+                "aspectRatio": "216:106",
+                "aspectMode": "fit",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "看看芳仁的四十年",
+                "color": "#2C5238",
+                "size": "sm",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "Ⓒ6",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "margin": "lg",
+        "weight": "bold"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "borderColor": "#3F654A",
+        "borderWidth": "1px",
+        "cornerRadius": "8px",
+        "paddingAll": "10px",
+        "action": {
+          "type": "uri",
+          "label": "認識這一間診所",
+          "uri": "https://fangren.net/"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "image",
+                "url": "https://fangren.net/assets/line-logo.png",
+                "size": "27px",
+                "aspectRatio": "216:106",
+                "aspectMode": "fit",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "認識這一間診所",
+                "color": "#2C5238",
+                "size": "sm",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "Ⓒ7",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "margin": "lg",
+        "weight": "bold"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "borderColor": "#3F654A",
+        "borderWidth": "1px",
+        "cornerRadius": "8px",
+        "paddingAll": "10px",
+        "action": {
+          "type": "uri",
+          "label": "認識醫師與科別",
+          "uri": "https://fangren.net/"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "image",
+                "url": "https://fangren.net/assets/line-logo.png",
+                "size": "27px",
+                "aspectRatio": "216:106",
+                "aspectMode": "fit",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "認識醫師與科別",
+                "color": "#2C5238",
+                "size": "sm",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "Ⓒ8",
         "size": "xxs",
         "color": "#8E8E8E",
         "margin": "lg",
@@ -598,6 +742,102 @@
               {
                 "type": "text",
                 "text": "認識芳仁　fangren.net",
+                "color": "#2C5238",
+                "size": "sm",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "Ⓒ9",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "margin": "lg",
+        "weight": "bold"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "borderColor": "#3F654A",
+        "borderWidth": "1px",
+        "cornerRadius": "8px",
+        "paddingAll": "10px",
+        "action": {
+          "type": "uri",
+          "label": "診所介紹與文章",
+          "uri": "https://fangren.net/"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "image",
+                "url": "https://fangren.net/assets/line-logo.png",
+                "size": "27px",
+                "aspectRatio": "216:106",
+                "aspectMode": "fit",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "診所介紹與文章",
+                "color": "#2C5238",
+                "size": "sm",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "Ⓒ10",
+        "size": "xxs",
+        "color": "#8E8E8E",
+        "margin": "lg",
+        "weight": "bold"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "borderColor": "#3F654A",
+        "borderWidth": "1px",
+        "cornerRadius": "8px",
+        "paddingAll": "10px",
+        "action": {
+          "type": "uri",
+          "label": "醫師、科別與文章",
+          "uri": "https://fangren.net/"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "image",
+                "url": "https://fangren.net/assets/line-logo.png",
+                "size": "27px",
+                "aspectRatio": "216:106",
+                "aspectMode": "fit",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "醫師、科別與文章",
                 "color": "#2C5238",
                 "size": "sm",
                 "weight": "bold",
