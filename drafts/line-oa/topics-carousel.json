@@ -237,6 +237,14 @@
             "wrap": true
           },
           {
+            "type": "text",
+            "text": "懷孕期間牙齦容易出狀況 —— 洗牙三個月一次，急性的可以先處理。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
             "type": "box",
             "layout": "vertical",
             "spacing": "xs",
@@ -299,6 +307,27 @@
                   {
                     "type": "text",
                     "text": "洗牙之外還被說要處理牙周",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "懷孕後牙齦變得容易腫",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
