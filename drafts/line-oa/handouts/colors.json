@@ -1,0 +1,44 @@
+{
+  "booking": {
+    "frame": "#55BBA8",
+    "fill": "#348374",
+    "ink": "#317B6D",
+    "hero": "1060:554"
+  },
+  "fees": {
+    "frame": "#A2D364",
+    "fill": "#588125",
+    "ink": "#547B23",
+    "hero": "1058:554"
+  },
+  "perio": {
+    "frame": "#57BEAD",
+    "fill": "#328275",
+    "ink": "#307C70",
+    "hero": "1124:588"
+  },
+  "prosth": {
+    "frame": "#F4AC64",
+    "fill": "#B25F0D",
+    "ink": "#A95A0C",
+    "hero": "1124:588"
+  },
+  "whitening": {
+    "frame": "#72BDFF",
+    "fill": "#0076DD",
+    "ink": "#006FD0",
+    "hero": "1056:552"
+  },
+  "wisdom": {
+    "frame": "#57BEAD",
+    "fill": "#328275",
+    "ink": "#307C70",
+    "hero": "1124:588"
+  },
+  "xray": {
+    "frame": "#57BEAD",
+    "fill": "#328275",
+    "ink": "#307C70",
+    "hero": "1124:588"
+  }
+}

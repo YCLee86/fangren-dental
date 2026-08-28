@@ -1,4 +1,4 @@
-/* 「衛教資訊」那一格的 Flex carousel（2026-08-28）
+/* 「衛教資訊」那一格的 Flex carousel（2026-08-28，第三輪）
  *
  * 結構：**一張圖看完 ＋ 想深入就點過去**。一格一個真實的問題，
  * hero 是診所自己的紙本懶人包（裁成橫的，見 handout-crop.mjs），
@@ -25,44 +25,34 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "../..");
 const SITE = JSON.parse(fs.readFileSync(path.join(ROOT, "site.json"), "utf8")).url.replace(/\/$/, "");
 
-/* 科別的套色從 index.html 讀回來，這裡不抄第二份（同 topics-carousel.mjs） */
-const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
-const accent = {};
-for (const m of html.matchAll(/--spec-([a-z]+):\s*(#[0-9a-fA-F]{6})/g)) accent[m[1]] = m[2].toUpperCase();
-const ACC = (spec) => {
-  const m = html.match(new RegExp(`\\[data-spec=["']${spec}["']\\][^{]*\\{[^}]*--accent:\\s*(#[0-9a-fA-F]{6})`));
-  if (!m) throw new Error(`index.html 裡找不到 ${spec} 的 --accent`);
-  return m[1].toUpperCase();
-};
+/* ⚠⚠ 顏色**每一張跟著自己的紙本走，不跟科別走**（2026-08-28 使用者定的）。
+   值由 handout-crop.mjs 從那圈外框取出來，寫在 handouts/colors.json，
+   這裡不抄第二份。理由與那三個成因寫在 handout-crop.mjs 的檔頭。 */
+const C = JSON.parse(fs.readFileSync(path.join(HERE, "handouts", "colors.json"), "utf8"));
 
 const CARDS = [
-  {
-    spec: "perio",
-    title: "嚴重牙周有救嗎",
+  { img: "perio", title: "嚴重牙周有救嗎",
     lead: "牙齒為什麼會搖、地基流失是怎麼回事；健保、水雷射、手術各能做到哪裡。",
-    img: "handout-perio",
-    post: "/posts/perio-laser/",
-    postLabel: "讀文章",
-  },
-  {
-    spec: "surg",
-    title: "我的智齒該拔嗎",
+    post: "/posts/perio-laser/" },
+  { img: "wisdom", title: "我的智齒該拔嗎",
     lead: "哪幾種智齒該處理、術前要看什麼、拔完那一週會怎麼過。",
-    img: "handout-wisdom",
-    post: "/posts/wisdom-tooth/",
-    postLabel: "讀文章",
-  },
-  {
-    spec: "endo",
-    title: "拍片的輻射有多少",
+    post: "/posts/wisdom-tooth/" },
+  { img: "prosth", title: "假牙一體成型有啥好",
+    lead: "什麼狀況需要做牙套、齒質要修掉多少；金屬、全瓷、全鋯各適合誰。",
+    post: "/posts/crown-materials/" },
+  { img: "whitening", title: "我的牙齒不夠白",
+    lead: "噴砂拋光、居家藥劑、冷光美白差在哪；做完會不會回色、會不會敏感。",
+    post: null },
+  { img: "xray", title: "拍片的輻射有多少",
     lead: "根尖片、全口片、斷層掃描各是多少；拿搭一趟飛機和日常生活來對照。",
-    img: "handout-xray",
-    post: null,          // ⚠ 站上還沒有對應的文章 —— 這一格只有「看大圖」
-    postLabel: null,
-  },
+    post: null },
+  { img: "booking", title: "預約協議",
+    lead: "分階段的療程診所會保留時段；要改期或取消，請至少兩天前告訴我們。",
+    post: null },
+  { img: "fees", title: "掛號與文件費用",
+    lead: "掛號費、部分負擔、優待身分，以及診斷證明與病歷複製各是多少。",
+    post: null },
 ];
-
-const ICON = (n) => `${SITE}/assets/line-${n}.png`;
 
 /* 兩顆按鈕做成「可以點的 box」，不用原生 button —— 原生的放不進圖示，
    而且這一份要和 clinic-info-flex.json 那三顆長一樣（同一套外觀）。 */
@@ -81,22 +71,22 @@ const btn = (label, uri, color, { outline = false } = {}) => ({
 });
 
 const bubbles = CARDS.map((c) => {
-  const color = ACC(c.spec);
-  const foot = [btn("看大圖", `${SITE}/assets/${c.img}.jpg`, color)];
-  if (c.post) foot.push(btn(c.postLabel, SITE + c.post, color, { outline: true }));
+  const { fill, ink, hero } = C[c.img];
+  const foot = [btn("看大圖", `${SITE}/assets/handout-${c.img}.jpg`, fill)];
+  if (c.post) foot.push(btn("讀文章", SITE + c.post, ink, { outline: true }));
   return {
     type: "bubble", size: "mega",
     hero: {
-      type: "image", url: `${SITE}/assets/${c.img}-hero.jpg`,
-      size: "full", aspectRatio: "1077:564", aspectMode: "cover",
-      action: { type: "uri", label: c.title, uri: `${SITE}/assets/${c.img}.jpg` },
+      type: "image", url: `${SITE}/assets/handout-${c.img}-hero.jpg`,
+      size: "full", aspectRatio: hero, aspectMode: "cover",
+      action: { type: "uri", label: c.title, uri: `${SITE}/assets/handout-${c.img}.jpg` },
     },
     body: {
       type: "box", layout: "vertical", backgroundColor: "#F4F4F5",
       paddingAll: "16px", spacing: "md",
       contents: [
         { type: "box", layout: "baseline", spacing: "sm", contents: [
-          { type: "text", text: "▌", size: "md", color, flex: 0 },
+          { type: "text", text: "▌", size: "md", color: ink, flex: 0 },
           { type: "text", text: c.title, size: "lg", weight: "bold", color: "#2A2C27", flex: 0 },
         ]},
         { type: "text", text: c.lead, size: "sm", color: "#5C5F57", wrap: true },
@@ -112,7 +102,9 @@ const bubbles = CARDS.map((c) => {
 /* 收尾那一格：站上還有另外九篇 */
 const n = fs.readdirSync(path.join(ROOT, "posts")).filter((d) =>
   fs.existsSync(path.join(ROOT, "posts", d, "index.html"))).length;
-const GREEN = ACC("general");
+/* 收尾那一格不屬於任何一張紙本，用站上一般牙科的套色 */
+const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+const GREEN = html.match(/\[data-spec=["']general["'][^{]*\{[^}]*--accent:\s*(#[0-9a-fA-F]{6})/)[1].toUpperCase();
 bubbles.push({
   type: "bubble", size: "mega",
   hero: { type: "image", url: `${SITE}/assets/og-home.jpg`,
@@ -141,4 +133,4 @@ const out = { type: "carousel", contents: bubbles };
 const file = path.join(HERE, "health-carousel.json");
 fs.writeFileSync(file, JSON.stringify(out, null, 2) + "\n");
 console.log(`${bubbles.length} 格　${Buffer.byteLength(JSON.stringify(out))} bytes（LINE 上限 12 格／50KB）`);
-for (const c of CARDS) console.log(`  ${c.spec.padEnd(7)} ${ACC(c.spec)}  ${c.title}　→ ${c.post ?? "⚠ 站上沒有對應文章"}`);
+for (const c of CARDS) console.log(`  ${c.img.padEnd(10)} 框 ${C[c.img].frame} 填 ${C[c.img].fill}  ${c.title.padEnd(11)}→ ${c.post ?? "⚠ 站上沒有對應文章"}`);
