@@ -919,7 +919,7 @@
           },
           {
             "type": "text",
-            "text": "成年之後還是可以矯正，前提是牙周先穩定；骨頭比較硬，時間和目標會和青少年不一樣。",
+            "text": "成年之後一樣可以矯正，牙周要同時顧好；骨頭比較硬，時間和目標會和青少年不一樣。",
             "color": "#2A2C27",
             "size": "sm",
             "wrap": true,
@@ -927,7 +927,7 @@
           },
           {
             "type": "text",
-            "text": "矯正很少單獨進行：牙周、蛀牙、拔牙常常要先處理，這幾科診所裡都有醫師。",
+            "text": "矯正很少單獨進行：牙周、蛀牙、拔牙常常要先處理；在芳仁，各科醫師會一起把療程的順序接起來。",
             "color": "#2A2C27",
             "size": "sm",
             "wrap": true,
@@ -975,27 +975,6 @@
                   {
                     "type": "text",
                     "text": "矯正過，後來又跑回去",
-                    "color": "#5C5F57",
-                    "size": "sm",
-                    "wrap": true
-                  }
-                ]
-              },
-              {
-                "type": "box",
-                "layout": "baseline",
-                "spacing": "xs",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "・",
-                    "color": "#5C5F57",
-                    "size": "sm",
-                    "flex": 0
-                  },
-                  {
-                    "type": "text",
-                    "text": "想先弄懂再決定",
                     "color": "#5C5F57",
                     "size": "sm",
                     "wrap": true
