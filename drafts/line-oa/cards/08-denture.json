@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "假牙做好只是開始：牙齦要適應、要回診調整，還有怎麼吃、怎麼洗。",
+        "text": "假牙做好只是開始：牙齦適應、回診調整，還有怎麼吃、怎麼洗。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -82,7 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#2A2C27",
+                "color": "#FFFFFF",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

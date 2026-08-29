@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "哪幾種智齒該處理、術前要看什麼、拔完那一週會怎麼過。",
+        "text": "哪幾種智齒該處理、術前要看什麼、拔完要怎麼照顧。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -82,7 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#2A2C27",
+                "color": "#FFFFFF",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

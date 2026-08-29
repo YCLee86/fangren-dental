@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "洗牙為什麼會痠、洗完為什麼覺得縫變大；牙齒會搖的話要另外處理。",
+        "text": "洗牙為什麼會痠、洗完為什麼覺得縫變大；牙齒會搖的話要特別治療。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -82,7 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#2A2C27",
+                "color": "#FFFFFF",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

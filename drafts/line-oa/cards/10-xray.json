@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "根尖片、全口片、斷層掃描各是多少；拿搭一趟飛機和日常生活來對照。",
+        "text": "根尖片、全口片、斷層掃描各是多少；日常生活、搭飛機也有輻射，對照給你看。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -82,7 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#2A2C27",
+                "color": "#FFFFFF",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

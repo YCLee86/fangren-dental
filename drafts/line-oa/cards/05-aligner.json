@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "傳統矯正器和透明牙套差在哪：材質、牙齒能怎麼移動、關縫，還有戴起來的感覺。",
+        "text": "傳統矯正器和透明牙套差在哪：材質、功能、關縫，還有戴起來的感覺。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -82,7 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#2A2C27",
+                "color": "#FFFFFF",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "牙齒為什麼會搖、地基流失是怎麼回事；健保、水雷射、手術各能做到哪裡。",
+        "text": "牙齒為什麼會搖、地基流失是怎麼回事；治療有哪些、能做什麼。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -82,7 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#2A2C27",
+                "color": "#FFFFFF",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

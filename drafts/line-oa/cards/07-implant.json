@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "術前要先做假牙模擬和斷層掃描；骨頭整合需要時間，植體與假牙都要有認證。",
+        "text": "術前要先做假牙模擬和斷層掃描；骨頭整合需要時間，植體和假牙零件都要有認證。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -82,7 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#2A2C27",
+                "color": "#FFFFFF",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0
