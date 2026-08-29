@@ -105,6 +105,9 @@ function cardBox(src, W, H) {
   const rowOK = (y) => [...Array(w).keys()].filter((x) => bright(x, y) >= 60).length >= w * MAJ;
   const colOK = (x, t, b) => [...Array(b - t + 1).keys()].filter((i) => bright(x, t + i) >= 60).length >= (b - t + 1) * MAJ;
   let t = 0; while (t < h && !rowOK(t)) t++;
+  /* ⚠ 邊界那一列常常一半是黑的（截圖的分隔線、PDF 檢視器的標題列下緣），
+     往下讓一格再開始裁 —— 一格約等於原圖的 8px，比任何一張的框都薄。 */
+  if (t + 1 < h) t++;
   let b = h - 1; while (b > t && !rowOK(b)) b--;
   if (t >= b) throw new Error("找不到卡片 —— 這張圖沒有一列是大部分亮的？");
   let l = 0; while (l < w && !colOK(l, t, b)) l++;
@@ -115,18 +118,32 @@ function cardBox(src, W, H) {
 
 /* 那圈框的顏色：取左右兩條邊上「最有彩」那一群像素的中位數。
    ⚠ 不要取平均 —— 框裡混著白底與陰影，平均會被拉淡（同 CLAUDE.md 第九節第 11 條）。 */
-function frameColor(box) {
+function frameColor(box, heroRows) {
   const { g, w, t, b, l, r } = box.grid;
   const picks = [];
-  for (let y = t + 2; y <= b - 2; y++) {
-    for (const x of [l, l + 1, r - 1, r]) {
-      const o = (y * w + x) * 3;
-      const [, s, ll] = rgb2hsl(g[o], g[o + 1], g[o + 2]);
-      if (s > 0.15 && ll > 0.15 && ll < 0.9) picks.push([g[o], g[o + 1], g[o + 2], s]);
+  /* ⚠⚠ 只掃**會變成 hero 的那一段**，不要掃到整張截圖的下面。
+     2026-08-28 踩過：植牙那張是 PDF 檢視器的截圖，同一畫面下面還接著
+     下一頁（牙周那張，青綠的框）——掃整片會把兩種框的顏色混在一起。 */
+  const bot = Math.min(b - 2, t + Math.round(heroRows));
+  /* ⚠⚠ 不要只看最外面那一兩欄。有些截圖的卡片外面還有一圈白邊
+     （植牙那張是 PDF 的頁面留白），最外欄取到的是白的，一個有彩的像素都沒有。
+     改成**從兩側往內找第一個有彩的像素**，找到就停 —— 那才是框。 */
+  const chroma = (x, y) => { const o = (y * w + x) * 3; return rgb2hsl(g[o], g[o + 1], g[o + 2]); };
+  const scan = (y, from, dir) => {
+    for (let i = 0; i < 12; i++) {
+      const x = from + dir * i;
+      if (x < 0 || x >= w) break;
+      const [, s2, ll] = chroma(x, y);
+      if (s2 > 0.15 && ll > 0.15 && ll < 0.9) {
+        const o = (y * w + x) * 3;
+        picks.push([g[o], g[o + 1], g[o + 2], s2]);
+        return;
+      }
     }
-  }
+  };
+  for (let y = t + 2; y <= bot; y++) { scan(y, l, +1); scan(y, r, -1); }
   if (picks.length < 20) throw new Error("框上取不到夠多的有彩像素 —— 這張的邊框可能不是色塊");
-  picks.sort((a, c) => c[3] - a[3]);                 // 飽和度高的優先
+  picks.sort((a, c) => c[3] - a[3]);
   const keep = picks.slice(0, Math.max(20, Math.round(picks.length * 0.5)));
   const med = (i) => { const v = keep.map((p) => p[i]).sort((a, c) => a - c); return v[v.length >> 1]; };
   return hex(med(0), med(1), med(2));
@@ -145,7 +162,7 @@ for (const f of fs.readdirSync(DIR).filter((f) => /^handout-[a-z]+\.(jpg|png)$/.
     "-vf", `crop=${w}:${h}:${box.x}:${box.y}`, "-q:v", "3",
     path.join(DIR, `handout-${name}-hero.jpg`)]);
 
-  const frame = frameColor(box);
+  const frame = frameColor(box, h / H * box.grid.h);
   const fill = darkenUntil(frame, "#FFFFFF");        // 填色鈕：白字要過 4.5
   const ink = darkenUntil(frame, CARD);              // 外框鈕與 ▌：字壓在卡片底上
   out[name] = { frame, fill, ink, hero: `${w}:${h}` };

@@ -29,7 +29,7 @@
             "type": "text",
             "text": "▌",
             "size": "md",
-            "color": "#0A6FD2",
+            "color": "#0C6FCE",
             "flex": 0
           },
           {
@@ -62,7 +62,7 @@
       {
         "type": "box",
         "layout": "vertical",
-        "backgroundColor": "#3495F5",
+        "backgroundColor": "#3495F3",
         "cornerRadius": "6px",
         "height": "40px",
         "justifyContent": "center",
@@ -94,7 +94,7 @@
       {
         "type": "box",
         "layout": "vertical",
-        "borderColor": "#0A6FD2",
+        "borderColor": "#0C6FCE",
         "borderWidth": "1px",
         "cornerRadius": "6px",
         "height": "40px",
@@ -115,7 +115,7 @@
               {
                 "type": "text",
                 "text": "讀文章",
-                "color": "#0A6FD2",
+                "color": "#0C6FCE",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

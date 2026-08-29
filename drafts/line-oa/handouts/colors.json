@@ -1,8 +1,8 @@
 {
   "aligner": {
-    "frame": "#FF5375",
-    "fill": "#EC002F",
-    "ink": "#DF002C",
+    "frame": "#FB5374",
+    "fill": "#EA0532",
+    "ink": "#E00530",
     "hero": "1124:588"
   },
   "booking": {
@@ -12,9 +12,9 @@
     "hero": "1060:554"
   },
   "calculus": {
-    "frame": "#3495F5",
-    "fill": "#0B75DE",
-    "ink": "#0A6FD2",
+    "frame": "#3495F3",
+    "fill": "#0D75DA",
+    "ink": "#0C6FCE",
     "hero": "1124:588"
   },
   "caries": {
@@ -24,9 +24,9 @@
     "hero": "1124:588"
   },
   "denture": {
-    "frame": "#10C0AC",
-    "fill": "#0B8577",
-    "ink": "#0B7E71",
+    "frame": "#11BCA9",
+    "fill": "#0C8477",
+    "ink": "#0B7D70",
     "hero": "1124:588"
   },
   "fees": {
@@ -35,34 +35,40 @@
     "ink": "#547B23",
     "hero": "1058:554"
   },
+  "implant": {
+    "frame": "#ADDD60",
+    "fill": "#5A811C",
+    "ink": "#567B1A",
+    "hero": "1124:588"
+  },
   "perio": {
-    "frame": "#57BEAD",
-    "fill": "#328275",
-    "ink": "#307C70",
+    "frame": "#54BBAA",
+    "fill": "#348275",
+    "ink": "#317B6F",
     "hero": "1124:588"
   },
   "prosth": {
-    "frame": "#F4AC64",
-    "fill": "#B25F0D",
-    "ink": "#A95A0C",
+    "frame": "#F0A860",
+    "fill": "#B16111",
+    "ink": "#A75B10",
     "hero": "1124:588"
   },
   "whitening": {
-    "frame": "#72BDFF",
-    "fill": "#0076DD",
-    "ink": "#006FD0",
+    "frame": "#6DB8FD",
+    "fill": "#0375DD",
+    "ink": "#036FD3",
     "hero": "1056:552"
   },
   "wisdom": {
-    "frame": "#57BEAD",
-    "fill": "#328275",
-    "ink": "#307C70",
+    "frame": "#54BBAA",
+    "fill": "#348275",
+    "ink": "#317B6F",
     "hero": "1124:588"
   },
   "xray": {
-    "frame": "#57BEAD",
-    "fill": "#328275",
-    "ink": "#307C70",
+    "frame": "#54BBAA",
+    "fill": "#348275",
+    "ink": "#317B6F",
     "hero": "1124:588"
   }
 }

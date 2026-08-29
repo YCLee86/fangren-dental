@@ -92,6 +92,9 @@ const CARDS = [
   { img: "prosth", title: "假牙一體成型有啥好",
     lead: "什麼狀況需要做牙套、齒質要修掉多少；金屬、全瓷、全鋯各適合誰。",
     post: "/posts/crown-materials/" },
+  { img: "implant", title: "植牙眉角停看聽",
+    lead: "術前要先做假牙模擬和斷層掃描；骨頭整合需要時間，植體與假牙都要有認證。",
+    post: "/posts/missing-tooth/" },
   { img: "denture", title: "活動假牙有眉角",
     lead: "假牙做好只是開始：牙齦要適應、要回診調整，還有怎麼吃、怎麼洗。",
     post: "/posts/missing-tooth/" },
@@ -101,10 +104,13 @@ const CARDS = [
   { img: "xray", title: "拍片的輻射有多少",
     lead: "根尖片、全口片、斷層掃描各是多少；拿搭一趟飛機和日常生活來對照。",
     post: null },
-  { img: "booking", title: "預約協議",
+  /* ⚠⚠ 這兩張是**行政**不是衛教，group 標成 admin 之後另外成一組。
+     成因是硬條件：LINE 的 carousel 最多 12 格，十二張紙本 ＋ 收尾那格就是 13。
+     行政本來就比較像「診所資訊」的延伸，剛好順著這條線切。 */
+  { img: "booking", title: "預約協議", group: "admin",
     lead: "分階段的療程診所會保留時段；要改期或取消，請至少兩天前告訴我們。",
     post: null },
-  { img: "fees", title: "掛號與文件費用",
+  { img: "fees", title: "掛號與文件費用", group: "admin",
     lead: "掛號費、部分負擔、優待身分，以及診斷證明與病歷複製各是多少。",
     post: null },
 ];
@@ -156,9 +162,12 @@ function make(c, sc, tag) {
   };
 }
 
+const HEALTH = CARDS.filter((c) => c.group !== "admin");
+const ADMIN = CARDS.filter((c) => c.group === "admin");
+
 const bubbles = PAIR
   ? CARDS.flatMap((c) => [make(c, "b", "Ⓑ 原色＋深墨字"), make(c, "d", "Ⓓ 原色＋白字")])
-  : CARDS.map((c) => make(c, SCHEME));
+  : HEALTH.map((c) => make(c, SCHEME));
 
 /* 收尾那一格：站上還有另外九篇 */
 const n = fs.readdirSync(path.join(ROOT, "posts")).filter((d) =>
@@ -200,11 +209,16 @@ if (!PAIR) {
   for (const f of fs.readdirSync(dir)) fs.unlinkSync(path.join(dir, f));
   CARDS.forEach((c, i) => fs.writeFileSync(
     path.join(dir, `${String(i + 1).padStart(2, "0")}-${c.img}.json`),
-    JSON.stringify(bubbles[i], null, 2) + "\n"));
+    JSON.stringify(make(c, SCHEME), null, 2) + "\n"));
 }
 
+const sfx = SCHEME === "a" ? "" : "-" + SCHEME;
 const out = { type: "carousel", contents: bubbles };
-const file = path.join(HERE, `health-carousel${SCHEME === "a" ? "" : "-" + SCHEME}.json`);
-fs.writeFileSync(file, JSON.stringify(out, null, 2) + "\n");
+fs.writeFileSync(path.join(HERE, `health-carousel${sfx}.json`), JSON.stringify(out, null, 2) + "\n");
+if (!PAIR) {
+  const admin = { type: "carousel", contents: ADMIN.map((c) => make(c, SCHEME)) };
+  fs.writeFileSync(path.join(HERE, `admin-carousel${sfx}.json`), JSON.stringify(admin, null, 2) + "\n");
+  console.log(`行政 ${ADMIN.length} 格　→ admin-carousel${sfx}.json`);
+}
 console.log(`案 ${SCHEME.toUpperCase()}　${bubbles.length} 格　${Buffer.byteLength(JSON.stringify(out))} bytes（LINE 上限 12 格／50KB）`);
 for (const c of CARDS) console.log(`  ${c.img.padEnd(10)} 框 ${C[c.img].frame} 填 ${solid(C[c.img])[0]}  ${c.title.padEnd(11)}→ ${c.post ?? "⚠ 站上沒有對應文章"}`);

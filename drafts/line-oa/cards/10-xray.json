@@ -3,14 +3,14 @@
   "size": "mega",
   "hero": {
     "type": "image",
-    "url": "https://fangren.net/assets/handout-whitening-hero.jpg",
+    "url": "https://fangren.net/assets/handout-xray-hero.jpg",
     "size": "full",
-    "aspectRatio": "1056:552",
+    "aspectRatio": "1124:588",
     "aspectMode": "cover",
     "action": {
       "type": "uri",
-      "label": "我的牙齒不夠白",
-      "uri": "https://fangren.net/assets/handout-whitening.jpg"
+      "label": "拍片的輻射有多少",
+      "uri": "https://fangren.net/assets/handout-xray.jpg"
     }
   },
   "body": {
@@ -29,12 +29,12 @@
             "type": "text",
             "text": "▌",
             "size": "md",
-            "color": "#006FD0",
+            "color": "#317B6F",
             "flex": 0
           },
           {
             "type": "text",
-            "text": "我的牙齒不夠白",
+            "text": "拍片的輻射有多少",
             "size": "lg",
             "weight": "bold",
             "color": "#2A2C27",
@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "噴砂拋光、居家藥劑、冷光美白差在哪；做完會不會回色、會不會敏感。",
+        "text": "根尖片、全口片、斷層掃描各是多少；拿搭一趟飛機和日常生活來對照。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -62,14 +62,14 @@
       {
         "type": "box",
         "layout": "vertical",
-        "backgroundColor": "#72BDFF",
+        "backgroundColor": "#54BBAA",
         "cornerRadius": "6px",
         "height": "40px",
         "justifyContent": "center",
         "action": {
           "type": "uri",
           "label": "看大圖",
-          "uri": "https://fangren.net/assets/handout-whitening.jpg"
+          "uri": "https://fangren.net/assets/handout-xray.jpg"
         },
         "contents": [
           {
