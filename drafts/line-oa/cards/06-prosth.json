@@ -1,0 +1,129 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/handout-prosth-hero.jpg",
+    "size": "full",
+    "aspectRatio": "1124:588",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "label": "假牙一體成型有啥好",
+      "uri": "https://fangren.net/assets/handout-prosth.jpg"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "▌",
+            "size": "md",
+            "color": "#A95A0C",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "假牙一體成型有啥好",
+            "size": "lg",
+            "weight": "bold",
+            "color": "#2A2C27",
+            "flex": 0
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "什麼狀況需要做牙套、齒質要修掉多少；金屬、全瓷、全鋯各適合誰。",
+        "size": "sm",
+        "color": "#5C5F57",
+        "wrap": true
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4AC64",
+        "cornerRadius": "6px",
+        "height": "40px",
+        "justifyContent": "center",
+        "action": {
+          "type": "uri",
+          "label": "看大圖",
+          "uri": "https://fangren.net/assets/handout-prosth.jpg"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "text",
+                "text": "看大圖",
+                "color": "#2A2C27",
+                "size": "md",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "borderColor": "#A95A0C",
+        "borderWidth": "1px",
+        "cornerRadius": "6px",
+        "height": "40px",
+        "justifyContent": "center",
+        "action": {
+          "type": "uri",
+          "label": "讀文章",
+          "uri": "https://fangren.net/posts/crown-materials/"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "text",
+                "text": "讀文章",
+                "color": "#A95A0C",
+                "size": "md",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

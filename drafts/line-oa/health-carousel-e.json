@@ -1,0 +1,1389 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-perio-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "嚴重牙周有救嗎",
+          "uri": "https://fangren.net/assets/handout-perio.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#307C70",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "嚴重牙周有救嗎",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "牙齒為什麼會搖、地基流失是怎麼回事；健保、水雷射、手術各能做到哪裡。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#57BEAD",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-perio.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#307C70",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/posts/perio-laser/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#307C70",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-calculus-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "陳年牙結石清除",
+          "uri": "https://fangren.net/assets/handout-calculus.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#0A6FD2",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "陳年牙結石清除",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "洗牙為什麼會痠、洗完為什麼覺得縫變大；牙齒會搖的話要另外處理。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#3495F5",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-calculus.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#0A6FD2",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/posts/regular-checkup/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#0A6FD2",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-caries-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "超大蛀牙生死線",
+          "uri": "https://fangren.net/assets/handout-caries.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#BE441B",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "超大蛀牙生死線",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "洞看起來不大、也不太痛，神經卻已經很近；清乾淨之後要填補、保神經，或做牙套。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#BE441B",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-caries.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#BE441B",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/posts/bioceramic/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#BE441B",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-wisdom-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "我的智齒該拔嗎",
+          "uri": "https://fangren.net/assets/handout-wisdom.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#307C70",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "我的智齒該拔嗎",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "哪幾種智齒該處理、術前要看什麼、拔完那一週會怎麼過。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#57BEAD",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-wisdom.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#307C70",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/posts/wisdom-tooth/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#307C70",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-aligner-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "我可以做隱形矯正嗎",
+          "uri": "https://fangren.net/assets/handout-aligner.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#DF002C",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "我可以做隱形矯正嗎",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "傳統矯正器和透明牙套差在哪：材質、牙齒能怎麼移動、關縫，還有戴起來的感覺。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#FF5375",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-aligner.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#DF002C",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/posts/orthodontics/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#DF002C",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-prosth-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "假牙一體成型有啥好",
+          "uri": "https://fangren.net/assets/handout-prosth.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#A95A0C",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "假牙一體成型有啥好",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "什麼狀況需要做牙套、齒質要修掉多少；金屬、全瓷、全鋯各適合誰。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#F4AC64",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-prosth.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#A95A0C",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/posts/crown-materials/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#A95A0C",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-denture-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "活動假牙有眉角",
+          "uri": "https://fangren.net/assets/handout-denture.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#0B7E71",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "活動假牙有眉角",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "假牙做好只是開始：牙齦要適應、要回診調整，還有怎麼吃、怎麼洗。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#10C0AC",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-denture.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#0B7E71",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/posts/missing-tooth/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#0B7E71",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-whitening-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1056:552",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "我的牙齒不夠白",
+          "uri": "https://fangren.net/assets/handout-whitening.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#006FD0",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "我的牙齒不夠白",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "噴砂拋光、居家藥劑、冷光美白差在哪；做完會不會回色、會不會敏感。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#72BDFF",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-whitening.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-xray-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1124:588",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "拍片的輻射有多少",
+          "uri": "https://fangren.net/assets/handout-xray.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#307C70",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "拍片的輻射有多少",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "根尖片、全口片、斷層掃描各是多少；拿搭一趟飛機和日常生活來對照。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#57BEAD",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-xray.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-booking-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1060:554",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "預約協議",
+          "uri": "https://fangren.net/assets/handout-booking.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#317B6D",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "預約協議",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "分階段的療程診所會保留時段；要改期或取消，請至少兩天前告訴我們。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#55BBA8",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-booking.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-fees-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1058:554",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "掛號與文件費用",
+          "uri": "https://fangren.net/assets/handout-fees.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#547B23",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "掛號與文件費用",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "掛號費、部分負擔、優待身分，以及診斷證明與病歷複製各是多少。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#A2D364",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-fees.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-home.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "到網站看看",
+          "uri": "https://fangren.net/#topics"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#3F654A",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "還有其他問題",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "站上另外還有 11 篇，從刷牙、蛀牙、缺牙到矯正，一科一科分好了。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#3F654A",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "到網站看看　fangren.net",
+              "uri": "https://fangren.net/#topics"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "到網站看看　fangren.net",
+                    "color": "#3F654A",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

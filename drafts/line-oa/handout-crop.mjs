@@ -76,7 +76,12 @@ function darkenUntil(color, against, target = AA) {
 }
 
 function dims(f) {
-  const d = fs.readFileSync(f); let i = 2;
+  const d = fs.readFileSync(f);
+  /* PNG：IHDR 就在檔頭 */
+  if (d.length > 24 && d.readUInt32BE(0) === 0x89504E47) {
+    return { w: d.readUInt32BE(16), h: d.readUInt32BE(20) };
+  }
+  let i = 2;
   while (i < d.length) {
     if (d[i] !== 0xFF) { i++; continue; }
     const m = d[i + 1];
@@ -86,16 +91,24 @@ function dims(f) {
   throw new Error("讀不到 JPEG 尺寸：" + f);
 }
 
-/* 卡片在截圖裡的範圍（跳過手機截圖的黑邊，但**保留**紙本自己那圈框） */
+/* 卡片在截圖裡的範圍（跳過黑邊，但**保留**紙本自己那圈框）
+ *
+ * ⚠⚠ 判準是「這一列**大部分**是亮的」，不是「有任何一個亮點」。
+ *   2026-08-28 加進來的三張是**相簿 app 的截圖**：上面有白色的標題與檔名、
+ *   下面有一排工具列圖示，那些都是黑底上的亮字 —— 用「有亮點就算」的舊寫法，
+ *   卡片的上緣會被判在標題那一行，裁出來整片是黑的加幾個字。 */
+const MAJ = 0.6;              // 六成以上
 function cardBox(src, W, H) {
   const g = raw(src, ["-vf", "scale=120:-1"]);
   const w = 120, h = g.length / (w * 3);
   const bright = (x, y) => { const o = (y * w + x) * 3; return Math.max(g[o], g[o + 1], g[o + 2]); };
-  const dark = (arr) => arr.every((v) => v < 40);
-  let t = 0; while (t < h && dark([...Array(w).keys()].map((x) => bright(x, t)))) t++;
-  let b = h - 1; while (b > t && dark([...Array(w).keys()].map((x) => bright(x, b)))) b--;
-  let l = 0; while (l < w && dark([...Array(h).keys()].map((y) => bright(l, y)))) l++;
-  let r = w - 1; while (r > l && dark([...Array(h).keys()].map((y) => bright(r, y)))) r--;
+  const rowOK = (y) => [...Array(w).keys()].filter((x) => bright(x, y) >= 60).length >= w * MAJ;
+  const colOK = (x, t, b) => [...Array(b - t + 1).keys()].filter((i) => bright(x, t + i) >= 60).length >= (b - t + 1) * MAJ;
+  let t = 0; while (t < h && !rowOK(t)) t++;
+  let b = h - 1; while (b > t && !rowOK(b)) b--;
+  if (t >= b) throw new Error("找不到卡片 —— 這張圖沒有一列是大部分亮的？");
+  let l = 0; while (l < w && !colOK(l, t, b)) l++;
+  let r = w - 1; while (r > l && !colOK(r, t, b)) r--;
   return { x: Math.round(l * W / w), y: Math.round(t * H / h),
            w: Math.round((r - l + 1) * W / w), h: Math.round((b - t + 1) * H / h), grid: { g, w, h, t, b, l, r } };
 }
@@ -120,8 +133,8 @@ function frameColor(box) {
 }
 
 const out = {};
-for (const f of fs.readdirSync(DIR).filter((f) => /^handout-[a-z]+\.jpg$/.test(f)).sort()) {
-  const name = f.match(/^handout-([a-z]+)\.jpg$/)[1];
+for (const f of fs.readdirSync(DIR).filter((f) => /^handout-[a-z]+\.(jpg|png)$/.test(f)).sort()) {
+  const name = f.match(/^handout-([a-z]+)\.(?:jpg|png)$/)[1];
   const src = path.join(DIR, f);
   const { w: W, h: H } = dims(src);
   const box = cardBox(src, W, H);

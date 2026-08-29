@@ -1,14 +1,32 @@
 {
+  "aligner": {
+    "frame": "#FF5375",
+    "fill": "#EC002F",
+    "ink": "#DF002C",
+    "hero": "1124:588"
+  },
   "booking": {
     "frame": "#55BBA8",
     "fill": "#348374",
     "ink": "#317B6D",
     "hero": "1060:554"
   },
+  "calculus": {
+    "frame": "#3495F5",
+    "fill": "#0B75DE",
+    "ink": "#0A6FD2",
+    "hero": "1124:588"
+  },
   "caries": {
     "frame": "#BE441B",
     "fill": "#BE441B",
     "ink": "#BE441B",
+    "hero": "1124:588"
+  },
+  "denture": {
+    "frame": "#10C0AC",
+    "fill": "#0B8577",
+    "ink": "#0B7E71",
     "hero": "1124:588"
   },
   "fees": {

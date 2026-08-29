@@ -34,6 +34,7 @@ const C = JSON.parse(fs.readFileSync(path.join(HERE, "handouts", "colors.json"),
      a 壓暗、飽和度不動、白字（第三輪的算法）
      b **原色一個值都不動**、字改深墨
      c 壓暗 ＋ 飽和度拉滿、白字
+     e **能用白字就用白字，不能就用深墨字**（原色一律不動）—— 使用者 2026-08-28 選的
      d **原色 ＋ 白字** —— ⚠ 對比只有 1.74~2.32，遠低於 AA 的 4.5。
        這一案是使用者指名要看的，留著比較用，**不要當成可以直接上線的預設**。
    ⚠ 只影響**填色**那一顆；外框鈕的字與 ▌ 一律用 ink
@@ -41,7 +42,7 @@ const C = JSON.parse(fs.readFileSync(path.join(HERE, "handouts", "colors.json"),
 const SCHEME = (process.argv[2] || "a").replace(/^--/, "");
 /* bd ＝ 比較用：每一張出兩格（B 一格、D 一格），body 最上面多一行標記。 */
 const PAIR = SCHEME === "bd";
-if (!PAIR && (!"abcd".includes(SCHEME) || SCHEME.length !== 1)) throw new Error("scheme 只能是 a／b／c／d／bd");
+if (!PAIR && (!"abcde".includes(SCHEME) || SCHEME.length !== 1)) throw new Error("scheme 只能是 a／b／c／d／e／bd");
 const INK = "#2A2C27";
 const hx = (r, g, b) => "#" + [r, g, b].map((v) => Math.round(v).toString(16).padStart(2, "0")).join("").toUpperCase();
 function r2h(r, g, b) { r /= 255; g /= 255; b /= 255;
@@ -68,21 +69,32 @@ const vivid = (frame) => {
 const solid = (v, sc = SCHEME) => sc === "b" ? [v.frame, INK]
   : sc === "c" ? [vivid(v.frame), "#FFFFFF"]
   : sc === "d" ? [v.frame, "#FFFFFF"]
+  /* e：底一律用他挑的原色，字看那個底撐不撐得住白 */
+  : sc === "e" ? [v.frame, RA(v.frame, "#FFFFFF") >= 4.5 ? "#FFFFFF" : INK]
   : [v.fill, "#FFFFFF"];
 
 const CARDS = [
   { img: "perio", title: "嚴重牙周有救嗎",
     lead: "牙齒為什麼會搖、地基流失是怎麼回事；健保、水雷射、手術各能做到哪裡。",
     post: "/posts/perio-laser/" },
+  { img: "calculus", title: "陳年牙結石清除",
+    lead: "洗牙為什麼會痠、洗完為什麼覺得縫變大；牙齒會搖的話要另外處理。",
+    post: "/posts/regular-checkup/" },
   { img: "caries", title: "超大蛀牙生死線",
     lead: "洞看起來不大、也不太痛，神經卻已經很近；清乾淨之後要填補、保神經，或做牙套。",
     post: "/posts/bioceramic/" },
   { img: "wisdom", title: "我的智齒該拔嗎",
     lead: "哪幾種智齒該處理、術前要看什麼、拔完那一週會怎麼過。",
     post: "/posts/wisdom-tooth/" },
+  { img: "aligner", title: "我可以做隱形矯正嗎",
+    lead: "傳統矯正器和透明牙套差在哪：材質、牙齒能怎麼移動、關縫，還有戴起來的感覺。",
+    post: "/posts/orthodontics/" },
   { img: "prosth", title: "假牙一體成型有啥好",
     lead: "什麼狀況需要做牙套、齒質要修掉多少；金屬、全瓷、全鋯各適合誰。",
     post: "/posts/crown-materials/" },
+  { img: "denture", title: "活動假牙有眉角",
+    lead: "假牙做好只是開始：牙齦要適應、要回診調整，還有怎麼吃、怎麼洗。",
+    post: "/posts/missing-tooth/" },
   { img: "whitening", title: "我的牙齒不夠白",
     lead: "噴砂拋光、居家藥劑、冷光美白差在哪；做完會不會回色、會不會敏感。",
     post: null },
@@ -179,6 +191,16 @@ bubbles.push({
       contents: [btn("到網站看看　fangren.net", `${SITE}/#topics`, GREEN, { outline: true })],
   },
 });
+}
+
+/* 一張一張看：每一格另外存一份單張的 bubble */
+if (!PAIR) {
+  const dir = path.join(HERE, "cards");
+  fs.mkdirSync(dir, { recursive: true });
+  for (const f of fs.readdirSync(dir)) fs.unlinkSync(path.join(dir, f));
+  CARDS.forEach((c, i) => fs.writeFileSync(
+    path.join(dir, `${String(i + 1).padStart(2, "0")}-${c.img}.json`),
+    JSON.stringify(bubbles[i], null, 2) + "\n"));
 }
 
 const out = { type: "carousel", contents: bubbles };

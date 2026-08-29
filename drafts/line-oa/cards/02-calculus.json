@@ -1,0 +1,129 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/handout-calculus-hero.jpg",
+    "size": "full",
+    "aspectRatio": "1124:588",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "label": "陳年牙結石清除",
+      "uri": "https://fangren.net/assets/handout-calculus.jpg"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "▌",
+            "size": "md",
+            "color": "#0A6FD2",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "陳年牙結石清除",
+            "size": "lg",
+            "weight": "bold",
+            "color": "#2A2C27",
+            "flex": 0
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "洗牙為什麼會痠、洗完為什麼覺得縫變大；牙齒會搖的話要另外處理。",
+        "size": "sm",
+        "color": "#5C5F57",
+        "wrap": true
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#3495F5",
+        "cornerRadius": "6px",
+        "height": "40px",
+        "justifyContent": "center",
+        "action": {
+          "type": "uri",
+          "label": "看大圖",
+          "uri": "https://fangren.net/assets/handout-calculus.jpg"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "text",
+                "text": "看大圖",
+                "color": "#2A2C27",
+                "size": "md",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "borderColor": "#0A6FD2",
+        "borderWidth": "1px",
+        "cornerRadius": "6px",
+        "height": "40px",
+        "justifyContent": "center",
+        "action": {
+          "type": "uri",
+          "label": "讀文章",
+          "uri": "https://fangren.net/posts/regular-checkup/"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "text",
+                "text": "讀文章",
+                "color": "#0A6FD2",
+                "size": "md",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

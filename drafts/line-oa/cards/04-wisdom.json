@@ -1,0 +1,129 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/handout-wisdom-hero.jpg",
+    "size": "full",
+    "aspectRatio": "1124:588",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "label": "我的智齒該拔嗎",
+      "uri": "https://fangren.net/assets/handout-wisdom.jpg"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "▌",
+            "size": "md",
+            "color": "#307C70",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "我的智齒該拔嗎",
+            "size": "lg",
+            "weight": "bold",
+            "color": "#2A2C27",
+            "flex": 0
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "哪幾種智齒該處理、術前要看什麼、拔完那一週會怎麼過。",
+        "size": "sm",
+        "color": "#5C5F57",
+        "wrap": true
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#57BEAD",
+        "cornerRadius": "6px",
+        "height": "40px",
+        "justifyContent": "center",
+        "action": {
+          "type": "uri",
+          "label": "看大圖",
+          "uri": "https://fangren.net/assets/handout-wisdom.jpg"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "text",
+                "text": "看大圖",
+                "color": "#2A2C27",
+                "size": "md",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "borderColor": "#307C70",
+        "borderWidth": "1px",
+        "cornerRadius": "6px",
+        "height": "40px",
+        "justifyContent": "center",
+        "action": {
+          "type": "uri",
+          "label": "讀文章",
+          "uri": "https://fangren.net/posts/wisdom-tooth/"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "text",
+                "text": "讀文章",
+                "color": "#307C70",
+                "size": "md",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

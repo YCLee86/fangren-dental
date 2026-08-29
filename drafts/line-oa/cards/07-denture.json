@@ -1,0 +1,129 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/handout-denture-hero.jpg",
+    "size": "full",
+    "aspectRatio": "1124:588",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "label": "活動假牙有眉角",
+      "uri": "https://fangren.net/assets/handout-denture.jpg"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "▌",
+            "size": "md",
+            "color": "#0B7E71",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "活動假牙有眉角",
+            "size": "lg",
+            "weight": "bold",
+            "color": "#2A2C27",
+            "flex": 0
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "假牙做好只是開始：牙齦要適應、要回診調整，還有怎麼吃、怎麼洗。",
+        "size": "sm",
+        "color": "#5C5F57",
+        "wrap": true
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#10C0AC",
+        "cornerRadius": "6px",
+        "height": "40px",
+        "justifyContent": "center",
+        "action": {
+          "type": "uri",
+          "label": "看大圖",
+          "uri": "https://fangren.net/assets/handout-denture.jpg"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "text",
+                "text": "看大圖",
+                "color": "#2A2C27",
+                "size": "md",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "borderColor": "#0B7E71",
+        "borderWidth": "1px",
+        "cornerRadius": "6px",
+        "height": "40px",
+        "justifyContent": "center",
+        "action": {
+          "type": "uri",
+          "label": "讀文章",
+          "uri": "https://fangren.net/posts/missing-tooth/"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "text",
+                "text": "讀文章",
+                "color": "#0B7E71",
+                "size": "md",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
