@@ -164,7 +164,7 @@ if (!(SS > 0)) { console.error("--statscale 要是正數"); process.exit(1); }
 const STATS_CELLS = [
   { n: "1983", u: "年", s: "中華路開業" },
   { n: "9",    u: "位", s: "醫師駐診" },
-  { n: "5",    u: "個", s: "部定專科" },
+  { n: "6",    u: "個", s: "部定專科" },   // ⚠ 2026-08-30 5→6（陳芷鈴醫師取得牙髓病科部定專科）
 ];
 const STATS_TEXT = STATS_CELLS.map((c) => c.n + c.u + c.s).join("");
 /* --blend alpha|multiply（2026-08-23 加）
