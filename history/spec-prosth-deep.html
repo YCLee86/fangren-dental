@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>spec-prosth-deep｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>spec-prosth-deep — 植牙的「重點字」提亮</h1>
+<p class="meta">
+  2026-08-31 開、當天定案上線<br>
+  原網址 <code>/preview/spec-prosth-deep/</code>（已刪除 2026-08-31）<br>
+  整頁還原：<code>git show c03e9cd:preview/spec-prosth-deep/index.html</code><br>
+  切換條 <code>?d=d0|d1|d2|d3</code>　產生器 <code>tools/spec-color-preview.mjs prosth-deep</code><br>
+  定案 <strong>Ⓓ3</strong>：<code>#182b4c</code> → <strong><code>#2a4677</code></strong>（填色 <code>#465885</code> 沒動）
+</p>
+
+<div class="note">
+<p>使用者看到剛上線的成品之後：「<strong>內文的字可以也調看看？現在的看起來很深色很黑。</strong>」
+他是對的，而且有一格數字直接說明了為什麼。</p>
+</div>
+
+<h2>一、那顆「彩色的字」和普通黑字一樣深</h2>
+<pre>全站的墨  --ink #2a2c27   L* 17.6
+植牙的深階       #182b4c   L* 17.7        ← 差 0.1 階
+
+所以那顆藍讀起來就是黑的，不是這一科的顏色。
+
+⚠ 它也是全站唯一的離群值：
+  深階 L*   植牙 17.7 ／ 根管 30.7 ／ 全部 31.3 ／ 一般 31.5 ／
+            矯正 39.8 ／ 口外 39.8 ／ 牙周 41.9 ／ 兒牙 47.2
+  比第二深的還深 13.1 階。
+
+  兩階落差（填色 − 深階）：植牙 20.1 是全站最大，其餘七科 5.9~15.1 ——
+  和同一天早上矯正那 21.6 是同一種病。</pre>
+
+<h2>二、⚠⚠ 它被壓那麼深的理由，同一天早上就消失了</h2>
+<pre>PALETTE.md 六之十四節寫著：
+  「這一組能成立完全靠贋復的字階讓到 L* 18.9 ——
+    沒有那一步，牙周深階對贋復深階只有 ΔE 0.7」
+
+那顆牙周的深階後來整組給了矯正，而矯正的深階 2026-08-31 早上已經搬到 #31637f
+（見 /history/spec-ortho-deep.html）。兩者現在 ΔE 25.4 —— 約束解除。
+
+⚠ 通則：**「為了讓別人活下來而委屈的值」，等別人搬走了要記得回來鬆綁。**
+  這一顆從 2026-08-09 委屈到 2026-08-31，中間沒有人回來看過。</pre>
+
+<h2>三、四案（只動亮度，色相與佔色域比例不變）</h2>
+<pre>                    深階      L*    比全站的墨亮  兩階落差  字對卡  字對紙
+Ⓓ0 現況            #182b4c  17.7    0.0 階        20.1    12.83  11.14
+Ⓓ1 提亮一階         #213962  24.1    6.5           13.8    10.46   9.08
+Ⓓ2 提亮兩階         #263f6c  26.9    9.2           10.8     9.51   8.25
+Ⓓ3 回到家族的深度 ★  #2a4677  29.9   12.3            7.9     8.53   7.40
+
+⚠⚠ **這一輪卡不到 AA** —— 四案的字對紙是 7.40~11.14，門檻只有 4.5。
+   判準是「讀起來像不像一個顏色」，不是看不看得清楚。
+   所以提案頁的面板報的是「**比全站的墨亮幾階**」，不是只印對比度。
+   ⚠ 面板要能直接下判斷（同 tag-fade 那一輪）：
+     < 2 階 → 「幾乎一樣深，讀起來會是黑的」／< 8 → 「看得出是顏色了」／
+     ≥ 8 → 「明顯是一個顏色」。
+
+定案的 Ⓓ3：L* 29.9 和根管 30.7・全部 31.3・一般 31.5 站在同一群，
+兩階落差 7.9 正好落在家族刻度（一般 7.9・口外 8.2・全部 8.4）。</pre>
+
+<h2>四、四種距離一格都沒動</h2>
+<pre>填色 × 填色   16.0  矯正×植牙
+深階 × 深階   18.6  一般×牙周
+深階 × 填色   15.6  牙周深×一般填
+填色 × 深階   15.6
+
+新深階對其他七科：深階最小 ΔE 20.1、填色最小 ΔE 21.0 —— 沒有撞色的風險。
+（這一輪只往上提亮，離其他人都更遠，本來就不會變緊。）</pre>
+
+<h2>五、⚠ 定案時跟著重跑的：分享圖的帶子</h2>
+<pre>assets/og-topic-prosth.jpg 的帶子吃的是**深階**，所以要重跑並重新校補償色：
+
+  node drafts/og-shift.mjs drafts/og-topic-prosth-src.jpg prosth --shift 45
+  node tools/og-plate.mjs prosth --blend multiply --tintcolor '#2e55a2' \
+    --ink 0.18 --blur 6 --loc full --locpos stack
+
+⚠⚠ 補償色 #2e55a2 是**校出來的**（相乘上色不是線性的）。這一輪累積到三個已知點，
+   逐通道做最小平方法擬合再反推目標 rgb(42,70,119)：
+
+     補償色 #3971bd → 帶子 rgb(50,91,137)
+     補償色 #1b3a66 → 帶子 rgb(29,50,79)
+     補償色 #143162 → 帶子 rgb(23,44,75)
+
+   實測落在 rgb(43,71,119)，對目標差 1 階。紙色字對這條帶子 7.30（舊的是 11.07）。
+
+⚠ 驗收：和上一版逐像素比 —— 帶子那 104 列 98.9% 有差（本來就要換色），
+  **帶子以下只有 0.98% 有差、最大 9 階**（JPEG 重壓的雜訊），內容沒動。
+
+⚠ **線稿不必動**：assets/lineart-prosth.png 吃的是**填色**，這一輪沒改填色。</pre>
+
+<h2>六、產生器這一輪修掉的兩個雷</h2>
+<pre>1. **覆寫規則原本三排都發。** CANDS（植牙填色那一排）的 "now" 在植牙定案之後
+   已經是**舊值 #335b8b** —— 在沒有那一排的頁面上發出去，
+   等於把站上剛換好的填色改回舊的。改成**只發這一頁真的有那一排的規則**。
+   ⚠ 這是同一支產生器第二次踩「規則發錯對象」（第一次是拿當頁的 spec 當目標，
+     見 /history/spec-ortho-deep.html）。**通則：覆寫規則的目標與範圍都要寫死。**
+
+2. **tail 變數的定義排在使用它的分支之後。** var 會提升，所以不是錯誤，
+   是安靜地印出 "undefined"。</pre>
+
+<h2>七、驗收</h2>
+<pre>・四案 × 四個視窗（390／375／834／1440）逐一讀 computed style 比對預期色值、
+  填色沒被動到、無水平捲動、切換條在手機上 20.7%；產出的腳本過 node --check。
+・八個位置 0 個不過（兒牙那三格是 2026-08-08 就定下的已知取捨，沒有動）。
+・上線後三個視窗量首頁七顆標記的字色，其餘六科逐一符合預期。</pre>
+
+<footer>
+  <a href="/history/">← 改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>

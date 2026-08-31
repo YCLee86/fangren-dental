@@ -4,7 +4,7 @@
  *   node tools/spec-color-preview.mjs prosth   → preview/spec-prosth-line58/
  *   node tools/spec-color-preview.mjs ortho    → preview/spec-ortho-twosteps/
  *
- * ⚠⚠ **2026-08-31 兩頁都已定案上線並刪除**（矯正深階 `#31637f`、植牙 Ⓒ
+ * ⚠⚠ **2026-08-31 三頁都已定案上線並刪除**（矯正深階 `#31637f`、植牙 Ⓒ
  *   `#465885`／`#182b4c`），推導在 `/history/spec-ortho-deep.html` 與
  *   `/history/spec-prosth-line58.html`。**所以下面 CANDS 的 "現況" 已經不是現況了，
  *   現在站上跑的是 Ⓒ；ORTHO 的 g0 也不是現況，是舊值。** 這一支留著是為了
@@ -114,10 +114,10 @@ const ORTHO = [
    ⚠ 四案的對比度都很寬鬆（對紙 7.4~11.1），這一輪卡不到 AA，純粹是「讀起來像不像
      一個顏色」。 */
 const PROSTH_DEEP = [
-  { k: "d0", label: "現況（和黑字一樣深）", deep: "#182b4c" },
+  { k: "d0", label: "舊值（和黑字一樣深）", deep: "#182b4c" },   /* ⚠ 2026-08-31 起這不是現況了 */
   { k: "d1", label: "Ⓓ1 提亮一階",        deep: "#213962" },
   { k: "d2", label: "Ⓓ2 提亮兩階",        deep: "#263f6c" },
-  { k: "d3", label: "Ⓓ3 回到家族的深度",   deep: "#2a4677" },
+  { k: "d3", label: "Ⓓ3 回到家族的深度（定案）", deep: "#2a4677" },
 ];
 
 /* ---- 每一頁要做什麼 --------------------------------------------------------
@@ -250,7 +250,7 @@ ${PAGE.rows.includes("c") ? rowC : ""}${PAGE.rows.includes("o") ? rowO : ""}${PA
           {n:'兒牙',f:'#c28229',d:'#9e6301'},{n:'根管',f:'#ae4f4d',d:'#89202d'},
           {n:'口外',f:'#8e6299',d:'#784e84'},{n:'全部',f:'#5f5d5c',d:'#4c4948'}];
 
-  var st={c:'now', o:'g3', d:'d0'};   /* ⚠ 預設一律指到站上現在跑的那一顆 */
+  var st={c:'now', o:'g3', d:'d3'};   /* ⚠ 預設一律指到站上現在跑的那一顆 */
   /* ⚠ 正規式寫 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到 g0 這種帶數字的值（CLAUDE.md 第八節） */
   var qs=new URLSearchParams(location.search);
   ['c','o','d'].forEach(function(k){var v=qs.get(k);
