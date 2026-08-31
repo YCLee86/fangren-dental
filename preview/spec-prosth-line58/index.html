@@ -5266,6 +5266,8 @@ html[data-qopen="1"] .head-search {
 .pvsw i{width:22px;height:14px;border-radius:3px;display:inline-block}
 .pvout{margin-top:5px;font-size:11.5px;line-height:1.55;color:#c9c5bf;white-space:pre-wrap}
 .pvout .bad{color:#ff9a8a}.pvout .ok{color:#9fd6a0}
+.pvout b{color:#e8e6e2}
+.pvout i{width:20px;height:12px;border-radius:3px;display:inline-block;vertical-align:-1px}
 .pvmin{position:fixed;right:10px;bottom:calc(6px + env(safe-area-inset-bottom));z-index:100;
   border:1px solid #4a4642;background:rgba(24,22,20,.93);color:#e8e6e2;border-radius:8px;
   padding:5px 9px;font:500 12px system-ui,sans-serif;min-height:30px}
@@ -7593,25 +7595,29 @@ html[data-qopen="1"] .head-search {
      ⚠ 兩支都用 `document.body.dataset.topic` 擋住，首頁上等於不存在。 -->
 
 <div class="pvbar" id="pvbar">
-  <div class="pvrow"><b>配色</b><button data-v="now">現況</button><button data-v="a">Ⓐ 實測原值</button><button data-v="b">Ⓑ 實測較深</button><button data-v="c">Ⓒ 亮度回家族帶</button></div>
-  <div class="pvrow" id="pvsw"><b>色票</b></div>
+  <div class="pvrow"><b>植牙</b><button data-k="c" data-v="now">現況</button><button data-k="c" data-v="a">Ⓐ 實測原值</button><button data-k="c" data-v="b">Ⓑ 實測較深</button><button data-k="c" data-v="c">Ⓒ 亮度回家族帶</button></div>
+  <div class="pvrow"><b>矯正</b><button data-k="o" data-v="g0">現況</button><button data-k="o" data-v="g1">Ⓖ1 偏藍</button><button data-k="o" data-v="g2">Ⓖ2 偏藍・提亮</button><button data-k="o" data-v="g3">Ⓖ3 原本那支藍</button></div>
   <div class="pvout" id="pvout">量測中…</div>
 </div>
 <button class="pvmin" id="pvmin">收起</button>
 <script>
 (function(){
-  var CANDS=[{"k":"now","label":"現況","fill":"#335b8b","deep":"#182f4b"},{"k":"a","label":"Ⓐ 實測原值","fill":"#3f527e","deep":"#182b4c"},{"k":"b","label":"Ⓑ 實測較深","fill":"#3c4c71","deep":"#182b4c"},{"k":"c","label":"Ⓒ 亮度回家族帶","fill":"#465885","deep":"#182b4c"}];
+  var CANDS=[{"k":"now","label":"現況","fill":"#335b8b","deep":"#182f4b"},{"k":"a","label":"Ⓐ 實測原值","fill":"#3f527e","deep":"#182b4c"},{"k":"b","label":"Ⓑ 實測較深","fill":"#3c4c71","deep":"#182b4c"},{"k":"c","label":"Ⓒ 亮度回家族帶","fill":"#465885","deep":"#182b4c"}], ORTHO=[{"k":"g0","label":"現況","deep":"#244369"},{"k":"g1","label":"Ⓖ1 偏藍","deep":"#274f6a"},{"k":"g2","label":"Ⓖ2 偏藍・提亮","deep":"#2c5977"},{"k":"g3","label":"Ⓖ3 原本那支藍","deep":"#31637f"}];
   var bar=document.getElementById('pvbar'), out=document.getElementById('pvout'),
-      sty=document.getElementById('pvspec'), swrow=document.getElementById('pvsw');
+      sty=document.getElementById('pvspec');
   var PAPER='#e2e5e6', CARD='#f4f4f5', WHITE='#ffffff';
-  /* 鄰居：全站最近的一對就在這裡（矯正 × 贋復），牙周是第三顆冷色 */
-  var NB=[{n:'矯正',f:'#4478b5',d:'#244369'},{n:'牙周',f:'#317d78',d:'#2a6d69'},
+  /* 其餘五科：填色與深階都列，因為標記那一排上被選到的用填色、其他用深階 */
+  var NB=[{n:'牙周',f:'#317d78',d:'#2a6d69'},{n:'一般',f:'#3f654a',d:'#2c5238'},
+          {n:'兒牙',f:'#c28229',d:'#9e6301'},{n:'根管',f:'#ae4f4d',d:'#89202d'},
           {n:'口外',f:'#8e6299',d:'#784e84'},{n:'全部',f:'#5f5d5c',d:'#4c4948'}];
 
-  var st='now';
-  /* ⚠ 正規式寫 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 第八節） */
-  var qs=new URLSearchParams(location.search).get('c');
-  if(qs && /^[a-z0-9]+$/.test(qs) && CANDS.some(function(c){return c.k===qs;})) st=qs;
+  var st={c:'now', o:'g0'};
+  /* ⚠ 正規式寫 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到 g0 這種帶數字的值（CLAUDE.md 第八節） */
+  var qs=new URLSearchParams(location.search);
+  ['c','o'].forEach(function(k){var v=qs.get(k);
+    if(v && /^[a-z0-9]+$/.test(v) && list(k).some(function(x){return x.k===v;})) st[k]=v;});
+  function list(k){ return k==='c'?CANDS:ORTHO; }
+  function cur(k){ return list(k).filter(function(x){return x.k===st[k];})[0]; }
 
   function hx(h){return [1,3,5].map(function(i){return parseInt(h.substr(i,2),16);});}
   function lum(c){var s=c.map(function(x){x/=255;return x<=0.03928?x/12.92:Math.pow((x+0.055)/1.055,2.4);});
@@ -7630,50 +7636,51 @@ html[data-qopen="1"] .head-search {
   function lch(h){var L=lab(h);return [L[0],Math.hypot(L[1],L[2]),(Math.atan2(L[2],L[1])*180/Math.PI+360)%360];}
   function f1(n){return n.toFixed(1);} function f2(n){return n.toFixed(2);}
   function mark(v,t){return v>=t?'<span class="ok">'+f2(v)+' ✓</span>':'<span class="bad">'+f2(v)+' ✗</span>';}
-
-  function cand(){return CANDS.filter(function(c){return c.k===st;})[0];}
+  function sw(c){return '<i style="background:'+c+'"></i>';}
 
   function apply(){
-    var c=cand();
-    sty.textContent='html [data-spec="prosth"]{--accent:'+c.fill+';--accent-deep:'+c.deep+';}'+
+    var c=cur('c'), o=cur('o');
+    sty.textContent=
+      'html [data-spec="prosth"]{--accent:'+c.fill+';--accent-deep:'+c.deep+';}'+
+      'html [data-spec="ortho"]{--accent-deep:'+o.deep+';}'+
       ':root{--pv-la:url("la-'+c.k+'.png");}';
-    bar.querySelectorAll('button[data-v]').forEach(function(b){
-      b.setAttribute('aria-pressed', String(b.dataset.v===st));});
-    var u=new URL(location); u.searchParams.set('c',st); history.replaceState(null,'',u);
-    swatches(); measure();
-  }
-  function swatches(){
-    var c=cand();
-    swrow.innerHTML='<b>色票</b>'+
-      [['本案',c.fill]].concat(NB.map(function(n){return [n.n,n.f];}))
-      .map(function(p){return '<span class="pvsw"><i style="background:'+p[1]+'"></i>'+p[0]+'</span>';}).join('');
+    bar.querySelectorAll('button[data-k]').forEach(function(b){
+      b.setAttribute('aria-pressed', String(st[b.dataset.k]===b.dataset.v));});
+    var u=new URL(location); u.searchParams.set('c',st.c); u.searchParams.set('o',st.o);
+    history.replaceState(null,'',u);
+    measure();
   }
   function measure(){
-    var c=cand(), L=lch(c.fill), D=lch(c.deep);
-    var near=NB.map(function(n){return {n:n.n,f:dE(c.fill,n.f),d:dE(c.deep,n.d)};});
-    var minF=near.reduce(function(a,b){return b.f<a.f?b:a;});
-    var minD=near.reduce(function(a,b){return b.d<a.d?b:a;});
+    var c=cur('c'), o=cur('o');
+    var L=lch(c.fill), D=lch(o.deep);
+    /* ⚠⚠ 這一行才是這一輪的主角：同一排標記上，被選到那顆用**填色**、
+       其餘六顆用**深階**，所以真正並排的是「矯正深階 × 植牙填色」。
+       PALETTE.md 全篇只算填色對填色、深階對深階，漏掉的就是這一格。 */
+    var cross=dE(o.deep, c.fill);
+    /* 其餘五科的深階，也一起對植牙的填色算一次（矯正是不是離群值，看這個） */
+    var others=NB.map(function(n){return {n:n.n, v:dE(n.d, c.fill)};});
+    var minOther=others.reduce(function(a,b){return b.v<a.v?b:a;});
     var hs=document.documentElement.scrollWidth>document.documentElement.clientWidth;
     out.innerHTML=
-      '填色 '+c.fill+'　L*'+f1(L[0])+' C*'+f1(L[1])+' h'+f1(L[2])+
-      '　　深階 '+c.deep+'　L*'+f1(D[0])+' C*'+f1(D[1])+' h'+f1(D[2])+'\n'+
+      sw(c.fill)+' 植牙填色 '+c.fill+' L*'+f1(L[0])+' h'+f1(L[2])+
+      '　'+sw(o.deep)+' 矯正深階 '+o.deep+' L*'+f1(D[0])+' h'+f1(D[2])+'\n'+
+      '<b>這兩顆在同一排標記上並排：ΔE '+f1(cross)+'</b>　'+
+      (cross>=13 ? '<span class="ok">分得開（比現況那 11.3 好）</span>'
+       : cross>=9 ? '<span class="ok">和現況那 11.3 差不多</span>'
+       : cross>=6.1 ? '<span class="bad">比現況更像（現況 11.3）</span>'
+                    : '<span class="bad">低於出局線 6.1</span>')+'\n'+
+      '對照：其餘五科的深階對這個填色最小的是 '+minOther.n+' '+f1(minOther.v)+
+      '（'+others.map(function(x){return x.n+f1(x.v);}).join('・')+'）\n'+
       '白字在塊 '+mark(cr(c.fill,WHITE),4.5)+'　塊對紙 '+mark(cr(c.fill,PAPER),3)+
-      '　深階對卡 '+mark(cr(c.deep,CARD),4.5)+'　深階對紙 '+mark(cr(c.deep,PAPER),4.5)+'\n'+
-      'ΔE 對鄰居：'+near.map(function(n){return n.n+' '+f1(n.f)+'/'+f1(n.d);}).join('　')+'\n'+
-      '最近的一對：填色 '+minF.n+' '+f1(minF.f)+
-      (minF.f>=13.3?'<span class="ok">（不比現況那 13.3 緊）</span>'
-                   :'<span class="bad">（比現況那 13.3 還緊）</span>')+
-      '　深階 '+minD.n+' '+f1(minD.d)+
-      (minD.d>=10.5?'<span class="ok">（不比現況那 10.5 緊）</span>'
-                   :'<span class="bad">（比現況那 10.5 還緊）</span>')+'\n'+
-      '家族帶 L* 36~48：'+(L[0]>=36&&L[0]<=48?'<span class="ok">在帶內</span>'
-        :'<span class="bad">低了 '+f1(36-L[0])+' 階（七科裡最深的一顆）</span>')+
+      '　矯正深階對卡 '+mark(cr(o.deep,CARD),4.5)+'　對紙 '+mark(cr(o.deep,PAPER),4.5)+
+      '　矯正兩階落差 '+f1(49.5-D[0])+'（家族 5.9~15.1）\n'+
+      '植牙深階 '+c.deep+' 對卡 '+mark(cr(c.deep,CARD),4.5)+'　對紙 '+mark(cr(c.deep,PAPER),4.5)+
       '　視窗 '+innerWidth+'×'+innerHeight+'　'+
       (hs?'<span class="bad">⚠ 有水平捲動</span>':'<span class="ok">無水平捲動</span>');
   }
   bar.addEventListener('click', function(e){
-    var b=e.target.closest('button[data-v]'); if(!b) return;
-    st=b.dataset.v; apply();
+    var b=e.target.closest('button[data-k]'); if(!b) return;
+    st[b.dataset.k]=b.dataset.v; apply();
   });
   document.getElementById('pvmin').addEventListener('click', function(){
     bar.classList.toggle('is-min');
