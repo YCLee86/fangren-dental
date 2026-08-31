@@ -101,6 +101,15 @@ if (!ART && !R) { console.error(`× ${spec} 沒有區塊 ${rk}（有的：${Obje
 
 const SRC = ART || path.join(ROOT, "drafts", `og-topic-${spec}-src.jpg`);
 if (!fs.existsSync(SRC)) { console.error(`× 找不到原檔 ${path.relative(ROOT, SRC)}`); process.exit(1); }
+/* --color <hex>：不用該科現行的套色，改用指定的顏色。
+   ⚠ 這是**提案用的**（2026-08-31 植牙那一輪加的）：線稿的顏色是烘進 PNG 的，
+     所以「換一個科別色看看」不能只改 CSS，要連線稿一起重產，否則提案頁上
+     的底圖還是舊色 —— 提案頁擺的必須是真的產出檔（CLAUDE.md 第八節）。
+   ⚠ 不給就照 ACCENT 那一組，正式站的三行指令一個字都不必改。 */
+const colIdx = args.indexOf("--color");
+const COLOR = colIdx >= 0 ? args[colIdx + 1] : ACCENT[spec];
+if (!/^#[0-9a-fA-F]{6}$/.test(COLOR)) { console.error("× --color 要 #rrggbb"); process.exit(1); }
+
 const oIdx = args.indexOf("--out");
 const OUT = oIdx >= 0 ? path.resolve(ROOT, args[oIdx + 1]) : path.join(ROOT, "assets", `lineart-${spec}.png`);
 
@@ -120,7 +129,7 @@ let chromium = null;
 for (const p of pwPaths) { try { ({ chromium } = (await import(p)).default ?? (await import(p))); if (chromium) break; } catch {} }
 if (!chromium) throw new Error("找不到 Playwright");
 
-const rgb = [1, 3, 5].map((i) => parseInt(ACCENT[spec].slice(i, i + 2), 16));
+const rgb = [1, 3, 5].map((i) => parseInt(COLOR.slice(i, i + 2), 16));
 const browser = await chromium.launch({ executablePath: chromePath });
 const pg = await browser.newPage();
 const mime = /\.png$/i.test(SRC) ? "image/png" : "image/jpeg";
