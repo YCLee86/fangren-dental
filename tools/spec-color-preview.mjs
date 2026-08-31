@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /* 科別色的提案頁產生器（換一顆科別色，逐案在真實版面上比）。
  *
- *   node tools/spec-color-preview.mjs prosth
- *   → preview/spec-<spec>-line58/index.html ＋ 各候選的線稿 PNG
+ *   node tools/spec-color-preview.mjs prosth   → preview/spec-prosth-line58/
+ *   node tools/spec-color-preview.mjs ortho    → preview/spec-ortho-twosteps/
  *
  * 2026-08-31 植牙・假牙重建這一輪寫的：使用者拍了富山路面電車的路線圖，
  * 「5、8 號線的顏色看起來跟植牙假牙贗復的標籤主題色很像」，要一份套色預覽
- * 和現在版本的比較。
+ * 和現在版本的比較。同一天他在提案頁上看出矯正的深階不對，於是長出第二頁。
  *
  * ⚠⚠ **快照取的是 `topics/<spec>/index.html`，不是 `index.html`。** 理由是那一頁
  *   把這顆色的每一種用法一次擺齊，而且**全部在「亮起來」那一態**：
@@ -25,6 +25,9 @@
  * ⚠⚠ **線稿底圖的顏色是烘進 PNG 的**（`tools/topic-lineart.mjs`），
  *   所以換色不能只改 CSS —— 這一支會用 `--color` 幫每個候選各產一張，
  *   放進提案頁的資料夾裡，切換時連圖一起換。**提案頁擺的必須是真的產出檔。**
+ *   ⚠ 只有**填色**變的時候才要重產（線稿吃的是套色那一階）。矯正這一輪只動
+ *   白底上的字那一階，`assets/lineart-ortho.png` 一個位元組都不必動 ——
+ *   所以那一頁 `HAS_LA` 是 false，`--pv-la` 不會被設，圖走 CSS 原本那個值。
  *
  * ⚠ 切換條是**即時套用不重新載入**：這一輪只改顏色，不影響任何
  *   「開頁量一次」的 JS（`sizeLabels`、`--topic-pad`、卡片折行那幾支量的是
@@ -32,6 +35,10 @@
  *
  * ⚠ 覆寫要寫成 `html [data-spec="…"]`（0,1,1）才一定贏得過站上那條
  *   `[data-spec="…"]`（0,1,0）—— 靠排序決勝的話，日後樣式表一搬位置就失效。
+ *
+ * ⚠⚠ **模板字串裡的換行一律寫 `\\n` 不是 `\n`** —— 這一支整段切換條是 JS 的
+ *   模板字串，`\n` 會在**產生的當下**就變成真的換行，把產出頁面裡那個字串
+ *   從中間切斷、整支腳本語法錯誤（2026-08-31 踩過）。最後有一道守門在擋。
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -40,9 +47,9 @@ import { execFileSync } from "node:child_process";
 const ROOT = path.resolve(import.meta.dirname, "..");
 const spec = process.argv[2] || "prosth";
 
-/* ---- 候選 ---------------------------------------------------------------
+/* ---- 植牙的候選 -----------------------------------------------------------
    量測：富山路面電車 5・8 號線那條深藍，八段逐段取中位數之後
-   用旁邊的看板底色做白平衡還原（做法與數字寫在 history 那一頁）。
+   用旁邊的看板底色做白平衡還原（做法與數字寫在 PALETTE.md 六之二十二）。
    ・看板當純白還原 → #3f527e
    ・看板當米白 #F2EDE4 還原 → #3c4c71
    兩個白點假設都合理，所以兩個都給使用者看。
@@ -57,7 +64,7 @@ const CANDS = [
   { k: "c",   label: "Ⓒ 亮度回家族帶", fill: "#465885", deep: "#182b4c" },
 ];
 
-/* ---- 第二把尺：齒顎矯正的深階（2026-08-31 使用者在提案頁上看出來的）----------
+/* ---- 矯正的深階（2026-08-31 使用者在提案頁上看出來的）------------------------
    「矯正的深階字套色顏色看起來很深，反而很像假牙重建的顏色。」**他是對的**：
    同一排標記上，**被選到那顆用填色、其餘六顆用深階**，所以真正並排的是
    「矯正深階 × 植牙填色」—— 而那一對 ΔE 只有 **11.3**，其他六科的深階對植牙填色
@@ -81,16 +88,32 @@ const ORTHO = [
   { k: "g3", label: "Ⓖ3 原本那支藍", deep: "#31637f" },
 ];
 
+/* ---- 每一頁要做什麼 --------------------------------------------------------
+   ⚠ demo ＝「兩階並排」的示範（2026-08-31 使用者：「不同色相是什麼意思，我看不懂」）。
+     它把**同一顆標記的兩態**擺在一起：被選到（填色）與沒被選到（白底＋深階的字），
+     再放一組口腔外科當對照（那一科的兩階色相只差 0.5°，是全站的常態）。
+     ⚠⚠ 用的是**站上自己的 class**（`.chips` ＋ `[data-spec]` ＋ `aria-current`），
+       不是拿 CSS 另外做一份假的 —— 假的哪天樣式改了這一頁就開始說謊
+       （同 og-topic-card 那一輪「提案頁要擺真的產出檔」）。
+     ⚠ 示範裡的 `<a>` **不給 href**，並且 `pointer-events: none` —— 它是拿來看的，
+       點下去換頁就毀了現場。 */
+const PAGES = {
+  prosth: { dir: "spec-prosth-line58",  rows: ["c", "o"], lineart: true,  demo: false },
+  ortho:  { dir: "spec-ortho-twosteps", rows: ["o"],      lineart: false, demo: true  },
+};
+const PAGE = PAGES[spec];
+if (!PAGE) { console.error(`× 這一支只做 ${Object.keys(PAGES).join(" / ")}`); process.exit(1); }
+
 /* 線稿要用哪一張原檔重產（＝ CLAUDE.md 定案表裡那一行指令的參數） */
 const LINEART = {
   prosth: { art: "drafts/lineart-prosth-v2.jpg", crop: "36,83,972,896", flip: false },
 };
 
-const dir = path.join(ROOT, "preview", `spec-${spec}-line58`);
+const dir = path.join(ROOT, "preview", PAGE.dir);
 fs.mkdirSync(dir, { recursive: true });
 
 /* ---- 1. 各候選的線稿 ------------------------------------------------------ */
-const la = LINEART[spec];
+const la = PAGE.lineart ? LINEART[spec] : null;
 if (la) {
   for (const c of CANDS) {
     const out = path.join(dir, `la-${c.k}.png`);
@@ -113,9 +136,11 @@ h = h.replace(/<meta name="robots"[^>]*>/,
 if (!/noindex/.test(h)) throw new Error("noindex 沒有寫進去");
 
 /* 線稿改吃變數（url 只出現一次，@media 那一段只調大小與濃度） */
-const reLa = new RegExp(`background: url\\("(\\.\\./\\.\\./assets/lineart-${spec}\\.png)"\\) no-repeat;`);
-if (!reLa.test(h)) throw new Error(`接不到 ${spec} 的線稿那一行 —— 站上的寫法變了`);
-h = h.replace(reLa, `background-image: var(--pv-la, url("$1")); background-repeat: no-repeat;`);
+if (PAGE.lineart) {
+  const reLa = new RegExp(`background: url\\("(\\.\\./\\.\\./assets/lineart-${spec}\\.png)"\\) no-repeat;`);
+  if (!reLa.test(h)) throw new Error(`接不到 ${spec} 的線稿那一行 —— 站上的寫法變了`);
+  h = h.replace(reLa, `background-image: var(--pv-la, url("$1")); background-repeat: no-repeat;`);
+}
 
 /* ---- 3. 切換條 ------------------------------------------------------------
    ⚠ 樣式一定要在 <head> 裡：塞在頁尾的話，切換條在樣式表之前就被解析出來，
@@ -127,37 +152,58 @@ const css = `
   backdrop-filter:blur(8px);color:#e8e6e2;font:500 13px/1.4 system-ui,sans-serif;
   padding:8px 10px calc(8px + env(safe-area-inset-bottom));max-height:24vh;overflow:auto}
 .pvbar.is-min{max-height:none;padding:4px 10px}
-.pvbar.is-min .pvrow,.pvbar.is-min .pvout{display:none}
+.pvbar.is-min .pvrow,.pvbar.is-min .pvout,.pvbar.is-min .pvdemo{display:none}
 .pvrow{display:flex;gap:5px;align-items:center;margin:4px 0;flex-wrap:nowrap;overflow-x:auto}
 .pvrow b{flex:none;width:2.6em;color:#a8a49e;font-weight:500}
 .pvbar button{flex:none;border:1px solid #4a4642;background:#2a2724;color:#e8e6e2;
   border-radius:7px;padding:5px 9px;font:inherit;min-height:30px;cursor:pointer}
 .pvbar button[aria-pressed="true"]{background:#e8e6e2;color:#1c1a18;border-color:#e8e6e2}
-.pvsw{display:inline-flex;align-items:center;gap:4px;flex:none;margin-right:6px;font-size:11.5px;color:#c9c5bf}
-.pvsw i{width:22px;height:14px;border-radius:3px;display:inline-block}
 .pvout{margin-top:5px;font-size:11.5px;line-height:1.55;color:#c9c5bf;white-space:pre-wrap}
 .pvout .bad{color:#ff9a8a}.pvout .ok{color:#9fd6a0}
 .pvout b{color:#e8e6e2}
 .pvout i{width:20px;height:12px;border-radius:3px;display:inline-block;vertical-align:-1px}
+/* 兩階並排的示範：擺在紙色上，因為站上那一排標記就是站在紙色上的 */
+.pvdemo{background:var(--paper);color:var(--ink);border-radius:10px;padding:8px 10px;margin:6px 0}
+.pvdemo .t{font-size:11.5px;color:#5c5f57;margin:0 0 5px}
+.pvdemo .g{display:flex;gap:10px;align-items:center;margin:0 0 6px;flex-wrap:wrap}
+.pvdemo .g:last-child{margin-bottom:0}
+.pvdemo .n{font-size:11.5px;color:#5c5f57;flex:none;width:5.2em}
+.pvdemo ul.chips{margin:0;flex:1 1 auto;overflow:visible}
+.pvdemo ul.chips a{pointer-events:none}
 .pvmin{position:fixed;right:10px;bottom:calc(6px + env(safe-area-inset-bottom));z-index:100;
   border:1px solid #4a4642;background:rgba(24,22,20,.93);color:#e8e6e2;border-radius:8px;
   padding:5px 9px;font:500 12px system-ui,sans-serif;min-height:30px}
 </style>`;
 h = h.replace("</head>", css + "\n<style id=\"pvspec\"></style>\n</head>");
 
+/* 示範用的兩顆標記：同一科、兩種狀態。用站上自己的 markup 與 class。 */
+const pair = (sp, name) =>
+  `<ul class="chips"><li><a data-spec="${sp}" aria-current="page">${name}</a></li>` +
+  `<li><a data-spec="${sp}">${name}</a></li></ul>`;
+const demo = !PAGE.demo ? "" : `
+  <div class="pvdemo">
+    <p class="t">同一顆標記的兩態：<b>左＝被選到（填色）・右＝沒被選到（字與框吃深階）</b>。同色相 ＝ 左右是同一個顏色的深淺。</p>
+    <div class="g"><span class="n">齒顎矯正</span>${pair("ortho", "齒顎矯正")}</div>
+    <div class="g"><span class="n">口腔外科<br>（對照）</span>${pair("surg", "口腔外科")}</div>
+  </div>`;
+
+const rowC = `  <div class="pvrow"><b>植牙</b>${CANDS.map(c => `<button data-k="c" data-v="${c.k}">${c.label}</button>`).join("")}</div>\n`;
+const rowO = `  <div class="pvrow"><b>矯正</b>${ORTHO.map(c => `<button data-k="o" data-v="${c.k}">${c.label}</button>`).join("")}</div>\n`;
+
 const bar = `
 <div class="pvbar" id="pvbar">
-  <div class="pvrow"><b>植牙</b>${CANDS.map(c => `<button data-k="c" data-v="${c.k}">${c.label}</button>`).join("")}</div>
-  <div class="pvrow"><b>矯正</b>${ORTHO.map(c => `<button data-k="o" data-v="${c.k}">${c.label}</button>`).join("")}</div>
+${PAGE.rows.includes("c") ? rowC : ""}${PAGE.rows.includes("o") ? rowO : ""}${demo}
   <div class="pvout" id="pvout">量測中…</div>
 </div>
 <button class="pvmin" id="pvmin">收起</button>
 <script>
 (function(){
   var CANDS=${JSON.stringify(CANDS)}, ORTHO=${JSON.stringify(ORTHO)};
+  var HAS_LA=${PAGE.lineart}, SPEC=${JSON.stringify(spec)}, DEMO=${PAGE.demo};
   var bar=document.getElementById('pvbar'), out=document.getElementById('pvout'),
       sty=document.getElementById('pvspec');
   var PAPER='#e2e5e6', CARD='#f4f4f5', WHITE='#ffffff';
+  var ORTHO_FILL='#4478b5', SURG_FILL='#8e6299', SURG_DEEP='#784e84';
   /* 其餘五科：填色與深階都列，因為標記那一排上被選到的用填色、其他用深階 */
   var NB=[{n:'牙周',f:'#317d78',d:'#2a6d69'},{n:'一般',f:'#3f654a',d:'#2c5238'},
           {n:'兒牙',f:'#c28229',d:'#9e6301'},{n:'根管',f:'#ae4f4d',d:'#89202d'},
@@ -186,6 +232,8 @@ const bar = `
      11.1／6.9，數字對不上文件，後人會以為顏色被動過。 */
   function dE(a,b){var A=lab(a),B=lab(b);return Math.hypot(A[0]-B[0],A[1]-B[1],A[2]-B[2]);}
   function lch(h){var L=lab(h);return [L[0],Math.hypot(L[1],L[2]),(Math.atan2(L[2],L[1])*180/Math.PI+360)%360];}
+  /* 色相是繞一圈的，差值要收進 ±180 */
+  function dh(a,b){var d=Math.abs(lch(a)[2]-lch(b)[2])%360; return d>180?360-d:d;}
   function f1(n){return n.toFixed(1);} function f2(n){return n.toFixed(2);}
   function mark(v,t){return v>=t?'<span class="ok">'+f2(v)+' ✓</span>':'<span class="bad">'+f2(v)+' ✗</span>';}
   function sw(c){return '<i style="background:'+c+'"></i>';}
@@ -193,9 +241,13 @@ const bar = `
   function apply(){
     var c=cur('c'), o=cur('o');
     sty.textContent=
-      'html [data-spec="${spec}"]{--accent:'+c.fill+';--accent-deep:'+c.deep+';}'+
+      /* ⚠⚠ 這一條的目標一律寫死 prosth，**不可以用當頁的 spec** ——
+         矯正那一頁的 SPEC 是 'ortho'，套進去就會把植牙候選的填色蓋到矯正頭上
+         （2026-08-31 踩過：示範裡「被選到」那顆矯正變成 #335b8b）。
+         矯正那一頁沒有植牙那一排，st.c 永遠是 now ＝ 站上現值，等於沒作用。 */
+      'html [data-spec="prosth"]{--accent:'+c.fill+';--accent-deep:'+c.deep+';}'+
       'html [data-spec="ortho"]{--accent-deep:'+o.deep+';}'+
-      ':root{--pv-la:url("la-'+c.k+'.png");}';
+      (HAS_LA ? ':root{--pv-la:url("la-'+c.k+'.png");}' : '');
     bar.querySelectorAll('button[data-k]').forEach(function(b){
       b.setAttribute('aria-pressed', String(st[b.dataset.k]===b.dataset.v));});
     var u=new URL(location); u.searchParams.set('c',st.c); u.searchParams.set('o',st.o);
@@ -209,26 +261,40 @@ const bar = `
        其餘六顆用**深階**，所以真正並排的是「矯正深階 × 植牙填色」。
        PALETTE.md 全篇只算填色對填色、深階對深階，漏掉的就是這一格。 */
     var cross=dE(o.deep, c.fill);
-    /* 其餘五科的深階，也一起對植牙的填色算一次（矯正是不是離群值，看這個） */
     var others=NB.map(function(n){return {n:n.n, v:dE(n.d, c.fill)};});
     var minOther=others.reduce(function(a,b){return b.v<a.v?b:a;});
     var hs=document.documentElement.scrollWidth>document.documentElement.clientWidth;
-    out.innerHTML=
-      sw(c.fill)+' 植牙填色 '+c.fill+' L*'+f1(L[0])+' h'+f1(L[2])+
-      '　'+sw(o.deep)+' 矯正深階 '+o.deep+' L*'+f1(D[0])+' h'+f1(D[2])+'\\n'+
-      '<b>這兩顆在同一排標記上並排：ΔE '+f1(cross)+'</b>　'+
-      (cross>=13 ? '<span class="ok">分得開（比現況那 11.3 好）</span>'
-       : cross>=9 ? '<span class="ok">和現況那 11.3 差不多</span>'
-       : cross>=6.1 ? '<span class="bad">比現況更像（現況 11.3）</span>'
-                    : '<span class="bad">低於出局線 6.1</span>')+'\\n'+
-      '對照：其餘五科的深階對這個填色最小的是 '+minOther.n+' '+f1(minOther.v)+
-      '（'+others.map(function(x){return x.n+f1(x.v);}).join('・')+'）\\n'+
-      '白字在塊 '+mark(cr(c.fill,WHITE),4.5)+'　塊對紙 '+mark(cr(c.fill,PAPER),3)+
-      '　矯正深階對卡 '+mark(cr(o.deep,CARD),4.5)+'　對紙 '+mark(cr(o.deep,PAPER),4.5)+
-      '　矯正兩階落差 '+f1(49.5-D[0])+'（家族 5.9~15.1）\\n'+
-      '植牙深階 '+c.deep+' 對卡 '+mark(cr(c.deep,CARD),4.5)+'　對紙 '+mark(cr(c.deep,PAPER),4.5)+
-      '　視窗 '+innerWidth+'×'+innerHeight+'　'+
-      (hs?'<span class="bad">⚠ 有水平捲動</span>':'<span class="ok">無水平捲動</span>');
+    var oh=dh(ORTHO_FILL, o.deep), sh=dh(SURG_FILL, SURG_DEEP);
+    var head = DEMO
+      ? sw(ORTHO_FILL)+' 矯正填色 #4478b5 h'+f1(lch(ORTHO_FILL)[2])+
+        '　'+sw(o.deep)+' 矯正深階 '+o.deep+' h'+f1(D[2])+'\\n'+
+        '<b>矯正這兩階的色相差 Δh '+f1(oh)+'°</b>　'+
+        (oh<=5 ? '<span class="ok">同色相（＝同一個顏色的深淺，和其他六科一樣）</span>'
+               : '<span class="bad">不同色相（左右是兩個顏色，全站唯一）</span>')+
+        '　對照 口外 '+f1(sh)+'°・其他六科 0.2~4.1°\\n'
+      : sw(c.fill)+' 植牙填色 '+c.fill+' L*'+f1(L[0])+' h'+f1(L[2])+
+        '　'+sw(o.deep)+' 矯正深階 '+o.deep+' L*'+f1(D[0])+' h'+f1(D[2])+'\\n';
+    var tail = hs ? '<span class="bad">⚠ 有水平捲動</span>' : '<span class="ok">無水平捲動</span>';
+    /* ⚠ 示範頁的面板刻意只印兩行：那一頁的主角是上面那組並排的標記，
+       切換條連示範一起要收在 24vh 之內（CLAUDE.md 第八節：不能吃掉半個畫面）。 */
+    out.innerHTML = DEMO
+      ? head +
+        '字對卡 '+mark(cr(o.deep,CARD),4.5)+'　對紙 '+mark(cr(o.deep,PAPER),4.5)+
+        '　兩階落差 '+f1(49.5-D[0])+'（家族 5.9~15.1）'+
+        '　對植牙填色 ΔE '+f1(cross)+'　'+tail
+      : head +
+        '<b>矯正深階 × 植牙填色（同一排標記上並排）：ΔE '+f1(cross)+'</b>　'+
+        (cross>=13 ? '<span class="ok">分得開（比現況那 11.3 好）</span>'
+         : cross>=9 ? '<span class="ok">和現況那 11.3 差不多</span>'
+         : cross>=6.1 ? '<span class="bad">比現況更像（現況 11.3）</span>'
+                      : '<span class="bad">低於出局線 6.1</span>')+'\\n'+
+        '對照：其餘五科的深階對這個填色最小的是 '+minOther.n+' '+f1(minOther.v)+
+        '（'+others.map(function(x){return x.n+f1(x.v);}).join('・')+'）\\n'+
+        '白字在塊 '+mark(cr(c.fill,WHITE),4.5)+'　塊對紙 '+mark(cr(c.fill,PAPER),3)+
+        '　矯正深階對卡 '+mark(cr(o.deep,CARD),4.5)+'　對紙 '+mark(cr(o.deep,PAPER),4.5)+
+        '　矯正兩階落差 '+f1(49.5-D[0])+'（家族 5.9~15.1）\\n'+
+        '植牙深階 '+c.deep+' 對卡 '+mark(cr(c.deep,CARD),4.5)+'　對紙 '+mark(cr(c.deep,PAPER),4.5)+
+        '　視窗 '+innerWidth+'×'+innerHeight+'　'+tail;
   }
   bar.addEventListener('click', function(e){
     var b=e.target.closest('button[data-k]'); if(!b) return;
@@ -249,11 +315,17 @@ const i = h.lastIndexOf("</body>");
 if (i < 0) throw new Error("找不到 </body>");
 h = h.slice(0, i) + bar + h.slice(i);
 
-/* 守門：切換條真的插在最後、覆寫規則的選擇器沒有寫錯 */
+/* 守門 */
 if (!/id="pvspec"/.test(h)) throw new Error("覆寫用的 <style> 沒插進 <head>");
 if (h.indexOf('class="pvbar"') < h.lastIndexOf("</main>")) throw new Error("切換條落在 </main> 之前");
+/* ⚠ 產出的腳本裡不能有「字串從中間被切斷」的行 —— 模板字串裡忘了跳脫 \n 就會這樣，
+   而且畫面上完全看不出來（整支腳本不執行、切換條按了沒反應）。 */
+const js = h.slice(h.lastIndexOf("<script>") + 8, h.lastIndexOf("</script>"));
+const broken = js.split("\n").filter((l) => (l.match(/'/g) || []).length % 2 === 1 && !l.includes("//"));
+if (broken.length) throw new Error(`產出的腳本有 ${broken.length} 行字串被切斷（模板字串裡的 \\n 忘了跳脫）：\n  ${broken[0].trim()}`);
 
 fs.writeFileSync(path.join(dir, "index.html"), h);
-console.log(`✓ preview/spec-${spec}-line58/index.html`);
-console.log(`  候選：${CANDS.map(c => c.k + "=" + c.fill).join("  ")}`);
-console.log(`  網址參數：?c=now|a|b|c`);
+console.log(`✓ preview/${PAGE.dir}/index.html`);
+if (PAGE.rows.includes("c")) console.log(`  植牙：${CANDS.map(c => c.k + "=" + c.fill).join("  ")}`);
+console.log(`  矯正深階：${ORTHO.map(c => c.k + "=" + c.deep).join("  ")}`);
+console.log(`  網址參數：?c=now|a|b|c　?o=g0|g1|g2|g3`);
