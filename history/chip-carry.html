@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>chip-carry｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>chip-carry — 標籤換頁不要跳</h1>
+<p class="meta">
+  2026-08-31 開、當天定案上線<br>
+  原網址 <code>/preview/chip-carry/</code>（已刪除 2026-08-31）<br>
+  整頁還原：<code>git show 9033496:preview/chip-carry/index.html</code>（八頁：<code>index</code> 與七科各一份）<br>
+  切換條 <code>?carry=0|1</code>（現況／新案・接回原位）<br>
+  產生器 <code>tools/chip-carry-preview.mjs</code>（定案時一起刪掉，同一個 sha 還原得到）
+</p>
+
+<h2>定案</h2>
+<div class="note"><pre>按下去的那一顆標籤，換頁之後留在原本的位置。
+
+只動 index.html 一份（那一排底下那支腳本），七科的著陸頁跑
+node tools/topics.mjs 跟上。CSS 一行都沒動、顏色一個都沒加。
+
+  ・按下去的當下把「這一顆的左緣離那一排可視範圍左緣多遠」記進
+    sessionStorage（key: fangren:chips-x，值：{ path, spec, t, off }）
+  ・新的一頁在**那一排的正下方**就算回去 → 第一幀就定位
+  ・讀出來立刻 removeItem，而且只認 60 秒內的（用一次就丟）
+  ・安全網：按到的那一顆若原本只露出半截，換頁之後讓它整顆看得到</pre></div>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者（附螢幕錄影）：「點選標籤的時候，因為我們現在進到著陸頁，
+那個標籤會回到設定好的著陸頁，就是會顯示成著陸頁面，但標籤就不一定是在
+點進去之前的位置，因為是不同的網頁 —— 那有辦法把它做成點下去之後
+標籤在點之前的那個位置嗎？」</pre></div>
+
+<h2>成因：不是標籤自己會跳，是 bring() 一律把它擺到最左邊</h2>
+<div class="note"><pre>那一排底下那支腳本（2026-08-21 那一輪加的）在著陸頁上會做一件事：
+把「目前這一科」捲進可視範圍，落點是 **最左邊留一顆的餘裕**
+（pad = min(48, 那一排寬 × 0.12)，390 上是 43.4px）。
+
+它本身沒有錯 —— 直接開網址、搜尋進來的人要一眼看到自己在哪一科。
+錯在它不分青紅皂白：使用者是**按著畫面中間那一顆**進來的，
+那一顆到了新的一頁被搬到最左邊，看起來就是「跳了一截」。
+
+螢幕錄影逐幀量：牙周治療那一顆從 x≈155 跳到 x≈63。
+提案頁的量測面板上（390×844，現況那一格）：
+  首頁 → 牙周治療　　　差 −37px
+  牙周治療 → 兒童牙科　差 −283px（按的那一顆在畫面右邊時最嚴重）</pre></div>
+
+<h2>為什麼記「那一顆的偏移量」，不是直接記 scrollLeft</h2>
+<div class="note"><pre>兩頁的那一排不見得一樣寬 —— 著陸頁的搜尋框和標題同一列，首頁不是。
+記 scrollLeft 的話，只要兩邊的可視寬度差一點，落點就會差一點。
+
+記「這一顆離左緣多遠」則是**以那一顆為錨**：
+  新的 scrollLeft = 這一顆的 offsetLeft − 記下來的偏移量
+兩頁排得一樣時逐像素相同（四個視窗實測差 0.00px），排得不一樣時
+也還是那一顆停在手指底下。哪天標籤的寬度或字級改了也仍然對。</pre></div>
+
+<h2>三個 ⚠</h2>
+<div class="note"><pre>① **用一次就丟。** 讀出來立刻 removeItem，並且只認 60 秒內的那一筆。
+   重新整理、上一頁／下一頁、直接開網址、從別條路走回這一頁 ——
+   一律退回原本的 bring()。不這樣做的話，「重新整理也會接回原位」，
+   那是假的：真正的行為只在「按了標籤換頁」時才該發生。
+
+② **load 時要再算一次，但不能搶。** 圖與字型到齊之後標籤的寬度可能變，
+   所以 load 還要重算；但使用者若已經自己滑過那一排就要放手 ——
+   記下我們寫進去的值，相差超過 1px 就當成是他滑的，整段不動。
+   （bring() 本來是無條件再寫一次，這一輪一起收進同一個 place()。）
+
+③ **安全網。** 按到的那一顆若原本只露出半截（它在淡出的斜坡底下也按得到），
+   換頁之後它就是「目前這一頁」那一顆，讓它整顆看得到。
+   位移量就是被切掉的那一截（實測 20~35px），比原本那一跳
+   （實測 100~283px）小一個數量級。整顆看得到的時候這一條不會生效。</pre></div>
+
+<h2>沒有做的</h2>
+<div class="note"><pre>・**沒有動 bring()**：直接開網址、搜尋進來、重新整理仍然是「擺到最左邊」。
+  那是給「不是從標籤點進來」的人看的，兩件事不衝突。
+・**沒有碰上一頁／下一頁**：那是瀏覽器自己的捲動位置還原，
+  硬去接手就變成另一種「跳」（同 2026-08-21 那一輪的判斷）。
+・**沒有加任何動畫**：位置在第一幀就是對的，不需要補一段過場。
+  站上那個 @view-transition 的 .18 秒交叉淡入照舊。
+・沒有 JS、或 sessionStorage 被擋掉（無痕）時整段不作用，行為＝改動前。</pre></div>
+
+<h2>驗收</h2>
+<div class="note"><pre>Playwright，390×844／375×812／744×1133／1440×900 四個視窗：
+
+  整顆看得到的標籤（首頁→著陸頁、著陸頁→著陸頁、著陸頁→首頁「全部」）
+    ……………………………… 逐格 **差 0.00px**
+  只露出半截的那幾格 ……… 安全網把它推成整顆看得到（+30／−20／−35px）
+  直接開網址、重新整理 …… 仍是 bring() 的落點（＝改動前）
+  淡出遮罩與兩顆角形的變數（--fade-l／--fade-r／--ar-fl／--ar-fr）
+    ……………………………… 跟著新的落點對上（150 → 10.00px／10.00px）
+  1440（八顆排得下、不會捲）…… 完全不作用
+  頁面水平溢出 …………………… 0
+  主控台 ………………………… 只有本機沒有 Worker 的計數 API 404
+
+八頁提案頁 × 390／744／1440 另外掃過一次：亮起來的標記逐頁正確、
+切換條佔畫面 10~12%（上限 24%）、壞掉的請求 0。</pre></div>
+
+<h2>提案頁本身學到的三件</h2>
+<div class="note"><pre>① **要判斷「換頁那一下」，提案頁就不能只有一頁。**
+   這一輪的提案頁是**八份真的文件、真的導覽**（首頁 ＋ 七科快照），
+   標籤的連結指向提案頁自己。用一頁 ＋ JS 模擬換頁是做不得的 ——
+   同 og-topic-card 那一輪：提案頁要擺真的產出檔，
+   不要用 CSS（或 JS）把成品再做一次。
+
+② **提案頁的計數器可以「降級」，不必「拿掉」。**
+   規矩本來是拿掉 counter.js（不然每開一次提案頁首頁就多算一次），
+   但那樣文章卡會印一排「—」，而且要另外寫一個示範值 ——
+   2026-08-07 就是示範值 8642 跟著版型搬回正式站、把真實的 190 蓋掉。
+   這一次改成只把 data-views-self 降成 data-views：
+   counter.js 只有看到 -self 才會 POST +1，所以「不會灌計數」與
+   「印得出真實數字」同時成立，也沒有任何假數字可以被搬回去。
+
+③ **Playwright 的 page.click() 會先把元素捲進可視範圍。**
+   量「按下去之前那一顆在哪裡」的時候，它會在你量完之後、按下去之前
+   偷偷改掉那一排的位置 —— 第一版的量測因此有兩格對不上，
+   看起來像安全網壞了，其實是量測工具自己動的手。
+   要用頁面自己的 el.click()（在 page.evaluate 裡）才是使用者的行為。</pre></div>
+
+<h2>順手查到、還沒處理的一件</h2>
+<div class="note"><pre>那一排右邊那兩顆橫捲角形的**垂直位置從 2026-08-21 起就沒有生效了**。
+量它的那支（頁尾那一段的 alignOne）是 el.querySelector('button')，
+而主題與科別那一排在 2026-08-21 換成了 &lt;a&gt; —— 抓不到就整支 return，
+--ar-y 從此沒有被寫進去，落在 CSS 的預設值上（比設計的位置低約 2.31px）。
+門診表那一排還是 &lt;button&gt;，所以那一排是對的（實測 --ar-y: 16.89px）。
+
+修法是把選擇器放寬成 button, a，一個字的事，但它會動到首頁與七科著陸頁
+的畫面 —— **2026-08-31 這一輪沒有做，等使用者點頭**。</pre></div>
+
+<footer>
+  <a href="/history/">← 改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>
