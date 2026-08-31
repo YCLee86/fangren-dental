@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>spec-ortho-deep｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>spec-ortho-deep — 齒顎矯正的深階（白底上的字）</h1>
+<p class="meta">
+  2026-08-31 開、當天定案上線<br>
+  原網址 <code>/preview/spec-ortho-twosteps/</code>（已刪除 2026-08-31）<br>
+  整頁還原：<code>git show ec01f91:preview/spec-ortho-twosteps/index.html</code><br>
+  切換條 <code>?o=g0|g1|g2|g3</code>　產生器 <code>tools/spec-color-preview.mjs ortho</code><br>
+  定案：<code>#244369</code> → <strong><code>#31637f</code></strong>（填色 <code>#4478b5</code> 一個字都沒動）
+</p>
+
+<div class="note">
+<p><strong>這一輪是使用者在別的提案頁上順手看出來的。</strong>他在
+<code>/preview/spec-prosth-line58/</code>（植牙換色）上說：「確認一下矯正的標籤色，
+在這個頁面下矯正的深階字套色顏色看起來很深，反而很像假牙重建的顏色。」
+量下來他是對的，而且指出了一個<strong>方法上的漏洞</strong>。</p>
+</div>
+
+<h2>一、漏掉的那一格：A 的深階 × B 的填色</h2>
+<pre>同一排標記上，被選到那一顆用「填色」，其餘六顆用「深階」——
+所以那一排上真正並排的是「A 科的深階 × B 科的填色」。
+
+而 PALETTE.md 從第六之二節到第六之二十一節，比的一律是
+「填色對填色、深階對深階」—— 那兩種組合在標記那一排上根本不會同時出現。
+
+補算（各科深階 → 對植牙填色 #335b8b 的 ΔE*ab）：
+  一般 47.8   牙周 36.0   兒牙 87.5   根管 66.2   口外 27.1   全部 32.6
+  矯正 11.3   ← 其他六科落在 27~87，只有這一顆貼上去
+
+而且色相只差 0.7°（273.9 vs 273.2）—— 本來就是同一支藍。
+這不是新問題，是六之十四節那個「矯正 × 植牙是全站最近的一對」的
+第三種現形方式；前兩種（填色對填色 13.3、深階對深階 10.5）都記下來了，
+這一種沒有。
+
+通則：日後動任何一顆科別色，四種距離都要算 ——
+  填色×填色、深階×深階、自己的深階×別人的填色、自己的填色×別人的深階。</pre>
+
+<h2>二、只提亮是死路（一格都沒放進候選）</h2>
+<pre>矯正的深階同色相往上提，會直接撞進植牙的填色：
+
+  L*        27.9   31.9   35.9   37.9   39.9   41.9
+  對植牙填色 11.3    6.7    2.1    0.6    2.6    4.8
+                                   ↑ L* 37.9 那一格算出來是 #335b8c，
+                                     和現行植牙填色 #335b8b 幾乎同一顆
+
+卡住的不是亮度，是「矯正和植牙同色相」—— 要治就得動色相。
+
+⚠ 這一格如果放進切換條，使用者選了就不能上線 ——
+  「給出去的每一格都要是選了就能上線的」（CLAUDE.md 第八節 card-width-mobile）。</pre>
+
+<h2>三、四案</h2>
+<pre>                 深階      L*   C*    h    兩階落差  對卡  對紙  對四種植牙填色最小
+Ⓖ0 現況          #244369  27.9 25.7 273.9   21.6    9.18  7.97   6.0（對植牙 Ⓑ）
+Ⓖ1 偏藍          #274f6a  31.9 19.9 255.5   17.6    7.92  6.87  10.2
+Ⓖ2 偏藍・提亮     #2c5977  36.0 22.4 255.5   13.5    6.82  5.92  10.9
+Ⓖ3 原本那支藍 ★   #31637f  39.8 22.1 249.3    9.7    5.93  5.15  14.6
+
+十六種組合的交叉 ΔE（植牙那一輪的四案 × 這四案）：
+  植牙＼矯正   Ⓖ0     Ⓖ1     Ⓖ2     Ⓖ3
+  現況        11.3   14.2   11.9   14.1
+  Ⓐ           8.5   13.5   12.7   15.8
+  Ⓑ           6.0✗  10.2   10.9   14.6
+  Ⓒ          11.0   14.6   13.1   15.6
+
+⚠ Ⓖ3 的 h 249.3 不是憑空挑的，那是矯正原本那一支藍 ——
+  #3C596B 是 h 248.1，2026-08-10 換成 #4478b5 之前用的就是它。</pre>
+
+<h2>四、使用者看不懂「不同色相」，所以做了第二頁</h2>
+<pre>他的原話：「矯正你說的不同色相是什麼意思，我看不懂，做提案頁切換讓我確認。」
+
+那一頁只做一件事：把同一顆標記的兩態擺在一起 ——
+  左＝被選到（填色填滿）   右＝沒被選到（白底，字與框吃深階）
+底下再放一組口腔外科當對照（那一科兩階色相只差 0.5°，是全站的常態）。
+
+  矯正兩階的色相差：Ⓖ0 1.1° ／ Ⓖ1 17.1° ／ Ⓖ2 17.3° ／ Ⓖ3 23.5°
+  現役七科：一般 0.2・牙周 0.6・兒牙 0.3・根管 4.1（最大）・矯正 1.1・植牙 0.3・口外 0.5
+
+⚠⚠ 示範用的是站上自己的 markup 與 class（.chips ＋ data-spec ＋ aria-current），
+   不是拿 CSS 另外做一份假的 —— 假的哪天樣式改了這一頁就開始說謊
+   （同 og-topic-card 那一輪「提案頁要擺真的產出檔」）。
+   示範裡的 &lt;a&gt; 不給 href、並且 pointer-events: none，點下去換頁就毀了現場。
+
+⚠ 矯正的線稿底圖不必重產：線稿吃的是「填色」那一階，這一輪只動白底上的字。
+  assets/lineart-ortho.png 一個位元組都沒動。</pre>
+
+<h2>五、定案之後全站的四種距離</h2>
+<pre>八個位置（白字 4.5／塊對紙 3.0／深階對卡 4.5／深階對紙 4.5）：0 個不過
+  （兒牙填色上的白字 3.22 是 2026-08-08 就定下的已知取捨，這一輪沒有動它）
+
+  矯正深階 #31637f  對卡 5.93  對紙 5.15   （舊值 9.18 / 7.97）
+  —— 和口腔外科的深階完全同一級（5.93 / 5.15）
+
+四種距離的最小值：
+  填色×填色   13.3  矯正×植牙   ← 沒有動（填色都沒改）
+  深階×深階   18.6  一般×牙周   ← 舊值是 10.5 的矯正×植牙
+  深階×填色   14.1  矯正深×植牙填 ← 舊值 11.3，就是這一輪要治的那一格
+  填色×深階   15.6  一般填×牙周深
+
+  也就是說：全站最近的一對，從「深階 10.5」變成「填色 13.3」，
+  而 13.3 那一半這一輪一個字都沒動。
+
+矯正這一顆逐項（新 vs 舊）：
+  對植牙填色 14.1 / 11.3      對植牙深階 22.7 / 10.5
+  對牙周填色 24.7 / 39.2      對牙周深階 21.9 / 35.0
+  對自己填色 21.6 / 24.6      對連結深綠松 23.3 / 30.2
+
+  兩階落差 21.6 → 9.7（回到家族刻度：一般 7.9、口外 8.2、全部 8.4）
+  兩階色相差 1.1° → 23.5°（全站唯一，這是知情的取捨）</pre>
+
+<h2>六、這一輪自己踩的兩個坑（都寫進 CLAUDE.md 第九節 24、25）</h2>
+<pre>1. 產生器是模板字串的時候，字串裡的 \n 會在「產生的當下」就變成真的換行，
+   把產出頁面裡那個字串從中間切斷、整支腳本語法錯誤。要寫 \\n。
+   ⚠ 症狀是「切換條按了完全沒反應」，畫面一切正常、主控台要打開才看得到。
+   治法：在產生器裡加一道守門，把產出的 script 抓出來逐行數單引號，奇數就 throw。
+
+2. 提案頁的覆寫規則，目標科別要寫死，不要用「當頁的那一科」。
+   同一支產生器做了兩頁，覆寫寫成 html [data-spec="&lt;當頁的 spec&gt;"]，
+   在矯正那一頁當頁的 spec 是 ortho，於是植牙候選的填色被套到矯正頭上，
+   示範裡「被選到」那顆矯正變成 #335b8b。
+   ⚠ 症狀很像「顏色沒吃到」，其實是吃到了別人的 —— 驗收要讀 computed style
+     比對預期的那一顆 rgb，不能只看「有沒有變」。</pre>
+
+<h2>七、驗收</h2>
+<pre>・四案 × 四個視窗（390／375／834／1440）：示範左右兩顆與那一排真正的矯正標記
+  逐一讀 computed style 比對預期色值、無水平捲動、切換條 24%。
+・上線版（剝掉註解的 _site）再驗一次，無 JS 錯誤。
+・上線之後：只有首頁的 lastmod 動（index.html 真的改了），沒有任何一篇文章
+  的日期被誤傷（內容雜湊只涵蓋 post-meta 與 &lt;main&gt;，這一輪都沒碰）。</pre>
+
+<footer>
+  <a href="/history/">← 改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>

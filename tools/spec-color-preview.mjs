@@ -81,11 +81,15 @@ const CANDS = [
      2026-08-10 換成 `#4478b5` 之前用的就是它），不是憑空挑的。
    ⚠ 代價：Ⓖ1~Ⓖ3 會讓矯正變成全站唯一「兩階不同色相」的科（Δh 17~24°）。
      牙周 2026-08-09 的 Ⓟ Ⓠ 就是被這一條擋下來的，那次有同色相的路可走，這次沒有。 */
+/* ⚠ 2026-08-31 定案 Ⓖ3 `#31637f` 並上線，`preview/spec-ortho-twosteps/` 已刪除、
+   文字在 `/history/spec-ortho-deep.html`。這一份留著是為了：① 那一頁要重開時
+   還跑得動 ② 植牙那一頁的 `st.o` 預設值要指到現在站上跑的那一顆。
+   **所以 g0 已經不是「現況」了，是舊值。** */
 const ORTHO = [
-  { k: "g0", label: "現況",         deep: "#244369" },
+  { k: "g0", label: "舊值 #244369", deep: "#244369" },
   { k: "g1", label: "Ⓖ1 偏藍",      deep: "#274f6a" },
   { k: "g2", label: "Ⓖ2 偏藍・提亮", deep: "#2c5977" },
-  { k: "g3", label: "Ⓖ3 原本那支藍", deep: "#31637f" },
+  { k: "g3", label: "Ⓖ3 原本那支藍（定案）", deep: "#31637f" },
 ];
 
 /* ---- 每一頁要做什麼 --------------------------------------------------------
@@ -98,7 +102,7 @@ const ORTHO = [
      ⚠ 示範裡的 `<a>` **不給 href**，並且 `pointer-events: none` —— 它是拿來看的，
        點下去換頁就毀了現場。 */
 const PAGES = {
-  prosth: { dir: "spec-prosth-line58",  rows: ["c", "o"], lineart: true,  demo: false },
+  prosth: { dir: "spec-prosth-line58",  rows: ["c"],      lineart: true,  demo: false },
   ortho:  { dir: "spec-ortho-twosteps", rows: ["o"],      lineart: false, demo: true  },
 };
 const PAGE = PAGES[spec];
@@ -209,7 +213,7 @@ ${PAGE.rows.includes("c") ? rowC : ""}${PAGE.rows.includes("o") ? rowO : ""}${de
           {n:'兒牙',f:'#c28229',d:'#9e6301'},{n:'根管',f:'#ae4f4d',d:'#89202d'},
           {n:'口外',f:'#8e6299',d:'#784e84'},{n:'全部',f:'#5f5d5c',d:'#4c4948'}];
 
-  var st={c:'now', o:'g0'};
+  var st={c:'now', o:'g3'};   /* ⚠ 矯正 2026-08-31 定案 Ⓖ3，預設要跟著站上跑的那一顆 */
   /* ⚠ 正規式寫 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到 g0 這種帶數字的值（CLAUDE.md 第八節） */
   var qs=new URLSearchParams(location.search);
   ['c','o'].forEach(function(k){var v=qs.get(k);
