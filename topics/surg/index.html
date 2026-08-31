@@ -5411,7 +5411,7 @@ html[data-qopen="1"] .head-search {
 /* =============================================================================
    ⚠⚠ 這一段刻意放在標記那一排的**正下方**，不在頁尾那一堆腳本裡。
    -----------------------------------------------------------------------------
-   它要做的兩件事都是「第一幀就要對」，晚一步就會被看見（2026-08-21 使用者的
+   它要做的三件事都是「第一幀就要對」，晚一步就會被看見（2026-08-21 使用者的
    螢幕錄影，逐幀量過）：
    ・首頁：從著陸頁按「全部」回來，網址是 /#topics。交給瀏覽器自己跳的話，
      實測 **scrollY 一直是 0 到 load 之後**，再過約 320ms 才開始動，而且因為
@@ -5420,13 +5420,78 @@ html[data-qopen="1"] .head-search {
      停一下才滑到主題與科別」。這裡在解析到這一行時就先捲好，第一幀就在定位。
    ・著陸頁：把目前這一科捲進那一排的可視範圍。原本這支在頁尾，iOS 會先畫一張
      「還沒捲」的畫面、下一幀才跳過去。
+   ・兩邊都有：**接回按下去那一刻那一排捲到哪裡**（2026-08-31 新增），
+     所以按下的那一顆標籤換頁之後還留在原位，不會往左跳一截。做法與三個
+     ⚠ 寫在下面第一段。
    ⚠ 沒有 JS 也不會壞：瀏覽器本來就會跳到 #topics，那一排本來也捲得動。
    ============================================================================= */
 (function () {
   var row = document.querySelector('#topics .chips');
   if (!row) return;
 
-  /* ── 著陸頁 ────────────────────────────────────────────────────────────
+  /* ── 一、接住「按下去那一刻」那一排捲到哪裡（2026-08-31）─────────────────
+     使用者：「點選標籤的時候會進到著陸頁，但標籤不一定在點進去之前的位置，
+     因為是不同的網頁 —— 有辦法做成點下去之後標籤還在點之前的那個位置嗎？」
+     成因就是下面第二段那個 bring()：它一律把目前這一科擺到最左邊（留一顆的
+     餘裕），而使用者按的那一顆多半在畫面中間，換頁之後就往左跳了一截
+     （螢幕錄影量到：牙周治療那一顆從 x≈155 跳到 x≈63）。
+     做法：按下去的那一刻，把「這一顆的左緣離那一排可視範圍左緣多遠」記進
+     sessionStorage，新的一頁解析到這裡時再算回去 —— 標籤就留在手指底下。
+     ⚠ 記的是**那一顆自己的偏移量**，不是直接記 scrollLeft：兩頁的那一排不見得
+       一樣寬（著陸頁的搜尋框和標題同一列），偏移量才對得準；而且哪天標籤的
+       寬度改了，落點仍然是對的那一顆。
+     ⚠ **用一次就丟**（讀出來立刻 removeItem，並且只認 60 秒內的）：重新整理、
+       上一頁／下一頁、或從別條路走回這一頁時要退回原本的 bring()，
+       不要拿一個舊的位置硬套。
+     ⚠ 沒有 JS、或 sessionStorage 被擋掉的時候整段不作用，行為就是改動前那樣。 */
+  var KEY = 'fangren:chips-x', carry = null, want = null;   /* 命名照 counter.js 的 fangren: 前綴 */
+  try {
+    var raw = sessionStorage.getItem(KEY);
+    if (raw) {
+      sessionStorage.removeItem(KEY);
+      var rec = JSON.parse(raw);
+      if (rec && rec.path === location.pathname && /^[a-z]+$/.test(rec.spec || '')
+          && Date.now() - rec.t < 60000) carry = rec;
+    }
+  } catch (e) {}
+
+  row.addEventListener('click', function (ev) {
+    var a = ev.target && ev.target.closest ? ev.target.closest('a[data-spec]') : null;
+    if (!a || !a.parentNode) return;
+    try {
+      sessionStorage.setItem(KEY, JSON.stringify({
+        path: a.pathname, spec: a.getAttribute('data-spec'), t: Date.now(),
+        off: Math.round(a.parentNode.offsetLeft - row.scrollLeft)
+      }));
+    } catch (e) {}
+  });
+
+  /* 把那一排捲到 x，並記下我們寫進去的值。
+     ⚠ want 是為了「load 時再算一次」用的：圖與字型到齊之後標籤的寬度可能變，
+       所以那時要重算；但**使用者若已經自己滑過就不要搶** —— 相差超過 1px
+       就當成是他滑的，整段放手。 */
+  function place(x) {
+    var max = row.scrollWidth - row.clientWidth;
+    if (max <= 1) return;                                   /* 排得下就不必動 */
+    if (want !== null && Math.abs(row.scrollLeft - want) > 1) return;
+    row.scrollLeft = Math.max(0, Math.min(x, max));
+    want = row.scrollLeft;
+  }
+
+  /* 把那一顆擺回按下去時的位置（li ＝ 它外面那個 <li>，offsetLeft 的量測對象）。
+     ⚠ 兩條安全網：那一顆若原本只露出半截（它在淡出的斜坡底下也按得到），
+       換頁之後它就是「目前這一頁」那一顆，讓它整顆看得到 —— 位移量就是被切掉
+       的那一截（實測 20~35px），比原本那一跳（實測 100~210px）小一個數量級。
+       整顆看得到的時候這兩條都不會生效，落點逐像素相同（四個視窗實測差 0.00）。 */
+  function keepAt(li) {
+    var x = li.offsetLeft - carry.off;
+    if (li.offsetLeft - x < 0) x = li.offsetLeft;
+    if (li.offsetLeft + li.offsetWidth - x > row.clientWidth)
+      x = li.offsetLeft + li.offsetWidth - row.clientWidth;
+    place(x);
+  }
+
+  /* ── 二、著陸頁 ────────────────────────────────────────────────────────
      手機上那一排是橫捲的，目前這一科可能整顆在畫面外（兒童牙科排第四顆
      就已經看不到了），讀者第一眼會找不到自己在哪一科。
      ⚠ 只動那一列自己的 scrollLeft，**不要用 scrollIntoView** —— 那會連整頁
@@ -5434,19 +5499,34 @@ html[data-qopen="1"] .head-search {
   if (document.body.dataset.topic) {
     var bring = function () {
       var cur = row.querySelector('[aria-current="page"]');
-      if (!cur) return;
-      if (row.scrollWidth <= row.clientWidth + 1) return;   /* 排得下就不必動 */
+      if (!cur || !cur.parentNode) return;
+      var li = cur.parentNode;
+      /* 是從那一顆點進來的 → 接回按下去之前的位置（第一段） */
+      if (carry && cur.getAttribute('data-spec') === carry.spec) return keepAt(li);
+      /* 直接開網址、重新整理、搜尋進來的 → 照舊擺到最左邊 */
       var pad = Math.min(48, row.clientWidth * 0.12);       /* 左邊留一顆的餘裕，
                                                                讓人看得出「左邊還有」 */
-      var max = row.scrollWidth - row.clientWidth;
-      row.scrollLeft = Math.max(0, Math.min(cur.parentNode.offsetLeft - pad, max));
+      place(li.offsetLeft - pad);
     };
     bring();
     addEventListener('load', bring);
     return;
   }
 
-  /* ── 首頁，而且是從「全部」回來的 ─────────────────────────────────────── */
+  /* ── 三、首頁 ──────────────────────────────────────────────────────────
+     從著陸頁按「全部」回來的時候，那一排也接回按下去之前的位置。
+     「全部」是第一顆，多半算出來就是 0（＝首頁原本的樣子）；但他若是把那一排
+     滑到一半才按的，接回去才不會跳。 */
+  if (carry) {
+    var back = row.querySelector('[data-spec="' + carry.spec + '"]');
+    if (back && back.parentNode) {
+      var put = function () { keepAt(back.parentNode); };
+      put();
+      addEventListener('load', put);
+    }
+  }
+
+  /* ── 三之二、首頁的**垂直**位置：從「全部」回來就直接落在主題與科別 ────── */
   if (location.hash !== '#topics') return;
   /* ⚠ 只在「真的去了一趟」的時候才自己捲。重新整理與上一頁／下一頁交給瀏覽器
      自己的捲動位置還原 —— 那時使用者可能已經捲到醫師介紹了，硬把他拉回
