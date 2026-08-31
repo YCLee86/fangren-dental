@@ -98,6 +98,28 @@ const ORTHO = [
   { k: "g3", label: "Ⓖ3 原本那支藍（定案）", deep: "#31637f" },
 ];
 
+/* ---- 第三輪：植牙的深階要不要提亮（2026-08-31 使用者在成品上看出來的）--------
+   「內文的字可以也調看看？現在的看起來很深色很黑。」**他是對的，而且有一格數字
+   直接說明了為什麼**：
+
+     全站的墨 `--ink #2a2c27` 是 **L* 17.6**，而植牙的深階是 **L* 17.7** ——
+     那顆「彩色的重點字」和普通黑字**一樣深**，所以讀起來就是黑的，不是藍的。
+
+   ⚠⚠ **它被壓那麼深是有歷史原因的，而那個原因今天已經消失了**：2026-08-09 為了
+     讓牙周（後來整組給矯正）的深階活下來，植牙的字階被往下探到 L* 18.9
+     （六之十四節：「這一組能成立完全靠贋復的字階讓到 L* 18.9」）。
+     **矯正的深階 2026-08-31 已經搬到 `#31637f`，兩者現在 ΔE 25.4** —— 約束解除。
+   ⚠ 它也是全站唯一的離群值：深階 L* 17.7 比第二深的根管（30.7）還深 **13.1 階**；
+     兩階落差 20.1 是全站最大（其餘 5.9~15.1）—— 和今天早上矯正那 21.6 是同一種病。
+   ⚠ 四案的對比度都很寬鬆（對紙 7.4~11.1），這一輪卡不到 AA，純粹是「讀起來像不像
+     一個顏色」。 */
+const PROSTH_DEEP = [
+  { k: "d0", label: "現況（和黑字一樣深）", deep: "#182b4c" },
+  { k: "d1", label: "Ⓓ1 提亮一階",        deep: "#213962" },
+  { k: "d2", label: "Ⓓ2 提亮兩階",        deep: "#263f6c" },
+  { k: "d3", label: "Ⓓ3 回到家族的深度",   deep: "#2a4677" },
+];
+
 /* ---- 每一頁要做什麼 --------------------------------------------------------
    ⚠ demo ＝「兩階並排」的示範（2026-08-31 使用者：「不同色相是什麼意思，我看不懂」）。
      它把**同一顆標記的兩態**擺在一起：被選到（填色）與沒被選到（白底＋深階的字），
@@ -110,8 +132,12 @@ const ORTHO = [
 const PAGES = {
   prosth: { dir: "spec-prosth-line58",  rows: ["c"],      lineart: true,  demo: false },
   ortho:  { dir: "spec-ortho-twosteps", rows: ["o"],      lineart: false, demo: true  },
+  /* 第三輪：只調植牙的深階。⚠ 線稿吃的是**填色**、這一輪沒動，所以 lineart 是 false；
+     但**分享圖的帶子吃深階**，定案時要跟著重跑（補償色要重校）。 */
+  "prosth-deep": { dir: "spec-prosth-deep", rows: ["d"], lineart: false, demo: false, spec: "prosth" },
 };
 const PAGE = PAGES[spec];
+const SPEC = PAGE && PAGE.spec ? PAGE.spec : spec;   /* 頁面代碼 ≠ 科別代碼時（prosth-deep）用這個 */
 if (!PAGE) { console.error(`× 這一支只做 ${Object.keys(PAGES).join(" / ")}`); process.exit(1); }
 
 /* 線稿要用哪一張原檔重產（＝ CLAUDE.md 定案表裡那一行指令的參數） */
@@ -123,11 +149,11 @@ const dir = path.join(ROOT, "preview", PAGE.dir);
 fs.mkdirSync(dir, { recursive: true });
 
 /* ---- 1. 各候選的線稿 ------------------------------------------------------ */
-const la = PAGE.lineart ? LINEART[spec] : null;
+const la = PAGE.lineart ? LINEART[SPEC] : null;
 if (la) {
   for (const c of CANDS) {
     const out = path.join(dir, `la-${c.k}.png`);
-    const args = [path.join(ROOT, "tools/topic-lineart.mjs"), spec,
+    const args = [path.join(ROOT, "tools/topic-lineart.mjs"), SPEC,
       "--art", la.art, "--crop", la.crop, "--color", c.fill, "--out", path.relative(ROOT, out)];
     if (la.flip) args.push("--flip");
     execFileSync("node", args, { cwd: ROOT, stdio: "pipe" });
@@ -136,7 +162,7 @@ if (la) {
 }
 
 /* ---- 2. 快照 -------------------------------------------------------------- */
-const src = path.join(ROOT, "topics", spec, "index.html");
+const src = path.join(ROOT, "topics", SPEC, "index.html");
 if (!fs.existsSync(src)) { console.error(`× 找不到 ${src}`); process.exit(1); }
 let h = fs.readFileSync(src, "utf8");
 
@@ -147,8 +173,8 @@ if (!/noindex/.test(h)) throw new Error("noindex 沒有寫進去");
 
 /* 線稿改吃變數（url 只出現一次，@media 那一段只調大小與濃度） */
 if (PAGE.lineart) {
-  const reLa = new RegExp(`background: url\\("(\\.\\./\\.\\./assets/lineart-${spec}\\.png)"\\) no-repeat;`);
-  if (!reLa.test(h)) throw new Error(`接不到 ${spec} 的線稿那一行 —— 站上的寫法變了`);
+  const reLa = new RegExp(`background: url\\("(\\.\\./\\.\\./assets/lineart-${SPEC}\\.png)"\\) no-repeat;`);
+  if (!reLa.test(h)) throw new Error(`接不到 ${SPEC} 的線稿那一行 —— 站上的寫法變了`);
   h = h.replace(reLa, `background-image: var(--pv-la, url("$1")); background-repeat: no-repeat;`);
 }
 
@@ -198,17 +224,22 @@ const demo = !PAGE.demo ? "" : `
   </div>`;
 
 const rowC = `  <div class="pvrow"><b>植牙</b>${CANDS.map(c => `<button data-k="c" data-v="${c.k}">${c.label}</button>`).join("")}</div>\n`;
+const rowD = `  <div class="pvrow"><b>重點字</b>${PROSTH_DEEP.map(c => `<button data-k="d" data-v="${c.k}">${c.label}</button>`).join("")}</div>\n`;
 const rowO = `  <div class="pvrow"><b>矯正</b>${ORTHO.map(c => `<button data-k="o" data-v="${c.k}">${c.label}</button>`).join("")}</div>\n`;
 
 const bar = `
 <div class="pvbar" id="pvbar">
-${PAGE.rows.includes("c") ? rowC : ""}${PAGE.rows.includes("o") ? rowO : ""}${demo}
+${PAGE.rows.includes("c") ? rowC : ""}${PAGE.rows.includes("o") ? rowO : ""}${PAGE.rows.includes("d") ? rowD : ""}${demo}
   <div class="pvout" id="pvout">量測中…</div>
 </div>
 <button class="pvmin" id="pvmin">收起</button>
 <script>
 (function(){
-  var CANDS=${JSON.stringify(CANDS)}, ORTHO=${JSON.stringify(ORTHO)};
+  var CANDS=${JSON.stringify(CANDS)}, ORTHO=${JSON.stringify(ORTHO)}, DEEPS=${JSON.stringify(PROSTH_DEEP)};
+  /* ⚠⚠ 哪幾條覆寫規則要發出去，由這一頁有哪幾排決定 —— **不能全部都發**：
+     CANDS 那一條會同時設 --accent 與 --accent-deep，而它的 'now' 已經是**舊值**，
+     在沒有植牙那一排的頁面上發出去，等於把站上剛換好的填色改回舊的。 */
+  var ROWS=${JSON.stringify(PAGE.rows)};
   var HAS_LA=${PAGE.lineart}, SPEC=${JSON.stringify(spec)}, DEMO=${PAGE.demo};
   var bar=document.getElementById('pvbar'), out=document.getElementById('pvout'),
       sty=document.getElementById('pvspec');
@@ -219,12 +250,12 @@ ${PAGE.rows.includes("c") ? rowC : ""}${PAGE.rows.includes("o") ? rowO : ""}${de
           {n:'兒牙',f:'#c28229',d:'#9e6301'},{n:'根管',f:'#ae4f4d',d:'#89202d'},
           {n:'口外',f:'#8e6299',d:'#784e84'},{n:'全部',f:'#5f5d5c',d:'#4c4948'}];
 
-  var st={c:'now', o:'g3'};   /* ⚠ 矯正 2026-08-31 定案 Ⓖ3，預設要跟著站上跑的那一顆 */
+  var st={c:'now', o:'g3', d:'d0'};   /* ⚠ 預設一律指到站上現在跑的那一顆 */
   /* ⚠ 正規式寫 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到 g0 這種帶數字的值（CLAUDE.md 第八節） */
   var qs=new URLSearchParams(location.search);
-  ['c','o'].forEach(function(k){var v=qs.get(k);
+  ['c','o','d'].forEach(function(k){var v=qs.get(k);
     if(v && /^[a-z0-9]+$/.test(v) && list(k).some(function(x){return x.k===v;})) st[k]=v;});
-  function list(k){ return k==='c'?CANDS:ORTHO; }
+  function list(k){ return k==='c'?CANDS:(k==='o'?ORTHO:DEEPS); }
   function cur(k){ return list(k).filter(function(x){return x.k===st[k];})[0]; }
 
   function hx(h){return [1,3,5].map(function(i){return parseInt(h.substr(i,2),16);});}
@@ -250,17 +281,18 @@ ${PAGE.rows.includes("c") ? rowC : ""}${PAGE.rows.includes("o") ? rowO : ""}${de
 
   function apply(){
     var c=cur('c'), o=cur('o');
+    /* ⚠⚠ 目標科別一律寫死，**不可以用當頁的 spec**（2026-08-31 踩過：
+       矯正那一頁的 SPEC 是 'ortho'，套進去會把植牙候選的填色蓋到矯正頭上）。
+       ⚠⚠ 而且**只發這一頁真的有那一排的規則** —— CANDS 那一條會同時設
+       --accent 與 --accent-deep，它的 'now' 已經是舊值，發出去等於改回舊色。 */
     sty.textContent=
-      /* ⚠⚠ 這一條的目標一律寫死 prosth，**不可以用當頁的 spec** ——
-         矯正那一頁的 SPEC 是 'ortho'，套進去就會把植牙候選的填色蓋到矯正頭上
-         （2026-08-31 踩過：示範裡「被選到」那顆矯正變成 #335b8b）。
-         矯正那一頁沒有植牙那一排，st.c 永遠是 now ＝ 站上現值，等於沒作用。 */
-      'html [data-spec="prosth"]{--accent:'+c.fill+';--accent-deep:'+c.deep+';}'+
-      'html [data-spec="ortho"]{--accent-deep:'+o.deep+';}'+
+      (ROWS.indexOf('c')>=0 ? 'html [data-spec="prosth"]{--accent:'+c.fill+';--accent-deep:'+c.deep+';}' : '')+
+      (ROWS.indexOf('o')>=0 ? 'html [data-spec="ortho"]{--accent-deep:'+o.deep+';}' : '')+
+      (ROWS.indexOf('d')>=0 ? 'html [data-spec="prosth"]{--accent-deep:'+cur('d').deep+';}' : '')+
       (HAS_LA ? ':root{--pv-la:url("la-'+c.k+'.png");}' : '');
     bar.querySelectorAll('button[data-k]').forEach(function(b){
       b.setAttribute('aria-pressed', String(st[b.dataset.k]===b.dataset.v));});
-    var u=new URL(location); u.searchParams.set('c',st.c); u.searchParams.set('o',st.o);
+    var u=new URL(location); ROWS.forEach(function(k){u.searchParams.set(k,st[k]);});
     history.replaceState(null,'',u);
     measure();
   }
@@ -275,6 +307,27 @@ ${PAGE.rows.includes("c") ? rowC : ""}${PAGE.rows.includes("o") ? rowO : ""}${de
     var minOther=others.reduce(function(a,b){return b.v<a.v?b:a;});
     var hs=document.documentElement.scrollWidth>document.documentElement.clientWidth;
     var oh=dh(ORTHO_FILL, o.deep), sh=dh(SURG_FILL, SURG_DEEP);
+    var tail = hs ? '<span class="bad">⚠ 有水平捲動</span>' : '<span class="ok">無水平捲動</span>';
+    /* 這一輪的判準不是 AA（四案的對比度都很寬鬆），是「讀起來像不像一個顏色」——
+       關鍵的一格是：全站的墨 --ink #2a2c27 是 L* 17.6，重點字如果也在那個深度，
+       眼睛就只會讀到黑。所以面板第一行報的是「比全站的墨亮幾階」。 */
+    if(ROWS.indexOf('d')>=0){
+      var dd=cur('d'), D2=lch(dd.deep), INK=lch('#2a2c27')[0], FILL=lch('#465885')[0];
+      var above=D2[0]-INK;
+      out.innerHTML=
+        sw(dd.deep)+' 重點字 '+dd.deep+' L*'+f1(D2[0])+' h'+f1(D2[2])+
+        '　'+sw('#2a2c27')+' 全站的墨 #2a2c27 L*'+f1(INK)+'\\n'+
+        '<b>比全站的墨亮 '+f1(above)+' 階</b>　'+
+        (above<2 ? '<span class="bad">幾乎一樣深 —— 讀起來會是黑的，不是這一科的顏色</span>'
+         : above<8 ? '<span class="ok">看得出是顏色了</span>'
+                   : '<span class="ok">明顯是一個顏色</span>')+
+        '　字對卡 '+mark(cr(dd.deep,CARD),4.5)+'　對紙 '+mark(cr(dd.deep,PAPER),4.5)+'\\n'+
+        '兩階落差 '+f1(FILL-D2[0])+'（家族 5.9~15.1，現況 20.1 是全站最大）'+
+        '　對其他七科最小 ΔE '+f1(Math.min.apply(null,NB.map(function(n){return dE(dd.deep,n.d);})
+          .concat([dE(dd.deep,'#31637f'),dE(dd.deep,'#465885')])))+
+        '　視窗 '+innerWidth+'×'+innerHeight+'　'+tail;
+      return;
+    }
     var head = DEMO
       ? sw(ORTHO_FILL)+' 矯正填色 #4478b5 h'+f1(lch(ORTHO_FILL)[2])+
         '　'+sw(o.deep)+' 矯正深階 '+o.deep+' h'+f1(D[2])+'\\n'+
@@ -284,7 +337,7 @@ ${PAGE.rows.includes("c") ? rowC : ""}${PAGE.rows.includes("o") ? rowO : ""}${de
         '　對照 口外 '+f1(sh)+'°・其他六科 0.2~4.1°\\n'
       : sw(c.fill)+' 植牙填色 '+c.fill+' L*'+f1(L[0])+' h'+f1(L[2])+
         '　'+sw(o.deep)+' 矯正深階 '+o.deep+' L*'+f1(D[0])+' h'+f1(D[2])+'\\n';
-    var tail = hs ? '<span class="bad">⚠ 有水平捲動</span>' : '<span class="ok">無水平捲動</span>';
+
     /* ⚠ 示範頁的面板刻意只印兩行：那一頁的主角是上面那組並排的標記，
        切換條連示範一起要收在 24vh 之內（CLAUDE.md 第八節：不能吃掉半個畫面）。 */
     out.innerHTML = DEMO
