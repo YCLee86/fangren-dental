@@ -4,6 +4,12 @@
  *   node tools/spec-color-preview.mjs prosth   → preview/spec-prosth-line58/
  *   node tools/spec-color-preview.mjs ortho    → preview/spec-ortho-twosteps/
  *
+ * ⚠⚠ **2026-08-31 兩頁都已定案上線並刪除**（矯正深階 `#31637f`、植牙 Ⓒ
+ *   `#465885`／`#182b4c`），推導在 `/history/spec-ortho-deep.html` 與
+ *   `/history/spec-prosth-line58.html`。**所以下面 CANDS 的 "現況" 已經不是現況了，
+ *   現在站上跑的是 Ⓒ；ORTHO 的 g0 也不是現況，是舊值。** 這一支留著是為了
+ *   下一次要換某一顆科別色時還跑得動 —— 重開之前先把候選表換掉。
+ *
  * 2026-08-31 植牙・假牙重建這一輪寫的：使用者拍了富山路面電車的路線圖，
  * 「5、8 號線的顏色看起來跟植牙假牙贗復的標籤主題色很像」，要一份套色預覽
  * 和現在版本的比較。同一天他在提案頁上看出矯正的深階不對，於是長出第二頁。
@@ -58,10 +64,10 @@ const spec = process.argv[2] || "prosth";
    深階三案共用一顆：色相跟著實測走（281.5）、佔色域比例照現行深階的 74%、
    亮度挑在「對矯正深階的 ΔE 不低於現行那 10.5」的那一格（L* 17.5）。 */
 const CANDS = [
-  { k: "now", label: "現況",        fill: "#335b8b", deep: "#182f4b" },
+  { k: "now", label: "舊值",        fill: "#335b8b", deep: "#182f4b" },   /* ⚠ 2026-08-31 起這不是現況了 */
   { k: "a",   label: "Ⓐ 實測原值",  fill: "#3f527e", deep: "#182b4c" },
   { k: "b",   label: "Ⓑ 實測較深",  fill: "#3c4c71", deep: "#182b4c" },
-  { k: "c",   label: "Ⓒ 亮度回家族帶", fill: "#465885", deep: "#182b4c" },
+  { k: "c",   label: "Ⓒ 亮度回家族帶（定案）", fill: "#465885", deep: "#182b4c" },
 ];
 
 /* ---- 矯正的深階（2026-08-31 使用者在提案頁上看出來的）------------------------

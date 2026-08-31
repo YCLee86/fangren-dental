@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>spec-prosth-line58｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>spec-prosth-line58 — 植牙・假牙重建改用富山 5・8 號線那條深藍</h1>
+<p class="meta">
+  2026-08-31 開、當天定案上線<br>
+  原網址 <code>/preview/spec-prosth-line58/</code>（已刪除 2026-08-31）<br>
+  整頁還原：<code>git show 201fa63:preview/spec-prosth-line58/index.html</code><br>
+  切換條 <code>?c=now|a|b|c</code>　產生器 <code>tools/spec-color-preview.mjs prosth</code><br>
+  定案 <strong>Ⓒ</strong>：填色 <code>#335b8b</code> → <code>#465885</code>、深階 <code>#182f4b</code> → <code>#182b4c</code>
+</p>
+
+<div class="note">
+<p>使用者拍了一張<strong>富山路面電車的路線圖</strong>：「5、8 號線的顏色看起來跟植牙假牙贗復的
+標籤主題色很像，你們幫我做這個顏色的套色預覽和現在版本的比較給我看。」</p>
+</div>
+
+<h2>一、量法（一個樣本不算數，逐段量了八次）</h2>
+<pre>照片 4284×5712（EXIF 轉正前的原始座標，Chromium 的 canvas 不套轉向）。
+
+1. 先整張掃藍色系的長條，得到兩群：x 972~1040（環狀線那條亮藍）
+   與 x 2684~2772（5・8 那條深藍）。
+   ⚠ 第一次直接抓「最藍的一群」抓到的是環狀線 —— 裁一小塊出來看一眼就發現了，
+     不要靠座標猜。
+
+2. 條子的 y 範圍 2751~3668，切成八段，每段逐列取中位數再對列取中位數。
+   ⚠ 不能取平均：看板上有反光，幾個亮點就把整段拉高（同六之十九節第 11 條）。
+
+3. 白平衡：每一段同時量條子右邊那塊看板底色，把條子除以它。
+   八段的原值從 (55,68,98) 走到 (52,65,94)、底色從 (224,213,199) 走到 (219,212,209)
+   —— 光線本身就在變，所以白點要逐段取，不能整張取一個。
+
+   看板當純白還原      → #3f527e（八段散布 #3d4e73 ~ #40527f）
+   看板當米白 #F2EDE4  → #3c4c71（八段散布 #394967 ~ #3d4c73）
+
+⚠ 兩個白點假設都合理（那面看板是暖白不是純白，但暖到什麼程度量不出來），
+  所以兩個都做成候選，不替使用者選一個。</pre>
+
+<h2>二、他的直覺是對的</h2>
+<pre>實測還原出來的 #3f527e，對當時的植牙填色 #335b8b：
+  ΔE00 只有 5.5（ΔE*ab 8.4）—— 兩顆幾乎是同一個顏色的兩個高度。
+差別是那條線比較深、比較灰、比較偏紫（L* 35.2 vs 37.9、C* 27.8 vs 30.9、h 282 vs 273）。</pre>
+
+<h2>三、四案</h2>
+<pre>                    填色      L*   C*    h   佔色域  白字  塊對紙  深階      對矯正填色
+現況               #335b8b  37.9 30.9 273.2  75%   6.98  5.51  #182f4b   13.3
+Ⓐ 實測原值          #3f527e  35.2 27.8 282.0  57%   7.72  6.10  #182b4c   18.1
+Ⓑ 實測較深          #3c4c71  32.5 23.7 281.2  52%   8.52  6.73  #182b4c   22.3
+Ⓒ 亮度回家族帶 ★     #465885  37.8 28.0 282.6  54%   7.01  5.54  #182b4c   16.0
+
+Ⓒ 走的是兒牙那一輪定下的做法（六之十五節）：
+  **顏色的出處是色相，不是那個 HEX** —— 取實測的色相與彩度，
+  只把亮度拉回七科的家族帶（L* 36~48）。
+
+深階三案共用一顆：色相跟著實測走、佔色域比例照舊深階的 74%、
+亮度挑在「對矯正深階不比當時那 10.5 更緊」的那一格（L* 17.7）。
+
+落選的理由：
+  Ⓐ 是實測原值，但 L* 35.2 已經低於家族帶 0.8 階。
+  Ⓑ L* 32.5 掉出家族帶 3.5 階 —— 方向是往六之十節提亮之前那個 #252d4a（19.1）退。
+  ⚠ Ⓑ 中途還一度出局：對當時的矯正深階只有 6.0，低於出局線 6.1（見下一段）。</pre>
+
+<h2>四、⚠⚠ 中途使用者抓到一格「這份文件從來沒算過」的距離</h2>
+<pre>他在這一頁上說：「確認一下矯正的標籤色，在這個頁面下矯正的深階字套色顏色
+看起來很深，反而很像假牙重建的顏色。」
+
+那一格是：**標記那一排上被選到的用填色、其餘六顆用深階**，
+所以真正並排的是「A 科的深階 × B 科的填色」——
+而 PALETTE.md 全篇比的是填色對填色、深階對深階。
+
+補算：矯正的深階對植牙填色只有 11.3，其他六科是 27~87。
+⚠ 而這一輪原本那三個候選有兩個會讓它更糟（Ⓐ 8.5、Ⓑ 6.0）。
+
+→ 分出去變成獨立的一輪，見 /history/spec-ortho-deep.html。
+  矯正的深階當天先定案上線（#244369 → #31637f），植牙這一輪才接著收。</pre>
+
+<h2>五、定案之後的全站四種距離</h2>
+<pre>               今天早上              現在
+填色 × 填色    13.3 矯正×植牙        16.0 矯正×植牙
+深階 × 深階    10.5 矯正×植牙        18.6 一般×牙周
+深階 × 填色    11.3 矯正深×植牙填     15.6 牙周深×一般填
+填色 × 深階    15.6                 15.6
+
+⚠⚠ 第六之十四節那句「矯正 × 植牙是全站最近的一對（13.3／10.5）」，
+   到 2026-08-31 為止整條都不成立了 —— 深階那一半是換矯正深階時解掉的，
+   填色那一半是這一輪解掉的。現在最近的一對是 16.0，
+   回到 2026-08-09 之前那個「最近 16.1」的水準。
+
+⚠ 已知的代價：色相從 273 走到 282，往六之十三節被使用者退回的「藍紫」
+  方向回去 9 度（當年是從 287 拉到 273）。他在提案頁上看過真實版面才選的。</pre>
+
+<h2>六、⚠⚠ 這一顆的顏色烘在兩個產出檔裡</h2>
+<pre>assets/lineart-prosth.png        ← 吃**套色**
+  node tools/topic-lineart.mjs prosth --art drafts/lineart-prosth-v2.jpg --crop 36,83,972,896
+  ⚠ 上線那張逐位元組等於提案頁上 Ⓒ 那一格用的檔 —— 他點頭的就是這一張。
+
+assets/og-topic-prosth.jpg 的帶子  ← 吃**深階**
+  node drafts/og-shift.mjs drafts/og-topic-prosth-src.jpg prosth --shift 45
+  node tools/og-plate.mjs prosth --blend multiply --tintcolor '#143162' \
+    --ink 0.18 --blur 6 --loc full --locpos stack
+
+⚠⚠ 補償色 #143162 是**校出來的不是套公式**：帶子是相乘上色，
+  「補償色 → 帶子實際落在哪」不是線性的（中間還有 --ink 0.18 那層墨與模糊）。
+  拿兩個已知點（#3971bd→rgb(50,91,137)、#1b3a66→rgb(29,50,79)）逐通道解一條直線，
+  反推目標 rgb(24,43,76)，得 #143162；實測落在 rgb(23,44,75)，ΔE 1.71。
+  紙色字對這條帶子 11.07。
+
+⚠ 兩支工具的顏色表也要改（topic-lineart.mjs 的 ACCENT、og-plate.mjs 的 ACCENT 與 DEEP），
+  否則下次重跑會跑回舊色。</pre>
+
+<h2>七、⚠⚠ 順帶查出一件本來就存在的落差（不是這一輪造成的）</h2>
+<pre>drafts/og-topic-prosth-prompt.md 第六節寫著「定案用套色版」，帶子應該落在
+rgb(50,91,137)。但線上跑的那張量出來是 rgb(26,47,74) ＝ 深階。
+用文件那行指令重跑，產出的確實是套色版 —— 文件與線上不一致，而且早於這一輪。
+
+這一輪的處理：**照線上的實況（深階）重做**，沒有改變那張圖的長相。
+要不要改成文件寫的套色版是另一題，要問使用者
+（那是看得出來的差別：套色版的帶子亮很多，紙色字對它 5.42，深階版是 11.07）。</pre>
+
+<h2>八、驗收</h2>
+<pre>・八個位置 0 個不過（兒牙那三格是 2026-08-08 就定下的已知取捨，沒有動）。
+・分享圖和線上那張逐像素比：帶子那 104 列 90% 的像素有差（本來就要換色），
+  **帶子以下只有 0.12% 有差、最大 6 階** —— JPEG 重壓的雜訊，內容一個地方都沒動。
+・線稿逐位元組等於提案頁 Ⓒ 那一張。
+・三個視窗量首頁七顆標記、植牙著陸頁的 chip 填色與內文重點字、
+  植牙文章頁的兩個變數、無水平捲動。
+・只有首頁的 lastmod 動，沒有文章的日期被誤傷。</pre>
+
+<footer>
+  <a href="/history/">← 改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>

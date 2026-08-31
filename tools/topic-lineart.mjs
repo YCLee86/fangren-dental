@@ -52,7 +52,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 /* 各科的套色（PALETTE.md）。和 tools/og-plate.mjs 的 ACCENT 是同一組值。 */
 const ACCENT = {
   general: "#3f654a", perio: "#317d78", kids: "#c28229", endo: "#ae4f4d",
-  prosth: "#335b8b", surg: "#8e6299", ortho: "#4478b5",
+  prosth: "#465885", surg: "#8e6299", ortho: "#4478b5",
 };
 
 /* 半身的裁切（在 1422×752 的原檔上量的）。

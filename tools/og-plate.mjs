@@ -55,13 +55,13 @@ const ACCENT = {
   perio:   "#317d78",   // 牙周治療
   kids:    "#c28229",   // 兒童牙科
   endo:    "#ae4f4d",   // 顯微根管
-  prosth:  "#335b8b",   // 植牙・假牙重建
+  prosth:  "#465885",   // 植牙・假牙重建
   surg:    "#8e6299",   // 口腔外科
   ortho:   "#4478b5",   // 齒顎矯正
 };
 const DEEP = {
   general: "#2c5238", perio: "#2a6d69", kids: "#9e6301", endo: "#89202d",
-  prosth: "#182f4b", surg: "#784e84", ortho: "#31637f",   // 2026-08-31 換（PALETTE 六之二十二）
+  prosth: "#182b4c", surg: "#784e84", ortho: "#31637f",   // 2026-08-31 換（PALETTE 六之二十二）
 };
 /* 牌子上的字與標誌的顏色。預設是站上的紙色 `--paper`。
    ⚠⚠ **暖色系的帶子要用 `--fg #ffffff`**（2026-08-24 兒牙那張）：紙色 #e2e5e6 是偏冷的灰，
