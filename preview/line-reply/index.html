@@ -127,6 +127,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        聊天室的，所以它也會觸發這一則。**同一則文字要在兩種情境下都讀得通。** */
 
   var WELCOME = {
+    /* 收短版：四格圖上已經印著電話、主題與科別、衛教文章，文字就不必再列一次；
+       只留圖上沒有的那一件（約診提醒）＋ 那句聲明。 */
+    tight:
+"{好友的顯示名稱}你好，這裡是芳仁牙醫診所。\n斗六永樂街上，1983 年開到現在。\n\n約診提醒會發在這裡；\n診所介紹、科別與衛教文章，\n上面那張圖點得進去。\n\n要改約診或取消，打電話最快：\n" + TEL + "\n週一至週五看診時間內都有人接。",
     img:
 "{好友的顯示名稱}你好，這裡是芳仁牙醫診所。\n斗六永樂街上，1983 年開到現在。\n\n這個 LINE 上你會收到：\n・約診提醒\n・診所與各科的介紹\n・平常用得到的牙齒衛教\n更完整的內容都在官網 https://fangren.net\n\n想找人說話的時候，打電話最快 ——\n這裡沒有專人回訊息，\n人在電話那頭。\n" + TEL,
     txt:
@@ -134,8 +138,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   };
 
   var AUTO = {
+    /* ⚠ 自動回應會**重複出現很多次**（綁定完一次、之後每次打字都一次），
+       所以它越短越好；完整的介紹交給只送一次的招呼訊息。 */
+    short:
+"這裡是芳仁牙醫診所。\n\n這個帳號沒有專人回訊息 ——\n要改約診或取消，打電話最快：\n" + TEL + "\n週一至週五看診時間內都有人接。\n\n約診提醒會發在這裡，\n其他的都在官網 https://fangren.net",
     img:
-"這裡是芳仁牙醫診所。\n\n這個 LINE 上你會收到：\n・約診提醒\n・診所與各科的介紹\n・平常用得到的牙齒衛教\n更完整的內容都在官網 https://fangren.net\n\n想找人說話的時候，打電話最快 ——\n這裡沒有專人回訊息，\n人在電話那頭。\n" + TEL + "\n週一至週五看診時間內都有人接。",
+"這裡是芳仁牙醫診所。\n\n約診提醒會發在這裡，\n診所介紹、科別與衛教文章都在官網\nhttps://fangren.net\n\n想找人說話，打電話最快 ——\n這裡沒有專人回訊息，人在電話那頭。\n" + TEL + "\n週一至週五看診時間內都有人接。",
     txt:
 "這裡是芳仁牙醫診所。\n\n這個 LINE 上你會收到：\n・約診提醒\n・診所與各科的介紹\n・平常用得到的牙齒衛教\n更完整的內容都在官網 https://fangren.net\n\n想找人說話的時候，打電話最快 ——\n這裡沒有專人回訊息，\n人在電話那頭。\n" + TEL + "\n週一至週五　早 08:45–11:30／午 13:45–16:30／晚 17:45–20:00"
   };
@@ -146,32 +154,34 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   /* ⚠ 兩則的工作不一樣，所以圖也不必一樣：
      ・招呼訊息 —— 第一次見面，講「這個 LINE 是做什麼的」→ 功能版四格。
      ・自動回應 —— 他已經在跟你講話了，要的是一個出口 → 兩格、一張圖只做一件事。 */
+  /* ⚠ 兩則的工作不一樣：
+     ・招呼訊息 —— 只送一次，是唯一一次他會認真看的自我介紹 → 四格圖＋功能簡介。
+     ・自動回應 —— 會重複出現很多次 → 越短越好。 */
+  /* ⚠ 兩則的工作不一樣，所以圖與長度各自決定：
+     ・招呼訊息 —— 只送一次，是唯一一次他會認真看的自我介紹 → 四格圖＋功能簡介。
+     ・自動回應 —— 綁定完一次、之後每次打字都一次，會重複出現 → 越短越好。 */
   var VER = {
-    pair:  { name: "各用各的（建議）",
-             img: function (sc) { return sc === "hello" ? "rich-4b.png" : "rich-2.png"; },
-             tap: function (sc) { return sc === "hello"
-               ? "診所介紹→fangren.net、直接撥號、主題與科別→/#topics、衛教文章→/#articles"
-               : "上半→fangren.net、下半直接撥號"; } },
-    both:  { name: "都用功能版",
-             img: function () { return "rich-4b.png"; },
-             tap: function () { return "診所介紹→fangren.net、直接撥號、主題與科別→/#topics、衛教文章→/#articles"; } },
-    pair2: { name: "回應改用捷徑版",
-             img: function (sc) { return sc === "hello" ? "rich-4b.png" : "rich-4.png"; },
-             tap: function (sc) { return sc === "hello"
-               ? "診所介紹→fangren.net、直接撥號、主題與科別→/#topics、衛教文章→/#articles"
-               : "fangren.net、直接撥號、/#clinic、Google 地圖"; } },
-    text:  { name: "只有文字" },
-    now:   { name: "現況" }
+    tight: { name: "建議：兩則都收短", hello: "rich-4b.png", auto: null, autoShort: true, helloTight: true },
+    slim: { name: "回應短、招呼完整", hello: "rich-4b.png", auto: null, autoShort: true },
+    pair: { name: "回應也配兩格圖",       hello: "rich-4b.png", auto: "rich-2.png" },
+    both: { name: "兩則都用四格",         hello: "rich-4b.png", auto: "rich-4b.png" },
+    now:  { name: "現況" }
+  };
+  var TAP = {
+    "rich-4b.png": "診所介紹→fangren.net、直接撥號、主題與科別→/#topics、衛教文章→/#articles",
+    "rich-2.png":  "上半→fangren.net、下半直接撥號"
   };
 
-  var SCENE = { hello: "剛加好友", bind: "剛綁定完", ask: "傳訊息要改約" };
+  var SCENE = { flow: "加好友→綁定（整段）", hello: "剛加好友", bind: "剛綁定完", ask: "傳訊息要改約" };
 
-  var state = { s: "bind", v: "pair" };
+  var state = { s: "flow", v: "tight" };
 
   function body(scene, ver) {
     if (ver === "now") return NOW;
-    var set = (scene === "hello") ? WELCOME : AUTO;
-    return VER[ver].img ? set.img : set.txt;
+    var v = VER[ver];
+    if (scene === "hello") return v.helloTight ? WELCOME.tight : (v.hello ? WELCOME.img : WELCOME.txt);
+    if (v.autoShort) return AUTO.short;
+    return v.auto ? AUTO.img : AUTO.txt;
   }
 
   function el(tag, cls, txt) {
@@ -207,7 +217,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
   function reply(chat, time) {
     var v = VER[state.v];
-    if (v.img) chat.appendChild(msg("oa", time, image(v.img(state.s))));
+    var src = (state.s === "hello") ? v.hello : v.auto;
+    if (src) chat.appendChild(msg("oa", time, image(src)));
     chat.appendChild(msg("oa", time, bubble(body(state.s, state.v))));
   }
 
@@ -216,7 +227,21 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     chat.innerHTML = "";
     chat.appendChild(el("div", "pv-day", "今天"));
 
-    if (state.s === "hello") {
+    if (state.s === "flow") {
+      /* 真的會發生的一整段：加好友 → 招呼訊息 → 點綁定 → 綁定成功 → 自動回應。
+         ⚠ 兩則之間只隔一兩分鐘，所以它們加起來有多長才是真正要看的數字。 */
+      var hv = VER[state.v].hello;
+      if (hv) chat.appendChild(msg("oa", "8:44", image(hv)));
+      chat.appendChild(msg("oa", "8:44", bubble(VER[state.v].helloTight ? WELCOME.tight : (hv ? WELCOME.img : WELCOME.txt))));
+      chat.appendChild(msg("oa", "8:45", function () {
+        var c = el("div", "pv-card");
+        c.appendChild(el("div", "k"));
+        c.appendChild(el("div", "btn", "點擊啟動完整服務 →"));
+        return c;
+      }));
+      chat.appendChild(msg("me", "8:46", bubble("✅ 0976237217 綁定成功！\n可以啟用線上相關服務囉！")));
+      reply(chat, "8:46");
+    } else if (state.s === "hello") {
       if (state.v === "now")
         chat.appendChild(msg("oa", "8:44", bubble("（現行的招呼訊息我沒有看到，所以這一格是空的）")));
       else reply(chat, "8:44");
@@ -248,17 +273,38 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     var lines = body(state.s, state.v).split("\n").length;
     var img = document.querySelector(".pv-chat .pv-bub.img img");
     var iw = img ? Math.round(img.getBoundingClientRect().width) : 0;
-    var kind = (state.s === "hello") ? "招呼訊息" : "自動回應";
+    var kind = (state.s === "flow") ? "招呼訊息 ＋ 自動回應"
+            : (state.s === "hello") ? "招呼訊息" : "自動回應";
+    if (state.s === "flow") {
+      var all = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub, .pv-chat .pv-msg:not(.me) .pv-card");
+      var tot = 0;
+      for (var i = 0; i < all.length; i++) tot += all[i].getBoundingClientRect().height + 11;
+      var tp = tot / vh * 100;
+      document.getElementById("panel").innerHTML =
+        "<b>" + kind + "（" + v.name + "）</b>　整段是連著出現的（差一兩分鐘）<br>" +
+        "診所送出的東西加起來 <b>" + tot.toFixed(0) + "px</b> ＝ " +
+        (tp > 100 ? '<span class="no">一屏的 ' + tp.toFixed(0) + '%</span>　他要捲一屏以上才看得完'
+                  : '<span class="ok">一屏的 ' + tp.toFixed(0) + '%</span>') +
+        "<br>圖 <b>" + document.querySelectorAll(".pv-chat .pv-bub.img").length +
+        "</b> 張・文字泡泡 <b>2</b> 則（你的螢幕 " +
+        Math.round(window.innerWidth) + "×" + Math.round(vh) + "）";
+      document.getElementById("note").textContent =
+        "⚠ 招呼訊息是我們自己要的（加好友時 LINE 送的，只送這一次）；"
+        + "綁定完那一則是被觸發的 —— 那句「綁定成功」是綁定系統以病人的身分送進聊天室的，"
+        + "自動回應對任何訊息都會回。兩件事性質不同，但病人是連著看到的，"
+        + "所以自動回應要寫短，不要把招呼訊息剛講過的再講一次。";
+      return;
+    }
 
     document.getElementById("panel").innerHTML =
       "<b>" + kind + "・" + v.name +
-        (v.img ? "（" + v.img(state.s).replace(".png", "") + "）" : "") + "</b>　" +
+        (((state.s === "hello") ? v.hello : v.auto) ? "（" + ((state.s === "hello") ? v.hello : v.auto).replace(".png", "") + "）" : "") + "</b>　" +
       (pct > 62 ? '<span class="no">佔一屏 ' + pct.toFixed(0) + "%</span>，要捲才看得完"
                 : '<span class="ok">佔一屏 ' + pct.toFixed(0) + '%</span>，一眼看得完') +
       "<br>文字 <b>" + lines + "</b> 行・泡泡高 <b>" + h.toFixed(0) + "px</b>（你的螢幕 " +
       Math.round(window.innerWidth) + "×" + Math.round(vh) + "）" +
       (iw ? "<br>圖在聊天室裡實際顯示 <b>" + iw + "px</b> 寬（原檔 1040×1040）" : "") +
-      (v.tap ? "<br>可以點的地方：" + v.tap(state.s) : "");
+      (TAP[(state.s === "hello") ? v.hello : v.auto] ? "<br>可以點的地方：" + TAP[(state.s === "hello") ? v.hello : v.auto] : "");
 
     document.getElementById("note").textContent =
       state.s === "hello"
