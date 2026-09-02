@@ -1,0 +1,130 @@
+{
+  "_說明": [
+    "加入好友的招呼圖卡（LINE Flex Message）。2026-09-02。",
+    "⚠⚠ 這一份要不要用得先問廠商一件事：後台的『招呼訊息』能不能送 Flex Message。",
+    "  後台自己編的招呼訊息通常只有『文字／圖片／圖文訊息』三種，圖文訊息＝一張圖＋",
+    "  可以點的區塊，字是烘進圖裡的。Flex 卡片要走 Messaging API，也就是要由廠商的",
+    "  系統接 follow 事件去送。診所的約診提醒卡與滿意度調查卡都是 Flex，所以廠商",
+    "  的系統做得到，剩下的問題只是願不願意接這一則。",
+    "  送不出 Flex 的話，退回 preview/line-reply/ 的『圖文分開』版（rich-w.png ＋ 文字）。",
+    "",
+    "顏色全部來自 PALETTE.md，沒有新增任何一顆：",
+    "  紙 #E2E5E6・卡 #F4F4F5・墨 #2A2C27・柔墨 #5C5F57・線 #CDD0D2",
+    "  綠（一般牙科套色）#3F654A・深階 #2C5238",
+    "",
+    "⚠ 頭圖 hero-card.png 是純照片，沒有字也沒有電話 —— 卡片本體已經有診所名，",
+    "  底下已經有一顆真的撥號按鈕，頭圖再放一次就是說兩遍。",
+    "",
+    "⚠⚠ 最後那顆『把芳仁介紹給家人』的 action 還沒驗證過：",
+    "  ・uri 填 https://line.me/R/ti/p/@445rpiiv 的話，按的人自己已經是好友，",
+    "    點下去只會開到診所的帳號頁，不會叫出轉傳。",
+    "  ・LINE 有一個『推薦官方帳號給朋友』的深連結，格式類似",
+    "    https://line.me/R/nv/recommendOA/@445rpiiv —— 這個我沒有實測過，",
+    "    要請廠商在自己的帳號上按一次確認。",
+    "  ・驗不過就把那顆拿掉，改成在圖卡後面補一則很短的純文字訊息：",
+    "      家裡有人也在芳仁看牙，把這個連結轉給他：",
+    "      https://line.me/R/ti/p/@445rpiiv",
+    "    純文字訊息裡的網址 LINE 會自動變成連結、也長按複製得到；",
+    "    Flex 卡片裡的文字不會自動變連結，這是圖卡唯一輸給純文字的地方。"
+  ],
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/line/hero-card.png",
+    "size": "full",
+    "aspectRatio": "2:1",
+    "aspectMode": "cover",
+    "action": { "type": "uri", "label": "診所網站", "uri": "https://fangren.net/" }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "16px",
+    "backgroundColor": "#F4F4F5",
+    "spacing": "none",
+    "contents": [
+      {
+        "type": "text",
+        "text": "芳仁牙醫診所",
+        "size": "lg",
+        "weight": "bold",
+        "color": "#2A2C27"
+      },
+      {
+        "type": "text",
+        "text": "雲林斗六・永樂街",
+        "size": "xs",
+        "color": "#5C5F57",
+        "margin": "xs"
+      },
+      {
+        "type": "text",
+        "text": "這裡是診所的官方 LINE。",
+        "size": "sm",
+        "color": "#2A2C27",
+        "margin": "lg",
+        "wrap": true
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#E2E5E6",
+        "cornerRadius": "8px",
+        "paddingAll": "11px",
+        "margin": "md",
+        "spacing": "xs",
+        "contents": [
+          { "type": "text", "text": "下面的選單有", "size": "xs", "color": "#5C5F57" },
+          {
+            "type": "text",
+            "text": "約診查詢、診所資訊、診療項目、醫師介紹、衛教資訊",
+            "size": "sm",
+            "weight": "bold",
+            "color": "#2A2C27",
+            "wrap": true
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "完成綁定，看診前 48 小時就會在這裡提醒你。",
+        "size": "sm",
+        "color": "#2A2C27",
+        "margin": "lg",
+        "wrap": true
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "backgroundColor": "#F4F4F5",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#3F654A",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "撥打電話　05-5339369",
+          "uri": "tel:+88655339369"
+        }
+      },
+      {
+        "type": "button",
+        "style": "link",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "把芳仁介紹給家人",
+          "uri": "https://line.me/R/nv/recommendOA/@445rpiiv"
+        }
+      }
+    ]
+  }
+}

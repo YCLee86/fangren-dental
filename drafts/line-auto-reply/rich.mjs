@@ -251,6 +251,16 @@ const fourB = `${base}
      左 → https://fangren.net/
      右 → tel:+88655339369   （選單六格裡沒有撥號，這是它補的那一格）*/
 const wideH = 520;
+
+/* ---- 候選五：招呼圖卡的頭圖（1040×520，純照片） ------------------------
+   ⚠ 圖卡（Flex Message）的頭圖**不要放字，也不要放電話** ——
+   卡片本體底下就有「芳仁牙醫診所」與一顆真的撥號按鈕，頭圖再放一次就是說兩遍。
+   這正是圖卡和圖文訊息最大的差別：圖文訊息的字非烘進圖裡不可，圖卡不必。 */
+const heroCard = `${sheet(wideH)}
+<div class="sheet" style="grid-template-columns:1040px">
+  <div class="cell photo" style="${photoCss(1040, wideH, 1480, 1120)}"></div>
+</div>`;
+
 const wideCard = `${sheet(wideH)}
 <div class="sheet" style="grid-template-columns:517px 517px">
   <div class="cell photo" style="${photoCss(517, wideH, 900, 1120)}">
@@ -284,7 +294,7 @@ const { chromium } = mod.default ?? mod;
 const GLYPHS = new Set(fs.readFileSync(path.join(FDIR, "glyphs.txt"), "utf8").replace(/\s/g, ""));
 const visibleText = (html) => html.replace(/<style[\s\S]*?<\/style>/g, "")
   .replace(/<[^>]*>/g, "").replace(/\s/g, "");
-const SHEETS = [["rich-2", two, 1040], ["rich-4", four, 1040], ["rich-4b", fourB, 1040], ["rich-w", wideCard, wideH]];
+const SHEETS = [["rich-2", two, 1040], ["rich-4", four, 1040], ["rich-4b", fourB, 1040], ["rich-w", wideCard, wideH], ["hero-card", heroCard, wideH]];
 for (const [name, html] of SHEETS) {
   const miss = [...new Set([...visibleText(html)].filter((c) => !GLYPHS.has(c)))];
   if (miss.length) {
