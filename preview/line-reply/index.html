@@ -66,6 +66,46 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-day{align-self:center;background:rgba(0,0,0,.16);color:#fff;font-size:.66rem;
   padding:2px 11px;border-radius:11px}
 
+
+/* ---- 約診提醒卡（現況 vs 新版）------------------------------------- */
+.rc{width:min(268px,74%);border-radius:14px;overflow:hidden;background:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,.10);font-size:.8rem;line-height:1.6}
+/* 現況：照截圖重做 */
+.rc-old .h{background:#7c8a63;color:#fff;font-weight:700;text-align:center;
+  padding:9px 8px;font-size:.86rem}
+.rc-old .b{padding:11px 12px 13px;color:#333}
+.rc-old .who{color:#555}
+.rc-old .dt{font-weight:700;color:#111;font-size:1.02rem;margin:7px 0 10px}
+.rc-old hr{border:0;border-top:1px solid #e0e0e0;margin:9px 0}
+.rc-old .note-h{text-align:center;font-weight:700;color:#333;margin-bottom:5px}
+.rc-old ol{margin:0 0 0 1.2em;padding:0;color:#333}
+.rc-old ol li{margin:3px 0}
+.rc-old .red{color:#d0021b;font-weight:700;text-align:center;margin:10px 0 8px;font-size:.78rem}
+.rc-old .btn{background:#7c8a63;color:#fff;font-weight:700;text-align:center;
+  padding:11px;border-radius:22px;margin-bottom:9px}
+.rc-old .sub{color:#7c8a63;text-align:center;font-size:.86rem}
+/* 新版：顏色一律回 PALETTE.md 拿，沒有 emoji、沒有紅字 */
+.rc-new{background:var(--card)}
+.rc-new .top{display:flex;align-items:center;gap:7px;padding:10px 13px 9px;
+  border-bottom:1px solid var(--rule)}
+.rc-new .top img{width:19px;height:19px;border-radius:50%;display:block}
+.rc-new .top b{font-size:.74rem;font-weight:500;color:var(--ink-soft);
+  letter-spacing:.08em}
+.rc-new .b{padding:13px 14px 14px}
+.rc-new .lead{font-size:.76rem;color:var(--ink-soft)}
+.rc-new .dt{font-size:1.12rem;font-weight:700;color:var(--ink);
+  letter-spacing:.01em;margin:4px 0 2px}
+.rc-new .dt small{font-size:.8rem;font-weight:500;color:var(--ink-soft);
+  margin-left:.35em;letter-spacing:0}
+.rc-new .know{background:var(--paper);border-radius:9px;padding:9px 11px;
+  margin:12px 0 13px;font-size:.75rem;color:var(--ink-soft);line-height:1.75}
+.rc-new .go{background:var(--green);color:#fff;font-weight:700;text-align:center;
+  padding:11px;border-radius:9px;font-size:.86rem}
+.rc-new .no{display:block;text-align:center;color:var(--deep);font-weight:500;
+  padding:9px;margin-top:2px;font-size:.82rem}
+.rc-new .foot{border-top:1px solid var(--rule);padding-top:9px;margin-top:4px;
+  font-size:.71rem;color:var(--ink-soft);line-height:1.7}
+
 /* ---- 量測面板 -------------------------------------------------------- */
 .pv-panel{margin:12px 0 0;border:1px solid var(--rule);border-radius:10px;
   background:var(--card);padding:9px 11px;font-size:.72rem;line-height:1.85;
@@ -146,7 +186,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 "感謝您的訊息！\n\n很抱歉，本帳號無法個別回覆用戶的訊息。\n如有需要更改約診，\n麻煩在診所營業時間來電 。\n診所電話 055339369 謝謝。\n診所有專業的諮詢人員，\n如有療程需要了解，\n請來電告知想要約諮詢師了解。";
 
   var VER = { neu: { name: "定稿" }, now: { name: "現況" } };
-  var SCENE = { flow: "整段（加好友→綁定）", hello: "剛加好友", bind: "剛綁定完", ask: "傳訊息要改約" };
+  var SCENE = { flow: "整段（加好友→綁定）", hello: "剛加好友", bind: "剛綁定完", ask: "傳訊息要改約", remind: "約診提醒卡" };
   var state = { s: "flow", v: "neu" };
 
   function el(tag, cls, txt) {
@@ -178,6 +218,37 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       b.appendChild(i); return b;
     };
   }
+
+  /* ---- 約診提醒卡 ------------------------------------------------- */
+  function cardOld() {
+    var c = el("div", "rc rc-old");
+    c.innerHTML =
+      '<div class="h">斗六芳仁牙醫診所</div><div class="b">' +
+      '<div class="who">〔病人姓名〕 提醒您，您的看診時間將至 請問您是否前往看診呢？</div>' +
+      '<div class="dt">2026/07/14 (二) 19:15</div><hr>' +
+      '<div class="note-h">⚠ 就診須知 ⚠</div>' +
+      '<ol><li>進入醫療場所者請戴『口罩』與攜帶『健保卡』</li>' +
+      '<li>有發燒/咳嗽/呼吸道症狀等，請來電改約</li></ol><hr>' +
+      '<div class="red">↓ 請點擊下方按鈕，回覆是否前往看診 ↓</div>' +
+      '<div class="btn">點此 👉 確定會到！</div>' +
+      '<div class="sub">不克前往，預約改期</div></div>';
+    return c;
+  }
+  function cardNew() {
+    var c = el("div", "rc rc-new");
+    c.innerHTML =
+      '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>' +
+      '<div class="b">' +
+      '<div class="lead">提醒您，〔病人姓名〕的看診時間快到了</div>' +
+      '<div class="dt">7 月 14 日（二）19:15</div>' +
+      '<div class="know">看診前請帶健保卡，並戴上口罩。<br>' +
+      '如果有發燒或咳嗽，先打電話給診所就好。</div>' +
+      '<div class="go">我會到</div><span class="no">不克前往</span>' +
+      '<div class="foot">按了「不克前往」我們會收到，並打電話跟你確認。<br>' +
+      '改期請在看診日的兩天前（不含假日）：' + TEL + '</div></div>';
+    return c;
+  }
+
   function bindCard() {
     var c = el("div", "pv-card");
     c.appendChild(el("div", "k"));
@@ -205,6 +276,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       chat.appendChild(msg("oa", "8:45", bindCard));
       chat.appendChild(msg("me", "8:46", bubble("✅ 綁定成功")));
       chat.appendChild(msg("oa", "8:46", bubble(state.v === "now" ? NOW : BOUND)));
+    } else if (state.s === "remind") {
+      chat.appendChild(msg("oa", "19:15", state.v === "now" ? cardOld : cardNew));
     } else {
       chat.appendChild(msg("me", "18:42", bubble("你好，我想改下週三下午的約診")));
       chat.appendChild(msg("oa", "18:42", bubble(state.v === "now" ? NOW : AUTO)));
@@ -230,6 +303,22 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub:not(.img)").length +
         "</b> 則（你的螢幕 " + Math.round(window.innerWidth) + "×" + Math.round(vh) + "）";
     } else {
+      if (state.s === "remind") {
+        var card = document.querySelector(".pv-chat .rc");
+        var ch = card ? card.getBoundingClientRect().height : 0;
+        panel.innerHTML = "<b>約診提醒卡・" + VER[state.v].name + "</b>　" +
+          '<span class="' + (ch / vh * 100 > 62 ? "no" : "ok") + '">佔一屏 ' +
+          (ch / vh * 100).toFixed(0) + "%</span>　高 <b>" + ch.toFixed(0) + "px</b>" +
+          "<br>emoji <b>" + (state.v === "now" ? "4" : "0") + "</b> 個・紅字 <b>" +
+          (state.v === "now" ? "1" : "0") + "</b> 行・顏色來源：" +
+          (state.v === "now" ? "廠商預設" : "PALETTE.md（一顆都沒新增）");
+        note.textContent = state.v === "now"
+          ? "現況：飽和的橄欖綠標題列、⚠ 與 👉 emoji、紅字箭頭、編號清單與『』引號。"
+            + "而且「有發燒請來電改約」和底下的「預約改期」按鈕互相打架。"
+          : "新版：診所名退成一行小字，最大的是日期時間（這張卡唯一非讀不可的東西）；"
+            + "須知改成兩句白話放進淡色塊；兩顆按鈕主次分明；底下誠實交代按了會怎樣。";
+        return;
+      }
       var bubs = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub:not(.img)");
       var last = bubs[bubs.length - 1];
       var h = last ? last.getBoundingClientRect().height : 0;
