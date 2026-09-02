@@ -62,5 +62,21 @@ node tools/og-plate.mjs prosth --blend multiply --tintcolor '#163561' \
 「整理好，吃得順、用得久；部定專科醫師做過全口評估，幫你安排治療計畫。」
 34 字，實測在卡片上剛好兩行、不截斷。破折號改成全形分號（同矯正那張）。</li>
 </ul>
+
+<h2>⚠ 2026-09-02 換色之後重做：帶子改落在新的套色上</h2>
+<p>科別色在 8 月底換過（<code>--accent: #465885</code>／<code>--accent-deep: #2a4677</code>），
+帶子當時跟著換成新的<b>深階</b>。使用者：「感覺和標籤現在的選色還是不太一樣」，
+所以改成落在<b>套色</b>上：補償色 <code>#536db5</code>，帶子實測 <code>#465984</code>
+（對標籤 ΔE 0.9，肉眼分不出），紙色字 5.54，過站上 4.5 的門檻。</p>
+<pre>node drafts/og-shift.mjs drafts/og-topic-prosth-src.jpg prosth --shift 45
+node tools/og-plate.mjs prosth --blend multiply --tintcolor '#536db5' \
+  --ink 0.18 --blur 6 --loc full --locpos stack</pre>
+<p>⚠⚠ 這一輪最貴的一課不在顏色：<b>我拿一條落後 main 一百多個 commit 的分支去比對</b>，
+讀到的是舊的 <code>#335b8b</code>，還回頭跟使用者說「站上的色沒有換過」。
+<b>動任何跟色票有關的事，第一件事是同步。</b></p>
+<p>⚠ 第二條：<b>「和標籤不一樣」要分成底色和字兩件事量</b> ——
+標籤是純白字，帶子預設是紙色 <code>#e2e5e6</code>，同一塊藍上面紙色字會鈍一階。
+這一輪使用者最後仍然選紙色字。</p>
+
 </body>
 </html>
