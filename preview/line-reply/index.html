@@ -103,6 +103,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   padding:11px;border-radius:9px;font-size:.86rem}
 .rc-new .no{display:block;text-align:center;color:var(--deep);font-weight:500;
   padding:9px;margin-top:2px;font-size:.82rem}
+
+.rc-new .go,.rc-new .no{display:flex;align-items:center;justify-content:center;gap:8px}
+.rc-new .mouth{flex:none;display:block}
 .rc-new .foot{border-top:1px solid var(--rule);padding-top:9px;margin-top:4px;
   font-size:.71rem;color:var(--ink-soft);line-height:1.7}
 
@@ -174,7 +177,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      四格圖有 3/4 格和選單重複，用一次性的訊息重複常駐的東西是浪費。 */
 
   var WELCOME =
-"這裡是芳仁牙醫診所的官方 LINE。\n\n看牙的事我們在診間談，\n約診的提醒交給這裡 ——\n看診前 48 小時它會提醒你。\n\n完成綁定，提醒才發得到你手上；\n家人的約診也可以綁在同一個帳號。\n\n診所資訊、醫師介紹、衛教資訊，\n都在下面的選單裡。";
+"這裡是芳仁牙醫診所的官方 LINE。\n\n看牙的事我們在診間談，\n約診的提醒交給這裡 ——\n看診前 48 小時它會提醒你。\n\n完成綁定，提醒才發得到你手上；\n家人的約診也可以綁在同一個帳號。\n\n下面的選單有：約診查詢、診所資訊、\n診療項目、醫師介紹、衛教資訊。";
 
   var BOUND =
 "綁定完成了。\n\n看診前 48 小時會在這裡提醒你，\n想查自己的約診，點下面選單的「約診查詢」。\n家人的約診也可以綁在這個帳號。\n\n約診要改或取消，請在看診日的兩天前\n（不含假日）打電話告訴診所：\n" + TEL + "\n\n這個帳號的訊息是系統自動發送的，\n有狀況請在開診時間打電話給診所。";
@@ -234,6 +237,18 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       '<div class="sub">不克前往，預約改期</div></div>';
     return c;
   }
+  /* ⚠ 這兩個嘴形是**近似**診所那套圖的語彙（厚中間、細兩端、帶一顆小點），
+     定案要用診所自己的向量原檔（那份 2024 聖誕的 pptx 裡就是一整套）。
+     ILLUSTRATION.md 第十之一節：形狀不要用文字描述，用原檔。 */
+  function mouth(kind, color, w, dotColor) {
+    var up = 'M5 8 Q50 52 95 8 Q50 20 5 8 Z';        /* 開心：往上彎，中間厚 */
+    var dn = 'M5 36 Q50 -8 95 36 Q50 24 5 36 Z';     /* 不開心：往下垂 */
+    var d = kind === "up" ? '<circle cx="68" cy="26" r="3.6" fill="' + dotColor + '"/>'
+                          : '<circle cx="32" cy="19" r="3.6" fill="' + dotColor + '"/>';
+    return '<svg class="mouth" width="' + w + '" height="' + (w * 0.44).toFixed(0) +
+      '" viewBox="0 0 100 44" aria-hidden="true"><path d="' + (kind === "up" ? up : dn) +
+      '" fill="' + color + '"/>' + d + '</svg>';
+  }
   function cardNew() {
     var c = el("div", "rc rc-new");
     c.innerHTML =
@@ -243,9 +258,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       '<div class="dt">7 月 14 日（二）19:15</div>' +
       '<div class="know">看診前請帶健保卡，並戴上口罩。<br>' +
       '如果有發燒或咳嗽，先打電話給診所就好。</div>' +
-      '<div class="go">我會到</div><span class="no">不克前往</span>' +
+      '<div class="go">' + mouth("up", "#ffffff", 30, "#3f654a") + '我會到</div>' +
+      '<span class="no">' + mouth("dn", "#2c5238", 26, "#f4f4f5") + '不克前往</span>' +
       '<div class="foot">按了「不克前往」我們會收到，並打電話跟你確認。<br>' +
-      '改期請在看診日的兩天前（不含假日）：' + TEL + '</div></div>';
+      '改期請在看診日的兩天前（不含假日）<br>' + TEL + '</div></div>';
     return c;
   }
 

@@ -7,45 +7,123 @@
     "  紙 #E2E5E6・卡 #F4F4F5・墨 #2A2C27・柔墨 #5C5F57・線 #CDD0D2",
     "  綠（一般牙科套色）#3F654A・深階 #2C5238",
     "兩顆按鈕的 action 沿用廠商現有的（這裡填 postback 只是佔位）。",
-    "⚠ 就診須知那兩句是臨床內容，要醫師點頭才能改。"
+    "⚠ 就診須知那兩句是臨床內容，要醫師點頭才能改。",
+    "兩顆按鈕的嘴形圖示：Flex 的 button 不能放 SVG，做法是把形狀輸出成小 PNG（透明底），用 box + image + text 自己排一顆按鈕；或請廠商把形狀併進按鈕的背景圖。形狀要用診所自己的向量原檔（2024 聖誕那份 pptx 裡的一整套），不要用提案頁上那兩個近似的。"
   ],
   "type": "bubble",
   "size": "mega",
   "header": {
-    "type": "box", "layout": "horizontal", "spacing": "sm",
-    "paddingAll": "12px", "backgroundColor": "#F4F4F5",
+    "type": "box",
+    "layout": "horizontal",
+    "spacing": "sm",
+    "paddingAll": "12px",
+    "backgroundColor": "#F4F4F5",
     "contents": [
-      { "type": "image", "url": "https://fangren.net/assets/icon-192.png",
-        "size": "20px", "aspectMode": "cover" },
-      { "type": "text", "text": "芳仁牙醫診所", "size": "sm", "weight": "regular",
-        "color": "#5C5F57", "gravity": "center" }
+      {
+        "type": "image",
+        "url": "https://fangren.net/assets/icon-192.png",
+        "size": "20px",
+        "aspectMode": "cover"
+      },
+      {
+        "type": "text",
+        "text": "芳仁牙醫診所",
+        "size": "sm",
+        "weight": "regular",
+        "color": "#5C5F57",
+        "gravity": "center"
+      }
     ]
   },
   "body": {
-    "type": "box", "layout": "vertical", "paddingAll": "14px",
-    "backgroundColor": "#F4F4F5", "spacing": "none",
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "14px",
+    "backgroundColor": "#F4F4F5",
+    "spacing": "none",
     "contents": [
-      { "type": "text", "text": "提醒您，{{patient}} 的看診時間快到了",
-        "size": "xs", "color": "#5C5F57", "wrap": true },
-      { "type": "text", "text": "{{date}}", "size": "xl", "weight": "bold",
-        "color": "#2A2C27", "margin": "sm", "wrap": true },
-      { "type": "box", "layout": "vertical", "backgroundColor": "#E2E5E6",
-        "cornerRadius": "9px", "paddingAll": "11px", "margin": "lg", "spacing": "xs",
-        "contents": [
-          { "type": "text", "text": "看診前請帶健保卡，並戴上口罩。",
-            "size": "xs", "color": "#5C5F57", "wrap": true },
-          { "type": "text", "text": "如果有發燒或咳嗽，先打電話給診所就好。",
-            "size": "xs", "color": "#5C5F57", "wrap": true }
-        ] },
-      { "type": "button", "style": "primary", "color": "#3F654A", "height": "md",
+      {
+        "type": "text",
+        "text": "提醒您，{{patient}} 的看診時間快到了",
+        "size": "xs",
+        "color": "#5C5F57",
+        "wrap": true
+      },
+      {
+        "type": "text",
+        "text": "{{date}}",
+        "size": "xl",
+        "weight": "bold",
+        "color": "#2A2C27",
+        "margin": "sm",
+        "wrap": true
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#E2E5E6",
+        "cornerRadius": "9px",
+        "paddingAll": "11px",
         "margin": "lg",
-        "action": { "type": "postback", "label": "我會到", "data": "confirm" } },
-      { "type": "button", "style": "link", "height": "sm",
-        "action": { "type": "postback", "label": "不克前往", "data": "cancel" } },
-      { "type": "separator", "margin": "md", "color": "#CDD0D2" },
-      { "type": "text", "margin": "md", "size": "xxs", "color": "#5C5F57", "wrap": true,
-        "text": "按了「不克前往」我們會收到，並打電話跟你確認。改期請在看診日的兩天前（不含假日）：05-5339369" }
+        "spacing": "xs",
+        "contents": [
+          {
+            "type": "text",
+            "text": "看診前請帶健保卡，並戴上口罩。",
+            "size": "xs",
+            "color": "#5C5F57",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "如果有發燒或咳嗽，先打電話給診所就好。",
+            "size": "xs",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#3F654A",
+        "height": "md",
+        "margin": "lg",
+        "action": {
+          "type": "postback",
+          "label": "我會到",
+          "data": "confirm"
+        }
+      },
+      {
+        "type": "button",
+        "style": "link",
+        "height": "sm",
+        "action": {
+          "type": "postback",
+          "label": "不克前往",
+          "data": "cancel"
+        }
+      },
+      {
+        "type": "separator",
+        "margin": "md",
+        "color": "#CDD0D2"
+      },
+      {
+        "type": "text",
+        "margin": "md",
+        "size": "xxs",
+        "color": "#5C5F57",
+        "wrap": true,
+        "text": "按了「不克前往」我們會收到，並打電話跟你確認。改期請在看診日的兩天前（不含假日）：05-5339369"
+      }
     ]
   },
-  "styles": { "header": { "separator": true, "separatorColor": "#CDD0D2" } }
+  "styles": {
+    "header": {
+      "separator": true,
+      "separatorColor": "#CDD0D2"
+    }
+  }
 }
