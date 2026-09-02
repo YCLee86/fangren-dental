@@ -115,6 +115,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 <div class="pv-bar">
   <div class="r"><span class="lb">情境</span><span id="sw-s"></span></div>
   <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
+  <div class="r"><span class="lb">開場</span><span id="sw-o"></span></div>
 </div>
 
 <script>
@@ -127,8 +128,22 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      而「綁定成功」那一句是以病人的身分被寫進聊天室的，所以它觸發的是 ②。
      → 想讓「綁定完成」有自己的一則，**一定要廠商配合**（見版本 A）。 */
 
-  var WELCOME =
-"{好友的顯示名稱}你好，這裡是芳仁牙醫診所。\n斗六永樂街上，1983 年開到現在。\n\n在這個 LINE 上你可以：\n・收到約診提醒\n・查約診狀況（點對話下方的選單）\n・看診所介紹、各科與衛教文章\n\n完成綁定之後，約診提醒才收得到。";
+  /* ⚠⚠ 招呼訊息的開場三案（2026-09-02 使用者退回第一版）。
+     他的兩句話是規格：
+     ・「斗六永樂街上，1983 年開到現在」→ **多餘**（四格圖上已經有名字與門面照片）。
+     ・「{好友的顯示名稱}你好」→ **無趣，而且病人會覺得「這只是系統帳號，
+       根本沒有人，幹嘛裝得好像有人」**。
+     → 所以三案都：拿掉那個變數、拿掉地址與年份、第一句不再自我介紹一次。 */
+  var OPEN = {
+    c: { name: "丙・把人放對位置", text:
+"看牙的事，我們在診間談；\n約診的提醒，交給這個帳號。\n\n看診前 48 小時它會提醒你，\n想查約診狀況，點下方的選單。\n診所與各科的介紹、衛教文章，\n上面那張圖點得進去。\n\n完成綁定，提醒才發得到你手上。" },
+    a: { name: "甲・這個帳號是什麼", text:
+"這是芳仁牙醫診所的官方帳號。\n\n它會做的事只有幾件：\n・看診前 48 小時提醒你的約診\n・查自己的約診狀況（點下方的選單）\n・診所與各科的介紹、衛教文章\n\n完成綁定，提醒才發得到你手上。" },
+    b: { name: "乙・先講加了會怎樣", text:
+"加了之後，看診前 48 小時\n這裡會提醒你那一次的約診。\n\n芳仁牙醫診所的官方帳號，還可以：\n・查自己的約診狀況（點下方的選單）\n・看診所與各科的介紹、衛教文章\n\n完成綁定，提醒才發得到你手上。" },
+    old: { name: "上一版（被退回）", text:
+"{好友的顯示名稱}你好，這裡是芳仁牙醫診所。\n斗六永樂街上，1983 年開到現在。\n\n在這個 LINE 上你可以：\n・收到約診提醒\n・查約診狀況（點對話下方的選單）\n・看診所介紹、各科與衛教文章\n\n完成綁定之後，約診提醒才收得到。" }
+  };
 
   /* A 案：廠商把那句話改成固定字串（或改用推播），我們就能給綁定完成一則專屬的 */
   var BOUND =
@@ -152,7 +167,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     now: { name: "現況" }
   };
   var SCENE = { flow: "整段（加好友→綁定）", hello: "剛加好友", bind: "剛綁定完", ask: "傳訊息要改約" };
-  var state = { s: "flow", v: "a" };
+  var state = { s: "flow", v: "a", o: "c" };
 
   function el(tag, cls, txt) {
     var n = document.createElement(tag);
@@ -196,7 +211,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   function sayHello(chat, t) {
     if (state.v === "now") { chat.appendChild(msg("oa", t, bubble("（現行的招呼訊息我沒有看到）"))); return; }
     chat.appendChild(msg("oa", t, image("rich-4b.png")));
-    chat.appendChild(msg("oa", t, bubble(WELCOME)));
+    chat.appendChild(msg("oa", t, bubble(OPEN[state.o].text)));
   }
   function afterBind(chat, t) {
     chat.appendChild(msg("oa", t, bubble(
@@ -252,8 +267,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       var last = bubs[bubs.length - 1];
       var h = last ? last.getBoundingClientRect().height : 0;
       var pct = h / vh * 100;
-      var kind = state.s === "hello" ? "招呼訊息" : state.s === "bind" ? "綁定完成後那一則" : "自動回應";
-      panel.innerHTML = "<b>" + kind + "・" + VER[state.v].name + "</b>　" +
+      var kind = state.s === "hello" ? ("招呼訊息・" + OPEN[state.o].name) : state.s === "bind" ? "綁定完成後那一則" : "自動回應";
+      panel.innerHTML = "<b>" + kind + (state.s === "hello" ? "" : "・" + VER[state.v].name) + "</b>　" +
         (pct > 62 ? '<span class="no">佔一屏 ' + pct.toFixed(0) + '%</span>，要捲才看得完'
                   : '<span class="ok">佔一屏 ' + pct.toFixed(0) + '%</span>，一眼看得完') +
         "<br>泡泡高 <b>" + h.toFixed(0) + "px</b>（你的螢幕 " +
@@ -281,7 +296,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         state[key] = k;
         host.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
         b.setAttribute("aria-pressed", "true");
-        history.replaceState(null, "", location.pathname + "?s=" + state.s + "&v=" + state.v);
+        history.replaceState(null, "", location.pathname + "?s=" + state.s + "&v=" + state.v + "&o=" + state.o);
         render();
       });
       host.appendChild(b);
@@ -291,9 +306,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   if (m && SCENE[m[1]]) state.s = m[1];
   m = location.search.match(/[?&]v=([a-z0-9]+)/);
   if (m && VER[m[1]]) state.v = m[1];
+  m = location.search.match(/[?&]o=([a-z0-9]+)/);
+  if (m && OPEN[m[1]]) state.o = m[1];
 
   chips(document.getElementById("sw-s"), SCENE, "s");
   chips(document.getElementById("sw-v"), VER, "v");
+  chips(document.getElementById("sw-o"), OPEN, "o");
   render();
   window.addEventListener("resize", measure);
 })();
