@@ -199,7 +199,7 @@
       {
         "type": "button",
         "style": "primary",
-        "color": "#335B8B",
+        "color": "#465885",
         "height": "sm",
         "action": {
           "type": "uri",
