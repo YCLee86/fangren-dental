@@ -88,6 +88,10 @@ const ICON = {
   tel: `<svg viewBox="0 0 512 512"><path fill="${C.green}" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>`,
   pin: `<svg viewBox="0 0 384 512"><path fill="${C.green}" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>`,
   clock: `<svg viewBox="0 0 512 512"><circle cx="256" cy="256" r="216" fill="none" stroke="${C.green}" stroke-width="48"/><path d="M256 128v136l88 56" fill="none" stroke="${C.green}" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  /* 科別與醫師：一個人 */
+  people: `<svg viewBox="0 0 512 512"><circle cx="256" cy="150" r="94" fill="${C.green}"/><path d="M256 276c-92 0-166 62-166 139 0 12 10 21 22 21h288c12 0 22-9 22-21 0-77-74-139-166-139z" fill="${C.green}"/></svg>`,
+  /* 衛教文章：一張紙上幾行字 */
+  doc: `<svg viewBox="0 0 512 512"><rect x="86" y="46" width="340" height="420" rx="34" fill="none" stroke="${C.green}" stroke-width="42"/><path d="M164 172h184M164 256h184M164 340h116" fill="none" stroke="${C.green}" stroke-width="42" stroke-linecap="round"/></svg>`,
 };
 
 const base = `<!doctype html><meta charset="utf-8"><style>
@@ -165,6 +169,36 @@ const four = `${base}
   </div>
 </div>`;
 
+/* ---- 候選三：四格・功能版 ---------------------------------------------
+   使用者 2026-09-02 講的功能：約診提醒／簡單診所介紹／科別內容／衛教訊息／
+   更詳細的在官網。⚠ 約診提醒是**推播**、沒有可以點的去處，所以它留在文字裡，
+   不放進格子 —— 格子裡的每一格都要答得出「點下去會怎樣」。 */
+const fourB = `${base}
+<div class="sheet" style="grid-template-rows:517px 517px;grid-template-columns:517px 517px">
+  <div class="cell photo" style="${photoCss(517, 517, 900, 1120)}">
+    <div class="veil" style="height:74px;bottom:126px;background:linear-gradient(to bottom,${smooth(0, 100)})"></div>
+    <div class="name" style="height:126px;gap:6px">
+      <b style="font-size:44px">芳仁牙醫診所</b>
+      <span style="font-size:30px;letter-spacing:.14em;text-indent:.14em">診所介紹</span>
+    </div>
+  </div>
+  <div class="cell" style="gap:16px">
+    <span class="ic" style="width:66px;height:66px">${ICON.tel}</span>
+    <div class="lab" style="font-size:38px">撥打電話</div>
+    <div class="big" style="font-size:62px">${TEL}</div>
+  </div>
+  <div class="cell" style="gap:18px">
+    <span class="ic" style="width:64px;height:64px">${ICON.people}</span>
+    <div class="big" style="font-size:52px">科別與醫師</div>
+    <div class="lab" style="font-size:34px">七個科別在做什麼</div>
+  </div>
+  <div class="cell" style="gap:18px">
+    <span class="ic" style="width:58px;height:64px">${ICON.doc}</span>
+    <div class="big" style="font-size:52px">牙齒衛教</div>
+    <div class="lab" style="font-size:34px">診所寫的文章</div>
+  </div>
+</div>`;
+
 /* ---- 出圖 --------------------------------------------------------------- */
 const chromePath = (() => {
   const pw = process.env.PLAYWRIGHT_BROWSERS_PATH || "/opt/pw-browsers";
@@ -177,10 +211,25 @@ const chromePath = (() => {
 })();
 const mod = await import("/opt/node22/lib/node_modules/playwright/index.js");
 const { chromium } = mod.default ?? mod;
+/* ⚠⚠ 出圖之前先確認每一個字都在子集裡 —— 缺字時瀏覽器會靜靜地掉到系統字
+   （這台只有文泉驛），畫面看起來「就是另一套字」但不會有任何錯誤訊息。
+   2026-09-02 踩過：「牙齒衛教」四個字有三個不在子集裡。做法同 tools/og-plate.mjs。 */
+const GLYPHS = new Set(fs.readFileSync(path.join(FDIR, "glyphs.txt"), "utf8").replace(/\s/g, ""));
+const visibleText = (html) => html.replace(/<style[\s\S]*?<\/style>/g, "")
+  .replace(/<[^>]*>/g, "").replace(/\s/g, "");
+for (const [name, html] of [["rich-2", two], ["rich-4", four], ["rich-4b", fourB]]) {
+  const miss = [...new Set([...visibleText(html)].filter((c) => !GLYPHS.has(c)))];
+  if (miss.length) {
+    console.error(`${name} 有 ${miss.length} 個字不在子集裡：${miss.join("")}`);
+    console.error("  補進 drafts/line-auto-reply/fonts/glyphs.txt 再跑一次 fonts/fetch.mjs。");
+    process.exit(1);
+  }
+}
+
 const browser = await chromium.launch({ executablePath: chromePath });
 const page = await browser.newPage({ viewport: { width: 1040, height: 1040 }, deviceScaleFactor: 1 });
 
-for (const [name, html] of [["rich-2", two], ["rich-4", four]]) {
+for (const [name, html] of [["rich-2", two], ["rich-4", four], ["rich-4b", fourB]]) {
   await page.setContent(html, { waitUntil: "load" });
   await page.evaluate(() => document.fonts.ready);
   const out = path.join(OUTDIR, `${name}.png`);
