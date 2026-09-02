@@ -179,6 +179,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   var WELCOME =
 "這裡是芳仁牙醫診所的官方 LINE。\n\n看牙的事我們在診間談，\n約診的提醒交給這裡 ——\n看診前 48 小時它會提醒你。\n\n完成綁定，提醒才發得到你手上；\n家人的約診也可以綁在同一個帳號。\n\n下面的選單有：約診查詢、診所資訊、\n診療項目、醫師介紹、衛教資訊。";
 
+  /* 變體：開場從「這個帳號是什麼」換成「綁定之後你會收到什麼」（國泰世華／玉山的做法）。
+     ⚠ 後兩條還沒確認是不是綁定之後才收得到 —— 沒確認之前不要真的上。 */
+  var WELCOME_BENEFIT =
+"完成綁定，這三件會發到你手上：\n　看診前 48 小時的約診提醒\n　治療後的照顧提醒\n　臨時休診的通知\n\n家人的約診也可以綁在同一個帳號。\n\n這裡是芳仁牙醫診所的官方 LINE，\n看牙的事我們在診間談。\n下面的選單有：約診查詢、診所資訊、\n診療項目、醫師介紹、衛教資訊。";
+
   var BOUND =
 "綁定完成了。\n\n看診前 48 小時會在這裡提醒你，\n想查自己的約診，點下面選單的「約診查詢」。\n家人的約診也可以綁在這個帳號。\n\n約診要改或取消，請在看診日的兩天前\n（不含假日）打電話告訴診所：\n" + TEL + "\n\n這個帳號的訊息是系統自動發送的，\n有狀況請在開診時間打電話給診所。";
 
@@ -188,7 +193,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   var NOW =
 "感謝您的訊息！\n\n很抱歉，本帳號無法個別回覆用戶的訊息。\n如有需要更改約診，\n麻煩在診所營業時間來電 。\n診所電話 055339369 謝謝。\n診所有專業的諮詢人員，\n如有療程需要了解，\n請來電告知想要約諮詢師了解。";
 
-  var VER = { neu: { name: "定稿" }, now: { name: "現況" } };
+  var VER = { neu: { name: "定稿" }, ben: { name: "招呼改成利益開場" }, now: { name: "現況" } };
   var SCENE = { flow: "整段（加好友→綁定）", hello: "剛加好友", bind: "剛綁定完", ask: "傳訊息要改約", remind: "約診提醒卡" };
   var state = { s: "flow", v: "neu" };
 
@@ -274,7 +279,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   function sayHello(chat, t) {
     if (state.v === "now") { chat.appendChild(msg("oa", t, bubble("（現行的招呼訊息我沒有看到）"))); return; }
     chat.appendChild(msg("oa", t, image("rich-2.png")));
-    chat.appendChild(msg("oa", t, bubble(WELCOME)));
+    chat.appendChild(msg("oa", t, bubble(state.v === "ben" ? WELCOME_BENEFIT : WELCOME)));
   }
 
   function render() {
@@ -350,6 +355,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     }
     note.textContent =
       state.v === "now" ? "現況：不管什麼情境都回同一則。"
+      : state.s === "hello" && state.v === "ben" ? "利益開場：第一句就是「綁定之後你會收到什麼」（國泰世華、玉山、JINS 都這樣寫）。⚠ 後兩條還沒確認是不是綁定才收得到。"
       : state.s === "hello" ? "招呼訊息配的是兩格圖（照片＋大電話）——常駐選單六格裡沒有撥號，四格圖有 3/4 格和選單重複。"
       : state.s === "bind" ? "廠商可以把「綁定成功」改成固定字串，所以綁定完成有自己的一則，不必和自動回應共用。"
       : "三則都不把提醒卡上那顆「不克前往」寫成改約管道——按下去只是系統顯示取消，而且已經違反兩天前的協議。";
