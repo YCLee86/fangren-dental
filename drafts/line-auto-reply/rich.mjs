@@ -18,8 +18,8 @@
  *   rich-4b（功能版・招呼訊息用）
  *     左上 診所介紹    → https://fangren.net/
  *     右上 撥打電話    → tel:+88655339369
- *     左下 科別介紹    → https://fangren.net/#topics    （七科的標記，點進去是各科著陸頁）
- *     右下 牙齒衛教    → https://fangren.net/#articles  （文章列表）
+ *     左下 主題與科別  → https://fangren.net/#topics    （七科的標記，點進去是各科著陸頁）
+ *     右下 衛教文章    → https://fangren.net/#articles  （文章列表）
  *
  *   rich-2（兩格・自動回應用）
  *     上  診所網站     → https://fangren.net/
@@ -31,7 +31,8 @@
  *     左下 看診時間    → https://fangren.net/#clinic
  *     右下 診所位置    → 診所的 Google 地圖短網址（clinic.json 的 sameAs）
  *
- * ⚠ 「科別介紹」不寫成「科別與醫師」：站上 #topics 與 #doctors 是兩個段落，
+ * ⚠ 「主題與科別」照站上那一節的名字（COPY.md 第六節定案），不寫「科別與醫師」：
+ *   站上 #topics 與 #doctors 是兩個段落，
  *   一個連結只能去一個地方。醫師沒有掉 —— 每一科的著陸頁裡就有那一科的醫師。
  * ⚠ 約診提醒沒有格子：它是推播，沒有可以點的去處。
  *
@@ -211,13 +212,13 @@ const fourB = `${base}
   </div>
   <div class="cell" style="gap:18px">
     <span class="ic" style="width:62px;height:62px">${ICON.grid}</span>
-    <div class="big" style="font-size:52px">科別介紹</div>
-    <div class="lab" style="font-size:34px">七個科別在做什麼</div>
+    <div class="big" style="font-size:50px">主題與科別</div>
+    <div class="lab" style="font-size:34px">哪一科在做什麼</div>
   </div>
   <div class="cell" style="gap:18px">
     <span class="ic" style="width:58px;height:64px">${ICON.doc}</span>
-    <div class="big" style="font-size:52px">牙齒衛教</div>
-    <div class="lab" style="font-size:34px">診所寫的文章</div>
+    <div class="big" style="font-size:52px">衛教文章</div>
+    <div class="lab" style="font-size:34px">診所自己寫的</div>
   </div>
 </div>`;
 
