@@ -95,8 +95,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
 <div class="pv-wrap">
   <h1>LINE 自動回應 —— 病人手機上長什麼樣</h1>
-  <p class="pv-sub">底下切換<b>情境</b>與<b>版本</b>。這是病人看到的畫面：官方帳號在左邊，
-    他自己的訊息在右邊。後台那個「自動回應訊息」小標籤只有你看得到，他不會看到。</p>
+  <p class="pv-sub">底下切換<b>情境</b>與<b>版本</b>。這是病人看到的畫面：官方帳號在左邊，他自己的訊息在右邊。
+    後台那個「自動回應訊息」小標籤只有你看得到，他不會看到。<br>
+    ⚠ <b>加好友</b>那一則是「招呼訊息」，<b>綁定完</b>與<b>打字之後</b>跳出來的是同一則「自動回應」——
+    後台是兩個不同的設定。</p>
 
   <div class="pv-phone">
     <div class="pv-head">
@@ -119,39 +121,46 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 (function () {
   var TEL = "05-5339369";
 
-  /* ------- 各版本的自動回應（全文與推導在 drafts/line-auto-reply/README.md） ---- */
-  var REPLY = {
-    now: { name: "現況", text:
-"感謝您的訊息！\n\n很抱歉，本帳號無法個別回覆用戶的訊息。\n如有需要更改約診，\n麻煩在診所營業時間來電 。\n診所電話 055339369 謝謝。\n診所有專業的諮詢人員，\n如有療程需要了解，\n請來電告知想要約諮詢師了解。" },
+  /* ⚠⚠ 後台是兩個不同的設定，而且 LINE 分不出「剛綁定完」和「打字問事情」：
+     ・招呼訊息 —— 只在「加好友」的當下送一次，可以用 {好友的顯示名稱} 這個變數。
+     ・自動回應 —— 病人送出任何訊息都會回；那句「綁定成功」是以病人的身分送進
+       聊天室的，所以它也會觸發這一則。**同一則文字要在兩種情境下都讀得通。** */
 
-    a: { name: "純文字", text:
-"這裡是芳仁牙醫診所。\n\n要改約診、取消，或想先了解療程，\n請直接撥 " + TEL + "，\n接電話的是診所人員，當場就能幫你排好。\n這個帳號的訊息沒有辦法一則一則回覆，\n先跟你說一聲，免得你在這裡等。\n\n看診時間　週一至週五\n早 08:45–11:30／午 13:45–16:30／晚 17:45–20:00\n（忙線多半是診間正在接另一通，隔幾分鐘再撥）\n\n門診表與診所位置：https://fangren.net" },
-
-    a2: { name: "純文字・完整", text:
-"這裡是芳仁牙醫診所。\n\n要改約診、取消，或想先了解療程，\n請直接撥 " + TEL + " ——\n接電話的是診所的人員，當場就能幫你排好。\n這個帳號的訊息沒有辦法一則一則回覆，\n先跟你說一聲，免得你在這裡等。\n\n電話忙線，多半是診間正在接另一通，\n隔幾分鐘再撥就會通。\n\n看診時間（週一至週五）\n　早　08:45–11:30\n　午　13:45–16:30\n　晚　17:45–20:00\n　週六、週日休診\n國定假日與各科特別門診，也請來電確認。\n\n門診表、各科說明與診所位置：\nhttps://fangren.net" },
-
-    b: { name: "文字＋照片", img: "../../assets/og-home.jpg", text:
-"這裡是芳仁牙醫診所。\n\n要改約診、取消，或想先了解療程，\n請直接撥 " + TEL + "，\n接電話的是診所的人員，當場就能幫你排好。\n這個帳號的訊息沒有辦法一則一則回覆，\n先跟你說一聲，免得你在這裡等。\n\n電話忙線，多半是診間正在接另一通，\n隔幾分鐘再撥就會通。\n\n看診時間（週一至週五）\n　早 08:45–11:30／午 13:45–16:30／晚 17:45–20:00\n　週六、週日休診" },
-
-    c: { name: "圖文訊息・兩格", img: "rich-2.png", tap: "上半點下去開網站，下半點下去直接撥號", text:
-"這裡是芳仁牙醫診所。\n\n要改約診、取消，或想先了解療程，\n上面那張圖，下半點一下就會撥出電話（" + TEL + "），\n診所人員當場就能幫你排好。\n\n這個帳號的訊息沒有辦法一則一則回覆，\n先跟你說一聲，免得你在這裡等。" },
-
-    d: { name: "圖文訊息・四格", img: "rich-4.png", tap: "四格各自可以點：照片開網站、電話直接撥、時間開門診表、位置開地圖", text:
-"這裡是芳仁牙醫診所。\n\n要改約診或取消，上面那格電話點一下就會撥出，\n診所人員當場就能幫你排好。\n電話忙線，多半是診間正在接另一通，隔幾分鐘再撥。\n\n這個帳號的訊息沒有辦法一則一則回覆，\n先跟你說一聲，免得你在這裡等。" }
+  var WELCOME = {
+    img:
+"{好友的顯示名稱}你好，這裡是芳仁牙醫診所。\n斗六永樂街上，1983 年開到現在。\n\n在這個 LINE 上你可以：\n・改約診、取消 —— 打電話最快\n・看門診時間，哪一診有你要看的科\n・點開地圖找路，附近哪裡好停車\n\n看診時間內都有人接：\n" + TEL + "",
+    txt:
+"{好友的顯示名稱}你好，這裡是芳仁牙醫診所。\n斗六永樂街上，1983 年開到現在。\n\n改約診、取消，打電話最快：" + TEL + "\n看診時間　週一至週五\n早 08:45–11:30／午 13:45–16:30／晚 17:45–20:00\n\n門診表、找路與各科說明：https://fangren.net"
   };
 
-  var WELCOME =
-"{好友的顯示名稱}你好，這裡是芳仁牙醫診所。\n\n診所在雲林斗六永樂街 70 號，1983 年開業到現在。\n\n要約診、改約或取消，請撥 " + TEL + "，\n看診時間內都有人接。\n\n看診時間（週一至週五）\n　早　08:45–11:30\n　午　13:45–16:30\n　晚　17:45–20:00\n　週六、週日休診\n\n門診表、醫師介紹與各科說明：\nhttps://fangren.net";
-
-  var SCENE = {
-    bind:  "剛綁定完",
-    ask:   "要改約診",
-    hello: "剛加好友"
+  var AUTO = {
+    img:
+"這裡是芳仁牙醫診所。\n\n這個帳號沒有專人看訊息，\n改約診或取消，直接撥電話最快：\n" + TEL + "\n看診時間內都有人接，忙線就隔幾分鐘再撥。\n\n門診時間、找路、診所網站，\n上面那張圖點一下就有。",
+    txt:
+"這裡是芳仁牙醫診所。\n\n這個帳號沒有專人看訊息，\n改約診或取消，直接撥電話最快：\n" + TEL + "\n看診時間內都有人接，忙線就隔幾分鐘再撥。\n\n看診時間　週一至週五\n早 08:45–11:30／午 13:45–16:30／晚 17:45–20:00\n門診表與找路：https://fangren.net"
   };
 
-  var state = { s: "bind", v: "a" };
+  var NOW =
+"感謝您的訊息！\n\n很抱歉，本帳號無法個別回覆用戶的訊息。\n如有需要更改約診，\n麻煩在診所營業時間來電 。\n診所電話 055339369 謝謝。\n診所有專業的諮詢人員，\n如有療程需要了解，\n請來電告知想要約諮詢師了解。";
 
-  /* ------- 畫一則訊息 ------------------------------------------------- */
+  var VER = {
+    now:  { name: "現況" },
+    four: { name: "四格圖＋短文字", img: "rich-4.png",
+            tap: "四格各自可以點：診所網站、直接撥號、門診表、Google 地圖" },
+    two:  { name: "兩格圖＋短文字", img: "rich-2.png",
+            tap: "上半開網站、下半直接撥號" },
+    text: { name: "只有文字" }
+  };
+  var SCENE = { hello: "剛加好友", bind: "剛綁定完", ask: "傳訊息要改約" };
+
+  var state = { s: "bind", v: "four" };
+
+  function body(scene, ver) {
+    if (ver === "now") return NOW;
+    var set = (scene === "hello") ? WELCOME : AUTO;
+    return VER[ver].img ? set.img : set.txt;
+  }
+
   function el(tag, cls, txt) {
     var n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -159,8 +168,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     return n;
   }
   function linkify(node, text) {
-    var parts = text.split(/(https:\/\/fangren\.net)/);
-    parts.forEach(function (p, i) {
+    text.split(/(https:\/\/fangren\.net)/).forEach(function (p, i) {
       if (i % 2) { var a = el("a", null, p); a.href = p; node.appendChild(a); }
       else node.appendChild(document.createTextNode(p));
     });
@@ -168,10 +176,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   function msg(who, time, build) {
     var row = el("div", "pv-msg" + (who === "me" ? " me" : ""));
     var av = el("div", "pv-av");
-    if (who !== "me") { av.style.background = "url(../../assets/icon-192.png) center/cover"; }
+    if (who !== "me") av.style.background = "url(../../assets/icon-192.png) center/cover";
     row.appendChild(av);
-    var body = build();
-    row.appendChild(body);
+    row.appendChild(build());
     row.appendChild(el("span", "pv-t", time));
     return row;
   }
@@ -181,21 +188,25 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   function image(src) {
     return function () {
       var b = el("div", "pv-bub img"), i = new Image();
-      i.src = src; i.alt = ""; b.appendChild(i); return b;
+      i.src = src; i.alt = ""; i.addEventListener("load", measure);
+      b.appendChild(i); return b;
     };
+  }
+  function reply(chat, time) {
+    var v = VER[state.v];
+    if (v.img) chat.appendChild(msg("oa", time, image(v.img)));
+    chat.appendChild(msg("oa", time, bubble(body(state.s, state.v))));
   }
 
   function render() {
     var chat = document.getElementById("chat");
     chat.innerHTML = "";
-    var r = REPLY[state.v];
     chat.appendChild(el("div", "pv-day", "今天"));
 
     if (state.s === "hello") {
-      chat.appendChild(msg("oa", "8:44", bubble(
-        state.v === "now"
-          ? "（現行的招呼訊息我沒有看到，所以這一格放的是新版）\n\n" + WELCOME
-          : WELCOME)));
+      if (state.v === "now")
+        chat.appendChild(msg("oa", "8:44", bubble("（現行的招呼訊息我沒有看到，所以這一格是空的）")));
+      else reply(chat, "8:44");
     } else if (state.s === "bind") {
       chat.appendChild(msg("oa", "8:45", function () {
         var c = el("div", "pv-card");
@@ -204,55 +215,50 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         return c;
       }));
       chat.appendChild(msg("me", "8:46", bubble("✅ 0976237217 綁定成功！\n可以啟用線上相關服務囉！")));
-      if (r.img) chat.appendChild(msg("oa", "8:46", image(r.img)));
-      chat.appendChild(msg("oa", "8:46", bubble(r.text)));
+      reply(chat, "8:46");
     } else {
       chat.appendChild(msg("me", "18:42", bubble("你好，我想改下週三下午的約診")));
-      if (r.img) chat.appendChild(msg("oa", "18:42", image(r.img)));
-      chat.appendChild(msg("oa", "18:42", bubble(r.text)));
+      reply(chat, "18:42");
       chat.appendChild(msg("me", "18:44", bubble("謝謝，我有打電話，忙線中")));
-      if (r.img) chat.appendChild(msg("oa", "18:44", image(r.img)));
-      chat.appendChild(msg("oa", "18:44", bubble(r.text)));
+      reply(chat, "18:44");
     }
     requestAnimationFrame(measure);
   }
 
-  /* ------- 量測面板：這一則在他的螢幕上有多大 -------------------------- */
   function measure() {
-    var r = REPLY[state.v];
+    var v = VER[state.v];
     var bubs = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub:not(.img)");
     var last = bubs[bubs.length - 1];
     var vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
     var h = last ? last.getBoundingClientRect().height : 0;
     var pct = h / vh * 100;
-    var lines = r.text.split("\n").length;
+    var lines = body(state.s, state.v).split("\n").length;
     var img = document.querySelector(".pv-chat .pv-bub.img img");
     var iw = img ? Math.round(img.getBoundingClientRect().width) : 0;
-
-    var verdict = pct > 62
-      ? '<span class="no">佔掉一屏的 ' + pct.toFixed(0) + '%</span>，他要捲才看得完'
-      : '<span class="ok">佔一屏的 ' + pct.toFixed(0) + '%</span>，一眼看得完';
+    var kind = (state.s === "hello") ? "招呼訊息" : "自動回應";
 
     document.getElementById("panel").innerHTML =
-      '<b>' + r.name + '</b>　' + verdict +
-      '<br>訊息 <b>' + lines + '</b> 行・泡泡高 <b>' + h.toFixed(0) + 'px</b>' +
-      '（你的螢幕 ' + Math.round(window.innerWidth) + '×' + Math.round(vh) + '）' +
-      (iw ? '<br>圖在聊天室裡實際顯示 <b>' + iw + 'px</b> 寬（原檔 ' +
-            (r.img.indexOf("og-home") >= 0 ? "1200×628" : "1040×1040") + '）' : '') +
-      (r.tap ? '<br>可以點的地方：' + r.tap : '');
+      "<b>" + kind + "・" + v.name + "</b>　" +
+      (pct > 62 ? '<span class="no">佔一屏 ' + pct.toFixed(0) + "%</span>，要捲才看得完"
+                : '<span class="ok">佔一屏 ' + pct.toFixed(0) + '%</span>，一眼看得完') +
+      "<br>文字 <b>" + lines + "</b> 行・泡泡高 <b>" + h.toFixed(0) + "px</b>（你的螢幕 " +
+      Math.round(window.innerWidth) + "×" + Math.round(vh) + "）" +
+      (iw ? "<br>圖在聊天室裡實際顯示 <b>" + iw + "px</b> 寬（原檔 1040×1040）" : "") +
+      (v.tap ? "<br>可以點的地方：" + v.tap : "");
 
     document.getElementById("note").textContent =
-      state.s === "bind"
-        ? "綁定成功那一句是以「病人的身分」送進聊天室的，所以自動回應一定會被觸發，"
-          + "而且擋不掉（LINE 的關鍵字回應是完全一致比對，那句話裡的手機號碼每個人都不一樣）。"
-          + "所以第一句不能是道歉 —— 現況那一版讀起來就是在回絕一句系統通知。"
-        : state.s === "ask"
-        ? "這是截圖裡真的發生過的一段：他傳訊息、拿到自動回應、打了電話忙線、再傳一次、"
-          + "又拿到同一則。同一則會出現兩次，所以它必須每次讀起來都還有用。"
-        : "招呼訊息是加好友的當下就送出的那一則，和自動回應是後台兩個不同的設定。";
+      state.s === "hello"
+        ? "「招呼訊息」是加好友的當下送出的那一則，後台和自動回應是兩個不同的設定，"
+          + "而且只有它可以用 {好友的顯示名稱} 這個變數。"
+        : state.s === "bind"
+        ? "⚠ 這一則不是招呼訊息，是自動回應 —— 那句「綁定成功」是以病人的身分送進聊天室的，"
+          + "所以自動回應被觸發了，而且擋不掉（LINE 的關鍵字回應是完全一致比對，"
+          + "那句話裡的手機號碼每個人都不一樣）。所以同一則文字要在「剛綁定完」與"
+          + "「打字問事情」兩種情境下都讀得通。"
+        : "截圖裡真的發生過的一段：他傳訊息、拿到自動回應、打了電話忙線、再傳一次、"
+          + "又拿到同一則。同一則會出現兩次，所以它每次讀起來都還要有用。";
   }
 
-  /* ------- 切換條 ------------------------------------------------------ */
   function chips(host, obj, key) {
     Object.keys(obj).forEach(function (k) {
       var b = el("button", null, obj[k].name || obj[k]);
@@ -260,9 +266,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       b.setAttribute("aria-pressed", String(state[key] === k));
       b.addEventListener("click", function () {
         state[key] = k;
-        host.parentNode.querySelectorAll("button").forEach(function (x) {
-          x.setAttribute("aria-pressed", "false");
-        });
+        host.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
         b.setAttribute("aria-pressed", "true");
         sync(); render();
       });
@@ -270,16 +274,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     });
   }
   function sync() {
-    var q = "?s=" + state.s + "&v=" + state.v;
-    history.replaceState(null, "", location.pathname + q);
+    history.replaceState(null, "", location.pathname + "?s=" + state.s + "&v=" + state.v);
   }
   var m = location.search.match(/[?&]s=([a-z0-9]+)/);
   if (m && SCENE[m[1]]) state.s = m[1];
   m = location.search.match(/[?&]v=([a-z0-9]+)/);
-  if (m && REPLY[m[1]]) state.v = m[1];
+  if (m && VER[m[1]]) state.v = m[1];
 
   chips(document.getElementById("sw-s"), SCENE, "s");
-  chips(document.getElementById("sw-v"), REPLY, "v");
+  chips(document.getElementById("sw-v"), VER, "v");
   render();
   window.addEventListener("resize", measure);
 })();

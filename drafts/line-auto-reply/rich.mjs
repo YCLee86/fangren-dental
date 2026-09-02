@@ -142,9 +142,9 @@ const four = `${base}
 <div class="sheet" style="grid-template-rows:517px 517px;grid-template-columns:517px 517px">
   <div class="cell photo" style="${photoCss(517, 517, 900, 1120)}">
     <div class="veil" style="height:74px;bottom:126px;background:linear-gradient(to bottom,${smooth(0, 100)})"></div>
-    <div class="name" style="height:126px;gap:7px">
+    <div class="name" style="height:126px;gap:6px">
       <b style="font-size:44px">芳仁牙醫診所</b>
-      <span style="font-size:27px">雲林斗六・永樂街</span>
+      <span style="font-size:30px;letter-spacing:.14em;text-indent:.14em">診所網站</span>
     </div>
   </div>
   <div class="cell" style="gap:16px">
