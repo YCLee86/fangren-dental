@@ -115,61 +115,39 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 <div class="pv-bar">
   <div class="r"><span class="lb">情境</span><span id="sw-s"></span></div>
   <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
-  <div class="r"><span class="lb">開場</span><span id="sw-o"></span></div>
 </div>
 
 <script>
 (function () {
   var TEL = "05-5339369";
 
-  /* ⚠⚠ 後台其實是三件事，但 LINE 只給我們兩個設定：
-     ① 招呼訊息 —— 加好友的當下送一次，可以用 {好友的顯示名稱}。
-     ② 自動回應 —— 病人送出**任何**訊息都會回。
-     而「綁定成功」那一句是以病人的身分被寫進聊天室的，所以它觸發的是 ②。
-     → 想讓「綁定完成」有自己的一則，**一定要廠商配合**（見版本 A）。 */
+  /* 2026-09-02 定稿。四個前提使用者都確認了：
+     ① 綁定成功那句話**可改** → 綁定完成可以有自己的一則（不必和自動回應共用）。
+     ② 一個帳號**可以綁多位家人** → 所以寫「家人的約診也可以綁在這個帳號」，
+        比「把連結轉給他」更省事、也更貼近實際在發生的事。
+     ③ 提醒卡的文字**可改**。
+     ④ ⚠⚠ 提醒卡上那顆「不克前往，預約改期」**只是在系統上顯示取消**，
+        診所仍會打電話確認；而且按下去**已經違反兩天前的預約協議**。
+        → 所以三則文案**都不把那顆按鈕寫成改約的管道**，改約一律指向電話。
 
-  /* ⚠⚠ 招呼訊息的開場三案（2026-09-02 使用者退回第一版）。
-     他的兩句話是規格：
-     ・「斗六永樂街上，1983 年開到現在」→ **多餘**（四格圖上已經有名字與門面照片）。
-     ・「{好友的顯示名稱}你好」→ **無趣，而且病人會覺得「這只是系統帳號，
-       根本沒有人，幹嘛裝得好像有人」**。
-     → 所以三案都：拿掉那個變數、拿掉地址與年份、第一句不再自我介紹一次。 */
-  var OPEN = {
-    d: { name: "丁・經營整合版（建議）", text:
-"這裡是芳仁牙醫診所的官方 LINE。\n\n看牙的事我們在診間談，\n約診的提醒交給這裡 ——\n看診前 48 小時它會提醒你。\n\n完成綁定，提醒才發得到你手上。\n\n診所介紹、各科與衛教文章在上面那張圖，\n約診狀況在下方的選單。" },
-    c: { name: "丙・把人放對位置", text:
-"看牙的事，我們在診間談；\n約診的提醒，交給這個帳號。\n\n看診前 48 小時它會提醒你，\n想查約診狀況，點下方的選單。\n診所與各科的介紹、衛教文章，\n上面那張圖點得進去。\n\n完成綁定，提醒才發得到你手上。" },
-    a: { name: "甲・這個帳號是什麼", text:
-"這是芳仁牙醫診所的官方帳號。\n\n它會做的事只有幾件：\n・看診前 48 小時提醒你的約診\n・查自己的約診狀況（點下方的選單）\n・診所與各科的介紹、衛教文章\n\n完成綁定，提醒才發得到你手上。" },
-    b: { name: "乙・先講加了會怎樣", text:
-"加了之後，看診前 48 小時\n這裡會提醒你那一次的約診。\n\n芳仁牙醫診所的官方帳號，還可以：\n・查自己的約診狀況（點下方的選單）\n・看診所與各科的介紹、衛教文章\n\n完成綁定，提醒才發得到你手上。" },
-    old: { name: "上一版（被退回）", text:
-"{好友的顯示名稱}你好，這裡是芳仁牙醫診所。\n斗六永樂街上，1983 年開到現在。\n\n在這個 LINE 上你可以：\n・收到約診提醒\n・查約診狀況（點下方的選單）\n・看診所介紹、各科與衛教文章\n\n完成綁定之後，約診提醒才收得到。" }
-  };
+     招呼訊息配的是**兩格圖**（照片＋大電話）：常駐選單六格裡沒有撥號，
+     四格圖有 3/4 格和選單重複，用一次性的訊息重複常駐的東西是浪費。 */
 
-  /* A 案：廠商把那句話改成固定字串（或改用推播），我們就能給綁定完成一則專屬的 */
+  var WELCOME =
+"這裡是芳仁牙醫診所的官方 LINE。\n\n看牙的事我們在診間談，\n約診的提醒交給這裡 ——\n看診前 48 小時它會提醒你。\n\n完成綁定，提醒才發得到你手上；\n家人的約診也可以綁在同一個帳號。\n\n診所資訊、醫師介紹、衛教資訊，\n都在下面的選單裡。";
+
   var BOUND =
-"綁定完成了。\n\n看診前 48 小時會在這裡提醒你；\n想查約診狀況，點下方的選單。\n\n要改約或取消，請在看診日的 2 天前\n（不含假日）打電話告訴診所：\n" + TEL + "\n\n家裡有人也在芳仁看牙，\n把這個連結轉給他就好：\nhttps://line.me/R/ti/p/@445rpiiv\n\n這個帳號的訊息是系統自動發送的，\n有狀況請在開診時間打電話給診所。";
+"綁定完成了。\n\n看診前 48 小時會在這裡提醒你，\n想查自己的約診，點下面選單的「約診查詢」。\n家人的約診也可以綁在這個帳號。\n\n約診要改或取消，請在看診日的兩天前\n（不含假日）打電話告訴診所：\n" + TEL + "\n\n這個帳號的訊息是系統自動發送的，\n有狀況請在開診時間打電話給診所。";
 
-  /* A 案的自動回應：綁定已經有專屬訊息，這一則就純粹回應「他傳了訊息」 */
-  var AUTO_A =
-"這裡是芳仁牙醫診所。\n\n這個帳號的訊息是系統自動發送的 ——\n要改約或取消，請在看診日的 2 天前\n（不含假日）打電話告訴診所：\n" + TEL + "\n開診時間內都有人接。\n\n想查約診狀況，點下方的選單；\n其他的都在官網 https://fangren.net";
-
-  /* B 案：廠商不改，同一則要同時服務「剛綁定完」與「打字問事情」，
-     所以**不能寫「綁定完成了」** —— 打字進來的人看到那句會一頭霧水。 */
-  var AUTO_B =
-"這裡是芳仁牙醫診所。\n\n看診前 48 小時會在這裡提醒你的約診；\n想查約診狀況，點下方的選單。\n\n要改約或取消，請在看診日的 2 天前\n（不含假日）打電話告訴診所：\n" + TEL + "\n\n這個帳號的訊息是系統自動發送的，\n有狀況請在開診時間打電話給診所。";
+  var AUTO =
+"這裡是芳仁牙醫診所。\n\n這個帳號的訊息是系統自動發送的 ——\n約診要改或取消，請在看診日的兩天前\n（不含假日）打電話告訴診所：\n" + TEL + "\n開診時間內都有人接。\n\n想查自己的約診，點下面選單的「約診查詢」；\n其他的都在官網 https://fangren.net";
 
   var NOW =
 "感謝您的訊息！\n\n很抱歉，本帳號無法個別回覆用戶的訊息。\n如有需要更改約診，\n麻煩在診所營業時間來電 。\n診所電話 055339369 謝謝。\n診所有專業的諮詢人員，\n如有療程需要了解，\n請來電告知想要約諮詢師了解。";
 
-  var VER = {
-    a:   { name: "A・廠商配合（三則各自）" },
-    b:   { name: "B・廠商不改（兩則）" },
-    now: { name: "現況" }
-  };
+  var VER = { neu: { name: "定稿" }, now: { name: "現況" } };
   var SCENE = { flow: "整段（加好友→綁定）", hello: "剛加好友", bind: "剛綁定完", ask: "傳訊息要改約" };
-  var state = { s: "flow", v: "a", o: "d" };
+  var state = { s: "flow", v: "neu" };
 
   function el(tag, cls, txt) {
     var n = document.createElement(tag);
@@ -178,7 +156,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     return n;
   }
   function linkify(node, text) {
-    text.split(/(https:\/\/(?:fangren\.net|line\.me\/R\/ti\/p\/@445rpiiv))/).forEach(function (p, i) {
+    text.split(/(https:\/\/fangren\.net)/).forEach(function (p, i) {
       if (i % 2) { var a = el("a", null, p); a.href = p; node.appendChild(a); }
       else node.appendChild(document.createTextNode(p));
     });
@@ -192,9 +170,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     row.appendChild(el("span", "pv-t", time));
     return row;
   }
-  function bubble(text) {
-    return function () { var b = el("div", "pv-bub"); linkify(b, text); return b; };
-  }
+  function bubble(t) { return function () { var b = el("div", "pv-bub"); linkify(b, t); return b; }; }
   function image(src) {
     return function () {
       var b = el("div", "pv-bub img"), i = new Image();
@@ -208,20 +184,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     c.appendChild(el("div", "btn", "點擊啟動完整服務 →"));
     return c;
   }
-  /* 招呼訊息一律是「四格圖＋文字」；綁定完成與自動回應都不配圖
-     （第十三節：兩則是連著出現的，第二張圖只是把整段又推長 234px）。 */
   function sayHello(chat, t) {
     if (state.v === "now") { chat.appendChild(msg("oa", t, bubble("（現行的招呼訊息我沒有看到）"))); return; }
-    chat.appendChild(msg("oa", t, image("rich-4b.png")));
-    chat.appendChild(msg("oa", t, bubble(OPEN[state.o].text)));
-  }
-  function afterBind(chat, t) {
-    chat.appendChild(msg("oa", t, bubble(
-      state.v === "now" ? NOW : state.v === "a" ? BOUND : AUTO_B)));
-  }
-  function onTyped(chat, t) {
-    chat.appendChild(msg("oa", t, bubble(
-      state.v === "now" ? NOW : state.v === "a" ? AUTO_A : AUTO_B)));
+    chat.appendChild(msg("oa", t, image("rich-2.png")));
+    chat.appendChild(msg("oa", t, bubble(WELCOME)));
   }
 
   function render() {
@@ -231,62 +197,57 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     if (state.s === "flow") {
       sayHello(chat, "8:44");
       chat.appendChild(msg("oa", "8:45", bindCard));
-      chat.appendChild(msg("me", "8:46", bubble("✅ 0976237217 綁定成功！\n可以啟用線上相關服務囉！")));
-      afterBind(chat, "8:46");
+      chat.appendChild(msg("me", "8:46", bubble("✅ 綁定成功")));
+      chat.appendChild(msg("oa", "8:46", bubble(state.v === "now" ? NOW : BOUND)));
     } else if (state.s === "hello") {
       sayHello(chat, "8:44");
     } else if (state.s === "bind") {
       chat.appendChild(msg("oa", "8:45", bindCard));
-      chat.appendChild(msg("me", "8:46", bubble("✅ 0976237217 綁定成功！\n可以啟用線上相關服務囉！")));
-      afterBind(chat, "8:46");
+      chat.appendChild(msg("me", "8:46", bubble("✅ 綁定成功")));
+      chat.appendChild(msg("oa", "8:46", bubble(state.v === "now" ? NOW : BOUND)));
     } else {
       chat.appendChild(msg("me", "18:42", bubble("你好，我想改下週三下午的約診")));
-      onTyped(chat, "18:42");
+      chat.appendChild(msg("oa", "18:42", bubble(state.v === "now" ? NOW : AUTO)));
       chat.appendChild(msg("me", "18:44", bubble("謝謝，我有打電話，忙線中")));
-      onTyped(chat, "18:44");
+      chat.appendChild(msg("oa", "18:44", bubble(state.v === "now" ? NOW : AUTO)));
     }
     requestAnimationFrame(measure);
   }
 
   function measure() {
     var vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
-    var mine = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub, .pv-chat .pv-msg:not(.me) .pv-card");
     var panel = document.getElementById("panel"), note = document.getElementById("note");
-
     if (state.s === "flow") {
+      var all = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub, .pv-chat .pv-msg:not(.me) .pv-card");
       var tot = 0;
-      for (var i = 0; i < mine.length; i++) tot += mine[i].getBoundingClientRect().height + 11;
+      for (var i = 0; i < all.length; i++) tot += all[i].getBoundingClientRect().height + 11;
       var tp = tot / vh * 100;
       panel.innerHTML = "<b>" + VER[state.v].name + "</b>　整段是連著發生的（差一兩分鐘）<br>" +
         "診所送出的東西加起來 <b>" + tot.toFixed(0) + "px</b> ＝ " +
         (tp > 115 ? '<span class="no">一屏的 ' + tp.toFixed(0) + '%</span>'
                   : '<span class="ok">一屏的 ' + tp.toFixed(0) + '%</span>') +
-        "<br>圖 <b>" + document.querySelectorAll(".pv-chat .pv-bub.img").length +
-        "</b> 張・文字泡泡 <b>" + document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub:not(.img)").length +
+        "<br>圖 <b>" + document.querySelectorAll(".pv-chat .pv-bub.img").length + "</b> 張・文字泡泡 <b>" +
+        document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub:not(.img)").length +
         "</b> 則（你的螢幕 " + Math.round(window.innerWidth) + "×" + Math.round(vh) + "）";
     } else {
       var bubs = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub:not(.img)");
       var last = bubs[bubs.length - 1];
       var h = last ? last.getBoundingClientRect().height : 0;
       var pct = h / vh * 100;
-      var kind = state.s === "hello" ? ("招呼訊息・" + OPEN[state.o].name) : state.s === "bind" ? "綁定完成後那一則" : "自動回應";
-      panel.innerHTML = "<b>" + kind + (state.s === "hello" ? "" : "・" + VER[state.v].name) + "</b>　" +
+      var kind = state.s === "hello" ? "招呼訊息" : state.s === "bind" ? "綁定完成" : "自動回應";
+      panel.innerHTML = "<b>" + kind + "・" + VER[state.v].name + "</b>　" +
         (pct > 62 ? '<span class="no">佔一屏 ' + pct.toFixed(0) + '%</span>，要捲才看得完'
                   : '<span class="ok">佔一屏 ' + pct.toFixed(0) + '%</span>，一眼看得完') +
         "<br>泡泡高 <b>" + h.toFixed(0) + "px</b>（你的螢幕 " +
         Math.round(window.innerWidth) + "×" + Math.round(vh) + "）" +
-        (state.s === "hello" && state.v !== "now"
-          ? "<br>可以點的地方：診所介紹→fangren.net、直接撥號、主題與科別→/#topics、衛教文章→/#articles" : "");
+        (state.s === "hello" && state.v === "neu"
+          ? "<br>圖可以點的地方：上半→fangren.net、下半直接撥號" : "");
     }
-
     note.textContent =
-      state.v === "a"
-        ? "A 案的前提：請廠商把「綁定成功」改成不含手機號碼的固定字串（或改用官方帳號推播）。"
-          + "有了固定字串才能用關鍵字回應接住它，綁定完成才有自己的一則。"
-        : state.v === "b"
-        ? "B 案是廠商不改的退路：同一則要同時服務「剛綁定完」與「打字問事情」，"
-          + "所以刻意沒有寫「綁定完成了」—— 打字進來的人看到那句會一頭霧水。"
-        : "現況：不管什麼情境都回同一則。";
+      state.v === "now" ? "現況：不管什麼情境都回同一則。"
+      : state.s === "hello" ? "招呼訊息配的是兩格圖（照片＋大電話）——常駐選單六格裡沒有撥號，四格圖有 3/4 格和選單重複。"
+      : state.s === "bind" ? "廠商可以把「綁定成功」改成固定字串，所以綁定完成有自己的一則，不必和自動回應共用。"
+      : "三則都不把提醒卡上那顆「不克前往」寫成改約管道——按下去只是系統顯示取消，而且已經違反兩天前的協議。";
   }
 
   function chips(host, obj, key) {
@@ -298,7 +259,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         state[key] = k;
         host.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
         b.setAttribute("aria-pressed", "true");
-        history.replaceState(null, "", location.pathname + "?s=" + state.s + "&v=" + state.v + "&o=" + state.o);
+        history.replaceState(null, "", location.pathname + "?s=" + state.s + "&v=" + state.v);
         render();
       });
       host.appendChild(b);
@@ -308,12 +269,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   if (m && SCENE[m[1]]) state.s = m[1];
   m = location.search.match(/[?&]v=([a-z0-9]+)/);
   if (m && VER[m[1]]) state.v = m[1];
-  m = location.search.match(/[?&]o=([a-z0-9]+)/);
-  if (m && OPEN[m[1]]) state.o = m[1];
-
   chips(document.getElementById("sw-s"), SCENE, "s");
   chips(document.getElementById("sw-v"), VER, "v");
-  chips(document.getElementById("sw-o"), OPEN, "o");
   render();
   window.addEventListener("resize", measure);
 })();
