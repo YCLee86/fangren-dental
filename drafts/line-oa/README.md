@@ -1473,3 +1473,21 @@ LINE 上 hero 最寬只用到 300pt × DPR3 ＝ 900，出到 1200 綽綽有餘�
 ⚠ 這一輪順帶把 `index.html` 從 `main` 取回來（本機那份停在 8/27），
 再把這條分支唯一動過的那一行（JSON-LD 的 `page.line.me/fafa070`）補回去 ——
 `git diff origin/main -- index.html` 現在只有那一行。
+
+### 同一輪：把 main 上更新過的資產取回來（2026-09-02）
+
+另一條對話重新調整並確認了植牙的分享圖，所以這一輪把**這條分支沒有動過、
+但 main 上比較新**的幾個檔一併取回來：
+
+```
+assets/og-topic-prosth.jpg   ← 圖卡的 hero 就是它（重新調整過）
+assets/lineart-prosth.png    著陸頁的線稿底圖
+assets/head-search.js
+assets/style.css
+index.html                   （上一輪就取回來了）
+```
+
+⚠ **取之前先確認這條分支有沒有動過它們**（`git log origin/main..HEAD -- <檔>`），
+五個都是空的才覆蓋。`assets/line-{pin,phone,logo}.png` 是這條分支新增的，沒有動。
+⚠ **產生器不必改**：hero 的路徑是 `assets/og-topic-<spec>.jpg`、顏色讀
+`index.html` 的 `[data-spec]` —— 檔案換新的，重跑就跟上。
