@@ -13,6 +13,28 @@
  *
  * ⚠ 版型名稱與可用的格數要在後台確認過再定案（我沒有那個後台）。
  *
+ * ⚠⚠ **圖只是圖，可以點的動作是在後台一格一格設的。** 每一格要填什麼：
+ *
+ *   rich-4b（功能版・招呼訊息用）
+ *     左上 診所介紹    → https://fangren.net/
+ *     右上 撥打電話    → tel:+88655339369
+ *     左下 科別介紹    → https://fangren.net/#topics    （七科的標記，點進去是各科著陸頁）
+ *     右下 牙齒衛教    → https://fangren.net/#articles  （文章列表）
+ *
+ *   rich-2（兩格・自動回應用）
+ *     上  診所網站     → https://fangren.net/
+ *     下  撥打電話     → tel:+88655339369
+ *
+ *   rich-4（捷徑版・目前沒有用，留給日後的圖文選單）
+ *     左上 診所網站    → https://fangren.net/
+ *     右上 撥打電話    → tel:+88655339369
+ *     左下 看診時間    → https://fangren.net/#clinic
+ *     右下 診所位置    → 診所的 Google 地圖短網址（clinic.json 的 sameAs）
+ *
+ * ⚠ 「科別介紹」不寫成「科別與醫師」：站上 #topics 與 #doctors 是兩個段落，
+ *   一個連結只能去一個地方。醫師沒有掉 —— 每一科的著陸頁裡就有那一科的醫師。
+ * ⚠ 約診提醒沒有格子：它是推播，沒有可以點的去處。
+ *
  * 照著站上既有的規矩做的四件：
  * ① Chromium 一律挑 headless_shell（CLAUDE.md 第九節第 18 條：完整版 chrome
  *    畫出來會少 87px，而且 PNG 仍輸出完整尺寸、不報錯）。
@@ -88,8 +110,8 @@ const ICON = {
   tel: `<svg viewBox="0 0 512 512"><path fill="${C.green}" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>`,
   pin: `<svg viewBox="0 0 384 512"><path fill="${C.green}" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>`,
   clock: `<svg viewBox="0 0 512 512"><circle cx="256" cy="256" r="216" fill="none" stroke="${C.green}" stroke-width="48"/><path d="M256 128v136l88 56" fill="none" stroke="${C.green}" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  /* 科別與醫師：一個人 */
-  people: `<svg viewBox="0 0 512 512"><circle cx="256" cy="150" r="94" fill="${C.green}"/><path d="M256 276c-92 0-166 62-166 139 0 12 10 21 22 21h288c12 0 22-9 22-21 0-77-74-139-166-139z" fill="${C.green}"/></svg>`,
+  /* 科別：四個分類方塊（站上那一排科別標記的意思） */
+  grid: `<svg viewBox="0 0 512 512"><rect x="46" y="46" width="176" height="176" rx="40" fill="${C.green}"/><rect x="290" y="46" width="176" height="176" rx="40" fill="none" stroke="${C.green}" stroke-width="42"/><rect x="46" y="290" width="176" height="176" rx="40" fill="none" stroke="${C.green}" stroke-width="42"/><rect x="290" y="290" width="176" height="176" rx="40" fill="none" stroke="${C.green}" stroke-width="42"/></svg>`,
   /* 衛教文章：一張紙上幾行字 */
   doc: `<svg viewBox="0 0 512 512"><rect x="86" y="46" width="340" height="420" rx="34" fill="none" stroke="${C.green}" stroke-width="42"/><path d="M164 172h184M164 256h184M164 340h116" fill="none" stroke="${C.green}" stroke-width="42" stroke-linecap="round"/></svg>`,
 };
@@ -188,8 +210,8 @@ const fourB = `${base}
     <div class="big" style="font-size:62px">${TEL}</div>
   </div>
   <div class="cell" style="gap:18px">
-    <span class="ic" style="width:64px;height:64px">${ICON.people}</span>
-    <div class="big" style="font-size:52px">科別與醫師</div>
+    <span class="ic" style="width:62px;height:62px">${ICON.grid}</span>
+    <div class="big" style="font-size:52px">科別介紹</div>
     <div class="lab" style="font-size:34px">七個科別在做什麼</div>
   </div>
   <div class="cell" style="gap:18px">
