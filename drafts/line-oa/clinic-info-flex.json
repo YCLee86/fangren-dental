@@ -176,28 +176,6 @@
         ]
       },
       {
-        "type": "box",
-        "layout": "baseline",
-        "spacing": "sm",
-        "margin": "md",
-        "contents": [
-          {
-            "type": "text",
-            "text": "休診",
-            "color": "#5C5F57",
-            "size": "sm",
-            "flex": 2
-          },
-          {
-            "type": "text",
-            "text": "週六、週日",
-            "color": "#2A2C27",
-            "size": "sm",
-            "flex": 5
-          }
-        ]
-      },
-      {
         "type": "text",
         "text": "國定假日與各科特別門診請來電確認。",
         "color": "#5C5F57",
