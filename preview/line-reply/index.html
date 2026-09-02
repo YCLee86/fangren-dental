@@ -188,7 +188,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   var NOW =
 "感謝您的訊息！\n\n很抱歉，本帳號無法個別回覆用戶的訊息。\n如有需要更改約診，\n麻煩在診所營業時間來電 。\n診所電話 055339369 謝謝。\n診所有專業的諮詢人員，\n如有療程需要了解，\n請來電告知想要約諮詢師了解。";
 
-  var VER = { neu: { name: "定稿" }, now: { name: "現況" } };
+  var VER = { neu: { name: "定稿", hello: "rich-w.png" }, now: { name: "現況" } };
   var SCENE = { flow: "整段（加好友→綁定）", hello: "剛加好友", bind: "剛綁定完", ask: "傳訊息要改約", remind: "約診提醒卡" };
   var state = { s: "flow", v: "neu" };
 
@@ -273,7 +273,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
   function sayHello(chat, t) {
     if (state.v === "now") { chat.appendChild(msg("oa", t, bubble("（現行的招呼訊息我沒有看到）"))); return; }
-    chat.appendChild(msg("oa", t, image("rich-2.png")));
+    chat.appendChild(msg("oa", t, image(VER[state.v].hello || "rich-w.png")));
     chat.appendChild(msg("oa", t, bubble(WELCOME)));
   }
 
@@ -346,11 +346,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         "<br>泡泡高 <b>" + h.toFixed(0) + "px</b>（你的螢幕 " +
         Math.round(window.innerWidth) + "×" + Math.round(vh) + "）" +
         (state.s === "hello" && state.v === "neu"
-          ? "<br>圖可以點的地方：上半→fangren.net、下半直接撥號" : "");
+          ? "<br>圖 1040×520（橫的），可以點的地方：左半→fangren.net、右半直接撥號" : "");
     }
     note.textContent =
       state.v === "now" ? "現況：不管什麼情境都回同一則。"
-      : state.s === "hello" ? "四件事各一段：這是誰、選單有什麼、綁定會拿到什麼、把連結轉給家人。配兩格圖（照片＋大電話）——常駐選單六格裡沒有撥號。"
+      : state.s === "hello" ? "四件事各一段：這是誰、選單有什麼、綁定會拿到什麼、把連結轉給家人。配一張橫的圖（1040×520，照片＋大電話）——常駐選單六格裡沒有撥號，這是它補的那一格。"
       : state.s === "bind" ? "三件事：綁定拿到什麼、改約取消的最晚時限、這裡沒有專人。⚠ 要有自己的一則，廠商得把「綁定成功」改成不含電話的固定字串。"
       : "第一句是道謝不是道歉（愛馬仕的做法），接著才說這裡沒有專人，然後給三個出口。不把提醒卡那顆「不克前往」寫成改約管道——按下去只是系統顯示取消，而且已經違反兩天前的協議。";
   }

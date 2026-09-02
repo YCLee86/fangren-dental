@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-/* LINE「圖文訊息」的候選圖 → preview/line-reply/rich-{2,4}.png（各 1040×1040）
+/* LINE「圖文訊息」的候選圖 → preview/line-reply/rich-{2,4,4b}.png（1040×1040）
+ *                              ＋ rich-w.png（1040×520，橫的・招呼訊息定案用）
  *
  *   node drafts/line-auto-reply/rich.mjs
  *
@@ -21,7 +22,13 @@
  *     左下 主題與科別  → https://fangren.net/#topics    （七科的標記，點進去是各科著陸頁）
  *     右下 衛教文章    → https://fangren.net/#articles  （文章列表）
  *
- *   rich-2（兩格・自動回應用）
+ *   ✅ rich-w（橫的・**招呼訊息定案用**，1040×520，左右各 517）
+     左  診所網站     → https://fangren.net/
+     右  撥打電話     → tel:+88655339369
+     ⚠ 這張在聊天室裡只有 232px 寬，圖上的字 × 0.223 才是實際尺寸。
+       產生器有一道守門：任何一段字掉到 11px 以下就 throw。
+
+   rich-2（兩格・目前沒有用，留作退路）
  *     上  診所網站     → https://fangren.net/
  *     下  撥打電話     → tel:+88655339369
  *
@@ -117,11 +124,11 @@ const ICON = {
   doc: `<svg viewBox="0 0 512 512"><rect x="86" y="46" width="340" height="420" rx="34" fill="none" stroke="${C.green}" stroke-width="42"/><path d="M164 172h184M164 256h184M164 340h116" fill="none" stroke="${C.green}" stroke-width="42" stroke-linecap="round"/></svg>`,
 };
 
-const base = `<!doctype html><meta charset="utf-8"><style>
+const sheet = (h) => `<!doctype html><meta charset="utf-8"><style>
 ${faces}
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:1040px;height:1040px;background:${C.rule}}
-.sheet{width:1040px;height:1040px;display:grid;gap:6px;background:${C.rule};overflow:hidden}
+html,body{width:1040px;height:${h}px;background:${C.rule}}
+.sheet{width:1040px;height:${h}px;display:grid;gap:6px;background:${C.rule};overflow:hidden}
 .cell{background:${C.card};display:flex;flex-direction:column;align-items:center;
   justify-content:center;position:relative;overflow:hidden;
   font-family:"NotoTC","Noto Sans TC",sans-serif;color:${C.ink};text-align:center}
@@ -141,6 +148,7 @@ html,body{width:1040px;height:1040px;background:${C.rule}}
   color:${C.ink};font-weight:500;white-space:nowrap}
 .row i{font-style:normal;color:${C.green};font-weight:700}
 </style>`;
+const base = sheet(1040);
 
 /* ---- 候選一：上下兩格 --------------------------------------------------- */
 /* ⚠ 兩格版切成上下各半 —— LINE 的圖文訊息版型是**固定的格子**，
@@ -222,6 +230,42 @@ const fourB = `${base}
   </div>
 </div>`;
 
+/* ---- 候選四：橫的（1040×520，招呼訊息用） ------------------------------
+   使用者 2026-09-02：「先來做歡迎，加了朋友，橫的。」
+
+   ⚠ 為什麼是橫的：方的那張在聊天室裡是一大塊，和文字泡泡加起來曾量到
+   一屏的 116%。2:1 把它砍一半，招呼訊息才收得進一屏。
+
+   ⚠⚠⚠ 這張圖在聊天室裡只有 **232px 寬**（提案頁量的，＝ 1040 的 22.3%），
+   所以圖上每一個字的**實際顯示尺寸 ＝ 設計尺寸 × 0.223**。
+   泡泡裡的內文是 13.76px，圖上的字掉到 11px 以下就開始讀不到，
+   換算回設計尺寸是 **49px**。下面的 MIN_PT 就在守這條，過不了會 throw。
+
+   ⚠⚠ 因此這張刻意**只有兩級字**，而且拿掉了「雲林斗六・永樂街」——
+   它在 232px 上只有 6.7px，是一團看不懂的灰。
+   **讀不到的字比沒有字更糟**：它不傳達任何東西，只讓卡片看起來很擠。
+   （地名沒有消失，招呼訊息的文字泡泡與站上都還在。）
+
+   ⚠ 切成左右各 517 的兩格，**畫面上的分界就是可以點的分界** ——
+   分界和格線對不起來的話，病人會點空。
+     左 → https://fangren.net/
+     右 → tel:+88655339369   （選單六格裡沒有撥號，這是它補的那一格）*/
+const wideH = 520;
+const wideCard = `${sheet(wideH)}
+<div class="sheet" style="grid-template-columns:517px 517px">
+  <div class="cell photo" style="${photoCss(517, wideH, 900, 1120)}">
+    <div class="veil" style="height:78px;bottom:118px;background:linear-gradient(to bottom,${smooth(0, 100)})"></div>
+    <div class="name" style="height:118px">
+      <b style="font-size:62px">芳仁牙醫診所</b>
+    </div>
+  </div>
+  <div class="cell" style="gap:22px">
+    <span class="ic" style="width:74px;height:74px">${ICON.tel}</span>
+    <div class="big" style="font-size:84px;line-height:1">${TEL}</div>
+    <div class="lab" style="font-size:54px">改約或取消</div>
+  </div>
+</div>`;
+
 /* ---- 出圖 --------------------------------------------------------------- */
 const chromePath = (() => {
   const pw = process.env.PLAYWRIGHT_BROWSERS_PATH || "/opt/pw-browsers";
@@ -240,7 +284,8 @@ const { chromium } = mod.default ?? mod;
 const GLYPHS = new Set(fs.readFileSync(path.join(FDIR, "glyphs.txt"), "utf8").replace(/\s/g, ""));
 const visibleText = (html) => html.replace(/<style[\s\S]*?<\/style>/g, "")
   .replace(/<[^>]*>/g, "").replace(/\s/g, "");
-for (const [name, html] of [["rich-2", two], ["rich-4", four], ["rich-4b", fourB]]) {
+const SHEETS = [["rich-2", two, 1040], ["rich-4", four, 1040], ["rich-4b", fourB, 1040], ["rich-w", wideCard, wideH]];
+for (const [name, html] of SHEETS) {
   const miss = [...new Set([...visibleText(html)].filter((c) => !GLYPHS.has(c)))];
   if (miss.length) {
     console.error(`${name} 有 ${miss.length} 個字不在子集裡：${miss.join("")}`);
@@ -249,18 +294,39 @@ for (const [name, html] of [["rich-2", two], ["rich-4", four], ["rich-4b", fourB
   }
 }
 
+/* 聊天室裡這些圖實際多寬（提案頁 .pv-bub.img 量到的），以及圖上文字的顯示下限 */
+const DISPLAY_W = { "rich-w": 232 };
+const MIN_ON = 11;
+
 const browser = await chromium.launch({ executablePath: chromePath });
 const page = await browser.newPage({ viewport: { width: 1040, height: 1040 }, deviceScaleFactor: 1 });
 
-for (const [name, html] of [["rich-2", two], ["rich-4", four], ["rich-4b", fourB]]) {
+for (const [name, html, H] of SHEETS) {
+  await page.setViewportSize({ width: 1040, height: H });
   await page.setContent(html, { waitUntil: "load" });
   await page.evaluate(() => document.fonts.ready);
   const out = path.join(OUTDIR, `${name}.png`);
-  await page.screenshot({ path: out, clip: { x: 0, y: 0, width: 1040, height: 1040 } });
+  await page.screenshot({ path: out, clip: { x: 0, y: 0, width: 1040, height: H } });
   /* 驗一次尺寸（第 18 條：被平切時 PNG 仍會輸出完整尺寸，所以要真的讀檔頭） */
+  /* ⚠⚠ 量「在聊天室裡實際多大」，不是「設計稿上多大」——
+     同 og-topic-card 那一輪的教訓：用 CSS 放大的稿子會比實際清楚，等於在騙自己。 */
+  if (DISPLAY_W[name]) {
+    const k = DISPLAY_W[name] / 1040;
+    const pts = await page.evaluate(() => [...document.querySelectorAll(".cell *")]
+      .filter((e) => e.textContent.trim() && !e.children.length)
+      .map((e) => ({ t: e.textContent.trim(), px: parseFloat(getComputedStyle(e).fontSize) })));
+    const small = pts.map((p) => ({ ...p, on: p.px * k })).filter((p) => p.on < MIN_ON);
+    const min = Math.min(...pts.map((p) => p.px * k));
+    if (small.length) {
+      console.error(`${name} 有 ${small.length} 段字在 ${DISPLAY_W[name]}px 的卡片上小於 ${MIN_ON}px：`);
+      for (const p of small) console.error(`   「${p.t}」${p.px}px → ${p.on.toFixed(1)}px`);
+      process.exit(1);
+    }
+    console.log(`   在聊天室裡 ${DISPLAY_W[name]}px 寬，最小的字 ${min.toFixed(1)}px（下限 ${MIN_ON}）`);
+  }
   const b = fs.readFileSync(out);
   const w = b.readUInt32BE(16), h = b.readUInt32BE(20);
-  if (w !== 1040 || h !== 1040) throw new Error(`${name} 是 ${w}×${h}，應該是 1040×1040`);
+  if (w !== 1040 || h !== H) throw new Error(`${name} 是 ${w}×${h}，應該是 1040×${H}`);
   console.log(`${name}.png  ${w}×${h}  ${(b.length / 1024).toFixed(0)}KB`);
 }
 await browser.close();
