@@ -66,9 +66,11 @@ const vivid = (frame) => {
   return hx(...h2r(h, 1, 0));
 };
 /* 填色鈕的底與字 */
-const solid = (v, sc = SCHEME) => sc === "b" ? [v.frame, INK]
+/* ⚠ 有幾張的底太亮，白字撐不住 —— 那幾張在 CARDS 裡標 `fg: "ink"`，
+   案 D（原色＋白字）會對它們單獨改用深墨字。使用者逐張指定的，不是算出來的。 */
+const solid = (v, sc = SCHEME, fg) => sc === "b" ? [v.frame, INK]
   : sc === "c" ? [vivid(v.frame), "#FFFFFF"]
-  : sc === "d" ? [v.frame, "#FFFFFF"]
+  : sc === "d" ? [v.frame, fg === "ink" ? INK : "#FFFFFF"]
   /* e：底一律用他挑的原色，字看那個底撐不撐得住白 */
   : sc === "e" ? [v.frame, RA(v.frame, "#FFFFFF") >= 4.5 ? "#FFFFFF" : INK]
   : [v.fill, "#FFFFFF"];
@@ -86,19 +88,19 @@ const CARDS = [
   { img: "wisdom", title: "我的智齒該拔嗎",
     lead: "哪幾種智齒該處理、術前要看什麼、拔完要怎麼照顧。",
     post: "/posts/wisdom-tooth/" },
-  { img: "aligner", title: "我可以做隱形矯正嗎",
+  { img: "aligner", fg: "ink", title: "我可以做隱形矯正嗎",
     lead: "傳統矯正器和透明牙套差在哪：材質、功能、關縫，還有戴起來的感覺。",
     post: "/posts/orthodontics/" },
   { img: "prosth", title: "假牙一體成型有啥好",
     lead: "什麼狀況需要做牙套、齒質要修掉多少；金屬、全瓷、全鋯各適合誰。",
     post: "/posts/crown-materials/" },
-  { img: "implant", title: "植牙眉角停看聽",
+  { img: "implant", fg: "ink", title: "植牙眉角停看聽",
     lead: "術前要先做假牙模擬和斷層掃描；骨頭整合需要時間，植體和假牙零件都要有認證。",
     post: "/posts/missing-tooth/" },
   { img: "denture", title: "活動假牙有眉角",
     lead: "假牙做好只是開始：牙齦適應、回診調整，還有怎麼吃、怎麼洗。",
     post: "/posts/missing-tooth/" },
-  { img: "whitening", title: "我的牙齒不夠白",
+  { img: "whitening", fg: "ink", title: "我的牙齒不夠白",
     lead: "噴砂拋光、居家藥劑、冷光美白差在哪；做完會不會回色、會不會敏感。",
     post: null },
   { img: "xray", title: "拍片的輻射有多少",
@@ -133,7 +135,7 @@ const btn = (label, uri, color, { outline = false, fg = "#FFFFFF" } = {}) => ({
 
 function make(c, sc, tag) {
   const { ink, hero } = C[c.img];
-  const [bg, fg] = solid(C[c.img], sc);
+  const [bg, fg] = solid(C[c.img], sc, c.fg);
   const foot = [btn("看大圖", `${SITE}/assets/handout-${c.img}.jpg`, bg, { fg })];
   if (c.post) foot.push(btn("讀文章", SITE + c.post, ink, { outline: true }));
   return {
@@ -221,4 +223,4 @@ if (!PAIR) {
   console.log(`行政 ${ADMIN.length} 格　→ admin-carousel${sfx}.json`);
 }
 console.log(`案 ${SCHEME.toUpperCase()}　${bubbles.length} 格　${Buffer.byteLength(JSON.stringify(out))} bytes（LINE 上限 12 格／50KB）`);
-for (const c of CARDS) console.log(`  ${c.img.padEnd(10)} 框 ${C[c.img].frame} 填 ${solid(C[c.img])[0]}  ${c.title.padEnd(11)}→ ${c.post ?? "⚠ 站上沒有對應文章"}`);
+for (const c of CARDS) console.log(`  ${c.img.padEnd(10)} 框 ${C[c.img].frame} 填 ${solid(C[c.img], SCHEME, c.fg)[0]}${c.fg === "ink" ? "＋墨" : ""}  ${c.title.padEnd(11)}→ ${c.post ?? "⚠ 站上沒有對應文章"}`);

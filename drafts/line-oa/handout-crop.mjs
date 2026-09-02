@@ -158,15 +158,21 @@ for (const f of fs.readdirSync(DIR).filter((f) => /^handout-[a-z]+\.(jpg|png)$/.
   const even = (n) => n - (n % 2);
   const w = even(Math.min(box.w, W - box.x));
   const h = even(Math.min(Math.round(w / RATIO), H - box.y));
+  /* ⚠ 有些原檔是高解析度的（矯正那張 5538 寬），裁完直接輸出會是好幾 MB。
+     hero 在 LINE 上最寬只用到 300pt × DPR3 ＝ 900，出到 1200 綽綽有餘。 */
+  const CAP = 1200;
+  const vf = w > CAP
+    ? `crop=${w}:${h}:${box.x}:${box.y},scale=${CAP}:-2`
+    : `crop=${w}:${h}:${box.x}:${box.y}`;
   execFileSync(ff, ["-hide_banner", "-loglevel", "error", "-y", "-i", src,
-    "-vf", `crop=${w}:${h}:${box.x}:${box.y}`, "-q:v", "3",
-    path.join(DIR, `handout-${name}-hero.jpg`)]);
+    "-vf", vf, "-q:v", "3", path.join(DIR, `handout-${name}-hero.jpg`)]);
 
   const frame = frameColor(box, h / H * box.grid.h);
   const fill = darkenUntil(frame, "#FFFFFF");        // 填色鈕：白字要過 4.5
   const ink = darkenUntil(frame, CARD);              // 外框鈕與 ▌：字壓在卡片底上
-  out[name] = { frame, fill, ink, hero: `${w}:${h}` };
+  const hw = Math.min(w, CAP), hh = w > CAP ? Math.round(h * CAP / w) : h;
+  out[name] = { frame, fill, ink, hero: `${hw}:${hh}` };
   console.log(`  ${name.padEnd(10)} 框 ${frame} 白字 ${ratio(frame, "#FFFFFF").toFixed(2)}` +
-    `　→ 填色 ${fill}（${ratio(fill, "#FFFFFF").toFixed(2)}）　字 ${ink}（${ratio(ink, CARD).toFixed(2)}）　hero ${w}×${h}`);
+    `　→ 填色 ${fill}（${ratio(fill, "#FFFFFF").toFixed(2)}）　字 ${ink}（${ratio(ink, CARD).toFixed(2)}）　hero ${hw}×${hh}`);
 }
 fs.writeFileSync(path.join(DIR, "colors.json"), JSON.stringify(out, null, 2) + "\n");

@@ -5,7 +5,7 @@
     "type": "image",
     "url": "https://fangren.net/assets/handout-aligner-hero.jpg",
     "size": "full",
-    "aspectRatio": "1124:588",
+    "aspectRatio": "1200:628",
     "aspectMode": "cover",
     "action": {
       "type": "uri",
@@ -29,7 +29,7 @@
             "type": "text",
             "text": "▌",
             "size": "md",
-            "color": "#E00530",
+            "color": "#0074BD",
             "flex": 0
           },
           {
@@ -62,7 +62,7 @@
       {
         "type": "box",
         "layout": "vertical",
-        "backgroundColor": "#FB5374",
+        "backgroundColor": "#4DBAFF",
         "cornerRadius": "6px",
         "height": "40px",
         "justifyContent": "center",
@@ -82,7 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#FFFFFF",
+                "color": "#2A2C27",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0
@@ -94,7 +94,7 @@
       {
         "type": "box",
         "layout": "vertical",
-        "borderColor": "#E00530",
+        "borderColor": "#0074BD",
         "borderWidth": "1px",
         "cornerRadius": "6px",
         "height": "40px",
@@ -115,7 +115,7 @@
               {
                 "type": "text",
                 "text": "讀文章",
-                "color": "#E00530",
+                "color": "#0074BD",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0
