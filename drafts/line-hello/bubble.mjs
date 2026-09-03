@@ -1,143 +1,88 @@
-/* 手繪感的對話框：一條有機、微微不規則的封閉曲線 ＋ 一條指出去的尾巴。
- * 給 generate.mjs 用，回傳一個 SVG path 的 d 字串。
+/* 對話框的形狀。2026-09-03 整支重寫。
  *
- * 為什麼自己畫不用現成的圖形：使用者要的是參考圖（YEBISU GARDEN CINEMA）那種
- * **手繪線條**的感覺 —— 一條粗細一致、轉角圓潤、但輪廓不是幾何完美的線。
- * 而且診所自己的標誌本來就是圓潤的有機形狀，對話框走同一套語彙才不會外來。
+ * ⚠⚠⚠ 前一版走錯方向了。使用者最早給 YEBISU GARDEN CINEMA 當參考時說「手繪的感覺」，
+ *   我把它讀成「輪廓要抖」，於是加了正弦擾動、把圓角放大到 118 —— 結果變成一隻變形蟲，
+ *   使用者：「現在的對話框變得好怪喔」。
+ *   他接著給的四張參考（Tully's 問卷卡／JR Suica 海報／かまわぬ 手拭巾傳單／無印良品海報）
+ *   說的是同一件事：**框都是乾淨的幾何形**（圓角矩形、膠囊、角狀多邊形），
+ *   配一支**短短的三角形尾巴**，而且**底是實的**、不是半透明的玻璃。
+ *   YEBISU 那張的「手繪」指的是**線的質感**（均勻、肯定的一筆），不是輪廓不規則。
  *
- * ⚠ 不要畫得太抖：參考圖那些人形是**很肯定的一筆**，不是顫抖的線。
- *   所以擾動只用兩個低頻正弦（週期 3 圈與 5 圈），振幅是半徑的百分之幾。
+ * ⚠ 通則：參考圖要看「它像什麼」，不要只抓一個形容詞去發揮。
+ *
+ * 三種形狀（都各有一支乾淨的三角尾巴）：
+ *   round    圓角矩形 —— Tully's／Suica 那種
+ *   stadium  膠囊（圓角 ＝ 高的一半）—— 無印良品那種
+ *   poly     角狀多邊形 —— かまわぬ 那種（直邊、有稜角）
  */
 
-/* 決定性的擾動（同樣的 seed 一定畫出同一條線，出圖才可重現） */
-const wobble = (t, seed, amp) =>
-  amp * (Math.sin(t * 3 + seed) * 0.52
-       + Math.sin(t * 5 + seed * 2.3) * 0.30
-       + Math.sin(t * 11 + seed * 3.7) * 0.18);   /* 高頻那一項是手抖，振幅要小 */
-
-/* 圓角矩形上的一點（t: 0~1 沿著周長） */
-function roundRectPoint(t, w, h, r) {
-  const sw = w - 2 * r, sh = h - 2 * r;                 /* 直邊長度 */
-  const arc = (Math.PI / 2) * r;                         /* 一個圓角的弧長 */
-  const per = 2 * sw + 2 * sh + 4 * arc;
-  let d = t * per;
-  const seg = (len) => { if (d <= len) return true; d -= len; return false; };
-  if (seg(sw)) return [r + d, 0];                                        /* 上邊 */
-  if (seg(arc)) { const a = d / r; return [w - r + r * Math.sin(a), r - r * Math.cos(a)]; }
-  if (seg(sh)) return [w, r + d];                                        /* 右邊 */
-  if (seg(arc)) { const a = d / r; return [w - r + r * Math.cos(a), h - r + r * Math.sin(a)]; }
-  if (seg(sw)) return [w - r - d, h];                                    /* 下邊 */
-  if (seg(arc)) { const a = d / r; return [r - r * Math.sin(a), h - r + r * Math.cos(a)]; }
-  if (seg(sh)) return [0, h - r - d];                                    /* 左邊 */
-  const a = d / r; return [r - r * Math.cos(a), r - r * Math.sin(a)];
-}
-
-/* Catmull-Rom → 三次貝茲。corner 為 true 的點不平滑（尾巴的尖端要是尖的）。 */
-function spline(pts, closed = true) {
-  const n = pts.length;
-  const at = (i) => pts[(i % n + n) % n];
-  let d = `M ${at(0).x.toFixed(1)} ${at(0).y.toFixed(1)}`;
-  for (let i = 0; i < n; i++) {
-    const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
-    /* 端點是角就把控制點收回自己身上 —— 那一段就會是直線、轉角是尖的 */
-    const k1 = p1.corner || p2.corner ? 0 : 1 / 6;
-    const k2 = p2.corner || p1.corner ? 0 : 1 / 6;
-    const c1x = p1.x + (p2.x - p0.x) * k1, c1y = p1.y + (p2.y - p0.y) * k1;
-    const c2x = p2.x - (p3.x - p1.x) * k2, c2y = p2.y - (p3.y - p1.y) * k2;
-    d += ` C ${c1x.toFixed(1)} ${c1y.toFixed(1)} ${c2x.toFixed(1)} ${c2y.toFixed(1)}` +
-         ` ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
-  }
-  return d + " Z";
-}
+const f = (n) => n.toFixed(1);
 
 /**
  * @param {object} o
- *   x,y,w,h  對話框本體的外框
- *   r        圓角
- *   amp      手繪擾動的振幅（px）。0 ＝ 完全幾何
- *   seed     擾動的種子
- *   tail     {at, spread, len, angle} —— at: 尾巴長在周長的哪裡（0~1）、
- *            spread: 根部寬度（周長比例）、len: 從根部中點伸出去多長（px）、
- *            angle: 伸出去的方向（度，0 ＝ 往右、90 ＝ 往下）
- *            ⚠ 2026-09-03 從絕對座標 tipX/tipY 改成「長度＋角度」——
- *              使用者說「延伸角形拉好長好怪」，而長度用絕對座標根本看不出來
- *              （第一版量出來是 148px，眼睛看才知道太長）。
- *   steps    取樣點數
+ *   shape        "round" | "stadium" | "poly"
+ *   x,y,w,h      外框
+ *   r            圓角（round 用；stadium 自動取 h/2）
+ *   sides        poly 的邊數
+ *   jitter       poly 每個頂點的半徑變化（0~1），決定性、不是亂數
+ *   seed         jitter 的種子
+ *   tail         {cx, wid, dx, dy} —— 尾巴根部的中心 x（絕對）、根部寬、
+ *                尖端相對根部中心的位移。⚠ 三個點都是尖角，不做平滑。
  */
-function outlinePoints(o) {
-  const { x, y, w, h, r, amp = 0, seed = 1, tail, steps = 64 } = o;
+export function bubble(o) {
+  const { shape = "round", x, y, w, h, tail } = o;
+  if (shape === "poly") return polyPath(o);
+  const r = shape === "stadium" ? h / 2 : Math.min(o.r ?? 40, w / 2, h / 2);
+  const t = tail;
+  /* 尾巴落在下緣，從右往左走的時候先遇到右邊那個根部 */
+  const b2 = t ? t.cx + t.wid / 2 : null;      /* 右根 */
+  const b1 = t ? t.cx - t.wid / 2 : null;      /* 左根 */
+  if (t && (b1 < x + r || b2 > x + w - r))
+    throw new Error(`尾巴的根部 ${f(b1)}~${f(b2)} 超出下緣的直線段 ${f(x + r)}~${f(x + w - r)}`);
+  let d = `M ${f(x + r)} ${f(y)}`;
+  d += ` H ${f(x + w - r)} A ${f(r)} ${f(r)} 0 0 1 ${f(x + w)} ${f(y + r)}`;
+  d += ` V ${f(y + h - r)} A ${f(r)} ${f(r)} 0 0 1 ${f(x + w - r)} ${f(y + h)}`;
+  if (t) {
+    d += ` H ${f(b2)} L ${f(t.cx + t.dx)} ${f(y + h + t.dy)} L ${f(b1)} ${f(y + h)}`;
+  }
+  d += ` H ${f(x + r)} A ${f(r)} ${f(r)} 0 0 1 ${f(x)} ${f(y + h - r)}`;
+  d += ` V ${f(y + r)} A ${f(r)} ${f(r)} 0 0 1 ${f(x + r)} ${f(y)} Z`;
+  return d;
+}
+
+/* 角狀多邊形：橢圓上取點，每個點的半徑用兩個低頻正弦推一點點（決定性），直線相連。
+   ⚠ 直邊、有稜角才是かまわぬ 那張的味道 —— 不要再去平滑它。
+   ⚠⚠ 尾巴要**接進輪廓裡**，不能另外畫一個三角形疊上去 ——
+      疊上去的話，填色看起來沒事，但一描邊就會在框身上多一條線。 */
+function polyPath(o) {
+  const { x, y, w, h, sides = 9, jitter = .07, seed = 2, tail } = o;
+  const cx = x + w / 2, cy = y + h / 2, rx = w / 2, ry = h / 2;
   const pts = [];
-  for (let i = 0; i < steps; i++) {
-    const t = i / steps;
-    /* 尾巴那一段跳過，等一下用三個點接上去 */
-    if (tail && t > tail.at - tail.spread / 2 && t < tail.at + tail.spread / 2) continue;
-    const [px, py] = roundRectPoint(t, w, h, r);
-    /* 沿著「從中心往外」的方向推一點點 */
-    const cx = w / 2, cy = h / 2;
-    let dx = px - cx, dy = py - cy;
-    const len = Math.hypot(dx, dy) || 1;
-    const k = wobble(t * Math.PI * 2, seed, amp);
-    pts.push({ x: x + px + dx / len * k, y: y + py + dy / len * k, t });
+  for (let i = 0; i < sides; i++) {
+    const a = (i / sides) * Math.PI * 2 - Math.PI / 2;
+    const k = 1 + jitter * (Math.sin(i * 2.1 + seed) * .6 + Math.sin(i * 3.7 + seed * 1.9) * .4);
+    pts.push([cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k]);
   }
   if (tail) {
-    /* 找出尾巴要插在哪兩點之間 */
-    const idx = pts.findIndex((p) => p.t > tail.at);
-    const b1 = roundRectPoint(tail.at - tail.spread / 2, w, h, r);
-    const b2 = roundRectPoint(tail.at + tail.spread / 2, w, h, r);
-    const mid = roundRectPoint(tail.at, w, h, r);
-    const rad = (tail.angle ?? 120) * Math.PI / 180;
-    const tipX = x + mid[0] + Math.cos(rad) * tail.len;
-    const tipY = y + mid[1] + Math.sin(rad) * tail.len;
-    const seg = [
-      { x: x + b1[0], y: y + b1[1] },
-      { x: tipX, y: tipY, corner: true },
-      { x: x + b2[0], y: y + b2[1] },
-    ];
-    if (idx < 0) pts.push(...seg); else pts.splice(idx, 0, ...seg);
+    /* 找最靠下的那條邊（兩個端點的 y 平均最大），把尾巴插進去 */
+    let best = 0, bestY = -Infinity;
+    for (let i = 0; i < pts.length; i++) {
+      const j = (i + 1) % pts.length;
+      const my = (pts[i][1] + pts[j][1]) / 2;
+      if (my > bestY) { bestY = my; best = i; }
+    }
+    const a = pts[best], b = pts[(best + 1) % pts.length];
+    const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (tail.wid > len * .8)
+      throw new Error(`尾巴根部 ${tail.wid} 比那條邊 ${len.toFixed(0)} 還寬`);
+    const ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
+    const p1 = [mid[0] - ux * tail.wid / 2, mid[1] - uy * tail.wid / 2];
+    const p2 = [mid[0] + ux * tail.wid / 2, mid[1] + uy * tail.wid / 2];
+    const tip = [mid[0] + tail.dx, mid[1] + tail.dy];
+    pts.splice(best + 1, 0, p1, tip, p2);
   }
-  return pts;
-}
-
-/** 封閉的輪廓路徑（給 clip-path 用） */
-export function speechBubble(o) { return spline(outlinePoints(o)); }
-
-
-/**
- * 把對話框的輪廓切成 n 段，每一段自己的線寬 —— 這是「手繪 vs 油漆」的關鍵。
- * ⚠ 均勻的粗線看起來就是**油漆滾出來的**；真的手繪，筆壓會變、線寬跟著變。
- * ⚠ 每一段刻意多畫一點（overlap），配上 stroke-linecap:round，接縫會自然消失，
- *   而且轉折處會有一點點「疊筆」的感覺 —— 那正是手繪的味道。
- *
- * @returns {{d:string, w:number}[]}
- */
-export function bubbleStrokes(o, { n = 9, base = 8, vary = .26, seed = 7, overlap = 3 } = {}) {
-  const pts = outlinePoints(o);
-  const N = pts.length;
-  const segs = [];
-  for (let i = 0; i < n; i++) {
-    const a = Math.round(i * N / n), b = Math.round((i + 1) * N / n) + overlap;
-    const slice = [];
-    for (let k = a; k <= b; k++) slice.push(pts[(k % N + N) % N]);
-    /* 這一段多粗：兩個低頻的和，穩定可重現 */
-    const t = (i + .5) / n * Math.PI * 2;
-    const k = Math.sin(t + seed) * .62 + Math.sin(t * 2.3 + seed * 1.7) * .38;
-    segs.push({ d: openSpline(slice), w: +(base * (1 + vary * k)).toFixed(2) });
-  }
-  return segs;
-}
-
-/* 開放曲線（不閉合），給 bubbleStrokes 用 */
-function openSpline(pts) {
-  const n = pts.length;
-  const at = (i) => pts[Math.max(0, Math.min(n - 1, i))];
-  let d = `M ${at(0).x.toFixed(1)} ${at(0).y.toFixed(1)}`;
-  for (let i = 0; i < n - 1; i++) {
-    const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
-    const k1 = p1.corner || p2.corner ? 0 : 1 / 6;
-    const k2 = p2.corner || p1.corner ? 0 : 1 / 6;
-    d += ` C ${(p1.x + (p2.x - p0.x) * k1).toFixed(1)} ${(p1.y + (p2.y - p0.y) * k1).toFixed(1)}` +
-         ` ${(p2.x - (p3.x - p1.x) * k2).toFixed(1)} ${(p2.y - (p3.y - p1.y) * k2).toFixed(1)}` +
-         ` ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
-  }
-  return d;
+  let d = `M ${f(pts[0][0])} ${f(pts[0][1])}`;
+  for (let i = 1; i < pts.length; i++) d += ` L ${f(pts[i][0])} ${f(pts[i][1])}`;
+  return d + " Z";
 }
