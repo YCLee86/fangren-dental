@@ -10,7 +10,9 @@
   ✅ 裁切 2026-09-03 定案 Ⓒ3b（x 934~7614、y 403~3743），其餘八案已刪，推導在
      drafts/line-hello/README.md 第八節。
   這一輪要選的是：**筆畫收尾的缺口有多大**（三級）與**字體**（三支）。
-  ⚠ 形狀已定：圓角 92（圓角矩形 44 ↔ 膠囊 144 的正中間）、玻璃濃度「中」（白 .58／模糊 11）。
+  ⚠ 形狀已定：**超橢圓 2.6**（不是圓角矩形 —— 圓角矩形永遠是「四段直線＋四個圓角」，
+    那四個轉折就是「太工整」的來源）、玻璃濃度「中」（白 .58／模糊 11）。
+  ⚠ **缺口的位置不是參數**，它錨在尾巴的根部（Tully's 那張的畫法）。
 
   ⚠⚠ 遮罩的位置是量出來的：逐列／逐行掃「有多少 % 的像素 L* ≥ 70」，
     乾淨區是 x 480~960、y 0~340。要避開三個東西：診所右牆的邊（x≈440）、
@@ -76,8 +78,8 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 </head>
 <body>
 <h1>頭圖：房子在說「芳仁　哩厚」</h1>
-<p class="lede">形狀照你說的走：<b>圓角矩形和膠囊之間</b>（圓角 92，兩端點是 44 與 144）、
-邊框是<b>一筆畫下來、最後留一個小缺口</b>、玻璃濃度<b>中</b>。底下選<b>缺口大小</b>與<b>字體</b>。</p>
+<p class="lede">照你說的三件改了：缺口移到<b>尾巴的銜接處</b>、形狀從圓角矩形換成
+<b>沒有一段是直線</b>的軟橢圓、整個框<b>往右下移</b>。底下選<b>缺口大小</b>與<b>字體</b>。</p>
 
 <div class="big"><img id="shot" alt=""></div>
 <p class="cap" id="cap"></p>
@@ -111,7 +113,7 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 <script>
 (function () {
   "use strict";
-  var R = [{"id":"hero-s-mplus","gap":"s","font":"mplus","gapPx":31,"visiblePx":24,"visibleOnChat":5.3,"inkDrop":2.2,"gapLabel":"小","gapPct":2.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":139},{"id":"hero-s-zenmaru","gap":"s","font":"zenmaru","gapPx":31,"visiblePx":24,"visibleOnChat":5.3,"inkDrop":2.2,"gapLabel":"小","gapPct":2.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":140},{"id":"hero-s-ntc","gap":"s","font":"ntc","gapPx":31,"visiblePx":24,"visibleOnChat":5.3,"inkDrop":2.2,"gapLabel":"小","gapPct":2.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":138},{"id":"hero-m-mplus","gap":"m","font":"mplus","gapPx":53,"visiblePx":46,"visibleOnChat":10.3,"inkDrop":3.9,"gapLabel":"中","gapPct":4.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":139},{"id":"hero-m-zenmaru","gap":"m","font":"zenmaru","gapPx":53,"visiblePx":46,"visibleOnChat":10.3,"inkDrop":3.9,"gapLabel":"中","gapPct":4.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":140},{"id":"hero-m-ntc","gap":"m","font":"ntc","gapPx":53,"visiblePx":46,"visibleOnChat":10.3,"inkDrop":3.9,"gapLabel":"中","gapPct":4.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":138},{"id":"hero-l-mplus","gap":"l","font":"mplus","gapPx":83,"visiblePx":76,"visibleOnChat":16.9,"inkDrop":6.2,"gapLabel":"大","gapPct":7.5,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":139},{"id":"hero-l-zenmaru","gap":"l","font":"zenmaru","gapPx":83,"visiblePx":76,"visibleOnChat":16.9,"inkDrop":6.2,"gapLabel":"大","gapPct":7.5,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":140},{"id":"hero-l-ntc","gap":"l","font":"ntc","gapPx":83,"visiblePx":76,"visibleOnChat":16.9,"inkDrop":6.2,"gapLabel":"大","gapPct":7.5,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":138}];
+  var R = [{"id":"hero-s-mplus","gap":"s","font":"mplus","gapPx":32,"visiblePx":25,"visibleOnChat":5.6,"inkDrop":4.1,"gapLabel":"小","gapPct":2.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":137},{"id":"hero-s-zenmaru","gap":"s","font":"zenmaru","gapPx":32,"visiblePx":25,"visibleOnChat":5.6,"inkDrop":4.1,"gapLabel":"小","gapPct":2.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":138},{"id":"hero-s-ntc","gap":"s","font":"ntc","gapPx":32,"visiblePx":25,"visibleOnChat":5.6,"inkDrop":4.1,"gapLabel":"小","gapPct":2.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":137},{"id":"hero-m-mplus","gap":"m","font":"mplus","gapPx":55,"visiblePx":48,"visibleOnChat":10.7,"inkDrop":6.4,"gapLabel":"中","gapPct":4.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":137},{"id":"hero-m-zenmaru","gap":"m","font":"zenmaru","gapPx":55,"visiblePx":48,"visibleOnChat":10.7,"inkDrop":6.4,"gapLabel":"中","gapPct":4.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":138},{"id":"hero-m-ntc","gap":"m","font":"ntc","gapPx":55,"visiblePx":48,"visibleOnChat":10.7,"inkDrop":6.4,"gapLabel":"中","gapPct":4.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":137},{"id":"hero-l-mplus","gap":"l","font":"mplus","gapPx":86,"visiblePx":79,"visibleOnChat":17.6,"inkDrop":8.9,"gapLabel":"大","gapPct":7.5,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":137},{"id":"hero-l-zenmaru","gap":"l","font":"zenmaru","gapPx":86,"visiblePx":79,"visibleOnChat":17.6,"inkDrop":8.9,"gapLabel":"大","gapPct":7.5,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":137},{"id":"hero-l-ntc","gap":"l","font":"ntc","gapPx":86,"visiblePx":79,"visibleOnChat":17.6,"inkDrop":8.9,"gapLabel":"大","gapPct":7.5,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":137}];
   var by = {}; R.forEach(function (r) { by[r.gap + "|" + r.font] = r; });
   var S = { s: "小", m: "中", l: "大" };
   var F = { mplus: "M PLUS 圓體", zenmaru: "Zen Maru 圓體", ntc: "Noto Sans TC" };
@@ -149,20 +151,21 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
       + "　<span class='k'>在聊天室裡</span> <b>" + r.onChat + "px</b>"
       + " <span class='k'>（下限 11px）</span>"
       + "　<span class='k'>框線</span> <b>" + r.stroke + "px</b>（聊天室 " + r.strokeOnChat + "px）"
-      + "<br><span class='k'>圓角</span> <b>" + r.r + "</b>"
-      + " <span class='k'>（圓角矩形 44 ↔ 膠囊 144 的正中間）</span>"
+      + "<br><span class='k'>形狀</span> <b>超橢圓 " + r.nExp + "</b>"
+      + " <span class='k'>（2 ＝ 橢圓、4 已經很方；整條線沒有一段是直的）</span>"
       + "　<span class='k'>玻璃</span> <b>中</b><span class='k'>（白 " + r.glassA + "、模糊 " + r.glassBlur + "）</span>";
     document.getElementById("note").innerHTML =
-      "⚠ <b>缺口是「筆畫沒接回去」不是「破了一個洞」</b>：描邊改成一條<b>開放路徑</b>，"
-      + "繞一圈回來時停在缺口前面。底仍然是封閉的，所以玻璃不會從缺口漏出去。"
-      + "<br>⚠ <b>缺口開在上緣、右上圓角之前</b>（x 749，框心 684、圓角從 764 起）。"
-      + "第一版落在<b>上緣正中央</b>，對稱的位置讀起來像印壞了，不像有人把筆提起來；"
-      + "而且這一段的底是乾淨的天空，縮到 232px 也讀得出來。"
-      + "<br>⚠ <b>不要看「墨少了幾 %」判斷缺口夠不夠大</b>：圓頭的筆尖會在開放路徑的兩端"
-      + "各補一個半圓，加起來約等於一整個線寬（7px）。所以名目弧長永遠比看得到的長，"
-      + "面板印的 <b>" + r.visiblePx + "px</b> 才是眼睛讀到的那一段。"
-      + "<br>⚠ 位置仍然是量出來的：框離外牆 <b>82px</b>，尾巴往左下指著房子、"
-      + "而且驗過<b>不會撞到劉家那支紅招牌</b>（x 620~660、y 165~325）。"
+      "⚠ <b>缺口移到尾巴的銜接處了。</b> 上一版按周長比例開在上緣，你說「意思差很多」——"
+      + "對。把 Tully's 那張放大之後，缺口就在尾巴的根部旁邊：下緣那條線走到尾巴前面就停了。"
+      + "開在別的地方讀起來是<b>印壞了</b>，開在尾巴旁邊才是<b>畫完最後一筆把筆提起來</b>。"
+      + "<br>⚠ 位置因此不再是可以自由指定的參數 —— 它由尾巴決定，"
+      + "起筆點就是尾巴的右根，繞一整圈回來停在快接回尾巴的地方。"
+      + "<br>⚠ <b>「太工整、太方正」的成因是圓角矩形這個做法本身</b>：圓角不管開多大，"
+      + "它都還是「四段直線 ＋ 四個圓角」，那四個轉折點就是工整的來源。"
+      + "改成<b>超橢圓</b>（指數 2.6）之後整條線沒有一段是直的、也沒有轉折點，"
+      + "再加兩個<b>很低頻</b>的擾動（±2.7% 以內）讓它左右不對稱。"
+      + "<br>⚠ 低頻是重點 —— 更早那次「手繪感」用的是高頻擾動，那會變成變形蟲。"
+      + "<br>⚠ 整個框往右下移了（x +32、y +26），離診所外牆從 82px 拉開到 114px。"
       + "<br>⚠ 兩行刻意錯開（芳仁往右、哩厚往左各 22px）—— 字面框其實完全對齊，"
       + "看起來錯位是「仁」右邊留白多、「厚」填滿整格。";
   }

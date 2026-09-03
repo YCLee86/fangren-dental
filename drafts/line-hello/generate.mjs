@@ -46,79 +46,80 @@ const sc = W / CW;
 /* ⚠⚠ 位置是量出來的（在成品的 1040×520 座標裡，疊格線讀的）：
      診所外牆右緣 x≈430、劉家紅招牌 x 620~660／y 165~325、遮陽棚上緣 y≈360。
 
-   ✅ 2026-09-03 使用者定案：
-     「介於圓角矩形和膠囊之間的形狀，風格要像 Tully's 那張照片下方的手繪對話框，
-       一筆劃最後帶一個小缺口，比較有人畫的感覺。玻璃濃度是中。」
-   → 圓角 **92**（圓角矩形是 44、膠囊是 144，取中間）
-   → 描邊是**開放路徑**、收尾留缺口；填色仍然封閉（不然玻璃會漏出去）
-   → 玻璃回到「中」（白 .58、模糊 11） */
-const BOX = { x: 512, y: 26, w: 344, h: 288, r: 92,
-              tail: { cx: 640, wid: 52, dx: -30, dy: 48 } };
+   ✅ 2026-09-03 第二輪修正（使用者看過第三版之後）：
+     「那個缺口和照片上的位置不一樣，這樣意思也差很多。照片上的缺口留在
+       和延伸角形的銜接處，這樣才有手畫的感覺。另外目前的對話框太工整，也太方正，
+       整個對話框可以往右下移一點。」
+   → 形狀從**圓角矩形**換成**超橢圓**（指數 2.6）＋兩個低頻擾動，見 bubble.mjs
+   → 缺口**錨在尾巴的根部**，不再用周長比例定位（那個參數整個拿掉了）
+   → 整個框往右下移：x 512 → 544、y 26 → 52 */
+const BOX = { x: 544, y: 52, w: 352, h: 296, n: 2.6,
+              tail: { cx: 664, wid: 52, dx: -34, dy: 46 } };
 const SIGN = { x0: 620, y0: 165, x1: 660, y1: 325 };
 const GLASS = { a: .58, blur: 11 };
 const STROKE = 7;
 const FS = 104, LH = 1.06, STAGGER = 22;
 const GAPS = { s: .028, m: .048, l: .075 };
-/* ⚠⚠ 缺口擺在哪裡，和它多大一樣要緊。
-   第一版用 .06，算出來落在**上緣正中央**（x 641，框心 684 附近）——
-   對稱的位置讀起來像印壞了，不像有人畫到最後把筆提起來。
-   .16 落在上緣、右上圓角**之前**（x 749，圓角從 764 起）：偏一邊、在一段長直線上，
-   而且那一段的底是乾淨的天空，232px 縮下去也讀得出來。 */
-const GAPSTART = .16;
 const GAPLABEL0 = { s: "小", m: "中", l: "大" };
 
-/* 周長（給缺口的守門換算成 px 用） */
-const PERIMETER = (() => {
-  const r = Math.min(BOX.r, BOX.w / 2, BOX.h / 2);
-  return 2 * (BOX.w - 2 * r) + 2 * (BOX.h - 2 * r) + 2 * Math.PI * r;
-})();
-const PTS = outline(BOX);
-const CLOSED = closedPath(PTS);
+const GEO = outline(BOX);
+const PERIMETER = GEO.per;
+const CLOSED = closedPath(GEO);
+
+/* 點在不在多邊形裡（射線法）—— 給「字有沒有跑出框外」的守門用。
+   ⚠ 換成超橢圓之後不能再用「離邊界幾 px」估，邊界不是直線了。 */
+const inside = ([px, py], pts) => {
+  let on = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [xi, yi] = pts[i], [xj, yj] = pts[j];
+    if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi) on = !on;
+  }
+  return on;
+};
 
 {
-  const tip = [BOX.tail.cx + BOX.tail.dx, BOX.y + BOX.h + BOX.tail.dy];
+  const tip = GEO.pts[GEO.tailI + 1];
   if (tip[0] > SIGN.x0 && tip[0] < SIGN.x1 && tip[1] > SIGN.y0 && tip[1] < SIGN.y1)
     throw new Error("尾巴的尖端撞到紅招牌了");
   if (BOX.x - 430 < 60) throw new Error("對話框離外牆只有 " + (BOX.x - 430) + "px");
   if (STROKE * 232 / 1040 < 1.5) throw new Error("框線在聊天室太細");
-  console.log("框離外牆 " + (BOX.x - 430) + "px、圓角 " + BOX.r +
-    "（圓角矩形 44 ↔ 膠囊 " + (BOX.h / 2) + " 的中間）、框線 " + STROKE +
-    "px（聊天室 " + (STROKE * 232 / 1040).toFixed(2) + "px）、尾巴尖端 (" +
-    tip[0].toFixed(0) + ", " + tip[1].toFixed(0) + ")");
+  const xs = GEO.pts.map((q) => q[0]), ys = GEO.pts.map((q) => q[1]);
+  if (Math.max(...xs) > W - 8 || Math.min(...xs) < 8 || Math.max(...ys) > H - 8 || Math.min(...ys) < 8)
+    throw new Error("對話框（含尾巴）超出畫面");
+  console.log(`框離外牆 ${BOX.x - 430}px、超橢圓指數 ${BOX.n}（2 ＝ 橢圓、4 已經很方）、` +
+    `框線 ${STROKE}px（聊天室 ${(STROKE * 232 / 1040).toFixed(2)}px）`);
+  console.log(`外框 x ${Math.min(...xs).toFixed(0)}~${Math.max(...xs).toFixed(0)}、` +
+    `y ${Math.min(...ys).toFixed(0)}~${Math.max(...ys).toFixed(0)}、尾巴尖端 (${tip.map((v) => v.toFixed(0)).join(", ")})`);
 }
 
-/* 缺口的位置守門：三件事都要成立，否則它讀起來就不是「筆提起來」。
-   ⚠ 這一段是實際去看那一段路徑落在哪裡，不是重算一次幾何 —— 圓角、尾巴一改就會移位。 */
+/* 缺口的位置守門 —— 這一版的判準整個反過來了。
+   ⚠⚠ 第三版是「缺口要離尾巴夠遠」，使用者退回：「照片上的缺口留在和延伸角形的
+     銜接處，這樣才有手畫的感覺。」所以現在要驗的是**缺口就貼著尾巴的根部**。
+   ⚠ 這一段是實際去看那一段路徑落在哪裡，不是重算一次幾何。 */
 {
-  const n = PTS.length, s0 = Math.round(n * GAPSTART);
-  const near = (k) => PTS[((k % n) + n) % n];
+  const { pts, tailI } = GEO, n = pts.length;
+  const root = pts[tailI];                              /* 尾巴的右根 ＝ 起筆點 */
+  const cy = BOX.y + BOX.h / 2;
   for (const g of ["s", "m", "l"]) {
     const keep = Math.round(n * (1 - GAPS[g]));
-    const a = near(s0), b = near(s0 + keep - 1);
-    const cx = (a[0] + b[0]) / 2, cy = (a[1] + b[1]) / 2;
-    /* ① 要在上緣的直線段上（不在圓角、不在尾巴、不在有字的那一半） */
-    if (Math.abs(cy - BOX.y) > 3)
-      throw new Error(`缺口「${GAPLABEL0[g]}」不在上緣（落在 ${cx.toFixed(0)}, ${cy.toFixed(0)}）`);
-    if (cx < BOX.x + BOX.r || cx > BOX.x + BOX.w - BOX.r)
-      throw new Error(`缺口「${GAPLABEL0[g]}」壓到圓角了（x ${cx.toFixed(0)}）`);
-    /* ② 不可以落在正中央 —— 對稱就讀成印壞了 */
-    const off = Math.abs(cx - (BOX.x + BOX.w / 2));
-    if (off < 40) throw new Error(`缺口「${GAPLABEL0[g]}」離框心只有 ${off.toFixed(0)}px，太對稱`);
-    /* ③ 兩端都要離尾巴的根部夠遠 */
-    const tailL = BOX.tail.cx - BOX.tail.wid / 2 - 30, tailR = BOX.tail.cx + BOX.tail.wid / 2 + 30;
-    for (const [px, py] of [a, b])
-      if (py > BOX.y + BOX.h - 3 && px > tailL && px < tailR)
-        throw new Error(`缺口「${GAPLABEL0[g]}」開在尾巴根部`);
+    const far = pts[(tailI + keep) % n];                 /* 缺口的另一端（收筆點） */
+    /* ① 缺口的兩端都要在下半圈 —— 爬到上緣就不是「銜接處」了 */
+    if (root[1] < cy || far[1] < cy)
+      throw new Error(`缺口「${GAPLABEL0[g]}」爬出下半圈（收筆 y=${far[1].toFixed(0)}、中線 ${cy.toFixed(0)}）`);
+    /* ② 收筆點要離尾巴根部夠近 —— 遠了就變成「框上破一個洞」 */
+    const d = Math.hypot(far[0] - root[0], far[1] - root[1]);
+    if (d > 130) throw new Error(`缺口「${GAPLABEL0[g]}」離尾巴根部 ${d.toFixed(0)}px，太遠了`);
   }
   const keepM = Math.round(n * (1 - GAPS.m));
-  const a = near(s0), b = near(s0 + keepM - 1);
-  console.log(`缺口開在上緣 x ${((a[0] + b[0]) / 2).toFixed(0)}（框心 ${(BOX.x + BOX.w / 2).toFixed(0)}、右上圓角從 ${(BOX.x + BOX.w - BOX.r).toFixed(0)} 起）`);
+  const farM = pts[(tailI + keepM) % n];
+  console.log(`缺口貼著尾巴的右根 (${root.map((v) => v.toFixed(0)).join(", ")})，` +
+    `「中」那一格收筆在 (${farM.map((v) => v.toFixed(0)).join(", ")})`);
 }
 
 const TX = BOX.x + BOX.w / 2, TY = BOX.y + BOX.h / 2;
 
 const page = (fontId, gapKey, withPhoto = true) => {
-  const open = openPath(PTS, GAPS[gapKey], GAPSTART);
+  const open = openPath(GEO, GAPS[gapKey]);
   return `<!doctype html><meta charset="utf-8"><style>
 ${faces}
 *{margin:0;padding:0}
@@ -192,7 +193,7 @@ stroke-linejoin:round;stroke-linecap:round}</style>
   };
   const full = await ink(CLOSED);
   for (const g of ["s", "m", "l"]) {
-    const cut = await ink(openPath(PTS, GAPS[g], GAPSTART));
+    const cut = await ink(openPath(GEO, GAPS[g]));
     const pct = (1 - cut / full) * 100;
     /* ⚠⚠ 量到的減量本來就會**少於**缺口的名目比例：stroke-linecap:round 會在
        開放路徑的兩端各補一個半圓，加起來約等於一個線寬的墨。
@@ -226,7 +227,7 @@ for (const c of CASES) {
   report.push({ ...c, ...GAPMEASURE[c.gap], gapLabel: GAPLABEL[c.gap], gapPct: +(GAPS[c.gap] * 100).toFixed(1),
                 fs: box.fs, onChat: +onChat.toFixed(1), stroke: STROKE,
                 strokeOnChat: +(STROKE * 232 / 1040).toFixed(2),
-                glassA: GLASS.a, glassBlur: GLASS.blur, r: BOX.r, kb: Math.round(kb) });
+                glassA: GLASS.a, glassBlur: GLASS.blur, nExp: BOX.n, kb: Math.round(kb) });
   console.log(`${c.id.padEnd(21)} ${GAPLABEL[c.gap]}     ${onChat.toFixed(1)}px      ${kb.toFixed(0)}KB`);
 }
 await browser.close();
