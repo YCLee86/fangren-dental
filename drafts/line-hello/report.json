@@ -6,11 +6,14 @@
     "glass": "不加玻璃",
     "alpha": 0,
     "blur": 0,
-    "lift": -0.0046,
-    "drop": -3.9,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 138
+    "lift": 0,
+    "drop": 0,
+    "fs": 104,
+    "tw": 247,
+    "th": 255,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 148
   },
   {
     "id": "hero-mplus-soft",
@@ -19,11 +22,14 @@
     "glass": "淡",
     "alpha": 0.34,
     "blur": 7,
-    "lift": 0.0757,
-    "drop": 42.6,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 130
+    "lift": 0.0553,
+    "drop": 0.2,
+    "fs": 104,
+    "tw": 247,
+    "th": 255,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 143
   },
   {
     "id": "hero-mplus-mid",
@@ -32,11 +38,14 @@
     "glass": "中",
     "alpha": 0.58,
     "blur": 11,
-    "lift": 0.1461,
-    "drop": 53.6,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 130
+    "lift": 0.0978,
+    "drop": -2.2,
+    "fs": 104,
+    "tw": 247,
+    "th": 255,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 143
   },
   {
     "id": "hero-mplus-hard",
@@ -45,11 +54,14 @@
     "glass": "濃",
     "alpha": 0.8,
     "blur": 15,
-    "lift": 0.2162,
-    "drop": 57.3,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 130
+    "lift": 0.1383,
+    "drop": -6.3,
+    "fs": 104,
+    "tw": 247,
+    "th": 255,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 143
   },
   {
     "id": "hero-zenmaru-none",
@@ -60,9 +72,12 @@
     "blur": 0,
     "lift": 0,
     "drop": 0,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 139
+    "fs": 104,
+    "tw": 247,
+    "th": 261,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 149
   },
   {
     "id": "hero-zenmaru-soft",
@@ -71,11 +86,14 @@
     "glass": "淡",
     "alpha": 0.34,
     "blur": 7,
-    "lift": 0.0799,
-    "drop": 53.7,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 131
+    "lift": 0.0553,
+    "drop": 0.6,
+    "fs": 104,
+    "tw": 247,
+    "th": 261,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 144
   },
   {
     "id": "hero-zenmaru-mid",
@@ -84,11 +102,14 @@
     "glass": "中",
     "alpha": 0.58,
     "blur": 11,
-    "lift": 0.1507,
-    "drop": 72.7,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 131
+    "lift": 0.0977,
+    "drop": -1.6,
+    "fs": 104,
+    "tw": 247,
+    "th": 261,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 144
   },
   {
     "id": "hero-zenmaru-hard",
@@ -97,11 +118,14 @@
     "glass": "濃",
     "alpha": 0.8,
     "blur": 15,
-    "lift": 0.2212,
-    "drop": 87.4,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 131
+    "lift": 0.1382,
+    "drop": -5.6,
+    "fs": 104,
+    "tw": 247,
+    "th": 261,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 143
   },
   {
     "id": "hero-ntc-none",
@@ -112,9 +136,12 @@
     "blur": 0,
     "lift": 0,
     "drop": 0,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 138
+    "fs": 104,
+    "tw": 247,
+    "th": 261,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 148
   },
   {
     "id": "hero-ntc-soft",
@@ -123,11 +150,14 @@
     "glass": "淡",
     "alpha": 0.34,
     "blur": 7,
-    "lift": 0.0799,
-    "drop": 53.7,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 130
+    "lift": 0.0549,
+    "drop": -3.4,
+    "fs": 104,
+    "tw": 247,
+    "th": 261,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 143
   },
   {
     "id": "hero-ntc-mid",
@@ -136,11 +166,14 @@
     "glass": "中",
     "alpha": 0.58,
     "blur": 11,
-    "lift": 0.1507,
-    "drop": 72.7,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 130
+    "lift": 0.097,
+    "drop": -7.3,
+    "fs": 104,
+    "tw": 247,
+    "th": 261,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 143
   },
   {
     "id": "hero-ntc-hard",
@@ -149,10 +182,13 @@
     "glass": "濃",
     "alpha": 0.8,
     "blur": 15,
-    "lift": 0.2212,
-    "drop": 87.4,
-    "fs": 88,
-    "onChat": 19.6,
-    "kb": 130
+    "lift": 0.1372,
+    "drop": -12,
+    "fs": 104,
+    "tw": 247,
+    "th": 261,
+    "onChat": 23.2,
+    "lineOnChat": 2.2,
+    "kb": 143
   }
 ]

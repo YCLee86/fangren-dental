@@ -21,6 +21,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { speechBubble } from "./bubble.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..", "..");
@@ -42,20 +43,18 @@ const W = 1040, H = 520;
 const IW = 8000, IH = 3982, CX0 = 934, CY0 = 403, CW = 6680, CH = 3340;
 const sc = W / CW;
 
-/* ⚠⚠ 乾淨區是**量出來的**（逐列／逐行掃「有多少 % 的像素 L* ≥ 70」）：x 480~960、y 0~340。
-   三個要避開的東西：x≈440 診所右牆的邊、**x≈640 劉家那支招牌的柱子**（只有 60% 夠亮）、
-   x≥980 右邊公寓的暗部。所以面板放在柱子**右邊**，整塊落在灰樓的亮牆與天空上。
-   ⚠ 面板一定要整塊落在乾淨區裡 —— backdrop-filter 的模糊會把框外的暗色吸進來，
-     壓到遮陽棚的話下緣會糊掉一塊（第一版就是這樣）。 */
-const CLEAN = { x0: 480, y0: 0, x1: 960, y1: 340 };
-const PANEL = { x: 688, y: 40, w: 272, h: 264, r: 24 };
-if (PANEL.x < CLEAN.x0 || PANEL.x + PANEL.w > CLEAN.x1
-    || PANEL.y < CLEAN.y0 || PANEL.y + PANEL.h > CLEAN.y1) {
-  throw new Error("遮罩 x" + PANEL.x + "~" + (PANEL.x + PANEL.w)
-    + " y" + PANEL.y + "~" + (PANEL.y + PANEL.h)
-    + " 超出量到的乾淨區 x" + CLEAN.x0 + "~" + CLEAN.x1 + " y" + CLEAN.y0 + "~" + CLEAN.y1
-    + " —— 邊緣的模糊會把暗色吸進來");
-}
+/* ⚠⚠ 位置是量出來的（在成品的 1040×520 座標裡，疊格線讀的）：
+     診所外牆右緣 x≈430（y 100~390）、屋簷右尖 (440, 90)
+     劉家那支紅招牌 x 620~660、y 165~325
+     右邊灰樓的牆 x 700~960、y 60~390
+     遮陽棚上緣 y≈360
+   對話框放在建築右邊的天空，**尾巴往左下指到清水模外牆**，
+   看起來就是這棟房子在說話。⚠ 尾巴不可以穿過紅招牌 —— 所以框放左邊不放右邊。 */
+const BUBBLE = { x: 468, y: 18, w: 344, h: 300, r: 88, amp: 5, seed: 3,
+                 tail: { at: .63, spread: .055, tipX: 432, tipY: 352 } };
+const STROKE = 10;              /* ⚠ 線也會 ×0.223：10px → 聊天室裡 2.2px */
+const FS = 104, LH = 1.06;      /* 使用者 2026-09-03：「字再大一點」88 → 104 */
+
 const GLASS = {
   none: { a: 0,   blur: 0,  label: "不加玻璃" },
   soft: { a: .34, blur: 7,  label: "淡" },
@@ -63,23 +62,44 @@ const GLASS = {
   hard: { a: .80, blur: 15, label: "濃" },
 };
 
-const page = (fontId, g, withText, withPanel) => `<!doctype html><meta charset="utf-8"><style>
+const bubblePath = speechBubble(BUBBLE);
+/* 字排在對話框本體的正中央（不含尾巴） */
+const TX = BUBBLE.x + BUBBLE.w / 2, TY = BUBBLE.y + BUBBLE.h / 2;
+
+const page = (fontId, g, withText, withBubble, withPhoto = true) => `<!doctype html><meta charset="utf-8"><style>
 ${faces}
 *{margin:0;padding:0}
 html,body{width:${W}px;height:${H}px;overflow:hidden;background:#000}
 .w{position:relative;width:${W}px;height:${H}px;overflow:hidden}
 img{position:absolute;left:${(-CX0 * sc).toFixed(2)}px;top:${(-CY0 * sc).toFixed(2)}px;
   width:${(IW * sc).toFixed(2)}px;height:${(IH * sc).toFixed(2)}px}
-.g{position:absolute;left:${PANEL.x}px;top:${PANEL.y}px;width:${PANEL.w}px;height:${PANEL.h}px;
-  border-radius:${PANEL.r}px;background:rgba(255,255,255,${g.a});
-  ${g.blur ? `backdrop-filter:blur(${g.blur}px) saturate(1.06);` : ""}
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.06em}
-.g b{display:block;font-family:"${FAM[fontId]}";font-weight:900;font-size:88px;line-height:1.16;
-  color:${withText ? DEEP : "transparent"};letter-spacing:.04em;text-indent:.04em}
+svg{position:absolute;inset:0}
+/* ⚠⚠⚠ 玻璃**不能**用 backdrop-filter ＋ clip-path 放在同一個元素上 ——
+   2026-09-03 實測：白色上得去（RING 亮度 +0.056）但**模糊整個被丟掉**
+   （起伏 0.0636 → 0.0637，一點都沒降）。同 CLAUDE.md 第九節第 20 條那一類：
+   被裁切的東西上面再掛濾鏡，瀏覽器會靜靜地不畫，而且不報錯。
+   做法改成：外層只負責裁切，裡面放一份**同樣位置、自己 filter: blur 的照片複本**，
+   再疊一層白。這是一般的 filter 不是 backdrop-filter，可靠得多。 */
+.clip{position:absolute;inset:0;clip-path:path('${bubblePath}')}
+.clip img{filter:blur(${g.blur}px) saturate(1.06)}
+.tint{position:absolute;inset:0;background:rgba(255,255,255,${g.a})}
+text{font-family:"${FAM[fontId]}";font-weight:900;font-size:${FS}px;
+  fill:${withText ? DEEP : "transparent"};letter-spacing:.04em}
+.line{stroke:${DEEP};stroke-width:${STROKE}px;fill:none;
+  stroke-linejoin:round;stroke-linecap:round}
 </style>
 <div class="w">
-  <img src="data:image/jpeg;base64,${photo64}">
-  ${withPanel ? `<div class="g"><b>芳仁</b><b>哩厚</b></div>` : ""}
+  ${withPhoto ? `<img src="data:image/jpeg;base64,${photo64}">` : ""}
+  ${withBubble && g.a > 0 ? `<div class="clip">
+     <img src="data:image/jpeg;base64,${photo64}"><div class="tint"></div>
+   </div>` : ""}
+  <svg viewBox="0 0 ${W} ${H}">
+    ${withBubble ? `<path class="line" d="${bubblePath}"/>` : ""}
+    <text x="${TX}" y="${TY}" text-anchor="middle" dominant-baseline="central">
+      <tspan x="${TX}" dy="${(-FS * LH / 2).toFixed(1)}">芳仁</tspan>
+      <tspan x="${TX}" dy="${(FS * LH).toFixed(1)}">哩厚</tspan>
+    </text>
+  </svg>
 </div>`;
 
 const chromePath = (() => {
@@ -96,9 +116,7 @@ const browser = await chromium.launch({ executablePath: chromePath });
 const p = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 const clip = { x: 0, y: 0, width: W, height: H };
 
-/* 沒有遮罩的底圖，拿來驗「玻璃到底有沒有生效」 */
-await p.setContent(page("ntc", GLASS.none, false, false), { waitUntil: "load" });
-const bareB64 = (await p.screenshot({ clip })).toString("base64");
+
 
 const stat = async (shotB64, box) => p.evaluate(async ({ s, b }) => {
   const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = s; });
@@ -116,9 +134,12 @@ const stat = async (shotB64, box) => p.evaluate(async ({ s, b }) => {
   return { mean, sd: Math.sqrt(varc) };
 }, { s: "data:image/png;base64," + shotB64, b: box });
 
-/* 只量玻璃的邊緣一圈（避開中央的字），才看得出模糊與提亮 */
-const RING = { x: PANEL.x + 8, y: PANEL.y + 8, w: PANEL.w - 16, h: 34 };
-const bare = await stat(bareB64, RING);
+/* ⚠ 量「玻璃有沒有生效」要挑對話框裡**沒有字**的一塊 —— 字塊約 x532~748、y58~278，
+   所以取**框線與字之間**那一條（框線在 x≈468、字塊從 x532 起，取 x492~526）。
+   ⚠ 取整塊會被字的深綠拉低；貼著框放又會量到框線本身
+   —— 第一版兩個都踩到了（不加玻璃那一格居然量出「起伏變大 42%」）。 */
+const RING = { x: 492, y: 120, w: 34, h: 110 };
+
 
 const CASES = [];
 for (const font of ["mplus", "zenmaru", "ntc"])
@@ -126,8 +147,76 @@ for (const font of ["mplus", "zenmaru", "ntc"])
     CASES.push({ id: `hero-${font}-${gk}`, font, gk });
 
 const report = [];
-console.log(`底圖那一圈：亮度 ${bare.mean.toFixed(3)}　起伏 ${bare.sd.toFixed(4)}`);
-console.log("案                    玻璃  提亮      模糊(起伏降幅)  字在聊天室  檔案");
+const lin = (v) => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; };
+const Yof = (r, g, b) => .2126 * lin(r) + .7152 * lin(g) + .0722 * lin(b);
+const crf = (a, b) => (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+const Ydeep = Yof(0x2c, 0x52, 0x38);
+
+/* 對話框那條線的遮罩（只有線、沒有照片沒有字），用來量「線壓在什麼亮度上」 */
+await p.setContent(page("ntc", GLASS.none, false, true, false)
+  .replace("stroke:" + DEEP, "stroke:#fff"), { waitUntil: "load" });
+const lineMaskB64 = (await p.screenshot({ clip })).toString("base64");
+
+/* 沒有對話框的底圖（量線的背景用） */
+await p.setContent(page("ntc", GLASS.none, false, false), { waitUntil: "load" });
+const photoOnlyB64 = (await p.screenshot({ clip })).toString("base64");
+
+const underMask = async (maskB64, bgB64) => p.evaluate(async ({ m, b }) => {
+  const load = (d) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = d; });
+  const [mi, bi] = await Promise.all([load(m), load(b)]);
+  const cv = document.createElement("canvas"); cv.width = mi.width; cv.height = mi.height;
+  const cx = cv.getContext("2d");
+  cx.drawImage(mi, 0, 0); const M = cx.getImageData(0, 0, cv.width, cv.height).data;
+  cx.clearRect(0, 0, cv.width, cv.height); cx.drawImage(bi, 0, 0);
+  const B = cx.getImageData(0, 0, cv.width, cv.height).data;
+  const out = [];
+  for (let i = 0; i < M.length; i += 4) if (M[i] > 200) out.push([B[i], B[i + 1], B[i + 2]]);
+  return out;
+}, { m: "data:image/png;base64," + maskB64, b: "data:image/png;base64," + bgB64 });
+
+const linePx = await underMask(lineMaskB64, photoOnlyB64);
+if (linePx.length < 3000) throw new Error(`對話框的線只量到 ${linePx.length} 個像素 —— 八成沒畫出來`);
+{
+  let bad = 0;
+  for (const [r, g, b] of linePx) if (crf(Ydeep, Yof(r, g, b)) < 3) bad++;
+  console.log(`對話框那條線：${linePx.length} px，壓在對比低於 3 的地方 ${(bad / linePx.length * 100).toFixed(1)}%`);
+  if (bad / linePx.length > 0.12)
+    throw new Error(`線有 ${(bad / linePx.length * 100).toFixed(0)}% 落在對比不足的地方 —— 換個落點`);
+}
+
+
+/* ⚠⚠⚠ 模糊要在**有紋理的地方**量，不能在平滑的天空上量。
+   2026-09-03 踩過：RING 落在乾淨的天空，而**模糊不會改變平滑漸層的起伏** ——
+   量出 0% 降幅，害我以為 backdrop-filter 又被丟掉，其實它一直有生效
+   （另外做了一張探測圖，紅招牌明顯糊了）。
+   所以拆成兩件各自量：
+     ① 模糊 —— 開／關兩張圖在對話框範圍內的平均差異（一次性）
+     ② 白底 —— RING 的亮度提升（每一案） */
+{
+  const bbox = { x: BUBBLE.x, y: BUBBLE.y, w: BUBBLE.w, h: BUBBLE.h };
+  const shot = async (blur) => {
+    await p.setContent(page("ntc", { a: .001, blur }, false, true), { waitUntil: "load" });
+    return (await p.screenshot({ clip })).toString("base64");
+  };
+  const [on, off] = [await shot(11), await shot(0)];
+  const diff = await p.evaluate(async ({ a, b, box }) => {
+    const load = (d) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = d; });
+    const [ia, ib] = await Promise.all([load(a), load(b)]);
+    const cv = document.createElement("canvas"); cv.width = 1040; cv.height = 520;
+    const cx = cv.getContext("2d");
+    cx.drawImage(ia, 0, 0); const A = cx.getImageData(box.x, box.y, box.w, box.h).data;
+    cx.clearRect(0, 0, 1040, 520); cx.drawImage(ib, 0, 0);
+    const B = cx.getImageData(box.x, box.y, box.w, box.h).data;
+    let sum = 0, n = 0;
+    for (let i = 0; i < A.length; i += 4) { sum += Math.abs(A[i] - B[i]); n++; }
+    return sum / n;
+  }, { a: "data:image/png;base64," + on, b: "data:image/png;base64," + off, box: bbox });
+  console.log(`模糊生效檢查：對話框範圍內平均差 ${diff.toFixed(2)} 階（0 ＝ 完全沒作用）`);
+  if (diff < 1) throw new Error(`模糊沒有生效（平均差 ${diff.toFixed(2)} 階）—— 濾鏡八成被裁切吃掉了`);
+}
+
+console.log("案                    玻璃  白底提亮   字在聊天室  檔案");
+let base = null;                         /* 每換一支字體，用它自己的 none 當基準 */
 for (const c of CASES) {
   const g = GLASS[c.gk];
   await p.setContent(page(c.font, g, true, true), { waitUntil: "load" });
@@ -137,31 +226,33 @@ for (const c of CASES) {
 
   const shotB64 = (await p.screenshot({ clip })).toString("base64");
   const m = await stat(shotB64, RING);
-  const lift = m.mean - bare.mean;
-  const drop = (1 - m.sd / bare.sd) * 100;
+  if (c.gk === "none") { base = m; }
+  if (!base) throw new Error("還沒有基準 —— CASES 的順序必須讓 none 排在同一支字體的最前面");
+  const lift = m.mean - base.mean;
+  const drop = (1 - m.sd / base.sd) * 100;
 
-  /* 字實際多大（量字面框，不是字級） */
+  /* 字實際多大（量 SVG 的字面框，不是字級） */
   const box = await p.evaluate(() => {
-    const bs = [...document.querySelectorAll(".g b")];
-    const r0 = bs[0].getBoundingClientRect(), r1 = bs[bs.length - 1].getBoundingClientRect();
-    return { w: Math.round(r0.width), h: Math.round(r1.bottom - r0.top), fs: parseFloat(getComputedStyle(bs[0]).fontSize) };
+    const t = document.querySelector("text");
+    const r = t.getBBox();
+    return { w: Math.round(r.width), h: Math.round(r.height),
+             fs: parseFloat(getComputedStyle(t).fontSize) };
   });
   const onChat = box.fs * 232 / 1040;
 
-  /* ⚠ 守門：宣告了玻璃就一定要看得到效果，不然是 backdrop-filter 被靜靜忽略 */
   if (g.a > 0 && lift < .02)
     throw new Error(`${c.id} 玻璃沒有提亮（${lift.toFixed(4)}）—— 遮罩八成沒生效`);
-  if (g.blur > 0 && drop < 15)
-    throw new Error(`${c.id} 起伏只降 ${drop.toFixed(0)}% —— backdrop-filter 八成被忽略了`);
   if (onChat < 11)
     throw new Error(`${c.id} 字在聊天室只有 ${onChat.toFixed(1)}px，低於 11px 的下限`);
+  if (STROKE * 232 / 1040 < 1.5)
+    throw new Error(`對話框的線在聊天室只有 ${(STROKE * 232 / 1040).toFixed(1)}px，太細會看不見`);
 
   const kb = fs.statSync(file).size / 1024;
   report.push({ ...c, glass: g.label, alpha: g.a, blur: g.blur,
                 lift: +lift.toFixed(4), drop: +drop.toFixed(1),
-                fs: box.fs, onChat: +onChat.toFixed(1), kb: Math.round(kb) });
-  console.log(`${c.id.padEnd(21)} ${g.label.padEnd(5)} ${lift >= 0 ? "+" : ""}${lift.toFixed(3)}` +
-    `   ${drop >= 0 ? " " : ""}${drop.toFixed(0)}%          ${onChat.toFixed(1)}px      ${kb.toFixed(0)}KB`);
+                fs: box.fs, tw: box.w, th: box.h, onChat: +onChat.toFixed(1),
+                lineOnChat: +(STROKE * 232 / 1040).toFixed(1), kb: Math.round(kb) });
+  console.log(`${c.id.padEnd(21)} ${g.label.padEnd(5)} ${lift >= 0 ? "+" : ""}${lift.toFixed(3)}    ${onChat.toFixed(1)}px      ${kb.toFixed(0)}KB`);
 }
 await browser.close();
 fs.writeFileSync(path.join(HERE, "report.json"), JSON.stringify(report, null, 2));
