@@ -97,7 +97,7 @@ Zen Maru 圓體、尾巴根 62／長 70。切換條收起來了。</p>
 <script>
 (function () {
   "use strict";
-  var r = {"id":"hero-zenmaru","font":"zenmaru","lineGap":45,"lineGapOnChat":10,"clear":15,"lhRatio":1.34,"boxW":415,"boxH":349,"bang":"!","bangDeg":12,"tailAim":[395,397],"tailAng":163,"tailTip":[502,365],"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":130};
+  var r = {"id":"hero-zenmaru","font":"zenmaru","lineGap":45,"lineGapOnChat":10,"clear":15,"lhRatio":1.34,"boxW":415,"boxH":349,"bang":"!","bangDeg":12,"bangDy":10,"bangBold":3.5,"tailAim":[395,397],"tailAng":163,"tailTip":[502,365],"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":130};
   var src = r.id + ".jpg";
   document.getElementById("shot").src = src;
   document.getElementById("mini").src = src;
@@ -113,7 +113,8 @@ Zen Maru 圓體、尾巴根 62／長 70。切換條收起來了。</p>
     + "　<span class='k'>框</span> <b>" + r.boxW + "\u00d7" + r.boxH + "</b>"
     + "　<span class='k'>字離框邊</span> <b>" + r.clear + "px</b>"
     + "<br><span class='k'>驚嘆號</span> <b>半形「" + r.bang + "」斜 " + r.bangDeg + "\u00b0</b>"
-    + "<span class='k'>（字級 .86 倍，接在「哩厚」的基線上）</span>"
+    + "<span class='k'>（字級 .86 倍，比「哩厚」的基線低 " + r.bangDy + "px，"
+    + "同色描邊 " + r.bangBold + "px 加粗）</span>"
     + "<br><span class='k'>形狀</span> <b>超橢圓 " + r.nExp + "</b>（沒有缺口）"
     + "　<span class='k'>框線</span> <b>" + r.stroke + "px</b>（聊天室 " + r.strokeOnChat + "px）"
     + "　<span class='k'>玻璃</span> <b>中</b><span class='k'>（白 " + r.glassA + "、模糊 " + r.glassBlur + "）</span>";
@@ -121,6 +122,11 @@ Zen Maru 圓體、尾巴根 62／長 70。切換條收起來了。</p>
     "⚠ <b>「哩厚」後面加了一個斜的驚嘆號。</b> 它<b>不放在同一個 &lt;text&gt; 裡</b> —— "
     + "那一行是置中對齊，加進去會把「哩厚」整個往左推，等於順手動了上一輪定案的 ±22 錯位。"
     + "所以另外一個元素，位置由<b>量到的「哩厚」右緣與基線</b>決定，「哩厚」一格都沒動。"
+    + "<br>⚠ <b>「粗一點」不是把它放大</b> —— 放大會連高度一起長，還會把墨推出框外；"
+    + "字重也加不上去（Zen Maru 只到 900，已經是最粗的）。做法是<b>同色描邊 ＋ "
+    + "paint-order</b>，和站上地圖那顆「P」加粗的手法同一個。"
+    + "量到：豎筆 <b>7px → 11px</b>，仍然比「哩厚」的筆畫（14px）細一點 —— "
+    + "標點比字瘦是對的。"
     + "<br>⚠ 用<b>半形</b>的「!」不是全形的「！」：全形在中文字型裡兩側各留一大塊空，"
     + "斜過去之後那塊空會把它推得離「厚」很遠。"
     + "<br>⚠ 字型是<b>照字切過的子集</b>，所以先把「!」加進去重切一次才畫得出來 —— "

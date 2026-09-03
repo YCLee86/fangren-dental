@@ -64,7 +64,14 @@ const FS = 104, STAGGER = 22;
      位置由**量到的「哩厚」右緣**決定，「哩厚」一格都不動。
    ⚠ 半形的「!」不是全形的「！」：全形在 CJK 字型裡兩側各留一大塊空，
      轉了角度之後那塊空會把它推得離「厚」很遠。 */
-const BANG = { ch: "!", deg: 12, gap: 16, dy: 0, scale: .86 };
+const BANG = { ch: "!", deg: 12, gap: 16, dy: 10, scale: .86, bold: 3.5 };
+/* dy ＝ 往下移多少（正的是往下，從「哩厚」的基線起算）；bold ＝ 同色描邊的寬度。
+   四格比過（下移 0／6／10／14，描邊 0／2.5／3.5／5），取第三格。 */
+/* ⚠⚠ 「粗一點」不能靠放大 scale —— 那會連高度一起長，還會把墨推出框外。
+   字重也加不上去：Zen Maru Gothic 這一支只到 900，已經是最粗的了。
+   做法是**同色描邊 ＋ paint-order: stroke**（描邊畫在填色底下，所以不會吃掉字腔），
+   和站上地圖那顆「P」加粗的手法同一個（CLAUDE.md 第九節「位置與周邊停車」那一列）。
+   ⚠ 描邊寬度是**兩側各一半**，所以 3.5 的描邊等於整體胖 3.5px。 */
 
 /* ✅ 定案：兩行的距離「更開」、框「更大」（＝ 前一版的 1.18 倍） */
 const LH = 1.34;
@@ -156,6 +163,7 @@ text{font-family:"${FAM[fontId]}";font-weight:900;font-size:${FS}px;fill:${DEEP}
     </text>
     ${bang ? `<text x="${bang.x.toFixed(1)}" y="${bang.y.toFixed(1)}" text-anchor="start"
       font-size="${(FS * BANG.scale).toFixed(1)}px"
+      stroke="${DEEP}" stroke-width="${BANG.bold}" stroke-linejoin="round" paint-order="stroke"
       transform="rotate(${BANG.deg} ${bang.x.toFixed(1)} ${bang.y.toFixed(1)})">${BANG.ch}</text>` : ""}
   </svg>
 </div>`;
@@ -260,7 +268,7 @@ for (const c of CASES) {
     lineGap: +m.lineGap.toFixed(0), lineGapOnChat: +(m.lineGap * 232 / 1040).toFixed(1),
     clear: +clear.toFixed(0), lhRatio: LH,
     boxW: Math.round(BOX.w), boxH: Math.round(BOX.h),
-    bang: BANG.ch, bangDeg: BANG.deg,
+    bang: BANG.ch, bangDeg: BANG.deg, bangDy: BANG.dy, bangBold: BANG.bold,
     tailAim: AIM, tailAng: +(GEO.aimAng * 180 / Math.PI).toFixed(0),
     tailTip: GEO.tip.map((v) => +v.toFixed(0)),
     fs: FS, onChat: +onChat.toFixed(1), stroke: STROKE,

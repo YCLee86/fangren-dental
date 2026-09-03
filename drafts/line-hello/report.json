@@ -10,6 +10,8 @@
     "boxH": 349,
     "bang": "!",
     "bangDeg": 12,
+    "bangDy": 10,
+    "bangBold": 3.5,
     "tailAim": [
       395,
       397
