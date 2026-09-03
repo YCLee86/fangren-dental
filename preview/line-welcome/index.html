@@ -41,7 +41,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:15px/1.7 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  padding:18px 16px 40px}
+  padding:18px 16px 96px}
 h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .lede{color:var(--ink-soft);font-size:.86rem;margin:0 0 16px}
 .lede b{color:var(--ink)}
@@ -74,7 +74,7 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
    這裡的值要和 welcome-card.json 的 `size` 逐字相同，check-welcome.mjs 會比對 */
 .hc .btn img{flex:none;display:block}
 .hc .btn.fill img{width:34px}
-.hc .btn.line img{width:47px}
+.hc .btn.line img{width:42px}
 .hc .btn span{font-size:16px;line-height:1.3;font-weight:700;letter-spacing:.02em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hc .btn.fill{background:var(--green);color:#fff}
@@ -90,6 +90,17 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .note{border-left:3px solid var(--rule);padding-left:11px;color:var(--ink-soft);
   font-size:.79rem;margin-top:13px}
 .note code{font-size:.94em;overflow-wrap:anywhere;word-break:break-all}
+/* 切換條：只剩一把尺（介紹那顆 logo 多寬）。⚠ 定案之後連同 data-* 一起刪掉 */
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(244,244,245,.97);
+  border-top:1px solid var(--rule);padding:9px 12px calc(9px + env(safe-area-inset-bottom));
+  backdrop-filter:blur(8px);z-index:9}
+.bar .r{display:flex;align-items:center;gap:8px}
+.bar .lb{flex:none;font-size:.72rem;color:var(--ink-soft)}
+.bar .g{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.bar .g::-webkit-scrollbar{display:none}
+.bar button{font:inherit;font-size:.75rem;padding:4px 11px;border-radius:7px;white-space:nowrap;
+  flex:none;border:1px solid var(--deep);background:#fff;color:var(--deep);cursor:pointer}
+.bar button[aria-pressed="true"]{background:var(--deep);color:#fff}
 </style>
 </head>
 <body>
@@ -106,6 +117,13 @@ Flex 的按鈕不支援圖示，所以改成<b>可點的盒子</b>（圖示＋�
 <div class="panel" id="panel"></div>
 <p class="note" id="note"></p>
 
+<!-- ⚠ 切換條一定要放在**頁尾那支腳本前面** —— 它不是 defer，解析到就跑，
+     那時後面的東西還不存在，getElementById 會回 null（踩過）。
+     ⚠ 這句話刻意不貼那個標籤本身（CLAUDE.md 第九節第 8 條的近親：
+     註解裡出現標籤字樣，抓區塊的工具會從這裡開始切）。 -->
+<div class="bar">
+  <div class="r"><span class="lb">介紹那顆 logo</span><span class="g" id="sw-w"></span></div>
+</div>
 
 <script>
 (function () {
@@ -141,6 +159,15 @@ Flex 的按鈕不支援圖示，所以改成<b>可點的盒子</b>（圖示＋�
       '<p class="say" id="s2">' + SAY_SHARE + '</p>' +
       '<span class="btn line" id="b2"><img src="mark-green.png" alt=""><span>介紹芳仁給朋友</span></span>' +
       '</div></div>';
+    /* ⚠ 用 inline style 覆寫，**不要動樣式表那一行** —— 那一行是「沒有 JS 時的樣子」，
+       而且 check-welcome.mjs 拿它去對 JSON 的 size。 */
+    document.querySelector("#b2 img").style.width = w + "px";
+    chips();
+    /* ⚠ 剛用 innerHTML 生出來的 <img> 還沒載完，`complete` 是 false ——
+       墨面積那一段會靜靜地印不出來（踩過）。載好再量一次。 */
+    [].forEach.call(document.querySelectorAll("#b1 img, #b2 img"), function (im) {
+      if (!im.complete) im.addEventListener("load", measure, { once: true });
+    });
     measure();
   }
 
@@ -177,6 +204,27 @@ Flex 的按鈕不支援圖示，所以改成<b>可點的盒子</b>（圖示＋�
     return { n: keys.length, last: g[keys[keys.length - 1]].join("") };
   }
 
+  /* ⚠⚠ 「有點大有點粗」量出來是**墨量**不是厚度：兩顆形狀的「厚度 ÷ 高度」
+     幾乎一樣（白 85.8%、綠 86.3%），差的是它鋪了多長。所以面板印的是**墨面積**。 */
+  function mass() {
+    var i1 = document.querySelector("#b1 img"), i2 = document.querySelector("#b2 img");
+    if (!i1.complete || !i2.complete) return "";
+    var r1 = i1.getBoundingClientRect(), r2 = i2.getBoundingClientRect();
+    var a1 = inkFrac(i1, "white") * r1.width * r1.height;
+    var a2 = inkFrac(i2, "green") * r2.width * r2.height;
+    var pct = a2 / a1 * 100;
+    var t = document.querySelector("#b2 span").getBoundingClientRect();
+    return "<br><span class='k'>綁定那顆</span> <b>" + r1.width.toFixed(0) + "×"
+      + r1.height.toFixed(1) + "</b>　<span class='k'>介紹那顆</span> <b>"
+      + r2.width.toFixed(0) + "×" + r2.height.toFixed(1) + "</b>"
+      + "<br><span class='k'>介紹那顆的墨是綁定那顆的</span> <b>" + pct.toFixed(0) + "%</b> "
+      + (pct > 110 ? "<span class='no'>比上面那顆重</span>"
+         : pct < 85 ? "<span class='no'>比上面那顆輕</span>"
+                    : "<span class='ok'>兩顆一樣重</span>")
+      + "　<span class='k'>它的高 ÷ 字的墨高</span> <b>"
+      + (r2.height / 16.25 * 100).toFixed(0) + "%</b>";
+  }
+
   function measure() {
     var b1 = document.getElementById("b1"), b2 = document.getElementById("b2");
     var cs = getComputedStyle(b1);
@@ -204,14 +252,22 @@ Flex 的按鈕不支援圖示，所以改成<b>可點的盒子</b>（圖示＋�
                                             : "<span class='ok'>都放得下</span>")
       + ln("開場", hi) + ln("選單那句", mn) + ln("綁定那句", s1) + ln("介紹那句", s2)
       + "<br><span class='k'>整張卡</span> <b>" + card.height.toFixed(0) + "px</b>"
-      + "　<span class='k'>佔你這一屏</span> <b>" + (card.height / vh * 100).toFixed(0) + "%</b>";
+      + "　<span class='k'>佔你這一屏</span> <b>" + (card.height / vh * 100).toFixed(0) + "%</b>"
+      + mass();
     document.getElementById("note").innerHTML =
       "⚠⚠ <b>按鈕上的 logo 不能用 Flex 的 <code>button</code></b> —— 它只有一個 label，"
       + "不支援圖示。所以兩顆按鈕都做成<b>可點的 box</b>（box 掛 action），裡面 image ＋ text。"
       + "代價是失去按鈕內建的按壓效果，換來完全的排版控制。"
       + "<br>⚠ <b>logo 要兩顆不同顏色</b>：白的疊在實心綠按鈕上、深階綠的疊在外框按鈕上。"
       + "透明底的暗綠疊在綠底上會看不見，不能只做一顆。"
-      + "路徑取的是<b>站上頁首那一條</b>（和 assets/logo.png 同一條）。"
+      + "<b>綁定</b>那顆是站上頁首那一條（和 assets/logo.png 同一條，長寬比 2.03）、"
+      + "<b>介紹</b>那顆是你選的 <code>brand/shapes/shape-r2c3</code>（細長那一顆，3.08）。"
+      + "<br>⚠⚠ 你說<b>「有點大有點粗」</b>，量出來是<b>墨量</b>不是厚度 —— "
+      + "兩顆形狀的「厚度 ÷ 高度」幾乎一樣（白 85.8%、綠 86.3%），"
+      + "差在<b>它鋪了多長</b>：47px 那一格的墨是綁定那顆的 <b>123%</b>。"
+      + "現在預設 <b>42px</b>（墨 98% ＝ 兩顆一樣重）。底下那把尺可以直接比："
+      + "<b>47</b>（上次）／<b>42</b>／<b>38</b>／<b>34</b>（＝和上面那顆同寬，但只有 11px 高）。"
+      + "<br>⚠ Flex 的 <code>size</code> 給的是<b>寬度</b>不是高度，所以兩顆不能寫同一個數字。"
       + "<br>⚠ 「LINE」前面那個空格<b>縮小了</b>：半形空格 3.89px → <b>2.52px</b>（窄 35%）。"
       + "做法是<b>普通的半形空格 ＋ 把它縮到 9px</b>，不是 U+2009／U+200A 那種細空格 —— "
       + "細空格要看系統字型有沒有那個字，沒有會變豆腐；縮小普通空格的最壞情況只是"
@@ -225,6 +281,42 @@ Flex 的按鈕不支援圖示，所以改成<b>可點的盒子</b>（圖示＋�
       + "電話在選單的「診所資訊」與帳號主頁上。"
       + "<br>⚠⚠ 兩顆按鈕的網址都還拿不到：「介紹芳仁給朋友」要用推薦官方帳號的深連結"
       + "（<code>" + SHARE + "</code>，<b>沒有實測過</b>）；「點這裡綁定」的網址是廠商系統產的。";
+  }
+
+  /* ⚠⚠ 這把尺只有一個值：介紹那顆 logo 多寬。
+     使用者 2026-09-03：「那個新加的 logo 感覺有點大有點粗，和字的比例怪怪的」。
+     量出來他說的是**墨量**不是厚度 —— 兩顆形狀的「厚度 ÷ 高度」幾乎一樣
+     （白 85.8%、綠 86.3%），但 47px 那一格的墨是白那顆的 **123%**。
+     ⚠ Flex 的 size 給的是**寬度**，所以這裡的值就是 JSON 的 size。 */
+  var WIDTHS = [47, 42, 38, 34];
+  var DEF = 42;                       /* ＝墨面積和白那顆一樣（98%）。CSS 的預設值也是它 */
+  var w = +(location.search.match(/[?&]gw=(\d+)/) || [])[1];
+  if (WIDTHS.indexOf(w) < 0) w = DEF;
+
+  /* 墨佔多少（不透明像素的比例）—— 線上是同源，直接量；
+     ⚠ 本機用 file:// 開的話 canvas 會被 taint（SecurityError），退回 mark-png.mjs 印過的值。 */
+  var INK = { white: .797, green: .778 };
+  function inkFrac(img, key) {
+    try {
+      var cv = document.createElement("canvas");
+      cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+      cv.getContext("2d").drawImage(img, 0, 0);
+      var d = cv.getContext("2d").getImageData(0, 0, cv.width, cv.height).data, n = 0;
+      for (var i = 3; i < d.length; i += 4) if (d[i] > 127) n++;
+      return n / (cv.width * cv.height);
+    } catch (e) { return INK[key]; }
+  }
+
+  function chips() {
+    var host = document.getElementById("sw-w");
+    host.innerHTML = "";
+    WIDTHS.forEach(function (v) {
+      var b = document.createElement("button");
+      b.textContent = v + "px" + (v === 47 ? "（上次）" : v === DEF ? "（現在）" : "");
+      b.setAttribute("aria-pressed", v === w ? "true" : "false");
+      b.addEventListener("click", function () { w = v; render(); });
+      host.appendChild(b);
+    });
   }
 
   render();
