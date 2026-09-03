@@ -7,61 +7,261 @@
 > 醫療人員伸出手要跟診療椅上的人做出連結手勢。你們做提示詞，我放到 Gemini 上生成。
 > 插圖的風格就跟現在網站上文章一樣，手繪、有動感、生命感。
 
-出圖用 Gemini（使用者自己跑）。**這一份就是要餵進去的提示詞**，逐字可複製。
-定案之後照 ILLUSTRATION.md 第七節第 19 條把定稿版存回這一份。
+**第一版（`drafts/bind-done-v1-rejected.jpg`）被退回**，第二版的提示詞在第四節。
+第一版那份逐字留在最後的「附」（第 19 條：改圖要從上一份改，不要從零重寫）。
 
 ---
 
-## 一、規格（先確認，這幾個數字會決定構圖）
+## 一、⚠⚠⚠ 第一版被退回：三句抱怨是**同一個成因**
+
+使用者的原話：
+
+> 我是覺得這個感覺有點奇怪，少了神話中的那個寓意。而且我傳的 Q 版不但有寓意還有
+> 可愛的趣味。**在診間出現這個動作會讓人懷疑醫病關係不單純。**
+
+三句話，一個成因：**我上一輪刻意把「上帝在上、亞當在下」抹平成兩人等高**
+（理由寫在當時的第三節：品牌是「一起想辦法」「不搶戲」）。那個決定同時做掉兩件事：
+
+| 抹平之後 | 為什麼 |
+| --- | --- |
+| **寓意沒了** | 那張名畫的梗**就是**它的不對稱：神那一側是一群人、乘著紅斗篷飄在空中、主動；亞當在地上、被動、手是垂的。**對稱之後就只是兩個人在對指**，沒有人在給、也沒有人在接 —— 梗的載體被我拆掉了 |
+| **長出親密感** | 剩下的畫面是「兩個成年人，單獨在密室裡，同高、側面對坐、互相看、中間發光」—— 那是**戀愛場面的視覺語法**。在診間就變成他說的「醫病關係不單純」 |
+| **不好笑** | Q 版好笑是因為它**照抄了那個不對稱**，只把神換成「懷裡塞了一堆娃娃的媽媽」。趣味來自**那一團**，不是來自手勢 |
+
+> ⚠⚠⚠ **通則（借名畫的梗都適用，值得記住）：名畫的梗來自它的構圖關係，
+> 而那個關係常常就是不對等。為了品牌把不對等抹平，等於把梗拆了；
+> 而且「兩個人、對稱、發光」幾乎一定會滑進親密的讀法。
+> 要調的是「誰站在強的那一側」，不是「把兩側拉平」。**
+
+### 所以第二版怎麼解（三個動作，都是從 Q 版學的）
+
+1. **診所那一側改成一群人**（五六個擠成一團）—— 一對一才會有親密感，**一群人就是喜劇**。
+   而且那正是原作「神＋一群天使」的位置，寓意跟著回來。
+2. **紅斗篷換成一件鼓起來的大白袍**，整團人包在裡面、微微浮在半空。
+   那是全畫最好認的形狀 —— **觀眾第一眼就把它讀成「在玩那張名畫」**，
+   所以不會讀成兩個人之間的事。
+3. **給的方向留著**：病患的手像亞當一樣**鬆垮垮**地伸著（他不必做什麼，
+   正好對上這一則訊息「提醒交給這裡」），診所那隻手是**有意志**地伸過去。
+   兩邊都看手、**不對看**。
+
+⚠ **診所變成「神」那一側會不會太自大？** 靠喜劇解掉：那一團是**擠到快掉出來**的同事
+（有人舉牙刷當火把、有人只露出頭頂、有人半個身體掛在別人肩上），
+讀起來是「這間診所人很多、很熱鬧」，不是「診所是神」。**不搶戲靠的是好笑，不是縮小。**
+
+⚠ **火花改成一顆會發光的小牙齒** —— 原作遞出去的是「生命」，這裡遞出去的是
+診所真正給得出的那件小事。它同時是寓意也是診所的東西，比一撮抽象的線好讀。
+
+## 二、規格（沒有變）
 
 | | |
 | --- | --- |
 | 用在哪 | Ⓑ 圖卡那一案的 Flex `hero`（`/preview/line-bind-done/?v=b`） |
-| 成品尺寸 | **1040×520（2:1）** —— 和招呼圖卡的頭圖同一個規格 |
-| 生成尺寸 | ⚠ **請 Gemini 出 16:9**（2:1 不在它的選項裡），之後上下各裁掉約 6% |
-| 圖上有字嗎 | **沒有。** 卡片上的字是 Flex 的真文字，不是烘進圖裡的 —— 所以這張圖不必留安靜區，但**整張不可以有任何文字** |
-| accent | 一般牙科那一支綠（套色 `#3f654a`／深階 `#2c5238`）。畫面上由**鼠尾草綠的刷手服**與背景那道光承接 —— 和站上七科的畫法一致，不必寫 HEX |
+| 成品尺寸 | **1040×520（2:1）**，和招呼圖卡的頭圖同一個規格 |
+| 生成尺寸 | ⚠ **請 Gemini 出 16:9**（2:1 不在它的選項裡），之後上下各裁約 6% |
+| 圖上有字嗎 | **沒有。** 卡片上的字是 Flex 的真文字 —— 整張圖不可以有任何文字 |
+| accent | 一般牙科那一支綠，由**鼠尾草綠的刷手服**與背景那片淡薄荷承接。⚠ 提示詞裡不要寫 HEX（第十之二節：色值和形容詞打架時模型跟形容詞） |
 
-⚠ **不要在提示詞裡寫 HEX 色碼。** ILLUSTRATION.md 第十之二節：色值和形容詞打架時模型
-跟形容詞，寫死色碼只會讓整張偏色（第七節第 8 條踩過，整張變棕）。
+## 三、⚠ 風格換了一條路，這是要知道的取捨
 
-## 二、要附哪幾張參考圖（**分三組，一組只講一件事**）
+使用者這一輪給的三張參考（國泰產險兩張、Gransta 一張）是**平面線條風**：
+細而均勻的深線、完全平塗不上陰影、白圓臉配兩顆小圓點眼、背景物件只用細灰線不填色、
+背後幾個大淡色圓形、旁邊飄小圖示。**第二版的提示詞就是照這一路寫的。**
 
-ILLUSTRATION.md 第十二節之二：參考圖混在一起餵，模型會把每一張的每一件事都拿一點。
+⚠⚠ **代價：它和站上十一張文章 HERO、七張分享圖那一套「色鉛筆＋顆粒」不是同一個風格。**
+這張圖會出現在 LINE 上、和招呼圖卡（真實街景照）排在一起，所以它不會和站上並排比對 ——
+但那個帳號從此有兩種畫風。**要不要維持站上那一套，是你的一句話**：
+要的話我把 `STYLE` 與 `COLOUR` 兩段換成站上的寫法，構圖與那一團人完全不動。
+
+### 參考圖要附哪幾張（**分兩組，一組只講一件事**）
 
 | 組 | 檔案 | 只提供這一件 | 要跟 Gemini 說的話 |
 | --- | --- | --- | --- |
-| **A・風格** | `assets/hero-crown-photo-1600.jpg`、`assets/og-topic-general.jpg` | 線、上色、質感、人物簡化程度、**白袍＋鼠尾草綠刷手服**、診療椅與燈臂長什麼樣 | 「風格、線條、上色與人物畫法**完全照這兩張**」 |
-| **B・手勢** | `drafts/bind-done-ref-adam-gesture.jpg` | **只有「兩隻手伸出來、指尖快要碰到」那個構圖** | 「**只參考兩隻手的姿勢與距離**，畫風、人物、顏色、水墨筆觸一律不要參考」 |
-| **C・臉** | `drafts/surg-doctor-ref.jpg`（短髮女醫師） | 醫療人員的長相與髮型 | 「醫療人員的臉與髮型照這張」 |
+| **A・畫風** | `drafts/bind-done-ref-flat-1.jpg`、`drafts/bind-done-ref-flat-2.jpg` | 線的粗細、平塗、極簡的臉、誇張的動作、飄在旁邊的小圖示 | 「**線條、上色與人物畫法照這兩張**，題材不要參考」 |
+| **B・構圖** | `drafts/bind-done-ref-adam-gesture.jpg` | **只有「一邊一個人躺著、一邊一團人飄著、中間兩指快要碰到」那個關係** | 「**只參考構圖與那個手勢**，水墨筆觸、娃娃造型、顏色一律不要」 |
 
-⚠⚠ **B 那一張是別人的水墨作品**，我們拿的是米開朗基羅那個手勢（本身是公共領域），
-**不是那位作者的畫風與娃娃造型**。提示詞的 `AVOID` 段已經把 `ink-wash or sumi-e brush
-style`、`babies or chubby infant figures` 兩項擋掉了。⚠ 那張原檔是手機截圖，
-`drafts/bind-done-refs-crop.mjs` 已經把新浪的介面、中文搜尋列、Lens 按鈕與浮水印裁掉
-—— **截圖裡的中文字會被模型抄進畫面**（第七節第 4 條的反面），不要直接餵原截圖。
+⚠⚠ **使用者給的第三張（Gransta 那張多格海報）沒有裁成參考圖**：它是**放射狀拼版**，
+每一格的角度都不一樣，整張轉 0／90／180／270 都會有人是躺著的 —— 餵進去等於教模型
+畫歪掉的身體；而且格子裡還有 MENU／OK!／COFFEE 的字。
+**它的優點改成寫進提示詞的文字**（白圓臉＋小圓點眼＋一條小嘴、背景物件只用細灰線
+不上色、平塗淡彩）。原檔留在 `drafts/bind-done-src-flat-3.jpg`。
 
-## 三、⚠⚠ 一個我改掉的地方，先看一眼再決定
+⚠ 三張原檔都是滿滿的中文／日文，`drafts/bind-done-refs2-crop.mjs` 已經把介面、標題、
+按鈕與招牌全裁掉 —— **截圖裡的字會被模型抄進畫面**（ILLUSTRATION.md 第七節第 4 條的反面）。
 
-**原作是「上帝在上、亞當在下」——我把它改成兩人等高。**
-
-米開朗基羅那張的力量來自不對等：神主動、居高、被天使托著；亞當被動、躺在地上、
-手是垂的。照抄到診間就變成「醫師從上面把生命遞給病患」。可是這間診所的品牌
-一直站在反方向：HERO 的收尾句是「**到巷口的芳仁　一起想辦法**」，
-而分享圖那一輪使用者親口說品牌核心之一是「**不搶戲、和諧**」。
-
-所以提示詞裡寫死了三件：**兩人的頭同高、肩同高、兩根食指同高**，醫師是**屈膝側身
-靠過來**（不是站直了往下伸手）。⚠ **這一項不是漏看，是判斷** —— 你要原作那種
-「醫師在上」的張力的話，把 `COMPOSITION` 段那句 `THE TWO FIGURES ARE EQUALS…` 換成
-下面這一句就好：
+## 四、提示詞・第二版（逐字複製給 Gemini）
 
 ```
-The clinician stands upright and leans over him from slightly above, her shoulder line
-clearly higher than his, her reaching hand coming down towards his — she is the one giving
-and he is the one receiving.
+Cute flat-colour illustration, 16:9 landscape. A warm, funny parody of Michelangelo's
+"The Creation of Adam", set in a dental clinic.
+
+READ THIS FIRST — STYLE. This is the most important section; keep it fully in force no
+matter how long the rest of this brief is. Clean FLAT illustration in the style of a modern
+Taiwanese or Japanese brand illustration. Every outline is a THIN, EVEN-WEIGHT dark
+grey-brown line — never pure black, never thick, never varying in weight. All colour is
+FLAT: no shading, no gradients, no texture, no highlights anywhere. Faces and hands are
+left plain paper white with no shading at all. The characters are CUTE and simple: a simple
+round white face, two small round dot eyes, one tiny curved line for a smile, a small oval
+pink cheek on each side, and no nose (or a single tiny dot); hair is one flat shape drawn
+with two or three loose loops. Bodies are simplified, arms and legs are simple rounded
+tubes, and hands are simple soft mitten shapes with the fingers clearly separated. Poses
+are exaggerated and full of movement. Behind everything, three or four LARGE PALE FLAT
+CIRCLES (pale mint, cream, soft butter yellow) as decoration, plus small floating
+decorative marks: four-pointed sparkles and tiny short motion arcs. Cheerful, friendly,
+humorous — never slick, never corporate, never serious.
+
+THE JOKE — Anyone who knows the painting must recognise it at a glance: a figure lying back
+and reaching out on the left, an airborne crowd wrapped in a billowing cloak on the right,
+and the famous gap between two index fingers in the middle. It is affectionate and silly,
+not grand and not religious.
+
+COMPOSITION — THE TWO SIDES ARE DELIBERATELY UNEQUAL, exactly as in the painting. On the
+LEFT, ONE single figure, low and earthbound, lying back, relaxed and passive, filling the
+lower left. On the RIGHT, a WHOLE CROWD of clinic staff bundled together, FLOATING a little
+above the floor, clearly higher than him, tilted forward towards him, active and
+purposeful. The two index fingers almost meet at the centre of the frame, a little above
+the middle — but the two BODIES stay far apart, with a clear open area of plain pale
+background between them, about two head-widths wide. Never symmetrical, never mirrored, and
+never the same height.
+
+LEFT — THE PATIENT (the Adam of this picture) — An East Asian man in his late thirties in
+his own everyday clothes: a dusty rose crew-neck jumper and warm grey trousers, no hospital
+gown and no paper bib. He lies back in a dental chair that is reclined about thirty degrees,
+propped up on his far elbow exactly like Adam in the painting: shoulders back, chest open,
+his near knee raised and relaxed. HIS REACHING ARM IS LIMP AND HEAVY like Adam's — the
+elbow resting on his raised knee, the wrist dropped, the fingers loose, the index finger
+only lazily extended. He is not straining and not sitting up. He has just woken up: eyes
+half open, a small dopey smile, mouth slightly open. One slipper dangles off his foot,
+about to fall. He looks at the approaching hand, never at us.
+
+RIGHT — THE CLINIC CROWD (the crowd that takes God's place) — FIVE OR SIX clinic staff
+crammed into ONE BUNDLE, all East Asian, mixed ages and both sexes, all in pale sage-green
+scrubs, piled onto and around each other exactly the way the angels are piled around God:
+heads at different heights, shoulders overlapping, arms sticking out at odd angles. At the
+front of the bundle is the dentist — a woman of about forty with a short bob, wearing an
+open white coat over her scrubs — leaning right out of the bundle with her arm stretched
+towards the patient. Around and behind her, all clearly visible: one holds a big toothbrush
+up in the air like a torch; one holds up a small round hand mirror; one hugs a rinse cup
+with both arms; one is squeezed in at the back so only the top of the head and two eyes
+show; one has slipped half out of the bundle and hangs onto a colleague's shoulder with
+both hands, feet in the air. They are enjoying themselves — this must be FUNNY and WARM, a
+happy crowd of colleagues, never grand, never solemn, never divine. They look at the
+patient or at each other, in several different directions, never at us.
+
+THE BILLOWING WHITE COAT — The whole crowd is wrapped in ONE ENORMOUS BILLOWING WHITE
+DOCTOR'S COAT which takes the exact place of the red cloak in the painting: it swells out
+behind and around them in one big soft rounded shape, and its hem flies out to the right in
+two or three long waving folds. It is unmistakably a doctor's white coat — a collar,
+lapels, one big patch pocket, and a fabric belt fluttering loose. Behind it, ONE flat pale
+mint oval, a little larger than the coat, as a simple background shape — flat colour only,
+no glow, no rays, no ring, no halo.
+
+THE TWO HANDS — The dentist's arm reaches out with intent: arm straight, wrist firm, index
+finger pointing precisely at his. The patient's hand stays limp. THE FINGERTIPS DO NOT
+TOUCH: leave a small clear gap between them, about the width of one finger. Draw both hands
+simply and correctly — five fingers on each hand, no fused, extra or missing fingers.
+
+THE LITTLE TOOTH BETWEEN THEM — In the gap between the two fingertips floats a TINY CUTE
+TOOTH: a small simple cartoon tooth shape, plain white with the same thin outline, with no
+face on it, about the size of the man's thumb. Four or five SHORT STRAIGHT sparkle lines
+radiate from it and three or four small four-pointed stars sit around it. It reads as one
+small good thing being handed over. KEEP IT SMALL — the whole marking is no bigger than the
+man's head. It must not look like lightning, an explosion, a lens flare or a starburst.
+
+BACKGROUND — The clinic behind them is drawn ONLY as THIN PALE GREY OUTLINES WITH NO FILL,
+so it sits quietly behind the characters: a low counter, a cabinet, a shelf holding a
+transparent tooth model, a potted plant, and the articulated arm of the overhead treatment
+lamp coming in from the top right with its round head switched off. The floor is suggested
+with one thin line. The ground of the whole picture is plain pale cream paper. The dental
+chair is the one piece of furniture drawn in full flat colour — muted slate blue, with a
+padded headrest, a padded back, an armrest and a slim base — so that the room reads
+immediately as a dental clinic.
+
+COLOUR — Flat, cheerful and restrained. Pale cream paper as the ground. PALE SAGE GREEN is
+the accent colour of the picture: all the scrubs, and the pale mint oval behind the coat.
+The white coat and the faces are white. The patient wears dusty rose and warm grey, clearly
+a different colour family from the staff, so the two sides read apart at a glance. The
+chair is muted slate blue. Background circles in pale mint, cream and soft butter yellow.
+Small pink cheeks on every face. No dark or heavy areas, no black fills, no neon, never
+greyscale.
+
+CROP SAFETY — This image will be cropped to a 2:1 letterbox by cutting an equal strip from
+the top and from the bottom, about 6% of the height each. Everything that matters — both
+fingertips and the little tooth between them, the patient's face, the dentist's face, the
+whole bundle of staff and the chair's headrest — must sit comfortably inside the central
+horizontal band, well away from the top and bottom edges. Put nothing essential in the top
+sixth or the bottom sixth of the frame.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, labels or watermarks, in any language. The white coat and its pocket
+carry no embroidery, no name badge and no writing; the scrubs are blank; the rinse cup, the
+mirror handle and the toothbrush are blank; every bottle, tube and box is blank; there is no
+poster or screen with writing on it; the chair carries no branding. Wherever writing would
+normally appear, leave the surface plain.
+
+AVOID — photorealism; the Renaissance fresco or oil-painting look; ink-wash or sumi-e brush
+style; coloured-pencil or crayon texture; shading, gradients, hatching or paper texture
+inside the flat colours; thick or uneven black outlines; chubby naked babies; NUDITY of any
+kind — everybody is fully dressed; a god figure, angels, wings, haloes, rays of golden
+light, clouds or sky — nothing religious except the pose itself; A ONE-TO-ONE SCENE — the
+right-hand side must be a CROWD, never a single person alone with the patient; the two
+sides being the same height, symmetrical or mirrored; ANY ROMANTIC OR INTIMATE MOOD — the
+patient and the dentist must NOT look into each other's eyes, must not blush at each other,
+and there is no soft romantic glow between them; anything inside the patient's mouth; any
+instrument near his face; a syringe, a drill or a probe; blood, wounds, pain or fear; face
+masks covering faces; anybody looking at the viewer; hands with the wrong number of fingers.
 ```
 
-## 四、提示詞（逐字複製給 Gemini）
+## 五、可以加、但沒有預設加的一句
+
+**手機**（原本第一版就有這個選項，仍然成立）：這一則訊息講的是「以後提醒會發到這裡」，
+所以病患手邊放一支手機會讓圖和訊息對得起來。想加就接在 `LEFT — THE PATIENT` 段最後：
+
+```
+A mobile phone lies on the armrest beside his limp hand, seen from the side, its screen
+blank and dark with nothing on it at all.
+```
+
+⚠ 兩個代價：① 空白螢幕是這個站踩過的地方，模型很愛在上面長出亂碼英文（第七節第 4 條）；
+② 那一團人已經很熱鬧，再多一個道具會更擠。**手勢加那顆小牙齒已經把意思講完了。**
+
+## 六、驗收（生成之後逐條看，任何一條沒過就重生成，不要後製）
+
+**先看這三條，第一版就是死在這裡：**
+
+1. **右邊是一群人（五個以上），不是一個人。** 只有一個人 ＝ 回到第一版那個問題。
+2. **兩側明顯不對等**：右邊那一團**比病患高、而且在飄**；病患躺著、手是鬆的。
+3. **兩人沒有對看**（都看手），中間沒有柔焦的浪漫光暈。
+
+其餘：
+
+4. **一眼認得出是那張名畫**（躺著的人 ＋ 飄著的一團 ＋ 中間那個指尖的空隙）。
+5. **好笑**：那一團裡至少有兩個明顯的笑點（舉牙刷當火把／只露出頭頂／掛在別人肩上）。
+6. **兩根食指沒有碰到**，間距約一個指節；中間那顆小牙齒不大於一個頭。
+7. **整張沒有任何文字**（白袍口袋、名牌、杯子、鏡柄、瓶罐、椅子都要清）。
+8. **沒有宗教語彙**：翅膀、光環的環、雲、天空、放射狀金光、上帝。
+9. **沒有裸體、沒有娃娃**（Q 版那個是娃娃，我們不是）。
+10. **線是細而均勻的深灰褐**，平塗、沒有陰影與顆粒（這一版刻意不是站上那套色鉛筆）。
+11. **診療椅一眼看得出是診療椅**；背景其餘只有細灰線、沒有填色。
+12. **手指數量正確**；病患嘴裡沒有東西、臉旁邊沒有器械。
+13. **中央那條 2:1 的帶子裡**裝得下兩張臉、兩隻手、那一團人與椅子的頭靠。
+
+## 七、生成之後給我，我接下來要做的
+
+1. 裁成 **1040×520**（2:1，上下對稱裁）→ `preview/line-bind-done/hero-bind.jpg`。
+2. 接進提案頁 Ⓑ 那一案的卡片頭圖，面板重量一次高度與佔一屏
+   （加 2:1 頭圖之後那一案大約從 350px 長到 480px ＝ 390×844 上約 57%）。
+3. 定案之後：這一份存下定稿提示詞、圖進 `assets/line/`（⚠ 那個資料夾還不存在，
+   `tools/dist.mjs` 也還沒有它，見 CLAUDE.md 第十一之七節第 3 項）、
+   Flex 的 `hero.url` 指過去。
+
+---
+
+## 附、第一版的提示詞（**被退回**，逐字保留）
+
+成品是 `drafts/bind-done-v1-rejected.jpg`。被退回的理由與診斷在第一節 ——
+**核心錯誤是「兩人等高」那一段**（下面 `COMPOSITION` 段那句
+`THE TWO FIGURES ARE EQUALS…`）。留著這一份是因為第 19 條：
+改圖要從上一份改、只換出問題的那一段，不要從零重寫。
 
 ```
 Editorial illustration, 16:9 landscape.
@@ -193,43 +393,3 @@ outlines; chrome or iridescent gradients; decorative gradients inside the flat c
 areas; flat untextured single-tone clothing; anybody looking at the viewer; hands with the
 wrong number of fingers.
 ```
-
-## 五、可以加、但我沒有預設加的一句
-
-**手機**。這一則訊息講的是「綁定完成、以後提醒會發到這裡」，所以病患手邊放一支手機
-會讓圖和訊息對得起來。想加就把這一句接在 `THE PATIENT` 段的最後：
-
-```
-A mobile phone lies on the armrest beside his hand, seen from the side, its screen blank
-and dark with nothing on it at all.
-```
-
-⚠ **兩個代價，先知道再決定**：① 空白螢幕是這個站踩過的地方 —— 模型很愛在螢幕上長出
-亂碼英文（第七節第 4 條），`CRITICAL` 段已經點名螢幕，但仍然要逐張檢查；
-② 畫面上會多一個要看的東西，和指尖那撮短線搶注意力。**手勢本身已經把意思講完了**，
-所以預設不放。
-
-## 六、驗收（生成之後逐條看，任何一條沒過就重生成，不要後製）
-
-1. **兩根食指沒有碰到**，間距約一個指節；**兩指尖等高**（高度差不超過圖高的 3%）。
-2. **兩人的頭同高**（除非你選了第三節那個「醫師在上」的版本）。
-3. **整張沒有任何文字** —— 白袍口袋、名牌、牆上的畫、瓶罐、螢幕、椅子上的商標都要清。
-4. **沒有宗教語彙**：雲、天空、光環的環、長袍、翅膀、天使、放射狀金光、有人在飄。
-5. **沒有裸體**，兩個人都穿正常衣服。
-6. **手指數量正確**，沒有融合或多出來的手指。
-7. **指尖之間是一群短線**（五六條、同向、不閉合、不交叉、不長過半個手掌），
-   整撮不高於一個頭 —— 一條長曲線會被讀成靈魂出竅（第七節第 17 條）。
-8. **病患嘴巴是閉的**，嘴裡沒有東西，臉旁邊沒有器械。
-9. **兩人不同色系**（醫師鼠尾草綠、病患赭土或暗玫瑰），衣服不是單一平色、有兩三階與皺褶。
-10. **線不是純黑**，整張有細顆粒質感，四角有紙白透出來。
-11. **中央那條 2:1 的帶子裡**裝得下兩張臉、兩隻手與椅子的頭靠 —— 上下各裁 6% 不會切到。
-12. **診療椅一眼看得出是診療椅**（頭靠＋燈臂）；器械都在遠處、很淡。
-
-## 七、生成之後給我，我接下來要做的
-
-1. 裁成 **1040×520**（2:1，上下對稱裁）並存成 `preview/line-bind-done/hero-bind.jpg`。
-2. 接進提案頁 Ⓑ 那一案的卡片頭圖，面板會跟著重量一次高度與佔一屏的百分比
-   （加了 2:1 的頭圖，那一案會從 350px 長到大約 480px ＝ 390×844 上約 57%）。
-3. 定案之後：這一份存下定稿提示詞、圖進 `assets/line/`（⚠ 那個資料夾還不存在，
-   `tools/dist.mjs` 也還沒有它，見 CLAUDE.md 第十一之七節第 3 項）、
-   Flex 的 `hero.url` 指過去。
