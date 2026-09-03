@@ -50,8 +50,30 @@ const sc = W / CW;
      遮陽棚上緣 y≈360
    對話框放在建築右邊的天空，**尾巴往左下指到清水模外牆**，
    看起來就是這棟房子在說話。⚠ 尾巴不可以穿過紅招牌 —— 所以框放左邊不放右邊。 */
-const BUBBLE = { x: 468, y: 18, w: 344, h: 300, r: 88, amp: 5, seed: 3,
-                 tail: { at: .63, spread: .055, tipX: 432, tipY: 352 } };
+const BUBBLE = { x: 512, y: 22, w: 344, h: 296, r: 86, amp: 5, seed: 3,
+                 tail: { at: .635, spread: .075, len: 70, angle: 150 } };
+/* ⚠⚠ 2026-09-03 使用者：「對話框和房子有點擠，那個延伸角形拉好長好怪。」兩件都對：
+   ・框原本在 x468，離外牆右緣（x≈430）只有 **38px**  → 挪到 x512，空出 **82px**
+   ・尾巴原本是絕對座標的尖端，實際長 **148px** —— 那是一根刺不是對話框的尾巴
+     → 改成「長度＋角度」表示，收到 **70px**、根部加寬（spread .055 → .075）
+   九組試過（離房子 38/82/126 × 尾巴 45/70/95）之後定這一組。
+   ⚠ 尾巴的角度 150° 是往左下 —— 指向房子那一側。 */
+const SIGN = { x0: 620, y0: 165, x1: 660, y1: 325 };   /* 劉家那支紅招牌 */
+{
+  const rad = BUBBLE.tail.angle * Math.PI / 180;
+  /* 尾巴根部大約在下緣左段（見 bubble.mjs 的周長順序），尖端由長度與角度算出來 */
+  const bx = BUBBLE.x + 102.5, by = BUBBLE.y + BUBBLE.h;
+  const tx = bx + Math.cos(rad) * BUBBLE.tail.len, ty = by + Math.sin(rad) * BUBBLE.tail.len;
+  const box = { x0: Math.min(bx, tx), x1: Math.max(bx, tx), y0: Math.min(by, ty), y1: Math.max(by, ty) };
+  if (box.x0 < SIGN.x1 && box.x1 > SIGN.x0 && box.y0 < SIGN.y1 && box.y1 > SIGN.y0)
+    throw new Error("尾巴撞到紅招牌了 —— 換個角度或把框往左移");
+  if (BUBBLE.x - 430 < 60)
+    throw new Error("對話框離外牆右緣只有 " + (BUBBLE.x - 430) + "px，太擠（至少 60）");
+  if (BUBBLE.tail.len > 90)
+    throw new Error("尾巴 " + BUBBLE.tail.len + "px 太長，會變成一根刺（上限 90）");
+  console.log("對話框：離外牆 " + (BUBBLE.x - 430) + "px、尾巴 " + BUBBLE.tail.len +
+    "px、尖端 (" + tx.toFixed(0) + ", " + ty.toFixed(0) + ")");
+}
 const STROKE = 10;              /* ⚠ 線也會 ×0.223：10px → 聊天室裡 2.2px */
 const FS = 104, LH = 1.06;      /* 使用者 2026-09-03：「字再大一點」88 → 104 */
 
@@ -138,7 +160,10 @@ const stat = async (shotB64, box) => p.evaluate(async ({ s, b }) => {
    所以取**框線與字之間**那一條（框線在 x≈468、字塊從 x532 起，取 x492~526）。
    ⚠ 取整塊會被字的深綠拉低；貼著框放又會量到框線本身
    —— 第一版兩個都踩到了（不加玻璃那一格居然量出「起伏變大 42%」）。 */
-const RING = { x: 492, y: 120, w: 34, h: 110 };
+/* ⚠⚠ RING 一定要從 BUBBLE 推算，不可以寫死座標 ——
+   2026-09-03 踩過：框從 x468 移到 x512，寫死的 RING 就落到框外面去了，
+   量出「玻璃沒有提亮」的假警報。**跟著別人動的東西，就要用別人算出來。** */
+const RING = { x: BUBBLE.x + 26, y: BUBBLE.y + 98, w: 32, h: 110 };
 
 
 const CASES = [];

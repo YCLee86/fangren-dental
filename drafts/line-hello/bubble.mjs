@@ -54,8 +54,12 @@ function spline(pts, closed = true) {
  *   r        圓角
  *   amp      手繪擾動的振幅（px）。0 ＝ 完全幾何
  *   seed     擾動的種子
- *   tail     {at, spread, tipX, tipY} —— at: 尾巴長在周長的哪裡（0~1）、
- *            spread: 尾巴根部的寬度（周長比例）、tipX/tipY: 尖端座標（絕對）
+ *   tail     {at, spread, len, angle} —— at: 尾巴長在周長的哪裡（0~1）、
+ *            spread: 根部寬度（周長比例）、len: 從根部中點伸出去多長（px）、
+ *            angle: 伸出去的方向（度，0 ＝ 往右、90 ＝ 往下）
+ *            ⚠ 2026-09-03 從絕對座標 tipX/tipY 改成「長度＋角度」——
+ *              使用者說「延伸角形拉好長好怪」，而長度用絕對座標根本看不出來
+ *              （第一版量出來是 148px，眼睛看才知道太長）。
  *   steps    取樣點數
  */
 export function speechBubble(o) {
@@ -78,9 +82,13 @@ export function speechBubble(o) {
     const idx = pts.findIndex((p) => p.t > tail.at);
     const b1 = roundRectPoint(tail.at - tail.spread / 2, w, h, r);
     const b2 = roundRectPoint(tail.at + tail.spread / 2, w, h, r);
+    const mid = roundRectPoint(tail.at, w, h, r);
+    const rad = (tail.angle ?? 120) * Math.PI / 180;
+    const tipX = x + mid[0] + Math.cos(rad) * tail.len;
+    const tipY = y + mid[1] + Math.sin(rad) * tail.len;
     const seg = [
       { x: x + b1[0], y: y + b1[1] },
-      { x: tail.tipX, y: tail.tipY, corner: true },
+      { x: tipX, y: tipY, corner: true },
       { x: x + b2[0], y: y + b2[1] },
     ];
     if (idx < 0) pts.push(...seg); else pts.splice(idx, 0, ...seg);
