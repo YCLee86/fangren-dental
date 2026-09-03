@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* 招呼圖卡的頭圖：Ⓒ3b 的街景 ＋ 白色玻璃遮罩 ＋「芳仁／哩厚」
  *   node drafts/line-hello/generate.mjs
- * 產出 preview/line-hello/hero-<字體>-<玻璃>.jpg（各 1040×520 ＝ Flex 頭圖的 2:1）
+ * 產出 preview/line-hello/hero-<缺口>-<字體>.jpg（各 1040×520 ＝ Flex 頭圖的 2:1）
  *
  * 使用者 2026-09-03：「選 Ⓒ3b。文字要放 芳仁 哩厚，感覺可以斷行，
  * 加點白色的玻璃遮罩看看。」（哩厚 ＝ 台語的你好）
@@ -21,7 +21,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { bubble } from "./bubble.mjs";
+import { outline, closedPath, openPath } from "./bubble.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..", "..");
@@ -45,58 +45,80 @@ const sc = W / CW;
 
 /* ⚠⚠ 位置是量出來的（在成品的 1040×520 座標裡，疊格線讀的）：
      診所外牆右緣 x≈430、劉家紅招牌 x 620~660／y 165~325、遮陽棚上緣 y≈360。
-   框放在建築右邊的天空，尾巴往左下指到外牆 —— 尾巴不可以穿過紅招牌。
 
-   ⚠⚠⚠ 2026-09-03 這一版整個換掉了。前一版是「有機的抖動輪廓」，使用者：
-     「現在的對話框變得好怪喔」，並給了四張參考（Tully's 問卷卡／JR Suica 海報／
-     かまわぬ 傳單／無印良品海報）。四張的共同點是：
-       ・框是**乾淨的幾何形**（圓角矩形、膠囊、角狀多邊形），不是不規則的曲線
-       ・尾巴是**短短的三角形**，直邊
-       ・底是**實的**，不是半透明的玻璃
-     最早那張 YEBISU 的「手繪感」講的是**線的質感**，不是輪廓要抖 —— 我讀錯了。
-   ⚠ 通則：參考圖要看「它像什麼」，不要抓一個形容詞去發揮。 */
-const BOX = { x: 512, y: 26, w: 344, h: 288 };
-const SIGN = { x0: 620, y0: 165, x1: 660, y1: 325 };   /* 劉家那支紅招牌 */
+   ✅ 2026-09-03 使用者定案：
+     「介於圓角矩形和膠囊之間的形狀，風格要像 Tully's 那張照片下方的手繪對話框，
+       一筆劃最後帶一個小缺口，比較有人畫的感覺。玻璃濃度是中。」
+   → 圓角 **92**（圓角矩形是 44、膠囊是 144，取中間）
+   → 描邊是**開放路徑**、收尾留缺口；填色仍然封閉（不然玻璃會漏出去）
+   → 玻璃回到「中」（白 .58、模糊 11） */
+const BOX = { x: 512, y: 26, w: 344, h: 288, r: 92,
+              tail: { cx: 640, wid: 52, dx: -30, dy: 48 } };
+const SIGN = { x0: 620, y0: 165, x1: 660, y1: 325 };
+const GLASS = { a: .58, blur: 11 };
+const STROKE = 7;
+const FS = 104, LH = 1.06, STAGGER = 22;
+const GAPS = { s: .028, m: .048, l: .075 };
+/* ⚠⚠ 缺口擺在哪裡，和它多大一樣要緊。
+   第一版用 .06，算出來落在**上緣正中央**（x 641，框心 684 附近）——
+   對稱的位置讀起來像印壞了，不像有人畫到最後把筆提起來。
+   .16 落在上緣、右上圓角**之前**（x 749，圓角從 764 起）：偏一邊、在一段長直線上，
+   而且那一段的底是乾淨的天空，232px 縮下去也讀得出來。 */
+const GAPSTART = .16;
+const GAPLABEL0 = { s: "小", m: "中", l: "大" };
 
-/* 四種做法。fill: "white" ＝ 白底綠字綠框；"green" ＝ 綠底白字（かまわぬ 那種實心） */
-const LOOKS = {
-  round:   { label: "圓角矩形", fill: "white",
-             geo: { ...BOX, shape: "round", r: 44, tail: { cx: 600, wid: 54, dx: -30, dy: 50 } } },
-  stadium: { label: "膠囊",     fill: "white",
-             geo: { ...BOX, shape: "stadium", tail: { cx: 684, wid: 40, dx: -46, dy: 50 } } },
-  poly:    { label: "角狀",     fill: "white",
-             geo: { ...BOX, shape: "poly", sides: 9, jitter: .07, seed: 2,
-                    tail: { wid: 54, dx: -26, dy: 54 } } },
-  polyG:   { label: "角狀・綠底", fill: "green",
-             geo: { ...BOX, shape: "poly", sides: 9, jitter: .07, seed: 2,
-                    tail: { wid: 54, dx: -26, dy: 54 } } },
-};
-const STROKE = 7;               /* 均勻細線（×0.223 → 聊天室 1.56px），參考圖都是均勻的 */
-const FS = 104, LH = 1.06;
-const STAGGER = 22;             /* 兩行刻意錯開：芳仁往右、哩厚往左 */
-const FILL_A = .93;             /* 底幾乎是實的（四張參考都不是半透明） */
+/* 周長（給缺口的守門換算成 px 用） */
+const PERIMETER = (() => {
+  const r = Math.min(BOX.r, BOX.w / 2, BOX.h / 2);
+  return 2 * (BOX.w - 2 * r) + 2 * (BOX.h - 2 * r) + 2 * Math.PI * r;
+})();
+const PTS = outline(BOX);
+const CLOSED = closedPath(PTS);
 
-/* 守門：尾巴不可以撞到紅招牌 */
-for (const [k, L] of Object.entries(LOOKS)) {
-  const d = bubble(L.geo);
-  const ys = [...d.matchAll(/[ ,](-?\d+\.?\d*) (-?\d+\.?\d*)/g)].map((m) => [+m[1], +m[2]]);
-  const low = ys.filter((p) => p[1] > BOX.y + BOX.h - 4);     /* 尾巴那一帶 */
-  const hit = low.some((p) => p[0] > SIGN.x0 && p[0] < SIGN.x1 && p[1] > SIGN.y0 && p[1] < SIGN.y1);
-  if (hit) throw new Error(k + " 的尾巴撞到紅招牌了");
+{
+  const tip = [BOX.tail.cx + BOX.tail.dx, BOX.y + BOX.h + BOX.tail.dy];
+  if (tip[0] > SIGN.x0 && tip[0] < SIGN.x1 && tip[1] > SIGN.y0 && tip[1] < SIGN.y1)
+    throw new Error("尾巴的尖端撞到紅招牌了");
+  if (BOX.x - 430 < 60) throw new Error("對話框離外牆只有 " + (BOX.x - 430) + "px");
+  if (STROKE * 232 / 1040 < 1.5) throw new Error("框線在聊天室太細");
+  console.log("框離外牆 " + (BOX.x - 430) + "px、圓角 " + BOX.r +
+    "（圓角矩形 44 ↔ 膠囊 " + (BOX.h / 2) + " 的中間）、框線 " + STROKE +
+    "px（聊天室 " + (STROKE * 232 / 1040).toFixed(2) + "px）、尾巴尖端 (" +
+    tip[0].toFixed(0) + ", " + tip[1].toFixed(0) + ")");
 }
-if (BOX.x - 430 < 60) throw new Error("對話框離外牆只有 " + (BOX.x - 430) + "px，太擠");
-if (STROKE * 232 / 1040 < 1.5) throw new Error("框線在聊天室只有 " + (STROKE * 232 / 1040).toFixed(2) + "px");
-console.log("框離外牆 " + (BOX.x - 430) + "px、框線 " + STROKE + "px（聊天室 " +
-  (STROKE * 232 / 1040).toFixed(2) + "px）、四種形狀都沒撞到招牌");
+
+/* 缺口的位置守門：三件事都要成立，否則它讀起來就不是「筆提起來」。
+   ⚠ 這一段是實際去看那一段路徑落在哪裡，不是重算一次幾何 —— 圓角、尾巴一改就會移位。 */
+{
+  const n = PTS.length, s0 = Math.round(n * GAPSTART);
+  const near = (k) => PTS[((k % n) + n) % n];
+  for (const g of ["s", "m", "l"]) {
+    const keep = Math.round(n * (1 - GAPS[g]));
+    const a = near(s0), b = near(s0 + keep - 1);
+    const cx = (a[0] + b[0]) / 2, cy = (a[1] + b[1]) / 2;
+    /* ① 要在上緣的直線段上（不在圓角、不在尾巴、不在有字的那一半） */
+    if (Math.abs(cy - BOX.y) > 3)
+      throw new Error(`缺口「${GAPLABEL0[g]}」不在上緣（落在 ${cx.toFixed(0)}, ${cy.toFixed(0)}）`);
+    if (cx < BOX.x + BOX.r || cx > BOX.x + BOX.w - BOX.r)
+      throw new Error(`缺口「${GAPLABEL0[g]}」壓到圓角了（x ${cx.toFixed(0)}）`);
+    /* ② 不可以落在正中央 —— 對稱就讀成印壞了 */
+    const off = Math.abs(cx - (BOX.x + BOX.w / 2));
+    if (off < 40) throw new Error(`缺口「${GAPLABEL0[g]}」離框心只有 ${off.toFixed(0)}px，太對稱`);
+    /* ③ 兩端都要離尾巴的根部夠遠 */
+    const tailL = BOX.tail.cx - BOX.tail.wid / 2 - 30, tailR = BOX.tail.cx + BOX.tail.wid / 2 + 30;
+    for (const [px, py] of [a, b])
+      if (py > BOX.y + BOX.h - 3 && px > tailL && px < tailR)
+        throw new Error(`缺口「${GAPLABEL0[g]}」開在尾巴根部`);
+  }
+  const keepM = Math.round(n * (1 - GAPS.m));
+  const a = near(s0), b = near(s0 + keepM - 1);
+  console.log(`缺口開在上緣 x ${((a[0] + b[0]) / 2).toFixed(0)}（框心 ${(BOX.x + BOX.w / 2).toFixed(0)}、右上圓角從 ${(BOX.x + BOX.w - BOX.r).toFixed(0)} 起）`);
+}
 
 const TX = BOX.x + BOX.w / 2, TY = BOX.y + BOX.h / 2;
 
-const page = (fontId, lookKey, withPhoto = true) => {
-  const L = LOOKS[lookKey];
-  const d = bubble(L.geo);
-  const green = L.fill === "green";
-  const ink = green ? "#ffffff" : DEEP;          /* 綠底就用白字（かまわぬ 那張的做法） */
-  const bg = green ? DEEP : "#ffffff";
+const page = (fontId, gapKey, withPhoto = true) => {
+  const open = openPath(PTS, GAPS[gapKey], GAPSTART);
   return `<!doctype html><meta charset="utf-8"><style>
 ${faces}
 *{margin:0;padding:0}
@@ -104,17 +126,21 @@ html,body{width:${W}px;height:${H}px;overflow:hidden;background:#000}
 .w{position:relative;width:${W}px;height:${H}px;overflow:hidden}
 img{position:absolute;left:${(-CX0 * sc).toFixed(2)}px;top:${(-CY0 * sc).toFixed(2)}px;
   width:${(IW * sc).toFixed(2)}px;height:${(IH * sc).toFixed(2)}px}
+/* ⚠ 玻璃：外層裁切、裡層放一份自己模糊的照片複本。
+   backdrop-filter ＋ clip-path 放同一個元素上，模糊會被靜靜丟掉（實測過）。 */
+.clip{position:absolute;inset:0;clip-path:path('${CLOSED}')}
+.clip img{filter:blur(${GLASS.blur}px) saturate(1.06)}
+.tint{position:absolute;inset:0;background:rgba(255,255,255,${GLASS.a})}
 svg{position:absolute;inset:0}
-.body{fill:${bg};fill-opacity:${FILL_A}}
-.line{stroke:${green ? "none" : DEEP};stroke-width:${STROKE}px;fill:none;
+.line{stroke:${DEEP};stroke-width:${STROKE}px;fill:none;
   stroke-linejoin:round;stroke-linecap:round}
-text{font-family:"${FAM[fontId]}";font-weight:900;font-size:${FS}px;fill:${ink};letter-spacing:.04em}
+text{font-family:"${FAM[fontId]}";font-weight:900;font-size:${FS}px;fill:${DEEP};letter-spacing:.04em}
 </style>
 <div class="w">
   ${withPhoto ? `<img src="data:image/jpeg;base64,${photo64}">` : ""}
+  ${withPhoto ? `<div class="clip"><img src="data:image/jpeg;base64,${photo64}"><div class="tint"></div></div>` : ""}
   <svg viewBox="0 0 ${W} ${H}">
-    <path class="body" d="${d}"/>
-    <path class="line" d="${d}"/>
+    <path class="line" d="${open}"/>
     <text x="${TX}" y="${TY}" text-anchor="middle" dominant-baseline="central">
       <tspan x="${TX + STAGGER}" dy="${(-FS * LH / 2).toFixed(1)}">芳仁</tspan>
       <tspan x="${TX - STAGGER}" dy="${(FS * LH).toFixed(1)}">哩厚</tspan>
@@ -137,42 +163,71 @@ const browser = await chromium.launch({ executablePath: chromePath });
 const p = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 const clip = { x: 0, y: 0, width: W, height: H };
 const report = [];
-
-const lin = (v) => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; };
-const Yof = (r, g, b) => .2126 * lin(r) + .7152 * lin(g) + .0722 * lin(b);
-const crf = (a, b) => (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+const GAPLABEL = { s: "小", m: "中", l: "大" };
+const GAPMEASURE = {};   /* 缺口的實測值，量完之後併進 report 給預覽頁的面板用 */
 
 const CASES = [];
-for (const look of Object.keys(LOOKS))
+for (const gap of ["s", "m", "l"])
   for (const font of ["mplus", "zenmaru", "ntc"])
-    CASES.push({ id: `hero-${look}-${font}`, look, font });
+    CASES.push({ id: `hero-${gap}-${font}`, gap, font });
 
-console.log("案                      形狀        字在聊天室  框裡的字對底  檔案");
+/* 缺口到底畫出來沒有：把描邊單獨畫在黑底上，量白色像素比封閉版少多少 */
+{
+  const strokeOnly = (dPath) => `<!doctype html><meta charset="utf-8"><style>
+*{margin:0;padding:0}html,body{width:${W}px;height:${H}px;background:#000;overflow:hidden}
+svg{position:absolute;inset:0}path{stroke:#fff;stroke-width:${STROKE}px;fill:none;
+stroke-linejoin:round;stroke-linecap:round}</style>
+<svg viewBox="0 0 ${W} ${H}"><path d="${dPath}"/></svg>`;
+  const ink = async (dPath) => {
+    await p.setContent(strokeOnly(dPath), { waitUntil: "load" });
+    const b64 = (await p.screenshot({ clip })).toString("base64");
+    return p.evaluate(async (s) => {
+      const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = s; });
+      const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
+      const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
+      const d = cx.getImageData(0, 0, cv.width, cv.height).data;
+      let n = 0; for (let i = 0; i < d.length; i += 4) if (d[i] > 200) n++;
+      return n;
+    }, "data:image/png;base64," + b64);
+  };
+  const full = await ink(CLOSED);
+  for (const g of ["s", "m", "l"]) {
+    const cut = await ink(openPath(PTS, GAPS[g], GAPSTART));
+    const pct = (1 - cut / full) * 100;
+    /* ⚠⚠ 量到的減量本來就會**少於**缺口的名目比例：stroke-linecap:round 會在
+       開放路徑的兩端各補一個半圓，加起來約等於一個線寬的墨。
+       所以判準不是比例，是**眼睛真正看得到的缺口有幾 px**：
+         看得到的缺口 ≈ 缺口的弧長 − 線寬（兩個半圓合起來填掉一個線寬）
+       低於 12px 就只是一個小缺角、讀不出「筆畫沒接回去」。 */
+    const gapPx = GAPS[g] * PERIMETER;
+    const visible = gapPx - STROKE;
+    console.log(`缺口「${GAPLABEL[g]}」：弧長 ${gapPx.toFixed(0)}px、看得到 ${visible.toFixed(0)}px` +
+      `（聊天室 ${(visible * 232 / 1040).toFixed(1)}px）　描邊的墨少了 ${pct.toFixed(1)}%`);
+    if (visible < 12) throw new Error(`缺口「${GAPLABEL[g]}」看得到的只有 ${visible.toFixed(0)}px，太小`);
+    GAPMEASURE[g] = { gapPx: +gapPx.toFixed(0), visiblePx: +visible.toFixed(0),
+                      visibleOnChat: +(visible * 232 / 1040).toFixed(1), inkDrop: +pct.toFixed(1) };
+    if (pct <= 0) throw new Error(`缺口「${GAPLABEL[g]}」根本沒少墨 —— 開放路徑沒生效`);
+  }
+}
+
+console.log("案                    缺口  字在聊天室  檔案");
 for (const c of CASES) {
-  await p.setContent(page(c.font, c.look), { waitUntil: "load" });
+  await p.setContent(page(c.font, c.gap), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
   const file = path.join(OUT, `${c.id}.jpg`);
   await p.screenshot({ path: file, type: "jpeg", quality: 88, clip });
-
   const box = await p.evaluate(() => {
     const t = document.querySelector("text"); const r = t.getBBox();
-    return { w: Math.round(r.width), h: Math.round(r.height), fs: parseFloat(getComputedStyle(t).fontSize) };
+    return { fs: parseFloat(getComputedStyle(t).fontSize) };
   });
   const onChat = box.fs * 232 / 1040;
   if (onChat < 11) throw new Error(`${c.id} 字在聊天室只有 ${onChat.toFixed(1)}px`);
-
-  /* 框裡是實底，所以字對底的對比是算得準的定值 —— 直接算，不必量像素 */
-  const green = LOOKS[c.look].fill === "green";
-  const Ybg = green ? Yof(0x2c, 0x52, 0x38) : 1, Yink = green ? 1 : Yof(0x2c, 0x52, 0x38);
-  const contrast = crf(Yink, Ybg);
-  if (contrast < 4.5) throw new Error(`${c.id} 字對底只有 ${contrast.toFixed(2)}`);
-
   const kb = fs.statSync(file).size / 1024;
-  report.push({ ...c, look: c.look, lookLabel: LOOKS[c.look].label, fill: LOOKS[c.look].fill,
+  report.push({ ...c, ...GAPMEASURE[c.gap], gapLabel: GAPLABEL[c.gap], gapPct: +(GAPS[c.gap] * 100).toFixed(1),
                 fs: box.fs, onChat: +onChat.toFixed(1), stroke: STROKE,
                 strokeOnChat: +(STROKE * 232 / 1040).toFixed(2),
-                contrast: +contrast.toFixed(2), kb: Math.round(kb) });
-  console.log(`${c.id.padEnd(23)} ${LOOKS[c.look].label.padEnd(7)} ${onChat.toFixed(1)}px      ${contrast.toFixed(2)}        ${kb.toFixed(0)}KB`);
+                glassA: GLASS.a, glassBlur: GLASS.blur, r: BOX.r, kb: Math.round(kb) });
+  console.log(`${c.id.padEnd(21)} ${GAPLABEL[c.gap]}     ${onChat.toFixed(1)}px      ${kb.toFixed(0)}KB`);
 }
 await browser.close();
 fs.writeFileSync(path.join(HERE, "report.json"), JSON.stringify(report, null, 2));

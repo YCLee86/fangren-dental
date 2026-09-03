@@ -9,7 +9,8 @@
   提案頁：加入好友那張圖卡的頭圖。
   ✅ 裁切 2026-09-03 定案 Ⓒ3b（x 934~7614、y 403~3743），其餘八案已刪，推導在
      drafts/line-hello/README.md 第八節。
-  這一輪要選的是：**字體**（三支）與**白色玻璃遮罩的濃度**（四級）。
+  這一輪要選的是：**筆畫收尾的缺口有多大**（三級）與**字體**（三支）。
+  ⚠ 形狀已定：圓角 92（圓角矩形 44 ↔ 膠囊 144 的正中間）、玻璃濃度「中」（白 .58／模糊 11）。
 
   ⚠⚠ 遮罩的位置是量出來的：逐列／逐行掃「有多少 % 的像素 L* ≥ 70」，
     乾淨區是 x 480~960、y 0~340。要避開三個東西：診所右牆的邊（x≈440）、
@@ -75,8 +76,8 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 </head>
 <body>
 <h1>頭圖：房子在說「芳仁　哩厚」</h1>
-<p class="lede">裁切已定案（<b>Ⓒ3b</b>）。這一版照你給的四張參考重做：
-框是<b>乾淨的幾何形</b>、尾巴是<b>短三角形</b>、底是<b>實的</b>。底下選<b>形狀</b>與<b>字體</b>。</p>
+<p class="lede">形狀照你說的走：<b>圓角矩形和膠囊之間</b>（圓角 92，兩端點是 44 與 144）、
+邊框是<b>一筆畫下來、最後留一個小缺口</b>、玻璃濃度<b>中</b>。底下選<b>缺口大小</b>與<b>字體</b>。</p>
 
 <div class="big"><img id="shot" alt=""></div>
 <p class="cap" id="cap"></p>
@@ -103,18 +104,18 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 <p class="note" id="note"></p>
 
 <div class="bar">
-  <div class="r"><span class="lb">形狀</span><span class="g" id="sw-s"></span></div>
+  <div class="r"><span class="lb">缺口</span><span class="g" id="sw-s"></span></div>
   <div class="r"><span class="lb">字體</span><span class="g" id="sw-f"></span></div>
 </div>
 
 <script>
 (function () {
   "use strict";
-  var R = [{"id":"hero-round-mplus","look":"round","font":"mplus","lookLabel":"圓角矩形","fill":"white","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":138},{"id":"hero-round-zenmaru","look":"round","font":"zenmaru","lookLabel":"圓角矩形","fill":"white","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":139},{"id":"hero-round-ntc","look":"round","font":"ntc","lookLabel":"圓角矩形","fill":"white","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":138},{"id":"hero-stadium-mplus","look":"stadium","font":"mplus","lookLabel":"膠囊","fill":"white","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":142},{"id":"hero-stadium-zenmaru","look":"stadium","font":"zenmaru","lookLabel":"膠囊","fill":"white","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":143},{"id":"hero-stadium-ntc","look":"stadium","font":"ntc","lookLabel":"膠囊","fill":"white","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":141},{"id":"hero-poly-mplus","look":"poly","font":"mplus","lookLabel":"角狀","fill":"white","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":142},{"id":"hero-poly-zenmaru","look":"poly","font":"zenmaru","lookLabel":"角狀","fill":"white","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":144},{"id":"hero-poly-ntc","look":"poly","font":"ntc","lookLabel":"角狀","fill":"white","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":142},{"id":"hero-polyG-mplus","look":"polyG","font":"mplus","lookLabel":"角狀・綠底","fill":"green","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":139},{"id":"hero-polyG-zenmaru","look":"polyG","font":"zenmaru","lookLabel":"角狀・綠底","fill":"green","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":141},{"id":"hero-polyG-ntc","look":"polyG","font":"ntc","lookLabel":"角狀・綠底","fill":"green","fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"contrast":8.86,"kb":139}];
-  var by = {}; R.forEach(function (r) { by[r.look + "|" + r.font] = r; });
-  var S = { round: "圓角矩形", stadium: "膠囊", poly: "角狀", polyG: "角狀・綠底" };
+  var R = [{"id":"hero-s-mplus","gap":"s","font":"mplus","gapPx":31,"visiblePx":24,"visibleOnChat":5.3,"inkDrop":2.2,"gapLabel":"小","gapPct":2.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":139},{"id":"hero-s-zenmaru","gap":"s","font":"zenmaru","gapPx":31,"visiblePx":24,"visibleOnChat":5.3,"inkDrop":2.2,"gapLabel":"小","gapPct":2.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":140},{"id":"hero-s-ntc","gap":"s","font":"ntc","gapPx":31,"visiblePx":24,"visibleOnChat":5.3,"inkDrop":2.2,"gapLabel":"小","gapPct":2.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":138},{"id":"hero-m-mplus","gap":"m","font":"mplus","gapPx":53,"visiblePx":46,"visibleOnChat":10.3,"inkDrop":3.9,"gapLabel":"中","gapPct":4.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":139},{"id":"hero-m-zenmaru","gap":"m","font":"zenmaru","gapPx":53,"visiblePx":46,"visibleOnChat":10.3,"inkDrop":3.9,"gapLabel":"中","gapPct":4.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":140},{"id":"hero-m-ntc","gap":"m","font":"ntc","gapPx":53,"visiblePx":46,"visibleOnChat":10.3,"inkDrop":3.9,"gapLabel":"中","gapPct":4.8,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":138},{"id":"hero-l-mplus","gap":"l","font":"mplus","gapPx":83,"visiblePx":76,"visibleOnChat":16.9,"inkDrop":6.2,"gapLabel":"大","gapPct":7.5,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":139},{"id":"hero-l-zenmaru","gap":"l","font":"zenmaru","gapPx":83,"visiblePx":76,"visibleOnChat":16.9,"inkDrop":6.2,"gapLabel":"大","gapPct":7.5,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":140},{"id":"hero-l-ntc","gap":"l","font":"ntc","gapPx":83,"visiblePx":76,"visibleOnChat":16.9,"inkDrop":6.2,"gapLabel":"大","gapPct":7.5,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"r":92,"kb":138}];
+  var by = {}; R.forEach(function (r) { by[r.gap + "|" + r.font] = r; });
+  var S = { s: "小", m: "中", l: "大" };
   var F = { mplus: "M PLUS 圓體", zenmaru: "Zen Maru 圓體", ntc: "Noto Sans TC" };
-  var st = { s: "round", f: "mplus" };
+  var st = { s: "m", f: "mplus" };
 
   function chips(host, obj, k) {
     host.innerHTML = "";
@@ -139,22 +140,29 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
     document.getElementById("mini").src = src;
     document.getElementById("cap").textContent = "1040×520（2:1）・" + r.kb + "KB";
     document.getElementById("panel").innerHTML =
-      "<span class='k'>形狀</span> <b>" + r.lookLabel + "</b>"
-      + "　<span class='k'>配色</span> <b>" + (r.fill === "green" ? "綠底白字" : "白底綠字綠框") + "</b>"
+      "<span class='k'>缺口</span> <b>" + r.gapLabel + "</b>"
+      + "　弧長 <b>" + r.gapPx + "px</b>、真正看得到 <b>" + r.visiblePx + "px</b>"
+      + " <span class='k'>（圓頭的筆尖會在兩端各補回半個線寬）</span>"
+      + "<br><span class='k'>在聊天室裡的缺口</span> <b>" + r.visibleOnChat + "px</b>"
+      + " <span class='k'>（×0.223 才是病人看到的）</span>"
       + "<br><span class='k'>字</span> <b>" + r.fs + "px</b>"
       + "　<span class='k'>在聊天室裡</span> <b>" + r.onChat + "px</b>"
-      + " <span class='k'>（×0.223 才是病人看到的，下限 11px）</span>"
-      + (r.fill === "green" ? "" : "　<span class='k'>框線</span> <b>" + r.stroke + "px</b>（聊天室 " + r.strokeOnChat + "px）")
-      + "<br><span class='k'>字對底的對比</span> <b>" + r.contrast + "</b>"
-      + " <span class='k'>（底是實的，所以這是算得準的定值，不必量像素）</span>";
+      + " <span class='k'>（下限 11px）</span>"
+      + "　<span class='k'>框線</span> <b>" + r.stroke + "px</b>（聊天室 " + r.strokeOnChat + "px）"
+      + "<br><span class='k'>圓角</span> <b>" + r.r + "</b>"
+      + " <span class='k'>（圓角矩形 44 ↔ 膠囊 144 的正中間）</span>"
+      + "　<span class='k'>玻璃</span> <b>中</b><span class='k'>（白 " + r.glassA + "、模糊 " + r.glassBlur + "）</span>";
     document.getElementById("note").innerHTML =
-      "⚠⚠⚠ <b>前一版走錯方向了。</b> 最早那張 YEBISU 的「手繪感」我讀成「輪廓要抖」，"
-      + "於是加了正弦擾動、把圓角放大 —— 結果變成一隻變形蟲。"
-      + "你給的四張參考（Tully's 問卷卡／JR Suica／かまわぬ 傳單／無印良品）說的是同一件事："
-      + "<b>框是乾淨的幾何形、尾巴是短三角形、底是實的</b>。那張 YEBISU 的手繪指的是<b>線的質感</b>，不是輪廓。"
-      + "<br>⚠ 通則：參考圖要看「它像什麼」，不要抓一個形容詞去發揮。"
-      + "<br>⚠ 位置仍然是量出來的：框離外牆 <b>82px</b>，尾巴往左下指、"
-      + "而且四種形狀都驗過<b>不會撞到劉家那支紅招牌</b>（x 620~660、y 165~325）。"
+      "⚠ <b>缺口是「筆畫沒接回去」不是「破了一個洞」</b>：描邊改成一條<b>開放路徑</b>，"
+      + "繞一圈回來時停在缺口前面。底仍然是封閉的，所以玻璃不會從缺口漏出去。"
+      + "<br>⚠ <b>缺口開在上緣、右上圓角之前</b>（x 749，框心 684、圓角從 764 起）。"
+      + "第一版落在<b>上緣正中央</b>，對稱的位置讀起來像印壞了，不像有人把筆提起來；"
+      + "而且這一段的底是乾淨的天空，縮到 232px 也讀得出來。"
+      + "<br>⚠ <b>不要看「墨少了幾 %」判斷缺口夠不夠大</b>：圓頭的筆尖會在開放路徑的兩端"
+      + "各補一個半圓，加起來約等於一整個線寬（7px）。所以名目弧長永遠比看得到的長，"
+      + "面板印的 <b>" + r.visiblePx + "px</b> 才是眼睛讀到的那一段。"
+      + "<br>⚠ 位置仍然是量出來的：框離外牆 <b>82px</b>，尾巴往左下指著房子、"
+      + "而且驗過<b>不會撞到劉家那支紅招牌</b>（x 620~660、y 165~325）。"
       + "<br>⚠ 兩行刻意錯開（芳仁往右、哩厚往左各 22px）—— 字面框其實完全對齊，"
       + "看起來錯位是「仁」右邊留白多、「厚」填滿整格。";
   }
