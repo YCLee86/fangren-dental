@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>招呼圖卡的頭圖 —— hello／你好</title>
+<!--
+  提案頁：加入好友那張圖卡的頭圖，白天的診所街景 ＋ 壓在天空上的「hello／你好」。
+  使用者 2026-09-03 給了照片與參考字體（URBAN RESEARCH 的 final sale 海報）。
+
+  ⚠ 這一頁擺的是**真的產出檔**（preview/line-hello/*.jpg），不是用 CSS 再做一次 ——
+    同 og-topic-card 那一輪：要判斷的是「縮到聊天室的 232px 還讀不讀得懂」，
+    用 CSS 縮放的向量文字會比實際清楚，等於在騙自己。
+  ⚠ 十張約 1.4MB，而 Worker 對 /preview/* 設 no-store：先畫選到的那一張，
+    其餘等 load 之後在背景預抓。
+
+  量測面板量的是「字的筆畫底下那些像素」對比不足的比例，不是整塊區域的平均。
+  出圖與量測：node drafts/line-hello/generate.mjs
+-->
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--ink-soft:#5c5f57;--rule:#cdd0d2;
+  --green:#3f654a;--deep:#2c5238}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:15px/1.7 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  padding:18px 16px 260px}
+h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
+.lede{color:var(--ink-soft);font-size:.86rem;margin:0 0 16px}
+.lede b{color:var(--ink)}
+.big{border-radius:12px;overflow:hidden;background:#000;line-height:0;
+  box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.big img{width:100%;display:block}
+.cap{font-size:.78rem;color:var(--ink-soft);margin:7px 2px 18px}
+/* 聊天室裡的真實大小 */
+.chat{background:#e9edf1;border-radius:12px;padding:12px 10px;margin-bottom:6px}
+.hc{width:232px;border-radius:14px;overflow:hidden;background:var(--card);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);margin-left:34px;position:relative}
+.hc::before{content:"";position:absolute;left:-34px;top:0;width:26px;height:26px;
+  border-radius:50%;background:var(--deep)}
+.hc .hero{display:block;width:100%}
+.hc .b{padding:11px 12px 8px}
+.hc h4{margin:0;font-size:.92rem;font-weight:700}
+.hc .loc{font-size:.66rem;color:var(--ink-soft);margin-top:2px}
+.hc p{margin:9px 0 0;font-size:.72rem;line-height:1.62}
+.hc .menu{background:var(--paper);border-radius:8px;padding:8px 10px;margin-top:9px;
+  font-size:.68rem;line-height:1.6}
+.hc .f{padding:0 12px 11px}
+.hc .tel{background:var(--green);color:#fff;font-weight:700;text-align:center;
+  border-radius:8px;padding:8px 0;font-size:.8rem;margin-top:9px}
+.hc .share{display:block;text-align:center;color:var(--deep);font-size:.72rem;padding:8px 0 1px}
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+  padding:11px 13px;font-size:.8rem;line-height:1.75;margin-top:14px}
+.panel b{font-variant-numeric:tabular-nums}
+.ok{color:#2c5238;font-weight:700}.warn{color:#8a4b12;font-weight:700}
+.note{border-left:3px solid var(--rule);padding-left:11px;color:var(--ink-soft);
+  font-size:.79rem;margin-top:14px}
+/* 切換條 */
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(244,244,245,.97);
+  border-top:1px solid var(--rule);padding:9px 12px calc(9px + env(safe-area-inset-bottom));
+  backdrop-filter:blur(8px);z-index:9}
+.bar .r{display:flex;align-items:flex-start;gap:8px;margin:3px 0}
+.bar .lb{flex:none;width:2.6em;font-size:.72rem;color:var(--ink-soft);padding-top:5px}
+.bar .g{display:flex;flex-wrap:wrap;gap:5px}
+.bar button{font:inherit;font-size:.75rem;padding:4px 9px;border-radius:7px;
+  border:1px solid var(--deep);background:#fff;color:var(--deep);cursor:pointer}
+.bar button[aria-pressed="true"]{background:var(--deep);color:#fff}
+</style>
+</head>
+<body>
+<h1>加入好友那張圖卡的頭圖</h1>
+<p class="lede">白天的診所街景，<b>hello／你好</b> 壓在診所右邊那條街的上方天空。
+底下切換<b>文字</b>、<b>字體</b>、<b>顏色</b>、<b>大小</b>。</p>
+
+<div class="big"><img id="shot" alt=""></div>
+<p class="cap" id="cap"></p>
+
+<div class="chat"><div class="hc">
+  <img class="hero" id="mini" alt="">
+  <div class="b">
+    <h4>芳仁牙醫診所</h4><div class="loc">雲林斗六・永樂街</div>
+    <p>這裡是診所的官方 LINE。</p>
+    <div class="menu">下面的選單有<br><b>約診查詢、診所資訊、診療項目、<br>醫師介紹、衛教資訊</b></div>
+    <p>完成綁定，看診前 48 小時<br>就會在這裡提醒你。</p>
+  </div>
+  <div class="f"><div class="tel">撥打電話　05-5339369</div>
+  <span class="share">把芳仁介紹給家人</span></div>
+</div></div>
+<p class="cap">↑ 這是它在聊天室裡的<b>真實大小</b>（卡片 232px 寬）。</p>
+
+<div class="panel" id="panel"></div>
+<p class="note" id="note"></p>
+
+<div class="bar">
+  <div class="r"><span class="lb">文字</span><span class="g" id="sw-t"></span></div>
+  <div class="r"><span class="lb">字體</span><span class="g" id="sw-f"></span></div>
+  <div class="r"><span class="lb">顏色</span><span class="g" id="sw-c"></span></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var R = [ { "id": "mplus-hello", "font": "mplus", "text": "hello", "color": "deep", "size": 132, "stroke": 0, "n": 16018, "bad3": 1.1, "bad45": 2.1, "min": 1, "box": [ 509, 89, 822, 188 ], "kb": 138 }, { "id": "zenmaru-hello", "font": "zenmaru", "text": "hello", "color": "deep", "size": 132, "stroke": 0, "n": 10688, "bad3": 0.6, "bad45": 1.5, "min": 1, "box": [ 537, 102, 793, 196 ], "kb": 139 }, { "id": "baloo-hello", "font": "baloo", "text": "hello", "color": "deep", "size": 148, "stroke": 0, "n": 17235, "bad3": 2, "bad45": 3.4, "min": 1, "box": [ 505, 81, 824, 180 ], "kb": 138 }, { "id": "fredoka-hello", "font": "fredoka", "text": "hello", "color": "deep", "size": 140, "stroke": 0, "n": 14841, "bad3": 1.1, "bad45": 2.3, "min": 1, "box": [ 515, 90, 813, 191 ], "kb": 139 }, { "id": "mplus-hello-acc", "font": "mplus", "text": "hello", "color": "accent", "size": 132, "stroke": 0, "n": 16018, "bad3": 1.8, "bad45": 11, "min": 1, "box": [ 509, 89, 822, 188 ], "kb": 138 }, { "id": "zenmaru-hello-acc", "font": "zenmaru", "text": "hello", "color": "accent", "size": 132, "stroke": 0, "n": 10688, "bad3": 1, "bad45": 8.8, "min": 1, "box": [ 537, 102, 793, 196 ], "kb": 139 }, { "id": "baloo-hello-acc", "font": "baloo", "text": "hello", "color": "accent", "size": 148, "stroke": 0, "n": 17235, "bad3": 2.9, "bad45": 12.5, "min": 1, "box": [ 505, 81, 824, 180 ], "kb": 138 }, { "id": "fredoka-hello-acc", "font": "fredoka", "text": "hello", "color": "accent", "size": 140, "stroke": 0, "n": 14841, "bad3": 1.9, "bad45": 10.8, "min": 1, "box": [ 515, 90, 813, 191 ], "kb": 139 }, { "id": "ntc-nihao", "font": "ntc", "text": "你好", "color": "deep", "size": 108, "stroke": 3, "n": 13547, "bad3": 0.6, "bad45": 1.4, "min": 1, "box": [ 555, 91, 769, 195 ], "kb": 140 }, { "id": "ntc-nihao-acc", "font": "ntc", "text": "你好", "color": "accent", "size": 108, "stroke": 3, "n": 13547, "bad3": 1, "bad45": 4.6, "min": 1, "box": [ 555, 91, 769, 195 ], "kb": 139 }, { "id": "ntcflat-nihao", "font": "ntc", "text": "你好", "color": "deep", "size": 108, "stroke": 0, "n": 11157, "bad3": 0.6, "bad45": 1.5, "min": 1, "box": [ 557, 93, 767, 194 ], "kb": 140 }, { "id": "ntcflat-nihao-acc", "font": "ntc", "text": "你好", "color": "accent", "size": 108, "stroke": 0, "n": 11157, "bad3": 1, "bad45": 4.9, "min": 1, "box": [ 557, 93, 767, 194 ], "kb": 140 }, { "id": "zz-mplus-big", "font": "mplus", "text": "hello", "color": "deep", "size": 168, "stroke": 0, "n": 26431, "bad3": 11.4, "bad45": 14.2, "min": 1, "box": [ 465, 76, 868, 203 ], "kb": 137 }, { "id": "zz-mplus-sm", "font": "mplus", "text": "hello", "color": "deep", "size": 104, "stroke": 0, "n": 10052, "bad3": 0.8, "bad45": 2.1, "min": 1.02, "box": [ 540, 100, 790, 178 ], "kb": 138 } ];
+  var byId = {}; R.forEach(function (r) { byId[r.id] = r; });
+
+  var T = { hello: "hello", nihao: "你好" };
+  var F = { mplus: "M PLUS Rounded 1c", zenmaru: "Zen Maru Gothic",
+            baloo: "Baloo 2", fredoka: "Fredoka", ntc: "Noto Sans TC ＋圓角描邊",
+            ntcflat: "Noto Sans TC（不描邊）" };
+  var C = { deep: "深階 #2c5238", accent: "套色 #3f654a" };
+
+  /* 哪些組合真的出過圖 */
+  var MAP = {
+    "hello|mplus|deep": "mplus-hello",     "hello|mplus|accent": "mplus-hello-acc",
+    "hello|zenmaru|deep": "zenmaru-hello", "hello|zenmaru|accent": "zenmaru-hello-acc",
+    "hello|baloo|deep": "baloo-hello",     "hello|baloo|accent": "baloo-hello-acc",
+    "hello|fredoka|deep": "fredoka-hello", "hello|fredoka|accent": "fredoka-hello-acc",
+    "nihao|ntc|deep": "ntc-nihao",         "nihao|ntc|accent": "ntc-nihao-acc",
+    "nihao|ntcflat|deep": "ntcflat-nihao", "nihao|ntcflat|accent": "ntcflat-nihao-acc"
+  };
+  var st = { t: "hello", f: "mplus", c: "deep" };
+
+  function key(o) { return o.t + "|" + o.f + "|" + o.c; }
+  function pick() { return MAP[key(st)] || null; }          /* ⚠ 不做退讓，沒有就是沒有 */
+
+  /* ⚠⚠ 「按了沒反應」是這一站踩過很多次的坑（第九節第 24、25 條）——
+     切換條上有的每一格，按下去都必須真的換到一張圖。
+     做法：按下去先把那一軸釘住，再去調其他軸直到組合合法；
+     真的湊不出來才不給按（標成半透明）。 */
+  var AXES = { t: ["hello", "nihao"], c: ["deep", "accent"] };
+  function fontsFor(t) { return t === "hello" ? ["mplus", "zenmaru", "baloo", "fredoka"] : ["ntc", "ntcflat"]; }
+
+  function settle(want) {
+    var o = Object.assign({}, st, want);
+    if (fontsFor(o.t).indexOf(o.f) < 0) o.f = fontsFor(o.t)[0];
+    if (MAP[key(o)]) return o;
+    var fixed = Object.keys(want);                            /* 剛按的那一軸不准動 */
+    var order = ["c", "f", "t"].filter(function (k) { return fixed.indexOf(k) < 0; });
+    for (var i = 0; i < order.length; i++) {
+      var k = order[i], vals = k === "f" ? fontsFor(o.t) : AXES[k];
+      for (var j = 0; j < vals.length; j++) {
+        var t2 = Object.assign({}, o); t2[k] = vals[j];
+        if (fontsFor(t2.t).indexOf(t2.f) < 0) t2.f = fontsFor(t2.t)[0];
+        if (MAP[key(t2)]) return t2;
+      }
+    }
+    /* 兩軸一起讓 */
+    for (var a = 0; a < order.length; a++) for (var b2 = a + 1; b2 < order.length; b2++) {
+      var ka = order[a], kb = order[b2];
+      var va = ka === "f" ? fontsFor(o.t) : AXES[ka], vb = kb === "f" ? fontsFor(o.t) : AXES[kb];
+      for (var x = 0; x < va.length; x++) for (var y = 0; y < vb.length; y++) {
+        var t3 = Object.assign({}, o); t3[ka] = va[x]; t3[kb] = vb[y];
+        if (fontsFor(t3.t).indexOf(t3.f) < 0) t3.f = fontsFor(t3.t)[0];
+        if (MAP[key(t3)]) return t3;
+      }
+    }
+    return null;
+  }
+
+  function el(tag, cls, txt) {
+    var e = document.createElement(tag); if (cls) e.className = cls;
+    if (txt != null) e.textContent = txt; return e;
+  }
+  function chips(host, obj, k) {
+    host.innerHTML = "";
+    Object.keys(obj).forEach(function (v) {
+      var b = el("button", null, obj[v]);
+      b.setAttribute("aria-pressed", st[k] === v ? "true" : "false");
+      var w = {}; w[k] = v;
+      var got = settle(w);
+      if (!got) { b.disabled = true; b.style.opacity = ".34"; b.title = "這個組合沒有出圖"; }
+      else b.addEventListener("click", function () { st = got; sync(); render(); });
+      host.appendChild(b);
+    });
+  }
+  function sync() {
+    var fo = {}; fontsFor(st.t).forEach(function (k) { fo[k] = F[k]; });
+    chips(document.getElementById("sw-t"), T, "t");
+    chips(document.getElementById("sw-f"), fo, "f");
+    chips(document.getElementById("sw-c"), C, "c");
+  }
+
+  function render() {
+    var id = pick();
+    var panel = document.getElementById("panel"), note = document.getElementById("note");
+    if (!id) {
+      document.getElementById("shot").removeAttribute("src");
+      panel.innerHTML = "這個組合沒有出圖。";
+      return;
+    }
+    var src = id + ".jpg";
+    document.getElementById("shot").src = src;
+    document.getElementById("mini").src = src;
+    var r = byId[id] || {};
+    document.getElementById("cap").textContent =
+      "1040×520（Flex 頭圖的 2:1）・" + (r.kb || "?") + "KB";
+
+    var bad = r.bad45 == null ? null : r.bad45;
+    var cls = bad == null ? "" : (bad <= 5 ? "ok" : "warn");
+    panel.innerHTML =
+      "字框 <b>" + (r.box ? (r.box[2] - r.box[0]) + "×" + (r.box[3] - r.box[1]) : "?") + "px</b>" +
+      "（在聊天室裡 <b>" + (r.box ? ((r.box[2] - r.box[0]) * 232 / 1040).toFixed(0) : "?") + "px</b> 寬）" +
+      "<br>字的筆畫底下，對比低於 4.5 的像素 <span class='" + cls + "'>" +
+      (bad == null ? "?" : bad + "%") + "</span>" +
+      "　低於 3 的 <b>" + (r.bad3 == null ? "?" : r.bad3 + "%") + "</b>" +
+      "<br><span style='color:var(--ink-soft)'>⚠ 量的是<b>筆畫底下那些像素</b>，不是整塊區域的平均 —— " +
+      "這顆綠是中間調（深階 L* 31.5），最壞情況是背景剛好和它一樣亮的地方。</span>";
+
+    note.innerHTML = st.t === "nihao"
+      ? "⚠⚠ 中文是<b>近似</b>：M PLUS Rounded 1c 與 Zen Maru Gothic 都是日文圓體，實測<b>「你」不在它們的字集裡</b>（只有「好」）。Google Fonts 沒有圓體的繁中，所以這裡是 Noto Sans TC 900 加一圈同色的圓角描邊去逼近 —— 它不會像參考圖那麼圓。"
+      : (st.c === "accent"
+        ? "⚠ 套色 <b>#3f654a</b> 比深階亮，壓在天空上對比掉很多（11.0% vs 2.1%）。站上的規矩本來就是<b>深階給亮底上的字、套色給填實的塊</b>。"
+        : "落點是量出來的：右半邊掃過五塊，最乾淨的是<b>診所右邊那條街的上方天空</b>。街屋與招牌那一塊有 73.8% 的像素不合格（深色遮陽棚、紅招牌），不能放字。⚠ 字級是 132px：試過放大到 168，字會伸進右邊那棟灰樓，不合格的比例從 2.1% 跳到 14.2%。");
+  }
+
+  sync(); render();
+  /* 其餘在背景預抓，切換才不會等下載 */
+  window.addEventListener("load", function () {
+    Object.keys(MAP).forEach(function (k) { new Image().src = MAP[k] + ".jpg"; });
+  });
+})();
+</script>
+</body>
+</html>

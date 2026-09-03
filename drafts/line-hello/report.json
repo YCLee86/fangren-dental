@@ -1,0 +1,268 @@
+[
+  {
+    "id": "mplus-hello",
+    "font": "mplus",
+    "text": "hello",
+    "color": "deep",
+    "size": 132,
+    "stroke": 0,
+    "n": 16018,
+    "bad3": 1.1,
+    "bad45": 2.1,
+    "min": 1,
+    "box": [
+      509,
+      89,
+      822,
+      188
+    ],
+    "kb": 138
+  },
+  {
+    "id": "zenmaru-hello",
+    "font": "zenmaru",
+    "text": "hello",
+    "color": "deep",
+    "size": 132,
+    "stroke": 0,
+    "n": 10688,
+    "bad3": 0.6,
+    "bad45": 1.5,
+    "min": 1,
+    "box": [
+      537,
+      102,
+      793,
+      196
+    ],
+    "kb": 139
+  },
+  {
+    "id": "baloo-hello",
+    "font": "baloo",
+    "text": "hello",
+    "color": "deep",
+    "size": 148,
+    "stroke": 0,
+    "n": 17235,
+    "bad3": 2,
+    "bad45": 3.4,
+    "min": 1,
+    "box": [
+      505,
+      81,
+      824,
+      180
+    ],
+    "kb": 138
+  },
+  {
+    "id": "fredoka-hello",
+    "font": "fredoka",
+    "text": "hello",
+    "color": "deep",
+    "size": 140,
+    "stroke": 0,
+    "n": 14841,
+    "bad3": 1.1,
+    "bad45": 2.3,
+    "min": 1,
+    "box": [
+      515,
+      90,
+      813,
+      191
+    ],
+    "kb": 139
+  },
+  {
+    "id": "mplus-hello-acc",
+    "font": "mplus",
+    "text": "hello",
+    "color": "accent",
+    "size": 132,
+    "stroke": 0,
+    "n": 16018,
+    "bad3": 1.8,
+    "bad45": 11,
+    "min": 1,
+    "box": [
+      509,
+      89,
+      822,
+      188
+    ],
+    "kb": 138
+  },
+  {
+    "id": "zenmaru-hello-acc",
+    "font": "zenmaru",
+    "text": "hello",
+    "color": "accent",
+    "size": 132,
+    "stroke": 0,
+    "n": 10688,
+    "bad3": 1,
+    "bad45": 8.8,
+    "min": 1,
+    "box": [
+      537,
+      102,
+      793,
+      196
+    ],
+    "kb": 139
+  },
+  {
+    "id": "baloo-hello-acc",
+    "font": "baloo",
+    "text": "hello",
+    "color": "accent",
+    "size": 148,
+    "stroke": 0,
+    "n": 17235,
+    "bad3": 2.9,
+    "bad45": 12.5,
+    "min": 1,
+    "box": [
+      505,
+      81,
+      824,
+      180
+    ],
+    "kb": 138
+  },
+  {
+    "id": "fredoka-hello-acc",
+    "font": "fredoka",
+    "text": "hello",
+    "color": "accent",
+    "size": 140,
+    "stroke": 0,
+    "n": 14841,
+    "bad3": 1.9,
+    "bad45": 10.8,
+    "min": 1,
+    "box": [
+      515,
+      90,
+      813,
+      191
+    ],
+    "kb": 139
+  },
+  {
+    "id": "ntc-nihao",
+    "font": "ntc",
+    "text": "你好",
+    "color": "deep",
+    "size": 108,
+    "stroke": 3,
+    "n": 13547,
+    "bad3": 0.6,
+    "bad45": 1.4,
+    "min": 1,
+    "box": [
+      555,
+      91,
+      769,
+      195
+    ],
+    "kb": 140
+  },
+  {
+    "id": "ntc-nihao-acc",
+    "font": "ntc",
+    "text": "你好",
+    "color": "accent",
+    "size": 108,
+    "stroke": 3,
+    "n": 13547,
+    "bad3": 1,
+    "bad45": 4.6,
+    "min": 1,
+    "box": [
+      555,
+      91,
+      769,
+      195
+    ],
+    "kb": 139
+  },
+  {
+    "id": "ntcflat-nihao",
+    "font": "ntc",
+    "text": "你好",
+    "color": "deep",
+    "size": 108,
+    "stroke": 0,
+    "n": 11157,
+    "bad3": 0.6,
+    "bad45": 1.5,
+    "min": 1,
+    "box": [
+      557,
+      93,
+      767,
+      194
+    ],
+    "kb": 140
+  },
+  {
+    "id": "ntcflat-nihao-acc",
+    "font": "ntc",
+    "text": "你好",
+    "color": "accent",
+    "size": 108,
+    "stroke": 0,
+    "n": 11157,
+    "bad3": 1,
+    "bad45": 4.9,
+    "min": 1,
+    "box": [
+      557,
+      93,
+      767,
+      194
+    ],
+    "kb": 140
+  },
+  {
+    "id": "zz-mplus-big",
+    "font": "mplus",
+    "text": "hello",
+    "color": "deep",
+    "size": 168,
+    "stroke": 0,
+    "n": 26431,
+    "bad3": 11.4,
+    "bad45": 14.2,
+    "min": 1,
+    "box": [
+      465,
+      76,
+      868,
+      203
+    ],
+    "kb": 137
+  },
+  {
+    "id": "zz-mplus-sm",
+    "font": "mplus",
+    "text": "hello",
+    "color": "deep",
+    "size": 104,
+    "stroke": 0,
+    "n": 10052,
+    "bad3": 0.8,
+    "bad45": 2.1,
+    "min": 1.02,
+    "box": [
+      540,
+      100,
+      790,
+      178
+    ],
+    "kb": 138
+  }
+]
