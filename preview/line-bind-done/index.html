@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>綁定完成的那一則・六案（芳仁牙醫診所）</title>
+<!--
+  提案頁：LINE 官方帳號「完成綁定」之後送出的那一則，六個版本。
+  推導與定稿全文在 drafts/channels/README.md 第十九節，
+  舊的逐輪紀錄在 drafts/line-auto-reply/README.md 第十四、二十、二十四節。
+
+  ⚠ 這一頁模擬的是**病人的畫面**，不是後台。
+  ⚠⚠ 字級一律寫**固定 px**（2026-09-03 招呼卡那一輪的教訓，channels/README 第 18-2 節）：
+     LINE Flex 的 size 是固定 px（xxs 11／xs 13／sm 14／md 16／lg 19／xl 22／xxl 27），
+     不是比例。寫成 rem 的話每一行都比 LINE 實際的小 1~2.7px，
+     **提案頁一旦和真實算繪對不上，上面做的每一個判斷都是假的。**
+  ⚠⚠ 但**純文字泡泡**那一側沒有這張表：聊天室的字級跟著使用者手機的「字體大小」設定走。
+     這一頁用 16px（＝ Flex 的 md）畫，那是**假設，還沒用實機截圖校過**。
+     所以 line-auto-reply/README 第 24-4 節那張「泡泡高 328px／39%」是用 13.76px 量的，
+     偏小 —— 這一頁印出來的數字會比它大，那不是這一頁算錯。
+
+  ⚠ 六案的差別是**結構**不是換字：
+     Ⓐ 定稿（確認→功能→規則→沒有專人）　Ⓑ 同一份內容做成圖卡
+     Ⓒ 有標籤的出口清單（＝自動回應那一則的排法）　Ⓓ 規則放到最前面
+     Ⓔ 綁定之後這個帳號會做的三件事（國泰世華／玉山那一種）　Ⓕ 最短
+  ⚠⚠ 事實查核紅線：這個帳號**沒有專人即時回覆訊息**，六案都不可以出現
+     「有問題隨時問」那一類的承諾；國定假日休不休診**還沒問到**，所以只寫「週一至週五」。
+  ⚠ class 一律 pv- 前綴（撞名的教訓見 CLAUDE.md 第八節）。
+-->
+<style>
+:root{
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  --ink:#2a2c27; --ink-soft:#5c5f57; --green:#3f654a; --deep:#2c5238;
+  /* LINE 那一側的顏色（別人的介面，不進 PALETTE.md） */
+  --li-bg:#e9edf1; --li-in:#ffffff; --li-head:#ffffff; --li-meta:#8b96a1; --li-ink:#14181c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.7;padding-bottom:180px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:14px 14px 0}
+h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
+.pv-sub{font-size:.78rem;color:var(--ink-soft);margin:.35rem 0 .9rem}
+.pv-sub b{color:var(--ink)}
+
+/* ---- 手機外框 ＋ LINE 聊天室 ---------------------------------------- */
+.pv-phone{border:1px solid var(--rule);border-radius:14px;overflow:hidden;
+  background:var(--li-bg);box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.pv-head{background:var(--li-head);display:flex;align-items:center;gap:9px;
+  padding:9px 12px;border-bottom:1px solid #e3e6ea}
+.pv-head .b{font-size:.9rem;font-weight:700;color:var(--li-ink)}
+.pv-head .av{width:26px;height:26px;border-radius:50%;background:var(--deep)}
+.pv-head .x{margin-left:auto;color:var(--li-meta);font-size:1rem;letter-spacing:.14em}
+.pv-chat{padding:12px 11px 16px;display:flex;flex-direction:column;gap:10px}
+.pv-day{align-self:center;background:rgba(0,0,0,.16);color:#fff;font-size:11px;
+  padding:2px 11px;border-radius:11px}
+.pv-sys{align-self:center;color:var(--li-meta);font-size:11px;text-align:center}
+
+.pv-msg{display:flex;gap:7px;align-items:flex-end;max-width:100%}
+.pv-msg.me{flex-direction:row-reverse;align-self:flex-end}
+.pv-av{width:30px;height:30px;border-radius:50%;flex:none;background:var(--deep)}
+/* ⚠⚠ 寬度限制要下在**這個盒子**上，不能下在裡面的泡泡上：泡泡的父層是 flex 項目、
+   寬度是 shrink-to-fit（不定值），百分比的 max-width 對它解不出來，
+   量出來的「可用寬度」會塌成 160px（實際是 244）—— 而且畫面看起來只是「泡泡有點窄」，
+   不報錯。整頁的折行判斷會因此全部誤判。 */
+#pv-slot{min-width:0;max-width:min(268px,72%)}
+/* ⚠ 圖卡是**固定 268px**（Flex 的 mega），泡泡是**跟著字縮**（shrink-to-fit）——
+   兩種需求不一樣，不能共用一條規則：卡片寫 width:100% 掛在 auto 寬的父層上，
+   會退回 shrink-to-fit，量出來的可用寬度是假的（實測 240 變成 210）。 */
+#pv-slot.card{flex:0 1 268px}
+.pv-msg.me .pv-av{visibility:hidden}
+.pv-t{font-size:11px;color:var(--li-meta);flex:none;padding-bottom:2px}
+
+/* ⚠⚠ 純文字泡泡的字級：LINE 聊天室跟著手機的「字體大小」設定走，
+   這裡用 16px（＝ Flex 的 md）當基準，**是假設，要用實機截圖校一次**。 */
+.pv-bub{background:var(--li-in);border-radius:15px;padding:9px 12px;
+  font-size:16px;line-height:1.6;color:var(--li-ink);white-space:pre-wrap;
+  max-width:100%;box-shadow:0 1px 1px rgba(0,0,0,.05);word-break:break-word}
+.pv-msg.me .pv-bub{background:#6de67b}
+.pv-bub .tel{color:#2b6cb0;text-decoration:underline}
+
+/* ---- Ⓑ 圖卡（Flex Message）：卡片 268px、內距 14px，和招呼卡同一套 ---- */
+.pv-hc{width:100%;border-radius:14px;overflow:hidden;background:var(--card);
+  box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.pv-hc .b{padding:14px 14px 0}
+.pv-hc .t{font-size:16px;line-height:1.55;font-weight:700;letter-spacing:.01em;
+  white-space:pre-line}
+.pv-hc .d{font-size:14px;line-height:1.75;color:var(--ink-soft);margin-top:8px;
+  white-space:pre-line}
+.pv-hc hr{border:0;border-top:1px solid var(--rule);margin:14px 0 0}
+.pv-hc .f{padding:0 14px 14px}
+.pv-hc .say{font-size:14px;line-height:1.75;margin-top:14px;white-space:pre-line}
+.pv-hc .btn{display:flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:9px;padding:11px 12px;margin-top:8px;background:var(--green);color:#fff;
+  font-size:16px;font-weight:700;letter-spacing:.02em}
+/* ⚠ 這一顆**不需要圖示**，所以用 Flex 原生的 `button` 就夠了 —— 招呼卡那兩顆做成
+   「可點的盒子」是因為要加 logo（Flex 的 button 只有 label、不支援圖示）。 */
+.pv-hc .fine{font-size:13px;line-height:1.75;color:var(--ink-soft);margin-top:11px;
+  white-space:pre-line}
+
+/* ---- 量測面板 -------------------------------------------------------- */
+.pv-cap{font-size:.74rem;color:var(--ink-soft);margin:9px 2px 0}
+.pv-panel{margin:12px 0 0;border:1px solid var(--rule);border-radius:10px;
+  background:var(--card);padding:9px 11px;font-size:.73rem;line-height:1.85;
+  color:var(--ink-soft)}
+.pv-panel b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+.pv-panel .ok{color:var(--deep);font-weight:700}
+.pv-panel .no{color:#a33;font-weight:700}
+.pv-panel hr{border:0;border-top:1px solid var(--rule);margin:7px 0}
+.pv-note{font-size:.73rem;color:var(--ink-soft);margin:12px 0 0;
+  border-left:3px solid var(--rule);padding-left:10px}
+.pv-note b{color:var(--ink)}
+.pv-note code{font-size:.94em;overflow-wrap:anywhere}
+
+/* ---- 切換條 ---------------------------------------------------------- */
+.pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:9;
+  background:rgba(226,229,230,.94);backdrop-filter:blur(8px);
+  border-top:1px solid var(--rule);padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
+.pv-bar .in{max-width:430px;margin:0 auto}
+.pv-bar .lb{font-size:.68rem;color:var(--ink-soft);margin:0 0 4px}
+.pv-bar .row{display:flex;gap:5px;flex-wrap:wrap}
+.pv-bar button{flex:1 1 0;min-width:52px;font:inherit;font-size:.74rem;line-height:1.25;
+  padding:7px 4px;border:1px solid var(--deep);border-radius:8px;background:transparent;
+  color:var(--deep);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pv-bar button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.pv-bar .row2{margin-top:6px}
+.pv-bar .row2 button{flex:1 1 0}
+</style>
+</head>
+<body>
+<div class="pv-wrap">
+  <h1>綁定完成的那一則</h1>
+  <p class="pv-sub">病人在綁定頁按完成之後，聊天室裡會出現的那一則。
+  <b>六案</b>，差的是<b>結構</b>不是字。底下那條可以切。</p>
+
+  <div class="pv-phone">
+    <div class="pv-head"><span class="av"></span><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
+    <div class="pv-chat">
+      <div class="pv-day">今天</div>
+      <div class="pv-msg me"><span class="pv-av"></span>
+        <div class="pv-bub" id="pv-mine">✅ 綁定成功！</div>
+        <span class="pv-t">14:07</span></div>
+      <div class="pv-msg"><span class="pv-av"></span>
+        <div id="pv-slot"></div>
+        <span class="pv-t">14:07</span></div>
+      <div class="pv-sys">此官方帳號正在自動回覆訊息</div>
+    </div>
+  </div>
+  <p class="pv-cap">↑ 綠色那一則是<b>廠商系統以病人的身分送出的</b>「綁定成功」，
+  下面那一則才是我們寫的。⚠ 近似，不是 LINE 自己的算繪。</p>
+
+  <div class="pv-panel" id="pv-panel"></div>
+  <p class="pv-note" id="pv-note"></p>
+</div>
+
+<div class="pv-bar">
+  <div class="in">
+    <p class="lb" id="pv-lb">版本</p>
+    <div class="row" id="pv-vrow"></div>
+    <div class="row row2" id="pv-trow"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ⚠⚠ 斷行一律用 \n 自己指定，不要交給自動換行（line-auto-reply/README 第 24-3 節）：
+     六個寬度量過，自動斷會把詞劈開、或讓末行只剩一兩個字。
+     規則：每一行不超過 14 個全形字寬（半形算 0.5）。
+     ⚠ 電話一定要自己一行 —— 和別的字擠在一起時，折行會把 05- 和 5339369 拆開，
+       LINE 就認不出那是號碼、不會變成可以撥的連結。
+     ⚠ {T} ＝ 提醒的時間怎麼講（切換條第二排）：「2 天」是招呼卡定稿用的說法，
+       「48 小時」是系統那一側的真值。兩個是同一件事，時間點沒有動。 */
+
+  var V = {
+    a: {
+      name: "Ⓐ 定稿", kind: "text",
+      note: "2026-09-02 定稿那一版（line-auto-reply/README 第 24-2 節「貳」）逐字，只把時間的說法接上切換條。順序是使用者自己列的：綁定拿到什麼 → 改約的最晚時限 → 沒有專人。",
+      text:
+        "綁定完成了。\n\n" +
+        "看診前 {T}這裡會提醒你。\n" +
+        "想看自己的約診，\n" +
+        "點下面選單的「約診查詢」。\n" +
+        "家人的約診也可以綁在一起。\n\n" +
+        "約診要改或取消，\n" +
+        "請在看診日的兩天前，\n" +
+        "不含假日，打電話告訴診所：\n" +
+        "05-5339369\n\n" +
+        "這裡沒有專人即時回覆訊息，\n" +
+        "有狀況請在開診時間打給診所。"
+    },
+    b: {
+      name: "Ⓑ 圖卡", kind: "card",
+      note: "同一份內容做成 Flex 圖卡，和 2026-09-03 定案的招呼卡同一套（卡 268px、內距 14px、分隔線、實心綠按鈕）。⚠ 這一案多一顆「撥打電話」按鈕 —— 招呼卡刻意沒有那顆（你三次整理的清單裡都沒有它），但這一則的主要動作正是「兩天前打電話」，所以放了。⚠⚠ 要先問廠商：關鍵字回應送不送得出 Flex Message。",
+      title: "綁定完成了",
+      desc: "看診前 {T}會在這裡提醒你\n想看自己的約診，點下面選單的\n「約診查詢」\n家人的約診也可以綁在一起",
+      say: "約診要改或取消，請在看診日的\n兩天前（不含假日）打電話",
+      btn: "05-5339369",
+      fine: "週一至週五開診時間都有人接\n這裡沒有專人即時回覆訊息"
+    },
+    c: {
+      name: "Ⓒ 出口清單", kind: "text",
+      note: "早安美芝城／星宇航空那一種：標籤自己一行、內容縮排兩層（channels/README 第十一節）。好處是**和自動回應那一則排法一致** —— 病人在這個帳號上看到的每一則都長同一個樣子。",
+      text:
+        "綁定完成了。\n" +
+        "看診前 {T}，\n這裡會提醒你的約診。\n\n" +
+        "改約或取消　05-5339369\n" +
+        "　看診日的兩天前，不含假日\n" +
+        "　週一至週五開診時間內\n" +
+        "　都有人接\n\n" +
+        "查自己的約診\n" +
+        "　點下面選單的「約診查詢」\n\n" +
+        "家人的約診\n" +
+        "　也可以綁在這個帳號\n\n" +
+        "這裡沒有專人即時回覆訊息。"
+    },
+    d: {
+      name: "Ⓓ 規則優先", kind: "text",
+      note: "把「兩天前改約」提到最前面。理由是 channels/README 第 8-1 節那個結構性矛盾：提醒在看診前 48 小時發，而協議是「兩天前（不含假日）」—— 卡片送到他手上時期限剛好到期或已經過了。**綁定完成這一則，是他還來得及的時候**，所以規則放這裡最有用。⚠ 代價是第一眼不是恭喜，是規定。",
+      text:
+        "綁定完成了。\n\n" +
+        "先說一件現在記最有用的事：\n" +
+        "約診要改或取消，\n" +
+        "請在看診日的兩天前，\n" +
+        "不含假日，打電話告訴診所：\n" +
+        "05-5339369\n" +
+        "看診前 {T}，\n" +
+        "這裡會提醒你，\n" +
+        "那時候剛好是期限，\n" +
+        "中間有假日就已經來不及。\n\n" +
+        "想看自己的約診，\n" +
+        "點下面選單的「約診查詢」。\n" +
+        "家人的約診也可以綁在一起。"
+    },
+    e: {
+      name: "Ⓔ 三件事", kind: "text",
+      note: "國泰世華與玉山那一種（channels/README 第十三節）：把「綁定之後你會收到什麼」列成具體的幾條。⚠ 那兩家列的是三、四條，我們只列**已經確認**的三件 —— 治療後的照顧提醒、臨時休診通知還沒確認是不是綁定才收得到，沒確認就不列（第 24-6 節那一題）。",
+      text:
+        "綁定完成了。\n" +
+        "從現在起，這個帳號\n" +
+        "會為你做三件事：\n\n" +
+        "・約診提醒\n" +
+        "　看診前 {T}送到這裡\n" +
+        "・查自己的約診\n" +
+        "　點下面選單的「約診查詢」\n" +
+        "・家人的約診也綁在一起\n\n" +
+        "約診要改或取消，\n" +
+        "請在看診日的兩天前，\n" +
+        "不含假日，打電話告訴診所：\n" +
+        "05-5339369\n\n" +
+        "這裡沒有專人即時回覆訊息。"
+    },
+    f: {
+      name: "Ⓕ 最短", kind: "text",
+      note: "只留「綁定完成」「什麼時候提醒」「怎麼改約」。⚠ 換掉的是**約診查詢與家人綁定那兩件** —— 兩件都只在這一則講過一次，砍掉之後病人不會從別的地方知道（選單上有「約診查詢」那一格，但沒有人告訴他家人可以綁在一起）。",
+      text:
+        "綁定完成了。\n" +
+        "看診前 {T}，\n" +
+        "這裡會提醒你。\n\n" +
+        "約診要改或取消，\n" +
+        "請在看診日的兩天前，\n" +
+        "不含假日，打電話告訴診所：\n" +
+        "05-5339369\n\n" +
+        "這裡沒有專人即時回覆訊息。"
+    }
+  };
+  var ORDER = ["a", "b", "c", "d", "e", "f"];
+  var TIME = { d2: { name: "看診前 2 天", v: "2 天" }, h48: { name: "看診前 48 小時", v: "48 小時" } };
+
+  /* ⚠ 網址參數的正規式要寫 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到 h48 這種帶數字的值，
+     比對失敗後悄悄退回預設，等於參數沒作用（CLAUDE.md 第九節那條）。 */
+  function param(k, ok, dflt) {
+    var m = new RegExp("[?&]" + k + "=([a-z0-9]+)").exec(location.search);
+    return m && ok[m[1]] ? m[1] : dflt;
+  }
+  var cur = param("v", V, "a");
+  var tm = param("t", TIME, "d2");
+
+  function fill(s) { return s.replace(/\{T\}/g, TIME[tm].v); }
+  /* 電話那一行在 LINE 裡會自己變成可以撥的連結，所以畫成連結的樣子 */
+  function tel(s) { return s.replace(/05-5339369/g, '<span class="tel">05-5339369</span>'); }
+
+  function render() {
+    var v = V[cur], slot = document.getElementById("pv-slot");
+    slot.className = v.kind === "card" ? "card" : "";
+    if (v.kind === "text") {
+      slot.innerHTML = '<div class="pv-bub" id="pv-body">' + tel(fill(v.text)) + "</div>";
+    } else {
+      slot.innerHTML =
+        '<div class="pv-hc" id="pv-body">' +
+        '<div class="b">' +
+        '<p class="t">' + fill(v.title) + "</p>" +
+        '<p class="d">' + fill(v.desc) + "</p>" +
+        "<hr></div>" +
+        '<div class="f">' +
+        '<p class="say">' + fill(v.say) + "</p>" +
+        '<span class="btn">' + v.btn + "</span>" +
+        '<p class="fine">' + fill(v.fine) + "</p>" +
+        "</div></div>";
+    }
+    buttons();
+    measure();
+  }
+
+  function buttons() {
+    var r1 = document.getElementById("pv-vrow"), r2 = document.getElementById("pv-trow");
+    r1.innerHTML = ORDER.map(function (k) {
+      return '<button data-v="' + k + '" aria-pressed="' + (k === cur) + '">' + V[k].name + "</button>";
+    }).join("");
+    r2.innerHTML = Object.keys(TIME).map(function (k) {
+      return '<button data-t="' + k + '" aria-pressed="' + (k === tm) + '">' + TIME[k].name + "</button>";
+    }).join("");
+  }
+
+  /* 逐字量 top 分組 —— 這樣才知道**實際**折成幾行、末行剩幾個字。
+     ⚠ 不能只數 \n：手動斷好的一行如果太長，瀏覽器還是會再折一次，
+       而那一折出來的末行就是孤字。要量的正是這件事。
+     ⚠ 空白與換行本身要排除（rect 的 top 會不一樣，行數會算錯）。 */
+  function lines(el) {
+    var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), tns = [], n;
+    while ((n = w.nextNode())) tns.push(n);
+    var r = document.createRange(), g = {};
+    tns.forEach(function (tn) {
+      var t = tn.textContent;
+      for (var k = 0; k < t.length; k++) {
+        r.setStart(tn, k); r.setEnd(tn, k + 1);
+        var b = r.getBoundingClientRect();
+        if (b.height && t[k] !== "\n" && t[k] !== " " && t[k] !== "　") {
+          var top = Math.round(b.top);
+          if (!g[top]) g[top] = { s: "", l: b.left, r: b.right };
+          g[top].s += t[k];
+          if (b.left < g[top].l) g[top].l = b.left;
+          if (b.right > g[top].r) g[top].r = b.right;
+        }
+      }
+    });
+    return Object.keys(g).map(Number).sort(function (a, b2) { return a - b2; })
+      .map(function (t) { return { s: g[t].s, w: g[t].r - g[t].l }; });
+  }
+
+  /* 這一則自己斷了哪幾行 —— 拿它和實際畫出來的行比，多出來的就是被自動折掉的 */
+  function spec(v) {
+    var s = v.kind === "text" ? v.text
+          : [v.title, v.desc, v.say, v.btn, v.fine].join("\n");
+    return fill(s).split("\n").map(function (x) { return x.replace(/[ \u3000]/g, ""); })
+      .filter(function (x) { return x; });
+  }
+
+  function measure() {
+    var v = V[cur], body = document.getElementById("pv-body");
+    var ls = lines(body), sp = spec(v);
+    var vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    var h = body.getBoundingClientRect().height;
+
+    /* 可用寬度：泡泡量它自己，圖卡量它的內文盒（兩邊的內距不一樣） */
+    var box = v.kind === "text" ? body : body.querySelector(".b");
+    var cs = getComputedStyle(box);
+    var avail = box.getBoundingClientRect().width
+              - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+
+    /* ⚠⚠ 判準不是「有沒有被折」，是**折出來有沒有孤字**：
+       自己斷好的短句（「05-5339369」自己一行）是刻意的，不能報錯；
+       被瀏覽器再折一次、末段只剩 1~3 個字的那一行才是要治的。
+       做法：實際畫出來的行如果 ≤3 個字、而且**不是我們自己斷的那一行**，就是孤字。 */
+    var self = {};
+    sp.forEach(function (x) { self[x] = 1; });
+    var orphan = ls.filter(function (l) { return l.s.length <= 3 && !self[l.s]; });
+
+    var wide = 0, widest = "";
+    ls.forEach(function (l) { if (l.w > wide) { wide = l.w; widest = l.s; } });
+
+    var over = ls.length - sp.length;
+    /* ⚠ 要驗的是**號碼有沒有被折斷**（折斷了 LINE 就認不出那是電話、不會變成可以撥的），
+       不是「是不是自己站一行」—— Ⓒ 那一案是「改約或取消　05-5339369」，
+       同一行還有標籤，但只要沒被折開就沒事。 */
+    var telOwn = ls.some(function (l) { return l.s.indexOf("05-5339369") >= 0; });
+    var hasTel = fill(v.kind === "text" ? v.text : v.btn).indexOf("05-5339369") >= 0;
+
+    /* 紅線掃描（和 drafts/channels/check-welcome.mjs 同一張表）：
+       這個帳號沒有專人即時回覆訊息，所以不可以出現「有人可以問」那一類的承諾。 */
+    var LIE = ["隨時問", "都可以問", "問到", "有人回", "馬上回", "找得到人", "有專人"];
+    var whole = v.kind === "text" ? fill(v.text)
+      : [v.title, v.desc, v.say, v.btn, v.fine].map(fill).join("\n");
+    /* ⚠⚠ 掃之前要先把**否定形**拿掉：六案每一案都寫著「這裡沒有專人即時回覆訊息」，
+       而那句話裡面就含著「有專人」—— 第一版整頁誤報「說謊」，正好報在守得最好的那一句上。
+       （drafts/channels/check-welcome.mjs 那張表有同一個洞，只是招呼卡沒寫到這句話。） */
+    var scan = whole.replace(/沒有專人/g, "\uff3f").replace(/無專人/g, "\uff3f");
+    var lied = LIE.filter(function (w) { return scan.indexOf(w) >= 0; });
+
+    document.getElementById("pv-panel").innerHTML =
+      "<b>" + v.name + "</b>　<span>" + (v.kind === "text" ? "純文字泡泡" : "Flex 圖卡（268px）") + "</span>"
+      + "<br>高 <b>" + h.toFixed(0) + "px</b>　佔你這一屏 <b>" + (h / vh * 100).toFixed(0) + "%</b>"
+      + "　字數 <b>" + whole.replace(/\s/g, "").length + "</b>"
+      + "<br>自己斷 <b>" + sp.length + " 行</b>，你這台畫出 <b>" + ls.length + " 行</b>"
+      + (over > 0 ? "（多的 " + over + " 行是被再折一次的）" : "<span class='ok'>（一行都沒被再折）</span>")
+      + "<br>孤字 "
+      + (orphan.length
+          ? "<span class='no'>" + orphan.length + " 行：「"
+            + orphan.map(function (o) { return o.s; }).join("」「") + "」</span>"
+          : "<span class='ok'>沒有</span>")
+      + "<br>最寬的一行 <b>" + wide.toFixed(0) + "px</b>／可用 <b>" + avail.toFixed(0) + "px</b>"
+      + " <span>（" + widest.slice(0, 12) + "）</span>"
+      + "<br>電話沒被折斷 " + (!hasTel ? "<span class='no'>這一案沒有電話</span>"
+          : telOwn ? "<span class='ok'>是（撥得下去）</span>"
+                   : "<span class='no'>否 —— 折開了，LINE 認不出那是號碼</span>")
+      + "<br>沒有專人那件事 "
+      + (lied.length ? "<span class='no'>出現「" + lied.join("、") + "」</span>"
+                     : "<span class='ok'>守住了</span>")
+      + "<hr>" + v.note;
+
+    document.getElementById("pv-note").innerHTML =
+      "⚠⚠ <b>這一則卡在廠商</b>：現在綁定完那一刻，廠商的系統會**以病人的身分**把"
+      + "「✅ 09xxxxxxxx 綁定成功！」寫進聊天室（上面那顆綠泡泡），觸發的是<b>自動回應</b> —— "
+      + "自動回應對「病人送出任何訊息」都會回。<b>號碼每個人不一樣，關鍵字回應是完全一致比對，抓不到。</b>"
+      + "所以要有這一則專屬的，得請廠商把那句話改成<b>不含號碼的固定字串</b>（或改由官方帳號推播）。"
+      + "改不了的話，這一則只能和<b>自動回應共用同一則</b>，那就不能寫「綁定完成了」"
+      + "（打字問事情的人會一頭霧水）。"
+      + "<br>⚠ <b>「看診前 2 天」和「48 小時」是同一件事</b>，只是講法不同，提醒的時間點沒有動。"
+      + "招呼卡定稿用的是「2 天」，兩排一起看是為了決定三則要不要統一。"
+      + "<br>⚠⚠ <b>不寫「不克前往，預約改期」那顆按鈕</b>：提醒卡上那顆按下去只是系統顯示取消，"
+      + "而且按的當下已經違反「兩天前」的協議。三則一律把改約指向<b>電話</b>。"
+      + "也<b>不寫「不要按那顆」</b> —— 否定句只會讓它更醒目。"
+      + "<br>⚠ <b>只寫「週一至週五」</b>：站上門診表底下寫的是「國定假日與各科特別門診請來電確認」，"
+      + "<b>不是休診</b>。國定假日到底休不休診還沒問到，問到才寫得完整。"
+      + "<br>⚠ 電話一律 <code>05-5339369</code>（2026-08-27 全站定案的寫法）。"
+      + "<br>⚠⚠ <b>一行的上限從 14 個全形字變成 13</b>：24-3 節那條「每行不超過 14 個全形字」"
+      + "是在 13.76px 上量的，改用 16px 之後 14 個字 ＝ 224px，而 390 的手機只給 219px。"
+      + "所以 <b>Ⓐ（定稿逐字）在 390／375 上會折出孤字「所。」</b>，切到「48 小時」再多一個「你。」——"
+      + "<b>Ⓐ 沒有動它一個字</b>（那是你定的稿），Ⓒ~Ⓕ 是照 13 個字重新斷過的，"
+      + "六個寬度裡 430／390／375 都乾淨。360 以下三案都會折（原本就在範圍外）。"
+      + "<br>⚠⚠ 純文字那五案畫在 <b>16px</b> 上，那是<b>假設</b> —— LINE 聊天室的字級跟著使用者手機的"
+      + "「字體大小」設定走，沒有 Flex 那張固定 px 的表。要定案前<b>用實機截圖校一次</b>。"
+      + "（Ⓑ 圖卡那一案是照 Flex 的表畫的：md 16／sm 14／xs 13。）";
+  }
+
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-v], button[data-t]");
+    if (!b) return;
+    if (b.dataset.v) cur = b.dataset.v; else tm = b.dataset.t;
+    history.replaceState(null, "", "?v=" + cur + "&t=" + tm);
+    render();
+  });
+  window.addEventListener("resize", measure);
+  render();
+})();
+</script>
+</body>
+</html>

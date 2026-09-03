@@ -2266,6 +2266,7 @@ topics/<spec>/         ← 產出。**不要手改**，重跑就沒了
 | 自動回應 | `drafts/line-auto-reply/README.md`（文字）＋ `rich.mjs`（圖文訊息的圖）→ 規格頁 `/preview/line-reply/` |
 | 招呼圖卡 | `drafts/channels/welcome-card.json`（Flex）＋ `README.md` 第十八節 → 規格頁 **`/preview/line-welcome/`**。✅ **2026-09-03 定案** |
 | 招呼圖卡的頭圖 | `drafts/line-hello/`（`generate.mjs`／`bubble.mjs`／`README.md`）→ `preview/line-hello/hero-zenmaru.jpg`，規格頁 `/preview/line-hello/`。✅ 定案 |
+| **綁定完成** | **提案中**：`/preview/line-bind-done/`（六案，2026-09-03 開）。推導在 `drafts/channels/README.md` **第十九節**，定稿文字在 `drafts/line-auto-reply/README.md` 第 24-2 節「貳」。⚠ 使用者挑完才寫 Flex 的 JSON |
 | 提醒卡 | `drafts/channels/reminder-card.json`、時間換算 `timing.mjs` |
 
 ### 十一之二、⚠⚠ LINE Flex Message 的硬條件（不知道會做出對不上的東西）
