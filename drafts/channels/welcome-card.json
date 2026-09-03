@@ -1,45 +1,42 @@
 {
   "_說明": [
-    "加入好友的招呼圖卡（LINE Flex Message）。2026-09-03 第四版。",
+    "加入好友的招呼圖卡（LINE Flex Message）。2026-09-03 第五版，**文案由使用者定稿**。",
     "",
-    "使用者第三輪：「你好 拿掉／歡迎那句寫五個版本讓我選／選單下面列功能是多此一舉，",
-    "  但還是要說這個 LINE 有些什麼功能可以從下面的選單點開／介紹給朋友目前沒有文字，",
-    "  加一些進來／要符合診所形象和品牌精神」",
+    "他給的（逐字）：",
+    "  歡迎加入芳仁牙醫的官方LINE",
+    "  下面有一排選單／診所的資訊都在裡面",
+    "  綁定芳仁牙醫LINE／看診前2天發送提醒通知喔~　(加logo)點這裡綁定",
+    "  家人或朋友要找牙醫／歡迎把芳仁傳過去　(加logo) 介紹芳仁給朋友",
     "",
-    "⚠⚠ 事實查核先擋掉一整類寫法：**這個帳號沒有專人即時回覆訊息**（自動回應與",
-    "  綁定完成那兩則自己就寫著）。所以「有事情這裡先找得到人」「有問題隨時問」",
-    "  這種很順的句子一句都不能用 —— 那是說謊，也會招來錯的期待。",
+    "⚠⚠ 「加 logo」逼出一個結構改動：**LINE Flex 的 `button` 只有 label，不支援圖示**。",
+    "  所以兩顆按鈕都改成**可點的 box**（box 掛 action），裡面 image ＋ text。",
+    "  代價是失去按鈕內建的按壓效果，換來完全的排版控制。",
+    "⚠ logo 要**兩顆不同顏色**（白／深階綠 #2C5238）：透明底的暗綠疊在綠底上會看不見。",
+    "  由 drafts/channels/mark-png.mjs 從 index.html 頁首那條路徑產生（和 assets/logo.png",
+    "  同一條）。上線前要放到 https://fangren.net/assets/line/mark-{white,green}.png",
     "",
-    "開場那句**五個版本待選**，出處都是站上已經有的句子（提案頁可以切）：",
-    "  Ⓐ 你原本寫的      歡迎加入／芳仁牙醫診所的官方 LINE",
-    "  Ⓑ 接住他剛按的動作 謝謝你把芳仁加進來",
-    "  Ⓒ 巷口            巷口的芳仁／現在也在你的 LINE 裡     ← 這一份先寫它",
-    "  Ⓓ 在地            斗六永樂街／芳仁牙醫診所的官方 LINE",
-    "  Ⓔ 四十多年        從中華路到永樂街／四十多年的芳仁",
-    "  Ⓒ 接 HERO 收尾句「到巷口的芳仁　一起想辦法」；Ⓓ 接窄帶與分享卡的「雲林斗六・永樂街」；",
-    "  Ⓔ 逐字接 HERO 第二行「從中華路到永樂街　四十多年」。",
+    "⚠ 兩處照站上慣例補的，不是改他的字：",
+    "  ・「官方 LINE」中間加半形空格（站上一律這樣寫：「官方 LINE」「 Google」）",
+    "  ・「喔～」用全形波浪，和站上其他中文標點一致",
+    "⚠ 「看診前 2 天」＝ 機器那邊的 48 小時，只是換成講話的說法，時間點沒有動。",
     "",
-    "⚠⚠ 斷行一律用 \\n **自己指定**，不要交給自動換行。五個寬度量過，自動斷會斷出",
-    "  「…的官／方 LINE」（把詞劈開）、「…LINE／裡」「…傳給／他」（末行剩一個字）。",
-    "  斷在哪就把那個逗號拿掉 —— 換行本身就是停頓，再加逗號是停兩次。",
+    "⚠⚠ 斷行一律用 \\n 自己指定，不要交給自動換行（五個寬度量過，自動斷會把詞劈開、",
+    "  或讓末行只剩一個字）。斷在哪就把那個逗號拿掉 —— 換行本身就是停頓。",
     "",
-    "⚠ 選單那段**不列五個功能**（使用者：列出來是多此一舉，點開就看得到），",
-    "  但仍然要說有東西可以點，所以留一句話、只點名兩件最常用的。",
-    "⚠ 介紹給朋友補了文字，**沒有任何好處交換**（TEAM.md 第 11 號角色的紅線：不誘導），",
-    "  也不用「推薦」「分享」這種行銷腔 —— 用平常動詞：找、傳。",
-    "⚠ 兩個動作各配一句話，形狀對稱；綁定在上（診所真正要的動作），介紹在下。",
+    "⚠⚠ 事實查核：這個帳號**沒有專人即時回覆訊息**（自動回應與綁定完成那兩則自己就寫著），",
+    "  所以卡片上不可以出現「有問題隨時問」那一類的承諾。check-welcome.mjs 有掃描擋著。",
     "",
-    "⚠⚠ 撥打電話那顆按鈕沒有了（使用者整理的清單裡沒有它）。電話仍在選單的",
-    "  「診所資訊」與帳號主頁上，不是消失。**這一項還沒等到他點頭。**",
-    "",
+    "⚠⚠ **撥打電話那顆按鈕沒有**（使用者三次整理的清單裡都沒有它）。電話仍在選單的",
+    "  「診所資訊」與帳號主頁上。",
     "⚠⚠ 要不要用得先問廠商：後台的『招呼訊息』能不能送 Flex Message。",
     "  送不出去的話退回 preview/line-reply/ 的『圖文分開』版。",
     "⚠⚠ 兩顆按鈕的網址都還不能用：綁定的是廠商系統產的；推薦官方帳號的深連結",
     "  **沒有實測過**。⚠ 不要改填 https://line.me/R/ti/p/@445rpiiv —— 按的人已經是好友，",
     "  點下去只會開到帳號頁，不會叫出轉傳。",
     "",
-    "字級照 LINE Flex 的固定 px：md 16（開場）／sm 14（其餘）。",
-    "顏色全部來自 PALETTE.md：卡 #F4F4F5・墨 #2A2C27・柔墨 #5C5F57・線 #CDD0D2・綠 #3F654A"
+    "字級照 LINE Flex 的固定 px：md 16（開場與按鈕的字）／sm 14（其餘）。",
+    "顏色全部來自 PALETTE.md：卡 #F4F4F5・墨 #2A2C27・柔墨 #5C5F57・線 #CDD0D2・",
+    "  綠 #3F654A（一般牙科套色）・深階 #2C5238"
   ],
   "type": "bubble",
   "size": "mega",
@@ -60,7 +57,7 @@
     "contents": [
       {
         "type": "text",
-        "text": "巷口的芳仁\n現在也在你的 LINE 裡",
+        "text": "歡迎加入芳仁牙醫的官方 LINE",
         "size": "md",
         "weight": "bold",
         "color": "#2A2C27",
@@ -68,7 +65,7 @@
       },
       {
         "type": "text",
-        "text": "下面有一排選單\n診所的資訊和你的約診都在裡面",
+        "text": "下面有一排選單\n診所的資訊都在裡面",
         "size": "sm",
         "color": "#5C5F57",
         "margin": "sm",
@@ -91,42 +88,90 @@
     "contents": [
       {
         "type": "text",
-        "text": "看診前 48 小時發送提醒通知喔～",
+        "text": "綁定芳仁牙醫 LINE\n看診前 2 天發送提醒通知喔～",
         "size": "sm",
         "color": "#2A2C27",
         "margin": "lg",
         "wrap": true
       },
       {
-        "type": "button",
-        "style": "primary",
-        "color": "#3F654A",
-        "height": "sm",
+        "type": "box",
+        "layout": "horizontal",
+        "cornerRadius": "9px",
+        "paddingAll": "11px",
+        "spacing": "sm",
+        "justifyContent": "center",
+        "alignItems": "center",
         "margin": "sm",
         "action": {
           "type": "uri",
-          "label": "完成綁定",
+          "label": "點這裡綁定",
           "uri": "【廠商系統產的綁定網址，還沒拿到】"
-        }
+        },
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/mark-white.png",
+            "size": "34px",
+            "aspectRatio": "2029:1000",
+            "aspectMode": "fit",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "點這裡綁定",
+            "size": "md",
+            "weight": "bold",
+            "color": "#FFFFFF",
+            "flex": 0,
+            "align": "center"
+          }
+        ],
+        "backgroundColor": "#3F654A"
       },
       {
         "type": "text",
-        "text": "家人朋友要找牙醫\n把芳仁傳給他",
+        "text": "家人或朋友要找牙醫\n歡迎把芳仁傳過去",
         "size": "sm",
         "color": "#2A2C27",
         "margin": "lg",
         "wrap": true
       },
       {
-        "type": "button",
-        "style": "link",
-        "height": "sm",
+        "type": "box",
+        "layout": "horizontal",
+        "cornerRadius": "9px",
+        "paddingAll": "11px",
+        "spacing": "sm",
+        "justifyContent": "center",
+        "alignItems": "center",
         "margin": "sm",
         "action": {
           "type": "uri",
           "label": "介紹芳仁給朋友",
           "uri": "https://line.me/R/nv/recommendOA/@445rpiiv"
-        }
+        },
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/mark-green.png",
+            "size": "34px",
+            "aspectRatio": "2029:1000",
+            "aspectMode": "fit",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "介紹芳仁給朋友",
+            "size": "md",
+            "weight": "bold",
+            "color": "#2C5238",
+            "flex": 0,
+            "align": "center"
+          }
+        ],
+        "borderColor": "#2C5238",
+        "borderWidth": "1px"
       }
     ]
   }

@@ -19,7 +19,9 @@ const html = fs.readFileSync("preview/line-welcome/index.html", "utf8");
 const MAP = ["#hi", "#menu", "#s1", "#s2"];
 const flat = [...j.body.contents, ...j.footer.contents];
 const texts = flat.filter((c) => c.type === "text");
-const buttons = flat.filter((c) => c.type === "button");
+/* ⚠ 按鈕現在是「掛了 action 的 box」，不是 type:"button"（Flex 的 button 不支援圖示）。
+   兩種都認，免得日後改回去時這支靜靜地什麼都沒驗到。 */
+const buttons = flat.filter((c) => c.type === "button" || (c.type === "box" && c.action));
 const bad = [];
 
 if (texts.length !== MAP.length)
@@ -44,22 +46,24 @@ texts.forEach((t, i) => {
     bad.push(`提案頁上找不到這段文字：「${t.text.replace(/\n/g, " ／ ")}」`);
 });
 
-/* ⚠ 開場那一句在提案頁上有五個版本（切換條），JSON 只能寫一個 —— 但那一個
-   一定要是五個之中的一個，不能是第六種寫法。 */
-const variants = [...html.matchAll(/text: "([^"]+)"/g)].map((m) => m[1]);
-if (variants.length !== 5) bad.push(`提案頁的開場版本有 ${variants.length} 個，該是 5 個`);
-if (!variants.includes(texts[0].text.replace(/\n/g, "\\n")))
-  bad.push(`JSON 的開場「${texts[0].text.replace(/\n/g, " ／ ")}」不在提案頁那五個版本裡`);
-
 /* 按鈕：順序、標籤、長度 */
 const labels = buttons.map((b) => b.action.label);
-const inHtml = [...html.matchAll(/class="btn [^"]*" id="b\d">([^<]+)</g)].map((m) => m[1]);
+const inHtml = [...html.matchAll(/id="b\d"><img src="[^"]+" alt=""><span>([^<]+)</g)].map((m) => m[1]);
 if (labels.join("|") !== inHtml.join("|"))
   bad.push(`按鈕對不上：JSON「${labels.join("、")}」vs 提案頁「${inHtml.join("、")}」`);
 /* ⚠ LINE 的按鈕標籤是單行、放不下就截掉。卡片 268 − 內距 28 − 按鈕內距 24 ＝ 216px，
    16px 的中文一個字 16px，所以上限約 13 個字；留餘裕抓 8 個字。 */
 for (const l of labels)
   if (l.length > 8) bad.push(`按鈕標籤「${l}」有 ${l.length} 個字，塞不進按鈕（會被截掉）`);
+
+/* ⚠ 兩顆按鈕的 logo：一定要**兩個不同的檔**（白／綠）。透明底的暗綠疊在綠底上
+   會看不見 —— 兩顆指到同一張就是這個錯，而且畫面上只會「有一顆看不太到」。 */
+const marks = buttons.map((b) => (b.contents || []).filter((c) => c.type === "image").map((c) => c.url)[0]);
+if (marks.some((m) => !m)) bad.push("有按鈕沒有 logo");
+else if (new Set(marks).size !== marks.length) bad.push(`兩顆按鈕指到同一張 logo：${marks[0]}`);
+for (const m of marks)
+  if (m && !fs.existsSync("preview/line-welcome/" + m.split("/").pop()))
+    bad.push(`提案頁底下沒有這張 logo：${m.split("/").pop()}（跑 node drafts/channels/mark-png.mjs）`);
 
 /* 還沒拿到的網址要看得出來是佔位符，不要哪天被當成真的推上去 */
 for (const b of buttons)
@@ -74,6 +78,6 @@ for (const t of texts) for (const w of LIE)
 
 console.log(bad.length
   ? "❌\n  " + bad.join("\n  ")
-  : `✅ JSON 與提案頁逐項相同（${texts.length} 段文字、字級、開場在五個版本裡、` +
-    `${labels.length} 顆按鈕、沒有「有人可以問」那一類的承諾）`);
+  : `✅ JSON 與提案頁逐項相同（${texts.length} 段文字、字級、${labels.length} 顆按鈕的標籤與 logo、` +
+    `沒有「有人可以問」那一類的承諾）`);
 process.exit(bad.length ? 1 : 0);
