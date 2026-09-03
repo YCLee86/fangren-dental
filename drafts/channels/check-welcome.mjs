@@ -94,6 +94,37 @@ for (const m of marks)
   if (m && !fs.existsSync("preview/line-welcome/" + m.split("/").pop()))
     bad.push(`提案頁底下沒有這張 logo：${m.split("/").pop()}（跑 node drafts/channels/mark-png.mjs）`);
 
+/* ⚠⚠ 2026-09-03：兩顆 logo 換成**兩個不同的形狀**（綁定是頁首那一條 2.029、
+   介紹是 brand/shapes/shape-r2c3 的 3.081），所以再驗兩件：
+   ① `aspectRatio` 要對得上那張 PNG 的真實尺寸。**寫錯不會報錯也不會變形** ——
+      aspectMode 是 fit，只會靜靜地把圖縮小、四周留白，很難用眼睛看出來。
+   ② `size`（＝**寬度**）要和提案頁那條 CSS 一樣。兩顆的寬不一樣是刻意的
+      （形狀不同、要一樣大），所以不能共用一條規則。 */
+const PNGSZ = (f) => {           /* 直接讀 PNG 檔頭的 IHDR，零依賴 */
+  const b = fs.readFileSync(f);
+  return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+};
+const BTNCLS = ["fill", "line"];               /* JSON 的按鈕順序 ↔ 提案頁的 class */
+buttons.forEach((b, i) => {
+  const img = (b.contents || []).find((c) => c.type === "image");
+  if (!img) return;
+  const file = "preview/line-welcome/" + img.url.split("/").pop();
+  if (fs.existsSync(file)) {
+    const { w, h } = PNGSZ(file);
+    const ar = (img.aspectRatio || "").split(":").map(Number);
+    if (ar.length !== 2 || !ar[0] || !ar[1]) bad.push(`按鈕「${b.action.label}」的 aspectRatio 讀不出來`);
+    else if (Math.abs(ar[0] / ar[1] - w / h) > .02)
+      bad.push(`按鈕「${b.action.label}」的 aspectRatio ${img.aspectRatio} 對不上 ` +
+               `${file.split("/").pop()} 的 ${w}×${h}（＝${(w / h).toFixed(3)}）`);
+  }
+  const px = parseFloat(img.size);
+  const cls = BTNCLS[i];
+  const m = cls && html.match(new RegExp(`\\.btn\\.${cls} img\\{width:(\\d+)px`));
+  if (!m) bad.push(`提案頁找不到 .btn.${cls} img 的 width（兩顆的寬不一樣，不能共用一條規則）`);
+  else if (+m[1] !== px)
+    bad.push(`按鈕「${b.action.label}」的 logo 寬度對不上：JSON ${px}px、提案頁 ${m[1]}px`);
+});
+
 /* 還沒拿到的網址要看得出來是佔位符，不要哪天被當成真的推上去 */
 for (const b of buttons)
   if (!/^https?:/.test(b.action.uri) && !/【.*】/.test(b.action.uri))
@@ -107,6 +138,7 @@ for (const t of texts) for (const w of LIE)
 
 console.log(bad.length
   ? "❌\n  " + bad.join("\n  ")
-  : `✅ JSON 與提案頁逐項相同（${texts.length} 段文字、字級、${labels.length} 顆按鈕的標籤與 logo、` +
+  : `✅ JSON 與提案頁逐項相同（${texts.length} 段文字、字級、${labels.length} 顆按鈕的標籤、`
+  + `logo 的檔案／長寬比／寬度、` +
     `沒有「有人可以問」那一類的承諾）`);
 process.exit(bad.length ? 1 : 0);

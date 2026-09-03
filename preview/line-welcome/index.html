@@ -18,7 +18,12 @@
     不支援圖示**。所以兩顆按鈕都改成**可點的 box**（box 掛 action），裡面 image ＋ text。
     代價是失去按鈕內建的按壓效果，換來完全的排版控制。
   ⚠ logo 要**兩顆不同顏色**（白／深階綠）：透明底的暗綠疊在綠底上會看不見。
-    由 drafts/channels/mark-png.mjs 從 index.html 頁首那條路徑產生。
+    由 drafts/channels/mark-png.mjs 產生。
+  ⚠⚠ 2026-09-03 稍晚：**兩顆是兩個不同的形狀**（使用者：「介紹芳仁給朋友的 logo
+    選 shape_r2c3」）—— 綁定那顆是 index.html 頁首那一條（長寬比 2.029），
+    介紹那顆是 brand/shapes/shape-r2c3.svg（細長那一顆，3.081）。
+    **Flex 的 `size` 給的是寬度**，所以兩顆不能都寫 34px（細長那顆只會有 11px 高）。
+    三格看過：52（＝等高，比白那顆重）／**47（定案，兩顆讀起來一樣大）**／42（＝等墨面積，比字還矮）。
 
   ⚠ 兩處照站上慣例補的，不是改他的字：
     ・「官方 LINE」中間加半形空格（站上一律這樣寫）
@@ -65,7 +70,11 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
    代價是失去按鈕內建的按壓效果，換來完全的排版控制。 */
 .hc .btn{display:flex;align-items:center;justify-content:center;gap:8px;
   border-radius:9px;padding:11px 12px;margin-top:8px;overflow:hidden}
-.hc .btn img{flex:none;width:34px;display:block}
+/* ⚠ 兩顆 logo 的**寬度不一樣**（形狀不一樣、要一樣大）——
+   這裡的值要和 welcome-card.json 的 `size` 逐字相同，check-welcome.mjs 會比對 */
+.hc .btn img{flex:none;display:block}
+.hc .btn.fill img{width:34px}
+.hc .btn.line img{width:47px}
 .hc .btn span{font-size:16px;line-height:1.3;font-weight:700;letter-spacing:.02em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hc .btn.fill{background:var(--green);color:#fff}
