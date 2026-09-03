@@ -4,24 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>招呼圖卡的頭圖 —— 裁切</title>
+<title>招呼圖卡的頭圖 —— 芳仁／哩厚</title>
 <!--
-  提案頁：加入好友那張圖卡的頭圖，要怎麼裁。
-  使用者 2026-09-03：「先不要管字，我們先處理照片的裁切。診所建築左邊還有點空間
-  可以裁掉，照片下緣的道路也可裁掉一些。」
+  提案頁：加入好友那張圖卡的頭圖。
+  ✅ 裁切 2026-09-03 定案 Ⓒ3b（x 934~7614、y 403~3743），其餘八案已刪，推導在
+     drafts/line-hello/README.md 第八節。
+  這一輪要選的是：**字體**（三支）與**白色玻璃遮罩的濃度**（四級）。
 
-  ⚠⚠ 左邊和下面不能各自調：成品必須是 2:1（Flex 頭圖的比例），
-    左邊裁掉多少，高度就得跟著裁掉一半。高度那一刀要從上下分配 ——
-    全部從下面切會吃到騎樓（建築底部在 y 88%）。
+  ⚠⚠ 遮罩的位置是量出來的：逐列／逐行掃「有多少 % 的像素 L* ≥ 70」，
+    乾淨區是 x 480~960、y 0~340。要避開三個東西：診所右牆的邊（x≈440）、
+    劉家招牌的柱子（x≈640，只有 60% 夠亮）、右邊公寓的暗部（x≥980）。
+    所以面板放在柱子右邊的 x 688~960、y 40~304。
+    ⚠ 面板一定要整塊落在乾淨區裡 —— backdrop-filter 的模糊會把框外的暗色吸進來
+      （第一版壓到遮陽棚，下緣糊掉一塊）。出圖有守門擋著。
 
-  ⚠⚠ 順序是對的：**先裁切、再放字**。字的落點是相對於裁切框量出來的
-    （前一輪量到最乾淨的那塊天空只有 6.4% 不合格），裁切一改那塊天空就換位置，
-    字一定要重放、重量。所以這一頁上沒有字。
+  ⚠ 字體：實測 M PLUS Rounded 1c 與 Zen Maru Gothic **這四個漢字全都有**
+    （連罕用的「哩」也在），而且逐字放大比對過 —— 芳／仁／哩／厚 在日文與繁中的
+    結構完全一致，沒有日本字形的問題。所以中文終於拿得到真正的圓體。
 
-  ⚠ 這一頁擺的是真的產出檔（crop-*.jpg），不是用 CSS 再裁一次 ——
-    要判斷的是縮到聊天室的 232px 還讀不讀得懂（同 og-topic-card 那一輪）。
-
-  出圖：node drafts/line-hello/crop.mjs　　推導：drafts/line-hello/README.md
+  ⚠ 這一頁擺的是真的產出檔（hero-*.jpg），不是用 CSS 再做一次。
+  出圖：node drafts/line-hello/generate.mjs
 -->
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--ink-soft:#5c5f57;--rule:#cdd0d2;
@@ -29,7 +31,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:15px/1.7 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  padding:18px 16px 190px}
+  padding:18px 16px 210px}
 h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .lede{color:var(--ink-soft);font-size:.86rem;margin:0 0 16px}
 .lede b{color:var(--ink)}
@@ -38,6 +40,7 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .big img{width:100%;display:block}
 .cap{font-size:.78rem;color:var(--ink-soft);margin:7px 2px 16px}
 .chat{background:#e9edf1;border-radius:12px;padding:12px 10px}
+.chat .day{text-align:center;font-size:.66rem;color:#7b8794;margin-bottom:9px}
 .hc{width:232px;border-radius:14px;overflow:hidden;background:var(--card);
   box-shadow:0 1px 2px rgba(0,0,0,.08);margin-left:34px;position:relative}
 .hc::before{content:"";position:absolute;left:-34px;top:0;width:26px;height:26px;
@@ -53,7 +56,6 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .hc .tel{background:var(--green);color:#fff;font-weight:700;text-align:center;
   border-radius:8px;padding:8px 0;font-size:.8rem;margin-top:9px}
 .hc .share{display:block;text-align:center;color:var(--deep);font-size:.72rem;padding:8px 0 1px}
-.chat .day{text-align:center;font-size:.66rem;color:#7b8794;margin-bottom:9px}
 .panel{background:var(--card);border:1px solid var(--rule);border-radius:10px;
   padding:11px 13px;font-size:.8rem;line-height:1.8;margin-top:14px}
 .panel b{font-variant-numeric:tabular-nums}
@@ -63,7 +65,7 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .bar{position:fixed;left:0;right:0;bottom:0;background:rgba(244,244,245,.97);
   border-top:1px solid var(--rule);padding:10px 12px calc(10px + env(safe-area-inset-bottom));
   backdrop-filter:blur(8px);z-index:9}
-.bar .r{display:flex;align-items:flex-start;gap:8px}
+.bar .r{display:flex;align-items:flex-start;gap:8px;margin:3px 0}
 .bar .lb{flex:none;width:2.6em;font-size:.72rem;color:var(--ink-soft);padding-top:5px}
 .bar .g{display:flex;flex-wrap:wrap;gap:5px}
 .bar button{font:inherit;font-size:.75rem;padding:4px 10px;border-radius:7px;
@@ -72,9 +74,9 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 </style>
 </head>
 <body>
-<h1>頭圖要怎麼裁</h1>
-<p class="lede">底下切換裁法。<b>Ⓒ1~Ⓒ3</b> 是在 Ⓒ 的基礎上把上緣的天空再收掉一階一階。⚠ 左邊和下面<b>不能各自調</b> ——
-成品要維持 <b>2:1</b>，左邊裁掉多少，高度就得跟著裁掉一半。</p>
+<h1>頭圖：芳仁／哩厚</h1>
+<p class="lede">裁切已定案（<b>Ⓒ3b</b>）。這一頁選<b>字體</b>與<b>白色玻璃的濃度</b>。
+遮罩的位置是量出來的，落在招牌柱子右邊那塊乾淨的天空與亮牆上。</p>
 
 <div class="big"><img id="shot" alt=""></div>
 <p class="cap" id="cap"></p>
@@ -100,64 +102,58 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 <div class="panel" id="panel"></div>
 <p class="note" id="note"></p>
 
-<div class="bar"><div class="r"><span class="lb">裁法</span><span class="g" id="sw"></span></div></div>
+<div class="bar">
+  <div class="r"><span class="lb">字體</span><span class="g" id="sw-f"></span></div>
+  <div class="r"><span class="lb">玻璃</span><span class="g" id="sw-g"></span></div>
+</div>
 
 <script>
 (function () {
   "use strict";
-  var R = [{"id":"a","label":"Ⓐ 幾乎不裁（現況）","L":0.5,"R":100,"bottom":100,"x0":40,"x1":8000,"y0":2,"y1":3982,"skyAboveRoof":13.456532663316583,"roadStrip":9.504773869346733,"cleanSky":68.5,"kb":136,"note":""},{"id":"b","label":"Ⓑ 左 5%・路留大半","L":5,"R":100,"bottom":97,"x0":400,"x1":8000,"y0":62.539999999999964,"y1":3862.54,"skyAboveRoof":12.500789473684213,"roadStrip":6.8113157894736815,"cleanSky":70.8,"kb":136,"note":""},{"id":"c","label":"Ⓒ 左 9%・路留一條","L":9,"R":100,"bottom":94,"x0":720,"x1":8000,"y0":103.07999999999993,"y1":3743.08,"skyAboveRoof":11.936538461538465,"roadStrip":3.828846153846151,"cleanSky":70.2,"kb":135,"note":""},{"id":"d","label":"Ⓓ 左 13%・貼到屋簷","L":13,"R":100,"bottom":92.5,"x0":1040,"x1":8000,"y0":203.3499999999999,"y1":3683.35,"skyAboveRoof":9.604022988505752,"roadStrip":2.288505747126433,"cleanSky":71.9,"kb":134,"note":""},{"id":"c1","label":"Ⓒ1 天空少一點","L":9,"R":97.5,"bottom":94,"x0":720,"x1":7800,"y0":203.07999999999993,"y1":3743.08,"skyAboveRoof":9.448870056497178,"roadStrip":3.9370056497175105,"cleanSky":77.1,"kb":134,"note":""},{"id":"c2","label":"Ⓒ2 天空再少","L":9,"R":95,"bottom":94,"x0":720,"x1":7600,"y0":303.0799999999999,"y1":3743.08,"skyAboveRoof":6.816569767441864,"roadStrip":4.05145348837209,"cleanSky":83.9,"kb":135,"note":""},{"id":"c3","label":"Ⓒ3 天空最少","L":9,"R":92.5,"bottom":94,"x0":720,"x1":7400,"y0":403.0799999999999,"y1":3743.08,"skyAboveRoof":4.026646706586829,"roadStrip":4.172754491017961,"cleanSky":88.3,"kb":136,"note":""},{"id":"c3a","label":"Ⓒ3a 往左一階","L":10.34,"R":93.84,"bottom":94,"x0":827.2,"x1":7507.2,"y0":403.0799999999999,"y1":3743.08,"skyAboveRoof":4.026646706586829,"roadStrip":4.172754491017961,"cleanSky":87.6,"kb":136,"note":""},{"id":"c3b","label":"Ⓒ3b 往左兩階","L":11.67,"R":95.17,"bottom":94,"x0":933.6,"x1":7613.6,"y0":403.0799999999999,"y1":3743.08,"skyAboveRoof":4.026646706586829,"roadStrip":4.172754491017961,"cleanSky":85.7,"kb":136,"note":""},{"id":"c3c","label":"Ⓒ3c 到 Ⓓ 的極限","L":13,"R":96.5,"bottom":94,"x0":1040,"x1":7720,"y0":403.0799999999999,"y1":3743.08,"skyAboveRoof":4.026646706586829,"roadStrip":4.172754491017961,"cleanSky":83.6,"kb":136,"note":""}];
-  var st = R[0].id;
+  var R = [{"id":"hero-mplus-none","font":"mplus","gk":"none","glass":"不加玻璃","alpha":0,"blur":0,"lift":-0.0046,"drop":-3.9,"fs":88,"onChat":19.6,"kb":138},{"id":"hero-mplus-soft","font":"mplus","gk":"soft","glass":"淡","alpha":0.34,"blur":7,"lift":0.0757,"drop":42.6,"fs":88,"onChat":19.6,"kb":130},{"id":"hero-mplus-mid","font":"mplus","gk":"mid","glass":"中","alpha":0.58,"blur":11,"lift":0.1461,"drop":53.6,"fs":88,"onChat":19.6,"kb":130},{"id":"hero-mplus-hard","font":"mplus","gk":"hard","glass":"濃","alpha":0.8,"blur":15,"lift":0.2162,"drop":57.3,"fs":88,"onChat":19.6,"kb":130},{"id":"hero-zenmaru-none","font":"zenmaru","gk":"none","glass":"不加玻璃","alpha":0,"blur":0,"lift":0,"drop":0,"fs":88,"onChat":19.6,"kb":139},{"id":"hero-zenmaru-soft","font":"zenmaru","gk":"soft","glass":"淡","alpha":0.34,"blur":7,"lift":0.0799,"drop":53.7,"fs":88,"onChat":19.6,"kb":131},{"id":"hero-zenmaru-mid","font":"zenmaru","gk":"mid","glass":"中","alpha":0.58,"blur":11,"lift":0.1507,"drop":72.7,"fs":88,"onChat":19.6,"kb":131},{"id":"hero-zenmaru-hard","font":"zenmaru","gk":"hard","glass":"濃","alpha":0.8,"blur":15,"lift":0.2212,"drop":87.4,"fs":88,"onChat":19.6,"kb":131},{"id":"hero-ntc-none","font":"ntc","gk":"none","glass":"不加玻璃","alpha":0,"blur":0,"lift":0,"drop":0,"fs":88,"onChat":19.6,"kb":138},{"id":"hero-ntc-soft","font":"ntc","gk":"soft","glass":"淡","alpha":0.34,"blur":7,"lift":0.0799,"drop":53.7,"fs":88,"onChat":19.6,"kb":130},{"id":"hero-ntc-mid","font":"ntc","gk":"mid","glass":"中","alpha":0.58,"blur":11,"lift":0.1507,"drop":72.7,"fs":88,"onChat":19.6,"kb":130},{"id":"hero-ntc-hard","font":"ntc","gk":"hard","glass":"濃","alpha":0.8,"blur":15,"lift":0.2212,"drop":87.4,"fs":88,"onChat":19.6,"kb":130}];
+  var by = {}; R.forEach(function (r) { by[r.font + "|" + r.gk] = r; });
+  var F = { mplus: "M PLUS 圓體", zenmaru: "Zen Maru 圓體", ntc: "Noto Sans TC" };
+  var G = { none: "不加", soft: "淡", mid: "中", hard: "濃" };
+  var st = { f: "mplus", g: "mid" };
 
-  function fmt(n) { return Math.round(n); }
+  function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c;
+    if (x != null) e.textContent = x; return e; }
+  function chips(host, obj, k) {
+    host.innerHTML = "";
+    Object.keys(obj).forEach(function (v) {
+      var b = el("button", null, obj[v]);
+      b.setAttribute("aria-pressed", st[k] === v ? "true" : "false");
+      var probe = { f: st.f, g: st.g }; probe[k] = v;
+      if (!by[probe.f + "|" + probe.g]) { b.disabled = true; b.style.opacity = ".34"; }
+      else b.addEventListener("click", function () { st[k] = v; sync(); render(); });
+      host.appendChild(b);
+    });
+  }
+  function sync() {
+    chips(document.getElementById("sw-f"), F, "f");
+    chips(document.getElementById("sw-g"), G, "g");
+  }
   function render() {
-    var r = R.filter(function (x) { return x.id === st; })[0];
-    document.getElementById("shot").src = "crop-" + r.id + ".jpg";
-    document.getElementById("mini").src = "crop-" + r.id + ".jpg";
+    var r = by[st.f + "|" + st.g];
+    var src = r.id + ".jpg";
+    document.getElementById("shot").src = src;
+    document.getElementById("mini").src = src;
     document.getElementById("cap").textContent = "1040×520（2:1）・" + r.kb + "KB";
     document.getElementById("panel").innerHTML =
-      "<span class='k'>左邊裁到</span> <b>" + r.L + "%</b>" +
-      "　<span class='k'>右邊留到</span> <b>" + r.R + "%</b>" +
-      "　<span class='k'>下緣留到</span> <b>" + r.bottom + "%</b>" +
-      "　<span class='k'>上面跟著切</span> <b>" + (r.y0 / 3982 * 100).toFixed(1) + "%</b>" +
-      "<br><span class='k'>屋簷上方還有</span> <b>" + r.skyAboveRoof.toFixed(1) + "%</b> 的天空" +
-      "　<span class='k'>路面剩</span> <b>" + r.roadStrip.toFixed(1) + "%</b>" +
-      "<br><span class='k'>之後放得下字的乾淨天空</span> <b>" + r.cleanSky + "%</b>" +
-      " <span class='k'>（診所右牆以右的上半部，對深階綠對比 ≥4.5 的像素）</span>" +
-      "<br><span class='k'>原檔落點</span> x " + fmt(r.x0) + "~" + fmt(r.x1) + "、y " + fmt(r.y0) + "~" + fmt(r.y1) +
-      (r.note ? "<br><b>" + r.note + "</b>" : "");
-    document.getElementById("note").innerHTML =
-      "⚠⚠ <b>先裁切、再放字。</b> 字的落點是相對於裁切框量出來的（上一輪量到最乾淨的那塊天空只有 6.4% 的像素對比不合格），"
-      + "裁切一改那塊天空就換位置 —— 所以這一頁上沒有字，等裁法定了再把字重放、重量一次。"
-      + "<br>⚠ 地標位置（原檔百分比）：屋簷左緣 <b>13.5%</b>、外牆左緣 16%、建築底部 <b>88%</b>、路緣 90.5%。"
-      + "<b>左邊裁超過 13.5% 就會切到屋簷</b>，所以 Ⓓ 是這條路的盡頭。"
-      + "<br>⚠⚠ <b>上緣的天空每裁掉一點，右邊就得收窄兩倍</b>（要維持 2:1，而左邊已經頂在屋簷）——"
-      + " Ⓒ1~Ⓒ3 收掉的正是右邊那棟公寓。Ⓒ3 屋簷上方只剩 4.0%，再往上就貼邊了。"
-      + "<br>⚠ <b>和直覺相反的一件</b>：天空裁掉愈多，之後<b>能放字的乾淨面積反而愈大</b>"
-      + "（Ⓒ 70.2% → Ⓒ3 88.3%）—— 因為切掉的正是頂端那片暗雲與灰樓的陰影側。"
-      + "所以「天空少一點」不會犧牲後面那一輪。"
-      + (r.id.indexOf("c3") === 0 && r.id !== "c3"
-        ? "<br>⚠ <b>Ⓒ3a~Ⓒ3c 沒有動 2:1</b>：窗框大小和 Ⓒ3 一模一樣，只是整個往右滑（左邊多裁、右邊少裁），"
-          + "所以屋簷上方 4.0%、路面 4.2% 三案都相同 —— 變的只有建築在畫面裡的位置。"
-          + "<b>Ⓒ3c 的左緣就是 Ⓓ 那條線</b>（13%），再往左會切到屋簷（13.5%）。"
-        : "");
+      "<span class='k'>玻璃</span> <b>" + r.glass + "</b>"
+      + (r.alpha ? "（白 " + r.alpha + "、模糊 " + r.blur + "px）" : "")
+      + "<br><span class='k'>它真的有生效嗎 ——</span> 遮罩那一圈比原圖<b>亮了 " + r.lift.toFixed(3) + "</b>"
+      + "、起伏<b>降 " + r.drop + "%</b>"
+      + "<br><span class='k'>字在聊天室裡</span> <b>" + r.onChat + "px</b>"
+      + " <span class='k'>（設計稿 " + r.fs + "px × 0.223；下限 11px）</span>";
+    document.getElementById("note").innerHTML = st.g === "none"
+      ? "⚠ 不加玻璃：字直接壓在照片上。前幾輪量過，這顆綠是<b>中間調</b>（深階 L* 31.5），最壞情況是背景剛好和它一樣亮的地方 —— 這一塊亮牆還撐得住，但它是四級裡最沒有保障的一個。"
+      : "⚠⚠ 出圖有三道守門，過不了會直接停：<b>①</b> 宣告了玻璃就一定要量得到提亮（不然是 backdrop-filter 被瀏覽器靜靜忽略）<b>②</b> 宣告了模糊，起伏就要真的降下來 <b>③</b> 字在聊天室不得小於 11px。"
+      + "<br>⚠ 字體：M PLUS 與 Zen Maru 是<b>日文</b>圓體，但這四個漢字它們都有，而且逐字放大比對過 —— <b>芳／仁／哩／厚 在日文與繁中的結構完全一致</b>，沒有日本字形的問題。";
   }
-  var host = document.getElementById("sw");
-  R.forEach(function (r) {
-    var b = document.createElement("button");
-    b.textContent = r.label;
-    b.setAttribute("aria-pressed", r.id === st ? "true" : "false");
-    b.addEventListener("click", function () {
-      st = r.id;
-      [].forEach.call(host.children, function (c, i) {
-        c.setAttribute("aria-pressed", R[i].id === st ? "true" : "false");
-      });
-      render();
-    });
-    host.appendChild(b);
-  });
-  render();
+  sync(); render();
   window.addEventListener("load", function () {
-    R.forEach(function (r) { new Image().src = "crop-" + r.id + ".jpg"; });
+    R.forEach(function (r) { new Image().src = r.id + ".jpg"; });
   });
 })();
 </script>
