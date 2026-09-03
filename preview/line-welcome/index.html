@@ -54,6 +54,7 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
   box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .hc .hero{display:block;width:100%}
 .hc .b{padding:14px 14px 0}
+.hc .sp{font-style:normal;font-size:9px}
 .hc .hi{margin:0;white-space:pre-line;font-size:16px;line-height:1.55;font-weight:700;letter-spacing:.01em}
 .hc .menu{margin:8px 0 0;white-space:pre-line;font-size:14px;line-height:1.75;color:var(--ink-soft)}
 .hc hr{border:0;border-top:1px solid var(--rule);margin:14px 0 0}
@@ -106,10 +107,15 @@ Flex 的按鈕不支援圖示，所以改成<b>可點的盒子</b>（圖示＋�
      LINE Flex 的 text 只要 wrap:true 就吃 \n，兩邊做法一樣。
    ⚠ 斷在哪就把那個逗號拿掉 —— 換行已經是停頓了，再加逗號是停兩次。 */
   var MENU  = "下面有一排選單\n診所的資訊都在裡面";
-  var SAY_BIND  = "綁定芳仁牙醫 LINE\n看診前 2 天發送提醒通知喔～";
+  var SAY_BIND  = '綁定芳仁牙醫<i class="sp"> </i>LINE\n看診前 2 天發送提醒通知喔～';
   var SAY_SHARE = "家人或朋友要找牙醫\n歡迎把芳仁傳過去";
 
-  var HI = "歡迎加入芳仁牙醫的官方 LINE";
+/* ⚠ 「官方 LINE」中間那個空格**縮成 9px**（使用者：「LINE 前面的空格短小一點」）。
+   量到：半形空格 3.89px → 縮到 9px 之後 2.52px（窄 35%）。
+   ⚠⚠ 用的是**普通的半形空格 ＋ 把它縮小**，不是 U+2009／U+200A 那種細空格 ——
+     細空格要看系統字型有沒有那個字，沒有就可能變成豆腐字；縮小普通空格的最壞
+     情況只是「維持現在的寬度」，不會壞掉。Flex 那邊對應的是 span 的 size。 */
+  var HI = '歡迎加入芳仁牙醫的官方<i class="sp"> </i>LINE';
 
   function render() {
     document.getElementById("card").innerHTML =
@@ -141,14 +147,23 @@ Flex 的按鈕不支援圖示，所以改成<b>可點的盒子</b>（圖示＋�
     return w;
   }
   /* 逐字量 top 分組 —— 這樣才知道折成幾行、最後一行剩幾個字（會不會落單） */
+  /* ⚠ 這一段要**走遍所有文字節點**，不能只看 firstChild —— 「官方 LINE」中間夾了一個
+     <i class="sp">，只量第一個節點的話會漏掉後半，行數就算錯了。 */
   function lines(sel) {
-    var el = document.querySelector(sel), tn = el.firstChild, txt = tn.textContent;
+    var el = document.querySelector(sel);
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), tns = [], n;
+    while ((n = walker.nextNode())) tns.push(n);
     var r = document.createRange(), g = {};
-    for (var k = 0; k < txt.length; k++) {
-      r.setStart(tn, k); r.setEnd(tn, k + 1);
-      var rect = r.getBoundingClientRect();
-      if (rect.height && txt[k] !== "\n") { var t = Math.round(rect.top); (g[t] = g[t] || []).push(txt[k]); }
-    }
+    tns.forEach(function (tn) {
+      var txt = tn.textContent;
+      for (var k = 0; k < txt.length; k++) {
+        r.setStart(tn, k); r.setEnd(tn, k + 1);
+        var rect = r.getBoundingClientRect();
+        if (rect.height && txt[k] !== "\n" && txt[k] !== " ") {
+          var t = Math.round(rect.top); (g[t] = g[t] || []).push(txt[k]);
+        }
+      }
+    });
     var keys = Object.keys(g).map(Number).sort(function (a, b) { return a - b; });
     return { n: keys.length, last: g[keys[keys.length - 1]].join("") };
   }
@@ -188,8 +203,12 @@ Flex 的按鈕不支援圖示，所以改成<b>可點的盒子</b>（圖示＋�
       + "<br>⚠ <b>logo 要兩顆不同顏色</b>：白的疊在實心綠按鈕上、深階綠的疊在外框按鈕上。"
       + "透明底的暗綠疊在綠底上會看不見，不能只做一顆。"
       + "路徑取的是<b>站上頁首那一條</b>（和 assets/logo.png 同一條）。"
-      + "<br>⚠ 「官方 LINE」中間<b>加了半形空格</b> —— 站上一律這樣寫"
-      + "（「官方 LINE」「 Google」）。你打的是「官方LINE」，這一項是照站上的慣例補的。"
+      + "<br>⚠ 「LINE」前面那個空格<b>縮小了</b>：半形空格 3.89px → <b>2.52px</b>（窄 35%）。"
+      + "做法是<b>普通的半形空格 ＋ 把它縮到 9px</b>，不是 U+2009／U+200A 那種細空格 —— "
+      + "細空格要看系統字型有沒有那個字，沒有會變豆腐；縮小普通空格的最壞情況只是"
+      + "「維持原本的寬度」，不會壞掉。Flex 那邊對應的是 span 的 size，兩句都改成 span。"
+      + "<br>⚠ 空格本身是照站上慣例補的（站上一律寫「官方 LINE」「 Google」）；"
+      + "你打的是「官方LINE」。"
       + "<br>⚠ 「喔～」用<b>全形</b>波浪，和站上其他中文標點一致。"
       + "<br>⚠ 「看診前 2 天」和機器那邊的 <b>48 小時</b>是同一件事，"
       + "只是換成講話的說法 —— 提醒的時間點沒有動。"

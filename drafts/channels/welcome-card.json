@@ -16,8 +16,13 @@
     "  同一條）。上線前要放到 https://fangren.net/assets/line/mark-{white,green}.png",
     "",
     "⚠ 兩處照站上慣例補的，不是改他的字：",
-    "  ・「官方 LINE」中間加半形空格（站上一律這樣寫：「官方 LINE」「 Google」）",
-    "  ・「喔～」用全形波浪，和站上其他中文標點一致",
+    "  ・「官方 LINE」中間加空格（站上一律這樣寫），而且**把那個空格縮成 9px**",
+    "    （使用者：「LINE 前面的空格短小一點」）。量到 3.89px → 2.52px，窄 35%。",
+    "    ⚠⚠ 做法是**普通的半形空格 ＋ span 的 size 縮小**，不是 U+2009／U+200A 那種細空格：",
+    "      細空格要看系統字型有沒有那個字，沒有會變豆腐；縮小普通空格的最壞情況只是",
+    "      「維持原本的寬度」，不會壞掉。",
+    "    ⚠ 這兩段因此從 `text` 改成 `text + contents[span]`。**span 裡的 \\n 要跟廠商驗一次** ——",
+    "      文件說 wrap:true 時 \\n 是換行，但我們沒有實機測過。",
     "⚠ 「看診前 2 天」＝ 機器那邊的 48 小時，只是換成講話的說法，時間點沒有動。",
     "",
     "⚠⚠ 斷行一律用 \\n 自己指定，不要交給自動換行（五個寬度量過，自動斷會把詞劈開、",
@@ -57,11 +62,25 @@
     "contents": [
       {
         "type": "text",
-        "text": "歡迎加入芳仁牙醫的官方 LINE",
         "size": "md",
         "weight": "bold",
         "color": "#2A2C27",
-        "wrap": true
+        "wrap": true,
+        "contents": [
+          {
+            "type": "span",
+            "text": "歡迎加入芳仁牙醫的官方"
+          },
+          {
+            "type": "span",
+            "text": " ",
+            "size": "9px"
+          },
+          {
+            "type": "span",
+            "text": "LINE"
+          }
+        ]
       },
       {
         "type": "text",
@@ -88,11 +107,25 @@
     "contents": [
       {
         "type": "text",
-        "text": "綁定芳仁牙醫 LINE\n看診前 2 天發送提醒通知喔～",
         "size": "sm",
         "color": "#2A2C27",
         "margin": "lg",
-        "wrap": true
+        "wrap": true,
+        "contents": [
+          {
+            "type": "span",
+            "text": "綁定芳仁牙醫"
+          },
+          {
+            "type": "span",
+            "text": " ",
+            "size": "9px"
+          },
+          {
+            "type": "span",
+            "text": "LINE\n看診前 2 天發送提醒通知喔～"
+          }
+        ]
       },
       {
         "type": "box",
