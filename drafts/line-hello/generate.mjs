@@ -37,7 +37,7 @@ const ROOT = path.resolve(HERE, "..", "..");
 const OUT = path.join(ROOT, "preview", "line-hello");
 fs.mkdirSync(OUT, { recursive: true });
 
-const PHOTO = path.join(ROOT, "assets", "hero-clinic-day-2080.jpg");
+const PHOTO = path.join(HERE, "source-2080.jpg");
 if (!fs.existsSync(PHOTO)) throw new Error(`找不到照片 ${PHOTO}`);
 const photo64 = fs.readFileSync(PHOTO).toString("base64");
 

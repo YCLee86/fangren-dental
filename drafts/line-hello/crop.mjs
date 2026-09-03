@@ -24,7 +24,7 @@ import { fileURLToPath } from "node:url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..", "..");
 const OUT = path.join(ROOT, "preview", "line-hello");
-const SRC = path.join(ROOT, "assets", "hero-clinic-day-2080.jpg");
+const SRC = path.join(HERE, "source-2080.jpg");
 const IW = 8000, IH = 3982;                 /* 原檔尺寸（縮圖等比，用原檔座標算比較好讀） */
 const W = 1040, H = 520;
 const b64 = fs.readFileSync(SRC).toString("base64");
