@@ -81,8 +81,8 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 </head>
 <body>
 <h1>頭圖：房子在說「芳仁　哩厚」</h1>
-<p class="lede">驚嘆號改成<b>自己畫的</b>（字型做不到「只把頭加粗」）。
-底下三把尺：<b>頭的粗細</b>、<b>角度</b>、<b>往下多少</b>。左上那一格是現在的。</p>
+<p class="lede"><b>頭 17、角度 18° 已經定案</b>，寫死了。這一輪三把新的尺：
+<b>整支多高</b>、<b>圓點多大</b>、<b>往下多少</b>。左邊那一格是你上次看到的。</p>
 
 <div class="big"><img id="shot" alt=""></div>
 <p class="cap" id="cap"></p>
@@ -106,64 +106,66 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 
 
 <div class="bar">
-  <div class="r"><span class="lb">頭的粗細</span><span class="g" id="sw-t"></span></div>
-  <div class="r"><span class="lb">角度</span><span class="g" id="sw-d"></span></div>
+  <div class="r"><span class="lb">整支多高</span><span class="g" id="sw-h"></span></div>
+  <div class="r"><span class="lb">圓點</span><span class="g" id="sw-o"></span></div>
   <div class="r"><span class="lb">往下</span><span class="g" id="sw-y"></span></div>
 </div>
 <script>
 (function () {
   "use strict";
-  var R = [{"id":"bang-11-12-10","bangTop":11,"bangDeg":12,"bangDy":10,"clear":22,"kb":106},{"id":"bang-11-12-18","bangTop":11,"bangDeg":12,"bangDy":18,"clear":22,"kb":106},{"id":"bang-11-12-26","bangTop":11,"bangDeg":12,"bangDy":26,"clear":22,"kb":106},{"id":"bang-11-18-10","bangTop":11,"bangDeg":18,"bangDy":10,"clear":19,"kb":106},{"id":"bang-11-18-18","bangTop":11,"bangDeg":18,"bangDy":18,"clear":19,"kb":106},{"id":"bang-11-18-26","bangTop":11,"bangDeg":18,"bangDy":26,"clear":19,"kb":106},{"id":"bang-11-24-10","bangTop":11,"bangDeg":24,"bangDy":10,"clear":16,"kb":106},{"id":"bang-11-24-18","bangTop":11,"bangDeg":24,"bangDy":18,"clear":16,"kb":106},{"id":"bang-11-24-26","bangTop":11,"bangDeg":24,"bangDy":26,"clear":16,"kb":106},{"id":"bang-14-12-10","bangTop":14,"bangDeg":12,"bangDy":10,"clear":21,"kb":106},{"id":"bang-14-12-18","bangTop":14,"bangDeg":12,"bangDy":18,"clear":21,"kb":106},{"id":"bang-14-12-26","bangTop":14,"bangDeg":12,"bangDy":26,"clear":21,"kb":106},{"id":"bang-14-18-10","bangTop":14,"bangDeg":18,"bangDy":10,"clear":18,"kb":106},{"id":"bang-14-18-18","bangTop":14,"bangDeg":18,"bangDy":18,"clear":18,"kb":106},{"id":"bang-14-18-26","bangTop":14,"bangDeg":18,"bangDy":26,"clear":18,"kb":106},{"id":"bang-14-24-10","bangTop":14,"bangDeg":24,"bangDy":10,"clear":14,"kb":106},{"id":"bang-14-24-18","bangTop":14,"bangDeg":24,"bangDy":18,"clear":14,"kb":106},{"id":"bang-14-24-26","bangTop":14,"bangDeg":24,"bangDy":26,"clear":14,"kb":106},{"id":"bang-17-12-10","bangTop":17,"bangDeg":12,"bangDy":10,"clear":19,"kb":106},{"id":"bang-17-12-18","bangTop":17,"bangDeg":12,"bangDy":18,"clear":19,"kb":106},{"id":"bang-17-12-26","bangTop":17,"bangDeg":12,"bangDy":26,"clear":19,"kb":106},{"id":"bang-17-18-10","bangTop":17,"bangDeg":18,"bangDy":10,"clear":17,"kb":106},{"id":"bang-17-18-18","bangTop":17,"bangDeg":18,"bangDy":18,"clear":17,"kb":106},{"id":"bang-17-18-26","bangTop":17,"bangDeg":18,"bangDy":26,"clear":17,"kb":106},{"id":"bang-17-24-10","bangTop":17,"bangDeg":24,"bangDy":10,"clear":13,"kb":106},{"id":"bang-17-24-18","bangTop":17,"bangDeg":24,"bangDy":18,"clear":13,"kb":106},{"id":"bang-17-24-26","bangTop":17,"bangDeg":24,"bangDy":26,"clear":13,"kb":106}];
-  var by = {}; R.forEach(function (r) { by[r.bangTop + "|" + r.bangDeg + "|" + r.bangDy] = r; });
-  var T = [11, 14, 17], D = [12, 18, 24], Y = [10, 18, 26];
-  var st = { t: 11, d: 12, y: 10 };
+  var R = [{"id":"bang2-66-18-26","bangH":66,"bangDot":18,"bangDy":26,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-18-34","bangH":66,"bangDot":18,"bangDy":34,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-18-42","bangH":66,"bangDot":18,"bangDy":42,"bangVsChar":0.69,"charH":96,"clear":39,"kb":106},{"id":"bang2-66-15-26","bangH":66,"bangDot":15,"bangDy":26,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-15-34","bangH":66,"bangDot":15,"bangDy":34,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-15-42","bangH":66,"bangDot":15,"bangDy":42,"bangVsChar":0.69,"charH":96,"clear":39,"kb":106},{"id":"bang2-66-12-26","bangH":66,"bangDot":12,"bangDy":26,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-12-34","bangH":66,"bangDot":12,"bangDy":34,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-12-42","bangH":66,"bangDot":12,"bangDy":42,"bangVsChar":0.69,"charH":96,"clear":39,"kb":106},{"id":"bang2-78-18-26","bangH":78,"bangDot":18,"bangDy":26,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-18-34","bangH":78,"bangDot":18,"bangDy":34,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-18-42","bangH":78,"bangDot":18,"bangDy":42,"bangVsChar":0.81,"charH":96,"clear":39,"kb":106},{"id":"bang2-78-15-26","bangH":78,"bangDot":15,"bangDy":26,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-15-34","bangH":78,"bangDot":15,"bangDy":34,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-15-42","bangH":78,"bangDot":15,"bangDy":42,"bangVsChar":0.81,"charH":96,"clear":39,"kb":106},{"id":"bang2-78-12-26","bangH":78,"bangDot":12,"bangDy":26,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-12-34","bangH":78,"bangDot":12,"bangDy":34,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-12-42","bangH":78,"bangDot":12,"bangDy":42,"bangVsChar":0.81,"charH":96,"clear":39,"kb":106},{"id":"bang2-90-18-26","bangH":90,"bangDot":18,"bangDy":26,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-18-34","bangH":90,"bangDot":18,"bangDy":34,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-18-42","bangH":90,"bangDot":18,"bangDy":42,"bangVsChar":0.94,"charH":96,"clear":39,"kb":106},{"id":"bang2-90-15-26","bangH":90,"bangDot":15,"bangDy":26,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-15-34","bangH":90,"bangDot":15,"bangDy":34,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-15-42","bangH":90,"bangDot":15,"bangDy":42,"bangVsChar":0.94,"charH":96,"clear":39,"kb":106},{"id":"bang2-90-12-26","bangH":90,"bangDot":12,"bangDy":26,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-12-34","bangH":90,"bangDot":12,"bangDy":34,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-12-42","bangH":90,"bangDot":12,"bangDy":42,"bangVsChar":0.94,"charH":96,"clear":39,"kb":106}];
+  var by = {}; R.forEach(function (r) { by[r.bangH + "|" + r.bangDot + "|" + r.bangDy] = r; });
+  var H = [66, 78, 90], O = [18, 15, 12], Y = [26, 34, 42];
+  var st = { h: 66, o: 18, y: 26 };
 
   function render() {
-    var r = by[st.t + "|" + st.d + "|" + st.y];
+    var r = by[st.h + "|" + st.o + "|" + st.y];
     var src = r.id + ".jpg";
     document.getElementById("shot").src = src;
     document.getElementById("mini").src = src;
     document.getElementById("cap").textContent = "1040\u00d7520（2:1）・" + r.kb + "KB";
     document.getElementById("panel").innerHTML =
-      "<span class='k'>頭的粗細</span> <b>" + r.bangTop + "px</b>"
-      + " <span class='k'>（尾一直是 8px，所以頭比尾粗 "
-      + (r.bangTop / 8).toFixed(2) + " 倍）</span>"
-      + "　<span class='k'>角度</span> <b>" + r.bangDeg + "\u00b0</b>"
+      "<span class='k'>整支高</span> <b>" + r.bangH + "px</b>"
+      + "　<span class='k'>「哩厚」的墨高</span> <b>" + r.charH + "px</b>"
+      + "　→ <b>" + r.bangVsChar + " 倍</b>"
+      + " <span class='k'>（你問的「以字體大小來說」就是這個數）</span>"
+      + "<br><span class='k'>圓點</span> <b>" + r.bangDot + "px</b>"
       + "　<span class='k'>比基線低</span> <b>" + r.bangDy + "px</b>"
-      + "<br><span class='k'>字離框邊</span> <b>" + r.clear + "px</b>"
-      + " <span class='k'>（門檻 10；27 格最小的是 13）</span>"
-      + "　<span class='k'>「哩厚」的筆畫</span> <b>14px</b>"
-      + (r.bangTop > 14 ? " <span class='no'>頭比字粗了</span>"
-                        : " <span class='ok'>頭還沒超過字</span>");
+      + "<br><span class='k'>頭</span> <b>17px</b>　<span class='k'>角度</span> <b>18\u00b0</b>"
+      + " <span class='k'>（已定案，寫死了）</span>"
+      + "　<span class='k'>尾</span> <b>8px</b>"
+      + "<br><span class='k'>墨離框最近</span> "
+      + (r.clear < 0 ? "<span class='no'>超出框外 " + (-r.clear) + "px</span>"
+                     : "<b>" + r.clear + "px</b> <span class='ok'>還在框裡</span>")
+      + " <span class='k'>（27 格最小的是 39px —— 都沒有超出，範圍不必動）</span>";
     document.getElementById("note").innerHTML =
-      "⚠⚠ <b>驚嘆號改成自己畫的，不是字型的字。</b>「只把頭加粗」用描邊做不到 —— "
-      + "描邊是整支一起變粗；字型也沒有這種軸。現在它是一個<b>錐形的莖 ＋ 一顆點</b>："
-      + "莖的頂寬可以單獨調，尾一直是 8px。"
-      + "<br>⚠ 「現況」那一格（11／12°／10）的預設值是<b>量 Zen Maru 那顆真的「!」</b>"
-      + "得來的（89px 下：莖高 43.8、頂寬 7.2、底寬 4.4、間隙 5.4、點徑 14.4），"
-      + "再把先前那 3.5px 的同色描邊併進寬度 —— 所以它和先前的字型版幾乎一樣。"
-      + "<br>⚠ 兩端的圓是對上下兩個圓拉<b>外公切線</b>算的（同地圖圖釘那一輪），"
-      + "取錯邊輪廓會從尖端折回去。"
-      + "<br>⚠ <b>「哩厚」的筆畫是 14px</b>。頭超過 14 就比字還粗，讀起來會像第三個字 —— "
-      + "面板會標出來，但要不要越過那條線是你決定的。"
-      + "<br>⚠ 27 格<b>都通過</b>「字不能碰到框」那道守門（最小 13px、門檻 10）。"
+      "⚠⚠ <b>「離框多遠」的量法這一輪修好了。</b> 之前量的是墨的<b>外框四個角</b>，"
+      + "而那四個角多半落在<b>空白處</b> —— 所以上一輪把驚嘆號往下移 16px，"
+      + "量出來的餘裕<b>一格都沒動</b>（17／17／17），等於那個數字在說謊。"
+      + "現在改成量<b>每一列墨的最左與最右</b>（＝墨真正的輪廓）逐點算，"
+      + "量到的是 39~45px。<b>27 格沒有一格超出框</b>，所以範圍這一輪不必動。"
+      + "<br>⚠ <b>間隙跟著圓點按比例走</b>（0.22 倍），不是固定值 —— "
+      + "點縮小之後，固定的間隙看起來會相對變大。"
+      + "<br>⚠ <b>莖的長度是由「整支多高」倒推的</b>（總高 − 間隙 − 點），"
+      + "所以換圓點的時候整支不會跟著變高，兩把尺互不干擾。"
+      + "<br>⚠ 頭 17／角度 18° 已經寫死在程式裡，不再是參數。"
       + "<br>⚠ 這 27 張是提案用的（品質 82，比正式的 88 低一階，省下載）。"
       + "你選完我會把值寫回去、用 88 重出一張，並把這 27 張刪掉。";
   }
-  function chips(host, arr, k, suffix) {
+  function chips(host, arr, k, suffix, firstLabel) {
     host.innerHTML = "";
     arr.forEach(function (v) {
       var b = document.createElement("button");
-      b.textContent = v + suffix + (v === arr[0] ? "（現況）" : "");
+      b.textContent = v + suffix + (v === arr[0] ? firstLabel : "");
       b.setAttribute("aria-pressed", st[k] === v ? "true" : "false");
       b.addEventListener("click", function () { st[k] = v; sync(); render(); });
       host.appendChild(b);
     });
   }
   function sync() {
-    chips(document.getElementById("sw-t"), T, "t", "px");
-    chips(document.getElementById("sw-d"), D, "d", "\u00b0");
-    chips(document.getElementById("sw-y"), Y, "y", "px");
+    chips(document.getElementById("sw-h"), H, "h", "px", "（上次）");
+    chips(document.getElementById("sw-o"), O, "o", "px", "（上次）");
+    chips(document.getElementById("sw-y"), Y, "y", "px", "（上次）");
   }
   sync(); render();
   /* ⚠ 27 張約 2.9MB。load 之後一張一張接力預抓，不要一次全開把 4G 塞住。 */

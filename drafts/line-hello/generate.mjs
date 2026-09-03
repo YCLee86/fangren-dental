@@ -69,11 +69,16 @@ const FS = 104, STAGGER = 22;
    ⚠ 字型子集裡的「!」沒有拿掉：萬一要退回字型版，那條路還在。 */
 const BANG = {
   gap: 16,                                   /* 離「哩厚」右緣多遠 */
-  dy: +(process.env.BDY ?? 10),              /* 墨的下緣比「哩厚」的基線低多少 */
-  deg: +(process.env.BDEG ?? 12),            /* 斜幾度 */
-  stemTop: +(process.env.BTOP ?? 11),        /* 莖的頂寬 ＝ 使用者說的「頭」 */
-  stemH: 44, stemBot: 8, dotGap: 4, dot: 18,
+  stemTop: 17,                               /* ✅ 2026-09-03 定案（使用者選的） */
+  deg: 18,                                   /* ✅ 2026-09-03 定案（使用者選的） */
+  stemBot: 8,
+  dy: +(process.env.BDY ?? 26),              /* 墨的下緣比「哩厚」的基線低多少 */
+  dot: +(process.env.BDOT ?? 18),            /* 圓點的直徑 */
+  inkH: +(process.env.BH ?? 66),             /* 整支的墨高（莖 ＋ 間隙 ＋ 點） */
 };
+/* ⚠ 間隙跟著點按比例走（0.22），不要寫死 —— 點縮小之後，固定的間隙看起來會相對變大。
+   這個比例是從 Zen Maru 那顆真字量的（89px 下間隙 5.4／點 14.4 ≈ 0.375）再收緊來的。 */
+const DOTGAP = (dot) => dot * .22;
 
 /* 錐形的莖（上粗下細、兩端圓）＋ 一顆點。座標以**墨的正下方中點**為原點。
    ⚠ 兩端圓的做法是對上下兩個圓拉**外公切線**（同地圖圖釘那一輪）：
@@ -81,9 +86,11 @@ const BANG = {
      取錯邊的話輪廓會從尖端折回去。 */
 function bangShape(o) {
   const rt = o.stemTop / 2, rb = o.stemBot / 2;
-  const inkH = o.stemH + o.dotGap + o.dot;
+  const dotGap = DOTGAP(o.dot);
+  const stemH = o.inkH - dotGap - o.dot;     /* 莖高由總高倒推 —— 這樣兩把尺才互不干擾 */
+  const inkH = o.inkH;
   const yTop = -inkH;
-  const cTop = yTop + rt, cBot = yTop + o.stemH - rb;
+  const cTop = yTop + rt, cBot = yTop + stemH - rb;
   const d = cBot - cTop;
   if (d <= Math.abs(rt - rb)) throw new Error("莖太短，兩端的圓包住彼此了");
   const phi = Math.asin((rt - rb) / d), c = Math.cos(phi), sn = Math.sin(phi);
@@ -94,7 +101,7 @@ function bangShape(o) {
     ` A ${f(rb)} ${f(rb)} 0 1 1 ${f(-rb * c)} ${f(cBot + rb * sn)}` +
     ` L ${f(-rt * c)} ${f(cTop + rt * sn)}` +
     ` A ${f(rt)} ${f(rt)} 0 1 1 ${f(rt * c)} ${f(cTop + rt * sn)} Z`;
-  return { stem, dotCy: yTop + o.stemH + o.dotGap + o.dot / 2, dotR: o.dot / 2, inkH };
+  return { stem, dotCy: yTop + stemH + dotGap + o.dot / 2, dotR: o.dot / 2, inkH, stemH };
 }
 
 /* ✅ 定案：兩行的距離「更開」、框「更大」（＝ 前一版的 1.18 倍） */
@@ -214,10 +221,10 @@ const report = [];
    `--variants` 是給提案頁用的：驚嘆號的三把尺全交叉出圖（27 張），
    使用者挑完就把那些檔刪掉、把選到的值寫回 BANG 的預設。 */
 const VARIANTS = process.argv.includes("--variants");
-const TOPS = [11, 14, 17], DEGS = [12, 18, 24], DYS = [10, 18, 26];
+const HS = [66, 78, 90], DOTS = [18, 15, 12], DYS = [26, 34, 42];
 const CASES = VARIANTS
-  ? TOPS.flatMap((t) => DEGS.flatMap((d) => DYS.map((y) => ({
-      id: `bang-${t}-${d}-${y}`, font: "zenmaru", cfg: { ...BANG, stemTop: t, deg: d, dy: y } }))))
+  ? HS.flatMap((h) => DOTS.flatMap((o) => DYS.map((y) => ({
+      id: `bang2-${h}-${o}-${y}`, font: "zenmaru", cfg: { ...BANG, inkH: h, dot: o, dy: y } }))))
   : [{ id: "hero-zenmaru", font: "zenmaru", cfg: BANG }];
 
 console.log("\n案                兩行之間  字離框邊  檔案");
@@ -252,24 +259,30 @@ for (const c of CASES) {
       const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
       const d = cx.getImageData(0, 0, cv.width, cv.height).data;
       let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
-      const rows = [];
+      const rows = [], edge = [];
       for (let y = 0; y < cv.height; y++) {
-        let any = false;
+        let any = false, a = -1, b = -1;
         for (let x = 0; x < cv.width; x++) {
           if (d[(y * cv.width + x) * 4] < 140) {
-            any = true;
+            any = true; if (a < 0) a = x; b = x;
             if (x < x0) x0 = x; if (x > x1) x1 = x;
             if (y < y0) y0 = y; if (y > y1) y1 = y;
           }
         }
         rows.push(any);
+        /* ⚠⚠ 每一列墨的最左與最右 ＝ 墨的**輪廓**。判斷「有沒有超出框」要用它，
+           不能用外框的四個角 —— 那四個角多半落在**空白處**，
+           所以驚嘆號往下移 16px，四個角量出來的餘裕**一格都沒動**（17／17／17）。 */
+        if (any) { edge.push([a, y]); if (b !== a) edge.push([b, y]); }
       }
-      let gap = 0, best = 0, started = false;
+      let gap = 0, best = 0, started = false, bestEnd = -1, run = -1;
       for (let y = y0; y <= y1; y++) {
-        if (rows[y]) { if (started) best = Math.max(best, gap); gap = 0; started = true; }
-        else if (started) gap++;
+        if (rows[y]) { if (started && gap > best) { best = gap; bestEnd = y; } gap = 0; started = true; }
+        else if (started) { if (gap === 0) run = y; gap++; }
       }
-      return { x0, x1, y0, y1, lineGap: best };
+      /* 第二行的墨高 ＝ 從最大空白之後到最底 —— 給「驚嘆號相對於字有多高」用 */
+      const line2H = bestEnd >= 0 ? y1 - bestEnd + 1 : 0;
+      return { x0, x1, y0, y1, lineGap: best, line2H, edge };
     }, "data:image/png;base64," + shot);
   };
 
@@ -284,10 +297,17 @@ for (const c of CASES) {
   await p.evaluate(() => document.fonts.ready);
   const m = await scan();
   m.lineGap = noBang.lineGap;
+  m.line2H = noBang.line2H;
 
-  const corners = [[m.x0, m.y0], [m.x1, m.y0], [m.x0, m.y1], [m.x1, m.y1]];
-  const clear = Math.min(...corners.map((q) => clearance(q, GEO.pts)));
-  if (clear < 10) throw new Error(`${c.id} 字離框邊只有 ${clear.toFixed(1)}px（要 ≥10）`);
+  /* 逐點量墨的輪廓離框多遠（負的＝跑到框外面了） */
+  let clear = Infinity, worst = null;
+  for (const q of m.edge) {
+    const v = clearance(q, GEO.pts);
+    if (v < clear) { clear = v; worst = q; }
+  }
+  /* ⚠⚠ 變體模式**只回報不擋**：使用者 2026-09-03「範圍先不要動，如果真的超出了
+     我們後面再來調範圍」。正式那一張仍然擋 —— 不然哪天默默出一張超框的。 */
+  if (!VARIANTS && clear < 10) throw new Error(`${c.id} 字離框邊只有 ${clear.toFixed(1)}px（要 ≥10）`);
 
   await p.setContent(page(c.font, false, bang, cfg), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
@@ -299,15 +319,18 @@ for (const c of CASES) {
   const kb = fs.statSync(file).size / 1024;
   report.push({ ...c,
     lineGap: +m.lineGap.toFixed(0), lineGapOnChat: +(m.lineGap * 232 / 1040).toFixed(1),
-    clear: +clear.toFixed(0), lhRatio: LH,
+    clear: +clear.toFixed(0), worstAt: worst, lhRatio: LH,
     boxW: Math.round(BOX.w), boxH: Math.round(BOX.h),
     bangDeg: cfg.deg, bangDy: cfg.dy, bangTop: cfg.stemTop, bangBot: cfg.stemBot,
+    bangH: cfg.inkH, bangDot: cfg.dot,
+    charH: m.line2H, bangVsChar: +(cfg.inkH / m.line2H).toFixed(2),
     tailAim: AIM, tailAng: +(GEO.aimAng * 180 / Math.PI).toFixed(0),
     tailTip: GEO.tip.map((v) => +v.toFixed(0)),
     fs: FS, onChat: +onChat.toFixed(1), stroke: STROKE,
     strokeOnChat: +(STROKE * 232 / 1040).toFixed(2),
     glassA: GLASS.a, glassBlur: GLASS.blur, nExp: BOX.n, kb: Math.round(kb) });
-  console.log(`${c.id.padEnd(17)} ${String(m.lineGap).padStart(4)}px    ${clear.toFixed(0).padStart(4)}px    ${kb.toFixed(0)}KB`);
+  console.log(`${c.id.padEnd(17)} ${String(m.lineGap).padStart(4)}px  ` +
+    `${(clear < 0 ? "超出 " + (-clear).toFixed(0) : clear.toFixed(0) + "px").padStart(8)}  ${kb.toFixed(0)}KB`);
 }
 await browser.close();
 
