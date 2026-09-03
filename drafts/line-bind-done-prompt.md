@@ -89,6 +89,66 @@
 **要整張換回站上那一套（暖棕的線、粗細有變化、整張顆粒）也可以，說一聲我換 `STYLE` 與
 `COLOUR` 兩段，構圖與那一團人不動。**
 
+## 一之三、⚠ 第三版：臉過了，**椅子上那個人像喝醉的** —— 七個線索全是我自己寫的
+
+使用者：
+
+> 這個版本人物風格好多了。坐在治療椅上的人怎麼看起來有點酒醉的樣子。
+>
+> 有幾個方向當作治療椅上人的描繪，可以考慮，你們想想看：
+> 1. 有點困惑但是又想伸出手了解這個連結的人
+> 2. 覺得開心高興，終於有地方可以接納他，解決困擾他長久以來的問題
+
+成品 `drafts/bind-done-v3.jpg`。**臉、膚色、五官、那一團人、寓意、構圖全部通過** ——
+這一輪只換椅子上那個人的表情與姿態。
+
+⚠⚠ **成因不是模型自己加的，是第三版的提示詞裡有七句一起指著「醉」**（逐字回去查過）：
+
+| 我寫的 | 讀出來是 |
+| --- | --- |
+| `HIS REACHING ARM IS LIMP AND HEAVY` | 沒有力氣 |
+| `the wrist dropped` | 手垮著 |
+| `He has just woken up` | 剛醒 |
+| `eyes half open` | 眼睛半閉 |
+| `a small dopey smile` | 傻笑 |
+| `mouth slightly open` | 嘴半開 |
+| `One slipper dangles off his foot, about to fall` | 鞋子快掉了 |
+
+**七句每一句單獨看都只是「放鬆」，加起來就是喝醉。** 它們的來源是〈創造亞當〉裡
+亞當那隻鬆掉的手 —— 那是**原作的重點**（神給力量之前，人還沒活起來），
+我照抄了它的肌肉狀態。
+
+> ⚠⚠⚠ **通則：借名畫的姿勢時，「不對等」要靠位置給，不要靠肌肉張力給。**
+> 這張圖的不對等已經由位置給足了（他躺著、比較低、一個人；他們飄著、比較高、一團人）。
+> 再把他的肌肉也放掉，畫出來就不是「還沒活起來」，是**神智不清** ——
+> 而診間裡一個神智不清的病人讀出來是麻醉或鎮靜，那是這一則訊息最不該長出來的聯想。
+> ⚠ 這和第一版那個「醫病關係不單純」是**同一類錯**：
+> **某個動作或狀態，放進診間這個場景裡會自己長出另一個意思。**
+> 借姿勢之前先問一次：這個姿勢在診間裡還代表原來那件事嗎。
+
+**這一輪的改法**（`LEFT — THE PATIENT` 整段換掉，其餘逐字沒動）：
+姿勢照舊（仍然躺著、仍然撐在遠側手肘上、仍然比那一團人低），
+**把力氣還給臉和那隻手** —— 頭離開頭靠、兩眼張開、手腕打直、腳穿著鞋踩在踏板上；
+`AVOID` 段再加一條把上面七個線索逐項擋掉，`FACES` 段那句「眼睛可以瞇成弧線」
+也補了一個例外（椅子上那個人永遠張開眼）。
+
+### 兩個方向我推薦 Ⓐ「好奇」，但兩塊都給你
+
+使用者給的兩個方向都寫成了可以整段替換的區塊：**Ⓐ 好奇又想伸手**（第四節，已套用）、
+**Ⓑ 放心又開心**（第四之二節）。
+
+**推薦 Ⓐ，理由是這一則訊息的時間點**：他剛剛把提醒打開，**還沒有任何事情被解決**。
+Ⓑ 那個「終於有地方接納我」是**療程走完之後**的情緒，現在就畫出來等於預支
+（COPY.md 第九之十七節：不要開空白支票、不要替他宣告他還沒有的感受）。
+Ⓐ 的「他伸手是想知道這是什麼」正好對上「綁定完成」這一刻，而且**伸手的動作本身
+就是那張名畫的梗**，好奇比開心更需要伸手。
+
+⚠⚠ **但「困惑」不可以畫成皺眉。** 這一站的紅線是**不能讓病患看起來在懷疑診所**，
+所以 Ⓐ 那一段把困惑寫成**好奇**：一邊眉毛抬高、頭離開頭靠、眼睛亮、嘴閉著微笑，
+並明文寫著 `Neither brow frowns`。
+⚠ **兩塊不要混著改** —— 混起來會變成「笑得很開又一邊眉毛抬高」，
+那就回到第三版那種「多個線索互相打架」的老路。
+
 ## 二、規格（沒有變）
 
 | | |
@@ -131,7 +191,7 @@
 **「參考圖裡出現的任何文字一律不要學，成品不能有字。」** 那兩張是站上的成品、
 不是外部素材，所以沒有版權問題。
 
-## 四、提示詞・第三版（逐字複製給 Gemini）
+## 四、提示詞・第四版（逐字複製給 Gemini）
 
 ```
 Cute flat-colour illustration, 16:9 landscape. A warm, funny parody of Michelangelo's
@@ -162,7 +222,8 @@ one.
     carry most of the expression, so draw them clearly.
   • EYES are drawn, not dotted: a curved upper eyelid rendered as a slightly thicker line
     that tapers at the outer corner, with a small dark iris below it; an eye that is
-    smiling becomes a simple upward arc. NO round dot eyes.
+    smiling becomes a simple upward arc — BUT the patient in the chair always keeps his
+    eyes open (see LEFT — THE PATIENT). NO round dot eyes.
   • A small, clear NOSE on every face — a short curved line with a soft rounded tip.
   • A real MOUTH with a real expression: an open smile may show the upper teeth as one
     simple white shape with a soft dark opening behind it; a closed mouth is a single line
@@ -195,12 +256,28 @@ never the same height.
 LEFT — THE PATIENT (the Adam of this picture) — An East Asian man in his late thirties in
 his own everyday clothes: a dusty rose crew-neck jumper and warm grey trousers, no hospital
 gown and no paper bib. He lies back in a dental chair that is reclined about thirty degrees,
-propped up on his far elbow exactly like Adam in the painting: shoulders back, chest open,
-his near knee raised and relaxed. HIS REACHING ARM IS LIMP AND HEAVY like Adam's — the
-elbow resting on his raised knee, the wrist dropped, the fingers loose, the index finger
-only lazily extended. He is not straining and not sitting up. He has just woken up: eyes
-half open, a small dopey smile, mouth slightly open. One slipper dangles off his foot,
-about to fall. He looks at the approaching hand, never at us.
+propped up on his far elbow like Adam in the painting: shoulders back, chest open, his near
+knee raised. HE IS CURIOUS AND WIDE AWAKE — he has just noticed the little tooth and is
+reaching out to find out what it is.
+  • His head is LIFTED CLEARLY OFF the headrest, chin a little forward, tilted slightly to
+    one side and turned towards the tooth.
+  • BOTH EYES ARE FULLY OPEN, round and bright, looking straight at the little tooth —
+    never half-closed, never heavy-lidded, never squeezed shut.
+  • ONE EYEBROW IS RAISED HIGHER THAN THE OTHER: the questioning, interested brow. Neither
+    brow frowns or angles down in worry — he is intrigued, not anxious.
+  • His mouth is CLOSED, with a small, slightly unsure but friendly smile — the corners
+    just lifted. NOT an open mouth, not a wide grin, not a slack hanging jaw.
+  • His reaching arm is EXTENDED WITH INTENT, though gently: the elbow has come up off his
+    knee, the forearm reaches forward, THE WRIST IS STRAIGHT — never dropped or dangling —
+    and the index finger points at the tooth deliberately, the other fingers softly curled.
+    The hand is relaxed but awake.
+  • His far hand rests naturally and neatly on the armrest, fingers together — never
+    dangling limply over the edge.
+  • Both feet stay on the chair's footrest with his shoes on. There is NO slipper falling
+    off and no bare foot.
+HE IS STILL RECLINED AND STILL LOWER THAN THE CROWD — the inequality of this picture comes
+from his POSITION, not from his muscle tone. His alertness lives in his face and in his
+reaching hand. He looks at the tooth and at the approaching hand, never at us.
 
 RIGHT — THE CLINIC CROWD (the crowd that takes God's place) — FIVE OR SIX clinic staff
 crammed into ONE BUNDLE, all East Asian, mixed ages and both sexes, all in pale sage-green
@@ -281,8 +358,51 @@ instrument near his face; a syringe, a drill or a probe; blood, wounds, pain or 
 masks covering faces; anybody looking at the viewer; hands with the wrong number of fingers;
 WHITE, PAPER-COLOURED, PALE GREY OR COLOURLESS FACES; faces with no skin tone; blank
 expressionless faces made of two round dots with no eyebrows and no nose; flat pink circle
-stickers used as cheeks; shading anywhere other than on the skin.
+stickers used as cheeks; shading anywhere other than on the skin; ANYBODY WHO LOOKS DRUNK,
+SLEEPY, DAZED, SEDATED OR SEMI-CONSCIOUS — no half-closed or heavy-lidded eyes, no slack
+hanging open mouth, no dopey grin, no dropped or dangling wrist, no head sunk back into the
+headrest, no sprawled limbs, no slipper falling off a bare foot; the cheek blush must read
+as healthy warmth and never as a drunken flush.
 ```
+
+## 四之二、Ⓑ「放心又開心」——⚠ 換方向就把 `LEFT — THE PATIENT` **整段**換掉
+
+第四節裡那一段 `LEFT — THE PATIENT` 是 **Ⓐ 好奇**（我推薦的那一案，理由見第一之三節）。
+想試使用者的第 2 個方向，就把那一整段（從 `LEFT — THE PATIENT` 那一行起，
+到 `never at us.` 那一行為止）**整塊換成**下面這一段，提示詞其餘每一個字都不要動：
+
+```
+LEFT — THE PATIENT (the Adam of this picture) — An East Asian man in his late thirties in
+his own everyday clothes: a dusty rose crew-neck jumper and warm grey trousers, no hospital
+gown and no paper bib. He lies back in a dental chair that is reclined about thirty degrees,
+propped up on his far elbow like Adam in the painting: shoulders back, chest open, his near
+knee raised. HE IS RELIEVED AND GENUINELY HAPPY — the face of someone who has finally found
+a place that will help with something he has carried around for a long time.
+  • His head is LIFTED CLEARLY OFF the headrest and turned towards the tooth, chin slightly
+    up.
+  • His eyes are OPEN AND SHINING, crinkled at the outer corners by a real smile, looking
+    straight at the little tooth. If they narrow at all, they narrow BECAUSE HE IS SMILING
+    — never sleepy, never heavy-lidded, never squeezed shut in a daze.
+  • BOTH EYEBROWS ARE RAISED EVENLY and relaxed — the eyebrows of good news, never a frown.
+  • He wears a WIDE, WARM OPEN SMILE that shows his upper teeth as one simple white shape.
+    This is a bright smile, NOT a slack open jaw: the corners are pulled firmly up and the
+    cheeks lift with it.
+  • His reaching arm is EXTENDED EAGERLY: the elbow has come up off his knee, the forearm
+    reaches forward, THE WRIST IS STRAIGHT — never dropped or dangling — and the index
+    finger points at the tooth clearly, the other fingers softly curled.
+  • His far hand rests naturally and neatly on the armrest, fingers together — never
+    dangling limply over the edge.
+  • Both feet stay on the chair's footrest with his shoes on. There is NO slipper falling
+    off and no bare foot.
+HE IS STILL RECLINED AND STILL LOWER THAN THE CROWD — the inequality of this picture comes
+from his POSITION, not from his muscle tone. His energy lives in his face and in his
+reaching hand. He looks at the tooth and at the approaching hand, never at us.
+```
+
+⚠ 換成 Ⓑ 之後，`AVOID` 段那條「不准看起來喝醉」**要留著** —— Ⓑ 是笑得開的嘴，
+和「鬆垮的嘴」只差一線，那條擋的正是這件事（Ⓑ 段自己也寫了 `NOT a slack open jaw`）。
+
+⚠ **兩塊不要混著用**，見第一之三節最後那一段。
 
 ## 五、可以加、但沒有預設加的一句
 
@@ -290,7 +410,7 @@ stickers used as cheeks; shading anywhere other than on the skin.
 所以病患手邊放一支手機會讓圖和訊息對得起來。想加就接在 `LEFT — THE PATIENT` 段最後：
 
 ```
-A mobile phone lies on the armrest beside his limp hand, seen from the side, its screen
+A mobile phone lies on the armrest beside his far hand, seen from the side, its screen
 blank and dark with nothing on it at all.
 ```
 
@@ -299,7 +419,13 @@ blank and dark with nothing on it at all.
 
 ## 六、驗收（生成之後逐條看，任何一條沒過就重生成，不要後製）
 
-**先看這兩條，第二版就是死在這裡：**
+**先看這三條，第三版就是死在這裡（椅子上那個人不可以看起來喝醉）：**
+
+- **他的眼睛是張開的**，不是半閉、不是瞇成一條線（Ⓑ 那一案只有「笑出來的瞇」算過）。
+- **他的頭離開頭靠**、有一點往前，不是整顆陷在頭靠裡。
+- **伸出去那隻手的手腕是打直的**、手指有方向；腳穿著鞋踩在踏板上，沒有拖鞋要掉。
+
+**再看這兩條，第二版就是死在這裡：**
 
 0. **每張臉都有膚色**（暖米桃色），不是白紙也不是灰的。
 0.5 **每張臉都有眉毛、鼻子、有表情的嘴**；眼睛是眼皮的弧線不是圓點。
