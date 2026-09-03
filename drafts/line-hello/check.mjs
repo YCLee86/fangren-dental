@@ -27,9 +27,13 @@ for (const pg of PAGES) {
     if (!fs.existsSync(f)) bad.push(`${pg} → ${where} 指到 ${rel}，檔案不存在`);
   };
   for (const m of html.matchAll(/src=["']([^"']+\.(?:jpg|png|webp))["']/g)) add(m[1], "src");
-  /* 切換條的圖是 JS 用 r.id + ".jpg" 組出來的，正規式抓不到，要從資料本身還原 */
-  const rm = html.match(/var R = (\[.*?\]);\n/s);
-  if (rm) for (const r of JSON.parse(rm[1])) add(r.id + ".jpg", "切換條資料");
+  /* 圖是 JS 用 r.id + ".jpg" 組出來的，正規式抓不到，要從資料本身還原。
+     ⚠ 兩種形狀都要認：提案期間是一整排（var R = [...]），定案之後收成一筆
+       （var r = {...}）。只認前者的話，定案那一版會把成品當成孤兒檔報出來。 */
+  const many = html.match(/var R = (\[.*?\]);\n/s);
+  if (many) for (const r of JSON.parse(many[1])) add(r.id + ".jpg", "切換條資料");
+  const one = html.match(/var r = (\{.*?\});\n/s);
+  if (one) add(JSON.parse(one[1]).id + ".jpg", "定案的那一筆");
 }
 
 const orphan = fs.readdirSync(DIR)
