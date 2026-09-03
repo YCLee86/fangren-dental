@@ -68,13 +68,13 @@ const FS = 104, STAGGER = 22;
      「哩厚」整個往左推（等於順手動了定案的 ±22 錯位）。位置由**量到的右緣與基線**決定。
    ⚠ 字型子集裡的「!」沒有拿掉：萬一要退回字型版，那條路還在。 */
 const BANG = {
-  gap: 16,                                   /* 離「哩厚」右緣多遠 */
+  gapInk: 14,                                /* ✅ 定案：離「厚」的**墨**多遠（＝字型自己那顆「!」的位置） */
   stemTop: 17,                               /* ✅ 2026-09-03 定案（使用者選的） */
   deg: 18,                                   /* ✅ 2026-09-03 定案（使用者選的） */
   stemBot: 8,
-  dy: +(process.env.BDY ?? 26),              /* 墨的下緣比「哩厚」的基線低多少 */
-  dot: +(process.env.BDOT ?? 18),            /* 圓點的直徑 */
-  inkH: +(process.env.BH ?? 66),             /* 整支的墨高（莖 ＋ 間隙 ＋ 點） */
+  dy: 42,                                    /* ✅ 定案 */
+  dot: 15,                                   /* ✅ 定案 */
+  inkH: 78,                                  /* ✅ 定案（整支的墨高 ＝ 莖 ＋ 間隙 ＋ 點） */
 };
 /* ⚠ 間隙跟著點按比例走（0.22），不要寫死 —— 點縮小之後，固定的間隙看起來會相對變大。
    這個比例是從 Zen Maru 那顆真字量的（89px 下間隙 5.4／點 14.4 ≈ 0.375）再收緊來的。 */
@@ -227,77 +227,137 @@ const CASES = VARIANTS
       id: `bang2-${h}-${o}-${y}`, font: "zenmaru", cfg: { ...BANG, inkH: h, dot: o, dy: y } }))))
   : [{ id: "hero-zenmaru", font: "zenmaru", cfg: BANG }];
 
+/* 掃暗像素，回墨的外框與「中間完全沒有墨的最長一段」 */
+const shoot = async () => "data:image/png;base64," + (await p.screenshot({ clip })).toString("base64");
+const scan = async (src) => {
+  return p.evaluate(async (src) => {
+    const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
+    const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
+    const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
+    const d = cx.getImageData(0, 0, cv.width, cv.height).data;
+    let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    const rows = [], edge = [];
+    for (let y = 0; y < cv.height; y++) {
+      let any = false, a = -1, b = -1;
+      for (let x = 0; x < cv.width; x++) {
+        if (d[(y * cv.width + x) * 4] < 140) {
+          any = true; if (a < 0) a = x; b = x;
+          if (x < x0) x0 = x; if (x > x1) x1 = x;
+          if (y < y0) y0 = y; if (y > y1) y1 = y;
+        }
+      }
+      rows.push(any);
+      /* ⚠⚠ 每一列墨的最左與最右 ＝ 墨的**輪廓**。判斷「有沒有超出框」要用它，
+         不能用外框的四個角 —— 那四個角多半落在**空白處**，
+         所以驚嘆號往下移 16px，四個角量出來的餘裕**一格都沒動**（17／17／17）。 */
+      if (any) { edge.push([a, y]); if (b !== a) edge.push([b, y]); }
+    }
+    let gap = 0, best = 0, started = false, bestEnd = -1, run = -1;
+    for (let y = y0; y <= y1; y++) {
+      if (rows[y]) { if (started && gap > best) { best = gap; bestEnd = y; } gap = 0; started = true; }
+      else if (started) { if (gap === 0) run = y; gap++; }
+    }
+    /* 第二行的墨高 ＝ 從最大空白之後到最底 —— 給「驚嘆號相對於字有多高」用 */
+    const line2H = bestEnd >= 0 ? y1 - bestEnd + 1 : 0;
+    return { x0, x1, y0, y1, lineGap: best, line2H, edge };
+  }, src);
+};
+
+/* 墨對墨的量測：A ＝ 沒有驚嘆號那張，B ＝ 有的那張。
+   驚嘆號的左緣用「B 比 A 多出來的墨」找（差集），才不會又量到「厚」自己。 */
+const inkGap = (a, b, yFrom, yTo, yCharTo) => p.evaluate(async ([a, b, yFrom, yTo, yCharTo]) => {
+  const load = (src) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
+  const px = async (src) => {
+    const img = await load(src);
+    const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
+    const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
+    return { d: cx.getImageData(0, 0, cv.width, cv.height).data, w: cv.width };
+  };
+  const A = await px(a), B = await px(b);
+  let charRight = -1e9, bangLeft = 1e9, bangRight = -1e9;
+  for (let y = yFrom; y <= yTo; y++) {
+    for (let x = 0; x < A.w; x++) {
+      const i = (y * A.w + x) * 4;
+      const da = A.d[i] < 140, db = B.d[i] < 140;
+      if (da && y <= yCharTo && x > charRight) charRight = x;
+      if (db && !da) { if (x < bangLeft) bangLeft = x; if (x > bangRight) bangRight = x; }
+    }
+  }
+  /* 「哩」和「厚」之間的墨距 —— 這一句自己的節奏，拿它當基準看驚嘆號有沒有離太遠 */
+  let left = 1e9; const cols = [];
+  for (let x = 0; x < A.w; x++) {
+    let any = false;
+    for (let y = yFrom; y <= yCharTo; y++) if (A.d[(y * A.w + x) * 4] < 140) { any = true; break; }
+    cols.push(any); if (any && x < left) left = x;
+  }
+  let charGap = 0, run = 0;
+  for (let x = left; x <= charRight; x++) { if (cols[x]) { if (run > charGap) charGap = run; run = 0; } else run++; }
+  return { charRight, bangLeft, bangRight, charGap };
+}, [a, b, yFrom, yTo, yCharTo]);
+
 console.log("\n案                兩行之間  字離框邊  檔案");
 for (const c of CASES) {
   /* ⚠⚠ 「擠不擠」要量**墨真正蓋到哪裡**，不能用 getBBox()。
      getBBox() 回的是字面框（含拉丁字母的 ascent/descent），中文用不到那麼多 ——
      直接拿它判斷「離框邊多遠」，先前那一版（畫面上一直好好的）會被算成
      「超出框外 10.4px」。所以另外畫一張「白底黑字、沒有照片也沒有框線」掃暗像素。 */
-  /* ⚠⚠ 驚嘆號要接在「哩厚」的**右緣**，那個右緣要**量**不要算：
-     SVG 的 letter-spacing 會在最後一個字後面也加一次，用「字數 × 字級」估會少一截。
-     所以先畫一次沒有驚嘆號的，量第二行的 bbox，再把位置算出來重畫。 */
+  /* ⚠⚠ 驚嘆號接在「哩厚」後面的空格，要用**墨對墨**定位，不能用排版右緣。
+     2026-09-03 使用者：「感覺可以往左一點　現在和厚有點詭異的空格」—— 量出來他是對的，
+     而且那是**量錯了**不是品味問題：
+     ・原本用 getEndPositionOfChar 當右緣，那是**advance**（下一個字要從哪裡開始），
+       後面還掛著一次 letter-spacing（.04em ＝ 4.16px）與「厚」自己的右側邊距。
+       設 gap=16 的時候，眼睛看到的空格其實是 **27px**。
+     ・而「哩」與「厚」之間的墨距只有 **8px** —— 驚嘆號離了 3.4 倍，
+       讀起來就變成另外一個詞黏在後面，這就是那個「詭異的空格」。
+     ・定案值 **14px**：那是**字型自己那顆「!」跟在「厚」後面時的墨距**
+       （同一支 Zen Maru 900、同一個 104px、同一個字距，實測 哩厚! → 8, 14）。
+       所以這顆手畫的驚嘆號站的位置，和字型原本會把它放的位置一模一樣。
+       ⚠ 全形「！」是 49px，那是另一回事（全形標點自帶半個字身的留白），不要拿它當基準。
+
+     基線仍然用 getStartPositionOfChar 取（getBBox() 回的是字面框，底邊在基線下面
+     一大截，拿它當基線驚嘆號會整個掉到「哩厚」下方 —— 守門擋下來過）。 */
   const cfg = c.cfg;
   await p.setContent(page(c.font, true, null, cfg), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
-  /* ⚠⚠ 用 getStartPositionOfChar／getEndPositionOfChar 取**基線**與**右緣**。
-     getBBox() 回的是版面框（em box），底邊在基線**下面**一大截 —— 拿它當基線，
-     驚嘆號會整個掉到「哩厚」下方，而且會把墨推出框外 8px（守門擋下來過）。 */
-  const line2 = await p.evaluate(() => {
-    const t = [...document.querySelectorAll("text tspan")][1];
-    const n = t.getComputedTextLength ? t.textContent.length : 0;
-    return { right: t.getEndPositionOfChar(n - 1).x, base: t.getStartPositionOfChar(0).y };
-  });
-  /* ⚠ 原點是**墨的正下方中點**，所以 x 要再往右半個莖頂寬，左緣才會落在 gap 上 */
-  const bang = { x: line2.right + cfg.gap + cfg.stemTop / 2, y: line2.base + cfg.dy };
-
-  /* 掃暗像素，回墨的外框與「中間完全沒有墨的最長一段」 */
-  const scan = async () => {
-    const shot = (await p.screenshot({ clip })).toString("base64");
-    return p.evaluate(async (src) => {
-      const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
-      const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
-      const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
-      const d = cx.getImageData(0, 0, cv.width, cv.height).data;
-      let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
-      const rows = [], edge = [];
-      for (let y = 0; y < cv.height; y++) {
-        let any = false, a = -1, b = -1;
-        for (let x = 0; x < cv.width; x++) {
-          if (d[(y * cv.width + x) * 4] < 140) {
-            any = true; if (a < 0) a = x; b = x;
-            if (x < x0) x0 = x; if (x > x1) x1 = x;
-            if (y < y0) y0 = y; if (y > y1) y1 = y;
-          }
-        }
-        rows.push(any);
-        /* ⚠⚠ 每一列墨的最左與最右 ＝ 墨的**輪廓**。判斷「有沒有超出框」要用它，
-           不能用外框的四個角 —— 那四個角多半落在**空白處**，
-           所以驚嘆號往下移 16px，四個角量出來的餘裕**一格都沒動**（17／17／17）。 */
-        if (any) { edge.push([a, y]); if (b !== a) edge.push([b, y]); }
-      }
-      let gap = 0, best = 0, started = false, bestEnd = -1, run = -1;
-      for (let y = y0; y <= y1; y++) {
-        if (rows[y]) { if (started && gap > best) { best = gap; bestEnd = y; } gap = 0; started = true; }
-        else if (started) { if (gap === 0) run = y; gap++; }
-      }
-      /* 第二行的墨高 ＝ 從最大空白之後到最底 —— 給「驚嘆號相對於字有多高」用 */
-      const line2H = bestEnd >= 0 ? y1 - bestEnd + 1 : 0;
-      return { x0, x1, y0, y1, lineGap: best, line2H, edge };
-    }, "data:image/png;base64," + shot);
-  };
+  const baseY = await p.evaluate(() =>
+    [...document.querySelectorAll("text tspan")][1].getStartPositionOfChar(0).y);
 
   /* ⚠⚠ 「兩行之間」要量**沒有驚嘆號**的那一張。
      驚嘆號站在第二行的基線上、往上長，橫向掃描會掃到它，量出來從 45px 掉到 16px ——
      那不是兩行變近了，是**量錯了東西**。兩件事分兩張圖量：
-       兩行的距離 → 沒有驚嘆號的（此時畫面還停在上一次 setContent）
+       兩行的距離 → 沒有驚嘆號的
        字離框邊   → 有驚嘆號的（驚嘆號也是墨，一定要算進去） */
-  const noBang = await scan();
+  const srcNo = await shoot();
+  const noBang = await scan(srcNo);
+  const y2From = noBang.y1 - noBang.line2H + 1;          /* 第二行的列帶 */
 
-  await p.setContent(page(c.font, true, bang, cfg), { waitUntil: "load" });
-  await p.evaluate(() => document.fonts.ready);
-  const m = await scan();
+  /* ⚠⚠ 「厚」的墨右緣只能在**第二行那個列帶**裡找 —— 第一行「芳仁」是往右錯開 22px 的，
+     整張圖掃回來的最右是「仁」，不是「厚」。踩過：量出來墨右緣 849 > 排版右緣 830，
+     空格算成 0，數字自己互相矛盾。 */
+  const charRight = Math.max(...noBang.edge.filter(([, y]) => y >= y2From).map(([x]) => x));
+
+  /* 位置自己收斂：先照名目值擺一次，量出真正的墨距，把差額補回去再擺一次。
+     ⚠ 這樣寫的好處是**角度、莖寬、點徑日後怎麼改都不必重算偏移** ——
+       旋轉之後的最左墨不等於「原點減半個莖頂寬」，用公式一定會漂。 */
+  const bang = { x: charRight + cfg.gapInk + cfg.stemTop / 2, y: baseY + cfg.dy };
+  let srcBang, m, ink;
+  for (let pass = 0; pass < 3; pass++) {
+    await p.setContent(page(c.font, true, bang, cfg), { waitUntil: "load" });
+    await p.evaluate(() => document.fonts.ready);
+    srcBang = await shoot();
+    m = await scan(srcBang);
+    ink = await inkGap(srcNo, srcBang, y2From, m.y1, noBang.y1);
+    const err = cfg.gapInk - (ink.bangLeft - ink.charRight - 1);
+    if (Math.abs(err) <= 1) break;
+    bang.x += err;
+  }
   m.lineGap = noBang.lineGap;
   m.line2H = noBang.line2H;
+  m.inkGap = ink.bangLeft - ink.charRight - 1;
+  m.charGap = ink.charGap;
+  if (Math.abs(m.inkGap - cfg.gapInk) > 1)
+    throw new Error(`${c.id} 驚嘆號的墨距收斂不了：要 ${cfg.gapInk}px，實際 ${m.inkGap}px`);
+  m.charGap = ink.charGap;
 
   /* 逐點量墨的輪廓離框多遠（負的＝跑到框外面了） */
   let clear = Infinity, worst = null;
@@ -324,13 +384,15 @@ for (const c of CASES) {
     bangDeg: cfg.deg, bangDy: cfg.dy, bangTop: cfg.stemTop, bangBot: cfg.stemBot,
     bangH: cfg.inkH, bangDot: cfg.dot,
     charH: m.line2H, bangVsChar: +(cfg.inkH / m.line2H).toFixed(2),
+    bangGapSet: cfg.gapInk, bangGapInk: m.inkGap, charGap: m.charGap,
     tailAim: AIM, tailAng: +(GEO.aimAng * 180 / Math.PI).toFixed(0),
     tailTip: GEO.tip.map((v) => +v.toFixed(0)),
     fs: FS, onChat: +onChat.toFixed(1), stroke: STROKE,
     strokeOnChat: +(STROKE * 232 / 1040).toFixed(2),
     glassA: GLASS.a, glassBlur: GLASS.blur, nExp: BOX.n, kb: Math.round(kb) });
-  console.log(`${c.id.padEnd(17)} ${String(m.lineGap).padStart(4)}px  ` +
-    `${(clear < 0 ? "超出 " + (-clear).toFixed(0) : clear.toFixed(0) + "px").padStart(8)}  ${kb.toFixed(0)}KB`);
+  console.log(`${c.id.padEnd(17)} 兩行 ${String(m.lineGap).padStart(3)}px  ` +
+    `餘裕 ${(clear < 0 ? "超出 " + (-clear).toFixed(0) : clear.toFixed(0) + "px").padStart(7)}  ` +
+    `設 gap ${String(cfg.gapInk).padStart(3)} → 墨對墨 ${String(m.inkGap).padStart(3)}px（哩厚之間 ${m.charGap}px）  ${kb.toFixed(0)}KB`);
 }
 await browser.close();
 

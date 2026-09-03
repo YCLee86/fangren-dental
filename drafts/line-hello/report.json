@@ -3,26 +3,35 @@
     "id": "hero-zenmaru",
     "font": "zenmaru",
     "cfg": {
-      "gap": 16,
+      "gapInk": 14,
       "stemTop": 17,
       "deg": 18,
       "stemBot": 8,
-      "dy": 26,
-      "dot": 18,
-      "inkH": 66
+      "dy": 42,
+      "dot": 15,
+      "inkH": 78
     },
     "lineGap": 45,
     "lineGapOnChat": 10,
-    "clear": 17,
+    "clear": 45,
+    "worstAt": [
+      845,
+      330
+    ],
     "lhRatio": 1.34,
     "boxW": 415,
     "boxH": 349,
     "bangDeg": 18,
-    "bangDy": 26,
+    "bangDy": 42,
     "bangTop": 17,
     "bangBot": 8,
-    "bangH": 66,
-    "bangDot": 18,
+    "bangH": 78,
+    "bangDot": 15,
+    "charH": 96,
+    "bangVsChar": 0.81,
+    "bangGapSet": 14,
+    "bangGapInk": 14,
+    "charGap": 8,
     "tailAim": [
       395,
       397

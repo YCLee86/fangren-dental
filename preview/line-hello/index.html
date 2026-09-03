@@ -14,7 +14,13 @@
      尾巴 .78π／根 62／長 70／指著一樓飾邊 (395, 397)、字體 **Zen Maru Gothic 900**。
   ⚠ 他指的是哪一版是**逐像素比對他的截圖**得到的，不是憑印象猜的 —— 推導在
      drafts/line-hello/README.md 第十六節。
-  ⚠ 切換條已經拿掉。這一頁現在是**定案的規格頁**，不是提案頁。
+  ✅ 2026-09-03 驚嘆號也定案了：頭 17／角度 18°／整支高 78／圓點 15／往下 42
+     （使用者在切換條上逐格挑的），最後一件是他說的
+     「感覺可以往左一點　現在和厚有點詭異的空格」——
+     **那不是品味問題，是量錯了**：原本用 getEndPositionOfChar 定位（＝排版右緣、
+     advance），空格實際是 27px，而「哩」「厚」之間只有 8px。改成用**墨**定位，
+     值取 **14px ＝ 字型自己那顆「!」跟在「厚」後面時的墨距**。
+  ⚠ 切換條已經拿掉（27 張 bang2-*.jpg 一併刪了）。這一頁現在是**定案的規格頁**。
 -->
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--ink-soft:#5c5f57;--rule:#cdd0d2;
@@ -22,7 +28,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:15px/1.7 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  padding:18px 16px 168px}
+  padding:18px 16px 40px}
 h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .lede{color:var(--ink-soft);font-size:.86rem;margin:0 0 16px}
 .lede b{color:var(--ink)}
@@ -58,34 +64,15 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .panel .k{color:var(--ink-soft)}
 .note{border-left:3px solid var(--rule);padding-left:11px;color:var(--ink-soft);
   font-size:.79rem;margin-top:13px}
-.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(244,244,245,.97);
-  border-top:1px solid var(--rule);padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-  backdrop-filter:blur(8px);z-index:9}
-.bar .r{display:flex;align-items:flex-start;gap:8px;margin:3px 0}
-.bar .lb{flex:none;width:2.6em;font-size:.72rem;color:var(--ink-soft);padding-top:5px}
-.bar .g{display:flex;flex-wrap:wrap;gap:5px}
-.bar button{font:inherit;font-size:.75rem;padding:4px 10px;border-radius:7px;
-  border:1px solid var(--deep);background:#fff;color:var(--deep);cursor:pointer}
-.bar button[aria-pressed="true"]{background:var(--deep);color:#fff}
-.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(244,244,245,.97);
-  border-top:1px solid var(--rule);padding:9px 12px calc(9px + env(safe-area-inset-bottom));
-  backdrop-filter:blur(8px);z-index:9}
-.bar .r{display:flex;align-items:center;gap:8px;margin:3px 0}
-.bar .lb{flex:none;width:4.6em;font-size:.72rem;color:var(--ink-soft)}
-.bar .g{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
-.bar .g::-webkit-scrollbar{display:none}
-.bar button{font:inherit;font-size:.75rem;padding:4px 11px;border-radius:7px;white-space:nowrap;
-  flex:none;border:1px solid var(--deep);background:#fff;color:var(--deep);cursor:pointer}
-.bar button[aria-pressed="true"]{background:var(--deep);color:#fff}
 </style>
 </head>
 <body>
 <h1>頭圖：房子在說「芳仁　哩厚」</h1>
-<p class="lede"><b>頭 17、角度 18° 已經定案</b>，寫死了。這一輪三把新的尺：
-<b>整支多高</b>、<b>圓點多大</b>、<b>往下多少</b>。左邊那一格是你上次看到的。</p>
+<p class="lede">全部定案了。這一頁留著當<b>規格頁</b>：底下是實際會送進 LINE 的那一張，
+以及每一個值和它的依據。</p>
 
-<div class="big"><img id="shot" alt=""></div>
-<p class="cap" id="cap"></p>
+<div class="big"><img src="hero-zenmaru.jpg" alt="房子形狀的對話框，裡面寫著「芳仁　哩厚！」"></div>
+<p class="cap">1040×520（2:1 ＝ Flex 頭圖）・130KB・品質 88</p>
 
 <div class="chat">
   <div class="day">今天</div>
@@ -93,90 +80,41 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
        整張卡在 /preview/line-welcome/，文案還在動；兩頁各畫一份必然會走鐘
        （這一頁一度還停在「完成綁定，看診前 48 小時」那個舊版）。 -->
   <div class="hc">
-    <img class="hero" id="mini" alt="">
+    <img class="hero" src="hero-zenmaru.jpg" alt="">
     <div class="b">
       <p class="hi">歡迎加入芳仁牙醫的官方<i class="sp"> </i>LINE</p>
       <p class="more">整張卡在 <a href="/preview/line-welcome/">/preview/line-welcome/</a></p>
     </div>
   </div>
+</div>
 <p class="cap">↑ 頭圖在聊天室裡的<b>真實大小</b>（卡片 268px 寬）。⚠ 近似，不是 LINE 自己的算繪。</p>
 
-<div class="panel" id="panel"></div>
-<p class="note" id="note"></p>
-
-
-<div class="bar">
-  <div class="r"><span class="lb">整支多高</span><span class="g" id="sw-h"></span></div>
-  <div class="r"><span class="lb">圓點</span><span class="g" id="sw-o"></span></div>
-  <div class="r"><span class="lb">往下</span><span class="g" id="sw-y"></span></div>
+<div class="panel">
+  <span class="k">框</span> <b>415×349</b>　<span class="k">超橢圓</span> <b>2.6</b>
+  　<span class="k">玻璃</span> <b>白 .58／模糊 11px</b>　<span class="k">框線</span> <b>7px</b>
+  <br><span class="k">字</span> <b>Zen Maru Gothic 900・104px</b>
+  　<span class="k">行高</span> <b>1.34</b>　<span class="k">兩行錯開</span> <b>±22px</b>
+  　<span class="k">兩行之間</span> <b>45px</b>
+  <br><span class="k">尾巴</span> 接在 <b>.78π</b>（左下）・根 <b>62</b>・長 <b>70</b>
+  　<span class="k">指著</span> <b>一樓飾邊 (395, 397)</b>　<span class="k">＝</span> <b>163°</b>
+  <br><span class="k">驚嘆號</span> 頭 <b>17</b>・尾 <b>8</b>・角度 <b>18°</b>
+  ・整支高 <b>78px</b>（＝「哩厚」墨高 96 的 <b>0.81 倍</b>）・圓點 <b>15px</b>
+  ・比基線低 <b>42px</b>・離「厚」的墨 <b>14px</b>
+  <br><span class="k">墨離框最近</span> <b>45px</b>　<span class="k">字在聊天室</span> <b>23.2px</b>
+  　<span class="k">框線在聊天室</span> <b>1.56px</b>
 </div>
-<script>
-(function () {
-  "use strict";
-  var R = [{"id":"bang2-66-18-26","bangH":66,"bangDot":18,"bangDy":26,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-18-34","bangH":66,"bangDot":18,"bangDy":34,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-18-42","bangH":66,"bangDot":18,"bangDy":42,"bangVsChar":0.69,"charH":96,"clear":39,"kb":106},{"id":"bang2-66-15-26","bangH":66,"bangDot":15,"bangDy":26,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-15-34","bangH":66,"bangDot":15,"bangDy":34,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-15-42","bangH":66,"bangDot":15,"bangDy":42,"bangVsChar":0.69,"charH":96,"clear":39,"kb":106},{"id":"bang2-66-12-26","bangH":66,"bangDot":12,"bangDy":26,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-12-34","bangH":66,"bangDot":12,"bangDy":34,"bangVsChar":0.69,"charH":96,"clear":45,"kb":106},{"id":"bang2-66-12-42","bangH":66,"bangDot":12,"bangDy":42,"bangVsChar":0.69,"charH":96,"clear":39,"kb":106},{"id":"bang2-78-18-26","bangH":78,"bangDot":18,"bangDy":26,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-18-34","bangH":78,"bangDot":18,"bangDy":34,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-18-42","bangH":78,"bangDot":18,"bangDy":42,"bangVsChar":0.81,"charH":96,"clear":39,"kb":106},{"id":"bang2-78-15-26","bangH":78,"bangDot":15,"bangDy":26,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-15-34","bangH":78,"bangDot":15,"bangDy":34,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-15-42","bangH":78,"bangDot":15,"bangDy":42,"bangVsChar":0.81,"charH":96,"clear":39,"kb":106},{"id":"bang2-78-12-26","bangH":78,"bangDot":12,"bangDy":26,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-12-34","bangH":78,"bangDot":12,"bangDy":34,"bangVsChar":0.81,"charH":96,"clear":45,"kb":106},{"id":"bang2-78-12-42","bangH":78,"bangDot":12,"bangDy":42,"bangVsChar":0.81,"charH":96,"clear":39,"kb":106},{"id":"bang2-90-18-26","bangH":90,"bangDot":18,"bangDy":26,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-18-34","bangH":90,"bangDot":18,"bangDy":34,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-18-42","bangH":90,"bangDot":18,"bangDy":42,"bangVsChar":0.94,"charH":96,"clear":39,"kb":106},{"id":"bang2-90-15-26","bangH":90,"bangDot":15,"bangDy":26,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-15-34","bangH":90,"bangDot":15,"bangDy":34,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-15-42","bangH":90,"bangDot":15,"bangDy":42,"bangVsChar":0.94,"charH":96,"clear":39,"kb":106},{"id":"bang2-90-12-26","bangH":90,"bangDot":12,"bangDy":26,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-12-34","bangH":90,"bangDot":12,"bangDy":34,"bangVsChar":0.94,"charH":96,"clear":45,"kb":106},{"id":"bang2-90-12-42","bangH":90,"bangDot":12,"bangDy":42,"bangVsChar":0.94,"charH":96,"clear":39,"kb":106}];
-  var by = {}; R.forEach(function (r) { by[r.bangH + "|" + r.bangDot + "|" + r.bangDy] = r; });
-  var H = [66, 78, 90], O = [18, 15, 12], Y = [26, 34, 42];
-  var st = { h: 66, o: 18, y: 26 };
-
-  function render() {
-    var r = by[st.h + "|" + st.o + "|" + st.y];
-    var src = r.id + ".jpg";
-    document.getElementById("shot").src = src;
-    document.getElementById("mini").src = src;
-    document.getElementById("cap").textContent = "1040\u00d7520（2:1）・" + r.kb + "KB";
-    document.getElementById("panel").innerHTML =
-      "<span class='k'>整支高</span> <b>" + r.bangH + "px</b>"
-      + "　<span class='k'>「哩厚」的墨高</span> <b>" + r.charH + "px</b>"
-      + "　→ <b>" + r.bangVsChar + " 倍</b>"
-      + " <span class='k'>（你問的「以字體大小來說」就是這個數）</span>"
-      + "<br><span class='k'>圓點</span> <b>" + r.bangDot + "px</b>"
-      + "　<span class='k'>比基線低</span> <b>" + r.bangDy + "px</b>"
-      + "<br><span class='k'>頭</span> <b>17px</b>　<span class='k'>角度</span> <b>18\u00b0</b>"
-      + " <span class='k'>（已定案，寫死了）</span>"
-      + "　<span class='k'>尾</span> <b>8px</b>"
-      + "<br><span class='k'>墨離框最近</span> "
-      + (r.clear < 0 ? "<span class='no'>超出框外 " + (-r.clear) + "px</span>"
-                     : "<b>" + r.clear + "px</b> <span class='ok'>還在框裡</span>")
-      + " <span class='k'>（27 格最小的是 39px —— 都沒有超出，範圍不必動）</span>";
-    document.getElementById("note").innerHTML =
-      "⚠⚠ <b>「離框多遠」的量法這一輪修好了。</b> 之前量的是墨的<b>外框四個角</b>，"
-      + "而那四個角多半落在<b>空白處</b> —— 所以上一輪把驚嘆號往下移 16px，"
-      + "量出來的餘裕<b>一格都沒動</b>（17／17／17），等於那個數字在說謊。"
-      + "現在改成量<b>每一列墨的最左與最右</b>（＝墨真正的輪廓）逐點算，"
-      + "量到的是 39~45px。<b>27 格沒有一格超出框</b>，所以範圍這一輪不必動。"
-      + "<br>⚠ <b>間隙跟著圓點按比例走</b>（0.22 倍），不是固定值 —— "
-      + "點縮小之後，固定的間隙看起來會相對變大。"
-      + "<br>⚠ <b>莖的長度是由「整支多高」倒推的</b>（總高 − 間隙 − 點），"
-      + "所以換圓點的時候整支不會跟著變高，兩把尺互不干擾。"
-      + "<br>⚠ 頭 17／角度 18° 已經寫死在程式裡，不再是參數。"
-      + "<br>⚠ 這 27 張是提案用的（品質 82，比正式的 88 低一階，省下載）。"
-      + "你選完我會把值寫回去、用 88 重出一張，並把這 27 張刪掉。";
-  }
-  function chips(host, arr, k, suffix, firstLabel) {
-    host.innerHTML = "";
-    arr.forEach(function (v) {
-      var b = document.createElement("button");
-      b.textContent = v + suffix + (v === arr[0] ? firstLabel : "");
-      b.setAttribute("aria-pressed", st[k] === v ? "true" : "false");
-      b.addEventListener("click", function () { st[k] = v; sync(); render(); });
-      host.appendChild(b);
-    });
-  }
-  function sync() {
-    chips(document.getElementById("sw-h"), H, "h", "px", "（上次）");
-    chips(document.getElementById("sw-o"), O, "o", "px", "（上次）");
-    chips(document.getElementById("sw-y"), Y, "y", "px", "（上次）");
-  }
-  sync(); render();
-  /* ⚠ 27 張約 2.9MB。load 之後一張一張接力預抓，不要一次全開把 4G 塞住。 */
-  window.addEventListener("load", function () {
-    var q = R.map(function (r) { return r.id + ".jpg"; });
-    (function next() {
-      var u = q.shift(); if (!u) return;
-      var i = new Image(); i.onload = i.onerror = next; i.src = u;
-    })();
-  });
-})();
-</script>
+<p class="note">⚠⚠ <b>最後那一步是「量錯了」不是「調品味」。</b>
+驚嘆號原本用 <b>getEndPositionOfChar</b> 接在「厚」後面 —— 那是<b>排版右緣</b>
+（下一個字要從哪裡開始），後面還掛著一次字距（.04em ＝ 4.2px）和「厚」自己的右側邊距，
+所以設 16px 的時候，<b>眼睛看到的空格是 27px</b>；而「哩」和「厚」之間的墨距只有
+<b>8px</b> —— 離了 <b>3.4 倍</b>，讀起來就變成另一個詞黏在後面。這就是那個「詭異的空格」。
+<br>⚠ 定案值 <b>14px</b> 不是挑的，是<b>量的</b>：同一支字型、同一個字級、同一個字距，
+排「哩厚<b>!</b>」出來，字型自己會把那顆「!」放在<b>離「厚」的墨 14px</b> 的地方。
+所以這顆手畫的驚嘆號，站的正是字型原本要放它的位置。
+（全形「！」是 49px —— 那是全形標點自帶的半個字身留白，不能拿來當基準。）
+<br>⚠ 位置現在<b>自己收斂</b>：擺一次 → 量真正的墨距 → 把差額補回去再擺一次。
+角度、莖寬、點徑日後怎麼改都不必重算偏移（旋轉之後的最左墨不等於「原點減半個莖頂寬」）。
+<br>⚠ <b>「離框多遠」量的是每一列墨的最左與最右</b>（＝墨的輪廓），不是外框四個角 ——
+那四個角多半落在空白處，所以先前把驚嘆號往下移 16px，量出來的餘裕一格都沒動（17／17／17）。</p>
 </body>
 </html>
