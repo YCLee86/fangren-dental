@@ -44,45 +44,37 @@ const IW = 8000, IH = 3982, CX0 = 934, CY0 = 403, CW = 6680, CH = 3340;
 const sc = W / CW;
 
 /* ⚠⚠ 位置是量出來的（在成品的 1040×520 座標裡，疊格線讀的）：
-     診所外牆右緣 x≈430、劉家紅招牌 x 620~660／y 165~325、遮陽棚上緣 y≈360。
+     診所外牆右緣 x≈430、**一樓飾邊**（掛著「芳仁牙醫診所」那條深色橫帶）
+     x 55~430／y 386~408、劉家紅招牌 x 620~660／y 165~325、遮陽棚上緣 y≈360。
 
-   ✅ 2026-09-03 第三輪修正（使用者看過第四版之後）：
-     「還是不要缺口好了。兩段字感覺有點擠，分開一點。對話框也可以範圍再大一點。」
-   → **缺口整個拿掉**（描邊改吃封閉路徑，`openPath()` 已從 bubble.mjs 移除）
-   → 這一輪要選的兩把尺換成：**兩行的距離** 與 **框多大**
-   ⚠ **字級不跟著框長大**（使用者要的是「不要擠」，字一起放大等於沒鬆到）。 */
-const SIGN = { x0: 620, y0: 165, x1: 660, y1: 325 };
+   ✅ 2026-09-03 第四輪：使用者在提案頁上選了「更開 × 更大」並說「這樣可以」，
+     所以那兩把尺**收成寫死的值、從切換條上拿掉**（同 head-search 那一輪的做法）。
+     剩下的一件事是他同時提的：
+       「那個延伸角形指向感覺是對著右邊的車頭，把它改成對著一樓飾邊的位置。」
+     → 尾巴改成用 **aim（指著哪一點）** 指定，見 bubble.mjs 的說明。 */
+const SIGN = { x0: 620, y0: 165, x1: 660, y1: 325 };      /* 劉家的紅招牌，別戳到 */
+const FASCIA = { x0: 55, y0: 386, x1: 430, y1: 408 };     /* 一樓飾邊 —— 尾巴要指這裡 */
+const AIM = [395, 397];                                   /* 飾邊靠右那一段，就是他畫的箭頭指的位置 */
 const GLASS = { a: .58, blur: 11 };
 const STROKE = 7;
 const FS = 104, STAGGER = 22;
 
-/* 尺一：兩行的距離（行高的倍數）。s ＝ 第四版的值。 */
-const LHS = { s: 1.06, m: 1.20, l: 1.34 };
-/* 尺二：框多大（對第四版的倍率）。s ＝ 第四版的值。
-   ⚠ 放大時框心順帶往右下推 —— 純粹以中心放大的話左緣會往回長，
-     把上一輪「往右下移」那件事吃掉。 */
-const SIZES = { s: 1.00, m: 1.09, l: 1.18 };
-const LABEL = { s: "現況", m: "中", l: "大" };
-/* 別的頁面引用的那一版（會另存成 hero-current.jpg） */
-const DEFAULT = { lh: "m", size: "m", font: "zenmaru" };
+/* ✅ 定案：兩行的距離「更開」、框「更大」（＝ 前一版的 1.18 倍） */
+const LH = 1.34;
+/* 尾巴：接在 .78π（左下）、根部弧長 52、長 88。
+   ⚠ 根寬與長度是重挑的，不是沿用舊值：舊的是根 62 ／凸出 67（比值 1.06），
+     那個比例在尾巴**往下**指的時候讀起來是三角形，改成**往左**指之後就變成一個鈍鈍的
+     凸包。三案比過（62/70、52/88、44/102）取中間那一格，凸出 85px、比值 1.6。 */
+const TAIL_T = .78, TAIL_W = 52, TAIL_L = 88;
+const BOX = { x: 535.7, y: 44.2, w: 415.4, h: 349.3, n: 2.6,
+              tail: { t: TAIL_T, wid: TAIL_W, len: TAIL_L, aim: AIM } };
 
-const BASE = { cx: 720, cy: 200, w: 352, h: 296, n: 2.6,
-               tail: { off: -56, wid: 52, dx: -34, dy: 46 } };
-const boxOf = (k) => {
-  const z = SIZES[k];
-  const cx = BASE.cx + (z - 1) * 130, cy = BASE.cy + (z - 1) * 105;
-  const w = BASE.w * z, h = BASE.h * z;
-  return { x: cx - w / 2, y: cy - h / 2, w, h, n: BASE.n,
-           tail: { cx: cx + BASE.tail.off * z, wid: BASE.tail.wid * z,
-                   dx: BASE.tail.dx * z, dy: BASE.tail.dy * z } };
-};
-const BOXES = {}, GEOS = {}, PATHS = {};
-for (const k of ["s", "m", "l"]) {
-  BOXES[k] = boxOf(k); GEOS[k] = outline(BOXES[k]); PATHS[k] = closedPath(GEOS[k]);
-}
+const GEO = outline(BOX);
+const CLOSED = closedPath(GEO);
+const TX = BOX.x + BOX.w / 2, TY = BOX.y + BOX.h / 2;
 
 /* 點在不在多邊形裡（射線法）＋ 離邊界多遠。
-   ⚠ 換成超橢圓之後不能再用「離邊界幾 px」估，邊界不是直線了，要真的算。 */
+   ⚠ 邊界是曲線，不能用「離框幾 px」估，要真的算。 */
 const inside = ([px, py], pts) => {
   let on = false;
   for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
@@ -102,25 +94,32 @@ const clearance = ([px, py], pts) => {
   return inside([px, py], pts) ? best : -best;
 };
 
-for (const k of ["s", "m", "l"]) {
-  const B = BOXES[k], G = GEOS[k];
-  const tip = G.pts[G.tailI + 1];
+{
+  const tip = GEO.tip;
+  /* ⚠⚠ 這一條是這一輪的重點：尾巴要指著**一樓飾邊**，不是右邊那台車。
+     方向是由 AIM 算出來的，所以只要驗 AIM 真的落在飾邊上就夠了 ——
+     日後框放大或形狀微調，尾巴會自己跟著轉，不必再試角度。 */
+  if (AIM[0] < FASCIA.x0 || AIM[0] > FASCIA.x1 || AIM[1] < FASCIA.y0 || AIM[1] > FASCIA.y1)
+    throw new Error(`尾巴指的 (${AIM}) 不在一樓飾邊上`);
   if (tip[0] > SIGN.x0 && tip[0] < SIGN.x1 && tip[1] > SIGN.y0 && tip[1] < SIGN.y1)
-    throw new Error(`框「${LABEL[k]}」的尾巴尖端撞到紅招牌了`);
-  const xs = G.pts.map((q) => q[0]), ys = G.pts.map((q) => q[1]);
+    throw new Error("尾巴的尖端撞到紅招牌了");
+  const xs = GEO.pts.map((q) => q[0]), ys = GEO.pts.map((q) => q[1]);
   const left = Math.min(...xs);
-  if (left - 430 < 60) throw new Error(`框「${LABEL[k]}」離外牆只有 ${(left - 430).toFixed(0)}px`);
+  /* ⚠⚠ 「離外牆多遠」要量**框身**，不能把尾巴算進去 —— 尾巴現在本來就是往診所伸的，
+     那是這一輪要的效果。把兩件事混在一起量，尾巴一拉長就會被自己的守門擋下來。 */
+  const bodyLeft = Math.min(...GEO.pts.filter((_, i) => i !== GEO.tailI + 1).map((q) => q[0]));
+  if (bodyLeft - 430 < 60) throw new Error(`框身離外牆只有 ${(bodyLeft - 430).toFixed(0)}px`);
+  if (GEO.tip[0] < 445) throw new Error(`尾巴的尖端 x=${GEO.tip[0].toFixed(0)} 壓到診所外牆上了`);
   if (Math.max(...xs) > W - 8 || left < 8 || Math.max(...ys) > H - 8 || Math.min(...ys) < 8)
-    throw new Error(`框「${LABEL[k]}」（含尾巴）超出畫面`);
-  console.log(`框「${LABEL[k]}」×${SIZES[k].toFixed(2)}　x ${left.toFixed(0)}~${Math.max(...xs).toFixed(0)}、` +
-    `y ${Math.min(...ys).toFixed(0)}~${Math.max(...ys).toFixed(0)}　離外牆 ${(left - 430).toFixed(0)}px　` +
-    `尾巴尖端 (${tip.map((v) => v.toFixed(0)).join(", ")})`);
+    throw new Error("對話框（含尾巴）超出畫面");
+  if (STROKE * 232 / 1040 < 1.5) throw new Error("框線在聊天室太細");
+  console.log(`框身 x ${bodyLeft.toFixed(0)}~${Math.max(...xs).toFixed(0)}、y ${Math.min(...ys).toFixed(0)}~${Math.max(...ys).toFixed(0)}` +
+    `　離外牆 ${(bodyLeft - 430).toFixed(0)}px　行高 ${LH}`);
+  console.log(`尾巴接在 ${BOX.tail.t}π（左下）、長 ${BOX.tail.len}px、尖端 (${tip.map((v) => v.toFixed(0)).join(", ")})、` +
+    `指向 ${(GEO.aimAng * 180 / Math.PI).toFixed(0)}° → 一樓飾邊 (${AIM})`);
 }
-if (STROKE * 232 / 1040 < 1.5) throw new Error("框線在聊天室太細");
 
-const page = (fontId, lhKey, sizeKey, inkOnly = false) => {
-  const B = BOXES[sizeKey], LH = LHS[lhKey];
-  const TX = B.x + B.w / 2, TY = B.y + B.h / 2;
+const page = (fontId, inkOnly = false) => {
   return `<!doctype html><meta charset="utf-8"><style>
 ${faces}
 *{margin:0;padding:0}
@@ -130,7 +129,7 @@ img{position:absolute;left:${(-CX0 * sc).toFixed(2)}px;top:${(-CY0 * sc).toFixed
   width:${(IW * sc).toFixed(2)}px;height:${(IH * sc).toFixed(2)}px}
 /* ⚠ 玻璃：外層裁切、裡層放一份自己模糊的照片複本。
    backdrop-filter ＋ clip-path 放同一個元素上，模糊會被靜靜丟掉（實測過）。 */
-.clip{position:absolute;inset:0;clip-path:path('${PATHS[sizeKey]}')}
+.clip{position:absolute;inset:0;clip-path:path('${CLOSED}')}
 .clip img{filter:blur(${GLASS.blur}px) saturate(1.06)}
 .tint{position:absolute;inset:0;background:rgba(255,255,255,${GLASS.a})}
 svg{position:absolute;inset:0}
@@ -142,7 +141,7 @@ text{font-family:"${FAM[fontId]}";font-weight:900;font-size:${FS}px;fill:${DEEP}
   ${inkOnly ? "" : `<img src="data:image/jpeg;base64,${photo64}">
   <div class="clip"><img src="data:image/jpeg;base64,${photo64}"><div class="tint"></div></div>`}
   <svg viewBox="0 0 ${W} ${H}">
-    ${inkOnly ? "" : `<path class="line" d="${PATHS[sizeKey]}"/>`}
+    ${inkOnly ? "" : `<path class="line" d="${CLOSED}"/>`}
     <text x="${TX}" y="${TY}" text-anchor="middle" dominant-baseline="central">
       <tspan x="${TX + STAGGER}" dy="${(-FS * LH / 2).toFixed(1)}">芳仁</tspan>
       <tspan x="${TX - STAGGER}" dy="${(FS * LH).toFixed(1)}">哩厚</tspan>
@@ -164,22 +163,18 @@ const { chromium } = mod.default ?? mod;
 const browser = await chromium.launch({ executablePath: chromePath });
 const p = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 const clip = { x: 0, y: 0, width: W, height: H };
-const report = [], skipped = [];
+const report = [];
 
-const CASES = [];
-for (const lh of ["s", "m", "l"])
-  for (const size of ["s", "m", "l"])
-    for (const font of ["mplus", "zenmaru", "ntc"])
-      CASES.push({ id: `hero-${lh}-${size}-${font}`, lh, size, font });
+/* ✅ 兩把尺已定案，這一輪只剩字體 */
+const CASES = ["mplus", "zenmaru", "ntc"].map((font) => ({ id: `hero-${font}`, font }));
 
-console.log("\n案                        兩行距離  框      字離框邊  檔案");
+console.log("\n案                兩行之間  字離框邊  檔案");
 for (const c of CASES) {
   /* ⚠⚠ 「擠不擠」要量**墨真正蓋到哪裡**，不能用 getBBox()。
-     getBBox() 回的是字面框（含 ascent/descent），拉丁字母的上伸下伸中文用不到，
-     這四個字算出來的框比實際的墨高一截 —— 直接拿它判斷「離框邊多遠」，
-     現行這一版（一直都好好的）會被算成**超出框外 10.4px**。
-     所以另外畫一張「白底黑字、沒有照片也沒有框線」的圖，掃暗像素求墨的範圍。 */
-  await p.setContent(page(c.font, c.lh, c.size, true), { waitUntil: "load" });
+     getBBox() 回的是字面框（含拉丁字母的 ascent/descent），中文用不到那麼多 ——
+     直接拿它判斷「離框邊多遠」，先前那一版（畫面上一直好好的）會被算成
+     「超出框外 10.4px」。所以另外畫一張「白底黑字、沒有照片也沒有框線」掃暗像素。 */
+  await p.setContent(page(c.font, true), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
   const shot = (await p.screenshot({ clip })).toString("base64");
   const m = await p.evaluate(async (src) => {
@@ -200,7 +195,7 @@ for (const c of CASES) {
       }
       rows.push(any);
     }
-    /* 兩行中間那一段完全沒有墨的列數 ＝ 眼睛看到的「兩段字的距離」 */
+    /* 兩行中間完全沒有墨的那一段 ＝ 眼睛看到的「兩段字的距離」 */
     let gap = 0, best = 0, started = false;
     for (let y = y0; y <= y1; y++) {
       if (rows[y]) { if (started) best = Math.max(best, gap); gap = 0; started = true; }
@@ -208,59 +203,40 @@ for (const c of CASES) {
     }
     return { x0, x1, y0, y1, lineGap: best };
   }, "data:image/png;base64," + shot);
-  m.fs = FS;
-  const pts = GEOS[c.size].pts;
-  const corners = [[m.x0, m.y0], [m.x1, m.y0], [m.x0, m.y1], [m.x1, m.y1]];
-  const clear = Math.min(...corners.map((q) => clearance(q, pts)));
-  /* 字的四角要留在框裡，而且離框線還有餘裕（框線本身 7px 佔一半）。
-     ⚠⚠ 不到就**跳過這一格、不出圖**，切換條會自己把它變成不能點的。
-     使用者要的是「兩行分開一點」＋「框大一點」，所以「行距拉開但框沒跟著大」
-     本來就不該是一個選項 —— 給出去的每一格都要是「選了就能上線」的（第八節）。 */
-  if (clear < 10) {
-    skipped.push({ ...c, clear: +clear.toFixed(1) });
-    console.log(`${c.id.padEnd(25)} — 跳過：字離框邊只有 ${clear.toFixed(1)}px（要 ≥10）`);
-    continue;
-  }
 
-  await p.setContent(page(c.font, c.lh, c.size), { waitUntil: "load" });
+  const corners = [[m.x0, m.y0], [m.x1, m.y0], [m.x0, m.y1], [m.x1, m.y1]];
+  const clear = Math.min(...corners.map((q) => clearance(q, GEO.pts)));
+  if (clear < 10) throw new Error(`${c.id} 字離框邊只有 ${clear.toFixed(1)}px（要 ≥10）`);
+
+  await p.setContent(page(c.font), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
   const file = path.join(OUT, `${c.id}.jpg`);
-  await p.screenshot({ path: file, type: "jpeg", quality: 86, clip });
+  await p.screenshot({ path: file, type: "jpeg", quality: 88, clip });
 
-  const onChat = m.fs * 232 / 1040;
+  const onChat = FS * 232 / 1040;
   if (onChat < 11) throw new Error(`${c.id} 字在聊天室只有 ${onChat.toFixed(1)}px`);
   const kb = fs.statSync(file).size / 1024;
-  const B = BOXES[c.size];
   report.push({ ...c,
-    lhLabel: LABEL[c.lh], sizeLabel: LABEL[c.size],
-    lhRatio: LHS[c.lh], sizeZoom: SIZES[c.size],
-    boxW: Math.round(B.w), boxH: Math.round(B.h),
     lineGap: +m.lineGap.toFixed(0), lineGapOnChat: +(m.lineGap * 232 / 1040).toFixed(1),
-    clear: +clear.toFixed(0),
-    fs: m.fs, onChat: +onChat.toFixed(1), stroke: STROKE,
+    clear: +clear.toFixed(0), lhRatio: LH,
+    boxW: Math.round(BOX.w), boxH: Math.round(BOX.h),
+    tailAim: AIM, tailAng: +(GEO.aimAng * 180 / Math.PI).toFixed(0),
+    tailTip: GEO.tip.map((v) => +v.toFixed(0)),
+    fs: FS, onChat: +onChat.toFixed(1), stroke: STROKE,
     strokeOnChat: +(STROKE * 232 / 1040).toFixed(2),
-    glassA: GLASS.a, glassBlur: GLASS.blur, nExp: BASE.n, kb: Math.round(kb) });
-  console.log(`${c.id.padEnd(25)} ${String(report.at(-1).lineGap).padStart(4)}px    ` +
-    `${Math.round(B.w)}×${Math.round(B.h)}  ${clear.toFixed(0).padStart(4)}px    ${kb.toFixed(0)}KB`);
+    glassA: GLASS.a, glassBlur: GLASS.blur, nExp: BOX.n, kb: Math.round(kb) });
+  console.log(`${c.id.padEnd(17)} ${String(m.lineGap).padStart(4)}px    ${clear.toFixed(0).padStart(4)}px    ${kb.toFixed(0)}KB`);
 }
 await browser.close();
+
 /* ⚠⚠ 別的頁面（preview/line-reply/）要引用「目前這一版的頭圖」。
-   直接寫檔名的話，每次改尺、改命名規則它就變成破圖，而且**不會報錯**——
-   2026-09-03 已經壞過兩次。所以固定另存一份 hero-current.jpg，
-   別的頁面一律指這一個，命名規則怎麼改都不會再壞。 */
-const DEFAULT_ID = `hero-${DEFAULT.lh}-${DEFAULT.size}-${DEFAULT.font}`;
+   直接寫當下的檔名，每次改尺或改命名規則它就變成破圖，而且**不會報錯**——
+   2026-09-03 已經壞過兩次。固定另存一份 hero-current.jpg，別的頁面一律指它。 */
+const DEFAULT_ID = "hero-zenmaru";
 if (!report.some((r) => r.id === DEFAULT_ID))
   throw new Error(`預設那一格 ${DEFAULT_ID} 沒有出圖 —— hero-current.jpg 會是舊的`);
 fs.copyFileSync(path.join(OUT, `${DEFAULT_ID}.jpg`), path.join(OUT, "hero-current.jpg"));
-console.log(`hero-current.jpg ← ${DEFAULT_ID}.jpg（給 preview/line-reply/ 引用）`);
 
 fs.writeFileSync(path.join(HERE, "report.json"), JSON.stringify(report, null, 2));
-if (!report.length) throw new Error("一張都沒出 —— 尺的範圍全都過不了守門");
-for (const k of ["s", "m", "l"]) {
-  if (!report.some((r) => r.lh === k)) throw new Error(`行距「${LABEL[k]}」一格都出不了`);
-  if (!report.some((r) => r.size === k)) throw new Error(`框「${LABEL[k]}」一格都出不了`);
-}
-if (skipped.length) console.log(`\n跳過 ${skipped.length} 格（字會太靠框）：` +
-  skipped.map((c) => `行距${LABEL[c.lh]}×框${LABEL[c.size]}`).filter((v, i, a) => a.indexOf(v) === i).join("、"));
-const total = report.reduce((s, r) => s + r.kb, 0);
-console.log(`\n出圖 ${report.length} 張（${CASES.length} 格裡跳過 ${skipped.length}）→ preview/line-hello/hero-*.jpg，合計 ${(total / 1024).toFixed(1)}MB`);
+console.log(`\nhero-current.jpg ← ${DEFAULT_ID}.jpg（給 preview/line-reply/ 引用）`);
+console.log(`出圖 ${report.length} 張 → preview/line-hello/hero-*.jpg`);

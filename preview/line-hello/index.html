@@ -9,12 +9,11 @@
   提案頁：加入好友那張圖卡的頭圖。
   ✅ 裁切 2026-09-03 定案 Ⓒ3b（x 934~7614、y 403~3743），其餘八案已刪，推導在
      drafts/line-hello/README.md 第八節。
-  這一輪要選的是：**兩行的距離**、**框多大**、**字體**。
-  ⚠ 缺口 2026-09-03 被使用者拿掉了（「還是不要缺口好了」），bubble.mjs 的 openPath()
-    已經移除，描邊和填色都吃 closedPath()。
-  ⚠ 形狀已定：**超橢圓 2.6**（不是圓角矩形 —— 圓角矩形永遠是「四段直線＋四個圓角」，
-    那四個轉折就是「太工整」的來源）、玻璃濃度「中」（白 .58／模糊 11）。
-  ⚠ 有六格沒有出圖（行距拉開但框沒跟著大，字離框邊只剩 0.4~7.8px），切換條上是灰的。
+  ✅ 已定案：裁切 Ⓒ3b、超橢圓 2.6（不是圓角矩形）、沒有缺口、玻璃「中」、
+     兩行的距離「更開」（行高 1.34）、框「更大」（415×349）。
+  ✅ 尾巴 2026-09-03 改成**指著一樓飾邊**（原本對著右邊那台車的車頭）——
+     參數從「位移」換成「aim（指著哪一點）」，見 bubble.mjs。
+  **這一輪只剩一件事：字體。**
 -->
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--ink-soft:#5c5f57;--rule:#cdd0d2;
@@ -66,8 +65,8 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 </head>
 <body>
 <h1>頭圖：房子在說「芳仁　哩厚」</h1>
-<p class="lede">缺口<b>拿掉了</b>。這一輪的兩把尺是<b>兩行的距離</b>與<b>框多大</b>
-（字級沒有跟著放大 —— 你要的是不要擠，字一起變大就等於沒鬆到）。</p>
+<p class="lede">「更開 × 更大」定案，兩把尺<b>收起來了</b>。尾巴改成指著
+<b>一樓飾邊</b>（原本對著右邊那台車的車頭）。剩下要選的只有<b>字體</b>。</p>
 
 <div class="big"><img id="shot" alt=""></div>
 <p class="cap" id="cap"></p>
@@ -94,84 +93,62 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 <p class="note" id="note"></p>
 
 <div class="bar">
-  <div class="r"><span class="lb">兩行</span><span class="g" id="sw-l"></span></div>
-  <div class="r"><span class="lb">框</span><span class="g" id="sw-z"></span></div>
   <div class="r"><span class="lb">字體</span><span class="g" id="sw-f"></span></div>
 </div>
 
 <script>
 (function () {
   "use strict";
-  var R = [{"id":"hero-s-s-mplus","lh":"s","size":"s","font":"mplus","lhLabel":"現況","sizeLabel":"現況","lhRatio":1.06,"sizeZoom":1,"boxW":352,"boxH":296,"lineGap":15,"lineGapOnChat":3.3,"clear":13,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":127},{"id":"hero-s-s-zenmaru","lh":"s","size":"s","font":"zenmaru","lhLabel":"現況","sizeLabel":"現況","lhRatio":1.06,"sizeZoom":1,"boxW":352,"boxH":296,"lineGap":15,"lineGapOnChat":3.3,"clear":13,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":128},{"id":"hero-s-s-ntc","lh":"s","size":"s","font":"ntc","lhLabel":"現況","sizeLabel":"現況","lhRatio":1.06,"sizeZoom":1,"boxW":352,"boxH":296,"lineGap":15,"lineGapOnChat":3.3,"clear":14,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":127},{"id":"hero-s-m-mplus","lh":"s","size":"m","font":"mplus","lhLabel":"現況","sizeLabel":"中","lhRatio":1.06,"sizeZoom":1.09,"boxW":384,"boxH":323,"lineGap":16,"lineGapOnChat":3.6,"clear":28,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":124},{"id":"hero-s-m-zenmaru","lh":"s","size":"m","font":"zenmaru","lhLabel":"現況","sizeLabel":"中","lhRatio":1.06,"sizeZoom":1.09,"boxW":384,"boxH":323,"lineGap":16,"lineGapOnChat":3.6,"clear":28,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":125},{"id":"hero-s-m-ntc","lh":"s","size":"m","font":"ntc","lhLabel":"現況","sizeLabel":"中","lhRatio":1.06,"sizeZoom":1.09,"boxW":384,"boxH":323,"lineGap":16,"lineGapOnChat":3.6,"clear":28,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":123},{"id":"hero-s-l-mplus","lh":"s","size":"l","font":"mplus","lhLabel":"現況","sizeLabel":"大","lhRatio":1.06,"sizeZoom":1.18,"boxW":415,"boxH":349,"lineGap":15,"lineGapOnChat":3.3,"clear":44,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":120},{"id":"hero-s-l-zenmaru","lh":"s","size":"l","font":"zenmaru","lhLabel":"現況","sizeLabel":"大","lhRatio":1.06,"sizeZoom":1.18,"boxW":415,"boxH":349,"lineGap":15,"lineGapOnChat":3.3,"clear":44,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":120},{"id":"hero-s-l-ntc","lh":"s","size":"l","font":"ntc","lhLabel":"現況","sizeLabel":"大","lhRatio":1.06,"sizeZoom":1.18,"boxW":415,"boxH":349,"lineGap":15,"lineGapOnChat":3.3,"clear":43,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":119},{"id":"hero-m-m-mplus","lh":"m","size":"m","font":"mplus","lhLabel":"中","sizeLabel":"中","lhRatio":1.2,"sizeZoom":1.09,"boxW":384,"boxH":323,"lineGap":30,"lineGapOnChat":6.7,"clear":23,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":124},{"id":"hero-m-m-zenmaru","lh":"m","size":"m","font":"zenmaru","lhLabel":"中","sizeLabel":"中","lhRatio":1.2,"sizeZoom":1.09,"boxW":384,"boxH":323,"lineGap":30,"lineGapOnChat":6.7,"clear":22,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":125},{"id":"hero-m-m-ntc","lh":"m","size":"m","font":"ntc","lhLabel":"中","sizeLabel":"中","lhRatio":1.2,"sizeZoom":1.09,"boxW":384,"boxH":323,"lineGap":30,"lineGapOnChat":6.7,"clear":22,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":123},{"id":"hero-m-l-mplus","lh":"m","size":"l","font":"mplus","lhLabel":"中","sizeLabel":"大","lhRatio":1.2,"sizeZoom":1.18,"boxW":415,"boxH":349,"lineGap":29,"lineGapOnChat":6.5,"clear":38,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":120},{"id":"hero-m-l-zenmaru","lh":"m","size":"l","font":"zenmaru","lhLabel":"中","sizeLabel":"大","lhRatio":1.2,"sizeZoom":1.18,"boxW":415,"boxH":349,"lineGap":29,"lineGapOnChat":6.5,"clear":37,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":120},{"id":"hero-m-l-ntc","lh":"m","size":"l","font":"ntc","lhLabel":"中","sizeLabel":"大","lhRatio":1.2,"sizeZoom":1.18,"boxW":415,"boxH":349,"lineGap":29,"lineGapOnChat":6.5,"clear":37,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":119},{"id":"hero-l-m-mplus","lh":"l","size":"m","font":"mplus","lhLabel":"大","sizeLabel":"中","lhRatio":1.34,"sizeZoom":1.09,"boxW":384,"boxH":323,"lineGap":44,"lineGapOnChat":9.8,"clear":17,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":124},{"id":"hero-l-m-zenmaru","lh":"l","size":"m","font":"zenmaru","lhLabel":"大","sizeLabel":"中","lhRatio":1.34,"sizeZoom":1.09,"boxW":384,"boxH":323,"lineGap":44,"lineGapOnChat":9.8,"clear":16,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":125},{"id":"hero-l-m-ntc","lh":"l","size":"m","font":"ntc","lhLabel":"大","sizeLabel":"中","lhRatio":1.34,"sizeZoom":1.09,"boxW":384,"boxH":323,"lineGap":44,"lineGapOnChat":9.8,"clear":15,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":124},{"id":"hero-l-l-mplus","lh":"l","size":"l","font":"mplus","lhLabel":"大","sizeLabel":"大","lhRatio":1.34,"sizeZoom":1.18,"boxW":415,"boxH":349,"lineGap":45,"lineGapOnChat":10,"clear":32,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":120},{"id":"hero-l-l-zenmaru","lh":"l","size":"l","font":"zenmaru","lhLabel":"大","sizeLabel":"大","lhRatio":1.34,"sizeZoom":1.18,"boxW":415,"boxH":349,"lineGap":45,"lineGapOnChat":10,"clear":30,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":120},{"id":"hero-l-l-ntc","lh":"l","size":"l","font":"ntc","lhLabel":"大","sizeLabel":"大","lhRatio":1.34,"sizeZoom":1.18,"boxW":415,"boxH":349,"lineGap":45,"lineGapOnChat":10,"clear":29,"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":119}];
-  var by = {}; R.forEach(function (r) { by[r.lh + "|" + r.size + "|" + r.font] = r; });
-  var L = { s: "現況", m: "分開", l: "更開" };
-  var Z = { s: "現況", m: "大", l: "更大" };
+  var R = [{"id":"hero-mplus","font":"mplus","lineGap":45,"lineGapOnChat":10,"clear":32,"lhRatio":1.34,"boxW":415,"boxH":349,"tailAim":[395,397],"tailAng":163,"tailTip":[485,370],"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":129},{"id":"hero-zenmaru","font":"zenmaru","lineGap":45,"lineGapOnChat":10,"clear":30,"lhRatio":1.34,"boxW":415,"boxH":349,"tailAim":[395,397],"tailAng":163,"tailTip":[485,370],"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":130},{"id":"hero-ntc","font":"ntc","lineGap":45,"lineGapOnChat":10,"clear":29,"lhRatio":1.34,"boxW":415,"boxH":349,"tailAim":[395,397],"tailAng":163,"tailTip":[485,370],"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":129}];
+  var by = {}; R.forEach(function (r) { by[r.font] = r; });
   var F = { mplus: "M PLUS 圓體", zenmaru: "Zen Maru 圓體", ntc: "Noto Sans TC" };
-  var st = { l: "m", z: "m", f: "zenmaru" };
-  var key = function (o) { return o.l + "|" + o.z + "|" + o.f; };
+  var st = { f: "zenmaru" };
 
-  function chips(host, obj, k) {
+  function chips() {
+    var host = document.getElementById("sw-f");
     host.innerHTML = "";
-    Object.keys(obj).forEach(function (v) {
+    Object.keys(F).forEach(function (v) {
       var b = document.createElement("button");
-      b.textContent = obj[v];
-      b.setAttribute("aria-pressed", st[k] === v ? "true" : "false");
-      var probe = { l: st.l, z: st.z, f: st.f }; probe[k] = v;
-      if (!by[key(probe)]) {
-        /* 這一格的字會太靠框，出圖時就跳過了 —— 不能點 */
-        b.disabled = true; b.style.opacity = ".34"; b.title = "這一格字會太靠框，沒有出圖";
-      } else b.addEventListener("click", function () { st[k] = v; sync(); render(); });
+      b.textContent = F[v];
+      b.setAttribute("aria-pressed", st.f === v ? "true" : "false");
+      b.addEventListener("click", function () { st.f = v; chips(); render(); });
       host.appendChild(b);
     });
   }
-  function sync() {
-    chips(document.getElementById("sw-l"), L, "l");
-    chips(document.getElementById("sw-z"), Z, "z");
-    chips(document.getElementById("sw-f"), F, "f");
-  }
   function render() {
-    var r = by[key(st)];
-    var src = r.id + ".jpg";
+    var r = by[st.f], src = r.id + ".jpg";
     document.getElementById("shot").src = src;
     document.getElementById("mini").src = src;
     document.getElementById("cap").textContent = "1040\u00d7520（2:1）・" + r.kb + "KB";
     document.getElementById("panel").innerHTML =
-      "<span class='k'>兩行之間</span> <b>" + r.lineGap + "px</b>"
+      "<span class='k'>尾巴</span> 從左下伸出，指著 <b>一樓飾邊 (" + r.tailAim.join(", ") + ")</b>"
+      + "　<span class='k'>角度</span> <b>" + r.tailAng + "\u00b0</b>"
+      + " <span class='k'>（尖端 " + r.tailTip.join(", ") + "）</span>"
+      + "<br><span class='k'>兩行之間</span> <b>" + r.lineGap + "px</b>"
       + " <span class='k'>（真的沒有墨的那一段，聊天室裡 " + r.lineGapOnChat + "px）</span>"
       + "　<span class='k'>行高</span> <b>" + r.lhRatio + "</b>"
       + "<br><span class='k'>框</span> <b>" + r.boxW + "\u00d7" + r.boxH + "</b>"
-      + " <span class='k'>（現況的 " + r.sizeZoom + " 倍）</span>"
       + "　<span class='k'>字離框邊</span> <b>" + r.clear + "px</b>"
-      + "<br><span class='k'>字</span> <b>" + r.fs + "px</b>"
-      + "　<span class='k'>在聊天室裡</span> <b>" + r.onChat + "px</b>"
-      + " <span class='k'>（下限 11px）</span>"
-      + "　<span class='k'>框線</span> <b>" + r.stroke + "px</b>（聊天室 " + r.strokeOnChat + "px）"
+      + "　<span class='k'>字</span> <b>" + r.fs + "px</b>"
+      + "（聊天室 " + r.onChat + "px）"
       + "<br><span class='k'>形狀</span> <b>超橢圓 " + r.nExp + "</b>"
+      + "　<span class='k'>框線</span> <b>" + r.stroke + "px</b>（聊天室 " + r.strokeOnChat + "px）"
       + "　<span class='k'>玻璃</span> <b>中</b><span class='k'>（白 " + r.glassA + "、模糊 " + r.glassBlur + "）</span>";
     document.getElementById("note").innerHTML =
-      "⚠ <b>缺口拿掉了</b>，框是一條接回去的封閉線。畫缺口那一支程式也一併移除，"
-      + "要走回去只能翻 git —— 免得哪天有人以為那還是個選項。"
-      + "<br>⚠ <b>字級刻意不跟著框放大。</b> 框變大、字不變，多出來的才是留白；"
-      + "字一起放大等於原地踏步。"
-      + "<br>⚠ <b>「兩行之間」印的是真的沒有墨的那一段</b>，不是行高算出來的。"
-      + "字面框（getBBox）含拉丁字母的上伸下伸部，中文用不到那麼多 —— "
-      + "拿它量的話，連現在這一版都會被算成「字超出框外 10px」。這裡是另外畫一張"
-      + "白底黑字掃暗像素量的。"
-      + "<br>⚠ <b>有幾格是灰的、點不下去</b>：行距拉開但框沒跟著大的那幾格，"
-      + "字離框邊只剩 0.4~7.8px。你要的是「分開」＋「大一點」，"
-      + "所以那幾格本來就不該是選項 —— 切換條上每一格都要是選了就能上線的。"
+      "⚠ <b>尾巴現在是「指著某一點」，不是「往哪個方向偏多少」。</b> 舊的寫法是給位移量，"
+      + "要指著某個東西只能自己試角度，而且框一改大就又跑掉。現在直接寫它要指的那一點"
+      + "（一樓飾邊 " + r.tailAim.join(", ") + "），方向由程式算 —— 日後框再改，尾巴會自己跟著轉。"
+      + "<br>⚠ <b>根寬與長度是重挑的，不是沿用舊值。</b> 舊的是根 62／凸出 67（比值 1.06），"
+      + "那個比例在尾巴<b>往下</b>指的時候讀起來是三角形，改成<b>往左</b>指之後變成一個鈍鈍的凸包。"
+      + "三案比過取中間：根 52／凸出 85（比值 1.6）。"
+      + "<br>⚠ 「離外牆多遠」現在只量<b>框身</b>（106px），不把尾巴算進去 —— "
+      + "尾巴本來就是往診所伸的，兩件事混在一起量，尾巴一拉長就會被自己的守門擋下來。"
       + "<br>⚠ 兩行刻意錯開（芳仁往右、哩厚往左各 22px）—— 字面框其實完全對齊，"
       + "看起來錯位是「仁」右邊留白多、「厚」填滿整格。";
   }
-  sync(); render();
-  /* ⚠ 21 張、合計 2.6MB。一次全開會把 4G 塞住，所以 load 之後**一張一張**接力預抓，
-     而且從現在選的那一組附近開始。 */
+  chips(); render();
   window.addEventListener("load", function () {
-    var q = R.map(function (r) { return r.id + ".jpg"; });
-    (function next() {
-      var u = q.shift(); if (!u) return;
-      var i = new Image(); i.onload = i.onerror = next; i.src = u;
-    })();
+    R.forEach(function (r) { new Image().src = r.id + ".jpg"; });
   });
 })();
 </script>

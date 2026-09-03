@@ -34,9 +34,21 @@ export const WOBBLE = [[2, .017, 1.15], [3, .010, -0.4]];
 
 /**
  * 超橢圓 ＋ 尾巴的密集取樣點。
- * @returns {{pts:number[][], tailI:number, per:number}}
- *   tailI ＝ 尾巴第一個點（右根）在點列裡的索引。
- *   ⚠ 缺口那一版已經拿掉了，但 tailI 留著 —— 守門要靠它認出尾巴在哪一段。
+ *
+ * ⚠⚠ 尾巴的參數 2026-09-03 改過（第六版）。舊寫法是 `{ cx, wid, dx, dy }`：
+ *   根部用**絕對 x** 指定（所以只能接在下緣），尖端用**位移**指定。使用者：
+ *   「那個延伸角形指向感覺是對著右邊的車頭，把它改成對著一樓飾邊的位置。」
+ *   —— 用位移那個寫法要「指著某個東西」只能自己試角度，而且框一改大就又跑掉。
+ *   新寫法直接寫**它要指著誰**：
+ *     { t, wid, len, aim }
+ *       t   接在輪廓的哪裡，單位是 π：0.5 ＝ 正下方、1.0 ＝ 正左方，之間就是左下
+ *       wid 根部沿著輪廓的弧長（px）
+ *       len 尖端離根部多遠（px）
+ *       aim 尖端朝著畫面上的哪一點 —— **方向由它算出來，不是自己填角度**
+ *   這樣框放大、形狀微調，尾巴都還是指著同一個東西。
+ *
+ * @returns {{pts:number[][], tailI:number, per:number, tip:number[], aimAng:number}}
+ *   pts[tailI] ＝ 前根、[tailI+1] ＝ 尖端、[tailI+2] ＝ 後根
  */
 export function outline(o) {
   const { x, y, w, h, n: nExp = 2.6, wobble = WOBBLE, tail, steps = 720 } = o;
@@ -53,51 +65,63 @@ export function outline(o) {
             cy + r * b * Math.sign(s) * Math.abs(s) ** p];
   };
 
-  /* 尾巴的兩個根部：在**下半圈**找 x 等於 cx±wid/2 的那兩個角度。
-     t 從 0 走到 π 時 x 單調遞減（右 → 左），所以二分法找得到唯一解。 */
-  let tRoots = null, tailPts = null;
-  if (tail) {
-    const solve = (targetX) => {
-      let lo = .02, hi = Math.PI - .02;
-      if (at(lo)[0] < targetX || at(hi)[0] > targetX)
-        throw new Error(`尾巴的根部 x=${f(targetX)} 落在下半圈的 ` +
-          `${f(at(hi)[0])}~${f(at(lo)[0])} 之外`);
-      for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; if (at(m)[0] > targetX) lo = m; else hi = m; }
-      return (lo + hi) / 2;
-    };
-    const tR = solve(tail.cx + tail.wid / 2);   /* 右根，t 比較小 */
-    const tL = solve(tail.cx - tail.wid / 2);   /* 左根 */
-    const tC = solve(tail.cx);
-    if (!(tR < tC && tC < tL)) throw new Error("尾巴的兩個根部順序不對");
-    tRoots = [tR, tL];
-    tailPts = [at(tR), [tail.cx + tail.dx, at(tC)[1] + tail.dy], at(tL)];
-  }
-
-  /* 從正上方（t = −π/2）起，沿著 t 遞增取樣：上 → 右 → 下（尾巴）→ 左 → 回到上 */
+  /* 先取一圈**沒有尾巴**的點（從正上方 t = −π/2 起，沿 t 遞增：上 → 右 → 下 → 左） */
   const t0 = -Math.PI / 2;
-  const pts = []; let tailI = -1;
-  for (let i = 0; i < steps; i++) {
-    const t = t0 + i / steps * 2 * Math.PI;
-    const tn = ((t % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);   /* 正規化到 0~2π 才比得了 */
-    if (tRoots && tn > tRoots[0] && tn < tRoots[1]) {
-      if (tailI < 0) { tailI = pts.length; pts.push(...tailPts); }
-      continue;
-    }
-    pts.push(at(t));
+  const base = [];
+  for (let i = 0; i < steps; i++) base.push(at(t0 + i / steps * 2 * Math.PI));
+
+  let pts = base, tailI = -1, tip = null, aimAng = 0;
+  if (tail) {
+    const { t: tPi, wid, len, aim } = tail;
+    if (tPi <= .5 || tPi >= 1.25) throw new Error(`尾巴接在 ${tPi}π，不在左下那一段（.5 ~ 1.25）`);
+    /* 接點的索引：取樣是從 −π/2 起跑的，換算要把那個起點算回去 */
+    const i0 = Math.round(((tPi * Math.PI - t0) / (2 * Math.PI)) * steps) % steps;
+    const P = base[i0];
+
+    /* 根部：從接點沿著輪廓往兩邊各走 wid/2 的**弧長**。
+       ⚠ 不能用索引差 —— 等角度取樣不是等弧長的，圓弧那一段密、平的那一段疏。 */
+    const walk = (dir) => {
+      let acc = 0, i = i0;
+      while (acc < wid / 2) {
+        const j = (i + dir + steps) % steps;
+        acc += Math.hypot(base[j][0] - base[i][0], base[j][1] - base[i][1]);
+        i = j;
+      }
+      return i;
+    };
+    const iA = walk(-1), iB = walk(1);        /* iA 在前（靠下緣）、iB 在後（靠左緣） */
+    if (iA >= iB) throw new Error("尾巴的根部跨過了取樣的起點，換一個 t");
+
+    /* 尖端：方向由 aim 算，長度是 len */
+    const d = [aim[0] - P[0], aim[1] - P[1]];
+    const L = Math.hypot(d[0], d[1]);
+    if (L < len * 1.5) throw new Error(`尾巴要指的那一點離根部只有 ${f(L)}px，比尾巴自己還短`);
+    aimAng = Math.atan2(d[1], d[0]);
+    tip = [P[0] + len * d[0] / L, P[1] + len * d[1] / L];
+
+    /* ⚠ 尖端要朝**外面**：和「框心指向接點」那個方向夾角不能太大，
+       不然尾巴會貼著框邊躺平，甚至戳回框裡面去。 */
+    const nrm = Math.atan2(P[1] - cy, P[0] - cx);
+    const off = Math.abs(((aimAng - nrm + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
+    if (off > Math.PI * 55 / 180)
+      throw new Error(`尾巴和外法線夾了 ${(off * 180 / Math.PI).toFixed(0)}°，太貼著框邊`);
+
+    pts = base.slice(0, iA + 1);
+    tailI = pts.length - 1;
+    pts.push(tip, ...base.slice(iB));
   }
-  if (tail && tailI < 0) throw new Error("尾巴沒有被插進點列 —— 取樣太疏或角度算錯");
 
   /* ⚠ 守門一：尾巴的前後兩點都要在**下半圈**（y > 中線）。
-     只驗根部的 x 範圍是不夠的 —— 那驗不出「插錯位置」（第三版踩過，尾巴被插到上緣）。 */
+     只驗參數範圍是不夠的 —— 那驗不出「插錯位置」（第三版踩過，尾巴被插到上緣）。 */
   if (tail) {
-    const before = pts[(tailI - 2 + pts.length) % pts.length];
-    const after = pts[(tailI + 4) % pts.length];
+    const before = pts[(tailI - 1 + pts.length) % pts.length];
+    const after = pts[(tailI + 3) % pts.length];
     if (before[1] < cy || after[1] < cy)
       throw new Error(`尾巴沒有接在下半圈（前 y=${f(before[1])}、後 y=${f(after[1])}、中線 ${f(cy)}）`);
   }
   /* ⚠ 守門二：相鄰兩點不可以跳太遠 —— 跳很遠就是路徑接錯了。
      ⚠ 尾巴自己那兩段本來就長，所以門檻要放它進來。 */
-  const jump = tail ? Math.max(80, Math.hypot(tail.dx, tail.dy) + tail.wid) : 40;
+  const jump = tail ? Math.max(60, tail.len + tail.wid) : 40;
   for (let k = 1; k < pts.length; k++) {
     const dd = Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]);
     if (dd > jump) throw new Error(`輪廓在第 ${k} 點跳了 ${dd.toFixed(0)}px —— 路徑接錯了`);
@@ -108,7 +132,7 @@ export function outline(o) {
     const q = pts[(k + 1) % pts.length];
     per += Math.hypot(q[0] - pts[k][0], q[1] - pts[k][1]);
   }
-  return { pts, tailI, per };
+  return { pts, tailI, per, tip, aimAng };
 }
 
 /** 封閉路徑（給填色與 clip-path 用） */
