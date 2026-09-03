@@ -42,7 +42,7 @@
 | `artboard-2-latin.svg` / `.png` | 英文標準字 `FANG REN DENTAL CLINIC`（粗、細兩款） |
 | `artboard-3-lockups.svg` / `.png` | 三組組合標：九宮格／直式中英＋標誌／實心牙齒＋英中。**這一頁是彩色的** |
 
-從 `.pptx` 搬出來的（設計師的官方匯出，一個位元組都沒重畫）：
+從 `.pptx` 搬出來的（設計師的官方匯出，**沒有重畫**，只是從 zip 裡搬出來換名字）：
 
 | | |
 | --- | --- |
@@ -52,6 +52,9 @@
 | `pptx-4-wordmark-reverse.svg` / `.png` | **中文標準字的反白版（白色），深色底專用** —— ⚠ 這一款 `.ai` 裡沒有，只有 pptx 有 |
 
 `.ai` 那三張 PNG 是 1200px 寬，pptx 那四張是原檔的 2500×1767，都白底。
+
+⚠ 那四份 SVG 進版控時被 git 正規化了換行（CRLF → LF），內容一個字沒改。
+要逐位元組的原樣就回頭解 `fangren-logo-104.pptx` 的 `ppt/media/`。
 
 ## 四、重新產生
 
