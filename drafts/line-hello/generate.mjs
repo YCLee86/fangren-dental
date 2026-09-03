@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* 招呼圖卡的頭圖：Ⓒ3b 的街景 ＋ 白色玻璃遮罩 ＋「芳仁／哩厚」
  *   node drafts/line-hello/generate.mjs
- * 產出 preview/line-hello/hero-<缺口>-<字體>.jpg（各 1040×520 ＝ Flex 頭圖的 2:1）
+ * 產出 preview/line-hello/hero-<行距>-<框大小>-<字體>.jpg（各 1040×520 ＝ Flex 頭圖的 2:1）
  *
  * 使用者 2026-09-03：「選 Ⓒ3b。文字要放 芳仁 哩厚，感覺可以斷行，
  * 加點白色的玻璃遮罩看看。」（哩厚 ＝ 台語的你好）
@@ -21,7 +21,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { outline, closedPath, openPath } from "./bubble.mjs";
+import { outline, closedPath } from "./bubble.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..", "..");
@@ -46,28 +46,43 @@ const sc = W / CW;
 /* ⚠⚠ 位置是量出來的（在成品的 1040×520 座標裡，疊格線讀的）：
      診所外牆右緣 x≈430、劉家紅招牌 x 620~660／y 165~325、遮陽棚上緣 y≈360。
 
-   ✅ 2026-09-03 第二輪修正（使用者看過第三版之後）：
-     「那個缺口和照片上的位置不一樣，這樣意思也差很多。照片上的缺口留在
-       和延伸角形的銜接處，這樣才有手畫的感覺。另外目前的對話框太工整，也太方正，
-       整個對話框可以往右下移一點。」
-   → 形狀從**圓角矩形**換成**超橢圓**（指數 2.6）＋兩個低頻擾動，見 bubble.mjs
-   → 缺口**錨在尾巴的根部**，不再用周長比例定位（那個參數整個拿掉了）
-   → 整個框往右下移：x 512 → 544、y 26 → 52 */
-const BOX = { x: 544, y: 52, w: 352, h: 296, n: 2.6,
-              tail: { cx: 664, wid: 52, dx: -34, dy: 46 } };
+   ✅ 2026-09-03 第三輪修正（使用者看過第四版之後）：
+     「還是不要缺口好了。兩段字感覺有點擠，分開一點。對話框也可以範圍再大一點。」
+   → **缺口整個拿掉**（描邊改吃封閉路徑，`openPath()` 已從 bubble.mjs 移除）
+   → 這一輪要選的兩把尺換成：**兩行的距離** 與 **框多大**
+   ⚠ **字級不跟著框長大**（使用者要的是「不要擠」，字一起放大等於沒鬆到）。 */
 const SIGN = { x0: 620, y0: 165, x1: 660, y1: 325 };
 const GLASS = { a: .58, blur: 11 };
 const STROKE = 7;
-const FS = 104, LH = 1.06, STAGGER = 22;
-const GAPS = { s: .028, m: .048, l: .075 };
-const GAPLABEL0 = { s: "小", m: "中", l: "大" };
+const FS = 104, STAGGER = 22;
 
-const GEO = outline(BOX);
-const PERIMETER = GEO.per;
-const CLOSED = closedPath(GEO);
+/* 尺一：兩行的距離（行高的倍數）。s ＝ 第四版的值。 */
+const LHS = { s: 1.06, m: 1.20, l: 1.34 };
+/* 尺二：框多大（對第四版的倍率）。s ＝ 第四版的值。
+   ⚠ 放大時框心順帶往右下推 —— 純粹以中心放大的話左緣會往回長，
+     把上一輪「往右下移」那件事吃掉。 */
+const SIZES = { s: 1.00, m: 1.09, l: 1.18 };
+const LABEL = { s: "現況", m: "中", l: "大" };
+/* 別的頁面引用的那一版（會另存成 hero-current.jpg） */
+const DEFAULT = { lh: "m", size: "m", font: "zenmaru" };
 
-/* 點在不在多邊形裡（射線法）—— 給「字有沒有跑出框外」的守門用。
-   ⚠ 換成超橢圓之後不能再用「離邊界幾 px」估，邊界不是直線了。 */
+const BASE = { cx: 720, cy: 200, w: 352, h: 296, n: 2.6,
+               tail: { off: -56, wid: 52, dx: -34, dy: 46 } };
+const boxOf = (k) => {
+  const z = SIZES[k];
+  const cx = BASE.cx + (z - 1) * 130, cy = BASE.cy + (z - 1) * 105;
+  const w = BASE.w * z, h = BASE.h * z;
+  return { x: cx - w / 2, y: cy - h / 2, w, h, n: BASE.n,
+           tail: { cx: cx + BASE.tail.off * z, wid: BASE.tail.wid * z,
+                   dx: BASE.tail.dx * z, dy: BASE.tail.dy * z } };
+};
+const BOXES = {}, GEOS = {}, PATHS = {};
+for (const k of ["s", "m", "l"]) {
+  BOXES[k] = boxOf(k); GEOS[k] = outline(BOXES[k]); PATHS[k] = closedPath(GEOS[k]);
+}
+
+/* 點在不在多邊形裡（射線法）＋ 離邊界多遠。
+   ⚠ 換成超橢圓之後不能再用「離邊界幾 px」估，邊界不是直線了，要真的算。 */
 const inside = ([px, py], pts) => {
   let on = false;
   for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
@@ -76,60 +91,46 @@ const inside = ([px, py], pts) => {
   }
   return on;
 };
-
-{
-  const tip = GEO.pts[GEO.tailI + 1];
-  if (tip[0] > SIGN.x0 && tip[0] < SIGN.x1 && tip[1] > SIGN.y0 && tip[1] < SIGN.y1)
-    throw new Error("尾巴的尖端撞到紅招牌了");
-  if (BOX.x - 430 < 60) throw new Error("對話框離外牆只有 " + (BOX.x - 430) + "px");
-  if (STROKE * 232 / 1040 < 1.5) throw new Error("框線在聊天室太細");
-  const xs = GEO.pts.map((q) => q[0]), ys = GEO.pts.map((q) => q[1]);
-  if (Math.max(...xs) > W - 8 || Math.min(...xs) < 8 || Math.max(...ys) > H - 8 || Math.min(...ys) < 8)
-    throw new Error("對話框（含尾巴）超出畫面");
-  console.log(`框離外牆 ${BOX.x - 430}px、超橢圓指數 ${BOX.n}（2 ＝ 橢圓、4 已經很方）、` +
-    `框線 ${STROKE}px（聊天室 ${(STROKE * 232 / 1040).toFixed(2)}px）`);
-  console.log(`外框 x ${Math.min(...xs).toFixed(0)}~${Math.max(...xs).toFixed(0)}、` +
-    `y ${Math.min(...ys).toFixed(0)}~${Math.max(...ys).toFixed(0)}、尾巴尖端 (${tip.map((v) => v.toFixed(0)).join(", ")})`);
-}
-
-/* 缺口的位置守門 —— 這一版的判準整個反過來了。
-   ⚠⚠ 第三版是「缺口要離尾巴夠遠」，使用者退回：「照片上的缺口留在和延伸角形的
-     銜接處，這樣才有手畫的感覺。」所以現在要驗的是**缺口就貼著尾巴的根部**。
-   ⚠ 這一段是實際去看那一段路徑落在哪裡，不是重算一次幾何。 */
-{
-  const { pts, tailI } = GEO, n = pts.length;
-  const root = pts[tailI];                              /* 尾巴的右根 ＝ 起筆點 */
-  const cy = BOX.y + BOX.h / 2;
-  for (const g of ["s", "m", "l"]) {
-    const keep = Math.round(n * (1 - GAPS[g]));
-    const far = pts[(tailI + keep) % n];                 /* 缺口的另一端（收筆點） */
-    /* ① 缺口的兩端都要在下半圈 —— 爬到上緣就不是「銜接處」了 */
-    if (root[1] < cy || far[1] < cy)
-      throw new Error(`缺口「${GAPLABEL0[g]}」爬出下半圈（收筆 y=${far[1].toFixed(0)}、中線 ${cy.toFixed(0)}）`);
-    /* ② 收筆點要離尾巴根部夠近 —— 遠了就變成「框上破一個洞」 */
-    const d = Math.hypot(far[0] - root[0], far[1] - root[1]);
-    if (d > 130) throw new Error(`缺口「${GAPLABEL0[g]}」離尾巴根部 ${d.toFixed(0)}px，太遠了`);
+const clearance = ([px, py], pts) => {
+  let best = Infinity;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [xi, yi] = pts[i], [xj, yj] = pts[j];
+    const dx = xj - xi, dy = yj - yi, L2 = dx * dx + dy * dy;
+    const t = L2 ? Math.max(0, Math.min(1, ((px - xi) * dx + (py - yi) * dy) / L2)) : 0;
+    best = Math.min(best, Math.hypot(px - (xi + t * dx), py - (yi + t * dy)));
   }
-  const keepM = Math.round(n * (1 - GAPS.m));
-  const farM = pts[(tailI + keepM) % n];
-  console.log(`缺口貼著尾巴的右根 (${root.map((v) => v.toFixed(0)).join(", ")})，` +
-    `「中」那一格收筆在 (${farM.map((v) => v.toFixed(0)).join(", ")})`);
+  return inside([px, py], pts) ? best : -best;
+};
+
+for (const k of ["s", "m", "l"]) {
+  const B = BOXES[k], G = GEOS[k];
+  const tip = G.pts[G.tailI + 1];
+  if (tip[0] > SIGN.x0 && tip[0] < SIGN.x1 && tip[1] > SIGN.y0 && tip[1] < SIGN.y1)
+    throw new Error(`框「${LABEL[k]}」的尾巴尖端撞到紅招牌了`);
+  const xs = G.pts.map((q) => q[0]), ys = G.pts.map((q) => q[1]);
+  const left = Math.min(...xs);
+  if (left - 430 < 60) throw new Error(`框「${LABEL[k]}」離外牆只有 ${(left - 430).toFixed(0)}px`);
+  if (Math.max(...xs) > W - 8 || left < 8 || Math.max(...ys) > H - 8 || Math.min(...ys) < 8)
+    throw new Error(`框「${LABEL[k]}」（含尾巴）超出畫面`);
+  console.log(`框「${LABEL[k]}」×${SIZES[k].toFixed(2)}　x ${left.toFixed(0)}~${Math.max(...xs).toFixed(0)}、` +
+    `y ${Math.min(...ys).toFixed(0)}~${Math.max(...ys).toFixed(0)}　離外牆 ${(left - 430).toFixed(0)}px　` +
+    `尾巴尖端 (${tip.map((v) => v.toFixed(0)).join(", ")})`);
 }
+if (STROKE * 232 / 1040 < 1.5) throw new Error("框線在聊天室太細");
 
-const TX = BOX.x + BOX.w / 2, TY = BOX.y + BOX.h / 2;
-
-const page = (fontId, gapKey, withPhoto = true) => {
-  const open = openPath(GEO, GAPS[gapKey]);
+const page = (fontId, lhKey, sizeKey, inkOnly = false) => {
+  const B = BOXES[sizeKey], LH = LHS[lhKey];
+  const TX = B.x + B.w / 2, TY = B.y + B.h / 2;
   return `<!doctype html><meta charset="utf-8"><style>
 ${faces}
 *{margin:0;padding:0}
-html,body{width:${W}px;height:${H}px;overflow:hidden;background:#000}
+html,body{width:${W}px;height:${H}px;overflow:hidden;background:${inkOnly ? "#fff" : "#000"}}
 .w{position:relative;width:${W}px;height:${H}px;overflow:hidden}
 img{position:absolute;left:${(-CX0 * sc).toFixed(2)}px;top:${(-CY0 * sc).toFixed(2)}px;
   width:${(IW * sc).toFixed(2)}px;height:${(IH * sc).toFixed(2)}px}
 /* ⚠ 玻璃：外層裁切、裡層放一份自己模糊的照片複本。
    backdrop-filter ＋ clip-path 放同一個元素上，模糊會被靜靜丟掉（實測過）。 */
-.clip{position:absolute;inset:0;clip-path:path('${CLOSED}')}
+.clip{position:absolute;inset:0;clip-path:path('${PATHS[sizeKey]}')}
 .clip img{filter:blur(${GLASS.blur}px) saturate(1.06)}
 .tint{position:absolute;inset:0;background:rgba(255,255,255,${GLASS.a})}
 svg{position:absolute;inset:0}
@@ -138,10 +139,10 @@ svg{position:absolute;inset:0}
 text{font-family:"${FAM[fontId]}";font-weight:900;font-size:${FS}px;fill:${DEEP};letter-spacing:.04em}
 </style>
 <div class="w">
-  ${withPhoto ? `<img src="data:image/jpeg;base64,${photo64}">` : ""}
-  ${withPhoto ? `<div class="clip"><img src="data:image/jpeg;base64,${photo64}"><div class="tint"></div></div>` : ""}
+  ${inkOnly ? "" : `<img src="data:image/jpeg;base64,${photo64}">
+  <div class="clip"><img src="data:image/jpeg;base64,${photo64}"><div class="tint"></div></div>`}
   <svg viewBox="0 0 ${W} ${H}">
-    <path class="line" d="${open}"/>
+    ${inkOnly ? "" : `<path class="line" d="${PATHS[sizeKey]}"/>`}
     <text x="${TX}" y="${TY}" text-anchor="middle" dominant-baseline="central">
       <tspan x="${TX + STAGGER}" dy="${(-FS * LH / 2).toFixed(1)}">芳仁</tspan>
       <tspan x="${TX - STAGGER}" dy="${(FS * LH).toFixed(1)}">哩厚</tspan>
@@ -163,73 +164,103 @@ const { chromium } = mod.default ?? mod;
 const browser = await chromium.launch({ executablePath: chromePath });
 const p = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 const clip = { x: 0, y: 0, width: W, height: H };
-const report = [];
-const GAPLABEL = { s: "小", m: "中", l: "大" };
-const GAPMEASURE = {};   /* 缺口的實測值，量完之後併進 report 給預覽頁的面板用 */
+const report = [], skipped = [];
 
 const CASES = [];
-for (const gap of ["s", "m", "l"])
-  for (const font of ["mplus", "zenmaru", "ntc"])
-    CASES.push({ id: `hero-${gap}-${font}`, gap, font });
+for (const lh of ["s", "m", "l"])
+  for (const size of ["s", "m", "l"])
+    for (const font of ["mplus", "zenmaru", "ntc"])
+      CASES.push({ id: `hero-${lh}-${size}-${font}`, lh, size, font });
 
-/* 缺口到底畫出來沒有：把描邊單獨畫在黑底上，量白色像素比封閉版少多少 */
-{
-  const strokeOnly = (dPath) => `<!doctype html><meta charset="utf-8"><style>
-*{margin:0;padding:0}html,body{width:${W}px;height:${H}px;background:#000;overflow:hidden}
-svg{position:absolute;inset:0}path{stroke:#fff;stroke-width:${STROKE}px;fill:none;
-stroke-linejoin:round;stroke-linecap:round}</style>
-<svg viewBox="0 0 ${W} ${H}"><path d="${dPath}"/></svg>`;
-  const ink = async (dPath) => {
-    await p.setContent(strokeOnly(dPath), { waitUntil: "load" });
-    const b64 = (await p.screenshot({ clip })).toString("base64");
-    return p.evaluate(async (s) => {
-      const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = s; });
-      const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
-      const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
-      const d = cx.getImageData(0, 0, cv.width, cv.height).data;
-      let n = 0; for (let i = 0; i < d.length; i += 4) if (d[i] > 200) n++;
-      return n;
-    }, "data:image/png;base64," + b64);
-  };
-  const full = await ink(CLOSED);
-  for (const g of ["s", "m", "l"]) {
-    const cut = await ink(openPath(GEO, GAPS[g]));
-    const pct = (1 - cut / full) * 100;
-    /* ⚠⚠ 量到的減量本來就會**少於**缺口的名目比例：stroke-linecap:round 會在
-       開放路徑的兩端各補一個半圓，加起來約等於一個線寬的墨。
-       所以判準不是比例，是**眼睛真正看得到的缺口有幾 px**：
-         看得到的缺口 ≈ 缺口的弧長 − 線寬（兩個半圓合起來填掉一個線寬）
-       低於 12px 就只是一個小缺角、讀不出「筆畫沒接回去」。 */
-    const gapPx = GAPS[g] * PERIMETER;
-    const visible = gapPx - STROKE;
-    console.log(`缺口「${GAPLABEL[g]}」：弧長 ${gapPx.toFixed(0)}px、看得到 ${visible.toFixed(0)}px` +
-      `（聊天室 ${(visible * 232 / 1040).toFixed(1)}px）　描邊的墨少了 ${pct.toFixed(1)}%`);
-    if (visible < 12) throw new Error(`缺口「${GAPLABEL[g]}」看得到的只有 ${visible.toFixed(0)}px，太小`);
-    GAPMEASURE[g] = { gapPx: +gapPx.toFixed(0), visiblePx: +visible.toFixed(0),
-                      visibleOnChat: +(visible * 232 / 1040).toFixed(1), inkDrop: +pct.toFixed(1) };
-    if (pct <= 0) throw new Error(`缺口「${GAPLABEL[g]}」根本沒少墨 —— 開放路徑沒生效`);
-  }
-}
-
-console.log("案                    缺口  字在聊天室  檔案");
+console.log("\n案                        兩行距離  框      字離框邊  檔案");
 for (const c of CASES) {
-  await p.setContent(page(c.font, c.gap), { waitUntil: "load" });
+  /* ⚠⚠ 「擠不擠」要量**墨真正蓋到哪裡**，不能用 getBBox()。
+     getBBox() 回的是字面框（含 ascent/descent），拉丁字母的上伸下伸中文用不到，
+     這四個字算出來的框比實際的墨高一截 —— 直接拿它判斷「離框邊多遠」，
+     現行這一版（一直都好好的）會被算成**超出框外 10.4px**。
+     所以另外畫一張「白底黑字、沒有照片也沒有框線」的圖，掃暗像素求墨的範圍。 */
+  await p.setContent(page(c.font, c.lh, c.size, true), { waitUntil: "load" });
+  await p.evaluate(() => document.fonts.ready);
+  const shot = (await p.screenshot({ clip })).toString("base64");
+  const m = await p.evaluate(async (src) => {
+    const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
+    const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
+    const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
+    const d = cx.getImageData(0, 0, cv.width, cv.height).data;
+    let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    const rows = [];
+    for (let y = 0; y < cv.height; y++) {
+      let any = false;
+      for (let x = 0; x < cv.width; x++) {
+        if (d[(y * cv.width + x) * 4] < 140) {
+          any = true;
+          if (x < x0) x0 = x; if (x > x1) x1 = x;
+          if (y < y0) y0 = y; if (y > y1) y1 = y;
+        }
+      }
+      rows.push(any);
+    }
+    /* 兩行中間那一段完全沒有墨的列數 ＝ 眼睛看到的「兩段字的距離」 */
+    let gap = 0, best = 0, started = false;
+    for (let y = y0; y <= y1; y++) {
+      if (rows[y]) { if (started) best = Math.max(best, gap); gap = 0; started = true; }
+      else if (started) gap++;
+    }
+    return { x0, x1, y0, y1, lineGap: best };
+  }, "data:image/png;base64," + shot);
+  m.fs = FS;
+  const pts = GEOS[c.size].pts;
+  const corners = [[m.x0, m.y0], [m.x1, m.y0], [m.x0, m.y1], [m.x1, m.y1]];
+  const clear = Math.min(...corners.map((q) => clearance(q, pts)));
+  /* 字的四角要留在框裡，而且離框線還有餘裕（框線本身 7px 佔一半）。
+     ⚠⚠ 不到就**跳過這一格、不出圖**，切換條會自己把它變成不能點的。
+     使用者要的是「兩行分開一點」＋「框大一點」，所以「行距拉開但框沒跟著大」
+     本來就不該是一個選項 —— 給出去的每一格都要是「選了就能上線」的（第八節）。 */
+  if (clear < 10) {
+    skipped.push({ ...c, clear: +clear.toFixed(1) });
+    console.log(`${c.id.padEnd(25)} — 跳過：字離框邊只有 ${clear.toFixed(1)}px（要 ≥10）`);
+    continue;
+  }
+
+  await p.setContent(page(c.font, c.lh, c.size), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
   const file = path.join(OUT, `${c.id}.jpg`);
-  await p.screenshot({ path: file, type: "jpeg", quality: 88, clip });
-  const box = await p.evaluate(() => {
-    const t = document.querySelector("text"); const r = t.getBBox();
-    return { fs: parseFloat(getComputedStyle(t).fontSize) };
-  });
-  const onChat = box.fs * 232 / 1040;
+  await p.screenshot({ path: file, type: "jpeg", quality: 86, clip });
+
+  const onChat = m.fs * 232 / 1040;
   if (onChat < 11) throw new Error(`${c.id} 字在聊天室只有 ${onChat.toFixed(1)}px`);
   const kb = fs.statSync(file).size / 1024;
-  report.push({ ...c, ...GAPMEASURE[c.gap], gapLabel: GAPLABEL[c.gap], gapPct: +(GAPS[c.gap] * 100).toFixed(1),
-                fs: box.fs, onChat: +onChat.toFixed(1), stroke: STROKE,
-                strokeOnChat: +(STROKE * 232 / 1040).toFixed(2),
-                glassA: GLASS.a, glassBlur: GLASS.blur, nExp: BOX.n, kb: Math.round(kb) });
-  console.log(`${c.id.padEnd(21)} ${GAPLABEL[c.gap]}     ${onChat.toFixed(1)}px      ${kb.toFixed(0)}KB`);
+  const B = BOXES[c.size];
+  report.push({ ...c,
+    lhLabel: LABEL[c.lh], sizeLabel: LABEL[c.size],
+    lhRatio: LHS[c.lh], sizeZoom: SIZES[c.size],
+    boxW: Math.round(B.w), boxH: Math.round(B.h),
+    lineGap: +m.lineGap.toFixed(0), lineGapOnChat: +(m.lineGap * 232 / 1040).toFixed(1),
+    clear: +clear.toFixed(0),
+    fs: m.fs, onChat: +onChat.toFixed(1), stroke: STROKE,
+    strokeOnChat: +(STROKE * 232 / 1040).toFixed(2),
+    glassA: GLASS.a, glassBlur: GLASS.blur, nExp: BASE.n, kb: Math.round(kb) });
+  console.log(`${c.id.padEnd(25)} ${String(report.at(-1).lineGap).padStart(4)}px    ` +
+    `${Math.round(B.w)}×${Math.round(B.h)}  ${clear.toFixed(0).padStart(4)}px    ${kb.toFixed(0)}KB`);
 }
 await browser.close();
+/* ⚠⚠ 別的頁面（preview/line-reply/）要引用「目前這一版的頭圖」。
+   直接寫檔名的話，每次改尺、改命名規則它就變成破圖，而且**不會報錯**——
+   2026-09-03 已經壞過兩次。所以固定另存一份 hero-current.jpg，
+   別的頁面一律指這一個，命名規則怎麼改都不會再壞。 */
+const DEFAULT_ID = `hero-${DEFAULT.lh}-${DEFAULT.size}-${DEFAULT.font}`;
+if (!report.some((r) => r.id === DEFAULT_ID))
+  throw new Error(`預設那一格 ${DEFAULT_ID} 沒有出圖 —— hero-current.jpg 會是舊的`);
+fs.copyFileSync(path.join(OUT, `${DEFAULT_ID}.jpg`), path.join(OUT, "hero-current.jpg"));
+console.log(`hero-current.jpg ← ${DEFAULT_ID}.jpg（給 preview/line-reply/ 引用）`);
+
 fs.writeFileSync(path.join(HERE, "report.json"), JSON.stringify(report, null, 2));
-console.log(`\n出圖 ${CASES.length} 張 → preview/line-hello/hero-*.jpg`);
+if (!report.length) throw new Error("一張都沒出 —— 尺的範圍全都過不了守門");
+for (const k of ["s", "m", "l"]) {
+  if (!report.some((r) => r.lh === k)) throw new Error(`行距「${LABEL[k]}」一格都出不了`);
+  if (!report.some((r) => r.size === k)) throw new Error(`框「${LABEL[k]}」一格都出不了`);
+}
+if (skipped.length) console.log(`\n跳過 ${skipped.length} 格（字會太靠框）：` +
+  skipped.map((c) => `行距${LABEL[c.lh]}×框${LABEL[c.size]}`).filter((v, i, a) => a.indexOf(v) === i).join("、"));
+const total = report.reduce((s, r) => s + r.kb, 0);
+console.log(`\n出圖 ${report.length} 張（${CASES.length} 格裡跳過 ${skipped.length}）→ preview/line-hello/hero-*.jpg，合計 ${(total / 1024).toFixed(1)}MB`);

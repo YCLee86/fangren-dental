@@ -7,6 +7,9 @@
  *   ③ 第三版做成**圓角矩形**，缺口按周長比例開在上緣 —— 使用者：
  *      「那個缺口和照片上的位置不一樣，這樣意思也差很多。照片上的缺口留在
  *        和延伸角形的銜接處，這樣才有手畫的感覺。另外目前的對話框太工整，也太方正。」
+ *   ④ 第四版把缺口移到尾巴的銜接處（位置對了），使用者看過之後決定
+ *      **整個不要缺口**：「還是不要缺口好了」。所以 `openPath()` 已經拿掉，
+ *      描邊和填色現在都吃 `closedPath()`。要走回去看 git（第五版之前的 bubble.mjs）。
  *
  * 把 Tully's 那張的對話框放大之後，看得出來的是三件事：
  *   ・**整條輪廓沒有一段是直的**，也沒有「直線轉圓角」那個轉折 —— 它是一個橢圓形的塊，
@@ -21,9 +24,7 @@
  *     比橢圓飽滿（塞得下字），但整條線沒有一段是直的、也沒有轉折點。
  *   ・加**兩個很低頻的擾動**（2 次與 3 次諧波，振幅 ±2.7% 以內）。
  *     ⚠ 低頻是重點：錯路①那次用的是高頻，高頻就是變形蟲。
- *   ・缺口**錨在尾巴的根部**，不再用周長比例定位。
- *   ⚠ 填色仍然是**封閉**的（不然玻璃會從缺口漏出去），
- *     而且描邊與填色一定要從**同一份幾何**算出來。
+ *   ⚠ 描邊與填色一定要從**同一份幾何**算出來。
  */
 
 const f = (n) => n.toFixed(1);
@@ -34,7 +35,8 @@ export const WOBBLE = [[2, .017, 1.15], [3, .010, -0.4]];
 /**
  * 超橢圓 ＋ 尾巴的密集取樣點。
  * @returns {{pts:number[][], tailI:number, per:number}}
- *   tailI ＝ 尾巴第一個點（右根）在點列裡的索引，缺口就錨在它前面。
+ *   tailI ＝ 尾巴第一個點（右根）在點列裡的索引。
+ *   ⚠ 缺口那一版已經拿掉了，但 tailI 留著 —— 守門要靠它認出尾巴在哪一段。
  */
 export function outline(o) {
   const { x, y, w, h, n: nExp = 2.6, wobble = WOBBLE, tail, steps = 720 } = o;
@@ -112,21 +114,4 @@ export function outline(o) {
 /** 封閉路徑（給填色與 clip-path 用） */
 export function closedPath({ pts }) {
   return "M " + pts.map(([a, b]) => `${f(a)} ${f(b)}`).join(" L ") + " Z";
-}
-
-/**
- * 開放路徑（給描邊用）——**從尾巴的右根起筆**，繞一整圈回來，在快接回尾巴之前停住。
- * 所以缺口一定落在**尾巴的根部旁邊**，就是 Tully's 那張的畫法。
- * @param gapFrac 缺口佔整條輪廓的比例（0~0.2）
- * ⚠ 不要再加「起筆位置」這個參數 —— 缺口的位置是由尾巴決定的，不是自由參數。
- *   第三版可以自由指定，結果就開到上緣正中央去了。
- */
-export function openPath({ pts, tailI }, gapFrac = .045) {
-  if (gapFrac <= 0 || gapFrac > .2) throw new Error(`缺口 ${gapFrac} 不合理（0~0.2）`);
-  if (tailI < 0) throw new Error("沒有尾巴就沒有地方錨缺口");
-  const n = pts.length;
-  const keep = Math.round(n * (1 - gapFrac));
-  const out = [];
-  for (let i = 0; i < keep; i++) out.push(pts[(tailI + i) % n]);
-  return "M " + out.map(([a, b]) => `${f(a)} ${f(b)}`).join(" L ");
 }
