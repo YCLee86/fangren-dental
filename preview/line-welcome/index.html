@@ -6,30 +6,29 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>招呼圖卡</title>
 <!--
-  加入好友的招呼圖卡（LINE Flex Message）。Flex 的 JSON 在
-  drafts/channels/welcome-card.json，頭圖是 /preview/line-hello/ 定案的那一張。
+  加入好友的招呼圖卡（LINE Flex Message）。JSON 在 drafts/channels/welcome-card.json。
 
-  ⚠⚠⚠ 2026-09-03 第一版被退回，三件都成立：
-    「你們要整合啊　灰底裡的字好小　整個好醜　怎麼可能一串字都塞在按鈕裡」
-    ① **不該給選項。** 內容他已經給了，把它做成一張像樣的卡是我的事，
-       不是列三種走法讓他挑。給選項是把我的工作退回去給他。
-    ② **灰底裡的字真的太小，而且是我的提案頁在說謊。**
-       LINE Flex 的字級是**固定的 px**（xxs 11／xs 13／sm 14／md 16／lg 19），
-       我卻寫成 rem 的比例（.72rem＝11.5px 之類），每一行都畫得比 LINE 實際的小
-       1~2.7px。**提案頁一旦和真實算繪對不上，上面做的每一個判斷都是假的。**
-    ③ **一串字本來就不該塞進按鈕。** LINE 的按鈕標籤是單行、放不下就截掉。
-       他寫「完成綁定。看診前48小時發送提醒通知喔～　按鈕連結」時，
-       那句話是**要說的話**，「按鈕連結」才是按鈕 —— 我讀成整句都是按鈕的字。
+  2026-09-03 使用者第三輪：
+    「你好 拿掉／歡迎那句寫五個版本讓我選／選單下面列功能是多此一舉，但還是要說
+      這個 LINE 有些什麼功能可以從下面的選單點開／介紹給朋友目前沒有文字，加一些進來
+      ／要符合診所形象和品牌精神」
 
-  這一版的做法：那句話是**內文**（內文會自動換行，多長都行），按鈕只留「完成綁定」，
-  而且**那句話就貼在那顆按鈕的正上方** —— 所以按鈕的順序和他寫的相反
-  （綁定在上、介紹在下）。理由是那句話是在講綁定，兩者要相鄰才讀得順。
+  ⚠⚠ 事實查核先擋掉一整類寫法：**這個帳號沒有專人即時回覆訊息**
+    （自動回應與綁定完成那兩則自己就寫著）。所以「有事情這裡先找得到人」
+    「有問題隨時問」這種很順的句子**一句都不能用**，那是說謊。
 
-  ⚠ 灰底的方塊整個拿掉了：卡是 #F4F4F5、方塊是 #E2E5E6，兩個差 14 階，
-    在 268px 的卡上讀起來就是一塊糊糊的髒。改成一條 1px 的分隔線，乾淨得多。
-  ⚠ 撥打電話那顆按鈕沒有了（他整理的清單裡沒有它）。電話仍在選單的「診所資訊」
-    與帳號主頁上。這一項要他點頭。
-  ⚠ 這裡仍是近似，不是 LINE 自己的算繪 —— 但字級已經照 Flex 的固定 px 對過。
+  ⚠ 品牌依據（COPY.md 第三節）：定位是**陪伴、朋友、在地**；
+    紅線是**診所給的是燈，不是答案** —— 不寫「問到飽」「不做也沒關係」；
+    第六節那六輪否決仍然有效：**不要行銷腔**（專業團隊／頂尖設備／歡迎諮詢一律不用）。
+    寫法規則（第二節）：具體名詞、平常動詞，主詞是人不是內容。
+  ⚠ 五個版本的出處都在站上已經有的句子，不是憑空想的：
+    Ⓒ 來自 HERO 收尾句「到巷口的芳仁　一起想辦法」；
+    Ⓓ 來自窄帶與分享卡一直在用的「雲林斗六・永樂街」；
+    Ⓔ 來自 HERO 第二行「從中華路到永樂街　四十多年」。
+
+  ⚠ 字級一律寫固定 px，不要寫 rem —— LINE Flex 的 size 就是固定 px
+    （xxs 11／xs 13／sm 14／md 16／lg 19／xl 22）。上一版寫成 rem 的比例，
+    每一行都畫得比實際小 1~2.7px，使用者一眼看出「灰底裡的字好小」。
 -->
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--ink-soft:#5c5f57;--rule:#cdd0d2;
@@ -37,7 +36,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:15px/1.7 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  padding:18px 16px 40px}
+  padding:18px 16px 96px}
 h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .lede{color:var(--ink-soft);font-size:.86rem;margin:0 0 16px}
 .lede b{color:var(--ink)}
@@ -45,31 +44,24 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .chat{background:var(--chat);border-radius:12px;padding:12px 10px}
 .chat .day{text-align:center;font-size:.66rem;color:#7b8794;margin-bottom:9px}
 .row{display:flex;gap:8px;align-items:flex-start}
-/* ⚠⚠ 這個 min-width:0 不能刪：按鈕的標籤是 nowrap，卡片的 min-content 會被撐大，
-   而 flex 項目預設 min-width:auto —— 360 寬會多 26px 水平捲動（320 上 66px）。
-   overflow:hidden 只管畫面上裁掉，不會讓 min-content 變小。
-   ⚠ 但不要順手加 flex:1，加了卡片會塌成 150px，量出來的可用寬度整組是假的。 */
+/* ⚠⚠ min-width:0 不能刪：按鈕標籤是 nowrap，卡片的 min-content 會被撐大，
+   flex 項目預設 min-width:auto，360 寬會多水平捲動。
+   ⚠ 但不要加 flex:1 —— 加了卡片會塌掉，量出來的可用寬度整組是假的。 */
 .row > div{min-width:0}
 .av{flex:none;width:26px;height:26px;border-radius:50%;background:var(--deep)}
 
-/* ⚠⚠ 字級一律寫**固定 px**，不要寫 rem —— LINE Flex 的 size 就是固定 px：
-   xxs 11／xs 13／sm 14／md 16／lg 19／xl 22。寫成 rem 的比例就會和實際對不上。 */
 .hc{width:268px;max-width:100%;border-radius:14px;overflow:hidden;background:var(--card);
   box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .hc .hero{display:block;width:100%}
 .hc .b{padding:14px 14px 0}
-.hc .hi{margin:0;font-size:19px;line-height:1.35;font-weight:700;letter-spacing:.02em}
-.hc .lead{margin:6px 0 0;font-size:14px;line-height:1.7}
-.hc hr{border:0;border-top:1px solid var(--rule);margin:15px 0 0}
-.hc .lb{margin:13px 0 0;font-size:13px;line-height:1.5;color:var(--ink-soft);letter-spacing:.06em}
-.hc .list{margin:3px 0 0;font-size:14px;line-height:1.8;font-weight:700}
-.hc .say{margin:15px 0 0;font-size:14px;line-height:1.8}
-.hc .f{padding:14px 14px 14px}
-/* 按鈕：標籤 16px、單行；內距 12px 是 Flex 的預設 */
+.hc .hi{margin:0;white-space:pre-line;font-size:16px;line-height:1.55;font-weight:700;letter-spacing:.01em}
+.hc .menu{margin:8px 0 0;white-space:pre-line;font-size:14px;line-height:1.75;color:var(--ink-soft)}
+.hc hr{border:0;border-top:1px solid var(--rule);margin:14px 0 0}
+.hc .f{padding:0 14px 14px}
+.hc .say{margin:14px 0 0;white-space:pre-line;font-size:14px;line-height:1.75}
 .hc .btn{display:block;border-radius:9px;padding:11px 12px;font-size:16px;line-height:1.3;
-  font-weight:700;text-align:center;letter-spacing:.02em;
+  font-weight:700;text-align:center;letter-spacing:.02em;margin-top:8px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hc .btn + .btn{margin-top:8px}
 .hc .btn.fill{background:var(--green);color:#fff}
 .hc .btn.line{border:1px solid var(--deep);color:var(--deep);background:transparent}
 
@@ -83,12 +75,23 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .note{border-left:3px solid var(--rule);padding-left:11px;color:var(--ink-soft);
   font-size:.79rem;margin-top:13px}
 .note code{font-size:.94em;overflow-wrap:anywhere;word-break:break-all}
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(244,244,245,.97);
+  border-top:1px solid var(--rule);padding:9px 12px calc(9px + env(safe-area-inset-bottom));
+  backdrop-filter:blur(8px);z-index:9}
+.bar .lb{font-size:.72rem;color:var(--ink-soft);margin-bottom:5px}
+/* ⚠ 五個版本各一整句，攤開來切換條會吃掉一屏的 28%（上限 24%，第八節）。
+   收成一排橫捲、只放短標籤 —— 整句在卡片上和面板裡都看得到，不必在按鈕上再寫一次。 */
+.bar .g{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.bar .g::-webkit-scrollbar{display:none}
+.bar button{font:inherit;font-size:.78rem;padding:5px 11px;border-radius:7px;white-space:nowrap;
+  flex:none;border:1px solid var(--deep);background:#fff;color:var(--deep);cursor:pointer}
+.bar button[aria-pressed="true"]{background:var(--deep);color:#fff}
 </style>
 </head>
 <body>
 <h1>招呼圖卡</h1>
-<p class="lede">整合成一張了。那句話是<b>內文</b>、按鈕只留「完成綁定」，
-灰底方塊換成分隔線，字級改成照 LINE Flex 的<b>固定 px</b>。</p>
+<p class="lede">「你好」拿掉了。開場那句<b>五個版本</b>在最下面切換 —— 五個的出處
+都是站上已經有的句子。選單那段改成<b>一句話</b>，介紹給朋友<b>補了文字</b>。</p>
 
 <div class="chat">
   <div class="day">今天</div>
@@ -99,34 +102,61 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 <div class="panel" id="panel"></div>
 <p class="note" id="note"></p>
 
+<div class="bar">
+  <div class="lb">開場那一句</div>
+  <div class="g" id="sw"></div>
+</div>
+
 <script>
 (function () {
   "use strict";
   var SHARE = "https://line.me/R/nv/recommendOA/@445rpiiv";
-  /* ⚠ 你寫的是「完成綁定。看診前48小時發送提醒通知喔～」，這裡把「完成綁定。」拿掉了
-     —— 正下方那顆按鈕就叫「完成綁定」，寫在文字裡是說兩遍。
-     順帶也解掉排版：留著的話 268 上會斷成「…發送提醒通」／「知喔～」，
-     320 上更慘（「～」自己一行）。 */
-  var SAY = "看診前 48 小時發送提醒通知喔～";
+  /* ⚠⚠ 斷行用 \n **自己指定**，不要交給瀏覽器。量過五個寬度，自動斷行會斷出
+     「…的官／方 LINE」（把一個詞劈開）、「…LINE／裡」「…傳給／他」（末行剩一個字）。
+     LINE Flex 的 text 只要 wrap:true 就吃 \n，兩邊做法一樣。
+   ⚠ 斷在哪就把那個逗號拿掉 —— 換行已經是停頓了，再加逗號是停兩次。 */
+  var MENU  = "下面有一排選單\n診所的資訊和你的約診都在裡面";
+  var SAY_BIND  = "看診前 48 小時發送提醒通知喔～";
+  var SAY_SHARE = "家人朋友要找牙醫\n把芳仁傳給他";
 
-  document.getElementById("card").innerHTML =
-    '<div class="hc">' +
-    '<img class="hero" src="../line-hello/hero-current.jpg" alt="">' +
-    '<div class="b">' +
-    '<p class="hi">你好</p>' +
-    '<p class="lead">歡迎加入芳仁牙醫診所的官方 LINE</p>' +
-    '<hr>' +
-    '<p class="lb">選單功能簡介</p>' +
-    '<p class="list">約診查詢・診所資訊・診療項目<br>醫師介紹・衛教資訊</p>' +
-    '<p class="say">' + SAY + '</p>' +
-    '</div>' +
-    '<div class="f">' +
-    '<span class="btn fill" id="b1">完成綁定</span>' +
-    '<span class="btn line" id="b2">介紹芳仁給朋友</span>' +
-    '</div></div>';
+  var V = [
+    { k: "a", short: "Ⓐ 原句", tag: "Ⓐ 你原本寫的", text: "歡迎加入\n芳仁牙醫診所的官方 LINE",
+      why: "最清楚，也最沒有溫度。是基準，不是陪跑的。" },
+    { k: "b", short: "Ⓑ 加進來", tag: "Ⓑ 接住他剛按下的動作", text: "謝謝你把芳仁加進來",
+      why: "主詞是<b>他</b>，不是診所。最短，溫度最高。" +
+           "「這是官方帳號」交給頭圖與帳號名去說。" },
+    { k: "c", short: "Ⓒ 巷口", tag: "Ⓒ 巷口", text: "巷口的芳仁\n現在也在你的 LINE 裡",
+      why: "接 HERO 收尾句<b>「到巷口的芳仁　一起想辦法」</b>。" +
+           "品牌意象最強：巷口是關係的距離，不是地址。" },
+    { k: "d", short: "Ⓓ 在地", tag: "Ⓓ 在地", text: "斗六永樂街\n芳仁牙醫診所的官方 LINE",
+      why: "地名是這一站一直在印的（HERO 窄帶、七科的分享卡都是" +
+           "「雲林斗六・永樂街」）。在地，但仍然說清楚是官方帳號。" },
+    { k: "e", short: "Ⓔ 四十多年", tag: "Ⓔ 四十多年", text: "從中華路到永樂街\n四十多年的芳仁",
+      why: "逐字接 HERO 第二行<b>「從中華路到永樂街　四十多年」</b>。" +
+           "時間感最重，但沒讀過首頁的人可能不知道中華路是哪裡。" }
+  ];
+  var st = "c";
 
-  /* ⚠ 量的是「標籤自己想要多寬」（丟進一個不換行、不裁切的量尺），
-     不是按鈕現在多寬 —— 按鈕已經把它截掉了，量按鈕永遠剛好等於可用寬度。 */
+  function render() {
+    var v = V.filter(function (x) { return x.k === st; })[0];
+    document.getElementById("card").innerHTML =
+      '<div class="hc">' +
+      '<img class="hero" src="../line-hello/hero-current.jpg" alt="">' +
+      '<div class="b">' +
+      '<p class="hi" id="hi">' + v.text + '</p>' +
+      '<p class="menu" id="menu">' + MENU + '</p>' +
+      '<hr>' +
+      '</div>' +
+      '<div class="f">' +
+      '<p class="say" id="s1">' + SAY_BIND + '</p>' +
+      '<span class="btn fill" id="b1">完成綁定</span>' +
+      '<p class="say" id="s2">' + SAY_SHARE + '</p>' +
+      '<span class="btn line" id="b2">介紹芳仁給朋友</span>' +
+      '</div></div>';
+    measure(v);
+  }
+
+  /* ⚠ 量的是「這段字自己想要多寬」（丟進不換行的量尺），不是它現在多寬 */
   function wants(text, sample) {
     var s = document.createElement("span");
     s.textContent = text;
@@ -137,51 +167,78 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
     s.remove();
     return w;
   }
+  /* 逐字量 top 分組 —— 這樣才知道折成幾行、最後一行剩幾個字（會不會落單） */
+  function lines(sel) {
+    var el = document.querySelector(sel), tn = el.firstChild, txt = tn.textContent;
+    var r = document.createRange(), g = {};
+    for (var k = 0; k < txt.length; k++) {
+      r.setStart(tn, k); r.setEnd(tn, k + 1);
+      var rect = r.getBoundingClientRect();
+      if (rect.height && txt[k] !== "\n") { var t = Math.round(rect.top); (g[t] = g[t] || []).push(txt[k]); }
+    }
+    var keys = Object.keys(g).map(Number).sort(function (a, b) { return a - b; });
+    return { n: keys.length, last: g[keys[keys.length - 1]].join("") };
+  }
 
-  function measure() {
+  function measure(v) {
     var b1 = document.getElementById("b1"), b2 = document.getElementById("b2");
     var cs = getComputedStyle(b1);
     var avail = b1.getBoundingClientRect().width
               - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
     var w1 = wants("完成綁定", b1), w2 = wants("介紹芳仁給朋友", b2);
-    var whole = wants(SAY, b1);          /* 那句話如果硬塞進按鈕會多寬 */
-    var card = document.querySelector(".hc").getBoundingClientRect().height;
+    var hi = lines("#hi"), mn = lines("#menu"), s1 = lines("#s1"), s2 = lines("#s2");
+    var card = document.querySelector(".hc").getBoundingClientRect();
     var vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
-    function row(name, w) {
-      return "<br><span class='k'>" + name + "</span> <b>" + w.toFixed(0) + "px</b> "
-        + (w > avail ? "<span class='no'>放不下</span>"
-                     : "<span class='ok'>放得下</span><span class='k'>（還剩 "
-                       + (avail - w).toFixed(0) + "px）</span>");
+    function ln(name, o) {
+      var orphan = o.n > 1 && o.last.length <= 3;
+      return "<br><span class='k'>" + name + "</span> <b>" + o.n + " 行</b>"
+        + (orphan ? " <span class='no'>末行只剩「" + o.last + "」，落單</span>"
+                  : " <span class='ok'>斷得乾淨</span>");
     }
     document.getElementById("panel").innerHTML =
-      "<span class='k'>按鈕能給的寬度</span> <b>" + avail.toFixed(0) + "px</b>"
-      + " <span class='k'>（卡片 " + document.querySelector(".hc").getBoundingClientRect().width.toFixed(0)
-      + " − 卡片內距 28 − 按鈕內距 24）</span>"
-      + row("完成綁定", w1) + row("介紹芳仁給朋友", w2)
-      + "<br><span class='k'>那句話如果塞進按鈕</span> <b>" + whole.toFixed(0) + "px</b> "
-      + "<span class='no'>放不下（超出 " + (whole - avail).toFixed(0) + "px）</span>"
-      + " <span class='k'>← 所以它是內文，不是按鈕的字</span>"
-      + "<br><span class='k'>整張卡</span> <b>" + card.toFixed(0) + "px</b>"
-      + "　<span class='k'>佔你這一屏</span> <b>" + (card / vh * 100).toFixed(0) + "%</b>";
+      "<b>" + v.tag + "</b>　<span class='k'>" + v.text.length + " 個字</span>"
+      + ln("開場", hi) + ln("選單那句", mn) + ln("提醒那句", s1) + ln("介紹那句", s2)
+      + "<br><span class='k'>按鈕可用</span> <b>" + avail.toFixed(0) + "px</b>"
+      + "　完成綁定 <b>" + w1.toFixed(0) + "px</b>"
+      + "　介紹芳仁給朋友 <b>" + w2.toFixed(0) + "px</b> "
+      + (Math.max(w1, w2) > avail ? "<span class='no'>放不下</span>" : "<span class='ok'>都放得下</span>")
+      + "<br><span class='k'>整張卡</span> <b>" + card.height.toFixed(0) + "px</b>"
+      + "　<span class='k'>佔你這一屏</span> <b>" + (card.height / vh * 100).toFixed(0) + "%</b>";
     document.getElementById("note").innerHTML =
-      "⚠⚠ <b>字級改成照 LINE Flex 的固定 px。</b> 之前我把它寫成 rem 的比例，"
-      + "每一行都畫得比 LINE 實際的小 1~2.7px（你好小 2.7、選單那一串小 1.8、"
-      + "「選單功能簡介」小 1.5）——<b>提案頁一旦和真實算繪對不上，上面做的判斷都是假的</b>。"
-      + "現在：你好 19px、內文 14px、標籤 13px、按鈕 16px。"
-      + "<br>⚠ <b>灰底方塊拿掉了。</b> 卡是 #F4F4F5、方塊是 #E2E5E6，只差 14 階，"
-      + "在 268px 的卡上就是一塊糊糊的髒。換成一條 1px 分隔線。"
-      + "<br>⚠ <b>那句話拿掉了開頭的「完成綁定。」</b> —— 正下方那顆按鈕就叫「完成綁定」，"
-      + "寫在文字裡是說兩遍；留著的話 268 上還會斷成「…發送提醒通／知喔～」。"
-      + "<br>⚠ <b>按鈕的順序和你寫的相反</b>（綁定在上、介紹在下）：那句話是在講綁定，"
-      + "所以它要貼在那顆按鈕的正上方，兩件事才讀得順。"
-      + "<br>⚠⚠ <b>撥打電話那顆按鈕沒有了</b> —— 你整理的清單裡沒有它。電話仍然在"
-      + "選單的「診所資訊」與帳號主頁上，不是消失。這一項要你點頭。"
-      + "<br>⚠⚠ <b>兩顆按鈕的網址都還拿不到。</b>「介紹芳仁給朋友」要用推薦官方帳號的"
-      + "深連結（<code>" + SHARE + "</code>），<b>沒有實測過</b>，要請廠商在自己的帳號上"
-      + "按一次；「完成綁定」的網址是廠商系統產的，只有他們有。";
+      "<b>" + v.tag + "</b>：" + v.why
+      + "<br><br>⚠⚠ <b>先擋掉的一整類寫法。</b> 這個帳號<b>沒有專人即時回覆訊息</b>"
+      + "（自動回應與綁定完成那兩則自己就寫著）。所以「有事情這裡先找得到人」"
+      + "「有問題隨時問」這種很順的句子一句都不能用 —— 那是說謊，"
+      + "而且會招來錯的期待（COPY.md 第三節那條紅線：<b>診所給的是燈，不是答案</b>）。"
+      + "<br>⚠ <b>選單那段不列功能了</b>：「" + MENU + "」。"
+      + "你說得對，列出來是多此一舉 —— 點開就看得到。但仍然要說「有東西可以點」，"
+      + "所以留一句話，裡面只點名兩件最常用的（診所資訊、你的約診），不列五項。"
+      + "<br>⚠ <b>介紹給朋友補上文字</b>：「" + SAY_SHARE + "」。"
+      + "沒有任何好處交換（TEAM.md 第 11 號角色的紅線：<b>不誘導</b>），"
+      + "也沒有「推薦」「分享」這種行銷腔 —— 用的是<b>平常動詞</b>：找、傳。"
+      + "<br>⚠ <b>兩個動作各配一句話</b>，形狀對稱：一句說為什麼，下面一顆按鈕。"
+      + "綁定在上（診所真正要的那個動作），介紹在下。"
+      + "<br>⚠⚠ <b>撥打電話那顆按鈕仍然沒有</b>（你整理的清單裡沒有它）。"
+      + "電話在選單的「診所資訊」與帳號主頁上。這一項還沒等到你點頭。"
+      + "<br>⚠⚠ 兩顆按鈕的網址都還拿不到：「介紹芳仁給朋友」要用推薦官方帳號的深連結"
+      + "（<code>" + SHARE + "</code>，<b>沒有實測過</b>）；「完成綁定」的網址是廠商系統產的。";
   }
-  measure();
-  window.addEventListener("resize", measure);
+
+  function chips() {
+    var host = document.getElementById("sw");
+    host.innerHTML = "";
+    V.forEach(function (v) {
+      var b = document.createElement("button");
+      b.textContent = v.short;
+      b.setAttribute("aria-pressed", st === v.k ? "true" : "false");
+      b.addEventListener("click", function () { st = v.k; chips(); render(); });
+      host.appendChild(b);
+    });
+  }
+  chips(); render();
+  window.addEventListener("resize", function () {
+    render();
+  });
 })();
 </script>
 </body>
