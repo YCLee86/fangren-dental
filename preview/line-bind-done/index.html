@@ -39,7 +39,7 @@
 html{-webkit-text-size-adjust:100%}
 body{background:var(--paper);color:var(--ink);
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
-  line-height:1.7;padding-bottom:180px}
+  line-height:1.7;padding-bottom:200px}
 .pv-wrap{max-width:430px;margin:0 auto;padding:14px 14px 0}
 h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-sub{font-size:.78rem;color:var(--ink-soft);margin:.35rem 0 .9rem}
@@ -53,7 +53,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-head .b{font-size:.9rem;font-weight:700;color:var(--li-ink)}
 .pv-head .av{width:26px;height:26px;border-radius:50%;background:var(--deep)}
 .pv-head .x{margin-left:auto;color:var(--li-meta);font-size:1rem;letter-spacing:.14em}
-.pv-chat{padding:12px 11px 16px;display:flex;flex-direction:column;gap:10px}
+.pv-chat{padding:12px 8px 16px;display:flex;flex-direction:column;gap:10px}
+/* ⚠⚠ 圖卡在 LINE 上是**固定 268px**，這個框放不下的話，上面量到的每一個數字都是假的
+   —— 第一版在 390 的螢幕上只給了 243.4px（可用寬度因此少 25px，折行判斷全部偏鬆）。
+   成因是我們比真手機多吃了兩層內距：頁面的 14 ＋ 聊天室的 11，左右合計 50px。
+   真的 LINE 只留約 11px 的邊 ＋ 40px 頭像。所以窄螢幕讓手機框貼齊頁面兩邊，
+   聊天室的內距也收到 8 —— 390 上因此還剩 300px 給卡片。
+   ⚠ 320 以下仍然放不下（只剩 230），面板會現場報出來，不要當成沒事。 */
+@media (max-width: 429px) {
+  .pv-phone{margin-inline:-14px;border-radius:0;border-left-width:0;border-right-width:0}
+}
 .pv-day{align-self:center;background:rgba(0,0,0,.16);color:#fff;font-size:11px;
   padding:2px 11px;border-radius:11px}
 .pv-sys{align-self:center;color:var(--li-meta);font-size:11px;text-align:center}
@@ -69,7 +78,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 /* ⚠ 圖卡是**固定 268px**（Flex 的 mega），泡泡是**跟著字縮**（shrink-to-fit）——
    兩種需求不一樣，不能共用一條規則：卡片寫 width:100% 掛在 auto 寬的父層上，
    會退回 shrink-to-fit，量出來的可用寬度是假的（實測 240 變成 210）。 */
-#pv-slot.card{flex:0 1 268px}
+#pv-slot.card{flex:0 1 268px;max-width:268px}
 .pv-msg.me .pv-av{visibility:hidden}
 .pv-t{font-size:11px;color:var(--li-meta);flex:none;padding-bottom:2px}
 
@@ -84,6 +93,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 /* ---- Ⓑ 圖卡（Flex Message）：卡片 268px、內距 14px，和招呼卡同一套 ---- */
 .pv-hc{width:100%;border-radius:14px;overflow:hidden;background:var(--card);
   box-shadow:0 1px 2px rgba(0,0,0,.08)}
+/* 頭圖：Flex 的 hero，size:full ＋ aspectRatio 2:1 ＝ 卡片滿寬、高度是寬的一半。
+   ⚠ width/height 屬性一定要寫（＋這裡的 aspect-ratio）—— 不寫的話圖還沒下載完
+   高度是 0，量測面板會報出一個比實際矮 134px 的卡片。 */
+.pv-hc .hero{display:block;width:100%;height:auto;aspect-ratio:2/1;object-fit:cover;
+  background:#faf7e6}
 .pv-hc .b{padding:14px 14px 0}
 .pv-hc .t{font-size:16px;line-height:1.55;font-weight:700;letter-spacing:.01em;
   white-space:pre-line}
@@ -160,6 +174,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     <p class="lb" id="pv-lb">版本</p>
     <div class="row" id="pv-vrow"></div>
     <div class="row row2" id="pv-trow"></div>
+    <div class="row row2" id="pv-hrow"></div>
   </div>
 </div>
 
@@ -194,7 +209,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     },
     b: {
       name: "Ⓑ 圖卡", kind: "card",
-      note: "同一份內容做成 Flex 圖卡，和 2026-09-03 定案的招呼卡同一套（卡 268px、內距 14px、分隔線、實心綠按鈕）。⚠ 這一案多一顆「撥打電話」按鈕 —— 招呼卡刻意沒有那顆（你三次整理的清單裡都沒有它），但這一則的主要動作正是「兩天前打電話」，所以放了。⚠⚠ 要先問廠商：關鍵字回應送不送得出 Flex Message。",
+      hero: "hero-bind.jpg",
+      note: "同一份內容做成 Flex 圖卡，和 2026-09-03 定案的招呼卡同一套（卡 268px、內距 14px、分隔線、實心綠按鈕），上面加了 2026-09-03 定案的頭圖〈創造亞當〉診間版（1024×512，2:1，size:full）。⚠ 這一案多一顆「撥打電話」按鈕 —— 招呼卡刻意沒有那顆（你三次整理的清單裡都沒有它），但這一則的主要動作正是「兩天前打電話」，所以放了。⚠⚠ 要先問廠商：關鍵字回應送不送得出 Flex Message。",
       title: "綁定完成了",
       desc: "看診前 {T}會在這裡提醒你\n想看自己的約診，點下面選單的\n「約診查詢」\n家人的約診也可以綁在一起",
       say: "約診要改或取消，請在看診日的\n兩天前（不含假日）打電話",
@@ -269,6 +285,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   };
   var ORDER = ["a", "b", "c", "d", "e", "f"];
   var TIME = { d2: { name: "看診前 2 天", v: "2 天" }, h48: { name: "看診前 48 小時", v: "48 小時" } };
+  /* 頭圖那一排只對 Ⓑ 有效（純文字的訊息放不了圖）。留著「不放圖」是為了看得出
+     它的代價：一張 2:1 的頭圖讓卡片長 134px，面板會現場算給你看。 */
+  var HERO = { y: { name: "有頭圖" }, n: { name: "不放圖" } };
 
   /* ⚠ 網址參數的正規式要寫 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到 h48 這種帶數字的值，
      比對失敗後悄悄退回預設，等於參數沒作用（CLAUDE.md 第九節那條）。 */
@@ -276,8 +295,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     var m = new RegExp("[?&]" + k + "=([a-z0-9]+)").exec(location.search);
     return m && ok[m[1]] ? m[1] : dflt;
   }
-  var cur = param("v", V, "a");
+  var cur = param("v", V, "b");
   var tm = param("t", TIME, "d2");
+  var hr = param("h", HERO, "y");
 
   function fill(s) { return s.replace(/\{T\}/g, TIME[tm].v); }
   /* 電話那一行在 LINE 裡會自己變成可以撥的連結，所以畫成連結的樣子 */
@@ -291,6 +311,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     } else {
       slot.innerHTML =
         '<div class="pv-hc" id="pv-body">' +
+        (v.hero && hr === "y"
+          ? '<img class="hero" id="pv-hero" src="' + v.hero + '" width="1024" height="512" alt="">'
+          : "") +
         '<div class="b">' +
         '<p class="t">' + fill(v.title) + "</p>" +
         '<p class="d">' + fill(v.desc) + "</p>" +
@@ -303,6 +326,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     }
     buttons();
     measure();
+    /* 圖還沒下載完就量的話高度會少一截 —— 屬性與 aspect-ratio 已經先把位置留好了，
+       這一條只是保險（快取沒中的第一次開頁）。 */
+    var im = document.getElementById("pv-hero");
+    if (im && !im.complete) im.addEventListener("load", measure);
   }
 
   function buttons() {
@@ -313,6 +340,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     r2.innerHTML = Object.keys(TIME).map(function (k) {
       return '<button data-t="' + k + '" aria-pressed="' + (k === tm) + '">' + TIME[k].name + "</button>";
     }).join("");
+    /* 第三排只在有頭圖可放的那一案出現（其餘五案是純文字泡泡，放不了圖） */
+    var r3 = document.getElementById("pv-hrow");
+    r3.innerHTML = V[cur].hero
+      ? Object.keys(HERO).map(function (k) {
+          return '<button data-h="' + k + '" aria-pressed="' + (k === hr) + '">' + HERO[k].name + "</button>";
+        }).join("")
+      : "";
   }
 
   /* 逐字量 top 分組 —— 這樣才知道**實際**折成幾行、末行剩幾個字。
@@ -354,12 +388,21 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     var ls = lines(body), sp = spec(v);
     var vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
     var h = body.getBoundingClientRect().height;
+    var cardW = body.getBoundingClientRect().width;
+    var heroEl = document.getElementById("pv-hero");
+    var hh = heroEl ? heroEl.getBoundingClientRect().height : 0;
 
-    /* 可用寬度：泡泡量它自己，圖卡量它的內文盒（兩邊的內距不一樣） */
+    /* 可用寬度 ＝ **上限**，不是「現在多寬」。
+       ⚠⚠ 泡泡是 shrink-to-fit：量它自己的話，量到的永遠等於它最寬那一行
+       （第一版就是這樣，面板印出「最寬 224／可用 224」，看起來剛好卡滿、其實還有 20px）。
+       所以泡泡要算它的天花板：min(268px, 那一列的 72%) 再扣掉左右內距。
+       圖卡不必，它本來就是固定 268。 */
     var box = v.kind === "text" ? body : body.querySelector(".b");
     var cs = getComputedStyle(box);
-    var avail = box.getBoundingClientRect().width
-              - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+    var avail = v.kind === "text"
+      ? Math.min(268, body.closest(".pv-msg").getBoundingClientRect().width * 0.72) - pad
+      : box.getBoundingClientRect().width - pad;
 
     /* ⚠⚠ 判準不是「有沒有被折」，是**折出來有沒有孤字**：
        自己斷好的短句（「05-5339369」自己一行）是刻意的，不能報錯；
@@ -392,8 +435,20 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
     document.getElementById("pv-panel").innerHTML =
       "<b>" + v.name + "</b>　<span>" + (v.kind === "text" ? "純文字泡泡" : "Flex 圖卡（268px）") + "</span>"
+      + (v.kind === "card"
+          ? "<br>卡片實寬 " + (cardW >= 267.5
+              ? "<span class='ok'>268px（＝LINE 的真值）</span>"
+              : "<span class='no'>" + cardW.toFixed(0) + "px —— 這個螢幕放不下 268，"
+                + "下面的折行判斷偏鬆 " + (268 - cardW).toFixed(0) + "px</span>")
+          : "")
       + "<br>高 <b>" + h.toFixed(0) + "px</b>　佔你這一屏 <b>" + (h / vh * 100).toFixed(0) + "%</b>"
       + "　字數 <b>" + whole.replace(/\s/g, "").length + "</b>"
+      + (v.hero
+          ? "<br>頭圖 " + (hr === "y"
+              ? "<b>" + hh.toFixed(0) + "px</b>（占這張卡 <b>" + (hh / h * 100).toFixed(0)
+                + "%</b>，文字那半 <b>" + (h - hh).toFixed(0) + "px</b>）"
+              : "<span>沒放 —— 放了會長 " + (avail + 28).toFixed(0) + " × 0.5 ≈ 134px</span>")
+          : "")
       + "<br>自己斷 <b>" + sp.length + " 行</b>，你這台畫出 <b>" + ls.length + " 行</b>"
       + (over > 0 ? "（多的 " + over + " 行是被再折一次的）" : "<span class='ok'>（一行都沒被再折）</span>")
       + "<br>孤字 "
@@ -401,7 +456,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
           ? "<span class='no'>" + orphan.length + " 行：「"
             + orphan.map(function (o) { return o.s; }).join("」「") + "」</span>"
           : "<span class='ok'>沒有</span>")
-      + "<br>最寬的一行 <b>" + wide.toFixed(0) + "px</b>／可用 <b>" + avail.toFixed(0) + "px</b>"
+      + "<br>最寬的一行 <b>" + wide.toFixed(0) + "px</b>／可用到 <b>" + avail.toFixed(0) + "px</b>"
       + " <span>（" + widest.slice(0, 12) + "）</span>"
       + "<br>電話沒被折斷 " + (!hasTel ? "<span class='no'>這一案沒有電話</span>"
           : telOwn ? "<span class='ok'>是（撥得下去）</span>"
@@ -418,6 +473,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "所以要有這一則專屬的，得請廠商把那句話改成<b>不含號碼的固定字串</b>（或改由官方帳號推播）。"
       + "改不了的話，這一則只能和<b>自動回應共用同一則</b>，那就不能寫「綁定完成了」"
       + "（打字問事情的人會一頭霧水）。"
+      + "<br>⚠⚠ <b>頭圖只有 Ⓑ 放得了</b>：LINE 的純文字訊息裡放不了圖，"
+      + "其餘五案要有圖就得變成<b>兩則</b>（一張圖訊息 ＋ 一則文字），"
+      + "而綁定完成這一刻連發兩則太吵。所以「要圖」等於「要圖卡」。"
+      + "<br>⚠ 頭圖 <code>hero-bind.jpg</code> 是 <b>1024×512（2:1）</b>，"
+      + "從 Gemini 出的 1376×768 上下各裁 40 列來的（<code>node drafts/bind-done-hero-crop.mjs</code>）。"
+      + "<b>不是 1040×520</b> —— LINE 對 Flex 的 <code>image</code> 寫著上限 1024×1024，"
+      + "<b>招呼圖卡那張 1040×520 要回去重切</b>。"
+      + "<br>⚠⚠ 上線前圖要放到 <code>https://fangren.net/assets/line/hero-bind.jpg</code>（Flex 只吃 HTTPS 的網址）——"
+      + "<b>那個資料夾還不存在</b>，<code>tools/dist.mjs</code> 也還沒有它（CLAUDE.md 第十一之七節第 3 項）。"
       + "<br>⚠ <b>「看診前 2 天」和「48 小時」是同一件事</b>，只是講法不同，提醒的時間點沒有動。"
       + "招呼卡定稿用的是「2 天」，兩排一起看是為了決定三則要不要統一。"
       + "<br>⚠⚠ <b>不寫「不克前往，預約改期」那顆按鈕</b>：提醒卡上那顆按下去只是系統顯示取消，"
@@ -426,21 +490,26 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>⚠ <b>只寫「週一至週五」</b>：站上門診表底下寫的是「國定假日與各科特別門診請來電確認」，"
       + "<b>不是休診</b>。國定假日到底休不休診還沒問到，問到才寫得完整。"
       + "<br>⚠ 電話一律 <code>05-5339369</code>（2026-08-27 全站定案的寫法）。"
-      + "<br>⚠⚠ <b>一行的上限從 14 個全形字變成 13</b>：24-3 節那條「每行不超過 14 個全形字」"
-      + "是在 13.76px 上量的，改用 16px 之後 14 個字 ＝ 224px，而 390 的手機只給 219px。"
-      + "所以 <b>Ⓐ（定稿逐字）在 390／375 上會折出孤字「所。」</b>，切到「48 小時」再多一個「你。」——"
-      + "<b>Ⓐ 沒有動它一個字</b>（那是你定的稿），Ⓒ~Ⓕ 是照 13 個字重新斷過的，"
-      + "六個寬度裡 430／390／375 都乾淨。360 以下三案都會折（原本就在範圍外）。"
+      + "<br>⚠⚠ <b>更正（2026-09-03 稍晚）：那句「390 的手機只給 219px」是這一頁自己量錯的。</b>"
+      + "為了讓圖卡能是真的 268px，這一頁的手機框在窄螢幕改成貼齊頁面兩邊（原本多吃了 25px 的內距）——"
+      + "重量之後泡泡的上限是 <b>244px</b>（＝ 268 扣掉左右內距 24），"
+      + "所以 <b>Ⓐ（定稿逐字）在 430／393／390／375 都不會折</b>，它最寬那一行是 224px、還剩 20px。"
+      + "<b>360 上會折一行「所。」</b>（那個寬度的上限掉到 224，只差 0.3px），320 上六案都會折。"
+      + "<br>⚠ <b>但「一行 13~14 個全形字」這條還是留著</b>：16px 下 244px 放得下 15 個字，"
+      + "可是 LINE 的字級跟著<b>使用者手機的字體大小設定</b>走，設大一階（約 18~19px）"
+      + "14 個字就變成 252~266px、照樣折。Ⓒ~Ⓕ 是照 13 個字斷的，那是給那一階留的餘裕。"
       + "<br>⚠⚠ 純文字那五案畫在 <b>16px</b> 上，那是<b>假設</b> —— LINE 聊天室的字級跟著使用者手機的"
       + "「字體大小」設定走，沒有 Flex 那張固定 px 的表。要定案前<b>用實機截圖校一次</b>。"
       + "（Ⓑ 圖卡那一案是照 Flex 的表畫的：md 16／sm 14／xs 13。）";
   }
 
   document.addEventListener("click", function (e) {
-    var b = e.target.closest("button[data-v], button[data-t]");
+    var b = e.target.closest("button[data-v], button[data-t], button[data-h]");
     if (!b) return;
-    if (b.dataset.v) cur = b.dataset.v; else tm = b.dataset.t;
-    history.replaceState(null, "", "?v=" + cur + "&t=" + tm);
+    if (b.dataset.v) cur = b.dataset.v;
+    else if (b.dataset.t) tm = b.dataset.t;
+    else hr = b.dataset.h;
+    history.replaceState(null, "", "?v=" + cur + "&t=" + tm + "&h=" + hr);
     render();
   });
   window.addEventListener("resize", measure);

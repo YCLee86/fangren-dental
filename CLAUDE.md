@@ -2267,7 +2267,7 @@ topics/<spec>/         ← 產出。**不要手改**，重跑就沒了
 | 招呼圖卡 | `drafts/channels/welcome-card.json`（Flex）＋ `README.md` 第十八節 → 規格頁 **`/preview/line-welcome/`**。✅ **2026-09-03 定案** |
 | 招呼圖卡的頭圖 | `drafts/line-hello/`（`generate.mjs`／`bubble.mjs`／`README.md`）→ `preview/line-hello/hero-zenmaru.jpg`，規格頁 `/preview/line-hello/`。✅ 定案 |
 | **綁定完成** | **提案中**：`/preview/line-bind-done/`（六案，2026-09-03 開）。推導在 `drafts/channels/README.md` **第十九節**，定稿文字在 `drafts/line-auto-reply/README.md` 第 24-2 節「貳」。⚠ 使用者挑完才寫 Flex 的 JSON |
-| 綁定完成的頭圖 | **`drafts/line-bind-done-prompt.md`** —— 〈創造亞當〉的診間版（Gemini 出圖，使用者自己跑，已走到**第四版**）。⚠⚠⚠ **不要把原作那個「上帝在上」抹平成兩人等高** ——第一版就是這樣被退回的（寓意沒了，而且兩個成年人同高對指會被讀成醫病關係不單純）：**一側是一團人、飄著、比較高，另一側一個人躺著、比較低**，這個不對等就是那張畫的梗。⚠ 但**不對等只能靠位置給、不可以靠肌肉張力給** —— 第三版把病患的手寫成鬆垮的，整個人看起來像喝醉（＝麻醉或鎮靜的聯想）。⚠ 臉一律照站上那一套（有膚色、眉毛、鼻子、有表情的嘴），**不隨風格參考圖走**。逐輪紀錄與六條驗收在那一份，通則在 ILLUSTRATION.md 第十三節 |
+| 綁定完成的頭圖 | ✅ **2026-09-03 第四版定案**（使用者：「很不錯，就用這個圖吧」）—— 成品 `preview/line-bind-done/hero-bind.jpg`（**1024×512**，`node drafts/bind-done-hero-crop.mjs`，原檔 `drafts/bind-done-v4-src.jpg`），已接進提案頁 Ⓑ 那一案。定稿提示詞與逐輪推導在 **`drafts/line-bind-done-prompt.md`** —— 〈創造亞當〉的診間版（Gemini 出圖，使用者自己跑，走了四版）。⚠⚠⚠ **不要把原作那個「上帝在上」抹平成兩人等高** ——第一版就是這樣被退回的（寓意沒了，而且兩個成年人同高對指會被讀成醫病關係不單純）：**一側是一團人、飄著、比較高，另一側一個人躺著、比較低**，這個不對等就是那張畫的梗。⚠ 但**不對等只能靠位置給、不可以靠肌肉張力給** —— 第三版把病患的手寫成鬆垮的，整個人看起來像喝醉（＝麻醉或鎮靜的聯想）。⚠ 臉一律照站上那一套（有膚色、眉毛、鼻子、有表情的嘴），**不隨風格參考圖走**。逐輪紀錄與六條驗收在那一份，通則在 ILLUSTRATION.md 第十三節 |
 | 提醒卡 | `drafts/channels/reminder-card.json`、時間換算 `timing.mjs` |
 
 ### 十一之二、⚠⚠ LINE Flex Message 的硬條件（不知道會做出對不上的東西）
@@ -2280,6 +2280,9 @@ topics/<spec>/         ← 產出。**不要手改**，重跑就沒了
   要「圖示＋文字」就做成**可點的 `box`**（box 掛 `action`，裡面 `image` ＋ `text`），
   代價是失去按鈕內建的按壓效果。
 - **`image` 的 `size` 給的是「寬度」**，不是高度。兩個長寬比不同的圖不能寫同一個數字。
+- ⚠⚠ **`image` 的圖檔上限是 1024×1024 px**（HTTPS 的網址、JPEG 或 PNG）。
+  所以頭圖一律出 **1024×512（2:1）**，不要出 1040×520 ——
+  招呼圖卡那張就是 1040，**要回去重切**（見 `drafts/channels/README.md` 第 19-10 節）。
 - **`aspectRatio` 寫錯不報錯也不變形** —— `aspectMode: fit` 只會讓圖**靜靜地縮小、
   四周留白**。`check-welcome.mjs` 會拿它去對 PNG 檔頭的真實尺寸。
 - **斷行一律用 `\n` 自己指定**，不要交給自動換行（會把詞劈開、或讓末行只剩一個字）。
@@ -2344,5 +2347,6 @@ node drafts/line-auto-reply/rich.mjs     # 圖文訊息的圖
    **滿意度調查卡那兩顆按鈕連去哪**（可能是 review gating）、以及
    **後台的「招呼訊息」能不能送 Flex Message**（送不出去就要退回圖文分開的版本）。
 3. **上線前要把圖放到 `https://fangren.net/assets/line/`**：
-   `mark-white.png`、`mark-green.png`、頭圖。⚠ 那個資料夾**現在還不存在**，
+   `mark-white.png`、`mark-green.png`、招呼圖卡的頭圖、**綁定完成的頭圖
+   （`hero-bind.jpg`，1024×512）**。⚠ 那個資料夾**現在還不存在**，
    `tools/dist.mjs` 也還沒有它 —— 真的要上線時要一起處理。
