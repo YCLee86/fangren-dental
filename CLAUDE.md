@@ -2267,6 +2267,7 @@ topics/<spec>/         ← 產出。**不要手改**，重跑就沒了
 | 招呼圖卡 | `drafts/channels/welcome-card.json`（Flex）＋ `README.md` 第十八節 → 規格頁 **`/preview/line-welcome/`**。✅ **2026-09-03 定案** |
 | 招呼圖卡的頭圖 | `drafts/line-hello/`（`generate.mjs`／`bubble.mjs`／`README.md`）→ `preview/line-hello/hero-zenmaru.jpg`，規格頁 `/preview/line-hello/`。✅ 定案 |
 | **綁定完成** | **提案中**：`/preview/line-bind-done/`（六案，2026-09-03 開）。推導在 `drafts/channels/README.md` **第十九節**，定稿文字在 `drafts/line-auto-reply/README.md` 第 24-2 節「貳」。⚠ 使用者挑完才寫 Flex 的 JSON |
+| 綁定完成的頭圖 | **`drafts/line-bind-done-prompt.md`** —— 〈創造亞當〉的診間版（Gemini 出圖，使用者自己跑）。參考圖 `drafts/bind-done-ref-adam-gesture.jpg`。⚠⚠ 原作那個「上帝在上」被**刻意改成兩人等高**（品牌是「一起想辦法」「不搶戲」），要換回去的句子寫在那一份第三節 |
 | 提醒卡 | `drafts/channels/reminder-card.json`、時間換算 `timing.mjs` |
 
 ### 十一之二、⚠⚠ LINE Flex Message 的硬條件（不知道會做出對不上的東西）
