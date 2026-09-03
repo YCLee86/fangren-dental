@@ -1,33 +1,86 @@
-# 診所標誌的原始檔（Illustrator）
+# 診所標誌的原始檔與形狀
 
-使用者 2026-09-03 上傳的**診所標誌 Illustrator 原件**，放進版控是為了
+使用者 2026-09-03 上傳的**診所標誌原件**，放進版控是為了
 **任何一個 Claude Code session（電腦、手機、雲端）都拿得到**。
+
+> **要形狀就直接拿 `shapes/`**（見下一節）。整張總覽開 `shapes.png` 就看得到。
+> 使用者 2026-09-03：「顏色倒是還好，標準色之前已經寫進網站了，
+> 而且網站應用顏色以後還會有其他選擇，**只要形狀就好了**。」
+
+## 一、形狀 `shapes/` ——⭐ 平常要用的就是這裡
+
+十二個檔，每一個都是**單一條路徑 ＋ `fill="currentColor"` ＋ `fill-rule="evenodd"`**，
+裁到形狀自己的外框（viewBox 從 0 起算）。要什麼顏色就在外面給 `color`，要多大給多大。
+
+⚠⚠ **牙洞是真的挖穿的**，不是拿一顆白點蓋上去 —— 所以擺在任何底色上都對。
+（`shapes.png` 的底色刻意不是黑也不是白，就是為了讓「沒挖穿」一眼穿幫。）
 
 | 檔案 | 是什麼 |
 | --- | --- |
-| `fangren-logo-2024-12-05.ai` | **原件，逐位元組沒有動過**。Adobe Illustrator 29.1 (Macintosh)，PDF-1.6 相容，A3 橫式三個工作區域，2024-12-05 存檔 |
-| `artboard-1-wordmark.svg` / `.png` | 工作區域 1：中文標準字（單線風格）「芳仁牙醫」與「芳仁牙醫診所」 |
-| `artboard-2-latin.svg` / `.png` | 工作區域 2：英文標準字 `FANG REN DENTAL CLINIC`（粗、細兩款） |
-| `artboard-3-lockups.svg` / `.png` | 工作區域 3：**三組組合標**（九宮格牙齒／直式中英＋標誌／實心牙齒＋英中） |
+| **`mark.svg`** | **站上頁首那顆標誌**。長寬比 2.02918，正規化之後對 `index.html` 的 `.brand-mark` 最大殘差 **0.009%** —— 同一個形狀 |
+| `mark-outline.svg` | 同一顆的**外框線版**（組合標裡用的那一種）。⚠ 這一款的牙洞是**同色的實心點**、不是挖穿的，線稿版本來就這樣畫 |
+| `tooth-solid.svg` | 第三組組合標那顆**實心牙齒**（比較高、比較圓的那一顆，不是 `mark`） |
+| `shape-r1c1` ~ `r3c3.svg` | 九宮格那九個形狀，照畫面位置命名（左上是 `r1c1`）。**`r1c2` 就是 `mark`** |
 
-**要看它長什麼樣就開那三張 `.png`** —— 用 Read 工具直接看得到，不必裝任何東西。
+⚠ **名字用位置不用顏色是刻意的** —— 站上的科別色本來就不是照這九顆走的，
+用顏色當檔名會誤導成「這個形狀配這個色」。
 
-## 為什麼旁邊要放 SVG 和 PNG
+## 二、原件
 
-容器裡**沒有 Illustrator，也沒有 poppler／mutool／ghostscript／PIL**（都確認過），
-所以 `.ai` 進了 repo 之後沒有任何人打得開它。`.ai` 存的是原件，
-SVG／PNG 存的是「不必裝東西就能用、也看得到」的那一份。
+| 檔案 | 是什麼 |
+| --- | --- |
+| `fangren-logo-2024-12-05.ai` | Illustrator 原件，逐位元組沒有動過。Adobe Illustrator 29.1 (Macintosh)、PDF-1.6 相容、A3 橫式三個工作區域、2024-12-05 存檔 |
+| `fangren-logo-104.pptx` | **就是 PALETTE.md 第一節講的那個 `104_logo.pptx`**。裡面內嵌著設計師從 Illustrator 匯出的四對「SVG 正本＋PNG 後備」 |
 
-要重新產生（改過 `.ai` 之後）：
+## 三、原封不動抽出來的整張圖（對照用）
+
+從 `.ai` 重畫的（向量，含顏色）：
+
+| | |
+| --- | --- |
+| `artboard-1-wordmark.svg` / `.png` | 中文標準字（單線風格）「芳仁牙醫」與「芳仁牙醫診所」 |
+| `artboard-2-latin.svg` / `.png` | 英文標準字 `FANG REN DENTAL CLINIC`（粗、細兩款） |
+| `artboard-3-lockups.svg` / `.png` | 三組組合標：九宮格／直式中英＋標誌／實心牙齒＋英中。**這一頁是彩色的** |
+
+從 `.pptx` 搬出來的（設計師的官方匯出，**沒有重畫**，只是從 zip 裡搬出來換名字）：
+
+| | |
+| --- | --- |
+| `pptx-1-lockups-color.svg` / `.png` | 三組組合標，彩色（＝ artboard-3） |
+| `pptx-2-wordmark.svg` / `.png` | 中文標準字，墨色 |
+| `pptx-3-latin.svg` / `.png` | 英文標準字，墨色 |
+| `pptx-4-wordmark-reverse.svg` / `.png` | **中文標準字的反白版（白色），深色底專用** —— ⚠ 這一款 `.ai` 裡沒有，只有 pptx 有 |
+
+`.ai` 那三張 PNG 是 1200px 寬，pptx 那四張是原檔的 2500×1767，都白底。
+
+⚠ 那四份 SVG 進版控時被 git 正規化了換行（CRLF → LF），內容一個字沒改。
+要逐位元組的原樣就回頭解 `fangren-logo-104.pptx` 的 `ppt/media/`。
+
+## 四、重新產生
 
 ```bash
-node tools/ai-extract.mjs brand/fangren-logo-2024-12-05.ai brand
+node tools/brand-extract.mjs                            # 兩份原檔都重跑
+node tools/brand-extract.mjs brand/fangren-logo-...ai   # 只跑一份
 ```
 
-那支是零依賴的：自己把 PDF 內容流用 zlib 解開、把 PDF 的路徑算符翻成 SVG，
-再用 Chromium 出 PNG。做法與限制寫在它的檔頭。
+零依賴：自己用 zlib 解 PDF 內容流／解 zip，把 PDF 的路徑算符翻成 SVG，
+再用 Chromium 出 PNG。做法、限制與四道守門寫在它的檔頭。
 
-## ⚠ 這裡的東西**不是**上線用的資產
+## 五、顏色（只是記著，不是拿來用的）
+
+`.ai` 的顏色是 ICCBased 四色（CMYK）。**CMYK → RGB 沒有自己套公式**，
+是拿 Illustrator 自己在 pptx 裡的 SVG 匯出逐條對位置得到的查表
+（`tools/brand-extract.mjs` 的 `CMYK` 常數）。表裡沒有的 CMYK 會 throw，不會猜。
+
+抽出來的九顆和 **PALETTE.md 第一節「`104_logo.pptx` 那一欄」逐字相同** ——
+那一欄原本是從使用者的截圖讀的，現在有檔案可以對了。
+另外兩顆不在 PALETTE.md 裡：`#714F38`（實心牙齒那顆褐，＝焦糖褐多加 K40）、
+`#231815`（標準字的墨，帶紅的複色黑）。
+
+⚠ **不要拿這裡的值去改站上的顏色。** 站上用的是另一組（`#3C596B` 那八顆），
+每一顆都各自做過對比度調校，理由寫在 PALETTE.md 第一節。
+
+## 六、⚠ 這裡的東西**不是**上線用的資產
 
 站上實際在用的仍然是原本那三個檔，**不要改成從這裡引用**：
 
@@ -37,22 +90,16 @@ node tools/ai-extract.mjs brand/fangren-logo-2024-12-05.ai brand
 | 主畫面圖示的來源 | `assets/icon.svg` → `assets/icon-*.png` |
 | 給 Google 的 Organization logo | `assets/logo.png`（由 `tools/logo-png.mjs` 從頁首那條路徑算出來） |
 
-⚠ **這裡的 SVG 一律是黑的**（原件整份是 CMYK 的 `0 0 0 1` ＝ 純黑 K），
-`fill`／`stroke` 都寫成 `currentColor`，套色的時候自己給 `color`。
-**黑不是品牌色** —— 品牌真值是 `#3f654a`，一律回 [PALETTE.md](../PALETTE.md) 拿。
-
 ⚠ `brand/` **不在 `tools/dist.mjs` 的 `ALWAYS`／`OPTIONAL` 裡，所以進不了 `_site/`**，
-不會被部署到 fangren.net（1.2MB 的 `.ai` 沒有理由送上線）。
-`tools/build.mjs` 也掃不到它（只掃 `posts/*/`）。
+不會被部署到 fangren.net。`tools/build.mjs` 也掃不到它（只掃 `posts/*/`）。
 
-## 量出來的三件事（2026-09-03，用真貝茲極值量的）
+## 七、量出來的（2026-09-03，用真貝茲極值量的）
 
-1. **工作區域 3 中間與右邊那兩組組合標裡的牙齒外框，長寬比就是 `2.02918`** ——
-   和 `assets/icon.svg`（2.02918）、`index.html` 頁首那條路徑（2.02926）、
-   `tools/logo-png.mjs` 的 `RATIO` 完全對得上。
+1. **`mark` 的外框長寬比就是 `2.02918`** —— 和 `assets/icon.svg`（2.02918）、
+   `index.html` 頁首（2.02926）、`tools/logo-png.mjs` 的 `RATIO` 完全對得上。
    **這份 `.ai` 確實就是站上那顆標誌的原廠來源。**
 
-2. **牙洞寬 ÷ 外框寬 ＝ `0.078894`。** 三個檔一起排：
+2. **牙洞寬 ÷ 外框寬 ＝ `0.078894`：**
 
    | | 牙洞寬 ÷ 外框寬 | 相對於原件 |
    | --- | --- | --- |
@@ -60,12 +107,26 @@ node tools/ai-extract.mjs brand/fangren-logo-2024-12-05.ai brand
    | `assets/icon.svg` | 0.093080 | **×1.1799** |
    | `index.html` 頁首 | 0.102514 | ×1.2995 |
 
-3. 所以 **CLAUDE.md 第九節第 19 條那個「還沒查清楚」的疑問，答案是它自己猜的那一個**：
+3. 所以 **CLAUDE.md 第九節第 19 條那個「還沒查清楚」的疑問結掉了**：
    `icon.svg` 註解寫的「牙洞放大 1.18 倍」**是相對於 AI 原始檔**（實測 ×1.1799），
-   不是相對於頁首那顆；頁首那顆本來就又比原件大一階（×1.2995）。
+   頁首那顆本來就又比原件大一階（×1.2995）。
    **兩個檔各自都是對的，沒有東西要改。**
+
+## 八、⚠⚠ 2026-09-03 踩過一次：牙洞不見了
+
+第一版的抽取器**把每一條路徑都畫成黑的**，結果是工作區域 3 整頁彩色變黑，
+而**牙洞是白色填色**（CMYK `0 0 0 0`，整頁 23 條），畫成黑的就等於消失在牙齒裡。
+是使用者看出來的：「有嘴巴圖案但沒有牙洞」。
+
+**這一種 bug 不會報錯** —— 圖看起來很正常，只是少了一個東西。
+所以 `tools/brand-extract.mjs` 現在有四道守門：路徑總數、標誌長寬比、
+**白色填色要正好 23 條**、形狀檔挖掉的牙洞總數。
+
+⚠ 那個 23 是拿 Illustrator 自己的 SVG 匯出數出來的（那一份就有 23 個 `fill="#FFFFFF"`），
+**不要拿內容流裡 `0 0 0 0 scn` 出現幾次來數** —— 一次 `scn` 之後可以連著填好幾條路徑，
+數出來是 19，少了 4。
 
 ## 相關
 
-- 標誌的幾何、顏色與圖示規則：[PALETTE.md](../PALETTE.md) 第六之二十節
-- 插畫語彙（和標誌是兩件事）：[ILLUSTRATION.md](../ILLUSTRATION.md)
+- 官方色票與站上顏色的關係：[PALETTE.md](../PALETTE.md) 第一節
+- 標誌的幾何與圖示規則：[PALETTE.md](../PALETTE.md) 第六之二十節

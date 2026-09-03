@@ -303,10 +303,18 @@ assets/
   logo.png              給 Google 的 Organization logo（透明底、品牌真值 #3f654a）。
                         由 tools/logo-png.mjs 算出來，已進版控，勿手改。
                         ⚠ 站上任何一頁都不會顯示它，只出現在 JSON-LD 裡
-brand/                  **診所標誌的 Illustrator 原件**（2026-09-03 使用者上傳）。
-                        fangren-logo-2024-12-05.ai ＋ 三個工作區域的 SVG／PNG。
+brand/                  **診所標誌的原件與形狀**（2026-09-03 使用者上傳）。
+  shapes/               ⭐ **平常要用的是這裡**：十二個只有形狀的 SVG，單一路徑、
+                        currentColor、**牙洞是真的挖穿的**（fill-rule evenodd）。
+                        mark.svg ＝ 站上頁首那顆（對 .brand-mark 殘差 0.009%）。
+                        整張總覽開 brand/shapes.png
+  fangren-logo-2024-12-05.ai   Illustrator 原件，A3 三個工作區域
+  fangren-logo-104.pptx        ＝ PALETTE.md 第一節那個 104_logo.pptx，
+                        裡面有設計師的官方匯出，**含 .ai 沒有的反白版**
+  artboard-*.svg/.png   從 .ai 重畫的整張圖（含顏色）
+  pptx-*.svg/.png       從 pptx 搬出來的官方匯出
                         ⚠ 容器裡沒有 Illustrator 也沒有 poppler／PIL，**要看它長什麼樣
-                        就開 brand/artboard-*.png**（Read 工具直接看得到）。
+                        就開那些 .png**（Read 工具直接看得到）。
                         ⚠ 不在 dist.mjs 的清單裡 → 進不了 _site，不會上線。
                         **不是上線資產** —— 站上仍然用 index.html 頁首那條路徑與
                         assets/icon.svg，不要改成從這裡引用。細節見 brand/README.md
@@ -355,10 +363,14 @@ tools/
   logo-png.mjs          從 index.html 頁首的標誌路徑產生 assets/logo.png
                         （給 Google 的 Organization logo，**站上不顯示**）。
                         只有改過頁首那條路徑或要換顏色時才要跑；--check 只比對
-  ai-extract.mjs        從 .ai（Illustrator 原件）抽出向量與預覽圖 → brand/。
-                        零依賴：自己用 zlib 解 PDF 內容流、把 PDF 的路徑算符翻成 SVG，
-                        再用 Chromium 出 PNG。⚠ 只支援外框化的路徑，**沒有支援活字與影像**
-                        （有一道守門會擋下來）。只有換過 .ai 才要跑
+  brand-extract.mjs     從 .ai／.pptx 抽出形狀、向量與預覽圖 → brand/。
+                        零依賴：自己用 zlib 解 PDF 內容流與 zip、把 PDF 的路徑算符
+                        翻成 SVG，再用 Chromium 出 PNG。只有換過原檔才要跑。
+                        ⚠ 只支援外框化的路徑，**沒有支援活字與影像**。
+                        ⚠⚠ **顏色一定要抽，不可以一律當成黑的** —— 牙洞是白色填色，
+                        畫成黑的就消失在牙齒裡，而且**不會報錯**（2026-09-03 踩過）。
+                        CMYK→RGB 是查表（來源是 pptx 裡 Illustrator 自己的匯出），
+                        **不是算的**；表裡沒有的顏色會 throw。四道守門見它的檔頭
   qr.mjs                QR code 產生器（純 JS、零依賴、吐 SVG 的 path，向量）。
                         ⚠ 驗收不能用眼睛 —— 格式資訊反過來的話畫面一模一樣但掃不出來。
                         驗證方式寫在它的檔頭（臨時裝 segno ＋ opencv 真的掃一次）
