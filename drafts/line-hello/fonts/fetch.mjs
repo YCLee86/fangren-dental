@@ -17,7 +17,9 @@ import { fileURLToPath } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36";
-const TEXT = "helloHello你好芳仁哩厚";      /* 2026-09-03 使用者定：芳仁／哩厚（台語的你好） */                     /* 只要這幾個字 */
+const TEXT = "helloHello你好芳仁哩厚!！";     /* 2026-09-03 使用者定：芳仁／哩厚（台語的你好）＋一個斜的驚嘆號 */
+/* ⚠ 字型是**照字切過的子集**，畫面上要多一個字元，就一定要先加進 TEXT 再重跑這一支。
+   不加的話那個字會用系統字型代打（或畫成空白），而且**不報錯**。 */                     /* 只要這幾個字 */
 fs.writeFileSync(path.join(HERE, "glyphs.txt"), TEXT);
 const cps = new Set([...TEXT].map((c) => c.codePointAt(0)));
 

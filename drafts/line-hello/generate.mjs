@@ -58,6 +58,13 @@ const AIM = [395, 397];                                   /* 飾邊靠右那一�
 const GLASS = { a: .58, blur: 11 };
 const STROKE = 7;
 const FS = 104, STAGGER = 22;
+/* 驚嘆號：使用者 2026-09-03「哩厚後面可以加一個斜的驚嘆號看看」。
+   ⚠ 它**不放在同一個 <text> 裡** —— 那一行是 text-anchor:middle，加進去會把「哩厚」
+     整個往左推（等於順手動了上一輪定案的 ±22 錯位）。所以另外一個 <text>，
+     位置由**量到的「哩厚」右緣**決定，「哩厚」一格都不動。
+   ⚠ 半形的「!」不是全形的「！」：全形在 CJK 字型裡兩側各留一大塊空，
+     轉了角度之後那塊空會把它推得離「厚」很遠。 */
+const BANG = { ch: "!", deg: 12, gap: 16, dy: 0, scale: .86 };
 
 /* ✅ 定案：兩行的距離「更開」、框「更大」（＝ 前一版的 1.18 倍） */
 const LH = 1.34;
@@ -120,7 +127,7 @@ const clearance = ([px, py], pts) => {
     `指向 ${(GEO.aimAng * 180 / Math.PI).toFixed(0)}° → 一樓飾邊 (${AIM})`);
 }
 
-const page = (fontId, inkOnly = false) => {
+const page = (fontId, inkOnly = false, bang = null) => {
   return `<!doctype html><meta charset="utf-8"><style>
 ${faces}
 *{margin:0;padding:0}
@@ -147,6 +154,9 @@ text{font-family:"${FAM[fontId]}";font-weight:900;font-size:${FS}px;fill:${DEEP}
       <tspan x="${TX + STAGGER}" dy="${(-FS * LH / 2).toFixed(1)}">芳仁</tspan>
       <tspan x="${TX - STAGGER}" dy="${(FS * LH).toFixed(1)}">哩厚</tspan>
     </text>
+    ${bang ? `<text x="${bang.x.toFixed(1)}" y="${bang.y.toFixed(1)}" text-anchor="start"
+      font-size="${(FS * BANG.scale).toFixed(1)}px"
+      transform="rotate(${BANG.deg} ${bang.x.toFixed(1)} ${bang.y.toFixed(1)})">${BANG.ch}</text>` : ""}
   </svg>
 </div>`;
 };
@@ -177,41 +187,68 @@ for (const c of CASES) {
      getBBox() 回的是字面框（含拉丁字母的 ascent/descent），中文用不到那麼多 ——
      直接拿它判斷「離框邊多遠」，先前那一版（畫面上一直好好的）會被算成
      「超出框外 10.4px」。所以另外畫一張「白底黑字、沒有照片也沒有框線」掃暗像素。 */
+  /* ⚠⚠ 驚嘆號要接在「哩厚」的**右緣**，那個右緣要**量**不要算：
+     SVG 的 letter-spacing 會在最後一個字後面也加一次，用「字數 × 字級」估會少一截。
+     所以先畫一次沒有驚嘆號的，量第二行的 bbox，再把位置算出來重畫。 */
   await p.setContent(page(c.font, true), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
-  const shot = (await p.screenshot({ clip })).toString("base64");
-  const m = await p.evaluate(async (src) => {
-    const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
-    const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
-    const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
-    const d = cx.getImageData(0, 0, cv.width, cv.height).data;
-    let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
-    const rows = [];
-    for (let y = 0; y < cv.height; y++) {
-      let any = false;
-      for (let x = 0; x < cv.width; x++) {
-        if (d[(y * cv.width + x) * 4] < 140) {
-          any = true;
-          if (x < x0) x0 = x; if (x > x1) x1 = x;
-          if (y < y0) y0 = y; if (y > y1) y1 = y;
+  /* ⚠⚠ 用 getStartPositionOfChar／getEndPositionOfChar 取**基線**與**右緣**。
+     getBBox() 回的是版面框（em box），底邊在基線**下面**一大截 —— 拿它當基線，
+     驚嘆號會整個掉到「哩厚」下方，而且會把墨推出框外 8px（守門擋下來過）。 */
+  const line2 = await p.evaluate(() => {
+    const t = [...document.querySelectorAll("text tspan")][1];
+    const n = t.getComputedTextLength ? t.textContent.length : 0;
+    return { right: t.getEndPositionOfChar(n - 1).x, base: t.getStartPositionOfChar(0).y };
+  });
+  const bang = { x: line2.right + BANG.gap, y: line2.base + BANG.dy };
+
+  /* 掃暗像素，回墨的外框與「中間完全沒有墨的最長一段」 */
+  const scan = async () => {
+    const shot = (await p.screenshot({ clip })).toString("base64");
+    return p.evaluate(async (src) => {
+      const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
+      const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
+      const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
+      const d = cx.getImageData(0, 0, cv.width, cv.height).data;
+      let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+      const rows = [];
+      for (let y = 0; y < cv.height; y++) {
+        let any = false;
+        for (let x = 0; x < cv.width; x++) {
+          if (d[(y * cv.width + x) * 4] < 140) {
+            any = true;
+            if (x < x0) x0 = x; if (x > x1) x1 = x;
+            if (y < y0) y0 = y; if (y > y1) y1 = y;
+          }
         }
+        rows.push(any);
       }
-      rows.push(any);
-    }
-    /* 兩行中間完全沒有墨的那一段 ＝ 眼睛看到的「兩段字的距離」 */
-    let gap = 0, best = 0, started = false;
-    for (let y = y0; y <= y1; y++) {
-      if (rows[y]) { if (started) best = Math.max(best, gap); gap = 0; started = true; }
-      else if (started) gap++;
-    }
-    return { x0, x1, y0, y1, lineGap: best };
-  }, "data:image/png;base64," + shot);
+      let gap = 0, best = 0, started = false;
+      for (let y = y0; y <= y1; y++) {
+        if (rows[y]) { if (started) best = Math.max(best, gap); gap = 0; started = true; }
+        else if (started) gap++;
+      }
+      return { x0, x1, y0, y1, lineGap: best };
+    }, "data:image/png;base64," + shot);
+  };
+
+  /* ⚠⚠ 「兩行之間」要量**沒有驚嘆號**的那一張。
+     驚嘆號站在第二行的基線上、往上長，橫向掃描會掃到它，量出來從 45px 掉到 16px ——
+     那不是兩行變近了，是**量錯了東西**。兩件事分兩張圖量：
+       兩行的距離 → 沒有驚嘆號的（此時畫面還停在上一次 setContent）
+       字離框邊   → 有驚嘆號的（驚嘆號也是墨，一定要算進去） */
+  const noBang = await scan();
+
+  await p.setContent(page(c.font, true, bang), { waitUntil: "load" });
+  await p.evaluate(() => document.fonts.ready);
+  const m = await scan();
+  m.lineGap = noBang.lineGap;
 
   const corners = [[m.x0, m.y0], [m.x1, m.y0], [m.x0, m.y1], [m.x1, m.y1]];
   const clear = Math.min(...corners.map((q) => clearance(q, GEO.pts)));
   if (clear < 10) throw new Error(`${c.id} 字離框邊只有 ${clear.toFixed(1)}px（要 ≥10）`);
 
-  await p.setContent(page(c.font), { waitUntil: "load" });
+  await p.setContent(page(c.font, false, bang), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
   const file = path.join(OUT, `${c.id}.jpg`);
   await p.screenshot({ path: file, type: "jpeg", quality: 88, clip });
@@ -223,6 +260,7 @@ for (const c of CASES) {
     lineGap: +m.lineGap.toFixed(0), lineGapOnChat: +(m.lineGap * 232 / 1040).toFixed(1),
     clear: +clear.toFixed(0), lhRatio: LH,
     boxW: Math.round(BOX.w), boxH: Math.round(BOX.h),
+    bang: BANG.ch, bangDeg: BANG.deg,
     tailAim: AIM, tailAng: +(GEO.aimAng * 180 / Math.PI).toFixed(0),
     tailTip: GEO.tip.map((v) => +v.toFixed(0)),
     fs: FS, onChat: +onChat.toFixed(1), stroke: STROKE,

@@ -4,10 +4,12 @@
     "font": "zenmaru",
     "lineGap": 45,
     "lineGapOnChat": 10,
-    "clear": 30,
+    "clear": 15,
     "lhRatio": 1.34,
     "boxW": 415,
     "boxH": 349,
+    "bang": "!",
+    "bangDeg": 12,
     "tailAim": [
       395,
       397
@@ -24,6 +26,6 @@
     "glassA": 0.58,
     "glassBlur": 11,
     "nExp": 2.6,
-    "kb": 129
+    "kb": 130
   }
 ]
