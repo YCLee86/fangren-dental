@@ -18,6 +18,17 @@
 > 本檔與 PALETTE.md／COPY.md／ILLUSTRATION.md 拿。
 > **使用者只跟 PM 講話**：所有人做完回報 PM，PM 檢查完才彙整成一份給他。
 
+> ## 2026-09-02 起：多了一條平行的線 —— **LINE 官方帳號**
+>
+> 診所的 LINE 官方帳號（招呼圖卡、自動回應、圖文選單、提醒卡、圖文訊息）。
+> **成品不在 fangren.net 上**，是要貼進 LINE 後台的訊息、圖與 Flex JSON；
+> 網站只放**規格頁**（`preview/line-*/`）給使用者在手機上看、之後整包給廠商看。
+>
+> **要做 LINE 的任何一頁，先讀本檔第十一節**（在最後面），
+> 再讀 **[`drafts/channels/README.md`](drafts/channels/README.md)**（那條線的總檔案）。
+> 那裡有三件不知道就會做錯的事：**Flex 的字級是固定 px 不是比例**、
+> **`button` 不支援圖示**、**這個帳號沒有專人即時回覆（所以不能寫「隨時問」）**。
+
 > ## 2026-08-21：SEO／GEO 這一輪**全部上線了**
 >
 > 三件技術面的成品（文章的「重點整理」、卡片改顯示上架日期、上線版剝掉註解）
@@ -325,12 +336,18 @@ topics/<spec>/index.html 科別著陸頁（七科，2026-08-21 上線）。**由
 history/<name>.html     改版紀錄（原提案頁的推導文字，定案後只留這個。見第八節）
 history/index.html      改版紀錄的目錄
 preview/<name>/index.html  進行中的提案頁；定案上線後刪掉、文字搬進 history/
+                        ⚠ **`preview/line-*/` 是例外**：那幾頁的成品在 LINE 不在站上，
+                        定案之後只拿掉切換條、頁面留著當規格頁。見第十一之五節
 drafts/                 **還沒定案的草稿**（文章、提示詞、參考圖）。不會進 _site，
                         build.mjs 也掃不到 —— 見第二節那個 2026-08-20 的警告。
                         定案那天用 git mv 搬進 posts/<slug>/index.html
   door-notice/          **門口的停車告示**（2026-08-23）。⚠ 成品是要印出來貼在
                         門口的 A4，**刻意不放在網站上**（使用者指定），所以住在
                         drafts/。兩行指令重做，推導與定案的值都在它的 README.md
+  channels/             **LINE 官方帳號**（2026-09-02 起）。README.md 是那條線的總檔案，
+                        另有招呼圖卡與提醒卡的 Flex JSON、守門與產生器。**見第十一節**
+  line-hello/           招呼圖卡的頭圖（房子在說「芳仁　哩厚！」）。同上
+  line-auto-reply/      自動回應的文字 ＋ 圖文訊息的圖。同上
 tools/
   build.mjs             產生首頁卡片、更新日期、排序、sitemap、allowed-slugs、結構化資料
   schema.mjs            JSON-LD 產生器（被 build.mjs 匯入，不單獨執行）。
@@ -2232,3 +2249,98 @@ topics/<spec>/         ← 產出。**不要手改**，重跑就沒了
 `<data value>` 一起收成同一份；JSON-LD 仍是 `+886-5-533-9369`。
 數字一個都沒變，`tel:+88655339369` 也沒動。推導與實測數字在
 [PALETTE.md](PALETTE.md) 第六之十七節。
+
+---
+
+## 十一、診所的 **LINE 官方帳號**（2026-09-02 起）—— 新的聊天要做 LINE 就先讀這一節
+
+⚠⚠ **這是一條和網站平行的線。** 成品**不在 fangren.net 上**，是要貼進
+**LINE 官方帳號後台**的訊息、圖與 JSON。網站這邊只放**規格頁**（`preview/line-*/`），
+用途是讓使用者在手機上看，以及**之後整包拿給廠商看**。
+
+### 十一之一、東西在哪
+
+| | |
+| --- | --- |
+| **總檔案** | **[`drafts/channels/README.md`](drafts/channels/README.md)** —— 後台的實際數字、管道地圖、「LINE 上該有哪幾則訊息」的全盤盤點與評分、五個外部參考（早安美芝城／天仁茗茶／星宇航空／HERMES／國泰世華・玉山）、提醒卡改版、滿意度調查卡的風險。**開工前先讀它的第十四、十六節** |
+| 自動回應 | `drafts/line-auto-reply/README.md`（文字）＋ `rich.mjs`（圖文訊息的圖）→ 規格頁 `/preview/line-reply/` |
+| 招呼圖卡 | `drafts/channels/welcome-card.json`（Flex）＋ `README.md` 第十八節 → 規格頁 **`/preview/line-welcome/`**。✅ **2026-09-03 定案** |
+| 招呼圖卡的頭圖 | `drafts/line-hello/`（`generate.mjs`／`bubble.mjs`／`README.md`）→ `preview/line-hello/hero-zenmaru.jpg`，規格頁 `/preview/line-hello/`。✅ 定案 |
+| 提醒卡 | `drafts/channels/reminder-card.json`、時間換算 `timing.mjs` |
+
+### 十一之二、⚠⚠ LINE Flex Message 的硬條件（不知道會做出對不上的東西）
+
+- **字級是固定 px，不是比例**：`xxs 11／xs 13／sm 14／md 16／lg 19／xl 22／xxl 27`。
+  ⚠⚠ 規格頁**一定要用這些 px 畫**。第一版寫成 rem 的比例，每一行都比 LINE 實際的
+  小 1~2.7px，使用者一眼看出「灰底裡的字好小」。**規格頁一旦和真實算繪對不上，
+  上面做的每一個判斷都是假的** —— `check-welcome.mjs` 就是為這件事寫的。
+- **`button` 只有一個 `label`，不支援圖示，也不會換行**（放不下從尾巴截斷）。
+  要「圖示＋文字」就做成**可點的 `box`**（box 掛 `action`，裡面 `image` ＋ `text`），
+  代價是失去按鈕內建的按壓效果。
+- **`image` 的 `size` 給的是「寬度」**，不是高度。兩個長寬比不同的圖不能寫同一個數字。
+- **`aspectRatio` 寫錯不報錯也不變形** —— `aspectMode: fit` 只會讓圖**靜靜地縮小、
+  四周留白**。`check-welcome.mjs` 會拿它去對 PNG 檔頭的真實尺寸。
+- **斷行一律用 `\n` 自己指定**，不要交給自動換行（會把詞劈開、或讓末行只剩一個字）。
+  ⚠ `span` 裡的 `\n` **還沒在實機驗過**。
+- 量到的尺寸：卡片 **268px** 寬、內距 14px → 按鈕可用 **216px**。
+
+### 十一之三、⚠⚠⚠ 事實查核的紅線
+
+**這個帳號沒有專人即時回覆訊息**（自動回應與「綁定成功」那兩則自己就寫著）。
+所以任何訊息上**不可以出現「有問題隨時問」那一類的承諾** —— 那是說謊，
+也違反 COPY.md 第三節「診所給的是燈，不是答案」。
+`check-welcome.mjs` 有一張掃描表擋著（隨時問／問到／即時回／找得到人…）。
+
+### 十一之四、已經定案的（不要重做）
+
+- **招呼圖卡的文案**：使用者**自己寫的**，逐字定稿，見 `welcome-card.json` 的 `_說明`。
+  照站上慣例補的只有兩處（「官方 LINE」中間的空格縮成 9px、「喔～」用全形波浪）。
+- **兩顆按鈕的 logo 是兩個不同的形狀**：綁定＝站上頁首那一條（2.029）、
+  介紹＝`brand/shapes/shape-r2c3`（3.081）。**兩顆都 34px 寬**。
+  ⚠⚠ 介紹那顆的墨只有綁定那顆的 **64%**（等重的是 42px），**那是使用者看過四格
+  之後選的取捨，不要拿「兩顆一樣重」去訂正它**（同兒牙填色白字 3.22 那一類）。
+- **撥打電話那顆按鈕沒有**（使用者三次整理的清單裡都沒有它）。電話在圖文選單的
+  「診所資訊」與帳號主頁上。**不要自己加回去。**
+- **頭圖**：對話框、尾巴（.78π／根 62／長 70／指著一樓飾邊）、Zen Maru Gothic 900、
+  驚嘆號（頭 17／角度 18°／高 78／點 15／往下 42／離「厚」的墨 14px）。
+  推導在 `drafts/line-hello/README.md`。
+
+### 十一之五、規格頁的規矩（和第八節**不一樣**）
+
+`preview/line-*/` 定案之後**不刪頁、不搬進 `history/`** —— 第八節那條規則是給
+「站上版型的提案」用的，這幾頁的成品在 LINE 不在站上，而且使用者要拿它們
+**整包給廠商看**。定案時做的是：**把切換條拿掉、改寫成規格頁**。
+三道 noindex 都還在（頁面 meta、Worker 的 `X-Robots-Tag`、`robots.txt`）。
+
+⚠ 其餘規矩照舊：提案頁只放 fangren.net（不要用 claude.ai 的 artifact）、
+**要擺真的產出檔不要用 CSS 再畫一次**、切換條要放在頁尾那支腳本前面。
+
+### 十一之六、改完要跑的守門
+
+```bash
+node drafts/channels/check-welcome.mjs   # Flex 的 JSON ↔ 規格頁：文字／字級／按鈕／logo 的檔案・長寬比・寬度／紅線
+node drafts/line-hello/check.mjs         # 規格頁引用的圖都在、沒有孤兒檔
+```
+
+產生器（改了對應的東西才要跑）：
+
+```bash
+node drafts/line-hello/generate.mjs      # 頭圖
+node drafts/channels/mark-png.mjs        # 按鈕上那兩顆 logo
+node drafts/channels/card-png.mjs        # 招呼圖卡的圖片檔（--chat 連聊天室的底）
+node drafts/line-auto-reply/rich.mjs     # 圖文訊息的圖
+```
+
+### 十一之七、⚠ 還沒有的東西（上線之前一定會卡住）
+
+1. **兩顆按鈕的網址都還不能用**：綁定的是**廠商系統產的**（現在是佔位符
+   `【…】`）；「介紹芳仁給朋友」用的推薦官方帳號深連結
+   `https://line.me/R/nv/recommendOA/@445rpiiv` **沒有實機測過**。
+   ⚠ **不要改填 `https://line.me/R/ti/p/@445rpiiv`** —— 按的人已經是好友，
+   點下去只會開到帳號頁，不會叫出轉傳。
+2. **廠商那八題**（見 `drafts/channels/README.md` 第十六、十七節），其中最要緊的是
+   **滿意度調查卡那兩顆按鈕連去哪**（可能是 review gating）、以及
+   **後台的「招呼訊息」能不能送 Flex Message**（送不出去就要退回圖文分開的版本）。
+3. **上線前要把圖放到 `https://fangren.net/assets/line/`**：
+   `mark-white.png`、`mark-green.png`、頭圖。⚠ 那個資料夾**現在還不存在**，
+   `tools/dist.mjs` 也還沒有它 —— 真的要上線時要一起處理。
