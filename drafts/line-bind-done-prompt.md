@@ -7,7 +7,8 @@
 > 醫療人員伸出手要跟診療椅上的人做出連結手勢。你們做提示詞，我放到 Gemini 上生成。
 > 插圖的風格就跟現在網站上文章一樣，手繪、有動感、生命感。
 
-**第一版（`drafts/bind-done-v1-rejected.jpg`）被退回**，第二版的提示詞在第四節。
+**第一版**（`drafts/bind-done-v1-rejected.jpg`）被退回、**第二版**（`drafts/bind-done-v2.jpg`）
+**構圖與趣味通過、臉被退回**，現行的是**第三版**（第四節）。
 第一版那份逐字留在最後的「附」（第 19 條：改圖要從上一份改，不要從零重寫）。
 
 ---
@@ -51,6 +52,43 @@
 ⚠ **火花改成一顆會發光的小牙齒** —— 原作遞出去的是「生命」，這裡遞出去的是
 診所真正給得出的那件小事。它同時是寓意也是診所的東西，比一撮抽象的線好讀。
 
+## 一之二、⚠ 第二版：構圖與趣味過了，**臉太蒼白** —— 那是我把外部風格整包搬進來的副作用
+
+使用者：
+
+> 我必須說很棒欸，只是**人臉風格有點蒼白**。之前診所網站的人物我覺得很不錯，附圖參考看看。
+（附了站上兩張已上線的 HERO：〈孩子第一次看牙〉與〈定期檢查〉）
+
+成品 `drafts/bind-done-v2.jpg`。**寓意、那一團人、白袍斗篷、小牙齒、動感全部通過** ——
+這一輪只換臉。
+
+⚠⚠ **成因很清楚：第二版的臉是照國泰那兩張參考圖畫的。** 那個品牌的畫法是
+**白紙底的臉、兩顆圓點眼、沒有鼻子、粉紅圓點當腮紅**；我在 `STYLE` 段裡逐字寫了
+「faces and hands are left plain paper white」與「two small round dot eyes… and no nose」。
+站上的臉完全不是那樣：**有膚色（暖米桃色）、有眉毛、有鼻子、嘴巴有表情、皮膚有很淡的
+色鉛筆陰影**，而且五官那幾筆是**粗細有變化**的線。
+
+> ⚠⚠⚠ **通則（借外部風格時一定要做的一件事）：換風格參考的時候，要逐項問
+> 「這一項是我們的，還是它的」。** 我上一輪把整套照搬 —— 線、平塗、大淡色圓、
+> 飄的小圖示（這些他要）**連臉一起**（這個他不要）。
+> **臉是這個站的品牌資產**（十一張文章 HERO 與七張分享圖都是同一套臉），
+> 它不隨參考圖走。同一條的近親是第 8 條「顏色寫太細會走鐘」與
+> 第 18 條「提示詞為了修內容越寫越長，風格就會被擠掉」。
+
+**第三版的改法（只有這幾處，其餘逐字沒動）：**
+
+| | |
+| --- | --- |
+| `STYLE` 段 | 把「白紙臉／點眼／沒有鼻子」那兩句刪掉，改成指向新的 `FACES` 段 |
+| 新增 `FACES, SKIN AND EXPRESSIONS` 段 | 放在 `STYLE` 正後面（第 18 條：風格那段要在最前面）。膚色、腮紅、眉毛、眼皮、鼻子、嘴、耳朵、髮的兩階、**只在皮膚上的淡陰影**、五官的線可以有粗細變化 |
+| `COLOUR` 段 | 「白袍和臉都是白的」→ **白袍是白的，臉／脖子／手是暖米桃色** |
+| `AVOID` 段 | 加上「白臉／紙色的臉／沒有膚色／兩顆點眼沒有眉毛鼻子／粉紅圓點當腮紅／皮膚以外的地方有陰影」 |
+
+⚠ **平塗那一條沒有解除** —— 只有皮膚可以有很淡的陰影，衣服、椅子、白袍、背景維持平塗。
+這是刻意的折衷：他要的是「臉不要蒼白」，不是「整張回到色鉛筆」。
+**要整張換回站上那一套（暖棕的線、粗細有變化、整張顆粒）也可以，說一聲我換 `STYLE` 與
+`COLOUR` 兩段，構圖與那一團人不動。**
+
 ## 二、規格（沒有變）
 
 | | |
@@ -78,6 +116,7 @@
 | --- | --- | --- | --- |
 | **A・畫風** | `drafts/bind-done-ref-flat-1.jpg`、`drafts/bind-done-ref-flat-2.jpg` | 線的粗細、平塗、極簡的臉、誇張的動作、飄在旁邊的小圖示 | 「**線條、上色與人物畫法照這兩張**，題材不要參考」 |
 | **B・構圖** | `drafts/bind-done-ref-adam-gesture.jpg` | **只有「一邊一個人躺著、一邊一團人飄著、中間兩指快要碰到」那個關係** | 「**只參考構圖與那個手勢**，水墨筆觸、娃娃造型、顏色一律不要」 |
+| **C・臉** ⭐ | `drafts/bind-done-ref-face-1.jpg`、`drafts/bind-done-ref-face-2.jpg`（從站上〈孩子第一次看牙〉與〈定期檢查〉裁的，放大兩倍） | **臉與膚色怎麼畫**：膚色、腮紅、眉毛、眼皮、鼻子、有表情的嘴、髮的兩階 | 「**人臉、膚色與表情完全照這兩張**，構圖與場景不要參考」 |
 
 ⚠⚠ **使用者給的第三張（Gransta 那張多格海報）沒有裁成參考圖**：它是**放射狀拼版**，
 每一格的角度都不一樣，整張轉 0／90／180／270 都會有人是躺著的 —— 餵進去等於教模型
@@ -88,7 +127,11 @@
 ⚠ 三張原檔都是滿滿的中文／日文，`drafts/bind-done-refs2-crop.mjs` 已經把介面、標題、
 按鈕與招牌全裁掉 —— **截圖裡的字會被模型抄進畫面**（ILLUSTRATION.md 第七節第 4 條的反面）。
 
-## 四、提示詞・第二版（逐字複製給 Gemini）
+⚠⚠ **C 那兩張裡有假字**（〈定期檢查〉櫃檯那張小卡上的亂碼），所以餵的時候要多講一句：
+**「參考圖裡出現的任何文字一律不要學，成品不能有字。」** 那兩張是站上的成品、
+不是外部素材，所以沒有版權問題。
+
+## 四、提示詞・第三版（逐字複製給 Gemini）
 
 ```
 Cute flat-colour illustration, 16:9 landscape. A warm, funny parody of Michelangelo's
@@ -99,15 +142,41 @@ matter how long the rest of this brief is. Clean FLAT illustration in the style 
 Taiwanese or Japanese brand illustration. Every outline is a THIN, EVEN-WEIGHT dark
 grey-brown line — never pure black, never thick, never varying in weight. All colour is
 FLAT: no shading, no gradients, no texture, no highlights anywhere. Faces and hands are
-left plain paper white with no shading at all. The characters are CUTE and simple: a simple
-round white face, two small round dot eyes, one tiny curved line for a smile, a small oval
-pink cheek on each side, and no nose (or a single tiny dot); hair is one flat shape drawn
-with two or three loose loops. Bodies are simplified, arms and legs are simple rounded
+filled with a warm skin tone and drawn with real features — see the FACES section below,
+which takes priority over any urge to simplify them. The characters are CUTE and friendly
+but their faces are ALIVE, never blank. Bodies are simplified, arms and legs are simple rounded
 tubes, and hands are simple soft mitten shapes with the fingers clearly separated. Poses
 are exaggerated and full of movement. Behind everything, three or four LARGE PALE FLAT
 CIRCLES (pale mint, cream, soft butter yellow) as decoration, plus small floating
 decorative marks: four-pointed sparkles and tiny short motion arcs. Cheerful, friendly,
 humorous — never slick, never corporate, never serious.
+
+FACES, SKIN AND EXPRESSIONS — READ THIS TOGETHER WITH THE STYLE SECTION; it overrides any
+"simple flat face" habit. Every face in this picture is a WARM, LIVING face, not a blank
+one.
+  • SKIN: every face, neck, ear and hand is filled with a warm light peachy-beige skin
+    tone. NEVER leave skin as white or as bare paper, and never make it grey.
+  • A soft warm blush sits high on each cheek, softly blended into the skin — NOT a flat
+    pink circle or an oval sticker.
+  • EYEBROWS on everyone: a soft dark brown curved shape above each eye. The eyebrows
+    carry most of the expression, so draw them clearly.
+  • EYES are drawn, not dotted: a curved upper eyelid rendered as a slightly thicker line
+    that tapers at the outer corner, with a small dark iris below it; an eye that is
+    smiling becomes a simple upward arc. NO round dot eyes.
+  • A small, clear NOSE on every face — a short curved line with a soft rounded tip.
+  • A real MOUTH with a real expression: an open smile may show the upper teeth as one
+    simple white shape with a soft dark opening behind it; a closed mouth is a single line
+    that lifts at the corners. Lips are suggested, not outlined heavily.
+  • EARS have a small inner curl.
+  • HAIR is warm dark brown in two tones: one flat base shape plus a slightly lighter
+    band where the light falls.
+  • VERY LIGHT coloured-pencil shading is allowed ON THE SKIN ONLY — under the chin, along
+    the jaw, beside the nose, inside the ear — just enough that the face has volume.
+    Everything else in the picture stays completely flat.
+  • The facial features may be drawn with a slightly varying, tapering line, even though
+    the outlines of bodies, clothes and props stay thin and even.
+  • Each face reads as a specific age: the patient a man in his late thirties; the dentist
+    a woman of about forty; the staff around her a mix of twenties to fifties.
 
 THE JOKE — Anyone who knows the painting must recognise it at a glance: a figure lying back
 and reaching out on the left, an airborne crowd wrapped in a billowing cloak on the right,
@@ -178,7 +247,8 @@ immediately as a dental clinic.
 
 COLOUR — Flat, cheerful and restrained. Pale cream paper as the ground. PALE SAGE GREEN is
 the accent colour of the picture: all the scrubs, and the pale mint oval behind the coat.
-The white coat and the faces are white. The patient wears dusty rose and warm grey, clearly
+The white coat is white, but the faces, necks and hands are the warm peachy beige
+described in FACES — never white. The patient wears dusty rose and warm grey, clearly
 a different colour family from the staff, so the two sides read apart at a glance. The
 chair is muted slate blue. Background circles in pale mint, cream and soft butter yellow.
 Small pink cheeks on every face. No dark or heavy areas, no black fills, no neon, never
@@ -208,7 +278,10 @@ sides being the same height, symmetrical or mirrored; ANY ROMANTIC OR INTIMATE M
 patient and the dentist must NOT look into each other's eyes, must not blush at each other,
 and there is no soft romantic glow between them; anything inside the patient's mouth; any
 instrument near his face; a syringe, a drill or a probe; blood, wounds, pain or fear; face
-masks covering faces; anybody looking at the viewer; hands with the wrong number of fingers.
+masks covering faces; anybody looking at the viewer; hands with the wrong number of fingers;
+WHITE, PAPER-COLOURED, PALE GREY OR COLOURLESS FACES; faces with no skin tone; blank
+expressionless faces made of two round dots with no eyebrows and no nose; flat pink circle
+stickers used as cheeks; shading anywhere other than on the skin.
 ```
 
 ## 五、可以加、但沒有預設加的一句
@@ -226,7 +299,12 @@ blank and dark with nothing on it at all.
 
 ## 六、驗收（生成之後逐條看，任何一條沒過就重生成，不要後製）
 
-**先看這三條，第一版就是死在這裡：**
+**先看這兩條，第二版就是死在這裡：**
+
+0. **每張臉都有膚色**（暖米桃色），不是白紙也不是灰的。
+0.5 **每張臉都有眉毛、鼻子、有表情的嘴**；眼睛是眼皮的弧線不是圓點。
+
+**再看這三條，第一版是死在這裡：**
 
 1. **右邊是一群人（五個以上），不是一個人。** 只有一個人 ＝ 回到第一版那個問題。
 2. **兩側明顯不對等**：右邊那一團**比病患高、而且在飄**；病患躺著、手是鬆的。
@@ -240,7 +318,8 @@ blank and dark with nothing on it at all.
 7. **整張沒有任何文字**（白袍口袋、名牌、杯子、鏡柄、瓶罐、椅子都要清）。
 8. **沒有宗教語彙**：翅膀、光環的環、雲、天空、放射狀金光、上帝。
 9. **沒有裸體、沒有娃娃**（Q 版那個是娃娃，我們不是）。
-10. **線是細而均勻的深灰褐**，平塗、沒有陰影與顆粒（這一版刻意不是站上那套色鉛筆）。
+10. **線是細而均勻的深灰褐**，平塗 —— **陰影只准出現在皮膚上**（衣服、椅子、白袍、
+    背景都要是平的）。五官那幾筆可以粗細有變化。
 11. **診療椅一眼看得出是診療椅**；背景其餘只有細灰線、沒有填色。
 12. **手指數量正確**；病患嘴裡沒有東西、臉旁邊沒有器械。
 13. **中央那條 2:1 的帶子裡**裝得下兩張臉、兩隻手、那一團人與椅子的頭靠。
