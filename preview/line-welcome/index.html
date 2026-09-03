@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>招呼圖卡 —— 你整理的那一版</title>
+<!--
+  提案頁：加入好友的招呼圖卡（LINE Flex Message）。
+
+  使用者 2026-09-03 把內容整理成這樣：
+      你好
+      歡迎加入芳仁牙醫診所的官方line
+      選單功能簡介
+      介紹芳仁給朋友　（按鈕連結）
+      完成綁定。看診前48小時發送提醒通知喔～　（按鈕連結）
+
+  ⚠⚠ 照這樣做會卡在一件事：**第二顆按鈕的字放不下**。
+    量出來 268px，而按鈕能給的只有 216px（卡片 268 − 卡片內距 28 − 按鈕內距 24），
+    LINE 的按鈕標籤是單行、放不下就從尾巴截掉，會變成
+    「完成綁定。看診前48小時發送提醒通…」——最重要的「提醒」兩個字剛好被吃掉。
+    所以底下給三種走法讓他選，Ⓐ 就是照他寫的（把被截掉的樣子做出來給他看）。
+
+  ⚠ 頭圖是已經定案的 hero-current.jpg（見 /preview/line-hello/）。
+  ⚠ 這裡是提案頁的近似，不是 LINE 自己的算繪：
+    卡片寬度、按鈕高度、字級都是照 Flex 的預設值量的，實機仍會有一兩 px 的差。
+  ⚠ 撥打電話那顆按鈕**這一版沒有了**（他整理的清單裡沒有它）。電話仍然在
+    選單的「診所資訊」與帳號主頁上，不是消失。這一項要他確認。
+-->
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--ink-soft:#5c5f57;--rule:#cdd0d2;
+  --green:#3f654a;--deep:#2c5238;--chat:#e9edf1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:15px/1.7 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  padding:18px 16px 150px}
+h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
+.lede{color:var(--ink-soft);font-size:.86rem;margin:0 0 16px}
+.lede b{color:var(--ink)}
+
+.chat{background:var(--chat);border-radius:12px;padding:12px 10px}
+.chat .day{text-align:center;font-size:.66rem;color:#7b8794;margin-bottom:9px}
+.row{display:flex;gap:8px;align-items:flex-start}
+/* ⚠⚠ 這個 min-width:0 不能刪。按鈕的標籤是 white-space:nowrap，所以卡片的
+   min-content 是「整條標籤 ＋ 內距」＝ 326px；flex 項目預設 min-width:auto，
+   不給它 0 的話 360 寬的手機會多 26px 水平捲動（320 上是 66px）。
+   overflow:hidden 只管畫面上裁掉，不會讓 min-content 變小。 */
+.row > div{min-width:0}
+.av{flex:none;width:26px;height:26px;border-radius:50%;background:var(--deep)}
+
+/* 圖卡本體。⚠ 卡片裡是**真的文字**，不是烘進圖裡的 —— 這是 Flex 贏過圖文訊息的地方 */
+/* ⚠ 卡片吃 min(268px, 100%)：LINE 的 mega 泡泡本來就跟著螢幕縮，
+   寫死 268 的話 320 寬的手機會多 8px 水平捲動，而且會謊報按鈕的可用寬度
+   —— 螢幕愈窄按鈕愈擠，那正是要量的東西。 */
+.hc{width:268px;max-width:100%;border-radius:14px;overflow:hidden;background:var(--card);
+  box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.hc .hero{display:block;width:100%}
+.hc .b{padding:13px 14px 10px}
+.hc .hi{margin:0;font-size:1.02rem;font-weight:700;letter-spacing:.02em}
+.hc .lead{margin:6px 0 0;font-size:.82rem;line-height:1.66}
+.hc .menu{background:var(--paper);border-radius:9px;padding:9px 11px;margin-top:11px}
+.hc .menu .t{font-size:.72rem;color:var(--ink-soft);letter-spacing:.03em}
+.hc .menu .l{font-size:.76rem;line-height:1.62;font-weight:700;margin-top:2px}
+.hc .say{margin:11px 0 0;font-size:.79rem;line-height:1.66}
+.hc .f{padding:0 14px 13px}
+/* 按鈕：內距 12px 是 Flex 的預設，標籤單行、放不下就截掉 */
+.hc .btn{display:block;border-radius:9px;padding:10px 12px;font-size:.9rem;
+  font-weight:700;text-align:center;letter-spacing:.02em;margin-top:8px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hc .btn.fill{background:var(--green);color:#fff}
+.hc .btn.line{border:1px solid var(--deep);color:var(--deep);background:transparent}
+
+.cap{font-size:.78rem;color:var(--ink-soft);margin:9px 2px 0}
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+  padding:10px 12px;font-size:.78rem;line-height:1.85;margin-top:14px}
+.panel b{color:var(--ink);font-variant-numeric:tabular-nums}
+.panel .k{color:var(--ink-soft)}
+.panel .no{color:#a33;font-weight:700}
+.panel .ok{color:var(--deep);font-weight:700}
+.note{border-left:3px solid var(--rule);padding-left:11px;color:var(--ink-soft);
+  font-size:.79rem;margin-top:13px}
+/* ⚠ 那條深連結是一長串沒有空白的字，不給它斷點的話 375 寬會多 13px 水平捲動 */
+.note code{font-size:.94em;overflow-wrap:anywhere;word-break:break-all}
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(244,244,245,.97);
+  border-top:1px solid var(--rule);padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+  backdrop-filter:blur(8px);z-index:9}
+.bar .r{display:flex;align-items:flex-start;gap:8px;margin:3px 0}
+.bar .lb{flex:none;width:4.6em;font-size:.72rem;color:var(--ink-soft);padding-top:5px}
+.bar .g{display:flex;flex-wrap:wrap;gap:5px}
+.bar button{font:inherit;font-size:.75rem;padding:4px 10px;border-radius:7px;
+  border:1px solid var(--deep);background:#fff;color:var(--deep);cursor:pointer}
+.bar button[aria-pressed="true"]{background:var(--deep);color:#fff}
+</style>
+</head>
+<body>
+<h1>招呼圖卡：你整理的那一版</h1>
+<p class="lede">照你寫的順序做了。卡在一件事：<b>第二顆按鈕的字放不下</b>
+（量出來 268px，按鈕只能給 216px）。底下三種走法，<b>Ⓐ 就是照你寫的</b>，
+把被截掉的樣子做出來給你看。</p>
+
+<div class="chat">
+  <div class="day">今天</div>
+  <div class="row"><div class="av"></div><div id="card"></div></div>
+</div>
+<p class="cap">↑ 聊天室裡的真實大小（卡片 268px 寬）。⚠ 提案頁的近似，不是 LINE 的算繪。</p>
+
+<div class="panel" id="panel"></div>
+<p class="note" id="note"></p>
+
+<div class="bar">
+  <div class="r"><span class="lb">綁定那顆</span><span class="g" id="sw"></span></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var SHARE = "https://line.me/R/nv/recommendOA/@445rpiiv";
+  var V = {
+    a: { name: "Ⓐ 照你寫的", say: null,
+         label: "完成綁定。看診前48小時發送提醒通知喔～" },
+    b: { name: "Ⓑ 那句當文字", say: "完成綁定。看診前 48 小時發送提醒通知喔～",
+         label: "完成綁定" },
+    c: { name: "Ⓒ 收短成一顆", say: null,
+         label: "完成綁定，看診前 48 小時提醒你" }
+  };
+  var st = "a";
+
+  function render() {
+    var v = V[st];
+    document.getElementById("card").innerHTML =
+      '<div class="hc">' +
+      '<img class="hero" src="../line-hello/hero-current.jpg" alt="">' +
+      '<div class="b">' +
+      '<p class="hi">你好</p>' +
+      '<p class="lead">歡迎加入芳仁牙醫診所的官方 LINE</p>' +
+      '<div class="menu"><div class="t">選單功能簡介</div>' +
+      '<div class="l">約診查詢・診所資訊・診療項目<br>醫師介紹・衛教資訊</div></div>' +
+      (v.say ? '<p class="say">' + v.say + '</p>' : '') +
+      '</div>' +
+      '<div class="f">' +
+      '<span class="btn line" id="b1">介紹芳仁給朋友</span>' +
+      '<span class="btn fill" id="b2">' + v.label + '</span>' +
+      '</div></div>';
+    measure();
+  }
+
+  /* ⚠ 量的是**標籤自己想要多寬**（放進一個不換行、不裁切的量尺裡量），
+     不是按鈕現在多寬 —— 按鈕已經把它截掉了，量按鈕永遠剛好等於可用寬度。 */
+  function wants(text, sample) {
+    var s = document.createElement("span");
+    s.textContent = text;
+    s.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;" +
+      "font:" + getComputedStyle(sample).font;
+    document.body.appendChild(s);
+    var w = s.getBoundingClientRect().width;
+    s.remove();
+    return w;
+  }
+
+  function measure() {
+    var v = V[st];
+    var b1 = document.getElementById("b1"), b2 = document.getElementById("b2");
+    var cs = getComputedStyle(b2);
+    var avail = b2.getBoundingClientRect().width
+              - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var w1 = wants(b1.textContent, b1), w2 = wants(v.label, b2);
+    var cut2 = w2 > avail;
+    var shown = v.label;
+    if (cut2) {                       /* 截到哪個字 */
+      for (var i = v.label.length; i > 0; i--)
+        if (wants(v.label.slice(0, i) + "…", b2) <= avail) { shown = v.label.slice(0, i) + "…"; break; }
+    }
+    var card = document.querySelector(".hc").getBoundingClientRect().height;
+    var vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+    document.getElementById("panel").innerHTML =
+      "<span class='k'>按鈕能給的寬度</span> <b>" + avail.toFixed(0) + "px</b>"
+      + " <span class='k'>（卡片 268 − 卡片內距 28 − 按鈕內距 24）</span>"
+      + "<br><span class='k'>介紹芳仁給朋友</span> <b>" + w1.toFixed(0) + "px</b> "
+      + (w1 > avail ? "<span class='no'>放不下</span>" : "<span class='ok'>放得下</span>")
+      + "<br><span class='k'>綁定那顆</span> <b>" + w2.toFixed(0) + "px</b> "
+      + (cut2 ? "<span class='no'>放不下，實際會顯示：</span><b>" + shown + "</b>"
+              : "<span class='ok'>放得下</span>（還剩 " + (avail - w2).toFixed(0) + "px）")
+      + "<br><span class='k'>整張卡</span> <b>" + card.toFixed(0) + "px</b>"
+      + "　<span class='k'>佔你這一屏</span> <b>" + (card / vh * 100).toFixed(0) + "%</b>";
+    document.getElementById("note").innerHTML =
+      "⚠⚠ <b>LINE 的按鈕標籤是單行的，放不下就從尾巴截掉</b>，不會換行也不會縮字。"
+      + "Ⓐ 被吃掉的正好是「<b>提醒</b>」——那顆按鈕最要緊的兩個字。"
+      + "<br>⚠ Ⓑ 是把那句話搬到按鈕上面當內文（內文會自動換行，多長都行），"
+      + "按鈕只留「完成綁定」。Ⓒ 是把那句收短到按鈕塞得下"
+      + "（<b>206px</b>，只剩 10px 餘裕，字再多一個就爆）。"
+      + "<br>⚠⚠ <b>Ⓒ 在小螢幕上還是會被截。</b> 五個寬度量過：430／390／375／360 上"
+      + "按鈕可用 216px，Ⓒ 剛好過；但 <b>320 上只剩 182px</b>，Ⓒ 會變成"
+      + "「完成綁定，看診前 48 小時…」。<b>只有 Ⓑ 在每個寬度都不會被截</b> —— "
+      + "因為它把長度交給會自動換行的內文，按鈕只放四個字。"
+      + "<br>⚠ <b>順序照你寫的</b>：介紹在上、綁定在下。綁定那顆用實心綠"
+      + "（那是診所真正想要的動作），介紹那顆用外框。"
+      + "<br>⚠⚠ <b>撥打電話那顆按鈕這一版沒有了</b> —— 你整理的清單裡沒有它。"
+      + "電話仍然在選單的「診所資訊」與帳號主頁上，不是消失。這一項要你點頭。"
+      + "<br>⚠⚠ <b>兩顆按鈕的連結都還沒有真的網址。</b>「介紹芳仁給朋友」要用"
+      + "推薦官方帳號的深連結（<code>" + SHARE + "</code>），<b>沒有實測過</b>，"
+      + "要請廠商在自己的帳號上按一次；「完成綁定」的網址是廠商系統產的，只有他們有。"
+      + "<br>⚠ 頭圖是已經定案的那一張（見 <a href='/preview/line-hello/'>/preview/line-hello/</a>）。";
+  }
+
+  function chips() {
+    var host = document.getElementById("sw");
+    host.innerHTML = "";
+    Object.keys(V).forEach(function (k) {
+      var b = document.createElement("button");
+      b.textContent = V[k].name;
+      b.setAttribute("aria-pressed", st === k ? "true" : "false");
+      b.addEventListener("click", function () { st = k; chips(); render(); });
+      host.appendChild(b);
+    });
+  }
+  chips(); render();
+  window.addEventListener("resize", measure);
+})();
+</script>
+</body>
+</html>

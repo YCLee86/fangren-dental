@@ -10,7 +10,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const PAGES = ["preview/line-hello/index.html", "preview/line-reply/index.html"];
+const PAGES = ["preview/line-hello/index.html", "preview/line-reply/index.html",
+               "preview/line-welcome/index.html"];
 const DIR = "preview/line-hello";
 /* 刻意留著、不必有人引用的：定案的裁切原圖（沒有字的那一張，是頭圖的底） */
 const KEEP = new Set(["crop-c3b.jpg"]);
