@@ -2,16 +2,26 @@
   {
     "id": "hero-zenmaru",
     "font": "zenmaru",
+    "cfg": {
+      "gap": 16,
+      "dy": 10,
+      "deg": 12,
+      "stemTop": 11,
+      "stemH": 44,
+      "stemBot": 8,
+      "dotGap": 4,
+      "dot": 18
+    },
     "lineGap": 45,
     "lineGapOnChat": 10,
-    "clear": 15,
+    "clear": 22,
     "lhRatio": 1.34,
     "boxW": 415,
     "boxH": 349,
-    "bang": "!",
     "bangDeg": 12,
     "bangDy": 10,
-    "bangBold": 3.5,
+    "bangTop": 11,
+    "bangBot": 8,
     "tailAim": [
       395,
       397

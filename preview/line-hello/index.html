@@ -22,7 +22,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:15px/1.7 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  padding:18px 16px 44px}
+  padding:18px 16px 168px}
 h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .lede{color:var(--ink-soft);font-size:.86rem;margin:0 0 16px}
 .lede b{color:var(--ink)}
@@ -32,12 +32,17 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .cap{font-size:.78rem;color:var(--ink-soft);margin:7px 2px 16px}
 .chat{background:#e9edf1;border-radius:12px;padding:12px 10px}
 .chat .day{text-align:center;font-size:.66rem;color:#7b8794;margin-bottom:9px}
-.hc{width:232px;border-radius:14px;overflow:hidden;background:var(--card);
+/* ⚠ 卡片左邊還有 34px 的頭像位，max-width 要把它扣掉，不然 320 上會多 8px 水平捲動 */
+.hc{width:268px;max-width:calc(100% - 34px);border-radius:14px;overflow:hidden;background:var(--card);
   box-shadow:0 1px 2px rgba(0,0,0,.08);margin-left:34px;position:relative}
 .hc::before{content:"";position:absolute;left:-34px;top:0;width:26px;height:26px;
   border-radius:50%;background:var(--deep)}
 .hc .hero{display:block;width:100%}
-.hc .b{padding:11px 12px 9px}
+.hc .b{padding:14px 14px 12px}
+.hc .sp{font-style:normal;font-size:9px}
+.hc .hi{margin:0;font-size:16px;line-height:1.55;font-weight:700}
+.hc .more{margin:8px 0 0;font-size:12px;color:var(--ink-soft)}
+.hc .more a{color:var(--deep)}
 .hc h4{margin:0;font-size:.92rem;font-weight:700}
 .hc .loc{font-size:.66rem;color:var(--ink-soft);margin-top:2px}
 .hc p{margin:9px 0 0;font-size:.72rem;line-height:1.62}
@@ -62,89 +67,113 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 .bar button{font:inherit;font-size:.75rem;padding:4px 10px;border-radius:7px;
   border:1px solid var(--deep);background:#fff;color:var(--deep);cursor:pointer}
 .bar button[aria-pressed="true"]{background:var(--deep);color:#fff}
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(244,244,245,.97);
+  border-top:1px solid var(--rule);padding:9px 12px calc(9px + env(safe-area-inset-bottom));
+  backdrop-filter:blur(8px);z-index:9}
+.bar .r{display:flex;align-items:center;gap:8px;margin:3px 0}
+.bar .lb{flex:none;width:4.6em;font-size:.72rem;color:var(--ink-soft)}
+.bar .g{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.bar .g::-webkit-scrollbar{display:none}
+.bar button{font:inherit;font-size:.75rem;padding:4px 11px;border-radius:7px;white-space:nowrap;
+  flex:none;border:1px solid var(--deep);background:#fff;color:var(--deep);cursor:pointer}
+.bar button[aria-pressed="true"]{background:var(--deep);color:#fff}
 </style>
 </head>
 <body>
 <h1>頭圖：房子在說「芳仁　哩厚」</h1>
-<p class="lede"><b>定案了。</b>你指名的那一張逐像素比對過，就是這一版：
-Zen Maru 圓體、尾巴根 62／長 70。切換條收起來了。</p>
+<p class="lede">驚嘆號改成<b>自己畫的</b>（字型做不到「只把頭加粗」）。
+底下三把尺：<b>頭的粗細</b>、<b>角度</b>、<b>往下多少</b>。左上那一格是現在的。</p>
 
 <div class="big"><img id="shot" alt=""></div>
 <p class="cap" id="cap"></p>
 
 <div class="chat">
   <div class="day">今天</div>
+  <!-- ⚠ 這裡只放頭圖 ＋ 開場那一句，**不重畫整張卡** ——
+       整張卡在 /preview/line-welcome/，文案還在動；兩頁各畫一份必然會走鐘
+       （這一頁一度還停在「完成綁定，看診前 48 小時」那個舊版）。 -->
   <div class="hc">
     <img class="hero" id="mini" alt="">
     <div class="b">
-      <h4>芳仁牙醫診所</h4><div class="loc">雲林斗六・永樂街</div>
-      <p>這裡是診所的官方 LINE。</p>
-      <div class="menu">下面的選單有<br><b>約診查詢、診所資訊、診療項目、<br>醫師介紹、衛教資訊</b></div>
-      <p>完成綁定，看診前 48 小時<br>就會在這裡提醒你。</p>
-    </div>
-    <div class="f">
-      <div class="tel">撥打電話　05-5339369</div>
-      <span class="share">把芳仁介紹給家人</span>
+      <p class="hi">歡迎加入芳仁牙醫的官方<i class="sp"> </i>LINE</p>
+      <p class="more">整張卡在 <a href="/preview/line-welcome/">/preview/line-welcome/</a></p>
     </div>
   </div>
-</div>
-<p class="cap">↑ 整張圖卡在聊天室裡的<b>真實大小</b>（卡片 232px 寬）。⚠ 這是提案頁的近似，不是 LINE 自己的算繪。</p>
+<p class="cap">↑ 頭圖在聊天室裡的<b>真實大小</b>（卡片 268px 寬）。⚠ 近似，不是 LINE 自己的算繪。</p>
 
 <div class="panel" id="panel"></div>
 <p class="note" id="note"></p>
 
 
+<div class="bar">
+  <div class="r"><span class="lb">頭的粗細</span><span class="g" id="sw-t"></span></div>
+  <div class="r"><span class="lb">角度</span><span class="g" id="sw-d"></span></div>
+  <div class="r"><span class="lb">往下</span><span class="g" id="sw-y"></span></div>
+</div>
 <script>
 (function () {
   "use strict";
-  var r = {"id":"hero-zenmaru","font":"zenmaru","lineGap":45,"lineGapOnChat":10,"clear":15,"lhRatio":1.34,"boxW":415,"boxH":349,"bang":"!","bangDeg":12,"bangDy":10,"bangBold":3.5,"tailAim":[395,397],"tailAng":163,"tailTip":[502,365],"fs":104,"onChat":23.2,"stroke":7,"strokeOnChat":1.56,"glassA":0.58,"glassBlur":11,"nExp":2.6,"kb":130};
-  var src = r.id + ".jpg";
-  document.getElementById("shot").src = src;
-  document.getElementById("mini").src = src;
-  document.getElementById("cap").textContent = "1040\u00d7520（2:1）・" + r.kb + "KB";
-  document.getElementById("panel").innerHTML =
-    "<span class='k'>字體</span> <b>Zen Maru Gothic 900</b>"
-    + "　<span class='k'>字</span> <b>" + r.fs + "px</b>（聊天室 " + r.onChat + "px）"
-    + "<br><span class='k'>尾巴</span> 從左下 <b>.78\u03c0</b> 伸出，根 <b>62</b>、長 <b>70</b>，"
-    + "指著 <b>一樓飾邊 (" + r.tailAim.join(", ") + ")</b>"
-    + "　<span class='k'>算出來</span> <b>" + r.tailAng + "\u00b0</b>"
-    + "<br><span class='k'>兩行之間</span> <b>" + r.lineGap + "px</b>"
-    + "（聊天室 " + r.lineGapOnChat + "px）　<span class='k'>行高</span> <b>" + r.lhRatio + "</b>"
-    + "　<span class='k'>框</span> <b>" + r.boxW + "\u00d7" + r.boxH + "</b>"
-    + "　<span class='k'>字離框邊</span> <b>" + r.clear + "px</b>"
-    + "<br><span class='k'>驚嘆號</span> <b>半形「" + r.bang + "」斜 " + r.bangDeg + "\u00b0</b>"
-    + "<span class='k'>（字級 .86 倍，比「哩厚」的基線低 " + r.bangDy + "px，"
-    + "同色描邊 " + r.bangBold + "px 加粗）</span>"
-    + "<br><span class='k'>形狀</span> <b>超橢圓 " + r.nExp + "</b>（沒有缺口）"
-    + "　<span class='k'>框線</span> <b>" + r.stroke + "px</b>（聊天室 " + r.strokeOnChat + "px）"
-    + "　<span class='k'>玻璃</span> <b>中</b><span class='k'>（白 " + r.glassA + "、模糊 " + r.glassBlur + "）</span>";
-  document.getElementById("note").innerHTML =
-    "⚠ <b>「哩厚」後面加了一個斜的驚嘆號。</b> 它<b>不放在同一個 &lt;text&gt; 裡</b> —— "
-    + "那一行是置中對齊，加進去會把「哩厚」整個往左推，等於順手動了上一輪定案的 ±22 錯位。"
-    + "所以另外一個元素，位置由<b>量到的「哩厚」右緣與基線</b>決定，「哩厚」一格都沒動。"
-    + "<br>⚠ <b>「粗一點」不是把它放大</b> —— 放大會連高度一起長，還會把墨推出框外；"
-    + "字重也加不上去（Zen Maru 只到 900，已經是最粗的）。做法是<b>同色描邊 ＋ "
-    + "paint-order</b>，和站上地圖那顆「P」加粗的手法同一個。"
-    + "量到：豎筆 <b>7px → 11px</b>，仍然比「哩厚」的筆畫（14px）細一點 —— "
-    + "標點比字瘦是對的。"
-    + "<br>⚠ 用<b>半形</b>的「!」不是全形的「！」：全形在中文字型裡兩側各留一大塊空，"
-    + "斜過去之後那塊空會把它推得離「厚」很遠。"
-    + "<br>⚠ 字型是<b>照字切過的子集</b>，所以先把「!」加進去重切一次才畫得出來 —— "
-    + "不加的話它會用系統字型代打或畫成空白，<b>而且不報錯</b>。"
-    + "<br>⚠ <b>「兩行之間」和「字離框邊」現在分兩張圖量。</b> 驚嘆號站在第二行的基線上"
-    + "往上長，橫向掃描會掃到它，兩行的距離會從 45px 被量成 16px —— 那不是兩行變近了，"
-    + "是量錯了東西。兩行的距離量<b>沒有驚嘆號</b>的那一張；字離框邊量<b>有</b>的"
-    + "（驚嘆號也是墨，一定要算進去）。"
-    + "<br><br>⚠ <b>你指的是哪一版，是比對出來的、不是猜的。</b> 你傳的截圖裡那條圖帶"
-    + "（y 1016~1578、長寬比 1.998）縮回 1040\u00d7520 之後，和三支字體逐像素比："
-    + "Zen Maru 的色差 <b>2.6</b>，另外兩支是 13.6 與 22.8。尾巴那一區再比一次，"
-    + "指向的是<b>根 62／長 70</b> 那一版（色差 5.3；我後來自己改成 52／88 的那版是 10.5）。"
-    + "<br>⚠ 所以<b>尾巴的比例改回去了</b>。我一度改成 52／88，理由是「往左指的時候"
-    + "62／70 讀起來鈍」—— 那是我的判斷，你看過之後選了原本那一組。程式裡已經註記。"
-    + "<br>⚠ 尾巴仍然是<b>指著一樓飾邊</b>（" + r.tailAim.join(", ") + "），方向由程式算出來，"
-    + "框日後再改也會自己跟著轉。"
-    + "<br>⚠ 兩行刻意錯開（芳仁往右、哩厚往左各 22px）—— 字面框其實完全對齊，"
-    + "看起來錯位是「仁」右邊留白多、「厚」填滿整格。";
+  var R = [{"id":"bang-11-12-10","bangTop":11,"bangDeg":12,"bangDy":10,"clear":22,"kb":106},{"id":"bang-11-12-18","bangTop":11,"bangDeg":12,"bangDy":18,"clear":22,"kb":106},{"id":"bang-11-12-26","bangTop":11,"bangDeg":12,"bangDy":26,"clear":22,"kb":106},{"id":"bang-11-18-10","bangTop":11,"bangDeg":18,"bangDy":10,"clear":19,"kb":106},{"id":"bang-11-18-18","bangTop":11,"bangDeg":18,"bangDy":18,"clear":19,"kb":106},{"id":"bang-11-18-26","bangTop":11,"bangDeg":18,"bangDy":26,"clear":19,"kb":106},{"id":"bang-11-24-10","bangTop":11,"bangDeg":24,"bangDy":10,"clear":16,"kb":106},{"id":"bang-11-24-18","bangTop":11,"bangDeg":24,"bangDy":18,"clear":16,"kb":106},{"id":"bang-11-24-26","bangTop":11,"bangDeg":24,"bangDy":26,"clear":16,"kb":106},{"id":"bang-14-12-10","bangTop":14,"bangDeg":12,"bangDy":10,"clear":21,"kb":106},{"id":"bang-14-12-18","bangTop":14,"bangDeg":12,"bangDy":18,"clear":21,"kb":106},{"id":"bang-14-12-26","bangTop":14,"bangDeg":12,"bangDy":26,"clear":21,"kb":106},{"id":"bang-14-18-10","bangTop":14,"bangDeg":18,"bangDy":10,"clear":18,"kb":106},{"id":"bang-14-18-18","bangTop":14,"bangDeg":18,"bangDy":18,"clear":18,"kb":106},{"id":"bang-14-18-26","bangTop":14,"bangDeg":18,"bangDy":26,"clear":18,"kb":106},{"id":"bang-14-24-10","bangTop":14,"bangDeg":24,"bangDy":10,"clear":14,"kb":106},{"id":"bang-14-24-18","bangTop":14,"bangDeg":24,"bangDy":18,"clear":14,"kb":106},{"id":"bang-14-24-26","bangTop":14,"bangDeg":24,"bangDy":26,"clear":14,"kb":106},{"id":"bang-17-12-10","bangTop":17,"bangDeg":12,"bangDy":10,"clear":19,"kb":106},{"id":"bang-17-12-18","bangTop":17,"bangDeg":12,"bangDy":18,"clear":19,"kb":106},{"id":"bang-17-12-26","bangTop":17,"bangDeg":12,"bangDy":26,"clear":19,"kb":106},{"id":"bang-17-18-10","bangTop":17,"bangDeg":18,"bangDy":10,"clear":17,"kb":106},{"id":"bang-17-18-18","bangTop":17,"bangDeg":18,"bangDy":18,"clear":17,"kb":106},{"id":"bang-17-18-26","bangTop":17,"bangDeg":18,"bangDy":26,"clear":17,"kb":106},{"id":"bang-17-24-10","bangTop":17,"bangDeg":24,"bangDy":10,"clear":13,"kb":106},{"id":"bang-17-24-18","bangTop":17,"bangDeg":24,"bangDy":18,"clear":13,"kb":106},{"id":"bang-17-24-26","bangTop":17,"bangDeg":24,"bangDy":26,"clear":13,"kb":106}];
+  var by = {}; R.forEach(function (r) { by[r.bangTop + "|" + r.bangDeg + "|" + r.bangDy] = r; });
+  var T = [11, 14, 17], D = [12, 18, 24], Y = [10, 18, 26];
+  var st = { t: 11, d: 12, y: 10 };
+
+  function render() {
+    var r = by[st.t + "|" + st.d + "|" + st.y];
+    var src = r.id + ".jpg";
+    document.getElementById("shot").src = src;
+    document.getElementById("mini").src = src;
+    document.getElementById("cap").textContent = "1040\u00d7520（2:1）・" + r.kb + "KB";
+    document.getElementById("panel").innerHTML =
+      "<span class='k'>頭的粗細</span> <b>" + r.bangTop + "px</b>"
+      + " <span class='k'>（尾一直是 8px，所以頭比尾粗 "
+      + (r.bangTop / 8).toFixed(2) + " 倍）</span>"
+      + "　<span class='k'>角度</span> <b>" + r.bangDeg + "\u00b0</b>"
+      + "　<span class='k'>比基線低</span> <b>" + r.bangDy + "px</b>"
+      + "<br><span class='k'>字離框邊</span> <b>" + r.clear + "px</b>"
+      + " <span class='k'>（門檻 10；27 格最小的是 13）</span>"
+      + "　<span class='k'>「哩厚」的筆畫</span> <b>14px</b>"
+      + (r.bangTop > 14 ? " <span class='no'>頭比字粗了</span>"
+                        : " <span class='ok'>頭還沒超過字</span>");
+    document.getElementById("note").innerHTML =
+      "⚠⚠ <b>驚嘆號改成自己畫的，不是字型的字。</b>「只把頭加粗」用描邊做不到 —— "
+      + "描邊是整支一起變粗；字型也沒有這種軸。現在它是一個<b>錐形的莖 ＋ 一顆點</b>："
+      + "莖的頂寬可以單獨調，尾一直是 8px。"
+      + "<br>⚠ 「現況」那一格（11／12°／10）的預設值是<b>量 Zen Maru 那顆真的「!」</b>"
+      + "得來的（89px 下：莖高 43.8、頂寬 7.2、底寬 4.4、間隙 5.4、點徑 14.4），"
+      + "再把先前那 3.5px 的同色描邊併進寬度 —— 所以它和先前的字型版幾乎一樣。"
+      + "<br>⚠ 兩端的圓是對上下兩個圓拉<b>外公切線</b>算的（同地圖圖釘那一輪），"
+      + "取錯邊輪廓會從尖端折回去。"
+      + "<br>⚠ <b>「哩厚」的筆畫是 14px</b>。頭超過 14 就比字還粗，讀起來會像第三個字 —— "
+      + "面板會標出來，但要不要越過那條線是你決定的。"
+      + "<br>⚠ 27 格<b>都通過</b>「字不能碰到框」那道守門（最小 13px、門檻 10）。"
+      + "<br>⚠ 這 27 張是提案用的（品質 82，比正式的 88 低一階，省下載）。"
+      + "你選完我會把值寫回去、用 88 重出一張，並把這 27 張刪掉。";
+  }
+  function chips(host, arr, k, suffix) {
+    host.innerHTML = "";
+    arr.forEach(function (v) {
+      var b = document.createElement("button");
+      b.textContent = v + suffix + (v === arr[0] ? "（現況）" : "");
+      b.setAttribute("aria-pressed", st[k] === v ? "true" : "false");
+      b.addEventListener("click", function () { st[k] = v; sync(); render(); });
+      host.appendChild(b);
+    });
+  }
+  function sync() {
+    chips(document.getElementById("sw-t"), T, "t", "px");
+    chips(document.getElementById("sw-d"), D, "d", "\u00b0");
+    chips(document.getElementById("sw-y"), Y, "y", "px");
+  }
+  sync(); render();
+  /* ⚠ 27 張約 2.9MB。load 之後一張一張接力預抓，不要一次全開把 4G 塞住。 */
+  window.addEventListener("load", function () {
+    var q = R.map(function (r) { return r.id + ".jpg"; });
+    (function next() {
+      var u = q.shift(); if (!u) return;
+      var i = new Image(); i.onload = i.onerror = next; i.src = u;
+    })();
+  });
 })();
 </script>
 </body>

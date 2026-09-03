@@ -58,20 +58,44 @@ const AIM = [395, 397];                                   /* 飾邊靠右那一�
 const GLASS = { a: .58, blur: 11 };
 const STROKE = 7;
 const FS = 104, STAGGER = 22;
-/* 驚嘆號：使用者 2026-09-03「哩厚後面可以加一個斜的驚嘆號看看」。
-   ⚠ 它**不放在同一個 <text> 裡** —— 那一行是 text-anchor:middle，加進去會把「哩厚」
-     整個往左推（等於順手動了上一輪定案的 ±22 錯位）。所以另外一個 <text>，
-     位置由**量到的「哩厚」右緣**決定，「哩厚」一格都不動。
-   ⚠ 半形的「!」不是全形的「！」：全形在 CJK 字型裡兩側各留一大塊空，
-     轉了角度之後那塊空會把它推得離「厚」很遠。 */
-const BANG = { ch: "!", deg: 12, gap: 16, dy: 10, scale: .86, bold: 3.5 };
-/* dy ＝ 往下移多少（正的是往下，從「哩厚」的基線起算）；bold ＝ 同色描邊的寬度。
-   四格比過（下移 0／6／10／14，描邊 0／2.5／3.5／5），取第三格。 */
-/* ⚠⚠ 「粗一點」不能靠放大 scale —— 那會連高度一起長，還會把墨推出框外。
-   字重也加不上去：Zen Maru Gothic 這一支只到 900，已經是最粗的了。
-   做法是**同色描邊 ＋ paint-order: stroke**（描邊畫在填色底下，所以不會吃掉字腔），
-   和站上地圖那顆「P」加粗的手法同一個（CLAUDE.md 第九節「位置與周邊停車」那一列）。
-   ⚠ 描邊寬度是**兩側各一半**，所以 3.5 的描邊等於整體胖 3.5px。 */
+/* ⚠⚠ 驚嘆號從 2026-09-03 起是**自己畫的**，不是字型的字。
+   起因：使用者「驚嘆號的頭可以粗一點」—— 那件事**用描邊做不到**（描邊是整支一起變粗），
+   字型也沒有「只把頭加粗」這種軸。所以改成一個錐形的莖 ＋ 一顆點。
+   ⚠ 預設值是**量 Zen Maru 900 那顆真的「!」**得來的（89px 下：莖高 43.8、頂寬 7.2、
+     底寬 4.4、間隙 5.4、點徑 14.4），再把先前那 3.5px 的同色描邊併進寬度裡 ——
+     所以「現況」那一格畫出來和字型版幾乎一樣。
+   ⚠ 它**不放在「哩厚」那個 <text> 裡** —— 那一行是 text-anchor:middle，放進去會把
+     「哩厚」整個往左推（等於順手動了定案的 ±22 錯位）。位置由**量到的右緣與基線**決定。
+   ⚠ 字型子集裡的「!」沒有拿掉：萬一要退回字型版，那條路還在。 */
+const BANG = {
+  gap: 16,                                   /* 離「哩厚」右緣多遠 */
+  dy: +(process.env.BDY ?? 10),              /* 墨的下緣比「哩厚」的基線低多少 */
+  deg: +(process.env.BDEG ?? 12),            /* 斜幾度 */
+  stemTop: +(process.env.BTOP ?? 11),        /* 莖的頂寬 ＝ 使用者說的「頭」 */
+  stemH: 44, stemBot: 8, dotGap: 4, dot: 18,
+};
+
+/* 錐形的莖（上粗下細、兩端圓）＋ 一顆點。座標以**墨的正下方中點**為原點。
+   ⚠ 兩端圓的做法是對上下兩個圓拉**外公切線**（同地圖圖釘那一輪）：
+     d ＝ 兩圓心距、φ ＝ asin((rt−rb)/d)，切點在各自圓上偏 φ 的位置。
+     取錯邊的話輪廓會從尖端折回去。 */
+function bangShape(o) {
+  const rt = o.stemTop / 2, rb = o.stemBot / 2;
+  const inkH = o.stemH + o.dotGap + o.dot;
+  const yTop = -inkH;
+  const cTop = yTop + rt, cBot = yTop + o.stemH - rb;
+  const d = cBot - cTop;
+  if (d <= Math.abs(rt - rb)) throw new Error("莖太短，兩端的圓包住彼此了");
+  const phi = Math.asin((rt - rb) / d), c = Math.cos(phi), sn = Math.sin(phi);
+  const f = (n) => n.toFixed(2);
+  const stem =
+    `M ${f(rt * c)} ${f(cTop + rt * sn)}` +
+    ` L ${f(rb * c)} ${f(cBot + rb * sn)}` +
+    ` A ${f(rb)} ${f(rb)} 0 1 1 ${f(-rb * c)} ${f(cBot + rb * sn)}` +
+    ` L ${f(-rt * c)} ${f(cTop + rt * sn)}` +
+    ` A ${f(rt)} ${f(rt)} 0 1 1 ${f(rt * c)} ${f(cTop + rt * sn)} Z`;
+  return { stem, dotCy: yTop + o.stemH + o.dotGap + o.dot / 2, dotR: o.dot / 2, inkH };
+}
 
 /* ✅ 定案：兩行的距離「更開」、框「更大」（＝ 前一版的 1.18 倍） */
 const LH = 1.34;
@@ -134,7 +158,7 @@ const clearance = ([px, py], pts) => {
     `指向 ${(GEO.aimAng * 180 / Math.PI).toFixed(0)}° → 一樓飾邊 (${AIM})`);
 }
 
-const page = (fontId, inkOnly = false, bang = null) => {
+const page = (fontId, inkOnly = false, bang = null, cfg = BANG) => {
   return `<!doctype html><meta charset="utf-8"><style>
 ${faces}
 *{margin:0;padding:0}
@@ -161,10 +185,11 @@ text{font-family:"${FAM[fontId]}";font-weight:900;font-size:${FS}px;fill:${DEEP}
       <tspan x="${TX + STAGGER}" dy="${(-FS * LH / 2).toFixed(1)}">芳仁</tspan>
       <tspan x="${TX - STAGGER}" dy="${(FS * LH).toFixed(1)}">哩厚</tspan>
     </text>
-    ${bang ? `<text x="${bang.x.toFixed(1)}" y="${bang.y.toFixed(1)}" text-anchor="start"
-      font-size="${(FS * BANG.scale).toFixed(1)}px"
-      stroke="${DEEP}" stroke-width="${BANG.bold}" stroke-linejoin="round" paint-order="stroke"
-      transform="rotate(${BANG.deg} ${bang.x.toFixed(1)} ${bang.y.toFixed(1)})">${BANG.ch}</text>` : ""}
+    ${bang ? (() => {
+      const b = bangShape(cfg);
+      return `<g fill="${DEEP}" transform="translate(${bang.x.toFixed(1)} ${bang.y.toFixed(1)}) rotate(${cfg.deg})">` +
+        `<path d="${b.stem}"/><circle cx="0" cy="${b.dotCy.toFixed(2)}" r="${b.dotR}"/></g>`;
+    })() : ""}
   </svg>
 </div>`;
 };
@@ -185,9 +210,15 @@ const clip = { x: 0, y: 0, width: W, height: H };
 const report = [];
 
 /* ✅ 兩把尺已定案，這一輪只剩字體 */
-/* ✅ 全部定案了：字體 Zen Maru 圓體（使用者指名的那一張就是它，逐像素比對過）。
-   只出這一張，不再出另外兩支字體 —— 留著會變成沒有人引用的孤兒檔。 */
-const CASES = [{ id: "hero-zenmaru", font: "zenmaru" }];
+/* ✅ 字體定案 Zen Maru 圓體（使用者指名的那一張，逐像素比對過）。
+   `--variants` 是給提案頁用的：驚嘆號的三把尺全交叉出圖（27 張），
+   使用者挑完就把那些檔刪掉、把選到的值寫回 BANG 的預設。 */
+const VARIANTS = process.argv.includes("--variants");
+const TOPS = [11, 14, 17], DEGS = [12, 18, 24], DYS = [10, 18, 26];
+const CASES = VARIANTS
+  ? TOPS.flatMap((t) => DEGS.flatMap((d) => DYS.map((y) => ({
+      id: `bang-${t}-${d}-${y}`, font: "zenmaru", cfg: { ...BANG, stemTop: t, deg: d, dy: y } }))))
+  : [{ id: "hero-zenmaru", font: "zenmaru", cfg: BANG }];
 
 console.log("\n案                兩行之間  字離框邊  檔案");
 for (const c of CASES) {
@@ -198,7 +229,8 @@ for (const c of CASES) {
   /* ⚠⚠ 驚嘆號要接在「哩厚」的**右緣**，那個右緣要**量**不要算：
      SVG 的 letter-spacing 會在最後一個字後面也加一次，用「字數 × 字級」估會少一截。
      所以先畫一次沒有驚嘆號的，量第二行的 bbox，再把位置算出來重畫。 */
-  await p.setContent(page(c.font, true), { waitUntil: "load" });
+  const cfg = c.cfg;
+  await p.setContent(page(c.font, true, null, cfg), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
   /* ⚠⚠ 用 getStartPositionOfChar／getEndPositionOfChar 取**基線**與**右緣**。
      getBBox() 回的是版面框（em box），底邊在基線**下面**一大截 —— 拿它當基線，
@@ -208,7 +240,8 @@ for (const c of CASES) {
     const n = t.getComputedTextLength ? t.textContent.length : 0;
     return { right: t.getEndPositionOfChar(n - 1).x, base: t.getStartPositionOfChar(0).y };
   });
-  const bang = { x: line2.right + BANG.gap, y: line2.base + BANG.dy };
+  /* ⚠ 原點是**墨的正下方中點**，所以 x 要再往右半個莖頂寬，左緣才會落在 gap 上 */
+  const bang = { x: line2.right + cfg.gap + cfg.stemTop / 2, y: line2.base + cfg.dy };
 
   /* 掃暗像素，回墨的外框與「中間完全沒有墨的最長一段」 */
   const scan = async () => {
@@ -247,7 +280,7 @@ for (const c of CASES) {
        字離框邊   → 有驚嘆號的（驚嘆號也是墨，一定要算進去） */
   const noBang = await scan();
 
-  await p.setContent(page(c.font, true, bang), { waitUntil: "load" });
+  await p.setContent(page(c.font, true, bang, cfg), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
   const m = await scan();
   m.lineGap = noBang.lineGap;
@@ -256,10 +289,10 @@ for (const c of CASES) {
   const clear = Math.min(...corners.map((q) => clearance(q, GEO.pts)));
   if (clear < 10) throw new Error(`${c.id} 字離框邊只有 ${clear.toFixed(1)}px（要 ≥10）`);
 
-  await p.setContent(page(c.font, false, bang), { waitUntil: "load" });
+  await p.setContent(page(c.font, false, bang, cfg), { waitUntil: "load" });
   await p.evaluate(() => document.fonts.ready);
   const file = path.join(OUT, `${c.id}.jpg`);
-  await p.screenshot({ path: file, type: "jpeg", quality: 88, clip });
+  await p.screenshot({ path: file, type: "jpeg", quality: VARIANTS ? 82 : 88, clip });
 
   const onChat = FS * 232 / 1040;
   if (onChat < 11) throw new Error(`${c.id} 字在聊天室只有 ${onChat.toFixed(1)}px`);
@@ -268,7 +301,7 @@ for (const c of CASES) {
     lineGap: +m.lineGap.toFixed(0), lineGapOnChat: +(m.lineGap * 232 / 1040).toFixed(1),
     clear: +clear.toFixed(0), lhRatio: LH,
     boxW: Math.round(BOX.w), boxH: Math.round(BOX.h),
-    bang: BANG.ch, bangDeg: BANG.deg, bangDy: BANG.dy, bangBold: BANG.bold,
+    bangDeg: cfg.deg, bangDy: cfg.dy, bangTop: cfg.stemTop, bangBot: cfg.stemBot,
     tailAim: AIM, tailAng: +(GEO.aimAng * 180 / Math.PI).toFixed(0),
     tailTip: GEO.tip.map((v) => +v.toFixed(0)),
     fs: FS, onChat: +onChat.toFixed(1), stroke: STROKE,
@@ -282,10 +315,10 @@ await browser.close();
    直接寫當下的檔名，每次改尺或改命名規則它就變成破圖，而且**不會報錯**——
    2026-09-03 已經壞過兩次。固定另存一份 hero-current.jpg，別的頁面一律指它。 */
 const DEFAULT_ID = "hero-zenmaru";
-if (!report.some((r) => r.id === DEFAULT_ID))
+if (!VARIANTS && !report.some((r) => r.id === DEFAULT_ID))
   throw new Error(`預設那一格 ${DEFAULT_ID} 沒有出圖 —— hero-current.jpg 會是舊的`);
-fs.copyFileSync(path.join(OUT, `${DEFAULT_ID}.jpg`), path.join(OUT, "hero-current.jpg"));
+if (!VARIANTS) fs.copyFileSync(path.join(OUT, `${DEFAULT_ID}.jpg`), path.join(OUT, "hero-current.jpg"));
 
-fs.writeFileSync(path.join(HERE, "report.json"), JSON.stringify(report, null, 2));
+fs.writeFileSync(path.join(HERE, VARIANTS ? "bangs.json" : "report.json"), JSON.stringify(report, null, 2));
 console.log(`\nhero-current.jpg ← ${DEFAULT_ID}.jpg（給 preview/line-reply/ 引用）`);
 console.log(`出圖 ${report.length} 張 → preview/line-hello/hero-*.jpg`);

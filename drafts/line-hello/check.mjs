@@ -13,8 +13,12 @@ import path from "node:path";
 const PAGES = ["preview/line-hello/index.html", "preview/line-reply/index.html",
                "preview/line-welcome/index.html"];
 const DIR = "preview/line-hello";
-/* 刻意留著、不必有人引用的：定案的裁切原圖（沒有字的那一張，是頭圖的底） */
-const KEEP = new Set(["crop-c3b.jpg"]);
+/* 刻意留著、不必有人引用的：
+   ・crop-c3b.jpg     定案的裁切原圖（沒有字的那一張，是頭圖的底）
+   ・hero-zenmaru.jpg **正式的產出**（hero-current.jpg 是它的複本）。
+     提案期間提案頁擺的是 bang-*.jpg 那 27 張，所以它會暫時「沒有人引用」，
+     但它才是要交出去的那一張，不能被當成孤兒刪掉。 */
+const KEEP = new Set(["crop-c3b.jpg", "hero-zenmaru.jpg"]);
 
 const refs = new Set();
 const bad = [];
