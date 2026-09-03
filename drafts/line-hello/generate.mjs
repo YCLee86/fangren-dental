@@ -21,7 +21,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { speechBubble } from "./bubble.mjs";
+import { speechBubble, bubbleStrokes } from "./bubble.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..", "..");
@@ -50,7 +50,7 @@ const sc = W / CW;
      遮陽棚上緣 y≈360
    對話框放在建築右邊的天空，**尾巴往左下指到清水模外牆**，
    看起來就是這棟房子在說話。⚠ 尾巴不可以穿過紅招牌 —— 所以框放左邊不放右邊。 */
-const BUBBLE = { x: 512, y: 22, w: 344, h: 296, r: 86, amp: 5, seed: 3,
+const BUBBLE = { x: 512, y: 22, w: 344, h: 296, r: 118, amp: 11, seed: 3,
                  tail: { at: .635, spread: .075, len: 70, angle: 150 } };
 /* ⚠⚠ 2026-09-03 使用者：「對話框和房子有點擠，那個延伸角形拉好長好怪。」兩件都對：
    ・框原本在 x468，離外牆右緣（x≈430）只有 **38px**  → 挪到 x512，空出 **82px**
@@ -74,7 +74,17 @@ const SIGN = { x0: 620, y0: 165, x1: 660, y1: 325 };   /* 劉家那支紅招牌 
   console.log("對話框：離外牆 " + (BUBBLE.x - 430) + "px、尾巴 " + BUBBLE.tail.len +
     "px、尖端 (" + tx.toFixed(0) + ", " + ty.toFixed(0) + ")");
 }
-const STROKE = 10;              /* ⚠ 線也會 ×0.223：10px → 聊天室裡 2.2px */
+/* ⚠⚠ 線不再是一個定值：使用者說「好粗，比較不像手繪，很像油漆的感覺」。
+   均勻的粗線讀起來就是滾出來的；真的手繪筆壓會變、線寬跟著變。
+   做法：把輪廓切成 9 段，每段自己的線寬（8 ± 26%），圓端點讓接縫自然消失。
+   ⚠⚠ 光是線變細還不夠 —— 使用者說的「可愛自然」有一半在**形狀**上。
+   五組試過之後，圓角 86 → **118**、抖動 5 → **11**：方框感消失，讀起來才是手繪的泡泡。
+   實測線寬 5.6~9.3px → 在聊天室 1.21~2.08px（原本是一律 2.23px 的均勻粗線）。 */
+const STROKE = { base: 7, vary: .34, n: 9 };
+/* ⚠ 兩行刻意錯開：字面框其實完全對齊（量過都是 216.3px 寬、中線 0 偏差），
+   看起來錯位是**字本身的墨色分布** —— 「仁」右邊留白多、「厚」填滿整格。
+   使用者要的是把它反過來：芳仁往右、哩厚往左。 */
+const STAGGER = 22;
 const FS = 104, LH = 1.06;      /* 使用者 2026-09-03：「字再大一點」88 → 104 */
 
 const GLASS = {
@@ -85,6 +95,16 @@ const GLASS = {
 };
 
 const bubblePath = speechBubble(BUBBLE);
+const strokes = bubbleStrokes(BUBBLE, STROKE);
+{
+  const ws = strokes.map((x) => x.w);
+  const onChat = (w) => w * 232 / 1040;
+  const avg = ws.reduce((a, b) => a + b, 0) / ws.length;
+  console.log(`框線 ${ws.length} 段：${Math.min(...ws)}~${Math.max(...ws)}px → 聊天室 ` +
+    `${onChat(Math.min(...ws)).toFixed(2)}~${onChat(Math.max(...ws)).toFixed(2)}px，平均 ${onChat(avg).toFixed(2)}px`);
+  if (onChat(avg) < 1.5) throw new Error(`框線平均只有 ${onChat(avg).toFixed(2)}px，太細會看不見`);
+  if (onChat(Math.min(...ws)) < 1.1) throw new Error(`最細那一段只有 ${onChat(Math.min(...ws)).toFixed(2)}px，會斷掉`);
+}
 /* 字排在對話框本體的正中央（不含尾巴） */
 const TX = BUBBLE.x + BUBBLE.w / 2, TY = BUBBLE.y + BUBBLE.h / 2;
 
@@ -107,8 +127,7 @@ svg{position:absolute;inset:0}
 .tint{position:absolute;inset:0;background:rgba(255,255,255,${g.a})}
 text{font-family:"${FAM[fontId]}";font-weight:900;font-size:${FS}px;
   fill:${withText ? DEEP : "transparent"};letter-spacing:.04em}
-.line{stroke:${DEEP};stroke-width:${STROKE}px;fill:none;
-  stroke-linejoin:round;stroke-linecap:round}
+.line{stroke:${DEEP};fill:none;stroke-linejoin:round;stroke-linecap:round}
 </style>
 <div class="w">
   ${withPhoto ? `<img src="data:image/jpeg;base64,${photo64}">` : ""}
@@ -116,10 +135,10 @@ text{font-family:"${FAM[fontId]}";font-weight:900;font-size:${FS}px;
      <img src="data:image/jpeg;base64,${photo64}"><div class="tint"></div>
    </div>` : ""}
   <svg viewBox="0 0 ${W} ${H}">
-    ${withBubble ? `<path class="line" d="${bubblePath}"/>` : ""}
+    ${withBubble ? strokes.map((x) => `<path class="line" d="${x.d}" stroke-width="${x.w}"/>`).join("") : ""}
     <text x="${TX}" y="${TY}" text-anchor="middle" dominant-baseline="central">
-      <tspan x="${TX}" dy="${(-FS * LH / 2).toFixed(1)}">芳仁</tspan>
-      <tspan x="${TX}" dy="${(FS * LH).toFixed(1)}">哩厚</tspan>
+      <tspan x="${TX + STAGGER}" dy="${(-FS * LH / 2).toFixed(1)}">芳仁</tspan>
+      <tspan x="${TX - STAGGER}" dy="${(FS * LH).toFixed(1)}">哩厚</tspan>
     </text>
   </svg>
 </div>`;
@@ -269,14 +288,11 @@ for (const c of CASES) {
     throw new Error(`${c.id} 玻璃沒有提亮（${lift.toFixed(4)}）—— 遮罩八成沒生效`);
   if (onChat < 11)
     throw new Error(`${c.id} 字在聊天室只有 ${onChat.toFixed(1)}px，低於 11px 的下限`);
-  if (STROKE * 232 / 1040 < 1.5)
-    throw new Error(`對話框的線在聊天室只有 ${(STROKE * 232 / 1040).toFixed(1)}px，太細會看不見`);
-
   const kb = fs.statSync(file).size / 1024;
   report.push({ ...c, glass: g.label, alpha: g.a, blur: g.blur,
                 lift: +lift.toFixed(4), drop: +drop.toFixed(1),
                 fs: box.fs, tw: box.w, th: box.h, onChat: +onChat.toFixed(1),
-                lineOnChat: +(STROKE * 232 / 1040).toFixed(1), kb: Math.round(kb) });
+                lineOnChat: +(STROKE.base * 232 / 1040).toFixed(2), kb: Math.round(kb) });
   console.log(`${c.id.padEnd(21)} ${g.label.padEnd(5)} ${lift >= 0 ? "+" : ""}${lift.toFixed(3)}    ${onChat.toFixed(1)}px      ${kb.toFixed(0)}KB`);
 }
 await browser.close();

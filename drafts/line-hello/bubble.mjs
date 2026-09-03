@@ -11,7 +11,9 @@
 
 /* 決定性的擾動（同樣的 seed 一定畫出同一條線，出圖才可重現） */
 const wobble = (t, seed, amp) =>
-  amp * (Math.sin(t * 3 + seed) * 0.6 + Math.sin(t * 5 + seed * 2.3) * 0.4);
+  amp * (Math.sin(t * 3 + seed) * 0.52
+       + Math.sin(t * 5 + seed * 2.3) * 0.30
+       + Math.sin(t * 11 + seed * 3.7) * 0.18);   /* 高頻那一項是手抖，振幅要小 */
 
 /* 圓角矩形上的一點（t: 0~1 沿著周長） */
 function roundRectPoint(t, w, h, r) {
@@ -62,7 +64,7 @@ function spline(pts, closed = true) {
  *              （第一版量出來是 148px，眼睛看才知道太長）。
  *   steps    取樣點數
  */
-export function speechBubble(o) {
+function outlinePoints(o) {
   const { x, y, w, h, r, amp = 0, seed = 1, tail, steps = 64 } = o;
   const pts = [];
   for (let i = 0; i < steps; i++) {
@@ -93,5 +95,49 @@ export function speechBubble(o) {
     ];
     if (idx < 0) pts.push(...seg); else pts.splice(idx, 0, ...seg);
   }
-  return spline(pts);
+  return pts;
+}
+
+/** 封閉的輪廓路徑（給 clip-path 用） */
+export function speechBubble(o) { return spline(outlinePoints(o)); }
+
+
+/**
+ * 把對話框的輪廓切成 n 段，每一段自己的線寬 —— 這是「手繪 vs 油漆」的關鍵。
+ * ⚠ 均勻的粗線看起來就是**油漆滾出來的**；真的手繪，筆壓會變、線寬跟著變。
+ * ⚠ 每一段刻意多畫一點（overlap），配上 stroke-linecap:round，接縫會自然消失，
+ *   而且轉折處會有一點點「疊筆」的感覺 —— 那正是手繪的味道。
+ *
+ * @returns {{d:string, w:number}[]}
+ */
+export function bubbleStrokes(o, { n = 9, base = 8, vary = .26, seed = 7, overlap = 3 } = {}) {
+  const pts = outlinePoints(o);
+  const N = pts.length;
+  const segs = [];
+  for (let i = 0; i < n; i++) {
+    const a = Math.round(i * N / n), b = Math.round((i + 1) * N / n) + overlap;
+    const slice = [];
+    for (let k = a; k <= b; k++) slice.push(pts[(k % N + N) % N]);
+    /* 這一段多粗：兩個低頻的和，穩定可重現 */
+    const t = (i + .5) / n * Math.PI * 2;
+    const k = Math.sin(t + seed) * .62 + Math.sin(t * 2.3 + seed * 1.7) * .38;
+    segs.push({ d: openSpline(slice), w: +(base * (1 + vary * k)).toFixed(2) });
+  }
+  return segs;
+}
+
+/* 開放曲線（不閉合），給 bubbleStrokes 用 */
+function openSpline(pts) {
+  const n = pts.length;
+  const at = (i) => pts[Math.max(0, Math.min(n - 1, i))];
+  let d = `M ${at(0).x.toFixed(1)} ${at(0).y.toFixed(1)}`;
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
+    const k1 = p1.corner || p2.corner ? 0 : 1 / 6;
+    const k2 = p2.corner || p1.corner ? 0 : 1 / 6;
+    d += ` C ${(p1.x + (p2.x - p0.x) * k1).toFixed(1)} ${(p1.y + (p2.y - p0.y) * k1).toFixed(1)}` +
+         ` ${(p2.x - (p3.x - p1.x) * k2).toFixed(1)} ${(p2.y - (p3.y - p1.y) * k2).toFixed(1)}` +
+         ` ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
+  }
+  return d;
 }

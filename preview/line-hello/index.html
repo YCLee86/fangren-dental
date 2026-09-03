@@ -110,7 +110,7 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
 <script>
 (function () {
   "use strict";
-  var R = [{"id":"hero-mplus-none","font":"mplus","gk":"none","glass":"不加玻璃","alpha":0,"blur":0,"lift":0,"drop":0,"fs":104,"tw":247,"th":255,"onChat":23.2,"lineOnChat":2.2,"kb":146},{"id":"hero-mplus-soft","font":"mplus","gk":"soft","glass":"淡","alpha":0.34,"blur":7,"lift":0.0596,"drop":4,"fs":104,"tw":247,"th":255,"onChat":23.2,"lineOnChat":2.2,"kb":140},{"id":"hero-mplus-mid","font":"mplus","gk":"mid","glass":"中","alpha":0.58,"blur":11,"lift":0.1047,"drop":3.7,"fs":104,"tw":247,"th":255,"onChat":23.2,"lineOnChat":2.2,"kb":140},{"id":"hero-mplus-hard","font":"mplus","gk":"hard","glass":"濃","alpha":0.8,"blur":15,"lift":0.148,"drop":-0.1,"fs":104,"tw":247,"th":255,"onChat":23.2,"lineOnChat":2.2,"kb":140},{"id":"hero-zenmaru-none","font":"zenmaru","gk":"none","glass":"不加玻璃","alpha":0,"blur":0,"lift":0,"drop":0,"fs":104,"tw":247,"th":261,"onChat":23.2,"lineOnChat":2.2,"kb":147},{"id":"hero-zenmaru-soft","font":"zenmaru","gk":"soft","glass":"淡","alpha":0.34,"blur":7,"lift":0.0595,"drop":4,"fs":104,"tw":247,"th":261,"onChat":23.2,"lineOnChat":2.2,"kb":141},{"id":"hero-zenmaru-mid","font":"zenmaru","gk":"mid","glass":"中","alpha":0.58,"blur":11,"lift":0.1045,"drop":3.7,"fs":104,"tw":247,"th":261,"onChat":23.2,"lineOnChat":2.2,"kb":141},{"id":"hero-zenmaru-hard","font":"zenmaru","gk":"hard","glass":"濃","alpha":0.8,"blur":15,"lift":0.1478,"drop":-0.1,"fs":104,"tw":247,"th":261,"onChat":23.2,"lineOnChat":2.2,"kb":141},{"id":"hero-ntc-none","font":"ntc","gk":"none","glass":"不加玻璃","alpha":0,"blur":0,"lift":0,"drop":0,"fs":104,"tw":247,"th":261,"onChat":23.2,"lineOnChat":2.2,"kb":146},{"id":"hero-ntc-soft","font":"ntc","gk":"soft","glass":"淡","alpha":0.34,"blur":7,"lift":0.059,"drop":-1.6,"fs":104,"tw":247,"th":261,"onChat":23.2,"lineOnChat":2.2,"kb":140},{"id":"hero-ntc-mid","font":"ntc","gk":"mid","glass":"中","alpha":0.58,"blur":11,"lift":0.1036,"drop":-4.7,"fs":104,"tw":247,"th":261,"onChat":23.2,"lineOnChat":2.2,"kb":139},{"id":"hero-ntc-hard","font":"ntc","gk":"hard","glass":"濃","alpha":0.8,"blur":15,"lift":0.1466,"drop":-9.5,"fs":104,"tw":247,"th":261,"onChat":23.2,"lineOnChat":2.2,"kb":139}];
+  var R = [{"id":"hero-mplus-none","font":"mplus","gk":"none","glass":"不加玻璃","alpha":0,"blur":0,"lift":0,"drop":0,"fs":104,"tw":275,"th":255,"onChat":23.2,"lineOnChat":1.56,"kb":146},{"id":"hero-mplus-soft","font":"mplus","gk":"soft","glass":"淡","alpha":0.34,"blur":7,"lift":0.0518,"drop":-7.7,"fs":104,"tw":275,"th":255,"onChat":23.2,"lineOnChat":1.56,"kb":141},{"id":"hero-mplus-mid","font":"mplus","gk":"mid","glass":"中","alpha":0.58,"blur":11,"lift":0.0912,"drop":-13.7,"fs":104,"tw":275,"th":255,"onChat":23.2,"lineOnChat":1.56,"kb":141},{"id":"hero-mplus-hard","font":"mplus","gk":"hard","glass":"濃","alpha":0.8,"blur":15,"lift":0.1287,"drop":-19.6,"fs":104,"tw":275,"th":255,"onChat":23.2,"lineOnChat":1.56,"kb":140},{"id":"hero-zenmaru-none","font":"zenmaru","gk":"none","glass":"不加玻璃","alpha":0,"blur":0,"lift":0,"drop":0,"fs":104,"tw":275,"th":261,"onChat":23.2,"lineOnChat":1.56,"kb":148},{"id":"hero-zenmaru-soft","font":"zenmaru","gk":"soft","glass":"淡","alpha":0.34,"blur":7,"lift":0.055,"drop":-7.5,"fs":104,"tw":275,"th":261,"onChat":23.2,"lineOnChat":1.56,"kb":142},{"id":"hero-zenmaru-mid","font":"zenmaru","gk":"mid","glass":"中","alpha":0.58,"blur":11,"lift":0.0967,"drop":-13.5,"fs":104,"tw":275,"th":261,"onChat":23.2,"lineOnChat":1.56,"kb":142},{"id":"hero-zenmaru-hard","font":"zenmaru","gk":"hard","glass":"濃","alpha":0.8,"blur":15,"lift":0.1362,"drop":-19.4,"fs":104,"tw":275,"th":261,"onChat":23.2,"lineOnChat":1.56,"kb":142},{"id":"hero-ntc-none","font":"ntc","gk":"none","glass":"不加玻璃","alpha":0,"blur":0,"lift":0,"drop":0,"fs":104,"tw":275,"th":261,"onChat":23.2,"lineOnChat":1.56,"kb":146},{"id":"hero-ntc-soft","font":"ntc","gk":"soft","glass":"淡","alpha":0.34,"blur":7,"lift":0.0547,"drop":-7.5,"fs":104,"tw":275,"th":261,"onChat":23.2,"lineOnChat":1.56,"kb":140},{"id":"hero-ntc-mid","font":"ntc","gk":"mid","glass":"中","alpha":0.58,"blur":11,"lift":0.0962,"drop":-13.5,"fs":104,"tw":275,"th":261,"onChat":23.2,"lineOnChat":1.56,"kb":140},{"id":"hero-ntc-hard","font":"ntc","gk":"hard","glass":"濃","alpha":0.8,"blur":15,"lift":0.1355,"drop":-19.3,"fs":104,"tw":275,"th":261,"onChat":23.2,"lineOnChat":1.56,"kb":140}];
   var by = {}; R.forEach(function (r) { by[r.font + "|" + r.gk] = r; });
   var F = { mplus: "M PLUS 圓體", zenmaru: "Zen Maru 圓體", ntc: "Noto Sans TC" };
   var G = { none: "不加", soft: "淡", mid: "中", hard: "濃" };
@@ -145,11 +145,11 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
       + (r.alpha ? "　<span class='k'>對框裡的亮度</span> <b>+" + r.lift.toFixed(3) + "</b>" : "")
       + "<br><span class='k'>字</span> <b>" + r.fs + "px</b>"
       + "　<span class='k'>在聊天室裡</span> <b>" + r.onChat + "px</b>"
-      + "　<span class='k'>框線</span> <b>" + r.lineOnChat + "px</b>"
-      + " <span class='k'>（都要 ×0.223；字的下限 11px、線 1.5px）</span>"
-      + "<br><span class='k'>對話框</span> 離外牆 <b>82px</b>、尾巴 <b>70px</b>"
-      + "　<span class='k'>框線壓在對比不足的地方</span> <b>2.4%</b>"
-      + " <span class='k'>（11,415 個線的像素逐點量的）</span>";
+      + " <span class='k'>（×0.223 才是病人看到的大小，下限 11px）</span>"
+      + "<br><span class='k'>對話框</span> 離外牆 <b>82px</b>、尾巴 <b>70px</b>、圓角 <b>118</b>、抖動 <b>11</b>"
+      + "<br><span class='k'>框線切成 9 段、各自不同粗細</span> <b>5.4~9.3px</b>"
+      + " <span class='k'>（聊天室 1.21~2.08px，平均 1.57px）</span>"
+      + "　<span class='k'>壓在對比不足的地方</span> <b>3.1%</b>";
     document.getElementById("note").innerHTML =
       "⚠⚠ 對話框的位置是量出來的：診所外牆右緣 x≈430、<b>劉家那支紅招牌 x 620~660</b>、"
       + "遮陽棚上緣 y≈360。框放在建築右邊的天空、<b>尾巴往左下指到清水模外牆</b> —— "
@@ -157,7 +157,9 @@ h1{font-size:1.12rem;margin:0 0 6px;letter-spacing:.01em}
       + (st.g === "none"
         ? "<br>⚠ 不加玻璃：紅招牌會從框裡透出來。框線本身沒問題（只有 3.3% 壓在對比不足的地方），是<b>框裡的背景太雜</b>。"
         : "<br>⚠⚠ 玻璃這一段踩了兩個坑，兩個都不報錯：<b>①</b> <code>backdrop-filter</code> ＋ <code>clip-path</code> 放同一個元素上，白色上得去但<b>模糊整個被丟掉</b>（起伏 0.0636→0.0637）—— 改成「外層裁切、裡層放一份自己模糊的照片複本」。"
-          + "<b>②</b> 接著量出「0% 降幅」以為又壞了，其實是<b>判準錯</b>：那一塊是平滑的天空，而<b>模糊不會改變平滑漸層的起伏</b>。現在改成「模糊開／關兩張圖的平均差」（量到 5.6 階）。");
+          + "<b>②</b> 接著量出「0% 降幅」以為又壞了，其實是<b>判準錯</b>：那一塊是平滑的天空，而<b>模糊不會改變平滑漸層的起伏</b>。現在改成「模糊開／關兩張圖的平均差」（量到 6.3 階）。")
+      + "<br>⚠ 框線<b>不是一個定值</b>：均勻的粗線讀起來像油漆滾出來的，所以切成 9 段、每段自己的粗細（7px ±34%），圓端點讓接縫消失。圓角也從 86 放到 <b>118</b> —— 「可愛自然」有一半在形狀上，不只是線。"
+      + "<br>⚠ 兩行<b>刻意錯開</b>（芳仁往右、哩厚往左各 22px）。字面框其實完全對齊（量過都是 216.3px 寬、中線 0 偏差），看起來錯位是<b>字本身的墨色分布</b> —— 「仁」右邊留白多、「厚」填滿整格。";
       }
   sync(); render();
   window.addEventListener("load", function () {
