@@ -302,7 +302,9 @@ mint oval, a little larger than the coat, as a simple background shape — flat 
 no glow, no rays, no ring, no halo.
 
 THE TWO HANDS — The dentist's arm reaches out with intent: arm straight, wrist firm, index
-finger pointing precisely at his. The patient's hand stays limp. THE FINGERTIPS DO NOT
+finger pointing precisely at his. The patient's hand is softer and less forceful than hers,
+but HIS WRIST IS STRAIGHT and his index finger is clearly extended — never limp, never
+dangling. THE FINGERTIPS DO NOT
 TOUCH: leave a small clear gap between them, about the width of one finger. Draw both hands
 simply and correctly — five fingers on each hand, no fused, extra or missing fingers.
 
@@ -433,7 +435,8 @@ blank and dark with nothing on it at all.
 **再看這三條，第一版是死在這裡：**
 
 1. **右邊是一群人（五個以上），不是一個人。** 只有一個人 ＝ 回到第一版那個問題。
-2. **兩側明顯不對等**：右邊那一團**比病患高、而且在飄**；病患躺著、手是鬆的。
+2. **兩側明顯不對等**：右邊那一團**比病患高、而且在飄**；病患躺著、位置比較低。
+   ⚠ 不對等只能來自**位置**，不可以來自「他沒力氣」（第三版就是死在這裡）。
 3. **兩人沒有對看**（都看手），中間沒有柔焦的浪漫光暈。
 
 其餘：
