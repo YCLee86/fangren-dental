@@ -496,7 +496,11 @@ function runPptx(src) {
     const pngData = zip.get(`ppt/media/${png}`);
     const svgData = zip.get(`ppt/media/${svgName}`);
     fs.writeFileSync(path.join(OUT_DIR, `pptx-${label}.png`), pngData);
-    fs.writeFileSync(path.join(OUT_DIR, `pptx-${label}.svg`), svgData);
+    /* ⚠ SVG 要把 CRLF 收成 LF 再寫 —— 不然 git 會在 commit 時自己正規化，
+       而這一支下次重跑又寫回 CRLF，`git status` 就永遠有一個檔是髒的。
+       內容一個字都沒改，要逐位元組的原樣回頭解 pptx 的 ppt/media/。 */
+    fs.writeFileSync(path.join(OUT_DIR, `pptx-${label}.svg`),
+      svgData.toString("utf8").replace(/\r\n/g, "\n"), "utf8");
     const dim = `${pngData.readUInt32BE(16)}×${pngData.readUInt32BE(20)}`;
     console.log(`  ${String(label).padEnd(22)} ${png} + ${svgName}・PNG ${dim}`);
   }
