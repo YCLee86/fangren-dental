@@ -152,8 +152,31 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      **無論哪一種寬度都不會有字消失**。縮短格式是在這之上再多買一層餘裕。 */
 .pv-nw .dt{font-size:22px;line-height:1.45;font-weight:700;color:var(--ink);
   letter-spacing:.01em;margin-top:6px}
-.pv-nw .st{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:2px}
-.pv-nw .st b{color:var(--ink);font-weight:700}
+/* ---- 浮水印（使用者 2026-09-04 提的）--------------------------------
+   ⚠⚠⚠ **聊天室的背景設不了** —— 那是每個使用者在自己手機上設的、而且只有他看得到，
+     官方帳號動不了（查證見 channels/README 第 21-12 節）。做得到的是**卡片自己裡面**。
+   ⚠⚠ **Flex 的 box 沒有背景圖**：`background` 只認 `linearGradient` 一種。
+     所以浮水印只能是一個 `image` ＋ `position: absolute` 疊上去。
+   ⚠⚠ **Flex 的 image 也沒有 opacity** —— 淡是烘進 PNG 的 alpha 裡的
+     （`node drafts/channels/booked-mark.mjs`，三個濃度 `?k=08|12|18`）。
+   ⚠ 這裡用 CSS 的 absolute 模擬同一件事：圖先、內容後，兩個都 positioned，
+     後畫的蓋在上面 —— **和 Flex 的疊法同一個道理，但 Flex 那邊還沒實機驗過**
+     （面板底下有寫）。 */
+.pv-nw{position:relative;overflow:hidden}
+.pv-nw .wm{position:absolute;display:block;pointer-events:none;
+  right:-18px;bottom:-10px;width:150px;height:auto}
+.pv-nw .b{position:relative}
+/* 右邊一顆（不重疊）—— 100% 支援的退路，不必用 absolute */
+.pv-nw .row{display:flex;align-items:center;gap:10px}
+.pv-nw .row .dt{flex:1;min-width:0}
+.pv-nw .row .sm{flex:none;display:block;width:46px;height:auto}
+/* 大日子：月小、日大、星期與時間疊在右邊。
+   ⚠⚠ 這一格**要廠商把日期拆成欄位**（現在是一整串系統填的字），見面板底下。 */
+.pv-nw .cal{display:flex;align-items:baseline;gap:9px;margin-top:6px}
+.pv-nw .cal .mo{font-size:14px;color:var(--ink-soft);line-height:1}
+.pv-nw .cal .dd{font-size:40px;font-weight:700;color:var(--ink);line-height:1;
+  letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.pv-nw .cal .rest{font-size:16px;color:var(--ink);line-height:1.4}
 .pv-nw .box{border-radius:8px;padding:10px 12px;margin-top:12px;
   font-size:14px;line-height:1.75;white-space:pre-line;
   background:var(--paper);color:var(--ink-soft)}
@@ -204,7 +227,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <h1>預約成功通知 ＋ 約診紀錄查詢　<span style="font-weight:400;font-size:.7em">提案</span></h1>
   <p class="pv-sub">你說的沒錯 —— <b>這兩則是同一張卡的兩個狀態</b>，所以這一頁把它們放在一起做：
   一個是<b>約好的當下</b>自動送的（單張），一個是<b>他點「約診紀錄查詢」</b>之後回的（輪播，一個約診一張）。<br>
-  上面切<b>哪一則</b>與<b>現況／新版</b>，下面三把尺調<b>日期怎麼寫</b>、<b>狀態那一行</b>、<b>地址電話</b>。
+  上面切<b>哪一則</b>與<b>現況／新版</b>，下面三把尺調<b>日期怎麼寫</b>、<b>輪播那張卡長什麼樣</b>、<b>地址電話</b>。
   推導在 <code>drafts/channels/README.md</code> 第二十一節。</p>
 
   <div class="pv-phone">
@@ -222,7 +245,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <div class="r"><span class="lb">哪一則</span><span id="sw-m"></span></div>
   <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
   <div class="r" id="row-d"><span class="lb">日期怎麼寫</span><span id="sw-d"></span></div>
-  <div class="r" id="row-s"><span class="lb">狀態那行</span><span id="sw-s"></span></div>
+  <div class="r" id="row-s"><span class="lb">卡片長相</span><span id="sw-s"></span></div>
   <div class="r" id="row-a"><span class="lb">地址電話</span><span id="sw-a"></span></div>
 </div>
 
@@ -259,19 +282,27 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     cn:    { name: "新版・中文", f: function (a) { return a.m + "月" + a.d + "日 (" + a.w + ") " + a.t; } }
   };
 
-  /* ---- 狀態那一行 -----------------------------------------------------
-     ⚠⚠⚠ 「尚未回覆」是這一輪**第二嚴重**的一件，而它是**事實問題不是文案問題**：
-       ① 誰還沒回覆？讀起來像**診所還沒回**（病人剛約好，他不知道自己要回什麼）。
-       ② 卡上**沒有任何一個地方可以回覆** —— 講了一個狀態，卻沒有給出口。
-       ③ 我們**不知道這個欄位總共有幾種值**（尚未回覆／已回覆／已取消？），
-          也不知道它和 48 小時提醒那顆確認鈕是不是同一件事。
-     所以這把尺只是**換說法**，真正要做的是先跟廠商要那張狀態表。
-     ⚠ 沒有一格敢寫「已為你保留」那一類的話 —— 那是在替一個我們不懂的狀態下定義。 */
-  var STAT = {
-    asis: { name: "尚未回覆（現況）", k: "預約狀態", v: "尚未回覆" },
-    wait: { name: "等你回覆",        k: "狀態",     v: "等你回覆" },
-    none: { name: "不放",            k: "",         v: "" }
+  /* ---- 輪播那張卡長什麼樣 ---------------------------------------------
+     使用者 2026-09-04：「預約狀態可以拿掉，不過這樣查詢預約的頁面變得好單調，
+     但我也不喜歡本來的 logo 在頁首，LINE 裡可以設置對話框浮水印嗎」。
+     ⚠ 三句話是**一件事**：狀態拿掉之後那張卡只剩一行日期，而他要的品牌感
+       不能靠「頂端一塊白底 logo」（＝現況那 87px）補回來。
+     四格由左到右是「越來越動到廠商」：
+       plain 什麼都不加（現在這樣）
+       wm    浮水印 —— 他要的那個。零文字改動，但**要 position: absolute**
+       side  右邊一顆淡標誌 —— 不重疊，**Flex 100% 支援**的退路
+       big   大日子 —— 對「單調」最有效，但**要廠商把日期拆成欄位** */
+  var LOOK = {
+    plain: { name: "只有日期" },
+    wm:    { name: "浮水印" },
+    side:  { name: "右邊一顆" },
+    big:   { name: "大日子" }
   };
+  /* 浮水印的濃度（網址參數 `?k=`）—— 烘在 PNG 的 alpha 裡，Flex 的 image 沒有 opacity。 */
+  var WM = { "08": 1, "12": 1, "18": 1 };
+  /* 浮水印和其他三格**可以併用**（例如大日子 ＋ 浮水印）——
+     切換條一次只放得下四列（24.7%），所以這一項走網址參數 `?wm=1`。 */
+  var wmOn = false;
 
   /* ---- 地址電話 -------------------------------------------------------
      ⚠ 「不放」不是偷懶：輪播回答的是**什麼時候**，不是**在哪裡**；
@@ -288,7 +319,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   /* 預設就開在**建議的那一組**：新版 ＋ 中文日期。
      ⚠ 頭圖預設不放（見底下的說明），要看放了長什麼樣就開 ?h=y。 */
-  var msg = "booked", v = "nw", dt = "cn", st = "asis", ad = "box", hero = "n";
+  var msg = "booked", v = "nw", dt = "cn", look = "wm", ad = "box", hero = "n", wmk = "12";
 
   (function () {
     var q = location.search;
@@ -297,7 +328,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       return m && set[m[1]] ? m[1] : def;
     }
     msg = pick("m", MSG, msg); v = pick("v", VER, v);
-    dt = pick("d", DATE, dt); st = pick("s", STAT, st); ad = pick("a", ADDRSET, ad);
+    dt = pick("d", DATE, dt); look = pick("s", LOOK, look); ad = pick("a", ADDRSET, ad);
+    wmk = pick("k", WM, wmk);
+    wmOn = /[?&]wm=1/.test(q);
     hero = pick("h", { y: 1, n: 1 }, hero);
   })();
 
@@ -337,13 +370,26 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         ? '<img class="hero" src="../line-remind/hero-remind.jpg" width="1024" height="512" alt="">'
         : '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>';
     }
+    /* 浮水印要排在內容**前面**（先畫的在底下），而且兩層都要 positioned。
+       ⚠⚠ Flex 那邊還有一條：**一個 box 的第一個子元件不可以是 absolute**，
+         所以真的寫 JSON 時浮水印不能擺在最前面，要先放一個正常的子元件。 */
+    if (isQuery && (look === "wm" || wmOn))
+      h += '<img class="wm" src="mark-wm-' + wmk + '.png" width="420" height="207" alt="">';
     h += '<div class="b">';
     /* ⚠ 名字加粗（Flex 就是一個 span 加 weight: bold，顏色不動）——
          一個帳號收得到好幾個家人的通知，「這一次是誰」要一眼看到（同提醒卡）。 */
     if (!isQuery) h += '<p class="hi"><b>〔病人姓名〕</b>　幫你約好了</p>';
-    h += '<p class="dt">' + fmt(a) + '</p>';
-    if (isQuery && st !== "none")
-      h += '<p class="st">' + STAT[st].k + '　<b>' + STAT[st].v + '</b></p>';
+    if (isQuery && look === "big") {
+      /* ⚠⚠ 這一格把日期**拆成四塊**，所以它不是純版面 —— 見面板底下那一段。 */
+      h += '<p class="cal"><span class="mo">' + a.m + '月</span>'
+        +  '<span class="dd">' + a.d + '</span>'
+        +  '<span class="rest">(' + a.w + ') ' + a.t + '</span></p>';
+    } else if (isQuery && look === "side") {
+      h += '<div class="row"><p class="dt">' + fmt(a) + '</p>'
+        +  '<img class="sm" src="mark-wm-18.png" width="420" height="207" alt=""></div>';
+    } else {
+      h += '<p class="dt">' + fmt(a) + '</p>';
+    }
     if (ad === "box")
       h += '<p class="box">' + ADDR + '\n' + TEL + '</p>';
     if (ad === "two")
@@ -379,15 +425,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     bar("sw-m", MSG, function () { return msg; }, function (k) { msg = k; });
     bar("sw-v", VER, function () { return v; }, function (k) { v = k; });
     bar("sw-d", DATE, function () { return dt; }, function (k) { dt = k; });
-    bar("sw-s", STAT, function () { return st; }, function (k) { st = k; });
+    bar("sw-s", LOOK, function () { return look; }, function (k) { look = k; });
     bar("sw-a", ADDRSET, function () { return ad; }, function (k) { ad = k; });
-    /* 狀態那一行只有輪播有；地址電話那把尺對現況無效（現況固定兩行）。
+    /* 卡片長相那把尺只有「新版的輪播」有；地址電話那把尺對現況無效（現況固定兩行）。
        ⚠ 關掉而不是拿掉，不然切回去整條會跳高一截。 */
     document.getElementById("row-s").className = "r" + (msg === "query" && v === "nw" ? "" : " off");
     document.getElementById("row-a").className = "r" + (v === "nw" ? "" : " off");
 
     history.replaceState(null, "", location.pathname
-      + "?m=" + msg + "&v=" + v + "&d=" + dt + "&s=" + st + "&a=" + ad + "&h=" + hero);
+      + "?m=" + msg + "&v=" + v + "&d=" + dt + "&s=" + look + "&a=" + ad
+      + "&h=" + hero + "&k=" + wmk + (wmOn ? "&wm=1" : ""));
     document.getElementById("pv-cap").innerHTML = msg === "booked"
       ? "↑ 約好的<b>當下</b>自動送出，<b>單張</b>。⚠ 近似，不是 LINE 自己的算繪。"
       : "↑ 他點了圖文選單的<b>約診紀錄查詢</b>之後回的，<b>輪播</b>（一個約診一張，可以左右滑）。"
@@ -487,9 +534,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        ⚠⚠⚠ 另外**用兩種寬度各算一次**：207（＝268 × 後台量到的 77.2%）
          與 224.7（＝後台那張輪播卡自己的可用寬度，如果 LINE 的泡泡是固定 px
          的話那才是真值）。我們還分不出是哪一種，所以兩種都報。 */
+    /* ⚠⚠ 「大日子」那一格**沒有 `.dt`**（日期被拆成月／日／星期時間三塊）——
+       直接 querySelector(".dt") 會回 null，面板整個掛掉而**畫面完全正常**
+       （同第九節第 24 條那種「不報錯、只是那一段沒作用」）。所以統一走這個取用函式。 */
+    function dtOf(c) { return c.querySelector(".dt") || c.querySelector(".cal"); }
     var cut = [], wrapN = 0, natMax = 0, availD = 0;
     cards.forEach(function (c, i) {
-      var d = c.querySelector(".dt");
+      var d = dtOf(c);
       var avail = d.getBoundingClientRect().width;
       var nat = natural(d);
       availD = avail;
@@ -504,7 +555,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     var text = cards.map(function (c) { return c.innerText || c.textContent; }).join(" ");
     var emo = text.match(EMOJI) || [];
     /* 孤字：末段只剩 1~3 個字的那一行（自己斷好的短句不算 —— 電話、狀態自己一行是刻意的） */
+    /* ⚠⚠ 「大日子」那三塊（月／日／星期時間）是**刻意拆開的元件**，字級不同 →
+       top 不同 → 逐字分組會把它們各算成一行，於是「20」「8月」全被報成孤字。
+       同電話自己一行那一條：**自己排出來的短句不算孤字**。 */
     var SELF = [TEL, "05-5339369"];
+    cards.forEach(function (c) {
+      c.querySelectorAll(".cal span").forEach(function (el) {
+        SELF.push((el.textContent || "").replace(/[ 　]/g, ""));
+      });
+    });
     var orphan = flat.filter(function (l) { return l.s.length <= 3 && SELF.indexOf(l.s) < 0; });
     var hasTel = text.indexOf(TEL) >= 0;
     var telOwn = flat.some(function (l) { return l.s.indexOf(TEL) >= 0; });
@@ -522,15 +581,25 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + " <span class='no'>低於 4.5 —— #979797 對白底，量出來的不是印象</span>";
     } else {
       var boxC = ct(c0.querySelector(".box"), cardBg);
-      var stC  = ct(c0.querySelector(".st"), cardBg);
+      /* ⚠⚠ 浮水印是**烘在 PNG 的 alpha 裡**的，讀 CSS 讀不到 —— 最壞底色要自己合成：
+         品牌綠 #3f654a 以那個 alpha 疊在卡色上，再拿日期那個墨去比。 */
+      var wmC = null;
+      if (msg === "query" && (look === "wm" || wmOn)) {
+        var g = { r: 0x3f, g: 0x65, b: 0x4a }, aa = Number(wmk) / 100;
+        var under = { r: g.r * aa + cardBg.r * (1 - aa),
+                      g: g.g * aa + cardBg.g * (1 - aa),
+                      b: g.b * aa + cardBg.b * (1 - aa) };
+        wmC = ratio(px(getComputedStyle(dtOf(c0)).color), under);
+      }
       var dtC  = ct(c0.querySelector(".dt"), cardBg);
       rows = (dtC ? "<br>日期 <b>" + dtC.c.toFixed(2) + "</b>"
               + (dtC.c >= 4.5 ? " <span class='ok'>過 AA</span>" : " <span class='no'>低於 4.5</span>") : "")
         + (boxC ? "<br>紙灰方塊 <b>" + boxC.c.toFixed(2) + "</b>"
               + (boxC.c >= 4.5 ? " <span class='ok'>過 AA</span>" : " <span class='no'>低於 4.5</span>")
               + " <span>底 " + hex(boxC.bg) + "</span>" : "")
-        + (stC ? "<br>狀態那一行 <b>" + stC.c.toFixed(2) + "</b>"
-              + (stC.c >= 4.5 ? " <span class='ok'>過 AA</span>" : " <span class='no'>低於 4.5</span>") : "");
+        + (wmC ? "<br>字壓在浮水印上 <b>" + wmC.toFixed(2) + "</b>"
+              + (wmC >= 4.5 ? " <span class='ok'>過 AA</span>" : " <span class='no'>低於 4.5</span>")
+              + " <span>（浮水印 alpha ." + wmk + "，最壞底色 ＝ 卡色疊上它最濃的地方）</span>" : "");
     }
 
     /* 紅線：這個帳號沒有專人即時回覆訊息（第十一之三節）。
@@ -553,7 +622,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + (cards.length > 1 ? "（最高的那一張；" + hs.map(function (x) { return x.toFixed(0); }).join(" / ") + "）" : "")
         + "　佔你這一屏 <b>" + (tall / vh * 100).toFixed(0) + "%</b>"
       /* ⚠⚠ 這是這一頁最重要的一列 —— 截圖上真的截了。 */
-      + "<br>日期 「<b>" + cards[0].querySelector(".dt").textContent + "</b>」 本來 <b>"
+      + "<br>日期 「<b>" + dtOf(cards[0]).textContent.replace(/\s+/g, " ").trim() + "</b>」 本來 <b>"
         + natMax.toFixed(0) + "px</b>"
       + (v === "as"
           ? "　" + (cut.length
@@ -663,10 +732,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>⚠⚠ 而 2026-09-04 你整理綁定完成那一則時帶進來的事實是"
       + "<b>「24 小時沒回應系統會自動取消」</b> —— 如果這個「尚未回覆」和那件事是同一個欄位，"
       + "那它就不只是說法問題了。<b>但我們不知道</b>，所以："
-      + "<br>⚠⚠⚠ <b>要跟廠商要那張狀態表</b>：這個欄位總共有幾種值、"
-      + "各是什麼意思、和 48 小時提醒那顆確認鈕是不是同一件事。"
-      + "<b>在那之前那把尺只是換說法，沒有一格敢寫「已為你保留」那一類的話</b> ——"
-      + "那是在替一個我們不懂的狀態下定義。"
+      + "<br>✅ <b>2026-09-04 你說「預約狀態可以拿掉」——新版已經整行拿掉了。</b>"
+      + "<br>⚠⚠⚠ <b>但那件事沒有跟著消失，還是要跟廠商要那張狀態表</b>："
+      + "這個欄位總共有幾種值、各是什麼意思、和 48 小時提醒那顆確認鈕是不是同一件事。"
+      + "理由是：<b>如果「尚未回覆」真的會導致自動取消，那病人就更需要知道</b> ——"
+      + "只是<b>知道的地方不該是一張查詢用的收據</b>，而是提醒卡上那顆按鈕。"
+      + "先拿掉是對的，但問題要留在廠商那一份裡。"
       + "<br><b>③ 標誌區塊吃掉整張卡的三分之一。</b>單張卡 261.3px 高，"
       + "最上面那一塊白底 <b>87.0px ＝ 33.3%</b>，而裡面的標誌只有 71.3 × 51 ——"
       + "<b>那一塊的墨只佔 2.3%</b>。而它出現在<b>診所自己的聊天室裡</b>，"
@@ -682,7 +753,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>兩則共用同一張卡，差的只有三件："
       + "<br>・<b>預約成功</b>有開場那一行（「〔病人姓名〕　幫你約好了」）；"
       + "<b>輪播沒有</b> —— 那是一份清單，每一張都重寫一次名字是浪費整整一行 × N 張。"
-      + "<br>・<b>輪播多一行狀態</b>，而且<b>日期就是第一行</b>："
+      + "<br>・<b>輪播的日期就是第一行</b>："
       + "他點「約診紀錄查詢」要看的是<b>什麼時候</b>，那就讓他一眼看到什麼時候。"
       + "<br>・<b>預約成功結尾多一句「看診前2天會再提醒你一次」</b>，把三則串成一條線"
       + "（約好 → 提醒 → 看診）。"
@@ -705,6 +776,47 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "地址在預約成功那張、48 小時提醒那張、圖文選單的「診所資訊」都已經有了。"
       + "尺上三格都留著，你自己比。"
       + "<hr>"
+      + "<b>「LINE 裡可以設置對話框浮水印嗎」—— 查過了，答案分兩半。</b>"
+      + "<br><b>① 聊天室的背景：不行，而且不是設定藏起來，是這件事本身做不到。</b>"
+      + "LINE 的聊天室背景是<b>每個使用者在自己手機上設的</b>"
+      + "（聊天室右上 → 設定 → 背景，可選插圖／顏色／自己的照片），"
+      + "而且<b>只有他自己看得到、對方看不到</b>。"
+      + "官方帳號後台能改的是<b>帳號主頁</b>那一張封面照，不是病人的聊天室。"
+      + "<br>→ 所以<b>診所沒有辦法在病人的對話框上放浮水印</b>。"
+      + "<br><b>② 卡片自己裡面：可以，而且這一頁已經做給你看了</b>（上面那把尺的「浮水印」）。"
+      + "<br>⚠⚠ 但有兩條 Flex 的硬限制，是查了官方 SDK 的原始碼才確定的："
+      + "<br>　・<b>box 沒有「背景圖」這個東西</b> —— `background` 只認一種型別 "
+      + "<code>linearGradient</code>（漸層），<b>沒有 backgroundImage</b>。"
+      + "所以浮水印只能是一個<b>真的 image 元件</b>疊上去，不能當底圖設定。"
+      + "<br>　・<b>image 沒有 opacity</b> —— 淡不能用參數調，"
+      + "<b>要烘進 PNG 的 alpha 裡</b>（同招呼卡那兩顆 logo 是烘顏色，這顆是烘濃度）。"
+      + "產圖 <code>node drafts/channels/booked-mark.mjs</code>，三個濃度 "
+      + "<code>?k=08</code>／<code>12</code>（預設）／<code>18</code>。"
+      + "<br>⚠⚠⚠ <b>而它要靠 `position: absolute` 疊，這一項我們沒有實機驗過</b>："
+      + "官方文件寫著「<b>一個 box 的第一個子元件不可以是 absolute</b>」"
+      + "（所以真的寫 JSON 時浮水印不能擺在最前面），"
+      + "至於<b>後面的元件會不會蓋在前面的上面</b>（＝字壓在浮水印上，而不是被它蓋住），"
+      + "文件沒有明講。<b>這一題加進廠商那一份，或等一支測試訊息。</b>"
+      + "<br>→ 所以尺上還有一格 <b>「右邊一顆」</b>：同一行、<b>不重疊</b>，"
+      + "純粹是排在日期旁邊的一個 image —— <b>那是 100% 支援、零風險的退路</b>，"
+      + "萬一疊不上去就用它。"
+      + "<hr>"
+      + "<b>「這樣查詢預約的頁面變得好單調」—— 這是對的，而且它有四種解法，"
+      + "差別在「要不要動到廠商」。</b>"
+      + "<br>・<b>只有日期</b>：最乾淨，但你說的單調就是這一格。"
+      + "<br>・<b>浮水印</b>（預設）：<b>一個字都不用改</b>，只多一張圖。品牌感回來了，"
+      + "而且它是<b>你不喜歡的那塊頁首 logo 的相反做法</b> —— 不佔高度、不搶第一眼。"
+      + "<br>・<b>右邊一顆</b>：同上，但穩，代價是它會佔掉日期那一行的右半。"
+      + "<br>・<b>大日子</b>：對「單調」<b>最有效</b>的一個 —— 月份小、"
+      + "<b>日子放到 40px</b>、星期與時間排旁邊，每一張卡的第一眼都不一樣。"
+      + "⚠⚠⚠ <b>但它不是版面問題，是資料問題</b>：現在那一整串日期是"
+      + "<b>系統填進來的一個欄位</b>，要拆成「月／日／星期／時間」四塊，"
+      + "<b>得廠商把欄位拆開給我們</b>（同提醒卡那條「有變數的那一行不能手動斷行」）。"
+      + "<b>拆不開就只能退回前三格。</b>"
+      + "<br>⚠ 還有一個<b>比版面更有效、但同樣要問廠商</b>的：<b>「還有幾天」</b>"
+      + "（明天／後天／還有 5 天）。那才是他打開查詢真正在算的東西，"
+      + "而且每張卡都不一樣 —— 但它要系統在送出的當下算，我們這邊填不了。"
+      + "<hr>"
       + "<b>沒有動、也不建議自己動的兩件：</b>"
       + "<br>・<b>地址逐字照廠商現在送出的那一份</b>（<code>" + ADDR + "</code>）。"
       + "站上寫的是「永樂街 70 號」，<b>沒有 1-2 樓</b> —— 多出來的樓層對病人是有用的，"
@@ -719,6 +831,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "尤其<b>日期那一格能不能換格式</b>，那是唯一一件正在出錯的事。"
       + "<br>⑪ <b>輪播最多幾張、超過怎麼辦</b>（LINE 的上限是 12 張）——"
       + "一個常來的病人約診紀錄不會只有三筆。"
+      + "<br>⑫ <b>日期能不能拆成欄位給我們</b>（月／日／星期／時間分開）——"
+      + "「大日子」那一格要它才做得出來。"
+      + "<br>⑬ <b>能不能算「還有幾天」</b>（明天／後天／還有 5 天）。"
+      + "<br>⚠ 另外一題不是問廠商是<b>要一支測試訊息</b>："
+      + "<b>Flex 裡 position: absolute 的圖，後面的文字會不會蓋在它上面。</b>"
       + "<hr>"
       + "⚠⚠ <b>Flex 的 JSON 等你挑完才寫</b>（同綁定完成、提醒卡的順序）。"
       + "這一頁現在只是<b>先改改看</b>：兩則的殼已經合成一個，"
