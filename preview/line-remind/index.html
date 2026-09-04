@@ -166,7 +166,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   line-height:1.4}
 .pv-new .btn img{flex:none;display:block;width:34px}
 .pv-new .btn span{font-size:16px;font-weight:700;letter-spacing:.02em}
-/* 「我不能到」：2026-09-04 使用者指定**加 logo**（shape_r2c3 嘴巴倒過來）。
+/* 「掰掰不去囉」：2026-09-04 使用者指定**加 logo**（shape_r2c3 嘴巴倒過來）
+   ＋ 字改成他自己寫的「掰掰不去囉」（原本是我擬的「我不能到」）。
    ⚠ 它是次要動作，和主鈕**對等**會把「請你確認」這件事稀釋掉 —— 所以做成
      **線框鈕**（同一個框、同一顆 logo，但底是空的），不是第二顆實心的綠鈕。
    ⚠⚠ logo 是 `mark-nogo.png`：`brand/shapes/shape-r2c3.svg` **整個上下翻**
@@ -269,7 +270,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
   <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
   <div class="r" id="row-h"><span class="lb">頭圖</span><span id="sw-h"></span></div>
-  <div class="r" id="row-no"><span class="lb">我不能到</span><span id="sw-n"></span></div>
+  <div class="r" id="row-no"><span class="lb">掰掰不去囉</span><span id="sw-n"></span></div>
   <div class="r" id="row-w"><span class="lb">24小時</span><span id="sw-w"></span></div>
   <div class="r" id="row-k"><span class="lb">就診須知</span><span id="sw-k"></span></div>
 </div>
@@ -392,7 +393,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   /* 新版的順序（三段，2026-09-04 使用者第二輪定的）：
        ① 這一次是什麼　開場 ＋ 日期 ＋ 就診須知
-       ② 請你回覆　　　ok 沒問題 ／ 我不能到
+       ② 請你回覆　　　ok 沒問題 ／ 掰掰不去囉
        ③ 來不了怎麼辦　臨時有事須改約，請致電診所 ＋ 電話鈕
      ⚠⚠ 原本 ③ 那一整塊（沒有專人 ＋ 改約期限 ＋ 電話，逐字沿用綁定完成那一則）
        **使用者指定整個拿掉**，換成上面這兩行。**那不是漏掉** ——
@@ -419,7 +420,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       +  '<span>ok 沒問題</span></span>';
     if (nb !== "drop") {
       h += '<span class="nob' + (nb === "text" ? " plain" : "") + '">'
-        +  '<img src="mark-nogo.png" alt=""><span>我不能到</span></span>';
+        +  '<img src="mark-nogo.png" alt=""><span>掰掰不去囉</span></span>';
     }
     /* 「臨時有事須改約，請致電診所」＋ 電話鈕（2026-09-04 使用者指定）——
        ⚠ 這一句和上面那顆按鈕**不是二選一**，是兩件事接在一起：
@@ -611,10 +612,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     return "文字是<b>你 2026-09-04 自己寫的</b>，用字逐字照你寫的，只做兩件你沒指定、"
       + "照站上慣例補的：<b>斷行</b>，以及<b>標點</b>"
       + "（「發燒 咳嗽 呼吸道症狀」的空格換成頓號、每一條補句號）。"
-      + "<br>一個我自己決定的，<b>你可以推翻</b>：次要那顆的字我寫<b>「我不能到」</b>"
-      + "（你只說了要加 logo、沒說寫什麼）—— 它和「ok 沒問題」一樣是"
-      + "<b>第一人稱的回話</b>，而現況那句「不克前往，預約改期」是公文體，"
-      + "和你這一版的語氣（哈囉、喔）差很遠。"
+      + "<br>次要那顆的字<b>也是你寫的了</b>（<b>掰掰不去囉</b>，2026-09-04 深夜）——"
+      + "它和「ok 沒問題」一樣是<b>第一人稱的回話</b>，而現況那句"
+      + "「不克前往，預約改期」是公文體，和這一版的語氣（哈囉、喔）差很遠。"
+      + "⚠ 我原本擬的是「我不能到」，<b>已經換掉</b>。"
       + "<hr>"
       + "和招呼圖卡、綁定完成同一套：卡片 268px、內距 14px、"
       + "<b>顏色一顆都沒新增</b>。<b>emoji 0 個、紅字 0 行。</b>"
@@ -714,7 +715,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "掛 <code>tel:+88655339369</code>。"
       + "<hr>"
       + "⚠⚠ <b>按鈕和「來電改約」不打架，因為它們是兩件事。</b>"
-      + "須知第 2 條寫「來電改約」、底下又有「我不能到」—— 現況那張卡就是被這件事扣分的"
+      + "須知第 2 條寫「來電改約」、底下又有「掰掰不去囉」—— 現況那張卡就是被這件事扣分的"
       + "（第 3-3 節：一個叫他打電話、一個叫他按按鈕，他會愣住）。"
       + "<br>現在的順序把它們講成<b>一前一後</b>："
       + "<b>按鈕＝告訴我們你不會來</b>（一秒，隨時可按）→ "
