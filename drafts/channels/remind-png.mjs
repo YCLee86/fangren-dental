@@ -47,7 +47,7 @@ const mod = await import("/opt/node22/lib/node_modules/playwright/index.js");
 const { chromium } = mod.default ?? mod;
 const browser = await chromium.launch({ executablePath: chrome });
 
-const query = OLD ? "?v=old" : "?v=new&h=y&n=line&w=none&k=two&c=b&g=main&s=box";   /* ＝ 2026-09-04 定的預設：有頭圖／線框鈕／不寫 24 小時／須知兩條 */
+const query = OLD ? "?v=old" : "?v=new&h=y&n=line&w=none&k=two&c=b&g=main&s=box&p=g8";   /* ＝ 2026-09-04 定的預設：有頭圖／線框鈕／不寫 24 小時／須知兩條 */
 const out = path.join(DIR, OLD ? "shot-remind-old.png"
   : CHAT ? "shot-remind-chat.png" : "shot-remind.png");
 

@@ -173,8 +173,17 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      ② 按鈕上有沒有「往前走」的記號（現況是 👉）
      ③ 按鈕**看起來像不像按鈕**（現況是藥丸，我們是圓角方框）
    修一個不會治好另外兩個，所以切換條上是三條尺。 */
+/* ⚠⚠⚠ 那一句和按鈕之間的距離（2026-09-04 第五輪）。使用者：「和按鈕的間隔很大，
+   縮小一點才知道在說這個按鈕。」——**成因不是「太大」，是「上下一樣大」**：
+   量出來上面（方塊→字面）17.0px、下面（字面→按鈕）**18.8px**，下面反而還大一點。
+   那句話因此浮在方塊與按鈕的正中間，眼睛沒有理由把它歸給按鈕（接近律）。
+   ⚠ **要它屬於按鈕，下面的間隔要明顯小於上面的**，不是兩邊一起縮。
+   ⚠⚠ **看得到的距離不等於 margin** —— 行高 1.7 讓字面下方多出 4.8px 的半行距，
+     所以 `margin-top: 14` 畫出來是 18.8。這裡的尺量的是**字面到按鈕**，
+     margin 由 `calc()` 把那 4.8 扣掉。 */
 .pv-new .cta{font-size:14px;line-height:1.7;color:var(--ink-soft);text-align:center;
   margin-top:14px}
+.pv-new .cta + .btn{margin-top:calc(var(--ctagap, 8px) - 4.8px)}
 /* 現況那一句：紅字、粗體、上下各一個箭頭。⚠ 對照用，站上不會這樣寫 */
 .pv-new .cta.asis{color:#d0021b;font-weight:700}
 /* 角形＝站上「往下滑／回到最上面」那顆轉成朝右，由 remind-marks.mjs 產。
@@ -214,7 +223,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      是真的行動呼籲，號碼是那個動作本身。
    ⚠ 話筒取的是 **index.html 頁尾那一顆**（Font Awesome solid），不另外畫；
      16.8px 寬 ＝ 和主鈕那顆標誌**同高**（34 ÷ 2.029 ＝ 16.8）。 */
+/* ⚠ 電話那一句和它的按鈕**吃同一條規則**（同上）—— 版面上有兩組「一句話 ＋ 一顆按鈕」，
+   兩組的間隔不一致的話，讀者會以為那是兩種不同的關係。切換條那把尺同時管這兩組。 */
 .pv-new .telnote{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:14px}
+.pv-new .telnote + .tel{margin-top:calc(var(--ctagap, 8px) - 4.8px)}
 .pv-new .tel{display:flex;align-items:center;justify-content:center;gap:8px;
   border:1px solid var(--deep);border-radius:9px;padding:11px 6px;margin-top:8px;
   color:var(--deep);font-size:16px;font-weight:700;line-height:1.4;
@@ -296,8 +308,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
   <div class="r" id="row-c"><span class="lb">叫他點的那句</span><span id="sw-c"></span></div>
   <div class="r" id="row-g"><span class="lb">角形</span><span id="sw-g"></span></div>
+  <div class="r" id="row-p"><span class="lb">那句離按鈕</span><span id="sw-p"></span></div>
   <div class="r" id="row-s"><span class="lb">主鈕的形狀</span><span id="sw-s"></span></div>
-  <div class="r" id="row-no"><span class="lb">掰掰不去囉</span><span id="sw-n"></span></div>
 </div>
 
 <span class="pv-probe" id="pv-probe"></span>
@@ -385,8 +397,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         這一句你要換就換（現況那句是廠商的，放在最後一格只當對照）。 */
   var CTA = {
     none: { name: "不放", text: "" },
-    a:    { name: "請點下面的按鈕回覆", text: "請點下面的按鈕回覆" },
-    b:    { name: "點一下…讓我們知道喔", text: "點一下下面的按鈕，讓我們知道喔" },
+    a:    { name: "請點…回覆", text: "請點下面的按鈕回覆" },
+    b:    { name: "點一下…知道喔", text: "點一下下面的按鈕，讓我們知道喔" },
     asis: { name: "現況那句", text: "\u2193 請點擊下方按鈕，回覆是否前往看診 \u2193" }
   };
   /* ② 按鈕上的「往前走」記號。角形＝站上那顆轉成朝右（remind-marks.mjs 產）。
@@ -396,6 +408,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     main: { name: "只有主鈕" },
     all:  { name: "三顆都放" },
     hand: { name: "主鈕用 👉" }
+  };
+  /* ④ 那一句離按鈕多遠（量的是**字面到按鈕**，不是 margin）。
+     ⚠ 上面那一段是固定的 17.0px，所以這條尺其實是在調「上下的比例」：
+        18.8 ＝ 1 : 1.1（現在，浮在中間）／12 ＝ 1 : 0.7／8 ＝ 1 : 0.5／5 ＝ 1 : 0.3 */
+  var GAP = {
+    now: { name: "現在 18.8", px: 18.8 },
+    g12: { name: "12", px: 12 },
+    g8:  { name: "8", px: 8 },
+    g5:  { name: "5", px: 5 }
   };
   /* ③ 主鈕的形狀。⚠⚠ `real` ＝ 真的 Flex button：有 LINE 內建的按壓效果，
      但 **button 放不了圖示**，所以 logo 會消失（第十一之二節）。 */
@@ -411,7 +432,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   /* ⚠ 預設就開在**我建議的那一組**（叫他點的那一句 ＋ 主鈕的角形，形狀不動）——
      要看回上一版你點頭的樣子，把「叫他點的那句」切到「不放」、角形切到「不放」。 */
   var v = "new", nb = "line", wa = "none", kn = "two", hr = "y",
-      cta = "b", cv = "main", sh = "box";
+      cta = "b", cv = "main", sh = "box", gp = "g8";
 
   /* 網址參數（⚠ 正規式一定要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值） */
   (function () {
@@ -424,6 +445,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     nb = pick("n", NOB, nb); wa = pick("w", WARN, wa);
     kn = pick("k", KNOW, kn); hr = pick("h", HERO, hr);
     cta = pick("c", CTA, cta); cv = pick("g", CHEV, cv); sh = pick("s", SHAPE, sh);
+    gp = pick("p", GAP, gp);
   })();
 
   /* 電話那一行在 Flex 裡**不會**自動變成可以撥的（純文字訊息才會）——
@@ -460,7 +482,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + (hr === "y"
           ? '<div class="hero ph"></div>'
           : '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>')
-      + '<div class="b">'
+      /* ⚠⚠⚠ `--ctagap` 要設在**共同的父層**，不能設在那一句自己身上 ——
+           用它的規則是 `.cta + .btn`（作用在**兄弟**上），而自訂屬性**只往下繼承、
+           不會傳給兄弟**。設錯地方時 `var(--ctagap, 8px)` 會安靜地退回那個 8px：
+           **按了沒反應、不報錯、畫面完全正常**，四格量出來一模一樣（踩過，
+           同第九節第 25 條那種「吃到的不是自己那一顆」）。 */
+      + '<div class="b" style="--ctagap:' + GAP[gp].px + 'px">'
       /* ⚠ 名字加粗（Flex 就是一個 span 加 weight: bold，顏色不動）——
            一個帳號收得到好幾個家人的提醒，「這一次是誰」要一眼看到。 */
       + '<p class="hi">哈囉　<b>〔病人姓名〕</b></p>'
@@ -509,6 +536,34 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     if (sh === "pill") a.push("藥丸鈕");
     if (sh === "real") a.push("真的 button（有按壓效果）");
     return a;
+  }
+
+  /* 那一句上下的空隙 —— **量字面不是量行框**（行高 1.7 讓字面下方多 4.8px 的
+     半行距，看得到的距離和 margin 差一截）。⚠ 面板直接下判斷，不要只印數字：
+     判準是「下面明顯比上面小」，那句話才會被讀成在講底下那顆按鈕。 */
+  function gapRow(body, above, line, below, label) {
+    var box = body.querySelector(above) || body.querySelector(".dt");
+    var el = body.querySelector(line), btn = body.querySelector(below);
+    if (!box || !el || !btn) return "";
+    var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), r = document.createRange();
+    var t, top = 1e9, bot = -1e9;
+    while ((t = w.nextNode())) {
+      for (var i = 0; i < t.length; i++) {
+        r.setStart(t, i); r.setEnd(t, i + 1);
+        var c = r.getBoundingClientRect();
+        if (!c.height) continue;
+        top = Math.min(top, c.top); bot = Math.max(bot, c.bottom);
+      }
+    }
+    var up = top - box.getBoundingClientRect().bottom;
+    var dn = btn.getBoundingClientRect().top - bot;
+    var k = dn / up;
+    return "<br>" + label + "：上面 <b>" + up.toFixed(1) + "</b>　下面 <b>" + dn.toFixed(1) + "</b>"
+      + "　（下 ÷ 上 <b>" + k.toFixed(2) + "</b>）"
+      + (k > .85 ? " <span class='no'>兩邊一樣大 —— 它會浮在中間，讀不出在講按鈕</span>"
+        : k > .62 ? " <span class='no'>下面還是偏大</span>"
+        : k > .2  ? " <span class='ok'>下面明顯小，歸給按鈕了</span>"
+                  : " <span class='no'>快貼上去了</span>");
   }
 
   /* ---- 量測 ---------------------------------------------------------- */
@@ -650,6 +705,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
             ? "" : " <span class='ok'>都是 0</span>")
       /* ⚠ 「點下去的線索」現在有幾個 —— 這一輪要判斷的正是這一項，
          所以面板直接數出來，不要讓他自己看。 */
+      + (v === "new" && body.querySelector(".cta")
+          ? gapRow(body, ".box.know", ".cta", ".btn", "那一句")
+            + gapRow(body, ".nob", ".telnote", ".tel", "電話那句")
+          : "")
       + (v === "new"
           ? "<br>點下去的線索 <b>" + cues().length + "</b> 個"
             + (cues().length ? "：" + cues().join("、")
@@ -736,27 +795,54 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         function () { return v; }, function (k) { v = k; });
     bar("sw-c", CTA, function () { return cta; }, function (k) { cta = k; });
     bar("sw-g", CHEV, function () { return cv; }, function (k) { cv = k; });
+    bar("sw-p", GAP, function () { return gp; }, function (k) { gp = k; });
     bar("sw-s", SHAPE, function () { return sh; }, function (k) { sh = k; });
-    bar("sw-n", NOB, function () { return nb; }, function (k) { nb = k; });
     /* ⚠ 頭圖／24小時／就診須知那三把尺**從切換條上收掉了**（同 head-search 那一輪：
        第一輪定案的收成寫死的值、讓位給第二輪的新尺，切換條不會愈長愈長）。
        **網址參數 `h`／`w`／`k` 仍然吃得到**，要把 24 小時那一段放回去就開
        `?w=box`。手機上一次只能給四條，第五條就超過一屏的 24%。 */
     /* 現況那一張是廠商的，這幾把尺對它無效 —— 關掉而不是拿掉，
        不然切回新版時整條會跳高一截。 */
-    ["row-c", "row-g", "row-s", "row-no"].forEach(function (id) {
+    ["row-c", "row-g", "row-p", "row-s"].forEach(function (id) {
       document.getElementById(id).className = "r" + (v === "old" ? " off" : "");
     });
     var q = v === "old" ? "?v=old"
       : "?v=new&h=" + hr + "&n=" + nb + "&w=" + wa + "&k=" + kn
-        + "&c=" + cta + "&g=" + cv + "&s=" + sh;
+        + "&c=" + cta + "&g=" + cv + "&s=" + sh + "&p=" + gp;
     history.replaceState(null, "", location.pathname + q);
     measure();
     document.getElementById("pv-note").innerHTML = note();
   }
 
   function note() {
-    return "⚠⚠⚠ <b>你說的「少了要點下去的感覺」，量出來是<u>三件各自獨立的事</u>，"
+    return "⚠⚠⚠ <b>「那一句和按鈕的間隔很大」——量出來，問題不是「太大」，是<u>上下一樣大</u>。</b>"
+      + "<br>改動前：上面（灰底方塊 → 字面）<b>17.0px</b>、"
+      + "下面（字面 → 按鈕）<b>18.8px</b> —— <b>下面反而還大一點。</b>"
+      + "所以那句話浮在方塊和按鈕的正中間，眼睛沒有理由把它歸給按鈕。"
+      + "<br><b>所以要改的是「上下的比例」，不是兩邊一起縮</b>："
+      + "下面明顯小於上面，它才會被讀成在講底下那顆。"
+      + "現在預設 <b>下 8.0 ÷ 上 17.0 ＝ 0.47</b>，切換條上還有 12／5 可以比。"
+      + "<br>⚠⚠ <b>看得到的距離不等於 <code>margin</code></b>：行高 1.7 讓字面下方多出 "
+      + "<b>4.8px</b> 的半行距，所以 <code>margin-top: 14</code> 畫出來是 18.8。"
+      + "<b>那把尺量的是字面到按鈕</b>，margin 由 <code>calc()</code> 把那 4.8 扣掉 —— "
+      + "面板每一格都現場重量一次，不是套公式。"
+      + "<br>⚠ <b>上面那 17.0 沒有動</b>：它是「就診須知」和「請你回覆」這兩件事之間的分界，"
+      + "縮掉的話兩段會黏成一塊。"
+      + "<br>⚠⚠ <b>電話那一句和它的按鈕吃同一條規則、跟著一起動。</b>"
+      + "這張卡上有<b>兩組「一句話 ＋ 一顆按鈕」</b>，兩組的間隔不一樣的話，"
+      + "讀者會以為那是兩種不同的關係。面板兩組都量給你看。"
+      + "<br>⚠ 順帶一件實作上的坑：<code>--ctagap</code> 要設在<b>共同的父層</b>，"
+      + "不能設在那一句自己身上 —— 用它的規則作用在<b>兄弟</b>上，而"
+      + "<b>自訂屬性只往下繼承、不會傳給兄弟</b>。設錯地方時它會安靜地退回預設值："
+      + "<b>按了沒反應、不報錯、四格量出來一模一樣</b>（這一輪踩到了，靠面板的數字才發現）。"
+      + "<hr>"
+      + "⚠ <b>「掰掰不去囉」那把尺從切換條上收掉了</b>（你已經看過線框鈕並說「這樣很好」）——"
+      + "手機一次只放得下四條。<b>網址參數還吃得到</b>：<code>?n=text</code> 只有字、"
+      + "<code>?n=drop</code> 拿掉。"
+      + "<hr>"
+      + "<b>下面是前一輪的推導。</b>"
+      + "<hr>"
+      + "⚠⚠⚠ <b>你說的「少了要點下去的感覺」，量出來是<u>三件各自獨立的事</u>，"
       + "所以切換條上是三條尺 —— 修一個不會治好另外兩個。</b>"
       + "現況那張卡三件都做了，我們上一版三件都沒有："
       + "<br>① <b>沒有一句話開口叫他點。</b>現況寫「請點擊下方按鈕，回覆是否前往看診」。"
