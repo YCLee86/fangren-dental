@@ -147,7 +147,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 <div class="pv-wrap">
   <h1>綁定完成的那一則</h1>
   <p class="pv-sub">病人在綁定頁按完成之後，聊天室裡會出現的那一則。
-  <b>六案</b>，差的是<b>結構</b>不是字。底下那條可以切。</p>
+  <b>八案</b>，差的是<b>結構</b>不是字。底下那條可以切。<br>
+  <b>Ⓖ／Ⓗ 是你 2026-09-04 自己整理的那一份</b>（同一份內容，一個純文字、一個圖卡）。</p>
 
   <div class="pv-phone">
     <div class="pv-head"><span class="av"></span><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
@@ -306,9 +307,19 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         "家人的約診也可以綁定在\n" +
         "同一隻手機，設定請洽\n" +
         "診所櫃檯人員。"
+    },
+    h: {
+      name: "Ⓗ 你整理的・圖卡", kind: "card",
+      hero: "hero-bind.jpg",
+      note: "把 Ⓖ 那一份做成 Flex 圖卡（和 Ⓐ→Ⓑ 同一個關係）：<b>一個字都沒有增減，只是換一個容器</b>，順序也照你寫的（約診查詢 → 提醒與自動取消 → 改約打電話 → 家人綁定）。⚠ 換來的兩件：電話變成一顆<b>真的按鈕</b>（點下去直接撥，不必自己選字複製），以及那三段被分隔線與字級分成「主要／規則／備註」三層。⚠ 代價是<b>更高</b>（面板上有實測），而且<b>要先問廠商關鍵字回應送不送得出 Flex Message</b> —— 送不出去就只能用 Ⓖ 那種純文字。",
+      title: "綁定完成～",
+      desc: "點下面選單的「約診查詢」，\n可隨時查看之後的約診。\n\n看診前 {T}這裡會發送訊息\n提醒，請務必確認。\n若 24 小時內無回應，系統將自動\n取消約診，以遞補他人的候診需求。",
+      say: "約診更改或取消，請在看診日\n2 天前（不含假日），於週一至\n週五診所開診時段與診所電聯",
+      btn: "05-5339369",
+      fine: "家人的約診也可以綁定在同一隻\n手機，設定請洽診所櫃檯人員。\n這裡沒有專人即時回覆訊息。"
     }
   };
-  var ORDER = ["a", "b", "c", "d", "e", "f", "g"];
+  var ORDER = ["a", "b", "c", "d", "e", "f", "g", "h"];
   /* 2026-09-04 定案，切換條上那一排已經拿掉（見檔頭那段註解） */
   var T_LABEL = "48 小時";
   /* 頭圖那一排只對 Ⓑ 有效（純文字的訊息放不了圖）。留著「不放圖」是為了看得出
@@ -321,7 +332,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     var m = new RegExp("[?&]" + k + "=([a-z0-9]+)").exec(location.search);
     return m && ok[m[1]] ? m[1] : dflt;
   }
-  var cur = param("v", V, "b");
+  var cur = param("v", V, "g");
   var hr = param("h", HERO, "y");
 
   function fill(s) { return s.replace(/\{T\}/g, T_LABEL); }
