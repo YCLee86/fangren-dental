@@ -2408,6 +2408,7 @@ node drafts/channels/review-png.mjs      # 評價邀約的圖片檔（同上三�
 node drafts/channels/remind-marks.mjs    # 提醒卡那兩顆新標誌（翻過來的 shape-r2c3 ＋ 頁尾的話筒）→ preview/line-remind/
 node drafts/channels/remind-hero-crop.mjs # 提醒卡的頭圖 16:9 → 1024×512 → preview/line-remind/hero-remind.jpg
 node drafts/channels/booked-mark.mjs      # 約診卡的浮水印標誌（三個濃度）→ preview/line-booked/mark-wm-{08,12,18}.png
+node drafts/channels/booked-num.mjs       # 約診卡輪播的順序號碼頭圖（12 張）→ preview/line-booked/num-01..12.png
 node drafts/line-auto-reply/rich.mjs     # 圖文訊息的圖
 ```
 

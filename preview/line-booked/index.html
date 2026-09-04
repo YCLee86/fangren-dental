@@ -75,13 +75,17 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
    我們手上唯一的病人端工作值是 268（招呼卡那一輪定的），所以：
      單張 268　輪播 268 × .772 ＝ **207**
    ⚠ 207 是**推導值不是量測值**。面板上寫得很清楚，不要當成真值。 */
-#pv-slot{min-width:0;flex:0 1 268px;max-width:268px}
+/* ⚠⚠ 兩個 id 都要寫：號碼那兩格會多畫一次「看完診之後」（#pv-slot2）。
+   只寫 #pv-slot 的話第二個輪播的卡**拿不到 207 的寬度**，兩輪的高度就對不起來
+   —— 而那正是這一格唯一要比的東西（症狀：畫面看起來正常，數字卻兜不攏）。
+   ⚠ 面板仍然只量 #pv-slot，第二輪只是給眼睛看的。 */
+#pv-slot,#pv-slot2{min-width:0;flex:0 1 268px;max-width:268px}
 /* 輪播：真的可以左右滑，而且要看得到下一張露出一角（同截圖）。
    ⚠ 這裡不是用 CSS 假裝 —— 是排真的 N 張卡（同 og-topic-card 那一輪：
      提案頁要擺真的產出檔，不要用 CSS 把成品再做一次）。 */
-#pv-slot.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
-#pv-slot.car .row{display:flex;gap:8.7px;padding-bottom:6px}
-#pv-slot.car .pv-hc{flex:none;width:207px}
+#pv-slot.car,#pv-slot2.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
+#pv-slot.car .row,#pv-slot2.car .row{display:flex;gap:8.7px;padding-bottom:6px}
+#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc{flex:none;width:207px}
 
 /* ---- 卡片外殼（兩案共用）------------------------------------------- */
 .pv-hc{width:100%;border-radius:14px;overflow:hidden;
@@ -172,6 +176,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-nw .row .sm{flex:none;display:block;width:46px;height:auto}
 /* 大日子：月小、日大、星期與時間疊在右邊。
    ⚠⚠ 這一格**要廠商把日期拆成欄位**（現在是一整串系統填的字），見面板底下。 */
+/* 號碼那一行（「號碼文字」那一格）—— xs 13，柔墨，日期上面。
+   ⚠ 它不是標題也不是警示，**不要加底色也不要加粗**：它回答的只是
+     「這是清單裡的第幾張」，比日期次要一階。 */
+.pv-nw .ix{font-size:13px;line-height:1.6;color:var(--ink-soft);letter-spacing:.02em}
 .pv-nw .cal{display:flex;align-items:baseline;gap:9px;margin-top:6px}
 .pv-nw .cal .mo{font-size:14px;color:var(--ink-soft);line-height:1}
 .pv-nw .cal .dd{font-size:40px;font-weight:700;color:var(--ink);line-height:1;
@@ -270,7 +278,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   var APPTS = [
     { m: 8, d: 20, w: "四", t: "15:45" },
     { m: 8, d: 25, w: "二", t: "10:15" },
-    { m: 9, d: 12, w: "六", t: "09:30" }
+    { m: 9, d: 12, w: "六", t: "09:30" },
+    /* ⚠ 2026-09-04 加的第四筆：使用者的問題就是「有 4 次約診、看完一次剩 3 次」，
+       示範資料要對得上那個情境，不然「重編號碼」根本演不出來。 */
+    { m: 10, d: 3, w: "五", t: "14:00" }
   ];
   var BOOKED = APPTS[1];   /* 預約成功那一則講的是 8/25 那一次（＝截圖裡的那一張） */
 
@@ -302,7 +313,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     wm1:   { name: "浮水印" },
     wm9:   { name: "每張不同" },
     side:  { name: "右邊一顆" },
-    big:   { name: "大日子" }
+    big:   { name: "大日子" },
+    /* ---- 2026-09-04：順序號碼（使用者：「頭圖如果變成有順序的數字做得到嗎」）----
+       ⚠⚠⚠ **兩格的差別不是好不好看，是「總數放不放得進去」**：
+         ・號碼頭圖 ＝ 12 張靜態圖（num-01…num-12.png），廠商按迴圈的位置挑一張。
+           **只放得下號碼，放不下「1 / 4」** —— 總數會變，1~12 × 1~12 ＝ 144 張。
+           而且它是頭圖，**每一張卡多 103.5px**。
+         ・號碼文字 ＝ 卡片上一行字，廠商的迴圈本來就知道總數，
+           所以寫得出「第 1 筆・共 4 筆」，而且**幾乎不佔高度**。 */
+    num:   { name: "號碼頭圖" },
+    numt:  { name: "號碼文字" }
   };
   /* ---- 那九顆 ---------------------------------------------------------
      使用者 2026-09-04：「我們有 9 個 logo，可以自動選擇不同的浮水印嗎」。
@@ -407,14 +427,20 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        ③ 預約成功結尾多一句「看診前2天會再提醒你一次」，把三則串起來。
      ⚠ 頂端那一行診所名**只有預約成功那一張留著**：輪播是在診所自己的聊天室裡
        一次跳出好幾張，識別由聊天室給，重複 N 次沒有意義。 */
-  function nwCard(a, isQuery) {
+  function nwCard(a, isQuery, i, n) {
     var h = '<div class="pv-hc pv-nw">';
     /* 頭圖：預約成功那一張是「頭圖 或 頂端那行診所名」二選一。
        ⚠⚠ 輪播**預設兩個都不放**（識別由聊天室給，重複 N 次沒有意義），
          但 ?h=y 時也照畫 —— 「一張圖 ＝ N × 104px」這件事要看得到，
          不能用講的。第一版寫成 if (!isQuery) 包住整段，結果輪播上按 ?h=y
          完全沒有反應、也不報錯（同第九節第 24、25 條那一類）。 */
-    if (hero === "y")
+    /* ⚠⚠ 號碼頭圖要排在一般頭圖**前面**：兩個都是 .hero，同時放會變成兩張圖。
+       ⚠⚠⚠ 而且它就是這一格的全部成本 —— 一張 2:1 的圖，為了印一個數字，
+         每一張卡多 103.5px（面板現場量給你看）。 */
+    if (isQuery && look === "num" && i != null)
+      h += '<img class="hero" src="num-' + String(i + 1).padStart(2, "0") + '.png"'
+        +  ' width="1024" height="512" alt="第 ' + (i + 1) + ' 筆">';
+    else if (hero === "y")
       h += '<img class="hero" src="../line-remind/hero-remind.jpg" width="1024" height="512" alt="">';
     else if (!isQuery)
       h += '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>';
@@ -434,6 +460,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     /* ⚠ 名字加粗（Flex 就是一個 span 加 weight: bold，顏色不動）——
          一個帳號收得到好幾個家人的通知，「這一次是誰」要一眼看到（同提醒卡）。 */
     if (!isQuery) h += '<p class="hi"><b>〔病人姓名〕</b>　幫你約好了</p>';
+    /* ⚠⚠⚠ 「共 n 筆」只有這一格寫得出來 —— 靜態圖沒有辦法帶總數（見 LOOK 那一段）。
+       這正是「號碼要做成圖還是做成字」真正的分水嶺。 */
+    if (isQuery && look === "numt" && i != null)
+      h += '<p class="ix">第 ' + (i + 1) + ' 筆・共 ' + n + ' 筆</p>';
     if (isQuery && look === "big") {
       /* ⚠⚠ 這一格把日期**拆成四塊**，所以它不是純版面 —— 見面板底下那一段。 */
       h += '<p class="cal"><span class="mo">' + a.m + '月</span>'
@@ -467,13 +497,27 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     } else {
       /* ⚠ 病人自己那一則要畫出來 —— 點圖文選單會留下一則「像他自己傳的」訊息
          （channels/README 第 6-3 節），那是這一則的觸發條件，不是裝飾。 */
-      h = '<div class="pv-day">8 月 13 日（四）</div>'
-        + '<div class="pv-msg"><img class="pv-av" src="../../assets/icon-192.png" alt="">'
-        + '<div class="pv-said">[約診紀錄查詢]</div><span class="pv-t">9:11</span></div>'
-        + '<div class="pv-msg"><img class="pv-av" src="../../assets/icon-192.png" alt="">'
-        + '<div id="pv-slot" class="car"><div class="row">'
-        + APPTS.map(function (a) { return v === "as" ? asCard(a, true) : nwCard(a, true); }).join("")
-        + '</div></div></div>';
+      function carousel(list, id) {
+        return '<div class="pv-msg"><img class="pv-av" src="../../assets/icon-192.png" alt="">'
+          + '<div id="' + id + '" class="car"><div class="row">'
+          + list.map(function (a, i) {
+              return v === "as" ? asCard(a, true) : nwCard(a, true, i, list.length);
+            }).join("")
+          + '</div></div></div>';
+      }
+      function asked(day, t) {
+        return '<div class="pv-day">' + day + '</div>'
+          + '<div class="pv-msg"><img class="pv-av" src="../../assets/icon-192.png" alt="">'
+          + '<div class="pv-said">[約診紀錄查詢]</div><span class="pv-t">' + t + '</span></div>';
+      }
+      h = asked("8 月 13 日（四）", "9:11") + carousel(APPTS, "pv-slot");
+      /* ⚠⚠⚠ 號碼那兩格要**再畫一次「看完診之後」** —— 使用者問的正是
+         「4 次看完一次剩 3 次，號碼還是從 1 開始嗎」。那件事一張圖看不出來，
+         要兩次查詢並排才看得到，所以這裡真的畫兩輪（第二輪把第一筆拿掉）。
+         ⚠ 第二個輪播的 id 是 pv-slot2 —— 面板只量 #pv-slot，不會被它污染。 */
+      if (v === "nw" && (look === "num" || look === "numt"))
+        h += asked("8 月 21 日（五）　（8/20 那一次看完之後）", "18:40")
+           + carousel(APPTS.slice(1), "pv-slot2");
     }
     chat.innerHTML = h;
 
@@ -764,7 +808,45 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
 
   function note() {
-    return "<b>先講一件你可能不想聽的：這兩張截圖還是「診所端的後台」，不是病人的手機。</b>"
+    /* ---- 2026-09-04：順序號碼那一題（只有選到那兩格時才印在最前面）---- */
+    var NUM = (look === "num" || look === "numt")
+      ? "<b>「輪播的頭圖變成有順序的數字，做得到嗎？」—— 做得到，而且上面那兩輪就是它。</b>"
+        + "第一輪是 8/13 查詢（4 筆，編 1・2・3・4），第二輪是 8/20 那一次看完之後再查"
+        + "（剩 3 筆，<b>又從 1 開始</b>）。"
+        + "<hr>"
+        + "⚠⚠⚠ <b>「重新從 1 開始」＝ 按位置算，不是按約診算。</b>"
+        + "那正是第 22-13 節替<b>浮水印</b>否決掉的那條規則（「取消一筆，後面全部換人」）——"
+        + "在那裡是缺點，<b>在這裡就是你要的行為本身</b>。"
+        + "同一條規則兩個相反的評價，因為問的是兩件事："
+        + "<br>・浮水印要的是「<b>同一筆約診</b>每次查都長一樣」＝ 身分 → 按日期算"
+        + "<br>・號碼要的是「這是<b>清單裡的第幾張</b>」＝ 位置 → 按迴圈的順序算"
+        + "<hr>"
+        + "⚠⚠⚠ <b>但這件事不在我們這一側</b>（同浮水印那一題）：Flex 的 JSON 是"
+        + "<b>廠商的系統組出來的</b>，「這是第幾張」只有那個迴圈知道。"
+        + "我們能做的是<b>把 12 張圖備好</b>（<code>num-01</code>~<code>num-12</code>，"
+        + "LINE 的輪播上限就是 12 張），他照迴圈的位置挑一張。"
+        + "<hr>"
+        + "⚠⚠⚠ <b>最要緊的一條：靜態圖只放得下號碼，放不下「1 / 4」。</b>"
+        + "總數會變，1~12 × 1~12 ＝ <b>144 張圖</b>，那是做不出來的。"
+        + "所以<b>想讓他知道「一共幾筆」，就只能寫成卡片上的字</b>"
+        + "（廠商的迴圈本來就知道總數）—— 那就是「號碼文字」那一格。"
+        + "<hr>"
+        + "<b>兩格的代價（390 上實測，一張卡）：</b>"
+        + "<br>・不放號碼 <b>203.3px</b>"
+        + "<br>・<b>號碼頭圖 306.8px</b>（每張 <b>+103.5</b>，四張就是 +414）"
+        + "<br>・<b>號碼文字 224.1px</b>（每張 +20.8，四張 +83），而且寫得出「共 4 筆」"
+        + "<br>→ <b>我建議號碼文字。</b>為了印一個數字，一張 2:1 的頭圖太貴了，"
+        + "而他點進來要看的是<b>什麼時候</b>。"
+        + "<hr>"
+        + "⚠⚠ <b>還有一件不是版面的：在牙科，「1 2 3 4」很容易被讀成「療程第幾次」。</b>"
+        + "（根管第 2 次、矯正第 3 次 —— 這間診所的病人本來就在數這種數字。）"
+        + "「第 1 筆・共 4 筆」不會被這樣讀，光一個大大的「1」會。"
+        + "<hr>"
+        + "⚠ 順序<b>從最近的一次排起</b>是我們假設的 —— <b>廠商那一則現在照什麼排，還沒問。</b>"
+        + "排錯的話號碼會指到錯的那一張，比沒有號碼更糟。<b>這一題要一起問。</b>"
+        + "<hr>"
+      : "";
+    return NUM + "<b>先講一件你可能不想聽的：這兩張截圖還是「診所端的後台」，不是病人的手機。</b>"
       + "判準三個，都在畫面上：<b>標題是病人的名字</b>（不是「芳仁牙醫診所」）、"
       + "卡片下面有<b>「已讀」</b>、底下有<b>「若希望暫時以手動聊天…」與「預約傳送」</b>。"
       + "同 2026-09-04 提醒卡那一次。"
