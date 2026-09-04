@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>LINE 自動回應・提案（芳仁牙醫診所）</title>
+<!--
+  提案頁：**參・自動回應**（病人打任何字都會跳出來的那一則）。
+  三則裡只剩這一則沒有自己的頁面（招呼卡 /preview/line-welcome/、
+  綁定完成 /preview/line-bind-done/、提醒卡 /preview/line-remind/ 都已定稿）。
+
+  推導與定稿全文在 drafts/line-auto-reply/README.md 第 24-2 節「參」，
+  後台能做到什麼在 drafts/channels/README.md 第二十一節。
+
+  ⚠ 這一頁模擬的是**病人的畫面**，不是後台。
+     後台那個「自動回應訊息」小標籤只有管理者看得到，病人不會看到。
+  ⚠ 圖是**真的產出檔** preview/line-reply/rich-2.png（1040×1040，
+     drafts/line-auto-reply/rich.mjs 產生），不是用 CSS 再畫一次 ——
+     同 og-topic-card 那一輪的教訓：CSS 重畫的會比實際清楚，等於在騙自己。
+  ⚠ 泡泡的綠 #6de67b、底 #e9edf1 是從使用者的 LINE 截圖量出來的，
+     那是別人的介面，不進 PALETTE.md。
+  ⚠ class 一律 pv- 前綴。樣式放在 <head>（放頁尾的話關著的東西會在開頁那 180ms 閃出來）。
+
+  四把尺：
+    ?s= 情境（病人打什麼字、什麼時候打）
+    ?n= 做幾則（一則通用／分時段兩則／關鍵字分流三則）
+    ?c= 一則裡放什麼（只有文字／文字＋圖／圖＋文字／文字＋圖＋文字）
+    ?w= 改約那一段的寫法（09-02 舊版／跟 09-04 定稿的綁定完成一致）
+-->
+<style>
+:root{
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  --ink:#2a2c27; --ink-soft:#5c5f57; --green:#3f654a; --deep:#2c5238;
+  /* LINE 那一側的顏色（別人的介面，不進 PALETTE.md） */
+  --li-bg:#e9edf1; --li-in:#ffffff; --li-out:#6de67b; --li-head:#ffffff;
+  --li-meta:#8b96a1; --li-ink:#14181c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.7;padding-bottom:180px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:14px 14px 0}
+h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
+.pv-sub{font-size:.78rem;color:var(--ink-soft);margin:.35rem 0 .9rem}
+
+/* ---- 「後台做得到什麼」：這一頁真正要回答的那三題 -------------------- */
+.pv-fact{border:1px solid var(--rule);border-radius:10px;background:var(--card);
+  padding:11px 12px;margin:0 0 14px;font-size:.75rem;line-height:1.78;color:var(--ink-soft)}
+.pv-fact h2{font-size:.78rem;font-weight:700;color:var(--ink);letter-spacing:.02em;
+  margin:0 0 6px}
+.pv-fact dl{margin:0}
+.pv-fact dt{font-weight:700;color:var(--ink);margin-top:9px}
+.pv-fact dt:first-child{margin-top:0}
+.pv-fact dd{margin:1px 0 0}
+.pv-fact .y{color:var(--deep);font-weight:700}
+.pv-fact .n{color:#a33;font-weight:700}
+.pv-fact .q{color:#8a6d1f;font-weight:700}
+
+/* ---- 手機外框 ＋ LINE 聊天室 ---------------------------------------- */
+.pv-phone{border:1px solid var(--rule);border-radius:14px;overflow:hidden;
+  background:var(--li-bg);box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.pv-head{background:var(--li-head);display:flex;align-items:center;gap:9px;
+  padding:9px 12px;border-bottom:1px solid #e3e6ea}
+.pv-head .b{font-size:.9rem;font-weight:700;color:var(--li-ink)}
+.pv-head img{width:26px;height:26px;border-radius:50%;display:block}
+.pv-head .x{margin-left:auto;color:var(--li-meta);font-size:1rem;letter-spacing:.14em}
+.pv-chat{padding:12px 11px 16px;display:flex;flex-direction:column;gap:11px}
+
+.pv-msg{display:flex;gap:7px;align-items:flex-end;max-width:100%}
+.pv-msg.me{flex-direction:row-reverse}
+.pv-av{width:30px;height:30px;border-radius:50%;flex:none;background:#fff;
+  border:1px solid #e3e6ea}
+.pv-msg.me .pv-av{visibility:hidden}
+.pv-bub{background:var(--li-in);border-radius:15px;padding:8px 11px;
+  font-size:.86rem;line-height:1.62;color:var(--li-ink);white-space:pre-wrap;
+  max-width:min(268px,74%);box-shadow:0 1px 1px rgba(0,0,0,.05);word-break:break-word}
+.pv-msg.me .pv-bub{background:var(--li-out)}
+.pv-bub a{color:#2b6cb0;text-decoration:underline}
+.pv-bub.img{padding:0;background:none;box-shadow:none;border-radius:12px;overflow:hidden;
+  max-width:min(232px,66%);line-height:0}
+.pv-bub.img img{width:100%;height:auto;display:block}
+.pv-t{font-size:.62rem;color:var(--li-meta);flex:none;padding-bottom:2px}
+.pv-day{align-self:center;background:rgba(0,0,0,.16);color:#fff;font-size:.66rem;
+  padding:2px 11px;border-radius:11px}
+/* 後台的小標籤：只有管理者看得到，畫在這裡是為了指出「哪一則是自動回應」 */
+.pv-tag{align-self:flex-start;margin-left:37px;font-size:.6rem;color:var(--li-meta);
+  border:1px solid #d6dce2;background:#fff;border-radius:6px;padding:1px 6px}
+
+/* ---- 量測面板 -------------------------------------------------------- */
+.pv-panel{margin:12px 0 0;border:1px solid var(--rule);border-radius:10px;
+  background:var(--card);padding:9px 11px;font-size:.72rem;line-height:1.85;
+  color:var(--ink-soft)}
+.pv-panel b{color:var(--ink);font-weight:700}
+.pv-panel .ok{color:var(--deep);font-weight:700}
+.pv-panel .no{color:#a33;font-weight:700}
+.pv-note{font-size:.72rem;color:var(--ink-soft);margin:10px 0 22px;
+  border-left:3px solid var(--rule);padding-left:9px}
+
+/* ---- 切換條 ---------------------------------------------------------- */
+.pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:9;
+  background:rgba(244,244,245,.96);backdrop-filter:blur(8px);
+  border-top:1px solid var(--rule);padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
+.pv-bar .r{display:flex;gap:6px;align-items:center;overflow-x:auto;
+  scrollbar-width:none;padding-bottom:2px}
+.pv-bar .r::-webkit-scrollbar{display:none}
+.pv-bar .lb{font-size:.66rem;color:var(--ink-soft);flex:none;width:4.4em;
+  white-space:nowrap}
+/* ⚠ 每一排的按鈕包在一個 <span> 裡，那個 span 自己也要是 flex ——
+   不是的話按鈕會在窄螢幕上換行，整排變兩倍高（360 上量到 63.9 vs 32.9）。 */
+.pv-bar .r > span:not(.lb){display:flex;gap:6px;flex:none}
+.pv-bar button{flex:none;font:inherit;font-size:.74rem;line-height:1.6;
+  border:1px solid var(--deep);color:var(--deep);background:#fff;
+  border-radius:8px;padding:5px 9px;cursor:pointer;white-space:nowrap}
+.pv-bar button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.pv-bar .r + .r{margin-top:6px}
+.pv-bar .fold{position:absolute;right:10px;top:-30px;background:rgba(244,244,245,.96);
+  border:1px solid var(--rule);border-radius:8px 8px 0 0;border-bottom:0;
+  font:inherit;font-size:.7rem;color:var(--ink-soft);padding:3px 9px;cursor:pointer}
+.pv-bar.is-fold .r{display:none}
+.pv-bar.is-fold .r.keep{display:flex}
+</style>
+</head>
+<body>
+
+<div class="pv-wrap">
+  <h1>LINE 自動回應 —— 病人打字之後跳出來的那一則</h1>
+  <p class="pv-sub">三則裡的<b>第三則</b>。招呼卡、綁定完成、提醒卡都定稿了，剩這一則。<br>
+    底下四把尺。上面那一塊先回答你問的那兩題。</p>
+
+  <div class="pv-fact">
+    <h2>你問的那兩題，LINE 後台的答案</h2>
+    <dl>
+      <dt>一、文字和圖可以交替，<span class="y">不是一則文字只能配一張圖</span></dt>
+      <dd>後台一則自動回應底下按「＋新增」可以再加一個對話框，
+        每一個對話框各自選類型（文字／圖片／貼圖／影片／<b>圖文訊息</b>／優惠券／問卷）。
+        所以「文字 → 圖 → 文字」做得出來，切到右邊那兩格就是。<br>
+        <span class="q">⚠ 對話框的上限查到兩種說法（3 個或 5 個）</span>——
+        要在後台按「＋新增」按到不能再加為止，那個數字才算數。</dd>
+
+      <dt>二、「做幾個版本」在 LINE 上有三種，<span class="n">只有兩種是準的</span></dt>
+      <dd>・<b>關鍵字分流</b>：打「改約」回 A、打「時間」回 B。<span class="y">準</span>，一組關鍵字最多 51 個詞。<br>
+        ・<b>時段分流</b>：開診時間一則、休診一則。<span class="y">準</span>（設的是星期＋時間）。<br>
+        ・<b>好幾則都不設關鍵字</b>：LINE <b>隨機</b>挑一則送。
+        <span class="n">病人問同一件事會拿到不一樣的答案</span>，這一種不要做。<br>
+        <span class="q">⚠ 隨機那一條是二手資料，要在後台自己確認一次。</span></dd>
+
+      <dt>三、⚠ 這裡的「圖卡」<span class="n">目前不是綁定完成那種圖卡</span></dt>
+      <dd>綁定完成那種卡片裡有真文字、有按鈕的是 <b>Flex Message</b>，
+        後台選單裡沒有這個選項，要廠商用 API 送 —— 那正是還在等廠商回答的那一題。<br>
+        自動回應這裡現在能放的圖是<b>圖文訊息</b>：一張 1040 的圖切成格子，
+        每一格設一個動作（開網址／撥號／傳一句話）。<b>字是烘在圖裡的</b>，
+        LINE 會把它縮到 <b>223px</b> 顯示（390 寬實測）。</dd>
+    </dl>
+  </div>
+
+  <div class="pv-phone">
+    <div class="pv-head">
+      <img src="../../assets/icon-192.png" alt="">
+      <span class="b">芳仁牙醫診所</span><span class="x">···</span>
+    </div>
+    <div class="pv-chat" id="chat"></div>
+  </div>
+
+  <div class="pv-panel" id="panel"></div>
+  <p class="pv-note" id="note"></p>
+</div>
+
+<div class="pv-bar" id="bar">
+  <button type="button" class="fold" id="fold">收起</button>
+  <div class="r keep"><span class="lb">情境</span><span id="sw-s"></span></div>
+  <div class="r"><span class="lb">做幾則</span><span id="sw-n"></span></div>
+  <div class="r keep"><span class="lb">放什麼</span><span id="sw-c"></span></div>
+  <div class="r"><span class="lb">改約那段</span><span id="sw-w"></span></div>
+</div>
+
+<script>
+(function () {
+  var TEL = "05-5339369";
+  var IMG = "../line-reply/rich-2.png";   /* 真的產出檔：上＝照片＋帶子→官網、下＝大電話→撥號 */
+
+  /* ------------------------------------------------------------------
+     文字。**每一行都是手動斷的**，改任何一個字都要重量一次折行
+     （drafts/line-auto-reply/README.md 第 24-3 節）。
+     規則：一行不超過 14 個全形字寬（半形算 0.5）。
+     ------------------------------------------------------------------ */
+
+  /* 改約那一段有兩種寫法 —— 同一組事實，兩種口氣。
+     old ＝ 09-02 定稿的參；new ＝ 09-04 定稿的「綁定完成」那一則的逐字寫法
+     （使用者自己寫的：最晚／開診時段／半形括號／不加空格）。 */
+  var RESCHED = {
+    old: "改約或取消　" + TEL + "\n　看診日的兩天前，不含假日\n　週一至週五開診時間都有人接",
+    now: "約診更改或取消，最晚請於\n看診日前2天(不含假日)、\n於診所開診時段來電變更\n" + TEL
+  };
+
+  function generic(w) {
+    return "謝謝你的訊息。\n這裡沒有專人即時回覆訊息。\n\n" + RESCHED[w] +
+      "\n\n查自己的約診\n　點下面選單的「約診查詢」\n\n門診表與各科說明\n　https://fangren.net";
+  }
+
+  /* 分時段。⚠ 時段設定看的是星期＋時間，**分不出國定假日** ——
+     所以開診那一則不可以寫「現在有人在」，只能寫「這個時段診所有開診」。
+     國定假日休不休診還沒問到（CLAUDE.md 第十節、channels README 16-4）。 */
+  function openHours(w) {
+    return "謝謝你的訊息。\n這裡沒有專人即時回覆訊息。\n這個時段診所有開診，\n打電話最快：\n" + TEL +
+      "\n\n查自己的約診\n　點下面選單的「約診查詢」";
+  }
+  function closedHours(w) {
+    return "謝謝你的訊息。\n這裡沒有專人即時回覆訊息，\n現在也不是門診時段。\n\n" + RESCHED[w] +
+      "\n\n門診表與各科說明\n　https://fangren.net";
+  }
+
+  /* 關鍵字分流。命中的那一則要短 —— 他已經講出他要什麼了，不必再給三個出口。 */
+  var KW_RESCHED = {
+    old: "改約或取消，請打電話給診所：\n" + TEL + "\n看診日的兩天前，不含假日\n週一至週五開診時間都有人接\n\n這裡沒有專人即時回覆訊息。",
+    now: "約診更改或取消，最晚請於\n看診日前2天(不含假日)、\n於診所開診時段來電變更\n" + TEL + "\n\n這裡沒有專人即時回覆訊息。"
+  };
+  /* ⚠ 時間一律以站上 #clinic 那張門診表為準（CLAUDE.md 紅線 10），
+     不要依門口的磁鐵板或 LINE 另外那兩組「訂正」。 */
+  var KW_HOURS =
+"門診時間\n\n早診　08:45–11:30\n午診　13:45–16:30\n晚診　17:45–20:00\n週一至週五・週六日休診\n\n國定假日與各科特別門診\n請來電確認　" + TEL;
+
+  /* 現況（廠商現在在送的那一則，逐字） */
+  var NOW =
+"感謝您的訊息！\n\n很抱歉，本帳號無法個別回覆用戶的訊息。\n如有需要更改約診，\n麻煩在診所營業時間來電 。\n診所電話 055339369 謝謝。\n診所有專業的諮詢人員，\n如有療程需要了解，\n請來電告知想要約諮詢師了解。";
+
+  /* ------------------------------------------------------------------ */
+  var SCENE = {
+    resched: { name: "想改約（下午）", say: "你好，我想改下週三下午的約診", t: "15:20", open: true,  hit: "resched" },
+    hours:   { name: "問看診時間",     say: "請問今天晚上有看診嗎",         t: "15:22", open: true,  hit: "hours" },
+    night:   { name: "半夜傳訊息",     say: "牙齒好痛，明天可以看嗎",       t: "02:14", open: false, hit: null },
+    other:   { name: "隨便一句",       say: "謝謝",                         t: "15:30", open: true,  hit: null }
+  };
+  var NUM = { one: "一則通用", two: "分時段兩則", kw: "關鍵字分流", now: "現況" };
+  var COMP = { t: "只有文字", ti: "文字＋圖", it: "圖＋文字", tit: "文字＋圖＋文字" };
+  var WORD = { old: "09-02 版", now: "跟綁定完成一致" };
+  var state = { s: "resched", n: "one", c: "t", w: "now" };
+
+  function el(tag, cls, txt) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (txt != null) n.textContent = txt;
+    return n;
+  }
+  function linkify(node, text) {
+    text.split(/(https:\/\/fangren\.net)/).forEach(function (p, i) {
+      if (i % 2) { var a = el("a", null, p); a.href = p; node.appendChild(a); }
+      else node.appendChild(document.createTextNode(p));
+    });
+  }
+  function msg(who, time, build) {
+    var row = el("div", "pv-msg" + (who === "me" ? " me" : ""));
+    var av = el("div", "pv-av");
+    if (who !== "me") av.style.background = "url(../../assets/icon-192.png) center/cover";
+    row.appendChild(av);
+    row.appendChild(build());
+    row.appendChild(el("span", "pv-t", time));
+    return row;
+  }
+  function bubble(t) { return function () { var b = el("div", "pv-bub"); linkify(b, t); return b; }; }
+  function image() {
+    return function () {
+      var b = el("div", "pv-bub img"), i = new Image();
+      i.src = IMG; i.alt = ""; i.width = 1040; i.height = 1040;
+      i.addEventListener("load", measure);
+      b.appendChild(i); return b;
+    };
+  }
+
+  /* 這一次會被觸發的是哪一則、它的文字是什麼 */
+  function pick() {
+    var sc = SCENE[state.s];
+    if (state.n === "now") return { which: "現況（不分情境，一律回同一則）", text: NOW, split: null };
+    if (state.n === "kw") {
+      if (sc.hit === "resched") return { which: "關鍵字「改約／取消／不能去」", text: KW_RESCHED[state.w], split: null };
+      if (sc.hit === "hours")   return { which: "關鍵字「時間／幾點／看診」",   text: KW_HOURS,            split: null };
+      return { which: "沒有命中關鍵字 → 全部訊息那一則", text: generic(state.w), split: null };
+    }
+    if (state.n === "two") {
+      return sc.open
+        ? { which: "時段：一～五 08:45–20:00", text: openHours(state.w), split: null }
+        : { which: "時段：其餘時間", text: closedHours(state.w), split: null };
+    }
+    return { which: "全部訊息（沒設關鍵字、沒設時段）", text: generic(state.w), split: null };
+  }
+
+  /* 一則裡放什麼 → 幾個對話框。
+     ⚠ 「文字＋圖＋文字」不是把同一段切兩半亂切 —— 切在空行上，
+        前半是「這裡沒有人」＋改約，後半是另外兩個出口。 */
+  function bubbles(text) {
+    if (state.n === "now") return [{ k: "t", v: text }];   /* 現況就是一則純文字 */
+    if (state.c === "t")  return [{ k: "t", v: text }];
+    if (state.c === "ti") return [{ k: "t", v: text }, { k: "i" }];
+    if (state.c === "it") return [{ k: "i" }, { k: "t", v: text }];
+    var parts = text.split("\n\n");
+    var cut = Math.min(2, parts.length - 1);
+    if (cut < 1) return [{ k: "t", v: text }, { k: "i" }];
+    return [{ k: "t", v: parts.slice(0, cut).join("\n\n") },
+            { k: "i" },
+            { k: "t", v: parts.slice(cut).join("\n\n") }];
+  }
+
+  function render() {
+    var chat = document.getElementById("chat");
+    var sc = SCENE[state.s], got = pick();
+    chat.innerHTML = "";
+    chat.appendChild(el("div", "pv-day", "今天"));
+    chat.appendChild(msg("me", sc.t, bubble(sc.say)));
+    chat.appendChild(el("div", "pv-tag", "自動回應訊息・" + got.which));
+    bubbles(got.text).forEach(function (b) {
+      chat.appendChild(msg("oa", sc.t, b.k === "i" ? image() : bubble(b.v)));
+    });
+    requestAnimationFrame(measure);
+  }
+
+  /* ------------------------------------------------------------------
+     量測。三件事：
+       ① 這一次診所送出多高、佔一屏幾 %
+       ② 洗版量 —— 自動回應**每傳一次就送一次**，所以要看「傳兩次」有多長
+       ③ 孤字 —— 用 Range 逐字量、照 top 分組（第九節：getClientRects 會騙人）
+     ------------------------------------------------------------------ */
+  function lastLine(node) {
+    var best = null, r = document.createRange(), tops = {};
+    var walk = document.createTreeWalker(node, NodeFilter.SHOW_TEXT), n;
+    while ((n = walk.nextNode())) {
+      for (var i = 0; i < n.length; i++) {
+        r.setStart(n, i); r.setEnd(n, i + 1);
+        var b = r.getBoundingClientRect();
+        if (!b.width && !b.height) continue;
+        var key = Math.round(b.top);
+        if (!tops[key]) tops[key] = { n: 0, w: 0 };
+        tops[key].n++;
+        tops[key].w += /[\x00-\xff]/.test(n.data[i]) ? 0.5 : 1;
+        if (best === null || key > best) best = key;
+      }
+    }
+    return { rows: Object.keys(tops).length, last: best === null ? null : tops[best] };
+  }
+  function orphans() {
+    var bubs = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub:not(.img)"), out = 0;
+    for (var i = 0; i < bubs.length; i++) {
+      var t = bubs[i].textContent.split("\n");
+      /* 只看真的被瀏覽器折過的段落：段落數 < 視覺行數才有折行 */
+      var m = lastLine(bubs[i]);
+      if (m.rows > t.filter(function (x) { return x.length; }).length && m.last && m.last.w <= 3) out++;
+    }
+    return out;
+  }
+
+  function measure() {
+    var vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+    var panel = document.getElementById("panel"), note = document.getElementById("note");
+    var oa = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub");
+    var tot = 0, nImg = 0, wid = 0;
+    for (var i = 0; i < oa.length; i++) {
+      var r = oa[i].getBoundingClientRect();
+      tot += r.height + 11;
+      if (oa[i].classList.contains("img")) nImg++;
+      else if (r.width > wid) wid = r.width;   /* 只比文字泡泡：圖是另一個上限 */
+    }
+    var pct = tot / vh * 100, twice = tot * 2 / vh * 100;
+    var got = pick(), orp = orphans();
+    var doc = document.documentElement;
+
+    panel.innerHTML =
+      "<b>" + NUM[state.n] + "</b>　觸發的是：" + got.which + "<br>" +
+      "診所送出 <b>" + (oa.length - nImg) + "</b> 則文字 ＋ <b>" + nImg + "</b> 張圖，" +
+      "合計 <b>" + tot.toFixed(0) + "px</b> ＝ " +
+      (pct > 62 ? '<span class="no">一屏的 ' + pct.toFixed(0) + "%</span>，要捲才看得完"
+                : '<span class="ok">一屏的 ' + pct.toFixed(0) + "%</span>，一眼看得完") + "<br>" +
+      "⚠ 他<b>再傳一次</b>就再來一整份 → " +
+      (twice > 100 ? '<span class="no">' + twice.toFixed(0) + "%（畫面被洗掉）</span>"
+                   : '<span class="ok">' + twice.toFixed(0) + "%</span>") + "<br>" +
+      "孤字 <b class=\"" + (orp ? "no" : "ok") + "\">" + orp + "</b> 處・" +
+      "最寬的文字泡泡 <b>" + wid.toFixed(0) + "px</b>（上限 268）・" +
+      "水平溢出 <b class=\"" + (doc.scrollWidth > doc.clientWidth ? "no" : "ok") + "\">" +
+      (doc.scrollWidth - doc.clientWidth) + "</b>px<br>" +
+      "你的螢幕 " + Math.round(window.innerWidth) + "×" + Math.round(vh) +
+      "　（回應類不計訊息則數，<b>發幾次都不用錢</b>）";
+
+    note.textContent =
+      state.n === "now"
+        ? "現況：不管他打什麼、什麼時候打，都回同一則。第二句就先道歉，而他只是傳了一則訊息、沒有人做錯事；後面四行在講諮詢師，和他問的事無關。"
+      : state.n === "kw"
+        ? "關鍵字分流：他講出他要什麼，就只回那一件，短很多。⚠ 代價是要維護關鍵字表——沒命中的仍然掉回「全部訊息」那一則，所以那一則不能省。"
+      : state.n === "two"
+        ? "分時段：省掉「現在到底有沒有人」這個猜測。⚠ 但時段只認星期＋時間，分不出國定假日——所以開診那一則寫的是「這個時段診所有開診」，不是「現在有人在」。"
+      : state.c === "t"
+        ? "只有文字（09-02 定稿的那一份）：這一則每傳一次就送一次，是三則裡最該克制的。第一句是道謝不是道歉（愛馬仕的做法）。"
+        : "配圖之後每次打字都洗一次版——上面那個「再傳一次」的數字就是代價。圖裡的字是烘進去的，LINE 縮到約 232px；真正要有可讀文字與按鈕的卡片是 Flex，後台送不出去。";
+  }
+
+  function chips(host, obj, key) {
+    Object.keys(obj).forEach(function (k) {
+      var b = el("button", null, obj[k].name || obj[k]);
+      b.type = "button";
+      b.setAttribute("aria-pressed", String(state[key] === k));
+      b.addEventListener("click", function () {
+        state[key] = k;
+        host.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
+        b.setAttribute("aria-pressed", "true");
+        history.replaceState(null, "",
+          location.pathname + "?s=" + state.s + "&n=" + state.n + "&c=" + state.c + "&w=" + state.w);
+        render();
+      });
+      host.appendChild(b);
+    });
+  }
+  ["s", "n", "c", "w"].forEach(function (k) {
+    var m = location.search.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
+    var tbl = { s: SCENE, n: NUM, c: COMP, w: WORD }[k];
+    if (m && tbl[m[1]]) state[k] = m[1];
+  });
+  chips(document.getElementById("sw-s"), SCENE, "s");
+  chips(document.getElementById("sw-n"), NUM, "n");
+  chips(document.getElementById("sw-c"), COMP, "c");
+  chips(document.getElementById("sw-w"), WORD, "w");
+
+  var bar = document.getElementById("bar"), fold = document.getElementById("fold");
+  fold.addEventListener("click", function () {
+    var on = bar.classList.toggle("is-fold");
+    fold.textContent = on ? "展開" : "收起";
+    document.body.style.paddingBottom = on ? "110px" : "180px";
+    requestAnimationFrame(measure);
+  });
+
+  render();
+  window.addEventListener("resize", measure);
+})();
+</script>
+</body>
+</html>
