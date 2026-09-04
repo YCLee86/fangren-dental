@@ -164,7 +164,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      （面板底下有寫）。 */
 .pv-nw{position:relative;overflow:hidden}
 .pv-nw .wm{position:absolute;display:block;pointer-events:none;
-  right:-18px;bottom:-10px;width:150px;height:auto}
+  right:-18px;bottom:-10px;height:auto}
 .pv-nw .b{position:relative}
 /* 右邊一顆（不重疊）—— 100% 支援的退路，不必用 absolute */
 .pv-nw .row{display:flex;align-items:center;gap:10px}
@@ -207,6 +207,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   scrollbar-width:none;padding-bottom:2px}
 .pv-bar .r::-webkit-scrollbar{display:none}
 .pv-bar .lb{font-size:.66rem;color:var(--ink-soft);flex:none;width:3.6em}
+/* ⚠⚠ 按鈕是包在一個 `<span id="sw-…">` 裡的，那個 span 才是 `.r` 的 flex 項目 ——
+   span 自己不是 flex 容器的話，裡面的按鈕會**在 span 裡換行**，
+   於是 `.r` 的 `overflow-x: auto` 根本用不到，整列變成兩倍高。
+   （五格那一列踩到：24.7% → 27.5%，而 scrollWidth 和 clientWidth 一樣寬 ＝ 沒有在捲。） */
+.pv-bar .r > span[id^="sw-"]{display:flex;gap:6px;flex:none}
 .pv-bar button{flex:none;font:inherit;font-size:.72rem;line-height:1.55;
   border:1px solid var(--deep);color:var(--deep);background:#fff;
   border-radius:8px;padding:4px 8px;cursor:pointer;white-space:nowrap}
@@ -294,15 +299,52 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        big   大日子 —— 對「單調」最有效，但**要廠商把日期拆成欄位** */
   var LOOK = {
     plain: { name: "只有日期" },
-    wm:    { name: "浮水印" },
+    wm1:   { name: "浮水印" },
+    wm9:   { name: "每張不同" },
     side:  { name: "右邊一顆" },
     big:   { name: "大日子" }
   };
+  /* ---- 那九顆 ---------------------------------------------------------
+     使用者 2026-09-04：「我們有 9 個 logo，可以自動選擇不同的浮水印嗎」。
+     ＝ `brand/shapes/shape-r{1,2,3}c{1,2,3}.svg`（九宮格，照畫面位置命名）。
+     ⚠ **`r1c2` 就是站上頁首那顆** —— 九顆裡本來就含著現在用的那一顆，不是第十顆。
+     ⚠⚠ **九顆的寬度各不相同**：它們有四種長寬比（1.00／1.33／2.03／3.08），
+       同寬的話細長那幾顆會矮一大截、看起來輕很多（同招呼卡第 18-10 節那條
+       「粗是墨量不是厚度」）。所以 `booked-mark.mjs` 按**墨的面積**正規化，
+       每一顆各自算一個寬度 → `wm-sizes.json`。**這裡讀那一份，不要再寫第二份。** */
+  var ALL9 = ["r1c1", "r1c2", "r1c3", "r2c1", "r2c2", "r2c3", "r3c1", "r3c2", "r3c3"];
+  /* ⚠⚠⚠ 九顆都做好了，但**在這個裁切下只有五顆真的分得出來**。
+     逐像素兩兩比過（207×98 的卡、同一個位置，差 ≥2 階才算看得出來）：
+       36 對的中位數 26.6%，**但有 5 對低於 10%**——
+       r1c1×r3c1 4.8／r1c3×r2c3 4.8／r3c1×r3c2 5.5／r1c1×r3c2 8.9／r1c2×r2c1 9.7。
+     成因是**裁切**不是形狀：浮水印只露出右下角一塊，兩顆同長寬比的（兩顆方的、
+     兩顆細長的）露出來的那一塊幾乎一樣。
+     → 兩兩都 ≥10% 的最大一組是**五顆**：r1c1、r1c2、r1c3、r2c2、r3c3。
+     ⚠ 所以預設用那五顆（每一張卡都看得出不同）；要看九顆全上就開 `?n=9`
+       —— 那時會有幾張相鄰的卡長得很像，那不是壞掉，是這個裁切的必然。
+     ⚠ 另一條路是**把浮水印縮小**（露出的形狀變完整，九顆就都分得出來），
+       代價是品牌感更弱 —— 還沒問使用者。 */
+  var FIVE = ["r1c1", "r1c2", "r1c3", "r2c2", "r3c3"];
+  /* ⚠⚠⚠ **但「只用五顆」有代價，而且是算得出來的**：規則是日期的線性式取餘數，
+     所以**兩筆約診只要差 N 天（或 N 的倍數）就一定撞同一顆**。
+     五顆 → 差 5／10／15／30 天就撞（30 天是真的會發生的回診間隔）；
+     九顆 → 差 7／14／21／28 天**都不會撞**，那正好是牙科最常見的幾個間隔。
+     實測就撞到了：示範的 8/20 與 8/25 差 5 天，五顆時兩張卡是同一顆。
+     → **預設用九顆**（間隔行為好），代價是那 5 對長得像的可能相鄰；
+       `?n=5` 切成五顆（兩兩都分得出來，代價是常見間隔會撞）。
+     ⚠ 第三條路是**把浮水印縮小**（九顆都分得出來、間隔行為也好）—— 還沒問使用者。 */
+  var SHAPES = ALL9;
+  var SIZES = null;                     /* 由 wm-sizes.json 載進來 */
+  /* ⚠⚠⚠ 挑哪一顆的規則：**按日期算**，不是按位置也不是隨機 ——
+     同一個約診不管查幾次都是同一顆牙齒。按位置的話取消一筆、後面全部換人；
+     隨機的話同一筆每次看都不一樣，讀起來就是壞掉。 */
+  function shapeFor(a) { return SHAPES[(a.m + a.d) % SHAPES.length]; }
   /* 浮水印的濃度（網址參數 `?k=`）—— 烘在 PNG 的 alpha 裡，Flex 的 image 沒有 opacity。 */
   var WM = { "08": 1, "12": 1, "18": 1 };
   /* 浮水印和其他三格**可以併用**（例如大日子 ＋ 浮水印）——
      切換條一次只放得下四列（24.7%），所以這一項走網址參數 `?wm=1`。 */
   var wmOn = false;
+  var five = false;   /* ?n=5 ＝ 只用兩兩分得出來的那五顆（見上面的代價） */
 
   /* ---- 地址電話 -------------------------------------------------------
      ⚠ 「不放」不是偷懶：輪播回答的是**什麼時候**，不是**在哪裡**；
@@ -319,7 +361,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   /* 預設就開在**建議的那一組**：新版 ＋ 中文日期。
      ⚠ 頭圖預設不放（見底下的說明），要看放了長什麼樣就開 ?h=y。 */
-  var msg = "booked", v = "nw", dt = "cn", look = "wm", ad = "box", hero = "n", wmk = "12";
+  var msg = "booked", v = "nw", dt = "cn", look = "wm9", ad = "box", hero = "n", wmk = "12";
 
   (function () {
     var q = location.search;
@@ -331,6 +373,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     dt = pick("d", DATE, dt); look = pick("s", LOOK, look); ad = pick("a", ADDRSET, ad);
     wmk = pick("k", WM, wmk);
     wmOn = /[?&]wm=1/.test(q);
+    five = /[?&]n=5/.test(q);
+    SHAPES = five ? FIVE : ALL9;
     hero = pick("h", { y: 1, n: 1 }, hero);
   })();
 
@@ -373,8 +417,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     /* 浮水印要排在內容**前面**（先畫的在底下），而且兩層都要 positioned。
        ⚠⚠ Flex 那邊還有一條：**一個 box 的第一個子元件不可以是 absolute**，
          所以真的寫 JSON 時浮水印不能擺在最前面，要先放一個正常的子元件。 */
-    if (isQuery && (look === "wm" || wmOn))
-      h += '<img class="wm" src="mark-wm-' + wmk + '.png" width="420" height="207" alt="">';
+    if (isQuery && (look === "wm1" || look === "wm9" || wmOn)) {
+      var sn = look === "wm9" ? shapeFor(a) : "r1c2";
+      var sz = (SIZES && SIZES[sn]) || { w: 150, ratio: 2.029 };
+      /* ⚠ 寬度是那一顆自己的（墨面積正規化過的），高度由長寬比算 —— 不要寫死。 */
+      h += '<img class="wm" src="wm-' + sn + '-' + wmk + '.png" alt=""'
+        +  ' style="width:' + sz.w + 'px"'
+        +  ' width="' + sz.w + '" height="' + (sz.w / sz.ratio).toFixed(1) + '"'
+        +  ' data-shape="' + sn + '">';
+    }
     h += '<div class="b">';
     /* ⚠ 名字加粗（Flex 就是一個 span 加 weight: bold，顏色不動）——
          一個帳號收得到好幾個家人的通知，「這一次是誰」要一眼看到（同提醒卡）。 */
@@ -386,7 +437,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         +  '<span class="rest">(' + a.w + ') ' + a.t + '</span></p>';
     } else if (isQuery && look === "side") {
       h += '<div class="row"><p class="dt">' + fmt(a) + '</p>'
-        +  '<img class="sm" src="mark-wm-18.png" width="420" height="207" alt=""></div>';
+        +  '<img class="sm" src="wm-r1c2-18.png" width="420" height="207" alt=""></div>';
     } else {
       h += '<p class="dt">' + fmt(a) + '</p>';
     }
@@ -434,7 +485,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
     history.replaceState(null, "", location.pathname
       + "?m=" + msg + "&v=" + v + "&d=" + dt + "&s=" + look + "&a=" + ad
-      + "&h=" + hero + "&k=" + wmk + (wmOn ? "&wm=1" : ""));
+      + "&h=" + hero + "&k=" + wmk + (wmOn ? "&wm=1" : "") + (five ? "&n=5" : ""));
     document.getElementById("pv-cap").innerHTML = msg === "booked"
       ? "↑ 約好的<b>當下</b>自動送出，<b>單張</b>。⚠ 近似，不是 LINE 自己的算繪。"
       : "↑ 他點了圖文選單的<b>約診紀錄查詢</b>之後回的，<b>輪播</b>（一個約診一張，可以左右滑）。"
@@ -584,7 +635,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       /* ⚠⚠ 浮水印是**烘在 PNG 的 alpha 裡**的，讀 CSS 讀不到 —— 最壞底色要自己合成：
          品牌綠 #3f654a 以那個 alpha 疊在卡色上，再拿日期那個墨去比。 */
       var wmC = null;
-      if (msg === "query" && (look === "wm" || wmOn)) {
+      if (msg === "query" && (look === "wm1" || look === "wm9" || wmOn)) {
         var g = { r: 0x3f, g: 0x65, b: 0x4a }, aa = Number(wmk) / 100;
         var under = { r: g.r * aa + cardBg.r * (1 - aa),
                       g: g.g * aa + cardBg.g * (1 - aa),
@@ -597,7 +648,26 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + (boxC ? "<br>紙灰方塊 <b>" + boxC.c.toFixed(2) + "</b>"
               + (boxC.c >= 4.5 ? " <span class='ok'>過 AA</span>" : " <span class='no'>低於 4.5</span>")
               + " <span>底 " + hex(boxC.bg) + "</span>" : "")
-        + (wmC ? "<br>字壓在浮水印上 <b>" + wmC.toFixed(2) + "</b>"
+        + (msg === "query" && cards[0].querySelector(".wm")
+          ? "<br>浮水印 " + (look === "wm9"
+              ? "<b>每張不同</b>（" + cards.map(function (c) {
+                  return c.querySelector(".wm").dataset.shape; }).join("、") + "）"
+                + "　池子 <b>" + SHAPES.length + " 顆</b>"
+                + (five ? " <span class='no'>兩兩都分得出來，但差 5／10／15／30 天的約診會撞同一顆</span>"
+                        : " <span class='ok'>差 7／14／21／28 天都不會撞</span>")
+                + (function () {
+                    /* ⚠ 相鄰兩張撞同一顆會被讀成「壞掉」，所以面板直接數出來。 */
+                    var sh = cards.map(function (c) { return c.querySelector(".wm").dataset.shape; });
+                    var n = 0;
+                    for (var i = 1; i < sh.length; i++) if (sh[i] === sh[i - 1]) n++;
+                    return n ? "　<span class='no'>相鄰撞 " + n + " 對</span>"
+                             : "　<span class='ok'>相鄰沒有撞</span>";
+                  })()
+              : "<b>同一顆</b>（" + cards[0].querySelector(".wm").dataset.shape + "）")
+            + "　寬度 " + (SIZES ? "<span class='ok'>讀自 wm-sizes.json</span>"
+                                 : "<span class='no'>讀不到 wm-sizes.json，九顆退回同一個寬度</span>")
+          : "")
+      + (wmC ? "<br>字壓在浮水印上 <b>" + wmC.toFixed(2) + "</b>"
               + (wmC >= 4.5 ? " <span class='ok'>過 AA</span>" : " <span class='no'>低於 4.5</span>")
               + " <span>（浮水印 alpha ." + wmk + "，最壞底色 ＝ 卡色疊上它最濃的地方）</span>" : "");
     }
@@ -853,7 +923,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   })();
 
   window.addEventListener("resize", measure);
+  /* ⚠⚠ 九顆的寬度只有一份出處：`wm-sizes.json`（由 booked-mark.mjs 寫的）。
+     先畫一次（用得到就用得到的那一顆），載回來再畫一次 —— 沒有 JSON 也不會白畫，
+     只是九顆會退回同一個寬度，面板會現場說出來。 */
   render();
+  fetch("wm-sizes.json").then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { if (j) { SIZES = j; render(); } })
+    .catch(function () { /* 讀不到就維持退回值，面板會標出來 */ });
 })();
 </script>
 </body>
