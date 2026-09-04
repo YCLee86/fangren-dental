@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>看診前 48 小時提醒・提案（芳仁牙醫診所）</title>
+<!--
+  提案頁：LINE 官方帳號的「約診提醒」那一則（看診前 48 小時送出）。
+  推導在 drafts/channels/README.md 第三、八、九、十四、十五、十九節。
+
+  ⚠ 這一頁模擬的是**病人的畫面**，不是後台。
+  ⚠⚠ 字級一律寫**固定 px**（channels/README 第 18-2 節）：LINE Flex 的 size 是固定 px
+     （xxs 11／xs 13／sm 14／md 16／lg 19／xl 22／xxl 27），不是比例。
+     寫成 rem 的話每一行都比 LINE 實際的小 1~2.7px，提案頁一旦和真實算繪對不上，
+     上面做的每一個判斷都是假的。
+     ⚠ 現況那一張也照同一張表畫 —— 它是廠商的卡，實際字級我們沒有量過，
+       所以那是**近似**，不要拿它的 px 去下結論；要比的是結構、emoji 與紅字。
+  ⚠ class 一律 pv- 前綴（撞名的教訓見 CLAUDE.md 第八節）。
+  ⚠⚠ 這一頁是使用者 2026-09-04 指定要做的：「我們之後會做 48 小時提醒的頁面，
+     在那邊會再確認版型與確認的按鈕，那邊做好後再回到這裡解決你們說的
+     『不知道要確認什麼或跟誰確認』」——**所以那顆確認的按鈕在這一頁定**，
+     定完再回頭看綁定完成那一則要不要多寫一句。
+-->
+<style>
+:root{
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  --ink:#2a2c27; --ink-soft:#5c5f57; --green:#3f654a; --deep:#2c5238;
+  --brick:#af4c52;
+  /* LINE 那一側的顏色（別人的介面，不進 PALETTE.md） */
+  --li-bg:#e9edf1; --li-in:#ffffff; --li-head:#ffffff; --li-meta:#8b96a1; --li-ink:#14181c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.7;padding-bottom:230px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:14px 14px 0}
+h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
+.pv-sub{font-size:.78rem;color:var(--ink-soft);margin:.35rem 0 .9rem}
+.pv-sub b{color:var(--ink)}
+.pv-sub code,.pv-note code,.pv-panel code{font-size:.94em;overflow-wrap:anywhere}
+
+/* ---- 手機外框 ＋ LINE 聊天室 ---------------------------------------- */
+.pv-phone{border:1px solid var(--rule);border-radius:14px;overflow:hidden;
+  background:var(--li-bg);box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.pv-head{background:var(--li-head);display:flex;align-items:center;gap:9px;
+  padding:9px 12px;border-bottom:1px solid #e3e6ea}
+.pv-head .b{font-size:.9rem;font-weight:700;color:var(--li-ink)}
+.pv-head img{width:26px;height:26px;border-radius:50%;display:block}
+.pv-head .x{margin-left:auto;color:var(--li-meta);font-size:1rem;letter-spacing:.14em}
+.pv-chat{padding:12px 8px 16px;display:flex;flex-direction:column;gap:10px}
+/* ⚠⚠ 圖卡在 LINE 上是**固定 268px**，這個框放不下的話，上面量到的每一個數字都是假的
+   （bind-done 那一輪踩過：390 的螢幕只給了 243.4px，折行判斷全部偏鬆）。
+   成因是我們比真手機多吃了兩層內距：頁面的 14 ＋ 聊天室的 11。
+   所以窄螢幕讓手機框貼齊頁面兩邊、聊天室內距收到 8 —— 390 上還剩 300px 給卡片。
+   ⚠ 320 以下仍然放不下，面板會現場報出來，不要當成沒事。 */
+@media (max-width: 429px) {
+  .pv-phone{margin-inline:-14px;border-radius:0;border-left-width:0;border-right-width:0}
+}
+.pv-day{align-self:center;background:rgba(0,0,0,.16);color:#fff;font-size:11px;
+  padding:2px 11px;border-radius:11px}
+.pv-msg{display:flex;gap:7px;align-items:flex-end;max-width:100%}
+.pv-av{width:30px;height:30px;border-radius:50%;flex:none;display:block}
+#pv-slot{min-width:0;flex:0 1 268px;max-width:268px}
+.pv-t{font-size:11px;color:var(--li-meta);flex:none;padding-bottom:2px}
+
+/* ---- 卡片外殼（兩案共用）：268px、圓角 14 ---------------------------- */
+.pv-hc{width:100%;border-radius:14px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* ---- Ⓐ 現況：照使用者提供的截圖重做 ---------------------------------
+   ⚠ 顏色是從截圖描的（橄欖綠標題列、紅字），**不是站上的色** ——
+     它們刻意不寫進 PALETTE.md，也不要拿去別的地方用。 */
+.pv-old{background:#fff;color:#333}
+.pv-old .h{background:#7c8a63;color:#fff;font-weight:700;text-align:center;
+  padding:10px 8px;font-size:16px;line-height:1.5}
+.pv-old .b{padding:12px 13px 14px;font-size:14px;line-height:1.7}
+.pv-old .who{color:#555}
+.pv-old .dt{font-weight:700;color:#111;font-size:19px;margin:8px 0 10px}
+.pv-old hr{border:0;border-top:1px solid #e0e0e0;margin:10px 0}
+.pv-old .nh{text-align:center;font-weight:700;color:#333;margin-bottom:5px;font-size:14px}
+.pv-old ol{margin:0 0 0 1.25em;padding:0;font-size:13px;line-height:1.75}
+.pv-old ol li{margin:3px 0}
+.pv-old .red{color:#d0021b;font-weight:700;text-align:center;margin:11px 0 9px;font-size:13px}
+.pv-old .btn{background:#7c8a63;color:#fff;font-weight:700;text-align:center;
+  padding:11px;border-radius:22px;font-size:16px}
+.pv-old .sub{color:#7c8a63;text-align:center;font-size:14px;padding-top:10px}
+
+/* ---- Ⓑ 新版：和招呼圖卡／綁定完成同一套（卡 268、內距 14）------------
+   顏色一顆都沒新增，全部回 PALETTE.md 拿：
+     卡 #f4f4f5・墨 #2a2c27・柔墨 #5c5f57・線 #cdd0d2・綠 #3f654a・深階 #2c5238
+     紙灰方塊＝--paper 直接鋪
+     警示方塊＝磚紅 #af4c52 濃度 .09（＝綁定完成那一則已定案的那一塊）
+     改約方塊＝矯正那支套色 #4478b5 濃度 .10（同上，2026-09-04 使用者挑的）
+   ⚠⚠ 兩塊淡底的濃度**不要自己調** —— .10 是反解出來的（要和 .09 的磚紅
+     合成後亮度相同）。細節見 bind-done 那一頁與 channels/README 第 19-18 節。 */
+.pv-new{background:var(--card)}
+.pv-new .top{display:flex;align-items:center;gap:8px;padding:11px 14px 10px;
+  border-bottom:1px solid var(--rule)}
+.pv-new .top img{width:20px;height:20px;border-radius:50%;display:block}
+.pv-new .top b{font-size:14px;font-weight:400;color:var(--ink-soft);letter-spacing:.06em}
+.pv-new .b{padding:14px}
+.pv-new .lead{font-size:14px;line-height:1.7;color:var(--ink-soft);white-space:pre-line}
+/* ⚠⚠⚠ 「提醒您，」單獨一行，是為了讓**變數那一行從行首開始**。
+   〔病人姓名〕是系統填的（{{patient}}），名字幾個字我們不知道 —— 兩件事接在同一行的話，
+   名字一長就會把句尾擠成孤字（放佔位符時實測折出一個「了」）。
+   拆開之後那一行只剩「〔名字〕的看診時間快到了」，面板量到**名字 8 個字以內都不會折**。
+   ⚠ 它不是版面的裝飾，是**變數欄位的防呆**：這一行不能手動斷行，只能給它足夠的餘裕。 */
+.pv-new .lead.nm{margin-top:1px}
+/* ⚠⚠ 日期是這張卡唯一非讀不可的東西，所以它是最大的那一個（xl 22）。
+   ⚠ 現況寫的是「2026/07/14 (二) 19:15」，這裡只動兩件：
+     ①**年份拿掉** —— 提醒在 48 小時前送，年份沒有任何資訊量，卻吃掉 5 個半形字寬。
+     ②月日改成中文。
+   ⚠⚠ **括號維持半形（跟現況一樣），刻意不換成全形** —— 兩個理由：
+     ・全形括號各佔一整個全形字寬，一組吃掉約 19px（第 19-17 節那一條），
+       而這一行在 xl 22 上本來就是全卡最寬的（全形版量到 228.8／可用 240）。
+     ・⚠⚠ 更要緊的是：**這是廠商系統的欄位，我們要求的改動愈小愈可能真的改到。**
+       他們現在就是印半形，只要求「把年份拿掉、月日改中文」比連標點一起改容易得多。 */
+.pv-new .dt{font-size:22px;line-height:1.45;font-weight:700;color:var(--ink);
+  letter-spacing:.01em;margin-top:4px}
+.pv-new .box{border-radius:8px;padding:10px 12px;margin-top:12px;
+  font-size:14px;line-height:1.75;white-space:pre-line}
+.pv-new .box.know{background:var(--paper);color:var(--ink-soft)}
+.pv-new .box.warn{background:rgba(175,76,82,.09);color:var(--li-ink);font-weight:700}
+.pv-new .box.say{background:rgba(68,120,181,.10);color:var(--ink)}
+/* 24 小時那一段不用方塊時的兩種輕做法（切換條上比得到） */
+.pv-new .warnline{font-size:14px;line-height:1.75;color:var(--ink-soft);
+  margin-top:12px;white-space:pre-line}
+/* 兩顆按鈕：主鈕是 Flex 原生的 button（實心綠、白字），
+   ⚠ 這一顆**不需要圖示**，所以用 button 就夠了 —— 招呼卡那兩顆做成「可點的盒子」
+     是因為要放 logo（Flex 的 button 只有 label、不支援圖示、也不會換行）。 */
+.pv-new .btn{display:block;text-align:center;border-radius:9px;padding:12px;
+  margin-top:14px;background:var(--green);color:#fff;font-size:16px;font-weight:700;
+  letter-spacing:.02em;line-height:1.4}
+.pv-new .nob{display:block;text-align:center;color:var(--deep);font-size:14px;
+  font-weight:500;padding:11px 6px 0;line-height:1.4}
+.pv-new .fine{font-size:13px;line-height:1.75;color:var(--ink-soft);margin-top:11px;
+  white-space:pre-line}
+.pv-new .fine b,.pv-new .lead b{font-weight:700;color:var(--ink-soft)}
+/* 量名字那一行用的探針（真名 3 個字時多寬）—— 不佔位、不影響版面 */
+.pv-probe{position:absolute;left:-9999px;top:0;font-size:14px;line-height:1.7;
+  white-space:nowrap;font-weight:400}
+
+/* ---- 量測面板 -------------------------------------------------------- */
+.pv-cap{font-size:.74rem;color:var(--ink-soft);margin:9px 2px 0}
+.pv-panel{margin:12px 0 0;border:1px solid var(--rule);border-radius:10px;
+  background:var(--card);padding:9px 11px;font-size:.73rem;line-height:1.85;
+  color:var(--ink-soft)}
+.pv-panel b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+.pv-panel .ok{color:var(--deep);font-weight:700}
+.pv-panel .no{color:#a33;font-weight:700}
+.pv-panel hr{border:0;border-top:1px solid var(--rule);margin:7px 0}
+.pv-note{font-size:.73rem;color:var(--ink-soft);margin:12px 0 0;
+  border-left:3px solid var(--rule);padding-left:10px}
+.pv-note b{color:var(--ink)}
+.pv-h2{font-size:1rem;font-weight:700;margin:30px 0 0;letter-spacing:.01em}
+.pv-h2 + .pv-sub{margin-top:6px}
+
+/* ---- 切換條 ---------------------------------------------------------- */
+.pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:9;
+  background:rgba(244,244,245,.96);backdrop-filter:blur(8px);
+  border-top:1px solid var(--rule);padding:7px 10px calc(7px + env(safe-area-inset-bottom))}
+.pv-bar .r{display:flex;gap:6px;align-items:center;overflow-x:auto;
+  scrollbar-width:none;padding-bottom:2px}
+.pv-bar .r::-webkit-scrollbar{display:none}
+.pv-bar .lb{font-size:.66rem;color:var(--ink-soft);flex:none;width:3.6em}
+/* ⚠ 切換條在手機上不能吃掉太多畫面（CLAUDE.md 第八節 hero-motion-mobile 那一輪：
+     第一版量到一屏的 28%，而要判斷的正是那張卡）。五把尺收緊之後量到 23%。 */
+.pv-bar button{flex:none;font:inherit;font-size:.72rem;line-height:1.55;
+  border:1px solid var(--deep);color:var(--deep);background:#fff;
+  border-radius:8px;padding:4px 8px;cursor:pointer;white-space:nowrap}
+.pv-bar button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.pv-bar .r + .r{margin-top:4px}
+.pv-bar .r.off{opacity:.38;pointer-events:none}
+/* ⚠⚠ 六把尺攤開會吃掉一屏的 28%，而這一頁要判斷的正是那張卡（它自己就 82%）。
+   照 type-scale-ipad-2 那一輪的做法：**收起要縮成一顆小鈕，不是變矮的一條**。
+   收起之後整條只剩 40px（5%）。 */
+.pv-bar .fold{position:absolute;right:10px;top:-31px;border-radius:8px 8px 0 0;
+  border-bottom-color:transparent;font-size:.7rem;padding:3px 10px;
+  background:rgba(244,244,245,.96)}
+.pv-bar.fold-in{padding-top:7px}
+.pv-bar.fold-in .r{display:none}
+.pv-bar.fold-in .fold{position:static;border-radius:8px;border-bottom-color:var(--deep)}
+</style>
+</head>
+<body>
+<div class="pv-wrap">
+  <h1>看診前 48 小時的約診提醒　<span style="font-weight:400;font-size:.7em">提案</span></h1>
+  <p class="pv-sub">這一則是<b>整個帳號曝光最高的訊息</b>（每一次約診都送一次），
+  也是<b>四則裡唯一要花錢的</b>（主動推播才計費）。<br>
+  底下切換<b>現況</b>與<b>新版</b>，再用下面<b>五把尺</b>決定<b>要留哪些、刪哪些</b>
+  （切換條右上角可以<b>收起</b>）。
+  推導在 <code>drafts/channels/README.md</code> 第三、八、九、十五、十九節。</p>
+
+  <div class="pv-phone">
+    <div class="pv-head"><img src="../../assets/icon-192.png" alt=""><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
+    <div class="pv-chat">
+      <div class="pv-day">7 月 12 日</div>
+      <div class="pv-msg"><img class="pv-av" src="../../assets/icon-192.png" alt="">
+        <div id="pv-slot"></div>
+        <span class="pv-t">10:00</span></div>
+    </div>
+  </div>
+  <p class="pv-cap">↑ 這一則是<b>診所這一側主動送出</b>的，所以聊天室裡沒有病人自己的訊息。
+  ⚠ 近似，不是 LINE 自己的算繪。</p>
+
+  <div class="pv-panel" id="pv-panel"></div>
+  <p class="pv-note" id="pv-note"></p>
+</div>
+
+<div class="pv-bar" id="pv-bar">
+  <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
+  <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
+  <div class="r" id="row-btn"><span class="lb">確認鈕</span><span id="sw-b"></span></div>
+  <div class="r" id="row-no"><span class="lb">不克前往</span><span id="sw-n"></span></div>
+  <div class="r" id="row-w"><span class="lb">24小時</span><span id="sw-w"></span></div>
+  <div class="r" id="row-k"><span class="lb">就診須知</span><span id="sw-k"></span></div>
+  <div class="r" id="row-t"><span class="lb">診所名</span><span id="sw-t"></span></div>
+</div>
+
+<span class="pv-probe" id="pv-probe"></span>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ⚠⚠ 斷行一律用 \n 自己指定，不要交給自動換行（line-auto-reply/README 第 24-3 節）。
+     這張卡的可用寬度：卡片 268 − 內距 28 ＝ **240px**；淡底方塊裡再扣 24 ＝ **216px**。
+     換算成全形字：sm 14 → 卡上 17 個／方塊裡 15 個；md 16 → 15 個；xs 13 → 18 個。
+     ⚠ 半形字算一半 —— 「24」「2」「05-5339369」都是半形，不能用「數幾個字元」代替量測。
+
+     ⚠⚠⚠ 但**有變數的那一行不能手動斷行**：〔病人姓名〕是系統填的（{{patient}}），
+       名字幾個字我們不知道，硬斷會在別人身上斷錯地方。那一行只能交給自動換行，
+       面板會現場量「真名 3 個字時多寬」給你看。 */
+
+  var TEL = "05-5339369";
+
+  /* ---- 現況（照截圖，姓名已遮）------------------------------------- */
+  var OLD = {
+    name: "Ⓐ 現況",
+    note: "廠商系統現在送出的那一張（照你提供的截圖重做，顏色是從截圖描的）。"
+      + "六件問題在 channels/README 第 9-1 節：<b>飽和的橄欖綠滿版標題列</b>、"
+      + "<b>⚠ 就診須知 ⚠</b>（把戴口罩講成警報）、<b>紅字＋↓↓ 箭頭</b>、"
+      + "<b>「點此 👉 確定會到！」</b>（emoji ＋ 驚嘆號 ＋「點此」三重用力）、"
+      + "<b>編號清單＋『』引號</b>（公文體）、以及<b>資訊層級亂</b>——"
+      + "日期雖然大，卻被上下的雜訊淹沒。"
+      + "<br>⚠ 另外三件是**事實**不是美感："
+      + "①標題寫「<b>斗六</b>芳仁牙醫診所」，站上與其他每一個地方都是「芳仁牙醫診所」；"
+      + "②「〔病人姓名〕 提醒您」的語序讀起來像<b>那個人在提醒你</b>"
+      + "（名字本身是必要的 —— 一個帳號收得到好幾個家人的提醒，那是唯一分得出是誰的線索）；"
+      + "③須知第 2 條「請來電改約」和底下那顆「不克前往，預約改期」<b>互相矛盾</b>"
+      + "（一個叫他打電話、一個叫他按按鈕）。"
+  };
+
+  /* ---- 新版 ---------------------------------------------------------- */
+  /* ⚠ 就診須知那兩句是**臨床內容**，要醫師點頭才能改（channels/README 第 9-4 節）。
+       「一句」那一格砍掉的是發燒那一句 —— 那是感染管控，砍掉要醫師同意。 */
+  var KNOW = {
+    two:  { name: "兩句", text: "看診前請帶健保卡，並戴上口罩。\n如果有發燒或咳嗽，\n先打電話給診所。" },
+    one:  { name: "一句", text: "看診前請帶健保卡，並戴上口罩。" },
+    none: { name: "不放", text: "" }
+  };
+  /* 24 小時那一段：這是 2026-09-04 你自己整理那一份帶進來的新事實 ——
+     ⚠⚠ 而它其實**是這張卡的事**：計時是從這一則送出的那一刻開始算的。
+     綁定完成那一則只是先告訴他有這回事，真正到期的是這裡。 */
+  var WARN = {
+    box:  { name: "淡底方塊" },
+    line: { name: "一般句" },
+    none: { name: "不寫" }
+  };
+  var WARN_TEXT = "請按下面的按鈕回覆。\n若24小時內無回應，\n系統將自動取消約診，\n以遞補他人的候診需求。";
+  /* 確認那顆按鈕的文字。⚠ 一律不用驚嘆號 —— 那是替病人加語氣（第 9-2 節判斷 3）。 */
+  var BTN = {
+    go:   { name: "我會到" },
+    ok:   { name: "確認看診" },
+    on:   { name: "我會準時到" }
+  };
+  /* 「不克前往」那一顆要不要留。
+     ⚠⚠ 留著的理由：它按下去只是**系統上顯示取消**、診所會打電話確認，
+        而且對誤按與真的臨時有事的人是有用的訊號（第八節使用者自己講的）。
+     ⚠⚠ 拿掉的理由：協議是「看診日前 2 天（不含假日）」，而這一則正好在 48 小時發，
+        按的當下多半已經過期 —— 這就是第 8-1 節那個結構性矛盾。
+     ⚠ 但 2026-09-02 使用者已經定案**維持 48 小時**，並說「真的有臨時狀況的病人如果打來，
+        診所還是會通融……對於按取消也不主動打來診所的，也不需要為這些狀況設想什麼」。
+        所以這裡預設**留著**，只是底下誠實交代按了會怎樣。
+     ⚠⚠ 三則一律**不寫「不要按那顆」** —— 否定句只會讓它更醒目（COPY.md 第九之十七節 B）。 */
+  var NOB = { keep: { name: "留著" }, drop: { name: "拿掉" } };
+  /* 卡片頂端那一行「圖示 ＋ 芳仁牙醫診所」要不要留。
+     ⚠ 它取代的是現況那條**滿版的橄欖綠標題列**（第 9-2 節判斷 1：診所名退成一行小字）。
+     ⚠⚠ 但在聊天室裡它和上面的帳號抬頭**是同一個名字** —— 模擬圖一放出來就看得到。
+       留著的理由：截圖或轉傳出去時它是唯一的識別（LINE 的帳號名不會跟著被拍進去），
+       而且從現況那條綠色標題列一路砍到「完全沒有名字」是很大的一跳。
+       拿掉的理由：省 42px，而且左邊本來就有帳號的大頭貼。
+     ⚠ 這一格**沒有對錯**，是刪減的取捨 —— 預設留著。 */
+  var TOPBAR = { keep: { name: "留著" }, drop: { name: "拿掉" } };
+
+  var v = "new", bt = "go", nb = "keep", wa = "box", kn = "two", tb = "keep";
+
+  /* 網址參數（⚠ 正規式一定要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值） */
+  (function () {
+    var q = location.search;
+    function pick(k, set, def) {
+      var m = q.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
+      return m && set[m[1]] ? m[1] : def;
+    }
+    v  = (q.match(/[?&]v=(old|new)/) || [])[1] || v;
+    bt = pick("b", BTN, bt); nb = pick("n", NOB, nb);
+    wa = pick("w", WARN, wa); kn = pick("k", KNOW, kn); tb = pick("t", TOPBAR, tb);
+  })();
+
+  /* 電話那一行在 Flex 裡**不會**自動變成可以撥的（純文字訊息才會）——
+     所以這裡不畫成連結的樣子，畫成它真正的長相：一行字。見底下的說明。 */
+
+  function oldHtml() {
+    return '<div class="pv-hc pv-old" id="pv-body">'
+      + '<div class="h">斗六芳仁牙醫診所</div>'
+      + '<div class="b">'
+      + '<div class="who">〔病人姓名〕 提醒您，您的看診時間將至 請問您是否前往看診呢？</div>'
+      + '<div class="dt">2026/07/14 (二) 19:15</div><hr>'
+      + '<div class="nh">⚠ 就診須知 ⚠</div>'
+      + '<ol><li>進入醫療場所者請戴『口罩』與攜帶『健保卡』</li>'
+      + '<li>有發燒/咳嗽/呼吸道症狀等，請來電改約</li></ol><hr>'
+      + '<div class="red">↓ 請點擊下方按鈕，回覆是否前往看診 ↓</div>'
+      + '<div class="btn">點此 👉 確定會到！</div>'
+      + '<div class="sub">不克前往，預約改期</div>'
+      + '</div></div>';
+  }
+
+  /* 新版的順序（三段）：
+       ① 這一次是什麼　lead ＋ 日期 ＋ 就診須知
+       ② 請你回覆　　　24 小時 ＋ 兩顆按鈕 ＋ 按了會怎樣
+       ③ 來不了怎麼辦　沒有專人 ＋ 改約的期限 ＋ 電話
+     ⚠ ③ 那一塊**逐字沿用綁定完成那一則已定案的句子**（2026-09-04 你自己的寫法），
+       兩則因此講同一件事用同一組字。 */
+  function newHtml() {
+    var h = '<div class="pv-hc pv-new" id="pv-body">'
+      + '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>'
+      + '<div class="b">'
+      + '<p class="lead">提醒您，</p>'
+      + '<p class="lead nm" id="pv-lead">〔病人姓名〕的看診時間快到了</p>'
+      + '<p class="dt">7月14日 (二) 19:15</p>';
+    if (kn !== "none") h += '<p class="box know">' + KNOW[kn].text + '</p>';
+    if (wa === "box")  h += '<p class="box warn">' + WARN_TEXT + '</p>';
+    if (wa === "line") h += '<p class="warnline">' + WARN_TEXT + '</p>';
+    h += '<span class="btn">' + BTN[bt].name + '</span>';
+    if (nb === "keep") {
+      h += '<span class="nob">不克前往</span>'
+        +  '<p class="fine">按了<b>不克前往</b>我們會收到，\n並打電話跟你確認。</p>';
+    }
+    h += '<p class="box say">這裡沒有專人即時回覆訊息。\n'
+      +  '約診更改或取消，最晚請於\n看診日前2天(不含假日)、\n於診所開診時段來電變更\n' + TEL + '</p>';
+    return h + '</div></div>';
+  }
+
+  /* ---- 量測 ---------------------------------------------------------- */
+  /* 逐字量 top 分組 —— 這樣才知道**實際**折成幾行、末行剩幾個字。
+     ⚠ 不能只數 \n：手動斷好的一行如果太長，瀏覽器還是會再折一次，
+       而那一折出來的末行就是孤字。要量的正是這件事。 */
+  function lines(el) {
+    var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), tns = [], n;
+    while ((n = w.nextNode())) tns.push(n);
+    var r = document.createRange(), g = {};
+    tns.forEach(function (tn) {
+      var t = tn.textContent;
+      for (var k = 0; k < t.length; k++) {
+        r.setStart(tn, k); r.setEnd(tn, k + 1);
+        var b = r.getBoundingClientRect();
+        if (b.height && t[k] !== "\n" && t[k] !== " " && t[k] !== "　") {
+          var top = Math.round(b.top);
+          if (!g[top]) g[top] = { s: "", l: b.left, r: b.right };
+          g[top].s += t[k];
+          if (b.left < g[top].l) g[top].l = b.left;
+          if (b.right > g[top].r) g[top].r = b.right;
+        }
+      }
+    });
+    return Object.keys(g).map(Number).sort(function (a, b2) { return a - b2; })
+      .map(function (t) { return { s: g[t].s, w: g[t].r - g[t].l }; });
+  }
+
+  function rel(c) {
+    return [c.r, c.g, c.b].map(function (x) {
+      x /= 255; return x <= .03928 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4);
+    }).reduce(function (a, x, i) { return a + x * [.2126, .7152, .0722][i]; }, 0);
+  }
+  function px(c) { var m = c.match(/[\d.]+/g).map(Number); return { r: m[0], g: m[1], b: m[2], a: m.length > 3 ? m[3] : 1 }; }
+  function ratio(fg, bg) { var a = rel(fg) + .05, b = rel(bg) + .05; return a > b ? a / b : b / a; }
+  /* ⚠⚠ 淡底方塊是**半透明**疊在卡色上，直接讀 rgba 會算錯 —— 要先合成。 */
+  function ct(el, cardBg) {
+    if (!el) return null;
+    var cs = getComputedStyle(el), wb = px(cs.backgroundColor), fg = px(cs.color);
+    var bg = wb.a === 0 ? cardBg : {
+      r: wb.r * wb.a + cardBg.r * (1 - wb.a),
+      g: wb.g * wb.a + cardBg.g * (1 - wb.a),
+      b: wb.b * wb.a + cardBg.b * (1 - wb.a)
+    };
+    return { c: ratio(fg, bg), bg: bg };
+  }
+  function hex(c) {
+    return "#" + [c.r, c.g, c.b].map(function (x) {
+      return ("0" + Math.round(x).toString(16)).slice(-2);
+    }).join("").toUpperCase();
+  }
+
+  var EMOJI = /[\u2600-\u27BF\u2B00-\u2BFF]|[\uD83C-\uD83E][\uDC00-\uDFFF]/g;
+
+  function measure() {
+    var body = document.getElementById("pv-body");
+    var ls = lines(body);
+    var vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    var box = body.getBoundingClientRect();
+    var text = body.innerText || body.textContent;
+    var emo = text.match(EMOJI) || [];
+    var cardBg = px(getComputedStyle(body).backgroundColor);
+
+    /* 可用寬度 ＝ 卡片扣掉內距（圖卡是固定 268，不必像泡泡那樣算天花板） */
+    var inner = body.querySelector(".b"), ics = getComputedStyle(inner);
+    var avail = inner.getBoundingClientRect().width
+      - parseFloat(ics.paddingLeft) - parseFloat(ics.paddingRight);
+
+    /* 自己斷了幾行 —— 拿它和實際畫出來的比，多出來的就是被自動折掉的。
+       ⚠ 現況那一張是照截圖重做的，沒有手動斷行，所以只對新版算。 */
+    var self = {}, selfN = 0;
+    if (v === "new") {
+      body.querySelectorAll(".lead,.dt,.box,.warnline,.fine,.btn,.nob").forEach(function (el) {
+        (el.innerText || "").split("\n").forEach(function (x) {
+          x = x.replace(/[ 　]/g, ""); if (x) { self[x] = 1; selfN++; }
+        });
+      });
+    }
+    /* ⚠⚠ 判準不是「有沒有被折」，是**折出來有沒有孤字**：
+       自己斷好的短句（電話自己一行）是刻意的；被瀏覽器再折一次、
+       末段只剩 1~3 個字的那一行才是要治的。 */
+    var orphan = ls.filter(function (l) { return l.s.length <= 3 && !self[l.s]; });
+    var wide = 0, widest = "";
+    ls.forEach(function (l) { if (l.w > wide) { wide = l.w; widest = l.s; } });
+    /* ⚠ 要驗的是**號碼有沒有被折斷**（折斷了就讀不出那是電話），
+       不是「有沒有電話」—— 現況那一張根本沒有印號碼，那是它自己的問題，不是折行。 */
+    var hasTel = text.indexOf(TEL) >= 0;
+    var telOwn = ls.some(function (l) { return l.s.indexOf(TEL) >= 0; });
+
+    /* 名字那一行：〔病人姓名〕是 6 個全形字的佔位符，真名通常 2~4 個字。
+       ⚠ 這一行**不能手動斷行**（系統填的），所以要知道它幾個字才會折。 */
+    var probe = document.getElementById("pv-probe"), nameW = 0, nameMax = 0;
+    if (v === "new") {
+      var lead = document.getElementById("pv-lead");
+      probe.style.font = getComputedStyle(lead).font;
+      probe.textContent = "李小明的看診時間快到了";
+      nameW = probe.getBoundingClientRect().width;
+      /* 幾個字才會折：一個一個加上去試 */
+      for (var i = 2; i <= 8; i++) {
+        probe.textContent = Array(i + 1).join("名") + "的看診時間快到了";
+        if (probe.getBoundingClientRect().width > avail) break;
+        nameMax = i;
+      }
+      probe.textContent = "";
+    }
+
+    /* 紅線掃描（和 drafts/channels/check-welcome.mjs 同一張表）：
+       這個帳號沒有專人即時回覆訊息，所以不可以出現「有人可以問」那一類的承諾。
+       ⚠⚠ 掃之前要先把**否定形**拿掉 —— 「這裡沒有專人即時回覆訊息」裡面就含著「有專人」。 */
+    var LIE = ["隨時問", "都可以問", "問到", "有人回", "馬上回", "找得到人", "有專人"];
+    var scan = text.replace(/沒有專人/g, "＿").replace(/無專人/g, "＿");
+    var lied = LIE.filter(function (w) { return scan.indexOf(w) >= 0; });
+
+    var warnC = ct(body.querySelector(".box.warn"), cardBg);
+    var sayC  = ct(body.querySelector(".box.say"), cardBg);
+    var knowC = ct(body.querySelector(".box.know"), cardBg);
+    var btnC  = ct(body.querySelector(".btn"), cardBg);
+
+    function line(label, o, want) {
+      if (!o) return "";
+      return "<br>" + label + " <b>" + o.c.toFixed(2) + "</b>"
+        + (o.c >= want ? " <span class='ok'>過 AA</span>"
+                       : " <span class='no'>低於 " + want + "</span>")
+        + " <span>底 " + hex(o.bg) + "</span>";
+    }
+
+    document.getElementById("pv-panel").innerHTML =
+      "<b>" + (v === "old" ? OLD.name : "Ⓑ 新版") + "</b>　<span>Flex 圖卡（268px）</span>"
+      + "<br>卡片實寬 " + (box.width >= 267.5
+          ? "<span class='ok'>268px（＝LINE 的真值）</span>"
+          : "<span class='no'>" + box.width.toFixed(0) + "px —— 這個螢幕放不下 268，"
+            + "下面的折行判斷偏鬆 " + (268 - box.width).toFixed(0) + "px</span>")
+      + "<br>高 <b>" + box.height.toFixed(0) + "px</b>　佔你這一屏 <b>"
+        + (box.height / vh * 100).toFixed(0) + "%</b>"
+      + "　字數 <b>" + text.replace(/\s/g, "").length + "</b>"
+      + "<br>emoji <b>" + emo.length + "</b>" + (emo.length ? "（" + emo.join(" ") + "）" : "")
+        + "　紅字 <b>" + body.querySelectorAll(".red").length + " 行</b>"
+        + (emo.length || body.querySelectorAll(".red").length
+            ? "" : " <span class='ok'>都是 0</span>")
+      + (v === "new"
+          ? "<br>自己斷 <b>" + selfN + " 行</b>，你這台畫出 <b>" + ls.length + " 行</b>"
+            + (ls.length - selfN > 0
+                ? "（多的 " + (ls.length - selfN) + " 行是被再折一次的）"
+                : "<span class='ok'>（一行都沒被再折）</span>")
+          : "<br>畫出 <b>" + ls.length + " 行</b>")
+      + "<br>孤字 " + (orphan.length
+          ? "<span class='no'>" + orphan.length + " 行：「"
+            + orphan.map(function (o) { return o.s; }).join("」「") + "」</span>"
+          : "<span class='ok'>沒有</span>")
+      + "<br>最寬的一行 <b>" + wide.toFixed(0) + "px</b>／可用到 <b>" + avail.toFixed(0) + "px</b>"
+        + " <span>（" + widest.slice(0, 12) + "）</span>"
+      + "<br>電話沒被折斷 " + (!hasTel
+          ? "<span class='no'>這一張根本沒有印號碼</span>"
+          : telOwn ? "<span class='ok'>是</span>"
+                   : "<span class='no'>否 —— 折開了，號碼會讀不出來</span>")
+      + (v === "new"
+          ? "<br>名字那一行 <b>" + nameW.toFixed(0) + "px</b>（真名 3 個字）／"
+            + "<b>" + nameMax + " 個字</b>以內不會折"
+            + (nameMax >= 4 ? " <span class='ok'>夠用</span>"
+                            : " <span class='no'>太緊</span>")
+          : "")
+      + line("警示那一塊", warnC, 4.5)
+      + line("改約那一塊", sayC, 4.5)
+      + line("須知那一塊", knowC, 4.5)
+      + line("按鈕白字", btnC, 4.5)
+      + "<br>沒有專人那件事 " + (lied.length
+          ? "<span class='no'>出現「" + lied.join("、") + "」</span>"
+          : "<span class='ok'>守住了</span>")
+      + (v === "old"
+          ? "<br><span class='no'>⚠ 現況這一張是照截圖重做的**近似**</span>"
+            + "：字級用 Flex 的固定 px 表填的，廠商實際用多大我們沒有量過。"
+            + "所以上面的 px 與行數只能拿來看**結構**，不要當成它的真值；"
+            + "emoji、紅字、白字對綠底那三項才是逐項對得上的。"
+          : "")
+      + "<hr>" + (v === "old" ? OLD.note : newNote());
+  }
+
+  function newNote() {
+    return "和招呼圖卡、綁定完成同一套：卡片 268px、內距 14px、"
+      + "<b>顏色一顆都沒新增</b>（卡 #f4f4f5・墨・柔墨・線・綠 ＋ 兩塊淡底）。"
+      + "<b>emoji 0 個、紅字 0 行。</b>"
+      + "<br>四個判斷（channels/README 第 9-2 節，這一輪加了第五個）："
+      + "①<b>最大的東西是日期</b> —— 這張卡唯一非讀不可的就是「什麼時候、是誰」，"
+      + "診所名退成頂端一行小字（配站上那顆圖示），不佔滿版色帶。"
+      + "②<b>須知不是警報</b> —— 兩句白話放進一塊紙灰底，不用編號、不用引號、不用 emoji。"
+      + "③<b>兩顆按鈕主次分明</b>，不用「確定會到！」（驚嘆號是替病人加語氣）。"
+      + "④<b>底下誠實交代按了會怎樣</b>。"
+      + "⑤<b>把「沒有專人＋改約期限＋電話」逐字沿用綁定完成那一則</b> —— "
+      + "同一件事，兩則用同一組字。"
+      + "<br>⚠ <b>年份拿掉了</b>：現況寫「2026/07/14 (二) 19:15」，"
+      + "而提醒是 48 小時前送的，年份沒有任何資訊量，卻吃掉 5 個半形字寬。"
+      + "<b>括號刻意維持半形</b>（＝他們現在就是這樣印的）：全形一組要多吃約 19px，"
+      + "而這一行在 22px 上本來就是全卡最寬的。"
+      + "<br>⚠ <b>卡片頂端那一行診所名</b>是尺上的一格：它取代的是現況那條"
+      + "<b>滿版的橄欖綠標題列</b>，但在聊天室裡它和上面的帳號抬頭是同一個名字"
+      + "（模擬圖看得到）。<b>留著</b>＝截圖或轉傳出去時仍有識別；"
+      + "<b>拿掉</b>＝省 42px、左邊本來就有大頭貼。這一格沒有對錯，你挑。"
+      + "<br>⚠ <b>名字留著、位置換到受詞</b>：一個帳號收得到好幾個家人的提醒"
+      + "（截圖上的聊天室名稱是「〔家長姓名〕(哲&amp;丞)」），"
+      + "那是唯一分得出「這一次是誰要看牙」的線索。";
+  }
+
+  /* ---- 切換條 -------------------------------------------------------- */
+  function bar(id, set, get, put) {
+    var box = document.getElementById(id);
+    box.innerHTML = "";
+    Object.keys(set).forEach(function (k) {
+      var b = document.createElement("button");
+      b.textContent = set[k].name;
+      b.setAttribute("aria-pressed", get() === k ? "true" : "false");
+      b.onclick = function () { put(k); render(); };
+      box.appendChild(b);
+    });
+  }
+  function render() {
+    document.getElementById("pv-slot").innerHTML = v === "old" ? oldHtml() : newHtml();
+    bar("sw-v", { old: { name: "Ⓐ 現況" }, new: { name: "Ⓑ 新版" } },
+        function () { return v; }, function (k) { v = k; });
+    bar("sw-b", BTN, function () { return bt; }, function (k) { bt = k; });
+    bar("sw-n", NOB, function () { return nb; }, function (k) { nb = k; });
+    bar("sw-w", WARN, function () { return wa; }, function (k) { wa = k; });
+    bar("sw-k", KNOW, function () { return kn; }, function (k) { kn = k; });
+    bar("sw-t", TOPBAR, function () { return tb; }, function (k) { tb = k; });
+    /* 現況那一張是廠商的，四把尺對它無效 —— 關掉而不是拿掉，
+       不然切回新版時整條會跳高一截。 */
+    ["row-btn", "row-no", "row-w", "row-k", "row-t"].forEach(function (id) {
+      document.getElementById(id).className = "r" + (v === "old" ? " off" : "");
+    });
+    var q = v === "old" ? "?v=old"
+      : "?v=new&b=" + bt + "&n=" + nb + "&w=" + wa + "&k=" + kn + "&t=" + tb;
+    history.replaceState(null, "", location.pathname + q);
+    measure();
+    document.getElementById("pv-note").innerHTML = note();
+  }
+
+  function note() {
+    return "⚠⚠ <b>這一頁要定的是兩件事</b>（2026-09-04 你指定的）："
+      + "<b>版型</b>，以及<b>那顆確認的按鈕</b>。定完之後回頭看綁定完成那一則要不要多寫一句"
+      + "（那邊寫著「請務必確認」卻沒說怎麼確認，答案就是這裡這顆按鈕）。"
+      + "<hr>"
+      + "<b>新的三件事實（都是你 2026-09-04 整理那一份帶進來的，這一輪全部進到卡上）：</b>"
+      + "<br>① <b>這一則是要「回覆確認」的</b>，不只是通知 —— 所以確認鈕是這張卡的主角。"
+      + "<br>② <b>24 小時內沒回應，系統會自動取消約診並遞補他人</b>。"
+      + "⚠⚠ 這一件<b>其實是這張卡的事</b>：那 24 小時是從<b>這一則送出的那一刻</b>開始算的，"
+      + "綁定完成那一則只是先告訴他有這回事。"
+      + "<b>所以它非寫在這裡不可</b>，不然病人是在不知情的狀態下被計時。"
+      + "<br>③ 家人綁定要洽櫃檯 —— <b>那一件不寫在這張卡上</b>："
+      + "收到這一則的人早就綁好了，寫了是雜訊。"
+      + "<hr>"
+      + "⚠⚠ <b>還沒問到廠商的兩題</b>（第 19-12 節，這一則直接受影響）："
+      + "①那 24 小時<b>會不會跳過休診日</b> —— 週一的約診，提醒在<b>週六</b>發、"
+      + "期限落在<b>週日</b>，而診所週六日休診、電話沒有人接，"
+      + "<b>病人會在完全沒辦法回應的時段被自動取消</b>。"
+      + "②被自動取消的時候<b>會不會再發一則通知病人</b>（不通知的話他是到了門口才知道）。"
+      + "<br>⚠ 還有一題舊的：<b>那顆「我會到」現在診所會看嗎？</b>"
+      + "<hr>"
+      + "⚠⚠ <b>時機維持 48 小時，這一題 2026-09-02 已經結案</b>（你：「不要那麼麻煩，"
+      + "就維持現有的 48 小時就好了。實際上真的有臨時狀況的病人如果打來，診所還是會通融」）。"
+      + "所以拆兩次送、改成 3 個開診日前那幾條路<b>全部不走</b>，不要再提。"
+      + "<br>⚠ 但要知道它留下什麼：協議是「看診日前 2 天（<b>不含假日</b>）」，"
+      + "而這一則正好在 48 小時發 —— 卡片送到他手上時，期限<b>剛好到期或已經過了</b>。"
+      + "這一頁的做法是<b>不假裝那顆按鈕是改約的管道</b>："
+      + "改約一律指向電話與「最晚」那條線，按鈕底下誠實寫「我們會收到，並打電話跟你確認」。"
+      + "<br>⚠⚠ 也<b>不寫「不要按那顆」</b> —— 否定句只會讓它更醒目（COPY.md 第九之十七節 B）。"
+      + "<hr>"
+      + "⚠⚠ <b>電話不做成按鈕</b>（2026-09-04 你的通則：「那只是一個說明，"
+      + "做成按鈕的用意是要讓人點下去」）。這張卡上<b>真正要人點的是確認鈕</b>，"
+      + "電話出現的位置是「改約要打電話」這條<b>規則的說明</b>。"
+      + "<br>⚠ 號碼<b>自己一行</b>是硬條件 —— 和別的字擠在一起時，折行會把 "
+      + "<code>05-</code> 和 <code>5339369</code> 拆開。"
+      + "<br>⚠⚠ 但 <b>Flex 圖卡裡的文字不會自動變成可撥的</b>（純文字訊息才會）。"
+      + "要它撥得下去，就在那一行掛一個 <code>tel:+88655339369</code> 的 action —— "
+      + "<b>外觀完全不變</b>。綁定完成那一則也有同一題，<b>兩則一起決定</b>。"
+      + "<hr>"
+      + "⚠ <b>不放頭圖</b>（綁定完成那一則有）：這一則<b>每一次約診都送一次</b>，"
+      + "一年很多次，每次一張大圖就是洗版；而且它是<b>唯一要花錢的一則</b>，"
+      + "版面該全部留給「什麼時候、是誰、要不要回覆」。"
+      + "<br>⚠ 卡片頂端仍然有一行<b>診所名 ＋ 站上那顆圖示</b>，識別留住了，"
+      + "但不是現況那條滿版的綠色標題列。"
+      + "<hr>"
+      + "⚠⚠ <b>就診須知那兩句是臨床內容，要醫師點頭</b>（channels/README 第 9-4 節）。"
+      + "「一句」那一格砍掉的是<b>發燒那一句</b>，那是感染管控，砍掉要醫師同意。"
+      + "<br>⚠ 現況第 2 條寫「有發燒/咳嗽…<b>請來電改約</b>」，和底下那顆"
+      + "「不克前往，預約改期」<b>互相矛盾</b>（一個叫他打電話、一個叫他按按鈕）。"
+      + "新版改成「先打電話給診所」，兩條路不再打架。"
+      + "<hr>"
+      + "⚠ <b>{{patient}} 與 {{date}} 是系統填的欄位</b>，不要寫死。"
+      + "⚠⚠ 名字那一行<b>不能手動斷行</b>（名字幾個字我們不知道，硬斷會在別人身上斷錯地方），"
+      + "只能交給自動換行 —— 面板現場量了「幾個字以內不會折」。"
+      + "<br>⚠ 日期的格式也是廠商的欄位。這裡畫的是我們想要的樣子"
+      + "（<b>只動兩件：去掉年份、月日改中文</b>；"
+      + "<b>括號維持他們現在的半形</b> —— 要求的改動愈小，愈可能真的改到）。"
+      + "<hr>"
+      + "⚠⚠ <b>Flex 的 JSON 等你挑完才寫</b>（同綁定完成那一則的順序）。"
+      + "<code>drafts/channels/reminder-card.json</code> 現在放的是 <b>2026-09-02 的舊版</b>，"
+      + "<b>沒有 24 小時那一段</b>，改約那句也還是舊寫法 —— "
+      + "<b>挑定之後才會重寫，在那之前不要拿它給廠商。</b>"
+      + "<br>⚠⚠ 還有一件卡在廠商：<b>關鍵字回應／推播送不送得出 Flex Message</b>。"
+      + "送不出去的話這一則只能退回純文字，那一版<b>沒有兩顆按鈕</b>，"
+      + "整個「請按按鈕確認」的做法就不成立 —— <b>這一題要先問</b>。"
+      + "<br>⚠ 這一則和另外三則不一樣：它是<b>主動推播</b>，所以<b>要計費</b>"
+      + "（招呼訊息、自動回應、關鍵字回應都是回應類，發幾次都不用錢）。";
+  }
+
+  (function () {
+    var bar = document.getElementById("pv-bar"), fold = document.getElementById("pv-fold");
+    fold.onclick = function () {
+      var on = bar.classList.toggle("fold-in");
+      fold.textContent = on ? "調整…" : "收起";
+      fold.setAttribute("aria-expanded", on ? "false" : "true");
+      measure();
+    };
+  })();
+
+  window.addEventListener("resize", measure);
+  render();
+})();
+</script>
+</body>
+</html>
