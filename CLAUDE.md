@@ -2122,9 +2122,16 @@ topics/<spec>/         ← 產出。**不要手改**，重跑就沒了
      所以使用者讀到的 `b297b51` 就是線上的真值。
    **結論：那一次 push 根本沒有被建置或部署。** 剩下的四個可能只有使用者打得開後台：
    ① 建置失敗（看 Deployments 最上面那筆有沒有紅字）
-   ② 建置額度用完（Workers Builds 有每月分鐘數，那天推了十幾次）
+   ~~② 建置額度用完~~ —— **2026-09-04 使用者拍後台排除了：`35 / 3,000` 分鐘**
+      （Workers & Pages → Usage → Workers build minutes this month）。九月只用了 1.2%。
    ③ **Build watch paths** 把那次改動的路徑排除掉了（Settings → Build）
    ④ 有一個舊版本被固定在 100%（Version History，同 08-25 那一輪看的那一頁）
+
+   ⚠ 順帶從那兩張截圖確認的兩件事：**Workers Builds 自己的 Deploy command 就是
+   `npx wrangler deploy`，那是正常的**（建置頁面上會標成 `Manually deployed`）——
+   **不要把它和第二節那條紅線搞混**，紅線禁的是「在自己電腦上跑」，不是 CI 跑。
+   另外，**建置是會失敗的**：他打開的那一筆 `#fabf43b6`（32 天前）是紅色的 ❌、
+   17 秒、**停在 `Deploying` 那一段**。所以 ① 仍然是最可能的一個。
    ⚠ **通則：`version.txt` 落後超過十分鐘就不要再說「等一下就好」** ——
    那是「沒有部署」，不是「還在部署」。**要去查的是後台，不是 repo。**
    ⚠ 順手記一件：repo 的 `.git` 已經 **250 MiB**（歷年的 JPEG／PNG），
