@@ -173,7 +173,6 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <div class="in">
     <p class="lb" id="pv-lb">版本</p>
     <div class="row" id="pv-vrow"></div>
-    <div class="row row2" id="pv-trow"></div>
     <div class="row row2" id="pv-hrow"></div>
   </div>
 </div>
@@ -187,8 +186,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      規則：每一行不超過 14 個全形字寬（半形算 0.5）。
      ⚠ 電話一定要自己一行 —— 和別的字擠在一起時，折行會把 05- 和 5339369 拆開，
        LINE 就認不出那是號碼、不會變成可以撥的連結。
-     ⚠ {T} ＝ 提醒的時間怎麼講（切換條第二排）：「2 天」是招呼卡定稿用的說法，
-       「48 小時」是系統那一側的真值。兩個是同一件事，時間點沒有動。 */
+     ⚠⚠ {T}（提醒的時間怎麼講）2026-09-04 定案「看診前 48 小時」（使用者：「改成前48小時」），
+       切換條上那一排（2 天／48 小時）已經收掉、值寫死在 T_LABEL。
+       這也讓它和 2026-09-03 定案的招呼圖卡對上了（那一張寫的就是「看診前 48 小時」）。
+     ⚠⚠ 這個 48 小時和「約診要改或取消，請在看診日的**兩天前**」是**兩個不同的數字**：
+       前者是系統什麼時候提醒，後者是診所收改約的期限（而且不含假日）。
+       看起來不一致，但不要順手改成一致 —— 改了就是在改診所的規定。 */
 
   var V = {
     a: {
@@ -282,9 +285,32 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         "05-5339369\n\n" +
         "這裡沒有專人即時回覆訊息。"
     }
+    ,
+    g: {
+      name: "Ⓖ 你整理的", kind: "text",
+      note: "2026-09-04 你自己整理的那一份，<b>用字逐字照你寫的</b>，我只做了三件事：把時間改成你指定的「看診前 48 小時」、按 13 個全形字重新斷行、末尾補上電話號碼（原文只寫「與診所電聯」沒有號碼，病人得自己去找）。⚠⚠ 這一案帶進了另外六案都沒有的<b>三件事實</b>：提醒<b>要回覆確認</b>、<b>24 小時沒回應系統會自動取消</b>並遞補、家人綁定<b>要洽櫃檯</b>。⚠ 還沒問到廠商的三題：怎麼「確認」（按卡片上的按鈕？回訊息？可是這裡沒有專人看）、那 24 小時<b>會不會跳過休診日</b>（週一的約診，提醒在週六發、期限落在週日，沒有人接電話）、被自動取消的時候<b>會不會通知病人</b>。",
+      text:
+        "綁定完成～\n\n" +
+        "點下面選單的「約診查詢」，\n" +
+        "可隨時查看之後的約診。\n\n" +
+        "看診前 {T}這裡會發送\n" +
+        "訊息提醒，請務必確認。\n" +
+        "若 24 小時內無回應，系統將\n" +
+        "自動取消約診，以遞補他人的\n" +
+        "候診需求。\n\n" +
+        "這裡沒有專人即時回覆訊息。\n" +
+        "約診更改或取消，請在看診日\n" +
+        "2 天前（不含假日），於週一至\n" +
+        "週五診所開診時段與診所電聯\n" +
+        "05-5339369\n\n" +
+        "家人的約診也可以綁定在\n" +
+        "同一隻手機，設定請洽\n" +
+        "診所櫃檯人員。"
+    }
   };
-  var ORDER = ["a", "b", "c", "d", "e", "f"];
-  var TIME = { d2: { name: "看診前 2 天", v: "2 天" }, h48: { name: "看診前 48 小時", v: "48 小時" } };
+  var ORDER = ["a", "b", "c", "d", "e", "f", "g"];
+  /* 2026-09-04 定案，切換條上那一排已經拿掉（見檔頭那段註解） */
+  var T_LABEL = "48 小時";
   /* 頭圖那一排只對 Ⓑ 有效（純文字的訊息放不了圖）。留著「不放圖」是為了看得出
      它的代價：一張 2:1 的頭圖讓卡片長 134px，面板會現場算給你看。 */
   var HERO = { y: { name: "有頭圖" }, n: { name: "不放圖" } };
@@ -296,10 +322,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     return m && ok[m[1]] ? m[1] : dflt;
   }
   var cur = param("v", V, "b");
-  var tm = param("t", TIME, "d2");
   var hr = param("h", HERO, "y");
 
-  function fill(s) { return s.replace(/\{T\}/g, TIME[tm].v); }
+  function fill(s) { return s.replace(/\{T\}/g, T_LABEL); }
   /* 電話那一行在 LINE 裡會自己變成可以撥的連結，所以畫成連結的樣子 */
   function tel(s) { return s.replace(/05-5339369/g, '<span class="tel">05-5339369</span>'); }
 
@@ -333,14 +358,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
 
   function buttons() {
-    var r1 = document.getElementById("pv-vrow"), r2 = document.getElementById("pv-trow");
+    var r1 = document.getElementById("pv-vrow");
     r1.innerHTML = ORDER.map(function (k) {
       return '<button data-v="' + k + '" aria-pressed="' + (k === cur) + '">' + V[k].name + "</button>";
     }).join("");
-    r2.innerHTML = Object.keys(TIME).map(function (k) {
-      return '<button data-t="' + k + '" aria-pressed="' + (k === tm) + '">' + TIME[k].name + "</button>";
-    }).join("");
-    /* 第三排只在有頭圖可放的那一案出現（其餘五案是純文字泡泡，放不了圖） */
+    /* 這一排只在有頭圖可放的那一案出現（其餘六案是純文字泡泡，放不了圖） */
     var r3 = document.getElementById("pv-hrow");
     r3.innerHTML = V[cur].hero
       ? Object.keys(HERO).map(function (k) {
@@ -482,8 +504,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<b>招呼圖卡那張 1040×520 要回去重切</b>。"
       + "<br>⚠⚠ 上線前圖要放到 <code>https://fangren.net/assets/line/hero-bind.jpg</code>（Flex 只吃 HTTPS 的網址）——"
       + "<b>那個資料夾還不存在</b>，<code>tools/dist.mjs</code> 也還沒有它（CLAUDE.md 第十一之七節第 3 項）。"
-      + "<br>⚠ <b>「看診前 2 天」和「48 小時」是同一件事</b>，只是講法不同，提醒的時間點沒有動。"
-      + "招呼卡定稿用的是「2 天」，兩排一起看是為了決定三則要不要統一。"
+      + "<br>⚠⚠ <b>時間的說法 2026-09-04 定案「看診前 48 小時」</b>（你：「改成前48小時」），"
+      + "切換條上那一排（2 天／48 小時）已經收掉、值寫死在這一頁裡。"
+      + "<br>⚠⚠ <b>但招呼圖卡目前仍然寫「看診前2天發送提醒通知喔～」</b>（<code>welcome-card.json</code>，"
+      + "那一則是你自己逐字寫的、2026-09-03 已定案），所以現在<b>兩則不一樣</b>。"
+      + "要統一的話動的是你自己寫的那一句，<b>沒有你點頭我不會改</b>。"
+      + "兩者是同一個時間點，只是講法不同。"
       + "<br>⚠⚠ <b>不寫「不克前往，預約改期」那顆按鈕</b>：提醒卡上那顆按下去只是系統顯示取消，"
       + "而且按的當下已經違反「兩天前」的協議。三則一律把改約指向<b>電話</b>。"
       + "也<b>不寫「不要按那顆」</b> —— 否定句只會讓它更醒目。"
@@ -504,12 +530,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
 
   document.addEventListener("click", function (e) {
-    var b = e.target.closest("button[data-v], button[data-t], button[data-h]");
+    var b = e.target.closest("button[data-v], button[data-h]");
     if (!b) return;
     if (b.dataset.v) cur = b.dataset.v;
-    else if (b.dataset.t) tm = b.dataset.t;
     else hr = b.dataset.h;
-    history.replaceState(null, "", "?v=" + cur + "&t=" + tm + "&h=" + hr);
+    history.replaceState(null, "", "?v=" + cur + "&h=" + hr);
     render();
   });
   window.addEventListener("resize", measure);

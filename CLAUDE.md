@@ -2289,7 +2289,7 @@ topics/<spec>/         ← 產出。**不要手改**，重跑就沒了
 | 自動回應 | `drafts/line-auto-reply/README.md`（文字）＋ `rich.mjs`（圖文訊息的圖）→ 規格頁 `/preview/line-reply/` |
 | 招呼圖卡 | `drafts/channels/welcome-card.json`（Flex）＋ `README.md` 第十八節 → 規格頁 **`/preview/line-welcome/`**。✅ **2026-09-03 定案** |
 | 招呼圖卡的頭圖 | `drafts/line-hello/`（`generate.mjs`／`bubble.mjs`／`README.md`）→ `preview/line-hello/hero-zenmaru.jpg`，規格頁 `/preview/line-hello/`。✅ 定案 |
-| **綁定完成** | **提案中**：`/preview/line-bind-done/`（六案，2026-09-03 開）。推導在 `drafts/channels/README.md` **第十九節**，定稿文字在 `drafts/line-auto-reply/README.md` 第 24-2 節「貳」。⚠ 使用者挑完才寫 Flex 的 JSON |
+| **綁定完成** | **提案中**：`/preview/line-bind-done/`（**七案**，2026-09-03 開；**Ⓖ 是使用者 2026-09-04 自己整理的那一份**，帶進三件新事實：提醒**要回覆確認**、**24 小時沒回應系統會自動取消**並遞補、家人綁定**要洽櫃檯**）。推導在 `drafts/channels/README.md` **第十九節**（09-04 那一輪在 **19-12**），定稿文字在 `drafts/line-auto-reply/README.md` 第 24-2 節「貳」。⚠ 使用者挑完才寫 Flex 的 JSON。⚠⚠ **時間的說法 2026-09-04 定案「看診前 48 小時」**，切換條上那一排已經收掉；**但招呼圖卡仍然寫「看診前2天」**（使用者自己逐字寫的、已定案），兩則目前不一致，**要統一得他點頭**。⚠ 這個 48 小時和「看診日 2 天前（不含假日）」是兩個不同的數字（提醒時機 vs 改約期限），**不要順手改成一致** |
 | 綁定完成的頭圖 | ✅ **2026-09-03 第四版定案**（使用者：「很不錯，就用這個圖吧」）—— 成品 `preview/line-bind-done/hero-bind.jpg`（**1024×512**，`node drafts/bind-done-hero-crop.mjs`，原檔 `drafts/bind-done-v4-src.jpg`），已接進提案頁 Ⓑ 那一案。定稿提示詞與逐輪推導在 **`drafts/line-bind-done-prompt.md`** —— 〈創造亞當〉的診間版（Gemini 出圖，使用者自己跑，走了四版）。⚠⚠⚠ **不要把原作那個「上帝在上」抹平成兩人等高** ——第一版就是這樣被退回的（寓意沒了，而且兩個成年人同高對指會被讀成醫病關係不單純）：**一側是一團人、飄著、比較高，另一側一個人躺著、比較低**，這個不對等就是那張畫的梗。⚠ 但**不對等只能靠位置給、不可以靠肌肉張力給** —— 第三版把病患的手寫成鬆垮的，整個人看起來像喝醉（＝麻醉或鎮靜的聯想）。⚠ 臉一律照站上那一套（有膚色、眉毛、鼻子、有表情的嘴），**不隨風格參考圖走**。逐輪紀錄與六條驗收在那一份，通則在 ILLUSTRATION.md 第十三節 |
 | 提醒卡 | `drafts/channels/reminder-card.json`、時間換算 `timing.mjs` |
 
@@ -2366,7 +2366,10 @@ node drafts/line-auto-reply/rich.mjs     # 圖文訊息的圖
    `https://line.me/R/nv/recommendOA/@445rpiiv` **沒有實機測過**。
    ⚠ **不要改填 `https://line.me/R/ti/p/@445rpiiv`** —— 按的人已經是好友，
    點下去只會開到帳號頁，不會叫出轉傳。
-2. **廠商那八題**（見 `drafts/channels/README.md` 第十六、十七節），其中最要緊的是
+2. **廠商那八題**（見 `drafts/channels/README.md` 第十六、十七節）——**2026-09-04 多三題**
+   （第 19-12 節）：提醒卡的「確認」是什麼動作、**那 24 小時的計時會不會跳過休診日**
+   （週一的約診，提醒週六發、期限落在週日，電話沒有人接）、被自動取消時會不會通知病人。
+   八題裡最要緊的是
    **滿意度調查卡那兩顆按鈕連去哪**（可能是 review gating）、以及
    **後台的「招呼訊息」能不能送 Flex Message**（送不出去就要退回圖文分開的版本）。
 3. **上線前要把圖放到 `https://fangren.net/assets/line/`**：
