@@ -69,9 +69,25 @@ const footPhone = () => {
   return { d, gt: "translate(0 0)", ratio: null, flip: false, where: "index.html 頁尾的話筒" };
 };
 
+/* 來源三：站上那顆角形（「往下滑」與「回到最上面」用的同一條），**轉成朝右**。
+   站上是 18×9 的 `M1 1l8 7 8-7`、筆畫 1.4、圓頭圓角；朝右就是把 x/y 對調：
+   在 9×18 的框裡走 (1,1) → (8,9) → (1,17)。
+   ⚠⚠ 這一顆是**筆畫不是填色**，所以 `getBBox()` 量不到它的實際範圍
+     （那個函式不含 stroke）—— 外框要自己算：筆畫往四面各長出半個 .7。
+   ⚠ 為什麼要做成圖檔而不是打一個「›」：Flex 裡的字要靠系統字型，
+     那個字在 Android 與 iOS 上長得不一樣、粗細也對不上站上這一支。 */
+const CHEV_W = 1.4;
+const chevron = () => ({
+  d: "M1 1l7 8-7 8", gt: "translate(0 0)", ratio: null, flip: false,
+  stroke: CHEV_W, box: { x: 1 - CHEV_W / 2, y: 1 - CHEV_W / 2, w: 7 + CHEV_W, h: 16 + CHEV_W },
+  where: "站上「往下滑／回到最上面」那顆角形（轉成朝右）",
+});
+
 const CASES = [
   { name: "nogo", color: DEEP, src: shapeR2c3() },
   { name: "tel",  color: DEEP, src: footPhone() },
+  { name: "chev-white", color: "#ffffff", src: chevron() },
+  { name: "chev-deep",  color: DEEP,      src: chevron() },
 ];
 
 const chrome = (() => {
@@ -95,7 +111,7 @@ for (const c of CASES) {
   await page.setContent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">` +
     `<g id="outer"><g transform="${gt}"><path d="${d}"/></g></g></svg>`);
-  const box = await page.evaluate(() => {
+  const box = c.src.box || await page.evaluate(() => {
     const r = document.getElementById("outer").getBBox();
     return { x: r.x, y: r.y, w: r.width, h: r.height };
   });
@@ -109,7 +125,9 @@ for (const c of CASES) {
   const PW = Math.round(PH * ratio);
   const svg =
 `<svg xmlns="http://www.w3.org/2000/svg" width="${PW}" height="${PH}" viewBox="${box.x} ${box.y} ${box.w} ${box.h}">
-  <g transform="${wrap}"><g transform="${gt}"><path fill="${c.color}" fill-rule="evenodd" d="${d}"/></g></g>
+  <g transform="${wrap}"><g transform="${gt}"><path ${c.src.stroke
+      ? `fill="none" stroke="${c.color}" stroke-width="${c.src.stroke}" stroke-linecap="round" stroke-linejoin="round"`
+      : `fill="${c.color}" fill-rule="evenodd"`} d="${d}"/></g></g>
 </svg>`;
   const pg = path.join(tmp, c.name + ".html"), png = path.join(tmp, c.name + ".png");
   fs.writeFileSync(pg, `<!doctype html><meta charset="utf-8"><style>html,body{margin:0}` +
@@ -121,7 +139,8 @@ for (const c of CASES) {
   const buf = fs.readFileSync(png);
   const w = buf.readUInt32BE(16), h = buf.readUInt32BE(20);
   if (w !== PW || h !== PH) throw new Error(`${c.name}：出圖 ${w}×${h}，該是 ${PW}×${PH}`);
-  if (buf.length < 700) throw new Error(`${c.name}：檔案只有 ${buf.length} 位元組 —— 多半是全透明的空圖`);
+  /* ⚠ 角形是一條細線，檔案本來就小得多，所以門檻改看「墨佔多少」不是看位元組 */
+  if (buf.length < 300) throw new Error(`${c.name}：檔案只有 ${buf.length} 位元組 —— 多半是全透明的空圖`);
 
   const ink = await page.evaluate(async (src) => {
     const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
@@ -156,6 +175,8 @@ for (const c of CASES) {
     report.push({ hole });
   }
 
+  if (ink < .02) throw new Error(`${c.name}：墨只有 ${(ink * 100).toFixed(2)}% —— 圖幾乎是空的`);
+
   fs.copyFileSync(png, path.join(OUT, `mark-${c.name}.png`));
   console.log(`mark-${c.name}.png　${w}×${h}　長寬比 ${ratio.toFixed(4)}　` +
     `墨 ${(ink * 100).toFixed(1)}%　${(buf.length / 1024).toFixed(1)}KB　${c.color}　← ${where}`);
@@ -173,8 +194,11 @@ for (const r of report) {
   if (!r.name) continue;
   if (r.name === "nogo")
     console.log(`  nogo　34px 寬（同招呼卡那顆 shape-r2c3）→ ${(34 / r.ratio).toFixed(1)}px 高`);
-  else
+  else if (r.name === "tel")
     console.log(`  tel 　${(mainH * r.ratio).toFixed(1)}px 寬（＝和主鈕的標誌同高 ${mainH.toFixed(1)}px）`);
+  else
+    console.log(`  ${r.name}　11px 高 → ${(11 * r.ratio).toFixed(1)}px 寬` +
+      `（角形跟著字走，不跟著標誌走：主鈕的字 16px，站上那一族是字高的 .58~.7）`);
 }
 const h = report.find((r) => r.hole);
 if (h) console.log(`\n牙洞守門：翻轉後仍量到 ${h.hole} 個被包住的透明像素 ✓`);

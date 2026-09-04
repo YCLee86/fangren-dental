@@ -166,6 +166,29 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   line-height:1.4}
 .pv-new .btn img{flex:none;display:block;width:34px}
 .pv-new .btn span{font-size:16px;font-weight:700;letter-spacing:.02em}
+/* ---- 「點下去」的三件事（2026-09-04 深夜第四輪）------------------------
+   使用者：「好像少了要病患點下去的感覺，原來的版本有說點擊回覆，按鈕上也有手勢提示」。
+   ⚠⚠ 拆開來是**三個各自獨立的量**（同第九節第 17 條那個淡出：一句話講到三件事）：
+     ① 有沒有一句話**開口叫他點**（現況有，我們拿掉了）
+     ② 按鈕上有沒有「往前走」的記號（現況是 👉）
+     ③ 按鈕**看起來像不像按鈕**（現況是藥丸，我們是圓角方框）
+   修一個不會治好另外兩個，所以切換條上是三條尺。 */
+.pv-new .cta{font-size:14px;line-height:1.7;color:var(--ink-soft);text-align:center;
+  margin-top:14px}
+/* 現況那一句：紅字、粗體、上下各一個箭頭。⚠ 對照用，站上不會這樣寫 */
+.pv-new .cta.asis{color:#d0021b;font-weight:700}
+/* 角形＝站上「往下滑／回到最上面」那顆轉成朝右，由 remind-marks.mjs 產。
+   ⚠ 高度跟著**字**走不是跟著標誌走（站上那一族是字高的 .58~.7）：
+     16px 的字配 11px 高，長寬比 0.4828 算出 5.3px 寬。 */
+.pv-new .btn .chev,
+.pv-new .nob .chev,
+.pv-new .tel .chev{flex:none;display:block;width:5.3px;height:11px;margin-left:-2px}
+/* 主鈕的三種形狀。⚠⚠ `real` 那一格是**真的 Flex button** —— 它有 LINE 內建的
+   按壓效果，但 **button 只有一個 label、放不了圖示**（第十一之二節），
+   所以那一格的 logo 一定會消失。這是取捨不是漏做。 */
+.pv-new .btn.pill{border-radius:30px;padding:16px 12px}
+.pv-new .btn.real{border-radius:9px;padding:14px 12px}
+.pv-new .btn.real img{display:none}
 /* 「掰掰不去囉」：2026-09-04 使用者指定**加 logo**（shape_r2c3 嘴巴倒過來）
    ＋ 字改成他自己寫的「掰掰不去囉」（原本是我擬的「我不能到」）。
    ⚠ 它是次要動作，和主鈕**對等**會把「請你確認」這件事稀釋掉 —— 所以做成
@@ -271,10 +294,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 <div class="pv-bar" id="pv-bar">
   <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
   <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
-  <div class="r" id="row-h"><span class="lb">頭圖</span><span id="sw-h"></span></div>
+  <div class="r" id="row-c"><span class="lb">叫他點的那句</span><span id="sw-c"></span></div>
+  <div class="r" id="row-g"><span class="lb">角形</span><span id="sw-g"></span></div>
+  <div class="r" id="row-s"><span class="lb">主鈕的形狀</span><span id="sw-s"></span></div>
   <div class="r" id="row-no"><span class="lb">掰掰不去囉</span><span id="sw-n"></span></div>
-  <div class="r" id="row-w"><span class="lb">24小時</span><span id="sw-w"></span></div>
-  <div class="r" id="row-k"><span class="lb">就診須知</span><span id="sw-k"></span></div>
 </div>
 
 <span class="pv-probe" id="pv-probe"></span>
@@ -357,10 +380,38 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        切到「不放圖」時它會回來，識別不會整個消失。 */
   var HERO = { y: { name: "預留位置" }, n: { name: "不放圖" } };
 
+  /* ---- 「點下去的感覺」三條尺（2026-09-04 深夜第四輪）------------------
+     ① 叫他點的那一句。⚠ 文字是**我擬的**，這張卡其餘每一個字都是你寫的，
+        這一句你要換就換（現況那句是廠商的，放在最後一格只當對照）。 */
+  var CTA = {
+    none: { name: "不放", text: "" },
+    a:    { name: "請點下面的按鈕回覆", text: "請點下面的按鈕回覆" },
+    b:    { name: "點一下…讓我們知道喔", text: "點一下下面的按鈕，讓我們知道喔" },
+    asis: { name: "現況那句", text: "\u2193 請點擊下方按鈕，回覆是否前往看診 \u2193" }
+  };
+  /* ② 按鈕上的「往前走」記號。角形＝站上那顆轉成朝右（remind-marks.mjs 產）。
+     ⚠ `hand` 那一格是現況的 👉，**對照用** —— 站上全站 0 個 emoji，面板會標出來。 */
+  var CHEV = {
+    none: { name: "不放" },
+    main: { name: "只有主鈕" },
+    all:  { name: "三顆都放" },
+    hand: { name: "主鈕用 👉" }
+  };
+  /* ③ 主鈕的形狀。⚠⚠ `real` ＝ 真的 Flex button：有 LINE 內建的按壓效果，
+     但 **button 放不了圖示**，所以 logo 會消失（第十一之二節）。 */
+  var SHAPE = {
+    box:  { name: "圓角方框" },
+    pill: { name: "藥丸" },
+    real: { name: "真的按鈕（沒 logo）" }
+  };
+
   /* ⚠⚠ 預設 wa="none"、nb="line"：2026-09-04 使用者指定「粉紅底整個拿掉」、
      「藍灰底整個拿掉」、取消鈕加 logo。24 小時那一段的尺**留著**（它是他自己
      帶進來的事實，要放回去按一下就有），但預設不出現。 */
-  var v = "new", nb = "line", wa = "none", kn = "two", hr = "y";
+  /* ⚠ 預設就開在**我建議的那一組**（叫他點的那一句 ＋ 主鈕的角形，形狀不動）——
+     要看回上一版你點頭的樣子，把「叫他點的那句」切到「不放」、角形切到「不放」。 */
+  var v = "new", nb = "line", wa = "none", kn = "two", hr = "y",
+      cta = "b", cv = "main", sh = "box";
 
   /* 網址參數（⚠ 正規式一定要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值） */
   (function () {
@@ -372,6 +423,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     v  = (q.match(/[?&]v=(old|new)/) || [])[1] || v;
     nb = pick("n", NOB, nb); wa = pick("w", WARN, wa);
     kn = pick("k", KNOW, kn); hr = pick("h", HERO, hr);
+    cta = pick("c", CTA, cta); cv = pick("g", CHEV, cv); sh = pick("s", SHAPE, sh);
   })();
 
   /* 電話那一行在 Flex 裡**不會**自動變成可以撥的（純文字訊息才會）——
@@ -417,19 +469,46 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     if (kn !== "none") h += '<p class="box know">' + KNOW[kn].text + '</p>';
     if (wa === "box")  h += '<p class="box warn">' + WARN_TEXT + '</p>';
     if (wa === "line") h += '<p class="warnline">' + WARN_TEXT + '</p>';
-    /* 主鈕：可點的 box（Flex 的 button 放不了 logo），白色標誌 ＋「ok 沒問題」 */
-    h += '<span class="btn"><img src="../line-welcome/mark-white.png" alt="">'
-      +  '<span>ok 沒問題</span></span>';
+    /* ① 叫他點的那一句，排在主鈕正上方 */
+    if (cta !== "none")
+      h += '<p class="cta' + (cta === "asis" ? " asis" : "") + '">' + CTA[cta].text + '</p>';
+    /* 主鈕：可點的 box（Flex 的 button 放不了 logo），白色標誌 ＋「ok 沒問題」。
+       ⚠ `real` 那一格是真的 button，logo 由 CSS 藏起來（Flex 那邊是根本放不進去）。 */
+    var wc = '<img class="chev" src="mark-chev-white.png" alt="">';
+    var dc = '<img class="chev" src="mark-chev-deep.png" alt="">';
+    h += '<span class="btn' + (sh === "box" ? "" : " " + sh) + '">'
+      +  '<img src="../line-welcome/mark-white.png" alt="">'
+      +  '<span>ok 沒問題' + (cv === "hand" ? " \ud83d\udc49" : "") + '</span>'
+      +  (cv === "main" || cv === "all" ? wc : "") + '</span>';
     if (nb !== "drop") {
       h += '<span class="nob' + (nb === "text" ? " plain" : "") + '">'
-        +  '<img src="mark-nogo.png" alt=""><span>掰掰不去囉</span></span>';
+        +  '<img src="mark-nogo.png" alt=""><span>掰掰不去囉</span>'
+        +  (cv === "all" ? dc : "") + '</span>';
     }
     /* 「突然有事想改時間，請致電診所」＋ 電話鈕（2026-09-04 使用者指定）——
        ⚠ 這一句和上面那顆按鈕**不是二選一**，是兩件事接在一起：
          按鈕 ＝ 告訴我們你不會來；電話 ＝ 重新約時間。 */
     h += '<p class="telnote">突然有事想改時間，請致電診所</p>'
-      +  '<span class="tel"><img src="mark-tel.png" alt=""><span>' + TEL + '</span></span>';
+      +  '<span class="tel"><img src="mark-tel.png" alt=""><span>' + TEL + '</span>'
+      +  (cv === "all" ? dc : "") + '</span>';
     return h + '</div></div>';
+  }
+
+  /* 這張卡現在給了幾個「可以點」的線索。⚠ 這是**這一輪的判準**：
+     使用者說「少了要點下去的感覺」，那就要數得出來現在有幾個、加了之後有幾個。 */
+  function cues() {
+    var a = [];
+    if (cta !== "none") a.push("叫他點的那一句");
+    /* ⚠⚠ 主鈕切到「真的按鈕」時，**圖示一個都放不進去** —— logo 與角形一起消失
+       （Flex 的 button 只有一個文字標籤）。所以那時 ② 這條尺對主鈕是無效的。 */
+    if (cv === "hand") a.push("👉");
+    else if (cv === "main") a.push(sh === "real" ? "主鈕的角形（⚠ 真的按鈕放不進去）"
+                                                : "主鈕的角形");
+    else if (cv === "all") a.push(sh === "real" ? "另外兩顆的角形（⚠ 主鈕放不進去）"
+                                                : "三顆的角形");
+    if (sh === "pill") a.push("藥丸鈕");
+    if (sh === "real") a.push("真的 button（有按壓效果）");
+    return a;
   }
 
   /* ---- 量測 ---------------------------------------------------------- */
@@ -502,7 +581,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        ⚠ 現況那一張是照截圖重做的，沒有手動斷行，所以只對新版算。 */
     var self = {}, selfN = 0;
     if (v === "new") {
-      body.querySelectorAll(".hi,.lead,.dt,.box,.warnline,.btn,.nob,.telnote,.tel").forEach(function (el) {
+      body.querySelectorAll(".hi,.lead,.dt,.box,.warnline,.cta,.btn,.nob,.telnote,.tel").forEach(function (el) {
         (el.innerText || "").split("\n").forEach(function (x) {
           x = x.replace(/[ 　]/g, ""); if (x) { self[x] = 1; selfN++; }
         });
@@ -566,9 +645,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + (box.height / vh * 100).toFixed(0) + "%</b>"
       + "　字數 <b>" + text.replace(/\s/g, "").length + "</b>"
       + "<br>emoji <b>" + emo.length + "</b>" + (emo.length ? "（" + emo.join(" ") + "）" : "")
-        + "　紅字 <b>" + body.querySelectorAll(".red").length + " 行</b>"
-        + (emo.length || body.querySelectorAll(".red").length
+        + "　紅字 <b>" + body.querySelectorAll(".red,.cta.asis").length + " 行</b>"
+        + (emo.length || body.querySelectorAll(".red,.cta.asis").length
             ? "" : " <span class='ok'>都是 0</span>")
+      /* ⚠ 「點下去的線索」現在有幾個 —— 這一輪要判斷的正是這一項，
+         所以面板直接數出來，不要讓他自己看。 */
+      + (v === "new"
+          ? "<br>點下去的線索 <b>" + cues().length + "</b> 個"
+            + (cues().length ? "：" + cues().join("、")
+                             : " <span class='no'>—— 沒有任何一句叫他點</span>")
+          : "<br>點下去的線索 <b>3</b> 個：叫他點的那一句、👉、藥丸鈕")
       + (v === "new"
           ? "<br>自己斷 <b>" + selfN + " 行</b>，你這台畫出 <b>" + ls.length + " 行</b>"
             + (ls.length - selfN > 0
@@ -648,24 +734,75 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     document.getElementById("pv-slot").innerHTML = v === "old" ? oldHtml() : newHtml();
     bar("sw-v", { old: { name: "Ⓐ 現況" }, new: { name: "Ⓑ 新版" } },
         function () { return v; }, function (k) { v = k; });
-    bar("sw-h", HERO, function () { return hr; }, function (k) { hr = k; });
+    bar("sw-c", CTA, function () { return cta; }, function (k) { cta = k; });
+    bar("sw-g", CHEV, function () { return cv; }, function (k) { cv = k; });
+    bar("sw-s", SHAPE, function () { return sh; }, function (k) { sh = k; });
     bar("sw-n", NOB, function () { return nb; }, function (k) { nb = k; });
-    bar("sw-w", WARN, function () { return wa; }, function (k) { wa = k; });
-    bar("sw-k", KNOW, function () { return kn; }, function (k) { kn = k; });
-    /* 現況那一張是廠商的，四把尺對它無效 —— 關掉而不是拿掉，
+    /* ⚠ 頭圖／24小時／就診須知那三把尺**從切換條上收掉了**（同 head-search 那一輪：
+       第一輪定案的收成寫死的值、讓位給第二輪的新尺，切換條不會愈長愈長）。
+       **網址參數 `h`／`w`／`k` 仍然吃得到**，要把 24 小時那一段放回去就開
+       `?w=box`。手機上一次只能給四條，第五條就超過一屏的 24%。 */
+    /* 現況那一張是廠商的，這幾把尺對它無效 —— 關掉而不是拿掉，
        不然切回新版時整條會跳高一截。 */
-    ["row-h", "row-no", "row-w", "row-k"].forEach(function (id) {
+    ["row-c", "row-g", "row-s", "row-no"].forEach(function (id) {
       document.getElementById(id).className = "r" + (v === "old" ? " off" : "");
     });
     var q = v === "old" ? "?v=old"
-      : "?v=new&h=" + hr + "&n=" + nb + "&w=" + wa + "&k=" + kn;
+      : "?v=new&h=" + hr + "&n=" + nb + "&w=" + wa + "&k=" + kn
+        + "&c=" + cta + "&g=" + cv + "&s=" + sh;
     history.replaceState(null, "", location.pathname + q);
     measure();
     document.getElementById("pv-note").innerHTML = note();
   }
 
   function note() {
-    return "<b>這一輪照你 2026-09-04 第三次交代的六件改的，逐字：</b>"
+    return "⚠⚠⚠ <b>你說的「少了要點下去的感覺」，量出來是<u>三件各自獨立的事</u>，"
+      + "所以切換條上是三條尺 —— 修一個不會治好另外兩個。</b>"
+      + "現況那張卡三件都做了，我們上一版三件都沒有："
+      + "<br>① <b>沒有一句話開口叫他點。</b>現況寫「請點擊下方按鈕，回覆是否前往看診」。"
+      + "⚠ 這一件我認為<b>影響最大</b>：這一則的工作就是「請你回覆」，"
+      + "而<b>按鈕再像按鈕，也不如一句話直接開口</b>。"
+      + "<br>② <b>按鈕上沒有「往前走」的記號。</b>現況是 👉。"
+      + "<br>③ <b>按鈕的形狀。</b>現況是<b>藥丸</b>（一看就是鈕），我們是圓角方框 —— "
+      + "而方框在這一站是<b>「框」的語彙</b>（頁首那三個玻璃框、線稿的框），"
+      + "框不見得等於「可以按」。"
+      + "<hr>"
+      + "⚠⚠⚠ <b>還有第四件，而且它畫面上補不回來，我必須先講：</b>"
+      + "<br><b>我們的按鈕不是 Flex 的 <code>button</code>，是一個「可以點的 box」</b> —— "
+      + "因為 <b>Flex 的 button 只有一個文字標籤、放不進圖示</b>，"
+      + "而你要按鈕上有 logo。"
+      + "<br>代價就寫在規格裡：<b>box 沒有 button 內建的按壓效果</b>。"
+      + "所以「點下去的感覺」有一半是<b>按下去那一瞬間的回饋</b>，"
+      + "那一半我們為了 logo 已經換掉了。"
+      + "<br>⚠ 老實說：<b>LINE 新版對可點的 box 到底會不會給一層淡淡的按壓反白，"
+      + "我們沒有在實機上驗過</b>，官方文件也沒寫。"
+      + "<b>這一題按一下就知道，是廠商那邊測得到的事</b> —— 值得問。"
+      + "<br>「主鈕的形狀」那條尺最後一格<b>「真的按鈕（沒 logo）」</b>就是這個取捨："
+      + "拿回按壓效果、失去 logo。<b>擺出來讓你比，不是建議。</b>"
+      + "<hr>"
+      + "<b>我的建議：①＋②，③ 維持圓角方框。</b>"
+      + "<br>・<b>①</b> 加那一句 —— 它是這一則的目的，而且<b>不佔按鈕的版面</b>。"
+      + "<br>・<b>②</b> 用<b>角形</b>不要用 👉。那顆角形是<b>站上自己的記號</b>："
+      + "首頁「往下滑」、「回到最上面」、文章卡的「繼續讀」用的都是同一條，"
+      + "這裡只是<b>轉成朝右</b>（<code>remind-marks.mjs</code> 產的，不是打一個「›」——"
+      + "那個字在 Android 與 iOS 上長得不一樣）。"
+      + "⚠ 站上全站 <b>emoji 0 個</b>，👉 那一格是<b>對照用的</b>，面板會把它數出來。"
+      + "<br>・<b>③</b> 藥丸那一格你可以比比看，但 <b>2026-08-15 你自己說過"
+      + "「圓圈跟網站主題不搭，主題是方框導圓」</b> —— 所以我沒有預設它。"
+      + "<hr>"
+      + "⚠ <b>那一句的文字是我擬的</b>（兩個寫法），這張卡其餘每一個字都是你寫的 —— "
+      + "<b>要換就換</b>。最後一格是現況那句（紅字 ＋ 上下箭頭），放著只當對照。"
+      + "<br>⚠ 角形的尺寸是算出來的：<b>跟著字走不是跟著標誌走</b>"
+      + "（站上那一族是字高的 .58~.7）—— 16px 的字配 <b>11px 高</b>，"
+      + "長寬比 0.4828 算出 <b>5.3px 寬</b>。"
+      + "<hr>"
+      + "⚠ <b>切換條上那三把已經定案的尺（頭圖／24 小時／就診須知）收掉了</b>，"
+      + "手機上一次只放得下四條。<b>網址參數還吃得到</b>："
+      + "<code>?w=box</code> 就把 24 小時那一段放回來。"
+      + "<hr>"
+      + "<b>下面是前三輪的紀錄。</b>"
+      + "<hr>"
+      + "<b>你 2026-09-04 第三次交代的六件，逐字：</b>"
       + "<br>①「攜帶健保卡」→「<b>請</b>攜帶健保卡」"
       + "<br>②「有發燒…請多休息，並來電改約」→「<b>如</b>有發燒、咳嗽、呼吸道症狀，"
       + "請多休息<b>並</b>來電改約」（那個逗號跟著你的寫法拿掉了）"
