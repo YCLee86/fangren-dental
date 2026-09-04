@@ -225,7 +225,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      16.8px 寬 ＝ 和主鈕那顆標誌**同高**（34 ÷ 2.029 ＝ 16.8）。 */
 /* ⚠ 電話那一句和它的按鈕**吃同一條規則**（同上）—— 版面上有兩組「一句話 ＋ 一顆按鈕」，
    兩組的間隔不一致的話，讀者會以為那是兩種不同的關係。切換條那把尺同時管這兩組。 */
-.pv-new .telnote{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:14px}
+/* ⚠ 置中（2026-09-04 使用者指定）—— 這樣兩組「一句話 ＋ 一顆按鈕」的排法
+   完全一致：兩句都置中、兩顆按鈕本來就置中。 */
+.pv-new .telnote{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:14px;
+  text-align:center}
 .pv-new .telnote + .tel{margin-top:calc(var(--ctagap, 8px) - 4.8px)}
 .pv-new .tel{display:flex;align-items:center;justify-content:center;gap:8px;
   border:1px solid var(--deep);border-radius:9px;padding:11px 6px;margin-top:8px;
