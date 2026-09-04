@@ -1,46 +1,86 @@
 {
   "_說明": [
-    "⚠⚠⚠ 過時（2026-09-04）：這一份是 2026-09-02 的版本，**不要拿給廠商**。",
-    "  它缺了三件 09-04 才進來的東西：①「24 小時內無回應系統會自動取消約診」整段",
-    "  （而那 24 小時正是從這一則送出的那一刻開始算的）②改約那一句已經換成使用者",
-    "  自己的寫法「最晚請於…、於診所開診時段來電變更」③日期還帶著年份。",
-    "  新的版型在提案頁 /preview/line-remind/（五把尺還沒定案），推導在 README 第二十節。",
-    "  **使用者挑完哪一格，這一份才會重寫。**",
+    "看診前 48 小時的約診提醒（LINE Flex Message）。",
+    "**2026-09-04 定稿**（使用者：「完工」）。規格頁是 /preview/line-remind/，",
+    "逐輪推導與落選案在 drafts/channels/README.md 第三、八、九、十五、二十節。",
     "",
-    "約診提醒卡的建議版型（LINE Flex Message）。2026-09-02。",
-    "如果廠商的系統是用 Flex Message 產生這張卡，這一份可以直接給他。",
-    "{{patient}} / {{date}} 是要由系統填入的欄位，不要寫死。",
-    "顏色全部來自 PALETTE.md，沒有新增任何一顆：",
-    "  紙 #E2E5E6・卡 #F4F4F5・墨 #2A2C27・柔墨 #5C5F57・線 #CDD0D2",
-    "  綠（一般牙科套色）#3F654A・深階 #2C5238",
-    "兩顆按鈕的 action 沿用廠商現有的（這裡填 postback 只是佔位）。",
-    "⚠ 就診須知那兩句是臨床內容，要醫師點頭才能改。",
-    "兩顆按鈕的嘴形圖示：Flex 的 button 不能放 SVG，做法是把形狀輸出成小 PNG（透明底），用 box + image + text 自己排一顆按鈕；或請廠商把形狀併進按鈕的背景圖。形狀要用診所自己的向量原檔（2024 聖誕那份 pptx 裡的一整套），不要用提案頁上那兩個近似的。"
+    "⚠⚠ 這一則和另外三則不一樣：它是**主動推播**，所以**要計費**",
+    "  （招呼訊息、自動回應、關鍵字回應都是回應類，發幾次都不用錢）。",
+    "  它同時是**整個帳號曝光最高的訊息** —— 每一次約診都送一次。",
+    "",
+    "**卡上每一個字都是使用者自己寫的。**我擬過的兩處他都換掉了：",
+    "  「我不能到」→「掰掰不去囉」、「臨時有事須改約」→「突然有事想改時間」。",
+    "  唯一還是我擬的是「點一下下面的按鈕，讓我們知道喔」那一句（他在四格裡挑的）。",
+    "",
+    "⚠⚠⚠ **「2天後」有事實上的風險，還沒解。**使用者給的現況截圖是 7/3（五）送、",
+    "  約診 7/6（一）—— **整整 3 天**（48 小時前是週六，診所沒開）。寫死「2天後」",
+    "  **每逢週一、週二的約診都會對不上**。三條路：維持但要廠商保證固定 2 天／",
+    "  把天數拿掉（日期就在下一行、而且是全卡最大的字）／讓系統填。",
+    "  **沒有自己改掉他的字**，這一版就是「2天後」。",
+    "",
+    "⚠⚠ **就診須知裡「戴口罩」被拿掉了**（使用者指定）。現況第 1 條是",
+    "  「進入醫療場所者請戴『口罩』與攜帶『健保卡』」。那是**臨床與感控內容、",
+    "  要醫師點頭** —— 拿掉口罩是政策改變，不是文案精簡。",
+    "",
+    "⚠⚠ **三顆按鈕在 Flex 裡都是「可以點的 box」，不是 button** ——",
+    "  因為 **Flex 的 button 只有一個文字標籤、放不進圖示**（第十一之二節），",
+    "  而使用者要按鈕上有 logo。代價：**box 沒有 button 內建的按壓效果**。",
+    "  ⚠ LINE 對可點的 box 會不會給一層淡淡的按壓反白，**我們沒有在實機上驗過**，",
+    "    官方文件也沒寫 —— **這一題要問廠商**。",
+    "",
+    "⚠⚠⚠ **margin 的數字和規格頁的 CSS 不會逐字相同，這是刻意的：**",
+    "  規格頁量的是**墨到墨**（字面到按鈕），而 CSS 的行高 1.7 在字面下方多出",
+    "  **4.8px 的半行距** —— 同一段半行距在 Flex 的 text 元件裡本來就有。",
+    "  所以使用者挑的「那一句離按鈕 5px」換算成 Flex 是 **margin: 0px**，不是 5px。",
+    "  ⚠ 兩組「一句話 ＋ 一顆按鈕」（確認、電話）**吃同一組數字**，不要只改一組。",
+    "  ⚠ 其餘的 margin 直接寫 px（Flex 的 margin/padding 吃 px 字串，不必用 xs/sm/md）。",
+    "",
+    "⚠⚠ **上面那 17px（就診須知 → 那一句）不要縮** —— 它是「就診須知」和",
+    "  「請你回覆」兩件事的分界。使用者要的是**上下的比例**（下明顯小於上），",
+    "  不是兩邊一起縮。定案 上 17 / 下 5 ＝ 0.29。",
+    "",
+    "⚠ **拿掉的兩塊淡底各帶走一件事實**（使用者指定拿掉，不要自己加回去）：",
+    "  ① 粉紅底 ＝「若24小時內無回應，系統將自動取消約診，以遞補他人的候診需求。」",
+    "     ⚠⚠ 那 24 小時是**從這一則送出的那一刻**開始算的 —— 拿掉之後病人是在",
+    "     不知情的狀態下被計時。綁定完成那一則有寫，但那可能是三個月前的事。",
+    "  ② 藍灰底 ＝「這裡沒有專人即時回覆訊息」＋「最晚請於看診日前2天(不含假日)」。",
+    "     後面那一句拿掉是對的：這張卡 48 小時才送，期限那時已經到期或過了。",
+    "",
+    "⚠ **〔病人姓名〕與日期是系統填的欄位**，不要寫死（這裡用 {{patient}}／{{date}}）。",
+    "  ⚠⚠ 名字那一行**不能手動斷行**（名字幾個字我們不知道），所以「哈囉　名字」",
+    "     自己一行、「提醒2天後…」另起一行。**用字一個都沒改，只是換行。**",
+    "  ⚠ 日期只要求兩件：**去掉年份、月日改中文**；括號維持廠商現在的**半形**",
+    "     （全形一組多吃約 19px，而且要求的改動愈小愈可能真的改到）。",
+    "",
+    "⚠⚠ **廠商那幾題，這一則直接受影響：**",
+    "  ① **推播送不送得出 Flex Message** —— 送不出去的話只能退回純文字，",
+    "     那一版**沒有按鈕**，整個「請按按鈕確認」的做法就不成立。**最要緊。**",
+    "  ② 那 24 小時**會不會跳過休診日**（週一的約診，提醒週六發、期限落在週日，",
+    "     診所六日休診、電話沒人接 —— 病人會在沒辦法回應的時段被自動取消）。",
+    "  ③ 被自動取消時**會不會再發一則通知病人**。",
+    "  ④ 兩顆按鈕按下去要送什麼（postback 的 data 由廠商定，這裡是佔位符）。",
+    "  ⑤ **那顆確認鈕現在診所會看嗎？**",
+    "",
+    "頭圖 hero-remind.jpg 是 1024×512（2:1）—— 候診間裡一群人在揮手。",
+    "⚠ Flex 的 image 上限就是 1024×1024。⚠ 上線前要放到 https://fangren.net/assets/line/。",
+    "⚠⚠ 這一則**每次約診都送一次**，所以圖要**耐看、不要有太強的梗**",
+    "  （綁定完成那張一輩子只出現一次，可以更用力）。",
+    "",
+    "字級照 LINE Flex 的固定 px：xl 22（日期）／md 16（開場與按鈕的字）／sm 14（其餘）。",
+    "顏色一顆都沒新增：卡 #F4F4F5・紙 #E2E5E6・墨 #2A2C27・柔墨 #5C5F57・",
+    "綠 #3F654A（主鈕）・深階 #2C5238（兩顆線框鈕）。**emoji 0 個、紅字 0 行。**",
+    "圖檔三顆：mark-white.png（招呼卡already產好，34px）／mark-nogo.png（243×79，34px）／",
+    "mark-tel.png（79×79，17px）／mark-chev-white.png（38×79，5px）——",
+    "後三顆由 node drafts/channels/remind-marks.mjs 產。"
   ],
   "type": "bubble",
   "size": "mega",
-  "header": {
-    "type": "box",
-    "layout": "horizontal",
-    "spacing": "sm",
-    "paddingAll": "12px",
-    "backgroundColor": "#F4F4F5",
-    "contents": [
-      {
-        "type": "image",
-        "url": "https://fangren.net/assets/icon-192.png",
-        "size": "20px",
-        "aspectMode": "cover"
-      },
-      {
-        "type": "text",
-        "text": "芳仁牙醫診所",
-        "size": "sm",
-        "weight": "regular",
-        "color": "#5C5F57",
-        "gravity": "center"
-      }
-    ]
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/line/hero-remind.jpg",
+    "size": "full",
+    "aspectRatio": "2:1",
+    "aspectMode": "cover"
   },
   "body": {
     "type": "box",
@@ -51,9 +91,20 @@
     "contents": [
       {
         "type": "text",
-        "text": "提醒您，{{patient}} 的看診時間快到了",
-        "size": "xs",
+        "size": "md",
+        "color": "#2A2C27",
+        "wrap": true,
+        "contents": [
+          { "type": "span", "text": "哈囉　" },
+          { "type": "span", "text": "{{patient}}", "weight": "bold" }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "提醒2天後有約要看牙齒喔",
+        "size": "sm",
         "color": "#5C5F57",
+        "margin": "2px",
         "wrap": true
       },
       {
@@ -62,75 +113,167 @@
         "size": "xl",
         "weight": "bold",
         "color": "#2A2C27",
-        "margin": "sm",
+        "margin": "6px",
         "wrap": true
       },
       {
         "type": "box",
         "layout": "vertical",
         "backgroundColor": "#E2E5E6",
-        "cornerRadius": "9px",
-        "paddingAll": "11px",
-        "margin": "lg",
-        "spacing": "xs",
+        "cornerRadius": "8px",
+        "paddingTop": "10px",
+        "paddingBottom": "10px",
+        "paddingStart": "12px",
+        "paddingEnd": "12px",
+        "margin": "12px",
         "contents": [
           {
             "type": "text",
-            "text": "看診前請帶健保卡，並戴上口罩。",
-            "size": "xs",
-            "color": "#5C5F57",
-            "wrap": true
-          },
-          {
-            "type": "text",
-            "text": "如果有發燒或咳嗽，先打電話給診所就好。",
-            "size": "xs",
+            "text": "請攜帶健保卡。\n如有發燒、咳嗽、呼吸道症狀，\n請多休息並來電改約。",
+            "size": "sm",
             "color": "#5C5F57",
             "wrap": true
           }
         ]
       },
       {
-        "type": "button",
-        "style": "primary",
-        "color": "#3F654A",
-        "height": "md",
-        "margin": "lg",
-        "action": {
-          "type": "postback",
-          "label": "我會到",
-          "data": "confirm"
-        }
+        "type": "text",
+        "text": "點一下下面的按鈕，讓我們知道喔",
+        "size": "sm",
+        "color": "#5C5F57",
+        "align": "center",
+        "margin": "14px",
+        "wrap": true
       },
       {
-        "type": "button",
-        "style": "link",
-        "height": "sm",
+        "type": "box",
+        "layout": "horizontal",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "backgroundColor": "#3F654A",
+        "cornerRadius": "9px",
+        "paddingAll": "12px",
+        "margin": "0px",
         "action": {
           "type": "postback",
-          "label": "不克前往",
-          "data": "cancel"
-        }
+          "label": "ok 沒問題",
+          "data": "【廠商填：確認出席】",
+          "displayText": "ok 沒問題"
+        },
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/mark-white.png",
+            "size": "34px",
+            "aspectRatio": "2.025:1",
+            "aspectMode": "fit",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "ok 沒問題",
+            "size": "md",
+            "weight": "bold",
+            "color": "#FFFFFF",
+            "align": "center",
+            "margin": "8px",
+            "flex": 0
+          },
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/mark-chev-white.png",
+            "size": "5px",
+            "aspectRatio": "0.481:1",
+            "aspectMode": "fit",
+            "margin": "6px",
+            "flex": 0
+          }
+        ]
       },
       {
-        "type": "separator",
-        "margin": "md",
-        "color": "#CDD0D2"
+        "type": "box",
+        "layout": "horizontal",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "borderColor": "#2C5238",
+        "borderWidth": "1px",
+        "cornerRadius": "9px",
+        "paddingTop": "11px",
+        "paddingBottom": "11px",
+        "paddingStart": "6px",
+        "paddingEnd": "6px",
+        "margin": "8px",
+        "action": {
+          "type": "postback",
+          "label": "掰掰不去囉",
+          "data": "【廠商填：取消約診】",
+          "displayText": "掰掰不去囉"
+        },
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/mark-nogo.png",
+            "size": "34px",
+            "aspectRatio": "3.076:1",
+            "aspectMode": "fit",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "掰掰不去囉",
+            "size": "md",
+            "weight": "bold",
+            "color": "#2C5238",
+            "align": "center",
+            "margin": "8px",
+            "flex": 0
+          }
+        ]
       },
       {
         "type": "text",
-        "margin": "md",
-        "size": "xxs",
+        "text": "突然有事想改時間，請致電診所",
+        "size": "sm",
         "color": "#5C5F57",
-        "wrap": true,
-        "text": "按了「不克前往」我們會收到，並打電話跟你確認。改期請在看診日的兩天前（不含假日）：05-5339369"
+        "align": "center",
+        "margin": "14px",
+        "wrap": true
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "borderColor": "#2C5238",
+        "borderWidth": "1px",
+        "cornerRadius": "9px",
+        "paddingTop": "11px",
+        "paddingBottom": "11px",
+        "paddingStart": "6px",
+        "paddingEnd": "6px",
+        "margin": "0px",
+        "action": { "type": "uri", "label": "05-5339369", "uri": "tel:+88655339369" },
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/mark-tel.png",
+            "size": "17px",
+            "aspectRatio": "1:1",
+            "aspectMode": "fit",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "05-5339369",
+            "size": "md",
+            "weight": "bold",
+            "color": "#2C5238",
+            "align": "center",
+            "margin": "8px",
+            "flex": 0
+          }
+        ]
       }
     ]
-  },
-  "styles": {
-    "header": {
-      "separator": true,
-      "separatorColor": "#CDD0D2"
-    }
   }
 }
