@@ -409,11 +409,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        一次跳出好幾張，識別由聊天室給，重複 N 次沒有意義。 */
   function nwCard(a, isQuery) {
     var h = '<div class="pv-hc pv-nw">';
-    if (!isQuery) {
-      h += hero === "y"
-        ? '<img class="hero" src="../line-remind/hero-remind.jpg" width="1024" height="512" alt="">'
-        : '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>';
-    }
+    /* 頭圖：預約成功那一張是「頭圖 或 頂端那行診所名」二選一。
+       ⚠⚠ 輪播**預設兩個都不放**（識別由聊天室給，重複 N 次沒有意義），
+         但 ?h=y 時也照畫 —— 「一張圖 ＝ N × 104px」這件事要看得到，
+         不能用講的。第一版寫成 if (!isQuery) 包住整段，結果輪播上按 ?h=y
+         完全沒有反應、也不報錯（同第九節第 24、25 條那一類）。 */
+    if (hero === "y")
+      h += '<img class="hero" src="../line-remind/hero-remind.jpg" width="1024" height="512" alt="">';
+    else if (!isQuery)
+      h += '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>';
     /* 浮水印要排在內容**前面**（先畫的在底下），而且兩層都要 positioned。
        ⚠⚠ Flex 那邊還有一條：**一個 box 的第一個子元件不可以是 absolute**，
          所以真的寫 JSON 時浮水印不能擺在最前面，要先放一個正常的子元件。 */
