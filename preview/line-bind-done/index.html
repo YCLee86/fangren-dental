@@ -166,27 +166,23 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-note b{color:var(--ink)}
 .pv-note code{font-size:.94em;overflow-wrap:anywhere}
 
-/* ---- 切換條 ---------------------------------------------------------- */
-.pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:9;
-  background:rgba(226,229,230,.94);backdrop-filter:blur(8px);
-  border-top:1px solid var(--rule);padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
-.pv-bar .in{max-width:430px;margin:0 auto}
-.pv-bar .lb{font-size:.68rem;color:var(--ink-soft);margin:0 0 4px}
-.pv-bar .row{display:flex;gap:5px;flex-wrap:wrap}
-.pv-bar button{flex:1 1 0;min-width:52px;font:inherit;font-size:.74rem;line-height:1.25;
-  padding:7px 4px;border:1px solid var(--deep);border-radius:8px;background:transparent;
-  color:var(--deep);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.pv-bar button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
-.pv-bar .row2{margin-top:6px}
-.pv-bar .row2 button{flex:1 1 0}
+/* ---- 定案之後：切換條整條拿掉了（第十一之五節：規格頁不留切換條）------
+   八案、頭圖、底色三把尺全部收成寫死的值，落選案留在 git 與
+   drafts/channels/README.md 第十九節。要調回提案頁看八案：
+     git show <這個 commit 的前一個>:preview/line-bind-done/index.html
+   ---- 退路那一段（送不出 Flex 時用的純文字版）------------------------- */
+.pv-h2{font-size:1rem;font-weight:700;margin:34px 0 0;letter-spacing:.01em}
+.pv-h2 + .pv-sub{margin-top:6px}
 </style>
 </head>
 <body>
 <div class="pv-wrap">
-  <h1>綁定完成的那一則</h1>
+  <h1>綁定完成的那一則　<span style="font-weight:400;font-size:.7em">規格</span></h1>
   <p class="pv-sub">病人在綁定頁按完成之後，聊天室裡會出現的那一則。
-  <b>八案</b>，差的是<b>結構</b>不是字。底下那條可以切。<br>
-  <b>Ⓖ／Ⓗ 是你 2026-09-04 自己整理的那一份</b>（同一份內容，一個純文字、一個圖卡）。</p>
+  <b>2026-09-04 定稿</b>：文字是你自己整理的那一份，做成<b>圖卡</b>、<b>有頭圖</b>、
+  改約那一塊用<b>淡藍</b>的淡底。<br>
+  Flex 的 JSON 在 <code>drafts/channels/bind-done-card.json</code>；
+  八案的推導與落選案在 <code>drafts/channels/README.md</code> 第十九節。</p>
 
   <div class="pv-phone">
     <div class="pv-head"><span class="av"></span><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
@@ -206,14 +202,20 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   <div class="pv-panel" id="pv-panel"></div>
   <p class="pv-note" id="pv-note"></p>
-</div>
 
-<div class="pv-bar">
-  <div class="in">
-    <p class="lb" id="pv-lb">版本</p>
-    <div class="row" id="pv-vrow"></div>
-    <div class="row row2" id="pv-hrow"></div>
-    <div class="row row2" id="pv-erow"></div>
+  <h2 class="pv-h2">退路：純文字版</h2>
+  <p class="pv-sub"><b>還要先問廠商：關鍵字回應送不送得出 Flex Message。</b>
+  送不出去的話這一則只能用純文字 —— <b>一字不差的同一份內容</b>，
+  差的是純文字<b>沒有粗體、沒有顏色、沒有段落間距</b>，
+  所以選單名回到「」、兩塊淡底變成靠空行分段。</p>
+
+  <div class="pv-phone">
+    <div class="pv-head"><span class="av"></span><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
+    <div class="pv-chat">
+      <div class="pv-msg"><span class="pv-av"></span>
+        <div id="pv-slot2"></div>
+        <span class="pv-t">14:07</span></div>
+    </div>
   </div>
 </div>
 
@@ -414,16 +416,17 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      它的代價：一張 2:1 的頭圖讓卡片長 134px，面板會現場算給你看。 */
   var HERO = { y: { name: "有頭圖" }, n: { name: "不放圖" } };
 
-  /* ⚠ 網址參數的正規式要寫 [a-z0-9]+ —— 寫 [a-z]+ 會吃不到 h48 這種帶數字的值，
-     比對失敗後悄悄退回預設，等於參數沒作用（CLAUDE.md 第九節那條）。 */
-  function param(k, ok, dflt) {
-    var m = new RegExp("[?&]" + k + "=([a-z0-9]+)").exec(location.search);
-    return m && ok[m[1]] ? m[1] : dflt;
-  }
-  var cur = param("v", V, "g");
-  var hr = param("h", HERO, "y");
-  var em = param("e", EMPH_TEXT, "n");
-  var sb = param("s", SAYBG, "pa");
+  /* ⚠⚠ 2026-09-04 定稿（使用者：「最後定稿的是這個」，附了那一格的截圖）——
+     **三把尺全部收成寫死的值、切換條整條拿掉**（第十一之五節：規格頁不留切換條）。
+       版本   Ⓗ「你整理的・圖卡」   落選 Ⓐ~Ⓕ（六案）與 Ⓖ（同一份的純文字版）
+       頭圖   有                    落選「不放圖」
+       底色   淡藍 .10              落選 紙灰、同上面（磚紅 .09）
+     ⚠ Ⓖ 沒有真的落選 —— 它是**送不出 Flex 時的退路**，所以這一頁下面仍然畫著它。
+     ⚠ 落選的六案留在 git 與 README 第十九節，不在這一頁上。 */
+  var cur = "h";      /* Ⓗ 你整理的・圖卡 */
+  var hr = "y";       /* 有頭圖 */
+  var em = "n";       /* 純文字那一版的強調：不強調（那一側還沒定案，見 README 19-13） */
+  var sb = "bl";      /* 改約那一塊：淡藍 .10 */
 
   function fill(s) { return s.replace(/\{T\}/g, T_LABEL); }
   /* 電話那一行在 LINE 裡會自己變成可以撥的連結，所以畫成連結的樣子 */
@@ -457,38 +460,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         '<p class="fine">' + fill(v.fine) + "</p>" +
         "</div></div>";
     }
-    buttons();
+    /* 退路：同一份內容的純文字版（送不出 Flex 時用） */
+    var s2 = document.getElementById("pv-slot2");
+    if (s2) s2.innerHTML = '<div class="pv-bub">' + tel(fill(textOf(V.g))) + "</div>";
     measure();
     /* 圖還沒下載完就量的話高度會少一截 —— 屬性與 aspect-ratio 已經先把位置留好了，
        這一條只是保險（快取沒中的第一次開頁）。 */
     var im = document.getElementById("pv-hero");
     if (im && !im.complete) im.addEventListener("load", measure);
-  }
-
-  function buttons() {
-    var r1 = document.getElementById("pv-vrow");
-    r1.innerHTML = ORDER.map(function (k) {
-      return '<button data-v="' + k + '" aria-pressed="' + (k === cur) + '">' + V[k].name + "</button>";
-    }).join("");
-    /* 這一排只在有頭圖可放的那一案出現（其餘六案是純文字泡泡，放不了圖） */
-    var r3 = document.getElementById("pv-hrow");
-    r3.innerHTML = V[cur].hero
-      ? Object.keys(HERO).map(function (k) {
-          return '<button data-h="' + k + '" aria-pressed="' + (k === hr) + '">' + HERO[k].name + "</button>";
-        }).join("")
-      : "";
-    /* 第三排：純文字那一案「24 小時那一段怎麼強調」（圖卡已定案淡底方塊、收掉了）；
-       圖卡那一案換成「改約那一塊的底色」。兩者互斥，共用同一排。 */
-    var r4 = document.getElementById("pv-erow"), v4 = V[cur], es = emphSet(v4);
-    r4.innerHTML = es
-      ? Object.keys(es).map(function (k) {
-          return '<button data-e="' + k + '" aria-pressed="' + (k === em) + '">' + es[k].name + "</button>";
-        }).join("")
-      : (v4.warn && v4.kind === "card"
-          ? Object.keys(SAYBG).map(function (k) {
-              return '<button data-s="' + k + '" aria-pressed="' + (k === sb) + '">' + SAYBG[k].name + "</button>";
-            }).join("")
-          : "");
   }
 
   /* 逐字量 top 分組 —— 這樣才知道**實際**折成幾行、末行剩幾個字。
@@ -657,13 +636,18 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<hr>" + v.note;
 
     document.getElementById("pv-note").innerHTML =
-      "📎 <b>這幾張已經存成圖片、也放在網路上了</b>（2026-09-04，"
-      + "<code>node drafts/channels/bind-done-png.mjs</code>）——"
-      + "圖卡三格底色各一張、純文字泡泡一張，另有一張三格並排的對照表："
-      + "<br><code>/preview/line-bind-done/shot-cards.png</code>（三格並排）"
-      + "<br><code>…/shot-card-pa.png</code>　<code>…/shot-card-bl.png</code>　"
-      + "<code>…/shot-card-br.png</code>　<code>…/shot-text.png</code>"
-      + "<br>⚠ 卡片實寬 268px，出圖是 <b>3×（804px 寬）</b>，縮放檢視都還清楚。"
+      "✅ <b>2026-09-04 定稿</b>（你：「最後定稿的是這個」）："
+      + "<b>Ⓗ 你整理的・圖卡 ＋ 有頭圖 ＋ 淡藍</b>。"
+      + "三把尺已經收成寫死的值、<b>切換條整條拿掉</b>（第十一之五節：規格頁不留切換條）。"
+      + "落選的是 Ⓐ~Ⓕ 六案、「不放圖」、以及底色的紙灰與同上面 —— 都留在 git 與 "
+      + "<code>drafts/channels/README.md</code> 第十九節，這一頁上不再出現。"
+      + "<br>⚠ <b>Ⓖ 沒有真的落選</b>：它是「廠商送不出 Flex Message」時的退路，"
+      + "所以這一頁最底下仍然畫著它。"
+      + "<br>📄 <b>Flex 的 JSON 寫好了</b>：<code>drafts/channels/bind-done-card.json</code>，"
+      + "由 <code>node drafts/channels/check-bind-done.mjs</code> 綁著這一頁"
+      + "（文字／字級／顏色／兩塊淡底／紅線逐項比對，對不上就 throw）。"
+      + "<br>📎 <b>圖片</b>：<code>/preview/line-bind-done/shot-bind-done.png</code>"
+      + "（卡片實寬 268px，出圖 <b>3×＝804px 寬</b>，<code>node drafts/channels/bind-done-png.mjs</code>）。"
       + "⚠⚠ 拍的是<b>這一頁自己的那張卡</b>，不是另外畫一份 —— 這一頁改了圖就要重跑，"
       + "不然它會開始說謊。"
       + "<br>⚠ <b>最後會把 LINE 這幾頁整合成一頁給廠商看</b>"
@@ -685,7 +669,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>⚠⚠ 上線前圖要放到 <code>https://fangren.net/assets/line/hero-bind.jpg</code>（Flex 只吃 HTTPS 的網址）——"
       + "<b>那個資料夾還不存在</b>，<code>tools/dist.mjs</code> 也還沒有它（CLAUDE.md 第十一之七節第 3 項）。"
       + "<br>⚠⚠ <b>時間的說法 2026-09-04 定案「看診前 48 小時」</b>（你：「改成前48小時」），"
-      + "切換條上那一排（2 天／48 小時）已經收掉、值寫死在這一頁裡。"
+      + "那一排（2 天／48 小時）已經收掉、值寫死在這一頁裡。"
       + "<br>⚠⚠ <b>但招呼圖卡目前仍然寫「看診前2天發送提醒通知喔～」</b>（<code>welcome-card.json</code>，"
       + "那一則是你自己逐字寫的、2026-09-03 已定案），所以現在<b>兩則不一樣</b>。"
       + "要統一的話動的是你自己寫的那一句，<b>沒有你點頭我不會改</b>。"
@@ -710,13 +694,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "（上面那一案的藍底線就是），<b>Flex 圖卡裡的文字不會</b>。所以 Ⓑ／Ⓗ 的號碼"
       + "現在<b>看起來、也就是一行字</b>。要它仍然撥得下去，就在那一行掛一個 "
       + "<code>tel:+88655339369</code> 的 action —— <b>外觀完全不變</b>，只是點得下去。"
-      + "<b>要不要掛，你說。</b>"
+      + "<b>要不要掛，你說</b>（JSON 現在沒有掛）。"
       + "<br>⚠⚠ <b>圖卡那一側 2026-09-04 定案「淡底方塊」</b>（你：「上面的淡底方塊我比較喜歡」），"
-      + "已經收成寫死的值、從切換條上拿掉（落選：不強調／加粗／加粗＋磚紅）。"
+      + "已經收成寫死的值（落選：不強調／加粗／加粗＋磚紅）。"
       + "面板仍然現場量那三行的對比（<b>14.42</b>，底是半透明磚紅疊在卡色上、要用合成後的顏色算）。"
       + "<br>⚠⚠ <b>改約那一段也做成淡底方塊了</b>（你：「這一段也用淡底方塊好了」），"
       + "而且<b>可以換顏色</b> —— Flex 的 box 就是一個 backgroundColor，想要什麼色都行。"
-      + "底下那一排三格全部取自站上既有的色，<b>沒有新增任何顏色</b>。"
+      + "那一排三格全部取自站上既有的色，<b>沒有新增任何顏色</b>。"
       + "<br>⚠⚠ <b>2026-09-04：淡藍收到 .10 了</b>（你：「淡藍色看過去比上面的淡紅色還濃，"
       + "要調成一樣的」）—— 你是對的，<b>.16 量出來是 L*88.9，比上面那塊磚紅（91.6）重 2.7 階</b>。"
       + "「一樣濃」＝ 兩塊合成之後的亮度相同，反解出來是 <b>a = .101</b>，取 <b>.10</b>。"
@@ -758,12 +742,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<b>LINE 的純文字訊息沒有粗體</b>（同上面那把強調的尺），拿掉引號就沒有任何東西"
       + "標示得出「約診查詢」是選單上那一格的名字，會和句子黏成一片。"
       + "半形的直引號省得到 18.1px，但中文句子裡看起來是外文的標點。"
-      + "<b>要 Ⓖ 也拿掉的話跟我說，那一行會變成「點下面選單的約診查詢，」。</b>"
+      + "⚠ 這一頁最底下那個退路就是這樣：純文字那一版仍然寫著「約診查詢」。"
       + "<br>⚠ <b>中間那條分隔線拿掉了</b>：兩塊都變成方塊之後，它們自己就分開了，"
-      + "再加一條線是多一個分隔。<b>要留著跟我說。</b>"
-      + "<br>⚠⚠ <b>純文字泡泡那一側還沒定案，那一排還在</b> —— 它<b>做不出方塊</b>："
-      + "LINE 的純文字訊息<b>沒有粗體、也沒有顏色</b>，能用的只有「空一行」與「加一個記號」。"
-      + "所以切到 Ⓖ 才會看到那一排，切到 Ⓗ 不會。"
+      + "再加一條線是多一個分隔。"
+      + "<br>⚠⚠ <b>退路那一版的強調還沒定案</b>（現在畫的是「不強調」）—— 純文字"
+      + "<b>做不出方塊</b>：LINE 的純文字訊息<b>沒有粗體、也沒有顏色</b>，"
+      + "能用的只有「空一行」與「加一個記號」。真的要走退路那條路時再定。"
       + "<br>⚠ <b>「怎麼確認」那一題等 48 小時提醒那一頁</b>：版型與確認的按鈕在那邊定，"
       + "定完再回來決定這一則要不要多寫一句。"
       + "<br>⚠⚠ <b>更正（2026-09-03 稍晚）：那句「390 的手機只給 219px」是這一頁自己量錯的。</b>"
@@ -779,16 +763,6 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "（Ⓑ 圖卡那一案是照 Flex 的表畫的：md 16／sm 14／xs 13。）";
   }
 
-  document.addEventListener("click", function (e) {
-    var b = e.target.closest("button[data-v], button[data-h], button[data-e], button[data-s]");
-    if (!b) return;
-    if (b.dataset.v) cur = b.dataset.v;
-    else if (b.dataset.h) hr = b.dataset.h;
-    else if (b.dataset.e) em = b.dataset.e;
-    else sb = b.dataset.s;
-    history.replaceState(null, "", "?v=" + cur + "&h=" + hr + "&e=" + em + "&s=" + sb);
-    render();
-  });
   window.addEventListener("resize", measure);
   render();
 })();
