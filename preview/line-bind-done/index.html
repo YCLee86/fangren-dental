@@ -111,6 +111,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   font-size:16px;font-weight:700;letter-spacing:.02em}
 /* ⚠ 這一顆**不需要圖示**，所以用 Flex 原生的 `button` 就夠了 —— 招呼卡那兩顆做成
    「可點的盒子」是因為要加 logo（Flex 的 button 只有 label、不支援圖示）。 */
+/* 24 小時那一段的四種強調（只有圖卡做得到；純文字泡泡那一側只能靠空行與記號）。
+   ⚠ 四種在 Flex 上都做得出來：加粗＝text.weight bold、換色＝text.color、
+     淡底方塊＝一個有 backgroundColor ＋ cornerRadius ＋ paddingAll 的 box。
+   ⚠ 磚紅 #AF4C52 是站上既有的 --brick（PALETTE 第一節），**它對紙只有 4.17，
+     只能待在卡上** —— 這裡的底正是卡色，面板會現場量給你看。 */
+.pv-hc .d.w-b{color:var(--li-ink);font-weight:700}
+.pv-hc .d.w-bc{color:#AF4C52;font-weight:700}
+.pv-hc .d.w-box{color:var(--li-ink);font-weight:700;background:rgba(175,76,82,.09);
+  border-radius:8px;padding:10px 12px;margin-top:12px}
 .pv-hc .fine{font-size:13px;line-height:1.75;color:var(--ink-soft);margin-top:11px;
   white-space:pre-line}
 
@@ -175,6 +184,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     <p class="lb" id="pv-lb">版本</p>
     <div class="row" id="pv-vrow"></div>
     <div class="row row2" id="pv-hrow"></div>
+    <div class="row row2" id="pv-erow"></div>
   </div>
 </div>
 
@@ -289,16 +299,21 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     ,
     g: {
       name: "Ⓖ 你整理的", kind: "text",
-      note: "2026-09-04 你自己整理的那一份，<b>用字逐字照你寫的</b>，我只做了三件事：把時間改成你指定的「看診前 48 小時」、按 13 個全形字重新斷行、末尾補上電話號碼（原文只寫「與診所電聯」沒有號碼，病人得自己去找）。⚠⚠ 這一案帶進了另外六案都沒有的<b>三件事實</b>：提醒<b>要回覆確認</b>、<b>24 小時沒回應系統會自動取消</b>並遞補、家人綁定<b>要洽櫃檯</b>。⚠ 還沒問到廠商的三題：怎麼「確認」（按卡片上的按鈕？回訊息？可是這裡沒有專人看）、那 24 小時<b>會不會跳過休診日</b>（週一的約診，提醒在週六發、期限落在週日，沒有人接電話）、被自動取消的時候<b>會不會通知病人</b>。",
-      text:
+      note: "2026-09-04 你自己整理的那一份，<b>用字逐字照你寫的</b>，我只做了三件事：把時間改成你指定的「看診前 48 小時」、按 13 個全形字重新斷行、末尾補上電話號碼（原文只寫「與診所電聯」沒有號碼，病人得自己去找）。⚠⚠ 這一案帶進了另外六案都沒有的<b>三件事實</b>：提醒<b>要回覆確認</b>、<b>24 小時沒回應系統會自動取消</b>並遞補、家人綁定<b>要洽櫃檯</b>。⚠ <b>「怎麼確認」那一題不在這一頁解</b>（2026-09-04 你的決定）—— 版型與那顆確認的按鈕在<b>之後的「看診前 48 小時提醒」那一頁</b>定，定完再回來看這一則要不要多寫一句。⚠ 還沒問到廠商的兩題：那 24 小時<b>會不會跳過休診日</b>（週一的約診，提醒在週六發、期限落在週日，沒有人接電話）、被自動取消的時候<b>會不會通知病人</b>。",
+      /* ⚠ 拆成三段是為了那把「強調」的尺 —— 中間那一段會依選擇加空行或記號。
+           斷行改成**在標點處斷**（原本是斷在「系統將／自動」中間），
+           這樣加了記號之後三行都還在寬度內，四格共用同一份字。 */
+      pre:
         "綁定完成～\n\n" +
         "點下面選單的「約診查詢」，\n" +
         "可隨時查看之後的約診。\n\n" +
         "看診前 {T}這裡會發送\n" +
-        "訊息提醒，請務必確認。\n" +
-        "若 24 小時內無回應，系統將\n" +
-        "自動取消約診，以遞補他人的\n" +
-        "候診需求。\n\n" +
+        "訊息提醒，請務必確認。",
+      warn:
+        "若 24 小時內無回應，\n" +
+        "系統將自動取消約診，\n" +
+        "以遞補他人的候診需求。",
+      post:
         "這裡沒有專人即時回覆訊息。\n" +
         "約診更改或取消，請在看診日\n" +
         "2 天前（不含假日），於週一至\n" +
@@ -311,17 +326,50 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     h: {
       name: "Ⓗ 你整理的・圖卡", kind: "card",
       hero: "hero-bind.jpg",
-      note: "把 Ⓖ 那一份做成 Flex 圖卡（和 Ⓐ→Ⓑ 同一個關係）：<b>一個字都沒有增減，只是換一個容器</b>，順序也照你寫的（約診查詢 → 提醒與自動取消 → 改約打電話 → 家人綁定）。⚠ 換來的兩件：電話變成一顆<b>真的按鈕</b>（點下去直接撥，不必自己選字複製），以及那三段被分隔線與字級分成「主要／規則／備註」三層。⚠ 代價是<b>更高</b>（面板上有實測），而且<b>要先問廠商關鍵字回應送不送得出 Flex Message</b> —— 送不出去就只能用 Ⓖ 那種純文字。",
+      note: "把 Ⓖ 那一份做成 Flex 圖卡（和 Ⓐ→Ⓑ 同一個關係）：<b>一個字都沒有增減，只是換一個容器</b>，順序也照你寫的（約診查詢 → 提醒與自動取消 → 改約打電話 → 家人綁定）。⚠ 換來的兩件：電話變成一顆<b>真的按鈕</b>（點下去直接撥，不必自己選字複製），以及那三段被分隔線與字級分成「主要／規則／備註」三層。⚠ 代價是<b>更高</b>（面板上有實測），而且<b>要先問廠商關鍵字回應送不送得出 Flex Message</b> —— 送不出去就只能用 Ⓖ 那種純文字。⚠ 2026-09-04 依你的話改了兩件：「這裡沒有專人即時回覆訊息」<b>搬到改約那一段前面</b>（它是「為什麼要打電話」的前提，擺在後面就變成事後補一句），以及 24 小時那一段接上底下那把<b>強調</b>的尺。",
       title: "綁定完成～",
-      desc: "點下面選單的「約診查詢」，\n可隨時查看之後的約診。\n\n看診前 {T}這裡會發送訊息\n提醒，請務必確認。\n若 24 小時內無回應，系統將自動\n取消約診，以遞補他人的候診需求。",
-      say: "約診更改或取消，請在看診日\n2 天前（不含假日），於週一至\n週五診所開診時段與診所電聯",
+      desc: "點下面選單的「約診查詢」，\n可隨時查看之後的約診。\n\n看診前 {T}這裡會發送訊息\n提醒，請務必確認。",
+      warn: "若 24 小時內無回應，\n系統將自動取消約診，\n以遞補他人的候診需求。",
+      /* ⚠ 2026-09-04 使用者指定：「這裡沒有專人即時回覆訊息」搬到改約那一段**前面**。
+           理由讀得出來 —— 它是「為什麼要打電話」的前提，擺在後面就變成事後補一句。 */
+      say: "這裡沒有專人即時回覆訊息。\n約診更改或取消，請在看診日\n2 天前（不含假日），於週一至\n週五診所開診時段與診所電聯",
       btn: "05-5339369",
-      fine: "家人的約診也可以綁定在同一隻\n手機，設定請洽診所櫃檯人員。\n這裡沒有專人即時回覆訊息。"
+      fine: "家人的約診也可以綁定在同一隻\n手機，設定請洽診所櫃檯人員。"
     }
   };
   var ORDER = ["a", "b", "c", "d", "e", "f", "g", "h"];
   /* 2026-09-04 定案，切換條上那一排已經拿掉（見檔頭那段註解） */
   var T_LABEL = "48 小時";
+
+  /* 「24 小時沒回應就自動取消」那一段要多醒目（2026-09-04 使用者：「需要讓他強調一點」）。
+     ⚠⚠ 兩種容器能用的手段**完全不同**，所以這一排的四格跟著容器換：
+       ・純文字泡泡：LINE 的文字訊息**沒有粗體也沒有顏色**，只剩「空行」與「記號」。
+       ・Flex 圖卡：weight／color／有底色的 box 都做得出來。
+     這一排只在 Ⓖ／Ⓗ 出現（其餘六案沒有那一段）。 */
+  var EMPH_TEXT = {
+    n:  { name: "不強調" },
+    sp: { name: "空一行" },
+    mk: { name: "※ 記號" },
+    wa: { name: "⚠️ 圖示" }
+  };
+  var EMPH_CARD = {
+    n:   { name: "不強調" },
+    b:   { name: "加粗" },
+    bc:  { name: "加粗＋磚紅" },
+    box: { name: "淡底方塊" }
+  };
+  function emphSet(v) {
+    if (!v.warn) return null;
+    return v.kind === "card" ? EMPH_CARD : EMPH_TEXT;
+  }
+  /* 純文字那一側：把三段組回一則。記號一律**配一個空行**（只加記號、不隔開，
+     讀起來像同一段裡突然冒出一個符號）。 */
+  var MARK = { n: "", sp: "", mk: "※ ", wa: "⚠️ " };
+  function textOf(v) {
+    if (!v.warn) return v.text;
+    var gap = em === "n" ? "\n" : "\n\n";
+    return v.pre + gap + MARK[em] + v.warn + "\n\n" + v.post;
+  }
   /* 頭圖那一排只對 Ⓑ 有效（純文字的訊息放不了圖）。留著「不放圖」是為了看得出
      它的代價：一張 2:1 的頭圖讓卡片長 134px，面板會現場算給你看。 */
   var HERO = { y: { name: "有頭圖" }, n: { name: "不放圖" } };
@@ -334,6 +382,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
   var cur = param("v", V, "g");
   var hr = param("h", HERO, "y");
+  var em = param("e", Object.assign({}, EMPH_TEXT, EMPH_CARD), "n");
 
   function fill(s) { return s.replace(/\{T\}/g, T_LABEL); }
   /* 電話那一行在 LINE 裡會自己變成可以撥的連結，所以畫成連結的樣子 */
@@ -342,8 +391,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   function render() {
     var v = V[cur], slot = document.getElementById("pv-slot");
     slot.className = v.kind === "card" ? "card" : "";
+    /* 切換案子的時候，上一案選的強調在這一案可能不存在（兩種容器的格不一樣） */
+    var es = emphSet(v);
+    if (es && !es[em]) em = "n";
     if (v.kind === "text") {
-      slot.innerHTML = '<div class="pv-bub" id="pv-body">' + tel(fill(v.text)) + "</div>";
+      slot.innerHTML = '<div class="pv-bub" id="pv-body">' + tel(fill(textOf(v))) + "</div>";
     } else {
       slot.innerHTML =
         '<div class="pv-hc" id="pv-body">' +
@@ -353,6 +405,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         '<div class="b">' +
         '<p class="t">' + fill(v.title) + "</p>" +
         '<p class="d">' + fill(v.desc) + "</p>" +
+        (v.warn ? '<p class="d w-' + em + '">' + fill(v.warn) + "</p>" : "") +
         "<hr></div>" +
         '<div class="f">' +
         '<p class="say">' + fill(v.say) + "</p>" +
@@ -378,6 +431,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     r3.innerHTML = V[cur].hero
       ? Object.keys(HERO).map(function (k) {
           return '<button data-h="' + k + '" aria-pressed="' + (k === hr) + '">' + HERO[k].name + "</button>";
+        }).join("")
+      : "";
+    /* 第三排：24 小時那一段怎麼強調（只有 Ⓖ／Ⓗ 有那一段） */
+    var r4 = document.getElementById("pv-erow"), es = emphSet(V[cur]);
+    r4.innerHTML = es
+      ? Object.keys(es).map(function (k) {
+          return '<button data-e="' + k + '" aria-pressed="' + (k === em) + '">' + es[k].name + "</button>";
         }).join("")
       : "";
   }
@@ -410,8 +470,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   /* 這一則自己斷了哪幾行 —— 拿它和實際畫出來的行比，多出來的就是被自動折掉的 */
   function spec(v) {
-    var s = v.kind === "text" ? v.text
-          : [v.title, v.desc, v.say, v.btn, v.fine].join("\n");
+    var s = v.kind === "text" ? textOf(v)
+          : [v.title, v.desc, v.warn || "", v.say, v.btn, v.fine].join("\n");
     return fill(s).split("\n").map(function (x) { return x.replace(/[ \u3000]/g, ""); })
       .filter(function (x) { return x; });
   }
@@ -453,18 +513,47 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        不是「是不是自己站一行」—— Ⓒ 那一案是「改約或取消　05-5339369」，
        同一行還有標籤，但只要沒被折開就沒事。 */
     var telOwn = ls.some(function (l) { return l.s.indexOf("05-5339369") >= 0; });
-    var hasTel = fill(v.kind === "text" ? v.text : v.btn).indexOf("05-5339369") >= 0;
+    var hasTel = fill(v.kind === "text" ? textOf(v) : v.btn).indexOf("05-5339369") >= 0;
 
     /* 紅線掃描（和 drafts/channels/check-welcome.mjs 同一張表）：
        這個帳號沒有專人即時回覆訊息，所以不可以出現「有人可以問」那一類的承諾。 */
     var LIE = ["隨時問", "都可以問", "問到", "有人回", "馬上回", "找得到人", "有專人"];
-    var whole = v.kind === "text" ? fill(v.text)
-      : [v.title, v.desc, v.say, v.btn, v.fine].map(fill).join("\n");
+    var whole = v.kind === "text" ? fill(textOf(v))
+      : [v.title, v.desc, v.warn || "", v.say, v.btn, v.fine].map(fill).join("\n");
     /* ⚠⚠ 掃之前要先把**否定形**拿掉：六案每一案都寫著「這裡沒有專人即時回覆訊息」，
        而那句話裡面就含著「有專人」—— 第一版整頁誤報「說謊」，正好報在守得最好的那一句上。
        （drafts/channels/check-welcome.mjs 那張表有同一個洞，只是招呼卡沒寫到這句話。） */
     var scan = whole.replace(/沒有專人/g, "\uff3f").replace(/無專人/g, "\uff3f");
     var lied = LIE.filter(function (w) { return scan.indexOf(w) >= 0; });
+
+    /* 強調那一段的對比度：圖卡才量得到（純文字那一側顏色是 LINE 給的，我們動不了）。
+       ⚠ 底要用**合成後**的顏色 —— 淡底方塊是半透明的磚紅疊在卡色上，
+         直接讀 rgba 會算錯。 */
+    function lum(c) {
+      var m = c.match(/[\d.]+/g).map(Number), a = m.length > 3 ? m[3] : 1;
+      return { r: m[0], g: m[1], b: m[2], a: a };
+    }
+    function rel(c) {
+      return [c.r, c.g, c.b].map(function (x) {
+        x /= 255; return x <= .03928 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4);
+      }).reduce(function (a, x, i) { return a + x * [.2126, .7152, .0722][i]; }, 0);
+    }
+    function ratio(fg, bg) {
+      var a = rel(fg) + .05, b2 = rel(bg) + .05;
+      return a > b2 ? a / b2 : b2 / a;
+    }
+    var warnCt = null;
+    var wEl = body.querySelector(".d[class*=' w-'], .d[class^='w-']");
+    if (wEl) {
+      var cs2 = getComputedStyle(wEl), card = lum(getComputedStyle(body).backgroundColor);
+      var wb = lum(cs2.backgroundColor), fg = lum(cs2.color);
+      var bg = wb.a === 0 ? card : {
+        r: wb.r * wb.a + card.r * (1 - wb.a),
+        g: wb.g * wb.a + card.g * (1 - wb.a),
+        b: wb.b * wb.a + card.b * (1 - wb.a)
+      };
+      warnCt = ratio(fg, bg);
+    }
 
     document.getElementById("pv-panel").innerHTML =
       "<b>" + v.name + "</b>　<span>" + (v.kind === "text" ? "純文字泡泡" : "Flex 圖卡（268px）") + "</span>"
@@ -494,6 +583,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>電話沒被折斷 " + (!hasTel ? "<span class='no'>這一案沒有電話</span>"
           : telOwn ? "<span class='ok'>是（撥得下去）</span>"
                    : "<span class='no'>否 —— 折開了，LINE 認不出那是號碼</span>")
+      + (warnCt !== null
+          ? "<br>強調那三行的對比 <b>" + warnCt.toFixed(2) + "</b>"
+            + (warnCt >= 4.5 ? " <span class='ok'>過 AA</span>"
+                             : " <span class='no'>低於站上的 4.5</span>")
+          : "")
       + "<br>沒有專人那件事 "
       + (lied.length ? "<span class='no'>出現「" + lied.join("、") + "」</span>"
                      : "<span class='ok'>守住了</span>")
@@ -527,6 +621,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>⚠ <b>只寫「週一至週五」</b>：站上門診表底下寫的是「國定假日與各科特別門診請來電確認」，"
       + "<b>不是休診</b>。國定假日到底休不休診還沒問到，問到才寫得完整。"
       + "<br>⚠ 電話一律 <code>05-5339369</code>（2026-08-27 全站定案的寫法）。"
+      + "<br>⚠⚠ <b>「24 小時那一段怎麼強調」那一排，兩種容器的四格是不一樣的東西</b>："
+      + "LINE 的<b>純文字訊息沒有粗體、也沒有顏色</b>，能用的只有「空一行」與「加一個記號」；"
+      + "<b>Flex 圖卡</b>才做得到加粗、換色與有底色的方塊（三種在 Flex 上都是合法的欄位）。"
+      + "所以切到 Ⓖ 和切到 Ⓗ，那一排會換成各自做得到的四格。"
+      + "<br>⚠ 磚紅是站上既有的 <code>--brick #AF4C52</code>，<b>面板會現場量對比</b>"
+      + "（卡上 4.80 過 AA；它<b>對紙只有 4.17</b>，所以只能待在卡上，不要搬去別的地方用）。"
+      + "<br>⚠ <b>「怎麼確認」那一題等 48 小時提醒那一頁</b>：版型與確認的按鈕在那邊定，"
+      + "定完再回來決定這一則要不要多寫一句。"
       + "<br>⚠⚠ <b>更正（2026-09-03 稍晚）：那句「390 的手機只給 219px」是這一頁自己量錯的。</b>"
       + "為了讓圖卡能是真的 268px，這一頁的手機框在窄螢幕改成貼齊頁面兩邊（原本多吃了 25px 的內距）——"
       + "重量之後泡泡的上限是 <b>244px</b>（＝ 268 扣掉左右內距 24），"
@@ -541,11 +643,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
 
   document.addEventListener("click", function (e) {
-    var b = e.target.closest("button[data-v], button[data-h]");
+    var b = e.target.closest("button[data-v], button[data-h], button[data-e]");
     if (!b) return;
     if (b.dataset.v) cur = b.dataset.v;
-    else hr = b.dataset.h;
-    history.replaceState(null, "", "?v=" + cur + "&h=" + hr);
+    else if (b.dataset.h) hr = b.dataset.h;
+    else em = b.dataset.e;
+    history.replaceState(null, "", "?v=" + cur + "&h=" + hr + "&e=" + em);
     render();
   });
   window.addEventListener("resize", measure);
