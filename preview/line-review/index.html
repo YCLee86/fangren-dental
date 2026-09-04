@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>看診後的評價邀約・提案（芳仁牙醫診所）</title>
+<!--
+  提案頁：LINE 官方帳號的「評價邀約」那一則（現在後台叫它「滿意度調查」）。
+  推導在 drafts/channels/README.md 第十七、二十一節。
+
+  ⚠ 這一頁模擬的是**病人的畫面**，不是後台。
+  ⚠⚠ 字級一律寫**固定 px**（channels/README 第 18-2 節）：LINE Flex 的 size 是固定 px
+     （xxs 11／xs 13／sm 14／md 16／lg 19／xl 22／xxl 27），不是比例。
+     寫成 rem 的比例的話每一行都比 LINE 實際的小 1~2.7px，提案頁一旦和真實算繪對不上，
+     上面做的每一個判斷都是假的。
+  ⚠⚠⚠ 這一則和另外三則不一樣的地方：它**不只是美感問題**。
+     現在那一張把人分成「願意 → 分享體驗」與「不願意 → 提供建議」兩條路，
+     如果只有前者通向 Google，那是 review gating（只向滿意的人索取公開評論），
+     據我所知是 Google 商家檔案明文禁止的。而商家檔案是這間診所最大的入口
+     （六個月 14,973 次瀏覽、1,886 通電話）。所以新版**不分流**：
+     同一個邀請給所有人，私下的意見管道也給所有人。見第 17-3 節。
+  ⚠ class 一律 pv- 前綴（撞名的教訓見 CLAUDE.md 第八節）。
+  ⚠ 使用者 2026-09-04：「先保留圖卡空間」—— 頭圖是**佔位框**，還沒畫。
+-->
+<style>
+:root{
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  --ink:#2a2c27; --ink-soft:#5c5f57; --green:#3f654a; --deep:#2c5238;
+  /* LINE 那一側的顏色（別人的介面，不進 PALETTE.md） */
+  --li-bg:#e9edf1; --li-in:#ffffff; --li-head:#ffffff; --li-meta:#8b96a1; --li-ink:#14181c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.7;padding-bottom:230px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:14px 14px 0}
+h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
+.pv-sub{font-size:.78rem;color:var(--ink-soft);margin:.35rem 0 .9rem}
+.pv-sub b{color:var(--ink)}
+.pv-sub code,.pv-note code,.pv-panel code{font-size:.94em;overflow-wrap:anywhere}
+
+/* ---- 手機外框 ＋ LINE 聊天室 ---------------------------------------- */
+.pv-phone{border:1px solid var(--rule);border-radius:14px;overflow:hidden;
+  background:var(--li-bg);box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.pv-head{background:var(--li-head);display:flex;align-items:center;gap:9px;
+  padding:9px 12px;border-bottom:1px solid #e3e6ea}
+.pv-head .b{font-size:.9rem;font-weight:700;color:var(--li-ink)}
+.pv-head img{width:26px;height:26px;border-radius:50%;display:block}
+.pv-head .x{margin-left:auto;color:var(--li-meta);font-size:1rem;letter-spacing:.14em}
+.pv-chat{padding:12px 8px 16px;display:flex;flex-direction:column;gap:10px}
+/* ⚠⚠ 圖卡在 LINE 上是**固定 268px**，這個框放不下的話，上面量到的每一個數字都是假的
+   （bind-done 那一輪踩過：390 的螢幕只給了 243.4px，折行判斷全部偏鬆）。
+   成因是我們比真手機多吃了兩層內距：頁面的 14 ＋ 聊天室的 11。
+   所以窄螢幕讓手機框貼齊頁面兩邊、聊天室內距收到 8 —— 390 上還剩 300px 給卡片。 */
+@media (max-width: 429px) {
+  .pv-phone{margin-inline:-14px;border-radius:0;border-left-width:0;border-right-width:0}
+}
+.pv-day{align-self:center;background:rgba(0,0,0,.16);color:#fff;font-size:11px;
+  padding:2px 11px;border-radius:11px}
+.pv-msg{display:flex;gap:7px;align-items:flex-end;max-width:100%}
+.pv-av{width:30px;height:30px;border-radius:50%;flex:none;display:block}
+#pv-slot{min-width:0;flex:0 1 268px;max-width:268px}
+.pv-t{font-size:11px;color:var(--li-meta);flex:none;padding-bottom:2px}
+
+/* ---- 卡片外殼（兩案共用）：268px、圓角 14 ---------------------------- */
+.pv-hc{width:100%;border-radius:14px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* ---- Ⓐ 現況：照使用者 2026-09-02 的截圖重畫（channels/README 第 17-2 節）------
+   ⚠⚠ **這一張沒有量過** —— 那張截圖沒有留下可以逐像素反推的行（提醒卡那一輪
+     是靠「11 個全形字量到 176.0px、16 整除」才把字級算出來的），
+     所以下面的 px 是**照 Flex 那張表推的近似**。
+     **不要拿它的高度或折行去下結論**，要比的是結構：分流、emoji、稱謂、標題。
+   ⚠ 顏色也是描的（廠商的綠、細字連結的灰），刻意不寫進 PALETTE.md。
+   ⚠ 標誌那一塊實際是**棕色的嘴形**，這裡用手上已經有的那顆綠色代替 ——
+     顏色不是這一輪要判斷的東西，而**「這張卡放得進診所自己的標誌」才是重點**
+     （它證明廠商的卡片系統吃得下品牌資產）。 */
+.pv-old{background:#fff;color:#333}
+.pv-old .logo{text-align:center;padding:18px 14px 14px}
+.pv-old .logo img{width:52px;display:block;margin:0 auto 7px}
+.pv-old .logo .en{font-size:11px;letter-spacing:.12em;color:#8a7a63}
+.pv-old .logo .zh{font-size:19px;font-weight:700;color:#8a7a63;letter-spacing:.08em}
+.pv-old .b{padding:0 20px 20px;font-size:16px;line-height:1.7}
+.pv-old .ttl{font-size:19px;font-weight:700;color:#333;margin-bottom:12px}
+.pv-old .q{color:#444;margin-bottom:16px}
+.pv-old .btn{background:#4a9a4a;color:#fff;font-weight:700;text-align:center;
+  padding:14px;border-radius:30px;font-size:16px;line-height:1.4}
+.pv-old .sub{color:#8b96a1;text-align:center;font-size:14px;padding-top:12px}
+
+/* ---- Ⓑ 新版：和招呼圖卡／綁定完成／提醒卡同一套（卡 268、內距 14）--------
+   顏色一顆都沒新增，全部回 PALETTE.md 拿：
+     卡 #f4f4f5・墨 #2a2c27・柔墨 #5c5f57・線 #cdd0d2・綠 #3f654a・深階 #2c5238
+     意見那一塊 ＝ --paper 直接鋪（紙灰，同提醒卡的「就診須知」那一塊） */
+.pv-new{background:var(--card)}
+/* 頭圖：**先保留位置**（使用者 2026-09-04 指定）。
+   規格和另外兩則一樣：Flex 的 hero，size:full ＋ aspectRatio 2:1，
+   圖檔 **1024×512**（＝ LINE 對 Flex image 的上限，第十一之二節）。
+   ⚠⚠ 佔位框和真圖**一定要同樣高**（aspect-ratio 2/1），不然現在量到的卡片高度
+     等圖進來就會全部作廢。 */
+.pv-new .hero{aspect-ratio:2/1;background:var(--paper);
+  border-bottom:1px solid var(--rule);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;color:var(--ink-soft);
+  background-image:repeating-linear-gradient(45deg,
+    rgba(92,95,87,.055) 0 7px, transparent 7px 14px)}
+.pv-new .hero b{font-size:13px;font-weight:700;color:var(--ink)}
+.pv-new .hero span{font-size:11px;letter-spacing:.04em}
+.pv-new .top{display:flex;align-items:center;gap:8px;padding:11px 14px 10px;
+  border-bottom:1px solid var(--rule)}
+.pv-new .top img{width:20px;height:20px;border-radius:50%;display:block}
+.pv-new .top b{font-size:14px;font-weight:400;color:var(--ink-soft);letter-spacing:.06em}
+.pv-new .b{padding:14px}
+/* 開場。⚠⚠⚠ 第 17-4 節那條規則：**這個帳號的每一張卡都要假設「讀的人不是病人本人」**
+   （一個帳號綁多位家人是已確認的事實）。所以病人的名字要當**受詞**（那一次看診是誰的），
+   不要當**稱謂**（在跟誰講話）—— 現況那句「親愛的 王丞睿，您願意推薦…」正是把
+   讀的人和病人混成同一個（那張卡送到阿嬤的帳號，開頭卻在叫孫子的名字）。
+   ⚠ 名字加粗（Flex 就是一個 span 加 weight: bold，顏色不動）：
+     一個帳號收得到好幾個家人的訊息，「這一次是誰」要一眼看到。
+   ⚠ 「這次」不寫「今天」—— 這一則什麼時候送我們還沒問到（第 17-6 節），
+     寫「今天」的話晚一天送就是錯的。 */
+.pv-new .hi{font-size:16px;line-height:1.6;color:var(--ink)}
+.pv-new .hi b{font-weight:700}
+.pv-new .lead{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:2px;
+  white-space:pre-line}
+/* 邀請那一段：sm 14、墨（不是柔墨）—— 它是這張卡的主文 */
+.pv-new .ask{font-size:14px;line-height:1.75;color:var(--ink);margin-top:12px;
+  white-space:pre-line}
+.pv-new .box{border-radius:8px;padding:10px 12px;margin-top:14px;
+  font-size:14px;line-height:1.75;white-space:pre-line}
+.pv-new .box.know{background:var(--paper);color:var(--ink-soft)}
+/* 叫他點的那一句 ＋ 主鈕。做法逐項照提醒卡定稿那一張：
+   ⚠⚠ **LINE Flex 的 button 只有一個 label、不支援圖示**（第十一之二節），
+     所以要在按鈕上放標誌就只能做成**可點的 box**（box 掛 action，裡面 image ＋ text）。
+     代價是失去 button 內建的按壓效果。
+   ⚠⚠ 那一句離按鈕的距離：**量的是字面到按鈕，不是 margin** —— 行高 1.7 讓字面下方
+     多出 4.8px 的半行距，所以 margin-top:14 畫出來是 18.8。提醒卡 2026-09-04 定案的
+     比例是「上 17.0 ／ 下 5.0」，這一張照抄，面板現場重量。 */
+.pv-new .cta{font-size:14px;line-height:1.7;color:var(--ink-soft);text-align:center;
+  margin-top:14px}
+.pv-new .cta + .btn{margin-top:calc(5px - 4.8px)}
+.pv-new .btn{display:flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:9px;padding:12px;background:var(--green);color:#fff;line-height:1.4}
+.pv-new .btn img{flex:none;display:block;width:34px}
+.pv-new .btn span{font-size:16px;font-weight:700;letter-spacing:.02em}
+/* 角形＝站上「往下滑／回到最上面／繼續讀」那一顆轉成朝右（remind-marks.mjs 產的，
+   借用提醒卡那一張，不另外再產一份）。⚠ 高度跟著**字**走：16px 的字配 11px 高。 */
+.pv-new .btn .chev,.pv-new .tel .chev{flex:none;display:block;
+  width:5.3px;height:11px;margin-left:-2px}
+.pv-new .telnote{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:14px;
+  text-align:center}
+.pv-new .telnote + .tel{margin-top:calc(5px - 4.8px)}
+.pv-new .tel{display:flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid var(--deep);border-radius:9px;padding:11px 6px;
+  color:var(--deep);font-size:16px;font-weight:700;line-height:1.4;
+  letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.pv-new .tel img{flex:none;display:block;width:16.8px}
+/* 量名字那一行用的探針（真名 3 個字時多寬）—— 不佔位、不影響版面 */
+.pv-probe{position:absolute;left:-9999px;top:0;white-space:nowrap}
+
+/* ---- 量測面板 -------------------------------------------------------- */
+.pv-cap{font-size:.74rem;color:var(--ink-soft);margin:9px 2px 0}
+.pv-panel{margin:12px 0 0;border:1px solid var(--rule);border-radius:10px;
+  background:var(--card);padding:9px 11px;font-size:.73rem;line-height:1.85;
+  color:var(--ink-soft)}
+.pv-panel b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+.pv-panel .ok{color:var(--deep);font-weight:700}
+.pv-panel .no{color:#a33;font-weight:700}
+.pv-panel hr{border:0;border-top:1px solid var(--rule);margin:7px 0}
+.pv-note{font-size:.73rem;color:var(--ink-soft);margin:12px 0 0;
+  border-left:3px solid var(--rule);padding-left:10px}
+.pv-note b{color:var(--ink)}
+
+/* ---- 切換條 ---------------------------------------------------------- */
+.pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:9;
+  background:rgba(244,244,245,.96);backdrop-filter:blur(8px);
+  border-top:1px solid var(--rule);padding:7px 10px calc(7px + env(safe-area-inset-bottom))}
+.pv-bar .r{display:flex;gap:6px;align-items:center;overflow-x:auto;
+  scrollbar-width:none;padding-bottom:2px}
+.pv-bar .r::-webkit-scrollbar{display:none}
+.pv-bar .lb{font-size:.66rem;color:var(--ink-soft);flex:none;width:3.6em}
+/* ⚠ 切換條在手機上不能吃掉太多畫面（CLAUDE.md 第八節 hero-motion-mobile 那一輪：
+     第一版量到一屏的 28%，而要判斷的正是那張卡）。這一頁只有三把尺，面板會現場量。 */
+.pv-bar button{flex:none;font:inherit;font-size:.72rem;line-height:1.55;
+  border:1px solid var(--deep);color:var(--deep);background:#fff;
+  border-radius:8px;padding:4px 8px;cursor:pointer;white-space:nowrap}
+.pv-bar button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.pv-bar .r + .r{margin-top:4px}
+.pv-bar .r.off{opacity:.38;pointer-events:none}
+.pv-bar .fold{position:absolute;right:10px;top:-31px;border-radius:8px 8px 0 0;
+  border-bottom-color:transparent;font-size:.7rem;padding:3px 10px;
+  background:rgba(244,244,245,.96)}
+.pv-bar.fold-in{padding-top:7px}
+.pv-bar.fold-in .r{display:none}
+.pv-bar.fold-in .fold{position:static;border-radius:8px;border-bottom-color:var(--deep)}
+</style>
+</head>
+<body>
+<div class="pv-wrap">
+  <h1>看診後的評價邀約　<span style="font-weight:400;font-size:.7em">提案</span></h1>
+  <p class="pv-sub">後台現在叫它「<b>滿意度調查</b>」，看診後送出。
+  <b>圖卡的位置先保留</b>（頭圖還沒畫，佔位框和真圖一樣高）。<br>
+  ⚠⚠ 這一則不只是美感問題：現在那一張<b>把人分成兩條路</b>
+  （願意 → 分享體驗／不願意 → 提供建議），<b>那可能是 Google 明文禁止的評論篩選</b>，
+  而商家檔案是這間診所最大的入口。新版<b>不分流</b>。<br>
+  底下切換<b>現況</b>與<b>新版</b>，再用兩把尺挑<b>語氣</b>與<b>意見那一塊</b>
+  （切換條右上角可以<b>收起</b>）。
+  推導在 <code>drafts/channels/README.md</code> 第十七、二十一節。</p>
+
+  <div class="pv-phone">
+    <div class="pv-head"><img src="../../assets/icon-192.png" alt=""><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
+    <div class="pv-chat">
+      <div class="pv-day">8 月 27 日（四）</div>
+      <div class="pv-msg"><img class="pv-av" src="../../assets/icon-192.png" alt="">
+        <div id="pv-slot"></div>
+        <span class="pv-t">12:02</span></div>
+    </div>
+  </div>
+  <p class="pv-cap">↑ 這一則是<b>診所這一側送出</b>的，所以聊天室裡沒有病人自己的訊息。
+  ⚠ 近似，不是 LINE 自己的算繪。</p>
+
+  <div class="pv-panel" id="pv-panel"></div>
+  <p class="pv-note" id="pv-note"></p>
+</div>
+
+<div class="pv-bar" id="pv-bar">
+  <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
+  <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
+  <div class="r" id="row-w"><span class="lb">為什麼寫</span><span id="sw-w"></span></div>
+  <div class="r" id="row-f"><span class="lb">意見那塊</span><span id="sw-f"></span></div>
+</div>
+
+<span class="pv-probe" id="pv-probe"></span>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ⚠⚠ 斷行一律用 \n 自己指定，不要交給自動換行（line-auto-reply/README 第 24-3 節）。
+     這張卡的可用寬度：卡片 268 − 內距 28 ＝ **240px**；淡底方塊裡再扣 24 ＝ **216px**。
+     換算成全形字：sm 14 → 卡上 17 個／方塊裡 15 個；md 16 → 15 個。
+     ⚠ 半形字算一半 —— 「Google」「05-5339369」都是半形，不能用「數幾個字元」代替量測。
+     ⚠⚠⚠ 但**有變數的那一行不能手動斷行**：〔病人姓名〕是系統填的，
+       名字幾個字我們不知道，硬斷會在別人身上斷錯地方。面板會現場量「幾個字以內不會折」。 */
+
+  var TEL = "05-5339369";
+
+  /* ---- 為什麼要寫這幾句（唯一真的是「品味」的那一格）------------------
+     ⚠⚠ 三格的差別**不是修辭，是這張卡站在誰那一邊**：
+       a 站在下一個病人那一邊（＝站上「診所給的是燈」那條）
+       b 站在寫的人那一邊（他的幾句話有重量）
+       c 站在診所那一邊（幫我們變好）
+     ⚠ a 那一句「不管寫什麼，都會幫到」是**刻意寫進去的** —— 它當著病人的面
+       說清楚「我們不是只想要好評」，是這張卡不分流最直接的證據。 */
+  var WHY = {
+    a: { name: "幫到下一個人", text: "不管寫什麼，都會幫到\n下一個正在找牙醫的人。" },
+    b: { name: "你寫的有重量", text: "你寫的幾句話，會是\n下一個人挑診所時的線索。" },
+    c: { name: "讓我們更好",   text: "不管寫什麼我們都會看，\n知道哪裡還可以再好一點。" }
+  };
+
+  /* ---- 意見那一塊（給所有人，不是「不滿意的人才走這條」）----------------
+     ⚠⚠⚠ 這一塊是**新版能不能不分流的關鍵**：拿掉分流之後，想抱怨的人不能沒有出口，
+       所以私下的管道要**給所有人**、寫在同一張卡上，而不是藏在「不願意」那一顆後面。
+     ⚠⚠ 預設不放電話鈕，理由是量出來的：這間診所的電話**本來就結構性忙線**
+       （六個月 1,886 通來自商家檔案，第 2-1 節），再把「想講幾句話」也導進電話，
+       等於拿最稀缺的那條線去接最不急的事。櫃檯是免費、而且本來就會遇到的。
+     ⚠ 但這是**診所的事實**不是我的品味（櫃檯願不願意接、有沒有人記），所以擺成一把尺。 */
+  var FB = {
+    desk: { name: "只跟櫃檯說", text: "有想直接告訴我們的，\n好的不好的都想聽。\n這裡沒有專人看訊息，\n下次來跟櫃檯說一聲就好。", tel: false },
+    tel:  { name: "加電話鈕",   text: "有想直接告訴我們的，\n好的不好的都想聽。\n這裡沒有專人看訊息，\n跟櫃檯說，或打給我們。", tel: true },
+    none: { name: "不放",       text: "", tel: false }
+  };
+
+  var v = "new", why = "a", fb = "desk";
+  var m = location.search.match(/[?&]v=(old|new)/); if (m) v = m[1];
+  m = location.search.match(/[?&]w=([a-z0-9]+)/); if (m && WHY[m[1]]) why = m[1];
+  m = location.search.match(/[?&]f=([a-z0-9]+)/); if (m && FB[m[1]]) fb = m[1];
+
+  /* ---- Ⓐ 現況（照 channels/README 第 17-2 節的逐字紀錄重畫）------------ */
+  function oldHtml() {
+    return '<div class="pv-hc pv-old" id="pv-body">'
+      + '<div class="logo"><img src="../line-welcome/mark-green.png" alt="">'
+      + '<div class="en">FANG REN DENTAL CLINIC</div>'
+      + '<div class="zh">芳仁牙醫</div></div>'
+      + '<div class="b">'
+      + '<div class="ttl">滿意度調查</div>'
+      + '<div class="q">親愛的 王丞睿，您願意推薦 斗六芳仁牙醫診所給身邊的親朋好友嗎？</div>'
+      + '<div class="btn">👉願意並分享體驗</div>'
+      + '<div class="sub">不願意並提供建議</div>'
+      + '</div></div>';
+  }
+
+  /* ---- Ⓑ 新版 ---------------------------------------------------------
+     順序（三段）：
+       ① 這一次是誰　　〔病人姓名〕　這次辛苦了 ＋ 謝謝你們跑這一趟
+       ② 邀請　　　　　方便的話在 Google 上留幾句 ＋ 一句叫他點 ＋ 綠鈕
+       ③ 想直接說的　　紙灰方塊：好的不好的都想聽、這裡沒有專人看訊息、跟櫃檯說
+     ⚠⚠ **沒有標題**（現況那個「滿意度調查」是公家表格的詞，而且標題說滿意度、
+       內文問推薦意願，本來就是兩件事）—— 同另外兩則：有頭圖就不必再寫一次名字。
+     ⚠⚠⚠ **沒有那個「您願意推薦…嗎？」的問句**：它是分流的入口，
+       而且兩個答案都要病人再做一件事（分享／填建議），等於一張問卷長成漏斗。 */
+  function newHtml() {
+    var h = '<div class="pv-hc pv-new" id="pv-body">'
+      + '<div class="hero"><b>頭圖（先保留位置）</b>'
+      + '<span>1024 × 512　＝ LINE 對 Flex 圖片的上限</span></div>'
+      + '<div class="b">'
+      + '<p class="hi"><b>〔病人姓名〕</b>　這次辛苦了</p>'
+      + '<p class="lead">謝謝你們跑這一趟。</p>'
+      + '<p class="ask">方便的話，在 Google 上留幾句話，\n說說這一次的經驗。\n'
+      + WHY[why].text + '</p>'
+      + '<p class="cta">點一下下面的按鈕就可以寫</p>'
+      + '<span class="btn"><img src="../line-welcome/mark-white.png" alt="">'
+      + '<span>去 Google 寫幾句</span>'
+      + '<img class="chev" src="../line-remind/mark-chev-white.png" alt=""></span>';
+    if (fb !== "none") h += '<p class="box know">' + FB[fb].text + '</p>';
+    if (FB[fb].tel) {
+      h += '<span class="tel"><img src="../line-remind/mark-tel.png" alt="">'
+        +  '<span>' + TEL + '</span></span>';
+    }
+    return h + '</div></div>';
+  }
+
+  /* ---- 量測 ---------------------------------------------------------- */
+  /* 逐字量 top 分組 —— 這樣才知道**實際**折成幾行、末行剩幾個字。
+     ⚠ 不能只數 \n：手動斷好的一行如果太長，瀏覽器還是會再折一次，
+       而那一折出來的末行就是孤字。要量的正是這件事。 */
+  function lines(el) {
+    var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), tns = [], n;
+    while ((n = w.nextNode())) tns.push(n);
+    var r = document.createRange(), g = {};
+    tns.forEach(function (tn) {
+      var t = tn.textContent;
+      for (var k = 0; k < t.length; k++) {
+        r.setStart(tn, k); r.setEnd(tn, k + 1);
+        var b = r.getBoundingClientRect();
+        if (b.height && t[k] !== "\n" && t[k] !== " " && t[k] !== "　") {
+          var top = Math.round(b.top);
+          if (!g[top]) g[top] = { s: "", l: b.left, r: b.right };
+          g[top].s += t[k];
+          if (b.left < g[top].l) g[top].l = b.left;
+          if (b.right > g[top].r) g[top].r = b.right;
+        }
+      }
+    });
+    return Object.keys(g).map(Number).sort(function (a, b2) { return a - b2; })
+      .map(function (t) { return { s: g[t].s, w: g[t].r - g[t].l }; });
+  }
+
+  function rel(c) {
+    return [c.r, c.g, c.b].map(function (x) {
+      x /= 255; return x <= .03928 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4);
+    }).reduce(function (a, x, i) { return a + x * [.2126, .7152, .0722][i]; }, 0);
+  }
+  function px(c) { var q = c.match(/[\d.]+/g).map(Number); return { r: q[0], g: q[1], b: q[2], a: q.length > 3 ? q[3] : 1 }; }
+  function ratio(fg, bg) { var a = rel(fg) + .05, b = rel(bg) + .05; return a > b ? a / b : b / a; }
+  /* ⚠⚠ 淡底方塊是半透明疊在卡色上，直接讀 rgba 會算錯 —— 要先合成。 */
+  function ct(el, cardBg) {
+    if (!el) return null;
+    var cs = getComputedStyle(el), wb = px(cs.backgroundColor), fg = px(cs.color);
+    var bg = wb.a === 0 ? cardBg : {
+      r: wb.r * wb.a + cardBg.r * (1 - wb.a),
+      g: wb.g * wb.a + cardBg.g * (1 - wb.a),
+      b: wb.b * wb.a + cardBg.b * (1 - wb.a)
+    };
+    return { c: ratio(fg, bg), bg: bg };
+  }
+  function hex(c) {
+    return "#" + [c.r, c.g, c.b].map(function (x) {
+      return ("0" + Math.round(x).toString(16)).slice(-2);
+    }).join("").toUpperCase();
+  }
+
+  /* 那一句上下的空隙 —— **量字面不是量行框**（行高 1.7 讓字面下方多 4.8px 的半行距，
+     看得到的距離和 margin 差一截）。判準是「下面明顯比上面小」，那句話才會被讀成
+     在講底下那顆按鈕（提醒卡 2026-09-04 定案的比例：上 17.0 ／ 下 5.0）。 */
+  function gapRow(body, above, line, below, label) {
+    var box = body.querySelector(above), el = body.querySelector(line),
+        btn = body.querySelector(below);
+    if (!box || !el || !btn) return "";
+    var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), r = document.createRange();
+    var t, top = 1e9, bot = -1e9;
+    while ((t = w.nextNode())) {
+      for (var i = 0; i < t.length; i++) {
+        r.setStart(t, i); r.setEnd(t, i + 1);
+        var c = r.getBoundingClientRect();
+        if (!c.height) continue;
+        top = Math.min(top, c.top); bot = Math.max(bot, c.bottom);
+      }
+    }
+    var up = top - box.getBoundingClientRect().bottom;
+    var dn = btn.getBoundingClientRect().top - bot;
+    var k = dn / up;
+    return "<br>" + label + "：上面 <b>" + up.toFixed(1) + "</b>　下面 <b>" + dn.toFixed(1) + "</b>"
+      + "　（下 ÷ 上 <b>" + k.toFixed(2) + "</b>）"
+      + (k > .85 ? " <span class='no'>兩邊一樣大 —— 它會浮在中間</span>"
+        : k > .62 ? " <span class='no'>下面還是偏大</span>"
+        : k > .2  ? " <span class='ok'>下面明顯小，歸給按鈕了</span>"
+                  : " <span class='no'>快貼上去了</span>");
+  }
+
+  var EMOJI = /[☀-➿⬀-⯿]|[\uD83C-\uD83E][\uDC00-\uDFFF]/g;
+
+  function measure() {
+    var body = document.getElementById("pv-body");
+    /* ⚠⚠ 量行與字數只看 `.b`，**不要量整張卡** —— 頭圖那個佔位框裡有兩行說明文字，
+       量進去的話它們會被算成「被瀏覽器再折一次的行」，而且「最寬的一行」會變成
+       那句佔位說明。圖進來之後那兩行就消失了，等於現在每一個數字都在說謊。 */
+    var inner = body.querySelector(".b"), ics = getComputedStyle(inner);
+    var ls = lines(inner);
+    var vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    var box = body.getBoundingClientRect();
+    var text = inner.innerText || inner.textContent;
+    var emo = text.match(EMOJI) || [];
+    var cardBg = px(getComputedStyle(body).backgroundColor);
+
+    var avail = inner.getBoundingClientRect().width
+      - parseFloat(ics.paddingLeft) - parseFloat(ics.paddingRight);
+
+    /* 自己斷了幾行 —— 拿它和實際畫出來的比，多出來的就是被自動折掉的。
+       ⚠ 現況那一張是照截圖重畫的、沒有手動斷行，所以只對新版算。 */
+    var self = {}, selfN = 0;
+    if (v === "new") {
+      body.querySelectorAll(".hi,.lead,.ask,.box,.cta,.btn,.tel").forEach(function (el) {
+        (el.innerText || "").split("\n").forEach(function (x) {
+          x = x.replace(/[ 　]/g, ""); if (x) { self[x] = 1; selfN++; }
+        });
+      });
+    }
+    /* ⚠⚠ 判準不是「有沒有被折」，是**折出來有沒有孤字**。 */
+    var orphan = ls.filter(function (l) { return l.s.length <= 3 && !self[l.s]; });
+    var wide = 0, widest = "";
+    ls.forEach(function (l) { if (l.w > wide) { wide = l.w; widest = l.s; } });
+
+    /* 名字那一行：〔病人姓名〕是 6 個全形字的佔位符，真名通常 2~4 個字。
+       ⚠ 這一行**不能手動斷行**（系統填的），所以要知道它幾個字才會折。 */
+    var probe = document.getElementById("pv-probe"), nameW = 0, nameMax = 0;
+    if (v === "new") {
+      var hi = body.querySelector(".hi");
+      probe.style.font = getComputedStyle(hi).font;
+      probe.textContent = "李小明　這次辛苦了";
+      nameW = probe.getBoundingClientRect().width;
+      for (var i = 2; i <= 9; i++) {
+        probe.textContent = Array(i + 1).join("名") + "　這次辛苦了";
+        if (probe.getBoundingClientRect().width > avail) break;
+        nameMax = i;
+      }
+      probe.textContent = "";
+    }
+
+    /* 紅線掃描（同 drafts/channels/check-welcome.mjs 那張表）：
+       這個帳號沒有專人即時回覆訊息，所以不可以出現「有人可以問」那一類的承諾。
+       ⚠⚠ 掃之前要先把**否定形**拿掉 —— 「這裡沒有專人看訊息」裡面就含著「有專人」。 */
+    var LIE = ["隨時問", "都可以問", "問到", "有人回", "馬上回", "找得到人", "有專人"];
+    var scan = text.replace(/沒有專人/g, "＿").replace(/無專人/g, "＿");
+    var lied = LIE.filter(function (w) { return scan.indexOf(w) >= 0; });
+
+    /* ⚠⚠⚠ 這一頁獨有的一列：**分流**。
+       判準是「通向公開評論的路是不是只給一部分人」，不是「有幾顆按鈕」。 */
+    var gate = v === "old";
+
+    /* ⚠ 另一件這一則獨有的：**不可以拿好處換評價**（Google 明文禁止，
+       而且醫療機構在台灣還多一層招徠的疑慮）。掃一次，免得日後有人加上去。 */
+    var BAIT = ["抽獎", "折價", "優惠", "贈品", "好禮", "送你", "回饋金", "洗牙一次"];
+    var bait = BAIT.filter(function (w) { return text.indexOf(w) >= 0; });
+
+    var knowC = ct(body.querySelector(".box.know"), cardBg);
+    var btnC  = ct(body.querySelector(".btn"), cardBg);
+    var telC  = ct(body.querySelector(".tel"), cardBg);
+    var barH = document.getElementById("pv-bar").getBoundingClientRect().height;
+
+    function line(label, o, want) {
+      if (!o) return "";
+      return "<br>" + label + " <b>" + o.c.toFixed(2) + "</b>"
+        + (o.c >= want ? " <span class='ok'>過 AA</span>"
+                       : " <span class='no'>低於 " + want + "</span>")
+        + " <span>底 " + hex(o.bg) + "</span>";
+    }
+
+    document.getElementById("pv-panel").innerHTML =
+      "<b>" + (v === "old" ? "Ⓐ 現況" : "Ⓑ 新版") + "</b>　<span>Flex 圖卡（268px）</span>"
+      + "<br>卡片實寬 " + (box.width >= 267.5
+          ? "<span class='ok'>268px（＝LINE 的真值）</span>"
+          : "<span class='no'>" + box.width.toFixed(0) + "px —— 這個螢幕放不下 268，"
+            + "下面的折行判斷偏鬆 " + (268 - box.width).toFixed(0) + "px</span>")
+      + "<br>高 <b>" + box.height.toFixed(0) + "px</b>　佔你這一屏 <b>"
+        + (box.height / vh * 100).toFixed(0) + "%</b>"
+        + "　字數 <b>" + text.replace(/\s/g, "").length + "</b>"
+      + "<br>通向公開評論的路 " + (gate
+          ? "<span class='no'>2 條、而且先問了才分流 —— 這就是要問廠商的那件事</span>"
+          : "<span class='ok'>1 條，給所有人（沒有先問、沒有分流）</span>")
+      + "<br>拿好處換評價 " + (bait.length
+          ? "<span class='no'>出現「" + bait.join("、") + "」</span>"
+          : "<span class='ok'>沒有</span>")
+      + "<br>emoji <b>" + emo.length + "</b>" + (emo.length ? "（" + emo.join(" ") + "）" : "")
+        + "　稱謂「親愛的」 <b>" + (text.indexOf("親愛的") >= 0 ? "有" : "沒有") + "</b>"
+        + "　「斗六芳仁」 <b>" + (text.indexOf("斗六芳仁") >= 0 ? "有" : "沒有") + "</b>"
+        + (emo.length || text.indexOf("親愛的") >= 0 || text.indexOf("斗六芳仁") >= 0
+            ? "" : " <span class='ok'>三個都是 0</span>")
+      + (v === "new" ? gapRow(body, ".ask", ".cta", ".btn", "那一句") : "")
+      + (v === "new"
+          ? "<br>自己斷 <b>" + selfN + " 行</b>，你這台畫出 <b>" + ls.length + " 行</b>"
+            + (ls.length - selfN > 0
+                ? "（多的 " + (ls.length - selfN) + " 行是被再折一次的）"
+                : "<span class='ok'>（一行都沒被再折）</span>")
+          : "<br>畫出 <b>" + ls.length + " 行</b>")
+      + "<br>孤字 " + (orphan.length
+          ? "<span class='no'>" + orphan.length + " 行：「"
+            + orphan.map(function (o) { return o.s; }).join("」「") + "」</span>"
+          : "<span class='ok'>沒有</span>")
+      + "<br>最寬的一行 <b>" + wide.toFixed(0) + "px</b>／可用到 <b>" + avail.toFixed(0) + "px</b>"
+        + " <span>（" + widest.slice(0, 12) + "）</span>"
+      + (v === "new"
+          ? "<br>名字那一行 <b>" + nameW.toFixed(0) + "px</b>（真名 3 個字）／"
+            + "<b>" + nameMax + " 個字</b>以內不會折"
+            + (nameMax >= 4 ? " <span class='ok'>夠用</span>"
+                            : " <span class='no'>太緊</span>")
+          : "")
+      /* ⚠⚠ 對比度只對 Ⓑ 報 —— Ⓐ 那張卡的綠是**我從截圖描的**，不是量的，
+         拿它算出來的比值會變成一個看起來很像發現、其實是自己編的數字。 */
+      + (v === "new" ? line("意見那一塊", knowC, 4.5)
+                     + line("按鈕白字", btnC, 4.5)
+                     + line("電話鈕", telC, 4.5) : "")
+      + "<br>沒有專人那件事 " + (lied.length
+          ? "<span class='no'>出現「" + lied.join("、") + "」</span>"
+          : "<span class='ok'>守住了</span>")
+      + "<br>切換條佔一屏 <b>" + (barH / vh * 100).toFixed(1) + "%</b>"
+        + (barH / vh > .24 ? " <span class='no'>太高了</span>" : " <span class='ok'>ok</span>")
+      + "<hr>" + (v === "old" ? oldNote() : newNote());
+  }
+
+  function oldNote() {
+    return "8/27（四）12:06 送出、已讀，收件的是<b>林苡馨（丞睿阿嬤）</b>。"
+      + "<br>⚠⚠ <b>這一張沒有量過</b> —— 你給的那張截圖沒有留下可以逐像素反推的行"
+      + "（提醒卡那一輪是靠「11 個全形字量到 176.0px、16 整除」把字級算出來的）。"
+      + "所以上面的 px 是<b>照 Flex 那張表推的近似</b>，"
+      + "<b>不要拿它的高度或折行去下結論</b>；要比的是結構。"
+      + "<br>⚠ 標誌實際是<b>棕色的嘴形</b>，這裡用手上已經有的綠色那顆代替。"
+      + "<b>而標誌那一塊是這張卡唯一做對的地方</b> —— 它證明廠商的卡片系統"
+      + "<b>吃得下診所自己的品牌資產</b>。"
+      + "<hr><b>五件問題</b>"
+      + "<br>① ⚠⚠⚠ <b>分流</b>：「願意 → 分享體驗」「不願意 → 提供建議」。"
+      + "如果只有前者通向 Google，那是 <b>review gating</b>（只向滿意的人索取公開評論），"
+      + "<b>據我所知是 Google 明文禁止的</b>。輕則評論被移除，重則影響整個商家檔案。"
+      + "<br>② <b>稱謂</b>：「親愛的 王丞睿，您…」—— 這則送到<b>阿嬤</b>的帳號，"
+      + "那個「您」卻指著孫子。這不是筆誤，是<b>結構性的</b>："
+      + "這間診所一個帳號綁多位家人是已確認的事實。"
+      + "<br>③ <b>名稱</b>：「<b>斗六</b>芳仁牙醫診所」—— 站上與其他每一個地方都是「芳仁牙醫診所」。"
+      + "<br>④ <b>emoji</b>：按鈕上的 👉（站上全站 0 個）。"
+      + "<br>⑤ <b>標題</b>：「滿意度調查」是公家表格的詞，"
+      + "而且<b>標題說滿意度、內文問推薦意願</b>，本來就是兩件事。"
+      + "<br>⚠ 還有一件不在表上、但最傷的：<b>兩個答案都要他再做一件事</b>"
+      + "（分享／填建議），<b>沒有「就回答一下」這個選項</b> —— 一張問卷長成漏斗。";
+  }
+
+  function newNote() {
+    return "和招呼圖卡、綁定完成、提醒卡同一套：卡片 <b>268px</b>、內距 <b>14px</b>、"
+      + "<b>顏色一顆都沒新增</b>、<b>emoji 0 個</b>。"
+      + "<br>⚠ <b>頭圖先保留位置</b>（你 2026-09-04 指定）。佔位框和真圖<b>一樣高</b>"
+      + "（<code>aspect-ratio 2/1</code>），所以現在量到的卡片高度<b>等圖進來也不會變</b>。"
+      + "規格同另外兩則：<b>1024×512</b>（LINE 對 Flex 圖片的上限）。"
+      + "<hr>"
+      + "<b>⚠⚠⚠ 這一則最要緊的改動：把「先問、再分流」整個拿掉。</b>"
+      + "<br>合規的形狀只有一種：<b>不要先問、不要分流</b>。"
+      + "所有人拿到<b>同一個邀請</b>，想寫的自己會去寫；"
+      + "私下的意見管道<b>另外給、也給所有人</b>，不是「不滿意的人才走這條」。"
+      + "<br>⚠ 「不管寫什麼，都會幫到下一個正在找牙醫的人」那一句是<b>刻意寫進去的</b> ——"
+      + "它當著病人的面說清楚<b>我們不是只想要好評</b>，是這張卡沒有分流最直接的證據。"
+      + "<br>⚠⚠ 這個改法<b>同時解掉品牌問題</b>：現在那一張是整個帳號裡最像推銷的一則，"
+      + "而站上的紅線第一條就是<b>不推銷</b>。"
+      + "<hr>"
+      + "<b>⚠⚠ 名字當受詞，不當稱謂</b>（第 17-4 節那條規則，這個帳號每一張卡都適用）："
+      + "<br>現況「<b>親愛的 王丞睿，您</b>願意推薦…」把讀的人和病人混成一個；"
+      + "新版是「<b>〔病人姓名〕　這次辛苦了</b>」—— 名字說的是<b>那一次看診是誰的</b>，"
+      + "接著「<b>謝謝你們跑這一趟</b>」才是對讀的人說（阿嬤、媽媽、子女都對）。"
+      + "<br>⚠ 「這次」<b>不寫「今天」</b> —— 這一則什麼時候送我們還沒問到，"
+      + "寫「今天」的話晚一天送就是錯的。"
+      + "<br>⚠ 名字<b>加粗</b>（Flex 就是一個 span 加 weight: bold）：一個帳號收得到"
+      + "好幾個家人的訊息，「這一次是誰」要一眼看到。面板現場量了「幾個字以內不會折」。"
+      + "<hr>"
+      + "<b>意見那一塊為什麼預設不放電話鈕</b>"
+      + "<br>這間診所的電話<b>本來就結構性忙線</b>（六個月光是從商家檔案就打進 1,886 通，"
+      + "第 2-1 節）。把「想講幾句話」也導進電話，等於<b>拿最稀缺的那條線去接最不急的事</b>；"
+      + "櫃檯是免費的，而且他下次本來就會來。"
+      + "<br>⚠ 但<b>櫃檯願不願意接、有沒有人記下來</b>是<b>診所的事實</b>不是我的品味，"
+      + "所以擺成一把尺讓你決定。"
+      + "<br>⚠⚠ 「<b>這裡沒有專人看訊息</b>」那一句<b>非寫不可</b>："
+      + "我們才剛請他「說幾句話」，不寫的話他會直接在 LINE 裡回，然後<b>沒有人看得到</b>。"
+      + "<hr>"
+      + "<b>⚠ 還沒有的東西（上線之前一定會卡住）</b>"
+      + "<br>① <b>按鈕的網址還沒有</b> —— Google 的「寫評論」深連結需要診所的 Place ID，"
+      + "我們手上只有分享用的短網址（<code>maps.app.goo.gl/…</code>）。"
+      + "<b>要一條真的能直接開啟評論框的網址</b>，不然按下去只會到地圖頁、他還要自己找。"
+      + "<br>② <b>現在那兩顆按鈕各連到哪裡</b>（第 17-3 節的三題）——"
+      + "<b>這一題比所有美感問題急</b>，因為它決定的是「你們現在是不是正在違規」。"
+      + "<br>③ <b>什麼時候送、自動還是手動、每個病人每次看診都送嗎</b>（第 17-6 節）。"
+      + "⚠ 如果是<b>主動推播</b>，它就是<b>第二則要錢的訊息</b>，而且每次看診都送的話"
+      + "<b>則數會比約診提醒還多</b>。"
+      + "<br>④ <b>這張卡的文字與版型改得動嗎</b>（同提醒卡那一題）。"
+      + "<br>⑤ <b>關鍵字回應／推播送不送得出 Flex Message</b> —— 送不出去的話"
+      + "這一則只能退回純文字，那一版<b>沒有按鈕</b>。"
+      + "<hr>"
+      + "<b>⚠⚠⚠ 一條不要越過的線：不可以拿好處換評價。</b>"
+      + "折價、抽獎、送洗牙都不行 —— Google 明文禁止，"
+      + "而且醫療機構在台灣還多一層招徠的疑慮。面板有一列在掃這件事。"
+      + "<hr>"
+      + "⚠ <b>〔病人姓名〕是系統填的欄位</b>，不要寫死。"
+      + "⚠ 三顆按鈕在 Flex 裡都是<b>可以點的 box</b>不是 <code>button</code> ——"
+      + "因為 <b>button 只有一個文字標籤、放不進圖示</b>（第十一之二節）。"
+      + "<br>⚠ 角形與話筒<b>借提醒卡已經產好的那兩張</b>，沒有另外再產一份。";
+  }
+
+  /* ---- 切換條 -------------------------------------------------------- */
+  function bar(id, set, get, put) {
+    var boxEl = document.getElementById(id);
+    boxEl.innerHTML = "";
+    Object.keys(set).forEach(function (k) {
+      var b = document.createElement("button");
+      b.textContent = set[k].name;
+      b.setAttribute("aria-pressed", get() === k ? "true" : "false");
+      b.onclick = function () { put(k); render(); };
+      boxEl.appendChild(b);
+    });
+  }
+
+  function render() {
+    document.getElementById("pv-slot").innerHTML = v === "old" ? oldHtml() : newHtml();
+    bar("sw-v", { old: { name: "Ⓐ 現況" }, new: { name: "Ⓑ 新版" } },
+        function () { return v; }, function (k) { v = k; });
+    bar("sw-w", WHY, function () { return why; }, function (k) { why = k; });
+    bar("sw-f", FB, function () { return fb; }, function (k) { fb = k; });
+    /* 現況那一張是廠商的，這兩把尺對它無效 —— 關掉而不是拿掉，
+       不然切回新版時整條會跳高一截。 */
+    ["row-w", "row-f"].forEach(function (id) {
+      document.getElementById(id).className = "r" + (v === "old" ? " off" : "");
+    });
+    var q = v === "old" ? "?v=old" : "?v=new&w=" + why + "&f=" + fb;
+    history.replaceState(null, "", location.pathname + q);
+    measure();
+    document.getElementById("pv-note").innerHTML = note();
+  }
+
+  function note() {
+    return "⚠⚠⚠ <b>這一則和另外三則不一樣：它不只是「醜」的問題。</b>"
+      + "<br>現在那一張<b>先問一句「您願意推薦…嗎？」再把人分成兩條路</b>"
+      + "（願意 → 分享體驗／不願意 → 提供建議）。"
+      + "<b>如果只有「願意」那條通向 Google 評論</b>，那就是 review gating ——"
+      + "<b>只向滿意的人索取公開評論</b>，據我所知是 Google 商家檔案明文禁止的，"
+      + "因為它會讓公開評分失真。"
+      + "<br>⚠⚠ <b>但我不知道那兩顆按鈕實際連到哪裡，所以這是「要問」不是「你們違規了」。</b>"
+      + "三題在 <code>drafts/channels/README.md</code> 第 17-3 節，"
+      + "<b>問到之前不要把新版送上去，也不要急著把舊的關掉</b> ——"
+      + "如果兩條路本來就都通向 Google，那它只是寫得不好，不是違規。"
+      + "<br>⚠ 而<b>商家檔案是這間診所最大的入口</b>（六個月 14,973 次瀏覽、1,886 通電話），"
+      + "所以這一格的風險比任何一次改版都高。"
+      + "<hr>"
+      + "<b>新版做了什麼（三件，其餘一個字都沒多加）</b>"
+      + "<br>① <b>拿掉分流</b>：同一個邀請給所有人，私下的意見管道也給所有人。"
+      + "<br>② <b>名字從稱謂變成受詞</b>：這個帳號一個人收得到好幾個家人的訊息。"
+      + "<br>③ <b>把「為什麼要寫」講出來</b>：不是為了診所的分數，"
+      + "是<b>幫到下一個正在找牙醫的人</b> —— 那正是站上「診所給的是燈」那條。"
+      + "<hr>"
+      + "<b>兩把尺</b>"
+      + "<br>⚠ <b>「為什麼寫」那三格是真的品味題</b>，差別不是修辭是<b>這張卡站在誰那一邊</b>："
+      + "<b>a</b> 站在下一個病人那一邊、<b>b</b> 站在寫的人那一邊、<b>c</b> 站在診所那一邊。"
+      + "我建議 <b>a</b>。"
+      + "<br>⚠ <b>「意見那塊」是診所的事實題</b>（櫃檯接不接得住、電話還撐不撐得住），"
+      + "我建議 <b>只跟櫃檯說</b>，理由在面板底下。"
+      + "<br>⚠ 其餘每一件我都自己決定了，沒有列成選單 ——"
+      + "<b>你給的是內容與意圖，不是規格</b>（第 18-1 節）。"
+      + "<hr>"
+      + "⚠⚠ <b>Flex 的 JSON 等你挑完才寫</b>（同綁定完成、提醒卡那兩則的順序）。"
+      + "挑定之後才會出 <code>drafts/channels/review-card.json</code> 與守門"
+      + "<code>check-review.mjs</code>，在那之前不要拿任何東西給廠商。"
+      + "<br>⚠ 這一頁是<b>提案頁</b>；定案之後照第十一之五節<b>改寫成規格頁</b>"
+      + "（切換條拿掉、頁面留著），不刪頁也不搬進 <code>history/</code> ——"
+      + "它的成品在 LINE 不在站上，而且要整包拿給廠商看。";
+  }
+
+  (function () {
+    var barEl = document.getElementById("pv-bar"), fold = document.getElementById("pv-fold");
+    fold.onclick = function () {
+      var on = barEl.classList.toggle("fold-in");
+      fold.textContent = on ? "調整…" : "收起";
+      fold.setAttribute("aria-expanded", on ? "false" : "true");
+      measure();
+    };
+  })();
+
+  window.addEventListener("resize", measure);
+  render();
+})();
+</script>
+</body>
+</html>
