@@ -657,7 +657,19 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<hr>" + v.note;
 
     document.getElementById("pv-note").innerHTML =
-      "⚠⚠ <b>這一則卡在廠商</b>：現在綁定完那一刻，廠商的系統會**以病人的身分**把"
+      "📎 <b>這幾張已經存成圖片、也放在網路上了</b>（2026-09-04，"
+      + "<code>node drafts/channels/bind-done-png.mjs</code>）——"
+      + "圖卡三格底色各一張、純文字泡泡一張，另有一張三格並排的對照表："
+      + "<br><code>/preview/line-bind-done/shot-cards.png</code>（三格並排）"
+      + "<br><code>…/shot-card-pa.png</code>　<code>…/shot-card-bl.png</code>　"
+      + "<code>…/shot-card-br.png</code>　<code>…/shot-text.png</code>"
+      + "<br>⚠ 卡片實寬 268px，出圖是 <b>3×（804px 寬）</b>，縮放檢視都還清楚。"
+      + "⚠⚠ 拍的是<b>這一頁自己的那張卡</b>，不是另外畫一份 —— 這一頁改了圖就要重跑，"
+      + "不然它會開始說謊。"
+      + "<br>⚠ <b>最後會把 LINE 這幾頁整合成一頁給廠商看</b>"
+      + "（招呼圖卡／自動回應／綁定完成／提醒卡），那是另一件事，還沒做。"
+      + "<hr>"
+      + "⚠⚠ <b>這一則卡在廠商</b>：現在綁定完那一刻，廠商的系統會**以病人的身分**把"
       + "「✅ 09xxxxxxxx 綁定成功！」寫進聊天室（上面那顆綠泡泡），觸發的是<b>自動回應</b> —— "
       + "自動回應對「病人送出任何訊息」都會回。<b>號碼每個人不一樣，關鍵字回應是完全一致比對，抓不到。</b>"
       + "所以要有這一則專屬的，得請廠商把那句話改成<b>不含號碼的固定字串</b>（或改由官方帳號推播）。"
