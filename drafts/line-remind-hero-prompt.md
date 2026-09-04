@@ -721,3 +721,270 @@ areas; an overall yellow or sepia cast; greyscale.
 17. **至少五張嘴是開的**，其中兩張大開＋頭後仰。
 18. **至少一半的頭是歪的**，而且頭頂連起來不是兩條水平線。
 19. **每一隻手正好五根手指**（放大逐隻數，這張圖有十幾隻張開的手掌）。
+
+---
+
+## 九、第四版（2026-09-04）：**姿勢差異化 ＋ 五個醫療人員從畫面兩側擠進來搶鏡頭**
+
+使用者看第三版：
+
+> 隱隱約約覺得有**再動感一點**，哈哈哈，**不是很明顯**。
+> 再加**四五位醫療人員**進來，也可以**從畫面旁邊擠進來搶一點鏡頭**的感覺。
+
+### 9-1　⚠⚠⚠ 第三版失敗的成因：動線都畫了，但**十二個人有十個是同一個姿勢**
+
+第三版**我要的東西全部出現了** —— 動線、跳起來的小孩、歪頭、張開的嘴 —— 畫面還是靜的。
+逐個人看就知道：**正面、站直、兩肩齊平、手舉在自己頭旁邊**，十二個人有十個是這一個。
+
+> **動線只是註記，觀眾讀的是身體。** 一群人做同一個動作，加再多短弧也只是
+> 「一張靜態合照上面畫了幾條線」。
+
+**判準寫得出來**：把每個人的身體軸線畫出來 —— 大多數是垂直的、肩線都水平，就是靜的。
+要動就要**軸線傾斜 15~30 度、肩線一高一低、前後深度不同**。
+（這一條已經寫進 ILLUSTRATION.md 第七節第 20 條。）
+
+### 9-2　使用者提的「從旁邊擠進來搶鏡頭」正是最有效的那一招
+
+被畫框切掉一半的身體 ＋ 斜著探進來的軀幹，**本身就是動態**，不必加任何新元素。
+而且它**人數可以往上加而不傷 268px 的可讀性** —— 進來的人是**大的**（被邊框切到），
+不是後排那種小點。
+
+⚠ **左右邊被切掉不違反 CROP SAFETY** —— 那一段管的是**上下**（2:1 裁切只裁上下），
+左右本來就滿版。
+
+### 9-3　⚠ 兩件連帶要處理的
+
+- **人數 11~12 → 16~17**，但**後排那三到四個一個都不加**（那才是會變小點的層）。
+- ⚠⚠ **刷手服的鼠尾草綠會變成一大塊。** 加五個醫療人員之後，全圖有**六個**穿刷手服，
+  268px 上很容易糊成一片綠。**兩個對策同時做**：
+  **① 其中兩個外面罩開襟白袍**（讀起來是白的）、
+  **② 六個人分散到畫面的不同角落，絕對不可以擠在一起**。
+- ⚠ 「不限於診所醫療人員」那條**沒有被推翻**：16~17 人裡仍然有十個以上是一般民眾。
+
+### 9-4　⚠ 動線的下界要給
+
+第三版的動線幾乎看不見 —— 我寫的是「**比旁邊那顆頭短**」，模型就畫成一點點。
+這一版改成**半個到一個頭寬**，並明講「縮到縮圖也要看得見」。上限從 20 放寬到 **24**
+（人變多了），單手仍然不超過三條。
+
+### 9-5　提示詞・第四版（逐字，可直接複製貼上）
+
+```
+Editorial illustration, landscape 16:9. It will be cropped to a 2:1 letterbox and then shown
+very small — about 268 pixels wide inside a phone message card — so every shape must still
+read at thumbnail size.
+
+READ THIS FIRST — STYLE. This is the most important section; keep it fully in force no matter
+how long the rest of this brief is. Draw everything in the style of the reference
+illustrations: THIN HAND-DRAWN LINEWORK whose weight varies and sometimes breaks — never a
+thick even outline, never a mechanical vector line, and never pure black (the line is a warm
+dark brown-grey). Colour is laid in soft coloured-pencil tones, light and high-key, with FINE
+PAPER GRAIN over the whole image and a few loose hand-drawn shading strokes; plenty of pale
+paper shows through. EVERY PERSON WEARS A DIFFERENT COLOUR so the group never reads as one
+block, and warm colours and cool colours are both present — this is not a monochrome picture
+and not a pastel-only one. Friendly, everyday, alive; never slick, never corporate, never
+photographic.
+
+FACES — each face is ONE FLAT WARM SKIN TONE with no modelling. On a face there is only: the
+outline, two eyes drawn as small simple marks, two short eyebrows, a small nose mark, a
+smiling mouth and an ear. Hair is a flat shape in two tones with no individual strands. EVERY
+PERSON IS DRAWN WITH THE SAME LINE WEIGHT AND THE SAME SOLIDITY — nobody is paler, softer,
+thinner or more transparent than anybody else. Every face is clearly HAPPY: an easy open
+smile, eyebrows lifted, eyes crinkled. Nobody is anxious, nobody is blank, and nobody is
+pushed into a wild cartoon grin.
+
+WHAT IS HAPPENING — this is the one idea and everything else serves it. WE ARE STANDING JUST
+OUTSIDE THE GLASS FRONT DOOR OF A SMALL NEIGHBOURHOOD DENTAL CLINIC, LOOKING IN THROUGH THE
+GLASS, AND EVERYONE INSIDE HAS CROWDED UP TO IT TO WAVE HELLO AT US. They are delighted to
+see us and they are all shoving in to get into the picture, the way a crowd piles into a
+group photo at the last second. IT IS NOISY, WARM AND GENUINELY CHAOTIC — not a party, not a
+ceremony, and above all NOT A TIDY POSED GROUP PHOTOGRAPH. EVERYBODY LOOKS STRAIGHT INTO THE
+CAMERA. This is deliberate and it is the whole point of the picture: do not turn anybody away
+from us.
+
+⚠ THE SINGLE MOST IMPORTANT INSTRUCTION IN THIS BRIEF — NO TWO PEOPLE HAVE THE SAME POSE.
+The previous attempt failed because almost everybody stood square to the camera, upright,
+with level shoulders and one hand raised beside their own head. THAT MUST NOT HAPPEN AGAIN.
+  • AT MOST THREE PEOPLE in the whole picture may use that plain "stand upright, one hand up
+    beside my head" wave. EVERY OTHER PERSON must be doing something structurally different.
+  • AT LEAST HALF THE PEOPLE HAVE A BODY AXIS TILTED 15 TO 30 DEGREES OFF VERTICAL, each at a
+    different angle, leaning in from the side, forward, or over somebody else.
+  • ALMOST NOBODY HAS LEVEL SHOULDERS: one shoulder is higher, or nearer to us, than the
+    other.
+  • THE TEST: if you mentally rotated every figure upright, they must NOT all look like the
+    same person. If they would, the picture has failed.
+
+PEOPLE PUSHING IN FROM THE LEFT AND RIGHT EDGES — this is the main new thing in this version
+and it is what makes the picture feel alive. FIVE CLINIC STAFF are squeezing into frame from
+the two side edges, late and eager, elbowing for a place:
+  • TWO come in from the LEFT EDGE and THREE from the RIGHT EDGE (or the other way round).
+  • EACH ONE IS CUT OFF BY THE EDGE OF THE PICTURE — one is only half a face and one shoulder
+    and one waving hand; one is a whole head and an arm but no body; one is leaning in so far
+    that their torso is diagonal across the corner.
+  • THEIR HEADS ARE LARGE — between a fifth and a quarter of the picture height — because
+    they are near the glass. They are NOT small background figures.
+  • THEY LEAN INWARDS TOWARDS THE CENTRE at a clear diagonal, shoulders first, faces bright
+    and laughing, all still looking straight at the camera.
+  • ONE OF THEM IS PRESSING IN SO HARD THAT THE PERSON IN FRONT IS SQUASHED SIDEWAYS a
+    little, tilted off balance and laughing about it.
+  • ONE MORE HEAD APPEARS LOW DOWN in a gap, someone crouched or bent right over at the front
+    corner, looking up into the camera.
+
+THE PICTURE IS FULL OF PEOPLE — SIXTEEN OR SEVENTEEN IN ALL, packed together, shoulders
+overlapping, heads at many different heights, arms crossing in front of each other, several
+figures cut by the left and right edges, so that almost no empty background is left. Nobody
+stands alone with space around them.
+
+MOVEMENT AND NOISE — the picture must feel LOUD and IN MOTION, and that feeling comes from
+the bodies, never from symbols.
+  • OPEN MOUTHS ARE THE VOLUME. At least SEVEN people have their mouths open, laughing or
+    calling out. THREE of them are open wide with the head tipped back. Only one or two of
+    the older people at the back have a closed, quiet smile.
+  • AT LEAST FIVE PEOPLE ARE CAUGHT MID-MOVEMENT, each doing something different: ONE CHILD
+    IS JUMPING WITH BOTH FEET CLEARLY OFF THE FLOOR, knees bent; one is up on tiptoe with the
+    heels lifted; one is leaning over somebody's shoulder from behind with an arm pushed
+    through the gap; one is half-turned, twisting towards us; one is crouched low at the
+    front corner looking up.
+  • HEADS ARE TILTED. At least half the heads are tilted between ten and twenty-five degrees,
+    every one at a different angle and in different directions. The tops of the heads follow
+    an uneven wave — NEVER straight horizontal rows of upright heads.
+  • ARMS CROSS OVER EACH OTHER. At least three arms reach across in front of, or over the
+    shoulder of, a neighbour, so the hands are not all neatly above their own owners. One
+    hand appears between two shoulders with no visible body behind it.
+  • CLOTHES AND HAIR HAVE JUST MOVED. On three or four people a shirt hem, a sleeve, a
+    ponytail or a fringe lifts and trails slightly, as if still catching up with the body.
+  • SHORT MOTION MARKS. Beside a waving hand put TWO OR THREE short curved marks; under the
+    jumping child's shoes put TWO; beside two or three tilting heads or leaning shoulders put
+    ONE OR TWO. EACH MARK IS BETWEEN HALF AND ONE HEAD-WIDTH LONG — clearly visible even when
+    the picture is shrunk to thumbnail size, but never longer than the head beside it. Each
+    is drawn in the SAME THIN LINE WEIGHT as the outlines, strongest where it starts and
+    fading to nothing at its end, curving the same way as its neighbours. NEVER a single long
+    ribbon, NEVER a loop or a closed curve, NEVER crossing another mark, NEVER growing
+    thicker as it travels. THE WHOLE PICTURE CONTAINS AT MOST ABOUT TWENTY-FOUR OF THESE
+    MARKS, and never more than three around any one hand.
+  • THIS IS HOW SOUND IS DRAWN HERE — through open mouths, movement and those short marks.
+    THERE ARE NO SPEECH BUBBLES, NO MUSICAL NOTES, NO EXCLAMATION MARKS, NO STARS, NO
+    SPARKLES, NO SMALL ICONS, NO ARROWS AND NO RADIATING MANGA SPEED LINES ANYWHERE.
+
+DEPTH, NOT A ROW — the people stand in THREE CLEAR LAYERS at three clearly different sizes,
+overlapping one another, so the crowd reads as "a lot of people" without the picture filling
+up with small heads:
+
+  • FRONT — THREE people crammed right up against the glass, very large, cut off by the
+    bottom edge at about chest height, reaching almost to the left and right edges. They fill
+    the lower half of the picture.
+      – THE LITTLE BOY IS THE CENTRE OF THE PICTURE: about five years old, just LEFT OF
+        CENTRE, HEAD ABOUT THREE TENTHS OF THE PICTURE HEIGHT — the biggest head in the
+        picture. HE HAS PRESSED HIS FACE FLAT AGAINST THE GLASS: the tip of his nose is
+        slightly squashed, ONE CHEEK IS PUSHED UP a little, his eyes are wide open and
+        bright, his mouth is open in a laugh. BOTH PALMS ARE FLAT ON THE GLASS beside his
+        face, fingers spread. KEEP THE SQUASHING GENTLE — he must still read instantly as a
+        happy little boy, never as a distorted or scary face.
+      – A GIRL OF ABOUT EIGHT on the right, head about a quarter of the picture height, MOUTH
+        WIDE OPEN AND HEAD TIPPED BACK, laughing out loud, leaning hard to one side with both
+        palms flat on the glass. Her face is NOT squashed.
+      – A YOUNG WOMAN IN HER EARLY TWENTIES on the left, head about a quarter of the picture
+        height, bent right down to the boy's level and TWISTED TOWARDS US, her body clearly
+        diagonal, one palm on the glass and the other arm reaching across in front of a
+        neighbour.
+    ONLY THE BOY'S FACE TOUCHES THE GLASS. Everybody else touches it with hands only.
+
+  • MIDDLE — FIVE people behind the front three, heads about one sixth of the picture height,
+    shoulders overlapping the front row, none of them square to the camera: a dentist of
+    about forty in an open white coat over pale sage-green scrubs, leaning in sideways; a
+    grandmother in a soft lilac blouse with both hands lifted, laughing with her head thrown
+    back; a young mother in a coral top with a toddler on her hip, and THE TODDLER IS
+    BOUNCING with both small arms thrown up; a young man in his twenties in a mustard t-shirt
+    LEANING RIGHT OVER SOMEBODY'S SHOULDER from behind, calling out.
+
+  • BACK — THREE OR FOUR more people deeper in the room, heads only about one tenth of the
+    picture height, with only heads, shoulders and waving hands visible in the gaps: a man in
+    his forties in a checked shirt, a teenage girl with a backpack UP ON TIPTOE, an older man
+    with a walking stick. DO NOT ADD ANY MORE PEOPLE TO THIS BACK LAYER — at thumbnail size
+    they turn into dots. All the extra people go to the SIDE EDGES, large, not to the back.
+
+WHO THEY ARE — ABOUT SIX of the sixteen are clinic staff; ALL THE OTHERS ARE ORDINARY
+NEIGHBOURS of every age in everyday clothes, each in a different colour. THE STAFF MUST NOT
+FORM ONE GREEN BLOCK: TWO of them wear an OPEN WHITE COAT over their pale sage-green scrubs
+so they read as white, and the six of them are SCATTERED to different parts of the frame —
+never two of them side by side, never a cluster of green in one corner.
+
+THE GLASS — a single big clean sheet of clear glass fills the whole frame between us and
+them. THERE IS NO WINDOW FRAME, NO DOOR FRAME, NO GLAZING BAR AND NO BORDER ANYWHERE IN THE
+PICTURE — the glass is shown ONLY by three small quiet signs:
+  • where a palm or a cheek presses on it, the skin flattens and goes slightly PALER at the
+    contact patch, with a thin soft outline around it;
+  • a SMALL SOFT PATCH OF BREATH MIST beside the boy's mouth, no bigger than his hand;
+  • ONE very faint pale diagonal reflection streak across ONE CORNER of the picture only.
+Keep all three subtle. The reflection must never cross a face and must never wash out the
+picture.
+
+THE WAVES ARE ALL DIFFERENT — flat palms on the glass, both hands up, one hand only as high
+as a shoulder, a hand between two shoulders with no face behind it, an arm reaching across a
+neighbour, a hand entering from outside the frame edge. NOBODY POINTS AT THE VIEWER, nobody
+beckons or waves anybody in, nobody knocks or bangs on the glass, nobody claps, nobody gives
+a thumbs-up or an OK sign, nobody holds anything up to show us, and nobody looks at a watch
+or a clock.
+
+THE ROOM BEHIND THEM — a small, bright, ordinary Taiwanese neighbourhood dental clinic. The
+crowd now hides nearly all of it, and that is correct. Only these show in the gaps, drawn
+large and simple and quiet: a low light-wood reception counter on the right; a plain
+light-wood cabinet wall; warm daylight from a window on the left; through a doorway, one
+corner of a dental chair and the folded arm of the treatment light, so the room is
+unmistakably a dental clinic. No posters, no charts, no shelves of little bottles, no
+scattered pot plants, no clutter — at 268 pixels wide those turn into dirt.
+
+LIGHT AND COLOUR — bright, calm midday daylight from the left, so the light pools on the
+boy's face and on the faces of the front three and softens towards the edges. Walls warm
+cream; floor light warm wood; scrubs pale sage green; everyone else in soft everyday colours
+— coral, lilac, mustard, denim blue, warm brown, soft green, dusty rose — one colour per
+person, and no two people next to each other in the same colour. Not a sunset, not lamplight,
+no long orange shadows, no overall yellow or sepia cast, never grey and never blue-white.
+
+CROP SAFETY — this image will be cropped to 2:1 by cutting an equal strip off the top and off
+the bottom, about 6% of the height each. EVERY FACE and EVERY WAVING HAND must sit
+comfortably inside the central band, clear of the top 10% and the bottom 10% of the frame.
+Figures may be cut off by the LEFT and RIGHT edges — that is intended and important — and the
+front three may run off the bottom edge from the chest down, but no face and no waving hand
+may be cut by the top or bottom edge.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No text, letters, words, numbers, logos,
+signage, captions, labels or watermarks, in any language. The glass carries no lettering and
+no sticker; the counter carries no sign; the scrubs and the white coats carry no badge, no
+name tag and no embroidery; there is no poster, no wall chart, no calendar, no clock face
+with numerals, no screen or monitor with anything on it, no price list and no name plate.
+Wherever writing would normally appear, leave the surface plain. If any of the reference
+images contains lettering, ignore it completely.
+
+EVERY HAND HAS EXACTLY FIVE FINGERS — there are many open palms in this picture, so draw each
+one carefully: no six-fingered hands, no fused fingers, no missing thumbs, and every hand
+belongs to a body we can trace, except the one deliberate hand between two shoulders.
+
+AVOID — photorealism; 3D rendering; thick even black outlines; flat vector art with no grain;
+EVERYBODY STANDING SQUARE TO THE CAMERA, UPRIGHT, WITH LEVEL SHOULDERS AND ONE HAND RAISED
+BESIDE THEIR OWN HEAD; a tidy posed group photograph; straight horizontal rows of upright
+heads all the same size; the extra staff drawn small and far away in the background instead
+of large at the side edges; the sage-green staff bunched together into one green block;
+speech bubbles, musical notes, exclamation marks, stars, sparkles, small icons, arrows, or
+radiating manga speed lines; one long ribbon-like motion line, looping or crossing motion
+lines, motion lines thicker than the outlines, motion marks so small they vanish at thumbnail
+size, or more than about twenty-four marks in total; a window frame, a door frame, a glazing
+bar or any border drawn across the picture; a heavy or mirror-like reflection that hides
+faces; more than one face pressed on the glass; a squashed face distorted so far that it
+stops looking friendly; anybody turned away from the camera; anybody pointing at the viewer,
+beckoning, knocking or banging on the glass; thumbs-up, OK signs, applause, held-up signs or
+banners; small faces at the front of the picture; anxious, tired, bored or blank faces; face
+masks covering faces; needles, syringes, drills, probes, blood or tears; anything inside
+anybody's mouth; a frightened child; balloons, confetti, streamers, party hats or a
+grand-opening feeling; panels, frames, insets or dividing lines; large empty background
+areas; an overall yellow or sepia cast; greyscale.
+```
+
+### 9-6　驗收（再多五條）
+
+20. **左右兩側各有人被畫框切掉**（合計五個），而且**頭都很大**（畫面高的 1/5~1/4），
+    不是縮在後面的小點。
+21. **把每個人的身體軸線畫出來，至少一半傾斜 15~30 度**，而且角度各不相同。
+22. **「正面站直、手舉在頭旁邊」的人 ≤ 3**。
+23. **六個穿刷手服的人分散在畫面不同角落**，沒有兩個並排、沒有一整塊綠；其中兩個罩白袍。
+24. **動線每一條有半個到一個頭寬**，縮到 268px 還看得見（第三版就是輸在這一條）。
