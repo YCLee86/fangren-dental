@@ -69,23 +69,41 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-hc{width:100%;border-radius:14px;overflow:hidden;
   box-shadow:0 1px 2px rgba(0,0,0,.08)}
 
-/* ---- Ⓐ 現況：照使用者提供的截圖重做 ---------------------------------
-   ⚠ 顏色是從截圖描的（橄欖綠標題列、紅字），**不是站上的色** ——
-     它們刻意不寫進 PALETTE.md，也不要拿去別的地方用。 */
+/* ---- Ⓐ 現況：**從使用者 2026-09-04 提供的真截圖逐項量出來的** -------
+   ⚠⚠ 那張截圖是**診所端的後台聊天室**（標題是病人的名字、底下有「使用手動聊天」
+     與「預約傳送」、卡片下面有「已讀」），**不是病人的手機**。
+     所以**那裡的卡片寬度 348px 不能拿來當病人看到的寬度** —— 這一頁仍然照 268px 畫。
+   ⚠ 但**字級可以拿**：Flex 的字級是固定 px，跟卡片多寬無關。
+   量到的（375 CSS px 的螢幕、3× 截圖，逐像素解出來）：
+     卡片 348 × 約 560px、左右內距 22px
+     標題列 高 43.7px、白字 19px、置中
+     病人姓名 22px；「提醒您，您的看診時間將至」等內文與清單 16px
+       （「請問您是否前往看診呢？」11 個全形字 ＝ 176.0px，16 整除）
+     日期 22px 粗體
+     「⚠ 就診須知 ⚠」**靠右**（中心 245.3，而版心中心是 174）—— 不是置中
+     紅字置中 16px；綠色藥丸鈕 高 60px、左右比文字內距各外擴 14.5px
+     「不克前往，預約改期」19px 置中
+   ⚠ 顏色是從截圖描的（橄欖綠 #7c8a63、紅字 #d0021b），**不是站上的色** ——
+     刻意不寫進 PALETTE.md，也不要拿去別的地方用。
+   ⚠⚠ 這一頁把它畫在 **268px** 上（病人那一側的寬度），所以它會比截圖裡**更高、
+     折更多行** —— 那是預測不是量測，面板上的高度要這樣讀。 */
 .pv-old{background:#fff;color:#333}
 .pv-old .h{background:#7c8a63;color:#fff;font-weight:700;text-align:center;
-  padding:10px 8px;font-size:16px;line-height:1.5}
-.pv-old .b{padding:12px 13px 14px;font-size:14px;line-height:1.7}
+  padding:9px 8px;font-size:19px;line-height:1.35}
+.pv-old .b{padding:18px 22px 18px;font-size:16px;line-height:1.7}
 .pv-old .who{color:#555}
-.pv-old .dt{font-weight:700;color:#111;font-size:19px;margin:8px 0 10px}
+.pv-old .who .nm{font-size:22px;color:#333}
+.pv-old .dt{font-weight:700;color:#111;font-size:22px;line-height:1.4;margin:10px 0 0}
 .pv-old hr{border:0;border-top:1px solid #e0e0e0;margin:10px 0}
-.pv-old .nh{text-align:center;font-weight:700;color:#333;margin-bottom:5px;font-size:14px}
-.pv-old ol{margin:0 0 0 1.25em;padding:0;font-size:13px;line-height:1.75}
-.pv-old ol li{margin:3px 0}
-.pv-old .red{color:#d0021b;font-weight:700;text-align:center;margin:11px 0 9px;font-size:13px}
+/* ⚠ 靠右不是置中 —— 量出來中心偏右 71px。 */
+.pv-old .nh{text-align:right;font-weight:700;color:#333;margin-bottom:11px;font-size:19px}
+.pv-old ol{margin:0 0 0 1.4em;padding:0;line-height:1.75}
+.pv-old ol li{margin:9px 0}
+.pv-old .red{color:#d0021b;font-weight:700;text-align:center;margin:10px 0 8px}
+/* 藥丸鈕比文字內距**再往外**：量到左右各離卡片邊 7.5px，而內距是 22 → 外擴 14.5 */
 .pv-old .btn{background:#7c8a63;color:#fff;font-weight:700;text-align:center;
-  padding:11px;border-radius:22px;font-size:16px}
-.pv-old .sub{color:#7c8a63;text-align:center;font-size:14px;padding-top:10px}
+  padding:16px;border-radius:30px;font-size:19px;line-height:1.4;margin:0 -14px}
+.pv-old .sub{color:#7c8a63;text-align:center;font-size:19px;padding-top:12px}
 
 /* ---- Ⓑ 新版：和招呼圖卡／綁定完成同一套（卡 268、內距 14）------------
    顏色一顆都沒新增，全部回 PALETTE.md 拿：
@@ -196,10 +214,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <div class="pv-phone">
     <div class="pv-head"><img src="../../assets/icon-192.png" alt=""><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
     <div class="pv-chat">
-      <div class="pv-day">7 月 12 日</div>
+      <div class="pv-day">7 月 3 日（五）</div>
       <div class="pv-msg"><img class="pv-av" src="../../assets/icon-192.png" alt="">
         <div id="pv-slot"></div>
-        <span class="pv-t">10:00</span></div>
+        <span class="pv-t">20:00</span></div>
     </div>
   </div>
   <p class="pv-cap">↑ 這一則是<b>診所這一側主動送出</b>的，所以聊天室裡沒有病人自己的訊息。
@@ -239,16 +257,27 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   /* ---- 現況（照截圖，姓名已遮）------------------------------------- */
   var OLD = {
     name: "Ⓐ 現況",
-    note: "廠商系統現在送出的那一張（照你提供的截圖重做，顏色是從截圖描的）。"
-      + "六件問題在 channels/README 第 9-1 節：<b>飽和的橄欖綠滿版標題列</b>、"
+    note: "廠商系統現在送出的那一張。<b>2026-09-04 你給了真截圖，這一份是逐像素量出來重做的</b>"
+      + "（不是照描）：內文與清單 <b>16px</b>、病人姓名與日期 <b>22px</b>、標題列與"
+      + "「不克前往」<b>19px</b>、左右內距 <b>22px</b>、標題列高 <b>43.7px</b>、"
+      + "藥丸鈕高 <b>60px</b>（左右比文字內距各再外擴 14.5px）。"
+      + "<br>⚠ 量法：「請問您是否前往看診呢？」11 個全形字量到 <b>176.0px</b>，"
+      + "16 整除 —— <b>字級是算出來的，不是目測的</b>。"
+      + "<hr>六件問題在 channels/README 第 9-1 節：<b>飽和的橄欖綠滿版標題列</b>、"
       + "<b>⚠ 就診須知 ⚠</b>（把戴口罩講成警報）、<b>紅字＋↓↓ 箭頭</b>、"
       + "<b>「點此 👉 確定會到！」</b>（emoji ＋ 驚嘆號 ＋「點此」三重用力）、"
-      + "<b>編號清單＋『』引號</b>（公文體）、以及<b>資訊層級亂</b>——"
+      + "<b>編號清單＋『』引號</b>（公文體）、以及<b>資訊層級亂</b> —— "
       + "日期雖然大，卻被上下的雜訊淹沒。"
-      + "<br>⚠ 另外三件是**事實**不是美感："
+      + "<br>⚠⚠ 截圖還量到<b>第七件</b>，之前沒發現：那一行「⚠ 就診須知 ⚠」"
+      + "<b>是靠右的，不是置中</b>（中心 245.3，而版心中心是 174）—— "
+      + "它和上下每一段都沒有對齊。"
+      + "<br>⚠⚠ 以及<b>第八件</b>：「2. 有發燒/咳嗽/呼吸道症狀等，請來電改約」"
+      + "<b>在截圖上真的折出一個孤字「約」</b>（量到那一行只有 13.7px 寬）。"
+      + "<hr>另外三件是<b>事實</b>不是美感："
       + "①標題寫「<b>斗六</b>芳仁牙醫診所」，站上與其他每一個地方都是「芳仁牙醫診所」；"
       + "②「〔病人姓名〕 提醒您」的語序讀起來像<b>那個人在提醒你</b>"
-      + "（名字本身是必要的 —— 一個帳號收得到好幾個家人的提醒，那是唯一分得出是誰的線索）；"
+      + "（名字本身是必要的 —— 一個帳號收得到好幾個家人的提醒，那是唯一分得出是誰的線索。"
+      + "⚠ 而它<b>把名字放到 22px</b>，那是這張卡少數做對的一件）；"
       + "③須知第 2 條「請來電改約」和底下那顆「不克前往，預約改期」<b>互相矛盾</b>"
       + "（一個叫他打電話、一個叫他按按鈕）。"
   };
@@ -316,9 +345,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     return '<div class="pv-hc pv-old" id="pv-body">'
       + '<div class="h">斗六芳仁牙醫診所</div>'
       + '<div class="b">'
-      + '<div class="who">〔病人姓名〕 提醒您，您的看診時間將至 請問您是否前往看診呢？</div>'
-      + '<div class="dt">2026/07/14 (二) 19:15</div><hr>'
-      + '<div class="nh">⚠ 就診須知 ⚠</div>'
+      + '<div class="who"><span class="nm">〔病人姓名〕</span> 提醒您，您的看診時間將至 '
+      + '請問您是否前往看診呢？</div>'
+      + '<div class="dt">2026/07/06 (一) 20:00</div><hr>'
+      + '<div class="nh">\u26a0\ufe0f 就診須知 \u26a0\ufe0f</div>'
       + '<ol><li>進入醫療場所者請戴『口罩』與攜帶『健保卡』</li>'
       + '<li>有發燒/咳嗽/呼吸道症狀等，請來電改約</li></ol><hr>'
       + '<div class="red">↓ 請點擊下方按鈕，回覆是否前往看診 ↓</div>'
@@ -338,8 +368,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>'
       + '<div class="b">'
       + '<p class="lead">提醒您，</p>'
-      + '<p class="lead nm" id="pv-lead">〔病人姓名〕的看診時間快到了</p>'
-      + '<p class="dt">7月14日 (二) 19:15</p>';
+      /* ⚠ 姓名加粗（Flex 就是一個 span 加 weight: bold，顏色不動）——
+           現況那一張把姓名放到 22px，那是它少數做對的一件：一個帳號收好幾個
+           家人的提醒，「這一次是誰」和「什麼時候」一樣要一眼看到。
+           但這一頁的層級是**日期最大**，所以名字不放大、改用加粗，高度一毛不花。 */
+      + '<p class="lead nm" id="pv-lead"><b>〔病人姓名〕</b>的看診時間快到了</p>'
+      + '<p class="dt">7月6日 (一) 20:00</p>';
     if (kn !== "none") h += '<p class="box know">' + KNOW[kn].text + '</p>';
     if (wa === "box")  h += '<p class="box warn">' + WARN_TEXT + '</p>';
     if (wa === "line") h += '<p class="warnline">' + WARN_TEXT + '</p>';
@@ -520,10 +554,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
           ? "<span class='no'>出現「" + lied.join("、") + "」</span>"
           : "<span class='ok'>守住了</span>")
       + (v === "old"
-          ? "<br><span class='no'>⚠ 現況這一張是照截圖重做的**近似**</span>"
-            + "：字級用 Flex 的固定 px 表填的，廠商實際用多大我們沒有量過。"
-            + "所以上面的 px 與行數只能拿來看**結構**，不要當成它的真值；"
-            + "emoji、紅字、白字對綠底那三項才是逐項對得上的。"
+          ? "<br>⚠ 這一張是<b>從你 2026-09-04 的真截圖逐像素量出來</b>重做的"
+            + "（字級 16／19／22、內距 22、標題列 43.7、按鈕 60、就診須知靠右）。"
+            + "<b>忠實度</b>：把它撐到截圖那個寬度（348px）量到 <b>529px</b>，"
+            + "截圖是 <b>約 560px</b> —— <b>差 5.5%</b>，字級、標題列高、按鈕高、"
+            + "按鈕外擴、靠右都對得上。"
+            + "<br><span class='no'>⚠⚠ 但這裡畫在 268px 上，那是<b>預測不是量測</b></span>"
+            + "：你那張截圖是<b>診所端的後台</b>（卡片 348px），病人手機上比較窄。"
           : "")
       + "<hr>" + (v === "old" ? OLD.note : newNote());
   }
@@ -599,6 +636,33 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<b>所以它非寫在這裡不可</b>，不然病人是在不知情的狀態下被計時。"
       + "<br>③ 家人綁定要洽櫃檯 —— <b>那一件不寫在這張卡上</b>："
       + "收到這一則的人早就綁好了，寫了是雜訊。"
+      + "<hr>"
+      + "⚠⚠⚠ <b>你那張截圖挖出一件我們一直搞錯的事：它不是 48 小時送的。</b>"
+      + "截圖上那一則的日期分隔是 <b>7/3（五）</b>，約診是 <b>7/6（一）20:00</b> —— "
+      + "<b>整整 3 天，不是 48 小時。</b>"
+      + "<br>48 小時前是<b>週六 20:00</b>，診所沒開。所以有兩種可能，"
+      + "<b>而兩種的意思完全不同</b>："
+      + "<br>　① 系統<b>會避開休診日</b>，自動往前挪到前一個開診日（週五）——"
+      + "那 <b>19-12 節那一題有一半已經有答案了</b>（那 24 小時大概也跟著跳過休診日）。"
+      + "<br>　② 它根本就是<b>固定 3 天前</b>送，和開不開診無關 —— 那只是這一次剛好落在週五。"
+      + "<br>⚠⚠ <b>一個樣本推不出通則</b>（同分享圖那一輪「LINE 不裁圖」的教訓）——"
+      + "<b>要再看一兩則不同星期的提醒才分得出來</b>：例如週三、週四的約診各一張截圖。"
+      + "<b>這件事要先問廠商，也可以直接看後台的排程設定。</b>"
+      + "<br>⚠ 順帶算一次：協議是「看診日前 2 天（不含假日）」＝ <b>2 個開診日前</b>，"
+      + "7/6（一）往回數就是 <b>7/2（四）</b>。這一則 7/3（五）送出，"
+      + "<b>仍然比期限晚一個開診日</b> —— 第 8-1 節那個矛盾還在，只是沒有原本以為的嚴重。"
+      + "<hr>"
+      + "⚠⚠ <b>那張截圖是「診所端的後台」，不是病人的手機</b>（標題是病人的名字、"
+      + "底下有「使用手動聊天」與「預約傳送」、卡片下面有「已讀」）。"
+      + "所以那裡量到的<b>卡片 348px 不是病人看到的寬度</b>，這一頁仍然照 <b>268px</b> 畫。"
+      + "<br>⚠⚠⚠ 但要老實說一件：<b>268 這個數字，我們從來沒有在病人的手機上量過</b> —— "
+      + "它是招呼卡那一輪定下來的工作值。<b>好消息是方向是安全的</b>："
+      + "真的比 268 寬的話，我們手斷的每一行都還在寬度內（只是保守）；"
+      + "反過來才會折。<b>要收掉這個不確定，只要一張病人手機上的截圖。</b>"
+      + "<br>⚠ 截圖也確認了兩件小事：<b>診所看得到「已讀」</b>"
+      + "（所以「有沒有回應」是量得到的）；以及後台有<b>「使用手動聊天」</b>這個功能。"
+      + "⚠⚠ 但那不改變紅線 —— <b>「這裡沒有專人即時回覆訊息」講的是診所的做法，"
+      + "不是系統做不做得到</b>，那句話照留。"
       + "<hr>"
       + "⚠⚠ <b>還沒問到廠商的兩題</b>（第 19-12 節，這一則直接受影響）："
       + "①那 24 小時<b>會不會跳過休診日</b> —— 週一的約診，提醒在<b>週六</b>發、"
