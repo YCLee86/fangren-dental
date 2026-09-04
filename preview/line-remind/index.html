@@ -114,48 +114,67 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
    ⚠⚠ 兩塊淡底的濃度**不要自己調** —— .10 是反解出來的（要和 .09 的磚紅
      合成後亮度相同）。細節見 bind-done 那一頁與 channels/README 第 19-18 節。 */
 .pv-new{background:var(--card)}
+/* 頭圖：Flex 的 hero，size:full ＋ aspectRatio 2:1 ＝ 卡片滿寬、高度是寬的一半。
+   ⚠⚠ **圖還沒畫，這裡先把位置預留出來**（使用者 2026-09-04：「先預留圖卡的位置」）。
+     虛線那一塊就是 1024×512 會佔掉的地方 —— 實測 134px，佔整張卡的兩成。
+   ⚠ 佔位符的字用 CSS 的 content 產生，**不是文字節點** —— 不然它會被算進行數、
+     孤字判斷與紅線掃描裡（同 card-more-button 那一輪「繼續讀」那三個字的理由）。
+   ⚠ 真的接上圖之後，width/height 屬性一定要寫（＋ aspect-ratio）：不寫的話圖還沒
+     下載完高度是 0，面板會報出一個比實際矮 134px 的卡片。 */
+.pv-new .hero{display:block;width:100%;aspect-ratio:2/1;background:var(--paper);
+  border-bottom:1px solid var(--rule)}
+.pv-new .hero.ph{display:flex;align-items:center;justify-content:center;
+  outline:1px dashed var(--rule);outline-offset:-9px}
+.pv-new .hero.ph::before{content:"頭圖　1024 × 512（還沒畫）";font-size:12px;
+  color:var(--ink-soft);letter-spacing:.04em}
 .pv-new .top{display:flex;align-items:center;gap:8px;padding:11px 14px 10px;
   border-bottom:1px solid var(--rule)}
 .pv-new .top img{width:20px;height:20px;border-radius:50%;display:block}
 .pv-new .top b{font-size:14px;font-weight:400;color:var(--ink-soft);letter-spacing:.06em}
 .pv-new .b{padding:14px}
-.pv-new .lead{font-size:14px;line-height:1.7;color:var(--ink-soft);white-space:pre-line}
-/* ⚠⚠⚠ 「提醒您，」單獨一行，是為了讓**變數那一行從行首開始**。
-   〔病人姓名〕是系統填的（{{patient}}），名字幾個字我們不知道 —— 兩件事接在同一行的話，
-   名字一長就會把句尾擠成孤字（放佔位符時實測折出一個「了」）。
-   拆開之後那一行只剩「〔名字〕的看診時間快到了」，面板量到**名字 8 個字以內都不會折**。
-   ⚠ 它不是版面的裝飾，是**變數欄位的防呆**：這一行不能手動斷行，只能給它足夠的餘裕。 */
-.pv-new .lead.nm{margin-top:1px}
-/* ⚠⚠ 日期是這張卡唯一非讀不可的東西，所以它是最大的那一個（xl 22）。
-   ⚠ 現況寫的是「2026/07/14 (二) 19:15」，這裡只動兩件：
-     ①**年份拿掉** —— 提醒在 48 小時前送，年份沒有任何資訊量，卻吃掉 5 個半形字寬。
-     ②月日改成中文。
-   ⚠⚠ **括號維持半形（跟現況一樣），刻意不換成全形** —— 兩個理由：
-     ・全形括號各佔一整個全形字寬，一組吃掉約 19px（第 19-17 節那一條），
-       而這一行在 xl 22 上本來就是全卡最寬的（全形版量到 228.8／可用 240）。
-     ・⚠⚠ 更要緊的是：**這是廠商系統的欄位，我們要求的改動愈小愈可能真的改到。**
-       他們現在就是印半形，只要求「把年份拿掉、月日改中文」比連標點一起改容易得多。 */
+/* 開場：使用者 2026-09-04 自己寫的「哈囉　病人名字　提醒2天後有約要看牙齒喔」。
+   ⚠⚠⚠ 拆成兩行，是為了讓**變數那一行從行首開始，而且在行尾結束** ——
+     〔病人姓名〕是系統填的（{{patient}}），名字幾個字我們不知道。
+     他寫的那一句名字夾在中間，整句放同一行的話，名字一長就把「喔」擠成孤字。
+     拆開之後第一行只有「哈囉　〔名字〕」，**8 個字的名字都還在寬度內**。
+   ⚠ 用字一個都沒改，只是換行。 */
+.pv-new .hi{font-size:16px;line-height:1.6;color:var(--ink)}
+.pv-new .hi b{font-weight:700}
+.pv-new .lead{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:2px;
+  white-space:pre-line}
+/* ⚠⚠ 日期仍然是這張卡最大的那一個（xl 22）—— 上面那句寫著「2天後」，
+     但真正要記住的是哪一天幾點。
+   ⚠ 現況寫「2026/07/06 (一) 20:00」，這裡只動兩件：拿掉年份、月日改中文。
+     **括號維持廠商現在的半形**（全形一組多吃約 19px，而且要求的改動愈小愈可能改到）。 */
 .pv-new .dt{font-size:22px;line-height:1.45;font-weight:700;color:var(--ink);
-  letter-spacing:.01em;margin-top:4px}
+  letter-spacing:.01em;margin-top:6px}
 .pv-new .box{border-radius:8px;padding:10px 12px;margin-top:12px;
   font-size:14px;line-height:1.75;white-space:pre-line}
 .pv-new .box.know{background:var(--paper);color:var(--ink-soft)}
 .pv-new .box.warn{background:rgba(175,76,82,.09);color:var(--li-ink);font-weight:700}
 .pv-new .box.say{background:rgba(68,120,181,.10);color:var(--ink)}
-/* 24 小時那一段不用方塊時的兩種輕做法（切換條上比得到） */
 .pv-new .warnline{font-size:14px;line-height:1.75;color:var(--ink-soft);
   margin-top:12px;white-space:pre-line}
-/* 兩顆按鈕：主鈕是 Flex 原生的 button（實心綠、白字），
-   ⚠ 這一顆**不需要圖示**，所以用 button 就夠了 —— 招呼卡那兩顆做成「可點的盒子」
-     是因為要放 logo（Flex 的 button 只有 label、不支援圖示、也不會換行）。 */
-.pv-new .btn{display:block;text-align:center;border-radius:9px;padding:12px;
-  margin-top:14px;background:var(--green);color:#fff;font-size:16px;font-weight:700;
-  letter-spacing:.02em;line-height:1.4}
+/* ⚠⚠ 主鈕要放 logo，而 **LINE Flex 的 `button` 只有 label、不支援圖示**
+   （第十一之二節）—— 所以和招呼圖卡那兩顆一樣，做成**可點的 box**
+   （box 掛 action，裡面 image ＋ text）。代價是失去按鈕內建的按壓效果。
+   ⚠ logo 用招呼卡已經產好的 `mark-white.png`（白色、34px 寬），
+     **不要另外再產一份** —— 由 `node drafts/channels/mark-png.mjs` 維護。
+   ⚠ 34px 是招呼卡 2026-09-03 定案的寬度，這一顆照抄。 */
+.pv-new .btn{display:flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:9px;padding:12px;margin-top:14px;background:var(--green);color:#fff;
+  line-height:1.4}
+.pv-new .btn img{flex:none;display:block;width:34px}
+.pv-new .btn span{font-size:16px;font-weight:700;letter-spacing:.02em}
+/* 「我不能到」：現況那一顆本來就是**文字鈕不是實心鈕**，那一點現況是對的 ——
+   它是次要動作，和主鈕對等會把「請你確認」這件事稀釋掉。切換條上比得到三種。 */
 .pv-new .nob{display:block;text-align:center;color:var(--deep);font-size:14px;
   font-weight:500;padding:11px 6px 0;line-height:1.4}
+.pv-new .nob.solid{border:1px solid var(--deep);border-radius:9px;padding:11px 6px;
+  margin-top:8px;font-weight:700;font-size:16px}
 .pv-new .fine{font-size:13px;line-height:1.75;color:var(--ink-soft);margin-top:11px;
   white-space:pre-line}
-.pv-new .fine b,.pv-new .lead b{font-weight:700;color:var(--ink-soft)}
+.pv-new .fine b{font-weight:700;color:var(--ink-soft)}
 /* 量名字那一行用的探針（真名 3 個字時多寬）—— 不佔位、不影響版面 */
 .pv-probe{position:absolute;left:-9999px;top:0;font-size:14px;line-height:1.7;
   white-space:nowrap;font-weight:400}
@@ -207,7 +226,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <h1>看診前 48 小時的約診提醒　<span style="font-weight:400;font-size:.7em">提案</span></h1>
   <p class="pv-sub">這一則是<b>整個帳號曝光最高的訊息</b>（每一次約診都送一次），
   也是<b>四則裡唯一要花錢的</b>（主動推播才計費）。<br>
-  底下切換<b>現況</b>與<b>新版</b>，再用下面<b>五把尺</b>決定<b>要留哪些、刪哪些</b>
+  底下切換<b>現況</b>與<b>新版</b>，再用下面<b>四把尺</b>決定<b>要留哪些、刪哪些</b>
   （切換條右上角可以<b>收起</b>）。
   推導在 <code>drafts/channels/README.md</code> 第三、八、九、十五、十九節。</p>
 
@@ -230,11 +249,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 <div class="pv-bar" id="pv-bar">
   <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
   <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
-  <div class="r" id="row-btn"><span class="lb">確認鈕</span><span id="sw-b"></span></div>
-  <div class="r" id="row-no"><span class="lb">不克前往</span><span id="sw-n"></span></div>
+  <div class="r" id="row-h"><span class="lb">頭圖</span><span id="sw-h"></span></div>
+  <div class="r" id="row-no"><span class="lb">我不能到</span><span id="sw-n"></span></div>
   <div class="r" id="row-w"><span class="lb">24小時</span><span id="sw-w"></span></div>
   <div class="r" id="row-k"><span class="lb">就診須知</span><span id="sw-k"></span></div>
-  <div class="r" id="row-t"><span class="lb">診所名</span><span id="sw-t"></span></div>
 </div>
 
 <span class="pv-probe" id="pv-probe"></span>
@@ -282,49 +300,42 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "（一個叫他打電話、一個叫他按按鈕）。"
   };
 
-  /* ---- 新版 ---------------------------------------------------------- */
-  /* ⚠ 就診須知那兩句是**臨床內容**，要醫師點頭才能改（channels/README 第 9-4 節）。
-       「一句」那一格砍掉的是發燒那一句 —— 那是感染管控，砍掉要醫師同意。 */
+  /* ---- 新版 ----------------------------------------------------------
+     文字是使用者 2026-09-04 自己寫的，**用字逐字照他寫的**，只做兩件他沒指定、
+     照站上慣例補的（都標在下面）：斷行，以及標點。 */
+  /* ⚠ 就診須知那兩條是**臨床內容，要醫師點頭才能改**（channels/README 第 9-4 節）。
+     ⚠⚠ 他這一版把「戴口罩」**拿掉了**（現況第 1 條是「進入醫療場所者請戴『口罩』
+       與攜帶『健保卡』」，他只寫「攜帶健保卡」）—— 那是刪減不是漏字，但**口罩是
+       感控**，要醫師點頭。面板底下有提醒。
+     ⚠ 照站上慣例補的兩處：頓號（他用空格隔開「發燒 咳嗽 呼吸道症狀」）、句號。 */
   var KNOW = {
-    two:  { name: "兩句", text: "看診前請帶健保卡，並戴上口罩。\n如果有發燒或咳嗽，\n先打電話給診所。" },
-    one:  { name: "一句", text: "看診前請帶健保卡，並戴上口罩。" },
+    two:  { name: "兩條", text: "攜帶健保卡。\n有發燒、咳嗽、呼吸道症狀，\n請多休息，並來電改約。" },
+    one:  { name: "只留健保卡", text: "攜帶健保卡。" },
     none: { name: "不放", text: "" }
   };
-  /* 24 小時那一段：這是 2026-09-04 你自己整理那一份帶進來的新事實 ——
-     ⚠⚠ 而它其實**是這張卡的事**：計時是從這一則送出的那一刻開始算的。
-     綁定完成那一則只是先告訴他有這回事，真正到期的是這裡。 */
+  /* 24 小時那一段：2026-09-04 使用者整理綁定完成那一則時帶進來的新事實。
+     ⚠⚠ 而它其實**是這張卡的事** —— 計時是從這一則送出的那一刻開始算的。 */
   var WARN = {
     box:  { name: "淡底方塊" },
     line: { name: "一般句" },
     none: { name: "不寫" }
   };
   var WARN_TEXT = "請按下面的按鈕回覆。\n若24小時內無回應，\n系統將自動取消約診，\n以遞補他人的候診需求。";
-  /* 確認那顆按鈕的文字。⚠ 一律不用驚嘆號 —— 那是替病人加語氣（第 9-2 節判斷 3）。 */
-  var BTN = {
-    go:   { name: "我會到" },
-    ok:   { name: "確認看診" },
-    on:   { name: "我會準時到" }
+  /* ⚠⚠⚠ 「不克前往」那一顆要不要留 —— 這是使用者 2026-09-04 要我們分析的那一題。
+       完整的分析寫在頁面底下那段說明，這裡只放結論：**建議留，但維持文字鈕**。
+       三格：文字鈕（建議）／拿掉／做成實心的第二顆。 */
+  var NOB = {
+    text:  { name: "文字鈕" },
+    drop:  { name: "拿掉" },
+    solid: { name: "實心第二顆" }
   };
-  /* 「不克前往」那一顆要不要留。
-     ⚠⚠ 留著的理由：它按下去只是**系統上顯示取消**、診所會打電話確認，
-        而且對誤按與真的臨時有事的人是有用的訊號（第八節使用者自己講的）。
-     ⚠⚠ 拿掉的理由：協議是「看診日前 2 天（不含假日）」，而這一則正好在 48 小時發，
-        按的當下多半已經過期 —— 這就是第 8-1 節那個結構性矛盾。
-     ⚠ 但 2026-09-02 使用者已經定案**維持 48 小時**，並說「真的有臨時狀況的病人如果打來，
-        診所還是會通融……對於按取消也不主動打來診所的，也不需要為這些狀況設想什麼」。
-        所以這裡預設**留著**，只是底下誠實交代按了會怎樣。
-     ⚠⚠ 三則一律**不寫「不要按那顆」** —— 否定句只會讓它更醒目（COPY.md 第九之十七節 B）。 */
-  var NOB = { keep: { name: "留著" }, drop: { name: "拿掉" } };
-  /* 卡片頂端那一行「圖示 ＋ 芳仁牙醫診所」要不要留。
-     ⚠ 它取代的是現況那條**滿版的橄欖綠標題列**（第 9-2 節判斷 1：診所名退成一行小字）。
-     ⚠⚠ 但在聊天室裡它和上面的帳號抬頭**是同一個名字** —— 模擬圖一放出來就看得到。
-       留著的理由：截圖或轉傳出去時它是唯一的識別（LINE 的帳號名不會跟著被拍進去），
-       而且從現況那條綠色標題列一路砍到「完全沒有名字」是很大的一跳。
-       拿掉的理由：省 42px，而且左邊本來就有帳號的大頭貼。
-     ⚠ 這一格**沒有對錯**，是刪減的取捨 —— 預設留著。 */
-  var TOPBAR = { keep: { name: "留著" }, drop: { name: "拿掉" } };
+  /* 頭圖：使用者 2026-09-04「還是做個圖卡吧　比較趣味　先預留圖卡的位置」。
+     ⚠ 圖還沒畫，先留位置（虛線那一塊 ＝ 1024×512 會佔掉的高度）。
+     ⚠⚠ 有頭圖時**卡片頂端那一行診所名就拿掉**（同綁定完成那一張：頭圖自己就是識別）；
+       切到「不放圖」時它會回來，識別不會整個消失。 */
+  var HERO = { y: { name: "預留位置" }, n: { name: "不放圖" } };
 
-  var v = "new", bt = "go", nb = "keep", wa = "box", kn = "two", tb = "keep";
+  var v = "new", nb = "text", wa = "box", kn = "two", hr = "y";
 
   /* 網址參數（⚠ 正規式一定要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值） */
   (function () {
@@ -334,8 +345,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       return m && set[m[1]] ? m[1] : def;
     }
     v  = (q.match(/[?&]v=(old|new)/) || [])[1] || v;
-    bt = pick("b", BTN, bt); nb = pick("n", NOB, nb);
-    wa = pick("w", WARN, wa); kn = pick("k", KNOW, kn); tb = pick("t", TOPBAR, tb);
+    nb = pick("n", NOB, nb); wa = pick("w", WARN, wa);
+    kn = pick("k", KNOW, kn); hr = pick("h", HERO, hr);
   })();
 
   /* 電話那一行在 Flex 裡**不會**自動變成可以撥的（純文字訊息才會）——
@@ -358,29 +369,31 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
 
   /* 新版的順序（三段）：
-       ① 這一次是什麼　lead ＋ 日期 ＋ 就診須知
-       ② 請你回覆　　　24 小時 ＋ 兩顆按鈕 ＋ 按了會怎樣
+       ① 這一次是什麼　開場 ＋ 日期 ＋ 就診須知
+       ② 請你回覆　　　24 小時 ＋ 按鈕 ＋ 按了會怎樣
        ③ 來不了怎麼辦　沒有專人 ＋ 改約的期限 ＋ 電話
-     ⚠ ③ 那一塊**逐字沿用綁定完成那一則已定案的句子**（2026-09-04 你自己的寫法），
+     ⚠ ③ 那一塊**逐字沿用綁定完成那一則已定案的句子**（2026-09-04 使用者自己的寫法），
        兩則因此講同一件事用同一組字。 */
   function newHtml() {
     var h = '<div class="pv-hc pv-new" id="pv-body">'
-      + '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>'
+      + (hr === "y"
+          ? '<div class="hero ph"></div>'
+          : '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>')
       + '<div class="b">'
-      + '<p class="lead">提醒您，</p>'
-      /* ⚠ 姓名加粗（Flex 就是一個 span 加 weight: bold，顏色不動）——
-           現況那一張把姓名放到 22px，那是它少數做對的一件：一個帳號收好幾個
-           家人的提醒，「這一次是誰」和「什麼時候」一樣要一眼看到。
-           但這一頁的層級是**日期最大**，所以名字不放大、改用加粗，高度一毛不花。 */
-      + '<p class="lead nm" id="pv-lead"><b>〔病人姓名〕</b>的看診時間快到了</p>'
+      /* ⚠ 名字加粗（Flex 就是一個 span 加 weight: bold，顏色不動）——
+           一個帳號收得到好幾個家人的提醒，「這一次是誰」要一眼看到。 */
+      + '<p class="hi">哈囉　<b>〔病人姓名〕</b></p>'
+      + '<p class="lead" id="pv-lead">提醒2天後有約要看牙齒喔</p>'
       + '<p class="dt">7月6日 (一) 20:00</p>';
     if (kn !== "none") h += '<p class="box know">' + KNOW[kn].text + '</p>';
     if (wa === "box")  h += '<p class="box warn">' + WARN_TEXT + '</p>';
     if (wa === "line") h += '<p class="warnline">' + WARN_TEXT + '</p>';
-    h += '<span class="btn">' + BTN[bt].name + '</span>';
-    if (nb === "keep") {
-      h += '<span class="nob">不克前往</span>'
-        +  '<p class="fine">按了<b>不克前往</b>我們會收到，\n並打電話跟你確認。</p>';
+    /* 主鈕：可點的 box（Flex 的 button 放不了 logo），白色標誌 ＋「ok 沒問題」 */
+    h += '<span class="btn"><img src="../line-welcome/mark-white.png" alt="">'
+      +  '<span>ok 沒問題</span></span>';
+    if (nb !== "drop") {
+      h += '<span class="nob' + (nb === "solid" ? " solid" : "") + '">我不能到</span>'
+        +  '<p class="fine">按了<b>我不能到</b>，我們會收到，\n並打電話跟你重新安排時間。</p>';
     }
     h += '<p class="box say">這裡沒有專人即時回覆訊息。\n'
       +  '約診更改或取消，最晚請於\n看診日前2天(不含假日)、\n於診所開診時段來電變更\n' + TEL + '</p>';
@@ -457,7 +470,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        ⚠ 現況那一張是照截圖重做的，沒有手動斷行，所以只對新版算。 */
     var self = {}, selfN = 0;
     if (v === "new") {
-      body.querySelectorAll(".lead,.dt,.box,.warnline,.fine,.btn,.nob").forEach(function (el) {
+      body.querySelectorAll(".hi,.lead,.dt,.box,.warnline,.fine,.btn,.nob").forEach(function (el) {
         (el.innerText || "").split("\n").forEach(function (x) {
           x = x.replace(/[ 　]/g, ""); if (x) { self[x] = 1; selfN++; }
         });
@@ -478,13 +491,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        ⚠ 這一行**不能手動斷行**（系統填的），所以要知道它幾個字才會折。 */
     var probe = document.getElementById("pv-probe"), nameW = 0, nameMax = 0;
     if (v === "new") {
-      var lead = document.getElementById("pv-lead");
-      probe.style.font = getComputedStyle(lead).font;
-      probe.textContent = "李小明的看診時間快到了";
+      var hi = body.querySelector(".hi");
+      probe.style.font = getComputedStyle(hi).font;
+      probe.textContent = "哈囉　李小明";
       nameW = probe.getBoundingClientRect().width;
       /* 幾個字才會折：一個一個加上去試 */
       for (var i = 2; i <= 8; i++) {
-        probe.textContent = Array(i + 1).join("名") + "的看診時間快到了";
+        probe.textContent = "哈囉　" + Array(i + 1).join("名");
         if (probe.getBoundingClientRect().width > avail) break;
         nameMax = i;
       }
@@ -566,28 +579,26 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
 
   function newNote() {
-    return "和招呼圖卡、綁定完成同一套：卡片 268px、內距 14px、"
-      + "<b>顏色一顆都沒新增</b>（卡 #f4f4f5・墨・柔墨・線・綠 ＋ 兩塊淡底）。"
-      + "<b>emoji 0 個、紅字 0 行。</b>"
-      + "<br>四個判斷（channels/README 第 9-2 節，這一輪加了第五個）："
-      + "①<b>最大的東西是日期</b> —— 這張卡唯一非讀不可的就是「什麼時候、是誰」，"
-      + "診所名退成頂端一行小字（配站上那顆圖示），不佔滿版色帶。"
-      + "②<b>須知不是警報</b> —— 兩句白話放進一塊紙灰底，不用編號、不用引號、不用 emoji。"
-      + "③<b>兩顆按鈕主次分明</b>，不用「確定會到！」（驚嘆號是替病人加語氣）。"
-      + "④<b>底下誠實交代按了會怎樣</b>。"
-      + "⑤<b>把「沒有專人＋改約期限＋電話」逐字沿用綁定完成那一則</b> —— "
-      + "同一件事，兩則用同一組字。"
-      + "<br>⚠ <b>年份拿掉了</b>：現況寫「2026/07/14 (二) 19:15」，"
-      + "而提醒是 48 小時前送的，年份沒有任何資訊量，卻吃掉 5 個半形字寬。"
-      + "<b>括號刻意維持半形</b>（＝他們現在就是這樣印的）：全形一組要多吃約 19px，"
-      + "而這一行在 22px 上本來就是全卡最寬的。"
-      + "<br>⚠ <b>卡片頂端那一行診所名</b>是尺上的一格：它取代的是現況那條"
-      + "<b>滿版的橄欖綠標題列</b>，但在聊天室裡它和上面的帳號抬頭是同一個名字"
-      + "（模擬圖看得到）。<b>留著</b>＝截圖或轉傳出去時仍有識別；"
-      + "<b>拿掉</b>＝省 42px、左邊本來就有大頭貼。這一格沒有對錯，你挑。"
-      + "<br>⚠ <b>名字留著、位置換到受詞</b>：一個帳號收得到好幾個家人的提醒"
-      + "（截圖上的聊天室名稱是「〔家長姓名〕(哲&amp;丞)」），"
-      + "那是唯一分得出「這一次是誰要看牙」的線索。";
+    return "文字是<b>你 2026-09-04 自己寫的</b>，用字逐字照你寫的，只做兩件你沒指定、"
+      + "照站上慣例補的：<b>斷行</b>，以及<b>標點</b>"
+      + "（「發燒 咳嗽 呼吸道症狀」的空格換成頓號、每一條補句號）。"
+      + "<br>另外兩個我自己決定的，<b>你可以推翻</b>："
+      + "①次要那顆的字我寫<b>「我不能到」</b>（你只說了要不要留、沒說寫什麼）——"
+      + "它和「ok 沒問題」一樣是<b>第一人稱的回話</b>，而現況那句「不克前往，預約改期」"
+      + "是公文體，和你這一版的語氣（哈囉、喔）差很遠。"
+      + "②按鈕底下那一句寫成「<b>我們會收到，並打電話跟你重新安排時間</b>」——"
+      + "理由見下面那段「兩條路會不會打架」。"
+      + "<hr>"
+      + "和招呼圖卡、綁定完成同一套：卡片 268px、內距 14px、"
+      + "<b>顏色一顆都沒新增</b>。<b>emoji 0 個、紅字 0 行。</b>"
+      + "<br>⚠ <b>主鈕的 logo 不能用 Flex 的 <code>button</code></b> —— 它只有一個 label、"
+      + "不支援圖示，所以和招呼卡那兩顆一樣做成<b>可點的 box</b>（image ＋ text）。"
+      + "logo 直接用招呼卡已經產好的 <code>mark-white.png</code>（白色、34px），"
+      + "<b>沒有另外再產一份</b>。"
+      + "<br>⚠ <b>有頭圖時，卡片頂端那一行診所名就拿掉了</b>（同綁定完成那一張："
+      + "頭圖自己就是識別）。切到「不放圖」它會回來，識別不會整個消失。"
+      + "<br>⚠ <b>日期仍然是最大的那一個</b>：上面寫著「2天後」，但真正要記住的是"
+      + "哪一天、幾點。";
   }
 
   /* ---- 切換條 -------------------------------------------------------- */
@@ -606,36 +617,105 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     document.getElementById("pv-slot").innerHTML = v === "old" ? oldHtml() : newHtml();
     bar("sw-v", { old: { name: "Ⓐ 現況" }, new: { name: "Ⓑ 新版" } },
         function () { return v; }, function (k) { v = k; });
-    bar("sw-b", BTN, function () { return bt; }, function (k) { bt = k; });
+    bar("sw-h", HERO, function () { return hr; }, function (k) { hr = k; });
     bar("sw-n", NOB, function () { return nb; }, function (k) { nb = k; });
     bar("sw-w", WARN, function () { return wa; }, function (k) { wa = k; });
     bar("sw-k", KNOW, function () { return kn; }, function (k) { kn = k; });
-    bar("sw-t", TOPBAR, function () { return tb; }, function (k) { tb = k; });
     /* 現況那一張是廠商的，四把尺對它無效 —— 關掉而不是拿掉，
        不然切回新版時整條會跳高一截。 */
-    ["row-btn", "row-no", "row-w", "row-k", "row-t"].forEach(function (id) {
+    ["row-h", "row-no", "row-w", "row-k"].forEach(function (id) {
       document.getElementById(id).className = "r" + (v === "old" ? " off" : "");
     });
     var q = v === "old" ? "?v=old"
-      : "?v=new&b=" + bt + "&n=" + nb + "&w=" + wa + "&k=" + kn + "&t=" + tb;
+      : "?v=new&h=" + hr + "&n=" + nb + "&w=" + wa + "&k=" + kn;
     history.replaceState(null, "", location.pathname + q);
     measure();
     document.getElementById("pv-note").innerHTML = note();
   }
 
   function note() {
-    return "⚠⚠ <b>這一頁要定的是兩件事</b>（2026-09-04 你指定的）："
-      + "<b>版型</b>，以及<b>那顆確認的按鈕</b>。定完之後回頭看綁定完成那一則要不要多寫一句"
-      + "（那邊寫著「請務必確認」卻沒說怎麼確認，答案就是這裡這顆按鈕）。"
+    return "⚠⚠⚠ <b>你問的那一題：取消的按鈕要不要留。我的建議是<u>留，但維持文字鈕</u>。</b>"
+      + "理由只有一個真的重要，其餘都是次要的："
+      + "<br><b>拿掉之後，「來不了」和「沒看到訊息」在診所眼裡會變成同一件事。</b>"
+      + "現在系統的規則是<b>24 小時沒回應就自動取消</b> —— 所以這兩種人最後都是"
+      + "「沒回應」，都被自動取消。可是診所對這兩種人的處理<b>本來就不一樣</b>"
+      + "（第八節你自己說的）：重要療程會打電話去確認、定期檢查就當他不想再來。"
+      + "<b>那顆按鈕是目前唯一能分辨這兩種人的東西</b>，拿掉就分不出來了。"
+      + "<br>第二個理由小一點但真實：<b>誤按沒有回頭路。</b>你在第八節提過"
+      + "「有時候也有誤按」—— 按錯「ok 沒問題」的人，如果卡上沒有第二顆，"
+      + "他只能等到開診時段打電話。"
       + "<hr>"
-      + "<b>新的三件事實（都是你 2026-09-04 整理那一份帶進來的，這一輪全部進到卡上）：</b>"
-      + "<br>① <b>這一則是要「回覆確認」的</b>，不只是通知 —— 所以確認鈕是這張卡的主角。"
+      + "<b>拿掉的理由我也列出來，因為它們不是沒有份量：</b>"
+      + "<br>①<b>兩顆按鈕會稀釋主要動作。</b>這一則的工作是「請你確認」，"
+      + "多一顆對等的按鈕會讓確認不再是唯一的動作 —— <b>這一條我同意，"
+      + "所以建議留成「文字鈕」不是實心的第二顆</b>（現況那一顆本來就是文字鈕，"
+      + "那一點現況是對的）。切換條上三格都比得到。"
+      + "<br>②<b>按下去只是系統顯示取消</b>，還是要人工回電，"
+      + "而且按的當下多半已經超過「看診日前 2 天（不含假日）」——"
+      + "⚠ 但這一條<b>你 2026-09-02 已經結案了</b>（「真的有臨時狀況的病人如果打來，"
+      + "診所還是會通融……也不需要為這些狀況設想什麼」），所以它現在份量不大。"
+      + "<br>③ 你自己的通則「<b>按鈕是現在請你做這件事</b>」—— "
+      + "而「我不能到」<b>確實是</b>一個現在要做的動作（告訴我們你不會來），"
+      + "它不像電話號碼那樣是說明。所以這一條不反對留。"
+      + "<hr>"
+      + "⚠⚠ <b>兩條路會不會打架？</b>你的須知第 2 條寫「請多休息，<b>並來電改約</b>」，"
+      + "而底下有一顆「我不能到」—— 現況那張卡就是被這件事扣分的"
+      + "（第 3-3 節：一個叫他打電話、一個叫他按按鈕，他會愣住）。"
+      + "<br><b>解法不是二選一，是把兩件事講成兩件事</b>："
+      + "<b>按鈕＝告訴我們你不會來</b>（一秒，隨時可按）、"
+      + "<b>電話＝重新約一個時間</b>（要人、要看診次）。"
+      + "所以按鈕底下那一句寫成「我們會收到，<b>並打電話跟你重新安排時間</b>」——"
+      + "兩條路變成<b>一前一後</b>，不再是二選一。"
+      + "<br>⚠ 如果你決定<b>拿掉</b>那顆按鈕，這一句也要跟著拿掉，"
+      + "而且須知那句「來電改約」就變成唯一的路 —— 那時整張卡是自洽的，只是失去上面說的那個分辨。"
+      + "<hr>"
+      + "⚠⚠⚠ <b>「2天後」有一個事實上的風險，這件事我必須先講。</b>"
+      + "你給的那張現況截圖上，那一則是 <b>7/3（五）</b>送的、約診是 <b>7/6（一）</b> ——"
+      + "<b>整整 3 天，不是 2 天。</b>（48 小時前是週六，診所沒開。）"
+      + "<br>所以卡上寫死「2天後」，<b>對那位病人來說是錯的</b>。"
+      + "而這種情況不會只有一次：只要系統會避開休診日（或本來就固定 3 天前送），"
+      + "<b>每逢週一、週二的約診都會對不上</b>。"
+      + "<br><b>三條路，你挑：</b>"
+      + "<br>　① <b>維持「2天後」</b>，但要廠商保證<b>固定就是 2 天</b>（會踩到週末沒人接電話）。"
+      + "<br>　② <b>把天數拿掉</b>，改成「<b>提醒你有約要看牙齒喔</b>」——"
+      + "日期就在下一行、而且是全卡最大的字，<b>天數本來就沒有多給資訊</b>，"
+      + "拿掉就永遠不會說錯。"
+      + "<br>　③ 讓<b>系統填</b>（`{{days}}`），要廠商支援。"
+      + "<br>⚠ <b>我沒有自己改掉你的字</b>，卡上現在就是「2天後」。"
+      + "但這一題要先問廠商「到底幾天前送、會不會跳過休診日」才有答案，"
+      + "<b>一個樣本推不出通則</b> —— 再看一兩則不同星期的提醒截圖就知道了。"
+      + "<hr>"
+      + "⚠⚠ <b>就診須知：你把「戴口罩」拿掉了。</b>現況第 1 條是"
+      + "「進入醫療場所者請戴『口罩』與攜帶『健保卡』」，你這一版只寫「攜帶健保卡」。"
+      + "<b>我照你寫的做了</b>，但這兩條是<b>臨床與感控內容，要醫師點頭</b>"
+      + "（channels/README 第 9-4 節）—— 拿掉口罩是一個政策改變，不是文案精簡。"
+      + "<br>⚠ 另外照站上慣例補了兩處標點：「發燒 咳嗽 呼吸道症狀」的空格換成<b>頓號</b>、"
+      + "每一條補<b>句號</b>。不要的話說一聲。"
+      + "<hr>"
+      + "<b>新的三件事實</b>（你 2026-09-04 整理綁定完成那一則時帶進來的）："
+      + "<br>① <b>這一則是要「回覆確認」的</b> —— 所以確認鈕是這張卡的主角，"
+      + "而你指定的「ok 沒問題」正好把它講成一句回話。"
       + "<br>② <b>24 小時內沒回應，系統會自動取消約診並遞補他人</b>。"
       + "⚠⚠ 這一件<b>其實是這張卡的事</b>：那 24 小時是從<b>這一則送出的那一刻</b>開始算的，"
-      + "綁定完成那一則只是先告訴他有這回事。"
+      + "綁定完成那一則只是先告訴他有這回事（他可能三個月前綁的）。"
       + "<b>所以它非寫在這裡不可</b>，不然病人是在不知情的狀態下被計時。"
       + "<br>③ 家人綁定要洽櫃檯 —— <b>那一件不寫在這張卡上</b>："
       + "收到這一則的人早就綁好了，寫了是雜訊。"
+      + "<hr>"
+      + "⚠⚠ <b>還沒問到廠商的兩題</b>（第 19-12 節，這一則直接受影響）："
+      + "①那 24 小時<b>會不會跳過休診日</b> —— 週一的約診，提醒在<b>週六</b>發、"
+      + "期限落在<b>週日</b>，而診所週六日休診、電話沒有人接，"
+      + "<b>病人會在完全沒辦法回應的時段被自動取消</b>。"
+      + "②被自動取消的時候<b>會不會再發一則通知病人</b>。"
+      + "<br>⚠ 還有一題舊的：<b>那顆確認鈕現在診所會看嗎？</b>"
+      + "<hr>"
+      + "⚠ <b>頭圖還沒畫，先把位置預留出來</b>（你：「先預留圖卡的位置」）——"
+      + "虛線那一塊就是 <b>1024×512</b> 會佔掉的高度，面板上有實測。"
+      + "畫法照綁定完成那一張的流程（Gemini、你自己跑），提示詞另開一輪。"
+      + "<br>⚠ 一個要知道的代價：這一則<b>每一次約診都送一次</b>，"
+      + "所以那張圖一年會被同一個人看到很多次 —— "
+      + "<b>愈耐看愈好，不要有太強的梗</b>（綁定完成那一張只在綁定當下出現一次，"
+      + "可以更用力）。"
       + "<hr>"
       + "⚠⚠⚠ <b>你那張截圖挖出一件我們一直搞錯的事：它不是 48 小時送的。</b>"
       + "截圖上那一則的日期分隔是 <b>7/3（五）</b>，約診是 <b>7/6（一）20:00</b> —— "
