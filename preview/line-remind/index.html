@@ -115,18 +115,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      合成後亮度相同）。細節見 bind-done 那一頁與 channels/README 第 19-18 節。 */
 .pv-new{background:var(--card)}
 /* 頭圖：Flex 的 hero，size:full ＋ aspectRatio 2:1 ＝ 卡片滿寬、高度是寬的一半。
-   ⚠⚠ **圖還沒畫，這裡先把位置預留出來**（使用者 2026-09-04：「先預留圖卡的位置」）。
-     虛線那一塊就是 1024×512 會佔掉的地方 —— 實測 134px，佔整張卡的兩成。
-   ⚠ 佔位符的字用 CSS 的 content 產生，**不是文字節點** —— 不然它會被算進行數、
-     孤字判斷與紅線掃描裡（同 card-more-button 那一輪「繼續讀」那三個字的理由）。
-   ⚠ 真的接上圖之後，width/height 屬性一定要寫（＋ aspect-ratio）：不寫的話圖還沒
-     下載完高度是 0，面板會報出一個比實際矮 134px 的卡片。 */
-.pv-new .hero{display:block;width:100%;aspect-ratio:2/1;background:var(--paper);
-  border-bottom:1px solid var(--rule)}
-.pv-new .hero.ph{display:flex;align-items:center;justify-content:center;
-  outline:1px dashed var(--rule);outline-offset:-9px}
-.pv-new .hero.ph::before{content:"頭圖　1024 × 512（還沒畫）";font-size:12px;
-  color:var(--ink-soft);letter-spacing:.04em}
+   ✅ 使用者 2026-09-04 選定（「圖片選好了」）：候診間裡一群人在揮手 ——
+     病人、家屬、小孩、長輩與診所的人擠在同一個畫面裡，站上那套手繪語彙。
+     成品 hero-remind.jpg（1024×512），產圖 node drafts/channels/remind-hero-crop.mjs。
+   ⚠⚠ **這一則每次約診都會送一次**，同一個人一年看很多次 —— 所以它要**耐看**，
+     不能有太強的梗（綁定完成那張〈創造亞當〉是一輩子只看一次，條件不一樣）。
+     一群人揮手沒有笑點可以用完，這一點是對的。
+   ⚠⚠ **width/height 一定要寫**（＋ aspect-ratio）：不寫的話圖還沒下載完高度是 0，
+     面板會報出一個比實際矮 134px 的卡片。 */
+.pv-new .hero{display:block;width:100%;height:auto;aspect-ratio:2/1;
+  background:var(--paper);border-bottom:1px solid var(--rule);object-fit:cover}
 .pv-new .top{display:flex;align-items:center;gap:8px;padding:11px 14px 10px;
   border-bottom:1px solid var(--rule)}
 .pv-new .top img{width:20px;height:20px;border-radius:50%;display:block}
@@ -389,11 +387,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     text: { name: "只有字" },
     drop: { name: "拿掉" }
   };
-  /* 頭圖：使用者 2026-09-04「還是做個圖卡吧　比較趣味　先預留圖卡的位置」。
-     ⚠ 圖還沒畫，先留位置（虛線那一塊 ＝ 1024×512 會佔掉的高度）。
+  /* 頭圖：使用者 2026-09-04「還是做個圖卡吧　比較趣味　先預留圖卡的位置」，
+     同日稍晚選定了圖（「圖片選好了」「用這張圖片　合併成通知提醒頁面」）。
      ⚠⚠ 有頭圖時**卡片頂端那一行診所名就拿掉**（同綁定完成那一張：頭圖自己就是識別）；
        切到「不放圖」時它會回來，識別不會整個消失。 */
-  var HERO = { y: { name: "預留位置" }, n: { name: "不放圖" } };
+  var HERO = { y: { name: "放頭圖" }, n: { name: "不放圖" } };
 
   /* ---- 「點下去的感覺」三條尺（2026-09-04 深夜第四輪）------------------
      ① 叫他點的那一句。⚠ 文字是**我擬的**，這張卡其餘每一個字都是你寫的，
@@ -483,7 +481,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   function newHtml() {
     var h = '<div class="pv-hc pv-new" id="pv-body">'
       + (hr === "y"
-          ? '<div class="hero ph"></div>'
+          ? '<img class="hero" src="hero-remind.jpg" width="1024" height="512" alt="">'
           : '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>')
       /* ⚠⚠⚠ `--ctagap` 要設在**共同的父層**，不能設在那一句自己身上 ——
            用它的規則是 `.cta + .btn`（作用在**兄弟**上），而自訂屬性**只往下繼承、
@@ -981,12 +979,18 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>③ 被自動取消時<b>會不會再發一則通知病人</b>（不通知的話他是到了門口才知道）。"
       + "<br>⚠ 還有一題舊的：<b>那顆確認鈕現在診所會看嗎？</b>"
       + "<hr>"
-      + "⚠ <b>頭圖還沒畫，先把位置預留出來</b>（你：「先預留圖卡的位置」）——"
-      + "虛線那一塊就是 <b>1024×512</b> 會佔掉的高度，面板上有實測。"
-      + "畫法照綁定完成那一張的流程（Gemini、你自己跑），提示詞另開一輪。"
-      + "<br>⚠⚠ 一個和綁定完成<b>不一樣</b>的條件：這一則<b>每一次約診都送一次</b>，"
-      + "同一個人一年會看到很多次 —— <b>要耐看，不要有太強的梗</b>"
-      + "（綁定完成那一張只在綁定當下出現一次，可以更用力）。"
+      + "✅ <b>頭圖已經接上了</b>（你 2026-09-04：「圖片選好了」）—— 候診間裡一群人在揮手，"
+      + "病人、家屬、小孩、長輩和診所的人在同一個畫面裡。"
+      + "成品 <code>hero-remind.jpg</code>（<b>1024×512</b>，＝ LINE 對 Flex 的 image 的上限），"
+      + "產圖 <code>node drafts/channels/remind-hero-crop.mjs</code>。"
+      + "<br>⚠ 原檔是 16:9，收成 2:1 要拿掉 80 列，<b>裁的是上 16 / 下 64 不是對稱的 40/40</b>："
+      + "上面深墨（人物的線稿）從第 43 列就開始，對半裁只剩 3 列、頭會貼著上緣；"
+      + "下面每一列都是墨，但那是<b>身體和手不是臉</b>（最低的下巴在第 660 列上下），"
+      + "收緊反而讓臉在 268px 上大一點。四個裁法縮到真實的 268px 並排比過。"
+      + "<br>⚠⚠ 一個和綁定完成<b>不一樣</b>的條件，選圖時就看著它："
+      + "這一則<b>每一次約診都送一次</b>，同一個人一年會看到很多次 —— <b>要耐看，"
+      + "不要有太強的梗</b>（綁定完成那一張只在綁定當下出現一次，可以更用力）。"
+      + "一群人揮手沒有笑點可以用完，這一點是對的。"
       + "<br>⚠ 有頭圖時卡片頂端那一行<b>診所名就拿掉了</b>（同綁定完成：頭圖自己就是識別）。"
       + "切到「不放圖」它會回來。"
       + "<hr>"
