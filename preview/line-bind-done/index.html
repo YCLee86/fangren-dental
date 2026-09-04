@@ -120,6 +120,25 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-hc .d.w-bc{color:#AF4C52;font-weight:700}
 .pv-hc .d.w-box{color:var(--li-ink);font-weight:700;background:rgba(175,76,82,.09);
   border-radius:8px;padding:10px 12px;margin-top:12px}
+/* 改約那一段的淡底方塊（2026-09-04 使用者：「這一段也用淡底方塊好了　可以用不同顏色的淡底嗎」）。
+   ⚠ 可以 —— Flex 的 box 就是一個 backgroundColor，想要什麼顏色都行。
+     四格全部取自站上既有的色（PALETTE 第一節），**沒有新增任何顏色**：
+       紙灰＝--paper 直接鋪（站上頁面的底色）
+       品牌綠＝一般牙科的套色 #3f654a 九分之一濃
+       深綠松＝全站連結色 #214D48 九分之一濃
+       同上面＝和 24 小時那一塊一樣的磚紅
+   ⚠⚠ **綠與深綠松是 .16 不是 .09，那不是漏改成一致** —— 量過：在這張卡上（卡色 #f4f4f5）
+     九分之一濃的綠 L*91.4、深綠松 90.6、紙灰 90.7、磚紅 91.7，**四個全部落在 1.1 階之內**，
+     彩度也小到看不出來，等於四格長得一模一樣、這把尺沒有意義。
+     要真的讀得出「這是綠的」就得到 .16（L*87.6／86.2）。
+     **代價寫在說明裡：那樣它會比上面那塊磚紅重約 4 階。**
+   ⚠ 兩塊都用方塊之後，中間那條分隔線就多餘了（兩塊自己就分開了），
+     所以有 warn 的那一案不畫 hr。 */
+.pv-hc .say.sbox{border-radius:8px;padding:10px 12px;margin-top:12px}
+.pv-hc .say.s-pa{background:var(--paper)}
+.pv-hc .say.s-gr{background:rgba(63,101,74,.16)}
+.pv-hc .say.s-te{background:rgba(33,77,72,.16)}
+.pv-hc .say.s-br{background:rgba(175,76,82,.09)}
 .pv-hc .fine{font-size:13px;line-height:1.75;color:var(--ink-soft);margin-top:11px;
   white-space:pre-line}
 
@@ -356,6 +375,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      ⚠ 純文字泡泡那一側**還沒定案**，那把尺留著 —— 它做不出方塊，
        只有「空一行／記號」可用（LINE 的文字訊息沒有粗體也沒有顏色）。 */
   var CARD_EMPH = "box";
+
+  /* 改約那一塊的底色（2026-09-04 新開的一把尺）。四格都是站上既有的色，沒有新增。 */
+  var SAYBG = {
+    pa: { name: "紙灰" },
+    gr: { name: "品牌綠" },
+    te: { name: "深綠松" },
+    br: { name: "同上面" }
+  };
   function emphSet(v) {
     if (!v.warn || v.kind === "card") return null;
     return EMPH_TEXT;
@@ -381,6 +408,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   var cur = param("v", V, "g");
   var hr = param("h", HERO, "y");
   var em = param("e", EMPH_TEXT, "n");
+  var sb = param("s", SAYBG, "pa");
 
   function fill(s) { return s.replace(/\{T\}/g, T_LABEL); }
   /* 電話那一行在 LINE 裡會自己變成可以撥的連結，所以畫成連結的樣子 */
@@ -404,9 +432,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         '<p class="t">' + fill(v.title) + "</p>" +
         '<p class="d">' + fill(v.desc) + "</p>" +
         (v.warn ? '<p class="d w-' + CARD_EMPH + '">' + fill(v.warn) + "</p>" : "") +
-        "<hr></div>" +
+        (v.warn ? "</div>" : "<hr></div>") +
         '<div class="f">' +
-        '<p class="say">' + fill(v.say) + "</p>" +
+        '<p class="say' + (v.warn ? " sbox s-" + sb : "") + '">' + fill(v.say) + "</p>" +
         /* ⚠ 2026-09-04 起這一則的兩張卡都沒有電話按鈕了（號碼在說明句裡自己一行）。
              btn 這個欄位留著，是為了日後真的需要一顆行動按鈕的卡片。 */
         (v.btn ? '<span class="btn">' + v.btn + "</span>" : "") +
@@ -433,13 +461,18 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
           return '<button data-h="' + k + '" aria-pressed="' + (k === hr) + '">' + HERO[k].name + "</button>";
         }).join("")
       : "";
-    /* 第三排：24 小時那一段怎麼強調（只有 Ⓖ／Ⓗ 有那一段） */
-    var r4 = document.getElementById("pv-erow"), es = emphSet(V[cur]);
+    /* 第三排：純文字那一案「24 小時那一段怎麼強調」（圖卡已定案淡底方塊、收掉了）；
+       圖卡那一案換成「改約那一塊的底色」。兩者互斥，共用同一排。 */
+    var r4 = document.getElementById("pv-erow"), v4 = V[cur], es = emphSet(v4);
     r4.innerHTML = es
       ? Object.keys(es).map(function (k) {
           return '<button data-e="' + k + '" aria-pressed="' + (k === em) + '">' + es[k].name + "</button>";
         }).join("")
-      : "";
+      : (v4.warn && v4.kind === "card"
+          ? Object.keys(SAYBG).map(function (k) {
+              return '<button data-s="' + k + '" aria-pressed="' + (k === sb) + '">' + SAYBG[k].name + "</button>";
+            }).join("")
+          : "");
   }
 
   /* 逐字量 top 分組 —— 這樣才知道**實際**折成幾行、末行剩幾個字。
@@ -544,18 +577,19 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       var a = rel(fg) + .05, b2 = rel(bg) + .05;
       return a > b2 ? a / b2 : b2 / a;
     }
-    var warnCt = null;
-    var wEl = body.querySelector(".d[class*=' w-'], .d[class^='w-']");
-    if (wEl) {
-      var cs2 = getComputedStyle(wEl), card = lum(getComputedStyle(body).backgroundColor);
+    function boxCt(el) {
+      if (!el) return null;
+      var cs2 = getComputedStyle(el), card = lum(getComputedStyle(body).backgroundColor);
       var wb = lum(cs2.backgroundColor), fg = lum(cs2.color);
       var bg = wb.a === 0 ? card : {
         r: wb.r * wb.a + card.r * (1 - wb.a),
         g: wb.g * wb.a + card.g * (1 - wb.a),
         b: wb.b * wb.a + card.b * (1 - wb.a)
       };
-      warnCt = ratio(fg, bg);
+      return ratio(fg, bg);
     }
+    var warnCt = boxCt(body.querySelector(".d[class*=' w-'], .d[class^='w-']"));
+    var sayCt = boxCt(body.querySelector(".say.sbox"));
 
     document.getElementById("pv-panel").innerHTML =
       "<b>" + v.name + "</b>　<span>" + (v.kind === "text" ? "純文字泡泡" : "Flex 圖卡（268px）") + "</span>"
@@ -589,6 +623,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
           ? "<br>強調那三行的對比 <b>" + warnCt.toFixed(2) + "</b>"
             + (warnCt >= 4.5 ? " <span class='ok'>過 AA</span>"
                              : " <span class='no'>低於站上的 4.5</span>")
+          : "")
+      + (sayCt !== null
+          ? "　改約那一塊 <b>" + sayCt.toFixed(2) + "</b>"
+            + (sayCt >= 4.5 ? " <span class='ok'>過 AA</span>"
+                            : " <span class='no'>低於 4.5</span>")
           : "")
       + "<br>沒有專人那件事 "
       + (lied.length ? "<span class='no'>出現「" + lied.join("、") + "」</span>"
@@ -641,6 +680,18 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>⚠⚠ <b>圖卡那一側 2026-09-04 定案「淡底方塊」</b>（你：「上面的淡底方塊我比較喜歡」），"
       + "已經收成寫死的值、從切換條上拿掉（落選：不強調／加粗／加粗＋磚紅）。"
       + "面板仍然現場量那三行的對比（<b>14.42</b>，底是半透明磚紅疊在卡色上、要用合成後的顏色算）。"
+      + "<br>⚠⚠ <b>改約那一段也做成淡底方塊了</b>（你：「這一段也用淡底方塊好了」），"
+      + "而且<b>可以換顏色</b> —— Flex 的 box 就是一個 backgroundColor，想要什麼色都行。"
+      + "底下那一排四格全部取自站上既有的色，<b>沒有新增任何顏色</b>。"
+      + "<br>⚠⚠ <b>但綠與深綠松是 .16 不是 .09 —— 這件事要先講。</b>"
+      + "量過：在這張卡上（卡色 <code>#f4f4f5</code>）九分之一濃的<b>綠 L*91.4／深綠松 90.6／"
+      + "紙灰 90.7／磚紅 91.7</b>，<b>四個全部落在 1.1 階之內</b>，彩度也小到看不出來 —— "
+      + "等於四格長得一模一樣，那把尺就沒有意義。要真的讀得出「這是綠的」得到 <b>.16</b>"
+      + "（L*87.6／86.2）。<b>代價：那樣它會比上面那塊磚紅重約 4 階。</b>"
+      + "想要兩塊等重就選<b>紙灰</b>或<b>同上面</b>。"
+      + "<br>⚠ 四格的字對底都在 <b>9.9~11.4</b>，沒有一格卡到可讀性。"
+      + "<br>⚠ <b>中間那條分隔線拿掉了</b>：兩塊都變成方塊之後，它們自己就分開了，"
+      + "再加一條線是多一個分隔。<b>要留著跟我說。</b>"
       + "<br>⚠⚠ <b>純文字泡泡那一側還沒定案，那一排還在</b> —— 它<b>做不出方塊</b>："
       + "LINE 的純文字訊息<b>沒有粗體、也沒有顏色</b>，能用的只有「空一行」與「加一個記號」。"
       + "所以切到 Ⓖ 才會看到那一排，切到 Ⓗ 不會。"
@@ -660,12 +711,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
 
   document.addEventListener("click", function (e) {
-    var b = e.target.closest("button[data-v], button[data-h], button[data-e]");
+    var b = e.target.closest("button[data-v], button[data-h], button[data-e], button[data-s]");
     if (!b) return;
     if (b.dataset.v) cur = b.dataset.v;
     else if (b.dataset.h) hr = b.dataset.h;
-    else em = b.dataset.e;
-    history.replaceState(null, "", "?v=" + cur + "&h=" + hr + "&e=" + em);
+    else if (b.dataset.e) em = b.dataset.e;
+    else sb = b.dataset.s;
+    history.replaceState(null, "", "?v=" + cur + "&h=" + hr + "&e=" + em + "&s=" + sb);
     render();
   });
   window.addEventListener("resize", measure);
