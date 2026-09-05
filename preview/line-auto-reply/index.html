@@ -4,11 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>LINE 自動回應・提案（芳仁牙醫診所）</title>
+<title>LINE 自動回應・規格（芳仁牙醫診所）</title>
 <!--
-  提案頁：**參・自動回應**（病人打任何字都會跳出來的那一則）。
-  三則裡只剩這一則沒有自己的頁面（招呼卡 /preview/line-welcome/、
-  綁定完成 /preview/line-bind-done/、提醒卡 /preview/line-remind/ 都已定稿）。
+  **規格頁**：參・自動回應（病人打任何字都會跳出來的那一則）。
+  ✅ 2026-09-05 定稿：**純文字 ＋ 一則通用 ＋ 改約那一段跟「綁定完成」逐字一致**。
+  切換條已經拿掉（CLAUDE.md 第十一之五節：line-* 這幾頁定案不刪頁、
+  改寫成規格頁，之後整包拿給廠商看）。
+
+  四則都定稿了：招呼卡 /preview/line-welcome/、綁定完成 /preview/line-bind-done/、
+  提醒卡 /preview/line-remind/、這一頁。
 
   推導與定稿全文在 drafts/line-auto-reply/README.md 第 24-2 節「參」，
   後台能做到什麼在 drafts/channels/README.md 第二十一節。
@@ -22,19 +26,17 @@
      那是別人的介面，不進 PALETTE.md。
   ⚠ class 一律 pv- 前綴。樣式放在 <head>（放頁尾的話關著的東西會在開頁那 180ms 閃出來）。
 
-  四把尺：
-    ?s= 情境（病人打什麼字、什麼時候打）
-    ?n= 做幾則（一則通用／分時段兩則／關鍵字分流三則）
-    ?c= 一則裡放什麼（只有文字／文字＋圖／圖＋文字／文字＋圖＋文字／圖卡）
-    ?g= 圖怎麼出（固定一張／三張隨機）
-    ⚠ 2026-09-05 使用者定案走**純文字**，?c 與 ?g 已從切換條上收掉，
-      網址參數仍然吃得到（?c=ti／?c=card／?g=rand）。
-    ?w= 改約那一段的寫法（09-02 舊版／跟 09-04 定稿的綁定完成一致）
+  ⚠⚠ 切換條拿掉了，**五把尺全部收成寫死的預設值**，但網址參數還吃得到 ——
+     同提醒卡那一輪的做法：已定案的尺不佔畫面，要回頭看還開得出來。
+       ?s= 情境（resched 想改約／hours 問時間／night 半夜／other 隨便一句）
+       ?n= 做幾則（one 定稿／two 分時段／kw 關鍵字分流／now 廠商現在在送的那一則）
+       ?c= 一則裡放什麼（t 定稿／ti 文字＋圖／it／tit／card Flex 圖卡）
+       ?g= 圖怎麼出（one／rand 三張隨機）
+       ?w= 改約那一段（now 定稿＝跟綁定完成一致／old 09-02 版）
+     例：?n=now 看現況、?c=card 看「如果交給廠商做成 Flex 圖卡」長什麼樣。
 
-  ⚠⚠ 「三張隨機」是使用者 2026-09-05 指定的方向。底下那顆「＋ 他再傳一次」
-     是為它做的 —— 隨機這件事一張靜態的畫面看不出來，要連著送幾次才感覺得到。
-     ⚠ 三張是**真的隨機**（會連兩次同一張，機率 1/3），沒有做「不重複」——
-        後台若真的是隨機，它也不會幫你避開重複。
+  ⚠ 底下那顆「＋ 他再傳一次」留著，它證明的是這一則最要緊的一件事：
+     自動回應是**他每打一句就送一次**，份量要看「連著送幾次」才算數。
 -->
 <style>
 :root{
@@ -48,7 +50,7 @@
 html{-webkit-text-size-adjust:100%}
 body{background:var(--paper);color:var(--ink);
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
-  line-height:1.7;padding-bottom:180px}
+  line-height:1.7;padding-bottom:40px}
 .pv-wrap{max-width:430px;margin:0 auto;padding:14px 14px 0}
 h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-sub{font-size:.78rem;color:var(--ink-soft);margin:.35rem 0 .9rem}
@@ -65,6 +67,25 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-fact .y{color:var(--deep);font-weight:700}
 .pv-fact .n{color:#a33;font-weight:700}
 .pv-fact .q{color:#8a6d1f;font-weight:700}
+.pv-fact code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px}
+
+/* ---- 要貼進後台的那一段字 -------------------------------------------
+   ⚠ 這一塊是**規格頁的成品**：診所或廠商是照著這一塊去打字的。
+   所以它一定要和上面那個聊天室模擬**逐字相同** —— 兩邊都由同一個
+   generic() 產生，不要在這裡再手寫一份（手寫的那一份哪天就會開始說謊）。 */
+.pv-spec{border:1px solid var(--rule);border-radius:10px;background:var(--card);
+  padding:11px 12px;margin:0 0 14px}
+.pv-spec h2{font-size:.78rem;font-weight:700;letter-spacing:.02em;margin:0 0 6px}
+.pv-spec .hd{display:flex;align-items:center;gap:8px;margin:0 0 6px}
+.pv-spec .hd h2{margin:0;flex:1}
+.pv-spec pre{font:inherit;font-size:.78rem;line-height:1.85;white-space:pre-wrap;
+  word-break:break-all;background:var(--paper);border-radius:8px;padding:9px 10px;
+  color:var(--ink);-webkit-user-select:text;user-select:text}
+.pv-spec .cp{font:inherit;font-size:.72rem;line-height:1.6;padding:3px 9px;
+  border:1px solid var(--rule);border-radius:7px;background:var(--card);
+  color:var(--ink-soft);cursor:pointer}
+.pv-spec .cp.ok{background:var(--green);border-color:var(--green);color:#fff}
+.pv-spec .fo{font-size:.72rem;color:var(--ink-soft);margin:7px 0 0;line-height:1.75}
 
 /* ---- 手機外框 ＋ LINE 聊天室 ---------------------------------------- */
 .pv-phone{border:1px solid var(--rule);border-radius:14px;overflow:hidden;
@@ -74,7 +95,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-head .b{font-size:.9rem;font-weight:700;color:var(--li-ink)}
 .pv-head img{width:26px;height:26px;border-radius:50%;display:block}
 .pv-head .x{margin-left:auto;color:var(--li-meta);font-size:1rem;letter-spacing:.14em}
-.pv-chat{padding:12px 11px 16px;display:flex;flex-direction:column;gap:11px}
+/* ⚠⚠ LINE 的泡泡上限是**固定 268px，不隨螢幕縮放** —— 這個框放不下的話，
+   下面量到的折行與孤字全部偏鬆（bind-done 與這一頁都踩過：寫成 74% 時
+   393 上只給了 252px，量出來的孤字是假的）。
+   成因是我們比真手機多吃了兩層內距：頁面的 14 ＋ 聊天室的 11。
+   所以窄螢幕讓手機框貼齊頁面兩邊、聊天室內距收到 8。
+   ⚠ 仍然放不下時面板會現場報出來，不要當成沒事。 */
+@media (max-width: 429px) {
+  .pv-phone{margin-inline:-14px;border-radius:0;border-left-width:0;border-right-width:0}
+}
+.pv-chat{padding:12px 8px 16px;display:flex;flex-direction:column;gap:11px}
 
 .pv-msg{display:flex;gap:7px;align-items:flex-end;max-width:100%}
 .pv-msg.me{flex-direction:row-reverse}
@@ -83,7 +113,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-msg.me .pv-av{visibility:hidden}
 .pv-bub{background:var(--li-in);border-radius:15px;padding:8px 11px;
   font-size:.86rem;line-height:1.62;color:var(--li-ink);white-space:pre-wrap;
-  max-width:min(268px,74%);box-shadow:0 1px 1px rgba(0,0,0,.05);word-break:break-word}
+  max-width:268px;box-shadow:0 1px 1px rgba(0,0,0,.05);word-break:break-word}
 .pv-msg.me .pv-bub{background:var(--li-out)}
 .pv-bub a{color:#2b6cb0;text-decoration:underline}
 .pv-bub.img{padding:0;background:none;box-shadow:none;border-radius:12px;overflow:hidden;
@@ -137,73 +167,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-again .go{flex:1;border:0;background:var(--green);color:#fff;font-weight:700}
 .pv-again .re{border:1px solid var(--rule);background:var(--card);color:var(--ink-soft)}
 
-/* ---- 切換條 ---------------------------------------------------------- */
-.pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:9;
-  background:rgba(244,244,245,.96);backdrop-filter:blur(8px);
-  border-top:1px solid var(--rule);padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
-.pv-bar .r{display:flex;gap:6px;align-items:center;overflow-x:auto;
-  scrollbar-width:none;padding-bottom:2px}
-.pv-bar .r::-webkit-scrollbar{display:none}
-.pv-bar .lb{font-size:.66rem;color:var(--ink-soft);flex:none;width:4.4em;
-  white-space:nowrap}
-/* ⚠ 每一排的按鈕包在一個 <span> 裡，那個 span 自己也要是 flex ——
-   不是的話按鈕會在窄螢幕上換行，整排變兩倍高（360 上量到 63.9 vs 32.9）。 */
-.pv-bar .r > span:not(.lb){display:flex;gap:6px;flex:none}
-.pv-bar button{flex:none;font:inherit;font-size:.74rem;line-height:1.6;
-  border:1px solid var(--deep);color:var(--deep);background:#fff;
-  border-radius:8px;padding:5px 9px;cursor:pointer;white-space:nowrap}
-.pv-bar button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
-/* ⚠ 五排的時候 6px 會讓切換條到 24.4%，越過「不吃掉四分之一畫面」那條線。
-   收成 4px ＝ 23.4%。**切換條的高度要逐寬度量**（CLAUDE.md 第 25-7 節）。 */
-.pv-bar .r + .r{margin-top:4px}
-.pv-bar .fold{position:absolute;right:10px;top:-30px;background:rgba(244,244,245,.96);
-  border:1px solid var(--rule);border-radius:8px 8px 0 0;border-bottom:0;
-  font:inherit;font-size:.7rem;color:var(--ink-soft);padding:3px 9px;cursor:pointer}
-.pv-bar.is-fold .r{display:none}
-.pv-bar.is-fold .r.keep{display:flex}
 </style>
 </head>
 <body>
 
 <div class="pv-wrap">
   <h1>LINE 自動回應 —— 病人打字之後跳出來的那一則</h1>
-  <p class="pv-sub">三則裡的<b>第三則</b>。招呼卡、綁定完成、提醒卡都定稿了，剩這一則。<br>
-    <b>2026-09-05 定案：走純文字</b>（理由見下面第二塊）。底下三把尺。</p>
-
-  <div class="pv-fact">
-    <h2>這一頁在決定什麼</h2>
-    <dl>
-      <dt><span class="y">已定：走純文字。</span>剩兩件要挑</dt>
-      <dd>① <b>做幾則</b>（一則通用／分時段兩則／關鍵字分流）<br>
-        ② <b>改約那一段怎麼寫</b>（09-02 那一版／跟已定稿的「綁定完成」一致）<br>
-        底下的<b>「＋ 他再傳一次」</b>按幾下 —— 自動回應是<b>他每打一句就送一次</b>，
-        份量要看「連著送幾次」才算數。</dd>
-
-      <dt>⚠⚠ 更正一句我先前講錯的話：<span class="n">「LINE 不能送圖卡」是錯的</span></dt>
-      <dd><b>LINE 平台完全送得出 Flex 圖卡</b>，而且回覆類不計費 ——
-        限制在<b>後台那個編輯介面</b>：「自動回應訊息」的型別下拉裡沒有 Flex 那一格。
-        你們的廠商顯然送得出（綁定完成、提醒卡、預約成功、評價卡全都是 Flex）。<br>
-        <span class="q">⚠⚠ 但查出更要緊的一件：<b>後台的「自動回應訊息」開著時，
-        會把病人打的字攔下來自己回，不會轉給廠商的系統</b>。</span>
-        所以要圖卡就得<b>把這一則整個交給廠商</b> ——
-        代價是<b>診所自己在後台就改不了那些字了</b>，改一個錯字都要找廠商。<br>
-        <b class="y">→ 所以這一輪走純文字：字留在自己手上。</b>
-        <span class="q">（⚠ 攔截那一條是二手資料，廠商一句話就能確認。）</span></dd>
-
-      <dt>⚠ 跟著擱下的一件：<b>三張圖隨機</b></dt>
-      <dd>純文字就沒有圖可以換了，這一題<b>先停在這裡</b>、沒有作廢 ——
-        哪天決定把這一則交給廠商，它會一起回來（那時隨機是他們幾行程式的事）。<br>
-        <span class="q">舊的圖／圖卡那幾格切換條上收掉了，網址還吃得到：
-        <code>?c=ti</code>（文字＋圖）、<code>?c=card</code>（Flex 圖卡）、
-        <code>?g=rand</code>（三張隨機）。</span></dd>
-
-      <dt>⚠ 文字這一側後台做得到的三件</dt>
-      <dd>・一則底下可以掛<b>好幾個對話框</b>（⚠ 上限查到 3 或 5 兩種說法，要在後台按到底）<br>
-        ・<b>關鍵字分流</b>：打「改約」回 A、打「時間」回 B。一組關鍵字最多 51 個詞<br>
-        ・<b>時段分流</b>：設的是星期＋時間，<span class="q">⚠ 分不出國定假日</span>
-        （所以開診那一則只能寫「這個時段診所有開診」，不能寫「現在有人在」）</dd>
-    </dl>
-  </div>
+  <p class="pv-sub"><b>規格頁・2026-09-05 定稿</b>：<b>純文字</b>、<b>一則通用</b>、
+    改約那一段跟已定稿的「綁定完成」逐字一致。<br>
+    什麼時候送：<b>病人在這個帳號裡打任何一句字</b>，每打一句就送一次。
+    要貼進後台的字在下面。</p>
 
   <div class="pv-phone">
     <div class="pv-head">
@@ -220,13 +193,63 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   <div class="pv-panel" id="panel"></div>
   <p class="pv-note" id="note"></p>
-</div>
 
-<div class="pv-bar" id="bar">
-  <button type="button" class="fold" id="fold">收起</button>
-  <div class="r keep"><span class="lb">情境</span><span id="sw-s"></span></div>
-  <div class="r"><span class="lb">做幾則</span><span id="sw-n"></span></div>
-  <div class="r keep"><span class="lb">改約那段</span><span id="sw-w"></span></div>
+  <div class="pv-spec">
+    <div class="hd"><h2>要貼進後台的字</h2>
+      <button type="button" class="cp" id="copy">複製</button></div>
+    <pre id="spec"></pre>
+    <p class="fo">⚠ <b>每一行都是手動斷的</b>（一行不超過 14 個全形字寬）——
+      改任何一個字都要回到這一頁重看折行。<br>
+      ⚠ 開頭那一句是<b>道謝不是道歉</b>：他只是傳了一則訊息，沒有人做錯事。
+      現況那一則第二句就先道歉（<code>?n=now</code> 看得到）。</p>
+  </div>
+
+  <div class="pv-fact">
+    <h2>後台怎麼設</h2>
+    <dl>
+      <dt>位置</dt>
+      <dd>LINE Official Account Manager → <b>自動回應訊息</b> → 新增一則 →
+        回應設定選<b>「一律回應」</b>（不設關鍵字、不設時段）。<br>
+        ⚠ <b>「回應模式」要在「聊天」以外</b>，或把自動回應打開 ——
+        兩件事同時開時，自動回應優先。</dd>
+
+      <dt>⚠ 一則底下可以掛好幾個對話框，這一次只用一個</dt>
+      <dd>上限查到 <b>3 或 5</b> 兩種說法，<span class="q">要在後台按到不能再加為止才算數</span>。
+        這一則只有一個對話框，所以那個上限現在不影響我們。</dd>
+
+      <dt>⚠⚠ 這一則留在後台，字就留在診所自己手上</dt>
+      <dd>查到的一件（<span class="q">二手資料，廠商一句話就能確認</span>）：
+        <b>後台的「自動回應訊息」開著時，會把病人打的字攔下來自己回，不會轉給廠商的系統</b>；
+        按鈕（postback）那條不受影響、照樣走廠商。<br>
+        所以這一則<b>只能二選一</b>：留後台 → 只有純文字與圖文訊息，但<b>診所自己改得了字</b>；
+        交廠商 → 有 Flex 圖卡、也做得出三張隨機，但<b>改一個錯字都要找廠商</b>。<br>
+        <b class="y">→ 2026-09-05 定案留後台，理由就是最後那一句。</b></dd>
+
+      <dt>⚠ 更正一句先前講錯的話</dt>
+      <dd>「LINE 不能送圖卡」是<span class="n">錯的</span>。
+        <b>LINE 平台完全送得出 Flex 圖卡</b>，回覆類還不計費 ——
+        限制在<b>後台那個編輯介面</b>的型別下拉裡沒有 Flex 那一格。
+        你們的廠商顯然送得出（綁定完成、提醒卡、預約成功、評價卡全都是 Flex）。<br>
+        <code>?c=card</code> 看得到「如果交給廠商做成圖卡」長什麼樣 ——
+        那不是現在做得到的東西，是<b>拿去問廠商的那張圖</b>。</dd>
+
+      <dt>⚠ 跟著擱下、沒有作廢的一件：<b>三張圖隨機</b></dt>
+      <dd>純文字沒有圖可以換。哪天決定把這一則交給廠商，它會一起回來
+        （那時隨機是他們幾行程式的事）。<code>?g=rand</code> 還看得到。</dd>
+
+      <dt>⚠ 留下來的一件：<b>電話現在只出現在改約那一段裡</b></dt>
+      <dd>09-02 那一版還有一句「各類事情請在開診時間打電話給診所」，
+        定稿這一份沒有 —— 號碼只跟著「改約或取消」出現。
+        <b>要不要另外補一句涵蓋其他事情，是還沒問過的一題</b>，沒有自己加回去。</dd>
+
+      <dt>其他兩條路（沒有選，留著當退路）</dt>
+      <dd>・<b>分時段兩則</b>（<code>?n=two</code>）：省掉「現在到底有沒有人」的猜測。
+        <span class="q">⚠ 時段只認星期＋時間、分不出國定假日</span>，
+        所以開診那一則只能寫「這個時段診所有開診」，不能寫「現在有人在」。<br>
+        ・<b>關鍵字分流</b>（<code>?n=kw</code>）：命中時短一半（一屏 19% vs 38%）。
+        ⚠ 代價是要維護關鍵字表，而且<b>沒命中的仍然掉回這一則</b>，所以這一則不能省。</dd>
+    </dl>
+  </div>
 </div>
 
 <script>
@@ -479,6 +502,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     }
     var pct = tot / vh * 100, rn = state.rounds.length, one = tot / rn / vh * 100;
     var got = pick(), orp = orphans();
+    /* 這個螢幕實際給得起泡泡多寬 ＝ 那一列扣掉頭像、時間與兩個間隙。
+       ⚠ 要從真的那一列量，不要用 .pv-chat 的寬度減常數 —— 間隙改了就會說謊。 */
+    var cap = 268, row = document.querySelector(".pv-chat .pv-msg:not(.me)");
+    if (row) {
+      var av = row.querySelector(".pv-av"), tm = row.querySelector(".pv-t");
+      cap = Math.min(268, row.clientWidth - (av ? av.offsetWidth : 0) -
+        (tm ? tm.offsetWidth : 0) - 14);
+    }
     var doc = document.documentElement;
     /* 抽到的那幾張，照順序印出來 —— 隨機這件事要看得到序列才算數，
        而且「連兩次同一張」本來就會發生（1/3），印出來他才知道那不是壞掉。 */
@@ -502,7 +533,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
             : "・固定一張") + "<br>"
         : "") +
       "孤字 <b class=\"" + (orp ? "no" : "ok") + "\">" + orp + "</b> 處・" +
-      "最寬的文字泡泡 <b>" + wid.toFixed(0) + "px</b>（上限 268）・" +
+      "最寬的文字泡泡 <b>" + wid.toFixed(0) + "px</b>（上限 " +
+      (cap >= 267.5 ? '<span class="ok">268＝LINE 的真值</span>'
+        : '<span class="no">' + cap.toFixed(0) + "px —— 這個螢幕放不下 268，折行判斷偏鬆 " +
+          (268 - cap).toFixed(0) + "px</span>") + "）・" +
       "水平溢出 <b class=\"" + (doc.scrollWidth > doc.clientWidth ? "no" : "ok") + "\">" +
       (doc.scrollWidth - doc.clientWidth) + "</b>px<br>" +
       "你的螢幕 " + Math.round(window.innerWidth) + "×" + Math.round(vh) +
@@ -516,7 +550,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       : state.n === "two"
         ? "分時段：省掉「現在到底有沒有人」這個猜測。⚠ 但時段只認星期＋時間，分不出國定假日——所以開診那一則寫的是「這個時段診所有開診」，不是「現在有人在」。"
       : state.c === "t"
-        ? "純文字（09-02 定稿的那一份）。第一句是道謝不是道歉（愛馬仕的做法）。⚠ 這一則每打一句就送一次 —— 按「＋ 他再傳一次」看份量怎麼疊，那正是「做幾則」那把尺要解決的事：關鍵字命中時只回一件，短一半。"
+        ? "✅ 定稿的那一則：純文字、一則通用。第一句是道謝不是道歉（愛馬仕的做法）。⚠ 這一則每打一句就送一次 —— 按「＋ 他再傳一次」看份量怎麼疊，一次 38%、兩次 75%；關鍵字分流命中時只回一件，一次 19%（?n=kw）。"
       : state.c === "card"
         ? "圖卡（Flex）：一則就是一張卡 —— 頭圖擺那張有趣的圖，卡片裡是**真的文字**（可以複製、螢幕閱讀器讀得到），淡藍那塊和已定稿的「綁定完成」用同一組樣子。⚠⚠ 後台的自動回應選單裡沒有這個選項，所以這一格不是現在做得到的，是**拿去問廠商的那張圖**。⚠ 頭圖是 2:1，和圖文訊息的 1040×1040 不一樣 —— 三張圖畫之前要先定走哪一條路。"
       : state.g === "rand"
@@ -524,37 +558,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         : "配圖（已擱下，網址參數才看得到）：要圖就得把這一則交給廠商，代價是診所自己改不了字。";
   }
 
-  function chips(host, obj, key) {
-    Object.keys(obj).forEach(function (k) {
-      var b = el("button", null, obj[k].name || obj[k]);
-      b.type = "button";
-      b.setAttribute("aria-pressed", String(state[key] === k));
-      b.addEventListener("click", function () {
-        state[key] = k;
-        host.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
-        b.setAttribute("aria-pressed", "true");
-        /* ⚠ 換任何一把尺就把輪數歸零 —— 不歸零的話畫面上會同時混著
-           兩個版本的東西，量出來的高度不屬於任何一個版本。 */
-        resetRounds();
-        history.replaceState(null, "", location.pathname + "?s=" + state.s + "&n=" + state.n +
-          "&c=" + state.c + "&g=" + state.g + "&w=" + state.w);
-        render();
-      });
-      host.appendChild(b);
-    });
-  }
+  /* ⚠⚠ 切換條 2026-09-05 定稿時整條拿掉了（CLAUDE.md 第十一之五節）。
+     chips() 一起刪掉，五把尺收成 state 的預設值；**網址參數仍然吃得到**，
+     所以要回頭看哪一格還開得出來（?n=now 現況、?c=card 圖卡、?g=rand 三張隨機）。 */
   ["s", "n", "c", "g", "w"].forEach(function (k) {
     var m = location.search.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
     var tbl = { s: SCENE, n: NUM, c: COMP, g: GO, w: WORD }[k];
     if (m && tbl[m[1]]) state[k] = m[1];
   });
-  chips(document.getElementById("sw-s"), SCENE, "s");
-  chips(document.getElementById("sw-n"), NUM, "n");
-  /* ⚠ 「放什麼」與「圖」兩把尺 2026-09-05 從切換條上收掉了（使用者定案走純文字），
-     但**網址參數仍然吃得到** —— 同提醒卡那一輪的做法：已定案的尺不佔畫面，
-     要回頭看還開得出來（?c=ti／?c=card／?g=rand）。 */
-  chips(document.getElementById("sw-w"), WORD, "w");
-
   /* 「＋ 他再傳一次」＝ 時間往前走一步，不是換版本 —— 所以它不碰網址參數。 */
   document.getElementById("again").addEventListener("click", function () {
     state.rounds.push(roll());
@@ -566,12 +577,26 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  var bar = document.getElementById("bar"), fold = document.getElementById("fold");
-  fold.addEventListener("click", function () {
-    var on = bar.classList.toggle("is-fold");
-    fold.textContent = on ? "展開" : "收起";
-    document.body.style.paddingBottom = on ? "110px" : "180px";
-    requestAnimationFrame(measure);
+  /* 要貼進後台的那一段字。
+     ⚠⚠ **從同一個 generic() 拿**，不在這裡再手寫一份 ——
+        手寫的那一份哪天就會和上面的模擬對不起來，而廠商是照這一塊打字的。 */
+  var spec = document.getElementById("spec");
+  spec.textContent = generic("now");
+  var cp = document.getElementById("copy");
+  cp.addEventListener("click", function () {
+    var done = function () { cp.textContent = "已複製"; cp.classList.add("ok");
+      setTimeout(function () { cp.textContent = "複製"; cp.classList.remove("ok"); }, 1600); };
+    /* ⚠ navigator.clipboard 在非 HTTPS 或舊瀏覽器上根本不存在，
+       退回「把那一塊選起來」—— 使用者自己長按複製也行。 */
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(spec.textContent).then(done, select);
+    } else select();
+    function select() {
+      var r = document.createRange(); r.selectNodeContents(spec);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      cp.textContent = "請長按複製";
+      setTimeout(function () { cp.textContent = "複製"; }, 2400);
+    }
   });
 
   render();
