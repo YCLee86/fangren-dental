@@ -145,7 +145,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
    ⚠ `.box` 與 `.foot2` 兩條規則都刪掉了，**不要留著沒人用的樣式**。 */
 /* 第二顆按鈕（「不好的」那一條）：線框鈕，同框同標誌、底是空的。
    規格逐項照提醒卡那顆「掰掰不去囉」（`/preview/line-remind/`）。
-   ⚠ 標誌用招呼卡已經產好的綠色那顆（`mark-green.png`，34px），沒有另外再產一份。 */
+   ⚠ 標誌 34px 寬，**沒有另外再產一份**（見下面那一段）。 */
+/* ⚠⚠ 2026-09-05 使用者：「不開心有話要說的 logo 要反過來」——
+   **不必再產一張**：`mark-green.png`（招呼卡「介紹芳仁給朋友」那顆）與
+   提醒卡的 `mark-nogo.png` 是**同一顆形狀 `shape-r2c3`、同一個色 `#2c5238`**，
+   後者只是整張上下翻過來（`remind-marks.mjs` 產的）。直接引用那一張就好。
+   ⚠ 兩顆都是 34px 寬、長寬比一樣，所以版面一個像素都不會動。
+   ⚠⚠ 那顆翻轉是**烘在 PNG 裡**不是 CSS 的 `scaleX/Y` —— 牙洞靠 fill-rule 挖，
+     只翻外框的話洞會落在形狀外面、靜靜地消失而且不報錯（見第十一之一節提醒卡那一列）。 */
 .pv-new .nob{display:flex;align-items:center;justify-content:center;gap:8px;
   border:1px solid var(--deep);border-radius:9px;padding:11px 6px;
   color:var(--deep);font-size:16px;font-weight:700;line-height:1.4}
@@ -350,7 +357,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
          ＝ 提醒卡那顆「掰掰不去囉」）—— **它不是第二顆綠鈕**，
          一眼看得出誰是主角。⚠ 這一顆**沒有角形**（使用者只在第一顆寫了角形）。 */
       + '<p class="ask2">' + VER[ask].ask2 + '</p>'
-      + '<span class="nob"><img src="../line-welcome/mark-green.png" alt="">'
+      + '<span class="nob"><img src="../line-remind/mark-nogo.png" alt="">'
       + '<span>' + VER[ask].lab2 + '</span></span>';
     return h + '</div></div>';
   }
