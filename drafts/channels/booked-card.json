@@ -1,0 +1,253 @@
+{
+  "_說明": [
+    "約診卡（LINE Flex Message），兩個狀態共用同一個殼：",
+    "  ①「預約成功通知」——約診成立的當下自動送出，**單張**。",
+    "  ②「約診紀錄查詢」——病人點圖文選單之後回的，**輪播**，一個約診一張。",
+    "**2026-09-05 定稿**（使用者兩張截圖上圈的那六格）。規格頁是 /preview/line-booked/，",
+    "逐輪推導在 drafts/channels/README.md 第二十二節。",
+    "",
+    "⚠ 這兩則現在**就是 Flex 圖卡**（廠商的系統送的），所以**不必問「送不送得出 Flex」**",
+    "  —— 那一題只存在於後台那個編輯介面的型別下拉（招呼訊息／自動回應那幾則）。",
+    "  要問的是**願不願意換這一版**、以及**日後改一個字的流程**。",
+    "⚠ 計費：查詢那一則是回應類，預約成立那一則是系統事件觸發的 —— 請廠商確認怎麼算。",
+    "",
+    "⚠⚠⚠ **這一則有一件現在正在出錯的事，修它比改版型重要：**",
+    "  查詢那張卡的日期現在設了 `maxLines: 1`，在輪播的寬度上**真的被截斷**",
+    "  （截圖上是「2026/08/20 15:45 星...」）。",
+    "  **正解是讓它折行**（Flex 的 text 只要 `wrap: true` 就會折）——",
+    "  放得下一行、放不下兩行，**哪一種寬度都不會有字消失**。",
+    "  改成中文短格式（去年份、月日中文）是在這之上再多買一層餘裕，不是替代品。",
+    "",
+    "⚠ **兩則的日期格式要一致**：現在同一個帳號有兩種寫法（預約成功寫",
+    "  `2026/08/25 (二) 10:15`、查詢寫 `2026/08/20 15:45 星期四`），這本身就是問題之一。",
+    "  定案兩則都用 `8月25日 (二) 10:15` —— **括號維持半形**（要求的改動愈小愈可能改到）。",
+    "",
+    "⚠⚠ **輪播每一張都要印病人姓名**：一支手機綁得到好幾個家人（小孩的綁在爸媽手機上），",
+    "  所以名字不是重複，是那一張卡的身分。",
+    "",
+    "⚠ **這兩則上沒有任何按鈕，也沒有淡底彩色方塊** —— 它們是**收據**，",
+    "  沒有要病人現在做什麼。彩色方塊是給警示與行動用的（見綁定完成、提醒卡）。",
+    "⚠ **也不放地址電話**：查詢回答的是「什麼時候」不是「在哪裡」，",
+    "  地址在預約成功以外的三個地方都有（提醒卡、圖文選單的診所資訊、帳號主頁）。",
+    "",
+    "字級照 LINE Flex 的固定 px：lg 19（日期）／md 16（姓名與開場）／xs 13（小字）。",
+    "  ⚠ 那張階梯**沒有 12、15、18、20**，所以「小一點／大一點」只有整階可以走。",
+    "顏色一顆都沒新增：卡 #F4F4F5・墨 #2A2C27・柔墨 #5C5F57，浮水印九支見下面的對照表。",
+    "",
+    "⚠ **〔病人姓名〕與日期是系統填的欄位**（這裡是 {{patient}}／{{date}}），不要寫死。",
+    "",
+    "── 浮水印 ──────────────────────────────────────────",
+    "⚠⚠⚠ **哪一顆由系統算**：`(約診月份 ＋ 約診日) % 9`，對到下面 `_浮水印` 那九筆的順序",
+    "  （r1c1、r1c2、r1c3、r2c1、r2c2、r2c3、r3c1、r3c2、r3c3）。",
+    "  ・**按日期算**：同一筆約診不管查幾次都是同一顆，而且**預約成功那一則",
+    "    和查詢清單裡那一張會是同一顆同一色**。",
+    "  ・按位置輪流 ✗：取消一筆，後面每一張全部換人。",
+    "  ・隨機 ✗：同一筆每次看都不一樣，讀起來就是壞掉。",
+    "  ・算不了的退路：整包同一顆，或兩則各固定一顆（靜態、零依賴）。",
+    "⚠⚠ **九顆的寬度各不相同**（`watermark_size`），因為它們有四種長寬比；",
+    "  同寬的話細長那幾顆看起來會輕很多。那九個數字是按**墨的面積**算出來的，",
+    "  唯一的出處是 preview/line-booked/wm-sizes.json，**不要自己改**。",
+    "⚠⚠ **淡是烘在 PNG 的 alpha 裡的**（Flex 的 image 沒有 opacity）。",
+    "  檔名末兩碼是濃度：08 / 12 / 18，**這一版用 12**。",
+    "⚠⚠ **box 沒有背景圖**（`background` 只認 linearGradient），所以浮水印是一個",
+    "  獨立的 `image` ＋ `position: absolute` 疊上去。",
+    "⚠⚠⚠ **這一項還沒有實機驗過**：官方文件只寫了「一個 box 的第一個子元件不可以是",
+    "  absolute」，**沒有明講後面的元件會不會蓋在絕對定位的圖上面**。所以這裡把內容",
+    "  包成一個 `position: relative` 的 box 排在前面、浮水印排在後面。",
+    "  **請先送一則測試訊息看實機**：如果浮水印蓋在字上面，就退回",
+    "  「右邊一顆不重疊的淡標誌」（100% 支援，不必用 absolute）。",
+    "  ⚠ 就算蓋上去，字仍然讀得到（.12 濃度下量過，日期的墨對最濃處仍過 AA）——",
+    "    但那不是設計要的樣子。",
+    "⚠ CSS 那一版把標誌往右下**溢出** 18／10px（更像浮水印）；Flex 的 offset",
+    "  不吃負值，所以這裡是 0／0，標誌會整顆落在卡片裡。",
+    "",
+    "⚠ 上線前所有的圖要放到 https://fangren.net/assets/line/（那個資料夾現在還不存在）。"
+  ],
+  "_浮水印": {
+    "r1c1": {
+      "科別": "一般牙科",
+      "色": "#3f654a",
+      "watermark_size": "107px",
+      "watermark_ratio": "1:1",
+      "url": "https://fangren.net/assets/line/wm-r1c1-12.png"
+    },
+    "r1c2": {
+      "科別": "牙周治療",
+      "色": "#317d78",
+      "watermark_size": "150px",
+      "watermark_ratio": "2.029:1",
+      "url": "https://fangren.net/assets/line/wm-r1c2-12.png"
+    },
+    "r1c3": {
+      "科別": "齒顎矯正",
+      "色": "#4478b5",
+      "watermark_size": "188px",
+      "watermark_ratio": "3.084:1",
+      "url": "https://fangren.net/assets/line/wm-r1c3-12.png"
+    },
+    "r2c1": {
+      "科別": "顯微根管",
+      "色": "#ae4f4d",
+      "watermark_size": "152px",
+      "watermark_ratio": "2.025:1",
+      "url": "https://fangren.net/assets/line/wm-r2c1-12.png"
+    },
+    "r2c2": {
+      "科別": "植牙・假牙重建",
+      "色": "#465885",
+      "watermark_size": "120px",
+      "watermark_ratio": "1.332:1",
+      "url": "https://fangren.net/assets/line/wm-r2c2-12.png"
+    },
+    "r2c3": {
+      "科別": "口腔外科",
+      "色": "#8e6299",
+      "watermark_size": "188px",
+      "watermark_ratio": "3.081:1",
+      "url": "https://fangren.net/assets/line/wm-r2c3-12.png"
+    },
+    "r3c1": {
+      "科別": "口腔外科",
+      "色": "#8e6299",
+      "watermark_size": "104px",
+      "watermark_ratio": "1:1",
+      "url": "https://fangren.net/assets/line/wm-r3c1-12.png"
+    },
+    "r3c2": {
+      "科別": "兒童牙科",
+      "色": "#c28229",
+      "watermark_size": "106px",
+      "watermark_ratio": "0.999:1",
+      "url": "https://fangren.net/assets/line/wm-r3c2-12.png"
+    },
+    "r3c3": {
+      "科別": "一般牙科",
+      "色": "#3f654a",
+      "watermark_size": "215px",
+      "watermark_ratio": "3.083:1",
+      "url": "https://fangren.net/assets/line/wm-r3c3-12.png"
+    }
+  },
+  "預約成功通知": {
+    "type": "bubble",
+    "size": "mega",
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "paddingAll": "14px",
+      "backgroundColor": "#F4F4F5",
+      "contents": [
+        {
+          "type": "box",
+          "layout": "vertical",
+          "position": "relative",
+          "contents": [
+            {
+              "type": "text",
+              "size": "md",
+              "color": "#2A2C27",
+              "wrap": true,
+              "contents": [
+                {
+                  "type": "span",
+                  "text": "{{patient}}",
+                  "weight": "bold"
+                },
+                {
+                  "type": "span",
+                  "text": "　約好囉"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "{{date}}",
+              "size": "lg",
+              "weight": "bold",
+              "color": "#2A2C27",
+              "margin": "6px",
+              "wrap": true
+            },
+            {
+              "type": "text",
+              "text": "異動請在2天前(不含假日)與診所聯繫",
+              "size": "xs",
+              "color": "#5C5F57",
+              "margin": "14px",
+              "wrap": true
+            },
+            {
+              "type": "text",
+              "text": "看診前2天會再提醒一次，記得回覆喔～",
+              "size": "xs",
+              "color": "#5C5F57",
+              "margin": "5px",
+              "wrap": true
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "url": "https://fangren.net/assets/line/wm-{{watermark}}-12.png",
+          "size": "{{watermark_size}}",
+          "aspectRatio": "{{watermark_ratio}}",
+          "aspectMode": "fit",
+          "position": "absolute",
+          "offsetEnd": "0px",
+          "offsetBottom": "0px"
+        }
+      ]
+    }
+  },
+  "約診紀錄查詢": {
+    "_說明": "輪播（carousel）的每一張都是這個 bubble，contents 最多 12 張（LINE 的上限）。",
+    "type": "carousel",
+    "contents": [
+      {
+        "type": "bubble",
+        "size": "micro",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "paddingAll": "14px",
+          "backgroundColor": "#F4F4F5",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "vertical",
+              "position": "relative",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "{{patient}}",
+                  "size": "md",
+                  "color": "#5C5F57",
+                  "wrap": true
+                },
+                {
+                  "type": "text",
+                  "text": "{{date}}",
+                  "size": "lg",
+                  "weight": "bold",
+                  "color": "#2A2C27",
+                  "margin": "6px",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "image",
+              "url": "https://fangren.net/assets/line/wm-{{watermark}}-12.png",
+              "size": "{{watermark_size}}",
+              "aspectRatio": "{{watermark_ratio}}",
+              "aspectMode": "fit",
+              "position": "absolute",
+              "offsetEnd": "0px",
+              "offsetBottom": "0px"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
