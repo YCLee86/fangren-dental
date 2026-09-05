@@ -1,38 +1,56 @@
 {
   "r1c1": {
     "w": 107,
-    "ratio": 1
+    "ratio": 1,
+    "spec": "general",
+    "color": "#3f654a"
   },
   "r1c2": {
     "w": 150,
-    "ratio": 2.029
+    "ratio": 2.029,
+    "spec": "perio",
+    "color": "#317d78"
   },
   "r1c3": {
     "w": 188,
-    "ratio": 3.084
+    "ratio": 3.084,
+    "spec": "ortho",
+    "color": "#4478b5"
   },
   "r2c1": {
     "w": 152,
-    "ratio": 2.025
+    "ratio": 2.025,
+    "spec": "endo",
+    "color": "#ae4f4d"
   },
   "r2c2": {
     "w": 120,
-    "ratio": 1.332
+    "ratio": 1.332,
+    "spec": "prosth",
+    "color": "#465885"
   },
   "r2c3": {
     "w": 188,
-    "ratio": 3.081
+    "ratio": 3.081,
+    "spec": "surg",
+    "color": "#8e6299"
   },
   "r3c1": {
     "w": 104,
-    "ratio": 1
+    "ratio": 1,
+    "spec": "surg",
+    "color": "#8e6299"
   },
   "r3c2": {
     "w": 106,
-    "ratio": 0.999
+    "ratio": 0.999,
+    "spec": "kids",
+    "color": "#c28229"
   },
   "r3c3": {
     "w": 215,
-    "ratio": 3.083
+    "ratio": 3.083,
+    "spec": "general",
+    "color": "#3f654a"
   }
 }

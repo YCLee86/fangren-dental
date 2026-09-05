@@ -185,6 +185,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 /* 號碼那一行（「號碼文字」那一格）—— xs 13，柔墨，日期上面。
    ⚠ 它不是標題也不是警示，**不要加底色也不要加粗**：它回答的只是
      「這是清單裡的第幾張」，比日期次要一階。 */
+/* 病人姓名：xs 13、柔墨。⚠ 不加粗、不上色 —— 它是標籤不是主角，
+   日期才是這張卡最大的東西（同 20-12 那條「按鈕看它上一句話」的精神：
+   先問這一行在回答什麼）。 */
+.pv-nw .who{font-size:13px;line-height:1.6;color:var(--ink-soft);letter-spacing:.02em}
+.pv-nw .who.bot{margin-top:8px}
 .pv-nw .ix{font-size:13px;line-height:1.6;color:var(--ink-soft);letter-spacing:.02em}
 .pv-nw .cal{display:flex;align-items:baseline;gap:9px;margin-top:6px}
 .pv-nw .cal .mo{font-size:14px;color:var(--ink-soft);line-height:1}
@@ -281,10 +286,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
   <div class="r" id="row-d"><span class="lb">日期怎麼寫</span><span id="sw-d"></span></div>
   <div class="r" id="row-s"><span class="lb">卡片長相</span><span id="sw-s"></span></div>
-  <div class="r" id="row-a"><span class="lb">地址電話</span><span id="sw-a"></span></div>
-  <!-- ⚠ 這一列和上面那一列**同一個位置、二選一顯示**（`display:none` 不是 .off）——
-       預約成功已經定案不放地址電話，所以那把尺只給輪播；切換條維持五列，
-       不會因為多一把尺而長高。 -->
+  <!-- ⚠ 這一列**二選一顯示**（`display:none` 不是 .off）：預約成功給「頁首標誌」、
+       輪播給「病人姓名」。兩則都已經定案不放地址電話，那把尺因此從這裡收掉
+       （`?a=box|two` 還吃得到）。切換條維持五列，不會因為多尺而長高。 -->
+  <div class="r" id="row-nm"><span class="lb">病人姓名</span><span id="sw-nm"></span></div>
   <div class="r" id="row-g"><span class="lb">頁首標誌</span><span id="sw-g"></span></div>
 </div>
 
@@ -301,13 +306,19 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   /* 三個約診（輪播那一則會排三張）。8/20 15:45 就是截圖裡被截斷的那一張。
      ⚠ 姓名已遮 —— 卡上一律用〔病人姓名〕，那是系統填的欄位。 */
+  /* ⚠⚠ `who` ＝ 病人姓名。2026-09-05 使用者：「要加病人姓名，因為有時候不只綁定
+     一個名字（例如小孩的綁在爸媽手機）」—— 他是對的，而我上一輪把名字從輪播
+     拿掉的理由（「每張都重寫一次名字＝浪費整行 × N」）**只有在整份清單都是
+     同一個人時才成立**。一支手機綁到兩個人，名字就不是重複，是那一張卡的身分。
+     ⚠ 頁面上寫兩種只是為了讓「同一支手機兩個人」看得出來，
+       **在系統裡是同一個欄位**，不是兩個變數。 */
   var APPTS = [
-    { m: 8, d: 20, w: "四", t: "15:45" },
-    { m: 8, d: 25, w: "二", t: "10:15" },
-    { m: 9, d: 12, w: "六", t: "09:30" },
+    { m: 8, d: 20, w: "四", t: "15:45", who: "〔病人姓名〕" },
+    { m: 8, d: 25, w: "二", t: "10:15", who: "〔家人姓名〕" },
+    { m: 9, d: 12, w: "六", t: "09:30", who: "〔病人姓名〕" },
     /* ⚠ 2026-09-04 加的第四筆：使用者的問題就是「有 4 次約診、看完一次剩 3 次」，
        示範資料要對得上那個情境，不然「重編號碼」根本演不出來。 */
-    { m: 10, d: 3, w: "五", t: "14:00" }
+    { m: 10, d: 3, w: "五", t: "14:00", who: "〔家人姓名〕" }
   ];
   var BOOKED = APPTS[1];   /* 預約成功那一則講的是 8/25 那一次（＝截圖裡的那一張） */
 
@@ -346,6 +357,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      ⚠ 天花板是**卡片的可用寬 240px**（268 − 內距 14×2）：那時標誌高 118px，
        自己就吃掉現在整張卡的一半。技術上限與好看的上限是兩件事，面板有算。 */
   var GH_PX = { none: 0, s28: 28, m40: 40, l56: 56, xl96: 96 };
+
+  /* ---- 輪播上的病人姓名（2026-09-05）--------------------------------- */
+  var NAMEPOS = {
+    top:  { name: "日期上面" },
+    bot:  { name: "日期下面" },
+    none: { name: "不放" }
+  };
 
   /* ---- 輪播那張卡長什麼樣 ---------------------------------------------
      使用者 2026-09-04：「預約狀態可以拿掉，不過這樣查詢預約的頁面變得好單調，
@@ -430,7 +448,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   /* 預設就開在**建議的那一組**：新版 ＋ 中文日期。
      ⚠ 頭圖預設不放（見底下的說明），要看放了長什麼樣就開 ?h=y。 */
-  var msg = "booked", v = "nw", dt = "cn", look = "wm9", ad = "box", hero = "n", wmk = "12", gh = "m40";
+  /* ⚠ `ad` 2026-09-05 起預設 **none**：兩則他都選了「不放」，那把尺因此從切換條上
+     收掉（位置讓給頁首標誌與病人姓名），但 `?a=box|two` 仍然吃得到。 */
+  var msg = "booked", v = "nw", dt = "cn", look = "wm9", ad = "none", hero = "n", wmk = "12",
+      gh = "m40", nm = "top";
 
   (function () {
     var q = location.search;
@@ -446,9 +467,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     SHAPES = five ? FIVE : ALL9;
     hero = pick("h", { y: 1, n: 1 }, hero);
     gh = pick("g", GHEAD, gh);
-    /* ⚠⚠ 預約成功那一張 2026-09-05 起不放地址電話（使用者指定）——
-       在這裡壓掉，而不是在畫卡的地方多寫一個判斷，免得面板與卡片各判一次。 */
-    if (msg === "booked") ad = "none";
+    nm = pick("nm", NAMEPOS, nm);
   })();
 
   /* 現況那一張的日期用哪一種：預約成功卡截圖上是短版、查詢卡截圖上是長版。
@@ -520,6 +539,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     if (!isQuery) h += '<p class="hi"><b>〔病人姓名〕</b>　我們約好囉</p>';
     /* ⚠⚠⚠ 「共 n 筆」只有這一格寫得出來 —— 靜態圖沒有辦法帶總數（見 LOOK 那一段）。
        這正是「號碼要做成圖還是做成字」真正的分水嶺。 */
+    /* ⚠⚠ 名字放在日期**上面**是預設：它是這張卡的「這是誰」，
+       而日期仍然是最大的那一個字，所以「一眼看到什麼時候」沒有被換掉。
+       放下面的那一格擺出來讓他比。 */
+    if (isQuery && nm === "top" && a.who) h += '<p class="who">' + a.who + '</p>';
     if (isQuery && look === "numt" && i != null)
       h += '<p class="ix">第 ' + (i + 1) + ' 筆・共 ' + n + ' 筆</p>';
     if (isQuery && look === "big") {
@@ -535,6 +558,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     }
     /* ⚠⚠ 預約成功那一張 2026-09-05 起**不放地址電話**（使用者指定），
        所以這把尺只剩輪播在用；booked 進來時 ad 已經被壓成 none。 */
+    if (isQuery && nm === "bot" && a.who) h += '<p class="who bot">' + a.who + '</p>';
     if (ad === "box")
       h += '<p class="box">' + ADDR + '\n' + TEL + '</p>';
     if (ad === "two")
@@ -550,7 +574,6 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   /* ---- 畫聊天室 ------------------------------------------------------- */
   function render() {
-    if (msg === "booked") ad = "none";       /* 同上，切換條換過來時也要壓 */
     var chat = document.getElementById("pv-chat"), h = "";
     if (msg === "booked") {
       h = '<div class="pv-day">8 月 6 日（四）</div>'
@@ -588,21 +611,21 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     bar("sw-v", VER, function () { return v; }, function (k) { v = k; });
     bar("sw-d", DATE, function () { return dt; }, function (k) { dt = k; });
     bar("sw-s", LOOK, function () { return look; }, function (k) { look = k; });
-    bar("sw-a", ADDRSET, function () { return ad; }, function (k) { ad = k; });
+    bar("sw-nm", NAMEPOS, function () { return nm; }, function (k) { nm = k; });
     bar("sw-g", GHEAD, function () { return gh; }, function (k) { gh = k; });
     /* 卡片長相那把尺只有「新版的輪播」有；地址電話那把尺對現況無效（現況固定兩行）。
        ⚠ 關掉而不是拿掉，不然切回去整條會跳高一截。 */
     document.getElementById("row-s").className = "r" + (msg === "query" && v === "nw" ? "" : " off");
-    document.getElementById("row-a").className = "r" + (v === "nw" ? "" : " off");
-    /* 二選一：預約成功給頁首標誌、輪播給地址電話。兩列高度一樣，切換不會跳。 */
-    document.getElementById("row-a").style.display = msg === "query" ? "" : "none";
+    var rn = document.getElementById("row-nm");
+    rn.style.display = msg === "query" ? "" : "none";
+    rn.className = "r" + (v === "nw" ? "" : " off");
     var rg = document.getElementById("row-g");
     rg.style.display = msg === "booked" ? "" : "none";
     rg.className = "r" + (v === "nw" ? "" : " off");
 
     history.replaceState(null, "", location.pathname
       + "?m=" + msg + "&v=" + v + "&d=" + dt + "&s=" + look + "&a=" + ad
-      + "&h=" + hero + "&g=" + gh + "&k=" + wmk + (wmOn ? "&wm=1" : "") + (five ? "&n=5" : ""));
+      + "&h=" + hero + "&g=" + gh + "&nm=" + nm + "&k=" + wmk + (wmOn ? "&wm=1" : "") + (five ? "&n=5" : ""));
     document.getElementById("pv-cap").innerHTML = msg === "booked"
       ? "↑ 約好的<b>當下</b>自動送出，<b>單張</b>。⚠ 近似，不是 LINE 自己的算繪。"
       : "↑ 他點了圖文選單的<b>約診紀錄查詢</b>之後回的，<b>輪播</b>（一個約診一張，可以左右滑）。"
@@ -921,6 +944,55 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + "約好的當下講期限，那時期限還在未來（提醒卡是 48 小時前才送，那時已經過期了）。"
         + "<hr>"
       : "";
+    /* ---- 2026-09-05：輪播的姓名與「每顆浮水印不同顏色」---- */
+    var CLR = (msg === "query" && v === "nw")
+      ? "<b>2026-09-05 這一版：輪播每一張都帶病人姓名，九顆浮水印各自一個顏色。</b>"
+        + "<hr>"
+        + "<b>姓名 —— 你是對的，我上一輪的理由不成立。</b>"
+        + "當初把名字從輪播拿掉，寫的是「清單裡每張都重寫一次名字＝浪費整行 × N」，"
+        + "<b>那句話只有在整份清單都是同一個人時才成立</b>。一支手機綁到兩個人"
+        + "（小孩綁在爸媽手機），名字就不是重複，是<b>那一張卡的身分</b>。"
+        + "<br>⚠ 頁面上寫〔病人姓名〕和〔家人姓名〕兩種，只是為了讓「同一支手機兩個人」"
+        + "看得出來 —— <b>在系統裡是同一個欄位</b>，不是兩個變數。"
+        + "<br>⚠ 預設放在<b>日期上面</b>（它回答「這是誰」，而日期仍然是最大的字，"
+        + "「一眼看到什麼時候」沒有被換掉）。放下面那一格也擺出來了。"
+        + "<hr>"
+        + "<b>顏色 —— 做了，但<u>不是隨機</u>，而且我建議不要隨機。</b>"
+        + "理由和上一輪挑形狀時同一條：<b>隨機 ＝ 同一筆約診每次查都不一樣，"
+        + "讀起來像壞掉</b>。現在的規則是<b>顏色跟著形狀走、形狀跟著日期算</b>"
+        + "（<code>(月＋日) % 9</code>）—— 同一筆約診查幾次都是同一顆同一色，"
+        + "取消一筆也不會害其他筆換人。"
+        + "<br>⚠⚠ <b>顏色不另外抽一次，是有原因的</b>：顏色若用「日期 mod 7」，"
+        + "<b>相差 7／14／21 天的兩筆一定同色</b>（任何 a·月＋b·日 mod 7 都躲不掉），"
+        + "而七天正是真的會發生的回診間隔。綁在形狀上就直接繼承 mod 9 那組好性質"
+        + "（7／14／21／28／30 天都不撞）。"
+        + "<hr>"
+        + "⚠ <b>顏色一個都沒有新增</b> —— 全部是站上<b>七科的套色</b>："
+        + "一般 <code>#3f654a</code>／牙周 <code>#317d78</code>／兒牙 <code>#c28229</code>／"
+        + "根管 <code>#ae4f4d</code>／植牙 <code>#465885</code>／口外 <code>#8e6299</code>／"
+        + "矯正 <code>#4478b5</code>。九顆配七色，所以<b>有兩色各用兩次</b>。"
+        + "<br>⚠⚠ <b>哪兩對共用是量出來的不是挑的</b>：先把顏色壓掉只比形狀，"
+        + "取形狀本來就差最多的兩對（<code>r1c1×r3c3 69.1%</code>、"
+        + "<code>r2c3×r3c1 61.1%</code>）來共用。"
+        + "<hr>"
+        + "✅ <b>順帶把上一輪那個已知缺陷修掉了。</b>上一輪九顆全綠時，"
+        + "有五對在這個裁切下幾乎分不出來（最像的只差 4.8%）。上了顏色之後重量："
+        + "<b>三十六對「有墨的地方」最少也有 60.9% 不一樣，中位 99.9%</b>。"
+        + "<br>→ <b>「有九個素材」這一次真的等於「有九種變化」了。</b>"
+        + "（量法換過：舊那個「差異像素佔整張卡幾 %」一加顏色就飽和，"
+        + "改成只看有墨的像素。）"
+        + "<hr>"
+        + "⚠⚠ <b>一件要先想過的</b>：這七個顏色在站上<b>各自代表一個科別</b>。"
+        + "這一則不在站上、也沒有和科別標記並排，所以照理不會被讀成「這次是牙周」——"
+        + "但這是我第一次<b>一次把七色全部攤在同一個畫面上</b>，"
+        + "看起來會比較像一組「顏色代碼」。<b>如果你覺得會被誤讀，就退回單一顏色</b>"
+        + "（九顆形狀還在，只是回到上一輪那五對分不出來的狀況）。"
+        + "<hr>"
+        + "⚠ 「自動選擇」仍然<b>不在我們這一側</b>：Flex 的 JSON 是廠商系統組的，"
+        + "我們能做的是把 27 張圖（9 形 × 3 濃度）與 <code>wm-sizes.json</code>"
+        + "（含每一顆的寬度與顏色）備好，他照 <code>(月＋日) % 9</code> 挑一張。"
+        + "<hr>"
+      : "";
     /* ---- 2026-09-04：順序號碼那一題（只有選到那兩格時才印在最前面）---- */
     var NUM = (look === "num" || look === "numt")
       ? "<b>「輪播的頭圖變成有順序的數字，做得到嗎？」—— 做得到，而且上面那兩輪就是它。</b>"
@@ -959,7 +1031,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + "排錯的話號碼會指到錯的那一張，比沒有號碼更糟。<b>這一題要一起問。</b>"
         + "<hr>"
       : "";
-    return BK + NUM + "<b>先講一件你可能不想聽的：這兩張截圖還是「診所端的後台」，不是病人的手機。</b>"
+    return BK + CLR + NUM + "<b>先講一件你可能不想聽的：這兩張截圖還是「診所端的後台」，不是病人的手機。</b>"
       + "判準三個，都在畫面上：<b>標題是病人的名字</b>（不是「芳仁牙醫診所」）、"
       + "卡片下面有<b>「已讀」</b>、底下有<b>「若希望暫時以手動聊天…」與「預約傳送」</b>。"
       + "同 2026-09-04 提醒卡那一次。"

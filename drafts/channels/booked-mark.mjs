@@ -32,7 +32,48 @@ import { execFileSync } from "node:child_process";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OUT = path.join(ROOT, "preview", "line-booked");
-const GREEN = "#3f654a";
+const GREEN = "#3f654a";      /* 頁首那顆標誌用的品牌真值（浮水印改成逐顆上色，見下） */
+
+/* ---- 每一顆浮水印自己的顏色（2026-09-05）-----------------------------
+   使用者：「浮水印現在是有點綠灰底，能不能每個浮水印的顏色不一樣，隨機輪播？」
+   ⚠⚠ **顏色一個都沒有新增** —— 全部是站上七科的**套色**（PALETTE 第六節，
+     填實的塊用套色不用深階）。九顆配七色，所以有兩色各用兩次。
+   ⚠⚠⚠ **顏色綁在「形狀」上，不是另外抽一次**，理由有兩個：
+     ① 第 22-13 節已經算過：**顏色若用「日期 mod 7」，相差 7／14／21 天
+        的兩筆一定同色**（任何 a·月＋b·日 mod 7 都躲不掉），而七天正是
+        真的會發生的回診間隔。綁在形狀上，就直接繼承 mod 9 那組好性質
+        （7／14／21／28／30 天都不撞）。
+     ② 第 22-13 節那五對「裁切之後幾乎分不出來」的形狀，**指定成不同顏色
+        就分得出來了** —— 顏色不只是變化，它同時修掉上一輪那個已知缺陷。
+   ⚠ 因此下面這張表的每一個配對都要滿足：那五對彼此顏色不同。
+     （r1c1×r3c1、r1c3×r2c3、r3c1×r3c2、r1c1×r3c2、r1c2×r2c1） */
+const SPEC = {
+  general: "#3f654a", perio: "#317d78", kids: "#c28229", endo: "#ae4f4d",
+  prosth:  "#465885", surg:  "#8e6299", ortho: "#4478b5"
+};
+/* ⚠⚠⚠ 九顆配七色 → **一定有兩色各用兩次**，而「哪兩對共用」是量出來的不是挑的：
+   先把顏色壓掉只比形狀（`filter: brightness(0)`，alpha 不動），
+   取**形狀本來就差最多**的兩對來共用 —— 實測
+   `r1c1×r3c3 69.1%`、`r2c3×r3c1 61.1%`（只看有墨的像素）。
+   反過來，形狀最像的三對（`r2c2×r3c2 5%`、`r1c1×r3c1 14.3%`、`r1c3×r2c3 14.3%`）
+   一定要給不同的顏色 —— 下面那道守門就是擋這個。 */
+const SHAPE_SPEC = {
+  r1c1: "general", r1c2: "perio",  r1c3: "ortho",
+  r2c1: "endo",    r2c2: "prosth", r2c3: "surg",
+  r3c1: "surg",    r3c2: "kids",   r3c3: "general"
+};
+/* 形狀本來就分不出來的那幾對，顏色一定要不一樣 —— 改表的人會被擋下來 */
+for (const [a, b] of [["r2c2","r3c2"],["r1c1","r3c1"],["r1c3","r2c3"],
+                      ["r3c1","r3c2"],["r1c1","r3c2"],["r1c2","r2c1"]])
+  if (SHAPE_SPEC[a] === SHAPE_SPEC[b])
+    throw new Error(`${a} 和 ${b} 是「裁切之後分不出來」的一對，顏色不可以一樣`);
+
+/* 墨壓在浮水印最濃處還讀不讀得到 —— 每一色 × 每一濃度都先算過再出圖 */
+const INK = "#2a2c27", CARD = "#f4f4f5";
+const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const lin = (c) => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
+const lum = (rgb) => .2126 * lin(rgb[0]) + .7152 * lin(rgb[1]) + .0722 * lin(rgb[2]);
+const cr = (x, y) => { const a = lum(x), b = lum(y); return (Math.max(a, b) + .05) / (Math.min(a, b) + .05); };
 const ALPHAS = [["08", .08], ["12", .12], ["18", .18]];
 const BASE = "r1c2";          /* 基準形狀 ＝ 站上頁首那顆 */
 const BASE_W = 150;           /* 它在卡片上的顯示寬度（2026-09-04 那一版） */
@@ -122,10 +163,16 @@ for (const name of SHAPES) {
   const { box, gt, d, ratio, cov, w: cssW } = info[name];
   const PW = Math.round(cssW * DPR), PH = Math.round(PW / ratio);
   if (PW > 1024 || PH > 1024) throw new Error(`${name}：${PW}×${PH} 超過 LINE 對 image 的 1024 上限`);
+  const COLOR = SPEC[SHAPE_SPEC[name]];
   for (const [tag, a] of ALPHAS) {
+    /* 最壞底色 ＝ 卡色與這一色按濃度混合；墨壓上去要過 AA */
+    const mixed = hex(CARD).map((c, i) => c * (1 - a) + hex(COLOR)[i] * a);
+    const ratioInk = cr(hex(INK), mixed);
+    if (ratioInk < 4.5)
+      throw new Error(`${name}-${tag}（${COLOR}）：墨壓在最濃處只有 ${ratioInk.toFixed(2)}`);
     const svg =
 `<svg xmlns="http://www.w3.org/2000/svg" width="${PW}" height="${PH}" viewBox="${box.x} ${box.y} ${box.w} ${box.h}">
-  <g transform="${gt}"><path fill="${GREEN}" fill-opacity="${a}" fill-rule="evenodd" d="${d}"/></g>
+  <g transform="${gt}"><path fill="${COLOR}" fill-opacity="${a}" fill-rule="evenodd" d="${d}"/></g>
 </svg>`;
     const pg = path.join(tmp, `${name}-${tag}.html`), png = path.join(tmp, `${name}-${tag}.png`);
     fs.writeFileSync(pg, `<!doctype html><meta charset="utf-8"><style>html,body{margin:0}` +
@@ -202,17 +249,19 @@ fs.rmSync(tmp, { recursive: true, force: true });
 
 /* 寬度表 —— 提案頁與日後的 Flex JSON 都讀這一份，不要再寫第二份。 */
 const manifest = {};
-for (const r of rows) manifest[r.name] = { w: r.w, ratio: r.ratio };
+for (const r of rows)
+  manifest[r.name] = { w: r.w, ratio: r.ratio, spec: SHAPE_SPEC[r.name], color: SPEC[SHAPE_SPEC[r.name]] };
 fs.writeFileSync(path.join(OUT, "wm-sizes.json"), JSON.stringify(manifest, null, 2) + "\n", "utf8");
 
 /* 九顆的墨面積要幾乎一樣（那正是這支腳本在做的事）—— 印出來當驗收。 */
 const areas = rows.map((r) => r.w * r.h * r.cov / 100);
 const spread = (Math.max(...areas) - Math.min(...areas)) / (areas.reduce((a, x) => a + x, 0) / areas.length);
-console.log("✅ 九顆浮水印（brand/shapes 的九宮格，" + GREEN + "，三個濃度）");
+console.log("✅ 九顆浮水印（brand/shapes 的九宮格，**逐顆上色**，三個濃度）");
 console.log("   形狀      長寬比   墨佔外框   顯示寬 × 高      出圖");
 for (const r of rows)
   console.log(`   ${r.name}${r.name === BASE ? "*" : " "}    ${r.ratio.toFixed(3)}    ${String(r.cov).padStart(5)}%   ` +
-              `${String(r.w).padStart(3)} × ${String(r.h).padStart(5)}    ${r.png}`);
+              `${String(r.w).padStart(3)} × ${String(r.h).padStart(5)}    ${r.png}   ` +
+              `${SHAPE_SPEC[r.name].padEnd(7)} ${SPEC[SHAPE_SPEC[r.name]]}`);
 console.log(`   * ＝ 站上頁首那顆（基準，${BASE_W}px）`);
 console.log(`   墨面積離散度 ${(spread * 100).toFixed(2)}%（按面積正規化過，越小越好）`);
 if (spread > .02) throw new Error(`九顆的墨面積差 ${(spread * 100).toFixed(1)}% —— 正規化沒生效？`);
