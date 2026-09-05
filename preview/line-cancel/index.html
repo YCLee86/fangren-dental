@@ -306,14 +306,17 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      ⚠⚠⚠ **兩顆按鈕的語意在這一張是反過來的**：綠底那顆是「是喔　要取消」＝ 不會來，
        所以 logo 配的是**白色的 nogo**（嘴巴倒過來那顆，`mark-nogo-white.png`，
        2026-09-04 由 `drafts/channels/remind-marks.mjs` 一起產出）；
-       白底那顆是「按錯惹　我會去」＝ 會來，配**綠色的正常標誌**。
+       白底那顆是「按錯惹　我會去」＝ 會來，配**主要那顆標誌的深階版**
+       （`mark-head-green.png`，2026-09-05 使用者指定：「按錯惹的 logo 是現在主要的那個」）。
+     ⚠⚠ **不要用 `mark-green.png`** —— 那個名字會誤導：它是招呼卡「介紹芳仁給朋友」
+       用的 **shape-r2c3**（細長那一顆，長寬比 3.081），不是站上頁首那一條（2.029）。
        ⚠ 提醒卡那一張正好相反（綠底＝ok 沒問題＝正常標誌、線框＝掰掰不去囉＝nogo）——
          **兩顆 logo 是跟著「去不去」走，不是跟著「哪一顆是主鈕」走**。
          若你要的是「位置沿用」（綠底＝正常標誌、白底＝nogo），一句話就換得回來。 */
   function flexCard() {
     var go = '<span class="btn"><img src="../line-remind/mark-nogo-white.png" alt="">'
       + '<span>' + L[lb].go + '</span></span>';
-    var stay = '<span class="nob"><img src="../line-welcome/mark-green.png" alt="">'
+    var stay = '<span class="nob"><img src="../line-welcome/mark-head-green.png" alt="">'
       + '<span>' + L[lb].stay + '</span></span>';
     return '<div class="pv-fx" id="pv-card"><div class="b top-none">'
       + '<p class="q">要取消這個約診嗎？</p>'
@@ -350,11 +353,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        的時間。」整句拿掉。** 那一句本來就是這一則唯一的事實風險
        （它對在期限內取消的人是錯的，而系統確實會成功取消 —— `?r=ok` 那張真截圖），
        拿掉之後**這一則不管來不來得及都成立**，不必再分兩種。 */
-  var DONE = "已取消，若還有其他問題請與診所聯繫";
-  /* ⚠ 斷行是量出來的（240px 可用寬）：這兩行是 176／96px，
-       每一行都自己收得住，不會被再折一次（整句 16 個字 ≈ 256px，放不下一行）。
-       ⚠⚠ 純文字那一則（Ⓑ）**不要自己斷行** —— LINE 的泡泡本來就會折。 */
-  var DONE_LINES = "已取消，若還有其他問題\n請與診所聯繫";
+  var DONE = "已取消，若還有其他問題請與診所聯繫喔～";
+  /* ⚠ 斷行是量出來的（240px 可用寬）：兩行是 176／144px，都自己收得住。
+     ⚠ 「喔～」的波浪用**全形**（同招呼卡那條，站上的慣例）。
+     ⚠⚠ 純文字那一則（Ⓑ）**不要自己斷行** —— LINE 的泡泡本來就會折。 */
+  var DONE_LINES = "已取消，若還有其他問題\n請與診所聯繫喔～";
 
   function resultNode() {
     if (v === "a") return bub("", RES.a[rs === "go" ? "late" : rs]);
@@ -672,7 +675,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     + '你說「按鈕的 logo 沿用」，而<b>這一張卡的語意和提醒卡是反過來的</b>：'
     + '這裡綠底那顆是「是喔　要取消」＝<b>不會來</b>，所以配的是'
     + '<b>白色的 nogo</b>（嘴巴倒過來那顆）；白底那顆是「按錯惹　我會去」＝<b>會來</b>，'
-    + '配<b>綠色的正常標誌</b>。提醒卡正好相反（綠底＝ok 沒問題＝正常標誌）。'
+    + '配<b>主要那顆標誌</b>（站上頁首那一條）的深階版。'
+    + '提醒卡正好相反（綠底＝ok 沒問題＝正常標誌）。'
     + '<b>logo 跟著「去不去」走，不是跟著「哪一顆是主鈕」走。</b>'
     + '⚠ 若你要的是<b>位置沿用</b>（綠底＝正常標誌、白底＝nogo），一句話就換得回來。'
     + '<span class="h">還沒有答案的兩件</span>'

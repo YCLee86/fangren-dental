@@ -64,6 +64,11 @@ const brandShape = (name) => {
 const CASES = [
   { name: "white", color: "#ffffff", src: headerMark() },
   { name: "green", color: "#2c5238", src: brandShape("shape-r2c3") },
+  /* ⚠⚠ 2026-09-05 新增：**頁首那一條的深階版**，給取消卡的白底鈕用
+       （使用者：「按錯惹的 logo 是現在主要的那個」）。
+     ⚠ `mark-green.png` **不是**主要那顆 —— 它是招呼卡「介紹芳仁給朋友」
+       用的 shape-r2c3（細長那一顆）。名字容易誤導，**要主要那顆就用這一張**。 */
+  { name: "head-green", color: "#2c5238", src: headerMark() },
 ];
 
 const chrome = (() => {
