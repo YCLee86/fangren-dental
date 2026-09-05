@@ -1374,14 +1374,19 @@ because of the weather, not abandoned. The mood is rough weather and ordinary hu
 never a disaster, never danger, never gloom for its own sake.
 
 TWO OF THE PROVIDED PICTURES ARE INSTRUCTIONS, NOT SCENES TO COPY WHOLE:
-  • ONE IS AN EARLIER ATTEMPT AT THIS EXACT SCENE AND MOST OF IT IS ALREADY RIGHT. Copy its
-    framing, its building, its closed shutter, its dark stormy light, its sky, its wet road,
-    and the position, size, posture and facing of its three people, exactly as they are.
+  • ONE IS AN EARLIER ATTEMPT AT THIS EXACT SCENE AND EVERYTHING IN IT IS NOW CORRECT EXCEPT ONE
+    THING. Copy its framing, its building, its covered walkway, its closed shutter, its dark
+    stormy light, its sky, its wet road, THE ANGLE AND DIRECTION OF ITS RAIN, its bent tree, its
+    broken pot and the position, size, posture and facing of its three people, exactly as they
+    are. Do not mirror anything. Do not improve anything.
   • THE OTHER IS A PLAIN DIAGRAM OF THE RAIN: a flat grey rectangle covered in pale diagonal
-    streaks and nothing else. COPY THE ANGLE AND DIRECTION OF THOSE STREAKS EXACTLY. Do not
-    copy its colour, do not use it as a background, do not draw a grey panel anywhere.
-  THERE ARE ONLY TWO CHANGES from the earlier attempt, both described below: the rain now falls
-  the other way, and the street tree is bent the other way. Everything else stays as it is.
+    streaks and nothing else. The rain in the earlier attempt already matches it; use it only to
+    confirm the angle. Do not copy its colour, do not use it as a background, do not draw a grey
+    panel anywhere.
+  THERE IS ONLY ONE CHANGE IN THIS ROUND, AND IT IS THE WIND LINES - see section 5. The earlier
+  attempt drew the wind as long soft white curving ribbons floating across the picture, which is
+  how a fine-day breeze is drawn. Those are the only thing being replaced. Everything else stays
+  exactly as it is.
 
 1. THE BUILDING IS COPIED FROM THE PROVIDED ILLUSTRATIONS. Same viewpoint, same framing, same
    proportions, same drawing. Do not re-invent it, do not simplify it, do not re-proportion it
@@ -1620,7 +1625,7 @@ photo-realism; 3D rendering; dental instruments, chairs, X-rays or teeth.```
 
 ---
 
-## 六、⚠ 十二個一定會踩的坑（都是這一站踩過的）
+## 六、⚠ 十三個一定會踩的坑（都是這一站踩過的）
 
 1. **「辛苦」寫成揉眼睛或嘴角往下張嘴 ＝ 在哭**（第七節第 7 條，〈擴張牙弓〉踩過）。
    所以第 5 段整段在寫「怎麼畫用力、怎麼不畫哭」，而且「手抓帽兜」明講**手不可以蓋到眼睛**。
@@ -1681,6 +1686,14 @@ photo-realism; 3D rendering; dental instruments, chairs, X-rays or teeth.```
    ⚠ 同一輪的第二件：**風的線條要自己一節、而且要給可以量的幾何**
    （一群六到十五道、每道不超過畫面寬的十分之一、和雨同角度、貼著東西走不要浮在天上）——
    塞在雨那一段的尾巴當從屬子句是不夠的（同第 3 條那棵路樹）。
+13. ⚠⚠⚠ **每一版都要把「上一版還沒對」的句子逐條清掉，否則它會去翻已經對的東西。**
+   第六版第一次組出來的時候，抬頭那一塊還留著第四版的話 ——
+   「**唯一要改的兩件：雨反過來、樹反過來**」，而那兩件第五版都已經對了。
+   ⚠ 症狀會是「上一版對的東西，這一版又壞了」，而且**看起來像模型不穩，其實是提示詞在叫它翻**。
+   ⚠ 成因是我用 `String.replace` 改那一塊、**沒有 assert**，字串對不上就靜靜地沒換
+   （同第九節第 24、25 條那種病）。**改提示詞的腳本，每一處替換都要 assert 命中。**
+   ⚠ 做法：每一輪定稿前 grep 一次「上一版的病名」（`GOT WRONG`／`Mirror it`／
+   `now mirrored`／`ONLY TWO CHANGES`／`stand neatly upright`…），一條都不能留。
 
 ---
 
