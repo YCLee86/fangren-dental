@@ -800,7 +800,7 @@ uniform black outlines; photo-realism; 3D rendering; dental instruments, chairs,
 
 ---
 
-## 五之六、⭐ 第四版的提示詞（逐字，可直接複製）
+## 五之六、~~第四版的提示詞~~ ⚠⚠ **雨還是反的、而且鐵門的位置錯了** —— 現行的是第五之八節
 
 ⚠⚠ **參考圖五張**：第四節那三張、**第二版出的那張圖**、**再加那張雨的方向參考圖**，
 用途分開講：
@@ -1015,7 +1015,302 @@ photo-realism; 3D rendering; dental instruments, chairs, X-rays or teeth.
 
 ---
 
-## 六、⚠ 九個一定會踩的坑（都是這一站踩過的）
+---
+
+## 五之七、⚠⚠⚠ 第四版：雨連四版都反，而且**鐵門的位置錯了**（2026-09-05）
+
+使用者：「還是錯的　**而且鐵門的位置錯了**」
+
+### ① 鐵門 —— 這一件比雨嚴重，而且是新的
+
+**騎樓不見了。** 那張圖把鐵門畫在**建築最前面那個平面**上：捲門直接落到人行道，
+三根柱子被壓平貼在捲門上、中間沒有空氣也沒有影子，**而且轉角柱右邊的側牆上也長出了捲門**。
+
+⚠ 回去看原始照片（`drafts/og-topic-general-src.jpg`）就一目了然：
+**一樓的玻璃是退進去的**，玻璃前面依序還有 **一道低階 → 一條淺色的騎樓地板 → 三根深咖啡色的柱子**，
+柱子上方是騎樓的天花。鐵門是**在玻璃那個平面**降下來的，所以：
+
+・**騎樓那個「房間」必須還看得到**（地板一條、低階一道、天花一片、柱子和捲門之間有空氣與陰影）。
+・捲門的下緣落在**騎樓地板**上，不是落在街上。
+・**側牆沒有捲門** —— 轉角柱右邊那面是平整的清水模，底下站著白色圓盆。
+
+⚠⚠ 第四版的提示詞第 2 段其實寫著「hangs BEHIND the three columns」，
+**但整段的主語一直是那塊金屬，騎樓本身一個名詞都沒有** ——
+沒有地板、沒有階、沒有天花、沒有「中間有空氣」。
+**通則：要模型畫出「A 在 B 後面」，就得把 B 和 A 之間那個空間當成一個東西寫出來**
+（地板、階、天花、影子），只寫「在後面」它會理解成「貼著」。
+
+### ② 雨 —— 第四次反過來，所以換一種綁法
+
+正文寫死過、`AVOID` 寫死過、**連只有線條的方向參考圖都給了**，出圖照樣是 `/`。
+到這裡可以確定：**「畫面的左上到右下」這個絕對座標，模型接不住。**
+
+⚠⚠⚠ **但有一樣東西它四版都沒畫錯：三個人面向哪一邊。**
+所以第五版把方向**綁在人身上**，整段不再從畫面座標講起：
+
+> **雨是打在她臉上的。** 它從她的臉與身體正面那一側過來，打在她的胸口、小腿、帽兜的前緣；
+> **她的背是被遮住的那一側，沒有任何東西吹到她背上。**
+
+同一段再補兩個也是「形狀」的錨點：
+・**傘**：他把傘頂向左邊的風，風就把傘面**往右邊**折回他頭上 —— 翻掉的是**右半邊**那幾根骨。
+・**樹**：樹是被推的，不會像人一樣頂著風 —— 所以它倒的方向 ＝ **她背過去的那一邊**。
+
+**通則：絕對方向講不動的時候，把方向掛在模型畫得最穩的那個東西上。**
+這一站以前的版本是「形狀不要用文字描述，用參考圖」（第十之一節）與
+「方向也是形狀，用參考圖」（第五之五節），這一條是第三層：
+**參考圖也接不住時，就把它變成「相對於畫面裡某個一定會畫對的東西」的關係。**
+
+### ⚠ 第五版還是反的話，走這一條（不要再改提示詞了）
+
+**利用模型自己的偏好，把整張圖鏡射過來畫**：
+① 把第四版那張圖**左右翻**（我這邊翻，傳給他）→ 那張裡建築的轉角在左邊、人朝右、雨是 `/`；
+② 叫模型照那張畫（它畫 `/` 的雨從來沒有失手）；
+③ **出來的圖再翻回來** —— 建築回到轉角在右、人回到朝左、而雨變成 `\`。
+⚠ 這一招成立的唯一條件是**畫面上一個字都沒有**（這張正好是零文字），
+文字會跟著鏡射。⚠ 代價是要多兩次翻圖，所以擺在最後才用。
+
+---
+
+## 五之八、⭐ 第五版的提示詞（逐字，可直接複製）
+
+⚠⚠ **參考圖照舊五張**：第四節那三張、**第四版出的那張圖**、**雨的方向參考圖**。
+用途分開講：「**構圖、建築、光、天空、三個人的位置動作與朝向照第四版那張**；
+**雨的角度照那張只有線條的參考圖**；要改的只有兩件 ——
+**鐵門要退回騎樓裡面**、**雨要打在她的臉上（不是背上）**。」
+
+```
+Editorial illustration, landscape 16:9 (it will be cropped to 2:1 afterwards), for a small
+message card. It will be seen at about 268 pixels wide, so everything must read at thumbnail
+size: one single continuous scene, few large shapes, no panels, no dividing lines, no insets.
+
+THE STORY IN ONE SENTENCE - READ THIS BEFORE DRAWING ANYTHING: it is a wet, wild afternoon in a
+typhoon. The dental clinic in the provided illustration has pulled its metal roller shutter all
+the way down and is closed, and three people are struggling past it along the street, leaning
+into the wind and the rain. The clinic itself is spotless and beautifully kept - it is shut
+because of the weather, not abandoned. The mood is rough weather and ordinary human effort:
+never a disaster, never danger, never gloom for its own sake.
+
+TWO OF THE PROVIDED PICTURES ARE INSTRUCTIONS, NOT SCENES TO COPY WHOLE:
+  • ONE IS AN EARLIER ATTEMPT AT THIS EXACT SCENE AND MOST OF IT IS ALREADY RIGHT. Copy its
+    framing, its building, its closed shutter, its dark stormy light, its sky, its wet road,
+    and the position, size, posture and facing of its three people, exactly as they are.
+  • THE OTHER IS A PLAIN DIAGRAM OF THE RAIN: a flat grey rectangle covered in pale diagonal
+    streaks and nothing else. COPY THE ANGLE AND DIRECTION OF THOSE STREAKS EXACTLY. Do not
+    copy its colour, do not use it as a background, do not draw a grey panel anywhere.
+  THERE ARE ONLY TWO CHANGES from the earlier attempt, both described below: the rain now falls
+  the other way, and the street tree is bent the other way. Everything else stays as it is.
+
+1. THE BUILDING IS COPIED FROM THE PROVIDED ILLUSTRATIONS. Same viewpoint, same framing, same
+   proportions, same drawing. Do not re-invent it, do not simplify it, do not re-proportion it
+   to make room for anything:
+     • The ground floor is set back under the upper storeys, forming a covered walkway carried
+       by three square columns clad in dark chocolate-brown metal, making two equal bays
+       between them. The columns are slim; the canopy above them is a thin horizontal band,
+       never a heavy block. The covered walkway is open and you could still walk under it.
+     • A slim dark steel beam runs across above the bays carrying a plain empty sign panel.
+     • Above the beam, a band of smooth concrete carrying one complete row of tall narrow
+       vertical windows set in dark metal boxes that project out from the wall, arranged in
+       pairs, uncropped.
+     • At the right, the last column is the corner of the building; from there a short stretch
+       of the long side elevation recedes to the right, with two white cylindrical planters and
+       small green shrubs along its base.
+     • At the left edge, the low tiled roof and pale wall of the old neighbouring house, cropped
+       by the frame, with a small street tree beside it.
+
+2. THE SHUTTER IS DOWN, AND IT HANGS DEEP INSIDE THE COVERED WALKWAY - THIS IS THE PART THE LAST
+   ATTEMPT GOT WRONG. In the reference photograph the ground floor is recessed: the shopfront glass
+   stands about one and a half metres BACK from the front edge of the building, and the three
+   columns, the low step and the tiled walkway floor are all IN FRONT of it, out in the open air.
+   The shutter comes down in the plane of that glass and nowhere else.
+     • You must still be able to see the walkway itself: a strip of pale tiled floor running left
+       to right in front of the shutter, a low step down from it to the wet street, the soffit
+       (ceiling) of the walkway overhead, and the three columns standing clear of the shutter with
+       air and shadow between them and it. The walkway is a room you could stand in, and it is the
+       darkest part of the picture.
+     • The shutter is one large, simple, dark shape filling the two bays BEHIND the columns: a warm
+       dark grey-brown metal skin ruled with fine even horizontal ribs, with a narrow dark slot at
+       the bottom where it meets the walkway floor - not the street.
+     • THE SHUTTER IS NOT DRAWN ACROSS THE FRONT OF THE BUILDING. It does not touch the outer edge
+       of the canopy, it does not pass in front of any column, it does not come down onto the
+       pavement, and the columns are not flattened against it like stickers.
+     • THE SIDE ELEVATION HAS NO SHUTTER. To the right of the corner column the long side wall of
+       the building recedes away from us: it is plain smooth concrete with the white cylindrical
+       planters along its base. No ribbed metal, no second shutter, no opening of any kind on that
+       wall.
+     • The shutter is clean and in good order, freshly painted metal, sitting in deep shade, and no
+       light of any kind comes from inside the clinic.
+
+
+3. THE LIGHT. Keep the light of the earlier attempt exactly: a typhoon in the middle of the
+   afternoon, still daylight but flat, low and dim, no sun anywhere, a deep bruised blue-grey
+   sky with a green cast, dark wet streaks running down the concrete, no cast sun shadows. Keep
+   this ladder from lightest to darkest: the woman's yellow rain poncho is the lightest thing in
+   the picture and nothing else comes near it; then the broken reflections of the sky on the wet
+   road; then the mid warm grey concrete wall; then the sky; and darkest of all the covered
+   walkway in deep shade and the closed shutter inside it.
+
+4. THE DIRECTION OF THE RAIN - FOUR ATTEMPTS HAVE NOW DRAWN THIS BACKWARDS, SO READ IT OFF THE
+   PEOPLE, NOT OFF THE FRAME. The three people are facing the LEFT edge of the picture and leaning
+   forward into the weather, and they are drawn correctly - do not move them. The wind is the thing
+   they are leaning into, so IT COMES FROM THE LEFT EDGE AND BLOWS TOWARDS THE RIGHT EDGE, and
+   everything else in the picture obeys that:
+     • THE RAIN IS DRIVEN INTO THE WOMAN'S FACE. It arrives on the side her face and the front of
+       her body point towards; the rain is striking her chest, her shins and the front of her hood.
+       Her back and the back of her poncho are the sheltered side. Nothing is blowing onto her back.
+     • Every rain stroke therefore has the shape of a BACKSLASH CHARACTER: the top end of each
+       stroke is nearer the LEFT edge and the bottom end is nearer the RIGHT edge, leaning about 40
+       degrees away from vertical. If you extended one stroke it would enter at the top-left corner
+       of the picture and leave at the bottom-right corner. This is the angle drawn in the provided
+       rain diagram - match it stroke for stroke.
+     • NOT ONE STROKE IS SHAPED LIKE A FORWARD SLASH, and no stroke runs from the top-right down to
+       the bottom-left. In the previous attempt every stroke was drawn the wrong way round; all of
+       them are now mirrored.
+     • THE UMBRELLA CONFIRMS IT. The man pushes his umbrella out ahead of him towards the LEFT, into
+       the wind, and the wind is folding the canopy back over his head towards the RIGHT: the ribs
+       that have already flipped the wrong way are the ones on the RIGHT-hand side of the canopy,
+       and the fabric is being pushed away from the left edge, never towards it.
+     • Everything loose streams to the RIGHT: hoods, hems, hair, the back of the poncho, the older
+       man's coat, every leaf, every splash, every piece of spray and the spilled soil.
+   Keep the rain heavy and keep the hard wind streaks of the previous attempt, only mirrored: many
+   short parallel hand-drawn rain strokes gathered into dense slanting bands, short splash ticks
+   along the ground, water pouring off the front edge of the canopy, tight parallel groups of short,
+   straight, hard-edged pale gust streaks low across the picture at the same angle as the rain,
+   sheets of fine spray skimming off the wet road towards the right, and puddles ruffled into small
+   parallel ripples. No long single sweeping ribbon, no S-curve, no wavy line, no loop, no spiral,
+   and nothing that touches or comes out of a person's body.
+
+
+5. THE STREET TREE IS BENT AWAY FROM THE PEOPLE'S FACES. In the previous attempt the small tree at
+   the left edge leans towards the left, which is backwards: it is leaning into the wind like a
+   person, which a tree cannot do. A tree is pushed, so it bends the way the wind is going, which
+   is the way the woman's back is turned. Mirror it: the trunk is bowed over towards the RIGHT in a clear curve, every branch and twig is
+   swept towards the RIGHT, and the foliage is stretched into a long ragged streak trailing off
+   to the RIGHT, thin and torn, with a gap of open sky on the LEFT-hand side of the tree where
+   the wind has pushed the leaves away. Several leaves have been torn off and are flying towards
+   the RIGHT. After the people, this tree is the most obviously wind-blown thing in the frame.
+
+6. THE POTS BY THE CLINIC DOOR ARE NOT CALM. In the earlier attempt they stand neatly upright,
+   which is wrong for this weather:
+     • ONE POT IS TIPPED OVER AT AN ANGLE but still standing, leaning hard, its plant bent almost
+       horizontal and streaming towards the RIGHT.
+     • THE OTHER POT HAS BEEN BLOWN RIGHT OVER AND HAS BROKEN. It lies on its side on the covered
+       walkway, cracked into two or three large clean pieces with a piece of the rim broken away,
+       and the DARK WET SOIL HAS SPILLED OUT OF IT in a fan across the walkway floor, trailing
+       towards the RIGHT with the wind - the same way the woman's poncho is streaming, never
+       towards the side she is facing. The plant lies on its side in the spilled soil with its root ball
+       showing, still green and still alive.
+     • IT HAS JUST HAPPENED, IN THIS STORM. The broken edges are clean and freshly broken, the
+       soil is a rich dark brown and obviously wet, and the plant is healthy. This is not
+       rubbish, not litter, not an old dirty pot and not neglect. Everything else outside the
+       clinic stays tidy.
+
+7. THE THREE PEOPLE - KEEP THEM EXACTLY AS THEY ARE IN THE EARLIER ATTEMPT. Same three, same
+   places, same sizes, same postures, all still walking towards the LEFT into the wind. They are
+   the nearest things in the picture and they are big, the head of the nearest adult reaching
+   about the height of the dark sign beam above the shutter:
+     • NEAREST, LEFT OF CENTRE, in front of the shutter - a woman in her forties in a BRIGHT
+       YELLOW rain poncho with the hood up, seen almost from the side, facing left, tipped
+       forward from the ankles, one hand gripping the front edge of the hood at her forehead,
+       the other arm hugging a bag against her chest, the back of the poncho blown out behind
+       her to the RIGHT like a sail. SHE IS THE BRIGHTEST THING IN THE PICTURE and she stands
+       against the dark shutter - that contrast is what the eye lands on at thumbnail size.
+     • CENTRE-RIGHT, near the corner column - a man in his thirties in a dark navy rain jacket
+       whose UMBRELLA IS ON THE POINT OF TURNING COMPLETELY INSIDE OUT. He holds it out ahead of
+       him towards the left, into the wind, with BOTH HANDS, arms straight, elbows locked, his
+       weight back on his heels. The canopy has been pushed up and back towards the RIGHT, three
+       of its ribs on the right-hand side have already flipped upward and folded the wrong way
+       so that part of the canopy is a deep lopsided bowl opening at the sky, the fabric between
+       those ribs stretched drum-tight into hard straight creases, and only the left-hand side
+       of the canopy still points down. It is a deep teal. He has stopped moving forward.
+     • FURTHEST, AT THE RIGHT, smaller and partly cropped by the right edge - an older man in a
+       dark green raincoat, facing left, holding a small CORAL umbrella low and tilted in front
+       of him like a shield, taking short careful steps, his coat blown out behind him to the
+       RIGHT.
+   EVERY PERSON IS DRAWN WITH EXACTLY THE SAME LINE WEIGHT, THE SAME LINE DARKNESS AND THE SAME
+   SOLIDITY OF COLOUR. No figure is pale, faint, translucent, greyed out or drawn in outline
+   only. Nobody looks at the camera.
+
+8. THEIR FACES SHOW EFFORT, NOT DISTRESS. Eyes narrowed to short lines against the rain,
+   eyebrows drawn together and pushed down, mouth a small closed line or slightly open with
+   effort, chin tucked, cheeks a little flushed from the wind. They are working hard and they are
+   fine. NOBODY IS CRYING: no tears, no screwed-up crying face, no down-turned open wailing
+   mouth, and no hand rubbing or covering the eyes - a hand may grip a hood at the forehead, palm
+   outward, but it must never cover the eyes. Nobody is frightened, nobody is shouting, nobody is
+   in pain, nobody is falling over, and nobody is angry or scowling.
+
+9. NOBODY IS IN DANGER, AND THE ONLY BROKEN THING IN THE PICTURE IS THAT ONE POT. Draw the
+   weather, not a catastrophe: no lightning, no thunderbolt, no flying debris, no loose sheet
+   metal, no fallen sign, no uprooted or snapped tree, no broken branches near anyone, no
+   emergency vehicle, no flood, no broken glass and nothing broken on the building itself. The
+   water on the ground is a thin sheet with shallow puddles, never above the ankle. The tree is
+   bent right over but still standing and still whole.
+
+10. THE CLINIC IS IMMACULATELY KEPT AND SIMPLY CLOSED FOR THE DAY. Clean surfaces, a clean
+    shutter. Nothing peeling, flaking, cracked, patched, stained, mouldy, rusted, boarded up,
+    cobwebbed, sagging or derelict - the wall is DARK because the sky is dark, not because it is
+    dirty, and the broken pot is something the wind is doing right now, not a sign of neglect.
+    Nothing sinister, nothing haunted, nothing sad-looking about the building itself.
+
+11. NO WRITING ANYWHERE IN THE IMAGE - no text, letters, words, numbers, Chinese characters,
+    logos, captions or watermarks, in any language. The sign panel above the shutter is a plain
+    empty surface with nothing written on it, even though the real building carries lettering
+    there. The shutter is a plain ribbed metal surface with nothing written on it and nothing
+    taped, stuck or hung on it. The bag, the raincoats and the umbrellas are all plain. Any
+    writing that appears in the reference pictures must be ignored and must not be copied.
+
+12. STYLE - the same hand-drawn editorial illustration as the earlier attempt. Thin hand-drawn
+    linework in warm dark brown or soft charcoal, weight varying, strokes tapering and sometimes
+    breaking - not a thick even outline, not a ruled vector line. Colour applied like soft
+    coloured pencil and light marker, edges a little loose and not always meeting the line. Flat
+    fills with two or three tones per hue, no gradients except to describe light. A fine even
+    paper grain over the whole image. Each face is one flat skin tone carrying only its outline,
+    eyes drawn as small simple dots or short lines, two short eyebrows, a tiny nose mark, a small
+    mouth and an ear - no wrinkles, no cheek lines.
+
+13. COLOUR - dark and stormy, but never grey and never colourless. Keep the key of the earlier
+    attempt: a black-green sky, mid warm grey concrete, near black-brown columns and shutter,
+    cool slate grey wet road. All the colour is carried by a few small saturated things: the
+    bright yellow poncho, the deep teal umbrella, the coral umbrella, the dark navy and dark
+    green raincoats, the deep green of the tree and the plants, and the RICH DARK BROWN of the
+    spilled wet soil. At least six distinct colours must still be readable at thumbnail size, and
+    the yellow poncho must be the one the eye finds first. This is not a monochrome picture, not
+    a sepia picture and not a blue-only picture, and there is no cyan, no turquoise and no patch
+    of blue or bright sky anywhere.
+
+AVOID: the shutter drawn across the front of the building instead of deep inside the covered
+walkway; a shutter that touches the outer edge of the canopy or comes down onto the pavement;
+columns flattened against the shutter with no air, floor or shadow between them; a missing covered
+walkway; ribbed metal or a second shutter anywhere on the side wall to the right of the corner
+column; rain blowing onto the backs of the people instead of into their faces; an umbrella folding
+back towards the left; any letters, words, Chinese characters or writing anywhere, and in particular any English
+word from these instructions painted onto the shutter, the sign panel or anywhere else; ANY RAIN
+STROKE SHAPED LIKE A FORWARD SLASH; any rain stroke that starts near the top-right of the picture
+and ends near the bottom-left; rain falling towards the left; a tree bent towards the left;
+branches or leaves blown towards the left; anything loose on a person streaming towards the left;
+turning the people round to face right; a flat grey rectangle, panel or block of diagonal stripes
+copied from the rain diagram; neat upright undisturbed pots by the door; a swept, tidy, undamaged
+doorway; litter, rubbish, weeds, an old dirty cracked pot or general mess; dry soil; gentle wavy,
+curving or S-shaped white ribbons drifting across the sky; long soft chalk air lines of the kind
+used on a fine day; a calm, upright, untouched street tree; a round undisturbed tree crown; light
+drizzle or a few scattered raindrops; a pale cream, sunlit, brightly lit or cheerful building; a
+wall as light as the yellow poncho; a bright, pale or white sky; a blue, cyan or turquoise sky;
+sunlight, sunbeams or cast sun shadows; a re-invented or re-proportioned shopfront; the shutter
+drawn in front of the columns or across the outer edge of the covered walkway instead of behind
+the columns in the plane of the glass; the covered walkway turned into a garage or a car port;
+any glass, waiting room, lamp, lit window or warm light visible anywhere in the clinic; night,
+sunset, an orange sky, lit street lamps, headlights; lightning, a thunderbolt, flying debris, a
+fallen, snapped or uprooted tree, deep flood water, an overturned scooter, an emergency vehicle;
+anyone falling, injured, frightened, shouting, scowling or crying; tears, a screwed-up crying
+face, a hand rubbing or covering the eyes; an umbrella stripped to bare ribs with no fabric; an
+intact, undamaged, ordinary umbrella; an empty street with nobody in it; small distant figures in
+a wide empty scene; any figure drawn pale, faint, translucent, ghostly or in outline only;
+peeling paint, cracks, stains, mould, rust, boards over the front, cobwebs, a derelict or haunted
+building; greyscale, sepia or a single-colour picture; thick uniform black outlines;
+photo-realism; 3D rendering; dental instruments, chairs, X-rays or teeth.```
+
+---
+
+## 六、⚠ 十一個一定會踩的坑（都是這一站踩過的）
 
 1. **「辛苦」寫成揉眼睛或嘴角往下張嘴 ＝ 在哭**（第七節第 7 條，〈擴張牙弓〉踩過）。
    所以第 5 段整段在寫「怎麼畫用力、怎麼不畫哭」，而且「手抓帽兜」明講**手不可以蓋到眼睛**。
@@ -1054,6 +1349,20 @@ photo-realism; 3D rendering; dental instruments, chairs, X-rays or teeth.
      比「離垂直 40 度」或「和風同方向」都硬 —— 那兩種寫法各自有第二種讀法，這一種沒有。
    ⚠ **第四版還是反的話，不要再改提示詞** —— 改成**拿第二版那張圖去修**：
    「把每一道雨鏡射過來，其他一個像素都不要動」。一次只改一件。
+10. ⚠⚠⚠ **要模型畫出「A 在 B 後面」，就要把 A 和 B 之間那個空間當成一個東西寫出來**
+   （第五之七節①，第四版把騎樓畫沒了）。第四版逐字寫著鐵門「hangs BEHIND the three columns」，
+   可是整段的主語從頭到尾都是那塊金屬，**騎樓本身一個名詞都沒有** —— 沒有地板、沒有低階、
+   沒有天花、沒有「柱子和門之間有空氣」。**只寫「在後面」，模型會理解成「貼著」。**
+   第五版因此把騎樓當成一個房間來寫（地板一條、階一道、天花一片、影子一片），
+   並補一條「側牆沒有捲門」（它會順手把捲門延伸到轉角右邊那面牆上）。
+11. ⚠⚠⚠ **絕對方向講不動的時候，把方向掛在模型畫得最穩的那個東西上**（第五之七節②）。
+   這一條是第 9 條的下一層：正文寫死 → `AVOID` 寫死 → **給只有線條的方向參考圖**，
+   雨仍然連四版都反。而**三個人面向哪一邊四版都沒錯**，所以第五版改寫成
+   「**雨是打在她臉上的，她的背是被遮住的那一側**」，再補兩個同樣是形狀的錨點
+   （傘往右折回、樹是被推的所以倒向她背過去的那一邊）。
+   ⚠ **再失敗就不要再改提示詞了**，走第五之七節最後那個**鏡射法**：
+   把圖左右翻了再叫它畫（模型畫 `/` 的雨從來沒失手），出圖再翻回來。
+   ⚠ 那一招只有在**畫面上一個字都沒有**時才成立。
 
 ---
 
