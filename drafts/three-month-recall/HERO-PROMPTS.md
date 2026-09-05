@@ -269,6 +269,49 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 
 ---
 
+#### ⚠⚠⚠ 第四版（2026-09-05 更晚）：「人的臉變得有點呆板」
+
+**照使用者說的去對站上的臉，三張放大之後成因很清楚** ——
+第三版治「太寫實」的那一段，**順手把表情的每一個載體都關掉了**。
+
+站上的臉實際上有這些（〈牙齦流血〉〈換牙〉〈定期檢查〉三張放大逐項看）：
+
+| | 站上 | 第三版的提示詞 |
+| --- | --- | --- |
+| **眉毛** | 每張臉都有，**一筆，而且角度就是情緒**（挑起、垂下、一高一低） | **一個字都沒提到** |
+| **嘴** | **開合幅度最大**：笑起來是張開的一個「形狀」＋一塊淺色的牙，想事情是一條偏一邊的波浪線 | 「**A mouth is one short stroke**」＝ 把唯一大幅度的載體鎖死 |
+| **眼睛** | 實心深色、沒有描邊；**開心時彎成上弧或閉起來的月牙**，想睡時是一條縫 | 只寫「一個小小的深色弧形」，沒有說它會變 |
+| **腮紅** | 有，一塊平塗的淡色 | 「**no blush**」← 直接禁掉了 |
+| **年紀的線** | 有，一到兩筆**畫出來的**線（嘴邊一條笑紋、眼尾兩筆） | 「no modelling, no contour」把它一起掃掉了 |
+
+⚠⚠⚠ **成因是那一段全部都是禁令**：沒有睫毛、沒有眼白、沒有反光點、沒有眼皮的褶、
+沒有陰影、沒有腮紅、沒有一根根的頭髮 —— 七條全是「不要有什麼」，
+**一條「要有什麼」都沒有**。它成功地把寫實拿掉了，也順手把臉清空了。
+
+**通則：一段全是禁令的規格，會做出一個「什麼都沒有」的東西。**
+每一條「不要有 X」旁邊要配一條「要有 Y」——
+這一版因此把 `FACES` 拆成明確的兩半：**這張臉有什麼**（眉毛／嘴／眼／腮紅／年紀的線
+／頭會歪）與**這張臉沒有什麼**（原本那七條原封不動）。
+
+⚠⚠⚠ **第二個成因也是我自己寫的：「ALL SIX ARE CALM, ORDINARY AND AT EASE」** ——
+那一句是為了擋「病容、虛弱、可憐」寫的，但它**同時等於叫模型畫六張一模一樣的表情**。
+現在改成**逐格點名**（孕婦低頭看著小冊子偷偷笑／阿嬤伸手拿杯子、眉毛抬起來有點使勁／
+中年男子一邊眉毛高、嘴偏一邊在想事情／量血糖的人**刻意就是很平常**、眉毛平嘴一直線
+／半夜那位眼睛只剩一條縫、眉毛垂下來／頭巾那位讀到有趣的地方笑出來），
+「不是病人、不可憐」那條禁令留著。中間兩位也各給一種
+（醫師張嘴笑、護理師眼睛彎成月牙閉著嘴笑、頭歪一點）。
+
+⚠ **第三件：`ECONOMY OF LINE` 那一段要補一句「這條是給東西的，不是給臉的」** ——
+第三版寫「每一樣東西用能認出它的最少筆畫」，臉也是東西。
+
+⚠ 判準從一條變兩條：原本只有「看起來像肖像畫就是錯的」，
+現在多一條反方向的 —— **「七張臉如果互換位置沒有人看得出來，也是錯的」**。
+
+⚠ `AVOID` 補了四條：不要一整排一模一樣的和善空臉、不要沒有眉毛的臉、
+不要每張嘴都是同一個小小的閉合弧線、不要有人是面無表情的。
+
+---
+
 ## 三、五個提案共用的規格（每一份提示詞裡都逐字帶著）
 
 - **Ⓐ~Ⓔ 是 16:9 橫幅**（`tools/hero-resize.mjs` 擋長寬比 2000/1116 ±0.02，16:9 過得了）；
@@ -300,7 +343,7 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 | --- | --- |
 | `assets/hero-gum-photo-1600.jpg`（〈牙齦流血〉） | ⭐ **最重要的一張。** 它就是 Ⓕ 想要的結構：**一格一個人、一格一個家、一格一個底色**（灰藍的臥室／米色的廚房／橘色的客廳／深色的夜間浴室）。連「唯一一格是暗的」都已經在裡面 |
 | `assets/hero-checkup-photo-1600.jpg`（〈定期檢查〉） | **環境密度**看這一張：候診區、櫃檯、玻璃門的器械櫃、櫃上一排瓶罐、牆上的掛圖、診療椅 —— 東西很多，可是那些線**全部比人淡**。中間那一格的診所照它畫。⚠ 它同時是「**不要再畫候診室**」的理由（同一科、卡片會並排） |
-| `assets/hero-kids-photo-1600.jpg`（〈換牙〉） | **臉、表情、手**看這一張：五官很簡單但表情讀得出來，動作有力道卻沒有變形成卡通 |
+| `assets/hero-kids-photo-1600.jpg`（〈換牙〉） | ⭐⭐ **臉**看這一張，而且要看仔細：五官很簡單，可是**嘴是張開的、眉毛有角度、臉頰有一塊平塗的腮紅**。2026-09-05 那一輪「臉呆板」就是因為只抄了「簡單」沒抄「在做什麼」 |
 
 ⚠⚠ **要抄的第一件不是「線好不好看」，是「一樣東西用幾筆」**（2026-09-05 第三版改的）——
 第二版寫的是「copy the line quality」，結果線畫得很像、**筆數卻多了好幾倍**，
@@ -659,10 +702,10 @@ Editorial illustration, 4:3 landscape (slightly wider than tall, NOT a wide bann
 
 REFERENCE IMAGES — THREE IMAGES ARE ATTACHED. They are existing illustrations from the
 same website and this new picture must look like it belongs beside them. Copy from them:
-the exact line quality, HOW FEW STROKES each object is drawn with, how simply faces and
-hands are drawn, and how flat the colour is. Do NOT copy their layouts, their people or
-their scenes. Wherever the words below and the attached images disagree about style, THE
-ATTACHED IMAGES WIN.
+the exact line quality, HOW FEW STROKES each object is drawn with, and above all HOW THE
+FACES ARE DRAWN — look at how much those faces are doing, how wide the mouths open, how
+the eyebrows tilt. Do NOT copy their layouts, their people or their scenes. Wherever the
+words below and the attached images disagree, THE ATTACHED IMAGES WIN.
 
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
 illustration, drawn quickly and confidently BY HAND. Every line is drawn in a warm dark
@@ -675,24 +718,36 @@ present, and each person wears a different colour family from everyone else. Peo
 simplified but their proportions are natural and their age is readable: Taiwanese / East
 Asian faces, normal head-to-body proportion.
 
-FACES AND HANDS — READ THIS TWICE. THIS IS WHERE THE PICTURE MOST EASILY GOES WRONG.
-Faces are drawn with the smallest possible number of marks and carry NO SHADING AT ALL.
-An eye is one small dark curved shape; there are no eyelashes, no visible white of the
-eye, no catchlight, no eyelid crease. A nose is one short stroke. A mouth is one short
-stroke. Cheeks, foreheads, chins and necks are flat unshaded skin tone with no modelling,
-no blush, no contouring and no cheekbones. Hair is two or three large shaped masses of
-flat colour with at most a few interior strokes — never individual strands, never rendered
-curls, never highlights. Hands are simple: fingers are simple tapering shapes, no knuckle
-modelling, no fingernails. IF A FACE IN THIS PICTURE LOOKS LIKE A PORTRAIT, IT IS WRONG.
+FACES — READ THIS TWICE. THESE FACES ARE SIMPLE, BUT THEY ARE NOT BLANK. Every face here
+is doing something, and every one of them is doing something DIFFERENT.
+  WHAT A FACE HAS. Eyebrows: every face has two clearly drawn eyebrows, each one a single
+  confident stroke, and THEIR ANGLE IS THE MAIN THING CARRYING THE MOOD — raised, level,
+  one higher than the other, inner ends tipped up. Eyes: a solid dark shape with no
+  outline; when someone is pleased the eye becomes an upward curve or a closed crescent,
+  and when someone is sleepy it becomes a narrow slit. Mouths: THE MOUTH VARIES MORE THAN
+  ANYTHING ELSE ON THE FACE. A laughing mouth is open wide — a shape, not a line, with a
+  plain pale block of teeth inside. A thinking mouth is a wavy line pushed off to one
+  side. A calm mouth is a small curve. NOT EVERY MOUTH IS THE SAME SMALL CLOSED ARC. A
+  flat soft patch of blush on the cheek is welcome. On older faces, one or two deliberate
+  drawn lines are welcome — a single smile line beside the mouth, two short strokes at the
+  outer corner of an eye — DRAWN LINES, not shading. Heads tilt; shoulders lean.
+  WHAT A FACE DOES NOT HAVE. No shading or modelling anywhere on the face — no cheekbones,
+  no contouring, no shadow under the nose or chin. No eyelashes, no visible white of the
+  eye, no catchlight, no eyelid crease. Hair is two or three large shaped masses of flat
+  colour with at most a few interior strokes — never individual strands, never rendered
+  curls, never highlights. Hands are simple: fingers are simple tapering shapes, no
+  knuckle modelling, no fingernails.
+  TWO TESTS. If a face looks like a portrait, it is wrong. And if the faces could be
+  swapped between panels without anyone noticing, it is also wrong.
 
-ECONOMY OF LINE — THE SECOND PLACE IT GOES WRONG. Every object is drawn with THE SMALLEST
-NUMBER OF STROKES THAT STILL NAMES IT, and then stopped. An electric fan is a circle, four
-or five spokes and a stand — not an accurate wire guard. A tiled wall is a few lines
-suggesting tiles, not a complete grid. A window grille is a few bars, not every bar. A
-dish rack is three or four dishes, not a full rack. A rice cooker is a rounded box with a
-lid. Perspective is relaxed and judged by hand, never ruled, never architecturally
-correct. Nothing in this picture is drawn accurately; everything is drawn quickly and
-recognisably.
+ECONOMY OF LINE — Every object is drawn with THE SMALLEST NUMBER OF STROKES THAT STILL
+NAMES IT, and then stopped. An electric fan is a circle, four or five spokes and a stand —
+not an accurate wire guard. A tiled wall is a few lines suggesting tiles, not a complete
+grid. A window grille is a few bars, not every bar. A dish rack is three or four dishes,
+not a full rack. A rice cooker is a rounded box with a lid. Perspective is relaxed and
+judged by hand, never ruled, never architecturally correct. Nothing in this picture is
+drawn accurately; everything is drawn quickly and recognisably. THIS RULE IS ABOUT THINGS,
+NOT ABOUT FACES — the faces still get their eyebrows, their mouths and their expression.
 
 TWO LEVELS — the people are drawn with the darkest, thickest lines and wear the strongest
 colours in their panel; the rooms behind them use thinner, paler lines and quieter colour.
@@ -712,62 +767,67 @@ DIFFERENT FURNITURE — the six homes must never look like the same house drawn 
 THE CENTRE PANEL is the largest: an irregular five-sided panel in the middle of the
 picture, holding TWO members of clinic staff standing side by side, seen from the waist
 up, both turned three-quarters, both looking OUT TOWARDS THE PANELS AROUND THEM. Neither
-of them looks at the viewer.
+of them looks at the viewer, and THEIR TWO FACES ARE DOING DIFFERENT THINGS.
   THE DENTIST, a woman in her thirties, wears an open WHITE COAT over a pale sage-green
   scrub top, hair in a low bun. She stands slightly forward of the other. One arm is open
   and extended outward in a calm, welcoming, presenting gesture — the gesture of someone
   introducing people she is glad to see, not the gesture of someone giving a warning. Her
-  weight is leaning very slightly towards the panels. Her expression is warm and unhurried.
+  weight leans very slightly towards the panels. HER FACE: an open smile with the mouth
+  clearly open, eyebrows relaxed and lifted, eyes bright and wide.
   THE NURSE, a woman in her forties, wears NO WHITE COAT — only a scrub top, and it is a
   DIFFERENT COLOUR from the dentist's: a muted dusty teal. Short hair tucked behind one
   ear. She stands half a step behind and to the other side, hands resting easily together
-  in front of her, head tilted, nodding slightly at one of the panels. She is the quieter
-  of the two, and she is clearly agreeing.
-  TOGETHER THEY READ AS WELCOME AND INTRODUCTION — these are the people we are glad to
-  look after, and here they are. Nobody is scolding, warning, pointing at the viewer or
-  raising a finger.
-  THEIR ROOM, simply drawn — a low wooden cabinet, a glass-fronted cabinet with rows of
-  small unlabelled bottles, a stack of folded towels, a potted plant, a simple picture on
-  the wall showing ONLY a single tooth and no writing at all, a window frame at one side,
-  and the floor visible at the bottom.
+  in front of her, head TILTED, nodding slightly at one of the panels. HER FACE: eyes
+  curved into happy closed crescents, mouth closed in a small warm smile — visibly quieter
+  and gentler than the dentist's face, not the same expression repeated.
 
 THE SIX PANELS AROUND HER, each holding ONE ordinary person in their own home, doing an
-ordinary thing. All of the objects below must be there, and every one of them is drawn
-with very few strokes.
+ordinary thing. EACH ONE HAS A DIFFERENT EXPRESSION, LISTED BELOW — do not give them all
+the same pleasant neutral face. All of the objects below must be there, and every one of
+them is drawn with very few strokes.
   UPPER LEFT — a woman in her early thirties, visibly but not dramatically pregnant,
   sitting back on a fabric sofa with one hand resting on her middle, the other holding a
-  slim blank booklet. HER ROOM: cushions, a low wooden coffee table with a glass of water
-  and a small stack of plain books, slippers on the floor, a leafy pot plant, a barred
-  Taiwanese window with daylight coming through, a standing electric fan.
+  slim blank booklet she is reading. FACE: looking down at the booklet, eyes curved, one
+  corner of the mouth lifted — quietly pleased. HER ROOM: cushions, a low wooden coffee
+  table with a glass of water and a small stack of plain books, slippers on the floor, a
+  leafy pot plant, a barred Taiwanese window with daylight coming through, a standing fan.
   UPPER RIGHT — a woman in her seventies with short grey permed hair, standing in her own
   kitchen, a wooden walking stick hooked over her forearm, reaching up into a cupboard for
-  a cup. HER ROOM: an old-fashioned counter, a tiled wall, a kettle on the gas ring, a
-  ladle and a cloth on hooks, a few unlabelled jars on the windowsill, a bamboo basket of
-  vegetables, a bunch of garlic hanging up, a wooden crockery cupboard.
+  a cup. FACE: mouth slightly open with the effort, both eyebrows raised, eyes on the cup —
+  busy and a little triumphant, two smile lines at the corner of the eye. HER ROOM: an
+  old-fashioned counter, a tiled wall, a kettle on the gas ring, a ladle and a cloth on
+  hooks, a few unlabelled jars on the windowsill, a bamboo basket of vegetables, a bunch of
+  garlic hanging up, a wooden crockery cupboard.
   RIGHT — a man in his early fifties in an open-collared work shirt, sitting at his dining
   table with a soft brown paper pharmacy bag in front of him and two blister packs of
-  tablets half slid out of it, one hand resting on the bag. HIS ROOM: a round table with a
-  patterned plastic tablecloth, a glass of tea, wooden chairs, a standing fan, a towel over
-  a chair back, a barred window, a remote control and reading glasses on the table.
+  tablets half slid out of it, one hand resting on the bag. FACE: one eyebrow higher than
+  the other, mouth a wavy line pushed to one side, looking down at the tablets — thinking
+  something over, not worried.  HIS ROOM: a round table with a patterned plastic
+  tablecloth, a glass of tea, wooden chairs, a standing fan, a towel over a chair back, a
+  barred window, a remote control and reading glasses on the table.
   LOWER RIGHT — a man in his sixties at his breakfast table, holding a small handheld
-  meter to his fingertip, completely matter-of-fact about it. HIS ROOM: a bowl of rice
-  porridge, two small dishes of vegetables, a cup of soy milk, a steel vacuum flask; behind
-  him a kitchen doorway, a rice cooker on a counter, a hanging cloth, and beyond the window
-  the pillars of a Taiwanese covered walkway.
+  meter to his fingertip. FACE: completely matter-of-fact — level eyebrows, mouth a small
+  straight line, eyes down on his own finger. He has done this a thousand times and it is
+  not an event. HIS ROOM: a bowl of rice porridge, two small dishes of vegetables, a cup of
+  soy milk, a steel vacuum flask; behind him a kitchen doorway, a rice cooker on a counter,
+  a hanging cloth, and beyond the window the pillars of a Taiwanese covered walkway.
   LOWER LEFT — the middle of the night. A woman in her fifties in a T-shirt stands at her
-  kitchen counter pouring herself a glass of water, half asleep. THIS IS THE ONLY DARK
-  PANEL: deep dusty blue-grey, with exactly two sources of light — a small warm lamp above
-  the counter, and a few lit windows in the block of flats across the street. A draining
-  rack with a few bowls, a tap and the counter are there, but they sit down in the dark.
-  The wall behind her is dark, never left pale.
+  kitchen counter pouring herself a glass of water. FACE: half asleep — eyes narrowed to
+  slits, eyebrows sloping down and out, mouth slightly open, hair a bit flattened on one
+  side. THIS IS THE ONLY DARK PANEL: deep dusty blue-grey, with exactly two sources of
+  light — a small warm lamp above the counter, and a few lit windows in the block of flats
+  across the street. A draining rack with a few bowls, a tap and the counter are there, but
+  they sit down in the dark. The wall behind her is dark, never left pale.
   LEFT — a woman in her forties wearing a soft printed headscarf, sitting comfortably in a
-  rattan armchair reading a book with blank pages, calm and at ease. HER ROOM: a small side
-  table with a vacuum flask, a knitted blanket over her knees, a pot plant, a shelf of
-  plain books, and a simple framed picture on the wall with no writing in it.
+  rattan armchair reading a book with blank pages. FACE: she has just reached something she
+  likes — eyes curved into crescents, mouth open in a small laugh, eyebrows lifted. HER
+  ROOM: a small side table with a vacuum flask, a knitted blanket over her knees, a pot
+  plant, a shelf of plain books, and a simple framed picture on the wall with no writing.
 
-ALL SIX ARE CALM, ORDINARY AND AT EASE — they are not ill, not frail, not sad, not
-frightened, and none of them is in a hospital or a clinic. Each has a different posture
-and a different direction of gaze. Nobody looks at the viewer.
+NONE OF THESE SIX IS ILL, FRAIL, SAD OR FRIGHTENED, and none of them is in a hospital or a
+clinic — but they are not all wearing the same mild pleasant expression either. Each has a
+different posture, a different direction of gaze and a different face. Nobody looks at the
+viewer.
 
 CROPPING — the top 12% and the bottom 12% of the whole picture will sometimes be cut off.
 Keep every face, and every one of the small objects listed above, well inside the middle of
@@ -795,19 +855,21 @@ its little screen, not on the jars, not on the bottles in the clinic cabinet, no
 flasks, not on the rice cooker, not on the remote control, and not on any wall. Every
 surface that would normally carry writing is left blank.
 
-AVOID — no realistic or portrait-like faces, no shading or modelling on any face, no
-eyelashes, no eye whites, no catchlights, no individually drawn hair strands; no soft,
-smooth or airbrushed gradient shading anywhere, on fabric, walls, skin or furniture — all
-shading is flat steps with hard edges; no technical, architectural or engineering drawing,
-no ruled perspective, no accurate mechanical detail on fans, appliances, tiles, window
-grilles or racks; no thin uniform grey outlines; no clocks, no calendars, no phone
-screens, no computer screens and no digital displays of any kind, because they all carry
-numbers; no speech bubbles, no thought bubbles, no captions, no arrows, no numbers on the
-panels and no icons or symbols of any kind; the gutters are plain hand-drawn lines, not a
-neat rectangular grid and not comic-book panel borders with heavy black outlines; nobody
-looks at the viewer and nobody points at the viewer; the dentist is not scolding, not
-warning and not raising a finger; the two staff must not be drawn as a matching pair in
-the same pose and must not wear the same colour; no empty rooms and no bare walls; no
+AVOID — no row of identical blank pleasant faces; no face without eyebrows; not every
+mouth is the same small closed curve; nobody is expressionless. No realistic or
+portrait-like faces, no shading or modelling on any face, no eyelashes, no eye whites, no
+catchlights, no individually drawn hair strands; no soft, smooth or airbrushed gradient
+shading anywhere, on fabric, walls, skin or furniture — all shading is flat steps with
+hard edges; no technical, architectural or engineering drawing, no ruled perspective, no
+accurate mechanical detail on fans, appliances, tiles, window grilles or racks; no thin
+uniform grey outlines; no clocks, no calendars, no phone screens, no computer screens and
+no digital displays of any kind, because they all carry numbers; no speech bubbles, no
+thought bubbles, no captions, no arrows, no numbers on the panels and no icons or symbols
+of any kind; the gutters are plain hand-drawn lines, not a neat rectangular grid and not
+comic-book panel borders with heavy black outlines; nobody looks at the viewer and nobody
+points at the viewer; the dentist is not scolding, not warning and not raising a finger;
+the two staff must not be drawn as a matching pair in the same pose, must not wear the
+same colour and must not wear the same expression; no empty rooms and no bare walls; no
 hospital beds, no IV stands, no wheelchairs, no oxygen tubes, no face masks covering
 anyone's face, no sick or pained expressions, no tears; no close-up dental instruments, no
 needles, no drills, no trays of tools; no blood; no photorealistic mouth interiors; no

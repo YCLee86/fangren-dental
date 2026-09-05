@@ -41,8 +41,13 @@ for (const b of blocks) {
   if (!/REFERENCE IMAGES — THREE IMAGES ARE ATTACHED/.test(f.prompt)) throw new Error("Ⓕ 少了『先餵參考圖』那一段");
   if (!/TWO LEVELS/.test(f.prompt)) throw new Error("Ⓕ 少了『兩層畫法』那一段");
   // ⚠ 第三版加的兩段：治「太寫實」的就是這兩段，掉了就會回到肖像式的臉與技術製圖。
-  if (!/FACES AND HANDS/.test(f.prompt)) throw new Error("Ⓕ 少了『臉與手』那一段");
+  if (!/\nFACES —/.test(f.prompt)) throw new Error("Ⓕ 少了『臉』那一段");
   if (!/ECONOMY OF LINE/.test(f.prompt)) throw new Error("Ⓕ 少了『用最少的筆畫』那一段");
+  // ⚠⚠ 第四版加的：治「臉呆板」的三件。少一件就會走回一整排空臉。
+  if (!/THESE FACES ARE SIMPLE, BUT THEY ARE NOT BLANK/.test(f.prompt)) throw new Error("Ⓕ 少了『臉不是空的』那一段");
+  if (!/WHAT A FACE HAS/.test(f.prompt)) throw new Error("Ⓕ 的臉那一段沒有『要有什麼』那一半");
+  if (/A mouth is one short stroke/.test(f.prompt)) throw new Error("Ⓕ 又出現第三版那句『嘴巴是一筆』");
+  if (/ALL SIX ARE CALM, ORDINARY AND AT EASE/.test(f.prompt)) throw new Error("Ⓕ 又出現『六個人都很平常自在』（＝六張一樣的臉）");
   // ⚠ 第二版那句「細到叫得出這是什麼房間」＝ 在叫它畫準，不可以回來。
   if (/enough detail that you could name the room/.test(f.prompt)) throw new Error("Ⓕ 又出現第二版那句『細到叫得出房間』");
 }
@@ -143,6 +148,8 @@ const NOTES = {
       "<b>比例 4:3</b>，比站上現在那十一張高（見最上面那一段）。",
     ],
     guards: [
+      "⚠⚠⚠ <b>第四版（09-05 更晚）治的是「人的臉變得有點呆板」，成因是第三版的提示詞自己寫的</b>：治「太寫實」那一段<b>全部都是禁令</b>（沒有睫毛／眼白／反光點／眼皮的褶／陰影／腮紅／一根根的頭髮 —— 七條全是「不要有什麼」，一條「要有什麼」都沒有），寫實是拿掉了，<b>表情的載體也順手被清空</b>。對照站上三張放大：<b>眉毛</b>每張臉都有、角度就是情緒（第三版一個字都沒提）；<b>嘴</b>開合幅度最大，笑起來是張開的一個形狀＋一塊淺色的牙（第三版寫「嘴是一筆」）；<b>眼睛</b>開心時彎成月牙；<b>腮紅</b>站上有、第三版直接禁掉；<b>年紀的線</b>（嘴邊一條笑紋、眼尾兩筆）也被「no contour」一起掃掉。",
+      "⚠⚠⚠ <b>第二個成因也是我寫的：「六個人都很平常、很自在」</b> —— 那句是為了擋病容，卻等於叫它畫六張一樣的表情。現在<b>逐格點名</b>（孕婦低頭偷偷笑／阿嬤伸手拿杯子、眉毛抬起來／中年男子一邊眉毛高、嘴偏一邊／量血糖的人刻意就是很平常／半夜那位眼睛只剩一條縫／頭巾那位讀到有趣的地方笑出來），中間兩位也各給一種。判準也多一條反方向的：<b>七張臉如果互換位置沒有人看得出來，也是錯的</b>。",
       "⚠⚠⚠ <b>第三版（09-05 更晚）治的是「還是比站上寫實了一點」，而且是量過才改的</b>：站上十一張自己就分兩群，〈定期檢查〉48%、〈貝氏刷牙法〉50% 的面積是近白的，<b>比第二版那張還淡</b> —— 所以「太寫實」不在顏色。真正的成因是兩件<b>「畫得太準」</b>：<b>臉有立體感</b>（眼皮、眼白、反光點、顴骨、一根根的頭髮）、<b>每一樣東西用的筆畫太多</b>（電風扇畫出整圈護網、磁磚畫出完整格線、透視是準的）。",
       "⚠⚠⚠ <b>而這兩件是第二版的提示詞自己寫出來的</b>：那一段「兩層畫法」我寫了「環境要細到你叫得出這是什麼房間」——<b>那句話等於在叫它畫準，而畫得準正是寫實的定義</b>；它同時是整份最長的一段（＝口外那一輪的通則：哪一段字最多，模型就把哪一個當主角）。第三版新增<b>「臉與手」</b>與<b>「用最少的筆畫」</b>兩段放到最前面，並把「兩層畫法」砍掉一半、反過來寫成「房間不是比人更細，是比人更粗略；東西多，每一樣簡單」。",
       "⚠⚠⚠ <b>出圖之前要先餵上面那三張參考圖</b> —— 風格用文字描述一定會漂（〈生物陶瓷〉那一輪的形狀失敗三四輪，改成給圖之後一次就中）。提示詞第一段明寫「文字和參考圖衝突時以參考圖為準」。",
@@ -215,6 +222,8 @@ h1{font-size:1.5rem;line-height:1.5;margin:1.8rem 0 .4rem}
 .pv-t2{border-collapse:collapse;width:100%;font-size:.88rem;margin:.6rem 0}
 .pv-t2 th:first-child,.pv-t2 td:first-child{text-align:left}
 .pv-t2 tr.pv-pick td{background:rgba(63,101,74,.09)}
+.pv-wrap th,.pv-wrap td{white-space:normal;text-align:left;line-height:1.6}
+.pv-wrap td:first-child,.pv-wrap th:first-child{width:4.6em}
 .pv-ratio code{font-size:.9em;background:#fff;border:1px solid var(--rule);border-radius:4px;padding:0 .25em}
 .pv-ref{margin:1rem 0 0}
 .pv-ref img{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:8px;background:#fff}
@@ -253,6 +262,20 @@ footer ol{padding-left:1.2rem}
 <p class="pv-sub">文章已經定稿，這一頁只決定圖要畫什麼。都還沒畫，先挑梗。</p>
 
 <div class="pv-note">
+<p><b>⚠⚠⚠ Ⓕ 出圖之前，先把這三張存下來一起餵進去</b></p>
+<p>你說「人物風格跟網站現有的不太一樣」—— 成因不是提示詞寫得不夠細，是<b>風格用文字描述一定會漂</b>
+（〈生物陶瓷〉那一輪：形狀用文字講失敗三四輪，改成給圖之後一次就中）。
+下面三張是站上自己的 HERO，<b>長按存下來，出圖時一起附上</b>。提示詞第一段已經寫著
+「文字和參考圖衝突時，以參考圖為準」。</p>
+${REFS.map((r) => `<figure class="pv-ref">
+  <img src="../../assets/${r.f}-800.jpg" alt="" width="800" height="447"
+       srcset="../../assets/${r.f}-800.jpg 800w, ../../assets/${r.f}-1600.jpg 1600w"
+       sizes="(min-width: 705px) 639px, calc(100vw - 66px)" loading="eager">
+  <figcaption><b>${r.t}</b>　${r.why}</figcaption>
+</figure>`).join("\n")}
+</div>
+
+<div class="pv-note">
 <p><b>2026-09-05：Ⓕ 是照你的方向新加的，建議走它。</b></p>
 <p>你選了 Ⓐ 但指出它單調 —— <b>成因是四格共用同一個診間、同一片背景</b>，變的只有坐上去的人。
 Ⓕ 把它換成七格拼起來的鑲嵌：六個人各自在<b>自己的生活裡</b>、各自一個底色，中間一格是醫師。</p>
@@ -278,6 +301,22 @@ footer ol{padding-left:1.2rem}
 <p>⚠ <b>而這兩件是我第二版的提示詞自己寫出來的</b>：那一段我寫了
 「環境要細到你叫得出這是什麼房間」——<b>那等於在叫它畫準，而畫得準正是寫實的定義</b>。
 第三版把「臉與手」和「用最少的筆畫」兩段放到最前面，「兩層畫法」砍掉一半並反過來寫。</p>
+<p><b>2026-09-05 更晚：Ⓕ 第四版</b> —— 治「人的臉變得有點呆板」。
+<b>成因是我第三版的提示詞自己寫的</b>：治「太寫實」那一段<b>七條全是禁令</b>
+（沒有睫毛／眼白／反光點／眼皮的褶／陰影／腮紅／一根根的頭髮），
+<b>一條「要有什麼」都沒有</b> —— 寫實是拿掉了，表情的載體也一起被清空。
+照你說的去對站上那三張，差的是這些：</p>
+<div class="pv-tw"><table class="pv-t2 pv-wrap">
+<tr><th></th><th>站上</th><th>我第三版寫的</th></tr>
+<tr class="pv-pick"><td>眉毛</td><td>每張臉都有，一筆，<b>角度就是情緒</b></td><td>一個字都沒提</td></tr>
+<tr class="pv-pick"><td>嘴</td><td><b>開合幅度最大</b>，笑起來是張開的形狀＋一塊牙</td><td>「嘴巴是一筆」</td></tr>
+<tr><td>眼睛</td><td>開心時彎成月牙、想睡是一條縫</td><td>只說是一個小弧形</td></tr>
+<tr><td>腮紅</td><td>有，一塊平塗的淡色</td><td><b>直接禁掉了</b></td></tr>
+<tr><td>年紀的線</td><td>嘴邊一條笑紋、眼尾兩筆</td><td>被「不要輪廓」一起掃掉</td></tr>
+</table></div>
+<p>第二個成因也是我寫的：<b>「六個人都很平常、很自在」</b> —— 那句是為了擋病容，
+可是它等於<b>叫模型畫六張一模一樣的表情</b>。現在改成逐格點名，中間兩位也各給一種。
+判準多一條反方向的：<b>七張臉如果互換位置沒有人看得出來，也是錯的</b>。</p>
 <p>Ⓐ~Ⓔ 留著沒有動，往下捲還在。</p>
 </div>
 
@@ -301,20 +340,6 @@ footer ol{padding-left:1.2rem}
 Ⓕ 的提示詞已經把「上下各 12% 不可以放臉與關鍵物件」寫死。</p>
 <p>⚠ 另外兩支工具要跟著改（<b>等你挑定再動，各兩行</b>）：縮圖那一支寫死了 16:9 會拒絕出圖、
 產生首頁卡的那一支寫死了 <code>width="2000" height="1116"</code>。</p>
-</div>
-
-<div class="pv-note">
-<p><b>⚠⚠⚠ Ⓕ 出圖之前，先把這三張存下來一起餵進去</b></p>
-<p>你說「人物風格跟網站現有的不太一樣」—— 成因不是提示詞寫得不夠細，是<b>風格用文字描述一定會漂</b>
-（〈生物陶瓷〉那一輪：形狀用文字講失敗三四輪，改成給圖之後一次就中）。
-下面三張是站上自己的 HERO，<b>長按存下來，出圖時一起附上</b>。提示詞第一段已經寫著
-「文字和參考圖衝突時，以參考圖為準」。</p>
-${REFS.map((r) => `<figure class="pv-ref">
-  <img src="../../assets/${r.f}-800.jpg" alt="" width="800" height="447"
-       srcset="../../assets/${r.f}-800.jpg 800w, ../../assets/${r.f}-1600.jpg 1600w"
-       sizes="(min-width: 705px) 639px, calc(100vw - 66px)" loading="lazy">
-  <figcaption><b>${r.t}</b>　${r.why}</figcaption>
-</figure>`).join("\n")}
 </div>
 
 ${cards}
