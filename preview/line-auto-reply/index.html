@@ -26,7 +26,13 @@
     ?s= 情境（病人打什麼字、什麼時候打）
     ?n= 做幾則（一則通用／分時段兩則／關鍵字分流三則）
     ?c= 一則裡放什麼（只有文字／文字＋圖／圖＋文字／文字＋圖＋文字）
+    ?g= 圖怎麼出（固定一張／三張隨機）
     ?w= 改約那一段的寫法（09-02 舊版／跟 09-04 定稿的綁定完成一致）
+
+  ⚠⚠ 「三張隨機」是使用者 2026-09-05 指定的方向。底下那顆「＋ 他再傳一次」
+     是為它做的 —— 隨機這件事一張靜態的畫面看不出來，要連著送幾次才感覺得到。
+     ⚠ 三張是**真的隨機**（會連兩次同一張，機率 1/3），沒有做「不重複」——
+        後台若真的是隨機，它也不會幫你避開重複。
 -->
 <style>
 :root{
@@ -97,6 +103,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-panel .no{color:#a33;font-weight:700}
 .pv-note{font-size:.72rem;color:var(--ink-soft);margin:10px 0 22px;
   border-left:3px solid var(--rule);padding-left:9px}
+/* 「再傳一次」那兩顆：不是切換條的一部分（切換條是「換一個版本」，
+   這兩顆是「時間往前走一步」），所以擺在手機框正下方、樣式也不一樣。 */
+.pv-again{display:flex;gap:8px;margin:10px 0 0}
+.pv-again button{font:inherit;font-size:.76rem;line-height:1.6;cursor:pointer;
+  border-radius:9px;padding:7px 12px}
+.pv-again .go{flex:1;border:0;background:var(--green);color:#fff;font-weight:700}
+.pv-again .re{border:1px solid var(--rule);background:var(--card);color:var(--ink-soft)}
 
 /* ---- 切換條 ---------------------------------------------------------- */
 .pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:9;
@@ -114,7 +127,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   border:1px solid var(--deep);color:var(--deep);background:#fff;
   border-radius:8px;padding:5px 9px;cursor:pointer;white-space:nowrap}
 .pv-bar button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
-.pv-bar .r + .r{margin-top:6px}
+/* ⚠ 五排的時候 6px 會讓切換條到 24.4%，越過「不吃掉四分之一畫面」那條線。
+   收成 4px ＝ 23.4%。**切換條的高度要逐寬度量**（CLAUDE.md 第 25-7 節）。 */
+.pv-bar .r + .r{margin-top:4px}
 .pv-bar .fold{position:absolute;right:10px;top:-30px;background:rgba(244,244,245,.96);
   border:1px solid var(--rule);border-radius:8px 8px 0 0;border-bottom:0;
   font:inherit;font-size:.7rem;color:var(--ink-soft);padding:3px 9px;cursor:pointer}
@@ -139,12 +154,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         <span class="q">⚠ 對話框的上限查到兩種說法（3 個或 5 個）</span>——
         要在後台按「＋新增」按到不能再加為止，那個數字才算數。</dd>
 
-      <dt>二、「做幾個版本」在 LINE 上有三種，<span class="n">只有兩種是準的</span></dt>
+      <dt>二、「做幾個版本」在 LINE 上有三種</dt>
       <dd>・<b>關鍵字分流</b>：打「改約」回 A、打「時間」回 B。<span class="y">準</span>，一組關鍵字最多 51 個詞。<br>
         ・<b>時段分流</b>：開診時間一則、休診一則。<span class="y">準</span>（設的是星期＋時間）。<br>
-        ・<b>好幾則都不設關鍵字</b>：LINE <b>隨機</b>挑一則送。
-        <span class="n">病人問同一件事會拿到不一樣的答案</span>，這一種不要做。<br>
-        <span class="q">⚠ 隨機那一條是二手資料，要在後台自己確認一次。</span></dd>
+        ・<b>好幾則都設「一律回應」</b>：據說 LINE 會<b>隨機</b>挑一則送。<br>
+        <span class="q">⚠⚠ 我上一輪把第三種寫成「不要做」，理由是「病人問同一件事會拿到
+        不一樣的答案」—— 那個理由<b>在三張圖這個用法下不成立</b>：三則的<b>文字一字不差、
+        只有圖不同</b>，答案從頭到尾是同一個，隨機的只有那張圖。<b>更正：這一種可以做。</b></span><br>
+        <span class="q">⚠ 但「到底會不會隨機」兩個來源說法相反，只能在後台實測 ——
+        五分鐘的驗證步驟見下面第三塊。</span></dd>
 
       <dt>三、⚠ 這裡的「圖卡」<span class="n">目前不是綁定完成那種圖卡</span></dt>
       <dd>綁定完成那種卡片裡有真文字、有按鈕的是 <b>Flex Message</b>，
@@ -152,6 +170,25 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         自動回應這裡現在能放的圖是<b>圖文訊息</b>：一張 1040 的圖切成格子，
         每一格設一個動作（開網址／撥號／傳一句話）。<b>字是烘在圖裡的</b>，
         LINE 會把它縮到 <b>223px</b> 顯示（390 寬實測）。</dd>
+
+      <dt>四、三張隨機 —— <span class="y">三條路，第一條要先實測</span></dt>
+      <dd><b>Ⓐ 三則「一律回應」，文字一字不差、只有圖不同。</b>
+        後台就做得到、不用錢，<span class="q">但要先確認 LINE 真的會隨機挑。</span><br>
+        <b>Ⓑ 三則各設不同時段</b>（例：一三五／二四／六日與夜間）。
+        <span class="y">一定可行</span>，缺點是<b>同一天內連傳兩次會是同一張</b>，
+        不是隨機是輪替。<br>
+        <b>Ⓒ 一則，每季換一張圖。</b><span class="y">零風險</span>，
+        缺點是不會在對話裡變。<br>
+        <b>Ⓓ 請廠商用 API 隨機。</b>真的隨機，但要開發 ——
+        這個帳號本來就有廠商在掛系統（綁定、提醒卡都是他們送的）。</dd>
+
+      <dt>五、⚠ Ⓐ 的五分鐘實測（在後台自己做，不必寫程式）</dt>
+      <dd>① 自動回應新增<b>兩則</b>，都勾「一律回應」、都<b>不設</b>關鍵字，
+        內容各打一個字（「1」和「2」）。<br>
+        ② 用自己的手機對官方帳號連傳 <b>6 次</b>隨便什麼字。<br>
+        ③ 回來的如果<b>1 和 2 混著出現</b> → 隨機成立，走 Ⓐ。<br>
+        　 如果<b>每次都回 1</b>（或每次都兩則一起來）→ 隨機不成立，走 Ⓑ 或 Ⓓ。<br>
+        ④ 測完把那兩則刪掉。<span class="q">⚠ 回應類不計費，測幾次都不用錢。</span></dd>
     </dl>
   </div>
 
@@ -163,6 +200,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     <div class="pv-chat" id="chat"></div>
   </div>
 
+  <div class="pv-again">
+    <button type="button" class="go" id="again">＋ 他再傳一次</button>
+    <button type="button" class="re" id="reset">重來</button>
+  </div>
+
   <div class="pv-panel" id="panel"></div>
   <p class="pv-note" id="note"></p>
 </div>
@@ -172,13 +214,23 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <div class="r keep"><span class="lb">情境</span><span id="sw-s"></span></div>
   <div class="r"><span class="lb">做幾則</span><span id="sw-n"></span></div>
   <div class="r keep"><span class="lb">放什麼</span><span id="sw-c"></span></div>
+  <div class="r keep"><span class="lb">圖</span><span id="sw-g"></span></div>
   <div class="r"><span class="lb">改約那段</span><span id="sw-w"></span></div>
 </div>
 
 <script>
 (function () {
   var TEL = "05-5339369";
-  var IMG = "../line-reply/rich-2.png";   /* 真的產出檔：上＝照片＋帶子→官網、下＝大電話→撥號 */
+  /* ⚠⚠ 這三張是**佔位符**，不是定案的三張 —— 它們是 2026-09-02 產好的真檔
+     （drafts/line-auto-reply/rich.mjs），擺在這裡是為了讓「三張隨機」這件事
+     在畫面上動得起來。**實際要新畫三張**，規格見 README 第 25-9 節。
+     ⚠ 三張的長寬比一定要一樣（這三張都是 1040×1040）—— 比例不同的話，
+        聊天室裡同一則訊息會忽高忽低，讀起來像壞掉。 */
+  var IMGS = [
+    { f: "../line-reply/rich-2.png",  n: "Ⓐ 上下兩格" },
+    { f: "../line-reply/rich-4b.png", n: "Ⓑ 四格・功能" },
+    { f: "../line-reply/rich-4.png",  n: "Ⓒ 四格・捷徑" }
+  ];
 
   /* ------------------------------------------------------------------
      文字。**每一行都是手動斷的**，改任何一個字都要重量一次折行
@@ -235,7 +287,20 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   var NUM = { one: "一則通用", two: "分時段兩則", kw: "關鍵字分流", now: "現況" };
   var COMP = { t: "只有文字", ti: "文字＋圖", it: "圖＋文字", tit: "文字＋圖＋文字" };
   var WORD = { old: "09-02 版", now: "跟綁定完成一致" };
-  var state = { s: "resched", n: "one", c: "t", w: "now" };
+  var GO = { one: "固定一張", rand: "三張隨機" };
+  /* rounds ＝ 他傳了幾次。每一輪記下這一次抽到第幾張圖（固定一張時永遠是 0）。
+     ⚠ 一輪 ＝ 「病人一句 ＋ 診所整份自動回應」，因為自動回應**每傳一句就送一次**。 */
+  var state = { s: "resched", n: "one", c: "t", g: "rand", w: "now", rounds: [] };
+  function roll() { return state.g === "rand" ? Math.floor(Math.random() * IMGS.length) : 0; }
+  function resetRounds() { state.rounds = [roll()]; }
+
+  /* 他第二句以後講什麼。⚠ 不要寫成「同一句再貼一次」——
+     真實的第二句多半是「我打了但忙線」，那正是這一則最該接住的人。 */
+  var FOLLOW = ["謝謝，我有打電話，忙線中", "那我晚點再打好了", "好，謝謝"];
+  function plus(hhmm, mins) {
+    var p = hhmm.split(":"), t = (+p[0]) * 60 + (+p[1]) + mins;
+    return String(Math.floor(t / 60) % 24) + ":" + ("0" + (t % 60)).slice(-2);
+  }
 
   function el(tag, cls, txt) {
     var n = document.createElement(tag);
@@ -259,10 +324,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     return row;
   }
   function bubble(t) { return function () { var b = el("div", "pv-bub"); linkify(b, t); return b; }; }
-  function image() {
+  function image(idx) {
     return function () {
       var b = el("div", "pv-bub img"), i = new Image();
-      i.src = IMG; i.alt = ""; i.width = 1040; i.height = 1040;
+      i.src = IMGS[idx].f; i.alt = ""; i.width = 1040; i.height = 1040;
       i.addEventListener("load", measure);
       b.appendChild(i); return b;
     };
@@ -304,12 +369,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   function render() {
     var chat = document.getElementById("chat");
     var sc = SCENE[state.s], got = pick();
+    if (!state.rounds.length) resetRounds();
     chat.innerHTML = "";
     chat.appendChild(el("div", "pv-day", "今天"));
-    chat.appendChild(msg("me", sc.t, bubble(sc.say)));
-    chat.appendChild(el("div", "pv-tag", "自動回應訊息・" + got.which));
-    bubbles(got.text).forEach(function (b) {
-      chat.appendChild(msg("oa", sc.t, b.k === "i" ? image() : bubble(b.v)));
+    state.rounds.forEach(function (idx, r) {
+      var t = plus(sc.t, r * 2);
+      chat.appendChild(msg("me", t, bubble(r === 0 ? sc.say : FOLLOW[(r - 1) % FOLLOW.length])));
+      chat.appendChild(el("div", "pv-tag", "自動回應訊息・" + got.which));
+      bubbles(got.text).forEach(function (b) {
+        chat.appendChild(msg("oa", t, b.k === "i" ? image(idx) : bubble(b.v)));
+      });
     });
     requestAnimationFrame(measure);
   }
@@ -359,19 +428,29 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       if (oa[i].classList.contains("img")) nImg++;
       else if (r.width > wid) wid = r.width;   /* 只比文字泡泡：圖是另一個上限 */
     }
-    var pct = tot / vh * 100, twice = tot * 2 / vh * 100;
+    var pct = tot / vh * 100, rn = state.rounds.length, one = tot / rn / vh * 100;
     var got = pick(), orp = orphans();
     var doc = document.documentElement;
+    /* 抽到的那幾張，照順序印出來 —— 隨機這件事要看得到序列才算數，
+       而且「連兩次同一張」本來就會發生（1/3），印出來他才知道那不是壞掉。 */
+    var seq = state.rounds.map(function (i) { return IMGS[i].n.slice(0, 1); }).join(" → ");
+    var rep = 0;
+    for (var k = 1; k < state.rounds.length; k++) if (state.rounds[k] === state.rounds[k - 1]) rep++;
 
     panel.innerHTML =
       "<b>" + NUM[state.n] + "</b>　觸發的是：" + got.which + "<br>" +
-      "診所送出 <b>" + (oa.length - nImg) + "</b> 則文字 ＋ <b>" + nImg + "</b> 張圖，" +
-      "合計 <b>" + tot.toFixed(0) + "px</b> ＝ " +
-      (pct > 62 ? '<span class="no">一屏的 ' + pct.toFixed(0) + "%</span>，要捲才看得完"
-                : '<span class="ok">一屏的 ' + pct.toFixed(0) + "%</span>，一眼看得完") + "<br>" +
-      "⚠ 他<b>再傳一次</b>就再來一整份 → " +
-      (twice > 100 ? '<span class="no">' + twice.toFixed(0) + "%（畫面被洗掉）</span>"
-                   : '<span class="ok">' + twice.toFixed(0) + "%</span>") + "<br>" +
+      "他傳了 <b>" + rn + "</b> 次 → 診所送出 <b>" + (oa.length - nImg) + "</b> 則文字 ＋ <b>" +
+      nImg + "</b> 張圖，合計 <b>" + tot.toFixed(0) + "px</b> ＝ " +
+      (pct > 100 ? '<span class="no">一屏的 ' + pct.toFixed(0) + "%（畫面被洗掉）</span>"
+       : pct > 62 ? '<span class="no">一屏的 ' + pct.toFixed(0) + "%</span>，要捲才看得完"
+                  : '<span class="ok">一屏的 ' + pct.toFixed(0) + "%</span>，一眼看得完") +
+      "　（一次 " + one.toFixed(0) + "%）<br>" +
+      (nImg
+        ? "抽到的順序 <b>" + seq + "</b>" +
+          (state.g === "rand"
+            ? "・連著同一張 <b class=\"" + (rep ? "no" : "ok") + "\">" + rep + "</b> 次"
+            : "・固定一張") + "<br>"
+        : "") +
       "孤字 <b class=\"" + (orp ? "no" : "ok") + "\">" + orp + "</b> 處・" +
       "最寬的文字泡泡 <b>" + wid.toFixed(0) + "px</b>（上限 268）・" +
       "水平溢出 <b class=\"" + (doc.scrollWidth > doc.clientWidth ? "no" : "ok") + "\">" +
@@ -388,7 +467,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         ? "分時段：省掉「現在到底有沒有人」這個猜測。⚠ 但時段只認星期＋時間，分不出國定假日——所以開診那一則寫的是「這個時段診所有開診」，不是「現在有人在」。"
       : state.c === "t"
         ? "只有文字（09-02 定稿的那一份）：這一則每傳一次就送一次，是三則裡最該克制的。第一句是道謝不是道歉（愛馬仕的做法）。"
-        : "配圖之後每次打字都洗一次版——上面那個「再傳一次」的數字就是代價。圖裡的字是烘進去的，LINE 縮到約 232px；真正要有可讀文字與按鈕的卡片是 Flex，後台送不出去。";
+      : state.g === "rand"
+        ? "三張隨機：按幾次「他再傳一次」看看。份量沒有變少（上面那個 % 照樣往上加），但第二次出現的不是同一張，「壞掉感」比重複貼同一張輕。⚠ 隨機能不能做，要在後台實測 —— 見 README 第 25-9 節那五分鐘的驗證步驟。"
+        : "固定一張：他連傳兩次就會看到一模一樣的東西貼兩遍。切到「三張隨機」比比看。";
   }
 
   function chips(host, obj, key) {
@@ -400,22 +481,37 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         state[key] = k;
         host.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
         b.setAttribute("aria-pressed", "true");
-        history.replaceState(null, "",
-          location.pathname + "?s=" + state.s + "&n=" + state.n + "&c=" + state.c + "&w=" + state.w);
+        /* ⚠ 換任何一把尺就把輪數歸零 —— 不歸零的話畫面上會同時混著
+           兩個版本的東西，量出來的高度不屬於任何一個版本。 */
+        resetRounds();
+        history.replaceState(null, "", location.pathname + "?s=" + state.s + "&n=" + state.n +
+          "&c=" + state.c + "&g=" + state.g + "&w=" + state.w);
         render();
       });
       host.appendChild(b);
     });
   }
-  ["s", "n", "c", "w"].forEach(function (k) {
+  ["s", "n", "c", "g", "w"].forEach(function (k) {
     var m = location.search.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
-    var tbl = { s: SCENE, n: NUM, c: COMP, w: WORD }[k];
+    var tbl = { s: SCENE, n: NUM, c: COMP, g: GO, w: WORD }[k];
     if (m && tbl[m[1]]) state[k] = m[1];
   });
   chips(document.getElementById("sw-s"), SCENE, "s");
   chips(document.getElementById("sw-n"), NUM, "n");
   chips(document.getElementById("sw-c"), COMP, "c");
+  chips(document.getElementById("sw-g"), GO, "g");
   chips(document.getElementById("sw-w"), WORD, "w");
+
+  /* 「＋ 他再傳一次」＝ 時間往前走一步，不是換版本 —— 所以它不碰網址參數。 */
+  document.getElementById("again").addEventListener("click", function () {
+    state.rounds.push(roll());
+    render();
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+  });
+  document.getElementById("reset").addEventListener("click", function () {
+    resetRounds(); render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 
   var bar = document.getElementById("bar"), fold = document.getElementById("fold");
   fold.addEventListener("click", function () {
