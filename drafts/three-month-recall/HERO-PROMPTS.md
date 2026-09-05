@@ -156,7 +156,7 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 　〈擴張牙弓〉的靈魂出竅踩過）。
 
 
-### Ⓕ 不規則分格 ＋ 中間兩位醫事人員（2026-09-05 新增，Ⓐ 的改寫；09-05 晚間第二版）
+### Ⓕ 不規則分格 ＋ 右下兩位醫事人員（2026-09-05 新增，Ⓐ 的改寫；09-05 晚間第二版）
 
 **起因**：使用者看過五案之後選 Ⓐ，但指出它的毛病 ——
 「**只有診療〔椅上〕的人不一樣，都一樣，所以畫面看起來很單調**」。
@@ -358,6 +358,50 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
   它和「填色要平」互相拉扯。改成「**這一條講的是一個東西給幾條線，不是顏色怎麼上**」。
 ・**`AVOID` 最前面補一整排**：蠟筆／色鉛筆／粉彩棒的外觀、填色裡的筆觸與排線、
   整張罩上的粗紙紋、素描稿的樣子、毛邊或描兩次的輪廓。
+
+---
+
+#### ⚠⚠⚠ 第六版（2026-09-05 更晚）：醫事人員從中間搬到右下 —— **成因是首頁卡片的裁切**
+
+使用者：「如果直接把這個圖放在網站文章，**首頁卡片的預覽圖片可能會重點都是在中間的
+醫事人員**……是不是把醫事人員改到右下框比較好（然後移過去的醫事人員視線或手勢動作
+要往左上帶）。」
+
+**量過，他說的成立，而且是三件事疊起來的：**
+
+| | |
+| --- | --- |
+| 首頁卡的縮圖是 **16:9** | 4:3 的圖被裁掉上下各 **12.4%**，只留中間 **75.3%** |
+| 裁切是**置中**的 | **中間那一格是七格裡唯一完全沒有被裁到的**，其餘六格各被切掉一塊 |
+| 中間那一格本來就最大 | 它在整張圖佔 **32.3%**，在卡片那一條裡變成 **36.1%**（＋12%） |
+
+三件合起來：**卡片上唯一完整、最大、又在正中央的東西就是那兩位醫事人員**。
+實際把圖裁成 393px 的卡片看過 —— 六個人只剩上下被切掉一截的碎片，
+讀起來就是「一張診所的照片」，而這一篇講的是**哪些人需要三個月回來一次**。
+
+⚠⚠⚠ **通則：一張圖會在兩個尺寸、兩個比例底下被看** ——
+文章頁是完整的 4:3、首頁卡是置中裁切的 16:9。
+**「畫面正中央」在文章頁只是構圖的一個位置，在卡片上等於「唯一的主角」。**
+畫之前要先問：**這張圖被裁成卡片之後，站在正中央的是誰？**
+
+**第六版四件改動：**
+
+・**右下那一格換成診所**（原本是量血糖的那位），兩位醫事人員**都轉向左上**、
+  醫師攤開的那隻手也**往左上伸出去**，穿過整張圖指回其他格子。
+  ⚠ 那一格**貼著畫面下緣**，所以明寫：**兩張臉與那隻手都要在那一格的上半部**，
+  底下只留房間與地板 —— 不然卡片會把她們的臉切掉。
+・**中間那一格換成孕婦**（原本在左上）。她是六個人裡**縮到卡片大小還讀得出來**的一個
+  （剪影就看得出來），而且她本來就是三個月回診最主流的一群。
+・**左上換成量血糖的那位**（和右下對調）。
+・**每一格的顏色跟著位置重新分配** —— 那一串本來是照位置寫的，人一換位置就對不上了。
+
+⚠ **中間那一格仍然是最大的，那是刻意的。**
+ILLUSTRATION.md 第十一節量過：**多格分割、沒有視覺中心的場面，縮到小尺寸會整張糊掉**。
+所以不能把七格拉成一樣大 —— 要的是**換掉站在中央的那個人**，不是拆掉中央。
+
+⚠ **這一輪逐條 diff 過第五版**（＝第五版學到的那條）：
+顏色多平、填色裡沒有筆觸、臉不是空的、房間那一段、接納與介紹那一段，五條都還在；
+顆粒、嘴巴一筆、六張一樣的臉、細到叫得出房間、沒有一樣東西是畫準的，五條都沒有回來。
 
 ---
 
@@ -744,7 +788,7 @@ greyscale; no backlit heroic silhouettes; no green cast over the whole picture; 
 must not look ill, frail, sad or bored; no arrows; no diagrams.
 ```
 
-### Ⓕ 不規則分格 ＋ 中間兩位醫事人員
+### Ⓕ 不規則分格 ＋ 右下兩位醫事人員
 
 ```
 Editorial illustration, 4:3 landscape (slightly wider than tall, NOT a wide banner).
@@ -819,39 +863,25 @@ Each panel has its own pale background tint, and each panel is a DIFFERENT ROOM 
 DIFFERENT FURNITURE — the six homes must never look like the same house drawn six times.
 
 THE CENTRE PANEL is the largest: an irregular five-sided panel in the middle of the
-picture, holding TWO members of clinic staff standing side by side, seen from the waist
-up, both turned three-quarters, both looking OUT TOWARDS THE PANELS AROUND THEM. Neither
-of them looks at the viewer, and THEIR TWO FACES ARE DOING DIFFERENT THINGS.
-  THE DENTIST, a woman in her thirties, wears an open WHITE COAT over a pale sage-green
-  scrub top, hair in a low bun. She stands slightly forward of the other. One arm is open
-  and extended outward in a calm, welcoming, presenting gesture — the gesture of someone
-  introducing people she is glad to see, not the gesture of someone giving a warning. Her
-  weight leans very slightly towards the panels. HER FACE: an open smile with the mouth
-  clearly open, eyebrows relaxed and lifted, eyes bright and wide.
-  THE NURSE, a woman in her forties, wears NO WHITE COAT — only a scrub top, and it is a
-  DIFFERENT COLOUR from the dentist's: a muted dusty teal. Short hair tucked behind one
-  ear. She stands half a step behind and to the other side, hands resting easily together
-  in front of her, head TILTED, nodding slightly at one of the panels. HER FACE: eyes
-  curved into happy closed crescents, mouth closed in a small warm smile — visibly quieter
-  and gentler than the dentist's face, not the same expression repeated.
-  TOGETHER THEY READ AS WELCOME AND INTRODUCTION — these are the people we are glad to
-  look after, and here they are. Nobody is scolding, warning, pointing at the viewer or
-  raising a finger.
-  THEIR ROOM, simply drawn — a low wooden cabinet, a glass-fronted cabinet with rows of
-  small unlabelled bottles, a stack of folded towels, a potted plant, a simple picture on
-  the wall showing ONLY a single tooth and no writing at all, a window frame at one side,
-  and the floor visible at the bottom.
+picture. IT IS A HOME, NOT THE CLINIC — the clinic is a smaller panel at the LOWER RIGHT.
+The centre panel holds a woman in her early thirties, visibly but not dramatically
+pregnant, sitting back on a fabric sofa with one hand resting on her middle, the other
+holding a slim blank booklet she is reading. FACE: looking down at the booklet, eyes
+curved, one corner of the mouth lifted — quietly pleased. HER ROOM: cushions, a low wooden
+coffee table with a glass of water and a small stack of plain books, slippers on the floor,
+a leafy pot plant, a barred Taiwanese window with daylight coming through, a standing fan.
 
-THE SIX PANELS AROUND HER, each holding ONE ordinary person in their own home, doing an
-ordinary thing. EACH ONE HAS A DIFFERENT EXPRESSION, LISTED BELOW — do not give them all
-the same pleasant neutral face. All of the objects below must be there, and every one of
-them is drawn with very few strokes.
-  UPPER LEFT — a woman in her early thirties, visibly but not dramatically pregnant,
-  sitting back on a fabric sofa with one hand resting on her middle, the other holding a
-  slim blank booklet she is reading. FACE: looking down at the booklet, eyes curved, one
-  corner of the mouth lifted — quietly pleased. HER ROOM: cushions, a low wooden coffee
-  table with a glass of water and a small stack of plain books, slippers on the floor, a
-  leafy pot plant, a barred Taiwanese window with daylight coming through, a standing fan.
+THE SIX PANELS AROUND HER: five of them hold ONE ordinary person in their own home, doing
+an ordinary thing, and the sixth — the LOWER RIGHT — is the clinic. EACH ONE HAS A
+DIFFERENT EXPRESSION, LISTED BELOW — do not give them all the same pleasant neutral face.
+All of the objects below must be there, and every one of them is drawn with very few
+strokes.
+  UPPER LEFT — a man in his sixties at his breakfast table, holding a small handheld meter
+  to his fingertip. FACE: completely matter-of-fact — level eyebrows, mouth a small
+  straight line, eyes down on his own finger. He has done this a thousand times and it is
+  not an event. HIS ROOM: a bowl of rice porridge, two small dishes of vegetables, a cup of
+  soy milk, a steel vacuum flask; behind him a kitchen doorway, a rice cooker on a counter,
+  a hanging cloth, and beyond the window the pillars of a Taiwanese covered walkway.
   UPPER RIGHT — a woman in her seventies with short grey permed hair, standing in her own
   kitchen, a wooden walking stick hooked over her forearm, reaching up into a cupboard for
   a cup. FACE: mouth slightly open with the effort, both eyebrows raised, eyes on the cup —
@@ -866,12 +896,33 @@ them is drawn with very few strokes.
   something over, not worried.  HIS ROOM: a round table with a patterned plastic
   tablecloth, a glass of tea, wooden chairs, a standing fan, a towel over a chair back, a
   barred window, a remote control and reading glasses on the table.
-  LOWER RIGHT — a man in his sixties at his breakfast table, holding a small handheld
-  meter to his fingertip. FACE: completely matter-of-fact — level eyebrows, mouth a small
-  straight line, eyes down on his own finger. He has done this a thousand times and it is
-  not an event. HIS ROOM: a bowl of rice porridge, two small dishes of vegetables, a cup of
-  soy milk, a steel vacuum flask; behind him a kitchen doorway, a rice cooker on a counter,
-  a hanging cloth, and beyond the window the pillars of a Taiwanese covered walkway.
+  LOWER RIGHT — THE CLINIC. This panel is SMALLER THAN THE CENTRE PANEL and it is a
+  SUPPORTING panel, not the subject of the picture. TWO members of clinic staff stand side
+  by side, seen from the chest up, BOTH TURNED THREE-QUARTERS TOWARDS THE UPPER LEFT OF THE
+  WHOLE PICTURE and both looking that way, out across the other panels. NEITHER OF THEM
+  LOOKS AT THE VIEWER, and THEIR TWO FACES ARE DOING DIFFERENT THINGS.
+    THE DENTIST, a woman in her thirties, wears an open WHITE COAT over a pale sage-green
+    scrub top, hair in a low bun. She stands slightly forward of the other. ONE ARM IS OPEN
+    AND EXTENDED UP AND TO THE LEFT, out across the picture towards the other panels — a
+    calm, welcoming, presenting gesture, the gesture of someone introducing people she is
+    glad to see; NOT a warning, NOT a raised finger, and NOT pointing at any one person.
+    Her weight leans very slightly the same way. HER FACE: an open smile with the mouth
+    clearly open, eyebrows relaxed and lifted, eyes bright and wide, looking up and to the
+    left, in the same direction as her hand.
+    THE NURSE, a woman in her forties, wears NO WHITE COAT — only a scrub top, and it is a
+    DIFFERENT COLOUR from the dentist's: a muted dusty teal. Short hair tucked behind one
+    ear. She stands half a step behind, hands resting easily together in front of her, head
+    TILTED, nodding slightly up towards the same upper-left corner. HER FACE: eyes curved
+    into happy closed crescents, mouth closed in a small warm smile — visibly quieter and
+    gentler than the dentist's face, not the same expression repeated.
+    TOGETHER THEY READ AS WELCOME AND INTRODUCTION — these are the people we are glad to
+    look after, and there they are. Nobody is scolding, warning, pointing at the viewer or
+    raising a finger.
+    THEIR ROOM, simply drawn and mostly behind them — a low wooden cabinet, a glass-fronted
+    cabinet with rows of small unlabelled bottles, a stack of folded towels, a potted plant,
+    a simple picture on the wall showing ONLY a single tooth and no writing at all.
+    BOTH THEIR FACES AND THE OPEN HAND SIT IN THE UPPER PART OF THIS PANEL, well clear of
+    the bottom edge of the whole picture.
   LOWER LEFT — the middle of the night. A woman in her fifties in a T-shirt stands at her
   kitchen counter pouring herself a glass of water. FACE: half asleep — eyes narrowed to
   slits, eyebrows sloping down and out, mouth slightly open, hair a bit flattened on one
@@ -885,25 +936,33 @@ them is drawn with very few strokes.
   ROOM: a small side table with a vacuum flask, a knitted blanket over her knees, a pot
   plant, a shelf of plain books, and a simple framed picture on the wall with no writing.
 
-NONE OF THESE SIX IS ILL, FRAIL, SAD OR FRIGHTENED, and none of them is in a hospital or a
-clinic — but they are not all wearing the same mild pleasant expression either. Each has a
+NONE OF THE SIX PEOPLE AT HOME IS ILL, FRAIL, SAD OR FRIGHTENED, and none of them is in a
+hospital or a clinic — but they are not all wearing the same mild pleasant expression
+either. Each has a
 different posture, a different direction of gaze and a different face. Nobody looks at the
 viewer.
 
-CROPPING — the top 12% and the bottom 12% of the whole picture will sometimes be cut off.
-Keep every face, and every one of the small objects listed above, well inside the middle of
-the frame. The top and bottom edges of the picture may hold only background: wall, floor,
-tint, the edge of a panel.
+CROPPING — the top 12% and the bottom 12% of the whole picture will sometimes be cut off,
+leaving a wide letterbox strip through the middle. Keep every face, and every one of the
+small objects listed above, well inside the middle of the frame. The top and bottom edges
+of the picture may hold only background: wall, floor, tint, the edge of a panel.
+  THIS MATTERS MOST FOR THE LOWER-RIGHT CLINIC PANEL, which touches the bottom edge of the
+  picture: the two staff, their faces and the open hand must all sit high enough in that
+  panel to survive the cut, with only their room and the floor below them.
+  WHEN THE PICTURE IS CUT DOWN TO THAT MIDDLE STRIP, THE THING IN THE CENTRE IS THE WOMAN
+  AT HOME ON HER SOFA — she is the one the strip is about. The clinic staff are off at the
+  lower right, partly cut, pointing back in towards her.
 
 LIGHT AND COLOUR — bright ordinary daytime in six of the seven panels, high key, soft
 daylight; no sunset, no long orange shadows. The lower-left night panel is the single
 exception and must read as clearly darker than all the others. Many colours, each of them
 held low and dusty: brick red, mustard, sage green, teal, greyish violet, cream. Give each
 panel a different pale tint for its background and assign the clothes so that no two
-neighbouring people clash: upper left dusty rose, upper right mustard, right pale slate
-blue, lower right cream and brick red, lower left deep blue in shadow, left muted teal
-with a patterned headscarf, the dentist white coat over pale sage green, the nurse dusty
-teal. Every garment has two or three FLAT steps of colour with hard edges, plus collars,
+neighbouring people clash: CENTRE dusty rose, upper left warm sand, upper right mustard,
+right pale slate blue, lower left deep blue in shadow, left muted teal with a patterned
+headscarf; in the LOWER-RIGHT CLINIC PANEL the dentist wears a white coat over pale sage
+green and the nurse wears dusty teal, and that panel keeps the palest, creamiest background
+of the seven. Every garment has two or three FLAT steps of colour with hard edges, plus collars,
 cuffs and hems — never a soft airbrushed gradient. As a small accent only, a deep forest
 green (#3f654a / #2c5238) on the gutter lines and on one shelf behind the staff — a touch,
 never a wash. Teeth, wherever they show, stay clean near-white.
