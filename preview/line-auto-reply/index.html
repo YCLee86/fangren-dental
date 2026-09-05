@@ -94,6 +94,30 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-tag{align-self:flex-start;margin-left:37px;font-size:.6rem;color:var(--li-meta);
   border:1px solid #d6dce2;background:#fff;border-radius:6px;padding:1px 6px}
 
+/* ---- Flex 圖卡（「如果廠商送得出 Flex」的樣子）----------------------
+   ⚠⚠ 字級一律用 LINE Flex 的**固定 px**（md 16／sm 14／xs 13），不可以寫成 rem
+   的比例 —— 招呼卡那一輪踩過：寫成比例每一行都比 LINE 實際的小 1~2.7px，
+   規格頁一旦和真實算繪對不上，上面做的每一個判斷都是假的（第十一之二節）。
+   ⚠ 顏色與那塊淡藍 #E2E8EF 逐字沿用已定稿的「綁定完成」那一張，
+   同一件事在同一個帳號裡用同一組樣子。 */
+/* ⚠ 卡片是**固定 268px**，不是視窗的百分比 —— LINE 的卡片寬度不隨螢幕變
+   （已定稿的 line-bind-done／line-remind 兩頁都是寫死 268）。第一版寫成
+   min(268px,74%)，393 上量到 252.3，那個寬度上做的折行判斷全部是假的。 */
+.fx{flex:0 0 268px;width:268px;border-radius:14px;overflow:hidden;background:#f4f4f5;
+  box-shadow:0 1px 2px rgba(0,0,0,.08)}
+/* ⚠⚠ height:auto 不可以省 —— <img> 上寫了 height 屬性（為了不跳版），
+   那是**呈現屬性**，不寫 height:auto 的話 aspect-ratio 蓋不過它，
+   頭圖會停在 520px 高。同一個坑這一頁踩過兩次（第 25-7 節第 1 條）。 */
+.fx .hero{display:block;width:100%;height:auto;aspect-ratio:2/1;object-fit:cover}
+.fx .b{padding:14px}
+.fx h4{margin:0;font-size:16px;line-height:1.5;font-weight:700;color:#2a2c27}
+.fx p{margin:8px 0 0;font-size:14px;line-height:1.7;color:#5c5f57;white-space:pre-wrap}
+.fx .blue{background:#e2e8ef;border-radius:8px;padding:10px 12px;margin-top:12px;
+  font-size:14px;line-height:1.7;color:#2a2c27;white-space:pre-wrap}
+.fx .xs{margin-top:11px;font-size:13px;line-height:1.7;color:#5c5f57;white-space:pre-wrap}
+.fx b{font-weight:700}
+.fx a{color:#2b6cb0;text-decoration:underline}
+
 /* ---- 量測面板 -------------------------------------------------------- */
 .pv-panel{margin:12px 0 0;border:1px solid var(--rule);border-radius:10px;
   background:var(--card);padding:9px 11px;font-size:.72rem;line-height:1.85;
@@ -169,7 +193,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         後台選單裡沒有這個選項，要廠商用 API 送 —— 那正是還在等廠商回答的那一題。<br>
         自動回應這裡現在能放的圖是<b>圖文訊息</b>：一張 1040 的圖切成格子，
         每一格設一個動作（開網址／撥號／傳一句話）。<b>字是烘在圖裡的</b>，
-        LINE 會把它縮到 <b>223px</b> 顯示（390 寬實測）。</dd>
+        LINE 會把它縮到 <b>223px</b> 顯示（390 寬實測）。<br>
+        ⚠ 你說的「圖卡」長什麼樣，切換條的<b>放什麼 → 圖卡（Flex）</b>那一格就是 ——
+        <span class="q">那一格不是現在做得到的，是**拿去問廠商的那張圖**。</span></dd>
 
       <dt>四、三張隨機 —— <span class="y">三條路，第一條要先實測</span></dt>
       <dd><b>Ⓐ 三則「一律回應」，文字一字不差、只有圖不同。</b>
@@ -285,7 +311,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     other:   { name: "隨便一句",       say: "謝謝",                         t: "15:30", open: true,  hit: null }
   };
   var NUM = { one: "一則通用", two: "分時段兩則", kw: "關鍵字分流", now: "現況" };
-  var COMP = { t: "只有文字", ti: "文字＋圖", it: "圖＋文字", tit: "文字＋圖＋文字" };
+  var COMP = { t: "只有文字", ti: "文字＋圖", it: "圖＋文字", tit: "文字＋圖＋文字", card: "圖卡（Flex）" };
   var WORD = { old: "09-02 版", now: "跟綁定完成一致" };
   var GO = { one: "固定一張", rand: "三張隨機" };
   /* rounds ＝ 他傳了幾次。每一輪記下這一次抽到第幾張圖（固定一張時永遠是 0）。
@@ -333,6 +359,39 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     };
   }
 
+  /* Flex 圖卡。⚠⚠ 這一格是「**如果**廠商送得出 Flex Message」的樣子 ——
+     後台的自動回應選單裡**沒有**這個選項（第 25-1 節第三點），所以它現在
+     不是可以直接照做的東西，是**拿去問廠商的那張圖**。
+     ⚠ 內容和純文字那一份是同一組事實，只是排成卡片：
+       標題 md 16／內文 sm 14／附註 xs 13，淡藍方塊沿用「綁定完成」那一張。
+     ⚠⚠ 頭圖在這裡是 2:1 —— 三張圖的比例**取決於走哪一條路**：
+       圖文訊息要 1040×1040（方的，切格子）、Flex 圖卡要 1024×512（2:1）。
+       畫圖之前一定要先定是哪一條，不然三張都要重畫。 */
+  function card(idx) {
+    return function () {
+      var c = el("div", "fx"), i = new Image();
+      i.className = "hero"; i.src = IMGS[idx].f; i.alt = "";
+      i.width = 1040; i.height = 520;
+      i.addEventListener("load", measure);
+      c.appendChild(i);
+      var b = el("div", "b");
+      b.appendChild(el("h4", null, "謝謝你的訊息"));
+      b.appendChild(el("p", null, "這裡沒有專人即時回覆訊息。"));
+      b.appendChild(el("div", "blue",
+        "約診更改或取消，最晚請於\n看診日前2天(不含假日)、\n於診所開診時段來電變更\n" + TEL));
+      var x1 = el("div", "xs");
+      x1.appendChild(document.createTextNode("查自己的約診，點下面選單的"));
+      x1.appendChild(el("b", null, "約診查詢"));
+      x1.appendChild(document.createTextNode("。"));
+      b.appendChild(x1);
+      var x2 = el("div", "xs");
+      linkify(x2, "門診表與各科說明\nhttps://fangren.net");
+      b.appendChild(x2);
+      c.appendChild(b);
+      return c;
+    };
+  }
+
   /* 這一次會被觸發的是哪一則、它的文字是什麼 */
   function pick() {
     var sc = SCENE[state.s];
@@ -355,6 +414,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         前半是「這裡沒有人」＋改約，後半是另外兩個出口。 */
   function bubbles(text) {
     if (state.n === "now") return [{ k: "t", v: text }];   /* 現況就是一則純文字 */
+    if (state.c === "card") return [{ k: "card" }];        /* 圖卡：整則就是一張卡 */
     if (state.c === "t")  return [{ k: "t", v: text }];
     if (state.c === "ti") return [{ k: "t", v: text }, { k: "i" }];
     if (state.c === "it") return [{ k: "i" }, { k: "t", v: text }];
@@ -377,7 +437,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       chat.appendChild(msg("me", t, bubble(r === 0 ? sc.say : FOLLOW[(r - 1) % FOLLOW.length])));
       chat.appendChild(el("div", "pv-tag", "自動回應訊息・" + got.which));
       bubbles(got.text).forEach(function (b) {
-        chat.appendChild(msg("oa", t, b.k === "i" ? image(idx) : bubble(b.v)));
+        chat.appendChild(msg("oa", t,
+          b.k === "card" ? card(idx) : b.k === "i" ? image(idx) : bubble(b.v)));
       });
     });
     requestAnimationFrame(measure);
@@ -407,7 +468,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     return { rows: Object.keys(tops).length, last: best === null ? null : tops[best] };
   }
   function orphans() {
-    var bubs = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub:not(.img)"), out = 0;
+    var bubs = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub:not(.img), .pv-chat .fx p, .pv-chat .fx .blue, .pv-chat .fx .xs"), out = 0;
     for (var i = 0; i < bubs.length; i++) {
       var t = bubs[i].textContent.split("\n");
       /* 只看真的被瀏覽器折過的段落：段落數 < 視覺行數才有折行 */
@@ -420,12 +481,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   function measure() {
     var vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
     var panel = document.getElementById("panel"), note = document.getElementById("note");
-    var oa = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub");
-    var tot = 0, nImg = 0, wid = 0;
+    /* ⚠ 圖卡不是 .pv-bub（它是 .fx），選擇器漏掉它的話整則會量成 0 —— 踩過的近親：
+       「按了沒反應、不報錯」，只有拿數字量才看得出來。 */
+    var oa = document.querySelectorAll(".pv-chat .pv-msg:not(.me) .pv-bub, .pv-chat .pv-msg:not(.me) .fx");
+    var tot = 0, nImg = 0, nCard = 0, wid = 0;
     for (var i = 0; i < oa.length; i++) {
       var r = oa[i].getBoundingClientRect();
       tot += r.height + 11;
-      if (oa[i].classList.contains("img")) nImg++;
+      if (oa[i].classList.contains("fx")) nCard++;
+      else if (oa[i].classList.contains("img")) nImg++;
       else if (r.width > wid) wid = r.width;   /* 只比文字泡泡：圖是另一個上限 */
     }
     var pct = tot / vh * 100, rn = state.rounds.length, one = tot / rn / vh * 100;
@@ -439,13 +503,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
     panel.innerHTML =
       "<b>" + NUM[state.n] + "</b>　觸發的是：" + got.which + "<br>" +
-      "他傳了 <b>" + rn + "</b> 次 → 診所送出 <b>" + (oa.length - nImg) + "</b> 則文字 ＋ <b>" +
-      nImg + "</b> 張圖，合計 <b>" + tot.toFixed(0) + "px</b> ＝ " +
+      "他傳了 <b>" + rn + "</b> 次 → 診所送出 <b>" + (oa.length - nImg - nCard) + "</b> 則文字 ＋ <b>" +
+      nImg + "</b> 張圖" + (nCard ? " ＋ <b>" + nCard + "</b> 張卡" : "") +
+      "，合計 <b>" + tot.toFixed(0) + "px</b> ＝ " +
       (pct > 100 ? '<span class="no">一屏的 ' + pct.toFixed(0) + "%（畫面被洗掉）</span>"
        : pct > 62 ? '<span class="no">一屏的 ' + pct.toFixed(0) + "%</span>，要捲才看得完"
                   : '<span class="ok">一屏的 ' + pct.toFixed(0) + "%</span>，一眼看得完") +
       "　（一次 " + one.toFixed(0) + "%）<br>" +
-      (nImg
+      (nImg || nCard
         ? "抽到的順序 <b>" + seq + "</b>" +
           (state.g === "rand"
             ? "・連著同一張 <b class=\"" + (rep ? "no" : "ok") + "\">" + rep + "</b> 次"
@@ -467,6 +532,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         ? "分時段：省掉「現在到底有沒有人」這個猜測。⚠ 但時段只認星期＋時間，分不出國定假日——所以開診那一則寫的是「這個時段診所有開診」，不是「現在有人在」。"
       : state.c === "t"
         ? "只有文字（09-02 定稿的那一份）：這一則每傳一次就送一次，是三則裡最該克制的。第一句是道謝不是道歉（愛馬仕的做法）。"
+      : state.c === "card"
+        ? "圖卡（Flex）：一則就是一張卡 —— 頭圖擺那張有趣的圖，卡片裡是**真的文字**（可以複製、螢幕閱讀器讀得到），淡藍那塊和已定稿的「綁定完成」用同一組樣子。⚠⚠ 後台的自動回應選單裡沒有這個選項，所以這一格不是現在做得到的，是**拿去問廠商的那張圖**。⚠ 頭圖是 2:1，和圖文訊息的 1040×1040 不一樣 —— 三張圖畫之前要先定走哪一條路。"
       : state.g === "rand"
         ? "三張隨機：按幾次「他再傳一次」看看。份量沒有變少（上面那個 % 照樣往上加），但第二次出現的不是同一張，「壞掉感」比重複貼同一張輕。⚠ 隨機能不能做，要在後台實測 —— 見 README 第 25-9 節那五分鐘的驗證步驟。"
         : "固定一張：他連傳兩次就會看到一模一樣的東西貼兩遍。切到「三張隨機」比比看。";
