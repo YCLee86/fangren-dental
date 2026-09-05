@@ -160,7 +160,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      所以新版真正的修法是**讓它折行**（Flex 的 text 預設就會折，是廠商那一張
      設了 maxLines:1 才會截）：放得下就一行，放不下就兩行，
      **無論哪一種寬度都不會有字消失**。縮短格式是在這之上再多買一層餘裕。 */
-.pv-nw .dt{font-size:22px;line-height:1.45;font-weight:700;color:var(--ink);
+.pv-nw .dt{font-size:var(--dtfs,22px);line-height:1.45;font-weight:700;color:var(--ink);
   letter-spacing:.01em;margin-top:6px}
 /* ---- 浮水印（使用者 2026-09-04 提的）--------------------------------
    ⚠⚠⚠ **聊天室的背景設不了** —— 那是每個使用者在自己手機上設的、而且只有他看得到，
@@ -188,7 +188,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 /* 病人姓名：xs 13、柔墨。⚠ 不加粗、不上色 —— 它是標籤不是主角，
    日期才是這張卡最大的東西（同 20-12 那條「按鈕看它上一句話」的精神：
    先問這一行在回答什麼）。 */
-.pv-nw .who{font-size:13px;line-height:1.6;color:var(--ink-soft);letter-spacing:.02em}
+.pv-nw .who{font-size:var(--whofs,13px);line-height:1.6;color:var(--ink-soft);letter-spacing:.02em}
 .pv-nw .who.bot{margin-top:8px}
 .pv-nw .ix{font-size:13px;line-height:1.6;color:var(--ink-soft);letter-spacing:.02em}
 .pv-nw .cal{display:flex;align-items:baseline;gap:9px;margin-top:6px}
@@ -289,7 +289,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <!-- ⚠ 這一列**二選一顯示**（`display:none` 不是 .off）：預約成功給「頁首標誌」、
        輪播給「病人姓名」。兩則都已經定案不放地址電話，那把尺因此從這裡收掉
        （`?a=box|two` 還吃得到）。切換條維持五列，不會因為多尺而長高。 -->
-  <div class="r" id="row-nm"><span class="lb">病人姓名</span><span id="sw-nm"></span></div>
+  <!-- ⚠ 病人姓名的**位置**他已經挑了（日期上面），那把尺收掉、位置讓給字級；
+       `?nm=bot|none` 仍然吃得到。切換條維持五列。 -->
+  <div class="r" id="row-z"><span class="lb">字級</span><span id="sw-z"></span></div>
   <div class="r" id="row-g"><span class="lb">頁首標誌</span><span id="sw-g"></span></div>
 </div>
 
@@ -359,6 +361,20 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   var GH_PX = { none: 0, s28: 28, m40: 40, l56: 56, xl96: 96 };
 
   /* ---- 輪播上的病人姓名（2026-09-05）--------------------------------- */
+  /* ---- 日期與姓名的字級（2026-09-05）---------------------------------
+     使用者：「這個版本不錯，**日期小一點，名字大一點**。」
+     ⚠⚠ 這兩件是**一句話**（他在講兩者的相對輕重），所以做成一把尺、成對地動，
+       不要拆成兩把讓他自己配。
+     ⚠⚠⚠ **只能挑 Flex 的固定階**（第十一之二節）：
+       xxs 11／xs 13／sm 14／md 16／lg 19／xl 22／xxl 27 —— **沒有 20、沒有 18、沒有 15**。
+       所以「小一點」只有 22 → 19 一步，「大一點」是 13 → 14 或 16。 */
+  var TYPE = {
+    a: { name: "22 / 13（現在）", dt: 22, who: 13 },
+    b: { name: "19 / 14",        dt: 19, who: 14 },
+    c: { name: "19 / 16",        dt: 19, who: 16 },
+    d: { name: "16 / 16",        dt: 16, who: 16 }
+  };
+
   var NAMEPOS = {
     top:  { name: "日期上面" },
     bot:  { name: "日期下面" },
@@ -451,7 +467,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   /* ⚠ `ad` 2026-09-05 起預設 **none**：兩則他都選了「不放」，那把尺因此從切換條上
      收掉（位置讓給頁首標誌與病人姓名），但 `?a=box|two` 仍然吃得到。 */
   var msg = "booked", v = "nw", dt = "cn", look = "wm9", ad = "none", hero = "n", wmk = "12",
-      gh = "m40", nm = "top";
+      gh = "m40", nm = "top", tz = "c";
 
   (function () {
     var q = location.search;
@@ -468,6 +484,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     hero = pick("h", { y: 1, n: 1 }, hero);
     gh = pick("g", GHEAD, gh);
     nm = pick("nm", NAMEPOS, nm);
+    tz = pick("z", TYPE, tz);
   })();
 
   /* 現況那一張的日期用哪一種：預約成功卡截圖上是短版、查詢卡截圖上是長版。
@@ -500,7 +517,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      ⚠ 頂端那一行診所名**只有預約成功那一張留著**：輪播是在診所自己的聊天室裡
        一次跳出好幾張，識別由聊天室給，重複 N 次沒有意義。 */
   function nwCard(a, isQuery, i, n) {
-    var h = '<div class="pv-hc pv-nw">';
+    /* ⚠ 字級寫在卡片自己身上（兩則共用同一個殼，所以**兩則一起動**）——
+       輪播只有 207px 寬，日期在那裡本來就比較容易折行，
+       但如果兩則的日期字級不一樣，它們就不再是「同一張卡的兩個狀態」了。 */
+    var h = '<div class="pv-hc pv-nw" style="--dtfs:' + TYPE[tz].dt
+      + 'px;--whofs:' + TYPE[tz].who + 'px">';
     /* 頭圖：預約成功那一張是「頭圖 或 頂端那行診所名」二選一。
        ⚠⚠ 輪播**預設兩個都不放**（識別由聊天室給，重複 N 次沒有意義），
          但 ?h=y 時也照畫 —— 「一張圖 ＝ N × 104px」這件事要看得到，
@@ -611,12 +632,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     bar("sw-v", VER, function () { return v; }, function (k) { v = k; });
     bar("sw-d", DATE, function () { return dt; }, function (k) { dt = k; });
     bar("sw-s", LOOK, function () { return look; }, function (k) { look = k; });
-    bar("sw-nm", NAMEPOS, function () { return nm; }, function (k) { nm = k; });
+    bar("sw-z", TYPE, function () { return tz; }, function (k) { tz = k; });
     bar("sw-g", GHEAD, function () { return gh; }, function (k) { gh = k; });
     /* 卡片長相那把尺只有「新版的輪播」有；地址電話那把尺對現況無效（現況固定兩行）。
        ⚠ 關掉而不是拿掉，不然切回去整條會跳高一截。 */
     document.getElementById("row-s").className = "r" + (msg === "query" && v === "nw" ? "" : " off");
-    var rn = document.getElementById("row-nm");
+    var rn = document.getElementById("row-z");
     rn.style.display = msg === "query" ? "" : "none";
     rn.className = "r" + (v === "nw" ? "" : " off");
     var rg = document.getElementById("row-g");
@@ -625,7 +646,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
     history.replaceState(null, "", location.pathname
       + "?m=" + msg + "&v=" + v + "&d=" + dt + "&s=" + look + "&a=" + ad
-      + "&h=" + hero + "&g=" + gh + "&nm=" + nm + "&k=" + wmk + (wmOn ? "&wm=1" : "") + (five ? "&n=5" : ""));
+      + "&h=" + hero + "&g=" + gh + "&nm=" + nm + "&z=" + tz + "&k=" + wmk + (wmOn ? "&wm=1" : "") + (five ? "&n=5" : ""));
     document.getElementById("pv-cap").innerHTML = msg === "booked"
       ? "↑ 約好的<b>當下</b>自動送出，<b>單張</b>。⚠ 近似，不是 LINE 自己的算繪。"
       : "↑ 他點了圖文選單的<b>約診紀錄查詢</b>之後回的，<b>輪播</b>（一個約診一張，可以左右滑）。"
@@ -949,6 +970,28 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     /* ---- 2026-09-05：輪播的姓名與「每顆浮水印不同顏色」---- */
     var CLR = (msg === "query" && v === "nw")
       ? "<b>2026-09-05 這一版：輪播每一張都帶病人姓名，九顆浮水印各自一個顏色。</b>"
+        + "<hr>"
+        + "<b>「日期小一點、名字大一點」——做成一把尺，兩個一起動。</b>"
+        + "你講的是兩者的<b>相對輕重</b>，拆成兩把尺讓你自己配反而難挑。"
+        + "<br>⚠⚠ <b>只能挑 Flex 的固定階</b>：xxs 11／xs 13／sm 14／md 16／lg 19／xl 22／xxl 27"
+        + "—— <b>沒有 20、沒有 18、沒有 15</b>。所以「日期小一點」只有 22 → 19 這一步；"
+        + "「名字大一點」是 13 → 14 或 16，而 <b>14 只差 1px，幾乎看不出來</b>。"
+        + "<br>→ <b>預設給你 19 / 16</b>（輪播卡 118.6 → <b>114.7</b>）。"
+        + "日期仍然是<b>粗體＋深墨</b>、名字是<b>一般字重＋柔墨</b>，"
+        + "所以就算只差 3px，誰是主角還是讀得出來。"
+        + "<br>・22/13（現在）118.6　・19/14 111.5　・<b>19/16 114.7</b>　・16/16 106"
+        + "<hr>"
+        + "⚠⚠ <b>字級是寫在卡片自己身上的，所以兩則一起動</b> —— 這兩張是"
+        + "「同一張卡的兩個狀態」，日期字級要是分家，它們就不再是同一個模板了。"
+        + "按上面的「預約成功」可以看另一則。"
+        + "<hr>"
+        + "⚠ <b>你現在選的「現況・短版」在四格裡都是兩行</b>（輪播只有 179px 可用）——"
+        + "那不是壞掉（會折就不會有字消失），但 19px 折得比 22px 好："
+        + "22 是「2026/08/20」+「(四) 15:45」，19 是「2026/08/20 (四)」+「15:45」。"
+        + "「新版・中文」只有在 16/16 那一格才收得成一行。"
+        + "<br>⚠⚠ 順帶量到一件：<b>「現況・長版」在 19px 上會把「星期二」拆成「星期／二」</b>"
+        + "（預約成功那一張，268 寬），22px 反而斷得乾淨。"
+        + "<b>那又多一個不要用長版的理由。</b>"
         + "<hr>"
         + "<b>姓名 —— 你是對的，我上一輪的理由不成立。</b>"
         + "當初把名字從輪播拿掉，寫的是「清單裡每張都重寫一次名字＝浪費整行 × N」，"
