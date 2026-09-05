@@ -107,6 +107,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-fx .box{border-radius:8px;padding:11px 12px;margin-top:11px;
   font-size:16px;line-height:1.6;color:var(--ink);white-space:pre-line}
 .pv-fx .who{background:rgba(68,120,181,.10)}
+/* ⚠ 2026-09-04 使用者指定「姓名、約診時間下面的灰底拿掉」——
+   字與大小完全不動，只把方塊那一層拿掉（內距也跟著收，不然會多一段空白）。 */
+.pv-fx .who.bare{background:none;padding:0;margin-top:9px}
+/* 沒有頁頭那一排時，內容自己補回上內距 */
+.pv-fx .b.top-none{padding-top:14px}
 .pv-fx .who .nm{font-weight:700}
 .pv-fx .who .dt{font-size:19px;font-weight:700;display:block;margin-top:2px}
 .pv-fx .warn{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:11px;
@@ -188,8 +193,6 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <button class="fold" id="pv-fold" aria-pressed="false">收起</button>
   <div class="in">
     <div class="row" id="pv-row-v"></div>
-    <div class="row" id="pv-row-l"></div>
-    <div class="row" id="pv-row-o"></div>
     <div class="row" id="pv-row-r"></div>
   </div>
 </div>
@@ -220,32 +223,48 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        ①它沒有說出後果（誤按的人第二次還是會按到同一個位置）；
        ②它在中文裡是有歧義的：「是」可以被讀成「是，我要去」；
        ③按下去之後聊天室裡只留下一個孤零零的「是」，日後回頭看那段對話，
-         病人和診所都看不出他當時取消了什麼。 */
+         病人和診所都看不出他當時取消了什麼。
+     ⚠⚠ 2026-09-04 使用者自己寫了兩顆按鈕的字，**這一把尺已經收掉了**
+       （切換條上看不到，`?l=yn|full|short` 仍然吃得到，用來對照現況）。
+       ⚠ 他寫的那一組在 Ⓑ（confirm 範本）**放不放得下要現場量** ——
+         那個容器一顆只有半個卡片寬，面板那一段會報。 */
   var L = {
+    user: { name: "你寫的",     go: "是喔　要取消", stay: "按錯惹　我會去" },
     yn:   { name: "是／否",     go: "是",           stay: "否" },
     full: { name: "說出動作",   go: "取消這個約診", stay: "不取消，我會到" },
     short:{ name: "短一點",     go: "取消約診",     stay: "不取消" }
   };
 
-  /* ---- 順序：哪一顆在前面（＝左邊那一顆）----------------------------
-     ⚠ 現況是「是」在左 ＝ 破壞性的那一顆站在慣性落點上。 */
+  /* ---- 順序：哪一顆在前面 --------------------------------------------
+     ⚠⚠ 2026-09-04 使用者指定「**第一個**按鈕是綠底套色、寫『是喔　要取消』」，
+       所以順序也寫死了（`?o=safe` 仍然吃得到，用來看另一種排法）。
+     ⚠ 這等於**破壞性的那一顆站在慣性落點上**，那是他知情的選擇，
+       面板照樣會報這一項，但它不是待辦。 */
   var O = { safe: { name: "安全的在左" }, go: { name: "取消在左" } };
 
-  /* ---- 按下去之後：三種結果 ------------------------------------------
-     ⚠ 「來不及」與「來得及」**兩則都是真的**（2026-09-04 使用者各給了一張截圖）。
-     ⚠⚠ 只剩「按了不取消」那一格還沒看過，那一格仍然是擬的。 */
+  /* ---- 按下去之後 -----------------------------------------------------
+     ⚠⚠ 2026-09-04 使用者指定：**不要再分「來得及」與「來不及」，一律顯示同一則。**
+       文字是他寫的，逐字。
+     ⚠⚠⚠ 但那一則裡的「（註）這次取消已經超過最晚2天前（不含假日）的時間」
+       **對在期限內取消的人是錯的** —— 而系統確實有成功取消的情況
+       （2026-09-04 那張「取消成功」的真截圖就是）。照寫、把證據攤開，
+       頁面底下那一段有三條路給他挑。
+     ⚠ 「請與診所聯繫」**沒有給號碼**，面板那一項會報。
+     ⚠ 只剩「按了不取消」那一格還沒看過，那一格仍然是擬的。 */
   var R = {
-    late: { name: "來不及" },
-    ok:   { name: "來得及" },
-    no:   { name: "按不取消" }
+    go: { name: "按了取消" },
+    no: { name: "按了不取消" }
   };
 
-  var v = "c", lb = "full", od = "safe", rs = "late";
+  var v = "c", lb = "user", od = "go", rs = "go";
   var q = location.search;
   v  = (q.match(/[?&]v=(a|b|c)/) || [])[1] || v;
-  lb = (q.match(/[?&]l=(yn|full|short)/) || [])[1] || lb;
+  lb = (q.match(/[?&]l=(user|yn|full|short)/) || [])[1] || lb;
   od = (q.match(/[?&]o=(safe|go)/) || [])[1] || od;
-  rs = (q.match(/[?&]r=(late|ok|no)/) || [])[1] || rs;
+  /* ⚠ `?r=ok` 沒有在切換條上，但**留著吃得到** —— 那一格是 2026-09-04
+       「取消成功」那張真截圖，Ⓐ 上看得到它逐字長什麼樣（證據不要弄丟）。 */
+  rs = (q.match(/[?&]r=(go|no|ok|late)/) || [])[1] || rs;
+  if (rs === "late") rs = "go";
 
   /* ---- 每一案的文字 ---------------------------------------------------
      ⚠⚠⚠ Ⓑ／Ⓒ 都多寫了一件現況沒有寫、而且**非寫不可**的事：
@@ -281,17 +300,24 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + '<div class="r">' + (od === "go" ? g + s : s + g) + '</div></div>';
   }
 
-  /* Ⓒ：圖卡。⚠ 沒有頭圖 —— 這一張是要他立刻判斷的介面，圖只會把按鈕推到畫面外。 */
+  /* Ⓒ：圖卡。⚠ 沒有頭圖 —— 這一張是要他立刻判斷的介面，圖只會把按鈕推到畫面外。
+     ⚠⚠ 2026-09-04 使用者三件：**頁頭那排 logo ＋ 診所名拿掉**、
+       **姓名與約診時間底下那塊淡底拿掉**（字留著）、兩顆按鈕的顏色與字自己指定。
+     ⚠⚠⚠ **兩顆按鈕的語意在這一張是反過來的**：綠底那顆是「是喔　要取消」＝ 不會來，
+       所以 logo 配的是**白色的 nogo**（嘴巴倒過來那顆，`mark-nogo-white.png`，
+       2026-09-04 由 `drafts/channels/remind-marks.mjs` 一起產出）；
+       白底那顆是「按錯惹　我會去」＝ 會來，配**綠色的正常標誌**。
+       ⚠ 提醒卡那一張正好相反（綠底＝ok 沒問題＝正常標誌、線框＝掰掰不去囉＝nogo）——
+         **兩顆 logo 是跟著「去不去」走，不是跟著「哪一顆是主鈕」走**。
+         若你要的是「位置沿用」（綠底＝正常標誌、白底＝nogo），一句話就換得回來。 */
   function flexCard() {
-    var go = '<span class="nob"><img src="../line-remind/mark-nogo.png" alt="">'
+    var go = '<span class="btn"><img src="../line-remind/mark-nogo-white.png" alt="">'
       + '<span>' + L[lb].go + '</span></span>';
-    var stay = '<span class="btn"><img src="../line-welcome/mark-white.png" alt="">'
+    var stay = '<span class="nob"><img src="../line-welcome/mark-green.png" alt="">'
       + '<span>' + L[lb].stay + '</span></span>';
-    return '<div class="pv-fx" id="pv-card">'
-      + '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>'
-      + '<div class="b">'
+    return '<div class="pv-fx" id="pv-card"><div class="b top-none">'
       + '<p class="q">要取消這個約診嗎？</p>'
-      + '<p class="box who"><span class="nm">' + WHO + '</span>'
+      + '<p class="who bare"><span class="nm">' + WHO + '</span>'
       + '<span class="dt">' + WHEN + '</span></p>'
       + '<p class="warn">按下去只會取消這個時段，\n不會幫你排新的時間；\n要看診請重新來電預約。</p>'
       + (od === "go" ? go + stay : stay + go)
@@ -318,8 +344,18 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       no:   "（沒看過 —— 按「否」之後系統回什麼，我們不知道）"
     }
   };
+  /* ⚠⚠ 這一則的字是使用者 2026-09-04 逐字寫的，**一個字都沒有動**，
+       只有斷行是我們排的（Flex 的斷行本來就要自己指定）。 */
+  var DONE = "已取消，若還有其他問題請與診所聯繫"
+    + "（註）這次取消已經超過最晚2天前（不含假日）的時間。";
+  /* ⚠ 斷行是量出來的（240px 可用寬）：這四行是 176／96／176／234px，
+       每一行都自己收得住，不會被再折一次。
+       ⚠⚠ 純文字那一則（Ⓑ）**不要自己斷行** —— LINE 的泡泡本來就會折。 */
+  var DONE_LINES = "已取消，若還有其他問題\n請與診所聯繫\n"
+    + "（註）這次取消已經超過\n最晚2天前（不含假日）的時間。";
+
   function resultNode() {
-    if (v === "a") return bub("", RES.a[rs]);
+    if (v === "a") return bub("", RES.a[rs === "go" ? "late" : rs]);
     if (rs === "no") {
       var t = "好，這個約診留著。\n" + WHEN + "，我們等你。";
       return v === "b" ? bub("", t) : slot(
@@ -327,32 +363,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + '<p class="done">好，約診留著</p>'
         + '<p class="lead">' + WHEN + "，我們等你。" + '</p></div></div>');
     }
-    if (rs === "ok") {
-      /* ⚠⚠ 現況這一則**已經做對兩件**（寫了是誰、寫了哪一天，還給了電話）——
-           新版改的是口氣（「煩請您儘速」「關心您❤️」是公文體＋公版）與日期的寫法。
-         ⚠ 「還要接著治療的話…」那兩句是**我擬的**，這張卡其餘的字都有出處，
-           這一句你要換就換（同提醒卡那一輪：文案的最後一哩留給你）。
-         ⚠ 現況那句「預約保留完整療程時間」是有內容的（療程要留夠時間），
-           不要為了精簡把那個意思弄丟。 */
-      var t2 = "好，這個約診取消了。\n" + WHO + "　" + WHEN + "\n\n"
-        + "還要接著治療的話，\n請早一點來電安排新的時間。\n" + TEL;
-      return v === "b" ? bub("", t2) : slot(
-        '<div class="pv-fx" id="pv-res"><div class="b">'
-        + '<p class="done">好，這個約診取消了</p>'
-        + '<p class="box who"><span class="nm">' + WHO + '</span>'
-        + '<span class="dt">' + WHEN + '</span></p>'
-        + '<p class="lead">還要接著治療的話，\n請早一點來電安排新的時間。</p>'
-        + '<span class="tel"><img src="../line-remind/mark-tel.png" alt=""><span>' + TEL + '</span></span>'
-        + '</div></div>');
-    }
-    var t3 = "這個約診還在，沒有取消。\n\n"
-      + "約診更改或取消，最晚請於看診日前 2 天（不含假日）、於診所開診時段來電變更。\n" + TEL;
-    return v === "b" ? bub("", t3) : slot(
+    if (rs === "ok") return bub("", RES.a.ok);   /* 切換條上沒有，`?r=ok` 才看得到 */
+    return v === "b" ? bub("", DONE) : slot(
       '<div class="pv-fx" id="pv-res"><div class="b">'
-      + '<p class="done">這個約診還在，\n沒有取消</p>'
-      + '<p class="lead">約診更改或取消，最晚請於\n看診日前 2 天（不含假日）、\n於診所開診時段來電變更。</p>'
-      + '<span class="tel"><img src="../line-remind/mark-tel.png" alt=""><span>' + TEL + '</span></span>'
-      + '</div></div>');
+      + '<p class="lead">' + DONE_LINES + '</p></div></div>');
   }
 
   function draw() {
@@ -438,19 +452,32 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     var all = chat.innerText || chat.textContent;
     var emo = all.match(EMOJI) || [];
 
-    /* 孤字：末段只剩 1~3 個字的那一行（自己斷好的短句不算）。 */
+    /* 孤字：末段只剩 1~3 個字的那一行（自己斷好的短句不算）。
+       ⚠⚠ 2026-09-04：**結果那一張卡也要掃**（原本只掃確認卡）——
+         那一則的斷行是我們自己排的，排長了就會被再折一次，
+         而只掃確認卡的話那幾行完全量不到（第一版就是這樣漏掉的）。 */
+    var scanEls = [card];
+    var resCard = document.getElementById("pv-res");
+    if (resCard) scanEls.push(resCard);
     var self = {};
-    card.querySelectorAll("p,span,div").forEach(function (el) {
-      if (el.children.length) return;
-      (el.innerText || "").split("\n").forEach(function (x) {
-        x = x.replace(/[ 　]/g, ""); if (x) self[x] = 1;
+    scanEls.forEach(function (root) {
+      root.querySelectorAll("p,span,div").forEach(function (el) {
+        if (el.children.length) return;
+        (el.innerText || "").split("\n").forEach(function (x) {
+          x = x.replace(/[ 　]/g, ""); if (x) self[x] = 1;
+        });
       });
     });
     /* ⚠⚠ 只量**會自動折行的文字段落** —— 不能拿整張卡去分組：
        並排的那兩顆按鈕在同一個 top 上，會被併成一行「是否」，誤報成孤字（踩過）。 */
-    var orphan = [];
-    card.querySelectorAll(".t,.q,.box,.warn,.lead,.done").forEach(function (el) {
-      lines(el).forEach(function (l) { if (l.s.length <= 3 && !self[l.s]) orphan.push(l); });
+    var orphan = [], wrapped = 0, drawn = 0;
+    scanEls.forEach(function (root) {
+      root.querySelectorAll(".t,.q,.who,.warn,.lead,.done").forEach(function (el) {
+        var ls = lines(el);
+        drawn += ls.length;
+        wrapped += (el.innerText || "").split("\n").filter(function (x) { return x.trim(); }).length;
+        ls.forEach(function (l) { if (l.s.length <= 3 && !self[l.s]) orphan.push(l); });
+      });
     });
 
     var go = fits(card.querySelector(".go")), stay = fits(card.querySelector(".stay"));
@@ -477,7 +504,6 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     var resEl = msgs[msgs.length - 1];
     var resT = resEl ? (resEl.innerText || resEl.textContent) : "";
     var hasTel  = resT.indexOf(TEL) >= 0;
-    var hasAlive = resT.indexOf("還在") >= 0;
     var resWho  = resT.indexOf(WHO) >= 0 && DATE.test(resT);
 
     /* 紅線（同 check-welcome.mjs 那張表）：這個帳號沒有專人即時回覆。 */
@@ -486,7 +512,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     var lied = LIE.filter(function (w) { return scan.indexOf(w) >= 0; });
 
     var cardBg = px(getComputedStyle(card).backgroundColor);
-    var whoC = ct(card.querySelector(".box.who"), cardBg);
+    var whoC = ct(card.querySelector(".who"), cardBg);
     var btnC = ct(card.querySelector(".btn"), cardBg);
     var nobC = ct(card.querySelector(".nob"), cardBg);
     var cfC  = ct(card.querySelector(".r span"), px("rgb(255,255,255)"));
@@ -527,8 +553,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + (lb === "yn" ? "<span class='no'>「是／否」沒有動詞</span>"
                        : "<span class='ok'>「" + L[lb].go + "」／「" + L[lb].stay + "」</span>")
       + "<br>・破壞性那顆站在慣性落點　"
-        + (od === "go" ? "<span class='no'>是（左邊那顆就是取消）</span>"
-                       : "<span class='ok'>否（左邊是不取消）</span>")
+        + (od === "go"
+            ? "<span class='no'>是（第一顆就是取消）</span>　<span>← 你指定的排法，"
+              + "不是待辦；<code>?o=safe</code> 看得到另一種</span>"
+            : "<span class='ok'>否（第一顆是不取消）</span>")
       + "<hr>按鈕的字放得下嗎"
         + (v === "c" ? "<span class='ok'>　圖卡的按鈕自己一行（可用 240px）而且會換行 —— "
             + "沒有這個限制</span>" : "")
@@ -543,7 +571,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
           : tight.length ? "<br><span class='no'>「" + tight.join("」「")
               + "」只剩不到一個字的餘裕 —— 別人的手機字型寬一點就會被截斷</span>"
           : go ? "<br><span class='ok'>兩顆都放得下</span>" : "")
-      + "<br>孤字 " + (orphan.length
+      + "<br>自己斷 <b>" + wrapped + "</b> 行／畫出 <b>" + drawn + "</b> 行"
+        + (drawn > wrapped ? " <span class='no'>有行被再折一次</span>"
+                           : " <span class='ok'>沒有被再折</span>")
+      + "　孤字 " + (orphan.length
           ? "<span class='no'>" + orphan.length + " 行：「"
             + orphan.map(function (o) { return o.s; }).join("」「") + "」</span>"
           : "<span class='ok'>沒有</span>")
@@ -551,14 +582,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>・聊天室留下的那句話　「<b>" + reply() + "</b>」"
         + (lb === "yn" ? " <span class='no'>回頭看這段對話，看不出他取消了什麼</span>"
                        : " <span class='ok'>看得出他做了什麼</span>")
-      + (rs === "late"
-          ? "<br>・有沒有說約診還在　" + yes(hasAlive, "有", "沒有 —— 他可能以為取消了就不來（＝爽約）")
-            + "<br>・有沒有給下一步　" + yes(hasTel, "有電話", "沒有 —— 只告訴他失敗，把他丟在原地")
+      + (rs === "go"
+          ? "<br>・有沒有給下一步　" + yes(hasTel, "有電話",
+              "沒有 —— 「請與診所聯繫」沒有寫號碼，他要自己去找")
+            + "<br>・<span class='no'>⚠⚠ 那句「（註）這次取消已經超過最晚2天前」"
+              + "對<b>在期限內取消的人是錯的</b></span>"
+            + " —— 而系統確實有成功取消的情況（你 2026-09-04 給的那張截圖，"
+            + "<code>?r=ok</code> 看得到）。頁面底下那一段有三條路"
           : "")
-      /* 這一格是真的（2026-09-04 的截圖），而那段對話還多告訴我們一件事。 */
       + (rs === "ok"
-          ? "<br>・寫了是誰、哪一天　" + yes(resWho,
-              v === "a" ? "有（現況這一則做對了）" : "有", "沒有")
+          ? "<br>・寫了是誰、哪一天　" + yes(resWho, "有（現況這一則做對了）", "沒有")
             + "<br>・有沒有給下一步　" + yes(hasTel, "有電話", "沒有")
             + "<br>・<span class='no'>⚠ 但真實對話裡，他下一句是「可以幫我改晚上嗎」</span>"
             + " —— 取消完他還在等新的時間，而那句話落到自動回應上"
@@ -606,10 +639,27 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     + '截圖裡系統回「因為約診時間太靠近」—— 表示<b>它自己知道已經來不及了</b>。'
     + '既然知道，就不必先問一次「您確定要取消嗎」再拒絕他：'
     + '<b>期限外直接給電話</b>就好，三步變一步。這一題也要問廠商（判斷得出來就設得出來）。'
-    + '<span class="h">結果那一則少了兩件</span>'
-    + '①<b>沒有說約診還在</b> —— 他可能以為取消掉了就不來，那就變成爽約；'
-    + '②<b>沒有給下一步</b>，而這時候唯一有效的路就是電話。'
-    + '兩個哭臉是廠商公版的口氣（站上全站 0 個 emoji）。'
+    + '<span class="h">⚠⚠⚠ 你指定的那一則，有一件事實要先決定</span>'
+    + '你寫的是「已取消，若還有其他問題請與診所聯繫（註）<b>這次取消已經超過最晚2天前'
+    + '（不含假日）的時間</b>。」—— 已經照著寫上去了，一個字沒動。'
+    + '但它<b>對在期限內取消的人是錯的</b>：系統確實會成功取消'
+    + '（你 2026-09-04 那張截圖就是，<code>?r=ok</code> 看得到它逐字長什麼樣），'
+    + '而這一則現在<b>不管來不來得及都會送出去</b>，'
+    + '所以準時取消的人也會被說成「超過期限」。三條路：'
+    + '<br>①<b>把「（註）」那句留給來不及的人送</b>（＝系統仍然要分兩種，只是兩則的前半一樣）；'
+    + '<br>②<b>把它改成不分情況都成立的說法</b>，例如'
+    + '「（註）取消最晚請於看診日前 2 天（不含假日）」—— 那是規則不是判決，'
+    + '寫給誰都對，而且和綁定完成那一則同一句話；'
+    + '<br>③<b>照現在這樣一律送</b>，接受準時取消的人也會看到那一句。'
+    + '<br>⚠ <b>還沒問到的事實</b>：系統到底分不分得出來（截圖看起來分得出來 —— '
+    + '它會回「時間太靠近」），這一題也在要問廠商的清單上。'
+    + '<span class="h">⚠ 「請與診所聯繫」沒有給號碼</span>'
+    + '這一則現在沒有電話。要他聯繫，卻要他自己去找號碼 —— '
+    + '建議在那一句底下多一行 <b>05-5339369</b>（<b>不要做成按鈕</b>，'
+    + '同你 09-04 定的那條：說明句裡的資訊不要穿按鈕的衣服）。'
+    + '<b>沒有自己加上去，等你點頭。</b>'
+    + '<span class="h">兩個哭臉</span>'
+    + '現況那一則的 😭😭 是廠商公版的口氣（站上全站 0 個 emoji），新版沒有。'
     + '<span class="h">⚠⚠ 取消成功那一則其實做對了兩件 —— 而那正好證明確認卡漏了什麼</span>'
     + '它<b>印得出病人姓名，也印得出完整的約診時間</b>（2026/08/26 (三) 15:30），'
     + '還給了電話。<b>所以系統手上有這兩筆資料</b> —— '
@@ -619,6 +669,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     + '<b>「煩請您儘速」</b>是公文體，以及<b>日期帶著年份</b>（同提醒卡，建議拿掉年份、月日改中文）。'
     + '⚠ 但那句「<b>預約保留完整療程時間</b>」是有內容的（療程要留夠時間），'
     + '改寫的時候不要把那個意思弄丟。'
+    + '<span class="h">⚠ 兩顆按鈕的 logo 是怎麼配的</span>'
+    + '你說「按鈕的 logo 沿用」，而<b>這一張卡的語意和提醒卡是反過來的</b>：'
+    + '這裡綠底那顆是「是喔　要取消」＝<b>不會來</b>，所以配的是'
+    + '<b>白色的 nogo</b>（嘴巴倒過來那顆）；白底那顆是「按錯惹　我會去」＝<b>會來</b>，'
+    + '配<b>綠色的正常標誌</b>。提醒卡正好相反（綠底＝ok 沒問題＝正常標誌）。'
+    + '<b>logo 跟著「去不去」走，不是跟著「哪一顆是主鈕」走。</b>'
+    + '⚠ 若你要的是<b>位置沿用</b>（綠底＝正常標誌、白底＝nogo），一句話就換得回來。'
     + '<span class="h">還沒有答案的兩件</span>'
     + '①他按「<b>否</b>」之後系統回什麼，我們還是沒看過（切換條那一格是<b>擬的</b>）；'
     + '②那顆按鈕的字（現在是「預約改期」）改不改得動 —— <b>它才是誤會的源頭</b>。'
@@ -637,8 +694,6 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
   function bar() {
     row("pv-row-v", "版本", V, v, "v");
-    row("pv-row-l", "按鈕的字", L, lb, "l");
-    row("pv-row-o", "哪顆先", O, od, "o");
     row("pv-row-r", "按了之後", R, rs, "r");
   }
   document.addEventListener("click", function (e) {

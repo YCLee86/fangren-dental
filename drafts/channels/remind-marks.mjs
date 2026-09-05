@@ -85,6 +85,10 @@ const chevron = () => ({
 
 const CASES = [
   { name: "nogo", color: DEEP, src: shapeR2c3() },
+  /* ⚠ 白色那顆是給**取消卡的綠底主鈕**用的（preview/line-cancel/）——
+     那一張的語意是反過來的：綠底 ＝「是喔　要取消」（＝不去）。
+     形狀與翻轉和上面那顆完全相同，只有顏色不同，**不要另外開一支產生器**。 */
+  { name: "nogo-white", color: "#ffffff", src: shapeR2c3() },
   { name: "tel",  color: DEEP, src: footPhone() },
   { name: "chev-white", color: "#ffffff", src: chevron() },
   { name: "chev-deep",  color: DEEP,      src: chevron() },
@@ -153,7 +157,7 @@ for (const c of CASES) {
 
   /* ⚠⚠ 守門：翻過去之後**牙洞一定要還在**。做法是看圖形內部有沒有一塊透明 ——
      只驗「檔案有產生」抓不到這件事（Ⓒ 那個做法出的圖一樣正常，只是沒有洞）。 */
-  if (c.name === "nogo") {
+  if (c.name.startsWith("nogo")) {
     const hole = await page.evaluate(async (src) => {
       const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
       const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
@@ -171,7 +175,7 @@ for (const c of CASES) {
       return n;
     }, "data:image/png;base64," + buf.toString("base64"));
     if (hole < 30)
-      throw new Error(`nogo：翻過去之後**牙洞不見了**（只量到 ${hole} 個被包住的透明像素）`);
+      throw new Error(`${c.name}：翻過去之後**牙洞不見了**（只量到 ${hole} 個被包住的透明像素）`);
     report.push({ hole });
   }
 
@@ -192,8 +196,8 @@ const mainH = MAINW / MAINR;
 console.log(`\n主鈕那顆標誌：34px 寬 → ${mainH.toFixed(1)}px 高`);
 for (const r of report) {
   if (!r.name) continue;
-  if (r.name === "nogo")
-    console.log(`  nogo　34px 寬（同招呼卡那顆 shape-r2c3）→ ${(34 / r.ratio).toFixed(1)}px 高`);
+  if (r.name.startsWith("nogo"))
+    console.log(`  ${r.name}　34px 寬（同招呼卡那顆 shape-r2c3）→ ${(34 / r.ratio).toFixed(1)}px 高`);
   else if (r.name === "tel")
     console.log(`  tel 　${(mainH * r.ratio).toFixed(1)}px 寬（＝和主鈕的標誌同高 ${mainH.toFixed(1)}px）`);
   else
