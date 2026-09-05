@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 官方帳號　整包規格</title>
+<!--
+  ⚠ 這一頁的身分是**規格頁不是提案頁**（CLAUDE.md 第十一之五節）：
+     沒有切換條、沒有候選案，用途是把 LINE 那條線的七則訊息整包拿給廠商看。
+     ＝ CLAUDE.md 第十一之七節第 3 項那個「最後一步」。
+
+  ⚠⚠ **這一頁不重抄任何一則的文字。**
+     每一則的字有它自己的出處（Flex 的 JSON、或 auto-reply.txt），
+     再抄一份就是第二個真相，而它一定會過期 —— 所以這裡只放
+     「什麼時候送、送給誰、誰送」＋**真的產出檔**（那七頁自己拍的 PNG）＋ 連回各自的規格頁。
+     ⚠ 圖是那七頁的產出檔，**那幾頁改了就要重跑各自的 *-png.mjs**，不然這一頁的圖會開始說謊。
+
+  ⚠ 圖一律寫 width/height 屬性（不寫的話沒載完之前高度是 0，整頁會跳版），
+     第一張以外一律 loading="lazy" —— 全部加起來約 2.4MB，而 Worker 對 /preview/* 設 no-store。
+  ⚠ class 一律 pv- 前綴；樣式放在 head。
+  ⚠ 連結一律相對路徑（../line-welcome/ 這種），不要用根目錄絕對路徑 ——
+     舊站 yclee86.github.io 還活著，那邊會壞（CLAUDE.md 第九節）。
+-->
+<style>
+:root{
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  --ink:#2a2c27; --ink-soft:#5c5f57; --green:#3f654a; --deep:#2c5238;
+  --red:#89202d; --amber:#8a6d1f;
+  --li-bg:#e9edf1;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.75;padding-bottom:60px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:16px 14px 0}
+
+h1{font-size:1.06rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
+h1 span{display:block;font-weight:400;font-size:.68em;color:var(--ink-soft);letter-spacing:.04em}
+.pv-sub{font-size:.78rem;color:var(--ink-soft);margin:.5rem 0 0;line-height:1.8}
+.pv-sub b{color:var(--ink)}
+code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px;
+  overflow-wrap:anywhere;font-family:ui-monospace,Menlo,Consolas,monospace}
+.pv-card code{background:#e7e9ea}
+a{color:var(--deep)}
+
+/* ---- 區塊 ------------------------------------------------------------ */
+.pv-h2{font-size:.94rem;font-weight:700;margin:32px 0 0;letter-spacing:.01em;
+  padding-left:9px;border-left:3px solid var(--green)}
+.pv-h2 .t{display:block;font-size:.78em;font-weight:400;color:var(--ink-soft);
+  letter-spacing:0}
+.pv-h2 + .pv-sub{margin-top:5px}
+.pv-h3{font-size:.82rem;font-weight:700;margin:18px 0 4px}
+
+.pv-card{border:1px solid var(--rule);border-radius:10px;background:var(--card);
+  padding:11px 12px;margin:10px 0 0;font-size:.75rem;line-height:1.8;color:var(--ink-soft)}
+.pv-card b{color:var(--ink)}
+.pv-card .y{color:var(--deep);font-weight:700}
+.pv-card .n{color:var(--red);font-weight:700}
+.pv-card .q{color:var(--amber);font-weight:700}
+.pv-card hr{border:0;border-top:1px solid var(--rule);margin:8px 0}
+.pv-card dl{margin:0}
+.pv-card dt{font-weight:700;color:var(--ink);margin-top:8px}
+.pv-card dt:first-of-type{margin-top:0}
+.pv-card dd{margin:0}
+.pv-card ol,.pv-card ul{margin:0;padding-left:1.25em}
+.pv-card li{margin-top:5px}
+.pv-card li:first-child{margin-top:0}
+
+/* 事實列（什麼時候送／送給誰／誰送）—— 標籤固定寬，一眼掃得下來 */
+.pv-when{display:grid;grid-template-columns:5.2em 1fr;gap:2px 8px;
+  font-size:.75rem;line-height:1.72;margin:9px 0 0}
+.pv-when dt{color:var(--ink-soft);font-weight:400}
+.pv-when dd{color:var(--ink)}
+.pv-when dd b{font-weight:700}
+.pv-when .who-us{color:var(--deep);font-weight:700}
+.pv-when .who-them{color:var(--red);font-weight:700}
+
+/* ---- 成品圖：擺真的產出檔，不要用 CSS 再畫一次 ----------------------- */
+.pv-shot{margin:11px 0 0;background:var(--li-bg);border:1px solid var(--rule);
+  border-radius:10px;padding:12px;display:flex;flex-direction:column;
+  align-items:flex-start;gap:10px}
+.pv-shot img{display:block;width:268px;height:auto;max-width:100%;
+  border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.pv-shot img.narrow{width:204px}
+.pv-shot img.plain{box-shadow:none;border-radius:0}
+/* 輪播比卡片寬（855px），自己一條捲軸，不要讓整頁能左右拉 */
+.pv-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pv-scroll img{width:855px;max-width:none}
+.pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:0}
+.pv-cap b{color:var(--ink)}
+
+/* ---- 檔案清單 -------------------------------------------------------- */
+.pv-files{font-size:.73rem;line-height:1.85;color:var(--ink-soft);
+  margin:9px 0 0;padding:9px 11px;border:1px dashed var(--rule);border-radius:8px}
+.pv-files b{color:var(--ink)}
+.pv-files div + div{margin-top:2px}
+
+/* ---- 表 -------------------------------------------------------------- */
+.pv-tw{overflow-x:auto;margin:9px 0 0}
+table{border-collapse:collapse;width:100%;font-size:.72rem;line-height:1.6}
+th,td{border:1px solid var(--rule);padding:5px 6px;text-align:left;vertical-align:top}
+th{background:var(--card);font-weight:700;color:var(--ink);white-space:nowrap}
+td{background:var(--card);color:var(--ink-soft)}
+td b{color:var(--ink)}
+td.mono{font-family:ui-monospace,Menlo,Consolas,monospace;white-space:nowrap;color:var(--ink)}
+
+/* ---- 問題清單 -------------------------------------------------------- */
+.pv-q{counter-reset:none}
+.pv-q .g{font-size:.78rem;font-weight:700;color:var(--ink);margin:14px 0 4px}
+.pv-q .g:first-child{margin-top:0}
+.pv-q .g .lv{font-weight:400;font-size:.86em;color:var(--ink-soft)}
+.pv-q ol{padding-left:1.5em}
+.pv-q li{margin-top:6px}
+
+/* ---- 目錄 ------------------------------------------------------------ */
+.pv-toc{margin:12px 0 0;font-size:.76rem;line-height:1.9}
+.pv-toc a{display:block;color:var(--ink);text-decoration:none;
+  border-bottom:1px solid var(--rule);padding:4px 0}
+.pv-toc a:last-child{border-bottom:0}
+.pv-toc a .n{color:var(--ink-soft);font-size:.9em}
+.pv-toc a .s{float:right;font-size:.86em}
+.pv-toc .ok{color:var(--deep)}
+.pv-toc .no{color:var(--red)}
+</style>
+</head>
+<body>
+<div class="pv-wrap">
+
+  <h1>芳仁牙醫診所　LINE 官方帳號
+    <span>七則訊息的整包規格　2026-09-05</span></h1>
+
+  <p class="pv-sub">這一頁是<b>給廠商看的</b>：這個帳號上該有哪幾則訊息、
+    每一則什麼時候送、送給誰、由誰送，以及成品長什麼樣。<br>
+    <b>七則全部定稿了</b>，Flex Message 的 JSON、圖檔與網址都在下面。
+    每一則各自還有一頁更詳細的規格（有量測與逐句的理由），從標題底下的連結進去。</p>
+
+  <div class="pv-card">
+    <b>三件事先講清楚，其餘都是細節</b>
+    <hr>
+    <b class="n">① 評價邀約那一則，先不要送。</b>
+    現在那張卡是「願意推薦 → 一條路、不願意 → 另一條路」，
+    如果只有前者通向 Google 評論，那是 Google 商家檔案明文禁止的
+    <b>評論篩選</b>（review gating）。<b>那兩顆按鈕實際連到哪裡，只有你們知道</b>
+    —— 這是要問，不是說你們違規了。答案出來之前，新舊兩版都先擱著。
+    <br><br>
+    <b class="n">② 約診紀錄查詢那一則，日期現在真的被截掉了。</b>
+    截圖上是「2026/08/20 15:45 星⋯」。成因是那個 <code>text</code> 設了
+    <code>maxLines: 1</code>；<b>拿掉它、改成 <code>wrap: true</code></b> 就好
+    —— 卡片本來就會自己折行。這是七則裡唯一一件<b>正在出錯</b>的事。
+    <br><br>
+    <b class="q">③ 我們手上沒有「這個帳號會自動送出哪幾則」的清單。</b>
+    下面這七則是從診所給的截圖盤出來的，而截圖是抽樣不是清單 ——
+    盤點已經漏過兩次（滿意度調查卡、預約成功與查詢）。
+    <b>請給一份完整的：每一則的觸發條件與送出時機。</b>
+  </div>
+
+  <div class="pv-toc">
+    <a href="#m1">① 招呼圖卡　<span class="n">加入好友</span><span class="s ok">定稿</span></a>
+    <a href="#m2">② 自動回應　<span class="n">病人打字</span><span class="s ok">定稿・診所自己設</span></a>
+    <a href="#m3">③ 綁定完成　<span class="n">綁定成功之後</span><span class="s ok">定稿</span></a>
+    <a href="#m4">④ 約診提醒　<span class="n">看診前 48 小時</span><span class="s ok">定稿</span></a>
+    <a href="#m5">⑤ 預約成功 ＋ 約診紀錄查詢<span class="s ok">定稿</span></a>
+    <a href="#m6">⑥ 取消／改期那一段對話<span class="s ok">定稿</span></a>
+    <a href="#m7">⑦ 評價邀約　<span class="n">看診後</span><span class="s no">先不要送</span></a>
+    <a href="#m8">⑧ 颱風／臨時休診<span class="s ok">定稿</span></a>
+    <a href="#tech">Flex Message 的硬條件</a>
+    <a href="#assets">圖檔清單與網址</a>
+    <a href="#ask">要請你們回答的</a>
+    <a href="#red">兩條紅線</a>
+  </div>
+
+  <!-- ================= 總表 ================= -->
+  <h2 class="pv-h2">總表</h2>
+  <p class="pv-sub">「誰送」是這張表最重要的一欄 —— <b>綠色那兩則診所自己在後台就設得完</b>，
+    不必動到你們；其餘五則是你們的系統在送。</p>
+  <div class="pv-tw">
+  <table>
+    <tr><th>訊息</th><th>什麼時候送</th><th>誰送</th><th>型別</th></tr>
+    <tr><td><b>① 招呼圖卡</b></td><td>加入好友的當下</td>
+      <td><b class="y">診所後台</b><br>（招呼訊息）</td><td>Flex</td></tr>
+    <tr><td><b>② 自動回應</b></td><td>病人打任何一句字</td>
+      <td><b class="y">診所後台</b><br>（一律回應）</td><td>純文字</td></tr>
+    <tr><td><b>③ 綁定完成</b></td><td>綁定成功之後</td><td>你們</td><td>Flex</td></tr>
+    <tr><td><b>④ 約診提醒</b></td><td>看診前 48 小時</td><td>你們<br>（唯一計費）</td><td>Flex</td></tr>
+    <tr><td><b>⑤ 預約成功</b></td><td>約診成立的當下</td><td>你們</td><td>Flex</td></tr>
+    <tr><td><b>⑤ 約診紀錄查詢</b></td><td>病人點選單那一格</td><td>你們</td><td>Flex 輪播</td></tr>
+    <tr><td><b>⑥ 取消／改期</b></td><td>病人點「預約改期」</td><td>你們</td><td>Flex ×3</td></tr>
+    <tr><td><b>⑦ 評價邀約</b></td><td>看診後<span class="q">（時機請告訴我們）</span></td>
+      <td>你們</td><td>Flex</td></tr>
+    <tr><td><b>⑧ 臨時休診</b></td><td>縣府宣布之後</td>
+      <td>現在是<b>診所人工一個一個貼</b></td><td>純文字<br>（或 Flex）</td></tr>
+  </table>
+  </div>
+
+  <!-- ================= ① 招呼圖卡 ================= -->
+  <h2 class="pv-h2" id="m1">① 招呼圖卡
+    <span class="t">加入好友的當下，一次 — <a href="../line-welcome/">完整規格</a></span></h2>
+
+  <dl class="pv-when">
+    <dt>什麼時候</dt><dd>病人把這個帳號<b>加為好友</b>的當下，只送這一次。</dd>
+    <dt>送給誰</dt><dd>新加入的好友。</dd>
+    <dt>誰送</dt><dd><span class="who-us">診所後台</span>　
+      LINE Official Account Manager → 加入好友的<b>招呼訊息</b>。</dd>
+    <dt>型別</dt><dd>Flex bubble：頭圖 ＋ 兩顆<b>可點的 box</b>（不是 button，因為要放 logo）。</dd>
+  </dl>
+
+  <div class="pv-shot">
+    <img src="../line-welcome/shot-welcome.png" width="268" height="490"
+      alt="招呼圖卡：頭圖是診所實景加一個對話框寫著「芳仁　哩厚！」，底下兩顆按鈕">
+    <p class="pv-cap">↑ 病人手機上的真實大小（卡片 268px 寬）。⚠ 近似，不是 LINE 自己的算繪。</p>
+  </div>
+
+  <div class="pv-files">
+    <div><b>Flex 的 JSON</b>　<code>welcome-card.json</code></div>
+    <div><b>頭圖</b>　<code>hero-welcome.jpg</code>（1024×512）</div>
+    <div><b>兩顆 logo</b>　<code>mark-white.png</code>（綁定）／<code>mark-green.png</code>（介紹）</div>
+  </div>
+
+  <div class="pv-card">
+    <b>⚠ 這一則要你們回答的</b>
+    <hr>
+    <b>後台的「招呼訊息」送不送得出 Flex Message？</b>
+    後台那個編輯介面的型別下拉裡沒有 Flex 那一格 ——
+    如果只能送純文字與圖文訊息，這一則就要退回<b>文字＋一張圖</b>的版本，
+    卡片與兩顆按鈕都會消失。<span class="q">這一題會改變成品的長相，請先答。</span>
+    <hr>
+    <b>⚠ 另外兩件是診所這一側的，記在這裡免得忘了</b><br>
+    ・「介紹芳仁給朋友」那顆用的是推薦官方帳號的深連結
+    （<code>line.me/R/nv/recommendOA/@445rpiiv</code>），<b>還沒有實機測過</b>。<br>
+    ・這一張寫著「看診前<b>2 天</b>發送提醒通知」，而 ④ 提醒卡寫的是
+    「看診前 <b>48 小時</b>」—— <b>兩則的講法目前不一致</b>，
+    要不要統一是診所要決定的（那一句是院長自己寫的字）。
+  </div>
+
+  <!-- ================= ② 自動回應 ================= -->
+  <h2 class="pv-h2" id="m2">② 自動回應
+    <span class="t">病人在聊天室打任何一句字 — <a href="../line-auto-reply/">完整規格</a></span></h2>
+
+  <dl class="pv-when">
+    <dt>什麼時候</dt><dd>病人打<b>任何一句字</b>，每打一句就送一次。</dd>
+    <dt>送給誰</dt><dd>打字的那一個人。</dd>
+    <dt>誰送</dt><dd><span class="who-us">診所後台</span>　
+      自動回應訊息 → 新增一則 → 回應設定選<b>「一律回應」</b>（不設關鍵字、不設時段）。</dd>
+    <dt>型別</dt><dd><b>純文字</b> —— 七則裡唯一不是 Flex 的一則。</dd>
+  </dl>
+
+  <div class="pv-shot">
+    <img src="../line-auto-reply/shot-auto-reply.png" width="204" height="307" loading="lazy"
+      alt="自動回應的純文字泡泡">
+    <p class="pv-cap">↑ 純文字泡泡（寬度由最長那一行決定）。要貼進後台的字在
+      <a href="../line-auto-reply/">那一頁</a>，有複製鈕。</p>
+  </div>
+
+  <div class="pv-files">
+    <div><b>要貼進後台的字</b>　<code>auto-reply.txt</code>（純文字，沒有 JSON）</div>
+  </div>
+
+  <div class="pv-card">
+    <b class="y">這一則診所自己設，不必動到你們</b> —— 這是刻意的決定：
+    留在後台，<b>字就留在診所自己手上</b>，改一個錯字不必找人。
+    做成 Flex 圖卡會漂亮一點，但每次改字都要走一趟。
+    <hr>
+    <b>⚠ 但有一件要你們確認</b><br>
+    我們查到（<span class="q">二手資料</span>）：<b>後台的「自動回應訊息」開著的時候，
+    會把病人打的字攔下來自己回，不轉給你們的 webhook</b>；
+    按鈕（postback）那條不受影響、照樣走你們。<br>
+    <b>如果這是真的，這一則就一定要留在後台</b>（不然會兩邊搶著回）。
+    <b class="q">請確認一句。</b>
+  </div>
+
+  <!-- ================= ③ 綁定完成 ================= -->
+  <h2 class="pv-h2" id="m3">③ 綁定完成
+    <span class="t">病人綁定成功之後 — <a href="../line-bind-done/">完整規格</a></span></h2>
+
+  <dl class="pv-when">
+    <dt>什麼時候</dt><dd>病人在綁定頁按下完成、綁定成功的當下。</dd>
+    <dt>送給誰</dt><dd>剛綁定的那一個帳號。</dd>
+    <dt>誰送</dt><dd><span class="who-them">你們</span>　
+      現在你們的系統會以病人的身分寫一則「✅ 09xxxxxxxx 綁定成功！」進聊天室。</dd>
+    <dt>型別</dt><dd>Flex bubble：頭圖 ＋ 兩塊淡底方塊（警示、改約）。</dd>
+  </dl>
+
+  <div class="pv-shot">
+    <img src="../line-bind-done/shot-bind-done.png" width="268" height="619" loading="lazy"
+      alt="綁定完成的圖卡">
+    <p class="pv-cap">↑ 定稿。兩塊淡底在 JSON 裡是<b>合成後的實色</b>
+      （<code>#EEE5E6</code>／<code>#E2E8EF</code>），不是半透明。</p>
+  </div>
+
+  <div class="pv-files">
+    <div><b>Flex 的 JSON</b>　<code>bind-done-card.json</code></div>
+    <div><b>頭圖</b>　<code>hero-bind.jpg</code>（1024×512）</div>
+    <div><b>退路</b>　送不出 Flex 的話有一份<b>一字不差的純文字版</b>，
+      畫在<a href="../line-bind-done/">那一頁</a>最底下</div>
+  </div>
+
+  <div class="pv-card">
+    <b>⚠ 這一則要你們配合的</b>
+    <hr>
+    <b>那句觸發字串裡有電話號碼。</b>
+    「✅ <b>09xxxxxxxx</b> 綁定成功！」每個人的號碼都不一樣，
+    而後台的關鍵字回應是<b>完全一致比對</b>，抓不到。<br>
+    <b class="y">→ 請改成不含號碼的固定字串</b>，或這一則直接由你們的系統推播出去
+    （那樣更好，就不必繞後台）。
+  </div>
+
+  <!-- ================= ④ 提醒 ================= -->
+  <h2 class="pv-h2" id="m4">④ 約診提醒
+    <span class="t">看診前 48 小時 — <a href="../line-remind/">完整規格</a></span></h2>
+
+  <dl class="pv-when">
+    <dt>什麼時候</dt><dd>看診前 <b>48 小時</b>（時機沒有要改）。</dd>
+    <dt>送給誰</dt><dd>綁定了那一次約診的帳號。<b>⚠ 讀的人不見得是病人本人</b>
+      —— 小孩的約診常常綁在爸媽或阿嬤的手機上，所以卡上要印姓名。</dd>
+    <dt>誰送</dt><dd><span class="who-them">你們</span>　
+      <b>七則裡唯一要花錢的一則</b>（主動推播才計費），也是整個帳號曝光最高的訊息。</dd>
+    <dt>型別</dt><dd>Flex bubble：頭圖 ＋ 一句話開口請他回覆 ＋ <b>三顆按鈕</b>
+      （確認／不來／打電話）。</dd>
+    <dt>變數</dt><dd><code>{{patient}}</code>　<code>{{date}}</code></dd>
+  </dl>
+
+  <div class="pv-shot">
+    <img src="../line-remind/shot-remind.png" width="268" height="581" loading="lazy"
+      alt="看診前 48 小時的提醒卡">
+    <p class="pv-cap">↑ 定稿。<b>有變數的那一行不能手動斷行</b>（姓名幾個字我們不知道），
+      交給 <code>wrap: true</code> 自己折。</p>
+  </div>
+
+  <div class="pv-files">
+    <div><b>Flex 的 JSON</b>　<code>reminder-card.json</code></div>
+    <div><b>頭圖</b>　<code>hero-remind.jpg</code>（1024×512）</div>
+    <div><b>四顆 logo</b>　<code>mark-white.png</code>／<code>mark-chev-white.png</code>（主鈕）、
+      <code>mark-nogo.png</code>（不來）、<code>mark-tel.png</code>（電話）</div>
+  </div>
+
+  <div class="pv-card">
+    <b class="n">⚠⚠ 這一則有兩題會出事，不是美感問題</b>
+    <hr>
+    <b>① 那 24 小時的計時，會不會跳過休診日？</b>
+    卡上寫著「24 小時沒回應會自動取消並遞補」。
+    <b>週一</b>的約診 → 提醒在<b>週六</b>發 → 期限落在<b>週日</b>，
+    而診所週六日休診、電話沒有人接 ——
+    <b>病人是在完全沒有辦法回應的時段被自動取消的</b>。
+    可不可以設成只在開診時段計時？
+    <br><br>
+    <b>② 被自動取消的時候，會不會再發一則通知病人？</b>
+    不通知的話，他是<b>到了門口才知道</b>。
+    <hr>
+    ⚠ 另外：<code>reminder-card.json</code> 裡的 <code>margin</code> 數字和規格頁上量到的
+    px 不會逐字相同，<b>那是對的</b> —— 規格頁量的是<b>墨到墨</b>，
+    而行高 1.7 在字面下方藏了約 4.8px 的半行距。要對的是<b>畫出來的距離</b>。
+  </div>
+
+  <!-- ================= ⑤ 預約成功／查詢 ================= -->
+  <h2 class="pv-h2" id="m5">⑤ 預約成功 ＋ 約診紀錄查詢
+    <span class="t">同一張卡的兩個狀態 — <a href="../line-booked/">完整規格</a></span></h2>
+
+  <dl class="pv-when">
+    <dt>預約成功</dt><dd>約診成立的<b>當下</b>自動送出，<b>單張</b>。</dd>
+    <dt>紀錄查詢</dt><dd>病人點圖文選單的「約診紀錄查詢」之後回的，
+      <b>輪播</b>、一個約診一張、可以左右滑。</dd>
+    <dt>送給誰</dt><dd>綁定了那個約診的帳號。<b>⚠ 輪播每一張都要印姓名</b>
+      —— 一支手機綁得到好幾個家人。</dd>
+    <dt>誰送</dt><dd><span class="who-them">你們</span></dd>
+  </dl>
+
+  <div class="pv-shot">
+    <img src="../line-booked/shot-booked.png" width="268" height="150" loading="lazy"
+      alt="預約成功通知（單張）">
+    <p class="pv-cap">↑ 預約成功（單張，268px）。</p>
+    <div class="pv-scroll">
+      <img src="../line-booked/shot-query.png" width="855" height="122" loading="lazy"
+        alt="約診紀錄查詢的輪播，三張卡並排">
+    </div>
+    <p class="pv-cap">↑ 約診紀錄查詢（輪播）。<b>輪播的卡比單張窄 23%</b>
+      —— 我們量到的是單張 348.7、輪播 269.3，左右內距<b>兩種都是 22.3</b>（一點都沒收），
+      所以可用寬度掉了 26%。<b>日期就是在這裡被截斷的。</b>　⚠ 這一條可以左右滑。</p>
+  </div>
+
+  <div class="pv-shot">
+    <img src="../line-booked/shot-wm.png" class="plain" width="402" height="462" loading="lazy"
+      alt="九顆浮水印的形狀與顏色對照表">
+    <p class="pv-cap">↑ <b>每一張卡的浮水印不一樣</b>：九個形狀、各配一支診所站上已經在用的科別色。
+      <b>九顆的寬度各不相同</b>（有四種長寬比），是按<b>墨的面積</b>算出來讓它們看起來一樣重的，
+      不可以改成同寬。寬度只有一份出處：<code>wm-sizes.json</code>。</p>
+  </div>
+
+  <div class="pv-files">
+    <div><b>Flex 的 JSON</b>　<code>booked-card.json</code>（兩則 ＋ 九顆的對照表）</div>
+    <div><b>浮水印</b>　<code>wm-r{1,2,3}c{1,2,3}-12.png</code>（九張）</div>
+    <div><b>寬度表</b>　<code>wm-sizes.json</code></div>
+  </div>
+
+  <div class="pv-card">
+    <b class="n">⚠⚠ 這一則有一件正在出錯</b>
+    <hr>
+    <b>日期被截斷</b>：截圖上是「2026/08/20 15:45 星⋯」。
+    成因是那個 <code>text</code> 設了 <code>maxLines: 1</code>。<br>
+    <b class="y">→ 拿掉 <code>maxLines</code>、改成 <code>wrap: true</code></b>。
+    放得下就一行、放不下就兩行，<b>哪一種寬度都不會有字消失</b>。<br>
+    ⚠ 只把字改短救不了 —— 我們到現在還沒有一張<b>病人手機</b>的截圖可以確定卡片實寬
+    （所有判斷都建立在 268px 上，而那是推導值）。<b>折行才是治本的。</b>
+    <hr>
+    <b>⚠ 順帶：同一個帳號現在有兩種日期格式</b> ——
+    查詢那張寫 <code>2026/08/20 15:45 星期四</code>，
+    預約成功與提醒卡寫 <code>2026/08/25 (二) 10:15</code>。
+    <b>最長的那一種正好被放進最窄的卡裡。</b>
+    <hr>
+    <b>要問你們的三題</b><br>
+    ① <b>「預約狀態」總共有幾種值</b>、各是什麼意思、和 ④ 提醒卡那顆確認鈕是不是同一個欄位？<br>
+    ② <b>日期那一格能不能拆成欄位</b>（月／日／星期／時間分開）？拆得開的話版面可以做得更好讀。<br>
+    ③ <b>輪播最多幾張、超過怎麼辦？</b>（LINE 的上限是 12 張，常來的病人不會只有三筆）<br>
+    ④ 浮水印<b>能不能按 <code>(月＋日) % 9</code> 算</b>？
+    這樣同一筆約診查幾次都是同一顆、取消一筆也不影響其他筆。
+  </div>
+
+  <!-- ================= ⑥ 取消／改期 ================= -->
+  <h2 class="pv-h2" id="m6">⑥ 取消／改期那一段對話
+    <span class="t">一句確認、一次回答、一則結果 — <a href="../line-cancel/">完整規格</a></span></h2>
+
+  <dl class="pv-when">
+    <dt>什麼時候</dt><dd>病人點圖文選單的「<b>預約改期</b>」→ 系統回一張確認卡 →
+      他按了其中一顆 → 回對應的結果。</dd>
+    <dt>送給誰</dt><dd>按的那一個帳號。</dd>
+    <dt>誰送</dt><dd><span class="who-them">你們</span>　共三則：確認卡 ＋ 兩則結果。</dd>
+    <dt>型別</dt><dd>Flex（現在是 LINE 官方的 <code>confirm</code> 範本，
+      <b>樣式一個像素都改不了</b>）。</dd>
+  </dl>
+
+  <div class="pv-shot">
+    <img src="../line-cancel/shot-cancel.png" width="268" height="242" loading="lazy"
+      alt="取消約診的確認卡">
+    <p class="pv-cap">↑ 確認卡。<b>那一層確認沒有要拿掉</b>（防誤按的理由成立），
+      改的是<b>它問得夠不夠清楚</b> —— 現在沒寫是誰、也沒寫哪一天。</p>
+    <img src="../line-cancel/shot-cancel-go.png" width="268" height="91" loading="lazy"
+      alt="按了取消之後的那一則">
+    <p class="pv-cap">↑ 按了「是喔 要取消」。</p>
+    <img src="../line-cancel/shot-cancel-no.png" width="268" height="135" loading="lazy"
+      alt="按了不取消之後的那一則">
+    <p class="pv-cap">↑ 按了「按錯惹～我會去～」。<b>要把保留下來的約診列出來</b>，
+      排法和確認卡那一塊一樣，他核對的是同一組東西。</p>
+  </div>
+
+  <div class="pv-files">
+    <div><b>Flex 的 JSON</b>　<code>cancel-card.json</code>（三則）</div>
+    <div><b>兩顆 logo</b>　<code>mark-nogo-white.png</code>（是喔 要取消）／
+      <code>mark-head-green.png</code>（按錯惹）</div>
+  </div>
+
+  <div class="pv-card">
+    <b class="n">⚠⚠⚠ 這一段真正的問題不是版面：那顆按鈕叫「預約改期」，可是它只取消</b>
+    <hr>
+    整段對話沒有一個字告訴病人「<b>按了不會幫你排新的時間</b>」。
+    診所給的真實對話裡，取消成功那一則送出之後，病人下一句就是
+    「<b>可以幫我改晚上嗎</b>」—— 他以為改期還在進行中。
+    <b>這不是推論，是紀錄。</b>
+    <hr>
+    <b>要問你們的四題</b><br>
+    ① <b>那顆按鈕的字改不改得動？</b>（改成「取消約診」之類的 —— <b>它才是誤會的源頭</b>）<br>
+    ② <b>兩個 action 的順序可不可以調？</b>
+    把「不取消」排前面 ＝ 零成本，破壞性那顆現在站在慣性落點。<br>
+    ③ <b>期限外可不可以直接回「請來電」那一則，不要先問一次？</b>
+    系統回「時間太靠近」表示它自己知道來不及，那就直接給電話，<b>三步變一步</b>。<br>
+    ④ <b>關鍵字／自動回應送不送得出 Flex Message？</b>
+    送不出去的話這一段要退回 <code>confirm</code> 範本 ——
+    而<b>那個容器的按鈕不換行、超過就截斷</b>（一顆只有半個卡片寬，可用約 122px），
+    現在定稿的兩顆字在那裡<b>放不下</b>，要先收短。
+  </div>
+
+  <!-- ================= ⑦ 評價 ================= -->
+  <h2 class="pv-h2" id="m7">⑦ 評價邀約
+    <span class="t">看診之後（後台叫它「滿意度調查」）— <a href="../line-review/">完整規格</a></span></h2>
+
+  <dl class="pv-when">
+    <dt>什麼時候</dt><dd class="q"><b>還不知道</b> —— 看診當天？隔天？每次看診都送嗎？
+      自動還是手動？<b>請告訴我們。</b></dd>
+    <dt>送給誰</dt><dd>那一次看診的病人。<b>⚠ 同 ④：讀的人不見得是本人</b>
+      —— 現在那一則送到阿嬤的帳號，開頭卻寫「親愛的〔孫子的名字〕，您願意推薦…」。</dd>
+    <dt>誰送</dt><dd><span class="who-them">你們</span></dd>
+  </dl>
+
+  <div class="pv-shot">
+    <img src="../line-review/shot-review.png" width="268" height="499" loading="lazy"
+      alt="評價邀約的圖卡">
+    <p class="pv-cap">↑ 定稿的版面。<b>⚠ 但這一則先不要送</b>，理由在下面。</p>
+  </div>
+
+  <div class="pv-files">
+    <div><b>Flex 的 JSON</b>　<code>review-card.json</code></div>
+    <div><b>頭圖</b>　<code>hero-review.jpg</code>（1024×512）</div>
+    <div><b>三顆 logo</b>　<code>mark-white.png</code>／<code>mark-chev-white.png</code>／
+      <code>mark-nogo.png</code></div>
+  </div>
+
+  <div class="pv-card">
+    <b class="n">⚠⚠⚠ 這一則有法遵風險，答案出來之前新舊兩版都先擱著</b>
+    <hr>
+    現在那張卡先問「您願意推薦…嗎？」再把人分成兩條路：
+    <b>願意 → 分享體驗</b>、<b>不願意 → 提供建議</b>。<br>
+    <b>如果只有前者通向 Google 評論、後者是診所自己的表單，那就是
+    <span class="n">評論篩選</span>（review gating）</b> ——
+    只向滿意的人索取公開評論，據我們所知是 Google 商家檔案<b>明文禁止</b>的。<br>
+    輕則評論被移除，重則影響整個商家檔案，
+    而<b>商家檔案是這間診所最大的入口</b>（六個月 14,973 次瀏覽、1,886 通電話）。
+    <hr>
+    <b class="q">要問你們的三題（這一組排在所有問題的最前面）</b><br>
+    ① 「願意並分享體驗」點下去到哪裡？<br>
+    ② 「不願意並提供建議」點下去到哪裡？<br>
+    ③ 兩條路是不是<b>只有一條</b>通向公開評論？
+    <hr>
+    <b>⚠ 新版也還沒解掉</b>：定稿那一張是院長逐字寫的，
+    上下兩塊合起來讀仍然是「願意的人去公開、不開心的人來私下」。
+    <b>合規的形狀只有一種：不要先問、不要分流</b> ——
+    所有人拿到同一個邀請，私下的意見管道<b>另外給、給所有人</b>。<br>
+    ⚠ 還有一條紅線：<b>不可以拿好處換評價</b>（折價、抽獎、送洗牙都不行）。
+    <hr>
+    <b>⚠ 按鈕的網址我們也還沒有</b>：Google 的「寫評論」深連結需要
+    <b>Place ID</b>，診所手上只有分享短網址。
+  </div>
+
+  <!-- ================= ⑧ 颱風 ================= -->
+  <h2 class="pv-h2" id="m8">⑧ 颱風／臨時休診
+    <span class="t">縣府宣布之後 — <a href="../line-typhoon/">完整規格</a></span></h2>
+
+  <dl class="pv-when">
+    <dt>什麼時候</dt><dd><b>縣府宣布停班停課之後就發</b>，不要等到當天早上。</dd>
+    <dt>送給誰</dt><dd><b>停診那一天有約診的人</b>（不是全體公告）。</dd>
+    <dt>誰送</dt><dd>現在是<b>診所人工</b>：從系統抓名單、一個一個貼。</dd>
+    <dt>型別</dt><dd>現在是<b>純文字</b>（院長每次自己打）。做成 Flex 圖卡的版本也備好了。</dd>
+  </dl>
+
+  <div class="pv-shot">
+    <img src="../line-typhoon/shot-typhoon.png" width="268" height="449" loading="lazy"
+      alt="颱風停診的圖卡">
+    <p class="pv-cap">↑ Flex 圖卡版（要你們送才有）。</p>
+    <img src="../line-typhoon/shot-typhoon-text.png" width="268" height="307" loading="lazy"
+      alt="颱風停診的純文字泡泡">
+    <p class="pv-cap">↑ 純文字版 ＝ <b>診所現在的做法</b>，今天就能用。</p>
+  </div>
+
+  <div class="pv-files">
+    <div><b>Flex 的 JSON</b>　<code>typhoon-card.json</code></div>
+    <div><b>頭圖</b>　<code>hero-typhoon.jpg</code>（1024×512，圖卡與聊天室共用同一張）</div>
+    <div><b>可填欄位</b>　<code>{{typhoon}}</code>　<code>{{date}}</code>（<b>兩處</b>）　
+      <code>{{weekday}}</code></div>
+  </div>
+
+  <div class="pv-card">
+    <b>⚠ 這一則要談的其實不是圖，是那份名單</b>
+    <hr>
+    診所現在人工從系統抓當天有約的人、一個一個貼 ——
+    而<b>你們的系統本來就知道那天有誰有約</b>。<br>
+    <b class="y">→ 能不能做一個「臨時休診公告」：診所選一個日期、填四個欄位，
+    系統自動發給那天有約的人？</b>
+    這一條同時解掉「要有圖卡」和「人工貼名單」兩件。<br>
+    ⚠ 談不成就走純文字（今天就能用，字完全在診所手上），<b>圖不會白畫</b>。
+    <hr>
+    <b class="n">⚠⚠⚠ 還有一題會出事</b><br>
+    <b>颱風休診那天，系統裡那些約診會變成什麼？</b>
+    7/11 停診的話，48 小時提醒是 7/9 就送出去的，
+    而那張卡寫著「24 小時沒回應會自動取消並遞補」——
+    <b>停診之後那些約診是留著，還是被系統當成取消？</b>
+    <span class="q">這一題決定了卡上能不能寫「這次不算你失約」。</span>
+  </div>
+
+  <!-- ================= 技術規格 ================= -->
+  <h2 class="pv-h2" id="tech">Flex Message 的硬條件</h2>
+  <p class="pv-sub">這幾條是量出來的，不知道會做出對不上的東西。
+    上面每一份 JSON 都已經照這些條件寫好了。</p>
+
+  <div class="pv-card">
+    <dl>
+      <dt>字級是固定 px，不是比例</dt>
+      <dd><code>xxs</code> 11／<code>xs</code> 13／<code>sm</code> 14／<code>md</code> 16／
+        <code>lg</code> 19／<code>xl</code> 22／<code>xxl</code> 27</dd>
+
+      <dt><code>button</code> 不支援圖示，也不換行</dt>
+      <dd>它只有一個 <code>label</code>，放不下就從尾巴截斷。
+        所以要「圖示＋文字」的按鈕一律做成<b>可點的 <code>box</code></b>
+        （box 掛 <code>action</code>，裡面 <code>image</code> ＋ <code>text</code>）。<br>
+        <span class="q">⚠ 想問一句：可點的 box 按下去，LINE 有沒有給按壓反白？
+        文件沒寫，我們也沒有實機驗過。</span></dd>
+
+      <dt><code>image</code> 的 <code>size</code> 給的是「寬度」</dt>
+      <dd>不是高度 —— 兩個長寬比不同的圖不能寫同一個數字。
+        （九顆浮水印的寬度各不相同就是這個原因）</dd>
+
+      <dt>圖檔上限 <b>1024×1024</b></dt>
+      <dd>HTTPS 的網址、JPEG 或 PNG。所有頭圖一律 <b>1024×512（2:1）</b>。</dd>
+
+      <dt><code>aspectRatio</code> 寫錯不報錯</dt>
+      <dd><code>aspectMode: fit</code> 只會讓圖靜靜地縮小、四周留白。</dd>
+
+      <dt><code>box</code> 沒有背景圖、<code>image</code> 沒有 opacity</dt>
+      <dd><code>background</code> 只認 <code>linearGradient</code>。
+        所以浮水印是疊一個真的 <code>image</code>，
+        而它的淡度是<b>烘進 PNG 的 alpha 裡</b>的。</dd>
+
+      <dt class="q">⚠ 浮水印那個疊法是這一包唯一沒有實機驗過的東西</dt>
+      <dd>文件寫著「<b>一個 box 的第一個子元件不可以是 <code>absolute</code></b>」，
+        所以我們寫成「內容 box 在前、浮水印 <code>absolute</code> 在後」——
+        但<b>後面的元件會不會蓋在前面的上面，文件沒有明講</b>。
+        <b class="y">麻煩用一則測試訊息驗一次。</b>
+        蓋不上去的話就退回「右邊放一顆、不重疊」（那個 100% 支援）。</dd>
+
+      <dt>斷行一律用 <code>\n</code> 自己指定</dt>
+      <dd>交給自動換行會把詞劈開、或讓末行只剩一個字。<br>
+        <b>⚠ 但有變數的那一行不能手動斷行</b>（姓名幾個字我們不知道），
+        那幾行只能靠 <code>wrap: true</code>。</dd>
+
+      <dt>卡片寬度</dt>
+      <dd>單張 <b>268px</b>、內距 14px → 按鈕可用 <b>240px</b>。
+        輪播裡一張只有 <b>207px</b>（單張的 77%，而左右內距一點都沒收）。<br>
+        <span class="q">⚠ 268 是我們從診所端後台的截圖推導的，
+        <b>沒有在病人手機上量過</b> —— 如果你們手上有實測值，麻煩給一下。</span></dd>
+    </dl>
+  </div>
+
+  <!-- ================= 素材 ================= -->
+  <h2 class="pv-h2" id="assets">圖檔清單與網址</h2>
+  <p class="pv-sub">JSON 裡的每一個 <code>url</code> 都指向
+    <code>https://fangren.net/assets/line/</code>，<b>檔案都已經放上去了</b>，
+    直接取用就好。共 21 個檔、0.78MB，每一張都在 LINE 的 1024×1024 之內。</p>
+
+  <div class="pv-tw">
+  <table>
+    <tr><th>檔名</th><th>尺寸</th><th>哪幾則在用</th></tr>
+    <tr><td class="mono">hero-welcome.jpg</td><td>1024×512</td><td>①</td></tr>
+    <tr><td class="mono">hero-bind.jpg</td><td>1024×512</td><td>③</td></tr>
+    <tr><td class="mono">hero-remind.jpg</td><td>1024×512</td><td>④</td></tr>
+    <tr><td class="mono">hero-review.jpg</td><td>1024×512</td><td>⑦</td></tr>
+    <tr><td class="mono">hero-typhoon.jpg</td><td>1024×512</td><td>⑧</td></tr>
+    <tr><td class="mono">mark-white.png</td><td>160×79</td><td>①④⑦</td></tr>
+    <tr><td class="mono">mark-green.png</td><td>243×79</td><td>①</td></tr>
+    <tr><td class="mono">mark-head-green.png</td><td>160×79</td><td>⑥</td></tr>
+    <tr><td class="mono">mark-nogo.png</td><td>243×79</td><td>④⑦</td></tr>
+    <tr><td class="mono">mark-nogo-white.png</td><td>243×79</td><td>⑥</td></tr>
+    <tr><td class="mono">mark-tel.png</td><td>79×79</td><td>④</td></tr>
+    <tr><td class="mono">mark-chev-white.png</td><td>38×79</td><td>④⑦</td></tr>
+    <tr><td class="mono">wm-r1c1-12.png</td><td>300×300</td><td rowspan="9">⑤<br>（九顆浮水印，
+      <b>寬度各不相同</b>，見 <code>wm-sizes.json</code>）</td></tr>
+    <tr><td class="mono">wm-r1c2-12.png</td><td>420×207</td></tr>
+    <tr><td class="mono">wm-r1c3-12.png</td><td>526×171</td></tr>
+    <tr><td class="mono">wm-r2c1-12.png</td><td>426×210</td></tr>
+    <tr><td class="mono">wm-r2c2-12.png</td><td>336×252</td></tr>
+    <tr><td class="mono">wm-r2c3-12.png</td><td>526×171</td></tr>
+    <tr><td class="mono">wm-r3c1-12.png</td><td>291×291</td></tr>
+    <tr><td class="mono">wm-r3c2-12.png</td><td>297×297</td></tr>
+    <tr><td class="mono">wm-r3c3-12.png</td><td>602×195</td></tr>
+  </table>
+  </div>
+  <p class="pv-cap" style="margin-top:7px">⚠ <code>wm-…-12.png</code> 的
+    <b>12</b> 是濃度（另外還產了 08 與 18 兩組，<b>定案用 12</b>）。<br>
+    ⚠ 那九顆浮水印<b>不可以改成同寬</b> —— 它們有四種長寬比，
+    同寬的話細長那幾顆看起來會輕很多。寬度是按墨的面積算出來的。</p>
+
+  <!-- ================= 問題 ================= -->
+  <h2 class="pv-h2" id="ask">要請你們回答的</h2>
+  <p class="pv-sub">照「答不出來會擋住什麼」排。<b>第一組會改變要不要送、
+    第二組會改變成品的長相、其餘是版面與資料。</b></p>
+
+  <div class="pv-card pv-q">
+    <div class="g"><span class="n">Ａ　最急</span>
+      <span class="lv">—— 可能正在出事，或會擋住整包</span></div>
+    <ol>
+      <li><b>評價卡那兩顆按鈕各連到哪裡？只有一條通向公開評論嗎？</b>（⑦）</li>
+      <li><b>約診紀錄查詢的日期能不能拿掉 <code>maxLines: 1</code>、改成
+        <code>wrap: true</code>？</b>（⑤ —— 唯一一件正在出錯的）</li>
+      <li><b>這個帳號現在總共會自動送出哪幾則？</b>
+        含每一則的觸發條件與送出時機 —— 我們盤到的是截圖不是清單，已經漏過兩次。</li>
+    </ol>
+
+    <div class="g"><span class="q">Ｂ　送得出什麼</span>
+      <span class="lv">—— 答案會改變成品的長相</span></div>
+    <ol start="4">
+      <li>後台的<b>「招呼訊息」送不送得出 Flex Message？</b>（①）</li>
+      <li><b>關鍵字／自動回應能不能改由你們的系統回 Flex？</b>（⑥）</li>
+      <li>後台的自動回應開著時，<b>會不會攔下病人打的字、不轉給你們的 webhook？</b>（②）</li>
+      <li><b>浮水印那個 <code>absolute</code> 疊法在實機上蓋得上去嗎？</b>（⑤，見上一節）</li>
+      <li>可點的 <code>box</code> 按下去<b>有沒有按壓反白？</b></li>
+    </ol>
+
+    <div class="g">Ｃ　版型與資料</div>
+    <ol start="9">
+      <li>綁定成功的觸發字串<b>改成不含電話號碼的固定字串</b>（③）</li>
+      <li><b>「預約狀態」有幾種值</b>、各是什麼意思、和提醒卡那顆確認鈕是不是同一個欄位（⑤）</li>
+      <li><b>日期那一格能不能拆成欄位</b>（月／日／星期／時間）（⑤）</li>
+      <li><b>輪播最多幾張、超過怎麼辦</b>（LINE 上限 12 張）（⑤）</li>
+      <li>浮水印<b>能不能按 <code>(月＋日) % 9</code> 算</b>（⑤）</li>
+      <li><b>「預約改期」那顆按鈕的字改不改得動</b>（⑥ —— 它只取消）</li>
+      <li><code>confirm</code> 的<b>兩個 action 順序可不可以調</b>（⑥）</li>
+      <li>期限外<b>可不可以直接回「請來電」那一則</b>，不要先問一次（⑥）</li>
+      <li><b>圖文選單六格底下各是什麼</b>、能不能改成連 fangren.net</li>
+    </ol>
+
+    <div class="g"><span class="n">Ｄ　會出事的（系統行為，不是版面）</span></div>
+    <ol start="18">
+      <li><b>那 24 小時的計時會不會跳過休診日？</b>可不可以只在開診時段計時？（④）</li>
+      <li>被自動取消時<b>會不會再通知病人？</b>（④）</li>
+      <li><b>颱風停診那天，系統裡那些約診會變成什麼？</b>（⑧）</li>
+      <li>能不能做一個<b>「臨時休診公告」</b>：選一個日期 → 自動發給那天有約的人（⑧）</li>
+    </ol>
+
+    <div class="g"><span class="y">Ｅ　診所自己要在後台按一次確認的</span>
+      <span class="lv">（不必你們回答）</span></div>
+    <ol start="22">
+      <li>一對一聊天室的「＋」裡到底有哪幾種型別</li>
+      <li>群發的「受眾」能不能上傳名單</li>
+      <li>一則自動回應底下最多掛幾個對話框（查到 3 和 5 兩種說法）</li>
+    </ol>
+  </div>
+
+  <!-- ================= 紅線 ================= -->
+  <h2 class="pv-h2" id="red">兩條紅線</h2>
+
+  <div class="pv-card">
+    <b class="n">① 這個帳號沒有專人即時回覆訊息。</b>
+    所以任何一則上都<b>不可以出現「有問題隨時問」那一類的承諾</b> ——
+    那是說謊，病人會在聊天室裡等一個不會來的回覆。
+    七則的字都已經照這條寫好了，<b>改字的時候請一起守著</b>。
+    <hr>
+    <b class="n">② 不可以拿好處換評價</b>（折價、抽獎、送洗牙都不行）。
+    Google 明文禁止，醫療機構在台灣還多一層招徠的疑慮。
+  </div>
+
+  <p class="pv-cap" style="margin-top:26px">
+    以上七則的 Flex JSON、圖檔與逐句的理由，都在各自那一頁
+    （每一則標題底下的「完整規格」）。<br>
+    ⚠ 頁面上畫的卡片是<b>近似</b>，不是 LINE 自己的算繪 ——
+    尺寸與字級是照 LINE 的規格畫的，但最後仍然要用一則測試訊息看實機。</p>
+
+</div>
+</body>
+</html>

@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 /* 招呼圖卡的圖片檔（給使用者存檔／轉給廠商看）
- *   node drafts/channels/card-png.mjs            → drafts/channels/welcome-card.png
- *   node drafts/channels/card-png.mjs --chat     → 連聊天室的底一起拍
+ *   node drafts/channels/card-png.mjs            → preview/line-welcome/shot-welcome.png
+ *   node drafts/channels/card-png.mjs --chat     → 連聊天室的底一起拍（-chat.png）
+ *
+ * ⚠⚠ 2026-09-05：出圖從 drafts/ 搬到 preview/line-welcome/。
+ *   drafts 進不了 _site（CLAUDE.md 第二節），放在那裡就只有 repo 看得到、線上打不開，
+ *   而整合給廠商的那一頁（preview/line-spec/）要引用它 —— 引用得到才算數。
+ *   其餘六則的圖本來就出在 preview/ 底下，這一支是最後一個對齊的。
  *
  * ⚠⚠ 拍的是 **preview/line-welcome/ 那一頁的卡片本身**，不是另外畫一份 ——
  *   另外畫一份的話，哪天那一頁改了這張圖就開始說謊（同 og-topic-card 那一輪：
@@ -18,7 +23,8 @@ import { fileURLToPath } from "node:url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..", "..");
 const CHAT = process.argv.includes("--chat");
-const OUT = path.join(HERE, CHAT ? "welcome-card-chat.png" : "welcome-card.png");
+const OUT = path.join(ROOT, "preview", "line-welcome",
+  CHAT ? "shot-welcome-chat.png" : "shot-welcome.png");
 const SCALE = 3;
 
 const chrome = (() => {
