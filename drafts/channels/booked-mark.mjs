@@ -156,6 +156,47 @@ for (const name of SHAPES) {
   rows.push({ name, w: cssW, h: +(cssW / ratio).toFixed(1), ratio: +ratio.toFixed(3),
               cov: +(cov * 100).toFixed(1), png: `${PW}×${PH}` });
 }
+/* ---- 卡片頂端那顆標誌（2026-09-05）-----------------------------------
+   使用者：「原版的診所 logo 在對話框頭的樣子好醜，那個大小可以多大呢，
+   現在做的好小。」
+   ⚠⚠ 廠商那一張的標誌**是咖啡色的**（從他的截圖逐像素叢集：ink ≈ #9b7254），
+     而同一個聊天室的頭像是品牌綠 #3f654a —— 不是我們挑的顏色，是量出來的。
+   ⚠ 這一顆和上面那九顆浮水印不同：**不透明**（alpha 1）、只出 BASE 那一形，
+     而且出得夠大（720 寬）讓卡片上放到 240px 都還是 3× 銳利。 */
+{
+  const { box, gt, d, ratio } = info[BASE];
+  const PW = 720, PH = Math.round(PW / ratio);
+  if (PW > 1024 || PH > 1024) throw new Error("頁首標誌超過 LINE 的 1024 上限");
+  const svg =
+`<svg xmlns="http://www.w3.org/2000/svg" width="${PW}" height="${PH}" viewBox="${box.x} ${box.y} ${box.w} ${box.h}">
+  <g transform="${gt}"><path fill="${GREEN}" fill-rule="evenodd" d="${d}"/></g>
+</svg>`;
+  const pg = path.join(tmp, "head.html"), png = path.join(tmp, "head.png");
+  fs.writeFileSync(pg, `<!doctype html><meta charset="utf-8"><style>html,body{margin:0}` +
+    `svg{display:block;width:${PW}px;height:${PH}px}</style>${svg}`, "utf8");
+  execFileSync(chrome, ["--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+    "--force-color-profile=srgb", "--default-background-color=00000000",
+    `--screenshot=${png}`, `--window-size=${PW},${PH}`, "file://" + pg], { stdio: "pipe" });
+  const buf = fs.readFileSync(png);
+  if (buf.readUInt32BE(16) !== PW || buf.readUInt32BE(20) !== PH)
+    throw new Error("頁首標誌出圖尺寸不對");
+  /* 守門：不透明（最濃 alpha 要到 255）＋ 墨佔外框要對得上第一趟量到的 */
+  const st = await page.evaluate(async (src) => {
+    const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
+    const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
+    const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
+    const p = cx.getImageData(0, 0, cv.width, cv.height).data;
+    let ink = 0, max = 0;
+    for (let i = 3; i < p.length; i += 4) { if (p[i] > 2) ink++; if (p[i] > max) max = p[i]; }
+    return { ink: ink / (cv.width * cv.height), max };
+  }, "data:image/png;base64," + buf.toString("base64"));
+  if (st.max !== 255) throw new Error(`頁首標誌最濃 alpha ${st.max}，該是 255（它不是浮水印）`);
+  if (Math.abs(st.ink - info[BASE].cov) > .04)
+    throw new Error(`頁首標誌墨佔 ${(st.ink * 100).toFixed(1)}%，第一趟量到 ${(info[BASE].cov * 100).toFixed(1)}%`);
+  fs.copyFileSync(png, path.join(OUT, "mark-head.png"));
+  console.log(`頁首標誌 mark-head.png　${PW}×${PH}　${GREEN}　不透明　長寬比 ${ratio.toFixed(3)}`);
+}
+
 await browser.close();
 fs.rmSync(tmp, { recursive: true, force: true });
 

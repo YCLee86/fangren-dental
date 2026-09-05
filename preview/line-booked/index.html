@@ -142,8 +142,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   background:var(--paper);border-bottom:1px solid var(--rule);object-fit:cover}
 .pv-nw .top{display:flex;align-items:center;gap:8px;padding:11px 14px 10px;
   border-bottom:1px solid var(--rule)}
-.pv-nw .top img{width:20px;height:20px;border-radius:50%;display:block}
+/* ⚠⚠ 改成**真的品牌標誌**（mark-head.png，站上頁首那一條、品牌綠、透明底），
+   不是 icon-192 那顆圓頭像 —— 那顆是「加到主畫面」的圖示，被 iOS 的玻璃效果
+   補償過（PALETTE 第六之二十節），而且圓形在這一站是被否決過的語彙。
+   ⚠ 寬度由 --gh 給，高度讓 aspect-ratio 自己算（2.029），不要兩個都寫死。 */
+.pv-nw .top img{width:var(--gh,40px);aspect-ratio:2.029;height:auto;display:block}
 .pv-nw .top b{font-size:14px;font-weight:400;color:var(--ink-soft);letter-spacing:.06em}
+/* 置中一疊：只有標誌、沒有名字 —— 名字在聊天室最上面已經有了。 */
+.pv-nw .top.mid{flex-direction:column;justify-content:center;padding:14px 14px 12px}
 .pv-nw .b{padding:14px}
 .pv-nw .hi{font-size:16px;line-height:1.6;color:var(--ink)}
 .pv-nw .hi b{font-weight:700}
@@ -191,6 +197,22 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-nw .kv{font-size:14px;line-height:1.75;color:var(--ink-soft);margin-top:10px;
   white-space:pre-line}
 .pv-nw .tail{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:12px}
+/* 小字（使用者寫的那兩條）—— xs 13、柔墨、編號掛在外面靠左切齊。
+   ⚠ Flex 沒有 list，真的寫 JSON 時是兩個 baseline box：
+     一個窄的 text 放「1.」、一個 flex:1 的 text 放內容（wrap: true）。 */
+/* ⚠⚠⚠ 這兩條**現在各折成兩行、而且都以一個孤字收尾**（「繫」「～」），
+   而差的只有 1.7px —— 量到的是：一條字寬 229.3、可用 240、編號「1.」12.4，
+   229.3 ＋ 12.4 ＝ 241.7。**沒有改他的字，把數字攤開讓他挑**（同提醒卡那條）：
+     ・拿掉編號 → 229.3 ✓（還餘 10.7）
+     ・（）換半形 → 213.4，**只救得了第 1 條**，第 2 條沒有括號可以換
+     ・13 → 11px → 194 ✓，但 Flex 的字級是固定階、**沒有 12**（xs 13／xxs 11）
+   ⚠ 我們畫得比 LINE 的字型寬約 10%（第 22-7 節那條校正），所以真機上很可能
+     不會折 —— 但那是賭不是量到的，這一頁照保守的畫。
+   ⚠ 編號用 `inside`（在行內）＝ Flex 最直接的等效寫法；真的寫 JSON 時是
+     「一個窄的 text 放 1. ＋ 一個 flex:1 的 text（wrap: true）」。 */
+.pv-nw .fine{font-size:13px;line-height:1.65;color:var(--ink-soft);margin-top:14px;
+  padding-left:0;list-style:decimal inside}
+.pv-nw .fine li + li{margin-top:5px}
 /* 量字用的探針 —— 不佔位、不影響版面 */
 .pv-probe{position:absolute;left:-9999px;top:0;white-space:nowrap}
 
@@ -260,6 +282,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <div class="r" id="row-d"><span class="lb">日期怎麼寫</span><span id="sw-d"></span></div>
   <div class="r" id="row-s"><span class="lb">卡片長相</span><span id="sw-s"></span></div>
   <div class="r" id="row-a"><span class="lb">地址電話</span><span id="sw-a"></span></div>
+  <!-- ⚠ 這一列和上面那一列**同一個位置、二選一顯示**（`display:none` 不是 .off）——
+       預約成功已經定案不放地址電話，所以那把尺只給輪播；切換條維持五列，
+       不會因為多一把尺而長高。 -->
+  <div class="r" id="row-g"><span class="lb">頁首標誌</span><span id="sw-g"></span></div>
 </div>
 
 <span class="pv-probe" id="pv-probe"></span>
@@ -295,8 +321,31 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   var DATE = {
     long:  { name: "現況・長版", f: function (a) { return "2026/" + two(a.m) + "/" + two(a.d) + " " + a.t + " 星期" + a.w; } },
     short: { name: "現況・短版", f: function (a) { return "2026/" + two(a.m) + "/" + two(a.d) + " (" + a.w + ") " + a.t; } },
-    cn:    { name: "新版・中文", f: function (a) { return a.m + "月" + a.d + "日 (" + a.w + ") " + a.t; } }
+    cn:    { name: "新版・中文", f: function (a) { return a.m + "月" + a.d + "日 (" + a.w + ") " + a.t; } },
+    /* ⚠ 2026-09-05 加的：他寫的是「**年**月日（星期）時間」，而上面三格
+       只有現況那兩格帶年份。所以把「中文＋年」單獨做一格，讓他看得到
+       多那三個字在 240px 上會不會把日期擠到第二行。 */
+    cny:   { name: "中文＋年", f: function (a) { return "2026年" + a.m + "月" + a.d + "日 (" + a.w + ") " + a.t; } }
   };
+
+  /* ---- 卡片頂端那顆標誌（2026-09-05）---------------------------------
+     使用者：「原版的診所 logo 在對話框頭的樣子好醜，那個大小可以多大呢，
+     現在做的好小。」
+     ⚠⚠ 兩件事要分開：**難看**是廠商那一塊（咖啡色、置中三行、87px ＝ 整張卡
+       的 33%），**太小**是我們這一版（一顆 20px 的圓頭像 ＋ 14px 的字）。
+     ⚠ 這裡的每一格都印**實際的 px**，不寫「大／更大」——
+       同顯微根管那一輪：尺的單位不一樣時，相對詞會騙人。 */
+  var GHEAD = {
+    none: { name: "不放" },
+    s28:  { name: "28px" },
+    m40:  { name: "40px" },
+    l56:  { name: "56px" },
+    xl96: { name: "置中 96px" }
+  };
+  /* 標誌的寬度（CSS px）—— 高度由長寬比 2.029 算，不要另外寫死。
+     ⚠ 天花板是**卡片的可用寬 240px**（268 − 內距 14×2）：那時標誌高 118px，
+       自己就吃掉現在整張卡的一半。技術上限與好看的上限是兩件事，面板有算。 */
+  var GH_PX = { none: 0, s28: 28, m40: 40, l56: 56, xl96: 96 };
 
   /* ---- 輪播那張卡長什麼樣 ---------------------------------------------
      使用者 2026-09-04：「預約狀態可以拿掉，不過這樣查詢預約的頁面變得好單調，
@@ -381,7 +430,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   /* 預設就開在**建議的那一組**：新版 ＋ 中文日期。
      ⚠ 頭圖預設不放（見底下的說明），要看放了長什麼樣就開 ?h=y。 */
-  var msg = "booked", v = "nw", dt = "cn", look = "wm9", ad = "box", hero = "n", wmk = "12";
+  var msg = "booked", v = "nw", dt = "cn", look = "wm9", ad = "box", hero = "n", wmk = "12", gh = "m40";
 
   (function () {
     var q = location.search;
@@ -396,6 +445,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     five = /[?&]n=5/.test(q);
     SHAPES = five ? FIVE : ALL9;
     hero = pick("h", { y: 1, n: 1 }, hero);
+    gh = pick("g", GHEAD, gh);
+    /* ⚠⚠ 預約成功那一張 2026-09-05 起不放地址電話（使用者指定）——
+       在這裡壓掉，而不是在畫卡的地方多寫一個判斷，免得面板與卡片各判一次。 */
+    if (msg === "booked") ad = "none";
   })();
 
   /* 現況那一張的日期用哪一種：預約成功卡截圖上是短版、查詢卡截圖上是長版。
@@ -442,8 +495,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         +  ' width="1024" height="512" alt="第 ' + (i + 1) + ' 筆">';
     else if (hero === "y")
       h += '<img class="hero" src="../line-remind/hero-remind.jpg" width="1024" height="512" alt="">';
-    else if (!isQuery)
-      h += '<div class="top"><img src="../../assets/icon-192.png" alt=""><b>芳仁牙醫診所</b></div>';
+    else if (!isQuery && gh !== "none")
+      h += '<div class="top' + (gh === "xl96" ? " mid" : "") + '"'
+        +  ' style="--gh:' + GH_PX[gh] + 'px">'
+        +  '<img src="mark-head.png" width="720" height="355" alt="芳仁牙醫">'
+        +  (gh === "xl96" ? "" : '<b>芳仁牙醫診所</b>') + '</div>';
     /* 浮水印要排在內容**前面**（先畫的在底下），而且兩層都要 positioned。
        ⚠⚠ Flex 那邊還有一條：**一個 box 的第一個子元件不可以是 absolute**，
          所以真的寫 JSON 時浮水印不能擺在最前面，要先放一個正常的子元件。 */
@@ -459,7 +515,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     h += '<div class="b">';
     /* ⚠ 名字加粗（Flex 就是一個 span 加 weight: bold，顏色不動）——
          一個帳號收得到好幾個家人的通知，「這一次是誰」要一眼看到（同提醒卡）。 */
-    if (!isQuery) h += '<p class="hi"><b>〔病人姓名〕</b>　幫你約好了</p>';
+    /* ⚠⚠ 這一段是**使用者 2026-09-05 自己寫的**（「病人姓名　我們約好囉」／
+       兩條小字），逐字照抄。我原本擬的「幫你約好了」與結尾那句已經換掉。 */
+    if (!isQuery) h += '<p class="hi"><b>〔病人姓名〕</b>　我們約好囉</p>';
     /* ⚠⚠⚠ 「共 n 筆」只有這一格寫得出來 —— 靜態圖沒有辦法帶總數（見 LOOK 那一段）。
        這正是「號碼要做成圖還是做成字」真正的分水嶺。 */
     if (isQuery && look === "numt" && i != null)
@@ -475,19 +533,24 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     } else {
       h += '<p class="dt">' + fmt(a) + '</p>';
     }
+    /* ⚠⚠ 預約成功那一張 2026-09-05 起**不放地址電話**（使用者指定），
+       所以這把尺只剩輪播在用；booked 進來時 ad 已經被壓成 none。 */
     if (ad === "box")
       h += '<p class="box">' + ADDR + '\n' + TEL + '</p>';
     if (ad === "two")
       h += '<p class="kv">' + ADDR + '\n' + TEL + '</p>';
-    /* ⚠⚠ 「看診前2天」是**招呼圖卡已經定案的那一句**（你自己寫的）——
-         這裡逐字沿用，不要改成「48 小時」。那兩個說法目前不一致，
-         要統一得你點頭（CLAUDE.md 第十一節已經記著這一條）。 */
-    if (!isQuery) h += '<p class="tail">看診前2天會再提醒你一次</p>';
+    /* ⚠⚠ 兩條小字逐字照抄使用者寫的。
+       ⚠ 「看診前2天」和招呼圖卡定案的那一句同一個說法（不是 48 小時）；
+         「記得回覆喔～」是新的 —— 它正好替提醒卡那顆確認鈕先鋪路。 */
+    if (!isQuery)
+      h += '<ol class="fine"><li>異動請在2天前（不含假日）與診所聯繫</li>'
+        +  '<li>看診前2天會再提醒一次，記得回覆喔～</li></ol>';
     return h + '</div></div>';
   }
 
   /* ---- 畫聊天室 ------------------------------------------------------- */
   function render() {
+    if (msg === "booked") ad = "none";       /* 同上，切換條換過來時也要壓 */
     var chat = document.getElementById("pv-chat"), h = "";
     if (msg === "booked") {
       h = '<div class="pv-day">8 月 6 日（四）</div>'
@@ -526,14 +589,20 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     bar("sw-d", DATE, function () { return dt; }, function (k) { dt = k; });
     bar("sw-s", LOOK, function () { return look; }, function (k) { look = k; });
     bar("sw-a", ADDRSET, function () { return ad; }, function (k) { ad = k; });
+    bar("sw-g", GHEAD, function () { return gh; }, function (k) { gh = k; });
     /* 卡片長相那把尺只有「新版的輪播」有；地址電話那把尺對現況無效（現況固定兩行）。
        ⚠ 關掉而不是拿掉，不然切回去整條會跳高一截。 */
     document.getElementById("row-s").className = "r" + (msg === "query" && v === "nw" ? "" : " off");
     document.getElementById("row-a").className = "r" + (v === "nw" ? "" : " off");
+    /* 二選一：預約成功給頁首標誌、輪播給地址電話。兩列高度一樣，切換不會跳。 */
+    document.getElementById("row-a").style.display = msg === "query" ? "" : "none";
+    var rg = document.getElementById("row-g");
+    rg.style.display = msg === "booked" ? "" : "none";
+    rg.className = "r" + (v === "nw" ? "" : " off");
 
     history.replaceState(null, "", location.pathname
       + "?m=" + msg + "&v=" + v + "&d=" + dt + "&s=" + look + "&a=" + ad
-      + "&h=" + hero + "&k=" + wmk + (wmOn ? "&wm=1" : "") + (five ? "&n=5" : ""));
+      + "&h=" + hero + "&g=" + gh + "&k=" + wmk + (wmOn ? "&wm=1" : "") + (five ? "&n=5" : ""));
     document.getElementById("pv-cap").innerHTML = msg === "booked"
       ? "↑ 約好的<b>當下</b>自動送出，<b>單張</b>。⚠ 近似，不是 LINE 自己的算繪。"
       : "↑ 他點了圖文選單的<b>約診紀錄查詢</b>之後回的，<b>輪播</b>（一個約診一張，可以左右滑）。"
@@ -808,6 +877,50 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
 
   function note() {
+    /* ---- 2026-09-05：預約成功那一則（他寫的文案 ＋ 頁首標誌要多大）---- */
+    var BK = (msg === "booked" && v === "nw")
+      ? "<b>2026-09-05 這一版：文字全部換成你寫的，地址電話拿掉了。</b>"
+        + "<hr>"
+        + "<b>「那個大小可以多大呢」——三個數字。</b>"
+        + "<br>① <b>技術上限 240px</b>（＝卡片 268 扣掉左右內距 14）。"
+        + "那時標誌高 <b>118px</b>，光它自己就等於現在整張卡的一半。"
+        + "<br>② <b>「不用錢」的上限是 50px。</b>這一列的高度是"
+        + "<b>旁邊那行字</b>撐出來的（14px 的「芳仁牙醫診所」，行框 24.8 ＋ 上下內距 21 ＝ 45.8），"
+        + "而標誌高 ＝ 寬 ÷ 2.029 —— <b>寬到 50px 以前，它都塞在字的行框裡，一格高度都不會多</b>。"
+        + "現在那顆 20px 小得很沒道理：<b>放大到 40 是免費的</b>。"
+        + "<br>③ 再往上就開始付錢：56px → 卡片 242 → <b>245.8</b>（＋3.8）；"
+        + "置中 96px → <b>270.5</b>（＋28.5）。"
+        + "<br>→ <b>我建議 40px</b>（免費、而且已經是現在的兩倍）；想更有存在感就 56。"
+        + "<hr>"
+        + "⚠⚠⚠ <b>另外，廠商那顆標誌是咖啡色的，不是診所的綠。</b>"
+        + "從你那張截圖逐像素叢集出來：標誌的墨 <b>rgb(155,114,84) ≈ #9b7254</b>，"
+        + "而同一個聊天室左下角的<b>頭像是 rgb(59,104,75) ≈ 品牌綠 #3f654a</b>。"
+        + "<br>→ 所以「好醜」有一半不是排版問題，是<b>它根本不是我們的顏色</b>。"
+        + "這一頁用的是站上頁首那一條、品牌綠、透明底（<code>mark-head.png</code>）。"
+        + "<b>這一條要跟廠商講。</b>"
+        + "<hr>"
+        + "⚠⚠ <b>你寫的「年月日（星期）時間」——「年」要放進去的話，日期會折成兩行。</b>"
+        + "日期那把尺多了一格「<b>中文＋年</b>」，按下去就看得到："
+        + "卡片 242 → <b>273.9</b>（＋31.9），而且那一行本來是這張卡最大的字、"
+        + "折成兩行之後它就不再是「一眼看到什麼時候」。"
+        + "<br>→ 現在預設仍是<b>不帶年</b>的「8月25日 (二) 10:15」。要帶年就按那一格。"
+        + "<hr>"
+        + "⚠⚠ <b>那兩條小字現在各折成兩行，而且都以一個孤字收尾</b>（「繫」「～」）。"
+        + "差的只有 <b>1.7px</b>：一條字寬 <b>229.3</b>、可用 <b>240</b>、編號「1.」<b>12.4</b>。"
+        + "<b>我沒有動你的字</b>，三條路給你挑："
+        + "<br>・<b>拿掉編號</b> → 229.3 ✓（還餘 10.7px）"
+        + "<br>・<b>（不含假日）換成半形</b> → 213.4 ✓ —— <b>但只救得了第 1 條</b>，"
+        + "第 2 條沒有括號可以換。（綁定完成那一則已經是半形，要不要統一也是一題。）"
+        + "<br>・<b>字級 13 → 11</b> → 194 ✓，但會明顯變小；"
+        + "Flex 的字級是<b>固定階、沒有 12</b>（xs 13／xxs 11）。"
+        + "<br>⚠ 我們畫得比 LINE 的字型<b>寬約 10%</b>，所以真機上很可能不會折 ——"
+        + "<b>但那是賭不是量到的</b>，這一頁照保守的畫。"
+        + "<hr>"
+        + "⚠ 兩件順帶記著的：<b>「2天前」和綁定完成那則的「看診日前 2 天」是同一條規則、"
+        + "兩種寫法</b>；而「異動請在 2 天前聯繫」擺在<b>預約成功</b>是對的 ——"
+        + "約好的當下講期限，那時期限還在未來（提醒卡是 48 小時前才送，那時已經過期了）。"
+        + "<hr>"
+      : "";
     /* ---- 2026-09-04：順序號碼那一題（只有選到那兩格時才印在最前面）---- */
     var NUM = (look === "num" || look === "numt")
       ? "<b>「輪播的頭圖變成有順序的數字，做得到嗎？」—— 做得到，而且上面那兩輪就是它。</b>"
@@ -846,7 +959,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + "排錯的話號碼會指到錯的那一張，比沒有號碼更糟。<b>這一題要一起問。</b>"
         + "<hr>"
       : "";
-    return NUM + "<b>先講一件你可能不想聽的：這兩張截圖還是「診所端的後台」，不是病人的手機。</b>"
+    return BK + NUM + "<b>先講一件你可能不想聽的：這兩張截圖還是「診所端的後台」，不是病人的手機。</b>"
       + "判準三個，都在畫面上：<b>標題是病人的名字</b>（不是「芳仁牙醫診所」）、"
       + "卡片下面有<b>「已讀」</b>、底下有<b>「若希望暫時以手動聊天…」與「預約傳送」</b>。"
       + "同 2026-09-04 提醒卡那一次。"
