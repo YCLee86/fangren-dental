@@ -343,12 +343,16 @@ teeth with faces; speech bubbles; heavy black outlines; photo-realism; 3D render
    而且**那塊牌子由小孩替媽媽舉**（媽媽兩手抱著孩子）——
    舉牌的仍然是三塊，數字一個都沒動。
 
-## 六之四、⭐ 現行提示詞（第三版，直接複製這一份）
+## 六之四、⭐ 定稿的提示詞（第四版 —— 出圖用的就是這一份）
 
 ⚠ 參考圖**五張**：第五節那四張，**再加 `assets/og-topic-kids.jpg`** ——
 只參考那位醫師身上的**花樣刷手服與同花色的綁帶手術帽**（米底＋小熊小雞小花的琥珀色圖案），
 構圖與診間都不要參考。⚠ `style-ref-endo-consult.jpg` 是**左右分格**的，
 要多講一句「不要學它的分格，成品是一個連續的場景」。
+
+⚠⚠ **第五段那句「牌子還是空白的」已經改寫過**（`nothing has been written on it yet`，
+小寫敘述句）並在 `AVOID` 補了一條 —— 出圖那一版寫的是 `STILL COMPLETELY BLANK`，
+**模型把那幾個字畫到牌子上了**，見第六之六節。**要重生成就用下面這一份。**
 
 ```
 Editorial illustration, landscape 16:9 (it will be cropped to 2:1 afterwards), for a small
@@ -356,58 +360,60 @@ message card. It will be seen at about 268 pixels wide, so THE PEOPLE MUST BE BI
 and everything must read at thumbnail size: ONE single continuous scene read LEFT TO RIGHT, few
 large shapes, no panels, no dividing lines, no insets.
 
-THE STORY IN ONE SENTENCE - READ THIS BEFORE DRAWING ANYTHING: on a small stage at a cheerful
-little awards evening, FOUR ORDINARY PATIENTS ARE SCORING THE CLINIC. They sit behind a long
+THE STORY IN ONE SENTENCE - READ THIS BEFORE DRAWING ANYTHING: on a small stage at a modest
+little awards evening, FIVE ORDINARY PATIENTS ARE SCORING THE CLINIC. They sit behind a long
 draped judges' table on the left, FACING US, and hold up boards with ONE BIG HANDWRITTEN NUMBER
-on each; on the right of the picture A GROUP OF FIVE CLINIC STAFF ARE CELEBRATING in front of a
-whiteboard where the scores have just been added up - one of them has thrown himself into the
-air. THE PATIENTS ARE THE JUDGES AND THE CLINIC IS THE ONE BEING JUDGED. It is a proper
-occasion, warm and festive - dressed up, but never solemn and never grand.
+on each; on the right of the picture FIVE CLINIC STAFF stand in front of a whiteboard where the
+scores have just been added up, quietly delighted. THE PATIENTS ARE THE JUDGES AND THE CLINIC IS
+THE ONE BEING JUDGED. The mood is WARM, PLEASED AND A LITTLE SHY - a proper occasion, but a
+small and gentle one. NOT a wild celebration.
 
-1. FILL THE FRAME. THIS IS THE MOST IMPORTANT INSTRUCTION IN THIS BRIEF, because the picture will
-   be seen very small. The people are the biggest thing in it:
+1. FILL THE FRAME. This matters because the picture will be seen very small. The people are the
+   biggest thing in it:
      • EACH ADULT HEAD, HAIR INCLUDED, IS ABOUT ONE FIFTH OF THE PICTURE HEIGHT.
      • The top edge of the highest raised board sits no more than 12% down from the top of the
-       picture; above that there is only a sliver of backdrop with the bunting and lamps CROPPED
-       BY THE TOP EDGE.
+       picture; above it only a sliver of backdrop with the bunting CROPPED BY THE TOP EDGE.
      • THE BOTTOM EDGE OF THE PICTURE CUTS STRAIGHT THROUGH THE FRONT OF THE JUDGES' TABLE and
-       through the celebrating staff at about thigh height. Feet, floor and the stage step are
-       mostly out of shot, and that is correct.
-     • The gap between the two groups is only a narrow slice of stage - just enough to read them
-       as two groups.
-   NO LARGE EMPTY AREAS anywhere: not of backdrop, not of floor, not of tablecloth. If in doubt,
-   move the camera closer.
+       through the staff at about thigh height. Feet, floor and the stage step are mostly out of
+       shot, and that is correct.
+     • NO MORE THAN ABOUT AN EIGHTH of the picture may be empty tablecloth, and no more than a
+       narrow slice of stage may separate the two groups.
+   NO LARGE EMPTY AREAS anywhere. If in doubt, move the camera closer.
 
 2. DIRECTION AND WHERE EVERYONE LOOKS. The picture reads strictly LEFT TO RIGHT: judges on the
-   left, celebrating staff and whiteboard on the right.
-     • THE FOUR JUDGES FACE THE CAMERA SQUARELY. Their shoulders are parallel to the picture
+   left, staff and whiteboard on the right.
+     • THE FIVE JUDGES FACE THE CAMERA SQUARELY. Their shoulders are parallel to the picture
        plane, their chests point straight at us, their chins are NOT turned to the side. TWO OF
-       THEM ARE SMILING DIRECTLY INTO THE CAMERA; the others look down at their own board or up
-       at their raised board. NOT ONE JUDGE IS DRAWN IN PROFILE OR TURNED AWAY. Their boards are
+       THEM SMILE DIRECTLY INTO THE CAMERA; the others look down at their own board or up at the
+       one they are holding. NOT ONE JUDGE IS DRAWN IN PROFILE OR TURNED AWAY. Their boards are
        held FLAT TO THE CAMERA so the numbers read perfectly.
-     • THE CLINIC STAFF, by contrast, NEVER look at the camera: they look at the judges, at the
-       whiteboard, or at each other. The staff group is the only thing that tells the viewer who
-       is being scored, so it must be LARGE, COMPLETE AND WELL INSIDE THE FRAME - never small,
-       never cropped away, never pushed to the edge.
+     • THE CLINIC STAFF NEVER look at the camera: they look at the judges, at the whiteboard, or
+       at each other. The staff group is the only thing that tells the viewer who is being
+       scored, so it must be LARGE, COMPLETE AND WELL INSIDE THE FRAME.
 
-3. LAYOUT ACROSS THE FRAME. LEFT HALF: a LONG JUDGES' TABLE draped in a smooth pale cloth, seen
-   nearly straight on, with FOUR PATIENTS seated behind it facing us. They are the nearest and
-   largest figures. RIGHT HALF: a WHITEBOARD ON A SIMPLE STAND with the scores on it, and FIVE
-   CLINIC STAFF grouped in front of and around it. Keep every face, every board and the whole
-   whiteboard inside the CENTRAL 88% of the picture height and the CENTRAL 88% of its width - the
-   edges will be cropped.
+3. LAYOUT. LEFT HALF: a LONG JUDGES' TABLE draped in a smooth pale cloth, seen nearly straight
+   on, with FIVE PATIENTS seated behind it facing us, filling the whole length of the table with
+   NO EMPTY CHAIR AND NO GAP between them. They are the nearest and largest figures. RIGHT HALF:
+   a WHITEBOARD ON A SIMPLE STAND with the scores on it, and FIVE CLINIC STAFF grouped in front
+   of and around it. Keep every face, every board and the whole whiteboard inside the CENTRAL
+   88% of the picture height and the CENTRAL 88% of its width - the edges will be cropped.
 
-4. IT IS A SMALL STAGE AND A PROPER OCCASION. Behind everyone, A PLAIN PALE BACKDROP PANEL in
+4. IT IS A SMALL STAGE AND A MODEST OCCASION. Behind everyone, A PLAIN PALE BACKDROP PANEL in
    warm cream. Strung across the very top and CUT BY THE TOP EDGE, A GARLAND OF SMALL TRIANGULAR
    BUNTING FLAGS in muted sage, dusty rose, cream and soft amber - THE FLAGS ARE COMPLETELY
-   PLAIN, with no writing, no letters and no pattern. Beside them, TWO OR THREE SIMPLE ROUND
-   STAGE LAMPS on thin stems, also cut by the top edge, throwing soft warm pools of light. A FEW
-   SMALL PIECES OF CONFETTI drift around the celebrating group, plus two or three short curved
-   motion strokes. One potted plant at each side, mostly cropped. Festive and a little makeshift -
-   a clinic's own small ceremony, NOT a television studio and NOT a grand awards gala.
+   PLAIN, with no writing, no letters and no pattern. Beside them, TWO SIMPLE ROUND STAGE LAMPS
+   on thin stems, also cut by the top edge, throwing soft warm pools of light. AT MOST THREE
+   SMALL PIECES OF CONFETTI drift near the staff - no more than three, and NO motion strokes,
+   NO speed lines and NO starbursts anywhere in the picture. One potted plant at each side,
+   mostly cropped. Homely and a little makeshift - a clinic's own small ceremony, NOT a
+   television studio, NOT a grand gala and NOT a sports victory.
 
-5. THE FOUR JUDGES ARE ORDINARY PATIENTS, NOT EXPERTS, and clearly different from one another,
+5. THE FIVE JUDGES ARE ORDINARY PATIENTS, NOT EXPERTS, and clearly different from one another,
    from left to right:
+     • AN OLDER MAN in his seventies in a buttoned cardigan, at the near left end. HE HAS NOT
+       DECIDED YET: his board lies flat on the table in front of him and nothing has been written
+       on it yet, he holds a pencil upright in one hand and rests his chin on the other, looking
+       up and away in cheerful thought, eyebrows raised, a small smile;
      • AN OLDER WOMAN with short grey permed hair and a patterned blouse, HOLDING A BOARD UP
        beside her head, beaming straight at the camera;
      • A MAN IN HIS FIFTIES in a plain polo shirt, HOLDING A BOARD UP, laughing, looking up at
@@ -416,19 +422,21 @@ occasion, warm and festive - dressed up, but never solemn and never grand.
        child, so SHE IS NOT HOLDING ANYTHING; THE CHILD HOLDS THEIR BOARD UP FOR HER with both
        little hands, stretching as high as it can, delighted. The mother smiles straight at the
        camera over the top of the child's head;
-     • A YOUNG WOMAN with long hair tied back who is NOT holding a board up: hers lies flat on
-       the table and she is writing her number on it with a pencil, head bent, half smiling.
+     • A YOUNG WOMAN with long hair tied back at the right end, NOT holding a board up: hers lies
+       flat on the table and she is writing her number on it with a pencil, head bent, half
+       smiling.
    They are relaxed, warm and enjoying themselves. NOT stern, NOT solemn, NOT frowning.
 
 6. THE BOARDS AND THE NUMBERS - READ THIS CAREFULLY. Each board is a plain rectangle about the
    size of a sheet of paper, pale cream-white with a thin hand-drawn edge and a simple stick
-   handle. On each RAISED board there is exactly ONE SINGLE-DIGIT NUMBER, drawn very large so it
-   fills most of the board, in a soft dark hand-drawn stroke as if written with a marker. From
-   left to right the three raised boards read: 9, then 8, then 9 (the third is the one the child
-   is holding). NOTHING ELSE is on any board - no second digit, no decimal point, no circle, no
-   cross, no tick, no star, no smiley, no word, no symbol and no unit. The board the young woman
-   is writing on is still blank apart from the very beginning of a stroke under her pencil. NEVER
-   draw a 10 and never draw a number below 7.
+   handle. THERE ARE EXACTLY THREE RAISED BOARDS and each carries exactly ONE SINGLE-DIGIT
+   NUMBER, drawn very large so it fills most of the board, in a soft dark hand-drawn stroke as if
+   written with a marker. From left to right the three raised boards read: 9, then 8, then 9 (the
+   third is the one the child is holding). NOTHING ELSE is on any board - no second digit, no
+   decimal point, no circle, no cross, no tick, no star, no smiley, no word, no symbol and no
+   unit. THE TWO BOARDS LYING ON THE TABLE HAVE NOTHING ON THEM AT ALL, apart from the very
+   beginning of a stroke under the young woman's pencil. NEVER draw a 10 and never draw a number
+   below 7.
 
 7. THE WHITEBOARD ON THE RIGHT. A plain white rectangular board on a simple metal stand, its face
    turned towards the camera so we can read it. On it, written in the same soft dark hand: A SHORT
@@ -437,58 +445,138 @@ occasion, warm and festive - dressed up, but never solemn and never grand.
    ELSE is on the whiteboard: no words, no Chinese characters, no letters, no headings, no percent
    sign, no other marks.
 
-8. THE FIVE CLINIC STAFF ARE THE ONES BEING SCORED, AND THEY ARE DELIGHTED. All East Asian, mixed
-   ages and both sexes, and THEY ARE NOT ALL DRESSED THE SAME - this matters:
+8. THE FIVE CLINIC STAFF ARE THE ONES BEING SCORED, AND THEY ARE PLEASED BUT COMPOSED. This is
+   important: they are happy in a QUIET, SLIGHTLY EMBARRASSED way - the way people who work
+   together are pleased in front of guests. NOBODY IS JUMPING. NOBODY HAS BOTH ARMS ABOVE THEIR
+   HEAD. NOBODY IS SHOUTING. EVERY PERSON HAS BOTH FEET ON THE FLOOR. All East Asian, mixed ages
+   and both sexes, and THEY ARE NOT ALL DRESSED THE SAME - this matters:
      • a woman in her forties in an OPEN WHITE COAT over pale sage-green scrubs, standing at the
-       whiteboard, marker still in her hand, looking back at the judges with a huge pleased grin;
-     • a man in his thirties in SOFT BLUE SCRUBS and no coat, THROWN INTO THE AIR mid-jump with
-       both arms punched straight up, hair flying, head clearly HIGHER THAN EVERYONE ELSE, mouth
-       open in a cheer, with short curved motion strokes around him. His feet are below the bottom
-       edge of the picture and that is fine - the raised arms, the flying hair and the extra height
-       are what make the jump read;
-     • a young woman in DUSTY ROSE SCRUBS and no coat, mid-dance, both arms out, shoulders twisted;
+       whiteboard, marker still in her hand, turning back towards the judges with a warm smile;
+     • a man in his thirties in SOFT BLUE SCRUBS and no coat, standing straight, ONE FIST RAISED
+       ONLY AS HIGH AS HIS OWN SHOULDER with the elbow bent close to his side, a big closed-mouth
+       grin, eyes creased;
+     • a young woman in DUSTY ROSE SCRUBS and no coat, CLAPPING SOFTLY with both hands at chest
+       height, shoulders relaxed, smiling at the judges;
      • a man in his fifties in an OPEN WHITE COAT over WARM GREY scrubs, both hands clasped in
        front of him, eyebrows raised, relieved and a bit sheepish;
      • a woman in her twenties in CREAM SCRUBS PRINTED ALL OVER WITH SMALL AMBER-BROWN MOTIFS
        (little bears, chicks and flowers) WITH A MATCHING TIE-BACK SURGICAL CAP in the same print
-       - drawn from the provided kids-clinic reference - hugging the colleague next to her with
-       one arm and waving the other in the air.
-   NOBODY WEARS A FACE MASK - we must see every expression. Nobody looks at the camera. It should
-   be funny and warm and a bit undignified: they clearly care what the numbers say.
+       - drawn from the provided kids-clinic reference - standing beside the man in grey with ONE
+       HAND RESTING ON HIS SHOULDER and the other hand held quietly at her chest, laughing.
+   NOBODY WEARS A FACE MASK - we must see every expression. Nobody looks at the camera. They stand
+   as a calm, close little group, not scattered and not leaping.
 
-9. THE EMPTY CHAIR AT THE NEAR LEFT. At the very left end of the judges' table, closest to us,
-   THERE IS ONE EMPTY CHAIR, its back cut by the left edge of the picture, pushed back a little as
-   if someone has just been invited to sit down. On the table in front of it: ONE COMPLETELY BLANK
-   BOARD lying face up and ONE PENCIL beside it. NOBODY is sitting in it and there is no coat and
-   no bag on it - it is plainly waiting for someone.
+9. STYLE. Thin hand-drawn linework whose weight varies and sometimes breaks - NOT a thick even
+   outline, NOT a ruled vector line. Each face is ONE FLAT SKIN TONE with no shading: only the
+   outline, two eyes drawn as small simple dots, two short eyebrows, a tiny nose mark, a small
+   mouth and an ear - no wrinkles, no cheek lines. Hair is a flat shape in two tones and STAYS
+   NEATLY IN PLACE on every person. EVERY PERSON IS DRAWN WITH EXACTLY THE SAME LINE WEIGHT AND
+   SOLIDITY. Flat fills in two or three steps per colour, no gradients except to describe light.
+   Fine paper grain over the whole image. Warm, calm, gently funny - never slick, never corporate.
 
-10. STYLE. Thin hand-drawn linework whose weight varies and sometimes breaks - NOT a thick even
-    outline, NOT a ruled vector line. Each face is ONE FLAT SKIN TONE with no shading: only the
-    outline, two eyes drawn as small simple dots, two short eyebrows, a tiny nose mark, a small
-    mouth and an ear - no wrinkles, no cheek lines. Hair is a flat shape in two tones. EVERY PERSON
-    IS DRAWN WITH EXACTLY THE SAME LINE WEIGHT AND SOLIDITY. Flat fills in two or three steps per
-    colour, no gradients except to describe light. Fine paper grain over the whole image. Warm,
-    festive, slightly funny - never slick, never corporate.
-
-11. COLOUR. Warm and quiet overall, with the celebration carried by variety rather than by
-    brightness: cream and pale wood for the stage, warm off-white for the boards and the
-    whiteboard, and the staff in FOUR DIFFERENT scrub colours (muted sage green, soft blue, dusty
-    rose, warm grey) plus the cream-and-amber printed set. The judges in soft everyday colours.
-    The near group is a little deeper in tone than the far group so the two separate at thumbnail
-    size. No neon, no strong saturated red, no gold.
+10. COLOUR. Warm and quiet overall, the variety carried by the clothes rather than by brightness:
+    cream and pale wood for the stage, warm off-white for the boards and the whiteboard, and the
+    staff in FOUR DIFFERENT scrub colours (muted sage green, soft blue, dusty rose, warm grey)
+    plus the cream-and-amber printed set. The judges in soft everyday colours. The near group is a
+    little deeper in tone than the far group so the two separate at thumbnail size. No neon, no
+    strong saturated red, no gold.
 
 AVOID: any letters, words, Chinese characters, Japanese characters or writing anywhere - THE ONLY
-MARKS THAT MAY LOOK LIKE WRITING ARE THE NUMBERS DESCRIBED ABOVE; any writing on the bunting; a
-banner, sign, board or panel above the stage; any number on a board other than a single digit; a
-10, a 100, a percent sign, a decimal point, a star, a heart, a tick, a cross or a smiley anywhere;
-ANY JUDGE DRAWN IN PROFILE, THREE-QUARTER OR TURNED AWAY FROM THE CAMERA; any clinic staff facing
-the camera or meeting the viewer's eyes; SMALL FIGURES IN A WIDE EMPTY ROOM; large empty areas of
-backdrop, floor or tablecloth; a wide gap between the two groups; anyone sitting in the empty
-chair; face masks; a trophy, a medal, a certificate, a ribbon or a podium; microphones, cameras,
-cables, an audience or a red carpet; balloons; a stern or severe judge; anyone pointing at the
-viewer; thumbs up or thumbs down; medical instruments in anybody's hand; a patient in a dental
-chair; teeth with faces; speech bubbles; heavy black outlines; photo-realism; 3D rendering.
+MARKS THAT MAY LOOK LIKE WRITING ARE THE NUMBERS DESCRIBED ABOVE; the words STILL BLANK, or any
+English word, on any board or anywhere else; any writing on the bunting; a banner, sign, board or
+panel above the stage; any number on a board other than a single digit; more than three raised
+boards; a 10, a 100, a percent sign, a decimal point, a star, a heart, a tick, a cross or a smiley
+anywhere; ANY JUDGE DRAWN IN PROFILE, THREE-QUARTER OR TURNED AWAY FROM THE CAMERA; AN EMPTY CHAIR
+OR A GAP IN THE ROW OF JUDGES; any clinic staff facing the camera or meeting the viewer's eyes;
+ANYONE JUMPING OR WITH BOTH FEET OFF THE FLOOR; ANY ARM RAISED ABOVE HEAD HEIGHT; open-mouthed
+shouting or cheering; flying or windswept hair; motion strokes, speed lines or starbursts; more
+than three pieces of confetti; SMALL FIGURES IN A WIDE EMPTY ROOM; large empty areas of backdrop,
+floor or tablecloth; face masks; a trophy, a medal, a certificate, a ribbon or a podium;
+microphones, cameras, cables, an audience or a red carpet; balloons; a stern or severe judge;
+anyone pointing at the viewer; thumbs up or thumbs down; medical instruments in anybody's hand; a
+patient in a dental chair; teeth with faces; speech bubbles; heavy black outlines; photo-realism;
+3D rendering.
 ```
+
+## 六之五、✅ 第四版定稿（2026-09-05，使用者：「定稿了」）
+
+第三版之後使用者只提兩件，第四版兩件都對了：
+
+> 「右邊的醫事人員好像太嗨了。左邊評審還有一個空位，補上一個人吧。」
+
+- **收斂那一側**：沒有人跳起來、沒有手舉過頭、沒有張嘴喊、頭髮不飛、
+  動態線整組拿掉、紙花剩兩三片。改成握拳到肩、輕輕拍手、搭肩笑。
+- ⚠⚠ **空椅補了人 ＝ 那個裝置沒有了。** 空椅原本一次解掉三件
+  （「這一席是給你的」不必寫字／會朝著鏡頭的那個位置是空的／邀請是具體的東西）。
+  補人之後**邀請全靠卡片上的文字承接**。留住的只有一半：
+  新的那位阿公**「還在想」**（筆舉著、牌子還空白、抬頭），
+  所以「還沒決定」那個意思還在，「那一席是給你的」沒有了。
+  **這是知情的取捨，不要事後又把空椅加回去。**
+- 舉牌仍然三塊（9／8／9）、白板仍然 9 8 9 ／ 26 —— **一個數字都沒動**。
+
+成品原檔 `drafts/review-hero-src.jpg`（1376×768）。
+
+### 裁成 1024×512
+
+```bash
+node drafts/channels/review-hero-crop.mjs
+```
+
+**上 64 / 下 16**，幾乎全部從上面拿，兩個理由都是掃出來的：
+
+- **上面 190 列幾乎是空的**（只有彩旗與兩盞燈，最高那塊牌子從第 195 列才開始），
+  而提示詞本來就寫著「彩旗與燈被上緣切掉」—— 收掉那一截正好是要的。
+- **下面不能多拿**：舞台前緣那條**橫貫全寬**的線在第 730 列（逐列最長連續 ＝ 1376），
+  裁 40 會正好切在它身上、下緣留一條半截的深線；688~700 列是醫事人員的鞋子。
+  裁 16（到第 752 列）兩樣都完整。
+
+⚠⚠ **守門不能照抄 `remind-hero-crop.mjs`**（通則：守門要跟著這一張圖的形狀走）。
+這一張**第 0 列就有濃墨**（左右兩盞燈與彩旗），那一支的「深墨要離上緣 ≥12 列」
+在這裡一直誤報。**試過兩條走不通的，記下來免得再走**：
+
+| 走不通的 | 為什麼 |
+| --- | --- |
+| **膚色偵測** | 暖米色的背板 R−B ＝ 20、臉是 65，本來分得開 —— 但**彩旗是米黃三角形、和膚色同一區**，上緣那一帶整片誤報（第一次跑量到 84188 個「膚色」像素） |
+| **「牌子是比背板白的白」** | 牌子其實也是米白，`R−B < 12` 一列都命中不到 |
+
+定案的五道：①長寬比 ②**下緣用那條橫貫全寬的舞台線當地標**（第 730 列，底下要留 ≥10 列）
+③**上緣看成品最上面 40 列有沒有長橫線**（＝被切一半的牌子或頭；彩旗與燈的最長橫向
+連續只有 22，實測成品是 73，上限 200）④四邊有沒有烘進去的白框 ⑤不超過 1024。
+
+---
+
+## 六之六、⚠⚠⚠ 圖上有一處英文字 —— **還沒處理**
+
+左下角阿公面前那塊空白牌子上寫著 **`STILL BLANK`**。
+
+**成因是我自己的提示詞**：第五段寫著 `his board lies flat on the table in front of him
+STILL COMPLETELY BLANK` —— **模型把那幾個大寫的英文字直接畫到那塊牌子上了**。
+
+⚠⚠⚠ **通則（下次寫任何提示詞都適用）：描述「某個東西上面沒有字」的時候，
+不要用大寫、不要加引號、不要把它寫成一個看起來像標籤的片語。**
+模型會把那種片語當成「要寫在那個物件上的內容」。
+改成小寫的敘述句：`nothing has been written on it yet`，
+並在 `AVOID` 明列 `the words STILL BLANK or any English word on any board`。
+
+⚠ 這和第十四節那條「圖上零文字」是同一件事的兩面：
+**AVOID 裡寫「不要有字」擋不住「正文裡自己寫了一個英文片語」** ——
+正文的權重比 AVOID 高。
+
+**量到的大小**：原檔 **145×42px**（x 85~229・y 495~536）→
+換算到卡片上的 268px 是 **28×8px**（整張卡面積的 1.1%）。
+1× 幾乎看不出來（在聊天室模擬圖上是桌面左邊一小塊灰痕），放大就讀得出來。
+
+**三條路，還沒問使用者**：
+
+| | |
+| --- | --- |
+| **Ⓐ 重生成一次**（建議） | 只改那一句（見上），構圖與其他每一項都不動。**這一站的規矩是整張圖零文字**，招呼卡到約診卡每一則都守著 |
+| Ⓑ 接受 | 268px 上只有 28×8px。代價：這一則會發給每一位看完診的病人，而且要拿給廠商看 |
+| ❌ 後製塗掉 | **不要**。塗掉會在紙紋上留一塊補丁，而且下次重生成又要再塗一次 |
+
+⚠ **裁切不會動到它**（只裁上下）。
+
+---
 
 ## 七、驗收（生成之後逐條看，任何一條沒過就重生成，不要後製）
 
@@ -515,20 +603,29 @@ chair; teeth with faces; speech bubbles; heavy black outlines; photo-realism; 3D
 11. 那張空椅在、沒有人坐（椅背被左緣切掉沒關係）。
 12. **縮到 268×134 還讀得出「左邊一排數字牌，右邊一群人在歡呼」** ——
     一定要真的縮到那個尺寸看（ILLUSTRATION.md 第十一節）。
-13. **裁成 2:1 的那條帶子裡**每一張臉、每一塊牌子、整塊白板都還在。
+13. **整張圖沒有任何字** —— ⚠ 第四版就是死在這裡（`STILL BLANK`，見第六之六節）。
+14. **裁成 2:1 的那條帶子裡**每一張臉、每一塊牌子、整塊白板都還在。
     ⚠ 上下裁多少要**掃過墨才決定**（同 `remind-hero-crop.mjs`）。
 
 ⚠ **還嫌小的話，下一級的槓桿是減人**（醫事人員 5 → 4），不是再收框。
 
 ## 八、還沒做的
 
-- **出圖**（使用者自己在 Gemini 上跑）→ 原檔放 `drafts/review-hero-src.jpg`。
-- **裁 2:1**：照 `drafts/channels/remind-hero-crop.mjs` 改一支
-  `drafts/channels/review-hero-crop.mjs` → `preview/line-review/hero-review.jpg`。
-  ⚠ 守門要照那一支的四道（長寬比／深墨離上緣／白框／不超過 1024）。
-- **接進提案頁**：`preview/line-review/index.html` 現在是佔位框，
-  換成 `<img>` 時**一定要寫 `width`／`height` 屬性**（不寫的話圖還沒下載完高度是 0，
-  面板會報出一個矮 134px 的卡片 —— 提醒卡那一輪踩過）。
-- **重跑** `node drafts/channels/review-png.mjs --all`（圖換了那幾張截圖就過期了）。
-- 上線時圖要放到 `https://fangren.net/assets/line/`（Flex 只吃 HTTPS 的網址）——
-  那個資料夾**還不存在**，`tools/dist.mjs` 也還沒有它（CLAUDE.md 第十一之七節第 3 項）。
+- ⚠⚠⚠ **圖上那處英文字**（第六之六節）—— 三條路都列好了，**等使用者決定**。
+- **Flex 的 JSON**（`drafts/channels/review-card.json`）與守門 `check-review.mjs`
+  —— 等使用者在 Ⓐ／Ⓑ 之間挑完文案才寫（同前幾則的順序）。
+- 上線時圖要放到 `https://fangren.net/assets/line/hero-review.jpg`
+  （Flex 只吃 HTTPS 的網址）—— 那個資料夾**還不存在**，
+  `tools/dist.mjs` 也還沒有它（CLAUDE.md 第十一之七節第 4 項）。
+
+### ✅ 已經做完的（2026-09-05）
+
+1. 裁成 **1024×512** → `preview/line-review/hero-review.jpg`（見第六之五節）。
+2. 接進提案頁：佔位框換成真的 `<img>`。
+   ⚠ **`width`／`height` 屬性 ＋ CSS 的 `height:auto` 三個都要寫** ——
+   少了屬性，圖還沒下載完高度是 0、面板會報一張矮 134px 的卡；
+   少了 `height:auto`，HTML 的 height 是呈現屬性、`aspect-ratio` 蓋不過它。
+3. 重跑 `node drafts/channels/review-png.mjs --all` 與 `--chat`。
+4. 驗收：五個寬度 × 兩案，**卡片 268.0×497.6 逐格相同**
+   （和佔位框那一版**一模一樣** —— 佔位框本來就照 `aspect-ratio: 2/1` 預留），
+   頭圖 268×134、孤字 0、水平溢出 0、JS 錯誤 0。

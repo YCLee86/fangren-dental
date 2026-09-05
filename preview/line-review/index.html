@@ -94,18 +94,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      卡 #f4f4f5・墨 #2a2c27・柔墨 #5c5f57・線 #cdd0d2・綠 #3f654a・深階 #2c5238
      聯繫那一塊 ＝ --paper 直接鋪（紙灰，同提醒卡的「就診須知」那一塊） */
 .pv-new{background:var(--card)}
-/* 頭圖：**先保留位置**（使用者 2026-09-04 指定）。
+/* 頭圖：**2026-09-05 定稿並接上**（原檔 drafts/review-hero-src.jpg，
+   裁切 node drafts/channels/review-hero-crop.mjs → hero-review.jpg）。
    規格和另外兩則一樣：Flex 的 hero，size:full ＋ aspectRatio 2:1，
    圖檔 **1024×512**（＝ LINE 對 Flex image 的上限，第十一之二節）。
-   ⚠⚠ 佔位框和真圖**一定要同樣高**（aspect-ratio 2/1），不然現在量到的卡片高度
-     等圖進來就會全部作廢。 */
-.pv-new .hero{aspect-ratio:2/1;background:var(--paper);
-  border-bottom:1px solid var(--rule);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:4px;color:var(--ink-soft);
-  background-image:repeating-linear-gradient(45deg,
-    rgba(92,95,87,.055) 0 7px, transparent 7px 14px)}
-.pv-new .hero b{font-size:13px;font-weight:700;color:var(--ink)}
-.pv-new .hero span{font-size:11px;letter-spacing:.04em}
+   ⚠⚠ `<img>` 一定要寫 width／height 屬性 —— 不寫的話圖還沒下載完高度是 0，
+     面板會報出一張矮 134px 的卡（提醒卡那一輪踩過）。
+   ⚠ `height:auto` 也要寫：HTML 的 height 屬性是呈現屬性，
+     不補這一行 `aspect-ratio` 蓋不過它（自動回應那一頁踩過兩次）。 */
+.pv-new .hero{display:block;width:100%;height:auto;aspect-ratio:2/1;
+  border-bottom:1px solid var(--rule)}
 .pv-new .top{display:flex;align-items:center;gap:8px;padding:11px 14px 10px;
   border-bottom:1px solid var(--rule)}
 .pv-new .top img{width:20px;height:20px;border-radius:50%;display:block}
@@ -342,8 +340,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        Ⓑ 是同排法、同口氣、拿掉問句與「不開心」的替代案。 */
   function newHtml() {
     var h = '<div class="pv-hc pv-new" id="pv-body">'
-      + '<div class="hero"><b>頭圖（先保留位置）</b>'
-      + '<span>1024 × 512　＝ LINE 對 Flex 圖片的上限</span></div>'
+      + '<img class="hero" src="hero-review.jpg" width="1024" height="512" alt="">'
       + '<div class="b">'
       + '<p class="hi">哈囉　<b>〔病人姓名〕</b>\n回去牙齒都還好嗎</p>'
       + '<p class="lead">有什麼狀況的話\n記得跟診所聯繫一下</p>'
@@ -666,9 +663,20 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   function newNote() {
     return "和招呼圖卡、綁定完成、提醒卡同一套：卡片 <b>268px</b>、內距 <b>14px</b>、"
       + "<b>顏色一顆都沒新增</b>、<b>emoji 0 個</b>。"
-      + "<br>⚠ <b>頭圖先保留位置</b>（你 2026-09-04 指定）。佔位框和真圖<b>一樣高</b>"
-      + "（<code>aspect-ratio 2/1</code>），所以現在量到的卡片高度<b>等圖進來也不會變</b>。"
-      + "規格同另外兩則：<b>1024×512</b>（LINE 對 Flex 圖片的上限）。"
+      + "<br>⚠ <b>頭圖 2026-09-05 定稿並接上了</b>：1024×512（LINE 對 Flex 圖片的上限），"
+      + "原檔 16:9 裁上 64／下 16 收成 2:1 —— 幾乎全部從上面拿，"
+      + "因為上面 190 列只有彩旗與兩盞燈，而下面第 730 列是舞台那條橫線、不能碰。"
+      + "<b>卡片高度和佔位框那一版逐格相同</b>（佔位框本來就照 <code>aspect-ratio 2/1</code> 預留）。"
+      + "<hr>"
+      + "<b>⚠⚠⚠ 圖上有一處英文字，還沒處理。</b>"
+      + "左下角阿公面前那塊空白牌子上寫著 <code>STILL BLANK</code> —— "
+      + "那是提示詞裡 <code>STILL COMPLETELY BLANK</code> 被模型抄到畫面上了。"
+      + "原檔量到 <b>145×42px</b>，換算到這張卡上是 <b>28×8px</b>（整張卡的 1.1%），"
+      + "1× 幾乎看不出來、放大就讀得出來。"
+      + "<br><b>這一站的規矩是整張圖零文字</b>（招呼卡到約診卡每一則都是），"
+      + "所以它不是可以留著的東西 —— 但<b>不能後製塗掉</b>（那會留一塊補丁），"
+      + "要拿掉只有<b>重生成一次</b>：把提示詞裡那一句改成不帶引號、不帶大寫的寫法。"
+      + "<b>先接上是為了讓你看整張卡的樣子，這一件等你決定。</b>"
       + "<hr>"
       + "<b>⚠⚠⚠ 這一版（Ⓐ）是你 2026-09-05 逐字寫的，一個字都沒改 —— "
       + "但有一件事我要講清楚，因為它不是美感問題。</b>"
