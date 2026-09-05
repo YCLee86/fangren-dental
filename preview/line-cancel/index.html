@@ -369,11 +369,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   function resultNode() {
     if (v === "a") return bub("", RES.a[rs === "go" ? "late" : rs]);
     if (rs === "no") {
-      /* ⚠ 2026-09-05 使用者逐字：「Ok，約診保留。」
+      /* ⚠ 2026-09-05 使用者逐字：「OK，約診保留了～」（同日稍早是「Ok，約診保留。」）
+         ⚠ 「OK」兩個字母都大寫、句號換成全形波浪 —— 同上面那則「喔～」的口氣。
          ⚠⚠ 同日稍晚：**底下要把保留的時間和名字列出來** ——
            排法逐字照確認卡那一塊（姓名一行、日期 19px 粗體一行、沒有淡底），
            他核對的是同一組東西，兩張卡長一樣才對得起來。 */
-      var t = "Ok，約診保留。";
+      var t = "OK，約診保留了～";
       return v === "b" ? bub("", t + "\n" + WHO + "　" + WHEN) : slot(
         '<div class="pv-fx" id="pv-res"><div class="b">'
         + '<p class="lead">' + t + '</p>'
