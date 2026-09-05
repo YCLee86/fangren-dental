@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>three-month-recall｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  h3 { font-size: .9rem; margin: 1.4rem 0 .4rem; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .86rem; margin: .6rem 0; }
+  th, td { border-bottom: 1px solid var(--rule); padding: .35rem .3rem; text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; white-space: normal; }
+  .tw { overflow-x: auto; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>three-month-recall — 〈三個月一次的洗牙與塗氟：哪些人適用，為什麼是三個月〉</h1>
+<p class="meta">
+  2026-09-05 開、當天定案上線・<strong>文章草稿的預覽，不是設計提案</strong>（同 <code>crown-materials</code>／<code>bioceramic-article</code> 那一種）<br>
+  原網址 <code>/preview/three-month-recall/</code>（文章）與 <code>/preview/three-month-recall-hero/</code>（HERO 六案，已刪除 2026-09-05）<br>
+  成品 <code>/posts/three-month-recall/</code>（定期檢查，站上第十二篇）<br>
+  文案五版・HERO 七版・<strong>站上第一張不是 16:9 的 HERO</strong>
+</p>
+
+<div class="note">
+  <p><strong>這一輪最要緊的一件事，和圖無關：</strong>連著三輪，每一次「治新問題」都順手弄丟了
+  上一輪「治舊問題」寫進去的句子。三個被退回的版本裡有<strong>三個</strong>的成因是我自己的 diff，
+  不是模型漂掉。做法寫在下面第五節，已經變成產生器的十二道守門。</p>
+</div>
+
+<h2>一、比例：站上第一張不是 16:9 的 HERO</h2>
+<p>使用者給了兩張參考圖並說「我們不需要這麼拘泥於每次都用橫幅的，用一些比較符合新的
+我們概念上的垂直比例拉高點的尺寸來畫畫看」。站上前十一張 HERO 全部是 2000×1116（16:9）。
+拉高之後圖在畫面上會長多高，實測（圖高 px ／佔一屏的百分比）：</p>
+
+<div class="tw"><table>
+  <tr><th>比例</th><th>390</th><th>744</th><th>1440</th></tr>
+  <tr><td>16:9（前十一張）</td><td>204／24%</td><td>371／33%</td><td>369／41%</td></tr>
+  <tr><td>3:2</td><td>241／29%</td><td>440／39%</td><td>437／49%</td></tr>
+  <tr><td><strong>4:3（定案）</strong></td><td><strong>272／32%</strong></td><td><strong>495／44%</strong></td><td><strong>492／55%</strong></td></tr>
+  <tr><td>5:4</td><td>290／34%</td><td>528／47%</td><td>525／58%</td></tr>
+  <tr><td>1:1</td><td>362／43%</td><td>659／58%</td><td>656／73%</td></tr>
+  <tr><td>4:5</td><td>453／54%</td><td>824／73%</td><td>820／91%</td></tr>
+</table></div>
+
+<p>⚠⚠ <strong>卡住的是電腦版不是手機。</strong>1440 上內文欄 656px，1:1 就吃掉 73% 的螢幕、
+4:5 是 91%（點進文章第一眼只有一張圖）。4:3 的 55% 還在可以接受的一側，
+而且它正好落在使用者給的兩張參考圖中間（一張跨頁約 1.45、一張 1:1）。</p>
+
+<p>⚠⚠ <strong>首頁的文章卡不能跟著變</strong> —— 縮圖固定 <code>aspect-ratio: 16/9</code> ＋
+<code>object-fit: cover</code>，十一張並排，改一張就要重裁十張。所以拉高的圖在卡片上只露出
+中間一條：<strong>4:3 露 75.3%（上下各裁 12.4%）</strong>、5:4 露 70%、1:1 只剩 56%。
+提示詞因此把「上下各 12% 不可以放臉與關鍵物件」寫死。</p>
+
+<p>兩支工具跟著改（各兩行）：<code>tools/hero-resize.mjs</code> 的比例守門本來寫死 2000×1116，
+改成一張允許清單（16:9 與 4:3，對不上仍然 throw，非 16:9 時多印一行提醒）；
+<code>tools/build.mjs</code> 的卡片與延伸閱讀本來把 <code>width="2000" height="1116"</code>
+寫死在模板裡，改成 <code>heroDim()</code> 現場讀 JPEG 檔頭（沿用既有的 <code>jpegSize()</code>）。</p>
+
+<h2>二、Ⓐ~Ⓔ 五案，使用者選了 Ⓐ 又指出它單調</h2>
+<p>第一輪提了五個梗：Ⓐ 同一張椅子四個不同的人／Ⓑ 桌上那一攤（藥袋、健保卡、藥盒）／
+Ⓒ 兩條時間軸／Ⓓ 一張日曆／Ⓔ 一杯水。使用者：「我覺得剛剛的提示詞 A 比較好，
+但是因為 A 只有診療椅上的人不一樣、其他都一樣，所以畫面看起來很單調……
+每個不一樣的人可以單獨變成一個框……中間可以是一個醫療人員……有點像呼籲的感覺。」</p>
+<p>成因很具體：<strong>四格共用同一個診間、同一片背景，變的只有坐上去的人</strong>。
+Ⓕ 把它換成七格拼起來的不規則鑲嵌：六個人各自在自己的生活裡、各自一個底色，
+另一格是診所。</p>
+
+<h2>三、Ⓕ 第二版～第四版：風格對不上站上</h2>
+<h3>第二版 —— 「人物風格跟網站現有的不太一樣」</h3>
+<p>成因不是提示詞寫得不夠細，是<strong>風格用文字描述一定會漂</strong>（同〈生物陶瓷〉那一輪：
+形狀用文字講失敗三四輪，改成給圖之後一次就中）。做法是<strong>把站上自己的三張 HERO 存下來
+一起餵進去</strong>，並在提示詞第一段寫「文字和參考圖衝突時，以參考圖為準」：</p>
+<ul>
+  <li><strong>〈牙齦流血〉</strong> —— 最重要的一張：一格一個人、一格一個家、一格一個底色，
+      連「只有一格是暗的」都已經在裡面。</li>
+  <li><strong>〈定期檢查〉</strong> —— 環境密度看這一張：東西很多，可是那些線全部比人淡。</li>
+  <li><strong>〈換牙〉</strong> —— 臉、表情、手看這一張：五官很簡單但表情讀得出來。</li>
+</ul>
+
+<h3>第三版 —— 「好像還是比現在網站上的寫實了一點」</h3>
+<p><strong>先量再改，而量出來把方向修掉了。</strong>站上十一張自己就分兩群，
+〈定期檢查〉48%、〈貝氏刷牙法〉50% 的面積是近白的，比被退回那張還淡 ——
+<strong>所以問題不在顏色</strong>：</p>
+<div class="tw"><table>
+  <tr><th></th><th>近白</th><th>墨</th><th>彩度中位</th></tr>
+  <tr><td>〈牙齦流血〉</td><td>6.3%</td><td>19.2%</td><td>19.3</td></tr>
+  <tr><td>〈換牙〉</td><td>18.0%</td><td>13.3%</td><td>9.9</td></tr>
+  <tr><td>〈缺牙之後〉</td><td>17.1%</td><td>12.9%</td><td>13.5</td></tr>
+  <tr><td>〈定期檢查〉</td><td>48.0%</td><td>8.0%</td><td>6.6</td></tr>
+  <tr><td>〈貝氏刷牙法〉</td><td>50.1%</td><td>6.1%</td><td>4.8</td></tr>
+</table></div>
+<p>是兩件「畫得太準」：①臉有立體感（眼皮、眼白、反光點、顴骨、一根一根的頭髮），
+而站上的臉是「一個小弧形當眼睛、一筆鼻子、一筆嘴，臉上完全沒有陰影」；
+②每一樣東西用的筆畫太多（電風扇畫出整圈護網、磁磚畫出完整格線、鐵窗每一根都畫、透視是準的），
+〈定期檢查〉那張東西一樣多，但每一樣只用三到八筆。</p>
+<p>⚠ <strong>而這兩件是第二版的提示詞自己寫出來的</strong>：那一段寫了「環境要細到你叫得出
+這是什麼房間」—— 那等於在叫它畫準，<strong>而畫得準正是寫實的定義</strong>。</p>
+
+<h3>第四版 —— 「人的臉變得有點呆板」</h3>
+<p>成因同樣是自己寫的：第三版治「太寫實」那一段七條全是禁令（沒有睫毛／眼白／反光點／
+眼皮的褶／陰影／腮紅／一根根的頭髮），<strong>一條「要有什麼」都沒有</strong> ——
+寫實是拿掉了，表情的載體也一起被清空。逐項對站上那三張：</p>
+<div class="tw"><table>
+  <tr><th></th><th>站上</th><th>第三版寫的</th></tr>
+  <tr><td>眉毛</td><td>每張臉都有，一筆，角度就是情緒</td><td>一個字都沒提</td></tr>
+  <tr><td>嘴</td><td>開合幅度最大，笑起來是張開的形狀＋一塊牙</td><td>「嘴巴是一筆」</td></tr>
+  <tr><td>眼睛</td><td>開心時彎成月牙、想睡是一條縫</td><td>只說是一個小弧形</td></tr>
+  <tr><td>腮紅</td><td>有，一塊平塗的淡色</td><td>直接禁掉了</td></tr>
+  <tr><td>年紀的線</td><td>嘴邊一條笑紋、眼尾兩筆</td><td>被「不要輪廓」一起掃掉</td></tr>
+</table></div>
+<p>第二個成因也是自己寫的：「六個人都很平常、很自在」—— 那句是為了擋病容，
+可是它等於<strong>叫模型畫六張一模一樣的表情</strong>。改成逐格點名，
+判準多一條反方向的：<strong>七張臉如果互換位置沒有人看得出來，也是錯的。</strong></p>
+
+<h2>四、第五版 —— 「變成蠟筆風格了，我要暈倒」</h2>
+<p>量的是顆粒（每個像素取 3×3 鄰域的亮度極差：極差很小 ＝ 那一塊是平塗的，
+極差很大 ＝ 那裡有一條邊）：</p>
+<div class="tw"><table>
+  <tr><th></th><th>平塗</th><th>硬邊</th></tr>
+  <tr><td>〈牙齦流血〉</td><td>25.9%</td><td>21.1%</td></tr>
+  <tr><td>〈換牙〉</td><td>22.0%</td><td>24.0%</td></tr>
+  <tr><td>〈定期檢查〉</td><td>30.9%</td><td>32.0%</td></tr>
+  <tr><td>Ⓕ 第三版</td><td>32.5%</td><td>36.4%</td></tr>
+  <tr><td><strong>Ⓕ 第四版</strong></td><td><strong>9.1%</strong></td><td><strong>54.2%</strong></td></tr>
+</table></div>
+<p>真正平的面積從三成掉到 9.1%，而「有硬邊」的像素超過一半 ——
+多出來的那些不是輪廓，是<strong>填色裡面的筆觸</strong>。這一版的填色不再是填色。</p>
+<p>⚠⚠⚠ 成因不是模型漂掉，是第四版的 diff 弄丟了兩句：①參考圖那一段的
+「抄它顏色多平」被刪掉了（第四版為了強調臉，把後半整句換成臉的三件事 ——
+而那是整份提示詞裡<strong>唯一</strong>叫模型去看參考圖的顏色怎麼上的一句）；
+②中間那一格的「診所那一角」與「接納與介紹」兩整段消失了（重寫中間兩個人時整段覆蓋掉的，
+等於第二版那個「單調」的成因又回來一半）。第三件是「每一個表面都有色鉛筆的顆粒」——
+<strong>那句從第一版就在、前三版都沒事</strong>，第四版把「手繪／很快／不準」這一類的字
+加多之後它就變成主角了。</p>
+
+<h2>五、⚠⚠⚠ 這一輪最重要的通則</h2>
+<div class="note">
+  <p><strong>每一輪為了治新問題而重寫某一段，會順手弄丟上一輪為了治舊問題寫進去的句子。</strong>
+  這一輪連著三次發生（第三版、第四版、第六版），而且每一次都是<strong>我自己的 diff</strong>，
+  不是模型不穩。</p>
+  <p>做法：改完一定要 diff 上一版，逐條問「這一行是為了治什麼，現在還在不在」，
+  並且<strong>把治過的病寫成守門</strong>。這一輪的產生器最後擋十二件，
+  第四版那一句顆粒也在名單上。</p>
+</div>
+<div class="note" style="margin-top:.8rem">
+  <p><strong>一份規格裡「唯一具體的那一條」會變成全場的規則。</strong>
+  一個維度如果只有一句虛的描述，它其實沒有被指定 —— 它是靠別的東西順帶撐著的，
+  哪天那個東西被改了就會整組垮掉。<strong>要嘛逐格寫死，要嘛不要在旁邊擺一句具體的。</strong></p>
+</div>
+<div class="note" style="margin-top:.8rem">
+  <p><strong>一個名詞如果它的字面意思就是那個壞結果，換掉那個名詞，不要在旁邊加形容詞。</strong>
+  窗戶那兩處寫的是 <code>a barred Taiwanese window</code>，而 <code>barred</code>
+  就是「有柵欄的」——加多少形容詞都擋不住。</p>
+</div>
+<div class="note" style="margin-top:.8rem">
+  <p><strong>一張圖會在兩個尺寸、兩個比例底下被看</strong> —— 文章頁是完整的 4:3、
+  首頁卡是置中裁切的 16:9。「畫面正中央」在文章頁只是構圖的一個位置，
+  在卡片上等於「唯一的主角」。<strong>畫之前要先問：這張圖被裁成卡片之後，站在正中央的是誰？</strong></p>
+</div>
+
+<h2>六、第六版 —— 醫事人員從中間搬到右下</h2>
+<p>起因是使用者：「如果直接把這個圖放在網站文章，首頁卡片的預覽圖片可能會重點都是在
+中間的醫事人員……是不是把醫事人員改到右下框比較好（然後移過去的醫事人員視線或手勢動作
+要往左上帶）。」量過，成立，而且是三件事疊起來的：</p>
+<div class="tw"><table>
+  <tr><td>首頁卡的縮圖是 16:9</td><td>4:3 的圖上下各被裁掉 12.4%，只留中間 75.3%</td></tr>
+  <tr><td>裁切是置中的</td><td>中間那一格是七格裡唯一完全沒被裁到的，其餘六格各被切掉一塊</td></tr>
+  <tr><td>中間那一格本來就最大</td><td>整張圖佔 32.3%，在卡片那一條裡變成 36.1%</td></tr>
+</table></div>
+<p>三件合起來：卡片上唯一完整、最大、又在正中央的東西就是那兩位醫事人員。
+實際裁成 393px 的卡片看過 —— 六個人只剩上下被切掉一截的碎片，讀起來就是
+「一張診所的照片」，而這一篇講的是哪些人需要三個月回來一次。</p>
+<p>四件改動：右下那一格換成診所（兩位都轉向左上、醫師攤開的手也往左上伸出去，穿過整張圖
+指回其他格子；⚠ 那一格貼著畫面下緣，所以明寫兩張臉與那隻手都要在那一格的上半部）／
+中間那一格換成孕婦（六個人裡縮到卡片大小還讀得出來的一個，剪影就看得出來，
+而且本來就是三個月回診最主流的一群）／左上換成量血糖的那位／
+每一格的顏色跟著位置重新分配。</p>
+<p>⚠ <strong>中間那一格仍然是最大的，那是刻意的</strong> —— 站上量過：多格分割、沒有視覺中心的
+場面，縮到小尺寸會整張糊掉（ILLUSTRATION.md 第十一節）。所以不是把七格拉成一樣大，
+是換掉站在中央的那個人。</p>
+
+<h2>七、第七版 —— 「顏色變單調」與「窗戶像監獄鐵窗」</h2>
+<p>⚠ 第六版那張出圖沒有存進容器裡，所以這一輪<strong>沒辦法逐像素量它</strong>；
+成因是逐行 diff 提示詞找出來的，不是從畫面猜的。</p>
+<p><strong>①顏色那一件，又是第六版改壞的。</strong>為了讓顏色跟著位置重排，那一句被改成
+「…and that panel keeps the palest, creamiest background of the seven」——
+那是整份提示詞裡<strong>唯一一句真的講到「背景是什麼顏色」</strong>的話，而它說的是 cream。
+在那之前背景只有一句很虛的「各給一格一個淡淡的色調」，七個底色從來沒有被指名過；
+第五版能有七個不同的底，是靠那一串<strong>衣服</strong>的顏色順帶把每一格帶開的。
+把那一串改成純粹的衣服清單、又補了一句具體的「最米白」，唯一具體的那句就變成全場的規則。</p>
+<p>第七版把底色與衣服拆成兩份清單，七格逐格指名（中間淡玫瑰／左上淡芥末金／右上暖奶油黃／
+右淡岩藍／右下柔鼠尾草綠／左下夜色藍灰／左淡青綠），並收一句判準：
+<strong>有人瞄一眼，要能單靠顏色分出這一格和隔壁不是同一格。</strong></p>
+<p><strong>②窗戶</strong> —— 用字本身就在叫它畫監獄。兩處寫的都是
+<code>a barred Taiwanese window</code>，而 <code>barred</code> 就是「有柵欄的」；
+第六版還把其中一扇搬進了最大的中間那一格（孕婦本來在左上，窗戶跟著她一起搬過去），
+於是被畫得又大又深。新增一整段規格：淺色、細、和其他家具同一個線寬、簡單的方格或曲線花樣、
+只用幾筆，四條紅線 —— 不可以粗、不可以深色、不可以是一排沒有橫向連接的直條、
+不可以是一整片密格子。</p>
+<p><strong>③第三件是使用者沒有提、看畫面看到的</strong>：格線從細的深色線變成很寬的白帶，
+那幾條白帶自己就佔掉不少面積，也在把整張圖洗淡。原本只寫「細的手繪格線」，
+沒有說<strong>它是一條線不是一條帶</strong> —— 補上：格線是一條深色的手繪線，
+粗細不超過人物的輪廓線，永遠不是一條白色的寬縫。</p>
+
+<h2>八、定案</h2>
+<p>2026-09-05，使用者：「OK 跟文章一起定稿 上線」。成品
+<code>assets/hero-recall-photo-{2000,1600,800}.jpg</code>（2000×1493），
+原檔留在 <code>drafts/three-month-recall-hero-src.jpg</code>，
+六份提示詞留在 <code>drafts/three-month-recall/HERO-PROMPTS.md</code>。</p>
+<p>⚠⚠ <strong>Ⓐ~Ⓔ 那五份提示詞從來沒有被出圖過</strong>，所以它們裡面還留著第一版那句
+「每一個表面都有色鉛筆的顆粒」（＝第五版被退回的成因）。日後真的要用其中一案，
+<strong>要先照 Ⓕ 的第五版把那一句換掉</strong>。</p>
+
+<h2>九、上線那一天踩到的事</h2>
+<p>⚠⚠⚠ <strong>連著三輪，使用者傳的出圖都沒有落進容器的上傳資料夾</strong>
+（<code>/root/.claude/uploads/&lt;session&gt;/</code>），全機掃描也找不到 ——
+只有畫面讀得到、拿不到位元組，等於沒辦法跑 <code>tools/hero-resize.mjs</code>。
+中途也試過請使用者貼本機路徑，那條走不通：雲端 session 跑在容器裡，看不到他的 <code>C:\</code>。</p>
+<div class="note">
+  <p><strong>解法：圖其實一直都在，在對話的逐字稿裡。</strong>
+  <code>~/.claude/projects/&lt;專案&gt;/&lt;session&gt;.jsonl</code> 每一則訊息裡的圖片是
+  base64 存的（<code>"media_type":"image/jpeg","data":"…"</code>），逐行掃出來解碼就是
+  <strong>原尺寸的檔案</strong>（這一次是 2000×1493，和使用者電腦上那個檔一模一樣）。</p>
+  <p>⚠ 那個 jsonl 這一次是 33MB，<strong>要用 readline 逐行讀</strong>，不要整份 <code>JSON.parse</code>。</p>
+  <p>⚠ 同一張圖會出現好幾次（每一輪都重送一次上下文），<strong>用 md5 去重、取最後一個</strong>。</p>
+</div>
+<p>⚠ 另一件：<code>git mv drafts/three-month-recall posts/three-month-recall</code> 會把整個
+資料夾搬過去，<strong>連五份草稿 .md 與兩支產生器一起</strong>。<code>tools/dist.mjs</code>
+是遞迴複製 <code>posts/</code> 的，那些檔會跟著上線。只搬 <code>index.html</code>，其餘留在
+<code>drafts/&lt;slug&gt;/</code>。</p>
+
+<h2>十、還開著的</h2>
+<ul>
+  <li>〈半年一次的洗牙〉那一篇的自費清單裡有「糖尿病」，而這一篇把糖尿病列在健保的專案裡 ——
+      <strong>兩篇對不上，還沒問過使用者</strong>。</li>
+  <li>「受眾」這個詞要不要換成「族群」（使用者原句用的是「受眾」，照寫了）。</li>
+  <li><code>drafts/three-month-recall/RULE-clinical-judgment.md</code> 那一條
+      「不要替臨床判斷開空白支票」還沒併進 COPY.md。</li>
+</ul>
+
+<footer>
+  完整的提案頁留在 git：<br>
+  <code>git show 8988234:preview/three-month-recall/index.html</code><br>
+  <code>git show 8988234:preview/three-month-recall-hero/index.html</code>
+</footer>
+
+</div></body>
+</html>

@@ -1,6 +1,7 @@
 // 由 tools/build.mjs 自動產生，請勿手動編輯。
 export const ALLOWED = [
   "home",
+  "three-month-recall",
   "crown-materials",
   "bioceramic",
   "orthodontics",
