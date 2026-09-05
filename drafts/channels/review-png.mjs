@@ -42,8 +42,7 @@ const SCALE = 3;
 const OLD = process.argv.includes("--old");
 const ALL = process.argv.includes("--all");
 /* ⚠ 五案的字母與標籤要和提案頁的 ASK 一致 —— 改那一邊要回來改這一邊。 */
-const ASKS = [["a","Ⓐ 想知道經驗"],["b","Ⓑ 都想聽（建議）"],["c","Ⓒ 經驗＋推薦"],
-              ["d","Ⓓ 只有推薦"],["e","Ⓔ 上一版"]];
+const ASKS = [["a","Ⓐ 你寫的"],["b","Ⓑ 不分流"]];
 const ASK = (process.argv.find((x) => x.startsWith("--ask=")) || "--ask=a").slice(6);
 if (!ASKS.some(([k]) => k === ASK)) throw new Error("沒有這一案：" + ASK);
 const CHAT = process.argv.includes("--chat");
@@ -106,7 +105,7 @@ function verify(file, wantCss, scale, strip) {
 
 const made = [];
 if (ALL) {
-  /* 五案各拍一張真的卡 */
+  /* 每一案各拍一張真的卡 */
   const sizes = {};
   for (const [k] of ASKS) {
     const file = k === "a" ? "shot-review.png" : "shot-review-" + k + ".png";
@@ -114,7 +113,7 @@ if (ALL) {
     sizes[k] = verify(file, 268);
     made.push(file);
   }
-  /* ⚠⚠ 並排那一張是**把上面那五張真的圖排進一頁重拍**，不是用 CSS 再畫一次卡片 ——
+  /* ⚠⚠ 並排那一張是**把上面那幾張真的圖排進一頁重拍**，不是用 CSS 再畫一次卡片 ——
      所以它永遠等於提案頁上按下去會看到的東西。 */
   const maxH = Math.max(...ASKS.map(([k]) => sizes[k].h)) / SCALE;
   const strip = ASKS.map(([k, label]) =>
@@ -140,7 +139,9 @@ if (ALL) {
   await el.screenshot({ path: path.join(DIR, "shot-review-asks.png") });
   await page.close();
   fs.unlinkSync(tmp);
-  verify("shot-review-asks.png", 268 * 5 + 18 * 4, 2, true);
+  /* ⚠ 寬度由案數算出來，**不要寫死** —— 案數變過兩次（五案 → 兩案），
+     寫死的話下一次改案數就會誤報「出圖寬度不對」。 */
+  verify("shot-review-asks.png", 268 * ASKS.length + 18 * (ASKS.length - 1), 2, true);
   made.push("shot-review-asks.png");
 } else {
   const file = OLD ? "shot-review-old.png"

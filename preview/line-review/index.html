@@ -137,15 +137,17 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 /* 邀請那一段：sm 14、墨（不是柔墨）—— 它是這張卡的主文 */
 .pv-new .ask{font-size:14px;line-height:1.75;color:var(--ink);margin-top:12px;
   white-space:pre-line}
-/* ⚠ 2026-09-05：紙灰方塊拿掉了（使用者：「灰底拿掉」）——收尾那兩行改成純文字。
-   ⚠ `.box` 那條規則整組刪掉，**不要留著沒人用的樣式**。 */
-.pv-new .foot2{font-size:14px;line-height:1.75;color:var(--ink-soft);
-  margin-top:14px;white-space:pre-line}
+/* 第二塊的那一段（「也很重視你的意見…」）—— 和第一塊同字級同顏色，
+   ⚠ 只有上外距不一樣：它要和上面那顆按鈕拉開，讓兩塊各自讀成「一句話＋一顆按鈕」。 */
+.pv-new .ask2{font-size:14px;line-height:1.75;color:var(--ink);margin-top:18px;
+  white-space:pre-line}
+/* ⚠ 2026-09-05：收尾那兩行（沒有專人／電話）**整段拿掉**（使用者指定）。
+   ⚠ `.box` 與 `.foot2` 兩條規則都刪掉了，**不要留著沒人用的樣式**。 */
 /* 第二顆按鈕（「不好的」那一條）：線框鈕，同框同標誌、底是空的。
    規格逐項照提醒卡那顆「掰掰不去囉」（`/preview/line-remind/`）。
    ⚠ 標誌用招呼卡已經產好的綠色那顆（`mark-green.png`，34px），沒有另外再產一份。 */
 .pv-new .nob{display:flex;align-items:center;justify-content:center;gap:8px;
-  border:1px solid var(--deep);border-radius:9px;padding:11px 6px;margin-top:8px;
+  border:1px solid var(--deep);border-radius:9px;padding:11px 6px;
   color:var(--deep);font-size:16px;font-weight:700;line-height:1.4}
 .pv-new .nob img{flex:none;display:block;width:34px}
 /* 叫他點的那一句 ＋ 主鈕。做法逐項照提醒卡定稿那一張：
@@ -158,7 +160,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 /* ⚠ 2026-09-05：叫他點的那一句拿掉了，所以「那一段話 → 按鈕」直接相鄰。
    ⚠⚠ 看得到的距離不等於 margin —— 行高 1.75 讓字面下方多出半行距，
      所以這裡寫的數字比想要的墨距小一截；面板現場量墨到墨。 */
-.pv-new .ask + .btn{margin-top:7px}
+.pv-new .ask + .btn,
+.pv-new .ask2 + .nob{margin-top:7px}
 .pv-new .btn{display:flex;align-items:center;justify-content:center;gap:8px;
   border-radius:9px;padding:12px;background:var(--green);color:#fff;line-height:1.4}
 .pv-new .btn img{flex:none;display:block;width:34px}
@@ -247,8 +250,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 <div class="pv-bar" id="pv-bar">
   <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
   <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
-  <div class="r" id="row-a"><span class="lb">下面那段</span><span id="sw-a"></span></div>
-  <div class="r" id="row-n"><span class="lb">不好的那顆</span><span id="sw-n"></span></div>
+  <div class="r" id="row-a"><span class="lb">那兩塊</span><span id="sw-a"></span></div>
 </div>
 
 <span class="pv-probe" id="pv-probe"></span>
@@ -266,62 +268,44 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   var TEL = "05-5339369";
 
-  /* ---- 開口要的那一段：五案（2026-09-05 使用者：「現在的版本太溫柔太客氣」）----
-     ⚠⚠⚠ 「太客氣」拆開來是**三件各自獨立的事**（同第九節第 17 條那個淡出）：
-       ① **墊詞** ——「方便的話」「如果不介意」那一類，把請求包起來，
-          讀起來像在道歉。**Ⓐ~Ⓓ 一律沒有。**
-       ② **不敢說是自己要的** —— 原本那句「會幫到下一個正在找牙醫的人」
-          把受益者推給第三人，聽起來很得體，但**它不承認這是診所在拜託人**。
-       ③ **句子太長** —— 四行、每行都完整，反而像公關稿。**短句本身就比較不客氣。**
-     ⚠⚠⚠ **但有一條線不可以跟著跨過去：不可以先問滿不滿意。**
-       「如果覺得還不錯」「滿意的話」都是**分流的另一種寫法**（第 17-3 節），
-       而且比現況那兩顆按鈕更難被發現，因為它看起來只是一句客套。
-       **五案裡一句都沒有**，Ⓑ 與 Ⓔ 還反過來明寫「好的不好的都想聽／都寫」。 */
-  /* ⚠⚠ 2026-09-05 第四輪：五案整組換成**使用者自己給的材料** ——
-       「很想知道你的**經驗**」「很重視他的經驗和意見」「願意推薦給身邊的親朋好友嗎」。
-     ⚠⚠⚠ **但那第三句放在兩顆按鈕正上方，就是現況那張卡的形狀** ——
-       一個是非題 ＋ 兩顆按鈕 ＝ 兩顆會被讀成它的答案（願意→公開／不願意→私下），
-       那正是第 17-3 節那條要問廠商的疑慮。**所以它只放在 Ⓒ／Ⓓ 兩案裡，
-       面板會現場掃、掃到就標紅**，不是默默拿掉他的句子。
-     ⚠ 建議 **Ⓑ** —— 同樣是他那句「很想知道你這次的經驗」，第二行換成
-       「好的不好的都想聽」：**不是問句**（沒有分流的形狀），
-       而且它就是守住那條線的第二個條件（公開那一顆不設條件）。 */
-  /* ⚠⚠ 2026-09-05 使用者：「這個評論邀請**不需要出現 Google 的字眼**。」
-     五案因此逐句拿掉 —— **按鈕連到哪裡沒有變**（仍然是 Google 的評論框），
-     只是卡片上不寫平台的名字。⚠ 這樣寫得通，是因為**動作本身講得完整**
-     （「寫幾句這次的經驗」），平台是按下去之後的事。 */
-  /* ⚠ 「經驗」不是「體驗」（使用者 2026-09-05 指定）——**現況那張卡寫的就是
-       「願意並分享體驗」**，那個詞要換掉。 */
-  var ASK = {
-    a: { name: "想知道經驗", text: "很想知道你這次的經驗，\n也很重視你的意見。" },
-    b: { name: "都想聽",     text: "很想知道你這次的經驗，\n好的不好的都想聽。" },
-    c: { name: "經驗＋推薦", text: "很想知道你這次的經驗，\n也很重視你的意見。\n願意推薦給身邊的親朋好友嗎？" },
-    d: { name: "只有推薦",   text: "願意把芳仁推薦給\n身邊的親朋好友嗎？" },
-    e: { name: "上一版",     text: "另外想拜託你一件事——\n寫幾句這次的看診經驗，\n好的不好的都寫，一兩句就好。" }
+  /* ---- 兩塊「一句話 ＋ 一顆按鈕」（2026-09-05 第五輪，使用者逐字指定）--------
+     他給的是：
+       想瞭解你這次的經驗，／願意推薦給身邊的親朋好友嗎？　→ 綠鈕「願意並分享經驗」＋角形
+       也很重視你的意見，／不好的直接告訴我們　　　　　　　→ 線框鈕「不開心有話要說」
+       「這裡沒專人看訊息」那一段整段拿掉。
+     ⚠ 排法因此和提醒卡定稿那一張一樣：**兩組「一句話 ＋ 一顆按鈕」**，
+       每一句話就站在它自己那顆按鈕上面，不再是「一段話 ＋ 兩顆按鈕」。
+
+     ⚠⚠⚠ **但這個組合正好就是現況那張卡的形狀，這件事一定要講清楚（沒有自己改掉）：**
+       第一塊是一個**是非題**（願意推薦嗎？）＋ 一顆**公開**的按鈕，
+       第二塊是**負面情緒**（不開心）＋ 一顆**私下**的按鈕 ——
+       合起來就是「**願意的人去公開、不開心的人來私下**」，
+       ＝ 第 17-3 節那條要問廠商的疑慮（review gating），而且比現況更明白。
+       Google 禁的兩件正好各中一件：**選擇性地只向滿意的人索取公開評論**、
+       **把不滿意的人導離公開評論**。
+     ⚠ 做法同提醒卡那條「2天後」：**照寫、隔離、標紅、給替代案。**
+       Ⓐ ＝ 你寫的（預設，逐字）。Ⓑ ＝ **同一個排法、同一個口氣**，
+       只把兩處拿掉：問句、以及「不開心」這個前提。 */
+  var VER = {
+    a: {
+      name: "Ⓐ 你寫的",
+      ask1: "想瞭解你這次的經驗，\n願意推薦給身邊的親朋好友嗎？",
+      lab1: "願意並分享經驗",
+      ask2: "也很重視你的意見，\n不好的直接告訴我們",
+      lab2: "不開心有話要說"
+    },
+    b: {
+      name: "Ⓑ 不分流",
+      ask1: "想瞭解你這次的經驗，\n好的不好的都想聽。",
+      lab1: "分享這次的經驗",
+      ask2: "也很重視你的意見，\n想直接跟我們說也可以",
+      lab2: "直接告訴我們"
+    }
   };
 
-  /* ---- 第二顆按鈕：「不好的」那一條（2026-09-05 使用者：「不好的評論　按鈕要保留」）--
-     ⚠⚠⚠ **這一顆讓這張卡更靠近評論篩選那條線，所以做法要很小心。**
-       Google 禁的是**選擇性地只向滿意的人索取公開評論**、以及**把不滿意的人
-       導離公開評論**。所以這一版守著三件，缺一不可：
-       ① **沒有先問滿不滿意** —— 兩顆按鈕一起出現，給所有人，沒有任何前置問題。
-       ② **公開那一顆不設條件** —— 主文明寫「**好的不好的都寫**」（Ⓐ／Ⓒ），
-          等於當著病人的面說「不好的也請寫在公開的地方」。
-       ③ **第二顆不可以寫成「改寫成私下講」** —— 一旦出現「與其…不如…」「先跟我們說」
-          那一類的字，它就從「多一個管道」變成「把負評導開」。
-       ⚠⚠ **所以三個候選的字都只講「你可以直接跟我們說」，一個都沒有「不要公開」的意思。**
-     ⚠⚠ 它要連到哪裡我們**還不知道** —— 那正是第 17-3 節那三題裡的第二題
-       （現況「不願意並提供建議」點下去到哪）。**問到之前這一顆是佔位的。** */
-  var NEG = {
-    a: { name: "直接告訴我們", text: "不好的直接告訴我們" },
-    b: { name: "有不好的想說", text: "有不好的想說" },
-    c: { name: "想私下說幾句", text: "想私下說幾句" }
-  };
-
-  var v = "new", ask = "a", neg = "a";
+  var v = "new", ask = "a";
   var m = location.search.match(/[?&]v=(old|new)/); if (m) v = m[1];
-  m = location.search.match(/[?&]a=([a-z0-9]+)/); if (m && ASK[m[1]]) ask = m[1];
-  m = location.search.match(/[?&]n=([a-z0-9]+)/); if (m && NEG[m[1]]) neg = m[1];
+  m = location.search.match(/[?&]a=([a-z0-9]+)/); if (m && VER[m[1]]) ask = m[1];
 
   /* ---- Ⓐ 現況（照 channels/README 第 17-2 節的逐字紀錄重畫）------------ */
   function oldHtml() {
@@ -341,12 +325,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      順序（四段，2026-09-05 這一版）：
        ① 先關心　　　　哈囉　〔病人姓名〕／回去牙齒都還好嗎／有狀況記得跟診所聯繫
        ② 開口　　　　　五案之一（切換條「下面那段」）
-       ③ 兩顆按鈕　　　一句叫他點 ＋ 綠鈕「留下評論」＋ 線框鈕「不好的…」
-       ④ 收尾兩行　　　這裡沒有專人看訊息／牙齒有狀況請打電話（**沒有灰底**）
+       ③ 第一塊　　　　一句話 ＋ 綠鈕（公開）
+       ④ 第二塊　　　　一句話 ＋ 線框鈕（私下）
+       ⑤ 收尾　　　　　**沒有了**（2026-09-05 使用者指定整段拿掉）
      ⚠⚠ **沒有標題**（現況那個「滿意度調查」是公家表格的詞，而且標題說滿意度、
        內文問推薦意願，本來就是兩件事）—— 同另外兩則：有頭圖就不必再寫一次名字。
-     ⚠⚠⚠ **沒有那個「您願意推薦…嗎？」的問句**：它是分流的入口，
-       而且兩個答案都要病人再做一件事（分享／填建議），等於一張問卷長成漏斗。 */
+     ⚠⚠⚠ **Ⓐ（使用者 2026-09-05 逐字寫的）把那個問句放回來了** ——
+       所以「分流」這一列現在會標紅。**沒有自己改掉他的字**，
+       Ⓑ 是同排法、同口氣、拿掉問句與「不開心」的替代案。 */
   function newHtml() {
     var h = '<div class="pv-hc pv-new" id="pv-body">'
       + '<div class="hero"><b>頭圖（先保留位置）</b>'
@@ -354,24 +340,18 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + '<div class="b">'
       + '<p class="hi">哈囉　<b>〔病人姓名〕</b>\n回去牙齒都還好嗎</p>'
       + '<p class="lead">有什麼狀況的話\n記得跟診所聯繫一下</p>'
-      + '<p class="ask">' + ASK[ask].text + '</p>'
-      /* ⚠ 2026-09-05：「點一下下面的按鈕就可以寫」那一句**使用者指定拿掉**。
-           所以現在是「那一段話」直接接按鈕，中間那個距離改由 `.ask + .btn` 控制，
-           面板量的也換成**那一段的最後一行到按鈕**。 */
-      /* 主鈕：公開那一條。⚠ 標籤上沒有平台名字（2026-09-05 使用者指定）。 */
+      + '<p class="ask">' + VER[ask].ask1 + '</p>'
+      /* 第一塊的按鈕：公開那一條。實心綠 ＋ 白標誌 ＋ 朝右的角形。
+         ⚠ 標籤上沒有平台名字（2026-09-05 使用者指定）。 */
       + '<span class="btn"><img src="../line-welcome/mark-white.png" alt="">'
-      + '<span>留下評論</span>'
+      + '<span>' + VER[ask].lab1 + '</span>'
       + '<img class="chev" src="../line-remind/mark-chev-white.png" alt=""></span>'
-      /* 第二顆：線框鈕，同一個框、同一顆標誌、底是空的（同提醒卡那顆「掰掰不去囉」）——
-         **它不是第二顆綠鈕**，一眼看得出誰是主角，也才不會讀成「兩條路二選一」。 */
+      /* 第二塊：先一句話，再一顆線框鈕（同框、同標誌、底是空的，
+         ＝ 提醒卡那顆「掰掰不去囉」）—— **它不是第二顆綠鈕**，
+         一眼看得出誰是主角。⚠ 這一顆**沒有角形**（使用者只在第一顆寫了角形）。 */
+      + '<p class="ask2">' + VER[ask].ask2 + '</p>'
       + '<span class="nob"><img src="../line-welcome/mark-green.png" alt="">'
-      + '<span>' + NEG[neg].text + '</span></span>'
-      /* 收尾：**灰底方塊 2026-09-05 拿掉了**（使用者指定），改成兩行純文字。
-         ⚠ 它回答的是**開場那一句**「有什麼狀況的話記得跟診所聯繫一下」——
-         病人手邊最近的按鈕就是在這個 LINE 裡回一句，而這裡沒有人看。
-         ⚠ 只講「牙齒有狀況」，不再重複「想說什麼跟櫃檯說」—— 那件事現在由
-         上面那顆線框鈕做，兩處講同一件事會互相稀釋。 */
-      + '<p class="foot2">這裡沒有專人看訊息，\n牙齒有狀況請打 ' + TEL + '。</p>';
+      + '<span>' + VER[ask].lab2 + '</span></span>';
     return h + '</div></div>';
   }
 
@@ -453,10 +433,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
                   : " <span class='no'>快貼上去了</span>");
   }
 
-  /* 那一段話的最後一行「墨」離按鈕多遠 —— **量墨不量盒**（行高把半行距藏在字下面）。 */
-  function askGap(body) {
-    var el = body.querySelector(".ask"), btn = body.querySelector(".btn");
-    if (!el || !btn) return "";
+  /* 那一段話的最後一行「墨」離按鈕多遠 —— **量墨不量盒**（行高把半行距藏在字下面）。
+     ⚠⚠ 2026-09-05 起這張卡有**兩組**「一句話 ＋ 一顆按鈕」，兩組都要量：
+       間隔不一致的話，同一種關係會被讀成兩種（同提醒卡第 20-14 節）。 */
+  function inkBottom(el) {
     var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), r = document.createRange();
     var t, bot = -1e9;
     while ((t = w.nextNode())) {
@@ -466,11 +446,27 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         if (c.height) bot = Math.max(bot, c.bottom);
       }
     }
-    var d = btn.getBoundingClientRect().top - bot;
-    return "<br>那一段到按鈕 <b>" + d.toFixed(1) + "px</b>（墨到墨）"
-      + (d < 8 ? " <span class='no'>快貼上去了</span>"
-        : d > 18 ? " <span class='no'>太遠，讀不出按鈕在回應那一段</span>"
-                 : " <span class='ok'>接得起來</span>");
+    return bot;
+  }
+  function askGap(body) {
+    var out = "", any = false, same = [];
+    [[".ask", ".btn", "第一塊"], [".ask2", ".nob", "第二塊"]].forEach(function (g) {
+      var el = body.querySelector(g[0]), btn = body.querySelector(g[1]);
+      if (!el || !btn) return;
+      var d = btn.getBoundingClientRect().top - inkBottom(el);
+      same.push(d); any = true;
+      out += (any ? "" : "") + "<br>" + g[2] + "：那一句到按鈕 <b>" + d.toFixed(1)
+        + "px</b>（墨到墨）"
+        + (d < 8 ? " <span class='no'>快貼上去了</span>"
+          : d > 18 ? " <span class='no'>太遠，讀不出按鈕在回應那一句</span>"
+                   : " <span class='ok'>接得起來</span>");
+    });
+    if (same.length === 2) {
+      out += "　兩組" + (Math.abs(same[0] - same[1]) < .6
+        ? "<span class='ok'>一致</span>"
+        : "<span class='no'>不一致，差 " + Math.abs(same[0] - same[1]).toFixed(1) + "px</span>");
+    }
+    return out;
   }
 
   var EMOJI = /[☀-➿⬀-⯿]|[\uD83C-\uD83E][\uDC00-\uDFFF]/g;
@@ -495,7 +491,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        ⚠ 現況那一張是照截圖重畫的、沒有手動斷行，所以只對新版算。 */
     var self = {}, selfN = 0;
     if (v === "new") {
-      body.querySelectorAll(".hi,.lead,.ask,.btn,.nob,.foot2").forEach(function (el) {
+      body.querySelectorAll(".hi,.lead,.ask,.btn,.ask2,.nob").forEach(function (el) {
         (el.innerText || "").split("\n").forEach(function (x) {
           x = x.replace(/[ 　]/g, ""); if (x) { self[x] = 1; selfN++; }
         });
@@ -531,14 +527,21 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
     /* ⚠⚠⚠ 這一頁獨有的一列：**分流**。
        判準是「通向公開評論的路是不是只給一部分人」，不是「有幾顆按鈕」。 */
-    var gate = v === "old";
+    /* ⚠⚠⚠ 新版現在也可能有這個形狀 —— 判準是**兩件同時成立**：
+         ① 公開那顆按鈕上面那一句是個**是非題**（把公開設成「願意」的人才走）；
+         ② 私下那顆上面那一句用**負面情緒／負面評價**當前提。
+       兩件都中 ＝「願意的人去公開、不開心的人來私下」＝ 現況那張卡的形狀。 */
+    var q1 = body.querySelector(".ask"), q2 = body.querySelector(".ask2");
+    var t1 = q1 ? q1.textContent : "", t2 = q2 ? q2.textContent : "";
+    var ask1Q = /嗎？|嗎\?/.test(t1);
+    var neg2  = /不開心|不滿意|不好的|抱怨|沒有很好/.test(t2 + (body.querySelector(".nob") || {}).textContent);
+    var gate = v === "old" || (ask1Q && neg2);
 
     /* ⚠ 另一件這一則獨有的：**不可以拿好處換評價**（Google 明文禁止，
        而且醫療機構在台灣還多一層招徠的疑慮）。掃一次，免得日後有人加上去。 */
     var BAIT = ["抽獎", "折價", "優惠", "贈品", "好禮", "送你", "回饋金", "洗牙一次"];
     var bait = BAIT.filter(function (w) { return text.indexOf(w) >= 0; });
 
-    var knowC = ct(body.querySelector(".foot2"), cardBg);
     var btnC  = ct(body.querySelector(".btn"), cardBg);
     var negC  = ct(body.querySelector(".nob"), cardBg);
     var barH = document.getElementById("pv-bar").getBoundingClientRect().height;
@@ -563,17 +566,19 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       /* ⚠⚠⚠ 這一列是這一頁最要緊的一行。判準**不是「有幾顆按鈕」**，
          是「**通向公開評論的那一條，有沒有先被一個問題篩過**」。 */
       + "<br>公開評論那一條 " + (gate
-          ? "<span class='no'>先問「願不願意」才給 —— 這就是要問廠商的那件事</span>"
+          ? "<span class='no'>" + (v === "old" ? "先問「願不願意」才給 —— 這就是要問廠商的那件事"
+              : "上面那顆是是非題、下面那顆用「不開心」當前提 —— "
+                + "合起來就是「願意的人去公開、不開心的人來私下」，"
+                + "＝ 現況那張卡的形狀（第 17-3 節）") + "</span>"
           : "<span class='ok'>沒有先問、給所有人</span>")
       /* ⚠⚠⚠ 這一列是 2026-09-05 加的，也是這一頁現在最要緊的一行。
          **一個是非題直接站在兩顆按鈕上面，那兩顆就變成它的答案** ——
          那正是現況那張卡的形狀（願意 → 分享／不願意 → 提供建議），只是好看一點。 */
       + (v === "new"
-          ? "<br>那一段是不是問句 "
-            + (/嗎？|嗎\?/.test(text)
-                ? "<span class='no'>是 —— 兩顆按鈕會被讀成它的答案，"
-                  + "那就是「先問、再分流」的形狀</span>"
-                : "<span class='ok'>不是</span>")
+          ? "<br>公開那一顆上面是不是問句 "
+            + (ask1Q ? "<span class='no'>是（是非題）</span>" : "<span class='ok'>不是</span>")
+            + "　私下那一顆有沒有用負面情緒當前提 "
+            + (neg2 ? "<span class='no'>有</span>" : "<span class='ok'>沒有</span>")
           : "")
       + (v === "new"
           ? "<br>主文有沒有明說「不好的也寫」 "
@@ -613,9 +618,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
           : "")
       /* ⚠⚠ 對比度只對 Ⓑ 報 —— Ⓐ 那張卡的綠是**我從截圖描的**，不是量的，
          拿它算出來的比值會變成一個看起來很像發現、其實是自己編的數字。 */
-      + (v === "new" ? line("收尾那兩行", knowC, 4.5)
-                     + line("主鈕白字", btnC, 4.5)
+      + (v === "new" ? line("主鈕白字", btnC, 4.5)
                      + line("線框鈕", negC, 4.5) : "")
+      + "<br>怎麼聯繫診所 " + (/05-\d|櫃檯|來電|致電/.test(text)
+          ? "<span class='ok'>卡上有</span>"
+          : "<span class='no'>卡上沒有 —— 開場叫他「跟診所聯繫一下」，"
+            + "但沒寫怎麼聯繫；而他手邊最近的按鈕就是在這裡回一句，這裡沒有人看</span>")
       + "<br>沒有專人那件事 " + (lied.length
           ? "<span class='no'>出現「" + lied.join("、") + "」</span>"
           : "<span class='ok'>守住了</span>")
@@ -655,14 +663,24 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "（<code>aspect-ratio 2/1</code>），所以現在量到的卡片高度<b>等圖進來也不會變</b>。"
       + "規格同另外兩則：<b>1024×512</b>（LINE 對 Flex 圖片的上限）。"
       + "<hr>"
-      + "<b>⚠⚠⚠ 這一則最要緊的改動：把「先問、再分流」整個拿掉。</b>"
-      + "<br>合規的形狀只有一種：<b>不要先問、不要分流</b>。"
-      + "所有人拿到<b>同一個邀請</b>，想寫的自己會去寫；"
-      + "私下的意見管道<b>另外給、也給所有人</b>，不是「不滿意的人才走這條」。"
-      + "<br>⚠ 「不管寫什麼，都會幫到下一個正在找牙醫的人」那一句是<b>刻意寫進去的</b> ——"
-      + "它當著病人的面說清楚<b>我們不是只想要好評</b>，是這張卡沒有分流最直接的證據。"
-      + "<br>⚠⚠ 這個改法<b>同時解掉品牌問題</b>：現在那一張是整個帳號裡最像推銷的一則，"
-      + "而站上的紅線第一條就是<b>不推銷</b>。"
+      + "<b>⚠⚠⚠ 這一版（Ⓐ）是你 2026-09-05 逐字寫的，一個字都沒改 —— "
+      + "但有一件事我要講清楚，因為它不是美感問題。</b>"
+      + "<br>你給的排法是<b>兩塊「一句話 ＋ 一顆按鈕」</b>，那個排法本身很好"
+      + "（每一句就站在它自己那顆上面，同提醒卡定稿那一張）。"
+      + "問題在<b>那兩句話的內容合起來的形狀</b>："
+      + "<br>・上面：一個<b>是非題</b>（願意推薦嗎？）→ 一顆<b>公開</b>的按鈕"
+      + "<br>・下面：一個<b>負面前提</b>（不開心）→ 一顆<b>私下</b>的按鈕"
+      + "<br>讀起來就是「<b>願意的人去公開、不開心的人來私下</b>」——"
+      + "那正是<b>現況那張卡的形狀</b>，而且比現況更明白。"
+      + "Google 禁的兩件各中一件：<b>選擇性地只向滿意的人索取公開評論</b>、"
+      + "<b>把不滿意的人導離公開評論</b>。這就是第 17-3 節那條要問廠商的疑慮。"
+      + "<br>⚠ <b>沒有自己改掉你的句子</b>，做法照提醒卡那條「2天後」："
+      + "照寫、面板標紅、給一個替代案。"
+      + "<b>Ⓑ 是同一個排法、同一個口氣</b>，只換兩處："
+      + "問句換成「好的不好的都想聽」、「不開心」換成「想直接跟我們說也可以」——"
+      + "兩顆按鈕都在、兩塊都在，只是<b>不再用滿不滿意把人分成兩邊</b>。"
+      + "<br>⚠ 這一題最後要看的是<b>那兩顆按鈕實際連到哪裡</b>（廠商那一題）。"
+      + "如果第二顆也是通向公開評論、只是換個入口，那上面整段就不成立了。"
       + "<hr>"
       + "<b>開場是你 2026-09-05 自己寫的</b>（「哈囉　病人姓名　回去牙齒都還好嗎／"
       + "有什麼狀況的話記得跟診所聯繫一下」）。<b>用字一個都沒改</b>，只做了<b>斷行</b>："
@@ -675,24 +693,21 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "子女的帳號，「哈囉　〔名字〕」問的是<b>那個人的牙齒</b>，不是在對名字本人講話。"
       + "名字<b>加粗</b>，一個帳號收得到好幾個家人的訊息，「這一次是誰」要一眼看到。"
       + "<hr>"
-      + "<b>⚠⚠⚠ 你那一句同時讓底下那一塊變得<u>更</u>必要，不是更不必要。</b>"
-      + "<br>你叫病人「<b>記得跟診所聯繫一下</b>」——而他手邊<b>最近的按鈕，"
-      + "就是在這個 LINE 裡回一句話</b>，然後沒有人看得到。"
-      + "所以底下那一塊現在的工作**不是「另外給一個意見管道」，是<b>回答你自己丟出來的問題</b>："
-      + "要聯繫，聯繫哪裡。"
-      + "<br>⚠ <b>2026-09-05 那兩行收短了</b>：只講「牙齒有狀況打電話」，"
-      + "不再重複「想說什麼跟櫃檯說」—— 那件事現在由<b>第二顆按鈕</b>做，"
-      + "兩處講同一件事會互相稀釋。"
-      + "<br>⚠ 號碼寫在說明句裡、<b>沒有做成按鈕</b>（第十一之四節那條通則：按鈕是"
-      + "「現在請你做這件事」）。代價是 <b>Flex 裡的文字不會自動變成可撥的</b> ——"
-      + "要它撥得下去得在那一行掛 <code>tel:</code>，外觀完全不變，<b>還沒問過你要不要</b>。"
+      + "<b>⚠⚠ 收尾那兩行整段拿掉了</b>（你指定）——"
+      + "卡片因此從 550 收到 <b>498px</b>，重量全部留給兩顆按鈕。"
+      + "<br>⚠ 但它帶走了一件事，先講一聲：<b>開場你叫他「記得跟診所聯繫一下」，"
+      + "現在卡上沒有一個地方寫怎麼聯繫</b>。而他手邊最近的按鈕就是<b>在這個 LINE 裡回一句</b>，"
+      + "這裡沒有人看得到。面板有一列在盯這件事。"
+      + "<br>要補的話最省的是<b>在最底下加一行小字</b>（「牙齒有狀況請打 " + TEL + "」），"
+      + "不是加第三顆按鈕 —— <b>還沒動，等你說</b>。"
       + "<hr>"
       + "<b>⚠⚠ 卡片上沒有出現「Google」四個字</b>（你 2026-09-05 指定）——"
       + "<b>按鈕連到哪裡沒有變</b>，只是卡上不寫平台的名字。"
-      + "這樣寫得通，是因為<b>動作本身講得完整</b>（「寫幾句這次的看診經驗」），"
+      + "這樣寫得通，是因為<b>動作本身講得完整</b>（「分享這次的經驗」），"
       + "平台是按下去之後的事。"
-      + "<br>⚠ <b>灰底方塊也拿掉了</b>（同你的指定）—— 收尾那兩行改成純文字，"
-      + "卡片因此少一塊色，重量全部留給兩顆按鈕。"
+      + "<br>⚠ 兩顆按鈕的長相：<b>綠底＝主角、線框＝次要</b>（同提醒卡那顆「掰掰不去囉」）。"
+      + "<b>角形只有第一顆有</b>（你只在那一顆寫了角形）——"
+      + "那正好也在說「這一顆是往外走的」。"
       + "<hr>"
       + "<b>⚠ 還沒有的東西（上線之前一定會卡住）</b>"
       + "<br>① <b>按鈕的網址還沒有</b> —— Google 的「寫評論」深連結需要診所的 Place ID，"
@@ -734,14 +749,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     document.getElementById("pv-slot").innerHTML = v === "old" ? oldHtml() : newHtml();
     bar("sw-v", { old: { name: "Ⓐ 現況" }, new: { name: "Ⓑ 新版" } },
         function () { return v; }, function (k) { v = k; });
-    bar("sw-a", ASK, function () { return ask; }, function (k) { ask = k; });
-    bar("sw-n", NEG, function () { return neg; }, function (k) { neg = k; });
+    bar("sw-a", VER, function () { return ask; }, function (k) { ask = k; });
     /* 現況那一張是廠商的，這兩把尺對它無效 —— 關掉而不是拿掉，
        不然切回新版時整條會跳高一截。 */
-    ["row-a", "row-n"].forEach(function (id) {
+    ["row-a"].forEach(function (id) {
       document.getElementById(id).className = "r" + (v === "old" ? " off" : "");
     });
-    var q = v === "old" ? "?v=old" : "?v=new&a=" + ask + "&n=" + neg;
+    var q = v === "old" ? "?v=old" : "?v=new&a=" + ask;
     history.replaceState(null, "", location.pathname + q);
     measure();
     document.getElementById("pv-note").innerHTML = note();
