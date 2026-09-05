@@ -24,11 +24,18 @@
      寫成 min(268px,74%) 時 393 上只給了 252px，那個寬度上做的折行判斷全是假的）。
   ⚠ class 一律 pv- 前綴。樣式放在 head（放頁尾的話關著的東西會在開頁那 180ms 閃出來）。
 
-  切換條四把尺（網址參數）：
-    ?v= 怎麼送（now 現況／text 純文字新版／img 文字＋一張固定的圖／card Flex 圖卡）
+  ⚠⚠⚠ 2026-09-05 使用者定案：**文字用現況那一份**（「現況的文字是我自己每次打的」）。
+     所以切換條從四把尺收成兩把，「哪一版的字」不再是一個問題 ——
+     這一頁剩下的問題只有一個：**要不要為了有圖，每個人多貼一次。**
+
+  切換條兩把尺（網址參數）：
+    ?v= 怎麼送（text 純文字／img 文字＋一張固定的圖／card 圖卡）
     ?s= 哪一種情況（stop 停診／open 照常看診／after 颱風過後）
+  已定案、收起來但還開得到的：
+    ?w= 用哪一份字（now 你打的／new 我們改寫的）
     ?m= 「不算你失約」那一句（on／off）　　　⚠ 診所的政策題，我們不知道
     ?t= 電話（off 不放／after 恢復後才有人接／now 颱風天也有人接）⚠ 診所的事實題
+    ⚠ 後三個只作用在「我們改寫的」那一份，你打的那一份是逐字照抄、不受它們影響。
 -->
 <style>
 :root{
@@ -190,12 +197,23 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 <div class="pv-wrap">
   <h1>颱風／臨時休診通知　<span>提案</span></h1>
   <p class="pv-sub">你 7/10 晚上發的那一則（從系統抓出 7/11 有約的病人，一個一個貼）。<br>
-    這一頁回答兩件事：<b>LINE 上做不做得成圖卡</b>，以及<b>這一則的字怎麼寫</b>。
-    切換條在最下面。</p>
+    <b>文字就用你打的那一份</b>（你 2026-09-05 決定的），所以這一頁只剩一個問題：
+    <b>要不要為了有圖，每個人多貼一次。</b>切換條在最下面。</p>
 
   <div class="pv-fact">
     <h2>先回答：LINE 上可不可行</h2>
     <dl>
+      <dt>⚠⚠⚠ 2026-09-05 你說「文字用現況的就好，那是我自己每次打的」——
+        那一句就把圖卡這條路關掉了大半</dt>
+      <dd><b>「你自己打」和「圖卡」在現在的送法下是互斥的。</b><br>
+        ・<b>Flex 圖卡</b>是<b>廠商系統送的模板</b>，字是系統填的。<br>
+        ・<b>圖文訊息</b>的字<b>烘在圖裡</b>。<br>
+        <b>兩種都不是在聊天室打出來的。</b>
+        <b class="y">唯一同時成立的是「一張永遠不變的圖 ＋ 你打的字」</b>
+        （切換條的「文字＋圖」那一格）——代價是<b>每個人要貼兩次</b>。<br>
+        ⚠ 所以下面那張表仍然成立，但<b>你的決定讓它變成一題「值不值得為了圖多貼一次」</b>，
+        不再是「做不做得到」。</dd>
+
       <dt>「圖卡」在 LINE 上有兩種，差很多</dt>
       <dd><b>Flex Message</b> ＝ 你們的綁定完成、約診提醒那種 ——
         卡片裡是<b>真的文字</b>，可以複製、可以放按鈕。<br>
@@ -263,10 +281,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       <button type="button" class="cp" id="pv-copy">複製</button></div>
     <pre id="pv-spec"></pre>
     <p class="fo">
-      ⚠ <b>〔　〕裡的是每次要換掉的</b>，其餘一個字都不用動。
-      面板上「每次要改幾處」數的就是它。<br>
-      ⚠ <b>每一行都是手動斷的</b>（一行不超過 14 個全形字寬）——
-      改任何一個字都要回到這一頁重看折行。<br>
+      ⚠ <b>〔　〕裡的是每次要重打的</b>（你本來就在打），面板那一列數的就是它。<br>
+      ⚠ 你那一份<b>沒有手動斷行</b>，整段交給 LINE 自動折 —— 那是對的，
+      每次現打的東西不可能去數字數。（我們改寫的那一份才是手動斷行的。）<br>
       ⚠ <b>什麼時候發</b>：縣府宣布停班停課之後就發，不要等到當天早上 ——
       你 7/10 晚上 19:37 那一次的時機是對的。</p>
   </div>
@@ -276,8 +293,6 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
   <div class="r"><span class="lb">怎麼送</span><span id="sw-v"></span></div>
   <div class="r"><span class="lb">情況</span><span id="sw-s"></span></div>
-  <div class="r" id="row-m"><span class="lb">失約</span><span id="sw-m"></span></div>
-  <div class="r" id="row-t"><span class="lb">電話</span><span id="sw-t"></span></div>
 </div>
 
 <script>
@@ -350,11 +365,14 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     return s + "\n路上還是要小心。";
   }
 
+  /* ⚠⚠ 只有「停診」那一則有現況的字（使用者自己打的，逐字照抄）。
+     **「照常看診」與「颱風過後」他從來沒寫過** —— 那兩格只有我們擬的草稿，
+     面板會標出來，不要讓它看起來像已經存在的東西。 */
+  function isMine() { return state.s === "stop" && state.w === "now"; }
   function textOf() {
-    if (state.v === "now") return NOW;
     if (state.s === "open")  return openText(state.m);
     if (state.s === "after") return afterText(state.t);
-    return stopText(state.m, state.t);
+    return state.w === "now" ? NOW : stopText(state.m, state.t);
   }
   function fill(s) {
     Object.keys(DEMO).forEach(function (k) { s = s.split(k).join(DEMO[k]); });
@@ -365,12 +383,16 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   function varCount(s) { var m = s.match(/〔[^〕]+〕/g); return m ? m.length : 0; }
 
   /* ------------------------------------------------------------------ */
+  /* ⚠⚠⚠ 2026-09-05 使用者定案：**文字用現況那一份**
+     （「現況的文字是我自己每次打的，所以還好」）。
+     所以這把尺從「哪一版的字」改成純粹的**怎麼送** —— 三格用的都是同一份字。
+     ⚠ 我們改寫的那一份沒有作廢，只是不佔畫面：?w=new 還開得出來。 */
   var VIA = {
-    now:  { name: "Ⓐ 現況",       n: 1, note: "純文字（你現在發的那一則）" },
-    text: { name: "Ⓑ 純文字",     n: 1, note: "純文字（改寫過）" },
-    img:  { name: "Ⓒ 文字＋圖",   n: 2, note: "先貼一張固定的圖，再貼文字" },
-    card: { name: "Ⓓ Flex 圖卡",  n: 0, note: "廠商從他們系統送" }
+    text: { name: "純文字",       n: 1, note: "你現在的做法" },
+    img:  { name: "文字＋圖",     n: 2, note: "先貼一張固定的圖，再貼你打的字" },
+    card: { name: "圖卡（Flex）", n: 0, note: "廠商從他們系統送" }
   };
+  var WORD = { now: { name: "現況（你打的）" }, new: { name: "我們改寫的" } };
   var SIT = { stop: { name: "停診" }, open: { name: "照常看診" }, after: { name: "颱風過後" } };
   var MISS = { off: { name: "不寫" }, on: { name: "寫「不算你失約」" } };
   var PHONE = { off: { name: "不放" }, after: { name: "恢復後才有人接" }, now: { name: "颱風天也有人接" } };
@@ -379,7 +401,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
      ⚠ 診所一天實際有幾個約診我們不知道，這個數字要問。 */
   var LIST = 30;
 
-  var state = { v: "text", s: "stop", m: "off", t: "after" };
+  var state = { v: "text", s: "stop", w: "now", m: "off", t: "after" };
 
   function el(tag, cls, txt) {
     var n = document.createElement(tag);
@@ -424,6 +446,13 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
        這一張沒有按鈕，淡底是唯一能指出「重點在這一句」的工具。
      ⚠⚠ 頭圖 2:1（1024×512）—— 和聊天室那張 1:1 **不是同一張**，
        走哪一條路要先定，不然圖要重畫。 */
+  /* 有沒有一個「短標題」：第一段最多兩行、每一行 ≤20 個全形字。 */
+  function titled(t) {
+    var first = t.split("\n\n")[0].split("\n");
+    return t.indexOf("\n\n") > 0 && first.length <= 2 &&
+      first.every(function (x) { return x.length <= 20; });
+  }
+
   function flexCard() {
     return function () {
       var c = el("div", "fx");
@@ -434,12 +463,19 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       var t = fill(textOf());
       /* 把純文字那一份切成 標題／行動／背景／小字 —— 同一組字，不另外寫一份。 */
       var seg = t.split("\n\n");
-      b.appendChild(el("h4", null, seg[0]));
-      var blue = el("div", "blue", seg[1] || "");
-      b.appendChild(blue);
-      for (var i = 2; i < seg.length; i++) {
-        b.appendChild(el(i === seg.length - 1 ? "div" : "p",
-          i === seg.length - 1 ? "xs" : null, seg[i]));
+      /* ⚠⚠⚠ 卡片的版型要有一個**短標題**才成立。現況那一份沒有 ——
+         它是三大段、第一段就一百多個字，硬切出來的「標題」會是一整塊 16px 粗體。
+         所以這裡先判斷，沒有短標題就整份當內文排，**不要假裝它有結構**。
+         那個判斷本身就是這一頁要給的答案之一（面板有一列在報）。 */
+      if (titled(t)) {
+        b.appendChild(el("h4", null, seg[0]));
+        b.appendChild(el("div", "blue", seg[1] || ""));
+        for (var i = 2; i < seg.length; i++) {
+          b.appendChild(el(i === seg.length - 1 ? "div" : "p",
+            i === seg.length - 1 ? "xs" : null, seg[i]));
+        }
+      } else {
+        seg.forEach(function (p) { b.appendChild(el("p", null, p)); });
       }
       c.appendChild(b);
       return c;
@@ -458,17 +494,12 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     }
 
     bar("sw-v", VIA, "v"); bar("sw-s", SIT, "s");
-    bar("sw-m", MISS, "m"); bar("sw-t", PHONE, "t");
-    /* 現況那一則是逐字照抄的，兩把尺對它無效；照常看診那一則診所一定有人在，
-       電話那把尺也無效。⚠ 關掉而不是拿掉，不然切回來時整條會跳高一截。 */
-    document.getElementById("row-m").className = "r" + (state.v === "now" || state.s === "after" ? " off" : "");
-    document.getElementById("row-t").className = "r" + (state.v === "now" || state.s === "open" ? " off" : "");
-
+    /* ⚠ 失約與電話那兩把尺已經收掉（文字用現況的，那兩句是加在我們那一版裡的），
+       網址參數仍然吃得到：?w=new&m=on&t=now。 */
     history.replaceState(null, "",
-      location.pathname + "?v=" + state.v + "&s=" + state.s + "&m=" + state.m + "&t=" + state.t);
+      location.pathname + "?v=" + state.v + "&s=" + state.s + "&w=" + state.w);
 
-    var spec = document.getElementById("pv-spec");
-    spec.textContent = state.v === "now" ? NOW : textOf();
+    document.getElementById("pv-spec").textContent = textOf();
     requestAnimationFrame(measure);
   }
 
@@ -529,14 +560,21 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     return { mine: mine, drawn: drawn, orp: orp, wide: wide };
   }
 
-  /* 紅線與公文體的掃描表。⚠ 改文案要回來改這張表（line-review 21-11 那條）。 */
-  var SCAN = [
+  /* ⚠⚠ 兩張表，不是一張 —— 第一版把它們混在一列印成「紅線 2 處」，
+     那會讓使用者已經定案的那一份字每次都被標紅，而那兩件根本不同級：
+     **紅線是「寫了就是說謊」，口氣是「我覺得可以更好」。**
+     通則：使用者選定的東西還要繼續量，但量出來的東西要標對級別，
+     不然面板就從「量尺」變成「一直在勸」。
+     ⚠ 改文案要回來改這兩張表（同 line-review 21-11 那條）。 */
+  var RED = [
     { re: /隨時|馬上回|盡快回|有問題再(跟|和)我們說|線上(客服|回覆)/,
-      why: "承諾了這個帳號做不到的事（沒有專人即時回覆），颱風天更沒有" },
+      why: "承諾了這個帳號做不到的事（沒有專人即時回覆），颱風天更沒有" }
+  ];
+  var TONE = [
     { re: /敬請見諒|造成不便|深感抱歉/,
-      why: "颱風不是診所造成的 —— 道歉會讓人以為診所本來可以選" },
-    { re: /民眾|切勿|惠請|另行公告|敬請/,
-      why: "公告的口氣。這一則是一對一發給有約的人，他不是「民眾」" }
+      why: "「敬請見諒」——颱風不是診所造成的，道歉會讓人以為診所本來可以選" },
+    { re: /民眾|切勿|惠請|另行公告/,
+      why: "公告的詞（民眾／切勿／另行公告），而這是一對一發給有約的人" }
   ];
 
   function measure() {
@@ -548,7 +586,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     for (var i = 0; i < msgs.length; i++) tot += msgs[i].getBoundingClientRect().height + 11;
     var pct = tot / vh * 100;
     var lc = lineCheck();
-    var raw = state.v === "now" ? NOW : textOf();
+    var raw = textOf();
     var vars = varCount(raw);
     var via = VIA[state.v];
 
@@ -564,8 +602,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     var barH = document.getElementById("pv-bar").getBoundingClientRect().height;
     var barPct = barH / vh * 100;
 
-    var hits = [];
-    SCAN.forEach(function (s) { if (s.re.test(raw)) hits.push(s.why); });
+    var red = [], tone = [];
+    RED.forEach(function (x) { if (x.re.test(raw)) red.push(x.why); });
+    TONE.forEach(function (x) { if (x.re.test(raw)) tone.push(x.why); });
 
     panel.innerHTML =
       "<b>" + via.name + "・" + SIT[state.s].name + "</b>　" + via.note +
@@ -574,13 +613,18 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
         : pct > 72 ? '<span class="no">一屏的 ' + pct.toFixed(0) + "%</span>"
                    : '<span class="ok">一屏的 ' + pct.toFixed(0) + "%</span>") + "<br>" +
 
-      "⚠ <b>每次颱風要改幾處</b>　<b class=\"" + (vars > 2 ? "no" : "ok") + "\">" + vars +
-      " 處</b>（現況 4 處）——" +
-      (state.v === "img"
-        ? " 字在文字那一則裡，<b class=\"ok\">圖不用重做</b>"
-        : state.v === "card"
-          ? " 卡片裡是真文字，<b class=\"ok\">改字不必重做圖</b>"
-          : " 純文字，直接改") + "<br>" +
+      "⚠ <b>每次颱風要重打的地方</b>　<b>" + vars + " 處</b>" +
+      (isMine() ? "（颱風名、日期 ×2、星期）" : "") + "——" +
+      (state.v === "text"
+        ? ' <b class="ok">你在聊天室直接打，沒問題</b>'
+        : state.v === "img"
+          ? ' 字仍然是你打的，<b class="ok">圖永遠不用重做</b>'
+          : ' <b class="no">圖卡的字是排版好的、不是聊天室打的</b> —— 要嘛廠商每次幫你改，要嘛做成他們系統的欄位') +
+      "<br>" +
+
+      "圖卡的版型　" + (titled(raw)
+        ? '<b class="ok">有短標題，排得起來</b>'
+        : '<b class="no">沒有短標題</b>　整份會排成一塊，卡片的版型用不上') + "<br>" +
 
       "⚠ <b>要貼幾次</b>　" +
       (via.n === 0
@@ -593,8 +637,8 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 
       /* ⚠ 現況那一則是**整段交給自動折行**的（沒有手動斷行），
          拿「自己斷幾行／畫出幾行」去比對它沒有意義，會永遠報紅。 */
-      (state.v === "now"
-        ? "畫出 <b>" + lc.drawn + "</b> 行<span style=\"opacity:.8\">（現況整段交給自動折行）</span>・"
+      (isMine()
+        ? "畫出 <b>" + lc.drawn + "</b> 行<span style=\"opacity:.8\">（你打的那一份交給自動折行）</span>・"
         : "自己斷 <b>" + lc.mine + "</b> 行／畫出 <b class=\"" +
           (lc.drawn > lc.mine ? "no" : "ok") + "\">" + lc.drawn + "</b> 行・") +
       "孤字 <b class=\"" + (lc.orp ? "no" : "ok") + "\">" + lc.orp + "</b> 處・" +
@@ -608,99 +652,72 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       "切換條佔一屏 <b class=\"" + (barPct > 24 ? "no" : "ok") + "\">" + barPct.toFixed(1) + "%</b>・" +
       "你的螢幕 " + Math.round(window.innerWidth) + "×" + Math.round(vh) + "<br>" +
 
-      "紅線 " + (hits.length
-        ? '<b class="no">' + hits.length + " 處</b>　" + hits.join("；")
-        : '<b class="ok">0 處</b>');
+      "紅線 " + (red.length
+        ? '<b class="no">' + red.length + " 處</b>　" + red.join("；")
+        : '<b class="ok">0 處</b>') +
+      /* ⚠ 口氣那一列是**觀察不是錯**：使用者已經決定用他自己的字，
+         所以這一列不上紅色，只記著。 */
+      "・口氣 <b>" + tone.length + " 處</b>" +
+      (tone.length ? '<span style="opacity:.8">　' + tone.join("；") +
+        "（你決定用自己的字，這一列只是記著，不是要你改）</span>" : "");
 
     document.getElementById("pv-note").innerHTML = note();
   }
 
   function note() {
-    if (state.v === "now") {
-      return "<b>Ⓐ 現況 —— 三件，前兩件是內容不是美感。</b>" +
-        "<br>① ⚠⚠⚠ <b>第一段和第二段互相矛盾。</b>第一段說「門診將同步暫停、切勿自行前往」，" +
-        "第二段說「若風雨不大而診所恢復開診，將電話連絡當日預約病患就診」——" +
-        "病人真正的問題是<b>「我明天到底要不要去」</b>，這一則給了兩個答案，" +
-        "而且第二段把第一段的確定性收回去了：他還是得等電話。" +
-        "<br>② <b>最重要的那一句埋在第一段的最後。</b>手機上第一眼看到的是" +
-        "「因應巴威颱風來襲，雲林縣政府已宣布…」——那是背景，不是結論。" +
-        "他要的第一行是<b>「明天休診、你的約診不用來」</b>。" +
-        "<br>③ <b>「民眾」「切勿自行前往」「敬請見諒」是公告的詞。</b>" +
-        "這一則是一對一發給<b>有約的病人</b>，他不是民眾。" +
-        "而「造成不便，敬請見諒」還多一件：<b>颱風不是診所造成的</b>，" +
-        "道歉會讓人以為診所本來可以選。" +
-        "<hr>⚠ <b>有一句要留著</b>：「並祝颱風天平安」是這一則裡最有人味的一句，新版留了。" +
-        "<br>⚠ <b>時機也是對的</b>：7/10 晚上 19:37、縣府宣布之後就發。這一項不用改。";
-    }
-    if (state.s === "open") {
-      return "<b>「照常看診」這一則現在沒有，但它可能比停診那一則更省事。</b>" +
-        "<br>颱風天病人最常打來問的是<b>「你們有沒有開」</b>——" +
-        "而電話是這間診所的結構性瓶頸（六個月 1,886 通，還只算 Google 商家那一種）。" +
-        "主動發一則，那一批電話就不會進來。" +
-        "<br>⚠⚠ 但它的重點<b>不是</b>「我們有開」，是<b>「你不必勉強來」</b>：" +
+    var s = "";
+    if (isMine()) {
+      s = "<b>這是你 7/10 打的那一份，一個字都沒動。</b>" +
+        "<br>你說那些字是自己每次打的 —— 那把這一則的成本講清楚了：" +
+        "<b>颱風名、日期兩處、星期</b>，四個地方每次重打，而你本來就在打。" +
+        "<b class=\"ok\">純文字這條路沒有任何額外成本。</b>";
+    } else if (state.s === "stop") {
+      s = "<b>我們改寫的那一份（<code>?w=new</code> 才看得到，不是建議你換掉）。</b>" +
+        "<br>留著只為一件事：如果哪天真的走圖卡，<b>圖卡需要一個短標題和分段</b>，" +
+        "而你那一份是三大段、第一段就一百多個字。這一份是「同樣的內容排成卡片長什麼樣」。";
+    } else if (state.s === "open") {
+      s = "<b>⚠ 這一則你沒有寫過 —— 底下是我們擬的草稿，不是現況。</b>" +
+        "<br>颱風天病人最常打來問的是<b>「你們有沒有開」</b>，而電話是這間診所的" +
+        "結構性瓶頸（六個月 1,886 通，還只算 Google 商家那一種）。主動發一則，" +
+        "那一批電話就不會進來。" +
+        "<br>⚠⚠ 但它的重點<b>不是</b>「我們有開」，是<b>「你不必勉強來」</b> ——" +
         "叫人在颱風天冒雨出門是不對的，而且那句話一寫，不來的人會<b>先打電話</b>" +
-        "而不是直接不出現。" +
-        "<br>⚠ 電話那把尺對這一則無效（診所有開，一定有人接），所以號碼寫死在裡面。";
+        "而不是直接不出現。<b>要用的話字自己改，跟停診那一則一樣你打就好。</b>";
+    } else {
+      s = "<b>⚠ 這一則你也沒有寫過 —— 我們擬的草稿。</b>" +
+        "<br>你現在的做法是「恢復上班後主動致電」。發這一則<b>不是取代那通電話</b>，" +
+        "是讓已經在等的人先知道診所回來了（「已經接到電話的話就不用理這一則」" +
+        "那句就是為了不打架）。<b>要不要用是你的決定</b>，它會改變服務的樣子。";
     }
-    if (state.s === "after") {
-      return "<b>「颱風過後」這一則是新的 —— 你現在的做法是「恢復上班後主動致電」。</b>" +
-        "<br>發這一則<b>不是取代那通電話</b>，是讓已經在等的人先知道診所回來了；" +
-        "打電話還是照打（「已經接到電話的話就不用理這一則」那句就是為了不打架）。" +
-        "<br>⚠⚠ <b>要不要用是你的決定</b>：它會改變服務的樣子 ——" +
-        "省下的是一部分電話，換掉的是「診所主動打給我」那個感覺。" +
-        "<br>⚠ 這一則有 <b>2 處</b>要改（恢復日、原本的約診日），是三則裡最多的。";
+
+    if (state.v === "text") {
+      s += "<hr><b class=\"ok\">純文字 —— 就是你現在的做法，沒有要改的東西。</b>" +
+        "剩下的只有兩件<b>不必改文字</b>就能做的：把三則先寫好放著（那一刻寫得慌張是必然的），" +
+        "以及跟廠商談那份名單（下面事實區最後一段）。";
     }
-    var s = "<b>Ⓑ 新版・停診 —— 改了三件，其中兩件是內容。</b>" +
-      "<br>① <b>順序倒過來</b>：結論（休診、你不用來、我們會打給你）擺第一段，" +
-      "縣府宣布什麼是背景、擺第二段。" +
-      "<br>② ⚠⚠⚠ <b>那個矛盾收成一句</b>：不管當天有沒有提前開診，" +
-      "<b>都是我們打電話給你；在那之前不用出門。</b>" +
-      "兩種情況只剩一個答案，他不必自己判斷。" +
-      "<br>③ <b>颱風名拿掉、日期只留一次。</b>這不是省字 ——" +
-      "<b>每少一個地方就少一個下次要改的欄位</b>：現況 4 處，這一版 1 處。" +
-      "<br>⚠ 「並祝颱風天平安」留著，那是這一則裡最有人味的一句。" +
-      "<hr>⚠ <b>新版比現況高</b>（390 上 462 vs 306px）—— 那是<b>手動斷行換來的</b>：" +
-      "每一行都短、一眼掃得完，代價是多佔一點畫面。<b>這一則一年只發幾次，" +
-      "高度不是要省的東西。</b>" +
-      "<br>⚠⚠ 而且這一頁上兩者<b>不是同一個比較基準</b>：現況是整段交給自動折行、" +
-      "吃滿泡泡的寬度；新版是一行 14 個全形字。真的 LINE 的字比這一頁大，" +
-      "所以<b>現況在真手機上會比這裡看到的更高</b>，新版不會（它的行是自己斷的）。";
     if (state.v === "img") {
-      s += "<hr><b>Ⓒ 文字＋一張固定的圖</b>：圖只放<b>不會變的東西</b>" +
-        "（颱風天的插畫＋診所名），字全部留在文字那一則 —— 所以" +
-        "<b class=\"ok\">圖一次做好可以用很多年</b>。" +
+      s += "<hr><b>文字＋一張固定的圖</b>：圖只放<b>不會變的東西</b>" +
+        "（颱風天的插畫＋診所名），<b>字全部還是你自己打</b> ——" +
+        "所以這是<b class=\"ok\">唯一一條「有圖」而且「字留在你手上」的路</b>。" +
+        "圖一次做好可以用很多年。" +
         "<br>⚠⚠ 代價是<b>每個人要貼兩次</b>：30 人的名單就是 60 次操作，" +
-        "而這一則發出去的那十分鐘正是最忙的十分鐘。" +
-        "<b>圖好不好看和這件事無關，貴的是手。</b>";
+        "而發這一則的那十分鐘正是最忙的十分鐘。<b>圖好不好看和這件事無關，貴的是手。</b>";
     }
     if (state.v === "card") {
-      s += "<hr><b>Ⓓ Flex 圖卡</b>：卡片裡是<b>真文字</b>（可以複製、螢幕閱讀器讀得到），" +
-        "所以下次颱風只要換那 1 處，<b class=\"ok\">不必重做圖</b>。" +
-        "<br>⚠⚠ <b>但這一格現在做不到</b> —— 後台的聊天室與群發都沒有 Flex 這個型別，" +
-        "要廠商從他們的系統送。<b>這一格不是可以照做的東西，是拿去問廠商的那張圖。</b>" +
-        "<br>⚠⚠⚠ 而且真正划算的地方不在圖：<b>他們的系統本來就知道 7/11 有哪些人有約</b>，" +
-        "那正是你現在人工在抓的名單。<b>談這一件的時候要一起談，不要只談圖。</b>";
-    }
-    if (state.v === "text") {
-      s += "<hr><b class=\"ok\">建議先走這一格。</b>零依賴、今天就能用、" +
-        "字留在診所自己手上（同自動回應那一則的定案理由）。" +
-        "圖卡當成跟廠商談的一件 —— 那條路同時解掉「圖」和「一個一個貼」。";
-    }
-    if (state.m === "on") {
-      s += "<hr>⚠⚠ <b>「這次不算你失約」這一句要你點頭</b>，那是政策不是文案。" +
-        "而且它先卡在一個我們不知道的事實：<b>停診之後，系統裡那些約診會變成什麼？</b>" +
-        "48 小時提醒那張卡寫著「24 小時沒回應會自動取消並遞補」——" +
-        "如果停診那天系統照樣在計時，這句話就寫不得。<b>要先問廠商。</b>";
-    }
-    if (state.t === "now") {
-      s += "<hr>⚠ <b>「有急事可以打」要你確認颱風天真的有人接。</b>" +
-        "沒有人接的話這一句比不寫還糟 —— 他打了、沒人接、又不敢出門。";
+      s += "<hr><b class=\"no\">⚠⚠⚠ 圖卡和「我自己每次打」是衝突的。</b>" +
+        "Flex 圖卡是<b>廠商系統送的模板</b>，字是系統填的；圖文訊息的字更是烘在圖裡。" +
+        "<b>兩種都不是在聊天室打出來的。</b>要走這條，颱風那一刻你得先把颱風名與日期" +
+        "交給廠商（或請他們做成一個可以填的欄位），這正是你現在<b>不必</b>做的事。" +
+        (titled(textOf())
+          ? ""
+          : "<br>⚠⚠ 而且<b>你那一份的結構也放不進卡片</b>：它沒有短標題、" +
+            "三大段、第一段一百多個字，排進 268px 的卡就是一整塊 —— " +
+            "面板那一列在報這件事。要走圖卡就得<b>連文字一起重寫</b>（<code>?w=new</code> 是那個樣子）。");
     }
     return s;
   }
-
   /* 網址參數。⚠ 正規式要寫 [a-z0-9]+（CLAUDE.md 第八節：寫 [a-z]+ 會吃不到帶數字的值）。 */
-  [["v", VIA], ["s", SIT], ["m", MISS], ["t", PHONE]].forEach(function (p) {
+  [["v", VIA], ["s", SIT], ["w", WORD], ["m", MISS], ["t", PHONE]].forEach(function (p) {
     var m = location.search.match(new RegExp("[?&]" + p[0] + "=([a-z0-9]+)"));
     if (m && p[1][m[1]]) state[p[0]] = m[1];
   });
