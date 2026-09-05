@@ -100,6 +100,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 .pv-bub a{color:#2b6cb0;text-decoration:underline}
 .pv-bub.img{padding:0;background:none;box-shadow:none;border-radius:12px;overflow:hidden;
   max-width:232px;line-height:0}
+/* ⚠⚠ height:auto 不可以省（同下面 .fx .hero 那一條）—— 真圖寫著 height 屬性，
+   那是呈現屬性，不寫 height:auto 的話 aspect-ratio 蓋不過它。 */
+.pv-bub.img img{display:block;width:100%;height:auto;aspect-ratio:2/1;object-fit:cover}
 .pv-t{font-size:.62rem;color:var(--li-meta);flex:none;padding-bottom:2px}
 .pv-day{align-self:center;background:rgba(0,0,0,.16);color:#fff;font-size:.66rem;
   padding:2px 11px;border-radius:11px}
@@ -248,16 +251,16 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
         那正是你人工在抓的東西。<br>
         <b class="y">→ 建議：文字先寫好放著（今天就能用），圖卡當成跟廠商談的一件。</b></dd>
 
-      <dt>圖：提示詞寫好了，<b class="y">一張 2:1 兩條路共用</b></dt>
+      <dt><b class="y">✅ 圖定稿了</b>（九版）——<b class="y">一張 2:1 兩條路共用</b></dt>
       <dd>沿用一般牙科著陸頁那張的建築與街道，天氣換成刮風下大雨、<b>鐵門拉下來</b>、
-        路上三個人走得很辛苦。<br>
+        路上三個人走得很辛苦。成品 <code>hero-typhoon.jpg</code>（1024×512），
+        上面聊天室那張圖、以及最下面那張 Flex 圖卡的頭圖，<b>吃的是同一個檔</b>。<br>
         ⚠ 原本以為「聊天室貼的圖」要方的（1040×1040）——<b>那是「圖文訊息」才有的規格</b>；
         單純貼一張圖不必是方的，所以<b>聊天室那張和 Flex 頭圖是同一張 1024×512</b>，
         <b class="y">圖先畫、路線後定都不會白畫</b>，而且在你手機上矮 134px。<br>
-        ⚠ 提示詞裡擋掉三個這一站踩過的坑：辛苦畫成在哭／雨畫成一條長曲線（會像靈魂出竅）／
-        陰暗＋關著的老房子變成<b>鬼屋</b>。<br>
-        ⚠⚠ 還有一件差點照抄出錯的：那張圖<b>定稿的提示詞明文禁止鐵捲門</b>
-        （當初是為了擋模型把騎樓畫成車庫），這一次要反過來寫。</dd>
+        ⚠ 九版裡有六版在治同一類的事：雨的方向（連四版都反）、鐵門畫到騎樓前面、
+        晴天那幾條白弧線跑回來、屋簷的水滴變成冰柱、水滴又大又滿全圖。
+        每一輪的成因與通則都寫在 <code>drafts/line-typhoon-hero-prompt.md</code>。</dd>
 
       <dt>⚠⚠ 要問廠商的一件（不是美感，是會出事的）</dt>
       <dd><b>颱風休診那天，系統裡那些約診會變成什麼？</b>
@@ -437,16 +440,19 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   function bubble(t) {
     return function () { var b = el("div", "pv-bub"); linkify(b, t); return b; };
   }
-  /* 聊天室裡那張固定的圖。⚠ 佔位框，還沒畫 —— 它和真圖一樣高（2:1）。
+  /* 聊天室裡那張固定的圖（2026-09-05 定稿並接上）。
      ⚠⚠ 2026-09-05 從 1:1 改成 2:1：貼進聊天室的圖不必是方的（方的是「圖文訊息」
        那條路才有的規格），而 2:1 和 Flex 頭圖同一個尺寸 ——**一張圖兩條路都能用**，
-       而且在 390 上矮 134px。 */
+       而且在 390 上矮 134px。**下面那張圖卡吃的就是同一個檔。**
+     ⚠ `width`／`height` 兩個屬性一定要寫：不寫的話圖還沒下載完高度是 0，
+       面板會量出一張矮一截的對話。 */
   function photo() {
     return function () {
       var b = el("div", "pv-bub img");
-      var p = el("div", "pv-ph");
-      p.innerHTML = "頭圖・佔位（還沒畫，1024×512）";
-      b.appendChild(p);
+      var i = document.createElement("img");
+      i.src = "hero-typhoon.jpg"; i.width = 1024; i.height = 512;
+      i.alt = "颱風天的診所：鐵門拉下來，三個人在雨中走過";
+      b.appendChild(i);
       return b;
     };
   }
@@ -469,8 +475,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   function flexCard() {
     return function () {
       var c = el("div", "fx");
-      var h = el("div", "pv-ph hero");
-      h.innerHTML = "頭圖・佔位（還沒畫，1024×512）";
+      var h = document.createElement("img");
+      h.className = "hero"; h.src = "hero-typhoon.jpg";
+      h.width = 1024; h.height = 512; h.alt = "";
       c.appendChild(h);
       var b = el("div", "b");
       var t = fill(textOf());
