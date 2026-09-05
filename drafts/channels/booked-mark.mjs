@@ -69,7 +69,7 @@ for (const [a, b] of [["r2c2","r3c2"],["r1c1","r3c1"],["r1c3","r2c3"],
     throw new Error(`${a} 和 ${b} 是「裁切之後分不出來」的一對，顏色不可以一樣`);
 
 /* 墨壓在浮水印最濃處還讀不讀得到 —— 每一色 × 每一濃度都先算過再出圖 */
-const INK = "#2a2c27", CARD = "#f4f4f5";
+const INK = "#2a2c27", SOFT = "#5c5f57", CARD = "#f4f4f5";
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const lin = (c) => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
 const lum = (rgb) => .2126 * lin(rgb[0]) + .7152 * lin(rgb[1]) + .0722 * lin(rgb[2]);
@@ -167,9 +167,14 @@ for (const name of SHAPES) {
   for (const [tag, a] of ALPHAS) {
     /* 最壞底色 ＝ 卡色與這一色按濃度混合；墨壓上去要過 AA */
     const mixed = hex(CARD).map((c, i) => c * (1 - a) + hex(COLOR)[i] * a);
-    const ratioInk = cr(hex(INK), mixed);
-    if (ratioInk < 4.5)
-      throw new Error(`${name}-${tag}（${COLOR}）：墨壓在最濃處只有 ${ratioInk.toFixed(2)}`);
+    /* ⚠⚠ 墨**和柔墨都要算**：2026-09-05 起預約成功那一則也有浮水印，
+       而壓在它上面的是**小字（柔墨 #5c5f57）**不是日期。
+       柔墨對卡色本來就只有 5.92，餘裕比墨（12.84）小得多 —— 只驗墨會漏掉。 */
+    for (const [nm2, fg] of [["墨", INK], ["柔墨", SOFT]]) {
+      const r2 = cr(hex(fg), mixed);
+      if (r2 < 4.5)
+        throw new Error(`${name}-${tag}（${COLOR}）：${nm2}壓在最濃處只有 ${r2.toFixed(2)}`);
+    }
     const svg =
 `<svg xmlns="http://www.w3.org/2000/svg" width="${PW}" height="${PH}" viewBox="${box.x} ${box.y} ${box.w} ${box.h}">
   <g transform="${gt}"><path fill="${COLOR}" fill-opacity="${a}" fill-rule="evenodd" d="${d}"/></g>
