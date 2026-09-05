@@ -195,6 +195,32 @@ footer ol{padding-left:1.2rem}
 <p>⚠ <b>中間那一格仍然是最大的，那是刻意的</b> —— 站上量過：
 <b>多格分割、沒有視覺中心的場面，縮到小尺寸會整張糊掉</b>。
 所以不是把七格拉成一樣大，是<b>換掉站在中央的那個人</b>。</p>
+<p><b>2026-09-05 更晚：Ⓕ 第七版</b> —— 治「顏色變單調」與「窗戶像監獄鐵窗」。
+⚠ 第六版那張出圖沒有存進容器裡，<b>所以這一輪沒辦法逐像素量它</b>；
+成因是<b>逐行 diff 提示詞</b>找出來的，不是從畫面猜的。</p>
+<p><b>① 顏色那一件，又是我第六版改壞的。</b>為了讓顏色跟著位置重排，
+我把那一句改成「…<code>and that panel keeps the palest, creamiest background of the seven</code>」——
+<b>那是整份提示詞裡唯一一句真的講到「背景是什麼顏色」的話，而它說的是 cream</b>。
+在那之前背景只有一句很虛的「各給一格一個淡淡的色調」，
+七個底色<b>從來沒有被指名過</b>；第五版能有七個不同的底，是靠那一串<b>衣服</b>的顏色
+順帶把每一格帶開的。我把那一串改成純粹的衣服清單、又補了一句具體的「最米白」，
+<b>唯一具體的那句就變成全場的規則</b>。</p>
+<p>⚠⚠ <b>通則：一份規格裡「唯一具體的那一條」會變成全場的規則。</b>
+一個維度如果只有一句虛的描述，它其實沒有被指定 —— 它是靠別的東西順帶撐著的，
+哪天那個東西被改了就會整組垮掉。<b>要嘛逐格寫死，要嘛不要在旁邊擺一句具體的。</b>
+第七版把<b>底色與衣服拆成兩份清單</b>，七格逐格指名（中間淡玫瑰／左上淡芥末金／
+右上暖奶油黃／右淡岩藍／右下柔鼠尾草綠／左下夜色藍灰／左淡青綠），
+並收一句判準：<b>有人瞄一眼，要能單靠顏色分出這一格和隔壁不是同一格。</b></p>
+<p><b>② 窗戶 —— 用字本身就在叫它畫監獄。</b>兩處寫的都是 <code>a barred Taiwanese window</code>，
+而 <code>barred</code> 就是「有柵欄的」；第六版還把其中一扇搬進了<b>最大的中間那一格</b>
+（孕婦本來在左上，窗戶跟著她一起搬過去），於是被畫得又大又深。
+新增一整段規格：<b>淺色、細、和其他家具同一個線寬、簡單的方格或曲線花樣、只用幾筆</b>，
+四條紅線 —— <b>不可以粗、不可以深色、不可以是一排沒有橫向連接的直條、不可以是一整片密格子</b>。
+⚠ <b>通則：一個名詞如果它的字面意思就是那個壞結果，換掉那個名詞，不要在旁邊加形容詞。</b></p>
+<p><b>③ 順手找到第三件（你沒有提，是我看畫面看到的）</b>：
+格線從細的深色線變成<b>很寬的白帶</b>，那幾條白帶自己就佔掉不少面積，也在把整張圖洗淡。
+原本只寫「細的手繪格線」，沒有說<b>它是一條線不是一條帶</b> ——
+補上：格線是一條深色的手繪線，粗細不超過人物的輪廓線，永遠不是一條白色的寬縫。</p>
 <p>Ⓐ~Ⓔ 留著沒有動，往下捲還在。</p>
 </div>
 
@@ -232,7 +258,7 @@ footer ol{padding-left:1.2rem}
     <p><b>右下那一格是診所</b>：醫師（白袍配淺鼠尾草綠刷手服）站前半步，<b>手往左上攤開、穿過整張圖</b>；護理師（只有刷手服、暗一階的青藍）站後半步，側頭往同一個方向點頭。<b>兩個人都轉向左上，臉與手都在那一格的上半部</b>（那一格貼著畫面下緣，會被卡片切掉一截）。</p>
     <p><b>比例 4:3</b>，比站上現在那十一張高（見最上面那一段）。</p>
     <h3>擋掉的坑</h3>
-    <ul><li>⚠⚠⚠ <b>第六版（09-05 更晚）治的是「首頁卡片的重點都在中間的醫事人員」，量過是三件事疊起來的</b>：首頁卡的縮圖是 <b>16:9</b>，所以 4:3 的圖上下各被裁掉 <b>12.4%</b>；而<b>裁切是置中的</b>，於是<b>中間那一格是七格裡唯一完全沒被裁到的</b>（其餘六格各被切掉一塊）；再加上它本來就最大（整張圖 32.3%、在卡片那一條裡 <b>36.1%</b>）—— <b>卡片上唯一完整、最大、又在正中央的東西就是那兩位醫事人員</b>。實際裁成 393px 看過，六個人只剩碎片。</li><li>⚠⚠⚠ <b>通則：一張圖會在兩個尺寸、兩個比例底下被看</b> —— 文章頁是完整的 4:3、首頁卡是置中裁切的 16:9。<b>「畫面正中央」在文章頁只是構圖的一個位置，在卡片上等於唯一的主角。</b>畫之前先問：<b>這張圖被裁成卡片之後，站在正中央的是誰？</b>四件改動：右下換成診所（兩位轉向左上、手往左上伸；⚠ 那一格貼著下緣，明寫<b>臉與手都要在那一格的上半部</b>）／中間換成孕婦（剪影就讀得出來）／左上換成量血糖的那位／每一格的顏色跟著位置重排。⚠ <b>中間那一格仍然最大是刻意的</b>：站上量過「多格分割、沒有視覺中心的場面，縮到小尺寸會整張糊掉」，所以是換掉站在中央的人，不是拆掉中央。</li><li>⚠⚠⚠ <b>第五版（09-05 更晚）治的是「變成蠟筆風格了」，而且成因是我第四版的 diff</b>：量顆粒（3×3 鄰域的亮度極差）—— 真正平塗的面積站上是 22~31%、第三版 32.5%，<b>第四版只剩 9.1%</b>；有硬邊的像素站上 21~32%、<b>第四版 54.2%</b>，多出來的不是輪廓是<b>填色裡面的筆觸</b>。逐行比對第三、四版：<b>①「抄它顏色多平」被我刪掉</b>（第四版為了強調臉把後半整句換掉，而那是唯一一句叫模型看參考圖顏色怎麼上的）、<b>②「診所那一角」與「接納與介紹」兩整段被覆蓋掉</b>（第二版那個單調的成因回來一半）、<b>③「每個表面都有色鉛筆顆粒」</b>那句<b>從第一版就在</b>、前三版都沒事，第四版把「手繪／很快／不準」的字加多之後它就變成主角了。</li><li>⚠⚠⚠ <b>通則：每一輪為了治新問題而重寫某一段，會順手弄丟上一輪為了治舊問題寫進去的句子。</b>三輪連著發生。做法：<b>改完一定要 diff 上一版</b>，逐條問「這一行是為了治什麼，現在還在不在」，並<b>把治過的病寫成守門</b>（產生器現在擋十二件）。第五版四件：那一句補回來並排到最前面；顆粒整句換成「<b>填色裡面沒有任何筆觸</b>」＋判準「看起來像用蠟筆或色鉛筆塗的，就是錯的」；「沒有一樣東西是畫準的」收掉（它和「填色要平」互相拉扯）；<code>AVOID</code> 最前面補一整排蠟筆／排線／紙紋／毛邊。</li><li>⚠⚠⚠ <b>第四版（09-05 更晚）治的是「人的臉變得有點呆板」，成因是第三版的提示詞自己寫的</b>：治「太寫實」那一段<b>全部都是禁令</b>（沒有睫毛／眼白／反光點／眼皮的褶／陰影／腮紅／一根根的頭髮 —— 七條全是「不要有什麼」，一條「要有什麼」都沒有），寫實是拿掉了，<b>表情的載體也順手被清空</b>。對照站上三張放大：<b>眉毛</b>每張臉都有、角度就是情緒（第三版一個字都沒提）；<b>嘴</b>開合幅度最大，笑起來是張開的一個形狀＋一塊淺色的牙（第三版寫「嘴是一筆」）；<b>眼睛</b>開心時彎成月牙；<b>腮紅</b>站上有、第三版直接禁掉；<b>年紀的線</b>（嘴邊一條笑紋、眼尾兩筆）也被「no contour」一起掃掉。</li><li>⚠⚠⚠ <b>第二個成因也是我寫的：「六個人都很平常、很自在」</b> —— 那句是為了擋病容，卻等於叫它畫六張一樣的表情。現在<b>逐格點名</b>（孕婦低頭偷偷笑／阿嬤伸手拿杯子、眉毛抬起來／中年男子一邊眉毛高、嘴偏一邊／量血糖的人刻意就是很平常／半夜那位眼睛只剩一條縫／頭巾那位讀到有趣的地方笑出來），中間兩位也各給一種。判準也多一條反方向的：<b>七張臉如果互換位置沒有人看得出來，也是錯的</b>。</li><li>⚠⚠⚠ <b>第三版（09-05 更晚）治的是「還是比站上寫實了一點」，而且是量過才改的</b>：站上十一張自己就分兩群，〈定期檢查〉48%、〈貝氏刷牙法〉50% 的面積是近白的，<b>比第二版那張還淡</b> —— 所以「太寫實」不在顏色。真正的成因是兩件<b>「畫得太準」</b>：<b>臉有立體感</b>（眼皮、眼白、反光點、顴骨、一根根的頭髮）、<b>每一樣東西用的筆畫太多</b>（電風扇畫出整圈護網、磁磚畫出完整格線、透視是準的）。</li><li>⚠⚠⚠ <b>而這兩件是第二版的提示詞自己寫出來的</b>：那一段「兩層畫法」我寫了「環境要細到你叫得出這是什麼房間」——<b>那句話等於在叫它畫準，而畫得準正是寫實的定義</b>；它同時是整份最長的一段（＝口外那一輪的通則：哪一段字最多，模型就把哪一個當主角）。第三版新增<b>「臉與手」</b>與<b>「用最少的筆畫」</b>兩段放到最前面，並把「兩層畫法」砍掉一半、反過來寫成「房間不是比人更細，是比人更粗略；東西多，每一樣簡單」。</li><li>⚠⚠⚠ <b>出圖之前要先餵上面那三張參考圖</b> —— 風格用文字描述一定會漂（〈生物陶瓷〉那一輪的形狀失敗三四輪，改成給圖之後一次就中）。提示詞第一段明寫「文字和參考圖衝突時以參考圖為準」。</li><li>⚠⚠ <b>「環境要更寫實」和「環境要淡化」不衝突，是兩件事</b>：要的是<b>東西多、但畫得淡</b>。提示詞多了一整段「兩層畫法」——人用最深最粗的線、房間裡的東西樣樣都畫但線更細更淡，並明寫「環境的線永遠不可以和人的線一樣深」。唯一例外是那個人手上正拿著的東西。</li><li>⚠⚠ <b>六格的家從一句話換成一張道具清單</b>（磁磚牆、瓦斯爐上的水壺、掛著的鍋鏟、竹編籃、立扇、塑膠桌巾、電鍋、鐵窗、瀝水架、藤椅、針織毯……）。第一版單調的成因就在這裡：中間那一格原本只寫「一點診所的暗示」。</li><li>⚠ 順帶擋掉<b>時鐘、月曆、手機與電腦螢幕、任何數位顯示</b> —— 六個家一寫實它們就會自己長出來，而它們身上一定有數字。血糖機那個小螢幕也逐項點名了。</li><li>⚠ <b>不做對話框</b> —— 這一站的圖一個字都不能有，而空的對話框讀起來是「在想一件沒有內容的事」。參考的那三張日本海報全部靠文字說話，我們不能照抄那一半。<b>要對話框版，一句話就換得掉。</b></li><li>⚠ <b>兩位醫事人員都不看鏡頭</b>（站上的紅線）。「接納」靠身體微微前傾與攤開的手，「介紹」靠兩個人都在看那幾格。要她們看鏡頭也是一句話，但要你先點頭。</li><li>⚠⚠ <b>上下各 12% 會被首頁的卡片切掉</b>（卡片縮圖固定 16:9），所以臉和那幾樣關鍵的東西一個都不能放在那裡 —— 提示詞裡已經寫死這一條。</li></ul>
+    <ul><li>⚠⚠⚠ <b>第七版（09-05 更晚）治的是「顏色變單調」與「窗戶像監獄鐵窗」，而顏色那一件又是我第六版改壞的</b>：第六版為了讓顏色跟著位置重排，補了一句「<code>and that panel keeps the palest, creamiest background of the seven</code>」——<b>那是整份提示詞裡唯一一句真的講到「背景是什麼顏色」的話，而它說的是 cream</b>。在那之前背景只有一句很虛的「各給一格一個淡淡的色調」，七個底色<b>從來沒有被指名過</b>；第五版有七個不同的底，是靠那一串<b>衣服</b>的顏色順帶帶開的。⚠⚠ <b>通則：一份規格裡「唯一具體的那一條」會變成全場的規則</b> —— 一個維度只有一句虛的描述時它其實沒有被指定，是靠別的東西順帶撐著的。第七版把<b>底色與衣服拆成兩份清單</b>、七格逐格指名，並收一句判準：<b>有人瞄一眼，要能單靠顏色分出這一格和隔壁不是同一格。</b></li><li>⚠⚠⚠ <b>窗戶：用字本身就在叫它畫監獄</b> —— 兩處寫的都是 <code>a barred Taiwanese window</code>，而 <code>barred</code> 就是「有柵欄的」；第六版還把其中一扇搬進了<b>最大的中間那一格</b>（孕婦本來在左上，窗戶跟著她搬過去），於是被畫得又大又深。新增一整段：<b>淺色、細、和其他家具同一個線寬、簡單的方格或曲線花樣、只用幾筆</b>，四條紅線（不可以粗／深色／一排沒有橫向連接的直條／一整片密格子），並明寫<b>先看到的是透進來的日光</b>。⚠ <b>通則：一個名詞如果它的字面意思就是那個壞結果，換掉那個名詞，不要在旁邊加形容詞。</b>順手還修了第三件（使用者沒提）：<b>格線從細的深色線變成很寬的白帶</b>，也在把整張圖洗淡 —— 補上「格線是一條線不是一條帶」。</li><li>⚠⚠⚠ <b>第六版（09-05 更晚）治的是「首頁卡片的重點都在中間的醫事人員」，量過是三件事疊起來的</b>：首頁卡的縮圖是 <b>16:9</b>，所以 4:3 的圖上下各被裁掉 <b>12.4%</b>；而<b>裁切是置中的</b>，於是<b>中間那一格是七格裡唯一完全沒被裁到的</b>（其餘六格各被切掉一塊）；再加上它本來就最大（整張圖 32.3%、在卡片那一條裡 <b>36.1%</b>）—— <b>卡片上唯一完整、最大、又在正中央的東西就是那兩位醫事人員</b>。實際裁成 393px 看過，六個人只剩碎片。</li><li>⚠⚠⚠ <b>通則：一張圖會在兩個尺寸、兩個比例底下被看</b> —— 文章頁是完整的 4:3、首頁卡是置中裁切的 16:9。<b>「畫面正中央」在文章頁只是構圖的一個位置，在卡片上等於唯一的主角。</b>畫之前先問：<b>這張圖被裁成卡片之後，站在正中央的是誰？</b>四件改動：右下換成診所（兩位轉向左上、手往左上伸；⚠ 那一格貼著下緣，明寫<b>臉與手都要在那一格的上半部</b>）／中間換成孕婦（剪影就讀得出來）／左上換成量血糖的那位／每一格的顏色跟著位置重排。⚠ <b>中間那一格仍然最大是刻意的</b>：站上量過「多格分割、沒有視覺中心的場面，縮到小尺寸會整張糊掉」，所以是換掉站在中央的人，不是拆掉中央。</li><li>⚠⚠⚠ <b>第五版（09-05 更晚）治的是「變成蠟筆風格了」，而且成因是我第四版的 diff</b>：量顆粒（3×3 鄰域的亮度極差）—— 真正平塗的面積站上是 22~31%、第三版 32.5%，<b>第四版只剩 9.1%</b>；有硬邊的像素站上 21~32%、<b>第四版 54.2%</b>，多出來的不是輪廓是<b>填色裡面的筆觸</b>。逐行比對第三、四版：<b>①「抄它顏色多平」被我刪掉</b>（第四版為了強調臉把後半整句換掉，而那是唯一一句叫模型看參考圖顏色怎麼上的）、<b>②「診所那一角」與「接納與介紹」兩整段被覆蓋掉</b>（第二版那個單調的成因回來一半）、<b>③「每個表面都有色鉛筆顆粒」</b>那句<b>從第一版就在</b>、前三版都沒事，第四版把「手繪／很快／不準」的字加多之後它就變成主角了。</li><li>⚠⚠⚠ <b>通則：每一輪為了治新問題而重寫某一段，會順手弄丟上一輪為了治舊問題寫進去的句子。</b>三輪連著發生。做法：<b>改完一定要 diff 上一版</b>，逐條問「這一行是為了治什麼，現在還在不在」，並<b>把治過的病寫成守門</b>（產生器現在擋十二件）。第五版四件：那一句補回來並排到最前面；顆粒整句換成「<b>填色裡面沒有任何筆觸</b>」＋判準「看起來像用蠟筆或色鉛筆塗的，就是錯的」；「沒有一樣東西是畫準的」收掉（它和「填色要平」互相拉扯）；<code>AVOID</code> 最前面補一整排蠟筆／排線／紙紋／毛邊。</li><li>⚠⚠⚠ <b>第四版（09-05 更晚）治的是「人的臉變得有點呆板」，成因是第三版的提示詞自己寫的</b>：治「太寫實」那一段<b>全部都是禁令</b>（沒有睫毛／眼白／反光點／眼皮的褶／陰影／腮紅／一根根的頭髮 —— 七條全是「不要有什麼」，一條「要有什麼」都沒有），寫實是拿掉了，<b>表情的載體也順手被清空</b>。對照站上三張放大：<b>眉毛</b>每張臉都有、角度就是情緒（第三版一個字都沒提）；<b>嘴</b>開合幅度最大，笑起來是張開的一個形狀＋一塊淺色的牙（第三版寫「嘴是一筆」）；<b>眼睛</b>開心時彎成月牙；<b>腮紅</b>站上有、第三版直接禁掉；<b>年紀的線</b>（嘴邊一條笑紋、眼尾兩筆）也被「no contour」一起掃掉。</li><li>⚠⚠⚠ <b>第二個成因也是我寫的：「六個人都很平常、很自在」</b> —— 那句是為了擋病容，卻等於叫它畫六張一樣的表情。現在<b>逐格點名</b>（孕婦低頭偷偷笑／阿嬤伸手拿杯子、眉毛抬起來／中年男子一邊眉毛高、嘴偏一邊／量血糖的人刻意就是很平常／半夜那位眼睛只剩一條縫／頭巾那位讀到有趣的地方笑出來），中間兩位也各給一種。判準也多一條反方向的：<b>七張臉如果互換位置沒有人看得出來，也是錯的</b>。</li><li>⚠⚠⚠ <b>第三版（09-05 更晚）治的是「還是比站上寫實了一點」，而且是量過才改的</b>：站上十一張自己就分兩群，〈定期檢查〉48%、〈貝氏刷牙法〉50% 的面積是近白的，<b>比第二版那張還淡</b> —— 所以「太寫實」不在顏色。真正的成因是兩件<b>「畫得太準」</b>：<b>臉有立體感</b>（眼皮、眼白、反光點、顴骨、一根根的頭髮）、<b>每一樣東西用的筆畫太多</b>（電風扇畫出整圈護網、磁磚畫出完整格線、透視是準的）。</li><li>⚠⚠⚠ <b>而這兩件是第二版的提示詞自己寫出來的</b>：那一段「兩層畫法」我寫了「環境要細到你叫得出這是什麼房間」——<b>那句話等於在叫它畫準，而畫得準正是寫實的定義</b>；它同時是整份最長的一段（＝口外那一輪的通則：哪一段字最多，模型就把哪一個當主角）。第三版新增<b>「臉與手」</b>與<b>「用最少的筆畫」</b>兩段放到最前面，並把「兩層畫法」砍掉一半、反過來寫成「房間不是比人更細，是比人更粗略；東西多，每一樣簡單」。</li><li>⚠⚠⚠ <b>出圖之前要先餵上面那三張參考圖</b> —— 風格用文字描述一定會漂（〈生物陶瓷〉那一輪的形狀失敗三四輪，改成給圖之後一次就中）。提示詞第一段明寫「文字和參考圖衝突時以參考圖為準」。</li><li>⚠⚠ <b>「環境要更寫實」和「環境要淡化」不衝突，是兩件事</b>：要的是<b>東西多、但畫得淡</b>。提示詞多了一整段「兩層畫法」——人用最深最粗的線、房間裡的東西樣樣都畫但線更細更淡，並明寫「環境的線永遠不可以和人的線一樣深」。唯一例外是那個人手上正拿著的東西。</li><li>⚠⚠ <b>六格的家從一句話換成一張道具清單</b>（磁磚牆、瓦斯爐上的水壺、掛著的鍋鏟、竹編籃、立扇、塑膠桌巾、電鍋、鐵窗、瀝水架、藤椅、針織毯……）。第一版單調的成因就在這裡：中間那一格原本只寫「一點診所的暗示」。</li><li>⚠ 順帶擋掉<b>時鐘、月曆、手機與電腦螢幕、任何數位顯示</b> —— 六個家一寫實它們就會自己長出來，而它們身上一定有數字。血糖機那個小螢幕也逐項點名了。</li><li>⚠ <b>不做對話框</b> —— 這一站的圖一個字都不能有，而空的對話框讀起來是「在想一件沒有內容的事」。參考的那三張日本海報全部靠文字說話，我們不能照抄那一半。<b>要對話框版，一句話就換得掉。</b></li><li>⚠ <b>兩位醫事人員都不看鏡頭</b>（站上的紅線）。「接納」靠身體微微前傾與攤開的手，「介紹」靠兩個人都在看那幾格。要她們看鏡頭也是一句話，但要你先點頭。</li><li>⚠⚠ <b>上下各 12% 會被首頁的卡片切掉</b>（卡片縮圖固定 16:9），所以臉和那幾樣關鍵的東西一個都不能放在那裡 —— 提示詞裡已經寫死這一條。</li></ul>
     <h3>為什麼提這一案</h3>
     <p>把 Ⓐ 的內容（誰要三個月一次）換一個排法：從「同一張椅子換人坐」變成「六個人各自在自己的生活裡，中間有人在看著他們」。單調的成因是背景一直沒變，不是人不夠多。</p>
     <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="0">複製</button></div>
@@ -303,7 +329,10 @@ because it is part of what they are doing.
 STRUCTURE — The whole picture is ONE MOSAIC of seven panels, like a page of an
 illustrated poster. The panels are irregular polygons of different sizes, fitted together
 edge to edge and separated by THIN HAND-DRAWN GUTTER LINES that are slightly wobbly, never
-ruler-straight and never a regular grid of rectangles. The mosaic fills the whole frame.
+ruler-straight and never a regular grid of rectangles. THE GUTTER IS A LINE, NOT A BAND —
+a single dark hand-drawn stroke, deep forest green, no thicker than the outline of a person.
+It is never a wide white gap or a pale channel between the panels; the panels sit right up
+against each other with only that line between them. The mosaic fills the whole frame.
 Each panel has its own pale background tint, and each panel is a DIFFERENT ROOM with
 DIFFERENT FURNITURE — the six homes must never look like the same house drawn six times.
 
@@ -314,7 +343,8 @@ pregnant, sitting back on a fabric sofa with one hand resting on her middle, the
 holding a slim blank booklet she is reading. FACE: looking down at the booklet, eyes
 curved, one corner of the mouth lifted — quietly pleased. HER ROOM: cushions, a low wooden
 coffee table with a glass of water and a small stack of plain books, slippers on the floor,
-a leafy pot plant, a barred Taiwanese window with daylight coming through, a standing fan.
+a leafy pot plant, a Taiwanese window with daylight coming through and a light window
+grille over it (see WINDOWS below), a standing fan.
 
 THE SIX PANELS AROUND HER: five of them hold ONE ordinary person in their own home, doing
 an ordinary thing, and the sixth — the LOWER RIGHT — is the clinic. EACH ONE HAS A
@@ -340,7 +370,7 @@ strokes.
   the other, mouth a wavy line pushed to one side, looking down at the tablets — thinking
   something over, not worried.  HIS ROOM: a round table with a patterned plastic
   tablecloth, a glass of tea, wooden chairs, a standing fan, a towel over a chair back, a
-  barred window, a remote control and reading glasses on the table.
+  window with the same light grille, a remote control and reading glasses on the table.
   LOWER RIGHT — THE CLINIC. This panel is SMALLER THAN THE CENTRE PANEL and it is a
   SUPPORTING panel, not the subject of the picture. TWO members of clinic staff stand side
   by side, seen from the chest up, BOTH TURNED THREE-QUARTERS TOWARDS THE UPPER LEFT OF THE
@@ -381,6 +411,14 @@ strokes.
   ROOM: a small side table with a vacuum flask, a knitted blanket over her knees, a pot
   plant, a shelf of plain books, and a simple framed picture on the wall with no writing.
 
+WINDOWS — the window grilles are the ordinary Taiwanese kind and they must read as part of
+a home, NEVER AS A PRISON. Each one is a PALE, THIN, LIGHT-COLOURED grille — off-white or
+pale grey, the same weight as the other furniture lines — laid lightly over the daylight,
+in a simple square or gently curved pattern, drawn with only a few strokes. NEVER thick.
+NEVER black, dark brown or any dark colour. NEVER a row of plain vertical bars with nothing
+crossing them. NEVER a dense cage of many lines. The daylight coming through is the thing
+you notice; the grille is a light detail on top of it.
+
 NONE OF THE SIX PEOPLE AT HOME IS ILL, FRAIL, SAD OR FRIGHTENED, and none of them is in a
 hospital or a clinic — but they are not all wearing the same mild pleasant expression
 either. Each has a
@@ -401,13 +439,18 @@ of the picture may hold only background: wall, floor, tint, the edge of a panel.
 LIGHT AND COLOUR — bright ordinary daytime in six of the seven panels, high key, soft
 daylight; no sunset, no long orange shadows. The lower-left night panel is the single
 exception and must read as clearly darker than all the others. Many colours, each of them
-held low and dusty: brick red, mustard, sage green, teal, greyish violet, cream. Give each
-panel a different pale tint for its background and assign the clothes so that no two
-neighbouring people clash: CENTRE dusty rose, upper left warm sand, upper right mustard,
-right pale slate blue, lower left deep blue in shadow, left muted teal with a patterned
-headscarf; in the LOWER-RIGHT CLINIC PANEL the dentist wears a white coat over pale sage
-green and the nurse wears dusty teal, and that panel keeps the palest, creamiest background
-of the seven. Every garment has two or three FLAT steps of colour with hard edges, plus collars,
+held low and dusty: brick red, mustard, sage green, teal, greyish violet, cream.   THE SEVEN BACKGROUNDS ARE SEVEN DIFFERENT COLOURS, AND THIS IS WHAT KEEPS THE PICTURE
+  FROM GOING FLAT. Do not let them drift towards one shared cream or beige. Each panel's
+  walls and floor carry their own tint, pale but clearly readable, and no two panels that
+  touch each other share one: CENTRE pale dusty rose, UPPER LEFT pale mustard gold, UPPER
+  RIGHT warm butter yellow, RIGHT pale slate blue, LOWER RIGHT soft sage green, LOWER LEFT
+  deep dusty blue-grey (the night panel), LEFT pale teal. All of them held low and dusty,
+  never bright and never candy — but SOMEONE GLANCING AT THE PICTURE MUST BE ABLE TO TELL
+  ONE PANEL FROM THE NEXT BY COLOUR ALONE.
+  THE CLOTHES sit on top of those tints and must not sink into them: centre a deeper
+  terracotta rose, upper left mustard, upper right ochre, right pale slate blue, lower left
+  grey in shadow, left muted teal with a patterned headscarf; in the LOWER-RIGHT CLINIC
+  PANEL the dentist wears a white coat over pale sage green and the nurse wears dusty teal. Every garment has two or three FLAT steps of colour with hard edges, plus collars,
 cuffs and hems — never a soft airbrushed gradient. As a small accent only, a deep forest
 green (#3f654a / #2c5238) on the gutter lines and on one shelf behind the staff — a touch,
 never a wash. Teeth, wherever they show, stay clean near-white.

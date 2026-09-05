@@ -399,6 +399,57 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 ILLUSTRATION.md 第十一節量過：**多格分割、沒有視覺中心的場面，縮到小尺寸會整張糊掉**。
 所以不能把七格拉成一樣大 —— 要的是**換掉站在中央的那個人**，不是拆掉中央。
 
+---
+
+#### ⚠⚠⚠ 第七版（2026-09-05 更晚）：顏色變單調、窗戶像監獄鐵窗 —— **顏色那一件又是我第六版改壞的**
+
+使用者：「這個版本位置改好了，但**有一些人的環境變得顏色單調**，**窗戶像監獄鐵窗**，
+這個上一版表現比較好。」
+
+⚠ **這一輪的第六版出圖沒有存進容器裡**，所以**沒有辦法逐像素量它**（前幾輪都量得到）。
+底下的成因是**逐行 diff 提示詞**得到的，不是從畫面猜的。
+
+**一、顏色 —— 我第六版動的正好就是那一段。**
+第六版為了讓顏色跟著位置重排，把那一句改成：
+
+    …CENTRE dusty rose, upper left warm sand, …, and that panel keeps the
+    palest, creamiest background of the seven.
+
+⚠⚠⚠ **那是整份提示詞裡唯一一句真的講到「背景是什麼顏色」的話，而它說的是 cream。**
+在那之前，背景只有一句很虛的 `give each panel a different pale tint`，
+七個底色從來沒有被指名過 —— 第五版能有七個不同的底，是靠那一串**衣服**的顏色
+順帶把每一格帶開的。我第六版把那一串改成純粹的衣服清單，又補了一句具體的
+「最米白」，**唯一具體的那句就變成全場的規則**（＝口外那一輪那條
+「哪一段最具體／字最多，模型就把哪一個當主角」）。
+另外 `warm sand` 本身就是低彩度的字，正好落在他說最單調的左上。
+
+→ 第七版把**底色與衣服拆成兩份清單**，底色七格逐格指名
+（中間淡玫瑰／左上淡芥末金／右上暖奶油黃／右淡岩藍／右下柔鼠尾草綠／
+左下夜色藍灰／左淡青綠），並收一句判準：
+**「有人瞄一眼，要能單靠顏色分出這一格和隔壁不是同一格。」**
+
+⚠⚠ **通則：一份規格裡「唯一具體的那一條」會變成全場的規則。**
+一個維度如果只有一句虛的描述（「各給一個淡淡的色調」），那它其實沒有被指定 ——
+它是靠別的東西順帶撐著的，哪天那個東西被改了就會整組垮掉。
+**要嘛七格逐格寫死，要嘛就不要在旁邊擺一句具體的。**
+
+**二、窗戶 —— 用字本身就在叫它畫監獄。**
+兩處寫的都是 `a barred Taiwanese window`。台灣的鐵窗是真的，但 `barred` 這個字
+就是「有柵欄的」，而第六版還把其中一扇搬進了**最大的中間那一格**（孕婦本來在左上，
+窗戶跟著她一起搬過去），於是它被畫得又大又深。
+→ 第七版新增一整段 `WINDOWS`：**淺色、細、和其他家具同一個線寬、簡單的方格或曲線花樣、
+只用幾筆**；四條紅線 —— **不可以粗、不可以深色、不可以是一排沒有橫向連接的直條、
+不可以是一整片密密麻麻的格子**。並明寫**先看到的是透進來的日光，鐵花窗只是上面一層淡淡的細節**。
+
+⚠ **通則：一個名詞如果它的字面意思就是那個壞結果，換掉那個名詞，不要在旁邊加形容詞。**
+
+**三、順手找到第三件（他沒有提，是我看畫面看到的）：格線從細的深色線變成很寬的白帶。**
+七格之間那幾條白色寬帶自己就佔掉不少面積，也在把整張圖洗淡。
+`STRUCTURE` 原本只寫「細的手繪格線」，沒有說**它是一條線不是一條帶**。
+→ 補一句：**格線是一條深色的手繪線，粗細不超過人物的輪廓線，永遠不是一條白色的寬縫。**
+
+⚠ 這一輪照樣逐條 diff 過第六版：前六版治好的十條都還在，五條不可以回來的都沒有回來。
+
 ⚠ **這一輪逐條 diff 過第五版**（＝第五版學到的那條）：
 顏色多平、填色裡沒有筆觸、臉不是空的、房間那一段、接納與介紹那一段，五條都還在；
 顆粒、嘴巴一筆、六張一樣的臉、細到叫得出房間、沒有一樣東西是畫準的，五條都沒有回來。
@@ -858,7 +909,10 @@ because it is part of what they are doing.
 STRUCTURE — The whole picture is ONE MOSAIC of seven panels, like a page of an
 illustrated poster. The panels are irregular polygons of different sizes, fitted together
 edge to edge and separated by THIN HAND-DRAWN GUTTER LINES that are slightly wobbly, never
-ruler-straight and never a regular grid of rectangles. The mosaic fills the whole frame.
+ruler-straight and never a regular grid of rectangles. THE GUTTER IS A LINE, NOT A BAND —
+a single dark hand-drawn stroke, deep forest green, no thicker than the outline of a person.
+It is never a wide white gap or a pale channel between the panels; the panels sit right up
+against each other with only that line between them. The mosaic fills the whole frame.
 Each panel has its own pale background tint, and each panel is a DIFFERENT ROOM with
 DIFFERENT FURNITURE — the six homes must never look like the same house drawn six times.
 
@@ -869,7 +923,8 @@ pregnant, sitting back on a fabric sofa with one hand resting on her middle, the
 holding a slim blank booklet she is reading. FACE: looking down at the booklet, eyes
 curved, one corner of the mouth lifted — quietly pleased. HER ROOM: cushions, a low wooden
 coffee table with a glass of water and a small stack of plain books, slippers on the floor,
-a leafy pot plant, a barred Taiwanese window with daylight coming through, a standing fan.
+a leafy pot plant, a Taiwanese window with daylight coming through and a light window
+grille over it (see WINDOWS below), a standing fan.
 
 THE SIX PANELS AROUND HER: five of them hold ONE ordinary person in their own home, doing
 an ordinary thing, and the sixth — the LOWER RIGHT — is the clinic. EACH ONE HAS A
@@ -895,7 +950,7 @@ strokes.
   the other, mouth a wavy line pushed to one side, looking down at the tablets — thinking
   something over, not worried.  HIS ROOM: a round table with a patterned plastic
   tablecloth, a glass of tea, wooden chairs, a standing fan, a towel over a chair back, a
-  barred window, a remote control and reading glasses on the table.
+  window with the same light grille, a remote control and reading glasses on the table.
   LOWER RIGHT — THE CLINIC. This panel is SMALLER THAN THE CENTRE PANEL and it is a
   SUPPORTING panel, not the subject of the picture. TWO members of clinic staff stand side
   by side, seen from the chest up, BOTH TURNED THREE-QUARTERS TOWARDS THE UPPER LEFT OF THE
@@ -936,6 +991,14 @@ strokes.
   ROOM: a small side table with a vacuum flask, a knitted blanket over her knees, a pot
   plant, a shelf of plain books, and a simple framed picture on the wall with no writing.
 
+WINDOWS — the window grilles are the ordinary Taiwanese kind and they must read as part of
+a home, NEVER AS A PRISON. Each one is a PALE, THIN, LIGHT-COLOURED grille — off-white or
+pale grey, the same weight as the other furniture lines — laid lightly over the daylight,
+in a simple square or gently curved pattern, drawn with only a few strokes. NEVER thick.
+NEVER black, dark brown or any dark colour. NEVER a row of plain vertical bars with nothing
+crossing them. NEVER a dense cage of many lines. The daylight coming through is the thing
+you notice; the grille is a light detail on top of it.
+
 NONE OF THE SIX PEOPLE AT HOME IS ILL, FRAIL, SAD OR FRIGHTENED, and none of them is in a
 hospital or a clinic — but they are not all wearing the same mild pleasant expression
 either. Each has a
@@ -956,13 +1019,18 @@ of the picture may hold only background: wall, floor, tint, the edge of a panel.
 LIGHT AND COLOUR — bright ordinary daytime in six of the seven panels, high key, soft
 daylight; no sunset, no long orange shadows. The lower-left night panel is the single
 exception and must read as clearly darker than all the others. Many colours, each of them
-held low and dusty: brick red, mustard, sage green, teal, greyish violet, cream. Give each
-panel a different pale tint for its background and assign the clothes so that no two
-neighbouring people clash: CENTRE dusty rose, upper left warm sand, upper right mustard,
-right pale slate blue, lower left deep blue in shadow, left muted teal with a patterned
-headscarf; in the LOWER-RIGHT CLINIC PANEL the dentist wears a white coat over pale sage
-green and the nurse wears dusty teal, and that panel keeps the palest, creamiest background
-of the seven. Every garment has two or three FLAT steps of colour with hard edges, plus collars,
+held low and dusty: brick red, mustard, sage green, teal, greyish violet, cream.   THE SEVEN BACKGROUNDS ARE SEVEN DIFFERENT COLOURS, AND THIS IS WHAT KEEPS THE PICTURE
+  FROM GOING FLAT. Do not let them drift towards one shared cream or beige. Each panel's
+  walls and floor carry their own tint, pale but clearly readable, and no two panels that
+  touch each other share one: CENTRE pale dusty rose, UPPER LEFT pale mustard gold, UPPER
+  RIGHT warm butter yellow, RIGHT pale slate blue, LOWER RIGHT soft sage green, LOWER LEFT
+  deep dusty blue-grey (the night panel), LEFT pale teal. All of them held low and dusty,
+  never bright and never candy — but SOMEONE GLANCING AT THE PICTURE MUST BE ABLE TO TELL
+  ONE PANEL FROM THE NEXT BY COLOUR ALONE.
+  THE CLOTHES sit on top of those tints and must not sink into them: centre a deeper
+  terracotta rose, upper left mustard, upper right ochre, right pale slate blue, lower left
+  grey in shadow, left muted teal with a patterned headscarf; in the LOWER-RIGHT CLINIC
+  PANEL the dentist wears a white coat over pale sage green and the nurse wears dusty teal. Every garment has two or three FLAT steps of colour with hard edges, plus collars,
 cuffs and hems — never a soft airbrushed gradient. As a small accent only, a deep forest
 green (#3f654a / #2c5238) on the gutter lines and on one shelf behind the staff — a touch,
 never a wash. Teeth, wherever they show, stay clean near-white.
