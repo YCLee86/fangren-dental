@@ -167,145 +167,160 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 .pv-note b{color:var(--ink)}
 .pv-note hr{border:0;border-top:1px solid var(--rule);margin:9px 0}
 
-/* ---- 切換條 ---------------------------------------------------------- */
-.pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:9;
-  background:rgba(244,244,245,.96);backdrop-filter:blur(8px);
-  border-top:1px solid var(--rule);padding:7px 10px calc(7px + env(safe-area-inset-bottom))}
-.pv-bar .r{display:flex;gap:6px;align-items:center;overflow-x:auto;
-  scrollbar-width:none;padding-bottom:2px}
-.pv-bar .r::-webkit-scrollbar{display:none}
-.pv-bar .lb{font-size:.66rem;color:var(--ink-soft);flex:none;width:3.1em}
-/* ⚠ 切換條在手機上不能吃掉太多畫面（CLAUDE.md 第八節 hero-motion-mobile 那一輪：
-     第一版量到一屏的 28%，而要判斷的正是那一則）。面板會現場量，超過 24% 要收。
-   ⚠ 每一顆按鈕包在一個 span 裡，那個 span 一定要 display:flex ——
-     不然按鈕會在 span 裡換行、外層的 overflow-x 根本用不到（line-booked 22-13 踩過）。 */
-.pv-bar .r > span[id]{display:flex;gap:6px;flex:none}
-.pv-bar button{flex:none;font:inherit;font-size:.72rem;line-height:1.55;
-  border:1px solid var(--deep);color:var(--deep);background:#fff;
-  border-radius:8px;padding:4px 8px;cursor:pointer;white-space:nowrap}
-.pv-bar button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
-.pv-bar .r + .r{margin-top:4px}
-.pv-bar .r.off{opacity:.38;pointer-events:none}
-.pv-bar .fold{position:absolute;right:10px;top:-31px;border-radius:8px 8px 0 0;
-  border-bottom-color:transparent;font-size:.7rem;padding:3px 10px;
-  background:rgba(244,244,245,.96)}
-.pv-bar.fold-in{padding-top:7px}
-.pv-bar.fold-in .r{display:none}
-.pv-bar.fold-in .fold{position:static;border-radius:8px;border-bottom-color:var(--deep)}
+/* ---- 規格頁：一頁好幾個狀態並排 ---------------------------------------
+   ⚠⚠ 定案之後切換條整條拿掉了（第十一之五節）。一頁從「一個狀態」變成
+   「好幾個狀態並排」，所以凡是用 id 抓的東西都要先改成 class ——
+   line-cancel 那一輪就是這樣踩的：不改的話第二段之後全部量到第一段。 */
+.pv-sec{margin:22px 0 0}
+.pv-sec > h2{font-size:.82rem;font-weight:700;letter-spacing:.02em;margin:0 0 3px}
+.pv-sec > h2 .t{font-size:.86em;font-weight:400;color:var(--ink-soft)}
+.pv-sec > .lead{font-size:.75rem;color:var(--ink-soft);line-height:1.78;margin:0 0 9px}
+.pv-sec > .lead b{color:var(--ink)}
+.pv-sec.on > h2{color:var(--deep)}
+.pv-files{border:1px solid var(--rule);border-radius:10px;background:var(--card);
+  padding:11px 12px;margin:14px 0 0;font-size:.73rem;line-height:1.85;color:var(--ink-soft)}
+.pv-files h2{font-size:.78rem;font-weight:700;color:var(--ink);margin:0 0 5px}
+.pv-files li{margin-left:1.1em}
+.pv-files b{color:var(--ink)}
 </style>
 </head>
 <body>
 
 <div class="pv-wrap">
-  <h1>颱風／臨時休診通知　<span>提案</span></h1>
-  <p class="pv-sub">你 7/10 晚上發的那一則（從系統抓出 7/11 有約的病人，一個一個貼）。<br>
-    <b>文字就用你打的那一份</b>（你 2026-09-05 決定的），所以這一頁只剩一個問題：
-    <b>要不要為了有圖，每個人多貼一次。</b>切換條在最下面。</p>
+  <h1>颱風／臨時休診通知　<span>規格</span></h1>
+  <p class="pv-sub"><b>2026-09-05 定案：Flex 圖卡 ＋ 你 7/10 那一份字。</b><br>
+    切換條已經拿掉，下面是每一種送法各自長什麼樣 ——
+    <b>第一段是定案的那一則</b>，後面是退路與另外兩種情況。</p>
 
   <div class="pv-fact">
-    <h2>先回答：LINE 上可不可行</h2>
+    <h2>定案的一則：什麼時候送、送給誰、誰送</h2>
     <dl>
-      <dt>⚠⚠⚠ 2026-09-05 你說「文字用現況的就好，那是我自己每次打的」——
-        那一句就把圖卡這條路關掉了大半</dt>
-      <dd><b>「你自己打」和「圖卡」在現在的送法下是互斥的。</b><br>
-        ・<b>Flex 圖卡</b>是<b>廠商系統送的模板</b>，字是系統填的。<br>
-        ・<b>圖文訊息</b>的字<b>烘在圖裡</b>。<br>
-        <b>兩種都不是在聊天室打出來的。</b>
-        <b class="y">唯一同時成立的是「一張永遠不變的圖 ＋ 你打的字」</b>
-        （切換條的「文字＋圖」那一格）——代價是<b>每個人要貼兩次</b>。<br>
-        ⚠ 所以下面那張表仍然成立，但<b>你的決定讓它變成一題「值不值得為了圖多貼一次」</b>，
-        不再是「做不做得到」。</dd>
+      <dt>什麼時候</dt>
+      <dd><b>縣府宣布停班停課之後就發</b>，不要等到當天早上 ——
+        你 7/10 晚上 19:37 那一次的時機是對的。</dd>
 
-      <dt>「圖卡」在 LINE 上有兩種，差很多</dt>
-      <dd><b>Flex Message</b> ＝ 你們的綁定完成、約診提醒那種 ——
-        卡片裡是<b>真的文字</b>，可以複製、可以放按鈕。<br>
-        <b>圖文訊息</b> ＝ 一張方圖切成格子，<b>字是烘在圖裡的</b>，
-        LINE 縮到 223px 顯示。</dd>
+      <dt>送給誰</dt>
+      <dd><b>停診那一天有約診的人</b>（現在是人工從系統抓名單、一個一個貼）。</dd>
 
-      <dt>誰送得出來（⚠ <span class="q">後台的型別清單是二手資料</span>，這個容器連不到 LINE 的說明中心）</dt>
-      <dd>
-        <table>
-          <tr><th>誰送</th><th>Flex 圖卡</th><th>只發給那天有約的人</th></tr>
-          <tr><td>① 診所在<b>一對一聊天室</b>貼<br>（＝你現在的做法）</td>
-              <td><span class="n">✗</span> 聊天室的型別裡沒有</td>
-              <td><span class="y">✓</span> 人工挑，就是你現在做的</td></tr>
-          <tr><td>② 後台<b>群發訊息</b></td>
-              <td><span class="n">✗</span> 也沒有</td>
-              <td><span class="n">✗</span> 只能全體或受眾，<br>切不出「那天有約的人」</td></tr>
-          <tr><td>③ <b>廠商</b>從他們系統送</td>
-              <td><span class="y">✓</span> 他們現在四則<br>全都是 Flex</td>
-              <td><span class="y">✓✓</span> 他們的系統<b>本來就知道</b><br>那天有誰</td></tr>
-        </table>
-      </dd>
+      <dt>誰送　<b class="n">⚠ 這一則要廠商送</b></dt>
+      <dd>Flex 圖卡在<b>一對一聊天室</b>與<b>後台群發</b>的型別清單裡都沒有，
+        只有<b>廠商從他們系統送</b>才有（他們現在四則全都是 Flex）。<br>
+        <b class="y">好處是同一條路一起解掉「一個一個貼」</b> ——
+        他們的系統本來就知道那天有誰有約，那正是你人工在抓的東西。</dd>
 
-      <dt>⚠⚠⚠ 但這一則有一件和另外四則都不一樣：<b>內容每次都不一樣</b></dt>
-      <dd>颱風名、日期、縣府宣布了什麼、診所停不停 —— 每一次都要重打。所以：<br>
-        ・<b class="n">字烘進圖的做法（圖文訊息）在這一則是最貴的</b> ——
-        每次颱風都要重做一張圖，而那正是最沒時間的十分鐘。<br>
-        ・<b>Flex 圖卡沒有這個問題</b>（卡片裡是真文字），但它要廠商送。<br>
-        ・<b class="y">純文字沒有這個問題，而且今天就能用。</b></dd>
+      <dt>⚠⚠⚠ 定案帶著一個沒有解掉的矛盾，<b>要跟廠商談的就是這一件</b></dt>
+      <dd>你說過<b>「文字是我自己每次打的」</b>，而<b>Flex 圖卡的字是系統填的</b>
+        —— 這兩件在現在的送法下是互斥的。<br>
+        <b class="y">→ 要談的是：把〔颱風名〕〔日期〕〔星期〕做成他們系統裡
+        可以填的欄位</b>，你在後台填四格、系統發給那天有約的人。<br>
+        ⚠ 談不成的話退回下面那一則<b>純文字</b>（今天就能用、字完全在你手上），
+        圖不會白畫 —— 它跟「文字＋圖」那一格共用同一張。</dd>
 
-      <dt>⚠⚠ 真正的成本不是圖，是<b>那份名單</b></dt>
-      <dd>現在是人工去系統抓名單、一個一個貼。<b>廠商那條路同時解掉「圖卡」和
-        「一個一個貼」</b> —— 而且他們的系統本來就知道 7/11 有哪些人有約，
-        那正是你人工在抓的東西。<br>
-        <b class="y">→ 建議：文字先寫好放著（今天就能用），圖卡當成跟廠商談的一件。</b></dd>
-
-      <dt><b class="y">✅ 圖定稿了</b>（九版）——<b class="y">一張 2:1 兩條路共用</b></dt>
-      <dd>沿用一般牙科著陸頁那張的建築與街道，天氣換成刮風下大雨、<b>鐵門拉下來</b>、
-        路上三個人走得很辛苦。成品 <code>hero-typhoon.jpg</code>（1024×512），
-        上面聊天室那張圖、以及最下面那張 Flex 圖卡的頭圖，<b>吃的是同一個檔</b>。<br>
-        ⚠ 原本以為「聊天室貼的圖」要方的（1040×1040）——<b>那是「圖文訊息」才有的規格</b>；
-        單純貼一張圖不必是方的，所以<b>聊天室那張和 Flex 頭圖是同一張 1024×512</b>，
-        <b class="y">圖先畫、路線後定都不會白畫</b>，而且在你手機上矮 134px。<br>
-        ⚠ 九版裡有六版在治同一類的事：雨的方向（連四版都反）、鐵門畫到騎樓前面、
-        晴天那幾條白弧線跑回來、屋簷的水滴變成冰柱、水滴又大又滿全圖。
-        每一輪的成因與通則都寫在 <code>drafts/line-typhoon-hero-prompt.md</code>。</dd>
-
-      <dt>⚠⚠ 要問廠商的一件（不是美感，是會出事的）</dt>
+      <dt>⚠⚠ 另一件要問的（不是美感，是會出事的）</dt>
       <dd><b>颱風休診那天，系統裡那些約診會變成什麼？</b>
         7/11 的約診，48 小時提醒是 7/9 送的 —— 而那張卡寫著
-        <b>「24 小時沒回應會自動取消並遞補」</b>。
-        停診之後那些約診是留著、還是被系統當成取消？
-        <span class="q">這一題我們不知道，但它決定了下面那句「不算你失約」能不能寫。</span></dd>
+        <b>「24 小時沒回應會自動取消並遞補」</b>。停診之後那些約診是留著、
+        還是被系統當成取消？
+        <span class="q">這一題決定了「這次不算你失約」那句能不能寫
+        （現在的定案沒有寫）。</span></dd>
 
       <dt>要在後台自己按一次確認的（<span class="q">按了才算數</span>）</dt>
-      <dd>① 一對一聊天室的「＋」裡到底有哪幾種型別（有沒有「圖文訊息」）<br>
-        ② 群發的「受眾」能不能上傳名單 —— 可以的話 ② 那一列就活了</dd>
+      <dd>① 一對一聊天室的「＋」裡到底有哪幾種型別<br>
+        ② 群發的「受眾」能不能上傳名單</dd>
     </dl>
   </div>
 
-  <div class="pv-phone">
-    <div class="pv-head">
+  <div class="pv-sec on" data-blk="card">
+    <h2>① 定案　<span class="t">圖卡（Flex）・停診</span></h2>
+    <p class="lead">頭圖 ＋ 你那一份字。<b>一個人一則</b>，系統發，不必人工貼。</p>
+    <div class="pv-phone"><div class="pv-head">
       <img src="../../assets/icon-192.png" alt="">
-      <span class="b">芳仁牙醫診所</span><span class="x">···</span>
-    </div>
-    <div class="pv-chat" id="pv-chat"></div>
+      <span class="b">芳仁牙醫診所</span><span class="x">···</span></div>
+      <div class="pv-chat js-chat"></div></div>
+    <div class="pv-panel js-panel"></div>
+    <p class="pv-note js-note"></p>
   </div>
-  <p class="pv-cap">↑ 這是<b>病人手機上</b>的樣子。你給的截圖是<b>診所端後台</b>
+
+  <div class="pv-sec" data-blk="text">
+    <h2>② 退路 A　<span class="t">純文字・停診（今天就能用）</span></h2>
+    <p class="lead">＝ <b>你現在的做法</b>，一個字都沒有動。
+      廠商那條路談不成就走這個 —— <b>字完全在你手上</b>，缺點只有「沒有圖」。</p>
+    <div class="pv-phone"><div class="pv-head">
+      <img src="../../assets/icon-192.png" alt="">
+      <span class="b">芳仁牙醫診所</span><span class="x">···</span></div>
+      <div class="pv-chat js-chat"></div></div>
+    <div class="pv-panel js-panel"></div>
+    <p class="pv-note js-note"></p>
+  </div>
+
+  <div class="pv-sec" data-blk="img">
+    <h2>③ 退路 B　<span class="t">文字＋一張固定的圖・停診</span></h2>
+    <p class="lead">先貼圖、再貼你打的字。<b>唯一同時做到「有圖」和「字在你手上」的路</b>，
+      而且今天就能用 —— 代價是<b>每個人要貼兩次</b>。</p>
+    <div class="pv-phone"><div class="pv-head">
+      <img src="../../assets/icon-192.png" alt="">
+      <span class="b">芳仁牙醫診所</span><span class="x">···</span></div>
+      <div class="pv-chat js-chat"></div></div>
+    <div class="pv-panel js-panel"></div>
+    <p class="pv-note js-note"></p>
+  </div>
+
+  <div class="pv-sec" data-blk="open">
+    <h2>④ 另一則　<span class="t">照常看診（⚠ 你沒有寫過）</span></h2>
+    <p class="lead"><b class="y">現在沒有這一則，而它擋掉的電話可能比停診那一則還多</b>
+      —— 颱風天病人最常打來問的是「你們有沒有開」，而電話是這間診所的結構性瓶頸
+      （六個月 1,886 通）。<b>底下是我們擬的草稿，不是現況。</b></p>
+    <div class="pv-phone"><div class="pv-head">
+      <img src="../../assets/icon-192.png" alt="">
+      <span class="b">芳仁牙醫診所</span><span class="x">···</span></div>
+      <div class="pv-chat js-chat"></div></div>
+    <div class="pv-panel js-panel"></div>
+    <p class="pv-note js-note"></p>
+  </div>
+
+  <div class="pv-sec" data-blk="after">
+    <h2>⑤ 另一則　<span class="t">颱風過後（⚠ 你沒有寫過）</span></h2>
+    <p class="lead">不是取代「恢復上班後主動致電」那一通，是讓已經在等的人先知道
+      診所回來了。<b>要不要用是診所的決定</b>，因為它會改變服務的樣子。
+      <b>底下是我們擬的草稿，不是現況。</b></p>
+    <div class="pv-phone"><div class="pv-head">
+      <img src="../../assets/icon-192.png" alt="">
+      <span class="b">芳仁牙醫診所</span><span class="x">···</span></div>
+      <div class="pv-chat js-chat"></div></div>
+    <div class="pv-panel js-panel"></div>
+    <p class="pv-note js-note"></p>
+  </div>
+
+  <p class="pv-cap">↑ 這幾張都是<b>病人手機上</b>的樣子。你給的截圖是<b>診所端後台</b>
     （綠泡泡在右邊、有「已讀」），那一側的寬度不是病人看到的寬度。
     ⚠ 近似，不是 LINE 自己的算繪。</p>
 
-  <div class="pv-panel" id="pv-panel"></div>
-  <p class="pv-note" id="pv-note"></p>
-
   <div class="pv-spec">
-    <div class="hd"><h2>要貼進去的字</h2>
+    <div class="hd"><h2>要貼進去的字（停診・定案）</h2>
       <button type="button" class="cp" id="pv-copy">複製</button></div>
     <pre id="pv-spec"></pre>
     <p class="fo">
-      ⚠ <b>〔　〕裡的是每次要重打的</b>（你本來就在打），面板那一列數的就是它。<br>
-      ⚠ 你那一份<b>沒有手動斷行</b>，整段交給 LINE 自動折 —— 那是對的，
-      每次現打的東西不可能去數字數。（我們改寫的那一份才是手動斷行的。）<br>
-      ⚠ <b>什麼時候發</b>：縣府宣布停班停課之後就發，不要等到當天早上 ——
-      你 7/10 晚上 19:37 那一次的時機是對的。</p>
+      ⚠ <b>〔　〕裡的是每次要重打的</b>：颱風名、日期兩處、星期，<b>共 4 處</b>。<br>
+      ⚠ 這一份<b>沒有手動斷行</b>，整段交給 LINE 自動折 —— 那是對的，
+      每次現打的東西不可能去數字數。<br>
+      ⚠⚠ 走圖卡的話這 4 處就是<b>要請廠商做成可填欄位</b>的那 4 格。</p>
   </div>
-</div>
 
-<div class="pv-bar" id="pv-bar">
-  <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
-  <div class="r"><span class="lb">怎麼送</span><span id="sw-v"></span></div>
-  <div class="r"><span class="lb">情況</span><span id="sw-s"></span></div>
+  <div class="pv-files">
+    <h2>檔案</h2>
+    <ul>
+      <li>Flex 的 JSON　<b>drafts/channels/typhoon-card.json</b></li>
+      <li>守門　<b>node drafts/channels/check-typhoon.mjs</b></li>
+      <li>頭圖　<b>preview/line-typhoon/hero-typhoon.jpg</b>（1024×512）<br>
+        產圖 <b>node drafts/channels/typhoon-hero-crop.mjs</b>、
+        原檔 drafts/typhoon-hero-src.jpg、提示詞 drafts/line-typhoon-hero-prompt.md</li>
+      <li>圖片檔　<b>node drafts/channels/typhoon-png.mjs</b>
+        → shot-typhoon-card／-chat／-text.png</li>
+      <li>推導　<b>drafts/channels/README.md 第二十五節</b></li>
+    </ul>
+    <p style="margin-top:6px">⚠ 上線前要把 <b>hero-typhoon.jpg</b> 放到
+      <b>https://fangren.net/assets/line/</b>（同其餘幾張頭圖）。</p>
+  </div>
 </div>
 
 <script>
@@ -313,17 +328,18 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   "use strict";
 
   var TEL = "05-5339369";
-  /* 示範值。⚠ 用你那一則的真實日期，這樣折行判斷才對得上實際會發生的字數。 */
-  var DEMO = { "〔日期〕": "7/11(六)", "〔颱風名〕": "巴威",
+
+  /* 示範值：只是為了讓畫面看起來像真的一則。⚠ 真正的字裡一律寫〔…〕。 */
+  var DEMO = { "〔颱風名〕": "巴威", "〔日期〕": "7/11(六)",
                "〔星期〕": "星期六", "〔原日期〕": "7/11", "〔恢復日〕": "7/14(一)" };
 
   /* ------------------------------------------------------------------
-     文字。**每一行都是手動斷的**，規則：一行不超過 14 個全形字寬（半形算 0.5）。
-     ⚠⚠ 可變的地方一律寫成〔…〕，不要直接寫死 —— 這一頁最重要的那個數字
-        （「每次颱風要改幾處」）就是數它，寫死了就數不出來。
+     文字。
+     ⚠⚠ 可變的地方一律寫成〔…〕，不要直接寫死 —— 面板那一列數的就是它，
+        而走圖卡的話那幾格正是要請廠商做成可填欄位的地方。
      ------------------------------------------------------------------ */
 
-  /* Ⓐ 現況：逐字照你 7/10 那一則抄的，連日期前後那幾個空格都照抄。 */
+  /* ⭐ 定案：逐字照使用者 7/10 那一則抄的，連日期前後那幾個空格都照抄。 */
   var NOW =
 "因應〔颱風名〕颱風來襲，雲林縣政府已宣布 〔日期〕（〔星期〕） 全縣停班停課，" +
 "本診所門診將同步暫停。請已預約 〔日期〕 看診的民眾，切勿自行前往，" +
@@ -331,13 +347,8 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 "若風雨不大而診所恢復開診，將電話連絡當日預約病患就診。\n\n" +
 "為因應天候變化，如後續有異動，將另行公告通知。造成不便，敬請見諒，並祝颱風天平安。";
 
-  /* Ⓑ 新版・停診。
-     ⚠⚠ 改掉的第一件是**順序**：結論（休診、你不用來）擺第一段，
-        縣府宣布什麼是背景、擺第二段。現況把最重要的那一句埋在第一段的最後。
-     ⚠⚠⚠ 改掉的第二件是**那個矛盾**：現況第一段說「暫停、切勿前往」，
-        第二段又說「若風雨不大恢復開診，將電話連絡」—— 病人真正的問題是
-        「我明天到底要不要去」，那一則給了兩個答案。新版把兩種情況收成同一句：
-        **不管哪一種，都是我們打電話給你；在那之前不用出門。** */
+  /* 我們改寫的那一份（?w=new 才看得到，**不是建議換掉**）。
+     留著只為一件事：如果哪天圖卡的版型要用得上，它需要一個短標題和分段。 */
   function stopText(m, t) {
     var s = "颱風天　〔日期〕休診\n\n" +
       "你那天的約診不用來，\n也不用先通知我們。\n";
@@ -350,13 +361,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     return s + "\n颱風天路上不好走，\n祝你平安。";
   }
 
-  /* Ⓑ 新版・照常看診。
-     ⚠⚠ 這一則現在沒有，但它擋掉的電話可能比停診那一則還多 ——
-        颱風天病人最常打來問的是「你們有沒有開」。
-     ⚠⚠⚠ 它的重點不是「我們有開」，是**「你不必勉強來」**：
-        叫人在颱風天冒雨出門是不對的，而且那句話一寫，改期的人就會先打電話
-        而不是直接不出現。
-     ⚠ 這一則診所一定有人在，所以電話那把尺對它無效（面板會把那一列關掉）。 */
+  /* ⚠⚠ 這一則現在沒有，重點不是「我們有開」是**「你不必勉強來」**。 */
   function openText(m) {
     var s = "颱風天　〔日期〕照常看診\n\n" +
       "雲林縣政府宣布當天停班停課，\n診所門診照常，\n你的約診不變。\n\n" +
@@ -366,10 +371,6 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     return s + "\n風雨如果變大、診所提前收，\n我們會再打電話給你。\n祝你平安。";
   }
 
-  /* Ⓑ 新版・颱風過後。
-     ⚠⚠ 這一則是**新的**：你現在的做法是「恢復上班後主動致電」。
-        發這一則不是取代那通電話，是讓已經在等的人先知道診所回來了 ——
-        要不要用是診所的決定，因為它會改變服務的樣子。 */
   function afterText(t) {
     var s = "颱風過去了\n〔恢復日〕起恢復看診\n\n" +
       "你原本〔原日期〕的約診，\n我們會打電話跟你\n重新安排時間。\n" +
@@ -378,74 +379,58 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     return s + "\n路上還是要小心。";
   }
 
-  /* ⚠⚠ 只有「停診」那一則有現況的字（使用者自己打的，逐字照抄）。
-     **「照常看診」與「颱風過後」他從來沒寫過** —— 那兩格只有我們擬的草稿，
-     面板會標出來，不要讓它看起來像已經存在的東西。 */
-  function isMine() { return state.s === "stop" && state.w === "now"; }
-  function textOf() {
-    if (state.s === "open")  return openText(state.m);
-    if (state.s === "after") return afterText(state.t);
-    return state.w === "now" ? NOW : stopText(state.m, state.t);
-  }
-  function fill(s) {
-    Object.keys(DEMO).forEach(function (k) { s = s.split(k).join(DEMO[k]); });
-    return s;
-  }
-  /* 「每次颱風要改幾處」＝ 文字裡〔…〕出現幾次（同一個名字出現兩次就算兩處，
-     因為兩處都要改）。⚠ 這是這一頁最重要的一個數字。 */
-  function varCount(s) { var m = s.match(/〔[^〕]+〕/g); return m ? m.length : 0; }
-
-  /* ------------------------------------------------------------------ */
-  /* ⚠⚠⚠ 2026-09-05 使用者定案：**文字用現況那一份**
-     （「現況的文字是我自己每次打的，所以還好」）。
-     所以這把尺從「哪一版的字」改成純粹的**怎麼送** —— 三格用的都是同一份字。
-     ⚠ 我們改寫的那一份沒有作廢，只是不佔畫面：?w=new 還開得出來。 */
   var VIA = {
     text: { name: "純文字",       n: 1, note: "你現在的做法" },
     img:  { name: "文字＋圖",     n: 2, note: "先貼一張固定的圖，再貼你打的字" },
     card: { name: "圖卡（Flex）", n: 0, note: "廠商從他們系統送" }
   };
-  var WORD = { now: { name: "現況（你打的）" }, new: { name: "我們改寫的" } };
   var SIT = { stop: { name: "停診" }, open: { name: "照常看診" }, after: { name: "颱風過後" } };
-  var MISS = { off: { name: "不寫" }, on: { name: "寫「不算你失約」" } };
-  var PHONE = { off: { name: "不放" }, after: { name: "恢復後才有人接" }, now: { name: "颱風天也有人接" } };
+  var LIST = 30;   /* 名單人數的假設值。⚠ 一天實際幾個約診要問診所。 */
 
-  /* 名單人數：一個**假設值**，用來把「貼幾次」換算成看得懂的工作量。
-     ⚠ 診所一天實際有幾個約診我們不知道，這個數字要問。 */
-  var LIST = 30;
+  /* ⚠⚠ 只有「停診」那一則有現況的字（使用者自己打的，逐字照抄）。
+     另外兩則他從來沒寫過 —— 面板與說明都要標出來。 */
+  function isMine(st) { return st.s === "stop" && st.w === "now"; }
+  function textOf(st) {
+    if (st.s === "open")  return openText(st.m);
+    if (st.s === "after") return afterText(st.t);
+    return st.w === "now" ? NOW : stopText(st.m, st.t);
+  }
+  function fill(s) {
+    Object.keys(DEMO).forEach(function (k) { s = s.split(k).join(DEMO[k]); });
+    return s;
+  }
+  function varCount(s) { var m = s.match(/〔[^〕]+〕/g); return m ? m.length : 0; }
 
-  var state = { v: "text", s: "stop", w: "now", m: "off", t: "after" };
-
+  /* ------------------------------------------------------------------
+     算繪
+     ------------------------------------------------------------------ */
   function el(tag, cls, txt) {
     var n = document.createElement(tag);
     if (cls) n.className = cls;
     if (txt != null) n.textContent = txt;
     return n;
   }
-  function linkify(node, text) {
-    text.split(/(https:\/\/fangren\.net)/).forEach(function (p, i) {
-      if (i % 2) { var a = el("a", null, p); a.href = p; node.appendChild(a); }
+  /* 純文字泡泡裡的電話要可以點（LINE 會自動偵測），圖卡裡的不會 —— 那是真的差別。 */
+  function linkify(node, t) {
+    t.split(new RegExp("(" + TEL + ")")).forEach(function (p, i) {
+      if (i % 2) { var a = el("a", null, p); a.href = "tel:+886" + TEL.replace(/^0|-/g, ""); node.appendChild(a); }
       else node.appendChild(document.createTextNode(p));
     });
   }
-  function row(build, time) {
+  function row(make, time) {
     var r = el("div", "pv-msg");
-    var av = el("div", "pv-av");
-    av.style.background = "url(../../assets/icon-192.png) center/cover";
-    r.appendChild(av);
-    r.appendChild(build());
-    r.appendChild(el("span", "pv-t", time));
+    r.appendChild(el("div", "pv-av"));
+    r.appendChild(make());
+    r.appendChild(el("div", "pv-t", time));
     return r;
   }
   function bubble(t) {
     return function () { var b = el("div", "pv-bub"); linkify(b, t); return b; };
   }
-  /* 聊天室裡那張固定的圖（2026-09-05 定稿並接上）。
-     ⚠⚠ 2026-09-05 從 1:1 改成 2:1：貼進聊天室的圖不必是方的（方的是「圖文訊息」
-       那條路才有的規格），而 2:1 和 Flex 頭圖同一個尺寸 ——**一張圖兩條路都能用**，
-       而且在 390 上矮 134px。**下面那張圖卡吃的就是同一個檔。**
+  /* 聊天室裡那張固定的圖（2026-09-05 定稿）。
      ⚠ `width`／`height` 兩個屬性一定要寫：不寫的話圖還沒下載完高度是 0，
-       面板會量出一張矮一截的對話。 */
+       面板會量出一張矮一截的對話。CSS 那邊還要補 height:auto（呈現屬性會蓋過
+       aspect-ratio，line-auto-reply 踩過兩次）。 */
   function photo() {
     return function () {
       var b = el("div", "pv-bub img");
@@ -456,23 +441,14 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       return b;
     };
   }
-
-  /* Ⓓ Flex 圖卡。⚠⚠ 這一格**不是現在做得到的東西**，是拿去問廠商的那張圖。
-     內容和純文字那一份是同一組事實，只是排成卡片：
-       標題 md 16／內文 sm 14／小字 xs 13，淡藍方塊沿用「綁定完成」那一張。
-     ⚠ 淡藍那一塊指的是**這張卡唯一的行動**（你不用來、我們會打給你）——
-       提醒卡定稿時把淡底拿掉了，那是因為那張卡有兩顆按鈕在收行動；
-       這一張沒有按鈕，淡底是唯一能指出「重點在這一句」的工具。
-     ⚠⚠ 頭圖 2:1（1024×512）—— **和聊天室那張是同一張**（2026-09-05 起兩條路
-       共用一個尺寸），所以圖先畫、路線後定都不會白畫。 */
   /* 有沒有一個「短標題」：第一段最多兩行、每一行 ≤20 個全形字。 */
   function titled(t) {
     var first = t.split("\n\n")[0].split("\n");
     return t.indexOf("\n\n") > 0 && first.length <= 2 &&
       first.every(function (x) { return x.length <= 20; });
   }
-
-  function flexCard() {
+  /* Flex 圖卡。頭圖 2:1（1024×512）—— 和聊天室那張是同一個檔。 */
+  function flexCard(st) {
     return function () {
       var c = el("div", "fx");
       var h = document.createElement("img");
@@ -480,13 +456,11 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       h.width = 1024; h.height = 512; h.alt = "";
       c.appendChild(h);
       var b = el("div", "b");
-      var t = fill(textOf());
-      /* 把純文字那一份切成 標題／行動／背景／小字 —— 同一組字，不另外寫一份。 */
+      var t = fill(textOf(st));
       var seg = t.split("\n\n");
-      /* ⚠⚠⚠ 卡片的版型要有一個**短標題**才成立。現況那一份沒有 ——
+      /* ⚠⚠⚠ 卡片的版型要有一個**短標題**才成立。定案那一份沒有 ——
          它是三大段、第一段就一百多個字，硬切出來的「標題」會是一整塊 16px 粗體。
-         所以這裡先判斷，沒有短標題就整份當內文排，**不要假裝它有結構**。
-         那個判斷本身就是這一頁要給的答案之一（面板有一列在報）。 */
+         所以這裡先判斷，沒有短標題就整份當內文排，**不要假裝它有結構**。 */
       if (titled(t)) {
         b.appendChild(el("h4", null, seg[0]));
         b.appendChild(el("div", "blue", seg[1] || ""));
@@ -502,44 +476,11 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     };
   }
 
-  function render() {
-    var chat = document.getElementById("pv-chat");
-    chat.innerHTML = "";
-    chat.appendChild(el("div", "pv-day", state.s === "after" ? "7/12（日）" : "7/10（五）"));
-    var time = state.s === "after" ? "09:10" : "19:37";
-    if (state.v === "card") chat.appendChild(row(flexCard(), time));
-    else {
-      if (state.v === "img") chat.appendChild(row(photo(), time));
-      chat.appendChild(row(bubble(fill(textOf())), time));
-    }
-
-    bar("sw-v", VIA, "v"); bar("sw-s", SIT, "s");
-    /* ⚠ 失約與電話那兩把尺已經收掉（文字用現況的，那兩句是加在我們那一版裡的），
-       網址參數仍然吃得到：?w=new&m=on&t=now。 */
-    history.replaceState(null, "",
-      location.pathname + "?v=" + state.v + "&s=" + state.s + "&w=" + state.w);
-
-    document.getElementById("pv-spec").textContent = textOf();
-    requestAnimationFrame(measure);
-  }
-
-  function bar(id, set, key) {
-    var boxEl = document.getElementById(id);
-    boxEl.innerHTML = "";
-    Object.keys(set).forEach(function (k) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.textContent = set[k].name;
-      b.setAttribute("aria-pressed", state[key] === k ? "true" : "false");
-      b.onclick = function () { state[key] = k; render(); };
-      boxEl.appendChild(b);
-    });
-  }
-
   /* ------------------------------------------------------------------
      量測。⚠ 孤字用 Range 逐字量、照 top 分組
      （CLAUDE.md 第九節：getClientRects 在 block 上會回整個區塊，會騙人）。
-     ⚠⚠ 佔位框整塊排除（pv-ph）—— 它裡面那兩行說明會被算成「被再折出來的行」。
+     ⚠⚠ 規格頁一頁有好幾段，所以每一個量測都要**限定在那一段裡**（傳 host 進來）
+        —— 用 id 抓的話第二段之後全部量到第一段（line-cancel 23-18 踩過）。
      ------------------------------------------------------------------ */
   function lastLine(node) {
     var best = null, r = document.createRange(), tops = {};
@@ -548,9 +489,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       if (n.parentNode.closest && n.parentNode.closest(".pv-ph")) continue;
       for (var i = 0; i < n.length; i++) {
         /* ⚠⚠ 換行符本身要跳掉。white-space: pre-wrap 之下，段落之間那個空行的
-           "\n" 自己有 rect（高 16px），會被算成一行 —— 三個空行就多三行，
-           症狀是「明明沒有折行，卻報被再折 14/17」。
-           量的是**墨**，不是換行符（同「兩個東西看起來多遠要量墨到墨」那一條）。 */
+           "\n" 自己有 rect（高 16px），會被算成一行 —— 量的是**墨**不是換行符。 */
         if (n.data[i] === "\n") continue;
         r.setStart(n, i); r.setEnd(n, i + 1);
         var b = r.getBoundingClientRect();
@@ -564,10 +503,8 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     }
     return { rows: Object.keys(tops).length, last: best === null ? null : tops[best] };
   }
-  /* 自己斷了幾行 vs 畫出來幾行。⚠ 兩個數字不一樣就表示有一行被**再折**過，
-     那正是「手動斷行卻還是折了」的徵兆（line-cancel 23-11 踩過）。 */
-  function lineCheck() {
-    var nodes = document.querySelectorAll(".pv-chat .pv-bub:not(.img), .pv-chat .fx h4, .pv-chat .fx p, .pv-chat .fx .blue, .pv-chat .fx .xs");
+  function lineCheck(host) {
+    var nodes = host.querySelectorAll(".pv-bub:not(.img), .fx h4, .fx p, .fx .blue, .fx .xs");
     var mine = 0, drawn = 0, orp = 0, wide = 0;
     for (var i = 0; i < nodes.length; i++) {
       var raw = nodes[i].textContent.split("\n").filter(function (x) { return x.length; });
@@ -580,12 +517,10 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     return { mine: mine, drawn: drawn, orp: orp, wide: wide };
   }
 
-  /* ⚠⚠ 兩張表，不是一張 —— 第一版把它們混在一列印成「紅線 2 處」，
-     那會讓使用者已經定案的那一份字每次都被標紅，而那兩件根本不同級：
+  /* ⚠⚠ 兩張表，不是一張 ——
      **紅線是「寫了就是說謊」，口氣是「我覺得可以更好」。**
-     通則：使用者選定的東西還要繼續量，但量出來的東西要標對級別，
-     不然面板就從「量尺」變成「一直在勸」。
-     ⚠ 改文案要回來改這兩張表（同 line-review 21-11 那條）。 */
+     使用者已經決定用他自己的字，所以口氣那一列不上紅色，只記著。
+     ⚠ 改文案要回來改這兩張表。 */
   var RED = [
     { re: /隨時|馬上回|盡快回|有問題再(跟|和)我們說|線上(客服|回覆)/,
       why: "承諾了這個帳號做不到的事（沒有專人即時回覆），颱風天更沒有" }
@@ -597,50 +532,46 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       why: "公告的詞（民眾／切勿／另行公告），而這是一對一發給有約的人" }
   ];
 
-  function measure() {
+  function measure(st, host, panel, note) {
     var vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
-    var panel = document.getElementById("pv-panel");
-    var box = document.querySelector(".pv-chat .pv-bub:not(.img), .pv-chat .fx");
-    var msgs = document.querySelectorAll(".pv-chat .pv-msg");
+    var box = host.querySelector(".pv-bub:not(.img), .fx");
+    var msgs = host.querySelectorAll(".pv-msg");
     var tot = 0;
     for (var i = 0; i < msgs.length; i++) tot += msgs[i].getBoundingClientRect().height + 11;
     var pct = tot / vh * 100;
-    var lc = lineCheck();
-    var raw = textOf();
+    var lc = lineCheck(host);
+    var raw = textOf(st);
     var vars = varCount(raw);
-    var via = VIA[state.v];
+    var via = VIA[st.v];
 
     /* 這個螢幕實際給得起泡泡多寬 ＝ 那一列扣掉頭像、時間與兩個間隙。
        ⚠ 要從真的那一列量，不要用 .pv-chat 的寬度減常數 —— 間隙改了就會說謊。 */
-    var cap = 268, r0 = document.querySelector(".pv-chat .pv-msg");
+    var cap = 268, r0 = host.querySelector(".pv-msg");
     if (r0) {
       var av = r0.querySelector(".pv-av"), tm = r0.querySelector(".pv-t");
       cap = Math.min(268, r0.clientWidth - (av ? av.offsetWidth : 0) -
         (tm ? tm.offsetWidth : 0) - 14);
     }
     var doc = document.documentElement;
-    var barH = document.getElementById("pv-bar").getBoundingClientRect().height;
-    var barPct = barH / vh * 100;
-
     var red = [], tone = [];
     RED.forEach(function (x) { if (x.re.test(raw)) red.push(x.why); });
     TONE.forEach(function (x) { if (x.re.test(raw)) tone.push(x.why); });
 
     panel.innerHTML =
-      "<b>" + via.name + "・" + SIT[state.s].name + "</b>　" + via.note +
+      "<b>" + via.name + "・" + SIT[st.s].name + "</b>　" + via.note +
       "　高 <b>" + (box ? box.getBoundingClientRect().height.toFixed(0) : "—") + "px</b>" +
       "　＝ " + (pct > 100 ? '<span class="no">一屏的 ' + pct.toFixed(0) + "%（要捲兩次）</span>"
         : pct > 72 ? '<span class="no">一屏的 ' + pct.toFixed(0) + "%</span>"
                    : '<span class="ok">一屏的 ' + pct.toFixed(0) + "%</span>") + "<br>" +
 
       "⚠ <b>每次颱風要重打的地方</b>　<b>" + vars + " 處</b>" +
-      (isMine() ? "（颱風名、日期 ×2、星期）" : "") + "——" +
-      (state.v === "text"
+      (isMine(st) ? "（颱風名、日期 ×2、星期）" : "") + "——" +
+      (st.v === "text"
         ? ' <b class="ok">你在聊天室直接打，沒問題</b>'
-        : state.v === "img"
+        : st.v === "img"
           ? ' 字仍然是你打的，<b class="ok">圖永遠不用重做</b>'
-          : ' <b class="no">圖卡的字是排版好的、不是聊天室打的</b> —— 要嘛廠商每次幫你改，要嘛做成他們系統的欄位') +
-      "<br>" +
+          : ' <b class="no">圖卡的字是排版好的、不是聊天室打的</b> —— 這 ' + vars +
+            ' 格要請廠商做成他們系統裡可以填的欄位') + "<br>" +
 
       "圖卡的版型　" + (titled(raw)
         ? '<b class="ok">有短標題，排得起來</b>'
@@ -655,9 +586,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
           (via.n > 1 ? "</span>" : "</b>")) +
       "　<span style=\"opacity:.8\">（30 人是假設值，一天實際幾個約診要問）</span><br>" +
 
-      /* ⚠ 現況那一則是**整段交給自動折行**的（沒有手動斷行），
+      /* ⚠ 定案那一則是**整段交給自動折行**的（沒有手動斷行），
          拿「自己斷幾行／畫出幾行」去比對它沒有意義，會永遠報紅。 */
-      (isMine()
+      (isMine(st)
         ? "畫出 <b>" + lc.drawn + "</b> 行<span style=\"opacity:.8\">（你打的那一份交給自動折行）</span>・"
         : "自己斷 <b>" + lc.mine + "</b> 行／畫出 <b class=\"" +
           (lc.drawn > lc.mine ? "no" : "ok") + "\">" + lc.drawn + "</b> 行・") +
@@ -669,80 +600,101 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 
       "水平溢出 <b class=\"" + (doc.scrollWidth > doc.clientWidth ? "no" : "ok") + "\">" +
       (doc.scrollWidth - doc.clientWidth) + "</b>px・" +
-      "切換條佔一屏 <b class=\"" + (barPct > 24 ? "no" : "ok") + "\">" + barPct.toFixed(1) + "%</b>・" +
       "你的螢幕 " + Math.round(window.innerWidth) + "×" + Math.round(vh) + "<br>" +
 
       "紅線 " + (red.length
         ? '<b class="no">' + red.length + " 處</b>　" + red.join("；")
         : '<b class="ok">0 處</b>') +
-      /* ⚠ 口氣那一列是**觀察不是錯**：使用者已經決定用他自己的字，
-         所以這一列不上紅色，只記著。 */
       "・口氣 <b>" + tone.length + " 處</b>" +
       (tone.length ? '<span style="opacity:.8">　' + tone.join("；") +
         "（你決定用自己的字，這一列只是記著，不是要你改）</span>" : "");
 
-    document.getElementById("pv-note").innerHTML = note();
+    note.innerHTML = noteOf(st);
   }
 
-  function note() {
-    var s = "";
-    if (isMine()) {
-      s = "<b>這是你 7/10 打的那一份，一個字都沒動。</b>" +
+  function noteOf(st) {
+    if (st.s === "open")
+      return "<b>⚠ 這一則你沒有寫過 —— 這是我們擬的草稿。</b>" +
+        "<br>⚠⚠ 它的重點<b>不是</b>「我們有開」，是<b>「你不必勉強來」</b> ——" +
+        "叫人在颱風天冒雨出門是不對的，而且那句話一寫，不來的人會<b>先打電話</b>" +
+        "而不是直接不出現。";
+    if (st.s === "after")
+      return "<b>⚠ 這一則你沒有寫過 —— 這是我們擬的草稿。</b>" +
+        "<br>你現在的做法是「恢復上班後主動致電」。發這一則<b>不是取代那通電話</b>，" +
+        "是讓已經在等的人先知道診所回來了。";
+    if (!isMine(st))
+      return "<b>我們改寫的那一份（<code>?w=new</code> 才看得到，不是建議你換掉）。</b>";
+    if (st.v === "card")
+      return "<b>⭐ 這是定案的那一則。</b>字是你 7/10 打的那一份，一個字都沒動；" +
+        "圖是定稿的那一張（<code>hero-typhoon.jpg</code>）。" +
+        "<hr><b class=\"no\">⚠⚠⚠ 它有一個沒有解掉的矛盾，那就是要跟廠商談的事：</b>" +
+        "圖卡的字是<b>系統填的</b>，不是你在聊天室打的。" +
+        "<b class=\"ok\">要談的是把〔颱風名〕〔日期〕〔星期〕做成他們系統裡可以填的欄位</b>" +
+        "（四格），你填完、系統發給那天有約的人 —— 那條路同時把「一個一個貼」也解掉。" +
+        "<br>⚠ 談不成就退回下面那兩則，<b>圖不會白畫</b>。";
+    if (st.v === "text")
+      return "<b>這是你 7/10 打的那一份，一個字都沒動。</b>" +
         "<br>你說那些字是自己每次打的 —— 那把這一則的成本講清楚了：" +
         "<b>颱風名、日期兩處、星期</b>，四個地方每次重打，而你本來就在打。" +
-        "<b class=\"ok\">純文字這條路沒有任何額外成本。</b>";
-    } else if (state.s === "stop") {
-      s = "<b>我們改寫的那一份（<code>?w=new</code> 才看得到，不是建議你換掉）。</b>" +
-        "<br>留著只為一件事：如果哪天真的走圖卡，<b>圖卡需要一個短標題和分段</b>，" +
-        "而你那一份是三大段、第一段就一百多個字。這一份是「同樣的內容排成卡片長什麼樣」。";
-    } else if (state.s === "open") {
-      s = "<b>⚠ 這一則你沒有寫過 —— 底下是我們擬的草稿，不是現況。</b>" +
-        "<br>颱風天病人最常打來問的是<b>「你們有沒有開」</b>，而電話是這間診所的" +
-        "結構性瓶頸（六個月 1,886 通，還只算 Google 商家那一種）。主動發一則，" +
-        "那一批電話就不會進來。" +
-        "<br>⚠⚠ 但它的重點<b>不是</b>「我們有開」，是<b>「你不必勉強來」</b> ——" +
-        "叫人在颱風天冒雨出門是不對的，而且那句話一寫，不來的人會<b>先打電話</b>" +
-        "而不是直接不出現。<b>要用的話字自己改，跟停診那一則一樣你打就好。</b>";
-    } else {
-      s = "<b>⚠ 這一則你也沒有寫過 —— 我們擬的草稿。</b>" +
-        "<br>你現在的做法是「恢復上班後主動致電」。發這一則<b>不是取代那通電話</b>，" +
-        "是讓已經在等的人先知道診所回來了（「已經接到電話的話就不用理這一則」" +
-        "那句就是為了不打架）。<b>要不要用是你的決定</b>，它會改變服務的樣子。";
-    }
-
-    if (state.v === "text") {
-      s += "<hr><b class=\"ok\">純文字 —— 就是你現在的做法，沒有要改的東西。</b>" +
-        "剩下的只有兩件<b>不必改文字</b>就能做的：把三則先寫好放著（那一刻寫得慌張是必然的），" +
-        "以及跟廠商談那份名單（下面事實區最後一段）。";
-    }
-    if (state.v === "img") {
-      s += "<hr><b>文字＋一張固定的圖</b>：圖只放<b>不會變的東西</b>" +
-        "（颱風天的插畫＋診所名），<b>字全部還是你自己打</b> ——" +
-        "所以這是<b class=\"ok\">唯一一條「有圖」而且「字留在你手上」的路</b>。" +
-        "圖一次做好可以用很多年。" +
-        "<br>⚠⚠ 代價是<b>每個人要貼兩次</b>：30 人的名單就是 60 次操作，" +
-        "而發這一則的那十分鐘正是最忙的十分鐘。<b>圖好不好看和這件事無關，貴的是手。</b>";
-    }
-    if (state.v === "card") {
-      s += "<hr><b class=\"no\">⚠⚠⚠ 圖卡和「我自己每次打」是衝突的。</b>" +
-        "Flex 圖卡是<b>廠商系統送的模板</b>，字是系統填的；圖文訊息的字更是烘在圖裡。" +
-        "<b>兩種都不是在聊天室打出來的。</b>要走這條，颱風那一刻你得先把颱風名與日期" +
-        "交給廠商（或請他們做成一個可以填的欄位），這正是你現在<b>不必</b>做的事。" +
-        (titled(textOf())
-          ? ""
-          : "<br>⚠⚠ 而且<b>你那一份的結構也放不進卡片</b>：它沒有短標題、" +
-            "三大段、第一段一百多個字，排進 268px 的卡就是一整塊 —— " +
-            "面板那一列在報這件事。要走圖卡就得<b>連文字一起重寫</b>（<code>?w=new</code> 是那個樣子）。");
-    }
-    return s;
+        "<b class=\"ok\">這條路沒有任何額外成本，今天就能用。</b>";
+    return "<b>唯一同時做到「有圖」和「字在你手上」的一條。</b>" +
+      "圖是永遠不變的那一張，做一次可以用很多年。" +
+      "<br>⚠⚠ 代價是<b>每個人要貼兩次</b>：30 人的名單就是 60 次操作，" +
+      "而發這一則的那十分鐘正是最忙的十分鐘。<b>圖好不好看和這件事無關，貴的是手。</b>";
   }
-  /* 網址參數。⚠ 正規式要寫 [a-z0-9]+（CLAUDE.md 第八節：寫 [a-z]+ 會吃不到帶數字的值）。 */
-  [["v", VIA], ["s", SIT], ["w", WORD], ["m", MISS], ["t", PHONE]].forEach(function (p) {
-    var m = location.search.match(new RegExp("[?&]" + p[0] + "=([a-z0-9]+)"));
-    if (m && p[1][m[1]]) state[p[0]] = m[1];
+
+  /* ------------------------------------------------------------------
+     一頁好幾段：每一段自己一個狀態、自己一個面板。
+     ------------------------------------------------------------------ */
+  var BLOCKS = {
+    card:  { v: "card", s: "stop",  w: "now", m: "off", t: "off", day: "7/10（五）", time: "19:37" },
+    text:  { v: "text", s: "stop",  w: "now", m: "off", t: "off", day: "7/10（五）", time: "19:37" },
+    img:   { v: "img",  s: "stop",  w: "now", m: "off", t: "off", day: "7/10（五）", time: "19:37" },
+    open:  { v: "card", s: "open",  w: "new", m: "off", t: "off", day: "7/10（五）", time: "19:37" },
+    after: { v: "card", s: "after", w: "new", m: "off", t: "off", day: "7/12（日）", time: "09:10" }
+  };
+  /* 網址參數（已定案，收起來但還開得到）。⚠ 正規式要寫 [a-z0-9]+
+     （CLAUDE.md 第八節：寫 [a-z]+ 會吃不到帶數字的值）。
+     ?w=new 把我們改寫的那一份放回三段裡；?m=on／?t=now 只作用在那一份上。 */
+  ["w", "m", "t"].forEach(function (k) {
+    var m = location.search.match(new RegExp("[?&]" + k + "=([a-z0-9]+)"));
+    if (m) Object.keys(BLOCKS).forEach(function (b) {
+      if (k !== "w" || BLOCKS[b].s === "stop") BLOCKS[b][k] = m[1];
+    });
   });
 
-  var cp = document.getElementById("pv-copy"), spec = document.getElementById("pv-spec");
+  var SECS = [];
+  document.querySelectorAll(".pv-sec[data-blk]").forEach(function (sec) {
+    var st = BLOCKS[sec.dataset.blk];
+    if (!st) return;
+    SECS.push({ st: st, sec: sec,
+      chat: sec.querySelector(".js-chat"),
+      panel: sec.querySelector(".js-panel"),
+      note: sec.querySelector(".js-note") });
+  });
+
+  function render() {
+    SECS.forEach(function (b) {
+      var st = b.st, chat = b.chat;
+      chat.innerHTML = "";
+      chat.appendChild(el("div", "pv-day", st.day));
+      if (st.v === "card") chat.appendChild(row(flexCard(st), st.time));
+      else {
+        if (st.v === "img") chat.appendChild(row(photo(), st.time));
+        chat.appendChild(row(bubble(fill(textOf(st))), st.time));
+      }
+    });
+    measureAll();
+  }
+  function measureAll() {
+    SECS.forEach(function (b) { measure(b.st, b.chat, b.panel, b.note); });
+  }
+
+  /* 要貼進去的字：和上面那幾段**同一個出處**，不要在這裡再手寫一份。 */
+  var spec = document.getElementById("pv-spec");
+  spec.textContent = textOf(BLOCKS.text);
+
+  var cp = document.getElementById("pv-copy");
   cp.addEventListener("click", function () {
     var done = function () {
       cp.textContent = "已複製"; cp.classList.add("ok");
@@ -760,18 +712,11 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     }
   });
 
-  (function () {
-    var barEl = document.getElementById("pv-bar"), fold = document.getElementById("pv-fold");
-    fold.onclick = function () {
-      var on = barEl.classList.toggle("fold-in");
-      fold.textContent = on ? "調整…" : "收起";
-      fold.setAttribute("aria-expanded", on ? "false" : "true");
-      measure();
-    };
-  })();
-
-  window.addEventListener("resize", measure);
   render();
+  /* 字型到齊、圖載完寬度會變 —— 重量一次。 */
+  window.addEventListener("load", measureAll);
+  window.addEventListener("resize", measureAll);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureAll);
 })();
 </script>
 </body>
