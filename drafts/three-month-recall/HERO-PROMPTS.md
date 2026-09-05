@@ -156,36 +156,68 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 　〈擴張牙弓〉的靈魂出竅踩過）。
 
 
-### Ⓕ 不規則分格 ＋ 中間一位醫師（2026-09-05 新增，Ⓐ 的改寫）
+### Ⓕ 不規則分格 ＋ 中間兩位醫事人員（2026-09-05 新增，Ⓐ 的改寫；09-05 晚間第二版）
 
 **起因**：使用者看過五案之後選 Ⓐ，但指出它的毛病 ——
 「**只有診療〔椅上〕的人不一樣，都一樣，所以畫面看起來很單調**」。
 他給的方向：**每個不一樣的人單獨變成一個框**，框可以帶一點不規則、
-或用對話框的方式，**中間是一位醫療人員**，讀起來像
+或用對話框的方式，**中間是醫療人員**，讀起來像
 「**這幾個人要特別注意自己牙齒的健康**」的呼籲。
 參考圖是三張日本車站的海報（GRANSTA 的多角形分格、声かけサポート 的對話框、
 カスハラ 的四格）。
 
-・**六格 ＋ 中間一格**：孕婦／拿拐杖的阿嬤／膝上放著藥袋的中年男子／
-　餐桌上量血糖／半夜起來倒水喝／綁著頭巾、手邊保溫杯的中年女性。
-　中間那一格是女醫師，一手向外攤開，看著四周那幾個人。
-・**每一格一個很淡的底色**（＝參考圖那一套），Ⓐ 之所以單調正是因為
-　四格共用同一個診間、同一片背景。
+**第一版出圖之後他提了五件**（2026-09-05 晚間）：
+① 人物風格跟站上現有的不一樣，要重新參考　② 每個人的環境有點單調，要更寫實、
+把環境細節加上去　③ 參考那三張海報：**人物和動作的細節清楚、周圍環境線條和顏色淡化**
+④ 中間的醫事人員**多畫一個** —— 一個穿白袍、一個不穿，**刷手服顏色可以不一樣**
+⑤ 動作與表情是 **「接納」** 和 **「介紹」**。
+
+第二版照這五件改，四件改動：
+
+・⚠⚠⚠ **風格不再只靠文字描述，改成餵站上自己的三張圖**（ILLUSTRATION.md 第七節第 19 條：
+　**能餵參考圖就餵，文字描述風格一定會漂**）。哪三張、為什麼是那三張，見第三之二節。
+　提示詞第一段就寫著「**文字和參考圖衝突時，以參考圖為準**」。
+・⚠⚠ **「環境要更寫實」和「環境要淡化」不是互相矛盾，是兩件事** ——
+　要的是**東西多、但畫得淡**。提示詞因此多了一整段
+　「**兩層畫法**」：人物用最深最粗的線、衣服吃最強的顏色、在做什麼要最清楚；
+　**房間裡的東西樣樣都畫，但線更細更淡、顏色更淡一階**，
+　而且明寫「**環境的線永遠不可以和人的線一樣深、一樣粗**」。
+　唯一的例外是那個人手上正拿著的東西（那是動作的一部分，跟著人用全力畫）。
+・⚠⚠ **六格的家從一句話變成一張道具清單**（第七節第 3、18 條：**每一格要點名該有的道具，
+　不寫就會變成空牆**）。第一版中間那格寫的是「only a hint of a clinic」——
+　**單調就是這樣寫出來的**。現在六格各自有磁磚牆、瓦斯爐上的水壺、掛著的鍋鏟、
+　竹編籃、立扇、塑膠桌巾、電鍋、鐵窗、瀝水架、藤椅、針織毯……
+　中間那一格也從「一點診所的暗示」換成真的診所一角（玻璃門的器械櫃、一排無字的瓶罐、
+　摺好的毛巾、只畫一顆牙的無字掛圖）。`AVOID` 補一條「不准有空房間、空牆、
+　只有一個人加一張椅子的格子」。
+・**中間變成兩個人**：醫師（三十幾歲、**白袍**穿在淺鼠尾草綠刷手服外面、低馬尾）站前半步，
+　一手向外攤開介紹；護理師（四十幾歲、**只有刷手服**、**暗一階的青藍**、短髮）站後半步，
+　手交疊在身前、側頭對著其中一格點頭。**接納**靠身體微微前傾與攤開的手，
+　**介紹**靠兩個人都看向四周那幾格。⚠ 兩件刷手服的顏色都是站上既有的低彩度族
+　（鼠尾草綠／青藍），**沒有新增顏色**；`AVOID` 另外擋掉「兩個人擺成一模一樣的姿勢」。
+
+沒有動的三件（第一版就定下來的判斷）：
+
 ・⚠⚠ **格子做成不規則的多角形，不做對話框** —— 我們這一站的圖**一個字都不能有**
 　（第七節第 4 條），而**空的對話框讀起來是「在想一件沒有內容的事」**；
 　參考圖那三張全部靠文字說話，我們不能照抄那一半。
 　**要對話框版我可以另出一份，一句話換掉。**
-・⚠⚠ **中間那位醫師不看鏡頭** —— A 類紅線那一條仍然有效。呼籲靠**攤開的手**與
-　**她在看那幾個人**給；她看鏡頭指著讀者是另一種東西（而且離站上的調子很遠）。
-　**要她看鏡頭也是一句話的事，但要你點頭。**
+・⚠⚠ **兩位醫事人員都不看鏡頭** —— A 類紅線那一條仍然有效。呼籲靠**攤開的手**與
+　**兩個人都在看那幾個人**給；看鏡頭指著讀者是另一種東西（而且離站上的調子很遠）。
+　**要她們看鏡頭也是一句話的事，但要你點頭。**
 ・⚠⚠⚠ **上下各 12% 是「會被卡片切掉」的區域**（見第一之二節）：
 　人臉與那幾樣關鍵的東西**一個都不可以放在那裡面**。
+
+⚠ 順帶擋掉一組第一版沒防到的東西：**時鐘、月曆、手機螢幕、電腦螢幕、任何數位顯示** ——
+六個家一寫實，這些東西就會自己長出來，而**它們身上一定會有數字**（＝第七節第 4 條那條
+「一個字都不能有」的破口）。血糖機那個小螢幕也逐項點名了。
 
 ---
 
 ## 三、五個提案共用的規格（每一份提示詞裡都逐字帶著）
 
-- **16:9 橫幅**（`tools/hero-resize.mjs` 擋長寬比 2000/1116 ±0.02，16:9 過得了）。
+- **Ⓐ~Ⓔ 是 16:9 橫幅**（`tools/hero-resize.mjs` 擋長寬比 2000/1116 ±0.02，16:9 過得了）；
+  **Ⓕ 是 4:3**，那一支要改兩行才過得了 —— 見第一之二節。
 - **`STYLE` 段放最前面並標成最重要的一段**（第七節第 18 條：提示詞為了修內容越寫越長，
   風格就會被擠掉）。
 - **線是暖深棕不是純黑、粗細有變化**；平塗兩三階；**每個表面都有色鉛筆顆粒**。
@@ -198,6 +230,29 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 - **`CRITICAL — NO WRITING ANYWHERE` 獨立一段大寫、逐項點名**（第七節第 4 條）。
 
 ---
+
+## 三之二、⚠⚠⚠ Ⓕ 出圖之前**先餵這三張參考圖**（2026-09-05）
+
+使用者第一版的第一句回饋是「**人物風格跟網站現有的不太一樣**」。
+成因不是提示詞寫得不夠細 —— 那一段 `STYLE` 已經是站上最長的一份了 ——
+是 **ILLUSTRATION.md 第七節第 19 條那條通則：形狀（含畫風）不要用文字描述，用參考圖。**
+〈根管治療的生物陶瓷〉那一輪走過同一條路：標誌與根管的形狀用文字描述失敗三到四輪，
+改成給圖之後一次就中。
+
+**要餵的三張，都是站上自己的 HERO，直接從網站上存下來就好**（提案頁上也擺著）：
+
+| 檔案 | 為什麼是這一張 |
+| --- | --- |
+| `assets/hero-gum-photo-1600.jpg`（〈牙齦流血〉） | ⭐ **最重要的一張。** 它就是 Ⓕ 想要的結構：**一格一個人、一格一個家、一格一個底色**（灰藍的臥室／米色的廚房／橘色的客廳／深色的夜間浴室）。連「唯一一格是暗的」都已經在裡面 |
+| `assets/hero-checkup-photo-1600.jpg`（〈定期檢查〉） | **環境密度**看這一張：候診區、櫃檯、玻璃門的器械櫃、櫃上一排瓶罐、牆上的掛圖、診療椅 —— 東西很多，可是那些線**全部比人淡**。中間那一格的診所照它畫。⚠ 它同時是「**不要再畫候診室**」的理由（同一科、卡片會並排） |
+| `assets/hero-kids-photo-1600.jpg`（〈換牙〉） | **臉、表情、手**看這一張：五官很簡單但表情讀得出來，動作有力道卻沒有變形成卡通 |
+
+⚠ **只抄畫風，不要抄構圖與人** —— 提示詞第一段就寫著這件事，
+而且明寫「**文字和參考圖衝突時以參考圖為準**」（不寫的話，長長的文字會把圖蓋掉）。
+
+⚠ 這三張裡的**環境線本來就比人淡**，正好就是使用者要的第 ③ 件
+（「人物和動作相關的細節比較清楚，周圍環境線條和顏色淡化」）——
+所以那一條**同時**用文字寫了一段（提示詞的「兩層畫法」）**又**用圖給了一次。
 
 ## 四、五份提示詞（逐字，可以直接複製）
 
@@ -536,10 +591,17 @@ greyscale; no backlit heroic silhouettes; no green cast over the whole picture; 
 must not look ill, frail, sad or bored; no arrows; no diagrams.
 ```
 
-### Ⓕ 不規則分格 ＋ 中間一位醫師
+### Ⓕ 不規則分格 ＋ 中間兩位醫事人員
 
 ```
 Editorial illustration, 4:3 landscape (slightly wider than tall, NOT a wide banner).
+
+REFERENCE IMAGES — THREE IMAGES ARE ATTACHED. They are existing illustrations from the
+same website and this new picture must look like it belongs beside them. Copy from them:
+the exact line quality, the way faces and hands are simplified, the way flat pale colour
+is laid down, and the way rooms, furniture and small objects are drawn. Do NOT copy their
+layouts, their people or their scenes. Wherever the words below and the attached images
+disagree about style, THE ATTACHED IMAGES WIN.
 
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
 illustration. Every line is drawn by hand in a warm dark brown, never pure black, with
@@ -553,44 +615,94 @@ simplified but their proportions are natural and their age is readable: Taiwanes
 Asian faces, normal head-to-body proportion, small simple features that still carry
 expression, hair drawn as a few shaped masses. NOBODY LOOKS OUT AT THE VIEWER.
 
+TWO LEVELS OF DRAWING — THIS IS THE SECOND MOST IMPORTANT RULE, AND IT APPLIES TO EVERY
+PANEL. The people are drawn at FULL STRENGTH and the rooms around them are drawn at HALF
+STRENGTH.
+  PEOPLE, AT FULL STRENGTH — the darkest, thickest lines in the picture. Faces, hands,
+  hair, collars, cuffs, hems and the folds of clothing are all clearly drawn. Their
+  clothes carry the strongest colour in their panel. What each person is DOING is the
+  clearest thing in that panel.
+  ROOMS AND OBJECTS, AT HALF STRENGTH — every room is FULL of real, ordinary, specific
+  things; none of these panels is a bare wall with a chair. But every one of those things
+  is drawn with a THINNER AND PALER line than the people, and filled with a paler, quieter
+  version of its colour. Furniture, tiles, window frames, shelves and plants are described
+  in enough detail that you could name the room, then held back so they never compete with
+  the person. An environment line must never be as dark or as heavy as a person's line.
+  The one exception is the small object each person is holding or touching: that object is
+  drawn at full strength, because it is part of what they are doing.
+
 STRUCTURE — The whole picture is ONE MOSAIC of seven panels, like a page of an
 illustrated poster. The panels are irregular polygons of different sizes, fitted together
 edge to edge and separated by THIN HAND-DRAWN GUTTER LINES that are slightly wobbly, never
 ruler-straight and never a regular grid of rectangles. The mosaic fills the whole frame.
-Each panel has its own very pale background tint, so the seven panels are immediately
-distinguishable from one another.
+Each panel has its own very pale background tint, and each panel is a DIFFERENT ROOM with
+DIFFERENT FURNITURE — the six homes must never look like the same house drawn six times.
 
 THE CENTRE PANEL is the largest: an irregular five-sided panel in the middle of the
-picture. In it stands a woman dentist in her thirties in a pale sage-green scrub top, hair
-in a low bun, seen from the waist up, turned three-quarters. One arm is open and extended
-outward in a calm, welcoming gesture, and she is looking OUT TOWARDS THE PANELS AROUND HER
-— warm, attentive, unhurried. She is not looking at the viewer, not pointing at the
-viewer, and not making a warning or scolding gesture. Behind her, only a hint of a clinic:
-a low wooden cabinet edge and a small shelf.
+picture, holding TWO members of clinic staff standing side by side, seen from the waist
+up, both turned three-quarters, both looking OUT TOWARDS THE PANELS AROUND THEM. Neither
+of them looks at the viewer.
+  THE DENTIST, a woman in her thirties, wears an open WHITE COAT over a pale sage-green
+  scrub top, hair in a low bun. She stands slightly forward of the other. One arm is open
+  and extended outward in a calm, welcoming, presenting gesture — the gesture of someone
+  introducing people she is glad to see, not the gesture of someone giving a warning. Her
+  weight is leaning very slightly towards the panels. Her expression is warm, attentive
+  and unhurried.
+  THE NURSE, a woman in her forties, wears NO WHITE COAT — only a scrub top, and it is a
+  DIFFERENT COLOUR from the dentist's: a muted dusty teal. Short hair tucked behind one
+  ear. She stands half a step behind and to the other side, hands resting easily together
+  in front of her or one hand on the edge of the cabinet, head tilted, nodding slightly at
+  one of the panels. She is the quieter of the two, and she is clearly agreeing.
+  TOGETHER THEY READ AS WELCOME AND INTRODUCTION — these are the people we are glad to
+  look after, and here they are. Nobody is scolding, warning, pointing at the viewer or
+  raising a finger.
+  THEIR ROOM, at half strength — a real clinic corner, not a hint of one: a low wooden
+  cabinet with a run of drawers, a glass-fronted cabinet holding rows of small unlabelled
+  bottles and boxes, a stack of folded towels, a small potted plant, a simple picture on
+  the wall showing ONLY a single tooth and no writing at all, a window frame at one side
+  letting in daylight, and the floor visible at the bottom.
 
-THE SIX PANELS AROUND HER, each holding ONE ordinary person in an ordinary moment. Place
-them exactly like this:
+THE SIX PANELS AROUND HER, each holding ONE ordinary person in their own home, doing an
+ordinary thing. Each home is described below and all of it must be drawn — quietly, at
+half strength, but drawn.
   UPPER LEFT — a woman in her early thirties, visibly but not dramatically pregnant,
-  sitting on a sofa with one hand resting on her middle, a slim blank booklet on the arm of
-  the sofa beside her.
+  sitting back on a fabric sofa with one hand resting on her middle, the other holding a
+  slim blank booklet. HER ROOM: two cushions pushed to one end of the sofa, a low wooden
+  coffee table with a glass of water and a small stack of plain books, a pair of slippers
+  on the floor, a leafy pot plant by the window, a barred Taiwanese window grille with
+  daylight coming through, a standing electric fan against the wall.
   UPPER RIGHT — a woman in her seventies with short grey permed hair, standing in her own
-  kitchen with a wooden walking stick hooked over her forearm, reaching for a cup.
-  RIGHT — a man in his early fifties in an open-collared work shirt, sitting at a table
-  with a soft brown paper pharmacy bag in front of him and two blister packs of tablets
-  half slid out of it.
-  LOWER RIGHT — the same kind of ordinary morning: a man in his sixties at a breakfast
-  table, holding a small handheld meter to his fingertip, matter-of-fact, a bowl and a mug
-  beside him.
-  LOWER LEFT — the middle of the night: a woman in her fifties in a T-shirt at her kitchen
-  counter, pouring a glass of water, half asleep. This is the only dark panel — deep dusty
-  blue with one small warm pool of light; the wall behind her is dark, never left pale.
-  LEFT — a woman in her forties wearing a soft printed headscarf, sitting in an armchair
-  with a small vacuum flask on the side table, reading, calm and comfortable.
+  kitchen, a wooden walking stick hooked over her forearm, reaching up into a cupboard for
+  a cup. HER ROOM: an old-fashioned counter with white square wall tiles, a kettle on the
+  gas ring, a ladle and a cloth hanging from hooks, a few unlabelled seasoning jars on the
+  windowsill, a bamboo basket of vegetables, a bunch of garlic hanging up, a wooden
+  crockery cupboard.
+  RIGHT — a man in his early fifties in an open-collared work shirt, sitting at his dining
+  table with a soft brown paper pharmacy bag in front of him and two blister packs of
+  tablets half slid out of it, one hand resting on the bag. HIS ROOM: a round table with a
+  patterned plastic tablecloth, a glass of tea, wooden chairs, a standing fan behind him,
+  a towel over the back of a chair, a barred window, a television remote and a pair of
+  reading glasses at the corner of the table.
+  LOWER RIGHT — a man in his sixties at his breakfast table, holding a small handheld
+  meter to his fingertip, completely matter-of-fact about it. HIS ROOM: a bowl of rice
+  porridge, two small dishes of side vegetables, a cup of soy milk, a stainless steel
+  vacuum flask; behind him the kitchen doorway, an electric rice cooker on a counter, a
+  hanging cloth, and beyond the window the pillars of a Taiwanese covered walkway.
+  LOWER LEFT — the middle of the night. A woman in her fifties in a T-shirt stands at her
+  kitchen counter pouring herself a glass of water, half asleep. THIS IS THE ONLY DARK
+  PANEL: deep dusty blue-grey, with exactly two sources of light — a small warm lamp above
+  the counter, and a few lit windows in the block of flats across the street. Her draining
+  rack of bowls, the tap, the tiled splashback and the counter are all drawn, but they sit
+  down in the dark. The wall behind her is dark, never left pale.
+  LEFT — a woman in her forties wearing a soft printed headscarf, sitting comfortably in a
+  rattan armchair reading a book with blank pages, calm and at ease. HER ROOM: a small
+  side table with a vacuum flask on it, a knitted blanket over her knees, a pot plant, a
+  shelf of plain books behind her, and a simple framed picture on the wall with no writing
+  in it.
 
 ALL SIX ARE CALM, ORDINARY AND AT EASE — they are not ill, not frail, not sad, not
-frightened, not in a hospital. Each one is in their own home or their own everyday
-surroundings, not in a clinic. Each has a different posture and a different direction of
-gaze. Nobody looks at the viewer.
+frightened, and none of them is in a hospital or a clinic. Each has a different posture
+and a different direction of gaze. Nobody looks at the viewer.
 
 CROPPING — the top 12% and the bottom 12% of the whole picture will sometimes be cut off.
 Keep every face, and every one of the small objects listed above, well inside the middle of
@@ -603,30 +715,38 @@ exception and must read as clearly darker than all the others. Many colours, eac
 held low and dusty: brick red, mustard, sage green, teal, greyish violet, cream. Give each
 panel a different pale tint for its background and assign the clothes so that no two
 neighbouring people clash: upper left dusty rose, upper right mustard, right pale slate
-blue, lower right cream and brick red, lower left deep blue in shadow, left muted teal,
-the dentist pale sage green. Clothes are not flat single blocks of colour — give every
-garment two or three steps, with collars, cuffs, hems and folds drawn in. As a small
-accent only, a deep forest green (#3f654a / #2c5238) on the gutter lines and on one shelf
-behind the dentist — a touch, never a wash. Teeth, wherever they show, stay clean
-near-white and take none of this colour.
+blue, lower right cream and brick red, lower left deep blue in shadow, left muted teal
+with a patterned headscarf, the dentist white coat over pale sage green, the nurse dusty
+teal. Clothes are not flat single blocks of colour — give every garment two or three
+steps, with collars, cuffs, hems and folds drawn in. As a small accent only, a deep forest
+green (#3f654a / #2c5238) on the gutter lines and on one shelf behind the staff — a touch,
+never a wash. Teeth, wherever they show, stay clean near-white and take none of this
+colour.
 
 CRITICAL — NO WRITING ANYWHERE. There is no text, no lettering, no numbers, no letters, no
 logos, no captions, no labels and no signage anywhere in this picture — not in the gutters
-between panels, not on the booklet, not on the pharmacy bag, not on the blister packs, not
-on the handheld meter or its little screen, not on the flask, not on any wall. Every
-surface that would normally carry writing is left blank. This is the single most important
-rule after the style.
+between panels, not on the booklet, not on the books or the bookshelf, not on the framed
+pictures, not on the pharmacy bag, not on the blister packs, not on the handheld meter or
+its little screen, not on the seasoning jars, not on the bottles and boxes in the clinic
+cabinet, not on the flasks, not on the rice cooker, not on the remote control, and not on
+any wall. Every surface that would normally carry writing is left blank. This is the
+single most important rule after the style.
 
-AVOID — no speech bubbles, no thought bubbles, no captions, no arrows, no numbers on the
-panels and no icons or symbols of any kind; the gutters are plain hand-drawn lines, not a
-neat rectangular grid and not comic-book panel borders with heavy black outlines; nobody
-looks at the viewer and nobody points at the viewer; the dentist is not scolding, not
-warning and not raising a finger; no hospital beds, no IV stands, no wheelchairs, no oxygen
-tubes, no face masks covering anyone's face, no sick or pained expressions, no tears; no
-close-up dental instruments, no needles, no drills, no trays of tools; no blood; no
-photorealistic mouth interiors; no teeth diagrams; no photorealism; no faceless figures; no
-exaggerated cartoon head-to-body proportions; no greyscale; no backlit heroic silhouettes;
-no green cast over the whole picture; the six panels must not all show the same room.
+AVOID — no clocks, no calendars, no phone screens, no computer screens and no digital
+displays of any kind, because they all carry numbers; no speech bubbles, no thought
+bubbles, no captions, no arrows, no numbers on the panels and no icons or symbols of any
+kind; the gutters are plain hand-drawn lines, not a neat rectangular grid and not
+comic-book panel borders with heavy black outlines; nobody looks at the viewer and nobody
+points at the viewer; the dentist is not scolding, not warning and not raising a finger;
+the two staff must not be drawn as a matching pair in the same pose and must not wear the
+same colour; no empty rooms, no bare walls, no panel that contains only a person and a
+chair; the environment lines must never be as dark or as heavy as the people's lines; no
+hospital beds, no IV stands, no wheelchairs, no oxygen tubes, no face masks covering
+anyone's face, no sick or pained expressions, no tears; no close-up dental instruments, no
+needles, no drills, no trays of tools; no blood; no photorealistic mouth interiors; no
+teeth diagrams; no photorealism; no faceless figures; no exaggerated cartoon head-to-body
+proportions; no greyscale; no backlit heroic silhouettes; no green cast over the whole
+picture; the six homes must not look like the same room drawn six times.
 ```
 
 ---
