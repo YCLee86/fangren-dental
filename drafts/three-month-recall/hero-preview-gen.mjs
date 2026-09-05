@@ -39,7 +39,12 @@ for (const b of blocks) {
 {
   const f = blocks.find((b) => b.key === "Ⓕ");
   if (!/REFERENCE IMAGES — THREE IMAGES ARE ATTACHED/.test(f.prompt)) throw new Error("Ⓕ 少了『先餵參考圖』那一段");
-  if (!/TWO LEVELS OF DRAWING/.test(f.prompt)) throw new Error("Ⓕ 少了『兩層畫法』那一段");
+  if (!/TWO LEVELS/.test(f.prompt)) throw new Error("Ⓕ 少了『兩層畫法』那一段");
+  // ⚠ 第三版加的兩段：治「太寫實」的就是這兩段，掉了就會回到肖像式的臉與技術製圖。
+  if (!/FACES AND HANDS/.test(f.prompt)) throw new Error("Ⓕ 少了『臉與手』那一段");
+  if (!/ECONOMY OF LINE/.test(f.prompt)) throw new Error("Ⓕ 少了『用最少的筆畫』那一段");
+  // ⚠ 第二版那句「細到叫得出這是什麼房間」＝ 在叫它畫準，不可以回來。
+  if (/enough detail that you could name the room/.test(f.prompt)) throw new Error("Ⓕ 又出現第二版那句『細到叫得出房間』");
 }
 // 三張參考圖：站上自己的 HERO，相對路徑往上兩層。
 // ⚠ 不要改成根目錄絕對路徑 /assets/… —— 舊站 yclee86.github.io 還活著，那邊會壞。
@@ -138,6 +143,8 @@ const NOTES = {
       "<b>比例 4:3</b>，比站上現在那十一張高（見最上面那一段）。",
     ],
     guards: [
+      "⚠⚠⚠ <b>第三版（09-05 更晚）治的是「還是比站上寫實了一點」，而且是量過才改的</b>：站上十一張自己就分兩群，〈定期檢查〉48%、〈貝氏刷牙法〉50% 的面積是近白的，<b>比第二版那張還淡</b> —— 所以「太寫實」不在顏色。真正的成因是兩件<b>「畫得太準」</b>：<b>臉有立體感</b>（眼皮、眼白、反光點、顴骨、一根根的頭髮）、<b>每一樣東西用的筆畫太多</b>（電風扇畫出整圈護網、磁磚畫出完整格線、透視是準的）。",
+      "⚠⚠⚠ <b>而這兩件是第二版的提示詞自己寫出來的</b>：那一段「兩層畫法」我寫了「環境要細到你叫得出這是什麼房間」——<b>那句話等於在叫它畫準，而畫得準正是寫實的定義</b>；它同時是整份最長的一段（＝口外那一輪的通則：哪一段字最多，模型就把哪一個當主角）。第三版新增<b>「臉與手」</b>與<b>「用最少的筆畫」</b>兩段放到最前面，並把「兩層畫法」砍掉一半、反過來寫成「房間不是比人更細，是比人更粗略；東西多，每一樣簡單」。",
       "⚠⚠⚠ <b>出圖之前要先餵上面那三張參考圖</b> —— 風格用文字描述一定會漂（〈生物陶瓷〉那一輪的形狀失敗三四輪，改成給圖之後一次就中）。提示詞第一段明寫「文字和參考圖衝突時以參考圖為準」。",
       "⚠⚠ <b>「環境要更寫實」和「環境要淡化」不衝突，是兩件事</b>：要的是<b>東西多、但畫得淡</b>。提示詞多了一整段「兩層畫法」——人用最深最粗的線、房間裡的東西樣樣都畫但線更細更淡，並明寫「環境的線永遠不可以和人的線一樣深」。唯一例外是那個人手上正拿著的東西。",
       "⚠⚠ <b>六格的家從一句話換成一張道具清單</b>（磁磚牆、瓦斯爐上的水壺、掛著的鍋鏟、竹編籃、立扇、塑膠桌巾、電鍋、鐵窗、瀝水架、藤椅、針織毯……）。第一版單調的成因就在這裡：中間那一格原本只寫「一點診所的暗示」。",
@@ -204,6 +211,10 @@ h1{font-size:1.5rem;line-height:1.5;margin:1.8rem 0 .4rem}
 .pv-ratio th:first-child,.pv-ratio td:first-child{text-align:left}
 .pv-ratio tr.pv-pick td{background:rgba(63,101,74,.09)}
 .pv-tw{overflow-x:auto}
+.pv-t2 th,.pv-t2 td{border-bottom:1px solid var(--rule);padding:.35rem .3rem;text-align:right;white-space:nowrap}
+.pv-t2{border-collapse:collapse;width:100%;font-size:.88rem;margin:.6rem 0}
+.pv-t2 th:first-child,.pv-t2 td:first-child{text-align:left}
+.pv-t2 tr.pv-pick td{background:rgba(63,101,74,.09)}
 .pv-ratio code{font-size:.9em;background:#fff;border:1px solid var(--rule);border-radius:4px;padding:0 .25em}
 .pv-ref{margin:1rem 0 0}
 .pv-ref img{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:8px;background:#fff}
@@ -248,6 +259,25 @@ footer ol{padding-left:1.2rem}
 <p><b>2026-09-05 晚間：Ⓕ 照你那五件改成第二版了</b> —— 換成餵站上自己的三張圖來定風格、
 六個家從一句話變成一張道具清單、多寫一段「人用實線、環境用淡線」的兩層畫法、
 中間變成兩個人（一個白袍、一個只有刷手服，兩件刷手服不同色）。</p>
+<p><b>2026-09-05 更晚：Ⓕ 第三版</b> —— 治「還是比站上寫實了一點」。
+<b>先量過再改，量出來把方向修掉了</b>：站上十一張自己就分兩群，
+〈定期檢查〉48%、〈貝氏刷牙法〉50% 的面積是近白的，<b>比你看到那張還淡</b>，
+所以問題不在顏色。是兩件「畫得太準」——</p>
+<div class="pv-tw"><table class="pv-t2">
+<tr><th></th><th>近白</th><th>墨</th><th>彩度中位</th></tr>
+<tr><td>〈牙齦流血〉</td><td>6.3%</td><td>19.2%</td><td>19.3</td></tr>
+<tr><td>〈換牙〉</td><td>18.0%</td><td>13.3%</td><td>9.9</td></tr>
+<tr><td>〈缺牙之後〉</td><td>17.1%</td><td>12.9%</td><td>13.5</td></tr>
+<tr class="pv-pick"><td>〈定期檢查〉</td><td>48.0%</td><td>8.0%</td><td>6.6</td></tr>
+<tr class="pv-pick"><td>〈貝氏刷牙法〉</td><td>50.1%</td><td>6.1%</td><td>4.8</td></tr>
+</table></div>
+<p>① <b>臉有立體感</b> —— 眼皮、眼白、反光點、顴骨、一根一根的頭髮。站上的臉是
+「一個小弧形當眼睛、一筆鼻子、一筆嘴，臉上完全沒有陰影」。<br>
+② <b>每一樣東西用的筆畫太多</b> —— 電風扇畫出整圈護網、磁磚畫出完整格線、鐵窗每一根都畫、
+透視是準的。〈定期檢查〉那張東西一樣多，但每一樣只用三到八筆。</p>
+<p>⚠ <b>而這兩件是我第二版的提示詞自己寫出來的</b>：那一段我寫了
+「環境要細到你叫得出這是什麼房間」——<b>那等於在叫它畫準，而畫得準正是寫實的定義</b>。
+第三版把「臉與手」和「用最少的筆畫」兩段放到最前面，「兩層畫法」砍掉一半並反過來寫。</p>
 <p>Ⓐ~Ⓔ 留著沒有動，往下捲還在。</p>
 </div>
 

@@ -214,6 +214,61 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 
 ---
 
+#### ⚠⚠⚠ 第三版（2026-09-05 更晚）：「還是比站上寫實了一點」
+
+**先量過再改，量出來把方向修掉了。** 直覺的第一個猜測是「顏色太淡、太多留白」，
+可是站上那十一張自己就分成兩群：
+
+| | 近白（L\*>92） | 墨（L\*<45） | 彩度中位 |
+| --- | --- | --- | --- |
+| 〈牙齦流血〉 | 6.3% | 19.2% | 19.3 |
+| 〈換牙〉 | 18.0% | 13.3% | 9.9 |
+| 〈缺牙之後〉 | 17.1% | 12.9% | 13.5 |
+| **〈定期檢查〉** | **48.0%** | 8.0% | 6.6 |
+| **〈貝氏刷牙法〉** | **50.1%** | 6.1% | 4.8 |
+
+**站上有兩張比第二版那一張還淡。所以「太寫實」不在顏色，也不在留白多少** ——
+把顏色加濃只會改壞另一件事。
+
+真正的成因是兩個，兩個都是**「畫得太準」**：
+
+・⚠⚠⚠ **臉有立體感。** 站上的臉是「一個小小的深色弧形當眼睛、一筆鼻子、一筆嘴」，
+　臉頰、額頭、下巴**完全沒有陰影**；第二版那張的臉有眼皮、有眼白、有反光點、有顴骨、
+　頭髮一根一根。**這是「寫實」最強的訊號，而且它只在臉上，改一段就治得掉。**
+・⚠⚠⚠ **每一樣東西用的筆畫太多。** 電風扇的護網畫出了整圈網格、磁磚牆畫出完整的格線、
+　鐵窗每一根都畫、瀝水架每一個碗都畫、透視是準的。站上〈定期檢查〉那張東西一樣多，
+　但**每一樣只用三到八筆**。
+
+⚠⚠⚠ **而這兩件都是第二版的提示詞自己寫出來的**：那一段「兩層畫法」我寫了
+「**環境要細到你叫得出這是什麼房間**」，那句話等於在說「畫準一點」——
+**而「畫得準」正是寫實的定義**。同一段還是整份提示詞裡最長的一段，
+照〈口腔外科〉那一輪的通則（**哪一段字最多，模型就把哪一個當主角**），
+整張圖因此被推去比「畫工」。
+
+第三版三件改動：
+
+・**新增一整段 `FACES AND HANDS`，而且放在最前面第二段**（僅次於 `STYLE`），
+　逐項寫死：眼睛是一個小弧形、**沒有睫毛、沒有眼白、沒有反光點、沒有眼皮的褶**、
+　鼻子一筆、嘴一筆、**臉上任何地方都不上陰影**、頭髮是兩三塊色塊。
+　收尾是一句判準：「**這張圖裡的臉如果看起來像肖像畫，就是錯的。**」
+・**新增 `ECONOMY OF LINE`**：每一樣東西**用能認出它的最少筆畫畫完就停**，
+　並逐項舉例（電風扇 ＝ 一個圓、四五根輻條加一支腳，不是準確的護網；
+　磁磚牆是幾條線不是完整格線；鐵窗是幾根不是每一根），
+　並明寫「**透視是手判斷的，不是用尺量的**」。
+・**「兩層畫法」從九行砍到五行**，而且把那句話反過來寫：
+　「**房間不是比人更細，是比人更粗略**。每個房間裡東西很多，但每一樣都只用很少的筆畫 ——
+　**東西多，每一樣簡單**。」
+
+⚠ `AVOID` 跟著補了一整排：不要肖像式的臉、臉上不要陰影、不要睫毛眼白反光點、
+不要一根根的頭髮、**不要柔和／漸層／噴槍式的陰影**（一律是硬邊的平塗階）、
+**不要技術製圖與建築製圖、不要用尺拉的透視、電風扇與磁磚與鐵窗不要準確的機械細節**、
+不要均勻的細灰色輪廓線。
+
+⚠ 參考圖那一段也跟著改了一句：要抄的東西從「線條品質」擴成
+「**每一樣東西用了幾筆**」與「**臉畫得多簡單**」。
+
+---
+
 ## 三、五個提案共用的規格（每一份提示詞裡都逐字帶著）
 
 - **Ⓐ~Ⓔ 是 16:9 橫幅**（`tools/hero-resize.mjs` 擋長寬比 2000/1116 ±0.02，16:9 過得了）；
@@ -246,6 +301,12 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 | `assets/hero-gum-photo-1600.jpg`（〈牙齦流血〉） | ⭐ **最重要的一張。** 它就是 Ⓕ 想要的結構：**一格一個人、一格一個家、一格一個底色**（灰藍的臥室／米色的廚房／橘色的客廳／深色的夜間浴室）。連「唯一一格是暗的」都已經在裡面 |
 | `assets/hero-checkup-photo-1600.jpg`（〈定期檢查〉） | **環境密度**看這一張：候診區、櫃檯、玻璃門的器械櫃、櫃上一排瓶罐、牆上的掛圖、診療椅 —— 東西很多，可是那些線**全部比人淡**。中間那一格的診所照它畫。⚠ 它同時是「**不要再畫候診室**」的理由（同一科、卡片會並排） |
 | `assets/hero-kids-photo-1600.jpg`（〈換牙〉） | **臉、表情、手**看這一張：五官很簡單但表情讀得出來，動作有力道卻沒有變形成卡通 |
+
+⚠⚠ **要抄的第一件不是「線好不好看」，是「一樣東西用幾筆」**（2026-09-05 第三版改的）——
+第二版寫的是「copy the line quality」，結果線畫得很像、**筆數卻多了好幾倍**，
+整張圖因此偏向技術製圖。現在那一句是「copy HOW FEW STROKES each object is drawn with，
+以及 how simply faces and hands are drawn」。〈定期檢查〉那張是最好的樣本：
+東西一樣多，但**每一樣只用三到八筆**。
 
 ⚠ **只抄畫風，不要抄構圖與人** —— 提示詞第一段就寫著這件事，
 而且明寫「**文字和參考圖衝突時以參考圖為準**」（不寫的話，長長的文字會把圖蓋掉）。
@@ -598,44 +659,54 @@ Editorial illustration, 4:3 landscape (slightly wider than tall, NOT a wide bann
 
 REFERENCE IMAGES — THREE IMAGES ARE ATTACHED. They are existing illustrations from the
 same website and this new picture must look like it belongs beside them. Copy from them:
-the exact line quality, the way faces and hands are simplified, the way flat pale colour
-is laid down, and the way rooms, furniture and small objects are drawn. Do NOT copy their
-layouts, their people or their scenes. Wherever the words below and the attached images
-disagree about style, THE ATTACHED IMAGES WIN.
+the exact line quality, HOW FEW STROKES each object is drawn with, how simply faces and
+hands are drawn, and how flat the colour is. Do NOT copy their layouts, their people or
+their scenes. Wherever the words below and the attached images disagree about style, THE
+ATTACHED IMAGES WIN.
 
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
-illustration. Every line is drawn by hand in a warm dark brown, never pure black, with
-visible variation in width and dry broken ends — never an even mechanical vector line,
-never a loose scribble. Colour is laid down in flat areas, two or three steps of the same
-colour; no smooth gradients except where light needs describing. EVERY surface carries a
+illustration, drawn quickly and confidently BY HAND. Every line is drawn in a warm dark
+brown, never pure black and never grey, with visible variation in width and dry broken
+ends — never an even mechanical vector line. Colour is laid down in FLAT areas, two or
+three steps of the same colour, with hard edges between the steps. EVERY surface carries a
 fine coloured-pencil grain. High key overall with plenty of pale paper showing through,
 BUT the picture must stay properly colourful — warm colours and cool colours both clearly
 present, and each person wears a different colour family from everyone else. People are
 simplified but their proportions are natural and their age is readable: Taiwanese / East
-Asian faces, normal head-to-body proportion, small simple features that still carry
-expression, hair drawn as a few shaped masses. NOBODY LOOKS OUT AT THE VIEWER.
+Asian faces, normal head-to-body proportion.
 
-TWO LEVELS OF DRAWING — THIS IS THE SECOND MOST IMPORTANT RULE, AND IT APPLIES TO EVERY
-PANEL. The people are drawn at FULL STRENGTH and the rooms around them are drawn at HALF
-STRENGTH.
-  PEOPLE, AT FULL STRENGTH — the darkest, thickest lines in the picture. Faces, hands,
-  hair, collars, cuffs, hems and the folds of clothing are all clearly drawn. Their
-  clothes carry the strongest colour in their panel. What each person is DOING is the
-  clearest thing in that panel.
-  ROOMS AND OBJECTS, AT HALF STRENGTH — every room is FULL of real, ordinary, specific
-  things; none of these panels is a bare wall with a chair. But every one of those things
-  is drawn with a THINNER AND PALER line than the people, and filled with a paler, quieter
-  version of its colour. Furniture, tiles, window frames, shelves and plants are described
-  in enough detail that you could name the room, then held back so they never compete with
-  the person. An environment line must never be as dark or as heavy as a person's line.
-  The one exception is the small object each person is holding or touching: that object is
-  drawn at full strength, because it is part of what they are doing.
+FACES AND HANDS — READ THIS TWICE. THIS IS WHERE THE PICTURE MOST EASILY GOES WRONG.
+Faces are drawn with the smallest possible number of marks and carry NO SHADING AT ALL.
+An eye is one small dark curved shape; there are no eyelashes, no visible white of the
+eye, no catchlight, no eyelid crease. A nose is one short stroke. A mouth is one short
+stroke. Cheeks, foreheads, chins and necks are flat unshaded skin tone with no modelling,
+no blush, no contouring and no cheekbones. Hair is two or three large shaped masses of
+flat colour with at most a few interior strokes — never individual strands, never rendered
+curls, never highlights. Hands are simple: fingers are simple tapering shapes, no knuckle
+modelling, no fingernails. IF A FACE IN THIS PICTURE LOOKS LIKE A PORTRAIT, IT IS WRONG.
+
+ECONOMY OF LINE — THE SECOND PLACE IT GOES WRONG. Every object is drawn with THE SMALLEST
+NUMBER OF STROKES THAT STILL NAMES IT, and then stopped. An electric fan is a circle, four
+or five spokes and a stand — not an accurate wire guard. A tiled wall is a few lines
+suggesting tiles, not a complete grid. A window grille is a few bars, not every bar. A
+dish rack is three or four dishes, not a full rack. A rice cooker is a rounded box with a
+lid. Perspective is relaxed and judged by hand, never ruled, never architecturally
+correct. Nothing in this picture is drawn accurately; everything is drawn quickly and
+recognisably.
+
+TWO LEVELS — the people are drawn with the darkest, thickest lines and wear the strongest
+colours in their panel; the rooms behind them use thinner, paler lines and quieter colour.
+That is the only difference between them. The rooms are NOT more detailed than the people
+— they are LESS detailed. Each room holds MANY ordinary objects, but every one of those
+objects is drawn with very few strokes. Many things, each one simple. The one exception is
+the small object each person is holding or touching: that is drawn at full strength,
+because it is part of what they are doing.
 
 STRUCTURE — The whole picture is ONE MOSAIC of seven panels, like a page of an
 illustrated poster. The panels are irregular polygons of different sizes, fitted together
 edge to edge and separated by THIN HAND-DRAWN GUTTER LINES that are slightly wobbly, never
 ruler-straight and never a regular grid of rectangles. The mosaic fills the whole frame.
-Each panel has its own very pale background tint, and each panel is a DIFFERENT ROOM with
+Each panel has its own pale background tint, and each panel is a DIFFERENT ROOM with
 DIFFERENT FURNITURE — the six homes must never look like the same house drawn six times.
 
 THE CENTRE PANEL is the largest: an irregular five-sided panel in the middle of the
@@ -646,59 +717,53 @@ of them looks at the viewer.
   scrub top, hair in a low bun. She stands slightly forward of the other. One arm is open
   and extended outward in a calm, welcoming, presenting gesture — the gesture of someone
   introducing people she is glad to see, not the gesture of someone giving a warning. Her
-  weight is leaning very slightly towards the panels. Her expression is warm, attentive
-  and unhurried.
+  weight is leaning very slightly towards the panels. Her expression is warm and unhurried.
   THE NURSE, a woman in her forties, wears NO WHITE COAT — only a scrub top, and it is a
   DIFFERENT COLOUR from the dentist's: a muted dusty teal. Short hair tucked behind one
   ear. She stands half a step behind and to the other side, hands resting easily together
-  in front of her or one hand on the edge of the cabinet, head tilted, nodding slightly at
-  one of the panels. She is the quieter of the two, and she is clearly agreeing.
+  in front of her, head tilted, nodding slightly at one of the panels. She is the quieter
+  of the two, and she is clearly agreeing.
   TOGETHER THEY READ AS WELCOME AND INTRODUCTION — these are the people we are glad to
   look after, and here they are. Nobody is scolding, warning, pointing at the viewer or
   raising a finger.
-  THEIR ROOM, at half strength — a real clinic corner, not a hint of one: a low wooden
-  cabinet with a run of drawers, a glass-fronted cabinet holding rows of small unlabelled
-  bottles and boxes, a stack of folded towels, a small potted plant, a simple picture on
-  the wall showing ONLY a single tooth and no writing at all, a window frame at one side
-  letting in daylight, and the floor visible at the bottom.
+  THEIR ROOM, simply drawn — a low wooden cabinet, a glass-fronted cabinet with rows of
+  small unlabelled bottles, a stack of folded towels, a potted plant, a simple picture on
+  the wall showing ONLY a single tooth and no writing at all, a window frame at one side,
+  and the floor visible at the bottom.
 
 THE SIX PANELS AROUND HER, each holding ONE ordinary person in their own home, doing an
-ordinary thing. Each home is described below and all of it must be drawn — quietly, at
-half strength, but drawn.
+ordinary thing. All of the objects below must be there, and every one of them is drawn
+with very few strokes.
   UPPER LEFT — a woman in her early thirties, visibly but not dramatically pregnant,
   sitting back on a fabric sofa with one hand resting on her middle, the other holding a
-  slim blank booklet. HER ROOM: two cushions pushed to one end of the sofa, a low wooden
-  coffee table with a glass of water and a small stack of plain books, a pair of slippers
-  on the floor, a leafy pot plant by the window, a barred Taiwanese window grille with
-  daylight coming through, a standing electric fan against the wall.
+  slim blank booklet. HER ROOM: cushions, a low wooden coffee table with a glass of water
+  and a small stack of plain books, slippers on the floor, a leafy pot plant, a barred
+  Taiwanese window with daylight coming through, a standing electric fan.
   UPPER RIGHT — a woman in her seventies with short grey permed hair, standing in her own
   kitchen, a wooden walking stick hooked over her forearm, reaching up into a cupboard for
-  a cup. HER ROOM: an old-fashioned counter with white square wall tiles, a kettle on the
-  gas ring, a ladle and a cloth hanging from hooks, a few unlabelled seasoning jars on the
-  windowsill, a bamboo basket of vegetables, a bunch of garlic hanging up, a wooden
-  crockery cupboard.
+  a cup. HER ROOM: an old-fashioned counter, a tiled wall, a kettle on the gas ring, a
+  ladle and a cloth on hooks, a few unlabelled jars on the windowsill, a bamboo basket of
+  vegetables, a bunch of garlic hanging up, a wooden crockery cupboard.
   RIGHT — a man in his early fifties in an open-collared work shirt, sitting at his dining
   table with a soft brown paper pharmacy bag in front of him and two blister packs of
   tablets half slid out of it, one hand resting on the bag. HIS ROOM: a round table with a
-  patterned plastic tablecloth, a glass of tea, wooden chairs, a standing fan behind him,
-  a towel over the back of a chair, a barred window, a television remote and a pair of
-  reading glasses at the corner of the table.
+  patterned plastic tablecloth, a glass of tea, wooden chairs, a standing fan, a towel over
+  a chair back, a barred window, a remote control and reading glasses on the table.
   LOWER RIGHT — a man in his sixties at his breakfast table, holding a small handheld
   meter to his fingertip, completely matter-of-fact about it. HIS ROOM: a bowl of rice
-  porridge, two small dishes of side vegetables, a cup of soy milk, a stainless steel
-  vacuum flask; behind him the kitchen doorway, an electric rice cooker on a counter, a
-  hanging cloth, and beyond the window the pillars of a Taiwanese covered walkway.
+  porridge, two small dishes of vegetables, a cup of soy milk, a steel vacuum flask; behind
+  him a kitchen doorway, a rice cooker on a counter, a hanging cloth, and beyond the window
+  the pillars of a Taiwanese covered walkway.
   LOWER LEFT — the middle of the night. A woman in her fifties in a T-shirt stands at her
   kitchen counter pouring herself a glass of water, half asleep. THIS IS THE ONLY DARK
   PANEL: deep dusty blue-grey, with exactly two sources of light — a small warm lamp above
-  the counter, and a few lit windows in the block of flats across the street. Her draining
-  rack of bowls, the tap, the tiled splashback and the counter are all drawn, but they sit
-  down in the dark. The wall behind her is dark, never left pale.
+  the counter, and a few lit windows in the block of flats across the street. A draining
+  rack with a few bowls, a tap and the counter are there, but they sit down in the dark.
+  The wall behind her is dark, never left pale.
   LEFT — a woman in her forties wearing a soft printed headscarf, sitting comfortably in a
-  rattan armchair reading a book with blank pages, calm and at ease. HER ROOM: a small
-  side table with a vacuum flask on it, a knitted blanket over her knees, a pot plant, a
-  shelf of plain books behind her, and a simple framed picture on the wall with no writing
-  in it.
+  rattan armchair reading a book with blank pages, calm and at ease. HER ROOM: a small side
+  table with a vacuum flask, a knitted blanket over her knees, a pot plant, a shelf of
+  plain books, and a simple framed picture on the wall with no writing in it.
 
 ALL SIX ARE CALM, ORDINARY AND AT EASE — they are not ill, not frail, not sad, not
 frightened, and none of them is in a hospital or a clinic. Each has a different posture
@@ -717,30 +782,32 @@ panel a different pale tint for its background and assign the clothes so that no
 neighbouring people clash: upper left dusty rose, upper right mustard, right pale slate
 blue, lower right cream and brick red, lower left deep blue in shadow, left muted teal
 with a patterned headscarf, the dentist white coat over pale sage green, the nurse dusty
-teal. Clothes are not flat single blocks of colour — give every garment two or three
-steps, with collars, cuffs, hems and folds drawn in. As a small accent only, a deep forest
+teal. Every garment has two or three FLAT steps of colour with hard edges, plus collars,
+cuffs and hems — never a soft airbrushed gradient. As a small accent only, a deep forest
 green (#3f654a / #2c5238) on the gutter lines and on one shelf behind the staff — a touch,
-never a wash. Teeth, wherever they show, stay clean near-white and take none of this
-colour.
+never a wash. Teeth, wherever they show, stay clean near-white.
 
 CRITICAL — NO WRITING ANYWHERE. There is no text, no lettering, no numbers, no letters, no
 logos, no captions, no labels and no signage anywhere in this picture — not in the gutters
 between panels, not on the booklet, not on the books or the bookshelf, not on the framed
 pictures, not on the pharmacy bag, not on the blister packs, not on the handheld meter or
-its little screen, not on the seasoning jars, not on the bottles and boxes in the clinic
-cabinet, not on the flasks, not on the rice cooker, not on the remote control, and not on
-any wall. Every surface that would normally carry writing is left blank. This is the
-single most important rule after the style.
+its little screen, not on the jars, not on the bottles in the clinic cabinet, not on the
+flasks, not on the rice cooker, not on the remote control, and not on any wall. Every
+surface that would normally carry writing is left blank.
 
-AVOID — no clocks, no calendars, no phone screens, no computer screens and no digital
-displays of any kind, because they all carry numbers; no speech bubbles, no thought
-bubbles, no captions, no arrows, no numbers on the panels and no icons or symbols of any
-kind; the gutters are plain hand-drawn lines, not a neat rectangular grid and not
-comic-book panel borders with heavy black outlines; nobody looks at the viewer and nobody
-points at the viewer; the dentist is not scolding, not warning and not raising a finger;
-the two staff must not be drawn as a matching pair in the same pose and must not wear the
-same colour; no empty rooms, no bare walls, no panel that contains only a person and a
-chair; the environment lines must never be as dark or as heavy as the people's lines; no
+AVOID — no realistic or portrait-like faces, no shading or modelling on any face, no
+eyelashes, no eye whites, no catchlights, no individually drawn hair strands; no soft,
+smooth or airbrushed gradient shading anywhere, on fabric, walls, skin or furniture — all
+shading is flat steps with hard edges; no technical, architectural or engineering drawing,
+no ruled perspective, no accurate mechanical detail on fans, appliances, tiles, window
+grilles or racks; no thin uniform grey outlines; no clocks, no calendars, no phone
+screens, no computer screens and no digital displays of any kind, because they all carry
+numbers; no speech bubbles, no thought bubbles, no captions, no arrows, no numbers on the
+panels and no icons or symbols of any kind; the gutters are plain hand-drawn lines, not a
+neat rectangular grid and not comic-book panel borders with heavy black outlines; nobody
+looks at the viewer and nobody points at the viewer; the dentist is not scolding, not
+warning and not raising a finger; the two staff must not be drawn as a matching pair in
+the same pose and must not wear the same colour; no empty rooms and no bare walls; no
 hospital beds, no IV stands, no wheelchairs, no oxygen tubes, no face masks covering
 anyone's face, no sick or pained expressions, no tears; no close-up dental instruments, no
 needles, no drills, no trays of tools; no blood; no photorealistic mouth interiors; no
