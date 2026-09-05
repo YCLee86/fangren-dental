@@ -78,7 +78,27 @@ const ALPHAS = [["08", .08], ["12", .12], ["18", .18]];
 const BASE = "r1c2";          /* 基準形狀 ＝ 站上頁首那顆 */
 const BASE_W = 150;           /* 它在卡片上的顯示寬度（2026-09-04 那一版） */
 const DPR = 2.8;              /* 出圖倍率（150 × 2.8 = 420，同前一版） */
+/* ⚠⚠ `brand/shapes/` 裡有 **12 個檔**，但**只有這九個是獨立的形狀**
+   （2026-09-05 使用者問「我看到的 logo 有 12 個」，逐一量過的結果）：
+     ・`mark.svg`        ＝ `shape-r1c2.svg` **逐位元組相同**，是同一顆的別名
+     ・`tooth-solid.svg` 對 `shape-r2c2.svg` **逐像素只差 0.8%**（比例同為 1.332）
+     ・`mark-outline.svg` **是真的不一樣**（描邊版，在卡片的裁切下對九顆差 91~95%），
+       但它**墨只佔 17.0%**（這九顆是 59.6~83.2%）—— 按等重換算要 **321px** 寬，
+       比整張卡（207px）還寬；用 150px 則露在卡上的墨只有 4.6% vs 九顆的 35~38%。
+       **要用它就得放掉「一組一樣重」那條規則**，所以沒有放進來。
+   數字與推導在 brand/README.md 與 drafts/channels/README.md 第 22-21 節。
+   ⚠ 要加第十顆之前先讀那兩節，特別是「份量在不在同一級」那一條。 */
 const SHAPES = ["r1c1", "r1c2", "r1c3", "r2c1", "r2c2", "r2c3", "r3c1", "r3c2", "r3c3"];
+/* ⚠ 守門：只收九宮格那九個。`mark`／`tooth-solid` 是重複的，放進來會出現兩張一模一樣的
+   浮水印，**而且畫面完全正常、不會報錯** —— 只有把兩張圖疊起來比才看得出來。 */
+{
+  const DUPE = { mark: "r1c2", "tooth-solid": "r2c2" };
+  for (const n of SHAPES) {
+    if (DUPE[n]) throw new Error(`${n} 是 ${DUPE[n]} 的重複，不要放進池子（見 brand/README.md）`);
+    if (!/^r[1-3]c[1-3]$/.test(n)) throw new Error(`${n} 不是九宮格那九個之一`);
+  }
+  if (new Set(SHAPES).size !== SHAPES.length) throw new Error("SHAPES 裡有重複");
+}
 
 const chrome = (() => {
   const base = process.env.PLAYWRIGHT_BROWSERS_PATH || "/opt/pw-browsers";

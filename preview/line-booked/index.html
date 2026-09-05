@@ -304,12 +304,25 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <div class="pv-panel" id="pv-panel2"></div>
 
   <h2 class="pv-h2">③ 浮水印：九顆形狀與顏色</h2>
-  <p class="pv-sub">診所標誌本來就有<b>九個形狀</b>（<code>brand/shapes/shape-r{1,2,3}c{1,2,3}.svg</code>，
-  照九宮格的位置命名），<b>r1c2 就是站上頁首那一顆</b> —— 九顆裡本來就含著現在用的那一顆，不是第十顆。
+  <p class="pv-sub">用的是<b>九宮格那九個形狀</b>（<code>brand/shapes/shape-r{1,2,3}c{1,2,3}.svg</code>，
+  照畫面位置命名），<b>r1c2 就是站上頁首那一顆</b> —— 九顆裡本來就含著現在用的那一顆，不是第十顆。
   每一顆各配一支<b>站上已經在用的科別色</b>，<b>顏色一支都沒有新增</b>。<br>
   ⚠⚠ 九顆的<b>寬度各不相同</b>：它們有四種長寬比（1.00／1.33／2.03／3.08），同寬的話細長那幾顆
   看起來會輕很多，所以是按<b>墨的面積</b>算出來的（離散度 1.14%）。寬度只有一份出處：
   <code>preview/line-booked/wm-sizes.json</code>。</p>
+
+  <p class="pv-note"><b>⚠ 為什麼是九顆，可是資料夾裡有十二個檔</b>（2026-09-05 你問的，逐一量過了）——
+  <code>brand/shapes/</code> 是 12 個 SVG，但<b>另外三個不是三種新形狀</b>：
+  <br>・<code>mark.svg</code> ＝ <b><code>shape-r1c2.svg</code> 逐位元組相同</b>（路徑與 viewBox 都一樣）。
+  它是同一顆的別名，不是第十顆。
+  <br>・<code>tooth-solid.svg</code> 和 <code>shape-r2c2.svg</code> <b>逐像素只差 0.8%</b>
+  （長寬比同為 1.332、墨佔 83.2% vs 82.6%）—— 九顆裡已經有它了。
+  <br>・<code>mark-outline.svg</code> 是<b>描邊版</b>（線框，牙洞是同色實心點不是挖穿的），
+  <b>真的和九顆都不一樣</b>（在這個裁切下對九顆差 91~95%）。<b>但它進不了這個池子</b>：
+  墨只佔 17.0%（九顆是 60~83%），按<b>等重</b>換算要 <b>321px</b> 寬 —— <b>比整張卡（207px）還寬</b>；
+  硬用 150px 的話露在卡上的墨只有 <b>4.6%</b>，而九顆是 35~38%，<b>會比旁邊那幾張淡七、八倍</b>。
+  <br>→ <b>要用它就得放掉「九顆一樣重」那條規則</b>（它天生就比較輕）。
+  <b>這一版沒有自己決定，池子維持九顆</b> —— 要加就是第十顆、而且要接受它比較淡。</p>
 
   <div class="pv-wm" id="pv-wmref"></div>
   <p class="pv-note" id="pv-wmnote"></p>
