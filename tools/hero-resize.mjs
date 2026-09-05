@@ -20,7 +20,17 @@
  *
  * 出圖前會自動驗兩件事，不過就拒絕寫檔：
  *   ① 四邊有沒有烘進去的白框（第七節第 6 條，〈牙齦流血〉那張踩過）
- *   ② 長寬比是不是 16:9 上下（站上的 <img> 寫死 width/height 2000×1116）
+ *   ② 長寬比落不落在允許的那幾種（`RATIOS`）
+ *
+ * ⚠⚠ 2026-09-05：這一支本來只收 16:9（站上前十一張都是 2000×1116）。
+ *    〈三個月一次的洗牙與塗氟〉那張是 **4:3**（使用者指定「不要拘泥於橫幅」），
+ *    所以改成一張允許清單。⚠ 換了比例要一起看兩件：
+ *    ・**首頁卡的縮圖是 `aspect-ratio: 16/9` ＋ `object-fit: cover`**，
+ *      所以非 16:9 的圖在卡片上會被**置中裁掉上下**（4:3 各裁 12.4%）——
+ *      臉與關鍵的東西不能放在那兩條裡（見 ILLUSTRATION.md 第七節附三）。
+ *    ・**`<img>` 的 width/height 要寫真值**：`.post-hero img` 是 `height:auto`，
+ *      寫錯不會變形但會在載入前留錯高度；`tools/build.mjs` 產的兩處已改成
+ *      用 `jpegSize()` 現讀，不再寫死 2000×1116。
  */
 
 import fs from "node:fs";
@@ -30,7 +40,11 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WIDTHS = [2000, 1600, 800];
 const QUALITY = 0.82;
-const RATIO = 2000 / 1116;          // 站上既有六張的比例
+// 允許的長寬比。⚠ 要再加一種之前先讀上面那一段的兩條。
+const RATIOS = [
+  { name: "16:9", r: 2000 / 1116 },   // 站上前十一張
+  { name: "4:3",  r: 4 / 3 },         // 〈三個月一次的洗牙與塗氟〉起
+];
 const RATIO_TOL = 0.02;
 
 const chromeCandidates = () => {
@@ -135,9 +149,11 @@ await browser.close();
 console.log(`原檔 ${res.W}×${res.H}`);
 
 const ratio = res.W / res.H;
-if (Math.abs(ratio - RATIO) > RATIO_TOL) {
-  console.error(`× 長寬比 ${ratio.toFixed(4)} 對不上站上的 ${RATIO.toFixed(4)}（±${RATIO_TOL}）。`);
-  console.error("  站上六張都是 2000×1116，<img> 的 width/height 也寫死那一組 —— 先裁到同一個比例再跑。");
+const hit = RATIOS.find((x) => Math.abs(ratio - x.r) <= RATIO_TOL);
+if (!hit) {
+  console.error(`× 長寬比 ${ratio.toFixed(4)} 不在允許的清單裡：` +
+    RATIOS.map((x) => `${x.name}（${x.r.toFixed(4)}）`).join("、") + `（±${RATIO_TOL}）`);
+  console.error("  先裁到其中一種再跑，或到這一支的檔頭把新的比例加進 RATIOS（那一段寫著要一起看的兩件事）。");
   process.exit(1);
 }
 const b = res.border;
@@ -147,7 +163,11 @@ if (b.top + b.bottom + b.left + b.right > 0) {
   console.error("  先把白邊裁掉再跑。");
   process.exit(1);
 }
-console.log("✓ 四邊沒有白框、比例對得上");
+console.log(`✓ 四邊沒有白框、比例對得上（${hit.name}）`);
+if (hit.name !== "16:9") {
+  console.log("⚠ 這不是 16:9 —— 首頁卡的縮圖會置中裁成 16:9（4:3 上下各裁 12.4%），");
+  console.log("  確認臉與關鍵的東西都不在那兩條裡；文章頁看得到完整的原比例。");
+}
 
 for (const w of WIDTHS) {
   const o = res.outs[w];

@@ -421,11 +421,23 @@ const relatedFor = (self, all, skip) => {
   return [...same, ...rest].slice(0, REL_COUNT);
 };
 
+/* HERO 的 width/height：讀真實的檔案，不要寫死。
+   ⚠⚠ 2026-09-05 以前這兩處寫死 `2000×1116`（站上前十一張都是 16:9），
+   〈三個月一次的洗牙與塗氟〉那張是 4:3，寫死就會在圖載入前留錯高度。
+   ⚠ 首頁卡的 `.card-thumb` 是 `aspect-ratio: 16/9` ＋ `object-fit: cover`，
+   所以那一張在卡片上會被置中裁掉上下 —— 版面不受影響，這裡只是把
+   內在尺寸講對（CLS 與 srcset 的挑選都看它）。 */
+const heroDim = (hero) => {
+  const px = jpegSize(path.join(ROOT, "assets", hero));
+  if (!px) return ` width="2000" height="1116"`;   // 非 JPEG（舊的 .svg）就退回原本那組
+  return ` width="${px.width}" height="${px.height}"`;
+};
+
 const relCard = (p) => {
   const spec = SPEC[p.tag];
   return `        <li class="rel-card"${spec ? ` data-spec="${spec}"` : ""}>
           <a href="../${esc(p.slug)}/">
-            <img src="../../assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "../../assets/"), SIZES_REL)} alt="" width="2000" height="1116" loading="lazy">
+            <img src="../../assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "../../assets/"), SIZES_REL)} alt=""${heroDim(p.hero)} loading="lazy">
             <span class="rel-body">
               <span class="rel-tag">${esc(p.tag)}</span>
               <span class="rel-title">${esc(p.title)}</span>
@@ -482,7 +494,7 @@ const card = (p) => {
   const spec = SPEC[p.tag];
   if (!spec) console.warn(`  ⚠ 標籤「${p.tag}」沒有對應的科別代碼，${p.slug} 不會被主題與科別篩到`);
   return `      <a class="card" href="posts/${esc(p.slug)}/"${spec ? ` data-spec="${spec}"` : ""}>
-        <img class="card-thumb" src="assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "assets/"), SIZES_THUMB)} alt="${esc(p.heroAlt || p.title)}" width="2000" height="1116" loading="lazy">
+        <img class="card-thumb" src="assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "assets/"), SIZES_THUMB)} alt="${esc(p.heroAlt || p.title)}"${heroDim(p.hero)} loading="lazy">
         <div class="card-body">
           <span class="card-tag">${esc(p.tag)}</span>
           <h3>${esc(p.title)}</h3>
