@@ -1,0 +1,211 @@
+{
+  "_說明": [
+    "看診後的評價邀約（LINE Flex Message）。後台現在叫它「滿意度調查」。",
+    "**2026-09-05 定稿**（使用者：「ok 定稿 存起來」）。規格頁是 /preview/line-review/，",
+    "逐輪推導在 drafts/channels/README.md 第十七、二十一節。",
+    "",
+    "⚠⚠⚠ **這一則和另外四則不一樣：它有一個法遵上的問題，而且還沒問到答案。**",
+    "  卡上是兩塊「一句話 ＋ 一顆按鈕」：上面是一個**是非題**（願意推薦嗎？）配",
+    "  **公開**評論那一顆，下面是一個**負面前提**（不好的直接告訴我們）配**私下**那一顆。",
+    "  合起來讀就是「願意的人去公開、不開心的人來私下」——而 Google 商家檔案禁的",
+    "  正好是這兩件：**選擇性地只向滿意的人索取公開評論**、**把不滿意的人導離公開評論**。",
+    "  ⚠⚠ **這幾句話是使用者 2026-09-05 逐字寫的，所以照寫**（同提醒卡那條「2天後」：",
+    "     使用者的字裡有事實或法遵風險時，照寫、把證據攤開、給替代案，不要自己改）。",
+    "     替代案是規格頁上的 Ⓑ（`?a=b`）——同排法、同口氣，只把問句換成",
+    "     「好的不好的都想聽」、把「不開心」換成「想直接跟我們說也可以」。",
+    "  ⚠⚠⚠ **在廠商答出那兩顆按鈕連到哪裡之前，不要把這一則送上去**",
+    "     （README 第 17-3 節那三題）。如果兩條路本來就都通向公開評論，那它只是",
+    "     寫得不好、不是違規；但那一題我們現在沒有答案。",
+    "",
+    "⚠⚠⚠ **一條紅線：不可以拿好處換評價**（折價、抽獎、送洗牙都不行）——",
+    "  Google 明文禁止，醫療機構在台灣還多一層招徠的疑慮。守門有一列在掃。",
+    "",
+    "⚠⚠ **兩顆按鈕的網址都還沒有：**",
+    "  ① 公開那一顆要的是 Google 的「寫評論」深連結，**需要 Place ID**，",
+    "     我們手上只有分享短網址（同綁定完成那顆按鈕的缺口）。",
+    "  ② 私下那一顆連到哪裡**還沒決定**（＝第 17-3 節那三題的第二題：",
+    "     現況那張卡的「不願意並提供建議」點下去到哪）。",
+    "  兩顆現在都是佔位符【…】。",
+    "",
+    "⚠ **開場是使用者自己寫的**（「哈囉　病人姓名　回去牙齒都還好嗎／",
+    "  有什麼狀況的話記得跟診所聯繫一下」）。用字一個都沒改，只做斷行 ——",
+    "  名字是系統填的，那一行只能自己一行（同提醒卡）。",
+    "  ⚠⚠ 這一句把整張卡的順序換掉了：**先關心、再開口**。要東西之前先給東西。",
+    "",
+    "⚠⚠ **沒有標題**（現況那個「滿意度調查」是公家表格的詞，而且標題說滿意度、",
+    "  內文問推薦意願，本來就是兩件事）。有頭圖就不必再寫一次診所名（同另外三則）。",
+    "",
+    "⚠⚠ **收尾那兩行（沒有專人看訊息／電話）2026-09-05 由使用者指定整段拿掉。**",
+    "  它帶走一件事：開場叫病人「記得跟診所聯繫一下」，而**卡上現在沒有一個地方",
+    "  寫怎麼聯繫**。沒有自己加回去，規格頁的面板有一列一直標著。",
+    "",
+    "⚠⚠ **兩顆按鈕在 Flex 裡都是「可以點的 box」，不是 button** ——",
+    "  因為 Flex 的 button 只有一個文字標籤、放不進圖示（CLAUDE.md 第十一之二節），",
+    "  而這一站的按鈕上要有標誌。代價：box 沒有 button 內建的按壓效果",
+    "  （LINE 會不會給一層淡淡的按壓反白，我們沒有實機驗過 —— 那一題在廠商清單上）。",
+    "",
+    "⚠⚠ **第二顆是線框鈕不是第二顆綠鈕**（同提醒卡那顆「掰掰不去囉」）——",
+    "  兩顆都填實會稀釋主要動作。",
+    "  ⚠ 它的標誌是 mark-nogo.png（招呼卡那顆 shape-r2c3 **上下翻過來**，",
+    "    由 remind-marks.mjs 一起產）。**翻轉是烘在 PNG 裡的**，不是 CSS 的 scaleY(-1) ——",
+    "    牙洞靠 fill-rule 挖，只翻外框、洞留原位會讓洞落在形狀外面、靜靜地消失而且不報錯。",
+    "  ⚠ 標籤中間那個空格是**半形**（使用者 2026-09-05 指定，同取消卡那顆「是喔 要取消」）。",
+    "",
+    "⚠⚠⚠ **margin 的數字和規格頁的 CSS 不會逐字相同，這是刻意的**（同提醒卡）：",
+    "  規格頁量的是**墨到墨**，而行高在字面下方藏著約 5px 的半行距 ——",
+    "  同一段半行距在 Flex 的 text 元件裡本來就有。規格頁量到的兩組",
+    "  「一句話 → 按鈕」墨距都是 **11.5px**，換算成 Flex 是 **margin: 6px**。",
+    "  ⚠ 兩組吃同一個數字，不要只改一組（不一致會被讀成兩種不同的關係）。",
+    "  ⚠ 其餘的 margin 直接沿用規格頁的 CSS 數字（Flex 的 margin 吃 px 字串，",
+    "    不必湊 xs/sm/md 那張四的倍數表）。",
+    "",
+    "⚠ 〔病人姓名〕是**系統填的欄位**，不要寫死（這裡用 {{patient}}）。",
+    "",
+    "⚠ 上線前要把圖放到 https://fangren.net/assets/line/（那個資料夾現在還不存在，",
+    "  tools/dist.mjs 也還沒有它 —— CLAUDE.md 第十一之七節第 4 項）：",
+    "  hero-review.jpg、mark-white.png、mark-chev-white.png、mark-nogo.png。"
+  ],
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/line/hero-review.jpg",
+    "size": "full",
+    "aspectRatio": "2:1",
+    "aspectMode": "cover"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "14px",
+    "backgroundColor": "#F4F4F5",
+    "spacing": "none",
+    "contents": [
+      {
+        "type": "text",
+        "size": "md",
+        "color": "#2A2C27",
+        "wrap": true,
+        "contents": [
+          { "type": "span", "text": "哈囉　" },
+          { "type": "span", "text": "{{patient}}", "weight": "bold" }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "回去牙齒都還好嗎",
+        "size": "md",
+        "color": "#2A2C27",
+        "margin": "0px",
+        "wrap": true
+      },
+      {
+        "type": "text",
+        "text": "有什麼狀況的話\n記得跟診所聯繫一下",
+        "size": "sm",
+        "color": "#5C5F57",
+        "margin": "2px",
+        "wrap": true
+      },
+      {
+        "type": "text",
+        "text": "想瞭解你這次的經驗，\n願意推薦給身邊的親朋好友嗎？",
+        "size": "sm",
+        "color": "#2A2C27",
+        "margin": "12px",
+        "wrap": true
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "backgroundColor": "#3F654A",
+        "cornerRadius": "9px",
+        "paddingAll": "12px",
+        "margin": "6px",
+        "action": {
+          "type": "uri",
+          "label": "願意並分享經驗",
+          "uri": "【廠商填：Google 評論的深連結，需要診所的 Place ID】"
+        },
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/mark-white.png",
+            "size": "34px",
+            "aspectRatio": "2.025:1",
+            "aspectMode": "fit",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "願意並分享經驗",
+            "size": "md",
+            "weight": "bold",
+            "color": "#FFFFFF",
+            "align": "center",
+            "margin": "8px",
+            "flex": 0
+          },
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/mark-chev-white.png",
+            "size": "5px",
+            "aspectRatio": "0.481:1",
+            "aspectMode": "fit",
+            "margin": "6px",
+            "flex": 0
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "也很重視你的意見，\n不好的直接告訴我們",
+        "size": "sm",
+        "color": "#2A2C27",
+        "margin": "18px",
+        "wrap": true
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "borderColor": "#2C5238",
+        "borderWidth": "1px",
+        "cornerRadius": "9px",
+        "paddingTop": "11px",
+        "paddingBottom": "11px",
+        "paddingStart": "6px",
+        "paddingEnd": "6px",
+        "margin": "6px",
+        "action": {
+          "type": "uri",
+          "label": "不開心 有話要說",
+          "uri": "【廠商填：私下的意見管道 —— 連到哪裡還沒決定，見第 17-3 節】"
+        },
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/mark-nogo.png",
+            "size": "34px",
+            "aspectRatio": "3.076:1",
+            "aspectMode": "fit",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "不開心 有話要說",
+            "size": "md",
+            "weight": "bold",
+            "color": "#2C5238",
+            "align": "center",
+            "margin": "8px",
+            "flex": 0
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -173,16 +173,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-new .btn span{font-size:16px;font-weight:700;letter-spacing:.02em}
 /* 角形＝站上「往下滑／回到最上面／繼續讀」那一顆轉成朝右（remind-marks.mjs 產的，
    借用提醒卡那一張，不另外再產一份）。⚠ 高度跟著**字**走：16px 的字配 11px 高。 */
-.pv-new .btn .chev,.pv-new .tel .chev{flex:none;display:block;
+.pv-new .btn .chev{flex:none;display:block;
   width:5.3px;height:11px;margin-left:-2px}
-.pv-new .telnote{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:14px;
-  text-align:center}
-.pv-new .telnote + .tel{margin-top:calc(5px - 4.8px)}
-.pv-new .tel{display:flex;align-items:center;justify-content:center;gap:8px;
-  border:1px solid var(--deep);border-radius:9px;padding:11px 6px;
-  color:var(--deep);font-size:16px;font-weight:700;line-height:1.4;
-  letter-spacing:.02em;font-variant-numeric:tabular-nums}
-.pv-new .tel img{flex:none;display:block;width:16.8px}
 /* 量名字那一行用的探針（真名 3 個字時多寬）—— 不佔位、不影響版面 */
 .pv-probe{position:absolute;left:-9999px;top:0;white-space:nowrap}
 
@@ -199,42 +191,20 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   border-left:3px solid var(--rule);padding-left:10px}
 .pv-note b{color:var(--ink)}
 
-/* ---- 切換條 ---------------------------------------------------------- */
-.pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:9;
-  background:rgba(244,244,245,.96);backdrop-filter:blur(8px);
-  border-top:1px solid var(--rule);padding:7px 10px calc(7px + env(safe-area-inset-bottom))}
-.pv-bar .r{display:flex;gap:6px;align-items:center;overflow-x:auto;
-  scrollbar-width:none;padding-bottom:2px}
-.pv-bar .r::-webkit-scrollbar{display:none}
-.pv-bar .lb{font-size:.66rem;color:var(--ink-soft);flex:none;width:3.6em}
-/* ⚠ 切換條在手機上不能吃掉太多畫面（CLAUDE.md 第八節 hero-motion-mobile 那一輪：
-     第一版量到一屏的 28%，而要判斷的正是那張卡）。這一頁只有三把尺，面板會現場量。 */
-.pv-bar button{flex:none;font:inherit;font-size:.72rem;line-height:1.55;
-  border:1px solid var(--deep);color:var(--deep);background:#fff;
-  border-radius:8px;padding:4px 8px;cursor:pointer;white-space:nowrap}
-.pv-bar button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
-.pv-bar .r + .r{margin-top:4px}
-.pv-bar .r.off{opacity:.38;pointer-events:none}
-.pv-bar .fold{position:absolute;right:10px;top:-31px;border-radius:8px 8px 0 0;
-  border-bottom-color:transparent;font-size:.7rem;padding:3px 10px;
-  background:rgba(244,244,245,.96)}
-.pv-bar.fold-in{padding-top:7px}
-.pv-bar.fold-in .r{display:none}
-.pv-bar.fold-in .fold{position:static;border-radius:8px;border-bottom-color:var(--deep)}
 </style>
 </head>
 <body>
 <div class="pv-wrap">
   <h1>看診後的評價邀約　<span style="font-weight:400;font-size:.7em">提案</span></h1>
   <p class="pv-sub">後台現在叫它「<b>滿意度調查</b>」，看診後送出。
-  <b>圖卡的位置先保留</b>（頭圖還沒畫，佔位框和真圖一樣高）。<br>
-  ⚠⚠ 這一則不只是美感問題：現在那一張<b>把人分成兩條路</b>
-  （願意 → 分享體驗／不願意 → 提供建議），<b>那可能是 Google 明文禁止的評論篩選</b>，
-  而商家檔案是這間診所最大的入口。新版<b>不分流</b>。<br>
-  <b>開場是你 2026-09-05 自己寫的</b>；底下那一段給你<b>五案</b>挑，
-  另一把尺是<b>聯繫那一塊</b>
-  （切換條右上角可以<b>收起</b>）。
-  推導在 <code>drafts/channels/README.md</code> 第十七、二十一節。</p>
+  <b>2026-09-05 定稿</b>，這一頁已經從提案頁改寫成<b>規格頁</b>
+  （切換條拿掉，頁面留著要整包拿給廠商看 —— CLAUDE.md 第十一之五節）。<br>
+  ⚠⚠⚠ <b>這一則有一個法遵上的問題還沒收掉</b>：卡上兩塊合起來讀是
+  「願意的人去公開、不開心的人來私下」，而那正是 Google 商家檔案禁的兩件。
+  <b>那幾句是你自己逐字寫的，所以照寫</b>；替代案與完整理由在下面的面板與說明裡。
+  <b>廠商答出那兩顆按鈕連到哪裡之前，不要把這一則送上去。</b><br>
+  推導在 <code>drafts/channels/README.md</code> 第十七、二十一節。
+  Flex 的 JSON 在 <code>drafts/channels/review-card.json</code>。</p>
 
   <div class="pv-phone">
     <div class="pv-head"><img src="../../assets/icon-192.png" alt=""><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
@@ -250,12 +220,6 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   <div class="pv-panel" id="pv-panel"></div>
   <p class="pv-note" id="pv-note"></p>
-</div>
-
-<div class="pv-bar" id="pv-bar">
-  <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
-  <div class="r"><span class="lb">版本</span><span id="sw-v"></span></div>
-  <div class="r" id="row-a"><span class="lb">那兩塊</span><span id="sw-a"></span></div>
 </div>
 
 <span class="pv-probe" id="pv-probe"></span>
@@ -548,7 +512,6 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
     var btnC  = ct(body.querySelector(".btn"), cardBg);
     var negC  = ct(body.querySelector(".nob"), cardBg);
-    var barH = document.getElementById("pv-bar").getBoundingClientRect().height;
 
     function line(label, o, want) {
       if (!o) return "";
@@ -559,7 +522,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     }
 
     document.getElementById("pv-panel").innerHTML =
-      "<b>" + (v === "old" ? "Ⓐ 現況" : "Ⓑ 新版") + "</b>　<span>Flex 圖卡（268px）</span>"
+      "<b>" + (v === "old" ? "現況（廠商現在送的那一張）" : (ask === "a" ? "定稿" : "Ⓑ 替代案・不分流")) + "</b>　<span>Flex 圖卡（268px）</span>"
       + "<br>卡片實寬 " + (box.width >= 267.5
           ? "<span class='ok'>268px（＝LINE 的真值）</span>"
           : "<span class='no'>" + box.width.toFixed(0) + "px —— 這個螢幕放不下 268，"
@@ -631,8 +594,6 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>沒有專人那件事 " + (lied.length
           ? "<span class='no'>出現「" + lied.join("、") + "」</span>"
           : "<span class='ok'>守住了</span>")
-      + "<br>切換條佔一屏 <b>" + (barH / vh * 100).toFixed(1) + "%</b>"
-        + (barH / vh > .24 ? " <span class='no'>太高了</span>" : " <span class='ok'>ok</span>")
       + "<hr>" + (v === "old" ? oldNote() : newNote());
   }
 
@@ -739,118 +700,69 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "而且醫療機構在台灣還多一層招徠的疑慮。面板有一列在掃這件事。"
       + "<hr>"
       + "⚠ <b>〔病人姓名〕是系統填的欄位</b>，不要寫死。"
-      + "⚠ 三顆按鈕在 Flex 裡都是<b>可以點的 box</b>不是 <code>button</code> ——"
+      + "⚠ 兩顆按鈕在 Flex 裡都是<b>可以點的 box</b>不是 <code>button</code> ——"
       + "因為 <b>button 只有一個文字標籤、放不進圖示</b>（第十一之二節）。"
-      + "<br>⚠ 角形與話筒<b>借提醒卡已經產好的那兩張</b>，沒有另外再產一份。";
+      + "<br>⚠ 角形與翻過來的那顆標誌<b>借提醒卡已經產好的那兩張</b>，沒有另外再產一份。";
   }
 
-  /* ---- 切換條 -------------------------------------------------------- */
-  function bar(id, set, get, put) {
-    var boxEl = document.getElementById(id);
-    boxEl.innerHTML = "";
-    Object.keys(set).forEach(function (k) {
-      var b = document.createElement("button");
-      b.textContent = set[k].name;
-      b.setAttribute("aria-pressed", get() === k ? "true" : "false");
-      b.onclick = function () { put(k); render(); };
-      boxEl.appendChild(b);
-    });
-  }
-
+  /* ---- 定稿之後：切換條拿掉了 -----------------------------------------
+     ⚠ 兩把尺收成寫死的預設值（Ⓐ ＝ 使用者逐字寫的那一版），
+       **網址參數仍然吃得到**：`?v=old` 現況那一張、`?a=b` 不分流的替代案。
+       同 line-auto-reply 那一頁：已定案的尺不佔畫面，但要回頭看還開得出來。 */
   function render() {
     document.getElementById("pv-slot").innerHTML = v === "old" ? oldHtml() : newHtml();
-    bar("sw-v", { old: { name: "Ⓐ 現況" }, new: { name: "Ⓑ 新版" } },
-        function () { return v; }, function (k) { v = k; });
-    bar("sw-a", VER, function () { return ask; }, function (k) { ask = k; });
-    /* 現況那一張是廠商的，這兩把尺對它無效 —— 關掉而不是拿掉，
-       不然切回新版時整條會跳高一截。 */
-    ["row-a"].forEach(function (id) {
-      document.getElementById(id).className = "r" + (v === "old" ? " off" : "");
-    });
-    var q = v === "old" ? "?v=old" : "?v=new&a=" + ask;
-    history.replaceState(null, "", location.pathname + q);
     measure();
     document.getElementById("pv-note").innerHTML = note();
   }
 
   function note() {
-    return "⚠⚠⚠ <b>這一則和另外三則不一樣：它不只是「醜」的問題。</b>"
-      + "<br>現在那一張<b>先問一句「您願意推薦…嗎？」再把人分成兩條路</b>"
-      + "（願意 → 分享體驗／不願意 → 提供建議）。"
-      + "<b>如果只有「願意」那條通向 Google 評論</b>，那就是 review gating ——"
-      + "<b>只向滿意的人索取公開評論</b>，據我所知是 Google 商家檔案明文禁止的，"
-      + "因為它會讓公開評分失真。"
-      + "<br>⚠⚠ <b>但我不知道那兩顆按鈕實際連到哪裡，所以這是「要問」不是「你們違規了」。</b>"
-      + "三題在 <code>drafts/channels/README.md</code> 第 17-3 節，"
-      + "<b>問到之前不要把新版送上去，也不要急著把舊的關掉</b> ——"
-      + "如果兩條路本來就都通向 Google，那它只是寫得不好，不是違規。"
-      + "<br>⚠ 而<b>商家檔案是這間診所最大的入口</b>（六個月 14,973 次瀏覽、1,886 通電話），"
-      + "所以這一格的風險比任何一次改版都高。"
+    return "<b>這一則什麼時候送、送給誰</b>"
+      + "<br>・<b>看診之後</b>送給那一次看診的病人（觸發條件與實際時間差"
+      + "<b>還沒問到廠商</b> —— README 第 17-6 節）。"
+      + "<br>・卡上的〔病人姓名〕是<b>系統填的欄位</b>（JSON 裡寫 <code>{{patient}}</code>）。"
+      + "<br>・<b>推播類、要計費</b>（招呼訊息、自動回應、關鍵字回應都是回應類，不計費）。"
       + "<hr>"
-      + "<b>⚠⚠⚠ 2026-09-05：你要留「不好的」那顆按鈕 —— 做了，但它讓這張卡"
-      + "<u>更靠近</u>那條線，所以有三件事必須同時成立。</b>"
-      + "<br>Google 禁的是<b>選擇性地只向滿意的人索取公開評論</b>，"
-      + "以及<b>把不滿意的人導離公開評論</b>。兩顆按鈕並排本身<b>不是</b>違規，"
-      + "違規的是「先問、再分流」和「叫他別公開」。這一版守著："
-      + "<br>① <b>沒有先問滿不滿意</b> —— 兩顆一起出現、給所有人，沒有任何前置問題。"
-      + "<br>② <b>公開那一顆不設條件</b> —— 主文明寫「<b>好的不好的都寫</b>」（Ⓐ／Ⓒ），"
-      + "等於當著病人的面說「不好的也請寫在公開的地方」。"
-      + "<b>所以第二顆按鈕最好配 Ⓐ 或 Ⓒ</b>；配 Ⓑ／Ⓓ／Ⓔ 時那句話不在卡上，"
-      + "面板會標紅提醒。"
-      + "<br>③ <b>第二顆不可以寫成「改成私下講」</b> —— 一出現「與其…不如…」"
-      + "「先跟我們說」「不要留評論」那一類的字，它就從「多一個管道」變成"
-      + "「<b>把負評導開</b>」。三個候選一個都沒有，面板每一次都掃。"
-      + "<br>⚠⚠ <b>那一顆要連到哪裡我們還不知道</b> —— 那正是第 17-3 節那三題的第二題"
-      + "（現況「不願意並提供建議」點下去到哪）。<b>問到之前它是佔位的。</b>"
+      + "<b>⚠⚠⚠ 上線之前一定要先收掉的一件：那兩顆按鈕連到哪裡。</b>"
+      + "<br>這張卡是兩塊「一句話 ＋ 一顆按鈕」：上面一個<b>是非題</b>（願意推薦嗎？）"
+      + "配<b>公開</b>那一顆，下面一個<b>負面前提</b>（不好的直接告訴我們）配<b>私下</b>那一顆。"
+      + "合起來讀就是「<b>願意的人去公開、不開心的人來私下</b>」——"
+      + "而 Google 商家檔案禁的正好是這兩件：<b>選擇性地只向滿意的人索取公開評論</b>、"
+      + "<b>把不滿意的人導離公開評論</b>。"
+      + "<br>⚠⚠ <b>這幾句是你 2026-09-05 逐字寫的，所以照寫</b>（同提醒卡那條「2天後」："
+      + "你的字裡有風險時，照寫、把證據攤開、給替代案，不要自己改）。"
+      + "替代案是 <code>?a=b</code> —— <b>同排法、同口氣</b>，只把問句換成"
+      + "「好的不好的都想聽」、把「不開心」換成「想直接跟我們說也可以」。"
+      + "<br>⚠⚠⚠ <b>而商家檔案是這間診所最大的入口</b>（六個月 14,973 次瀏覽、1,886 通電話），"
+      + "所以這一格的風險比任何一次改版都高。<b>問到之前不要送上去，也不要急著把舊的關掉</b>"
+      + "—— 如果兩條路本來就都通向公開評論，那它只是寫得不好、不是違規。"
       + "<hr>"
-      + "<b>新版做了什麼（三件，其餘一個字都沒多加）</b>"
-      + "<br>① <b>拿掉分流</b>：同一個邀請給所有人，私下的意見管道也給所有人。"
-      + "<br>② <b>名字從稱謂變成受詞</b>：這個帳號一個人收得到好幾個家人的訊息。"
-      + "<br>③ <b>先關心、再開口</b>（你 2026-09-05 寫的開場）——要東西之前先給東西。"
+      + "<b>還沒收掉的（面板上那幾列一直標著，不要當成漏做）</b>"
+      + "<br>① <b>那兩顆按鈕的網址</b>：公開那一顆要 Google 的「寫評論」深連結、"
+      + "<b>需要 Place ID</b>（我們只有分享短網址）；私下那一顆<b>連到哪裡還沒決定</b>。"
+      + "兩顆現在都是佔位符。"
+      + "<br>② <b>卡上沒有寫怎麼聯繫診所</b> —— 開場叫病人「記得跟診所聯繫一下」，"
+      + "而收尾那兩行（沒有專人看訊息／電話）是你指定整段拿掉的。<b>沒有自己加回去。</b>"
+      + "<br>③ <b>這一則實際什麼時候送</b>（看診當天？隔天？）還沒問到廠商 ——"
+      + "所以卡上寫「這次」不寫「今天」。"
       + "<hr>"
-      + "<b>⚠⚠⚠ 「太溫柔太客氣」——拆開來是三件各自獨立的事</b>"
-      + "<br>① <b>墊詞</b>：「方便的話」把請求包起來，讀起來像在道歉。"
-      + "<br>② <b>不敢說是自己要的</b>：「會幫到下一個正在找牙醫的人」把受益者推給第三人，"
-      + "很得體，但<b>它不承認這是診所在拜託人</b>。"
-      + "<br>③ <b>句子太長</b>：四行、每行都完整，反而像公關稿。<b>短句本身就比較不客氣。</b>"
-      + "<br>五案各自動到不同的那幾件 —— <b>Ⓐ 動①②、Ⓑ 動②、Ⓒ 動①②③、Ⓓ 動①②</b>，"
-      + "<b>Ⓔ 是現在這一版</b>，留著對照。"
+      + "<b>檔案</b>"
+      + "<br>・Flex 的 JSON：<code>drafts/channels/review-card.json</code>"
+      + "<br>・守門：<code>node drafts/channels/check-review.mjs</code>"
+      + "（JSON ↔ 這一頁逐字、字級、顏色、圖的長寬比與寬度、紅線、切換條已拿掉）"
+      + "<br>・圖片檔：<code>node drafts/channels/review-png.mjs --all</code>"
+      + "（加 <code>--chat</code> 出聊天室模擬、<code>--old</code> 出現況）"
+      + "<br>・頭圖：<code>node drafts/channels/review-hero-crop.mjs</code>"
+      + "（原檔 16:9 → <code>hero-review.jpg</code> 1024×512）"
+      + "<br>・上線前要把圖放到 <code>https://fangren.net/assets/line/</code>"
+      + "（<b>那個資料夾還不存在</b>，第十一之七節第 4 項）："
+      + "<code>hero-review.jpg</code>、<code>mark-white.png</code>、"
+      + "<code>mark-chev-white.png</code>、<code>mark-nogo.png</code>。"
       + "<hr>"
-      + "<b>⚠⚠⚠ 但有一條線不可以跟著跨過去：不可以先問滿不滿意。</b>"
-      + "<br>「如果覺得還不錯」「滿意的話再幫我們寫」——那是<b>分流的另一種寫法</b>，"
-      + "而且<b>比現況那兩顆按鈕更難被發現</b>，因為它看起來只是一句客套。"
-      + "<b>五案裡一句都沒有</b>；Ⓐ 與 Ⓒ 還反過來明寫「<b>好的不好的都寫</b>」。"
-      + "<hr>"
-      + "<b>兩把尺</b>"
-      + "<br>⚠ <b>下面那一段（五案）</b>——我建議 <b>Ⓐ 拜託一件事</b>："
-      + "它把「這是我們在拜託你」講出來（那正是客氣版不敢講的），"
-      + "又用「一兩句就好」把門檻壓到最低。"
-      + "<b>最不客氣的是 Ⓒ</b>（兩行、沒有任何鋪陳）；"
-      + "<b>Ⓑ 是唯一給理由的</b>（很多人看評論才決定要不要來 —— 那是事實，也是這一則"
-      + "真正的動機）；<b>Ⓓ 把主詞換成診所</b>（我們想知道），語氣最平、最像在對談。"
-      + "<br>⚠ <b>「不好的那顆」三格只差在口氣</b>（直接告訴我們／有不好的想說／想私下說幾句）"
-      + " —— 三個都<b>只講「你可以直接跟我們說」，沒有一個有「不要公開」的意思</b>，"
-      + "那是這一顆能不能留的關鍵，見下面那一段。"
-      + "<br>⚠ 其餘每一件我都自己決定了，沒有列成選單 ——"
-      + "<b>你給的是內容與意圖，不是規格</b>（第 18-1 節）。"
-      + "<hr>"
-      + "⚠⚠ <b>Flex 的 JSON 等你挑完才寫</b>（同綁定完成、提醒卡那兩則的順序）。"
-      + "挑定之後才會出 <code>drafts/channels/review-card.json</code> 與守門"
-      + "<code>check-review.mjs</code>，在那之前不要拿任何東西給廠商。"
-      + "<br>⚠ 這一頁是<b>提案頁</b>；定案之後照第十一之五節<b>改寫成規格頁</b>"
-      + "（切換條拿掉、頁面留著），不刪頁也不搬進 <code>history/</code> ——"
-      + "它的成品在 LINE 不在站上，而且要整包拿給廠商看。";
+      + "⚠ <b>切換條已經拿掉</b>（定稿了）。網址參數仍然吃得到："
+      + "<code>?v=old</code> 現況那一張、<code>?a=b</code> 不分流的替代案。"
+      + "<br>⚠ 這一頁<b>不刪、也不搬進 <code>history/</code></b> —— "
+      + "它的成品在 LINE 不在站上，而且要整包拿給廠商看（第十一之五節）。";
   }
-
-  (function () {
-    var barEl = document.getElementById("pv-bar"), fold = document.getElementById("pv-fold");
-    fold.onclick = function () {
-      var on = barEl.classList.toggle("fold-in");
-      fold.textContent = on ? "調整…" : "收起";
-      fold.setAttribute("aria-expanded", on ? "false" : "true");
-      measure();
-    };
-  })();
 
   window.addEventListener("resize", measure);
   render();
