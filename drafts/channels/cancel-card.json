@@ -1,0 +1,237 @@
+{
+  "_說明": [
+    "取消約診那一段對話（LINE Flex Message）。**2026-09-05 定稿**（使用者：「Ok 定稿 存下來」）。",
+    "規格頁是 /preview/line-cancel/，逐輪推導與落選案在 drafts/channels/README.md 第二十三節。",
+    "",
+    "**三則**：病人點圖文選單的「預約改期」→ ①確認卡 → 他按哪一顆 → ②或③。",
+    "  ① 確認　　　　cancel-confirm　（回應類，不計費）",
+    "  ② 按了取消　　cancel-done",
+    "  ③ 按了不取消　cancel-keep",
+    "",
+    "⚠⚠⚠ **這三則能不能送 Flex，要問廠商** —— 後台的關鍵字／自動回應那個編輯介面",
+    "  的型別下拉**沒有 Flex**，但**平台送得出**（這間診所的綁定完成、提醒卡、",
+    "  預約成功都是 Flex），所以問的是「這一段可不可以改由你們的系統回」。",
+    "  ⚠ 送不出去的退路是 LINE 官方的 **confirm 範本**（規格頁第 ③ 節）——",
+    "    內容一字不差，但**按鈕不換行、一顆只有半個卡片寬（約 122px）**，",
+    "    「按錯惹～我會去～」量到 128px **會被截斷**，走那條路要先把字收短。",
+    "",
+    "**卡上每一個字都是使用者自己寫的**（2026-09-04~05，逐字）：",
+    "  ・確認那一句與兩顆按鈕：「要取消這個約診嗎？」「是喔 要取消」「按錯惹～我會去～」",
+    "    ⚠ 「是喔 要取消」中間是**半形**空格、「按錯惹～我會去～」用**全形波浪**。",
+    "  ・按了取消：「已取消，若還有其他問題請與診所聯繫喔～」",
+    "  ・按了不取消：「OK，約診保留了～」＋ 底下列出姓名與約診時間。",
+    "",
+    "⚠⚠⚠ **兩顆按鈕的 logo 語意是反過來的，不要照抄提醒卡：**",
+    "  綠底＝「是喔 要取消」＝**不會來** → 白色的 nogo（mark-nogo-white.png，",
+    "    ＝ shape-r2c3 整張上下翻，由 drafts/channels/remind-marks.mjs 產）；",
+    "  白底＝「按錯惹～我會去～」＝**會來** → **主要那顆標誌的深階版**",
+    "    （mark-head-green.png，＝站上頁首那一條 2.029，由 mark-png.mjs 產）。",
+    "  ⚠⚠ **不要用 mark-green.png** —— 那個檔名只講顏色沒講形狀，它是招呼卡",
+    "    「介紹芳仁給朋友」用的 shape-r2c3（3.081），不是頁首那一條。",
+    "  ⚠ 提醒卡正好相反（綠底＝ok 沒問題＝正常標誌）——",
+    "    **logo 跟著「去不去」走，不是跟著「哪一顆是主鈕」走。**",
+    "",
+    "⚠⚠⚠ **拿掉的那三行帶走一件事實**（使用者 2026-09-05 指定拿掉，不要自己加回去）：",
+    "  「按下去只會取消這個時段，不會幫你排新的時間；要看診請重新來電預約。」",
+    "  那是整段對話裡**唯一**告訴病人「按了不會幫你排新時間」的地方，",
+    "  而 2026-09-04 那張真截圖已經證實那個誤會會發生（病人下一句「可以幫我改晚上嗎」）。",
+    "  兩條不必放回卡片的路：①改那顆按鈕的字（它叫「預約改期」卻只取消，那是源頭）",
+    "  ②寫進 cancel-done 那一則。**兩條都要先問過使用者。**",
+    "",
+    "⚠⚠ **「（註）這次取消已經超過最晚2天前（不含假日）的時間。」已經整句拿掉** ——",
+    "  它對在期限內取消的人是錯的，而系統確實會成功取消。拿掉之後 cancel-done",
+    "  **不管來不來得及都成立**，系統不必再分兩種回覆。",
+    "",
+    "⚠ **「請與診所聯繫」沒有給號碼**。建議在那一句底下多一行 05-5339369，",
+    "  **不要做成按鈕**（第十一之四節：說明句裡的資訊不要穿按鈕的衣服）。",
+    "  **還沒問過使用者，所以這一版沒有。**",
+    "",
+    "⚠ **〔病人姓名〕與日期是系統填的欄位**，不要寫死（這裡用 {{patient}}／{{date}}）。",
+    "  ⚠ 日期只要求兩件：**去掉年份、月日改中文**（同提醒卡）；括號維持半形。",
+    "",
+    "⚠⚠ **兩顆按鈕是「可以點的 box」不是 button** —— Flex 的 button 放不進圖示",
+    "  （第十一之二節），而這兩顆要有 logo。代價：**沒有 button 內建的按壓效果**",
+    "  （LINE 對可點的 box 會不會給按壓反白，我們沒有實機驗過 —— 要問廠商）。",
+    "",
+    "⚠⚠ **兩顆按鈕的順序是使用者指定的**：第一顆就是「是喔 要取消」。",
+    "  那等於**破壞性那顆站在慣性落點上**，是他知情的選擇，不要自己調換。",
+    "  （調換是零成本的一項，要問廠商 action 的順序改不改得動。）",
+    "",
+    "字級照 LINE Flex 的固定 px：lg 19（確認那一句、日期）／md 16（姓名、按鈕、結果那一句）。",
+    "顏色一顆都沒新增：卡 #F4F4F5・墨 #2A2C27・綠 #3F654A・深階 #2C5238。"
+  ],
+
+  "cancel-confirm": {
+    "_說明": "病人點「預約改期」之後系統回的那一張。⚠ 沒有頭圖 —— 這一張是要他立刻判斷的介面，圖只會把按鈕推到畫面外。",
+    "type": "bubble",
+    "size": "mega",
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "paddingAll": "14px",
+      "backgroundColor": "#F4F4F5",
+      "spacing": "none",
+      "contents": [
+        {
+          "type": "text",
+          "text": "要取消這個約診嗎？",
+          "size": "lg",
+          "weight": "bold",
+          "color": "#2A2C27",
+          "wrap": true
+        },
+        {
+          "type": "text",
+          "text": "{{patient}}",
+          "size": "md",
+          "weight": "bold",
+          "color": "#2A2C27",
+          "margin": "9px",
+          "wrap": true
+        },
+        {
+          "type": "text",
+          "text": "{{date}}",
+          "size": "lg",
+          "weight": "bold",
+          "color": "#2A2C27",
+          "margin": "2px",
+          "wrap": true
+        },
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "backgroundColor": "#3F654A",
+          "cornerRadius": "8px",
+          "paddingAll": "12px",
+          "margin": "10px",
+          "action": {
+            "type": "postback",
+            "label": "是喔 要取消",
+            "data": "【廠商填：確定取消這一筆約診】",
+            "displayText": "是喔 要取消"
+          },
+          "contents": [
+            {
+              "type": "image",
+              "url": "https://fangren.net/assets/line/mark-nogo-white.png",
+              "size": "30px",
+              "aspectRatio": "3.076:1",
+              "aspectMode": "fit",
+              "flex": 0
+            },
+            {
+              "type": "text",
+              "text": "是喔 要取消",
+              "size": "md",
+              "weight": "bold",
+              "color": "#FFFFFF",
+              "align": "center",
+              "margin": "7px",
+              "flex": 0
+            }
+          ]
+        },
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "borderColor": "#2C5238",
+          "borderWidth": "1px",
+          "cornerRadius": "8px",
+          "paddingAll": "12px",
+          "margin": "10px",
+          "action": {
+            "type": "postback",
+            "label": "按錯惹～我會去～",
+            "data": "【廠商填：不取消，約診保留】",
+            "displayText": "按錯惹～我會去～"
+          },
+          "contents": [
+            {
+              "type": "image",
+              "url": "https://fangren.net/assets/line/mark-head-green.png",
+              "size": "30px",
+              "aspectRatio": "2.025:1",
+              "aspectMode": "fit",
+              "flex": 0
+            },
+            {
+              "type": "text",
+              "text": "按錯惹～我會去～",
+              "size": "md",
+              "weight": "bold",
+              "color": "#2C5238",
+              "align": "center",
+              "margin": "7px",
+              "flex": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "cancel-done": {
+    "_說明": "他按了「是喔 要取消」之後。⚠⚠ 不分來得及／來不及，一律送這一則（使用者指定）。",
+    "type": "bubble",
+    "size": "mega",
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "paddingAll": "14px",
+      "backgroundColor": "#F4F4F5",
+      "contents": [
+        {
+          "type": "text",
+          "text": "已取消，若還有其他問題\n請與診所聯繫喔～",
+          "size": "md",
+          "color": "#2A2C27",
+          "wrap": true
+        }
+      ]
+    }
+  },
+
+  "cancel-keep": {
+    "_說明": "他按了「按錯惹～我會去～」之後。⚠ 底下那兩行要和確認卡逐字一樣 —— 他核對的是同一組東西。",
+    "type": "bubble",
+    "size": "mega",
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "paddingAll": "14px",
+      "backgroundColor": "#F4F4F5",
+      "contents": [
+        {
+          "type": "text",
+          "text": "OK，約診保留了～",
+          "size": "md",
+          "color": "#2A2C27",
+          "wrap": true
+        },
+        {
+          "type": "text",
+          "text": "{{patient}}",
+          "size": "md",
+          "weight": "bold",
+          "color": "#2A2C27",
+          "margin": "9px",
+          "wrap": true
+        },
+        {
+          "type": "text",
+          "text": "{{date}}",
+          "size": "lg",
+          "weight": "bold",
+          "color": "#2A2C27",
+          "margin": "2px",
+          "wrap": true
+        }
+      ]
+    }
+  }
+}
