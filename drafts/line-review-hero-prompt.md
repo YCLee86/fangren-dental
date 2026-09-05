@@ -427,16 +427,22 @@ small and gentle one. NOT a wild celebration.
        smiling.
    They are relaxed, warm and enjoying themselves. NOT stern, NOT solemn, NOT frowning.
 
-6. THE BOARDS AND THE NUMBERS - READ THIS CAREFULLY. Each board is a plain rectangle about the
-   size of a sheet of paper, pale cream-white with a thin hand-drawn edge and a simple stick
-   handle. THERE ARE EXACTLY THREE RAISED BOARDS and each carries exactly ONE SINGLE-DIGIT
-   NUMBER, drawn very large so it fills most of the board, in a soft dark hand-drawn stroke as if
-   written with a marker. From left to right the three raised boards read: 9, then 8, then 9 (the
-   third is the one the child is holding). NOTHING ELSE is on any board - no second digit, no
-   decimal point, no circle, no cross, no tick, no star, no smiley, no word, no symbol and no
-   unit. THE TWO BOARDS LYING ON THE TABLE HAVE NOTHING ON THEM AT ALL, apart from the very
-   beginning of a stroke under the young woman's pencil. NEVER draw a 10 and never draw a number
-   below 7.
+6. THE BOARDS AND THE NUMBERS - READ THIS CAREFULLY, IT IS THE PART MOST OFTEN GOT WRONG.
+   Each board is a plain rectangle about the size of a sheet of paper, pale cream-white with a
+   thin hand-drawn edge and a simple stick handle. There are two kinds of board and they follow
+   OPPOSITE rules:
+     • THE RAISED BOARDS - the three held up in the air - each carry exactly ONE SINGLE-DIGIT
+       NUMBER, drawn very large so it fills most of the board, in a soft dark hand-drawn stroke
+       as if written with a marker. From left to right they read: 9, then 8, then 9 (the third is
+       the one the child is holding). NOTHING ELSE is on them - no second digit, no decimal
+       point, no circle, no cross, no tick, no star, no smiley, no word, no symbol, no unit.
+       NEVER draw a 10 and never draw a number below 7.
+     • EVERY BOARD LYING FLAT ON THE TABLE IS COMPLETELY EMPTY - HOWEVER MANY OF THEM THERE ARE.
+       This applies to the one in front of the old man on the left, the one in front of the
+       mother with the child, and any other board resting on the table anywhere in the picture:
+       plain empty cream paper, NO NUMBER, NO LETTER, NO WORD, NO MARK OF ANY KIND on them. The
+       only exception is the young woman's board at the right end, which has the very beginning
+       of one short pencil stroke under her hand - a stroke, not a digit and not a letter.
 
 7. THE WHITEBOARD ON THE RIGHT. A plain white rectangular board on a simple metal stand, its face
    turned towards the camera so we can read it. On it, written in the same soft dark hand: A SHORT
@@ -482,8 +488,10 @@ small and gentle one. NOT a wild celebration.
     strong saturated red, no gold.
 
 AVOID: any letters, words, Chinese characters, Japanese characters or writing anywhere - THE ONLY
-MARKS THAT MAY LOOK LIKE WRITING ARE THE NUMBERS DESCRIBED ABOVE; the words STILL BLANK, or any
-English word, on any board or anywhere else; any writing on the bunting; a banner, sign, board or
+MARKS THAT MAY LOOK LIKE WRITING ARE THE THREE NUMBERS ON THE THREE RAISED BOARDS; the words
+STILL BLANK, or any English word, on any board or anywhere else; ANY NUMBER, LETTER OR MARK ON A
+BOARD THAT IS LYING ON THE TABLE - every board on the table is blank paper; any writing on the
+bunting; a banner, sign, board or
 panel above the stage; any number on a board other than a single digit; more than three raised
 boards; a 10, a 100, a percent sign, a decimal point, a star, a heart, a tick, a cross or a smiley
 anywhere; ANY JUDGE DRAWN IN PROFILE, THREE-QUARTER OR TURNED AWAY FROM THE CAMERA; AN EMPTY CHAIR
@@ -545,7 +553,7 @@ node drafts/channels/review-hero-crop.mjs
 
 ---
 
-## 六之六、⚠⚠⚠ 圖上有一處英文字 —— **還沒處理**
+## 六之六、⚠⚠⚠ 圖上有一處英文字 —— **2026-09-05 使用者決定重生成（Ⓐ）**
 
 左下角阿公面前那塊空白牌子上寫著 **`STILL BLANK`**。
 
@@ -566,7 +574,15 @@ STILL COMPLETELY BLANK` —— **模型把那幾個大寫的英文字直接畫�
 換算到卡片上的 268px 是 **28×8px**（整張卡面積的 1.1%）。
 1× 幾乎看不出來（在聊天室模擬圖上是桌面左邊一小塊灰痕），放大就讀得出來。
 
-**三條路，還沒問使用者**：
+**✅ 使用者選了 Ⓐ**（「重新生成一次好了」），同一輪還指定第二件：
+**「左邊爺爺的板子和右邊抱小孩的媽媽桌上的板子都留白」** ——
+⚠⚠ 那是**同一條規則被違反了兩次**：上一版第 6 段寫的是「桌上有**兩塊**牌子，
+兩塊都空白」，可是模型**畫了四塊**，多出來的兩塊自己填了 9 和 8。
+**通則：規則綁在數量上，模型畫多一個就整條失效。**
+改寫成**和數量無關**的講法：「**桌上的每一塊牌子，不管有幾塊，一律空白**」，
+並在 `AVOID` 補一條「任何躺在桌上的牌子上有數字、字母或記號」。
+
+**三條路（留著看推論）**：
 
 | | |
 | --- | --- |
