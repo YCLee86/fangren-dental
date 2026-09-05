@@ -155,9 +155,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
    ⚠⚠ 那一句離按鈕的距離：**量的是字面到按鈕，不是 margin** —— 行高 1.7 讓字面下方
      多出 4.8px 的半行距，所以 margin-top:14 畫出來是 18.8。提醒卡 2026-09-04 定案的
      比例是「上 17.0 ／ 下 5.0」，這一張照抄，面板現場重量。 */
-.pv-new .cta{font-size:14px;line-height:1.7;color:var(--ink-soft);text-align:center;
-  margin-top:14px}
-.pv-new .cta + .btn{margin-top:calc(5px - 4.8px)}
+/* ⚠ 2026-09-05：叫他點的那一句拿掉了，所以「那一段話 → 按鈕」直接相鄰。
+   ⚠⚠ 看得到的距離不等於 margin —— 行高 1.75 讓字面下方多出半行距，
+     所以這裡寫的數字比想要的墨距小一截；面板現場量墨到墨。 */
+.pv-new .ask + .btn{margin-top:7px}
 .pv-new .btn{display:flex;align-items:center;justify-content:center;gap:8px;
   border-radius:9px;padding:12px;background:var(--green);color:#fff;line-height:1.4}
 .pv-new .btn img{flex:none;display:block;width:34px}
@@ -275,17 +276,28 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      ⚠⚠⚠ **但有一條線不可以跟著跨過去：不可以先問滿不滿意。**
        「如果覺得還不錯」「滿意的話」都是**分流的另一種寫法**（第 17-3 節），
        而且比現況那兩顆按鈕更難被發現，因為它看起來只是一句客套。
-       **五案裡一句都沒有**，Ⓐ 與 Ⓒ 還反過來明寫「好的不好的都寫」。 */
+       **五案裡一句都沒有**，Ⓑ 與 Ⓔ 還反過來明寫「好的不好的都想聽／都寫」。 */
+  /* ⚠⚠ 2026-09-05 第四輪：五案整組換成**使用者自己給的材料** ——
+       「很想知道你的**經驗**」「很重視他的經驗和意見」「願意推薦給身邊的親朋好友嗎」。
+     ⚠⚠⚠ **但那第三句放在兩顆按鈕正上方，就是現況那張卡的形狀** ——
+       一個是非題 ＋ 兩顆按鈕 ＝ 兩顆會被讀成它的答案（願意→公開／不願意→私下），
+       那正是第 17-3 節那條要問廠商的疑慮。**所以它只放在 Ⓒ／Ⓓ 兩案裡，
+       面板會現場掃、掃到就標紅**，不是默默拿掉他的句子。
+     ⚠ 建議 **Ⓑ** —— 同樣是他那句「很想知道你這次的經驗」，第二行換成
+       「好的不好的都想聽」：**不是問句**（沒有分流的形狀），
+       而且它就是守住那條線的第二個條件（公開那一顆不設條件）。 */
   /* ⚠⚠ 2026-09-05 使用者：「這個評論邀請**不需要出現 Google 的字眼**。」
      五案因此逐句拿掉 —— **按鈕連到哪裡沒有變**（仍然是 Google 的評論框），
      只是卡片上不寫平台的名字。⚠ 這樣寫得通，是因為**動作本身講得完整**
      （「寫幾句這次的經驗」），平台是按下去之後的事。 */
+  /* ⚠ 「經驗」不是「體驗」（使用者 2026-09-05 指定）——**現況那張卡寫的就是
+       「願意並分享體驗」**，那個詞要換掉。 */
   var ASK = {
-    a: { name: "拜託一件事", text: "另外想拜託你一件事——\n寫幾句這次的看診經驗，\n好的不好的都寫，一兩句就好。" },
-    b: { name: "很多人在看", text: "現在很多人是看評論\n才決定要不要來。\n你寫的一兩句，\n就是下一個人的參考。" },
-    c: { name: "順手寫幾句", text: "順手寫幾句這次的經驗吧，\n好的不好的都寫。" },
-    d: { name: "想知道你怎麼看", text: "我們想知道你怎麼看這次的看診。\n寫幾句，寫什麼都行。" },
-    e: { name: "現在的（客氣）", text: "方便的話，留幾句話，\n說說這一次的經驗。\n不管寫什麼，都會幫到\n下一個正在找牙醫的人。" }
+    a: { name: "想知道經驗", text: "很想知道你這次的經驗，\n也很重視你的意見。" },
+    b: { name: "都想聽",     text: "很想知道你這次的經驗，\n好的不好的都想聽。" },
+    c: { name: "經驗＋推薦", text: "很想知道你這次的經驗，\n也很重視你的意見。\n願意推薦給身邊的親朋好友嗎？" },
+    d: { name: "只有推薦",   text: "願意把芳仁推薦給\n身邊的親朋好友嗎？" },
+    e: { name: "上一版",     text: "另外想拜託你一件事——\n寫幾句這次的看診經驗，\n好的不好的都寫，一兩句就好。" }
   };
 
   /* ---- 第二顆按鈕：「不好的」那一條（2026-09-05 使用者：「不好的評論　按鈕要保留」）--
@@ -343,7 +355,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + '<p class="hi">哈囉　<b>〔病人姓名〕</b>\n回去牙齒都還好嗎</p>'
       + '<p class="lead">有什麼狀況的話\n記得跟診所聯繫一下</p>'
       + '<p class="ask">' + ASK[ask].text + '</p>'
-      + '<p class="cta">點一下下面的按鈕就可以寫</p>'
+      /* ⚠ 2026-09-05：「點一下下面的按鈕就可以寫」那一句**使用者指定拿掉**。
+           所以現在是「那一段話」直接接按鈕，中間那個距離改由 `.ask + .btn` 控制，
+           面板量的也換成**那一段的最後一行到按鈕**。 */
       /* 主鈕：公開那一條。⚠ 標籤上沒有平台名字（2026-09-05 使用者指定）。 */
       + '<span class="btn"><img src="../line-welcome/mark-white.png" alt="">'
       + '<span>留下評論</span>'
@@ -439,6 +453,26 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
                   : " <span class='no'>快貼上去了</span>");
   }
 
+  /* 那一段話的最後一行「墨」離按鈕多遠 —— **量墨不量盒**（行高把半行距藏在字下面）。 */
+  function askGap(body) {
+    var el = body.querySelector(".ask"), btn = body.querySelector(".btn");
+    if (!el || !btn) return "";
+    var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), r = document.createRange();
+    var t, bot = -1e9;
+    while ((t = w.nextNode())) {
+      for (var i = 0; i < t.length; i++) {
+        r.setStart(t, i); r.setEnd(t, i + 1);
+        var c = r.getBoundingClientRect();
+        if (c.height) bot = Math.max(bot, c.bottom);
+      }
+    }
+    var d = btn.getBoundingClientRect().top - bot;
+    return "<br>那一段到按鈕 <b>" + d.toFixed(1) + "px</b>（墨到墨）"
+      + (d < 8 ? " <span class='no'>快貼上去了</span>"
+        : d > 18 ? " <span class='no'>太遠，讀不出按鈕在回應那一段</span>"
+                 : " <span class='ok'>接得起來</span>");
+  }
+
   var EMOJI = /[☀-➿⬀-⯿]|[\uD83C-\uD83E][\uDC00-\uDFFF]/g;
 
   function measure() {
@@ -461,7 +495,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        ⚠ 現況那一張是照截圖重畫的、沒有手動斷行，所以只對新版算。 */
     var self = {}, selfN = 0;
     if (v === "new") {
-      body.querySelectorAll(".hi,.lead,.ask,.cta,.btn,.nob,.foot2").forEach(function (el) {
+      body.querySelectorAll(".hi,.lead,.ask,.btn,.nob,.foot2").forEach(function (el) {
         (el.innerText || "").split("\n").forEach(function (x) {
           x = x.replace(/[ 　]/g, ""); if (x) { self[x] = 1; selfN++; }
         });
@@ -531,9 +565,19 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "<br>公開評論那一條 " + (gate
           ? "<span class='no'>先問「願不願意」才給 —— 這就是要問廠商的那件事</span>"
           : "<span class='ok'>沒有先問、給所有人</span>")
+      /* ⚠⚠⚠ 這一列是 2026-09-05 加的，也是這一頁現在最要緊的一行。
+         **一個是非題直接站在兩顆按鈕上面，那兩顆就變成它的答案** ——
+         那正是現況那張卡的形狀（願意 → 分享／不願意 → 提供建議），只是好看一點。 */
+      + (v === "new"
+          ? "<br>那一段是不是問句 "
+            + (/嗎？|嗎\?/.test(text)
+                ? "<span class='no'>是 —— 兩顆按鈕會被讀成它的答案，"
+                  + "那就是「先問、再分流」的形狀</span>"
+                : "<span class='ok'>不是</span>")
+          : "")
       + (v === "new"
           ? "<br>主文有沒有明說「不好的也寫」 "
-            + (text.indexOf("好的不好的都寫") >= 0
+            + (/好的不好的都(寫|想聽|說)/.test(text)
                 ? "<span class='ok'>有</span>"
                 : "<span class='no'>沒有 —— 配上第二顆按鈕，會更像在把負評導開</span>")
             + "　第二顆有沒有「不要公開」的意思 "
@@ -548,7 +592,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + "　「斗六芳仁」 <b>" + (text.indexOf("斗六芳仁") >= 0 ? "有" : "沒有") + "</b>"
         + (emo.length || text.indexOf("親愛的") >= 0 || text.indexOf("斗六芳仁") >= 0
             ? "" : " <span class='ok'>三個都是 0</span>")
-      + (v === "new" ? gapRow(body, ".ask", ".cta", ".btn", "那一句") : "")
+      + (v === "new" ? askGap(body) : "")
       + (v === "new"
           ? "<br>自己斷 <b>" + selfN + " 行</b>，你這台畫出 <b>" + ls.length + " 行</b>"
             + (ls.length - selfN > 0

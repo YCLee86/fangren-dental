@@ -42,8 +42,8 @@ const SCALE = 3;
 const OLD = process.argv.includes("--old");
 const ALL = process.argv.includes("--all");
 /* ⚠ 五案的字母與標籤要和提案頁的 ASK 一致 —— 改那一邊要回來改這一邊。 */
-const ASKS = [["a","Ⓐ 拜託一件事"],["b","Ⓑ 很多人在看"],["c","Ⓒ 順手寫幾句"],
-              ["d","Ⓓ 想知道你怎麼看"],["e","Ⓔ 現在的（客氣）"]];
+const ASKS = [["a","Ⓐ 想知道經驗"],["b","Ⓑ 都想聽（建議）"],["c","Ⓒ 經驗＋推薦"],
+              ["d","Ⓓ 只有推薦"],["e","Ⓔ 上一版"]];
 const ASK = (process.argv.find((x) => x.startsWith("--ask=")) || "--ask=a").slice(6);
 if (!ASKS.some(([k]) => k === ASK)) throw new Error("沒有這一案：" + ASK);
 const CHAT = process.argv.includes("--chat");
