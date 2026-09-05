@@ -312,6 +312,55 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 
 ---
 
+#### ⚠⚠⚠ 第五版（2026-09-05 更晚）：「變成蠟筆風格了」——**兩處是我第四版改壞的**
+
+先量（3×3 鄰域的亮度極差；平塗 ＝ 極差 <1.5、硬邊 ＝ >25）：
+
+| | 平塗 | 硬邊 |
+| --- | --- | --- |
+| 站上〈牙齦流血〉 | 25.9% | 21.1% |
+| 站上〈換牙〉 | 22.0% | 24.0% |
+| 站上〈定期檢查〉 | 30.9% | 32.0% |
+| Ⓕ 第三版 | 32.5% | 36.4% |
+| **Ⓕ 第四版** | **9.1%** | **54.2%** |
+
+**真正平的面積從三成掉到 9.1%，而「有硬邊」的像素超過一半** ——
+多出來的那些不是輪廓，是**填色裡面的筆觸**。這一版的填色不再是填色。
+
+⚠⚠⚠ **成因不是模型漂掉，是第四版的 diff。** 逐行比對第三版與第四版，
+**有兩處是我改壞的**：
+
+1. **參考圖那一段的「`how flat the colour is`」被我刪掉了。**
+   第三版寫的是「抄它的線質、抄每一樣東西用幾筆、抄臉多簡單、**抄顏色多平**」；
+   第四版為了強調臉，把後半整句換成臉的三件事，**那句「顏色多平」順手被換掉了** ——
+   而它是整份提示詞裡**唯一**叫模型去看參考圖的顏色怎麼上的一句。
+2. **中間那一格的 `THEIR ROOM`（診所那一角）與 `TOGETHER THEY READ AS…`
+   兩整段消失了。** 那是第四版重寫中間兩個人時整段覆蓋掉的，
+   ——**第二版那個「單調」的成因（「only a hint of a clinic」）等於又回來了一半。**
+
+⚠⚠⚠ **通則：每一輪為了治新問題而重寫某一段，會順手弄丟上一輪為了治舊問題寫進去的句子。**
+三輪連著發生：第三版治寫實 → 第四版治呆板時刪掉「顏色是平的」與整段房間 → 蠟筆。
+**做法：改完一定要 `diff` 上一版，逐條問「這一行是為了治什麼，現在還在不在」**，
+並且**把治過的病寫成守門**（產生器現在擋五件，見下面）。
+
+第五版四件改動：
+
+・**參考圖那一句補回來並排到最前面**：`HOW FLAT AND SOLID THE COLOUR IS`。
+・⚠⚠ **`STYLE` 裡那句「每一個表面都有色鉛筆的顆粒」整句換掉** ——
+  它**從第一版就在**，前三版都沒事；第四版把「手繪／很快／不準／畫出來的線」
+  這一類的字加多之後，**它就變成主角了**（＝口外那一輪的通則）。
+  現在寫成：**填色裡面沒有任何筆觸**（不要蠟筆、不要色鉛筆的排線、不要交叉線、
+  不要塗鴉式的填色、不要素描質感），最多一點點紙紋；線是**實的、連續的**，
+  不可以毛、不可以描兩次。收一句判準：**「看起來像用蠟筆或色鉛筆塗的，就是錯的。」**
+  ⚠ **那一句在 Ⓐ~Ⓔ 五份裡都還在，刻意沒動** —— 那五案一張都沒出過圖，
+  真的要拿其中一案去出圖，先把這一句照 Ⓕ 改掉。
+・**`ECONOMY OF LINE` 那句「這張圖沒有一樣東西是畫準的、什麼都畫得很快」收掉** ——
+  它和「填色要平」互相拉扯。改成「**這一條講的是一個東西給幾條線，不是顏色怎麼上**」。
+・**`AVOID` 最前面補一整排**：蠟筆／色鉛筆／粉彩棒的外觀、填色裡的筆觸與排線、
+  整張罩上的粗紙紋、素描稿的樣子、毛邊或描兩次的輪廓。
+
+---
+
 ## 三、五個提案共用的規格（每一份提示詞裡都逐字帶著）
 
 - **Ⓐ~Ⓔ 是 16:9 橫幅**（`tools/hero-resize.mjs` 擋長寬比 2000/1116 ±0.02，16:9 過得了）；
@@ -702,17 +751,22 @@ Editorial illustration, 4:3 landscape (slightly wider than tall, NOT a wide bann
 
 REFERENCE IMAGES — THREE IMAGES ARE ATTACHED. They are existing illustrations from the
 same website and this new picture must look like it belongs beside them. Copy from them:
-the exact line quality, HOW FEW STROKES each object is drawn with, and above all HOW THE
-FACES ARE DRAWN — look at how much those faces are doing, how wide the mouths open, how
-the eyebrows tilt. Do NOT copy their layouts, their people or their scenes. Wherever the
-words below and the attached images disagree, THE ATTACHED IMAGES WIN.
+the exact line quality, HOW FLAT AND SOLID THE COLOUR IS, HOW FEW STROKES each object is
+drawn with, and HOW THE FACES ARE DRAWN — look at how much those faces are doing, how wide
+the mouths open, how the eyebrows tilt. Do NOT copy their layouts, their people or their
+scenes. Wherever the words below and the attached images disagree, THE ATTACHED IMAGES WIN.
 
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
 illustration, drawn quickly and confidently BY HAND. Every line is drawn in a warm dark
 brown, never pure black and never grey, with visible variation in width and dry broken
 ends — never an even mechanical vector line. Colour is laid down in FLAT areas, two or
-three steps of the same colour, with hard edges between the steps. EVERY surface carries a
-fine coloured-pencil grain. High key overall with plenty of pale paper showing through,
+three steps of the same colour, with a clean hard edge between the steps.
+THE INSIDE OF EVERY FILL IS SMOOTH AND EVEN — there are no strokes inside it: no
+crayon marks, no coloured-pencil hatching, no cross-hatching, no scribbled fill, no
+sketchy texture. At most a barely visible paper tooth that you only notice if you go
+looking for it. The lines are solid, continuous and confident: never feathered, never
+drawn twice, never hairy. IF THIS PICTURE LOOKS LIKE IT WAS COLOURED IN WITH CRAYONS OR
+COLOURED PENCILS, IT IS WRONG. High key overall with plenty of pale paper showing through,
 BUT the picture must stay properly colourful — warm colours and cool colours both clearly
 present, and each person wears a different colour family from everyone else. People are
 simplified but their proportions are natural and their age is readable: Taiwanese / East
@@ -745,9 +799,9 @@ NAMES IT, and then stopped. An electric fan is a circle, four or five spokes and
 not an accurate wire guard. A tiled wall is a few lines suggesting tiles, not a complete
 grid. A window grille is a few bars, not every bar. A dish rack is three or four dishes,
 not a full rack. A rice cooker is a rounded box with a lid. Perspective is relaxed and
-judged by hand, never ruled, never architecturally correct. Nothing in this picture is
-drawn accurately; everything is drawn quickly and recognisably. THIS RULE IS ABOUT THINGS,
-NOT ABOUT FACES — the faces still get their eyebrows, their mouths and their expression.
+judged by hand, never ruled, never architecturally correct. THIS RULE IS ABOUT HOW MANY LINES AN
+OBJECT GETS, NOT ABOUT HOW THE COLOUR IS PUT DOWN — the fills stay flat and even. AND IT
+IS ABOUT THINGS, NOT ABOUT FACES — the faces still get their eyebrows, their mouths and their expression.
 
 TWO LEVELS — the people are drawn with the darkest, thickest lines and wear the strongest
 colours in their panel; the rooms behind them use thinner, paler lines and quieter colour.
@@ -780,6 +834,13 @@ of them looks at the viewer, and THEIR TWO FACES ARE DOING DIFFERENT THINGS.
   in front of her, head TILTED, nodding slightly at one of the panels. HER FACE: eyes
   curved into happy closed crescents, mouth closed in a small warm smile — visibly quieter
   and gentler than the dentist's face, not the same expression repeated.
+  TOGETHER THEY READ AS WELCOME AND INTRODUCTION — these are the people we are glad to
+  look after, and here they are. Nobody is scolding, warning, pointing at the viewer or
+  raising a finger.
+  THEIR ROOM, simply drawn — a low wooden cabinet, a glass-fronted cabinet with rows of
+  small unlabelled bottles, a stack of folded towels, a potted plant, a simple picture on
+  the wall showing ONLY a single tooth and no writing at all, a window frame at one side,
+  and the floor visible at the bottom.
 
 THE SIX PANELS AROUND HER, each holding ONE ordinary person in their own home, doing an
 ordinary thing. EACH ONE HAS A DIFFERENT EXPRESSION, LISTED BELOW — do not give them all
@@ -855,7 +916,10 @@ its little screen, not on the jars, not on the bottles in the clinic cabinet, no
 flasks, not on the rice cooker, not on the remote control, and not on any wall. Every
 surface that would normally carry writing is left blank.
 
-AVOID — no row of identical blank pleasant faces; no face without eyebrows; not every
+AVOID — no crayon look, no coloured-pencil look, no pastel-stick look; no visible strokes,
+hatching, cross-hatching or scribble inside any filled area; no rough paper texture laid
+over the picture; no pencil-sketch or rough-sketch look; no feathered, doubled or hairy
+outlines; no row of identical blank pleasant faces; no face without eyebrows; not every
 mouth is the same small closed curve; nobody is expressionless. No realistic or
 portrait-like faces, no shading or modelling on any face, no eyelashes, no eye whites, no
 catchlights, no individually drawn hair strands; no soft, smooth or airbrushed gradient

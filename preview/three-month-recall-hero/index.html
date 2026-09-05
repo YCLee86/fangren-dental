@@ -143,6 +143,35 @@ footer ol{padding-left:1.2rem}
 <p>第二個成因也是我寫的：<b>「六個人都很平常、很自在」</b> —— 那句是為了擋病容，
 可是它等於<b>叫模型畫六張一模一樣的表情</b>。現在改成逐格點名，中間兩位也各給一種。
 判準多一條反方向的：<b>七張臉如果互換位置沒有人看得出來，也是錯的</b>。</p>
+<p><b>2026-09-05 更晚：Ⓕ 第五版</b> —— 治「變成蠟筆風格了」。
+<b>量的是顆粒</b>（每個像素取 3×3 鄰域的亮度極差：極差很小 ＝ 那一塊是平塗的，
+極差很大 ＝ 那裡有一條邊）：</p>
+<div class="pv-tw"><table class="pv-t2">
+<tr><th></th><th>平塗</th><th>硬邊</th></tr>
+<tr><td>〈牙齦流血〉</td><td>25.9%</td><td>21.1%</td></tr>
+<tr><td>〈換牙〉</td><td>22.0%</td><td>24.0%</td></tr>
+<tr><td>〈定期檢查〉</td><td>30.9%</td><td>32.0%</td></tr>
+<tr><td>Ⓕ 第三版</td><td>32.5%</td><td>36.4%</td></tr>
+<tr class="pv-pick"><td><b>Ⓕ 第四版</b></td><td><b>9.1%</b></td><td><b>54.2%</b></td></tr>
+</table></div>
+<p><b>真正平的面積從三成掉到 9.1%，而「有硬邊」的像素超過一半</b> ——
+多出來的那些不是輪廓，是<b>填色裡面的筆觸</b>。這一版的填色不再是填色。</p>
+<p>⚠⚠⚠ <b>成因不是模型漂掉，是我第四版的 diff 弄丟了兩句。</b>
+逐行比對第三版與第四版：<b>① 參考圖那一段的「抄它顏色多平」被我刪掉了</b>
+（第四版為了強調臉，把後半整句換成臉的三件事 —— 而那是整份提示詞裡<b>唯一</b>
+叫模型去看參考圖的顏色怎麼上的一句）；<b>② 中間那一格的「診所那一角」與
+「接納與介紹」兩整段消失了</b>（重寫中間兩個人時整段覆蓋掉的，
+等於第二版那個「單調」的成因又回來一半）。第三件是
+<b>「每一個表面都有色鉛筆的顆粒」</b> —— 那句<b>從第一版就在</b>、前三版都沒事，
+第四版把「手繪／很快／不準」這一類的字加多之後<b>它就變成主角了</b>。</p>
+<p>⚠⚠⚠ <b>通則：每一輪為了治新問題而重寫某一段，會順手弄丟上一輪為了治舊問題
+寫進去的句子。</b> 三輪連著發生。做法是<b>改完一定要 diff 上一版</b>，
+逐條問「這一行是為了治什麼，現在還在不在」，並且<b>把治過的病寫成守門</b> ——
+產生器現在擋十二件，第四版那一句顆粒也在擋的名單上。</p>
+<p>第五版四件：參考圖那一句<b>補回來並排到最前面</b>；<b>顆粒那句整句換掉</b>，
+改成「填色裡面沒有任何筆觸」＋一句判準「<b>看起來像用蠟筆或色鉛筆塗的，就是錯的</b>」；
+「這張圖沒有一樣東西是畫準的」那句<b>收掉</b>（它和「填色要平」互相拉扯）；
+<code>AVOID</code> 最前面補一整排蠟筆／色鉛筆／排線／紙紋／毛邊。</p>
 <p>Ⓐ~Ⓔ 留著沒有動，往下捲還在。</p>
 </div>
 
@@ -179,7 +208,7 @@ footer ol{padding-left:1.2rem}
     <p>中間那一格最大：<b>醫師（白袍配淺鼠尾草綠刷手服）站前半步</b>，一手向外攤開介紹；<b>護理師（只有刷手服、暗一階的青藍）站後半步</b>，側頭對著其中一格點頭。兩個人都看著四周那幾格。</p>
     <p><b>比例 4:3</b>，比站上現在那十一張高（見最上面那一段）。</p>
     <h3>擋掉的坑</h3>
-    <ul><li>⚠⚠⚠ <b>第四版（09-05 更晚）治的是「人的臉變得有點呆板」，成因是第三版的提示詞自己寫的</b>：治「太寫實」那一段<b>全部都是禁令</b>（沒有睫毛／眼白／反光點／眼皮的褶／陰影／腮紅／一根根的頭髮 —— 七條全是「不要有什麼」，一條「要有什麼」都沒有），寫實是拿掉了，<b>表情的載體也順手被清空</b>。對照站上三張放大：<b>眉毛</b>每張臉都有、角度就是情緒（第三版一個字都沒提）；<b>嘴</b>開合幅度最大，笑起來是張開的一個形狀＋一塊淺色的牙（第三版寫「嘴是一筆」）；<b>眼睛</b>開心時彎成月牙；<b>腮紅</b>站上有、第三版直接禁掉；<b>年紀的線</b>（嘴邊一條笑紋、眼尾兩筆）也被「no contour」一起掃掉。</li><li>⚠⚠⚠ <b>第二個成因也是我寫的：「六個人都很平常、很自在」</b> —— 那句是為了擋病容，卻等於叫它畫六張一樣的表情。現在<b>逐格點名</b>（孕婦低頭偷偷笑／阿嬤伸手拿杯子、眉毛抬起來／中年男子一邊眉毛高、嘴偏一邊／量血糖的人刻意就是很平常／半夜那位眼睛只剩一條縫／頭巾那位讀到有趣的地方笑出來），中間兩位也各給一種。判準也多一條反方向的：<b>七張臉如果互換位置沒有人看得出來，也是錯的</b>。</li><li>⚠⚠⚠ <b>第三版（09-05 更晚）治的是「還是比站上寫實了一點」，而且是量過才改的</b>：站上十一張自己就分兩群，〈定期檢查〉48%、〈貝氏刷牙法〉50% 的面積是近白的，<b>比第二版那張還淡</b> —— 所以「太寫實」不在顏色。真正的成因是兩件<b>「畫得太準」</b>：<b>臉有立體感</b>（眼皮、眼白、反光點、顴骨、一根根的頭髮）、<b>每一樣東西用的筆畫太多</b>（電風扇畫出整圈護網、磁磚畫出完整格線、透視是準的）。</li><li>⚠⚠⚠ <b>而這兩件是第二版的提示詞自己寫出來的</b>：那一段「兩層畫法」我寫了「環境要細到你叫得出這是什麼房間」——<b>那句話等於在叫它畫準，而畫得準正是寫實的定義</b>；它同時是整份最長的一段（＝口外那一輪的通則：哪一段字最多，模型就把哪一個當主角）。第三版新增<b>「臉與手」</b>與<b>「用最少的筆畫」</b>兩段放到最前面，並把「兩層畫法」砍掉一半、反過來寫成「房間不是比人更細，是比人更粗略；東西多，每一樣簡單」。</li><li>⚠⚠⚠ <b>出圖之前要先餵上面那三張參考圖</b> —— 風格用文字描述一定會漂（〈生物陶瓷〉那一輪的形狀失敗三四輪，改成給圖之後一次就中）。提示詞第一段明寫「文字和參考圖衝突時以參考圖為準」。</li><li>⚠⚠ <b>「環境要更寫實」和「環境要淡化」不衝突，是兩件事</b>：要的是<b>東西多、但畫得淡</b>。提示詞多了一整段「兩層畫法」——人用最深最粗的線、房間裡的東西樣樣都畫但線更細更淡，並明寫「環境的線永遠不可以和人的線一樣深」。唯一例外是那個人手上正拿著的東西。</li><li>⚠⚠ <b>六格的家從一句話換成一張道具清單</b>（磁磚牆、瓦斯爐上的水壺、掛著的鍋鏟、竹編籃、立扇、塑膠桌巾、電鍋、鐵窗、瀝水架、藤椅、針織毯……）。第一版單調的成因就在這裡：中間那一格原本只寫「一點診所的暗示」。</li><li>⚠ 順帶擋掉<b>時鐘、月曆、手機與電腦螢幕、任何數位顯示</b> —— 六個家一寫實它們就會自己長出來，而它們身上一定有數字。血糖機那個小螢幕也逐項點名了。</li><li>⚠ <b>不做對話框</b> —— 這一站的圖一個字都不能有，而空的對話框讀起來是「在想一件沒有內容的事」。參考的那三張日本海報全部靠文字說話，我們不能照抄那一半。<b>要對話框版，一句話就換得掉。</b></li><li>⚠ <b>兩位醫事人員都不看鏡頭</b>（站上的紅線）。「接納」靠身體微微前傾與攤開的手，「介紹」靠兩個人都在看那幾格。要她們看鏡頭也是一句話，但要你先點頭。</li><li>⚠⚠ <b>上下各 12% 會被首頁的卡片切掉</b>（卡片縮圖固定 16:9），所以臉和那幾樣關鍵的東西一個都不能放在那裡 —— 提示詞裡已經寫死這一條。</li></ul>
+    <ul><li>⚠⚠⚠ <b>第五版（09-05 更晚）治的是「變成蠟筆風格了」，而且成因是我第四版的 diff</b>：量顆粒（3×3 鄰域的亮度極差）—— 真正平塗的面積站上是 22~31%、第三版 32.5%，<b>第四版只剩 9.1%</b>；有硬邊的像素站上 21~32%、<b>第四版 54.2%</b>，多出來的不是輪廓是<b>填色裡面的筆觸</b>。逐行比對第三、四版：<b>①「抄它顏色多平」被我刪掉</b>（第四版為了強調臉把後半整句換掉，而那是唯一一句叫模型看參考圖顏色怎麼上的）、<b>②「診所那一角」與「接納與介紹」兩整段被覆蓋掉</b>（第二版那個單調的成因回來一半）、<b>③「每個表面都有色鉛筆顆粒」</b>那句<b>從第一版就在</b>、前三版都沒事，第四版把「手繪／很快／不準」的字加多之後它就變成主角了。</li><li>⚠⚠⚠ <b>通則：每一輪為了治新問題而重寫某一段，會順手弄丟上一輪為了治舊問題寫進去的句子。</b>三輪連著發生。做法：<b>改完一定要 diff 上一版</b>，逐條問「這一行是為了治什麼，現在還在不在」，並<b>把治過的病寫成守門</b>（產生器現在擋十二件）。第五版四件：那一句補回來並排到最前面；顆粒整句換成「<b>填色裡面沒有任何筆觸</b>」＋判準「看起來像用蠟筆或色鉛筆塗的，就是錯的」；「沒有一樣東西是畫準的」收掉（它和「填色要平」互相拉扯）；<code>AVOID</code> 最前面補一整排蠟筆／排線／紙紋／毛邊。</li><li>⚠⚠⚠ <b>第四版（09-05 更晚）治的是「人的臉變得有點呆板」，成因是第三版的提示詞自己寫的</b>：治「太寫實」那一段<b>全部都是禁令</b>（沒有睫毛／眼白／反光點／眼皮的褶／陰影／腮紅／一根根的頭髮 —— 七條全是「不要有什麼」，一條「要有什麼」都沒有），寫實是拿掉了，<b>表情的載體也順手被清空</b>。對照站上三張放大：<b>眉毛</b>每張臉都有、角度就是情緒（第三版一個字都沒提）；<b>嘴</b>開合幅度最大，笑起來是張開的一個形狀＋一塊淺色的牙（第三版寫「嘴是一筆」）；<b>眼睛</b>開心時彎成月牙；<b>腮紅</b>站上有、第三版直接禁掉；<b>年紀的線</b>（嘴邊一條笑紋、眼尾兩筆）也被「no contour」一起掃掉。</li><li>⚠⚠⚠ <b>第二個成因也是我寫的：「六個人都很平常、很自在」</b> —— 那句是為了擋病容，卻等於叫它畫六張一樣的表情。現在<b>逐格點名</b>（孕婦低頭偷偷笑／阿嬤伸手拿杯子、眉毛抬起來／中年男子一邊眉毛高、嘴偏一邊／量血糖的人刻意就是很平常／半夜那位眼睛只剩一條縫／頭巾那位讀到有趣的地方笑出來），中間兩位也各給一種。判準也多一條反方向的：<b>七張臉如果互換位置沒有人看得出來，也是錯的</b>。</li><li>⚠⚠⚠ <b>第三版（09-05 更晚）治的是「還是比站上寫實了一點」，而且是量過才改的</b>：站上十一張自己就分兩群，〈定期檢查〉48%、〈貝氏刷牙法〉50% 的面積是近白的，<b>比第二版那張還淡</b> —— 所以「太寫實」不在顏色。真正的成因是兩件<b>「畫得太準」</b>：<b>臉有立體感</b>（眼皮、眼白、反光點、顴骨、一根根的頭髮）、<b>每一樣東西用的筆畫太多</b>（電風扇畫出整圈護網、磁磚畫出完整格線、透視是準的）。</li><li>⚠⚠⚠ <b>而這兩件是第二版的提示詞自己寫出來的</b>：那一段「兩層畫法」我寫了「環境要細到你叫得出這是什麼房間」——<b>那句話等於在叫它畫準，而畫得準正是寫實的定義</b>；它同時是整份最長的一段（＝口外那一輪的通則：哪一段字最多，模型就把哪一個當主角）。第三版新增<b>「臉與手」</b>與<b>「用最少的筆畫」</b>兩段放到最前面，並把「兩層畫法」砍掉一半、反過來寫成「房間不是比人更細，是比人更粗略；東西多，每一樣簡單」。</li><li>⚠⚠⚠ <b>出圖之前要先餵上面那三張參考圖</b> —— 風格用文字描述一定會漂（〈生物陶瓷〉那一輪的形狀失敗三四輪，改成給圖之後一次就中）。提示詞第一段明寫「文字和參考圖衝突時以參考圖為準」。</li><li>⚠⚠ <b>「環境要更寫實」和「環境要淡化」不衝突，是兩件事</b>：要的是<b>東西多、但畫得淡</b>。提示詞多了一整段「兩層畫法」——人用最深最粗的線、房間裡的東西樣樣都畫但線更細更淡，並明寫「環境的線永遠不可以和人的線一樣深」。唯一例外是那個人手上正拿著的東西。</li><li>⚠⚠ <b>六格的家從一句話換成一張道具清單</b>（磁磚牆、瓦斯爐上的水壺、掛著的鍋鏟、竹編籃、立扇、塑膠桌巾、電鍋、鐵窗、瀝水架、藤椅、針織毯……）。第一版單調的成因就在這裡：中間那一格原本只寫「一點診所的暗示」。</li><li>⚠ 順帶擋掉<b>時鐘、月曆、手機與電腦螢幕、任何數位顯示</b> —— 六個家一寫實它們就會自己長出來，而它們身上一定有數字。血糖機那個小螢幕也逐項點名了。</li><li>⚠ <b>不做對話框</b> —— 這一站的圖一個字都不能有，而空的對話框讀起來是「在想一件沒有內容的事」。參考的那三張日本海報全部靠文字說話，我們不能照抄那一半。<b>要對話框版，一句話就換得掉。</b></li><li>⚠ <b>兩位醫事人員都不看鏡頭</b>（站上的紅線）。「接納」靠身體微微前傾與攤開的手，「介紹」靠兩個人都在看那幾格。要她們看鏡頭也是一句話，但要你先點頭。</li><li>⚠⚠ <b>上下各 12% 會被首頁的卡片切掉</b>（卡片縮圖固定 16:9），所以臉和那幾樣關鍵的東西一個都不能放在那裡 —— 提示詞裡已經寫死這一條。</li></ul>
     <h3>為什麼提這一案</h3>
     <p>把 Ⓐ 的內容（誰要三個月一次）換一個排法：從「同一張椅子換人坐」變成「六個人各自在自己的生活裡，中間有人在看著他們」。單調的成因是背景一直沒變，不是人不夠多。</p>
     <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="0">複製</button></div>
@@ -187,17 +216,22 @@ footer ol{padding-left:1.2rem}
 
 REFERENCE IMAGES — THREE IMAGES ARE ATTACHED. They are existing illustrations from the
 same website and this new picture must look like it belongs beside them. Copy from them:
-the exact line quality, HOW FEW STROKES each object is drawn with, and above all HOW THE
-FACES ARE DRAWN — look at how much those faces are doing, how wide the mouths open, how
-the eyebrows tilt. Do NOT copy their layouts, their people or their scenes. Wherever the
-words below and the attached images disagree, THE ATTACHED IMAGES WIN.
+the exact line quality, HOW FLAT AND SOLID THE COLOUR IS, HOW FEW STROKES each object is
+drawn with, and HOW THE FACES ARE DRAWN — look at how much those faces are doing, how wide
+the mouths open, how the eyebrows tilt. Do NOT copy their layouts, their people or their
+scenes. Wherever the words below and the attached images disagree, THE ATTACHED IMAGES WIN.
 
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
 illustration, drawn quickly and confidently BY HAND. Every line is drawn in a warm dark
 brown, never pure black and never grey, with visible variation in width and dry broken
 ends — never an even mechanical vector line. Colour is laid down in FLAT areas, two or
-three steps of the same colour, with hard edges between the steps. EVERY surface carries a
-fine coloured-pencil grain. High key overall with plenty of pale paper showing through,
+three steps of the same colour, with a clean hard edge between the steps.
+THE INSIDE OF EVERY FILL IS SMOOTH AND EVEN — there are no strokes inside it: no
+crayon marks, no coloured-pencil hatching, no cross-hatching, no scribbled fill, no
+sketchy texture. At most a barely visible paper tooth that you only notice if you go
+looking for it. The lines are solid, continuous and confident: never feathered, never
+drawn twice, never hairy. IF THIS PICTURE LOOKS LIKE IT WAS COLOURED IN WITH CRAYONS OR
+COLOURED PENCILS, IT IS WRONG. High key overall with plenty of pale paper showing through,
 BUT the picture must stay properly colourful — warm colours and cool colours both clearly
 present, and each person wears a different colour family from everyone else. People are
 simplified but their proportions are natural and their age is readable: Taiwanese / East
@@ -230,9 +264,9 @@ NAMES IT, and then stopped. An electric fan is a circle, four or five spokes and
 not an accurate wire guard. A tiled wall is a few lines suggesting tiles, not a complete
 grid. A window grille is a few bars, not every bar. A dish rack is three or four dishes,
 not a full rack. A rice cooker is a rounded box with a lid. Perspective is relaxed and
-judged by hand, never ruled, never architecturally correct. Nothing in this picture is
-drawn accurately; everything is drawn quickly and recognisably. THIS RULE IS ABOUT THINGS,
-NOT ABOUT FACES — the faces still get their eyebrows, their mouths and their expression.
+judged by hand, never ruled, never architecturally correct. THIS RULE IS ABOUT HOW MANY LINES AN
+OBJECT GETS, NOT ABOUT HOW THE COLOUR IS PUT DOWN — the fills stay flat and even. AND IT
+IS ABOUT THINGS, NOT ABOUT FACES — the faces still get their eyebrows, their mouths and their expression.
 
 TWO LEVELS — the people are drawn with the darkest, thickest lines and wear the strongest
 colours in their panel; the rooms behind them use thinner, paler lines and quieter colour.
@@ -265,6 +299,13 @@ of them looks at the viewer, and THEIR TWO FACES ARE DOING DIFFERENT THINGS.
   in front of her, head TILTED, nodding slightly at one of the panels. HER FACE: eyes
   curved into happy closed crescents, mouth closed in a small warm smile — visibly quieter
   and gentler than the dentist's face, not the same expression repeated.
+  TOGETHER THEY READ AS WELCOME AND INTRODUCTION — these are the people we are glad to
+  look after, and here they are. Nobody is scolding, warning, pointing at the viewer or
+  raising a finger.
+  THEIR ROOM, simply drawn — a low wooden cabinet, a glass-fronted cabinet with rows of
+  small unlabelled bottles, a stack of folded towels, a potted plant, a simple picture on
+  the wall showing ONLY a single tooth and no writing at all, a window frame at one side,
+  and the floor visible at the bottom.
 
 THE SIX PANELS AROUND HER, each holding ONE ordinary person in their own home, doing an
 ordinary thing. EACH ONE HAS A DIFFERENT EXPRESSION, LISTED BELOW — do not give them all
@@ -340,7 +381,10 @@ its little screen, not on the jars, not on the bottles in the clinic cabinet, no
 flasks, not on the rice cooker, not on the remote control, and not on any wall. Every
 surface that would normally carry writing is left blank.
 
-AVOID — no row of identical blank pleasant faces; no face without eyebrows; not every
+AVOID — no crayon look, no coloured-pencil look, no pastel-stick look; no visible strokes,
+hatching, cross-hatching or scribble inside any filled area; no rough paper texture laid
+over the picture; no pencil-sketch or rough-sketch look; no feathered, doubled or hairy
+outlines; no row of identical blank pleasant faces; no face without eyebrows; not every
 mouth is the same small closed curve; nobody is expressionless. No realistic or
 portrait-like faces, no shading or modelling on any face, no eyelashes, no eye whites, no
 catchlights, no individually drawn hair strands; no soft, smooth or airbrushed gradient
