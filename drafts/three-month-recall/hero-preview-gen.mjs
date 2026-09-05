@@ -27,14 +27,19 @@ const md = fs.readFileSync(path.join(HERE, "HERO-PROMPTS.md"), "utf8");
 // 只抓「四、五份提示詞」那一節底下的 code block
 const sec = md.split("## 四、五份提示詞")[1];
 if (!sec) throw new Error("HERO-PROMPTS.md 裡找不到第四節");
-const blocks = [...sec.matchAll(/### (Ⓐ|Ⓑ|Ⓒ|Ⓓ|Ⓔ) ([^\n]+)\n\n```\n([\s\S]*?)\n```/g)]
+const blocks = [...sec.matchAll(/### (Ⓐ|Ⓑ|Ⓒ|Ⓓ|Ⓔ|Ⓕ) ([^\n]+)\n\n```\n([\s\S]*?)\n```/g)]
   .map((m) => ({ key: m[1], title: m[2].trim(), prompt: m[3] }));
-if (blocks.length !== 5) throw new Error(`抓到 ${blocks.length} 份提示詞，應該是 5 份`);
+if (blocks.length !== 6) throw new Error(`抓到 ${blocks.length} 份提示詞，應該是 6 份`);
 for (const b of blocks) {
   if (/[一-鿿]/.test(b.prompt)) throw new Error(`${b.key} 的提示詞裡有中文`);
   if (!/CRITICAL — NO WRITING ANYWHERE/.test(b.prompt)) throw new Error(`${b.key} 少了 NO WRITING 那一段`);
-  if (!/16:9/.test(b.prompt)) throw new Error(`${b.key} 沒有指定 16:9`);
+  if (!/\b(16:9|4:3|3:2|5:4|1:1|4:5)\b/.test(b.prompt)) throw new Error(`${b.key} 開頭沒有指定長寬比`);
 }
+
+// ⚠ Ⓕ 排到最前面 —— 它是建議的那一案，手機上不能要他捲過五案才看到。
+//    markdown 裡仍然照字母順序寫，兩邊不必一致。
+const ORDER = ["Ⓕ", "Ⓐ", "Ⓑ", "Ⓒ", "Ⓓ", "Ⓔ"];
+blocks.sort((a, b) => ORDER.indexOf(a.key) - ORDER.indexOf(b.key));
 
 // 每一案的中文說明（畫面／對到哪一段／擋的坑）
 const NOTES = {
@@ -107,6 +112,23 @@ const NOTES = {
     ],
     why: "最安靜、最像站上的調性，講的是「這件事已經是他生活的一部分」。缺點是它講「常來」不講「誰」。",
   },
+  "Ⓕ": {
+    lead: "整張圖是七格拼起來的：六個不同的人各自一格，中間一格是醫師。",
+    maps: "〈哪些人適用〉（Ⓐ 的改寫）",
+    scene: [
+      "格子是<b>不規則的多角形</b>、大小不一，中間隔著手繪的細線 —— 不是整齊的四方格。每一格自己一個很淡的底色。",
+      "六格：孕婦／拿拐杖的阿嬤／膝上放著藥袋的中年男子／餐桌上量血糖／半夜起來倒水喝／綁著頭巾、手邊保溫杯的中年女性。<b>每個人都在自己家裡，不是在診間。</b>",
+      "中間那一格最大：女醫師一手向外攤開，看著四周那幾個人。",
+      "<b>比例 4:3</b>，比站上現在那十一張高（見最上面那一段）。",
+    ],
+    guards: [
+      "⚠ <b>不做對話框</b> —— 這一站的圖一個字都不能有，而空的對話框讀起來是「在想一件沒有內容的事」。參考的那三張日本海報全部靠文字說話，我們不能照抄那一半。<b>要對話框版，一句話就換得掉。</b>",
+      "⚠ <b>醫師不看鏡頭</b>（站上的紅線）。呼籲靠攤開的手與「她在看那幾個人」給。要她看鏡頭也是一句話，但要你先點頭。",
+      "⚠⚠ <b>上下各 12% 會被首頁的卡片切掉</b>（卡片縮圖固定 16:9），所以臉和那幾樣關鍵的東西一個都不能放在那裡 —— 提示詞裡已經寫死這一條。",
+      "六格各一個底色，正是為了治 Ⓐ 那個「四格共用同一個診間」的單調。",
+    ],
+    why: "把 Ⓐ 的內容（誰要三個月一次）換一個排法：從「同一張椅子換人坐」變成「六個人各自在自己的生活裡，中間有人在看著他們」。單調的成因是背景一直沒變，不是人不夠多。",
+  },
 };
 
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -158,6 +180,12 @@ h1{font-size:1.5rem;line-height:1.5;margin:1.8rem 0 .4rem}
 .pv-note p{margin:.4rem 0}
 .pv-note p:first-child{margin-top:0}
 .pv-note p:last-child{margin-bottom:0}
+.pv-ratio table{border-collapse:collapse;width:100%;font-size:.88rem;margin:.6rem 0}
+.pv-ratio th,.pv-ratio td{border-bottom:1px solid var(--rule);padding:.4rem .3rem;text-align:right;white-space:nowrap}
+.pv-ratio th:first-child,.pv-ratio td:first-child{text-align:left}
+.pv-ratio tr.pv-pick td{background:rgba(63,101,74,.09)}
+.pv-tw{overflow-x:auto}
+.pv-ratio code{font-size:.9em;background:#fff;border:1px solid var(--rule);border-radius:4px;padding:0 .25em}
 .pv-case{background:var(--card);border:1px solid var(--rule);border-radius:12px;
   padding:1.1rem 1.1rem 1.3rem;margin:0 0 1.6rem}
 .pv-case h2{font-size:1.18rem;line-height:1.5;margin:0 0 .5rem;display:flex;
@@ -188,15 +216,36 @@ footer ol{padding-left:1.2rem}
 <body>
 <header class="pv-head"><div class="pv-shell"><b>芳仁牙醫診所</b><span>提案頁・尚未上線</span></div></header>
 <div class="pv-shell">
-<h1>〈三個月一次的洗牙與塗氟〉<br>插畫・五個提案</h1>
-<p class="pv-sub">文章已經定稿，這一頁只決定圖要畫什麼。五案都還沒畫，先挑梗。</p>
+<h1>〈三個月一次的洗牙與塗氟〉<br>插畫・六個提案</h1>
+<p class="pv-sub">文章已經定稿，這一頁只決定圖要畫什麼。都還沒畫，先挑梗。</p>
 
 <div class="pv-note">
-<p><b>建議 Ⓐ 主推、Ⓒ 次推。</b></p>
-<p>Ⓐ 直接畫「對象」，正好是這一篇和〈半年一次的洗牙〉的分工；Ⓒ 解掉整篇最反直覺的那一句。</p>
-<p>⚠ <b>不能再做熱鬧的候診室</b> —— 〈半年一次的洗牙〉那張就是櫃檯加候診區十幾個人，
-同一科、卡片會並排，撞了就變成同一個模子。五案都避開了。</p>
-<p>⚠ Ⓓ 的骨架和〈拔智齒〉那張一樣（人＋一個大泡泡分三段），選它要知道這件事。</p>
+<p><b>2026-09-05：Ⓕ 是照你的方向新加的，建議走它。</b></p>
+<p>你選了 Ⓐ 但指出它單調 —— <b>成因是四格共用同一個診間、同一片背景</b>，變的只有坐上去的人。
+Ⓕ 把它換成七格拼起來的鑲嵌：六個人各自在<b>自己的生活裡</b>、各自一個底色，中間一格是醫師。</p>
+<p>Ⓐ~Ⓔ 留著沒有動，往下捲還在。</p>
+</div>
+
+<div class="pv-note pv-ratio">
+<p><b>拉高之後會長多高（實測）</b></p>
+<p>站上十一張 HERO 全部是 16:9。下面是<b>圖高 px ／佔一屏的百分比</b>：</p>
+<div class="pv-tw"><table>
+<tr><th>比例</th><th>390</th><th>744</th><th>1440</th></tr>
+<tr><td>16:9 現況</td><td>204／24%</td><td>371／33%</td><td>369／41%</td></tr>
+<tr><td>3:2</td><td>241／29%</td><td>440／39%</td><td>437／49%</td></tr>
+<tr class="pv-pick"><td><b>4:3 建議</b></td><td>272／32%</td><td>495／44%</td><td>492／55%</td></tr>
+<tr><td>5:4</td><td>290／34%</td><td>528／47%</td><td>525／58%</td></tr>
+<tr><td>1:1</td><td>362／43%</td><td>659／58%</td><td>656／73%</td></tr>
+<tr><td>4:5</td><td>453／54%</td><td>824／73%</td><td>820／91%</td></tr>
+</table></div>
+<p>⚠⚠ <b>卡住的是電腦版不是手機</b>：1440 上內文欄 656px，1:1 就吃掉 73% 的螢幕、
+4:5 是 91%（點進文章第一眼只有一張圖）。<b>4:3 的 55% 還在可以接受的一側</b>，
+而且它正好落在你給的兩張圖中間（絨毛玩偶那張跨頁約 1.45、羽扇豆那張 1:1）。</p>
+<p>⚠⚠ <b>首頁的文章卡不能跟著變</b> —— 縮圖固定 16:9，十一張並排，改一張就要重裁十張。
+所以拉高的圖<b>在卡片上只露出中間一條</b>：4:3 露 75%、5:4 露 70%、1:1 只剩 56%。
+Ⓕ 的提示詞已經把「上下各 12% 不可以放臉與關鍵物件」寫死。</p>
+<p>⚠ 另外兩支工具要跟著改（<b>等你挑定再動，各兩行</b>）：縮圖那一支寫死了 16:9 會拒絕出圖、
+產生首頁卡的那一支寫死了 <code>width="2000" height="1116"</code>。</p>
 </div>
 
 ${cards}
@@ -241,4 +290,4 @@ function fallback(t, done) {
 if (!/noindex/.test(html)) throw new Error("少了 noindex");
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, html);
-console.log(`寫好了：${path.relative(ROOT, OUT)}　${html.length} 字元　五案：${blocks.map((b) => b.key).join(" ")}`);
+console.log(`寫好了：${path.relative(ROOT, OUT)}　${html.length} 字元　${blocks.length} 案：${blocks.map((b) => b.key).join(" ")}`);

@@ -33,6 +33,7 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 | **Ⓒ** | 阿公和孫女一起塗氟 | 〈年紀大了，氟的角色會變〉 | 人是主角的喜悅場面 |
 | **Ⓓ** | 人 ＋ 一個大泡泡三段 | 〈為什麼是三個月〉 | 拔智齒那個結構（⚠ 重複，見下） |
 | **Ⓔ** | 同一扇窗，一年裡回來幾次 | 〈不只是把牙結石清掉〉 | 同機位重複，**變的是季節** |
+| **Ⓕ** | **不規則分格 ＋ 中間一位醫師**（Ⓐ 的改寫） | 〈哪些人適用〉 | 鑲嵌式分格，**4:3** |
 
 ⚠ **Ⓓ 和〈拔智齒〉同結構**，放進來是因為它是唯一畫得出「口乾／血糖／慢癒合」那三件的
 做法；**要選它就要接受兩張圖的骨架一樣**（泡泡裡的內容完全不同，但一眼看過去會像親戚）。
@@ -43,6 +44,52 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 ・Ⓒ 解掉整篇最反直覺的一句「塗氟不再只是小孩才做的事」，而且是喜悅的場面、記憶點最高。
 ・Ⓑ 最不像牙科插畫、辨識度最高，但它只講到最後一段。
 ・Ⓔ 最安靜、最像站上的調性，但它講的是「常來」不是「誰」。
+
+---
+
+## 一之二、⚠⚠ 2026-09-05：不再拘泥 16:9（使用者指定）
+
+使用者：「**之前的尺寸都是很扁的，所以這個框這樣畫下去就會不好看**……
+其實我們不需要這麼拘泥於每次都用橫幅的……用一些比較符合新的我們概念上的
+**垂直比例拉高**一點的尺寸來畫畫看。」
+
+**站上十一張 HERO 全部是 2000×1116（1.792:1）。** 這一張要拉高，先量代價：
+
+| 比例 | 375 | 390 | 430 | 744 | 1440 |
+| --- | --- | --- | --- | --- | --- |
+| **16:9（現況）** | 195／24% | 204／24% | 226／24% | 371／33% | 369／41% |
+| 3:2 | 231／28% | 241／29% | 268／29% | 440／39% | 437／49% |
+| **4:3（建議）** | 260／32% | 272／32% | 302／32% | 495／44% | **492／55%** |
+| 5:4 | 278／34% | 290／34% | 322／35% | 528／47% | 525／58% |
+| 1:1 | 347／43% | 362／43% | 402／43% | 659／58% | **656／73%** |
+| 4:5 | 434／53% | 453／54% | 503／54% | 824／73% | **820／91%** |
+
+（圖高 px ／佔那個視窗一屏的百分比。內文欄寬 375 上 347、1440 上 656，
+`.post-hero img` 是 `height: auto`，所以**文章頁不會破圖，只是變高**。）
+
+⚠⚠ **卡住的不是手機是電腦版**：1440 上內文欄 656px，1:1 就吃掉 **73% 的螢幕**、
+4:5 是 **91%**（＝點進文章第一眼只有一張圖）。**4:3 的 55% 還在可以接受的一側。**
+
+### ⚠⚠⚠ 三個一定會被波及的地方
+
+1. **首頁文章卡的縮圖是 `aspect-ratio: 16/9` ＋ `object-fit: cover`** ——
+   十一張卡並排，**不能為了一張圖改掉**（改了另外十張全部要重裁）。
+   所以拉高的圖在卡片上會**只露出中間一條**：
+   ・4:3 → 露出高度的 **75%**（上下各切 12.5%）
+   ・5:4 → 70%　　・1:1 → **56%**　　・4:5 → 45%
+   **→ 這是構圖的硬條件：最重要的東西要落在中間那 75% 裡**（同分享卡那條
+   「在成品的尺寸上量，不要在素材的尺寸上量」）。延伸閱讀那三張卡同理。
+2. **`tools/hero-resize.mjs` 會擋下來** —— 它寫死 `RATIO = 2000/1116`、容差 ±0.02，
+   比例不對就拒絕寫檔。要改成可以指定比例（**等挑定再改，兩行**）。
+3. **`tools/build.mjs` 的卡片與延伸閱讀寫死 `width="2000" height="1116"`** ——
+   要改成用它自己已經有的 `jpegSize()` 讀真實尺寸。文章頁那一行是手寫的，跟著改。
+
+⚠ `sizes` **不必動**（那三段講的是**寬度**，欄寬沒有變）。
+⚠ `og:image` 指的就是這張 HERO，寬高由 `jpegSize()` 讀 —— 會自己對，
+但**訊息 app 的卡片槽約 1.5:1**，比它高的圖會被上下裁；4:3 只差一點，1:1 以上就明顯。
+
+**建議 4:3（2000×1500）。** 它落在你給的兩張參考圖中間
+（絨毛玩偶那張跨頁約 1.45:1、羽扇豆那張 1:1），電腦版 55%、卡片還看得到 75%。
 
 ---
 
@@ -107,6 +154,32 @@ ILLUSTRATION.md 第七節第 19 條**逐字留在 repo 裡**，日後改圖只�
 　牆上無字的牙齒海報、門內露出的診療椅一角、淺色刷手服。
 ・⚠ 窗外的雨要畫成**一群同向的短線**，不是一條長曲線（第三節那條，
 　〈擴張牙弓〉的靈魂出竅踩過）。
+
+
+### Ⓕ 不規則分格 ＋ 中間一位醫師（2026-09-05 新增，Ⓐ 的改寫）
+
+**起因**：使用者看過五案之後選 Ⓐ，但指出它的毛病 ——
+「**只有診療〔椅上〕的人不一樣，都一樣，所以畫面看起來很單調**」。
+他給的方向：**每個不一樣的人單獨變成一個框**，框可以帶一點不規則、
+或用對話框的方式，**中間是一位醫療人員**，讀起來像
+「**這幾個人要特別注意自己牙齒的健康**」的呼籲。
+參考圖是三張日本車站的海報（GRANSTA 的多角形分格、声かけサポート 的對話框、
+カスハラ 的四格）。
+
+・**六格 ＋ 中間一格**：孕婦／拿拐杖的阿嬤／膝上放著藥袋的中年男子／
+　餐桌上量血糖／半夜起來倒水喝／綁著頭巾、手邊保溫杯的中年女性。
+　中間那一格是女醫師，一手向外攤開，看著四周那幾個人。
+・**每一格一個很淡的底色**（＝參考圖那一套），Ⓐ 之所以單調正是因為
+　四格共用同一個診間、同一片背景。
+・⚠⚠ **格子做成不規則的多角形，不做對話框** —— 我們這一站的圖**一個字都不能有**
+　（第七節第 4 條），而**空的對話框讀起來是「在想一件沒有內容的事」**；
+　參考圖那三張全部靠文字說話，我們不能照抄那一半。
+　**要對話框版我可以另出一份，一句話換掉。**
+・⚠⚠ **中間那位醫師不看鏡頭** —— A 類紅線那一條仍然有效。呼籲靠**攤開的手**與
+　**她在看那幾個人**給；她看鏡頭指著讀者是另一種東西（而且離站上的調子很遠）。
+　**要她看鏡頭也是一句話的事，但要你點頭。**
+・⚠⚠⚠ **上下各 12% 是「會被卡片切掉」的區域**（見第一之二節）：
+　人臉與那幾樣關鍵的東西**一個都不可以放在那裡面**。
 
 ---
 
@@ -461,6 +534,99 @@ with staff; no close-up dental instruments, no needles, no drills; no blood; no
 photorealism; no faceless figures; no exaggerated cartoon head-to-body proportions; no
 greyscale; no backlit heroic silhouettes; no green cast over the whole picture; the man
 must not look ill, frail, sad or bored; no arrows; no diagrams.
+```
+
+### Ⓕ 不規則分格 ＋ 中間一位醫師
+
+```
+Editorial illustration, 4:3 landscape (slightly wider than tall, NOT a wide banner).
+
+STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
+illustration. Every line is drawn by hand in a warm dark brown, never pure black, with
+visible variation in width and dry broken ends — never an even mechanical vector line,
+never a loose scribble. Colour is laid down in flat areas, two or three steps of the same
+colour; no smooth gradients except where light needs describing. EVERY surface carries a
+fine coloured-pencil grain. High key overall with plenty of pale paper showing through,
+BUT the picture must stay properly colourful — warm colours and cool colours both clearly
+present, and each person wears a different colour family from everyone else. People are
+simplified but their proportions are natural and their age is readable: Taiwanese / East
+Asian faces, normal head-to-body proportion, small simple features that still carry
+expression, hair drawn as a few shaped masses. NOBODY LOOKS OUT AT THE VIEWER.
+
+STRUCTURE — The whole picture is ONE MOSAIC of seven panels, like a page of an
+illustrated poster. The panels are irregular polygons of different sizes, fitted together
+edge to edge and separated by THIN HAND-DRAWN GUTTER LINES that are slightly wobbly, never
+ruler-straight and never a regular grid of rectangles. The mosaic fills the whole frame.
+Each panel has its own very pale background tint, so the seven panels are immediately
+distinguishable from one another.
+
+THE CENTRE PANEL is the largest: an irregular five-sided panel in the middle of the
+picture. In it stands a woman dentist in her thirties in a pale sage-green scrub top, hair
+in a low bun, seen from the waist up, turned three-quarters. One arm is open and extended
+outward in a calm, welcoming gesture, and she is looking OUT TOWARDS THE PANELS AROUND HER
+— warm, attentive, unhurried. She is not looking at the viewer, not pointing at the
+viewer, and not making a warning or scolding gesture. Behind her, only a hint of a clinic:
+a low wooden cabinet edge and a small shelf.
+
+THE SIX PANELS AROUND HER, each holding ONE ordinary person in an ordinary moment. Place
+them exactly like this:
+  UPPER LEFT — a woman in her early thirties, visibly but not dramatically pregnant,
+  sitting on a sofa with one hand resting on her middle, a slim blank booklet on the arm of
+  the sofa beside her.
+  UPPER RIGHT — a woman in her seventies with short grey permed hair, standing in her own
+  kitchen with a wooden walking stick hooked over her forearm, reaching for a cup.
+  RIGHT — a man in his early fifties in an open-collared work shirt, sitting at a table
+  with a soft brown paper pharmacy bag in front of him and two blister packs of tablets
+  half slid out of it.
+  LOWER RIGHT — the same kind of ordinary morning: a man in his sixties at a breakfast
+  table, holding a small handheld meter to his fingertip, matter-of-fact, a bowl and a mug
+  beside him.
+  LOWER LEFT — the middle of the night: a woman in her fifties in a T-shirt at her kitchen
+  counter, pouring a glass of water, half asleep. This is the only dark panel — deep dusty
+  blue with one small warm pool of light; the wall behind her is dark, never left pale.
+  LEFT — a woman in her forties wearing a soft printed headscarf, sitting in an armchair
+  with a small vacuum flask on the side table, reading, calm and comfortable.
+
+ALL SIX ARE CALM, ORDINARY AND AT EASE — they are not ill, not frail, not sad, not
+frightened, not in a hospital. Each one is in their own home or their own everyday
+surroundings, not in a clinic. Each has a different posture and a different direction of
+gaze. Nobody looks at the viewer.
+
+CROPPING — the top 12% and the bottom 12% of the whole picture will sometimes be cut off.
+Keep every face, and every one of the small objects listed above, well inside the middle of
+the frame. The top and bottom edges of the picture may hold only background: wall, floor,
+tint, the edge of a panel.
+
+LIGHT AND COLOUR — bright ordinary daytime in six of the seven panels, high key, soft
+daylight; no sunset, no long orange shadows. The lower-left night panel is the single
+exception and must read as clearly darker than all the others. Many colours, each of them
+held low and dusty: brick red, mustard, sage green, teal, greyish violet, cream. Give each
+panel a different pale tint for its background and assign the clothes so that no two
+neighbouring people clash: upper left dusty rose, upper right mustard, right pale slate
+blue, lower right cream and brick red, lower left deep blue in shadow, left muted teal,
+the dentist pale sage green. Clothes are not flat single blocks of colour — give every
+garment two or three steps, with collars, cuffs, hems and folds drawn in. As a small
+accent only, a deep forest green (#3f654a / #2c5238) on the gutter lines and on one shelf
+behind the dentist — a touch, never a wash. Teeth, wherever they show, stay clean
+near-white and take none of this colour.
+
+CRITICAL — NO WRITING ANYWHERE. There is no text, no lettering, no numbers, no letters, no
+logos, no captions, no labels and no signage anywhere in this picture — not in the gutters
+between panels, not on the booklet, not on the pharmacy bag, not on the blister packs, not
+on the handheld meter or its little screen, not on the flask, not on any wall. Every
+surface that would normally carry writing is left blank. This is the single most important
+rule after the style.
+
+AVOID — no speech bubbles, no thought bubbles, no captions, no arrows, no numbers on the
+panels and no icons or symbols of any kind; the gutters are plain hand-drawn lines, not a
+neat rectangular grid and not comic-book panel borders with heavy black outlines; nobody
+looks at the viewer and nobody points at the viewer; the dentist is not scolding, not
+warning and not raising a finger; no hospital beds, no IV stands, no wheelchairs, no oxygen
+tubes, no face masks covering anyone's face, no sick or pained expressions, no tears; no
+close-up dental instruments, no needles, no drills, no trays of tools; no blood; no
+photorealistic mouth interiors; no teeth diagrams; no photorealism; no faceless figures; no
+exaggerated cartoon head-to-body proportions; no greyscale; no backlit heroic silhouettes;
+no green cast over the whole picture; the six panels must not all show the same room.
 ```
 
 ---

@@ -27,6 +27,12 @@ h1{font-size:1.5rem;line-height:1.5;margin:1.8rem 0 .4rem}
 .pv-note p{margin:.4rem 0}
 .pv-note p:first-child{margin-top:0}
 .pv-note p:last-child{margin-bottom:0}
+.pv-ratio table{border-collapse:collapse;width:100%;font-size:.88rem;margin:.6rem 0}
+.pv-ratio th,.pv-ratio td{border-bottom:1px solid var(--rule);padding:.4rem .3rem;text-align:right;white-space:nowrap}
+.pv-ratio th:first-child,.pv-ratio td:first-child{text-align:left}
+.pv-ratio tr.pv-pick td{background:rgba(63,101,74,.09)}
+.pv-tw{overflow-x:auto}
+.pv-ratio code{font-size:.9em;background:#fff;border:1px solid var(--rule);border-radius:4px;padding:0 .25em}
 .pv-case{background:var(--card);border:1px solid var(--rule);border-radius:12px;
   padding:1.1rem 1.1rem 1.3rem;margin:0 0 1.6rem}
 .pv-case h2{font-size:1.18rem;line-height:1.5;margin:0 0 .5rem;display:flex;
@@ -57,19 +63,144 @@ footer ol{padding-left:1.2rem}
 <body>
 <header class="pv-head"><div class="pv-shell"><b>芳仁牙醫診所</b><span>提案頁・尚未上線</span></div></header>
 <div class="pv-shell">
-<h1>〈三個月一次的洗牙與塗氟〉<br>插畫・五個提案</h1>
-<p class="pv-sub">文章已經定稿，這一頁只決定圖要畫什麼。五案都還沒畫，先挑梗。</p>
+<h1>〈三個月一次的洗牙與塗氟〉<br>插畫・六個提案</h1>
+<p class="pv-sub">文章已經定稿，這一頁只決定圖要畫什麼。都還沒畫，先挑梗。</p>
 
 <div class="pv-note">
-<p><b>建議 Ⓐ 主推、Ⓒ 次推。</b></p>
-<p>Ⓐ 直接畫「對象」，正好是這一篇和〈半年一次的洗牙〉的分工；Ⓒ 解掉整篇最反直覺的那一句。</p>
-<p>⚠ <b>不能再做熱鬧的候診室</b> —— 〈半年一次的洗牙〉那張就是櫃檯加候診區十幾個人，
-同一科、卡片會並排，撞了就變成同一個模子。五案都避開了。</p>
-<p>⚠ Ⓓ 的骨架和〈拔智齒〉那張一樣（人＋一個大泡泡分三段），選它要知道這件事。</p>
+<p><b>2026-09-05：Ⓕ 是照你的方向新加的，建議走它。</b></p>
+<p>你選了 Ⓐ 但指出它單調 —— <b>成因是四格共用同一個診間、同一片背景</b>，變的只有坐上去的人。
+Ⓕ 把它換成七格拼起來的鑲嵌：六個人各自在<b>自己的生活裡</b>、各自一個底色，中間一格是醫師。</p>
+<p>Ⓐ~Ⓔ 留著沒有動，往下捲還在。</p>
+</div>
+
+<div class="pv-note pv-ratio">
+<p><b>拉高之後會長多高（實測）</b></p>
+<p>站上十一張 HERO 全部是 16:9。下面是<b>圖高 px ／佔一屏的百分比</b>：</p>
+<div class="pv-tw"><table>
+<tr><th>比例</th><th>390</th><th>744</th><th>1440</th></tr>
+<tr><td>16:9 現況</td><td>204／24%</td><td>371／33%</td><td>369／41%</td></tr>
+<tr><td>3:2</td><td>241／29%</td><td>440／39%</td><td>437／49%</td></tr>
+<tr class="pv-pick"><td><b>4:3 建議</b></td><td>272／32%</td><td>495／44%</td><td>492／55%</td></tr>
+<tr><td>5:4</td><td>290／34%</td><td>528／47%</td><td>525／58%</td></tr>
+<tr><td>1:1</td><td>362／43%</td><td>659／58%</td><td>656／73%</td></tr>
+<tr><td>4:5</td><td>453／54%</td><td>824／73%</td><td>820／91%</td></tr>
+</table></div>
+<p>⚠⚠ <b>卡住的是電腦版不是手機</b>：1440 上內文欄 656px，1:1 就吃掉 73% 的螢幕、
+4:5 是 91%（點進文章第一眼只有一張圖）。<b>4:3 的 55% 還在可以接受的一側</b>，
+而且它正好落在你給的兩張圖中間（絨毛玩偶那張跨頁約 1.45、羽扇豆那張 1:1）。</p>
+<p>⚠⚠ <b>首頁的文章卡不能跟著變</b> —— 縮圖固定 16:9，十一張並排，改一張就要重裁十張。
+所以拉高的圖<b>在卡片上只露出中間一條</b>：4:3 露 75%、5:4 露 70%、1:1 只剩 56%。
+Ⓕ 的提示詞已經把「上下各 12% 不可以放臉與關鍵物件」寫死。</p>
+<p>⚠ 另外兩支工具要跟著改（<b>等你挑定再動，各兩行</b>）：縮圖那一支寫死了 16:9 會拒絕出圖、
+產生首頁卡的那一支寫死了 <code>width="2000" height="1116"</code>。</p>
 </div>
 
 
   <section class="pv-case" id="case-1">
+    <h2><span class="pv-mark">Ⓕ</span>不規則分格 ＋ 中間一位醫師</h2>
+    <p class="pv-lead">整張圖是七格拼起來的：六個不同的人各自一格，中間一格是醫師。</p>
+    <p class="pv-maps">對到文章的　<b>〈哪些人適用〉（Ⓐ 的改寫）</b></p>
+    <h3>畫面</h3>
+    <p>格子是<b>不規則的多角形</b>、大小不一，中間隔著手繪的細線 —— 不是整齊的四方格。每一格自己一個很淡的底色。</p>
+    <p>六格：孕婦／拿拐杖的阿嬤／膝上放著藥袋的中年男子／餐桌上量血糖／半夜起來倒水喝／綁著頭巾、手邊保溫杯的中年女性。<b>每個人都在自己家裡，不是在診間。</b></p>
+    <p>中間那一格最大：女醫師一手向外攤開，看著四周那幾個人。</p>
+    <p><b>比例 4:3</b>，比站上現在那十一張高（見最上面那一段）。</p>
+    <h3>擋掉的坑</h3>
+    <ul><li>⚠ <b>不做對話框</b> —— 這一站的圖一個字都不能有，而空的對話框讀起來是「在想一件沒有內容的事」。參考的那三張日本海報全部靠文字說話，我們不能照抄那一半。<b>要對話框版，一句話就換得掉。</b></li><li>⚠ <b>醫師不看鏡頭</b>（站上的紅線）。呼籲靠攤開的手與「她在看那幾個人」給。要她看鏡頭也是一句話，但要你先點頭。</li><li>⚠⚠ <b>上下各 12% 會被首頁的卡片切掉</b>（卡片縮圖固定 16:9），所以臉和那幾樣關鍵的東西一個都不能放在那裡 —— 提示詞裡已經寫死這一條。</li><li>六格各一個底色，正是為了治 Ⓐ 那個「四格共用同一個診間」的單調。</li></ul>
+    <h3>為什麼提這一案</h3>
+    <p>把 Ⓐ 的內容（誰要三個月一次）換一個排法：從「同一張椅子換人坐」變成「六個人各自在自己的生活裡，中間有人在看著他們」。單調的成因是背景一直沒變，不是人不夠多。</p>
+    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="0">複製</button></div>
+    <pre class="pv-prompt" id="p0">Editorial illustration, 4:3 landscape (slightly wider than tall, NOT a wide banner).
+
+STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
+illustration. Every line is drawn by hand in a warm dark brown, never pure black, with
+visible variation in width and dry broken ends — never an even mechanical vector line,
+never a loose scribble. Colour is laid down in flat areas, two or three steps of the same
+colour; no smooth gradients except where light needs describing. EVERY surface carries a
+fine coloured-pencil grain. High key overall with plenty of pale paper showing through,
+BUT the picture must stay properly colourful — warm colours and cool colours both clearly
+present, and each person wears a different colour family from everyone else. People are
+simplified but their proportions are natural and their age is readable: Taiwanese / East
+Asian faces, normal head-to-body proportion, small simple features that still carry
+expression, hair drawn as a few shaped masses. NOBODY LOOKS OUT AT THE VIEWER.
+
+STRUCTURE — The whole picture is ONE MOSAIC of seven panels, like a page of an
+illustrated poster. The panels are irregular polygons of different sizes, fitted together
+edge to edge and separated by THIN HAND-DRAWN GUTTER LINES that are slightly wobbly, never
+ruler-straight and never a regular grid of rectangles. The mosaic fills the whole frame.
+Each panel has its own very pale background tint, so the seven panels are immediately
+distinguishable from one another.
+
+THE CENTRE PANEL is the largest: an irregular five-sided panel in the middle of the
+picture. In it stands a woman dentist in her thirties in a pale sage-green scrub top, hair
+in a low bun, seen from the waist up, turned three-quarters. One arm is open and extended
+outward in a calm, welcoming gesture, and she is looking OUT TOWARDS THE PANELS AROUND HER
+— warm, attentive, unhurried. She is not looking at the viewer, not pointing at the
+viewer, and not making a warning or scolding gesture. Behind her, only a hint of a clinic:
+a low wooden cabinet edge and a small shelf.
+
+THE SIX PANELS AROUND HER, each holding ONE ordinary person in an ordinary moment. Place
+them exactly like this:
+  UPPER LEFT — a woman in her early thirties, visibly but not dramatically pregnant,
+  sitting on a sofa with one hand resting on her middle, a slim blank booklet on the arm of
+  the sofa beside her.
+  UPPER RIGHT — a woman in her seventies with short grey permed hair, standing in her own
+  kitchen with a wooden walking stick hooked over her forearm, reaching for a cup.
+  RIGHT — a man in his early fifties in an open-collared work shirt, sitting at a table
+  with a soft brown paper pharmacy bag in front of him and two blister packs of tablets
+  half slid out of it.
+  LOWER RIGHT — the same kind of ordinary morning: a man in his sixties at a breakfast
+  table, holding a small handheld meter to his fingertip, matter-of-fact, a bowl and a mug
+  beside him.
+  LOWER LEFT — the middle of the night: a woman in her fifties in a T-shirt at her kitchen
+  counter, pouring a glass of water, half asleep. This is the only dark panel — deep dusty
+  blue with one small warm pool of light; the wall behind her is dark, never left pale.
+  LEFT — a woman in her forties wearing a soft printed headscarf, sitting in an armchair
+  with a small vacuum flask on the side table, reading, calm and comfortable.
+
+ALL SIX ARE CALM, ORDINARY AND AT EASE — they are not ill, not frail, not sad, not
+frightened, not in a hospital. Each one is in their own home or their own everyday
+surroundings, not in a clinic. Each has a different posture and a different direction of
+gaze. Nobody looks at the viewer.
+
+CROPPING — the top 12% and the bottom 12% of the whole picture will sometimes be cut off.
+Keep every face, and every one of the small objects listed above, well inside the middle of
+the frame. The top and bottom edges of the picture may hold only background: wall, floor,
+tint, the edge of a panel.
+
+LIGHT AND COLOUR — bright ordinary daytime in six of the seven panels, high key, soft
+daylight; no sunset, no long orange shadows. The lower-left night panel is the single
+exception and must read as clearly darker than all the others. Many colours, each of them
+held low and dusty: brick red, mustard, sage green, teal, greyish violet, cream. Give each
+panel a different pale tint for its background and assign the clothes so that no two
+neighbouring people clash: upper left dusty rose, upper right mustard, right pale slate
+blue, lower right cream and brick red, lower left deep blue in shadow, left muted teal,
+the dentist pale sage green. Clothes are not flat single blocks of colour — give every
+garment two or three steps, with collars, cuffs, hems and folds drawn in. As a small
+accent only, a deep forest green (#3f654a / #2c5238) on the gutter lines and on one shelf
+behind the dentist — a touch, never a wash. Teeth, wherever they show, stay clean
+near-white and take none of this colour.
+
+CRITICAL — NO WRITING ANYWHERE. There is no text, no lettering, no numbers, no letters, no
+logos, no captions, no labels and no signage anywhere in this picture — not in the gutters
+between panels, not on the booklet, not on the pharmacy bag, not on the blister packs, not
+on the handheld meter or its little screen, not on the flask, not on any wall. Every
+surface that would normally carry writing is left blank. This is the single most important
+rule after the style.
+
+AVOID — no speech bubbles, no thought bubbles, no captions, no arrows, no numbers on the
+panels and no icons or symbols of any kind; the gutters are plain hand-drawn lines, not a
+neat rectangular grid and not comic-book panel borders with heavy black outlines; nobody
+looks at the viewer and nobody points at the viewer; the dentist is not scolding, not
+warning and not raising a finger; no hospital beds, no IV stands, no wheelchairs, no oxygen
+tubes, no face masks covering anyone's face, no sick or pained expressions, no tears; no
+close-up dental instruments, no needles, no drills, no trays of tools; no blood; no
+photorealistic mouth interiors; no teeth diagrams; no photorealism; no faceless figures; no
+exaggerated cartoon head-to-body proportions; no greyscale; no backlit heroic silhouettes;
+no green cast over the whole picture; the six panels must not all show the same room.</pre>
+  </section>
+
+  <section class="pv-case" id="case-2">
     <h2><span class="pv-mark">Ⓐ</span>同一張椅子，四個不同的人</h2>
     <p class="pv-lead">同一張診療椅、同一個機位、同一位醫師，四格裡換的是坐上去的人。</p>
     <p class="pv-maps">對到文章的　<b>〈哪些人適用〉</b></p>
@@ -80,8 +211,8 @@ footer ol{padding-left:1.2rem}
     <ul><li>身分靠<b>手邊的東西</b>給，不靠身體給 —— 媽媽手冊、膝上的藥袋、靠著椅子的拐杖、手邊的保溫杯。不畫點滴、不畫輪椅、不畫病容。</li><li>四個人的姿勢、視線、表情各自不同，衣服顏色互不重複 —— 不然會變成型錄。</li><li>站上最好讀的手法是「同一個機位重複、只有一件事在變」；〈牙齦流血〉那張變的是時間，這一張變的是人。</li></ul>
     <h3>為什麼提這一案</h3>
     <p>直接畫「對象」＝ 這一篇的定位，而且一眼破掉「這是老人的事」那個刻板印象。</p>
-    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="0">複製</button></div>
-    <pre class="pv-prompt" id="p0">Editorial illustration, 16:9 landscape.
+    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="1">複製</button></div>
+    <pre class="pv-prompt" id="p1">Editorial illustration, 16:9 landscape.
 
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
 illustration. Every line is drawn by hand in a warm dark brown, never pure black, with
@@ -153,7 +284,7 @@ interiors; no green cast over the whole picture; no arrows; the four people must
 posed identically like a catalogue.</pre>
   </section>
 
-  <section class="pv-case" id="case-2">
+  <section class="pv-case" id="case-3">
     <h2><span class="pv-mark">Ⓑ</span>桌上那一攤</h2>
     <p class="pv-lead">一張診間桌面幾乎佔滿整張圖，桌上是藥袋、藥板、用藥紀錄、健保卡。</p>
     <p class="pv-maps">對到文章的　<b>〈來的時候〉</b></p>
@@ -164,8 +295,8 @@ posed identically like a catalogue.</pre>
     <ul><li>這一格長字的風險最高（藥板、小冊、卡片、藥袋都是「該有字的表面」），所以那一段禁令要逐項點名。</li><li>桌上每多一個「沒指定內容的表面」，就多一個外溢的落點 —— 每一樣東西的表面都寫死了。</li></ul>
     <h3>為什麼提這一案</h3>
     <p>最不像牙科插畫、辨識度最高，而且畫的是診所真正希望病人做的那件事。缺點是它只講到文章最後一段。</p>
-    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="1">複製</button></div>
-    <pre class="pv-prompt" id="p1">Editorial illustration, 16:9 landscape.
+    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="2">複製</button></div>
+    <pre class="pv-prompt" id="p2">Editorial illustration, 16:9 landscape.
 
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
 illustration. Every line is drawn by hand in a warm dark brown, never pure black, with
@@ -220,7 +351,7 @@ blood; no photorealism; no greyscale; no green cast over the whole picture; noth
 arranged in a neat symmetrical grid like a flat-lay product shot; no arrows; no diagrams.</pre>
   </section>
 
-  <section class="pv-case" id="case-3">
+  <section class="pv-case" id="case-4">
     <h2><span class="pv-mark">Ⓒ</span>阿公和孫女一起塗氟</h2>
     <p class="pv-lead">孫女剛塗完氟拿到貼紙，阿公手上也有一張一模一樣的。</p>
     <p class="pv-maps">對到文章的　<b>〈年紀大了，氟的角色會變〉</b></p>
@@ -231,8 +362,8 @@ arranged in a neat symmetrical grid like a flat-lay product shot; no arrows; no 
     <ul><li>貼紙上不能有字，畫一顆簡單的牙。</li><li>旁邊的人不可以看起來在笑他 —— 要寫成「一起覺得好玩」，不是「笑一個老人在做小孩的事」。〈缺牙之後〉那篇踩過這個坑。</li><li>阿公不可以被畫成虛弱、駝背、可憐的樣子。</li></ul>
     <h3>為什麼提這一案</h3>
     <p>解掉整篇最反直覺的那一句「塗氟不再只是小孩才做的事」，記憶點最高。</p>
-    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="2">複製</button></div>
-    <pre class="pv-prompt" id="p2">Editorial illustration, 16:9 landscape.
+    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="3">複製</button></div>
+    <pre class="pv-prompt" id="p3">Editorial illustration, 16:9 landscape.
 
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
 illustration. Every line is drawn by hand in a warm dark brown, never pure black, with
@@ -292,7 +423,7 @@ cast over the whole picture; the grandfather must not be drawn as frail, bent, t
 pitiable; no arrows; no diagrams.</pre>
   </section>
 
-  <section class="pv-case" id="case-4">
+  <section class="pv-case" id="case-5">
     <h2><span class="pv-mark">Ⓓ</span>人 ＋ 一個大泡泡三段</h2>
     <p class="pv-lead">醫師和病患在談，上面一個大泡泡分三段，畫的是他自己的生活。</p>
     <p class="pv-maps">對到文章的　<b>〈為什麼是三個月〉</b></p>
@@ -303,8 +434,8 @@ pitiable; no arrows; no diagrams.</pre>
     <ul><li>三段都不要器械、不要剖面圖 —— 使用者嫌過「太學術了，是我們看模型或書上才會出現的樣子」。</li><li>牙齦的紅靠<b>形狀</b>（邊緣鼓起、乳突最腫）不是靠色名，而且不畫血。</li><li>⚠ 這個骨架和〈拔智齒〉那張一樣。選它就要接受兩張圖一眼看過去像親戚。</li></ul>
     <h3>為什麼提這一案</h3>
     <p>唯一畫得出「口乾／血糖／傷口慢」那三件的做法，而且用生活場景講、不是醫學圖。</p>
-    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="3">複製</button></div>
-    <pre class="pv-prompt" id="p3">Editorial illustration, 16:9 landscape.
+    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="4">複製</button></div>
+    <pre class="pv-prompt" id="p4">Editorial illustration, 16:9 landscape.
 
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
 illustration. Every line is drawn by hand in a warm dark brown, never pure black, with
@@ -377,7 +508,7 @@ backlit heroic silhouettes; no green cast over the whole picture; the night thir
 be left pale, white or empty.</pre>
   </section>
 
-  <section class="pv-case" id="case-5">
+  <section class="pv-case" id="case-6">
     <h2><span class="pv-mark">Ⓔ</span>同一扇窗，一年裡回來幾次</h2>
     <p class="pv-lead">同一個窗邊、同一張椅子、同一個人，三格裡變的只有窗外的季節。</p>
     <p class="pv-maps">對到文章的　<b>〈不只是把牙結石清掉〉</b></p>
@@ -388,8 +519,8 @@ be left pale, white or empty.</pre>
     <ul><li>這一格沒有任何「牙」的資訊，所以識別物要自己列：牆上無字的牙齒海報、門內露出的診療椅一角、淺色刷手服。</li><li>窗外的雨要畫成<b>一群同向的短線</b>，不是一條長曲線 —— 〈擴張牙弓〉那張的「靈魂出竅」就是這樣來的。</li><li>不准出現月曆、時鐘或任何數字。</li></ul>
     <h3>為什麼提這一案</h3>
     <p>最安靜、最像站上的調性，講的是「這件事已經是他生活的一部分」。缺點是它講「常來」不講「誰」。</p>
-    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="4">複製</button></div>
-    <pre class="pv-prompt" id="p4">Editorial illustration, 16:9 landscape.
+    <div class="pv-pbar"><span>提示詞</span><button class="pv-copy" type="button" data-i="5">複製</button></div>
+    <pre class="pv-prompt" id="p5">Editorial illustration, 16:9 landscape.
 
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST. Warm hand-drawn editorial
 illustration. Every line is drawn by hand in a warm dark brown, never pure black, with
