@@ -194,6 +194,40 @@ V 領與口袋滾同色細邊；只有點，沒有熊雞雲星花；<b>絕對不
       它的「最後更新」會跳成今天）。</li>
 </ul>
 
+<h2>七、上線之後又改了三件（2026-09-07）</h2>
+<ol>
+  <li><b>卡片摘要是第一版的，錯了兩處</b>（使用者：「文章圖卡的預覽文字好像不是內文」）。
+      <code>post-meta</code> 的 <code>excerpt</code> 一路留到上線那天沒跟著內文走：
+      「真正的原因通常在別的地方」<b>和定稿的開場「可能說對了一半」互相矛盾</b>——
+      內文那個事實錯誤已經改掉，卡片上還活著；
+      「要換的往往不是材料，是做法」則是<b>豪氏牙套那一版的殘留</b>（豪氏＝做法），
+      那一節拿掉之後這篇比的正是兩種材料，方向反了。
+      <code>excerpt</code>／<code>description</code>／<code>og:description</code> 三處一起改。
+      ⚠⚠ <b>通則：文章改到剩下一半的時候，<code>post-meta</code> 那三段摘要不會自己跟著改，
+      而它們就印在首頁卡上</b>——定稿之後要把摘要逐句對一次定稿的開場。</li>
+  <li><b>HERO 第八版：左上那格小孩肩膀上多一隻手</b>（不屬於畫面上任何一個人——
+      那一格媽媽的兩隻手已經合在自己胸前）。成因是「一隻手扶著小孩的肩膀」在提示詞裡
+      四格寫了三次，模型把它當成這個角色的屬性，第一格也照畫。</li>
+  <li><b>HERO 第九版：右上那格的媽媽變成喜悅的。</b> 成因寫在第八版的提示詞裡——
+      表情那張清單降級成「只是讓你核對」，裡面卻還留著整段唯一一句大寫的
+      <code>THE FOURTH FACE MUST READ AS A WOMAN WHO IS SMILING</code>。
+      ⚠⚠⚠ 同一個角色連著兩輪出事而且<b>方向相反</b>（第七版憂慮往下串、第八版微笑往上串），
+      兩次都是<b>份量最重的那一項蓋掉其他三項</b>。第九版一次過。
+      通則寫在 <code>ILLUSTRATION.md</code> 第十七節。</li>
+</ol>
+
+<p>⚠ 換圖那一次的兩個實務點：<b>第九版的出圖右邊有 5px、下面有 1px 烘進去的白邊</b>，
+  <code>tools/hero-resize.mjs</code> 的第一道守門擋下來了，先跑
+  <code>node drafts/kids-crown/hero-crop.mjs</code> 裁掉；
+  <b>那一支下面多裁 2 列</b>，是為了讓長寬比正好回到 2000/1116——
+  這樣產出的三張是 2000×1116／1600×893／800×446，<b>和原本那三張逐格相同</b>，
+  文章頁那個手寫的 <code>width</code>／<code>height</code> 與 <code>og:image</code> 的尺寸一個字都不必改，
+  換圖那一次<b>整站零 HTML 變動</b>（<code>build.mjs</code> 沒有把任何一篇的日期換掉）。</p>
+
+<p>⚠ 原始出圖只有 <b>1376×768</b>（前幾版是 2000×1116），所以站上那三張是從它放大出來的
+  ——2000 那張放大 1.46 倍、1600 那張 1.17 倍。<code>og:image</code> 指的正是 1600 那張。
+  日後若拿得到 2000 寬以上的原檔，重跑一次那兩行就會換掉。</p>
+
 <h2>六、還開著的</h2>
 <ul>
   <li><b>四件診所事實還沒問到，所以文章裡一個字都沒寫</b>：不鏽鋼與全鋯是健保還是自費、
@@ -211,7 +245,7 @@ V 領與口袋滾同色細邊；只有點，沒有熊雞雲星花；<b>絕對不
 <footer>
   完整的提案頁留在 git：<br>
   <code>git show HEAD~1:preview/kids-crown/index.html</code><br>
-  逐版的提示詞與七張出圖：<code>drafts/kids-crown/HERO-PROMPTS.md</code>、<code>drafts/kids-crown/hero-v{1..6}.jpg</code>
+  逐版的提示詞與七張出圖：<code>drafts/kids-crown/HERO-PROMPTS.md</code>、<code>drafts/kids-crown/hero-v{1..9}.jpg</code>
 </footer>
 
 </div></body>

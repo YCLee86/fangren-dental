@@ -1259,3 +1259,36 @@ marks in the bottom band; a whole tooth coloured grey or white including its roo
 photorealism; a portrait-like face; grey-scale; a frame around the whole image; blood; an
 anatomical or textbook-style diagram.
 ```
+
+---
+
+## ✅ 第九版一次過，2026-09-07 換上站
+
+出圖存在 `drafts/kids-crown/hero-v9.jpg`（1376×768）。
+使用者：「成功了　把站上的圖片換成這張」。**四張臉全對、手也沒有再多出來。**
+
+**「四行等重 ＋ 對稱的自我檢查 ＋ 正確的那幾格錨在參考圖上」這一組是有效的** ——
+第七、八版各串一次，第九版一次過。
+
+### 換圖那一次的兩件實務
+
+1. **出圖右邊有 5px、下面有 1px 烘進去的白邊**，`tools/hero-resize.mjs`
+   的第一道守門擋下來（ILLUSTRATION.md 第七節第 6 條）。
+   新寫了一支一次性的 `drafts/kids-crown/hero-crop.mjs` 裁掉。
+2. ⚠⚠ **那一支下面多裁 2 列（1371×765）是刻意的** ——
+   為了讓長寬比正好回到 **2000/1116**，產出的三張才會是
+   2000×1116／1600×893／800×446，**和原本那三張逐格相同**。
+   於是文章頁那個手寫的 `width`／`height`、`og:image:width/height`
+   全都不必改，**換圖那一次整站零 HTML 變動、沒有任何一篇的日期被換掉**。
+   > **⚠ 通則：換 HERO 的圖時，先算「裁成幾乘幾會讓輸出的三張和舊的一模一樣」。**
+   > 差一個像素，文章的 `<main>` 就變了，那一篇的 `updated` 會跳成今天。
+
+```bash
+node drafts/kids-crown/hero-crop.mjs drafts/kids-crown/hero-v9.jpg /tmp/h.png
+node tools/hero-resize.mjs /tmp/h.png kids-crown-photo
+node tools/build.mjs
+```
+
+⚠ **原檔只有 1376×768**（前幾版是 2000×1116），所以站上那三張是放大出來的
+（2000 那張 ×1.46、1600 那張 ×1.17，而 `og:image` 指的正是 1600 那張）。
+日後拿得到 2000 寬以上的原檔，重跑上面那兩行就換掉了。
