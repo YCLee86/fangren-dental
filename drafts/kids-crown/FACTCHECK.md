@@ -1,4 +1,4 @@
-# 查核表 —— 小朋友的牙套（2026-09-06）
+# 查核表 —— 小朋友的牙套（2026-09-06，第二輪補上豪氏牙套）
 
 ⚠⚠ **這個容器只有 WebSearch 讀得到摘要，`WebFetch` 一律 `ENOTFOUND`** ——
 下面每一筆的「來源」都是搜尋結果的摘要與標題，**沒有一份原文是真的打開過的**。
@@ -22,6 +22,36 @@
 | 「牙套會跟著乳牙一起脫落」 | ✅ 有據（乳牙牙根吸收的必然結果） | 同上 | ❓ |
 | 「不必送技工所，診間挑尺寸、修邊、當次裝上」 | ✅ 有據（兩者都是 preformed crown） | 預成冠的定義 | — |
 
+## 一之二、豪氏牙套（Hall technique）—— 2026-09-06 使用者補的
+
+| 主張（引文） | 判定 | 來源 | 連結 |
+| --- | --- | --- | --- |
+| **不打麻醉、不磨牙、不清蛀牙**，直接用玻璃離子水門汀把預成不鏽鋼冠壓上去 | ✅ 有據（這就是它的定義） | 「a method for managing carious primary molar teeth by cementing preformed metal crowns over them, with **no local anaesthesia, tooth preparation or carious tissue removal**」 | https://en.wikipedia.org/wiki/Hall_Technique ・ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7148518/ |
+| **蛀蝕被封住之後會停下來** | ✅ 有據 | 「the bacteria will be sealed from oral environment and **the caries will be inactive**」 | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7148518/ |
+| **成功率和傳統先磨牙再套的做法相當** | ✅ 有據（多份對照） | 「similar success rate for SSCs placed with the traditional technique or the Hall technique」；主要與次要結果**皆無統計上顯著差異** | https://pubmed.ncbi.nlm.nih.gov/33851682/ ・ https://www.sciencedirect.com/science/article/abs/pii/S1532338215000408 |
+| 適應症：**蛀蝕不超過牙本質中層、沒有牙髓炎／壞死／膿瘍的臨床或 X 光證據** | ✅ 有據 | RCT 的納入條件；年齡多寫 3–7 歲 | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2265270/ |
+| **牙縫太緊要先放矯正用小橡皮圈幾天**，所以可能分兩次 | ✅ 有據 | 「separators can be placed **2–5 days** before the crown fitting appointment」 | https://upload.wikimedia.org/wikipedia/commons/9/91/HallTechGuide_V4.pdf |
+| **套上去那一邊會咬得比較高，幾週內自己適應回來** | ✅ 有據 | 「inevitably associated with a premature contact following cementation, and an increase in occlusal vertical dimension」；「pre-crown occlusion should be re-established in a period of **4 weeks**」 | 同上 ・ https://clinicaltrials.gov/study/NCT03010618 |
+| 孩子與家長的接受度高 | ✅ 有據（文章沒有寫這個數字） | 有偏好的人當中 **77% 孩子、83% 照顧者、81% 牙醫**偏好 Hall technique | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2265270/ |
+
+### ⚠⚠ 使用者那句話有一個會出錯的地方，已經在文章裡處理掉（沒有改掉他的意思）
+
+使用者的原話是「**在牙齒只有一點點缺損的時候就套上去**」。方向是對的
+（它確實是把牙套用在比傳統路徑更前面的一步），但**照字面寫會長出一個誤讀**：
+家長會讀成「小蛀牙就要套牙套」。文獻上它的適應症是「**已經蛀出窩洞、
+但深度不超過牙本質中層、且沒有牙髓症狀**」——剛開始脫鈣、還沒形成窩洞的，
+該做的是塗氟與清潔，不是牙套。
+
+處理方式照 COPY.md 那條（使用者寫的字裡有會出錯的事實時：照寫、把證據攤開、
+不要自己改也不要不講）——文章把「早一點」寫進去，同一節最後再用一句把範圍框起來：
+**「早一點套上去」不等於「小蛀牙就要套牙套」**。⚠ 這一句要請使用者看過。
+
+### ⚠ 刻意沒有寫進文章的兩件
+
+1. **年齡範圍 3–7 歲。** 那是 RCT 的納入條件，不是適應症的上下限，寫成年齡會被當成規則。
+2. **接受度 77%／83%／81%。** 數字漂亮，但那是英國基層診所的樣本，
+   寫進來會變成對台灣家長的承諾。
+
 ## ⚠ 刻意寫得比文獻保守的三處
 
 1. **沒有寫任何存活率的數字。** 上面那組 26% / 7% 很有說服力，但它是回溯性資料、
@@ -40,7 +70,9 @@
 | **2. 費用要不要寫進文章？** | 〈一體成型的假牙好在哪〉的做法是**不寫價格**（「材質和價格之間的順序會隨行情變動，寫進去很快就會過期」）。這一篇目前照辦 |
 | **3. 芳仁後牙的全鋯牙套有沒有在做？** | 使用者口述「後牙現在也有全鋯牙套」，但那是講**市面上有**還是**診所有做**，兩種讀法都通。文章現在寫的是前者（「現在後牙也有」），不是診所的服務宣告 |
 | **4. 做牙套通常要跑幾趟？** | 家長最想知道的一題。預成冠原則上當次可完成，但實際安排（要不要分次、根管幾次）是診所的排程，**沒問到就不寫**（CLAUDE.md 第九節紅線 11） |
-| **5. 舒眠／鎮靜在什麼情況會被建議？** | 兒童牙科著陸頁的 `ask` 也還欠這一題（COPY.md 九之十三）。這一篇完全沒有提到舒眠 —— 蛀好幾顆、要做牙套的孩子正是最常被建議的那一群，問到之後可以補一段 |
+| **5. 芳仁有沒有在做豪氏牙套？** | 使用者這一輪主動提到它，但「有這種做法」和「這裡有在做」是兩件事。**文章目前寫的是前者**（介紹一種做法），沒有一句宣告診所提供它。要寫成診所有做，要他點頭 |
+| **6. 豪氏牙套是健保還是自費？** | 同第 1 題。它用的就是不鏽鋼牙套，但少了麻醉與磨牙那兩個處置 —— 申報上是不是同一項，只有診所知道 |
+| **7. 舒眠／鎮靜在什麼情況會被建議？** | 兒童牙科著陸頁的 `ask` 也還欠這一題（COPY.md 九之十三）。這一篇完全沒有提到舒眠 —— 蛀好幾顆、要做牙套的孩子正是最常被建議的那一群，問到之後可以補一段 |
 
 ## ⚠ 一條和著陸頁的規則有出入，要使用者點頭
 

@@ -28,8 +28,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '../..');
 const src = readFileSync(resolve(root, 'posts/kids-first-visit/index.html'), 'utf8');
 
-const TITLE = '同一顆補了又掉：小朋友的牙套什麼時候該做，有哪兩種';
-const DESC  = '補了又掉多半不是體質，是條件——洞的大小、剩下的齒質，以及那幾分鐘能不能保持乾燥。什麼時候該從「補」換成「整顆包起來」，不鏽鋼牙套與全鋯牙套差在哪裡。';
+const TITLE = '同一顆補了又掉：小朋友的牙套什麼時候該做，怎麼選';
+const DESC  = '補了又掉多半不是體質，是條件——洞的大小、剩下的齒質，以及那幾分鐘能不能保持乾燥。什麼時候該從「補」換成「整顆包起來」，不鏽鋼與全鋯差在哪裡，以及不必磨牙、不必打針的豪氏牙套。';
 const EXCERPT = '同一顆牙補了又掉，很多爸媽的第一個念頭是孩子的牙齒特別不好。真正的原因通常在別的地方：黏著要的是乾燥的環境，而那正是小朋友最給不起的東西。當「補不住」變成反覆發生的事，要換的往往不是材料，是做法。';
 
 let out = src;
@@ -72,7 +72,8 @@ out = out.slice(0, metaStart) + `<script type="application/json" id="post-meta">
     { "type": "MedicalCondition", "name": "兒童齲齒" },
     { "type": "MedicalProcedure", "name": "乳牙牙冠" },
     { "type": "MedicalProcedure", "name": "根管治療" },
-    { "type": "MedicalProcedure", "name": "空間維持器" }
+    { "type": "MedicalProcedure", "name": "空間維持器" },
+    { "type": "MedicalProcedure", "name": "豪氏牙套" }
   ]
 }
 </script>` + out.slice(metaEnd);
@@ -143,6 +144,7 @@ const must = [
   [TITLE, '標題沒換到'],
   ['data-spec="kids"', '科別標記掉了'],
   ['不鏽鋼牙套', '內文沒接上'],
+  ['豪氏牙套（Hall technique）', '豪氏牙套那一節沒接上'],
 ];
 for (const [s, msg] of must) if (!out.includes(s)) throw new Error(msg);
 const banned = [
