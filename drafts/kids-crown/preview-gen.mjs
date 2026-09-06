@@ -29,7 +29,7 @@ const root = resolve(here, '../..');
 const src = readFileSync(resolve(root, 'posts/kids-first-visit/index.html'), 'utf8');
 
 const TITLE = '同一顆補了又掉：小朋友的牙套什麼時候該做，怎麼選';
-const DESC  = '補了又掉多半不是體質，是條件——洞的大小、剩下的齒質，以及那幾分鐘能不能保持乾燥。什麼時候該從「補」換成「整顆包起來」，不鏽鋼與全鋯差在哪裡，以及不必磨牙、不必打針的豪氏牙套。';
+const DESC  = '補了又掉多半不是體質，是條件——洞的大小、剩下的齒質，以及那幾分鐘能不能保持乾燥。什麼時候該從「補」換成「整顆包起來」，不鏽鋼牙套與全鋯牙套又差在哪裡。';
 const EXCERPT = '同一顆牙補了又掉，很多爸媽的第一個念頭是孩子的牙齒特別不好。真正的原因通常在別的地方：黏著要的是乾燥的環境，而那正是小朋友最給不起的東西。當「補不住」變成反覆發生的事，要換的往往不是材料，是做法。';
 
 let out = src;
@@ -72,8 +72,7 @@ out = out.slice(0, metaStart) + `<script type="application/json" id="post-meta">
     { "type": "MedicalCondition", "name": "兒童齲齒" },
     { "type": "MedicalProcedure", "name": "乳牙牙冠" },
     { "type": "MedicalProcedure", "name": "根管治療" },
-    { "type": "MedicalProcedure", "name": "空間維持器" },
-    { "type": "MedicalProcedure", "name": "豪氏牙套" }
+    { "type": "MedicalProcedure", "name": "空間維持器" }
   ]
 }
 </script>` + out.slice(metaEnd);
@@ -144,7 +143,6 @@ const must = [
   [TITLE, '標題沒換到'],
   ['data-spec="kids"', '科別標記掉了'],
   ['不鏽鋼牙套', '內文沒接上'],
-  ['豪氏牙套（Hall technique）', '豪氏牙套那一節沒接上'],
 ];
 for (const [s, msg] of must) if (!out.includes(s)) throw new Error(msg);
 const banned = [
@@ -154,6 +152,13 @@ const banned = [
   ['孩子第一次看牙：時機、氟化物與窩溝封填 —', '舊標題殘留'],
   ['href="../gum-bleeding/', '同層連結殘留，會指到 preview/ 底下'],
   ['健保', '⚠ 給付與費用還沒問到診所，這一篇不寫（CLAUDE.md 第九節紅線 11）'],
+  // ⚠⚠ 2026-09-06 使用者：「那豪氏牙套先拿掉好了　以後會另外寫　寫完記得再回來
+  //    這篇附加關於豪氏牙套的簡單描述連接到豪氏牙套的文章」。
+  //    整節已經拿掉，材料留在 FACTCHECK.md 的一之二節（給那一篇用，不要刪）。
+  //    **那一篇寫好之後**要回來做的三件寫在 drafts/kids-crown/PENDING-hall.md，
+  //    到時候把這一條守門改成「提到豪氏，就一定要連到那一篇」再放行。
+  ['豪氏', '⚠ 豪氏牙套那一節已經拿掉了，之後要另外寫一篇 —— 見 drafts/kids-crown/PENDING-hall.md'],
+  ['Hall technique', '同上'],
 ];
 for (const [s, msg] of banned) if (out.includes(s)) throw new Error(msg);
 if (/href="\.\.\/(?!\.\/)[a-z]/.test(out)) throw new Error('還有同層的 ../<資料夾>/ 連結');
