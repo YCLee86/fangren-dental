@@ -1000,3 +1000,262 @@ diagram.
 
 **改用局部重繪／inpainting**，只框住小孩肩膀那一小塊重畫 ——
 這一類「只刪掉一個東西」的需求，重繪比整張重生成可靠得多（同第七版那條 Plan B）。
+
+---
+
+## Ⓕ 第九版（2026-09-06）—— ⚠⚠⚠ 降級一段的時候，裡面那句大寫的祈使句沒有跟著降級
+
+第八版的出圖存在 `drafts/kids-crown/hero-v8.jpg`（1376×768）。
+**多出來的那隻手治好了**，可是使用者：「**右上媽媽的臉變得喜悅　好奇怪**」——
+她在第三位醫師那裡又被婉拒，卻笑得很開心。
+
+### ⚠⚠⚠ 成因就寫在第八版的提示詞裡
+
+第八版把表情那張清單降級成「已經對了，這一段只是讓你核對」，
+**可是那一段裡面還留著一句全大寫的祈使句**：
+
+```
+THE FOURTH FACE MUST READ AT A GLANCE AS A WOMAN WHO IS SMILING
+```
+
+整段唯一帶 `MUST` 的句子講的是「她在笑」，`AVOID` 那一列也只寫了
+「下面那格不可以憂慮」—— **關於這個角色的臉，整份提示詞最用力的一句話就是「要笑」**。
+於是笑容往上串到了第三格。
+
+> **⚠⚠⚠ 通則：把一段降級成「這一段只是讓你核對」時，要整段一起降級 ——
+> 裡面若還留著一句大寫的祈使句，那一句就會變成整段唯一的指令。**
+> 降級只降標題是沒有用的。
+
+### ⚠⚠⚠ 更要緊的一條：串台的方向 ＝ 寫得最用力的那張臉的方向
+
+同一個角色的四張臉，第七、八版連著兩輪出事，**而且方向相反**：
+
+| | 哪一張寫得最用力 | 結果 |
+| --- | --- | --- |
+| 第六版 → 第七版 | 第三格的**憂慮**（一整段大寫） | 憂慮**往下**串，下面那格的笑容也變憂愁 |
+| 第八版 | 第四格的**微笑**（唯一一句 `MUST`） | 微笑**往上**串，右上那格變成喜悅 |
+
+**兩次都是「份量最重的那一張臉」蓋掉其他三張，只是方向跟著份量走。**
+所以修法不是「把另一邊也寫得很用力」（那只會換一個方向再串一次），
+是**把四張臉寫成份量完全相同的四行，而且自我檢查要對稱** ——
+第七、八版的自我檢查都只說「第四張必須是在笑的」，等於又給了一張臉額外的份量。
+
+### 第九版的做法
+
+1. **四行等重**：每一行都寫「嘴的形狀 ＋ 眼睛看哪裡 ＋ 眉毛」，
+   前三行各寫一次 `She is not smiling`，第四行寫一次 `She is smiling`，**沒有人被大寫**。
+2. **每一行標明「這一格已經對了，照抄」還是「這一格是要改的」** ——
+   把正確的那三格錨在**參考圖**上，而不是錨在文字的份量上。
+3. **自我檢查改成對稱的**：四張並排唸一次，
+   「前三張只要有任何一張的嘴角是往上的就是錯的；**第四張的嘴角不是往上的也一樣是錯的**」，
+   最後補一句「這兩半一樣重要」。
+4. **用對比寫死第三與第四格**：`SCENE 3 AND SCENE 4 ARE THE TWO OPPOSITE POLES` ——
+   同一個人、相反的嘴形（第三版治金屬牙套那次用過同一招）。
+5. **新增一句拆開同一格裡的兩張嘴**：右上那格的「尷尬的笑」是**醫師的**，
+   不是媽媽的 —— 同一個小格裡兩個人兩種嘴形，很容易被合成一種。
+6. **手那張清單降級**，而且**降得乾淨**：整段沒有大寫、沒有 `MUST`，
+   每一行都寫 `already correct in the reference picture`。
+7. `AVOID` 兩邊都寫：上面三格不可以笑、下面那格不可以憂慮。
+   **只寫一邊就是在給那一邊加份量。**
+
+⚠ 參考圖用 **`hero-v8.jpg`**（手已經對了那一張），輸出仍然要 **≥2000 寬**
+（第八版只有 1376×768，管線要 2000／1600／800）。
+
+### ⚠⚠ 這是同一個部位第三次出事 —— 建議這一輪就改用局部重繪
+
+臉已經連著兩輪串台。**如果第九版還是不對，不要再改提示詞了** ——
+用局部重繪（inpainting）框住右上那張臉單獨重畫，其餘一個像素都不要動。
+「只改一張臉」這一類需求，重繪比整張重生成可靠得多，
+而且**整張重生成每一次都會順手動到別的東西**（這一輪就是手治好了、臉壞了）。
+
+### 完整提示詞
+
+```
+Editorial illustration for a dental clinic's article, 16:9 landscape. Output at least 2000
+pixels wide.
+
+REFERENCE IMAGE — One reference picture is attached. It is the previous version of THIS SAME
+illustration and it is finished and correct except for ONE face: in the TOP-RIGHT scene the
+mother is smiling and looks pleased, and she must not be. Reproduce the whole picture exactly
+and redraw only her mouth and her eyebrows, as described under THE MOTHER'S FOUR FACES below.
+Nothing else changes — every other face, every pose, every hand, every room, every prop, both
+speech bubbles and all the colours stay exactly as they are.
+
+⚠⚠⚠ THE MOTHER'S FOUR FACES — READ THIS BEFORE DRAWING ANY FACE.
+The same woman appears four times in this picture. HER FOUR FACES ARE DELIBERATELY DIFFERENT
+FROM ONE ANOTHER, and no expression may be copied from one scene into another. Each face is
+defined by TWO things only — the shape of her mouth and where her eyes are looking. ALL FOUR
+MATTER EQUALLY; give them equal care.
+  • SCENE 1 (top left) — ASKING. Mouth OPEN, mid-sentence. Eyes on the dentist. Inner ends of
+    the eyebrows raised. She is not smiling.
+    ALREADY CORRECT IN THE REFERENCE PICTURE — copy it exactly.
+  • SCENE 2 (top middle) — ANXIOUS. Mouth CLOSED, a small tight straight line. Eyes on the
+    dentist. Inner ends of the eyebrows raised. She is not smiling.
+    ALREADY CORRECT IN THE REFERENCE PICTURE — copy it exactly.
+  • SCENE 3 (top right) — WORRIED. Mouth CLOSED, a short line whose BOTH ENDS CURVE
+    DOWNWARDS. Eyes on the dentist. Inner ends of the eyebrows raised. She is not smiling.
+    THIS IS THE ONE FACE TO REDRAW. In the reference picture her mouth curves upward and she
+    looks pleased; she has just been turned away by a third dentist and cannot look pleased.
+    Change only her mouth and her two eyebrows — her head angle, her hair, her hands, her
+    clothes and her position all stay exactly as they are.
+  • SCENE 4 (the wide bottom scene) — RELIEVED. Mouth OPEN, BOTH CORNERS CURVING UPWARDS.
+    Eyes on the paediatric dentist. Eyebrows down and level, relaxed. She is smiling.
+    ALREADY CORRECT IN THE REFERENCE PICTURE — copy it exactly.
+
+⚠⚠⚠ SCENE 3 AND SCENE 4 ARE THE TWO OPPOSITE POLES OF THIS PICTURE — the same woman with
+opposite mouths, and the whole point of the illustration lives in that difference. Draw them
+as a matched pair: same face, same hair, same blush, and the mouth curving DOWN in scene 3
+and UP in scene 4.
+SELF-CHECK — put all four of her faces side by side and read them in order:
+  1st — not smiling.  2nd — not smiling.  3rd — not smiling, the corners of the mouth clearly
+  DOWN.  4th — smiling, the corners clearly UP.
+If ANY of the first three has an upward-curving mouth, the drawing is wrong. If the fourth
+does NOT have an upward-curving mouth, the drawing is also wrong. Both halves of this check
+matter the same amount.
+
+⚠ THE MOTHER'S FOUR PAIRS OF HANDS — already correct in the reference picture; this list is
+here only so you can check that nothing shifted. She has exactly two hands and never more,
+and both are accounted for in every scene.
+  • SCENE 1 (top left) — both hands lightly clasped together in front of her own chest.
+    Nothing rests on the boy's shoulders in this scene and no arm reaches across him; the
+    space around his shoulders is empty. That is correct in the reference picture; keep it.
+  • SCENE 2 (top middle) — one hand on the boy's near shoulder, the other flat against her
+    own chest.
+  • SCENE 3 (top right) — one hand on the boy's near shoulder, the other up near her own
+    collarbone, loosely closed.
+  • SCENE 4 (the wide bottom scene) — one hand resting on the boy, the other arm relaxed.
+Every person in this picture has exactly two hands and two arms, and every hand that touches
+another person can be traced along a visible arm back to its own shoulder. No spare hand, no
+floating hand, no sleeve without an arm in it.
+
+STYLE — unchanged from the reference picture; this section is here so you can check it.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in warm
+dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly varies
+along a stroke, strokes taper and sometimes break and run dry at the end. Colour applied like
+soft coloured pencil and light marker; colour edges a little loose. Flat fills with two or
+three tones per hue — no gradients, no airbrush, no glow. A fine even paper grain over every
+surface.
+
+FACES AND HANDS — unchanged; check against this.
+Every face and every hand is ONE single flat tone: no shading, no cheekbones, no jawline. On
+a face draw ONLY these six things plus blush: the outline of the head, the eyes, the
+eyebrows, the nose, the mouth, the ears — and two soft round patches of warm pink blush high
+on each cheek. An eye is one small dark curved mark. NO eyelashes, NO whites of the eyes, NO
+catchlights, NO eyelid crease, NO wrinkle, NO line beside the nose, NO shadow under the eye.
+Hair is two or three flat shapes and stays very dark. IF A FACE LOOKS LIKE A PORTRAIT, IT IS
+WRONG.
+
+ECONOMY OF LINE — unchanged; check against this. Each object is drawn with the fewest strokes
+that still make it recognisable. The rooms are LESS detailed than the people.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No letters, no numbers, no words, no logos.
+
+LAYOUT — unchanged. TWO BANDS: the top two fifths hold THREE SMALL SCENES side by side; the
+bottom three fifths are ONE WIDE SCENE. TWO hand-drawn VERTICAL LINES separate the three
+small scenes and ONE HORIZONTAL LINE runs between the bands; no border around the whole
+image; nothing crosses those lines.
+
+WHO IS IN WHICH SCENE — unchanged. The mother (dusty-rose blouse) and the boy (sage-green
+T-shirt) are in all four scenes. The father and the assistant are ONLY in the wide bottom
+scene; the three small scenes contain exactly three people each — one dentist, the mother and
+the boy, and no part of any fourth person.
+
+UPPER BAND — unchanged from the reference picture apart from the one face described above.
+Three different dentists in three different clinics, half-length. THE THREE DENTISTS' OWN
+FACES AND GESTURES ARE ALL CORRECT — do not touch them.
+  1. LEFT SCENE — dentist on the left: a man in his fifties, PALE BLUE-GREEN scrubs, both
+     palms turned upward and outward apologetically, head tilted, TWO SMALL SWEAT DROPS at
+     his temple. The mother on the right leans forward from the waist. The boy stands close
+     against her side and looks up at the dentist.
+     ROOM: cool grey-blue walls, pale wood cabinet, grey-blue chair back.
+  2. MIDDLE SCENE — mother and boy on the left, dentist on the right: a woman in her
+     thirties, hair tied back, JAPANESE-STYLE WHITE CLINICAL TUNIC with a STAND-UP MANDARIN
+     COLLAR and buttons down ONE SIDE of the chest, looking down at a small blank card, other
+     hand at the back of her neck, A SMALL SCRIBBLED KNOT OF TANGLED DARK LINES floating just
+     above her head. The mother's body is tipped towards the dentist. The boy looks down and
+     holds the hem of her blouse.
+     ROOM: pale mint-green walls, white cabinet and shelf, window with a white frame.
+  3. RIGHT SCENE — mother and boy on the left, dentist on the right beside a door: a man in
+     his late twenties, DEEP CORAL-PINK scrubs, one hand scratching the back of his own head,
+     the other held LOW near his waist with the palm turned up towards the door, a strained
+     awkward closed-mouth smile, head tipped down and away, ONE SWEAT DROP at his temple. The
+     mother's shoulders are slightly raised and drawn in, her body still turned towards the
+     dentist, HER FACE AS DESCRIBED IN SCENE 3 ABOVE. The boy looks up at his mother's face.
+     ROOM: pale dusty-lilac walls, mid-brown wood cabinet, picture-only poster.
+⚠ THE AWKWARD SMILE IN THE TOP-RIGHT SCENE BELONGS TO THE DENTIST, NOT TO THE MOTHER. He is
+embarrassed and smiling awkwardly; she is worried and not smiling at all. Two different
+people, two different mouths, in the same small scene.
+
+⚠ THE THREE DENTISTS ABOVE ARE KIND, PROFESSIONAL, SINCERE AND SORRY — unchanged. They are
+not bad dentists and are not being criticised: each is honestly saying that this case belongs
+to someone else. Nobody frowns at the family, shakes their head, folds their arms, waves
+dismissively, shrugs, looks bored, looks incompetent or turns their back. The mother is never
+angry with them.
+⚠ THE COMIC MARKS — unchanged. Small and few, in the same warm dark brown line, never larger
+than a hand, never on top of a face. No speed lines, no screen tone, no starbursts. NONE of
+them appear in the bottom scene.
+
+LOWER BAND — COMPLETELY UNCHANGED FROM THE REFERENCE PICTURE, including the mother's smiling
+face. Five people in three groups across the width: THE ASSISTANT on the left, THE PAEDIATRIC
+DENTIST in the centre, and THE FATHER, THE MOTHER AND THE BOY together on the right.
+  • THE PAEDIATRIC DENTIST sits on a low stool, leaning forward, SMILING, one hand open. Her
+    TIE-BACK SURGICAL CAP, top and trousers are all cut from ONE printed fabric: warm
+    off-white cloth (#f4ead8) with SIMPLE FLAT CHILDLIKE DOODLES — bears, chicks, clouds,
+    stars, small flowers — in ONLY amber (#c28229) and deep caramel (#9e6301), BIG AND FEW;
+    over it a WHITE CLINICAL COAT hanging open and unbuttoned.
+  • THE ASSISTANT stands on the left holding a flat tray, smiling towards the boy. She wears
+    plain scrubs, NO COAT AND NO CAP, in THE SAME OFF-WHITE CLOTH (#f4ead8) patterned with
+    SMALL MUSTARD-AMBER POLKA DOTS (#dda85a) and a narrow mustard-amber trim at the V-neck
+    and pocket — DOTS ONLY, and never a solid mustard or yellow garment.
+  • THE BOY sits on the treatment chair, feet dangling, chin lifted, listening.
+  • THE MOTHER stands at his shoulder, her shoulders relaxed and down, her body open towards
+    the dentist, HER FACE AS DESCRIBED IN SCENE 4 ABOVE — she is the one person in the
+    picture who is clearly smiling, and that is already right in the reference picture.
+  • THE FATHER stands on the far side of the mother so the three form one group: a man of her
+    age, MUTED SLATE-BLUE shirt with sleeves rolled to the forearm, dark grey trousers,
+    leaning in to listen, a small relaxed closed-mouth smile.
+THE ROOM keeps every prop it has in the reference picture — the toy basket, the children's
+drawings, the height chart with no numbers, the step stool, the shelf of tooth models and
+sticker jar, the toothbrush rack, the washbasin and towel, the potted plant, the hanging
+mobile, the printed seat cushion, the window — warm cream walls with a band of pale amber
+along the lower wall.
+⚠ THE PALE SUNLIGHT LINES stay exactly as they are: three or four long straight very pale
+white lines slanting in from the window across the upper part of THIS BAND ONLY. They never
+come out of a person, never curl or loop, never cross a face or a speech bubble, and never
+appear in the three scenes above.
+
+THE TWO SPEECH BUBBLES — UNCHANGED in size, position and content. One to the paediatric
+dentist's left and one to her right, both at about her head height, both tails pointing down
+at HER head in the centre. Nobody overlaps a bubble.
+INSIDE THEM — unchanged, but check it: THE TWO ROWS ARE IDENTICAL EXCEPT THE COLOUR OF THE
+MIDDLE CAP. Three teeth each, side by side, every tooth a crown sitting on TWO simple
+tapering roots. All six teeth and ALL their roots are soft natural ivory, faintly warm, NOT
+pure white. THE CAP COVERS ONLY THE UPPER PART and STOPS AT THE SHOULDER where the crown
+meets the roots; the roots beneath it are never covered and never change colour. Left bubble:
+the cap is FLAT SILVER-GREY METAL with a single soft highlight. Right bubble: the cap is a
+NOTICEABLY BRIGHTER, CLEANER WHITE than its neighbours. No gums, no cross-section, no arrows,
+no labels, no writing.
+
+CLOTHING COLOURS — unchanged: mother dusty rose; boy sage green; father muted slate blue;
+paediatric dentist off-white with amber and caramel doodles under an open white coat;
+assistant the same off-white with mustard-amber dots.
+
+LIGHT AND COLOUR — unchanged. The three small scenes are lit by plain, even, slightly cool
+daylight, each in its own colour family. The wide scene below has one warm light from its
+window and is the warmest part of the picture.
+
+COMPOSITION — unchanged. The paediatric dentist and her two bubbles sit across the CENTRE of
+the frame. Nothing important in the top eighth or the bottom eighth.
+
+AVOID — the mother smiling, looking pleased, cheerful or content in ANY of the three small
+scenes at the top; her mouth curving upward in the top-right scene; the dentist's awkward
+smile being given to the mother beside him; the mother in the wide bottom scene at the bottom
+looking worried, anxious, sad, tired or neutral; the same expression on the mother in more
+than one scene; changing any face other than hers in the top-right scene; changing any hand,
+pose, room, prop or speech bubble; a third hand, spare hand or floating hand on anyone; a
+fourth person, or part of one, in any of the three small scenes; a crying or frightened
+child; tears; white lines coming out of a person; any line crossing between scenes; comic
+marks in the bottom band; a whole tooth coloured grey or white including its roots;
+photorealism; a portrait-like face; grey-scale; a frame around the whole image; blood; an
+anatomical or textbook-style diagram.
+```
