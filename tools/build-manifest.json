@@ -19,6 +19,10 @@
     "hash": "6b68f92115cd4178",
     "updated": "2026-08-18"
   },
+  "kids-crown": {
+    "hash": "847ae1673e0d4e0b",
+    "updated": "2026-09-07"
+  },
   "kids-first-visit": {
     "hash": "7bcf729e5ea626a4",
     "updated": "2026-08-18"
@@ -48,7 +52,7 @@
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "237dae01f4e53917",
-    "updated": "2026-09-05"
+    "hash": "f6ffc01ba1330bb6",
+    "updated": "2026-09-07"
   }
 }
