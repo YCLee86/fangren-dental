@@ -345,3 +345,210 @@ COMPOSITION — the paediatric dentist and her two bubbles sit across the CENTRE
 frame; that band is what must still read when the picture is shown small. Nothing
 important in the top eighth or the bottom eighth of the whole image.
 ```
+
+---
+
+## Ⓕ 第二版（2026-09-06，使用者看過第一版出圖之後的四件微調）
+
+第一版的出圖存在 `drafts/kids-crown/hero-v1.jpg`（1376×768，16:9）。
+使用者：「大致上很接近了　有幾個地方微調」——
+
+| # | 他說的 | 改法 |
+| --- | --- | --- |
+| 1 | 四格圖沒有分隔線 | **加上手繪的細分隔線**：上排兩條直的、上下兩帶之間一條橫的。⚠ **只在格與格之間，整張圖的外緣不要框** —— 第一版的提示詞寫的是 `no dividing lines anywhere`，那一句要換掉 |
+| 2 | 右上的牙醫師看起來不像做不來的樣子，應該要有點不好意思的尷尬臉 | ⚠⚠ **成因是姿勢不是表情**：第一版寫 `one hand lifted to indicate the door`，模型畫成**舉手打招呼**，那個手勢本身就是自信的。定案改成**一手搔後腦、另一手掌心朝上低低地朝門口比**，並明寫「他的手不是在打招呼」 |
+| 3 | 四個診間的配色都一樣，有點奇怪 | **四個房間各指派一個色系**（牆＋櫃子），而且**和那一位的刷手服不同色**；兒牙那一間最暖 |
+| 4 | 兒牙醫師的診間環境要再更細節一點，因為是這張圖的重點 | ⚠⚠⚠ **這正是第十六節那個坑**：「環境要更寫實」和「每一樣畫得更準」是兩件事，模型會選後者。所以寫法是**逐項列出該有的東西 ＋ 每一樣只用三到八筆 ＋ 房間仍然比人粗略**，不可以寫「細到叫得出這是什麼房間」 |
+
+**同時鎖住第一版已經對的東西**（第七節第 18 條：看到喜歡的東西要立刻寫進提示詞，
+不能靠它自己記得）：一家人的長相與衣服、兒牙醫師那一身、三位醫師的刷手服顏色、
+兩個泡泡的位置與尾巴方向。
+
+⚠ **一處是我放寬的，不是他要求的**：第一版的提示詞禁止畫牙根，但**出圖畫了、而且他沒有反對**，
+讀起來也更像牙齒不像磁磚。所以第二版**改成允許牙根**（兩片簡單的錐形），
+把已經被接受的樣子鎖住；其餘的禁令（剖面、標示線、箭頭、文字）一條都沒有鬆。
+
+**出圖時附上 `drafts/kids-crown/hero-v1.jpg` 當參考圖**，提示詞裡已經寫明抄什麼、不抄什麼。
+
+```
+Editorial illustration for a dental clinic's article, 16:9 landscape.
+
+REFERENCE IMAGE — One reference picture is attached. It is the previous version of THIS
+SAME illustration and it is nearly right.
+  • COPY FROM IT: the drawing style, the paper ground, the colour of the linework, the way
+    the faces and hands are drawn, the four people who recur (the mother, the boy, and the
+    look of the paediatric dentist and her printed uniform), the overall four-scene layout,
+    and the two speech bubbles with a row of three teeth inside each.
+  • DO NOT COPY FOUR THINGS, which are the whole point of this new version: (1) it has no
+    dividing lines between the scenes — this version has them; (2) the dentist at the top
+    right is smiling confidently with a raised hand — in this version he is awkward and
+    embarrassed; (3) all four rooms are the same colour — in this version each room has its
+    own; (4) the paediatric clinic below is nearly empty — in this version it is full of
+    things.
+
+STYLE — THIS MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+
+FACES AND HANDS — read this twice.
+Every face and every hand is ONE single flat tone: no shading, no cheekbones, no jawline,
+no modelling of any kind. On a face draw ONLY these six things plus blush: the outline of
+the head, the eyes, the eyebrows, the nose, the mouth, the ears — and two soft round
+patches of warm pink blush high on each cheek, on every person. An eye is one small dark
+curved mark. NO eyelashes, NO whites of the eyes, NO catchlights, NO eyelid crease, NO
+wrinkle, NO line beside the nose, NO shadow under the eye. Hair is two or three flat
+shapes, never individual strands, and stays very dark — warm dark brown or blue-black,
+never grey, silver, ash or white. IF A FACE IN THIS PICTURE LOOKS LIKE A PORTRAIT, IT IS
+WRONG.
+
+ECONOMY OF LINE — draw each object with the fewest strokes that still make it
+recognisable, then stop. A cabinet is a rectangle and one line for its door. A tiled wall
+is a few lines, not a complete grid. THE ROOMS ARE NOT MORE DETAILED THAN THE PEOPLE; THEY
+ARE LESS DETAILED THAN THE PEOPLE. Perspective is judged by hand, not measured with a
+ruler. Rooms hold MANY THINGS, each one drawn SIMPLY. Busy does not mean accurate.
+
+PEOPLE — East Asian / Taiwanese faces. Natural head-to-body proportions, simplified
+features, ages readable at a glance. Nobody looks at the viewer. Nobody is backlit or
+posed heroically.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No letters, no numbers, no words, no logos,
+no brand marks — not on posters, charts, cards, packaging, folders, screens, signs, height
+charts, mugs, clothing or anything else. Where writing would normally appear, leave the
+surface blank or draw a picture instead.
+
+LAYOUT — ONE single illustration in TWO BANDS.
+THE UPPER BAND is the top two fifths and holds THREE SMALL SCENES side by side.
+THE LOWER BAND is the bottom three fifths and is ONE WIDE SCENE running the full width.
+The lower band is the point of the picture and must be the first thing the eye lands on.
+
+DIVIDING LINES — draw them, and draw them by hand. TWO VERTICAL LINES separate the three
+scenes in the upper band, and ONE HORIZONTAL LINE runs the full width between the upper
+band and the lower band. They are thin, single, hand-drawn lines in the same warm dark
+brown as the rest of the linework, their weight visibly varying, slightly wobbly, not
+ruled. THERE IS NO BORDER OR FRAME AROUND THE OUTSIDE OF THE WHOLE IMAGE and no boxes
+around individual scenes — only those three lines between the scenes.
+
+THE SAME FAMILY APPEARS IN ALL FOUR SCENES: a mother and her son of about six. Draw them
+identically every time — same faces, same clothes (the mother in a dusty-rose blouse, the
+boy in a sage-green T-shirt) — so the reader understands this is one family going from
+place to place. The boy is never frightened and never crying; he is quiet, close beside
+her.
+
+UPPER BAND — THREE DIFFERENT DENTISTS IN THREE DIFFERENT CLINICS. Half-length figures.
+  1. LEFT — a man in his fifties, short dark hair, PALE BLUE-GREEN scrubs. Both palms
+     turned a little upward and outward in an apologetic open gesture, head tilted, the
+     inner ends of his eyebrows raised.
+     HIS ROOM: cool grey-blue walls, a pale wood cabinet, a grey-blue chair back.
+  2. MIDDLE — a woman in her thirties, hair tied back, in a JAPANESE-STYLE WHITE CLINICAL
+     TUNIC: a STAND-UP MANDARIN COLLAR and a row of buttons down ONE SIDE of the chest,
+     not down the middle; long sleeves, plain white, no lapels, no V-neck. She looks down
+     at a small blank card in her hand, mouth pressed into a straight line, her other hand
+     at the back of her neck.
+     HER ROOM: pale mint-green walls, a white cabinet and shelf, a window with a white
+     frame.
+  3. RIGHT — a man in his late twenties, DEEP CORAL-PINK scrubs. HE IS EMBARRASSED AND
+     APOLOGETIC, and this is the most important expression in the upper band. ONE HAND
+     SCRATCHES THE BACK OF HIS OWN HEAD; the other hand is held LOW, near his waist, palm
+     turned upward and angled towards the door — a small, hesitant, almost reluctant
+     gesture. HIS HAND IS NOT RAISED AND HE IS NOT WAVING: this must not read as a
+     confident greeting or a cheerful hello. His smile is a STRAINED, AWKWARD, CLOSED-MOUTH
+     SMILE, one corner higher than the other; the inner ends of both eyebrows are pushed
+     up; his head is tipped slightly down and away; the blush on his cheeks is a little
+     stronger than on anyone else. He looks like someone who wishes he could help and knows
+     he cannot.
+     HIS ROOM: pale dusty-lilac walls, a mid-brown wood cabinet, a picture-only poster.
+
+⚠ HOW THESE THREE MUST READ — THE MOST IMPORTANT INSTRUCTION IN THE PICTURE.
+All three are KIND, PROFESSIONAL, SINCERE AND SORRY. They are not bad dentists and they
+are not being criticised: each is honestly saying that this particular case belongs to
+someone else. NOBODY frowns, shakes their head, folds their arms, waves a hand
+dismissively, pushes anything away, shrugs, rolls their eyes, looks bored, looks
+incompetent, looks annoyed, or turns their back on the family. The mother is not angry
+with them — she is tired and still looking. Draw all three exactly as respectfully as the
+dentist in the lower band.
+
+LOWER BAND — THE PAEDIATRIC DENTIST. This band is the point of the picture.
+IN THE CENTRE a paediatric dentist sits on a low stool, leaning slightly forward, SMILING,
+in the middle of explaining something, one hand open in a friendly gesture.
+HER CLOTHES ARE A BRAND DETAIL — draw them carefully. HER CAP, HER TOP AND HER TROUSERS
+ARE ALL CUT FROM ONE AND THE SAME PRINTED FABRIC: on her head a TIE-BACK SURGICAL CAP
+covering her hair completely, gathered and knotted into short ties at the back. Over the
+printed scrubs a WHITE CLINICAL COAT with a collar, long sleeves and a chest pocket,
+HANGING OPEN AND UNBUTTONED so the printed top, sleeves and trousers all show. THE FABRIC:
+warm off-white cloth (#f4ead8) scattered with SIMPLE FLAT CHILDLIKE DOODLES — little
+bears, chicks, clouds, stars and small flowers — in ONLY TWO COLOURS, amber (#c28229) and
+deep caramel (#9e6301). THE DOODLES ARE BIG AND FEW: each about a quarter of the width of
+the cap, with a gap about the same size between them, the same doodles over cap, top and
+trousers alike. No letters and no numbers in the pattern.
+The boy sits on the treatment chair beside her, feet dangling well above the floor,
+listening. His mother stands at his shoulder with one hand resting on the headrest, and
+for the first time in the picture her shoulders have come down.
+
+THIS ROOM IS A CHILDREN'S DENTAL CLINIC AND IT MUST LOOK USED BY CHILDREN. Put ALL of
+these in it — MANY THINGS, EACH DRAWN IN THREE TO EIGHT STROKES, none of them accurate,
+none of them competing with the people for attention:
+  • a low open toy basket on the floor with a few toys showing over the rim — a couple of
+    building blocks, a soft animal, a small car
+  • a row of children's drawings pinned along the wall — a sun, a house, an animal, a
+    flower, drawn the way a five-year-old draws, and containing no letters or numbers
+  • a height chart taped to the wall beside the door: one vertical strip with short tick
+    marks and NO numbers
+  • a small step stool at the foot of the treatment chair
+  • a shelf holding three or four clear tooth models and a jar of stickers
+  • a rack of toothbrushes
+  • a low washbasin with a towel hanging beside it
+  • a small potted plant on the windowsill
+  • a simple hanging mobile turning near the ceiling — three or four small shapes on threads
+  • a seat cushion on the treatment chair cut FROM THE SAME PRINTED FABRIC as her uniform
+  • a window on one side letting in warm daylight
+NO instruments anywhere in the picture — no drill, no syringe, no probes, nothing sharp.
+THIS ROOM'S COLOUR: warm cream walls with a band of soft pale amber along the lower wall,
+light warm wood furniture. It is clearly the warmest and most inviting of the four rooms.
+
+THE TWO SPEECH BUBBLES — the reason this picture exists.
+TWO large rounded-rectangle speech bubbles float in the lower band, ONE TO HER LEFT AND
+ONE TO HER RIGHT, both at about her head height. BOTH of their short tapering tails come
+down out of the bubble and point at HER — at the paediatric dentist's head in the centre.
+Neither tail reaches across to the boy or the mother, neither bubble sits above them,
+there are exactly TWO bubbles, and there are no arrows.
+INSIDE EACH BUBBLE, drawn large, simple and clean. Each bubble is big enough that the
+teeth inside it are about as tall as the boy's head, so every tooth is clearly readable:
+  • THE LEFT BUBBLE — A ROW OF THREE TEETH seen from the front, side by side and touching,
+    each drawn as a crown with its two simple tapering roots below it. The MIDDLE one is
+    completely covered by a crown of FLAT SILVER-GREY METAL, the same outline as a tooth,
+    drawn as one flat metal tone with a single soft highlight and no reflections. The two
+    teeth either side are the child's own, in a soft natural ivory that is faintly warm —
+    clearly NOT pure white.
+  • THE RIGHT BUBBLE — the same row of three teeth, same size, same position. Here the
+    MIDDLE one is covered by a crown in a NOTICEABLY BRIGHTER, CLEANER WHITE than its
+    neighbours. The two teeth either side are again the child's own soft natural ivory, so
+    the difference between the bright white crown and the natural teeth is easy to see at
+    a glance.
+Nothing else goes inside the bubbles: no gums, no cross-section, no cut-away, no leader
+lines, no arrows, no labels, no writing. These are simple friendly drawings, NOT an
+anatomical or textbook diagram and NOT a photorealistic mouth.
+
+LIGHT AND COLOUR — the three small scenes above are lit by plain, even, slightly cool
+daylight, and each keeps to its own colour family so that the three rooms are obviously
+three different places. The wide scene below has ONE warm light from its window and is the
+warmest part of the whole picture. Plenty of pale paper shows through everywhere, but the
+picture is NOT washed out to near white: keep real colour in the clothes and the rooms.
+
+COMPOSITION — the paediatric dentist and her two bubbles sit across the CENTRE of the
+frame; that band is what must still read when the picture is shown small. Nothing
+important in the top eighth or the bottom eighth of the whole image.
+
+AVOID — photorealism; a portrait-like face; grey-scale; a silhouette or backlit hero pose;
+a faceless figure; exaggerated head-to-body proportions; a frame or border around the whole
+image; boxes around individual scenes; the dentist at the top right waving, greeting,
+smiling confidently or holding a hand up at head height; four rooms that share one colour
+scheme; an empty or under-furnished paediatric clinic; close-ups of dental instruments;
+blood; pain; a frightened or crying child; tears; hands rubbing or covering the eyes; a
+photorealistic interior of a mouth; an anatomical or textbook-style diagram; any single
+long ribbon-like curved line floating away from a person.
+```
