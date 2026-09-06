@@ -210,3 +210,138 @@ COMPOSITION — the two heads, the dentist's and the child's, sit side by side a
 height across the CENTRE of the frame; that is the picture. Nothing important in the top
 eighth or the bottom eighth. Daylight from the window is the one warm light source.
 ```
+
+---
+
+## Ⓕ 找了三個牙醫，最後找到兒牙　（⭐ 使用者 2026-09-06 自己想的，指定畫這一案｜**16:9**）
+
+> 「爸媽帶著小孩看了三個牙醫師（牙醫師的刷手服顏色都不一樣，年齡性別也不一樣，
+> 有一位牙醫師是穿著日本式高領白色側鈕扣刷手服）三個牙醫師分別表示無法處理或是
+> 表現出困難棘手的樣子 甚至覺得不好意思請爸媽另請高明 然後最後爸媽找到兒牙醫師
+> （站上的醫師袍＋花紋刷手服）兒牙醫師微笑的解說 牙齒治療方式 用對話框裱是一排牙齒
+> （3顆牙）有一個是金屬色的牙套包覆（另外2顆自己的牙齒稍微帶牙齒色）另一邊對話框對照
+> 一排牙齒（3顆牙）有一顆是特別白的牙套（同樣另外2顆自己的牙齒稍微帶牙齒色）」
+
+**接的是**：著陸頁那一句已定案的回應 —— 「**這一種比較複雜，要找兒童牙科的醫師處理。**」
+以及 COPY.md 九之十三那張表的第①種家長（**被退回來**）。
+
+### ⚠⚠⚠ 這一案有一條紅線要靠畫法守住（提示詞裡已經寫死了）
+
+COPY.md 第六節：**不做同業比較**。九之十三也記著「寫成『別的地方做不了的我們做』
+就是同業比較」。**「三個做不到 → 我們做得到」正好是那個句型的圖像版**，
+而且醫療廣告的相關規範對「比較」比對文字更敏感。
+
+**唯一能站得住的讀法是使用者自己講的那個**：那三位不是不會，是**誠懇地說這一種要找別人**
+—— 一般牙醫轉診給兒牙專科本來就是正常且正確的做法（診所自己「接受轉診很多」）。
+所以提示詞裡有一整段大寫的守則：三位都友善、專業、真誠、有點抱歉；
+**沒有人皺眉、搖頭、抱胸、揮手、轉身、看起來無能或不耐煩**，媽媽也沒有在生他們的氣。
+⚠ **這一段不要刪，也不要弱化** —— 少了它，這張圖就從「這一科要找誰」變成「別人不行」。
+
+### 版面為什麼是 16:9 上三下一
+
+- **不能用 4:3**：卡片縮圖會把 4:3 上下各裁掉 12.4%，**上排三格的頭會被切掉**。
+- 16:9 在卡片上不裁切，所以四格都保得住；下面那一條寬帶正好放「醫師在中間、
+  左右各一個對話框」。
+- ⚠ 代價：上排每格在 393 寬的卡片上只有約 130px，**臉會很小**。
+  所以下面那一條要佔六成高，**縮圖上要讀得懂的是它**。
+
+### 牙齒為什麼敢畫
+
+ILLUSTRATION.md 第七節第 10 條：牙齒的細節平常畫不穩，**但放進一個放大的圈裡就穩了**
+（像素夠）。兩個對話框就是那兩個圈 —— 所以提示詞要求**泡泡裡的牙齒和小孩的頭一樣高**。
+⚠ 同一節第 11 條：**不可以畫成課本示意圖** —— 只畫牙冠，沒有牙根、沒有牙齦剖面、
+沒有標示線、沒有箭頭、沒有字。
+
+```
+(Use the shared block above, but change the first line to: 16:9 landscape.)
+
+SCENE — ONE single illustration divided into TWO BANDS, separated only by the pale paper
+ground — no borders, no frames, no dividing lines anywhere.
+THE UPPER BAND is about the top two fifths and holds THREE SMALL SCENES side by side.
+THE LOWER BAND is about the bottom three fifths and is ONE WIDE SCENE running the full
+width. The lower band is the point of the picture and must be the first thing the eye
+lands on.
+
+THE SAME FAMILY APPEARS IN ALL FOUR SCENES: a mother and her son of about six. Draw them
+identically every time — same faces, same clothes (the mother in a dusty-rose blouse, the
+boy in a sage-green T-shirt) — so the reader understands this is one family going from
+place to place. The boy is never frightened and never crying in any scene; he is quiet,
+holding his mother's hand or standing close beside her.
+
+UPPER BAND — THREE DIFFERENT DENTISTS IN THREE DIFFERENT CLINICS.
+Each small scene shows the mother and boy on one side and ONE dentist on the other, drawn
+half-length, in a clinic corner suggested with a few strokes only (a chair back, a shelf,
+a window, a picture-only poster). The three dentists are obviously different people:
+  1. LEFT — a man in his fifties with short dark hair, in PALE BLUE-GREEN scrubs. Both
+     palms turned a little upward and outward in an apologetic open gesture, head tilted,
+     the inner ends of his eyebrows raised.
+  2. MIDDLE — a woman in her thirties, hair tied back, in a JAPANESE-STYLE WHITE CLINICAL
+     TUNIC: a STAND-UP MANDARIN COLLAR and a row of buttons running down ONE SIDE of the
+     chest, not down the middle; long sleeves, plain white, no lapels and no V-neck. She is
+     looking down at a small card in her hand, mouth pressed into a straight line, her
+     other hand at the back of her neck — this one is difficult and she knows it.
+  3. RIGHT — a man in his late twenties in DEEP CORAL-PINK scrubs. He has half-turned
+     towards the mother, one hand lifted to indicate the door, the other open at his chest
+     — sincerely suggesting she take the boy to somebody else.
+
+⚠ HOW THESE THREE MUST READ — THIS IS THE MOST IMPORTANT INSTRUCTION IN THE PICTURE.
+All three are KIND, PROFESSIONAL, SINCERE AND A LITTLE SORRY. They are not bad dentists
+and they are not being criticised: each is honestly saying that this particular case
+belongs to someone else. NOBODY frowns, shakes their head, folds their arms, waves a hand
+dismissively, pushes anything away, shrugs, rolls their eyes, looks bored, looks
+incompetent, looks annoyed, or turns their back on the family. The mother is not angry
+with them — she is tired and still looking. Draw all three exactly as respectfully as the
+dentist in the lower band.
+
+LOWER BAND — THE PAEDIATRIC DENTIST.
+A wide scene running the full width. IN THE CENTRE a paediatric dentist sits on a low
+stool, leaning slightly forward, SMILING, in the middle of explaining something, one hand
+open in a friendly gesture. HER CLOTHES ARE A BRAND DETAIL — draw them carefully. HER CAP,
+HER TOP AND HER TROUSERS ARE ALL CUT FROM ONE AND THE SAME PRINTED FABRIC: on her head a
+TIE-BACK SURGICAL CAP covering her hair completely, the fabric gathered and knotted into
+short ties at the back. Over the printed scrubs she wears a WHITE CLINICAL COAT with a
+collar, long sleeves and a chest pocket, HANGING OPEN AND UNBUTTONED so that the printed
+top, the printed sleeves and the printed trousers are all clearly visible. THE FABRIC:
+warm off-white cloth (#f4ead8) scattered with SIMPLE FLAT CHILDLIKE DOODLES — little
+bears, chicks, clouds, stars and small flowers — in ONLY TWO COLOURS, amber (#c28229) and
+deep caramel (#9e6301). THE DOODLES ARE BIG AND FEW: each about a quarter of the width of
+the cap, with a clear gap of about the same size between them, the same doodles running
+over cap, top and trousers alike. No letters and no numbers in the pattern.
+The boy sits on the treatment chair beside her, feet dangling well above the floor,
+listening. His mother stands at his shoulder with one hand resting on the headrest, and
+for the first time in the picture her shoulders have come down.
+Behind them, kept simple and few: a picture-only tooth poster, a shelf of clear tooth
+models, a rack of toothbrushes, a window. NO instruments in view anywhere in the picture —
+no drill, no syringe, no probes, nothing sharp.
+
+THE TWO SPEECH BUBBLES — the reason this picture exists.
+TWO large rounded-rectangle speech bubbles float in the lower band, ONE TO HER LEFT AND
+ONE TO HER RIGHT, both at about her head height. BOTH of their short tapering tails come
+down out of the bubble and point at HER — at the paediatric dentist's head in the centre.
+Neither tail reaches across to the boy or to the mother, neither bubble sits above them,
+there are exactly TWO bubbles, and there are no arrows.
+INSIDE EACH BUBBLE, drawn large, simple and clean. Each bubble is big enough that the
+teeth inside it are about as tall as the boy's head, so every tooth is clearly readable:
+  • THE LEFT BUBBLE — A ROW OF THREE TEETH seen from the front, side by side and touching.
+    The MIDDLE one is completely covered by a crown of FLAT SILVER-GREY METAL, the same
+    outline as a tooth, drawn as one flat metal tone with a single soft highlight and no
+    reflections. The two teeth either side are the child's own, in a soft natural ivory
+    that is faintly warm — clearly NOT pure white.
+  • THE RIGHT BUBBLE — the same row of three teeth, same size, same position. Here the
+    MIDDLE one is covered by a crown in a NOTICEABLY BRIGHTER, CLEANER WHITE than its
+    neighbours. The two teeth either side are again the child's own soft natural ivory, so
+    that the difference between the bright white crown and the natural teeth is easy to
+    see at a glance.
+BOTH ROWS SHOW CROWNS ONLY — draw the visible part of the teeth and nothing else: no
+roots, no gums below them, no cross-section, no cut-away, no leader lines, no arrows, no
+labels, no writing. These are simple friendly drawings, NOT an anatomical or textbook
+diagram and NOT a photorealistic mouth.
+
+LIGHT ACROSS THE BANDS — the three small scenes above are lit by plain, even, slightly
+cool daylight. The wide scene below has ONE warm light from the window, and it is the
+warmest part of the whole picture.
+
+COMPOSITION — the paediatric dentist and her two bubbles sit across the CENTRE of the
+frame; that band is what must still read when the picture is shown small. Nothing
+important in the top eighth or the bottom eighth of the whole image.
+```
