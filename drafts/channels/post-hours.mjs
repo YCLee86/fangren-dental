@@ -211,7 +211,19 @@ const caseC = (spec) => {
  * 做法：品牌條與電話**搬進卡片裡面**，卡片本身壓在 y 250~830；
  *   外面上緣留大標題（大格看不到沒關係，帶子裡已經寫了一次）。
  */
-const CSS2 = CSS + `
+const CSS3 = `
+.rows{padding:2px 22px 0}
+.row{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid ${RULE}}
+.row:last-child{border-bottom:0}
+.sp{flex:none;width:264px;font-size:25px;font-weight:700;letter-spacing:.02em;
+    display:flex;align-items:center;gap:11px}
+.sp i{width:17px;height:17px;border-radius:50%;flex:none}
+.gs{display:flex;gap:22px;flex-wrap:wrap}
+.g{font-size:25px;color:${INK};letter-spacing:.06em;white-space:nowrap}
+.g b{font-weight:700;color:${SOFT};margin-right:9px;letter-spacing:0}
+`;
+
+const CSS2X = CSS + `
 .sheet.safe{padding:0}
 .sheet.safe .top{height:272px;padding:56px 52px 0}
 .sheet.safe h1{font-size:52px}
@@ -237,6 +249,8 @@ const CSS2 = CSS + `
 .sheet.safe .bot{padding:0 52px;flex:1;display:flex;align-items:center;
                  font-size:23px;color:${SOFT}}
 `;
+const CSS2 = CSS2X + CSS3 + `
+`;
 const caseA2 = () => `<div class="sheet safe">
   <div class="top"><h1>看診時間</h1><div class="sub">一週的門診，以及每一節有哪些科別</div></div>
   <div class="card">
@@ -249,6 +263,41 @@ const caseA2 = () => `<div class="sheet safe">
     <div class="ctel"><span>診所電話</span><b>${PHONE}</b></div>
   </div>
   <div class="bot">${D.note}</div></div>`;
+
+
+/* ---------- Ⓓ：一科一行（照「早／午／晚」分組） ----------------------
+ * 2026-09-07 使用者傳來「最新貼文 → 新增項目」的表單：一個項目 ＝ 一張
+ * **方形**的照片 ＋ 一段「詳情」文字，而且說明寫著「以及**您設定的照片**」——
+ * ⚠⚠⚠ **所以這個區塊不必先發 VOOM 貼文，可以直接傳圖**（上一輪的前提要修正）。
+ *
+ * ⚠⚠ 有了「詳情」那段字之後，圖就不必把每一件事都扛下來 —— 於是可以問一個
+ *   更好的問題：**病人真正要查的是「我這一科什麼時候可以來」，不是「週三下午有誰」。**
+ *   格子表回答的是後者（那是診所排班的視角），Ⓓ 回答的是前者。
+ *   ＝ COPY.md 第九節那條：他不是想認識這個科別，是帶著一個具體的問題來的。
+ *
+ * ⚠ 排法是「早／午／晚 各列出哪幾天」，不是逐節列出：
+ *   實測七科用這個排法**每一科都收得進一行**，而且顯微根管會變成
+ *   「早 三　午 三　晚 三」——**全在週三**這件事自己跳出來，不必寫成一句話。
+ */
+const byPart = (id) => D.rows.map((r, ri) => ({
+  part: r.part,
+  days: r.cells.map((c, ci) => c.includes(id) ? D.days[ci] : null).filter(Boolean)
+})).filter(g => g.days.length);
+
+const caseD = () => `<div class="sheet safe">
+  <div class="top"><h1>哪一科　什麼時候</h1><div class="sub">一週的門診，一科一行</div></div>
+  <div class="card">
+    <div class="cbar">${MARK}<b>芳仁牙醫診所</b><em>看診時間</em></div>
+    <div class="rows">${D.specs.map(sp => `<div class="row">
+      <div class="sp" style="color:${DEEP[sp.id]}">
+        <i style="background:${FILL[sp.id]}"></i>${sp.name}</div>
+      <div class="gs">${byPart(sp.id).map(g =>
+        `<span class="g"><b>${g.part}</b>${g.days.join("")}</span>`).join("")}</div>
+    </div>`).join("")}</div>
+    <div class="ctel"><span>診所電話</span><b>${PHONE}</b></div>
+  </div>
+  <div class="bot">${D.note}</div></div>`;
+
 
 /* 大格照 cover 裁之後，1080 的圖看得到的原圖列數 */
 const PW = 823, PH = 409 + 4 + 410;
@@ -269,7 +318,7 @@ const browser = await chromium.launch({ executablePath: chrome });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 fs.mkdirSync(OUT, { recursive: true });
 
-const shots = [["a", caseA()], ["a2", caseA2()], ["b", caseB()], ["c-all", caseC(null)],
+const shots = [["a", caseA()], ["a2", caseA2()], ["d", caseD()], ["b", caseB()], ["c-all", caseC(null)],
   ...D.specs.map(s => [`c-${s.id}`, caseC(s)])];
 const made = [];
 for (const [tag, html] of shots) {
@@ -286,12 +335,12 @@ for (const [tag, html] of shots) {
     }).map(el => el.className || el.tagName);
   });
   if (over.length) throw new Error(`${tag} 有 ${over.length} 個元素溢出：${over.slice(0,4)}`);
-  if (tag === "a2") {
+  if (tag === "a2" || tag === "d") {
     /* ⚠ 這一案存在的理由就是「大格看得到卡片」，所以那件事要用量的，不要用看的 */
     const top = (W - band2()) / 2, bot = W - top;
     const c = await page.locator(".sheet.safe .card").boundingBox();
     if (c.y < top - .5 || c.y + c.height > bot + .5)
-      throw new Error(`Ⓐ2 的卡片是 ${c.y.toFixed(1)}~${(c.y + c.height).toFixed(1)}，`
+      throw new Error(`${tag} 的卡片是 ${c.y.toFixed(1)}~${(c.y + c.height).toFixed(1)}，`
         + `超出大格看得到的 ${top.toFixed(1)}~${bot.toFixed(1)}`);
   }
   const file = path.join(OUT, `post-hours-${tag}.png`);
@@ -312,6 +361,26 @@ console.log(`\n對比度 ${contrast.length} 項，過不了 AA 的 ${bad.length}
 for (const [n, r] of tradeoff) console.log(`  （已知取捨　${n} ${r.toFixed(2)}）`);
 if (bad.length) throw new Error("有字過不了 AA，不出圖");
 
+
+/* ---------- 「詳情」那一欄要貼的字 ------------------------------------
+ * 表單上一個項目 ＝ 一張照片 ＋ 一段「詳情」。所以圖不必把每一件事都扛下來。
+ * ⚠ 這段字也從同一份資料長出來（時段、休診說明、電話都不重打）。
+ * ⚠⚠ **不要補回「週六、週日休診。」** —— 那句 2026-08-13 由使用者拿掉了，
+ *   理由是表只列一到五就看得出來；這裡的表一樣只列一到五，同一個理由成立。
+ * ⚠⚠ 紅線：這個帳號沒有專人即時回覆，所以不可以出現「有問題隨時問」那一類的話
+ *   （第十一之三節）。下面那道掃描就是擋這個。
+ */
+const detail =
+  `一週的門診時段，以及每一節有哪些科別。\n`
+  + D.rows.map(r => `${r.part} ${r.time}`).join("　") + `\n`
+  + D.note.replace(/。$/, "") + `　${PHONE}`;
+
+const RED = [/隨時(問|詢問|聯絡)/, /都可以問/, /問到/, /即時回/, /小編/, /專人/, /馬上回/];
+for (const re of RED) if (re.test(detail)) throw new Error(`「詳情」踩到紅線：${re}`);
+fs.writeFileSync(path.join(OUT, "detail.txt"), detail + "\n");
+console.log("\n── 「詳情」欄要貼的字（preview/line-post-hours/detail.txt）──");
+console.log(detail.split("\n").map(l => "  " + l).join("\n"));
+
 /* ---------- 主頁那三格長什麼樣（裁切模擬） --------------------------
  * ⚠⚠⚠ 這是 2026-08-23「分享卡會被訊息 app 左右裁掉」那條教訓在這裡的變形。
  *   從使用者 2026-09-07 的截圖量：整塊寬 823、**大格 823×409 ＝ 2.01:1**、
@@ -331,7 +400,7 @@ const profile = (big, s1, s2) => `<div style="width:${PW}px;height:${PH}px;backg
 
 const browser2 = await chromium.launch({ executablePath: chrome });
 const page2 = await browser2.newPage({ viewport: { width: PW, height: PH } });
-for (const [tag, big] of [["a", "post-hours-a.png"], ["a2", "post-hours-a2.png"]]) {
+for (const [tag, big] of [["a", "post-hours-a.png"], ["a2", "post-hours-a2.png"], ["d", "post-hours-d.png"]]) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0;box-sizing:border-box}</style>`
     + profile(big, "post-hours-c-endo.png", "post-hours-c-kids.png"));
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
