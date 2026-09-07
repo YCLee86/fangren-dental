@@ -40,6 +40,8 @@ const DEEP = { general:"#2c5238", perio:"#2a6d69", endo:"#89202d", kids:"#9e6301
 
 /* ⚠ 短名只給 Ⓐ 的格子用（144px 欄寬塞不下「植牙・假牙重建」六個字）。
    其餘每一處一律用 index.html 上的全名。**這是版面被迫的縮寫，要使用者點頭。** */
+/* ⚠ 只有「格子裡寫字」那一版被寬度逼著縮。**只用圖案那一版不必縮** ——
+   圖例裡是全名，所以 2026-09-07 開著的那個「要不要縮寫」的問題自己消失了。 */
 const SHORT = { "植牙・假牙重建": "植牙假牙" };
 
 /* ⚠⚠⚠ Ⓖ3「每科一顆記號」用的是 brand/shapes 那九顆（同一個標誌的九種變體）。
@@ -140,7 +142,16 @@ tbody th i{font-style:normal;font-size:19px;color:${SOFT}}
 tbody tr + tr th, tbody tr + tr td{border-top:1px solid ${RULE}}
 .nm{font-size:23px;line-height:1.34;letter-spacing:.02em}
 .mk-row{display:flex;align-items:center;justify-content:center;gap:7px}
-svg.mk{width:22px;height:22px;flex:none;object-fit:contain}
+svg.mk{width:100%;height:100%;display:block}
+/* 只有圖案那一版：格子裡的圖案 30px 一列排開；圖例的 26px */
+.ic{width:30px;height:30px;flex:none;display:flex;align-items:center;justify-content:center}
+.mk-row .ic, .mk-row svg.mk{width:22px;height:22px}
+.ic-row{display:flex;align-items:center;justify-content:center;gap:6px}
+.lg{padding-top:30px}
+.lg-row{display:flex;align-items:center;justify-content:center;gap:26px}
+.lg-row + .lg-row{margin-top:10px}
+.lg-i{display:flex;align-items:center;gap:9px;font-size:23px;color:${INK};letter-spacing:.02em}
+.ic.sm{width:24px;height:24px}
 
 /* 一科一行 */
 .rows{padding-top:6px}
@@ -175,13 +186,26 @@ const grid = (mode) => shell(`<table><colgroup><col class="lab"><col span="5"></
   <thead><tr><td></td>${D.days.map(d => `<th>${d}</th>`).join("")}</tr></thead>
   <tbody>${D.rows.map(r => `<tr>
     <th><b>${r.part}</b><i>${r.time}</i></th>${r.cells.map(c => `<td>${
-      c.map(id => { const sp = D.specs.find(x => x.id === id);
-        const nm = SHORT[sp.name] || sp.name;
-        const col = mode === "rank" && id === "general" ? SOFT : INK;
-        return mode === "mark"
-          ? `<div class="nm mk-row" style="color:${col}">${mark22[id]}${nm}</div>`
-          : `<div class="nm" style="color:${col}">${nm}</div>`;
-      }).join("")}</td>`).join("")}</tr>`).join("")}</tbody></table>`);
+      mode === "icon" ? `<div class="ic-row">${c.map(id =>
+          `<span class="ic" style="color:${DEEP[id]}">${mark22[id]}</span>`).join("")}</div>`
+      : c.map(id => { const sp = D.specs.find(x => x.id === id);
+          const nm = SHORT[sp.name] || sp.name;
+          const col = mode === "rank" && id === "general" ? SOFT : INK;
+          return mode === "mark"
+            ? `<div class="nm mk-row" style="color:${col}"><span class="ic">${mark22[id]}</span>${nm}</div>`
+            : `<div class="nm" style="color:${col}">${nm}</div>`;
+        }).join("")}</td>`).join("")}</tr>`).join("")}</tbody></table>`
+  + (mode === "icon" ? legend() : ""));
+
+/* 圖例：logo 套色 ＋ 科別名用墨（使用者 2026-09-07 指定）。
+ * ⚠⚠ 格子裡只剩圖案的話，第一次看的人**一定要對照這一排** ——
+ *   所以它不是裝飾，是那張表讀不讀得懂的前提，不可以為了省高度砍掉。
+ * ⚠ 排成 4 ＋ 3 兩行（七個一行放不下），刻意不讓它自己 wrap ——
+ *   自己 wrap 會斷成 6＋1（招呼卡那一輪的圖例踩過）。 */
+const legend = () => `<div class="lg">${[D.specs.slice(0, 4), D.specs.slice(4)]
+  .map(g => `<div class="lg-row">${g.map(sp =>
+    `<span class="lg-i"><span class="ic sm" style="color:${DEEP[sp.id]}">${mark22[sp.id]}</span>`
+    + `${sp.name}</span>`).join("")}</div>`).join("")}</div>`;
 
 /* Ⓛ 一科一行：照「早／午／晚」各列出哪幾天 */
 const byPart = (id) => D.rows.map(r => ({
@@ -216,6 +240,17 @@ const contrast = [["墨對底", ratio(INK, CARD)], ["柔墨對底", ratio(SOFT, 
   ...D.specs.map(s => [`${s.name} 深階對底`, ratio(DEEP[s.id], CARD)])];
 const bad = contrast.filter(([, r]) => r < 4.5);
 if (bad.length) throw new Error("過不了 AA：" + bad.map(([n,r]) => `${n} ${r.toFixed(2)}`).join("、"));
+/* ⚠⚠⚠ 圖案用**深階**不是套色，那是量出來的：**兒童牙科的套色 #c28229 對卡色
+   只有 2.93**，過不了裝飾性圖形的 3:1（同 iPad 那顆「往下滑」指標的門檻）。
+   而深階七科全部 ≥4.51。
+   ⚠ 這**不牴觸** PALETTE 那條「深階給白底上的字、套色給填實的塊」——
+   那條講的是**首頁 chip 那種一整塊的填色**（面積大）。這裡是 30px 的小圖形
+   站在淺底上，處境和白底上的字一樣，需要的是同一階。
+   ⚠ 使用者說的「圖案要套色」是口語的「上那一科的顏色」，不是 PALETTE 的專有名詞。 */
+const icon = D.specs.map(s2 => [`${s2.name} 深階對底`, ratio(DEEP[s2.id], CARD)]);
+const iconBad = icon.filter(([, r]) => r < 3);
+if (iconBad.length) throw new Error("圖案對底不到 3:1："
+  + iconBad.map(([n,r]) => `${n} ${r.toFixed(2)}`).join("、"));
 
 /* ---------- 出圖 ---------- */
 const chrome = (() => {
@@ -234,8 +269,7 @@ fs.mkdirSync(OUT, { recursive: true });
 for (const f of fs.readdirSync(OUT).filter(f => f.endsWith(".png"))) fs.rmSync(path.join(OUT, f));
 
 const made = [];
-for (const [tag, html] of [["ink", grid("ink")], ["rank", grid("rank")],
-                           ["mark", grid("mark")], ["list", list()]]) {
+for (const [tag, html] of [["icon", grid("icon")], ["rank", grid("rank")], ["list", list()]]) {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${html}`);
   /* ⚠⚠ 這一版存在的理由就是「乾淨 ＋ 大格看得到全部」，所以那件事要用量的。
      整塊內容一定要落在安全帶裡（大格只看得到 y ${TOP}~${BOT}）。 */
@@ -260,8 +294,8 @@ const cell = (f, w, h) =>
 const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 410 } });
 await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
   <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
-    ${cell("post-hours-rank.png", PW, 409)}
-    <div style="display:flex;gap:3px">${cell("post-hours-ink.png", 410, 410)}${cell("post-hours-list.png", 410, 410)}</div>
+    ${cell("post-hours-icon.png", PW, 409)}
+    <div style="display:flex;gap:3px">${cell("post-hours-rank.png", 410, 410)}${cell("post-hours-list.png", 410, 410)}</div>
   </div>`);
 await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await page2.screenshot({ path: path.join(OUT, "profile-3up.png") });
@@ -273,6 +307,9 @@ for (const [t, b] of made)
   console.log(`  post-hours-${t}.png　內容 ${b.y.toFixed(0)}~${(b.y + b.height).toFixed(0)}`
     + `（安全帶 ${TOP}~${BOT}，餘 ${(b.y - TOP).toFixed(0)}）`);
 console.log(`  profile-3up.png`);
-console.log(`\n對比度 ${contrast.length} 項全部過 AA（最低 ${
+console.log(`\n文字 ${contrast.length} 項全部過 AA（最低 ${
   Math.min(...contrast.map(c => c[1])).toFixed(2)}）`);
+console.log(`圖案 ${icon.length} 項全部過 3:1（最低 ${
+  Math.min(...icon.map(c => c[1])).toFixed(2)}　${
+  icon.reduce((a,b)=>a[1]<b[1]?a:b)[0]}）`);
 console.log("\n── 「詳情」欄要貼的字 ──\n" + detail.split("\n").map(l => "  " + l).join("\n"));
