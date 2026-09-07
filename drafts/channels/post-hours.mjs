@@ -91,9 +91,26 @@ const ASPECT = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => {
 let INKA = null;
 const wScale = (id, wgt) => !wgt || !INKA ? 1
   : Math.pow(INKA.general / INKA[id], wgt === "half" ? .25 : .5);
-const icSize = (id, base, wgt) => wgt
-  ? `width:${(base * wScale(id, wgt)).toFixed(1)}px;`
-    + `height:${(base * wScale(id, wgt) / ASPECT[id]).toFixed(1)}px;` : "";
+/* ⚠⚠⚠ 2026-09-07 使用者：「感覺間距要拉開一點，因為有矯正的診，
+   logo 看起來和其他沒有矯正的時段沒對齊。」
+   **拉開間距和對齊是兩件事**（同第九節第 17 條那條淡出）：
+   ・**間距** ＝ 一列裡兩顆之間留多少（`--icgx`，三格 11／16／22）。
+   ・**對齊** ＝ 等重之後每一顆的寬度不一樣（矯正 42、牙周 36、其餘 30），
+     一列置中之後**起點跟著那一列有誰而跑**，所以同一欄不同列對不齊。
+     → 治法是**每一顆給一樣寬的格子**（slot ＝ 最寬那一顆），
+       圖案在自己的格子裡置中；一列有幾顆，位置就落在同一組刻度上。
+   ⚠ 拉開間距**不會**治好對齊，等寬格**不會**讓它變鬆 —— 兩條尺各自要給。 */
+const icSize = (id, base, wgt, slot = 0) => {
+  if (!wgt) return "";
+  const w = base * wScale(id, wgt), h = w / ASPECT[id];
+  return slot
+    ? `width:${slot.toFixed(1)}px;height:${base}px;`
+      + `--mw:${w.toFixed(1)}px;--mh:${h.toFixed(1)}px;`
+    : `width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;`;
+};
+/* 等寬格要多寬 ＝ 最寬的那一顆（現在是矯正）。base 一改自己跟著算 */
+const slotOf = (base, wgt) => wgt
+  ? Math.max(...Object.keys(SHAPE).map(id => base * wScale(id, wgt))) : 0;
 
 /* ---------- 從 index.html 讀回來（唯一的出處） ---------- */
 function parse() {
@@ -188,13 +205,14 @@ tbody tr + tr th, tbody tr + tr td{border-top:1px solid ${RULE}}
 .nm{font-size:23px;line-height:1.34;letter-spacing:.02em}
 .mk-row{display:flex;align-items:center;justify-content:center;gap:7px}
 svg.mk{width:100%;height:100%;display:block}
+.ic > svg.mk{width:var(--mw, 100%);height:var(--mh, 100%)}
 /* 只有圖案那一版：格子裡的圖案 30px 一列排開；圖例的 26px */
 .ic{width:var(--ics, 30px);height:var(--ics, 30px);flex:none;display:flex;align-items:center;justify-content:center}
 .mk-row .ic, .mk-row svg.mk{width:22px;height:22px}
 /* ⚠ 2026-09-07 使用者：「每診裡面的 logo 現在靠得有點近，有點擠。」
    橫向 6 → 11px、行距 6 → 9px。格子寬約 151px，兩顆 30px ＋ 11 ＝ 71，還很寬鬆。 */
-.ic-row{display:flex;flex-direction:column;align-items:center;gap:9px}
-.ic-line{display:flex;align-items:center;justify-content:center;gap:11px}
+.ic-row{display:flex;flex-direction:column;align-items:center;gap:var(--icgy, 9px)}
+.ic-line{display:flex;align-items:center;justify-content:center;gap:var(--icgx, 11px)}
 /* 2026-09-07 使用者：「現在 logo 擠成一個橫條」——四個排成一列讀起來像一條，
    看不出是四個各自獨立的東西。兩個對照版本：
    col  一格裡全部直排（一節一欄）
@@ -222,7 +240,8 @@ svg.mk{width:100%;height:100%;display:block}
 .g b{font-weight:400;color:${SOFT};margin-right:8px;letter-spacing:.02em}
 `;
 
-const shell = (inner, cls = "") => `<div class="sheet"><div class="band ${cls}">
+const shell = (inner, cls = "", gap = null) => `<div class="sheet"><div class="band ${cls}"${
+  gap ? ` style="--icgx:${gap[0]}px;--icgy:${gap[1]}px"` : ""}>
   <div class="id">${MARK}<b>芳仁牙醫診所</b><em>看診時間</em></div>
   <div class="rule"></div>
   ${inner}
@@ -240,13 +259,13 @@ const shell = (inner, cls = "") => `<div class="sheet"><div class="band ${cls}">
  *         （25 個名字裡有 12 個是它）。退一階之後，五科特別門診自己跳出來。
  *   mark  每科一顆記號（＝他的第二個提議，量測見上面 SHAPE 那一段）
  */
-const grid = (mode, ics, k = 1, flat = false, pal = null, wgt = null) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
+const grid = (mode, ics, k = 1, flat = false, pal = null, wgt = null, gap = null, slot = false) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
   <thead><tr><td></td>${D.days.map(d => `<th>${d}</th>`).join("")}</tr></thead>
   <tbody>${D.rows.map(r => `<tr>
     <th><b>${r.part}</b><i>${r.time}</i></th>${r.cells.map(c => `<td>${
       mode.startsWith("i") ? `<div class="ic-row">${lines(c, mode).map(g =>
           `<div class="ic-line">${g.map(id =>
-            `<span class="ic" style="${icSize(id, ics || 30, wgt)}color:${tone(id, k, flat, pal)}">${mark22[id]}</span>`
+            `<span class="ic" style="${icSize(id, ics || 30, wgt, slot ? slotOf(ics || 30, wgt) : 0)}color:${tone(id, k, flat, pal)}">${mark22[id]}</span>`
           ).join("")}</div>`).join("")}</div>`
       : c.map(id => { const sp = D.specs.find(x => x.id === id);
           const nm = disp(sp.name);
@@ -255,7 +274,7 @@ const grid = (mode, ics, k = 1, flat = false, pal = null, wgt = null) => shell(`
             ? `<div class="nm mk-row" style="color:${col}"><span class="ic">${mark22[id]}</span>${nm}</div>`
             : `<div class="nm" style="color:${col}">${nm}</div>`;
         }).join("")}</td>`).join("")}</tr>`).join("")}</tbody></table>`
-  + (mode.startsWith("i") ? legend(k, flat, pal, wgt) : ""), ics ? `s${ics}` : "");
+  + (mode.startsWith("i") ? legend(k, flat, pal, wgt) : ""), ics ? `s${ics}` : "", gap);
 
 /* ⚠⚠⚠ 一格裡的圖案怎麼分行（2026-09-07 使用者：「一個診有三個科別的，
  *   第一行一個科第二行兩個科，這樣才不會頭重腳輕」）。
@@ -467,6 +486,10 @@ const measure = async (mode, px) => {
   return { px, h: b.height, over: Math.max(0, Math.round(b.height - BAND)) };
 };
 const COL = 26, W2 = 30;
+/* 圖案之間要多鬆（橫向 / 行距）。第一格 ＝ 2026-09-07 之前的值 */
+/* 三格間距 ＋ 要不要等寬格。第一格 ＝ 2026-09-07 之前的值（不等寬、11px） */
+const GAPS = [["mix-half", 11, 9, false], ["mix-half-a11", 11, 9, true],
+              ["mix-half-a16", 16, 12, true], ["mix-half-a22", 22, 15, true]];
 const mCol = await measure("icol", COL), mW2 = await measure("i2x2", W2);
 console.log(`\n── 三種排法（安全帶 ${BAND} 列）──`);
 console.log(`  橫排一列 30px　高 ${(await measure("icon", 30)).h.toFixed(0)}　收得進`);
@@ -484,8 +507,14 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
                            ["b8",    grid("i2x2", W2, 1, false, "b8")],
                            /* 使用者挑的混合色 ＋ 圖案份量三格（現況／半／等重） */
                            ["mix",      grid("i2x2", W2, 1, false, "mix")],
-                           ["mix-half", grid("i2x2", W2, 1, false, "mix", "half")],
                            ["mix-even", grid("i2x2", W2, 1, false, "mix", "even")],
+                           /* ⚠⚠ 2026-09-07 使用者選了「半」，並說「間距要拉開一點，
+                              因為有矯正的診，logo 看起來和其他沒有矯正的時段沒對齊」。
+                              等重之後每一顆的寬度不一樣（矯正 42、牙周 36、其餘 30），
+                              一列置中之後**同一欄不同列的圖案就落在不同的 x 上** ——
+                              間距拉開治的是「讀不讀得出是幾顆」，對齊要另外處理（見下面 GAPS）。 */
+                           ...GAPS.map(([tag, gx, gy, slot]) =>
+                             [tag, grid("i2x2", W2, 1, false, "mix", "half", [gx, gy], slot)]),
                           ]) {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${html}`);
   /* ⚠⚠ 這一版存在的理由就是「乾淨 ＋ 大格看得到全部」，所以那件事要用量的。
@@ -517,11 +546,11 @@ const cell = (f, w, h) =>
      <img src="data:image/png;base64,${fs.readFileSync(path.join(OUT, f)).toString("base64")}"
           style="width:100%;height:100%;object-fit:cover;display:block"></div>`;
 const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 410 } });
-for (const [tag, big] of [["w2", "post-hours-mix.png"], ["col", "post-hours-icol.png"]]) {
+for (const [tag, big] of [["w2", "post-hours-mix-half-a16.png"], ["col", "post-hours-icol.png"]]) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
     <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
       ${cell(big, PW, 409)}
-      <div style="display:flex;gap:3px">${cell("post-hours-mix-half.png", 410, 410)}${cell("post-hours-mix-even.png", 410, 410)}</div>
+      <div style="display:flex;gap:3px">${cell("post-hours-mix-half-a11.png", 410, 410)}${cell("post-hours-mix-half-a22.png", 410, 410)}</div>
     </div>`);
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
   await page2.screenshot({ path: path.join(OUT, `profile-3up-${tag}.png`) });
