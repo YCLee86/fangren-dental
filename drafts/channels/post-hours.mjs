@@ -182,7 +182,9 @@ const TITLE = "芳仁牙醫開診時段";
    ⚠ 這裡用**站上頁首那一條**（mark.svg），不是九顆科別記號裡的任何一顆 ——
    那九顆在格子裡各自有身分，拿其中一顆放大會讓人以為那一科比較重要。
    ⚠ 顏色是墨 ＋ 很低的 opacity，**不新增任何顏色**。 */
-const WMSH = "r1c1";   /* 2026-09-07 使用者：「浮水印改用圓的 logo」 */
+const WMSH = "r3c1";   /* 2026-09-07 使用者：「浮水印改用圓的 logo」→「用另外一顆圓 logo」
+                         ＝ 圓的那兩顆裡的**單洞版**（格子裡顯微根管在用的那一顆）。
+                         ⚠ 兩顆的長寬比都是 1.00，所以下面那四個數字一個都不必動。 */
 const WMARK = fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${WMSH}.svg`), "utf8")
   .replace(/<svg([^>]*?)(width|height)="[\d.]+"/g, "<svg$1")
   .replace(/<svg/, '<svg class="wm"');
