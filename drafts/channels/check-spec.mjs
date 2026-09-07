@@ -69,7 +69,7 @@ for (const m of body.matchAll(/<img\s([^>]*)>/g)) {
   if (!at.includes("alt=")) bad.push(`${src} 沒有 alt`);
   nImg++;
 }
-if (nImg !== 17) bad.push(`找到 ${nImg} 張圖，該有 17 張`);
+if (nImg !== 16) bad.push(`找到 ${nImg} 張圖，該有 16 張`);
 
 /* ---- ①之二 捲軸裡那幾張的寬度 -----------------------------------------
    ⚠⚠⚠ 2026-09-07 踩過：`.pv-scroll img{width:auto}` 會**蓋掉 `<img>` 的 width 屬性**，
