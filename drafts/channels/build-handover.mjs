@@ -189,8 +189,19 @@ const SVG_NOTE = {
   "phone.svg": "話筒 —— 診所資訊卡「打給診所」、提醒卡「致電診所」",
 };
 
-const html = `<meta name="robots" content="noindex, nofollow, noarchive">
-<title>芳仁牙醫診所 LINE 官方帳號・交付包</title>
+/* ⚠⚠⚠ 這一段的前四行一行都不能少 —— 2026-09-07 漏了 `charset` 那一行，
+   使用者在 iPhone 上開起來**整頁中文都是亂碼**（ASCII 的檔名與電話好好的，
+   那是「編碼沒宣告、瀏覽器自己猜」最典型的樣子）。
+   ⚠⚠ **Playwright 那一輪完全沒抓到**：用 `file://` 載入時 Chromium 會自己
+   嗅出 UTF-8，八個寬度全綠。**編碼這種事只能對原始碼做靜態斷言，不能靠算繪驗。**
+   （同一族：`version.txt` 在 Safari 上是亂碼，第九節第 23 條。） */
+const html = `<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 官方帳號　交付包</title>
 <style>
   :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
     --green:#2c5238;--brick:#89202d}
@@ -235,6 +246,8 @@ const html = `<meta name="robots" content="noindex, nofollow, noarchive">
   ol.q{padding-left:1.3em}
   ol.q li{margin:.7em 0}
 </style>
+</head>
+<body>
 <div class="wrap">
 <h1>芳仁牙醫診所　LINE 官方帳號　交付包</h1>
 <p class="lede">照廠商 2026-09-07 那封信的順序，一項一項把<b>圖檔</b>與<b>文字</b>放在這裡。
@@ -293,6 +306,8 @@ ${sections}
       放到網站上之前要先確認授權。</li>
   </ol>
 </div>
+</body>
+</html>
 `;
 
 fs.mkdirSync(OUT, { recursive: true });

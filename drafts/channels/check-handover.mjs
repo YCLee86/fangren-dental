@@ -53,6 +53,25 @@ const body = after.slice(0, after.indexOf('id="ask"') + 1 || after.length);
 for (const w of ["隨時問", "隨時詢問", "即時回覆您", "馬上回覆", "都會回覆", "有問題都可以問"])
   if (body.includes(w)) bad.push(`出現「${w}」—— 這個帳號沒有專人即時回覆`);
 
+/* ---- ④之二 抬頭那四行（漏了就是整頁亂碼）------------------------------- */
+/* ⚠⚠⚠ 2026-09-07 踩過：漏了 charset，使用者在 iPhone 上開起來整頁中文都是亂碼。
+   ⚠⚠ **算繪測驗抓不到** —— Playwright 用 file:// 載入時 Chromium 自己嗅得出 UTF-8，
+   八個寬度全綠。編碼只能對原始碼做靜態斷言。順手把 preview 底下每一頁都掃一次。 */
+for (const [re, what] of [
+  [/^<!doctype html>/i, "<!doctype html>"],
+  [/<html lang="zh-Hant-TW">/, 'html lang="zh-Hant-TW"'],
+  [/<meta charset="utf-8">/i, "meta charset utf-8"],
+  [/<meta name="viewport"[^>]*width=device-width/i, "meta viewport"],
+]) if (!re.test(after)) bad.push(`抬頭少了 ${what}`);
+
+const PV = path.join(ROOT, "preview");
+for (const d of fs.readdirSync(PV)) {
+  const f = path.join(PV, d, "index.html");
+  if (!fs.existsSync(f)) continue;
+  const h = fs.readFileSync(f, "utf8").slice(0, 800);
+  if (!/<meta charset="utf-8">/i.test(h)) bad.push(`preview/${d}/ 沒有宣告 charset —— 手機上會整頁亂碼`);
+}
+
 /* ---- ⑤ 零 JS ----------------------------------------------------------- */
 if (/<script/i.test(after)) bad.push("出現 <script> —— 這一頁刻意零 JS");
 
