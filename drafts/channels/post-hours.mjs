@@ -165,8 +165,20 @@ const D = parse();
 const W = 1080, H = 1080;
 const BAND = Math.round(W * (409 / 823));        /* 大格看得到的列數 ＝ 537 */
 const TOP = (H - BAND) / 2, BOT = H - TOP;
-const MARK = fs.readFileSync(path.join(ROOT, "brand", "shapes", "mark.svg"), "utf8")
-  .replace(/<svg([^>]*)>/, '<svg$1 style="width:82px;height:auto;display:block">');
+/* ⚠⚠ 2026-09-07 使用者：「左上的大 logo 拿掉　直接寫芳仁牙醫開診時段。」
+   所以這張圖上**一顆大標誌都沒有** —— 品牌靠格子裡那些科別記號
+   （都是 brand/shapes 的形狀）與標題那幾個字。不要因為「圖上沒有 logo」自己加回去。
+   ⚠ 「看診時間」也一起換成**開診時段**（＝站上門診表那排標記第一顆用的字）。 */
+const TITLE = "芳仁牙醫開診時段";
+/* 頁尾那顆話筒。素材出處：Lucide "phone"，ISC 授權，https://lucide.dev ——
+   這一行註解就是署名，改圖或搬檔的時候不要刪。
+   ⚠ 幾何直接從 index.html 頁首那顆讀回來，不抄第二份（同這一支其餘每一項資料）。 */
+const TELICO = (SRC.match(/<span class="ico"><svg viewBox="0 0 24 24"[^>]*>(<path d="M21\.5[^"]+"\/>)<\/svg><\/span>/) || [])[1];
+if (!TELICO) throw new Error("index.html 裡找不到話筒那條路徑（.c-tel 的 Lucide phone）");
+const ICOPX = 28;   /* ＝ 站上那顆 11.33px 等比例放大到 31px 的號碼旁（×2.484） */
+const TELSVG = `<svg viewBox="0 0 24 24" aria-hidden="true">${TELICO}</svg>`;
+/* 這兩個是出圖前在瀏覽器裡現量的（見下面 telAlign），不寫死 */
+let TELDY = 0, ICODY = 0;
 const PHONE = (SRC.match(/05-\d{7}/) || [])[0];
 if (!PHONE) throw new Error("index.html 裡找不到電話（畫面上的寫法是 05-5339369）");
 
@@ -184,22 +196,38 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 .band.s30{--ics:30px}
 .band.s16{--ics:16px}
 .band.s14{--ics:14px}
-.id{display:flex;align-items:center;gap:16px;padding-bottom:18px}
-.id svg{color:${DEEP.general}}
+.id{padding-bottom:18px}
 .id b{font-size:31px;font-weight:700;letter-spacing:.05em}
-.id em{font-style:normal;font-size:31px;color:${SOFT};margin-left:auto;letter-spacing:.14em}
 .rule{height:1px;background:${RULE}}
+/* ⚠⚠⚠ 2026-09-07 使用者：「最下面的電話和國定假日那段文字對齊。」
+   基線對齊（原本那樣）**不等於看起來對齊** —— 兩邊字級不一樣（23 vs 31），
+   而中文的字面中線在基線上方約 0.345em、阿拉伯數字是 capHeight 的一半，
+   兩者離基線的距離差了好幾 px，而眼睛讀的是**字面中線**不是基線（第九節第 9 條）。
+   所以 --tel-dy 是量出來的：把號碼整組往下推到「兩邊的字面中線同一條」。
+   ⚠ 那個值不寫死，每次出圖現量（字級一改自己跟著對）。
+   ⚠⚠ .no 刻意**不是** flex 容器 —— 裡面第一個是 svg，flex 容器的基線會取第一個
+      項目的下緣，整條 .tel 的 baseline 對齊會壞掉。話筒用 inline-block 走文字流。 */
 .tel{display:flex;align-items:baseline;gap:16px;padding-top:18px;
      font-size:23px;color:${SOFT};letter-spacing:.02em}
-.tel b{font-size:31px;font-weight:400;color:${DEEP.general};margin-left:auto;letter-spacing:.03em}
+.tel .no{margin-left:auto;white-space:nowrap;position:relative;top:var(--tel-dy,0px);
+         font-size:31px;color:${DEEP.general};letter-spacing:.03em}
+/* 話筒吃 currentColor ＝ 和號碼同一個顏色（使用者：「跟文字一樣墨色就好」） */
+.tel .no svg{width:${ICOPX}px;height:${ICOPX}px;display:inline-block;overflow:visible;
+             margin-right:11px;transform:translateY(var(--ico-dy,0px));
+             fill:none;stroke:currentColor;stroke-width:3.2;
+             stroke-linecap:round;stroke-linejoin:round}
+/* ⚠ non-scaling-stroke 要下在圖形上、不是 <svg> 上（這個屬性不會繼承） */
+.tel .no svg path{vector-effect:non-scaling-stroke}
 
 /* 格子 */
 table{width:100%;border-collapse:collapse;table-layout:fixed}
 col.lab{width:176px}
 thead th{font-size:27px;font-weight:400;color:${SOFT};padding:11px 0 7px;letter-spacing:.1em}
 tbody td{text-align:center;vertical-align:middle;padding:8px 4px}
-tbody th{text-align:left;padding:8px 8px 8px 0;font-weight:400;line-height:1.2}
-tbody th b{display:block;font-size:26px;font-weight:400;letter-spacing:.1em}
+/* 2026-09-07 使用者：「早午晚跟時間不用斷行　空間還很夠用。」
+   ⚠ 那一欄 176px，收起來之後量到約 129px —— 出圖時有一道守門在確認它沒有被折行。 */
+tbody th{text-align:left;padding:8px 8px 8px 0;font-weight:400;line-height:1.2;white-space:nowrap}
+tbody th b{font-size:26px;font-weight:400;letter-spacing:.1em;margin-right:7px}
 tbody th i{font-style:normal;font-size:19px;color:${SOFT}}
 tbody tr + tr th, tbody tr + tr td{border-top:1px solid ${RULE}}
 .nm{font-size:23px;line-height:1.34;letter-spacing:.02em}
@@ -242,11 +270,12 @@ svg.mk{width:100%;height:100%;display:block}
 
 const shell = (inner, cls = "", gap = null) => `<div class="sheet"><div class="band ${cls}"${
   gap ? ` style="--icgx:${gap[0]}px;--icgy:${gap[1]}px"` : ""}>
-  <div class="id">${MARK}<b>芳仁牙醫診所</b><em>看診時間</em></div>
+  <div class="id"><b>${TITLE}</b></div>
   <div class="rule"></div>
   ${inner}
   <div class="rule"></div>
-  <div class="tel">${D.note.replace(/。$/, "")}<b>${PHONE}</b></div>
+  <div class="tel" style="--tel-dy:${TELDY.toFixed(2)}px;--ico-dy:${ICODY.toFixed(2)}px">${
+    D.note.replace(/。$/, "")}<span class="no">${TELSVG}${PHONE}</span></div>
 </div></div>`;
 
 /* Ⓖ 格子：日子當欄、早午晚當列，格子裡直接寫科別。
@@ -480,6 +509,27 @@ for (const id of Object.keys(SHAPE).sort((a, b) => INKA[b] - INKA[a]))
     + `${INKA[id].toFixed(0).padStart(4)} px　${(INKA[id] / INKA.general * 100).toFixed(0).padStart(3)}%`
     + `　等重要 ${(30 * wScale(id, "even")).toFixed(0)}px（半 ${(30 * wScale(id, "half")).toFixed(0)}px）`);
 
+/* ⚠⚠⚠ 頁尾兩塊字的「字面中線」現量一次（第九節第 9 條）。
+ *   ・號碼往下推多少 ＝ 號碼的字面中線離基線多高 − 那句話的
+ *   ・話筒往下推多少 ＝ 它自己的盒心（inline-block 的下緣坐在基線上 → 盒心在基線上方
+ *     ICOPX/2）− 號碼的字面中線
+ * ⚠ 要在 400px 上量再等比例縮 —— Blink 回來的 actualBoundingBox 以 1/64 em 為階，
+ *   直接在 23／31px 上量會被進位吃掉（同 spec-tag-fit 那一輪）。 */
+const telAlign = await page.evaluate(({ font, note, phone, ico, fsNote, fsTel }) => {
+  const cx = document.createElement("canvas").getContext("2d");
+  const S = 400;
+  const mid = (txt) => { cx.font = `${S}px ${font}`; const m = cx.measureText(txt);
+    return (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2 / S; };
+  const n = mid(note) * fsNote, p = mid(phone) * fsTel;
+  return { noteMid: n, telMid: p, telDy: p - n, icoDy: ico / 2 - p };
+}, { font: '"Noto Sans TC","WenQuanYi Zen Hei",sans-serif',
+     note: D.note.replace(/。$/, ""), phone: PHONE, ico: ICOPX, fsNote: 23, fsTel: 31 });
+TELDY = telAlign.telDy; ICODY = telAlign.icoDy;
+console.log(`\n── 頁尾對齊（字面中線離基線）──`);
+console.log(`  那句話 23px　${telAlign.noteMid.toFixed(2)}px`);
+console.log(`  號碼 31px　　${telAlign.telMid.toFixed(2)}px　→ 號碼往下 ${TELDY.toFixed(2)}px`);
+console.log(`  話筒 ${ICOPX}px　　盒心 ${(ICOPX / 2).toFixed(2)}px　→ 話筒往下 ${ICODY.toFixed(2)}px`);
+
 const measure = async (mode, px) => {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${grid(mode, px)}`);
   const b = await page.locator(".band").boundingBox();
@@ -531,12 +581,47 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
     .filter(el => el.getBoundingClientRect().width
       > el.closest("td").getBoundingClientRect().width - 8).length);
   if (wide) throw new Error(`${tag} 有 ${wide} 列圖案撐破格子`);
+  /* ⚠ 早午晚與時間收成一行之後，那一欄不可以被折 —— 折了不報錯，只是靜靜地變兩行
+     （而「空間夠不夠」正是使用者這一項的前提）。兩件一起驗：沒有橫向溢位，
+     而且 <b> 與 <i> 落在同一條線上。 */
+  const lab = await page.evaluate(() => {
+    const ths = [...document.querySelectorAll("tbody th")];
+    const bad = ths.filter(th => th.scrollWidth > th.clientWidth + .5
+      /* ⚠ 不可以比 top —— 26px 與 19px 兩個行內盒同一條基線、top 本來就不一樣。
+         同一行的判準是「時間在早午晚的右邊」，折行的話它會掉到下一行的行首。 */
+      || th.querySelector("i").getBoundingClientRect().left
+         < th.querySelector("b").getBoundingClientRect().right - .5).length;
+    const w = Math.max(...ths.map(th => {
+      const b = th.querySelector("b").getBoundingClientRect();
+      const i = th.querySelector("i").getBoundingClientRect();
+      return i.right - b.left;
+    }));
+    return { bad, w };
+  });
+  if (lab.bad) throw new Error(`${tag} 有 ${lab.bad} 個時段標籤被折行`);
   const over = await page.evaluate(() => [...document.querySelectorAll(".sheet *")]
     .filter(el => { const r = el.getBoundingClientRect();
       return r.width && (r.right > 1080.5 || r.left < -.5); }).length);
   if (over) throw new Error(`${tag} 有 ${over} 個元素溢出`);
+  /* 頁尾對齊驗收：兩塊字的**字面中線**要落在同一條線上（用 Range 量墨，不量盒） */
+  const tel = await page.evaluate(() => {
+    const el = document.querySelector(".tel");
+    const rng = document.createRange();
+    rng.setStart(el.firstChild, 0); rng.setEnd(el.firstChild, el.firstChild.length);
+    const a = rng.getBoundingClientRect();
+    const no = el.querySelector(".no");
+    rng.selectNodeContents(no.lastChild);
+    const b2 = rng.getBoundingClientRect();
+    const ic = no.querySelector("svg").getBoundingClientRect();
+    return { note: a.top + a.height / 2, num: b2.top + b2.height / 2,
+             ico: ic.top + ic.height / 2 };
+  });
+  /* 對不齊就不要出圖（--tel-dy 是算出來的，字型或字級一改它要自己跟上） */
+  if (Math.abs(tel.note - tel.num) > 1 || Math.abs(tel.num - tel.ico) > 1)
+    throw new Error(`${tag} 的頁尾沒對齊：那句話 ${tel.note.toFixed(1)}`
+      + `　號碼 ${tel.num.toFixed(1)}　話筒 ${tel.ico.toFixed(1)}`);
   await page.screenshot({ path: path.join(OUT, `post-hours-${tag}.png`) });
-  made.push([tag, b]);
+  made.push([tag, b, lab.w, tel]);
 }
 
 /* ---------- 主頁那三格（裁切模擬） ---------- */
@@ -546,11 +631,13 @@ const cell = (f, w, h) =>
      <img src="data:image/png;base64,${fs.readFileSync(path.join(OUT, f)).toString("base64")}"
           style="width:100%;height:100%;object-fit:cover;display:block"></div>`;
 const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 410 } });
-for (const [tag, big] of [["w2", "post-hours-mix-half-a16.png"], ["col", "post-hours-icol.png"]]) {
+/* ⚠ 大格與兩個小格一律放**定案那一張**（a11）——這一格是「主頁看起來長怎樣」，
+   不是版本比較；col 那一版留著只是為了讓人看見直排的代價。 */
+for (const [tag, big] of [["w2", "post-hours-mix-half-a11.png"], ["col", "post-hours-icol.png"]]) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
     <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
       ${cell(big, PW, 409)}
-      <div style="display:flex;gap:3px">${cell("post-hours-mix-half-a11.png", 410, 410)}${cell("post-hours-mix-half-a22.png", 410, 410)}</div>
+      <div style="display:flex;gap:3px">${cell("post-hours-mix-half-a11.png", 410, 410)}${cell("post-hours-mix-half-a11.png", 410, 410)}</div>
     </div>`);
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
   await page2.screenshot({ path: path.join(OUT, `profile-3up-${tag}.png`) });
@@ -580,6 +667,12 @@ console.log("\n── 出圖 ──");
 for (const [t, b] of made)
   console.log(`  post-hours-${t}.png　內容 ${b.y.toFixed(0)}~${(b.y + b.height).toFixed(0)}`
     + `（安全帶 ${TOP}~${BOT}，餘 ${(b.y - TOP).toFixed(0)}）`);
+const m0 = made.find(m => m[0] === "mix-half-a11");
+console.log(`\n── 定案那張的兩件版面 ──`);
+console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 176，沒有折行）`);
+console.log(`  頁尾：那句話的中線 ${m0[3].note.toFixed(1)}　號碼 ${m0[3].num.toFixed(1)}`
+  + `　話筒 ${m0[3].ico.toFixed(1)}　→ 差 ${Math.abs(m0[3].note - m0[3].num).toFixed(2)}`
+  + ` / ${Math.abs(m0[3].num - m0[3].ico).toFixed(2)}px`);
 console.log(`  profile-3up.png`);
 console.log(`\n文字 ${contrast.length} 項全部過 AA（最低 ${
   Math.min(...contrast.map(c => c[1])).toFixed(2)}）`);

@@ -65,10 +65,60 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <div class="pv-wrap">
 
   <h1>LINE 貼文的看診時間圖
-    <span>半 ＋ 齒顎矯正二午 ＋ 間距與對齊　2026-09-07</span></h1>
-  <p class="pv-lead"><b>齒顎矯正・禮拜二下午</b>已經加進去了——
+    <span>定案 Ⓖ1 ＋ 版面四件　2026-09-07</span></h1>
+  <p class="pv-lead">這一輪定的是 <b>Ⓖ1 等寬格 ＋ 間距 11</b>，
+    加上你點名的<b>版面四件</b>與<b>八格圖案的順序</b>。<br>
+    <b>齒顎矯正・禮拜二下午</b>也已經加進去了——
     <b>站上的門診表同一次改掉了</b>（那是這張圖唯一的資料出處，
     七科著陸頁與結構化資料都跟著更新）。</p>
+
+  <h2 class="pv-h2">定案<em>Ⓖ1</em>
+    <span class="t">等寬格 ＋ 間距 11 ＋ 版面四件</span></h2>
+  <div class="pv-shot">
+    <img src="post-hours-mix-half-a11.png" width="1080" height="1080"
+      alt="看診時間圖：標題芳仁牙醫開診時段，格子表每一節用科別記號，頁尾話筒與電話">
+  </div>
+  <p class="pv-cap">整塊內容落在 <span class="n">291 ~ 789</span>，
+    主頁大格看得到的是 <span class="n">271.5 ~ 808.5</span>——<b>上下各餘 20px</b>
+    （改動前只餘 9px，拿掉大 logo 換來的）。</p>
+
+  <h2 class="pv-h2">版面那四件<span class="t">每一件都量過</span></h2>
+  <p class="pv-lead"><b>① 左上的大 logo 拿掉，直接寫「芳仁牙醫開診時段」。</b><br>
+    所以這張圖上<b>一顆大標誌都沒有</b>——品牌改由格子裡那些科別記號扛
+    （七顆全部是 <code>brand/shapes/</code> 的形狀）。<br>
+    「看診時間」順手換成<b>開診時段</b>＝站上門診表那排標記第一顆用的字。<br><br>
+
+    <b>② 早／午／晚和時間收成一行。</b><br>
+    收起來之後那一行量到 <span class="n">148.7px</span>，欄寬 176px——
+    <b>沒有折行</b>（出圖時有一道守門在確認，折了會停下來不出圖）。<br><br>
+
+    <b>③ 電話和「國定假日」那句話對齊。</b><br>
+    ⚠ 原本就已經是<b>基線對齊</b>了，但那不等於看起來對齊——
+    兩邊字級不一樣（23 與 31），而<b>眼睛讀的是字面中線不是基線</b>：
+    那句中文的字面中線在基線上方 <span class="n">8.09px</span>、
+    號碼是 <span class="n">10.66px</span>，所以號碼看起來一直偏高。<br>
+    把號碼整組往下推 <b>2.57px</b> 之後，量到兩邊的字面中線只差
+    <b>0.44px</b>。<br>
+    ⚠ 那個位移<b>不是寫死的</b>，每次出圖現量一次（字級一改自己跟著對）。<br><br>
+
+    <b>④ 號碼前面一顆話筒，和號碼同一個顏色。</b><br>
+    28px、線條空心、筆畫 3.2px——比例是站上頁首那顆話筒等比例放大來的
+    （那顆 11.33px 配 12.48px 的字，這裡 28px 配 31px 的號碼）。<br>
+    幾何直接從 <code>index.html</code> 頁首那顆讀回來，<b>不抄第二份</b>；
+    素材出處 Lucide「phone」ISC 授權。<br>
+    它吃 <code>currentColor</code>＝和號碼<b>完全同一個顏色</b>，
+    自己往下 3.34px 讓盒心對上號碼的字面中線（差 0.16px）。<br>
+    ⚠ 現在號碼是<b>一般牙科的深階綠</b>（站上原本就是這個色），所以話筒也是綠的。
+    要整組改成純墨色的話，跟我說一聲、改一行就好。</p>
+
+  <h2 class="pv-h2">八格圖案的順序<span class="t">照你逐格指定的</span></h2>
+  <p class="pv-lead">二午〔一般／兒牙・矯正〕　二晚〔牙周／兒牙・矯正〕<br>
+    三午〔一般・顯微／兒牙・假牙〕　三晚〔一般・顯微／兒牙・矯正〕<br>
+    四午〔兒牙・口外〕　四晚〔牙周／兒牙・口外〕<br>
+    五午〔牙周／一般・假牙〕　五晚〔牙周／一般・矯正〕<br>
+    ⚠ 順序是改<b>站上門診表的 <code>data-in</code></b>（那是唯一的出處），
+    不是在這支腳本裡另外排一份。<b>站上那張表看不出差別</b>——
+    那邊一格只畫一顆點，順序沒有畫面上的作用。</p>
 
   <h2 class="pv-h2">⚠ 「間距」和「對齊」是兩件事
     <span class="t">拉開間距不會讓它對齊</span></h2>
@@ -79,47 +129,31 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     逐像素量過（同一欄、同樣顆數的行，圖案中心的最大差）：<br>
     沒有等寬格 <span class="n">2.0 ~ 7.0px</span>　／　有等寬格 <b>0.0 ~ 0.5px</b>。</p>
 
-  <h2 class="pv-h2">Ⓖ2 等寬格 ＋ 間距 16<em>建議</em>
-    <span class="t">對齊了，也比原本鬆</span></h2>
+  <h2 class="pv-h2">擺進主頁那三格</h2>
   <div class="pv-shot">
-    <img src="post-hours-mix-half-a16.png" width="1080" height="1080"
-      alt="格子表：每一顆圖案給一樣寬的格子，圖案間距 16px">
+    <img src="profile-3up-w2.png" width="823" height="823" loading="lazy"
+      alt="主頁三格模擬：大格與兩個小格都是定案那一張">
   </div>
-  <p class="pv-cap">同一欄不同列的圖案落在同一組刻度上。</p>
+  <p class="pv-cap">大格 823×409 只看得到中間 <b>537 列</b>，
+    上下各切掉 271——所以標題與電話一定要留在那條帶子裡。</p>
 
-  <h2 class="pv-h2">Ⓖ1 等寬格 ＋ 間距 11
-    <span class="t">只對齊，鬆緊維持原本</span></h2>
+  <h2 class="pv-h2">保留：間距的另外兩格</h2>
   <div class="pv-shot">
-    <img src="post-hours-mix-half-a11.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：等寬格，圖案間距維持 11px">
+    <img src="post-hours-mix-half-a16.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：等寬格，圖案間距 16px">
   </div>
-  <p class="pv-cap">⚠ 等寬格自己就已經把兩顆圓的推開了
-    （42 減 30 ＝ 中間多 12px），所以這一格看起來也比改動前鬆。</p>
-
-  <h2 class="pv-h2">Ⓖ3 等寬格 ＋ 間距 22
-    <span class="t">最鬆</span></h2>
+  <p class="pv-cap">Ⓖ2 間距 16。</p>
   <div class="pv-shot">
     <img src="post-hours-mix-half-a22.png" width="1080" height="1080" loading="lazy"
       alt="格子表：等寬格，圖案間距 22px">
   </div>
-  <p class="pv-cap">整塊高了 6px，離安全帶還剩 3px——<b>這是這條尺的地板</b>，
-    再鬆就會被主頁大格切到。</p>
-
-  <h2 class="pv-h2">Ⓖ0 對照：沒有等寬格
-    <span class="t">＝ 你昨天看到的那一版，加上矯正二午</span></h2>
+  <p class="pv-cap">Ⓖ3 間距 22。整塊高了 6px，
+    離安全帶還剩 <span class="n">14px</span>——<b>這是這條尺的地板</b>。</p>
   <div class="pv-shot">
     <img src="post-hours-mix-half.png" width="1080" height="1080" loading="lazy"
       alt="格子表：沒有等寬格，有矯正的那一列和別的列對不齊">
   </div>
-  <p class="pv-cap">看第二欄與第五欄——<b>有矯正的那一列整組往旁邊挪</b>。</p>
-
-  <h2 class="pv-h2">擺進主頁那三格</h2>
-  <div class="pv-shot">
-    <img src="profile-3up-w2.png" width="823" height="823" loading="lazy"
-      alt="主頁三格模擬：大格是建議那一版，兩個小格是間距 11 與 22">
-  </div>
-  <p class="pv-cap">大格 823×409 只看得到中間 <b>537 列</b>，
-    上下各切掉 271——所以品牌與電話一定要留在那條帶子裡。</p>
+  <p class="pv-cap">Ⓖ0 沒有等寬格。看第二欄與第五欄——<b>有矯正的那一列整組往旁邊挪</b>。</p>
 
   <h2 class="pv-h2">保留：份量的另外兩格</h2>
   <div class="pv-shot">
