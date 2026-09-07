@@ -1125,39 +1125,6 @@
                 ]
               }
             ]
-          },
-          {
-            "type": "box",
-            "layout": "vertical",
-            "borderColor": "#507B0D",
-            "borderWidth": "1px",
-            "cornerRadius": "6px",
-            "height": "40px",
-            "justifyContent": "center",
-            "action": {
-              "type": "uri",
-              "label": "讀文章",
-              "uri": "https://fangren.net/posts/missing-tooth/"
-            },
-            "contents": [
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "justifyContent": "center",
-                "alignItems": "center",
-                "spacing": "md",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "讀文章",
-                    "color": "#507B0D",
-                    "size": "md",
-                    "weight": "bold",
-                    "flex": 0
-                  }
-                ]
-              }
-            ]
           }
         ]
       }
@@ -1247,39 +1214,6 @@
                     "type": "text",
                     "text": "看大圖",
                     "color": "#FFFFFF",
-                    "size": "md",
-                    "weight": "bold",
-                    "flex": 0
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "box",
-            "layout": "vertical",
-            "borderColor": "#087D6F",
-            "borderWidth": "1px",
-            "cornerRadius": "6px",
-            "height": "40px",
-            "justifyContent": "center",
-            "action": {
-              "type": "uri",
-              "label": "讀文章",
-              "uri": "https://fangren.net/posts/missing-tooth/"
-            },
-            "contents": [
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "justifyContent": "center",
-                "alignItems": "center",
-                "spacing": "md",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "讀文章",
-                    "color": "#087D6F",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0

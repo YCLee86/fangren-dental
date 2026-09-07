@@ -7028,3 +7028,35 @@ caries `#CF3600`→`#CF3700`）—— 那是取樣雜訊變少，不是換色；
 載不到的圖 0、死錨 0、JS 錯 0、16 張圖都畫在它宣告的尺寸上。
 ⚠ 量「載不到的圖」時**要先把整頁捲一遍** —— 第一張以外都是 `loading="lazy"`，
 不捲的話 13 張的 `img.complete` 是 `false`，會誤報成整頁的圖都壞了。
+
+### 30-12、植牙與活動假牙那兩格的「讀文章」拿掉了（2026-09-07）
+
+使用者：「植牙 活動假牙的文章連結和按鈕先拿掉」。兩張原本都連
+`/posts/missing-tooth/`（〈缺牙之後〉），現在 `drafts/line-oa/health-carousel.mjs` 的
+`post` 給 `null` —— 那一支本來就寫著「`if (c.post)` 才 push 那顆鈕」，所以**資料改一個字、
+版型一行都不必動**，卡片自動收成「只有看大圖」那一種形狀（同美白與拍片輻射兩張）。
+
+- 兩張的高度 432 → **388 CSS px**（少 44 ＝ 按鈕 40 ＋ `spacing: sm` 4），
+  輪播其餘十格逐格沒動，仍然是 12 格。
+- ⚠ **是「先」拿掉不是作廢**：把那兩行 `post` 改回 `"/posts/missing-tooth/"` 再跑一次
+  管線就回來了。程式碼裡那段註解寫著怎麼還原。
+
+⚠⚠ **順手改掉一句會說謊的話**：`build-spec.mjs` 的表格對 `post === null` 一律印
+「站上還沒有」—— 那對美白與拍片輻射是對的，**對這兩張是錯的**（站上有〈缺牙之後〉，
+是診所指定先不放）。改成「**沒有這顆鈕**」（陳述這一格的事實，四張都成立），
+表格底下那一句拆成兩種理由。
+**通則：一個欄位的空值可能有好幾種成因，標籤要說「現在是什麼樣子」，
+不要替它解釋「為什麼」** —— 解釋只有在成因唯一時才寫得對。
+
+跑過的管線（換文案或連結都是這一條）：
+
+```
+node drafts/line-oa/health-carousel.mjs d
+node drafts/channels/publish-handouts.mjs
+cd drafts/line-oa && node flex-preview.mjs health-carousel-d.json --row
+rm -f cards/preview-*.png && for f in cards/*.json; do node flex-preview.mjs "$f"; done
+node drafts/channels/oa-shots.mjs && node drafts/channels/build-spec.mjs && node drafts/channels/check-spec.mjs
+```
+
+驗收：守門全綠、八個寬度水平溢出 0／圖 0 張載不到／死錨 0／JS 錯 0、16 張圖都畫在
+它宣告的尺寸上；兩張卡的預覽圖打開看過，「讀文章」真的不在了。

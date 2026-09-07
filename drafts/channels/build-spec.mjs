@@ -313,7 +313,7 @@ const healthRows = hRows.map((r, i) => `<tr>
   <td>${r.big ? `<a href="${esc(r.big)}">${esc(r.big.split("/").pop())}</a>` : "—"}</td>
   <td>${r.post ? `<a href="${esc(r.post)}">${esc(r.post.replace("https://fangren.net", ""))}</a>`
       : r.other ? `<span class="s">〔鈕〕${esc(r.other[0])}</span><br><a href="${esc(r.other[1])}">${esc(r.other[1].replace("https://fangren.net", ""))}</a>`
-      : `<span class="n">站上還沒有</span>`}</td>
+      : `<span class="n">沒有這顆鈕</span>`}</td>
 </tr>`).join("");
 
 /* ⚠⚠ ⑩⑪ 兩組本來只有表格，表格裡放不下卡片裡的每一行字 ——
@@ -484,8 +484,9 @@ ${sections}
     <tr><th>#</th><th>標題＆內文</th><th>頭圖</th><th>看大圖</th><th>讀文章</th></tr>
     ${healthRows}
   </table></div>
-  <p class="pv-note">⚠ <b>美白</b>與<b>拍片輻射</b>兩張沒有「讀文章」—— 站上還沒有對應的文章，那兩格只有一顆按鈕。<br>
-    ⚠ <b>智齒</b>與<b>手術照護</b>連到同一篇、<b>植牙</b>與<b>活動假牙</b>也是 —— 站上目前各只有一篇涵蓋那兩件事，不是填錯。<br>
+  <p class="pv-note">⚠ 有<b>四張沒有「讀文章」</b>，那四格只有一顆按鈕：<b>美白</b>與<b>拍片輻射</b>是站上還沒有對應的文章，
+    <b>植牙</b>與<b>活動假牙</b>是診所指定先不放。<br>
+    ⚠ <b>智齒</b>與<b>手術照護</b>連到同一篇 —— 站上目前只有一篇涵蓋那兩件事，不是填錯。<br>
     ⚠ 這一條<b>沒有</b>收尾到官網那一格（原本有）：十二格已經滿了，而官網的入口在
     ⑨ 診所資訊那張卡的第三顆按鈕「到網站看看　fangren.net」。</p>
   <h3>文字（十二格各一段，可以整段複製）</h3>

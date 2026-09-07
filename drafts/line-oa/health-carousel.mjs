@@ -96,7 +96,7 @@ const CARDS = [
     post: "/posts/wisdom-tooth/" },
   /* ⚠ 緊接在智齒後面：那一張講「該不該拔」，這一張講「拔完回家怎麼過」。
      ⚠⚠ 它和上一張連到同一篇（站上只有〈拔智齒之後〉在講術後照顧）——
-     已知的重複，同 implant／denture 都連 missing-tooth 那一組。 */
+     已知的重複，全表現在只剩這一組（implant／denture 那一組 2026-09-07 拿掉了）。 */
   { img: "surgcare", title: "牙齒手術照護須知",
     lead: "手術完那幾天怎麼過：紗布要咬多久、什麼時候冰敷什麼時候熱敷、能吃什麼、傷口怎麼清。",
     post: "/posts/wisdom-tooth/" },
@@ -106,12 +106,17 @@ const CARDS = [
   { img: "prosth", title: "假牙一體成型有啥好",
     lead: "什麼狀況需要做牙套、齒質要修掉多少；金屬、全瓷、全鋯各適合誰。",
     post: "/posts/crown-materials/" },
+  /* ⚠ 這兩張的文章連結與「讀文章」那顆按鈕 2026-09-07 由使用者指定**先拿掉**
+     （原本兩張都連 /posts/missing-tooth/〈缺牙之後〉）。post 給 null 就不會產生那顆鈕，
+     卡片只剩「看大圖」——和 whitening／xray 那幾張同一種形狀，不是壞掉。
+     ⚠ 是「先」拿掉不是作廢：要放回去就把底下那兩行 post 改回
+     "/posts/missing-tooth/"，重跑這一支再往下跑那條管線（見檔頭）。 */
   { img: "implant", fg: "ink", title: "植牙眉角停看聽",
     lead: "術前要先做假牙模擬和斷層掃描；骨頭整合需要時間，植體和假牙零件都要有認證。",
-    post: "/posts/missing-tooth/" },
+    post: null },
   { img: "denture", title: "活動假牙有眉角",
     lead: "假牙做好只是開始：牙齦適應、回診調整，還有怎麼吃、怎麼洗。",
-    post: "/posts/missing-tooth/" },
+    post: null },
   { img: "whitening", fg: "ink", title: "我的牙齒不夠白",
     lead: "噴砂拋光、居家藥劑、冷光美白差在哪；做完會不會回色、會不會敏感。",
     post: null },
