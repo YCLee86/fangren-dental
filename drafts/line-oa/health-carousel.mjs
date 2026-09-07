@@ -76,6 +76,12 @@ const solid = (v, sc = SCHEME, fg) => sc === "b" ? [v.frame, INK]
   : [v.fill, "#FFFFFF"];
 
 const CARDS = [
+  /* ⚠ 這一張排第一是刻意的：第一格是每個人都會看到的那一格，而它的受眾最廣
+     （牙周病不會痛，多數人不知道自己有）。它和下一張正好接成
+     「早期怎麼發現 → 拖到嚴重怎麼救」。 */
+  { img: "perioearly", title: "牙周疾病報你知",
+    lead: "牙周病不會痛，刷牙流血、口腔有味道就是警訊；早點發現，治療和追蹤都輕鬆很多。",
+    post: "/posts/gum-bleeding/" },
   { img: "perio", title: "嚴重牙周有救嗎",
     lead: "牙齒為什麼會搖、地基流失是怎麼回事；治療有哪些、能做什麼。",
     post: "/posts/perio-laser/" },
@@ -87,6 +93,12 @@ const CARDS = [
     post: "/posts/bioceramic/" },
   { img: "wisdom", title: "我的智齒該拔嗎",
     lead: "哪幾種智齒該處理、術前要看什麼、拔完要怎麼照顧。",
+    post: "/posts/wisdom-tooth/" },
+  /* ⚠ 緊接在智齒後面：那一張講「該不該拔」，這一張講「拔完回家怎麼過」。
+     ⚠⚠ 它和上一張連到同一篇（站上只有〈拔智齒之後〉在講術後照顧）——
+     已知的重複，同 implant／denture 都連 missing-tooth 那一組。 */
+  { img: "surgcare", title: "牙齒手術照護須知",
+    lead: "手術完那幾天怎麼過：紗布要咬多久、什麼時候冰敷什麼時候熱敷、能吃什麼、傷口怎麼清。",
     post: "/posts/wisdom-tooth/" },
   { img: "aligner", fg: "ink", title: "我可以做隱形矯正嗎",
     lead: "傳統矯正器和透明牙套差在哪：材質、功能、關縫，還有戴起來的感覺。",
@@ -171,12 +183,20 @@ const bubbles = PAIR
   ? CARDS.flatMap((c) => [make(c, "b", "Ⓑ 原色＋深墨字"), make(c, "d", "Ⓓ 原色＋白字")])
   : HEALTH.map((c) => make(c, SCHEME));
 
+/* ⚠⚠ 收尾那一格 2026-09-07 關掉了（使用者：「選單上在診所資訊已經有診所
+   網站的按鈕可以選了」）—— 那一天新增兩張紙本，十二張 ＋ 收尾 ＝ 13，
+   而 LINE 的 carousel 上限是 12 格。三條路裡他選了「拿掉收尾」，
+   理由是**出口沒有消失**：圖文選單「診所資訊」那張卡的第三顆按鈕就是
+   「到網站看看　fangren.net」。
+   ⚠ 底下整段留著沒刪，把這個常數改回 true 就回來了。 */
+const CLOSING = false;
+
 /* 收尾那一格：站上還有另外九篇 */
 const n = fs.readdirSync(path.join(ROOT, "posts")).filter((d) =>
   fs.existsSync(path.join(ROOT, "posts", d, "index.html"))).length;
 /* 收尾那一格不屬於任何一張紙本，用站上一般牙科的套色。
    ⚠ 比較用的 bd 不要它 —— 那一格沒有紙本、兩案長得一樣，擺進去只是佔位置。 */
-if (!PAIR) {
+if (!PAIR && CLOSING) {
 const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 const GREEN = html.match(/\[data-spec=["']general["'][^{]*\{[^}]*--accent:\s*(#[0-9a-fA-F]{6})/)[1].toUpperCase();
 bubbles.push({
@@ -224,5 +244,10 @@ if (!PAIR) {
   fs.writeFileSync(path.join(HERE, `admin-carousel${sfx}.json`), JSON.stringify(admin, null, 2) + "\n");
   console.log(`行政 ${ADMIN.length} 格　→ admin-carousel${sfx}.json`);
 }
+/* ⚠⚠ 12 格是 LINE 的硬上限，超過那一則整個送不出去（不是自動截掉）。
+   原本只有印出來，2026-09-07 加了這一道 —— 那天正好因為多兩張紙本撞到上限，
+   而「印一行字」是沒有人會看的守門。⚠ PAIR 是兩案並排的比較頁、不是要送的訊息，跳過。 */
+if (!PAIR && bubbles.length > 12)
+  throw new Error(`carousel ${bubbles.length} 格，超過 LINE 的 12 格上限 —— 要拆成兩條，或拿掉一格`);
 console.log(`案 ${SCHEME.toUpperCase()}　${bubbles.length} 格　${Buffer.byteLength(JSON.stringify(out))} bytes（LINE 上限 12 格／50KB）`);
 for (const c of CARDS) console.log(`  ${c.img.padEnd(10)} 框 ${C[c.img].frame} 填 ${solid(C[c.img], SCHEME, c.fg)[0]}${c.fg === "ink" ? "＋墨" : ""}  ${c.title.padEnd(11)}→ ${c.post ?? "⚠ 站上沒有對應文章"}`);

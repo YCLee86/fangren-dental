@@ -75,7 +75,7 @@ for (const d of fs.readdirSync(PV)) {
 /* ---- ⑤ 零 JS ----------------------------------------------------------- */
 if (/<script/i.test(after)) bad.push("出現 <script> —— 這一頁刻意零 JS");
 
-/* ---- ⑥ 衛教那二十張圖要真的上線 ---------------------------------------- */
+/* ---- ⑥ 衛教那幾十張圖要真的上線（張數跟著 CARDS 走，不要寫死） ---------- */
 try {
   execFileSync(process.execPath, [path.join(HERE, "publish-handouts.mjs"), "--check"],
     { cwd: ROOT, stdio: "pipe" });
@@ -83,6 +83,11 @@ try {
   bad.push("publish-handouts.mjs --check 沒過：\n    " + String(e.stdout || e.message).trim().replace(/\n/g, "\n    "));
 }
 
+const health = JSON.parse(fs.readFileSync(
+  path.join(ROOT, "drafts", "line-oa", "health-carousel-d.json"), "utf8")).contents.length;
+/* ⚠ 12 是 LINE 的硬上限，超過整條送不出去（health-carousel.mjs 也擋一次，兩邊都要）。 */
+if (health > 12) bad.push(`衛教輪播 ${health} 格，超過 LINE 的 12 格上限`);
+
 if (bad.length) { console.error("× " + bad.join("\n× ")); process.exit(1); }
 console.log(`✓ preview/line-handover/　和 JSON 重新產生的結果逐位相同、圖檔 ${urls.length} 個都在、`
-  + `內部連結都通、紅線 0、零 JS、衛教二十張都上線了`);
+  + `內部連結都通、紅線 0、零 JS、衛教 ${health} 格的圖都上線了`);

@@ -1,9 +1,9 @@
 {
   "aligner": {
-    "frame": "#4EBBFF",
-    "fill": "#007AC6",
-    "ink": "#0074BC",
-    "hero": "720:376"
+    "frame": "#4FBBFF",
+    "fill": "#007AC7",
+    "ink": "#0074BD",
+    "hero": "1200:628"
   },
   "booking": {
     "frame": "#55BBA8",
@@ -15,19 +15,19 @@
     "frame": "#3396F5",
     "fill": "#0B76DD",
     "ink": "#0A6FCF",
-    "hero": "720:376"
+    "hero": "1200:628"
   },
   "caries": {
-    "frame": "#CF3600",
-    "fill": "#CF3600",
-    "ink": "#CF3600",
-    "hero": "720:376"
+    "frame": "#CF3700",
+    "fill": "#CF3700",
+    "ink": "#CF3700",
+    "hero": "1200:628"
   },
   "denture": {
     "frame": "#0CC0AB",
     "fill": "#088476",
     "ink": "#087D6F",
-    "hero": "720:376"
+    "hero": "1200:628"
   },
   "fees": {
     "frame": "#A2D364",
@@ -39,36 +39,48 @@
     "frame": "#91DE18",
     "fill": "#55820E",
     "ink": "#507B0D",
-    "hero": "720:376"
+    "hero": "1200:628"
   },
   "perio": {
     "frame": "#0CC0AB",
     "fill": "#088476",
     "ink": "#087D6F",
-    "hero": "720:376"
+    "hero": "1200:628"
+  },
+  "perioearly": {
+    "frame": "#0CC0AB",
+    "fill": "#088476",
+    "ink": "#087D6F",
+    "hero": "1200:628"
   },
   "prosth": {
     "frame": "#FBA451",
     "fill": "#B95C04",
     "ink": "#AF5704",
-    "hero": "720:376"
+    "hero": "1200:628"
+  },
+  "surgcare": {
+    "frame": "#0CC0AB",
+    "fill": "#088476",
+    "ink": "#087D6F",
+    "hero": "1200:628"
   },
   "whitening": {
-    "frame": "#4FBAFF",
-    "fill": "#007AC9",
-    "ink": "#0073BD",
-    "hero": "720:376"
+    "frame": "#4FBBFF",
+    "fill": "#007AC7",
+    "ink": "#0074BD",
+    "hero": "1200:628"
   },
   "wisdom": {
     "frame": "#0CC0AB",
     "fill": "#088476",
     "ink": "#087D6F",
-    "hero": "720:376"
+    "hero": "1200:628"
   },
   "xray": {
     "frame": "#0CC0AB",
     "fill": "#088476",
     "ink": "#087D6F",
-    "hero": "720:376"
+    "hero": "1200:628"
   }
 }

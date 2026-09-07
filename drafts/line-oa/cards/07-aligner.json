@@ -3,14 +3,14 @@
   "size": "mega",
   "hero": {
     "type": "image",
-    "url": "https://fangren.net/assets/handout-prosth-hero.jpg",
+    "url": "https://fangren.net/assets/handout-aligner-hero.jpg",
     "size": "full",
-    "aspectRatio": "720:376",
+    "aspectRatio": "1200:628",
     "aspectMode": "cover",
     "action": {
       "type": "uri",
-      "label": "假牙一體成型有啥好",
-      "uri": "https://fangren.net/assets/handout-prosth.jpg"
+      "label": "我可以做隱形矯正嗎",
+      "uri": "https://fangren.net/assets/handout-aligner.jpg"
     }
   },
   "body": {
@@ -29,12 +29,12 @@
             "type": "text",
             "text": "▌",
             "size": "md",
-            "color": "#AF5704",
+            "color": "#0074BD",
             "flex": 0
           },
           {
             "type": "text",
-            "text": "假牙一體成型有啥好",
+            "text": "我可以做隱形矯正嗎",
             "size": "lg",
             "weight": "bold",
             "color": "#2A2C27",
@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "什麼狀況需要做牙套、齒質要修掉多少；金屬、全瓷、全鋯各適合誰。",
+        "text": "傳統矯正器和透明牙套差在哪：材質、功能、關縫，還有戴起來的感覺。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -62,14 +62,14 @@
       {
         "type": "box",
         "layout": "vertical",
-        "backgroundColor": "#FBA451",
+        "backgroundColor": "#4FBBFF",
         "cornerRadius": "6px",
         "height": "40px",
         "justifyContent": "center",
         "action": {
           "type": "uri",
           "label": "看大圖",
-          "uri": "https://fangren.net/assets/handout-prosth.jpg"
+          "uri": "https://fangren.net/assets/handout-aligner.jpg"
         },
         "contents": [
           {
@@ -82,7 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#FFFFFF",
+                "color": "#2A2C27",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0
@@ -94,7 +94,7 @@
       {
         "type": "box",
         "layout": "vertical",
-        "borderColor": "#AF5704",
+        "borderColor": "#0074BD",
         "borderWidth": "1px",
         "cornerRadius": "6px",
         "height": "40px",
@@ -102,7 +102,7 @@
         "action": {
           "type": "uri",
           "label": "讀文章",
-          "uri": "https://fangren.net/posts/crown-materials/"
+          "uri": "https://fangren.net/posts/orthodontics/"
         },
         "contents": [
           {
@@ -115,7 +115,7 @@
               {
                 "type": "text",
                 "text": "讀文章",
-                "color": "#AF5704",
+                "color": "#0074BD",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

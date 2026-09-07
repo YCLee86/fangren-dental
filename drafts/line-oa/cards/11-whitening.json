@@ -3,14 +3,14 @@
   "size": "mega",
   "hero": {
     "type": "image",
-    "url": "https://fangren.net/assets/handout-perio-hero.jpg",
+    "url": "https://fangren.net/assets/handout-whitening-hero.jpg",
     "size": "full",
-    "aspectRatio": "720:376",
+    "aspectRatio": "1200:628",
     "aspectMode": "cover",
     "action": {
       "type": "uri",
-      "label": "嚴重牙周有救嗎",
-      "uri": "https://fangren.net/assets/handout-perio.jpg"
+      "label": "我的牙齒不夠白",
+      "uri": "https://fangren.net/assets/handout-whitening.jpg"
     }
   },
   "body": {
@@ -29,12 +29,12 @@
             "type": "text",
             "text": "▌",
             "size": "md",
-            "color": "#087D6F",
+            "color": "#0074BD",
             "flex": 0
           },
           {
             "type": "text",
-            "text": "嚴重牙周有救嗎",
+            "text": "我的牙齒不夠白",
             "size": "lg",
             "weight": "bold",
             "color": "#2A2C27",
@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "牙齒為什麼會搖、地基流失是怎麼回事；治療有哪些、能做什麼。",
+        "text": "噴砂拋光、居家藥劑、冷光美白差在哪；做完會不會回色、會不會敏感。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -62,14 +62,14 @@
       {
         "type": "box",
         "layout": "vertical",
-        "backgroundColor": "#0CC0AB",
+        "backgroundColor": "#4FBBFF",
         "cornerRadius": "6px",
         "height": "40px",
         "justifyContent": "center",
         "action": {
           "type": "uri",
           "label": "看大圖",
-          "uri": "https://fangren.net/assets/handout-perio.jpg"
+          "uri": "https://fangren.net/assets/handout-whitening.jpg"
         },
         "contents": [
           {
@@ -82,40 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#FFFFFF",
-                "size": "md",
-                "weight": "bold",
-                "flex": 0
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "box",
-        "layout": "vertical",
-        "borderColor": "#087D6F",
-        "borderWidth": "1px",
-        "cornerRadius": "6px",
-        "height": "40px",
-        "justifyContent": "center",
-        "action": {
-          "type": "uri",
-          "label": "讀文章",
-          "uri": "https://fangren.net/posts/perio-laser/"
-        },
-        "contents": [
-          {
-            "type": "box",
-            "layout": "horizontal",
-            "justifyContent": "center",
-            "alignItems": "center",
-            "spacing": "md",
-            "contents": [
-              {
-                "type": "text",
-                "text": "讀文章",
-                "color": "#087D6F",
+                "color": "#2A2C27",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

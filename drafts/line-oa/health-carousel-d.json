@@ -6,9 +6,138 @@
       "size": "mega",
       "hero": {
         "type": "image",
+        "url": "https://fangren.net/assets/handout-perioearly-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1024:536",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "牙周疾病報你知",
+          "uri": "https://fangren.net/assets/handout-perioearly.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#087D6F",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "牙周疾病報你知",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "牙周病不會痛，刷牙流血、口腔有味道就是警訊；早點發現，治療和追蹤都輕鬆很多。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#0CC0AB",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-perioearly.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#087D6F",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/posts/gum-bleeding/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#087D6F",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
         "url": "https://fangren.net/assets/handout-perio-hero.jpg",
         "size": "full",
-        "aspectRatio": "720:376",
+        "aspectRatio": "1024:536",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -137,7 +266,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-calculus-hero.jpg",
         "size": "full",
-        "aspectRatio": "720:376",
+        "aspectRatio": "1024:536",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -266,7 +395,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-caries-hero.jpg",
         "size": "full",
-        "aspectRatio": "720:376",
+        "aspectRatio": "1024:536",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -290,7 +419,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#CF3600",
+                "color": "#CF3700",
                 "flex": 0
               },
               {
@@ -323,7 +452,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#CF3600",
+            "backgroundColor": "#CF3700",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -355,7 +484,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "borderColor": "#CF3600",
+            "borderColor": "#CF3700",
             "borderWidth": "1px",
             "cornerRadius": "6px",
             "height": "40px",
@@ -376,7 +505,7 @@
                   {
                     "type": "text",
                     "text": "讀文章",
-                    "color": "#CF3600",
+                    "color": "#CF3700",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0
@@ -395,7 +524,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-wisdom-hero.jpg",
         "size": "full",
-        "aspectRatio": "720:376",
+        "aspectRatio": "1024:536",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -522,9 +651,138 @@
       "size": "mega",
       "hero": {
         "type": "image",
+        "url": "https://fangren.net/assets/handout-surgcare-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1024:536",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "牙齒手術照護須知",
+          "uri": "https://fangren.net/assets/handout-surgcare.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#087D6F",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "牙齒手術照護須知",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "手術完那幾天怎麼過：紗布要咬多久、什麼時候冰敷什麼時候熱敷、能吃什麼、傷口怎麼清。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#0CC0AB",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-surgcare.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#FFFFFF",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#087D6F",
+            "borderWidth": "1px",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "讀文章",
+              "uri": "https://fangren.net/posts/wisdom-tooth/"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "讀文章",
+                    "color": "#087D6F",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
         "url": "https://fangren.net/assets/handout-aligner-hero.jpg",
         "size": "full",
-        "aspectRatio": "720:376",
+        "aspectRatio": "1024:536",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -548,7 +806,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#0074BC",
+                "color": "#0074BD",
                 "flex": 0
               },
               {
@@ -581,7 +839,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#4EBBFF",
+            "backgroundColor": "#4FBBFF",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -613,7 +871,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "borderColor": "#0074BC",
+            "borderColor": "#0074BD",
             "borderWidth": "1px",
             "cornerRadius": "6px",
             "height": "40px",
@@ -634,7 +892,7 @@
                   {
                     "type": "text",
                     "text": "讀文章",
-                    "color": "#0074BC",
+                    "color": "#0074BD",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0
@@ -653,7 +911,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-prosth-hero.jpg",
         "size": "full",
-        "aspectRatio": "720:376",
+        "aspectRatio": "1024:536",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -782,7 +1040,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-implant-hero.jpg",
         "size": "full",
-        "aspectRatio": "720:376",
+        "aspectRatio": "1024:536",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -911,7 +1169,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-denture-hero.jpg",
         "size": "full",
-        "aspectRatio": "720:376",
+        "aspectRatio": "1024:536",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -1040,7 +1298,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-whitening-hero.jpg",
         "size": "full",
-        "aspectRatio": "720:376",
+        "aspectRatio": "1024:536",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -1064,7 +1322,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#0073BD",
+                "color": "#0074BD",
                 "flex": 0
               },
               {
@@ -1097,7 +1355,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#4FBAFF",
+            "backgroundColor": "#4FBBFF",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -1136,7 +1394,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-xray-hero.jpg",
         "size": "full",
-        "aspectRatio": "720:376",
+        "aspectRatio": "1024:536",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -1214,103 +1472,6 @@
                     "type": "text",
                     "text": "看大圖",
                     "color": "#FFFFFF",
-                    "size": "md",
-                    "weight": "bold",
-                    "flex": 0
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "type": "bubble",
-      "size": "mega",
-      "hero": {
-        "type": "image",
-        "url": "https://fangren.net/assets/og-home.jpg",
-        "size": "full",
-        "aspectRatio": "1200:628",
-        "aspectMode": "cover",
-        "action": {
-          "type": "uri",
-          "label": "到網站看看",
-          "uri": "https://fangren.net/#topics"
-        }
-      },
-      "body": {
-        "type": "box",
-        "layout": "vertical",
-        "backgroundColor": "#F4F4F5",
-        "paddingAll": "16px",
-        "spacing": "md",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "baseline",
-            "spacing": "sm",
-            "contents": [
-              {
-                "type": "text",
-                "text": "▌",
-                "size": "md",
-                "color": "#3F654A",
-                "flex": 0
-              },
-              {
-                "type": "text",
-                "text": "還有其他問題",
-                "size": "lg",
-                "weight": "bold",
-                "color": "#2A2C27",
-                "flex": 0
-              }
-            ]
-          },
-          {
-            "type": "text",
-            "text": "站上另外還有 13 篇，從刷牙、蛀牙、缺牙到矯正，一科一科分好了。",
-            "size": "sm",
-            "color": "#5C5F57",
-            "wrap": true
-          }
-        ]
-      },
-      "footer": {
-        "type": "box",
-        "layout": "vertical",
-        "backgroundColor": "#F4F4F5",
-        "paddingAll": "16px",
-        "paddingTop": "0px",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "vertical",
-            "borderColor": "#3F654A",
-            "borderWidth": "1px",
-            "cornerRadius": "6px",
-            "height": "40px",
-            "justifyContent": "center",
-            "action": {
-              "type": "uri",
-              "label": "到網站看看　fangren.net",
-              "uri": "https://fangren.net/#topics"
-            },
-            "contents": [
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "justifyContent": "center",
-                "alignItems": "center",
-                "spacing": "md",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "到網站看看　fangren.net",
-                    "color": "#3F654A",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0

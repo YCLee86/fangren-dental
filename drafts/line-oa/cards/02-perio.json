@@ -3,14 +3,14 @@
   "size": "mega",
   "hero": {
     "type": "image",
-    "url": "https://fangren.net/assets/handout-aligner-hero.jpg",
+    "url": "https://fangren.net/assets/handout-perio-hero.jpg",
     "size": "full",
-    "aspectRatio": "720:376",
+    "aspectRatio": "1200:628",
     "aspectMode": "cover",
     "action": {
       "type": "uri",
-      "label": "我可以做隱形矯正嗎",
-      "uri": "https://fangren.net/assets/handout-aligner.jpg"
+      "label": "嚴重牙周有救嗎",
+      "uri": "https://fangren.net/assets/handout-perio.jpg"
     }
   },
   "body": {
@@ -29,12 +29,12 @@
             "type": "text",
             "text": "▌",
             "size": "md",
-            "color": "#0074BC",
+            "color": "#087D6F",
             "flex": 0
           },
           {
             "type": "text",
-            "text": "我可以做隱形矯正嗎",
+            "text": "嚴重牙周有救嗎",
             "size": "lg",
             "weight": "bold",
             "color": "#2A2C27",
@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "傳統矯正器和透明牙套差在哪：材質、功能、關縫，還有戴起來的感覺。",
+        "text": "牙齒為什麼會搖、地基流失是怎麼回事；治療有哪些、能做什麼。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -62,14 +62,14 @@
       {
         "type": "box",
         "layout": "vertical",
-        "backgroundColor": "#4EBBFF",
+        "backgroundColor": "#0CC0AB",
         "cornerRadius": "6px",
         "height": "40px",
         "justifyContent": "center",
         "action": {
           "type": "uri",
           "label": "看大圖",
-          "uri": "https://fangren.net/assets/handout-aligner.jpg"
+          "uri": "https://fangren.net/assets/handout-perio.jpg"
         },
         "contents": [
           {
@@ -82,7 +82,7 @@
               {
                 "type": "text",
                 "text": "看大圖",
-                "color": "#2A2C27",
+                "color": "#FFFFFF",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0
@@ -94,7 +94,7 @@
       {
         "type": "box",
         "layout": "vertical",
-        "borderColor": "#0074BC",
+        "borderColor": "#087D6F",
         "borderWidth": "1px",
         "cornerRadius": "6px",
         "height": "40px",
@@ -102,7 +102,7 @@
         "action": {
           "type": "uri",
           "label": "讀文章",
-          "uri": "https://fangren.net/posts/orthodontics/"
+          "uri": "https://fangren.net/posts/perio-laser/"
         },
         "contents": [
           {
@@ -115,7 +115,7 @@
               {
                 "type": "text",
                 "text": "讀文章",
-                "color": "#0074BC",
+                "color": "#087D6F",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

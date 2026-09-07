@@ -3,14 +3,14 @@
   "size": "mega",
   "hero": {
     "type": "image",
-    "url": "https://fangren.net/assets/handout-denture-hero.jpg",
+    "url": "https://fangren.net/assets/handout-surgcare-hero.jpg",
     "size": "full",
-    "aspectRatio": "720:376",
+    "aspectRatio": "1200:628",
     "aspectMode": "cover",
     "action": {
       "type": "uri",
-      "label": "活動假牙有眉角",
-      "uri": "https://fangren.net/assets/handout-denture.jpg"
+      "label": "牙齒手術照護須知",
+      "uri": "https://fangren.net/assets/handout-surgcare.jpg"
     }
   },
   "body": {
@@ -34,7 +34,7 @@
           },
           {
             "type": "text",
-            "text": "活動假牙有眉角",
+            "text": "牙齒手術照護須知",
             "size": "lg",
             "weight": "bold",
             "color": "#2A2C27",
@@ -44,7 +44,7 @@
       },
       {
         "type": "text",
-        "text": "假牙做好只是開始：牙齦適應、回診調整，還有怎麼吃、怎麼洗。",
+        "text": "手術完那幾天怎麼過：紗布要咬多久、什麼時候冰敷什麼時候熱敷、能吃什麼、傷口怎麼清。",
         "size": "sm",
         "color": "#5C5F57",
         "wrap": true
@@ -69,7 +69,7 @@
         "action": {
           "type": "uri",
           "label": "看大圖",
-          "uri": "https://fangren.net/assets/handout-denture.jpg"
+          "uri": "https://fangren.net/assets/handout-surgcare.jpg"
         },
         "contents": [
           {
@@ -102,7 +102,7 @@
         "action": {
           "type": "uri",
           "label": "讀文章",
-          "uri": "https://fangren.net/posts/missing-tooth/"
+          "uri": "https://fangren.net/posts/wisdom-tooth/"
         },
         "contents": [
           {
