@@ -65,10 +65,14 @@ const two  = n => SHORT2[n] || n.slice(0, 2);
    ⚠ 沒有選 r1c3：它和口腔外科的 r2c3 在小尺寸下只差 5.6%，是九顆裡最像的一對。 */
 const SHAPE = { general:"r1c1", perio:"r1c2", ortho:"r3c3", endo:"r3c1",
                 prosth:"r2c2", surg:"r2c3", kids:"r3c2" };
-const mark22 = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => [id,
+/* ⚠ 九顆全部讀進來（不是只讀用到的七顆）—— 這樣才換得動：`SHAPE` 只是
+   「哪一科用哪一顆」的對照表，臨時改一個字就能出一張換過形狀的圖。 */
+const ALLSH = ["r1c1","r1c2","r1c3","r2c1","r2c2","r2c3","r3c1","r3c2","r3c3"];
+const MK = Object.fromEntries(ALLSH.map(sh => [sh,
   fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${sh}.svg`), "utf8")
     .replace(/<svg([^>]*?)(width|height)="[\d.]+"/g, "<svg$1")
     .replace(/<svg/, '<svg class="mk"')]));
+const mark22 = new Proxy({}, { get: (_, id) => MK[SHAPE[id]] });
 
 /* 各形狀的長寬比：**從 viewBox 讀，不寫死**。
    ⚠⚠⚠ 2026-09-07 使用者：「齒顎矯正的 logo 細細的不太明顯，有其他可以換嗎。」
@@ -81,15 +85,17 @@ const mark22 = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => [id,
      那三顆**一顆都躲不掉**。換給誰只是把細的那一顆換一個科別（口外現在就是 227）。
    → 所以這一輪給的是**等重**那條路（同浮水印那一輪 22-13 的做法）：
      按墨面積算出每一顆自己的寬度，細長的放大、方的不動。 */
-const ASPECT = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => {
+const AR = Object.fromEntries(ALLSH.map(sh => {
   const vb = fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${sh}.svg`), "utf8")
     .match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
   if (!vb) throw new Error(`shape-${sh}.svg 讀不到 viewBox`);
-  return [id, +vb[1] / +vb[2]];
+  return [sh, +vb[1] / +vb[2]];
 }));
-/* 墨面積開瀏覽器現量（measureInk），量到之前是 null ＝ 不加權 */
-let INKA = null;
-const wScale = (id, wgt) => !wgt || !INKA ? 1
+const ASPECT = new Proxy({}, { get: (_, id) => AR[SHAPE[id]] });
+/* 墨面積開瀏覽器現量（九顆都量），量到之前是 null ＝ 不加權 */
+let INK9 = null;
+const INKA = new Proxy({}, { get: (_, id) => INK9 && INK9[SHAPE[id]] });
+const wScale = (id, wgt) => !wgt || !INK9 ? 1
   : Math.pow(INKA.general / INKA[id], wgt === "half" ? .25 : .5);
 /* ⚠⚠⚠ 2026-09-07 使用者：「感覺間距要拉開一點，因為有矯正的診，
    logo 看起來和其他沒有矯正的時段沒對齊。」
@@ -175,7 +181,10 @@ const TITLE = "芳仁牙醫開診時段";
    ⚠ 幾何直接從 index.html 頁首那顆讀回來，不抄第二份（同這一支其餘每一項資料）。 */
 const TELICO = (SRC.match(/<span class="ico"><svg viewBox="0 0 24 24"[^>]*>(<path d="M21\.5[^"]+"\/>)<\/svg><\/span>/) || [])[1];
 if (!TELICO) throw new Error("index.html 裡找不到話筒那條路徑（.c-tel 的 Lucide phone）");
-const ICOPX = 28;   /* ＝ 站上那顆 11.33px 等比例放大到 31px 的號碼旁（×2.484） */
+/* ⚠⚠ 2026-09-07 第二輪使用者：「電話移到國定假日那段文字下一行，電話 logo 改實心、
+   套墨色，電話號碼也套墨色，字級大小和國定假日那段文字一樣。」
+   所以頁尾現在是**兩行、都靠左、都 23px**：上行柔墨（那句話）、下行墨（話筒＋號碼）。 */
+const ICOPX = 21;   /* ＝ 站上那顆 11.33px 配 12.48px 的字，同比例放到 23px 的號碼旁 */
 const TELSVG = `<svg viewBox="0 0 24 24" aria-hidden="true">${TELICO}</svg>`;
 /* 這兩個是出圖前在瀏覽器裡現量的（見下面 telAlign），不寫死 */
 let TELDY = 0, ICODY = 0;
@@ -207,17 +216,12 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
    ⚠ 那個值不寫死，每次出圖現量（字級一改自己跟著對）。
    ⚠⚠ .no 刻意**不是** flex 容器 —— 裡面第一個是 svg，flex 容器的基線會取第一個
       項目的下緣，整條 .tel 的 baseline 對齊會壞掉。話筒用 inline-block 走文字流。 */
-.tel{display:flex;align-items:baseline;gap:16px;padding-top:18px;
-     font-size:23px;color:${SOFT};letter-spacing:.02em}
-.tel .no{margin-left:auto;white-space:nowrap;position:relative;top:var(--tel-dy,0px);
-         font-size:31px;color:${DEEP.general};letter-spacing:.03em}
-/* 話筒吃 currentColor ＝ 和號碼同一個顏色（使用者：「跟文字一樣墨色就好」） */
-.tel .no svg{width:${ICOPX}px;height:${ICOPX}px;display:inline-block;overflow:visible;
-             margin-right:11px;transform:translateY(var(--ico-dy,0px));
-             fill:none;stroke:currentColor;stroke-width:3.2;
-             stroke-linecap:round;stroke-linejoin:round}
-/* ⚠ non-scaling-stroke 要下在圖形上、不是 <svg> 上（這個屬性不會繼承） */
-.tel .no svg path{vector-effect:non-scaling-stroke}
+.tel{padding-top:16px;font-size:23px;color:${SOFT};letter-spacing:.02em;line-height:1.5}
+.tel .no{color:${INK};white-space:nowrap}
+/* 實心：fill 吃 currentColor、不描邊（站上那顆是空心的，這裡刻意不一樣） */
+.tel .no svg{width:${ICOPX}px;height:${ICOPX}px;display:inline-block;
+             margin-right:9px;transform:translateY(var(--ico-dy,0px));
+             fill:currentColor;stroke:none}
 
 /* 格子 */
 table{width:100%;border-collapse:collapse;table-layout:fixed}
@@ -251,9 +255,16 @@ svg.mk{width:100%;height:100%;display:block}
 .ic-row.col{gap:5px}
 
 
-.lg{padding-top:30px}
-.lg-row{display:flex;align-items:center;justify-content:center;gap:26px}
-.lg-row + .lg-row{margin-top:10px}
+/* ⚠⚠⚠ 2026-09-07 第二輪使用者：「各科別 logo 和文字說明那邊，每個科別再拉開一點，
+   上下兩行對齊（現在是分別置中）。」
+   ・原本是兩條各自 justify-content:center 的 flex —— **兩行各自置中，所以欄對不上**。
+   ・改成一個四欄的 grid（整塊置中、欄自己對齊），第二行的三個自然落在前三欄底下。
+   ・⚠ 七個科別名剛好都是四個字，所以四欄同寬；圖案再套上**和格子裡同一組等寬格**
+     （slotOf），文字的起點才會跟著對齊 —— 只對齊外框、圖案寬度不一樣的話，
+     字還是會各自參差。
+   ・間距 26 → 40px。 */
+.lg{padding-top:26px;display:grid;grid-template-columns:repeat(4,max-content);
+    column-gap:40px;row-gap:10px;width:max-content;margin-inline:auto}
 .lg-i{display:flex;align-items:center;gap:9px;font-size:23px;color:${INK};letter-spacing:.02em}
 .ic.sm{width:24px;height:24px}
 
@@ -274,8 +285,8 @@ const shell = (inner, cls = "", gap = null) => `<div class="sheet"><div class="b
   <div class="rule"></div>
   ${inner}
   <div class="rule"></div>
-  <div class="tel" style="--tel-dy:${TELDY.toFixed(2)}px;--ico-dy:${ICODY.toFixed(2)}px">${
-    D.note.replace(/。$/, "")}<span class="no">${TELSVG}${PHONE}</span></div>
+  <div class="tel" style="--ico-dy:${ICODY.toFixed(2)}px"><div>${
+    D.note.replace(/。$/, "")}</div><div class="no">${TELSVG}${PHONE}</div></div>
 </div></div>`;
 
 /* Ⓖ 格子：日子當欄、早午晚當列，格子裡直接寫科別。
@@ -324,10 +335,11 @@ const chunk = (a, n) => a.length ? [a.slice(0, n), ...chunk(a.slice(n), n)] : []
  *   所以它不是裝飾，是那張表讀不讀得懂的前提，不可以為了省高度砍掉。
  * ⚠ 排成 4 ＋ 3 兩行（七個一行放不下），刻意不讓它自己 wrap ——
  *   自己 wrap 會斷成 6＋1（招呼卡那一輪的圖例踩過）。 */
-const legend = (k = 1, flat = false, pal = null, wgt = null) => `<div class="lg">${[D.specs.slice(0, 4), D.specs.slice(4)]
-  .map(g => `<div class="lg-row">${g.map(sp =>
-    `<span class="lg-i"><span class="ic sm" style="${icSize(sp.id, 24, wgt)}color:${tone(sp.id, k, flat, pal)}">${mark22[sp.id]}</span>`
-    + `${disp(sp.name)}</span>`).join("")}</div>`).join("")}</div>`;
+const legend = (k = 1, flat = false, pal = null, wgt = null) => `<div class="lg">${
+  D.specs.map(sp =>
+    `<span class="lg-i"><span class="ic sm" style="${
+      icSize(sp.id, 24, wgt, wgt ? slotOf(24, wgt) : 0)}color:${tone(sp.id, k, flat, pal)}">${
+      mark22[sp.id]}</span>${disp(sp.name)}</span>`).join("")}</div>`;
 
 /* Ⓛ 一科一行：照「早／午／晚」各列出哪幾天 */
 const byPart = (id) => D.rows.map(r => ({
@@ -478,7 +490,7 @@ const made = [];
  */
 /* ⚠⚠ 墨面積現量、不寫死：把每一顆畫進 canvas 數暗像素（4 倍取樣再除回去）。
    同浮水印那一輪 22-13 —— 長寬比不同的形狀同寬就不同重。 */
-INKA = await page.evaluate(async (list) => {
+INK9 = await page.evaluate(async (list) => {
   const out = {}, S = 120;
   for (const [id, svg, ar] of list) {
     const img = new Image();
@@ -496,13 +508,13 @@ INKA = await page.evaluate(async (list) => {
     out[id] = ink / (S / 30) ** 2;
   }
   return out;
-}, Object.keys(SHAPE).map(id => [id,
-  /* ⚠ mark22 那條 /g 的正規式只吃掉了 width（第一次比對就把 <svg 用掉了），
+}, ALLSH.map(sh => [sh,
+  /* ⚠ MK 那條 /g 的正規式只吃掉了 width（第一次比對就把 <svg 用掉了），
      height 還留著 —— 注進 width/height 會變成重複屬性、整個 SVG 解不開
      （症狀是 canvas 丟 EncodingError）。這裡再剝一次。 */
-  mark22[id].replace(/\s(width|height)="[\d.]+"/g, ""), ASPECT[id]]));
-if (Object.values(INKA).some(v => !(v > 50)))
-  throw new Error("墨面積量出來不對：" + JSON.stringify(INKA));
+  MK[sh].replace(/\s(width|height)="[\d.]+"/g, ""), AR[sh]]));
+if (Object.values(INK9).some(v => !(v > 50)))
+  throw new Error("墨面積量出來不對：" + JSON.stringify(INK9));
 console.log("\n── 每一顆在 30px 方框裡的墨面積（等重要放多大）──");
 for (const id of Object.keys(SHAPE).sort((a, b) => INKA[b] - INKA[a]))
   console.log(`  ${SHAPE[id]}  ${disp(D.specs.find(s2 => s2.id === id).name).padEnd(6, "　")}`
@@ -515,20 +527,19 @@ for (const id of Object.keys(SHAPE).sort((a, b) => INKA[b] - INKA[a]))
  *     ICOPX/2）− 號碼的字面中線
  * ⚠ 要在 400px 上量再等比例縮 —— Blink 回來的 actualBoundingBox 以 1/64 em 為階，
  *   直接在 23／31px 上量會被進位吃掉（同 spec-tag-fit 那一輪）。 */
-const telAlign = await page.evaluate(({ font, note, phone, ico, fsNote, fsTel }) => {
+const telAlign = await page.evaluate(({ font, phone, ico, fsTel }) => {
   const cx = document.createElement("canvas").getContext("2d");
   const S = 400;
   const mid = (txt) => { cx.font = `${S}px ${font}`; const m = cx.measureText(txt);
     return (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2 / S; };
-  const n = mid(note) * fsNote, p = mid(phone) * fsTel;
-  return { noteMid: n, telMid: p, telDy: p - n, icoDy: ico / 2 - p };
+  const p = mid(phone) * fsTel;
+  return { telMid: p, icoDy: ico / 2 - p };
 }, { font: '"Noto Sans TC","WenQuanYi Zen Hei",sans-serif',
-     note: D.note.replace(/。$/, ""), phone: PHONE, ico: ICOPX, fsNote: 23, fsTel: 31 });
-TELDY = telAlign.telDy; ICODY = telAlign.icoDy;
-console.log(`\n── 頁尾對齊（字面中線離基線）──`);
-console.log(`  那句話 23px　${telAlign.noteMid.toFixed(2)}px`);
-console.log(`  號碼 31px　　${telAlign.telMid.toFixed(2)}px　→ 號碼往下 ${TELDY.toFixed(2)}px`);
-console.log(`  話筒 ${ICOPX}px　　盒心 ${(ICOPX / 2).toFixed(2)}px　→ 話筒往下 ${ICODY.toFixed(2)}px`);
+     phone: PHONE, ico: ICOPX, fsTel: 23 });
+ICODY = telAlign.icoDy;
+console.log(`\n── 頁尾：話筒對號碼的字面中線 ──`);
+console.log(`  號碼 23px 的字面中線離基線 ${telAlign.telMid.toFixed(2)}px`
+  + `　話筒盒心 ${(ICOPX / 2).toFixed(2)}px　→ 話筒往下 ${ICODY.toFixed(2)}px`);
 
 const measure = async (mode, px) => {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${grid(mode, px)}`);
@@ -538,6 +549,7 @@ const measure = async (mode, px) => {
 const COL = 26, W2 = 30;
 /* 圖案之間要多鬆（橫向 / 行距）。第一格 ＝ 2026-09-07 之前的值 */
 /* 三格間距 ＋ 要不要等寬格。第一格 ＝ 2026-09-07 之前的值（不等寬、11px） */
+const ALTP = [["alt-r2c1", "r2c1"], ["alt-r1c3", "r1c3"]];
 const GAPS = [["mix-half", 11, 9, false], ["mix-half-a11", 11, 9, true],
               ["mix-half-a16", 16, 12, true], ["mix-half-a22", 22, 15, true]];
 const mCol = await measure("icol", COL), mW2 = await measure("i2x2", W2);
@@ -565,6 +577,18 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
                               間距拉開治的是「讀不讀得出是幾顆」，對齊要另外處理（見下面 GAPS）。 */
                            ...GAPS.map(([tag, gx, gy, slot]) =>
                              [tag, grid("i2x2", W2, 1, false, "mix", "half", [gx, gy], slot)]),
+                           /* ⚠⚠⚠ 2026-09-07 第二輪使用者：「午診的假牙 logo 底部被切到了。」
+                              量過**沒有被裁**（見下面那道守門與規格頁上的數字）——
+                              r2c2 的下緣本來就是往上凹的，而它是七顆裡最矮的一顆
+                              （墨 31×23，別人 30×30），所以讀起來像被切掉。
+                              真的要治只能換形狀，而九顆裡沒用到的只剩兩顆，兩顆各有前科：
+                              r2c1 ＝ 上一輪被退回的那顆「哭哭」、r1c3 ＝ 和口外只差 5.6%。
+                              兩張都出出來讓他自己看。 */
+                           ...ALTP.map(([tag, sh]) => {
+                             const old = SHAPE.prosth; SHAPE.prosth = sh;
+                             const html = grid("i2x2", W2, 1, false, "mix", "half", [11, 9], true);
+                             SHAPE.prosth = old; return [tag, html];
+                           }),
                           ]) {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${html}`);
   /* ⚠⚠ 這一版存在的理由就是「乾淨 ＋ 大格看得到全部」，所以那件事要用量的。
@@ -599,6 +623,14 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
     return { bad, w };
   });
   if (lab.bad) throw new Error(`${tag} 有 ${lab.bad} 個時段標籤被折行`);
+  /* ⚠ 「圖案被切到」這件事要量：每一顆畫出來的盒都要塞得進它自己的格子。
+     （`.ic` 沒有 overflow:hidden，所以就算超出也不會真的被裁 —— 這道守門是
+      為了把「看起來像被切」和「真的被切」分開，下次再有人回報就有數字可以答。） */
+  const clip = await page.evaluate(() => [...document.querySelectorAll(".ic")].map(el => {
+    const g = el.querySelector("svg").getBoundingClientRect(), b = el.getBoundingClientRect();
+    return g.width > b.width + .5 || g.height > b.height + .5;
+  }).filter(Boolean).length);
+  if (clip) throw new Error(`${tag} 有 ${clip} 顆圖案比它自己的格子大`);
   const over = await page.evaluate(() => [...document.querySelectorAll(".sheet *")]
     .filter(el => { const r = el.getBoundingClientRect();
       return r.width && (r.right > 1080.5 || r.left < -.5); }).length);
@@ -607,19 +639,20 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
   const tel = await page.evaluate(() => {
     const el = document.querySelector(".tel");
     const rng = document.createRange();
-    rng.setStart(el.firstChild, 0); rng.setEnd(el.firstChild, el.firstChild.length);
+    rng.selectNodeContents(el.firstElementChild);
     const a = rng.getBoundingClientRect();
     const no = el.querySelector(".no");
-    rng.selectNodeContents(no.lastChild);
+    rng.selectNodeContents(no.lastChild);          /* 只選號碼那段文字 */
     const b2 = rng.getBoundingClientRect();
     const ic = no.querySelector("svg").getBoundingClientRect();
-    return { note: a.top + a.height / 2, num: b2.top + b2.height / 2,
-             ico: ic.top + ic.height / 2 };
+    /* 兩行要靠同一條左緣（＝「移到下一行」之後的對齊） */
+    return { note: a.left, num: b2.top + b2.height / 2,
+             ico: ic.top + ic.height / 2, left: no.getBoundingClientRect().left };
   });
   /* 對不齊就不要出圖（--tel-dy 是算出來的，字型或字級一改它要自己跟上） */
-  if (Math.abs(tel.note - tel.num) > 1 || Math.abs(tel.num - tel.ico) > 1)
-    throw new Error(`${tag} 的頁尾沒對齊：那句話 ${tel.note.toFixed(1)}`
-      + `　號碼 ${tel.num.toFixed(1)}　話筒 ${tel.ico.toFixed(1)}`);
+  if (Math.abs(tel.note - tel.left) > .5 || Math.abs(tel.num - tel.ico) > 1)
+    throw new Error(`${tag} 的頁尾沒對齊：兩行左緣 ${tel.note.toFixed(1)} / ${tel.left.toFixed(1)}`
+      + `　號碼中線 ${tel.num.toFixed(1)}　話筒中線 ${tel.ico.toFixed(1)}`);
   await page.screenshot({ path: path.join(OUT, `post-hours-${tag}.png`) });
   made.push([tag, b, lab.w, tel]);
 }
@@ -670,9 +703,14 @@ for (const [t, b] of made)
 const m0 = made.find(m => m[0] === "mix-half-a11");
 console.log(`\n── 定案那張的兩件版面 ──`);
 console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 176，沒有折行）`);
-console.log(`  頁尾：那句話的中線 ${m0[3].note.toFixed(1)}　號碼 ${m0[3].num.toFixed(1)}`
-  + `　話筒 ${m0[3].ico.toFixed(1)}　→ 差 ${Math.abs(m0[3].note - m0[3].num).toFixed(2)}`
-  + ` / ${Math.abs(m0[3].num - m0[3].ico).toFixed(2)}px`);
+{ /* 假牙重建那一顆到底有沒有被切：畫出來多大 vs 形狀本身的長寬比 */
+  const w = 30 * wScale("prosth", "half");
+  console.log(`  假牙重建 r2c2：畫出來 ${w.toFixed(1)}×${(w / AR.r2c2).toFixed(1)}px`
+    + `（格子 ${slotOf(30, "half").toFixed(1)}×30，塞得進去）`
+    + `　長寬比 ${AR.r2c2.toFixed(3)} 是形狀本身的`);
+}
+console.log(`  頁尾兩行左緣 ${m0[3].note.toFixed(1)} / ${m0[3].left.toFixed(1)}`
+  + `　話筒對號碼的字面中線差 ${Math.abs(m0[3].num - m0[3].ico).toFixed(2)}px`);
 console.log(`  profile-3up.png`);
 console.log(`\n文字 ${contrast.length} 項全部過 AA（最低 ${
   Math.min(...contrast.map(c => c[1])).toFixed(2)}）`);
