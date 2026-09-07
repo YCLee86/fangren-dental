@@ -69,7 +69,26 @@ for (const m of body.matchAll(/<img\s([^>]*)>/g)) {
   if (!at.includes("alt=")) bad.push(`${src} 沒有 alt`);
   nImg++;
 }
-if (nImg !== 18) bad.push(`找到 ${nImg} 張圖，該有 18 張`);
+if (nImg !== 17) bad.push(`找到 ${nImg} 張圖，該有 17 張`);
+
+/* ---- ①之二 捲軸裡那幾張的寬度 -----------------------------------------
+   ⚠⚠⚠ 2026-09-07 踩過：`.pv-scroll img{width:auto}` 會**蓋掉 `<img>` 的 width 屬性**，
+   圖因此退回「原始像素尺寸」—— 3× 拍的那幾張畫成三倍大（`shot-query` 855 → 2565）。
+   症狀是使用者說「手機上有幾張特別巨大」，而**版面沒有破、水平溢出仍然是 0**，
+   只有把每一張的 `getBoundingClientRect().width` 印出來才看得到。
+   所以這裡守兩件：捲軸裡每一張都要自己寫 inline 的寬度、而且樣式表不准再出現 width:auto。 */
+let nScroll = 0;
+for (const m of body.matchAll(/class="pv-scroll">\s*(<img\s[^>]*>)/g)) {
+  nScroll++;
+  const at = m[1];
+  const src = (at.match(/src="([^"]+)"/) || [])[1];
+  const w = +(at.match(/\swidth="(\d+)"/) || [])[1];
+  const css = +(at.match(/style="width:(\d+)px"/) || [])[1];
+  if (!css) bad.push(`${src} 在捲軸裡卻沒有寫 inline 的 style="width:…px" —— 會退回原始像素尺寸`);
+  else if (css !== w) bad.push(`${src} 的 width 屬性是 ${w}、inline 卻寫 ${css}px`);
+}
+if (/\.pv-scroll\s+img\s*\{[^}]*width:\s*auto/.test(html))
+  bad.push(".pv-scroll img 又出現 width:auto —— 那會讓圖退回原始像素尺寸（3× 拍的變三倍大）");
 
 /* ---- ② 連結 ----------------------------------------------------------- */
 const links = new Set();
@@ -96,4 +115,4 @@ if (/<script/.test(body)) bad.push("頁面上有 <script> —— 這一頁刻意
 
 if (bad.length) { console.error("× " + bad.join("\n× ")); process.exit(1); }
 console.log(`✓ preview/line-spec/　圖 ${nImg} 張（尺寸都對得上實檔）、`
-  + `連結 ${links.size} 條都通、錨點 0 個死的、紅線 0、零 JS`);
+  + `捲軸裡 ${nScroll} 張都寫了 inline 寬度、連結 ${links.size} 條都通、錨點 0 個死的、紅線 0、零 JS`);

@@ -6,7 +6,7 @@
  *   圖本身仍然由 `drafts/line-oa/flex-preview.mjs` 從那幾份 Flex JSON 產生 ——
  *   同 og-topic-card 那一輪的規矩：**提案頁要擺真的產出檔，不要用 CSS 再做一次**。
  *
- * ⚠ 搬的時候**等比例縮一半**（DPR 2 → DPR 1）：七科那張原檔 2.6MB，
+ * ⚠ 搬的時候**等比例縮到「它自己的 CSS px 再乘 268/300」**：七科那張原檔 2.6MB，
  *   而 Worker 對 `/preview/*` 設 `no-store`（第九節第 23 條），每次開頁都要重載。
  *   縮完仍然是「一格一格看得清楚」的尺寸，因為整合頁本來就是**照 CSS px 原尺寸
  *   擺進一條 overflow-x 的捲軸裡**，不是縮圖。
@@ -26,13 +26,19 @@ const ROOT = path.resolve(HERE, "..", "..");
 const CHECK = process.argv.includes("--check");
 const OUT_DIR = path.join(ROOT, "preview", "line-spec");
 
-/* 來源 → 成品，以及它是用 DPR 幾畫的（flex-preview 對 carousel 用 2、單張用 3） */
+/* 來源 → 成品，以及它是用 DPR 幾畫的（flex-preview 對 carousel 用 2、單張用 3）
+   ⚠ 行政那兩張（預約協議／掛號與文件費用）2026-09-07 使用者指定拿掉，
+     所以這裡沒有 admin —— `drafts/line-oa/admin-carousel-d.json` 與它的預覽都留著沒刪。 */
 const JOBS = [
   { src: "preview-topics-carousel.png",   out: "shot-oa-topics.png",  dpr: 2 },
   { src: "preview-health-carousel-d.png", out: "shot-oa-health.png",  dpr: 2 },
-  { src: "preview-admin-carousel-d.png",  out: "shot-oa-admin.png",   dpr: 2 },
   { src: "preview-clinic-info-flex.png",  out: "shot-oa-clinic.png",  dpr: 3 },
 ];
+
+/* ⚠⚠ 再乘一次 268/300：`flex-preview.mjs` 的 mega bubble 畫的是 **300px**，
+   而整合頁上其餘十三張都是病人手機上量到的 **268px**。不縮的話這三張的卡片
+   比隔壁大 12%，在手機上讀起來就是「這幾張特別大」。 */
+const CARD = 268 / 300;
 
 const png = (f) => {
   const b = fs.readFileSync(f);
@@ -52,7 +58,7 @@ for (const j of JOBS) {
   const srcPath = path.join(ROOT, "drafts", "line-oa", j.src);
   if (!fs.existsSync(srcPath)) { bad.push(`找不到來源 ${j.src} —— 先跑 drafts/line-oa/flex-preview.mjs`); continue; }
   const s = png(srcPath);
-  const W = Math.round(s.w / j.dpr), H = Math.round(s.h / j.dpr);
+  const W = Math.round(s.w / j.dpr * CARD), H = Math.round(s.h / j.dpr * CARD);
 
   const r = await pg.evaluate(async ({ uri, W, H }) => {
     const img = new Image(); img.src = uri; await img.decode();
@@ -68,6 +74,7 @@ for (const j of JOBS) {
   }, { uri: `data:image/png;base64,${s.buf.toString("base64")}`, W, H });
 
   if (Math.abs(s.w / s.h - W / H) > 0.01) bad.push(`${j.out}：長寬比跑掉了`);
+  if (W > 1600) bad.push(`${j.out}：${W}px 太寬了 —— 整合頁上那一條捲軸會變成一整片`);
   if (r.ink < 0.10) bad.push(`${j.out}：縮完幾乎是空的（非黑底只有 ${(r.ink * 100).toFixed(1)}%）`);
 
   const buf = Buffer.from(r.png.split(",")[1], "base64");
@@ -89,4 +96,4 @@ await browser.close();
 
 if (bad.length) { console.error("× " + bad.join("\n× ")); process.exit(1); }
 console.log(rows.join("\n"));
-console.log(CHECK ? "✓ 四張都在，尺寸對得上" : "✓ 已寫進 preview/line-spec/");
+console.log(CHECK ? `✓ ${rows.length} 張都在，尺寸對得上` : "✓ 已寫進 preview/line-spec/");

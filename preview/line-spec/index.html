@@ -20,6 +20,8 @@
        這一頁從「整包規格」變成「**模擬圖的總覽 ＋ 入口**」。
      ⚠ 只留下兩處一行的提醒（⑦ 先不要送、⑤ 日期正在被截斷）：
        那兩件是**現在就會出事**的，不是解說。
+     ⚠ 2026-09-07 稍晚：**行政那兩張（預約協議／掛號與文件費用）使用者指定拿掉**，
+       所以 ⑪ 只剩衛教那一條輪播。`drafts/line-oa/admin-carousel-d.json` 與它的預覽都留著沒刪。
 
   ⚠⚠ **這一頁不重抄任何一則的文字。**
      每一則的字有它自己的出處（Flex 的 JSON、或 auto-reply.txt），
@@ -28,7 +30,7 @@
      ⚠ 圖是那幾頁的產出檔，**那幾頁改了就要重跑各自的 *-png.mjs**，不然這一頁的圖會開始說謊。
 
   ⚠ 圖一律寫 width/height 屬性（不寫的話沒載完之前高度是 0，整頁會跳版），
-     第一張以外一律 loading="lazy" —— 全部加起來約 4.6MB，而 Worker 對 /preview/* 設 no-store。
+     第一張以外一律 loading="lazy" —— 全部加起來約 3.5MB，而 Worker 對 /preview/* 設 no-store。
   ⚠ class 一律 pv- 前綴；樣式放在 head。
   ⚠ 連結一律相對路徑（../line-welcome/ 這種），不要用根目錄絕對路徑 ——
      舊站 yclee86.github.io 還活著，那邊會壞（CLAUDE.md 第九節）。
@@ -72,10 +74,16 @@ code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px;
   border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .pv-shot img.narrow{width:204px}
 .pv-shot img.plain{box-shadow:none;border-radius:0}
-/* 比卡片寬的（輪播、七科攤成格狀那幾張）自己一條捲軸，
-   不要讓整頁能左右拉。寬度交給 img 的 width 屬性，這裡只把 CSS 的寬度讓開。 */
+/* 比卡片寬的（輪播、七科攤成格狀那幾張）自己一條捲軸，不要讓整頁能左右拉。
+   ⚠⚠⚠ 這裡**每一張都要自己寫 inline 的 `width:NNNpx`**，
+   而且要等於它的 `width` 屬性 —— 2026-09-07 踩過：原本寫 `width:auto`，
+   而 **`width:auto` 會蓋掉 `<img>` 的 width 屬性、讓圖退回「原始像素尺寸」**，
+   3× 拍的那幾張因此畫成三倍大（`shot-query` 855 → 2565）。
+   症狀是「手機上有幾張特別巨大」，**版面沒有破、水平溢出仍然是 0**，
+   只有把每一張的 `getBoundingClientRect().width` 印出來才看得到。
+   `check-spec.mjs` 現在有兩道在守這件事。 */
 .pv-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.pv-scroll img{width:auto;max-width:none}
+.pv-scroll img{max-width:none}
 .pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:0}
 .pv-cap b{color:var(--ink)}
 .pv-cap .n{color:var(--red);font-weight:700}
@@ -114,7 +122,7 @@ code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px;
     <div class="sep">圖文選單點下去回的卡</div>
     <a href="#m9">⑨ 診所資訊</a>
     <a href="#m10">⑩ 主題與科別　<span class="n">七科輪播</span></a>
-    <a href="#m11">⑪ 衛教懶人包　<span class="n">十張 ＋ 行政兩張</span></a>
+    <a href="#m11">⑪ 衛教懶人包　<span class="n">十張 ＋ 收尾一格</span></a>
   </div>
 
   <!-- ================= ① 招呼圖卡 ================= -->
@@ -161,7 +169,7 @@ code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px;
       alt="預約成功通知（單張）">
     <p class="pv-cap">↑ 預約成功（約診成立的當下，單張）。</p>
     <div class="pv-scroll">
-      <img src="../line-booked/shot-query.png" width="855" height="122" loading="lazy"
+      <img src="../line-booked/shot-query.png" width="855" height="122" style="width:855px" loading="lazy"
         alt="約診紀錄查詢的輪播，三張卡並排">
     </div>
     <p class="pv-cap">↑ 約診紀錄查詢（<b>輪播</b>，一個約診一張，可以左右滑）。
@@ -190,7 +198,7 @@ code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px;
   </div>
   <div class="pv-shot">
     <div class="pv-scroll">
-      <img src="../line-cancel/shot-cancel-chat.png" width="402" height="591" loading="lazy"
+      <img src="../line-cancel/shot-cancel-chat.png" width="402" height="591" style="width:402px" loading="lazy"
         alt="取消那一段對話在 LINE 聊天室裡的樣子">
     </div>
     <p class="pv-cap">↑ 整段對話在聊天室裡的樣子。</p>
@@ -228,7 +236,7 @@ code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px;
     <span class="t">圖文選單第一格</span></h2>
   <div class="pv-shot">
     <div class="pv-scroll">
-      <img src="shot-oa-clinic.png" class="plain" width="398" height="619" loading="lazy"
+      <img src="shot-oa-clinic.png" class="plain" width="356" height="553" style="width:356px" loading="lazy"
         alt="診所資訊卡：診所夜景頭圖、電話地址門診時間，以及三顆按鈕">
     </div>
     <p class="pv-cap">↑ 電話、地址、門診時間 ＋ 三顆按鈕（Google 地圖／打給診所／到網站看看）。
@@ -240,7 +248,7 @@ code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px;
     <span class="t">圖文選單「診療項目」那一格　七科輪播</span></h2>
   <div class="pv-shot">
     <div class="pv-scroll">
-      <img src="shot-oa-topics.png" class="plain" width="1496" height="1387" loading="lazy"
+      <img src="shot-oa-topics.png" class="plain" width="1336" height="1239" style="width:1336px" loading="lazy"
         alt="七科的介紹圖卡：一般牙科、牙周、顯微根管、兒童牙科、齒顎矯正、植牙假牙重建、口腔外科">
     </div>
     <p class="pv-cap">↑ 一科一格，在 LINE 上是<b>橫著滑的輪播</b>；這裡攤成格狀是為了一次看完七科。
@@ -253,21 +261,13 @@ code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px;
     <span class="t">圖文選單「衛教資訊」那一格　十張 ＋ 收尾一格</span></h2>
   <div class="pv-shot">
     <div class="pv-scroll">
-      <img src="shot-oa-health.png" class="plain" width="1496" height="1345" loading="lazy"
+      <img src="shot-oa-health.png" class="plain" width="1336" height="1202" style="width:1336px" loading="lazy"
         alt="衛教懶人包的十一格圖卡：牙周、牙結石、蛀牙、智齒、隱形矯正、假牙、植牙、活動假牙、美白、輻射，以及收尾那一格">
     </div>
     <p class="pv-cap">↑ 診所自己的紙本懶人包，一張一格；兩顆按鈕：「看大圖」開原圖、「讀文章」到站上那一篇。
       最後一格收尾到官網。<span class="n">⚠ 懶人包的圖檔還沒上線</span>，
       JSON 裡寫的是未來的網址。⚠ 這一條可以左右滑。</p>
   </div>
-  <div class="pv-shot">
-    <div class="pv-scroll">
-      <img src="shot-oa-admin.png" class="plain" width="812" height="406" loading="lazy"
-        alt="行政那兩張圖卡：預約協議、掛號與文件費用">
-    </div>
-    <p class="pv-cap">↑ 行政那兩張<b>另外一組</b>（預約協議、掛號與文件費用），沒有和衛教混在同一條輪播裡。</p>
-  </div>
-
 </div>
 </body>
 </html>
