@@ -159,7 +159,10 @@ svg.mk{width:100%;height:100%;display:block}
 /* 只有圖案那一版：格子裡的圖案 30px 一列排開；圖例的 26px */
 .ic{width:var(--ics, 30px);height:var(--ics, 30px);flex:none;display:flex;align-items:center;justify-content:center}
 .mk-row .ic, .mk-row svg.mk{width:22px;height:22px}
-.ic-row{display:flex;align-items:center;justify-content:center;gap:6px}
+/* ⚠ 2026-09-07 使用者：「每診裡面的 logo 現在靠得有點近，有點擠。」
+   橫向 6 → 11px、行距 6 → 9px。格子寬約 151px，兩顆 30px ＋ 11 ＝ 71，還很寬鬆。 */
+.ic-row{display:flex;flex-direction:column;align-items:center;gap:9px}
+.ic-line{display:flex;align-items:center;justify-content:center;gap:11px}
 /* 2026-09-07 使用者：「現在 logo 擠成一個橫條」——四個排成一列讀起來像一條，
    看不出是四個各自獨立的東西。兩個對照版本：
    col  一格裡全部直排（一節一欄）
@@ -167,9 +170,9 @@ svg.mk{width:100%;height:100%;display:block}
    ⚠⚠ 直排有一個量得出來的代價：晚那一列有四個，直排就是四倍高，
       整塊會超出安全帶 —— 所以圖案得縮小，而圖案一小就回到「分不出來」那個問題。
       w2 只長兩倍高，圖案可以維持原來的大小。 */
-.ic-row.col{flex-direction:column;gap:5px}
-.ic-row.w2{flex-wrap:wrap;gap:6px;width:calc(var(--ics) * 2 + 6px);margin:0 auto}
-.ic-row.col .ic, .ic-row.w2 .ic{width:var(--ics);height:var(--ics)}
+.ic-row.col{gap:5px}
+
+
 .lg{padding-top:30px}
 .lg-row{display:flex;align-items:center;justify-content:center;gap:26px}
 .lg-row + .lg-row{margin-top:10px}
@@ -209,9 +212,10 @@ const grid = (mode, ics, k = 1, flat = false, pal = null) => shell(`<table><colg
   <thead><tr><td></td>${D.days.map(d => `<th>${d}</th>`).join("")}</tr></thead>
   <tbody>${D.rows.map(r => `<tr>
     <th><b>${r.part}</b><i>${r.time}</i></th>${r.cells.map(c => `<td>${
-      mode.startsWith("i") ? `<div class="ic-row ${
-          mode === "icol" ? "col" : mode === "i2x2" ? "w2" : ""}">${c.map(id =>
-          `<span class="ic" style="color:${tone(id, k, flat, pal)}">${mark22[id]}</span>`).join("")}</div>`
+      mode.startsWith("i") ? `<div class="ic-row">${lines(c, mode).map(g =>
+          `<div class="ic-line">${g.map(id =>
+            `<span class="ic" style="color:${tone(id, k, flat, pal)}">${mark22[id]}</span>`
+          ).join("")}</div>`).join("")}</div>`
       : c.map(id => { const sp = D.specs.find(x => x.id === id);
           const nm = SHORT[sp.name] || sp.name;
           const col = mode === "rank" && id === "general" ? SOFT : INK;
@@ -220,6 +224,20 @@ const grid = (mode, ics, k = 1, flat = false, pal = null) => shell(`<table><colg
             : `<div class="nm" style="color:${col}">${nm}</div>`;
         }).join("")}</td>`).join("")}</tr>`).join("")}</tbody></table>`
   + (mode.startsWith("i") ? legend(k, flat, pal) : ""), ics ? `s${ics}` : "");
+
+/* ⚠⚠⚠ 一格裡的圖案怎麼分行（2026-09-07 使用者：「一個診有三個科別的，
+ *   第一行一個科第二行兩個科，這樣才不會頭重腳輕」）。
+ *   flex 的自動換行是「填滿一行再換」，三個一定排成 2＋1（上重下輕）——
+ *   **`wrap-reverse` 治不了**：它把行的上下對調，第一行會變成第三科，
+ *   科別的順序就亂了。所以改成**自己分組**，順序原封不動：
+ *     1 → [1]　2 → [2]　**3 → [1, 2]**　4 → [2, 2]
+ *   規則：奇數且大於一時，第一行只放一個。 */
+const lines = (c, mode) =>
+  mode === "icol" ? c.map(x => [x])                    /* 直排：一行一個 */
+  : mode === "i2x2" ? (c.length % 2 === 1 && c.length > 1
+      ? [[c[0]], ...chunk(c.slice(1), 2)] : chunk(c, 2))
+  : [c];                                               /* 橫排一列 */
+const chunk = (a, n) => a.length ? [a.slice(0, n), ...chunk(a.slice(n), n)] : [];
 
 /* 圖例：logo 套色 ＋ 科別名用墨（使用者 2026-09-07 指定）。
  * ⚠⚠ 格子裡只剩圖案的話，第一次看的人**一定要對照這一排** ——
@@ -431,6 +449,22 @@ for (const [tag, big] of [["w2", "post-hours-cboth.png"], ["col", "post-hours-ic
 await browser.close();
 
 fs.writeFileSync(path.join(OUT, "detail.txt"), detail + "\n");
+
+/* ⚠⚠ 六案 × 七科的色碼寫成檔案，**規格頁那張表讀它、不手抄** ——
+   手抄一份就是第二個真相，而顏色改一次它就開始說謊（守門會逐格比對）。 */
+const CASES = [["O", "現況（站上深階）", 1, false, null], ["C", "全部彩度 65%", .65, false, null],
+  ["N", "一般牙科轉中性", 1, true, null], ["B", "轉中性 ＋ 65%", .65, true, null],
+  ["P", "設計師九顆 104_logo", 1, false, "b104"], ["Q", "設計師八顆 Logo顏色", 1, false, "b8"]];
+fs.writeFileSync(path.join(OUT, "colors.json"), JSON.stringify({
+  specs: D.specs.map(s2 => s2.name),
+  cases: CASES.map(([tag, nm, k, flat, pal]) => ({ tag, name: nm,
+    colors: D.specs.map(s2 => tone(s2.id, k, flat, pal).toUpperCase()) }))
+}, null, 2) + "\n");
+console.log("\n── 六案的色碼（preview/line-post-hours/colors.json）──");
+console.log("      " + D.specs.map(s2 => s2.name.slice(0, 2)).join("　　"));
+for (const [tag, nm, k, flat, pal] of CASES)
+  console.log(`  ${tag}　` + D.specs.map(s2 => tone(s2.id, k, flat, pal).toUpperCase()).join(" ")
+    + `　${nm}`);
 console.log("\n── 出圖 ──");
 for (const [t, b] of made)
   console.log(`  post-hours-${t}.png　內容 ${b.y.toFixed(0)}~${(b.y + b.height).toFixed(0)}`

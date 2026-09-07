@@ -70,6 +70,22 @@ if (onPage !== undefined)
   ok(onPage.trim() === detail,
     `「詳情」和 detail.txt 對不上：\n    頁面 ${JSON.stringify(onPage.trim())}\n    檔案 ${JSON.stringify(detail)}`);
 
+/* ---- ③b 色碼表和 colors.json 逐格相同 ----
+   ⚠ 頁面上那六案 × 七科的色碼是給使用者挑的，**手抄一份就是第二個真相**，
+   顏色改一次它就開始說謊。這一道逐格比對。 */
+const pal = JSON.parse(fs.readFileSync(path.join(DIR, "colors.json"), "utf8"));
+const blocks = [...PAGE.matchAll(/<div class="pv-pal"><b>([A-Z])[^<]*<\/b>([\s\S]*?)<\/div><\/div>/g)];
+ok(blocks.length === pal.cases.length,
+  `頁上有 ${blocks.length} 個色碼區塊，colors.json 有 ${pal.cases.length} 案`);
+for (const [, tag, body] of blocks) {
+  const c = pal.cases.find(x => x.tag === tag);
+  if (!c) { bad.push(`頁上多了一案 ${tag}`); continue; }
+  const got = [...body.matchAll(/#[0-9A-F]{6}/g)].map(m => m[0]);
+  const want = c.colors.flatMap(x => [x, x]);   /* 每一格出現兩次：色塊的 background ＋ 印出來的字 */
+  ok(JSON.stringify(got) === JSON.stringify(want),
+    `${tag} 的色碼對不上 colors.json：\n    頁面 ${got.join(" ")}\n    檔案 ${want.join(" ")}`);
+}
+
 /* ---- ④ 產出的圖沒有孤兒 ---- */
 for (const f of fs.readdirSync(DIR).filter(f => f.endsWith(".png")))
   ok(used.has(f), `圖產了卻沒有擺上頁面：${f}`);
