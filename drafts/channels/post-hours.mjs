@@ -865,11 +865,13 @@ const cell = (f, w, h) =>
 const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 410 } });
 /* ⚠ 大格與兩個小格一律放**定案那一張**（a11）——這一格是「主頁看起來長怎樣」，
    不是版本比較；col 那一版留著只是為了讓人看見直排的代價。 */
-for (const [tag, big] of [["w2", "post-hours-fit.png"], ["col", "post-hours-icol.png"]]) {
+/* ⚠ 2026-09-07 使用者：「G 定稿」＝ post-hours-s130w.png
+   （放大 1.30 ＋ 列距 16 ＋ 時段標籤斷成兩行、置中）。 */
+for (const [tag, big] of [["w2", "post-hours-s130w.png"], ["col", "post-hours-icol.png"]]) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
     <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
       ${cell(big, PW, 409)}
-      <div style="display:flex;gap:3px">${cell("post-hours-fit.png", 410, 410)}${cell("post-hours-fit.png", 410, 410)}</div>
+      <div style="display:flex;gap:3px">${cell("post-hours-s130w.png", 410, 410)}${cell("post-hours-s130w.png", 410, 410)}</div>
     </div>`);
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
   await page2.screenshot({ path: path.join(OUT, `profile-3up-${tag}.png`) });
@@ -926,6 +928,34 @@ for (const [t, sc] of [["mix-half-a11", 1], ...SCALES.map(([a, b2]) => [a, b2])]
     console.log(`  Ⓖ 斷行那一版：早午晚的墨心對時間的墨心偏 ${mw[4] ? "" : ""}`
       + `${(made.find(m => m[0] === "s130w")[5] ?? 0).toFixed(2)}px`); }
   console.log(`  　　　　　時段標籤 ${mf[2].toFixed(1)}px（欄寬 ${(LAB * 1.387).toFixed(0)}，沒有折行）`); }
+/* ---------- 「讀起來對不對」一次印完（2026-09-07 的檢討，見 CLAUDE.md 第九節第 28 條）
+ * ⚠⚠⚠ 這一輪的教訓是：守門全部都在檢查「有沒有壞」（溢出、折行、對比、超出安全帶），
+ *   **沒有一條在量「讀起來好不好」** —— 群分不分得開、留白比例、置中偏多少，
+ *   每一條都是使用者先講、才補上去的。所以把它們收成一張表，每次出圖都印，
+ *   回歸就會表現成「某個數字動了」，而不是等他看圖。
+ * ⚠ 第二件：**自己推導出來的限制在壓縮版面時要當場講**（安全帶那一行）。 */
+{
+  const F0 = made.find(m => m[0] === "s130w");   /* 定稿那一張 */
+  const room = (BAND - (F0[1].height)) / 2;
+  console.log(`\n── 讀起來對不對（定稿 Ⓖ）──`);
+  console.log(`  留白　　整塊 ${F0[1].height.toFixed(0)}／1080　＝ 佔 `
+    + `${(F0[1].height / H * 100).toFixed(0)}%，上下各留 ${((H - F0[1].height) / 2).toFixed(0)}px`);
+  console.log(`  分群　　同一格 ${F0[4].inn.toFixed(1)}　跨一天 ${F0[4].out.toFixed(1)}`
+    + `　＝ ${(F0[4].out / F0[4].inn).toFixed(2)} 倍（要 ≥ 1.7）`);
+  console.log(`  時段標籤　寬 ${F0[2].toFixed(1)}px　折行 0　`
+    + `早午晚對時間的中線偏 ${(F0[5] ?? 0).toFixed(2)}px（要 ≤ 1.5）`);
+  console.log(`  頁尾　　兩行左緣 ${F0[3].note.toFixed(1)} / ${F0[3].left.toFixed(1)}`
+    + `　話筒對號碼中線偏 ${Math.abs(F0[3].num - F0[3].ico).toFixed(2)}px`);
+  console.log(`  對比　　紙上最低 ${Math.min(...contrast.map(c => c[1])).toFixed(2)}`
+    + `　浮水印上：字 ${Math.min(...wmText.map(c => c[1])).toFixed(2)}`
+    + `／圖案 ${Math.min(...wmIcon.map(c => c[1])).toFixed(2)}`);
+  console.log(`  安全帶　大格看得到中間 ${BAND} 列，這一張上下各被切 `
+    + `${Math.max(0, -room).toFixed(0)}px`);
+  if (room > -1 && room < 12)
+    console.log(`  ⚠⚠ 安全帶只剩 ${room.toFixed(0)}px —— **這條限制正在壓縮版面**，`
+      + `再要加東西就得先跟使用者攤開取捨（CLAUDE.md 第九節第 28 條 ③）`);
+}
+
 const m0 = made.find(m => m[0] === "mix-half-a11");
 console.log(`\n── 定案那張的兩件版面 ──`);
 console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 ${LAB}，沒有折行）`);
