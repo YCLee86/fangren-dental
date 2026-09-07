@@ -317,7 +317,10 @@ svg.mk{width:100%;height:100%;display:block}
      （slotOf），文字的起點才會跟著對齊 —— 只對齊外框、圖案寬度不一樣的話，
      字還是會各自參差。
    ・間距 26 → 40px。 */
-.lg{padding-top:16px;display:grid;grid-template-columns:repeat(4,max-content);
+/* ⚠⚠ 2026-09-07 使用者：「科別說明和門診表的間隔拉開一點。」16 → 26px。
+   ⚠ 這一格是有代價的：它算在「中間那一塊」裡，而放大倍率 ＝ 537 ÷ 中間那一塊，
+   所以**這裡每多 1px，能放大的倍率就少一點**（16 → 26 讓 S 從 1.387 掉到 1.352）。 */
+.lg{padding-top:26px;display:grid;grid-template-columns:repeat(4,max-content);
     column-gap:40px;row-gap:8px;width:max-content;margin-inline:auto}
 .lg-i{display:flex;align-items:center;gap:9px;font-size:23px;color:${INK};letter-spacing:.02em}
 .ic.sm{width:24px;height:24px}
@@ -614,6 +617,7 @@ const COL = 26, W2 = 30;
 /* 圖案之間要多鬆（橫向 / 行距）。第一格 ＝ 2026-09-07 之前的值 */
 /* 三格間距 ＋ 要不要等寬格。第一格 ＝ 2026-09-07 之前的值（不等寬、11px） */
 const ALTP = [["alt-r2c1", "r2c1"], ["alt-r1c3", "r1c3"]];
+const OVERSIZE = new Set(["icol", "mix-half-a16", "mix-half-a22"]);
 /* 整體放大：Ⓢ1 ＝ 現況（收得進安全帶），其餘三格用掉上下的空白 */
 /* ⚠⚠⚠ 這把尺有一個算得出來的天花板，而且不是垂直方向 ——
    整張圖固定 1080 寬，一格最多要放兩顆等寬格（2×42.5 ＋ 間距 11 ＝ 96），
@@ -644,7 +648,12 @@ const GAPS = [["mix-half", 11, 9, false], ["mix-half-a11", 11, 9, true],
   const want = BAND / mid;
   const smax = (W - 2 * PAD) / (LAB + 5 * (2 * slotOf(30, "half") + 11 + 8));
   const fit = Math.min(want, smax);
-  SCALES = [["fit", +fit.toFixed(3), +(m.bot - m.top).toFixed(2)]];
+  /* ⚠ 2026-09-07 使用者：「做幾個版本，介於現在放大 1.387 和 1 之間的。」
+     三格中間值 ＋ 那個算出來的上限，四張都套同一個 EX（標題底下多墊的那一段），
+     所以四張的差別**只有倍率**，比得出來。 */
+  const ex = +(m.bot - m.top).toFixed(2);
+  SCALES = [["s110", 1.10, ex], ["s120", 1.20, ex], ["s130", 1.30, ex],
+            ["fit", +fit.toFixed(3), ex]];
   console.log(`\n── 放大倍率（算出來的，不是挑的）──`);
   console.log(`  1× 的三塊：標題 ${m.top.toFixed(1)}　中間 ${mid.toFixed(1)}　頁尾 ${m.bot.toFixed(1)}`);
   console.log(`  中間那塊要填滿安全帶 ${BAND} → S ${want.toFixed(3)}`
@@ -706,7 +715,12 @@ for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i
   const b = await page.locator(".band").boundingBox();
   if (b.y < TOP - .5 || b.y + b.height > BOT + .5) {
     /* ⚠ icol 是刻意超出的那一案（它存在的意義就是讓人看見這個代價），其餘一律擋下來 */
-    if (tag !== "icol" && !(sc > 1))
+    /* ⚠ 刻意放行的三種：直排那一案（它存在的意義就是讓人看見代價）、
+       放大那把尺（sc 有值），以及**間距 16／22 那兩張保留的舊圖** ——
+       2026-09-07 把圖例往下推 10px 之後，那兩格在 1× 也收不進安全帶了
+       （a22 超出 2.6px）。它們是已經結案的那把尺的紀錄、不是還能挑的選項，
+       所以留著看、不擋出圖。 */
+    if (!OVERSIZE.has(tag) && !sc)
       throw new Error(`${tag} 的內容是 ${b.y.toFixed(1)}~${(b.y + b.height).toFixed(1)}，`
         + `超出大格看得到的 ${TOP}~${BOT}`);
   }
