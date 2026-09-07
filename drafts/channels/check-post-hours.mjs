@@ -35,7 +35,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，而且尺寸對得上 ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 3, `頁上有 ${imgs.length} 張圖，應該是 3`);
+ok(imgs.length === 5, `頁上有 ${imgs.length} 張圖，應該是 5`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);

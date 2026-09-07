@@ -42,6 +42,19 @@ const DEEP = { general:"#2c5238", perio:"#2a6d69", endo:"#89202d", kids:"#9e6301
    其餘每一處一律用 index.html 上的全名。**這是版面被迫的縮寫，要使用者點頭。** */
 const SHORT = { "植牙・假牙重建": "植牙假牙" };
 
+/* ⚠⚠⚠ Ⓖ3「每科一顆記號」用的是 brand/shapes 那九顆（同一個標誌的九種變體）。
+   挑法避開 r1c3×r2c3 —— 在 22px 下那一對只差 5.6%。
+   **但量出來的結論是這條路不成立**：九顆畫成 22px（＝格子裡記號的大小），
+   兩兩不同的像素比例**最不像的一對也只有 20.9%、中位 16.7%**
+   （對照浮水印那一輪在 150px 下是最不像 52.0%、中位 26.6%）。
+   ⚠ 通則（已在 CLAUDE.md）：**在成品的尺寸上量，不要在素材的尺寸上量。** */
+const SHAPE = { general:"r1c1", perio:"r1c2", ortho:"r3c3", endo:"r2c1",
+                prosth:"r2c2", surg:"r2c3", kids:"r3c2" };
+const mark22 = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => [id,
+  fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${sh}.svg`), "utf8")
+    .replace(/<svg([^>]*?)(width|height)="[\d.]+"/g, "<svg$1")
+    .replace(/<svg/, '<svg class="mk"')]));
+
 /* ---------- 從 index.html 讀回來（唯一的出處） ---------- */
 function parse() {
   const card = SRC.slice(SRC.indexOf('<div class="info-card" data-hue="taupe">'));
@@ -126,6 +139,8 @@ tbody th b{display:block;font-size:26px;font-weight:400;letter-spacing:.1em}
 tbody th i{font-style:normal;font-size:19px;color:${SOFT}}
 tbody tr + tr th, tbody tr + tr td{border-top:1px solid ${RULE}}
 .nm{font-size:23px;line-height:1.34;letter-spacing:.02em}
+.mk-row{display:flex;align-items:center;justify-content:center;gap:7px}
+svg.mk{width:22px;height:22px;flex:none;object-fit:contain}
 
 /* 一科一行 */
 .rows{padding-top:6px}
@@ -146,13 +161,26 @@ const shell = (inner) => `<div class="sheet"><div class="band">
   <div class="tel">${D.note.replace(/。$/, "")}<b>${PHONE}</b></div>
 </div></div>`;
 
-/* Ⓖ 格子：日子當欄、早午晚當列，格子裡直接寫科別 */
-const grid = () => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
+/* Ⓖ 格子：日子當欄、早午晚當列，格子裡直接寫科別。
+ * 2026-09-07 使用者：「G 文字的比較好，但有需要這麼多顏色嗎…或是每個科別各自用一個 logo」
+ * 三個方案：
+ *   ink   全部同一個墨（＝他講的那一個）
+ *   rank  **一般牙科退一階（建議）** —— ⚠⚠⚠ 它在 15 節裡佔 12 節，
+ *         是「這一節有沒有開診」的背景，不是「這一節有什麼特別的」的資訊。
+ *         和其他六科畫成一樣重，等於讓最不需要找的東西佔掉最多視覺重量
+ *         （25 個名字裡有 12 個是它）。退一階之後，五科特別門診自己跳出來。
+ *   mark  每科一顆記號（＝他的第二個提議，量測見上面 SHAPE 那一段）
+ */
+const grid = (mode) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
   <thead><tr><td></td>${D.days.map(d => `<th>${d}</th>`).join("")}</tr></thead>
   <tbody>${D.rows.map(r => `<tr>
     <th><b>${r.part}</b><i>${r.time}</i></th>${r.cells.map(c => `<td>${
       c.map(id => { const sp = D.specs.find(x => x.id === id);
-        return `<div class="nm" style="color:${DEEP[id]}">${SHORT[sp.name] || sp.name}</div>`;
+        const nm = SHORT[sp.name] || sp.name;
+        const col = mode === "rank" && id === "general" ? SOFT : INK;
+        return mode === "mark"
+          ? `<div class="nm mk-row" style="color:${col}">${mark22[id]}${nm}</div>`
+          : `<div class="nm" style="color:${col}">${nm}</div>`;
       }).join("")}</td>`).join("")}</tr>`).join("")}</tbody></table>`);
 
 /* Ⓛ 一科一行：照「早／午／晚」各列出哪幾天 */
@@ -206,7 +234,8 @@ fs.mkdirSync(OUT, { recursive: true });
 for (const f of fs.readdirSync(OUT).filter(f => f.endsWith(".png"))) fs.rmSync(path.join(OUT, f));
 
 const made = [];
-for (const [tag, html] of [["grid", grid()], ["list", list()]]) {
+for (const [tag, html] of [["ink", grid("ink")], ["rank", grid("rank")],
+                           ["mark", grid("mark")], ["list", list()]]) {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${html}`);
   /* ⚠⚠ 這一版存在的理由就是「乾淨 ＋ 大格看得到全部」，所以那件事要用量的。
      整塊內容一定要落在安全帶裡（大格只看得到 y ${TOP}~${BOT}）。 */
@@ -231,8 +260,8 @@ const cell = (f, w, h) =>
 const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 410 } });
 await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
   <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
-    ${cell("post-hours-list.png", PW, 409)}
-    <div style="display:flex;gap:3px">${cell("post-hours-grid.png", 410, 410)}${cell("post-hours-list.png", 410, 410)}</div>
+    ${cell("post-hours-rank.png", PW, 409)}
+    <div style="display:flex;gap:3px">${cell("post-hours-ink.png", 410, 410)}${cell("post-hours-list.png", 410, 410)}</div>
   </div>`);
 await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await page2.screenshot({ path: path.join(OUT, "profile-3up.png") });

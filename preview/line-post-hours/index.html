@@ -6,19 +6,13 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>芳仁牙醫診所　LINE 貼文的看診時間圖</title>
 <!--
-  兩案待選。定案之後照 CLAUDE.md 第十一之五節改寫成規格頁
-  （成品在 LINE 不在站上，所以不刪頁、不搬進 history/）。
-
-  ⚠⚠⚠ 2026-09-07 使用者看過五案：「覺得不夠乾淨　簡潔」。
-     ① 圖收成三塊（識別／表／電話），沒有卡片框、沒有副標、沒有大標題。
-     ② **這一頁的文字也一起收掉** —— 他同一天才對 /preview/line-spec/ 講過
-        「只要保留模擬圖的部分就好…大量的文字解說都不用」，我隔一頁又寫了一堆。
-     ③ 「乾淨簡潔」本身淘汰了三案：色點版要來回對照圖例、八張版要滑八張。
-     推導留在 drafts/channels/post-hours.mjs 的檔頭，不搬到這一頁上。
+  2026-09-07 使用者：「我感覺 G 文字的比較好，但有需要這麼多顏色嗎？
+  因為光以文字應該就能區分科別。或是每個科別各自用一個 logo 加註呢？」
+  → 兩個提議方向相反（一個減、一個加），三個方案都做出來，
+    而且**在成品的尺寸上量過**再下判斷。推導留在 drafts/channels/post-hours.mjs 的檔頭。
 
   ⚠ 圖一律擺真的產出檔；width/height 屬性要等於 PNG 檔頭的真實尺寸。
-  ⚠ 連結一律相對路徑 —— 舊站 yclee86.github.io 還活著。
-  ⚠ 刻意零 JS（守門連 script 標籤都擋）。
+  ⚠ 連結一律相對路徑；刻意零 JS（守門連 script 標籤都擋）。
 -->
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
@@ -42,8 +36,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 .pv-h2 em{font-style:normal;font-size:.72em;background:var(--deep);color:#fff;
   border-radius:6px;padding:1px 7px;margin-left:6px;letter-spacing:.04em;vertical-align:2px}
 .pv-shot{margin:10px 0 0}
-.pv-shot img{display:block;width:100%;height:auto;border-radius:10px;
-  border:1px solid var(--rule)}
+.pv-shot img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--rule)}
 .pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:7px 0 0}
 .pv-cap b{color:var(--ink)}
 .pv-cap .n{color:var(--red);font-weight:700}
@@ -56,38 +49,50 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <div class="pv-wrap">
 
   <h1>LINE 貼文的看診時間圖
-    <span>兩案待選　2026-09-07</span></h1>
-  <p class="pv-lead">站上那張表靠<b>點科別標記</b>一次看一科。<br>
-    貼文是靜態的圖，但畫布 1080px <b>放得下</b>，所以不模擬切換，直接攤開。</p>
+    <span>顏色三案　2026-09-07</span></h1>
+  <p class="pv-lead">「光以文字應該就能區分科別」——<b>對</b>。<br>
+    但全部同一階會讓表變得很平，所以中間那一案多做一件事。</p>
 
-  <h2 class="pv-h2">Ⓛ 一科一行<em>建議</em>
-    <span class="t">早／午／晚 各列出哪幾天</span></h2>
+  <h2 class="pv-h2">Ⓡ 一般牙科退一階<em>建議</em>
+    <span class="t">零彩色，但有層次</span></h2>
   <div class="pv-shot">
-    <img src="post-hours-list.png" width="1080" height="1080"
-      alt="一科一行：七科各一列，每列寫出早、午、晚分別是哪幾天">
+    <img src="post-hours-rank.png" width="1080" height="1080"
+      alt="格子表：一般牙科用淺灰、其餘六科用深墨，沒有彩色">
   </div>
-  <p class="pv-cap">病人查的是「<b>我這一科什麼時候可以來</b>」。<br>
-    顯微根管排出來是「早三　午三　晚三」——<b>全在週三自己跳出來</b>，格子表看不出來。</p>
+  <p class="pv-cap">⚠ <b>一般牙科在 15 節裡佔 12 節</b>——它是「這一節有沒有開診」的背景，
+    不是「這一節有什麼特別的」。<br>
+    和其他六科一樣重，等於讓<b>最不需要找的東西佔掉最多視覺重量</b>（25 個名字裡有 12 個是它）。<br>
+    退一階之後，<b>五科特別門診自己跳出來</b>。</p>
 
-  <h2 class="pv-h2">Ⓖ 格子
-    <span class="t">和站上那張表同一個排法</span></h2>
+  <h2 class="pv-h2">Ⓘ 全部同一個墨
+    <span class="t">你講的那一個</span></h2>
   <div class="pv-shot">
-    <img src="post-hours-grid.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：日子當欄、早午晚當列，格子裡直接寫科別名">
+    <img src="post-hours-ink.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：所有科別都用同一個深墨">
   </div>
-  <p class="pv-cap">看得出「<b>同一節有誰一起看診</b>」。<br>
-    <span class="n">⚠</span>「植牙・假牙重建」被格子寬度逼成「<b>植牙假牙</b>」——要你點頭。</p>
+  <p class="pv-cap">最乾淨。代價是<b>要一個字一個字讀</b>——掃過去分不出哪幾節有特別門診。</p>
 
-  <h2 class="pv-h2">擺進主頁那三格
-    <span class="t">大格 2:1、小格 1:1</span></h2>
+  <h2 class="pv-h2">Ⓜ 每科一顆記號
+    <span class="t">你的第二個提議</span></h2>
+  <div class="pv-shot">
+    <img src="post-hours-mark.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：每個科別名前面加一顆標誌變體的小記號，25 顆記號長得幾乎一樣">
+  </div>
+  <p class="pv-cap"><span class="n">⚠</span> <b>不建議</b>，而且是量出來的：
+    診所那九顆標誌變體畫成 <b>22px</b>（＝這裡記號的大小），
+    兩兩不同的像素比例<b>最不像的一對也只有 20.9%</b>、中位 16.7%
+    （同樣九顆在 150px 的浮水印上是 52.0%／26.6%）。<br>
+    它們是<b>同一個標誌的九種變體</b>，不是九個不同的圖示——放小就分不出來。<br>
+    而且一格最多 4 個項目，<b>25 顆記號比顏色更花</b>，和你要的方向相反。<br>
+    要走這條路得<b>新畫七個科別圖示</b>（象徵物），那是另一件事。</p>
+
+  <h2 class="pv-h2">擺進主頁那三格</h2>
   <div class="pv-shot">
     <img src="profile-3up.png" width="823" height="823" loading="lazy"
-      alt="主頁三格模擬：大格是一科一行，底下兩小格是格子表與一科一行">
+      alt="主頁三格模擬：大格是一般牙科退一階那一版">
   </div>
-  <p class="pv-cap">大格會把 1080 的圖<b>上下各切掉 271 列</b>，所以識別與電話
-    收在中間那條帶子裡。<br>
-    <span class="n">⚠</span> 到底是裁還是留白<b>我們沒驗過</b>——表單右上角那顆
-    <b>預覽</b>按一下就有答案。兩案哪一種都成立。</p>
+  <p class="pv-cap">大格會把 1080 的圖<b>上下各切掉 271 列</b>，所以識別與電話收在中間那條帶子裡。<br>
+    <span class="n">⚠</span> 到底是裁還是留白<b>我們沒驗過</b>——表單右上角那顆<b>預覽</b>按一下就有答案。</p>
 
   <h2 class="pv-h2">「詳情」欄要貼的字</h2>
   <div class="pv-txt">一週的門診時段，以及每一節有哪些科別。
@@ -95,6 +100,15 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 國定假日與各科特別門診請來電確認　05-5339369</div>
   <p class="pv-cap">排班、時段、電話都是從站上 <code>index.html</code> 讀回來的，
     <b>不重打</b>——診所改排班，重跑一次就好。</p>
+
+  <h2 class="pv-h2">另一種排法
+    <span class="t">上一輪的一科一行，還留著</span></h2>
+  <div class="pv-shot">
+    <img src="post-hours-list.png" width="1080" height="1080" loading="lazy"
+      alt="一科一行：七科各一列，每列寫出早、午、晚分別是哪幾天">
+  </div>
+  <p class="pv-cap">你說格子比較好，這一張留著當對照。<br>
+    它唯一贏的地方：顯微根管排出來是「早三　午三　晚三」，<b>全在週三自己跳出來</b>。</p>
 
 </div>
 </body>
