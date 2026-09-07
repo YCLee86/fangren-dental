@@ -99,6 +99,30 @@
 　https://fangren.net</pre>
   <p class="pv-more"><a href="../line-auto-reply/">看這一則的模擬圖與完整規格 →</a></p>
 
+  <h2 class="pv-h2" id="m③">③ 綁定完成
+    <span class="t">廠商回覆：綁定完成訊息為公版，故無法調整</span></h2>
+  
+  <p class="pv-note"><b>那句公版我們不用改，也不必取代它。</b>「✅ 09XXXXXX 綁定成功！」是病人端送出的訊息；我們要換的是<b>它後面那一則回覆</b> —— 現在回的是我們設在後台「自動回應」的通用文字（那一段是給「病人在聊天室打任何字」用的），希望改成下面這張<b>綁定完成專屬的圖卡</b>，或是<b>在公版那句後面再多送一則</b>。細節與三個要確認的問題見下面「還需要答案的事」第 3 項。</p>
+  <h3>圖檔（點下去就是線上那一張）</h3><ul class="pv-files"><li><a href="https://fangren.net/assets/line/hero-bind.jpg">hero-bind.jpg</a><span class="d">1024×512　100KB</span></li></ul>
+  <h3>文字</h3>
+  <p class="pv-lbl">綁定完成之後送出</p><pre class="pv-copy">〔圖〕hero-bind.jpg
+綁定完成～
+點下面選單的約診查詢，
+可隨時查看之後的約診。
+看診前48小時這裡會發送訊息
+提醒，請務必確認。
+若24小時內無回應，
+系統將自動取消約診，
+以遞補他人的候診需求。
+這裡沒有專人即時回覆訊息。
+約診更改或取消，最晚請於
+看診日前2天(不含假日)、
+於診所開診時段來電變更
+05-5339369
+家人的約診也可以綁定在同一隻
+手機，設定請洽診所櫃檯人員。</pre>
+  <p class="pv-more"><a href="../line-bind-done/">看這一則的模擬圖與完整規格 →</a></p>
+
   <h2 class="pv-h2" id="m④">④ 約診提醒
     <span class="t">廠商要的：請提供圖檔</span></h2>
   
@@ -118,6 +142,21 @@
 突然有事想改時間，請致電診所
 〔鈕〕05-5339369</pre>
   <p class="pv-more"><a href="../line-remind/">看這一則的模擬圖與完整規格 →</a></p>
+
+  <h2 class="pv-h2" id="m⑤">⑤ 預約成功 ＋ 約診紀錄查詢
+    <span class="t">廠商回覆：背景只能全白或其他顏色，無法放圖示；請確認維持白底或提供色碼</span></h2>
+  <p class="pv-warn">⚠ <b>這一則有一件現在正在出錯的，比改版型優先</b>：約診紀錄查詢那張卡的日期設了 <code>maxLines: 1</code>，在輪播的窄卡上<b>真的被截斷</b>（截圖上是「2026/08/20 15:45 星…」）。請改成 <code>wrap: true</code>、<b>不要限制行數</b> —— 放得下一行、放不下折兩行，這樣不管卡片多寬都不會有字消失。</p>
+  <p class="pv-note"><b>背景色：<code>#F4F4F5</code></b>（診所網站的卡片色）—— 不必另外設定，<b>我們給的每一份 JSON 裡本來就寫著它</b>，七則統一，照 JSON 走就好。<br>至於右下角那顆淡標誌：<b>我們要的不是背景圖</b>（Flex 的 box 確實沒有背景圖這個欄位，這一點沒有問題），是一個<b>疊在卡片上的圖片元件</b>（<code>image</code> ＋ <code>position: absolute</code>，靠 <code>offsetEnd</code>／<code>offsetBottom</code> 貼右下角，淡度已經烘在 PNG 裡）。要確認的只有一句：<b>這樣疊得上去嗎（文字會在圖上面嗎）？</b>疊不上去的退路是<b>把那顆淡標誌排在日期右邊、不重疊</b>，就不必用 absolute。</p>
+  <h3>圖檔（點下去就是線上那一張）</h3><ul class="pv-files"><li><a href="https://fangren.net/assets/line/wm-r1c1-12.png">wm-r1c1-12.png</a><span class="d">300×300　8KB</span></li><li><a href="https://fangren.net/assets/line/wm-r1c2-12.png">wm-r1c2-12.png</a><span class="d">420×207　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r1c3-12.png">wm-r1c3-12.png</a><span class="d">526×171　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r2c1-12.png">wm-r2c1-12.png</a><span class="d">426×210　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r2c2-12.png">wm-r2c2-12.png</a><span class="d">336×252　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r2c3-12.png">wm-r2c3-12.png</a><span class="d">526×171　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r3c1-12.png">wm-r3c1-12.png</a><span class="d">291×291　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r3c2-12.png">wm-r3c2-12.png</a><span class="d">297×297　6KB</span></li><li><a href="https://fangren.net/assets/line/wm-r3c3-12.png">wm-r3c3-12.png</a><span class="d">602×195　9KB</span></li></ul>
+  <h3>文字</h3>
+  <p class="pv-lbl">① 預約成立的當下自動送出（單張）</p><pre class="pv-copy">{{patient}}　約好囉
+{{date}}
+異動請在2天前(不含假日)與診所聯繫
+看診前2天會再提醒一次，記得回覆喔～
+〔圖〕wm-{{watermark}}-12.png</pre><p class="pv-lbl">② 點圖文選單「約診查詢」（輪播，一個約診一張，最多 12 張）</p><pre class="pv-copy">{{patient}}
+{{date}}
+〔圖〕wm-{{watermark}}-12.png</pre>
+  <p class="pv-more"><a href="../line-booked/">看這一則的模擬圖與完整規格 →</a></p>
 
   <h2 class="pv-h2" id="m⑥">⑥ 取消／改期那一段對話
     <span class="t">廠商要的：（請提供完整內容）</span></h2>
@@ -433,7 +472,16 @@
       <b>review gating</b>。<b>答案出來之前 ⑦ 先不要送。</b></li>
     <li><b>Google 的「寫評論」深連結需要 Place ID</b> —— 診所手上只有分享短網址，
       要先取得才填得了 ⑦ 那顆按鈕的網址。</li>
-    <li><b>綁定完成那一則的觸發字串</b>目前還含著電話號碼，要換成廠商系統產的網址。</li>
+    <li><b>綁定完成那一則，現在是誰在回？</b>（後台的「自動回應訊息」，還是你們系統？）<br>
+      我們想改成：<b>綁定成功的當下由你們系統送 ③ 那張圖卡</b>，或在公版那句後面再多送一則 ——
+      <b>公版那句不用動。</b><br>
+      ⚠ 跟著要確認的一件：<b>後台的「自動回應訊息」如果同時開著，病人會不會兩則一起收到</b>
+      （圖卡 ＋ ② 那段通用文字）？如果會，是不是要把後台的自動回應關掉、② 那一則也改由你們系統回？<br>
+      ⚠ 一件背景，免得繞路：後台的關鍵字回應是<b>完全一致</b>比對，而那句話含著每個人不同的
+      電話號碼 —— <b>後台永遠抓不到它</b>，所以這一則只能由你們系統處理。</li>
+    <li><b>⑤ 那兩張卡右下角的淡標誌，用 <code>position: absolute</code> 疊得上去嗎？</b>
+      （要的是文字在圖上面。）疊不上去就改成<b>排在日期右邊、不重疊</b> ——
+      兩種我們都可以，只要先知道是哪一種；圖檔九顆都已經在線上了。</li>
     <li><b>病人手機上卡片的實際寬度</b>：全線的排版是按 <b>268px</b> 做的，
       而那是從診所端後台的截圖推導出來的。<b>一張病人手機的截圖</b>就能收掉這一題。</li>
     <li><b>衛教懶人包的授權已經沒問題了</b> —— 2026-09-07 診所重新匯出十二張，
