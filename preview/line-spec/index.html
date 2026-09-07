@@ -4,270 +4,584 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>芳仁牙醫診所　LINE 官方帳號　模擬圖總覽</title>
-<!--
-  ⚠ 這一頁的身分是**規格頁不是提案頁**（CLAUDE.md 第十一之五節）：
-     沒有切換條、沒有候選案，用途是把 LINE 那條線的成品整包拿給廠商看。
-     ＝ CLAUDE.md 第十一之七節第 3 項那個「最後一步」。
-
-  ⚠⚠ **2026-09-07 整頁改寫：只留模擬圖。**
-     使用者：「廠商對接窗口也是專業的 line 設計工程師，所以只要保留模擬圖的部分就好，
-     附帶標題文字或是哪一個介面的簡單說明，目前大量的文字解說都不用。」
-     → 拿掉的是：總表、每一則的「什麼時候送／送給誰／誰送／型別」事實列、檔案清單、
-       Flex 的硬條件、圖檔清單與網址、24 題要問廠商的、兩條紅線。
-     ⚠⚠ **那些東西一個字都沒有消失** —— 它們本來就各自住在那一則自己的規格頁裡
-       （`preview/line-*/`），這一頁的每一個標題底下都連著。
-       這一頁從「整包規格」變成「**模擬圖的總覽 ＋ 入口**」。
-     ⚠ 只留下兩處一行的提醒（⑦ 先不要送、⑤ 日期正在被截斷）：
-       那兩件是**現在就會出事**的，不是解說。
-     ⚠ 2026-09-07 稍晚：**行政那兩張（預約協議／掛號與文件費用）使用者指定拿掉**，
-       所以 ⑪ 只剩衛教那一條輪播。`drafts/line-oa/admin-carousel-d.json` 與它的預覽都留著沒刪。
-     ⚠ 同一天：**⑧ 颱風那一則的「純文字版」也使用者指定拿掉**，這一頁只留圖卡版。
-       ⚠⚠ `/preview/line-typhoon/` **那一頁的純文字版沒有動** —— 那是「廠商送不出 Flex」時的退路，
-         拿掉的是「這一頁要不要給廠商看」，不是把那條路作廢（同行政那兩張）。
-
-  ⚠⚠ **這一頁不重抄任何一則的文字。**
-     每一則的字有它自己的出處（Flex 的 JSON、或 auto-reply.txt），
-     再抄一份就是第二個真相，而它一定會過期 —— 所以這裡只放
-     **真的產出檔**（那幾頁自己拍的 PNG）＋ 連回各自的規格頁。
-     ⚠ 圖是那幾頁的產出檔，**那幾頁改了就要重跑各自的 *-png.mjs**，不然這一頁的圖會開始說謊。
-
-  ⚠ 圖一律寫 width/height 屬性（不寫的話沒載完之前高度是 0，整頁會跳版），
-     第一張以外一律 loading="lazy" —— 全部加起來約 3.5MB，而 Worker 對 /preview/* 設 no-store。
-  ⚠ class 一律 pv- 前綴；樣式放在 head。
-  ⚠ 連結一律相對路徑（../line-welcome/ 這種），不要用根目錄絕對路徑 ——
-     舊站 yclee86.github.io 還活著，那邊會壞（CLAUDE.md 第九節）。
-  ⚠ 這一頁刻意零 JS：交給廠商的東西沒有理由需要跑腳本（守門連 <script> 都擋）。
--->
+<title>芳仁牙醫診所　LINE 官方帳號　交付包</title>
 <style>
-:root{
-  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
-  --ink:#2a2c27; --ink-soft:#5c5f57; --green:#3f654a; --deep:#2c5238;
-  --red:#89202d;
-  --li-bg:#e9edf1;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{background:var(--paper);color:var(--ink);
-  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
-  line-height:1.75;padding-bottom:60px}
-.pv-wrap{max-width:430px;margin:0 auto;padding:16px 14px 0}
-
-h1{font-size:1.06rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
-h1 span{display:block;font-weight:400;font-size:.68em;color:var(--ink-soft);letter-spacing:.04em}
-.pv-sub{font-size:.78rem;color:var(--ink-soft);margin:.5rem 0 0;line-height:1.8}
-.pv-sub b{color:var(--ink)}
-a{color:var(--deep)}
-code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px;
-  overflow-wrap:anywhere;font-family:ui-monospace,Menlo,Consolas,monospace}
-
-.pv-h2{font-size:.94rem;font-weight:700;margin:30px 0 0;letter-spacing:.01em;
-  padding-left:9px;border-left:3px solid var(--green)}
-.pv-h2 .t{display:block;font-size:.78em;font-weight:400;color:var(--ink-soft);
-  letter-spacing:0}
-.pv-group{font-size:.78rem;color:var(--ink-soft);margin:34px 0 0;
-  border-top:1px solid var(--rule);padding-top:12px;line-height:1.8}
-.pv-group b{color:var(--ink)}
-
-/* ---- 成品圖：擺真的產出檔，不要用 CSS 再畫一次 ----------------------- */
-.pv-shot{margin:11px 0 0;background:var(--li-bg);border:1px solid var(--rule);
-  border-radius:10px;padding:12px;display:flex;flex-direction:column;
-  align-items:flex-start;gap:10px}
-.pv-shot img{display:block;width:268px;height:auto;max-width:100%;
-  border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.pv-shot img.narrow{width:204px}
-.pv-shot img.plain{box-shadow:none;border-radius:0}
-/* 比卡片寬的（輪播、七科攤成格狀那幾張）自己一條捲軸，不要讓整頁能左右拉。
-   ⚠⚠⚠ 這裡**每一張都要自己寫 inline 的 `width:NNNpx`**，
-   而且要等於它的 `width` 屬性 —— 2026-09-07 踩過：原本寫 `width:auto`，
-   而 **`width:auto` 會蓋掉 `<img>` 的 width 屬性、讓圖退回「原始像素尺寸」**，
-   3× 拍的那幾張因此畫成三倍大（`shot-query` 855 → 2565）。
-   症狀是「手機上有幾張特別巨大」，**版面沒有破、水平溢出仍然是 0**，
-   只有把每一張的 `getBoundingClientRect().width` 印出來才看得到。
-   `check-spec.mjs` 現在有兩道在守這件事。 */
-.pv-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.pv-scroll img{max-width:none}
-.pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:0}
-.pv-cap b{color:var(--ink)}
-.pv-cap .n{color:var(--red);font-weight:700}
-
-/* ---- 目錄 ------------------------------------------------------------ */
-.pv-toc{margin:12px 0 0;font-size:.76rem;line-height:1.9}
-.pv-toc a{display:block;color:var(--ink);text-decoration:none;
-  border-bottom:1px solid var(--rule);padding:4px 0}
-.pv-toc a:last-child{border-bottom:0}
-.pv-toc a .n{color:var(--ink-soft);font-size:.9em}
-.pv-toc .sep{font-size:.9em;color:var(--ink-soft);padding:9px 0 2px;
-  border-bottom:1px solid var(--rule)}
+  :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
+    --green:#2c5238;--brick:#89202d}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+    -webkit-text-size-adjust:100%}
+  .wrap{max-width:760px;margin:0 auto;padding:26px 14px 72px}
+  h1{font-size:1.34rem;line-height:1.5;margin:0 0 .3em}
+  .lede{color:var(--soft);font-size:.94rem;margin:0 0 1.6em}
+  .pv-h2{font-size:1.06rem;margin:2.4em 0 .5em;padding-top:1.1em;border-top:1px solid var(--rule)}
+  .pv-h2 .t{display:block;font-size:.8rem;font-weight:400;color:var(--soft);margin-top:.25em}
+  h3{font-size:.86rem;color:var(--soft);font-weight:600;letter-spacing:.04em;
+    margin:1.5em 0 .4em;text-transform:none}
+  a{color:#214d48}
+  code{font-size:.9em;background:var(--card);padding:.1em .35em;border-radius:4px}
+  .pv-note,.pv-warn{font-size:.9rem;background:var(--card);border-radius:9px;
+    padding:.75em .9em;margin:.6em 0}
+  .pv-warn{background:#eee5e6}
+  .pv-lbl{font-size:.83rem;color:var(--soft);margin:1em 0 .3em}
+  .pv-copy{background:var(--card);border:1px solid var(--rule);border-radius:9px;
+    padding:14px 15px;margin:0 0 .4em;white-space:pre-wrap;word-break:break-word;
+    /* ⚠ 寫成 font 的簡寫再接 inherit 是無效的（family 不能寫 inherit），
+       <pre> 就退回等寬字 —— 中文看不出來，但 LINE、日期、檔名會突然變等寬。 */
+    font-size:15px;line-height:1.85;font-family:inherit}
+  .pv-files{list-style:none;margin:.3em 0;padding:0;font-size:.92rem}
+  .pv-files li{padding:.28em 0;border-bottom:1px dotted var(--rule);
+    display:flex;gap:.2em .6em;justify-content:space-between;align-items:baseline;flex-wrap:wrap}
+  /* ⚠ 這裡**不可以寫 white-space:nowrap** —— 圖示原檔那幾行的說明很長，
+     一 nowrap 就在手機上撐出 150~260px 的水平捲動（2026-09-07 量到）。 */
+  .pv-files .d{color:var(--soft);font-size:.82rem;min-width:0}
+  .pv-files a{word-break:break-all}
+  .n{color:var(--brick)}
+  .pv-more{font-size:.88rem;margin:.9em 0 0}
+  /* ⚠ 一定要給 min-width —— 只寫 width:100% 的話，外層的 overflow-x 永遠用不到，
+     表格會被壓成每一格三四個字（2026-09-07 在 390 上量到檔名折成四行）。 */
+  table{width:100%;min-width:600px;border-collapse:collapse;font-size:.88rem;margin:.4em 0}
+  th,td{text-align:left;vertical-align:top;padding:.5em .45em;border-bottom:1px solid var(--rule)}
+  th{font-size:.8rem;color:var(--soft);font-weight:600;white-space:nowrap}
+  td .s{color:var(--soft);font-size:.88em}
+  .scroll{overflow-x:auto}
+  ol.q{padding-left:1.3em}
+  ol.q li{margin:.7em 0}
+  .pv-h2 .t2{display:block;font-size:.78rem;font-weight:400;color:var(--soft);margin-top:.15em}
+  .pv-group{font-size:.9rem;color:var(--soft);margin:2.6em 0 0;
+    border-top:1px solid var(--rule);padding-top:1.1em;line-height:1.8}
+  .pv-group b{color:var(--ink)}
+  /* ---- 模擬圖：擺真的產出檔，不要用 CSS 再畫一次 ---------------------- */
+  .pv-shot{margin:.5em 0 0;background:#e9edf1;border:1px solid var(--rule);
+    border-radius:10px;padding:12px;display:flex;flex-direction:column;
+    align-items:flex-start;gap:10px}
+  .pv-shot img{display:block;width:268px;height:auto;max-width:100%;
+    border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .pv-shot img.narrow{width:204px}
+  .pv-shot img.plain{box-shadow:none;border-radius:0}
+  /* ⚠⚠⚠ 捲軸裡每一張都要自己寫 inline 的 width:NNNpx（產生器會寫），
+     這裡**絕對不可以寫 width:auto** —— 那會蓋掉 <img> 的 width 屬性、
+     讓圖退回「原始像素尺寸」，3× 拍的那幾張因此畫成三倍大。
+     症狀是「手機上有幾張特別巨大」，而版面沒破、水平溢出仍然是 0（2026-09-07 踩過）。 */
+  .pv-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .pv-scroll img{max-width:none}
+  .pv-cap{font-size:.8rem;color:var(--soft);line-height:1.7;margin:0}
+  .pv-cap b{color:var(--ink)}
+  .pv-cap .n{color:var(--brick);font-weight:700}
+  /* ---- 目錄 ---------------------------------------------------------- */
+  .pv-toc{margin:1.2em 0 0;font-size:.88rem;line-height:1.9}
+  .pv-toc a{display:block;color:var(--ink);text-decoration:none;
+    border-bottom:1px solid var(--rule);padding:4px 0}
+  .pv-toc a:last-child{border-bottom:0}
+  .pv-toc a .n{color:var(--soft);font-size:.9em}
+  .pv-toc .sep{font-size:.9em;color:var(--soft);padding:9px 0 2px;
+    border-bottom:1px solid var(--rule)}
 </style>
 </head>
 <body>
-<div class="pv-wrap">
+<div class="wrap">
+<h1>芳仁牙醫診所　LINE 官方帳號</h1>
+<p class="lede">這個帳號上該有哪幾則訊息與哪幾張卡：一項一項附上<b>模擬圖</b>、
+  <b>圖檔的線上網址</b>與<b>可以整段複製的文字</b>。<br>
+  圖檔連結點下去就是線上那一張（可直接下載，或填進 Flex JSON 的 <code>url</code>）。
+  每一則的 Flex JSON、量測與逐句的理由，在標題底下那個<b>完整規格</b>連結裡。</p>
 
-  <h1>芳仁牙醫診所　LINE 官方帳號
-    <span>模擬圖總覽　2026-09-07</span></h1>
+<div class="pv-toc">
+  <div class="sep">自動送出的訊息</div>
+  <a href="#m1">① 招呼圖卡　<span class="n">加入好友</span></a>
+  <a href="#m2">② 自動回應　<span class="n">病人打字</span></a>
+  <a href="#m3">③ 綁定完成　<span class="n">綁定成功之後</span></a>
+  <a href="#m4">④ 約診提醒　<span class="n">看診前 48 小時</span></a>
+  <a href="#m5">⑤ 預約成功 ＋ 約診紀錄查詢</a>
+  <a href="#m6">⑥ 取消／改期那一段對話</a>
+  <a href="#m7">⑦ 評價邀約　<span class="n">看診後</span></a>
+  <a href="#m8">⑧ 颱風／臨時休診</a>
+  <div class="sep">圖文選單點下去回的卡</div>
+  <a href="#m9">⑨ 診所資訊</a>
+  <a href="#m10">⑩ 主題與科別　<span class="n">七科輪播</span></a>
+  <a href="#m11">⑪ 衛教懶人包　<span class="n">十二張</span></a>
+  <div class="sep">最後</div>
+  <a href="#icons">✱ 按鈕上那幾顆圖示的原檔</a>
+  <a href="#ask">✱ 還需要答案的事</a>
+</div>
 
-  <p class="pv-sub">這一頁只放<b>成品的模擬圖</b>：這個帳號上該有哪幾則訊息與哪幾張卡，
-    各自長什麼樣。<br>
-    每一則的 Flex JSON、圖檔、量測與逐句的理由，在標題底下那個
-    <b>完整規格</b>連結裡。<br>
-    <b>要拿圖檔與可複製的文字</b>：<a href="../line-handover/">交付包 →</a></p>
 
-  <div class="pv-toc">
-    <div class="sep">自動送出的訊息</div>
-    <a href="#m1">① 招呼圖卡　<span class="n">加入好友</span></a>
-    <a href="#m2">② 自動回應　<span class="n">病人打字</span></a>
-    <a href="#m3">③ 綁定完成　<span class="n">綁定成功之後</span></a>
-    <a href="#m4">④ 約診提醒　<span class="n">看診前 48 小時</span></a>
-    <a href="#m5">⑤ 預約成功 ＋ 約診紀錄查詢</a>
-    <a href="#m6">⑥ 取消／改期那一段對話</a>
-    <a href="#m7">⑦ 評價邀約　<span class="n">看診後</span></a>
-    <a href="#m8">⑧ 颱風／臨時休診</a>
-    <div class="sep">圖文選單點下去回的卡</div>
-    <a href="#m9">⑨ 診所資訊</a>
-    <a href="#m10">⑩ 主題與科別　<span class="n">七科輪播</span></a>
-    <a href="#m11">⑪ 衛教懶人包　<span class="n">十二張</span></a>
-  </div>
-
-  <!-- ================= ① 招呼圖卡 ================= -->
+  
   <h2 class="pv-h2" id="m1">① 招呼圖卡
-    <span class="t">加入好友的當下 — <a href="../line-welcome/">完整規格</a></span></h2>
-  <div class="pv-shot">
-    <img src="../line-welcome/shot-welcome.png" width="268" height="490"
-      alt="招呼圖卡：頭圖是診所實景加一個對話框寫著「芳仁　哩厚！」，底下兩顆按鈕">
-    <p class="pv-cap">↑ 病人手機上的真實大小（卡片 268px 寬）。以下每一張都是同一個尺度。</p>
-  </div>
+    <span class="t">加入好友的當下　—　<a href="../line-welcome/">完整規格 →</a></span>
+    <span class="t2">廠商要的：請提供圖檔</span></h2>
+  
+  
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><img src="../line-welcome/shot-welcome.png" width="268" height="490" alt="招呼圖卡：頭圖是診所實景加一個對話框寫著「芳仁　哩厚！」，底下兩顆按鈕"><p class="pv-cap">↑ 病人手機上的真實大小（卡片 268px 寬）。以下每一張都是同一個尺度。</p></div>
+  <h3>圖檔（點下去就是線上那一張）</h3><ul class="pv-files"><li><a href="https://fangren.net/assets/line/hero-welcome.jpg">hero-welcome.jpg</a><span class="d">1024×512　123KB</span></li><li><a href="https://fangren.net/assets/line/mark-white.png">mark-white.png</a><span class="d">160×79　2KB</span></li><li><a href="https://fangren.net/assets/line/mark-green.png">mark-green.png</a><span class="d">243×79　3KB</span></li></ul>
+  <h3>文字</h3>
+  <p class="pv-lbl">加為好友時自動送出的那一則</p><pre class="pv-copy">〔圖〕hero-welcome.jpg
+歡迎加入芳仁牙醫的官方 LINE
+下面有一排選單
+診所的資訊都在裡面
+────────
+綁定芳仁牙醫 LINE
+看診前 2 天發送提醒通知喔～
+〔鈕〕點這裡綁定
+家人或朋友要找牙醫
+歡迎把芳仁傳過去
+〔鈕〕介紹芳仁給朋友</pre>
 
-  <!-- ================= ② 自動回應 ================= -->
+  
   <h2 class="pv-h2" id="m2">② 自動回應
-    <span class="t">病人在聊天室打任何一句字 — <a href="../line-auto-reply/">完整規格</a></span></h2>
-  <div class="pv-shot">
-    <img src="../line-auto-reply/shot-auto-reply.png" class="narrow" width="204" height="307" loading="lazy"
-      alt="自動回應：一則純文字泡泡">
-    <p class="pv-cap">↑ <b>純文字，不是圖卡</b>　這一則留在 LINE 官方帳號後台，診所自己設。</p>
-  </div>
+    <span class="t">病人在聊天室打任何一句字　—　<a href="../line-auto-reply/">完整規格 →</a></span>
+    <span class="t2">廠商要的：（請提供完整內容）</span></h2>
+  
+  <p class="pv-note">這一則是<b>純文字，不是圖卡</b> —— 貼進後台「自動回應訊息」的「一律回應」即可，診所自己就設得完，不必經過廠商。</p>
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><img src="../line-auto-reply/shot-auto-reply.png" class="narrow" width="204" height="307" loading="lazy" alt="自動回應：一則純文字泡泡"><p class="pv-cap">↑ <b>純文字，不是圖卡</b>　這一則留在 LINE 官方帳號後台，診所自己設。</p></div>
+  
+  <h3>文字</h3>
+  <p class="pv-lbl">病人在聊天室打任何字，回這一則</p><pre class="pv-copy">謝謝你的訊息。
+這裡沒有專人即時回覆訊息。
 
-  <!-- ================= ③ 綁定完成 ================= -->
+約診更改或取消，最晚請於
+看診日前2天(不含假日)、
+於診所開診時段來電變更
+05-5339369
+
+查自己的約診
+　點下面選單的「約診查詢」
+
+門診表與各科說明
+　https://fangren.net</pre>
+
+  
   <h2 class="pv-h2" id="m3">③ 綁定完成
-    <span class="t">病人綁定成功之後 — <a href="../line-bind-done/">完整規格</a></span></h2>
-  <div class="pv-shot">
-    <img src="../line-bind-done/shot-bind-done.png" width="268" height="619" loading="lazy"
-      alt="綁定完成的圖卡：頭圖、確認文字，以及一塊淡藍底的改約說明">
-    <p class="pv-cap">↑ Flex bubble：頭圖 ＋ 兩塊淡底的方塊。</p>
-  </div>
+    <span class="t">病人綁定成功之後　—　<a href="../line-bind-done/">完整規格 →</a></span>
+    <span class="t2">廠商回覆：綁定完成訊息為公版，故無法調整</span></h2>
+  
+  <p class="pv-note"><b>那句公版我們不用改，也不必取代它。</b>「✅ 09XXXXXX 綁定成功！」是病人端送出的訊息；我們要換的是<b>它後面那一則回覆</b> —— 現在回的是我們設在後台「自動回應」的通用文字（那一段是給「病人在聊天室打任何字」用的），希望改成下面這張<b>綁定完成專屬的圖卡</b>，或是<b>在公版那句後面再多送一則</b>。細節與三個要確認的問題見下面「還需要答案的事」第 3 項。</p>
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><img src="../line-bind-done/shot-bind-done.png" width="268" height="619" loading="lazy" alt="綁定完成的圖卡：頭圖、確認文字，以及一塊淡藍底的改約說明"><p class="pv-cap">↑ Flex bubble：頭圖 ＋ 兩塊淡底的方塊。</p></div>
+  <h3>圖檔（點下去就是線上那一張）</h3><ul class="pv-files"><li><a href="https://fangren.net/assets/line/hero-bind.jpg">hero-bind.jpg</a><span class="d">1024×512　100KB</span></li></ul>
+  <h3>文字</h3>
+  <p class="pv-lbl">綁定完成之後送出</p><pre class="pv-copy">〔圖〕hero-bind.jpg
+綁定完成～
+點下面選單的約診查詢，
+可隨時查看之後的約診。
+看診前48小時這裡會發送訊息
+提醒，請務必確認。
+若24小時內無回應，
+系統將自動取消約診，
+以遞補他人的候診需求。
+這裡沒有專人即時回覆訊息。
+約診更改或取消，最晚請於
+看診日前2天(不含假日)、
+於診所開診時段來電變更
+05-5339369
+家人的約診也可以綁定在同一隻
+手機，設定請洽診所櫃檯人員。</pre>
 
-  <!-- ================= ④ 約診提醒 ================= -->
+  
   <h2 class="pv-h2" id="m4">④ 約診提醒
-    <span class="t">看診前 48 小時 — <a href="../line-remind/">完整規格</a></span></h2>
-  <div class="pv-shot">
-    <img src="../line-remind/shot-remind.png" width="268" height="581" loading="lazy"
-      alt="約診提醒的圖卡：候診間揮手的頭圖、姓名與日期，以及三顆按鈕">
-    <p class="pv-cap">↑ 三顆按鈕都是<b>可點的 box</b>不是 button（button 放不進 logo）。</p>
-  </div>
+    <span class="t">看診前 48 小時　—　<a href="../line-remind/">完整規格 →</a></span>
+    <span class="t2">廠商要的：請提供圖檔</span></h2>
+  
+  
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><img src="../line-remind/shot-remind.png" width="268" height="581" loading="lazy" alt="約診提醒的圖卡：候診間揮手的頭圖、姓名與日期，以及三顆按鈕"><p class="pv-cap">↑ 三顆按鈕都是<b>可點的 box</b>不是 button（button 放不進 logo）。</p></div>
+  <h3>圖檔（點下去就是線上那一張）</h3><ul class="pv-files"><li><a href="https://fangren.net/assets/line/hero-remind.jpg">hero-remind.jpg</a><span class="d">1024×512　162KB</span></li><li><a href="https://fangren.net/assets/line/mark-white.png">mark-white.png</a><span class="d">160×79　2KB</span></li><li><a href="https://fangren.net/assets/line/mark-chev-white.png">mark-chev-white.png</a><span class="d">38×79　1KB</span></li><li><a href="https://fangren.net/assets/line/mark-nogo.png">mark-nogo.png</a><span class="d">243×79　3KB</span></li><li><a href="https://fangren.net/assets/line/mark-tel.png">mark-tel.png</a><span class="d">79×79　2KB</span></li></ul>
+  <h3>文字</h3>
+  <p class="pv-lbl">看診前 48 小時送出</p><pre class="pv-copy">〔圖〕hero-remind.jpg
+哈囉　{{patient}}
+提醒2天後有約要看牙齒喔
+{{date}}
+請攜帶健保卡。
+如有發燒、咳嗽、呼吸道症狀，
+請多休息並來電改約。
+點一下下面的按鈕，讓我們知道喔
+〔鈕〕ok 沒問題
+〔鈕〕掰掰不去囉
+突然有事想改時間，請致電診所
+〔鈕〕05-5339369</pre>
 
-  <!-- ================= ⑤ 預約成功 ＋ 約診紀錄查詢 ================= -->
+  
   <h2 class="pv-h2" id="m5">⑤ 預約成功 ＋ 約診紀錄查詢
-    <span class="t">同一張卡的兩個狀態 — <a href="../line-booked/">完整規格</a></span></h2>
-  <div class="pv-shot">
-    <img src="../line-booked/shot-booked.png" width="268" height="150" loading="lazy"
-      alt="預約成功通知（單張）">
-    <p class="pv-cap">↑ 預約成功（約診成立的當下，單張）。</p>
-    <div class="pv-scroll">
-      <img src="../line-booked/shot-query.png" width="855" height="122" style="width:855px" loading="lazy"
-        alt="約診紀錄查詢的輪播，三張卡並排">
-    </div>
-    <p class="pv-cap">↑ 約診紀錄查詢（<b>輪播</b>，一個約診一張，可以左右滑）。
-      <span class="n">⚠ 現況那一則的日期被截斷了</span>（<code>maxLines: 1</code>），
-      詳見完整規格。</p>
-  </div>
-  <div class="pv-shot">
-    <img src="../line-booked/shot-wm.png" class="plain" width="402" height="462" loading="lazy"
-      alt="九顆浮水印的形狀與顏色對照表">
-    <p class="pv-cap">↑ 每一張卡右下角那顆<b>浮水印</b>的九個形狀與顏色。</p>
-  </div>
+    <span class="t">同一張卡的兩個狀態　—　<a href="../line-booked/">完整規格 →</a></span>
+    <span class="t2">廠商回覆：背景只能全白或其他顏色，無法放圖示；請確認維持白底或提供色碼</span></h2>
+  <p class="pv-warn">⚠ <b>這一則有一件現在正在出錯的，比改版型優先</b>：約診紀錄查詢那張卡的日期設了 <code>maxLines: 1</code>，在輪播的窄卡上<b>真的被截斷</b>（截圖上是「2026/08/20 15:45 星…」）。請改成 <code>wrap: true</code>、<b>不要限制行數</b> —— 放得下一行、放不下折兩行，這樣不管卡片多寬都不會有字消失。</p>
+  <p class="pv-note"><b>背景色：<code>#F4F4F5</code></b>（診所網站的卡片色）—— 不必另外設定，<b>我們給的每一份 JSON 裡本來就寫著它</b>，七則統一，照 JSON 走就好。<br>至於右下角那顆淡標誌：<b>我們要的不是背景圖</b>（Flex 的 box 確實沒有背景圖這個欄位，這一點沒有問題），是一個<b>疊在卡片上的圖片元件</b>（<code>image</code> ＋ <code>position: absolute</code>，靠 <code>offsetEnd</code>／<code>offsetBottom</code> 貼右下角，淡度已經烘在 PNG 裡）。要確認的只有一句：<b>這樣疊得上去嗎（文字會在圖上面嗎）？</b>疊不上去的退路是<b>把那顆淡標誌排在日期右邊、不重疊</b>，就不必用 absolute。</p>
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><img src="../line-booked/shot-booked.png" width="268" height="150" loading="lazy" alt="預約成功通知（單張）"><p class="pv-cap">↑ 預約成功（約診成立的當下，單張）。</p><div class="pv-scroll"><img src="../line-booked/shot-query.png" width="855" height="122" style="width:855px" loading="lazy" alt="約診紀錄查詢的輪播，三張卡並排"></div><p class="pv-cap">↑ 約診紀錄查詢（<b>輪播</b>，一個約診一張，可以左右滑）。</p></div><div class="pv-shot"><div class="pv-scroll"><img src="../line-booked/shot-wm.png" class="plain" width="402" height="462" style="width:402px" loading="lazy" alt="九顆浮水印的形狀與顏色對照表"></div><p class="pv-cap">↑ 每一張卡右下角那顆<b>浮水印</b>的九個形狀與顏色。</p></div>
+  <h3>圖檔（點下去就是線上那一張）</h3><ul class="pv-files"><li><a href="https://fangren.net/assets/line/wm-r1c1-12.png">wm-r1c1-12.png</a><span class="d">300×300　8KB</span></li><li><a href="https://fangren.net/assets/line/wm-r1c2-12.png">wm-r1c2-12.png</a><span class="d">420×207　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r1c3-12.png">wm-r1c3-12.png</a><span class="d">526×171　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r2c1-12.png">wm-r2c1-12.png</a><span class="d">426×210　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r2c2-12.png">wm-r2c2-12.png</a><span class="d">336×252　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r2c3-12.png">wm-r2c3-12.png</a><span class="d">526×171　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r3c1-12.png">wm-r3c1-12.png</a><span class="d">291×291　7KB</span></li><li><a href="https://fangren.net/assets/line/wm-r3c2-12.png">wm-r3c2-12.png</a><span class="d">297×297　6KB</span></li><li><a href="https://fangren.net/assets/line/wm-r3c3-12.png">wm-r3c3-12.png</a><span class="d">602×195　9KB</span></li></ul>
+  <h3>文字</h3>
+  <p class="pv-lbl">① 預約成立的當下自動送出（單張）</p><pre class="pv-copy">{{patient}}　約好囉
+{{date}}
+異動請在2天前(不含假日)與診所聯繫
+看診前2天會再提醒一次，記得回覆喔～
+〔圖〕wm-{{watermark}}-12.png</pre><p class="pv-lbl">② 點圖文選單「約診查詢」（輪播，一個約診一張，最多 12 張）</p><pre class="pv-copy">{{patient}}
+{{date}}
+〔圖〕wm-{{watermark}}-12.png</pre>
 
-  <!-- ================= ⑥ 取消／改期 ================= -->
+  
   <h2 class="pv-h2" id="m6">⑥ 取消／改期那一段對話
-    <span class="t">病人按了圖文選單的「預約改期」 — <a href="../line-cancel/">完整規格</a></span></h2>
-  <div class="pv-shot">
-    <img src="../line-cancel/shot-cancel.png" width="268" height="242" loading="lazy"
-      alt="取消確認卡：姓名、約診時間與兩顆按鈕">
-    <p class="pv-cap">↑ 確認卡（防誤按）。</p>
-    <img src="../line-cancel/shot-cancel-go.png" width="268" height="91" loading="lazy"
-      alt="按了「是喔 要取消」之後回的那一則">
-    <p class="pv-cap">↑ 按了「是喔　要取消」。</p>
-    <img src="../line-cancel/shot-cancel-no.png" width="268" height="135" loading="lazy"
-      alt="按了「按錯惹～我會去～」之後回的那一則">
-    <p class="pv-cap">↑ 按了「按錯惹～我會去～」。</p>
-  </div>
-  <div class="pv-shot">
-    <div class="pv-scroll">
-      <img src="../line-cancel/shot-cancel-chat.png" width="402" height="591" style="width:402px" loading="lazy"
-        alt="取消那一段對話在 LINE 聊天室裡的樣子">
-    </div>
-    <p class="pv-cap">↑ 整段對話在聊天室裡的樣子。</p>
-  </div>
+    <span class="t">病人按了圖文選單的「預約改期」　—　<a href="../line-cancel/">完整規格 →</a></span>
+    <span class="t2">廠商要的：（請提供完整內容）</span></h2>
+  
+  
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><img src="../line-cancel/shot-cancel.png" width="268" height="242" loading="lazy" alt="取消確認卡：姓名、約診時間與兩顆按鈕"><p class="pv-cap">↑ 確認卡（防誤按）。</p><img src="../line-cancel/shot-cancel-go.png" width="268" height="91" loading="lazy" alt="按了「是喔 要取消」之後回的那一則"><p class="pv-cap">↑ 按了「是喔　要取消」。</p><img src="../line-cancel/shot-cancel-no.png" width="268" height="135" loading="lazy" alt="按了「按錯惹～我會去～」之後回的那一則"><p class="pv-cap">↑ 按了「按錯惹～我會去～」。</p></div><div class="pv-shot"><div class="pv-scroll"><img src="../line-cancel/shot-cancel-chat.png" width="402" height="591" style="width:402px" loading="lazy" alt="取消那一段對話在 LINE 聊天室裡的樣子"></div><p class="pv-cap">↑ 整段對話在聊天室裡的樣子。</p></div>
+  <h3>圖檔（點下去就是線上那一張）</h3><ul class="pv-files"><li><a href="https://fangren.net/assets/line/mark-nogo-white.png">mark-nogo-white.png</a><span class="d">243×79　2KB</span></li><li><a href="https://fangren.net/assets/line/mark-head-green.png">mark-head-green.png</a><span class="d">160×79　3KB</span></li></ul>
+  <h3>文字</h3>
+  <p class="pv-lbl">① 按了「預約改期」→ 先問一次</p><pre class="pv-copy">要取消這個約診嗎？
+{{patient}}
+{{date}}
+〔鈕〕是喔 要取消
+〔鈕〕按錯惹～我會去～</pre><p class="pv-lbl">② 按了「是喔　要取消」</p><pre class="pv-copy">已取消，若還有其他問題
+請與診所聯繫喔～</pre><p class="pv-lbl">③ 按了「按錯惹～我會去～」</p><pre class="pv-copy">OK，約診還在喔～
+{{patient}}
+{{date}}</pre>
 
-  <!-- ================= ⑦ 評價邀約 ================= -->
+  
   <h2 class="pv-h2" id="m7">⑦ 評價邀約
-    <span class="t">看診後 — <a href="../line-review/">完整規格</a></span></h2>
-  <div class="pv-shot">
-    <img src="../line-review/shot-review.png" width="268" height="499" loading="lazy"
-      alt="評價邀約的圖卡：評審席的頭圖，兩塊各配一顆按鈕">
-    <p class="pv-cap">↑ <span class="n">⚠ 這一則先不要送</span>
-      —— 那兩顆按鈕實際連到哪裡，會決定它算不算<b>評論篩選</b>，
-      問清楚之前新舊兩版都先擱著。理由見完整規格。</p>
-  </div>
+    <span class="t">看診後　—　<a href="../line-review/">完整規格 →</a></span>
+    <span class="t2">廠商要的：（請提供完整內容）</span></h2>
+  <p class="pv-warn">⚠ 這一則<b>先不要送</b>：兩顆按鈕連到哪裡還沒有答案，在那之前它有可能落入 Google 禁止的「只向滿意的人索取公開評論」。細節見下面「還需要答案的事」第 1 項。</p>
+  
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><img src="../line-review/shot-review.png" width="268" height="499" loading="lazy" alt="評價邀約的圖卡：評審席的頭圖，兩塊各配一顆按鈕"><p class="pv-cap">↑ 版面是這樣，<span class="n">但這一則先不要送</span>（理由見上面那一塊）。</p></div>
+  <h3>圖檔（點下去就是線上那一張）</h3><ul class="pv-files"><li><a href="https://fangren.net/assets/line/hero-review.jpg">hero-review.jpg</a><span class="d">1024×512　148KB</span></li><li><a href="https://fangren.net/assets/line/mark-white.png">mark-white.png</a><span class="d">160×79　2KB</span></li><li><a href="https://fangren.net/assets/line/mark-chev-white.png">mark-chev-white.png</a><span class="d">38×79　1KB</span></li><li><a href="https://fangren.net/assets/line/mark-nogo.png">mark-nogo.png</a><span class="d">243×79　3KB</span></li></ul>
+  <h3>文字</h3>
+  <p class="pv-lbl">看診後送出</p><pre class="pv-copy">〔圖〕hero-review.jpg
+哈囉　{{patient}}
+回去牙齒都還好嗎
+有什麼狀況的話
+記得跟診所聯繫一下
+想瞭解你這次的經驗，
+願意推薦給身邊的親朋好友嗎？
+〔鈕〕願意並分享經驗
+也很重視你的意見，
+不好的直接告訴我們
+〔鈕〕不開心 有話要說</pre>
 
-  <!-- ================= ⑧ 颱風／臨時休診 ================= -->
+  
   <h2 class="pv-h2" id="m8">⑧ 颱風／臨時休診
-    <span class="t">縣府宣布之後，發給那天有約的人 — <a href="../line-typhoon/">完整規格</a></span></h2>
-  <div class="pv-shot">
-    <img src="../line-typhoon/shot-typhoon.png" width="268" height="449" loading="lazy"
-      alt="颱風停診的圖卡：鐵門降下的診所頭圖與停診說明">
-    <p class="pv-cap">↑ 圖卡版（要你們從系統送才有）。</p>
-  </div>
+    <span class="t">縣府宣布之後，發給那天有約的人　—　<a href="../line-typhoon/">完整規格 →</a></span>
+    <span class="t2">廠商要的：（請提供完整內容）</span></h2>
+  
+  <p class="pv-note">文字是<b>診所每次自己打的</b>，所以四個〔…〕要做成可以填的欄位（<code>{{typhoon}}</code>／<code>{{date}}</code>兩處／<code>{{weekday}}</code>）——填完由系統發給那天有約的人，就不必一個一個貼。</p>
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><img src="../line-typhoon/shot-typhoon.png" width="268" height="449" loading="lazy" alt="颱風停診的圖卡：鐵門降下的診所頭圖與停診說明"><p class="pv-cap">↑ 圖卡版（要你們從系統送才有）。</p></div>
+  <h3>圖檔（點下去就是線上那一張）</h3><ul class="pv-files"><li><a href="https://fangren.net/assets/line/hero-typhoon.jpg">hero-typhoon.jpg</a><span class="d">1024×512　180KB</span></li></ul>
+  <h3>文字</h3>
+  <p class="pv-lbl">颱風停診時送出</p><pre class="pv-copy">〔圖〕hero-typhoon.jpg
+因應{{typhoon}}颱風來襲，雲林縣政府已宣布 {{date}}（{{weekday}}） 全縣停班停課，本診所門診將同步暫停。請已預約 {{date}} 看診的民眾，切勿自行前往，我們將於恢復上班後主動致電，協助安排改期。
+若風雨不大而診所恢復開診，將電話連絡當日預約病患就診。
+為因應天候變化，如後續有異動，將另行公告通知。造成不便，敬請見諒，並祝颱風天平安。</pre>
 
-  <!-- ================= 圖文選單那幾格 ================= -->
   <p class="pv-group"><b>以下三張是圖文選單點下去回的卡</b>，不是自動推播。
     現在線上那幾格回的是廠商的預設值，這三張是要拿去換掉它的。</p>
-
-  <!-- ================= ⑨ 診所資訊 ================= -->
   <h2 class="pv-h2" id="m9">⑨ 診所資訊
-    <span class="t">圖文選單第一格</span></h2>
-  <div class="pv-shot">
-    <div class="pv-scroll">
-      <img src="shot-oa-clinic.png" class="plain" width="356" height="553" style="width:356px" loading="lazy"
-        alt="診所資訊卡：診所夜景頭圖、電話地址門診時間，以及三顆按鈕">
-    </div>
-    <p class="pv-cap">↑ 電話、地址、門診時間 ＋ 三顆按鈕（Google 地圖／打給診所／到網站看看）。
-      頭圖直接用站上那張分享圖，<b>1983 年、9 位醫師、6 個部定專科</b>已經印在圖上。</p>
-  </div>
+    <span class="t">圖文選單第一格</span>
+    <span class="t2">廠商要的：請提供圖檔、網站連結</span></h2>
+  
+  <p class="pv-note">網站連結：<a href="https://fangren.net/">https://fangren.net/</a>（按鈕「到網站看看」）。 地圖與電話那兩顆不是網頁連結：一顆開 Google 地圖搜尋、一顆是 <code>tel:+88655339369</code>。</p>
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><div class="pv-scroll"><img src="shot-oa-clinic.png" class="plain" width="356" height="553" style="width:356px" loading="lazy" alt="診所資訊卡：診所夜景頭圖、電話地址門診時間，以及三顆按鈕"></div><p class="pv-cap">↑ 電話、地址、門診時間 ＋ 三顆按鈕（Google 地圖／打給診所／到網站看看）。頭圖直接用站上那張分享圖，<b>1983 年、9 位醫師、6 個部定專科</b>已經印在圖上。</p></div>
+  <h3>圖檔（點下去就是線上那一張）</h3><ul class="pv-files"><li><a href="https://fangren.net/assets/og-home.jpg">og-home.jpg</a><span class="d">1200×628　129KB</span></li><li><a href="https://fangren.net/assets/line-pin.png">line-pin.png</a><span class="d">96×128　2KB</span></li><li><a href="https://fangren.net/assets/line-phone.png">line-phone.png</a><span class="d">104×104　2KB</span></li><li><a href="https://fangren.net/assets/line-logo.png">line-logo.png</a><span class="d">216×106　3KB</span></li></ul>
+  <h3>文字</h3>
+  <p class="pv-lbl">圖文選單「診所資訊」那一格點下去</p><pre class="pv-copy">〔圖〕og-home.jpg
+▍　診所資訊
+────────
+電話　05-5339369
+地址　雲林縣斗六市永樂街70號
+門診　週一至週五
+早診　08:45 – 11:30
+午診　13:45 – 16:30
+晚診　17:45 – 20:00
+國定假日與各科特別門診請來電確認。
+〔鈕〕Google 地圖
+〔鈕〕打給診所
+〔鈕〕到網站看看　fangren.net</pre>
 
-  <!-- ================= ⑩ 主題與科別 ================= -->
   <h2 class="pv-h2" id="m10">⑩ 主題與科別
-    <span class="t">圖文選單「診療項目」那一格　七科輪播</span></h2>
-  <div class="pv-shot">
-    <div class="pv-scroll">
-      <img src="shot-oa-topics.png" class="plain" width="2317" height="634" style="width:2317px" loading="lazy"
-        alt="七科的介紹圖卡一列排開：一般牙科、牙周治療、顯微根管、兒童牙科、齒顎矯正、植牙假牙重建、口腔外科">
-    </div>
-    <p class="pv-cap">↑ <b>七科各一格</b>（不是兩格），在 LINE 上是<b>橫著滑的輪播</b>，這裡照同一個順序一列排開。
-      每一格：那一科的分享圖 ＋ 一句病人自己的話 ＋ 該科的醫師與專長 ＋ 一顆該科顏色的按鈕。
-      ⚠ <b>這一條要左右滑才看得完</b>，每一格左上角標著 1／7 ~ 7／7。</p>
-  </div>
+    <span class="t">圖文選單「診療項目」那一格　七科輪播</span>
+    <span class="t2">廠商問：只需要一般牙科、齒顎矯正兩項嗎？</span></h2>
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><div class="pv-scroll"><img src="shot-oa-topics.png" class="plain" width="2317" height="634" style="width:2317px" loading="lazy" alt="七科的介紹圖卡一列排開：一般牙科、牙周治療、顯微根管、兒童牙科、齒顎矯正、植牙假牙重建、口腔外科"></div><p class="pv-cap">↑ <b>七科各一格</b>（不是兩格），在 LINE 上是<b>橫著滑的輪播</b>，這裡照同一個順序一列排開。⚠ <b>要左右滑才看得完</b>，每一格左上角標著 1／7 ~ 7／7。</p></div>
+  <p class="pv-warn"><b>不是兩項，是七項。</b>那一格是<b>橫著滑的輪播</b>，七科各一張。
+    模擬圖在前一頁上是一整條、要左右滑才看得完 —— 只看畫面左邊會剛好看到第 1 張（一般牙科）
+    與第 5 張（齒顎矯正），我們已經把那張圖改成一列排開，右邊被切一半的那一格就是「還有更多」。</p>
+  <p class="pv-note">七科的圖<b>都已經在線上</b>，尺寸一致（1200×630），檔名見下表。
+    LOGO 圖檔：<b>已經印在每一張圖右上角</b>，不必另外疊；要單獨的向量原檔見下面那一節。</p>
+  <div class="scroll"><table>
+    <tr><th>#</th><th>科別（按鈕上的字）</th><th>圖檔</th><th>按鈕連到</th></tr>
+    <tr><td>1</td><td><b>一般牙科・定期檢查</b></td>
+    <td><a href="https://fangren.net/assets/og-topic-general.jpg">og-topic-general.jpg</a></td>
+    <td><a href="https://fangren.net/topics/general/">/topics/general/</a></td></tr><tr><td>2</td><td><b>牙周治療</b></td>
+    <td><a href="https://fangren.net/assets/og-topic-perio.jpg">og-topic-perio.jpg</a></td>
+    <td><a href="https://fangren.net/topics/perio/">/topics/perio/</a></td></tr><tr><td>3</td><td><b>顯微根管</b></td>
+    <td><a href="https://fangren.net/assets/og-topic-endo.jpg">og-topic-endo.jpg</a></td>
+    <td><a href="https://fangren.net/topics/endo/">/topics/endo/</a></td></tr><tr><td>4</td><td><b>兒童牙科</b></td>
+    <td><a href="https://fangren.net/assets/og-topic-kids.jpg">og-topic-kids.jpg</a></td>
+    <td><a href="https://fangren.net/topics/kids/">/topics/kids/</a></td></tr><tr><td>5</td><td><b>齒顎矯正</b></td>
+    <td><a href="https://fangren.net/assets/og-topic-ortho.jpg">og-topic-ortho.jpg</a></td>
+    <td><a href="https://fangren.net/topics/ortho/">/topics/ortho/</a></td></tr><tr><td>6</td><td><b>植牙・假牙重建</b></td>
+    <td><a href="https://fangren.net/assets/og-topic-prosth.jpg">og-topic-prosth.jpg</a></td>
+    <td><a href="https://fangren.net/topics/prosth/">/topics/prosth/</a></td></tr><tr><td>7</td><td><b>口腔外科</b></td>
+    <td><a href="https://fangren.net/assets/og-topic-surg.jpg">og-topic-surg.jpg</a></td>
+    <td><a href="https://fangren.net/topics/surg/">/topics/surg/</a></td></tr>
+  </table></div>
+  <h3>文字（七科各一段，可以整段複製）</h3>
+  <p class="pv-note">〔圖〕是那一格的頭圖、〔鈕〕是按鈕上的字，
+    <code>────────</code> 是一條分隔線。中間那四行前面的「・」就是卡片上真的會印出來的點。</p>
+  <p class="pv-lbl">1　一般牙科・定期檢查</p><pre class="pv-copy">〔圖〕og-topic-general.jpg
+半年一次的洗牙，順便把整口看一遍。
+小孩、青少年、懷孕、高齡，各有不同的回診維護方案與週期。
+・半年到了，想約洗牙
+・很久沒看牙，想整個檢查一下
+・想帶家裡的人一起來看
+・刷得很認真，還是一直蛀牙或牙周發炎
+────────
+牙周風險　洗牙、牙周維護
+齲齒風險　去除牙菌斑指導、塗氟
+醫師　李柄輝、李侑津、楊小瑩、謝耀慶
+專長　口腔檢查、一般牙科治療
+〔鈕〕一般牙科・定期檢查</pre><p class="pv-lbl">2　牙周治療</p><pre class="pv-copy">〔圖〕og-topic-perio.jpg
+牙齒要咬得穩，地基就要顧好。
+咬起來痠軟、使不上力，或有點會搖，多半是牙周出了問題；早期發現、早期治療，效果才會好。
+懷孕期間牙齦容易出狀況：洗牙三個月一次，急性的要趕快處理。
+・刷牙容易流血
+・牙齒開始搖，或已經掉過
+・洗牙時被告知牙周有問題
+・懷孕後牙齦變得容易腫
+────────
+醫師　李柄輝、李侑津
+專長　牙周照護、牙周病治療、牙周再生手術、水雷射牙周治療
+〔鈕〕牙周治療</pre><p class="pv-lbl">3　顯微根管</p><pre class="pv-copy">〔圖〕og-topic-endo.jpg
+有些根管又細又彎，還會鈣化；X 光片上看不出來，得靠顯微鏡找。
+抽過神經又長膿包，很有可能是末端的細小分支又有細菌滋生；重做或從牙根尖處理，還有機會。
+蛀得很深、神經還沒受影響的，可以評估能不能保留神經。
+・蛀得深，被說要抽神經
+・抽過神經的牙又腫，或長膿包
+・根管太彎、太細或分支多，被說不好處理
+・想把這顆牙留下來
+────────
+醫師　陳芷鈴
+專長　顯微根管、根尖手術、活髓治療
+〔鈕〕顯微根管</pre><p class="pv-lbl">4　兒童牙科</p><pre class="pv-copy">〔圖〕og-topic-kids.jpg
+把乳牙照顧到換牙，恆牙才有位置好好長。
+不喊痛不代表沒事：吃得慢、不愛吃，牙齒可能出狀況了。
+蛀牙很嚴重，無法在門診中順利治療；多半需要在舒眠下完成，兒牙醫師會先評估。
+・小孩喊牙痛，或不肯吃東西
+・乳牙蛀了，不確定要不要處理
+・看過牙，但不配合、沒處理成
+・同一顆補了又掉
+────────
+醫師　林晏妤、謝耀慶
+專長　兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療
+〔鈕〕兒童牙科</pre><p class="pv-lbl">5　齒顎矯正</p><pre class="pv-copy">〔圖〕og-topic-ortho.jpg
+排整齊只是一半：咬得不對，拆掉之後牙齒很容易又跑回去。
+矯正很少單獨進行：蛀牙、拔牙常常要先處理。
+成年人矯正，還要注意到牙周狀況。牙周顧好，牙齒矯正才順利。
+在芳仁，各科醫師會一起把療程的順序接起來。
+・牙齒排得不整齊
+・矯正過，後來又跑回去
+・想知道自己適不適合
+────────
+醫師　王俊偉、廖立揚
+專長　齒顎矯正、隱適美、阻生齒矯正
+〔鈕〕齒顎矯正</pre><p class="pv-lbl">6　植牙・假牙重建</p><pre class="pv-copy">〔圖〕og-topic-prosth.jpg
+不只一顆要處理時，順序比選哪一種更重要。
+缺牙不會痛，但周圍的牙會慢慢倒過去、骨頭也會流失；拖得愈久，治療愈複雜。
+做假牙或植牙之前，牙周和蛀牙要先處理好。
+・缺牙一段時間了
+・假牙鬆了、不好咬
+・問過幾個地方，說法都不一樣
+・想把整口一起整理
+────────
+醫師　李侑津、楊小瑩、陳芷鈴
+專長　植牙手術、固定假牙、活動假牙、牙橋、全口重建
+〔鈕〕植牙・假牙重建</pre><p class="pv-lbl">7　口腔外科</p><pre class="pv-copy">〔圖〕og-topic-surg.jpg
+難拔的那幾顆，門診多半就能完成；根據 X 光影像，先把狀況說清楚。
+反覆發炎、抵住前面那顆，都建議早點處理；埋著沒長出來的，久了可能長出囊腫。
+拔完留下的洞，齒槽骨會慢慢流失；需要的話會放填補材料。
+・智齒腫過，反覆發作
+・牙齒只剩牙根
+・長不出來的牙齒
+・上次拔牙的印象，到現在還記得
+────────
+醫師　許馨文
+專長　阻生齒拔除、齒槽骨保留術
+〔鈕〕口腔外科</pre>
 
-  <!-- ================= ⑪ 衛教懶人包 ================= -->
   <h2 class="pv-h2" id="m11">⑪ 衛教懶人包
-    <span class="t">圖文選單「衛教資訊」那一格　十二張</span></h2>
-  <div class="pv-shot">
-    <div class="pv-scroll">
-      <img src="shot-oa-health.png" class="plain" width="3952" height="420" style="width:3952px" loading="lazy"
-        alt="衛教懶人包的十二格圖卡一列排開：牙周疾病、嚴重牙周、牙結石、蛀牙、智齒、手術照護、隱形矯正、假牙、植牙、活動假牙、美白、輻射">
-    </div>
-    <p class="pv-cap">↑ 診所自己的紙本懶人包，一張一格；兩顆按鈕：「看大圖」開原圖、「讀文章」到站上那一篇。
-      ⚠ <b>這一條要左右滑才看得完</b>，共十二格 ＝ LINE 的上限。</p>
-  </div>
+    <span class="t">圖文選單「衛教資訊」那一格　十二張</span>
+    <span class="t2">廠商要的：圖檔、每一頁標題＆內文、「看大圖」「讀文章」對應的圖片及連結</span></h2>
+  <h3>模擬圖</h3>
+  <div class="pv-shot"><div class="pv-scroll"><img src="shot-oa-health.png" class="plain" width="3952" height="420" style="width:3952px" loading="lazy" alt="衛教懶人包的十二格圖卡一列排開"></div><p class="pv-cap">↑ 診所自己的紙本懶人包，一張一格；兩顆按鈕：「看大圖」開原圖、「讀文章」到站上那一篇。⚠ <b>要左右滑才看得完</b>，共十二格 ＝ LINE 的上限。</p></div>
+  <p class="pv-note"><b>十二張</b>，也是<b>橫著滑的輪播</b> —— 十二格正好是 LINE 的上限，再加就送不出去。
+    每一格：頭圖（<b>1024×536</b> ＝ LINE 對 Flex 圖檔的上限，卡片上顯示的那一張）＋ 標題 ＋ 一句內文 ＋ 兩顆按鈕。
+    <b>「看大圖」開的是完整的那一張直式長圖</b>（在瀏覽器裡開，不受 LINE 的尺寸限制）。</p>
+  <div class="scroll"><table>
+    <tr><th>#</th><th>標題＆內文</th><th>頭圖</th><th>看大圖</th><th>讀文章</th></tr>
+    <tr>
+  <td>1</td>
+  <td><b>▌　牙周疾病報你知</b><br><span class="s">牙周病不會痛，刷牙流血、口腔有味道就是警訊；早點發現，治療和追蹤都輕鬆很多。</span></td>
+  <td><a href="https://fangren.net/assets/handout-perioearly-hero.jpg">handout-perioearly-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-perioearly.jpg">handout-perioearly.jpg</a></td>
+  <td><a href="https://fangren.net/posts/gum-bleeding/">/posts/gum-bleeding/</a></td>
+</tr><tr>
+  <td>2</td>
+  <td><b>▌　嚴重牙周有救嗎</b><br><span class="s">牙齒為什麼會搖、地基流失是怎麼回事；治療有哪些、能做什麼。</span></td>
+  <td><a href="https://fangren.net/assets/handout-perio-hero.jpg">handout-perio-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-perio.jpg">handout-perio.jpg</a></td>
+  <td><a href="https://fangren.net/posts/perio-laser/">/posts/perio-laser/</a></td>
+</tr><tr>
+  <td>3</td>
+  <td><b>▌　陳年牙結石清除</b><br><span class="s">洗牙為什麼會痠、洗完為什麼覺得縫變大；牙齒會搖的話要特別治療。</span></td>
+  <td><a href="https://fangren.net/assets/handout-calculus-hero.jpg">handout-calculus-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-calculus.jpg">handout-calculus.jpg</a></td>
+  <td><a href="https://fangren.net/posts/regular-checkup/">/posts/regular-checkup/</a></td>
+</tr><tr>
+  <td>4</td>
+  <td><b>▌　超大蛀牙生死線</b><br><span class="s">洞看起來不大、也不太痛，神經卻已經很近；清乾淨之後要填補、保神經，或做牙套。</span></td>
+  <td><a href="https://fangren.net/assets/handout-caries-hero.jpg">handout-caries-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-caries.jpg">handout-caries.jpg</a></td>
+  <td><a href="https://fangren.net/posts/bioceramic/">/posts/bioceramic/</a></td>
+</tr><tr>
+  <td>5</td>
+  <td><b>▌　我的智齒該拔嗎</b><br><span class="s">哪幾種智齒該處理、術前要看什麼、拔完要怎麼照顧。</span></td>
+  <td><a href="https://fangren.net/assets/handout-wisdom-hero.jpg">handout-wisdom-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-wisdom.jpg">handout-wisdom.jpg</a></td>
+  <td><a href="https://fangren.net/posts/wisdom-tooth/">/posts/wisdom-tooth/</a></td>
+</tr><tr>
+  <td>6</td>
+  <td><b>▌　牙齒手術照護須知</b><br><span class="s">手術完那幾天怎麼過：紗布要咬多久、什麼時候冰敷什麼時候熱敷、能吃什麼、傷口怎麼清。</span></td>
+  <td><a href="https://fangren.net/assets/handout-surgcare-hero.jpg">handout-surgcare-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-surgcare.jpg">handout-surgcare.jpg</a></td>
+  <td><a href="https://fangren.net/posts/wisdom-tooth/">/posts/wisdom-tooth/</a></td>
+</tr><tr>
+  <td>7</td>
+  <td><b>▌　我可以做隱形矯正嗎</b><br><span class="s">傳統矯正器和透明牙套差在哪：材質、功能、關縫，還有戴起來的感覺。</span></td>
+  <td><a href="https://fangren.net/assets/handout-aligner-hero.jpg">handout-aligner-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-aligner.jpg">handout-aligner.jpg</a></td>
+  <td><a href="https://fangren.net/posts/orthodontics/">/posts/orthodontics/</a></td>
+</tr><tr>
+  <td>8</td>
+  <td><b>▌　假牙一體成型有啥好</b><br><span class="s">什麼狀況需要做牙套、齒質要修掉多少；金屬、全瓷、全鋯各適合誰。</span></td>
+  <td><a href="https://fangren.net/assets/handout-prosth-hero.jpg">handout-prosth-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-prosth.jpg">handout-prosth.jpg</a></td>
+  <td><a href="https://fangren.net/posts/crown-materials/">/posts/crown-materials/</a></td>
+</tr><tr>
+  <td>9</td>
+  <td><b>▌　植牙眉角停看聽</b><br><span class="s">術前要先做假牙模擬和斷層掃描；骨頭整合需要時間，植體和假牙零件都要有認證。</span></td>
+  <td><a href="https://fangren.net/assets/handout-implant-hero.jpg">handout-implant-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-implant.jpg">handout-implant.jpg</a></td>
+  <td><a href="https://fangren.net/posts/missing-tooth/">/posts/missing-tooth/</a></td>
+</tr><tr>
+  <td>10</td>
+  <td><b>▌　活動假牙有眉角</b><br><span class="s">假牙做好只是開始：牙齦適應、回診調整，還有怎麼吃、怎麼洗。</span></td>
+  <td><a href="https://fangren.net/assets/handout-denture-hero.jpg">handout-denture-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-denture.jpg">handout-denture.jpg</a></td>
+  <td><a href="https://fangren.net/posts/missing-tooth/">/posts/missing-tooth/</a></td>
+</tr><tr>
+  <td>11</td>
+  <td><b>▌　我的牙齒不夠白</b><br><span class="s">噴砂拋光、居家藥劑、冷光美白差在哪；做完會不會回色、會不會敏感。</span></td>
+  <td><a href="https://fangren.net/assets/handout-whitening-hero.jpg">handout-whitening-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-whitening.jpg">handout-whitening.jpg</a></td>
+  <td><span class="n">站上還沒有</span></td>
+</tr><tr>
+  <td>12</td>
+  <td><b>▌　拍片的輻射有多少</b><br><span class="s">根尖片、全口片、斷層掃描各是多少；日常生活、搭飛機也有輻射，對照給你看。</span></td>
+  <td><a href="https://fangren.net/assets/handout-xray-hero.jpg">handout-xray-hero.jpg</a></td>
+  <td><a href="https://fangren.net/assets/handout-xray.jpg">handout-xray.jpg</a></td>
+  <td><span class="n">站上還沒有</span></td>
+</tr>
+  </table></div>
+  <p class="pv-note">⚠ <b>美白</b>與<b>拍片輻射</b>兩張沒有「讀文章」—— 站上還沒有對應的文章，那兩格只有一顆按鈕。<br>
+    ⚠ <b>智齒</b>與<b>手術照護</b>連到同一篇、<b>植牙</b>與<b>活動假牙</b>也是 —— 站上目前各只有一篇涵蓋那兩件事，不是填錯。<br>
+    ⚠ 這一條<b>沒有</b>收尾到官網那一格（原本有）：十二格已經滿了，而官網的入口在
+    ⑨ 診所資訊那張卡的第三顆按鈕「到網站看看　fangren.net」。</p>
+  <h3>文字（十二格各一段，可以整段複製）</h3>
+  <p class="pv-lbl">1　▌　牙周疾病報你知</p><pre class="pv-copy">〔圖〕handout-perioearly-hero.jpg
+▌　牙周疾病報你知
+牙周病不會痛，刷牙流血、口腔有味道就是警訊；早點發現，治療和追蹤都輕鬆很多。
+〔鈕〕看大圖
+〔鈕〕讀文章</pre><p class="pv-lbl">2　▌　嚴重牙周有救嗎</p><pre class="pv-copy">〔圖〕handout-perio-hero.jpg
+▌　嚴重牙周有救嗎
+牙齒為什麼會搖、地基流失是怎麼回事；治療有哪些、能做什麼。
+〔鈕〕看大圖
+〔鈕〕讀文章</pre><p class="pv-lbl">3　▌　陳年牙結石清除</p><pre class="pv-copy">〔圖〕handout-calculus-hero.jpg
+▌　陳年牙結石清除
+洗牙為什麼會痠、洗完為什麼覺得縫變大；牙齒會搖的話要特別治療。
+〔鈕〕看大圖
+〔鈕〕讀文章</pre><p class="pv-lbl">4　▌　超大蛀牙生死線</p><pre class="pv-copy">〔圖〕handout-caries-hero.jpg
+▌　超大蛀牙生死線
+洞看起來不大、也不太痛，神經卻已經很近；清乾淨之後要填補、保神經，或做牙套。
+〔鈕〕看大圖
+〔鈕〕讀文章</pre><p class="pv-lbl">5　▌　我的智齒該拔嗎</p><pre class="pv-copy">〔圖〕handout-wisdom-hero.jpg
+▌　我的智齒該拔嗎
+哪幾種智齒該處理、術前要看什麼、拔完要怎麼照顧。
+〔鈕〕看大圖
+〔鈕〕讀文章</pre><p class="pv-lbl">6　▌　牙齒手術照護須知</p><pre class="pv-copy">〔圖〕handout-surgcare-hero.jpg
+▌　牙齒手術照護須知
+手術完那幾天怎麼過：紗布要咬多久、什麼時候冰敷什麼時候熱敷、能吃什麼、傷口怎麼清。
+〔鈕〕看大圖
+〔鈕〕讀文章</pre><p class="pv-lbl">7　▌　我可以做隱形矯正嗎</p><pre class="pv-copy">〔圖〕handout-aligner-hero.jpg
+▌　我可以做隱形矯正嗎
+傳統矯正器和透明牙套差在哪：材質、功能、關縫，還有戴起來的感覺。
+〔鈕〕看大圖
+〔鈕〕讀文章</pre><p class="pv-lbl">8　▌　假牙一體成型有啥好</p><pre class="pv-copy">〔圖〕handout-prosth-hero.jpg
+▌　假牙一體成型有啥好
+什麼狀況需要做牙套、齒質要修掉多少；金屬、全瓷、全鋯各適合誰。
+〔鈕〕看大圖
+〔鈕〕讀文章</pre><p class="pv-lbl">9　▌　植牙眉角停看聽</p><pre class="pv-copy">〔圖〕handout-implant-hero.jpg
+▌　植牙眉角停看聽
+術前要先做假牙模擬和斷層掃描；骨頭整合需要時間，植體和假牙零件都要有認證。
+〔鈕〕看大圖
+〔鈕〕讀文章</pre><p class="pv-lbl">10　▌　活動假牙有眉角</p><pre class="pv-copy">〔圖〕handout-denture-hero.jpg
+▌　活動假牙有眉角
+假牙做好只是開始：牙齦適應、回診調整，還有怎麼吃、怎麼洗。
+〔鈕〕看大圖
+〔鈕〕讀文章</pre><p class="pv-lbl">11　▌　我的牙齒不夠白</p><pre class="pv-copy">〔圖〕handout-whitening-hero.jpg
+▌　我的牙齒不夠白
+噴砂拋光、居家藥劑、冷光美白差在哪；做完會不會回色、會不會敏感。
+〔鈕〕看大圖</pre><p class="pv-lbl">12　▌　拍片的輻射有多少</p><pre class="pv-copy">〔圖〕handout-xray-hero.jpg
+▌　拍片的輻射有多少
+根尖片、全口片、斷層掃描各是多少；日常生活、搭飛機也有輻射，對照給你看。
+〔鈕〕看大圖</pre>
+
+  <h2 class="pv-h2" id="icons">✱ 按鈕上那幾顆圖示的原檔
+    <span class="t">廠商要的：按鈕中的診所 icon 原圖檔</span></h2>
+  <p class="pv-note">下面是<b>向量原檔（SVG）</b>，<code>fill="currentColor"</code> ——
+    顏色與尺寸都可以自己改。前面各則裡列的 <code>.png</code> 是已經烘好顏色、給 Flex 直接用的成品
+    （<b>Flex 的 image 不吃 SVG</b>，所以送進 LINE 的一定是 PNG）。</p>
+  <ul class="pv-files"><li><a href="https://fangren.net/assets/line-src/mark.svg">mark.svg</a><span class="d">站上頁首那一條標誌（長寬比 2.029）—— 綁定鈕、「按錯惹～我會去～」用它</span></li><li><a href="https://fangren.net/assets/line-src/phone.svg">phone.svg</a><span class="d">話筒 —— 診所資訊卡「打給診所」、提醒卡「致電診所」</span></li><li><a href="https://fangren.net/assets/line-src/pin.svg">pin.svg</a><span class="d">地圖圖釘 —— 診所資訊卡「Google 地圖」</span></li><li><a href="https://fangren.net/assets/line-src/shape-r2c3.svg">shape-r2c3.svg</a><span class="d">細長那一顆（長寬比 3.081）—— 「介紹芳仁給朋友」、「掰掰不去囉」、「是喔　要取消」用它</span></li></ul>
+
+  <h2 class="pv-h2" id="ask">還需要答案的事</h2>
+  <ol class="q">
+    <li><b>評價邀約那兩顆按鈕連到哪裡？</b>（現在送的那一版）
+      如果「願意推薦」通向公開評論、「不願意」通向私下表單，那是 Google 明文禁止的
+      <b>review gating</b>。<b>答案出來之前 ⑦ 先不要送。</b></li>
+    <li><b>Google 的「寫評論」深連結需要 Place ID</b> —— 診所手上只有分享短網址，
+      要先取得才填得了 ⑦ 那顆按鈕的網址。</li>
+    <li><b>綁定完成那一則，現在是誰在回？</b>（後台的「自動回應訊息」，還是你們系統？）<br>
+      我們想改成：<b>綁定成功的當下由你們系統送 ③ 那張圖卡</b>，或在公版那句後面再多送一則 ——
+      <b>公版那句不用動。</b><br>
+      ⚠ 跟著要確認的一件：<b>後台的「自動回應訊息」如果同時開著，病人會不會兩則一起收到</b>
+      （圖卡 ＋ ② 那段通用文字）？如果會，是不是要把後台的自動回應關掉、② 那一則也改由你們系統回？<br>
+      ⚠ 一件背景，免得繞路：後台的關鍵字回應是<b>完全一致</b>比對，而那句話含著每個人不同的
+      電話號碼 —— <b>後台永遠抓不到它</b>，所以這一則只能由你們系統處理。</li>
+    <li><b>⑤ 那兩張卡右下角的淡標誌，用 <code>position: absolute</code> 疊得上去嗎？</b>
+      （要的是文字在圖上面。）疊不上去就改成<b>排在日期右邊、不重疊</b> ——
+      兩種我們都可以，只要先知道是哪一種；圖檔九顆都已經在線上了。</li>
+    <li><b>病人手機上卡片的實際寬度</b>：全線的排版是按 <b>268px</b> 做的，
+      而那是從診所端後台的截圖推導出來的。<b>一張病人手機的截圖</b>就能收掉這一題。</li>
+    <li><b>衛教懶人包的授權已經沒問題了</b> —— 2026-09-07 診所重新匯出十二張，
+      署名一律是<b>芳仁牙醫診所</b>（原本印的是「侑津製圖」）。
+      ⚠ 中間一度只匯出 720×1040（頭圖 720，比實際用得到的 804 裝置像素還少）——
+      同一天診所把 PowerPoint 的匯出解析度調高、十二張全部重匯，現在原檔是
+      <b>1384×2000</b>，頭圖 <b>1024×536</b> ＝ LINE 的上限，是<b>縮下來</b>不是不夠。</li>
+  </ol>
 </div>
 </body>
 </html>
