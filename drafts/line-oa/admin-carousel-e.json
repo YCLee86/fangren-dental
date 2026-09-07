@@ -1,0 +1,197 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-booking-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1060:554",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "預約協議",
+          "uri": "https://fangren.net/assets/handout-booking.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#317B6D",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "預約協議",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "分階段的療程診所會保留時段；要改期或取消，請至少兩天前告訴我們。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#55BBA8",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-booking.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/handout-fees-hero.jpg",
+        "size": "full",
+        "aspectRatio": "1058:554",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "掛號與文件費用",
+          "uri": "https://fangren.net/assets/handout-fees.jpg"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "▌",
+                "size": "md",
+                "color": "#547B23",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "掛號與文件費用",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "掛號費、部分負擔、優待身分，以及診斷證明與病歷複製各是多少。",
+            "size": "sm",
+            "color": "#5C5F57",
+            "wrap": true
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#A2D364",
+            "cornerRadius": "6px",
+            "height": "40px",
+            "justifyContent": "center",
+            "action": {
+              "type": "uri",
+              "label": "看大圖",
+              "uri": "https://fangren.net/assets/handout-fees.jpg"
+            },
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "spacing": "md",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "看大圖",
+                    "color": "#2A2C27",
+                    "size": "md",
+                    "weight": "bold",
+                    "flex": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

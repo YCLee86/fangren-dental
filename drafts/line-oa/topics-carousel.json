@@ -1,0 +1,1513 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-general.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "一般牙科・定期檢查",
+          "uri": "https://fangren.net/topics/general/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "半年一次的洗牙，順便把整口看一遍。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "weight": "bold",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "小孩、青少年、懷孕、高齡，各有不同的回診維護方案與週期。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "md",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "半年到了，想約洗牙",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "很久沒看牙，想整個檢查一下",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "想帶家裡的人一起來看",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "刷得很認真，還是一直蛀牙或牙周發炎",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "lg"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "牙周風險",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "洗牙、牙周維護",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "齲齒風險",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "去除牙菌斑指導、塗氟",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "李柄輝、李侑津、楊小瑩、謝耀慶",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "口腔檢查、一般牙科治療",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#3F654A",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "一般牙科・定期檢查",
+              "uri": "https://fangren.net/topics/general/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-perio.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "牙周治療",
+          "uri": "https://fangren.net/topics/perio/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "牙齒要咬得穩，地基就要顧好。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "weight": "bold",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "咬起來痠軟、使不上力，或有點會搖，多半是牙周出了問題；早期發現、早期治療，效果才會好。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "懷孕期間牙齦容易出狀況：洗牙三個月一次，急性的要趕快處理。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "md",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "刷牙容易流血",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "牙齒開始搖，或已經掉過",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "洗牙時被告知牙周有問題",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "懷孕後牙齦變得容易腫",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "lg"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "李柄輝、李侑津",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "牙周照護、牙周病治療、牙周再生手術、水雷射牙周治療",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#317D78",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "牙周治療",
+              "uri": "https://fangren.net/topics/perio/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-endo.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "顯微根管",
+          "uri": "https://fangren.net/topics/endo/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "有些根管又細又彎，還會鈣化；X 光片上看不出來，得靠顯微鏡找。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "weight": "bold",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "抽過神經又長膿包，很有可能是末端的細小分支又有細菌滋生；重做或從牙根尖處理，還有機會。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "蛀得很深、神經還沒受影響的，可以評估能不能保留神經。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "md",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "蛀得深，被說要抽神經",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "抽過神經的牙又腫，或長膿包",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "根管太彎、太細或分支多，被說不好處理",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "想把這顆牙留下來",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "lg"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "陳芷鈴",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "顯微根管、根尖手術、活髓治療",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#AE4F4D",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "顯微根管",
+              "uri": "https://fangren.net/topics/endo/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-kids.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "兒童牙科",
+          "uri": "https://fangren.net/topics/kids/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "把乳牙照顧到換牙，恆牙才有位置好好長。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "weight": "bold",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "不喊痛不代表沒事：吃得慢、不愛吃，牙齒可能出狀況了。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "蛀牙很嚴重，無法在門診中順利治療；多半需要在舒眠下完成，兒牙醫師會先評估。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "md",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "小孩喊牙痛，或不肯吃東西",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "乳牙蛀了，不確定要不要處理",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "看過牙，但不配合、沒處理成",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "同一顆補了又掉",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "lg"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "林晏妤、謝耀慶",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#C28229",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "兒童牙科",
+              "uri": "https://fangren.net/topics/kids/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-ortho.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "齒顎矯正",
+          "uri": "https://fangren.net/topics/ortho/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "排整齊只是一半：咬得不對，拆掉之後牙齒很容易又跑回去。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "weight": "bold",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "矯正很少單獨進行：蛀牙、拔牙常常要先處理。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "成年人矯正，還要注意到牙周狀況。牙周顧好，牙齒矯正才順利。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "在芳仁，各科醫師會一起把療程的順序接起來。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "md",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "牙齒排得不整齊",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "矯正過，後來又跑回去",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "想知道自己適不適合",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "lg"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "王俊偉、廖立揚",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "齒顎矯正、隱適美、阻生齒矯正",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#4478B5",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "齒顎矯正",
+              "uri": "https://fangren.net/topics/ortho/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-prosth.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "植牙・假牙重建",
+          "uri": "https://fangren.net/topics/prosth/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "不只一顆要處理時，順序比選哪一種更重要。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "weight": "bold",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "缺牙不會痛，但周圍的牙會慢慢倒過去、骨頭也會流失；拖得愈久，治療愈複雜。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "做假牙或植牙之前，牙周和蛀牙要先處理好。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "md",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "缺牙一段時間了",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "假牙鬆了、不好咬",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "問過幾個地方，說法都不一樣",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "想把整口一起整理",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "lg"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "李侑津、楊小瑩、陳芷鈴",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "植牙手術、固定假牙、活動假牙、牙橋、全口重建",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#465885",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "植牙・假牙重建",
+              "uri": "https://fangren.net/topics/prosth/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://fangren.net/assets/og-topic-surg.jpg",
+        "size": "full",
+        "aspectRatio": "1200:628",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "label": "口腔外科",
+          "uri": "https://fangren.net/topics/surg/"
+        }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "20px",
+        "paddingTop": "16px",
+        "spacing": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "難拔的那幾顆，門診多半就能完成；根據 X 光影像，先把狀況說清楚。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "weight": "bold",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "反覆發炎、抵住前面那顆，都建議早點處理；埋著沒長出來的，久了可能長出囊腫。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "text",
+            "text": "拔完留下的洞，齒槽骨會慢慢流失；需要的話會放填補材料。",
+            "color": "#2A2C27",
+            "size": "sm",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "margin": "md",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "智齒腫過，反覆發作",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "牙齒只剩牙根",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "長不出來的牙齒",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "xs",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "上次拔牙的印象，到現在還記得",
+                    "color": "#5C5F57",
+                    "size": "sm",
+                    "wrap": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "separator",
+            "color": "#CDD0D2",
+            "margin": "lg"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "醫師",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "許馨文",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "專長",
+                "color": "#5C5F57",
+                "size": "xs",
+                "flex": 2
+              },
+              {
+                "type": "text",
+                "text": "阻生齒拔除、齒槽骨保留術",
+                "color": "#2A2C27",
+                "size": "sm",
+                "flex": 7,
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#F4F4F5",
+        "paddingAll": "16px",
+        "paddingTop": "0px",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#8E6299",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "口腔外科",
+              "uri": "https://fangren.net/topics/surg/"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

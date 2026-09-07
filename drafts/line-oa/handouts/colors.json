@@ -1,0 +1,74 @@
+{
+  "aligner": {
+    "frame": "#4DBAFF",
+    "fill": "#007AC7",
+    "ink": "#0074BD",
+    "hero": "1200:628"
+  },
+  "booking": {
+    "frame": "#55BBA8",
+    "fill": "#348374",
+    "ink": "#317B6D",
+    "hero": "1060:554"
+  },
+  "calculus": {
+    "frame": "#3495F3",
+    "fill": "#0D75DA",
+    "ink": "#0C6FCE",
+    "hero": "1124:588"
+  },
+  "caries": {
+    "frame": "#BE441B",
+    "fill": "#BE441B",
+    "ink": "#BE441B",
+    "hero": "1124:588"
+  },
+  "denture": {
+    "frame": "#11BCA9",
+    "fill": "#0C8477",
+    "ink": "#0B7D70",
+    "hero": "1124:588"
+  },
+  "fees": {
+    "frame": "#A2D364",
+    "fill": "#588125",
+    "ink": "#547B23",
+    "hero": "1058:554"
+  },
+  "implant": {
+    "frame": "#ADDD60",
+    "fill": "#5A811C",
+    "ink": "#567B1A",
+    "hero": "1124:588"
+  },
+  "perio": {
+    "frame": "#54BBAA",
+    "fill": "#348275",
+    "ink": "#317B6F",
+    "hero": "1124:588"
+  },
+  "prosth": {
+    "frame": "#F0A860",
+    "fill": "#B16111",
+    "ink": "#A75B10",
+    "hero": "1124:588"
+  },
+  "whitening": {
+    "frame": "#6DB8FD",
+    "fill": "#0375DD",
+    "ink": "#036FD3",
+    "hero": "1056:552"
+  },
+  "wisdom": {
+    "frame": "#54BBAA",
+    "fill": "#348275",
+    "ink": "#317B6F",
+    "hero": "1124:588"
+  },
+  "xray": {
+    "frame": "#54BBAA",
+    "fill": "#348275",
+    "ink": "#317B6F",
+    "hero": "1124:588"
+  }
+}

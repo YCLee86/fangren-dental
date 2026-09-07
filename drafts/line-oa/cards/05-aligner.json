@@ -1,0 +1,129 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/handout-aligner-hero.jpg",
+    "size": "full",
+    "aspectRatio": "1200:628",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "label": "我可以做隱形矯正嗎",
+      "uri": "https://fangren.net/assets/handout-aligner.jpg"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "baseline",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "▌",
+            "size": "md",
+            "color": "#0074BD",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "我可以做隱形矯正嗎",
+            "size": "lg",
+            "weight": "bold",
+            "color": "#2A2C27",
+            "flex": 0
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "傳統矯正器和透明牙套差在哪：材質、功能、關縫，還有戴起來的感覺。",
+        "size": "sm",
+        "color": "#5C5F57",
+        "wrap": true
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "backgroundColor": "#F4F4F5",
+    "paddingAll": "16px",
+    "paddingTop": "0px",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#4DBAFF",
+        "cornerRadius": "6px",
+        "height": "40px",
+        "justifyContent": "center",
+        "action": {
+          "type": "uri",
+          "label": "看大圖",
+          "uri": "https://fangren.net/assets/handout-aligner.jpg"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "text",
+                "text": "看大圖",
+                "color": "#2A2C27",
+                "size": "md",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "borderColor": "#0074BD",
+        "borderWidth": "1px",
+        "cornerRadius": "6px",
+        "height": "40px",
+        "justifyContent": "center",
+        "action": {
+          "type": "uri",
+          "label": "讀文章",
+          "uri": "https://fangren.net/posts/orthodontics/"
+        },
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "spacing": "md",
+            "contents": [
+              {
+                "type": "text",
+                "text": "讀文章",
+                "color": "#0074BD",
+                "size": "md",
+                "weight": "bold",
+                "flex": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
