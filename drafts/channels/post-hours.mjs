@@ -209,7 +209,12 @@ if (!PHONE) throw new Error("index.html 裡找不到電話（畫面上的寫法�
    這裡要的是「一個大 logo」，所以**只從右邊切掉一點點、其餘完整露出來**，
    並且壓在表的後面（同約診卡：浮水印在字的後面，不是躲在空白處）。 */
 const WMW = 660, WMR = -60, WMT = 470, WMA = .05;
-const CSS = `
+/* 版心的左右內距（裝置 px，放大時自己換算）與整體放大倍率 */
+const PAD = 44, LAB = 158;
+let S = 1;
+/* 標題底下要多墊多少（版心的單位）——見下面 fitScale 那一段，量出來才填 */
+let EX = 0;
+const css = () => `
 *{box-sizing:border-box;margin:0}
 html,body{width:${W}px;height:${H}px}
 body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
@@ -220,7 +225,20 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 svg.wm{position:absolute;width:${WMW}px;height:auto;right:${WMR}px;top:${WMT}px;
        color:${INK};opacity:${WMA};z-index:0}
 .band{position:relative;z-index:1}
-.band{padding:0 74px}
+/* ⚠⚠⚠ 2026-09-07 使用者：「整個表的邊界抓的太小，周圍還有很多空間，把邊界縮小，
+   好處是文字、圖案可以放大，這樣辨識度比較好。」
+   ・**左右**是免費的：內距 74 → 44px，版心 932 → 992（表跟著變寬）。
+   ・**上下不是** —— 空的那兩塊正是「主頁大格只看得到中間 537 列」留的餘裕
+     （見上面 BAND 那一段）。整體放大 ＝ 內容變高 ＝ 大格會從上下切掉東西。
+   所以放大做成一把尺，每一格都算出「大格會切掉什麼」讓他挑。
+   ⚠⚠ 放大是用 CSS 的 zoom 做的：版心寫成 1080 除以 S、再乘回來，
+   **裡面每一個 px 都跟著長**（字級、圖案、內距、圓角一次到位），不必一個一個改。
+   ⚠ zoom 會一併縮放 getBoundingClientRect，所以量出來的仍然是裝置 px，
+   下面每一道守門都不必改寫。
+   ⚠⚠⚠ 這一段註解本來寫了幾個反引號（想標出變數名），整支腳本就在這裡語法錯誤 ——
+   **這一整塊是 JS 的模板字串，CSS 註解裡不可以出現反引號**（第九節第 8 條的近親，
+   這條線上已經是第四次踩到）。要標變數名就用中文引號。 */
+.band{padding:0 ${(PAD / S).toFixed(2)}px;width:${(W / S).toFixed(2)}px;zoom:${S}}
 .band.s18{--ics:18px}
 .band.s20{--ics:20px}
 .band.s22{--ics:22px}
@@ -228,7 +246,7 @@ svg.wm{position:absolute;width:${WMW}px;height:auto;right:${WMR}px;top:${WMT}px;
 .band.s30{--ics:30px}
 .band.s16{--ics:16px}
 .band.s14{--ics:14px}
-.id{padding-bottom:12px}
+.id{padding-bottom:${(12 + EX).toFixed(2)}px}
 .id b{font-size:31px;font-weight:700;letter-spacing:.05em}
 .rule{height:1px;background:${RULE}}
 /* ⚠⚠⚠ 2026-09-07 使用者：「最下面的電話和國定假日那段文字對齊。」
@@ -248,7 +266,9 @@ svg.wm{position:absolute;width:${WMW}px;height:auto;right:${WMR}px;top:${WMT}px;
 
 /* 格子 */
 table{width:100%;border-collapse:collapse;table-layout:fixed}
-col.lab{width:176px}
+/* ⚠ 時段那一欄量到 148.7（版心的單位），原本給 176 ＝ 白白吃掉 27。
+   收到 158 之後那 27 全部讓給五天的欄，也就是「放大」那把尺的天花板往上抬。 */
+col.lab{width:${LAB}px}
 thead th{font-size:27px;font-weight:400;color:${SOFT};padding:8px 0 6px;letter-spacing:.1em}
 /* ⚠⚠ 2026-09-07 第三輪使用者：「早午晚的間隔可以再拉開一點，
    禮拜三的診看起來特別緊密。」——禮拜三是唯一兩節都排成 2＋2 的一欄，
@@ -582,7 +602,7 @@ console.log(`  號碼 23px 的字面中線離基線 ${telAlign.telMid.toFixed(2)
   + `　話筒盒心 ${(ICOPX / 2).toFixed(2)}px　→ 話筒往下 ${ICODY.toFixed(2)}px`);
 
 const measure = async (mode, px) => {
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${grid(mode, px)}`);
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css()}</style>${grid(mode, px)}`);
   const b = await page.locator(".band").boundingBox();
   return { px, h: b.height, over: Math.max(0, Math.round(b.height - BAND)) };
 };
@@ -590,8 +610,44 @@ const COL = 26, W2 = 30;
 /* 圖案之間要多鬆（橫向 / 行距）。第一格 ＝ 2026-09-07 之前的值 */
 /* 三格間距 ＋ 要不要等寬格。第一格 ＝ 2026-09-07 之前的值（不等寬、11px） */
 const ALTP = [["alt-r2c1", "r2c1"], ["alt-r1c3", "r1c3"]];
+/* 整體放大：Ⓢ1 ＝ 現況（收得進安全帶），其餘三格用掉上下的空白 */
+/* ⚠⚠⚠ 這把尺有一個算得出來的天花板，而且不是垂直方向 ——
+   整張圖固定 1080 寬，一格最多要放兩顆等寬格（2×42.5 ＋ 間距 11 ＝ 96），
+   加上時段那一欄 158，總共 638；版心可用寬 ＝ (1080 − 2×44) / S ＝ 992 / S。
+   所以 **S ≤ 992 / (158 + 5×104) ≈ 1.42**（每格留 8 的餘裕）——
+   再大就會撞到格子的牆，不是撞到安全帶。 */
+/* ⚠⚠⚠ 放大不是隨便挑一個倍率 —— 主頁大格看得到的是**正中央那 537 列**，
+   上下切掉的量一樣多，所以「切得乾不乾淨」是算得出來的：
+   ・讓**中間那一塊**（日子的表頭 ＋ 表 ＋ 圖例）正好等於 537 列
+     → S ＝ 537 ÷ 中間那一塊在 1× 時的高度。
+   ・再讓**上面那一塊（標題）和下面那一塊（頁尾）一樣高**（標題底下多墊 EX ＝ 頁尾高 − 標題高），
+     兩邊的切口就會**正好落在那兩條分隔線上** —— 大格看到的是完整的表，
+     沒有半截的字。
+   ⚠ 天花板不是安全帶，是**格子的牆**：一格最多放兩顆等寬格，
+     S ≤ (1080 − 2×44) ÷ (158 + 5×(2×42.5 + 11 + 8))。算出來超過就夾住。 */
+let SCALES = [];
 const GAPS = [["mix-half", 11, 9, false], ["mix-half-a11", 11, 9, true],
               ["mix-half-a16", 16, 12, true], ["mix-half-a22", 22, 15, true]];
+/* ---------- 放大倍率：量一次 1× 的三塊高度，再解出來 ---------- */
+{
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css()}</style>${
+    grid("i2x2", W2, 1, false, "mix", "half", [11, 9], true)}`);
+  const m = await page.evaluate(() => {
+    const q = (s2) => document.querySelector(s2).getBoundingClientRect().height;
+    return { all: q(".band"), top: q(".id"), bot: q(".tel") };
+  });
+  const mid = m.all - m.top - m.bot;
+  const want = BAND / mid;
+  const smax = (W - 2 * PAD) / (LAB + 5 * (2 * slotOf(30, "half") + 11 + 8));
+  const fit = Math.min(want, smax);
+  SCALES = [["fit", +fit.toFixed(3), +(m.bot - m.top).toFixed(2)]];
+  console.log(`\n── 放大倍率（算出來的，不是挑的）──`);
+  console.log(`  1× 的三塊：標題 ${m.top.toFixed(1)}　中間 ${mid.toFixed(1)}　頁尾 ${m.bot.toFixed(1)}`);
+  console.log(`  中間那塊要填滿安全帶 ${BAND} → S ${want.toFixed(3)}`
+    + `　格子的牆 → S ≤ ${smax.toFixed(3)}　→ 取 ${fit.toFixed(3)}`);
+  console.log(`  標題底下多墊 ${(m.bot - m.top).toFixed(1)}（＝頁尾高 − 標題高），`
+    + `兩邊的切口才會落在分隔線上`);
+}
 const mCol = await measure("icol", COL), mW2 = await measure("i2x2", W2);
 console.log(`\n── 三種排法（安全帶 ${BAND} 列）──`);
 console.log(`  橫排一列 30px　高 ${(await measure("icon", 30)).h.toFixed(0)}　收得進`);
@@ -601,7 +657,7 @@ console.log(`  直排 ${COL}px　　高 ${mCol.h.toFixed(0)}　${mCol.over ? "�
 if (mW2.over) throw new Error(`一行兩個 ${W2}px 收不進安全帶，超出 ${mW2.over}`);
 
 /* 排法一律用建議的「一行兩個」，這一輪只比顏色 */
-for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2)],
+for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2)],
                            ["c65",  grid("i2x2", W2, .65)],
                            ["cflat", grid("i2x2", W2, 1, true)],
                            ["cboth", grid("i2x2", W2, .65, true)],
@@ -624,19 +680,25 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
                               真的要治只能換形狀，而九顆裡沒用到的只剩兩顆，兩顆各有前科：
                               r2c1 ＝ 上一輪被退回的那顆「哭哭」、r1c3 ＝ 和口外只差 5.6%。
                               兩張都出出來讓他自己看。 */
+                           /* ⚠⚠⚠ 2026-09-07 第五輪：整體放大那把尺。
+                              同一份版面、同一組參數，只有 zoom 不一樣 —— 每一格
+                              的代價（主頁大格會從上下切掉多少）印在下面的表裡。 */
+                           ...SCALES.map(([tag, sc, ex]) =>
+                             [tag, grid("i2x2", W2, 1, false, "mix", "half", [11, 9], true), sc, ex]),
                            ...ALTP.map(([tag, sh]) => {
                              const old = SHAPE.prosth; SHAPE.prosth = sh;
                              const html = grid("i2x2", W2, 1, false, "mix", "half", [11, 9], true);
                              SHAPE.prosth = old; return [tag, html];
                            }),
                           ]) {
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${html}`);
+  S = sc || 1; EX = ex || 0;
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css()}</style>${html}`);
   /* ⚠⚠ 這一版存在的理由就是「乾淨 ＋ 大格看得到全部」，所以那件事要用量的。
      整塊內容一定要落在安全帶裡（大格只看得到 y ${TOP}~${BOT}）。 */
   const b = await page.locator(".band").boundingBox();
   if (b.y < TOP - .5 || b.y + b.height > BOT + .5) {
     /* ⚠ icol 是刻意超出的那一案（它存在的意義就是讓人看見這個代價），其餘一律擋下來 */
-    if (tag !== "icol")
+    if (tag !== "icol" && !(sc > 1))
       throw new Error(`${tag} 的內容是 ${b.y.toFixed(1)}~${(b.y + b.height).toFixed(1)}，`
         + `超出大格看得到的 ${TOP}~${BOT}`);
   }
@@ -700,6 +762,8 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
   made.push([tag, b, lab.w, tel]);
 }
 
+S = 1; EX = 0;
+
 /* ---------- 主頁那三格（裁切模擬） ---------- */
 const PW = 823;
 const cell = (f, w, h) =>
@@ -709,15 +773,28 @@ const cell = (f, w, h) =>
 const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 410 } });
 /* ⚠ 大格與兩個小格一律放**定案那一張**（a11）——這一格是「主頁看起來長怎樣」，
    不是版本比較；col 那一版留著只是為了讓人看見直排的代價。 */
-for (const [tag, big] of [["w2", "post-hours-mix-half-a11.png"], ["col", "post-hours-icol.png"]]) {
+for (const [tag, big] of [["w2", "post-hours-fit.png"], ["col", "post-hours-icol.png"]]) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
     <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
       ${cell(big, PW, 409)}
-      <div style="display:flex;gap:3px">${cell("post-hours-mix-half-a11.png", 410, 410)}${cell("post-hours-mix-half-a11.png", 410, 410)}</div>
+      <div style="display:flex;gap:3px">${cell("post-hours-fit.png", 410, 410)}${cell("post-hours-fit.png", 410, 410)}</div>
     </div>`);
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
   await page2.screenshot({ path: path.join(OUT, `profile-3up-${tag}.png`) });
 }
+/* ⚠⚠⚠ 放大那把尺的**代價**要看得見：同一個大格（823×409）在四種倍率下
+   分別看得到什麼。⚠ 這裡擺的是**真的產出檔裁出來的**，不是用 CSS 再畫一次。 */
+/* ⚠ 高度要跟著格數算，不要寫死 —— 尺從四格收成兩格之後，寫死的高度會留下
+   一大塊空白（而且長寬比對得上實檔，守門抓不到，只有把圖打開看才看得出來）。 */
+const NCUT = 1 + SCALES.length;
+const page3 = await browser.newPage({ viewport: { width: PW, height: 409 * NCUT + 6 * (NCUT - 1) } });
+await page3.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
+  body{background:${RULE};display:flex;flex-direction:column;gap:6px}</style>`
+  + ["post-hours-mix-half-a11.png", ...SCALES.map(([t]) => `post-hours-${t}.png`)]
+    .map(f => cell(f, PW, 409)).join(""));
+await page3.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
+await page3.screenshot({ path: path.join(OUT, "bigslot-scales.png") });
+
 await browser.close();
 
 fs.writeFileSync(path.join(OUT, "detail.txt"), detail + "\n");
@@ -743,6 +820,13 @@ console.log("\n── 出圖 ──");
 for (const [t, b] of made)
   console.log(`  post-hours-${t}.png　內容 ${b.y.toFixed(0)}~${(b.y + b.height).toFixed(0)}`
     + `（安全帶 ${TOP}~${BOT}，餘 ${(b.y - TOP).toFixed(0)}）`);
+console.log(`\n── 放大那把尺（整張圖固定 1080 見方，所以放大的代價在「主頁大格切掉什麼」）──`);
+for (const [t, sc] of [["mix-half-a11", 1], ...SCALES.map(([a, b2]) => [a, b2])]) {
+  const b = made.find(m => m[0] === t)[1];
+  const cut = Math.max(0, (b.height - BAND) / 2);
+  console.log(`  ${(sc).toFixed(2)}×　內容高 ${b.height.toFixed(0)}　`
+    + (cut ? `大格上下各切掉 ${cut.toFixed(0)}px` : "大格看得到全部"));
+}
 const m0 = made.find(m => m[0] === "mix-half-a11");
 console.log(`\n── 定案那張的兩件版面 ──`);
 console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 176，沒有折行）`);

@@ -65,19 +65,55 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <div class="pv-wrap">
 
   <h1>LINE 貼文的看診時間圖
-    <span>定案 Ⓖ1 ＋ 版面第三輪　2026-09-07</span></h1>
-  <p class="pv-lead">定案是 <b>Ⓖ1 等寬格 ＋ 間距 11</b>。這一輪改的是
-    <b>早／午／晚的列距</b>（拉開）與<b>一顆大的淡墨浮水印</b>；
-    上一輪的頁尾兩行、圖例對齊也都在下面留著。</p>
+    <span>邊界縮小 ＋ 整體放大　2026-09-07</span></h1>
+  <p class="pv-lead">這一輪把版心的邊界收掉、整組放大 <b>1.387 倍</b>——
+    而且那個倍率是<b>算出來的</b>：放大到「主頁大格正好看到一整塊完整的表」為止。
+    前幾輪的列距、浮水印、頁尾兩行、圖例對齊都在下面留著。</p>
 
-  <h2 class="pv-h2">定案<em>Ⓖ1</em>
-    <span class="t">等寬格 ＋ 間距 11</span></h2>
+  <h2 class="pv-h2">定案<em>放大 1.387×</em>
+    <span class="t">邊界縮小，字與圖案一起長大</span></h2>
   <div class="pv-shot">
-    <img src="post-hours-mix-half-a11.png" width="1080" height="1080"
-      alt="看診時間圖：標題芳仁牙醫開診時段，格子表每一節用科別記號，頁尾兩行是說明與電話">
+    <img src="post-hours-fit.png" width="1080" height="1080"
+      alt="看診時間圖：整體放大之後的版面，標題、表、圖例、電話">
   </div>
-  <p class="pv-cap">整塊內容落在 <span class="n">280 ~ 800</span>，
-    主頁大格看得到的是 <span class="n">271.5 ~ 808.5</span>——上下各餘 8px。</p>
+  <p class="pv-cap">左右內距 74 → <b>44px</b>、時段那一欄 176 → <b>158px</b>，
+    其餘每一個尺寸一起乘 <b>1.387</b>——字、圖案、行距、內距一次到位。<br>
+    整塊內容 520 → <span class="n">755px</span>，上下的留白 280 → <b>162px</b>。</p>
+
+  <h2 class="pv-h2">① 放大到多少是算出來的，不是挑的
+    <span class="t">因為「切得乾不乾淨」有解</span></h2>
+  <p class="pv-lead">你講的那些空白<b>不是白留的</b>——主頁那個大格只看得到
+    <b>正中央 537 列</b>，上下各切掉 271。整張圖固定 1080 見方，
+    所以<b>放大 ＝ 內容變高 ＝ 大格會從上下切掉東西</b>。<br>
+    但「切掉什麼」是算得出來的，所以這一輪把它解出來，而不是挑一個倍率：<br>
+    ・讓<b>中間那一塊</b>（日子的表頭 ＋ 表 ＋ 圖例）正好等於 537 列
+    → <span class="n">S ＝ 537 ÷ 387.2 ＝ 1.387</span>；<br>
+    ・再讓<b>上面那一塊（標題）和下面那一塊（電話）一樣高</b>
+    （標題底下多墊 <span class="n">25px</span> ＝ 79 − 54），
+    兩邊的切口就會<b>正好落在那兩條分隔線上</b>。<br>
+    結果：大格看到的是<b>一整塊完整的表</b>，沒有任何半截的字；
+    整張圖點開來則是完整的（標題與電話都在）。<br>
+    ⚠ <b>天花板不是安全帶，是格子的牆</b>：一格最多放兩顆等寬格
+    （2×42.5 ＋ 間距 11），加上時段那一欄 158，
+    算出 <span class="n">S ≤ 1.464</span>——1.387 剛好在裡面。
+    ⚠ 這兩個數字都是<b>每次出圖現量現算</b>的，日後改字級或加一列會自己跟著調。</p>
+
+  <h2 class="pv-h2">大格看得到什麼<span class="t">上：原本　下：放大之後</span></h2>
+  <div class="pv-shot">
+    <img src="bigslot-scales.png" width="823" height="824" loading="lazy"
+      alt="兩張大格的裁切模擬：原本看得到全部，放大之後看得到完整的表">
+  </div>
+  <p class="pv-cap">上面那格是原本的（1×，標題與電話都在，但字很小）；
+    下面是放大之後的——<b>切口落在兩條分隔線上</b>，
+    看到的是日子的表頭、三列門診與整排圖例。</p>
+
+  <h2 class="pv-h2">保留：原本那一張<span class="t">1×，收在安全帶裡</span></h2>
+  <div class="pv-shot">
+    <img src="post-hours-mix-half-a11.png" width="1080" height="1080" loading="lazy"
+      alt="放大之前的版面，整塊內容收在主頁大格看得到的範圍裡">
+  </div>
+  <p class="pv-cap">內容 <span class="n">280 ~ 800</span>，主頁大格看得到的是
+    271.5 ~ 808.5——<b>全部都在</b>，代價就是字與圖案小了 28%。</p>
 
   <h2 class="pv-h2">① 早／午／晚的列距拉開<span class="t">16 → 26px</span></h2>
   <p class="pv-lead">禮拜三是<b>唯一兩節都排成 2＋2 的一欄</b>，所以那一欄的列與列之間
