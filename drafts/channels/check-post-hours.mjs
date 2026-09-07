@@ -35,7 +35,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，而且尺寸對得上 ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 9, `頁上有 ${imgs.length} 張圖，應該是 9`);
+ok(imgs.length === 12, `頁上有 ${imgs.length} 張圖，應該是 12`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -80,6 +80,11 @@ ok(blocks.length === pal.cases.length,
 for (const [, tag, body] of blocks) {
   const c = pal.cases.find(x => x.tag === tag);
   if (!c) { bad.push(`頁上多了一案 ${tag}`); continue; }
+  /* ⚠ 2026-09-07 使用者把「植牙」改成「假牙」—— 標籤也要有唯一的出處，
+     不然改名只改了一半而且沒有人會發現。colors.json 的 short 就是那一份。 */
+  const lab = [...body.matchAll(/<\/i>([^ ]+) #/g)].map(m => m[1]);
+  ok(lab.join(" ") === pal.short.join(" "),
+    `${tag} 的科別標籤對不上 colors.json 的 short：\n    頁面 ${lab.join(" ")}\n    檔案 ${pal.short.join(" ")}`);
   const got = [...body.matchAll(/#[0-9A-F]{6}/g)].map(m => m[0]);
   const want = c.colors.flatMap(x => [x, x]);   /* 每一格出現兩次：色塊的 background ＋ 印出來的字 */
   ok(JSON.stringify(got) === JSON.stringify(want),

@@ -42,7 +42,14 @@ const DEEP = { general:"#2c5238", perio:"#2a6d69", endo:"#89202d", kids:"#9e6301
    其餘每一處一律用 index.html 上的全名。**這是版面被迫的縮寫，要使用者點頭。** */
 /* ⚠ 只有「格子裡寫字」那一版被寬度逼著縮。**只用圖案那一版不必縮** ——
    圖例裡是全名，所以 2026-09-07 開著的那個「要不要縮寫」的問題自己消失了。 */
-const SHORT = { "植牙・假牙重建": "植牙假牙" };
+/* ⚠⚠ 2026-09-07 使用者：「植牙改成假牙　植牙假牙重建　改成　假牙重建」。
+   這一條**只換這張圖與這一頁上的顯示名** —— `index.html`／`topics/`／
+   `tools/topic-copy.mjs` 上的「植牙・假牙重建」一個字都沒有動。
+   **全站要不要跟著改名是另一件事，要先問使用者。** */
+const DISP   = { "植牙・假牙重建": "假牙重建" };   /* 格子與圖例裡的全名 */
+const SHORT2 = { "植牙・假牙重建": "假牙" };       /* 色碼表那一欄的兩個字 */
+const disp = n => DISP[n] || n;
+const two  = n => SHORT2[n] || n.slice(0, 2);
 
 /* ⚠⚠⚠ Ⓖ3「每科一顆記號」用的是 brand/shapes 那九顆（同一個標誌的九種變體）。
    挑法避開 r1c3×r2c3 —— 在 22px 下那一對只差 5.6%。
@@ -62,6 +69,31 @@ const mark22 = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => [id,
   fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${sh}.svg`), "utf8")
     .replace(/<svg([^>]*?)(width|height)="[\d.]+"/g, "<svg$1")
     .replace(/<svg/, '<svg class="mk"')]));
+
+/* 各形狀的長寬比：**從 viewBox 讀，不寫死**。
+   ⚠⚠⚠ 2026-09-07 使用者：「齒顎矯正的 logo 細細的不太明顯，有其他可以換嗎。」
+   量出來他是對的，而且比想像中嚴重 —— 九顆放進同一個 30px 方框，墨面積是：
+     r3c1 顯微 734　r3c2 兒牙 712　r1c1 一般 699　r2c2 假牙 558
+     r1c2 牙周 357　r2c1（沒用到）349　r1c3（沒用到）228　r2c3 口外 227
+     **r3c3 矯正 174 ＝ 一般牙科的 25%，九顆裡最輕的那一顆。**
+   ⚠⚠⚠ 但「換一顆」解不掉：九顆裡有**三顆**是長寬比 3.08 的細長家族
+     （r1c3／r2c3／r3c3），而七科要用掉九顆裡的七顆 —— 扣掉被退回的 r2c1，
+     那三顆**一顆都躲不掉**。換給誰只是把細的那一顆換一個科別（口外現在就是 227）。
+   → 所以這一輪給的是**等重**那條路（同浮水印那一輪 22-13 的做法）：
+     按墨面積算出每一顆自己的寬度，細長的放大、方的不動。 */
+const ASPECT = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => {
+  const vb = fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${sh}.svg`), "utf8")
+    .match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
+  if (!vb) throw new Error(`shape-${sh}.svg 讀不到 viewBox`);
+  return [id, +vb[1] / +vb[2]];
+}));
+/* 墨面積開瀏覽器現量（measureInk），量到之前是 null ＝ 不加權 */
+let INKA = null;
+const wScale = (id, wgt) => !wgt || !INKA ? 1
+  : Math.pow(INKA.general / INKA[id], wgt === "half" ? .25 : .5);
+const icSize = (id, base, wgt) => wgt
+  ? `width:${(base * wScale(id, wgt)).toFixed(1)}px;`
+    + `height:${(base * wScale(id, wgt) / ASPECT[id]).toFixed(1)}px;` : "";
 
 /* ---------- 從 index.html 讀回來（唯一的出處） ---------- */
 function parse() {
@@ -208,22 +240,22 @@ const shell = (inner, cls = "") => `<div class="sheet"><div class="band ${cls}">
  *         （25 個名字裡有 12 個是它）。退一階之後，五科特別門診自己跳出來。
  *   mark  每科一顆記號（＝他的第二個提議，量測見上面 SHAPE 那一段）
  */
-const grid = (mode, ics, k = 1, flat = false, pal = null) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
+const grid = (mode, ics, k = 1, flat = false, pal = null, wgt = null) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
   <thead><tr><td></td>${D.days.map(d => `<th>${d}</th>`).join("")}</tr></thead>
   <tbody>${D.rows.map(r => `<tr>
     <th><b>${r.part}</b><i>${r.time}</i></th>${r.cells.map(c => `<td>${
       mode.startsWith("i") ? `<div class="ic-row">${lines(c, mode).map(g =>
           `<div class="ic-line">${g.map(id =>
-            `<span class="ic" style="color:${tone(id, k, flat, pal)}">${mark22[id]}</span>`
+            `<span class="ic" style="${icSize(id, ics || 30, wgt)}color:${tone(id, k, flat, pal)}">${mark22[id]}</span>`
           ).join("")}</div>`).join("")}</div>`
       : c.map(id => { const sp = D.specs.find(x => x.id === id);
-          const nm = SHORT[sp.name] || sp.name;
+          const nm = disp(sp.name);
           const col = mode === "rank" && id === "general" ? SOFT : INK;
           return mode === "mark"
             ? `<div class="nm mk-row" style="color:${col}"><span class="ic">${mark22[id]}</span>${nm}</div>`
             : `<div class="nm" style="color:${col}">${nm}</div>`;
         }).join("")}</td>`).join("")}</tr>`).join("")}</tbody></table>`
-  + (mode.startsWith("i") ? legend(k, flat, pal) : ""), ics ? `s${ics}` : "");
+  + (mode.startsWith("i") ? legend(k, flat, pal, wgt) : ""), ics ? `s${ics}` : "");
 
 /* ⚠⚠⚠ 一格裡的圖案怎麼分行（2026-09-07 使用者：「一個診有三個科別的，
  *   第一行一個科第二行兩個科，這樣才不會頭重腳輕」）。
@@ -244,10 +276,10 @@ const chunk = (a, n) => a.length ? [a.slice(0, n), ...chunk(a.slice(n), n)] : []
  *   所以它不是裝飾，是那張表讀不讀得懂的前提，不可以為了省高度砍掉。
  * ⚠ 排成 4 ＋ 3 兩行（七個一行放不下），刻意不讓它自己 wrap ——
  *   自己 wrap 會斷成 6＋1（招呼卡那一輪的圖例踩過）。 */
-const legend = (k = 1, flat = false, pal = null) => `<div class="lg">${[D.specs.slice(0, 4), D.specs.slice(4)]
+const legend = (k = 1, flat = false, pal = null, wgt = null) => `<div class="lg">${[D.specs.slice(0, 4), D.specs.slice(4)]
   .map(g => `<div class="lg-row">${g.map(sp =>
-    `<span class="lg-i"><span class="ic sm" style="color:${tone(sp.id, k, flat, pal)}">${mark22[sp.id]}</span>`
-    + `${sp.name}</span>`).join("")}</div>`).join("")}</div>`;
+    `<span class="lg-i"><span class="ic sm" style="${icSize(sp.id, 24, wgt)}color:${tone(sp.id, k, flat, pal)}">${mark22[sp.id]}</span>`
+    + `${disp(sp.name)}</span>`).join("")}</div>`).join("")}</div>`;
 
 /* Ⓛ 一科一行：照「早／午／晚」各列出哪幾天 */
 const byPart = (id) => D.rows.map(r => ({
@@ -256,7 +288,7 @@ const byPart = (id) => D.rows.map(r => ({
 })).filter(g => g.days.length);
 
 const list = () => shell(`<div class="rows">${D.specs.map(sp => `<div class="row">
-    <div class="sp"><i style="background:${FILL[sp.id]}"></i>${sp.name}</div>
+    <div class="sp"><i style="background:${FILL[sp.id]}"></i>${disp(sp.name)}</div>
     <div>${byPart(sp.id).map(g => `<span class="g"><b>${g.part}</b>${g.days.join("")}</span>`).join("")}</div>
   </div>`).join("")}</div>`);
 
@@ -331,6 +363,12 @@ const BRAND = {
   /* 104_logo.pptx（九顆的完整版） */
   b104: { general:"#5A6E4F", perio:"#0B4B46", endo:"#944449", kids:"#9E7253",
           ortho:"#315568", prosth:"#805751", surg:"#5E5A61" },
+  /* ⚠⚠⚠ 2026-09-07 使用者自己挑的一組（從上面幾案裡各取幾顆）：
+     一般＝設計師 104 的苔綠、顯微＝設計師 104 的磚紅、齒顎＝站上的深階，
+     其餘四科＝彩度 65% 那一案。**這是他指定的值，不要拿別的案去「訂正」。**
+     ⚠ 他寫的「一般 #5A6E4」只有五碼，六碼的讀法是 104 那一案的 **#5A6E4F**。 */
+  mix:  { general:"#5A6E4F", perio:"#436A67", endo:"#944449", kids:"#926833",
+          ortho:"#31637F", prosth:"#394666", surg:"#6F5477" },
   /* Logo顏色.pptx（八顆，站上現行色值的出處） */
   b8:   { general:"#5D6D55", perio:"#214D48", endo:"#AF4C52", kids:"#9B735E",
           ortho:"#3C596B", prosth:"#7D5A58", surg:"#5F5D66" }
@@ -390,6 +428,39 @@ const made = [];
  *   **「直排」與「主頁大格看得到品牌與電話」二選一**。
  *   這一版讓直排維持 26px（讀得清楚），代價由下面那張主頁模擬呈現。
  */
+/* ⚠⚠ 墨面積現量、不寫死：把每一顆畫進 canvas 數暗像素（4 倍取樣再除回去）。
+   同浮水印那一輪 22-13 —— 長寬比不同的形狀同寬就不同重。 */
+INKA = await page.evaluate(async (list) => {
+  const out = {}, S = 120;
+  for (const [id, svg, ar] of list) {
+    const img = new Image();
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+      svg.replace(/<svg/, `<svg width="${200}" height="${200 / ar}"`));
+    await img.decode();
+    const cv = document.createElement("canvas"); cv.width = cv.height = S;
+    const cx = cv.getContext("2d");
+    cx.fillStyle = "#fff"; cx.fillRect(0, 0, S, S);
+    const w = ar >= 1 ? S : S * ar, h = ar >= 1 ? S / ar : S;
+    cx.drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
+    const d = cx.getImageData(0, 0, S, S).data;
+    let ink = 0;
+    for (let i = 0; i < d.length; i += 4) ink += (255 - (d[i] + d[i+1] + d[i+2]) / 3) / 255;
+    out[id] = ink / (S / 30) ** 2;
+  }
+  return out;
+}, Object.keys(SHAPE).map(id => [id,
+  /* ⚠ mark22 那條 /g 的正規式只吃掉了 width（第一次比對就把 <svg 用掉了），
+     height 還留著 —— 注進 width/height 會變成重複屬性、整個 SVG 解不開
+     （症狀是 canvas 丟 EncodingError）。這裡再剝一次。 */
+  mark22[id].replace(/\s(width|height)="[\d.]+"/g, ""), ASPECT[id]]));
+if (Object.values(INKA).some(v => !(v > 50)))
+  throw new Error("墨面積量出來不對：" + JSON.stringify(INKA));
+console.log("\n── 每一顆在 30px 方框裡的墨面積（等重要放多大）──");
+for (const id of Object.keys(SHAPE).sort((a, b) => INKA[b] - INKA[a]))
+  console.log(`  ${SHAPE[id]}  ${disp(D.specs.find(s2 => s2.id === id).name).padEnd(6, "　")}`
+    + `${INKA[id].toFixed(0).padStart(4)} px　${(INKA[id] / INKA.general * 100).toFixed(0).padStart(3)}%`
+    + `　等重要 ${(30 * wScale(id, "even")).toFixed(0)}px（半 ${(30 * wScale(id, "half")).toFixed(0)}px）`);
+
 const measure = async (mode, px) => {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${grid(mode, px)}`);
   const b = await page.locator(".band").boundingBox();
@@ -411,6 +482,10 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
                            ["cboth", grid("i2x2", W2, .65, true)],
                            ["b104",  grid("i2x2", W2, 1, false, "b104")],
                            ["b8",    grid("i2x2", W2, 1, false, "b8")],
+                           /* 使用者挑的混合色 ＋ 圖案份量三格（現況／半／等重） */
+                           ["mix",      grid("i2x2", W2, 1, false, "mix")],
+                           ["mix-half", grid("i2x2", W2, 1, false, "mix", "half")],
+                           ["mix-even", grid("i2x2", W2, 1, false, "mix", "even")],
                           ]) {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${html}`);
   /* ⚠⚠ 這一版存在的理由就是「乾淨 ＋ 大格看得到全部」，所以那件事要用量的。
@@ -422,6 +497,11 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
       throw new Error(`${tag} 的內容是 ${b.y.toFixed(1)}~${(b.y + b.height).toFixed(1)}，`
         + `超出大格看得到的 ${TOP}~${BOT}`);
   }
+  /* ⚠ 等重那兩案會把細長的那幾顆放大，一列的總寬不可以超過格子 */
+  const wide = await page.evaluate(() => [...document.querySelectorAll(".ic-line")]
+    .filter(el => el.getBoundingClientRect().width
+      > el.closest("td").getBoundingClientRect().width - 8).length);
+  if (wide) throw new Error(`${tag} 有 ${wide} 列圖案撐破格子`);
   const over = await page.evaluate(() => [...document.querySelectorAll(".sheet *")]
     .filter(el => { const r = el.getBoundingClientRect();
       return r.width && (r.right > 1080.5 || r.left < -.5); }).length);
@@ -437,11 +517,11 @@ const cell = (f, w, h) =>
      <img src="data:image/png;base64,${fs.readFileSync(path.join(OUT, f)).toString("base64")}"
           style="width:100%;height:100%;object-fit:cover;display:block"></div>`;
 const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 410 } });
-for (const [tag, big] of [["w2", "post-hours-cboth.png"], ["col", "post-hours-icol.png"]]) {
+for (const [tag, big] of [["w2", "post-hours-mix.png"], ["col", "post-hours-icol.png"]]) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
     <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
       ${cell(big, PW, 409)}
-      <div style="display:flex;gap:3px">${cell("post-hours-c65.png", 410, 410)}${cell("post-hours-cflat.png", 410, 410)}</div>
+      <div style="display:flex;gap:3px">${cell("post-hours-mix-half.png", 410, 410)}${cell("post-hours-mix-even.png", 410, 410)}</div>
     </div>`);
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
   await page2.screenshot({ path: path.join(OUT, `profile-3up-${tag}.png`) });
@@ -454,14 +534,16 @@ fs.writeFileSync(path.join(OUT, "detail.txt"), detail + "\n");
    手抄一份就是第二個真相，而顏色改一次它就開始說謊（守門會逐格比對）。 */
 const CASES = [["O", "現況（站上深階）", 1, false, null], ["C", "全部彩度 65%", .65, false, null],
   ["N", "一般牙科轉中性", 1, true, null], ["B", "轉中性 ＋ 65%", .65, true, null],
-  ["P", "設計師九顆 104_logo", 1, false, "b104"], ["Q", "設計師八顆 Logo顏色", 1, false, "b8"]];
+  ["P", "設計師九顆 104_logo", 1, false, "b104"], ["Q", "設計師八顆 Logo顏色", 1, false, "b8"],
+  ["U", "使用者挑的混合", 1, false, "mix"]];
 fs.writeFileSync(path.join(OUT, "colors.json"), JSON.stringify({
-  specs: D.specs.map(s2 => s2.name),
+  specs: D.specs.map(s2 => disp(s2.name)),
+  short: D.specs.map(s2 => two(s2.name)),
   cases: CASES.map(([tag, nm, k, flat, pal]) => ({ tag, name: nm,
     colors: D.specs.map(s2 => tone(s2.id, k, flat, pal).toUpperCase()) }))
 }, null, 2) + "\n");
 console.log("\n── 六案的色碼（preview/line-post-hours/colors.json）──");
-console.log("      " + D.specs.map(s2 => s2.name.slice(0, 2)).join("　　"));
+console.log("      " + D.specs.map(s2 => two(s2.name)).join("　　"));
 for (const [tag, nm, k, flat, pal] of CASES)
   console.log(`  ${tag}　` + D.specs.map(s2 => tone(s2.id, k, flat, pal).toUpperCase()).join(" ")
     + `　${nm}`);
@@ -479,12 +561,13 @@ console.log("\n── 顏色三案：七顆圖案兩兩最近的一對 ──");
 for (const [nm, k, flat, pal] of [["現況（100%）", 1, false], ["彩度 65%", .65, false],
                              ["一般牙科轉中性", 1, true], ["兩個都做", .65, true],
                              ["設計師 104（九顆）", 1, false, "b104"],
-                             ["設計師 八顆", 1, false, "b8"]]) {
+                             ["設計師 八顆", 1, false, "b8"],
+                             ["使用者挑的混合", 1, false, "mix"]]) {
   const cs = D.specs.map(s2 => tone(s2.id, k, flat, pal));
   let mn = 1e9, pr = "";
   for (let i=0;i<cs.length;i++) for (let j=i+1;j<cs.length;j++) {
     const d = dE(cs[i], cs[j]);
-    if (d < mn) { mn = d; pr = `${D.specs[i].name}×${D.specs[j].name}`; }
+    if (d < mn) { mn = d; pr = `${disp(D.specs[i].name)}×${disp(D.specs[j].name)}`; }
   }
   const lo = Math.min(...cs.map(c2 => ratio(c2, CARD)));
   console.log(`  ${nm.padEnd(16,"　")}ΔE ${mn.toFixed(1).padStart(5)}　${pr.padEnd(18,"　")}`
