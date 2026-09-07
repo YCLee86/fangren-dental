@@ -6,21 +6,14 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>芳仁牙醫診所　LINE 貼文的看診時間圖</title>
 <!--
-  2026-09-07 使用者定方向：「先用 M。門診表裡只用圖案，圖案要套色。
-  然後門診表下方放 logo ＋ 科別，只有 logo 套色，文字用墨色就好。」
+  2026-09-07 使用者：「現在 logo 擠成一個橫條。做兩版對照，一個是同一節都直的，
+  另一個橫的放兩個然後斷行。」
 
-  ⚠⚠⚠ 這個組合解掉了我上一輪量出來的那個問題：**九顆形狀在小尺寸下分不出來
-  （22px 下最不像的一對只差 20.9%），但加上顏色就分得出來** —— 形狀與顏色
-  雙重編碼，比被淘汰的純色點版強。上一輪我只算了形狀，沒有把顏色算進去。
-
-  ⚠⚠ 圖案用**深階**不是套色，那是量出來的：兒童牙科的套色 #c28229 對卡色
-  只有 2.93，過不了裝飾性圖形的 3:1；深階七科全部 ≥4.51。
-  這不牴觸 PALETTE 那條「深階給白底上的字、套色給填實的塊」——
-  那條講的是首頁 chip 那種一整塊的填色（面積大），這裡是 30px 的小圖形站在
-  淺底上，處境和白底上的字一樣。
-
-  ⚠ 副作用（好的）：格子裡不寫字之後，「植牙・假牙重建」**不必再縮成「植牙假牙」**，
-  圖例裡是全名 —— 那個等使用者點頭的問題自己消失了。
+  ⚠⚠⚠ 直排撞到一面硬牆，而且是量出來的：「晚」那一節有四科，直排就是四倍高。
+  從 30px 一路試下來 —— 30→663　26→623　22→588　20→572　18→556　16→540，
+  而安全帶（主頁大格看得到的那一段）只有 537 列。要收得進去圖案得縮到 13px，
+  而 22px 已經是「形狀分不出來」的門檻（九顆兩兩最不像的一對只差 20.9%）。
+  → **直排真正的取捨不是「圖案多大」，是「直排」與「主頁大格看得到品牌與電話」二選一。**
 
   ⚠ 圖一律擺真的產出檔；width/height 屬性要等於 PNG 檔頭的真實尺寸。
   ⚠ 連結一律相對路徑；刻意零 JS（守門連 script 標籤都擋）。
@@ -60,30 +53,47 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <div class="pv-wrap">
 
   <h1>LINE 貼文的看診時間圖
-    <span>只用圖案　2026-09-07</span></h1>
-  <p class="pv-lead">格子裡<b>只放圖案</b>，圖案上該科的顏色；<br>
-    表下方一排 <b>logo ＋ 科別</b>，只有 logo 上色，文字用墨。</p>
+    <span>圖案怎麼排　兩版對照　2026-09-07</span></h1>
+  <p class="pv-lead">四個排成一列讀起來像<b>一條橫條</b>。兩種拆法各有代價，
+    而代價是<b>量出來的</b>。</p>
 
-  <h2 class="pv-h2">Ⓜ 只用圖案 ＋ 圖例<em>這一版</em></h2>
+  <h2 class="pv-h2">Ⓥ 同一節都直的</h2>
   <div class="pv-shot">
-    <img src="post-hours-icon.png" width="1080" height="1080"
-      alt="格子表：每一格只放該科的標誌圖案並上色，表下方兩行圖例是 logo 加科別名">
+    <img src="post-hours-icol.png" width="1080" height="1080"
+      alt="格子表：每一格的圖案垂直排成一欄">
   </div>
-  <p class="pv-cap">⚠⚠ 這個組合<b>解掉了上一輪量出來的問題</b>：九顆形狀在 22px 下最不像的
-    一對只差 20.9%，<b>但加上顏色就分得出來</b>——形狀與顏色雙重編碼。<br>
-    上一輪我只算了形狀，沒把顏色算進去。<br><br>
-    ⚠ 圖案用的是<b>深階</b>不是套色：兒童牙科的套色對底只有 <b>2.93</b>，
-    過不了裝飾性圖形的 3:1；深階七科全部 ≥4.51。<br>
-    <b>好的副作用</b>：格子裡不寫字，「植牙・假牙重建」不必再縮成「植牙假牙」，
-    圖例裡是全名——那個等你點頭的問題自己消失了。</p>
+  <p class="pv-cap">最好讀——每一欄一眼數得出有幾科。<br>
+    <span class="n">⚠</span> 但「晚」那一節有四科，直排就是<b>四倍高</b>：整塊 623px，
+    <b>超出主頁大格看得到的那 537 列共 86px</b>。<br>
+    要收得進去圖案得縮到 <b>13px</b>，而 22px 已經是形狀分不出來的門檻——
+    <b>13px 等於只剩顏色在作用，形狀白給</b>。<br>
+    所以這一版是「直排 ＋ 圖案 26px ＋ 主頁大格會被切」的組合。</p>
+  <div class="pv-shot">
+    <img src="profile-3up-col.png" width="823" height="823" loading="lazy"
+      alt="直排版擺進主頁三格：大格上下被切掉，品牌與電話看不到">
+  </div>
+  <p class="pv-cap">↑ 大格：<b>品牌條與電話被切掉了</b>，只剩表格中段。</p>
 
-  <h2 class="pv-h2">擺進主頁那三格</h2>
+  <h2 class="pv-h2">Ⓦ 一行兩個，滿了斷行<em>建議</em></h2>
   <div class="pv-shot">
-    <img src="profile-3up.png" width="823" height="823" loading="lazy"
-      alt="主頁三格模擬：大格是只用圖案那一版">
+    <img src="post-hours-i2x2.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：每一格的圖案一行兩個，四個時排成 2×2">
   </div>
-  <p class="pv-cap">大格會把 1080 的圖<b>上下各切掉 271 列</b>，所以識別與電話收在中間那條帶子裡。<br>
-    <span class="n">⚠</span> 到底是裁還是留白<b>我們沒驗過</b>——表單右上角那顆<b>預覽</b>按一下就有答案。</p>
+  <p class="pv-cap">四個變 2×2，看得出是四個各自獨立的東西，<b>只長兩倍高</b>。<br>
+    整塊 514px，<b>收得進 537</b>——圖案維持 30px，主頁大格也完整。</p>
+  <div class="pv-shot">
+    <img src="profile-3up-w2.png" width="823" height="823" loading="lazy"
+      alt="一行兩個那一版擺進主頁三格：大格看得到品牌條、整張表與電話">
+  </div>
+  <p class="pv-cap">↑ 大格：品牌條、整張表、電話都在。</p>
+
+  <h2 class="pv-h2">Ⓗ 橫排一列
+    <span class="t">上一版，當對照</span></h2>
+  <div class="pv-shot">
+    <img src="post-hours-icon.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：每一格的圖案橫排成一列">
+  </div>
+  <p class="pv-cap">＝ 你說的「擠成一個橫條」那一版。整塊 490px，最矮。</p>
 
   <h2 class="pv-h2">「詳情」欄要貼的字</h2>
   <div class="pv-txt">一週的門診時段，以及每一節有哪些科別。
@@ -91,19 +101,6 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 國定假日與各科特別門診請來電確認　05-5339369</div>
   <p class="pv-cap">排班、時段、電話都是從站上 <code>index.html</code> 讀回來的，
     <b>不重打</b>——診所改排班，重跑一次就好。</p>
-
-  <h2 class="pv-h2">留著的兩張對照</h2>
-  <div class="pv-shot">
-    <img src="post-hours-rank.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：寫科別名，一般牙科退一階，沒有彩色">
-  </div>
-  <p class="pv-cap">寫字版（一般牙科退一階）。<b>零彩色</b>，不必對照圖例。</p>
-  <div class="pv-shot">
-    <img src="post-hours-list.png" width="1080" height="1080" loading="lazy"
-      alt="一科一行：七科各一列，每列寫出早、午、晚分別是哪幾天">
-  </div>
-  <p class="pv-cap">一科一行。唯一贏的地方：顯微根管排出來是「早三　午三　晚三」，
-    <b>全在週三自己跳出來</b>。</p>
 </div>
 </body>
 </html>

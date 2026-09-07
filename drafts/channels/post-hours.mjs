@@ -122,6 +122,13 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
      font-family:"Noto Sans TC","WenQuanYi Zen Hei",sans-serif}
 .sheet{width:${W}px;height:${H}px;display:flex;flex-direction:column;justify-content:center}
 .band{padding:0 74px}
+.band.s18{--ics:18px}
+.band.s20{--ics:20px}
+.band.s22{--ics:22px}
+.band.s26{--ics:26px}
+.band.s30{--ics:30px}
+.band.s16{--ics:16px}
+.band.s14{--ics:14px}
 .id{display:flex;align-items:center;gap:16px;padding-bottom:18px}
 .id svg{color:${DEEP.general}}
 .id b{font-size:31px;font-weight:700;letter-spacing:.05em}
@@ -144,9 +151,19 @@ tbody tr + tr th, tbody tr + tr td{border-top:1px solid ${RULE}}
 .mk-row{display:flex;align-items:center;justify-content:center;gap:7px}
 svg.mk{width:100%;height:100%;display:block}
 /* 只有圖案那一版：格子裡的圖案 30px 一列排開；圖例的 26px */
-.ic{width:30px;height:30px;flex:none;display:flex;align-items:center;justify-content:center}
+.ic{width:var(--ics, 30px);height:var(--ics, 30px);flex:none;display:flex;align-items:center;justify-content:center}
 .mk-row .ic, .mk-row svg.mk{width:22px;height:22px}
 .ic-row{display:flex;align-items:center;justify-content:center;gap:6px}
+/* 2026-09-07 使用者：「現在 logo 擠成一個橫條」——四個排成一列讀起來像一條，
+   看不出是四個各自獨立的東西。兩個對照版本：
+   col  一格裡全部直排（一節一欄）
+   w2   一行兩個、滿了斷行（四個 ＝ 2×2）
+   ⚠⚠ 直排有一個量得出來的代價：晚那一列有四個，直排就是四倍高，
+      整塊會超出安全帶 —— 所以圖案得縮小，而圖案一小就回到「分不出來」那個問題。
+      w2 只長兩倍高，圖案可以維持原來的大小。 */
+.ic-row.col{flex-direction:column;gap:5px}
+.ic-row.w2{flex-wrap:wrap;gap:6px;width:calc(var(--ics) * 2 + 6px);margin:0 auto}
+.ic-row.col .ic, .ic-row.w2 .ic{width:var(--ics);height:var(--ics)}
 .lg{padding-top:30px}
 .lg-row{display:flex;align-items:center;justify-content:center;gap:26px}
 .lg-row + .lg-row{margin-top:10px}
@@ -164,7 +181,7 @@ svg.mk{width:100%;height:100%;display:block}
 .g b{font-weight:400;color:${SOFT};margin-right:8px;letter-spacing:.02em}
 `;
 
-const shell = (inner) => `<div class="sheet"><div class="band">
+const shell = (inner, cls = "") => `<div class="sheet"><div class="band ${cls}">
   <div class="id">${MARK}<b>芳仁牙醫診所</b><em>看診時間</em></div>
   <div class="rule"></div>
   ${inner}
@@ -182,11 +199,12 @@ const shell = (inner) => `<div class="sheet"><div class="band">
  *         （25 個名字裡有 12 個是它）。退一階之後，五科特別門診自己跳出來。
  *   mark  每科一顆記號（＝他的第二個提議，量測見上面 SHAPE 那一段）
  */
-const grid = (mode) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
+const grid = (mode, ics) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
   <thead><tr><td></td>${D.days.map(d => `<th>${d}</th>`).join("")}</tr></thead>
   <tbody>${D.rows.map(r => `<tr>
     <th><b>${r.part}</b><i>${r.time}</i></th>${r.cells.map(c => `<td>${
-      mode === "icon" ? `<div class="ic-row">${c.map(id =>
+      mode.startsWith("i") ? `<div class="ic-row ${
+          mode === "icol" ? "col" : mode === "i2x2" ? "w2" : ""}">${c.map(id =>
           `<span class="ic" style="color:${DEEP[id]}">${mark22[id]}</span>`).join("")}</div>`
       : c.map(id => { const sp = D.specs.find(x => x.id === id);
           const nm = SHORT[sp.name] || sp.name;
@@ -195,7 +213,7 @@ const grid = (mode) => shell(`<table><colgroup><col class="lab"><col span="5"></
             ? `<div class="nm mk-row" style="color:${col}"><span class="ic">${mark22[id]}</span>${nm}</div>`
             : `<div class="nm" style="color:${col}">${nm}</div>`;
         }).join("")}</td>`).join("")}</tr>`).join("")}</tbody></table>`
-  + (mode === "icon" ? legend() : ""));
+  + (mode.startsWith("i") ? legend() : ""), ics ? `s${ics}` : "");
 
 /* 圖例：logo 套色 ＋ 科別名用墨（使用者 2026-09-07 指定）。
  * ⚠⚠ 格子裡只剩圖案的話，第一次看的人**一定要對照這一排** ——
@@ -269,14 +287,42 @@ fs.mkdirSync(OUT, { recursive: true });
 for (const f of fs.readdirSync(OUT).filter(f => f.endsWith(".png"))) fs.rmSync(path.join(OUT, f));
 
 const made = [];
-for (const [tag, html] of [["icon", grid("icon")], ["rank", grid("rank")], ["list", list()]]) {
+/* ⚠⚠⚠ 直排撞到一面硬牆，而且是量出來的：
+ *   「晚」那一節有四科，直排就是四倍高。從 30px 一路試下來 ——
+ *   30→663　26→623　22→588　20→572　18→556　16→540（安全帶只有 537）。
+ *   要收得進去圖案得縮到 **13px**，而 22px 已經是「形狀分不出來」的門檻
+ *   （九顆兩兩最不像的一對只差 20.9%）—— 13px 等於只剩顏色在作用，形狀白給。
+ * ⚠⚠ 所以直排真正的取捨不是「圖案多大」，是
+ *   **「直排」與「主頁大格看得到品牌與電話」二選一**。
+ *   這一版讓直排維持 26px（讀得清楚），代價由下面那張主頁模擬呈現。
+ */
+const measure = async (mode, px) => {
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${grid(mode, px)}`);
+  const b = await page.locator(".band").boundingBox();
+  return { px, h: b.height, over: Math.max(0, Math.round(b.height - BAND)) };
+};
+const COL = 26, W2 = 30;
+const mCol = await measure("icol", COL), mW2 = await measure("i2x2", W2);
+console.log(`\n── 三種排法（安全帶 ${BAND} 列）──`);
+console.log(`  橫排一列 30px　高 ${(await measure("icon", 30)).h.toFixed(0)}　收得進`);
+console.log(`  一行兩個 ${W2}px　高 ${mW2.h.toFixed(0)}　${mW2.over ? "超出 " + mW2.over : "收得進"}`);
+console.log(`  直排 ${COL}px　　高 ${mCol.h.toFixed(0)}　${mCol.over ? "⚠ 超出 " + mCol.over
+  + "（主頁大格會切掉品牌與電話）" : "收得進"}`);
+if (mW2.over) throw new Error(`一行兩個 ${W2}px 收不進安全帶，超出 ${mW2.over}`);
+
+for (const [tag, html] of [["icon", grid("icon")], ["icol", grid("icol", COL)],
+                           ["i2x2", grid("i2x2", W2)],
+                          ]) {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${html}`);
   /* ⚠⚠ 這一版存在的理由就是「乾淨 ＋ 大格看得到全部」，所以那件事要用量的。
      整塊內容一定要落在安全帶裡（大格只看得到 y ${TOP}~${BOT}）。 */
   const b = await page.locator(".band").boundingBox();
-  if (b.y < TOP - .5 || b.y + b.height > BOT + .5)
-    throw new Error(`${tag} 的內容是 ${b.y.toFixed(1)}~${(b.y + b.height).toFixed(1)}，`
-      + `超出大格看得到的 ${TOP}~${BOT}`);
+  if (b.y < TOP - .5 || b.y + b.height > BOT + .5) {
+    /* ⚠ icol 是刻意超出的那一案（它存在的意義就是讓人看見這個代價），其餘一律擋下來 */
+    if (tag !== "icol")
+      throw new Error(`${tag} 的內容是 ${b.y.toFixed(1)}~${(b.y + b.height).toFixed(1)}，`
+        + `超出大格看得到的 ${TOP}~${BOT}`);
+  }
   const over = await page.evaluate(() => [...document.querySelectorAll(".sheet *")]
     .filter(el => { const r = el.getBoundingClientRect();
       return r.width && (r.right > 1080.5 || r.left < -.5); }).length);
@@ -292,13 +338,15 @@ const cell = (f, w, h) =>
      <img src="data:image/png;base64,${fs.readFileSync(path.join(OUT, f)).toString("base64")}"
           style="width:100%;height:100%;object-fit:cover;display:block"></div>`;
 const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 410 } });
-await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
-  <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
-    ${cell("post-hours-icon.png", PW, 409)}
-    <div style="display:flex;gap:3px">${cell("post-hours-rank.png", 410, 410)}${cell("post-hours-list.png", 410, 410)}</div>
-  </div>`);
-await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
-await page2.screenshot({ path: path.join(OUT, "profile-3up.png") });
+for (const [tag, big] of [["w2", "post-hours-i2x2.png"], ["col", "post-hours-icol.png"]]) {
+  await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
+    <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
+      ${cell(big, PW, 409)}
+      <div style="display:flex;gap:3px">${cell(tag === "w2" ? "post-hours-icol.png" : "post-hours-i2x2.png", 410, 410)}${cell("post-hours-icon.png", 410, 410)}</div>
+    </div>`);
+  await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
+  await page2.screenshot({ path: path.join(OUT, `profile-3up-${tag}.png`) });
+}
 await browser.close();
 
 fs.writeFileSync(path.join(OUT, "detail.txt"), detail + "\n");
