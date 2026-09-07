@@ -6,24 +6,29 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>芳仁牙醫診所　LINE 貼文的看診時間圖</title>
 <!--
-  2026-09-07 使用者：「保留這個版本，找出本來設計師給的標準色，套用他給的標準色看看。」
+  2026-09-07 使用者：「一般 #5A6E4 牙周 #436A67 顯微 #944449 兒童 #926833
+  齒顎 #31637F 植牙 #394666 口腔 #6F5477 ／ 植牙改成假牙　植牙假牙重建 改成 假牙重建
+  ／ 齒顎矯正的 logo 細細的不太明顯　有其他可以換嗎」
 
-  出處是 PALETTE.md 第一節，**原本就在的兩份**（不是新的取值）：
-  `104_logo.pptx` 九顆（完整版）／`Logo顏色.pptx` 八顆（站上現行色值的出處）。
+  三件各自要治：
 
-  ⚠⚠⚠ **九顆扣掉兩顆太淺的（稻草灰 2.17、米色 1.46，過不了裝飾圖形的 3:1），
-  正好剩七顆 —— 正好七科。** 八顆那一份扣掉灰綠也一樣是七顆。
-  ⚠⚠ 而且它本來就比站上沉：**彩度中位 31.8 → 20.3（低 36%）**，
-  上一輪那個「吵雜熱鬧」等於免費解掉一半。
+  ① 顏色：他從前面幾案裡各取幾顆，湊成 Ⓤ（一般＝設計師 104 的苔綠、
+     顯微＝設計師 104 的磚紅、齒顎＝站上的深階，其餘四科＝彩度 65 那一案）。
+     ⚠ 他寫的「一般 #5A6E4」只有五碼，六碼的讀法是 104 那一案的 #5A6E4F。
 
-  配對照**色相最近**排（不是憑感覺挑）：
-  顯微根管→磚紅 Δh 2°／牙周→深綠松 3°／矯正→藍灰 5°／口外→灰紫 8°／
-  兒牙→焦糖褐 11°／一般→苔綠 18°（而且苔綠就是 Logo 色）。
-  ⚠⚠⚠ **植牙是唯一配不上的，成因是結構性的**：設計師的色票裡**只有一支藍**，
-  而站上有兩科是藍（矯正 h249、植牙 h281）。藍灰給了更近的矯正，
-  植牙只剩 Deep Taupe（h 33，差 108°）。**不是配錯，是那份色票沒有第二支藍。**
+  ② 改名：只換這張圖與這一頁上的顯示名。index.html／topics/／tools/topic-copy.mjs
+     上的「植牙・假牙重建」**一個字都沒有動** —— 全站要不要跟著改要先問他。
 
-  ⚠ 圖一律擺真的產出檔；連結一律相對路徑；刻意零 JS。
+  ③ ⚠⚠⚠ 矯正那顆「細細的」量出來成立，而且「換一顆」解不掉：
+     九顆放進同一個 30px 方框，墨面積是
+       r3c1 顯微 735　r3c2 兒牙 713　r1c1 一般 700　r2c2 假牙 558
+       r1c2 牙周 357　r2c1（沒用到）349　r1c3（沒用到）228　r2c3 口外 227
+       r3c3 矯正 174 ＝ 一般牙科的四分之一，九顆裡最輕的那一顆。
+     九顆裡有**三顆**是長寬比 3.08 的細長家族（r1c3／r2c3／r3c3），
+     而七科要用掉九顆裡的七顆 —— 扣掉上一輪被退回的 r2c1，那三顆一顆都躲不掉。
+     換給誰只是把細的那一顆換一個科別（口外現在就是 227，同一個毛病）。
+     → 所以這一輪走的是**等重**（同浮水印那一輪 22-13）：按墨面積算出每一顆
+       自己的寬度，細長的放大、方的不動。三格讓他挑。
 -->
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
@@ -68,89 +73,122 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <div class="pv-wrap">
 
   <h1>LINE 貼文的看診時間圖
-    <span>設計師的標準色　2026-09-07</span></h1>
-  <p class="pv-lead">色票出自 <b>PALETTE.md 第一節</b>，原本就在的兩份。<br>
-    <b>九顆扣掉兩顆太淺的，正好剩七顆——正好七科。</b></p>
+    <span>你挑的顏色　＋　圖案的份量　2026-09-07</span></h1>
+  <p class="pv-lead">七顆色已經套上去了（<b>Ⓤ</b>）。<br>
+    「植牙」→<b>假牙</b>、「植牙・假牙重建」→<b>假牙重建</b>，
+    <b>只換這張圖與這一頁</b>——站上一個字都沒動。</p>
 
-  <h2 class="pv-h2">Ⓟ 設計師九顆　104_logo<em>建議</em>
-    <span class="t">彩度中位 20.3（站上是 31.8）</span></h2>
-  <div class="pv-shot">
-    <img src="post-hours-b104.png" width="1080" height="1080"
-      alt="格子表：七科的圖案改用設計師官方色票九顆裡的七顆">
-  </div>
-  <p class="pv-cap">配對照<b>色相最近</b>排，不是憑感覺挑：<br>
-    顯微根管→磚紅 <b>Δh 2°</b>／牙周→深綠松 3°／矯正→藍灰 5°／口外→灰紫 8°／
-    兒牙→焦糖褐 11°／一般→苔綠 18°（<b>而且苔綠就是 Logo 色</b>）。<br>
-    七顆兩兩最近 ΔE <b>16.0</b>，對底最低 3.83（門檻 3）。</p>
+  <h2 class="pv-h2">⚠ 矯正那顆換不掉，只能放大
+    <span class="t">量出來你是對的，但成因不是挑錯形狀</span></h2>
+  <p class="pv-lead">九顆放進同一個 30px 方框，<b>墨的面積</b>是——<br>
+    顯微 735／兒牙 713／一般 700／假牙 558／牙周 357／
+    <span class="n">口外 227</span>／<span class="n">矯正 174</span>。<br>
+    <b>矯正只有一般牙科的四分之一，九顆裡最輕的那一顆。</b></p>
+  <p class="pv-lead"><b>但換一顆解不掉：</b>九顆裡有<b>三顆</b>是長寬比 3.08 的細長家族，
+    而七科要用掉九顆裡的七顆——扣掉上一輪被你退回的那顆「哭哭」，
+    <b>那三顆一顆都躲不掉</b>。換給誰只是把細的那一顆換一個科別
+    （<b>口外現在就是 227，同一個毛病</b>）。<br>
+    → 所以改成<b>按墨的面積算出每一顆自己的寬度</b>：細長的放大、方的不動。
+    這是站上浮水印那一輪用過的做法。</p>
 
-  <h2 class="pv-h2">Ⓠ 設計師八顆　Logo顏色
-    <span class="t">站上現行色值的出處，彩度中位 15.8</span></h2>
+  <h2 class="pv-h2">Ⓤ2 等重<em>建議</em>
+    <span class="t">矯正 30→60px、口外 30→53px、牙周 42px，其餘幾乎不動</span></h2>
   <div class="pv-shot">
-    <img src="post-hours-b8.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：七科的圖案改用設計師八顆色票">
+    <img src="post-hours-mix-even.png" width="1080" height="1080"
+      alt="格子表：七科的圖案按墨面積放大，細長的矯正與口外變明顯">
   </div>
-  <p class="pv-cap">更沉一階。<span class="n">⚠</span> 但七顆兩兩最近 ΔE 掉到 <b>12.6</b>
-    （矯正×口外），已經比站上最緊的一格還近。</p>
+  <p class="pv-cap">七顆看起來一樣重。<b>整塊高度沒有變</b>——
+    放大的都是扁的那幾顆，長出來的是寬不是高。</p>
 
-  <h2 class="pv-h2">⚠ 植牙是唯一配不上的</h2>
-  <p class="pv-lead"><b>設計師的色票裡只有一支藍</b>（藍灰），而站上有兩科是藍
-    ——矯正 h249、植牙 h281。<br>
-    藍灰給了更近的矯正（Δh 5°），植牙只剩 <b>Deep Taupe</b>（h 33，差 <b>108°</b>）。<br>
-    <b>這不是配錯，是那份色票沒有第二支藍。</b> 要嘛接受褐色，要嘛那一科留用站上的值。</p>
+  <h2 class="pv-h2">Ⓤ1 半
+    <span class="t">只補一半：矯正 42px、口外 40px</span></h2>
+  <div class="pv-shot">
+    <img src="post-hours-mix-half.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：七科的圖案按墨面積補一半">
+  </div>
+  <p class="pv-cap">大小的落差還看得出來，但矯正不再是一條線。</p>
 
-  <h2 class="pv-h2">保留：上一輪那四案</h2>
+  <h2 class="pv-h2">Ⓤ0 現況
+    <span class="t">你挑的顏色，圖案大小沒動</span></h2>
   <div class="pv-shot">
-    <img src="post-hours-cboth.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：一般牙科的圖案是灰色，其餘六科降低彩度">
+    <img src="post-hours-mix.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：七科的圖案都是 30px 方框，矯正與口外看起來很細">
   </div>
-  <p class="pv-cap">Ⓑ 一般牙科轉中性 ＋ 彩度 65%。ΔE 13.7、彩色 13 顆。</p>
-  <div class="pv-shot">
-    <img src="post-hours-cflat.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：一般牙科的圖案是灰色，其餘六科維持原本彩度">
-  </div>
-  <p class="pv-cap">Ⓝ 只把一般牙科轉中性。ΔE <b>20.1</b>——所有案裡辨識度最高的。</p>
-  <div class="pv-shot">
-    <img src="post-hours-c65.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：七科的圖案都降低彩度">
-  </div>
-  <p class="pv-cap">Ⓒ 全部降到彩度 65%。ΔE 14.4。</p>
-  <div class="pv-shot">
-    <img src="post-hours-i2x2.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：七科維持站上原本的深階顏色">
-  </div>
-  <p class="pv-cap">Ⓞ 現況（站上的深階）。ΔE 18.6、彩度中位 31.8。</p>
+  <p class="pv-cap">Ⓤ 七顆兩兩最近 ΔE <b>15.5</b>（矯正×假牙），
+    彩度中位 22.1，對底最低 4.50——三項都比站上現況好。</p>
 
-  <h2 class="pv-h2" id="pal">六案的色碼
+  <h2 class="pv-h2">⚠ 全站要不要一起改名？</h2>
+  <p class="pv-lead">「植牙・假牙重建」在站上有五處：首頁那排標記、七科導覽列、
+    著陸頁 <code>/topics/prosth/</code>、文章卡的主題標籤、
+    以及 <code>tools/topic-copy.mjs</code>。<br>
+    <b>這一輪一個字都沒動</b>——要不要一起改成「假牙重建」，你說了才動。</p>
+
+  <h2 class="pv-h2" id="pal">七案的色碼
     <span class="t">挑好告訴我代號就好</span></h2>
   <p class="pv-cap">色碼的唯一出處是 <code>colors.json</code>，這一頁讀它、<b>不手抄</b>——
-    守門會逐格比對。順序：一般／牙周／顯微／兒童／齒顎／植牙／口腔</p>
-  <div class="pv-pal"><b>O　現況（站上深階）</b><div class="sw"><span><i style="background:#2C5238"></i>一般 #2C5238</span><span><i style="background:#2A6D69"></i>牙周 #2A6D69</span><span><i style="background:#89202D"></i>顯微 #89202D</span><span><i style="background:#9E6301"></i>兒童 #9E6301</span><span><i style="background:#31637F"></i>齒顎 #31637F</span><span><i style="background:#2A4677"></i>植牙 #2A4677</span><span><i style="background:#784E84"></i>口腔 #784E84</span></div></div>
-  <div class="pv-pal"><b>C　全部彩度 65%</b><div class="sw"><span><i style="background:#38503E"></i>一般 #38503E</span><span><i style="background:#436A67"></i>牙周 #436A67</span><span><i style="background:#753436"></i>顯微 #753436</span><span><i style="background:#926833"></i>兒童 #926833</span><span><i style="background:#466173"></i>齒顎 #466173</span><span><i style="background:#394666"></i>植牙 #394666</span><span><i style="background:#6F5477"></i>口腔 #6F5477</span></div></div>
-  <div class="pv-pal"><b>N　一般牙科轉中性</b><div class="sw"><span><i style="background:#5C5F57"></i>一般 #5C5F57</span><span><i style="background:#2A6D69"></i>牙周 #2A6D69</span><span><i style="background:#89202D"></i>顯微 #89202D</span><span><i style="background:#9E6301"></i>兒童 #9E6301</span><span><i style="background:#31637F"></i>齒顎 #31637F</span><span><i style="background:#2A4677"></i>植牙 #2A4677</span><span><i style="background:#784E84"></i>口腔 #784E84</span></div></div>
-  <div class="pv-pal"><b>B　轉中性 ＋ 65%</b><div class="sw"><span><i style="background:#5C5F57"></i>一般 #5C5F57</span><span><i style="background:#436A67"></i>牙周 #436A67</span><span><i style="background:#753436"></i>顯微 #753436</span><span><i style="background:#926833"></i>兒童 #926833</span><span><i style="background:#466173"></i>齒顎 #466173</span><span><i style="background:#394666"></i>植牙 #394666</span><span><i style="background:#6F5477"></i>口腔 #6F5477</span></div></div>
-  <div class="pv-pal"><b>P　設計師九顆 104_logo</b><div class="sw"><span><i style="background:#5A6E4F"></i>一般 #5A6E4F</span><span><i style="background:#0B4B46"></i>牙周 #0B4B46</span><span><i style="background:#944449"></i>顯微 #944449</span><span><i style="background:#9E7253"></i>兒童 #9E7253</span><span><i style="background:#315568"></i>齒顎 #315568</span><span><i style="background:#805751"></i>植牙 #805751</span><span><i style="background:#5E5A61"></i>口腔 #5E5A61</span></div></div>
-  <div class="pv-pal"><b>Q　設計師八顆 Logo顏色</b><div class="sw"><span><i style="background:#5D6D55"></i>一般 #5D6D55</span><span><i style="background:#214D48"></i>牙周 #214D48</span><span><i style="background:#AF4C52"></i>顯微 #AF4C52</span><span><i style="background:#9B735E"></i>兒童 #9B735E</span><span><i style="background:#3C596B"></i>齒顎 #3C596B</span><span><i style="background:#7D5A58"></i>植牙 #7D5A58</span><span><i style="background:#5F5D66"></i>口腔 #5F5D66</span></div></div>
+    守門會逐格比對。順序：一般／牙周／顯微／兒童／齒顎／假牙／口腔</p>
+  <div class="pv-pal"><b>O　現況（站上深階）</b><div class="sw"><span><i style="background:#2C5238"></i>一般 #2C5238</span><span><i style="background:#2A6D69"></i>牙周 #2A6D69</span><span><i style="background:#89202D"></i>顯微 #89202D</span><span><i style="background:#9E6301"></i>兒童 #9E6301</span><span><i style="background:#31637F"></i>齒顎 #31637F</span><span><i style="background:#2A4677"></i>假牙 #2A4677</span><span><i style="background:#784E84"></i>口腔 #784E84</span></div></div>
+  <div class="pv-pal"><b>C　全部彩度 65%</b><div class="sw"><span><i style="background:#38503E"></i>一般 #38503E</span><span><i style="background:#436A67"></i>牙周 #436A67</span><span><i style="background:#753436"></i>顯微 #753436</span><span><i style="background:#926833"></i>兒童 #926833</span><span><i style="background:#466173"></i>齒顎 #466173</span><span><i style="background:#394666"></i>假牙 #394666</span><span><i style="background:#6F5477"></i>口腔 #6F5477</span></div></div>
+  <div class="pv-pal"><b>N　一般牙科轉中性</b><div class="sw"><span><i style="background:#5C5F57"></i>一般 #5C5F57</span><span><i style="background:#2A6D69"></i>牙周 #2A6D69</span><span><i style="background:#89202D"></i>顯微 #89202D</span><span><i style="background:#9E6301"></i>兒童 #9E6301</span><span><i style="background:#31637F"></i>齒顎 #31637F</span><span><i style="background:#2A4677"></i>假牙 #2A4677</span><span><i style="background:#784E84"></i>口腔 #784E84</span></div></div>
+  <div class="pv-pal"><b>B　轉中性 ＋ 65%</b><div class="sw"><span><i style="background:#5C5F57"></i>一般 #5C5F57</span><span><i style="background:#436A67"></i>牙周 #436A67</span><span><i style="background:#753436"></i>顯微 #753436</span><span><i style="background:#926833"></i>兒童 #926833</span><span><i style="background:#466173"></i>齒顎 #466173</span><span><i style="background:#394666"></i>假牙 #394666</span><span><i style="background:#6F5477"></i>口腔 #6F5477</span></div></div>
+  <div class="pv-pal"><b>P　設計師九顆 104_logo</b><div class="sw"><span><i style="background:#5A6E4F"></i>一般 #5A6E4F</span><span><i style="background:#0B4B46"></i>牙周 #0B4B46</span><span><i style="background:#944449"></i>顯微 #944449</span><span><i style="background:#9E7253"></i>兒童 #9E7253</span><span><i style="background:#315568"></i>齒顎 #315568</span><span><i style="background:#805751"></i>假牙 #805751</span><span><i style="background:#5E5A61"></i>口腔 #5E5A61</span></div></div>
+  <div class="pv-pal"><b>Q　設計師八顆 Logo顏色</b><div class="sw"><span><i style="background:#5D6D55"></i>一般 #5D6D55</span><span><i style="background:#214D48"></i>牙周 #214D48</span><span><i style="background:#AF4C52"></i>顯微 #AF4C52</span><span><i style="background:#9B735E"></i>兒童 #9B735E</span><span><i style="background:#3C596B"></i>齒顎 #3C596B</span><span><i style="background:#7D5A58"></i>假牙 #7D5A58</span><span><i style="background:#5F5D66"></i>口腔 #5F5D66</span></div></div>
+  <div class="pv-pal"><b>U　使用者挑的混合</b><div class="sw"><span><i style="background:#5A6E4F"></i>一般 #5A6E4F</span><span><i style="background:#436A67"></i>牙周 #436A67</span><span><i style="background:#944449"></i>顯微 #944449</span><span><i style="background:#926833"></i>兒童 #926833</span><span><i style="background:#31637F"></i>齒顎 #31637F</span><span><i style="background:#394666"></i>假牙 #394666</span><span><i style="background:#6F5477"></i>口腔 #6F5477</span></div></div>
 
   <h2 class="pv-h2">擺進主頁那三格</h2>
   <div class="pv-shot">
     <img src="profile-3up-w2.png" width="823" height="823" loading="lazy"
-      alt="擺進主頁三格：大格看得到品牌條、整張表與電話">
+      alt="主頁三格模擬：大格是 Ⓤ，兩個小格是半與等重">
   </div>
-  <p class="pv-cap">大格會把 1080 的圖<b>上下各切掉 271 列</b>，所以識別與電話收在中間那條帶子裡。<br>
-    <span class="n">⚠</span> 到底是裁還是留白<b>我們沒驗過</b>——表單右上角那顆<b>預覽</b>按一下就有答案。</p>
+  <p class="pv-cap">大格 823×409 只看得到中間 <b>537 列</b>，
+    上下各切掉 271——所以品牌與電話一定要留在那條帶子裡。</p>
+
+  <h2 class="pv-h2">保留：設計師的兩份色票</h2>
+  <div class="pv-shot">
+    <img src="post-hours-b104.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：七科的圖案用設計師官方色票九顆裡的七顆">
+  </div>
+  <p class="pv-cap">Ⓟ 104_logo 九顆。ΔE 16.0、彩度中位 20.3。</p>
+  <div class="pv-shot">
+    <img src="post-hours-b8.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：七科的圖案用設計師八顆色票">
+  </div>
+  <p class="pv-cap">Ⓠ Logo顏色 八顆。更沉一階，但 ΔE 掉到 <b>12.6</b>。</p>
+
+  <h2 class="pv-h2">保留：更早的四案</h2>
+  <div class="pv-shot">
+    <img src="post-hours-cboth.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：一般牙科的圖案是灰色，其餘六科降低彩度">
+  </div>
+  <p class="pv-cap">Ⓑ 轉中性 ＋ 彩度 65。</p>
+  <div class="pv-shot">
+    <img src="post-hours-cflat.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：一般牙科的圖案是灰色，其餘六科維持原本彩度">
+  </div>
+  <p class="pv-cap">Ⓝ 只把一般牙科轉中性。ΔE 20.1。</p>
+  <div class="pv-shot">
+    <img src="post-hours-c65.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：七科的圖案都降低彩度">
+  </div>
+  <p class="pv-cap">Ⓒ 全部降到彩度 65。</p>
+  <div class="pv-shot">
+    <img src="post-hours-i2x2.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：七科維持站上原本的深階顏色">
+  </div>
+  <p class="pv-cap">Ⓞ 現況（站上的深階）。</p>
 
   <h2 class="pv-h2">排法那一件還開著
-    <span class="t">直排 vs 一行兩個</span></h2>
+    <span class="t">直排收不進大格</span></h2>
   <div class="pv-shot">
     <img src="post-hours-icol.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：每一格的圖案垂直排成一欄">
+      alt="格子表：一格裡的圖案全部直排，整塊變高">
   </div>
-  <p class="pv-cap">直排最好讀，但整塊 623px，<b>超出主頁大格看得到的 537 列共 86px</b>——
-    品牌與電話會被切掉。上面每一張用的都是「一行兩個」。</p>
+  <p class="pv-cap">一節四科就是四倍高，整塊 <b>651 列</b>、超出安全帶 114。</p>
   <div class="pv-shot">
     <img src="profile-3up-col.png" width="823" height="823" loading="lazy"
-      alt="直排版擺進主頁三格：大格上下被切掉">
+      alt="主頁三格模擬：直排的版本，品牌與電話被切掉">
   </div>
+  <p class="pv-cap">代價就是這個——<b>品牌與電話被切掉</b>。</p>
 
   <h2 class="pv-h2">「詳情」欄要貼的字</h2>
   <div class="pv-txt">一週的門診時段，以及每一節有哪些科別。
