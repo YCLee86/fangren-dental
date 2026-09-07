@@ -205,13 +205,13 @@ const shell = (inner, cls = "") => `<div class="sheet"><div class="band ${cls}">
  *         （25 個名字裡有 12 個是它）。退一階之後，五科特別門診自己跳出來。
  *   mark  每科一顆記號（＝他的第二個提議，量測見上面 SHAPE 那一段）
  */
-const grid = (mode, ics, k = 1, flat = false) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
+const grid = (mode, ics, k = 1, flat = false, pal = null) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
   <thead><tr><td></td>${D.days.map(d => `<th>${d}</th>`).join("")}</tr></thead>
   <tbody>${D.rows.map(r => `<tr>
     <th><b>${r.part}</b><i>${r.time}</i></th>${r.cells.map(c => `<td>${
       mode.startsWith("i") ? `<div class="ic-row ${
           mode === "icol" ? "col" : mode === "i2x2" ? "w2" : ""}">${c.map(id =>
-          `<span class="ic" style="color:${tone(id, k, flat)}">${mark22[id]}</span>`).join("")}</div>`
+          `<span class="ic" style="color:${tone(id, k, flat, pal)}">${mark22[id]}</span>`).join("")}</div>`
       : c.map(id => { const sp = D.specs.find(x => x.id === id);
           const nm = SHORT[sp.name] || sp.name;
           const col = mode === "rank" && id === "general" ? SOFT : INK;
@@ -219,16 +219,16 @@ const grid = (mode, ics, k = 1, flat = false) => shell(`<table><colgroup><col cl
             ? `<div class="nm mk-row" style="color:${col}"><span class="ic">${mark22[id]}</span>${nm}</div>`
             : `<div class="nm" style="color:${col}">${nm}</div>`;
         }).join("")}</td>`).join("")}</tr>`).join("")}</tbody></table>`
-  + (mode.startsWith("i") ? legend(k, flat) : ""), ics ? `s${ics}` : "");
+  + (mode.startsWith("i") ? legend(k, flat, pal) : ""), ics ? `s${ics}` : "");
 
 /* 圖例：logo 套色 ＋ 科別名用墨（使用者 2026-09-07 指定）。
  * ⚠⚠ 格子裡只剩圖案的話，第一次看的人**一定要對照這一排** ——
  *   所以它不是裝飾，是那張表讀不讀得懂的前提，不可以為了省高度砍掉。
  * ⚠ 排成 4 ＋ 3 兩行（七個一行放不下），刻意不讓它自己 wrap ——
  *   自己 wrap 會斷成 6＋1（招呼卡那一輪的圖例踩過）。 */
-const legend = (k = 1, flat = false) => `<div class="lg">${[D.specs.slice(0, 4), D.specs.slice(4)]
+const legend = (k = 1, flat = false, pal = null) => `<div class="lg">${[D.specs.slice(0, 4), D.specs.slice(4)]
   .map(g => `<div class="lg-row">${g.map(sp =>
-    `<span class="lg-i"><span class="ic sm" style="color:${tone(sp.id, k, flat)}">${mark22[sp.id]}</span>`
+    `<span class="lg-i"><span class="ic sm" style="color:${tone(sp.id, k, flat, pal)}">${mark22[sp.id]}</span>`
     + `${sp.name}</span>`).join("")}</div>`).join("")}</div>`;
 
 /* Ⓛ 一科一行：照「早／午／晚」各列出哪幾天 */
@@ -291,8 +291,36 @@ const unLab = ([L,a,b2]) => { const fy=(L+16)/116, fx=fy+a/500, fz=fy-b2/200;
 const desat = (h, k) => { const [L,a,b] = toLab(h); return unLab([L, a*k, b*k]); };
 const dE = (x,y) => { const A=toLab(x), B=toLab(y); return Math.hypot(A[0]-B[0],A[1]-B[1],A[2]-B[2]); };
 
-/* 每一科畫出來的顏色：k ＝ 彩度倍率，flat ＝ 一般牙科要不要轉中性 */
-const tone = (id, k, flat) => flat && id === "general" ? SOFT : desat(DEEP[id], k);
+/* ---------- 設計師給的官方色票 -----------------------------------------
+ * 2026-09-07 使用者：「找出本來設計師給的標準色，套用他給的標準色看看。」
+ * 出處 PALETTE.md 第一節（**不是新的取值，是原本就在的那兩份**）：
+ *   `104_logo.pptx` 九顆（完整版）／`Logo顏色.pptx` 八顆。
+ *
+ * ⚠⚠⚠ **九顆扣掉兩顆太淺的（稻草灰 2.17、米色 1.46，過不了裝飾圖形的 3:1），
+ *   正好剩七顆 —— 正好七科。** 八顆那一份扣掉灰綠也一樣是七顆。
+ * ⚠⚠ 而且它本來就比站上沉：**彩度中位 31.8 → 20.3（低 36%）** ——
+ *   使用者上一輪說的「吵雜熱鬧」，換這一套等於免費解掉一半。
+ *
+ * 配對照**色相最近**排（不是憑感覺挑）：
+ *   顯微根管→磚紅 Δh 2°　牙周→深綠松 3°　矯正→藍灰 5°　口外→灰紫 8°
+ *   兒牙→焦糖褐 11°　一般→苔綠 18°（而且苔綠就是 Logo 色）
+ * ⚠⚠⚠ **植牙是唯一配不上的，而且成因是結構性的**：設計師的色票裡
+ *   **只有一支藍**（藍灰），而站上有兩科是藍（矯正 h249、植牙 h281）。
+ *   藍灰給了更近的矯正，植牙只剩 Deep Taupe（h 33，差 108°）。
+ *   **這不是配錯，是那份色票沒有第二支藍** —— 要嘛接受褐色，要嘛那一科留用站上的值。
+ */
+const BRAND = {
+  /* 104_logo.pptx（九顆的完整版） */
+  b104: { general:"#5A6E4F", perio:"#0B4B46", endo:"#944449", kids:"#9E7253",
+          ortho:"#315568", prosth:"#805751", surg:"#5E5A61" },
+  /* Logo顏色.pptx（八顆，站上現行色值的出處） */
+  b8:   { general:"#5D6D55", perio:"#214D48", endo:"#AF4C52", kids:"#9B735E",
+          ortho:"#3C596B", prosth:"#7D5A58", surg:"#5F5D66" }
+};
+
+/* 每一科畫出來的顏色：pal ＝ 用哪一套；k ＝ 彩度倍率，flat ＝ 一般牙科要不要轉中性 */
+const tone = (id, k, flat, pal) => flat && id === "general" ? SOFT
+  : pal ? BRAND[pal][id] : desat(DEEP[id], k);
 
 /* ---------- 對比度：字是要讀的 ---------- */
 const lin = c => { c /= 255; return c <= .03928 ? c/12.92 : Math.pow((c+.055)/1.055, 2.4); };
@@ -311,6 +339,9 @@ if (bad.length) throw new Error("過不了 AA：" + bad.map(([n,r]) => `${n} ${r
    站在淺底上，處境和白底上的字一樣，需要的是同一階。
    ⚠ 使用者說的「圖案要套色」是口語的「上那一科的顏色」，不是 PALETTE 的專有名詞。 */
 const icon = D.specs.map(s2 => [`${s2.name} 深階對底`, ratio(DEEP[s2.id], CARD)]);
+for (const [pal, tbl] of Object.entries(BRAND))
+  for (const [id, c] of Object.entries(tbl))
+    icon.push([`${pal}／${D.specs.find(s2 => s2.id === id).name}`, ratio(c, CARD)]);
 const iconBad = icon.filter(([, r]) => r < 3);
 if (iconBad.length) throw new Error("圖案對底不到 3:1："
   + iconBad.map(([n,r]) => `${n} ${r.toFixed(2)}`).join("、"));
@@ -360,6 +391,8 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
                            ["c65",  grid("i2x2", W2, .65)],
                            ["cflat", grid("i2x2", W2, 1, true)],
                            ["cboth", grid("i2x2", W2, .65, true)],
+                           ["b104",  grid("i2x2", W2, 1, false, "b104")],
+                           ["b8",    grid("i2x2", W2, 1, false, "b8")],
                           ]) {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${html}`);
   /* ⚠⚠ 這一版存在的理由就是「乾淨 ＋ 大格看得到全部」，所以那件事要用量的。
@@ -409,9 +442,11 @@ console.log(`圖案 ${icon.length} 項全部過 3:1（最低 ${
   Math.min(...icon.map(c => c[1])).toFixed(2)}　${
   icon.reduce((a,b)=>a[1]<b[1]?a:b)[0]}）`);
 console.log("\n── 顏色三案：七顆圖案兩兩最近的一對 ──");
-for (const [nm, k, flat] of [["現況（100%）", 1, false], ["彩度 65%", .65, false],
-                             ["一般牙科轉中性", 1, true], ["兩個都做", .65, true]]) {
-  const cs = D.specs.map(s2 => tone(s2.id, k, flat));
+for (const [nm, k, flat, pal] of [["現況（100%）", 1, false], ["彩度 65%", .65, false],
+                             ["一般牙科轉中性", 1, true], ["兩個都做", .65, true],
+                             ["設計師 104（九顆）", 1, false, "b104"],
+                             ["設計師 八顆", 1, false, "b8"]]) {
+  const cs = D.specs.map(s2 => tone(s2.id, k, flat, pal));
   let mn = 1e9, pr = "";
   for (let i=0;i<cs.length;i++) for (let j=i+1;j<cs.length;j++) {
     const d = dE(cs[i], cs[j]);
@@ -419,6 +454,8 @@ for (const [nm, k, flat] of [["現況（100%）", 1, false], ["彩度 65%", .65,
   }
   const lo = Math.min(...cs.map(c2 => ratio(c2, CARD)));
   console.log(`  ${nm.padEnd(16,"　")}ΔE ${mn.toFixed(1).padStart(5)}　${pr.padEnd(18,"　")}`
-    + `對底最低 ${lo.toFixed(2)}　彩色顆數 ${flat ? 13 : 25}`);
+    + `對底最低 ${lo.toFixed(2)}　彩度中位 ${
+      cs.map(c2 => { const [,a,b] = toLab(c2); return Math.hypot(a,b); })
+        .sort((x,y)=>x-y)[3].toFixed(1)}`);
 }
 console.log("\n── 「詳情」欄要貼的字 ──\n" + detail.split("\n").map(l => "  " + l).join("\n"));
