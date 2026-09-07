@@ -652,8 +652,8 @@ const GAPS = [["mix-half", 11, 9, false], ["mix-half-a11", 11, 9, true],
      三格中間值 ＋ 那個算出來的上限，四張都套同一個 EX（標題底下多墊的那一段），
      所以四張的差別**只有倍率**，比得出來。 */
   const ex = +(m.bot - m.top).toFixed(2);
-  SCALES = [["s110", 1.10, ex], ["s120", 1.20, ex], ["s130", 1.30, ex],
-            ["fit", +fit.toFixed(3), ex]];
+  SCALES = [["s110", 1.10, ex], ["s120", 1.20, ex], ["s125", 1.25, ex],
+            ["s130", 1.30, ex], ["fit", +fit.toFixed(3), ex]];
   console.log(`\n── 放大倍率（算出來的，不是挑的）──`);
   console.log(`  1× 的三塊：標題 ${m.top.toFixed(1)}　中間 ${mid.toFixed(1)}　頁尾 ${m.bot.toFixed(1)}`);
   console.log(`  中間那塊要填滿安全帶 ${BAND} → S ${want.toFixed(3)}`
