@@ -210,7 +210,11 @@ if (!PHONE) throw new Error("index.html 裡找不到電話（畫面上的寫法�
    並且壓在表的後面（同約診卡：浮水印在字的後面，不是躲在空白處）。 */
 const WMW = 660, WMR = -60, WMT = 470, WMA = .05;
 /* 版心的左右內距（裝置 px，放大時自己換算）與整體放大倍率 */
-const PAD = 44, LAB = 158;
+/* ⚠⚠ 2026-09-07 使用者：「二三四五的科別感覺擠在一起了。」——放大之後每一天的欄
+   只剩 154.6，兩顆等寬格就吃掉 133，**同一格與跨一天的距離差不到 1.3 倍**，
+   眼睛因此分不出哪幾顆是同一天的。左右內距 44 → 32、時段那一欄 158 → 152，
+   把省下來的 34 全部讓給五天的欄。 */
+const PAD = 32, LAB = 152;
 let S = 1;
 /* 標題底下要多墊多少（版心的單位）——見下面 fitScale 那一段，量出來才填 */
 let EX = 0;
@@ -683,8 +687,12 @@ for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i
                            /* ⚠⚠⚠ 2026-09-07 第五輪：整體放大那把尺。
                               同一份版面、同一組參數，只有 zoom 不一樣 —— 每一格
                               的代價（主頁大格會從上下切掉多少）印在下面的表裡。 */
+                           /* ⚠⚠⚠ 同一格裡的間距 11 → 8（畫出來 11.1 裝置 px ＝ 他在 1× 時
+                              挑的那一格逐字相同），跨一天的距離因此從 30.2 拉到 49.4。
+                              **兩件事是互相搶同一塊寬度的**：整張圖固定 1080 寬，
+                              同一格鬆一分，跨格就緊一分。 */
                            ...SCALES.map(([tag, sc, ex]) =>
-                             [tag, grid("i2x2", W2, 1, false, "mix", "half", [11, 9], true), sc, ex]),
+                             [tag, grid("i2x2", W2, 1, false, "mix", "half", [8, 9], true), sc, ex]),
                            ...ALTP.map(([tag, sh]) => {
                              const old = SHAPE.prosth; SHAPE.prosth = sh;
                              const html = grid("i2x2", W2, 1, false, "mix", "half", [11, 9], true);
@@ -740,6 +748,41 @@ for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i
     .filter(el => { const r = el.getBoundingClientRect();
       return r.width && (r.right > 1080.5 || r.left < -.5); }).length);
   if (over) throw new Error(`${tag} 有 ${over} 個元素溢出`);
+  /* ⚠⚠⚠ 2026-09-07 使用者：「二三四五的科別感覺擠在一起了。」
+     成因量得出來：**同一格裡兩顆的距離**和**跨到隔壁那一天的距離**如果差不多，
+     眼睛就分不出哪幾顆是同一天的（接近律）。所以這裡兩個都量，
+     並且要求「跨格 ÷ 同格 ≥ 1.7」——差不到那麼多就當成擠在一起。
+     ⚠ 1.7 是算出來能同時滿足三件事的那一格：放大到 1.387、同一格維持他挑的
+       11 裝置 px、以及整張圖固定 1080 寬。要更分得開就得放棄其中一件。
+     ⚠ 量的是**墨**不是格子：等寬格在每一顆旁邊都補了空白，
+     那些空白同格與跨格都有，只看格子會把差距稀釋掉。 */
+  const grp = await page.evaluate(() => {
+    const rows = [...document.querySelectorAll("tbody tr")];
+    let inn = 1e9, out = 1e9;
+    for (const tr of rows) {
+      const marks = [...tr.querySelectorAll("td svg.mk")].map(el => ({
+        r: el.getBoundingClientRect(), td: el.closest("td") }));
+      /* 照 y 分行（同一行的才比得出左右距離） */
+      const lines = new Map();
+      for (const m of marks) {
+        const k = Math.round((m.r.top + m.r.height / 2) / 6);
+        (lines.get(k) || lines.set(k, []).get(k)).push(m);
+      }
+      for (const line of lines.values()) {
+        line.sort((a, b2) => a.r.left - b2.r.left);
+        for (let i = 1; i < line.length; i++) {
+          const d = line[i].r.left - line[i - 1].r.right;
+          if (line[i].td === line[i - 1].td) inn = Math.min(inn, d);
+          else out = Math.min(out, d);
+        }
+      }
+    }
+    /* 直排那一案一格只放一顆，量不到「同一格」的距離 → 回 null，下面就跳過 */
+    return { inn: inn < 1e8 ? inn : null, out: out < 1e8 ? out : null };
+  });
+  if (grp.inn && grp.out && grp.out < grp.inn * 1.7)
+    throw new Error(`${tag} 的科別擠在一起了：同一格 ${grp.inn.toFixed(1)}px、`
+      + `跨到隔壁那一天 ${grp.out.toFixed(1)}px（要 ≥ 1.7 倍）`);
   /* 頁尾對齊驗收：兩塊字的**字面中線**要落在同一條線上（用 Range 量墨，不量盒） */
   const tel = await page.evaluate(() => {
     const el = document.querySelector(".tel");
@@ -759,7 +802,7 @@ for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i
     throw new Error(`${tag} 的頁尾沒對齊：兩行左緣 ${tel.note.toFixed(1)} / ${tel.left.toFixed(1)}`
       + `　號碼中線 ${tel.num.toFixed(1)}　話筒中線 ${tel.ico.toFixed(1)}`);
   await page.screenshot({ path: path.join(OUT, `post-hours-${tag}.png`) });
-  made.push([tag, b, lab.w, tel]);
+  made.push([tag, b, lab.w, tel, grp]);
 }
 
 S = 1; EX = 0;
@@ -827,9 +870,13 @@ for (const [t, sc] of [["mix-half-a11", 1], ...SCALES.map(([a, b2]) => [a, b2])]
   console.log(`  ${(sc).toFixed(2)}×　內容高 ${b.height.toFixed(0)}　`
     + (cut ? `大格上下各切掉 ${cut.toFixed(0)}px` : "大格看得到全部"));
 }
+{ const mf = made.find(m => m[0] === "fit");
+  console.log(`  放大之後：同一格裡兩顆相距 ${mf[4].inn.toFixed(1)}px　`
+    + `跨到隔壁那一天 ${mf[4].out.toFixed(1)}px　＝ ${(mf[4].out / mf[4].inn).toFixed(2)} 倍`);
+  console.log(`  　　　　　時段標籤 ${mf[2].toFixed(1)}px（欄寬 ${(LAB * 1.387).toFixed(0)}，沒有折行）`); }
 const m0 = made.find(m => m[0] === "mix-half-a11");
 console.log(`\n── 定案那張的兩件版面 ──`);
-console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 176，沒有折行）`);
+console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 ${LAB}，沒有折行）`);
 { /* 假牙重建那一顆到底有沒有被切：畫出來多大 vs 形狀本身的長寬比 */
   const w = 30 * wScale("prosth", "half");
   console.log(`  假牙重建 r2c2：畫出來 ${w.toFixed(1)}×${(w / AR.r2c2).toFixed(1)}px`
@@ -839,6 +886,8 @@ console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 176，沒有
 console.log(`  浮水印 ${WMW}px・墨 ${(WMA * 100).toFixed(1)}%　底色 ${CARD} → ${WMBG}`
   + `　壓在上面的字 ${Math.min(...wmText.map(c => c[1])).toFixed(2)}`
   + `　圖案 ${Math.min(...wmIcon.map(c => c[1])).toFixed(2)}（門檻 4.5 / 3）`);
+console.log(`  同一格裡兩顆相距 ${(m0[4].inn ?? 0).toFixed(1)}px　跨到隔壁那一天 `
+  + `${(m0[4].out ?? 0).toFixed(1)}px　＝ ${(m0[4].out / m0[4].inn).toFixed(2)} 倍`);
 console.log(`  頁尾兩行左緣 ${m0[3].note.toFixed(1)} / ${m0[3].left.toFixed(1)}`
   + `　話筒對號碼的字面中線差 ${Math.abs(m0[3].num - m0[3].ico).toFixed(2)}px`);
 console.log(`  profile-3up.png`);
