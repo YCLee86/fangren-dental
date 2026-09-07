@@ -336,8 +336,10 @@ svg.mk{width:100%;height:100%;display:block}
 .g b{font-weight:400;color:${SOFT};margin-right:8px;letter-spacing:.02em}
 `;
 
+/* gap ＝ [同一格橫向, 同一格行距, 早午晚的列距（選填，預設 13）] */
 const shell = (inner, cls = "", gap = null) => `<div class="sheet">${WMARK}<div class="band ${cls}"${
-  gap ? ` style="--icgx:${gap[0]}px;--icgy:${gap[1]}px"` : ""}>
+  gap ? ` style="--icgx:${gap[0]}px;--icgy:${gap[1]}px${
+    gap[2] ? `;--rowpad:${gap[2]}px` : ""}"` : ""}>
   <div class="id"><b>${TITLE}</b></div>
   <div class="rule"></div>
   ${inner}
@@ -652,8 +654,11 @@ const GAPS = [["mix-half", 11, 9, false], ["mix-half-a11", 11, 9, true],
      三格中間值 ＋ 那個算出來的上限，四張都套同一個 EX（標題底下多墊的那一段），
      所以四張的差別**只有倍率**，比得出來。 */
   const ex = +(m.bot - m.top).toFixed(2);
+  /* ⚠ 2026-09-07 使用者：「把 1.3 早午晚的間隔再拉開一點點。」
+     只有那一格的 --rowpad 從 13 換成 16（畫出來 20.8 裝置 px，列距 33.8 → 41.6）；
+     其餘每一格都還是 13，所以「只差倍率」那句話對其餘四張仍然成立。 */
   SCALES = [["s110", 1.10, ex], ["s120", 1.20, ex], ["s125", 1.25, ex],
-            ["s130", 1.30, ex], ["fit", +fit.toFixed(3), ex]];
+            ["s130", 1.30, ex, 16], ["fit", +fit.toFixed(3), ex]];
   console.log(`\n── 放大倍率（算出來的，不是挑的）──`);
   console.log(`  1× 的三塊：標題 ${m.top.toFixed(1)}　中間 ${mid.toFixed(1)}　頁尾 ${m.bot.toFixed(1)}`);
   console.log(`  中間那塊要填滿安全帶 ${BAND} → S ${want.toFixed(3)}`
@@ -700,8 +705,8 @@ for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i
                               挑的那一格逐字相同），跨一天的距離因此從 30.2 拉到 49.4。
                               **兩件事是互相搶同一塊寬度的**：整張圖固定 1080 寬，
                               同一格鬆一分，跨格就緊一分。 */
-                           ...SCALES.map(([tag, sc, ex]) =>
-                             [tag, grid("i2x2", W2, 1, false, "mix", "half", [8, 9], true), sc, ex]),
+                           ...SCALES.map(([tag, sc, ex, rp]) =>
+                             [tag, grid("i2x2", W2, 1, false, "mix", "half", [8, 9, rp], true), sc, ex]),
                            ...ALTP.map(([tag, sh]) => {
                              const old = SHAPE.prosth; SHAPE.prosth = sh;
                              const html = grid("i2x2", W2, 1, false, "mix", "half", [11, 9], true);
