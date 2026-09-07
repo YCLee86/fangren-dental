@@ -182,7 +182,8 @@ const TITLE = "芳仁牙醫開診時段";
    ⚠ 這裡用**站上頁首那一條**（mark.svg），不是九顆科別記號裡的任何一顆 ——
    那九顆在格子裡各自有身分，拿其中一顆放大會讓人以為那一科比較重要。
    ⚠ 顏色是墨 ＋ 很低的 opacity，**不新增任何顏色**。 */
-const WMARK = fs.readFileSync(path.join(ROOT, "brand", "shapes", "mark.svg"), "utf8")
+const WMSH = "r1c1";   /* 2026-09-07 使用者：「浮水印改用圓的 logo」 */
+const WMARK = fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${WMSH}.svg`), "utf8")
   .replace(/<svg([^>]*?)(width|height)="[\d.]+"/g, "<svg$1")
   .replace(/<svg/, '<svg class="wm"');
 /* 頁尾那顆話筒。素材出處：Lucide "phone"，ISC 授權，https://lucide.dev ——
@@ -205,7 +206,7 @@ if (!PHONE) throw new Error("index.html 裡找不到電話（畫面上的寫法�
    看不出是標誌。約診卡那一輪之所以那樣做，是因為那張卡只有 207px 寬；
    這裡要的是「一個大 logo」，所以**只從右邊切掉一點點、其餘完整露出來**，
    並且壓在表的後面（同約診卡：浮水印在字的後面，不是躲在空白處）。 */
-const WMW = 940, WMR = -110, WMT = 300, WMA = .05;
+const WMW = 660, WMR = -60, WMT = 470, WMA = .05;
 const CSS = `
 *{box-sizing:border-box;margin:0}
 html,body{width:${W}px;height:${H}px}
