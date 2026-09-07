@@ -176,6 +176,15 @@ const TOP = (H - BAND) / 2, BOT = H - TOP;
    （都是 brand/shapes 的形狀）與標題那幾個字。不要因為「圖上沒有 logo」自己加回去。
    ⚠ 「看診時間」也一起換成**開診時段**（＝站上門診表那排標記第一顆用的字）。 */
 const TITLE = "芳仁牙醫開診時段";
+/* ⚠⚠ 2026-09-07 第三輪使用者：「這張照片可以一個大 logo 的淡色浮水印，
+   像之前 line 約診查詢的頁面那樣，顏色就用淡墨色。」
+   ＝ 約診卡那一輪（README 22-13）的做法：**一顆大的、淡的、從邊緣切出去**。
+   ⚠ 這裡用**站上頁首那一條**（mark.svg），不是九顆科別記號裡的任何一顆 ——
+   那九顆在格子裡各自有身分，拿其中一顆放大會讓人以為那一科比較重要。
+   ⚠ 顏色是墨 ＋ 很低的 opacity，**不新增任何顏色**。 */
+const WMARK = fs.readFileSync(path.join(ROOT, "brand", "shapes", "mark.svg"), "utf8")
+  .replace(/<svg([^>]*?)(width|height)="[\d.]+"/g, "<svg$1")
+  .replace(/<svg/, '<svg class="wm"');
 /* 頁尾那顆話筒。素材出處：Lucide "phone"，ISC 授權，https://lucide.dev ——
    這一行註解就是署名，改圖或搬檔的時候不要刪。
    ⚠ 幾何直接從 index.html 頁首那顆讀回來，不抄第二份（同這一支其餘每一項資料）。 */
@@ -191,12 +200,23 @@ let TELDY = 0, ICODY = 0;
 const PHONE = (SRC.match(/05-\d{7}/) || [])[0];
 if (!PHONE) throw new Error("index.html 裡找不到電話（畫面上的寫法是 05-5339369）");
 
+/* 浮水印的四個數字（大小／往右切出去／離上緣／濃度）。
+   ⚠⚠ 第一版擺在右下角、切掉一半以上 —— 在 1080 見方上讀起來就是一團灰，
+   看不出是標誌。約診卡那一輪之所以那樣做，是因為那張卡只有 207px 寬；
+   這裡要的是「一個大 logo」，所以**只從右邊切掉一點點、其餘完整露出來**，
+   並且壓在表的後面（同約診卡：浮水印在字的後面，不是躲在空白處）。 */
+const WMW = 940, WMR = -110, WMT = 300, WMA = .05;
 const CSS = `
 *{box-sizing:border-box;margin:0}
 html,body{width:${W}px;height:${H}px}
 body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
      font-family:"Noto Sans TC","WenQuanYi Zen Hei",sans-serif}
-.sheet{width:${W}px;height:${H}px;display:flex;flex-direction:column;justify-content:center}
+.sheet{width:${W}px;height:${H}px;display:flex;flex-direction:column;justify-content:center;
+       position:relative;overflow:hidden}
+/* 浮水印：從右下角切出去，壓在所有東西後面 */
+svg.wm{position:absolute;width:${WMW}px;height:auto;right:${WMR}px;top:${WMT}px;
+       color:${INK};opacity:${WMA};z-index:0}
+.band{position:relative;z-index:1}
 .band{padding:0 74px}
 .band.s18{--ics:18px}
 .band.s20{--ics:20px}
@@ -205,7 +225,7 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 .band.s30{--ics:30px}
 .band.s16{--ics:16px}
 .band.s14{--ics:14px}
-.id{padding-bottom:18px}
+.id{padding-bottom:12px}
 .id b{font-size:31px;font-weight:700;letter-spacing:.05em}
 .rule{height:1px;background:${RULE}}
 /* ⚠⚠⚠ 2026-09-07 使用者：「最下面的電話和國定假日那段文字對齊。」
@@ -216,7 +236,7 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
    ⚠ 那個值不寫死，每次出圖現量（字級一改自己跟著對）。
    ⚠⚠ .no 刻意**不是** flex 容器 —— 裡面第一個是 svg，flex 容器的基線會取第一個
       項目的下緣，整條 .tel 的 baseline 對齊會壞掉。話筒用 inline-block 走文字流。 */
-.tel{padding-top:16px;font-size:23px;color:${SOFT};letter-spacing:.02em;line-height:1.5}
+.tel{padding-top:10px;font-size:23px;color:${SOFT};letter-spacing:.02em;line-height:1.5}
 .tel .no{color:${INK};white-space:nowrap}
 /* 實心：fill 吃 currentColor、不描邊（站上那顆是空心的，這裡刻意不一樣） */
 .tel .no svg{width:${ICOPX}px;height:${ICOPX}px;display:inline-block;
@@ -226,11 +246,18 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 /* 格子 */
 table{width:100%;border-collapse:collapse;table-layout:fixed}
 col.lab{width:176px}
-thead th{font-size:27px;font-weight:400;color:${SOFT};padding:11px 0 7px;letter-spacing:.1em}
-tbody td{text-align:center;vertical-align:middle;padding:8px 4px}
+thead th{font-size:27px;font-weight:400;color:${SOFT};padding:8px 0 6px;letter-spacing:.1em}
+/* ⚠⚠ 2026-09-07 第三輪使用者：「早午晚的間隔可以再拉開一點，
+   禮拜三的診看起來特別緊密。」——禮拜三是唯一兩節都排成 2＋2 的一欄，
+   所以列與列之間本來就最擠。上下內距 8 → 13px（列距 16 → 26）。
+   ⚠⚠ 這 42px 是**從別的地方挪來的**，不是憑空多出來：安全帶只剩 9px 餘裕，
+   所以標題下 18→14、表頭 11/7→8/6、圖例上 26→20、頁尾上 16→12
+   各收一點（合計 19px）。**改任何一個數字之前先看還剩多少餘裕。** */
+tbody td{text-align:center;vertical-align:middle;padding:var(--rowpad,13px) 4px}
 /* 2026-09-07 使用者：「早午晚跟時間不用斷行　空間還很夠用。」
    ⚠ 那一欄 176px，收起來之後量到約 129px —— 出圖時有一道守門在確認它沒有被折行。 */
-tbody th{text-align:left;padding:8px 8px 8px 0;font-weight:400;line-height:1.2;white-space:nowrap}
+tbody th{text-align:left;padding:var(--rowpad,13px) 8px var(--rowpad,13px) 0;
+         font-weight:400;line-height:1.2;white-space:nowrap}
 tbody th b{font-size:26px;font-weight:400;letter-spacing:.1em;margin-right:7px}
 tbody th i{font-style:normal;font-size:19px;color:${SOFT}}
 tbody tr + tr th, tbody tr + tr td{border-top:1px solid ${RULE}}
@@ -263,8 +290,8 @@ svg.mk{width:100%;height:100%;display:block}
      （slotOf），文字的起點才會跟著對齊 —— 只對齊外框、圖案寬度不一樣的話，
      字還是會各自參差。
    ・間距 26 → 40px。 */
-.lg{padding-top:26px;display:grid;grid-template-columns:repeat(4,max-content);
-    column-gap:40px;row-gap:10px;width:max-content;margin-inline:auto}
+.lg{padding-top:16px;display:grid;grid-template-columns:repeat(4,max-content);
+    column-gap:40px;row-gap:8px;width:max-content;margin-inline:auto}
 .lg-i{display:flex;align-items:center;gap:9px;font-size:23px;color:${INK};letter-spacing:.02em}
 .ic.sm{width:24px;height:24px}
 
@@ -279,7 +306,7 @@ svg.mk{width:100%;height:100%;display:block}
 .g b{font-weight:400;color:${SOFT};margin-right:8px;letter-spacing:.02em}
 `;
 
-const shell = (inner, cls = "", gap = null) => `<div class="sheet"><div class="band ${cls}"${
+const shell = (inner, cls = "", gap = null) => `<div class="sheet">${WMARK}<div class="band ${cls}"${
   gap ? ` style="--icgx:${gap[0]}px;--icgy:${gap[1]}px"` : ""}>
   <div class="id"><b>${TITLE}</b></div>
   <div class="rule"></div>
@@ -459,6 +486,16 @@ for (const [pal, tbl] of Object.entries(BRAND))
   for (const [id, c] of Object.entries(tbl))
     icon.push([`${pal}／${D.specs.find(s2 => s2.id === id).name}`, ratio(c, CARD)]);
 const iconBad = icon.filter(([, r]) => r < 3);
+/* ⚠⚠⚠ 浮水印壓在表的後面，所以那一塊的底色不是卡色，是「卡色疊上 ${WMA} 的墨」。
+   落在浮水印上的字與圖案要用**那個底**重算一次：字仍然要 4.5、圖案仍然要 3。
+   ⚠ 圖案會從 4.50 掉到 4 出頭 —— 那是**裝飾性圖形的門檻 3:1**，不是 AA 文字門檻
+   （同 iPad 那顆「往下滑」指標）。要它們維持 4.5 就得把浮水印調到幾乎看不見。 */
+const WMBG = rgb2hex(hex2rgb(CARD).map((v, i) => v * (1 - WMA) + hex2rgb(INK)[i] * WMA));
+const wmText = [["墨", ratio(INK, WMBG)], ["柔墨", ratio(SOFT, WMBG)]];
+const wmIcon = D.specs.map(s2 => [disp(s2.name), ratio(DEEP[s2.id], WMBG)]);
+const wmBad = [...wmText.filter(([, r]) => r < 4.5), ...wmIcon.filter(([, r]) => r < 3)];
+if (wmBad.length) throw new Error("壓在浮水印上過不了："
+  + wmBad.map(([n, r]) => `${n} ${r.toFixed(2)}`).join("、"));
 if (iconBad.length) throw new Error("圖案對底不到 3:1："
   + iconBad.map(([n,r]) => `${n} ${r.toFixed(2)}`).join("、"));
 
@@ -631,7 +668,10 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
     return g.width > b.width + .5 || g.height > b.height + .5;
   }).filter(Boolean).length);
   if (clip) throw new Error(`${tag} 有 ${clip} 顆圖案比它自己的格子大`);
+  /* ⚠ 浮水印是**刻意**切出去的（`.sheet` 有 overflow:hidden，切掉的部分不會真的畫出來），
+     所以它與它的路徑要從這道溢出檢查裡排除，不然每一張都會被擋下來。 */
   const over = await page.evaluate(() => [...document.querySelectorAll(".sheet *")]
+    .filter(el => !el.closest("svg.wm"))
     .filter(el => { const r = el.getBoundingClientRect();
       return r.width && (r.right > 1080.5 || r.left < -.5); }).length);
   if (over) throw new Error(`${tag} 有 ${over} 個元素溢出`);
@@ -709,6 +749,9 @@ console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 176，沒有
     + `（格子 ${slotOf(30, "half").toFixed(1)}×30，塞得進去）`
     + `　長寬比 ${AR.r2c2.toFixed(3)} 是形狀本身的`);
 }
+console.log(`  浮水印 ${WMW}px・墨 ${(WMA * 100).toFixed(1)}%　底色 ${CARD} → ${WMBG}`
+  + `　壓在上面的字 ${Math.min(...wmText.map(c => c[1])).toFixed(2)}`
+  + `　圖案 ${Math.min(...wmIcon.map(c => c[1])).toFixed(2)}（門檻 4.5 / 3）`);
 console.log(`  頁尾兩行左緣 ${m0[3].note.toFixed(1)} / ${m0[3].left.toFixed(1)}`
   + `　話筒對號碼的字面中線差 ${Math.abs(m0[3].num - m0[3].ico).toFixed(2)}px`);
 console.log(`  profile-3up.png`);

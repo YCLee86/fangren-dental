@@ -65,11 +65,10 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <div class="pv-wrap">
 
   <h1>LINE 貼文的看診時間圖
-    <span>定案 Ⓖ1 ＋ 版面第二輪　2026-09-07</span></h1>
+    <span>定案 Ⓖ1 ＋ 版面第三輪　2026-09-07</span></h1>
   <p class="pv-lead">定案是 <b>Ⓖ1 等寬格 ＋ 間距 11</b>。這一輪改的是
-    <b>頁尾</b>（電話自己一行、實心話筒、墨色、字級同上一行）與
-    <b>圖例</b>（拉開、上下兩行對齊）；<b>假牙的圖案量過了，沒有被裁</b>——
-    下面把數字攤開。</p>
+    <b>早／午／晚的列距</b>（拉開）與<b>一顆大的淡墨浮水印</b>；
+    上一輪的頁尾兩行、圖例對齊也都在下面留著。</p>
 
   <h2 class="pv-h2">定案<em>Ⓖ1</em>
     <span class="t">等寬格 ＋ 間距 11</span></h2>
@@ -77,10 +76,29 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <img src="post-hours-mix-half-a11.png" width="1080" height="1080"
       alt="看診時間圖：標題芳仁牙醫開診時段，格子表每一節用科別記號，頁尾兩行是說明與電話">
   </div>
-  <p class="pv-cap">整塊內容落在 <span class="n">281 ~ 799</span>，
-    主頁大格看得到的是 <span class="n">271.5 ~ 808.5</span>——上下各餘 9px。</p>
+  <p class="pv-cap">整塊內容落在 <span class="n">280 ~ 800</span>，
+    主頁大格看得到的是 <span class="n">271.5 ~ 808.5</span>——上下各餘 8px。</p>
 
-  <h2 class="pv-h2">① 假牙的圖案<span class="t">量過了：沒有被裁</span></h2>
+  <h2 class="pv-h2">① 早／午／晚的列距拉開<span class="t">16 → 26px</span></h2>
+  <p class="pv-lead">禮拜三是<b>唯一兩節都排成 2＋2 的一欄</b>，所以那一欄的列與列之間
+    本來就最擠——你看到的就是這件事。上下內距 8 → <b>13px</b>，列距 16 → <b>26px</b>。<br>
+    ⚠⚠ <b>那 30px 是從別的地方挪來的，不是憑空多出來</b>：安全帶原本只剩 9px 餘裕，
+    所以標題下 18→12、表頭 11/7→8/6、圖例上 26→16、頁尾上 16→10 各收一點
+    （合計 19px）。<b>要再拉開就得再從別的地方挪</b>，那一格現在只剩 8px。</p>
+
+  <h2 class="pv-h2">② 一顆大的淡墨浮水印<span class="t">壓在表的後面</span></h2>
+  <p class="pv-lead">用的是<b>站上頁首那一條標誌</b>（不是格子裡那七顆科別記號——
+    那七顆各自有身分，拿其中一顆放大會讓人以為那一科比較重要）。<br>
+    940px 寬、從右邊切出去一點、<b>墨色 5%</b>（沒有新增任何顏色）。<br>
+    ⚠ 第一版擺在右下角、切掉一半以上——在 1080 見方上讀起來就是一團灰，
+    <b>看不出是標誌</b>。約診卡那一輪之所以那樣做，是因為那張卡只有 207px 寬；
+    這裡要的是「一個大 logo」，所以只切掉一點點、其餘完整露出來。<br>
+    ⚠⚠ <b>底色因此變了，落在浮水印上的東西要重算對比度</b>：
+    卡色 <code>#f4f4f5</code> → <code>#eaeaeb</code>，字最低 <b>5.41</b>（門檻 4.5）、
+    圖案最低 <b>4.12</b>（裝飾性圖形的門檻是 3，同 iPad 那顆「往下滑」指標）。
+    出圖時有一道守門在算這件事，濃度調過頭會停下來不出圖。</p>
+
+  <h2 class="pv-h2">③ 假牙的圖案<span class="t">量過了：沒有被裁</span></h2>
   <p class="pv-lead">直接從產出的 PNG 上量那一顆的墨：<b>31 × 23 像素</b>，
     長寬比 <span class="n">1.348</span>——而 <code>shape-r2c2</code> 這個形狀
     本身的長寬比就是 <span class="n">1.332</span>（29.253 / 21.955）。
@@ -108,7 +126,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     假牙會從「最矮」變成「最細」。<br>
     <b>建議維持現況</b>——它沒有壞，換過去是拿一個問題換另一個。</p>
 
-  <h2 class="pv-h2">② 頁尾改成兩行<span class="t">都靠左、都 23px</span></h2>
+  <h2 class="pv-h2">④ 頁尾改成兩行<span class="t">都靠左、都 23px</span></h2>
   <p class="pv-lead">電話搬到「國定假日…」<b>下一行</b>，兩行左緣都在
     <span class="n">74.0px</span>；號碼與話筒都是<b>墨色</b>、字級和上一行一樣
     <span class="n">23px</span>。<br>
@@ -119,7 +137,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     ⚠ 上一輪那個「號碼往下 2.57px」的修正<b>用不到了</b>——
     兩行同字級、各自佔一行，本來就對齊。</p>
 
-  <h2 class="pv-h2">③ 圖例拉開並對齊<span class="t">上下兩行落在同一組欄上</span></h2>
+  <h2 class="pv-h2">⑤ 圖例拉開並對齊<span class="t">上下兩行落在同一組欄上</span></h2>
   <p class="pv-lead">原本是兩條<b>各自置中</b>的橫排，所以上下兩行的欄位對不上。<br>
     改成<b>四欄的格線</b>（整塊置中、欄自己對齊），第二行那三個自然落在
     前三欄底下。七個科別名剛好都是四個字，所以四欄同寬。<br>
