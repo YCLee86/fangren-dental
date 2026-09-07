@@ -6,17 +6,25 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>芳仁牙醫診所　LINE 貼文的看診時間圖</title>
 <!--
-  2026-09-07 使用者：「現在 logo 擠成一個橫條。做兩版對照，一個是同一節都直的，
-  另一個橫的放兩個然後斷行。」
+  2026-09-07 使用者：「顯微的那個 logo 看起來哭哭，換別的。另外這裡 logo 色覺得
+  很吵雜熱鬧，你們看看怎麼解決，似乎可以降一點彩度。」
 
-  ⚠⚠⚠ 直排撞到一面硬牆，而且是量出來的：「晚」那一節有四科，直排就是四倍高。
-  從 30px 一路試下來 —— 30→663　26→623　22→588　20→572　18→556　16→540，
-  而安全帶（主頁大格看得到的那一段）只有 537 列。要收得進去圖案得縮到 13px，
-  而 22px 已經是「形狀分不出來」的門檻（九顆兩兩最不像的一對只差 20.9%）。
-  → **直排真正的取捨不是「圖案多大」，是「直排」與「主頁大格看得到品牌與電話」二選一。**
+  ⚠⚠⚠ 哭臉的成因看得出來：**九顆裡只有 r1c1 與 r2c1 是雙洞**，而顯微根管用的
+  r2c1 兩個洞在**頂端**、形狀又扁又寬 —— 縮到 30px 就是兩隻眼睛加一張抿著的嘴。
+  r1c1（一般牙科）的洞在底部，讀起來像牙根，沒有這個問題。
+  → 換成 r3c1（圓形、單洞）。**單洞的形狀不會被讀成臉。**
+  ⚠ 沒有選 r1c3：它和口腔外科的 r2c3 在小尺寸下只差 5.6%，是九顆裡最像的一對。
 
-  ⚠ 圖一律擺真的產出檔；width/height 屬性要等於 PNG 檔頭的真實尺寸。
-  ⚠ 連結一律相對路徑；刻意零 JS（守門連 script 標籤都擋）。
+  ⚠⚠ 降彩度的做法是 sRGB → Lab，**只乘 a／b、L 原封不動** —— 對比度一格都不掉
+  （七色對底 100% 是 4.51、35% 是 4.53）。但七色會互相靠近：
+  100% ΔE 18.6　80% 16.1　65% 14.4　50% 10.9　35% 7.6，
+  而站上既有、已被接受的最緊那一格是 13.3～13.6 → **65% 是安全的下界**。
+
+  ⚠⚠⚠ 另有一條更省的路：**一般牙科轉中性**。它在 25 個圖案裡佔 12 個（48%），
+  是「這一節有沒有開診」的背景不是資訊 —— 轉成柔墨，整張圖立刻只剩 13 顆彩色。
+  這是「只削弱不需要被看到的那一半」；全體降彩度則是把該被看到的五科也一起削弱。
+
+  ⚠ 圖一律擺真的產出檔；連結一律相對路徑；刻意零 JS。
 -->
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
@@ -53,47 +61,62 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <div class="pv-wrap">
 
   <h1>LINE 貼文的看診時間圖
-    <span>圖案怎麼排　兩版對照　2026-09-07</span></h1>
-  <p class="pv-lead">四個排成一列讀起來像<b>一條橫條</b>。兩種拆法各有代價，
-    而代價是<b>量出來的</b>。</p>
+    <span>顏色四案　2026-09-07</span></h1>
+  <p class="pv-lead">顯微根管換了形狀（<b>雙洞在頂端 ＝ 兩隻眼睛</b>，九顆裡只有它會這樣）。<br>
+    顏色四案，<b>對比度全部不變</b>——只動彩度、不動亮度。</p>
 
-  <h2 class="pv-h2">Ⓥ 同一節都直的</h2>
+  <h2 class="pv-h2">Ⓑ 一般牙科轉中性 ＋ 彩度 65%<em>建議</em></h2>
   <div class="pv-shot">
-    <img src="post-hours-icol.png" width="1080" height="1080"
-      alt="格子表：每一格的圖案垂直排成一欄">
+    <img src="post-hours-cboth.png" width="1080" height="1080"
+      alt="格子表：一般牙科的圖案是灰色，其餘六科降低彩度">
   </div>
-  <p class="pv-cap">最好讀——每一欄一眼數得出有幾科。<br>
-    <span class="n">⚠</span> 但「晚」那一節有四科，直排就是<b>四倍高</b>：整塊 623px，
-    <b>超出主頁大格看得到的那 537 列共 86px</b>。<br>
-    要收得進去圖案得縮到 <b>13px</b>，而 22px 已經是形狀分不出來的門檻——
-    <b>13px 等於只剩顏色在作用，形狀白給</b>。<br>
-    所以這一版是「直排 ＋ 圖案 26px ＋ 主頁大格會被切」的組合。</p>
-  <div class="pv-shot">
-    <img src="profile-3up-col.png" width="823" height="823" loading="lazy"
-      alt="直排版擺進主頁三格：大格上下被切掉，品牌與電話看不到">
-  </div>
-  <p class="pv-cap">↑ 大格：<b>品牌條與電話被切掉了</b>，只剩表格中段。</p>
-
-  <h2 class="pv-h2">Ⓦ 一行兩個，滿了斷行<em>建議</em></h2>
-  <div class="pv-shot">
-    <img src="post-hours-i2x2.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：每一格的圖案一行兩個，四個時排成 2×2">
-  </div>
-  <p class="pv-cap">四個變 2×2，看得出是四個各自獨立的東西，<b>只長兩倍高</b>。<br>
-    整塊 514px，<b>收得進 537</b>——圖案維持 30px，主頁大格也完整。</p>
+  <p class="pv-cap">彩色從 <b>25 顆降到 13 顆</b>，剩下的也退一階。<br>
+    七顆兩兩最近 ΔE <b>13.7</b>（站上既有的最緊格是 13.3~13.6，同一級）。</p>
   <div class="pv-shot">
     <img src="profile-3up-w2.png" width="823" height="823" loading="lazy"
-      alt="一行兩個那一版擺進主頁三格：大格看得到品牌條、整張表與電話">
+      alt="建議案擺進主頁三格">
   </div>
-  <p class="pv-cap">↑ 大格：品牌條、整張表、電話都在。</p>
 
-  <h2 class="pv-h2">Ⓗ 橫排一列
-    <span class="t">上一版，當對照</span></h2>
+  <h2 class="pv-h2">Ⓝ 只把一般牙科轉中性
+    <span class="t">彩度不動</span></h2>
   <div class="pv-shot">
-    <img src="post-hours-icon.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：每一格的圖案橫排成一列">
+    <img src="post-hours-cflat.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：一般牙科的圖案是灰色，其餘六科維持原本彩度">
   </div>
-  <p class="pv-cap">＝ 你說的「擠成一個橫條」那一版。整塊 490px，最矮。</p>
+  <p class="pv-cap">⚠⚠ <b>一般牙科在 25 個圖案裡佔 12 個</b>——它是「這一節有沒有開診」的
+    背景，不是「這一節有什麼特別的」。<br>
+    轉成灰，整張圖立刻剩 13 顆彩色，<b>而且該被看到的五科一點都沒有被削弱</b>。<br>
+    七顆兩兩最近 ΔE <b>20.1</b>——四案裡辨識度最高的一個
+    （現在最近的一對正好就是「一般牙科×牙周」，轉中性之後那一對消失了）。</p>
+
+  <h2 class="pv-h2">Ⓒ 全部降到彩度 65%</h2>
+  <div class="pv-shot">
+    <img src="post-hours-c65.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：七科的圖案都降低彩度">
+  </div>
+  <p class="pv-cap">＝ 你講的那一個。七顆兩兩最近 ΔE <b>14.4</b>。<br>
+    <span class="n">⚠</span> 再往下 50% 就掉到 10.9，<b>比全站最近的深階對（10.5）還近</b>——
+    <b>65% 是這條尺的地板</b>。</p>
+
+  <h2 class="pv-h2">Ⓞ 現況
+    <span class="t">彩度 100%，當對照</span></h2>
+  <div class="pv-shot">
+    <img src="post-hours-i2x2.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：七科維持原本的深階顏色">
+  </div>
+
+  <h2 class="pv-h2">排法那一件還開著
+    <span class="t">上一輪的直排</span></h2>
+  <div class="pv-shot">
+    <img src="post-hours-icol.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：每一格的圖案垂直排成一欄">
+  </div>
+  <p class="pv-cap">直排最好讀，但整塊 623px，<b>超出主頁大格看得到的 537 列共 86px</b>——
+    品牌與電話會被切掉。上面幾張用的都是「一行兩個」。</p>
+  <div class="pv-shot">
+    <img src="profile-3up-col.png" width="823" height="823" loading="lazy"
+      alt="直排版擺進主頁三格：大格上下被切掉">
+  </div>
 
   <h2 class="pv-h2">「詳情」欄要貼的字</h2>
   <div class="pv-txt">一週的門診時段，以及每一節有哪些科別。

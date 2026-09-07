@@ -50,7 +50,13 @@ const SHORT = { "植牙・假牙重建": "植牙假牙" };
    兩兩不同的像素比例**最不像的一對也只有 20.9%、中位 16.7%**
    （對照浮水印那一輪在 150px 下是最不像 52.0%、中位 26.6%）。
    ⚠ 通則（已在 CLAUDE.md）：**在成品的尺寸上量，不要在素材的尺寸上量。** */
-const SHAPE = { general:"r1c1", perio:"r1c2", ortho:"r3c3", endo:"r2c1",
+/* ⚠⚠⚠ 2026-09-07 使用者：「顯微的那個 logo 看起來哭哭，換別的。」
+   他是對的，而且成因看得出來：**九顆裡只有 r1c1 與 r2c1 是雙洞**，
+   而 r2c1 的兩個洞在**頂端**、形狀又扁又寬 —— 縮到 30px 就是兩隻眼睛
+   加一張抿著的嘴。r1c1 的兩個洞在**底部**（讀起來像牙根），沒有這個問題。
+   → 顯微根管換成 **r3c1**（圓形、單洞）。單洞的形狀不會被讀成臉。
+   ⚠ 沒有選 r1c3：它和口腔外科的 r2c3 在小尺寸下只差 5.6%，是九顆裡最像的一對。 */
+const SHAPE = { general:"r1c1", perio:"r1c2", ortho:"r3c3", endo:"r3c1",
                 prosth:"r2c2", surg:"r2c3", kids:"r3c2" };
 const mark22 = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => [id,
   fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${sh}.svg`), "utf8")
@@ -199,13 +205,13 @@ const shell = (inner, cls = "") => `<div class="sheet"><div class="band ${cls}">
  *         （25 個名字裡有 12 個是它）。退一階之後，五科特別門診自己跳出來。
  *   mark  每科一顆記號（＝他的第二個提議，量測見上面 SHAPE 那一段）
  */
-const grid = (mode, ics) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
+const grid = (mode, ics, k = 1, flat = false) => shell(`<table><colgroup><col class="lab"><col span="5"></colgroup>
   <thead><tr><td></td>${D.days.map(d => `<th>${d}</th>`).join("")}</tr></thead>
   <tbody>${D.rows.map(r => `<tr>
     <th><b>${r.part}</b><i>${r.time}</i></th>${r.cells.map(c => `<td>${
       mode.startsWith("i") ? `<div class="ic-row ${
           mode === "icol" ? "col" : mode === "i2x2" ? "w2" : ""}">${c.map(id =>
-          `<span class="ic" style="color:${DEEP[id]}">${mark22[id]}</span>`).join("")}</div>`
+          `<span class="ic" style="color:${tone(id, k, flat)}">${mark22[id]}</span>`).join("")}</div>`
       : c.map(id => { const sp = D.specs.find(x => x.id === id);
           const nm = SHORT[sp.name] || sp.name;
           const col = mode === "rank" && id === "general" ? SOFT : INK;
@@ -213,16 +219,16 @@ const grid = (mode, ics) => shell(`<table><colgroup><col class="lab"><col span="
             ? `<div class="nm mk-row" style="color:${col}"><span class="ic">${mark22[id]}</span>${nm}</div>`
             : `<div class="nm" style="color:${col}">${nm}</div>`;
         }).join("")}</td>`).join("")}</tr>`).join("")}</tbody></table>`
-  + (mode.startsWith("i") ? legend() : ""), ics ? `s${ics}` : "");
+  + (mode.startsWith("i") ? legend(k, flat) : ""), ics ? `s${ics}` : "");
 
 /* 圖例：logo 套色 ＋ 科別名用墨（使用者 2026-09-07 指定）。
  * ⚠⚠ 格子裡只剩圖案的話，第一次看的人**一定要對照這一排** ——
  *   所以它不是裝飾，是那張表讀不讀得懂的前提，不可以為了省高度砍掉。
  * ⚠ 排成 4 ＋ 3 兩行（七個一行放不下），刻意不讓它自己 wrap ——
  *   自己 wrap 會斷成 6＋1（招呼卡那一輪的圖例踩過）。 */
-const legend = () => `<div class="lg">${[D.specs.slice(0, 4), D.specs.slice(4)]
+const legend = (k = 1, flat = false) => `<div class="lg">${[D.specs.slice(0, 4), D.specs.slice(4)]
   .map(g => `<div class="lg-row">${g.map(sp =>
-    `<span class="lg-i"><span class="ic sm" style="color:${DEEP[sp.id]}">${mark22[sp.id]}</span>`
+    `<span class="lg-i"><span class="ic sm" style="color:${tone(sp.id, k, flat)}">${mark22[sp.id]}</span>`
     + `${sp.name}</span>`).join("")}</div>`).join("")}</div>`;
 
 /* Ⓛ 一科一行：照「早／午／晚」各列出哪幾天 */
@@ -248,6 +254,45 @@ const detail = `一週的門診時段，以及每一節有哪些科別。\n`
   + D.note.replace(/。$/, "") + `　${PHONE}`;
 for (const re of [/隨時(問|詢問|聯絡)/, /都可以問/, /即時回/, /小編/, /馬上回/])
   if (re.test(detail)) throw new Error(`「詳情」踩到紅線：${re}`);
+
+/* ---------- 彩度 ----------------------------------------------------
+ * 2026-09-07 使用者：「這裡 logo 色覺得很吵雜熱鬧…似乎可以降一點彩度。」
+ * ⚠⚠ 做法是 sRGB → Lab，**只乘 a／b、L 原封不動** —— 所以對比度一格都不掉
+ *   （實測七色對底 100% 是 4.51、35% 是 4.53，只有彩度在動）。
+ * ⚠⚠⚠ 但降彩度是有代價的：七色會互相靠近。實測最近的一對 ——
+ *   100% 18.6　80% 16.1　65% 14.4　50% 10.9　35% 7.6。
+ *   站上既有、已經被接受的最緊那一格是 ΔE 13.3～13.6，
+ *   所以 **65% 是安全的下界**，50% 已經比全站最近的深階對（10.5）還近。
+ * ⚠⚠⚠ 另有一條更省的路：**一般牙科轉中性**。它在 25 個圖案裡佔 12 個（48%），
+ *   而且是「這一節有沒有開診」的背景不是資訊 —— 轉成柔墨，整張圖立刻只剩
+ *   13 顆彩色。這是「只削弱不需要被看到的那一半」，全體降彩度則是把該被
+ *   看到的五科也一起削弱。順帶：現在最近的一對正好就是「一般牙科×牙周」，
+ *   轉中性之後那一對消失，六色最近的一對從 18.6 變成 20.1。
+ */
+const hex2rgb = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+const rgb2hex = r => "#" + r.map(v => Math.max(0,Math.min(255,Math.round(v)))
+  .toString(16).padStart(2,"0")).join("");
+const lz = c => { c/=255; return c<=.04045 ? c/12.92 : Math.pow((c+.055)/1.055,2.4); };
+const unlz = c => 255*(c<=.0031308 ? 12.92*c : 1.055*Math.pow(c,1/2.4)-.055);
+const MX=[[.4124,.3576,.1805],[.2126,.7152,.0722],[.0193,.1192,.9505]];
+const MI=[[3.2406,-1.5372,-.4986],[-.9689,1.8758,.0415],[.0557,-.2040,1.0570]];
+const WP=[.95047,1,1.08883];
+const ff=t=>t>Math.pow(6/29,3)?Math.cbrt(t):t/(3*Math.pow(6/29,2))+4/29;
+const fi=t=>t>6/29?t*t*t:3*Math.pow(6/29,2)*(t-4/29);
+const toLab = h => { const [r,g,b]=hex2rgb(h).map(lz);
+  const X=MX[0][0]*r+MX[0][1]*g+MX[0][2]*b, Y=MX[1][0]*r+MX[1][1]*g+MX[1][2]*b,
+        Z=MX[2][0]*r+MX[2][1]*g+MX[2][2]*b;
+  const fx=ff(X/WP[0]), fy=ff(Y/WP[1]), fz=ff(Z/WP[2]);
+  return [116*fy-16, 500*(fx-fy), 200*(fy-fz)]; };
+const unLab = ([L,a,b2]) => { const fy=(L+16)/116, fx=fy+a/500, fz=fy-b2/200;
+  const X=WP[0]*fi(fx), Y=WP[1]*fi(fy), Z=WP[2]*fi(fz);
+  return rgb2hex([MI[0][0]*X+MI[0][1]*Y+MI[0][2]*Z, MI[1][0]*X+MI[1][1]*Y+MI[1][2]*Z,
+                  MI[2][0]*X+MI[2][1]*Y+MI[2][2]*Z].map(unlz)); };
+const desat = (h, k) => { const [L,a,b] = toLab(h); return unLab([L, a*k, b*k]); };
+const dE = (x,y) => { const A=toLab(x), B=toLab(y); return Math.hypot(A[0]-B[0],A[1]-B[1],A[2]-B[2]); };
+
+/* 每一科畫出來的顏色：k ＝ 彩度倍率，flat ＝ 一般牙科要不要轉中性 */
+const tone = (id, k, flat) => flat && id === "general" ? SOFT : desat(DEEP[id], k);
 
 /* ---------- 對比度：字是要讀的 ---------- */
 const lin = c => { c /= 255; return c <= .03928 ? c/12.92 : Math.pow((c+.055)/1.055, 2.4); };
@@ -310,8 +355,11 @@ console.log(`  直排 ${COL}px　　高 ${mCol.h.toFixed(0)}　${mCol.over ? "�
   + "（主頁大格會切掉品牌與電話）" : "收得進"}`);
 if (mW2.over) throw new Error(`一行兩個 ${W2}px 收不進安全帶，超出 ${mW2.over}`);
 
-for (const [tag, html] of [["icon", grid("icon")], ["icol", grid("icol", COL)],
-                           ["i2x2", grid("i2x2", W2)],
+/* 排法一律用建議的「一行兩個」，這一輪只比顏色 */
+for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2)],
+                           ["c65",  grid("i2x2", W2, .65)],
+                           ["cflat", grid("i2x2", W2, 1, true)],
+                           ["cboth", grid("i2x2", W2, .65, true)],
                           ]) {
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${html}`);
   /* ⚠⚠ 這一版存在的理由就是「乾淨 ＋ 大格看得到全部」，所以那件事要用量的。
@@ -338,11 +386,11 @@ const cell = (f, w, h) =>
      <img src="data:image/png;base64,${fs.readFileSync(path.join(OUT, f)).toString("base64")}"
           style="width:100%;height:100%;object-fit:cover;display:block"></div>`;
 const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 410 } });
-for (const [tag, big] of [["w2", "post-hours-i2x2.png"], ["col", "post-hours-icol.png"]]) {
+for (const [tag, big] of [["w2", "post-hours-cboth.png"], ["col", "post-hours-icol.png"]]) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
     <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
       ${cell(big, PW, 409)}
-      <div style="display:flex;gap:3px">${cell(tag === "w2" ? "post-hours-icol.png" : "post-hours-i2x2.png", 410, 410)}${cell("post-hours-icon.png", 410, 410)}</div>
+      <div style="display:flex;gap:3px">${cell("post-hours-c65.png", 410, 410)}${cell("post-hours-cflat.png", 410, 410)}</div>
     </div>`);
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
   await page2.screenshot({ path: path.join(OUT, `profile-3up-${tag}.png`) });
@@ -360,4 +408,17 @@ console.log(`\n文字 ${contrast.length} 項全部過 AA（最低 ${
 console.log(`圖案 ${icon.length} 項全部過 3:1（最低 ${
   Math.min(...icon.map(c => c[1])).toFixed(2)}　${
   icon.reduce((a,b)=>a[1]<b[1]?a:b)[0]}）`);
+console.log("\n── 顏色三案：七顆圖案兩兩最近的一對 ──");
+for (const [nm, k, flat] of [["現況（100%）", 1, false], ["彩度 65%", .65, false],
+                             ["一般牙科轉中性", 1, true], ["兩個都做", .65, true]]) {
+  const cs = D.specs.map(s2 => tone(s2.id, k, flat));
+  let mn = 1e9, pr = "";
+  for (let i=0;i<cs.length;i++) for (let j=i+1;j<cs.length;j++) {
+    const d = dE(cs[i], cs[j]);
+    if (d < mn) { mn = d; pr = `${D.specs[i].name}×${D.specs[j].name}`; }
+  }
+  const lo = Math.min(...cs.map(c2 => ratio(c2, CARD)));
+  console.log(`  ${nm.padEnd(16,"　")}ΔE ${mn.toFixed(1).padStart(5)}　${pr.padEnd(18,"　")}`
+    + `對底最低 ${lo.toFixed(2)}　彩色顆數 ${flat ? 13 : 25}`);
+}
 console.log("\n── 「詳情」欄要貼的字 ──\n" + detail.split("\n").map(l => "  " + l).join("\n"));
