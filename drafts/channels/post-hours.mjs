@@ -215,6 +215,9 @@ const WMW = 660, WMR = -60, WMT = 470, WMA = .05;
    眼睛因此分不出哪幾顆是同一天的。左右內距 44 → 32、時段那一欄 158 → 152，
    把省下來的 34 全部讓給五天的欄。 */
 const PAD = 32, LAB = 152;
+/* 早午晚與時間**斷成兩行**時的欄寬：一行要 148.7，兩行只要放得下時間那一段
+   （量到 113.1）＋ th 的右內距 8 → 124 還有 3 的餘裕 */
+const LAB2 = 124;
 let S = 1;
 /* 標題底下要多墊多少（版心的單位）——見下面 fitScale 那一段，量出來才填 */
 let EX = 0;
@@ -272,7 +275,7 @@ svg.wm{position:absolute;width:${WMW}px;height:auto;right:${WMR}px;top:${WMT}px;
 table{width:100%;border-collapse:collapse;table-layout:fixed}
 /* ⚠ 時段那一欄量到 148.7（版心的單位），原本給 176 ＝ 白白吃掉 27。
    收到 158 之後那 27 全部讓給五天的欄，也就是「放大」那把尺的天花板往上抬。 */
-col.lab{width:${LAB}px}
+col.lab{width:var(--lab, ${LAB}px)}
 thead th{font-size:27px;font-weight:400;color:${SOFT};padding:8px 0 6px;letter-spacing:.1em}
 /* ⚠⚠ 2026-09-07 第三輪使用者：「早午晚的間隔可以再拉開一點，
    禮拜三的診看起來特別緊密。」——禮拜三是唯一兩節都排成 2＋2 的一欄，
@@ -285,7 +288,11 @@ tbody td{text-align:center;vertical-align:middle;padding:var(--rowpad,13px) 4px}
    ⚠ 那一欄 176px，收起來之後量到約 129px —— 出圖時有一道守門在確認它沒有被折行。 */
 tbody th{text-align:left;padding:var(--rowpad,13px) 8px var(--rowpad,13px) 0;
          font-weight:400;line-height:1.2;white-space:nowrap}
-tbody th b{font-size:26px;font-weight:400;letter-spacing:.1em;margin-right:7px}
+/* ⚠ 2026-09-07 使用者：「這樣早午晚和時間就有空間斷行了，做做看。」
+   → 斷行版把 --labd 切成 block、--labgap 收成 0，欄寬也跟著收
+   （一行要 148.7，兩行只要放得下時間那一段 ≈ 113）。逐案給，不動其他張。 */
+tbody th b{font-size:26px;font-weight:400;letter-spacing:.1em;
+           display:var(--labd, inline);margin-right:var(--labgap, 7px)}
 tbody th i{font-style:normal;font-size:19px;color:${SOFT}}
 tbody tr + tr th, tbody tr + tr td{border-top:1px solid ${RULE}}
 .nm{font-size:23px;line-height:1.34;letter-spacing:.02em}
@@ -339,7 +346,8 @@ svg.mk{width:100%;height:100%;display:block}
 /* gap ＝ [同一格橫向, 同一格行距, 早午晚的列距（選填，預設 13）] */
 const shell = (inner, cls = "", gap = null) => `<div class="sheet">${WMARK}<div class="band ${cls}"${
   gap ? ` style="--icgx:${gap[0]}px;--icgy:${gap[1]}px${
-    gap[2] ? `;--rowpad:${gap[2]}px` : ""}"` : ""}>
+    gap[2] ? `;--rowpad:${gap[2]}px` : ""}${
+    gap[3] ? `;--labd:block;--labgap:0px;--lab:${LAB2}px` : ""}"` : ""}>
   <div class="id"><b>${TITLE}</b></div>
   <div class="rule"></div>
   ${inner}
@@ -658,7 +666,8 @@ const GAPS = [["mix-half", 11, 9, false], ["mix-half-a11", 11, 9, true],
      只有那一格的 --rowpad 從 13 換成 16（畫出來 20.8 裝置 px，列距 33.8 → 41.6）；
      其餘每一格都還是 13，所以「只差倍率」那句話對其餘四張仍然成立。 */
   SCALES = [["s110", 1.10, ex], ["s120", 1.20, ex], ["s125", 1.25, ex],
-            ["s130", 1.30, ex, 16], ["fit", +fit.toFixed(3), ex]];
+            ["s130", 1.30, ex, 16], ["s130w", 1.30, ex, 16, true],
+            ["fit", +fit.toFixed(3), ex]];
   console.log(`\n── 放大倍率（算出來的，不是挑的）──`);
   console.log(`  1× 的三塊：標題 ${m.top.toFixed(1)}　中間 ${mid.toFixed(1)}　頁尾 ${m.bot.toFixed(1)}`);
   console.log(`  中間那塊要填滿安全帶 ${BAND} → S ${want.toFixed(3)}`
@@ -705,8 +714,8 @@ for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i
                               挑的那一格逐字相同），跨一天的距離因此從 30.2 拉到 49.4。
                               **兩件事是互相搶同一塊寬度的**：整張圖固定 1080 寬，
                               同一格鬆一分，跨格就緊一分。 */
-                           ...SCALES.map(([tag, sc, ex, rp]) =>
-                             [tag, grid("i2x2", W2, 1, false, "mix", "half", [8, 9, rp], true), sc, ex]),
+                           ...SCALES.map(([tag, sc, ex, rp, w2]) =>
+                             [tag, grid("i2x2", W2, 1, false, "mix", "half", [8, 9, rp, w2], true), sc, ex]),
                            ...ALTP.map(([tag, sh]) => {
                              const old = SHAPE.prosth; SHAPE.prosth = sh;
                              const html = grid("i2x2", W2, 1, false, "mix", "half", [11, 9], true);
@@ -741,9 +750,11 @@ for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i
     const ths = [...document.querySelectorAll("tbody th")];
     const bad = ths.filter(th => th.scrollWidth > th.clientWidth + .5
       /* ⚠ 不可以比 top —— 26px 與 19px 兩個行內盒同一條基線、top 本來就不一樣。
-         同一行的判準是「時間在早午晚的右邊」，折行的話它會掉到下一行的行首。 */
-      || th.querySelector("i").getBoundingClientRect().left
-         < th.querySelector("b").getBoundingClientRect().right - .5).length;
+         同一行的判準是「時間在早午晚的右邊」，折行的話它會掉到下一行的行首。
+         ⚠ 刻意斷成兩行的那一張（--labd: block）跳過這一條，只驗有沒有橫向溢位。 */
+      || (getComputedStyle(th.querySelector("b")).display !== "block"
+          && th.querySelector("i").getBoundingClientRect().left
+             < th.querySelector("b").getBoundingClientRect().right - .5)).length;
     const w = Math.max(...ths.map(th => {
       const b = th.querySelector("b").getBoundingClientRect();
       const i = th.querySelector("i").getBoundingClientRect();
