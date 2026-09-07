@@ -5,7 +5,7 @@
     "type": "image",
     "url": "https://fangren.net/assets/handout-calculus-hero.jpg",
     "size": "full",
-    "aspectRatio": "1124:588",
+    "aspectRatio": "720:376",
     "aspectMode": "cover",
     "action": {
       "type": "uri",
@@ -29,7 +29,7 @@
             "type": "text",
             "text": "▌",
             "size": "md",
-            "color": "#0C6FCE",
+            "color": "#0A6FCF",
             "flex": 0
           },
           {
@@ -62,7 +62,7 @@
       {
         "type": "box",
         "layout": "vertical",
-        "backgroundColor": "#3495F3",
+        "backgroundColor": "#3396F5",
         "cornerRadius": "6px",
         "height": "40px",
         "justifyContent": "center",
@@ -94,7 +94,7 @@
       {
         "type": "box",
         "layout": "vertical",
-        "borderColor": "#0C6FCE",
+        "borderColor": "#0A6FCF",
         "borderWidth": "1px",
         "cornerRadius": "6px",
         "height": "40px",
@@ -115,7 +115,7 @@
               {
                 "type": "text",
                 "text": "讀文章",
-                "color": "#0C6FCE",
+                "color": "#0A6FCF",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

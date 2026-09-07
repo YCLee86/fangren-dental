@@ -1,9 +1,9 @@
 {
   "aligner": {
-    "frame": "#4DBAFF",
-    "fill": "#007AC7",
-    "ink": "#0074BD",
-    "hero": "1200:628"
+    "frame": "#4EBBFF",
+    "fill": "#007AC6",
+    "ink": "#0074BC",
+    "hero": "720:376"
   },
   "booking": {
     "frame": "#55BBA8",
@@ -12,22 +12,22 @@
     "hero": "1060:554"
   },
   "calculus": {
-    "frame": "#3495F3",
-    "fill": "#0D75DA",
-    "ink": "#0C6FCE",
-    "hero": "1124:588"
+    "frame": "#3396F5",
+    "fill": "#0B76DD",
+    "ink": "#0A6FCF",
+    "hero": "720:376"
   },
   "caries": {
-    "frame": "#BE441B",
-    "fill": "#BE441B",
-    "ink": "#BE441B",
-    "hero": "1124:588"
+    "frame": "#CF3600",
+    "fill": "#CF3600",
+    "ink": "#CF3600",
+    "hero": "720:376"
   },
   "denture": {
-    "frame": "#11BCA9",
-    "fill": "#0C8477",
-    "ink": "#0B7D70",
-    "hero": "1124:588"
+    "frame": "#0CC0AB",
+    "fill": "#088476",
+    "ink": "#087D6F",
+    "hero": "720:376"
   },
   "fees": {
     "frame": "#A2D364",
@@ -36,39 +36,39 @@
     "hero": "1058:554"
   },
   "implant": {
-    "frame": "#ADDD60",
-    "fill": "#5A811C",
-    "ink": "#567B1A",
-    "hero": "1124:588"
+    "frame": "#91DE18",
+    "fill": "#55820E",
+    "ink": "#507B0D",
+    "hero": "720:376"
   },
   "perio": {
-    "frame": "#54BBAA",
-    "fill": "#348275",
-    "ink": "#317B6F",
-    "hero": "1124:588"
+    "frame": "#0CC0AB",
+    "fill": "#088476",
+    "ink": "#087D6F",
+    "hero": "720:376"
   },
   "prosth": {
-    "frame": "#F0A860",
-    "fill": "#B16111",
-    "ink": "#A75B10",
-    "hero": "1124:588"
+    "frame": "#FBA451",
+    "fill": "#B95C04",
+    "ink": "#AF5704",
+    "hero": "720:376"
   },
   "whitening": {
-    "frame": "#6DB8FD",
-    "fill": "#0375DD",
-    "ink": "#036FD3",
-    "hero": "1056:552"
+    "frame": "#4FBAFF",
+    "fill": "#007AC9",
+    "ink": "#0073BD",
+    "hero": "720:376"
   },
   "wisdom": {
-    "frame": "#54BBAA",
-    "fill": "#348275",
-    "ink": "#317B6F",
-    "hero": "1124:588"
+    "frame": "#0CC0AB",
+    "fill": "#088476",
+    "ink": "#087D6F",
+    "hero": "720:376"
   },
   "xray": {
-    "frame": "#54BBAA",
-    "fill": "#348275",
-    "ink": "#317B6F",
-    "hero": "1124:588"
+    "frame": "#0CC0AB",
+    "fill": "#088476",
+    "ink": "#087D6F",
+    "hero": "720:376"
   }
 }

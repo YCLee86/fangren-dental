@@ -5,7 +5,7 @@
     "type": "image",
     "url": "https://fangren.net/assets/handout-denture-hero.jpg",
     "size": "full",
-    "aspectRatio": "1124:588",
+    "aspectRatio": "720:376",
     "aspectMode": "cover",
     "action": {
       "type": "uri",
@@ -29,7 +29,7 @@
             "type": "text",
             "text": "▌",
             "size": "md",
-            "color": "#0B7D70",
+            "color": "#087D6F",
             "flex": 0
           },
           {
@@ -62,7 +62,7 @@
       {
         "type": "box",
         "layout": "vertical",
-        "backgroundColor": "#11BCA9",
+        "backgroundColor": "#0CC0AB",
         "cornerRadius": "6px",
         "height": "40px",
         "justifyContent": "center",
@@ -94,7 +94,7 @@
       {
         "type": "box",
         "layout": "vertical",
-        "borderColor": "#0B7D70",
+        "borderColor": "#087D6F",
         "borderWidth": "1px",
         "cornerRadius": "6px",
         "height": "40px",
@@ -115,7 +115,7 @@
               {
                 "type": "text",
                 "text": "讀文章",
-                "color": "#0B7D70",
+                "color": "#087D6F",
                 "size": "md",
                 "weight": "bold",
                 "flex": 0

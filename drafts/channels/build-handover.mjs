@@ -52,6 +52,16 @@ function lines(node, out = []) {
     out.push(`〔鈕〕${inner.filter((x) => x && !x.startsWith("〔圖〕")).join("") || node.action.label}`);
     return out;
   }
+  /* ⚠⚠ baseline 的 box 在 LINE 上畫出來是**同一行** —— 「電話　05-5339369」、
+     「・半年到了，想約洗牙」都是。不合起來的話，複製出去會變成兩行，
+     廠商照著排就多一行（2026-09-07）。第一顆是「・」的接起來就好，其餘用全形空格隔開。 */
+  if (t === "box" && node.layout === "baseline") {
+    const inner = [];
+    for (const c of node.contents || []) lines(c, inner);
+    const parts = inner.filter((x) => x !== "");
+    if (parts.length) out.push(parts[0] === "・" ? parts.join("") : parts.join("　"));
+    return out;
+  }
   for (const k of ["header", "hero", "body", "footer"]) if (node[k]) lines(node[k], out);
   for (const c of node.contents || []) lines(c, out);
   return out;
@@ -180,6 +190,18 @@ const healthRows = hRows.map((r, i) => `<tr>
       : `<span class="n">站上還沒有</span>`}</td>
 </tr>`).join("");
 
+/* ⚠⚠ ⑩⑪ 兩組本來只有表格，表格裡放不下卡片裡的每一行字 ——
+   廠商 2026-09-07 回報「還要一個一個打」。所以每一格都補一塊可以整段複製的原文，
+   內容和其他各則一樣是**從那份 JSON 現抽的**，這一頁上沒有第二份文案。 */
+const copyBlocks = (rows) => rows.map(([label, body]) =>
+  `<p class="pv-lbl">${esc(label)}</p><pre class="pv-copy">${esc(body)}</pre>`).join("");
+
+const topicCopy = copyBlocks(tBubbles.map((b, i) =>
+  [`${i + 1}　${b.footer?.contents?.[0]?.action?.label ?? ""}`, copy(b)]));
+
+const healthCopy = copyBlocks(health.contents.map((b, i) =>
+  [`${i + 1}　${hRows[i].title}`, copy(b)]));
+
 const svgs = fs.existsSync(path.join(ROOT, "assets", "line-src"))
   ? fs.readdirSync(path.join(ROOT, "assets", "line-src")).filter((n) => n.endsWith(".svg")).sort() : [];
 const SVG_NOTE = {
@@ -268,6 +290,10 @@ ${sections}
     <tr><th>#</th><th>科別（按鈕上的字）</th><th>圖檔</th><th>按鈕連到</th></tr>
     ${topicRows}
   </table></div>
+  <h3>文字（七科各一段，可以整段複製）</h3>
+  <p class="pv-note">〔圖〕是那一格的頭圖、〔鈕〕是按鈕上的字，
+    <code>────────</code> 是一條分隔線。中間那四行前面的「・」就是卡片上真的會印出來的點。</p>
+  ${topicCopy}
   <p class="pv-more"><a href="../line-spec/#m10">看七科的模擬圖 →</a></p>
 
   <h2 class="pv-h2" id="m⑪">⑪ 衛教懶人包
@@ -282,6 +308,8 @@ ${sections}
   <p class="pv-note">最後一格（第 11 格）是收尾：圖 <a href="https://fangren.net/assets/og-home.jpg">og-home.jpg</a>、
     按鈕「到網站看看」→ <a href="https://fangren.net/#topics">https://fangren.net/#topics</a>。<br>
     ⚠ <b>美白</b>與<b>拍片輻射</b>兩張沒有「讀文章」—— 站上還沒有對應的文章，那兩格只有一顆按鈕。</p>
+  <h3>文字（十一格各一段，可以整段複製）</h3>
+  ${healthCopy}
   <p class="pv-more"><a href="../line-spec/#m11">看十一格的模擬圖 →</a></p>
 
   <h2 class="pv-h2" id="icons">✱ 按鈕上那幾顆圖示的原檔
@@ -302,8 +330,11 @@ ${sections}
     <li><b>綁定完成那一則的觸發字串</b>目前還含著電話號碼，要換成廠商系統產的網址。</li>
     <li><b>病人手機上卡片的實際寬度</b>：全線的排版是按 <b>268px</b> 做的，
       而那是從診所端後台的截圖推導出來的。<b>一張病人手機的截圖</b>就能收掉這一題。</li>
-    <li><b>衛教懶人包的圖上印著「侑津製圖」</b> —— 若不是診所自己的李侑津醫師，
-      放到網站上之前要先確認授權。</li>
+    <li><b>衛教懶人包的授權已經沒問題了</b> —— 2026-09-07 診所重新匯出十張，
+      署名一律是<b>芳仁牙醫診所</b>（原本印的是「侑津製圖」）。
+      ⚠ 新的匯出檔是 <b>720×1040</b>（舊的 1125 寬），所以頭圖只有 720×376、
+      比 LINE 用得到的 804 裝置像素少 84px —— 看得出一點點軟、不會糊。
+      要更銳利只能請診所給大一點的匯出檔，<b>不要放大補</b>。</li>
   </ol>
 </div>
 </body>

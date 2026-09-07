@@ -208,7 +208,9 @@ bubbles.push({
 if (!PAIR) {
   const dir = path.join(HERE, "cards");
   fs.mkdirSync(dir, { recursive: true });
-  for (const f of fs.readdirSync(dir)) fs.unlinkSync(path.join(dir, f));
+  /* ⚠ 只清 .json —— 這個資料夾裡還躺著每一格的預覽圖 preview-NN-<名字>.png，
+     舊寫法一律 unlink，重跑一次產生器那十二張就無聲消失了（2026-09-07 踩到）。 */
+  for (const f of fs.readdirSync(dir)) if (f.endsWith(".json")) fs.unlinkSync(path.join(dir, f));
   CARDS.forEach((c, i) => fs.writeFileSync(
     path.join(dir, `${String(i + 1).padStart(2, "0")}-${c.img}.json`),
     JSON.stringify(make(c, SCHEME), null, 2) + "\n"));

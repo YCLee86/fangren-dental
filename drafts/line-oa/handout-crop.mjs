@@ -149,9 +149,18 @@ function frameColor(box, heroRows) {
   return hex(med(0), med(1), med(2));
 }
 
-const out = {};
+/* ⚠ 只重做指名的那幾張（其餘的 hero 與顏色原封不動、colors.json 用合併的）：
+ *     node drafts/line-oa/handout-crop.mjs wisdom aligner whitening
+ *   不給名字就是整批重做（原本的行為）。
+ *   2026-09-07 加的：那天只換了三張紙本（作者從「侑津製圖」改成「芳仁牙醫診所」），
+ *   整批重跑會把另外九張的 JPEG 重新編碼一次 —— 位元組全變、內容一模一樣，
+ *   之後要看「這一輪到底動了什麼」就看不出來了。 */
+const ONLY = process.argv.slice(2).filter((a) => !a.startsWith("--"));
+const COLORS = path.join(DIR, "colors.json");
+const out = ONLY.length && fs.existsSync(COLORS) ? JSON.parse(fs.readFileSync(COLORS, "utf8")) : {};
 for (const f of fs.readdirSync(DIR).filter((f) => /^handout-[a-z]+\.(jpg|png)$/.test(f)).sort()) {
   const name = f.match(/^handout-([a-z]+)\.(?:jpg|png)$/)[1];
+  if (ONLY.length && !ONLY.includes(name)) continue;
   const src = path.join(DIR, f);
   const { w: W, h: H } = dims(src);
   const box = cardBox(src, W, H);
@@ -175,4 +184,7 @@ for (const f of fs.readdirSync(DIR).filter((f) => /^handout-[a-z]+\.(jpg|png)$/.
   console.log(`  ${name.padEnd(10)} 框 ${frame} 白字 ${ratio(frame, "#FFFFFF").toFixed(2)}` +
     `　→ 填色 ${fill}（${ratio(fill, "#FFFFFF").toFixed(2)}）　字 ${ink}（${ratio(ink, CARD).toFixed(2)}）　hero ${hw}×${hh}`);
 }
-fs.writeFileSync(path.join(DIR, "colors.json"), JSON.stringify(out, null, 2) + "\n");
+/* ⚠ 鍵要排序 —— 合併寫回時如果照 Object.assign 的順序，
+   新做的那幾張會跑到最後面，整份 colors.json 的 diff 會變得看不懂。 */
+fs.writeFileSync(COLORS, JSON.stringify(Object.fromEntries(
+  Object.keys(out).sort().map((k) => [k, out[k]])), null, 2) + "\n");

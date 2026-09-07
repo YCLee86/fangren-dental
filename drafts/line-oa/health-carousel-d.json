@@ -8,7 +8,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-perio-hero.jpg",
         "size": "full",
-        "aspectRatio": "1024:536",
+        "aspectRatio": "720:376",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -32,7 +32,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#317B6F",
+                "color": "#087D6F",
                 "flex": 0
               },
               {
@@ -65,7 +65,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#54BBAA",
+            "backgroundColor": "#0CC0AB",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -97,7 +97,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "borderColor": "#317B6F",
+            "borderColor": "#087D6F",
             "borderWidth": "1px",
             "cornerRadius": "6px",
             "height": "40px",
@@ -118,7 +118,7 @@
                   {
                     "type": "text",
                     "text": "讀文章",
-                    "color": "#317B6F",
+                    "color": "#087D6F",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0
@@ -137,7 +137,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-calculus-hero.jpg",
         "size": "full",
-        "aspectRatio": "1024:536",
+        "aspectRatio": "720:376",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -161,7 +161,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#0C6FCE",
+                "color": "#0A6FCF",
                 "flex": 0
               },
               {
@@ -194,7 +194,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#3495F3",
+            "backgroundColor": "#3396F5",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -226,7 +226,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "borderColor": "#0C6FCE",
+            "borderColor": "#0A6FCF",
             "borderWidth": "1px",
             "cornerRadius": "6px",
             "height": "40px",
@@ -247,7 +247,7 @@
                   {
                     "type": "text",
                     "text": "讀文章",
-                    "color": "#0C6FCE",
+                    "color": "#0A6FCF",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0
@@ -266,7 +266,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-caries-hero.jpg",
         "size": "full",
-        "aspectRatio": "1024:536",
+        "aspectRatio": "720:376",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -290,7 +290,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#BE441B",
+                "color": "#CF3600",
                 "flex": 0
               },
               {
@@ -323,7 +323,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#BE441B",
+            "backgroundColor": "#CF3600",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -355,7 +355,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "borderColor": "#BE441B",
+            "borderColor": "#CF3600",
             "borderWidth": "1px",
             "cornerRadius": "6px",
             "height": "40px",
@@ -376,7 +376,7 @@
                   {
                     "type": "text",
                     "text": "讀文章",
-                    "color": "#BE441B",
+                    "color": "#CF3600",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0
@@ -395,7 +395,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-wisdom-hero.jpg",
         "size": "full",
-        "aspectRatio": "1024:536",
+        "aspectRatio": "720:376",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -419,7 +419,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#317B6F",
+                "color": "#087D6F",
                 "flex": 0
               },
               {
@@ -452,7 +452,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#54BBAA",
+            "backgroundColor": "#0CC0AB",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -484,7 +484,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "borderColor": "#317B6F",
+            "borderColor": "#087D6F",
             "borderWidth": "1px",
             "cornerRadius": "6px",
             "height": "40px",
@@ -505,7 +505,7 @@
                   {
                     "type": "text",
                     "text": "讀文章",
-                    "color": "#317B6F",
+                    "color": "#087D6F",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0
@@ -524,7 +524,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-aligner-hero.jpg",
         "size": "full",
-        "aspectRatio": "1024:536",
+        "aspectRatio": "720:376",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -548,7 +548,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#0074BD",
+                "color": "#0074BC",
                 "flex": 0
               },
               {
@@ -581,7 +581,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#4DBAFF",
+            "backgroundColor": "#4EBBFF",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -613,7 +613,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "borderColor": "#0074BD",
+            "borderColor": "#0074BC",
             "borderWidth": "1px",
             "cornerRadius": "6px",
             "height": "40px",
@@ -634,7 +634,7 @@
                   {
                     "type": "text",
                     "text": "讀文章",
-                    "color": "#0074BD",
+                    "color": "#0074BC",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0
@@ -653,7 +653,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-prosth-hero.jpg",
         "size": "full",
-        "aspectRatio": "1024:536",
+        "aspectRatio": "720:376",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -677,7 +677,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#A75B10",
+                "color": "#AF5704",
                 "flex": 0
               },
               {
@@ -710,7 +710,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#F0A860",
+            "backgroundColor": "#FBA451",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -742,7 +742,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "borderColor": "#A75B10",
+            "borderColor": "#AF5704",
             "borderWidth": "1px",
             "cornerRadius": "6px",
             "height": "40px",
@@ -763,7 +763,7 @@
                   {
                     "type": "text",
                     "text": "讀文章",
-                    "color": "#A75B10",
+                    "color": "#AF5704",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0
@@ -782,7 +782,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-implant-hero.jpg",
         "size": "full",
-        "aspectRatio": "1024:536",
+        "aspectRatio": "720:376",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -806,7 +806,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#567B1A",
+                "color": "#507B0D",
                 "flex": 0
               },
               {
@@ -839,7 +839,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#ADDD60",
+            "backgroundColor": "#91DE18",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -871,7 +871,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "borderColor": "#567B1A",
+            "borderColor": "#507B0D",
             "borderWidth": "1px",
             "cornerRadius": "6px",
             "height": "40px",
@@ -892,7 +892,7 @@
                   {
                     "type": "text",
                     "text": "讀文章",
-                    "color": "#567B1A",
+                    "color": "#507B0D",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0
@@ -911,7 +911,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-denture-hero.jpg",
         "size": "full",
-        "aspectRatio": "1024:536",
+        "aspectRatio": "720:376",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -935,7 +935,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#0B7D70",
+                "color": "#087D6F",
                 "flex": 0
               },
               {
@@ -968,7 +968,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#11BCA9",
+            "backgroundColor": "#0CC0AB",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -1000,7 +1000,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "borderColor": "#0B7D70",
+            "borderColor": "#087D6F",
             "borderWidth": "1px",
             "cornerRadius": "6px",
             "height": "40px",
@@ -1021,7 +1021,7 @@
                   {
                     "type": "text",
                     "text": "讀文章",
-                    "color": "#0B7D70",
+                    "color": "#087D6F",
                     "size": "md",
                     "weight": "bold",
                     "flex": 0
@@ -1040,7 +1040,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-whitening-hero.jpg",
         "size": "full",
-        "aspectRatio": "1024:535",
+        "aspectRatio": "720:376",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -1064,7 +1064,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#036FD3",
+                "color": "#0073BD",
                 "flex": 0
               },
               {
@@ -1097,7 +1097,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#6DB8FD",
+            "backgroundColor": "#4FBAFF",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
@@ -1136,7 +1136,7 @@
         "type": "image",
         "url": "https://fangren.net/assets/handout-xray-hero.jpg",
         "size": "full",
-        "aspectRatio": "1024:536",
+        "aspectRatio": "720:376",
         "aspectMode": "cover",
         "action": {
           "type": "uri",
@@ -1160,7 +1160,7 @@
                 "type": "text",
                 "text": "▌",
                 "size": "md",
-                "color": "#317B6F",
+                "color": "#087D6F",
                 "flex": 0
               },
               {
@@ -1193,7 +1193,7 @@
           {
             "type": "box",
             "layout": "vertical",
-            "backgroundColor": "#54BBAA",
+            "backgroundColor": "#0CC0AB",
             "cornerRadius": "6px",
             "height": "40px",
             "justifyContent": "center",
