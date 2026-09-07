@@ -6,29 +6,21 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>芳仁牙醫診所　LINE 貼文的看診時間圖</title>
 <!--
-  2026-09-07 使用者：「一般 #5A6E4 牙周 #436A67 顯微 #944449 兒童 #926833
-  齒顎 #31637F 植牙 #394666 口腔 #6F5477 ／ 植牙改成假牙　植牙假牙重建 改成 假牙重建
-  ／ 齒顎矯正的 logo 細細的不太明顯　有其他可以換嗎」
+  2026-09-07 使用者：「U1 半還不錯　矯正禮拜二下午有診　更新一下　網站開診時段也要更新
+  ／感覺間距要拉開一點　因為有矯正的診　logo 看起來和其他沒有矯正的時段沒對齊」
 
-  三件各自要治：
+  ① 排班：index.html 那張門診表的「二・午」從 general kids 改成 general ortho kids。
+     ⚠ 那是**站上與這張圖唯一的出處**，所以站上的門診表、七科著陸頁、
+     JSON-LD 全部同一次跟上（改完跑 node tools/topics.mjs ＋ node tools/build.mjs）。
 
-  ① 顏色：他從前面幾案裡各取幾顆，湊成 Ⓤ（一般＝設計師 104 的苔綠、
-     顯微＝設計師 104 的磚紅、齒顎＝站上的深階，其餘四科＝彩度 65 那一案）。
-     ⚠ 他寫的「一般 #5A6E4」只有五碼，六碼的讀法是 104 那一案的 #5A6E4F。
-
-  ② 改名：只換這張圖與這一頁上的顯示名。index.html／topics/／tools/topic-copy.mjs
-     上的「植牙・假牙重建」**一個字都沒有動** —— 全站要不要跟著改要先問他。
-
-  ③ ⚠⚠⚠ 矯正那顆「細細的」量出來成立，而且「換一顆」解不掉：
-     九顆放進同一個 30px 方框，墨面積是
-       r3c1 顯微 735　r3c2 兒牙 713　r1c1 一般 700　r2c2 假牙 558
-       r1c2 牙周 357　r2c1（沒用到）349　r1c3（沒用到）228　r2c3 口外 227
-       r3c3 矯正 174 ＝ 一般牙科的四分之一，九顆裡最輕的那一顆。
-     九顆裡有**三顆**是長寬比 3.08 的細長家族（r1c3／r2c3／r3c3），
-     而七科要用掉九顆裡的七顆 —— 扣掉上一輪被退回的 r2c1，那三顆一顆都躲不掉。
-     換給誰只是把細的那一顆換一個科別（口外現在就是 227，同一個毛病）。
-     → 所以這一輪走的是**等重**（同浮水印那一輪 22-13）：按墨面積算出每一顆
-       自己的寬度，細長的放大、方的不動。三格讓他挑。
+  ② ⚠⚠⚠ 「間距」和「對齊」是兩件事，修一件不會治好另一件：
+     ・間距 ＝ 一列裡兩顆之間留多少（三格 11／16／22）。
+     ・對齊 ＝ 等重之後每一顆的寬度不一樣（矯正 42、牙周 36、其餘 30），
+       一列置中之後**起點跟著「那一列有誰」而跑** —— 所以同一欄不同列對不齊。
+       治法是**每一顆給一樣寬的格子**（＝最寬那一顆 42px），圖案在自己的格子裡置中。
+     逐像素量過（同一欄、同樣顆數的行，圖案中心的最大差）：
+       沒有等寬格　2.0 ~ 7.0 px
+       有等寬格　　0.0 ~ 0.5 px
 -->
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
@@ -73,49 +65,73 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <div class="pv-wrap">
 
   <h1>LINE 貼文的看診時間圖
-    <span>你挑的顏色　＋　圖案的份量　2026-09-07</span></h1>
-  <p class="pv-lead">七顆色已經套上去了（<b>Ⓤ</b>）。<br>
-    「植牙」→<b>假牙</b>、「植牙・假牙重建」→<b>假牙重建</b>，
-    <b>只換這張圖與這一頁</b>——站上一個字都沒動。</p>
+    <span>半 ＋ 齒顎矯正二午 ＋ 間距與對齊　2026-09-07</span></h1>
+  <p class="pv-lead"><b>齒顎矯正・禮拜二下午</b>已經加進去了——
+    <b>站上的門診表同一次改掉了</b>（那是這張圖唯一的資料出處，
+    七科著陸頁與結構化資料都跟著更新）。</p>
 
-  <h2 class="pv-h2">⚠ 矯正那顆換不掉，只能放大
-    <span class="t">量出來你是對的，但成因不是挑錯形狀</span></h2>
-  <p class="pv-lead">九顆放進同一個 30px 方框，<b>墨的面積</b>是——<br>
-    顯微 735／兒牙 713／一般 700／假牙 558／牙周 357／
-    <span class="n">口外 227</span>／<span class="n">矯正 174</span>。<br>
-    <b>矯正只有一般牙科的四分之一，九顆裡最輕的那一顆。</b></p>
-  <p class="pv-lead"><b>但換一顆解不掉：</b>九顆裡有<b>三顆</b>是長寬比 3.08 的細長家族，
-    而七科要用掉九顆裡的七顆——扣掉上一輪被你退回的那顆「哭哭」，
-    <b>那三顆一顆都躲不掉</b>。換給誰只是把細的那一顆換一個科別
-    （<b>口外現在就是 227，同一個毛病</b>）。<br>
-    → 所以改成<b>按墨的面積算出每一顆自己的寬度</b>：細長的放大、方的不動。
-    這是站上浮水印那一輪用過的做法。</p>
+  <h2 class="pv-h2">⚠ 「間距」和「對齊」是兩件事
+    <span class="t">拉開間距不會讓它對齊</span></h2>
+  <p class="pv-lead"><b>對齊那一件的成因是等重</b>：每一顆的寬度不一樣
+    （矯正 42、牙周 36、其餘 30），一列置中之後
+    <b>起點跟著「那一列有誰」而跑</b>——所以有矯正的那一列就和別的列對不上。<br>
+    治法是<b>每一顆給一樣寬的格子</b>（＝最寬那一顆），圖案在自己的格子裡置中。<br>
+    逐像素量過（同一欄、同樣顆數的行，圖案中心的最大差）：<br>
+    沒有等寬格 <span class="n">2.0 ~ 7.0px</span>　／　有等寬格 <b>0.0 ~ 0.5px</b>。</p>
 
-  <h2 class="pv-h2">Ⓤ2 等重<em>建議</em>
-    <span class="t">矯正 30→60px、口外 30→53px、牙周 42px，其餘幾乎不動</span></h2>
+  <h2 class="pv-h2">Ⓖ2 等寬格 ＋ 間距 16<em>建議</em>
+    <span class="t">對齊了，也比原本鬆</span></h2>
   <div class="pv-shot">
-    <img src="post-hours-mix-even.png" width="1080" height="1080"
-      alt="格子表：七科的圖案按墨面積放大，細長的矯正與口外變明顯">
+    <img src="post-hours-mix-half-a16.png" width="1080" height="1080"
+      alt="格子表：每一顆圖案給一樣寬的格子，圖案間距 16px">
   </div>
-  <p class="pv-cap">七顆看起來一樣重。<b>整塊高度沒有變</b>——
-    放大的都是扁的那幾顆，長出來的是寬不是高。</p>
+  <p class="pv-cap">同一欄不同列的圖案落在同一組刻度上。</p>
 
-  <h2 class="pv-h2">Ⓤ1 半
-    <span class="t">只補一半：矯正 42px、口外 40px</span></h2>
+  <h2 class="pv-h2">Ⓖ1 等寬格 ＋ 間距 11
+    <span class="t">只對齊，鬆緊維持原本</span></h2>
+  <div class="pv-shot">
+    <img src="post-hours-mix-half-a11.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：等寬格，圖案間距維持 11px">
+  </div>
+  <p class="pv-cap">⚠ 等寬格自己就已經把兩顆圓的推開了
+    （42 減 30 ＝ 中間多 12px），所以這一格看起來也比改動前鬆。</p>
+
+  <h2 class="pv-h2">Ⓖ3 等寬格 ＋ 間距 22
+    <span class="t">最鬆</span></h2>
+  <div class="pv-shot">
+    <img src="post-hours-mix-half-a22.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：等寬格，圖案間距 22px">
+  </div>
+  <p class="pv-cap">整塊高了 6px，離安全帶還剩 3px——<b>這是這條尺的地板</b>，
+    再鬆就會被主頁大格切到。</p>
+
+  <h2 class="pv-h2">Ⓖ0 對照：沒有等寬格
+    <span class="t">＝ 你昨天看到的那一版，加上矯正二午</span></h2>
   <div class="pv-shot">
     <img src="post-hours-mix-half.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：七科的圖案按墨面積補一半">
+      alt="格子表：沒有等寬格，有矯正的那一列和別的列對不齊">
   </div>
-  <p class="pv-cap">大小的落差還看得出來，但矯正不再是一條線。</p>
+  <p class="pv-cap">看第二欄與第五欄——<b>有矯正的那一列整組往旁邊挪</b>。</p>
 
-  <h2 class="pv-h2">Ⓤ0 現況
-    <span class="t">你挑的顏色，圖案大小沒動</span></h2>
+  <h2 class="pv-h2">擺進主頁那三格</h2>
+  <div class="pv-shot">
+    <img src="profile-3up-w2.png" width="823" height="823" loading="lazy"
+      alt="主頁三格模擬：大格是建議那一版，兩個小格是間距 11 與 22">
+  </div>
+  <p class="pv-cap">大格 823×409 只看得到中間 <b>537 列</b>，
+    上下各切掉 271——所以品牌與電話一定要留在那條帶子裡。</p>
+
+  <h2 class="pv-h2">保留：份量的另外兩格</h2>
+  <div class="pv-shot">
+    <img src="post-hours-mix-even.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：圖案按墨面積等重，矯正 60px">
+  </div>
+  <p class="pv-cap">Ⓤ2 等重（矯正 60px）。<b>沒有等寬格</b>。</p>
   <div class="pv-shot">
     <img src="post-hours-mix.png" width="1080" height="1080" loading="lazy"
-      alt="格子表：七科的圖案都是 30px 方框，矯正與口外看起來很細">
+      alt="格子表：圖案大小沒動，矯正與口外看起來很細">
   </div>
-  <p class="pv-cap">Ⓤ 七顆兩兩最近 ΔE <b>15.5</b>（矯正×假牙），
-    彩度中位 22.1，對底最低 4.50——三項都比站上現況好。</p>
+  <p class="pv-cap">Ⓤ0 大小沒動。</p>
 
   <h2 class="pv-h2">⚠ 全站要不要一起改名？</h2>
   <p class="pv-lead">「植牙・假牙重建」在站上有五處：首頁那排標記、七科導覽列、
@@ -124,7 +140,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <b>這一輪一個字都沒動</b>——要不要一起改成「假牙重建」，你說了才動。</p>
 
   <h2 class="pv-h2" id="pal">七案的色碼
-    <span class="t">挑好告訴我代號就好</span></h2>
+    <span class="t">目前用的是 Ⓤ</span></h2>
   <p class="pv-cap">色碼的唯一出處是 <code>colors.json</code>，這一頁讀它、<b>不手抄</b>——
     守門會逐格比對。順序：一般／牙周／顯微／兒童／齒顎／假牙／口腔</p>
   <div class="pv-pal"><b>O　現況（站上深階）</b><div class="sw"><span><i style="background:#2C5238"></i>一般 #2C5238</span><span><i style="background:#2A6D69"></i>牙周 #2A6D69</span><span><i style="background:#89202D"></i>顯微 #89202D</span><span><i style="background:#9E6301"></i>兒童 #9E6301</span><span><i style="background:#31637F"></i>齒顎 #31637F</span><span><i style="background:#2A4677"></i>假牙 #2A4677</span><span><i style="background:#784E84"></i>口腔 #784E84</span></div></div>
@@ -134,14 +150,6 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   <div class="pv-pal"><b>P　設計師九顆 104_logo</b><div class="sw"><span><i style="background:#5A6E4F"></i>一般 #5A6E4F</span><span><i style="background:#0B4B46"></i>牙周 #0B4B46</span><span><i style="background:#944449"></i>顯微 #944449</span><span><i style="background:#9E7253"></i>兒童 #9E7253</span><span><i style="background:#315568"></i>齒顎 #315568</span><span><i style="background:#805751"></i>假牙 #805751</span><span><i style="background:#5E5A61"></i>口腔 #5E5A61</span></div></div>
   <div class="pv-pal"><b>Q　設計師八顆 Logo顏色</b><div class="sw"><span><i style="background:#5D6D55"></i>一般 #5D6D55</span><span><i style="background:#214D48"></i>牙周 #214D48</span><span><i style="background:#AF4C52"></i>顯微 #AF4C52</span><span><i style="background:#9B735E"></i>兒童 #9B735E</span><span><i style="background:#3C596B"></i>齒顎 #3C596B</span><span><i style="background:#7D5A58"></i>假牙 #7D5A58</span><span><i style="background:#5F5D66"></i>口腔 #5F5D66</span></div></div>
   <div class="pv-pal"><b>U　使用者挑的混合</b><div class="sw"><span><i style="background:#5A6E4F"></i>一般 #5A6E4F</span><span><i style="background:#436A67"></i>牙周 #436A67</span><span><i style="background:#944449"></i>顯微 #944449</span><span><i style="background:#926833"></i>兒童 #926833</span><span><i style="background:#31637F"></i>齒顎 #31637F</span><span><i style="background:#394666"></i>假牙 #394666</span><span><i style="background:#6F5477"></i>口腔 #6F5477</span></div></div>
-
-  <h2 class="pv-h2">擺進主頁那三格</h2>
-  <div class="pv-shot">
-    <img src="profile-3up-w2.png" width="823" height="823" loading="lazy"
-      alt="主頁三格模擬：大格是 Ⓤ，兩個小格是半與等重">
-  </div>
-  <p class="pv-cap">大格 823×409 只看得到中間 <b>537 列</b>，
-    上下各切掉 271——所以品牌與電話一定要留在那條帶子裡。</p>
 
   <h2 class="pv-h2">保留：設計師的兩份色票</h2>
   <div class="pv-shot">
