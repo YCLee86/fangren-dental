@@ -4,282 +4,97 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>芳仁牙醫診所　LINE 貼文的看診時間圖　五案</title>
+<title>芳仁牙醫診所　LINE 貼文的看診時間圖</title>
 <!--
-  身分：**提案頁**（五案待選），不是規格頁。定案之後照 CLAUDE.md 第十一之五節
-  改寫成規格頁（拿掉落選案、留成品與規格），這幾頁的成品在 LINE 不在站上，
-  所以**不刪頁、不搬進 history/**。
+  兩案待選。定案之後照 CLAUDE.md 第十一之五節改寫成規格頁
+  （成品在 LINE 不在站上，所以不刪頁、不搬進 history/）。
 
-  起點（2026-09-07）：使用者「網站上的門診表是有切換效果的，LINE 商家的貼文要怎麼做」。
+  ⚠⚠⚠ 2026-09-07 使用者看過五案：「覺得不夠乾淨　簡潔」。
+     ① 圖收成三塊（識別／表／電話），沒有卡片框、沒有副標、沒有大標題。
+     ② **這一頁的文字也一起收掉** —— 他同一天才對 /preview/line-spec/ 講過
+        「只要保留模擬圖的部分就好…大量的文字解說都不用」，我隔一頁又寫了一堆。
+     ③ 「乾淨簡潔」本身淘汰了三案：色點版要來回對照圖例、八張版要滑八張。
+     推導留在 drafts/channels/post-hours.mjs 的檔頭，不搬到這一頁上。
 
-  ⚠⚠⚠ 這一題真正的判斷：**站上那個切換是為了解決「375px 的一格塞不進四個科別名」，
-     不是為了好玩。** 貼文的畫布是 1080px —— 放得下，所以正確的做法不是模擬切換，
-     是把切換本來要藏的東西**直接攤開**。
-     ＝ og-topic-card 那一輪：**換一個容器就要重新設計，不要照搬。**
-
-  ⚠⚠⚠ 排班資料只有一個出處：`index.html` 那張 `.hours-grid` 的 `data-in`。
-     科別名、時段、休診說明、電話全部是讀回來的（`drafts/channels/post-hours.mjs`）。
-     抄第二份的話，診所改排班時貼文的圖會**安靜地開始說謊**。
-
-  ⚠ 這一頁刻意零 JS，也沒有切換條 —— 五案並排，手機上一路往下滑就比完了
-     （守門連 script 標籤都擋）。
-  ⚠ 圖一律擺**真的產出檔**，不要用 CSS 再畫一次（第八節那條）。
-  ⚠ class 一律 pv- 前綴；樣式放在 head。
-  ⚠ 連結一律相對路徑 —— 舊站 yclee86.github.io 還活著，根目錄絕對路徑那邊會壞。
-  ⚠ 圖一律寫 width/height 屬性（不寫的話沒載完之前高度是 0，整頁會跳版），
-     第一張以外一律 loading="lazy"。
+  ⚠ 圖一律擺真的產出檔；width/height 屬性要等於 PNG 檔頭的真實尺寸。
+  ⚠ 連結一律相對路徑 —— 舊站 yclee86.github.io 還活著。
+  ⚠ 刻意零 JS（守門連 script 標籤都擋）。
 -->
 <style>
-:root{
-  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
-  --ink:#2a2c27; --ink-soft:#5c5f57; --green:#3f654a; --deep:#2c5238;
-  --red:#89202d; --li-bg:#e9edf1;
-}
+:root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
+  --ink:#2a2c27;--ink-soft:#5c5f57;--green:#3f654a;--deep:#2c5238;--red:#89202d}
 *{margin:0;padding:0;box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+html{-webkit-text-size-adjust:100%}
 body{background:var(--paper);color:var(--ink);
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
-  line-height:1.75;padding-bottom:60px}
-.pv-wrap{max-width:430px;margin:0 auto;padding:16px 14px 0}
-
-h1{font-size:1.06rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
-h1 span{display:block;font-weight:400;font-size:.68em;color:var(--ink-soft);letter-spacing:.04em}
-.pv-sub{font-size:.78rem;color:var(--ink-soft);margin:.5rem 0 0;line-height:1.8}
-.pv-sub b{color:var(--ink)}
+  line-height:1.75;padding-bottom:56px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:18px 14px 0}
+h1{font-size:1.02rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
+h1 span{display:block;font-weight:400;font-size:.7em;color:var(--ink-soft);letter-spacing:.04em}
+.pv-lead{font-size:.78rem;color:var(--ink-soft);margin:.55rem 0 0;line-height:1.8}
+.pv-lead b{color:var(--ink)}
 a{color:var(--deep)}
-code{font-size:.94em;background:var(--paper);border-radius:4px;padding:0 3px;
-  overflow-wrap:anywhere;font-family:ui-monospace,Menlo,Consolas,monospace}
-
-.pv-h2{font-size:.94rem;font-weight:700;margin:32px 0 0;letter-spacing:.01em;
+code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
+  font-family:ui-monospace,Menlo,Consolas,monospace}
+.pv-h2{font-size:.92rem;font-weight:700;margin:34px 0 0;letter-spacing:.01em;
   padding-left:9px;border-left:3px solid var(--green)}
 .pv-h2 .t{display:block;font-size:.78em;font-weight:400;color:var(--ink-soft);letter-spacing:0}
-.pv-h2.rec{border-left-color:var(--deep)}
 .pv-h2 em{font-style:normal;font-size:.72em;background:var(--deep);color:#fff;
   border-radius:6px;padding:1px 7px;margin-left:6px;letter-spacing:.04em;vertical-align:2px}
-.pv-group{font-size:.78rem;color:var(--ink-soft);margin:36px 0 0;
-  border-top:1px solid var(--rule);padding-top:12px;line-height:1.8}
-.pv-group b{color:var(--ink)}
-
-.pv-shot{margin:11px 0 0;background:var(--li-bg);border:1px solid var(--rule);
-  border-radius:10px;padding:12px;display:flex;flex-direction:column;
-  align-items:flex-start;gap:10px}
-.pv-shot img{display:block;width:100%;height:auto;border-radius:9px;
-  box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.pv-shot a{display:block;width:100%}
-/* 比一屏寬的（Ⓒ 那八張）自己一條捲軸，不要讓整頁能左右拉。
-   ⚠⚠⚠ 捲軸裡每一張都要自己寫 inline 的 width:NNNpx —— 2026-09-07 在
-   line-spec 踩過：寫 width:auto 會蓋掉 img 的 width 屬性、讓圖退回原始像素尺寸
-   （1080 見方的圖畫成 1080px），而水平溢出仍然是 0、守門也抓不到。 */
-.pv-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;
-  display:flex;gap:8px;padding-bottom:4px}
-.pv-scroll img{max-width:none;flex:none}
-.pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:0}
+.pv-shot{margin:10px 0 0}
+.pv-shot img{display:block;width:100%;height:auto;border-radius:10px;
+  border:1px solid var(--rule)}
+.pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:7px 0 0}
 .pv-cap b{color:var(--ink)}
 .pv-cap .n{color:var(--red);font-weight:700}
-
-.pv-pro{font-size:.74rem;line-height:1.8;margin:9px 0 0;list-style:none}
-.pv-pro li{padding-left:1.15em;position:relative;color:var(--ink-soft)}
-.pv-pro li b{color:var(--ink)}
-.pv-pro li::before{position:absolute;left:0;color:var(--green)}
-.pv-pro li.y::before{content:"＋"}
-.pv-pro li.n::before{content:"−";color:var(--red)}
-
 .pv-txt{background:var(--card);border:1px solid var(--rule);border-radius:10px;
-  padding:12px 14px;margin:11px 0 0;font-size:.78rem;line-height:1.95;
+  padding:12px 14px;margin:10px 0 0;font-size:.78rem;line-height:1.95;
   white-space:pre-wrap;overflow-wrap:anywhere}
-.pv-open{font-size:.68rem;color:var(--ink-soft)}
-.pv-toc{margin:12px 0 0;font-size:.76rem;line-height:1.9}
-.pv-toc a{display:block;color:var(--ink);text-decoration:none;
-  border-bottom:1px solid var(--rule);padding:4px 0}
-.pv-toc a:last-child{border-bottom:0}
-.pv-toc a .n{color:var(--ink-soft);font-size:.9em}
-.pv-files{font-size:.72rem;line-height:1.95;color:var(--ink-soft)}
-.pv-files b{color:var(--ink);font-weight:400}
 </style>
 </head>
 <body>
 <div class="pv-wrap">
 
   <h1>LINE 貼文的看診時間圖
-    <span>五案待選　2026-09-07</span></h1>
+    <span>兩案待選　2026-09-07</span></h1>
+  <p class="pv-lead">站上那張表靠<b>點科別標記</b>一次看一科。<br>
+    貼文是靜態的圖，但畫布 1080px <b>放得下</b>，所以不模擬切換，直接攤開。</p>
 
-  <p class="pv-sub">站上那張門診表靠<b>點科別標記套色</b>一次看一科，貼文是靜態的圖，
-    沒有這個動作。<br>
-    但那個切換是為了解決「<b>手機一格塞不進四個科別名</b>」——
-    貼文的畫布是 1080px，<b>放得下</b>。<br>
-    所以做法不是模擬切換，是把它藏的東西<b>攤開</b>。</p>
-
-  <div class="pv-toc">
-    <a href="#form">⓪ 那個表單長什麼樣</a>
-    <a href="#d">Ⓓ 一科一行　<span class="n">建議</span></a>
-    <a href="#a2">Ⓐ2 格子表・識別收進安全帶</a>
-    <a href="#a">Ⓐ 格子表・原樣</a>
-    <a href="#b">Ⓑ 格子表・色點 ＋ 圖例</a>
-    <a href="#c">Ⓒ 一科一張（八張）</a>
-    <a href="#crop">主頁那三格會怎麼裁</a>
-    <a href="#detail">「詳情」欄要貼的字</a>
-    <a href="#open">還沒收掉的</a>
-  </div>
-
-  <!-- ================= ⓪ 表單 ================= -->
-  <h2 class="pv-h2" id="form">⓪ 那個表單長什麼樣
-    <span class="t">商業簡介 → 最新貼文 → 新增項目</span></h2>
-  <p class="pv-sub">說明那一行寫著「可顯示張貼至 LINE VOOM 的照片、影片，
-    <b>以及您設定的照片</b>」——<br>
-    ⚠⚠ 所以<b>不必先去 VOOM 發一則貼文</b>，可以直接在這裡傳圖。<br><br>
-    一個「一覽項目」＝ 一張<b>方形</b>的照片 ＋ 一段<b>詳情</b>文字。<br>
-    ⚠ 有了那段字，<b>圖就不必把每一件事都扛下來</b> —— 底下五案的差別就在這裡。</p>
-
-  <!-- ================= Ⓓ ================= -->
-  <h2 class="pv-h2 rec" id="d">Ⓓ 一科一行<em>建議</em>
-    <span class="t">照「早／午／晚」各列出哪幾天</span></h2>
+  <h2 class="pv-h2">Ⓛ 一科一行<em>建議</em>
+    <span class="t">早／午／晚 各列出哪幾天</span></h2>
   <div class="pv-shot">
-    <a href="post-hours-d.png"><img src="post-hours-d.png" width="1080" height="1080"
-      alt="Ⓓ 一科一行：七科各一列，每列寫出早、午、晚分別是哪幾天"></a>
-    <p class="pv-cap">↑ 點圖看原圖（1080×1080）</p>
+    <img src="post-hours-list.png" width="1080" height="1080"
+      alt="一科一行：七科各一列，每列寫出早、午、晚分別是哪幾天">
   </div>
-  <p class="pv-sub">⚠⚠⚠ 格子表回答的是「<b>週三下午有哪幾科</b>」——那是<b>診所排班的視角</b>。<br>
-    病人真正要查的是「<b>我這一科，什麼時候可以來</b>」。<br>
-    ＝ COPY.md 第九節那條：他不是想認識這個科別，是帶著一個具體的問題來的。</p>
-  <ul class="pv-pro">
-    <li class="y">七科<b>每一科都收得進一行</b>（實測）</li>
-    <li class="y">顯微根管排出來是「早 三　午 三　晚 三」——<b>全在週三自己跳出來</b>；
-      口腔外科同理（全在週四）。<b>這四科的規律，格子表反而看不出來</b></li>
-    <li class="y">科別一律<b>全名</b>，不必縮寫</li>
-    <li class="n">看不出「同一節有誰一起看診」（那件事交給 Ⓐ2）</li>
-  </ul>
+  <p class="pv-cap">病人查的是「<b>我這一科什麼時候可以來</b>」。<br>
+    顯微根管排出來是「早三　午三　晚三」——<b>全在週三自己跳出來</b>，格子表看不出來。</p>
 
-  <!-- ================= Ⓐ2 ================= -->
-  <h2 class="pv-h2" id="a2">Ⓐ2 格子表・識別收進安全帶
+  <h2 class="pv-h2">Ⓖ 格子
     <span class="t">和站上那張表同一個排法</span></h2>
   <div class="pv-shot">
-    <a href="post-hours-a2.png"><img src="post-hours-a2.png" width="1080" height="1080" loading="lazy"
-      alt="Ⓐ2 格子表：日子當欄、早午晚當列，格子裡直接寫科別名，品牌條與電話在卡片裡"></a>
-    <p class="pv-cap">↑ 品牌條與電話<b>搬進卡片裡面</b>，才不會被大格切掉（見下面那一節）</p>
+    <img src="post-hours-grid.png" width="1080" height="1080" loading="lazy"
+      alt="格子表：日子當欄、早午晚當列，格子裡直接寫科別名">
   </div>
-  <ul class="pv-pro">
-    <li class="y">和站上那張表<b>同一個排法</b>，看過網站的人不必重新認</li>
-    <li class="y">看得出「<b>週三下午同時有四科</b>」這種事</li>
-    <li class="n">「植牙・假牙重建」被<b>格子寬度逼成「植牙假牙」</b>——<b>這要你點頭</b></li>
-  </ul>
+  <p class="pv-cap">看得出「<b>同一節有誰一起看診</b>」。<br>
+    <span class="n">⚠</span>「植牙・假牙重建」被格子寬度逼成「<b>植牙假牙</b>」——要你點頭。</p>
 
-  <!-- ================= Ⓐ ================= -->
-  <h2 class="pv-h2" id="a">Ⓐ 格子表・原樣
-    <span class="t">品牌與標題在最上面（＝會被大格切掉的那一版）</span></h2>
+  <h2 class="pv-h2">擺進主頁那三格
+    <span class="t">大格 2:1、小格 1:1</span></h2>
   <div class="pv-shot">
-    <a href="post-hours-a.png"><img src="post-hours-a.png" width="1080" height="1080" loading="lazy"
-      alt="Ⓐ 格子表：品牌條與大標題在圖的最上面，電話在最下面"></a>
-    <p class="pv-cap"><span class="n">⚠</span> 單看很好，但主頁大格會把上下各切掉 271 列 —— 見下一節</p>
+    <img src="profile-3up.png" width="823" height="823" loading="lazy"
+      alt="主頁三格模擬：大格是一科一行，底下兩小格是格子表與一科一行">
   </div>
+  <p class="pv-cap">大格會把 1080 的圖<b>上下各切掉 271 列</b>，所以識別與電話
+    收在中間那條帶子裡。<br>
+    <span class="n">⚠</span> 到底是裁還是留白<b>我們沒驗過</b>——表單右上角那顆
+    <b>預覽</b>按一下就有答案。兩案哪一種都成立。</p>
 
-  <!-- ================= Ⓑ ================= -->
-  <h2 class="pv-h2" id="b">Ⓑ 格子表・色點 ＋ 圖例
-    <span class="t">格子裡不寫字，用該科的顏色</span></h2>
-  <div class="pv-shot">
-    <a href="post-hours-b.png"><img src="post-hours-b.png" width="1080" height="1080" loading="lazy"
-      alt="Ⓑ 格子表：格子裡畫七科顏色的小圓點，底下兩排圖例"></a>
-  </div>
-  <ul class="pv-pro">
-    <li class="y">科別名<b>不必縮寫</b>，格子乾淨</li>
-    <li class="n">要<b>來回對照圖例</b>，多一個動作 —— 而看的人正在路上或候診</li>
-    <li class="n">縮到主頁那一格時，七個顏色<b>分不出來</b></li>
-  </ul>
-
-  <!-- ================= Ⓒ ================= -->
-  <h2 class="pv-h2" id="c">Ⓒ 一科一張（八張）
-    <span class="t">＝ 站上那個切換的直譯</span></h2>
-  <div class="pv-shot">
-    <div class="pv-scroll">
-      <img src="post-hours-c-all.png" width="1080" height="1080" style="width:210px" loading="lazy" alt="Ⓒ 開診時段：全部時段都有點">
-      <img src="post-hours-c-general.png" width="1080" height="1080" style="width:210px" loading="lazy" alt="Ⓒ 一般牙科">
-      <img src="post-hours-c-perio.png" width="1080" height="1080" style="width:210px" loading="lazy" alt="Ⓒ 牙周治療">
-      <img src="post-hours-c-endo.png" width="1080" height="1080" style="width:210px" loading="lazy" alt="Ⓒ 顯微根管：三顆點全在週三那一欄">
-      <img src="post-hours-c-kids.png" width="1080" height="1080" style="width:210px" loading="lazy" alt="Ⓒ 兒童牙科">
-      <img src="post-hours-c-ortho.png" width="1080" height="1080" style="width:210px" loading="lazy" alt="Ⓒ 齒顎矯正">
-      <img src="post-hours-c-prosth.png" width="1080" height="1080" style="width:210px" loading="lazy" alt="Ⓒ 植牙・假牙重建">
-      <img src="post-hours-c-surg.png" width="1080" height="1080" style="width:210px" loading="lazy" alt="Ⓒ 口腔外科">
-    </div>
-    <p class="pv-cap">↑ 這一條<b>可以左右滑</b>，八張。每一張底下有一句摘要
-      （顯微根管＝「週三　早・午・晚」）</p>
-  </div>
-  <ul class="pv-pro">
-    <li class="y">每一張都很乾淨，<b>一眼看完一科</b></li>
-    <li class="n">要滑八張，而<b>主頁只看得到第一項</b></li>
-    <li class="n">診所改排班要<b>重傳八張</b></li>
-  </ul>
-
-  <!-- ================= 裁切 ================= -->
-  <h2 class="pv-h2" id="crop">主頁那三格會怎麼裁
-    <span class="t">＝ 2026-08-23「分享卡被左右裁掉」那條在這裡的變形</span></h2>
-  <p class="pv-sub">從第一張截圖量：整塊寬 823、<b>大格 823×409（2.01:1）</b>、
-    底下兩格各 <b>410×410（1:1）</b>。<br>
-    一張 1080 見方的圖擺進大格，照 cover 裁<b>上下各被切掉 271.5 列</b>。</p>
-  <div class="pv-shot">
-    <a href="profile-3up-a.png"><img src="profile-3up-a.png" width="823" height="823" loading="lazy"
-      alt="Ⓐ 擺進主頁三格：大格只剩一片表格中段，品牌、標題、電話都被切掉"></a>
-    <p class="pv-cap"><span class="n">✗ Ⓐ</span>　大格只剩一片<b>沒有出處的表</b>——
-      品牌、標題、電話三樣全在被切掉的那兩截裡</p>
-  </div>
-  <div class="pv-shot">
-    <a href="profile-3up-a2.png"><img src="profile-3up-a2.png" width="823" height="823" loading="lazy"
-      alt="Ⓐ2 擺進主頁三格：大格看得到品牌條、整張表與電話"></a>
-    <p class="pv-cap"><span class="n">✓ Ⓐ2</span>　識別收進中間那 537 列，大格完整</p>
-  </div>
-  <div class="pv-shot">
-    <a href="profile-3up-d.png"><img src="profile-3up-d.png" width="823" height="823" loading="lazy"
-      alt="Ⓓ 擺進主頁三格：大格看得到品牌條、七科各一行與電話"></a>
-    <p class="pv-cap"><span class="n">✓ Ⓓ</span>　同上</p>
-  </div>
-  <p class="pv-sub">⚠⚠ <b>把圖直接做成 2:1 不行</b> —— 小格會改成左右各切 25%，
-    中間三欄以外全沒了。<br>
-    <b>1:1 ＋ 識別放在中間那條帶子</b>是唯一同時滿足兩格的解。<br><br>
-    ⚠ 大格<b>到底是 cover 裁還是留白，我們沒有驗過</b>（上面畫的是最壞的那一種）——
-    而新的那張截圖顯示<b>上傳框是方形</b>，所以也可能整塊都用 1:1。<br>
-    <b>這一題不必先答</b>：Ⓐ2／Ⓓ 兩種情況都成立。要收掉就按表單右上角那顆<b>預覽</b>。</p>
-
-  <!-- ================= 詳情 ================= -->
-  <h2 class="pv-h2" id="detail">「詳情」欄要貼的字
-    <span class="t">五案共用同一段</span></h2>
+  <h2 class="pv-h2">「詳情」欄要貼的字</h2>
   <div class="pv-txt">一週的門診時段，以及每一節有哪些科別。
 早 08:45–11:30　午 13:45–16:30　晚 17:45–20:00
 國定假日與各科特別門診請來電確認　05-5339369</div>
-  <p class="pv-sub">⚠ 這段字也是從 <code>index.html</code> 長出來的（時段、說明、電話都不重打），
-    檔案在 <code>detail.txt</code>。<br>
-    ⚠⚠ <b>刻意沒有補回「週六、週日休診。」</b>——那句 2026-08-13 由你拿掉了，
-    理由是表只列一到五就看得出來；這裡的表一樣只列一到五。<br>
-    ⚠ 紅線：這個帳號<b>沒有專人即時回覆</b>，所以不可以寫「有問題隨時問」那一類的話。
-    產生器有一道掃描擋著。</p>
-
-  <!-- ================= 建議 ================= -->
-  <h2 class="pv-h2" id="rec">建議的一覽項目配置
-    <span class="t">三項</span></h2>
-  <p class="pv-sub"><b>1　Ⓓ 一科一行</b>　←「我這一科什麼時候可以來」是最多人要的答案，
-    而主頁那一格顯示的是<b>第一項</b><br>
-    <b>2　Ⓐ2 格子表</b>　←「同一節有誰一起看診」的完整版<br>
-    <b>3　位置與周邊停車</b>　←（還沒做）</p>
-
-  <!-- ================= 還沒收掉的 ================= -->
-  <h2 class="pv-h2" id="open">還沒收掉的</h2>
-  <ul class="pv-pro">
-    <li class="n"><b>「植牙・假牙重建」在 Ⓐ／Ⓐ2 被縮成「植牙假牙」</b>（格子塞不下）——
-      要你點頭。<b>Ⓓ 不必縮</b>，那是選 Ⓓ 的附帶好處</li>
-    <li class="n"><b>「詳情」有沒有字數上限</b>，不知道 —— 貼上去就會知道</li>
-    <li class="n"><b>大格到底怎麼裁</b> —— 表單右上角那顆「預覽」按一下就有答案</li>
-    <li class="n">圖是在容器裡出的，中文落到 <b>WenQuanYi Zen Hei</b> 不是 Noto Sans TC，
-      <b>字的細節和真機會有一點差</b>（這條線每一張圖都是這樣）</li>
-  </ul>
-
-  <!-- ================= 檔案 ================= -->
-  <p class="pv-group"><b>檔案</b></p>
-  <p class="pv-files">
-    產生器　<b>node drafts/channels/post-hours.mjs</b><br>
-    守門　<b>node drafts/channels/check-post-hours.mjs</b><br>
-    資料的唯一出處　<b>index.html 的 .hours-grid（data-in）</b><br>
-    圖　<b>preview/line-post-hours/post-hours-*.png</b>（12 張，1080×1080）<br>
-    主頁模擬　<b>profile-3up-{a,a2,d}.png</b>（823×823）<br>
-    詳情　<b>detail.txt</b><br><br>
-    這條線的總檔案　<a href="../line-spec/">模擬圖總覽 →</a>
-  </p>
+  <p class="pv-cap">排班、時段、電話都是從站上 <code>index.html</code> 讀回來的，
+    <b>不重打</b>——診所改排班，重跑一次就好。</p>
 
 </div>
 </body>

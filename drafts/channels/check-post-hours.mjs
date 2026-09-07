@@ -35,7 +35,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，而且尺寸對得上 ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length >= 15, `頁上只找到 ${imgs.length} 張圖，應該至少 15`);
+ok(imgs.length === 3, `頁上有 ${imgs.length} 張圖，應該是 3`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -47,12 +47,16 @@ for (const im of imgs) {
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
 }
 
-/* ---- ② 捲軸裡的圖：每一張都要自己寫 inline width ---- */
-const scroll = PAGE.slice(PAGE.indexOf('<div class="pv-scroll">'),
-                          PAGE.indexOf("</div>", PAGE.indexOf('<div class="pv-scroll">')));
-const inScroll = [...scroll.matchAll(/<img\s+src="([^"]+)"[^>]*>/g)].map(m => m[0]);
-ok(inScroll.length === 8, `捲軸裡有 ${inScroll.length} 張，應該是 8`);
-for (const tag of inScroll)
+/* ---- ② 捲軸裡的圖 ----
+   2026-09-07「乾淨簡潔」那一輪把八張版拿掉了，所以現在沒有捲軸。
+   ⚠ 這一道**留著**：日後只要有人再加一條 pv-scroll，它就會生效。
+   ⚠⚠⚠ 那條教訓是 line-spec 踩到的：`.pv-scroll img{width:auto}` 會蓋掉 img 的
+   width 屬性、讓圖退回原始像素尺寸（這裡是 1080px），而**水平溢出仍然是 0、
+   每一道既有的守門都會過** —— 只有把 rect 印出來才看得到。 */
+const scroll = PAGE.includes('class="pv-scroll"')
+  ? PAGE.slice(PAGE.indexOf('<div class="pv-scroll">'),
+               PAGE.indexOf("</div>", PAGE.indexOf('<div class="pv-scroll">'))) : "";
+for (const tag of [...scroll.matchAll(/<img\s+src="([^"]+)"[^>]*>/g)].map(m => m[0]))
   ok(/style="width:\d+px"/.test(tag),
     `捲軸裡有一張沒寫 inline width（會退回原始像素尺寸）：${tag.slice(0, 60)}`);
 ok(!/\.pv-scroll\s+img\s*\{[^}]*width:\s*auto/.test(PAGE),
@@ -84,7 +88,7 @@ for (const re of [/隨時(問|詢問|聯絡)/, /都可以問/, /即時回/, /小
   ok(!re.test(detail), `「詳情」踩到紅線（這個帳號沒有專人即時回覆）：${re}`);
 
 if (bad.length) { console.error("✗ " + bad.length + " 項：\n  " + bad.join("\n  ")); process.exit(1); }
-console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、捲軸 ${inScroll.length} 張、詳情逐字相同）`);
+console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、詳情逐字相同）`);
 
 /* ---- ⑦ 量：八個寬度水平溢出 0、圖都載得到、死錨 0 ---- */
 const chrome = (() => {
