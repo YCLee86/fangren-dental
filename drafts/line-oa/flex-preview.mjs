@@ -150,7 +150,12 @@ export function bubbleHtml(b) {
 
 /* ── 產生預覽頁 ── */
 const load = (f) => JSON.parse(fs.readFileSync(path.join(HERE, f), "utf8"));
-const arg = process.argv[2];
+const arg = process.argv.slice(2).find((a) => !a.startsWith("--"));
+/* ⚠⚠ `--row` ＝ 一整條攤成一列（＝ LINE 上真的橫著滑的樣子）。
+   2026-09-07 加的：格狀版在手機上只看得到最左邊那一欄 —— 廠商因此以為
+   七科只有兩科（他看到的是第 1 格與第 5 格，正好是左欄的上下兩個）。
+   一列排開之後，右邊那一格被切一半就是「還有更多」的提示。 */
+const ROW = process.argv.includes("--row");
 
 /* 兩種模式：
    ・不給參數 → 診所資訊那張卡的兩版並排
@@ -168,7 +173,7 @@ if (!arg) {
   if (doc.type === "carousel") {
     cards = doc.contents.map((b, i) => [`${i + 1}／${doc.contents.length}　${b.footer?.contents?.[0]?.action?.label ?? ""}`, b]);
     /* 比較用的成對版本（bd）擺成兩欄，兩案就左右並排、同一列 */
-    cols = /-bd\.json$/.test(arg) ? 2 : 4;
+    cols = ROW ? cards.length : (/-bd\.json$/.test(arg) ? 2 : 4);
     dpr = 2; gap = 24;
   } else {
     cards = [["", doc]]; cols = 1; dpr = 3; gap = 28;
@@ -213,7 +218,7 @@ if (!exe) throw new Error("找不到 headless_shell —— 不要退回完整版
 
 const browser = await chromium.launch({ executablePath: exe });
 const page = await browser.newPage({ deviceScaleFactor: dpr });
-await page.setViewportSize({ width: 4000, height: 1200 });
+await page.setViewportSize({ width: 8000, height: 1200 });
 await page.goto("file://" + outHtml);
 await page.waitForLoadState("networkidle");
 const box = await page.locator(".row").boundingBox();

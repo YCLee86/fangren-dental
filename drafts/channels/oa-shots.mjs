@@ -74,7 +74,10 @@ for (const j of JOBS) {
   }, { uri: `data:image/png;base64,${s.buf.toString("base64")}`, W, H });
 
   if (Math.abs(s.w / s.h - W / H) > 0.01) bad.push(`${j.out}：長寬比跑掉了`);
-  if (W > 1600) bad.push(`${j.out}：${W}px 太寬了 —— 整合頁上那一條捲軸會變成一整片`);
+  /* ⚠ 2026-09-07 從 1600 放寬到 4000：那兩條輪播改成「一列排開」了（flex-preview --row）。
+     格狀版在手機上只看得到最左邊那一欄，廠商因此以為七科只有兩科；一列排開之後
+     右邊被切一半的那一格就是「還有更多」的提示。上限只用來擋離譜的值。 */
+  if (W > 4000) bad.push(`${j.out}：${W}px 太寬了 —— 整合頁上那一條捲軸會變成一整片`);
   if (r.ink < 0.10) bad.push(`${j.out}：縮完幾乎是空的（非黑底只有 ${(r.ink * 100).toFixed(1)}%）`);
 
   const buf = Buffer.from(r.png.split(",")[1], "base64");
