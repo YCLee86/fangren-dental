@@ -6394,3 +6394,46 @@ shot-oa-clinic.png     398×619 →   356×553    152 →  127KB
 拿掉的是「這一頁要不要給廠商看」，不是把那條路作廢 —— 同行政那兩張（28-11）。
 
 ⚠ 那一則的檔案（`typhoon-png.mjs` 的 `--text`、`shot-typhoon-text.png`）全部留著。
+
+### 28-13　⚠⚠⚠ 2026-09-07：⑨ 診所資訊那三顆按鈕上畫的是「破圖圖示」
+
+使用者拿手機截圖回報「診所資訊的圖卡　按鈕上的小圖案顯示怪怪的」——
+三顆按鈕（Google 地圖／打給診所／到網站看看）上，該是圖釘、話筒、標誌的地方，
+畫的是瀏覽器的**破圖佔位圖示**，而且那三顆是**烘進 `shot-oa-clinic.png` 裡的**，
+所以出錯的時刻是 `flex-preview.mjs` 出圖的那一刻。
+
+**成因是我自己這一輪的指令順序。** `flex-preview.mjs` 會把 JSON 裡那個
+「未來的網址」換算成本機路徑：
+
+```js
+let src = n.url.replace("https://fangren.net/", ROOT + "/");
+```
+
+而我在**修完電話**之後就先跑了 `flex-preview.mjs clinic-info-flex.json`，
+**那時 `assets/line-{pin,phone,logo}.png` 還沒從那條分支取過來**（下一步才取）。
+Chromium 找不到檔案就畫三顆破圖，**一句警告都沒有**。
+
+⚠⚠⚠ **而每一道數字守門都通過了**：`oa-shots.mjs` 的長寬比、上限、
+「非黑像素 ≥10%」全過（破圖圖示本身就是非黑的），`check-spec.mjs` 的
+尺寸對得上實檔、alt、inline 寬度、連結、錨點全綠，八個寬度溢出 0。
+**和 28-9 那個 `width:auto` 是同一類：數字全對、只有把圖打開看才看得出來。**
+
+**修法兩件：**
+
+1. 三個檔案已經在了，重跑一次就好：
+
+   ```bash
+   node drafts/line-oa/flex-preview.mjs clinic-info-flex.json
+   node drafts/channels/oa-shots.mjs
+   ```
+
+2. **`flex-preview.mjs` 加了守門**：`image` 那一節找不到檔案就 `throw`
+   （原本只是「退到 `handouts/` 再找一次」，找不到就靜靜地畫下去）。
+
+⚠⚠ **通則：產生器引用不到的外部檔案一律 throw，不要畫下去。**
+畫下去的結果是一張「看起來很正常、尺寸也對」的圖，它會通過每一道守門，
+一路上線，最後由使用者在手機上發現 —— 這是這條線上第二次
+（第一次是 28-9）**「畫面壞掉但量測全綠」**。
+
+⚠ 版面一個像素都沒動（`shot-oa-clinic.png` 仍是 356×553），
+八個寬度重量過：高 10290~10439、圖 16 張、溢出 0、JS 錯 0。

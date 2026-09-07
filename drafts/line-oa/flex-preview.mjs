@@ -75,6 +75,12 @@ function render(n, dir = "vertical", first = false) {
       const alt = path.join(HERE, "handouts", path.basename(src));
       if (fs.existsSync(alt)) src = alt;
     }
+    /* ⚠⚠ 檔案不在就要停下來。2026-09-07 踩過：assets/line-{pin,phone,logo}.png
+       還沒進 repo 就先出了圖，Chromium 靜靜地畫了三顆破圖圖示烘進 PNG，
+       而每一道數字守門（尺寸、長寬比、非黑像素比例）全部通過 —— 是使用者
+       在手機上看到才發現的。**產生器引用不到的檔案一律 throw，不要畫下去。** */
+    if (!fs.existsSync(src))
+      throw new Error(`引用的圖檔不存在：${n.url}\n  找過 ${src}\n  也找過 ${path.join(HERE, "handouts", path.basename(src))}`);
     /* size 給 px 就是固定寬（按鈕上那三顆小圖示），不給就是撐滿（hero）。 */
     const w = px(n.size);
     const box = w != null ? `width:${w}px;flex:0 0 ${w}px` : "width:100%";
