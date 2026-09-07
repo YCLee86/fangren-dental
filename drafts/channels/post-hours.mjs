@@ -286,12 +286,16 @@ thead th{font-size:27px;font-weight:400;color:${SOFT};padding:8px 0 6px;letter-s
 tbody td{text-align:center;vertical-align:middle;padding:var(--rowpad,13px) 4px}
 /* 2026-09-07 使用者：「早午晚跟時間不用斷行　空間還很夠用。」
    ⚠ 那一欄 176px，收起來之後量到約 129px —— 出圖時有一道守門在確認它沒有被折行。 */
-tbody th{text-align:left;padding:var(--rowpad,13px) 8px var(--rowpad,13px) 0;
+/* ⚠ 置中要下在 th 上、不是下在那個 <b> 上 —— 下在 b 上只有它自己置中，
+   而它的盒比底下那段時間寬 2.9px，兩者的中線就對不齊（實測偏 1.92px）。
+   下在 th 上，兩行在**同一個盒**裡置中，中線自動一致。 */
+tbody th{text-align:var(--labta, left);padding:var(--rowpad,13px) 8px var(--rowpad,13px) 0;
          font-weight:400;line-height:1.2;white-space:nowrap}
 /* ⚠ 2026-09-07 使用者：「這樣早午晚和時間就有空間斷行了，做做看。」
    → 斷行版把 --labd 切成 block、--labgap 收成 0，欄寬也跟著收
    （一行要 148.7，兩行只要放得下時間那一段 ≈ 113）。逐案給，不動其他張。 */
-tbody th b{font-size:26px;font-weight:400;letter-spacing:.1em;
+tbody th b{font-size:26px;font-weight:400;
+           letter-spacing:var(--labls, .1em);
            display:var(--labd, inline);margin-right:var(--labgap, 7px)}
 tbody th i{font-style:normal;font-size:19px;color:${SOFT}}
 tbody tr + tr th, tbody tr + tr td{border-top:1px solid ${RULE}}
@@ -347,7 +351,10 @@ svg.mk{width:100%;height:100%;display:block}
 const shell = (inner, cls = "", gap = null) => `<div class="sheet">${WMARK}<div class="band ${cls}"${
   gap ? ` style="--icgx:${gap[0]}px;--icgy:${gap[1]}px${
     gap[2] ? `;--rowpad:${gap[2]}px` : ""}${
-    gap[3] ? `;--labd:block;--labgap:0px;--lab:${LAB2}px` : ""}"` : ""}>
+    /* ⚠ 2026-09-07 使用者：「早 午 晚 的字現在是置左要置中。」
+       ⚠⚠ 順帶要把字距歸零 —— 那一行只有一個字，`.1em` 的字距全部加在**字的後面**，
+          置中時那段空白會被算進去，字看起來就偏左 1.3px。 */
+    gap[3] ? `;--labd:block;--labgap:0px;--lab:${LAB2}px;--labta:center;--labls:0` : ""}"` : ""}>
   <div class="id"><b>${TITLE}</b></div>
   <div class="rule"></div>
   ${inner}
@@ -760,9 +767,21 @@ for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i
       const i = th.querySelector("i").getBoundingClientRect();
       return i.right - b.left;
     }));
-    return { bad, w };
+    /* 斷行那一版：早／午／晚要對準底下那一段時間的中線（量墨不量盒） */
+    let off = null;
+    const th0 = ths[0], b0 = th0.querySelector("b");
+    if (getComputedStyle(b0).display === "block") {
+      const rng = document.createRange();
+      const mid = (el) => { rng.selectNodeContents(el);
+        const r = rng.getBoundingClientRect(); return r.left + r.width / 2; };
+      off = Math.max(...ths.map(th =>
+        Math.abs(mid(th.querySelector("b")) - mid(th.querySelector("i")))));
+    }
+    return { bad, w, off };
   });
   if (lab.bad) throw new Error(`${tag} 有 ${lab.bad} 個時段標籤被折行`);
+  if (lab.off !== null && lab.off > 1.5)
+    throw new Error(`${tag} 的早／午／晚沒有對準時間的中線：偏 ${lab.off.toFixed(2)}px`);
   /* ⚠ 「圖案被切到」這件事要量：每一顆畫出來的盒都要塞得進它自己的格子。
      （`.ic` 沒有 overflow:hidden，所以就算超出也不會真的被裁 —— 這道守門是
       為了把「看起來像被切」和「真的被切」分開，下次再有人回報就有數字可以答。） */
@@ -832,7 +851,7 @@ for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i
     throw new Error(`${tag} 的頁尾沒對齊：兩行左緣 ${tel.note.toFixed(1)} / ${tel.left.toFixed(1)}`
       + `　號碼中線 ${tel.num.toFixed(1)}　話筒中線 ${tel.ico.toFixed(1)}`);
   await page.screenshot({ path: path.join(OUT, `post-hours-${tag}.png`) });
-  made.push([tag, b, lab.w, tel, grp]);
+  made.push([tag, b, lab.w, tel, grp, lab.off]);
 }
 
 S = 1; EX = 0;
@@ -903,6 +922,9 @@ for (const [t, sc] of [["mix-half-a11", 1], ...SCALES.map(([a, b2]) => [a, b2])]
 { const mf = made.find(m => m[0] === "fit");
   console.log(`  放大之後：同一格裡兩顆相距 ${mf[4].inn.toFixed(1)}px　`
     + `跨到隔壁那一天 ${mf[4].out.toFixed(1)}px　＝ ${(mf[4].out / mf[4].inn).toFixed(2)} 倍`);
+  { const mw = made.find(m => m[0] === "s130w");
+    console.log(`  Ⓖ 斷行那一版：早午晚的墨心對時間的墨心偏 ${mw[4] ? "" : ""}`
+      + `${(made.find(m => m[0] === "s130w")[5] ?? 0).toFixed(2)}px`); }
   console.log(`  　　　　　時段標籤 ${mf[2].toFixed(1)}px（欄寬 ${(LAB * 1.387).toFixed(0)}，沒有折行）`); }
 const m0 = made.find(m => m[0] === "mix-half-a11");
 console.log(`\n── 定案那張的兩件版面 ──`);
