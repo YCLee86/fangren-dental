@@ -49,7 +49,17 @@ if (!ADDR || !PHONE) throw new Error("index.html 裡讀不到地址或電話");
 const W = 1080, H = 1080;
 const BIG_W = 823, BIG_H = 409, SMALL = 410;
 const BAND = Math.round(W * (BIG_H / BIG_W));
-const PAD = 40, GAP = 18, MARGIN = 44;
+const PAD = 40;
+/* ⚠⚠ 2026-09-08：上下留白與段距**變成一把尺**（使用者：「指北針變小　地圖的部分
+   就有餘裕大一點　調整一下」）。
+   ⚠⚠⚠ 但要先講清楚一件事：**指北針能給的已經給完了**（地圖 754 → 758）——
+     它畫在地圖那張圖的 viewBox 裡，收小只讓那張圖瘦一點點。
+     真正卡住地圖的是**高度**：地圖是「填滿剩下的高度」，左右反而還空著 121px。
+     所以地圖要大，只能從**這一頁自己的留白**拿（第 28 條 ③：為了守一條限制而削別的
+     東西時，要把取捨攤開讓他選）。
+   ⚠ 指北針那條帶子**不可以拿來抵**：門口那張的規則是「指北針不可以壓在路上」
+     （使用者 2026-08-23 指定），所以那條帶子是它的家，不是浪費。 */
+const GAP0 = 18, MARGIN0 = 44;
 
 /* PNG 的真實尺寸（IHDR） */
 const pngSize = (buf) => ({ w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) });
@@ -231,7 +241,7 @@ const shotMap = async (targetW, { orient = "w", you = "clinic", ns = "c" } = {})
 
 /* ========== 第二步：1080 的方畫布 ========== */
 let MAPW = 0, MAPH = 0, MAPURI = "";
-const css = (fs2, qrpx, lotk = 1, wrapn = 0) => `
+const css = (fs2, qrpx, lotk = 1, wrapn = 0, GAP = GAP0) => `
 *{box-sizing:border-box;margin:0}
 html,body{width:${W}px;height:${H}px}
 body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
@@ -319,10 +329,11 @@ for (const f of fs.readdirSync(OUT).filter(f => f.startsWith("door-") && f.endsW
 
 const made = [];
 const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you = "clinic",
-                            drop = 0, title = "", lotk = 1, wrapn = 0, ns = "c" } = {}) => {
+                            drop = 0, title = "", lotk = 1, wrapn = 0, ns = "c",
+                            margin = MARGIN0, gap = GAP0 } = {}) => {
   /* 先量「地圖以外的東西有多高」，再把地圖撐到剩下的空間 */
   MAPW = 400; MAPH = 320; MAPURI = "";
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn)}</style>`
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn, gap)}</style>`
     + sheet(fs2, qr, drop, title, wrapn));
   const other = await page.evaluate(() => {
     const b = document.querySelector(".band").getBoundingClientRect();
@@ -331,7 +342,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
   });
   const probe = await shotMap(600, { orient, you, ns });
   const ar = probe.meta.vb[2] / probe.meta.vb[3];
-  const roomH = Math.floor(H - 2 * MARGIN - other - 2 * GAP);
+  const roomH = Math.floor(H - 2 * margin - other - 2 * gap);
   MAPW = Math.floor(Math.min(roomH * ar, W - 2 * PAD));
   /* ⚠ 收斂會落在 ±1px，取整之後可能比算出來的空間多 1~2px、整塊就頂到留白 ——
      所以目標往下讓 3px（看不出來，但守門過得去）。 */
@@ -339,7 +350,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
   const sz = pngSize(buf);
   MAPW = sz.w; MAPH = sz.h;
   MAPURI = "data:image/png;base64," + buf.toString("base64");
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn)}</style>`
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn, gap)}</style>`
     + sheet(fs2, qr, drop, title, wrapn));
   await page.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 
@@ -431,9 +442,9 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
     + `${(-m.room).toFixed(0)}px —— 會互相碰到（要嘛字收小，要嘛讓名字折行 wrapn）`);
   if (m.corner.toLowerCase() !== CARD) throw new Error(
     `${tag}：地圖 PNG 的角落是 ${m.corner}，畫布是 ${CARD}（截圖帶到了別的底色）`);
-  if (m.band.y < MARGIN - .5 || m.band.y + m.band.h > H - MARGIN + .5)
+  if (m.band.y < margin - .5 || m.band.y + m.band.h > H - margin + .5)
     throw new Error(`${tag}：內容 ${m.band.y.toFixed(0)}~${(m.band.y + m.band.h).toFixed(0)}，`
-      + `超出留白 ${MARGIN}`);
+      + `超出留白 ${margin}`);
   /* ⚠⚠ 不是壞掉檢查，是「讀起來對不對」：這張圖是給**小格**的（整張縮到 410px），
      四點提醒是那個尺寸下唯一讀得出來的整段文字，小於 10px 就等於沒寫。 */
   const onSlot = fs2 * SMALL / W;
@@ -448,7 +459,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
 
   await page.screenshot({ path: path.join(OUT, `door-${tag}.png`) });
   m.onLot = onLot;
-  made.push({ tag, m, meta, fs2, qr, qrpx, orient, you, ar, drop, title, lotk, wrapn, ns,
+  made.push({ tag, m, meta, fs2, qr, qrpx, orient, you, ar, drop, title, lotk, wrapn, ns, margin, gap,
               pts: dropPts(drop).length });
   return made[made.length - 1];
 };
@@ -470,6 +481,11 @@ const CASES = [
      ⚠ 上面每一張都已經是 ns=c（小一格），這兩張只是把另外兩格擺出來比。 */
   ["c130-nsb", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, ns: "b" }],  /* 門口那張的大小 */
   ["c130-nsd", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, ns: "d" }],  /* 再小一格 */
+  /* 地圖要多大 ＝ 上下留白與段距要收多少（見上面 MARGIN0 那一段：地圖是高度在卡）。
+     ⚠ 四格都吃 Ⓒ ×1.30 那一組字級，只有留白不一樣 —— 一次只動一件。 */
+  ["c130-m2", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 34, gap: 14 }],
+  ["c130-m3", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 26, gap: 11 }],
+  ["c130-m4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 18, gap: 8 }],
   ["c145",  { qr: false, drop: DROP, lotk: 1.45, wrapn: 1 }],  /* Ⓓ */
   ["c160",  { qr: false, drop: DROP, lotk: 1.60, wrapn: 1 }],  /* Ⓔ 最大 */
   ["c-title", { qr: false, drop: DROP, title: "芳仁牙醫　周邊停車" }], /* 標題那一格 */
@@ -504,6 +520,15 @@ await p3.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
     .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
 await p3.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p3.screenshot({ path: path.join(OUT, "door-slot-410.png") });
+
+/* 留白那把尺也要在成品的尺寸上並排看一次（第 28 條 ④） */
+const p4 = await browser.newPage({ viewport: { width: SMALL * 4 + 30, height: SMALL + 12 } });
+await p4.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
+  body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
+  + ["door-c130.png", "door-c130-m2.png", "door-c130-m3.png", "door-c130-m4.png"]
+    .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
+await p4.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
+await p4.screenshot({ path: path.join(OUT, "door-slot-410-margin.png") });
 await browser.close();
 
 /* ========== ⚠⚠⚠ QR 不能用眼睛驗收：真的拿解碼器掃一次 ==========
@@ -603,6 +628,14 @@ for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-ns")
   console.log(`  door-${x.tag}\t?ns=${x.ns}\t整組高 ${x.meta.nsw.h}→${(x.meta.nsw.h * shrink).toFixed(1)}`
     + `\t「北」${x.meta.nsw.fs}→${(x.meta.nsw.fs * shrink).toFixed(1)}`
     + `\t地圖 ${x.m.img.w}×${x.m.img.h}`);
+
+/* ⚠ 不是壞掉檢查，是「讀起來對不對」：留白收多少換到多大的地圖 */
+console.log(`\n── 地圖要多大（上下留白／段距 → 地圖）──`);
+for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-m")))
+  console.log(`  door-${x.tag}\t留白 ${x.margin}　段距 ${x.gap}`
+    + `\t地圖 ${x.m.img.w}×${x.m.img.h}（比現況 ${(x.m.img.w / 758 * 100 - 100).toFixed(1)}%）`
+    + `\t整塊 ${x.m.band.h.toFixed(0)}／1080　上下各留 ${x.m.band.y.toFixed(0)}px`
+    + `\t小格上的留白 ${(x.m.band.y * SMALL / W).toFixed(1)}px`);
 
 console.log(`\n── 出圖 ──`);
 for (const x of made)
