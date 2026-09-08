@@ -4,7 +4,7 @@
  *  ① 頁上每一張圖 repo 裡都有，且 width/height 屬性 ＝ PNG 檔頭的真實尺寸
  *  ② ⚠⚠ 捲軸裡的圖要自己寫 inline width（line-spec 踩過：.pv-scroll img{width:auto}
  *     會蓋掉 width 屬性、讓圖退回原始像素尺寸，而每一道既有的守門都會過）
- *  ③ 「詳情」那一段和 detail.txt 逐字相同（不要有第二個真相）
+ *  ③ 「詳情」那一段和 door-detail.txt 逐字相同（不要有第二個真相）
  *  ④ ⚠⚠⚠ 「詳情」裡的地址、電話、三個停車場的名字與距離，
  *     要和 **index.html** 逐字相同 —— 那是這張圖唯一的出處，
  *     地圖改了而這裡沒跟上的話，圖與字會各說各話
@@ -39,7 +39,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，而且尺寸對得上 ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 45, `頁上有 ${imgs.length} 張圖，應該是 45`);
+ok(imgs.length === 8, `頁上有 ${imgs.length} 張圖，應該是 8`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -50,7 +50,8 @@ for (const im of imgs) {
     `${im.src} 屬性寫 ${im.w}×${im.h}，實檔是 ${s.w}×${s.h}`);
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
   /* 成品一律 1080 見方；模擬圖不在此限 */
-  if (/^(post-map-|door-(c|c110|c130|c130-nsb|c130-nsd|c130-m1|c130-m2|c130-m4|c130-w0|c130-w1|c130-w3|c130-w4|c130-wbr|c130-x1|c130-x3|c130-x4|c130-l1|c130-l2|c130-l3|c130-l4|c145|c160|c-title|c-qr|a|b|noqr|qr140|north)\.png)/.test(im.src))
+  /* 成品一律 1080 見方；模擬圖（三格、410px 並排）不在此限 */
+  if (/^door-c(-x\d+)?\.png$/.test(im.src))
     ok(s.w === 1080 && s.h === 1080, `${im.src} 不是 1080×1080（是 ${s.w}×${s.h}）`);
 }
 
@@ -64,31 +65,22 @@ for (const tag of [...scroll.matchAll(/<img\s+src="([^"]+)"[^>]*>/g)].map(m => m
 ok(!/\.pv-scroll\s+img\s*\{[^}]*width:\s*auto/.test(PAGE),
   "樣式表出現 .pv-scroll img{width:auto} —— 那會讓捲軸裡的圖畫成 1080px");
 
-/* ---- ③ 兩塊「詳情」各自和它的 .txt 逐字相同 ----
-   第一塊 ＝ 門口那張告示的版本（door-detail.txt），第二塊 ＝ 站上那張地圖的版本（detail.txt）。 */
+/* ---- ③ 「詳情」那一塊和 door-detail.txt 逐字相同 ----
+   ⚠ 2026-09-08 使用者指定「其他都不要再顯示在提案頁上」，所以「站上那張簡易地圖」
+     那整個版本（連同它自己那塊詳情 detail.txt）已經從這一頁上拿掉了，只剩一塊。 */
 const txts = [...PAGE.matchAll(/<div class="pv-txt">([\s\S]*?)<\/div>/g)].map(m => m[1].trim());
-ok(txts.length === 2, `頁上有 ${txts.length} 塊「詳情」，應該是 2`);
+ok(txts.length === 1, `頁上有 ${txts.length} 塊「詳情」，應該是 1`);
 const doorDetail = fs.readFileSync(path.join(DIR, "door-detail.txt"), "utf8").trimEnd();
-const detail = fs.readFileSync(path.join(DIR, "detail.txt"), "utf8").trimEnd();
-for (const [i, want, nm] of [[0, doorDetail, "door-detail.txt"], [1, detail, "detail.txt"]])
-  if (txts[i] !== undefined) ok(txts[i] === want,
-    `第 ${i + 1} 塊「詳情」和 ${nm} 對不上：\n    頁面 ${JSON.stringify(txts[i])}\n    檔案 ${JSON.stringify(want)}`);
+if (txts[0] !== undefined) ok(txts[0] === doorDetail,
+  `「詳情」和 door-detail.txt 對不上：\n    頁面 ${JSON.stringify(txts[0])}`
+  + `\n    檔案 ${JSON.stringify(doorDetail)}`);
 
 /* ---- ④ 「詳情」裡的每一個事實都要在原始出處上找得到 ---- */
 const ADDR = (SRC.match(/<span class="txt">(雲林縣[^<]+)<\/span>/) || [])[1];
 ok(ADDR, "index.html 裡讀不到頁尾那一行地址");
 const PHONE = (SRC.match(/05-\d{7}/) || [])[0];
-for (const [d, nm] of [[doorDetail, "door-detail.txt"], [detail, "detail.txt"]]) {
-  if (ADDR) ok(d.includes(ADDR.replace(/&nbsp;/g, " ")), `${nm} 裡的地址和 index.html 對不上`);
-  ok(PHONE && d.includes(PHONE), `${nm} 裡的電話和 index.html 對不上（站上是 ${PHONE}）`);
-}
-/* 站上那一版：三個停車場的名字與距離逐字 ＝ index.html 地圖上的字 */
-const lots = [...SRC.matchAll(
-  /<text class="rl-nm"[^>]*>([^<]+)<\/text>[\s\S]{0,400}?<text class="rl-d"[^>]*>([^<]+)<\/text>/g)]
-  .map(m => [m[1].trim(), m[2].trim()]);
-ok(lots.length === 3, `index.html 的地圖上讀到 ${lots.length} 個停車場，應該是 3`);
-for (const [nm, d] of lots)
-  ok(detail.includes(`${nm} ${d}`), `detail.txt 裡少了或寫錯了：${nm} ${d}`);
+if (ADDR) ok(doorDetail.includes(ADDR.replace(/&nbsp;/g, " ")), "door-detail.txt 裡的地址和 index.html 對不上");
+ok(PHONE && doorDetail.includes(PHONE), `door-detail.txt 裡的電話和 index.html 對不上（站上是 ${PHONE}）`);
 /* ⚠⚠ 門口那一版：提醒逐字 ＝ drafts/door-notice/body.html（使用者 2026-08-23
    一句一句定的），三條網址逐字 ＝ index.html 那三個 .rl-link。
    兩邊都不可以在這一頁上被改掉 —— 改了就是第二個真相。
@@ -122,48 +114,13 @@ ok(order.length === 3 && order.map(o => o[0]).join("") === "P1P2P3",
 ok(order.length === 3 && order[0][1] > order[2][1],
   "門口那張的順序刻意不是照距離排（P1 最遠、P3 最近），detail 裡被重排了");
 
-/* ---- ④b QR 那張表要對得上 door-qr.json（產生器寫的，不要手抄） ---- */
-const QJ = JSON.parse(fs.readFileSync(path.join(DIR, "door-qr.json"), "utf8"));
-const SLOT = { "原圖": 1080, "大格": 823, "小格": 410 };
-const TAG = { "200px": "a", "140px": "qr140" };
-const rows = [...PAGE.matchAll(
-  /<tr><td>(200px|140px)・(原圖|大格|小格) \d+<\/td><td>([\d.]+)px<\/td><td>([\d.]+)px<\/td><td[^>]*>(\d\/3)<\/td><\/tr>/g)];
-ok(rows.length === 6, `QR 那張表有 ${rows.length} 列，應該是 6`);
-for (const [, t, slot, px, per, got] of rows) {
-  const c = QJ.cases.find(x => x.tag === TAG[t]);
-  const sl = c && c.slots.find(x => x.w === SLOT[slot]);
-  if (!sl) { bad.push(`QR 表上有一列在 door-qr.json 裡找不到：${t} ${slot}`); continue; }
-  ok(+px === sl.px && +per === sl.per && got === sl.scan,
-    `QR 表 ${t}${slot} 對不上 door-qr.json：頁面 ${px}／${per}／${got}　檔案 ${sl.px}／${sl.per}／${sl.scan}`);
-}
-ok(!QJ.cases.some(c => c.slots.some(s => s.scan === "未驗")),
-  "door-qr.json 裡有「未驗」—— 那台機器上沒有 opencv，QR 沒有被真的掃過。"
-  + "要驗：pip install opencv-python-headless 再跑一次 post-map-door.mjs");
-/* ⚠⚠⚠ QR 不能用眼睛驗收（門口那張告示的 README 就寫著）——這裡真的再掃一次，
-   拿頁面上宣稱的數字去對。掃不到 opencv 就**大聲印出來**，不要靜靜地放行。 */
-let scanned = "（這台機器沒有 opencv，沒有重掃）";
-try {
-  const py = `
-import sys, json, cv2
-img = cv2.imread(sys.argv[1]); out = []
-for w in [int(x) for x in sys.argv[2:]]:
-    im = img if w == img.shape[1] else cv2.resize(img, (w, w), interpolation=cv2.INTER_AREA)
-    ok, dec, pts, _ = cv2.QRCodeDetector().detectAndDecodeMulti(im)
-    out.append(len(sorted(set(s for s in (dec if ok else []) if s))))
-print(json.dumps(out))`;
-  const hits = [];
-  for (const c of QJ.cases.filter(c => ["a", "qr140"].includes(c.tag))) {
-    const r = JSON.parse(execFileSync("python3",
-      ["-c", py, path.join(DIR, `door-${c.tag}.png`), ...c.slots.map(s => String(s.w))],
-      { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }));
-    c.slots.forEach((s, i) => {
-      ok(`${r[i]}/3` === s.scan,
-        `door-${c.tag} 縮到 ${s.w} 重掃是 ${r[i]}/3，頁上寫的是 ${s.scan}`);
-      hits.push(`${c.tag}@${s.w} ${r[i]}/3`);
-    });
-  }
-  scanned = "（重掃：" + hits.join("、") + "）";
-} catch (e) { /* 沒有 opencv：下面那一行會把它印出來 */ }
+/* ---- ④b QR 那張表拿掉了（2026-09-08 定案不放 QR）----
+   ⚠⚠⚠ 以前這裡會用 opencv **真的把三顆碼再掃一次**去對頁面上宣稱的數字
+   （門口那張告示的 README：QR 不能用眼睛驗收）。定案是不放 QR、
+   而且使用者指定「其他都不要再顯示在提案頁上」，所以表、door-qr.json 與這一道
+   一起拿掉了。要放回去：`git show 4fe0021 -- drafts/channels/check-post-map.mjs`。
+   ⚠ 掃描的結論不要重推：200px 的碼在原圖 3/3、大格會隨版面挪動而變、小格 0/3；
+     140px 連原圖都 0/3。數字在 README 第 35-11、35-12 節。 */
 
 /* ---- ⑤ 產出的圖沒有孤兒 ---- */
 for (const f of fs.readdirSync(DIR).filter(f => f.endsWith(".png")))
@@ -176,12 +133,11 @@ ok(!/(?:src|href)="\/(?!\/)/.test(PAGE), "出現根目錄絕對路徑（舊站 y
 
 /* ---- ⑦ 紅線 ---- */
 for (const re of [/隨時(問|詢問|聯絡)/, /都可以問/, /即時回/, /小編/, /馬上回/])
-  for (const [d, nm] of [[doorDetail, "door-detail.txt"], [detail, "detail.txt"]])
-    ok(!re.test(d), `${nm} 踩到紅線（這個帳號沒有專人即時回覆）：${re}`);
+  ok(!re.test(doorDetail), `door-detail.txt 踩到紅線（這個帳號沒有專人即時回覆）：${re}`);
 
 if (bad.length) { console.error("✗ " + bad.length + " 項：\n  " + bad.join("\n  ")); process.exit(1); }
-console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、兩塊詳情逐字相同、留下的兩句與拿掉的兩句都對得上門口那張、三條網址對得上 index.html）`);
-console.log(`  QR ${scanned}`);
+console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、詳情逐字相同、`
+  + `留下的兩句與拿掉的兩句都對得上門口那張、三條網址對得上 index.html）`);
 
 /* ---- ⑧ 量：八個寬度水平溢出 0、圖都載得到、死錨 0 ---- */
 const chrome = (() => {

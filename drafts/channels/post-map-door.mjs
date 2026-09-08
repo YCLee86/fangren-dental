@@ -75,6 +75,14 @@ const PAD = 40;
      只會讓上面那兩句變長。所以「上下比左右緊」是刻意的。 */
 const GAP0 = 11, MARGIN0 = 26;
 
+/* ⚠ 2026-09-08 使用者選的是 **不放 QR ＋ 前兩句（紅線／開單）拿掉**。 */
+const DROP = 2;
+/* ⚠⚠ 下排那兩行的字級：使用者挑 **Ⓒ ×1.30 ＋ 名字折行**（「Cx1.3」）——
+   那是三個名字第一次在小格 410px 上都過 10px 的那一格。
+   ⚠ 指北針：使用者挑 **Ⓝ3**（`ns=d`，最小那一格）。
+   兩件都已經寫回下面 build() 的預設值，所以 `build("c")` 就是定案那一張。 */
+const LOTK0 = 1.30, WRAPN0 = 1, NS0 = "d";
+
 /* ---------- 浮水印（2026-09-08 使用者：「試試看這個壓像門診表的浮水印看看，
    可能要更淡一點」）----------
    做法沿用看診時間那一張（post-hours.mjs）：**一顆大的、淡的、從邊緣切出去的圓 logo**，
@@ -105,7 +113,11 @@ const WMBX = 60 / 660, WMBY = 50 / 660;   /* 左右／上下各切出去多少�
    （只有 `tl` 這一側；右下那一格仍然吃上面那個比例）。單位是畫布 px，
    因為他看的是「離左邊多遠」不是「佔自己的百分之幾」。
    ⚠ **垂直沒有動**（他只說左），上緣仍然是高的 7.6%。 */
-const WMX0 = 180;
+/* ⚠⚠ 2026-09-08 使用者又往左了一格：「**Ⓧ4**」＋「我覺得可以比 Ⓧ4 再左一點」——
+   所以整把尺往左移一格重開：380（他挑的那一格）／**440（現在的預設）**／500／560。
+   ⚠ 切得愈多，畫出來的那一顆愈只剩右半邊 —— 這是一把**有盡頭**的尺：
+     r1c2 畫出來 952px 寬，切 560 就只剩 392px（小格 410px 上 149px）。 */
+const WMX0 = 440;
 const WMW0 = 660, WMA0 = .04, WMPOS0 = "tl";
 
 /* 浮水印的形狀：從 brand/shapes 讀，不抄第二份（同這一支其餘每一項資料）。
@@ -192,7 +204,9 @@ const dropPts = (n) => {
   return keep;
 };
 
-/* QR 的格數從它自己的 viewBox 讀（-4 -4 n+8 n+8），不另外算一份 */
+/* QR 的格數從它自己的 viewBox 讀（-4 -4 n+8 n+8），不另外算一份。
+   ⚠ 定案不放 QR，所以這個數字現在沒有人用 —— 留著是因為它同時是一道守門：
+     門口那張告示的 QR 換了畫法、viewBox 讀不出來時，這裡就會 throw。 */
 const QRN = D.lots.map(l => {
   const m = l.qr.match(/viewBox="-4 -4 (\d+) \d+"/);
   if (!m) throw new Error("QR 的 viewBox 讀不出格數");
@@ -416,8 +430,8 @@ for (const f of fs.readdirSync(OUT).filter(f => f.startsWith("door-") && f.endsW
   fs.rmSync(path.join(OUT, f));
 
 const made = [];
-const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you = "clinic",
-                            drop = 0, title = "", lotk = 1, wrapn = 0, ns = "c",
+const build = async (tag, { fs2 = 30, qr = false, qrpx = 200, orient = "w", you = "clinic",
+                            drop = DROP, title = "", lotk = LOTK0, wrapn = WRAPN0, ns = NS0,
                             margin = MARGIN0, gap = GAP0, wma = WMA0,
                             wmsh = WMSH0, wmpos = WMPOS0, wmx = WMX0 } = {}) => {
   /* 先量「地圖以外的東西有多高」，再把地圖撐到剩下的空間 */
@@ -575,59 +589,19 @@ const wmCheck = (a) => {
     + bad.map(([n, r]) => `${n} ${r.toFixed(2)}`).join("、"));
 };
 
-/* ⚠ 2026-09-08 使用者選的是 **Ⓒ ＝ 不放 QR ＋ 前兩句拿掉**（door-c）。
-   同日再一句：「**下排停車場的名稱和距離　步行時間字級有點小**」——
-   量出來他是對的：那兩行在小格 410px 上只有 **9.9 / 8.4px**，
-   而這一線的判準一直是「小格上小於 10px ＝ 等於沒寫」。
-   ⚠⚠ 但它有一個代價，所以是一把尺不是一個值（第九節第 28 條 ①）：
-   **字一大，那一排就變高，高度是從地圖借的**。
-   ⚠⚠ 而且中間有一道硬牆：三個名字是 nowrap，×1.22 就開始互相碰到 ——
-   要再大只能讓**名字折行**（`wrapn`），那又會讓那一排再高一截。 */
-const DROP = 2;                                       /* 拿掉「紅線」「開單」那兩句 */
+/* ⚠⚠⚠ 2026-09-08 使用者：「不要標題　Ⓧ4　Ⓒ×1.3　Ⓝ3　**其他都不要再顯示在提案頁上**」——
+   所以已經挑定的每一件都寫回上面的預設值（LOTK0／WRAPN0／NS0／DROP／不放 QR／
+   不加標題／浮水印 4%・r1c2・壓左上），這裡只剩**還沒挑定的那一件**：再往左多少。
+   ⚠ 走到定案之前的每一格（字級 Ⓐ~Ⓔ、指北針 Ⓝ1~Ⓝ3、留白 Ⓜ1~Ⓜ4、濃度 Ⓦ、
+     換 logo Ⓛ、壓哪一角、標題、QR、北在上、站上那張地圖的版本）**都在 git 裡**，
+     推導在 drafts/channels/README.md 第三十五節。要回頭比就從那裡取，不要重畫。 */
 const CASES = [
-  ["c",     { qr: false, drop: DROP }],               /* Ⓐ 現況（他挑的那一張，字最小） */
-  ["c110",  { qr: false, drop: DROP, lotk: 1.10 }],   /* Ⓑ 大一階，仍然一行（×1.15 就碰到了，這是不折行的上限） */
-  ["c130",  { qr: false, drop: DROP, lotk: 1.30, wrapn: 1 }],  /* Ⓒ 建議：距離第一次過 10px */
-  /* 指北針的大小（第 28 條 ①：他的眼睛才是裁判 → 給一把尺，不要送一個我估的值）。
-     ⚠ 上面每一張都已經是 ns=c（小一格），這兩張只是把另外兩格擺出來比。 */
-  ["c130-nsb", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, ns: "b" }],  /* 門口那張的大小 */
-  ["c130-nsd", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, ns: "d" }],  /* 再小一格 */
-  /* 地圖要多大 ＝ 上下留白與段距要收多少（見上面 MARGIN0 那一段：地圖是高度在卡）。
-     ⚠ 四格都吃 Ⓒ ×1.30 那一組字級，只有留白不一樣 —— 一次只動一件。 */
-  ["c130-m1", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 44, gap: 18 }],
-  ["c130-m2", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 34, gap: 14 }],
-  ["c130-m4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 18, gap: 8 }],
-  /* 浮水印要多淡（2026-09-08 使用者：「可能要更淡一點」）。
-     ⚠ 四格只有濃度不一樣 —— 上面每一張都已經是預設的 .03（Ⓦ3）。 */
-  /* 濃度（他挑 4% ＝ 預設，其餘三格留著對照） */
-  ["c130-w1", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: .05 }],  /* ＝ 門診表那一張 */
-  ["c130-w3", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: .03 }],
-  ["c130-w4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: .02 }],
-  ["c130-w0", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: 0 }],    /* 不放（對照） */
-  /* 浮水印壓哪一角（2026-09-08 使用者指定改左上）—— 右下那一格留著當對照。 */
-  ["c130-wbr", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmpos: "br" }],
-  /* 換哪一顆 logo（他挑 r1c2 ＝ 預設；寬度按墨的面積等重換算，見 wmWidth）。
-     ⚠ 3.08 那三顆（r1c3／r2c3／r3c3）等重之後要 1193~1364px、比畫布還寬，不列。 */
-  ["c130-l1", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r3c1" }],  /* 門診表那顆 */
-  ["c130-l2", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r1c1" }],
-  ["c130-l3", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r3c2" }],
-  ["c130-l4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r2c2" }],
-  /* 再往左多少（2026-09-08 使用者：「再往左移」）——只有 tl 這一側，單位是畫布 px。 */
-  ["c130-x1", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmx: 87 }],   /* 上一版 ＝ 寬的 9.1% */
-  ["c130-x3", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmx: 280 }],
-  ["c130-x4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmx: 380 }],
-  ["c145",  { qr: false, drop: DROP, lotk: 1.45, wrapn: 1 }],  /* Ⓓ */
-  ["c160",  { qr: false, drop: DROP, lotk: 1.60, wrapn: 1 }],  /* Ⓔ 最大 */
-  ["c-title", { qr: false, drop: DROP, title: "芳仁牙醫　周邊停車" }], /* 標題那一格 */
-  ["c-qr",  { drop: DROP }],                          /* 前兩句拿掉、QR 留著（對照） */
-  ["a",     {}],                                      /* 全套，綠塊寫「芳仁牙醫」 */
-  ["b",     { you: "door" }],                         /* 逐字照門口那張（綠塊寫「現在位置」） */
-  ["noqr",  { qr: false }],                           /* 不放 QR，地圖放大 */
-  ["qr140", { qrpx: 140 }],                           /* QR 收小，地圖放大 */
-  ["north", { orient: "n" }],                         /* 北在上（地圖變回直的，看代價） */
+  ["c",      {}],                 /* ⭐ 定案（浮水印再往左 440px ＝ 現在的預設） */
+  ["c-x380", { wmx: 380 }],       /* Ⓧ1 ＝ 上一輪你挑的那一格 */
+  ["c-x500", { wmx: 500 }],       /* Ⓧ3 */
+  ["c-x560", { wmx: 560 }],       /* Ⓧ4 這把尺的盡頭：只剩右邊 392px */
 ];
-for (const a of [...new Set([WMA0, ...CASES.map(([, o]) => o.wma).filter(v => v !== undefined)])])
-  wmCheck(a);
+wmCheck(WMA0);
 for (const [tag, opt] of CASES) await build(tag, opt);
 
 /* ========== 主頁三格 ＋ 410px 實際大小 ========== */
@@ -640,31 +614,13 @@ const p2 = await browser.newPage({ viewport: { width: BIG_W, height: BIG_H + 4 +
 await p2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
   <div style="width:${BIG_W}px;background:#fff;display:flex;flex-direction:column;gap:4px">
     ${cell("data:image/png;base64," + fs.readFileSync(HOURS).toString("base64"), BIG_W, BIG_H)}
-    <div style="display:flex;gap:3px">${cell(b64("door-c130.png"), SMALL, SMALL)}${cell(null, SMALL, SMALL)}</div>
+    <div style="display:flex;gap:3px">${cell(b64("door-c.png"), SMALL, SMALL)}${cell(null, SMALL, SMALL)}</div>
   </div>`);
 await p2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p2.screenshot({ path: path.join(OUT, "door-profile-3up.png") });
 
-const p3 = await browser.newPage({ viewport: { width: SMALL * 3 + 24, height: SMALL + 12 } });
-await p3.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
-  body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
-  + ["door-c.png", "door-c130.png", "door-c160.png"]
-    .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
-await p3.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
-await p3.screenshot({ path: path.join(OUT, "door-slot-410.png") });
-
-/* 留白那把尺也要在成品的尺寸上並排看一次（第 28 條 ④） */
-const p4 = await browser.newPage({ viewport: { width: SMALL * 4 + 30, height: SMALL + 12 } });
-await p4.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
-  body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
-  + ["door-c130-m1.png", "door-c130-m2.png", "door-c130.png", "door-c130-m4.png"]
-    .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
-await p4.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
-await p4.screenshot({ path: path.join(OUT, "door-slot-410-margin.png") });
-
-/* 浮水印那把尺也要在成品的尺寸上並排看一次（第 28 條 ④）——
-   ⚠ 濃度這種東西**一定要在會被看到的尺寸上比**，1080 原圖上看起來明顯的，
-     縮到 410px 常常就沒了。 */
+/* ⚠⚠ 濃度、位置這種東西**一定要在會被看到的尺寸上比**（第 28 條 ④）：
+   1080 的原圖上看起來明顯的，縮到小格 410px 常常就沒了。 */
 const strip410 = async (file, list) => {
   const pg = await browser.newPage({
     viewport: { width: SMALL * list.length + 6 * (list.length + 1), height: SMALL + 12 } });
@@ -674,63 +630,28 @@ const strip410 = async (file, list) => {
   await pg.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
   await pg.screenshot({ path: path.join(OUT, file) });
 };
-await strip410("door-slot-410-wm.png",
-  ["door-c130-w1.png", "door-c130.png", "door-c130-w3.png", "door-c130-w4.png"]);
-/* 換 logo 那把尺也在成品的尺寸上並排一次 */
-await strip410("door-slot-410-logo.png",
-  ["door-c130.png", "door-c130-l1.png", "door-c130-l2.png", "door-c130-l3.png", "door-c130-l4.png"]);
-/* 「再往左」那把尺同樣要在成品的尺寸上並排 */
+/* 定案那一張在小格的實際大小 */
+await strip410("door-slot-410.png", ["door-c.png"]);
+/* 「再往左」那把尺，同樣在小格的實際大小上並排 */
 await strip410("door-slot-410-x.png",
-  ["door-c130-x1.png", "door-c130.png", "door-c130-x3.png", "door-c130-x4.png"]);
+  ["door-c-x380.png", "door-c.png", "door-c-x500.png", "door-c-x560.png"]);
 await browser.close();
 
-/* ========== ⚠⚠⚠ QR 不能用眼睛驗收：真的拿解碼器掃一次 ==========
- * 門口那張告示的 README 就寫著這一條（格式資訊反過來的話畫面一模一樣但掃不出來）。
- * 這裡多驗一件那張紙不必驗的事：**縮到主頁那三格的大小之後還掃不掃得動**。
- * ⚠ opencv 不是這個專案的相依套件（這一站零依賴）——裝不到就寫「未驗」並大聲印出來，
- *   **絕對不要靜靜地當成掃得動**。要驗：pip install opencv-python-headless
+/* ========== ⚠⚠⚠ QR 那一段搬走了（2026-09-08 定案不放 QR）==========
+ * 「三顆 QR 真的掃不掃得動」不是用眼睛看的（門口那張告示的 README 就寫著這一條），
+ * 所以以前每次出圖都用 opencv 真的掃一次，數字寫進 door-qr.json、擺在規格頁上。
+ * 定案是**不放 QR**（door-c），而且使用者 2026-09-08 指定「其他都不要再顯示在提案頁上」，
+ * 所以那一段連同 door-qr.json 一起拿掉了。
+ * ⚠⚠⚠ **結論不要重推**：200px 的碼在原圖 3/3、大格 0~3/3（版面一挪就會變）、
+ *   小格 0/3；收到 140px 連原圖都 0/3。而且更根本的一件是
+ *   **看貼文的人正拿著那支手機，掃不了自己螢幕上的碼**。
+ *   完整的數字與掃描結果在 drafts/channels/README.md 第 35-11、35-12 節與 git 裡
+ *   （`git show 4fe0021 -- preview/line-post-map/door-qr.json`）。
+ * ⚠ 要放回去：把 `qr: true` 加回 CASES、再從那個 commit 取回這一段。
  */
-const scanPy = `
-import sys, cv2
-f = sys.argv[1]
-img = cv2.imread(f)
-out = []
-for w in [int(x) for x in sys.argv[2:]]:
-    im = img if w == img.shape[1] else cv2.resize(img, (w, w), interpolation=cv2.INTER_AREA)
-    ok, dec, pts, _ = cv2.QRCodeDetector().detectAndDecodeMulti(im)
-    got = sorted(set(s for s in (dec if ok else []) if s))
-    out.append({"w": w, "n": len(got), "urls": got})
-import json; print(json.dumps(out, ensure_ascii=False))
-`;
-const scan = (file, widths) => {
-  try {
-    const r = execFileSync("python3", ["-c", scanPy, path.join(OUT, file), ...widths.map(String)],
-      { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
-    return JSON.parse(r);
-  } catch (e) { return null; }
-};
-const QRJSON = { modules: QRN[0] + 8, urls: URLS, cases: [] };
-for (const x of made.filter(m => m.qr)) {
-  const res = scan(`door-${x.tag}.png`, [W, BIG_W, SMALL]);
-  QRJSON.cases.push({ tag: x.tag, qrpx: x.qrpx,
-    slots: [W, BIG_W, SMALL].map((w, i) => ({
-      w, px: +(x.qrpx * w / W).toFixed(1),
-      per: +(x.qrpx * w / W / (QRN[0] + 8)).toFixed(2),
-      scan: res ? `${res[i].n}/3` : "未驗" })) });
-}
-fs.writeFileSync(path.join(OUT, "door-qr.json"), JSON.stringify(QRJSON, null, 2) + "\n");
-console.log(`\n── ⚠⚠⚠ 三顆 QR：真的拿解碼器掃過（不是用眼睛看）──`);
-console.log(`  每一顆 ${QRJSON.modules}×${QRJSON.modules} 格（含四格靜區）`);
-for (const c of QRJSON.cases) {
-  console.log(`  door-${c.tag}　QR ${c.qrpx}px：` + c.slots.map(s =>
-    `${s.w === W ? "原圖" : s.w === BIG_W ? "大格" : "小格"} ${s.px}px／每格 ${s.per}px → 掃到 ${s.scan}`)
-    .join("　"));
-}
-if (QRJSON.cases.some(c => c.slots.some(s => s.scan === "未驗")))
-  console.log(`  ⚠⚠ 有幾格是「未驗」—— 這台機器上沒有 opencv。`
-    + `要真的驗：pip install opencv-python-headless 再跑一次。`);
-console.log(`  ⚠⚠⚠ 就算掃得動也還有一件：**看貼文的人正拿著那支手機，掃不了自己螢幕上的碼。**`);
-console.log(`     LINE 上接得住這件事的是「詳情」欄裡那三條**可以點**的網址（下面那一段已經產好）。`);
+console.log(`\n── QR ──`);
+console.log(`  定案不放 QR。LINE 上接得住這件事的是「詳情」欄裡那三條**可以點**的網址`);
+console.log(`  （下面那一段已經產好）—— 看貼文的人拿著那支手機，掃不了自己螢幕上的碼。`);
 
 /* ========== 「詳情」那一欄 ========== */
 /* ⚠⚠⚠ 這一段是 QR 在 LINE 上真正的替代品：**三條可以點的網址**。
@@ -767,65 +688,34 @@ console.log(`  地圖上的字（畫布 px → 小格 px）：`
     + `${A.m.band.y.toFixed(0)}~${(A.m.band.y + A.m.band.h).toFixed(0)}　`
     + (inBand ? "收得進去" : "⚠ 上下都會被切掉 —— 這一張是給小格的"));
 }
-console.log(`\n── 下排那兩行的字（畫布 px → 小格 410px）──`);
-for (const x of made.filter(x => x.qr === false && x.drop && !x.title))
+console.log(`\n── 下排那兩行的字（Ⓒ ×1.30 ＋ 折行；畫布 px → 小格 410px）──`);
+for (const x of made.filter(x => x.tag === "c"))
   console.log(`  door-${x.tag}\t×${x.lotk.toFixed(2)}${x.wrapn ? " 折行" : "　一行"}`
     + `\t名 ${x.m.lotfs[0]}→${x.m.onLot[0].toFixed(1)}${x.m.onLot[0] >= 10 ? " ✓" : " ⚠"}`
     + `\t距 ${x.m.lotfs[1]}→${x.m.onLot[1].toFixed(1)}${x.m.onLot[1] >= 10 ? " ✓" : " ⚠"}`
     + `\t名字 ${x.m.nmLines.join("/")} 列`
     + `\t那一排高 ${x.m.lotsH.toFixed(0)}\t地圖 ${x.m.img.w}×${x.m.img.h}\t三格加溝還餘 ${x.m.room.toFixed(0)}px`);
-/* ⚠ 不是壞掉檢查，是「讀起來對不對」：指北針在小格 410px 上多大
-   （第 28 條 ④：每加一種版面關係，就把它壞掉時會不對的那個數字印出來）。 */
-console.log(`\n── 指北針（畫布 px → 小格 410px）──`);
-for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-ns")))
-  console.log(`  door-${x.tag}\t?ns=${x.ns}\t整組高 ${x.meta.nsw.h}→${(x.meta.nsw.h * shrink).toFixed(1)}`
-    + `\t「北」${x.meta.nsw.fs}→${(x.meta.nsw.fs * shrink).toFixed(1)}`
-    + `\t地圖 ${x.m.img.w}×${x.m.img.h}`);
+/* ⚠ 不是壞掉檢查，是「讀起來對不對」：定案那一張的指北針、留白、浮水印各是多少。
+   ⚠⚠ 那幾把尺（指北針 Ⓝ／留白 Ⓜ／濃度 Ⓦ／換 logo Ⓛ／壓哪一角）都已經挑定，
+     值寫回上面的常數、格子從 CASES 上拿掉了；**數字仍然要印** ——
+     不然哪天有人動到留白或形狀，這裡不會有任何一個數字變（第 28 條 ④）。 */
+console.log(`\n── 定案那一張（door-c）的幾何 ──`);
+console.log(`  指北針\t?ns=${A.ns}（Ⓝ3）\t整組高 ${A.meta.nsw.h}→小格 ${(A.meta.nsw.h * shrink).toFixed(1)}px`
+  + `\t「北」${A.meta.nsw.fs}→${(A.meta.nsw.fs * shrink).toFixed(1)}px`);
+console.log(`  留白\t上下 ${A.margin}　段距 ${A.gap}（Ⓜ3）\t地圖 ${A.m.img.w}×${A.m.img.h}`
+  + `\t小格留白 ${(A.m.band.y * SMALL / W).toFixed(1)}px`);
+console.log(`  浮水印\t${A.wmsh}（站上頁首那顆）・墨 ${(A.wma * 100).toFixed(1)}%・壓左上`
+  + `\t畫出來 ${A.m.wmr.w}×${A.m.wmr.h}（等重基準 ${WMREF}）`
+  + `\t壓在它上面：墨字 ${ratio(wmOver(INK, A.wma), wmOver(CARD, A.wma)).toFixed(2)}`
+  + `／柔墨 ${ratio(wmOver(SOFT, A.wma), wmOver(CARD, A.wma)).toFixed(2)}（門檻 4.5）`);
 
-/* ⚠ 不是壞掉檢查，是「讀起來對不對」：留白收多少換到多大的地圖 */
-console.log(`\n── 地圖要多大（上下留白／段距 → 地圖）──`);
-{
-  const base = made.find(x => x.tag === "c130-m1").m.img.w;
-  for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-m")))
-    console.log(`  door-${x.tag}\t留白 ${x.margin}　段距 ${x.gap}`
-      + `\t地圖 ${x.m.img.w}×${x.m.img.h}（比 Ⓜ1 ${(x.m.img.w / base * 100 - 100).toFixed(1)}%）`
-      + `\t整塊 ${x.m.band.h.toFixed(0)}／1080　上下各留 ${x.m.band.y.toFixed(0)}px`
-      + `\t小格留白 ${(x.m.band.y * SMALL / W).toFixed(1)}px`
-      + `${x.tag === "c130" ? "\t← 定案（Ⓜ3，已寫回預設）" : ""}`);
-}
-
-/* ⚠ 不是壞掉檢查，是「讀起來對不對」：浮水印多濃、壓在它上面的字還剩多少對比 */
-console.log(`\n── 浮水印・濃度（形狀 ${WMSH0}・${wmWidth(WMSH0)}px・壓左上、切掉 ${WMX0}px）──`);
-for (const x of made.filter(x => x.tag === "c130" || /^c130-w[0-9]$/.test(x.tag)))
-  console.log(`  door-${x.tag}\t墨 ${(x.wma * 100).toFixed(1)}%`
-    + `\t底色 ${CARD} → ${wmOver(CARD, x.wma)}`
-    + `\t壓在上面：墨字 ${ratio(wmOver(INK, x.wma), wmOver(CARD, x.wma)).toFixed(2)}`
-    + `／柔墨 ${ratio(wmOver(SOFT, x.wma), wmOver(CARD, x.wma)).toFixed(2)}（門檻 4.5）`
-    + `${x.tag === "c130" ? "\t← 現在的預設（建議）" : ""}`);
-
-/* ⚠ 「哪一角」與「哪一顆」也各印一次（第 28 條 ④：新的版面關係要有自己的數字） */
-console.log(`\n── 浮水印・壓哪一角 ──`);
-for (const x of made.filter(x => x.tag === "c130" || x.tag === "c130-wbr"))
-  console.log(`  door-${x.tag}\t${x.wmpos === "tl" ? "左上" : "右下"}`
-    + `\t畫出來 ${x.m.wmr.w}×${x.m.wmr.h}　在畫布上 x ${x.m.wmr.x}~${x.m.wmr.x + x.m.wmr.w}`
-    + `・y ${x.m.wmr.y}~${x.m.wmr.y + x.m.wmr.h}`
-    + `${x.tag === "c130" ? "\t← 你指定的（預設）" : ""}`);
-
-console.log(`\n── 浮水印・再往左多少（畫布 px；垂直沒有動）──`);
-for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-x")))
+/* ⚠ 還沒挑定的那一件：浮水印再往左多少（第 28 條 ①：他的眼睛才是裁判 → 給一把尺） */
+console.log(`\n── ⚠ 要挑：浮水印再往左多少（畫布 px；垂直沒有動）──`);
+for (const x of [...made].sort((a, b) => a.wmx - b.wmx))
   console.log(`  door-${x.tag}\t左邊切掉 ${x.wmx}px（＝寬的 ${(x.wmx / x.m.wmr.w * 100).toFixed(1)}%）`
     + `\t在畫布上 x ${x.m.wmr.x}~${x.m.wmr.x + x.m.wmr.w}`
-    + `\t看得到 ${(x.m.wmr.w - x.wmx)}px`
-    + `${x.tag === "c130" ? "\t← 現在的預設（建議）" : ""}`);
-
-console.log(`\n── 浮水印・哪一顆 logo（寬度按墨的面積等重換算，出處 wm-sizes.json）──`);
-for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-l")))
-  console.log(`  door-${x.tag}\t${x.wmsh}\t長寬比 ${WMSIZES[x.wmsh].ratio}`
-    + `\t${x.m.wmr.w}×${x.m.wmr.h}　→ 小格 410px 上 ${(x.m.wmr.w * SMALL / W).toFixed(0)}px`
-    + `${x.wmsh === WMSH0 ? "\t← 你挑的（預設）" : ""}`
-    + `${x.wmsh === WMREF ? "\t← 門診表那一張用的" : ""}`);
-console.log(`  ⚠ 3.08 那三顆（r1c3／r2c3／r3c3）等重之後要 `
-  + [ "r1c3", "r2c3", "r3c3" ].map(k => wmWidth(k)).join("／") + `px，比畫布還寬，沒有列進來。`);
+    + `\t看得到 ${(x.m.wmr.w - x.wmx)}px → 小格 ${((x.m.wmr.w - x.wmx) * shrink).toFixed(0)}px`
+    + `${x.tag === "c" ? "\t← 現在的預設（建議）" : ""}`);
 
 console.log(`\n── 出圖 ──`);
 for (const x of made)
@@ -833,6 +723,5 @@ for (const x of made)
     + `　提醒 ${x.pts} 條${x.title ? "＋標題" : ""}`
     + `　內容高 ${x.m.band.h.toFixed(0)}${x.qr ? `　QR ${x.qrpx}px` : "　沒有 QR"}`
     + `${x.you === "door" ? "　綠塊寫「現在位置」" : ""}${x.orient !== "w" ? `　${x.orient} 在上` : ""}`);
-console.log(`  door-profile-3up.png　door-slot-410.png　door-slot-410-margin.png`
-  + `　door-slot-410-wm.png　door-slot-410-logo.png　door-slot-410-x.png`);
+console.log(`  door-profile-3up.png　door-slot-410.png　door-slot-410-x.png`);
 console.log(`\n── 「詳情」欄要貼的字 ──\n` + detail.split("\n").map(l => "  " + l).join("\n"));
