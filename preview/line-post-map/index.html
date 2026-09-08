@@ -12,10 +12,15 @@
   有 P1 P2 P3 和 QR code 的那個」→ ＝ drafts/door-notice/ 那張 A4 告示，
   這一頁因此改成**那個版本在最前面**。
 
-  ⚠⚠⚠ 換媒介的三件（CLAUDE.md 第九節第 28 條 ⑤）：
+  同日再稍晚：「選 C 但前兩行　紅線　開單的文句拿掉」→ 定案 door-c。
+
+  ⚠⚠⚠ 換媒介的四件（CLAUDE.md 第九節第 28 條 ⑤）：
    ① 「現在位置」四個字 —— 門口那張是給站在門口的人看的，貼文的人不在那裡。
    ② 三顆 QR —— 看貼文的人**正拿著那支手機**，掃不了自己螢幕上的碼。
    ③ 「鄰近停車場可參考如下圖」—— 那句話要求地圖在文字**底下**，版面因此鎖住。
+   ④ **紅線與開單那兩句** —— 站在門口的人車已經停了，要擋的是「就停一下」；
+      看貼文的人還沒出門，同一句話讀起來變成「這間診所門口會被開單」＝ 警告不是幫忙。
+      這一件是使用者自己看出來的（我送上去的每一格都還留著那兩句）。
 -->
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
@@ -58,126 +63,139 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 .pv-tab thead th{background:#e9eaeb;font-weight:700;color:var(--ink)}
 .pv-tab tbody tr:last-child td{border-bottom:0}
 .pv-tab .no{color:var(--red);font-weight:700}
-.pv-txt{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+.pv-txt,.pv-cut{background:var(--card);border:1px solid var(--rule);border-radius:10px;
   padding:12px 14px;margin:10px 0 0;font-size:.78rem;line-height:1.95;
   white-space:pre-wrap;overflow-wrap:anywhere}
+/* ⚠ 拿掉的那兩句用另一個 class —— 守門是拿 .pv-txt 去對 detail 那兩個檔的，
+   這一塊不是要貼出去的字，混進去會被當成第三個「詳情」。 */
+.pv-cut{color:var(--ink-soft);text-decoration:line-through;
+  text-decoration-color:var(--red);text-decoration-thickness:1px}
 </style>
 </head>
 <body>
 <div class="pv-wrap">
 
   <h1>LINE 商家貼文・位置與周邊停車
-    <span>提案中　2026-09-08　兩個版本</span></h1>
-  <p class="pv-lead">主頁「最新貼文」那三格的<b>小格左</b>。兩個版本都在這一頁：<br>
-    <b>一、門口那張告示的版本</b>（你指名的那一版：四點提醒 ＋ P1 P2 P3 ＋ 三顆 QR）<br>
-    <b>二、站上那張簡易地圖的版本</b>（先做的那一版，留著對照）<br>
-    ⚠ 檔名都還是流水號（<code>door-…</code>／<code>post-map-…</code>）——
-    <b>挑定了再改成拿得出去的名字</b>（看診時間那張是 <code>fangren-hours-1080.png</code>）。</p>
+    <span>2026-09-08　定案 door-c，其餘留著當紀錄</span></h1>
+  <p class="pv-lead">主頁「最新貼文」那三格的<b>小格左</b>。<br>
+    <b>⭐ 定案是 <code>door-c</code></b>：門口那張告示的版本，<b>不放 QR</b>、
+    <b>拿掉「紅線」「開單」那兩句</b>——那兩句一走，地圖從 516 長到 <b>920px</b>。<br>
+    底下還留著走到這裡的每一格，以及先做的那個「站上簡易地圖」的版本（第二部分）。<br>
+    ⚠ 檔名還是流水號（<code>door-…</code>）——<b>挑定了再改成拿得出去的名字</b>。</p>
 
-  <h2 class="pv-h1">一、門口那張告示的版本
-    <span>四點提醒 ＋ P1 P2 P3 ＋ 三顆 QR</span></h2>
-  <p class="pv-lead">地圖、四點提醒、三張停車場卡<b>全部是門口那張 A4 告示本人</b>——
+  <h2 class="pv-h1">一、門口那張告示的版本<span>⭐ 定案：Ⓒ 不放 QR ＋ 前兩句拿掉</span></h2>
+  <p class="pv-lead">地圖、提醒、三張停車場卡<b>全部是門口那張 A4 告示本人</b>——
     產生器把 <code>drafts/door-notice/</code> 跑起來，再把它的東西讀進 1080 的方畫布。
-    旋轉、街名重排、路線圓點、指北針、QR 的碼<b>一個字都沒有重做</b>。<br>
+    旋轉、街名重排、路線圓點、指北針<b>一個字都沒有重做</b>。<br>
     ⚠⚠ 而它在方畫布上比站上那張<b>好排</b>：門口那版把地圖轉了 90 度，
     所以地圖是<b>橫的（1.27）</b>而不是站上那張直的（0.903）。</p>
 
+  <h2 class="pv-h2">⭐ 定案<em>door-c</em><span class="t">不放 QR、拿掉「紅線」「開單」那兩句</span></h2>
+  <div class="pv-shot">
+    <img src="door-c.png" width="1080" height="1080"
+      alt="定案的位置圖：兩句提醒、轉向的地圖、P1 P2 P3 三張卡，沒有 QR">
+  </div>
+  <p class="pv-cap">兩句一走、三顆碼一走，那些高度<b>全部給了地圖</b>：
+    516 → <span class="n">920px</span>（大 <b>78%</b>），左右已經頂到版面的內距（各 40px）。<br>
+    ⚠⚠ 換來的是地圖上的字在小格上大了一倍：<b>街名 7.4 → 13.2px</b>、
+    P 代號 7.0 → 12.5、綠塊「芳仁牙醫」5.7 → 10.2、巷名 4.2 → 7.5。<br>
+    ⚠ 綠塊裡是<b>「芳仁牙醫」</b>不是門口那張的「現在位置」——
+    看貼文的人不在那裡，那四個字會被讀成「你現在的位置」。</p>
+
   <h2 class="pv-h2">先看它在主頁上長怎樣<span class="t">大格＝看診時間（已定稿）／小格左＝這一張</span></h2>
   <div class="pv-shot">
-    <img src="door-profile-3up.png" width="823" height="823"
-      alt="主頁三格的模擬：大格是看診時間，小格左是門口告示版的位置圖">
+    <img src="door-profile-3up.png" width="823" height="823" loading="lazy"
+      alt="主頁三格的模擬：大格是看診時間，小格左是定案的位置圖">
   </div>
   <p class="pv-cap">⚠⚠ <b>這一張不能放大格</b>：大格只看得到中間 537 列，
-    這一張的內容佔 45~1035——四點提醒和三顆 QR 都會被切掉。</p>
+    這一張的內容佔 45~1035——上下都會被切掉。</p>
 
-  <h2 class="pv-h2">⚠⚠ 在小格的實際大小（410px）<span class="t">左＝Ⓐ 全套　中＝Ⓒ 不放 QR　右＝Ⓓ QR 收小</span></h2>
+  <h2 class="pv-h2">⚠⚠ 在小格的實際大小（410px）<span class="t">左＝定案　中＝加一行標題　右＝原本那一版（四句＋三顆碼）</span></h2>
   <div class="pv-shot">
     <img src="door-slot-410.png" width="1254" height="422" loading="lazy"
       alt="三張候選圖縮到小格的實際大小 410px 並排">
   </div>
-  <p class="pv-cap"><b>這一排才是判準。</b>量出來：四點提醒 <b>11.4px</b>（讀得出來）、
-    停車場名字與距離讀得出來；<b>地圖上的字一律小於 8px</b>
-    （街名 7.4、P 代號 7.0、綠塊 5.7、巷名 4.2）。<br>
-    ⚠ 中間那一張（不放 QR）地圖大 <span class="n">50%</span>，
-    在 410px 上是三張裡最好讀的。</p>
+  <p class="pv-cap"><b>這一排才是判準。</b>左邊那張的提醒 <b>11.4px</b>、
+    停車場名字與距離都讀得出來，<b>地圖上的街名也第一次過了 10px（13.2）</b>。<br>
+    ⚠ 右邊那張（四句 ＋ 三顆碼）的地圖只有它的 56%，街名 7.4px——<b>差距一眼看得出來</b>。</p>
 
-  <h2 class="pv-h2">Ⓐ 你指名的那一版<em>全套</em>
-    <span class="t">四點 ＋ 地圖 ＋ 三顆 QR，綠塊改寫「芳仁牙醫」</span></h2>
+  <h2 class="pv-h2">拿掉的是這兩句<span class="t">門口那張告示本人一個字都沒有動</span></h2>
+  <div class="pv-cut">永樂街平常車不多，但診所門口被劃設紅線。
+過往多為柔性勸導，近來常有直接開單情形。</div>
+  <p class="pv-cap">留下來的是<b>後兩句</b>（路邊停車格與如下圖／計價依現場標示）。<br>
+    ⚠⚠ 產生器<b>不是照順序砍前兩條</b>：它會檢查砍掉的那兩句真的含著「紅線」「開單」、
+    留下來的那兩句真的沒有，對不上就停下來——
+    這樣門口那張哪天改了字或換了順序，這裡不會靜靜地砍錯句子。<br>
+    ⚠ 「詳情」那一欄也跟著拿掉同樣兩句（見最底下）——
+    圖上寫兩句、詳情寫四句，就是同一則貼文有兩個版本的事實。</p>
+
+  <h2 class="pv-h2">要不要加一行標題<span class="t">door-c-title・地圖 822×645</span></h2>
   <div class="pv-shot">
-    <img src="door-a.png" width="1080" height="1080"
-      alt="門口告示版的位置圖：四點提醒、轉向的地圖、三顆 QR">
+    <img src="door-c-title.png" width="1080" height="1080" loading="lazy"
+      alt="定案版加上一行標題：芳仁牙醫　周邊停車">
   </div>
-  <p class="pv-cap">四點提醒<b>逐字沿用門口那張</b>（那四句是 2026-08-23 你一句一句定的），
-    只有字級跟著這個媒介重挑。<br>
-    ⚠⚠⚠ <b>綠塊裡的四個字從「現在位置」換成「芳仁牙醫」</b>——
-    門口那張是給<b>站在門口的人</b>看的，所以寫「現在位置」是對的；
-    看貼文的人<b>不在那裡</b>，那四個字會被讀成「你現在的位置」。
-    要照門口那張原樣看 Ⓑ。<br>
-    ⚠ 地圖 516×406，左右各留 <b>242px</b>——那是三顆 QR 佔掉的高度換來的（見 Ⓒ）。</p>
+  <p class="pv-cap">那兩句一拿掉，整張圖第一眼看到的就是
+    「周邊路段有畫設之路邊停車格」——<b>沒有人知道這是誰家的</b>。
+    加一行標題「芳仁牙醫　周邊停車」就解掉，代價是地圖從 920 收到 <b>822</b>（小 11%）。<br>
+    ⚠ 主頁三格是<b>三格一起看</b>的：上面那格已經寫著芳仁牙醫的門診表，
+    所以不加也說得過去。<b>這一格是給你挑的，我沒有自己加上去。</b></p>
 
-  <h2 class="pv-h2">⚠⚠⚠ 三顆 QR 真的掃得動嗎<span class="t">不是用眼睛看，是拿解碼器掃過</span></h2>
+  <h2 class="pv-h2">以下是紀錄<span class="t">走到定案之前的幾格，留著日後要回頭比</span></h2>
+  <div class="pv-shot">
+    <img src="door-c-qr.png" width="1080" height="1080" loading="lazy"
+      alt="拿掉兩句但留著三顆 QR">
+  </div>
+  <p class="pv-cap"><b>拿掉兩句、碼留著</b>（地圖 666×523）。碼在小格上一顆都掃不出來，見下面那張表。</p>
+  <div class="pv-shot">
+    <img src="door-a.png" width="1080" height="1080" loading="lazy"
+      alt="原本那一版：四句提醒、地圖、三顆 QR">
+  </div>
+  <p class="pv-cap"><b>你原本指名的那一版</b>：四句 ＋ 三顆碼，地圖只剩 516×406。</p>
+  <div class="pv-shot">
+    <img src="door-noqr.png" width="1080" height="1080" loading="lazy"
+      alt="四句提醒但沒有 QR">
+  </div>
+  <p class="pv-cap"><b>四句 ＋ 不放碼</b>（地圖 772×606）——定案是在這一格再拿掉兩句。</p>
+  <div class="pv-shot">
+    <img src="door-b.png" width="1080" height="1080" loading="lazy"
+      alt="逐字照門口那張：綠塊寫著現在位置">
+  </div>
+  <p class="pv-cap"><b>逐字照門口那張</b>（綠塊寫「現在位置」）。留著看原樣，不建議用。</p>
+  <div class="pv-shot">
+    <img src="door-qr140.png" width="1080" height="1080" loading="lazy"
+      alt="QR 收小到 140px">
+  </div>
+  <p class="pv-cap"><b>碼收小到 140px</b> 想換地圖大一點——<b>兩頭空</b>：地圖只大 15%，
+    而碼<b>連在原圖上都掃不出來了</b>。</p>
+  <div class="pv-shot">
+    <img src="door-north.png" width="1080" height="1080" loading="lazy"
+      alt="地圖改成北在上，變成直的、很小">
+  </div>
+  <p class="pv-cap">⚠⚠ <b>北在上</b>是<b>代價的展示</b>不是候選：那時地圖變成直的（0.61），
+    塞進同一個高度只剩 <span class="n">246px</span> 寬。
+    <b>門口那張把地圖轉 90 度，正是這一版在方畫布上贏的地方。</b></p>
+
+  <h2 class="pv-h2">⚠⚠⚠ 那三顆 QR 真的掃得動嗎<span class="t">不是用眼睛看，是拿解碼器掃過</span></h2>
   <table class="pv-tab">
     <thead><tr><th>哪一張</th><th>碼多大</th><th>每格</th><th>掃到幾顆</th></tr></thead>
     <tbody>
-      <tr><td>Ⓐ 原圖 1080</td><td>200px</td><td>4.88px</td><td>3/3</td></tr>
-      <tr><td>Ⓐ 大格 823</td><td>152.4px</td><td>3.72px</td><td>2/3</td></tr>
-      <tr><td>Ⓐ 小格 410</td><td>75.9px</td><td>1.85px</td><td class="no">0/3</td></tr>
-      <tr><td>Ⓓ 原圖 1080</td><td>140px</td><td>3.41px</td><td class="no">0/3</td></tr>
-      <tr><td>Ⓓ 大格 823</td><td>106.7px</td><td>2.6px</td><td class="no">0/3</td></tr>
-      <tr><td>Ⓓ 小格 410</td><td>53.1px</td><td>1.3px</td><td class="no">0/3</td></tr>
+      <tr><td>200px・原圖 1080</td><td>200px</td><td>4.88px</td><td>3/3</td></tr>
+      <tr><td>200px・大格 823</td><td>152.4px</td><td>3.72px</td><td>2/3</td></tr>
+      <tr><td>200px・小格 410</td><td>75.9px</td><td>1.85px</td><td class="no">0/3</td></tr>
+      <tr><td>140px・原圖 1080</td><td>140px</td><td>3.41px</td><td class="no">0/3</td></tr>
+      <tr><td>140px・大格 823</td><td>106.7px</td><td>2.6px</td><td class="no">0/3</td></tr>
+      <tr><td>140px・小格 410</td><td>53.1px</td><td>1.3px</td><td class="no">0/3</td></tr>
     </tbody>
   </table>
   <p class="pv-cap">每一顆是 <b>41×41 格</b>（含四格靜區）。<br>
     <b>① 在小格上一顆都掃不出來</b>（每格只有 1.85px）。<br>
-    <b>② 碼收小到 140px，連原圖都掃不動了</b>——所以「把碼縮小、讓地圖大一點」這條路走不通。<br>
-    ⚠⚠⚠ <b>③ 而且還有一件更根本的：看貼文的人正拿著那支手機，掃不了自己螢幕上的碼。</b>
+    <b>② 碼收小到 140px，連原圖都掃不動</b>——「把碼縮小、讓地圖大一點」這條路走不通。<br>
+    ⚠⚠⚠ <b>③ 更根本的一件：看貼文的人正拿著那支手機，掃不了自己螢幕上的碼。</b>
     門口那張是紙，人站在前面用手機掃，成立；貼文是螢幕，同一支手機掃不了自己。<br>
-    <b>LINE 上真正接得住這件事的，是「詳情」欄裡那三條可以點的網址</b>——
-    已經一起產好了（見最底下那一段）。<br>
-    ⚠ 所以我的建議是 <b>Ⓒ（不放 QR）＋ 詳情裡放三條網址</b>；
-    但你指名的是有 QR 的那一版，<b>要留著就用 Ⓐ</b>（碼維持 200px，
-    在原圖上是掃得動的——有人把圖點開、或用另一支手機掃就有用）。</p>
-
-  <h2 class="pv-h2">Ⓑ 逐字照門口那張<span class="t">綠塊寫「現在位置」</span></h2>
-  <div class="pv-shot">
-    <img src="door-b.png" width="1080" height="1080" loading="lazy"
-      alt="門口告示版的位置圖：綠塊裡寫著現在位置">
-  </div>
-  <p class="pv-cap">和 Ⓐ 只差綠塊裡那四個字。<b>不建議</b>——理由見 Ⓐ。</p>
-
-  <h2 class="pv-h2">Ⓒ 不放 QR<em>建議</em><span class="t">地圖大 50%（772×606）</span></h2>
-  <div class="pv-shot">
-    <img src="door-noqr.png" width="1080" height="1080" loading="lazy"
-      alt="門口告示版的位置圖：沒有 QR，地圖放大">
-  </div>
-  <p class="pv-cap">三張停車場卡<b>只拿掉碼</b>，P1 P2 P3 的號碼牌、名字、距離都留著。<br>
-    地圖 516 → <span class="n">772px</span>（大 50%），左右留白 242 → <b>114px</b>。<br>
-    ⚠ 換掉的那條路徑（掃碼直接導航）改由「詳情」欄那三條網址接住，
-    <b>而且點下去比掃碼還快一步</b>。</p>
-
-  <h2 class="pv-h2">Ⓓ QR 收小到 140px<span class="t">地圖 592×466</span></h2>
-  <div class="pv-shot">
-    <img src="door-qr140.png" width="1080" height="1080" loading="lazy"
-      alt="門口告示版的位置圖：QR 收小，地圖略大">
-  </div>
-  <p class="pv-cap">看起來是折衷，<b>其實是兩頭空</b>：地圖只大 15%，
-    而碼<b>連在原圖上都掃不出來了</b>（上面那張表）。留著是為了讓那條尺有下界。</p>
-
-  <h2 class="pv-h2">Ⓔ 北在上<span class="t">＝不要那個 90 度的轉向</span></h2>
-  <div class="pv-shot">
-    <img src="door-north.png" width="1080" height="1080" loading="lazy"
-      alt="門口告示版的位置圖：地圖改成北在上，變成直的、很小">
-  </div>
-  <p class="pv-cap">⚠⚠ 這一張是<b>代價的展示</b>，不是候選：北在上的時候地圖是<b>直的</b>
-    （長寬比 0.61），塞進同一個高度就只剩 <span class="n">249px</span> 寬——
-    P 代號和街名全部糊掉。<br>
-    <b>門口那張把地圖轉 90 度，正是這一版在方畫布上贏的地方。</b>
-    指北針一直在圖上，所以轉過去也不會迷路。</p>
+    <b>LINE 上真正接得住這件事的，是「詳情」欄裡那三條可以點的網址</b>（見下一段）。</p>
 
   <h2 class="pv-h2">「詳情」那一欄要貼的字<span class="t">⚠ 這裡才是 QR 在 LINE 上的替代品</span></h2>
-  <div class="pv-txt">永樂街平常車不多，但診所門口被劃設紅線。
-過往多為柔性勸導，近來常有直接開單情形。
-周邊路段有畫設之路邊停車格，鄰近停車場可參考如下圖。
+  <div class="pv-txt">周邊路段有畫設之路邊停車格，鄰近停車場可參考如下圖。
 停車計價方式依各業者現場標示為準。
 P1 壹車房－中華路停車場　190 公尺・步行 3 分鐘
 https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic
@@ -186,19 +204,20 @@ https://maps.app.goo.gl/tiHLpeKc2gETXRh96?g_st=ic
 P3 斗六永樂站停車場　50 公尺・步行 1 分鐘
 https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic
 雲林縣斗六市永樂街 70 號　05-5339369</div>
-  <p class="pv-cap">四點提醒<b>逐字</b>取自門口那張；三條網址<b>逐字</b>取自
-    <code>index.html</code> 地圖上那三個連結（你自己分享過、驗證會開對地方的那三條），
+  <p class="pv-cap">兩句提醒<b>逐字</b>取自門口那張（紅線與開單那兩句已經跟著圖一起拿掉）；
+    三條網址<b>逐字</b>取自 <code>index.html</code> 地圖上那三個連結
+    （你自己分享過、驗證會開對地方的那三條），
     <b>順序照你排的 P1／P2／P3</b>（刻意不是照距離）。<br>
-    ⚠ 「可參考如下圖」在這裡指的是貼文上面那張圖，成立；
-    <b>所以版面鎖住「文字在上、地圖在下」</b>，不要把地圖搬到旁邊或最上面。<br>
+    ⚠ 「可參考如下圖」指的是貼文上面那張圖，成立；
+    <b>所以圖裡的版面鎖住「文字在上、地圖在下」</b>，不要把地圖搬到旁邊或最上面。<br>
     ⚠⚠ 不可以寫「有問題留言問我們」那一類的話（這個帳號沒有專人即時回覆）。</p>
 
   <h2 class="pv-h1">二、站上那張簡易地圖的版本
     <span>2026-09-08 稍早做的，留著對照</span></h2>
   <p class="pv-lead">地圖是<b>站上那張簡易地圖本人</b>（1:1 截下來），
     三個停車場全亮、各自帶著牌子與步行時間。<br>
-    ⚠ 和上面那一版最大的差別：<b>沒有紅線與開單那四句</b>，
-    而且地圖是<b>直的</b>（左右各留 179px）。</p>
+    ⚠ 和上面那一版最大的差別：地圖是<b>直的</b>（左右各留 179px），
+    而且沒有 P1 P2 P3 的號碼牌——停車場的名字與距離是畫在地圖上的牌子裡。</p>
 
   <h2 class="pv-h2">Ⓕ 三塊全亮<span class="t">標題 46／頁尾 32・地圖 642×711</span></h2>
   <div class="pv-shot">
@@ -268,12 +287,13 @@ https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic
 
   <h2 class="pv-h2">還沒決定的</h2>
   <p class="pv-cap">
-    <b>① 兩個版本要哪一個</b>，以及那一版裡的哪一格。<br>
-    <b>② QR 要不要留</b>（上面那張表是實測的，不是估的）。<br>
+    <b>① 要不要加那一行標題</b>（<code>door-c</code> 還是 <code>door-c-title</code>）。<br>
+    <b>② 檔名</b>——挑定了就改成拿得出去的名字
+    （看診時間那張是 <code>fangren-hours-1080.png</code>，這一張會是
+    <code>fangren-map-1080.png</code>）。<br>
     <b>③ 小格右那一格</b>（主題與科別七科）還沒做——七張分享圖現成，
     但都是 1.91:1，<b>要重裁成方的</b>。<br>
-    <b>④ 這張圖點進去看不看得到大圖</b>——看得到的話，Ⓐ 那三顆碼在原圖上是掃得動的
-    （只是掃的人得換一支手機）。<b>在後台按一次預覽就知道。</b></p>
+    <b>④ 小格到底是不是照這樣裁</b>——在後台按一次「預覽」就知道，我們是照 410×410 推的。</p>
 
 </div>
 </body>

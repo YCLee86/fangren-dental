@@ -90,6 +90,25 @@ const D = await doorPage.evaluate(() => ({
 }));
 if (D.points.length !== 4) throw new Error(`四點提醒讀到 ${D.points.length} 條`);
 if (D.lots.length !== 3) throw new Error(`停車場卡讀到 ${D.lots.length} 張`);
+/* ⚠⚠⚠ 2026-09-08 使用者：「選 C 但前兩行 紅線 開單的文句拿掉」。
+ *   那兩句（劃設紅線／直接開單）是**門口那張紙**才成立的理由：站在門口的人車已經停了，
+ *   要擋的是「就停一下」；看貼文的人還沒出門，同一句話讀起來變成
+ *   「這間診所門口會被開單」＝ 警告不是幫忙（第九節第 28 條 ⑤ 換媒介那一條）。
+ * ⚠⚠ 但**不可以用索引硬切** —— body.html 哪天多一句或換順序，就會靜靜地砍錯句子而且不報錯。
+ *   砍掉的一定要真的是紅線／開單那兩句、留下來的一定不是，對不上就 throw。 */
+const strip = (t) => t.replace(/<[^>]+>/g, "");
+const dropPts = (n) => {
+  if (!n) return D.points;
+  const cut = D.points.slice(0, n), keep = D.points.slice(n);
+  const fine = (t) => /紅線|開單/.test(t);
+  if (!cut.every(fine)) throw new Error(
+    `要拿掉的那 ${n} 句裡有不是「紅線／開單」的：${cut.map(strip).join("／")}`);
+  if (keep.some(fine)) throw new Error(
+    `留下來的句子裡還有「紅線／開單」：${keep.map(strip).join("／")}`);
+  if (!keep.length) throw new Error("四點提醒被砍光了");
+  return keep;
+};
+
 /* QR 的格數從它自己的 viewBox 讀（-4 -4 n+8 n+8），不另外算一份 */
 const QRN = D.lots.map(l => {
   const m = l.qr.match(/viewBox="-4 -4 (\d+) \d+"/);
@@ -210,6 +229,11 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 .sheet{width:${W}px;height:${H}px;display:flex;flex-direction:column;justify-content:center;
        position:relative;overflow:hidden}
 .band{padding:0 ${PAD}px}
+/* ⚠ 標題只在「拿掉前兩句」那一版才有意義：那兩句一走，整張圖第一眼看到的
+   就變成「周邊路段有畫設之路邊停車格」＝ 沒有人知道這是誰家的。
+   給成一格尺讓使用者挑，不要自己加上去（第九節第 28 條 ①）。 */
+.tt{font-size:${Math.round(fs2 * 1.5)}px;font-weight:700;letter-spacing:.02em;
+    padding-bottom:${Math.round(fs2 * .58)}px}
 /* 四點提醒：字與紅字**逐字沿用門口那張**（使用者 2026-08-23 一句一句定的），
    只有字級跟著這個媒介重挑（小格 410px 上要讀得出來）。 */
 .pts{list-style:none;display:grid;gap:${Math.round(fs2 * .34)}px;padding:0 0 ${GAP}px}
@@ -237,8 +261,9 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 .lot .du{margin-top:${Math.round(fs2 * .22)}px;font-size:${Math.round(fs2 * .74)}px;color:${SOFT}}
 `;
 
-const sheet = (fs2, qr) => `<div class="sheet"><div class="band">
-  <ul class="pts">${D.points.map(p => `<li>${p}</li>`).join("")}</ul>
+const sheet = (fs2, qr, drop = 0, title = "") => `<div class="sheet"><div class="band">
+  ${title ? `<div class="tt">${title}</div>` : ""}
+  <ul class="pts">${dropPts(drop).map(p => `<li>${p}</li>`).join("")}</ul>
   <div class="rule"></div>
   <div class="map"><img src="${MAPURI}" width="${MAPW}" height="${MAPH}" alt=""></div>
   <div class="rule"></div>
@@ -254,11 +279,12 @@ for (const f of fs.readdirSync(OUT).filter(f => f.startsWith("door-") && f.endsW
   fs.rmSync(path.join(OUT, f));
 
 const made = [];
-const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you = "clinic" } = {}) => {
+const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you = "clinic",
+                            drop = 0, title = "" } = {}) => {
   /* 先量「地圖以外的東西有多高」，再把地圖撐到剩下的空間 */
   MAPW = 400; MAPH = 320; MAPURI = "";
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx)}</style>`
-    + sheet(fs2, qr));
+    + sheet(fs2, qr, drop, title));
   const other = await page.evaluate(() => {
     const b = document.querySelector(".band").getBoundingClientRect();
     const m = document.querySelector(".map").getBoundingClientRect();
@@ -275,7 +301,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
   MAPW = sz.w; MAPH = sz.h;
   MAPURI = "data:image/png;base64," + buf.toString("base64");
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx)}</style>`
-    + sheet(fs2, qr));
+    + sheet(fs2, qr, drop, title));
   await page.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 
   /* ---------- 守門 ---------- */
@@ -324,14 +350,21 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
     throw new Error(`${tag}：綠塊寫著「現在位置」，但看貼文的人不在那裡`);
 
   await page.screenshot({ path: path.join(OUT, `door-${tag}.png`) });
-  made.push({ tag, m, meta, fs2, qr, qrpx, orient, you, ar });
+  made.push({ tag, m, meta, fs2, qr, qrpx, orient, you, ar, drop, title,
+              pts: dropPts(drop).length });
   return made[made.length - 1];
 };
 
+/* ⚠ 2026-09-08 使用者選的是 **Ⓒ ＝ 不放 QR ＋ 前兩句拿掉**（door-c）。
+   其餘幾格留著當紀錄，也留著日後要回頭比的路。 */
+const DROP = 2;                                       /* 拿掉「紅線」「開單」那兩句 */
 const CASES = [
-  ["a",   {}],                                        /* 建議：全套，綠塊寫「芳仁牙醫」 */
-  ["b",   { you: "door" }],                           /* 逐字照門口那張（綠塊寫「現在位置」） */
-  ["noqr", { qr: false }],                            /* 不放 QR，地圖放大 */
+  ["c",     { qr: false, drop: DROP }],               /* ⭐ 定案：不放 QR、前兩句拿掉 */
+  ["c-title", { qr: false, drop: DROP, title: "芳仁牙醫　周邊停車" }], /* 同上＋一行標題 */
+  ["c-qr",  { drop: DROP }],                          /* 前兩句拿掉、QR 留著（對照） */
+  ["a",     {}],                                      /* 全套，綠塊寫「芳仁牙醫」 */
+  ["b",     { you: "door" }],                         /* 逐字照門口那張（綠塊寫「現在位置」） */
+  ["noqr",  { qr: false }],                           /* 不放 QR，地圖放大 */
   ["qr140", { qrpx: 140 }],                           /* QR 收小，地圖放大 */
   ["north", { orient: "n" }],                         /* 北在上（地圖變回直的，看代價） */
 ];
@@ -347,7 +380,7 @@ const p2 = await browser.newPage({ viewport: { width: BIG_W, height: BIG_H + 4 +
 await p2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
   <div style="width:${BIG_W}px;background:#fff;display:flex;flex-direction:column;gap:4px">
     ${cell("data:image/png;base64," + fs.readFileSync(HOURS).toString("base64"), BIG_W, BIG_H)}
-    <div style="display:flex;gap:3px">${cell(b64("door-a.png"), SMALL, SMALL)}${cell(null, SMALL, SMALL)}</div>
+    <div style="display:flex;gap:3px">${cell(b64("door-c.png"), SMALL, SMALL)}${cell(null, SMALL, SMALL)}</div>
   </div>`);
 await p2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p2.screenshot({ path: path.join(OUT, "door-profile-3up.png") });
@@ -355,7 +388,7 @@ await p2.screenshot({ path: path.join(OUT, "door-profile-3up.png") });
 const p3 = await browser.newPage({ viewport: { width: SMALL * 3 + 24, height: SMALL + 12 } });
 await p3.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
   body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
-  + ["door-a.png", "door-noqr.png", "door-qr140.png"]
+  + ["door-c.png", "door-c-title.png", "door-a.png"]
     .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
 await p3.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p3.screenshot({ path: path.join(OUT, "door-slot-410.png") });
@@ -412,8 +445,9 @@ console.log(`     LINE 上接得住這件事的是「詳情」欄裡那三條**�
 /* ========== 「詳情」那一欄 ========== */
 /* ⚠⚠⚠ 這一段是 QR 在 LINE 上真正的替代品：**三條可以點的網址**。
    看貼文的人拿著那支手機，掃不了自己螢幕上的碼，但點得下去。 */
-const strip = (s) => s.replace(/<[^>]+>/g, "");
-const detail = D.points.map(strip).join("\n") + "\n"
+/* ⚠⚠ 圖上拿掉的那兩句，這裡也一起拿掉 —— 圖說兩句、詳情說四句，
+   就是同一則貼文有兩個版本的事實。**門口那張告示本人一個字都沒有動。** */
+const detail = dropPts(DROP).map(strip).join("\n") + "\n"
   + D.lots.map((l, i) => `${l.tag} ${l.name}　${l.dist}\n${URLS[i]}`).join("\n") + "\n"
   + ADDR + `　` + PHONE;
 for (const re of [/隨時(問|詢問|聯絡)/, /都可以問/, /即時回/, /小編/, /馬上回/])
@@ -421,7 +455,7 @@ for (const re of [/隨時(問|詢問|聯絡)/, /都可以問/, /即時回/, /小
 fs.writeFileSync(path.join(OUT, "door-detail.txt"), detail + "\n");
 
 /* ========== 印一張「讀起來對不對」 ========== */
-const A = made.find(x => x.tag === "a");
+const A = made.find(x => x.tag === "c");
 const shrink = SMALL / W, bigShrink = BIG_W / W;
 console.log(`\n── 地圖（門口那張告示的算繪，1:1 截下來）──`);
 console.log(`  轉 90 度（正對診所）之後 viewBox ${A.meta.vb[2]}×${A.meta.vb[3]}`
@@ -429,7 +463,7 @@ console.log(`  轉 90 度（正對診所）之後 viewBox ${A.meta.vb[2]}×${A.m
 console.log(`  畫在成品上 ${A.m.img.w}×${A.m.img.h}　比例尺 ${A.meta.k.toFixed(3)}`
   + `　左右各留 ${((W - 2 * PAD - A.m.img.w) / 2).toFixed(0)}px`);
 console.log(`  綠塊裡那四個字：${A.meta.you}`);
-console.log(`\n── 讀起來對不對（建議那一張 Ⓐ）──`);
+console.log(`\n── 讀起來對不對（定案那一張 door-c：不放 QR、前兩句拿掉）──`);
 console.log(`  留白　　整塊 ${A.m.band.h.toFixed(0)}／1080 ＝ 佔 ${(A.m.band.h / H * 100).toFixed(0)}%，`
   + `上下各留 ${A.m.band.y.toFixed(0)}px`);
 console.log(`  四點提醒　每一條佔 ${A.m.lines.join("／")} 行　字級 ${A.fs2}px → 小格 `
@@ -446,6 +480,7 @@ console.log(`  地圖上的字（畫布 px → 小格 px）：`
 console.log(`\n── 出圖 ──`);
 for (const x of made)
   console.log(`  door-${x.tag}.png　地圖 ${x.m.img.w}×${x.m.img.h}（長寬比 ${x.ar.toFixed(3)}）`
+    + `　提醒 ${x.pts} 條${x.title ? "＋標題" : ""}`
     + `　內容高 ${x.m.band.h.toFixed(0)}${x.qr ? `　QR ${x.qrpx}px` : "　沒有 QR"}`
     + `${x.you === "door" ? "　綠塊寫「現在位置」" : ""}${x.orient !== "w" ? `　${x.orient} 在上` : ""}`);
 console.log(`  door-profile-3up.png　door-slot-410.png`);

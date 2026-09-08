@@ -39,7 +39,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，而且尺寸對得上 ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 17, `頁上有 ${imgs.length} 張圖，應該是 17`);
+ok(imgs.length === 20, `頁上有 ${imgs.length} 張圖，應該是 20`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -50,7 +50,7 @@ for (const im of imgs) {
     `${im.src} 屬性寫 ${im.w}×${im.h}，實檔是 ${s.w}×${s.h}`);
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
   /* 成品一律 1080 見方；模擬圖不在此限 */
-  if (/^(post-map-|door-(a|b|noqr|qr140|north)\.png)/.test(im.src))
+  if (/^(post-map-|door-(c|c-title|c-qr|a|b|noqr|qr140|north)\.png)/.test(im.src))
     ok(s.w === 1080 && s.h === 1080, `${im.src} 不是 1080×1080（是 ${s.w}×${s.h}）`);
 }
 
@@ -89,14 +89,29 @@ const lots = [...SRC.matchAll(
 ok(lots.length === 3, `index.html 的地圖上讀到 ${lots.length} 個停車場，應該是 3`);
 for (const [nm, d] of lots)
   ok(detail.includes(`${nm} ${d}`), `detail.txt 裡少了或寫錯了：${nm} ${d}`);
-/* ⚠⚠ 門口那一版：四點提醒逐字 ＝ drafts/door-notice/body.html（使用者 2026-08-23
+/* ⚠⚠ 門口那一版：提醒逐字 ＝ drafts/door-notice/body.html（使用者 2026-08-23
    一句一句定的），三條網址逐字 ＝ index.html 那三個 .rl-link。
-   兩邊都不可以在這一頁上被改掉 —— 改了就是第二個真相。 */
+   兩邊都不可以在這一頁上被改掉 —— 改了就是第二個真相。
+   ⚠⚠⚠ 2026-09-08 使用者指定拿掉前兩句（紅線／開單），所以這裡要驗三件：
+     ① 門口那張本人仍然是四句（**沒有被我們改到**）
+     ② 拿掉的那兩句真的含著「紅線」「開單」、留下來的兩句真的沒有
+     ③ 頁上「拿掉的是這兩句」那一塊逐字 ＝ 被拿掉的那兩句 */
 const BODY = fs.readFileSync(path.join(ROOT, "drafts", "door-notice", "body.html"), "utf8");
 const pts = [...BODY.matchAll(/<li>([\s\S]*?)<\/li>/g)]
   .map(m => m[1].replace(/<[^>]+>/g, "").trim());
-ok(pts.length === 4, `門口那張告示讀到 ${pts.length} 條提醒，應該是 4`);
-for (const t of pts) ok(doorDetail.includes(t), `door-detail.txt 少了門口那張的一句：${t}`);
+ok(pts.length === 4, `門口那張告示讀到 ${pts.length} 條提醒，應該是 4（那張紙本身不該被動到）`);
+const CUT = pts.slice(0, 2), KEEP = pts.slice(2);
+const fine = (t) => /紅線|開單/.test(t);
+ok(CUT.every(fine), `要拿掉的那兩句裡有不是「紅線／開單」的：${CUT.join("／")}`);
+ok(KEEP.every(t => !fine(t)), `留下來的句子裡還有「紅線／開單」：${KEEP.join("／")}`);
+for (const t of KEEP) ok(doorDetail.includes(t), `door-detail.txt 少了門口那張的一句：${t}`);
+for (const t of CUT) ok(!doorDetail.includes(t),
+  `door-detail.txt 裡還留著已經從圖上拿掉的那一句（圖與字會各說各話）：${t}`);
+const cut = (PAGE.match(/<div class="pv-cut">([\s\S]*?)<\/div>/) || [])[1];
+ok(cut !== undefined, "頁上找不到「拿掉的是這兩句」那一塊");
+if (cut !== undefined) ok(cut.trim() === CUT.join("\n"),
+  `「拿掉的是這兩句」和 body.html 對不上：\n    頁面 ${JSON.stringify(cut.trim())}`
+  + `\n    檔案 ${JSON.stringify(CUT.join("\n"))}`);
 const hrefs = [...SRC.matchAll(/<a class="rl-link" href="([^"]+)"/g)].map(m => m[1]);
 ok(hrefs.length === 3, `index.html 讀到 ${hrefs.length} 條停車場連結`);
 for (const u of hrefs) ok(doorDetail.includes(u), `door-detail.txt 少了一條網址：${u}`);
@@ -110,9 +125,9 @@ ok(order.length === 3 && order[0][1] > order[2][1],
 /* ---- ④b QR 那張表要對得上 door-qr.json（產生器寫的，不要手抄） ---- */
 const QJ = JSON.parse(fs.readFileSync(path.join(DIR, "door-qr.json"), "utf8"));
 const SLOT = { "原圖": 1080, "大格": 823, "小格": 410 };
-const TAG = { "Ⓐ": "a", "Ⓓ": "qr140" };
+const TAG = { "200px": "a", "140px": "qr140" };
 const rows = [...PAGE.matchAll(
-  /<tr><td>(Ⓐ|Ⓓ) (原圖|大格|小格) \d+<\/td><td>([\d.]+)px<\/td><td>([\d.]+)px<\/td><td[^>]*>(\d\/3)<\/td><\/tr>/g)];
+  /<tr><td>(200px|140px)・(原圖|大格|小格) \d+<\/td><td>([\d.]+)px<\/td><td>([\d.]+)px<\/td><td[^>]*>(\d\/3)<\/td><\/tr>/g)];
 ok(rows.length === 6, `QR 那張表有 ${rows.length} 列，應該是 6`);
 for (const [, t, slot, px, per, got] of rows) {
   const c = QJ.cases.find(x => x.tag === TAG[t]);
@@ -165,7 +180,7 @@ for (const re of [/隨時(問|詢問|聯絡)/, /都可以問/, /即時回/, /小
     ok(!re.test(d), `${nm} 踩到紅線（這個帳號沒有專人即時回覆）：${re}`);
 
 if (bad.length) { console.error("✗ " + bad.length + " 項：\n  " + bad.join("\n  ")); process.exit(1); }
-console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、兩塊詳情逐字相同、四點提醒對得上門口那張、三條網址對得上 index.html）`);
+console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、兩塊詳情逐字相同、留下的兩句與拿掉的兩句都對得上門口那張、三條網址對得上 index.html）`);
 console.log(`  QR ${scanned}`);
 
 /* ---- ⑧ 量：八個寬度水平溢出 0、圖都載得到、死錨 0 ---- */
