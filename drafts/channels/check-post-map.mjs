@@ -39,7 +39,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，而且尺寸對得上 ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 20, `頁上有 ${imgs.length} 張圖，應該是 20`);
+ok(imgs.length === 24, `頁上有 ${imgs.length} 張圖，應該是 24`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -146,17 +146,27 @@ ok(askNames.length === 1, `far-map.json 裡沒有座標的有 ${askNames.length}
 /* far-geo.json 是產生器寫的：沒有座標的一定要是 null（＝真的沒有被畫上去） */
 for (const g of GEO.places.filter(g => askNames.includes(g.name)))
   ok(g.m === null && g.px410 === null, `${g.name} 沒有被列為待補，卻在 far-geo.json 裡有座標`);
-/* 那張距離表逐格 ＝ far-geo.json（它是「為什麼要開市區小圖」的唯一證據） */
+/* 那張距離表逐格 ＝ far-geo.json。
+   ⚠⚠⚠ 2026-09-08 第五版起它有**三欄數字**：實地公尺／這一版畫成幾公尺／小格上幾 px。
+   中間那一欄就是「這張圖示意了多少」，**它一旦和產生器分岔，這一頁就會替一張
+   不存在的圖說話**（而且畫面完全正常）——所以三欄都逐格比。
+   ⚠ 沒有被放大的那幾個（釘住的斗六交流道）中間那一欄寫「—」。 */
 const grows = [...PAGE.matchAll(
-  /<tr><td>([^<]+)<\/td><td>(\d+) 公尺<\/td><td><span class="n">([\d.]+)px<\/span><\/td><td>([^<]+)<\/td><\/tr>/g)];
+  /<tr><td>([^<]+)<\/td><td>(\d+) 公尺<\/td><td>(—|畫得像 (\d+))<\/td><td><span class="n">([\d.]+)px<\/span><\/td><td>([^<]+)<\/td><\/tr>/g)];
 ok(grows.length === GEO.places.filter(g => g.m !== null).length,
   `距離表有 ${grows.length} 列，far-geo.json 裡有座標的是 ${GEO.places.filter(g => g.m !== null).length} 個`);
-for (const [, nm, m, px] of grows) {
+for (const [, nm, m, dcell, dnum, px] of grows) {
   const g = GEO.places.find(g => g.name === nm);
   if (!g) { bad.push(`距離表上有一列在 far-geo.json 裡找不到：${nm}`); continue; }
-  ok(+m === g.m && +px === g.px410,
-    `距離表 ${nm} 對不上 far-geo.json：頁面 ${m}／${px}　檔案 ${g.m}／${g.px410}`);
+  const drawn = dcell === "—" ? g.m : +dnum;
+  ok(+m === g.m && +px === g.px410 && drawn === g.drawn,
+    `距離表 ${nm} 對不上 far-geo.json：頁面 ${m}／${drawn}／${px}　檔案 ${g.m}／${g.drawn}／${g.px410}`);
 }
+/* ⚠⚠ 「近的放大、遠的收起來」是這一版唯一會被人誤讀成造假的地方，
+   所以頁上一定要留著那句「方位一度都沒有變」，而且 far-geo.json 要真的是非等比例的。 */
+ok(/方位一度都沒有變/.test(PAGE), "第三部分少了「方位一度都沒有變」那一句 —— 非等比例的圖沒有它就是在騙人");
+ok(GEO.warp > 1 === GEO.places.some(g => g.m !== null && g.m !== g.drawn),
+  "far-geo.json 的 warp 和它自己的距離欄對不上");
 /* ⚠⚠ 還有地標沒有座標的時候，**不可以有定稿檔** ——
    定稿等於「這一張可以拿出去了」，而它現在少了使用者指名的六個地標。 */
 ok(!(askNames.length && fs.existsSync(path.join(DIR, "fangren-route-1080.png"))),

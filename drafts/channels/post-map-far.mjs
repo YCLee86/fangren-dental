@@ -424,19 +424,92 @@ const LOOK = {
             rw: 12, badge: true, spot: true, tname: true, rail: .7, tf: 1.1, dn: true },
 };
 
+/* ---------- 非等比例的尺度（近的放大、遠的收起來）----------
+ * 2026-09-08 第五版。使用者：「地圖是示意圖，不需要整張地圖都維持同樣的比例尺。
+ * 近一點的地標、公家機關，比例尺可以變大一點，這樣才畫得下；遠一點例如國道交流道
+ * 縮小一點，不然會拉很長。」
+ *
+ * ⚠⚠⚠ 做法是**以診所為圓心、只改「離診所多遠」，一點都不改方位**：
+ *   f(r) 是半徑的函數，(x, y) → (x, y) × f(r)/r。所以每一個地標的**方位一度都沒有變**，
+ *   兩個交流道仍然一個在東北一個在西南，鐵路仍然北偏東 53 度 ——
+ *   被壓縮的只有「離診所多遠」，而那件事圖上本來就有兩塊牌子印著真實公里數。
+ *
+ * f(r) 是**三段的折線**（斜率一段比一段小）：
+ *   0~R1   斜率 z      （近處放大 z 倍 —— 那四個公家機關就是在這一段被拉開的）
+ *   R1~R2  斜率 z·q
+ *   R2~    斜率 z·q²
+ *   q 由「**把斗六交流道釘在原地**」解出來（f(PIN) = PIN），所以：
+ *   ・z = 1 時 q 恰好 = 1 ＝ **完全等比例**（前四版那幾格的幾何一格都不會動；畫面上唯一的差別是雲科大改印短名）
+ *   ・z > 1 時近處撐開多少，遠處就等量收回來多少 —— 整張圖的外框幾乎不動。
+ * ⚠ 斜率一段比一段小 ＝ 單調遞增且不會反折，所以**不會有兩個地方疊在一起**。
+ * ⚠⚠ PIN 讀的是斗六交流道自己的半徑，不是寫死的數字。
+ * ⚠⚠⚠ 直線在這種尺度下會**微微彎**（半徑方向被拉、切線方向沒有），
+ *   所以每一條折線畫之前都要先加密（dens()），不然長直線會切成兩段折線。 */
+const WR1 = 700, WR2 = 2200;
+const warpOf = (z) => {
+  const PIN = Math.hypot(...FAR.places.find(p => p.kind === "ic" && p.xy[0] > 0).xy);
+  if (z === 1) return { z: 1, q: 1, m: 1, o: 1, PIN, f: (r) => r, id: true };
+  /* (PIN−R2)z·q² + (R2−R1)z·q + (R1·z − PIN) = 0 */
+  const A = (PIN - WR2) * z, B = (WR2 - WR1) * z, C = WR1 * z - PIN;
+  const q = (-B + Math.sqrt(B * B - 4 * A * C)) / (2 * A);
+  const m = z * q, o = z * q * q;
+  /* ⚠⚠ 放大倍率有盡頭：近處撐得太開，遠處的斜率就會塌到 0（＝所有遠的東西
+     疊成同一個半徑，兩條連外道路會黏在一起）。撞到就停下來，不要畫出來。 */
+  if (!(o > .05)) throw new Error(`放大 ${z} 倍太多：外圈的斜率只剩 ${o.toFixed(3)}，遠的東西會疊在一起`);
+  const y1 = WR1 * z, y2 = y1 + m * (WR2 - WR1);
+  return { z, q, m, o, PIN, id: false,
+           f: (r) => r <= WR1 ? r * z : r <= WR2 ? y1 + m * (r - WR1) : y2 + o * (r - WR2) };
+};
+const warpPt = (WP, [x, y]) => {
+  if (WP.id) return [x, y];
+  const r = Math.hypot(x, y);
+  return r < 1e-9 ? [0, 0] : [x * WP.f(r) / r, y * WP.f(r) / r];
+};
+/* 折線加密（公尺座標，加密完才 warp）—— 見上面那條「直線會微微彎」 */
+const densify = (pts, seg = 120) => {
+  const out = [pts[0]];
+  for (let i = 1; i < pts.length; i++) {
+    const [ax, ay] = pts[i - 1], [bx, by] = pts[i];
+    const n = Math.max(1, Math.min(48, Math.ceil(Math.hypot(bx - ax, by - ay) / seg)));
+    for (let j = 1; j <= n; j++) out.push([ax + (bx - ax) * j / n, ay + (by - ay) * j / n]);
+  }
+  return out;
+};
+
 const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
-                    town = true, ends = true, near = true, look = "mid" }) => {
+                    town = true, ends = true, near = true, look = "mid", warp = 1 }) => {
   const LK = LOOK[look] || LOOK.mid;
+  const WP = warpOf(warp);
   const KIND2 = LK.kind || KIND;
-  const k = vbw / zoom;
-  /* 中心 ＝ 要畫的東西的外接框中心（不是診所）—— 兩個交流道一個在東北一個在西南，
-     以診所為中心的話一定會有一半是空的。 */
-  const C = [-575, -225];
-  const EXT = { x0: C[0] - zoom / 2, x1: C[0] + zoom / 2,
+  /* ⚠⚠⚠ 框是在 **warp 之後**的座標上算的 —— warp 把遠處收起來之後，
+     整張圖佔的範圍就不是 `zoom` 那個公尺數了。
+     ・warp = 1（前四版那幾格）：照舊，中心與範圍都是寫死的，一個像素都不會動。
+     ・warp > 1：**照畫出來的東西自己外接框去配**（留 MPX 給交流道那兩塊名牌），
+       因為非等比例的圖上「範圍幾公尺」本來就不是一個數字。 */
+  const MPX = 52;
+  const wall = () => {
+    const ps = [...FAR.roads.flatMap(r => densify(r.pts).map(q => warpPt(WP, q))),
+                ...FAR.places.filter(q => q.xy).map(q => warpPt(WP, q.xy))];
+    const xs = ps.map(q => q[0]), ys = ps.map(q => q[1]);
+    return { x0: Math.min(...xs), x1: Math.max(...xs),
+             y0: Math.min(...ys), y1: Math.max(...ys) };
+  };
+  let C, ZM;
+  if (WP.id) { C = [-575, -225]; ZM = zoom; }
+  else {
+    const b = wall();
+    C = [(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2];
+    ZM = Math.max((b.x1 - b.x0) * vbw / (vbw - 2 * MPX),
+                  (b.y1 - b.y0) * vbw / Math.max(1, vbh - 2 * MPX));
+  }
+  const k = vbw / ZM;
+  const EXT = { x0: C[0] - ZM / 2, x1: C[0] + ZM / 2,
                 y0: C[1] - vbh / k / 2, y1: C[1] + vbh / k / 2 };
   const PX = (x) => (x - EXT.x0) * k;
   const PY = (y) => vbh - (y - EXT.y0) * k;
-  const P = ([x, y]) => [PX(x), PY(y)];
+  /* ⚠ 每一個座標都要先過 warp 再投影 —— 只在某幾處呼叫的話，路和地標會對不起來。 */
+  const P = (pt) => { const [x, y] = warpPt(WP, pt); return [PX(x), PY(y)]; };
+  const DZ = (pts) => WP.id ? pts : densify(pts);
   const F = (v) => v.toFixed(1);
 
   const wOf = (t, f) => [...t].reduce((a, c) => a + (c.codePointAt(0) < 0x2e80 ? .55 : 1), 0) * f;
@@ -462,23 +535,39 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
     return { x0: Math.max(-1100, Math.min(...xs)), x1: Math.min(900, Math.max(...xs)),
              y0: Math.max(-1100, Math.min(...ys)), y1: Math.min(900, Math.max(...ys)) };
   })();
-  const [tx0, ty0] = P([bb.x0, bb.y1]), [tx1, ty1] = P([bb.x1, bb.y0]);
+  /* ⚠⚠⚠ 非等比例底下**不可以拿兩個角畫一個方框** —— warp 只改「離診所多遠」，
+     所以一個矩形的四條邊會**往外鼓**（近的邊被拉得比遠的邊多）。
+     拿兩個角畫方框的話，那一塊會和它自己的街道格網對不起來，
+     而且**不會報錯**（尺寸、位置每一項都合法）。→ 邊先加密再逐點 warp，畫成多邊形。 */
+  const ring = (() => {
+    const cn = [[bb.x0, bb.y0], [bb.x1, bb.y0], [bb.x1, bb.y1], [bb.x0, bb.y1], [bb.x0, bb.y0]];
+    return densify(cn, 60).map(P);
+  })();
+  const txs = ring.map(q => q[0]), tys = ring.map(q => q[1]);
+  const tx0 = Math.min(...txs), tx1 = Math.max(...txs);
+  const ty0 = Math.min(...tys), ty1 = Math.max(...tys);
   /* ⚠⚠ 底色從 `--rule` 換成**紙色**：路現在也是 `--rule`（見上面那組寬度），
      同一個顏色的話市區這一塊會把路吃掉。紙色是站上「底」的顏色，不是新增的。
      ⚠ 它要**標上名字**才算一塊地方 —— 沒有名字的灰方塊只是一塊灰方塊
      （MIHO 那張的琵琶湖也寫著「琵琶湖」）。 */
-  const townRect = !town ? "" : `<rect x="${F(tx0)}" y="${F(ty0)}" width="${F(tx1 - tx0)}"`
-    + ` height="${F(ty1 - ty0)}" rx="${F(fs2 * .4)}" fill="${PAPER}"/>`;
+  /* ⚠ 等比例那幾格仍然畫 `<rect>` —— 線性的座標系底下矩形就是對的，
+     而且那幾格是前四版已經看過的圖，**不要為了程式一致讓它們變一個樣子**。 */
+  const townRect = !town ? "" : WP.id
+    ? `<rect x="${F(tx0)}" y="${F(ty0)}" width="${F(tx1 - tx0)}"`
+      + ` height="${F(ty1 - ty0)}" rx="${F(fs2 * .4)}" fill="${PAPER}"/>`
+    : `<path d="${ring.map((q, i) => (i ? "L" : "M")
+      + q.map(F).join(" ")).join("")}Z" fill="${PAPER}" stroke="${PAPER}"`
+      + ` stroke-width="${F(fs2 * .8)}" stroke-linejoin="round"/>`;
 
   /* --- ② 路：先細後粗，粗的壓在上面（同真的地圖） --- */
   const order = ["county", "main", "prov", "free"];
   const roads = order.map(kd => FAR.roads.filter(r => (r.kind || "") === kd)
-    .map(r => line(r.pts, KIND2[kd].w, KIND2[kd].c)).join("")).join("");
+    .map(r => line(DZ(r.pts), KIND2[kd].w, KIND2[kd].c)).join("")).join("");
 
   /* --- ③ 鐵路：白底 ＋ 細線 ＋ 枕木（＝那三張都在用的畫法） --- */
   const rl = FAR.roads.find(r => r.kind === "rail");
   const rail = (() => {
-    const pts = rl.pts.map(P);
+    const pts = DZ(rl.pts).map(P);
     let ticks = "";
     for (let i = 1; i < pts.length; i++) {
       const [ax, ay] = pts[i - 1], [bx, by] = pts[i];
@@ -489,12 +578,12 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
       }
     }
     const rc = LK.rail < 1 ? RULE : SOFT;
-    return line(rl.pts, 11, CARD) + line(rl.pts, 2.4, rc)
+    return line(DZ(rl.pts), 11, CARD) + line(DZ(rl.pts), 2.4, rc)
       + `<path d="${ticks}" stroke="${rc}" stroke-width="2" fill="none"/>`;
   })();
 
   /* --- ④ 被標出來的那條路線 ＋ 往診所的箭頭 --- */
-  const rpts = (sg) => sg.pts || farOf(sg.id).pts.slice(sg.from ?? 0, sg.to ?? undefined);
+  const rpts = (sg) => DZ(sg.pts || farOf(sg.id).pts.slice(sg.from ?? 0, sg.to ?? undefined));
   /* ⚠⚠⚠ 斗南那一側要接得到診所，而 `t1d` 的東北端停在市區西北、`wenhua` 的西端
      在它南邊 —— 兩條**沒有共用的節點**，直接兩段都塗綠就是兩截綠線。
      解法不是自己畫一條連接線（那是憑空生幾何），是**算出它們的交點**：
@@ -551,9 +640,11 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
   };
   /* ⚠⚠ 兩個交流道都一定要在框裡：這一張存在的理由就是它們。
      放不下就直接停下來，不要畫一張少一個交流道的路線圖（那是最壞的一種「看起來正常」）。 */
-  for (const p2 of FAR.places.filter(q => q.kind === "ic"))
-    if (p2.xy[0] < EXT.x0 || p2.xy[0] > EXT.x1 || p2.xy[1] < EXT.y0 || p2.xy[1] > EXT.y1)
-      throw new Error(`範圍 ${zoom} 公尺放不下「${p2.name}」——這一張的下限是 13600`);
+  for (const p2 of FAR.places.filter(q => q.kind === "ic")) {
+    const [wx, wy] = warpPt(WP, p2.xy);
+    if (wx < EXT.x0 || wx > EXT.x1 || wy < EXT.y0 || wy > EXT.y1)
+      throw new Error(`範圍 ${Math.round(ZM)} 放不下「${p2.name}」——等比例那幾格的下限是 13600`);
+  }
   const ics = ["ic-dl", "ic-dn"].map(id => {
     const p = FAR.places.find(q => q.kind === "ic" && (id === "ic-dl" ? q.xy[0] > 0 : q.xy[0] < 0));
     const [px, py] = P(p.xy);
@@ -660,35 +751,68 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
    *   下面那一行沿著文化路的字。
    * ⚠ 門檻寫成距離、不要寫死名單：雲林縣政府的座標補進來那天，
    *   它會自己出現在圖上（或自己留在框外）。 */
-  const spots = !LK.spot ? "" : FAR.places.filter(q => q.kind === "gov" && q.xy
-      && Math.hypot(...q.xy) >= 1200).map(q => {
-    const [px, py] = P(q.xy);
-    if (px < 4 || px > vbw - 4 || py < 4 || py > vbh - 4) return "";
-    claim({ x: px - 11, y: py - 11, w: 22, h: 22 });
-    const sym = `<rect x="${F(px - fs2 * .2)}" y="${F(py - fs2 * .2)}" width="${F(fs2 * .4)}"`
-      + ` height="${F(fs2 * .4)}" rx="2.5" fill="${SOFT}"/>`;
-    const nm = q.short || q.name;
-    const w = wOf(nm, fs2 * .88), h = fs2 * 1.1, step = h + 8, cand = [];
-    for (let t = 0; t < 3; t++) {
-      cand.push([px - w / 2, py + 13 + t * step]);
-      cand.push([px - w / 2, py - 13 - h - t * step]);
-      if (t < 2) {
-        cand.push([px - 17 - w, py - h / 2 - t * step]);
-        cand.push([px + 17, py - h / 2 - t * step]);
+  /* ⚠⚠⚠ 2026-09-08 第五版：**近的那幾個公家機關現在畫得下了**（warp > 1 時），
+   *   所以門檻不再是「離診所 1200 公尺以上」，是「**warp 之後畫出來排不排得開**」。
+   *   ・warp = 1（等比例）：照舊 1200 公尺，那四個交給文化路底下那一行字。
+   *   ・warp > 1：全部畫成點，**還是太近的合併成一顆、名字疊成幾行**。
+   * ⚠⚠ 派出所與中華電信實地只差 24 公尺、方位也只差 4 度 —— **任何一種
+   *   以診所為圓心的放大都分不開它們**（放大的是「離診所多遠」，不是「彼此多遠」）。
+   *   所以合併不是偷懶，是那一組座標的必然。
+   * ⚠ 合併的順序寫死成**由遠到近**：那是一條講得出來的規則，不是看哪個先被讀到。 */
+  const MERGE = 22;
+  const spots = !LK.spot ? "" : (() => {
+    const govMin = WP.id ? 1200 : 0;
+    const list = FAR.places.filter(q => q.kind === "gov" && q.xy
+        && Math.hypot(...q.xy) >= govMin)
+      .map(q => ({ q, r: Math.hypot(...q.xy), p: P(q.xy) }))
+      .sort((a, b) => b.r - a.r);                       /* 由遠到近 */
+    const cl = [];
+    for (const it of list) {
+      const c = cl.find(c2 => Math.hypot(c2.p[0] - it.p[0], c2.p[1] - it.p[1]) < MERGE);
+      if (c) { c.names.push(it.q.short || it.q.name); c.at.push(it.p); }
+      else cl.push({ p: it.p, names: [it.q.short || it.q.name], at: [it.p] });
+    }
+    return cl.map(c => {
+      const px = c.at.reduce((a, v) => a + v[0], 0) / c.at.length;
+      const py = c.at.reduce((a, v) => a + v[1], 0) / c.at.length;
+      if (px < 4 || px > vbw - 4 || py < 4 || py > vbh - 4) return "";
+      claim({ x: px - 11, y: py - 11, w: 22, h: 22 });
+      const sym = `<rect x="${F(px - fs2 * .2)}" y="${F(py - fs2 * .2)}" width="${F(fs2 * .4)}"`
+        + ` height="${F(fs2 * .4)}" rx="2.5" fill="${SOFT}"/>`;
+      /* 合併的那一顆：名字**疊成幾行**，不要用頓號串成一條 —— 兩個名字串起來
+         就是 9 個字 238px，比文化路整條還長。 */
+      const nf = fs2 * .88, lh = nf * 1.16;
+      const w = Math.max(...c.names.map(t => wOf(t, nf))), h = lh * c.names.length;
+      const step = h + 8, cand = [];
+      for (let t = 0; t < 3; t++) {
+        cand.push([px - w / 2, py + 13 + t * step]);
+        cand.push([px - w / 2, py - 13 - h - t * step]);
+        if (t < 2) {
+          cand.push([px - 17 - w, py - h / 2 - t * step]);
+          cand.push([px + 17, py - h / 2 - t * step]);
+        }
       }
-    }
-    for (const [bx, by] of cand) {
-      const box = { x: bx - 3, y: by - 3, w: w + 6, h: h + 6 };
-      if (!inFrame(box) || hits(box)) continue;
-      claim(box);
-      return sym + `<text class="pn" x="${F(bx)}" y="${F(by + fs2 * .76)}"`
-        + ` style="font-size:${F(fs2 * .88)}px">${nm}</text>`;
-    }
-    return sym;
-  }).join("");
+      for (const [bx, by] of cand) {
+        const box = { x: bx - 3, y: by - 3, w: w + 6, h: h + 6 };
+        if (!inFrame(box) || hits(box)) continue;
+        claim(box);
+        /* ⚠⚠⚠ 被擠遠的名字要拉一條細線回它自己那顆 ■（同路名那一條）——
+           不拉線的話，「斗六派出所／中華電信」被推到 90px 外、正好落在鐵路旁邊，
+           讀起來像在標鐵路。**這一版第一次出圖就是這樣。** */
+        const d2 = Math.hypot(bx + w / 2 - px, by + h / 2 - py);
+        const lead = d2 < 34 ? "" : `<path d="M${F(px)} ${F(py)}L${F(bx + w / 2)} ${F(by + h / 2)}"`
+          + ` stroke="${SOFT}" stroke-width="1.6" fill="none"/>`;
+        return lead + sym + c.names.map((t, i) => `<text class="pn" x="${F(bx)}"`
+          + ` y="${F(by + lh * i + nf * .86)}" style="font-size:${F(nf)}px">${t}</text>`).join("");
+      }
+      return sym;
+    }).join("");
+  })();
 
   const nearLine = (() => {
-    if (!(near && LK.spot)) return "";
+    /* ⚠⚠ warp > 1 時這一行**不畫** —— 那四個已經變成圖上真的點了，
+       再寫一行「文化路上　圓環・斗六派出所…」就是同一件事講兩次。 */
+    if (!(near && LK.spot && WP.id)) return "";
     const f = rf0 * .86;
     /* ⚠ 順序是量出來的不是排的：圓環 −356 → 派出所 −157 → 中華電信 −133
        → 元大銀行 −22（公尺，往東遞增）。⚠⚠ 尾巴不可以接上「芳仁牙醫」——
@@ -727,8 +851,9 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
     const w = wOf(r.badge, bf) + pad * 2, h = bf * 1.62;
     /* 沿線找一個放得下的落點：先中段，再往兩頭退 */
     for (const f of [.5, .32, .68, .16, .84, .08, .92]) {
-      const i = Math.min(r.pts.length - 1, Math.max(1, Math.round(f * (r.pts.length - 1))));
-      const a = P(r.pts[i - 1]), b = P(r.pts[i]);
+      const rp = DZ(r.pts);
+      const i = Math.min(rp.length - 1, Math.max(1, Math.round(f * (rp.length - 1))));
+      const a = P(rp[i - 1]), b = P(rp[i]);
       const cx2 = a[0] + (b[0] - a[0]) * .5, cy2 = a[1] + (b[1] - a[1]) * .5;
       const box = { x: cx2 - w / 2 - 3, y: cy2 - h / 2 - 3, w: w + 6, h: h + 6 };
       if (!inFrame(box) || hits(box)) continue;
@@ -748,7 +873,7 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
    * ⚠ **有號碼牌的路就不再排文字路名**（那正是號碼牌買到的空間）。 */
   const rf = rf0;
   const names = FAR.roads.filter(r => r.name && r.kind !== "rail" && !(LK.badge && r.badge)
-      && !(near && LK.tname && r.id === "wenhua")).map(r => {
+      && !(near && LK.tname && WP.id && r.id === "wenhua")).map(r => {
     const w = wOf(r.name, rf), h = rf * 1.15;
     /* ⚠⚠ 兩層迴圈的順序是「**先把整條路走一遍、再往外推一階**」，不是反過來 ——
        路名離它的路愈遠愈沒有用，寧可換一個落點也不要離開那條線。
@@ -758,8 +883,9 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
        只給「貼著線」那一階的話它整條沒有名字，而它正是綠色路線走的那一條。 */
     for (const t of [0, 1, 2]) {
       for (const f of [.5, .3, .7, .15, .85]) {
-        const i = Math.min(r.pts.length - 1, Math.max(1, Math.round(f * (r.pts.length - 1))));
-        const a = P(r.pts[i - 1]), b = P(r.pts[i]);
+        const rp = DZ(r.pts);
+        const i = Math.min(rp.length - 1, Math.max(1, Math.round(f * (rp.length - 1))));
+        const a = P(rp[i - 1]), b = P(rp[i]);
         const mx = a[0] + (b[0] - a[0]) * .5, my = a[1] + (b[1] - a[1]) * .5;
         const L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
         const nx = -(b[1] - a[1]) / L, ny = (b[0] - a[0]) / L;
@@ -969,7 +1095,7 @@ for (const f of fs.readdirSync(OUT).filter(f => f.startsWith("far-") && f.endsWi
   fs.rmSync(path.join(OUT, f));
 
 /* ⭐ 建議的那一格（＝「實際 ↔ 示意」那把尺的第三格，最靠近 MIHO 那張） */
-const PICK = "schema";
+const PICK = "w4";
 const TITLES = {
   t1: "從外地來　芳仁牙醫怎麼走",
   t2: "芳仁牙醫　交通與位置",
@@ -979,10 +1105,11 @@ const TITLES = {
 const made = [];
 const build = async (tag, { title = TITLES.t1, ts = 46, fs2 = 32, mfs = 30,
                             zoom = 13600, route = true, inset = false, town = true,
-                            ends = true, near = true, look = "mid", city = false } = {}) => {
+                            ends = true, near = true, look = "mid", city = false,
+                            warp = 1 } = {}) => {
   const draw = (vbw, vbh) => city
     ? citySvg({ vbw, vbh, fs2: mfs, zoom: 1300, marks: "name", grid: true, edges: true })
-    : routeSvg({ vbw, vbh, fs2: mfs, zoom, route, inset, town, ends, near, look });
+    : routeSvg({ vbw, vbh, fs2: mfs, zoom, route, inset, town, ends, near, look, warp });
   /* 第一輪：地圖先給一個高度，量出「地圖以外的東西有多高」 */
   const probe = draw(400, 300);
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(ts, fs2, mfs)}</style>`
@@ -1064,25 +1191,31 @@ const build = async (tag, { title = TITLES.t1, ts = 46, fs2 = 32, mfs = 30,
   const file = fileOf(tag);
   const buf = await page.screenshot({ path: path.join(OUT, file) });
   const q = inkOf(buf);
-  made.push({ tag, file, m, k, ext, ts, fs2, mfs, zoom: city ? 1300 : zoom, title, q,
-              route, inset, city, mapW: MAPW, mapH: MAPH });
+  made.push({ tag, file, m, k, ext, ts, fs2, mfs, zoom: city ? 1300 : Math.round(ext.x1 - ext.x0),
+              title, q, route, inset, city, warp, mapW: MAPW, mapH: MAPH });
   return made[made.length - 1];
 };
 
 /* 一把尺（第九節第 28 條 ①：他的眼睛才是裁判，給一把尺不要送一個我估的值） */
 const CASES = [
-  ["mid",     {}],                                   /* ⭐ 建議：中間那一格 */
+  /* ── 尺度：整張同一個比例尺 ↔ 近的放大遠的收起來（2026-09-08 第五版的那把尺）── */
+  ["w4",      { look: "schema", warp: 4 }],          /* ⭐ 建議：近處放大 4 倍 */
+  ["w3",      { look: "schema", warp: 3 }],
+  ["w2",      { look: "schema", warp: 2 }],
+  /* ── 畫法：實際 ↔ 示意（第四版那把尺，都是等比例）── */
+  ["mid",     {}],                                   /* 中間那一格 */
   ["real",    { look: "real" }],                     /* 偏實際（＝第三版的畫法） */
-  ["schema",  { look: "schema" }],                   /* 偏示意（再往 MIHO 那張走） */
+  ["schema",  { look: "schema" }],                   /* 偏示意（＝第四版建議的那一格） */
   ["lens",    { inset: true }],                      /* 右下角加一塊市區小圖（見規格頁的取捨） */
   ["nonear",  { near: false }],                      /* 不放文化路那一行路標 */
   ["noroute", { route: false }],                     /* 不標那條路線（看它少了什麼） */
-  ["wide",    { zoom: 17000 }],                      /* 範圍大一階 */
-  ["wider",   { zoom: 22000 }],                      /* 再大一階 */
-  ["big",     { ts: 54, fs2: 38, mfs: 34 }],         /* 字大一階 */
-  ["small",   { ts: 40, fs2: 28, mfs: 26 }],         /* 字小一階 */
-  ["notitle", { title: "" }],                        /* 沒有標題 */
-  ["t2",      { title: TITLES.t2 }],                 /* 標題換一句 */
+  /* ⚠⚠ 「範圍幾公尺」只有在**等比例**時才是一個數字，所以這兩格維持 warp = 1 */
+  ["wide",    { zoom: 17000 }],                      /* 範圍大一階（等比例） */
+  ["wider",   { zoom: 22000 }],                      /* 再大一階（等比例） */
+  ["big",     { ts: 54, fs2: 38, mfs: 34, look: "schema", warp: 4 }],   /* 字大一階 */
+  ["small",   { ts: 40, fs2: 28, mfs: 26, look: "schema", warp: 4 }],   /* 字小一階 */
+  ["notitle", { title: "", look: "schema", warp: 4 }],   /* 沒有標題 */
+  ["t2",      { title: TITLES.t2, look: "schema", warp: 4 }],  /* 標題換一句 */
   ["city",    { city: true, title: TITLES.t3 }],     /* 第二版那張市區圖（對照／也可以當第二則） */
 ];
 for (const [tag, opt] of CASES) await build(tag, opt);
@@ -1114,7 +1247,7 @@ await p2.screenshot({ path: path.join(OUT, "far-profile-3up.png") });
 const p3 = await browser.newPage({ viewport: { width: SMALL * 3 + 24, height: SMALL + 12 } });
 await p3.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
   body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
-  + [fileOf(PICK), fileOf("wide"), fileOf("wider")]
+  + [fileOf("schema"), fileOf("wide"), fileOf("wider")]
     .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
 await p3.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p3.screenshot({ path: path.join(OUT, "far-slot-410.png") });
@@ -1122,7 +1255,7 @@ await p3.screenshot({ path: path.join(OUT, "far-slot-410.png") });
 const p4 = await browser.newPage({ viewport: { width: SMALL * 3 + 24, height: SMALL + 12 } });
 await p4.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
   body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
-  + [fileOf("small"), fileOf("mid"), fileOf("big")]
+  + [fileOf("small"), fileOf(PICK), fileOf("big")]
     .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
 await p4.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p4.screenshot({ path: path.join(OUT, "far-slot-410-type.png") });
@@ -1135,6 +1268,17 @@ await p5.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
     .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
 await p5.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p5.screenshot({ path: path.join(OUT, "far-slot-410-look.png") });
+
+/* 「整張同一個比例尺 ↔ 近的放大遠的收起來」那把尺，在小格 410px 上並排 ——
+   ⚠ 判準就在這張：1080 的原圖上四格都讀得出來，**410px 上只有放大過的那幾格
+   看得到那四個公家機關**。 */
+const p6 = await browser.newPage({ viewport: { width: SMALL * 4 + 30, height: SMALL + 12 } });
+await p6.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
+  body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
+  + [fileOf("schema"), fileOf("w2"), fileOf("w3"), fileOf("w4")]
+    .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
+await p6.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
+await p6.screenshot({ path: path.join(OUT, "far-slot-410-warp.png") });
 await browser.close();
 
 /* ========== far-geo.json：每個地標離診所多遠、在小格上是幾 px ==========
@@ -1147,18 +1291,28 @@ const A = made.find(x => x.tag === PICK);
    它是「**為什麼那四個公家機關不畫成圖上的點、改成左下角一行字**」的唯一證據。
    ⚠ 尺度直接讀那張建議圖自己的 zoom，不要另外寫一個數字：兩者一旦分岔，
      這張表就會開始說一張不存在的圖的話。 */
-const WIDE_ZOOM = made.find(x => x.tag === PICK).zoom;
-const KWIDE = (W - 2 * PAD) / WIDE_ZOOM;
+const WIDE_ZOOM = A.zoom, KWIDE = A.k;
 const FARMAP = JSON.parse(fs.readFileSync(path.join(ROOT, "drafts", "channels", "far-map.json"), "utf8"));
+/* ⚠⚠⚠ 2026-09-08 第五版起這張表有**兩欄距離**，而那正是這一版在做的事：
+   `m` ＝ 實地離診所幾公尺（事實，不會變）；`drawn` ＝ 這一版畫出來相當於幾公尺
+   （近的被放大、遠的被收起來）。px410 算的是 `drawn`，因為那是眼睛看到的。
+   ⚠ 兩欄差多少 ＝ 這張圖「示意」了多少，攤在規格頁上讓他自己看。 */
+const WPICK = warpOf(A.warp);
 const GEO = {
-  _說明: `每個地標離診所多遠，以及照這一版的 ${WIDE_ZOOM} 公尺尺度畫的話，`
-    + `在小格 ${SMALL}px 上離診所幾 px（＝為什麼那四個公家機關收成左下角一行字）。`
+  _說明: `每個地標離診所多遠，以及照建議那一版（${A.warp === 1 ? "整張同一個比例尺"
+    : `近處放大 ${A.warp} 倍`}）畫出來，在小格 ${SMALL}px 上離診所幾 px。`
     + "post-map-far.mjs 寫的，不要手改。",
-  wideZoom: WIDE_ZOOM, k: +KWIDE.toFixed(5), slot: SMALL,
+  wideZoom: WIDE_ZOOM, k: +KWIDE.toFixed(5), slot: SMALL, warp: A.warp,
+  warpNote: A.warp === 1 ? "整張同一個比例尺"
+    : `以診所為圓心，只改「離診所多遠」不改方位：0~${WR1}m 放大 ${A.warp} 倍，`
+      + `${WR1}~${WR2}m ×${WPICK.m.toFixed(2)}，再外面 ×${WPICK.o.toFixed(2)}，`
+      + `斗六交流道釘在原地（${Math.round(WPICK.PIN)} 公尺）`,
   places: FARMAP.places.filter(p => p.id !== "clinic").map(p => {
-    if (!p.xy) return { name: p.name, src: p.src, m: null, px410: null };
+    if (!p.xy) return { name: p.name, src: p.src, m: null, drawn: null, px410: null };
     const d = Math.round(Math.hypot(p.xy[0], p.xy[1]));
-    return { name: p.name, src: p.src, m: d, px410: +(d * KWIDE * K_SMALL).toFixed(1) };
+    const dw = Math.round(WPICK.f(d));
+    return { name: p.name, src: p.src, m: d, drawn: dw,
+             px410: +(dw * KWIDE * K_SMALL).toFixed(1) };
   }),
 };
 fs.writeFileSync(path.join(OUT, "far-geo.json"), JSON.stringify(GEO, null, 2) + "\n");
