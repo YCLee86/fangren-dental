@@ -266,13 +266,27 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
          ${wrapn ? "flex-direction:column;gap:" + Math.round(fs2 * .22) + "px;"
                  : "flex-wrap:nowrap;"}
          display:flex;align-items:center;justify-content:center;gap:${Math.round(fs2 * .3)}px}
+/* ⚠⚠⚠ 2026-09-08 使用者：「Ⓒ ×1.30 壹車房 斷行 中華路停車場 斷行 190公尺 分成三行」。
+   折行那一種**不可以交給瀏覽器自己折** —— 只有 P1 的名字放不下（10 個字），
+   瀏覽器會折在「停車／場」，一個字被丟到下一行。名字裡本來就有一個全形破折號
+   （壹車房－中華路停車場），那才是它自己的斷點：拆成兩個 .ln、各自一列。
+   ⚠ 破折號留在第一列的行尾，**沒有拿掉任何一個字**（它是門口那張紙上的原文）。
+   ⚠ 每一個 .ln 自己 nowrap，而且下面有一道守門在數它有沒有被再折（第 23 節那條）。 */
+.lot .nm .ln{white-space:nowrap}
 .lot .no{background:#365685;color:${CARD};border-radius:${Math.round(fs2 * .28)}px;
          padding:.28em .62em;font-size:.86em;font-weight:700;
          font-family:Arial,Helvetica,sans-serif;letter-spacing:.02em}
 .lot .du{margin-top:${Math.round(fs2 * .22)}px;font-size:${Math.round(fs2 * .74 * lotk)}px;color:${SOFT}}
 `;
 
-const sheet = (fs2, qr, drop = 0, title = "") => `<div class="sheet"><div class="band">
+/* 折行那一種：名字照它自己的全形破折號拆成幾列（破折號留在行尾，一個字都沒少） */
+/* ⚠ 一行那一種也包成一個 .ln（畫出來一模一樣：nowrap 的 flex 項目，匿名或具名都同一個盒）
+     —— 這樣「名字畫成幾列」才量得到。直接量 .nm 是假的：裡面還有那顆號碼牌，
+     字級不同、rect 的 top 就不同，會被數成 2~3 列（第一版就是這樣報 3/3/3）。 */
+const nmHtml = (name, wrapn) => (wrapn ? name.split("\uFF0D") : [name])
+  .map((s, j, a) => `<span class="ln">${s}${j < a.length - 1 ? "\uFF0D" : ""}</span>`).join("");
+
+const sheet = (fs2, qr, drop = 0, title = "", wrapn = 0) => `<div class="sheet"><div class="band">
   ${title ? `<div class="tt">${title}</div>` : ""}
   <ul class="pts">${dropPts(drop).map(p => `<li>${p}</li>`).join("")}</ul>
   <div class="rule"></div>
@@ -280,7 +294,7 @@ const sheet = (fs2, qr, drop = 0, title = "") => `<div class="sheet"><div class=
   <div class="rule"></div>
   <div class="lots">${D.lots.map((l, i) => `<div class="lot">${
     qr ? `<div class="qr">${l.qr}</div>` : ""
-  }<div class="nm"><span class="no">${l.tag}</span>${l.name}</div>
+  }<div class="nm"><span class="no">${l.tag}</span>${nmHtml(l.name, wrapn)}</div>
     <div class="du">${l.dist}</div></div>`).join("")}</div>
 </div></div>`;
 
@@ -295,7 +309,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
   /* 先量「地圖以外的東西有多高」，再把地圖撐到剩下的空間 */
   MAPW = 400; MAPH = 320; MAPURI = "";
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn)}</style>`
-    + sheet(fs2, qr, drop, title));
+    + sheet(fs2, qr, drop, title, wrapn));
   const other = await page.evaluate(() => {
     const b = document.querySelector(".band").getBoundingClientRect();
     const m = document.querySelector(".map").getBoundingClientRect();
@@ -312,7 +326,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
   MAPW = sz.w; MAPH = sz.h;
   MAPURI = "data:image/png;base64," + buf.toString("base64");
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn)}</style>`
-    + sheet(fs2, qr, drop, title));
+    + sheet(fs2, qr, drop, title, wrapn));
   await page.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 
   /* ---------- 守門 ---------- */
@@ -363,6 +377,18 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
     const room = bandW - need;
     const lotfs = [parseFloat(getComputedStyle(lots[0].querySelector(".nm")).fontSize),
                    parseFloat(getComputedStyle(lots[0].querySelector(".du")).fontSize)];
+    /* ⚠⚠ 自己指定的斷行有沒有被「再折」（第 23 節那一條：凡是自己斷行的東西，
+       都要有一個有沒有被再折的量測）。折行那一種的每一個 .ln 只准佔一列。 */
+    const refold = [...document.querySelectorAll(".lot .nm .ln")].filter(el => {
+      rng.selectNodeContents(el);
+      return new Set([...rng.getClientRects()].map(r => Math.round(r.top / 4))).size > 1;
+    }).length;
+    /* 名字實際畫成幾列（折行那一種：P1 應該是 2、另外兩張 1） */
+    const nmLines = [...document.querySelectorAll(".lot .nm")].map(el =>
+      [...el.querySelectorAll(".ln")].reduce((n, sp) => {
+        rng.selectNodeContents(sp);
+        return n + new Set([...rng.getClientRects()].map(r => Math.round(r.top / 4))).size;
+      }, 0));
     /* 地圖 PNG 的角落要等於畫布底色 */
     const im = document.querySelector(".map img");
     const cv = document.createElement("canvas");
@@ -370,11 +396,13 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
     const cx = cv.getContext("2d"); cx.drawImage(im, 0, 0);
     const px = cx.getImageData(1, 1, 1, 1).data;
     return { band: { y: band.y, h: band.height }, img: { w: img.width, h: img.height },
-             over, lines, wide, room, lotfs, lotsH: grid.getBoundingClientRect().height,
+             over, lines, wide, room, lotfs, refold, nmLines,
+             lotsH: grid.getBoundingClientRect().height,
              corner: "#" + [px[0], px[1], px[2]].map(v => v.toString(16).padStart(2, "0")).join("") };
   }, { CARD, wrapn });
 
   if (m.over) throw new Error(`${tag}：有 ${m.over} 個元素溢出`);
+  if (m.refold) throw new Error(`${tag}：自己斷行的名字有 ${m.refold} 段被再折`);
   if (m.wide) throw new Error(`${tag}：那一排的三個名字加起來比整條寬 `
     + `${(-m.room).toFixed(0)}px —— 會互相碰到（要嘛字收小，要嘛讓名字折行 wrapn）`);
   if (m.corner.toLowerCase() !== CARD) throw new Error(
@@ -538,6 +566,7 @@ for (const x of made.filter(x => x.qr === false && x.drop && !x.title))
   console.log(`  door-${x.tag}\t×${x.lotk.toFixed(2)}${x.wrapn ? " 折行" : "　一行"}`
     + `\t名 ${x.m.lotfs[0]}→${x.m.onLot[0].toFixed(1)}${x.m.onLot[0] >= 10 ? " ✓" : " ⚠"}`
     + `\t距 ${x.m.lotfs[1]}→${x.m.onLot[1].toFixed(1)}${x.m.onLot[1] >= 10 ? " ✓" : " ⚠"}`
+    + `\t名字 ${x.m.nmLines.join("/")} 列`
     + `\t那一排高 ${x.m.lotsH.toFixed(0)}\t地圖 ${x.m.img.w}×${x.m.img.h}\t三格加溝還餘 ${x.m.room.toFixed(0)}px`);
 console.log(`\n── 出圖 ──`);
 for (const x of made)

@@ -119,7 +119,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   <p class="pv-cap"><b>這一排才是判準。</b>上面那兩句提醒 <b>11.4px</b>、
     地圖上的街名 <b>13.2px</b>（第一次過 10px）——那兩項三張都一樣。<br>
     ⚠ 差在<b>最下面那一排</b>：左邊 9.9／8.4px、中間 12.9／11.0、右邊 15.6／13.7。
-    代價是地圖 920 → 764 → 656。<b>下一節那把尺就是這件事。</b></p>
+    代價是地圖 920 → 754 → 644。<b>下一節那把尺就是這件事。</b></p>
 
   <h2 class="pv-h2">⚠ 下排那兩行的字級<em>要挑</em><span class="t">你說有點小 —— 量出來你是對的</span></h2>
   <table class="pv-tab">
@@ -127,9 +127,9 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <tbody>
       <tr><td>Ⓐ 現況</td><td class="no">9.9px</td><td class="no">8.4px</td><td>920</td></tr>
       <tr><td>Ⓑ ×1.10</td><td>10.6px</td><td class="no">9.1px</td><td>914</td></tr>
-      <tr><td>Ⓒ ×1.30 建議</td><td>12.9px</td><td>11.0px</td><td>764</td></tr>
-      <tr><td>Ⓓ ×1.45</td><td>14.0px</td><td>12.1px</td><td>686</td></tr>
-      <tr><td>Ⓔ ×1.60</td><td>15.6px</td><td>13.7px</td><td>656</td></tr>
+      <tr><td>Ⓒ ×1.30 建議</td><td>12.9px</td><td>11.0px</td><td>754</td></tr>
+      <tr><td>Ⓓ ×1.45</td><td>14.0px</td><td>12.1px</td><td>676</td></tr>
+      <tr><td>Ⓔ ×1.60</td><td>15.6px</td><td>13.7px</td><td>644</td></tr>
     </tbody>
   </table>
   <p class="pv-cap">名字與距離那兩欄是<b>在小格 410px 上量的</b>（這一線的判準一直是
@@ -146,11 +146,18 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     距離仍然 9.1px。</p>
   <div class="pv-shot">
     <img src="door-c130.png" width="1080" height="1080" loading="lazy"
-      alt="下排字級 ×1.30：名字折行、號碼牌自己一列">
+      alt="下排字級 ×1.30：名字照破折號斷成兩行、號碼牌自己一列">
   </div>
   <p class="pv-cap"><b>Ⓒ ×1.30</b><b>（建議）</b>——<b>兩行第一次都過 10px</b>。
     名字開始折行，所以號碼牌改成<b>自己一列</b>：不這樣做的話三格會各折在不同的地方
-    （一格牌子在字旁邊、一格在字上面），看起來就是亂的。地圖 920 → <b>764</b>。</p>
+    （一格牌子在字旁邊、一格在字上面），看起來就是亂的。地圖 920 → <b>754</b>。<br>
+    ⚠⚠ <b>P1 的斷點是自己指定的，不是交給瀏覽器折。</b>只有 P1 放不下（10 個字），
+    瀏覽器會折成「中華路停車<b>／</b>場」，一個字被丟到下一行；名字裡本來就有一個
+    <b>全形破折號</b>（壹車房－中華路停車場），那才是它自己的斷點——
+    現在讀起來是<b>壹車房－／中華路停車場／190 公尺・步行 3 分鐘</b>三行。<br>
+    ⚠ 破折號<b>留在第一行的行尾，一個字都沒有拿掉</b>（那是門口那張紙上的原文）。
+    要它不出現在畫面上是另一個決定，說一聲就改。<br>
+    ⚠ 產生器有一道守門在數「自己斷的每一段有沒有被再折」，被折就停下來。</p>
   <div class="pv-shot">
     <img src="door-c145.png" width="1080" height="1080" loading="lazy"
       alt="下排字級 ×1.45">
@@ -159,8 +166,10 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <img src="door-c160.png" width="1080" height="1080" loading="lazy"
       alt="下排字級 ×1.60">
   </div>
-  <p class="pv-cap"><b>Ⓓ ×1.45</b>（地圖 686）與 <b>Ⓔ ×1.60</b>（地圖 656）。
-    再往上那一排就比地圖還搶眼了。</p>
+  <p class="pv-cap"><b>Ⓓ ×1.45</b>（地圖 676）與 <b>Ⓔ ×1.60</b>（地圖 644）。
+    再往上那一排就比地圖還搶眼了。<br>
+    ⚠ 而且到這兩格，<b>連「140 公尺・步行 2 分鐘」那一行也開始自己折</b>
+    （「2 分鐘」掉到第二行）——名字的斷點我們指定得了，那一行沒有可以指定的斷點。</p>
 
   <h2 class="pv-h2">拿掉的是這兩句<span class="t">門口那張告示本人一個字都沒有動</span></h2>
   <div class="pv-cut">永樂街平常車不多，但診所門口被劃設紅線。
