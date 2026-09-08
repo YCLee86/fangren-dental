@@ -96,28 +96,71 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
       alt="定案的位置圖：兩句提醒、轉向的地圖、P1 P2 P3 三張卡，沒有 QR">
   </div>
   <p class="pv-cap">兩句一走、三顆碼一走，那些高度<b>全部給了地圖</b>：
-    516 → <span class="n">920px</span>（大 <b>78%</b>），左右已經頂到版面的內距（各 40px）。<br>
-    ⚠⚠ 換來的是地圖上的字在小格上大了一倍：<b>街名 7.4 → 13.2px</b>、
-    P 代號 7.0 → 12.5、綠塊「芳仁牙醫」5.7 → 10.2、巷名 4.2 → 7.5。<br>
+    460 → <span class="n">920px</span>（<b>整整大一倍</b>），左右已經頂到版面的內距（各 40px）。<br>
+    ⚠⚠ 換來的是地圖上的字在小格上也大一倍：<b>街名 6.6 → 13.2px</b>、
+    P 代號 6.3 → 12.5、綠塊「芳仁牙醫」5.1 → 10.2、巷名 3.8 → 7.5。<br>
     ⚠ 綠塊裡是<b>「芳仁牙醫」</b>不是門口那張的「現在位置」——
     看貼文的人不在那裡，那四個字會被讀成「你現在的位置」。</p>
 
   <h2 class="pv-h2">先看它在主頁上長怎樣<span class="t">大格＝看診時間（已定稿）／小格左＝這一張</span></h2>
   <div class="pv-shot">
     <img src="door-profile-3up.png" width="823" height="823" loading="lazy"
-      alt="主頁三格的模擬：大格是看診時間，小格左是定案的位置圖">
+      alt="主頁三格的模擬：大格是看診時間，小格左是位置圖">
   </div>
   <p class="pv-cap">⚠⚠ <b>這一張不能放大格</b>：大格只看得到中間 537 列，
-    這一張的內容佔 45~1035——上下都會被切掉。</p>
+    這一張的內容佔 45~1035——上下都會被切掉。<br>
+    ⚠ 小格裡放的是<b>下一節那把尺的建議格（Ⓒ）</b>，不是上面那張。</p>
 
-  <h2 class="pv-h2">⚠⚠ 在小格的實際大小（410px）<span class="t">左＝定案　中＝加一行標題　右＝原本那一版（四句＋三顆碼）</span></h2>
+  <h2 class="pv-h2">⚠⚠ 在小格的實際大小（410px）<span class="t">左＝現況　中＝Ⓒ 建議　右＝Ⓔ 最大</span></h2>
   <div class="pv-shot">
     <img src="door-slot-410.png" width="1254" height="422" loading="lazy"
-      alt="三張候選圖縮到小格的實際大小 410px 並排">
+      alt="三種下排字級縮到小格的實際大小 410px 並排">
   </div>
-  <p class="pv-cap"><b>這一排才是判準。</b>左邊那張的提醒 <b>11.4px</b>、
-    停車場名字與距離都讀得出來，<b>地圖上的街名也第一次過了 10px（13.2）</b>。<br>
-    ⚠ 右邊那張（四句 ＋ 三顆碼）的地圖只有它的 56%，街名 7.4px——<b>差距一眼看得出來</b>。</p>
+  <p class="pv-cap"><b>這一排才是判準。</b>上面那兩句提醒 <b>11.4px</b>、
+    地圖上的街名 <b>13.2px</b>（第一次過 10px）——那兩項三張都一樣。<br>
+    ⚠ 差在<b>最下面那一排</b>：左邊 9.9／8.4px、中間 12.9／11.0、右邊 15.6／13.7。
+    代價是地圖 920 → 764 → 656。<b>下一節那把尺就是這件事。</b></p>
+
+  <h2 class="pv-h2">⚠ 下排那兩行的字級<em>要挑</em><span class="t">你說有點小 —— 量出來你是對的</span></h2>
+  <table class="pv-tab">
+    <thead><tr><th>哪一格</th><th>名字</th><th>距離</th><th>地圖</th></tr></thead>
+    <tbody>
+      <tr><td>Ⓐ 現況</td><td class="no">9.9px</td><td class="no">8.4px</td><td>920</td></tr>
+      <tr><td>Ⓑ ×1.10</td><td>10.6px</td><td class="no">9.1px</td><td>914</td></tr>
+      <tr><td>Ⓒ ×1.30 建議</td><td>12.9px</td><td>11.0px</td><td>764</td></tr>
+      <tr><td>Ⓓ ×1.45</td><td>14.0px</td><td>12.1px</td><td>686</td></tr>
+      <tr><td>Ⓔ ×1.60</td><td>15.6px</td><td>13.7px</td><td>656</td></tr>
+    </tbody>
+  </table>
+  <p class="pv-cap">名字與距離那兩欄是<b>在小格 410px 上量的</b>（這一線的判準一直是
+    「小格上小於 10px ＝ 等於沒寫」）——現況兩行都沒過，<b>你看出來的是真的</b>。<br>
+    ⚠⚠ <b>但字一大，那一排就變高，而高度是從地圖借的</b>（最右欄）。
+    這一格沒有免費的答案，所以是一把尺。<br>
+    ⚠ 中間還有一道硬牆：三個名字原本是<b>不折行</b>的，<span class="n">×1.15 就開始互相碰到</span>——
+    要再大只能<b>讓名字折行</b>（Ⓒ 以上都是），那又會再多吃一截地圖。</p>
+  <div class="pv-shot">
+    <img src="door-c110.png" width="1080" height="1080" loading="lazy"
+      alt="下排字級 ×1.10：名字仍然一行">
+  </div>
+  <p class="pv-cap"><b>Ⓑ ×1.10</b>——<b>幾乎不花錢</b>（地圖只少 6px），但只有名字過線、
+    距離仍然 9.1px。</p>
+  <div class="pv-shot">
+    <img src="door-c130.png" width="1080" height="1080" loading="lazy"
+      alt="下排字級 ×1.30：名字折行、號碼牌自己一列">
+  </div>
+  <p class="pv-cap"><b>Ⓒ ×1.30</b><b>（建議）</b>——<b>兩行第一次都過 10px</b>。
+    名字開始折行，所以號碼牌改成<b>自己一列</b>：不這樣做的話三格會各折在不同的地方
+    （一格牌子在字旁邊、一格在字上面），看起來就是亂的。地圖 920 → <b>764</b>。</p>
+  <div class="pv-shot">
+    <img src="door-c145.png" width="1080" height="1080" loading="lazy"
+      alt="下排字級 ×1.45">
+  </div>
+  <div class="pv-shot">
+    <img src="door-c160.png" width="1080" height="1080" loading="lazy"
+      alt="下排字級 ×1.60">
+  </div>
+  <p class="pv-cap"><b>Ⓓ ×1.45</b>（地圖 686）與 <b>Ⓔ ×1.60</b>（地圖 656）。
+    再往上那一排就比地圖還搶眼了。</p>
 
   <h2 class="pv-h2">拿掉的是這兩句<span class="t">門口那張告示本人一個字都沒有動</span></h2>
   <div class="pv-cut">永樂街平常車不多，但診所門口被劃設紅線。
@@ -129,14 +172,14 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     ⚠ 「詳情」那一欄也跟著拿掉同樣兩句（見最底下）——
     圖上寫兩句、詳情寫四句，就是同一則貼文有兩個版本的事實。</p>
 
-  <h2 class="pv-h2">要不要加一行標題<span class="t">door-c-title・地圖 822×645</span></h2>
+  <h2 class="pv-h2">要不要加一行標題<span class="t">door-c-title・地圖 766×602</span></h2>
   <div class="pv-shot">
     <img src="door-c-title.png" width="1080" height="1080" loading="lazy"
       alt="定案版加上一行標題：芳仁牙醫　周邊停車">
   </div>
   <p class="pv-cap">那兩句一拿掉，整張圖第一眼看到的就是
     「周邊路段有畫設之路邊停車格」——<b>沒有人知道這是誰家的</b>。
-    加一行標題「芳仁牙醫　周邊停車」就解掉，代價是地圖從 920 收到 <b>822</b>（小 11%）。<br>
+    加一行標題「芳仁牙醫　周邊停車」就解掉，代價是地圖從 920 收到 <b>766</b>（小 17%）。<br>
     ⚠ 主頁三格是<b>三格一起看</b>的：上面那格已經寫著芳仁牙醫的門診表，
     所以不加也說得過去。<b>這一格是給你挑的，我沒有自己加上去。</b></p>
 
@@ -145,17 +188,17 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <img src="door-c-qr.png" width="1080" height="1080" loading="lazy"
       alt="拿掉兩句但留著三顆 QR">
   </div>
-  <p class="pv-cap"><b>拿掉兩句、碼留著</b>（地圖 666×523）。碼在小格上一顆都掃不出來，見下面那張表。</p>
+  <p class="pv-cap"><b>拿掉兩句、碼留著</b>（地圖 610×479）。碼在小格上一顆都掃不出來，見下面那張表。</p>
   <div class="pv-shot">
     <img src="door-a.png" width="1080" height="1080" loading="lazy"
       alt="原本那一版：四句提醒、地圖、三顆 QR">
   </div>
-  <p class="pv-cap"><b>你原本指名的那一版</b>：四句 ＋ 三顆碼，地圖只剩 516×406。</p>
+  <p class="pv-cap"><b>你原本指名的那一版</b>：四句 ＋ 三顆碼，地圖只剩 460×362 ——不到定案那張的一半。</p>
   <div class="pv-shot">
     <img src="door-noqr.png" width="1080" height="1080" loading="lazy"
       alt="四句提醒但沒有 QR">
   </div>
-  <p class="pv-cap"><b>四句 ＋ 不放碼</b>（地圖 772×606）——定案是在這一格再拿掉兩句。</p>
+  <p class="pv-cap"><b>四句 ＋ 不放碼</b>（地圖 714×562）——定案是在這一格再拿掉兩句。</p>
   <div class="pv-shot">
     <img src="door-b.png" width="1080" height="1080" loading="lazy"
       alt="逐字照門口那張：綠塊寫著現在位置">
@@ -172,7 +215,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
       alt="地圖改成北在上，變成直的、很小">
   </div>
   <p class="pv-cap">⚠⚠ <b>北在上</b>是<b>代價的展示</b>不是候選：那時地圖變成直的（0.61），
-    塞進同一個高度只剩 <span class="n">246px</span> 寬。
+    塞進同一個高度只剩 <span class="n">218px</span> 寬。
     <b>門口那張把地圖轉 90 度，正是這一版在方畫布上贏的地方。</b></p>
 
   <h2 class="pv-h2">⚠⚠⚠ 那三顆 QR 真的掃得動嗎<span class="t">不是用眼睛看，是拿解碼器掃過</span></h2>
@@ -180,7 +223,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <thead><tr><th>哪一張</th><th>碼多大</th><th>每格</th><th>掃到幾顆</th></tr></thead>
     <tbody>
       <tr><td>200px・原圖 1080</td><td>200px</td><td>4.88px</td><td>3/3</td></tr>
-      <tr><td>200px・大格 823</td><td>152.4px</td><td>3.72px</td><td>2/3</td></tr>
+      <tr><td>200px・大格 823</td><td>152.4px</td><td>3.72px</td><td>3/3</td></tr>
       <tr><td>200px・小格 410</td><td>75.9px</td><td>1.85px</td><td class="no">0/3</td></tr>
       <tr><td>140px・原圖 1080</td><td>140px</td><td>3.41px</td><td class="no">0/3</td></tr>
       <tr><td>140px・大格 823</td><td>106.7px</td><td>2.6px</td><td class="no">0/3</td></tr>
@@ -188,7 +231,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     </tbody>
   </table>
   <p class="pv-cap">每一顆是 <b>41×41 格</b>（含四格靜區）。<br>
-    <b>① 在小格上一顆都掃不出來</b>（每格只有 1.85px）。<br>
+    <b>① 在小格上一顆都掃不出來</b>（每格只有 1.85px）——而小格正是這一張要去的地方。<br>
     <b>② 碼收小到 140px，連原圖都掃不動</b>——「把碼縮小、讓地圖大一點」這條路走不通。<br>
     ⚠⚠⚠ <b>③ 更根本的一件：看貼文的人正拿著那支手機，掃不了自己螢幕上的碼。</b>
     門口那張是紙，人站在前面用手機掃，成立；貼文是螢幕，同一支手機掃不了自己。<br>

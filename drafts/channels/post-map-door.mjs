@@ -221,7 +221,7 @@ const shotMap = async (targetW, { orient = "w", you = "clinic" } = {}) => {
 
 /* ========== 第二步：1080 的方畫布 ========== */
 let MAPW = 0, MAPH = 0, MAPURI = "";
-const css = (fs2, qrpx) => `
+const css = (fs2, qrpx, lotk = 1, wrapn = 0) => `
 *{box-sizing:border-box;margin:0}
 html,body{width:${W}px;height:${H}px}
 body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
@@ -247,18 +247,29 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 .map{padding:${GAP}px 0;display:flex;justify-content:center}
 .map img{display:block}
 /* 三張停車場卡：排法沿用門口那張（一場一顆碼，橫著排開、拉開距離） */
-.lots{display:grid;grid-template-columns:repeat(3,1fr);gap:${Math.round(fs2 * .9)}px;
+/* ⚠ 一個 fr ＝ minmax(auto,1fr)，最小值是 min-content —— 名字是 nowrap，
+   一格撐破會把**整條推出畫布**（同站上 .info-card 那條 min-width:0）。
+   ⚠⚠ 這是模板字串，CSS 註解裡不可以出現反引號（第八節那一條）。 */
+.lots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:${Math.round(fs2 * .9)}px;
       padding-top:${GAP}px}
 .lot{text-align:center}
 .lot .qr{display:flex;justify-content:center}
 .lot .qr svg{width:${qrpx}px;height:${qrpx}px;display:block}
-.lot .nm{margin-top:${Math.round(fs2 * .38)}px;font-size:${Math.round(fs2 * .86)}px;
-         font-weight:700;letter-spacing:.02em;white-space:nowrap;
+.lot .nm{margin-top:${Math.round(fs2 * .38)}px;font-size:${Math.round(fs2 * .86 * lotk)}px;
+         font-weight:700;letter-spacing:.02em;
+         /* ⚠ flex-wrap 也要跟著 wrapn 開關 —— 只開它、white-space 還是 nowrap 的話，
+            名字會被當成一個不能斷的 flex 項目丟到第二行，Ⓐ 就不是他看過的那一張了。
+            ⚠⚠ 而且折行那一種要**把號碼牌獨立成一列**：讓它跟著文字流的話，
+            三格會各自折在不同的地方（一格牌子在字旁邊、一格在字上面）——
+            那是「順序／位置沒有人決定過」的一種（第九節第 28 條 ⑤）。 */
+         white-space:${wrapn ? "normal" : "nowrap"};
+         ${wrapn ? "flex-direction:column;gap:" + Math.round(fs2 * .22) + "px;"
+                 : "flex-wrap:nowrap;"}
          display:flex;align-items:center;justify-content:center;gap:${Math.round(fs2 * .3)}px}
 .lot .no{background:#365685;color:${CARD};border-radius:${Math.round(fs2 * .28)}px;
          padding:.28em .62em;font-size:.86em;font-weight:700;
          font-family:Arial,Helvetica,sans-serif;letter-spacing:.02em}
-.lot .du{margin-top:${Math.round(fs2 * .22)}px;font-size:${Math.round(fs2 * .74)}px;color:${SOFT}}
+.lot .du{margin-top:${Math.round(fs2 * .22)}px;font-size:${Math.round(fs2 * .74 * lotk)}px;color:${SOFT}}
 `;
 
 const sheet = (fs2, qr, drop = 0, title = "") => `<div class="sheet"><div class="band">
@@ -280,10 +291,10 @@ for (const f of fs.readdirSync(OUT).filter(f => f.startsWith("door-") && f.endsW
 
 const made = [];
 const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you = "clinic",
-                            drop = 0, title = "" } = {}) => {
+                            drop = 0, title = "", lotk = 1, wrapn = 0 } = {}) => {
   /* 先量「地圖以外的東西有多高」，再把地圖撐到剩下的空間 */
   MAPW = 400; MAPH = 320; MAPURI = "";
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx)}</style>`
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn)}</style>`
     + sheet(fs2, qr, drop, title));
   const other = await page.evaluate(() => {
     const b = document.querySelector(".band").getBoundingClientRect();
@@ -300,12 +311,12 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
   const sz = pngSize(buf);
   MAPW = sz.w; MAPH = sz.h;
   MAPURI = "data:image/png;base64," + buf.toString("base64");
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx)}</style>`
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn)}</style>`
     + sheet(fs2, qr, drop, title));
   await page.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 
   /* ---------- 守門 ---------- */
-  const m = await page.evaluate(({ CARD }) => {
+  const m = await page.evaluate(({ CARD, wrapn }) => {
     const band = document.querySelector(".band").getBoundingClientRect();
     const img = document.querySelector(".map img").getBoundingClientRect();
     const over = [...document.querySelectorAll(".sheet *")].filter(el => {
@@ -320,9 +331,38 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
       const tops = new Set(rs.map(r => Math.round(r.top / 4)));
       return tops.size;
     });
-    /* 三張卡的名字有沒有被擠出去（nowrap，撐破就會溢出自己的格） */
-    const wide = [...document.querySelectorAll(".lot")].filter(el =>
-      el.querySelector(".nm").scrollWidth > el.clientWidth + .5).length;
+    /* ⚠⚠ 三張卡的名字有沒有被擠出去。
+       **不可以用 `nm.scrollWidth > lot.clientWidth`** —— `.nm` 是 flex 容器、
+       寬度本來就等於 `.lot`，那個式子永遠是 0，**這道守門從來沒有生效過**
+       （溢出真的發生時是外面那道 `over` 抓到的）。要量的是**裡面那幾塊的總寬**。 */
+    /* ⚠⚠⚠ 量「這一格的東西本來要多寬」踩過兩種都是假的：
+       ① `nm.scrollWidth > lot.clientWidth` —— `.nm` 是 flex 容器、寬度本來就等於
+          `.lot`，那個式子**永遠是 0，這道守門從來沒有生效過**；
+       ② 把 `.nm` 複製出去量 —— 裡面的字是 flex 的匿名項目，仍然被壓縮，
+          量出來非單調（26px 和 28px 回同一個數字）。
+       ✅ 唯一準的：**把整條的欄位暫時切成 `max-content` 再量 `.lot` 自己**，量完還原。 */
+    const lots = [...document.querySelectorAll(".lot")];
+    const grid = document.querySelector(".lots");
+    const cell = lots[0].getBoundingClientRect().width;
+    const keep = grid.style.gridTemplateColumns;
+    grid.style.gridTemplateColumns = "repeat(3, max-content)";
+    const nat = lots.map(el => el.getBoundingClientRect().width);
+    grid.style.gridTemplateColumns = keep;
+    /* ⚠ 判準**不是「有沒有超過自己那一格」** —— 一格 1fr 是 333，而三個名字長短
+       不一，短的那一格用不完、長的可以借旁邊那條溝（27px）。真正會壞的是
+       **三格的自然寬加兩條溝超過整條** ＝ 名字開始互相碰到、或整條被推出畫布。 */
+    const gapx = parseFloat(getComputedStyle(grid).columnGap) || 0;
+    const need = nat.reduce((a, b) => a + b, 0) + 2 * gapx;
+    const bandW = document.querySelector(".band").clientWidth
+      - parseFloat(getComputedStyle(document.querySelector(".band")).paddingLeft) * 2;
+    /* ⚠ 名字可以折行的時候這一道不適用（max-content 量出來的是「不折行要多寬」，
+       而它本來就會折）—— 那一種靠外面那道 over 就夠了。 */
+    const wide = !wrapn && need > bandW + .5 ? 1 : 0;
+    /* ⚠ 不是壞掉檢查，是「讀起來對不對」：最長那一張名字離撐破還剩幾 px，
+       以及那兩行的字級 —— 使用者說「有點小」，判準是它在小格 410px 上多大。 */
+    const room = bandW - need;
+    const lotfs = [parseFloat(getComputedStyle(lots[0].querySelector(".nm")).fontSize),
+                   parseFloat(getComputedStyle(lots[0].querySelector(".du")).fontSize)];
     /* 地圖 PNG 的角落要等於畫布底色 */
     const im = document.querySelector(".map img");
     const cv = document.createElement("canvas");
@@ -330,12 +370,13 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
     const cx = cv.getContext("2d"); cx.drawImage(im, 0, 0);
     const px = cx.getImageData(1, 1, 1, 1).data;
     return { band: { y: band.y, h: band.height }, img: { w: img.width, h: img.height },
-             over, lines, wide,
+             over, lines, wide, room, lotfs, lotsH: grid.getBoundingClientRect().height,
              corner: "#" + [px[0], px[1], px[2]].map(v => v.toString(16).padStart(2, "0")).join("") };
-  }, { CARD });
+  }, { CARD, wrapn });
 
   if (m.over) throw new Error(`${tag}：有 ${m.over} 個元素溢出`);
-  if (m.wide) throw new Error(`${tag}：有 ${m.wide} 張停車場卡的名字撐破格子`);
+  if (m.wide) throw new Error(`${tag}：那一排的三個名字加起來比整條寬 `
+    + `${(-m.room).toFixed(0)}px —— 會互相碰到（要嘛字收小，要嘛讓名字折行 wrapn）`);
   if (m.corner.toLowerCase() !== CARD) throw new Error(
     `${tag}：地圖 PNG 的角落是 ${m.corner}，畫布是 ${CARD}（截圖帶到了別的底色）`);
   if (m.band.y < MARGIN - .5 || m.band.y + m.band.h > H - MARGIN + .5)
@@ -345,22 +386,37 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
      四點提醒是那個尺寸下唯一讀得出來的整段文字，小於 10px 就等於沒寫。 */
   const onSlot = fs2 * SMALL / W;
   if (onSlot < 10) throw new Error(`${tag}：四點提醒在小格上只有 ${onSlot.toFixed(1)}px，讀不出來`);
+  /* ⚠⚠ 「讀起來對不對」第二條（2026-09-08 使用者：「下排停車場的名稱和距離
+     步行時間字級有點小」）：那兩行在小格 410px 上各有幾 px。**只印不 throw** ——
+     現況那一格本來就沒過 10px，把它擋掉等於不能拿現況當對照。 */
+  const onLot = m.lotfs.map(v => v * SMALL / W);
   /* ⚠⚠⚠ 「現在位置」那四個字：貼文的人不在那裡。是他指定要門口那一版才放行。 */
   if (meta.you === "現在位置" && tag !== "b")
     throw new Error(`${tag}：綠塊寫著「現在位置」，但看貼文的人不在那裡`);
 
   await page.screenshot({ path: path.join(OUT, `door-${tag}.png`) });
-  made.push({ tag, m, meta, fs2, qr, qrpx, orient, you, ar, drop, title,
+  m.onLot = onLot;
+  made.push({ tag, m, meta, fs2, qr, qrpx, orient, you, ar, drop, title, lotk, wrapn,
               pts: dropPts(drop).length });
   return made[made.length - 1];
 };
 
 /* ⚠ 2026-09-08 使用者選的是 **Ⓒ ＝ 不放 QR ＋ 前兩句拿掉**（door-c）。
-   其餘幾格留著當紀錄，也留著日後要回頭比的路。 */
+   同日再一句：「**下排停車場的名稱和距離　步行時間字級有點小**」——
+   量出來他是對的：那兩行在小格 410px 上只有 **9.9 / 8.4px**，
+   而這一線的判準一直是「小格上小於 10px ＝ 等於沒寫」。
+   ⚠⚠ 但它有一個代價，所以是一把尺不是一個值（第九節第 28 條 ①）：
+   **字一大，那一排就變高，高度是從地圖借的**。
+   ⚠⚠ 而且中間有一道硬牆：三個名字是 nowrap，×1.22 就開始互相碰到 ——
+   要再大只能讓**名字折行**（`wrapn`），那又會讓那一排再高一截。 */
 const DROP = 2;                                       /* 拿掉「紅線」「開單」那兩句 */
 const CASES = [
-  ["c",     { qr: false, drop: DROP }],               /* ⭐ 定案：不放 QR、前兩句拿掉 */
-  ["c-title", { qr: false, drop: DROP, title: "芳仁牙醫　周邊停車" }], /* 同上＋一行標題 */
+  ["c",     { qr: false, drop: DROP }],               /* Ⓐ 現況（他挑的那一張，字最小） */
+  ["c110",  { qr: false, drop: DROP, lotk: 1.10 }],   /* Ⓑ 大一階，仍然一行（×1.15 就碰到了，這是不折行的上限） */
+  ["c130",  { qr: false, drop: DROP, lotk: 1.30, wrapn: 1 }],  /* Ⓒ 建議：距離第一次過 10px */
+  ["c145",  { qr: false, drop: DROP, lotk: 1.45, wrapn: 1 }],  /* Ⓓ */
+  ["c160",  { qr: false, drop: DROP, lotk: 1.60, wrapn: 1 }],  /* Ⓔ 最大 */
+  ["c-title", { qr: false, drop: DROP, title: "芳仁牙醫　周邊停車" }], /* 標題那一格 */
   ["c-qr",  { drop: DROP }],                          /* 前兩句拿掉、QR 留著（對照） */
   ["a",     {}],                                      /* 全套，綠塊寫「芳仁牙醫」 */
   ["b",     { you: "door" }],                         /* 逐字照門口那張（綠塊寫「現在位置」） */
@@ -380,7 +436,7 @@ const p2 = await browser.newPage({ viewport: { width: BIG_W, height: BIG_H + 4 +
 await p2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
   <div style="width:${BIG_W}px;background:#fff;display:flex;flex-direction:column;gap:4px">
     ${cell("data:image/png;base64," + fs.readFileSync(HOURS).toString("base64"), BIG_W, BIG_H)}
-    <div style="display:flex;gap:3px">${cell(b64("door-c.png"), SMALL, SMALL)}${cell(null, SMALL, SMALL)}</div>
+    <div style="display:flex;gap:3px">${cell(b64("door-c130.png"), SMALL, SMALL)}${cell(null, SMALL, SMALL)}</div>
   </div>`);
 await p2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p2.screenshot({ path: path.join(OUT, "door-profile-3up.png") });
@@ -388,7 +444,7 @@ await p2.screenshot({ path: path.join(OUT, "door-profile-3up.png") });
 const p3 = await browser.newPage({ viewport: { width: SMALL * 3 + 24, height: SMALL + 12 } });
 await p3.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
   body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
-  + ["door-c.png", "door-c-title.png", "door-a.png"]
+  + ["door-c.png", "door-c130.png", "door-c160.png"]
     .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
 await p3.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p3.screenshot({ path: path.join(OUT, "door-slot-410.png") });
@@ -477,6 +533,12 @@ console.log(`  地圖上的字（畫布 px → 小格 px）：`
     + `${A.m.band.y.toFixed(0)}~${(A.m.band.y + A.m.band.h).toFixed(0)}　`
     + (inBand ? "收得進去" : "⚠ 上下都會被切掉 —— 這一張是給小格的"));
 }
+console.log(`\n── 下排那兩行的字（畫布 px → 小格 410px）──`);
+for (const x of made.filter(x => x.qr === false && x.drop && !x.title))
+  console.log(`  door-${x.tag}\t×${x.lotk.toFixed(2)}${x.wrapn ? " 折行" : "　一行"}`
+    + `\t名 ${x.m.lotfs[0]}→${x.m.onLot[0].toFixed(1)}${x.m.onLot[0] >= 10 ? " ✓" : " ⚠"}`
+    + `\t距 ${x.m.lotfs[1]}→${x.m.onLot[1].toFixed(1)}${x.m.onLot[1] >= 10 ? " ✓" : " ⚠"}`
+    + `\t那一排高 ${x.m.lotsH.toFixed(0)}\t地圖 ${x.m.img.w}×${x.m.img.h}\t三格加溝還餘 ${x.m.room.toFixed(0)}px`);
 console.log(`\n── 出圖 ──`);
 for (const x of made)
   console.log(`  door-${x.tag}.png　地圖 ${x.m.img.w}×${x.m.img.h}（長寬比 ${x.ar.toFixed(3)}）`
