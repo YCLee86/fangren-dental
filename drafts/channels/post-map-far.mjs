@@ -367,12 +367,22 @@ const citySvg = ({ vbw, vbh, fs2, zoom = 1300, marks = "name", grid = true, edge
  */
 const FAR = JSON.parse(fs.readFileSync(path.join(ROOT, "drafts", "channels", "far-map.json"), "utf8"));
 /* 線的層級：粗細與顏色只有這一張表，畫的時候不要另外寫死 */
+/* ⚠⚠⚠ 2026-09-08 第四版：**粗細的階層整個反過來。**
+ * 使用者拿 MIHO 那張示意圖對照：「實際和示意圖的平衡度沒抓好」。
+ * 逐項比對之後，最明顯的一件是**誰最粗**：
+ *   ・MIHO 那張：**要走的那條路線最粗、暗紅**，名神高速那幾條連外道路是
+ *     幾乎看不見的米色細線 —— 高速公路是**背景**，路線才是主角。
+ *   ・我第三版：國道１號 15px 的粗藍線佔著整個左緣，綠色路線只有 5.5 ——
+ *     畫面在說「這張圖是在講國道１號」，而它其實什麼都沒說。
+ * → 路線 11、國道 8、其餘一律 4~6 的淡灰。**只有兩種東西可以搶眼：
+ *   那條路線，和兩塊交流道名牌。** */
 const KIND = {
-  free:   { w: 15, c: BLUE },   /* 國道 */
-  prov:   { w: 10, c: SOFT },   /* 省道・台１丁 */
-  main:   { w:  8, c: SOFT },   /* 交流道下來的連絡道、文化路 */
-  county: { w:  7, c: RULE },   /* 縣道 */
+  free:   { w: 8, c: BLUE },   /* 國道 —— 仍然是藍的（認得出來），但比路線細 */
+  prov:   { w: 6, c: RULE },   /* 省道・台１丁 */
+  main:   { w: 5, c: RULE },   /* 交流道下來的連絡道、文化路 */
+  county: { w: 4, c: RULE },   /* 縣道 */
 };
+const ROUTE_W = 11;
 /* ⚠ 「被標出來的那條路線」＝ 兩個交流道下來、通到診所的那幾段。
    顏色用**診所自己的綠**（`--map-mark`）：綠線一路走到綠塊，不必再加一個新顏色。 */
 /* 被標成綠色的那一條 —— **只標一條，而且一定要連續**。
@@ -397,8 +407,27 @@ const farPlace = (id) => {
   return p;
 };
 
+/* ⚠⚠⚠ 2026-09-08：**「實際 ←→ 示意」做成一把尺**（使用者：「仔細 Google map 實際地圖
+ * 和 MIHO 美術館自己的示意圖　我覺得目前的版本沒有抓好　實際和示意圖的平衡度」）。
+ *   real   ＝ 照量到的座標畫、粗細照道路等級、沒有號碼牌與地標（＝第三版）
+ *   mid    ＝ 建議：路線最粗、國道退成背景、號碼牌取代長路名、市區有名字
+ *   schema ＝ 再往 MIHO 走：兩個交流道都拉綠線（斗南那一段是示意的所以畫虛線）、
+ *            國道與鐵路再退一階、圖上的字再大一階
+ * ⚠ 三格只差**畫法**，一個座標都沒有改。 */
+const LOOK = {
+  real:   { kind: { free: { w: 15, c: BLUE }, prov: { w: 10, c: SOFT },
+                    main: { w: 8, c: SOFT }, county: { w: 7, c: RULE } },
+            rw: 5.5, badge: false, spot: false, tname: false, rail: 1, tf: 1, dn: false },
+  mid:    { kind: null, rw: 11, badge: true, spot: true, tname: true, rail: 1, tf: 1, dn: false },
+  schema: { kind: { free: { w: 6, c: BLUE }, prov: { w: 5, c: RULE },
+                    main: { w: 4, c: RULE }, county: { w: 3, c: RULE } },
+            rw: 12, badge: true, spot: true, tname: true, rail: .7, tf: 1.1, dn: true },
+};
+
 const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
-                    town = true, ends = true, near = true }) => {
+                    town = true, ends = true, near = true, look = "mid" }) => {
+  const LK = LOOK[look] || LOOK.mid;
+  const KIND2 = LK.kind || KIND;
   const k = vbw / zoom;
   /* 中心 ＝ 要畫的東西的外接框中心（不是診所）—— 兩個交流道一個在東北一個在西南，
      以診所為中心的話一定會有一半是空的。 */
@@ -416,7 +445,7 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
                                      || b.y + b.h < t.y || t.y + t.h < b.y));
   const claim = (b) => { taken.push(b); return true; };
   const inFrame = (b) => b.x >= 2 && b.y >= 2 && b.x + b.w <= vbw - 2 && b.y + b.h <= vbh - 2;
-  const rf0 = fs2 * .82;                    /* 路名與牌子的字級（先定，左下那塊要用） */
+  const rf0 = fs2 * .82 * LK.tf;                    /* 路名與牌子的字級（先定，左下那塊要用） */
 
   const d = (pts) => pts.map((p, i) => (i ? "L" : "M") + P(p).map(F).join(" ")).join("");
   const line = (pts, w, c, extra = "") =>
@@ -434,13 +463,17 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
              y0: Math.max(-1100, Math.min(...ys)), y1: Math.min(900, Math.max(...ys)) };
   })();
   const [tx0, ty0] = P([bb.x0, bb.y1]), [tx1, ty1] = P([bb.x1, bb.y0]);
+  /* ⚠⚠ 底色從 `--rule` 換成**紙色**：路現在也是 `--rule`（見上面那組寬度），
+     同一個顏色的話市區這一塊會把路吃掉。紙色是站上「底」的顏色，不是新增的。
+     ⚠ 它要**標上名字**才算一塊地方 —— 沒有名字的灰方塊只是一塊灰方塊
+     （MIHO 那張的琵琶湖也寫著「琵琶湖」）。 */
   const townRect = !town ? "" : `<rect x="${F(tx0)}" y="${F(ty0)}" width="${F(tx1 - tx0)}"`
-    + ` height="${F(ty1 - ty0)}" rx="${F(fs2 * .4)}" fill="${RULE}"/>`;
+    + ` height="${F(ty1 - ty0)}" rx="${F(fs2 * .4)}" fill="${PAPER}"/>`;
 
   /* --- ② 路：先細後粗，粗的壓在上面（同真的地圖） --- */
   const order = ["county", "main", "prov", "free"];
   const roads = order.map(kd => FAR.roads.filter(r => (r.kind || "") === kd)
-    .map(r => line(r.pts, KIND[kd].w, KIND[kd].c)).join("")).join("");
+    .map(r => line(r.pts, KIND2[kd].w, KIND2[kd].c)).join("")).join("");
 
   /* --- ③ 鐵路：白底 ＋ 細線 ＋ 枕木（＝那三張都在用的畫法） --- */
   const rl = FAR.roads.find(r => r.kind === "rail");
@@ -455,14 +488,39 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
         ticks += `M${F(cx - uy * h)} ${F(cy + ux * h)}L${F(cx + uy * h)} ${F(cy - ux * h)}`;
       }
     }
-    return line(rl.pts, 11, CARD) + line(rl.pts, 2.4, SOFT)
-      + `<path d="${ticks}" stroke="${SOFT}" stroke-width="2" fill="none"/>`;
+    const rc = LK.rail < 1 ? RULE : SOFT;
+    return line(rl.pts, 11, CARD) + line(rl.pts, 2.4, rc)
+      + `<path d="${ticks}" stroke="${rc}" stroke-width="2" fill="none"/>`;
   })();
 
   /* --- ④ 被標出來的那條路線 ＋ 往診所的箭頭 --- */
-  const rpts = (sg) => farOf(sg.id).pts.slice(sg.from ?? 0, sg.to ?? undefined);
-  const routeLine = !route ? "" : ROUTE.map(sg => line(rpts(sg), 5.5, GREEN)).join("")
-    + ROUTE.map(sg => {
+  const rpts = (sg) => sg.pts || farOf(sg.id).pts.slice(sg.from ?? 0, sg.to ?? undefined);
+  /* ⚠⚠⚠ 斗南那一側要接得到診所，而 `t1d` 的東北端停在市區西北、`wenhua` 的西端
+     在它南邊 —— 兩條**沒有共用的節點**，直接兩段都塗綠就是兩截綠線。
+     解法不是自己畫一條連接線（那是憑空生幾何），是**算出它們的交點**：
+     台１丁在 y ＝ 文化路西端那條緯度上穿過 x ≈ −2455，離文化路西端只有 255 公尺。
+     交點是**從兩條量過的折線推出來的**，不是我擺的。 */
+  const dnLeg = () => {
+    const t = farOf("t1d").pts, wh = farOf("wenhua").pts, y0 = wh[0][1];
+    for (let i = 1; i < t.length; i++) {
+      const [ax, ay] = t[i - 1], [bx, by] = t[i];
+      if ((ay - y0) * (by - y0) <= 0 && ay !== by) {
+        const u = (y0 - ay) / (by - ay);
+        return [...t.slice(0, i), [ax + (bx - ax) * u, y0], wh[0]];
+      }
+    }
+    throw new Error("台１丁 沒有穿過文化路那條緯度 —— 資料換過就要回來看這一段");
+  };
+  /* schema 那一格連斗南那一側也拉綠線 —— 但 `link_dn` 是示意畫的（far-map.json 的
+     note 寫著），所以那一段**畫成虛線**：虛線的意思就是「這一段是大概的」。 */
+  /* schema 那一格：斗南交流道 →（示意的接續段，虛線）→ 台１丁 → 文化路 → 診所。
+     文化路整條都變成路線（西半段從斗南來、東半段從斗六交流道來），所以不切片。 */
+  const RT = LK.dn
+    ? [{ id: "n3link" }, { id: "wenhua" }, { pts: dnLeg() }, { id: "link_dn", dash: 1 }]
+    : ROUTE;
+  const routeLine = !route ? "" : RT.map(sg => line(rpts(sg), LK.rw, GREEN,
+      sg.dash ? ` stroke-dasharray="${F(LK.rw * 1.5)} ${F(LK.rw * 1.1)}"` : "")).join("")
+    + RT.map(sg => {
         /* 箭頭擺在每一段的中間，指向「離診所比較近」的那一端 */
         const pts = rpts(sg);
         const i = Math.max(1, Math.floor(pts.length / 2));
@@ -570,37 +628,127 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
   const IW = vbw * .34, IH = IW * .78, IX = vbw - IW - 6, IY = vbh - IH - 6;
   if (inset) claim({ x: IX - 6, y: IY - 6, w: IW + 12, h: IH + 12 });
 
-  /* --- ⑥之二 診所周邊的路標（左下角一塊牌子）---
-   * ⚠⚠⚠ 他點名的八個地標裡，**只有「斗六車站」是這個比例尺上的東西**：
-   *   圓環、派出所、中華電信、元大銀行四個彼此只差 24~330 公尺，
-   *   在 13.6 公里的框上全部落在診所那塊牌子底下（最遠的圓環也才 26px）。
-   *   畫成點 ＝ 四顆疊在一起的黑點；塞進小圖 ＝ 小格 410px 上字只有 7px。
-   * 所以改成**一行字**：那四個本來就是一條線上的順序，寫出來比畫出來有用
-   *   （開車的人要的正是「看到什麼就快到了」）。
-   * ⚠ 順序是量出來的不是排的：圓環 −356 → 派出所 −157 → 中華電信 −133
-   *   → 元大銀行 −22（公尺，往東遞增），四個的 y 都在文化路上。
-   * ⚠⚠ **不可以在這一行的尾巴接上「芳仁牙醫」** —— 診所在永樂街、
-   *   離文化路還有 90 公尺，接上去就變成「診所在文化路上」，那是假的。 */
-  const nearBox = (() => {
-    if (!near) return "";
-    const f1 = rf0 * .9, f2 = rf0 * 1.02;
-    const l1 = "診所周邊的路標（文化路上，由西往東）";
-    const l2 = "圓環　斗六派出所　中華電信　元大銀行";
-    const w = Math.max(wOf(l1, f1), wOf(l2, f2)) + f2 * 1.1;
-    const h = f1 * 1.3 + f2 * 1.45 + f2 * .5;
-    const bx = 8, by = vbh - h - 8;
-    claim({ x: bx - 4, y: by - 4, w: w + 8, h: h + 8 });
-    return `<rect x="${F(bx)}" y="${F(by)}" width="${F(w)}" height="${F(h)}" rx="${F(f2 * .5)}"`
-      + ` fill="${CARD}" stroke="${RULE}" stroke-width="1.5"/>`
-      + `<text class="nb1" x="${F(bx + f2 * .55)}" y="${F(by + f2 * .3 + f1)}"`
-      + ` style="font-size:${F(f1)}px">${l1}</text>`
-      + `<text class="nb2" x="${F(bx + f2 * .55)}" y="${F(by + f2 * .3 + f1 * 1.3 + f2)}"`
-      + ` style="font-size:${F(f2)}px">${l2}</text>`;
+  /* --- ⑥之二 市區那一塊的名字 ＋ 文化路上那一串路標 ---
+   * ⚠⚠⚠ 2026-09-08 第四版：**左下角那塊白牌子拿掉了。**
+   *   使用者拿 MIHO 那張對照：「實際和示意圖的平衡度沒抓好」。
+   *   那塊牌子是**簡報的語彙不是地圖的語彙** —— MIHO 那張上沒有任何一個
+   *   浮在地圖上的文字方塊，它的每一段字都貼著它在講的那個東西
+   *   （「平野」「牧」就直接寫在路邊）。
+   * → 改成**沿著文化路下方的一行小字**：位置就在那條路上，讀起來是
+   *   「這條路上會經過這些」，而不是「附註一則」。
+   * ⚠⚠⚠ **為什麼不畫成四個點**（這是量出來的硬事實，不是偷懶）：
+   *   那四個彼此只差 24~330 公尺，而每一個名字畫出來要 100~142px；
+   *   在 13.6 公里的框上，文化路**整條**只有 234px。四個名字要 480px ——
+   *   連 MIHO 那張也沒有把四個相距 24 公尺的東西畫成四個點。 */
+  const townName = !(town && LK.tname) ? "" : (() => {
+    const w = wOf("斗六市區", rf0 * .95), h = rf0 * 1.15;
+    /* ⚠ 一定要有候選、要會躲：第一版無條件 claim，「斗六市區」正好疊在
+       「斗六車站」上（兩個都寫得出來，畫面上是四個字疊四個字）。 */
+    for (const [bx, by] of [[tx0 + 8, ty0 + 6], [tx0 + 8, ty1 - h - 6],
+                            [tx0, ty1 + 8], [tx0, ty0 - h - 8], [tx1 + 8, ty0 + 6]]) {
+      const box = { x: bx - 3, y: by - 3, w: w + 6, h: h + 6 };
+      if (!inFrame(box) || hits(box)) continue;
+      claim(box);
+      return `<text class="tn" x="${F(bx)}" y="${F(by + rf0 * .8)}">斗六市區</text>`;
+    }
+    return "";
   })();
 
-  /* --- ⑦ 路名：貼著線排，撞到就往下一個候選點 --- */
+  /* --- ⑥之二b 放得下的地標（＝ MIHO 那張的 ■ ＋ 名字）---
+   * ⚠⚠ 只畫**離診所夠遠、名字排得開**的（門檻 1200 公尺 ＝ 這個尺度上 88px）。
+   *   近的那四個（24~330 公尺）畫成點就是四顆疊在一起的黑點 —— 它們交給
+   *   下面那一行沿著文化路的字。
+   * ⚠ 門檻寫成距離、不要寫死名單：雲林縣政府的座標補進來那天，
+   *   它會自己出現在圖上（或自己留在框外）。 */
+  const spots = !LK.spot ? "" : FAR.places.filter(q => q.kind === "gov" && q.xy
+      && Math.hypot(...q.xy) >= 1200).map(q => {
+    const [px, py] = P(q.xy);
+    if (px < 4 || px > vbw - 4 || py < 4 || py > vbh - 4) return "";
+    claim({ x: px - 11, y: py - 11, w: 22, h: 22 });
+    const sym = `<rect x="${F(px - fs2 * .2)}" y="${F(py - fs2 * .2)}" width="${F(fs2 * .4)}"`
+      + ` height="${F(fs2 * .4)}" rx="2.5" fill="${SOFT}"/>`;
+    const nm = q.short || q.name;
+    const w = wOf(nm, fs2 * .88), h = fs2 * 1.1, step = h + 8, cand = [];
+    for (let t = 0; t < 3; t++) {
+      cand.push([px - w / 2, py + 13 + t * step]);
+      cand.push([px - w / 2, py - 13 - h - t * step]);
+      if (t < 2) {
+        cand.push([px - 17 - w, py - h / 2 - t * step]);
+        cand.push([px + 17, py - h / 2 - t * step]);
+      }
+    }
+    for (const [bx, by] of cand) {
+      const box = { x: bx - 3, y: by - 3, w: w + 6, h: h + 6 };
+      if (!inFrame(box) || hits(box)) continue;
+      claim(box);
+      return sym + `<text class="pn" x="${F(bx)}" y="${F(by + fs2 * .76)}"`
+        + ` style="font-size:${F(fs2 * .88)}px">${nm}</text>`;
+    }
+    return sym;
+  }).join("");
+
+  const nearLine = (() => {
+    if (!(near && LK.spot)) return "";
+    const f = rf0 * .86;
+    /* ⚠ 順序是量出來的不是排的：圓環 −356 → 派出所 −157 → 中華電信 −133
+       → 元大銀行 −22（公尺，往東遞增）。⚠⚠ 尾巴不可以接上「芳仁牙醫」——
+       診所在永樂街、離文化路還有 90 公尺，接上去就變成「診所在文化路上」。 */
+    const t = "文化路上　圓環・斗六派出所・中華電信・元大銀行";
+    const w = wOf(t, f), h = f * 1.15;
+    const wh = farOf("wenhua").pts;                 /* 貼著文化路的西半段 */
+    const [ax, ay] = P(wh[0]), [bx2] = P(wh[2]);
+    const bx = Math.max(6, Math.min(vbw - w - 6, (ax + bx2) / 2 - w / 2));
+    const st2 = h + 7, cand = [];
+    for (let t = 0; t < 5; t++) { cand.push(ay + 16 + t * st2); cand.push(ay - 16 - h - t * st2); }
+    for (const by of cand) {
+      const box = { x: bx - 3, y: by - 3, w: w + 6, h: h + 6 };
+      if (!inFrame(box) || hits(box)) continue;
+      claim(box);
+      /* ⚠⚠ 擠不到貼著路的那一階時要拉一條細線回文化路（同路名那一條）——
+         這一行字離它在講的那條路 90px、旁邊又正好是鐵路，不拉線會被讀成
+         「鐵路上有這些」。 */
+      const lead = Math.abs(by - ay) < 40 ? "" :
+        `<path d="M${F(bx + w / 2)} ${F(by + h / 2)}L${F(bx + w / 2)} ${F(ay)}"`
+        + ` stroke="${SOFT}" stroke-width="1.6" fill="none"/>`;
+      return lead + `<text class="nb2" x="${F(bx)}" y="${F(by + f * .84)}"`
+        + ` style="font-size:${F(f)}px">${t}</text>`;
+    }
+    return "";
+  })();
+
+  /* --- ⑥之三 號碼牌（＝ MIHO 那張畫在線上的六角形路線標）---
+   * ⚠⚠⚠ 這是「更像地圖」最便宜的一項：一塊 40px 的牌子取代一串 100px 的字，
+   *   而且它**貼在線上**，不必猜那個名字在講哪一條。
+   * ⚠ 三種型別照台灣的慣例分色：國道＝路牌藍底白字、省道＝墨底白字、
+   *   縣道＝白底墨字墨框。**形狀一律圓角方牌**，沒有假裝是官方的盾形／六角形。
+   * ⚠ 牌面的字寫在 far-map.json 的 `badge`，不在這支腳本裡。 */
+  const badges = !LK.badge ? "" : FAR.roads.filter(r => r.badge).map(r => {
+    const bf = fs2 * .74, pad = bf * .42;
+    const w = wOf(r.badge, bf) + pad * 2, h = bf * 1.62;
+    /* 沿線找一個放得下的落點：先中段，再往兩頭退 */
+    for (const f of [.5, .32, .68, .16, .84, .08, .92]) {
+      const i = Math.min(r.pts.length - 1, Math.max(1, Math.round(f * (r.pts.length - 1))));
+      const a = P(r.pts[i - 1]), b = P(r.pts[i]);
+      const cx2 = a[0] + (b[0] - a[0]) * .5, cy2 = a[1] + (b[1] - a[1]) * .5;
+      const box = { x: cx2 - w / 2 - 3, y: cy2 - h / 2 - 3, w: w + 6, h: h + 6 };
+      if (!inFrame(box) || hits(box)) continue;
+      claim(box);
+      const solid = r.badgeKind !== "county";
+      const fill = r.badgeKind === "free" ? BLUE : r.badgeKind === "prov" ? INK : CARD;
+      return `<rect x="${F(cx2 - w / 2)}" y="${F(cy2 - h / 2)}" width="${F(w)}" height="${F(h)}"`
+        + ` rx="${F(bf * .34)}" fill="${fill}"`
+        + (solid ? "" : ` stroke="${INK}" stroke-width="1.6"`) + `/>`
+        + `<text class="${solid ? "bdw" : "bdk"}" x="${F(cx2)}" y="${F(cy2 + bf * .36)}"`
+        + ` text-anchor="middle" style="font-size:${F(bf)}px">${r.badge}</text>`;
+    }
+    return "";
+  }).join("");
+
+  /* --- ⑦ 路名：貼著線排，撞到就往下一個候選點 ---
+   * ⚠ **有號碼牌的路就不再排文字路名**（那正是號碼牌買到的空間）。 */
   const rf = rf0;
-  const names = FAR.roads.filter(r => r.name && r.kind !== "rail").map(r => {
+  const names = FAR.roads.filter(r => r.name && r.kind !== "rail" && !(LK.badge && r.badge)
+      && !(near && LK.tname && r.id === "wenhua")).map(r => {
     const w = wOf(r.name, rf), h = rf * 1.15;
     /* ⚠⚠ 兩層迴圈的順序是「**先把整條路走一遍、再往外推一階**」，不是反過來 ——
        路名離它的路愈遠愈沒有用，寧可換一個落點也不要離開那條線。
@@ -616,7 +764,7 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
         const L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
         const nx = -(b[1] - a[1]) / L, ny = (b[0] - a[0]) / L;
         for (const s of [1, -1]) {
-          const off = (KIND[r.kind]?.w ?? 8) / 2 + h * (.8 + t * 1.25);
+          const off = (KIND2[r.kind]?.w ?? 8) / 2 + h * (.8 + t * 1.25);
           const bx = mx + nx * off * s - w / 2, by = my + ny * off * s - h / 2;
           const box = { x: bx - 3, y: by - 3, w: w + 6, h: h + 6 };
           if (!inFrame(box) || hits(box)) continue;
@@ -625,8 +773,8 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
              不然它會被讀成旁邊那一條的名字：實測「文化路」被擠到離自己 100px 的
              地方，而那個位置正好貼著鐵路，看起來就像在標鐵路。
              ⚠ 貼著線的那一階（t=0）不畫線，畫了反而髒。 */
-          const lead = t === 0 ? "" : `<path d="M${F(mx + nx * ((KIND[r.kind]?.w ?? 8) / 2 + 2) * s)}`
-            + ` ${F(my + ny * ((KIND[r.kind]?.w ?? 8) / 2 + 2) * s)}L${F(bx + w / 2)} ${F(by + h / 2)}"`
+          const lead = t === 0 ? "" : `<path d="M${F(mx + nx * ((KIND2[r.kind]?.w ?? 8) / 2 + 2) * s)}`
+            + ` ${F(my + ny * ((KIND2[r.kind]?.w ?? 8) / 2 + 2) * s)}L${F(bx + w / 2)} ${F(by + h / 2)}"`
             + ` stroke="${SOFT}" stroke-width="1.6" fill="none"/>`;
           return lead + `<text class="rn" x="${F(bx)}" y="${F(by + rf * .86)}">${r.name}</text>`;
         }
@@ -694,7 +842,7 @@ const routeSvg = ({ vbw, vbh, fs2, zoom = 13600, route = true, inset = false,
     + `<g clip-path="url(#mclip)">`
     + `<rect width="${vbw}" height="${vbh}" fill="${CARD}"/>`
     + townRect + roads + rail + routeLine + ics + stn + clinic
-    + names + railName + endTxt + nearBox + north + lens + `</g>`
+    + badges + names + railName + endTxt + townName + spots + nearLine + north + lens + `</g>`
     + `<rect x=".75" y=".75" width="${F(vbw - 1.5)}" height="${F(vbh - 1.5)}"`
     + ` rx="12" fill="none" stroke="${RULE}" stroke-width="1.5"/></svg>`,
     k, ext: EXT };
@@ -736,9 +884,13 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 .mp .ick{fill:${RULE};letter-spacing:.01em;stroke:none}
 .mp .rn{font-size:${(mfs * .82).toFixed(1)}px;fill:${INK};font-weight:700;letter-spacing:.02em}
 .mp .egk{fill:${SOFT};letter-spacing:.01em;stroke:none}
-/* 左下角那塊「診所周邊的路標」—— 牌子自己有底，字不必描邊 */
-.mp .nb1{fill:${SOFT};letter-spacing:.01em;stroke:none}
-.mp .nb2{fill:${INK};font-weight:700;letter-spacing:.02em;stroke:none}
+/* 文化路底下那一行路標（第四版起沒有牌子了，所以要描邊才壓得住底下的路） */
+.mp .nb2{fill:${INK};font-weight:700;letter-spacing:.02em}
+/* 市區那一塊的名字 */
+.mp .tn{fill:${SOFT};font-weight:700;letter-spacing:.06em}
+/* 號碼牌 */
+.mp .bdw{fill:${CARD};font-weight:700;letter-spacing:.02em;stroke:none}
+.mp .bdk{fill:${INK};font-weight:700;letter-spacing:.02em;stroke:none}
 `;
 
 const sheet = (title, fs2, svg) => `<div class="sheet"><div class="band">
@@ -816,6 +968,8 @@ fs.mkdirSync(OUT, { recursive: true });
 for (const f of fs.readdirSync(OUT).filter(f => f.startsWith("far-") && f.endsWith(".png")))
   fs.rmSync(path.join(OUT, f));
 
+/* ⭐ 建議的那一格（＝「實際 ↔ 示意」那把尺的第三格，最靠近 MIHO 那張） */
+const PICK = "schema";
 const TITLES = {
   t1: "從外地來　芳仁牙醫怎麼走",
   t2: "芳仁牙醫　交通與位置",
@@ -825,10 +979,10 @@ const TITLES = {
 const made = [];
 const build = async (tag, { title = TITLES.t1, ts = 46, fs2 = 32, mfs = 30,
                             zoom = 13600, route = true, inset = false, town = true,
-                            ends = true, near = true, city = false } = {}) => {
+                            ends = true, near = true, look = "mid", city = false } = {}) => {
   const draw = (vbw, vbh) => city
     ? citySvg({ vbw, vbh, fs2: mfs, zoom: 1300, marks: "name", grid: true, edges: true })
-    : routeSvg({ vbw, vbh, fs2: mfs, zoom, route, inset, town, ends, near });
+    : routeSvg({ vbw, vbh, fs2: mfs, zoom, route, inset, town, ends, near, look });
   /* 第一輪：地圖先給一個高度，量出「地圖以外的東西有多高」 */
   const probe = draw(400, 300);
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(ts, fs2, mfs)}</style>`
@@ -917,9 +1071,11 @@ const build = async (tag, { title = TITLES.t1, ts = 46, fs2 = 32, mfs = 30,
 
 /* 一把尺（第九節第 28 條 ①：他的眼睛才是裁判，給一把尺不要送一個我估的值） */
 const CASES = [
-  ["mid",     {}],                                   /* ⭐ 建議：13.6 公里 ＋ 一條路線 ＋ 左下的路標牌 */
+  ["mid",     {}],                                   /* ⭐ 建議：中間那一格 */
+  ["real",    { look: "real" }],                     /* 偏實際（＝第三版的畫法） */
+  ["schema",  { look: "schema" }],                   /* 偏示意（再往 MIHO 那張走） */
   ["lens",    { inset: true }],                      /* 右下角加一塊市區小圖（見規格頁的取捨） */
-  ["nonear",  { near: false }],                      /* 不放左下那塊路標牌 */
+  ["nonear",  { near: false }],                      /* 不放文化路那一行路標 */
   ["noroute", { route: false }],                     /* 不標那條路線（看它少了什麼） */
   ["wide",    { zoom: 17000 }],                      /* 範圍大一階 */
   ["wider",   { zoom: 22000 }],                      /* 再大一階 */
@@ -948,7 +1104,7 @@ await p2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</st
   <div style="width:${BIG_W}px;background:#fff;display:flex;flex-direction:column;gap:4px">
     ${cell("data:image/png;base64," + fs.readFileSync(HOURS).toString("base64"), BIG_W, BIG_H)}
     <div style="display:flex;gap:3px">${cell(b64("door-c.png"), SMALL, SMALL)}${
-      cell(b64(fileOf("mid")), SMALL, SMALL)}</div>
+      cell(b64(fileOf(PICK)), SMALL, SMALL)}</div>
   </div>`);
 await p2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p2.screenshot({ path: path.join(OUT, "far-profile-3up.png") });
@@ -956,7 +1112,7 @@ await p2.screenshot({ path: path.join(OUT, "far-profile-3up.png") });
 const p3 = await browser.newPage({ viewport: { width: SMALL * 3 + 24, height: SMALL + 12 } });
 await p3.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
   body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
-  + [fileOf("mid"), fileOf("wide"), fileOf("wider")]
+  + [fileOf(PICK), fileOf("wide"), fileOf("wider")]
     .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
 await p3.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p3.screenshot({ path: path.join(OUT, "far-slot-410.png") });
@@ -968,6 +1124,15 @@ await p4.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
     .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
 await p4.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p4.screenshot({ path: path.join(OUT, "far-slot-410-type.png") });
+
+/* 「實際 ↔ 示意」那把尺，在小格 410px 上並排 */
+const p5 = await browser.newPage({ viewport: { width: SMALL * 3 + 24, height: SMALL + 12 } });
+await p5.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
+  body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
+  + [fileOf("real"), fileOf("mid"), fileOf("schema")]
+    .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
+await p5.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
+await p5.screenshot({ path: path.join(OUT, "far-slot-410-look.png") });
 await browser.close();
 
 /* ========== far-geo.json：每個地標離診所多遠、在小格上是幾 px ==========
@@ -975,12 +1140,12 @@ await browser.close();
  *   兩個交流道在 5.1 / 7.3 公里外，要畫進來這張圖就得是 13 公里，
  *   而斗六高中在小格上離診所只有 10.9px —— 他列的地標會擠成一團。
  * ⚠ 沒有座標的一律寫 null（＝真的沒有被畫上去），守門會拿它去對頁面。 */
-const A = made.find(x => x.tag === "mid");
+const A = made.find(x => x.tag === PICK);
 /* ⚠⚠ 這張表算的是「各地標在小格 410px 上離診所幾 px」，**用的就是這一版的尺度** ——
    它是「**為什麼那四個公家機關不畫成圖上的點、改成左下角一行字**」的唯一證據。
    ⚠ 尺度直接讀那張建議圖自己的 zoom，不要另外寫一個數字：兩者一旦分岔，
      這張表就會開始說一張不存在的圖的話。 */
-const WIDE_ZOOM = made.find(x => x.tag === "mid").zoom;
+const WIDE_ZOOM = made.find(x => x.tag === PICK).zoom;
 const KWIDE = (W - 2 * PAD) / WIDE_ZOOM;
 const FARMAP = JSON.parse(fs.readFileSync(path.join(ROOT, "drafts", "channels", "far-map.json"), "utf8"));
 const GEO = {
@@ -1038,7 +1203,7 @@ console.log(`  ⚠ 地圖裡的字一律小於 10px —— 那是**故意的**�
 for (const x of made)
   console.log(`  ${x.file}　範圍 ${x.zoom}　標題 ${x.ts}／頁尾 ${x.fs2}／地圖 ${x.mfs}　`
     + `地圖 ${x.mapW}×${x.mapH}　墨 ${x.q.ink}%`);
-console.log(`  far-profile-3up.png　far-slot-410.png　far-slot-410-type.png`);
+console.log(`  far-profile-3up.png　far-slot-410.png　far-slot-410-type.png　far-slot-410-look.png`);
 console.log(`還沒有座標的地標 ${ASK.length} 個：${ASK.map(p => p.name).join("、")}`);
 console.log(`  → 補進 drafts/channels/far-city.json 的 xy（公尺，原點＝診所，x 東 y 北）再跑一次，`
   + `版面不必動；補齊之前不會有定稿檔 ${FINAL_FILE}。`);
