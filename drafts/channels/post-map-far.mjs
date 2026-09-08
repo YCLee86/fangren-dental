@@ -133,7 +133,9 @@ const mapSvg = ({ vbw, vbh, fs2, zoom = 1300, marks = "name", grid = true, edges
 
   /* --- 街廓：由相鄰兩條街的「內緣」算出來 --- */
   const ew = CITY.ew.filter(r => !r.slope).slice().sort((a, b) => b.y - a.y);   /* 北→南 */
-  const ns = CITY.ns.slice().sort((a, b) => a.x - b.x);                          /* 西→東 */
+  /* ⚠ 有斜率的那幾條不進街廓的計算（它們不是一條垂直線，`r.x` 不代表它整條在哪裡）——
+     同 `ew` 裡的民生路。它們和民生路一樣，最後用路面色畫回街廓上面。 */
+  const ns = CITY.ns.filter(r => !r.slope).slice().sort((a, b) => a.x - b.x);    /* 西→東 */
   const OVER = 40;                                   /* 往框外多留 */
   const ybands = [];
   for (let i = 0; i <= ew.length; i++) {
@@ -152,11 +154,16 @@ const mapSvg = ({ vbw, vbh, fs2, zoom = 1300, marks = "name", grid = true, edges
     + ` height="${(b - t).toFixed(1)}" rx="4"/>`)).join("") : "";
 
   /* --- 斜的路（民生路）與鐵路：疊在街廓上，用路面色畫回去 --- */
-  const diag = CITY.ew.filter(r => r.slope).map(r => {
-    const a = P([r.x0, r.y + (r.x0 - 0) * r.slope]), b = P([r.x1, r.y + (r.x1 - 0) * r.slope]);
-    return `<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}"`
-      + ` stroke="${MAP_ROAD}" stroke-width="${S(r.w).toFixed(1)}" stroke-linecap="round" fill="none"/>`;
-  }).join("");
+  const road = (a, b, w) => `<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}`
+    + `L${b[0].toFixed(1)} ${b[1].toFixed(1)}" stroke="${MAP_ROAD}"`
+    + ` stroke-width="${S(w).toFixed(1)}" stroke-linecap="round" fill="none"/>`;
+  const diag = CITY.ew.filter(r => r.slope).map(r =>
+      road(P([r.x0, r.y + r.x0 * r.slope]), P([r.x1, r.y + r.x1 * r.slope]), r.w)).join("")
+    /* 斜的南北向：x 跟著 y 走（dx/dy ＝ slope，從 yref 那一點算起） */
+    + CITY.ns.filter(r => r.slope).map(r => {
+        const X = (y) => r.x + (y - (r.yref ?? 0)) * r.slope;
+        return road(P([X(r.y0), r.y0]), P([X(r.y1), r.y1]), r.w);
+      }).join("");
 
   /* 鐵路：北偏東 53 度通過斗六車站（方位另外用真實經緯度驗過，見 far-map.json） */
   const st = place("station").xy, dir = [Math.sin(53 * Math.PI / 180), Math.cos(53 * Math.PI / 180)];
@@ -303,6 +310,7 @@ const mapSvg = ({ vbw, vbh, fs2, zoom = 1300, marks = "name", grid = true, edges
     if (!done) nm.push("");
   }
   for (const r of CITY.ns) {
+    if (!r.name) continue;                          /* 名字沒有標的路（見資料檔的說明）不排字 */
     const w = wOf(r.name, sf), h = sf * 1.1;
     for (const f of [.18, .42, .66, .86, .05]) {
       const y = Math.max(r.y0, EXT.y0) + (Math.min(r.y1, EXT.y1) - Math.max(r.y0, EXT.y0)) * f;

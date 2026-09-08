@@ -36,9 +36,9 @@
     },
     {
       "name": "圓環",
-      "src": "ask",
-      "m": null,
-      "px410": null
+      "src": "shot-circle",
+      "m": 362,
+      "px410": 10.6
     },
     {
       "name": "斗六派出所",
