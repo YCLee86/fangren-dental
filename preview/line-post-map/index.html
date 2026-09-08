@@ -21,6 +21,15 @@
    ④ **紅線與開單那兩句** —— 站在門口的人車已經停了，要擋的是「就停一下」；
       看貼文的人還沒出門，同一句話讀起來變成「這間診所門口會被開單」＝ 警告不是幫忙。
       這一件是使用者自己看出來的（我送上去的每一格都還留著那兩句）。
+
+  2026-09-08 最後一輪：「不要標題　Ⓧ4　Ⓒ×1.3　Ⓝ3　**其他都不要再顯示在提案頁上**
+  我覺得可以比 Ⓧ4 再左一點」→ 尺往左移一格重開，同日他挑了 **Ⓧ2 ＝ 440px** 並定稿。
+  這一頁因此只剩 **定案那一張 ＋ 主頁三格 ＋ 小格實際大小 ＋ 拿掉的兩句 ＋ 詳情**。
+  ⭐ 要貼的檔案是 **fangren-map-1080.png**（同看診時間那張的命名）。
+  ⚠⚠⚠ 拿掉的每一格都在 git 裡（`git show 4fe0021 -- preview/line-post-map/`），
+  推導在 drafts/channels/README.md 第三十五節 —— **不要重畫，要回頭比就從那裡取**。
+  拿掉的有：下排字級 Ⓐ~Ⓔ、指北針 Ⓝ1~Ⓝ3、留白 Ⓜ1~Ⓜ4、浮水印濃度 Ⓦ、換 logo Ⓛ、
+  壓哪一角、標題那一格、QR 那張表、北在上，以及「站上那張簡易地圖」的整個版本。
 -->
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
@@ -55,6 +64,11 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   border-radius:10px;padding:11px 12px;font-size:.7rem;line-height:1.85;color:var(--ink-soft)}
 .pv-num b{color:var(--ink)}
 .pv-num .n{color:var(--red);font-weight:700}
+/* ⚠ 表格要包一層自己的橫向捲軸：格子是 nowrap，四欄的表在手機上一定超出版心
+   （守門量到 320px 溢出 408px）。⚠ 表格一定要給 min-width，不給的話外層的
+   overflow-x 永遠用不到（line-handover 那一輪記過同一條）。 */
+.pv-tabwrap{overflow-x:auto;margin:10px 0 0}
+.pv-tabwrap .pv-tab{margin:0;min-width:420px}
 .pv-tab{width:100%;border-collapse:collapse;margin:10px 0 0;font-size:.66rem;
   background:var(--card);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
 .pv-tab th,.pv-tab td{padding:5px 7px;border-bottom:1px solid var(--rule);text-align:right;
@@ -63,10 +77,6 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 .pv-tab thead th{background:#e9eaeb;font-weight:700;color:var(--ink)}
 .pv-tab tbody tr:last-child td{border-bottom:0}
 .pv-tab .no{color:var(--red);font-weight:700}
-/* ⚠ 欄位一多就會把整頁推寬（cell 是 nowrap）——包一層自己捲，
-   而且表要給 min-width，不然外層那個 overflow-x 永遠用不到（第 29 節那一條）。 */
-.pv-tabwrap{overflow-x:auto;margin:10px 0 0}
-.pv-tabwrap .pv-tab{margin:0;min-width:340px}
 .pv-txt,.pv-cut{background:var(--card);border:1px solid var(--rule);border-radius:10px;
   padding:12px 14px;margin:10px 0 0;font-size:.78rem;line-height:1.95;
   white-space:pre-wrap;overflow-wrap:anywhere}
@@ -79,389 +89,64 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <body>
 <div class="pv-wrap">
 
-  <h1>LINE 商家貼文・地圖那幾張
-    <span>2026-09-08　停車那張定案 door-c；<b>第三部分是新的「怎麼到斗六」路線圖</b></span></h1>
-  <p class="pv-lead">第一、二部分是<b>小格左</b>那一張（到了斗六停哪裡）；
-    <b>第三部分是 09-08 新開的路線圖</b>（怎麼到斗六），還沒定案。<br>
-    <b>⭐ 定案是 <code>door-c</code></b>：門口那張告示的版本，<b>不放 QR</b>、
-    <b>拿掉「紅線」「開單」那兩句</b>——那兩句一走，地圖從 520 長到 <b>926px</b>。<br>
-    底下還留著走到這裡的每一格，以及先做的那個「站上簡易地圖」的版本（第二部分）。<br>
-    ⚠ 檔名還是流水號（<code>door-…</code>）——<b>挑定了再改成拿得出去的名字</b>。</p>
-
-  <h2 class="pv-h1">一、門口那張告示的版本<span>⭐ 定案：Ⓒ 不放 QR ＋ 前兩句拿掉</span></h2>
-  <p class="pv-lead">地圖、提醒、三張停車場卡<b>全部是門口那張 A4 告示本人</b>——
-    產生器把 <code>drafts/door-notice/</code> 跑起來，再把它的東西讀進 1080 的方畫布。
+  <h1>LINE 商家貼文・地圖那兩張
+    <span>2026-09-08　停車那張定稿；<b>第三部分是「怎麼到斗六」的路線圖，還沒定案</b></span></h1>
+  <p class="pv-lead">主頁「最新貼文」那三格的<b>小格左</b>。
+    地圖、提醒、三張停車場卡<b>全部是門口那張 A4 告示本人</b>——產生器把
+    <code>drafts/door-notice/</code> 跑起來，再把它的東西讀進 1080 的方畫布，
     旋轉、街名重排、路線圓點、指北針<b>一個字都沒有重做</b>。<br>
-    ⚠⚠ 而它在方畫布上比站上那張<b>好排</b>：門口那版把地圖轉了 90 度，
-    所以地圖是<b>橫的（1.27）</b>而不是站上那張直的（0.903）。</p>
+    你挑定的：<b>不放 QR</b>・<b>拿掉「紅線」「開單」那兩句</b>・
+    <b>下排字 ×1.30 折行</b>・<b>指北針 Ⓝ3</b>・<b>留白 Ⓜ3</b>・
+    <b>浮水印 4%・站上頁首那顆・壓左上、再往左 440px（Ⓧ2）</b>・<b>不加標題</b>。<br>
+    ⭐ <b>要貼的檔案是 <code>fangren-map-1080.png</code></b>（1080×1080）。<br>
+    ⚠ <b>第三部分是另一張圖</b>（給外縣市看的路線圖），和這一張回答的是不同的問題，
+    還在挑。</p>
 
-  <h2 class="pv-h2">⭐ 定案<em>door-c</em><span class="t">不放 QR、拿掉「紅線」「開單」那兩句</span></h2>
+  <h2 class="pv-h2">⭐ 定稿<em>fangren-map-1080.png</em><span class="t">1080×1080　這一張就是要貼的</span></h2>
   <div class="pv-shot">
-    <img src="door-c.png" width="1080" height="1080"
-      alt="定案的位置圖：兩句提醒、轉向的地圖、P1 P2 P3 三張卡，沒有 QR">
+    <img src="fangren-map-1080.png" width="1080" height="1080"
+      alt="定案的位置圖：兩句提醒、轉向的地圖、P1 P2 P3 三張卡，沒有 QR，左上壓著淡淡的標誌">
   </div>
   <p class="pv-cap">兩句一走、三顆碼一走，那些高度<b>全部給了地圖</b>：
-    460 → <span class="n">926px</span>（<b>整整大一倍</b>），左右已經頂到版面的內距（各 40px）。<br>
-    ⚠⚠ 換來的是地圖上的字在小格上也大一倍：<b>街名 6.6 → 13.2px</b>、
-    P 代號 6.3 → 12.5、綠塊「芳仁牙醫」5.1 → 10.2、巷名 3.8 → 7.5。<br>
+    460 → <span class="n">848px</span>，左右已經頂到版面的內距（各 40px）。<br>
+    ⚠ 指北針收到最小那一格之後，那張圖<b>又瘦了一點</b>（長寬比 1.283 → 1.292），
+    所以同樣的高度放得下更寬的圖：840 → <b>848px</b>。<br>
     ⚠ 綠塊裡是<b>「芳仁牙醫」</b>不是門口那張的「現在位置」——
     看貼文的人不在那裡，那四個字會被讀成「你現在的位置」。</p>
+  <div class="pv-num">
+    <b>定案那一張的數字</b><br>
+    下排　名 34 → 小格 <b>12.9px</b>　距 29 → <b>11.0px</b>（兩行第一次都過 10px）<br>
+    提醒　30 → 小格 <b>11.4px</b>　地圖上的街名 32 → <b>12.2px</b><br>
+    指北針　整組高 68.4 → 小格 <b>26.0px</b>　「北」19.7 → 7.5px<br>
+    <span class="n">⚠</span> 「北」在 10px 以下是<b>刻意的</b>：那個字不必讀、形狀認得出來就好
+    （旁邊還有箭頭）。那條 10px 的線是給<b>要讀完的字</b>的，不是給記號的。<br>
+    浮水印　畫出來 952×469・墨 4.0%・左邊切掉 <b>440px</b>（看得到 512 → 小格 194px）<br>
+    　　　　壓在它上面：墨字 11.95／柔墨 <b>5.68</b>（門檻 4.5）
+  </div>
 
-  <h2 class="pv-h2">先看它在主頁上長怎樣<span class="t">大格＝看診時間（已定稿）／小格左＝這一張</span></h2>
+  <h2 class="pv-h2">在主頁上長怎樣<span class="t">大格＝看診時間（已定稿）／小格左＝這一張</span></h2>
   <div class="pv-shot">
     <img src="door-profile-3up.png" width="823" height="823" loading="lazy"
       alt="主頁三格的模擬：大格是看診時間，小格左是位置圖">
   </div>
   <p class="pv-cap">⚠⚠ <b>這一張不能放大格</b>：大格只看得到中間 537 列，
     這一張的內容佔 27~1053——上下都會被切掉。<br>
-    ⚠ 小格裡放的是<b>下一節那把尺的建議格（Ⓒ）</b>，不是上面那張。</p>
+    ⚠ <b>小格右那一格還沒做</b>（主題與科別七科）。</p>
 
-  <h2 class="pv-h2">⚠⚠ 在小格的實際大小（410px）<span class="t">左＝現況　中＝Ⓒ 建議　右＝Ⓔ 最大</span></h2>
+  <h2 class="pv-h2">⚠⚠ 在小格的實際大小（410px）<span class="t">這一排才是判準</span></h2>
   <div class="pv-shot">
-    <img src="door-slot-410.png" width="1254" height="422" loading="lazy"
-      alt="三種下排字級縮到小格的實際大小 410px 並排">
+    <img src="door-slot-410.png" width="422" height="422" loading="lazy"
+      alt="定案那一張縮到小格的實際大小 410px">
   </div>
-  <p class="pv-cap"><b>這一排才是判準。</b>上面那兩句提醒 <b>11.4px</b>、
-    地圖上的街名 <b>13.2px</b>（第一次過 10px）——那兩項三張都一樣。<br>
-    ⚠ 差在<b>最下面那一排</b>：左邊 9.9／8.4px、中間 12.9／11.0、右邊 15.6／13.7。
-    代價是地圖 998 → 840 → 730。<b>下一節那把尺就是這件事。</b></p>
-
-  <h2 class="pv-h2">⚠ 下排那兩行的字級<em>要挑</em><span class="t">你說有點小 —— 量出來你是對的</span></h2>
-  <table class="pv-tab">
-    <thead><tr><th>哪一格</th><th>名字</th><th>距離</th><th>地圖</th></tr></thead>
-    <tbody>
-      <tr><td>Ⓐ 現況</td><td class="no">9.9px</td><td class="no">8.4px</td><td>998</td></tr>
-      <tr><td>Ⓑ ×1.10</td><td>10.6px</td><td class="no">9.1px</td><td>998</td></tr>
-      <tr><td>Ⓒ ×1.30 建議</td><td>12.9px</td><td>11.0px</td><td>840</td></tr>
-      <tr><td>Ⓓ ×1.45</td><td>14.0px</td><td>12.1px</td><td>762</td></tr>
-      <tr><td>Ⓔ ×1.60</td><td>15.6px</td><td>13.7px</td><td>730</td></tr>
-    </tbody>
-  </table>
-  <p class="pv-cap">名字與距離那兩欄是<b>在小格 410px 上量的</b>（這一線的判準一直是
-    「小格上小於 10px ＝ 等於沒寫」）——現況兩行都沒過，<b>你看出來的是真的</b>。<br>
-    ⚠⚠ <b>但字一大，那一排就變高，而高度是從地圖借的</b>（最右欄）。
-    這一格沒有免費的答案，所以是一把尺。<br>
-    ⚠ 中間還有一道硬牆：三個名字原本是<b>不折行</b>的，<span class="n">×1.15 就開始互相碰到</span>——
-    要再大只能<b>讓名字折行</b>（Ⓒ 以上都是），那又會再多吃一截地圖。</p>
-  <div class="pv-shot">
-    <img src="door-c110.png" width="1080" height="1080" loading="lazy"
-      alt="下排字級 ×1.10：名字仍然一行">
-  </div>
-  <p class="pv-cap"><b>Ⓑ ×1.10</b>——<b>完全不花錢</b>：Ⓐ 與 Ⓑ 的地圖都已經
-    <b>頂到左右內距</b>（998／可用 1000），那一排再高一點也還借得到高度。
-    但只有名字過線、距離仍然 9.1px。</p>
-  <div class="pv-shot">
-    <img src="door-c130.png" width="1080" height="1080" loading="lazy"
-      alt="下排字級 ×1.30：名字照破折號斷成兩行、號碼牌自己一列">
-  </div>
-  <p class="pv-cap"><b>Ⓒ ×1.30</b><b>（建議）</b>——<b>兩行第一次都過 10px</b>。
-    名字開始折行，所以號碼牌改成<b>自己一列</b>：不這樣做的話三格會各折在不同的地方
-    （一格牌子在字旁邊、一格在字上面），看起來就是亂的。地圖 998 → <b>840</b>。<br>
-    ⚠⚠ <b>P1 的斷點是自己指定的，不是交給瀏覽器折。</b>只有 P1 放不下（10 個字），
-    瀏覽器會折成「中華路停車<b>／</b>場」，一個字被丟到下一行；名字裡本來就有一個
-    <b>全形破折號</b>（壹車房－中華路停車場），那才是它自己的斷點——
-    現在讀起來是<b>壹車房／中華路停車場／190 公尺・步行 3 分鐘</b>三行。<br>
-    ⚠ <b>破折號已經拿掉</b>（你指定的）——換行本來就把「分兩截」講完了，
-    留在行尾反而像沒收完。<br>
-    ⚠⚠ 只有<b>畫在圖上</b>的那一份拿掉：底下那塊「詳情」的字與門口那張紙
-    <b>一個字都沒動</b>，那兩份是一行，破折號在那裡仍然是唯一的分隔。<br>
-    ⚠ 產生器有一道守門在數「自己斷的每一段有沒有被再折」，被折就停下來。</p>
-  <div class="pv-shot">
-    <img src="door-c145.png" width="1080" height="1080" loading="lazy"
-      alt="下排字級 ×1.45">
-  </div>
-  <div class="pv-shot">
-    <img src="door-c160.png" width="1080" height="1080" loading="lazy"
-      alt="下排字級 ×1.60">
-  </div>
-  <p class="pv-cap"><b>Ⓓ ×1.45</b>（地圖 762）與 <b>Ⓔ ×1.60</b>（地圖 730）。
-    再往上那一排就比地圖還搶眼了。<br>
-    ⚠ 而且到這兩格，<b>連「140 公尺・步行 2 分鐘」那一行也開始自己折</b>
-    （「2 分鐘」掉到第二行）——名字的斷點我們指定得了，那一行沒有可以指定的斷點。</p>
-
-  <h2 class="pv-h2">指北針要多小<em>要挑</em><span class="t">上面每一張都已經是中間那一格</span></h2>
-  <p class="pv-cap">你說「指北針的標示和北可以小一點」——<b>照做了，而且再給你上下各一格</b>。<br>
-    ⚠ 門口那張紙上那一組是為了<b>站在門口、離半公尺</b>挑的；這張圖要在小格 410px 上看，
-    同一組就顯得吵。<b>門口那張一個字都沒動</b>，只有這張圖換一格。<br>
-    ⚠ 指北針畫在地圖那張圖裡面，所以換大小<b>不會動到版面</b>——三張的字、留白、
-    那一排停車場逐格相同。</p>
-  <table class="pv-tab">
-    <thead><tr><th>哪一格</th><th>整組高</th><th>「北」</th><th>地圖</th></tr></thead>
-    <tbody>
-      <tr><td>Ⓝ1 門口那張的大小</td><td>35.2px</td><td>10.2px</td><td>834</td></tr>
-      <tr><td>Ⓝ2 小一格（現在這樣）</td><td>30.5px</td><td>8.8px</td><td>840</td></tr>
-      <tr><td>Ⓝ3 再小一格</td><td>26.0px</td><td>7.5px</td><td>848</td></tr>
-    </tbody>
-  </table>
-  <p class="pv-cap">前三欄是<b>在小格 410px 上量的</b>。⚠ 「北」那個字三格都在 10px 以下——
-    但它和停車場的名字不一樣：<b>那個字不必讀，形狀認得出來就好</b>（旁邊還有一支箭頭），
-    所以這一格不套那條 10px 的線。<br>
-    ⚠ 地圖反而<b>愈小的指北針愈寬一點</b>（834 → 848）：指北針在圖裡面，它一收，
-    整張圖就瘦一點、同樣的高度放得下更寬的圖。</p>
-  <div class="pv-shot">
-    <img src="door-c130-nsb.png" width="1080" height="1080" loading="lazy"
-      alt="指北針＝門口那張的大小">
-  </div>
-  <p class="pv-cap"><b>Ⓝ1</b>——門口那張 A4 用的那一組。</p>
-  <div class="pv-shot">
-    <img src="door-c130-nsd.png" width="1080" height="1080" loading="lazy"
-      alt="指北針再小一格">
-  </div>
-  <p class="pv-cap"><b>Ⓝ3</b>——再小一格。<b>Ⓝ2（現在這樣）就是上面那幾張。</b></p>
-
-  <h2 class="pv-h2">地圖要多大<em>要挑</em><span class="t">指北針能給的已經給完了，剩下的要從留白拿</span></h2>
-  <p class="pv-cap">⚠⚠ <b>先講一件事：指北針收小換到的只有 4px</b>（地圖 754 → 758）。
-    它畫在地圖那張圖<b>裡面</b>，收小只讓那張圖瘦一點點。<br>
-    ⚠⚠⚠ 真正卡住地圖的是<b>高度</b>——地圖是「填滿剩下的高度」，
-    <b>左右反而還空著各 121px</b>。所以地圖要大，只能從<b>這一頁自己的上下留白</b>拿。<br>
-    ⚠ 指北針那條帶子<b>不可以拿來抵</b>：門口那張的規則是「指北針不可以壓在路上」
-    （你 8/23 指定的），那條帶子是它的家、不是浪費。</p>
-  <table class="pv-tab">
-    <thead><tr><th>哪一格</th><th>留白／段距</th><th>地圖</th><th>小格留白</th></tr></thead>
-    <tbody>
-      <tr><td>Ⓜ1 原本</td><td>44／18</td><td>758</td><td>17.0px</td></tr>
-      <tr><td>Ⓜ2</td><td>34／14</td><td>804 +6%</td><td>13.2px</td></tr>
-      <tr><td><b>Ⓜ3 你選的</b></td><td>26／11</td><td>840 +11%</td><td>10.3px</td></tr>
-      <tr><td>Ⓜ4</td><td>18／8</td><td>876 +16%</td><td>7.1px</td></tr>
-    </tbody>
-  </table>
-  <p class="pv-cap">四格<b>只有留白不一樣</b>，字級、那一排停車場、指北針全都是同一組。<br>
-    ✅ <b>你選了 Ⓜ3 —— 已經寫成預設，這一頁上面每一張圖都換過去了</b>
-    （所以上面那幾格的地圖尺寸和你昨天看到的不一樣，那是這一改帶來的）。<br>
-    ⚠ <b>Ⓜ4 的上面那兩句幾乎貼到邊</b>。<br>
-    ⚠ 已知的不對稱：左右的內距<b>沒有跟著收</b>（一直是 40 ＝ 小格 15.2px）——
-    收它<b>一點都換不到地圖</b>（地圖是高度在卡，左右本來就有空），
-    收了只會讓上面那兩句變長。所以 Ⓜ3 之後會變成「上下比左右緊一點」，那是刻意的。</p>
-  <div class="pv-shot">
-    <img src="door-slot-410-margin.png" width="1670" height="422" loading="lazy"
-      alt="四格留白在小格 410px 上並排">
-  </div>
-  <p class="pv-cap"><b>這一排是在小格的實際大小（410px）比的</b>：左起 Ⓜ1／Ⓜ2／Ⓜ3／Ⓜ4。</p>
-  <p class="pv-cap"><b>Ⓜ3 就是上面那幾張</b>——地圖 <b>840×655</b>。下面三格留著當對照。</p>
-  <div class="pv-shot">
-    <img src="door-c130-m1.png" width="1080" height="1080" loading="lazy"
-      alt="留白 44／段距 18：地圖 758">
-  </div>
-  <div class="pv-shot">
-    <img src="door-c130-m2.png" width="1080" height="1080" loading="lazy"
-      alt="留白 34／段距 14：地圖 804">
-  </div>
-  <div class="pv-shot">
-    <img src="door-c130-m4.png" width="1080" height="1080" loading="lazy"
-      alt="留白 18／段距 8：地圖 876">
-  </div>
-  <p class="pv-cap"><b>Ⓜ1</b>（原本，地圖 758）、<b>Ⓜ2</b>（804）與 <b>Ⓜ4</b>（876）。</p>
-
-  <h2 class="pv-h2">浮水印<span class="t">你挑的：4% ＋ 站上頁首那顆 ＋ 再往左</span></h2>
-  <p class="pv-cap"><b>三件都照做了</b>，上面每一張圖現在都是這一組：
-    <b>形狀 r1c2 ＝ 站上頁首那顆</b>（952×469）、<b>墨 4%</b>、<b>左邊切出去 180px</b>。<br>
-    ⚠ 門診表那一張仍然是<b>圓的 r3c1、5%、壓右下</b>——<b>兩張不一樣是你挑的</b>，
-    不是漏改成一致。<br>
-    ⚠⚠ 壓左上的理由（你說的）量得出來：這一張的右下角是<b>三張停車場卡</b>，
-    名字＋號碼牌＋距離共九段字，是整張圖上唯一要逐字讀的地方；
-    左上那兩句只有兩行、行長不一，右邊本來就空著。<br>
-    ⚠ 這一張的地圖是<b>不透明的圖</b>，所以浮水印是<b>壓在最上面</b>不是壓在後面
-    （擺在後面會被地圖那個長方形切掉一大塊）。這麼淡的一端兩種讀起來一樣。</p>
-
-  <h2 class="pv-h2">① 再往左多少<em>要挑</em><span class="t">垂直沒有動，只有左右</span></h2>
-  <table class="pv-tab">
-    <thead><tr><th>哪一格</th><th>左邊切掉</th><th>佔它自己的寬</th><th>看得到</th></tr></thead>
-    <tbody>
-      <tr><td>Ⓧ1 上一版</td><td>87px</td><td>9.1%</td><td>865px</td></tr>
-      <tr><td><b>Ⓧ2 現在這樣</b></td><td>180px</td><td>18.9%</td><td>772px</td></tr>
-      <tr><td>Ⓧ3</td><td>280px</td><td>29.4%</td><td>672px</td></tr>
-      <tr><td>Ⓧ4 最左</td><td>380px</td><td>39.9%</td><td>572px</td></tr>
-    </tbody>
-  </table>
-  <p class="pv-cap">「再往左」＝ <b>左邊切出去多少</b>。這一顆是扁的（952×469），
-    往左推等於露出來的那一段愈短、洞也跟著往左走。<br>
-    ⚠ <b>垂直一個字都沒動</b>（上緣仍然切掉高的 7.6%）——你只說了左右。</p>
-  <div class="pv-shot">
-    <img src="door-slot-410-x.png" width="1670" height="422" loading="lazy"
-      alt="四種左移量在小格 410px 上並排">
-  </div>
-  <p class="pv-cap"><b>這一排是在小格的實際大小（410px）比的</b>：左起 Ⓧ1／Ⓧ2／Ⓧ3／Ⓧ4。</p>
-  <div class="pv-shot">
-    <img src="door-c130-x1.png" width="1080" height="1080" loading="lazy"
-      alt="左邊切掉 87px">
-  </div>
-  <p class="pv-cap"><b>Ⓧ1 ＝ 上一版</b>（切 87px）。<b>Ⓧ2 就是上面那幾張。</b></p>
-  <div class="pv-shot">
-    <img src="door-c130-x3.png" width="1080" height="1080" loading="lazy"
-      alt="左邊切掉 280px">
-  </div>
-  <div class="pv-shot">
-    <img src="door-c130-x4.png" width="1080" height="1080" loading="lazy"
-      alt="左邊切掉 380px">
-  </div>
-  <p class="pv-cap"><b>Ⓧ3</b>（切 280px）與 <b>Ⓧ4</b>（切 380px）——再往左，
-    畫面上剩下的就只是一片圓弧、看不出是標誌了。</p>
-
-  <h2 class="pv-h2">② 濃度<span class="t">你挑 4%，其餘留著對照</span></h2>
-  <table class="pv-tab">
-    <thead><tr><th>哪一格</th><th>墨</th><th>底色</th><th>壓在上面的柔墨</th></tr></thead>
-    <tbody>
-      <tr><td>Ⓦ1 ＝ 門診表那張</td><td>5.0%</td><td>#eaeaeb</td><td>5.66</td></tr>
-      <tr><td><b>Ⓦ2 你挑的</b></td><td>4.0%</td><td>#ececed</td><td>5.68</td></tr>
-      <tr><td>Ⓦ3</td><td>3.0%</td><td>#eeeeef</td><td>5.76</td></tr>
-      <tr><td>Ⓦ4 最淡</td><td>2.0%</td><td>#f0f0f1</td><td>5.80</td></tr>
-    </tbody>
-  </table>
-  <p class="pv-cap">四格<b>沒有一格會讓字讀不到</b>（最濃的 Ⓦ1 柔墨仍有 5.66、門檻 4.5），
-    所以這一題純粹是看起來舒不舒服。產生器仍然有一道守門在算，掉到 4.5 以下會停下來。</p>
-  <div class="pv-shot">
-    <img src="door-slot-410-wm.png" width="1670" height="422" loading="lazy"
-      alt="四種濃度在小格 410px 上並排">
-  </div>
-  <p class="pv-cap">左起 Ⓦ1／<b>Ⓦ2（現在這樣）</b>／Ⓦ3／Ⓦ4。</p>
-  <div class="pv-shot">
-    <img src="door-c130-w1.png" width="1080" height="1080" loading="lazy"
-      alt="浮水印 5%">
-  </div>
-  <div class="pv-shot">
-    <img src="door-c130-w3.png" width="1080" height="1080" loading="lazy"
-      alt="浮水印 3%">
-  </div>
-  <div class="pv-shot">
-    <img src="door-c130-w4.png" width="1080" height="1080" loading="lazy"
-      alt="浮水印 2%">
-  </div>
-  <div class="pv-shot">
-    <img src="door-c130-w0.png" width="1080" height="1080" loading="lazy"
-      alt="不放浮水印">
-  </div>
-  <p class="pv-cap"><b>Ⓦ1 ＝ 5%</b>（和門診表同濃度）、<b>Ⓦ3 ＝ 3%</b>、<b>Ⓦ4 ＝ 2%</b>，
-    以及<b>完全不放</b>（最後那一張）。</p>
-
-  <h2 class="pv-h2">③ 其他幾顆 logo<span class="t">你挑 r1c2，這幾格留著對照</span></h2>
-  <table class="pv-tab">
-    <thead><tr><th>哪一格</th><th>形狀</th><th>長寬比</th><th>畫出來</th></tr></thead>
-    <tbody>
-      <tr><td><b>你挑的</b></td><td>r1c2</td><td>2.03</td><td>952×469</td></tr>
-      <tr><td>Ⓛ1 ＝ 門診表那顆</td><td>r3c1</td><td>1.00</td><td>660×660</td></tr>
-      <tr><td>Ⓛ2</td><td>r1c1</td><td>1.00</td><td>679×679</td></tr>
-      <tr><td>Ⓛ3</td><td>r3c2</td><td>1.00</td><td>673×674</td></tr>
-      <tr><td>Ⓛ4</td><td>r2c2</td><td>1.33</td><td>762×572</td></tr>
-    </tbody>
-  </table>
-  <p class="pv-cap">⚠⚠ <b>換形狀不可以沿用同一個寬度</b>：九顆的長寬比 1.00~3.08、
-    墨佔外框 59.6~83.2%，同寬的話細長那幾顆會輕很多。所以寬度是
-    <b>按墨的面積等重換算</b>的——五格看起來一樣重，只是形狀不同。<br>
-    ⚠ 長寬比 3.08 那三顆（r1c3／r2c3／r3c3）等重之後要 <b>1193~1364px</b>、
-    比畫布 1080 還寬，沒有列進來。<br>
-    ⚠ <b>這幾格的左移量仍然是上一版的比例</b>（寬的 9.1%）——它們是形狀的對照，
-    不是拿來挑位置的。</p>
-  <div class="pv-shot">
-    <img src="door-slot-410-logo.png" width="2086" height="422" loading="lazy"
-      alt="五顆 logo 在小格 410px 上並排">
-  </div>
-  <p class="pv-cap">左起<b>你挑的 r1c2</b>／Ⓛ1／Ⓛ2／Ⓛ3／Ⓛ4，在小格 410px 上比。
-    ⚠ 這麼淡的濃度，410px 上幾乎分不出來——差別要在 1080 的原圖看。</p>
-  <div class="pv-shot">
-    <img src="door-c130-l1.png" width="1080" height="1080" loading="lazy"
-      alt="浮水印換成門診表那顆 r3c1">
-  </div>
-  <p class="pv-cap"><b>Ⓛ1 ＝ r3c1</b>，門診表那一張用的那顆圓 logo。</p>
-  <div class="pv-shot">
-    <img src="door-c130-l2.png" width="1080" height="1080" loading="lazy"
-      alt="浮水印換成 r1c1">
-  </div>
-  <div class="pv-shot">
-    <img src="door-c130-l3.png" width="1080" height="1080" loading="lazy"
-      alt="浮水印換成 r3c2">
-  </div>
-  <div class="pv-shot">
-    <img src="door-c130-l4.png" width="1080" height="1080" loading="lazy"
-      alt="浮水印換成 r2c2">
-  </div>
-  <p class="pv-cap"><b>Ⓛ2 ＝ r1c1</b>、<b>Ⓛ3 ＝ r3c2</b>、<b>Ⓛ4 ＝ r2c2</b>。</p>
-
-  <h2 class="pv-h2">④ 壓哪一角<span class="t">留著當對照，左上是你指定的</span></h2>
-  <div class="pv-shot">
-    <img src="door-c130-wbr.png" width="1080" height="1080" loading="lazy"
-      alt="浮水印壓右下角">
-  </div>
-  <p class="pv-cap"><b>右下</b>（＝門診表那一張的位置）。<b>它壓在三張停車場卡上</b>——
-    那正是這張圖唯一要逐字讀的地方，所以換到左上。</p>
+  <p class="pv-cap">上面每一個數字都是量這個尺寸得來的。
+    <b>這是真的 410px，不是縮圖</b>——手機上看到多大，主頁上就多大。</p>
 
   <h2 class="pv-h2">拿掉的是這兩句<span class="t">門口那張告示本人一個字都沒有動</span></h2>
   <div class="pv-cut">永樂街平常車不多，但診所門口被劃設紅線。
 過往多為柔性勸導，近來常有直接開單情形。</div>
-  <p class="pv-cap">留下來的是<b>後兩句</b>（路邊停車格與如下圖／計價依現場標示）。<br>
-    ⚠⚠ 產生器<b>不是照順序砍前兩條</b>：它會檢查砍掉的那兩句真的含著「紅線」「開單」、
-    留下來的那兩句真的沒有，對不上就停下來——
-    這樣門口那張哪天改了字或換了順序，這裡不會靜靜地砍錯句子。<br>
-    ⚠ 「詳情」那一欄也跟著拿掉同樣兩句（見最底下）——
-    圖上寫兩句、詳情寫四句，就是同一則貼文有兩個版本的事實。</p>
-
-  <h2 class="pv-h2">要不要加一行標題<span class="t">door-c-title・地圖 910×711</span></h2>
-  <div class="pv-shot">
-    <img src="door-c-title.png" width="1080" height="1080" loading="lazy"
-      alt="定案版加上一行標題：芳仁牙醫　周邊停車">
-  </div>
-  <p class="pv-cap">那兩句一拿掉，整張圖第一眼看到的就是
-    「周邊路段有畫設之路邊停車格」——<b>沒有人知道這是誰家的</b>。
-    加一行標題「芳仁牙醫　周邊停車」就解掉，代價是地圖從 998 收到 <b>910</b>（小 9%）。<br>
-    ⚠ 主頁三格是<b>三格一起看</b>的：上面那格已經寫著芳仁牙醫的門診表，
-    所以不加也說得過去。<b>這一格是給你挑的，我沒有自己加上去。</b></p>
-
-  <h2 class="pv-h2">以下是紀錄<span class="t">走到定案之前的幾格，留著日後要回頭比</span></h2>
-  <div class="pv-shot">
-    <img src="door-c-qr.png" width="1080" height="1080" loading="lazy"
-      alt="拿掉兩句但留著三顆 QR">
-  </div>
-  <p class="pv-cap"><b>拿掉兩句、碼留著</b>（地圖 752×587）。碼在小格上一顆都掃不出來，見下面那張表。</p>
-  <div class="pv-shot">
-    <img src="door-a.png" width="1080" height="1080" loading="lazy"
-      alt="原本那一版：四句提醒、地圖、三顆 QR">
-  </div>
-  <p class="pv-cap"><b>你原本指名的那一版</b>：四句 ＋ 三顆碼，地圖只剩 602×470 ——不到定案那張的一半。</p>
-  <div class="pv-shot">
-    <img src="door-noqr.png" width="1080" height="1080" loading="lazy"
-      alt="四句提醒但沒有 QR">
-  </div>
-  <p class="pv-cap"><b>四句 ＋ 不放碼</b>（地圖 858×670）——定案是在這一格再拿掉兩句。</p>
-  <div class="pv-shot">
-    <img src="door-b.png" width="1080" height="1080" loading="lazy"
-      alt="逐字照門口那張：綠塊寫著現在位置">
-  </div>
-  <p class="pv-cap"><b>逐字照門口那張</b>（綠塊寫「現在位置」）。留著看原樣，不建議用。</p>
-  <div class="pv-shot">
-    <img src="door-qr140.png" width="1080" height="1080" loading="lazy"
-      alt="QR 收小到 140px">
-  </div>
-  <p class="pv-cap"><b>碼收小到 140px</b> 想換地圖大一點——<b>兩頭空</b>：地圖只大 15%，
-    而碼<b>連在原圖上都掃不出來了</b>。</p>
-  <div class="pv-shot">
-    <img src="door-north.png" width="1080" height="1080" loading="lazy"
-      alt="地圖改成北在上，變成直的、很小">
-  </div>
-  <p class="pv-cap">⚠⚠ <b>北在上</b>是<b>代價的展示</b>不是候選：那時地圖變成直的（0.61），
-    塞進同一個高度只剩 <span class="n">286px</span> 寬。
-    <b>門口那張把地圖轉 90 度，正是這一版在方畫布上贏的地方。</b></p>
-
-  <h2 class="pv-h2">⚠⚠⚠ 那三顆 QR 真的掃得動嗎<span class="t">不是用眼睛看，是拿解碼器掃過</span></h2>
-  <table class="pv-tab">
-    <thead><tr><th>哪一張</th><th>碼多大</th><th>每格</th><th>掃到幾顆</th></tr></thead>
-    <tbody>
-      <tr><td>200px・原圖 1080</td><td>200px</td><td>4.88px</td><td>3/3</td></tr>
-      <tr><td>200px・大格 823</td><td>152.4px</td><td>3.72px</td><td class="no">0/3</td></tr>
-      <tr><td>200px・小格 410</td><td>75.9px</td><td>1.85px</td><td class="no">0/3</td></tr>
-      <tr><td>140px・原圖 1080</td><td>140px</td><td>3.41px</td><td class="no">0/3</td></tr>
-      <tr><td>140px・大格 823</td><td>106.7px</td><td>2.6px</td><td class="no">0/3</td></tr>
-      <tr><td>140px・小格 410</td><td>53.1px</td><td>1.3px</td><td class="no">0/3</td></tr>
-    </tbody>
-  </table>
-  <p class="pv-cap">每一顆是 <b>41×41 格</b>（含四格靜區）。<br>
-    <b>① 在小格上一顆都掃不出來</b>（每格只有 1.85px）——而小格正是這一張要去的地方。<br>
-    <b>② 碼收小到 140px，連原圖都掃不動</b>——「把碼縮小、讓地圖大一點」這條路走不通。<br>
-    ⚠⚠ <b>大格那一列這一輪從 3/3 變成 0/3</b>：碼一樣大（每格 3.72px，本來就在解碼器的邊緣），
-    是 Ⓜ3 把那一排往下挪了一點、縮圖的取樣就跟著換了。<b>結論沒有變，只是更難看了。</b>
-    ⚠ 順帶把那三顆碼<b>拉到浮水印前面</b>——碼上面不可以壓任何東西，
-    而且壓了<b>畫面上看不出來</b>，只有拿解碼器掃才知道。<br>
-    ⚠⚠⚠ <b>③ 更根本的一件：看貼文的人正拿著那支手機，掃不了自己螢幕上的碼。</b>
-    門口那張是紙，人站在前面用手機掃，成立；貼文是螢幕，同一支手機掃不了自己。<br>
-    <b>LINE 上真正接得住這件事的，是「詳情」欄裡那三條可以點的網址</b>（見下一段）。</p>
+  <p class="pv-cap">門口那張是給<b>車已經停好、站在門口的人</b>看的，這兩句擋的是「就停一下」；
+    看貼文的人<b>還沒出門</b>，同一句話讀起來是「這間診所門口會被開單」＝ 警告不是幫忙。<br>
+    ⚠ 留下來的兩句（有停車格／計價依現場標示）對兩種人都成立。</p>
 
   <h2 class="pv-h2">「詳情」那一欄要貼的字<span class="t">⚠ 這裡才是 QR 在 LINE 上的替代品</span></h2>
   <div class="pv-txt">周邊路段有畫設之路邊停車格，鄰近停車場可參考如下圖。
@@ -477,93 +162,17 @@ https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic
     三條網址<b>逐字</b>取自 <code>index.html</code> 地圖上那三個連結
     （你自己分享過、驗證會開對地方的那三條），
     <b>順序照你排的 P1／P2／P3</b>（刻意不是照距離）。<br>
+    ⚠⚠⚠ 三顆 QR 已經拿掉了，而<b>看貼文的人正拿著那支手機、掃不了自己螢幕上的碼</b>——
+    這三條<b>可以點</b>的網址才是它在 LINE 上真正的替代品。<br>
     ⚠ 「可參考如下圖」指的是貼文上面那張圖，成立；
     <b>所以圖裡的版面鎖住「文字在上、地圖在下」</b>，不要把地圖搬到旁邊或最上面。<br>
     ⚠⚠ 不可以寫「有問題留言問我們」那一類的話（這個帳號沒有專人即時回覆）。</p>
 
-  <h2 class="pv-h1">二、站上那張簡易地圖的版本
-    <span>2026-09-08 稍早做的，留著對照</span></h2>
-  <p class="pv-lead">地圖是<b>站上那張簡易地圖本人</b>（1:1 截下來），
-    三個停車場全亮、各自帶著牌子與步行時間。<br>
-    ⚠ 和上面那一版最大的差別：地圖是<b>直的</b>（左右各留 179px），
-    而且沒有 P1 P2 P3 的號碼牌——停車場的名字與距離是畫在地圖上的牌子裡。</p>
-
-  <h2 class="pv-h2">Ⓕ 三塊全亮<span class="t">標題 46／頁尾 32・地圖 642×711</span></h2>
-  <div class="pv-shot">
-    <img src="post-map-a.png" width="1080" height="1080" loading="lazy"
-      alt="站上地圖版的位置圖：三個停車場全部亮著">
-  </div>
-  <p class="pv-cap">站上一次只亮一塊（那是手機一格放不下三塊牌子的解），
-    貼文放得下就<b>攤開</b>。永樂站那塊牌子往左挪了 <b>50</b>——
-    兩塊之間要空出 2×11（牌子自己的內距），而且尾巴要留在它自己那塊 P 上。<br>
-    ⚠ 左右各留 179px 是結構性的：地圖是直的（0.903）、畫布是方的，
-    把四周空白裁掉<b>反而更瘦</b>（→0.724），要滿版就得上下切掉 111 個單位以上、
-    永樂站與壹車房都會不見。</p>
-  <div class="pv-shot">
-    <img src="profile-3up.png" width="823" height="823" loading="lazy"
-      alt="主頁三格的模擬：小格左是站上地圖版">
-  </div>
-  <div class="pv-shot">
-    <img src="slot-410.png" width="1254" height="422" loading="lazy"
-      alt="站上地圖版三張候選縮到 410px 並排">
-  </div>
-  <p class="pv-cap">左＝Ⓕ／中＝字大一階／右＝字小一階。</p>
-
-  <h2 class="pv-h2">其餘幾格<span class="t">頁尾、只亮一塊、標題、沒有標題</span></h2>
-  <div class="pv-shot">
-    <img src="post-map-b.png" width="1080" height="1080" loading="lazy"
-      alt="站上地圖版：頁尾只有地址與電話兩行">
-  </div>
-  <p class="pv-cap"><b>頁尾不放停車那一句</b>，地圖 642 → 686。
-    ⚠ 那一句是這一版<b>唯一在 410px 讀得出「有停車位」</b>的地方，建議留著。</p>
-  <div class="pv-shot">
-    <img src="post-map-c.png" width="1080" height="1080" loading="lazy"
-      alt="站上地圖版：只有壹車房停車場亮著">
-  </div>
-  <p class="pv-cap"><b>只亮壹車房</b>（＝站上開頁的樣子）。畫面乾淨，
-    但最近的那一個（走路 1 分鐘）就這樣不見了。</p>
-  <div class="pv-shot">
-    <img src="post-map-big.png" width="1080" height="1080" loading="lazy"
-      alt="站上地圖版：字大一階">
-  </div>
-  <div class="pv-shot">
-    <img src="post-map-sml.png" width="1080" height="1080" loading="lazy"
-      alt="站上地圖版：字小一階">
-  </div>
-  <p class="pv-cap"><b>字大一階 54/38</b>（地圖 606×671）／<b>字小一階 40/28</b>（地圖 664×736）。
-    ⚠ 字和地圖在搶同一塊高度。</p>
-  <div class="pv-shot">
-    <img src="post-map-t2.png" width="1080" height="1080" loading="lazy"
-      alt="站上地圖版：標題是芳仁牙醫位置與停車">
-  </div>
-  <div class="pv-shot">
-    <img src="post-map-t3.png" width="1080" height="1080" loading="lazy"
-      alt="站上地圖版：標題是怎麼走・哪裡停車">
-  </div>
-  <div class="pv-shot">
-    <img src="post-map-notitle.png" width="1080" height="1080" loading="lazy"
-      alt="站上地圖版：沒有標題，地圖放到最大">
-  </div>
-  <p class="pv-cap"><b>標題換一句</b>（芳仁牙醫位置與停車／怎麼走・哪裡停車）、
-    以及<b>沒有標題</b>（地圖 712×788，但主頁上那一格就不會自我介紹了）。</p>
-
-  <h2 class="pv-h2">這一版的「詳情」</h2>
-  <div class="pv-txt">診所在永樂街與平和街19巷的那一角，門面朝永樂街。
-雲林縣斗六市永樂街 70 號　05-5339369
-斗六永樂站停車場 50 公尺・1 分鐘
-合廷停車場 140 公尺・2 分鐘
-壹車房停車場 190 公尺・3 分鐘</div>
-
-  <h2 class="pv-h2">還沒決定的</h2>
+  <h2 class="pv-h2">還開著的兩件</h2>
   <p class="pv-cap">
-    <b>① 要不要加那一行標題</b>（<code>door-c</code> 還是 <code>door-c-title</code>）。<br>
-    <b>② 檔名</b>——挑定了就改成拿得出去的名字
-    （看診時間那張是 <code>fangren-hours-1080.png</code>，這一張會是
-    <code>fangren-map-1080.png</code>）。<br>
-    <b>③ 小格右那一格</b>（主題與科別七科）還沒做——七張分享圖現成，
+    <b>① 小格右那一格</b>（主題與科別七科）還沒做——七張分享圖現成，
     但都是 1.91:1，<b>要重裁成方的</b>。<br>
-    <b>④ 小格到底是不是照這樣裁</b>——在後台按一次「預覽」就知道，我們是照 410×410 推的。</p>
-
+    <b>② 小格到底是不是照這樣裁</b>——在後台按一次「預覽」就知道，我們是照 410×410 推的。</p>
 
   <h2 class="pv-h1">三、給外縣市／鄰近鄉鎮看的路線圖<span>2026-09-08 第四版，還沒定案</span></h2>
   <p class="pv-lead">你拿 Google 地圖的實景和 MIHO 自己那張示意圖對照，說

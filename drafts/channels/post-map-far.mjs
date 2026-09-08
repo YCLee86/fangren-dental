@@ -1090,9 +1090,11 @@ for (const [tag, opt] of CASES) await build(tag, opt);
 /* ========== 主頁三格 ＋ 410px 實際大小 ========== */
 const b64 = (f) => "data:image/png;base64," + fs.readFileSync(path.join(OUT, f)).toString("base64");
 const HOURS = path.join(ROOT, "preview", "line-post-hours", "fangren-hours-1080.png");
-const DOOR = path.join(OUT, "door-c.png");
+/* ⚠ 停車那張 2026-09-08 定稿之後改名成 fangren-map-1080.png（另一台做的），
+   `door-c.png` 已經不存在 —— 這裡只拿它當「墨的百分比」的對照。 */
+const DOOR = path.join(OUT, "fangren-map-1080.png");
 if (!fs.existsSync(HOURS)) throw new Error("找不到看診時間那張圖，先跑 node drafts/channels/post-hours.mjs");
-if (!fs.existsSync(DOOR)) throw new Error("找不到停車那張圖，先跑 node drafts/channels/post-map-door.mjs");
+if (!fs.existsSync(DOOR)) throw new Error("找不到停車那張定稿圖，先跑 node drafts/channels/post-map-door.mjs");
 const cell = (uri, w, h) => `<div style="width:${w}px;height:${h}px;overflow:hidden;background:${RULE}">`
   + (uri ? `<img src="${uri}" style="width:100%;height:100%;object-fit:cover;display:block">` : "")
   + `</div>`;
@@ -1103,7 +1105,7 @@ const p2 = await browser.newPage({ viewport: { width: BIG_W, height: BIG_H + 4 +
 await p2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
   <div style="width:${BIG_W}px;background:#fff;display:flex;flex-direction:column;gap:4px">
     ${cell("data:image/png;base64," + fs.readFileSync(HOURS).toString("base64"), BIG_W, BIG_H)}
-    <div style="display:flex;gap:3px">${cell(b64("door-c.png"), SMALL, SMALL)}${
+    <div style="display:flex;gap:3px">${cell(b64("fangren-map-1080.png"), SMALL, SMALL)}${
       cell(b64(fileOf(PICK)), SMALL, SMALL)}</div>
   </div>`);
 await p2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
@@ -1192,7 +1194,7 @@ const doorInk = inkOf(fs.readFileSync(DOOR));
 console.log(`地圖範圍　${A.zoom} 公尺寬　比例尺 ${A.k.toFixed(4)} 單位／公尺　`
   + `畫布 ${A.mapW}×${A.mapH}（縱向 ${Math.round(A.ext.y1 - A.ext.y0)} 公尺）`);
 console.log(`有墨的像素　⭐${A.file} ${A.q.ink}%　`
-  + `（對照：停車那張 door-c.png ${doorInk.ink}%）　幾乎全空的列 ${A.q.empty}/${A.q.h}`);
+  + `（對照：停車那張 fangren-map-1080.png ${doorInk.ink}%）　幾乎全空的列 ${A.q.empty}/${A.q.h}`);
 if (A.q.ink < doorInk.ink * .7)
   console.log(`  ⚠ 比停車那張空很多 —— 第一版被退回就是這一項（6.0% vs 29.0%）`);
 console.log(`小格 410px 上　標題 ${(A.ts * K_SMALL).toFixed(1)}px　頁尾 ${(A.fs2 * K_SMALL).toFixed(1)}px　`
