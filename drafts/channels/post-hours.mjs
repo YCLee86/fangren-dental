@@ -215,6 +215,18 @@ const WMW = 660, WMR = -60, WMT = 470, WMA = .05;
    眼睛因此分不出哪幾顆是同一天的。左右內距 44 → 32、時段那一欄 158 → 152，
    把省下來的 34 全部讓給五天的欄。 */
 const PAD = 32, LAB = 152;
+
+/* ⚠⚠ 定稿那一張要「拿得出去」，所以它的檔名不是產生器的流水號（2026-09-08 補，
+ *   使用者：「定稿的門診表匯出讓我放在 line 商家帳號 貼圖」）。
+ *   那把尺的代號（s130w ＝ 1.30 ＋ 標籤斷行）只有我們看得懂，而他要的是一個
+ *   **存到手機、傳給別人、貼進後台**都認得出來的名字。
+ *   ⚠ 只有定稿那一張換名字，其餘的候選維持流水號 —— 名字乾淨的只該有一個，
+ *   兩個乾淨的名字並排就等於沒有指出哪一張是定稿。
+ *   ⚠⚠ 這是**改名不是另存一份**：另存的話舊檔會變成孤兒（check 第 ④ 道會擋），
+ *   而且日後一定有人會拿到舊的那一份。 */
+const FINAL = "s130w";
+const FINAL_FILE = "fangren-hours-1080.png";
+const fileOf = (tag) => tag === FINAL ? FINAL_FILE : `post-hours-${tag}.png`;
 /* 早午晚與時間**斷成兩行**時的欄寬：一行要 148.7，兩行只要放得下時間那一段
    （量到 113.1）＋ th 的右內距 8 → 124 還有 3 的餘裕 */
 const LAB2 = 124;
@@ -893,7 +905,7 @@ for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i
   if (Math.abs(tel.note - tel.left) > .5 || Math.abs(tel.num - tel.ico) > 1)
     throw new Error(`${tag} 的頁尾沒對齊：兩行左緣 ${tel.note.toFixed(1)} / ${tel.left.toFixed(1)}`
       + `　號碼中線 ${tel.num.toFixed(1)}　話筒中線 ${tel.ico.toFixed(1)}`);
-  await page.screenshot({ path: path.join(OUT, `post-hours-${tag}.png`) });
+  await page.screenshot({ path: path.join(OUT, fileOf(tag)) });
   made.push([tag, b, lab.w, tel, grp, lab.off]);
 }
 
@@ -910,11 +922,11 @@ const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 4
    不是版本比較；col 那一版留著只是為了讓人看見直排的代價。 */
 /* ⚠ 2026-09-07 使用者：「G 定稿」＝ post-hours-s130w.png
    （放大 1.30 ＋ 列距 16 ＋ 時段標籤斷成兩行、置中）。 */
-for (const [tag, big] of [["w2", "post-hours-s130w.png"], ["col", "post-hours-icol.png"]]) {
+for (const [tag, big] of [["w2", FINAL_FILE], ["col", "post-hours-icol.png"]]) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
     <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
       ${cell(big, PW, 409)}
-      <div style="display:flex;gap:3px">${cell("post-hours-s130w.png", 410, 410)}${cell("post-hours-s130w.png", 410, 410)}</div>
+      <div style="display:flex;gap:3px">${cell(FINAL_FILE, 410, 410)}${cell(FINAL_FILE, 410, 410)}</div>
     </div>`);
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
   await page2.screenshot({ path: path.join(OUT, `profile-3up-${tag}.png`) });
@@ -927,7 +939,7 @@ const NCUT = 1 + SCALES.length;
 const page3 = await browser.newPage({ viewport: { width: PW, height: 409 * NCUT + 6 * (NCUT - 1) } });
 await page3.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
   body{background:${RULE};display:flex;flex-direction:column;gap:6px}</style>`
-  + ["post-hours-mix-half-a11.png", ...SCALES.map(([t]) => `post-hours-${t}.png`)]
+  + ["post-hours-mix-half-a11.png", ...SCALES.map(([t]) => fileOf(t))]
     .map(f => cell(f, PW, 409)).join(""));
 await page3.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await page3.screenshot({ path: path.join(OUT, "bigslot-scales.png") });
