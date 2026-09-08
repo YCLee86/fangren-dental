@@ -63,6 +63,10 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 .pv-tab thead th{background:#e9eaeb;font-weight:700;color:var(--ink)}
 .pv-tab tbody tr:last-child td{border-bottom:0}
 .pv-tab .no{color:var(--red);font-weight:700}
+/* ⚠ 欄位一多就會把整頁推寬（cell 是 nowrap）——包一層自己捲，
+   而且表要給 min-width，不然外層那個 overflow-x 永遠用不到（第 29 節那一條）。 */
+.pv-tabwrap{overflow-x:auto;margin:10px 0 0}
+.pv-tabwrap .pv-tab{margin:0;min-width:340px}
 .pv-txt,.pv-cut{background:var(--card);border:1px solid var(--rule);border-radius:10px;
   padding:12px 14px;margin:10px 0 0;font-size:.78rem;line-height:1.95;
   white-space:pre-wrap;overflow-wrap:anywhere}
@@ -75,8 +79,8 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <body>
 <div class="pv-wrap">
 
-  <h1>LINE 商家貼文・位置與周邊停車
-    <span>2026-09-08　定案 door-c，其餘留著當紀錄</span></h1>
+  <h1>LINE 商家貼文・地圖那兩張
+    <span>2026-09-08　停車那張定案 door-c；<b>第三部分是新的「怎麼到斗六」路線圖</b></span></h1>
   <p class="pv-lead">主頁「最新貼文」那三格的<b>小格左</b>。<br>
     <b>⭐ 定案是 <code>door-c</code></b>：門口那張告示的版本，<b>不放 QR</b>、
     <b>拿掉「紅線」「開單」那兩句</b>——那兩句一走，地圖從 520 長到 <b>926px</b>。<br>
@@ -532,6 +536,175 @@ https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic
     <b>③ 小格右那一格</b>（主題與科別七科）還沒做——七張分享圖現成，
     但都是 1.91:1，<b>要重裁成方的</b>。<br>
     <b>④ 小格到底是不是照這樣裁</b>——在後台按一次「預覽」就知道，我們是照 410×410 推的。</p>
+
+
+  <h2 class="pv-h1">三、給外縣市／鄰近鄉鎮看的路線圖<span>2026-09-08 新開，還沒定案</span></h2>
+  <p class="pv-lead">你說的那一張：<b>不一樣的 scale</b>、給周圍鄉鎮或外縣市的人看，
+    <b>巷弄一條都不標</b>（外地人不是認巷弄），改成標<b>鐵路、國道、省道、車站</b>，
+    再加沿路看得到的大東西。<br>
+    ⚠⚠ 所以它<b>不是把停車那張放大縮小</b>，是<b>另一份資料</b>——
+    那一張回答「到了斗六停哪裡」（180 公尺的尺度），這一張回答「怎麼到斗六」（13 公里）。</p>
+
+  <div class="pv-tabwrap"><table class="pv-tab">
+    <tr><th></th><th>看診時間</th><th>位置與周邊停車</th><th>這一張</th></tr>
+    <tr><td>回答的問題</td><td>什麼時候有診</td><td>到了斗六停哪裡</td><td><b>怎麼到斗六</b></td></tr>
+    <tr><td>尺度</td><td>—</td><td>180 公尺</td><td><b>13 公里</b></td></tr>
+    <tr><td>巷弄</td><td>—</td><td>要（那就是它的工作）</td><td><b>一條都不要</b></td></tr>
+    <tr><td>看的人</td><td>本地</td><td>已經到斗六了</td><td><b>還在外縣市</b></td></tr>
+  </table></div>
+
+  <h2 class="pv-h2">⭐ 建議<em>far-mid</em><span class="t">國道１＋國道３＋台３＋鐵路，右下角開一個市區小圖</span></h2>
+  <div class="pv-shot">
+    <img src="far-mid.png" width="1080" height="1080"
+      alt="路線圖：國道１在西、國道３在東北、台３在東、鐵路斜穿，右下角一個市區放大的小圖">
+  </div>
+  <p class="pv-cap">四條連外道路 ＋ 鐵路 ＋ 兩個交流道 ＋ 診所，右下角開一個<b>市區放大</b>的小圖。<br>
+    ⚠ 範圍是<b>算出來的</b>不是給半徑：把要畫的東西框起來、自己算比例尺
+    （第一版用「以診所為中心 ＋ 半徑」，畫出來上面空了三分之一）。</p>
+
+  <h2 class="pv-h2">在主頁三格上長怎樣<span class="t">大格＝看診時間　小格左＝停車　小格右＝這一張</span></h2>
+  <div class="pv-shot">
+    <img src="far-profile-3up.png" width="847" height="851" loading="lazy"
+      alt="主頁三格模擬：上面是門診表，左下是停車圖，右下是新的路線圖">
+  </div>
+  <p class="pv-cap">⚠⚠⚠ <b>三格已經滿了。</b>34-4 那一節把小格右排給了「主題與科別七科」，
+    所以這一則要放哪一格<b>是你要決定的</b>——見最底下那一題。<br>
+    ⚠ 兩張小圖並排其實很合理：<b>左邊「到了停哪裡」、右邊「怎麼過來」</b>，
+    剛好是外地人心裡的兩個問題。</p>
+
+  <h2 class="pv-h2">⚠⚠ 在小格的實際大小（410px）<span class="t">這一排才是判準</span></h2>
+  <div class="pv-shot">
+    <img src="far-slot-410.png" width="430" height="430" loading="lazy"
+      alt="路線圖在小格 410px 的實際大小">
+  </div>
+  <p class="pv-cap">路名 <span class="n">11px</span>、地標名 <span class="n">11.4px</span>、
+    診所 <span class="n">11.8px</span>、地址與電話 <span class="n">10.6px</span>
+    ——<b>每一項都剛好過 10px 那條線，一個都沒有餘裕</b>。<br>
+    ⚠⚠ 小格只有 0.3796 倍，所以 1080 的畫布上<b>任何要讀完的字都不可以小於 27px</b>。
+    這張圖因此<b>幾乎沒有「小字」可以用</b>——那是量出來的限制，不是排版偷懶。</p>
+
+  <h2 class="pv-h2">⚠⚠⚠ 六個公家機關<b>還沒有位置</b>，所以一個都沒有畫上去</h2>
+  <p class="pv-cap">你列了八個：<b>車站</b>與<b>斗六高中</b>在你給的截圖上，量得到；
+    其餘六個（圓環、斗六派出所、中華電信斗六服務中心、元大銀行斗信分行、斗六家商、雲林縣政府）<b>一個都不在那兩張截圖上</b>，
+    而這台機器連不出去（Google／OSM 都被擋掉，403），所以我查不到。<br>
+    ⚠⚠⚠ <b>我沒有憑印象把它們擺上去。</b>一個擺錯位置的地標，比沒有那個地標更糟
+    ——外地人會照著它轉錯彎。產生器現在遇到沒有座標的地標會直接停下來，不會偷偷畫。<br>
+    <b>要補很簡單</b>：給我一張 Google 地圖截圖（把這六個搜出來、都在同一個畫面裡），
+    或直接講「它在哪條路上、在哪個路口附近」。我改一個資料檔就重畫，版面不用動。</p>
+
+  <h2 class="pv-h2">⚠⚠ 但先看這張表——你列的八個裡，<b>只有車站是廣域尺度的</b></h2>
+  <div class="pv-tabwrap"><table class="pv-tab">
+    <tr><th>地標</th><th>離診所</th><th>小格 410px 上離診所</th><th>畫在哪一層</th></tr>
+    <tr><td>斗六車站</td><td>616 公尺</td><td><span class="n">16.5px</span></td><td>市區小圖</td></tr>
+    <tr><td>斗六交流道</td><td>5140 公尺</td><td><span class="n">137.7px</span></td><td>廣域</td></tr>
+    <tr><td>斗南交流道</td><td>7254 公尺</td><td><span class="n">194.3px</span></td><td>廣域</td></tr>
+    <tr><td>斗六高中</td><td>406 公尺</td><td><span class="n">10.9px</span></td><td>市區小圖</td></tr>
+    <tr><td>雲林科技大學</td><td>1982 公尺</td><td><span class="n">53.1px</span></td><td>廣域</td></tr>
+  </table>
+  <p class="pv-cap">⚠⚠⚠ <b>斗六高中在小格上離診所只有 10.9px、車站 16.5px。</b>
+    圓環、派出所、中華電信、元大銀行、家商都在同一個市區裡，
+    <b>七個地標會全部疊在直徑 40px 的一團裡</b>——名字一個都讀不出來。<br>
+    <b>所以這一張開了「市區放大」那個小圖</b>：一張圖裝不下兩個尺度，
+    古典解就是在同一張圖上開一個小窗。市區那一層的地標全部住在裡面。<br>
+    ⚠ 小圖的範圍<b>寫死成以診所為中心的 3.2 公里見方</b>，不跟著「現在有哪幾個地標」浮動
+    ——不然那六個一補進來，你上一輪看過的那一張就不算數了。</p>
+
+  <h2 class="pv-h2">不開小圖會怎樣<em>對照</em><span class="t">far-nolens</span></h2>
+  <div class="pv-shot">
+    <img src="far-nolens.png" width="1080" height="1080" loading="lazy"
+      alt="不開市區小圖：市區的地標全部擠在中間那一撮">
+  </div>
+  <p class="pv-cap">市區那幾個地標全部回到中間那一撮，<b>現在只有三個就已經在互相碰</b>。
+    再加六個就是一團墨。</p>
+
+  <h2 class="pv-h2">範圍要到哪裡<em>要挑</em></h2>
+  <div class="pv-shot">
+    <img src="far-tight.png" width="1080" height="1080" loading="lazy"
+      alt="範圍收小：只到斗六市區與國道３交流道">
+  </div>
+  <p class="pv-cap"><b>Ⓑ 收小</b>：只到斗六市區與國道３交流道（<b>國道１不在圖上</b>）。
+    從西邊來的人看不到自己的入口。</p>
+  <div class="pv-shot">
+    <img src="far-city.png" width="1080" height="1080" loading="lazy"
+      alt="範圍再收：只有市區，沒有國道">
+  </div>
+  <p class="pv-cap"><b>Ⓒ 再收</b>：只有市區、沒有國道——那就變成第二張停車圖了，
+    <b>不建議</b>（這一張存在的理由就是國道與省道）。</p>
+  <div class="pv-shot">
+    <img src="far-all.png" width="1080" height="1080" loading="lazy"
+      alt="多畫一條縣道１４９甲">
+  </div>
+  <p class="pv-cap"><b>Ⓓ 多一條縣道１４９甲</b>（往東南）。它不是連外道路，
+    加上去只是讓右下角更擠，<b>也不建議</b>。</p>
+
+  <h2 class="pv-h2">地標怎麼放<em>要挑</em></h2>
+  <div class="pv-shot">
+    <img src="far-num.png" width="1080" height="1080" loading="lazy"
+      alt="地標改成號碼，名字排在圖的底下">
+  </div>
+  <p class="pv-cap"><b>號碼 ＋ 底下列清單</b>——地標一多就得走這條路（圖上只放①②③，
+    名字排在底下一行一個）。<b>六個補進來之後這一格會變成建議</b>，
+    現在只有五個還不必。</p>
+  <div class="pv-shot">
+    <img src="far-plain.png" width="1080" height="1080" loading="lazy"
+      alt="不放地標：只有路、車站、診所">
+  </div>
+  <p class="pv-cap"><b>不放地標</b>——最乾淨，但就少了你說的那件事
+    （沿路的參考點）。留著當下限。</p>
+
+  <h2 class="pv-h2">字級與標題<em>要挑</em></h2>
+  <div class="pv-shot">
+    <img src="far-big.png" width="1080" height="1080" loading="lazy"
+      alt="字大一階">
+  </div>
+  <div class="pv-shot">
+    <img src="far-small.png" width="1080" height="1080" loading="lazy"
+      alt="字小一階">
+  </div>
+  <p class="pv-cap"><b>字大一階（×1.15）</b>：路名 12.1px、地址 11px，讀起來鬆很多，
+    代價是地圖要讓出空間。<br>
+    <b>字小一階（×0.87）</b>：<b>比例尺 9.1px 已經掉到 10px 以下</b>——這一格是下限的展示，
+    不是候選。</p>
+  <div class="pv-shot">
+    <img src="far-t2.png" width="1080" height="1080" loading="lazy"
+      alt="標題換成：怎麼到芳仁牙醫">
+  </div>
+  <div class="pv-shot">
+    <img src="far-notitle.png" width="1080" height="1080" loading="lazy"
+      alt="沒有標題，版面全給地圖">
+  </div>
+  <p class="pv-cap"><b>標題換一句</b>（「怎麼到芳仁牙醫」）、以及<b>沒有標題</b>
+    （地圖大一點，但主頁上那一格就不會自我介紹了）。</p>
+
+  <h2 class="pv-h2">⚠ 圖上每一樣東西的出處</h2>
+  <p class="pv-cap">這張圖<b>不是描 Google 地圖描出來的街道圖，是示意圖</b>：
+    每一條路收成兩三個轉折點，方位與相對位置對得上，形狀不對。
+    外地人要的是「從哪裡下來、走哪一條、經過什麼」。<br>
+    ⚠ 地理資料只有一個出處：<code>drafts/channels/far-map.json</code>，
+    而那一份是從<b>你給的那兩張截圖描出來的</b>（比例尺是拿「診所↔斗六車站」回推的；
+    鐵路的方位另外驗過，北偏東 53 度，和斗六→石榴的真實經緯度算出來的 52.9 度對得上）。<br>
+    ⚠⚠ 有兩處<b>我自己也不確定</b>，寫在那一份檔案的 note 裡：
+    <b>國道３與台３線在斗六東北角交叉</b>，截圖上兩條都掛著「3」的標誌，
+    哪一條是哪一條要再確認；<b>斗南交流道</b>的確切位置截圖上沒有標。</p>
+
+  <h2 class="pv-h2">這一版的「詳情」</h2>
+  <div class="pv-txt">開車或搭車來斗六的話，這是周邊的路線。
+國道１號 ── 斗南交流道下，走台１丁往斗六市區。
+國道３號 ── 斗六交流道下，往西南進市區、接文化路。
+火車 ── 斗六車站下車，往東約 620 公尺。
+雲林縣斗六市永樂街 70 號　05-5339369</div>
+
+  <h2 class="pv-h2">要你決定的</h2>
+  <p class="pv-cap">
+    <b>① 那六個公家機關的位置</b>——給我一張截圖或一句話就好（見上面那一段）。<br>
+    <b>② 這一則要放哪一格</b>：三格已經被門診表（大格）與停車圖（小格左）佔滿，
+    小格右原本排給「主題與科別七科」。三條路：
+    <b>擠掉七科</b>／<b>當第四則</b>（主頁上要滑才看得到）／<b>換掉停車那一張</b>
+    （不建議——那一張回答的是完全不同的問題）。<b>我的建議是擠掉七科</b>：
+    七科那一張還沒做，而「怎麼過來」是外地人第一個問題。<br>
+    <b>③ 範圍、地標怎麼放、字級、標題</b>——上面每一格都擺出來了。<br>
+    <b>④ 檔名</b>——挑定了就改成拿得出去的名字（會是 <code>fangren-route-1080.png</code>）。
+    ⚠ 六個地標補進來之前<b>不會有定稿檔</b>，守門擋著。</p>
 
 </div>
 </body>

@@ -1,0 +1,73 @@
+{
+  "_說明": "far-mid.png 的比例尺，以及每個地標離診所多遠、在小格 410px 上是幾 px。post-map-far.mjs 寫的，不要手改。",
+  "k": 0.07055,
+  "slot": 410,
+  "places": [
+    {
+      "name": "斗六車站",
+      "src": "shot2",
+      "m": 616,
+      "px410": 16.5
+    },
+    {
+      "name": "斗六交流道",
+      "src": "shot1",
+      "m": 5140,
+      "px410": 137.7
+    },
+    {
+      "name": "斗南交流道",
+      "src": "shot1",
+      "m": 7254,
+      "px410": 194.3
+    },
+    {
+      "name": "斗六高中",
+      "src": "shot2",
+      "m": 406,
+      "px410": 10.9
+    },
+    {
+      "name": "雲林科技大學",
+      "src": "shot1",
+      "m": 1982,
+      "px410": 53.1
+    },
+    {
+      "name": "圓環",
+      "src": "ask",
+      "m": null,
+      "px410": null
+    },
+    {
+      "name": "斗六派出所",
+      "src": "ask",
+      "m": null,
+      "px410": null
+    },
+    {
+      "name": "中華電信斗六服務中心",
+      "src": "ask",
+      "m": null,
+      "px410": null
+    },
+    {
+      "name": "元大銀行斗信分行",
+      "src": "ask",
+      "m": null,
+      "px410": null
+    },
+    {
+      "name": "斗六家商",
+      "src": "ask",
+      "m": null,
+      "px410": null
+    },
+    {
+      "name": "雲林縣政府",
+      "src": "ask",
+      "m": null,
+      "px410": null
+    }
+  ]
+}

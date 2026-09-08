@@ -39,7 +39,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，而且尺寸對得上 ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 41, `頁上有 ${imgs.length} 張圖，應該是 41`);
+ok(imgs.length === 43, `頁上有 ${imgs.length} 張圖，應該是 43`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -50,7 +50,7 @@ for (const im of imgs) {
     `${im.src} 屬性寫 ${im.w}×${im.h}，實檔是 ${s.w}×${s.h}`);
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
   /* 成品一律 1080 見方；模擬圖不在此限 */
-  if (/^(post-map-|door-(c|c110|c130|c130-nsb|c130-nsd|c130-m1|c130-m2|c130-m4|c130-w0|c130-w1|c130-w2|c130-w4|c130-wbr|c130-l1|c130-l2|c130-l3|c130-l4|c145|c160|c-title|c-qr|a|b|noqr|qr140|north)\.png)/.test(im.src))
+  if (/^(post-map-|far-(?!profile|slot)|door-(c|c110|c130|c130-nsb|c130-nsd|c130-m1|c130-m2|c130-m4|c130-w0|c130-w1|c130-w2|c130-w4|c130-wbr|c130-l1|c130-l2|c130-l3|c130-l4|c145|c160|c-title|c-qr|a|b|noqr|qr140|north)\.png)/.test(im.src))
     ok(s.w === 1080 && s.h === 1080, `${im.src} 不是 1080×1080（是 ${s.w}×${s.h}）`);
 }
 
@@ -67,10 +67,12 @@ ok(!/\.pv-scroll\s+img\s*\{[^}]*width:\s*auto/.test(PAGE),
 /* ---- ③ 兩塊「詳情」各自和它的 .txt 逐字相同 ----
    第一塊 ＝ 門口那張告示的版本（door-detail.txt），第二塊 ＝ 站上那張地圖的版本（detail.txt）。 */
 const txts = [...PAGE.matchAll(/<div class="pv-txt">([\s\S]*?)<\/div>/g)].map(m => m[1].trim());
-ok(txts.length === 2, `頁上有 ${txts.length} 塊「詳情」，應該是 2`);
+ok(txts.length === 3, `頁上有 ${txts.length} 塊「詳情」，應該是 3`);
 const doorDetail = fs.readFileSync(path.join(DIR, "door-detail.txt"), "utf8").trimEnd();
 const detail = fs.readFileSync(path.join(DIR, "detail.txt"), "utf8").trimEnd();
-for (const [i, want, nm] of [[0, doorDetail, "door-detail.txt"], [1, detail, "detail.txt"]])
+const farDetail = fs.readFileSync(path.join(DIR, "far-detail.txt"), "utf8").trimEnd();
+for (const [i, want, nm] of [[0, doorDetail, "door-detail.txt"], [1, detail, "detail.txt"],
+                             [2, farDetail, "far-detail.txt"]])
   if (txts[i] !== undefined) ok(txts[i] === want,
     `第 ${i + 1} 塊「詳情」和 ${nm} 對不上：\n    頁面 ${JSON.stringify(txts[i])}\n    檔案 ${JSON.stringify(want)}`);
 
@@ -78,7 +80,8 @@ for (const [i, want, nm] of [[0, doorDetail, "door-detail.txt"], [1, detail, "de
 const ADDR = (SRC.match(/<span class="txt">(雲林縣[^<]+)<\/span>/) || [])[1];
 ok(ADDR, "index.html 裡讀不到頁尾那一行地址");
 const PHONE = (SRC.match(/05-\d{7}/) || [])[0];
-for (const [d, nm] of [[doorDetail, "door-detail.txt"], [detail, "detail.txt"]]) {
+for (const [d, nm] of [[doorDetail, "door-detail.txt"], [detail, "detail.txt"],
+                       [farDetail, "far-detail.txt"]]) {
   if (ADDR) ok(d.includes(ADDR.replace(/&nbsp;/g, " ")), `${nm} 裡的地址和 index.html 對不上`);
   ok(PHONE && d.includes(PHONE), `${nm} 裡的電話和 index.html 對不上（站上是 ${PHONE}）`);
 }
@@ -165,6 +168,39 @@ print(json.dumps(out))`;
   scanned = "（重掃：" + hits.join("、") + "）";
 } catch (e) { /* 沒有 opencv：下面那一行會把它印出來 */ }
 
+/* ---- ④c 第三張（給外縣市的路線圖）：頁面 ↔ far-map.json ↔ far-geo.json ----
+   ⚠⚠⚠ 最要緊的一道：**那六個還沒有座標的公家機關，頁上列的名字要逐字等於
+   far-map.json 裡 src 是 "ask" 的那幾個**。哪天補了一個進去卻忘了改頁面，
+   這一頁就會繼續說「這六個還沒有位置」——那是說謊，而且畫面完全正常。 */
+const FAR = JSON.parse(fs.readFileSync(path.join(ROOT, "drafts", "channels", "far-map.json"), "utf8"));
+const GEO = JSON.parse(fs.readFileSync(path.join(DIR, "far-geo.json"), "utf8"));
+const askNames = FAR.places.filter(p => !p.xy).map(p => p.name);
+ok(askNames.length > 0 || true, "");
+const askLine = (PAGE.match(/其餘六個（([^）]+)）/) || [])[1];
+ok(askLine !== undefined, "第三部分找不到「其餘六個（…）」那一句");
+if (askLine !== undefined) ok(askLine === askNames.join("、"),
+  `頁上列的「還沒有位置」和 far-map.json 對不上：\n    頁面 ${askLine}\n    檔案 ${askNames.join("、")}`);
+ok(/其餘六個/.test(PAGE) === (askNames.length === 6),
+  `far-map.json 裡沒有座標的有 ${askNames.length} 個，頁上卻寫「六個」`);
+/* far-geo.json 是產生器寫的：沒有座標的一定要是 null（＝真的沒有被畫上去） */
+for (const g of GEO.places.filter(g => askNames.includes(g.name)))
+  ok(g.m === null && g.px410 === null, `${g.name} 沒有被列為待補，卻在 far-geo.json 裡有座標`);
+/* 那張距離表逐格 ＝ far-geo.json（它是「為什麼要開市區小圖」的唯一證據） */
+const grows = [...PAGE.matchAll(
+  /<tr><td>([^<]+)<\/td><td>(\d+) 公尺<\/td><td><span class="n">([\d.]+)px<\/span><\/td><td>([^<]+)<\/td><\/tr>/g)];
+ok(grows.length === GEO.places.filter(g => g.m !== null).length,
+  `距離表有 ${grows.length} 列，far-geo.json 裡有座標的是 ${GEO.places.filter(g => g.m !== null).length} 個`);
+for (const [, nm, m, px] of grows) {
+  const g = GEO.places.find(g => g.name === nm);
+  if (!g) { bad.push(`距離表上有一列在 far-geo.json 裡找不到：${nm}`); continue; }
+  ok(+m === g.m && +px === g.px410,
+    `距離表 ${nm} 對不上 far-geo.json：頁面 ${m}／${px}　檔案 ${g.m}／${g.px410}`);
+}
+/* ⚠⚠ 還有地標沒有座標的時候，**不可以有定稿檔** ——
+   定稿等於「這一張可以拿出去了」，而它現在少了使用者指名的六個地標。 */
+ok(!(askNames.length && fs.existsSync(path.join(DIR, "fangren-route-1080.png"))),
+  "還有地標沒有座標，卻已經出現定稿檔 fangren-route-1080.png");
+
 /* ---- ⑤ 產出的圖沒有孤兒 ---- */
 for (const f of fs.readdirSync(DIR).filter(f => f.endsWith(".png")))
   ok(used.has(f), `圖產了卻沒有擺上頁面：${f}`);
@@ -176,11 +212,12 @@ ok(!/(?:src|href)="\/(?!\/)/.test(PAGE), "出現根目錄絕對路徑（舊站 y
 
 /* ---- ⑦ 紅線 ---- */
 for (const re of [/隨時(問|詢問|聯絡)/, /都可以問/, /即時回/, /小編/, /馬上回/])
-  for (const [d, nm] of [[doorDetail, "door-detail.txt"], [detail, "detail.txt"]])
+  for (const [d, nm] of [[doorDetail, "door-detail.txt"], [detail, "detail.txt"],
+                         [farDetail, "far-detail.txt"]])
     ok(!re.test(d), `${nm} 踩到紅線（這個帳號沒有專人即時回覆）：${re}`);
 
 if (bad.length) { console.error("✗ " + bad.length + " 項：\n  " + bad.join("\n  ")); process.exit(1); }
-console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、兩塊詳情逐字相同、留下的兩句與拿掉的兩句都對得上門口那張、三條網址對得上 index.html）`);
+console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、三塊詳情逐字相同、留下的兩句與拿掉的兩句都對得上門口那張、三條網址對得上 index.html、待補的 ${askNames.length} 個地標頁面與資料對得上）`);
 console.log(`  QR ${scanned}`);
 
 /* ---- ⑧ 量：八個寬度水平溢出 0、圖都載得到、死錨 0 ---- */
