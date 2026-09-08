@@ -45,6 +45,15 @@ const ADDR = (SRC.match(/<span class="txt">(雲林縣[^<]+)<\/span>/) || [])[1].
 const PHONE = (SRC.match(/05-\d{7}/) || [])[0];
 if (!ADDR || !PHONE) throw new Error("index.html 裡讀不到地址或電話");
 
+/* 對比度（浮水印那一段要用；PALETTE.md 的算法，不新增顏色） */
+const hex2rgb = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const rgb2hex = (v) => "#" + v.map(x => Math.round(x).toString(16).padStart(2, "0")).join("");
+const lum = (h) => { const [r, g, b] = hex2rgb(h).map(v => { v /= 255;
+  return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; });
+  return .2126 * r + .7152 * g + .0722 * b; };
+const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
+  return (x + .05) / (y + .05); };
+
 /* ---------- 畫布 ---------- */
 const W = 1080, H = 1080;
 const BIG_W = 823, BIG_H = 409, SMALL = 410;
@@ -59,7 +68,38 @@ const PAD = 40;
      東西時，要把取捨攤開讓他選）。
    ⚠ 指北針那條帶子**不可以拿來抵**：門口那張的規則是「指北針不可以壓在路上」
      （使用者 2026-08-23 指定），所以那條帶子是它的家，不是浪費。 */
-const GAP0 = 18, MARGIN0 = 44;
+/* ⚠⚠⚠ 2026-09-08 使用者挑了 **Ⓜ3**（「選 M3」）—— 所以那一組值寫回這裡當預設，
+   每一張 door-*.png 都跟著吃到（CLAUDE.md 那一列：「挑定之後要把那一組值寫回
+   MARGIN0／GAP0」）。原本的 44／18 變成尺上的 Ⓜ1，仍然產得出來當對照。
+   ⚠ **左右的內距 PAD 沒有跟著收**（一直是 40）：收它一點地圖都換不到（高度在卡），
+     只會讓上面那兩句變長。所以「上下比左右緊」是刻意的。 */
+const GAP0 = 11, MARGIN0 = 26;
+
+/* ---------- 浮水印（2026-09-08 使用者：「試試看這個壓像門診表的浮水印看看，
+   可能要更淡一點」）----------
+   做法沿用看診時間那一張（post-hours.mjs）：**一顆大的、淡的、從邊緣切出去的圓 logo**，
+   顏色是墨 ＋ 很低的 opacity，**不新增任何顏色**、也不多一個檔案（形狀從 brand/shapes 讀）。
+   ⚠⚠⚠ 但有一件和那一張**不一樣、照抄就會壞**：這一張的地圖是一張**不透明的 PNG**
+     （截圖帶著畫布底色，角落那道守門就在驗這件事），它蓋掉畫布中央 840×660。
+     浮水印若照門診表擺在**所有東西後面**，會被那個長方形**切掉一大塊** ——
+     圓形突然沿著地圖的邊消失，看起來就是壞的。
+     所以這裡是**壓在最上面**（z-index 2），濃度極低。
+     那兩種做法在淡的那一端讀起來一樣（亮處都是一層灰、暗處都看不出來），
+     差別只在「會不會被地圖切掉」。
+   ⚠ 濃度是一把尺（第 28 條 ①）：門診表那一張是 .05，他說「可能要更淡一點」，
+     所以預設先給 .03，另外三格擺出來讓他比。 */
+const WMSH = "r3c1";                 /* ＝ 門診表那一張用的同一顆圓 logo（單洞版） */
+/* ⚠ 大小與位置**逐字照門診表那一張**（660／−60／470，都是 1080 上的值）——
+   使用者說的是「像門診表的浮水印」，兩張圖並排在主頁三格裡，
+   位置與份量不一樣就會讀成兩件事。**只有濃度是這一輪要挑的。** */
+const WMW = 660, WMR = -60, WMT = 470, WMA0 = .03;
+
+/* 浮水印的形狀：從 brand/shapes 讀，不抄第二份（同這一支其餘每一項資料）。
+   ⚠ 那幾份 SVG 是單一路徑、currentColor、牙洞用 fill-rule 挖穿的，
+     所以只要把 width/height 拿掉、掛一個 class，顏色與濃度就交給 CSS。 */
+const WMARK = fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${WMSH}.svg`), "utf8")
+  .replace(/<svg([^>]*?)(width|height)="[\d.]+"/g, "<svg$1")
+  .replace(/<svg/, '<svg class="wm"');
 
 /* PNG 的真實尺寸（IHDR） */
 const pngSize = (buf) => ({ w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) });
@@ -241,14 +281,19 @@ const shotMap = async (targetW, { orient = "w", you = "clinic", ns = "c" } = {})
 
 /* ========== 第二步：1080 的方畫布 ========== */
 let MAPW = 0, MAPH = 0, MAPURI = "";
-const css = (fs2, qrpx, lotk = 1, wrapn = 0, GAP = GAP0) => `
+const css = (fs2, qrpx, lotk = 1, wrapn = 0, GAP = GAP0, wma = WMA0) => `
 *{box-sizing:border-box;margin:0}
 html,body{width:${W}px;height:${H}px}
 body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
      font-family:"Noto Sans TC","WenQuanYi Zen Hei",sans-serif}
 .sheet{width:${W}px;height:${H}px;display:flex;flex-direction:column;justify-content:center;
        position:relative;overflow:hidden}
-.band{padding:0 ${PAD}px}
+.band{padding:0 ${PAD}px;position:relative;z-index:1}
+/* 浮水印：從右下角切出去（.sheet 有 overflow:hidden，切掉的不會真的畫出來）。
+   ⚠⚠ 壓在**最上面**不是最下面 —— 見上面 WMSH 那一段：地圖是不透明的 PNG，
+   擺在後面會被那個長方形切掉一塊。濃度低到亮處只是一層灰、暗處看不出來。 */
+svg.wm{position:absolute;width:${WMW}px;height:auto;right:${WMR}px;top:${WMT}px;
+       color:${INK};opacity:${wma};z-index:2;pointer-events:none}
 /* ⚠ 標題只在「拿掉前兩句」那一版才有意義：那兩句一走，整張圖第一眼看到的
    就變成「周邊路段有畫設之路邊停車格」＝ 沒有人知道這是誰家的。
    給成一格尺讓使用者挑，不要自己加上去（第九節第 28 條 ①）。 */
@@ -273,7 +318,10 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 .lots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:${Math.round(fs2 * .9)}px;
       padding-top:${GAP}px}
 .lot{text-align:center}
-.lot .qr{display:flex;justify-content:center}
+/* ⚠⚠⚠ QR 上面不可以壓任何東西，浮水印也不行 —— 那顆碼在 823px 上每格只有 3.72px，
+   已經在解碼器的邊緣，再蓋一層 3% 的墨就可能整顆掃不出來（而且**畫面上看不出來**，
+   同門口那張 README 那一條：QR 不能用眼睛驗收）。所以這一塊自己拉到浮水印前面。 */
+.lot .qr{display:flex;justify-content:center;position:relative;z-index:3}
 .lot .qr svg{width:${qrpx}px;height:${qrpx}px;display:block}
 .lot .nm{margin-top:${Math.round(fs2 * .38)}px;font-size:${Math.round(fs2 * .86 * lotk)}px;
          font-weight:700;letter-spacing:.02em;
@@ -320,7 +368,7 @@ const sheet = (fs2, qr, drop = 0, title = "", wrapn = 0) => `<div class="sheet">
     qr ? `<div class="qr">${l.qr}</div>` : ""
   }<div class="nm"><span class="no">${l.tag}</span>${nmHtml(l.name, wrapn)}</div>
     <div class="du">${l.dist}</div></div>`).join("")}</div>
-</div></div>`;
+</div>${WMARK}</div>`;
 
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 fs.mkdirSync(OUT, { recursive: true });
@@ -330,10 +378,10 @@ for (const f of fs.readdirSync(OUT).filter(f => f.startsWith("door-") && f.endsW
 const made = [];
 const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you = "clinic",
                             drop = 0, title = "", lotk = 1, wrapn = 0, ns = "c",
-                            margin = MARGIN0, gap = GAP0 } = {}) => {
+                            margin = MARGIN0, gap = GAP0, wma = WMA0 } = {}) => {
   /* 先量「地圖以外的東西有多高」，再把地圖撐到剩下的空間 */
   MAPW = 400; MAPH = 320; MAPURI = "";
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn, gap)}</style>`
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn, gap, wma)}</style>`
     + sheet(fs2, qr, drop, title, wrapn));
   const other = await page.evaluate(() => {
     const b = document.querySelector(".band").getBoundingClientRect();
@@ -350,7 +398,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
   const sz = pngSize(buf);
   MAPW = sz.w; MAPH = sz.h;
   MAPURI = "data:image/png;base64," + buf.toString("base64");
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn, gap)}</style>`
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn, gap, wma)}</style>`
     + sheet(fs2, qr, drop, title, wrapn));
   await page.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 
@@ -358,10 +406,18 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
   const m = await page.evaluate(({ CARD, wrapn }) => {
     const band = document.querySelector(".band").getBoundingClientRect();
     const img = document.querySelector(".map img").getBoundingClientRect();
-    const over = [...document.querySelectorAll(".sheet *")].filter(el => {
-      const r = el.getBoundingClientRect();
-      return r.width && (r.right > 1080.5 || r.left < -.5);
-    }).length;
+    /* ⚠ 浮水印是**刻意**切出去的（.sheet 有 overflow:hidden，切掉的部分不會真的
+       畫出來），所以它與它的路徑要從這道溢出檢查裡排除，不然每一張都會被擋下來。 */
+    const over = [...document.querySelectorAll(".sheet *")]
+      .filter(el => !el.closest("svg.wm"))
+      .filter(el => {
+        const r = el.getBoundingClientRect();
+        return r.width && (r.right > 1080.5 || r.left < -.5);
+      }).length;
+    const wmr = (() => { const el = document.querySelector("svg.wm");
+      if (!el) return null; const r = el.getBoundingClientRect();
+      return { w: +r.width.toFixed(0), h: +r.height.toFixed(0),
+               out: +(r.right - 1080).toFixed(0) }; })();
     /* 四點提醒有沒有被折行、以及每一條佔幾行（折行不報錯，只是靜靜地變高） */
     const rng = document.createRange();
     const lines = [...document.querySelectorAll(".pts li")].map(li => {
@@ -426,7 +482,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
     const cx = cv.getContext("2d"); cx.drawImage(im, 0, 0);
     const px = cx.getImageData(1, 1, 1, 1).data;
     return { band: { y: band.y, h: band.height }, img: { w: img.width, h: img.height },
-             over, lines, wide, room, lotfs, refold, nmLines, nmText,
+             over, lines, wide, room, lotfs, refold, nmLines, nmText, wmr,
              lotsH: grid.getBoundingClientRect().height,
              corner: "#" + [px[0], px[1], px[2]].map(v => v.toString(16).padStart(2, "0")).join("") };
   }, { CARD, wrapn });
@@ -459,9 +515,23 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
 
   await page.screenshot({ path: path.join(OUT, `door-${tag}.png`) });
   m.onLot = onLot;
+  if (!m.wmr) throw new Error(`${tag}：浮水印沒有畫出來`);
   made.push({ tag, m, meta, fs2, qr, qrpx, orient, you, ar, drop, title, lotk, wrapn, ns, margin, gap,
-              pts: dropPts(drop).length });
+              wma, pts: dropPts(drop).length });
   return made[made.length - 1];
+};
+
+/* ⚠⚠⚠ 浮水印壓在最上面，所以落在它上面的字，**前景與背景兩邊都會被染一層墨**
+   （擺在後面的話只有背景會）。兩邊各自合成之後重算一次對比度：字仍然要 4.5。
+   ⚠ 這一道是**壞掉檢查**（會擋），和下面那個「讀起來對不對」的面板不同級。 */
+const wmOver = (c, a) => rgb2hex(hex2rgb(c).map((v, i) => v * (1 - a) + hex2rgb(INK)[i] * a));
+const wmCheck = (a) => {
+  const pairs = [["墨字", INK, CARD], ["柔墨", SOFT, CARD], ["紅字", BRICK, CARD],
+                 ["號碼牌", CARD, "#365685"]];
+  const bad = pairs.map(([n, fg, bg]) => [n, ratio(wmOver(fg, a), wmOver(bg, a))])
+    .filter(([, r]) => r < 4.5);
+  if (bad.length) throw new Error(`壓在浮水印（${a}）上過不了：`
+    + bad.map(([n, r]) => `${n} ${r.toFixed(2)}`).join("、"));
 };
 
 /* ⚠ 2026-09-08 使用者選的是 **Ⓒ ＝ 不放 QR ＋ 前兩句拿掉**（door-c）。
@@ -483,9 +553,15 @@ const CASES = [
   ["c130-nsd", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, ns: "d" }],  /* 再小一格 */
   /* 地圖要多大 ＝ 上下留白與段距要收多少（見上面 MARGIN0 那一段：地圖是高度在卡）。
      ⚠ 四格都吃 Ⓒ ×1.30 那一組字級，只有留白不一樣 —— 一次只動一件。 */
+  ["c130-m1", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 44, gap: 18 }],
   ["c130-m2", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 34, gap: 14 }],
-  ["c130-m3", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 26, gap: 11 }],
   ["c130-m4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 18, gap: 8 }],
+  /* 浮水印要多淡（2026-09-08 使用者：「可能要更淡一點」）。
+     ⚠ 四格只有濃度不一樣 —— 上面每一張都已經是預設的 .03（Ⓦ3）。 */
+  ["c130-w1", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: .05 }],  /* ＝ 門診表那一張 */
+  ["c130-w2", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: .04 }],
+  ["c130-w4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: .02 }],
+  ["c130-w0", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: 0 }],    /* 不放（對照） */
   ["c145",  { qr: false, drop: DROP, lotk: 1.45, wrapn: 1 }],  /* Ⓓ */
   ["c160",  { qr: false, drop: DROP, lotk: 1.60, wrapn: 1 }],  /* Ⓔ 最大 */
   ["c-title", { qr: false, drop: DROP, title: "芳仁牙醫　周邊停車" }], /* 標題那一格 */
@@ -496,6 +572,8 @@ const CASES = [
   ["qr140", { qrpx: 140 }],                           /* QR 收小，地圖放大 */
   ["north", { orient: "n" }],                         /* 北在上（地圖變回直的，看代價） */
 ];
+for (const a of [...new Set([WMA0, ...CASES.map(([, o]) => o.wma).filter(v => v !== undefined)])])
+  wmCheck(a);
 for (const [tag, opt] of CASES) await build(tag, opt);
 
 /* ========== 主頁三格 ＋ 410px 實際大小 ========== */
@@ -525,10 +603,21 @@ await p3.screenshot({ path: path.join(OUT, "door-slot-410.png") });
 const p4 = await browser.newPage({ viewport: { width: SMALL * 4 + 30, height: SMALL + 12 } });
 await p4.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
   body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
-  + ["door-c130.png", "door-c130-m2.png", "door-c130-m3.png", "door-c130-m4.png"]
+  + ["door-c130-m1.png", "door-c130-m2.png", "door-c130.png", "door-c130-m4.png"]
     .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
 await p4.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await p4.screenshot({ path: path.join(OUT, "door-slot-410-margin.png") });
+
+/* 浮水印那把尺也要在成品的尺寸上並排看一次（第 28 條 ④）——
+   ⚠ 濃度這種東西**一定要在會被看到的尺寸上比**，1080 原圖上看起來明顯的，
+     縮到 410px 常常就沒了。 */
+const p5 = await browser.newPage({ viewport: { width: SMALL * 4 + 30, height: SMALL + 12 } });
+await p5.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
+  body{background:${RULE};display:flex;gap:6px;padding:6px}</style>`
+  + ["door-c130-w1.png", "door-c130-w2.png", "door-c130.png", "door-c130-w4.png"]
+    .map(f => `<img src="${b64(f)}" width="${SMALL}" height="${SMALL}" style="display:block">`).join(""));
+await p5.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
+await p5.screenshot({ path: path.join(OUT, "door-slot-410-wm.png") });
 await browser.close();
 
 /* ========== ⚠⚠⚠ QR 不能用眼睛驗收：真的拿解碼器掃一次 ==========
@@ -631,11 +720,29 @@ for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-ns")
 
 /* ⚠ 不是壞掉檢查，是「讀起來對不對」：留白收多少換到多大的地圖 */
 console.log(`\n── 地圖要多大（上下留白／段距 → 地圖）──`);
-for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-m")))
-  console.log(`  door-${x.tag}\t留白 ${x.margin}　段距 ${x.gap}`
-    + `\t地圖 ${x.m.img.w}×${x.m.img.h}（比現況 ${(x.m.img.w / 758 * 100 - 100).toFixed(1)}%）`
-    + `\t整塊 ${x.m.band.h.toFixed(0)}／1080　上下各留 ${x.m.band.y.toFixed(0)}px`
-    + `\t小格上的留白 ${(x.m.band.y * SMALL / W).toFixed(1)}px`);
+{
+  const base = made.find(x => x.tag === "c130-m1").m.img.w;
+  for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-m")))
+    console.log(`  door-${x.tag}\t留白 ${x.margin}　段距 ${x.gap}`
+      + `\t地圖 ${x.m.img.w}×${x.m.img.h}（比 Ⓜ1 ${(x.m.img.w / base * 100 - 100).toFixed(1)}%）`
+      + `\t整塊 ${x.m.band.h.toFixed(0)}／1080　上下各留 ${x.m.band.y.toFixed(0)}px`
+      + `\t小格留白 ${(x.m.band.y * SMALL / W).toFixed(1)}px`
+      + `${x.tag === "c130" ? "\t← 定案（Ⓜ3，已寫回預設）" : ""}`);
+}
+
+/* ⚠ 不是壞掉檢查，是「讀起來對不對」：浮水印多濃、壓在它上面的字還剩多少對比 */
+console.log(`\n── 浮水印（${WMSH}・${WMW}px・從右下角切出去）──`);
+{
+  const A0 = made.find(x => x.tag === "c130");
+  console.log(`  畫出來 ${A0.m.wmr.w}×${A0.m.wmr.h}　右邊切掉 ${A0.m.wmr.out}px`
+    + `　→ 小格 410px 上 ${(A0.m.wmr.w * SMALL / W).toFixed(0)}px`);
+  for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-w")))
+    console.log(`  door-${x.tag}\t墨 ${(x.wma * 100).toFixed(1)}%`
+      + `\t底色 ${CARD} → ${wmOver(CARD, x.wma)}`
+      + `\t壓在上面：墨字 ${ratio(wmOver(INK, x.wma), wmOver(CARD, x.wma)).toFixed(2)}`
+      + `／柔墨 ${ratio(wmOver(SOFT, x.wma), wmOver(CARD, x.wma)).toFixed(2)}（門檻 4.5）`
+      + `${x.tag === "c130" ? "\t← 現在的預設（建議）" : ""}`);
+}
 
 console.log(`\n── 出圖 ──`);
 for (const x of made)
@@ -643,5 +750,5 @@ for (const x of made)
     + `　提醒 ${x.pts} 條${x.title ? "＋標題" : ""}`
     + `　內容高 ${x.m.band.h.toFixed(0)}${x.qr ? `　QR ${x.qrpx}px` : "　沒有 QR"}`
     + `${x.you === "door" ? "　綠塊寫「現在位置」" : ""}${x.orient !== "w" ? `　${x.orient} 在上` : ""}`);
-console.log(`  door-profile-3up.png　door-slot-410.png`);
+console.log(`  door-profile-3up.png　door-slot-410.png　door-slot-410-margin.png　door-slot-410-wm.png`);
 console.log(`\n── 「詳情」欄要貼的字 ──\n` + detail.split("\n").map(l => "  " + l).join("\n"));

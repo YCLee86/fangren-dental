@@ -108,7 +108,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
       alt="主頁三格的模擬：大格是看診時間，小格左是位置圖">
   </div>
   <p class="pv-cap">⚠⚠ <b>這一張不能放大格</b>：大格只看得到中間 537 列，
-    這一張的內容佔 45~1035——上下都會被切掉。<br>
+    這一張的內容佔 27~1053——上下都會被切掉。<br>
     ⚠ 小格裡放的是<b>下一節那把尺的建議格（Ⓒ）</b>，不是上面那張。</p>
 
   <h2 class="pv-h2">⚠⚠ 在小格的實際大小（410px）<span class="t">左＝現況　中＝Ⓒ 建議　右＝Ⓔ 最大</span></h2>
@@ -119,17 +119,17 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   <p class="pv-cap"><b>這一排才是判準。</b>上面那兩句提醒 <b>11.4px</b>、
     地圖上的街名 <b>13.2px</b>（第一次過 10px）——那兩項三張都一樣。<br>
     ⚠ 差在<b>最下面那一排</b>：左邊 9.9／8.4px、中間 12.9／11.0、右邊 15.6／13.7。
-    代價是地圖 926 → 758 → 648。<b>下一節那把尺就是這件事。</b></p>
+    代價是地圖 998 → 840 → 730。<b>下一節那把尺就是這件事。</b></p>
 
   <h2 class="pv-h2">⚠ 下排那兩行的字級<em>要挑</em><span class="t">你說有點小 —— 量出來你是對的</span></h2>
   <table class="pv-tab">
     <thead><tr><th>哪一格</th><th>名字</th><th>距離</th><th>地圖</th></tr></thead>
     <tbody>
-      <tr><td>Ⓐ 現況</td><td class="no">9.9px</td><td class="no">8.4px</td><td>926</td></tr>
-      <tr><td>Ⓑ ×1.10</td><td>10.6px</td><td class="no">9.1px</td><td>920</td></tr>
-      <tr><td>Ⓒ ×1.30 建議</td><td>12.9px</td><td>11.0px</td><td>758</td></tr>
-      <tr><td>Ⓓ ×1.45</td><td>14.0px</td><td>12.1px</td><td>680</td></tr>
-      <tr><td>Ⓔ ×1.60</td><td>15.6px</td><td>13.7px</td><td>648</td></tr>
+      <tr><td>Ⓐ 現況</td><td class="no">9.9px</td><td class="no">8.4px</td><td>998</td></tr>
+      <tr><td>Ⓑ ×1.10</td><td>10.6px</td><td class="no">9.1px</td><td>998</td></tr>
+      <tr><td>Ⓒ ×1.30 建議</td><td>12.9px</td><td>11.0px</td><td>840</td></tr>
+      <tr><td>Ⓓ ×1.45</td><td>14.0px</td><td>12.1px</td><td>762</td></tr>
+      <tr><td>Ⓔ ×1.60</td><td>15.6px</td><td>13.7px</td><td>730</td></tr>
     </tbody>
   </table>
   <p class="pv-cap">名字與距離那兩欄是<b>在小格 410px 上量的</b>（這一線的判準一直是
@@ -142,15 +142,16 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <img src="door-c110.png" width="1080" height="1080" loading="lazy"
       alt="下排字級 ×1.10：名字仍然一行">
   </div>
-  <p class="pv-cap"><b>Ⓑ ×1.10</b>——<b>幾乎不花錢</b>（地圖只少 6px），但只有名字過線、
-    距離仍然 9.1px。</p>
+  <p class="pv-cap"><b>Ⓑ ×1.10</b>——<b>完全不花錢</b>：Ⓐ 與 Ⓑ 的地圖都已經
+    <b>頂到左右內距</b>（998／可用 1000），那一排再高一點也還借得到高度。
+    但只有名字過線、距離仍然 9.1px。</p>
   <div class="pv-shot">
     <img src="door-c130.png" width="1080" height="1080" loading="lazy"
       alt="下排字級 ×1.30：名字照破折號斷成兩行、號碼牌自己一列">
   </div>
   <p class="pv-cap"><b>Ⓒ ×1.30</b><b>（建議）</b>——<b>兩行第一次都過 10px</b>。
     名字開始折行，所以號碼牌改成<b>自己一列</b>：不這樣做的話三格會各折在不同的地方
-    （一格牌子在字旁邊、一格在字上面），看起來就是亂的。地圖 926 → <b>758</b>。<br>
+    （一格牌子在字旁邊、一格在字上面），看起來就是亂的。地圖 998 → <b>840</b>。<br>
     ⚠⚠ <b>P1 的斷點是自己指定的，不是交給瀏覽器折。</b>只有 P1 放不下（10 個字），
     瀏覽器會折成「中華路停車<b>／</b>場」，一個字被丟到下一行；名字裡本來就有一個
     <b>全形破折號</b>（壹車房－中華路停車場），那才是它自己的斷點——
@@ -168,7 +169,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <img src="door-c160.png" width="1080" height="1080" loading="lazy"
       alt="下排字級 ×1.60">
   </div>
-  <p class="pv-cap"><b>Ⓓ ×1.45</b>（地圖 680）與 <b>Ⓔ ×1.60</b>（地圖 648）。
+  <p class="pv-cap"><b>Ⓓ ×1.45</b>（地圖 762）與 <b>Ⓔ ×1.60</b>（地圖 730）。
     再往上那一排就比地圖還搶眼了。<br>
     ⚠ 而且到這兩格，<b>連「140 公尺・步行 2 分鐘」那一行也開始自己折</b>
     （「2 分鐘」掉到第二行）——名字的斷點我們指定得了，那一行沒有可以指定的斷點。</p>
@@ -182,15 +183,15 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   <table class="pv-tab">
     <thead><tr><th>哪一格</th><th>整組高</th><th>「北」</th><th>地圖</th></tr></thead>
     <tbody>
-      <tr><td>Ⓝ1 門口那張的大小</td><td>31.8px</td><td>9.2px</td><td>754</td></tr>
-      <tr><td>Ⓝ2 小一格（現在這樣）</td><td>27.6px</td><td>8.0px</td><td>758</td></tr>
-      <tr><td>Ⓝ3 再小一格</td><td>23.5px</td><td>6.7px</td><td>764</td></tr>
+      <tr><td>Ⓝ1 門口那張的大小</td><td>35.2px</td><td>10.2px</td><td>834</td></tr>
+      <tr><td>Ⓝ2 小一格（現在這樣）</td><td>30.5px</td><td>8.8px</td><td>840</td></tr>
+      <tr><td>Ⓝ3 再小一格</td><td>26.0px</td><td>7.5px</td><td>848</td></tr>
     </tbody>
   </table>
   <p class="pv-cap">前三欄是<b>在小格 410px 上量的</b>。⚠ 「北」那個字三格都在 10px 以下——
     但它和停車場的名字不一樣：<b>那個字不必讀，形狀認得出來就好</b>（旁邊還有一支箭頭），
     所以這一格不套那條 10px 的線。<br>
-    ⚠ 地圖反而<b>愈小的指北針愈寬一點</b>（754 → 764）：指北針在圖裡面，它一收，
+    ⚠ 地圖反而<b>愈小的指北針愈寬一點</b>（834 → 848）：指北針在圖裡面，它一收，
     整張圖就瘦一點、同樣的高度放得下更寬的圖。</p>
   <div class="pv-shot">
     <img src="door-c130-nsb.png" width="1080" height="1080" loading="lazy"
@@ -213,14 +214,16 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   <table class="pv-tab">
     <thead><tr><th>哪一格</th><th>留白／段距</th><th>地圖</th><th>小格留白</th></tr></thead>
     <tbody>
-      <tr><td>Ⓜ1 現況</td><td>44／18</td><td>758</td><td>17.0px</td></tr>
+      <tr><td>Ⓜ1 原本</td><td>44／18</td><td>758</td><td>17.0px</td></tr>
       <tr><td>Ⓜ2</td><td>34／14</td><td>804 +6%</td><td>13.2px</td></tr>
-      <tr><td>Ⓜ3 建議</td><td>26／11</td><td>840 +11%</td><td>10.3px</td></tr>
+      <tr><td><b>Ⓜ3 你選的</b></td><td>26／11</td><td>840 +11%</td><td>10.3px</td></tr>
       <tr><td>Ⓜ4</td><td>18／8</td><td>876 +16%</td><td>7.1px</td></tr>
     </tbody>
   </table>
   <p class="pv-cap">四格<b>只有留白不一樣</b>，字級、那一排停車場、指北針全都是同一組。<br>
-    ⚠ <b>建議 Ⓜ3</b>：地圖大 11%，四邊還看得出留白。<b>Ⓜ4 的上面那兩句幾乎貼到邊</b>。<br>
+    ✅ <b>你選了 Ⓜ3 —— 已經寫成預設，這一頁上面每一張圖都換過去了</b>
+    （所以上面那幾格的地圖尺寸和你昨天看到的不一樣，那是這一改帶來的）。<br>
+    ⚠ <b>Ⓜ4 的上面那兩句幾乎貼到邊</b>。<br>
     ⚠ 已知的不對稱：左右的內距<b>沒有跟著收</b>（一直是 40 ＝ 小格 15.2px）——
     收它<b>一點都換不到地圖</b>（地圖是高度在卡，左右本來就有空），
     收了只會讓上面那兩句變長。所以 Ⓜ3 之後會變成「上下比左右緊一點」，那是刻意的。</p>
@@ -229,11 +232,11 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
       alt="四格留白在小格 410px 上並排">
   </div>
   <p class="pv-cap"><b>這一排是在小格的實際大小（410px）比的</b>：左起 Ⓜ1／Ⓜ2／Ⓜ3／Ⓜ4。</p>
+  <p class="pv-cap"><b>Ⓜ3 就是上面那幾張</b>——地圖 <b>840×655</b>。下面三格留著當對照。</p>
   <div class="pv-shot">
-    <img src="door-c130-m3.png" width="1080" height="1080" loading="lazy"
-      alt="留白 26／段距 11：地圖 840">
+    <img src="door-c130-m1.png" width="1080" height="1080" loading="lazy"
+      alt="留白 44／段距 18：地圖 758">
   </div>
-  <p class="pv-cap"><b>Ⓜ3（建議）</b>——地圖 <b>840×655</b>。</p>
   <div class="pv-shot">
     <img src="door-c130-m2.png" width="1080" height="1080" loading="lazy"
       alt="留白 34／段距 14：地圖 804">
@@ -242,8 +245,60 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <img src="door-c130-m4.png" width="1080" height="1080" loading="lazy"
       alt="留白 18／段距 8：地圖 876">
   </div>
-  <p class="pv-cap"><b>Ⓜ2</b>（地圖 804）與 <b>Ⓜ4</b>（地圖 876）。
-    ⚠ 上面每一張別的圖都還是 Ⓜ1，挑定了才整批換過去。</p>
+  <p class="pv-cap"><b>Ⓜ1</b>（原本，地圖 758）、<b>Ⓜ2</b>（804）與 <b>Ⓜ4</b>（876）。</p>
+
+  <h2 class="pv-h2">浮水印要多淡<em>要挑</em><span class="t">「壓像門診表的浮水印」——大小與位置逐字照那一張</span></h2>
+  <p class="pv-cap"><b>照做了</b>：同一顆圓 logo（<code>shape-r3c1</code>）、
+    同樣 <b>660px</b>、同樣從右下角切出去 60px、同樣是墨色加很低的濃度——
+    <b>沒有新增任何顏色，也沒有多一個檔案</b>（形狀從 <code>brand/shapes/</code> 讀回來）。<br>
+    ⚠ 位置與大小<b>逐字照門診表那一張</b>是刻意的：兩張圖在主頁三格裡是<b>上下相鄰</b>的，
+    份量或位置不一樣就會被讀成兩件事。<b>這一輪只有濃度是要挑的。</b><br>
+    ⚠⚠ 有一件和門診表<b>不一樣</b>：那一張的浮水印壓在表的<b>後面</b>；
+    這一張的地圖是一張<b>不透明的圖</b>，擺在後面會被那個長方形<b>切掉一塊</b>——
+    圓形突然沿著地圖的邊消失，看起來就是壞的。所以這裡是<b>壓在最上面</b>、濃度更低。
+    在這麼淡的一端，兩種做法讀起來一樣（亮處是一層灰、暗處看不出來）。</p>
+  <table class="pv-tab">
+    <thead><tr><th>哪一格</th><th>墨</th><th>底色</th><th>壓在上面的柔墨</th></tr></thead>
+    <tbody>
+      <tr><td>Ⓦ1 ＝ 門診表那張</td><td>5.0%</td><td>#eaeaeb</td><td>5.66</td></tr>
+      <tr><td>Ⓦ2</td><td>4.0%</td><td>#ececed</td><td>5.68</td></tr>
+      <tr><td><b>Ⓦ3 現在這樣</b></td><td>3.0%</td><td>#eeeeef</td><td>5.76</td></tr>
+      <tr><td>Ⓦ4 最淡</td><td>2.0%</td><td>#f0f0f1</td><td>5.80</td></tr>
+    </tbody>
+  </table>
+  <p class="pv-cap">你說「可能要更淡一點」，所以<b>預設先給 Ⓦ3（3%）</b>，
+    另外三格擺在下面讓你比。<b>四格只有濃度不一樣</b>，版面一個像素都沒動。<br>
+    ⚠ 對比度不是這一格的判準：最濃的 Ⓦ1 壓在上面，柔墨仍有 <b>5.66</b>（門檻 4.5），
+    四格<b>沒有一格會讓字讀不到</b>——所以這一題純粹是「看起來舒不舒服」。
+    產生器仍然有一道守門在算，掉到 4.5 以下會直接停下來。</p>
+  <div class="pv-shot">
+    <img src="door-slot-410-wm.png" width="1670" height="422" loading="lazy"
+      alt="四種濃度在小格 410px 上並排">
+  </div>
+  <p class="pv-cap"><b>這一排才是判準</b>：左起 Ⓦ1／Ⓦ2／Ⓦ3／Ⓦ4，
+    在小格的實際大小（410px）上比——浮水印在那裡只有 <b>251px</b>。<br>
+    ⚠ 濃度這種東西一定要<b>在會被看到的尺寸上比</b>：1080 原圖上看起來明顯的，
+    縮到 410px 常常就沒了。</p>
+  <div class="pv-shot">
+    <img src="door-c130-w1.png" width="1080" height="1080" loading="lazy"
+      alt="浮水印 5%：和門診表那一張同濃度">
+  </div>
+  <p class="pv-cap"><b>Ⓦ1 ＝ 5%</b>，和門診表那一張完全同一組數字。</p>
+  <div class="pv-shot">
+    <img src="door-c130-w4.png" width="1080" height="1080" loading="lazy"
+      alt="浮水印 2%：最淡">
+  </div>
+  <p class="pv-cap"><b>Ⓦ4 ＝ 2%</b>，最淡的一格。
+    ⚠ <b>Ⓦ3 就是上面那幾張</b>（這一頁除了這一節，每一張都是 Ⓦ3）。</p>
+  <div class="pv-shot">
+    <img src="door-c130-w2.png" width="1080" height="1080" loading="lazy"
+      alt="浮水印 4%">
+  </div>
+  <div class="pv-shot">
+    <img src="door-c130-w0.png" width="1080" height="1080" loading="lazy"
+      alt="不放浮水印">
+  </div>
+  <p class="pv-cap"><b>Ⓦ2 ＝ 4%</b>，以及<b>完全不放</b>（最後那一張，回到你昨天看的樣子）。</p>
 
   <h2 class="pv-h2">拿掉的是這兩句<span class="t">門口那張告示本人一個字都沒有動</span></h2>
   <div class="pv-cut">永樂街平常車不多，但診所門口被劃設紅線。
@@ -255,14 +310,14 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     ⚠ 「詳情」那一欄也跟著拿掉同樣兩句（見最底下）——
     圖上寫兩句、詳情寫四句，就是同一則貼文有兩個版本的事實。</p>
 
-  <h2 class="pv-h2">要不要加一行標題<span class="t">door-c-title・地圖 828×645</span></h2>
+  <h2 class="pv-h2">要不要加一行標題<span class="t">door-c-title・地圖 910×711</span></h2>
   <div class="pv-shot">
     <img src="door-c-title.png" width="1080" height="1080" loading="lazy"
       alt="定案版加上一行標題：芳仁牙醫　周邊停車">
   </div>
   <p class="pv-cap">那兩句一拿掉，整張圖第一眼看到的就是
     「周邊路段有畫設之路邊停車格」——<b>沒有人知道這是誰家的</b>。
-    加一行標題「芳仁牙醫　周邊停車」就解掉，代價是地圖從 926 收到 <b>828</b>（小 11%）。<br>
+    加一行標題「芳仁牙醫　周邊停車」就解掉，代價是地圖從 998 收到 <b>910</b>（小 9%）。<br>
     ⚠ 主頁三格是<b>三格一起看</b>的：上面那格已經寫著芳仁牙醫的門診表，
     所以不加也說得過去。<b>這一格是給你挑的，我沒有自己加上去。</b></p>
 
@@ -271,17 +326,17 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <img src="door-c-qr.png" width="1080" height="1080" loading="lazy"
       alt="拿掉兩句但留著三顆 QR">
   </div>
-  <p class="pv-cap"><b>拿掉兩句、碼留著</b>（地圖 670×524）。碼在小格上一顆都掃不出來，見下面那張表。</p>
+  <p class="pv-cap"><b>拿掉兩句、碼留著</b>（地圖 752×587）。碼在小格上一顆都掃不出來，見下面那張表。</p>
   <div class="pv-shot">
     <img src="door-a.png" width="1080" height="1080" loading="lazy"
       alt="原本那一版：四句提醒、地圖、三顆 QR">
   </div>
-  <p class="pv-cap"><b>你原本指名的那一版</b>：四句 ＋ 三顆碼，地圖只剩 520×406 ——不到定案那張的一半。</p>
+  <p class="pv-cap"><b>你原本指名的那一版</b>：四句 ＋ 三顆碼，地圖只剩 602×470 ——不到定案那張的一半。</p>
   <div class="pv-shot">
     <img src="door-noqr.png" width="1080" height="1080" loading="lazy"
       alt="四句提醒但沒有 QR">
   </div>
-  <p class="pv-cap"><b>四句 ＋ 不放碼</b>（地圖 776×605）——定案是在這一格再拿掉兩句。</p>
+  <p class="pv-cap"><b>四句 ＋ 不放碼</b>（地圖 858×670）——定案是在這一格再拿掉兩句。</p>
   <div class="pv-shot">
     <img src="door-b.png" width="1080" height="1080" loading="lazy"
       alt="逐字照門口那張：綠塊寫著現在位置">
@@ -298,7 +353,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
       alt="地圖改成北在上，變成直的、很小">
   </div>
   <p class="pv-cap">⚠⚠ <b>北在上</b>是<b>代價的展示</b>不是候選：那時地圖變成直的（0.61），
-    塞進同一個高度只剩 <span class="n">248px</span> 寬。
+    塞進同一個高度只剩 <span class="n">286px</span> 寬。
     <b>門口那張把地圖轉 90 度，正是這一版在方畫布上贏的地方。</b></p>
 
   <h2 class="pv-h2">⚠⚠⚠ 那三顆 QR 真的掃得動嗎<span class="t">不是用眼睛看，是拿解碼器掃過</span></h2>
@@ -306,7 +361,7 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <thead><tr><th>哪一張</th><th>碼多大</th><th>每格</th><th>掃到幾顆</th></tr></thead>
     <tbody>
       <tr><td>200px・原圖 1080</td><td>200px</td><td>4.88px</td><td>3/3</td></tr>
-      <tr><td>200px・大格 823</td><td>152.4px</td><td>3.72px</td><td>3/3</td></tr>
+      <tr><td>200px・大格 823</td><td>152.4px</td><td>3.72px</td><td class="no">0/3</td></tr>
       <tr><td>200px・小格 410</td><td>75.9px</td><td>1.85px</td><td class="no">0/3</td></tr>
       <tr><td>140px・原圖 1080</td><td>140px</td><td>3.41px</td><td class="no">0/3</td></tr>
       <tr><td>140px・大格 823</td><td>106.7px</td><td>2.6px</td><td class="no">0/3</td></tr>
@@ -316,6 +371,10 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   <p class="pv-cap">每一顆是 <b>41×41 格</b>（含四格靜區）。<br>
     <b>① 在小格上一顆都掃不出來</b>（每格只有 1.85px）——而小格正是這一張要去的地方。<br>
     <b>② 碼收小到 140px，連原圖都掃不動</b>——「把碼縮小、讓地圖大一點」這條路走不通。<br>
+    ⚠⚠ <b>大格那一列這一輪從 3/3 變成 0/3</b>：碼一樣大（每格 3.72px，本來就在解碼器的邊緣），
+    是 Ⓜ3 把那一排往下挪了一點、縮圖的取樣就跟著換了。<b>結論沒有變，只是更難看了。</b>
+    ⚠ 順帶把那三顆碼<b>拉到浮水印前面</b>——碼上面不可以壓任何東西，
+    而且壓了<b>畫面上看不出來</b>，只有拿解碼器掃才知道。<br>
     ⚠⚠⚠ <b>③ 更根本的一件：看貼文的人正拿著那支手機，掃不了自己螢幕上的碼。</b>
     門口那張是紙，人站在前面用手機掃，成立；貼文是螢幕，同一支手機掃不了自己。<br>
     <b>LINE 上真正接得住這件事的，是「詳情」欄裡那三條可以點的網址</b>（見下一段）。</p>
