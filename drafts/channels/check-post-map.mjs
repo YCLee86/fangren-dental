@@ -39,7 +39,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，而且尺寸對得上 ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 35, `頁上有 ${imgs.length} 張圖，應該是 35`);
+ok(imgs.length === 41, `頁上有 ${imgs.length} 張圖，應該是 41`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -50,7 +50,7 @@ for (const im of imgs) {
     `${im.src} 屬性寫 ${im.w}×${im.h}，實檔是 ${s.w}×${s.h}`);
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
   /* 成品一律 1080 見方；模擬圖不在此限 */
-  if (/^(post-map-|door-(c|c110|c130|c130-nsb|c130-nsd|c130-m1|c130-m2|c130-m4|c130-w0|c130-w1|c130-w2|c130-w4|c145|c160|c-title|c-qr|a|b|noqr|qr140|north)\.png)/.test(im.src))
+  if (/^(post-map-|door-(c|c110|c130|c130-nsb|c130-nsd|c130-m1|c130-m2|c130-m4|c130-w0|c130-w1|c130-w2|c130-w4|c130-wbr|c130-l1|c130-l2|c130-l3|c130-l4|c145|c160|c-title|c-qr|a|b|noqr|qr140|north)\.png)/.test(im.src))
     ok(s.w === 1080 && s.h === 1080, `${im.src} 不是 1080×1080（是 ${s.w}×${s.h}）`);
 }
 

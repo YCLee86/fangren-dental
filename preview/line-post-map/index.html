@@ -247,16 +247,67 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   </div>
   <p class="pv-cap"><b>Ⓜ1</b>（原本，地圖 758）、<b>Ⓜ2</b>（804）與 <b>Ⓜ4</b>（876）。</p>
 
-  <h2 class="pv-h2">浮水印要多淡<em>要挑</em><span class="t">「壓像門診表的浮水印」——大小與位置逐字照那一張</span></h2>
-  <p class="pv-cap"><b>照做了</b>：同一顆圓 logo（<code>shape-r3c1</code>）、
-    同樣 <b>660px</b>、同樣從右下角切出去 60px、同樣是墨色加很低的濃度——
-    <b>沒有新增任何顏色，也沒有多一個檔案</b>（形狀從 <code>brand/shapes/</code> 讀回來）。<br>
-    ⚠ 位置與大小<b>逐字照門診表那一張</b>是刻意的：兩張圖在主頁三格裡是<b>上下相鄰</b>的，
-    份量或位置不一樣就會被讀成兩件事。<b>這一輪只有濃度是要挑的。</b><br>
+  <h2 class="pv-h2">浮水印<em>要挑</em><span class="t">壓左上（你指定的）／濃度／換哪一顆 logo</span></h2>
+  <p class="pv-cap"><b>照做了</b>：同一顆圓 logo（<code>shape-r3c1</code>）、同樣 <b>660px</b>、
+    同樣的墨色與很低的濃度——<b>沒有新增任何顏色，也沒有多一個檔案</b>
+    （形狀從 <code>brand/shapes/</code> 讀回來）。<br>
+    ⚠⚠ <b>壓左上是你說的，而且量出來成立</b>：門診表那一張的右下角只有「國定假日…」
+    與電話兩行；<b>這一張的右下角是三張停車場卡</b>——名字、號碼牌、距離共九段字，
+    是整張圖上唯一要逐字讀的東西。左上那兩句只有兩行、行長不一，右邊本來就空著。<br>
+    ⚠ 切出去的量現在用<b>比例</b>寫（寬的 9.1%、高的 7.6% ＝ 門診表那一張的同一組比例），
+    所以<b>換形狀會自動跟著換</b>，不必再挑一次位置。<br>
     ⚠⚠ 有一件和門診表<b>不一樣</b>：那一張的浮水印壓在表的<b>後面</b>；
-    這一張的地圖是一張<b>不透明的圖</b>，擺在後面會被那個長方形<b>切掉一塊</b>——
-    圓形突然沿著地圖的邊消失，看起來就是壞的。所以這裡是<b>壓在最上面</b>、濃度更低。
-    在這麼淡的一端，兩種做法讀起來一樣（亮處是一層灰、暗處看不出來）。</p>
+    這一張的地圖是一張<b>不透明的圖</b>，擺在後面會被那個長方形<b>切掉一大塊</b>——
+    圓形沿著地圖的邊突然消失，看起來就是壞的。所以這裡是<b>壓在最上面</b>、濃度更低。
+    在這麼淡的一端，兩種做法讀起來一樣。<br>
+    ⚠ 那三顆 QR（其他版本才有）自己拉到浮水印前面——碼上面不可以壓任何東西，
+    而且壓了<b>畫面上看不出來</b>，只有拿解碼器掃才知道。</p>
+
+  <h2 class="pv-h2">① 換哪一顆 logo<em>要挑</em><span class="t">寬度按「墨的面積」等重換算，不是同寬</span></h2>
+  <table class="pv-tab">
+    <thead><tr><th>哪一格</th><th>形狀</th><th>長寬比</th><th>畫出來</th></tr></thead>
+    <tbody>
+      <tr><td><b>Ⓛ1 現在這顆</b></td><td>r3c1</td><td>1.00</td><td>660×660</td></tr>
+      <tr><td>Ⓛ2</td><td>r1c1</td><td>1.00</td><td>679×679</td></tr>
+      <tr><td>Ⓛ3</td><td>r3c2</td><td>1.00</td><td>673×674</td></tr>
+      <tr><td>Ⓛ4</td><td>r2c2</td><td>1.33</td><td>762×572</td></tr>
+      <tr><td>Ⓛ5 站上頁首那顆</td><td>r1c2</td><td>2.03</td><td>952×469</td></tr>
+    </tbody>
+  </table>
+  <p class="pv-cap">⚠⚠ <b>換形狀不可以沿用同一個寬度</b>：九顆的長寬比 1.00~3.08、
+    墨佔外框 59.6~83.2%，同寬的話細長那幾顆會輕很多（約診卡那一輪已經量過這件事）。
+    所以寬度是<b>按墨的面積等重換算</b>的——五格看起來一樣重，只是形狀不同。<br>
+    ⚠ <b>剩下那三顆沒有列進來</b>：長寬比 3.08 的（r1c3／r2c3／r3c3）等重之後要
+    <b>1193~1364px</b>，比畫布 1080 還寬，整顆會變成一條橫的糊帶。</p>
+  <div class="pv-shot">
+    <img src="door-slot-410-logo.png" width="2086" height="422" loading="lazy"
+      alt="五顆 logo 在小格 410px 上並排">
+  </div>
+  <p class="pv-cap"><b>這一排是在小格的實際大小（410px）比的</b>：左起 Ⓛ1～Ⓛ5。
+    ⚠ 這麼淡的濃度，在 410px 上五格幾乎分不出來——<b>差別要在下面 1080 的原圖看</b>。</p>
+  <div class="pv-shot">
+    <img src="door-c130-l1.png" width="1080" height="1080" loading="lazy"
+      alt="浮水印換成 r1c1">
+  </div>
+  <p class="pv-cap"><b>Ⓛ2 ＝ r1c1</b>（679×679）。</p>
+  <div class="pv-shot">
+    <img src="door-c130-l2.png" width="1080" height="1080" loading="lazy"
+      alt="浮水印換成 r3c2">
+  </div>
+  <p class="pv-cap"><b>Ⓛ3 ＝ r3c2</b>（673×674）。</p>
+  <div class="pv-shot">
+    <img src="door-c130-l3.png" width="1080" height="1080" loading="lazy"
+      alt="浮水印換成 r2c2">
+  </div>
+  <p class="pv-cap"><b>Ⓛ4 ＝ r2c2</b>（762×572）——第一顆不是正方的，橫過去比較開。</p>
+  <div class="pv-shot">
+    <img src="door-c130-l4.png" width="1080" height="1080" loading="lazy"
+      alt="浮水印換成站上頁首那顆">
+  </div>
+  <p class="pv-cap"><b>Ⓛ5 ＝ r1c2 ＝ 站上頁首那顆</b>（952×469）——最扁，讀起來是
+    一條橫過上緣的軟帶子。<b>Ⓛ1 就是上面那幾張。</b></p>
+
+  <h2 class="pv-h2">② 浮水印要多淡<em>要挑</em><span class="t">門診表那一張是 5%</span></h2>
   <table class="pv-tab">
     <thead><tr><th>哪一格</th><th>墨</th><th>底色</th><th>壓在上面的柔墨</th></tr></thead>
     <tbody>
@@ -266,30 +317,24 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
       <tr><td>Ⓦ4 最淡</td><td>2.0%</td><td>#f0f0f1</td><td>5.80</td></tr>
     </tbody>
   </table>
-  <p class="pv-cap">你說「可能要更淡一點」，所以<b>預設先給 Ⓦ3（3%）</b>，
-    另外三格擺在下面讓你比。<b>四格只有濃度不一樣</b>，版面一個像素都沒動。<br>
+  <p class="pv-cap">你說「可能要更淡一點」，所以<b>預設先給 Ⓦ3（3%）</b>。<br>
     ⚠ 對比度不是這一格的判準：最濃的 Ⓦ1 壓在上面，柔墨仍有 <b>5.66</b>（門檻 4.5），
-    四格<b>沒有一格會讓字讀不到</b>——所以這一題純粹是「看起來舒不舒服」。
+    四格<b>沒有一格會讓字讀不到</b>——這一題純粹是「看起來舒不舒服」。
     產生器仍然有一道守門在算，掉到 4.5 以下會直接停下來。</p>
   <div class="pv-shot">
     <img src="door-slot-410-wm.png" width="1670" height="422" loading="lazy"
       alt="四種濃度在小格 410px 上並排">
   </div>
-  <p class="pv-cap"><b>這一排才是判準</b>：左起 Ⓦ1／Ⓦ2／Ⓦ3／Ⓦ4，
-    在小格的實際大小（410px）上比——浮水印在那裡只有 <b>251px</b>。<br>
-    ⚠ 濃度這種東西一定要<b>在會被看到的尺寸上比</b>：1080 原圖上看起來明顯的，
-    縮到 410px 常常就沒了。</p>
+  <p class="pv-cap">左起 Ⓦ1／Ⓦ2／Ⓦ3／Ⓦ4，在小格的實際大小（410px）上比。</p>
   <div class="pv-shot">
     <img src="door-c130-w1.png" width="1080" height="1080" loading="lazy"
-      alt="浮水印 5%：和門診表那一張同濃度">
+      alt="浮水印 5%">
   </div>
-  <p class="pv-cap"><b>Ⓦ1 ＝ 5%</b>，和門診表那一張完全同一組數字。</p>
+  <p class="pv-cap"><b>Ⓦ1 ＝ 5%</b>，和門診表那一張同濃度。</p>
   <div class="pv-shot">
     <img src="door-c130-w4.png" width="1080" height="1080" loading="lazy"
-      alt="浮水印 2%：最淡">
+      alt="浮水印 2%">
   </div>
-  <p class="pv-cap"><b>Ⓦ4 ＝ 2%</b>，最淡的一格。
-    ⚠ <b>Ⓦ3 就是上面那幾張</b>（這一頁除了這一節，每一張都是 Ⓦ3）。</p>
   <div class="pv-shot">
     <img src="door-c130-w2.png" width="1080" height="1080" loading="lazy"
       alt="浮水印 4%">
@@ -298,7 +343,15 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
     <img src="door-c130-w0.png" width="1080" height="1080" loading="lazy"
       alt="不放浮水印">
   </div>
-  <p class="pv-cap"><b>Ⓦ2 ＝ 4%</b>，以及<b>完全不放</b>（最後那一張，回到你昨天看的樣子）。</p>
+  <p class="pv-cap"><b>Ⓦ4 ＝ 2%</b>（最淡）、<b>Ⓦ2 ＝ 4%</b>，以及<b>完全不放</b>（最後那一張）。</p>
+
+  <h2 class="pv-h2">③ 壓哪一角<span class="t">留著當對照，左上是你指定的</span></h2>
+  <div class="pv-shot">
+    <img src="door-c130-wbr.png" width="1080" height="1080" loading="lazy"
+      alt="浮水印壓右下角">
+  </div>
+  <p class="pv-cap"><b>右下</b>（＝門診表那一張的位置）。<b>它壓在三張停車場卡上</b>——
+    那正是這張圖唯一要逐字讀的地方，所以換到左上。<b>上面每一張都已經是左上。</b></p>
 
   <h2 class="pv-h2">拿掉的是這兩句<span class="t">門口那張告示本人一個字都沒有動</span></h2>
   <div class="pv-cut">永樂街平常車不多，但診所門口被劃設紅線。
