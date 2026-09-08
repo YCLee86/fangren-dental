@@ -187,9 +187,10 @@ const mapSvg = ({ vbw, vbh, fs2, zoom = 1300, marks = "name", grid = true, edges
    * ⚠ 寬度是估的（中文一個字算一個字級、半形算 .55），估寬一點是安全的那一側。 */
   const wOf = (t, f) => [...t].reduce((a, c) => a + (c.codePointAt(0) < 0x2e80 ? .55 : 1), 0) * f;
   const taken = [];
-  const hits = (b) => taken.some(t => !(b.x + b.w < t.x || t.x + t.w < b.x
+  const hit1 = (b) => taken.find(t => !(b.x + b.w < t.x || t.x + t.w < b.x
                                      || b.y + b.h < t.y || t.y + t.h < b.y));
-  const claim = (b) => { taken.push(b); return true; };
+  const hits = (b) => !!hit1(b);
+  const claim = (b, tag) => { b.tag = tag; taken.push(b); return true; };
   const inFrame = (b) => b.x >= 2 && b.y >= 2 && b.x + b.w <= vbw - 2 && b.y + b.h <= vbh - 2;
 
   /* --- 四個角落的連外道路：一塊牌子，牌子裡一個箭頭指著真正的方向 ---
@@ -222,7 +223,7 @@ const mapSvg = ({ vbw, vbh, fs2, zoom = 1300, marks = "name", grid = true, edges
       + `L${(tip[0] - Math.cos(a + .45) * ar * .95).toFixed(1)} ${(tip[1] - Math.sin(a + .45) * ar * .95).toFixed(1)}Z"`
       + ` fill="${BLUE}"/>`;
     const tx = bx + pad + aw + gap2;
-    claim({ x: bx - 4, y: by - 4, w: bw2 + 8, h: bh2 + 8 });
+    claim({ x: bx - 4, y: by - 4, w: bw2 + 8, h: bh2 + 8 }, "牌子" + e.short);
     return `<rect class="pl" x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${bw2.toFixed(1)}"`
       + ` height="${bh2.toFixed(1)}" rx="${(fs2 * .3).toFixed(1)}" fill="${MAP_BG}"`
       + ` stroke="${BLUE}" stroke-width="1.4"/>`
@@ -238,7 +239,7 @@ const mapSvg = ({ vbw, vbh, fs2, zoom = 1300, marks = "name", grid = true, edges
   /* --- 診所：綠塊 ＋ 白字（＝站上那張地圖的做法） --- */
   const [cx, cy] = P([0, 0]);
   const bw = wOf("芳仁牙醫", fs2) + fs2 * .9, bh = fs2 * 1.78;
-  claim({ x: cx - bw / 2 - 6, y: cy - bh / 2 - 6, w: bw + 12, h: bh + 12 });
+  claim({ x: cx - bw / 2 - 3, y: cy - bh / 2 - 3, w: bw + 6, h: bh + 6 }, "診所");
   const clinic = `<rect class="meb" x="${(cx - bw / 2).toFixed(1)}" y="${(cy - bh / 2).toFixed(1)}"`
     + ` width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="${(bh * .28).toFixed(1)}" fill="${GREEN}"/>`
     + `<text class="me" x="${cx.toFixed(1)}" y="${(cy + fs2 * .38).toFixed(1)}" text-anchor="middle">芳仁牙醫</text>`;
@@ -246,25 +247,40 @@ const mapSvg = ({ vbw, vbh, fs2, zoom = 1300, marks = "name", grid = true, edges
   /* --- 地標：一顆點 ＋ 名字。名字先試上面，撞到就換下／左／右 --- */
   const pf = fs2 * .95;
   const dots = marks === "none" ? "" : HAVE.map(p => {
+    const nm0 = p.short || p.name;
     const [px, py] = P(p.xy);
     const sym = p.kind === "rail"
       ? `<rect x="${(px - 8).toFixed(1)}" y="${(py - 8).toFixed(1)}" width="16" height="16" rx="3" fill="${INK}"/>`
       : `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="6.5" fill="${INK}"/>`;
-    claim({ x: px - 9, y: py - 9, w: 18, h: 18 });
+    claim({ x: px - 7, y: py - 7, w: 14, h: 14 }, "點" + nm0);
     if (marks === "dot") return sym;
-    const w = wOf(p.name, pf), h = pf * 1.15;
-    const cand = [
-      [px - w / 2, py - 14 - h, "start"],          /* 上 */
-      [px - w / 2, py + 14, "start"],              /* 下 */
-      [px + 14, py - h / 2, "start"],              /* 右 */
-      [px - 14 - w, py - h / 2, "start"],          /* 左 */
-    ];
+    /* ⚠ 圖上寫 `short`（沒有就用全名）—— 「中華電信斗六服務中心」十個字在這個比例尺上
+       是 370 公尺寬的一條，一定會壓到別的東西；規格頁與資料檔仍然是全名。 */
+    const nm2 = p.short || p.name;
+    const w = wOf(nm2, pf), h = pf * 1.15;
+    /* ⚠⚠⚠ 候選要有「二階、三階」：派出所、中華電信、元大銀行三個都在文化路上、
+       彼此只差 24~110 公尺（這個比例尺上 18~85px），只給上下左右四格的話
+       後兩個一定都卡不下、變成兩顆沒有名字的點 —— **那比不畫還糟**。
+       ⚠ 相鄰兩階要留 8px 空隙：`hits()` 是用 `<` 比的，**兩塊剛好貼齊也算撞**
+       （第一版就是這樣，上二階明明是空的卻一直被判成撞到上一階）。 */
+    const step = h + 8;
+    const cand = [];
+    for (let t = 0; t < 3; t++) {
+      cand.push([px - w / 2, py - 14 - h - t * step]);   /* 上 t 階 */
+      cand.push([px - w / 2, py + 14 + t * step]);       /* 下 t 階 */
+    }
+    for (const t of [0, 1]) {
+      cand.push([px + 14, py - h / 2 - t * step]);       /* 右 */
+      cand.push([px - 14 - w, py - h / 2 - t * step]);   /* 左 */
+    }
     for (const [bx, by] of cand) {
       const box = { x: bx - 3, y: by - 3, w: w + 6, h: h + 6 };
       if (!inFrame(box) || hits(box)) continue;
-      claim(box);
-      return sym + `<text class="pn" x="${bx.toFixed(1)}" y="${(by + pf * .86).toFixed(1)}">${p.name}</text>`;
+      claim(box, "名" + nm2);
+      return sym + `<text class="pn" x="${bx.toFixed(1)}" y="${(by + pf * .86).toFixed(1)}">${nm2}</text>`;
     }
+    if (process.env.DBG) console.error(`  ✗ ${nm2} 卡不下 (${px.toFixed(0)},${py.toFixed(0)}) w=${w.toFixed(0)}`
+      + cand.map(([bx,by],i)=>` [${i}]${inFrame({x:bx-3,y:by-3,w:w+6,h:h+6})?"in":"OUT"}${(()=>{const hb=hit1({x:bx-3,y:by-3,w:w+6,h:h+6});return hb?"HIT:"+(hb.tag||JSON.stringify([hb.x|0,hb.y|0,hb.w|0,hb.h|0])):"ok";})()}`).join(""));
     return sym;                                     /* 卡不下就只留點 */
   }).join("");
 

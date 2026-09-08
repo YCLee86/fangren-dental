@@ -42,27 +42,27 @@
     },
     {
       "name": "斗六派出所",
-      "src": "ask",
-      "m": null,
-      "px410": null
+      "src": "shot-斗六",
+      "m": 184,
+      "px410": 5.4
     },
     {
       "name": "中華電信斗六服務中心",
-      "src": "ask",
-      "m": null,
-      "px410": null
+      "src": "shot-中華",
+      "m": 163,
+      "px410": 4.8
     },
     {
       "name": "元大銀行斗信分行",
-      "src": "ask",
-      "m": null,
-      "px410": null
+      "src": "shot-元大",
+      "m": 98,
+      "px410": 2.9
     },
     {
       "name": "斗六家商",
-      "src": "ask",
-      "m": null,
-      "px410": null
+      "src": "shot-斗六",
+      "m": 293,
+      "px410": 8.6
     },
     {
       "name": "雲林縣政府",

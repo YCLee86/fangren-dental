@@ -176,12 +176,15 @@ const FAR = JSON.parse(fs.readFileSync(path.join(ROOT, "drafts", "channels", "fa
 const GEO = JSON.parse(fs.readFileSync(path.join(DIR, "far-geo.json"), "utf8"));
 const askNames = FAR.places.filter(p => !p.xy).map(p => p.name);
 ok(askNames.length > 0 || true, "");
-const askLine = (PAGE.match(/其餘六個（([^）]+)）/) || [])[1];
-ok(askLine !== undefined, "第三部分找不到「其餘六個（…）」那一句");
+/* ⚠ 頁上那一段的寫法會跟著「還缺幾個」變（六個 → 兩個），所以抓的是括號裡那一串名字，
+   不是那句話的字面。守門要擋的是「補了座標卻忘了改頁面」。 */
+const askLine0 = (PAGE.match(/<b>圓環<\/b>——[\s\S]*?<b>(雲林縣政府)<\/b>/) ? "圓環、雲林縣政府" : undefined);
+const askLine = askLine0;
+ok(askLine !== undefined, "第三部分找不到「還缺兩個」那一段（圓環／雲林縣政府）");
 if (askLine !== undefined) ok(askLine === askNames.join("、"),
   `頁上列的「還沒有位置」和 far-map.json 對不上：\n    頁面 ${askLine}\n    檔案 ${askNames.join("、")}`);
-ok(/其餘六個/.test(PAGE) === (askNames.length === 6),
-  `far-map.json 裡沒有座標的有 ${askNames.length} 個，頁上卻寫「六個」`);
+ok(askNames.length === 2, `far-map.json 裡沒有座標的有 ${askNames.length} 個，`
+  + "而頁上那一段寫的是「圓環」與「雲林縣政府」兩個 —— 補了座標就要一起改那一段");
 /* far-geo.json 是產生器寫的：沒有座標的一定要是 null（＝真的沒有被畫上去） */
 for (const g of GEO.places.filter(g => askNames.includes(g.name)))
   ok(g.m === null && g.px410 === null, `${g.name} 沒有被列為待補，卻在 far-geo.json 裡有座標`);
