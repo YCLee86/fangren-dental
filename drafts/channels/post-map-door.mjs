@@ -163,8 +163,13 @@ const setSheet = async (sw, you) => doorPage.evaluate(({ sw, you, CARD }) => {
   return r.width;
 }, { sw, you, CARD });
 
-const shotMap = async (targetW, { orient = "w", you = "clinic" } = {}) => {
-  await doorPage.goto("file://" + DOOR + `?size=p&orient=${orient}&qr=on`);
+/* ⚠⚠ 2026-09-08 使用者：「指北針的標示和北可以小一點」。
+   門口那張紙上那一組是 `ns=b`（針長 36）—— 那是**站在門口、離半公尺**挑的；
+   這張圖要在小格 410px 上看，同一組就顯得吵。門口那張**一個字都沒動**，
+   只有這裡帶 `?ns=` 換一格。⚠ 指北針畫在地圖那張 SVG 的 viewBox 裡面，
+   所以換大小**不會動到地圖的框**（每一張圖的版面逐格不變）。 */
+const shotMap = async (targetW, { orient = "w", you = "clinic", ns = "c" } = {}) => {
+  await doorPage.goto("file://" + DOOR + `?size=p&orient=${orient}&qr=on&ns=${ns}`);
   await doorPage.waitForTimeout(1400);
   let sw = Math.round(targetW / SHEET_K), got = 0;
   for (let i = 0; i < 4; i++) {
@@ -202,7 +207,12 @@ const shotMap = async (targetW, { orient = "w", you = "clinic" } = {}) => {
       const q = t.getBoundingClientRect();
       return { s: t.textContent.replace(/\s+/g, ""), w: +q.width.toFixed(1), h: +q.height.toFixed(1) };
     });
-    return { w: r.width, h: r.height, vb, k: r.width / vb[2], labs,
+    /* 指北針：整組畫出來多高、「北」多大（都換算成畫布 px） */
+    const nswG = svg.querySelector(".nsw"), nswT = svg.querySelector(".nsw text");
+    const kk = r.width / vb[2];
+    const nsw = nswG ? { h: +(nswG.getBBox().height * kk).toFixed(1),
+                         fs: +(parseFloat(getComputedStyle(nswT).fontSize) * kk).toFixed(1) } : null;
+    return { w: r.width, h: r.height, vb, k: kk, labs, nsw,
              you: you && you.style.display !== "none" ? [...you.querySelectorAll("tspan")]
                .map(t => t.textContent).join("") : null,
              type: Object.fromEntries([["街名", ".map-svg .lbl"], ["巷名", ".map-svg .lbl-xs"],
@@ -282,9 +292,13 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 /* 折行那一種：名字照它自己的全形破折號拆成幾列（破折號留在行尾，一個字都沒少） */
 /* ⚠ 一行那一種也包成一個 .ln（畫出來一模一樣：nowrap 的 flex 項目，匿名或具名都同一個盒）
      —— 這樣「名字畫成幾列」才量得到。直接量 .nm 是假的：裡面還有那顆號碼牌，
-     字級不同、rect 的 top 就不同，會被數成 2~3 列（第一版就是這樣報 3/3/3）。 */
+     字級不同、rect 的 top 就不同，會被數成 2~3 列（第一版就是這樣報 3/3/3）。
+   ⚠⚠ 2026-09-08 使用者：「Ⓒ ×1.30 壹車房後破折號拿掉」——折行那一種**斷點就是分行**，
+     破折號的工作已經由換行做掉了，留在行尾反而像沒收完。
+     ⚠ 只有**畫在圖上**的那一份拿掉；`door-detail.txt`（貼進「詳情」欄的字）與門口那張紙
+     **一個字都沒動** —— 那兩份是一行，破折號在那裡仍然是唯一的分隔。 */
 const nmHtml = (name, wrapn) => (wrapn ? name.split("\uFF0D") : [name])
-  .map((s, j, a) => `<span class="ln">${s}${j < a.length - 1 ? "\uFF0D" : ""}</span>`).join("");
+  .map((s) => `<span class="ln">${s}</span>`).join("");
 
 const sheet = (fs2, qr, drop = 0, title = "", wrapn = 0) => `<div class="sheet"><div class="band">
   ${title ? `<div class="tt">${title}</div>` : ""}
@@ -305,7 +319,7 @@ for (const f of fs.readdirSync(OUT).filter(f => f.startsWith("door-") && f.endsW
 
 const made = [];
 const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you = "clinic",
-                            drop = 0, title = "", lotk = 1, wrapn = 0 } = {}) => {
+                            drop = 0, title = "", lotk = 1, wrapn = 0, ns = "c" } = {}) => {
   /* 先量「地圖以外的東西有多高」，再把地圖撐到剩下的空間 */
   MAPW = 400; MAPH = 320; MAPURI = "";
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn)}</style>`
@@ -315,13 +329,13 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
     const m = document.querySelector(".map").getBoundingClientRect();
     return b.height - m.height;
   });
-  const probe = await shotMap(600, { orient, you });
+  const probe = await shotMap(600, { orient, you, ns });
   const ar = probe.meta.vb[2] / probe.meta.vb[3];
   const roomH = Math.floor(H - 2 * MARGIN - other - 2 * GAP);
   MAPW = Math.floor(Math.min(roomH * ar, W - 2 * PAD));
   /* ⚠ 收斂會落在 ±1px，取整之後可能比算出來的空間多 1~2px、整塊就頂到留白 ——
      所以目標往下讓 3px（看不出來，但守門過得去）。 */
-  const { buf, meta } = await shotMap(MAPW - 3, { orient, you });
+  const { buf, meta } = await shotMap(MAPW - 3, { orient, you, ns });
   const sz = pngSize(buf);
   MAPW = sz.w; MAPH = sz.h;
   MAPURI = "data:image/png;base64," + buf.toString("base64");
@@ -383,6 +397,11 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
       rng.selectNodeContents(el);
       return new Set([...rng.getClientRects()].map(r => Math.round(r.top / 4))).size > 1;
     }).length;
+    /* ⚠⚠ 畫在圖上的名字 ＝ 資料把破折號拿掉（折行那一種）。
+       這一道是為了擋「哪天資料換了名字、拆法卻沒跟上」——症狀會是行尾多一個
+       破折號或整個名字擠成一行，兩種都不報錯。 */
+    const nmText = [...document.querySelectorAll(".lot .nm")].map(el =>
+      [...el.querySelectorAll(".ln")].map(sp => sp.textContent).join(""));
     /* 名字實際畫成幾列（折行那一種：P1 應該是 2、另外兩張 1） */
     const nmLines = [...document.querySelectorAll(".lot .nm")].map(el =>
       [...el.querySelectorAll(".ln")].reduce((n, sp) => {
@@ -396,13 +415,18 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
     const cx = cv.getContext("2d"); cx.drawImage(im, 0, 0);
     const px = cx.getImageData(1, 1, 1, 1).data;
     return { band: { y: band.y, h: band.height }, img: { w: img.width, h: img.height },
-             over, lines, wide, room, lotfs, refold, nmLines,
+             over, lines, wide, room, lotfs, refold, nmLines, nmText,
              lotsH: grid.getBoundingClientRect().height,
              corner: "#" + [px[0], px[1], px[2]].map(v => v.toString(16).padStart(2, "0")).join("") };
   }, { CARD, wrapn });
 
   if (m.over) throw new Error(`${tag}：有 ${m.over} 個元素溢出`);
   if (m.refold) throw new Error(`${tag}：自己斷行的名字有 ${m.refold} 段被再折`);
+  {
+    const want = D.lots.map(l => wrapn ? l.name.split("\uFF0D").join("") : l.name);
+    const bad = m.nmText.map((t, i) => t === want[i] ? null : `${t} ≠ ${want[i]}`).filter(Boolean);
+    if (bad.length) throw new Error(`${tag}：畫在圖上的名字對不上（${bad.join("／")}）`);
+  }
   if (m.wide) throw new Error(`${tag}：那一排的三個名字加起來比整條寬 `
     + `${(-m.room).toFixed(0)}px —— 會互相碰到（要嘛字收小，要嘛讓名字折行 wrapn）`);
   if (m.corner.toLowerCase() !== CARD) throw new Error(
@@ -424,7 +448,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
 
   await page.screenshot({ path: path.join(OUT, `door-${tag}.png`) });
   m.onLot = onLot;
-  made.push({ tag, m, meta, fs2, qr, qrpx, orient, you, ar, drop, title, lotk, wrapn,
+  made.push({ tag, m, meta, fs2, qr, qrpx, orient, you, ar, drop, title, lotk, wrapn, ns,
               pts: dropPts(drop).length });
   return made[made.length - 1];
 };
@@ -442,6 +466,10 @@ const CASES = [
   ["c",     { qr: false, drop: DROP }],               /* Ⓐ 現況（他挑的那一張，字最小） */
   ["c110",  { qr: false, drop: DROP, lotk: 1.10 }],   /* Ⓑ 大一階，仍然一行（×1.15 就碰到了，這是不折行的上限） */
   ["c130",  { qr: false, drop: DROP, lotk: 1.30, wrapn: 1 }],  /* Ⓒ 建議：距離第一次過 10px */
+  /* 指北針的大小（第 28 條 ①：他的眼睛才是裁判 → 給一把尺，不要送一個我估的值）。
+     ⚠ 上面每一張都已經是 ns=c（小一格），這兩張只是把另外兩格擺出來比。 */
+  ["c130-nsb", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, ns: "b" }],  /* 門口那張的大小 */
+  ["c130-nsd", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, ns: "d" }],  /* 再小一格 */
   ["c145",  { qr: false, drop: DROP, lotk: 1.45, wrapn: 1 }],  /* Ⓓ */
   ["c160",  { qr: false, drop: DROP, lotk: 1.60, wrapn: 1 }],  /* Ⓔ 最大 */
   ["c-title", { qr: false, drop: DROP, title: "芳仁牙醫　周邊停車" }], /* 標題那一格 */
@@ -568,6 +596,14 @@ for (const x of made.filter(x => x.qr === false && x.drop && !x.title))
     + `\t距 ${x.m.lotfs[1]}→${x.m.onLot[1].toFixed(1)}${x.m.onLot[1] >= 10 ? " ✓" : " ⚠"}`
     + `\t名字 ${x.m.nmLines.join("/")} 列`
     + `\t那一排高 ${x.m.lotsH.toFixed(0)}\t地圖 ${x.m.img.w}×${x.m.img.h}\t三格加溝還餘 ${x.m.room.toFixed(0)}px`);
+/* ⚠ 不是壞掉檢查，是「讀起來對不對」：指北針在小格 410px 上多大
+   （第 28 條 ④：每加一種版面關係，就把它壞掉時會不對的那個數字印出來）。 */
+console.log(`\n── 指北針（畫布 px → 小格 410px）──`);
+for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-ns")))
+  console.log(`  door-${x.tag}\t?ns=${x.ns}\t整組高 ${x.meta.nsw.h}→${(x.meta.nsw.h * shrink).toFixed(1)}`
+    + `\t「北」${x.meta.nsw.fs}→${(x.meta.nsw.fs * shrink).toFixed(1)}`
+    + `\t地圖 ${x.m.img.w}×${x.m.img.h}`);
+
 console.log(`\n── 出圖 ──`);
 for (const x of made)
   console.log(`  door-${x.tag}.png　地圖 ${x.m.img.w}×${x.m.img.h}（長寬比 ${x.ar.toFixed(3)}）`
