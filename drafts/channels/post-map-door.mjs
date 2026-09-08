@@ -88,7 +88,10 @@ const GAP0 = 11, MARGIN0 = 26;
      差別只在「會不會被地圖切掉」。
    ⚠ 濃度是一把尺（第 28 條 ①）：門診表那一張是 .05，他說「可能要更淡一點」，
      所以預設先給 .03，另外三格擺出來讓他比。 */
-const WMSH0 = "r3c1";                /* ＝ 門診表那一張用的同一顆圓 logo（單洞版） */
+/* ⚠⚠ 2026-09-08 使用者定了兩格：「**4% R1c2**」——濃度 Ⓦ2、形狀換成**站上頁首那顆**
+   （`shape-r1c2` ＝ `brand/shapes/mark.svg` 逐位元組相同的那一顆，長寬比 2.029）。
+   ⚠ 門診表那一張仍然是 r3c1・5%，**兩張不一樣是他挑的，不要順手改成一致**。 */
+const WMSH0 = "r1c2";
 /* ⚠⚠⚠ 2026-09-08 使用者：「感覺可以壓左上　因為右下相對比較多要認真看的資訊」——
    **他是對的，而且這一點和門診表那一張不一樣**：門診表的右下角是「國定假日…」與電話
    那兩行，字少；這一張的右下角是**三張停車場卡**（名字＋號碼牌＋距離，一共九段字，
@@ -98,7 +101,12 @@ const WMSH0 = "r3c1";                /* ＝ 門診表那一張用的同一顆圓
    （＝門診表那一張 −60／−50 對 660 的比例），**換形狀時自動跟著換**。
    ⚠ 大小與濃度仍然照門診表那一張（660px 的等重、墨很低）。 */
 const WMBX = 60 / 660, WMBY = 50 / 660;   /* 左右／上下各切出去多少（佔它自己的寬與高） */
-const WMW0 = 660, WMA0 = .03, WMPOS0 = "tl";
+/* ⚠⚠⚠ 2026-09-08 使用者再一句：「再往左移」——所以**左邊切出去多少變成一把尺**
+   （只有 `tl` 這一側；右下那一格仍然吃上面那個比例）。單位是畫布 px，
+   因為他看的是「離左邊多遠」不是「佔自己的百分之幾」。
+   ⚠ **垂直沒有動**（他只說左），上緣仍然是高的 7.6%。 */
+const WMX0 = 180;
+const WMW0 = 660, WMA0 = .04, WMPOS0 = "tl";
 
 /* 浮水印的形狀：從 brand/shapes 讀，不抄第二份（同這一支其餘每一項資料）。
    ⚠ 那幾份 SVG 是單一路徑、currentColor、牙洞用 fill-rule 挖穿的，
@@ -114,8 +122,14 @@ const wmark = (sh) => fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-
    ⚠ 代價：3.08 那三顆等重之後要 1193~1364px、比畫布還寬，**所以不列進這一把尺**。 */
 const WMSIZES = JSON.parse(fs.readFileSync(
   path.join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
+/* ⚠⚠⚠ 基準要**寫死成 r3c1**，不可以寫成「目前這一顆」——
+   `WMW0 = 660` 的意思是「**r3c1 畫 660 那麼重**」，而不是「不管哪一顆都畫 660」。
+   踩過：2026-09-08 把預設換成 r1c2 的那一刻，基準跟著變成 r1c2，
+   於是**整組等重的尺一起縮水**（r1c2 952→660、r3c1 660→458），
+   使用者挑的那一顆畫出來比他看到的小 31%，**而且不報錯、每一道守門都過**。 */
+const WMREF = "r3c1";
 const wmWidth = (sh) => {
-  const a = WMSIZES[sh], b = WMSIZES[WMSH0];
+  const a = WMSIZES[sh], b = WMSIZES[WMREF];
   if (!a || !b) throw new Error(`wm-sizes.json 裡沒有 ${sh}`);
   return Math.round(WMW0 * a.w / b.w);
 };
@@ -301,10 +315,10 @@ const shotMap = async (targetW, { orient = "w", you = "clinic", ns = "c" } = {})
 /* ========== 第二步：1080 的方畫布 ========== */
 let MAPW = 0, MAPH = 0, MAPURI = "";
 const css = (fs2, qrpx, lotk = 1, wrapn = 0, GAP = GAP0, wma = WMA0,
-             wmsh = WMSH0, wmpos = WMPOS0) => {
+             wmsh = WMSH0, wmpos = WMPOS0, wmx = WMX0) => {
   const ww = wmWidth(wmsh), wh = ww / WMSIZES[wmsh].ratio;
   const bx = -Math.round(ww * WMBX), by = -Math.round(wh * WMBY);
-  const place = wmpos === "tl" ? `left:${bx}px;top:${by}px`
+  const place = wmpos === "tl" ? `left:${-wmx}px;top:${by}px`
                                : `right:${bx}px;bottom:${by}px`;
   return `
 *{box-sizing:border-box;margin:0}
@@ -405,10 +419,10 @@ const made = [];
 const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you = "clinic",
                             drop = 0, title = "", lotk = 1, wrapn = 0, ns = "c",
                             margin = MARGIN0, gap = GAP0, wma = WMA0,
-                            wmsh = WMSH0, wmpos = WMPOS0 } = {}) => {
+                            wmsh = WMSH0, wmpos = WMPOS0, wmx = WMX0 } = {}) => {
   /* 先量「地圖以外的東西有多高」，再把地圖撐到剩下的空間 */
   MAPW = 400; MAPH = 320; MAPURI = "";
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn, gap, wma, wmsh, wmpos)}</style>`
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn, gap, wma, wmsh, wmpos, wmx)}</style>`
     + sheet(fs2, qr, drop, title, wrapn, wmsh));
   const other = await page.evaluate(() => {
     const b = document.querySelector(".band").getBoundingClientRect();
@@ -425,7 +439,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
   const sz = pngSize(buf);
   MAPW = sz.w; MAPH = sz.h;
   MAPURI = "data:image/png;base64," + buf.toString("base64");
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn, gap, wma, wmsh, wmpos)}</style>`
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(fs2, qrpx, lotk, wrapn, gap, wma, wmsh, wmpos, wmx)}</style>`
     + sheet(fs2, qr, drop, title, wrapn, wmsh));
   await page.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 
@@ -544,7 +558,7 @@ const build = async (tag, { fs2 = 30, qr = true, qrpx = 200, orient = "w", you =
   m.onLot = onLot;
   if (!m.wmr) throw new Error(`${tag}：浮水印沒有畫出來`);
   made.push({ tag, m, meta, fs2, qr, qrpx, orient, you, ar, drop, title, lotk, wrapn, ns, margin, gap,
-              wma, wmsh, wmpos, pts: dropPts(drop).length });
+              wma, wmsh, wmpos, wmx, pts: dropPts(drop).length });
   return made[made.length - 1];
 };
 
@@ -585,18 +599,23 @@ const CASES = [
   ["c130-m4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, margin: 18, gap: 8 }],
   /* 浮水印要多淡（2026-09-08 使用者：「可能要更淡一點」）。
      ⚠ 四格只有濃度不一樣 —— 上面每一張都已經是預設的 .03（Ⓦ3）。 */
+  /* 濃度（他挑 4% ＝ 預設，其餘三格留著對照） */
   ["c130-w1", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: .05 }],  /* ＝ 門診表那一張 */
-  ["c130-w2", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: .04 }],
+  ["c130-w3", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: .03 }],
   ["c130-w4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: .02 }],
   ["c130-w0", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wma: 0 }],    /* 不放（對照） */
   /* 浮水印壓哪一角（2026-09-08 使用者指定改左上）—— 右下那一格留著當對照。 */
   ["c130-wbr", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmpos: "br" }],
-  /* 換哪一顆 logo（同上，只有形狀不一樣；寬度按墨的面積等重換算，見 wmWidth）。
+  /* 換哪一顆 logo（他挑 r1c2 ＝ 預設；寬度按墨的面積等重換算，見 wmWidth）。
      ⚠ 3.08 那三顆（r1c3／r2c3／r3c3）等重之後要 1193~1364px、比畫布還寬，不列。 */
-  ["c130-l1", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r1c1" }],
-  ["c130-l2", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r3c2" }],
-  ["c130-l3", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r2c2" }],
-  ["c130-l4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r1c2" }],
+  ["c130-l1", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r3c1" }],  /* 門診表那顆 */
+  ["c130-l2", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r1c1" }],
+  ["c130-l3", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r3c2" }],
+  ["c130-l4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmsh: "r2c2" }],
+  /* 再往左多少（2026-09-08 使用者：「再往左移」）——只有 tl 這一側，單位是畫布 px。 */
+  ["c130-x1", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmx: 87 }],   /* 上一版 ＝ 寬的 9.1% */
+  ["c130-x3", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmx: 280 }],
+  ["c130-x4", { qr: false, drop: DROP, lotk: 1.30, wrapn: 1, wmx: 380 }],
   ["c145",  { qr: false, drop: DROP, lotk: 1.45, wrapn: 1 }],  /* Ⓓ */
   ["c160",  { qr: false, drop: DROP, lotk: 1.60, wrapn: 1 }],  /* Ⓔ 最大 */
   ["c-title", { qr: false, drop: DROP, title: "芳仁牙醫　周邊停車" }], /* 標題那一格 */
@@ -656,10 +675,13 @@ const strip410 = async (file, list) => {
   await pg.screenshot({ path: path.join(OUT, file) });
 };
 await strip410("door-slot-410-wm.png",
-  ["door-c130-w1.png", "door-c130-w2.png", "door-c130.png", "door-c130-w4.png"]);
+  ["door-c130-w1.png", "door-c130.png", "door-c130-w3.png", "door-c130-w4.png"]);
 /* 換 logo 那把尺也在成品的尺寸上並排一次 */
 await strip410("door-slot-410-logo.png",
   ["door-c130.png", "door-c130-l1.png", "door-c130-l2.png", "door-c130-l3.png", "door-c130-l4.png"]);
+/* 「再往左」那把尺同樣要在成品的尺寸上並排 */
+await strip410("door-slot-410-x.png",
+  ["door-c130-x1.png", "door-c130.png", "door-c130-x3.png", "door-c130-x4.png"]);
 await browser.close();
 
 /* ========== ⚠⚠⚠ QR 不能用眼睛驗收：真的拿解碼器掃一次 ==========
@@ -773,7 +795,7 @@ console.log(`\n── 地圖要多大（上下留白／段距 → 地圖）─�
 }
 
 /* ⚠ 不是壞掉檢查，是「讀起來對不對」：浮水印多濃、壓在它上面的字還剩多少對比 */
-console.log(`\n── 浮水印・濃度（形狀 ${WMSH0}・${WMW0}px・壓左上）──`);
+console.log(`\n── 浮水印・濃度（形狀 ${WMSH0}・${wmWidth(WMSH0)}px・壓左上、切掉 ${WMX0}px）──`);
 for (const x of made.filter(x => x.tag === "c130" || /^c130-w[0-9]$/.test(x.tag)))
   console.log(`  door-${x.tag}\t墨 ${(x.wma * 100).toFixed(1)}%`
     + `\t底色 ${CARD} → ${wmOver(CARD, x.wma)}`
@@ -789,11 +811,19 @@ for (const x of made.filter(x => x.tag === "c130" || x.tag === "c130-wbr"))
     + `・y ${x.m.wmr.y}~${x.m.wmr.y + x.m.wmr.h}`
     + `${x.tag === "c130" ? "\t← 你指定的（預設）" : ""}`);
 
+console.log(`\n── 浮水印・再往左多少（畫布 px；垂直沒有動）──`);
+for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-x")))
+  console.log(`  door-${x.tag}\t左邊切掉 ${x.wmx}px（＝寬的 ${(x.wmx / x.m.wmr.w * 100).toFixed(1)}%）`
+    + `\t在畫布上 x ${x.m.wmr.x}~${x.m.wmr.x + x.m.wmr.w}`
+    + `\t看得到 ${(x.m.wmr.w - x.wmx)}px`
+    + `${x.tag === "c130" ? "\t← 現在的預設（建議）" : ""}`);
+
 console.log(`\n── 浮水印・哪一顆 logo（寬度按墨的面積等重換算，出處 wm-sizes.json）──`);
 for (const x of made.filter(x => x.tag === "c130" || x.tag.startsWith("c130-l")))
   console.log(`  door-${x.tag}\t${x.wmsh}\t長寬比 ${WMSIZES[x.wmsh].ratio}`
     + `\t${x.m.wmr.w}×${x.m.wmr.h}　→ 小格 410px 上 ${(x.m.wmr.w * SMALL / W).toFixed(0)}px`
-    + `${x.wmsh === WMSH0 ? "\t← 門診表那一張用的（預設）" : ""}`);
+    + `${x.wmsh === WMSH0 ? "\t← 你挑的（預設）" : ""}`
+    + `${x.wmsh === WMREF ? "\t← 門診表那一張用的" : ""}`);
 console.log(`  ⚠ 3.08 那三顆（r1c3／r2c3／r3c3）等重之後要 `
   + [ "r1c3", "r2c3", "r3c3" ].map(k => wmWidth(k)).join("／") + `px，比畫布還寬，沒有列進來。`);
 
@@ -804,5 +834,5 @@ for (const x of made)
     + `　內容高 ${x.m.band.h.toFixed(0)}${x.qr ? `　QR ${x.qrpx}px` : "　沒有 QR"}`
     + `${x.you === "door" ? "　綠塊寫「現在位置」" : ""}${x.orient !== "w" ? `　${x.orient} 在上` : ""}`);
 console.log(`  door-profile-3up.png　door-slot-410.png　door-slot-410-margin.png`
-  + `　door-slot-410-wm.png　door-slot-410-logo.png`);
+  + `　door-slot-410-wm.png　door-slot-410-logo.png　door-slot-410-x.png`);
 console.log(`\n── 「詳情」欄要貼的字 ──\n` + detail.split("\n").map(l => "  " + l).join("\n"));
