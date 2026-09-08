@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 貼文的第三格・主題與科別・醫師</title>
+<!--
+  2026-09-08 使用者：「Line商家帳號的貼文 還有一格 之前對話建議放主題與科別
+  包括醫師的資訊 但只有一格 怎麼放七個醫師」
+  → 「有點難想像 你們先做看看 但因為門診表已經有七個科別
+     所以不要只是又重複只列七個科別」
+
+  ⚠⚠⚠ 那句話就是規格。大格（門診表）已經把七個科別名連同圖案印過一次，
+  所以這一格要接的是門診表**沒有**回答的兩件事：誰（九位醫師）、做得了什麼（專長）。
+
+  四案由 node drafts/channels/post-docs.mjs 產生，守門 check-post-docs.mjs。
+  推導在 drafts/channels/README.md 第三十六節。
+-->
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
+  --ink:#2a2c27;--ink-soft:#5c5f57;--green:#3f654a;--deep:#2c5238;--red:#89202d}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.75;padding-bottom:56px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:18px 14px 0}
+h1{font-size:1.02rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
+h1 span{display:block;font-weight:400;font-size:.7em;color:var(--ink-soft);letter-spacing:.04em}
+.pv-lead{font-size:.78rem;color:var(--ink-soft);margin:.55rem 0 0;line-height:1.8}
+.pv-lead b{color:var(--ink)}
+a{color:var(--deep)}
+code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
+  font-family:ui-monospace,Menlo,Consolas,monospace}
+.pv-h2{font-size:.92rem;font-weight:700;margin:34px 0 0;letter-spacing:.01em;
+  padding-left:9px;border-left:3px solid var(--green)}
+.pv-h2 .t{display:block;font-size:.78em;font-weight:400;color:var(--ink-soft);letter-spacing:0}
+.pv-h2 em{font-style:normal;font-size:.72em;background:var(--deep);color:#fff;
+  border-radius:6px;padding:1px 7px;margin-left:6px;letter-spacing:.04em;vertical-align:2px}
+.pv-shot{margin:10px 0 0}
+.pv-shot img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--rule)}
+.pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:7px 0 0}
+.pv-cap b{color:var(--ink)}
+.pv-cap .n{color:var(--red);font-weight:700}
+.pv-num{margin:12px 0 0;background:var(--card);border:1px solid var(--rule);
+  border-radius:10px;padding:10px 12px;font-size:.7rem;color:var(--ink-soft);line-height:1.9}
+.pv-num b{color:var(--ink)}
+.pv-num .n{color:var(--red);font-weight:700}
+.pv-tab{width:100%;border-collapse:collapse;margin:10px 0 0;font-size:.66rem;
+  background:var(--card);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.pv-tab th,.pv-tab td{padding:5px 7px;border-bottom:1px solid var(--rule);text-align:right;
+  color:var(--ink-soft);line-height:1.6}
+.pv-tab th:first-child,.pv-tab td:first-child{text-align:left}
+.pv-tab thead th{background:#e9eaeb;font-weight:700;color:var(--ink)}
+.pv-tab tbody tr:last-child td{border-bottom:0}
+.pv-tab .no{color:var(--red);font-weight:700}
+.pv-tab .ok{color:var(--deep);font-weight:700}
+.pv-txt{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+  padding:11px 13px;margin:10px 0 0;font-size:.72rem;line-height:1.85;white-space:pre-wrap;
+  word-break:break-all}
+</style>
+</head>
+<body>
+<div class="pv-wrap">
+
+  <h1>LINE 商家貼文的第三格<span>主題與科別・醫師　四案，挑一個</span></h1>
+
+  <p class="pv-lead">主頁「最新貼文」那三格的<b>小格右</b>。
+  大格是<b>看診時間</b>（已定稿）、小格左是<b>位置與周邊停車</b>（已定稿），
+  這是最後一格。<br>
+  ⚠ 你說「門診表已經有七個科別，不要只是又重複只列七個科別」——
+  所以四案裡有<b>三案完全不寫科別名</b>，科別只靠門診表那組圖案與顏色帶過，
+  省下來的地方全部給<b>人</b>與<b>做得了什麼</b>。</p>
+
+  <h2 class="pv-h2">⚠⚠ 判準是這一張<span class="t">四案在小格的實際大小（410px）並排</span></h2>
+  <div class="pv-shot">
+    <img src="slot-410.png" width="826" height="826"
+         alt="四案在 410px 小格的實際大小並排：左上 Ⓐ 九位醫師、右上 Ⓑ 醫師加專長、左下 Ⓒ 二十三項專長、右下 Ⓓ 一科一行">
+  </div>
+  <p class="pv-cap">左上 <b>Ⓐ 九位醫師</b>　右上 <b>Ⓑ 醫師 ＋ 他在做的事</b><br>
+  左下 <b>Ⓒ 做得了什麼</b>　右下 <b>Ⓓ 一科一行 ＋ 該科醫師</b><br>
+  下面每一個數字都是量這個尺寸得來的。1080 的原圖上看起來明顯的，縮到 410px 常常就沒了。</p>
+
+  <h2 class="pv-h2">四案差在哪</h2>
+  <table class="pv-tab">
+    <thead><tr><th>　</th><th>寫了誰</th><th>寫了做什麼</th><th>寫科別名</th><th>最小的字</th></tr></thead>
+    <tbody>
+      <tr><td>Ⓐ 九位醫師</td><td>9 位</td><td class="no">沒有</td><td class="ok">沒有</td><td>11.4px</td></tr>
+      <tr><td>Ⓑ 醫師 ＋ 專長</td><td>9 位</td><td>每位 3 項</td><td class="ok">沒有</td><td>11.0px</td></tr>
+      <tr><td>Ⓒ 做得了什麼</td><td class="no">沒有</td><td>23 項</td><td class="ok">沒有</td><td>12.1px</td></tr>
+      <tr><td>Ⓓ 一科一行</td><td>9 位</td><td class="no">沒有</td><td class="no">七個都寫了</td><td>12.1px</td></tr>
+    </tbody>
+  </table>
+  <p class="pv-cap">「最小的字」＝ 那一案在小格 410px 上最小的一種字。
+  <b>10px 是這一線的地板</b>（小於它在那一格等於沒寫），產生器過不了就不出圖。</p>
+
+  <h2 class="pv-h2">⚠⚠⚠ 先講一件量出來的事<span class="t">大格會把門診表那排圖例切掉一半</span></h2>
+  <p class="pv-cap">Ⓐ／Ⓑ／Ⓒ 三案不寫科別名，押的是「大格那排圖例已經教過哪一顆是哪一科」。
+  把門診表那張逐像素掃過之後，那個前提<b>只成立一半</b>——
+  主頁大格只看得到那張圖的 y 271~809，而圖例是兩行：</p>
+  <table class="pv-tab">
+    <thead><tr><th>圖例</th><th>墨落在</th><th>大格看得到嗎</th></tr></thead>
+    <tbody>
+      <tr><td>一般牙科・牙周・顯微根管・兒童牙科</td><td>≤ 767</td><td class="ok">看得到</td></tr>
+      <tr><td>齒顎矯正・假牙重建・口腔外科</td><td>809~814</td><td class="no">被切掉</td></tr>
+    </tbody>
+  </table>
+  <p class="pv-cap">⚠ 這件事<b>對門診表那張自己也成立</b>——圖例不是裝飾，是那張表讀不讀得懂的前提。
+  ⚠⚠ 但它還有一個沒收掉的前提：<b>主頁那一格到底是裁切還是留白，我們還沒驗過</b>
+  （在後台按一次「預覽」就知道）。留白的話這一整段不成立，三案都沒有問題。<br>
+  <b>Ⓓ 存在的理由就是這個</b>：它自己把七個科別名寫回去，不靠門診表。</p>
+
+  <h2 class="pv-h2">Ⓐ 九位醫師<span class="t">姓名最大，科別只有圖案</span></h2>
+  <div class="pv-shot">
+    <img src="post-docs-roster.png" width="1080" height="1080" loading="lazy"
+         alt="Ⓐ：九位醫師排成三欄三列，每位是科別圖案、姓名與專科藥丸的字">
+  </div>
+  <p class="pv-cap">姓名 19.7px（四案裡最大）。缺點：<b>看不出這間做得了什麼</b>——
+  而看貼文的人多半不認識任何一位醫師的名字。</p>
+
+  <h2 class="pv-h2">Ⓑ 醫師 ＋ 他在做的事<span class="t">建議這一格</span></h2>
+  <div class="pv-shot">
+    <img src="post-docs-who.png" width="1080" height="1080" loading="lazy"
+         alt="Ⓑ：九位醫師一位一行，圖案、姓名、專科藥丸與三項專長">
+  </div>
+  <p class="pv-cap">同時回答「誰」與「做得了什麼」，而且<b>一個科別名都沒寫</b>。
+  專長取站上那位醫師專長欄的<b>前三項</b>，順序照站上、沒有重新挑。<br>
+  代價：專長那一行 <b class="n">11.0px</b>，是四案裡最小的，貼著 10px 的地板。</p>
+
+  <h2 class="pv-h2">Ⓒ 做得了什麼<span class="t">二十三項專長，沒有人名</span></h2>
+  <div class="pv-shot">
+    <img src="post-docs-skills.png" width="1080" height="1080" loading="lazy"
+         alt="Ⓒ：二十三項專長排成一片，每一項前面一顆該科的圖案">
+  </div>
+  <p class="pv-cap">二十三項全部是站上醫師卡的專長，<b>一個字都沒有另外寫</b>，同一個詞只留一次。
+  對「我這個問題你們處理得了嗎」回答得最直接，但<b>沒有醫師</b>——
+  而你原本要的就是醫師的資訊，所以它列在這裡是給你比。</p>
+
+  <h2 class="pv-h2">Ⓓ 一科一行 ＋ 該科醫師<span class="t">重複了七個科別名的那一案</span></h2>
+  <div class="pv-shot">
+    <img src="post-docs-byspec.png" width="1080" height="1080" loading="lazy"
+         alt="Ⓓ：七科一科一行，左邊圖案與科別名，右邊該科的醫師">
+  </div>
+  <p class="pv-cap">最好懂的一案：哪一科有誰，一眼對得起來。
+  <b>但它就是你說不要的那一種</b>——七個科別名又寫了一次。
+  留著是因為上面那件事：<b>圖例在大格會被切掉三科</b>，只有這一案不受影響。</p>
+
+  <h2 class="pv-h2">在主頁上長怎樣<span class="t">大格＝看診時間　小格左＝停車　小格右＝Ⓑ</span></h2>
+  <div class="pv-shot">
+    <img src="profile-3up-who.png" width="823" height="823" loading="lazy"
+         alt="主頁三格模擬：大格看診時間、小格左位置與停車、小格右 Ⓑ">
+  </div>
+  <p class="pv-cap">另外三案的三格模擬在
+  <code>profile-3up-roster.png</code>、<code>profile-3up-skills.png</code>、
+  <code>profile-3up-byspec.png</code>。</p>
+
+  <h2 class="pv-h2">「詳情」那一欄要貼的字<span class="t">圖上的網址點不下去，這裡的可以</span></h2>
+  <div class="pv-txt">9 位醫師駐診・6 個部定專科。
+一般牙科・定期檢查　https://fangren.net/topics/general/
+牙周治療　https://fangren.net/topics/perio/
+顯微根管　https://fangren.net/topics/endo/
+兒童牙科　https://fangren.net/topics/kids/
+齒顎矯正　https://fangren.net/topics/ortho/
+假牙重建　https://fangren.net/topics/prosth/
+口腔外科　https://fangren.net/topics/surg/
+醫師介紹　https://fangren.net/#doctors</div>
+  <p class="pv-cap">⚠⚠ <b>七條科別網址由這一欄接</b>——圖上放不下七個入口，
+  但「詳情」放得下，而且點得下去（同小格左那張地圖的三條停車場網址）。
+  照這一份貼，<b>不要重打</b>。</p>
+
+  <h2 class="pv-h2">還沒問到、也還沒決定的</h2>
+  <div class="pv-num">
+    ・<b>標題那幾個字是我們擬的</b>，你還沒看過：駐診醫師／誰在看／做得了什麼／哪一科有誰。<br>
+    ・<b>「假牙重建」這個縮寫</b>沿用門診表那張（站上仍然是「植牙・假牙重建」）。<br>
+    ・<b>Ⓑ 的專長取前三項</b>是版面決定的，不是挑的——要換哪三項是你的決定。<br>
+    ・<b>主頁那一格是裁切還是留白</b>，後台按一次「預覽」就知道（見上面那一段）。<br>
+    ・浮水印照小格左那一張（同一顆、4%、壓左上），<b>沒有另外問過</b>。
+  </div>
+
+  <p class="pv-cap" style="margin-top:26px">
+  產生器 <code>node drafts/channels/post-docs.mjs</code>
+  守門 <code>node drafts/channels/check-post-docs.mjs</code>
+  推導在 <code>drafts/channels/README.md</code> 第三十六節。</p>
+
+</div>
+</body>
+</html>
