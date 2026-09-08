@@ -39,7 +39,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，而且尺寸對得上 ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 8, `頁上有 ${imgs.length} 張圖，應該是 8`);
+ok(imgs.length === 3, `頁上有 ${imgs.length} 張圖，應該是 3`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -50,8 +50,8 @@ for (const im of imgs) {
     `${im.src} 屬性寫 ${im.w}×${im.h}，實檔是 ${s.w}×${s.h}`);
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
   /* 成品一律 1080 見方；模擬圖不在此限 */
-  /* 成品一律 1080 見方；模擬圖（三格、410px 並排）不在此限 */
-  if (/^door-c(-x\d+)?\.png$/.test(im.src))
+  /* ⭐ 定稿那一張一律 1080 見方；模擬圖（三格、410px）不在此限 */
+  if (im.src === "fangren-map-1080.png")
     ok(s.w === 1080 && s.h === 1080, `${im.src} 不是 1080×1080（是 ${s.w}×${s.h}）`);
 }
 

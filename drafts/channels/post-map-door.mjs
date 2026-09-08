@@ -75,6 +75,11 @@ const PAD = 40;
      只會讓上面那兩句變長。所以「上下比左右緊」是刻意的。 */
 const GAP0 = 11, MARGIN0 = 26;
 
+/* ⭐ 定案那一張要拿得出去的檔名（同看診時間那張 fangren-hours-1080.png，README 33-5j）。
+   ⚠ 產生器內部仍然叫 door-c，出圖、模擬圖都排完之後最後一步才改名 ——
+     `door-profile-3up` 與 `door-slot-410` 都要讀它。 */
+const FINAL = "fangren-map-1080.png";
+
 /* ⚠ 2026-09-08 使用者選的是 **不放 QR ＋ 前兩句（紅線／開單）拿掉**。 */
 const DROP = 2;
 /* ⚠⚠ 下排那兩行的字級：使用者挑 **Ⓒ ×1.30 ＋ 名字折行**（「Cx1.3」）——
@@ -113,10 +118,11 @@ const WMBX = 60 / 660, WMBY = 50 / 660;   /* 左右／上下各切出去多少�
    （只有 `tl` 這一側；右下那一格仍然吃上面那個比例）。單位是畫布 px，
    因為他看的是「離左邊多遠」不是「佔自己的百分之幾」。
    ⚠ **垂直沒有動**（他只說左），上緣仍然是高的 7.6%。 */
-/* ⚠⚠ 2026-09-08 使用者又往左了一格：「**Ⓧ4**」＋「我覺得可以比 Ⓧ4 再左一點」——
-   所以整把尺往左移一格重開：380（他挑的那一格）／**440（現在的預設）**／500／560。
-   ⚠ 切得愈多，畫出來的那一顆愈只剩右半邊 —— 這是一把**有盡頭**的尺：
-     r1c2 畫出來 952px 寬，切 560 就只剩 392px（小格 410px 上 149px）。 */
+/* ✅ **2026-09-08 定案 Ⓧ2 ＝ 440px**（使用者：「Ⓧ2 定稿」）——
+   他上一輪挑 Ⓧ4（380）又說「可以再左一點」，整把尺往左移一格重開之後選了第二格。
+   那一顆畫出來 952×469，切掉 440 之後看得到 512px（小格 410px 上 194px）。
+   ⚠ 落選：380（上一輪那一格）／500／560。**560 是這把尺的盡頭** ——
+     再往左只剩右邊 392px，形狀認不出來、浮水印變成一團灰。 */
 const WMX0 = 440;
 const WMW0 = 660, WMA0 = .04, WMPOS0 = "tl";
 
@@ -426,7 +432,9 @@ const sheet = (fs2, qr, drop = 0, title = "", wrapn = 0, wmsh = WMSH0) => `<div 
 
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 fs.mkdirSync(OUT, { recursive: true });
-for (const f of fs.readdirSync(OUT).filter(f => f.startsWith("door-") && f.endsWith(".png")))
+/* ⚠ 定案那一張叫 fangren-map-1080.png（不是流水號），清檔時要一起清 */
+for (const f of fs.readdirSync(OUT).filter(f =>
+      (f.startsWith("door-") || f === FINAL) && f.endsWith(".png")))
   fs.rmSync(path.join(OUT, f));
 
 const made = [];
@@ -596,10 +604,7 @@ const wmCheck = (a) => {
      換 logo Ⓛ、壓哪一角、標題、QR、北在上、站上那張地圖的版本）**都在 git 裡**，
      推導在 drafts/channels/README.md 第三十五節。要回頭比就從那裡取，不要重畫。 */
 const CASES = [
-  ["c",      {}],                 /* ⭐ 定案（浮水印再往左 440px ＝ 現在的預設） */
-  ["c-x380", { wmx: 380 }],       /* Ⓧ1 ＝ 上一輪你挑的那一格 */
-  ["c-x500", { wmx: 500 }],       /* Ⓧ3 */
-  ["c-x560", { wmx: 560 }],       /* Ⓧ4 這把尺的盡頭：只剩右邊 392px */
+  ["c", {}],   /* ⭐ 定案（這一張出圖之後改名成 fangren-map-1080.png） */
 ];
 wmCheck(WMA0);
 for (const [tag, opt] of CASES) await build(tag, opt);
@@ -632,10 +637,10 @@ const strip410 = async (file, list) => {
 };
 /* 定案那一張在小格的實際大小 */
 await strip410("door-slot-410.png", ["door-c.png"]);
-/* 「再往左」那把尺，同樣在小格的實際大小上並排 */
-await strip410("door-slot-410-x.png",
-  ["door-c-x380.png", "door-c.png", "door-c-x500.png", "door-c-x560.png"]);
 await browser.close();
+
+/* ⭐ 最後一步：改成拿得出去的檔名（模擬圖都已經排完，讀的是舊名） */
+fs.renameSync(path.join(OUT, "door-c.png"), path.join(OUT, FINAL));
 
 /* ========== ⚠⚠⚠ QR 那一段搬走了（2026-09-08 定案不放 QR）==========
  * 「三顆 QR 真的掃不掃得動」不是用眼睛看的（門口那張告示的 README 就寫著這一條），
@@ -709,19 +714,14 @@ console.log(`  浮水印\t${A.wmsh}（站上頁首那顆）・墨 ${(A.wma * 100
   + `\t壓在它上面：墨字 ${ratio(wmOver(INK, A.wma), wmOver(CARD, A.wma)).toFixed(2)}`
   + `／柔墨 ${ratio(wmOver(SOFT, A.wma), wmOver(CARD, A.wma)).toFixed(2)}（門檻 4.5）`);
 
-/* ⚠ 還沒挑定的那一件：浮水印再往左多少（第 28 條 ①：他的眼睛才是裁判 → 給一把尺） */
-console.log(`\n── ⚠ 要挑：浮水印再往左多少（畫布 px；垂直沒有動）──`);
-for (const x of [...made].sort((a, b) => a.wmx - b.wmx))
-  console.log(`  door-${x.tag}\t左邊切掉 ${x.wmx}px（＝寬的 ${(x.wmx / x.m.wmr.w * 100).toFixed(1)}%）`
-    + `\t在畫布上 x ${x.m.wmr.x}~${x.m.wmr.x + x.m.wmr.w}`
-    + `\t看得到 ${(x.m.wmr.w - x.wmx)}px → 小格 ${((x.m.wmr.w - x.wmx) * shrink).toFixed(0)}px`
-    + `${x.tag === "c" ? "\t← 現在的預設（建議）" : ""}`);
+console.log(`  再往左\t左邊切掉 ${A.wmx}px（＝寬的 ${(A.wmx / A.m.wmr.w * 100).toFixed(1)}%，Ⓧ2 定案）`
+  + `\t在畫布上 x ${A.m.wmr.x}~${A.m.wmr.x + A.m.wmr.w}`
+  + `\t看得到 ${(A.m.wmr.w - A.wmx)}px → 小格 ${((A.m.wmr.w - A.wmx) * shrink).toFixed(0)}px`);
 
 console.log(`\n── 出圖 ──`);
 for (const x of made)
-  console.log(`  door-${x.tag}.png　地圖 ${x.m.img.w}×${x.m.img.h}（長寬比 ${x.ar.toFixed(3)}）`
-    + `　提醒 ${x.pts} 條${x.title ? "＋標題" : ""}`
-    + `　內容高 ${x.m.band.h.toFixed(0)}${x.qr ? `　QR ${x.qrpx}px` : "　沒有 QR"}`
-    + `${x.you === "door" ? "　綠塊寫「現在位置」" : ""}${x.orient !== "w" ? `　${x.orient} 在上` : ""}`);
-console.log(`  door-profile-3up.png　door-slot-410.png　door-slot-410-x.png`);
+  console.log(`  ⭐ ${FINAL}　地圖 ${x.m.img.w}×${x.m.img.h}（長寬比 ${x.ar.toFixed(3)}）`
+    + `　提醒 ${x.pts} 條　內容高 ${x.m.band.h.toFixed(0)}　沒有 QR`
+    + `　—— 這一張就是要貼的`);
+console.log(`  door-profile-3up.png（主頁三格）　door-slot-410.png（小格實際大小）`);
 console.log(`\n── 「詳情」欄要貼的字 ──\n` + detail.split("\n").map(l => "  " + l).join("\n"));
