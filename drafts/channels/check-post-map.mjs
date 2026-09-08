@@ -19,6 +19,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -38,7 +39,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，而且尺寸對得上 ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 10, `頁上有 ${imgs.length} 張圖，應該是 10`);
+ok(imgs.length === 17, `頁上有 ${imgs.length} 張圖，應該是 17`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -49,7 +50,7 @@ for (const im of imgs) {
     `${im.src} 屬性寫 ${im.w}×${im.h}，實檔是 ${s.w}×${s.h}`);
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
   /* 成品一律 1080 見方；模擬圖不在此限 */
-  if (im.src.startsWith("post-map-"))
+  if (/^(post-map-|door-(a|b|noqr|qr140|north)\.png)/.test(im.src))
     ok(s.w === 1080 && s.h === 1080, `${im.src} 不是 1080×1080（是 ${s.w}×${s.h}）`);
 }
 
@@ -63,28 +64,91 @@ for (const tag of [...scroll.matchAll(/<img\s+src="([^"]+)"[^>]*>/g)].map(m => m
 ok(!/\.pv-scroll\s+img\s*\{[^}]*width:\s*auto/.test(PAGE),
   "樣式表出現 .pv-scroll img{width:auto} —— 那會讓捲軸裡的圖畫成 1080px");
 
-/* ---- ③ 「詳情」那一段和 detail.txt 逐字相同 ---- */
+/* ---- ③ 兩塊「詳情」各自和它的 .txt 逐字相同 ----
+   第一塊 ＝ 門口那張告示的版本（door-detail.txt），第二塊 ＝ 站上那張地圖的版本（detail.txt）。 */
+const txts = [...PAGE.matchAll(/<div class="pv-txt">([\s\S]*?)<\/div>/g)].map(m => m[1].trim());
+ok(txts.length === 2, `頁上有 ${txts.length} 塊「詳情」，應該是 2`);
+const doorDetail = fs.readFileSync(path.join(DIR, "door-detail.txt"), "utf8").trimEnd();
 const detail = fs.readFileSync(path.join(DIR, "detail.txt"), "utf8").trimEnd();
-const onPage = (PAGE.match(/<div class="pv-txt">([\s\S]*?)<\/div>/) || [])[1];
-ok(onPage !== undefined, "頁上找不到「詳情」那一塊");
-if (onPage !== undefined)
-  ok(onPage.trim() === detail,
-    `「詳情」和 detail.txt 對不上：\n    頁面 ${JSON.stringify(onPage.trim())}\n    檔案 ${JSON.stringify(detail)}`);
+for (const [i, want, nm] of [[0, doorDetail, "door-detail.txt"], [1, detail, "detail.txt"]])
+  if (txts[i] !== undefined) ok(txts[i] === want,
+    `第 ${i + 1} 塊「詳情」和 ${nm} 對不上：\n    頁面 ${JSON.stringify(txts[i])}\n    檔案 ${JSON.stringify(want)}`);
 
-/* ---- ④ 「詳情」裡的每一個事實都要在 index.html 上找得到 ---- */
+/* ---- ④ 「詳情」裡的每一個事實都要在原始出處上找得到 ---- */
 const ADDR = (SRC.match(/<span class="txt">(雲林縣[^<]+)<\/span>/) || [])[1];
 ok(ADDR, "index.html 裡讀不到頁尾那一行地址");
-if (ADDR) ok(detail.includes(ADDR.replace(/&nbsp;/g, " ")),
-  `「詳情」裡的地址和 index.html 對不上（站上是 ${ADDR.replace(/&nbsp;/g, " ")}）`);
 const PHONE = (SRC.match(/05-\d{7}/) || [])[0];
-ok(PHONE && detail.includes(PHONE), `「詳情」裡的電話和 index.html 對不上（站上是 ${PHONE}）`);
+for (const [d, nm] of [[doorDetail, "door-detail.txt"], [detail, "detail.txt"]]) {
+  if (ADDR) ok(d.includes(ADDR.replace(/&nbsp;/g, " ")), `${nm} 裡的地址和 index.html 對不上`);
+  ok(PHONE && d.includes(PHONE), `${nm} 裡的電話和 index.html 對不上（站上是 ${PHONE}）`);
+}
+/* 站上那一版：三個停車場的名字與距離逐字 ＝ index.html 地圖上的字 */
 const lots = [...SRC.matchAll(
   /<text class="rl-nm"[^>]*>([^<]+)<\/text>[\s\S]{0,400}?<text class="rl-d"[^>]*>([^<]+)<\/text>/g)]
   .map(m => [m[1].trim(), m[2].trim()]);
 ok(lots.length === 3, `index.html 的地圖上讀到 ${lots.length} 個停車場，應該是 3`);
 for (const [nm, d] of lots)
-  ok(detail.includes(`${nm} ${d}`),
-    `「詳情」裡少了或寫錯了：${nm} ${d}（那是 index.html 地圖上的字）`);
+  ok(detail.includes(`${nm} ${d}`), `detail.txt 裡少了或寫錯了：${nm} ${d}`);
+/* ⚠⚠ 門口那一版：四點提醒逐字 ＝ drafts/door-notice/body.html（使用者 2026-08-23
+   一句一句定的），三條網址逐字 ＝ index.html 那三個 .rl-link。
+   兩邊都不可以在這一頁上被改掉 —— 改了就是第二個真相。 */
+const BODY = fs.readFileSync(path.join(ROOT, "drafts", "door-notice", "body.html"), "utf8");
+const pts = [...BODY.matchAll(/<li>([\s\S]*?)<\/li>/g)]
+  .map(m => m[1].replace(/<[^>]+>/g, "").trim());
+ok(pts.length === 4, `門口那張告示讀到 ${pts.length} 條提醒，應該是 4`);
+for (const t of pts) ok(doorDetail.includes(t), `door-detail.txt 少了門口那張的一句：${t}`);
+const hrefs = [...SRC.matchAll(/<a class="rl-link" href="([^"]+)"/g)].map(m => m[1]);
+ok(hrefs.length === 3, `index.html 讀到 ${hrefs.length} 條停車場連結`);
+for (const u of hrefs) ok(doorDetail.includes(u), `door-detail.txt 少了一條網址：${u}`);
+/* 門口那一版的號碼牌順序（P1 190m／P2 140m／P3 50m，刻意不是照距離） */
+const order = [...doorDetail.matchAll(/^(P\d) .*?(\d+) 公尺/gm)].map(m => [m[1], +m[2]]);
+ok(order.length === 3 && order.map(o => o[0]).join("") === "P1P2P3",
+  `door-detail.txt 的號碼牌順序不是 P1 P2 P3：${order.map(o => o[0]).join("")}`);
+ok(order.length === 3 && order[0][1] > order[2][1],
+  "門口那張的順序刻意不是照距離排（P1 最遠、P3 最近），detail 裡被重排了");
+
+/* ---- ④b QR 那張表要對得上 door-qr.json（產生器寫的，不要手抄） ---- */
+const QJ = JSON.parse(fs.readFileSync(path.join(DIR, "door-qr.json"), "utf8"));
+const SLOT = { "原圖": 1080, "大格": 823, "小格": 410 };
+const TAG = { "Ⓐ": "a", "Ⓓ": "qr140" };
+const rows = [...PAGE.matchAll(
+  /<tr><td>(Ⓐ|Ⓓ) (原圖|大格|小格) \d+<\/td><td>([\d.]+)px<\/td><td>([\d.]+)px<\/td><td[^>]*>(\d\/3)<\/td><\/tr>/g)];
+ok(rows.length === 6, `QR 那張表有 ${rows.length} 列，應該是 6`);
+for (const [, t, slot, px, per, got] of rows) {
+  const c = QJ.cases.find(x => x.tag === TAG[t]);
+  const sl = c && c.slots.find(x => x.w === SLOT[slot]);
+  if (!sl) { bad.push(`QR 表上有一列在 door-qr.json 裡找不到：${t} ${slot}`); continue; }
+  ok(+px === sl.px && +per === sl.per && got === sl.scan,
+    `QR 表 ${t}${slot} 對不上 door-qr.json：頁面 ${px}／${per}／${got}　檔案 ${sl.px}／${sl.per}／${sl.scan}`);
+}
+ok(!QJ.cases.some(c => c.slots.some(s => s.scan === "未驗")),
+  "door-qr.json 裡有「未驗」—— 那台機器上沒有 opencv，QR 沒有被真的掃過。"
+  + "要驗：pip install opencv-python-headless 再跑一次 post-map-door.mjs");
+/* ⚠⚠⚠ QR 不能用眼睛驗收（門口那張告示的 README 就寫著）——這裡真的再掃一次，
+   拿頁面上宣稱的數字去對。掃不到 opencv 就**大聲印出來**，不要靜靜地放行。 */
+let scanned = "（這台機器沒有 opencv，沒有重掃）";
+try {
+  const py = `
+import sys, json, cv2
+img = cv2.imread(sys.argv[1]); out = []
+for w in [int(x) for x in sys.argv[2:]]:
+    im = img if w == img.shape[1] else cv2.resize(img, (w, w), interpolation=cv2.INTER_AREA)
+    ok, dec, pts, _ = cv2.QRCodeDetector().detectAndDecodeMulti(im)
+    out.append(len(sorted(set(s for s in (dec if ok else []) if s))))
+print(json.dumps(out))`;
+  const hits = [];
+  for (const c of QJ.cases.filter(c => ["a", "qr140"].includes(c.tag))) {
+    const r = JSON.parse(execFileSync("python3",
+      ["-c", py, path.join(DIR, `door-${c.tag}.png`), ...c.slots.map(s => String(s.w))],
+      { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }));
+    c.slots.forEach((s, i) => {
+      ok(`${r[i]}/3` === s.scan,
+        `door-${c.tag} 縮到 ${s.w} 重掃是 ${r[i]}/3，頁上寫的是 ${s.scan}`);
+      hits.push(`${c.tag}@${s.w} ${r[i]}/3`);
+    });
+  }
+  scanned = "（重掃：" + hits.join("、") + "）";
+} catch (e) { /* 沒有 opencv：下面那一行會把它印出來 */ }
 
 /* ---- ⑤ 產出的圖沒有孤兒 ---- */
 for (const f of fs.readdirSync(DIR).filter(f => f.endsWith(".png")))
@@ -97,10 +161,12 @@ ok(!/(?:src|href)="\/(?!\/)/.test(PAGE), "出現根目錄絕對路徑（舊站 y
 
 /* ---- ⑦ 紅線 ---- */
 for (const re of [/隨時(問|詢問|聯絡)/, /都可以問/, /即時回/, /小編/, /馬上回/])
-  ok(!re.test(detail), `「詳情」踩到紅線（這個帳號沒有專人即時回覆）：${re}`);
+  for (const [d, nm] of [[doorDetail, "door-detail.txt"], [detail, "detail.txt"]])
+    ok(!re.test(d), `${nm} 踩到紅線（這個帳號沒有專人即時回覆）：${re}`);
 
 if (bad.length) { console.error("✗ " + bad.length + " 項：\n  " + bad.join("\n  ")); process.exit(1); }
-console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、詳情逐字相同、三個停車場對得上 index.html）`);
+console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、兩塊詳情逐字相同、四點提醒對得上門口那張、三條網址對得上 index.html）`);
+console.log(`  QR ${scanned}`);
 
 /* ---- ⑧ 量：八個寬度水平溢出 0、圖都載得到、死錨 0 ---- */
 const chrome = (() => {

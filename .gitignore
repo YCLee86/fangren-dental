@@ -6,3 +6,6 @@ hero-preview.html
 Thumbs.db
 *.log
 .github/
+# 門口那張告示的產出（兩行指令重做，見 drafts/door-notice/README.md）
+drafts/door-notice/preview.html
+drafts/door-notice/*.pdf
