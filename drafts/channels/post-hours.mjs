@@ -404,6 +404,49 @@ const lines = (c, mode) =>
   : [c];                                               /* 橫排一列 */
 const chunk = (a, n) => a.length ? [a.slice(0, n), ...chunk(a.slice(n), n)] : [];
 
+/* ⚠⚠⚠ 守門：一格裡「哪個科別排前面」現在是看得見的東西（2026-09-08 補）。
+ *   起因是使用者：「不同的 logo 一開始非常凌亂，後來被我指定位置才舒服很多，
+ *   這個你們一開始也應該要注意到的。」他是對的，而且成因比「沒注意到」具體：
+ *
+ *   ⚠⚠ **順序是從 index.html 的 `data-in` 讀回來的，而那份資料裡順序沒有畫面**
+ *   —— 站上那張門診表一格只畫**一顆點**（有診／沒診），七個科別誰寫在前面
+ *   完全看不出來，所以那串字的順序這四十幾天來是**任意的**。
+ *   這張貼文圖一格要畫二到四顆圖案，**同一份資料換了媒介，順序突然變成資訊**，
+ *   而我把它原封不動照搬，等於讓一個從來沒有人決定過的東西決定版面。
+ *
+ *   ⚠⚠⚠ 通則（已進 CLAUDE.md 第九節第 28 條第 ⑤ 項）：
+ *   **一份資料搬到新的媒介時，要逐項問「原本沒有意義的性質，在這裡有沒有變成
+ *   看得見的東西」** —— 順序、間距、大小寫、檔名、寫的先後，都可能突然開始說話。
+ *   有的話那就是一個**還沒有人決定過的設計項**，要當成設計項處理（給尺、問使用者），
+ *   不可以沿用資料裡碰巧的那一份。
+ *
+ *   兩道，都只擋「讀起來會亂」的那一種，不是強制一個全域順序：
+ *   ① **同一行出現過的兩科，順序要一致** —— 掃到同一對在不同格裡左右對調就 throw。
+ *      ⚠⚠ **不可以改成全域的拓樸排序** ——「四早」是 general・perio 同一行，
+ *      而「五午／五晚」是 perio 自己第一行、general 在第二行，**那是刻意的**
+ *      （第一行只放一個時放最常態的那一科）。跨行比對會誤報。
+ *   ② **斷成兩行時，第一行要由「天天都有的那一科」帶頭**（general 或 perio）——
+ *      眼睛往下掃的時候有一根固定的軸，其餘的科才不會看起來在跳。
+ */
+const ANCHOR = new Set(["general", "perio"]);
+function checkOrder() {
+  const seen = new Map(), bad = [];
+  for (const r of D.rows) r.cells.forEach((c, ci) => {
+    if (!c.length) return;
+    const where = D.days[ci] + r.part, ls = lines(c, "i2x2");
+    for (const ln of ls) for (let i = 0; i < ln.length; i++) for (let j = i + 1; j < ln.length; j++) {
+      const [a, b] = [ln[i], ln[j]], rev = seen.get(`${b}|${a}`);
+      if (rev) bad.push(`${where} 的「${a}→${b}」和 ${rev} 的「${b}→${a}」左右相反`);
+      else if (!seen.has(`${a}|${b}`)) seen.set(`${a}|${b}`, where);
+    }
+    if (ls.length > 1 && !ANCHOR.has(ls[0][0]))
+      bad.push(`${where} 斷兩行，但第一行由「${ls[0][0]}」帶頭（要 general 或 perio）`);
+  });
+  if (bad.length) throw new Error("圖案的順序讀起來會亂：\n  ・" + bad.join("\n  ・")
+    + "\n  順序的出處是 index.html 的 data-in，改那裡（站上那張表看不出差別）");
+}
+checkOrder();
+
 /* 圖例：logo 套色 ＋ 科別名用墨（使用者 2026-09-07 指定）。
  * ⚠⚠ 格子裡只剩圖案的話，第一次看的人**一定要對照這一排** ——
  *   所以它不是裝飾，是那張表讀不讀得懂的前提，不可以為了省高度砍掉。
