@@ -40,7 +40,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，尺寸對得上，都有 alt ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 6, `頁上有 ${imgs.length} 張圖，應該是 6`);
+ok(imgs.length === 3, `頁上有 ${imgs.length} 張圖，應該是 3`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -52,12 +52,11 @@ for (const im of imgs) {
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
 }
 /* ⚠ 每一案的 1080 圖都要擺上去 —— 少一張，那一案就等於沒有被提案。
-   ⚠⚠ 2026-09-09 使用者：「保留 E F」，所以候選收成 Ⓔ／Ⓕ ＋ 那把深淺的尺
-   （Ⓔ2／Ⓕ2）。Ⓕ2 只在說明裡寫檔名（同一件事套第二次，不必再放一張大圖）。
-   ⚠ 同日再一件：拿掉標題與頁尾之後多一把**倍率**的尺（Ⓔ3／Ⓔ4），
-   頂到上限那一格（k115）要放大圖 —— 那一格是這把尺的兩端之一。 */
-for (const t of ["two", "twoc", "two-flat", "two-k115"])
-  ok(used.has(`post-docs-${t}.png`), `少了一案沒擺上頁面：post-docs-${t}.png`);
+   ⚠⚠ 2026-09-09 定案 Ⓕ，所以四格全部是同一個排法、只差「空出來的高度怎麼用」。
+   ⚠ 四格不必各放一張大圖（縮到 410px 的那一張就是判準），
+   但**建議的那一格要放**，而且四格的檔名都要在頁上出現得到。 */
+ok(used.has("slot-410.png"), "少了 slot-410.png —— 那一張是這一頁的判準");
+ok(used.has("post-docs-k115-p14.png"), "少了建議那一格的大圖：post-docs-k115-p14.png");
 
 /* ---- ② 「詳情」逐字 ---- */
 const detail = fs.readFileSync(path.join(DIR, "detail.txt"), "utf8").trimEnd();
@@ -69,9 +68,10 @@ if (onPage !== undefined)
 
 /* ---- ③ 四格的名字要和產生器的 CASES 對得上 ----
    ⚠ 頁上那些標題是手寫的，產生器改了案名而頁面沒跟上，使用者挑的就是別的東西。 */
-const cases = [...GEN.matchAll(/\["(two|twoc)",\s*"(dim|flat)",\s*([\d.]+),\s*"([^"]+)"\]/g)]
-  .map(m => ({ tag: m[1], v: m[2], k: +m[3], label: m[4] }));
-ok(cases.length === 6, `產生器的 CASES 讀到 ${cases.length} 格，應該是 6`);
+const cases = [...GEN.matchAll(/\[([\d.]+),\s*(null|[\d.]+),\s*(true|false),\s*"([^"]+)"\]/g)]
+  .map(m => ({ k: +m[1], pad: m[2] === "null" ? null : +m[2], rec: m[3] === "true", label: m[4] }));
+ok(cases.length === 4, `產生器的 CASES 讀到 ${cases.length} 格，應該是 4`);
+ok(cases.filter(c => c.rec).length === 1, "CASES 裡建議的那一格不是剛好一個");
 for (const c of cases) {
   /* 圈號（含 Ⓔ2 那個尾數）後面那幾個字，去掉括號裡的補充，要出現在頁面上 */
   const key = c.label.replace(/^[Ⓐ-Ⓩ]\d?\s*/, "").replace(/（[^）]*）/g, "").trim();
@@ -80,6 +80,12 @@ for (const c of cases) {
 /* ⚠⚠⚠ 2026-09-09 使用者指定拿掉標題、上下兩條線、那兩個數字與網址 ——
    這一道擋的是「有人順手加回去」：畫面上多一行字不會讓任何一道尺寸守門翻臉。
    ⚠ 只掃產生器畫出來的那幾個 class，不掃註解（推導本來就會提到它們）。 */
+/* ⚠⚠ 2026-09-09 使用者：「治療項目不要套色」「醫師名字等級都一樣　不要分色」——
+   兩件都是「加回去不會讓任何一道尺寸守門翻臉」的那一種，所以各擋一道。 */
+ok(!/style="color:\$\{TONE\[sp\.id\]\}"/.test(GENCODE),
+  "專長小塊又套回科別色了 —— 使用者指定「不要套色，維持淡色，框起來」");
+ok(!/\.xd\{/.test(GENCODE) && !/"xd"/.test(GENCODE),
+  "醫師名字又分深淺了 —— 使用者指定「等級都一樣，不要分色」");
 for (const cls of ["hd", "rule", "ft"])
   ok(!new RegExp(`class="${cls}"`).test(GENCODE),
     `產生器又把 .${cls} 畫回去了 —— 標題／分隔線／頁尾是使用者指定拿掉的`);
