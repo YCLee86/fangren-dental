@@ -4,15 +4,16 @@
  * 擋的是這一輪特有的幾種「畫面正常、數字也對，只有把圖打開看才看得出來」：
  *   ⑦ 產生器把「跑完用預設值再跑一次」那一步刪掉 —— repo 裡那三張 LINE 的成品
  *      會停在臉書版的浮水印上，**三格拼起來就接不成一顆圓，而且看起來很正常**。
- *   ⑨ 因此不是只驗產生器的原始碼，是**真的去讀那四張 PNG 的角落像素**：
- *      臉書版的角落應該是乾淨的卡片色（整顆標誌都在畫布裡），
- *      LINE 版的同一個角落應該是被浮水印染過的（那一顆是切出去的）。
+ *   ⑨ 因此不是只讀原始碼，是**真的去解那六張 PNG**：
+ *      ⓐ 同一格的 LINE 版與臉書版**不可以逐位元組相同**（相同 ＝ 還原那一步沒有跑）
+ *      ⓑ 那一層淡墨的**重心**要落在該版本的幾何算出來的位置（±100px）
  *   ③ 三段文字一個字都不重打 —— 逐字對那一則自己的 .txt。
  */
 import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
+import { wmFor, TRI, FB, fbWidth, shapeRatio } from "./wm-triptych.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const DIR  = path.join(ROOT, "preview", "fb-post");
@@ -55,19 +56,44 @@ function decode(buf) {
   }
   return { w, h, ch, px };
 }
-const lum = (f, x, y) => { const d = decode(fs.readFileSync(f)); return d.px[(y * d.w + x) * d.ch]; };
+/* 那一層淡墨的重心。⚠ **不要比對某一個色階的精確值** —— 4% 與 5% 合成出來的
+   RGB 只差一階，而 Chromium 的進位在不同版面上不一定一樣。改成「比卡色暗一點點、
+   而且三個通道還維持卡色那個中性關係」的一段區間，兩種濃度都收得進來。 */
+function wmCentroid(file) {
+  const d = decode(fs.readFileSync(file));
+  let n = 0, sx = 0, sy = 0;
+  for (let y = 0; y < d.h; y++) for (let x = 0; x < d.w; x++) {
+    const i = (y * d.w + x) * d.ch, r = d.px[i], g = d.px[i + 1], b = d.px[i + 2];
+    if (r >= 232 && r <= 242 && Math.abs(r - g) <= 1 && b >= r && b - r <= 2) { n++; sx += x; sy += y; }
+  }
+  return n ? { n, x: sx / n, y: sy / n } : { n: 0, x: NaN, y: NaN };
+}
+/* 幾何上那一顆被畫布裁掉之後的中心 —— 拿它去對量到的重心 */
+function wmCenter(gm) {
+  const C = TRI.CANVAS;
+  const x0 = Math.max(0, gm.left), x1 = Math.min(C, gm.left + gm.w);
+  const y0 = Math.max(0, gm.top),  y1 = Math.min(C, gm.top + gm.h);
+  return { x: (x0 + x1) / 2, y: (y0 + y1) / 2 };
+}
 const size = f => { const b = fs.readFileSync(f); return { w: b.readUInt32BE(16), h: b.readUInt32BE(20), n: b.length }; };
+
+const TILES = [
+  ["hours", "line-post-hours", "fangren-hours-1080.png"],
+  ["docs",  "line-post-docs",  "fangren-docs-1080.png"],
+  ["map",   "line-post-map",   "fangren-map-1080.png"],
+];
+const fbFile = k => path.join(DIR, `fangren-fb-${k}-1080.png`);
 
 /* ---------- ① 頁上每一張圖 ---------- */
 const imgs = [...page.matchAll(/<img src="([^"]+)" width="(\d+)" height="(\d+)"/g)];
-ok(imgs.length >= 12, `頁上只有 ${imgs.length} 張圖，太少了`);
+ok(imgs.length >= 13, `頁上只有 ${imgs.length} 張圖，太少了`);
 const used = new Set();
 for (const [, src, w, h] of imgs) {
   const f = path.join(DIR, src);
   if (!fs.existsSync(f)) { bad.push(`頁上引用的 ${src} 不在`); continue; }
   used.add(src);
   const d = size(f);
-  /* ⚠ 這一頁的圖是**縮下來擺的**（不是照實際像素），所以比對的是長寬比不是尺寸 ——
+  /* ⚠ 這一頁的圖是**縮下來擺的**，所以比對的是長寬比不是尺寸 ——
      比錯的話一張被壓扁的圖照樣會過。 */
   const want = Math.round(d.h * (+w) / d.w);
   ok(Math.abs(want - +h) <= 1, `${src} 的 height=${h} 對不上長寬比（應該是 ${want}）`);
@@ -96,8 +122,8 @@ for (const [k, rel] of Object.entries(SRC)) {
 }
 
 /* ---------- ④ 要上傳的那三張 ---------- */
-for (const k of ["hours", "docs", "map"]) {
-  const f = path.join(DIR, `fangren-fb-${k}-1080.png`);
+for (const [k] of TILES) {
+  const f = fbFile(k);
   ok(fs.existsSync(f), `少了 fangren-fb-${k}-1080.png`);
   if (!fs.existsSync(f)) continue;
   const d = size(f);
@@ -107,10 +133,10 @@ for (const k of ["hours", "docs", "map"]) {
 
 /* ---------- ⑤ 紅線 ---------- */
 /* ⚠⚠ 臉書**有留言區**（LINE 主頁那個模組沒有），而這個帳號沒有專人回覆 ——
-   第十一之三節那條在這裡回來了。 */
-/* ⚠⚠ 這條線每一份檔案都把「為什麼不可以寫」寫在資料旁邊，所以掃字一定會撞到自己的
-   說明（check-spec、check-cancel、check-review 都踩過同一件）。
-   說明那一段用 data-red 標起來，掃之前先剝掉 —— 而**剝掉的那一段本身要驗它還在**，
+   第十一之三節那條在這裡回來了。
+   ⚠ 這條線每一份檔案都把「為什麼不可以寫」寫在資料旁邊，所以掃字一定會撞到自己的
+   說明（check-spec、check-cancel、check-review 都踩過同一件）。說明那一段用
+   data-red 標起來、掃之前先剝掉，而**剝掉的那一段本身要驗它還在**，
    不然把標記亂加一通就等於把守門關掉。 */
 const red = [...page.matchAll(/<span data-red>[\s\S]*?<\/span>/g)];
 ok(red.length === 1, `data-red 那一段應該剛好一段，實際 ${red.length} 段`);
@@ -131,30 +157,44 @@ ok(/from "\.\/wm-triptych\.mjs"/.test(gen),
 ok(/for \(const t of TILES\) run\(t\.gen, \{\}\);/.test(gen),
   "post-fb.mjs 少了「跑完用預設值再跑一次」那一步 —— repo 裡的 LINE 成品會停在臉書版的浮水印上");
 
-/* ---------- ⑧ 那把尺挑定的直徑 ---------- */
-const tri = fs.readFileSync(path.join(ROOT, "drafts", "channels", "wm-triptych.mjs"), "utf8");
-ok(/DIA: \+\(process\.env\.WM_SOLO_DIA \|\| 656\)/.test(tri),
-  "wm-triptych.mjs 的臉書版直徑不是 656");
-ok(/DIA: \+\(process\.env\.WM_DIA \|\| 500\)/.test(tri),
-  "wm-triptych.mjs 的三格版直徑不是 500 —— 2026-09-09 定案那一格");
+/* ---------- ⑧ 臉書版那一組值 ＝ 他 2026-09-08 挑定的那一組 ---------- */
+/* ⚠ 門診表與科別醫師那兩顆一個值都不可以改（那是他挑的）；地圖那一顆是尺，
+   只驗「不可以和另外兩顆一樣」—— 他要的正是「不一樣」。 */
+ok(FB.hours.shape === "r3c1" && FB.hours.opacity === .05 && FB.hours.by === 470,
+  "門診表那顆浮水印不是 2026-09-08 挑定的那一組（r3c1・5%・top 470）");
+ok(FB.docs.shape === "r1c2" && FB.docs.opacity === .04 && FB.docs.cut === 440,
+  "科別醫師那顆浮水印不是 2026-09-08 挑定的那一組（r1c2・4%・切 440）");
+ok(FB.map.shape !== FB.hours.shape && FB.map.shape !== FB.docs.shape,
+  `地圖那顆是 ${FB.map.shape}，和另外兩張撞了 —— 使用者指定要「不一樣的」`);
+ok(fbWidth("r3c1") === 660, "等重換算的基準跑掉了（r3c1 應該畫 660）");
+/* ⚠ 三張成品的長寬比一定要對得上那顆形狀的 viewBox（不可以被壓扁） */
+for (const [k] of TILES) {
+  const g = wmFor(k, { mode: "fb" });
+  ok(Math.abs(g.w / g.h - shapeRatio(g.shape)) < .01,
+    `${k} 的浮水印被壓扁了：${g.w}×${g.h}`);
+}
 
-/* ---------- ⑨ 角落像素：臉書版整顆在畫布裡、LINE 版仍然是切出去的那一顆 ---------- */
-/* ⚠⚠⚠ 這一道是這一支最重要的：⑦ 只讀原始碼，⑨ 讀的是真的畫出來的東西。
-   科別醫師的標誌在右上、地圖的在左上 —— 臉書版**貼著邊但不越界**，
-   所以那個角落是乾淨的卡片色（244）；三格版是切出去的，同一個角落被染成 235。 */
-const CARD = 244, TINT = 240;
-const CORNERS = [
-  ["docs", 1075, 4, "右上"],
-  ["map", 4, 4, "左上"],
-];
-for (const [k, x, y, nm] of CORNERS) {
-  const fb = lum(path.join(DIR, `fangren-fb-${k}-1080.png`), x, y);
-  ok(fb >= CARD - 1, `臉書版 ${k} 的${nm}角量到 ${fb}，應該是乾淨的卡片色 ——`
-    + " 標誌切出畫布了（臉書版整顆都要在裡面）");
-  const dir = k === "docs" ? "line-post-docs" : "line-post-map";
-  const line = lum(path.join(ROOT, "preview", dir, `fangren-${k}-1080.png`), x, y);
-  ok(line <= TINT, `LINE 那張 ${k} 的${nm}角量到 ${line}，沒有被浮水印染到 ——`
-    + " repo 裡留下的是臉書版的浮水印，三格拼不成一顆圓（跑一次 post-fb.mjs 會自己還原）");
+/* ---------- ⑨ 讀真的畫出來的像素 ---------- */
+/* ⚠⚠⚠ ⓐ 是這一支最強的一道：同一格的兩張**逐位元組相同**就代表
+   「跑完用預設值再跑一次」那一步沒有真的還原（⑦ 只讀得到原始碼寫著它）。 */
+for (const [k, dir, file] of TILES) {
+  const lineF = path.join(ROOT, "preview", dir, file), fbF = fbFile(k);
+  if (!fs.existsSync(lineF) || !fs.existsSync(fbF)) continue;
+  ok(!fs.readFileSync(lineF).equals(fs.readFileSync(fbF)),
+    `${k}：LINE 那張和臉書那張逐位元組相同 —— 還原那一步沒有跑`
+    + "（跑一次 node drafts/channels/post-fb.mjs 會自己還原）");
+  /* ⓑ 淡墨那一層的重心，要落在各自的幾何算出來的位置。
+     ⚠ 容差 100px：那幾顆形狀都不填滿自己的外框（牙洞、圓角），
+       重心本來就不會剛好在框的正中央。 */
+  for (const [f, gm, nm] of [[fbF, wmFor(k, { mode: "fb" }), "臉書版"],
+                             [lineF, wmFor(k, { mode: "tri" }), "LINE 版"]]) {
+    const c = wmCentroid(f), want = wmCenter(gm);
+    ok(c.n > 20000, `${nm} ${k} 幾乎量不到浮水印（只有 ${c.n} 個像素）`);
+    if (c.n > 20000)
+      ok(Math.abs(c.x - want.x) <= 100 && Math.abs(c.y - want.y) <= 100,
+        `${nm} ${k} 的浮水印重心 (${c.x.toFixed(0)}, ${c.y.toFixed(0)})`
+        + ` 對不上幾何算出來的 (${want.x.toFixed(0)}, ${want.y.toFixed(0)})`);
+  }
 }
 
 /* ---------- ⑩ 八個寬度：水平溢出 0、圖都載得到、死錨 0 ---------- */
@@ -176,7 +216,7 @@ for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
   await pg.setViewportSize({ width: w, height: 800 });
   await pg.goto("file://" + path.join(DIR, "index.html"), { waitUntil: "load" });
   /* ⚠ 畫面外的 lazy 圖永遠不會開始載，「等它載完」的 Promise 會永遠不 resolve
-     —— 先催成 eager（同 check-richmenu 那一輪）。 */
+     —— 先催成 eager，而且只等「結束」不等「成功」（同 check-richmenu 那一輪）。 */
   await pg.evaluate(async () => {
     for (const i of document.images) i.loading = "eager";
     await Promise.all([...document.images].map(i =>
@@ -197,5 +237,6 @@ ok(!errs.length, `JS 錯誤 ${errs.length} 個`);
 
 if (bad.length) { console.error("✗ " + bad.join("\n✗ ")); process.exit(1); }
 console.log(`✓ 臉書版三張貼文圖：${imgs.length} 張圖、三段文字逐字對得上、`
-  + "角落像素證明兩個版本沒有互相蓋掉、紅線 0、零 JS");
-console.log("✓ 八個寬度：水平溢出 0、圖全部載得到、死錨 0");
+  + "門診表與科別醫師那兩顆浮水印 ＝ 他挑定的那一組、地圖那顆和兩張都不一樣");
+console.log("✓ 像素：兩個版本沒有互相蓋掉，六張的浮水印重心都對得上各自的幾何");
+console.log("✓ 八個寬度：水平溢出 0、圖全部載得到、死錨 0、紅線 0、零 JS");

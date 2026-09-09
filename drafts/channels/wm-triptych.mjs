@@ -48,37 +48,59 @@ export const TRI = {
 };
 
 /* ⚠⚠⚠ 2026-09-09：同一組圖要貼到 **Facebook** 上（使用者：「這三個圖片似乎也很適合
- *   放在臉書上」）。臉書是**一則一則被看到的**，三張不會並排 ——
- *   所以那顆騎在十字縫上的圓，在臉書上每一張只剩一塊往外流出去的弧，
- *   讀起來是一團淡灰不是標誌（＝ CLAUDE.md 第九節第 28 條 ⑤：
- *   一個在舊媒介裡沒有意義的性質，換了媒介就開始說話）。
- *   **臉書版每一張各自一顆完整的標誌**，貼在它原本那一角、整顆進到畫布裡。
- * ⚠ 形狀與濃度沿用他挑定的那一組（r3c1・4%），只改「完整」與「大小」。
- * ⚠ 角落沿用他 2026-09-09 指定的那三個（門診表下方／科別醫師右上／地圖左上），
- *   所以兩組圖擺在一起時是同一個語彙，不是兩套設計。 */
-export const SOLO = {
-  /* 直徑（畫布 px，三張同一個數字）—— 656 ＝ 定案那顆在**門診表**那張上畫出來的大小，
-     所以不是新猜的值，是他一直在看的那一顆。⚠ 它是一把尺，用 WM_SOLO_DIA 傳。 */
-  DIA: +(process.env.WM_SOLO_DIA || 656),
-  CORNER: { hours: "b", docs: "tr", map: "tl" },
+ *   放在臉書上」→「**因為臉書沒有像 line 那樣的版面　我比較傾向用之前的版本
+ *   單一張看順眼就好**　但你們還是把這兩張和地圖弄成臉書適合的尺寸
+ *   **地圖也挑一個不一樣的浮水印**壓上去」）。
+ *
+ * ＝ 臉書版**不是**三格拼一顆，是**回到三格版之前那一組「一張一顆」的浮水印**：
+ *   那顆騎在十字縫上的圓只有三格並排時才拼得起來，臉書是一則一則被看到的
+ *   （中間隔著別人的貼文、隔著好幾天），每一張上只剩一塊往畫布外流出去的弧
+ *   （＝ CLAUDE.md 第九節第 28 條 ⑤：舊媒介裡沒有意義的性質，換了媒介就開始說話）。
+ *
+ * ⚠⚠ **這一組的值一個都不是新挑的**，全部是 2026-09-08 使用者自己在那兩頁上挑定的：
+ *   門診表 r3c1・660px・壓右下（right −60 / top 470）・**5%**（壓在表的後面）
+ *   科別醫師 r1c2・952px・壓左上・左邊切 440・4%（壓在最上面）
+ * ⚠⚠ **地圖那一張是唯一一個新決定**：它原本和科別醫師共用 r1c2，理由是
+ *   「兩個小格並排，浮水印不一樣會讀成兩件事」—— **那個理由在臉書上不成立**
+ *   （兩則分開貼），所以他指定換一顆。那是一把尺，用 `WM_FB_MAP` 傳形狀。
+ * ⚠ 寬度**不可以沿用同一個數字**：九顆的長寬比 1.00~3.08、墨佔外框 59.6~83.2%，
+ *   同寬的話細長那幾顆會輕很多 —— 一律按墨的面積正規化（基準 r3c1 畫 660）。 */
+export const FB = {
+  /* 基準：`r3c1` 畫 660px 那麼重。**換形狀時基準不可以跟著換**
+     （2026-09-08 踩過：把預設換掉，整把尺一起縮水 31%）。 */
+  REF: "r3c1", REFW: 660,
+  hours: { shape: "r3c1", pos: "br", opacity: .05, bx: -60 / 660, by: 470 },
+  docs:  { shape: "r1c2", pos: "tl", opacity: .04, cut: 440,      by: -50 / 660 },
+  /* ⚠ 地圖這一顆是尺：`WM_FB_MAP` 換形狀。預設 r2c2（長寬比 1.33 —— 和門診表的
+     正圓、科別醫師的長條都分得出來）。
+     ⚠⚠ **切掉多少不是另一把尺**：一律切到「看得到 512px」為止 ＝ 科別醫師那一張
+     切 440 之後剩下的寬度，這樣換形狀時份量不會跟著跳。 */
+  map:   { shape: process.env.WM_FB_MAP || "r2c2", pos: "tl", opacity: .04, seen: 512, by: -50 / 660 },
 };
-function wmSoloFor(tile, opt = {}) {
-  const corner = SOLO.CORNER[tile];
-  if (!corner) throw new Error(`不認識的格子：${tile}`);
-  const shape = opt.shape ?? TRI.SHAPE;
-  const dia = opt.dia ?? SOLO.DIA;
-  const C = TRI.CANVAS;
-  const w = dia, h = w / shapeRatio(shape);
-  /* 整顆都要在畫布裡 —— 這就是臉書版存在的理由，貼著邊但不切出去 */
-  const left = corner === "tr" ? C - w : corner === "b" ? (C - w) / 2 : 0;
-  const top  = corner === "b" ? C - h : 0;
-  if (left < -.01 || top < -.01 || left + w > C + .01 || top + h > C + .01)
-    throw new Error(`臉書版的標誌切出畫布了（${tile} ${dia}px）—— 直徑要 ≤ ${C}`);
+const WMSIZES = JSON.parse(fs.readFileSync(
+  path.join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
+/** 等重換算：那一顆要畫多寬，才和「r3c1 畫 660」一樣重 */
+export function fbWidth(sh) {
+  const a = WMSIZES[sh], b = WMSIZES[FB.REF];
+  if (!a) throw new Error(`wm-sizes.json 裡沒有 ${sh}`);
+  return Math.round(FB.REFW * a.w / b.w);
+}
+function wmFbFor(tile, opt = {}) {
+  const c = FB[tile];
+  if (!c) throw new Error(`不認識的格子：${tile}（只有 hours／docs／map）`);
+  const shape = opt.shape ?? c.shape;
+  const w = fbWidth(shape), h = w / shapeRatio(shape);
+  /* `br` ＝ 右下角切出去一點（門診表那一張）；`tl` ＝ 左上角切掉一截（另外兩張）。
+     兩種都是他挑定的裁法，**切出去是刻意的**，不要改成「整顆進到畫布裡」。 */
+  const cut = c.pos === "br" ? 0 : (c.cut ?? Math.max(0, w - c.seen));
+  const left = c.pos === "br" ? TRI.CANVAS - w - Math.round(w * c.bx) : -cut;
+  const top  = c.pos === "br" ? c.by : Math.round(h * c.by);
   return {
-    shape, opacity: TRI.OPACITY, scale: 1, mode: "fb", corner,
-    w: +w.toFixed(1), h: +h.toFixed(1), left: +left.toFixed(1), top: +top.toFixed(1),
-    css: `width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;`
-       + `left:${left.toFixed(1)}px;top:${top.toFixed(1)}px`,
+    shape, opacity: c.opacity, scale: 1, mode: "fb", pos: c.pos, cut,
+    w, h: +h.toFixed(1), left: +left.toFixed(1), top: +top.toFixed(1),
+    /* 看得到多寬 —— 面板要印的就是這個（切掉之後還剩多少形狀） */
+    seen: c.pos === "br" ? TRI.CANVAS - left : w - cut,
+    css: `width:${w}px;height:${h.toFixed(1)}px;left:${left.toFixed(1)}px;top:${top.toFixed(1)}px`,
   };
 }
 
@@ -109,7 +131,7 @@ export const CENTER = { x: TRI.BIG_W / 2, y: TRI.BIG_H + TRI.GAP / 2 };
 export function wmFor(tile, opt = {}) {
   /* ⚠⚠ 臉書版：三支產生器一行都不用改，由環境變數切（同 WM_DIA 那把尺的做法）。
      ⚠ 沒有第二個地方在算浮水印，所以兩個版本不可能分家。 */
-  if ((opt.mode ?? process.env.WM_MODE) === "fb") return wmSoloFor(tile, opt);
+  if ((opt.mode ?? process.env.WM_MODE) === "fb") return wmFbFor(tile, opt);
   const r = RECT[tile];
   if (!r) throw new Error(`不認識的格子：${tile}（只有 hours／docs／map）`);
   const dia = opt.dia ?? TRI.DIA;

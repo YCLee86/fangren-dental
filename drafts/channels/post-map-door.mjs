@@ -126,13 +126,15 @@ const WMBX = 60 / 660, WMBY = 50 / 660;   /* 左右／上下各切出去多少�
    ⚠ 落選：380（上一輪那一格）／500／560。**560 是這把尺的盡頭** ——
      再往左只剩右邊 392px，形狀認不出來、浮水印變成一團灰。 */
 const WMX0 = 440;
-const WMW0 = 660, WMA0 = TRI.OPACITY, WMPOS0 = "tl";
+const WMW0 = 660, WMPOS0 = "tl";
 /* ⚠⚠⚠ 2026-09-09：上面那三段（形狀 r1c2、左邊切 440、壓左上）**已經被推翻了**——
    使用者要三格拼成一顆完整的標誌（「右下是地圖停車 logo 壓在左上」「logo 用門診表
    那張圓圓的」），所以形狀、大小、位置全部改由 wm-triptych.mjs 算。
    **那幾行留著是為了看得懂當初為什麼是 r1c2 與 440**，值本身已經不生效。
    ⚠ 濃度 4% 是他上一輪挑的，這一輪三格統一吃的就是它（TRI.OPACITY）。 */
 const WM = wmFor("map");
+/* ⚠ 濃度跟著 wmFor 走：三格版統一 4%，臉書版由 FB 那張表給（地圖仍是 4%）。 */
+const WMA0 = WM.opacity;
 
 /* 浮水印的形狀：從 brand/shapes 讀，不抄第二份（同這一支其餘每一項資料）。
    ⚠ 那幾份 SVG 是單一路徑、currentColor、牙洞用 fill-rule 挖穿的，
@@ -722,7 +724,7 @@ console.log(`  指北針\t?ns=${A.ns}（Ⓝ3）\t整組高 ${A.meta.nsw.h}→小
   + `\t「北」${A.meta.nsw.fs}→${(A.meta.nsw.fs * shrink).toFixed(1)}px`);
 console.log(`  留白\t上下 ${A.margin}　段距 ${A.gap}（Ⓜ3）\t地圖 ${A.m.img.w}×${A.m.img.h}`
   + `\t小格留白 ${(A.m.band.y * SMALL / W).toFixed(1)}px`);
-console.log(`  浮水印\t${A.wmsh}（站上頁首那顆）・墨 ${(A.wma * 100).toFixed(1)}%・壓左上`
+console.log(`  浮水印\t${WM.shape}（${WM.mode === "fb" ? "臉書版：和另外兩張不一樣的那一顆，切掉 " + WM.cut : "三格共用的那一顆"}）・墨 ${(A.wma * 100).toFixed(1)}%・壓左上`
   + `\t畫出來 ${A.m.wmr.w}×${A.m.wmr.h}（等重基準 ${WMREF}）`
   + `\t壓在它上面：墨字 ${ratio(wmOver(INK, A.wma), wmOver(CARD, A.wma)).toFixed(2)}`
   + `／柔墨 ${ratio(wmOver(SOFT, A.wma), wmOver(CARD, A.wma)).toFixed(2)}（門檻 4.5）`);

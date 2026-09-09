@@ -767,7 +767,7 @@ console.log(`\n── 對比 ──`);
 for (const [n, r] of CONTR) console.log(`  ${n.padEnd(12, "　")}${r.toFixed(2)}　（門檻 4.5）`);
 console.log(`  圖案最低　${Math.min(...ICON.map(c => c[1])).toFixed(2)}`
   + `　${ICON.reduce((a, b) => a[1] < b[1] ? a : b)[0]}　（門檻 3）`);
-console.log(`  浮水印 ${WM.shape}（三格共用的那一顆，圓心在右上角外面）`
+console.log(`  浮水印 ${WM.shape}（${WM.mode === "fb" ? "臉書版：一張一顆、壓左上、切掉 " + WM.cut : "三格共用的那一顆，圓心在右上角外面"}）`
   + `　${WM.w}×${WM.h}px・墨 ${(WMA * 100).toFixed(0)}%`
   + `　底色 ${CARD} → ${WMBG}`);
 console.log(`  三格接得起來嗎：`
