@@ -40,7 +40,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，尺寸對得上，都有 alt ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 6, `頁上有 ${imgs.length} 張圖，應該是 6`);
+ok(imgs.length === 8, `頁上有 ${imgs.length} 張圖，應該是 8`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -51,9 +51,11 @@ for (const im of imgs) {
     `${im.src} 屬性寫 ${im.w}×${im.h}，實檔是 ${s.w}×${s.h}`);
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
 }
-/* ⚠ 四案的 1080 圖每一張都要擺上去 —— 少一張，那一案就等於沒有被提案 */
-for (const t of ["roster", "who", "skills", "byspec"])
-  ok(used.has(`post-docs-${t}.png`), `Ⓐ~Ⓓ 少了一案沒擺上頁面：post-docs-${t}.png`);
+/* ⚠ 每一案的 1080 圖都要擺上去 —— 少一張，那一案就等於沒有被提案。
+   ⚠⚠ 2026-09-09 使用者挑了 Ⓒ＋Ⓓ 合併，所以候選換成 Ⓔ~Ⓗ；
+   Ⓒ／Ⓓ 兩張父案也要在（頁上要拿它們比合併前後）。 */
+for (const t of ["two", "twoc", "col3", "docfirst", "skills", "byspec"])
+  ok(used.has(`post-docs-${t}.png`), `少了一案沒擺上頁面：post-docs-${t}.png`);
 
 /* ---- ② 「詳情」逐字 ---- */
 const detail = fs.readFileSync(path.join(DIR, "detail.txt"), "utf8").trimEnd();
@@ -65,12 +67,12 @@ if (onPage !== undefined)
 
 /* ---- ③ 四案的名字要和產生器的 CASES 對得上 ----
    ⚠ 頁上那張表是手寫的，產生器改了案名而頁面沒跟上，使用者挑的就是別的東西。 */
-const cases = [...GEN.matchAll(/\["(roster|who|skills|byspec)",\s*"([^"]+)"\]/g)]
+const cases = [...GEN.matchAll(/\["(two|twoc|col3|docfirst|skills|byspec)",\s*"([^"]+)"\]/g)]
   .map(m => ({ tag: m[1], label: m[2] }));
-ok(cases.length === 4, `產生器的 CASES 讀到 ${cases.length} 案，應該是 4`);
+ok(cases.length === 6, `產生器的 CASES 讀到 ${cases.length} 案，應該是 6`);
 for (const c of cases) {
   /* 圈號後面那幾個字（去掉「Ⓐ 」與括號裡的補充）要出現在頁面上 */
-  const key = c.label.replace(/^[ⒶⒷⒸⒹ]\s*/, "").replace(/（[^）]*）/g, "").trim();
+  const key = c.label.replace(/^[Ⓐ-Ⓩ]\s*/, "").replace(/（[^）]*）/g, "").trim();
   ok(PAGE.includes(key), `產生器的「${c.label}」在規格頁上找不到（頁面沒跟上改名？）`);
 }
 

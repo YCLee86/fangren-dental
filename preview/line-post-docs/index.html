@@ -4,17 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>芳仁牙醫診所　LINE 貼文的第三格・主題與科別・醫師</title>
+<title>芳仁牙醫診所　LINE 貼文的第三格・科別與醫師</title>
 <!--
-  2026-09-08 使用者：「Line商家帳號的貼文 還有一格 之前對話建議放主題與科別
-  包括醫師的資訊 但只有一格 怎麼放七個醫師」
-  → 「有點難想像 你們先做看看 但因為門診表已經有七個科別
-     所以不要只是又重複只列七個科別」
+  2026-09-08 使用者：「還有一格　之前對話建議放主題與科別　包括醫師的資訊
+  但只有一格　怎麼放七個醫師」→「你們先做看看　但因為門診表已經有七個科別
+  所以不要只是又重複只列七個科別」→ 四案（Ⓐ 九位醫師／Ⓑ 醫師＋他在做的事／
+  Ⓒ 做得了什麼／Ⓓ 一科一行）。
 
-  ⚠⚠⚠ 那句話就是規格。大格（門診表）已經把七個科別名連同圖案印過一次，
-  所以這一格要接的是門診表**沒有**回答的兩件事：誰（九位醫師）、做得了什麼（專長）。
+  2026-09-09 使用者：「我喜歡 C+D　把資訊整合再調整看看」
+  → Ⓐ Ⓑ 整組拿掉（留在 git：git show ae10fa2 -- drafts/channels/post-docs.mjs），
+     Ⓒ ＋ Ⓓ 合併成四個排法 Ⓔ~Ⓗ。四案的**資料一模一樣、標題也一樣**，
+     差別只有「排成幾行、誰站哪裡」—— 那把尺才乾淨。
 
-  四案由 node drafts/channels/post-docs.mjs 產生，守門 check-post-docs.mjs。
+  產生器 node drafts/channels/post-docs.mjs，守門 check-post-docs.mjs，
   推導在 drafts/channels/README.md 第三十六節。
 -->
 <style>
@@ -64,96 +66,92 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <body>
 <div class="pv-wrap">
 
-  <h1>LINE 商家貼文的第三格<span>主題與科別・醫師　四案，挑一個</span></h1>
+  <h1>LINE 商家貼文的第三格<span>Ⓒ ＋ Ⓓ 合併，四個排法挑一個</span></h1>
 
   <p class="pv-lead">主頁「最新貼文」那三格的<b>小格右</b>。
-  大格是<b>看診時間</b>（已定稿）、小格左是<b>位置與周邊停車</b>（已定稿），
-  這是最後一格。<br>
-  ⚠ 你說「門診表已經有七個科別，不要只是又重複只列七個科別」——
-  所以四案裡有<b>三案完全不寫科別名</b>，科別只靠門診表那組圖案與顏色帶過，
-  省下來的地方全部給<b>人</b>與<b>做得了什麼</b>。</p>
+  你說喜歡 Ⓒ ＋ Ⓓ，所以四案的<b>內容完全一樣</b>：一科一列，
+  該科的<b>專長</b>（Ⓒ 的內容）與<b>該科醫師</b>（Ⓓ 的骨架）都在。<br>
+  ⚠ 四案連標題都一樣，<b>差別只有排法</b>。上一輪的 Ⓐ Ⓑ 已經拿掉。</p>
 
   <h2 class="pv-h2">⚠⚠ 判準是這一張<span class="t">四案在小格的實際大小（410px）並排</span></h2>
   <div class="pv-shot">
     <img src="slot-410.png" width="826" height="826"
-         alt="四案在 410px 小格的實際大小並排：左上 Ⓐ 九位醫師、右上 Ⓑ 醫師加專長、左下 Ⓒ 二十三項專長、右下 Ⓓ 一科一行">
+         alt="四案在 410px 小格的實際大小並排：左上 Ⓔ 兩行、右上 Ⓕ 專長做成小塊、左下 Ⓖ 三欄一列、右下 Ⓗ 醫師和專長同一行">
   </div>
-  <p class="pv-cap">左上 <b>Ⓐ 九位醫師</b>　右上 <b>Ⓑ 醫師 ＋ 他在做的事</b><br>
-  左下 <b>Ⓒ 做得了什麼</b>　右下 <b>Ⓓ 一科一行 ＋ 該科醫師</b><br>
-  下面每一個數字都是量這個尺寸得來的。1080 的原圖上看起來明顯的，縮到 410px 常常就沒了。</p>
+  <p class="pv-cap">左上 <b>Ⓔ 兩行</b>　右上 <b>Ⓕ 兩行・專長做成小塊</b><br>
+  左下 <b>Ⓖ 三欄一列</b>　右下 <b>Ⓗ 醫師和專長同一行</b><br>
+  下面每一個數字都是量這個尺寸得來的。</p>
 
   <h2 class="pv-h2">四案差在哪</h2>
   <table class="pv-tab">
-    <thead><tr><th>　</th><th>寫了誰</th><th>寫了做什麼</th><th>寫科別名</th><th>最小的字</th></tr></thead>
+    <thead><tr><th>　</th><th>幾行</th><th>醫師在</th><th>專長被折行</th><th>最小的字</th></tr></thead>
     <tbody>
-      <tr><td>Ⓐ 九位醫師</td><td>9 位</td><td class="no">沒有</td><td class="ok">沒有</td><td>11.4px</td></tr>
-      <tr><td>Ⓑ 醫師 ＋ 專長</td><td>9 位</td><td>每位 3 項</td><td class="ok">沒有</td><td>11.0px</td></tr>
-      <tr><td>Ⓒ 做得了什麼</td><td class="no">沒有</td><td>23 項</td><td class="ok">沒有</td><td>12.1px</td></tr>
-      <tr><td>Ⓓ 一科一行</td><td>9 位</td><td class="no">沒有</td><td class="no">七個都寫了</td><td>12.1px</td></tr>
+      <tr><td>Ⓔ 兩行</td><td>2</td><td>第一行右</td><td class="ok">0 / 7 科</td><td>11.0px</td></tr>
+      <tr><td>Ⓕ 專長做成小塊</td><td>2</td><td>第一行右</td><td class="ok">0 / 7 科</td><td>11.0px</td></tr>
+      <tr><td>Ⓖ 三欄一列</td><td>1</td><td>最右欄</td><td class="no">4 / 7 科</td><td>11.0px</td></tr>
+      <tr><td>Ⓗ 醫師和專長同行</td><td>2</td><td>第二行首</td><td class="no">1 / 7 科</td><td>11.0px</td></tr>
     </tbody>
   </table>
-  <p class="pv-cap">「最小的字」＝ 那一案在小格 410px 上最小的一種字。
-  <b>10px 是這一線的地板</b>（小於它在那一格等於沒寫），產生器過不了就不出圖。</p>
+  <p class="pv-cap">「最小的字」是專長那一行，四案都一樣（<b>10px 是這一線的地板</b>，
+  小於它在小格上等於沒寫）。<br>
+  <b>折行是 Ⓖ 唯一真正的代價</b>：一列只有一行，專長被擠進中間那一欄，
+  最長的牙周與兒牙折到 <b>3 行</b>，那一列的醫師名就浮在中間、對不上任何一條線。</p>
 
-  <h2 class="pv-h2">⚠⚠⚠ 先講一件量出來的事<span class="t">大格會把門診表那排圖例切掉一半</span></h2>
-  <p class="pv-cap">Ⓐ／Ⓑ／Ⓒ 三案不寫科別名，押的是「大格那排圖例已經教過哪一顆是哪一科」。
-  把門診表那張逐像素掃過之後，那個前提<b>只成立一半</b>——
-  主頁大格只看得到那張圖的 y 271~809，而圖例是兩行：</p>
-  <table class="pv-tab">
-    <thead><tr><th>圖例</th><th>墨落在</th><th>大格看得到嗎</th></tr></thead>
-    <tbody>
-      <tr><td>一般牙科・牙周・顯微根管・兒童牙科</td><td>≤ 767</td><td class="ok">看得到</td></tr>
-      <tr><td>齒顎矯正・假牙重建・口腔外科</td><td>809~814</td><td class="no">被切掉</td></tr>
-    </tbody>
-  </table>
-  <p class="pv-cap">⚠ 這件事<b>對門診表那張自己也成立</b>——圖例不是裝飾，是那張表讀不讀得懂的前提。
-  ⚠⚠ 但它還有一個沒收掉的前提：<b>主頁那一格到底是裁切還是留白，我們還沒驗過</b>
-  （在後台按一次「預覽」就知道）。留白的話這一整段不成立，三案都沒有問題。<br>
-  <b>Ⓓ 存在的理由就是這個</b>：它自己把七個科別名寫回去，不靠門診表。</p>
-
-  <h2 class="pv-h2">Ⓐ 九位醫師<span class="t">姓名最大，科別只有圖案</span></h2>
+  <h2 class="pv-h2">Ⓔ 兩行<span class="t">建議這一格</span><em>post-docs-two.png</em></h2>
   <div class="pv-shot">
-    <img src="post-docs-roster.png" width="1080" height="1080" loading="lazy"
-         alt="Ⓐ：九位醫師排成三欄三列，每位是科別圖案、姓名與專科藥丸的字">
+    <img src="post-docs-two.png" width="1080" height="1080" loading="lazy"
+         alt="Ⓔ：一科兩行，第一行是圖案、科別名與該科醫師，第二行是該科的專長">
   </div>
-  <p class="pv-cap">姓名 19.7px（四案裡最大）。缺點：<b>看不出這間做得了什麼</b>——
-  而看貼文的人多半不認識任何一位醫師的名字。</p>
+  <p class="pv-cap">第一行 <b>科別＋醫師</b>，第二行 <b>專長</b>，縮排對齊科別名的起點。
+  七列一行都沒折，是四案裡最好掃的。</p>
 
-  <h2 class="pv-h2">Ⓑ 醫師 ＋ 他在做的事<span class="t">建議這一格</span></h2>
+  <h2 class="pv-h2">Ⓕ 專長做成小塊<span class="t">Ⓒ 那一套的縮小版</span></h2>
   <div class="pv-shot">
-    <img src="post-docs-who.png" width="1080" height="1080" loading="lazy"
-         alt="Ⓑ：九位醫師一位一行，圖案、姓名、專科藥丸與三項專長">
+    <img src="post-docs-twoc.png" width="1080" height="1080" loading="lazy"
+         alt="Ⓕ：和 Ⓔ 相同，但第二行的專長是描邊小塊、顏色跟著該科">
   </div>
-  <p class="pv-cap">同時回答「誰」與「做得了什麼」，而且<b>一個科別名都沒寫</b>。
-  專長取站上那位醫師專長欄的<b>前三項</b>，順序照站上、沒有重新挑。<br>
-  代價：專長那一行 <b class="n">11.0px</b>，是四案裡最小的，貼著 10px 的地板。</p>
+  <p class="pv-cap">和 Ⓔ 完全一樣，只有專長換成<b>描邊小塊</b>，顏色跟著該科走。
+  每一項各自成塊，掃起來比一整串點分隔清楚；代價是<b>整張圖多了 28 條框線</b>，
+  而且列距被小塊的高度逼得比 Ⓔ 緊 5px。</p>
 
-  <h2 class="pv-h2">Ⓒ 做得了什麼<span class="t">二十三項專長，沒有人名</span></h2>
+  <h2 class="pv-h2">Ⓖ 三欄一列<span class="t">最矮的一案</span></h2>
+  <div class="pv-shot">
+    <img src="post-docs-col3.png" width="1080" height="1080" loading="lazy"
+         alt="Ⓖ：一科一列，左邊科別、中間專長、右邊醫師">
+  </div>
+  <p class="pv-cap">科別 ｜ 專長 ｜ 醫師，一科只佔一列，整塊最矮（756px）。
+  <b class="n">但七科裡有四科的專長被折成兩三行</b>，那幾列的醫師名就落在中間，
+  上下看起來參差。</p>
+
+  <h2 class="pv-h2">Ⓗ 醫師和專長同一行<span class="t">人和他做的事排在一起</span></h2>
+  <div class="pv-shot">
+    <img src="post-docs-docfirst.png" width="1080" height="1080" loading="lazy"
+         alt="Ⓗ：第一行只有科別，第二行行首是醫師、後面接該科的專長">
+  </div>
+  <p class="pv-cap">第一行只有科別，第二行<b>醫師在行首</b>（墨）、專長接在後面（柔墨）。
+  讀起來是「這一科：誰、做什麼」。代價是兒童牙科那一列<b>兩位醫師加四項專長折成兩行</b>。</p>
+
+  <h2 class="pv-h2">在主頁上長怎樣<span class="t">大格＝看診時間　小格左＝停車　小格右＝Ⓔ</span></h2>
+  <div class="pv-shot">
+    <img src="profile-3up-two.png" width="823" height="823" loading="lazy"
+         alt="主頁三格模擬：大格看診時間、小格左位置與停車、小格右 Ⓔ">
+  </div>
+  <p class="pv-cap">另外三案的三格模擬在
+  <code>profile-3up-twoc.png</code>、<code>profile-3up-col3.png</code>、
+  <code>profile-3up-docfirst.png</code>。</p>
+
+  <h2 class="pv-h2">父案：Ⓒ 與 Ⓓ<span class="t">合併之前的那兩張，放著給你比</span></h2>
   <div class="pv-shot">
     <img src="post-docs-skills.png" width="1080" height="1080" loading="lazy"
          alt="Ⓒ：二十三項專長排成一片，每一項前面一顆該科的圖案">
   </div>
-  <p class="pv-cap">二十三項全部是站上醫師卡的專長，<b>一個字都沒有另外寫</b>，同一個詞只留一次。
-  對「我這個問題你們處理得了嗎」回答得最直接，但<b>沒有醫師</b>——
-  而你原本要的就是醫師的資訊，所以它列在這裡是給你比。</p>
-
-  <h2 class="pv-h2">Ⓓ 一科一行 ＋ 該科醫師<span class="t">重複了七個科別名的那一案</span></h2>
+  <p class="pv-cap"><b>Ⓒ 做得了什麼</b>　二十三項專長，沒有醫師也沒有科別名。</p>
   <div class="pv-shot">
     <img src="post-docs-byspec.png" width="1080" height="1080" loading="lazy"
          alt="Ⓓ：七科一科一行，左邊圖案與科別名，右邊該科的醫師">
   </div>
-  <p class="pv-cap">最好懂的一案：哪一科有誰，一眼對得起來。
-  <b>但它就是你說不要的那一種</b>——七個科別名又寫了一次。
-  留著是因為上面那件事：<b>圖例在大格會被切掉三科</b>，只有這一案不受影響。</p>
-
-  <h2 class="pv-h2">在主頁上長怎樣<span class="t">大格＝看診時間　小格左＝停車　小格右＝Ⓑ</span></h2>
-  <div class="pv-shot">
-    <img src="profile-3up-who.png" width="823" height="823" loading="lazy"
-         alt="主頁三格模擬：大格看診時間、小格左位置與停車、小格右 Ⓑ">
-  </div>
-  <p class="pv-cap">另外三案的三格模擬在
-  <code>profile-3up-roster.png</code>、<code>profile-3up-skills.png</code>、
-  <code>profile-3up-byspec.png</code>。</p>
+  <p class="pv-cap"><b>Ⓓ 一科一行 ＋ 該科醫師</b>　沒有專長。
+  合併之後這兩張的內容都在同一張上了。</p>
 
   <h2 class="pv-h2">「詳情」那一欄要貼的字<span class="t">圖上的網址點不下去，這裡的可以</span></h2>
   <div class="pv-txt">9 位醫師駐診・6 個部定專科。
@@ -166,16 +164,15 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 口腔外科　https://fangren.net/topics/surg/
 醫師介紹　https://fangren.net/#doctors</div>
   <p class="pv-cap">⚠⚠ <b>七條科別網址由這一欄接</b>——圖上放不下七個入口，
-  但「詳情」放得下，而且點得下去（同小格左那張地圖的三條停車場網址）。
-  照這一份貼，<b>不要重打</b>。</p>
+  但「詳情」放得下，而且點得下去。照這一份貼，<b>不要重打</b>。</p>
 
   <h2 class="pv-h2">還沒問到、也還沒決定的</h2>
   <div class="pv-num">
-    ・<b>標題那幾個字是我們擬的</b>，你還沒看過：駐診醫師／誰在看／做得了什麼／哪一科有誰。<br>
-    ・<b>「假牙重建」這個縮寫</b>沿用門診表那張（站上仍然是「植牙・假牙重建」）。<br>
-    ・<b>Ⓑ 的專長取前三項</b>是版面決定的，不是挑的——要換哪三項是你的決定。<br>
-    ・<b>主頁那一格是裁切還是留白</b>，後台按一次「預覽」就知道（見上面那一段）。<br>
-    ・浮水印照小格左那一張（同一顆、4%、壓左上），<b>沒有另外問過</b>。
+    ・<b>標題「科別與醫師」是我們擬的</b>，你還沒看過。<br>
+    ・<b>專長是全部印</b>（最多的一科五項），不是挑過的；順序照站上。<br>
+    ・「假牙重建」這個縮寫沿用門診表那張（站上仍然是「植牙・假牙重建」）。<br>
+    ・浮水印照小格左那一張（同一顆、4%、壓左上），<b>沒有另外問過</b>。<br>
+    ・<b>主頁那一格是裁切還是留白</b>，後台按一次「預覽」就知道。
   </div>
 
   <p class="pv-cap" style="margin-top:26px">
