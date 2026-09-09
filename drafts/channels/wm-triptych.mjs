@@ -65,17 +65,40 @@ export const TRI = {
  *   （兩則分開貼），所以他指定換一顆。那是一把尺，用 `WM_FB_MAP` 傳形狀。
  * ⚠ 寬度**不可以沿用同一個數字**：九顆的長寬比 1.00~3.08、墨佔外框 59.6~83.2%，
  *   同寬的話細長那幾顆會輕很多 —— 一律按墨的面積正規化（基準 r3c1 畫 660）。 */
+/* ⚠⚠⚠ 2026-09-09 再一輪，使用者兩件（**兩件都是「牙洞」的事，判準同一條**）：
+ *   「**地圖那個 logo 選得不錯　不過 logo 原本的牙洞在左上　這裡看不到了
+ *     把牙洞移到右上**」／「**科別醫師那個 logo 在左上　移到右下比較好**」
+ *
+ * ⚠⚠ 牙洞是這顆標誌**唯一的識別特徵** —— 沒有它，剩下的就只是一團圓角形狀。
+ *   所以「切出去」可以，**切掉牙洞不可以**：把每一顆的牙洞量出來
+ *   （逐一算過：r1c2 在 71.3%／75.7%、r2c2 在 17.5%／23.9%、r3c1 在 56.7%／81.9%），
+ *   再確認它落在畫布看得到的那一段裡；守門有一道真的去 PNG 上找那個洞。
+ * ⚠ 翻轉一律**整個 `<svg>` 元素**做（`transform: scale(±1)`），外框與洞一起翻。
+ *   **絕對不要只翻 `<path d>`** —— 洞是 fill-rule 挖的，只翻外框洞會落在形狀外面、
+ *   靜靜地消失而且不報錯（remind-marks 那一輪已經踩過一次）。 */
 export const FB = {
   /* 基準：`r3c1` 畫 660px 那麼重。**換形狀時基準不可以跟著換**
      （2026-09-08 踩過：把預設換掉，整把尺一起縮水 31%）。 */
   REF: "r3c1", REFW: 660,
-  hours: { shape: "r3c1", pos: "br", opacity: .05, bx: -60 / 660, by: 470 },
-  docs:  { shape: "r1c2", pos: "tl", opacity: .04, cut: 440,      by: -50 / 660 },
+  /* `tl` ＝ 左上角切掉 cutX／cutY；`br` ＝ 右下角切掉同樣那兩個量。
+     ⚠ 門診表那一組（cutX 60、cutY 50）就是他 09-08 挑定的 right −60 / top 470，
+       換算過來一模一樣 —— **值沒有改，只是寫法統一了**。 */
+  hours: { shape: "r3c1", pos: "br", opacity: .05, cutX: 60, cutY: 50 },
+  /* ⚠⚠ 科別醫師：2026-09-09 從壓左上**搬到右下**（使用者指定）。
+     ⚠⚠⚠ **搬過去要連著轉 180°**，不然牙洞會被切掉 —— 它在那顆形狀的
+     71.3%／75.7%（右下），原樣搬到右下之後看得到的是形狀的左上那一塊，洞剛好在外面。
+     轉 180° 之後看得到的**逐像素就是現在那一塊，只是換到對角**，洞跟著回來。
+     ⚠ `WM_FB_DOCS=plain` 可以看「原樣搬過去」那一格（洞不見的那一種）。 */
+  docs:  { shape: "r1c2", pos: "br", opacity: .04, cutX: 440, cutYr: 50 / 660,
+           flipX: process.env.WM_FB_DOCS !== "plain", flipY: process.env.WM_FB_DOCS !== "plain" },
   /* ⚠ 地圖這一顆是尺：`WM_FB_MAP` 換形狀。預設 r2c2（長寬比 1.33 —— 和門診表的
      正圓、科別醫師的長條都分得出來）。
      ⚠⚠ **切掉多少不是另一把尺**：一律切到「看得到 512px」為止 ＝ 科別醫師那一張
-     切 440 之後剩下的寬度，這樣換形狀時份量不會跟著跳。 */
-  map:   { shape: process.env.WM_FB_MAP || "r2c2", pos: "tl", opacity: .04, seen: 512, by: -50 / 660 },
+     切 440 之後剩下的寬度，這樣換形狀時份量不會跟著跳。
+     ⚠⚠⚠ **左右鏡射**（2026-09-09 使用者：「牙洞移到右上」）—— r2c2 的洞在左上，
+     而這一張切掉左邊那一截，洞正好被切走；鏡射之後洞落在畫布 (379, 94) ＝ 右上。 */
+  map:   { shape: process.env.WM_FB_MAP || "r2c2", pos: "tl", opacity: .04,
+           seen: 512, cutYr: 50 / 660, flipX: true },
 };
 const WMSIZES = JSON.parse(fs.readFileSync(
   path.join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
@@ -85,23 +108,51 @@ export function fbWidth(sh) {
   if (!a) throw new Error(`wm-sizes.json 裡沒有 ${sh}`);
   return Math.round(FB.REFW * a.w / b.w);
 }
+/* 每一顆形狀的牙洞在哪（外框的百分比，逐一量出來的 —— 見 README 第 38-11 節）。
+   ⚠ 這是**資料不是猜的**：把那份 SVG 畫成黑的、從邊界 flood fill，剩下沒被淹到的
+     白色連通區就是洞。要加新形狀就照同一個方法量一次再填進來。 */
+export const HOLE = {
+  r1c1: [0.294, 0.815], r1c2: [0.713, 0.757], r2c1: [0.500, 0.203],
+  r2c2: [0.175, 0.239], r3c1: [0.567, 0.819], r3c2: [0.500, 0.240],
+};
+
 function wmFbFor(tile, opt = {}) {
   const c = FB[tile];
   if (!c) throw new Error(`不認識的格子：${tile}（只有 hours／docs／map）`);
   const shape = opt.shape ?? c.shape;
   const w = fbWidth(shape), h = w / shapeRatio(shape);
-  /* `br` ＝ 右下角切出去一點（門診表那一張）；`tl` ＝ 左上角切掉一截（另外兩張）。
-     兩種都是他挑定的裁法，**切出去是刻意的**，不要改成「整顆進到畫布裡」。 */
-  const cut = c.pos === "br" ? 0 : (c.cut ?? Math.max(0, w - c.seen));
-  const left = c.pos === "br" ? TRI.CANVAS - w - Math.round(w * c.bx) : -cut;
-  const top  = c.pos === "br" ? c.by : Math.round(h * c.by);
+  /* `br` ＝ 從右下角切掉；`tl` ＝ 從左上角切掉。兩種都是他挑定的裁法，
+     **切出去是刻意的**，不要改成「整顆進到畫布裡」。 */
+  const cutX = c.cutX ?? Math.max(0, w - c.seen);
+  const cutY = c.cutY ?? Math.round(h * (c.cutYr ?? 0));
+  const left = c.pos === "br" ? TRI.CANVAS - w + cutX : -cutX;
+  const top  = c.pos === "br" ? TRI.CANVAS - h + cutY : -cutY;
+  const fx = c.flipX ? -1 : 1, fy = c.flipY ? -1 : 1;
+  /* 牙洞畫在畫布的哪裡（翻轉之後）—— 面板與守門都要用它 */
+  const [hx, hy] = HOLE[shape] ?? [NaN, NaN];
+  const hole = { x: +(left + (fx < 0 ? 1 - hx : hx) * w).toFixed(1),
+                 y: +(top  + (fy < 0 ? 1 - hy : hy) * h).toFixed(1) };
   return {
-    shape, opacity: c.opacity, scale: 1, mode: "fb", pos: c.pos, cut,
+    shape, opacity: c.opacity, scale: 1, mode: "fb", pos: c.pos, cutX, cutY,
+    flipX: fx < 0, flipY: fy < 0, hole,
     w, h: +h.toFixed(1), left: +left.toFixed(1), top: +top.toFixed(1),
     /* 看得到多寬 —— 面板要印的就是這個（切掉之後還剩多少形狀） */
-    seen: c.pos === "br" ? TRI.CANVAS - left : w - cut,
-    css: `width:${w}px;height:${h.toFixed(1)}px;left:${left.toFixed(1)}px;top:${top.toFixed(1)}px`,
+    seen: w - cutX,
+    css: `width:${w}px;height:${h.toFixed(1)}px;left:${left.toFixed(1)}px;top:${top.toFixed(1)}px`
+       + (fx < 0 || fy < 0 ? `;transform:scale(${fx},${fy})` : ""),
   };
+}
+
+/* 面板要印的那一句 —— 三支產生器共用一份，不要各寫各的
+   （寫法一分家，同一顆浮水印在三張面板上就會有三種說法）。 */
+export function wmDesc(WM) {
+  if (WM.mode !== "fb") return "三格共用的那一顆，圓心在十字縫上";
+  const 角 = { br: "壓右下", tl: "壓左上" }[WM.pos] ?? WM.pos;
+  const 翻 = WM.flipX && WM.flipY ? "・轉 180°（牙洞才看得到）"
+    : WM.flipX ? "・左右鏡射（牙洞才看得到）"
+    : WM.flipY ? "・上下鏡射（牙洞才看得到）" : "";
+  return `臉書版：一張一顆、${角}、切掉 ${WM.cutX}×${WM.cutY}`
+    + `（看得到 ${WM.seen}px）${翻}・牙洞落在畫布 (${WM.hole.x}, ${WM.hole.y})`;
 }
 
 /* 形狀的長寬比從 SVG 的 viewBox 讀回來，不要用 img.naturalWidth

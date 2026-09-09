@@ -69,6 +69,21 @@ function wmCentroid(file) {
   return n ? { n, x: sx / n, y: sy / n } : { n: 0, x: NaN, y: NaN };
 }
 /* 幾何上那一顆被畫布裁掉之後的中心 —— 拿它去對量到的重心 */
+/* 一小塊圓盤裡有多少比例是那一層淡墨 —— 拿來驗「牙洞真的是挖穿的」。
+   洞的位置本身是幾何算的，這一道是去 PNG 上確認它真的畫成一個洞
+   （洞裡沒有墨、旁邊那一塊形狀有）。 */
+function tintAt(d, cx, cy, rr) {
+  let n = 0, t = 0;
+  for (let y = Math.round(cy - rr); y <= cy + rr; y++)
+    for (let x = Math.round(cx - rr); x <= cx + rr; x++) {
+      if ((x - cx) ** 2 + (y - cy) ** 2 > rr * rr) continue;
+      if (x < 0 || y < 0 || x >= d.w || y >= d.h) continue;
+      n++;
+      const i = (y * d.w + x) * d.ch, r = d.px[i], g = d.px[i + 1], b = d.px[i + 2];
+      if (r >= 232 && r <= 242 && Math.abs(r - g) <= 1 && b >= r && b - r <= 2) t++;
+    }
+  return n ? t / n : NaN;
+}
 function wmCenter(gm) {
   const C = TRI.CANVAS;
   const x0 = Math.max(0, gm.left), x1 = Math.min(C, gm.left + gm.w);
@@ -160,13 +175,31 @@ ok(/for \(const t of TILES\) run\(t\.gen, \{\}\);/.test(gen),
 /* ---------- ⑧ 臉書版那一組值 ＝ 他 2026-09-08 挑定的那一組 ---------- */
 /* ⚠ 門診表與科別醫師那兩顆一個值都不可以改（那是他挑的）；地圖那一顆是尺，
    只驗「不可以和另外兩顆一樣」—— 他要的正是「不一樣」。 */
-ok(FB.hours.shape === "r3c1" && FB.hours.opacity === .05 && FB.hours.by === 470,
-  "門診表那顆浮水印不是 2026-09-08 挑定的那一組（r3c1・5%・top 470）");
-ok(FB.docs.shape === "r1c2" && FB.docs.opacity === .04 && FB.docs.cut === 440,
+ok(FB.hours.shape === "r3c1" && FB.hours.opacity === .05
+   && FB.hours.cutX === 60 && FB.hours.cutY === 50,
+  "門診表那顆浮水印不是 2026-09-08 挑定的那一組（r3c1・5%・切 60×50）");
+/* ⚠ 科別醫師 2026-09-09 從壓左上搬到右下，**切掉的量沒有變**（仍然是他挑的 440）——
+   換的只有壓哪一角，以及跟著搬過去非做不可的那個 180°。 */
+ok(FB.docs.shape === "r1c2" && FB.docs.opacity === .04 && FB.docs.cutX === 440,
   "科別醫師那顆浮水印不是 2026-09-08 挑定的那一組（r1c2・4%・切 440）");
+ok(FB.docs.pos === "br", "科別醫師那顆應該壓右下（2026-09-09 使用者指定）");
+ok(FB.map.pos === "tl", "地圖那顆應該壓左上");
 ok(FB.map.shape !== FB.hours.shape && FB.map.shape !== FB.docs.shape,
   `地圖那顆是 ${FB.map.shape}，和另外兩張撞了 —— 使用者指定要「不一樣的」`);
 ok(fbWidth("r3c1") === 660, "等重換算的基準跑掉了（r3c1 應該畫 660）");
+/* ⚠⚠⚠ 牙洞一定要看得到（2026-09-09 使用者：「logo 原本的牙洞在左上　這裡看不到了」）。
+   牙洞是這顆標誌唯一的識別特徵，切掉之後剩下的只是一團圓角形狀 ——
+   而**切掉牙洞不會讓任何一道尺寸守門翻臉**，圖看起來仍然很正常。
+   ⚠ 這裡驗兩件：① 幾何算出來的洞心要落在畫布裡（離邊 ≥8px）
+   ② 那個位置在 PNG 上**沒有被淡墨染到**、而它旁邊的形狀有 ＝ 洞真的是挖穿的。 */
+for (const [k] of TILES) {
+  const gm = wmFor(k, { mode: "fb" });
+  const C = TRI.CANVAS, M = 8;
+  ok(Number.isFinite(gm.hole.x) && Number.isFinite(gm.hole.y),
+    `${k}：wm-triptych.mjs 的 HOLE 表裡沒有 ${gm.shape} 的牙洞位置`);
+  ok(gm.hole.x >= M && gm.hole.x <= C - M && gm.hole.y >= M && gm.hole.y <= C - M,
+    `${k} 的牙洞落在畫布外面 (${gm.hole.x}, ${gm.hole.y}) —— 被切掉了`);
+}
 /* ⚠ 三張成品的長寬比一定要對得上那顆形狀的 viewBox（不可以被壓扁） */
 for (const [k] of TILES) {
   const g = wmFor(k, { mode: "fb" });
@@ -195,6 +228,23 @@ for (const [k, dir, file] of TILES) {
         `${nm} ${k} 的浮水印重心 (${c.x.toFixed(0)}, ${c.y.toFixed(0)})`
         + ` 對不上幾何算出來的 (${want.x.toFixed(0)}, ${want.y.toFixed(0)})`);
   }
+  /* ⓒ 牙洞在 PNG 上真的是一個洞：洞心那一小塊沒有淡墨，
+     而從洞心往形狀中心走 13% 的地方有。⚠ 兩件都要 —— 只驗「洞心沒有墨」的話，
+     整顆浮水印沒畫出來也會通過。 */
+  const gm = wmFor(k, { mode: "fb" });
+  /* ⚠ 洞已經在畫布外面的話，上面那一道已經說完了 —— 這裡再量會回一堆 NaN，
+     把真正的那一句訊息淹掉。 */
+  if (gm.hole.x < 0 || gm.hole.x >= TRI.CANVAS
+   || gm.hole.y < 0 || gm.hole.y >= TRI.CANVAS) continue;
+  const d = decode(fs.readFileSync(fbF));
+  const cx = gm.left + gm.w / 2, cy = gm.top + gm.h / 2;
+  const dx = cx - gm.hole.x, dy = cy - gm.hole.y, L = Math.hypot(dx, dy) || 1;
+  const rx = gm.hole.x + dx / L * gm.w * .13, ry = gm.hole.y + dy / L * gm.w * .13;
+  const inHole = tintAt(d, gm.hole.x, gm.hole.y, 6), inInk = tintAt(d, rx, ry, 6);
+  ok(inInk > .6, `${k}：牙洞旁邊那一塊量不到浮水印（只有 ${(inInk * 100).toFixed(0)}%）`
+    + " —— 浮水印可能根本沒畫出來，或洞的位置算錯了");
+  ok(inHole < .2, `${k}：牙洞的位置被墨填滿了（${(inHole * 100).toFixed(0)}%）`
+    + " —— 翻轉大概只翻了外框、洞落到形狀外面去了");
 }
 
 /* ---------- ⑩ 八個寬度：水平溢出 0、圖都載得到、死錨 0 ---------- */

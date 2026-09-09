@@ -25,7 +25,7 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { fileURLToPath } from "node:url";
-import { wmFor, TRI, checkOne } from "./wm-triptych.mjs";
+import { wmFor, wmDesc, TRI, checkOne } from "./wm-triptych.mjs";
 const tri = checkOne();
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -1031,7 +1031,7 @@ console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 ${LAB}，沒
     + `（格子 ${slotOf(30, "half").toFixed(1)}×30，塞得進去）`
     + `　長寬比 ${AR.r2c2.toFixed(3)} 是形狀本身的`);
 }
-console.log(`  浮水印 ${WMSH}（${WM.mode === "fb" ? "臉書版：一張一顆、壓右下" : "三格共用的那一顆，圓心在可視段下緣"}）`
+console.log(`  浮水印 ${WMSH}（${wmDesc(WM)}）`
   + `　${WM.w}×${WM.h}px・墨 ${(WMA * 100).toFixed(1)}%　底色 ${CARD} → ${WMBG}`
   + `　壓在上面的字 ${Math.min(...wmText.map(c => c[1])).toFixed(2)}`
   + `　圖案 ${Math.min(...wmIcon.map(c => c[1])).toFixed(2)}（門檻 4.5 / 3）`);

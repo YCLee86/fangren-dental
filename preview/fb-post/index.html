@@ -42,9 +42,9 @@ b{font-weight:700}
 <h2 class="pv-h2">要上傳的那三張<span class="t">1080×1080・PNG</span></h2>
 <div class="pv-scroll"><table>
 <tr><th>貼文</th><th>檔案</th><th>尺寸</th><th>浮水印</th><th></th></tr>
-<tr><td>門診表</td><td><code>fangren-fb-hours-1080.png</code></td><td>1080×1080・100KB</td><td><code>r3c1</code>　660×660<br>壓右下・墨 5%</td><td><a href="/preview/line-post-hours/">完整規格</a></td></tr>
-<tr><td>科別與醫師</td><td><code>fangren-fb-docs-1080.png</code></td><td>1080×1080・189KB</td><td><code>r1c2</code>　952×469<br>壓左上・切掉 440・墨 4%</td><td><a href="/preview/line-post-docs/">完整規格</a></td></tr>
-<tr><td>位置與周邊停車</td><td><code>fangren-fb-map-1080.png</code></td><td>1080×1080・123KB</td><td><code>r2c2</code>　762×572<br>壓左上・切掉 250・墨 4%</td><td><a href="/preview/line-post-map/">完整規格</a></td></tr>
+<tr><td>門診表</td><td><code>fangren-fb-hours-1080.png</code></td><td>1080×1080・100KB</td><td><code>r3c1</code>　660×660<br>壓右下・看得到 600px・墨 5%</td><td><a href="/preview/line-post-hours/">完整規格</a></td></tr>
+<tr><td>科別與醫師</td><td><code>fangren-fb-docs-1080.png</code></td><td>1080×1080・188KB</td><td><code>r1c2</code>　952×469<br>壓右下・看得到 512px・轉 180°・墨 4%</td><td><a href="/preview/line-post-docs/">完整規格</a></td></tr>
+<tr><td>位置與周邊停車</td><td><code>fangren-fb-map-1080.png</code></td><td>1080×1080・124KB</td><td><code>r2c2</code>　762×572<br>壓左上・看得到 512px・左右鏡射・墨 4%</td><td><a href="/preview/line-post-map/">完整規格</a></td></tr>
 </table></div>
 <p class="pv-cap">
 ⚠ 門診表與科別醫師那兩顆<b>一個值都沒有改</b>，就是你 09-08 在那兩頁上挑定的那一組
@@ -57,6 +57,23 @@ b{font-weight:700}
 <figure class="pv-shot"><img src="fangren-fb-map-1080.png" width="330" height="330" alt="位置與周邊停車" loading="lazy"><figcaption>位置與周邊停車</figcaption></figure>
 </div>
 
+<h2 class="pv-h2">牙洞這一輪都看得到了<span class="t">兩張各動了一件事</span></h2>
+<p class="pv-cap">
+牙洞是這顆標誌<b>唯一的識別特徵</b> —— 沒有它，剩下的就只是一團圓角形狀。
+所以「切出去」可以，<b>切掉牙洞不可以</b>。<br>
+⚠ <b>地圖</b>：那一顆的牙洞本來在左上（形狀寬的 17.5%），而這一張切掉的正是左邊那一截，
+洞剛好被切走。<b>左右鏡射</b>之後洞落在畫布 (378.6, 93.7) ＝ 右上。<br>
+⚠ <b>科別醫師</b>：從壓左上搬到右下，<b>而且要連著轉 180°</b>。
+它的洞在形狀的 71.3%／75.7%（右下角），原樣搬過去之後看得到的是形狀的左上那一塊，
+洞剛好在畫布外面；轉 180° 之後<b>看得到的逐像素就是原來那一塊、只是換到對角</b>，
+洞跟著回來，落在 (841.2, 760.8)。<br>
+⚠ 翻轉是整個標誌一起翻的（外框與洞同一條路徑）—— 只翻外框的話，
+洞會落到形狀外面、靜靜地消失而且不報錯。</p>
+<div class="pv-row">
+<figure class="pv-shot"><img src="fangren-fb-docs-1080.png" width="330" height="330" alt="科別醫師：搬到右下 ＋ 轉 180°（現在這樣）" loading="lazy"><figcaption>科別醫師：搬到右下 ＋ 轉 180°（現在這樣）</figcaption></figure>
+<figure class="pv-shot"><img src="fb-docs-plain.png" width="330" height="330" alt="⚠ 原樣搬過去不轉 —— 牙洞被切掉了" loading="lazy"><figcaption>⚠ 原樣搬過去不轉 —— 牙洞被切掉了</figcaption></figure>
+</div>
+
 <h2 class="pv-h2">地圖那一顆要換成哪一個<span class="t">五格，建議 r2c2</span></h2>
 <p class="pv-cap">
 寬度<b>不是同一個數字</b>：九顆的長寬比 1.00~3.08、墨佔外框 59.6~83.2%，
@@ -66,19 +83,19 @@ b{font-weight:700}
 ⚠ 門診表是 <code>r3c1</code>（長寬比 1.00）、科別醫師是 <code>r1c2</code>（2.03），
 所以<b>和兩張都分得出來的只有 r2c2（1.33）與 r2c3（3.08）那兩族</b>；
 r1c1 與 r3c2 是圓的、r2c1 是長條，各自會和其中一張撞。</p>
-<div class="pv-row"><figure class="pv-shot"><img src="fangren-fb-map-1080.png" width="330" height="330" alt="r2c2　762×572　長寬比 1.33（建議）" loading="lazy"><figcaption>r2c2　762×572　長寬比 1.33（建議）</figcaption></figure>
-<figure class="pv-shot"><img src="fb-map-r1c1.png" width="330" height="330" alt="r1c1　679×679　長寬比 1.00" loading="lazy"><figcaption>r1c1　679×679　長寬比 1.00</figcaption></figure>
-<figure class="pv-shot"><img src="fb-map-r3c2.png" width="330" height="330" alt="r3c2　673×674　長寬比 1.00" loading="lazy"><figcaption>r3c2　673×674　長寬比 1.00</figcaption></figure>
-<figure class="pv-shot"><img src="fb-map-r2c1.png" width="330" height="330" alt="r2c1　965×477　長寬比 2.02" loading="lazy"><figcaption>r2c1　965×477　長寬比 2.02</figcaption></figure>
-<figure class="pv-shot"><img src="fb-map-r2c3.png" width="330" height="330" alt="r2c3　1193×387　長寬比 3.08" loading="lazy"><figcaption>r2c3　1193×387　長寬比 3.08</figcaption></figure></div>
+<div class="pv-row"><figure class="pv-shot"><img src="fangren-fb-map-1080.png" width="330" height="330" alt="r2c2 762×572 長寬比 1.33（建議） 牙洞 在畫布 (378.6, 93.7)" loading="lazy"><figcaption>r2c2　762×572　長寬比 1.33（建議）<br>牙洞 在畫布 (378.6, 93.7)</figcaption></figure>
+<figure class="pv-shot"><img src="fb-map-r1c1.png" width="330" height="330" alt="r1c1 679×679 長寬比 1.00 牙洞 在畫布 (312.4, 502.6)" loading="lazy"><figcaption>r1c1　679×679　長寬比 1.00<br>牙洞 在畫布 (312.4, 502.6)</figcaption></figure>
+<figure class="pv-shot"><img src="fb-map-r3c2.png" width="330" height="330" alt="r3c2 673×674 長寬比 1.00 牙洞 在畫布 (175.5, 110.7)" loading="lazy"><figcaption>r3c2　673×674　長寬比 1.00<br>牙洞 在畫布 (175.5, 110.7)</figcaption></figure>
+<figure class="pv-shot"><img src="fb-map-r2c1.png" width="330" height="330" alt="r2c1 965×477 長寬比 2.02 牙洞 在畫布 (29.5, 60.7)" loading="lazy"><figcaption>r2c1　965×477　長寬比 2.02<br>牙洞 在畫布 (29.5, 60.7)</figcaption></figure>
+<figure class="pv-shot"><img src="fb-map-r2c3.png" width="330" height="330" alt="r2c3 1193×387 長寬比 3.08 牙洞 ⚠ 被切掉了" loading="lazy"><figcaption>r2c3　1193×387　長寬比 3.08<br>牙洞 ⚠ 被切掉了</figcaption></figure></div>
 
 <h2 class="pv-h2">在臉書動態上長什麼樣<span class="t">375px 的手機</span></h2>
 <p class="pv-cap">照片在動態裡是滿版，所以 1080 的圖畫出來就是螢幕那麼寬。
 文字大約三行之後收成「查看更多」。</p>
 <div class="pv-row">
-<figure class="pv-shot"><img src="feed-hours.png" width="300" height="452" alt="門診表　折疊線之上露出 3／4 行" loading="lazy"><figcaption>門診表　折疊線之上露出 3／4 行</figcaption></figure>
-<figure class="pv-shot"><img src="feed-docs.png" width="300" height="452" alt="科別與醫師　折疊線之上露出 3／11 行" loading="lazy"><figcaption>科別與醫師　折疊線之上露出 3／11 行</figcaption></figure>
-<figure class="pv-shot"><img src="feed-map.png" width="300" height="452" alt="位置與周邊停車　折疊線之上露出 3／13 行" loading="lazy"><figcaption>位置與周邊停車　折疊線之上露出 3／13 行</figcaption></figure>
+<figure class="pv-shot"><img src="feed-hours.png" width="300" height="452" alt="門診表 折疊線之上露出 3／4 行" loading="lazy"><figcaption>門診表　折疊線之上露出 3／4 行</figcaption></figure>
+<figure class="pv-shot"><img src="feed-docs.png" width="300" height="452" alt="科別與醫師 折疊線之上露出 3／11 行" loading="lazy"><figcaption>科別與醫師　折疊線之上露出 3／11 行</figcaption></figure>
+<figure class="pv-shot"><img src="feed-map.png" width="300" height="452" alt="位置與周邊停車 折疊線之上露出 3／13 行" loading="lazy"><figcaption>位置與周邊停車　折疊線之上露出 3／13 行</figcaption></figure>
 </div>
 
 <h2 class="pv-h2">尺寸查過了，不用改<span class="t">1080×1080</span></h2>
@@ -87,7 +104,7 @@ r1c1 與 r3c2 是圓的、r2c1 是長條，各自會和其中一張撞。</p>
 ⚠ 常看到的 <b>1200×630 是「連結預覽卡」</b>的規格，不是照片貼文的，不要拿來套。<br>
 ⚠ <b>4:5（1080×1350）</b>在手機上佔更多畫面，但這三張的內容是方的，
 拉成 4:5 只會在上下多兩條空白 —— 換版型換不到東西。<br>
-⚠ 檔案上限 8MB，這三張是 100／189／123KB。<br>
+⚠ 檔案上限 8MB，這三張是 100／188／124KB。<br>
 ⚠ 這幾個數字是查來的<b>二手資料</b>（Meta 自己的說明頁這個容器連不出去）。</p>
 <p class="pv-cap">
 順帶一件是免費撿到的：門診表那張在 LINE 大格是裁切的，只看得到中間 537 列，

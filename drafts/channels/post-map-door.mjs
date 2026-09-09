@@ -28,7 +28,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { wmFor, TRI, checkOne } from "./wm-triptych.mjs";
+import { wmFor, wmDesc, TRI, checkOne } from "./wm-triptych.mjs";
 const tri = checkOne();
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -352,7 +352,11 @@ const css = (fs2, qrpx, lotk = 1, wrapn = 0, GAP = GAP0, wma = WMA0,
   const ww = tri3 ? WM.w : wmWidth(wmsh);
   const wh = tri3 ? WM.h : ww / WMSIZES[wmsh].ratio;
   const bx = -Math.round(ww * WMBX), by = -Math.round(wh * WMBY);
-  const place = tri3 ? `left:${WM.left}px;top:${WM.top}px`
+  /* ⚠⚠ 臉書版可能帶著翻轉（牙洞要露出來），所以 place 要把 transform 一起帶上 ——
+     只抄 left/top 的話翻轉會靜靜地掉，而畫面看起來仍然很正常。 */
+  const flip = (WM.flipX || WM.flipY)
+    ? `;transform:scale(${WM.flipX ? -1 : 1},${WM.flipY ? -1 : 1})` : "";
+  const place = tri3 ? `left:${WM.left}px;top:${WM.top}px${flip}`
               : wmpos === "tl" ? `left:${-wmx}px;top:${by}px`
                                : `right:${bx}px;bottom:${by}px`;
   return `
@@ -724,7 +728,7 @@ console.log(`  指北針\t?ns=${A.ns}（Ⓝ3）\t整組高 ${A.meta.nsw.h}→小
   + `\t「北」${A.meta.nsw.fs}→${(A.meta.nsw.fs * shrink).toFixed(1)}px`);
 console.log(`  留白\t上下 ${A.margin}　段距 ${A.gap}（Ⓜ3）\t地圖 ${A.m.img.w}×${A.m.img.h}`
   + `\t小格留白 ${(A.m.band.y * SMALL / W).toFixed(1)}px`);
-console.log(`  浮水印\t${WM.shape}（${WM.mode === "fb" ? "臉書版：和另外兩張不一樣的那一顆，切掉 " + WM.cut : "三格共用的那一顆"}）・墨 ${(A.wma * 100).toFixed(1)}%・壓左上`
+console.log(`  浮水印\t${WM.shape}（${wmDesc(WM)}）・墨 ${(A.wma * 100).toFixed(1)}%`
   + `\t畫出來 ${A.m.wmr.w}×${A.m.wmr.h}（等重基準 ${WMREF}）`
   + `\t壓在它上面：墨字 ${ratio(wmOver(INK, A.wma), wmOver(CARD, A.wma)).toFixed(2)}`
   + `／柔墨 ${ratio(wmOver(SOFT, A.wma), wmOver(CARD, A.wma)).toFixed(2)}（門檻 4.5）`);

@@ -43,7 +43,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { wmFor, checkOne, TRI, MOCK, tripleHtml } from "./wm-triptych.mjs";
+import { wmFor, wmDesc, checkOne, TRI, MOCK, tripleHtml } from "./wm-triptych.mjs";
 /* ⚠ 三格的圓要是同一顆 —— 算回「合起來」那個座標系比一次，對不上就 throw */
 const tri = checkOne();
 
@@ -767,7 +767,7 @@ console.log(`\n── 對比 ──`);
 for (const [n, r] of CONTR) console.log(`  ${n.padEnd(12, "　")}${r.toFixed(2)}　（門檻 4.5）`);
 console.log(`  圖案最低　${Math.min(...ICON.map(c => c[1])).toFixed(2)}`
   + `　${ICON.reduce((a, b) => a[1] < b[1] ? a : b)[0]}　（門檻 3）`);
-console.log(`  浮水印 ${WM.shape}（${WM.mode === "fb" ? "臉書版：一張一顆、壓左上、切掉 " + WM.cut : "三格共用的那一顆，圓心在右上角外面"}）`
+console.log(`  浮水印 ${WM.shape}（${wmDesc(WM)}）`
   + `　${WM.w}×${WM.h}px・墨 ${(WMA * 100).toFixed(0)}%`
   + `　底色 ${CARD} → ${WMBG}`);
 console.log(`  三格接得起來嗎：`

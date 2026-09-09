@@ -81,6 +81,11 @@ for (const k of ["hours", "docs"]) {
   run(t.gen, { WM_MODE: "fb" });
   fs.copyFileSync(path.join(ROOT, ...t.img), path.join(OUT, finalOf(k)));
 }
+/* ⚠ 順手多做一張「原樣搬到右下、不轉」的科別醫師 —— 那是牙洞被切掉的那一種。
+   它不是候選，是**為什麼要轉 180°** 的證據（頁上兩張並排）。 */
+run(byKey.docs.gen, { WM_MODE: "fb", WM_FB_DOCS: "plain" });
+fs.copyFileSync(path.join(ROOT, ...byKey.docs.img), path.join(OUT, "fb-docs-plain.png"));
+
 /* ---------- 第二步：地圖 × 五顆候選 ---------- */
 for (const sh of MAPWM) {
   run(byKey.map.gen, { WM_MODE: "fb", WM_FB_MAP: sh });
@@ -190,22 +195,32 @@ await browser.close();
 /* ---------- 第五步：規格頁 ---------- */
 const png = f => { const b = fs.readFileSync(path.join(OUT, f));
   return { w: b.readUInt32BE(16), h: b.readUInt32BE(20), kb: Math.round(b.length / 1024) }; };
+/* ⚠ caption 裡可以帶 <br>／<b>，但 alt 是屬性 —— 標記要先剝掉，
+   不然 `<br>` 會把 alt="" 提早關掉、整段 HTML 從那裡歪掉。 */
 const shot = (f, wCss, cap) => { const d = png(f);
+  const alt = cap.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
   return `<figure class="pv-shot"><img src="${f}" width="${wCss}" height="${Math.round(d.h * wCss / d.w)}"`
-    + ` alt="${cap}" loading="lazy"><figcaption>${cap}</figcaption></figure>`; };
+    + ` alt="${alt}" loading="lazy"><figcaption>${cap}</figcaption></figure>`; };
 
 const g = Object.fromEntries(TILES.map(t => [t.k, wmFor(t.k, { mode: "fb" })]));
 const wmRow = (t) => { const w = g[t.k];
   return `<tr><td>${t.name}</td><td><code>${finalOf(t.k)}</code></td>`
     + `<td>${png(finalOf(t.k)).w}×${png(finalOf(t.k)).h}・${png(finalOf(t.k)).kb}KB</td>`
     + `<td><code>${w.shape}</code>　${w.w}×${Math.round(w.h)}<br>`
-    + `${w.pos === "br" ? "壓右下" : "壓左上・切掉 " + w.cut}・墨 ${(w.opacity * 100).toFixed(0)}%</td>`
+    + `${w.pos === "br" ? "壓右下" : "壓左上"}・看得到 ${w.seen}px`
+    + `${w.flipX && w.flipY ? "・轉 180°" : w.flipX ? "・左右鏡射" : w.flipY ? "・上下鏡射" : ""}`
+    + `・墨 ${(w.opacity * 100).toFixed(0)}%</td>`
     + `<td><a href="${t.spec}">完整規格</a></td></tr>`; };
 
+/* ⚠ 每一格都現場算「牙洞落在畫布哪裡」—— 換形狀的時候洞會跟著跑，
+   有的候選就算鏡射過也還是被切掉，那要當著他的面標出來。 */
 const mapCases = MAPWM.map(sh => { const w = fbWidth(sh);
+  const m = wmFor("map", { mode: "fb", shape: sh });
+  const C = 1080, inside = m.hole.x >= 8 && m.hole.x <= C - 8 && m.hole.y >= 8 && m.hole.y <= C - 8;
   return shot(mapFileOf(sh), 330,
     `${sh}　${w}×${Math.round(w / shapeRatio(sh))}　長寬比 ${shapeRatio(sh).toFixed(2)}`
-    + (sh === REC ? "（建議）" : "")); }).join("\n");
+    + (sh === REC ? "（建議）" : "")
+    + `<br>牙洞 ${inside ? `在畫布 (${m.hole.x}, ${m.hole.y})` : "⚠ 被切掉了"}`); }).join("\n");
 
 const html = `<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -260,6 +275,23 @@ ${TILES.map(wmRow).join("\n")}
 <b>那個理由在臉書上不成立</b>（兩則分開貼），所以換了一顆。</p>
 <div class="pv-row">
 ${TILES.map(t => shot(finalOf(t.k), 330, t.name)).join("\n")}
+</div>
+
+<h2 class="pv-h2">牙洞這一輪都看得到了<span class="t">兩張各動了一件事</span></h2>
+<p class="pv-cap">
+牙洞是這顆標誌<b>唯一的識別特徵</b> —— 沒有它，剩下的就只是一團圓角形狀。
+所以「切出去」可以，<b>切掉牙洞不可以</b>。<br>
+⚠ <b>地圖</b>：那一顆的牙洞本來在左上（形狀寬的 17.5%），而這一張切掉的正是左邊那一截，
+洞剛好被切走。<b>左右鏡射</b>之後洞落在畫布 (${g.map.hole.x}, ${g.map.hole.y}) ＝ 右上。<br>
+⚠ <b>科別醫師</b>：從壓左上搬到右下，<b>而且要連著轉 180°</b>。
+它的洞在形狀的 71.3%／75.7%（右下角），原樣搬過去之後看得到的是形狀的左上那一塊，
+洞剛好在畫布外面；轉 180° 之後<b>看得到的逐像素就是原來那一塊、只是換到對角</b>，
+洞跟著回來，落在 (${g.docs.hole.x}, ${g.docs.hole.y})。<br>
+⚠ 翻轉是整個標誌一起翻的（外框與洞同一條路徑）—— 只翻外框的話，
+洞會落到形狀外面、靜靜地消失而且不報錯。</p>
+<div class="pv-row">
+${shot(finalOf("docs"), 330, "科別醫師：搬到右下 ＋ 轉 180°（現在這樣）")}
+${shot("fb-docs-plain.png", 330, "⚠ 原樣搬過去不轉 —— 牙洞被切掉了")}
 </div>
 
 <h2 class="pv-h2">地圖那一顆要換成哪一個<span class="t">五格，建議 ${REC}</span></h2>
@@ -342,8 +374,10 @@ for (const t of TILES) {
   const a = wmFor(t.k, { mode: "tri" }), b = g[t.k];
   console.log(`  ${t.name.padEnd(7, "　")}　三格版 ${String(a.shape)} ${String(a.w).padStart(6)}px`
     + `　→　臉書版 ${b.shape} ${b.w}×${Math.round(b.h)}`
-    + `・${b.pos === "br" ? "壓右下" : "壓左上切 " + b.cut}`
-    + `・墨 ${(b.opacity * 100).toFixed(0)}%　看得到 ${b.seen}px`);
+    + `・${b.pos === "br" ? "壓右下" : "壓左上"}`
+    + `${b.flipX && b.flipY ? "轉 180°" : b.flipX ? "左右鏡射" : b.flipY ? "上下鏡射" : ""}`
+    + `・墨 ${(b.opacity * 100).toFixed(0)}%　看得到 ${b.seen}px`
+    + `　牙洞 (${b.hole.x}, ${b.hole.y})`);
 }
 
 console.log(`\n── 地圖那一顆的尺（等重基準：${FB.REF} 畫 ${FB.REFW}）──`);
