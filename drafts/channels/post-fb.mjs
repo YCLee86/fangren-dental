@@ -1,15 +1,22 @@
 /* 同一組貼文圖搬到 **Facebook**
  *   node drafts/channels/post-fb.mjs
  *
- * 2026-09-09 使用者第二輪：「**因為臉書沒有像 line 那樣的版面　我比較傾向用之前的版本
- *   單一張看順眼就好**　但你們還是把這兩張和地圖弄成臉書適合的尺寸
- *   **地圖也挑一個不一樣的浮水印**壓上去　預覽給我看」。
+ * ⚠⚠⚠ 2026-09-09 定案：**臉書的相簿貼文也是三格，所以照 LINE 那樣拼一顆完整的標誌。**
+ *   使用者拿了粉專上那一則的截圖：「**結果貼文也有三格是欸　那還是像 line 那樣做一下
+ *   讓同一個 logo 完整顯示好了　給我適合放在臉書貼文的圖片**」。
  *
- * ⚠⚠⚠ 所以臉書版**不是**三格拼一顆，是**回到三格版之前那一組「一張一顆」的浮水印**
- *   —— 那一組每一個值都是他 2026-09-08 自己在那兩頁上挑定的，這裡一個都沒有改：
- *     門診表　　r3c1・660px・壓右下（right −60 / top 470）・5%・壓在表的後面
- *     科別醫師　r1c2・952px・壓左上・左邊切 440・4%・壓在最上面
- *   **只有地圖那一張是新決定**（他指定要不一樣的），做成一把尺。
+ * ⚠⚠⚠ **這推翻了上一輪那整段推理，而且是我沒有量就下的結論。** 我當時寫
+ *   「臉書沒有像 line 那樣的版面」，所以退回一張一顆 —— 那句話**是推的不是量的**，
+ *   而臉書把「一次三張照片」排成的，正是「上面一張寬的、下面兩張方的」。
+ *   **通則：「那個平台沒有這種版面」是一句可以被一張截圖推翻的話 ——
+ *   在推翻它之前，先貼三張上去看一眼。**
+ *
+ * ⚠⚠ 臉書那一組三格的尺寸是**從他那張截圖逐像素量的**（見 wm-triptych.mjs 的 `TRI_FB`）：
+ *   大格 829×413、小格 413×413、縫 3 —— 和 LINE 那一組（823／409／5）差不到 1%，
+ *   但**各記一份**：兩邊都是量出來的事實，寫成同一份等於說「它們一定一樣」。
+ *
+ * ⚠ 「一張一顆」那一版**沒有刪**，`WM_MODE=fb-solo` 還產得出來（`FB` 那張表）——
+ *   哪天真的要一則一則單獨貼才會用到。
  *
  * ⚠⚠ 三張圖的內容**一個像素都沒有另外畫** —— 用的是同樣那三支產生器，
  *   只把浮水印切成臉書版（`WM_MODE=fb`，見 wm-triptych.mjs 的 `FB`）。
@@ -28,7 +35,7 @@
  *
  * ── 產出（都放 `preview/fb-post/`）──
  *   `fangren-fb-<格>-1080.png`　要上傳的那三張
- *   `fb-map-<形狀>.png`　　　　 地圖浮水印那把尺的其餘幾格
+ *   `fb-3up.png`　　　　　　　　 三張拼起來長什麼樣（照臉書量到的 829／413／3）
  *   `feed-<格>.png`　　　　　　 在臉書動態上長什麼樣（375 CSS px 的手機，3×）
  *   `detail-<格>.txt`　　　　　 貼文的文字（**從那一則自己的 .txt 讀回來，不重打**）
  */
@@ -36,7 +43,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { FB, fbWidth, wmFor, shapeRatio } from "./wm-triptych.mjs";
+import { TRI, TRI_FB, wmFor, checkOne, tripleHtml, mockOf } from "./wm-triptych.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..", "..");
@@ -44,14 +51,6 @@ const OUT  = path.join(ROOT, "preview", "fb-post");
 fs.mkdirSync(OUT, { recursive: true });
 
 const CARD = "#f4f4f5", RULE = "#cdd0d2", INK = "#2a2c27", SOFT = "#5c5f57";
-
-/* ⚠ 地圖那一顆的形狀是尺（第九節第 28 條 ①）。
-   ⚠⚠ **r3c1 與 r1c2 不在名單裡** —— 那兩顆已經是門診表與科別醫師的，
-     他要的正是「不一樣」。
-   ⚠ 每一格旁邊那個比例是**長寬比**：門診表 1.00、科別醫師 2.03，
-     所以真正和兩張都分得出來的只有 r2c2（1.33）與 r2c3（3.08）那兩族。 */
-const MAPWM = ["r2c2", "r1c1", "r3c2", "r2c1", "r2c3"];
-const REC = FB.map.shape;   /* 建議的那一格（＝ WM_FB_MAP 的預設） */
 
 const TILES = [
   { k: "hours", gen: "post-hours.mjs",
@@ -73,18 +72,11 @@ const run = (script, env) => execFileSync("node", [path.join(HERE, script)],
   { cwd: ROOT, env: { ...process.env, ...env }, stdio: "pipe" });
 
 const finalOf = (k) => `fangren-fb-${k}-1080.png`;
-const mapFileOf = (sh) => sh === REC ? finalOf("map") : `fb-map-${sh}.png`;
 
-/* ---------- 第一步：門診表與科別醫師（各一張，值都是他挑定的） ---------- */
-for (const k of ["hours", "docs"]) {
-  const t = byKey[k];
+/* ---------- 第一步：三張都用臉書那一組三格的幾何跑一次 ---------- */
+for (const t of TILES) {
   run(t.gen, { WM_MODE: "fb" });
-  fs.copyFileSync(path.join(ROOT, ...t.img), path.join(OUT, finalOf(k)));
-}
-/* ---------- 第二步：地圖 × 五顆候選 ---------- */
-for (const sh of MAPWM) {
-  run(byKey.map.gen, { WM_MODE: "fb", WM_FB_MAP: sh });
-  fs.copyFileSync(path.join(ROOT, ...byKey.map.img), path.join(OUT, mapFileOf(sh)));
+  fs.copyFileSync(path.join(ROOT, ...t.img), path.join(OUT, finalOf(t.k)));
 }
 /* ⚠⚠ 一定要用預設（三格版）再跑一次 */
 for (const t of TILES) run(t.gen, {});
@@ -234,6 +226,21 @@ for (const t of TILES) {
   fold[t.k] = await shoot(`feed-${t.k}.png`, b64(path.join(OUT, finalOf(t.k))), texts[t.k]);
   if (ALT[t.k]) await shoot(`feed-${t.k}-alt.png`, b64(path.join(OUT, finalOf(t.k))), ALT[t.k]);
 }
+
+/* ---------- 第四步之二：三張拼起來長什麼樣（照臉書量到的 829／413／3） ----------
+   ⚠⚠ 版面只有一份（`tripleHtml`），三支產生器不各畫各的 ——
+     哪一支的縫或順序寫錯，就會靜靜地畫出一顆接不起來的圓。
+   ⚠ 順序照使用者說的：大格＝門診表、左下＝科別醫師、右下＝地圖停車，
+     **和他截圖上那一則的排法一樣**。 */
+{
+  const M = mockOf("fb");
+  const pg = await browser.newPage({ viewport: { width: M.w, height: M.h }, deviceScaleFactor: 2 });
+  await pg.setContent(tripleHtml(Object.fromEntries(TILES.map(t =>
+    [t.k, b64(path.join(OUT, finalOf(t.k)))])), "#cdd0d2", "fb"));
+  await pg.waitForFunction(() => [...document.images].every(i => i.complete));
+  await pg.screenshot({ path: path.join(OUT, "fb-3up.png") });
+  await pg.close();
+}
 await browser.close();
 
 /* ---------- 第五步：規格頁 ---------- */
@@ -247,24 +254,12 @@ const shot = (f, wCss, cap) => { const d = png(f);
     + ` alt="${alt}" loading="lazy"><figcaption>${cap}</figcaption></figure>`; };
 
 const g = Object.fromEntries(TILES.map(t => [t.k, wmFor(t.k, { mode: "fb" })]));
-const wmRow = (t) => { const w = g[t.k];
+const gLine = Object.fromEntries(TILES.map(t => [t.k, wmFor(t.k, { mode: undefined })]));
+const wmRow = (t) => { const w = g[t.k], d = png(finalOf(t.k));
   return `<tr><td>${t.name}</td><td><code>${finalOf(t.k)}</code></td>`
-    + `<td>${png(finalOf(t.k)).w}×${png(finalOf(t.k)).h}・${png(finalOf(t.k)).kb}KB</td>`
-    + `<td><code>${w.shape}</code>　${w.w}×${Math.round(w.h)}<br>`
-    + `${w.pos === "br" ? "壓右下" : "壓左上"}・看得到 ${w.seen}px`
-    + `${w.flipX && w.flipY ? "・轉 180°" : w.flipX ? "・左右鏡射" : w.flipY ? "・上下鏡射" : ""}`
-    + `・墨 ${(w.opacity * 100).toFixed(0)}%</td>`
+    + `<td>${d.w}×${d.h}・${d.kb}KB</td>`
+    + `<td>圓畫 ${Math.round(w.w)}px<br>比例尺 ${w.scale.toFixed(4)}</td>`
     + `<td><a href="${t.spec}">完整規格</a></td></tr>`; };
-
-/* ⚠ 每一格都現場算「牙洞落在畫布哪裡」—— 換形狀的時候洞會跟著跑，
-   有的候選就算鏡射過也還是被切掉，那要當著他的面標出來。 */
-const mapCases = MAPWM.map(sh => { const w = fbWidth(sh);
-  const m = wmFor("map", { mode: "fb", shape: sh });
-  const C = 1080, inside = m.hole.x >= 8 && m.hole.x <= C - 8 && m.hole.y >= 8 && m.hole.y <= C - 8;
-  return shot(mapFileOf(sh), 330,
-    `${sh}　${w}×${Math.round(w / shapeRatio(sh))}　長寬比 ${shapeRatio(sh).toFixed(2)}`
-    + (sh === REC ? "（建議）" : "")
-    + `<br>牙洞 ${inside ? `在畫布 (${m.hole.x}, ${m.hole.y})` : "⚠ 被切掉了"}`); }).join("\n");
 
 const html = `<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -323,27 +318,28 @@ ${TILES.map(wmRow).join("\n")}
 ${TILES.map(t => shot(finalOf(t.k), 330, t.name)).join("\n")}
 </div>
 
-<h2 class="pv-h2">牙洞這件事<span class="t">兩張各自的答案</span></h2>
+<h2 class="pv-h2">三張拼起來<span class="t">照臉書量到的 829／413／3</span></h2>
 <p class="pv-cap">
-牙洞是這顆標誌<b>唯一的識別特徵</b> —— 沒有它，剩下的就只是一團圓角形狀。
-所以預設會讓它露出來，<b>但那不是硬條件</b>。<br>
-⚠ <b>地圖</b>：那一顆的牙洞本來在左上（形狀寬的 17.5%），而這一張切掉的正是左邊那一截，
-洞剛好被切走。<b>左右鏡射</b>之後洞落在畫布 (${g.map.hole.x}, ${g.map.hole.y}) ＝ 右上。<br>
-⚠ <b>科別醫師</b>：從壓左上搬到右下，<b>不轉</b>。
-它的洞在形狀的右下角，原樣搬過去之後看得到的是形狀的左上那一塊，洞落在畫布外面
-(${g.docs.hole.x}, ${g.docs.hole.y})。轉 180° 洞會回來，
-但那樣<b>整顆標誌是倒過來的</b> —— 一顆倒的標誌比一個看不到的洞更明顯，所以不轉。</p>
-
-<h2 class="pv-h2">地圖那一顆要換成哪一個<span class="t">五格，建議 ${REC}</span></h2>
+⚠⚠⚠ <b>上一版我判斷錯了，這一版是照你那張截圖改的。</b>
+我當時寫「臉書沒有像 LINE 那樣的版面」，所以退回「一張一顆」——
+<b>那句話是推的、沒有量過</b>，而臉書把「一次三張照片」排成的，
+正是「上面一張寬的、下面兩張方的」。<b>通則：這種話一張截圖就能推翻，
+所以要先貼三張上去看一眼再說。</b></p>
 <p class="pv-cap">
-寬度<b>不是同一個數字</b>：九顆的長寬比 1.00~3.08、墨佔外框 59.6~83.2%，
-同寬的話細長那幾顆會輕很多，所以一律<b>按墨的面積正規化</b>（基準是門診表那顆畫 660）。<br>
-切掉多少也不是另一把尺：一律切到<b>看得到 512px</b> 為止 ＝ 科別醫師那一張切 440 之後
-剩下的寬度，這樣換形狀時份量不會跟著跳。<br>
-⚠ 門診表是 <code>r3c1</code>（長寬比 1.00）、科別醫師是 <code>r1c2</code>（2.03），
-所以<b>和兩張都分得出來的只有 ${REC}（1.33）與 r2c3（3.08）那兩族</b>；
-r1c1 與 r3c2 是圓的、r2c1 是長條，各自會和其中一張撞。</p>
-<div class="pv-row">${mapCases}</div>
+⚠⚠ 臉書那一組的尺寸是<b>從你截圖逐像素量的</b>（深色模式，所以縫是暗的不是白的，
+找的是「整列幾乎全暗」的帶）：<br>
+大格 <b>x 3–831・y 136–548 → 829×413</b>（2.007:1）／縫 <b>3</b>（y 549–551、x 416–418）／
+小格 <b>413×413</b>（y 552–965）—— 而且 <b>829 ＝ 413＋3＋413</b>，對得起來。<br>
+⚠ 和 LINE 那一組（823／409／5）<b>差不到 1%</b>，但兩份各記各的：
+兩邊都是量出來的事實，寫成同一份就等於說「它們一定一樣」，那沒有人驗過。<br>
+⚠ 大格一樣是 <b>cover 裁切</b>（你截圖上「芳仁牙醫開診時段」那行標題和最下面那行電話
+都不見了），所以圓對大格只露出上半。</p>
+<div class="pv-row">${shot("fb-3up.png", 380, "三張拼起來（照臉書量到的比例）")}</div>
+<p class="pv-cap">
+⚠ 你那一則的排法<b>已經是對的</b>：大格門診表、左下科別醫師、右下地圖停車 ——
+和這顆圓假設的順序一樣，<b>相簿裡不用重排</b>。<br>
+⚠⚠ <b>但這三張要重新上傳</b>：貼上去的那三張是「一張一顆」那一版，
+浮水印的位置和大小都不一樣，接不成一顆圓。</p>
 
 <h2 class="pv-h2">在臉書動態上長什麼樣<span class="t">375px 的手機</span></h2>
 <p class="pv-cap">照片在動態裡是滿版，所以 1080 的圖畫出來就是螢幕那麼寬。
@@ -493,25 +489,20 @@ ${TILES.map(t => `<h3 class="pv-h3">${t.name}</h3><pre>${esc(texts[t.k])}</pre>`
 fs.writeFileSync(path.join(OUT, "index.html"), html);
 
 /* ---------- 面板 ---------- */
-console.log(`\n── 浮水印：三格版 vs 臉書版（一張一顆）──`);
+console.log(`\n── 浮水印：一顆圓騎在三格的十字縫上（直徑 ${TRI.DIA}）──`);
+console.log(`  臉書三格　大格 ${TRI_FB.BIG_W}×${TRI_FB.BIG_H}・小格 ${TRI_FB.SLOT}・縫 ${TRI_FB.GAP}`
+  + `　（LINE 是 ${TRI.BIG_W}×${TRI.BIG_H}／${TRI.SLOT}／${TRI.GAP}）`);
 for (const t of TILES) {
-  const a = wmFor(t.k, { mode: "tri" }), b = g[t.k];
-  console.log(`  ${t.name.padEnd(7, "　")}　三格版 ${String(a.shape)} ${String(a.w).padStart(6)}px`
-    + `　→　臉書版 ${b.shape} ${b.w}×${Math.round(b.h)}`
-    + `・${b.pos === "br" ? "壓右下" : "壓左上"}`
-    + `${b.flipX && b.flipY ? "轉 180°" : b.flipX ? "左右鏡射" : b.flipY ? "上下鏡射" : ""}`
-    + `・墨 ${(b.opacity * 100).toFixed(0)}%　看得到 ${b.seen}px`
-    + `　牙洞 (${b.hole.x}, ${b.hole.y})${b.holeMode === "cut" ? "＝在畫布外（他選的不轉）" : ""}`);
+  const a = gLine[t.k], b = g[t.k];
+  console.log(`  ${t.name.padEnd(7, "　")}　臉書版圓畫 ${String(Math.round(b.w)).padStart(4)}px`
+    + `（比例尺 ${b.scale.toFixed(4)}）`
+    + `　LINE 版 ${String(Math.round(a.w)).padStart(4)}px`
+    + `　差 ${(Math.abs(b.w - a.w) / a.w * 100).toFixed(1)}%`);
 }
-
-console.log(`\n── 地圖那一顆的尺（等重基準：${FB.REF} 畫 ${FB.REFW}）──`);
-for (const sh of MAPWM) {
-  const w = fbWidth(sh), h = w / shapeRatio(sh);
-  console.log(`  ${sh}　${String(w).padStart(4)}×${String(Math.round(h)).padStart(4)}`
-    + `　長寬比 ${shapeRatio(sh).toFixed(2)}　切掉 ${w - FB.map.seen}　看得到 ${FB.map.seen}px`
-    + (sh === REC ? "　← 建議" : "")
-    + (Math.abs(shapeRatio(sh) - 1) < .05 ? "　⚠ 和門診表同比例" : "")
-    + (Math.abs(shapeRatio(sh) - 2.03) < .05 ? "　⚠ 和科別醫師同比例" : ""));
+/* ⚠ 三格的圓算回「合起來」那個座標系要是同一顆 —— 這一行是守門的白話版 */
+{
+  const o = checkOne(TRI.DIA, "fb");
+  console.log(`  接得起來：` + o.map(x => `${x.tile} (${x.cx}, ${x.cy}) d=${x.d}`).join("　"));
 }
 
 /* ⚠ 第 28 條 ④：挑定之後這幾行仍然要印，不然換了標籤這裡不會有數字動 */

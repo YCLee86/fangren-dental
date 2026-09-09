@@ -13,7 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
-import { wmFor, TRI, FB, fbWidth, shapeRatio } from "./wm-triptych.mjs";
+import { wmFor, checkOne, TRI, TRI_FB, FB, fbWidth, shapeRatio } from "./wm-triptych.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const DIR  = path.join(ROOT, "preview", "fb-post");
@@ -101,7 +101,9 @@ const fbFile = k => path.join(DIR, `fangren-fb-${k}-1080.png`);
 
 /* ---------- ① 頁上每一張圖 ---------- */
 const imgs = [...page.matchAll(/<img src="([^"]+)" width="(\d+)" height="(\d+)"/g)];
-ok(imgs.length >= 13, `頁上只有 ${imgs.length} 張圖，太少了`);
+/* ⚠ 2026-09-09 從 13 收成 9：地圖浮水印那把尺（fb-map-*）整組拿掉了 ——
+   三張現在共用同一顆圓，沒有「換哪一顆」這件事了。 */
+ok(imgs.length >= 9, `頁上只有 ${imgs.length} 張圖，太少了`);
 const used = new Set();
 for (const [, src, w, h] of imgs) {
   const f = path.join(DIR, src);
@@ -200,51 +202,41 @@ ok(/from "\.\/wm-triptych\.mjs"/.test(gen),
   "post-fb.mjs 沒有 import wm-triptych.mjs —— 浮水印不可以在這裡自己算一份");
 ok(/for \(const t of TILES\) run\(t\.gen, \{\}\);/.test(gen),
   "post-fb.mjs 少了「跑完用預設值再跑一次」那一步 —— repo 裡的 LINE 成品會停在臉書版的浮水印上");
+ok(/run\(t\.gen, \{ WM_MODE: "fb" \}\)/.test(gen),
+  "post-fb.mjs 沒有用 WM_MODE=fb 跑三張 —— 那顆圓就接不成一顆了");
 
-/* ---------- ⑧ 臉書版那一組值 ＝ 他 2026-09-08 挑定的那一組 ---------- */
-/* ⚠ 門診表與科別醫師那兩顆一個值都不可以改（那是他挑的）；地圖那一顆是尺，
-   只驗「不可以和另外兩顆一樣」—— 他要的正是「不一樣」。 */
-ok(FB.hours.shape === "r3c1" && FB.hours.opacity === .05
-   && FB.hours.cutX === 60 && FB.hours.cutY === 50,
-  "門診表那顆浮水印不是 2026-09-08 挑定的那一組（r3c1・5%・切 60×50）");
-/* ⚠ 科別醫師 2026-09-09 從壓左上搬到右下，**切掉的量沒有變**（仍然是他挑的 440）——
-   換的只有壓哪一角，以及跟著搬過去非做不可的那個 180°。 */
-ok(FB.docs.shape === "r1c2" && FB.docs.opacity === .04 && FB.docs.cutX === 440,
-  "科別醫師那顆浮水印不是 2026-09-08 挑定的那一組（r1c2・4%・切 440）");
-ok(FB.docs.pos === "br", "科別醫師那顆應該壓右下（2026-09-09 使用者指定）");
-ok(FB.map.pos === "tl", "地圖那顆應該壓左上");
-ok(FB.map.shape !== FB.hours.shape && FB.map.shape !== FB.docs.shape,
-  `地圖那顆是 ${FB.map.shape}，和另外兩張撞了 —— 使用者指定要「不一樣的」`);
-ok(fbWidth("r3c1") === 660, "等重換算的基準跑掉了（r3c1 應該畫 660）");
-/* ⚠⚠⚠ 牙洞一定要看得到（2026-09-09 使用者：「logo 原本的牙洞在左上　這裡看不到了」）。
-   牙洞是這顆標誌唯一的識別特徵，切掉之後剩下的只是一團圓角形狀 ——
-   而**切掉牙洞不會讓任何一道尺寸守門翻臉**，圖看起來仍然很正常。
-   ⚠ 這裡驗兩件：① 幾何算出來的洞心要落在畫布裡（離邊 ≥8px）
-   ② 那個位置在 PNG 上**沒有被淡墨染到**、而它旁邊的形狀有 ＝ 洞真的是挖穿的。 */
-for (const [k] of TILES) {
-  const gm = wmFor(k, { mode: "fb" });
-  const C = TRI.CANVAS, M = 8;
-  ok(Number.isFinite(gm.hole.x) && Number.isFinite(gm.hole.y),
-    `${k}：wm-triptych.mjs 的 HOLE 表裡沒有 ${gm.shape} 的牙洞位置`);
-  /* ⚠ 只有宣告 `hole: "show"` 的那幾格才要求看得到 —— 科別醫師那一張是
-     `cut`，因為使用者 2026-09-09 說「不要轉　牙洞不要出來沒關係」。 */
-  if (gm.holeMode === "show")
-    ok(gm.hole.x >= M && gm.hole.x <= C - M && gm.hole.y >= M && gm.hole.y <= C - M,
-      `${k} 的牙洞落在畫布外面 (${gm.hole.x}, ${gm.hole.y}) —— 被切掉了`);
-}
-/* ⚠⚠ 科別醫師那一張**不可以再轉回去**（2026-09-09 使用者指定不轉）——
-   轉回去畫面照樣正常、每一道尺寸守門都會過，只有把圖打開看才看得出標誌是倒的。 */
+/* ---------- ⑧ 臉書那一組三格的幾何 ＝ 從他截圖量出來的那一組 ---------- */
+/* ⚠⚠⚠ 2026-09-09 定案：臉書的相簿貼文也是三格，所以照 LINE 那樣拼一顆完整的標誌。
+   這幾個數字是從那張截圖逐像素量的，改了就等於改掉一個「量出來的事實」。 */
+ok(TRI_FB.BIG_W === 829 && TRI_FB.BIG_H === 413 && TRI_FB.SLOT === 413 && TRI_FB.GAP === 3,
+  `臉書那一組三格的尺寸被改了：${TRI_FB.BIG_W}×${TRI_FB.BIG_H}／${TRI_FB.SLOT}／${TRI_FB.GAP}`
+  + "，量出來的是 829×413／413／3");
+ok(TRI_FB.SLOT * 2 + TRI_FB.GAP === TRI_FB.BIG_W,
+  "臉書那一組對不起來：小格×2 ＋ 縫 應該等於大格寬");
+/* ⚠⚠⚠ 最強的一道：三格的圓算回「合起來」那個座標系要是同一顆（同心、同大小）。
+   哪一支的比例尺寫錯了，這裡就會翻臉 —— 而圖看起來仍然完全正常。 */
 {
-  const g = wmFor("docs", { mode: "fb" });
-  ok(!g.flipX && !g.flipY, "科別醫師那顆浮水印又被轉了 —— 使用者指定不轉");
-  ok(FB.docs.hole === "cut", "FB.docs 少了 hole: \"cut\" —— 牙洞那道守門會誤擋這一張");
+  let o = [];
+  try { o = checkOne(TRI.DIA, "fb"); }
+  catch (e) { ok(false, "臉書那一組接不成一顆圓：" + e.message); }
+  ok(o.length === 3, "checkOne 沒有回三格");
+  for (const x of o)
+    ok(Math.abs(x.d - TRI.DIA) < .05, `${x.tile} 的圓畫出來是 ${x.d}，不是 ${TRI.DIA}`);
 }
-/* ⚠ 三張成品的長寬比一定要對得上那顆形狀的 viewBox（不可以被壓扁） */
+/* ⚠ 三張成品的浮水印長寬比要對得上那顆形狀的 viewBox（不可以被壓扁） */
 for (const [k] of TILES) {
   const g = wmFor(k, { mode: "fb" });
   ok(Math.abs(g.w / g.h - shapeRatio(g.shape)) < .01,
     `${k} 的浮水印被壓扁了：${g.w}×${g.h}`);
 }
+/* ⚠⚠ 「一張一顆」那一版（`fb-solo`）**留著當退路**，它那一組值仍然是
+   他 2026-09-08 挑定的 —— 這幾道守著那份紀錄不被順手改掉。 */
+ok(FB.hours.shape === "r3c1" && FB.hours.opacity === .05
+   && FB.hours.cutX === 60 && FB.hours.cutY === 50,
+  "fb-solo 的門診表那顆不是 2026-09-08 挑定的那一組（r3c1・5%・切 60×50）");
+ok(FB.docs.shape === "r1c2" && FB.docs.opacity === .04 && FB.docs.cutX === 440,
+  "fb-solo 的科別醫師那顆不是 2026-09-08 挑定的那一組（r1c2・4%・切 440）");
+ok(fbWidth("r3c1") === 660, "等重換算的基準跑掉了（r3c1 應該畫 660）");
 
 /* ---------- ⑨ 讀真的畫出來的像素 ---------- */
 /* ⚠⚠⚠ ⓐ 是這一支最強的一道：同一格的兩張**逐位元組相同**就代表
@@ -259,7 +251,7 @@ for (const [k, dir, file] of TILES) {
      ⚠ 容差 100px：那幾顆形狀都不填滿自己的外框（牙洞、圓角），
        重心本來就不會剛好在框的正中央。 */
   for (const [f, gm, nm] of [[fbF, wmFor(k, { mode: "fb" }), "臉書版"],
-                             [lineF, wmFor(k, { mode: "tri" }), "LINE 版"]]) {
+                             [lineF, wmFor(k, { mode: undefined }), "LINE 版"]]) {
     const c = wmCentroid(f), want = wmCenter(gm);
     ok(c.n > 20000, `${nm} ${k} 幾乎量不到浮水印（只有 ${c.n} 個像素）`);
     if (c.n > 20000)
@@ -267,24 +259,6 @@ for (const [k, dir, file] of TILES) {
         `${nm} ${k} 的浮水印重心 (${c.x.toFixed(0)}, ${c.y.toFixed(0)})`
         + ` 對不上幾何算出來的 (${want.x.toFixed(0)}, ${want.y.toFixed(0)})`);
   }
-  /* ⓒ 牙洞在 PNG 上真的是一個洞：洞心那一小塊沒有淡墨，
-     而從洞心往形狀中心走 13% 的地方有。⚠ 兩件都要 —— 只驗「洞心沒有墨」的話，
-     整顆浮水印沒畫出來也會通過。 */
-  const gm = wmFor(k, { mode: "fb" });
-  /* ⚠ 宣告 `cut` 的那一格、或洞已經在畫布外面的，這裡不量 —— 量了會回一堆 NaN，
-     把真正的那一句訊息淹掉。 */
-  if (gm.holeMode !== "show") continue;
-  if (gm.hole.x < 0 || gm.hole.x >= TRI.CANVAS
-   || gm.hole.y < 0 || gm.hole.y >= TRI.CANVAS) continue;
-  const d = decode(fs.readFileSync(fbF));
-  const cx = gm.left + gm.w / 2, cy = gm.top + gm.h / 2;
-  const dx = cx - gm.hole.x, dy = cy - gm.hole.y, L = Math.hypot(dx, dy) || 1;
-  const rx = gm.hole.x + dx / L * gm.w * .13, ry = gm.hole.y + dy / L * gm.w * .13;
-  const inHole = tintAt(d, gm.hole.x, gm.hole.y, 6), inInk = tintAt(d, rx, ry, 6);
-  ok(inInk > .6, `${k}：牙洞旁邊那一塊量不到浮水印（只有 ${(inInk * 100).toFixed(0)}%）`
-    + " —— 浮水印可能根本沒畫出來，或洞的位置算錯了");
-  ok(inHole < .2, `${k}：牙洞的位置被墨填滿了（${(inHole * 100).toFixed(0)}%）`
-    + " —— 翻轉大概只翻了外框、洞落到形狀外面去了");
 }
 
 /* ---------- ⑩ 八個寬度：水平溢出 0、圖都載得到、死錨 0 ---------- */
@@ -327,6 +301,7 @@ ok(!errs.length, `JS 錯誤 ${errs.length} 個`);
 
 if (bad.length) { console.error("✗ " + bad.join("\n✗ ")); process.exit(1); }
 console.log(`✓ 臉書版三張貼文圖：${imgs.length} 張圖、三段文字逐字對得上、`
-  + "門診表與科別醫師那兩顆浮水印 ＝ 他挑定的那一組、地圖那顆和兩張都不一樣");
+  + `三格 ${TRI_FB.BIG_W}×${TRI_FB.BIG_H}／${TRI_FB.SLOT}／${TRI_FB.GAP} 是量出來的那一組、`
+  + "一顆圓接得起來");
 console.log("✓ 像素：兩個版本沒有互相蓋掉，六張的浮水印重心都對得上各自的幾何");
 console.log("✓ 八個寬度：水平溢出 0、圖全部載得到、死錨 0、紅線 0、零 JS");

@@ -42,9 +42,9 @@ b{font-weight:700}
 <h2 class="pv-h2">要上傳的那三張<span class="t">1080×1080・PNG</span></h2>
 <div class="pv-scroll"><table>
 <tr><th>貼文</th><th>檔案</th><th>尺寸</th><th>浮水印</th><th></th></tr>
-<tr><td>門診表</td><td><code>fangren-fb-hours-1080.png</code></td><td>1080×1080・100KB</td><td><code>r3c1</code>　660×660<br>壓右下・看得到 600px・墨 5%</td><td><a href="/preview/line-post-hours/">完整規格</a></td></tr>
-<tr><td>科別與醫師</td><td><code>fangren-fb-docs-1080.png</code></td><td>1080×1080・187KB</td><td><code>r1c2</code>　952×469<br>壓右下・看得到 512px・墨 4%</td><td><a href="/preview/line-post-docs/">完整規格</a></td></tr>
-<tr><td>位置與周邊停車</td><td><code>fangren-fb-map-1080.png</code></td><td>1080×1080・124KB</td><td><code>r2c2</code>　762×572<br>壓左上・看得到 512px・左右鏡射・墨 4%</td><td><a href="/preview/line-post-map/">完整規格</a></td></tr>
+<tr><td>門診表</td><td><code>fangren-fb-hours-1080.png</code></td><td>1080×1080・100KB</td><td>圓畫 651px<br>比例尺 0.7676</td><td><a href="/preview/line-post-hours/">完整規格</a></td></tr>
+<tr><td>科別與醫師</td><td><code>fangren-fb-docs-1080.png</code></td><td>1080×1080・190KB</td><td>圓畫 1308px<br>比例尺 0.3824</td><td><a href="/preview/line-post-docs/">完整規格</a></td></tr>
+<tr><td>位置與周邊停車</td><td><code>fangren-fb-map-1080.png</code></td><td>1080×1080・125KB</td><td>圓畫 1308px<br>比例尺 0.3824</td><td><a href="/preview/line-post-map/">完整規格</a></td></tr>
 </table></div>
 <p class="pv-cap">
 ⚠ 門診表與科別醫師那兩顆<b>一個值都沒有改</b>，就是你 09-08 在那兩頁上挑定的那一組
@@ -59,31 +59,28 @@ b{font-weight:700}
 <figure class="pv-shot"><img src="fangren-fb-map-1080.png" width="330" height="330" alt="位置與周邊停車" loading="lazy"><figcaption>位置與周邊停車</figcaption></figure>
 </div>
 
-<h2 class="pv-h2">牙洞這件事<span class="t">兩張各自的答案</span></h2>
+<h2 class="pv-h2">三張拼起來<span class="t">照臉書量到的 829／413／3</span></h2>
 <p class="pv-cap">
-牙洞是這顆標誌<b>唯一的識別特徵</b> —— 沒有它，剩下的就只是一團圓角形狀。
-所以預設會讓它露出來，<b>但那不是硬條件</b>。<br>
-⚠ <b>地圖</b>：那一顆的牙洞本來在左上（形狀寬的 17.5%），而這一張切掉的正是左邊那一截，
-洞剛好被切走。<b>左右鏡射</b>之後洞落在畫布 (378.6, 93.7) ＝ 右上。<br>
-⚠ <b>科別醫師</b>：從壓左上搬到右下，<b>不轉</b>。
-它的洞在形狀的右下角，原樣搬過去之後看得到的是形狀的左上那一塊，洞落在畫布外面
-(1246.8, 1002)。轉 180° 洞會回來，
-但那樣<b>整顆標誌是倒過來的</b> —— 一顆倒的標誌比一個看不到的洞更明顯，所以不轉。</p>
-
-<h2 class="pv-h2">地圖那一顆要換成哪一個<span class="t">五格，建議 r2c2</span></h2>
+⚠⚠⚠ <b>上一版我判斷錯了，這一版是照你那張截圖改的。</b>
+我當時寫「臉書沒有像 LINE 那樣的版面」，所以退回「一張一顆」——
+<b>那句話是推的、沒有量過</b>，而臉書把「一次三張照片」排成的，
+正是「上面一張寬的、下面兩張方的」。<b>通則：這種話一張截圖就能推翻，
+所以要先貼三張上去看一眼再說。</b></p>
 <p class="pv-cap">
-寬度<b>不是同一個數字</b>：九顆的長寬比 1.00~3.08、墨佔外框 59.6~83.2%，
-同寬的話細長那幾顆會輕很多，所以一律<b>按墨的面積正規化</b>（基準是門診表那顆畫 660）。<br>
-切掉多少也不是另一把尺：一律切到<b>看得到 512px</b> 為止 ＝ 科別醫師那一張切 440 之後
-剩下的寬度，這樣換形狀時份量不會跟著跳。<br>
-⚠ 門診表是 <code>r3c1</code>（長寬比 1.00）、科別醫師是 <code>r1c2</code>（2.03），
-所以<b>和兩張都分得出來的只有 r2c2（1.33）與 r2c3（3.08）那兩族</b>；
-r1c1 與 r3c2 是圓的、r2c1 是長條，各自會和其中一張撞。</p>
-<div class="pv-row"><figure class="pv-shot"><img src="fangren-fb-map-1080.png" width="330" height="330" alt="r2c2 762×572 長寬比 1.33（建議） 牙洞 在畫布 (378.6, 93.7)" loading="lazy"><figcaption>r2c2　762×572　長寬比 1.33（建議）<br>牙洞 在畫布 (378.6, 93.7)</figcaption></figure>
-<figure class="pv-shot"><img src="fb-map-r1c1.png" width="330" height="330" alt="r1c1 679×679 長寬比 1.00 牙洞 在畫布 (312.4, 502.6)" loading="lazy"><figcaption>r1c1　679×679　長寬比 1.00<br>牙洞 在畫布 (312.4, 502.6)</figcaption></figure>
-<figure class="pv-shot"><img src="fb-map-r3c2.png" width="330" height="330" alt="r3c2 673×674 長寬比 1.00 牙洞 在畫布 (175.5, 110.7)" loading="lazy"><figcaption>r3c2　673×674　長寬比 1.00<br>牙洞 在畫布 (175.5, 110.7)</figcaption></figure>
-<figure class="pv-shot"><img src="fb-map-r2c1.png" width="330" height="330" alt="r2c1 965×477 長寬比 2.02 牙洞 在畫布 (29.5, 60.7)" loading="lazy"><figcaption>r2c1　965×477　長寬比 2.02<br>牙洞 在畫布 (29.5, 60.7)</figcaption></figure>
-<figure class="pv-shot"><img src="fb-map-r2c3.png" width="330" height="330" alt="r2c3 1193×387 長寬比 3.08 牙洞 ⚠ 被切掉了" loading="lazy"><figcaption>r2c3　1193×387　長寬比 3.08<br>牙洞 ⚠ 被切掉了</figcaption></figure></div>
+⚠⚠ 臉書那一組的尺寸是<b>從你截圖逐像素量的</b>（深色模式，所以縫是暗的不是白的，
+找的是「整列幾乎全暗」的帶）：<br>
+大格 <b>x 3–831・y 136–548 → 829×413</b>（2.007:1）／縫 <b>3</b>（y 549–551、x 416–418）／
+小格 <b>413×413</b>（y 552–965）—— 而且 <b>829 ＝ 413＋3＋413</b>，對得起來。<br>
+⚠ 和 LINE 那一組（823／409／5）<b>差不到 1%</b>，但兩份各記各的：
+兩邊都是量出來的事實，寫成同一份就等於說「它們一定一樣」，那沒有人驗過。<br>
+⚠ 大格一樣是 <b>cover 裁切</b>（你截圖上「芳仁牙醫開診時段」那行標題和最下面那行電話
+都不見了），所以圓對大格只露出上半。</p>
+<div class="pv-row"><figure class="pv-shot"><img src="fb-3up.png" width="380" height="380" alt="三張拼起來（照臉書量到的比例）" loading="lazy"><figcaption>三張拼起來（照臉書量到的比例）</figcaption></figure></div>
+<p class="pv-cap">
+⚠ 你那一則的排法<b>已經是對的</b>：大格門診表、左下科別醫師、右下地圖停車 ——
+和這顆圓假設的順序一樣，<b>相簿裡不用重排</b>。<br>
+⚠⚠ <b>但這三張要重新上傳</b>：貼上去的那三張是「一張一顆」那一版，
+浮水印的位置和大小都不一樣，接不成一顆圓。</p>
 
 <h2 class="pv-h2">在臉書動態上長什麼樣<span class="t">375px 的手機</span></h2>
 <p class="pv-cap">照片在動態裡是滿版，所以 1080 的圖畫出來就是螢幕那麼寬。
@@ -100,7 +97,7 @@ r1c1 與 r3c2 是圓的、r2c1 是長條，各自會和其中一張撞。</p>
 ⚠ 常看到的 <b>1200×630 是「連結預覽卡」</b>的規格，不是照片貼文的，不要拿來套。<br>
 ⚠ <b>4:5（1080×1350）</b>在手機上佔更多畫面，但這三張的內容是方的，
 拉成 4:5 只會在上下多兩條空白 —— 換版型換不到東西。<br>
-⚠ 檔案上限 8MB，這三張是 100／187／124KB。<br>
+⚠ 檔案上限 8MB，這三張是 100／190／125KB。<br>
 ⚠ 這幾個數字是查來的<b>二手資料</b>（Meta 自己的說明頁這個容器連不出去）。</p>
 <p class="pv-cap">
 順帶一件是免費撿到的：門診表那張在 LINE 大格是裁切的，只看得到中間 537 列，

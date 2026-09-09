@@ -136,7 +136,7 @@ function wmFbFor(tile, opt = {}) {
   const hole = { x: +(left + (fx < 0 ? 1 - hx : hx) * w).toFixed(1),
                  y: +(top  + (fy < 0 ? 1 - hy : hy) * h).toFixed(1) };
   return {
-    shape, opacity: c.opacity, scale: 1, mode: "fb", pos: c.pos, cutX, cutY,
+    shape, opacity: c.opacity, scale: 1, mode: "fb-solo", pos: c.pos, cutX, cutY,
     holeMode: c.hole ?? "show",
     flipX: fx < 0, flipY: fy < 0, hole,
     w, h: +h.toFixed(1), left: +left.toFixed(1), top: +top.toFixed(1),
@@ -150,7 +150,7 @@ function wmFbFor(tile, opt = {}) {
 /* 面板要印的那一句 —— 三支產生器共用一份，不要各寫各的
    （寫法一分家，同一顆浮水印在三張面板上就會有三種說法）。 */
 export function wmDesc(WM) {
-  if (WM.mode !== "fb") return "三格共用的那一顆，圓心在十字縫上";
+  if (WM.mode !== "fb-solo") return "三格共用的那一顆，圓心在十字縫上";
   const 角 = { br: "壓右下", tl: "壓左上" }[WM.pos] ?? WM.pos;
   const 翻 = WM.flipX && WM.flipY ? "・轉 180°"
     : WM.flipX ? "・左右鏡射" : WM.flipY ? "・上下鏡射" : "・不轉";
@@ -159,7 +159,7 @@ export function wmDesc(WM) {
   const 洞 = WM.holeMode === "cut"
     ? `・牙洞在畫布外 (${WM.hole.x}, ${WM.hole.y})＝他選的不轉`
     : `・牙洞落在畫布 (${WM.hole.x}, ${WM.hole.y})`;
-  return `臉書版：一張一顆、${角}、切掉 ${WM.cutX}×${WM.cutY}`
+  return `一張一顆（fb-solo・留著當退路）：${角}、切掉 ${WM.cutX}×${WM.cutY}`
     + `（看得到 ${WM.seen}px）${翻}${洞}`;
 }
 
@@ -181,6 +181,40 @@ const RECT = {
 /* 十字縫的正中央 —— 圓心就放這裡 */
 export const CENTER = { x: TRI.BIG_W / 2, y: TRI.BIG_H + TRI.GAP / 2 };
 
+/* ⚠⚠⚠ 2026-09-09 最後一輪：**臉書的相簿貼文也是三格，而且是同一種排法。**
+ *   使用者拿了粉專上那一則的截圖：「**結果貼文也有三格是欸　那還是像 line 那樣
+ *   做一下讓同一個 logo 完整顯示好了　給我適合放在臉書貼文的圖片**」。
+ *
+ * ⚠⚠⚠ **這推翻了 38-2 那整段推理。** 我當時寫「臉書沒有像 LINE 那樣的版面，
+ *   所以退回一張一顆」，那句話是**從第一原理推的、沒有量過** ——
+ *   而臉書把「一次三張照片」排成的正是「上面一張寬的、下面兩張方的」。
+ *   **通則：「那個平台沒有這種版面」是一句可以被一張截圖推翻的話 ——
+ *   在推翻它之前，先貼三張上去看一眼。**
+ *
+ * ⚠⚠ 下面這一組是**從那張截圖逐像素量的**（截圖 838×1063，臉書深色模式，
+ *   所以縫是暗的不是白的 —— 找的是「整列幾乎全暗」的帶）：
+ *     大格　x 3—831・y 136—548　→ 829×413（2.007:1）
+ *     縫　　y 549—551、x 416—418　→ **3**
+ *     小格　x 3—415 與 419—831・y 552—965　→ 413×413
+ *   而且 **829 ＝ 413 ＋ 3 ＋ 413**，和 LINE 那一組一樣對得起來。
+ *
+ * ⚠ 和 LINE 那一組（823／409／5）差不到 1%，**但還是各記一份** ——
+ *   兩邊都是量出來的事實，寫成同一份就等於說「它們一定一樣」，那沒有人驗過。
+ * ⚠ 大格一樣是 **cover 裁切**（截圖上「芳仁牙醫開診時段」那行標題與最下面
+ *   那行電話都不見了），所以圓心對大格仍然落在它看得到那一段的下緣外一點點。 */
+export const TRI_FB = {
+  CANVAS: 1080,
+  BIG_W: 829, BIG_H: 413,
+  SLOT: 413, GAP: 3,
+};
+const metricsOf = (mode) => mode === "fb" ? TRI_FB : TRI;
+const rectsOf = (m) => ({
+  hours: { x: 0, y: 0, w: m.BIG_W, h: m.BIG_H },
+  docs:  { x: 0, y: m.BIG_H + m.GAP, w: m.SLOT, h: m.SLOT },
+  map:   { x: m.BIG_W - m.SLOT, y: m.BIG_H + m.GAP, w: m.SLOT, h: m.SLOT },
+});
+const centerOf = (m) => ({ x: m.BIG_W / 2, y: m.BIG_H + m.GAP / 2 });
+
 /**
  * 某一格的浮水印要畫在它自己那張 1080 原圖的哪裡、多大。
  * @param {"hours"|"docs"|"map"} tile
@@ -188,22 +222,28 @@ export const CENTER = { x: TRI.BIG_W / 2, y: TRI.BIG_H + TRI.GAP / 2 };
  * @returns {{shape,w,h,left,top,opacity,scale,css}}  left/top 是 SVG 外框的左上角（1080 座標）
  */
 export function wmFor(tile, opt = {}) {
-  /* ⚠⚠ 臉書版：三支產生器一行都不用改，由環境變數切（同 WM_DIA 那把尺的做法）。
-     ⚠ 沒有第二個地方在算浮水印，所以兩個版本不可能分家。 */
-  if ((opt.mode ?? process.env.WM_MODE) === "fb") return wmFbFor(tile, opt);
-  const r = RECT[tile];
+  /* ⚠⚠ 版本由環境變數切（同 WM_DIA 那把尺的做法），三支產生器一行都不用改。
+     ⚠ 沒有第二個地方在算浮水印，所以幾個版本不可能分家。
+       `fb`      ＝ 臉書相簿貼文的三格（2026-09-09 定案，量出來和 LINE 同一種排法）
+       `fb-solo` ＝ 一張一顆的那一版（2026-09-08 挑定的值，**留著當紀錄與退路**，
+                    哪天真的要一則一則單獨貼才會用到） */
+  const mode = opt.mode ?? process.env.WM_MODE;
+  if (mode === "fb-solo") return wmFbFor(tile, opt);
+  const m = metricsOf(mode);
+  const r = rectsOf(m)[tile];
   if (!r) throw new Error(`不認識的格子：${tile}（只有 hours／docs／map）`);
   const dia = opt.dia ?? TRI.DIA;
   const shape = opt.shape ?? TRI.SHAPE;
-  const C = TRI.CANVAS;
+  const C = m.CANVAS;
+  const ctr = centerOf(m);
 
   /* cover：比例尺由「比較長的那一邊」決定；1080 是正方形，所以就是寬與高取大的那個 */
   const s = Math.max(r.w, r.h) / C;
   /* 原圖上看得到的那一段（cover 是置中裁的） */
   const offX = (C - r.w / s) / 2, offY = (C - r.h / s) / 2;
 
-  const cx = (CENTER.x - r.x) / s + offX;
-  const cy = (CENTER.y - r.y) / s + offY;
+  const cx = (ctr.x - r.x) / s + offX;
+  const cy = (ctr.y - r.y) / s + offY;
 
   const w = dia / s, h = w / shapeRatio(shape);
   const left = cx - w / 2, top = cy - h / 2;
@@ -217,21 +257,22 @@ export function wmFor(tile, opt = {}) {
 
 /* ⚠ 守門用：三格的圓在「合起來」那個座標系裡要是同一顆（同心、同大小）。
    算回去比一次 —— 哪一支的比例尺寫錯了，這裡會翻臉。 */
-export function checkOne(dia = TRI.DIA) {
-  /* ⚠ 臉書版三張各自一顆完整的，本來就不該接成一顆 —— 這一道跳過。 */
-  if (process.env.WM_MODE === "fb") return [];
+export function checkOne(dia = TRI.DIA, mode = process.env.WM_MODE) {
+  /* ⚠ 一張一顆那一版本來就不該接成一顆 —— 這一道跳過。 */
+  if (mode === "fb-solo") return [];
+  const m = metricsOf(mode), RE = rectsOf(m), ctr = centerOf(m);
   const out = [];
-  for (const tile of Object.keys(RECT)) {
-    const g = wmFor(tile, { dia }), r = RECT[tile];
-    const s = g.scale, offY = (TRI.CANVAS - r.h / s) / 2, offX = (TRI.CANVAS - r.w / s) / 2;
+  for (const tile of Object.keys(RE)) {
+    const g = wmFor(tile, { dia, mode }), r = RE[tile];
+    const s = g.scale, offY = (m.CANVAS - r.h / s) / 2, offX = (m.CANVAS - r.w / s) / 2;
     out.push({ tile,
       cx: +(((g.left + g.w / 2) - offX) * s + r.x).toFixed(2),
       cy: +(((g.top + g.h / 2) - offY) * s + r.y).toFixed(2),
       d:  +(g.w * s).toFixed(2) });
   }
   for (const o of out) {
-    if (Math.abs(o.cx - CENTER.x) > .05 || Math.abs(o.cy - CENTER.y) > .05)
-      throw new Error(`${o.tile} 的圓心接不上：(${o.cx}, ${o.cy})，應該是 (${CENTER.x}, ${CENTER.y})`);
+    if (Math.abs(o.cx - ctr.x) > .05 || Math.abs(o.cy - ctr.y) > .05)
+      throw new Error(`${o.tile} 的圓心接不上：(${o.cx}, ${o.cy})，應該是 (${ctr.x}, ${ctr.y})`);
     if (Math.abs(o.d - dia) > .05)
       throw new Error(`${o.tile} 的圓畫出來是 ${o.d}，不是 ${dia}`);
   }
@@ -242,16 +283,20 @@ export function checkOne(dia = TRI.DIA) {
    哪一支的縫或順序寫錯就會靜靜地畫出一顆接不起來的圓）。
    ⚠ 順序是使用者指定的：大格＝門診表、左下＝科別醫師、右下＝地圖停車。 */
 export const MOCK = { w: TRI.BIG_W, h: TRI.BIG_H + TRI.GAP + TRI.SLOT };
-export function tripleHtml({ hours, docs, map }, rule = "#cdd0d2") {
+/* ⚠ 臉書相簿貼文那一組的模擬尺寸（量出來的，見上面 TRI_FB） */
+export const mockOf = (mode) => { const m = metricsOf(mode);
+  return { w: m.BIG_W, h: m.BIG_H + m.GAP + m.SLOT }; };
+export function tripleHtml({ hours, docs, map }, rule = "#cdd0d2", mode) {
+  const m = metricsOf(mode);
   const cell = (uri, w, h) =>
     `<div style="width:${w}px;height:${h}px;overflow:hidden;background:${rule}">`
     + (uri ? `<img src="${uri}" style="width:100%;height:100%;object-fit:cover;display:block">` : "")
     + `</div>`;
   return `<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>`
-    + `<div style="width:${TRI.BIG_W}px;background:#fff;display:flex;`
-    + `flex-direction:column;gap:${TRI.GAP}px">`
-    + cell(hours, TRI.BIG_W, TRI.BIG_H)
-    + `<div style="display:flex;gap:${TRI.GAP}px">`
-    + cell(docs, TRI.SLOT, TRI.SLOT) + cell(map, TRI.SLOT, TRI.SLOT)
+    + `<div style="width:${m.BIG_W}px;background:#fff;display:flex;`
+    + `flex-direction:column;gap:${m.GAP}px">`
+    + cell(hours, m.BIG_W, m.BIG_H)
+    + `<div style="display:flex;gap:${m.GAP}px">`
+    + cell(docs, m.SLOT, m.SLOT) + cell(map, m.SLOT, m.SLOT)
     + `</div></div>`;
 }
