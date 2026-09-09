@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 圖文選單：綁定手機</title>
+<!--
+  2026-09-09 使用者拿了另一家診所（同一個廠商）的截圖：
+  「我們之前做過的綁定插圖　把他合在這個頁面的下方　取代這個　點此 sign in 圖片看看
+    或是　在 line 商家帳號裡，這個下方的圖片尺寸可以變動嗎？
+    我把我們做好的圖片合進去被裁剪成很奇怪」
+
+  ⚠⚠⚠ 「被裁得很奇怪」是量得出來的：那條選單量到 1125×378 ＝ 2.976:1
+       ＝ LINE 的小型版型（2500×843）；插圖是 1376×768 ＝ 1.792:1。
+       把 1.79 塞進 2.97 要切掉 40% 的高度 —— 切掉的正好是上面那排頭和下面的腳。
+       **不是裁法沒調好，是比例差太多。**
+
+  ⚠ 這一頁刻意不放另一家診所的畫面：只用了截圖最底下那條 LINE 自己的選單列
+    （drafts/line-richmenu-chatbar.png），他們的圖文選單一個像素都沒有取 —— repo 是公開的。
+
+  ⚠ 產生器 node drafts/channels/richmenu-bind.mjs、守門 node drafts/channels/check-richmenu.mjs
+    推導在 drafts/channels/README.md 第三十七節
+-->
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
+  --ink:#2a2c27;--ink-soft:#5c5f57;--green:#3f654a;--deep:#2c5238;--red:#89202d}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.75;padding-bottom:56px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:18px 14px 0}
+h1{font-size:1.02rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
+h1 span{display:block;font-weight:400;font-size:.7em;color:var(--ink-soft);letter-spacing:.04em}
+.pv-lead{font-size:.78rem;color:var(--ink-soft);margin:.55rem 0 0;line-height:1.8}
+.pv-lead b{color:var(--ink)}
+a{color:var(--deep)}
+code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
+  font-family:ui-monospace,Menlo,Consolas,monospace}
+.pv-h1{font-size:.98rem;font-weight:700;margin:40px 0 0;letter-spacing:.02em;
+  background:var(--deep);color:#fff;border-radius:8px;padding:7px 11px;line-height:1.5}
+.pv-h1 span{display:block;font-size:.74em;font-weight:400;opacity:.85;letter-spacing:.03em}
+.pv-h2{font-size:.92rem;font-weight:700;margin:34px 0 0;letter-spacing:.01em;
+  padding-left:9px;border-left:3px solid var(--green)}
+.pv-h2 .t{display:block;font-size:.78em;font-weight:400;color:var(--ink-soft);letter-spacing:0}
+.pv-h2 em{font-style:normal;font-size:.72em;background:var(--deep);color:#fff;
+  border-radius:6px;padding:1px 7px;margin-left:6px;letter-spacing:.04em;vertical-align:2px}
+.pv-h2 em.no{background:var(--red)}
+/* 模擬圖一律畫成 375px ＝ 手機上真正的大小，不要放大看 */
+.pv-shot{margin:12px auto 0;width:375px;max-width:100%}
+.pv-shot img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--rule)}
+.pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:7px 0 0}
+.pv-cap b{color:var(--ink)}
+.pv-cap .n{color:var(--red);font-weight:700}
+.pv-num{margin:12px 0 0;background:var(--card);border:1px solid var(--rule);
+  border-radius:10px;padding:11px 12px;font-size:.7rem;line-height:1.85;color:var(--ink-soft)}
+.pv-num b{color:var(--ink)}
+.pv-num .n{color:var(--red);font-weight:700}
+.pv-scroll{overflow-x:auto;margin:10px 0 0}
+.pv-tab{border-collapse:collapse;font-size:.66rem;min-width:100%;
+  background:var(--card);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.pv-tab th,.pv-tab td{padding:5px 7px;border-bottom:1px solid var(--rule);text-align:right;
+  white-space:nowrap}
+.pv-tab th:first-child,.pv-tab td:first-child{text-align:left}
+.pv-tab thead th{background:#e9eaeb;font-weight:700;color:var(--ink)}
+.pv-tab tbody tr:last-child td{border-bottom:0}
+.pv-tab .no{color:var(--red);font-weight:700}
+.pv-tab .ok{color:var(--deep);font-weight:700}
+.pv-files{margin:10px 0 0;font-size:.7rem;line-height:1.9;color:var(--ink-soft)}
+.pv-files .d{display:block;overflow-wrap:anywhere}
+.pv-files b{color:var(--ink)}
+.pv-ask{margin:10px 0 0;background:var(--card);border:1px solid var(--rule);
+  border-left:3px solid var(--red);border-radius:10px;padding:11px 13px;
+  font-size:.72rem;line-height:1.9}
+.pv-ask ol{margin:6px 0 0 1.1em}
+.pv-ask li{margin:5px 0 0}
+.pv-foot{margin:44px 0 0;font-size:.66rem;color:var(--ink-soft);line-height:1.9;
+  border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="pv-wrap">
+
+<h1>LINE 圖文選單：綁定手機
+  <span>把綁定完成那張插圖擺進聊天室最底下那條選單　2026-09-09</span></h1>
+
+<p class="pv-lead">
+先回答尺寸那一題：<b>那條選單的比例是 LINE 定的，不是隨便給多大就多大</b>。
+你合進去被裁掉的不是裁法沒調好 ——
+<b>插圖是 1.79:1，那條選單是 2.97:1，硬塞就一定要切掉四成的高度</b>，
+切掉的正好是上面那排頭和下面的腳。<br>
+底下四格都是<b>真的產出檔</b>，而且一律畫成 <b>375px ＝ 手機上真正的大小</b>，不要放大看。
+</p>
+
+<h2 class="pv-h1">一、為什麼會被裁成那樣<span>量出來的，不是感覺</span></h2>
+
+<div class="pv-num">
+你給的截圖 <b>1125×2436</b>（iPhone，一個點畫三格），<br>
+那條選單量到 <b>y 1818 ~ 2195 ＝ 1125×378</b> → <b>1125 ÷ 378 ＝ 2.976</b><br>
+＝ LINE 的<b>小型版型 2500×843（2.966:1）</b>。<br>
+我們的插圖 <b>1376×768 ＝ 1.792:1</b>。<br>
+把 1.79 塞進 2.97：寬度對齊之後，高度只放得下
+<b class="n">768 → 464 列</b>，<b class="n">四成被切掉</b>。
+</div>
+
+<h2 class="pv-h1">二、尺寸可以變嗎<span>可以，但要看是誰在設</span></h2>
+
+<h3 class="pv-h2">後台自己設<span class="t">LINE Official Account Manager → 圖文選單</span><em>只有兩種</em></h3>
+<div class="pv-scroll"><table class="pv-tab">
+<thead><tr><th>版型</th><th>尺寸</th><th>比例</th><th>手機上</th></tr></thead>
+<tbody>
+<tr><td>大型</td><td>2500×1686<br>1200×810／800×540</td><td>1.483</td><td>375×253</td></tr>
+<tr><td>小型（現在這種）</td><td>2500×843<br>1200×405／800×270</td><td>2.966</td><td>375×126</td></tr>
+</tbody></table></div>
+<p class="pv-cap">
+版型裡的<b>格子</b>可以自己切（幾格、切在哪），但<b>整張圖的比例只有這兩個</b>，
+上傳的圖對不上就會被它自己裁。
+</p>
+
+<h3 class="pv-h2">廠商用系統送<span class="t">Messaging API 的 rich menu</span><em>可以自訂</em></h3>
+<div class="pv-num">
+寬 <b>800 ~ 2500</b>　高 <b>250 以上</b>　<b>寬 ÷ 高 ≥ 1.45</b>　檔案 <b>≤ 1MB</b>　JPEG 或 PNG<br>
+→ 我們這張插圖是 <b class="ok">1.792</b>，<b>剛好過得了 1.45</b>，
+所以「整張圖一個像素都不裁」<b>做得到</b>，但<b>只有廠商那一側做得到</b>（底下 Ⓒ）。
+</div>
+
+<h2 class="pv-h1">三、四格<span>都是真的產出檔，畫成手機上真正的大小</span></h2>
+
+<h3 class="pv-h2">Ⓧ 現況：整張圖直接塞進去
+  <span class="t">＝ 你合進去看到的那一種</span><em class="no">不建議</em></h3>
+<div class="pv-shot"><img src="mock-x.png" width="1125" height="657"
+  alt="小型選單，整張插圖硬塞：上面那排頭和下面的腳都被切掉"></div>
+<p class="pv-cap">
+<b>只看得到原圖的 60%</b>：後面那排人的頭被切平、六個人的腳全部不見，
+而且<b>整條沒有一個字叫人去綁定</b>，只剩選單列那行「手機註冊」。
+</p>
+
+<h3 class="pv-h2">Ⓐ 小型：右邊放圖，左邊留一欄字
+  <span class="t">2500×843，後台就設得了</span><em>建議</em></h3>
+<div class="pv-shot"><img src="mock-a.png" width="1125" height="657"
+  alt="小型選單，右邊放整張插圖、左邊一欄字：點一下／綁定手機／看診提醒與約診查詢綁定後都在這裡"></div>
+<p class="pv-cap">
+圖只裁掉左右各 3%（<b>看得到 94%</b>），高度一列都沒切。
+代價是<b>圖只剩 213×126</b>，畫面上一個人頭只有 <b>13.5px</b> ——
+遠看是「一群人跑過來」的形狀，看不清楚每一張臉。
+</p>
+
+<h3 class="pv-h2">Ⓑ 大型：整張圖 ＋ 底下一條字帶
+  <span class="t">2500×1686，後台也設得了</span><em>圖最好看</em></h3>
+<div class="pv-shot"><img src="mock-b.png" width="1125" height="1037"
+  alt="大型選單，整張插圖在上、底下一條深綠字帶寫著點一下 綁定手機"></div>
+<p class="pv-cap">
+<b>看得到 97%</b>，一個人頭 <b>22.3px</b>，臉看得清楚，字帶也講得完整。<br>
+代價只有一個而且很實在：<b class="n">它吃掉 253px ＝ 手機畫面的三分之一</b>
+（小型只吃 126px）。這條選單是<b>常駐</b>的，每次打開聊天室都在。
+</p>
+
+<h3 class="pv-h2">Ⓒ 自訂：整張圖，一個像素都不裁
+  <span class="t">2500×1396 ＝ 插圖原比例</span><em class="no">要廠商送</em></h3>
+<div class="pv-shot"><img src="mock-c.png" width="1125" height="906"
+  alt="自訂尺寸 2500x1396 的選單，整張插圖完全不裁，沒有字"></div>
+<p class="pv-cap">
+<b>看得到 100%</b>，比例正好是插圖自己的 1.79。<br>
+兩個代價：<b>後台選不到這個尺寸</b>（要廠商用系統送），
+以及<b class="n">整張都是圖，沒有地方放字</b> ——
+要叫人去綁定就只剩選單列那一行。
+</p>
+
+<h3 class="pv-h2">四格擺在一起<span class="t">同一個判準：手機上多大、看得到原圖多少</span></h3>
+<div class="pv-scroll"><table class="pv-tab">
+<thead><tr><th></th><th>版型</th><th>圖檔</th><th>手機上</th><th>看得到</th><th>一個人頭</th><th>主標</th><th>檔案</th></tr></thead>
+<tbody>
+<tr><td>Ⓧ 現況</td><td>小型</td><td>2500×843</td><td>375×126</td><td class="no">60%</td><td>22.3px</td><td class="no">沒有</td><td>265KB</td></tr>
+<tr><td>Ⓐ 圖＋字欄</td><td>小型</td><td>2500×843</td><td>375×126</td><td>94%</td><td class="no">13.5px</td><td>28.5px</td><td>267KB</td></tr>
+<tr><td>Ⓑ 大型</td><td>大型</td><td>2500×1686</td><td class="no">375×253</td><td>97%</td><td>22.3px</td><td>18.9px</td><td>424KB</td></tr>
+<tr><td>Ⓒ 自訂</td><td>自訂</td><td>2500×1396</td><td>375×209</td><td class="ok">100%</td><td>22.4px</td><td class="no">沒有</td><td>355KB</td></tr>
+</tbody></table></div>
+<p class="pv-cap">
+「一個人頭」量的是原圖裡患者那顆頭（86×82px）縮到選單上還剩多高 ——
+<b>這一格才是「圖看不看得懂」的判準，不是圖檔多大</b>。
+LINE 的上限是 1MB，四張都遠低於。
+</p>
+
+<h2 class="pv-h1">四、檔案<span>要上傳的是 richmenu-*.jpg</span></h2>
+<div class="pv-files">
+<b>Ⓧ</b> <span class="d">https://fangren.net/preview/line-richmenu/richmenu-x.jpg　2500×843</span>
+<b>Ⓐ</b> <span class="d">https://fangren.net/preview/line-richmenu/richmenu-a.jpg　2500×843</span>
+<b>Ⓑ</b> <span class="d">https://fangren.net/preview/line-richmenu/richmenu-b.jpg　2500×1686</span>
+<b>Ⓒ</b> <span class="d">https://fangren.net/preview/line-richmenu/richmenu-c.jpg　2500×1396</span>
+</div>
+<p class="pv-cap">
+<code>mock-*.png</code> 是「在聊天室裡長什麼樣」的模擬，<b>不是要上傳的檔</b>。<br>
+挑定哪一格再重跑 <code>node drafts/channels/richmenu-bind.mjs</code> 就好，
+文案改在那支的 <code>COPY</code>。
+</p>
+
+<h2 class="pv-h1">五、還沒定的<span>都要你點頭，沒有自己決定</span></h2>
+<div class="pv-ask">
+<ol>
+<li><b>字是我們擬的，不是你寫的。</b>「點一下／綁定手機／看診提醒與約診查詢　綁定後都在這裡」——
+  用詞跟著已經定稿的綁定完成卡走（那張寫的是「約診查詢」「看診前48小時…提醒」），
+  但這條線前面每一則的字最後都換成你的版本。</li>
+<li><b>選單列那行字（現在寫「手機註冊」）誰在設。</b>
+  Ⓒ 那一格整張都是圖，全靠那一行講話 —— 它改不改得動要問廠商。</li>
+<li><b>這條選單點下去要去哪裡。</b>綁定的網址是廠商系統產的，
+  我們手上還是佔位符（同綁定完成卡那顆按鈕，第十一之七節第 1 項）。</li>
+<li><b>綁定完成之後這條選單要不要換掉。</b>
+  已經綁好的人每次打開聊天室還看到「綁定手機」是說謊；
+  LINE 是可以分眾換選單的，但那要廠商做。</li>
+</ol>
+</div>
+
+<p class="pv-foot">
+產生器　<code>node drafts/channels/richmenu-bind.mjs</code><br>
+守門　　<code>node drafts/channels/check-richmenu.mjs</code><br>
+推導　　<code>drafts/channels/README.md</code> 第三十七節<br>
+插圖　　<code>drafts/bind-done-v4-src.jpg</code>（＝綁定完成卡那張頭圖的原檔，1376×768）<br>
+⚠ 這一頁只用了你那張截圖最底下那條 LINE 自己的選單列，
+別家診所的圖文選單一個像素都沒有取 —— 這個 repo 是公開的。
+</p>
+
+</div>
+</body>
+</html>
