@@ -40,7 +40,8 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，尺寸對得上，都有 alt ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 4, `頁上有 ${imgs.length} 張圖，應該是 4`);
+/* ⚠ 3 張成品 ＋ 浮水印直徑那把尺 12 張（三個直徑 × 排在一起／三張獨立） */
+ok(imgs.length === 15, `頁上有 ${imgs.length} 張圖，應該是 15`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -55,8 +56,22 @@ for (const im of imgs) {
    ⚠⚠ 2026-09-09 定稿 Ⓕ3，這一頁收成三張：定稿本人／小格 410px／主頁三格。
    ⚠⚠⚠ **要貼的檔案叫 `fangren-docs-1080.png`**（同看診時間與地圖那兩張的命名），
    其餘兩張只是模擬圖 —— 名字寫錯的話使用者會貼到模擬圖上去。 */
-for (const f of ["fangren-docs-1080.png", "slot-410.png", "profile-3up.png", "tri-sizes.png"])
-  ok(used.has(f), `少了這一張：${f}`);
+/* ⚠⚠ 2026-09-09 使用者：「三個大小的版本都要作成獨立的和排在一起的給我看」——
+   所以每一個直徑要四張：排在一起 ＋ 三張各自獨立。少一張那一格就等於沒提案。
+   ⚠ 直徑那三個數字的唯一出處是 post-triptych.mjs 的 DIAS，不要在這裡再寫一份。 */
+const TRIGEN = fs.readFileSync(path.join(ROOT, "drafts", "channels", "post-triptych.mjs"), "utf8");
+const DIAS = (() => {
+  const m = TRIGEN.match(/const DIAS = \[([^\]]*)\]/);
+  if (!m) throw new Error("post-triptych.mjs 裡讀不到 `const DIAS = [...]` —— 那把尺的唯一出處");
+  return m[1].split(",").map(s => s.trim()).filter(Boolean);
+})();
+ok(DIAS.length > 0, "DIAS 讀出來是空的");
+const want = ["fangren-docs-1080.png", "slot-410.png", "profile-3up.png"];
+for (const d of DIAS)
+  for (const k of ["3up", "hours", "docs", "map"]) want.push(`tri-${d}-${k}.png`);
+for (const f of want) ok(used.has(f), `少了這一張：${f}`);
+/* ⚠ 上一版那張疊成一長條的 tri-sizes.png 已經拿掉（那三段就是現在的三張 -3up） */
+ok(!fs.existsSync(path.join(DIR, "tri-sizes.png")), "tri-sizes.png 還在 —— 它已經被三張 -3up 取代");
 /* ⚠⚠⚠ 2026-09-09：浮水印跨三格拼成一顆，位置與大小只有一個出處 ——
    這一支不可以自己寫死，不然三張接不成一顆而且**畫面上看起來很正常**。 */
 ok(/from "\.\/wm-triptych\.mjs"/.test(GENCODE) && /wmFor\("docs"\)/.test(GENCODE),
