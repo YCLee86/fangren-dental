@@ -139,6 +139,25 @@ if (!N.格.some((g) => g.主標文字 === "手機綁定"))
 if (/綁定手機(?!就啟用)/.test(N.格.map((g) => g.主標文字).join("|")))
   bad.push("有一格的主標寫成「綁定手機」（使用者定的是「手機綁定」）");
 
+/* ⚠⚠⚠ 招呼卡那兩行是**已經定稿的字**，頁上一定要逐字等於 welcome-card.json ——
+ *   憑印象重打一次就是第二個真相（這條線一再踩到的那件事）。 */
+{
+  const wc = JSON.parse(fs.readFileSync("drafts/channels/welcome-card.json", "utf8"));
+  const all = [];
+  JSON.stringify(wc, (k, v) => { if (k === "text" && typeof v === "string") all.push(v); return v; });
+  const line = all.find((t) => t.includes("一排選單"));
+  /* ⚠⚠⚠ 只能在「引用定稿」那一塊裡找，不可以掃整頁 ——
+   *   底下「甲」那個改法的句子裡也有同一串字，掃整頁的話改壞了照樣會過
+   *   （負向測第一次就是這樣漏掉的）。同第三十五節那個 pv-cut：
+   *   **一段字同時是「資料」又是「展示品」時，兩者要用不同的標記。** */
+  const q0 = html.indexOf('id="wc-quote"');
+  const block = q0 < 0 ? "" : html.slice(q0, html.indexOf("</div>", q0));
+  if (q0 < 0) bad.push("頁上找不到 id=\"wc-quote\"（引用招呼卡定稿的那一塊）");
+  if (!line) bad.push("welcome-card.json 裡找不到「一排選單」那一塊 —— 招呼卡改過了？");
+  else for (const part of line.split("\n"))
+    if (!block.includes(part)) bad.push(`頁上招呼卡那一句和定稿對不起來，少了：${part}`);
+}
+
 /* ⚠⚠ 六格那件事要留在頁上 —— 它是這一輪真正的發現，
  *   哪天有人把頁面收乾淨、把它一起收掉，這個 bug 就會再犯一次。 */
 for (const t of ["診所資訊", "約診查詢", "診療項目", "醫師介紹", "衛教資訊", "基本設定"])
