@@ -40,7 +40,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，尺寸對得上，都有 alt ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 8, `頁上有 ${imgs.length} 張圖，應該是 8`);
+ok(imgs.length === 5, `頁上有 ${imgs.length} 張圖，應該是 5`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -52,9 +52,9 @@ for (const im of imgs) {
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
 }
 /* ⚠ 每一案的 1080 圖都要擺上去 —— 少一張，那一案就等於沒有被提案。
-   ⚠⚠ 2026-09-09 使用者挑了 Ⓒ＋Ⓓ 合併，所以候選換成 Ⓔ~Ⓗ；
-   Ⓒ／Ⓓ 兩張父案也要在（頁上要拿它們比合併前後）。 */
-for (const t of ["two", "twoc", "col3", "docfirst", "skills", "byspec"])
+   ⚠⚠ 2026-09-09 使用者：「保留 E F」，所以候選收成 Ⓔ／Ⓕ ＋ 那把深淺的尺
+   （Ⓔ2／Ⓕ2）。Ⓕ2 只在說明裡寫檔名（同一件事套第二次，不必再放一張大圖）。 */
+for (const t of ["two", "twoc", "two-flat"])
   ok(used.has(`post-docs-${t}.png`), `少了一案沒擺上頁面：post-docs-${t}.png`);
 
 /* ---- ② 「詳情」逐字 ---- */
@@ -65,14 +65,14 @@ if (onPage !== undefined)
   ok(onPage.trim() === detail,
     `「詳情」和 detail.txt 對不上：\n    頁面 ${JSON.stringify(onPage.trim())}\n    檔案 ${JSON.stringify(detail)}`);
 
-/* ---- ③ 四案的名字要和產生器的 CASES 對得上 ----
-   ⚠ 頁上那張表是手寫的，產生器改了案名而頁面沒跟上，使用者挑的就是別的東西。 */
-const cases = [...GEN.matchAll(/\["(two|twoc|col3|docfirst|skills|byspec)",\s*"([^"]+)"\]/g)]
-  .map(m => ({ tag: m[1], label: m[2] }));
-ok(cases.length === 6, `產生器的 CASES 讀到 ${cases.length} 案，應該是 6`);
+/* ---- ③ 四格的名字要和產生器的 CASES 對得上 ----
+   ⚠ 頁上那些標題是手寫的，產生器改了案名而頁面沒跟上，使用者挑的就是別的東西。 */
+const cases = [...GEN.matchAll(/\["(two|twoc)",\s*"(dim|flat)",\s*"([^"]+)"\]/g)]
+  .map(m => ({ tag: m[1], v: m[2], label: m[3] }));
+ok(cases.length === 4, `產生器的 CASES 讀到 ${cases.length} 格，應該是 4`);
 for (const c of cases) {
-  /* 圈號後面那幾個字（去掉「Ⓐ 」與括號裡的補充）要出現在頁面上 */
-  const key = c.label.replace(/^[Ⓐ-Ⓩ]\s*/, "").replace(/（[^）]*）/g, "").trim();
+  /* 圈號（含 Ⓔ2 那個尾數）後面那幾個字，去掉括號裡的補充，要出現在頁面上 */
+  const key = c.label.replace(/^[Ⓐ-Ⓩ]\d?\s*/, "").replace(/（[^）]*）/g, "").trim();
   ok(PAGE.includes(key), `產生器的「${c.label}」在規格頁上找不到（頁面沒跟上改名？）`);
 }
 
@@ -109,6 +109,40 @@ for (const s of specs) {
   ok(detail.includes(`${n}　https://fangren.net/topics/${s.id}/`),
     `「詳情」少了或寫錯這一科：${n} → /topics/${s.id}/`);
 }
+/* ⚠⚠⚠ 頁上那張「每一列印誰」的表要逐格對得上**站上篩選的規則**
+   （index.html 那支 specHit()：本科 **或** 專長命中）——
+   那張表是手寫的，寫錯一個名字，使用者是照它在挑。
+   ⚠ 順序：本科的排前面，兩群內部照站上卡序（＝產生器那一段的排法）。 */
+{
+  const docFull = SRC.slice(a0, a1).split("<article").slice(1).map(a => {
+    const s = a.replace(/<!--[\s\S]*?-->/g, "");
+    return {
+      spec: (s.match(/data-spec="([a-z]+)"/) || [])[1],
+      name: (s.match(/<h3>([^<]*)</) || [])[1],
+      sk: [...((s.match(/class="skills">([\s\S]*?)<\/dd>/) || [])[1] || "")
+        .matchAll(/<span class="sk" data-spec="([a-z]+)">/g)].map(m => m[1]),
+    };
+  });
+  const rows = [...PAGE.matchAll(/<tr><td>([^<]+)<\/td><td>([^<]+)<\/td><td[^>]*>([^<]+)<\/td><\/tr>/g)]
+    .map(m => ({ spec: m[1].trim(), home: m[2].trim(), cross: m[3].trim() }));
+  ok(rows.length === 7, `頁上那張「每一列印誰」讀到 ${rows.length} 列，應該是 7`);
+  const join = xs => xs.length ? xs.join("　") : "—";
+  for (const s of specs) {
+    const n = DISP[s.name] || s.name;
+    const row = rows.find(r => r.spec === n);
+    if (!row) { bad.push(`「每一列印誰」少了 ${n} 這一列`); continue; }
+    const home  = docFull.filter(d => d.spec === s.id).map(d => d.name);
+    const cross = docFull.filter(d => d.spec !== s.id && d.sk.includes(s.id)).map(d => d.name);
+    ok(row.home === join(home),
+      `${n} 那一列的「本科醫師」對不上：頁面「${row.home}」、index.html「${join(home)}」`);
+    ok(row.cross === join(cross),
+      `${n} 那一列的「跨科」對不上：頁面「${row.cross}」、index.html「${join(cross)}」`);
+  }
+  /* ⚠ 產生器那一段也要真的照這條規則寫 —— 頁面對了、圖卻是舊的分法，這一道才擋得住 */
+  ok(/d\.spec === sp\.id \|\| d\.sk\.some\(s => s\.spec === sp\.id\)/.test(GENCODE),
+    "產生器沒有照站上 specHit() 的規則挑醫師（本科 或 專長命中）");
+}
+
 /* 產生器不可以把科別名或姓名寫死（那就是第二個真相） */
 for (const n of names)
   ok(!GENCODE.includes(n), `產生器裡寫死了醫師姓名「${n}」—— 資料只能從 index.html 讀`);
