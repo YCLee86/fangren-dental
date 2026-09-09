@@ -408,26 +408,26 @@ INK9 = await page.evaluate(async (list) => {
 if (Object.values(INK9).some(v => !(v > 50)))
   throw new Error("墨面積量出來不對：" + JSON.stringify(INK9));
 
-/* ⚠⚠⚠ 排法已經定案（Ⓕ），所以這一把尺量的是**空出來的高度怎麼用**
-   （使用者：「空出來的空間要好好運用」）。
-   **每一案都留在 git 裡**：Ⓔ 在 `c6b7a66`、Ⓖ／Ⓗ 在 `d01e961`、
-   Ⓐ／Ⓑ 在 `ae10fa2` —— 要回頭比就從那裡取，不要重畫。
-
-   ⚠⚠⚠ **兩個方向要分開給，因為它們卡在不同的東西上**：
-   ・**字要多大**（`k`）—— 卡在**寬度**：每一列的圖案、科別名、醫師名擠在同一行
-     而且都不折行，最寬的那一列 863px／可用 1000px ＝ 天花板 1.159 倍。
-     **拿掉標題空出來的高度一點都幫不上這一項。**
-   ・**列距要多鬆**（`pad`，＝ `.mrow` 的上下內距）—— 卡在**高度**，
-     而那正是空出來的那一塊。
-   所以 Ⓕ2 是「只動字」、Ⓕ4 是「只動列距」、**Ⓕ3 兩個都吃滿**（建議）。 */
-const CASES = [
-  [1.00, null, false, "Ⓕ1 現在這樣"],
-  [1.15, null, false, "Ⓕ2 只放大 1.15 倍（頂到寬度上限）"],
-  [1.15, 13.5, true,  "Ⓕ3 放大 1.15 ＋ 列距拉開（建議）"],
-  [1.00, 18.0, false, "Ⓕ4 字不放大，只把列距拉開"],
-];
-const fileOf = (k, pad) => "post-docs"
-  + (k === 1 ? "" : "-k" + Math.round(k * 100)) + (pad ? "-p" + Math.round(pad) : "");
+/* ---------- ✅ 2026-09-09 定稿：Ⓕ3（使用者：「選 F3　給我圖片」）----------
+ * 挑定的兩個值寫回常數，所以 `build()` 本身就是定案那一張。
+ * **要貼的檔案是 `fangren-docs-1080.png`**（同看診時間與地圖那兩張的命名）。
+ *
+ * ⚠⚠⚠ 那把尺的兩個方向**卡在不同的東西上**，日後要再調先看這兩行：
+ * ・`K0`（字要多大）—— 卡在**寬度**：每一列的圖案、科別名、醫師名擠在同一行
+ *   而且都不折行，最寬的那一列 863px／可用 1000px ＝ **天花板 1.159 倍**。
+ *   **拿掉標題空出來的高度一點都幫不上這一項**（下面那個面板每次都印）。
+ * ・`MPAD0`（列距，＝ `.mrow` 的上下內距）—— 卡在**高度**，那才是空出來的那一塊。
+ *   定案這一組把內容撐到 994／1000，上下只剩 3px ＝ 這一版的盡頭。
+ *
+ * ⚠ 四格的數字（Ⓕ1 現在這樣／Ⓕ2 只放大／Ⓕ3 兩個都吃滿／Ⓕ4 只拉開列距）
+ *   留在 `drafts/channels/README.md` 第 36-15 節與 git（`git show e71fd3d`），
+ *   **要回頭比就從那裡取，不要重畫**。Ⓔ 在 `c6b7a66`、Ⓖ／Ⓗ 在 `d01e961`、
+ *   Ⓐ／Ⓑ 在 `ae10fa2`。 */
+const K0 = 1.15, MPAD0 = 13.5;
+const FINAL = "fangren-docs-1080";
+const CASES = [[K0, MPAD0, true, "定稿（Ⓕ3 放大 1.15 ＋ 列距拉開）"]];
+const fileOf = (k, pad) => (k === K0 && pad === MPAD0) ? FINAL
+  : "post-docs" + (k === 1 ? "" : "-k" + Math.round(k * 100)) + (pad ? "-p" + Math.round(pad) : "");
 const made = [];
 for (const [k, pad, rec, label] of CASES) {
   const m = { ...scaled(FSZ, k), ...(pad === null ? {} : { mpad: pad }) };
@@ -607,8 +607,7 @@ const cell = (f, w, h) =>
      <img src="data:image/png;base64,${b64(f)}"
           style="width:100%;height:100%;object-fit:cover;display:block"></div>`;
 
-/* ⚠ 主頁三格只做**兩種排法**（Ⓔ／Ⓕ 各一張）—— 深淺與倍率那兩把尺縮到 410px
-   之後三格那張看不太出來，每一格都做等於多幾張沒有人會開的圖。 */
+/* 主頁三格只做定稿那一張 */
 const page2 = await browser.newPage({ viewport: { width: BIG_W, height: BIG_H + 4 + SLOT } });
 for (const { file } of made.filter(m => m.rec)) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
@@ -618,7 +617,7 @@ for (const { file } of made.filter(m => m.rec)) {
         cell(path.join(OUT, `${file}.png`), SLOT, SLOT)}</div>
     </div>`);
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
-  await page2.screenshot({ path: path.join(OUT, `profile-3up-${file.replace("post-docs-", "")}.png`) });
+  await page2.screenshot({ path: path.join(OUT, "profile-3up.png") });
 }
 /* ⚠⚠⚠ 「科別的名字整個不寫、只留圖案」那個做法押在一件事上：
  *   「大格那排圖例已經教過哪一顆是哪一科」（Ⓐ~Ⓒ 那幾案就是這樣做的）。
@@ -648,13 +647,15 @@ const legendCut = await page.evaluate(async ({ src, tone, top, bot }) => {
 
 /* ⚠⚠ 四格並排在小格的**實際大小**上 —— 上面每一個數字都是量這個尺寸得來的，
    1080 的原圖上看起來明顯的，縮到 410px 常常就沒了。 */
-/* ⚠ 高度要跟著格數算，不要寫死 —— 案數一改，寫死的高度會留下一大塊空白，
-   而長寬比對得上實檔、守門抓不到（同 post-hours 那條 NCUT）。 */
-const rows = Math.ceil(made.length / 2);
+/* ⚠ 寬與高都要跟著格數算，不要寫死 —— 案數一改（這一輪從四格收成一格），
+   寫死的尺寸會留下一大塊空白，而長寬比對得上實檔、守門抓不到
+   （同 post-hours 那條 NCUT）。 */
+const cols = Math.min(made.length, 2), rows = Math.ceil(made.length / cols);
+const CW = SLOT * cols + 6 * (cols - 1);
 const page3 = await browser.newPage({
-  viewport: { width: SLOT * 2 + 6, height: SLOT * rows + 6 * (rows - 1) } });
+  viewport: { width: CW, height: SLOT * rows + 6 * (rows - 1) } });
 await page3.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
-  body{background:${RULE};display:flex;flex-wrap:wrap;gap:6px;width:${SLOT * 2 + 6}px}</style>`
+  body{background:${RULE};display:flex;flex-wrap:wrap;gap:6px;width:${CW}px}</style>`
   + made.map(m => cell(path.join(OUT, `${m.file}.png`), SLOT, SLOT)).join(""));
 await page3.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
 await page3.screenshot({ path: path.join(OUT, "slot-410.png") });
@@ -725,7 +726,7 @@ for (const g of legendCut)
   const cut = legendCut.filter(g => !g.inside);
   console.log(cut.length
     ? `  ⚠⚠ 有 ${cut.length} 科的圖例在主頁上看不完整 —— 所以「圖例已經教過」`
-      + `這個前提**只成立一半**。Ⓔ／Ⓕ 兩案都把科別名寫著，不靠它。`
+      + `這個前提**只成立一半**。**這一版把科別名寫著，不靠它。**`
     : `  七科的圖例在主頁上都看得到。`);
 }
 
@@ -738,6 +739,6 @@ console.log(`  浮水印 ${WMSH}　${WMW}×${WMH.toFixed(0)}px・墨 ${(WMA * 10
 
 console.log(`\n── 出圖 ──`);
 for (const m of made) console.log(`  ${m.file}.png`
-  + (m.rec ? `　profile-3up${m.file.replace("post-docs", "")}.png` : ""));
+  + (m.rec ? "　profile-3up.png" : ""));
 console.log(`  slot-410.png（${made.length} 格在小格的實際大小 —— 判準是這一張）`);
 console.log(`\n── 「詳情」欄要貼的字 ──\n` + detail.split("\n").map(l => "  " + l).join("\n"));

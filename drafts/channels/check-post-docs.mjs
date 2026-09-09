@@ -52,11 +52,11 @@ for (const im of imgs) {
   ok(/alt="[^"]+"/.test(im.rest), `${im.src} 沒有 alt`);
 }
 /* ⚠ 每一案的 1080 圖都要擺上去 —— 少一張，那一案就等於沒有被提案。
-   ⚠⚠ 2026-09-09 定案 Ⓕ，所以四格全部是同一個排法、只差「空出來的高度怎麼用」。
-   ⚠ 四格不必各放一張大圖（縮到 410px 的那一張就是判準），
-   但**建議的那一格要放**，而且四格的檔名都要在頁上出現得到。 */
-ok(used.has("slot-410.png"), "少了 slot-410.png —— 那一張是這一頁的判準");
-ok(used.has("post-docs-k115-p14.png"), "少了建議那一格的大圖：post-docs-k115-p14.png");
+   ⚠⚠ 2026-09-09 定稿 Ⓕ3，這一頁收成三張：定稿本人／小格 410px／主頁三格。
+   ⚠⚠⚠ **要貼的檔案叫 `fangren-docs-1080.png`**（同看診時間與地圖那兩張的命名），
+   其餘兩張只是模擬圖 —— 名字寫錯的話使用者會貼到模擬圖上去。 */
+for (const f of ["fangren-docs-1080.png", "slot-410.png", "profile-3up.png"])
+  ok(used.has(f), `少了這一張：${f}`);
 
 /* ---- ② 「詳情」逐字 ---- */
 const detail = fs.readFileSync(path.join(DIR, "detail.txt"), "utf8").trimEnd();
@@ -68,10 +68,13 @@ if (onPage !== undefined)
 
 /* ---- ③ 四格的名字要和產生器的 CASES 對得上 ----
    ⚠ 頁上那些標題是手寫的，產生器改了案名而頁面沒跟上，使用者挑的就是別的東西。 */
-const cases = [...GEN.matchAll(/\[([\d.]+),\s*(null|[\d.]+),\s*(true|false),\s*"([^"]+)"\]/g)]
-  .map(m => ({ k: +m[1], pad: m[2] === "null" ? null : +m[2], rec: m[3] === "true", label: m[4] }));
-ok(cases.length === 4, `產生器的 CASES 讀到 ${cases.length} 格，應該是 4`);
-ok(cases.filter(c => c.rec).length === 1, "CASES 裡建議的那一格不是剛好一個");
+const cases = [...GEN.matchAll(/\[(K0|[\d.]+),\s*(MPAD0|null|[\d.]+),\s*(true|false),\s*"([^"]+)"\]/g)]
+  .map(m => ({ rec: m[3] === "true", label: m[4] }));
+ok(cases.length === 1, `產生器的 CASES 讀到 ${cases.length} 格，定稿之後應該是 1`);
+ok(cases.every(c => c.rec), "CASES 那一格沒有標成定稿");
+/* ⚠⚠ 定稿的兩個值要真的寫回常數（不然「這一頁畫的」和「他挑的」會分家） */
+ok(/const K0 = 1\.15, MPAD0 = 13\.5;/.test(GENCODE),
+  "定稿那兩個值沒有寫回常數（K0 1.15／MPAD0 13.5）");
 for (const c of cases) {
   /* 圈號（含 Ⓔ2 那個尾數）後面那幾個字，去掉括號裡的補充，要出現在頁面上 */
   const key = c.label.replace(/^[Ⓐ-Ⓩ]\d?\s*/, "").replace(/（[^）]*）/g, "").trim();
@@ -167,7 +170,7 @@ for (const s of specs)
     `產生器裡寫死了科別名「${s.name}」—— 資料只能從 index.html 讀`);
 
 if (bad.length) { console.error("✗ " + bad.length + " 項：\n  " + bad.join("\n  ")); process.exit(1); }
-console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、${cases.length} 格齊、`
+console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、定稿那一格寫回常數了、`
   + `標題與網址真的沒畫回去、詳情逐字、七科九位對得上 index.html）`);
 
 /* ---- ⑧ 量：八個寬度水平溢出 0、圖都載得到、死錨 0 ---- */

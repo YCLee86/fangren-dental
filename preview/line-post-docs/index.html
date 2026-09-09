@@ -28,14 +28,17 @@
   → 標題、上下兩條分隔線、窄帶那兩個數字與 fangren.net 全部不畫。
 
   2026-09-09 定案：「選 F 但治療項目不要套色 維持淡色 框起來，醫師名字等級都一樣
-  不要分色，空出來的空間要好好運用」→ 四件各自獨立：
-     ① 排法定 Ⓕ，Ⓔ 拿掉（留在 git：git show c6b7a66 -- drafts/channels/post-docs.mjs）
-     ② 專長小塊不吃科別色：字柔墨、框站上的格線色 —— 彩色只剩最左邊那顆圖案
-     ③ 九位醫師同一階墨（跨科用柔墨那一套整組拿掉）
-     ④ 空出來的高度做成一把尺（倍率 ＋ 列距），沒有自己放大
+  不要分色，空出來的空間要好好運用」→ ① 排法定 Ⓕ（Ⓔ 拿掉，留在 git c6b7a66）
+  ② 專長小塊不吃科別色：字柔墨、框站上的格線色 —— 彩色只剩最左邊那顆圖案
+  ③ 九位醫師同一階墨 ④ 空出來的高度做成一把尺（倍率 ＋ 列距），沒有自己放大。
+
+  ✅ 2026-09-09 定稿：「選 F3　給我圖片」→ 兩個值寫回常數（K0 1.15／MPAD0 13.5），
+  匯出 fangren-docs-1080.png，這一頁收成三張圖（定稿／410px／主頁三格）。
+     ⚠ 四格的數字留在 drafts/channels/README.md 第 36-15 節與 git（git show e71fd3d），
+       要回頭比從那裡取，不要重畫。
      ⚠⚠⚠ 那把尺的兩個方向卡在不同的東西上：字要多大卡在**寬度**
-        （最寬的一列 863px／可用 1000px ＝ 天花板 1.159 倍，拿掉標題空出來的
-        高度一點都幫不上）；列距卡在**高度**，那才是空出來的那一塊。
+        （最寬的一列 992／1000px，天花板 1.008 倍了）；列距卡在**高度**，
+        那才是拿掉標題空出來的那一塊，定稿把內容撐到 994／1000。
 
   產生器 node drafts/channels/post-docs.mjs，守門 check-post-docs.mjs，
   推導在 drafts/channels/README.md 第三十六節。
@@ -87,49 +90,45 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 <body>
 <div class="pv-wrap">
 
-  <h1>LINE 商家貼文的第三格<span>Ⓕ 定案：小塊不套色、醫師同一階、空間用滿</span></h1>
+  <h1>LINE 商家貼文的第三格<span>✅ 定稿 Ⓕ3　fangren-docs-1080.png</span></h1>
 
-  <p class="pv-lead">主頁「最新貼文」那三格的<b>小格右</b>。你選的三件都做了：<br>
+  <p class="pv-lead">主頁「最新貼文」那三格的<b>小格右</b>。<br>
+  <b>要貼的是 <code>fangren-docs-1080.png</code></b>（1080×1080・PNG），
+  「詳情」那一欄照下面那一份貼，<b>不要重打</b>。</p>
+
+  <h2 class="pv-h2">定稿<span class="t">Ⓕ3　放大 1.15 ＋ 列距拉開</span><em>fangren-docs-1080.png</em></h2>
+  <div class="pv-shot">
+    <img src="fangren-docs-1080.png" width="1080" height="1080"
+         alt="定稿：一科一列，第一行是圖案、科別名與該科醫師，第二行是那一科的治療項目">
+  </div>
+  <p class="pv-cap">一科一列。第一行 <b>圖案＋科別＋醫師</b>，第二行 <b>治療項目</b>。<br>
   <b>治療項目不套色</b>（字柔墨、框站上的格線色）——整張圖的彩色<b>只剩最左邊那顆圖案</b>，
   而那一顆是圖例、要對得上門診表那一張，所以它不能跟著淡化。<br>
-  <b>九位醫師同一階墨</b>，跨科用柔墨那一套整組拿掉。
-  ⚠ 誰是本科的仍然看得出來 ——<b>本科的排前面</b>。<br>
-  <b>空出來的空間</b>做成下面那把尺，<b>沒有自己放大</b>。</p>
+  <b>九位醫師同一階墨</b>。誰是本科的仍然看得出來 ——<b>本科的排前面</b>。<br>
+  ⚠ 內容高 <b>994／1000</b>，上下只剩 3px ＝ 這一版的盡頭。</p>
 
-  <h2 class="pv-h2">⚠⚠ 判準是這一張<span class="t">四格在小格的實際大小（410px）並排</span></h2>
+  <h2 class="pv-h2">在小格的實際大小<span class="t">410×410 —— 判準是這一張</span></h2>
   <div class="pv-shot">
-    <img src="slot-410.png" width="826" height="826"
-         alt="四格在 410px 小格的實際大小並排：Ⓕ1 現在這樣、Ⓕ2 只放大、Ⓕ3 放大加列距、Ⓕ4 只拉開列距">
+    <img src="slot-410.png" width="410" height="410"
+         alt="定稿那一張縮到主頁小格的實際大小 410×410">
   </div>
-  <p class="pv-cap">左上 <b>Ⓕ1 現在這樣</b>　右上 <b>Ⓕ2 只放大 1.15 倍</b><br>
-  左下 <b>Ⓕ3 放大 1.15 ＋ 列距拉開（建議）</b>　右下 <b>Ⓕ4 字不放大，只把列距拉開</b><br>
-  下面每一個數字都是量這個尺寸得來的。<br>
-  四張 1080 的原圖：<code>post-docs.png</code>　<code>post-docs-k115.png</code>
-  <code>post-docs-k115-p14.png</code>　<code>post-docs-p18.png</code></p>
+  <p class="pv-cap">科別 <b>15.7px</b>・醫師 <b>13.5</b>・治療項目 <b>12.7</b>
+  （這一線的地板是 10px）。<br>
+  ⚠⚠⚠ <b>再放大是「寬度」擋住的，不是高度</b>：每一列的圖案、科別名、醫師名擠在同一行、
+  都不折行，最寬的那一列（一般牙科・定期檢查，四位醫師）已經要 <b>992px</b>、
+  可用 <b>1000px</b>。拿掉標題空出來的是上下，那一塊給了<b>列距</b>。<br>
+  ⚠ 走過的四格（現在這樣／只放大／放大＋列距／只拉開列距）留在
+  <code>drafts/channels/README.md</code> 第 36-15 節與 git，要回頭比從那裡取。</p>
 
-  <h2 class="pv-h2">空出來的空間怎麼用<span class="t">兩個方向卡在不同的東西上</span><em>post-docs-k115-p14.png</em></h2>
+  <h2 class="pv-h2">在主頁上長怎樣<span class="t">大格＝看診時間　小格左＝停車　小格右＝這一張</span></h2>
   <div class="pv-shot">
-    <img src="post-docs-k115-p14.png" width="1080" height="1080" loading="lazy"
-         alt="Ⓕ3：整組放大 1.15 倍，列距再拉開，內容填滿畫布">
+    <img src="profile-3up.png" width="823" height="823" loading="lazy"
+         alt="主頁三格模擬：大格看診時間、小格左位置與停車、小格右是這一張">
   </div>
-  <p class="pv-cap">⚠⚠⚠ <b>字要多大卡在「寬度」，列距卡在「高度」</b>——
-  拿掉標題空出來的是上下，可是每一列的圖案、科別名、醫師名擠在同一行、都不折行，
-  最寬的那一列（一般牙科・定期檢查，四位醫師）要 <b>863px</b>、可用 <b>1000px</b>，
-  所以字的天花板是 <b>1.159 倍</b>，高度一點都幫不上。
-  <b>列距</b>才是空出來的那一塊能買到的東西。</p>
-  <table class="pv-tab">
-    <thead><tr><th>這一格</th><th>科別</th><th>醫師</th><th>治療項目</th><th>內容高</th></tr></thead>
-    <tbody>
-      <tr><td>Ⓕ1 現在這樣</td><td class="no">13.7</td><td class="no">11.8</td><td class="no">11.0</td><td>803</td></tr>
-      <tr><td>Ⓕ2 只放大 1.15</td><td>15.7</td><td>13.5</td><td>12.7</td><td>917</td></tr>
-      <tr><td>Ⓕ3 放大 ＋ 列距（建議）</td><td class="ok">15.7</td><td class="ok">13.5</td><td class="ok">12.7</td><td>994</td></tr>
-      <tr><td>Ⓕ4 只拉開列距</td><td class="no">13.7</td><td class="no">11.8</td><td class="no">11.0</td><td>957</td></tr>
-    </tbody>
-  </table>
-  <p class="pv-cap">前三欄是<b>在小格 410px 上</b>的字級（單位 px），這一線的地板是 10px。
-  <span class="n">紅色</span>那幾格<b>一直貼著地板</b>；放大之後治療項目才第一次離開 12px。<br>
-  ⚠ 放大是<b>整組等比例</b>（字級、圖案、縮排、小塊內距一起乘），不是只放大字。
-  Ⓕ3 的內容高 994／1000 ＝ 上下只剩 3px，那一格是這一版的盡頭。</p>
+  <p class="pv-cap">三格擺在一起才看得出<b>拿掉標題是對的</b>：上面那格已經寫著芳仁牙醫的門診表，
+  這一格再寫一次診所名等於同一個名字在同一個畫面上出現兩次。<br>
+  也看得出<b>治療項目不套色是對的</b>：三格裡的彩色現在只有那幾顆圖案，
+  而它們在兩張圖上是同一組顏色、同一組形狀。</p>
 
   <h2 class="pv-h2">⚠⚠⚠ 這一輪真正改的：每一列印誰<span class="t">＝站上按那顆標記會亮起來的那幾位</span></h2>
   <table class="pv-tab">
@@ -150,17 +149,6 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   ⚠ 順序改成<b>本科的排前面</b>（站上一個人只出現在一張卡上，所以卡序從來不必回答
   「誰排前面」；補進跨科的之後它才開始說話）。</p>
 
-  <h2 class="pv-h2">在主頁上長怎樣<span class="t">大格＝看診時間　小格左＝停車　小格右＝Ⓕ3</span></h2>
-  <div class="pv-shot">
-    <img src="profile-3up-k115-p14.png" width="823" height="823" loading="lazy"
-         alt="主頁三格模擬：大格看診時間、小格左位置與停車、小格右是這一張">
-  </div>
-  <p class="pv-cap">只做建議那一格 —— 另外三格縮到 410px 之後在這一張上看不太出來。<br>
-  ⚠ 三格擺在一起才看得出<b>拿掉標題是對的</b>：上面那格已經寫著芳仁牙醫的門診表，
-  這一格再寫一次診所名等於同一個名字在同一個畫面上出現兩次。<br>
-  ⚠ 也看得出<b>治療項目不套色是對的</b>：三格裡的彩色現在只有那幾顆圖案，
-  而它們在兩張圖上是同一組顏色、同一組形狀。</p>
-
   <h2 class="pv-h2">「詳情」那一欄要貼的字<span class="t">圖上的網址點不下去，這裡的可以</span></h2>
   <div class="pv-txt">9 位醫師駐診・6 個部定專科。
 一般牙科・定期檢查　https://fangren.net/topics/general/
@@ -179,7 +167,6 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
 
   <h2 class="pv-h2">還沒問到、也還沒決定的</h2>
   <div class="pv-num">
-    ・<b>要放多大</b>（Ⓕ1～Ⓕ4，建議 Ⓕ3）。<br>
     ・<b>「詳情」第一行那兩個數字</b>要不要跟著拿掉（見上一節）。<br>
     ・<b>專長是全部印</b>（最多的一科五項），不是挑過的；順序照站上。<br>
     ・一般牙科那一列變成<b>四位醫師</b>（其中三位是跨科）—— 那是站上的事實，
