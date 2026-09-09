@@ -101,7 +101,26 @@ const CASES = [
   { id: "a2", size: "compact", kind: "split", textw: 1080, head: 165, sub: 82,
     label: "Ⓐ2 小一階", note: "主標 24.8px、副標 12.3px" },
   { id: "a3", size: "compact", kind: "split", textw: 1080, head: 145, sub: 76,
-    label: "Ⓐ3 再小一階", note: "主標 21.8px、副標 11.4px（建議 —— 讓插圖當主角）" },
+    label: "Ⓐ3 再小一階", note: "主標 21.8px、副標 11.4px（你挑的那一格）" },
+
+  /* ── Ⓐ3 的圖欄：一把「圖再往左多少」的尺 ──────────────────────────
+   * 起因（2026-09-09）：「Ⓐ3 的版本　文字和圖中間感覺還很有餘裕
+   *   　圖是不是可以再往左一點或是放大一點」。
+   *
+   * ⚠⚠⚠ 「放大」這條路不存在，而且不是版面問題是幾何 ——
+   *   插圖已經**吃滿選單的高度**（843），cover 的倍率由高度那一項決定，
+   *   所以圖欄變寬**不會讓圖變大**，只會**多露出左右兩邊**。
+   *   要讓圖真的變大只有換版型（Ⓑ 大型），那是另一件事。
+   *
+   * ⚠⚠⚠ 這把尺也有轉折點（同 Ⓑ 的帶子）：
+   *   圖欄 ÷ 843 ＝ 插圖的 1.7917 時是 **1510px**（textw 990），那裡 100% 看得到；
+   *   再往左圖欄比插圖還扁，**裁法從左右切換成上下切** —— 切掉的正好是頭和腳。 */
+  { id: "a3b", size: "compact", kind: "split", textw: 1035, head: 145, sub: 76,
+    label: "Ⓐ3-2 往左 45", note: "圖欄 1465（手機上 220px）、看得到 97%" },
+  { id: "a3c", size: "compact", kind: "split", textw: 990, head: 145, sub: 76,
+    label: "Ⓐ3-3 往左 90", note: "圖欄 1510（227px）、看得到 100% —— 整張一個像素都不裁（建議）" },
+  { id: "a3d", size: "compact", kind: "split", textw: 940, head: 145, sub: 76,
+    label: "Ⓐ3-4 往左 140", note: "圖欄 1560（234px）、看得到 96.8% —— 過頭了，改成切上下（頭與腳）" },
 
   /* ── Ⓑ 大型・圖 ＋ 字帶：一把「帶子與字要多大」的尺 ────────────────
    * ⚠⚠⚠ 帶子收小**不會讓選單變矮** —— 大型版型是 2500×1686 寫死的，
@@ -275,7 +294,13 @@ for (let i = 0; i < CASES.length; i++) {
   const visW = Math.min(1376, b.slot.w / b.s), visH = Math.min(768, b.slot.h / b.s);
   const seen = (visW * visH) / (1376 * 768) * 100;
   const bytes = fs.statSync(real).size;
-  rows.push({ c, S, m, b, dispW, dispH, k, headCss, seen, bytes });
+  /* ⚠ 「字和圖中間還有多少」＝ 圖欄左緣 − 最寬那一行的右緣。
+   *   使用者看到的「餘裕」就是這一格，面板不印它就只能用眼睛猜。 */
+  const inkR = c.kind === "split" ? Math.max(m.head.right, m.sub.right) : null;
+  const gapCss = inkR == null ? null : (m.picLeft - inkR) * k;
+  /* 裁哪一邊：圖欄比插圖寬就是切上下（頭與腳），反之切左右 */
+  const cropSide = b.slot.w / b.slot.h > 1376 / 768 ? "上下" : "左右";
+  rows.push({ c, S, m, b, dispW, dispH, k, headCss, seen, bytes, gapCss, cropSide });
 
   /* ── 守門 ──────────────────────────────────────────────── */
   if (S.w / S.h < 1.45) throw new Error(`${c.id}：比例 ${(S.w / S.h).toFixed(3)} < LINE 的下限 1.45`);
@@ -310,7 +335,7 @@ for (let i = 0; i < CASES.length; i++) {
  *   七格都做等於在一頁 no-store 的頁面上多 2MB。這張圖回答的是「**它在整個畫面裡
  *   佔多少**」——那是**版型**的事（小型／大型），字級那把尺看不出差別。
  *   所以現況一張 ＋ 每一族的建議各一張。 */
-const MOCK = ["x", "a3", "b2"];
+const MOCK = ["x", "a3c", "b2"];
 const MOCKS = CASES.filter((c) => MOCK.includes(c.id));
 const b64 = (f) => fs.readFileSync(f).toString("base64");
 const welcURI = `data:image/png;base64,${b64(WELC)}`;
@@ -393,14 +418,15 @@ await browser.close();
 const px = (e, k) => (e ? (e.fs * k).toFixed(1) : "—");
 const pad = (s, n) => String(s) + " ".repeat(Math.max(0, n - [...String(s)].reduce((a, ch) => a + (ch.charCodeAt(0) > 255 ? 2 : 1), 0)));
 console.log("");
-console.log("　　　　　　　　　版型　　圖檔　　　　手機上　　　圖欄　　　　看得到　一個人頭　主標　副標　帶子　　檔案");
+console.log("　　　　　　　　　版型　　圖檔　　　　手機上　　　圖欄　　　　看得到　裁哪邊　一個人頭　字→圖　主標　副標　帶子　　檔案");
 for (const r of rows) {
   const { c, S, m, k } = r;
   const picCss = `${(m.picW * k).toFixed(0)}×${(m.picH * k).toFixed(0)}`;
   console.log(
     pad(c.label, 20) + pad(SIZES[c.size].name, 6) + pad(`${S.w}×${S.h}`, 12) +
     pad(`${r.dispW}×${r.dispH}`, 11) + pad(picCss, 11) + pad(`${r.seen.toFixed(0)}%`, 8) +
-    pad(`${r.headCss.toFixed(1)}px`, 10) +
+    pad(r.cropSide, 8) + pad(`${r.headCss.toFixed(1)}px`, 10) +
+    pad(r.gapCss == null ? "—" : `${r.gapCss.toFixed(1)}px`, 8) +
     pad(px(m.head ?? m.bh, k), 6) + pad(px(m.sub ?? m.bs, k), 6) +
     pad(c.bandh ? `${(c.bandh * k).toFixed(1)}px` : "—", 8) +
     `${(r.bytes / 1024).toFixed(0)}KB`);
@@ -423,7 +449,9 @@ fs.writeFileSync("drafts/line-richmenu-numbers.json", JSON.stringify({
     圖檔: `${r.S.w}×${r.S.h}`, 比例: +(r.S.w / r.S.h).toFixed(3),
     手機上: `${r.dispW}×${r.dispH}`,
     圖欄: `${Math.round(r.m.picW * r.k)}×${Math.round(r.m.picH * r.k)}`,
-    看得到: +r.seen.toFixed(0), 一個人頭: +r.headCss.toFixed(1),
+    看得到: +r.seen.toFixed(0), 裁哪邊: r.cropSide, 一個人頭: +r.headCss.toFixed(1),
+    字到圖: r.gapCss == null ? null : +r.gapCss.toFixed(1),
+    字欄: r.c.textw ?? null,
     主標: r.m.head ? +(r.m.head.fs * r.k).toFixed(1) : (r.m.bh ? +(r.m.bh.fs * r.k).toFixed(1) : null),
     副標: r.m.sub ? +(r.m.sub.fs * r.k).toFixed(1) : (r.m.bs ? +(r.m.bs.fs * r.k).toFixed(1) : null),
     帶子: r.c.bandh ? +(r.c.bandh * r.k).toFixed(1) : null,

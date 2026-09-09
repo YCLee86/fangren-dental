@@ -50,8 +50,9 @@ if (rows.length !== N.格.length)
   bad.push(`那張表有 ${rows.length} 列，產生器出了 ${N.格.length} 格`);
 else N.格.forEach((g, i) => {
   /* ⚠ 第一格逐字對「標籤」—— 尺上有 Ⓐ1／Ⓐ2／Ⓐ3，只比圈號的話三列會互相通過 */
-  const want = [g.標籤, g.版型, g.圖檔, g.手機上,
-    `${g.看得到}%`, `${g.一個人頭}px`,
+  const want = [g.標籤, g.版型, g.圖檔, g.手機上, g.圖欄,
+    `${g.看得到}%`, g.裁哪邊, `${g.一個人頭}px`,
+    g.字到圖 == null ? "—" : `${g.字到圖}px`,
     g.主標 == null ? "沒有" : `${g.主標}px`,
     g.副標 == null ? "沒有" : `${g.副標}px`,
     g.帶子 == null ? "—" : `${g.帶子}px`,
