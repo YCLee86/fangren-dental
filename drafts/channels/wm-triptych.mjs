@@ -47,6 +47,41 @@ export const TRI = {
   DIA: +(process.env.WM_DIA || 500),
 };
 
+/* ⚠⚠⚠ 2026-09-09：同一組圖要貼到 **Facebook** 上（使用者：「這三個圖片似乎也很適合
+ *   放在臉書上」）。臉書是**一則一則被看到的**，三張不會並排 ——
+ *   所以那顆騎在十字縫上的圓，在臉書上每一張只剩一塊往外流出去的弧，
+ *   讀起來是一團淡灰不是標誌（＝ CLAUDE.md 第九節第 28 條 ⑤：
+ *   一個在舊媒介裡沒有意義的性質，換了媒介就開始說話）。
+ *   **臉書版每一張各自一顆完整的標誌**，貼在它原本那一角、整顆進到畫布裡。
+ * ⚠ 形狀與濃度沿用他挑定的那一組（r3c1・4%），只改「完整」與「大小」。
+ * ⚠ 角落沿用他 2026-09-09 指定的那三個（門診表下方／科別醫師右上／地圖左上），
+ *   所以兩組圖擺在一起時是同一個語彙，不是兩套設計。 */
+export const SOLO = {
+  /* 直徑（畫布 px，三張同一個數字）—— 656 ＝ 定案那顆在**門診表**那張上畫出來的大小，
+     所以不是新猜的值，是他一直在看的那一顆。⚠ 它是一把尺，用 WM_SOLO_DIA 傳。 */
+  DIA: +(process.env.WM_SOLO_DIA || 656),
+  CORNER: { hours: "b", docs: "tr", map: "tl" },
+};
+function wmSoloFor(tile, opt = {}) {
+  const corner = SOLO.CORNER[tile];
+  if (!corner) throw new Error(`不認識的格子：${tile}`);
+  const shape = opt.shape ?? TRI.SHAPE;
+  const dia = opt.dia ?? SOLO.DIA;
+  const C = TRI.CANVAS;
+  const w = dia, h = w / shapeRatio(shape);
+  /* 整顆都要在畫布裡 —— 這就是臉書版存在的理由，貼著邊但不切出去 */
+  const left = corner === "tr" ? C - w : corner === "b" ? (C - w) / 2 : 0;
+  const top  = corner === "b" ? C - h : 0;
+  if (left < -.01 || top < -.01 || left + w > C + .01 || top + h > C + .01)
+    throw new Error(`臉書版的標誌切出畫布了（${tile} ${dia}px）—— 直徑要 ≤ ${C}`);
+  return {
+    shape, opacity: TRI.OPACITY, scale: 1, mode: "fb", corner,
+    w: +w.toFixed(1), h: +h.toFixed(1), left: +left.toFixed(1), top: +top.toFixed(1),
+    css: `width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;`
+       + `left:${left.toFixed(1)}px;top:${top.toFixed(1)}px`,
+  };
+}
+
 /* 形狀的長寬比從 SVG 的 viewBox 讀回來，不要用 img.naturalWidth
    （瀏覽器對 SVG 會進位到整數，2.029 會回 2.000）。 */
 export function shapeRatio(sh = TRI.SHAPE) {
@@ -72,6 +107,9 @@ export const CENTER = { x: TRI.BIG_W / 2, y: TRI.BIG_H + TRI.GAP / 2 };
  * @returns {{shape,w,h,left,top,opacity,scale,css}}  left/top 是 SVG 外框的左上角（1080 座標）
  */
 export function wmFor(tile, opt = {}) {
+  /* ⚠⚠ 臉書版：三支產生器一行都不用改，由環境變數切（同 WM_DIA 那把尺的做法）。
+     ⚠ 沒有第二個地方在算浮水印，所以兩個版本不可能分家。 */
+  if ((opt.mode ?? process.env.WM_MODE) === "fb") return wmSoloFor(tile, opt);
   const r = RECT[tile];
   if (!r) throw new Error(`不認識的格子：${tile}（只有 hours／docs／map）`);
   const dia = opt.dia ?? TRI.DIA;
@@ -99,6 +137,8 @@ export function wmFor(tile, opt = {}) {
 /* ⚠ 守門用：三格的圓在「合起來」那個座標系裡要是同一顆（同心、同大小）。
    算回去比一次 —— 哪一支的比例尺寫錯了，這裡會翻臉。 */
 export function checkOne(dia = TRI.DIA) {
+  /* ⚠ 臉書版三張各自一顆完整的，本來就不該接成一顆 —— 這一道跳過。 */
+  if (process.env.WM_MODE === "fb") return [];
   const out = [];
   for (const tile of Object.keys(RECT)) {
     const g = wmFor(tile, { dia }), r = RECT[tile];
