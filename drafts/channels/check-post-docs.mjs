@@ -40,7 +40,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，尺寸對得上，都有 alt ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 5, `頁上有 ${imgs.length} 張圖，應該是 5`);
+ok(imgs.length === 6, `頁上有 ${imgs.length} 張圖，應該是 6`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -53,8 +53,10 @@ for (const im of imgs) {
 }
 /* ⚠ 每一案的 1080 圖都要擺上去 —— 少一張，那一案就等於沒有被提案。
    ⚠⚠ 2026-09-09 使用者：「保留 E F」，所以候選收成 Ⓔ／Ⓕ ＋ 那把深淺的尺
-   （Ⓔ2／Ⓕ2）。Ⓕ2 只在說明裡寫檔名（同一件事套第二次，不必再放一張大圖）。 */
-for (const t of ["two", "twoc", "two-flat"])
+   （Ⓔ2／Ⓕ2）。Ⓕ2 只在說明裡寫檔名（同一件事套第二次，不必再放一張大圖）。
+   ⚠ 同日再一件：拿掉標題與頁尾之後多一把**倍率**的尺（Ⓔ3／Ⓔ4），
+   頂到上限那一格（k115）要放大圖 —— 那一格是這把尺的兩端之一。 */
+for (const t of ["two", "twoc", "two-flat", "two-k115"])
   ok(used.has(`post-docs-${t}.png`), `少了一案沒擺上頁面：post-docs-${t}.png`);
 
 /* ---- ② 「詳情」逐字 ---- */
@@ -67,14 +69,22 @@ if (onPage !== undefined)
 
 /* ---- ③ 四格的名字要和產生器的 CASES 對得上 ----
    ⚠ 頁上那些標題是手寫的，產生器改了案名而頁面沒跟上，使用者挑的就是別的東西。 */
-const cases = [...GEN.matchAll(/\["(two|twoc)",\s*"(dim|flat)",\s*"([^"]+)"\]/g)]
-  .map(m => ({ tag: m[1], v: m[2], label: m[3] }));
-ok(cases.length === 4, `產生器的 CASES 讀到 ${cases.length} 格，應該是 4`);
+const cases = [...GEN.matchAll(/\["(two|twoc)",\s*"(dim|flat)",\s*([\d.]+),\s*"([^"]+)"\]/g)]
+  .map(m => ({ tag: m[1], v: m[2], k: +m[3], label: m[4] }));
+ok(cases.length === 6, `產生器的 CASES 讀到 ${cases.length} 格，應該是 6`);
 for (const c of cases) {
   /* 圈號（含 Ⓔ2 那個尾數）後面那幾個字，去掉括號裡的補充，要出現在頁面上 */
   const key = c.label.replace(/^[Ⓐ-Ⓩ]\d?\s*/, "").replace(/（[^）]*）/g, "").trim();
   ok(PAGE.includes(key), `產生器的「${c.label}」在規格頁上找不到（頁面沒跟上改名？）`);
 }
+/* ⚠⚠⚠ 2026-09-09 使用者指定拿掉標題、上下兩條線、那兩個數字與網址 ——
+   這一道擋的是「有人順手加回去」：畫面上多一行字不會讓任何一道尺寸守門翻臉。
+   ⚠ 只掃產生器畫出來的那幾個 class，不掃註解（推導本來就會提到它們）。 */
+for (const cls of ["hd", "rule", "ft"])
+  ok(!new RegExp(`class="${cls}"`).test(GENCODE),
+    `產生器又把 .${cls} 畫回去了 —— 標題／分隔線／頁尾是使用者指定拿掉的`);
+ok(!/fangren\.net/.test(GENCODE.replace(/const detail[\s\S]*?;\n/, "")),
+  "產生器又把網址畫進圖裡了 —— 網址只留在「詳情」那一欄");
 
 /* ---- ④ 孤兒圖 ---- */
 /* ⚠ 「擺上去」包含**只在說明裡寫出檔名**的那幾張（三案的主頁三格模擬）——
@@ -151,7 +161,8 @@ for (const s of specs)
     `產生器裡寫死了科別名「${s.name}」—— 資料只能從 index.html 讀`);
 
 if (bad.length) { console.error("✗ " + bad.length + " 項：\n  " + bad.join("\n  ")); process.exit(1); }
-console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、四案齊、詳情逐字、七科九位對得上 index.html）`);
+console.log(`✓ 靜態檢查通過（圖 ${imgs.length} 張、${cases.length} 格齊、`
+  + `標題與網址真的沒畫回去、詳情逐字、七科九位對得上 index.html）`);
 
 /* ---- ⑧ 量：八個寬度水平溢出 0、圖都載得到、死錨 0 ---- */
 const chrome = (() => {

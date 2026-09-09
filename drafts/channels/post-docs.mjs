@@ -225,20 +225,21 @@ const mark = (id, base) => {
     + `</svg-slot>${MK[SHAPE[id]]}</span>`;
 };
 
-/* ---------- 標題與頁尾 ----------
- * ⚠ 頁尾那一行是**從窄帶那三格讀回來的**（9 位醫師駐診・6 個部定專科）。
- * ⚠⚠ 紅線：這個帳號沒有專人即時回覆，圖上與詳情都不可以出現
- *   「有問題隨時問」那一類的話（第十一之三節）。
- * ⚠ 網址寫在圖上只是讓人認得出來 —— 圖上的字點不下去，可以點的那一份在「詳情」欄
- *   （同小格左那張地圖的三條停車場網址）。 */
-const SITE = "fangren.net";
+/* ---------- 標題與頁尾：⚠⚠⚠ 2026-09-09 使用者指定整組拿掉 ----------
+ * 「標題　芳仁牙醫 科別與醫師　9位醫師 6個專科　網址　拿掉」
+ *   → `.hd`（標題）、上下兩條分隔線、`.ft`（窄帶那兩個數字 ＋ fangren.net）全部不畫。
+ *
+ * ⚠⚠ **那三樣佔的高度不是零，所以這一改立刻長出一個新問題：整塊要不要放大**
+ *   （CLAUDE.md 第九節第 28 條 ②）。可用高度從 836 撐到整個 1000，
+ *   所以下面 `CASES` 多了一把**倍率**的尺 —— 沒有自己放大，擺出來讓使用者挑。
+ *
+ * ⚠ 「詳情」那一欄**沒有跟著拿掉那一行**（`9 位醫師駐診・6 個部定專科`）——
+ *   圖上不寫之後，這張圖已經沒有一個地方講得出診所是誰、有多少人，
+ *   而「詳情」正是接這種事的地方（同小格左那張地圖的三條停車場網址）。
+ *   ⚠ 那是**還沒問過的一件**，規格頁上寫著。
+ * ⚠⚠ 紅線：這個帳號沒有專人即時回覆，「詳情」不可以出現
+ *   「有問題隨時問」那一類的話（第十一之三節）。 */
 const FOOT = `${D.nDoc.n} ${D.nDoc.unit}${D.nDoc.label}・${D.nSpe.n} ${D.nSpe.unit}${D.nSpe.label}`;
-
-/* 標題。⚠ 這幾個字是我們擬的，**使用者還沒看過**，規格頁上寫著。
-   ⚠⚠ **四個合併案共用同一個標題是刻意的** —— 這一輪要比的是「同一份資訊怎麼排」，
-   標題跟著換的話那把尺就同時動了兩件事，挑出來的不知道是排法還是標題。 */
-const MERGED = "芳仁牙醫　科別與醫師";
-const TITLE = { two: MERGED, twoc: MERGED };
 
 const css = (fsz) => `
 *{box-sizing:border-box;margin:0}
@@ -253,12 +254,7 @@ svg.wm{position:absolute;width:${WMW}px;height:${WMH.toFixed(1)}px;
        left:${(-WMX).toFixed(0)}px;top:${(-Math.round(WMH * WMBY)).toFixed(0)}px;
        color:${INK};opacity:${WMA};z-index:2;pointer-events:none}
 .band{position:relative;z-index:1;display:flex;flex-direction:column;flex:1}
-.hd{font-size:${fsz.title}px;font-weight:700;letter-spacing:.05em;line-height:1.4}
-.rule{height:1px;background:${RULE};margin:${fsz.rule}px 0}
 .body{flex:1;display:flex;flex-direction:column;justify-content:center}
-.ft{display:flex;align-items:baseline;justify-content:space-between;
-    font-size:${fsz.foot}px;color:${SOFT};letter-spacing:.03em;line-height:1.5}
-.ft .u{color:${INK}}
 /* ⚠⚠ 第二位醫師用斜體標籤只是為了掛「左邊留一個字寬」，**不是要斜體** ——
    歸正一定要下在最外層。第一版只寫在「.mtop .who i」上，Ⓗ 那一案的
    斜體標籤包在粗體裡、選擇器命中不到，兩位醫師的第二位就被畫成斜體，
@@ -301,12 +297,8 @@ svg-slot{display:none}
 `;
 
 const WMARK = shapeSvg(WMSH).replace('class="mk"', 'class="wm"');
-const shell = (tag, inner) => `<div class="sheet">${WMARK}<div class="band">
-  <div class="hd">${TITLE[tag]}</div>
-  <div class="rule"></div>
+const shell = (inner) => `<div class="sheet">${WMARK}<div class="band">
   <div class="body">${inner}</div>
-  <div class="rule"></div>
-  <div class="ft"><span>${FOOT}</span><span class="u">${SITE}</span></div>
 </div></div>`;
 
 /* ⚠⚠ 合併之後**每一科的專長全部印**（不像 Ⓑ 那樣只取前三項）——
@@ -322,13 +314,13 @@ const docsOf = (sp, v) => sp.docs.map((d, i) => {
 
 const build = {
   /* Ⓔ 兩行：科別＋醫師一行，專長縮排到第二行 */
-  two: (m, v) => shell("two", `<div class="rows" style="--ind:${ind(m)}px">${bySpec.map(sp =>
+  two: (m, v) => shell(`<div class="rows" style="--ind:${ind(m)}px">${bySpec.map(sp =>
     `<div class="mrow"><div class="mtop">${mark(sp.id, m.icon)}`
     + `<div class="sp">${disp(sp.name)}</div><div class="who">${docsOf(sp, v)}</div></div>`
     + `<div class="msk mind">${skOf(sp.id).join("・")}</div></div>`).join("")}</div>`),
 
   /* Ⓕ 同上，專長換成描邊小塊 */
-  twoc: (m, v) => shell("twoc", `<div class="rows" style="--ind:${ind(m)}px">${bySpec.map(sp =>
+  twoc: (m, v) => shell(`<div class="rows" style="--ind:${ind(m)}px">${bySpec.map(sp =>
     `<div class="mrow"><div class="mtop">${mark(sp.id, m.icon)}`
     + `<div class="sp">${disp(sp.name)}</div><div class="who">${docsOf(sp, v)}</div></div>`
     + `<div class="mchips mind" style="color:${TONE[sp.id]}">`
@@ -339,7 +331,7 @@ const build = {
 const ind = (m) => Math.round(slotOf(m.icon) + m.mgap);
 
 /* 各案的字級。⚠ 每一個都會被下面那道「小格上不可以小於 10px」擋一次 */
-const BASE = { title:46, foot:32, rule:24, name:0, role:0, icon:0, sk:0, mpad:0,
+const BASE = { name:0, role:0, icon:0, sk:0, mpad:0,
                mgap:15, mnamegap:16, msktop:0, mchipgap:0, mchippad:0 };
 const FSZ = {
   /* ⚠⚠ 兩案的字級刻意完全相同（科別 36／醫師 31／專長 29）——
@@ -351,6 +343,11 @@ const FSZ = {
   twoc: { ...BASE, name:36, role:31, sk:29, icon:38, mpad:7, msktop:6,
           mchipgap:10, mchippad:4 },
 };
+/* ⚠⚠ 放大是**整組等比例**，不是只放大字 —— 圖案、縮排、列距、小塊的內距
+   一起乘，不然「科別名比圖案大一階」這種關係會在某一格突然變了。
+   ⚠ 小塊的框線維持 1px（那是線不是字，跟著乘會變粗）。 */
+const scaled = (m, k) => Object.fromEntries(
+  Object.entries(m).map(([key, v]) => [key, +(v * k).toFixed(2)]));
 
 /* ---------- 對比度：字是要讀的、圖案是要認的 ---------- */
 const lin = c => { c /= 255; return c <= .03928 ? c/12.92 : Math.pow((c+.055)/1.055, 2.4); };
@@ -428,16 +425,24 @@ if (Object.values(INK9).some(v => !(v > 50)))
    **每一案都留在 git 裡**：`git show d01e961 -- drafts/channels/post-docs.mjs`
    （Ⓐ／Ⓑ 更早，在 `ae10fa2`）—— 要回頭比就從那裡取，不要重畫。
    ⚠ 剩下的那把尺是**跨科的醫師要不要分深淺**（同一份資料，只有顏色不一樣）。 */
+/* ⚠⚠⚠ 2026-09-09 使用者再一件：「標題　芳仁牙醫 科別與醫師　9位醫師 6個專科　網址　拿掉」
+   —— 那三樣佔的高度不是零，所以立刻長出一個**新的設計項**：空出來的要不要用掉
+   （CLAUDE.md 第九節第 28 條 ②）。**沒有自己放大**，多一把倍率的尺擺出來讓他挑。 */
 const CASES = [
-  ["two",  "dim",  "Ⓔ 兩行（建議）"],
-  ["twoc", "dim",  "Ⓕ 兩行・專長做成小塊"],
-  ["two",  "flat", "Ⓔ2 兩行・醫師不分深淺"],
-  ["twoc", "flat", "Ⓕ2 小塊・醫師不分深淺"],
+  ["two",  "dim",  1.00, "Ⓔ 兩行（現在這樣）"],
+  ["twoc", "dim",  1.00, "Ⓕ 兩行・專長做成小塊"],
+  ["two",  "flat", 1.00, "Ⓔ2 兩行・醫師不分深淺"],
+  ["twoc", "flat", 1.00, "Ⓕ2 小塊・醫師不分深淺"],
+  /* ⚠ 倍率這把尺只掛在 Ⓔ 上，Ⓕ 不必再各做一次 —— 兩案的第一行（圖案＋科別名＋
+     醫師名）逐字相同，**天花板一模一樣**（1.159 倍），挑到哪一案都適用。 */
+  ["two",  "dim",  1.08, "Ⓔ3 放大 1.08 倍"],
+  ["two",  "dim",  1.15, "Ⓔ4 放大 1.15 倍（頂到寬度上限）"],
 ];
-const fileOf = (tag, v) => `post-docs-${tag}${v === "dim" ? "" : "-" + v}`;
+const fileOf = (tag, v, k) =>
+  `post-docs-${tag}${v === "dim" ? "" : "-" + v}${k === 1 ? "" : "-k" + Math.round(k * 100)}`;
 const made = [];
-for (const [tag, v, label] of CASES) {
-  const m = FSZ[tag];
+for (const [tag, v, k, label] of CASES) {
+  const m = scaled(FSZ[tag], k);
   await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css(m)}</style>${build[tag](m, v)}`);
   /* 等重的寬度是寫在 svg-slot 上的（模板裡先放一個佔位元素），這裡搬到真的 svg 上 ——
      ⚠ 直接把 style 寫進 MK 那串字會和它自己的屬性打架，形狀會靜靜地不見。 */
@@ -479,7 +484,7 @@ for (const [tag, v, label] of CASES) {
   /* ── 守門③：孤字（自己排出來的短句不算，只看會折行的那幾塊） ── */
   const orphan = await page.evaluate(() => {
     const rng = document.createRange(), out = [];
-    for (const el of document.querySelectorAll(".sk,.ro,.who,.chip,.ft span")) {
+    for (const el of document.querySelectorAll(".sk,.ro,.who,.chip")) {
       const t = el.textContent.trim();
       if (t.length < 3) continue;
       const lines = new Map();
@@ -540,8 +545,28 @@ for (const [tag, v, label] of CASES) {
       skL:  edge(".mind", "left"),         /* 縮排的那一行 */
     };
   });
-  for (const [k, v] of Object.entries(align))
-    if (v > .5) throw new Error(`${tag} 的 ${k} 沒有對齊同一條線：差 ${v.toFixed(1)}px`);
+  for (const [key, v] of Object.entries(align))
+    if (v > .5) throw new Error(`${tag} 的 ${key} 沒有對齊同一條線：差 ${v.toFixed(1)}px`
+      + `（放大倍率 ${k} 撐破了最寬的那一列）`);
+
+  /* ── ⚠⚠⚠ 「還能放大多少」要是一個數字（第 28 條 ③④）──
+     拿掉標題與頁尾之後空出來的是**高度**，可是這一版卡住的是**寬度**：
+     每一列是「圖案 ＋ 科別名 ＋ 醫師名」擠在同一行、都不折行，
+     所以最寬的那一列一撐破，`.sp` 就把醫師名推出版面（上面那道 whoR 抓得到）。
+     這裡現場量最寬的一列要多寬、可用多寬，倒推出這一版的倍率天花板。 */
+  const widest = await page.evaluate(() => {
+    const rng = document.createRange();
+    let worst = { need: 0, name: "" }, box = 0;
+    for (const row of document.querySelectorAll(".mtop")) {
+      box = row.getBoundingClientRect().width;
+      const cs = getComputedStyle(row), gap = parseFloat(cs.gap) || 0;
+      const ic = row.querySelector(".ic").getBoundingClientRect().width;
+      const ink = el => { rng.selectNodeContents(el); return rng.getBoundingClientRect().width; };
+      const need = ic + gap * 2 + ink(row.querySelector(".sp")) + ink(row.querySelector(".who"));
+      if (need > worst.need) worst = { need, name: row.querySelector(".sp").textContent.trim() };
+    }
+    return { ...worst, box };
+  });
 
   /* ── ⚠⚠ 「有幾段專長被折行」也要是一個數字 ──
      跨科的醫師補進來之後，專長那一行沒有變、但第一行變長了；折行是這兩案
@@ -578,9 +603,9 @@ for (const [tag, v, label] of CASES) {
     const r = el.getBoundingClientRect(), body = document.querySelector(".body").getBoundingClientRect();
     return { height: r.height, room: body.height - r.height };
   });
-  const file = fileOf(tag, v);
+  const file = fileOf(tag, v, k);
   await page.screenshot({ path: path.join(OUT, `${file}.png`) });
-  made.push({ tag, v, file, label, b, sizes, wrapped });
+  made.push({ tag, v, k, file, label, b, sizes, wrapped, widest });
 }
 
 /* ---------- 主頁那三格（裁切模擬）＋ 小格實際大小 ---------- */
@@ -594,10 +619,10 @@ const cell = (f, w, h) =>
      <img src="data:image/png;base64,${b64(f)}"
           style="width:100%;height:100%;object-fit:cover;display:block"></div>`;
 
-/* ⚠ 主頁三格只做**建議的那兩案**（Ⓔ／Ⓕ）—— Ⓔ2／Ⓕ2 只有醫師的深淺不一樣，
-   縮到 410px 之後三格那張看不出差別，每一案都做等於多兩張沒有人會開的圖。 */
+/* ⚠ 主頁三格只做**兩種排法**（Ⓔ／Ⓕ 各一張）—— 深淺與倍率那兩把尺縮到 410px
+   之後三格那張看不太出來，每一格都做等於多幾張沒有人會開的圖。 */
 const page2 = await browser.newPage({ viewport: { width: BIG_W, height: BIG_H + 4 + SLOT } });
-for (const { file } of made.filter(m => m.v === "dim")) {
+for (const { file } of made.filter(m => m.v === "dim" && m.k === 1)) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
     <div style="width:${BIG_W}px;background:#fff;display:flex;flex-direction:column;gap:4px">
       ${cell(HOURS, BIG_W, BIG_H)}
@@ -688,8 +713,17 @@ console.log(`\n── 版面（中間那一塊有多滿・專長有沒有被折�
 for (const m of made)
   console.log(`  ${m.label.padEnd(24, "　")}內容 ${m.b.height.toFixed(0)}px`
     + `　上下各餘 ${(m.b.room / 2).toFixed(0)}px`
-    + `　折行 ${m.wrapped.n}/7 科（最多 ${m.wrapped.max} 行）`
-    + (m.b.room / 2 > 120 ? "　⚠ 空得可以再放大" : ""));
+    + `　折行 ${m.wrapped.n}/7 科（最多 ${m.wrapped.max} 行）`);
+console.log(`\n── ⚠⚠⚠ 還能放大多少：卡住的是**寬度**不是高度 ──`);
+for (const m of made) {
+  const w = m.widest;
+  console.log(`  ${m.label.padEnd(24, "　")}最寬的一列（${w.name}）要 ${w.need.toFixed(0)}px`
+    + `／可用 ${w.box.toFixed(0)}px　餘 ${(w.box - w.need).toFixed(0)}px`
+    + `　→ 這一版最多還能放大 ${(w.box / w.need).toFixed(3)} 倍`);
+}
+console.log(`  ⚠ 拿掉標題與頁尾空出來的是**高度**（上下各餘一大塊），`
+  + `可是每一列的圖案、科別名、醫師名擠在同一行而且都不折行 ——`
+  + `**再放大是被寬度擋住的，不是被高度**。`);
 console.log(`  ⚠ 這一張是給**小格**的（方進方、整張都看得到），`
   + `所以沒有門診表那張的安全帶問題（大格只看得到中間 ${BAND} 列）。`);
 
@@ -716,6 +750,6 @@ console.log(`  浮水印 ${WMSH}　${WMW}×${WMH.toFixed(0)}px・墨 ${(WMA * 10
 
 console.log(`\n── 出圖 ──`);
 for (const m of made) console.log(`  ${m.file}.png`
-  + (m.v === "dim" ? `　profile-3up-${m.file.replace("post-docs-", "")}.png` : ""));
-console.log(`  slot-410.png（四格在小格的實際大小 —— 判準是這一張）`);
+  + (m.v === "dim" && m.k === 1 ? `　profile-3up-${m.file.replace("post-docs-", "")}.png` : ""));
+console.log(`  slot-410.png（${made.length} 格在小格的實際大小 —— 判準是這一張）`);
 console.log(`\n── 「詳情」欄要貼的字 ──\n` + detail.split("\n").map(l => "  " + l).join("\n"));
