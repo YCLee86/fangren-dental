@@ -120,17 +120,33 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   ⚠ 走過的四格（現在這樣／只放大／放大＋列距／只拉開列距）留在
   <code>drafts/channels/README.md</code> 第 36-15 節與 git，要回頭比從那裡取。</p>
 
-  <h2 class="pv-h2">在主頁上長怎樣<span class="t">大格＝看診時間　小格左＝停車　小格右＝這一張</span></h2>
+  <h2 class="pv-h2">在主頁上長怎樣<span class="t">大格＝門診表　左下＝科別醫師　右下＝地圖停車</span></h2>
   <div class="pv-shot">
     <img src="profile-3up.png" width="823" height="823" loading="lazy"
-         alt="主頁三格模擬：大格看診時間、小格左位置與停車、小格右是這一張">
+         alt="主頁三格模擬：大格門診表、左下科別醫師、右下位置與停車，浮水印跨在三格上拼成一顆">
   </div>
-  <p class="pv-cap">三格擺在一起才看得出<b>拿掉標題是對的</b>：上面那格已經寫著芳仁牙醫的門診表，
-  這一格再寫一次診所名等於同一個名字在同一個畫面上出現兩次。<br>
-  也看得出<b>治療項目不套色是對的</b>：三格裡的彩色現在只有那幾顆圖案，
-  而它們在兩張圖上是同一組顏色、同一組形狀。</p>
+  <p class="pv-cap">⚠⚠⚠ <b>那顆浮水印現在是一顆圓，騎在三格中間的十字縫上</b>：
+  大格看到上半、左下看到左下那一象限、右下看到右下那一象限。
+  三格的幾何只有一個出處 <code>drafts/channels/wm-triptych.mjs</code>，
+  三支產生器都從它拿位置與大小。<br>
+  ⚠⚠ 濃度三格<b>統一 4%</b>（門診表那張本來是 5%）——現在是同一個物件，
+  一深一淺會在縫上看得出來。<br>
+  ⚠⚠⚠ <b>同一個 px 在三格上不一樣大</b>：大格是 823÷1080 ＝ 0.762 縮的、
+  小格是 409÷1080 ＝ 0.379，差 <b>2.012 倍</b>。所以三張都畫同一個寬度會變成
+  「一顆大的配兩顆小的」，接不成一顆 ——<b>兩個小格在原圖上要畫成兩倍大</b>。<br>
+  ⚠ <b>順序要在後台排好</b>：門診表在最上面那一格。你那張截圖裡現在是科別醫師在大格。</p>
 
-  <h2 class="pv-h2">⚠⚠⚠ 這一輪真正改的：每一列印誰<span class="t">＝站上按那顆標記會亮起來的那幾位</span></h2>
+  <h2 class="pv-h2">那顆圓要多大<span class="t">三格一起換才比得出來</span><em>tri-sizes.png</em></h2>
+  <div class="pv-shot">
+    <img src="tri-sizes.png" width="823" height="2607" loading="lazy"
+         alt="三種直徑的三格拼圖並排：380、500、620">
+  </div>
+  <p class="pv-cap">由上到下 <b>380</b>（大格寬的 46%）／<b>500</b>（61%，現在這樣）／
+  <b>620</b>（75%）。單位是「三格合起來」那個座標系，大格寬 823。<br>
+  ⚠ 換直徑要三張一起重跑（<code>node drafts/channels/post-triptych.mjs</code>），
+  只改一張的話拼起來是三段對不上的弧。</p>
+
+  <h2 class="pv-h2">每一列印誰<span class="t">＝站上按那顆標記會亮起來的那幾位</span></h2>
   <table class="pv-tab">
     <thead><tr><th>這一列</th><th>本科的醫師</th><th>跨科（專長命中）</th></tr></thead>
     <tbody>

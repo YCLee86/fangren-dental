@@ -40,7 +40,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，尺寸對得上，都有 alt ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-ok(imgs.length === 3, `頁上有 ${imgs.length} 張圖，應該是 3`);
+ok(imgs.length === 4, `頁上有 ${imgs.length} 張圖，應該是 4`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -55,8 +55,14 @@ for (const im of imgs) {
    ⚠⚠ 2026-09-09 定稿 Ⓕ3，這一頁收成三張：定稿本人／小格 410px／主頁三格。
    ⚠⚠⚠ **要貼的檔案叫 `fangren-docs-1080.png`**（同看診時間與地圖那兩張的命名），
    其餘兩張只是模擬圖 —— 名字寫錯的話使用者會貼到模擬圖上去。 */
-for (const f of ["fangren-docs-1080.png", "slot-410.png", "profile-3up.png"])
+for (const f of ["fangren-docs-1080.png", "slot-410.png", "profile-3up.png", "tri-sizes.png"])
   ok(used.has(f), `少了這一張：${f}`);
+/* ⚠⚠⚠ 2026-09-09：浮水印跨三格拼成一顆，位置與大小只有一個出處 ——
+   這一支不可以自己寫死，不然三張接不成一顆而且**畫面上看起來很正常**。 */
+ok(/from "\.\/wm-triptych\.mjs"/.test(GENCODE) && /wmFor\("docs"\)/.test(GENCODE),
+  "產生器沒有從 wm-triptych.mjs 拿浮水印的位置（三格會接不起來）");
+ok(!/right:\$\{|bottom:\$\{/.test(GENCODE.match(/svg\.wm\{[^}]*\}/)?.[0] ?? ""),
+  "浮水印又自己寫死位置了 —— 位置只能來自 wm-triptych.mjs");
 
 /* ---- ② 「詳情」逐字 ---- */
 const detail = fs.readFileSync(path.join(DIR, "detail.txt"), "utf8").trimEnd();

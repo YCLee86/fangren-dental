@@ -25,6 +25,8 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { fileURLToPath } from "node:url";
+import { wmFor, TRI, checkOne } from "./wm-triptych.mjs";
+const tri = checkOne();
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OUT  = path.join(ROOT, "preview", "line-post-hours");
@@ -182,9 +184,13 @@ const TITLE = "芳仁牙醫開診時段";
    ⚠ 這裡用**站上頁首那一條**（mark.svg），不是九顆科別記號裡的任何一顆 ——
    那九顆在格子裡各自有身分，拿其中一顆放大會讓人以為那一科比較重要。
    ⚠ 顏色是墨 ＋ 很低的 opacity，**不新增任何顏色**。 */
-const WMSH = "r3c1";   /* 2026-09-07 使用者：「浮水印改用圓的 logo」→「用另外一顆圓 logo」
-                         ＝ 圓的那兩顆裡的**單洞版**（格子裡顯微根管在用的那一顆）。
-                         ⚠ 兩顆的長寬比都是 1.00，所以下面那四個數字一個都不必動。 */
+/* ⚠⚠⚠ 2026-09-09 起這顆浮水印**不是這一張圖自己的事**：使用者要三格拼成一顆完整的
+   標誌（「第一張是門診表 logo 要壓在下方」），所以形狀、大小、位置、濃度全部由
+   wm-triptych.mjs 算 —— 這一支不可以自己寫死，不然三張接不成一顆。
+   ⚠⚠ 而「壓在下方」在這一張上**不是畫布的下緣**：大格只看得到中間 537 列，
+   畫在 1080 的最底下等於畫在看不到的地方。圓心因此落在**可視段的下緣**（源圖 y≈812）。
+   形狀仍然是 2026-09-07 使用者挑的那一顆圓的（r3c1）。 */
+const WMSH = TRI.SHAPE;
 const WMARK = fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${WMSH}.svg`), "utf8")
   .replace(/<svg([^>]*?)(width|height)="[\d.]+"/g, "<svg$1")
   .replace(/<svg/, '<svg class="wm"');
@@ -208,7 +214,7 @@ if (!PHONE) throw new Error("index.html 裡找不到電話（畫面上的寫法�
    看不出是標誌。約診卡那一輪之所以那樣做，是因為那張卡只有 207px 寬；
    這裡要的是「一個大 logo」，所以**只從右邊切掉一點點、其餘完整露出來**，
    並且壓在表的後面（同約診卡：浮水印在字的後面，不是躲在空白處）。 */
-const WMW = 660, WMR = -60, WMT = 470, WMA = .05;
+const WM = wmFor("hours"), WMW = WM.w, WMA = WM.opacity;
 /* 版心的左右內距（裝置 px，放大時自己換算）與整體放大倍率 */
 /* ⚠⚠ 2026-09-07 使用者：「二三四五的科別感覺擠在一起了。」——放大之後每一天的欄
    只剩 154.6，兩顆等寬格就吃掉 133，**同一格與跨一天的距離差不到 1.3 倍**，
@@ -240,9 +246,8 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
      font-family:"Noto Sans TC","WenQuanYi Zen Hei",sans-serif}
 .sheet{width:${W}px;height:${H}px;display:flex;flex-direction:column;justify-content:center;
        position:relative;overflow:hidden}
-/* 浮水印：從右下角切出去，壓在所有東西後面 */
-svg.wm{position:absolute;width:${WMW}px;height:auto;right:${WMR}px;top:${WMT}px;
-       color:${INK};opacity:${WMA};z-index:0}
+/* 浮水印：騎在三格的十字縫上（見 wm-triptych.mjs），壓在所有東西後面 */
+svg.wm{position:absolute;${WM.css};color:${INK};opacity:${WMA};z-index:0}
 .band{position:relative;z-index:1}
 /* ⚠⚠⚠ 2026-09-07 使用者：「整個表的邊界抓的太小，周圍還有很多空間，把邊界縮小，
    好處是文字、圖案可以放大，這樣辨識度比較好。」
@@ -1020,7 +1025,8 @@ console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 ${LAB}，沒
     + `（格子 ${slotOf(30, "half").toFixed(1)}×30，塞得進去）`
     + `　長寬比 ${AR.r2c2.toFixed(3)} 是形狀本身的`);
 }
-console.log(`  浮水印 ${WMW}px・墨 ${(WMA * 100).toFixed(1)}%　底色 ${CARD} → ${WMBG}`
+console.log(`  浮水印 ${WMSH}（三格共用的那一顆，圓心在可視段下緣）`
+  + `　${WM.w}×${WM.h}px・墨 ${(WMA * 100).toFixed(1)}%　底色 ${CARD} → ${WMBG}`
   + `　壓在上面的字 ${Math.min(...wmText.map(c => c[1])).toFixed(2)}`
   + `　圖案 ${Math.min(...wmIcon.map(c => c[1])).toFixed(2)}（門檻 4.5 / 3）`);
 console.log(`  同一格裡兩顆相距 ${(m0[4].inn ?? 0).toFixed(1)}px　跨到隔壁那一天 `

@@ -43,6 +43,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { wmFor, checkOne, TRI, MOCK, tripleHtml } from "./wm-triptych.mjs";
+/* ⚠ 三格的圓要是同一顆 —— 算回「合起來」那個座標系比一次，對不上就 throw */
+const tri = checkOne();
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OUT  = path.join(ROOT, "preview", "line-post-docs");
@@ -201,19 +204,12 @@ const BAND = Math.round(W * (BIG_H / BIG_W));    /* 大格看得到的中間 537
 const FLOOR = 10;                                /* 小格上「等於沒寫」的那條線 */
 const px410 = v => v * SCALE;
 
-/* 浮水印：照小格左那一張（地圖）—— 兩個小格並排，不一樣會讀成兩件事。
-   ⚠ 寬度的唯一出處是 preview/line-booked/wm-sizes.json（等重換算，
-   基準寫死 r3c1 畫 660 —— 換預設形狀不可以連基準一起換，見 README 35-15）。 */
-const WMSH = "r1c2", WMA = .04, WMW0 = 660, WMREF = "r3c1", WMX = 440;
-const WMBX = 60 / 660, WMBY = 50 / 660;
-const WMSIZES = JSON.parse(fs.readFileSync(
-  path.join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
-const wmWidth = sh => {
-  const a = WMSIZES[sh], b = WMSIZES[WMREF];
-  if (!a || !b) throw new Error(`wm-sizes.json 裡沒有 ${sh}`);
-  return Math.round(WMW0 * a.w / b.w);
-};
-const WMW = wmWidth(WMSH), WMH = WMW / WMSIZES[WMSH].ratio;
+/* ⚠⚠⚠ 浮水印 2026-09-09 換成**三格共用的那一顆**（使用者：「logo 浮水印要選一樣的，
+   讓這三張呈現一個完整的 logo……左下是科別醫師 logo 壓在右上」）——
+   位置、大小、濃度全部由 wm-triptych.mjs 算，這一支不可以自己寫死，
+   不然三張接不成一顆。這一格是**左下**，所以圓心落在它的右上角外面一點點。 */
+const WM = wmFor("docs");
+const WMA = WM.opacity;
 
 /* ---------- 圖案：等重（同門診表那一張的 half） ----------
  * ⚠⚠ 九顆的長寬比 1.00~3.08、墨佔外框 59.6~83.2%，同寬的話細長那幾顆會輕很多。
@@ -256,8 +252,7 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
        display:flex;flex-direction:column;padding:${PAD}px;justify-content:center}
 /* 浮水印：壓在最上面、切出去一角（同小格左那張地圖 —— 那一張的地圖是不透明
    的 PNG，壓在後面會被切掉一塊；這一張沒有那個問題，但兩張並排要一樣） */
-svg.wm{position:absolute;width:${WMW}px;height:${WMH.toFixed(1)}px;
-       left:${(-WMX).toFixed(0)}px;top:${(-Math.round(WMH * WMBY)).toFixed(0)}px;
+svg.wm{position:absolute;${WM.css};
        color:${INK};opacity:${WMA};z-index:2;pointer-events:none}
 .band{position:relative;z-index:1;display:flex;flex-direction:column;flex:1}
 .body{flex:1;display:flex;flex-direction:column;justify-content:center}
@@ -302,7 +297,7 @@ svg-slot{display:none}
        padding:${fsz.mchippad}px 11px}
 `;
 
-const WMARK = shapeSvg(WMSH).replace('class="mk"', 'class="wm"');
+const WMARK = shapeSvg(WM.shape).replace('class="mk"', 'class="wm"');
 const shell = (inner) => `<div class="sheet">${WMARK}<div class="band">
   <div class="body">${inner}</div>
 </div></div>`;
@@ -383,7 +378,10 @@ const { chromium } = mod.default ?? mod;
 const browser = await chromium.launch({ executablePath: chrome });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 fs.mkdirSync(OUT, { recursive: true });
-for (const f of fs.readdirSync(OUT).filter(f => f.endsWith(".png"))) fs.rmSync(path.join(OUT, f));
+/* ⚠ `tri-*.png` 不清 —— 那是 post-triptych.mjs 跑出來的「浮水印多大」那把尺，
+   它要三支產生器一起跑才做得出來，被這一支順手刪掉就再也回不來了。 */
+for (const f of fs.readdirSync(OUT).filter(f => f.endsWith(".png") && !f.startsWith("tri-")))
+  fs.rmSync(path.join(OUT, f));
 
 /* 墨面積現量（九顆都量），等重要用 */
 INK9 = await page.evaluate(async (list) => {
@@ -607,15 +605,16 @@ const cell = (f, w, h) =>
      <img src="data:image/png;base64,${b64(f)}"
           style="width:100%;height:100%;object-fit:cover;display:block"></div>`;
 
-/* 主頁三格只做定稿那一張 */
-const page2 = await browser.newPage({ viewport: { width: BIG_W, height: BIG_H + 4 + SLOT } });
+/* 主頁三格：⚠ 版面（尺寸與順序）只有一份出處 —— wm-triptych.mjs 的 tripleHtml。
+   ⚠⚠ 這一張現在最重要的用途是**看那顆浮水印接不接得起來**：
+   大格看到上半、左下（這一張）看到左下那一象限、右下（地圖）看到右下那一象限。 */
+const page2 = await browser.newPage({ viewport: { width: MOCK.w, height: MOCK.h } });
 for (const { file } of made.filter(m => m.rec)) {
-  await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
-    <div style="width:${BIG_W}px;background:#fff;display:flex;flex-direction:column;gap:4px">
-      ${cell(HOURS, BIG_W, BIG_H)}
-      <div style="display:flex;gap:3px">${cell(MAP, SLOT, SLOT)}${
-        cell(path.join(OUT, `${file}.png`), SLOT, SLOT)}</div>
-    </div>`);
+  await page2.setContent(tripleHtml({
+    hours: "data:image/png;base64," + b64(HOURS),
+    docs:  "data:image/png;base64," + b64(path.join(OUT, `${file}.png`)),
+    map:   "data:image/png;base64," + b64(MAP),
+  }, RULE));
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
   await page2.screenshot({ path: path.join(OUT, "profile-3up.png") });
 }
@@ -734,8 +733,11 @@ console.log(`\n── 對比 ──`);
 for (const [n, r] of CONTR) console.log(`  ${n.padEnd(12, "　")}${r.toFixed(2)}　（門檻 4.5）`);
 console.log(`  圖案最低　${Math.min(...ICON.map(c => c[1])).toFixed(2)}`
   + `　${ICON.reduce((a, b) => a[1] < b[1] ? a : b)[0]}　（門檻 3）`);
-console.log(`  浮水印 ${WMSH}　${WMW}×${WMH.toFixed(0)}px・墨 ${(WMA * 100).toFixed(0)}%`
-  + `　左邊切掉 ${WMX}px　底色 ${CARD} → ${WMBG}`);
+console.log(`  浮水印 ${WM.shape}（三格共用的那一顆，圓心在右上角外面）`
+  + `　${WM.w}×${WM.h}px・墨 ${(WMA * 100).toFixed(0)}%`
+  + `　底色 ${CARD} → ${WMBG}`);
+console.log(`  三格接得起來嗎：`
+  + tri.map(o => `${o.tile} 圓心(${o.cx}, ${o.cy})・直徑 ${o.d}`).join("　") + "　✓ 同一顆");
 
 console.log(`\n── 出圖 ──`);
 for (const m of made) console.log(`  ${m.file}.png`

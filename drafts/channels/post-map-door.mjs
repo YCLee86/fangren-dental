@@ -28,6 +28,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { wmFor, TRI, checkOne } from "./wm-triptych.mjs";
+const tri = checkOne();
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OUT  = path.join(ROOT, "preview", "line-post-map");
@@ -124,7 +126,13 @@ const WMBX = 60 / 660, WMBY = 50 / 660;   /* 左右／上下各切出去多少�
    ⚠ 落選：380（上一輪那一格）／500／560。**560 是這把尺的盡頭** ——
      再往左只剩右邊 392px，形狀認不出來、浮水印變成一團灰。 */
 const WMX0 = 440;
-const WMW0 = 660, WMA0 = .04, WMPOS0 = "tl";
+const WMW0 = 660, WMA0 = TRI.OPACITY, WMPOS0 = "tl";
+/* ⚠⚠⚠ 2026-09-09：上面那三段（形狀 r1c2、左邊切 440、壓左上）**已經被推翻了**——
+   使用者要三格拼成一顆完整的標誌（「右下是地圖停車 logo 壓在左上」「logo 用門診表
+   那張圓圓的」），所以形狀、大小、位置全部改由 wm-triptych.mjs 算。
+   **那幾行留著是為了看得懂當初為什麼是 r1c2 與 440**，值本身已經不生效。
+   ⚠ 濃度 4% 是他上一輪挑的，這一輪三格統一吃的就是它（TRI.OPACITY）。 */
+const WM = wmFor("map");
 
 /* 浮水印的形狀：從 brand/shapes 讀，不抄第二份（同這一支其餘每一項資料）。
    ⚠ 那幾份 SVG 是單一路徑、currentColor、牙洞用 fill-rule 挖穿的，
@@ -336,9 +344,14 @@ const shotMap = async (targetW, { orient = "w", you = "clinic", ns = "c" } = {})
 let MAPW = 0, MAPH = 0, MAPURI = "";
 const css = (fs2, qrpx, lotk = 1, wrapn = 0, GAP = GAP0, wma = WMA0,
              wmsh = WMSH0, wmpos = WMPOS0, wmx = WMX0) => {
-  const ww = wmWidth(wmsh), wh = ww / WMSIZES[wmsh].ratio;
+  /* ⚠ 三格共用那一顆時，位置與大小由 wm-triptych 算；wmsh／wmpos／wmx 那三個
+     參數只有「回頭比舊版」時才有人傳（留著不刪，見上面 WMX0 那一段）。 */
+  const tri3 = wmsh === WMSH0 && wmpos === WMPOS0 && wmx === WMX0;
+  const ww = tri3 ? WM.w : wmWidth(wmsh);
+  const wh = tri3 ? WM.h : ww / WMSIZES[wmsh].ratio;
   const bx = -Math.round(ww * WMBX), by = -Math.round(wh * WMBY);
-  const place = wmpos === "tl" ? `left:${-wmx}px;top:${by}px`
+  const place = tri3 ? `left:${WM.left}px;top:${WM.top}px`
+              : wmpos === "tl" ? `left:${-wmx}px;top:${by}px`
                                : `right:${bx}px;bottom:${by}px`;
   return `
 *{box-sizing:border-box;margin:0}
@@ -351,7 +364,7 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 /* 浮水印：從右下角切出去（.sheet 有 overflow:hidden，切掉的不會真的畫出來）。
    ⚠⚠ 壓在**最上面**不是最下面 —— 見上面 WMSH 那一段：地圖是不透明的 PNG，
    擺在後面會被那個長方形切掉一塊。濃度低到亮處只是一層灰、暗處看不出來。 */
-svg.wm{position:absolute;width:${ww}px;height:auto;${place};
+svg.wm{position:absolute;width:${ww}px;height:${tri3 ? wh + "px" : "auto"};${place};
        color:${INK};opacity:${wma};z-index:2;pointer-events:none}
 /* ⚠ 標題只在「拿掉前兩句」那一版才有意義：那兩句一走，整張圖第一眼看到的
    就變成「周邊路段有畫設之路邊停車格」＝ 沒有人知道這是誰家的。
@@ -428,7 +441,7 @@ const sheet = (fs2, qr, drop = 0, title = "", wrapn = 0, wmsh = WMSH0) => `<div 
     qr ? `<div class="qr">${l.qr}</div>` : ""
   }<div class="nm"><span class="no">${l.tag}</span>${nmHtml(l.name, wrapn)}</div>
     <div class="du">${l.dist}</div></div>`).join("")}</div>
-</div>${wmark(wmsh)}</div>`;
+</div>${wmark(wmsh === WMSH0 ? WM.shape : wmsh)}</div>`;
 
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 fs.mkdirSync(OUT, { recursive: true });
