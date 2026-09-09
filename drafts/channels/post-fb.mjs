@@ -81,11 +81,6 @@ for (const k of ["hours", "docs"]) {
   run(t.gen, { WM_MODE: "fb" });
   fs.copyFileSync(path.join(ROOT, ...t.img), path.join(OUT, finalOf(k)));
 }
-/* ⚠ 順手多做一張「原樣搬到右下、不轉」的科別醫師 —— 那是牙洞被切掉的那一種。
-   它不是候選，是**為什麼要轉 180°** 的證據（頁上兩張並排）。 */
-run(byKey.docs.gen, { WM_MODE: "fb", WM_FB_DOCS: "plain" });
-fs.copyFileSync(path.join(ROOT, ...byKey.docs.img), path.join(OUT, "fb-docs-plain.png"));
-
 /* ---------- 第二步：地圖 × 五顆候選 ---------- */
 for (const sh of MAPWM) {
   run(byKey.map.gen, { WM_MODE: "fb", WM_FB_MAP: sh });
@@ -277,22 +272,16 @@ ${TILES.map(wmRow).join("\n")}
 ${TILES.map(t => shot(finalOf(t.k), 330, t.name)).join("\n")}
 </div>
 
-<h2 class="pv-h2">牙洞這一輪都看得到了<span class="t">兩張各動了一件事</span></h2>
+<h2 class="pv-h2">牙洞這件事<span class="t">兩張各自的答案</span></h2>
 <p class="pv-cap">
 牙洞是這顆標誌<b>唯一的識別特徵</b> —— 沒有它，剩下的就只是一團圓角形狀。
-所以「切出去」可以，<b>切掉牙洞不可以</b>。<br>
+所以預設會讓它露出來，<b>但那不是硬條件</b>。<br>
 ⚠ <b>地圖</b>：那一顆的牙洞本來在左上（形狀寬的 17.5%），而這一張切掉的正是左邊那一截，
 洞剛好被切走。<b>左右鏡射</b>之後洞落在畫布 (${g.map.hole.x}, ${g.map.hole.y}) ＝ 右上。<br>
-⚠ <b>科別醫師</b>：從壓左上搬到右下，<b>而且要連著轉 180°</b>。
-它的洞在形狀的 71.3%／75.7%（右下角），原樣搬過去之後看得到的是形狀的左上那一塊，
-洞剛好在畫布外面；轉 180° 之後<b>看得到的逐像素就是原來那一塊、只是換到對角</b>，
-洞跟著回來，落在 (${g.docs.hole.x}, ${g.docs.hole.y})。<br>
-⚠ 翻轉是整個標誌一起翻的（外框與洞同一條路徑）—— 只翻外框的話，
-洞會落到形狀外面、靜靜地消失而且不報錯。</p>
-<div class="pv-row">
-${shot(finalOf("docs"), 330, "科別醫師：搬到右下 ＋ 轉 180°（現在這樣）")}
-${shot("fb-docs-plain.png", 330, "⚠ 原樣搬過去不轉 —— 牙洞被切掉了")}
-</div>
+⚠ <b>科別醫師</b>：從壓左上搬到右下，<b>不轉</b>。
+它的洞在形狀的右下角，原樣搬過去之後看得到的是形狀的左上那一塊，洞落在畫布外面
+(${g.docs.hole.x}, ${g.docs.hole.y})。轉 180° 洞會回來，
+但那樣<b>整顆標誌是倒過來的</b> —— 一顆倒的標誌比一個看不到的洞更明顯，所以不轉。</p>
 
 <h2 class="pv-h2">地圖那一顆要換成哪一個<span class="t">五格，建議 ${REC}</span></h2>
 <p class="pv-cap">
@@ -377,7 +366,7 @@ for (const t of TILES) {
     + `・${b.pos === "br" ? "壓右下" : "壓左上"}`
     + `${b.flipX && b.flipY ? "轉 180°" : b.flipX ? "左右鏡射" : b.flipY ? "上下鏡射" : ""}`
     + `・墨 ${(b.opacity * 100).toFixed(0)}%　看得到 ${b.seen}px`
-    + `　牙洞 (${b.hole.x}, ${b.hole.y})`);
+    + `　牙洞 (${b.hole.x}, ${b.hole.y})${b.holeMode === "cut" ? "＝在畫布外（他選的不轉）" : ""}`);
 }
 
 console.log(`\n── 地圖那一顆的尺（等重基準：${FB.REF} 畫 ${FB.REFW}）──`);

@@ -69,8 +69,10 @@ export const TRI = {
  *   「**地圖那個 logo 選得不錯　不過 logo 原本的牙洞在左上　這裡看不到了
  *     把牙洞移到右上**」／「**科別醫師那個 logo 在左上　移到右下比較好**」
  *
- * ⚠⚠ 牙洞是這顆標誌**唯一的識別特徵** —— 沒有它，剩下的就只是一團圓角形狀。
- *   所以「切出去」可以，**切掉牙洞不可以**：把每一顆的牙洞量出來
+ * ⚠⚠ 牙洞是這顆標誌**唯一的識別特徵** —— 沒有它，剩下的就只是一團圓角形狀，
+ *   所以預設要讓它看得到。**但那不是硬條件**：2026-09-09 稍晚使用者對科別醫師那一張
+ *   說「不要轉　牙洞不要出來沒關係」—— **一顆倒過來的標誌比一個看不到的洞更糟**。
+ *   所以每一格自己宣告 `hole: "show" | "cut"`，守門照它驗。做法是把每一顆的牙洞量出來
  *   （逐一算過：r1c2 在 71.3%／75.7%、r2c2 在 17.5%／23.9%、r3c1 在 56.7%／81.9%），
  *   再確認它落在畫布看得到的那一段裡；守門有一道真的去 PNG 上找那個洞。
  * ⚠ 翻轉一律**整個 `<svg>` 元素**做（`transform: scale(±1)`），外框與洞一起翻。
@@ -83,14 +85,15 @@ export const FB = {
   /* `tl` ＝ 左上角切掉 cutX／cutY；`br` ＝ 右下角切掉同樣那兩個量。
      ⚠ 門診表那一組（cutX 60、cutY 50）就是他 09-08 挑定的 right −60 / top 470，
        換算過來一模一樣 —— **值沒有改，只是寫法統一了**。 */
-  hours: { shape: "r3c1", pos: "br", opacity: .05, cutX: 60, cutY: 50 },
+  hours: { shape: "r3c1", pos: "br", opacity: .05, cutX: 60, cutY: 50, hole: "show" },
   /* ⚠⚠ 科別醫師：2026-09-09 從壓左上**搬到右下**（使用者指定）。
-     ⚠⚠⚠ **搬過去要連著轉 180°**，不然牙洞會被切掉 —— 它在那顆形狀的
-     71.3%／75.7%（右下），原樣搬到右下之後看得到的是形狀的左上那一塊，洞剛好在外面。
-     轉 180° 之後看得到的**逐像素就是現在那一塊，只是換到對角**，洞跟著回來。
-     ⚠ `WM_FB_DOCS=plain` 可以看「原樣搬過去」那一格（洞不見的那一種）。 */
-  docs:  { shape: "r1c2", pos: "br", opacity: .04, cutX: 440, cutYr: 50 / 660,
-           flipX: process.env.WM_FB_DOCS !== "plain", flipY: process.env.WM_FB_DOCS !== "plain" },
+     ⚠⚠⚠ **不轉**（2026-09-09 使用者：「科別醫師那個 logo 不要轉　牙洞不要出來沒關係」）——
+     所以這一張看得到的是形狀的**左上那一塊**，牙洞（71.3%／75.7%，在右下）落在畫布外面。
+     那是他知情的取捨：**轉 180° 洞會回來，但那顆標誌就是倒過來的**。
+     ⚠ `hole: "cut"` 是講給守門聽的 —— 沒有它，那道「牙洞要看得到」會擋下這一張。
+     ⚠ `WM_FB_DOCS=flip` 仍然產得出轉過的那一版（留著看，頁面上沒有）。 */
+  docs:  { shape: "r1c2", pos: "br", opacity: .04, cutX: 440, cutYr: 50 / 660, hole: "cut",
+           flipX: process.env.WM_FB_DOCS === "flip", flipY: process.env.WM_FB_DOCS === "flip" },
   /* ⚠ 地圖這一顆是尺：`WM_FB_MAP` 換形狀。預設 r2c2（長寬比 1.33 —— 和門診表的
      正圓、科別醫師的長條都分得出來）。
      ⚠⚠ **切掉多少不是另一把尺**：一律切到「看得到 512px」為止 ＝ 科別醫師那一張
@@ -98,7 +101,7 @@ export const FB = {
      ⚠⚠⚠ **左右鏡射**（2026-09-09 使用者：「牙洞移到右上」）—— r2c2 的洞在左上，
      而這一張切掉左邊那一截，洞正好被切走；鏡射之後洞落在畫布 (379, 94) ＝ 右上。 */
   map:   { shape: process.env.WM_FB_MAP || "r2c2", pos: "tl", opacity: .04,
-           seen: 512, cutYr: 50 / 660, flipX: true },
+           seen: 512, cutYr: 50 / 660, flipX: true, hole: "show" },
 };
 const WMSIZES = JSON.parse(fs.readFileSync(
   path.join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
@@ -134,6 +137,7 @@ function wmFbFor(tile, opt = {}) {
                  y: +(top  + (fy < 0 ? 1 - hy : hy) * h).toFixed(1) };
   return {
     shape, opacity: c.opacity, scale: 1, mode: "fb", pos: c.pos, cutX, cutY,
+    holeMode: c.hole ?? "show",
     flipX: fx < 0, flipY: fy < 0, hole,
     w, h: +h.toFixed(1), left: +left.toFixed(1), top: +top.toFixed(1),
     /* 看得到多寬 —— 面板要印的就是這個（切掉之後還剩多少形狀） */
@@ -148,11 +152,15 @@ function wmFbFor(tile, opt = {}) {
 export function wmDesc(WM) {
   if (WM.mode !== "fb") return "三格共用的那一顆，圓心在十字縫上";
   const 角 = { br: "壓右下", tl: "壓左上" }[WM.pos] ?? WM.pos;
-  const 翻 = WM.flipX && WM.flipY ? "・轉 180°（牙洞才看得到）"
-    : WM.flipX ? "・左右鏡射（牙洞才看得到）"
-    : WM.flipY ? "・上下鏡射（牙洞才看得到）" : "";
+  const 翻 = WM.flipX && WM.flipY ? "・轉 180°"
+    : WM.flipX ? "・左右鏡射" : WM.flipY ? "・上下鏡射" : "・不轉";
+  /* ⚠ 牙洞那一句要照它自己宣告的講：`cut` 的那一張說「被切掉（他知情）」，
+     不要印一個看起來像壞掉的座標。 */
+  const 洞 = WM.holeMode === "cut"
+    ? `・牙洞在畫布外 (${WM.hole.x}, ${WM.hole.y})＝他選的不轉`
+    : `・牙洞落在畫布 (${WM.hole.x}, ${WM.hole.y})`;
   return `臉書版：一張一顆、${角}、切掉 ${WM.cutX}×${WM.cutY}`
-    + `（看得到 ${WM.seen}px）${翻}・牙洞落在畫布 (${WM.hole.x}, ${WM.hole.y})`;
+    + `（看得到 ${WM.seen}px）${翻}${洞}`;
 }
 
 /* 形狀的長寬比從 SVG 的 viewBox 讀回來，不要用 img.naturalWidth

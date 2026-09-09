@@ -197,8 +197,18 @@ for (const [k] of TILES) {
   const C = TRI.CANVAS, M = 8;
   ok(Number.isFinite(gm.hole.x) && Number.isFinite(gm.hole.y),
     `${k}：wm-triptych.mjs 的 HOLE 表裡沒有 ${gm.shape} 的牙洞位置`);
-  ok(gm.hole.x >= M && gm.hole.x <= C - M && gm.hole.y >= M && gm.hole.y <= C - M,
-    `${k} 的牙洞落在畫布外面 (${gm.hole.x}, ${gm.hole.y}) —— 被切掉了`);
+  /* ⚠ 只有宣告 `hole: "show"` 的那幾格才要求看得到 —— 科別醫師那一張是
+     `cut`，因為使用者 2026-09-09 說「不要轉　牙洞不要出來沒關係」。 */
+  if (gm.holeMode === "show")
+    ok(gm.hole.x >= M && gm.hole.x <= C - M && gm.hole.y >= M && gm.hole.y <= C - M,
+      `${k} 的牙洞落在畫布外面 (${gm.hole.x}, ${gm.hole.y}) —— 被切掉了`);
+}
+/* ⚠⚠ 科別醫師那一張**不可以再轉回去**（2026-09-09 使用者指定不轉）——
+   轉回去畫面照樣正常、每一道尺寸守門都會過，只有把圖打開看才看得出標誌是倒的。 */
+{
+  const g = wmFor("docs", { mode: "fb" });
+  ok(!g.flipX && !g.flipY, "科別醫師那顆浮水印又被轉了 —— 使用者指定不轉");
+  ok(FB.docs.hole === "cut", "FB.docs 少了 hole: \"cut\" —— 牙洞那道守門會誤擋這一張");
 }
 /* ⚠ 三張成品的長寬比一定要對得上那顆形狀的 viewBox（不可以被壓扁） */
 for (const [k] of TILES) {
@@ -232,8 +242,9 @@ for (const [k, dir, file] of TILES) {
      而從洞心往形狀中心走 13% 的地方有。⚠ 兩件都要 —— 只驗「洞心沒有墨」的話，
      整顆浮水印沒畫出來也會通過。 */
   const gm = wmFor(k, { mode: "fb" });
-  /* ⚠ 洞已經在畫布外面的話，上面那一道已經說完了 —— 這裡再量會回一堆 NaN，
+  /* ⚠ 宣告 `cut` 的那一格、或洞已經在畫布外面的，這裡不量 —— 量了會回一堆 NaN，
      把真正的那一句訊息淹掉。 */
+  if (gm.holeMode !== "show") continue;
   if (gm.hole.x < 0 || gm.hole.x >= TRI.CANVAS
    || gm.hole.y < 0 || gm.hole.y >= TRI.CANVAS) continue;
   const d = decode(fs.readFileSync(fbF));

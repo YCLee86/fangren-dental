@@ -43,7 +43,7 @@ b{font-weight:700}
 <div class="pv-scroll"><table>
 <tr><th>貼文</th><th>檔案</th><th>尺寸</th><th>浮水印</th><th></th></tr>
 <tr><td>門診表</td><td><code>fangren-fb-hours-1080.png</code></td><td>1080×1080・100KB</td><td><code>r3c1</code>　660×660<br>壓右下・看得到 600px・墨 5%</td><td><a href="/preview/line-post-hours/">完整規格</a></td></tr>
-<tr><td>科別與醫師</td><td><code>fangren-fb-docs-1080.png</code></td><td>1080×1080・188KB</td><td><code>r1c2</code>　952×469<br>壓右下・看得到 512px・轉 180°・墨 4%</td><td><a href="/preview/line-post-docs/">完整規格</a></td></tr>
+<tr><td>科別與醫師</td><td><code>fangren-fb-docs-1080.png</code></td><td>1080×1080・187KB</td><td><code>r1c2</code>　952×469<br>壓右下・看得到 512px・墨 4%</td><td><a href="/preview/line-post-docs/">完整規格</a></td></tr>
 <tr><td>位置與周邊停車</td><td><code>fangren-fb-map-1080.png</code></td><td>1080×1080・124KB</td><td><code>r2c2</code>　762×572<br>壓左上・看得到 512px・左右鏡射・墨 4%</td><td><a href="/preview/line-post-map/">完整規格</a></td></tr>
 </table></div>
 <p class="pv-cap">
@@ -57,22 +57,16 @@ b{font-weight:700}
 <figure class="pv-shot"><img src="fangren-fb-map-1080.png" width="330" height="330" alt="位置與周邊停車" loading="lazy"><figcaption>位置與周邊停車</figcaption></figure>
 </div>
 
-<h2 class="pv-h2">牙洞這一輪都看得到了<span class="t">兩張各動了一件事</span></h2>
+<h2 class="pv-h2">牙洞這件事<span class="t">兩張各自的答案</span></h2>
 <p class="pv-cap">
 牙洞是這顆標誌<b>唯一的識別特徵</b> —— 沒有它，剩下的就只是一團圓角形狀。
-所以「切出去」可以，<b>切掉牙洞不可以</b>。<br>
+所以預設會讓它露出來，<b>但那不是硬條件</b>。<br>
 ⚠ <b>地圖</b>：那一顆的牙洞本來在左上（形狀寬的 17.5%），而這一張切掉的正是左邊那一截，
 洞剛好被切走。<b>左右鏡射</b>之後洞落在畫布 (378.6, 93.7) ＝ 右上。<br>
-⚠ <b>科別醫師</b>：從壓左上搬到右下，<b>而且要連著轉 180°</b>。
-它的洞在形狀的 71.3%／75.7%（右下角），原樣搬過去之後看得到的是形狀的左上那一塊，
-洞剛好在畫布外面；轉 180° 之後<b>看得到的逐像素就是原來那一塊、只是換到對角</b>，
-洞跟著回來，落在 (841.2, 760.8)。<br>
-⚠ 翻轉是整個標誌一起翻的（外框與洞同一條路徑）—— 只翻外框的話，
-洞會落到形狀外面、靜靜地消失而且不報錯。</p>
-<div class="pv-row">
-<figure class="pv-shot"><img src="fangren-fb-docs-1080.png" width="330" height="330" alt="科別醫師：搬到右下 ＋ 轉 180°（現在這樣）" loading="lazy"><figcaption>科別醫師：搬到右下 ＋ 轉 180°（現在這樣）</figcaption></figure>
-<figure class="pv-shot"><img src="fb-docs-plain.png" width="330" height="330" alt="⚠ 原樣搬過去不轉 —— 牙洞被切掉了" loading="lazy"><figcaption>⚠ 原樣搬過去不轉 —— 牙洞被切掉了</figcaption></figure>
-</div>
+⚠ <b>科別醫師</b>：從壓左上搬到右下，<b>不轉</b>。
+它的洞在形狀的右下角，原樣搬過去之後看得到的是形狀的左上那一塊，洞落在畫布外面
+(1246.8, 1002)。轉 180° 洞會回來，
+但那樣<b>整顆標誌是倒過來的</b> —— 一顆倒的標誌比一個看不到的洞更明顯，所以不轉。</p>
 
 <h2 class="pv-h2">地圖那一顆要換成哪一個<span class="t">五格，建議 r2c2</span></h2>
 <p class="pv-cap">
@@ -104,7 +98,7 @@ r1c1 與 r3c2 是圓的、r2c1 是長條，各自會和其中一張撞。</p>
 ⚠ 常看到的 <b>1200×630 是「連結預覽卡」</b>的規格，不是照片貼文的，不要拿來套。<br>
 ⚠ <b>4:5（1080×1350）</b>在手機上佔更多畫面，但這三張的內容是方的，
 拉成 4:5 只會在上下多兩條空白 —— 換版型換不到東西。<br>
-⚠ 檔案上限 8MB，這三張是 100／188／124KB。<br>
+⚠ 檔案上限 8MB，這三張是 100／187／124KB。<br>
 ⚠ 這幾個數字是查來的<b>二手資料</b>（Meta 自己的說明頁這個容器連不出去）。</p>
 <p class="pv-cap">
 順帶一件是免費撿到的：門診表那張在 LINE 大格是裁切的，只看得到中間 537 列，
