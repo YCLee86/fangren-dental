@@ -77,7 +77,11 @@ const HEAD = { w: 86, h: 82 };
  *   不要另外發明一組講法。
  * ⚠ 斷行一律自己指定（第十一之二節）。 */
 const COPY = {
-  head: "綁定手機",
+  /* ⚠ 2026-09-09 使用者定案：「綁定手機」→「手機綁定」。
+   *   ⚠⚠ 選單列那一行是廠商設的「手機註冊」——**同一條選單上兩個詞**
+   *   （註冊 vs 綁定），而這條線其餘每一則（綁定完成卡…）一律用「綁定」。
+   *   那一行改不改得動已經在頁面的問題清單裡。 */
+  head: "手機綁定",
   sub:  ["看診提醒與約診查詢", "綁定後都在這裡"],
   /* ⚠⚠ 字帶那一句仍然留著「點一下」，那不是漏改成一致 ——
    *   使用者拿掉的是**藥丸**（一顆看起來像按鈕的東西，會讓人以為只有那裡可以按，
@@ -89,59 +93,24 @@ const COPY = {
 
 /* ── 四格 ─────────────────────────────────────────────────────────
  * crop 給的是「原圖上要露出來的那一塊」；不給就用 cover 置中。 */
+/* ── 定案（2026-09-09，使用者：「那就用 A2-3　不過綁定手機　改成　手機綁定
+ *   　做好　給我預覽　其他的不用再顯示出來」）───────────────────────────
+ *
+ * ＝ 原本那把尺上的 **Ⓐ2-3**：小型版型 ＋ 字欄 990 ＋ 主標 165／副標 82。
+ *   圖欄 1510（手機上 227px）、插圖 **100% 一個像素都不裁**、字到圖 14.6px。
+ *
+ * ⚠⚠ **其餘十二格全部拿掉了，推導留在 README 第 37-4-3 ~ 37-4-6 與 git**：
+ *   字級三格（Ⓐ1／Ⓐ2／Ⓐ3）、圖欄四格（Ⓐ3-2~4／Ⓐ2-2）、
+ *   大型的帶子三格（Ⓑ1~3）、自訂（Ⓒ）、硬塞（Ⓧ）——
+ *   要回頭比就 `git show 7420f27 -- drafts/channels/richmenu-bind.mjs`，不要重畫。
+ *   `kind: "band"`／`"full"` 那兩條路的程式碼**留著沒刪**（大型與自訂的退路）。
+ *
+ * ⚠⚠⚠ **面板不可以跟著收**（第九節第 28 條 ④）：格子只剩一個，但
+ *   「看得到多少／裁哪邊／一個人頭多高／字到圖多遠」每次出圖仍然要印 ——
+ *   不然哪天有人動到字級或字欄，這裡不會有任何一個數字變。 */
 const CASES = [
-  { id: "x", size: "compact", kind: "full",
-    label: "Ⓧ 現況", note: "整張圖直接塞進小型版型（＝使用者遇到的那一種）" },
-
-  /* ── Ⓐ 小型・圖 ＋ 字欄：一把「字要多大」的尺（藥丸已經拿掉）──────
-   * ⚠ 三格只差字級，版型、圖欄、裁法一個數字都沒動 ——
-   *   一把尺一次只准動一件事（第九節第 28 條 ①）。 */
-  { id: "a1", size: "compact", kind: "split", textw: 1080, head: 190, sub: 92,
-    label: "Ⓐ1 現在這樣", note: "主標 28.5px、副標 13.8px（＝拿掉藥丸之前那一組）" },
-  { id: "a2", size: "compact", kind: "split", textw: 1080, head: 165, sub: 82,
-    label: "Ⓐ2 小一階", note: "主標 24.8px、副標 12.3px" },
-  /* ⚠ Ⓐ2 的字比 Ⓐ3 寬（最寬那一行多約 55px），但**推得到的位置完全一樣** ——
-   *   擋住這把尺的不是文字放不放得下，是 37-4-5 那個裁法翻面的轉折點（字欄 990）。
-   *   字欄 990 時 Ⓐ2 還有 790px 可用、最寬那一行約 760px，仍然放得下。 */
-  { id: "a2b", size: "compact", kind: "split", textw: 1035, head: 165, sub: 82,
-    label: "Ⓐ2-2 往左 45", note: "圖欄 1465（手機上 220px）、看得到 97%" },
-  { id: "a2c", size: "compact", kind: "split", textw: 990, head: 165, sub: 82,
-    label: "Ⓐ2-3 往左 90", note: "圖欄 1510（227px）、看得到 100% —— 和 Ⓐ3-3 的圖一模一樣，只有字比較大" },
-  { id: "a3", size: "compact", kind: "split", textw: 1080, head: 145, sub: 76,
-    label: "Ⓐ3 再小一階", note: "主標 21.8px、副標 11.4px（你挑的那一格）" },
-
-  /* ── Ⓐ3 的圖欄：一把「圖再往左多少」的尺 ──────────────────────────
-   * 起因（2026-09-09）：「Ⓐ3 的版本　文字和圖中間感覺還很有餘裕
-   *   　圖是不是可以再往左一點或是放大一點」。
-   *
-   * ⚠⚠⚠ 「放大」這條路不存在，而且不是版面問題是幾何 ——
-   *   插圖已經**吃滿選單的高度**（843），cover 的倍率由高度那一項決定，
-   *   所以圖欄變寬**不會讓圖變大**，只會**多露出左右兩邊**。
-   *   要讓圖真的變大只有換版型（Ⓑ 大型），那是另一件事。
-   *
-   * ⚠⚠⚠ 這把尺也有轉折點（同 Ⓑ 的帶子）：
-   *   圖欄 ÷ 843 ＝ 插圖的 1.7917 時是 **1510px**（textw 990），那裡 100% 看得到；
-   *   再往左圖欄比插圖還扁，**裁法從左右切換成上下切** —— 切掉的正好是頭和腳。 */
-  { id: "a3b", size: "compact", kind: "split", textw: 1035, head: 145, sub: 76,
-    label: "Ⓐ3-2 往左 45", note: "圖欄 1465（手機上 220px）、看得到 97%" },
-  { id: "a3c", size: "compact", kind: "split", textw: 990, head: 145, sub: 76,
-    label: "Ⓐ3-3 往左 90", note: "圖欄 1510（227px）、看得到 100% —— 整張一個像素都不裁（建議）" },
-  { id: "a3d", size: "compact", kind: "split", textw: 940, head: 145, sub: 76,
-    label: "Ⓐ3-4 往左 140", note: "圖欄 1560（234px）、看得到 96.8% —— 過頭了，改成切上下（頭與腳）" },
-
-  /* ── Ⓑ 大型・圖 ＋ 字帶：一把「帶子與字要多大」的尺 ────────────────
-   * ⚠⚠⚠ 帶子收小**不會讓選單變矮** —— 大型版型是 2500×1686 寫死的，
-   *   手機上永遠是 375×253 CSS px。收小帶子換到的是**插圖變大**
-   *   （看得到的比例跟著上升），要讓選單變矮只有 Ⓐ（小型，126px）。 */
-  { id: "b1", size: "large", kind: "band", bandh: 330, bandHead: 126, bandSub: 80,
-    label: "Ⓑ1 現在這樣", note: "帶子 49.5px、主標 18.9px、副標 12.0px" },
-  { id: "b2", size: "large", kind: "band", bandh: 275, bandHead: 110, bandSub: 72,
-    label: "Ⓑ2 小一階", note: "帶子 41.3px、主標 16.5px、副標 10.8px（建議）" },
-  { id: "b3", size: "large", kind: "band", bandh: 230, bandHead: 96, bandSub: 68,
-    label: "Ⓑ3 再小一階", note: "帶子 34.5px、主標 14.4px、副標 10.2px" },
-
-  { id: "c", size: "custom", kind: "full",
-    label: "Ⓒ 自訂", note: "2500×1396 ＝ 插圖原比例，一個像素都不裁（只有廠商走 API 做得到）" },
+  { id: "final", size: "compact", kind: "split", textw: 990, head: 165, sub: 82,
+    label: "定案", note: "小型 2500×843、圖欄 227px、插圖 100% 看得到" },
 ];
 
 /* ── 版面（畫在 2500 的畫布上，所以每個數字都要乘 0.15 才是手機上的 px）── */
@@ -224,6 +193,8 @@ const chromePath = "/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/h
 const imgURI = `data:image/jpeg;base64,${fs.readFileSync(SRC).toString("base64")}`;
 
 fs.mkdirSync(OUT, { recursive: true });
+/* ⚠ 先清掉上一次的產物 —— 收格子的時候舊候選會變成孤兒檔 */
+for (const f of fs.readdirSync(OUT)) if (f.endsWith(".jpg")) fs.unlinkSync(path.join(OUT, f));
 const browser = await chromium.launch({ executablePath: fs.existsSync(chromePath) ? chromePath : undefined });
 const pg = await browser.newPage({ viewport: { width: 2560, height: 2000 }, deviceScaleFactor: 1 });
 
@@ -342,7 +313,7 @@ for (let i = 0; i < CASES.length; i++) {
  *   七格都做等於在一頁 no-store 的頁面上多 2MB。這張圖回答的是「**它在整個畫面裡
  *   佔多少**」——那是**版型**的事（小型／大型），字級那把尺看不出差別。
  *   所以現況一張 ＋ 每一族的建議各一張。 */
-const MOCK = ["x", "a2c", "a3c", "b2"];
+const MOCK = ["final"];
 const MOCKS = CASES.filter((c) => MOCK.includes(c.id));
 const b64 = (f) => fs.readFileSync(f).toString("base64");
 const welcURI = `data:image/png;base64,${b64(WELC)}`;
@@ -463,9 +434,25 @@ fs.writeFileSync("drafts/line-richmenu-numbers.json", JSON.stringify({
     副標: r.m.sub ? +(r.m.sub.fs * r.k).toFixed(1) : (r.m.bs ? +(r.m.bs.fs * r.k).toFixed(1) : null),
     帶子: r.c.bandh ? +(r.c.bandh * r.k).toFixed(1) : null,
     檔案KB: Math.round(r.bytes / 1024),
+    檔名: { 上傳: "fangren-richmenu-2500.jpg", 選單: "shot-richmenu.jpg", 手機: "shot-richmenu-chat.jpg" },
     strip: { w: r.dispW * 3, h: Math.round((r.S.h * r.dispW * 3) / r.S.w) },
     chat: MOCK.includes(r.c.id) ? { w: PHONE_W * DSF, h: PHONE_H * DSF } : null,
   })),
 }, null, 1) + "\n");
+/* ⚠⚠ 改名放在最後一步（產生器內部仍然叫 final）——
+ *   **要上傳到 LINE 的是 fangren-richmenu-2500.jpg**，另外兩張只是模擬圖。
+ *   ⚠ 上面那一行清檔會一起清掉它們，所以重跑不會留下上一次的。 */
+const FINAL = {
+  "richmenu-final.jpg": "fangren-richmenu-2500.jpg",
+  "strip-final.jpg":    "shot-richmenu.jpg",
+  "chat-final.jpg":     "shot-richmenu-chat.jpg",
+};
+for (const [from, to] of Object.entries(FINAL)) {
+  const a = path.join(OUT, from);
+  if (!fs.existsSync(a)) throw new Error(`要改名的 ${from} 不在`);
+  fs.renameSync(a, path.join(OUT, to));
+}
+console.log("要上傳到 LINE 的是　" + path.join(OUT, FINAL["richmenu-final.jpg"]));
+console.log("");
 console.log("數字寫進 drafts/line-richmenu-numbers.json");
 console.log("");

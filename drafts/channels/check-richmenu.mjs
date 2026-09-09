@@ -41,30 +41,19 @@ function dims(p) {
   throw new Error(`${p} 認不出是 PNG 還是 JPEG`);
 }
 
-/* ── ① 頁上那張表逐格對 numbers.json ─────────────────────────────── */
-const tb = html.slice(html.lastIndexOf("<tbody>"), html.lastIndexOf("</tbody>"));
-const rows = [...tb.matchAll(/<tr>([\s\S]*?)<\/tr>/g)]
-  .map((m) => [...m[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)]
-    .map((c) => c[1].replace(/<[^>]+>/g, "").trim()));
-if (rows.length !== N.格.length)
-  bad.push(`那張表有 ${rows.length} 列，產生器出了 ${N.格.length} 格`);
-else N.格.forEach((g, i) => {
-  /* ⚠ 第一格逐字對「標籤」—— 尺上有 Ⓐ1／Ⓐ2／Ⓐ3，只比圈號的話三列會互相通過 */
-  const want = [g.標籤, g.版型, g.圖檔, g.手機上, g.圖欄,
-    `${g.看得到}%`, g.裁哪邊, `${g.一個人頭}px`,
-    g.字到圖 == null ? "—" : `${g.字到圖}px`,
-    g.主標 == null ? "沒有" : `${g.主標}px`,
-    g.副標 == null ? "沒有" : `${g.副標}px`,
-    g.帶子 == null ? "—" : `${g.帶子}px`,
-    `${g.檔案KB}KB`];
-  const got = rows[i];
-  if (got.length !== want.length)
-    bad.push(`表第 ${i + 1} 列有 ${got.length} 格，應該是 ${want.length} 格`);
-  want.forEach((w, j) => {
-    if ((got[j] ?? "") !== w)
-      bad.push(`表第 ${i + 1} 列第 ${j + 1} 格：頁上「${got[j]}」，產生器算的是「${w}」`);
-  });
-});
+/* ── ① 定案那一格的數字逐項出現在頁上 ─────────────────────────────
+ * ⚠ 2026-09-09 那一頁收成一件事（使用者：「其他的不用再顯示出來」），
+ *   所以沒有那張表了 —— 改成把 numbers.json 那一格的每一個數字
+ *   逐字在頁上找一次。少印一個就是頁面和產生器分家。 */
+if (N.格.length !== 1)
+  bad.push(`產生器出了 ${N.格.length} 格，定案之後應該只有 1 格`);
+else {
+  const g = N.格[0];
+  for (const t of [g.圖檔, g.手機上, g.圖欄, `${g.看得到}%`,
+                   `${g.主標}px`, `${g.副標}px`, `${g.字到圖}px`,
+                   `${g.一個人頭}px`, `${g.檔案KB}KB`])
+    if (!html.includes(t)) bad.push(`頁上少了定案那一格的數字：${t}`);
+}
 
 /* ── ① 之二：內文裡那幾個非抄不可的數字 ──────────────────────────── */
 const S = N.截圖, O = N.原圖, H = N.硬條件;
@@ -80,7 +69,7 @@ for (const t of [
 const used = new Set(["index.html"]);
 for (const g of N.格) {
   /* 要上傳的那一份 */
-  const jp = path.join(DIR, `richmenu-${g.id}.jpg`);
+  const jp = path.join(DIR, g.檔名.上傳);
   used.add(path.basename(jp));
   if (!fs.existsSync(jp)) { bad.push(`${jp} 不在`); continue; }
   const d = dims(jp), [w, h] = g.圖檔.split("×").map(Number);
@@ -95,7 +84,7 @@ for (const g of N.格) {
   if (Math.round(kb) !== g.檔案KB) bad.push(`${jp} 實檔 ${Math.round(kb)}KB，numbers 記的是 ${g.檔案KB}KB`);
 
   /* 規格頁擺的那一份（1125 寬 ＝ 螢幕寬的三倍）——每一格都要有 */
-  const sp = path.join(DIR, `strip-${g.id}.jpg`);
+  const sp = path.join(DIR, g.檔名.選單);
   used.add(path.basename(sp));
   if (!fs.existsSync(sp)) bad.push(`${sp} 不在`);
   else {
@@ -104,7 +93,7 @@ for (const g of N.格) {
       bad.push(`${sp} 是 ${ds.w}×${ds.h}，產生器算的是 ${g.strip.w}×${g.strip.h}`);
   }
   /* ⚠ 整支手機那張只有三格有（現況 ＋ 兩族各一張建議）——寫死成每一格都有會誤報孤兒檔 */
-  if (g.chat) used.add(`chat-${g.id}.jpg`);
+  if (g.chat) used.add(g.檔名.手機);
 }
 /* 頁上每一張圖：檔案要在、width/height 要等於實檔、alt 要有 */
 for (const m of html.matchAll(/<img\s([^>]*)>/g)) {
@@ -117,10 +106,10 @@ for (const m of html.matchAll(/<img\s([^>]*)>/g)) {
   const d = dims(p);
   if (d.w !== w || d.h !== h) bad.push(`${src} 實檔 ${d.w}×${d.h}，屬性寫 ${w}×${h}`);
   if (!a("alt")) bad.push(`${src} 沒有 alt`);
-  const gc = N.格.find((g) => src === `chat-${g.id}.jpg`);
+  const gc = N.格.find((g) => src === g.檔名.手機);
   if (gc && (d.w !== gc.chat.w || d.h !== gc.chat.h))
     bad.push(`${src} 實檔 ${d.w}×${d.h}，產生器算的是 ${gc.chat.w}×${gc.chat.h}`);
-  const gs = N.格.find((g) => src === `strip-${g.id}.jpg`);
+  const gs = N.格.find((g) => src === g.檔名.選單);
   if (gs && (d.w !== gs.strip.w || d.h !== gs.strip.h))
     bad.push(`${src} 實檔 ${d.w}×${d.h}，產生器算的是 ${gs.strip.w}×${gs.strip.h}`);
 }
@@ -130,6 +119,12 @@ for (const f of fs.readdirSync(DIR)) if (!used.has(f)) bad.push(`孤兒檔：${D
 if (!/<meta name="robots" content="noindex, nofollow, noarchive">/.test(html))
   bad.push("noindex 那一行不見了");
 if (/<script/i.test(html)) bad.push("這一頁不該有 <script>");
+
+/* ⚠ 定案的主標是使用者指定的「手機綁定」，不是「綁定手機」——
+ *   換回去畫面照樣正常、每一道尺寸守門都會過，只有讀字才看得出來。 */
+if (!/head: "手機綁定"/.test(fs.readFileSync("drafts/channels/richmenu-bind.mjs", "utf8")))
+  bad.push("產生器的主標不是「手機綁定」");
+if (!html.includes("手機綁定")) bad.push("頁面上找不到「手機綁定」");
 
 /* ── ⑦ 紅線（第十一之三節）───────────────────────────────────────── */
 const body = html.slice(html.indexOf("<body"));
