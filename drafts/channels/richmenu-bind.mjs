@@ -1,8 +1,7 @@
 /* 圖文選單（rich menu）：把綁定完成那張插圖擺進聊天室最底下那條選單
  *   node drafts/channels/richmenu-bind.mjs
  *   → preview/line-richmenu/richmenu-<id>.jpg   ⭐ 這才是要上傳到 LINE 的檔（2500 寬）
- *   → preview/line-richmenu/shot-<id>.png       規格頁上看的（2× 顯示尺寸，只縮不畫）
- *   → preview/line-richmenu/mock-<id>.png       在聊天室裡長什麼樣（1125 裝置 px）
+ *   → preview/line-richmenu/chat-<id>.jpg       在 LINE 裡長什麼樣（整支手機，1125×2436）
  *
  * 起點：2026-09-09 使用者拿了另一家診所（同一個廠商）的截圖 ——
  *   「我們之前做過的綁定插圖　把他合在這個頁面的下方　取代這個　點此 sign in 圖片看看
@@ -37,7 +36,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const SRC   = "drafts/bind-done-v4-src.jpg";
-const BAR   = "drafts/line-richmenu-chatbar.png";   /* 截圖切下來的那條選單列（1125×240） */
+const WELC  = "preview/line-welcome/shot-welcome.png";  /* 招呼圖卡（已定案的產出檔，804×1470 ＝ 268×490 CSS） */
+const ICON  = "assets/icon-192.png";
 const OUT   = "preview/line-richmenu";
 
 /* ── 顏色：一個都沒有新增 ────────────────────────────────────────── */
@@ -46,11 +46,18 @@ const INK   = "#2a2c27";   /* --ink */
 const SOFT  = "#5c5f57";   /* --ink-soft */
 const GREEN = "#3f654a";   /* 一般牙科的套色 ＝ 品牌真值 */
 
-/* ── 聊天室那一側量出來的（1125×2436 的截圖）────────────────────── */
-const PHONE_W  = 1125;     /* 375 CSS px × DPR 3 */
-const GAP_H    = 38;       /* 選單上面那段聊天室底色 */
-const CHAT_BG  = "#1a1a1a";
-const BAR_H    = 240;
+/* ── 「在 LINE 裡長什麼樣」那張整支手機 ──────────────────────────
+ * ⚠⚠ 尺寸照使用者那張截圖：1125×2436（iPhone，DPR 3）＝ 375×812 CSS px。
+ * ⚠⚠ 但**一個像素都沒有用他的截圖** —— 聊天室、選單列、狀態列全部自己畫，
+ *   配色沿用這條線其他規格頁那一組（--li-bg 那幾支），repo 是公開的。
+ * ⚠ 聊天室是**貼著底部長的**（`justify-content: flex-end`）：大型版型把選單
+ *   撐到 253px 時，招呼圖卡自然被上緣切掉一截 —— 那正是真的聊天室的樣子。 */
+const PHONE_W  = 375, PHONE_H = 812;   /* CSS px；出圖 deviceScaleFactor 3 */
+const DSF      = 3;
+const HEAD_H   = 44;       /* LINE 的聊天室抬頭 */
+const BAR_H    = 80;       /* 選單底下那條（鍵盤圖示 ＋ 選單列的名字 ＋ home 指示） */
+const BAR_LABEL = "手機註冊";   /* ⚠ 那一行字是廠商在後台設的，我們還不知道改不改得動 */
+const LI = { bg: "#e9edf1", head: "#ffffff", ink: "#14181c", meta: "#8b96a1", line: "#e3e6ea" };
 
 /* ── LINE 的兩種版型 ─────────────────────────────────────────────── */
 const SIZES = {
@@ -164,7 +171,6 @@ const mod = await import("/opt/node22/lib/node_modules/playwright/index.js");
 const { chromium } = mod.default ?? mod;
 const chromePath = "/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell";
 const imgURI = `data:image/jpeg;base64,${fs.readFileSync(SRC).toString("base64")}`;
-const barURI = `data:image/png;base64,${fs.readFileSync(BAR).toString("base64")}`;
 
 fs.mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch({ executablePath: fs.existsSync(chromePath) ? chromePath : undefined });
@@ -188,46 +194,20 @@ for (let i = 0; i < CASES.length; i++) {
   const png = await el.screenshot({ type: "png" });
   /* 真的要上傳的那一份出 JPEG：LINE 的上限是 1MB，這種滿版插畫 PNG 會超過 */
   const real = path.join(OUT, `richmenu-${c.id}.jpg`);
-  const shot = path.join(OUT, `shot-${c.id}.png`);
-  const mock = path.join(OUT, `mock-${c.id}.png`);
-
   const dispW = 375, dispH = Math.round((S.h * dispW) / S.w);       /* 手機上的 CSS px */
-  const r = await pg.evaluate(async ({ b64, W, H, q, shotW, barURI, PHONE_W, GAP_H, BAR_H, CHAT_BG }) => {
+  const r = await pg.evaluate(async ({ b64, W, H, q }) => {
     const load = async (u) => { const im = new Image(); im.src = u; await im.decode(); return im; };
     const src = await load(`data:image/png;base64,${b64}`);
 
-    /* ① 上傳用的那一份 */
+    /* 上傳用的那一份 */
     const c1 = document.createElement("canvas"); c1.width = W; c1.height = H;
     c1.getContext("2d").drawImage(src, 0, 0);
     const jpg = c1.toDataURL("image/jpeg", q).split(",")[1];
 
-    /* ② 規格頁上看的（2× 顯示尺寸，只縮不畫） */
-    const c2 = document.createElement("canvas");
-    c2.width = shotW; c2.height = Math.round((H * shotW) / W);
-    const g2 = c2.getContext("2d"); g2.imageSmoothingQuality = "high";
-    g2.drawImage(src, 0, 0, c2.width, c2.height);
-
-    /* ③ 在聊天室裡長什麼樣（裝置 px：1125 寬） */
-    const menuH = Math.round((H * PHONE_W) / W);
-    const bar = await load(barURI);
-    const c3 = document.createElement("canvas");
-    c3.width = PHONE_W; c3.height = GAP_H + menuH + BAR_H;
-    const g3 = c3.getContext("2d");
-    g3.fillStyle = CHAT_BG; g3.fillRect(0, 0, c3.width, c3.height);
-    g3.imageSmoothingQuality = "high";
-    g3.drawImage(src, 0, GAP_H, PHONE_W, menuH);
-    g3.drawImage(bar, 0, GAP_H + menuH);
-
-    /* 量：圖欄裡真的露出原圖的哪一塊、字有沒有被再折 */
-    const el = document.getElementById("rm-" + location.hash);   /* 用不到，量在外面做 */
-    return { jpg, shot: c2.toDataURL("image/png").split(",")[1],
-             mock: c3.toDataURL("image/png").split(",")[1], menuH };
-  }, { b64: png.toString("base64"), W: S.w, H: S.h, q: 0.92, shotW: dispW * 2,
-       barURI, PHONE_W, GAP_H, BAR_H, CHAT_BG });
+    return { jpg };
+  }, { b64: png.toString("base64"), W: S.w, H: S.h, q: 0.92 });
 
   fs.writeFileSync(real, Buffer.from(r.jpg, "base64"));
-  fs.writeFileSync(shot, Buffer.from(r.shot, "base64"));
-  fs.writeFileSync(mock, Buffer.from(r.mock, "base64"));
 
   /* ── 量測 ─────────────────────────────────────────────── */
   const m = await pg.evaluate((id) => {
@@ -260,7 +240,7 @@ for (let i = 0; i < CASES.length; i++) {
   const visW = Math.min(1376, b.slot.w / b.s), visH = Math.min(768, b.slot.h / b.s);
   const seen = (visW * visH) / (1376 * 768) * 100;
   const bytes = fs.statSync(real).size;
-  rows.push({ c, S, m, b, dispW, dispH, k, headCss, seen, bytes, menuH: r.menuH });
+  rows.push({ c, S, m, b, dispW, dispH, k, headCss, seen, bytes });
 
   /* ── 守門 ──────────────────────────────────────────────── */
   if (S.w / S.h < 1.45) throw new Error(`${c.id}：比例 ${(S.w / S.h).toFixed(3)} < LINE 的下限 1.45`);
@@ -284,6 +264,85 @@ for (let i = 0; i < CASES.length; i++) {
     if (m.bh.fs * k < 14) throw new Error(`${c.id}：字帶主標只有 ${(m.bh.fs * k).toFixed(1)}px`);
   }
 }
+/* ── 「在 LINE 裡長什麼樣」：整支手機 ────────────────────────────────
+ * ⚠⚠ 另開一個 deviceScaleFactor 3 的頁 —— 上面那一頁是 1，才出得了剛好 2500px 的圖檔。
+ * ⚠ 聊天室裡擺的是**已經定案的招呼圖卡那張產出檔**，不是用 CSS 再畫一次
+ *   （第十一之五節：提案頁要擺真的產出檔）——它正好就是加好友當下看到的第一則。 */
+const b64 = (f) => fs.readFileSync(f).toString("base64");
+const welcURI = `data:image/png;base64,${b64(WELC)}`;
+const iconURI = `data:image/png;base64,${b64(ICON)}`;
+
+const pg3 = await browser.newPage({ viewport: { width: 420, height: PHONE_H + 40 }, deviceScaleFactor: DSF });
+await pg3.setContent(`<!doctype html><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#fff;font-family:"Noto Sans TC","WenQuanYi Zen Hei",sans-serif;
+  -webkit-font-smoothing:antialiased}
+.ph{position:relative;width:${PHONE_W}px;height:${PHONE_H}px;overflow:hidden;
+  background:${LI.bg};display:flex;flex-direction:column}
+.hd{height:${HEAD_H}px;flex:none;background:${LI.head};display:flex;align-items:center;
+  gap:9px;padding:0 12px;border-bottom:1px solid ${LI.line}}
+.hd img{width:26px;height:26px;border-radius:50%;display:block}
+.hd .b{font-size:15px;font-weight:700;color:${LI.ink};letter-spacing:.01em}
+.hd .x{margin-left:auto;color:${LI.meta};font-size:16px;letter-spacing:.14em}
+/* ⚠ 聊天室貼著底部長：選單一高，上面的訊息自然被切掉一截 ＝ 真的聊天室的樣子 */
+.ct{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;
+  align-items:flex-start;gap:10px;padding:12px 8px 14px}
+.day{align-self:center;background:rgba(0,0,0,.16);color:#fff;font-size:11px;
+  padding:2px 11px;border-radius:11px;flex:none}
+.msg{display:flex;gap:7px;align-items:flex-end;flex:none;max-width:100%}
+.av{width:30px;height:30px;border-radius:50%;flex:none;display:block;
+  border:1px solid ${LI.line}}
+.card{width:268px;border-radius:12px;overflow:hidden;line-height:0;flex:none;
+  box-shadow:0 1px 2px rgba(0,0,0,.10)}
+.card img{display:block;width:100%;height:auto}
+.rm{flex:none;width:100%;line-height:0}
+.rm img{display:block;width:100%;height:auto}
+/* 選單底下那一條：鍵盤圖示 ＋ 選單列的名字 ＋ home 指示 */
+.bar{flex:none;height:${BAR_H}px;background:#ffffff;border-top:1px solid ${LI.line};
+  display:flex;align-items:center;padding:0 14px;position:relative}
+/* 鍵盤圖示：一個框 ＋ 三顆點（空框讀起來像破圖） */
+.kb{width:26px;height:20px;border:1.5px solid ${LI.meta};border-radius:5px;flex:none;
+  display:flex;align-items:center;justify-content:center;gap:3px}
+.kb b{width:3px;height:3px;border-radius:1px;background:${LI.meta};display:block}
+.lb{position:absolute;left:0;right:0;text-align:center;font-size:15px;color:${LI.ink};
+  letter-spacing:.02em;pointer-events:none}
+.lb u{text-decoration:underline;text-underline-offset:3px}
+.lb i{font-style:normal;font-size:10px;color:${LI.meta};margin-left:5px;vertical-align:2px}
+.home{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+  width:134px;height:5px;border-radius:3px;background:#c8ced4}
+</style><body>${CASES.map((c) => `
+<div class="ph" id="ph-${c.id}">
+  <div class="hd"><img src="${iconURI}" alt=""><span class="b">芳仁牙醫診所</span><span class="x">···</span></div>
+  <div class="ct">
+    <span class="day">今天</span>
+    <div class="msg"><img class="av" src="${iconURI}" alt="">
+      <span class="card"><img src="${welcURI}" alt=""></span></div>
+  </div>
+  <div class="rm"><img src="data:image/jpeg;base64,${b64(path.join(OUT, `richmenu-${c.id}.jpg`))}" alt=""></div>
+  <div class="bar"><span class="kb"><b></b><b></b><b></b></span>
+    <span class="lb"><u>${BAR_LABEL}</u><i>▼</i></span><span class="home"></span></div>
+</div>`).join("")}</body>`);
+await pg3.evaluate(() => document.fonts.ready);
+
+for (const c of CASES) {
+  const el = pg3.locator(`#ph-${c.id}`);
+  const box = await el.boundingBox();
+  if (Math.round(box.width) !== PHONE_W || Math.round(box.height) !== PHONE_H)
+    throw new Error(`${c.id} 的手機量到 ${box.width}×${box.height}，應該是 ${PHONE_W}×${PHONE_H}`);
+  /* 選單真的畫成螢幕寬、而且高度 ＝ 圖檔比例算出來的那個數字 */
+  const rm = await pg3.evaluate((id) => {
+    const r = document.querySelector(`#ph-${id} .rm img`).getBoundingClientRect();
+    return { w: +r.width.toFixed(1), h: +r.height.toFixed(1) };
+  }, c.id);
+  const want = Math.round((SIZES[c.size].h * PHONE_W) / SIZES[c.size].w);
+  if (Math.abs(rm.w - PHONE_W) > 0.5 || Math.abs(rm.h - want) > 1)
+    throw new Error(`${c.id} 的選單畫成 ${rm.w}×${rm.h}，應該是 ${PHONE_W}×${want}`);
+  /* ⚠ 出 JPEG 不是 PNG：四張 1125×2436 的 PNG 合計 4MB，
+   *   而 Worker 對 /preview/* 設 no-store（每次都要重新下載）。 */
+  await el.screenshot({ path: path.join(OUT, `chat-${c.id}.jpg`), type: "jpeg", quality: 88 });
+  const d = rows.find((r) => r.c.id === c.id); if (d) d.chat = rm;
+}
+
 await browser.close();
 
 /* ── 面板 ─────────────────────────────────────────────────────────── */
@@ -323,7 +382,7 @@ fs.writeFileSync("drafts/line-richmenu-numbers.json", JSON.stringify({
     主標: r.m.head ? +(r.m.head.fs * r.k).toFixed(1) : (r.m.bh ? +(r.m.bh.fs * r.k).toFixed(1) : null),
     副標: r.m.sub ? +(r.m.sub.fs * r.k).toFixed(1) : (r.m.bs ? +(r.m.bs.fs * r.k).toFixed(1) : null),
     檔案KB: Math.round(r.bytes / 1024),
-    mock: { w: PHONE_W, h: GAP_H + r.menuH + BAR_H },
+    chat: { w: PHONE_W * DSF, h: PHONE_H * DSF },
   })),
 }, null, 1) + "\n");
 console.log("數字寫進 drafts/line-richmenu-numbers.json");

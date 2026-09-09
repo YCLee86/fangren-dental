@@ -3,7 +3,7 @@
  *
  * 擋的是這一輪真正會出錯的六種：
  *  ① 規格頁上的數字和產生器算出來的對不上（頁上那張表整格逐字比對 numbers.json）
- *  ② <img> 的 width/height 和實檔對不上（⚠ 屬性寫對不等於畫出來是那個大小，
+ *  ② <img> 的 width/height 和實檔對不上（模擬圖 ＝ 整支手機 1125×2436）（⚠ 屬性寫對不等於畫出來是那個大小，
  *     所以底下第 ⑥ 道還會量 rect —— CLAUDE.md 第十一之一節那個 width:auto 的坑）
  *  ③ 要上傳的 richmenu-*.jpg 違反 LINE 的硬條件（尺寸／比例 ≥1.45／≤1MB）
  *  ④ 有孤兒檔（產生器改過名字，舊的還躺在 preview/ 裡跟著上線）
@@ -85,8 +85,7 @@ for (const g of N.格) {
   const kb = fs.statSync(jp).size / 1024;
   if (kb > H.檔案上限KB) bad.push(`${jp} ${kb.toFixed(0)}KB 超過 LINE 的 ${H.檔案上限KB}KB`);
   if (Math.round(kb) !== g.檔案KB) bad.push(`${jp} 實檔 ${Math.round(kb)}KB，numbers 記的是 ${g.檔案KB}KB`);
-  used.add(`shot-${g.id}.png`);
-  used.add(`mock-${g.id}.png`);
+  used.add(`chat-${g.id}.jpg`);
 }
 /* 頁上每一張圖：檔案要在、width/height 要等於實檔、alt 要有 */
 for (const m of html.matchAll(/<img\s([^>]*)>/g)) {
@@ -99,9 +98,9 @@ for (const m of html.matchAll(/<img\s([^>]*)>/g)) {
   const d = dims(p);
   if (d.w !== w || d.h !== h) bad.push(`${src} 實檔 ${d.w}×${d.h}，屬性寫 ${w}×${h}`);
   if (!a("alt")) bad.push(`${src} 沒有 alt`);
-  const g = N.格.find((g) => src === `mock-${g.id}.png`);
-  if (g && (d.w !== g.mock.w || d.h !== g.mock.h))
-    bad.push(`${src} 實檔 ${d.w}×${d.h}，產生器算的是 ${g.mock.w}×${g.mock.h}`);
+  const g = N.格.find((g) => src === `chat-${g.id}.jpg`);
+  if (g && (d.w !== g.chat.w || d.h !== g.chat.h))
+    bad.push(`${src} 實檔 ${d.w}×${d.h}，產生器算的是 ${g.chat.w}×${g.chat.h}`);
 }
 for (const f of fs.readdirSync(DIR)) if (!used.has(f)) bad.push(`孤兒檔：${DIR}/${f}`);
 
@@ -125,8 +124,14 @@ for (const W of [430, 393, 390, 375, 360, 320, 834, 1440]) {
   const errs = [];
   pg.on("pageerror", (e) => errs.push(String(e)));
   await pg.goto("file://" + path.resolve(PAGE));
-  await pg.evaluate(() => Promise.all([...document.images].map((i) =>
-    i.complete ? null : new Promise((r) => { i.onload = i.onerror = r; }))));
+  /* ⚠⚠ 畫面外的圖是 loading="lazy"，**永遠不會開始載** —— 直接等 `complete`
+     會掛住不動、不報錯也不結束（踩過）。要先整批催成 eager，再等。
+     ⚠ 兩步分開寫：先跑完整個 for 迴圈，再建那些 Promise（同 check-post-map.mjs）。 */
+  await pg.evaluate(async () => {
+    for (const i of document.images) i.loading = "eager";
+    await Promise.all([...document.images].map((i) =>
+      i.complete && i.naturalWidth ? null : new Promise((r) => { i.onload = i.onerror = r; })));
+  });
   const r = await pg.evaluate(() => ({
     over: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     broken: [...document.images].filter((i) => !i.naturalWidth).map((i) => i.getAttribute("src")),
