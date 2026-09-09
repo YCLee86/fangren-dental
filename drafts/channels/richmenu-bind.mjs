@@ -77,9 +77,13 @@ const HEAD = { w: 86, h: 82 };
  *   不要另外發明一組講法。
  * ⚠ 斷行一律自己指定（第十一之二節）。 */
 const COPY = {
-  pill: "點一下",
   head: "綁定手機",
   sub:  ["看診提醒與約診查詢", "綁定後都在這裡"],
+  /* ⚠⚠ 字帶那一句仍然留著「點一下」，那不是漏改成一致 ——
+   *   使用者拿掉的是**藥丸**（一顆看起來像按鈕的東西，會讓人以為只有那裡可以按，
+   *   「雖然圖片也可以點」）。字帶裡它只是一行字的開頭、不會長出一個假的按鈕，
+   *   而大型版的圖佔滿整條、更需要一句話說這是可以按的。 */
+  bandHead: "點一下　綁定手機",
   band: "看診提醒與約診查詢都在這裡",
 };
 
@@ -88,17 +92,38 @@ const COPY = {
 const CASES = [
   { id: "x", size: "compact", kind: "full",
     label: "Ⓧ 現況", note: "整張圖直接塞進小型版型（＝使用者遇到的那一種）" },
-  { id: "a", size: "compact", kind: "split", textw: 1080,
-    label: "Ⓐ 小型・圖 ＋ 字欄", note: "右邊放圖（左右各裁 3%），左邊留一欄字" },
-  { id: "b", size: "large", kind: "band", bandh: 330,
-    label: "Ⓑ 大型・圖 ＋ 字帶", note: "整張圖幾乎不裁，底下一條深綠的字帶" },
+
+  /* ── Ⓐ 小型・圖 ＋ 字欄：一把「字要多大」的尺（藥丸已經拿掉）──────
+   * ⚠ 三格只差字級，版型、圖欄、裁法一個數字都沒動 ——
+   *   一把尺一次只准動一件事（第九節第 28 條 ①）。 */
+  { id: "a1", size: "compact", kind: "split", textw: 1080, head: 190, sub: 92,
+    label: "Ⓐ1 現在這樣", note: "主標 28.5px、副標 13.8px（＝拿掉藥丸之前那一組）" },
+  { id: "a2", size: "compact", kind: "split", textw: 1080, head: 165, sub: 82,
+    label: "Ⓐ2 小一階", note: "主標 24.8px、副標 12.3px" },
+  { id: "a3", size: "compact", kind: "split", textw: 1080, head: 145, sub: 76,
+    label: "Ⓐ3 再小一階", note: "主標 21.8px、副標 11.4px（建議 —— 讓插圖當主角）" },
+
+  /* ── Ⓑ 大型・圖 ＋ 字帶：一把「帶子與字要多大」的尺 ────────────────
+   * ⚠⚠⚠ 帶子收小**不會讓選單變矮** —— 大型版型是 2500×1686 寫死的，
+   *   手機上永遠是 375×253 CSS px。收小帶子換到的是**插圖變大**
+   *   （看得到的比例跟著上升），要讓選單變矮只有 Ⓐ（小型，126px）。 */
+  { id: "b1", size: "large", kind: "band", bandh: 330, bandHead: 126, bandSub: 80,
+    label: "Ⓑ1 現在這樣", note: "帶子 49.5px、主標 18.9px、副標 12.0px" },
+  { id: "b2", size: "large", kind: "band", bandh: 275, bandHead: 110, bandSub: 72,
+    label: "Ⓑ2 小一階", note: "帶子 41.3px、主標 16.5px、副標 10.8px（建議）" },
+  { id: "b3", size: "large", kind: "band", bandh: 230, bandHead: 96, bandSub: 68,
+    label: "Ⓑ3 再小一階", note: "帶子 34.5px、主標 14.4px、副標 10.2px" },
+
   { id: "c", size: "custom", kind: "full",
-    label: "Ⓒ 自訂・整張圖", note: "2500×1396 ＝ 插圖原比例，一個像素都不裁（只有廠商走 API 做得到）" },
+    label: "Ⓒ 自訂", note: "2500×1396 ＝ 插圖原比例，一個像素都不裁（只有廠商走 API 做得到）" },
 ];
 
 /* ── 版面（畫在 2500 的畫布上，所以每個數字都要乘 0.15 才是手機上的 px）── */
 const PAD_L = 130, PAD_R = 70;
-const FS = { pill: 78, head: 190, sub: 92, bandHead: 126, bandSub: 80 };
+/* ⚠ 字級收進每一格自己身上（CASES 的 head／sub／bandHead／bandSub），
+ *   這裡只留那一格沒寫時的預設值。**藥丸整組拿掉了。** */
+const FS = { head: 190, sub: 92, bandHead: 126, bandSub: 80 };
+const fsOf = (c, k) => c[k] ?? FS[k];
 
 const css = (imgURI) => `
 *{margin:0;padding:0;box-sizing:border-box}
@@ -109,19 +134,16 @@ body{background:#fff;font-family:"Noto Sans TC","WenQuanYi Zen Hei",sans-serif;
 /* 字欄 */
 .col{position:absolute;left:0;top:0;bottom:0;display:flex;flex-direction:column;
   justify-content:center;align-items:flex-start;padding:0 ${PAD_R}px 0 ${PAD_L}px}
-.pill{background:${GREEN};color:#fff;border-radius:999px;font-size:${FS.pill}px;
-  font-weight:700;letter-spacing:.10em;padding:14px 34px 16px;line-height:1.2;
-  text-indent:.10em}
-.head{font-size:${FS.head}px;font-weight:900;letter-spacing:.06em;line-height:1.28;
-  margin-top:26px;text-indent:.06em;white-space:nowrap}
-.sub{font-size:${FS.sub}px;font-weight:500;color:${SOFT};letter-spacing:.03em;
-  line-height:1.55;margin-top:20px;white-space:pre;text-indent:.03em}
+.head{font-weight:900;letter-spacing:.06em;line-height:1.28;
+  text-indent:.06em;white-space:nowrap}
+.sub{font-weight:500;color:${SOFT};letter-spacing:.03em;
+  line-height:1.55;white-space:pre;text-indent:.03em}
 /* 大型版的字帶 */
 .band{position:absolute;left:0;right:0;bottom:0;background:${GREEN};color:#fff;
   display:flex;align-items:center;justify-content:center;gap:32px}
-.band .bh{font-size:${FS.bandHead}px;font-weight:900;letter-spacing:.08em;
+.band .bh{font-weight:900;letter-spacing:.08em;
   white-space:nowrap;text-indent:.08em}
-.band .bs{font-size:${FS.bandSub}px;font-weight:400;letter-spacing:.03em;opacity:.92;
+.band .bs{font-weight:400;letter-spacing:.03em;opacity:.92;
   white-space:nowrap;text-indent:.03em}
 .band .dot{width:9px;height:9px;border-radius:50%;background:#fff;opacity:.55}
 `;
@@ -150,17 +172,20 @@ function block(c) {
     `background-position:${ox.toFixed(2)}px ${oy.toFixed(2)}px;`;
 
   let inner = `<div class="pic" style="${pic}"></div>`;
-  if (c.kind === "split")
+  if (c.kind === "split") {
+    /* ⚠ 副標的上外距跟著自己的字級走（.24em），字一小間距也要跟著收，
+     *   不然三格看起來會是「字變小、空隙沒變」＝ 只動了一半。 */
+    const fh = fsOf(c, "head"), fsb = fsOf(c, "sub");
     inner += `<div class="col" style="width:${c.textw}px">
-        <div class="pill">${COPY.pill}</div>
-        <div class="head">${COPY.head}</div>
-        <div class="sub">${COPY.sub.join("\n")}</div>
+        <div class="head" style="font-size:${fh}px">${COPY.head}</div>
+        <div class="sub" style="font-size:${fsb}px;margin-top:${Math.round(fsb * 0.24)}px">${COPY.sub.join("\n")}</div>
       </div>`;
+  }
   if (c.kind === "band")
-    inner += `<div class="band" style="height:${c.bandh}px">
-        <span class="bh">${COPY.pill}　${COPY.head}</span>
+    inner += `<div class="band" style="height:${c.bandh}px;gap:${Math.round(fsOf(c, "bandHead") * 0.25)}px">
+        <span class="bh" style="font-size:${fsOf(c, "bandHead")}px">${COPY.bandHead}</span>
         <span class="dot"></span>
-        <span class="bs">${COPY.band}</span>
+        <span class="bs" style="font-size:${fsOf(c, "bandSub")}px">${COPY.band}</span>
       </div>`;
   return { html: `<div class="rm" id="rm-${c.id}" style="width:${S.w}px;height:${S.h}px">${inner}</div>`,
            slot, s };
@@ -195,7 +220,7 @@ for (let i = 0; i < CASES.length; i++) {
   /* 真的要上傳的那一份出 JPEG：LINE 的上限是 1MB，這種滿版插畫 PNG 會超過 */
   const real = path.join(OUT, `richmenu-${c.id}.jpg`);
   const dispW = 375, dispH = Math.round((S.h * dispW) / S.w);       /* 手機上的 CSS px */
-  const r = await pg.evaluate(async ({ b64, W, H, q }) => {
+  const r = await pg.evaluate(async ({ b64, W, H, DW, DH, q }) => {
     const load = async (u) => { const im = new Image(); im.src = u; await im.decode(); return im; };
     const src = await load(`data:image/png;base64,${b64}`);
 
@@ -204,10 +229,20 @@ for (let i = 0; i < CASES.length; i++) {
     c1.getContext("2d").drawImage(src, 0, 0);
     const jpg = c1.toDataURL("image/jpeg", q).split(",")[1];
 
-    return { jpg };
-  }, { b64: png.toString("base64"), W: S.w, H: S.h, q: 0.92 });
+    /* 規格頁擺的那一份：1125 寬 ＝ 手機上 375 CSS px 的 3 倍。
+     * ⚠ 2500 那一份一張 260~430KB，七格嵌進同一頁就是 2.6MB，
+     *   而 Worker 對 /preview/* 設 no-store（每次都要重新下載）。 */
+    const c2 = document.createElement("canvas"); c2.width = DW; c2.height = DH;
+    const g = c2.getContext("2d"); g.imageSmoothingQuality = "high";
+    g.drawImage(src, 0, 0, DW, DH);
+    const strip = c2.toDataURL("image/jpeg", 0.88).split(",")[1];
+
+    return { jpg, strip };
+  }, { b64: png.toString("base64"), W: S.w, H: S.h,
+       DW: dispW * 3, DH: Math.round((S.h * dispW * 3) / S.w), q: 0.92 });
 
   fs.writeFileSync(real, Buffer.from(r.jpg, "base64"));
+  fs.writeFileSync(path.join(OUT, `strip-${c.id}.jpg`), Buffer.from(r.strip, "base64"));
 
   /* ── 量測 ─────────────────────────────────────────────── */
   const m = await pg.evaluate((id) => {
@@ -228,7 +263,7 @@ for (let i = 0; i < CASES.length; i++) {
                fs: parseFloat(getComputedStyle(e).fontSize), lines: tops.size };
     };
     const pic = rm.querySelector(".pic").getBoundingClientRect();
-    return { pill: one(".pill"), head: one(".head"), sub: one(".sub"),
+    return { head: one(".head"), sub: one(".sub"),
              bh: one(".bh"), bs: one(".bs"),
              picLeft: pic.left - R.left, picW: pic.width, picH: pic.height,
              scrollW: rm.scrollWidth, clientW: rm.clientWidth };
@@ -250,24 +285,33 @@ for (let i = 0; i < CASES.length; i++) {
     if (m.head.lines !== 1) throw new Error(`${c.id}：主標被折成 ${m.head.lines} 行`);
     if (m.sub.lines !== COPY.sub.length)
       throw new Error(`${c.id}：副標自己斷 ${COPY.sub.length} 行、畫出 ${m.sub.lines} 行（被再折了）`);
-    for (const [nm, e] of [["主標", m.head], ["副標", m.sub], ["藥丸", m.pill]])
+    for (const [nm, e] of [["主標", m.head], ["副標", m.sub]])
       if (e.right > c.textw - PAD_R + 1)
         throw new Error(`${c.id}：${nm}右緣 ${e.right.toFixed(0)} 超出字欄可用的 ${c.textw - PAD_R}`);
     if (m.head.fs * k < 14)
       throw new Error(`${c.id}：主標在手機上只有 ${(m.head.fs * k).toFixed(1)}px（下限 14）`);
-    if (m.sub.fs * k < 11)
-      throw new Error(`${c.id}：副標在手機上只有 ${(m.sub.fs * k).toFixed(1)}px（下限 11）`);
+    /* ⚠ 下限 10px 是「讀不讀得到」那一條線（同商家貼文那兩張的判準），
+     *   不是「好不好看」—— 哪一格好看是使用者在尺上挑的（第九節第 28 條 ④）。 */
+    if (m.sub.fs * k < 10)
+      throw new Error(`${c.id}：副標在手機上只有 ${(m.sub.fs * k).toFixed(1)}px（下限 10）`);
   }
   if (c.kind === "band") {
     for (const [nm, e] of [["字帶主標", m.bh], ["字帶副標", m.bs]])
       if (e.lines !== 1) throw new Error(`${c.id}：${nm}被折成 ${e.lines} 行`);
-    if (m.bh.fs * k < 14) throw new Error(`${c.id}：字帶主標只有 ${(m.bh.fs * k).toFixed(1)}px`);
+    if (m.bh.fs * k < 14) throw new Error(`${c.id}：字帶主標只有 ${(m.bh.fs * k).toFixed(1)}px（下限 14）`);
+    if (m.bs.fs * k < 10) throw new Error(`${c.id}：字帶副標只有 ${(m.bs.fs * k).toFixed(1)}px（下限 10）`);
   }
 }
 /* ── 「在 LINE 裡長什麼樣」：整支手機 ────────────────────────────────
  * ⚠⚠ 另開一個 deviceScaleFactor 3 的頁 —— 上面那一頁是 1，才出得了剛好 2500px 的圖檔。
  * ⚠ 聊天室裡擺的是**已經定案的招呼圖卡那張產出檔**，不是用 CSS 再畫一次
- *   （第十一之五節：提案頁要擺真的產出檔）——它正好就是加好友當下看到的第一則。 */
+ *   （第十一之五節：提案頁要擺真的產出檔）——它正好就是加好友當下看到的第一則。
+ * ⚠⚠ **只做三張，不是每一格都做**：一張 1125×2436 的 JPEG 約 300KB，
+ *   七格都做等於在一頁 no-store 的頁面上多 2MB。這張圖回答的是「**它在整個畫面裡
+ *   佔多少**」——那是**版型**的事（小型／大型），字級那把尺看不出差別。
+ *   所以現況一張 ＋ 每一族的建議各一張。 */
+const MOCK = ["x", "a3", "b2"];
+const MOCKS = CASES.filter((c) => MOCK.includes(c.id));
 const b64 = (f) => fs.readFileSync(f).toString("base64");
 const welcURI = `data:image/png;base64,${b64(WELC)}`;
 const iconURI = `data:image/png;base64,${b64(ICON)}`;
@@ -310,7 +354,7 @@ body{background:#fff;font-family:"Noto Sans TC","WenQuanYi Zen Hei",sans-serif;
 .lb i{font-style:normal;font-size:10px;color:${LI.meta};margin-left:5px;vertical-align:2px}
 .home{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
   width:134px;height:5px;border-radius:3px;background:#c8ced4}
-</style><body>${CASES.map((c) => `
+</style><body>${MOCKS.map((c) => `
 <div class="ph" id="ph-${c.id}">
   <div class="hd"><img src="${iconURI}" alt=""><span class="b">芳仁牙醫診所</span><span class="x">···</span></div>
   <div class="ct">
@@ -324,7 +368,7 @@ body{background:#fff;font-family:"Noto Sans TC","WenQuanYi Zen Hei",sans-serif;
 </div>`).join("")}</body>`);
 await pg3.evaluate(() => document.fonts.ready);
 
-for (const c of CASES) {
+for (const c of MOCKS) {
   const el = pg3.locator(`#ph-${c.id}`);
   const box = await el.boundingBox();
   if (Math.round(box.width) !== PHONE_W || Math.round(box.height) !== PHONE_H)
@@ -349,15 +393,16 @@ await browser.close();
 const px = (e, k) => (e ? (e.fs * k).toFixed(1) : "—");
 const pad = (s, n) => String(s) + " ".repeat(Math.max(0, n - [...String(s)].reduce((a, ch) => a + (ch.charCodeAt(0) > 255 ? 2 : 1), 0)));
 console.log("");
-console.log("　　　　　　　　　　版型　　圖檔　　　　手機上　　　圖欄　　　　看得到　一個人頭　主標　副標　檔案");
+console.log("　　　　　　　　　版型　　圖檔　　　　手機上　　　圖欄　　　　看得到　一個人頭　主標　副標　帶子　　檔案");
 for (const r of rows) {
   const { c, S, m, k } = r;
   const picCss = `${(m.picW * k).toFixed(0)}×${(m.picH * k).toFixed(0)}`;
   console.log(
-    pad(c.label, 22) + pad(SIZES[c.size].name, 6) + pad(`${S.w}×${S.h}`, 12) +
+    pad(c.label, 20) + pad(SIZES[c.size].name, 6) + pad(`${S.w}×${S.h}`, 12) +
     pad(`${r.dispW}×${r.dispH}`, 11) + pad(picCss, 11) + pad(`${r.seen.toFixed(0)}%`, 8) +
     pad(`${r.headCss.toFixed(1)}px`, 10) +
     pad(px(m.head ?? m.bh, k), 6) + pad(px(m.sub ?? m.bs, k), 6) +
+    pad(c.bandh ? `${(c.bandh * k).toFixed(1)}px` : "—", 8) +
     `${(r.bytes / 1024).toFixed(0)}KB`);
 }
 console.log("");
@@ -381,8 +426,10 @@ fs.writeFileSync("drafts/line-richmenu-numbers.json", JSON.stringify({
     看得到: +r.seen.toFixed(0), 一個人頭: +r.headCss.toFixed(1),
     主標: r.m.head ? +(r.m.head.fs * r.k).toFixed(1) : (r.m.bh ? +(r.m.bh.fs * r.k).toFixed(1) : null),
     副標: r.m.sub ? +(r.m.sub.fs * r.k).toFixed(1) : (r.m.bs ? +(r.m.bs.fs * r.k).toFixed(1) : null),
+    帶子: r.c.bandh ? +(r.c.bandh * r.k).toFixed(1) : null,
     檔案KB: Math.round(r.bytes / 1024),
-    chat: { w: PHONE_W * DSF, h: PHONE_H * DSF },
+    strip: { w: r.dispW * 3, h: Math.round((r.S.h * r.dispW * 3) / r.S.w) },
+    chat: MOCK.includes(r.c.id) ? { w: PHONE_W * DSF, h: PHONE_H * DSF } : null,
   })),
 }, null, 1) + "\n");
 console.log("數字寫進 drafts/line-richmenu-numbers.json");
