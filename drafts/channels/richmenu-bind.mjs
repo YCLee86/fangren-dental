@@ -100,6 +100,13 @@ const CASES = [
     label: "Ⓐ1 現在這樣", note: "主標 28.5px、副標 13.8px（＝拿掉藥丸之前那一組）" },
   { id: "a2", size: "compact", kind: "split", textw: 1080, head: 165, sub: 82,
     label: "Ⓐ2 小一階", note: "主標 24.8px、副標 12.3px" },
+  /* ⚠ Ⓐ2 的字比 Ⓐ3 寬（最寬那一行多約 55px），但**推得到的位置完全一樣** ——
+   *   擋住這把尺的不是文字放不放得下，是 37-4-5 那個裁法翻面的轉折點（字欄 990）。
+   *   字欄 990 時 Ⓐ2 還有 790px 可用、最寬那一行約 760px，仍然放得下。 */
+  { id: "a2b", size: "compact", kind: "split", textw: 1035, head: 165, sub: 82,
+    label: "Ⓐ2-2 往左 45", note: "圖欄 1465（手機上 220px）、看得到 97%" },
+  { id: "a2c", size: "compact", kind: "split", textw: 990, head: 165, sub: 82,
+    label: "Ⓐ2-3 往左 90", note: "圖欄 1510（227px）、看得到 100% —— 和 Ⓐ3-3 的圖一模一樣，只有字比較大" },
   { id: "a3", size: "compact", kind: "split", textw: 1080, head: 145, sub: 76,
     label: "Ⓐ3 再小一階", note: "主標 21.8px、副標 11.4px（你挑的那一格）" },
 
@@ -335,7 +342,7 @@ for (let i = 0; i < CASES.length; i++) {
  *   七格都做等於在一頁 no-store 的頁面上多 2MB。這張圖回答的是「**它在整個畫面裡
  *   佔多少**」——那是**版型**的事（小型／大型），字級那把尺看不出差別。
  *   所以現況一張 ＋ 每一族的建議各一張。 */
-const MOCK = ["x", "a3c", "b2"];
+const MOCK = ["x", "a2c", "a3c", "b2"];
 const MOCKS = CASES.filter((c) => MOCK.includes(c.id));
 const b64 = (f) => fs.readFileSync(f).toString("base64");
 const welcURI = `data:image/png;base64,${b64(WELC)}`;
