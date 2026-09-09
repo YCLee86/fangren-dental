@@ -40,8 +40,7 @@ const pngSize = (f) => {
 /* ---- ① 圖都在，尺寸對得上，都有 alt ---- */
 const imgs = [...PAGE.matchAll(/<img\s+src="([^"]+)"\s+width="(\d+)"\s+height="(\d+)"([^>]*)>/g)]
   .map(m => ({ src: m[1], w: +m[2], h: +m[3], rest: m[4] }));
-/* ⚠ 3 張成品 ＋ 浮水印直徑那把尺 12 張（三個直徑 × 排在一起／三張獨立） */
-ok(imgs.length === 15, `頁上有 ${imgs.length} 張圖，應該是 15`);
+ok(imgs.length === 3, `頁上有 ${imgs.length} 張圖，應該是 3`);
 const used = new Set();
 for (const im of imgs) {
   const f = path.join(DIR, im.src);
@@ -56,22 +55,19 @@ for (const im of imgs) {
    ⚠⚠ 2026-09-09 定稿 Ⓕ3，這一頁收成三張：定稿本人／小格 410px／主頁三格。
    ⚠⚠⚠ **要貼的檔案叫 `fangren-docs-1080.png`**（同看診時間與地圖那兩張的命名），
    其餘兩張只是模擬圖 —— 名字寫錯的話使用者會貼到模擬圖上去。 */
-/* ⚠⚠ 2026-09-09 使用者：「三個大小的版本都要作成獨立的和排在一起的給我看」——
-   所以每一個直徑要四張：排在一起 ＋ 三張各自獨立。少一張那一格就等於沒提案。
-   ⚠ 直徑那三個數字的唯一出處是 post-triptych.mjs 的 DIAS，不要在這裡再寫一份。 */
-const TRIGEN = fs.readFileSync(path.join(ROOT, "drafts", "channels", "post-triptych.mjs"), "utf8");
-const DIAS = (() => {
-  const m = TRIGEN.match(/const DIAS = \[([^\]]*)\]/);
-  if (!m) throw new Error("post-triptych.mjs 裡讀不到 `const DIAS = [...]` —— 那把尺的唯一出處");
-  return m[1].split(",").map(s => s.trim()).filter(Boolean);
-})();
-ok(DIAS.length > 0, "DIAS 讀出來是空的");
-const want = ["fangren-docs-1080.png", "slot-410.png", "profile-3up.png"];
-for (const d of DIAS)
-  for (const k of ["3up", "hours", "docs", "map"]) want.push(`tri-${d}-${k}.png`);
-for (const f of want) ok(used.has(f), `少了這一張：${f}`);
-/* ⚠ 上一版那張疊成一長條的 tri-sizes.png 已經拿掉（那三段就是現在的三張 -3up） */
-ok(!fs.existsSync(path.join(DIR, "tri-sizes.png")), "tri-sizes.png 還在 —— 它已經被三張 -3up 取代");
+for (const f of ["fangren-docs-1080.png", "slot-410.png", "profile-3up.png"])
+  ok(used.has(f), `少了這一張：${f}`);
+/* ⚠⚠ 2026-09-09 使用者定案直徑 500，那把尺的 12 張圖（三個直徑 × 排在一起／
+   三張各自獨立）已經清掉 —— 數字留在 README 第 36-17 節與 git。
+   這一道擋的是「有人重跑了 post-triptych.mjs 卻忘了清」：那些圖留著就是孤兒。 */
+ok(!fs.readdirSync(DIR).some(f => f.startsWith("tri-")),
+  "尺的圖 tri-*.png 還在 —— 挑定之後要清掉（node drafts/channels/post-docs.mjs 會重出定稿那三張）");
+/* ⚠⚠⚠ 挑定的直徑要真的寫在那個常數上，不然「這一頁說的」和「圖畫的」會分家 */
+{
+  const t = fs.readFileSync(path.join(ROOT, "drafts", "channels", "wm-triptych.mjs"), "utf8");
+  ok(/DIA: \+\(process\.env\.WM_DIA \|\| 500\)/.test(t),
+    "wm-triptych.mjs 的直徑不是 500 —— 2026-09-09 定案那一格");
+}
 /* ⚠⚠⚠ 2026-09-09：浮水印跨三格拼成一顆，位置與大小只有一個出處 ——
    這一支不可以自己寫死，不然三張接不成一顆而且**畫面上看起來很正常**。 */
 ok(/from "\.\/wm-triptych\.mjs"/.test(GENCODE) && /wmFor\("docs"\)/.test(GENCODE),

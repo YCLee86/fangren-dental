@@ -140,86 +140,19 @@ code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
   「一顆大的配兩顆小的」，接不成一顆 ——<b>兩個小格在原圖上要畫成兩倍大</b>。<br>
   ⚠ <b>順序要在後台排好</b>：門診表在最上面那一格。你那張截圖裡現在是科別醫師在大格。</p>
 
-  <h2 class="pv-h2">那顆圓要多大<span class="t">⚠ 還沒挑　三格一起換才比得出來</span></h2>
+  <h2 class="pv-h2">那顆圓要多大<span class="t">✅ 定案 500 ＝ 大格寬的 61%</span></h2>
   <p class="pv-cap">單位是「三格合起來」那個座標系（大格寬 823），所以
-  <b>500 ＝ 圓的直徑佔大格寬的 61%</b>。<br>
-  每一格都給<b>排在一起</b>與<b>三張各自獨立</b>兩種 ——
-  排在一起才看得出那顆圓接不接得起來，<b>獨立看才知道單張上那一塊弧讀起來像什麼</b>
-  （貼文是一則一則被看到的，不是永遠三格一起看）。<br>
+  <b>500 ＝ 圓的直徑佔大格寬的 61%</b>：門診表原圖畫 <b>656.1px</b>、
+  兩個小格原圖各畫 <b>1320.3px</b>（差 2.012 倍 ＝ 兩格的顯示比例差）。<br>
+  三格 <b>380／500／620</b> 都看過「排在一起」與「三張各自獨立」兩種
+  （<b>12 張</b>），挑定之後那些尺的圖已經清掉，數字留在
+  <code>drafts/channels/README.md</code> 第 36-17 節與 git。<br>
   ⚠⚠⚠ <b>門診表那一張獨立看和貼上去不一樣</b>：大格是 cover 裁切、只看得到中間
-  y 271.6~808.4 那一段，所以<b>圓的下半（含牙洞）貼上去一律看不到</b> ——
-  三個直徑都只露出上面 49~50%。兩個小格是方進方，獨立看到的就是貼上去看到的。<br>
+  y 271.6~808.4 那一段，所以<b>圓的下半（含牙洞）貼上去看不到</b> ——
+  只露出上面 <b>49%</b>，而獨立看整張 1080 看得到 <b>91%</b>。
+  兩個小格是方進方，獨立看到的就是貼上去看到的。<br>
   ⚠ 換直徑要三張一起重跑（<code>node drafts/channels/post-triptych.mjs</code>），
   只改一張的話拼起來是三段對不上的弧。</p>
-
-  <h2 class="pv-h2">直徑 380<span class="t">大格寬的 46%　門診表畫 498.7px・兩個小格各畫 1003.4px</span></h2>
-  <div class="pv-shot">
-    <img src="tri-380-3up.png" width="823" height="823" loading="lazy"
-         alt="直徑 380：三格排在一起">
-  </div>
-  <p class="pv-cap">排在一起。獨立看整張 1080 時，門診表那一張看得到圓的 <b>100%</b>。</p>
-  <div class="pv-shot">
-    <img src="tri-380-hours.png" width="1080" height="1080" loading="lazy"
-         alt="直徑 380：門診表那一張獨立看">
-  </div>
-  <p class="pv-cap">① 大格・門診表（圓的上半，壓在圖例與電話那一區後面）</p>
-  <div class="pv-shot">
-    <img src="tri-380-docs.png" width="1080" height="1080" loading="lazy"
-         alt="直徑 380：科別與醫師那一張獨立看">
-  </div>
-  <p class="pv-cap">② 左下・科別與醫師（右上那一象限，只有一道弧邊）</p>
-  <div class="pv-shot">
-    <img src="tri-380-map.png" width="1080" height="1080" loading="lazy"
-         alt="直徑 380：位置與周邊停車那一張獨立看">
-  </div>
-  <p class="pv-cap">③ 右下・位置與周邊停車（左上那一象限，牙洞落在左緣）</p>
-
-  <h2 class="pv-h2">直徑 500<span class="t">大格寬的 61%　門診表畫 656.1px・兩個小格各畫 1320.3px</span><em>現在這樣</em></h2>
-  <div class="pv-shot">
-    <img src="tri-500-3up.png" width="823" height="823" loading="lazy"
-         alt="直徑 500：三格排在一起">
-  </div>
-  <p class="pv-cap">排在一起。獨立看整張 1080 時，門診表那一張看得到圓的 <b>91%</b>。</p>
-  <div class="pv-shot">
-    <img src="tri-500-hours.png" width="1080" height="1080" loading="lazy"
-         alt="直徑 500：門診表那一張獨立看">
-  </div>
-  <p class="pv-cap">① 大格・門診表</p>
-  <div class="pv-shot">
-    <img src="tri-500-docs.png" width="1080" height="1080" loading="lazy"
-         alt="直徑 500：科別與醫師那一張獨立看">
-  </div>
-  <p class="pv-cap">② 左下・科別與醫師</p>
-  <div class="pv-shot">
-    <img src="tri-500-map.png" width="1080" height="1080" loading="lazy"
-         alt="直徑 500：位置與周邊停車那一張獨立看">
-  </div>
-  <p class="pv-cap">③ 右下・位置與周邊停車</p>
-
-  <h2 class="pv-h2">直徑 620<span class="t">大格寬的 75%　門診表畫 813.6px・兩個小格各畫 1637.2px</span></h2>
-  <div class="pv-shot">
-    <img src="tri-620-3up.png" width="823" height="823" loading="lazy"
-         alt="直徑 620：三格排在一起">
-  </div>
-  <p class="pv-cap">排在一起。獨立看整張 1080 時，門診表那一張看得到圓的 <b>83%</b>
-  （圓比畫布還高，上下都出界）。</p>
-  <div class="pv-shot">
-    <img src="tri-620-hours.png" width="1080" height="1080" loading="lazy"
-         alt="直徑 620：門診表那一張獨立看">
-  </div>
-  <p class="pv-cap">① 大格・門診表</p>
-  <div class="pv-shot">
-    <img src="tri-620-docs.png" width="1080" height="1080" loading="lazy"
-         alt="直徑 620：科別與醫師那一張獨立看">
-  </div>
-  <p class="pv-cap">② 左下・科別與醫師</p>
-  <div class="pv-shot">
-    <img src="tri-620-map.png" width="1080" height="1080" loading="lazy"
-         alt="直徑 620：位置與周邊停車那一張獨立看">
-  </div>
-  <p class="pv-cap">③ 右下・位置與周邊停車<br>
-  ⚠ 這 12 張是<b>尺</b>不是成品 —— 挑定之後會連同這幾節一起清掉，數字留在
-  <code>drafts/channels/README.md</code> 第 36-17 節。</p>
 
   <h2 class="pv-h2">每一列印誰<span class="t">＝站上按那顆標記會亮起來的那幾位</span></h2>
   <table class="pv-tab">
