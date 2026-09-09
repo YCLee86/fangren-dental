@@ -81,10 +81,14 @@ const SHAPE = { general:"r1c1", perio:"r1c2", ortho:"r3c3", endo:"r3c1",
       throw new Error(`${id} 的形狀和門診表那張對不上（這裡 ${sh}）`);
 }
 
-/* ⚠⚠ 2026-09-07 使用者在門診表那一輪指定「植牙・假牙重建　改成　假牙重建」。
-   那一條只換那張圖上的顯示名，站上一個字都沒動 —— 這一張是同一組貼文，
-   所以沿用同一份對照表（不然兩張圖對同一科有兩個名字）。 */
-const DISP = { "植牙・假牙重建": "假牙重建" };
+/* ⚠⚠ 2026-09-07 使用者在門診表那一輪指定「植牙・假牙重建　改成　假牙重建」，
+   2026-09-09 在這一張指定「一般牙科・定期檢查　只要一般牙科就好」。
+   兩條都只換**貼文那三張圖**上的顯示名，`index.html`／`topics/`／
+   `tools/topic-copy.mjs` 一個字都沒動。
+   ⚠⚠⚠ **這份表兩張圖共用**（門診表那一張也照抄同一份）—— 一張縮、一張不縮的話，
+   三格擺在一起就會看到同一科有兩個名字。**改這裡要一起改 post-hours.mjs。**
+   ⚠ 守門（check-post-docs.mjs）是**從這一支的原始碼讀這張表**，不要在那邊再寫一份。 */
+const DISP = { "植牙・假牙重建": "假牙重建", "一般牙科・定期檢查": "一般牙科" };
 const disp = n => DISP[n] || n;
 
 const shapeSvg = sh => fs.readFileSync(
@@ -358,7 +362,29 @@ const ICON = D.specs.flatMap(s => [[`${disp(s.name)} 對底`, ratio(TONE[s.id], 
  * ⚠ 圖上的網址點不下去，可以點的在這裡（同小格左那張地圖的三條停車場網址）。
  * ⚠⚠ 七條科別網址就是站上七個著陸頁 —— 圖上放不下的由這一欄接。
  * ⚠⚠ 紅線：不可以出現「有問題隨時問」那一類的承諾。 */
-const detail = `${FOOT}。\n`
+/* ⚠⚠ 2026-09-09 使用者：「科別醫師也給一點貼文的文字說明」——
+   原本這一欄只有 FOOT 那一行加八條網址，讀起來是一張清單不是一段說明。
+   ⚠⚠⚠ 兩條從門診表那一張帶過來的規則（README 34-x）：
+   ・**第一行不要寫「這是一張科別與醫師表」** —— 說明欄只先露一兩行，
+     那一行要拿來講「他看得到什麼」，不是介紹這張圖。
+   ・**不可以寫「有問題歡迎私訊」**（這個帳號沒有專人即時回覆）。
+   ⚠ 三案的差別只在開頭那一段，網址那八行三案完全相同。
+   使用者挑完就把 `LEAD0` 換掉。 */
+const LEADS = {
+  a: [`${FOOT}。`],
+  b: [`不確定自己的狀況要看哪一科，可以先從這裡找。`,
+      `每一科底下寫的，就是那一科在做的事。`,
+      `${FOOT}。`],
+  /* ⚠ Ⓒ 刻意不寫「打電話問我們」——這張圖上已經沒有電話（標題與頁尾拿掉了），
+     而號碼的唯一出處在 index.html，為了一句話在這裡寫死一組號碼不划算。 */
+  c: [`牙齒的狀況百百種，不一定分得出來該看哪一科。`,
+      `先看看哪一科在做你的那一件。`,
+      `${FOOT}。`],
+};
+const LEAD0 = "b";
+const lead = LEADS[process.env.DOCS_LEAD || LEAD0];
+if (!lead) throw new Error(`不認識的「詳情」開頭：${process.env.DOCS_LEAD}`);
+const detail = lead.join("\n") + "\n"
   + D.specs.map(s => `${disp(s.name)}　https://fangren.net/topics/${s.id}/`).join("\n")
   + `\n醫師介紹　https://fangren.net/#doctors`;
 for (const re of [/隨時(問|詢問|聯絡)/, /都可以問/, /即時回/, /小編/, /馬上回/])
@@ -702,16 +728,24 @@ for (const m of made)
   console.log(`  ${m.label.padEnd(24, "　")}內容 ${m.b.height.toFixed(0)}px`
     + `　上下各餘 ${(m.b.room / 2).toFixed(0)}px`
     + `　折行 ${m.wrapped.n}/7 科（最多 ${m.wrapped.max} 行）`);
-console.log(`\n── ⚠⚠⚠ 還能放大多少：卡住的是**寬度**不是高度 ──`);
+/* ⚠⚠⚠ 2026-09-09：「一般牙科・定期檢查　只要一般牙科」把最寬那一列砍掉 215px，
+   **於是「卡住的是寬度」那句話變成假的**（第九節第 28 條 ② 又一次）——
+   寬度的天花板從 1.008 跳到 1.287，而高度早就用滿了（994/1000）。
+   所以這裡兩邊都要算，並且**印出哪一邊先撞牆**，不要再寫死一句結論。 */
+console.log(`\n── ⚠⚠⚠ 還能放大多少：寬度與高度兩邊都算，看誰先撞牆 ──`);
 for (const m of made) {
   const w = m.widest;
+  const kW = w.box / w.need, kH = (m.b.height + m.b.room) / m.b.height;
   console.log(`  ${m.label.padEnd(24, "　")}最寬的一列（${w.name}）要 ${w.need.toFixed(0)}px`
-    + `／可用 ${w.box.toFixed(0)}px　餘 ${(w.box - w.need).toFixed(0)}px`
-    + `　→ 這一版最多還能放大 ${(w.box / w.need).toFixed(3)} 倍`);
+    + `／可用 ${w.box.toFixed(0)}px　→ 寬度容得下 ${kW.toFixed(3)} 倍`);
+  console.log(`  ${"".padEnd(24, "　")}內容 ${m.b.height.toFixed(0)}px`
+    + `／可用 ${(m.b.height + m.b.room).toFixed(0)}px　→ 高度容得下 ${kH.toFixed(3)} 倍`);
+  console.log(`  ${"".padEnd(24, "　")}⚠ 先撞牆的是**${kW < kH ? "寬度" : "高度"}**`
+    + `　→ 這一版最多還能放大 ${Math.min(kW, kH).toFixed(3)} 倍`);
 }
-console.log(`  ⚠ 拿掉標題與頁尾空出來的是**高度**（上下各餘一大塊），`
-  + `可是每一列的圖案、科別名、醫師名擠在同一行而且都不折行 ——`
-  + `**再放大是被寬度擋住的，不是被高度**。`);
+console.log(`  ⚠⚠ 縮寫之前是**寬度**在卡（最寬那一列 992／1000，只剩 1.008 倍）；`
+  + `「一般牙科・定期檢查」收成「一般牙科」之後那一列少了 215px，`
+  + `**換成高度在卡** —— 上下已經用到只剩幾 px，所以放大這條路仍然走不動。`);
 console.log(`  ⚠ 這一張是給**小格**的（方進方、整張都看得到），`
   + `所以沒有門診表那張的安全帶問題（大格只看得到中間 ${BAND} 列）。`);
 
@@ -743,4 +777,11 @@ console.log(`\n── 出圖 ──`);
 for (const m of made) console.log(`  ${m.file}.png`
   + (m.rec ? "　profile-3up.png" : ""));
 console.log(`  slot-410.png（${made.length} 格在小格的實際大小 —— 判準是這一張）`);
-console.log(`\n── 「詳情」欄要貼的字 ──\n` + detail.split("\n").map(l => "  " + l).join("\n"));
+console.log(`\n── 「詳情」欄要貼的字（開頭那一段 ＝ ${LEAD0 === (process.env.DOCS_LEAD || LEAD0) ? "預設" : "覆寫"} `
+  + `Ⓛ${(process.env.DOCS_LEAD || LEAD0).toUpperCase()}）──\n`
+  + detail.split("\n").map(l => "  " + l).join("\n"));
+console.log("\n── 開頭那一段的三案（八行網址三案相同，換 DOCS_LEAD=a|b|c 看）──");
+for (const [k, v] of Object.entries(LEADS))
+  console.log(`  Ⓛ${k.toUpperCase()}${k === LEAD0 ? "（現在這個）" : "　　　　"}`
+    + `${k === "a" ? "只有事實" : k === "b" ? "多一句怎麼看" : "對著人講"}\n`
+    + v.map(l => "      " + l).join("\n"));

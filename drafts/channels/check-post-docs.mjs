@@ -127,8 +127,27 @@ const a0 = SRC.indexOf('<div class="docs">'), a1 = SRC.indexOf('data-for="doctor
 const names = [...SRC.slice(a0, a1).replace(/<!--[\s\S]*?-->/g, "")
   .matchAll(/<h3>([^<]*)</g)].map(m => m[1]);
 ok(names.length === 9, `index.html 讀到 ${names.length} 位醫師，應該是 9`);
-/* 頁上那段「詳情」列了七科，逐字比對（顯示名沿用門診表那張的縮寫） */
-const DISP = { "植牙・假牙重建": "假牙重建" };
+/* 頁上那段「詳情」列了七科，逐字比對（顯示名沿用門診表那張的縮寫）
+   ⚠⚠ **那張對照表從產生器的原始碼讀回來，這裡不要再寫一份** ——
+   寫第二份的話，改了縮寫這一道就開始對著舊名字驗、而且不會有人發現。 */
+const DISP = (() => {
+  const m = GENCODE.match(/const DISP = \{([^}]*)\}/);
+  if (!m) throw new Error("post-docs.mjs 裡讀不到 `const DISP = {…}` —— "
+    + "那張顯示名對照表是這一道的唯一出處，改名或刪掉的話守門就沒得對了");
+  return Object.fromEntries([...m[1].matchAll(/"([^"]+)":\s*"([^"]+)"/g)]
+    .map(x => [x[1], x[2]]));
+})();
+ok(Object.keys(DISP).length > 0, "DISP 讀出來是空的");
+/* ⚠⚠ 門診表那一張要用同一份 —— 一張縮、一張不縮就是同一科有兩個名字 */
+{
+  const h = fs.readFileSync(path.join(ROOT, "drafts", "channels", "post-hours.mjs"), "utf8")
+    .match(/const DISP\s+= \{([\s\S]*?)\};/);
+  ok(!!h, "post-hours.mjs 裡讀不到 DISP");
+  const hd = Object.fromEntries([...h[1].matchAll(/"([^"]+)":\s*"([^"]+)"/g)]
+    .map(x => [x[1], x[2]]));
+  ok(JSON.stringify(hd) === JSON.stringify(DISP),
+    `兩張圖的顯示名對照表不一樣：\n    docs  ${JSON.stringify(DISP)}\n    hours ${JSON.stringify(hd)}`);
+}
 for (const s of specs) {
   const n = DISP[s.name] || s.name;
   ok(detail.includes(`${n}　https://fangren.net/topics/${s.id}/`),
