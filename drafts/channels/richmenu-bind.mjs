@@ -76,41 +76,64 @@ const HEAD = { w: 86, h: 82 };
  * ⚠ 用詞跟著已定稿的綁定完成卡走（那張寫「約診查詢」「看診前48小時…提醒」），
  *   不要另外發明一組講法。
  * ⚠ 斷行一律自己指定（第十一之二節）。 */
+/* ── 文案 ─────────────────────────────────────────────────────────
+ * ⚠⚠⚠ **這一組是有硬上限的**（定案的字欄 990、內距 130/70 ＝ 可用 790px）：
+ *     主標 165px → **最多 4 個全形字**（4 字 699.6 ✓／6 字 1049.4 ✗）
+ *     副標 82px  → **最多 9 個全形字**（9 字 760.1 ✓／12 字 1013.5 ✗）
+ *   所以「啟用完整功能」**當不了主標**（6 個字，連縮到 145px 都還超出 132px）——
+ *   要那個意思就只能放進副標。字欄不能再放寬：990 已經是裁法翻面的地板（37-4-5）。
+ *
+ * ⚠⚠ **「30 秒」刻意一格都沒有寫** —— 森釉那張寫「30秒 綁定手機」，
+ *   但**我們沒有量過芳仁的綁定要多久**，那條流程是廠商的。
+ *   要寫秒數得先問到，不可以照抄別人的數字。 */
 const COPY = {
-  /* ⚠ 2026-09-09 使用者定案：「綁定手機」→「手機綁定」。
-   *   ⚠⚠ 選單列那一行是廠商設的「手機註冊」——**同一條選單上兩個詞**
-   *   （註冊 vs 綁定），而這條線其餘每一則（綁定完成卡…）一律用「綁定」。
-   *   那一行改不改得動已經在頁面的問題清單裡。 */
   head: "手機綁定",
-  sub:  ["看診提醒與約診查詢", "綁定後都在這裡"],
-  /* ⚠⚠ 字帶那一句仍然留著「點一下」，那不是漏改成一致 ——
-   *   使用者拿掉的是**藥丸**（一顆看起來像按鈕的東西，會讓人以為只有那裡可以按，
-   *   「雖然圖片也可以點」）。字帶裡它只是一行字的開頭、不會長出一個假的按鈕，
-   *   而大型版的圖佔滿整條、更需要一句話說這是可以按的。 */
-  bandHead: "點一下　綁定手機",
+  sub:  ["綁定後啟用完整功能", "看診提醒與約診查詢"],
+  bandHead: "點一下　手機綁定",
   band: "看診提醒與約診查詢都在這裡",
 };
 
 /* ── 四格 ─────────────────────────────────────────────────────────
  * crop 給的是「原圖上要露出來的那一塊」；不給就用 cover 置中。 */
-/* ── 定案（2026-09-09，使用者：「那就用 A2-3　不過綁定手機　改成　手機綁定
- *   　做好　給我預覽　其他的不用再顯示出來」）───────────────────────────
+/* ── 2026-09-09 稍晚：文案重寫（使用者發現的那個 bug）─────────────────
  *
- * ＝ 原本那把尺上的 **Ⓐ2-3**：小型版型 ＋ 字欄 990 ＋ 主標 165／副標 82。
- *   圖欄 1510（手機上 227px）、插圖 **100% 一個像素都不裁**、字到圖 14.6px。
+ * 「現在這樣有個 bug　本來是加入好友可以點選單　要綁定才有提醒通知和約診查詢
+ *   但現在變成馬上要綁定　所以我認為應該要改成綁定啟用完整功能
+ *   就像森釉牙醫這樣　那我們的內文也要跟著調整」
  *
- * ⚠⚠ **其餘十二格全部拿掉了，推導留在 README 第 37-4-3 ~ 37-4-6 與 git**：
- *   字級三格（Ⓐ1／Ⓐ2／Ⓐ3）、圖欄四格（Ⓐ3-2~4／Ⓐ2-2）、
- *   大型的帶子三格（Ⓑ1~3）、自訂（Ⓒ）、硬塞（Ⓧ）——
- *   要回頭比就 `git show 7420f27 -- drafts/channels/richmenu-bind.mjs`，不要重畫。
- *   `kind: "band"`／`"full"` 那兩條路的程式碼**留著沒刪**（大型與自訂的退路）。
+ * ⚠⚠⚠ **他說的 bug 有兩層，文案只是外層。**
+ *   內層是**結構**：這個帳號的選單本來是 **3×2 六格**（README 第 6-1 節：
+ *   診所資訊／約診查詢／診療項目／醫師介紹／衛教資訊／基本設定，選單列寫「點我選服務」），
+ *   而我做的那一張是**整條一格**，等於把六格全部換掉 ——
+ *   **綁定之前那六格一格都點不到**，其中三格的內容還是這條線自己剛做完的
+ *   （診所資訊／主題與科別／衛教懶人包 12 張）。
  *
- * ⚠⚠⚠ **面板不可以跟著收**（第九節第 28 條 ④）：格子只剩一個，但
- *   「看得到多少／裁哪邊／一個人頭多高／字到圖多遠」每次出圖仍然要印 ——
- *   不然哪天有人動到字級或字欄，這裡不會有任何一個數字變。 */
+ * ⚠⚠⚠ **而那正好也是文案改不動的原因**：「啟用完整功能」這句話的前提
+ *   就是「不完整的那一份現在就能用」。整條被橫幅佔滿的話，那個前提是假的。
+ *   **所以文案和結構是同一件事，不是兩件。**
+ *
+ * ⚠ 這四格只動文案，版型／字級／圖欄／裁法一個數字都沒動
+ *   （小型 2500×843・字欄 990・主標 165／副標 82 ＝ 定案那一組）。 */
 const CASES = [
-  { id: "final", size: "compact", kind: "split", textw: 990, head: 165, sub: 82,
-    label: "定案", note: "小型 2500×843、圖欄 227px、插圖 100% 看得到" },
+  { id: "a", size: "compact", kind: "split", textw: 990, head: 165, sub: 82,
+    label: "Ⓐ 綁定後啟用完整功能",
+    note: "最貼近你講的那句話；動作留在主標，好處放第一行",
+    copy: { head: "手機綁定", sub: ["綁定後啟用完整功能", "看診提醒與約診查詢"] } },
+
+  { id: "b", size: "compact", kind: "split", textw: 990, head: 165, sub: 82,
+    label: "Ⓑ 完整功能（主標換成好處）",
+    note: "主標從動作換成結果，動作退到第一行",
+    copy: { head: "完整功能", sub: ["綁定手機就啟用", "看診提醒與約診查詢"] } },
+
+  { id: "c", size: "compact", kind: "split", textw: 990, head: 165, sub: 82,
+    label: "Ⓒ 立即啟用完整服務（森釉的節奏）",
+    note: "用「服務」不是「功能」、加一個「立即」——最靠近森釉那張的口氣",
+    copy: { head: "手機綁定", sub: ["立即啟用完整服務", "看診提醒與約診查詢"] } },
+
+  { id: "now", size: "compact", kind: "split", textw: 990, head: 165, sub: 82,
+    label: "Ⓝ 現在這樣（對照）",
+    note: "「綁定後都在這裡」＝ 把功能講成關在門後面，就是你說的那個 bug",
+    copy: { head: "手機綁定", sub: ["看診提醒與約診查詢", "綁定後都在這裡"] } },
 ];
 
 /* ── 版面（畫在 2500 的畫布上，所以每個數字都要乘 0.15 才是手機上的 px）── */
@@ -167,20 +190,21 @@ function block(c) {
     `background-position:${ox.toFixed(2)}px ${oy.toFixed(2)}px;`;
 
   let inner = `<div class="pic" style="${pic}"></div>`;
+  const CP = { ...COPY, ...(c.copy ?? {}) };
   if (c.kind === "split") {
     /* ⚠ 副標的上外距跟著自己的字級走（.24em），字一小間距也要跟著收，
      *   不然三格看起來會是「字變小、空隙沒變」＝ 只動了一半。 */
     const fh = fsOf(c, "head"), fsb = fsOf(c, "sub");
     inner += `<div class="col" style="width:${c.textw}px">
-        <div class="head" style="font-size:${fh}px">${COPY.head}</div>
-        <div class="sub" style="font-size:${fsb}px;margin-top:${Math.round(fsb * 0.24)}px">${COPY.sub.join("\n")}</div>
+        <div class="head" style="font-size:${fh}px">${CP.head}</div>
+        <div class="sub" style="font-size:${fsb}px;margin-top:${Math.round(fsb * 0.24)}px">${CP.sub.join("\n")}</div>
       </div>`;
   }
   if (c.kind === "band")
     inner += `<div class="band" style="height:${c.bandh}px;gap:${Math.round(fsOf(c, "bandHead") * 0.25)}px">
-        <span class="bh" style="font-size:${fsOf(c, "bandHead")}px">${COPY.bandHead}</span>
+        <span class="bh" style="font-size:${fsOf(c, "bandHead")}px">${CP.bandHead}</span>
         <span class="dot"></span>
-        <span class="bs" style="font-size:${fsOf(c, "bandSub")}px">${COPY.band}</span>
+        <span class="bs" style="font-size:${fsOf(c, "bandSub")}px">${CP.band}</span>
       </div>`;
   return { html: `<div class="rm" id="rm-${c.id}" style="width:${S.w}px;height:${S.h}px">${inner}</div>`,
            slot, s };
@@ -286,8 +310,9 @@ for (let i = 0; i < CASES.length; i++) {
   if (m.scrollW > m.clientW) throw new Error(`${c.id}：水平溢出 ${m.scrollW - m.clientW}px`);
   if (c.kind === "split") {
     if (m.head.lines !== 1) throw new Error(`${c.id}：主標被折成 ${m.head.lines} 行`);
-    if (m.sub.lines !== COPY.sub.length)
-      throw new Error(`${c.id}：副標自己斷 ${COPY.sub.length} 行、畫出 ${m.sub.lines} 行（被再折了）`);
+    const want = (c.copy?.sub ?? COPY.sub).length;
+    if (m.sub.lines !== want)
+      throw new Error(`${c.id}：副標自己斷 ${want} 行、畫出 ${m.sub.lines} 行（被再折了）`);
     for (const [nm, e] of [["主標", m.head], ["副標", m.sub]])
       if (e.right > c.textw - PAD_R + 1)
         throw new Error(`${c.id}：${nm}右緣 ${e.right.toFixed(0)} 超出字欄可用的 ${c.textw - PAD_R}`);
@@ -313,7 +338,7 @@ for (let i = 0; i < CASES.length; i++) {
  *   七格都做等於在一頁 no-store 的頁面上多 2MB。這張圖回答的是「**它在整個畫面裡
  *   佔多少**」——那是**版型**的事（小型／大型），字級那把尺看不出差別。
  *   所以現況一張 ＋ 每一族的建議各一張。 */
-const MOCK = ["final"];
+const MOCK = ["a"];
 const MOCKS = CASES.filter((c) => MOCK.includes(c.id));
 const b64 = (f) => fs.readFileSync(f).toString("base64");
 const welcURI = `data:image/png;base64,${b64(WELC)}`;
@@ -434,25 +459,14 @@ fs.writeFileSync("drafts/line-richmenu-numbers.json", JSON.stringify({
     副標: r.m.sub ? +(r.m.sub.fs * r.k).toFixed(1) : (r.m.bs ? +(r.m.bs.fs * r.k).toFixed(1) : null),
     帶子: r.c.bandh ? +(r.c.bandh * r.k).toFixed(1) : null,
     檔案KB: Math.round(r.bytes / 1024),
-    檔名: { 上傳: "fangren-richmenu-2500.jpg", 選單: "shot-richmenu.jpg", 手機: "shot-richmenu-chat.jpg" },
+    檔名: { 上傳: `richmenu-${r.c.id}.jpg`, 選單: `strip-${r.c.id}.jpg`, 手機: `chat-${r.c.id}.jpg` },
+    主標文字: (r.c.copy ?? COPY).head, 副標文字: (r.c.copy ?? COPY).sub,
     strip: { w: r.dispW * 3, h: Math.round((r.S.h * r.dispW * 3) / r.S.w) },
     chat: MOCK.includes(r.c.id) ? { w: PHONE_W * DSF, h: PHONE_H * DSF } : null,
   })),
 }, null, 1) + "\n");
-/* ⚠⚠ 改名放在最後一步（產生器內部仍然叫 final）——
- *   **要上傳到 LINE 的是 fangren-richmenu-2500.jpg**，另外兩張只是模擬圖。
- *   ⚠ 上面那一行清檔會一起清掉它們，所以重跑不會留下上一次的。 */
-const FINAL = {
-  "richmenu-final.jpg": "fangren-richmenu-2500.jpg",
-  "strip-final.jpg":    "shot-richmenu.jpg",
-  "chat-final.jpg":     "shot-richmenu-chat.jpg",
-};
-for (const [from, to] of Object.entries(FINAL)) {
-  const a = path.join(OUT, from);
-  if (!fs.existsSync(a)) throw new Error(`要改名的 ${from} 不在`);
-  fs.renameSync(a, path.join(OUT, to));
-}
-console.log("要上傳到 LINE 的是　" + path.join(OUT, FINAL["richmenu-final.jpg"]));
-console.log("");
+/* ⚠ 上一輪那段「改名成 fangren-richmenu-2500.jpg」暫時收起來 ——
+ *   這一輪文案還沒挑定，四格都是候選，沒有「要上傳的那一張」。
+ *   挑定之後把它加回來（git show 48301bd）。 */
 console.log("數字寫進 drafts/line-richmenu-numbers.json");
 console.log("");
