@@ -129,11 +129,40 @@ const SRC = {
 };
 const pres = [...page.matchAll(/<pre>([\s\S]*?)<\/pre>/g)].map(m =>
   m[1].replace(/&lt;/g, "<").replace(/&amp;/g, "&").trim());
+/* ⚠⚠ 2026-09-09 起最後面可以接一行 hashtag（只加在臉書這一份）——
+   所以比對的是**本文**，標籤那一行另外驗。
+   ⚠ 分法：最後一行**整行每一段都以 # 開頭**才算標籤，其餘一律算本文 ——
+   這樣「本文最後一行剛好有個 #」不會被誤吃掉。 */
+const TAG_RED = /推薦|最好|最佳|第一|唯一|保證|無痛|免費|優惠|便宜|權威|名醫|首選/;
+const splitTags = (s0) => {
+  const s = s0.trim();               /* ⚠ 先 trim —— 檔案結尾那個換行會讓最後一行是空的 */
+  const lines = s.split("\n");
+  const last = lines[lines.length - 1].trim();
+  if (!last || !last.split(/\s+/).every(w => /^#\S+$/.test(w))) return { body: s.trim(), tags: [] };
+  return { body: lines.slice(0, -1).join("\n").trim(), tags: last.split(/\s+/).map(w => w.slice(1)) };
+};
 for (const [k, rel] of Object.entries(SRC)) {
   const want = fs.readFileSync(path.join(ROOT, ...rel), "utf8").trim();
-  ok(pres.some(p => p === want), `${k} 那一段的文字和 ${rel.join("/")} 不一樣 —— 有人重打了`);
-  const mine = fs.readFileSync(path.join(DIR, `detail-${k}.txt`), "utf8").trim();
-  ok(mine === want, `detail-${k}.txt 和 ${rel.join("/")} 不一樣`);
+  ok(pres.some(p => splitTags(p).body === want),
+    `${k} 那一段的文字和 ${rel.join("/")} 不一樣 —— 有人重打了`);
+  const mine = splitTags(fs.readFileSync(path.join(DIR, `detail-${k}.txt`), "utf8"));
+  ok(mine.body === want, `detail-${k}.txt 的本文和 ${rel.join("/")} 不一樣`);
+  /* 標籤那一行（沒有就跳過 ＝ Ⓐ 不加） */
+  if (!mine.tags.length) continue;
+  ok(mine.tags.length <= 3, `detail-${k}.txt 的標籤有 ${mine.tags.length} 個，上限 3`);
+  ok(mine.tags[0] === "芳仁牙醫診所",
+    `detail-${k}.txt 的第一個標籤是「#${mine.tags[0]}」——` +
+    `品牌那一個是唯一不會把人送走的，它一定要在`);
+  for (const g of mine.tags) {
+    ok(!TAG_RED.test(g), `標籤「#${g}」踩到紅線（評價性／招徠性的字）`);
+    ok(!/[・－—、，。･]/.test(g), `標籤「#${g}」裡有符號，臉書會把它截斷`);
+  }
+}
+/* ⚠ 產生器裡那道紅線掃描不可以被拿掉（拿掉之後畫面照樣正常） */
+{
+  const src = fs.readFileSync(GEN, "utf8");
+  ok(/const TAG_RED\s*=/.test(src) && /FB_TAGS/.test(src),
+    "post-fb.mjs 少了 TAG_RED 或 FB_TAGS —— 標籤那道守門被拿掉了");
 }
 
 /* ---------- ④ 要上傳的那三張 ---------- */
