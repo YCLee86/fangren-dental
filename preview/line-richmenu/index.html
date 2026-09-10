@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 圖文選單：手機綁定</title>
+<!--
+  2026-09-09 使用者拿了另一家診所（同一個廠商）的截圖：
+  「我們之前做過的綁定插圖　把他合在這個頁面的下方　取代這個　點此 sign in 圖片看看
+    或是　在 line 商家帳號裡，這個下方的圖片尺寸可以變動嗎？
+    我把我們做好的圖片合進去被裁剪成很奇怪」
+
+  ⚠⚠⚠ 「被裁得很奇怪」是量得出來的：那條選單量到 1125×378 ＝ 2.976:1
+       ＝ LINE 的小型版型（2500×843）；插圖是 1376×768 ＝ 1.792:1。
+       把 1.79 塞進 2.97 要切掉 40% 的高度 —— 切掉的正好是上面那排頭和下面的腳。
+       **不是裁法沒調好，是比例差太多。**
+
+  ⚠ 這一頁刻意不放另一家診所的畫面：只用了截圖最底下那條 LINE 自己的選單列
+    （drafts/line-richmenu-chatbar.png），他們的圖文選單一個像素都沒有取 —— repo 是公開的。
+
+  ⚠ 產生器 node drafts/channels/richmenu-bind.mjs、守門 node drafts/channels/check-richmenu.mjs
+    推導在 drafts/channels/README.md 第三十七節
+-->
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
+  --ink:#2a2c27;--ink-soft:#5c5f57;--green:#3f654a;--deep:#2c5238;--red:#89202d}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.75;padding-bottom:56px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:18px 14px 0}
+h1{font-size:1.02rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
+h1 span{display:block;font-weight:400;font-size:.7em;color:var(--ink-soft);letter-spacing:.04em}
+.pv-lead{font-size:.78rem;color:var(--ink-soft);margin:.55rem 0 0;line-height:1.8}
+.pv-lead b{color:var(--ink)}
+a{color:var(--deep)}
+code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
+  font-family:ui-monospace,Menlo,Consolas,monospace}
+.pv-h1{font-size:.98rem;font-weight:700;margin:40px 0 0;letter-spacing:.02em;
+  background:var(--deep);color:#fff;border-radius:8px;padding:7px 11px;line-height:1.5}
+.pv-h1 span{display:block;font-size:.74em;font-weight:400;opacity:.85;letter-spacing:.03em}
+.pv-h2{font-size:.92rem;font-weight:700;margin:34px 0 0;letter-spacing:.01em;
+  padding-left:9px;border-left:3px solid var(--green)}
+.pv-h2 .t{display:block;font-size:.78em;font-weight:400;color:var(--ink-soft);letter-spacing:0}
+.pv-h2 em{font-style:normal;font-size:.72em;background:var(--deep);color:#fff;
+  border-radius:6px;padding:1px 7px;margin-left:6px;letter-spacing:.04em;vertical-align:2px}
+.pv-h2 em.no{background:var(--red)}
+/* 模擬圖一律畫成 375px ＝ 手機上真正的大小，不要放大看 */
+.pv-shot{margin:12px auto 0;width:375px;max-width:100%}
+.pv-shot img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--rule)}
+/* 尺上的那幾格：只有選單自己那一條（1125 寬 ＝ 375 的三倍），一樣畫成 375 */
+.pv-shot.s{margin-top:16px}
+.pv-shot.s img{border-radius:6px}
+.pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:7px 0 0}
+.pv-cap b{color:var(--ink)}
+.pv-cap .n{color:var(--red);font-weight:700}
+.pv-num{margin:12px 0 0;background:var(--card);border:1px solid var(--rule);
+  border-radius:10px;padding:11px 12px;font-size:.7rem;line-height:1.85;color:var(--ink-soft)}
+.pv-num b{color:var(--ink)}
+.pv-num .n{color:var(--red);font-weight:700}
+.pv-scroll{overflow-x:auto;margin:10px 0 0}
+.pv-tab{border-collapse:collapse;font-size:.66rem;min-width:100%;
+  background:var(--card);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.pv-tab th,.pv-tab td{padding:5px 7px;border-bottom:1px solid var(--rule);text-align:right;
+  white-space:nowrap}
+.pv-tab th:first-child,.pv-tab td:first-child{text-align:left}
+.pv-tab thead th{background:#e9eaeb;font-weight:700;color:var(--ink)}
+.pv-tab tbody tr:last-child td{border-bottom:0}
+.pv-tab .no{color:var(--red);font-weight:700}
+.pv-tab .ok{color:var(--deep);font-weight:700}
+.pv-files{margin:10px 0 0;font-size:.7rem;line-height:1.9;color:var(--ink-soft)}
+.pv-files .d{display:block;overflow-wrap:anywhere}
+.pv-files b{color:var(--ink)}
+.pv-ask{margin:10px 0 0;background:var(--card);border:1px solid var(--rule);
+  border-left:3px solid var(--red);border-radius:10px;padding:11px 13px;
+  font-size:.72rem;line-height:1.9}
+.pv-ask ol{margin:6px 0 0 1.1em}
+.pv-ask li{margin:5px 0 0}
+.pv-foot{margin:44px 0 0;font-size:.66rem;color:var(--ink-soft);line-height:1.9;
+  border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="pv-wrap">
+
+<h1>LINE 圖文選單：手機綁定
+  <span>把綁定完成那張插圖擺進聊天室最底下那條選單　2026-09-09</span></h1>
+
+<p class="pv-lead">
+你抓到的那個 bug <b>不只是文字的事</b>。<br>
+這個帳號的選單本來是 <b>3×2 六格</b>（選單列寫「點我選服務」），加好友就點得到；
+而我做的那一張是<b class="n">整條一格</b> —— 等於<b>把六格全部換掉</b>。<br>
+底下先把這件事攤開，再給四格文案。
+</p>
+
+<h2 class="pv-h1">一、bug 的根：六格被一格換掉了<span>文案只是外層</span></h2>
+
+<div class="pv-num">
+這個帳號現在那條選單（<code>drafts/channels/README.md</code> 第 6-1 節量過的）：<br>
+<b>診所資訊　約診查詢　診療項目</b><br>
+<b>醫師介紹　衛教資訊　基本設定</b><br>
+—— <b>六格，加好友就能點</b>，要綁定的只有「約診查詢」查得到東西、以及收得到看診提醒。<br>
+<b class="n">我做的那一張把這六格整條換掉了</b>，所以綁定之前一格都點不到 ——
+而其中三格的內容<b>正是這條線自己剛做完的</b>（診所資訊／主題與科別七科／衛教懶人包 12 張）。
+</div>
+
+<p class="pv-cap">
+⚠⚠ <b>你要的那句話，前提就是這件事。</b>「啟用<b>完整</b>功能」在說「<b>不完整的那一份現在就能用</b>」——
+整條被橫幅佔滿的話，那個前提是假的。<b>所以文案和選單結構是同一件事，不是兩件。</b>
+</p>
+
+<h2 class="pv-h1">二、擺法<span>要先定這個，文案才站得住</span></h2>
+
+<div class="pv-ask">
+<ol>
+<li><b class="ok">建議：六格裡挪一格給綁定。</b>
+  後台自己就設得了、今天就能上，<b>六格一格都不會不見</b>，
+  招呼卡那句話也<b>一個字都不用改</b>（見下一節）。<br>
+  ⚠ 最合理的是<b>「基本設定」那一格</b>（綁定本來就是設定）——
+  但<b>那一格底下現在是什麼我們還沒問到</b>，有可能綁定早就在裡面了。<br>
+  ⚠ 代價是綁定的曝光比整條橫幅小 —— 但<b>招呼卡上那顆滿版的「點這裡綁定」還在</b>，
+  而且它出現的時機正好是加好友那一刻，綁定的主力本來就在那裡。</li>
+<li><b>森釉那條：橫幅只給「還沒綁定的人」，綁定完成就換回六格。</b>
+  綁定曝光最大，六格也沒有永久損失。<br>
+  ⚠ <b>要廠商做「分眾選單」</b>（LINE 支援，但要他們的系統判斷誰綁了）——
+  這本來就是問題清單第 4 項，走這條就<b>從「要不要做」變成「非做不可」</b>。<br>
+  ⚠⚠ <b>而且要改你自己定稿的招呼卡</b>（見下一節）。</li>
+<li>橫幅和六格同時擺在一條選單上 —— <b>後台的預設版型有沒有這種切法要按一次才知道</b>，
+  自訂的話一樣要廠商送。</li>
+</ol>
+</div>
+
+<h2 class="pv-h1">二之二、你剛發現的：招呼卡那一句<span>它替上面那三條做了決定</span></h2>
+
+<div class="pv-num" id="wc-quote">
+已經定稿的招呼圖卡，第二塊逐字是：<br>
+<b class="ok">下面有一排選單</b><br>
+<b class="ok">診所的資訊都在裡面</b><br>
+—— 那句話是<b>在六格還在的時候寫的</b>，而它送出的時機正好是<b>加好友那一刻</b>，
+那時候還沒有人綁定。
+</div>
+
+<p class="pv-cap">
+所以整條換成橫幅之後，<b class="n">那句話在它送出的當下就是假的</b> ——
+底下沒有一排選單，只有一張叫你去綁定的圖。<br>
+<b>上面那張聊天室模擬就是證據</b>：招呼卡寫著「下面有一排選單」，
+而它下面那一條是綁定橫幅。
+</p>
+
+<div class="pv-scroll"><table class="pv-tab">
+<thead><tr><th>擺法</th><th>「下面有一排選單」</th><th>要動到你定稿的字嗎</th><th>要等廠商嗎</th></tr></thead>
+<tbody>
+<tr><td><b>① 六格挪一格</b></td><td class="ok">成立</td><td class="ok">不用</td><td class="ok">不用</td></tr>
+<tr><td>② 森釉那條</td><td class="no">送出當下是假的</td><td class="no">要改</td><td class="no">要（分眾選單）</td></tr>
+<tr><td>③ 橫幅＋六格</td><td class="ok">成立</td><td class="ok">不用</td><td>看後台有沒有那種版型</td></tr>
+</tbody></table></div>
+
+<p class="pv-cap">
+⚠ 真的要走 ②，招呼卡那一塊最小的改法有兩個，
+<b>兩個都動到你自己寫的字，所以沒有自己改</b>：<br>
+<b>甲</b>　綁定後下面會有一排選單／診所的資訊都在裡面　（把它變成綁定的下一步）<br>
+<b>乙</b>　那一塊整個拿掉　（招呼卡只講綁定與介紹兩件事）
+</p>
+
+<h2 class="pv-h1">三、文案<span>四格只差字，版型與圖一個數字都沒動</span></h2>
+
+<div class="pv-num">
+⚠⚠ <b>先講一個硬上限</b>：定案那個版型（字欄 990、內距 130/70 ＝ 可用 <b>790px</b>）——<br>
+主標最多 <b class="ok">4 個全形字</b>（4 字 699.6 ✓／<b>6 字 1049.4 ✗</b>）、副標最多 <b class="ok">9 個</b>。<br>
+→ <b class="n">「啟用完整功能」當不了主標</b>（6 個字，連縮成小一階的 145px 都還超出 132px），
+那個意思只能放進副標。字欄也不能再放寬，990 已經是插圖裁法翻面的地板。<br>
+⚠ <b>「30 秒」四格一個都沒寫</b> —— 森釉那張寫「30秒 綁定手機」，
+但<b>我們沒有量過芳仁的綁定要多久</b>，那條流程是廠商的。要寫得先問到。
+</div>
+
+<div class="pv-num">
+四格<b>共用同一組版型與圖</b>（所以這把尺只在動文字）：<br>
+版型 <b>小型 2500×843</b>　手機上 <b>375×126</b>　圖欄 <b>227×126</b>　
+插圖 <b class="ok">100% 看得到</b>　一個人頭 <b>13.5px</b><br>
+主標 <b>24.8px</b>　副標 <b>12.3px</b>
+</div>
+
+<div class="pv-shot s"><img src="strip-a.jpg" width="1125" height="379"
+  alt="圖文選單：手機綁定，底下兩行綁定後啟用完整功能、看診提醒與約診查詢"></div>
+<p class="pv-cap"><b>Ⓐ　手機綁定</b>／綁定後啟用完整功能／看診提醒與約診查詢　<b>建議</b><br>
+最貼近你講的那句話：動作留在主標，<b>好處放第一行</b>。</p>
+
+<div class="pv-shot s"><img src="strip-b.jpg" width="1125" height="379" loading="lazy"
+  alt="圖文選單：完整功能，底下兩行綁定手機就啟用、看診提醒與約診查詢"></div>
+<p class="pv-cap"><b>Ⓑ　完整功能</b>／綁定手機就啟用／看診提醒與約診查詢<br>
+主標從<b>動作</b>換成<b>結果</b>，動作退到第一行。</p>
+
+<div class="pv-shot s"><img src="strip-c.jpg" width="1125" height="379" loading="lazy"
+  alt="圖文選單：手機綁定，底下兩行立即啟用完整服務、看診提醒與約診查詢"></div>
+<p class="pv-cap"><b>Ⓒ　手機綁定</b>／立即啟用完整服務／看診提醒與約診查詢<br>
+用「<b>服務</b>」不是「功能」、加一個「立即」——最靠近森釉那張的口氣。</p>
+
+<div class="pv-shot s"><img src="strip-now.jpg" width="1125" height="379" loading="lazy"
+  alt="圖文選單：手機綁定，底下兩行看診提醒與約診查詢、綁定後都在這裡"></div>
+<p class="pv-cap"><b>Ⓝ　現在這樣（對照）</b>／看診提醒與約診查詢／<b class="n">綁定後都在這裡</b><br>
+「綁定後<b>都在這裡</b>」＝ 把功能講成關在門後面 —— <b>那一句就是你說的那個 bug</b>。</p>
+
+<div class="pv-shot"><img src="chat-a.jpg" width="1125" height="2436" loading="lazy"
+  alt="LINE 聊天室的模擬：招呼圖卡在上，底下那條就是圖文選單"></div>
+<p class="pv-cap">Ⓐ 在 LINE 裡長什麼樣（整支手機 375×812 ＝ 一支 iPhone 真正的大小）。</p>
+
+<h2 class="pv-h1">四、檔案<span>四格都是候選，還沒有「要上傳的那一張」</span></h2>
+<div class="pv-files">
+<b>Ⓐ</b> <span class="d">https://fangren.net/preview/line-richmenu/richmenu-a.jpg　2500×843</span>
+<b>Ⓑ</b> <span class="d">https://fangren.net/preview/line-richmenu/richmenu-b.jpg　2500×843</span>
+<b>Ⓒ</b> <span class="d">https://fangren.net/preview/line-richmenu/richmenu-c.jpg　2500×843</span>
+<b>Ⓝ</b> <span class="d">https://fangren.net/preview/line-richmenu/richmenu-now.jpg　2500×843</span>
+</div>
+<p class="pv-cap">
+挑定之後才會改名成 <code>fangren-richmenu-2500.jpg</code>。
+字改在 <code>drafts/channels/richmenu-bind.mjs</code> 的 <code>CASES</code>，改完重跑。
+</p>
+
+<h2 class="pv-h1">二、尺寸可以變嗎<span>可以，但要看是誰在設</span></h2>
+
+<h3 class="pv-h2">後台自己設<span class="t">LINE Official Account Manager → 圖文選單</span><em>只有兩種</em></h3>
+<div class="pv-scroll"><table class="pv-tab">
+<thead><tr><th>版型</th><th>尺寸</th><th>比例</th><th>手機上</th></tr></thead>
+<tbody>
+<tr><td>大型</td><td>2500×1686<br>1200×810／800×540</td><td>1.483</td><td>375×253</td></tr>
+<tr><td>小型（現在這種）</td><td>2500×843<br>1200×405／800×270</td><td>2.966</td><td>375×126</td></tr>
+</tbody></table></div>
+<p class="pv-cap">
+版型裡的<b>格子</b>可以自己切（幾格、切在哪），但<b>整張圖的比例只有這兩個</b>，
+上傳的圖對不上就會被它自己裁。
+</p>
+
+<h3 class="pv-h2">廠商用系統送<span class="t">Messaging API 的 rich menu</span><em>可以自訂</em></h3>
+<div class="pv-num">
+寬 <b>800 ~ 2500</b>　高 <b>250 以上</b>　<b>寬 ÷ 高 ≥ 1.45</b>　檔案 <b>≤ 1MB</b>　JPEG 或 PNG<br>
+→ 我們這張插圖是 <b class="ok">1.792</b>，<b>剛好過得了 1.45</b>，
+所以「整張圖一個像素都不裁」<b>做得到</b>，但<b>只有廠商那一側做得到</b>（底下 Ⓒ）。
+</div>
+
+<h2 class="pv-h1">五、還沒定的<span>都要你點頭，沒有自己決定</span></h2>
+<div class="pv-ask">
+<ol>
+<li><b>擺法先挑（第二節那三個）。</b>文案是跟著它走的 ——
+  走建議那條（綁定後換回六格）就可以寫「完整功能」；
+  真的要整條永久佔著，那句話就不太站得住。</li>
+<li><b>⚠ 選單列那行字。</b>現在寫「<b>點我選服務</b>」；
+  換成橫幅之後森釉那邊寫的是「手機註冊」。<br>
+  <b>那一行誰在設、改不改得動要問廠商</b> —— 而且我們寫「綁定」、他們寫「註冊」，
+  這條線其餘每一則（綁定完成卡…）一律用「綁定」。</li>
+<li><b>「基本設定」那一格底下是什麼</b>（第二節退路那條要用到）——
+  綁定有可能早就在裡面了。這一題本來就在廠商清單上。</li>
+<li><b>綁定要幾秒</b>。森釉寫 30 秒，我們沒有量過，四格都刻意沒寫。</li>
+<li><b>這條選單點下去要去哪裡。</b>綁定的網址是廠商系統產的，我們手上還是佔位符。</li>
+</ol>
+</div>
+
+<p class="pv-foot">
+產生器　<code>node drafts/channels/richmenu-bind.mjs</code><br>
+守門　　<code>node drafts/channels/check-richmenu.mjs</code><br>
+推導　　<code>drafts/channels/README.md</code> 第三十七節<br>
+插圖　　<code>drafts/bind-done-v4-src.jpg</code>（＝綁定完成卡那張頭圖的原檔，1376×768）<br>
+⚠ 這一頁<b>沒有用到你那張截圖的任何一個像素</b> —— 聊天室、選單列、手機外框全部自己畫。
+這個 repo 是公開的。
+</p>
+
+</div>
+</body>
+</html>

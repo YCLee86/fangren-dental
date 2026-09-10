@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 貼文的位置與停車圖</title>
+<!--
+  2026-09-08 使用者：「製作 line 商家貼文　地圖的部分」
+  → 先做了「站上那張簡易地圖」的版本（底下第二部分）。
+  同日稍晚：「之前做過一版印出來的停車建議（因為有警察開單）用那個版本製作
+  有 P1 P2 P3 和 QR code 的那個」→ ＝ drafts/door-notice/ 那張 A4 告示，
+  這一頁因此改成**那個版本在最前面**。
+
+  同日再稍晚：「選 C 但前兩行　紅線　開單的文句拿掉」→ 定案 door-c。
+
+  ⚠⚠⚠ 換媒介的四件（CLAUDE.md 第九節第 28 條 ⑤）：
+   ① 「現在位置」四個字 —— 門口那張是給站在門口的人看的，貼文的人不在那裡。
+   ② 三顆 QR —— 看貼文的人**正拿著那支手機**，掃不了自己螢幕上的碼。
+   ③ 「鄰近停車場可參考如下圖」—— 那句話要求地圖在文字**底下**，版面因此鎖住。
+   ④ **紅線與開單那兩句** —— 站在門口的人車已經停了，要擋的是「就停一下」；
+      看貼文的人還沒出門，同一句話讀起來變成「這間診所門口會被開單」＝ 警告不是幫忙。
+      這一件是使用者自己看出來的（我送上去的每一格都還留著那兩句）。
+
+  2026-09-08 最後一輪：「不要標題　Ⓧ4　Ⓒ×1.3　Ⓝ3　**其他都不要再顯示在提案頁上**
+  我覺得可以比 Ⓧ4 再左一點」→ 尺往左移一格重開，同日他挑了 **Ⓧ2 ＝ 440px** 並定稿。
+  這一頁因此只剩 **定案那一張 ＋ 主頁三格 ＋ 小格實際大小 ＋ 拿掉的兩句 ＋ 詳情**。
+  ⭐ 要貼的檔案是 **fangren-map-1080.png**（同看診時間那張的命名）。
+  ⚠⚠⚠ 拿掉的每一格都在 git 裡（`git show 4fe0021 -- preview/line-post-map/`），
+  推導在 drafts/channels/README.md 第三十五節 —— **不要重畫，要回頭比就從那裡取**。
+  拿掉的有：下排字級 Ⓐ~Ⓔ、指北針 Ⓝ1~Ⓝ3、留白 Ⓜ1~Ⓜ4、浮水印濃度 Ⓦ、換 logo Ⓛ、
+  壓哪一角、標題那一格、QR 那張表、北在上，以及「站上那張簡易地圖」的整個版本。
+-->
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
+  --ink:#2a2c27;--ink-soft:#5c5f57;--green:#3f654a;--deep:#2c5238;--red:#89202d}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.75;padding-bottom:56px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:18px 14px 0}
+h1{font-size:1.02rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
+h1 span{display:block;font-weight:400;font-size:.7em;color:var(--ink-soft);letter-spacing:.04em}
+.pv-lead{font-size:.78rem;color:var(--ink-soft);margin:.55rem 0 0;line-height:1.8}
+.pv-lead b{color:var(--ink)}
+a{color:var(--deep)}
+code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
+  font-family:ui-monospace,Menlo,Consolas,monospace}
+.pv-h1{font-size:.98rem;font-weight:700;margin:40px 0 0;letter-spacing:.02em;
+  background:var(--deep);color:#fff;border-radius:8px;padding:7px 11px;line-height:1.5}
+.pv-h1 span{display:block;font-size:.74em;font-weight:400;opacity:.85;letter-spacing:.03em}
+.pv-h2{font-size:.92rem;font-weight:700;margin:34px 0 0;letter-spacing:.01em;
+  padding-left:9px;border-left:3px solid var(--green)}
+.pv-h2 .t{display:block;font-size:.78em;font-weight:400;color:var(--ink-soft);letter-spacing:0}
+.pv-h2 em{font-style:normal;font-size:.72em;background:var(--deep);color:#fff;
+  border-radius:6px;padding:1px 7px;margin-left:6px;letter-spacing:.04em;vertical-align:2px}
+.pv-shot{margin:10px 0 0}
+.pv-shot img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--rule)}
+.pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:7px 0 0}
+.pv-cap b{color:var(--ink)}
+.pv-cap .n{color:var(--red);font-weight:700}
+.pv-num{margin:12px 0 0;background:var(--card);border:1px solid var(--rule);
+  border-radius:10px;padding:11px 12px;font-size:.7rem;line-height:1.85;color:var(--ink-soft)}
+.pv-num b{color:var(--ink)}
+.pv-num .n{color:var(--red);font-weight:700}
+.pv-tab{width:100%;border-collapse:collapse;margin:10px 0 0;font-size:.66rem;
+  background:var(--card);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.pv-tab th,.pv-tab td{padding:5px 7px;border-bottom:1px solid var(--rule);text-align:right;
+  white-space:nowrap}
+.pv-tab th:first-child,.pv-tab td:first-child{text-align:left}
+.pv-tab thead th{background:#e9eaeb;font-weight:700;color:var(--ink)}
+.pv-tab tbody tr:last-child td{border-bottom:0}
+.pv-tab .no{color:var(--red);font-weight:700}
+.pv-txt,.pv-cut{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+  padding:12px 14px;margin:10px 0 0;font-size:.78rem;line-height:1.95;
+  white-space:pre-wrap;overflow-wrap:anywhere}
+/* ⚠ 拿掉的那兩句用另一個 class —— 守門是拿 .pv-txt 去對 detail 那兩個檔的，
+   這一塊不是要貼出去的字，混進去會被當成第三個「詳情」。 */
+.pv-cut{color:var(--ink-soft);text-decoration:line-through;
+  text-decoration-color:var(--red);text-decoration-thickness:1px}
+</style>
+</head>
+<body>
+<div class="pv-wrap">
+
+  <h1>LINE 商家貼文・位置與周邊停車
+    <span>2026-09-08　定稿</span></h1>
+  <p class="pv-lead">主頁「最新貼文」那三格的<b>小格左</b>。
+    地圖、提醒、三張停車場卡<b>全部是門口那張 A4 告示本人</b>——產生器把
+    <code>drafts/door-notice/</code> 跑起來，再把它的東西讀進 1080 的方畫布，
+    旋轉、街名重排、路線圓點、指北針<b>一個字都沒有重做</b>。<br>
+    你挑定的：<b>不放 QR</b>・<b>拿掉「紅線」「開單」那兩句</b>・
+    <b>下排字 ×1.30 折行</b>・<b>指北針 Ⓝ3</b>・<b>留白 Ⓜ3</b>・
+    <b>浮水印 4%</b>・<b>不加標題</b>。<br>
+    ⚠⚠⚠ <b>2026-09-09 浮水印整個換掉了</b>：使用者要三格拼成一顆完整的標誌
+    （「右下是地圖停車 logo 壓在左上」「logo 用門診表那張圓圓的」），
+    所以形狀從站上頁首那顆換成<b>門診表那顆圓的</b>、位置改成
+    <b>同一顆圓的右下那一象限</b>（圓心在這一張的左上角外面）。
+    <b>「站上頁首那顆・再往左 440px（Ⓧ2）」那一組已經不生效</b>，
+    下面那些數字是換掉之前的紀錄。濃度 4% 沒有變。<br>
+    ⭐ <b>要貼的檔案是 <code>fangren-map-1080.png</code></b>（1080×1080）。</p>
+
+  <h2 class="pv-h2">⭐ 定稿<em>fangren-map-1080.png</em><span class="t">1080×1080　這一張就是要貼的</span></h2>
+  <div class="pv-shot">
+    <img src="fangren-map-1080.png" width="1080" height="1080"
+      alt="定案的位置圖：兩句提醒、轉向的地圖、P1 P2 P3 三張卡，沒有 QR，左上壓著淡淡的標誌">
+  </div>
+  <p class="pv-cap">兩句一走、三顆碼一走，那些高度<b>全部給了地圖</b>：
+    460 → <span class="n">848px</span>，左右已經頂到版面的內距（各 40px）。<br>
+    ⚠ 指北針收到最小那一格之後，那張圖<b>又瘦了一點</b>（長寬比 1.283 → 1.292），
+    所以同樣的高度放得下更寬的圖：840 → <b>848px</b>。<br>
+    ⚠ 綠塊裡是<b>「芳仁牙醫」</b>不是門口那張的「現在位置」——
+    看貼文的人不在那裡，那四個字會被讀成「你現在的位置」。</p>
+  <div class="pv-num">
+    <b>定案那一張的數字</b><br>
+    下排　名 34 → 小格 <b>12.9px</b>　距 29 → <b>11.0px</b>（兩行第一次都過 10px）<br>
+    提醒　30 → 小格 <b>11.4px</b>　地圖上的街名 32 → <b>12.2px</b><br>
+    指北針　整組高 68.4 → 小格 <b>26.0px</b>　「北」19.7 → 7.5px<br>
+    <span class="n">⚠</span> 「北」在 10px 以下是<b>刻意的</b>：那個字不必讀、形狀認得出來就好
+    （旁邊還有箭頭）。那條 10px 的線是給<b>要讀完的字</b>的，不是給記號的。<br>
+    浮水印　畫出來 952×469・墨 4.0%・左邊切掉 <b>440px</b>（看得到 512 → 小格 194px）<br>
+    　　　　壓在它上面：墨字 11.95／柔墨 <b>5.68</b>（門檻 4.5）
+  </div>
+
+  <h2 class="pv-h2">在主頁上長怎樣<span class="t">大格＝看診時間（已定稿）／小格左＝這一張</span></h2>
+  <div class="pv-shot">
+    <img src="door-profile-3up.png" width="823" height="823" loading="lazy"
+      alt="主頁三格的模擬：大格是看診時間，小格左是位置圖">
+  </div>
+  <p class="pv-cap">⚠⚠ <b>這一張不能放大格</b>：大格只看得到中間 537 列，
+    這一張的內容佔 27~1053——上下都會被切掉。<br>
+    ⚠ <b>小格右那一格還沒做</b>（主題與科別七科）。</p>
+
+  <h2 class="pv-h2">⚠⚠ 在小格的實際大小（410px）<span class="t">這一排才是判準</span></h2>
+  <div class="pv-shot">
+    <img src="door-slot-410.png" width="422" height="422" loading="lazy"
+      alt="定案那一張縮到小格的實際大小 410px">
+  </div>
+  <p class="pv-cap">上面每一個數字都是量這個尺寸得來的。
+    <b>這是真的 410px，不是縮圖</b>——手機上看到多大，主頁上就多大。</p>
+
+  <h2 class="pv-h2">拿掉的是這兩句<span class="t">門口那張告示本人一個字都沒有動</span></h2>
+  <div class="pv-cut">永樂街平常車不多，但診所門口被劃設紅線。
+過往多為柔性勸導，近來常有直接開單情形。</div>
+  <p class="pv-cap">門口那張是給<b>車已經停好、站在門口的人</b>看的，這兩句擋的是「就停一下」；
+    看貼文的人<b>還沒出門</b>，同一句話讀起來是「這間診所門口會被開單」＝ 警告不是幫忙。<br>
+    ⚠ 留下來的兩句（有停車格／計價依現場標示）對兩種人都成立。</p>
+
+  <h2 class="pv-h2">「詳情」那一欄要貼的字<span class="t">⚠ 這裡才是 QR 在 LINE 上的替代品</span></h2>
+  <div class="pv-txt">周邊路段有畫設之路邊停車格，鄰近停車場可參考如下圖。
+停車計價方式依各業者現場標示為準。
+P1 壹車房－中華路停車場　190 公尺・步行 3 分鐘
+https://maps.app.goo.gl/z8Ds9sgX7YBy4mRw7?g_st=ic
+P2 合廷停車場　140 公尺・步行 2 分鐘
+https://maps.app.goo.gl/tiHLpeKc2gETXRh96?g_st=ic
+P3 斗六永樂站停車場　50 公尺・步行 1 分鐘
+https://maps.app.goo.gl/rwPydf3Mvt4fS4er7?g_st=ic
+雲林縣斗六市永樂街 70 號　05-5339369</div>
+  <p class="pv-cap">兩句提醒<b>逐字</b>取自門口那張（紅線與開單那兩句已經跟著圖一起拿掉）；
+    三條網址<b>逐字</b>取自 <code>index.html</code> 地圖上那三個連結
+    （你自己分享過、驗證會開對地方的那三條），
+    <b>順序照你排的 P1／P2／P3</b>（刻意不是照距離）。<br>
+    ⚠⚠⚠ 三顆 QR 已經拿掉了，而<b>看貼文的人正拿著那支手機、掃不了自己螢幕上的碼</b>——
+    這三條<b>可以點</b>的網址才是它在 LINE 上真正的替代品。<br>
+    ⚠ 「可參考如下圖」指的是貼文上面那張圖，成立；
+    <b>所以圖裡的版面鎖住「文字在上、地圖在下」</b>，不要把地圖搬到旁邊或最上面。<br>
+    ⚠⚠ 不可以寫「有問題留言問我們」那一類的話（這個帳號沒有專人即時回覆）。</p>
+
+  <h2 class="pv-h2">還開著的兩件</h2>
+  <p class="pv-cap">
+    <b>① 小格右那一格</b>（主題與科別七科）還沒做——七張分享圖現成，
+    但都是 1.91:1，<b>要重裁成方的</b>。<br>
+    <b>② 小格到底是不是照這樣裁</b>——在後台按一次「預覽」就知道，我們是照 410×410 推的。</p>
+
+</div>
+</body>
+</html>

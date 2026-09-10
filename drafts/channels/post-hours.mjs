@@ -25,6 +25,8 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { fileURLToPath } from "node:url";
+import { wmFor, wmDesc, TRI, checkOne } from "./wm-triptych.mjs";
+const tri = checkOne();
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OUT  = path.join(ROOT, "preview", "line-post-hours");
@@ -46,7 +48,12 @@ const DEEP = { general:"#2c5238", perio:"#2a6d69", endo:"#89202d", kids:"#9e6301
    這一條**只換這張圖與這一頁上的顯示名** —— `index.html`／`topics/`／
    `tools/topic-copy.mjs` 上的「植牙・假牙重建」一個字都沒有動。
    **全站要不要跟著改名是另一件事，要先問使用者。** */
-const DISP   = { "植牙・假牙重建": "假牙重建" };   /* 格子與圖例裡的全名 */
+/* ⚠⚠⚠ 2026-09-09 使用者在第三格那一張指定「一般牙科・定期檢查　只要一般牙科就好」。
+   那一句是對科別醫師那張講的，但**這張表跟著改是刻意的** ——
+   三格擺在同一個畫面上，一張縮、一張不縮就是同一科有兩個名字。
+   **這兩支的 DISP 要逐字相同。** */
+const DISP   = { "植牙・假牙重建": "假牙重建",
+                 "一般牙科・定期檢查": "一般牙科" };   /* 格子與圖例裡的全名 */
 const SHORT2 = { "植牙・假牙重建": "假牙" };       /* 色碼表那一欄的兩個字 */
 const disp = n => DISP[n] || n;
 const two  = n => SHORT2[n] || n.slice(0, 2);
@@ -65,10 +72,14 @@ const two  = n => SHORT2[n] || n.slice(0, 2);
    ⚠ 沒有選 r1c3：它和口腔外科的 r2c3 在小尺寸下只差 5.6%，是九顆裡最像的一對。 */
 const SHAPE = { general:"r1c1", perio:"r1c2", ortho:"r3c3", endo:"r3c1",
                 prosth:"r2c2", surg:"r2c3", kids:"r3c2" };
-const mark22 = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => [id,
+/* ⚠ 九顆全部讀進來（不是只讀用到的七顆）—— 這樣才換得動：`SHAPE` 只是
+   「哪一科用哪一顆」的對照表，臨時改一個字就能出一張換過形狀的圖。 */
+const ALLSH = ["r1c1","r1c2","r1c3","r2c1","r2c2","r2c3","r3c1","r3c2","r3c3"];
+const MK = Object.fromEntries(ALLSH.map(sh => [sh,
   fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${sh}.svg`), "utf8")
     .replace(/<svg([^>]*?)(width|height)="[\d.]+"/g, "<svg$1")
     .replace(/<svg/, '<svg class="mk"')]));
+const mark22 = new Proxy({}, { get: (_, id) => MK[SHAPE[id]] });
 
 /* 各形狀的長寬比：**從 viewBox 讀，不寫死**。
    ⚠⚠⚠ 2026-09-07 使用者：「齒顎矯正的 logo 細細的不太明顯，有其他可以換嗎。」
@@ -81,15 +92,17 @@ const mark22 = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => [id,
      那三顆**一顆都躲不掉**。換給誰只是把細的那一顆換一個科別（口外現在就是 227）。
    → 所以這一輪給的是**等重**那條路（同浮水印那一輪 22-13 的做法）：
      按墨面積算出每一顆自己的寬度，細長的放大、方的不動。 */
-const ASPECT = Object.fromEntries(Object.entries(SHAPE).map(([id, sh]) => {
+const AR = Object.fromEntries(ALLSH.map(sh => {
   const vb = fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${sh}.svg`), "utf8")
     .match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
   if (!vb) throw new Error(`shape-${sh}.svg 讀不到 viewBox`);
-  return [id, +vb[1] / +vb[2]];
+  return [sh, +vb[1] / +vb[2]];
 }));
-/* 墨面積開瀏覽器現量（measureInk），量到之前是 null ＝ 不加權 */
-let INKA = null;
-const wScale = (id, wgt) => !wgt || !INKA ? 1
+const ASPECT = new Proxy({}, { get: (_, id) => AR[SHAPE[id]] });
+/* 墨面積開瀏覽器現量（九顆都量），量到之前是 null ＝ 不加權 */
+let INK9 = null;
+const INKA = new Proxy({}, { get: (_, id) => INK9 && INK9[SHAPE[id]] });
+const wScale = (id, wgt) => !wgt || !INK9 ? 1
   : Math.pow(INKA.general / INKA[id], wgt === "half" ? .25 : .5);
 /* ⚠⚠⚠ 2026-09-07 使用者：「感覺間距要拉開一點，因為有矯正的診，
    logo 看起來和其他沒有矯正的時段沒對齊。」
@@ -165,18 +178,97 @@ const D = parse();
 const W = 1080, H = 1080;
 const BAND = Math.round(W * (409 / 823));        /* 大格看得到的列數 ＝ 537 */
 const TOP = (H - BAND) / 2, BOT = H - TOP;
-const MARK = fs.readFileSync(path.join(ROOT, "brand", "shapes", "mark.svg"), "utf8")
-  .replace(/<svg([^>]*)>/, '<svg$1 style="width:82px;height:auto;display:block">');
+/* ⚠⚠ 2026-09-07 使用者：「左上的大 logo 拿掉　直接寫芳仁牙醫開診時段。」
+   所以這張圖上**一顆大標誌都沒有** —— 品牌靠格子裡那些科別記號
+   （都是 brand/shapes 的形狀）與標題那幾個字。不要因為「圖上沒有 logo」自己加回去。
+   ⚠ 「看診時間」也一起換成**開診時段**（＝站上門診表那排標記第一顆用的字）。 */
+const TITLE = "芳仁牙醫開診時段";
+/* ⚠⚠ 2026-09-07 第三輪使用者：「這張照片可以一個大 logo 的淡色浮水印，
+   像之前 line 約診查詢的頁面那樣，顏色就用淡墨色。」
+   ＝ 約診卡那一輪（README 22-13）的做法：**一顆大的、淡的、從邊緣切出去**。
+   ⚠ 這裡用**站上頁首那一條**（mark.svg），不是九顆科別記號裡的任何一顆 ——
+   那九顆在格子裡各自有身分，拿其中一顆放大會讓人以為那一科比較重要。
+   ⚠ 顏色是墨 ＋ 很低的 opacity，**不新增任何顏色**。 */
+/* ⚠⚠⚠ 2026-09-09 起這顆浮水印**不是這一張圖自己的事**：使用者要三格拼成一顆完整的
+   標誌（「第一張是門診表 logo 要壓在下方」），所以形狀、大小、位置、濃度全部由
+   wm-triptych.mjs 算 —— 這一支不可以自己寫死，不然三張接不成一顆。
+   ⚠⚠ 而「壓在下方」在這一張上**不是畫布的下緣**：大格只看得到中間 537 列，
+   畫在 1080 的最底下等於畫在看不到的地方。圓心因此落在**可視段的下緣**（源圖 y≈812）。
+   形狀仍然是 2026-09-07 使用者挑的那一顆圓的（r3c1）。 */
+/* ⚠ 形狀跟著 wmFor 走 —— 臉書版是「一張一顆」那一組（門診表仍然是 r3c1）。 */
+const WMSH = wmFor("hours").shape;
+const WMARK = fs.readFileSync(path.join(ROOT, "brand", "shapes", `shape-${WMSH}.svg`), "utf8")
+  .replace(/<svg([^>]*?)(width|height)="[\d.]+"/g, "<svg$1")
+  .replace(/<svg/, '<svg class="wm"');
+/* 頁尾那顆話筒。素材出處：Lucide "phone"，ISC 授權，https://lucide.dev ——
+   這一行註解就是署名，改圖或搬檔的時候不要刪。
+   ⚠ 幾何直接從 index.html 頁首那顆讀回來，不抄第二份（同這一支其餘每一項資料）。 */
+const TELICO = (SRC.match(/<span class="ico"><svg viewBox="0 0 24 24"[^>]*>(<path d="M21\.5[^"]+"\/>)<\/svg><\/span>/) || [])[1];
+if (!TELICO) throw new Error("index.html 裡找不到話筒那條路徑（.c-tel 的 Lucide phone）");
+/* ⚠⚠ 2026-09-07 第二輪使用者：「電話移到國定假日那段文字下一行，電話 logo 改實心、
+   套墨色，電話號碼也套墨色，字級大小和國定假日那段文字一樣。」
+   所以頁尾現在是**兩行、都靠左、都 23px**：上行柔墨（那句話）、下行墨（話筒＋號碼）。 */
+const ICOPX = 21;   /* ＝ 站上那顆 11.33px 配 12.48px 的字，同比例放到 23px 的號碼旁 */
+const TELSVG = `<svg viewBox="0 0 24 24" aria-hidden="true">${TELICO}</svg>`;
+/* 這兩個是出圖前在瀏覽器裡現量的（見下面 telAlign），不寫死 */
+let TELDY = 0, ICODY = 0;
 const PHONE = (SRC.match(/05-\d{7}/) || [])[0];
 if (!PHONE) throw new Error("index.html 裡找不到電話（畫面上的寫法是 05-5339369）");
 
-const CSS = `
+/* 浮水印的四個數字（大小／往右切出去／離上緣／濃度）。
+   ⚠⚠ 第一版擺在右下角、切掉一半以上 —— 在 1080 見方上讀起來就是一團灰，
+   看不出是標誌。約診卡那一輪之所以那樣做，是因為那張卡只有 207px 寬；
+   這裡要的是「一個大 logo」，所以**只從右邊切掉一點點、其餘完整露出來**，
+   並且壓在表的後面（同約診卡：浮水印在字的後面，不是躲在空白處）。 */
+const WM = wmFor("hours"), WMW = WM.w, WMA = WM.opacity;
+/* 版心的左右內距（裝置 px，放大時自己換算）與整體放大倍率 */
+/* ⚠⚠ 2026-09-07 使用者：「二三四五的科別感覺擠在一起了。」——放大之後每一天的欄
+   只剩 154.6，兩顆等寬格就吃掉 133，**同一格與跨一天的距離差不到 1.3 倍**，
+   眼睛因此分不出哪幾顆是同一天的。左右內距 44 → 32、時段那一欄 158 → 152，
+   把省下來的 34 全部讓給五天的欄。 */
+const PAD = 32, LAB = 152;
+
+/* ⚠⚠ 定稿那一張要「拿得出去」，所以它的檔名不是產生器的流水號（2026-09-08 補，
+ *   使用者：「定稿的門診表匯出讓我放在 line 商家帳號 貼圖」）。
+ *   那把尺的代號（s130w ＝ 1.30 ＋ 標籤斷行）只有我們看得懂，而他要的是一個
+ *   **存到手機、傳給別人、貼進後台**都認得出來的名字。
+ *   ⚠ 只有定稿那一張換名字，其餘的候選維持流水號 —— 名字乾淨的只該有一個，
+ *   兩個乾淨的名字並排就等於沒有指出哪一張是定稿。
+ *   ⚠⚠ 這是**改名不是另存一份**：另存的話舊檔會變成孤兒（check 第 ④ 道會擋），
+ *   而且日後一定有人會拿到舊的那一份。 */
+const FINAL = "s130w";
+const FINAL_FILE = "fangren-hours-1080.png";
+const fileOf = (tag) => tag === FINAL ? FINAL_FILE : `post-hours-${tag}.png`;
+/* 早午晚與時間**斷成兩行**時的欄寬：一行要 148.7，兩行只要放得下時間那一段
+   （量到 113.1）＋ th 的右內距 8 → 124 還有 3 的餘裕 */
+const LAB2 = 124;
+let S = 1;
+/* 標題底下要多墊多少（版心的單位）——見下面 fitScale 那一段，量出來才填 */
+let EX = 0;
+const css = () => `
 *{box-sizing:border-box;margin:0}
 html,body{width:${W}px;height:${H}px}
 body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
      font-family:"Noto Sans TC","WenQuanYi Zen Hei",sans-serif}
-.sheet{width:${W}px;height:${H}px;display:flex;flex-direction:column;justify-content:center}
-.band{padding:0 74px}
+.sheet{width:${W}px;height:${H}px;display:flex;flex-direction:column;justify-content:center;
+       position:relative;overflow:hidden}
+/* 浮水印：騎在三格的十字縫上（見 wm-triptych.mjs），壓在所有東西後面 */
+svg.wm{position:absolute;${WM.css};color:${INK};opacity:${WMA};z-index:0}
+.band{position:relative;z-index:1}
+/* ⚠⚠⚠ 2026-09-07 使用者：「整個表的邊界抓的太小，周圍還有很多空間，把邊界縮小，
+   好處是文字、圖案可以放大，這樣辨識度比較好。」
+   ・**左右**是免費的：內距 74 → 44px，版心 932 → 992（表跟著變寬）。
+   ・**上下不是** —— 空的那兩塊正是「主頁大格只看得到中間 537 列」留的餘裕
+     （見上面 BAND 那一段）。整體放大 ＝ 內容變高 ＝ 大格會從上下切掉東西。
+   所以放大做成一把尺，每一格都算出「大格會切掉什麼」讓他挑。
+   ⚠⚠ 放大是用 CSS 的 zoom 做的：版心寫成 1080 除以 S、再乘回來，
+   **裡面每一個 px 都跟著長**（字級、圖案、內距、圓角一次到位），不必一個一個改。
+   ⚠ zoom 會一併縮放 getBoundingClientRect，所以量出來的仍然是裝置 px，
+   下面每一道守門都不必改寫。
+   ⚠⚠⚠ 這一段註解本來寫了幾個反引號（想標出變數名），整支腳本就在這裡語法錯誤 ——
+   **這一整塊是 JS 的模板字串，CSS 註解裡不可以出現反引號**（第九節第 8 條的近親，
+   這條線上已經是第四次踩到）。要標變數名就用中文引號。 */
+.band{padding:0 ${(PAD / S).toFixed(2)}px;width:${(W / S).toFixed(2)}px;zoom:${S}}
 .band.s18{--ics:18px}
 .band.s20{--ics:20px}
 .band.s22{--ics:22px}
@@ -184,22 +276,50 @@ body{background:${CARD};color:${INK};-webkit-font-smoothing:antialiased;
 .band.s30{--ics:30px}
 .band.s16{--ics:16px}
 .band.s14{--ics:14px}
-.id{display:flex;align-items:center;gap:16px;padding-bottom:18px}
-.id svg{color:${DEEP.general}}
+.id{padding-bottom:${(12 + EX).toFixed(2)}px}
 .id b{font-size:31px;font-weight:700;letter-spacing:.05em}
-.id em{font-style:normal;font-size:31px;color:${SOFT};margin-left:auto;letter-spacing:.14em}
 .rule{height:1px;background:${RULE}}
-.tel{display:flex;align-items:baseline;gap:16px;padding-top:18px;
-     font-size:23px;color:${SOFT};letter-spacing:.02em}
-.tel b{font-size:31px;font-weight:400;color:${DEEP.general};margin-left:auto;letter-spacing:.03em}
+/* ⚠⚠⚠ 2026-09-07 使用者：「最下面的電話和國定假日那段文字對齊。」
+   基線對齊（原本那樣）**不等於看起來對齊** —— 兩邊字級不一樣（23 vs 31），
+   而中文的字面中線在基線上方約 0.345em、阿拉伯數字是 capHeight 的一半，
+   兩者離基線的距離差了好幾 px，而眼睛讀的是**字面中線**不是基線（第九節第 9 條）。
+   所以 --tel-dy 是量出來的：把號碼整組往下推到「兩邊的字面中線同一條」。
+   ⚠ 那個值不寫死，每次出圖現量（字級一改自己跟著對）。
+   ⚠⚠ .no 刻意**不是** flex 容器 —— 裡面第一個是 svg，flex 容器的基線會取第一個
+      項目的下緣，整條 .tel 的 baseline 對齊會壞掉。話筒用 inline-block 走文字流。 */
+.tel{padding-top:10px;font-size:23px;color:${SOFT};letter-spacing:.02em;line-height:1.5}
+.tel .no{color:${INK};white-space:nowrap}
+/* 實心：fill 吃 currentColor、不描邊（站上那顆是空心的，這裡刻意不一樣） */
+.tel .no svg{width:${ICOPX}px;height:${ICOPX}px;display:inline-block;
+             margin-right:9px;transform:translateY(var(--ico-dy,0px));
+             fill:currentColor;stroke:none}
 
 /* 格子 */
 table{width:100%;border-collapse:collapse;table-layout:fixed}
-col.lab{width:176px}
-thead th{font-size:27px;font-weight:400;color:${SOFT};padding:11px 0 7px;letter-spacing:.1em}
-tbody td{text-align:center;vertical-align:middle;padding:8px 4px}
-tbody th{text-align:left;padding:8px 8px 8px 0;font-weight:400;line-height:1.2}
-tbody th b{display:block;font-size:26px;font-weight:400;letter-spacing:.1em}
+/* ⚠ 時段那一欄量到 148.7（版心的單位），原本給 176 ＝ 白白吃掉 27。
+   收到 158 之後那 27 全部讓給五天的欄，也就是「放大」那把尺的天花板往上抬。 */
+col.lab{width:var(--lab, ${LAB}px)}
+thead th{font-size:27px;font-weight:400;color:${SOFT};padding:8px 0 6px;letter-spacing:.1em}
+/* ⚠⚠ 2026-09-07 第三輪使用者：「早午晚的間隔可以再拉開一點，
+   禮拜三的診看起來特別緊密。」——禮拜三是唯一兩節都排成 2＋2 的一欄，
+   所以列與列之間本來就最擠。上下內距 8 → 13px（列距 16 → 26）。
+   ⚠⚠ 這 42px 是**從別的地方挪來的**，不是憑空多出來：安全帶只剩 9px 餘裕，
+   所以標題下 18→14、表頭 11/7→8/6、圖例上 26→20、頁尾上 16→12
+   各收一點（合計 19px）。**改任何一個數字之前先看還剩多少餘裕。** */
+tbody td{text-align:center;vertical-align:middle;padding:var(--rowpad,13px) 4px}
+/* 2026-09-07 使用者：「早午晚跟時間不用斷行　空間還很夠用。」
+   ⚠ 那一欄 176px，收起來之後量到約 129px —— 出圖時有一道守門在確認它沒有被折行。 */
+/* ⚠ 置中要下在 th 上、不是下在那個 <b> 上 —— 下在 b 上只有它自己置中，
+   而它的盒比底下那段時間寬 2.9px，兩者的中線就對不齊（實測偏 1.92px）。
+   下在 th 上，兩行在**同一個盒**裡置中，中線自動一致。 */
+tbody th{text-align:var(--labta, left);padding:var(--rowpad,13px) 8px var(--rowpad,13px) 0;
+         font-weight:400;line-height:1.2;white-space:nowrap}
+/* ⚠ 2026-09-07 使用者：「這樣早午晚和時間就有空間斷行了，做做看。」
+   → 斷行版把 --labd 切成 block、--labgap 收成 0，欄寬也跟著收
+   （一行要 148.7，兩行只要放得下時間那一段 ≈ 113）。逐案給，不動其他張。 */
+tbody th b{font-size:26px;font-weight:400;
+           letter-spacing:var(--labls, .1em);
+           display:var(--labd, inline);margin-right:var(--labgap, 7px)}
 tbody th i{font-style:normal;font-size:19px;color:${SOFT}}
 tbody tr + tr th, tbody tr + tr td{border-top:1px solid ${RULE}}
 .nm{font-size:23px;line-height:1.34;letter-spacing:.02em}
@@ -223,9 +343,19 @@ svg.mk{width:100%;height:100%;display:block}
 .ic-row.col{gap:5px}
 
 
-.lg{padding-top:30px}
-.lg-row{display:flex;align-items:center;justify-content:center;gap:26px}
-.lg-row + .lg-row{margin-top:10px}
+/* ⚠⚠⚠ 2026-09-07 第二輪使用者：「各科別 logo 和文字說明那邊，每個科別再拉開一點，
+   上下兩行對齊（現在是分別置中）。」
+   ・原本是兩條各自 justify-content:center 的 flex —— **兩行各自置中，所以欄對不上**。
+   ・改成一個四欄的 grid（整塊置中、欄自己對齊），第二行的三個自然落在前三欄底下。
+   ・⚠ 七個科別名剛好都是四個字，所以四欄同寬；圖案再套上**和格子裡同一組等寬格**
+     （slotOf），文字的起點才會跟著對齊 —— 只對齊外框、圖案寬度不一樣的話，
+     字還是會各自參差。
+   ・間距 26 → 40px。 */
+/* ⚠⚠ 2026-09-07 使用者：「科別說明和門診表的間隔拉開一點。」16 → 26px。
+   ⚠ 這一格是有代價的：它算在「中間那一塊」裡，而放大倍率 ＝ 537 ÷ 中間那一塊，
+   所以**這裡每多 1px，能放大的倍率就少一點**（16 → 26 讓 S 從 1.387 掉到 1.352）。 */
+.lg{padding-top:26px;display:grid;grid-template-columns:repeat(4,max-content);
+    column-gap:40px;row-gap:8px;width:max-content;margin-inline:auto}
 .lg-i{display:flex;align-items:center;gap:9px;font-size:23px;color:${INK};letter-spacing:.02em}
 .ic.sm{width:24px;height:24px}
 
@@ -240,13 +370,20 @@ svg.mk{width:100%;height:100%;display:block}
 .g b{font-weight:400;color:${SOFT};margin-right:8px;letter-spacing:.02em}
 `;
 
-const shell = (inner, cls = "", gap = null) => `<div class="sheet"><div class="band ${cls}"${
-  gap ? ` style="--icgx:${gap[0]}px;--icgy:${gap[1]}px"` : ""}>
-  <div class="id">${MARK}<b>芳仁牙醫診所</b><em>看診時間</em></div>
+/* gap ＝ [同一格橫向, 同一格行距, 早午晚的列距（選填，預設 13）] */
+const shell = (inner, cls = "", gap = null) => `<div class="sheet">${WMARK}<div class="band ${cls}"${
+  gap ? ` style="--icgx:${gap[0]}px;--icgy:${gap[1]}px${
+    gap[2] ? `;--rowpad:${gap[2]}px` : ""}${
+    /* ⚠ 2026-09-07 使用者：「早 午 晚 的字現在是置左要置中。」
+       ⚠⚠ 順帶要把字距歸零 —— 那一行只有一個字，`.1em` 的字距全部加在**字的後面**，
+          置中時那段空白會被算進去，字看起來就偏左 1.3px。 */
+    gap[3] ? `;--labd:block;--labgap:0px;--lab:${LAB2}px;--labta:center;--labls:0` : ""}"` : ""}>
+  <div class="id"><b>${TITLE}</b></div>
   <div class="rule"></div>
   ${inner}
   <div class="rule"></div>
-  <div class="tel">${D.note.replace(/。$/, "")}<b>${PHONE}</b></div>
+  <div class="tel" style="--ico-dy:${ICODY.toFixed(2)}px"><div>${
+    D.note.replace(/。$/, "")}</div><div class="no">${TELSVG}${PHONE}</div></div>
 </div></div>`;
 
 /* Ⓖ 格子：日子當欄、早午晚當列，格子裡直接寫科別。
@@ -290,15 +427,59 @@ const lines = (c, mode) =>
   : [c];                                               /* 橫排一列 */
 const chunk = (a, n) => a.length ? [a.slice(0, n), ...chunk(a.slice(n), n)] : [];
 
+/* ⚠⚠⚠ 守門：一格裡「哪個科別排前面」現在是看得見的東西（2026-09-08 補）。
+ *   起因是使用者：「不同的 logo 一開始非常凌亂，後來被我指定位置才舒服很多，
+ *   這個你們一開始也應該要注意到的。」他是對的，而且成因比「沒注意到」具體：
+ *
+ *   ⚠⚠ **順序是從 index.html 的 `data-in` 讀回來的，而那份資料裡順序沒有畫面**
+ *   —— 站上那張門診表一格只畫**一顆點**（有診／沒診），七個科別誰寫在前面
+ *   完全看不出來，所以那串字的順序這四十幾天來是**任意的**。
+ *   這張貼文圖一格要畫二到四顆圖案，**同一份資料換了媒介，順序突然變成資訊**，
+ *   而我把它原封不動照搬，等於讓一個從來沒有人決定過的東西決定版面。
+ *
+ *   ⚠⚠⚠ 通則（已進 CLAUDE.md 第九節第 28 條第 ⑤ 項）：
+ *   **一份資料搬到新的媒介時，要逐項問「原本沒有意義的性質，在這裡有沒有變成
+ *   看得見的東西」** —— 順序、間距、大小寫、檔名、寫的先後，都可能突然開始說話。
+ *   有的話那就是一個**還沒有人決定過的設計項**，要當成設計項處理（給尺、問使用者），
+ *   不可以沿用資料裡碰巧的那一份。
+ *
+ *   兩道，都只擋「讀起來會亂」的那一種，不是強制一個全域順序：
+ *   ① **同一行出現過的兩科，順序要一致** —— 掃到同一對在不同格裡左右對調就 throw。
+ *      ⚠⚠ **不可以改成全域的拓樸排序** ——「四早」是 general・perio 同一行，
+ *      而「五午／五晚」是 perio 自己第一行、general 在第二行，**那是刻意的**
+ *      （第一行只放一個時放最常態的那一科）。跨行比對會誤報。
+ *   ② **斷成兩行時，第一行要由「天天都有的那一科」帶頭**（general 或 perio）——
+ *      眼睛往下掃的時候有一根固定的軸，其餘的科才不會看起來在跳。
+ */
+const ANCHOR = new Set(["general", "perio"]);
+function checkOrder() {
+  const seen = new Map(), bad = [];
+  for (const r of D.rows) r.cells.forEach((c, ci) => {
+    if (!c.length) return;
+    const where = D.days[ci] + r.part, ls = lines(c, "i2x2");
+    for (const ln of ls) for (let i = 0; i < ln.length; i++) for (let j = i + 1; j < ln.length; j++) {
+      const [a, b] = [ln[i], ln[j]], rev = seen.get(`${b}|${a}`);
+      if (rev) bad.push(`${where} 的「${a}→${b}」和 ${rev} 的「${b}→${a}」左右相反`);
+      else if (!seen.has(`${a}|${b}`)) seen.set(`${a}|${b}`, where);
+    }
+    if (ls.length > 1 && !ANCHOR.has(ls[0][0]))
+      bad.push(`${where} 斷兩行，但第一行由「${ls[0][0]}」帶頭（要 general 或 perio）`);
+  });
+  if (bad.length) throw new Error("圖案的順序讀起來會亂：\n  ・" + bad.join("\n  ・")
+    + "\n  順序的出處是 index.html 的 data-in，改那裡（站上那張表看不出差別）");
+}
+checkOrder();
+
 /* 圖例：logo 套色 ＋ 科別名用墨（使用者 2026-09-07 指定）。
  * ⚠⚠ 格子裡只剩圖案的話，第一次看的人**一定要對照這一排** ——
  *   所以它不是裝飾，是那張表讀不讀得懂的前提，不可以為了省高度砍掉。
  * ⚠ 排成 4 ＋ 3 兩行（七個一行放不下），刻意不讓它自己 wrap ——
  *   自己 wrap 會斷成 6＋1（招呼卡那一輪的圖例踩過）。 */
-const legend = (k = 1, flat = false, pal = null, wgt = null) => `<div class="lg">${[D.specs.slice(0, 4), D.specs.slice(4)]
-  .map(g => `<div class="lg-row">${g.map(sp =>
-    `<span class="lg-i"><span class="ic sm" style="${icSize(sp.id, 24, wgt)}color:${tone(sp.id, k, flat, pal)}">${mark22[sp.id]}</span>`
-    + `${disp(sp.name)}</span>`).join("")}</div>`).join("")}</div>`;
+const legend = (k = 1, flat = false, pal = null, wgt = null) => `<div class="lg">${
+  D.specs.map(sp =>
+    `<span class="lg-i"><span class="ic sm" style="${
+      icSize(sp.id, 24, wgt, wgt ? slotOf(24, wgt) : 0)}color:${tone(sp.id, k, flat, pal)}">${
+      mark22[sp.id]}</span>${disp(sp.name)}</span>`).join("")}</div>`;
 
 /* Ⓛ 一科一行：照「早／午／晚」各列出哪幾天 */
 const byPart = (id) => D.rows.map(r => ({
@@ -418,6 +599,16 @@ for (const [pal, tbl] of Object.entries(BRAND))
   for (const [id, c] of Object.entries(tbl))
     icon.push([`${pal}／${D.specs.find(s2 => s2.id === id).name}`, ratio(c, CARD)]);
 const iconBad = icon.filter(([, r]) => r < 3);
+/* ⚠⚠⚠ 浮水印壓在表的後面，所以那一塊的底色不是卡色，是「卡色疊上 ${WMA} 的墨」。
+   落在浮水印上的字與圖案要用**那個底**重算一次：字仍然要 4.5、圖案仍然要 3。
+   ⚠ 圖案會從 4.50 掉到 4 出頭 —— 那是**裝飾性圖形的門檻 3:1**，不是 AA 文字門檻
+   （同 iPad 那顆「往下滑」指標）。要它們維持 4.5 就得把浮水印調到幾乎看不見。 */
+const WMBG = rgb2hex(hex2rgb(CARD).map((v, i) => v * (1 - WMA) + hex2rgb(INK)[i] * WMA));
+const wmText = [["墨", ratio(INK, WMBG)], ["柔墨", ratio(SOFT, WMBG)]];
+const wmIcon = D.specs.map(s2 => [disp(s2.name), ratio(DEEP[s2.id], WMBG)]);
+const wmBad = [...wmText.filter(([, r]) => r < 4.5), ...wmIcon.filter(([, r]) => r < 3)];
+if (wmBad.length) throw new Error("壓在浮水印上過不了："
+  + wmBad.map(([n, r]) => `${n} ${r.toFixed(2)}`).join("、"));
 if (iconBad.length) throw new Error("圖案對底不到 3:1："
   + iconBad.map(([n,r]) => `${n} ${r.toFixed(2)}`).join("、"));
 
@@ -449,7 +640,7 @@ const made = [];
  */
 /* ⚠⚠ 墨面積現量、不寫死：把每一顆畫進 canvas 數暗像素（4 倍取樣再除回去）。
    同浮水印那一輪 22-13 —— 長寬比不同的形狀同寬就不同重。 */
-INKA = await page.evaluate(async (list) => {
+INK9 = await page.evaluate(async (list) => {
   const out = {}, S = 120;
   for (const [id, svg, ar] of list) {
     const img = new Image();
@@ -467,29 +658,96 @@ INKA = await page.evaluate(async (list) => {
     out[id] = ink / (S / 30) ** 2;
   }
   return out;
-}, Object.keys(SHAPE).map(id => [id,
-  /* ⚠ mark22 那條 /g 的正規式只吃掉了 width（第一次比對就把 <svg 用掉了），
+}, ALLSH.map(sh => [sh,
+  /* ⚠ MK 那條 /g 的正規式只吃掉了 width（第一次比對就把 <svg 用掉了），
      height 還留著 —— 注進 width/height 會變成重複屬性、整個 SVG 解不開
      （症狀是 canvas 丟 EncodingError）。這裡再剝一次。 */
-  mark22[id].replace(/\s(width|height)="[\d.]+"/g, ""), ASPECT[id]]));
-if (Object.values(INKA).some(v => !(v > 50)))
-  throw new Error("墨面積量出來不對：" + JSON.stringify(INKA));
+  MK[sh].replace(/\s(width|height)="[\d.]+"/g, ""), AR[sh]]));
+if (Object.values(INK9).some(v => !(v > 50)))
+  throw new Error("墨面積量出來不對：" + JSON.stringify(INK9));
 console.log("\n── 每一顆在 30px 方框裡的墨面積（等重要放多大）──");
 for (const id of Object.keys(SHAPE).sort((a, b) => INKA[b] - INKA[a]))
   console.log(`  ${SHAPE[id]}  ${disp(D.specs.find(s2 => s2.id === id).name).padEnd(6, "　")}`
     + `${INKA[id].toFixed(0).padStart(4)} px　${(INKA[id] / INKA.general * 100).toFixed(0).padStart(3)}%`
     + `　等重要 ${(30 * wScale(id, "even")).toFixed(0)}px（半 ${(30 * wScale(id, "half")).toFixed(0)}px）`);
 
+/* ⚠⚠⚠ 頁尾兩塊字的「字面中線」現量一次（第九節第 9 條）。
+ *   ・號碼往下推多少 ＝ 號碼的字面中線離基線多高 − 那句話的
+ *   ・話筒往下推多少 ＝ 它自己的盒心（inline-block 的下緣坐在基線上 → 盒心在基線上方
+ *     ICOPX/2）− 號碼的字面中線
+ * ⚠ 要在 400px 上量再等比例縮 —— Blink 回來的 actualBoundingBox 以 1/64 em 為階，
+ *   直接在 23／31px 上量會被進位吃掉（同 spec-tag-fit 那一輪）。 */
+const telAlign = await page.evaluate(({ font, phone, ico, fsTel }) => {
+  const cx = document.createElement("canvas").getContext("2d");
+  const S = 400;
+  const mid = (txt) => { cx.font = `${S}px ${font}`; const m = cx.measureText(txt);
+    return (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2 / S; };
+  const p = mid(phone) * fsTel;
+  return { telMid: p, icoDy: ico / 2 - p };
+}, { font: '"Noto Sans TC","WenQuanYi Zen Hei",sans-serif',
+     phone: PHONE, ico: ICOPX, fsTel: 23 });
+ICODY = telAlign.icoDy;
+console.log(`\n── 頁尾：話筒對號碼的字面中線 ──`);
+console.log(`  號碼 23px 的字面中線離基線 ${telAlign.telMid.toFixed(2)}px`
+  + `　話筒盒心 ${(ICOPX / 2).toFixed(2)}px　→ 話筒往下 ${ICODY.toFixed(2)}px`);
+
 const measure = async (mode, px) => {
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${grid(mode, px)}`);
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css()}</style>${grid(mode, px)}`);
   const b = await page.locator(".band").boundingBox();
   return { px, h: b.height, over: Math.max(0, Math.round(b.height - BAND)) };
 };
 const COL = 26, W2 = 30;
 /* 圖案之間要多鬆（橫向 / 行距）。第一格 ＝ 2026-09-07 之前的值 */
 /* 三格間距 ＋ 要不要等寬格。第一格 ＝ 2026-09-07 之前的值（不等寬、11px） */
+const ALTP = [["alt-r2c1", "r2c1"], ["alt-r1c3", "r1c3"]];
+const OVERSIZE = new Set(["icol", "mix-half-a16", "mix-half-a22"]);
+/* 整體放大：Ⓢ1 ＝ 現況（收得進安全帶），其餘三格用掉上下的空白 */
+/* ⚠⚠⚠ 這把尺有一個算得出來的天花板，而且不是垂直方向 ——
+   整張圖固定 1080 寬，一格最多要放兩顆等寬格（2×42.5 ＋ 間距 11 ＝ 96），
+   加上時段那一欄 158，總共 638；版心可用寬 ＝ (1080 − 2×44) / S ＝ 992 / S。
+   所以 **S ≤ 992 / (158 + 5×104) ≈ 1.42**（每格留 8 的餘裕）——
+   再大就會撞到格子的牆，不是撞到安全帶。 */
+/* ⚠⚠⚠ 放大不是隨便挑一個倍率 —— 主頁大格看得到的是**正中央那 537 列**，
+   上下切掉的量一樣多，所以「切得乾不乾淨」是算得出來的：
+   ・讓**中間那一塊**（日子的表頭 ＋ 表 ＋ 圖例）正好等於 537 列
+     → S ＝ 537 ÷ 中間那一塊在 1× 時的高度。
+   ・再讓**上面那一塊（標題）和下面那一塊（頁尾）一樣高**（標題底下多墊 EX ＝ 頁尾高 − 標題高），
+     兩邊的切口就會**正好落在那兩條分隔線上** —— 大格看到的是完整的表，
+     沒有半截的字。
+   ⚠ 天花板不是安全帶，是**格子的牆**：一格最多放兩顆等寬格，
+     S ≤ (1080 − 2×44) ÷ (158 + 5×(2×42.5 + 11 + 8))。算出來超過就夾住。 */
+let SCALES = [];
 const GAPS = [["mix-half", 11, 9, false], ["mix-half-a11", 11, 9, true],
               ["mix-half-a16", 16, 12, true], ["mix-half-a22", 22, 15, true]];
+/* ---------- 放大倍率：量一次 1× 的三塊高度，再解出來 ---------- */
+{
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css()}</style>${
+    grid("i2x2", W2, 1, false, "mix", "half", [11, 9], true)}`);
+  const m = await page.evaluate(() => {
+    const q = (s2) => document.querySelector(s2).getBoundingClientRect().height;
+    return { all: q(".band"), top: q(".id"), bot: q(".tel") };
+  });
+  const mid = m.all - m.top - m.bot;
+  const want = BAND / mid;
+  const smax = (W - 2 * PAD) / (LAB + 5 * (2 * slotOf(30, "half") + 11 + 8));
+  const fit = Math.min(want, smax);
+  /* ⚠ 2026-09-07 使用者：「做幾個版本，介於現在放大 1.387 和 1 之間的。」
+     三格中間值 ＋ 那個算出來的上限，四張都套同一個 EX（標題底下多墊的那一段），
+     所以四張的差別**只有倍率**，比得出來。 */
+  const ex = +(m.bot - m.top).toFixed(2);
+  /* ⚠ 2026-09-07 使用者：「把 1.3 早午晚的間隔再拉開一點點。」
+     只有那一格的 --rowpad 從 13 換成 16（畫出來 20.8 裝置 px，列距 33.8 → 41.6）；
+     其餘每一格都還是 13，所以「只差倍率」那句話對其餘四張仍然成立。 */
+  SCALES = [["s110", 1.10, ex], ["s120", 1.20, ex], ["s125", 1.25, ex],
+            ["s130", 1.30, ex, 16], ["s130w", 1.30, ex, 16, true],
+            ["fit", +fit.toFixed(3), ex]];
+  console.log(`\n── 放大倍率（算出來的，不是挑的）──`);
+  console.log(`  1× 的三塊：標題 ${m.top.toFixed(1)}　中間 ${mid.toFixed(1)}　頁尾 ${m.bot.toFixed(1)}`);
+  console.log(`  中間那塊要填滿安全帶 ${BAND} → S ${want.toFixed(3)}`
+    + `　格子的牆 → S ≤ ${smax.toFixed(3)}　→ 取 ${fit.toFixed(3)}`);
+  console.log(`  標題底下多墊 ${(m.bot - m.top).toFixed(1)}（＝頁尾高 − 標題高），`
+    + `兩邊的切口才會落在分隔線上`);
+}
 const mCol = await measure("icol", COL), mW2 = await measure("i2x2", W2);
 console.log(`\n── 三種排法（安全帶 ${BAND} 列）──`);
 console.log(`  橫排一列 30px　高 ${(await measure("icon", 30)).h.toFixed(0)}　收得進`);
@@ -499,7 +757,7 @@ console.log(`  直排 ${COL}px　　高 ${mCol.h.toFixed(0)}　${mCol.over ? "�
 if (mW2.over) throw new Error(`一行兩個 ${W2}px 收不進安全帶，超出 ${mW2.over}`);
 
 /* 排法一律用建議的「一行兩個」，這一輪只比顏色 */
-for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2)],
+for (const [tag, html, sc, ex] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2)],
                            ["c65",  grid("i2x2", W2, .65)],
                            ["cflat", grid("i2x2", W2, 1, true)],
                            ["cboth", grid("i2x2", W2, .65, true)],
@@ -515,14 +773,41 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
                               間距拉開治的是「讀不讀得出是幾顆」，對齊要另外處理（見下面 GAPS）。 */
                            ...GAPS.map(([tag, gx, gy, slot]) =>
                              [tag, grid("i2x2", W2, 1, false, "mix", "half", [gx, gy], slot)]),
+                           /* ⚠⚠⚠ 2026-09-07 第二輪使用者：「午診的假牙 logo 底部被切到了。」
+                              量過**沒有被裁**（見下面那道守門與規格頁上的數字）——
+                              r2c2 的下緣本來就是往上凹的，而它是七顆裡最矮的一顆
+                              （墨 31×23，別人 30×30），所以讀起來像被切掉。
+                              真的要治只能換形狀，而九顆裡沒用到的只剩兩顆，兩顆各有前科：
+                              r2c1 ＝ 上一輪被退回的那顆「哭哭」、r1c3 ＝ 和口外只差 5.6%。
+                              兩張都出出來讓他自己看。 */
+                           /* ⚠⚠⚠ 2026-09-07 第五輪：整體放大那把尺。
+                              同一份版面、同一組參數，只有 zoom 不一樣 —— 每一格
+                              的代價（主頁大格會從上下切掉多少）印在下面的表裡。 */
+                           /* ⚠⚠⚠ 同一格裡的間距 11 → 8（畫出來 11.1 裝置 px ＝ 他在 1× 時
+                              挑的那一格逐字相同），跨一天的距離因此從 30.2 拉到 49.4。
+                              **兩件事是互相搶同一塊寬度的**：整張圖固定 1080 寬，
+                              同一格鬆一分，跨格就緊一分。 */
+                           ...SCALES.map(([tag, sc, ex, rp, w2]) =>
+                             [tag, grid("i2x2", W2, 1, false, "mix", "half", [8, 9, rp, w2], true), sc, ex]),
+                           ...ALTP.map(([tag, sh]) => {
+                             const old = SHAPE.prosth; SHAPE.prosth = sh;
+                             const html = grid("i2x2", W2, 1, false, "mix", "half", [11, 9], true);
+                             SHAPE.prosth = old; return [tag, html];
+                           }),
                           ]) {
-  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${CSS}</style>${html}`);
+  S = sc || 1; EX = ex || 0;
+  await page.setContent(`<!doctype html><meta charset="utf-8"><style>${css()}</style>${html}`);
   /* ⚠⚠ 這一版存在的理由就是「乾淨 ＋ 大格看得到全部」，所以那件事要用量的。
      整塊內容一定要落在安全帶裡（大格只看得到 y ${TOP}~${BOT}）。 */
   const b = await page.locator(".band").boundingBox();
   if (b.y < TOP - .5 || b.y + b.height > BOT + .5) {
     /* ⚠ icol 是刻意超出的那一案（它存在的意義就是讓人看見這個代價），其餘一律擋下來 */
-    if (tag !== "icol")
+    /* ⚠ 刻意放行的三種：直排那一案（它存在的意義就是讓人看見代價）、
+       放大那把尺（sc 有值），以及**間距 16／22 那兩張保留的舊圖** ——
+       2026-09-07 把圖例往下推 10px 之後，那兩格在 1× 也收不進安全帶了
+       （a22 超出 2.6px）。它們是已經結案的那把尺的紀錄、不是還能挑的選項，
+       所以留著看、不擋出圖。 */
+    if (!OVERSIZE.has(tag) && !sc)
       throw new Error(`${tag} 的內容是 ${b.y.toFixed(1)}~${(b.y + b.height).toFixed(1)}，`
         + `超出大格看得到的 ${TOP}~${BOT}`);
   }
@@ -531,13 +816,111 @@ for (const [tag, html] of [["icol", grid("icol", COL)], ["i2x2", grid("i2x2", W2
     .filter(el => el.getBoundingClientRect().width
       > el.closest("td").getBoundingClientRect().width - 8).length);
   if (wide) throw new Error(`${tag} 有 ${wide} 列圖案撐破格子`);
+  /* ⚠ 早午晚與時間收成一行之後，那一欄不可以被折 —— 折了不報錯，只是靜靜地變兩行
+     （而「空間夠不夠」正是使用者這一項的前提）。兩件一起驗：沒有橫向溢位，
+     而且 <b> 與 <i> 落在同一條線上。 */
+  const lab = await page.evaluate(() => {
+    const ths = [...document.querySelectorAll("tbody th")];
+    const bad = ths.filter(th => th.scrollWidth > th.clientWidth + .5
+      /* ⚠ 不可以比 top —— 26px 與 19px 兩個行內盒同一條基線、top 本來就不一樣。
+         同一行的判準是「時間在早午晚的右邊」，折行的話它會掉到下一行的行首。
+         ⚠ 刻意斷成兩行的那一張（--labd: block）跳過這一條，只驗有沒有橫向溢位。 */
+      || (getComputedStyle(th.querySelector("b")).display !== "block"
+          && th.querySelector("i").getBoundingClientRect().left
+             < th.querySelector("b").getBoundingClientRect().right - .5)).length;
+    const w = Math.max(...ths.map(th => {
+      const b = th.querySelector("b").getBoundingClientRect();
+      const i = th.querySelector("i").getBoundingClientRect();
+      return i.right - b.left;
+    }));
+    /* 斷行那一版：早／午／晚要對準底下那一段時間的中線（量墨不量盒） */
+    let off = null;
+    const th0 = ths[0], b0 = th0.querySelector("b");
+    if (getComputedStyle(b0).display === "block") {
+      const rng = document.createRange();
+      const mid = (el) => { rng.selectNodeContents(el);
+        const r = rng.getBoundingClientRect(); return r.left + r.width / 2; };
+      off = Math.max(...ths.map(th =>
+        Math.abs(mid(th.querySelector("b")) - mid(th.querySelector("i")))));
+    }
+    return { bad, w, off };
+  });
+  if (lab.bad) throw new Error(`${tag} 有 ${lab.bad} 個時段標籤被折行`);
+  if (lab.off !== null && lab.off > 1.5)
+    throw new Error(`${tag} 的早／午／晚沒有對準時間的中線：偏 ${lab.off.toFixed(2)}px`);
+  /* ⚠ 「圖案被切到」這件事要量：每一顆畫出來的盒都要塞得進它自己的格子。
+     （`.ic` 沒有 overflow:hidden，所以就算超出也不會真的被裁 —— 這道守門是
+      為了把「看起來像被切」和「真的被切」分開，下次再有人回報就有數字可以答。） */
+  const clip = await page.evaluate(() => [...document.querySelectorAll(".ic")].map(el => {
+    const g = el.querySelector("svg").getBoundingClientRect(), b = el.getBoundingClientRect();
+    return g.width > b.width + .5 || g.height > b.height + .5;
+  }).filter(Boolean).length);
+  if (clip) throw new Error(`${tag} 有 ${clip} 顆圖案比它自己的格子大`);
+  /* ⚠ 浮水印是**刻意**切出去的（`.sheet` 有 overflow:hidden，切掉的部分不會真的畫出來），
+     所以它與它的路徑要從這道溢出檢查裡排除，不然每一張都會被擋下來。 */
   const over = await page.evaluate(() => [...document.querySelectorAll(".sheet *")]
+    .filter(el => !el.closest("svg.wm"))
     .filter(el => { const r = el.getBoundingClientRect();
       return r.width && (r.right > 1080.5 || r.left < -.5); }).length);
   if (over) throw new Error(`${tag} 有 ${over} 個元素溢出`);
-  await page.screenshot({ path: path.join(OUT, `post-hours-${tag}.png`) });
-  made.push([tag, b]);
+  /* ⚠⚠⚠ 2026-09-07 使用者：「二三四五的科別感覺擠在一起了。」
+     成因量得出來：**同一格裡兩顆的距離**和**跨到隔壁那一天的距離**如果差不多，
+     眼睛就分不出哪幾顆是同一天的（接近律）。所以這裡兩個都量，
+     並且要求「跨格 ÷ 同格 ≥ 1.7」——差不到那麼多就當成擠在一起。
+     ⚠ 1.7 是算出來能同時滿足三件事的那一格：放大到 1.387、同一格維持他挑的
+       11 裝置 px、以及整張圖固定 1080 寬。要更分得開就得放棄其中一件。
+     ⚠ 量的是**墨**不是格子：等寬格在每一顆旁邊都補了空白，
+     那些空白同格與跨格都有，只看格子會把差距稀釋掉。 */
+  const grp = await page.evaluate(() => {
+    const rows = [...document.querySelectorAll("tbody tr")];
+    let inn = 1e9, out = 1e9;
+    for (const tr of rows) {
+      const marks = [...tr.querySelectorAll("td svg.mk")].map(el => ({
+        r: el.getBoundingClientRect(), td: el.closest("td") }));
+      /* 照 y 分行（同一行的才比得出左右距離） */
+      const lines = new Map();
+      for (const m of marks) {
+        const k = Math.round((m.r.top + m.r.height / 2) / 6);
+        (lines.get(k) || lines.set(k, []).get(k)).push(m);
+      }
+      for (const line of lines.values()) {
+        line.sort((a, b2) => a.r.left - b2.r.left);
+        for (let i = 1; i < line.length; i++) {
+          const d = line[i].r.left - line[i - 1].r.right;
+          if (line[i].td === line[i - 1].td) inn = Math.min(inn, d);
+          else out = Math.min(out, d);
+        }
+      }
+    }
+    /* 直排那一案一格只放一顆，量不到「同一格」的距離 → 回 null，下面就跳過 */
+    return { inn: inn < 1e8 ? inn : null, out: out < 1e8 ? out : null };
+  });
+  if (grp.inn && grp.out && grp.out < grp.inn * 1.7)
+    throw new Error(`${tag} 的科別擠在一起了：同一格 ${grp.inn.toFixed(1)}px、`
+      + `跨到隔壁那一天 ${grp.out.toFixed(1)}px（要 ≥ 1.7 倍）`);
+  /* 頁尾對齊驗收：兩塊字的**字面中線**要落在同一條線上（用 Range 量墨，不量盒） */
+  const tel = await page.evaluate(() => {
+    const el = document.querySelector(".tel");
+    const rng = document.createRange();
+    rng.selectNodeContents(el.firstElementChild);
+    const a = rng.getBoundingClientRect();
+    const no = el.querySelector(".no");
+    rng.selectNodeContents(no.lastChild);          /* 只選號碼那段文字 */
+    const b2 = rng.getBoundingClientRect();
+    const ic = no.querySelector("svg").getBoundingClientRect();
+    /* 兩行要靠同一條左緣（＝「移到下一行」之後的對齊） */
+    return { note: a.left, num: b2.top + b2.height / 2,
+             ico: ic.top + ic.height / 2, left: no.getBoundingClientRect().left };
+  });
+  /* 對不齊就不要出圖（--tel-dy 是算出來的，字型或字級一改它要自己跟上） */
+  if (Math.abs(tel.note - tel.left) > .5 || Math.abs(tel.num - tel.ico) > 1)
+    throw new Error(`${tag} 的頁尾沒對齊：兩行左緣 ${tel.note.toFixed(1)} / ${tel.left.toFixed(1)}`
+      + `　號碼中線 ${tel.num.toFixed(1)}　話筒中線 ${tel.ico.toFixed(1)}`);
+  await page.screenshot({ path: path.join(OUT, fileOf(tag)) });
+  made.push([tag, b, lab.w, tel, grp, lab.off]);
 }
+
+S = 1; EX = 0;
 
 /* ---------- 主頁那三格（裁切模擬） ---------- */
 const PW = 823;
@@ -546,15 +929,32 @@ const cell = (f, w, h) =>
      <img src="data:image/png;base64,${fs.readFileSync(path.join(OUT, f)).toString("base64")}"
           style="width:100%;height:100%;object-fit:cover;display:block"></div>`;
 const page2 = await browser.newPage({ viewport: { width: PW, height: 409 + 4 + 410 } });
-for (const [tag, big] of [["w2", "post-hours-mix-half-a16.png"], ["col", "post-hours-icol.png"]]) {
+/* ⚠ 大格與兩個小格一律放**定案那一張**（a11）——這一格是「主頁看起來長怎樣」，
+   不是版本比較；col 那一版留著只是為了讓人看見直排的代價。 */
+/* ⚠ 2026-09-07 使用者：「G 定稿」＝ post-hours-s130w.png
+   （放大 1.30 ＋ 列距 16 ＋ 時段標籤斷成兩行、置中）。 */
+for (const [tag, big] of [["w2", FINAL_FILE], ["col", "post-hours-icol.png"]]) {
   await page2.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}</style>
     <div style="width:${PW}px;background:#fff;display:flex;flex-direction:column;gap:4px">
       ${cell(big, PW, 409)}
-      <div style="display:flex;gap:3px">${cell("post-hours-mix-half-a11.png", 410, 410)}${cell("post-hours-mix-half-a22.png", 410, 410)}</div>
+      <div style="display:flex;gap:3px">${cell(FINAL_FILE, 410, 410)}${cell(FINAL_FILE, 410, 410)}</div>
     </div>`);
   await page2.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
   await page2.screenshot({ path: path.join(OUT, `profile-3up-${tag}.png`) });
 }
+/* ⚠⚠⚠ 放大那把尺的**代價**要看得見：同一個大格（823×409）在四種倍率下
+   分別看得到什麼。⚠ 這裡擺的是**真的產出檔裁出來的**，不是用 CSS 再畫一次。 */
+/* ⚠ 高度要跟著格數算，不要寫死 —— 尺從四格收成兩格之後，寫死的高度會留下
+   一大塊空白（而且長寬比對得上實檔，守門抓不到，只有把圖打開看才看得出來）。 */
+const NCUT = 1 + SCALES.length;
+const page3 = await browser.newPage({ viewport: { width: PW, height: 409 * NCUT + 6 * (NCUT - 1) } });
+await page3.setContent(`<!doctype html><meta charset="utf-8"><style>*{margin:0}
+  body{background:${RULE};display:flex;flex-direction:column;gap:6px}</style>`
+  + ["post-hours-mix-half-a11.png", ...SCALES.map(([t]) => fileOf(t))]
+    .map(f => cell(f, PW, 409)).join(""));
+await page3.waitForFunction(() => [...document.images].every(i => i.complete && i.naturalWidth));
+await page3.screenshot({ path: path.join(OUT, "bigslot-scales.png") });
+
 await browser.close();
 
 fs.writeFileSync(path.join(OUT, "detail.txt"), detail + "\n");
@@ -580,6 +980,65 @@ console.log("\n── 出圖 ──");
 for (const [t, b] of made)
   console.log(`  post-hours-${t}.png　內容 ${b.y.toFixed(0)}~${(b.y + b.height).toFixed(0)}`
     + `（安全帶 ${TOP}~${BOT}，餘 ${(b.y - TOP).toFixed(0)}）`);
+console.log(`\n── 放大那把尺（整張圖固定 1080 見方，所以放大的代價在「主頁大格切掉什麼」）──`);
+for (const [t, sc] of [["mix-half-a11", 1], ...SCALES.map(([a, b2]) => [a, b2])]) {
+  const b = made.find(m => m[0] === t)[1];
+  const cut = Math.max(0, (b.height - BAND) / 2);
+  console.log(`  ${(sc).toFixed(2)}×　內容高 ${b.height.toFixed(0)}　`
+    + (cut ? `大格上下各切掉 ${cut.toFixed(0)}px` : "大格看得到全部"));
+}
+{ const mf = made.find(m => m[0] === "fit");
+  console.log(`  放大之後：同一格裡兩顆相距 ${mf[4].inn.toFixed(1)}px　`
+    + `跨到隔壁那一天 ${mf[4].out.toFixed(1)}px　＝ ${(mf[4].out / mf[4].inn).toFixed(2)} 倍`);
+  { const mw = made.find(m => m[0] === "s130w");
+    console.log(`  Ⓖ 斷行那一版：早午晚的墨心對時間的墨心偏 ${mw[4] ? "" : ""}`
+      + `${(made.find(m => m[0] === "s130w")[5] ?? 0).toFixed(2)}px`); }
+  console.log(`  　　　　　時段標籤 ${mf[2].toFixed(1)}px（欄寬 ${(LAB * 1.387).toFixed(0)}，沒有折行）`); }
+/* ---------- 「讀起來對不對」一次印完（2026-09-07 的檢討，見 CLAUDE.md 第九節第 28 條）
+ * ⚠⚠⚠ 這一輪的教訓是：守門全部都在檢查「有沒有壞」（溢出、折行、對比、超出安全帶），
+ *   **沒有一條在量「讀起來好不好」** —— 群分不分得開、留白比例、置中偏多少，
+ *   每一條都是使用者先講、才補上去的。所以把它們收成一張表，每次出圖都印，
+ *   回歸就會表現成「某個數字動了」，而不是等他看圖。
+ * ⚠ 第二件：**自己推導出來的限制在壓縮版面時要當場講**（安全帶那一行）。 */
+{
+  const F0 = made.find(m => m[0] === "s130w");   /* 定稿那一張 */
+  const room = (BAND - (F0[1].height)) / 2;
+  console.log(`\n── 讀起來對不對（定稿 Ⓖ）──`);
+  console.log(`  留白　　整塊 ${F0[1].height.toFixed(0)}／1080　＝ 佔 `
+    + `${(F0[1].height / H * 100).toFixed(0)}%，上下各留 ${((H - F0[1].height) / 2).toFixed(0)}px`);
+  console.log(`  分群　　同一格 ${F0[4].inn.toFixed(1)}　跨一天 ${F0[4].out.toFixed(1)}`
+    + `　＝ ${(F0[4].out / F0[4].inn).toFixed(2)} 倍（要 ≥ 1.7）`);
+  console.log(`  時段標籤　寬 ${F0[2].toFixed(1)}px　折行 0　`
+    + `早午晚對時間的中線偏 ${(F0[5] ?? 0).toFixed(2)}px（要 ≤ 1.5）`);
+  console.log(`  頁尾　　兩行左緣 ${F0[3].note.toFixed(1)} / ${F0[3].left.toFixed(1)}`
+    + `　話筒對號碼中線偏 ${Math.abs(F0[3].num - F0[3].ico).toFixed(2)}px`);
+  console.log(`  對比　　紙上最低 ${Math.min(...contrast.map(c => c[1])).toFixed(2)}`
+    + `　浮水印上：字 ${Math.min(...wmText.map(c => c[1])).toFixed(2)}`
+    + `／圖案 ${Math.min(...wmIcon.map(c => c[1])).toFixed(2)}`);
+  console.log(`  安全帶　大格看得到中間 ${BAND} 列，這一張上下各被切 `
+    + `${Math.max(0, -room).toFixed(0)}px`);
+  if (room > -1 && room < 12)
+    console.log(`  ⚠⚠ 安全帶只剩 ${room.toFixed(0)}px —— **這條限制正在壓縮版面**，`
+      + `再要加東西就得先跟使用者攤開取捨（CLAUDE.md 第九節第 28 條 ③）`);
+}
+
+const m0 = made.find(m => m[0] === "mix-half-a11");
+console.log(`\n── 定案那張的兩件版面 ──`);
+console.log(`  時段標籤一行寬 ${m0[2].toFixed(1)}px（欄寬 ${LAB}，沒有折行）`);
+{ /* 假牙重建那一顆到底有沒有被切：畫出來多大 vs 形狀本身的長寬比 */
+  const w = 30 * wScale("prosth", "half");
+  console.log(`  假牙重建 r2c2：畫出來 ${w.toFixed(1)}×${(w / AR.r2c2).toFixed(1)}px`
+    + `（格子 ${slotOf(30, "half").toFixed(1)}×30，塞得進去）`
+    + `　長寬比 ${AR.r2c2.toFixed(3)} 是形狀本身的`);
+}
+console.log(`  浮水印 ${WMSH}（${wmDesc(WM)}）`
+  + `　${WM.w}×${WM.h}px・墨 ${(WMA * 100).toFixed(1)}%　底色 ${CARD} → ${WMBG}`
+  + `　壓在上面的字 ${Math.min(...wmText.map(c => c[1])).toFixed(2)}`
+  + `　圖案 ${Math.min(...wmIcon.map(c => c[1])).toFixed(2)}（門檻 4.5 / 3）`);
+console.log(`  同一格裡兩顆相距 ${(m0[4].inn ?? 0).toFixed(1)}px　跨到隔壁那一天 `
+  + `${(m0[4].out ?? 0).toFixed(1)}px　＝ ${(m0[4].out / m0[4].inn).toFixed(2)} 倍`);
+console.log(`  頁尾兩行左緣 ${m0[3].note.toFixed(1)} / ${m0[3].left.toFixed(1)}`
+  + `　話筒對號碼的字面中線差 ${Math.abs(m0[3].num - m0[3].ico).toFixed(2)}px`);
 console.log(`  profile-3up.png`);
 console.log(`\n文字 ${contrast.length} 項全部過 AA（最低 ${
   Math.min(...contrast.map(c => c[1])).toFixed(2)}）`);

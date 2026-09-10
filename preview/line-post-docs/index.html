@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 貼文的第三格・科別與醫師</title>
+<!--
+  2026-09-08 使用者：「還有一格　之前對話建議放主題與科別　包括醫師的資訊
+  但只有一格　怎麼放七個醫師」→「你們先做看看　但因為門診表已經有七個科別
+  所以不要只是又重複只列七個科別」→ 四案（Ⓐ 九位醫師／Ⓑ 醫師＋他在做的事／
+  Ⓒ 做得了什麼／Ⓓ 一科一行）。
+
+  2026-09-09 使用者：「我喜歡 C+D　把資訊整合再調整看看」
+  → Ⓐ Ⓑ 整組拿掉（留在 git：git show ae10fa2 -- drafts/channels/post-docs.mjs），
+     Ⓒ ＋ Ⓓ 合併成四個排法 Ⓔ~Ⓗ。四案的**資料一模一樣、標題也一樣**，
+     差別只有「排成幾行、誰站哪裡」—— 那把尺才乾淨。
+
+  2026-09-09 稍晚使用者：「保留 E F　有些醫師專長是不同科的　更新一下」
+  → ① Ⓖ Ⓗ 拿掉（留在 git：git show d01e961 -- drafts/channels/post-docs.mjs）。
+     ② **每一列印誰改成照站上 specHit() 的規則算**（本科 **或** 專長命中）——
+        合併之後專長照「專長自己的科」分群、醫師卻照「那張卡自己的科」分，
+        兩邊分法不一樣，所以牙周那一列印著李柄輝的「牙周照護」卻只掛李侑津。
+        現在「這張圖印誰」＝「站上按那一科會亮誰」，不可能對不起來。
+     ③ 剩下的那把尺：跨科的那幾位要不要用柔墨分深淺。
+
+  2026-09-09 再一件使用者：「標題　芳仁牙醫 科別與醫師　9位醫師 6個專科　網址　拿掉」
+  → 標題、上下兩條分隔線、窄帶那兩個數字與 fangren.net 全部不畫。
+
+  2026-09-09 定案：「選 F 但治療項目不要套色 維持淡色 框起來，醫師名字等級都一樣
+  不要分色，空出來的空間要好好運用」→ ① 排法定 Ⓕ（Ⓔ 拿掉，留在 git c6b7a66）
+  ② 專長小塊不吃科別色：字柔墨、框站上的格線色 —— 彩色只剩最左邊那顆圖案
+  ③ 九位醫師同一階墨 ④ 空出來的高度做成一把尺（倍率 ＋ 列距），沒有自己放大。
+
+  ✅ 2026-09-09 定稿：「選 F3　給我圖片」→ 兩個值寫回常數（K0 1.15／MPAD0 13.5），
+  匯出 fangren-docs-1080.png，這一頁收成三張圖（定稿／410px／主頁三格）。
+     ⚠ 四格的數字留在 drafts/channels/README.md 第 36-15 節與 git（git show e71fd3d），
+       要回頭比從那裡取，不要重畫。
+     ⚠⚠⚠ 那把尺的兩個方向卡在不同的東西上：字要多大卡在**寬度**
+        （最寬的一列 992／1000px，天花板 1.008 倍了）；列距卡在**高度**，
+        那才是拿掉標題空出來的那一塊，定稿把內容撐到 994／1000。
+
+  產生器 node drafts/channels/post-docs.mjs，守門 check-post-docs.mjs，
+  推導在 drafts/channels/README.md 第三十六節。
+-->
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--rule:#cdd0d2;
+  --ink:#2a2c27;--ink-soft:#5c5f57;--green:#3f654a;--deep:#2c5238;--red:#89202d}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.75;padding-bottom:56px}
+.pv-wrap{max-width:430px;margin:0 auto;padding:18px 14px 0}
+h1{font-size:1.02rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
+h1 span{display:block;font-weight:400;font-size:.7em;color:var(--ink-soft);letter-spacing:.04em}
+.pv-lead{font-size:.78rem;color:var(--ink-soft);margin:.55rem 0 0;line-height:1.8}
+.pv-lead b{color:var(--ink)}
+a{color:var(--deep)}
+code{font-size:.94em;background:var(--card);border-radius:4px;padding:0 4px;
+  font-family:ui-monospace,Menlo,Consolas,monospace}
+.pv-h2{font-size:.92rem;font-weight:700;margin:34px 0 0;letter-spacing:.01em;
+  padding-left:9px;border-left:3px solid var(--green)}
+.pv-h2 .t{display:block;font-size:.78em;font-weight:400;color:var(--ink-soft);letter-spacing:0}
+.pv-h2 em{font-style:normal;font-size:.72em;background:var(--deep);color:#fff;
+  border-radius:6px;padding:1px 7px;margin-left:6px;letter-spacing:.04em;vertical-align:2px}
+.pv-shot{margin:10px 0 0}
+.pv-shot img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--rule)}
+.pv-cap{font-size:.7rem;color:var(--ink-soft);line-height:1.7;margin:7px 0 0}
+.pv-cap b{color:var(--ink)}
+.pv-cap .n{color:var(--red);font-weight:700}
+.pv-num{margin:12px 0 0;background:var(--card);border:1px solid var(--rule);
+  border-radius:10px;padding:10px 12px;font-size:.7rem;color:var(--ink-soft);line-height:1.9}
+.pv-num b{color:var(--ink)}
+.pv-num .n{color:var(--red);font-weight:700}
+.pv-tab{width:100%;border-collapse:collapse;margin:10px 0 0;font-size:.66rem;
+  background:var(--card);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.pv-tab th,.pv-tab td{padding:5px 7px;border-bottom:1px solid var(--rule);text-align:right;
+  color:var(--ink-soft);line-height:1.6}
+.pv-tab th:first-child,.pv-tab td:first-child{text-align:left}
+.pv-tab thead th{background:#e9eaeb;font-weight:700;color:var(--ink)}
+.pv-tab tbody tr:last-child td{border-bottom:0}
+.pv-tab .no{color:var(--red);font-weight:700}
+.pv-tab .ok{color:var(--deep);font-weight:700}
+.pv-txt{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+  padding:11px 13px;margin:10px 0 0;font-size:.72rem;line-height:1.85;white-space:pre-wrap;
+  word-break:break-all}
+</style>
+</head>
+<body>
+<div class="pv-wrap">
+
+  <h1>LINE 商家貼文的第三格<span>✅ 定稿 Ⓕ3　fangren-docs-1080.png</span></h1>
+
+  <p class="pv-lead">主頁「最新貼文」那三格的<b>小格右</b>。<br>
+  <b>要貼的是 <code>fangren-docs-1080.png</code></b>（1080×1080・PNG），
+  「詳情」那一欄照下面那一份貼，<b>不要重打</b>。</p>
+
+  <h2 class="pv-h2">定稿<span class="t">Ⓕ3　放大 1.15 ＋ 列距拉開</span><em>fangren-docs-1080.png</em></h2>
+  <div class="pv-shot">
+    <img src="fangren-docs-1080.png" width="1080" height="1080"
+         alt="定稿：一科一列，第一行是圖案、科別名與該科醫師，第二行是那一科的治療項目">
+  </div>
+  <p class="pv-cap">一科一列。第一行 <b>圖案＋科別＋醫師</b>，第二行 <b>治療項目</b>。<br>
+  <b>治療項目不套色</b>（字柔墨、框站上的格線色）——整張圖的彩色<b>只剩最左邊那顆圖案</b>，
+  而那一顆是圖例、要對得上門診表那一張，所以它不能跟著淡化。<br>
+  <b>九位醫師同一階墨</b>。誰是本科的仍然看得出來 ——<b>本科的排前面</b>。<br>
+  ⚠ 內容高 <b>994／1000</b>，上下只剩 3px ＝ 這一版的盡頭。</p>
+
+  <h2 class="pv-h2">在小格的實際大小<span class="t">410×410 —— 判準是這一張</span></h2>
+  <div class="pv-shot">
+    <img src="slot-410.png" width="410" height="410"
+         alt="定稿那一張縮到主頁小格的實際大小 410×410">
+  </div>
+  <p class="pv-cap">科別 <b>15.7px</b>・醫師 <b>13.5</b>・治療項目 <b>12.7</b>
+  （這一線的地板是 10px）。<br>
+  ⚠⚠⚠ <b>再放大現在是「高度」擋住的</b>：內容 <b>994px</b>／可用 <b>1000px</b>，
+  只剩 <b>1.006 倍</b>。<br>
+  ⚠⚠ <b>那句話 2026-09-09 才翻過來</b>：縮寫之前卡住的是<b>寬度</b>——每一列的圖案、
+  科別名、醫師名擠在同一行、都不折行，最寬的那一列（一般牙科・定期檢查，四位醫師）
+  要 <b>992px</b>／可用 1000px。「一般牙科・定期檢查」收成「一般牙科」之後那一列
+  少了 <b>215px</b>（777／1000，寬度容得下 1.287 倍），<b>換成高度先撞牆</b>。
+  拿掉標題空出來的是上下，那一塊早就給了<b>列距</b>。<br>
+  ⚠ 走過的四格（現在這樣／只放大／放大＋列距／只拉開列距）留在
+  <code>drafts/channels/README.md</code> 第 36-15 節與 git，要回頭比從那裡取。</p>
+
+  <h2 class="pv-h2">在主頁上長怎樣<span class="t">大格＝門診表　左下＝科別醫師　右下＝地圖停車</span></h2>
+  <div class="pv-shot">
+    <img src="profile-3up.png" width="823" height="823" loading="lazy"
+         alt="主頁三格模擬：大格門診表、左下科別醫師、右下位置與停車，浮水印跨在三格上拼成一顆">
+  </div>
+  <p class="pv-cap">⚠⚠⚠ <b>那顆浮水印現在是一顆圓，騎在三格中間的十字縫上</b>：
+  大格看到上半、左下看到左下那一象限、右下看到右下那一象限。
+  三格的幾何只有一個出處 <code>drafts/channels/wm-triptych.mjs</code>，
+  三支產生器都從它拿位置與大小。<br>
+  ⚠⚠ 濃度三格<b>統一 4%</b>（門診表那張本來是 5%）——現在是同一個物件，
+  一深一淺會在縫上看得出來。<br>
+  ⚠⚠⚠ <b>同一個 px 在三格上不一樣大</b>：大格是 823÷1080 ＝ 0.762 縮的、
+  小格是 409÷1080 ＝ 0.379，差 <b>2.012 倍</b>。所以三張都畫同一個寬度會變成
+  「一顆大的配兩顆小的」，接不成一顆 ——<b>兩個小格在原圖上要畫成兩倍大</b>。<br>
+  ⚠ <b>順序要在後台排好</b>：門診表在最上面那一格。你那張截圖裡現在是科別醫師在大格。</p>
+
+  <h2 class="pv-h2">那顆圓要多大<span class="t">✅ 定案 500 ＝ 大格寬的 61%</span></h2>
+  <p class="pv-cap">單位是「三格合起來」那個座標系（大格寬 823），所以
+  <b>500 ＝ 圓的直徑佔大格寬的 61%</b>：門診表原圖畫 <b>656.1px</b>、
+  兩個小格原圖各畫 <b>1320.3px</b>（差 2.012 倍 ＝ 兩格的顯示比例差）。<br>
+  三格 <b>380／500／620</b> 都看過「排在一起」與「三張各自獨立」兩種
+  （<b>12 張</b>），挑定之後那些尺的圖已經清掉，數字留在
+  <code>drafts/channels/README.md</code> 第 36-17 節與 git。<br>
+  ⚠⚠⚠ <b>門診表那一張獨立看和貼上去不一樣</b>：大格是 cover 裁切、只看得到中間
+  y 271.6~808.4 那一段，所以<b>圓的下半（含牙洞）貼上去看不到</b> ——
+  只露出上面 <b>49%</b>，而獨立看整張 1080 看得到 <b>91%</b>。
+  兩個小格是方進方，獨立看到的就是貼上去看到的。<br>
+  ⚠ 換直徑要三張一起重跑（<code>node drafts/channels/post-triptych.mjs</code>），
+  只改一張的話拼起來是三段對不上的弧。</p>
+
+  <h2 class="pv-h2">每一列印誰<span class="t">＝站上按那顆標記會亮起來的那幾位</span></h2>
+  <table class="pv-tab">
+    <thead><tr><th>這一列</th><th>本科的醫師</th><th>跨科（專長命中）</th></tr></thead>
+    <tbody>
+      <tr><td>一般牙科</td><td>李柄輝</td><td class="no">李侑津　楊小瑩　謝耀慶</td></tr>
+      <tr><td>牙周治療</td><td>李侑津</td><td class="no">李柄輝</td></tr>
+      <tr><td>顯微根管</td><td>陳芷鈴</td><td>—</td></tr>
+      <tr><td>兒童牙科</td><td>林晏妤　謝耀慶</td><td>—</td></tr>
+      <tr><td>齒顎矯正</td><td>王俊偉　廖立揚</td><td>—</td></tr>
+      <tr><td>假牙重建</td><td>楊小瑩</td><td class="no">李侑津　陳芷鈴</td></tr>
+      <tr><td>口腔外科</td><td>許馨文</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <p class="pv-cap">紅色那 <b>6 個名字改動前一個都沒有出現</b>。
+  舉例：李侑津的「植牙手術・固定假牙・活動假牙」本來就印在假牙重建那一列，
+  <b>但那一列只掛楊小瑩</b>；李柄輝的「牙周照護」印在牙周那一列，<b>只掛李侑津</b>。<br>
+  ⚠ 順序改成<b>本科的排前面</b>（站上一個人只出現在一張卡上，所以卡序從來不必回答
+  「誰排前面」；補進跨科的之後它才開始說話）。</p>
+
+  <h2 class="pv-h2">「詳情」那一欄要貼的字<span class="t">圖上的網址點不下去，這裡的可以</span></h2>
+  <div class="pv-txt">不確定自己的狀況要看哪一科，可以先從這裡找。
+每一科底下寫的，就是那一科在做的事。
+9 位醫師駐診・6 個部定專科。
+一般牙科　https://fangren.net/topics/general/
+牙周治療　https://fangren.net/topics/perio/
+顯微根管　https://fangren.net/topics/endo/
+兒童牙科　https://fangren.net/topics/kids/
+齒顎矯正　https://fangren.net/topics/ortho/
+假牙重建　https://fangren.net/topics/prosth/
+口腔外科　https://fangren.net/topics/surg/
+醫師介紹　https://fangren.net/#doctors</div>
+  <p class="pv-cap">⚠⚠ <b>七條科別網址由這一欄接</b>——圖上放不下七個入口，
+  但「詳情」放得下，而且點得下去。照這一份貼，<b>不要重打</b>。<br>
+  ⚠⚠⚠ <b>第一行「9 位醫師駐診・6 個部定專科」刻意留著</b>：圖上不寫之後，
+  這張圖已經沒有一個地方講得出診所有多少人，而「詳情」正是接這種事的地方。
+  <b>要不要一起拿掉，是你的決定</b>——沒有自己動。<br>
+  ⚠⚠ <b>開頭那兩句是新加的</b>（你說「科別醫師也給一點貼文的文字說明」）——
+  原本這一欄只有數字那一行加八條網址，讀起來是一張清單不是一段說明。
+  <b>八條網址三案完全相同，差的只有開頭</b>：</p>
+  <!-- ⚠⚠ 這一塊是「展示品」不是「要貼的資料」，所以刻意不是 class="pv-txt" ——
+       守門拿第一個 class 剛好是 pv-txt 的那一塊去對 detail.txt，同名會被吃掉
+       （同第三十五節那個 pv-cut：一段字同時是資料又是展示品時，標記一定要分開）。 -->
+  <div class="pv-txt pv-alt">Ⓛa　只有事實
+　　9 位醫師駐診・6 個部定專科。
+
+Ⓛb　多一句怎麼看　← 現在放的是這一個
+　　不確定自己的狀況要看哪一科，可以先從這裡找。
+　　每一科底下寫的，就是那一科在做的事。
+　　9 位醫師駐診・6 個部定專科。
+
+Ⓛc　對著人講
+　　牙齒的狀況百百種，不一定分得出來該看哪一科。
+　　先看看哪一科在做你的那一件。
+　　9 位醫師駐診・6 個部定專科。</div>
+  <p class="pv-cap">⚠ 兩條規矩沿用門診表那一張：<b>第一行不要寫「這是一張科別與醫師表」</b>
+  （說明欄只先露一兩行，那一行要拿來講他看得到什麼），以及
+  <b>不可以寫「有問題歡迎私訊」</b>（這個帳號沒有專人即時回覆）。<br>
+  ⚠ Ⓛc 刻意不寫「打電話問我們」——這張圖上已經沒有電話（標題與頁尾拿掉了），
+  而號碼的唯一出處在站上那一份，為了一句話在這裡寫死一組號碼不划算。</p>
+
+  <h2 class="pv-h2">還沒問到、也還沒決定的</h2>
+  <div class="pv-num">
+    ・<b>「詳情」第一行那兩個數字</b>要不要跟著拿掉（見上一節）。<br>
+    ・<b>專長是全部印</b>（最多的一科五項），不是挑過的；順序照站上。<br>
+    ・一般牙科那一列變成<b>四位醫師</b>（其中三位是跨科）—— 那是站上的事實，
+      但要不要在這一格上呈現得這麼滿，是你的決定。<br>
+    ・<b>「詳情」開頭那一段要哪一案</b>（Ⓛa／Ⓛb／Ⓛc，見上一節，現在放 Ⓛb）。<br>
+    ・「假牙重建」與<b>「一般牙科」</b>這兩個縮寫只在貼文這三張圖上，
+      站上仍然是「植牙・假牙重建」與「一般牙科・定期檢查」——
+      <b>門診表那一張已經跟著改</b>（三格擺在一起，一張縮一張不縮就是兩個名字）。<br>
+    ・浮水印照小格左那一張（同一顆、4%、壓左上），<b>沒有另外問過</b>。<br>
+    ・<b>主頁那一格是裁切還是留白</b>，後台按一次「預覽」就知道。
+  </div>
+
+  <p class="pv-cap" style="margin-top:26px">
+  產生器 <code>node drafts/channels/post-docs.mjs</code>
+  守門 <code>node drafts/channels/check-post-docs.mjs</code>
+  推導在 <code>drafts/channels/README.md</code> 第三十六節。</p>
+
+</div>
+</body>
+</html>
