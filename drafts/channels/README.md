@@ -7060,3 +7060,32 @@ node drafts/channels/oa-shots.mjs && node drafts/channels/build-spec.mjs && node
 
 驗收：守門全綠、八個寬度水平溢出 0／圖 0 張載不到／死錨 0／JS 錯 0、16 張圖都畫在
 它宣告的尺寸上；兩張卡的預覽圖打開看過，「讀文章」真的不在了。
+
+### 20-17、提醒卡的頭圖換成修好的那一版（2026-09-10）
+
+使用者：「預約提醒的圖片放到舊的版本了　被媽媽抱起來的小孩有三隻手　是這張才對」。
+兩張圖並排看過，他說的成立：舊那張裡被抱著的幼兒**左右各舉一隻，媽媽肩上還有第三隻**。
+新的那張構圖、人物、色調一個都沒動，只有那隻多出來的手不見了（同樣 1376×768）。
+
+換的是**原檔** `drafts/remind-hero-src.jpg`，其餘全部重跑：
+
+```
+node drafts/channels/remind-hero-crop.mjs      # → preview/line-remind/hero-remind.jpg（1024×512）
+node drafts/channels/remind-png.mjs            # shot-remind.png
+node drafts/channels/remind-png.mjs --chat     # shot-remind-chat.png
+node drafts/channels/publish-assets.mjs        # → assets/line/hero-remind.jpg
+node drafts/channels/build-spec.mjs            # 給廠商那一頁的圖檔大小那一行
+```
+
+⚠⚠ **這一種「同一張圖的修正版」最容易只換一半** —— 這條線上同一張圖存在**四個地方**
+（原檔／裁好的頭圖／兩張模擬圖／`assets/line/` 那一份），而**每一份都是產生出來的、
+不會自己跟上**。判斷有沒有漏：`md5sum preview/line-remind/hero-remind.jpg
+assets/line/hero-remind.jpg` 要一樣，`git status` 應該看到五個檔一起變。
+
+⚠ 裁法**一個數字都沒改**（上 16 / 下 64）：新圖的深墨仍然從第 12 列起（守門的下限正好
+是 12 列），四邊白框、長寬比、≤1024 四道守門全過。**同一張圖的修正版不必重新定裁法，
+但守門要真的跑一次** —— 構圖只要動一點點，那 12 列的餘裕就沒了。
+
+驗收：`check-remind.mjs` ✅（九段文字、字級、顏色、五張圖的檔案／上限／長寬比／寬度、
+兩組 17.0-5.0 的墨距、紅線）；`check-spec.mjs` ✓；八個寬度水平溢出 0、圖 0 張載不到、
+死錨 0、JS 錯 0。卡片仍是 268×585.9，版面一個像素都沒動。
