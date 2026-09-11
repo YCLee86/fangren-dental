@@ -338,6 +338,9 @@ ${compare}
 <p class="note">${b(cmp.量)}</p>
 
 <div class="rows" style="margin-top:1.4em">
+<div class="row"><p class="k">是不是平台的限制</p><p class="v">${b(D.浮水印.是不是平台的限制)}</p></div>
+<div class="row"><p class="k">接下來問什麼</p><p class="v">${b(D.浮水印.接下來問什麼)}</p></div>
+<div class="row"><p class="k">順帶</p><p class="v">${b(D.浮水印.順帶)}</p></div>
 <div class="row"><p class="k">還要確認的</p><p class="v">${b(D.浮水印.要確認)}</p></div>
 </div>
 <p class="note">${b(D.浮水印._說明)}</p>
