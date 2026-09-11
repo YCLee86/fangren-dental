@@ -6,315 +6,403 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>芳仁牙醫診所　LINE 廠商對接　現況與待答</title>
 <style>
-:root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
-  --green:#2c5238;--brick:#89202d;--blue:#2a4677}
+:root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   -webkit-text-size-adjust:100%}
-.wrap{max-width:780px;margin:0 auto;padding:26px 14px 72px}
-h1{font-size:1.34rem;line-height:1.5;margin:0 0 .3em}
-.lede{color:var(--soft);font-size:.94rem;margin:0 0 1.4em}
-.h2{font-size:1.06rem;margin:2.6em 0 .5em;padding-top:1.1em;border-top:1px solid var(--rule)}
-.h2 .t{display:block;font-size:.8rem;font-weight:400;color:var(--soft);margin-top:.25em}
-h3{font-size:.9rem;color:var(--soft);font-weight:600;margin:1.6em 0 .4em}
-.m{color:var(--brick);font-weight:600}
-.note,.warn{font-size:.9rem;background:var(--card);border-radius:9px;padding:.75em .9em;margin:.7em 0}
-.warn{background:#eee5e6}
-.now{background:var(--card);border-radius:11px;padding:14px 15px;margin:0 0 .6em;font-size:.95rem}
-.now ol{margin:.4em 0 0;padding-left:1.25em}
-.now li{margin:.45em 0}
-/* 表格一定要給 min-width —— 只寫 100% 的話外層那條 overflow-x 永遠用不到，
-   手機上會被壓成一格三四個字 */
+.wrap{max-width:760px;margin:0 auto;padding:26px 14px 72px}
+h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
+.lede{color:var(--soft);font-size:.92rem;margin:0 0 1.5em}
+.h2{font-size:1.04rem;margin:2.4em 0 .6em;padding-top:1em;border-top:1px solid var(--rule)}
+.h2 .t{display:block;font-size:.79rem;font-weight:400;color:var(--soft);margin-top:.25em}
+.now{background:var(--card);border-radius:11px;padding:13px 15px;margin:0;font-size:.93rem}
+.now ol{margin:.3em 0 0;padding-left:1.2em}
+.now li{margin:.5em 0}
+.note{font-size:.88rem;color:var(--soft);background:var(--card);border-radius:9px;
+  padding:.7em .85em;margin:.9em 0 0}
+
+/* ── 一則一格：左邊是那一則自己的縮圖 ─────────────────────────── */
+.msgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));
+  gap:9px;margin:.2em 0 0}
+.msg{display:flex;gap:10px;background:var(--card);border-radius:10px;padding:9px 10px}
+.msg img{width:64px;height:64px;flex:0 0 64px;border-radius:6px;object-fit:cover;
+  background:var(--paper)}
+.msg .ph{width:64px;height:64px;flex:0 0 64px;border-radius:6px;background:var(--paper)}
+.msg .x{min-width:0}
+.msg .nm{font-size:.9rem;font-weight:600;line-height:1.45}
+.msg .mt{font-size:.79rem;color:var(--soft);line-height:1.55;margin-top:.15em}
+
+/* ── 改版：左邊規格圖、右邊逐項 ───────────────────────────────── */
+.fig{margin:.9em 0 0}
+.fig img{display:block;max-width:100%;height:auto;border-radius:8px;background:var(--card)}
+.fig figcaption{font-size:.8rem;color:var(--soft);margin-top:.4em}
 .scroll{overflow-x:auto}
-table{width:100%;min-width:660px;border-collapse:collapse;font-size:.86rem;margin:.4em 0}
-th,td{text-align:left;vertical-align:top;padding:.5em .45em;border-bottom:1px solid var(--rule)}
-th{font-size:.78rem;color:var(--soft);font-weight:600;white-space:nowrap}
-td.n{white-space:nowrap;color:var(--soft)}
-td .s{color:var(--soft);font-size:.9em;display:block;margin-top:.2em}
-.tag{display:inline-block;font-size:.74rem;padding:.1em .5em;border-radius:6px;
-  border:1px solid var(--rule);white-space:nowrap}
-.tag.ok{color:var(--green);border-color:#9db3a3}
-.tag.warn{color:#7a5a18;border-color:#d0bc90}
-.tag.bad{color:var(--brick);border-color:#c79aa0}
-.rd{background:var(--card);border-radius:11px;padding:13px 15px;margin:.7em 0;font-size:.92rem}
-.rd .d{font-size:.8rem;color:var(--soft);margin:0 0 .4em}
-.rd p{margin:.45em 0}
-.rd .q{color:var(--soft)}
-.ev{border-top:1px solid var(--rule);padding:.9em 0 .2em;font-size:.92rem}
-.ev .hd{font-weight:600}
-.ev .hd .w{font-size:.76rem;color:var(--soft);font-weight:400;margin-left:.5em}
-.ev p{margin:.35em 0}
-.ask{list-style:none;margin:.3em 0 0;padding:0}
-.ask li{padding:.7em 0;border-bottom:1px solid var(--rule);font-size:.93rem}
-.ask .q{font-weight:600}
-.ask .y{display:block;color:var(--soft);font-size:.87rem;margin-top:.25em}
-.hot{color:var(--brick)}
-.grp{margin:2em 0 0}
-.grp .t{font-size:.95rem;font-weight:600;margin:0 0 .1em}
-.grp .c{font-size:.8rem;color:var(--soft)}
-.foot{margin:3em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
-  font-size:.84rem;color:var(--soft);line-height:1.85}
+.scroll img{max-width:none}
+.two{display:grid;gap:14px;margin:.9em 0 0}
+@media(min-width:620px){.two{grid-template-columns:268px 1fr;align-items:start}}
+ul.tick{list-style:none;margin:.2em 0 0;padding:0;font-size:.92rem}
+ul.tick li{padding:.28em 0 .28em 1.15em;position:relative}
+ul.tick li::before{content:"・";position:absolute;left:0;color:var(--soft)}
+.rows{margin:.2em 0 0}
+.row{border-top:1px solid var(--rule);padding:.8em 0}
+.row .k{font-weight:600;font-size:.93rem}
+.row .v{font-size:.9rem;margin-top:.25em}
+.row .v i{font-style:normal;color:var(--soft);margin-right:.35em}
+
+/* ── 九宮格 ────────────────────────────────────────────────── */
+.nine{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px;
+  margin:.9em 0 0;background:var(--card);border-radius:11px;padding:15px 14px}
+.nine figure{margin:0;text-align:center}
+.nine svg{display:block;margin:0 auto;height:auto}
+.nine figcaption{font-size:.72rem;color:var(--soft);line-height:1.5;margin-top:.45em}
+
+/* ── 待答 ──────────────────────────────────────────────────── */
+.grp{margin:1.6em 0 0}
+.grp .t{font-size:.93rem;font-weight:600;margin:0 0 .1em}
+.grp .c{font-size:.79rem;color:var(--soft);margin:0}
+ul.ask{list-style:none;margin:.35em 0 0;padding:0}
+ul.ask li{padding:.55em 0;border-bottom:1px solid var(--rule);font-size:.91rem}
+ul.ask .y{display:block;color:var(--soft);font-size:.85rem;margin-top:.2em}
+ul.ask .s{display:inline-block;width:1.35em;color:var(--soft)}
+details{margin:.3em 0 0}
+summary{font-size:.87rem;color:var(--soft);cursor:pointer;padding:.5em 0;
+  border-bottom:1px solid var(--rule)}
+summary::marker{color:var(--rule)}
+.foot{margin:2.8em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
+  font-size:.83rem;color:var(--soft);line-height:1.85}
 a{color:#214d48}
+code{font-size:.92em}
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <h1>LINE 廠商對接　現況與待答</h1>
-<p class="lede">更新於 2026-09-11　這一頁不放任何一則訊息的文字，只放三件事：<br>
-現在有哪幾則在跑、對方說了什麼而那句話真不真、還沒有答案的是什麼。</p>
+<p class="lede">更新於 2026-09-11　這一頁不放任何一則訊息的文字，只放四件事：<br>
+現在有哪幾則在跑、廠商改了什麼、對方的回覆涵蓋到哪裡、還沒有答案的是什麼。</p>
 
 <div class="now">
-<b>現在卡在哪</b>
+<b>現在停在哪</b>
 <ol>
-<li><b class="m">⚠</b> <b>一件正在出錯</b>：約診紀錄查詢那張卡的日期被截斷（maxLines:1）。廠商 09-10 改了那兩則，但送來的四張看不出這一項有沒有修 —— 要一張輪播的截圖。</li>
-<li><b class="m">⚠⚠⚠</b> <b>一件要先問</b>：他們新版卡上的年份寫著 2020。測試資料打錯年（沒事），還是系統真的算錯（每個病人都收到錯的年）—— 不可以從星期反推，2020 和 2026 的 9/11 都是星期五。</li>
-<li><b class="m">⚠⚠</b> <b>一件要確認規則</b>：浮水印他們真的在換九顆，但<b>同一筆約診三分鐘內出現兩顆</b>（2020/09/11 那一筆先圓形後寬形）—— 要確認是給我們看候選，還是輪替沒綁在那一筆約診上（那是 22-13 明文否決的那一種）。</li>
-<li><b class="m">⚠</b> <b>一件不要送</b>：評價邀約 —— 那兩顆按鈕連到哪裡沒有答案之前先擱著。</li>
-<li><b class="m">⚠</b> <b>一件五分鐘能做完</b>：對品御那個帳號打一句「早安」，看它回不回。</li>
+<li>約診紀錄查詢那張卡的日期會被截斷（maxLines:1）。廠商 09-10 改了那兩則，送來的四張截圖看不出這一項是否已改 —— 需要一張輪播的截圖。</li>
+<li>新版卡上的年份是 2020，而截圖拍攝日是 2026-09-10。需確認是測試資料還是系統算出來的值。（2020 與 2026 的 9/11 都是星期五，星期幾看不出來。）</li>
+<li>浮水印已經在九顆之間變換，但同一筆約診在三分鐘內出現兩顆不同的。需確認換的規則。</li>
+<li>評價邀約那兩顆按鈕連到哪裡還沒有答案，在那之前先不送。</li>
 </ol>
 </div>
 
-<h2 class="h2">① 這個帳號現在會自動送出哪幾則<span class="t">誰送、是不是公版、改一個字要找誰</span></h2>
-<div class="scroll"><table>
-<thead><tr><th></th><th>訊息</th><th>什麼時候送</th><th>誰送</th><th>公版</th><th>改一個字要找誰</th></tr></thead>
-<tbody>
-<tr>
-<td class="n">①</td>
-<td>招呼圖卡<span class="s">定稿</span></td>
-<td>加好友那一刻</td><td>診所後台</td><td>否</td><td>診所自己</td>
-</tr>
-<tr>
-<td class="n">②</td>
-<td>自動回應（一律回應）<span class="s">定稿・純文字。選它的唯一理由就是「字留在自己手上」</span></td>
-<td>病人打任何字</td><td>診所後台</td><td>否</td><td>診所自己</td>
-</tr>
-<tr>
-<td class="n">③</td>
-<td>「✅ 09xxxxxxxx 綁定成功！」<span class="s">現況・截圖上它在左邊、帶病人頭像。不必取代它，在它後面再送一則</span></td>
-<td>綁定完成那一刻</td><td>病人那一側（綁定頁面代送）</td><td>是・改不了</td><td>不必改</td>
-</tr>
-<tr>
-<td class="n">④</td>
-<td>綁定完成卡<span class="s">定稿・等廠商送。<b class="m">⚠</b> 和 ② 會不會兩則一起送還沒答</span></td>
-<td>③ 之後</td><td>廠商</td><td>?</td><td>廠商</td>
-</tr>
-<tr>
-<td class="n">⑤</td>
-<td>還沒綁定就按「約診查詢」<span class="s">提案中・截圖證實已經在跑。第四次「我盤的是截圖不是清單」</span></td>
-<td>他按下去那一刻</td><td>廠商</td><td>是（藍色卡）</td><td>廠商</td>
-</tr>
-<tr>
-<td class="n">⑥</td>
-<td>預約成功通知<span class="s">定稿・<b class="m">⚠</b> 2026-09-10 廠商改了一版：六件對上、<b class="m">⚠⚠⚠</b> 卡上年份寫著 2020、日期格式沒換</span></td>
-<td>約好當下</td><td>廠商</td><td>?</td><td>廠商</td>
-</tr>
-<tr>
-<td class="n">⑦</td>
-<td>約診紀錄查詢<span class="s">定稿・<b class="m">⚠⚠</b> 2026-09-10 改版：預約狀態還在（但字變好了）、日期仍是最長那種格式；<b>maxLines 有沒有拿掉還看不出來</b></span></td>
-<td>他按查詢</td><td>廠商</td><td>?</td><td>廠商</td>
-</tr>
-<tr>
-<td class="n">⑧</td>
-<td>看診前 48 小時提醒<span class="s">定稿・<b class="m">⚠</b> 真截圖那一則是 3 天前送的，固不固定還沒答</span></td>
-<td>看診前 48 小時</td><td>廠商</td><td>?</td><td>廠商</td>
-</tr>
-<tr>
-<td class="n">⑨</td>
-<td>取消確認 → 取消成功<span class="s">定稿・<b class="m">⚠</b> 按「否」之後長什麼樣還沒看過</span></td>
-<td>他按「預約改期」</td><td>廠商</td><td>confirm 範本</td><td>廠商</td>
-</tr>
-<tr>
-<td class="n">⑩</td>
-<td>評價邀約（滿意度調查）<span class="s">定稿・先不要送・<b class="m">⛔</b> 那兩顆按鈕連到哪裡沒有答案之前不要送（可能是 review gating）</span></td>
-<td>看診後</td><td>廠商</td><td>?</td><td>廠商</td>
-</tr>
-<tr>
-<td class="n">⑪</td>
-<td>颱風／臨時休診<span class="s">定稿・用他自己每次打的那一份字</span></td>
-<td>縣府宣布之後</td><td>診所人工一個一個貼</td><td>否</td><td>診所自己</td>
-</tr>
-<tr>
-<td class="n">⑫</td>
-<td>圖文選單點下去回的三組卡<span class="s">圖與 JSON 都好了・診所資訊／主題與科別七科／衛教懶人包 12 張</span></td>
-<td>他點選單</td><td>廠商</td><td>否</td><td>廠商</td>
-</tr>
-</tbody></table></div>
-<div class="warn"><b class="m">⚠⚠</b> 這張表是我們自己從截圖與往返裡拼出來的，不是廠商給的。「總共會自動送出哪幾則」那份清單要了四次都沒拿到，而每一次要不到，就從截圖裡再冒出一則（滿意度調查卡／預約成功／約診紀錄查詢／還沒綁定按約診查詢）。所以它仍然是第一順位。</div>
+<h2 class="h2">① 這個帳號會自動送出哪幾則<span class="t">12 則．圖是那一則自己的規格頁拍的</span></h2>
+<div class="msgs">
+<div class="msg"><img src="t-welcome.jpg" width="210" height="210" alt="招呼圖卡的模擬圖"><div class="x">
+<p class="nm">①　招呼圖卡</p>
+<p class="mt">加好友那一刻／診所後台送・定稿<br>改字診所自己來</p>
+</div></div>
+<div class="msg"><img src="t-auto.jpg" width="210" height="210" alt="自動回應（一律回應）的模擬圖"><div class="x">
+<p class="nm">②　自動回應（一律回應）</p>
+<p class="mt">病人打任何字／診所後台送・定稿<br>純文字。選它的理由是字留在診所自己手上</p>
+</div></div>
+<div class="msg"><span class="ph"></span><div class="x">
+<p class="nm">③　「綁定成功」那一句</p>
+<p class="mt">綁定完成那一刻／病人那一側送・現況・公版<br>截圖上它在左邊、帶病人頭像。不必取代它，在它後面再送一則</p>
+</div></div>
+<div class="msg"><img src="t-binddone.jpg" width="210" height="210" alt="綁定完成卡的模擬圖"><div class="x">
+<p class="nm">④　綁定完成卡</p>
+<p class="mt">③ 之後／廠商送・定稿・等送<br>和 ② 會不會兩則一起送還沒有答案</p>
+</div></div>
+<div class="msg"><span class="ph"></span><div class="x">
+<p class="nm">⑤　還沒綁定就按約診查詢</p>
+<p class="mt">他按下去那一刻／廠商送・提案中<br>公版藍色卡，截圖證實已經在跑</p>
+</div></div>
+<div class="msg"><img src="t-booked.jpg" width="210" height="210" loading="lazy" alt="預約成功通知的模擬圖"><div class="x">
+<p class="nm">⑥　預約成功通知</p>
+<p class="mt">約好當下／廠商送・09-10 改版<br>六件對上、四件還沒對上（見下一節）</p>
+</div></div>
+<div class="msg"><img src="t-query.jpg" width="210" height="210" loading="lazy" alt="約診紀錄查詢的模擬圖"><div class="x">
+<p class="nm">⑦　約診紀錄查詢</p>
+<p class="mt">他按查詢／廠商送・09-10 改版<br>日期是這個帳號裡最長的一種寫法</p>
+</div></div>
+<div class="msg"><img src="t-remind.jpg" width="210" height="210" loading="lazy" alt="看診前 48 小時提醒的模擬圖"><div class="x">
+<p class="nm">⑧　看診前 48 小時提醒</p>
+<p class="mt">看診前 48 小時／廠商送・定稿・等送<br>真截圖那一則是 3 天前送的，固不固定還沒有答案</p>
+</div></div>
+<div class="msg"><img src="t-cancel.jpg" width="210" height="210" loading="lazy" alt="取消確認 → 取消成功的模擬圖"><div class="x">
+<p class="nm">⑨　取消確認 → 取消成功</p>
+<p class="mt">他按預約改期／廠商送・定稿・等送<br>按「否」之後長什麼樣還沒看過</p>
+</div></div>
+<div class="msg"><img src="t-review.jpg" width="210" height="210" loading="lazy" alt="評價邀約的模擬圖"><div class="x">
+<p class="nm">⑩　評價邀約</p>
+<p class="mt">看診後／廠商送・定稿・先不送<br>兩顆按鈕連到哪裡還沒有答案</p>
+</div></div>
+<div class="msg"><img src="t-typhoon.jpg" width="210" height="210" loading="lazy" alt="颱風／臨時休診的模擬圖"><div class="x">
+<p class="nm">⑪　颱風／臨時休診</p>
+<p class="mt">縣府宣布之後／診所人工送・定稿<br>用診所每次自己打的那一份字</p>
+</div></div>
+<div class="msg"><img src="t-oa.jpg" width="210" height="210" loading="lazy" alt="圖文選單點下去回的三組卡的模擬圖"><div class="x">
+<p class="nm">⑫　圖文選單點下去回的三組卡</p>
+<p class="mt">他點選單／廠商送・圖與 JSON 都好了<br>診所資訊／主題與科別七科／衛教懶人包 12 張</p>
+</div></div>
+</div>
+<p class="note">這張表是我們從截圖與往返裡整理出來的。「總共會自動送出哪幾則」的完整清單還沒有拿到，目前有四則（滿意度調查卡、預約成功、約診紀錄查詢、還沒綁定按約診查詢）是從截圖裡發現的 —— 所以那份清單仍是第一順位。</p>
 
-<h2 class="h2">② 和廠商的三封往返</h2>
-<div class="rd">
-<p class="d">2026-09-07　廠商（第一封）</p>
-<p class="q">他說：列了八項要的東西（圖檔、文字、規格）。</p>
-<p>我們：交出 /preview/line-spec/ —— 模擬圖 ＋ 圖檔網址 ＋ 可以整段複製的文字。</p>
-<p>沒有爭議的一輪。</p>
+<h2 class="h2">② 廠商 2026-09-10 的改版<span class="t">2026-09-10 廠商把 ⑥⑦ 兩則照我們的規格改了一版。左邊是我們送過去的規格圖，右邊各項是逐項比對的結果。</span></h2>
+<div class="two">
+<figure class="fig">
+<img src="../line-booked/shot-booked.png" width="804" height="450" loading="lazy"
+  alt="我們送過去的預約成功通知規格圖">
+<figcaption>我們送過去的規格圖（預約成功通知）</figcaption>
+</figure>
+<div>
+<p style="font-size:.93rem;margin:0"><b>對上的六件</b></p>
+<ul class="tick"><li>姓名（粗體）＋「約好囉」的寫法</li><li>日期升成整張卡最大的一塊</li><li>兩行灰色小字逐字採用</li><li>頂端那塊 87px 的標誌區拿掉了</li><li>地址與電話拿掉了</li><li>浮水印放上去了</li></ul>
 </div>
-<div class="rd">
-<p class="d">2026-09-07　廠商（第二封）</p>
-<p class="q">他說：③ 綁定完成訊息為公版，故無法調整。⑤ 背景只能全白或其他顏色，無法放圖示。</p>
-<p>我們：兩題都改寫成新的問法，寫進交付頁。</p>
-<p><b class="m">⚠</b> 兩題答的都是另一個問題，而他們答的那一句都是對的。③ 我們本來就沒有要改那句公版；⑤ 我們要的不是背景，是疊在卡片上的一個 image，而「這張卡放得了圖」他們自己的成品就是反例。</p>
-</div>
-<div class="rd">
-<p class="d">2026-09-10　廠商（客戶經理 Sunny）</p>
-<p class="q">他說：1. 綁定成功訊息沒辦法拿掉，因為 a 需通知病患已經綁定好、b 診所櫃檯可以馬上透過手機號碼查看病患資料。所以它發出時會觸發到自動回應：官方 LINE 無法針對抓關鍵詞跳不同訊息，這是已釘死的限制，並非翔評不能做。2. 約診狀態要留下，因為病患取消後診所要在樂衍上取消才是正式取消；診所櫃檯刪除後就會自動不見。</p>
-<p>我們：使用者當天回了三點（約診狀態造成誤會、其他商家帳號不是這樣、浮水印效果有差異），Sunny 回問是哪個帳號。</p>
-<p><b class="m">⚠⚠</b> 第 1 題只有一半是對的，第 2 題答的是另一件事。逐句拆在下面那一張表。</p>
-</div>
-<div class="rd">
-<p class="d">2026-09-10　廠商（改版的四張截圖）</p>
-<p class="q">他說：把 ⑥ 預約成功通知與 ⑦ 約診紀錄查詢兩則照我們的規格改了一版送來看。</p>
-<p>我們：逐項對過我們那份 JSON：六件對上（姓名＋約好囉、日期升成最大、兩行小字逐字、頂端標誌區拿掉、地址電話拿掉、浮水印放了），四件沒對上。</p>
-<p><b class="m">⭐</b> 這是這條線目前配合度最高的一次，回信要先講這個。<b class="m">⚠⚠⚠</b> 而且浮水印<b>真的照我們那張九顆的表在換</b>（圓形＋紫 ＝ r3c1 口外、寬形＋青綠 ＝ r1c2 牙周，長寬比與色相都對得上）—— 我第一次判成「固定一顆」是錯的，<b>使用者看出來的</b>。剩下沒對上的三件：年份 2020、日期格式沒換、預約狀態還在。推導在 README 第四十二節。</p>
 </div>
 
-<h2 class="h2">③ 對方講的每一句，真不真<span class="t">「做不到」一律先改寫成「誰做不到」</span></h2>
-<div class="scroll"><table>
-<thead><tr><th>他說的</th><th>判斷</th><th>實際上是什麼</th></tr></thead>
-<tbody>
-<tr>
-<td>後台送不出 Flex Message</td>
-<td><span class="tag ok">對</span></td>
-<td>LINE 平台完全送得出，是那個編輯介面的型別下拉沒有 Flex —— 換一個人送就好，而他們自己一直在送。</td>
-</tr>
-<tr>
-<td>綁定完成訊息為公版，故無法調整</td>
-<td><span class="tag ok">對，而且不必改</span></td>
-<td>那句話是病人那一側送出的。我們從來沒有要改它 —— 在它後面再送一則就好。</td>
-</tr>
-<tr>
-<td>背景只能全白或其他顏色，無法放圖示</td>
-<td><span class="tag warn">對，但答的是另一個問題</span></td>
-<td>Flex 的 box 真的沒有背景圖。但浮水印不是背景，是 image ＋ absolute；而「卡片裡放得了圖」他們自己那張預約成功卡頂端就有一顆標誌。</td>
-</tr>
-<tr>
-<td>官方 LINE 無法針對抓關鍵詞跳不同訊息，已釘死</td>
-<td><span class="tag warn">只有一半對</span></td>
-<td>後台的自動回應確實分不開「這一句」（關鍵字是完全一致比對，而那句話含著每個人不同的號碼）。但後台本來就設得了好幾則各自一組關鍵字，而且這一則根本不必由後台回 —— 那句話是他們的系統送出來的，他們在那一刻就知道綁定好了，不必比對任何字串。</td>
-</tr>
-<tr>
-<td>綁定成功訊息沒辦法拿掉，因為 a 需通知病患</td>
-<td><span class="tag bad">有反例</span></td>
-<td>玉山那一則「您已成功申請個人化通知服務」是商家自己送的，而且一個號碼都沒有 —— 通知這件事不需要那句話。</td>
-</tr>
-<tr>
-<td>…因為 b 櫃檯可以馬上透過手機號碼查看病患資料</td>
-<td><span class="tag warn">新資訊，要留著</span></td>
-<td>這件事我們以前不知道：那則訊息同時是櫃檯在聊天室裡查號碼的入口。所以「不發送」會拿掉櫃檯的一個功能 —— 問題徹底收斂到這一句。</td>
-</tr>
-<tr>
-<td>約診狀態要留下（不然樂衍上約診直接不見）</td>
-<td><span class="tag warn">答的是另一件事</span></td>
-<td>他們守的是「資料不要消失」，使用者要的是「病人那一側不要再看到」。兩件不衝突 —— 樂衍後台照舊保留，LINE 的查詢結果不列。</td>
-</tr>
-</tbody></table></div>
+<div class="rows" style="margin-top:1.4em">
+<p style="font-size:.93rem;margin:0 0 .2em"><b>還沒對上的四件</b></p>
+<div class="row"><p class="k">卡上年份是 2020</p><p class="v">截圖拍攝日是 2026-09-10。若是系統算出來的，每個病人都會收到錯的年份，而這一則是約好的當下就送。</p></div>
+<div class="row"><p class="k">日期格式沒換</p><p class="v">仍是這個帳號裡最長的一種寫法，也正是會被截斷的那一種。</p></div>
+<div class="row"><p class="k">maxLines 看不出來改了沒</p><p class="v">送來的四張是單張 mega 卡，本來就不會截斷；會截斷的是 micro 輪播，需要一張輪播的截圖。</p></div>
+<div class="row"><p class="k">預約狀態還在</p><p class="v">但字從「尚未回覆」換成了「您已取消，請聯絡診所改約」—— 對著病人講、也給了下一步，比原本清楚。所以我們的要求跟著縮小：樂衍後台照舊保留，只問病人自己取消過的那一筆能不能不列在他的查詢清單裡。</p></div>
+</div>
 
-<h2 class="h2">④ 別家帳號那幾張的證據力<span class="t">拿出去之前先問：它證明的是哪一句話</span></h2>
-<div class="ev">
-<p class="hd">新竹品御牙醫<span class="w">⭐ 主力</span></p>
-<p>同一個廠商的另一間診所。按約診查詢 → 一模一樣那張藍色公版卡 → 病人那一側送出「✅ 09xxxxxxxx 綁定成功！」→ 後面什麼都沒有。</p>
-<p>同一套系統、同一句話，在那一間診所沒有觸發任何通用回覆。而它的頁首寫著「此官方帳號正在自動回覆訊息」＝ 有開。</p>
-</div>
-<div class="ev">
-<p class="hd">玉山銀行<span class="w">補刀</span></p>
-<p>綁定成功那一則是商家自己送的（左邊灰泡泡），而且一個號碼都沒有。另外打「玉山」「早安」「午安」回三則不同。</p>
-<p>廠商的理由 a 有反例了。<b class="m">⚠</b> 而「午安」回了「台幣匯款說明」＝ 關鍵字分流會出錯，出錯的樣子就是答非所問。</p>
-</div>
-<div class="ev">
-<p class="hd">潔客幫<span class="w">背景</span></p>
-<p>8:10 綁定完成回「謝謝你完成好友綁定＋200 元折價券」，9:34 打「早安」回「感謝您來訊…客戶服務時間…」。</p>
-<p>綁定那一刻回專屬的、其他時候回通用的，同一個帳號兩則並存而且真的在跑 ＝ 使用者要的形狀。<b class="m">⚠</b> 但那一則有可能是後台的加入好友歡迎訊息，時間戳分不出來。</p>
-</div>
-<div class="ev">
-<p class="hd">BREAD, ESPRESSO &amp;<span class="w">背景</span></p>
-<p>12:00 按綁定 → 12:02 回「恭喜您已接受邀請成為麵包學徒」，中間病人那一側一句話都沒有；而打「早安／午安／晚安」三則都沒有回應。</p>
-<p>它根本沒開自動回應，所以那一則必定是系統送的。<b class="m">⚠</b> 是未認證帳號，對方可能拿這一點說嘴。</p>
-</div>
-<div class="ev">
-<p class="hd">中國信託<span class="w">背景</span></p>
-<p>綁定完成回一張帶四顆按鈕的 Flex 圖卡，頭圖上寫著「綁定完成！」。打「早安／午安／晚安／等好久」四句四則不同。</p>
-<p>綁定完成那一則可以是 Flex 圖卡 ＝ 和我們那張同一類。<b class="m">⚠</b> 四句全是固定字，反駁不了「含號碼的那一句抓不到」。</p>
-</div>
-<div class="ev">
-<p class="hd">台北富邦<span class="w">背景</span></p>
-<p>「恭喜成為我們的綁定好友」＋下載行動銀行的連結卡；打三句都回同一張「數位客服邦尼」。</p>
-<p>回一則通用的 fallback 是常態、不丟臉 —— 我們那一則的存在是對的。</p>
-</div>
-<div class="ev">
-<p class="hd">國泰世華<span class="w">背景</span></p>
-<p>同一分鐘內：打別的字回「我無法理解該字詞意思」、打「綁定」回帶名字的專屬卡。</p>
-<p>專屬的一則和通用的那一則可以在同一個帳號裡並存。<b class="m">⚠</b> 「綁定」是固定字，仍然反駁不了那一句。</p>
-</div>
-<div class="warn"><b class="m">⚠⚠</b> 七張一起丟會被挑最弱的那一張回。主力擺品御、玉山補刀，其餘五張只在被問「有哪些例子」時才拿出來。拿別人家的畫面當證據之前，先問它證明的是哪一句話。</div>
+<figure class="fig">
+<div class="scroll"><img src="../line-booked/shot-query.png" width="2565" height="366"
+  style="width:855px" loading="lazy" alt="我們送過去的約診紀錄查詢規格圖（輪播）"></div>
+<figcaption>我們送過去的規格圖（約診紀錄查詢，輪播．這一條可以左右滑）。日期會被截斷的是這一種
+micro 卡，不是單張的 mega 卡 —— 所以要一張輪播的截圖才看得出 maxLines 改了沒。</figcaption>
+</figure>
 
-<h2 class="h2">⑤ 還沒有答案的 42 題<span class="t">照「誰能答」分開　其中 8 題最急</span></h2>
+<h2 class="h2">③ 浮水印那九顆<span class="t">形狀取自 brand/shapes／寬度與顏色取自 wm-sizes.json</span></h2>
+<div class="nine">
+<figure>
+<svg viewBox="0 0 29.273 29.282" width="29.273" height="29.282" style="width:49.8%"
+  role="img" aria-label="浮水印形狀 r1c1"><g transform="translate(-166.723 511.764) scale(1 -1)"><path fill="#3f654a"
+  fill-rule="evenodd" d="M 169.138 507.466 C 174.036 512.891 187.403 513.495 193.553 507.466 C 197.569 503.528 195.758 495.329 194.278 492.182 C 192.28 487.935 190.318 482.482 181.357 482.482 C 175.147 482.482 171.687 485.294 168.543 492.182 C 165.68 498.451 166.436 504.473 169.138 507.466 M 183.24 486.006 C 183.489 486.079 183.584 486.097 183.827 486.006 C 183.99 485.945 184.211 485.956 184.372 486.006 C 184.897 486.169 185.415 487.205 185.32 488.523 C 185.225 489.84 181.834 489.657 181.836 488.523 C 181.839 487.619 182.163 486.455 182.609 486.139 C 182.801 486.003 182.943 485.919 183.24 486.006 M 178.786 486.006 C 179.035 486.079 179.13 486.097 179.373 486.006 C 179.536 485.945 179.757 485.956 179.918 486.006 C 180.443 486.169 180.961 487.205 180.866 488.523 C 180.771 489.84 177.379 489.657 177.382 488.523 C 177.385 487.619 177.709 486.455 178.155 486.139 C 178.347 486.003 178.489 485.919 178.786 486.006"/></g></svg>
+<figcaption>一般牙科・定期檢查<br>r1c1・107px</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 44.304 21.834" width="44.304" height="21.834" style="width:69.8%"
+  role="img" aria-label="浮水印形狀 r1c2"><g transform="translate(-232.961 508.04) scale(1 -1)"><path fill="#317d78"
+  fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+<figcaption>牙周治療<br>r1c2・150px</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 44.229 14.341" width="44.229" height="14.341" style="width:87.4%"
+  role="img" aria-label="浮水印形狀 r1c3"><g transform="translate(-306.733 500.546) scale(1 -1)"><path fill="#4478b5"
+  fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+<figcaption>齒顎矯正<br>r1c3・188px</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 44.267 21.861" width="44.267" height="21.861" style="width:70.7%"
+  role="img" aria-label="浮水印形狀 r2c1"><g transform="translate(-159.225 433.777) scale(1 -1)"><path fill="#ae4f4d"
+  fill-rule="evenodd" d="M 200.76 426.819 C 205.142 421.217 203.911 415.88 199.491 412.98 C 196.899 411.28 192.183 411.879 186.857 413.42 C 175.983 416.566 171.53 409.032 163.348 413.214 C 159.665 415.096 156.953 421.343 161.967 426.764 C 171.255 436.805 194.063 435.38 200.76 426.819 M 179.468 430.235 C 179.219 430.162 179.124 430.144 178.881 430.235 C 178.718 430.296 178.497 430.285 178.336 430.235 C 177.811 430.072 177.293 429.036 177.388 427.718 C 177.483 426.401 180.874 426.584 180.872 427.718 C 180.869 428.622 180.545 429.786 180.099 430.102 C 179.907 430.238 179.765 430.322 179.468 430.235 M 183.921 430.235 C 183.672 430.162 183.577 430.144 183.334 430.235 C 183.171 430.296 182.95 430.285 182.789 430.235 C 182.264 430.072 181.746 429.036 181.841 427.718 C 181.936 426.401 185.328 426.584 185.325 427.718 C 185.322 428.622 184.998 429.786 184.552 430.102 C 184.36 430.238 184.218 430.322 183.921 430.235"/></g></svg>
+<figcaption>顯微根管<br>r2c1・152px</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 29.253 21.955" width="29.253" height="21.955" style="width:55.8%"
+  role="img" aria-label="浮水印形狀 r2c2"><g transform="translate(-240.487 433.824) scale(1 -1)"><path fill="#465885"
+  fill-rule="evenodd" d="M 258.316 412.07 C 263.699 410.812 266.61 415.769 267.523 418.051 C 269.025 421.805 270.191 426.758 269.568 429.365 C 268.74 432.834 265.685 434.439 261.853 433.609 C 253.39 431.776 253.853 432.555 248.515 433.609 C 243.49 434.601 241.244 431.98 240.636 429.365 C 240.028 426.755 241.377 421.108 242.875 418.051 C 244.144 415.462 247.074 410.971 252.502 412.07 C 253.901 412.353 255.844 412.648 258.316 412.07 M 246.025 430.29 C 245.776 430.217 245.681 430.198 245.438 430.29 C 245.275 430.35 245.054 430.34 244.893 430.29 C 244.368 430.126 243.85 429.09 243.945 427.773 C 244.04 426.456 247.432 426.638 247.429 427.773 C 247.426 428.677 247.102 429.84 246.656 430.157 C 246.464 430.292 246.322 430.376 246.025 430.29"/></g></svg>
+<figcaption>植牙・假牙重建<br>r2c2・120px</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 44.261 14.366" width="44.261" height="14.366" style="width:87.4%"
+  role="img" aria-label="浮水印形狀 r2c3"><g transform="translate(-306.719 430.029) scale(1 -1)"><path fill="#8e6299"
+  fill-rule="evenodd" d="M 312.185 418.502 C 306.828 421.135 305.775 425.468 307.45 427.797 C 309.659 430.869 315.27 430.411 321.373 428.582 C 326.635 427.005 332.793 427.484 336.327 428.617 C 341.177 430.17 346.63 430.902 349.755 428.064 C 352.164 425.877 351.188 420.893 345.319 418.028 C 339.632 415.251 320.637 414.347 312.185 418.502 M 346.101 426.494 C 345.852 426.421 345.757 426.403 345.514 426.494 C 345.351 426.555 345.13 426.544 344.969 426.494 C 344.444 426.331 343.926 425.295 344.021 423.977 C 344.116 422.66 347.507 422.843 347.505 423.977 C 347.502 424.881 347.178 426.045 346.732 426.361 C 346.54 426.497 346.398 426.581 346.101 426.494"/></g></svg>
+<figcaption>口腔外科<br>r2c3・188px</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 29.43 29.43" width="29.43" height="29.43" style="width:48.4%"
+  role="img" aria-label="浮水印形狀 r3c1"><g transform="translate(-166.615 366.998) scale(1 -1)"><path fill="#8e6299"
+  fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
+<figcaption>口腔外科<br>r3c1・104px</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 44.221 44.266" width="44.221" height="44.266" style="width:49.3%"
+  role="img" aria-label="浮水印形狀 r3c2"><g transform="translate(-233.002 374.392) scale(1 -1)"><path fill="#c28229"
+  fill-rule="evenodd" d="M 240.173 330.126 C 237.214 330.126 233.002 331.801 233.002 339.494 C 233.002 339.494 233.365 359.509 246.254 371.273 C 251.307 375.885 259.611 374.953 263.874 371.273 C 272.504 363.821 277.223 347.577 277.223 338.885 C 277.223 332.768 274.88 330.126 270.082 330.126 Z M 257.439 370.907 C 257.19 370.834 257.095 370.816 256.853 370.907 C 256.689 370.968 256.468 370.957 256.307 370.907 C 255.782 370.744 255.264 369.708 255.359 368.39 C 255.454 367.073 258.846 367.256 258.843 368.39 C 258.84 369.294 258.516 370.458 258.07 370.774 C 257.878 370.91 257.736 370.994 257.439 370.907"/></g></svg>
+<figcaption>兒童牙科<br>r3c2・106px</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 44.322 14.378" width="44.322" height="14.378" style="width:100.0%"
+  role="img" aria-label="浮水印形狀 r3c3"><g transform="translate(-306.689 359.486) scale(1 -1)"><path fill="#3f654a"
+  fill-rule="evenodd" d="M 326.482 352.763 C 322.051 356.284 318.54 362.303 311.648 357.984 C 304.8 353.692 305.054 344.099 312.348 345.194 C 320.662 346.443 327.623 349.699 339.17 345.971 C 348.848 342.846 350.834 349.33 350.976 350.796 C 351.244 353.557 350.042 358.07 344.814 357.208 C 340.519 356.499 339.1 353.546 335.25 351.658 C 331.729 349.932 328.581 351.095 326.482 352.763 M 316.169 355.937 C 315.92 355.864 315.825 355.846 315.582 355.937 C 315.419 355.998 315.198 355.987 315.037 355.937 C 314.512 355.774 313.994 354.738 314.089 353.42 C 314.184 352.103 317.575 352.286 317.573 353.42 C 317.57 354.324 317.246 355.488 316.8 355.804 C 316.608 355.94 316.466 356.024 316.169 355.937"/></g></svg>
+<figcaption>一般牙科・定期檢查<br>r3c3・215px</figcaption>
+</figure>
+</div>
+<div class="rows">
+<div class="row"><p class="k">現況</p><p class="v">廠商送來的兩張卡上，浮水印確實是這九顆裡的兩顆，形狀與各自的顏色都對得上（圓形＋紫 ＝ 口腔外科那一顆；寬形＋青綠 ＝ 牙周治療那一顆，量到的長寬比 2.024 對表上的 2.029）。顯示寬度約是表上的六成。</p></div>
+<div class="row"><p class="k">要確認的</p><p class="v">同一筆約診（2020/09/11 09:00）在 14:20 是圓形、14:23 是寬形。我們的規格是「(約診月份＋約診日) % 9」，同一筆不管查幾次都是同一顆。要確認現在是在給我們看候選，還是換的規則沒有綁在那一筆約診上。</p></div>
+</div>
+<p class="note">九顆的形狀、顏色與寬度都從 brand/shapes/ 與 preview/line-booked/wm-sizes.json 讀回來，這一頁不抄第二份。九顆的寬度不一樣是刻意的 —— 按墨的面積正規化，看起來才一樣重。</p>
+
+<h2 class="h2">④ 和廠商的四封往返</h2>
+<div class="rows">
+<div class="row">
+<p class="k">2026-09-07　廠商（第一封）</p>
+<p class="v"><i>他說</i>列了八項要的東西（圖檔、文字、規格）。</p>
+<p class="v"><i>我們</i>交出 /preview/line-spec/ —— 模擬圖、圖檔網址、可以整段複製的文字。</p>
+
+</div>
+<div class="row">
+<p class="k">2026-09-07　廠商（第二封）</p>
+<p class="v"><i>他說</i>③ 綁定完成訊息為公版，故無法調整。⑤ 背景只能全白或其他顏色，無法放圖示。</p>
+<p class="v"><i>我們</i>兩題都改寫成新的問法寫進交付頁。</p>
+<p class="v">兩句各自都成立，只是涵蓋的不是我們問的那一點 —— 我們沒有要改那句公版；浮水印要的也不是背景。</p>
+</div>
+<div class="row">
+<p class="k">2026-09-10　廠商（客戶經理 Sunny）</p>
+<p class="v"><i>他說</i>1. 綁定成功訊息沒辦法拿掉（需通知病患、櫃檯可用號碼查資料），它發出時會觸發自動回應，而官方 LINE 無法抓關鍵詞跳不同訊息。2. 約診狀態要留下，因為病患取消後診所要在樂衍上取消才算正式取消。</p>
+<p class="v"><i>我們</i>使用者當天回了三點（約診狀態造成誤會、其他商家帳號不是這樣、浮水印效果有差異），對方回問是哪個帳號。</p>
+<p class="v">逐句的涵蓋範圍拆在下一節。</p>
+</div>
+<div class="row">
+<p class="k">2026-09-10　廠商（改版的四張截圖）</p>
+<p class="v"><i>他說</i>把 ⑥⑦ 兩則照我們的規格改了一版送來看。</p>
+<p class="v"><i>我們</i>逐項比對過：六件對上、四件還沒對上。</p>
+<p class="v">這是這條線目前配合度最高的一次，回信要先講這個。</p>
+</div>
+</div>
+
+<h2 class="h2">⑤ 對方的回覆涵蓋到哪裡<span class="t">「做不到」一律先改寫成「誰做不到」再往下談</span></h2>
+<div class="rows">
+<div class="row">
+<p class="k">後台送不出 Flex Message</p>
+<p class="v"><i>說明的是</i>後台那個編輯介面的型別下拉裡確實沒有 Flex。</p>
+<p class="v"><i>還沒回答</i>LINE 平台送得出，換一個人送就行 —— 而他們自己一直在送。</p>
+</div>
+<div class="row">
+<p class="k">綁定完成訊息為公版，故無法調整</p>
+<p class="v"><i>說明的是</i>那句話是病人那一側送出的，內容固定。</p>
+<p class="v"><i>還沒回答</i>我們沒有要改它。要問的是能不能在它後面再送一則。</p>
+</div>
+<div class="row">
+<p class="k">背景只能全白或其他顏色，無法放圖示</p>
+<p class="v"><i>說明的是</i>Flex 的 box 確實沒有背景圖。</p>
+<p class="v"><i>還沒回答</i>浮水印不是背景，是 image ＋ absolute。而卡片裡放得了圖 —— 他們那張預約成功卡頂端本來就有一顆標誌。</p>
+</div>
+<div class="row">
+<p class="k">官方 LINE 無法針對抓關鍵詞跳不同訊息，已釘死</p>
+<p class="v"><i>說明的是</i>後台的自動回應分不開這一句（關鍵字是完全一致比對，而那句話含著每個人不同的號碼）。</p>
+<p class="v"><i>還沒回答</i>這一則不必由後台回。那句話是他們的系統送出來的，他們在那一刻就知道綁定完成，不必比對任何字串。</p>
+</div>
+<div class="row">
+<p class="k">綁定成功訊息要留著，因為要通知病患</p>
+<p class="v"><i>說明的是</i>通知病患確實需要有一則訊息。</p>
+<p class="v"><i>還沒回答</i>那件事我們自己那張綁定完成卡就在做。玉山的做法是商家自己送一則、不含號碼。</p>
+</div>
+<div class="row">
+<p class="k">…也因為櫃檯可以用手機號碼查病患資料</p>
+<p class="v"><i>說明的是</i>這件事我們以前不知道：那則訊息同時是櫃檯在聊天室裡查號碼的入口。</p>
+<p class="v"><i>還沒回答</i>櫃檯能不能從別的地方看到那個號碼 —— 整件事收斂到這一句，而這一句要先問診所自己。</p>
+</div>
+<div class="row">
+<p class="k">約診狀態要留下，不然樂衍上的約診會不見</p>
+<p class="v"><i>說明的是</i>資料要留在樂衍後台，這一點沒有爭議。</p>
+<p class="v"><i>還沒回答</i>使用者要的是病人那一側不要再看到。兩件可以同時成立 —— 後台照舊保留，LINE 的查詢結果不列。</p>
+</div>
+</div>
+
+<h2 class="h2">⑥ 別家帳號的畫面<span class="t">圖沒有進 repo，也沒有貼上任何頁面（別人家的畫面）。</span></h2>
+<div class="rows">
+<div class="row">
+<p class="k">新竹品御牙醫<span style="font-weight:400;color:var(--soft);font-size:.82rem">　最接近我們的狀況</span></p>
+<p class="v"><i>看到</i>同一個廠商的另一間診所。按約診查詢 → 一模一樣那張藍色公版卡 → 病人那一側送出綁定成功那一句 → 後面沒有再出現任何訊息。它的頁首寫著「此官方帳號正在自動回覆訊息」。</p>
+<p class="v"><i>說明的是</i>同一套系統、同一句話，在那一間診所沒有接著跳出通用回覆。所以要問的是他們那邊怎麼設的，不是要求新功能。</p>
+</div>
+<div class="row">
+<p class="k">玉山銀行<span style="font-weight:400;color:var(--soft);font-size:.82rem">　補充</span></p>
+<p class="v"><i>看到</i>綁定完成那一則是商家自己送的，內容不含號碼。另外打「玉山」「早安」「午安」回三則不同，其中「午安」回的是台幣匯款說明。</p>
+<p class="v"><i>說明的是</i>通知病患這件事不必靠含號碼的那一句。另外，關鍵字分流會出錯，出錯的樣子就是答非所問。</p>
+</div>
+<div class="row"><p class="k">另外五個帳號</p>
+<ul class="tick"><li><b>潔客幫</b>　8:10 綁定完成回一則專屬的、9:34 打「早安」回一則通用的 —— 兩則在同一個帳號裡並存。（那一則也可能是後台的加入好友歡迎訊息。）</li><li><b>BREAD, ESPRESSO &amp;</b>　打三句都沒有回應 ＝ 沒有開自動回應，所以綁定後那一則是系統送的。（未認證帳號。）</li><li><b>中國信託</b>　綁定完成回一張帶四顆按鈕的 Flex 圖卡，和我們那張同一類。（打四句話回四則不同，但都是固定字。）</li><li><b>台北富邦</b>　打三句都回同一張客服卡 —— 回一則通用的 fallback 是常見做法。</li><li><b>國泰世華</b>　同一分鐘內，打別的字回「無法理解」、打「綁定」回帶名字的專屬卡。（「綁定」是固定字。）</li></ul>
+</div>
+</div>
+<p class="note">每一張說明的事情不一樣。附給廠商時一次只附對應那一句的那一張，並寫清楚它對應的是哪一句。</p>
+
+<h2 class="h2">⑦ 還沒有答案的 40 題<span class="t">照「誰能答」分開・★ 是最先要的 9 題</span></h2>
 <div class="grp">
 <p class="t">只有廠商能答</p>
-<p class="c">28 題・其中 5 題最急</p>
+<p class="c">26 題・其中 6 題最先要</p>
 <ul class="ask">
-<li><span class="q hot">⭐ 這個帳號總共會自動送出哪幾則訊息？（一份清單）</span><span class="y">要了四次沒拿到，每一次要不到就從截圖裡再冒出一則。它決定我們還有沒有漏掉的。</span></li>
-<li><span class="q hot">⭐ 新版卡上的年份寫著 2020（截圖是 2026-09-10 拍的）—— 那是測試資料，還是系統真的把年份算錯？</span><span class="y"><b class="m">⚠⚠⚠</b> 算錯的話每一個病人都會收到錯的年，而這一則是約好的當下就送。<b class="m">⚠</b> 不可以從星期反推：2020-09-11 和 2026-09-11 都是星期五。</span></li>
-<li><span class="q hot">⭐ 同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用的自動回覆 —— 他們的自動回應是怎麼設的？我們能不能照那個設法？</span><span class="y">不是要求新功能，是問他們自己手上就有的設定。<b class="m">⚠</b> 先備好兩種答案：關鍵字模式（我們那一則就廢了）／時段（綁定隨時會發生，避不開）。</span></li>
-<li><span class="q hot">⭐ 約診紀錄查詢那張卡的日期，maxLines 拿掉了嗎？請給一張輪播的截圖。</span><span class="y"><b class="m">⚠</b> 全線唯一一件現在就在出錯的事。09-10 改版那四張看不出來 —— 單張是 mega 本來就不會截，會截的是 micro 輪播。<b class="m">⚠⚠</b> 真正要修的是 wrap 不是格式：格式短只是多買一層餘裕。</span></li>
-<li><span class="q hot">⭐ 評價邀約那兩顆按鈕分別連到哪裡？</span><span class="y">如果只有「願意」那一顆通向公開評論，那是 review gating。答案出來之前那一則不要送。</span></li>
-<li><span class="q">綁定完成那一則現在是誰回的？改由你們的系統在綁定當下送我們那張卡可不可以？後台的自動回應同時開著會不會兩則一起送？</span><span class="y"><b class="m">⚠</b> 最後那一題會動到已定稿的自動回應（選純文字的唯一理由是「字留在自己手上」）—— 那是使用者的決定。</span></li>
-<li><span class="q">病人自己按過取消之後，他在 LINE 查詢時那一筆能不能就不列出來？（樂衍後台照舊保留）</span><span class="y">問法不是「把約診狀態拿掉」—— 那會照 a／b 被回絕。兩邊守的是兩件事，可以同時成立。</span></li>
-<li><span class="q">「預約狀態」總共有幾種值、各是什麼意思？和提醒卡那顆確認鈕是不是同一個欄位？</span></li>
-<li><span class="q">浮水印能不能用 position:absolute 疊在文字後面？疊不上去我們退回「右邊一顆不重疊」。</span></li>
-<li><span class="q">24 小時沒回應自動取消：計時會不會跳過休診日？被自動取消時會不會通知病人？</span></li>
-<li><span class="q">提醒卡是不是固定 48 小時前送？（真截圖那一則是 3 天前）</span></li>
-<li><span class="q">「預約改期」那顆按鈕的字改不改得動？（它只取消，那是誤會的源頭）</span></li>
-<li><span class="q">取消確認那兩顆按鈕的順序可不可以調？（把「不取消」排前面）</span></li>
-<li><span class="q">期限外那一種可不可以直接回電話那一則，不要先問一次？（三步變一步）</span></li>
-<li><span class="q">颱風休診那天，系統裡那些約診會變成什麼？（48 小時提醒已經送出去了）</span><span class="y">它決定「這次不算你失約」那句能不能寫。</span></li>
-<li><span class="q">能不能做一個臨時休診公告：診所選一個日期，系統自動發給那天有約的人？</span><span class="y">同時解掉「圖卡」與「人工一個一個貼名單」。</span></li>
-<li><span class="q">還沒綁定的人按其他格會怎樣？總共有幾種自動回覆？</span></li>
-<li><span class="q">「您尚未有任何預約😃」那一則要不要一起改？</span></li>
-<li><span class="q">圖文選單做不做得到分眾（綁定前後給不同的選單）？</span></li>
-<li><span class="q">選單列那行字（現在是「手機註冊」）誰在設、改不改得動？</span><span class="y">圖上寫「手機綁定」，同一條選單兩個詞。</span></li>
-<li><span class="q">綁定的網址（我們卡片上那顆按鈕還是佔位符）。</span></li>
-<li><span class="q">輪播最多幾張？超過怎麼辦？（LINE 上限 12）</span></li>
-<li><span class="q">Flex 裡「可點的 box」有沒有按壓反白？</span></li>
-<li><span class="q"><b class="m">⭐</b> 合約包了什麼：改一則訊息算不算服務範圍內？有沒有次數限制？</span><span class="y">沒有這個資訊，就不知道該用要求的還是商量的。這一題從頭到尾沒有問過。</span></li>
-<li><span class="q">日期可不可以換成 9月11日 (五) 09:00（去年份、月日中文、括號維持半形）？</span><span class="y">現在送的是這個帳號裡最長的一種寫法，而那正是被截斷的那一種。<b class="m">⚠</b> 這是在 wrap 之上再多買一層餘裕，不是替代品。</span></li>
-<li><span class="q">病人自己按過取消的那一筆，能不能就不要列在他的查詢清單裡？（樂衍後台照舊保留）</span><span class="y"><b class="m">⚠⚠</b> 這是把「預約狀態整行拿掉」縮小之後的問法 —— 他們新版的字（您已取消，請聯絡診所改約）比舊的好，堅持原話等於把改進推掉。做不到就留著這一版的字，不要退回「尚未回覆」。</span></li>
-<li><span class="q">浮水印是按什麼規則換的？請改成 (約診月份＋約診日) % 9 —— 同一筆約診不管查幾次都同一顆，而且預約成功與查詢清單裡那一張要同一顆同一色。</span><span class="y"><b class="m">⚠⚠</b> 他們已經照九顆那張表在做（形狀與每一顆自己的顏色都對得上），但<b>同一筆約診 14:20 是圓形、14:23 變寬形</b> —— 若不是在給候選，就是輪替沒綁在那一筆上，那是 22-13 明文否決的「同一筆每次看都不一樣」。<b class="m">⚠</b> 尺寸量到是表上的六成，要確認是刻意收淡還是另外挑的值。</span></li>
-<li><span class="q">浮水印用 position: absolute 疊在文字後面，實機上會不會蓋到字？</span><span class="y">這一項從來沒有實機驗過。09-10 那四張的右下角剛好沒有字，看不出來。蓋到就退回「右邊一顆不重疊」。</span></li>
-</ul></div>
+<li><span class="s">★</span>這個帳號總共會自動送出哪幾則訊息？（一份清單）<span class="y">目前有四則是從截圖裡發現的，所以還不確定有沒有漏掉。</span></li>
+<li><span class="s">★</span>新版卡上的年份是 2020 —— 那是測試資料，還是系統算出來的值？<span class="y">若是系統算的，每個病人都會收到錯的年份。</span></li>
+<li><span class="s">★</span>約診紀錄查詢那張卡的日期，maxLines 拿掉了嗎？請給一張輪播的截圖。<span class="y">全線唯一一件現在就在出錯的事。要修的是 wrap，換短格式只是多買一層餘裕。</span></li>
+<li><span class="s">★</span>同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆 —— 他們的自動回應是怎麼設的？我們能不能照那個設法？<span class="y">不是要求新功能，是問他們手上已經有的設定。</span></li>
+<li><span class="s">★</span>評價邀約那兩顆按鈕分別連到哪裡？<span class="y">若只有「願意」那一顆通向公開評論，那是 review gating。答案出來之前那一則不送。</span></li>
+<li><span class="s">★</span>合約包了什麼：改一則訊息算不算服務範圍內？有沒有次數限制？<span class="y">沒有這個資訊，就不知道該用要求的還是商量的。這一題還沒問過。</span></li>
+</ul>
+<details><summary>其餘 20 題</summary>
+<ul class="ask">
+<li><span class="s">・</span>浮水印是按什麼規則換的？能不能改成 (約診月份＋約診日) % 9？<span class="y">同一筆約診不管查幾次都同一顆，預約成功與查詢清單裡那一張也要同一顆同一色。</span></li>
+<li><span class="s">・</span>浮水印用 position: absolute 疊在文字後面，實機上會不會蓋到字？<span class="y">這一項從來沒有實機驗過；09-10 那四張的右下角剛好沒有字。蓋到就退回「右邊一顆不重疊」。</span></li>
+<li><span class="s">・</span>日期可不可以換成「9月11日 (五) 09:00」（去年份、月日中文、括號維持半形）？</li>
+<li><span class="s">・</span>病人自己按過取消的那一筆，能不能不要列在他的 LINE 查詢清單裡？（樂衍後台照舊保留）</li>
+<li><span class="s">・</span>「預約狀態」總共有幾種值、各是什麼意思？和提醒卡那顆確認鈕是不是同一個欄位？</li>
+<li><span class="s">・</span>綁定完成那一則現在是誰回的？改由你們的系統在綁定當下送我們那張卡可不可以？後台的自動回應同時開著會不會兩則一起送？<span class="y">最後那一題會動到已定稿的自動回應（選純文字的理由是字留在自己手上）—— 那是使用者的決定。</span></li>
+<li><span class="s">・</span>24 小時沒回應自動取消：計時會不會跳過休診日？被自動取消時會不會通知病人？</li>
+<li><span class="s">・</span>提醒卡是不是固定 48 小時前送？（真截圖那一則是 3 天前）</li>
+<li><span class="s">・</span>「預約改期」那顆按鈕的字改不改得動？（它只取消）</li>
+<li><span class="s">・</span>取消確認那兩顆按鈕的順序可不可以調？（把「不取消」排前面）</li>
+<li><span class="s">・</span>期限外那一種可不可以直接回電話那一則，不要先問一次？</li>
+<li><span class="s">・</span>颱風休診那天，系統裡那些約診會變成什麼？<span class="y">它決定「這次不算你失約」那句能不能寫。</span></li>
+<li><span class="s">・</span>能不能做一個臨時休診公告：診所選一個日期，系統自動發給那天有約的人？</li>
+<li><span class="s">・</span>還沒綁定的人按其他格會怎樣？總共有幾種自動回覆？</li>
+<li><span class="s">・</span>「您尚未有任何預約」那一則要不要一起改？</li>
+<li><span class="s">・</span>圖文選單做不做得到分眾（綁定前後給不同的選單）？</li>
+<li><span class="s">・</span>選單列那行字（現在是「手機註冊」）誰在設、改不改得動？<span class="y">圖上寫「手機綁定」，同一條選單兩個詞。</span></li>
+<li><span class="s">・</span>綁定的網址（我們卡片上那顆按鈕還是佔位符）。</li>
+<li><span class="s">・</span>輪播最多幾張？超過怎麼辦？（LINE 上限 12）</li>
+<li><span class="s">・</span>Flex 裡「可點的 box」有沒有按壓反白？</li>
+</ul></details>
+</div>
 <div class="grp">
 <p class="t">診所自己在後台按一次就知道</p>
-<p class="c">6 題・其中 1 題最急</p>
+<p class="c">6 題・其中 1 題最先要</p>
 <ul class="ask">
-<li><span class="q hot">⭐ <b class="m">⭐</b> 對品御那個帳號打一句「早安」，看它回不回。</span><span class="y">回了通用的 ＝ 那句綁定成功根本沒經過後台，問題從「LINE 的限制」變成「他們怎麼設的」；沒回 ＝ 關鍵字模式。兩種結果都用得上。五分鐘。</span></li>
-<li><span class="q">一對一聊天室的「＋」裡有哪幾種型別？（有沒有「圖文訊息」）</span></li>
-<li><span class="q">群發的「受眾」能不能上傳名單？</span></li>
-<li><span class="q">一則自動回應底下能掛幾個對話框？（查到 3 和 5 兩種說法，按到不能再加為止）</span></li>
-<li><span class="q">圖文選單「基本設定」那一格底下是什麼？（綁定有可能早就在裡面）</span></li>
-<li><span class="q">商業簡介那三格，小格是照 410×410 裁還是留白？（按一次「預覽」就知道）</span><span class="y">大格已經確認是 cover 裁切。</span></li>
-</ul></div>
+<li><span class="s">★</span>對品御那個帳號打一句「早安」，看它回不回。<span class="y">回了通用的 ＝ 那句綁定成功沒有經過後台；沒回 ＝ 關鍵字模式。兩種結果都用得上。五分鐘。</span></li>
+</ul>
+<details><summary>其餘 5 題</summary>
+<ul class="ask">
+<li><span class="s">・</span>一對一聊天室的「＋」裡有哪幾種型別？（有沒有「圖文訊息」）</li>
+<li><span class="s">・</span>群發的「受眾」能不能上傳名單？</li>
+<li><span class="s">・</span>一則自動回應底下能掛幾個對話框？<span class="y">查到 3 和 5 兩種說法，按到不能再加為止。</span></li>
+<li><span class="s">・</span>圖文選單「基本設定」那一格底下是什麼？<span class="y">綁定有可能早就在裡面。</span></li>
+<li><span class="s">・</span>商業簡介那三格，小格是照 410×410 裁還是留白？<span class="y">按一次「預覽」就知道。大格已經確認是 cover 裁切。</span></li>
+</ul></details>
+</div>
 <div class="grp">
 <p class="t">只有診所自己知道的事實</p>
-<p class="c">5 題・其中 1 題最急</p>
+<p class="c">5 題・其中 1 題最先要</p>
 <ul class="ask">
-<li><span class="q hot">⭐ <b class="m">⭐</b> 櫃檯多常用聊天室那句訊息裡的號碼查病患資料？樂衍後台查不查得到？</span><span class="y">廠商的理由 a 已經有反例，整件事現在收斂到這一句。答案是「用不到／別處查得到」，那句話就拿得掉。</span></li>
-<li><span class="q">3,205 個好友裡有多少人綁定了？</span><span class="y">決定「催綁定」那一則值不值得做。</span></li>
-<li><span class="q">颱風天診所有沒有人接電話？</span><span class="y">沒人接的話「有急事可以打」比不寫還糟。</span></li>
-<li><span class="q">颱風停診那一次「不算失約」要不要寫？</span><span class="y">那是政策不是文案。</span></li>
-<li><span class="q">看診時間三組不一致（網站／門口磁鐵板＝LINE 門診時間／LINE 營業時間）要不要收斂？</span><span class="y"><b class="m">⚠</b> 網站那一組是使用者指定的，不要自己訂正。</span></li>
-</ul></div>
+<li><span class="s">★</span>櫃檯多常用聊天室那句訊息裡的號碼查病患資料？樂衍後台查不查得到？<span class="y">整件事現在收斂到這一句。答案是「用不到／別處查得到」，那句話就拿得掉。</span></li>
+</ul>
+<details><summary>其餘 4 題</summary>
+<ul class="ask">
+<li><span class="s">・</span>3,205 個好友裡有多少人綁定了？<span class="y">決定「催綁定」那一則值不值得做。</span></li>
+<li><span class="s">・</span>颱風天診所有沒有人接電話？<span class="y">沒人接的話「有急事可以打」比不寫還糟。</span></li>
+<li><span class="s">・</span>颱風停診那一次「不算失約」要不要寫？<span class="y">那是政策不是文案。</span></li>
+<li><span class="s">・</span>看診時間三組不一致要不要收斂？<span class="y">網站那一組是使用者指定的，不要自己訂正。</span></li>
+</ul></details>
+</div>
 <div class="grp">
 <p class="t">要一張截圖或一個素材</p>
-<p class="c">3 題・其中 1 題最急</p>
+<p class="c">3 題・其中 1 題最先要</p>
 <ul class="ask">
-<li><span class="q hot">⭐ <b class="m">⭐</b> 一張病人自己手機上的卡片截圖。</span><span class="y">全線每一個版面判斷都建立在「卡片寬 268px」上，而那是從診所端後台的截圖推導的，從來沒有在病人那一側量過。</span></li>
-<li><span class="q">取消確認按「否」之後長什麼樣。</span><span class="y">那一格現在是我們擬的。</span></li>
-<li><span class="q">Google 商家的 Place ID。</span><span class="y">評價卡那顆按鈕要它才連得到「寫評論」。</span></li>
-</ul></div>
+<li><span class="s">★</span>一張病人自己手機上的卡片截圖。<span class="y">全線每一個版面判斷都建立在「卡片寬 268px」上，而那是從診所端後台的截圖推導的。</span></li>
+</ul>
+<details><summary>其餘 2 題</summary>
+<ul class="ask">
+<li><span class="s">・</span>取消確認按「否」之後長什麼樣。<span class="y">那一格現在是我們擬的。</span></li>
+<li><span class="s">・</span>Google 商家的 Place ID。<span class="y">評價卡那顆按鈕要它才連得到「寫評論」。</span></li>
+</ul></details>
+</div>
 
 <p class="foot">
 這一頁由 <code>node drafts/channels/build-vendor.mjs</code> 產生，資料在
-<code>drafts/channels/vendor-log.json</code>。<br>
+<code>drafts/channels/vendor-log.json</code>，縮圖由
+<code>node drafts/channels/vendor-shots.mjs</code> 從各則規格頁的產出檔縮出來。<br>
 七則訊息的文字、圖檔與規格在另一頁：<a href="/preview/line-spec/">/preview/line-spec/</a>
 </p>
 

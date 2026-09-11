@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 守門：廠商對接那一頁（preview/line-vendor/）
 //
-// 擋七件：
+// 擋八件：
 //  ① 重跑 build-vendor.mjs、逐位比對（有人手改了頁面，或改了 JSON 卻忘了重跑）
 //  ② ⚠⚠ 頁面上不可以出現「七則訊息的文字」—— 那些字的出處是各自的 Flex JSON 與
 //     auto-reply.txt，抄進來就是第八個真相。這一道從那些檔裡現抽長句去掃。
@@ -10,6 +10,12 @@
 //  ⑤ 紅線（「隨時問」那一類 —— 這個帳號沒有專人即時回覆）
 //  ⑥ 內部連結指得到真的檔案
 //  ⑦ 八個寬度水平溢出 0、JS 錯 0
+//  ⑧ 頁上每一張圖都找得到、width/height 對得上實檔、沒有孤兒縮圖
+//  ⑨ 只敘述事實：不出現「真／假」那一組判語，也不留警示色的標籤
+//     （2026-09-11 使用者：「不要有太情緒或是指控誰說謊　只要基於事實
+//      客觀的敘述就好」。加回去不會讓任何一道版面守門翻臉，所以要有一道盯著。）
+//     ⚠ 縮圖是 vendor-shots.mjs 從各則規格頁的產出檔縮出來的 —— 那幾頁重跑過
+//       出圖腳本之後，這一支也要重跑，不然這一頁的圖會停在舊版。
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
@@ -112,6 +118,58 @@ for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
 await browser.close();
 if (errs.length) bad.push(`⑦ JS 錯 ${errs.length}：${errs[0]}`);
 if (!bad.some((b) => b.startsWith("⑦"))) ok("⑦ 八個寬度水平溢出 0、JS 錯 0");
+
+/* ⑧ 圖 ---------------------------------------------------------------- */
+const DIR = path.dirname(PAGE);
+const sizeOf = (f) => {
+  const b2 = fs.readFileSync(f);
+  if (b2[0] === 0x89 && b2[1] === 0x50) return { w: b2.readUInt32BE(16), h: b2.readUInt32BE(20) };
+  /* JPEG 要掃 SOF，不能像 PNG 那樣讀固定位移 */
+  for (let i = 2; i < b2.length - 9; ) {
+    if (b2[i] !== 0xff) { i++; continue; }
+    const m2 = b2[i + 1];
+    if (m2 >= 0xc0 && m2 <= 0xcf && m2 !== 0xc4 && m2 !== 0xc8 && m2 !== 0xcc)
+      return { w: b2.readUInt16BE(i + 7), h: b2.readUInt16BE(i + 5) };
+    i += 2 + b2.readUInt16BE(i + 2);
+  }
+  throw new Error(`${f} 讀不出尺寸`);
+};
+const used = new Set();
+let imgs = 0;
+for (const m of html.matchAll(/<img\s[^>]*>/g)) {
+  const tag = m[0];
+  const src = (tag.match(/src="([^"]+)"/) || [])[1];
+  const w = Number((tag.match(/\swidth="(\d+)"/) || [])[1]);
+  const h = Number((tag.match(/\sheight="(\d+)"/) || [])[1]);
+  if (!src) { bad.push("⑧ 有一張 img 沒有 src"); continue; }
+  if (!/alt="[^"]+"/.test(tag)) bad.push(`⑧ ${src} 沒有 alt`);
+  const f = path.resolve(DIR, src);
+  if (!fs.existsSync(f)) { bad.push(`⑧ 找不到圖：${src}`); continue; }
+  if (f.startsWith(DIR + path.sep)) used.add(path.basename(f));
+  const s2 = sizeOf(f);
+  if (s2.w !== w || s2.h !== h)
+    bad.push(`⑧ ${src} 宣告 ${w}×${h}，實檔是 ${s2.w}×${s2.h}`);
+  imgs++;
+}
+/* 孤兒縮圖：改過 vendor-log.json 之後留在資料夾裡沒人引用的那幾張 */
+for (const f of fs.readdirSync(DIR))
+  if (/^t-.*\.jpg$/.test(f) && !used.has(f)) bad.push(`⑧ 沒有人引用的縮圖：${f}`);
+/* 縮圖本身要和來源對得上（尺寸；來源換圖了就重跑 vendor-shots.mjs） */
+try {
+  execFileSync("node", [path.join(HERE, "vendor-shots.mjs"), "--check"], { stdio: "pipe" });
+} catch (e) {
+  bad.push("⑧ vendor-shots.mjs --check 沒過：" + String(e.stdout || e).slice(0, 160));
+}
+if (!bad.some((x) => x.startsWith("⑧"))) ok(`⑧ ${imgs} 張圖都在、尺寸對得上、沒有孤兒縮圖`);
+
+/* ⑨ 只敘述事實 -------------------------------------------------------- */
+const JUDGE = ["真不真", "說謊", "指控", "有反例", "只有一半對", "講太寬",
+               "答的是另一個問題", "答的是另一件事", "證據力", "主力", "補刀"];
+const j = JUDGE.filter((w) => html.includes(w));
+if (j.length) bad.push(`⑨ 出現判語：${j.join("、")}`);
+else if (/class="tag/.test(html)) bad.push("⑨ 還留著警示色的標籤（class=\"tag…\"）");
+else if (html.includes("⚠")) bad.push("⑨ 還留著警示記號（⚠）");
+else ok("⑨ 沒有判語、沒有警示色、沒有警示記號");
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }
 console.log("\n全部通過。");
