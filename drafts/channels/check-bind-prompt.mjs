@@ -10,7 +10,7 @@
  *     ④ 按鈕的字逐字 ＝ welcome-card.json 那一顆（同一個動作要長一樣）
  *     ⑤ 電話是現行寫法 05-5339369（作廢的 (05)5339-369 不可以出現）
  *     ⑥ 紅線：沒有專人即時回覆的承諾（三案 × 三格全部掃）
- *     ⑦ 標題逐字 ＝ 使用者指定的那一句，而且一行放得下就要是一行
+ *     ⑦ 標題逐字 ＝ 使用者指定的那一句，一行放得下就要是一行，而且**置中**
  *        卡上不可以出現「48小時／2天」（那兩種講法還沒統一，不要生出第三種）
  *     ⑧ 八個寬度：水平溢出 0、卡片畫出來就是 268px
  *     ⑩ **預設那一張只准有標題與按鈕**（2026-09-10 使用者指定「其他文字拿掉」）——
@@ -147,7 +147,12 @@ for (const w of WIDTHS) {
             tops[k].r = Math.max(tops[k].r, b.right);
           }
           const ws = Object.values(tops).map((v) => v.r - v.l);
-          return { rows: ws.length, wide: Math.max(...ws) };
+          /* 置中不置中：量墨，不要問 text-align ——
+             那個屬性寫著 center、被別條規則蓋掉時畫面照樣是靠左的。 */
+          const box = card.querySelector(".b").getBoundingClientRect();
+          const gaps = Object.values(tops).map((v) =>
+            Math.abs((v.l - box.left) - (box.right - v.r)));
+          return { rows: ws.length, wide: Math.max(...ws), off: Math.max(...gaps) };
         })(),
         cardW: card.getBoundingClientRect().width,
         btns: [...card.querySelectorAll(".btn > span")].map((s) => s.textContent),
@@ -194,6 +199,10 @@ for (const w of WIDTHS) {
         `${c}/${h}/${t}：標題最寬那一行 ${got.titleLines.wide.toFixed(1)}px，超過可用的 240`);
       ok(got.titleLines.rows === 1,
         `${c}/${h}/${t}：標題畫成 ${got.titleLines.rows} 行（量到最寬 ${got.titleLines.wide.toFixed(1)}px，一行放得下就該是一行）`);
+      /* ⚠ 標題置中（2026-09-10 使用者指定）——靠回左邊畫面照樣正常、
+         每一道尺寸守門也都會過，只有量左右留白才看得出來。 */
+      ok(got.titleLines.off <= 1,
+        `${c}/${h}/${t}：標題沒有置中（左右留白差 ${got.titleLines.off.toFixed(1)}px）`);
     }
     ok(got.text.includes("05-5339369") || t === "off",
       `${c}/${h}/${t}：電話那把尺不是「不放」，卡上卻找不到 05-5339369`);
@@ -229,7 +238,8 @@ const t390 = seen.find((s) => s.w === 390);
 console.log("✅ " + seen.length + " 組（8 個寬度 × 3 案 × 2 頭圖 × 3 電話）全部通過：\n" +
   "   資料夾只有 index.html（四個圖都引用別人那一份）、頭圖 1024×512、" +
   "按鈕逐字 ＝ 招呼圖卡那一顆、\n   標題逐字 ＝「" + TITLE + "」（畫成 " +
-  t390.titleLines.rows + " 行、最寬 " + t390.titleLines.wide.toFixed(1) + "px／可用 240）、\n" +
+  t390.titleLines.rows + " 行、最寬 " + t390.titleLines.wide.toFixed(1) +
+  "px／可用 240、置中偏 " + t390.titleLines.off.toFixed(1) + "px）、\n" +
   "   預設那一張只有標題與按鈕、切換條沒有長回來、\n" +
   "   電話是現行寫法、紅線 0、沒有 48 小時也沒有 2 天、卡片畫成 268、水平溢出 0\n" +
   "   ⚠ 標題那個「30 秒」是廠商那張卡上的數字，我們沒有量過 —— 面板照實印著，" +
