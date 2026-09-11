@@ -50,7 +50,7 @@
 html{-webkit-text-size-adjust:100%}
 body{background:var(--paper);color:var(--ink);
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
-  line-height:1.7;padding-bottom:200px}
+  line-height:1.7;padding-bottom:40px}   /* 切換條拿掉了，不必再替它讓出 200px */
 .pv-wrap{max-width:430px;margin:0 auto;padding:14px 14px 0}
 h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
@@ -170,28 +170,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 .pv-note ol{margin:6px 0 0 1.1em;padding:0}
 .pv-note li{margin:0 0 5px}
 
-/* ---- 切換條 ---------------------------------------------------------- */
-.pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:9;
-  background:rgba(244,244,245,.96);backdrop-filter:blur(8px);
-  border-top:1px solid var(--rule);padding:7px 10px calc(7px + env(safe-area-inset-bottom))}
-.pv-bar .r{display:flex;gap:6px;align-items:center;overflow-x:auto;
-  scrollbar-width:none;padding-bottom:2px}
-.pv-bar .r::-webkit-scrollbar{display:none}
-.pv-bar .lb{font-size:.66rem;color:var(--ink-soft);flex:none;width:3.1em}
-/* ⚠ 每一顆按鈕包在一個 span 裡，那個 span 一定要 display:flex ——
-   不然按鈕會在 span 裡換行、外層的 overflow-x 根本用不到（22-13 踩過）。 */
-.pv-bar .r > span[id]{display:flex;gap:6px;flex:none}
-.pv-bar button{flex:none;font:inherit;font-size:.72rem;line-height:1.55;
-  border:1px solid var(--deep);color:var(--deep);background:#fff;
-  border-radius:8px;padding:4px 8px;cursor:pointer;white-space:nowrap}
-.pv-bar button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
-.pv-bar .r + .r{margin-top:4px}
-.pv-bar .fold{position:absolute;right:10px;top:-31px;border-radius:8px 8px 0 0;
-  border-bottom-color:transparent;font-size:.7rem;padding:3px 10px;
-  background:rgba(244,244,245,.96)}
-.pv-bar.fold-in{padding-top:7px}
-.pv-bar.fold-in .r{display:none}
-.pv-bar.fold-in .fold{position:static;border-radius:8px;border-bottom-color:var(--deep)}
+/* ---- 切換條：2026-09-10 整條拿掉（三把尺都定了），樣式一起清掉 ---- */
 </style>
 </head>
 <body>
@@ -201,8 +180,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   <p class="pv-sub">加了好友、還沒綁定的人按下那一格之後跳出來的那一張。<br>
     <b>這一則已經在跑了</b> —— 你截圖上那張藍色卡就是它，所以這一輪是<b>改版</b>，
     不是多加一則訊息。頭圖用<b>之前那張綁定圖</b>（＝綁定完成那一張的同一個檔）。<br>
-    <b>標題已經換成你指定的那一句</b>，三案共用，所以切換條那把尺現在調的是
-    <b>標題底下寫什麼</b>。切換條在最下面。</p>
+    <b>照你說的收成三樣：頭圖、標題、按鈕。</b>標題底下那一段、家人那一句、
+    電話那一行<b>全部拿掉了</b>，所以<b>切換條也跟著收掉</b> —— 沒有東西要挑了。
+    拿掉的那幾段各帶走什麼，寫在底下那一塊與第 ① 段下面。</p>
 
   <div class="pv-fact">
     <h2>先把幾件事實放上來</h2>
@@ -249,10 +229,36 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
         ② <b>整張都是廠商的</b>：兩隻吉祥物、那支藍，芳仁一個記號都沒有<br>
         ③ 「啟用完整服務」是<b>系統的話</b> —— 病人不知道「完整服務」是什麼<br>
         ④ <b>沒有第二條路</b>：不想綁、綁不起來的人，這張卡就是死路<br>
-        ⚠ <b>你指定把標題換成那一句，所以 ③ 現在由底下那一段接</b> ——
-        Ⓐ 用「你剛剛點的約診查詢」舉一個他現在就用得到的例子、Ⓑ 直接把它拆成兩件事，
-        Ⓒ 則是不翻譯。<b class="y">順帶一件：那句話和圖文選單那張的副標
+        ⚠ <b>收成三樣之後，② 治好了</b>（圖與字都是芳仁的），
+        <b class="y">而 ① ③ ④ 維持現況那一版的樣子</b> —— 那是你的決定，
+        底下那一塊把各自帶走什麼寫清楚。<br>
+        <b class="y">順帶一件：標題那句「啟用完整服務」和圖文選單那張的副標
         「綁定後啟用完整功能」是同一套詞</b>，兩塊前後腳出現在同一個畫面上，一致是對的。</dd>
+
+      <dt>⚠ 拿掉那三段字，各帶走一件事</dt>
+      <dd>
+        <table>
+          <tr><th>拿掉的</th><th>它原本在做什麼</th></tr>
+          <tr><td>標題底下那一段</td>
+              <td>唯一會提到<b>他剛剛按的「約診查詢」</b>的地方，<br>
+                也是唯一替「完整服務」翻譯的地方</td></tr>
+          <tr><td>家人那一句</td>
+              <td>沒有損失 —— <span class="y">綁定完成那一張已經講過一次</span></td></tr>
+          <tr><td><b class="n">電話那一行</b></td>
+              <td><b>綁不起來的人唯一的出路</b>（見下）</td></tr>
+        </table></dd>
+
+      <dt>⚠⚠ 電話拿掉之後，綁不起來的人會走進一個圈子</dt>
+      <dd>卡上沒有別的路，他多半會<b>直接在這裡打字</b>。
+        那會打到<b>已經定稿的自動回應</b>，而那一則<b class="y">確實給得出電話</b>
+        （「來電變更　05-5339369」）—— 所以<b>不是完全的死路</b>。<br>
+        <b class="q">但那一則接著寫著「查自己的約診　點下面選單的『約診查詢』」</b> ——
+        那正是他剛剛按、而且按不動的那一格。<b class="n">他會被送回起點。</b><br>
+        ⚠ 這個圈子<b>本來就在</b>（自動回應那一則早就這樣寫），
+        只是先前卡上有電話，他不必走到那一步。
+        <b class="y">兩個解法都不必動這張卡</b>：把電話那一行放回來（網址加
+        <code>?t=note</code> 就看得到），或是改自動回應那一句
+        （⚠ 那一則你已經定稿，<b>要動得你點頭</b>）。</dd>
 
       <dt>⚠ 標題那個「30 秒」是<b>你指定要寫的</b>，它有一個出處問題</dt>
       <dd>那個數字來自<b>廠商那張公版卡</b>（「僅需花費30秒」），<b class="q">我們自己沒有量過</b> ——
@@ -270,8 +276,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   </div>
 
   <h2 class="pv-h2">① 他按下去那一刻</h2>
-  <p class="pv-sub">切換條調的就是這一張。<b>什麼時候送</b>：還沒綁定的人按了圖文選單的
-    「約診查詢」（其他要綁定才看得到的格子也一樣，那是要問廠商的一題）。</p>
+  <p class="pv-sub"><b>什麼時候送</b>：還沒綁定的人按了圖文選單的
+    「約診查詢」（其他要綁定才看得到的格子也一樣，那是要問廠商的一題）。<br>
+    卡上只有三樣：頭圖、標題、按鈕。</p>
 
   <div class="pv-phone">
     <div class="pv-head">
@@ -321,12 +328,13 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   <p class="pv-note" id="pv-ask"></p>
 </div>
 
-<div class="pv-bar" id="pv-bar">
-  <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
-  <div class="r"><span class="lb">標題下</span><span id="sw-c"></span></div>
-  <div class="r"><span class="lb">頭圖</span><span id="sw-h"></span></div>
-  <div class="r"><span class="lb">電話</span><span id="sw-t"></span></div>
-</div>
+<!-- ⚠ 切換條 2026-09-10 整條拿掉（三把尺都定了：頭圖用你那張、標題底下不寫、電話不放）。
+     ⚠⚠ 網址參數仍然吃得到，要回頭比隨時開得出來（同這條線其他幾頁的做法）：
+       ?c=a   標題底下接「你剛剛點的約診查詢…」
+       ?c=b   標題底下拆成兩件事（＋家人那一句）
+       ?h=off 不放頭圖
+       ?t=note 電話留成說明句一行　　?t=btn 電話做成第二顆按鈕
+     ⚠ 面板**沒有**跟著收 —— 卡片多高、有沒有孤字、按鈕的字放不放得下，每次都還要量。 -->
 
 <script>
 (function () {
@@ -350,8 +358,10 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   var TITLE = "30秒快速綁定　啟用完整服務";
 
   /* ------------------------------------------------------------------
-     底下那一段三案。**每一行都是手動斷的**，規則同這條線其他幾則：
-     一行不超過 14 個全形字寬（半形算 0.5）。
+     底下那一段。**2026-09-10 使用者指定拿掉**（「標題和按鈕保存　其他文字拿掉」），
+     所以預設是 c: "c" ＝ 標題底下一個字都沒有。
+     ⚠ Ⓐ／Ⓑ 沒有刪，網址 ?c=a|b 還開得出來（已定案的尺不佔畫面，但要回頭看還在）。
+     ⚠ 每一行都是手動斷的，規則同這條線其他幾則：一行不超過 14 個全形字寬（半形算 0.5）。
      ⚠⚠ 三案都**沒有寫「看診前 48 小時」也沒有寫「看診前 2 天」** ——
         那兩種講法現在一則一種（綁定完成寫 48 小時、招呼圖卡寫 2 天），
         還沒統一。這一則刻意不帶那個數字，不要再生出第三種。
@@ -375,11 +385,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
            "而且家人那一件在<b>綁定完成那一則已經講過一次</b>了。"
     },
     c: {
-      name: "只有一句話",
+      name: "標題底下不寫字", rec: true,
       why: "路障卡的工作只有一件：讓他按下去。<b>字愈少愈容易按</b>，" +
-           "而綁了之後拿得到什麼，綁定完成那一張會再講一次。" +
-           "⚠ 代價有兩個：「完整服務」沒有人替他翻譯，" +
-           "而且綁不起來的人手上什麼都沒有（電話那把尺就是為了這件事）。"
+           "而綁了之後拿得到什麼，綁定完成那一張會再講一次。"
     }
   };
   var HEROS = {
@@ -387,12 +395,13 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     off: { name: "不放", note: "卡片短一截，按鈕離他的手指更近" }
   };
   var PHONE = {
-    off:  { name: "不放" },
-    note: { name: "說明句一行", rec: true },
+    off:  { name: "不放", rec: true },
+    note: { name: "說明句一行" },
     btn:  { name: "第二顆按鈕" }
   };
 
-  var state = { c: "a", h: "on", t: "note" };
+  /* 2026-09-10 定：頭圖用他那張、標題底下不寫、電話不放。 */
+  var state = { c: "c", h: "on", t: "off" };
 
   /* ------------------------------------------------------------------ */
   function el(tag, cls, txt) {
@@ -507,23 +516,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     c3.appendChild(row(bub("[約診紀錄查詢]", true), "18:57", true));
     c3.appendChild(row(oemCard(), "18:57"));
 
-    bar("sw-c", CASES, "c"); bar("sw-h", HEROS, "h"); bar("sw-t", PHONE, "t");
     history.replaceState(null, "",
       location.pathname + "?c=" + state.c + "&h=" + state.h + "&t=" + state.t);
     requestAnimationFrame(measure);
-  }
-
-  function bar(id, set, key) {
-    var boxEl = document.getElementById(id);
-    boxEl.innerHTML = "";
-    Object.keys(set).forEach(function (k) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.textContent = set[k].name + (set[k].rec ? "（建議）" : "");
-      b.setAttribute("aria-pressed", state[key] === k ? "true" : "false");
-      b.onclick = function () { state[key] = k; render(); };
-      boxEl.appendChild(b);
-    });
   }
 
   /* ------------------------------------------------------------------
@@ -615,8 +610,6 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       var w = s.scrollWidth; if (w > btnW) btnW = w;
     });
     var doc = document.documentElement;
-    var barH = document.getElementById("pv-bar").getBoundingClientRect().height;
-    var barPct = barH / vh * 100;
     /* 同一張頭圖在這一分鐘裡出現幾次（綁定完成那一張本來就有一張）。 */
     var heroTimes = state.h === "on" ? 2 : 1;
 
@@ -645,7 +638,6 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 
       "水平溢出 <b class=\"" + (doc.scrollWidth > doc.clientWidth ? "no" : "ok") + "\">" +
       (doc.scrollWidth - doc.clientWidth) + "</b>px・" +
-      "切換條佔一屏 <b class=\"" + (barPct > 24 ? "no" : "ok") + "\">" + barPct.toFixed(1) + "%</b>・" +
       "你的螢幕 " + Math.round(window.innerWidth) + "×" + Math.round(vh) + "<br>" +
 
       "紅線 " + (red.length ? '<b class="no">' + red.length + " 處</b>　" + red.join("；")
@@ -662,6 +654,16 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   function note() {
     var C = CASES[state.c];
     var s = "<b>" + C.name + "</b>　" + C.why;
+    if (state.c === "c") {
+      s += "<hr><b>拿掉那一段帶走兩件事</b>（<b>兩件都不是壞掉，是取捨</b>）：" +
+        "① 卡上<b class=\"n\">不再提到他剛剛按的「約診查詢」</b> —— " +
+        "他按了一格、跳出一張卡，而那張卡沒有回答他按的那件事；" +
+        "② <b class=\"n\">「完整服務」沒有人替他翻譯</b> —— " +
+        "那正是現況那張卡的第 ③ 件，這一輪沒有治到。" +
+        "<br>⚠ 換到的是<b>整張卡只剩一個動作</b>：一張圖、一句話、一顆按鈕。" +
+        "路障卡的工作就是讓他按下去，<b>字愈少愈容易按</b>。" +
+        "<br>⚠ 要看回原本那兩案：網址加 <code>?c=a</code> 或 <code>?c=b</code>。";
+    }
     if (state.h === "off") {
       s += "<hr><b>不放頭圖</b>：卡片短一截、按鈕離手指更近，而且<b>不會和綁定完成那一張撞圖</b>。" +
         "代價是這一張在聊天室裡就只是一塊字 —— 而它現在（廠商那張）至少是有圖的。";
@@ -673,9 +675,16 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
         "或綁定完成那一張不放圖（那一則的字已經定稿，動的只是圖）。";
     }
     if (state.t === "off") {
-      s += "<hr><b class=\"no\">⚠ 電話不放的話，這張卡對綁不起來的人是死路。</b>" +
-        "他按了「約診查詢」、跳出一張卡、綁不起來，然後就沒有了 —— " +
-        "他多半會直接在這裡打字，而這裡沒有人看。";
+      s += "<hr><b>電話不放</b>（你指定的）。" +
+        "他按了「約診查詢」、跳出這張卡、綁不起來，卡上就沒有別的路了 —— " +
+        "他多半會<b>直接在這裡打字</b>。" +
+        "<br><b class=\"ok\">那不是完全的死路</b>：打字會打到<b>已經定稿的自動回應</b>，" +
+        "而那一則給得出電話（「來電變更　05-5339369」）。" +
+        "<br><b class=\"no\">⚠ 但那一則接著寫著「查自己的約診　點下面選單的『約診查詢』」</b> —— " +
+        "那正是他剛剛按、而且按不動的那一格，<b>他會被送回起點</b>。" +
+        "這個圈子本來就在，只是先前卡上有電話、他不必走到那一步。" +
+        "<br>⚠ 兩個解法都不必動這張卡：把電話那一行放回來（<code>?t=note</code>），" +
+        "或改自動回應那一句 —— <b>那一則你已經定稿，要動得你點頭</b>。";
     } else if (state.t === "btn") {
       s += "<hr><b>電話做成第二顆按鈕</b>：最顯眼，但<b class=\"no\">它把人推向電話</b>，" +
         "而電話正是這間診所的結構性瓶頸（六個月 1,886 通，還只算 Google 商家那一種）。" +
@@ -712,6 +721,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       "<ol>" +
       "<li><b class=\"no\">病人那一側的卡片實寬到現在沒有量過</b> —— 全線都用 268px，" +
         "而那是從後台截圖推導的。<b>一張病人手機的截圖就能收掉。</b></li>" +
+      "<li><b class=\"q\">自動回應那一則會把綁不起來的人送回起點</b> —— " +
+        "它寫著「查自己的約診　點下面選單的『約診查詢』」，而那正是他按不動的那一格。" +
+        "電話拿掉之後這條路才會有人走到。<b>那一則你已經定稿，要不要改那一句是你的決定。</b></li>" +
       "<li>「看診前 <b>48 小時</b>」（綁定完成）和「看診前 <b>2 天</b>」（招呼圖卡）" +
         "兩種講法還沒統一 —— <b>這一則刻意一個數字都沒寫</b>，不要再生出第三種。</li>" +
       "<li>3,205 個好友裡<b>多少人綁了</b>（後台看得到）—— " +
@@ -727,16 +739,6 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     var m = location.search.match(new RegExp("[?&]" + p[0] + "=([a-z0-9]+)"));
     if (m && p[1][m[1]]) state[p[0]] = m[1];
   });
-
-  (function () {
-    var barEl = document.getElementById("pv-bar"), fold = document.getElementById("pv-fold");
-    fold.onclick = function () {
-      var on = barEl.classList.toggle("fold-in");
-      fold.textContent = on ? "調整…" : "收起";
-      fold.setAttribute("aria-expanded", on ? "false" : "true");
-      measure();
-    };
-  })();
 
   window.addEventListener("resize", measure);
   render();
