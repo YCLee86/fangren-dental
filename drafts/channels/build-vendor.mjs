@@ -23,9 +23,11 @@ const D = JSON.parse(readFileSync(join(HERE, "vendor-log.json"), "utf8"));
 const esc = (t) =>
   String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-/* 一段字裡的「⚠」與「⛔」開頭那一句標成警示色，其餘照原樣 */
+/* 「⚠」「⛔」「⭐」標成警示色，**…** 加粗，其餘照原樣 */
 const mark = (t) =>
-  esc(t).replace(/(⚠+|⛔|⭐)/g, '<b class="m">$1</b>');
+  esc(t)
+    .replace(/(⚠+|⛔|⭐)/g, '<b class="m">$1</b>')
+    .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
 
 const CSS = `
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
@@ -158,9 +160,7 @@ ${CSS}
 <div class="now">
 <b>現在卡在哪</b>
 <ol>
-<li><b>一件正在出錯</b>：約診紀錄查詢那張卡的日期被截斷，改一個設定就好。</li>
-<li><b>一件不要送</b>：評價邀約 —— 那兩顆按鈕連到哪裡沒有答案之前先擱著。</li>
-<li><b>一件五分鐘能做完</b>：對品御那個帳號打一句「早安」，看它回不回。</li>
+${D.現在.map((t) => `<li>${mark(t)}</li>`).join("\n")}
 </ol>
 </div>
 
