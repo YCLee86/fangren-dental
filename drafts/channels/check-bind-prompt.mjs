@@ -30,6 +30,9 @@ const PAGE = path.join(DIR, "index.html");
 const bad = [];
 const ok = (cond, msg) => { if (!cond) bad.push(msg); };
 
+/* 使用者 2026-09-10 指定的標題，逐字。⚠ 全形空格 U+3000。 */
+const TITLE = "30秒快速綁定　啟用完整服務";
+
 /* ── ② 這個資料夾裡只能有 index.html ──────────────────────────
  * 引用的圖都在別人的資料夾，複製一份就是多一個會漂掉的真相。 */
 const files = fs.readdirSync(DIR).sort();
@@ -120,6 +123,24 @@ for (const w of WIDTHS) {
         .filter((i) => !i.naturalWidth).map((i) => i.getAttribute("src"));
       return {
         text: card.textContent,
+        title: card.querySelector("h4").textContent,
+        titleLines: (() => {
+          /* 標題畫成幾行、最寬那一行多寬 —— 量墨（Range 逐字、照 top 分組），
+             不要問盒子（h4 是 block，rect 回的是整欄寬 240）。 */
+          const h = card.querySelector("h4"), r = document.createRange(), tops = {};
+          const n = h.firstChild;
+          for (let i = 0; i < n.length; i++) {
+            r.setStart(n, i); r.setEnd(n, i + 1);
+            const b = r.getBoundingClientRect();
+            if (!b.width && !b.height) continue;
+            const k = Math.round(b.top);
+            tops[k] = tops[k] || { l: Infinity, r: -Infinity };
+            tops[k].l = Math.min(tops[k].l, b.left);
+            tops[k].r = Math.max(tops[k].r, b.right);
+          }
+          const ws = Object.values(tops).map((v) => v.r - v.l);
+          return { rows: ws.length, wide: Math.max(...ws) };
+        })(),
         cardW: card.getBoundingClientRect().width,
         btns: [...card.querySelectorAll(".btn > span")].map((s) => s.textContent),
         shotRect: shot ? shot.getBoundingClientRect().width : 0,
@@ -152,10 +173,23 @@ for (const w of WIDTHS) {
     const scan = got.text.replace(/沒有專人看訊息/g, "");
     for (const [re, why] of [
       [/隨時問|馬上回|即時回|盡快回覆|專人回覆|線上客服/, "承諾了這個帳號做不到的事（沒有專人即時回覆）"],
-      [/\d+\s*秒/, "出現秒數 —— 別人卡片上的數字不可以照抄（第三十七節）"],
-      [/48\s*小時|看診前\s*2\s*天/, "出現了提醒的天數／時數 —— 那兩種講法還沒統一，這一則刻意不帶數字"],
+      [/48\s*小時|看診前\s*2\s*天/, "出現了提醒的天數／時數 —— 那兩種講法還沒統一，這一則刻意不帶那個數字"],
       [/\(05\)|05-533-9369/, "用了作廢的電話寫法（2026-08-27 起全站是 05-5339369）"],
     ]) ok(!re.test(scan), `${c}/${h}/${t}：${why}`);
+    /* ⚠⚠ 標題是**使用者 2026-09-10 指定的逐字**，三案共用 ——
+       改回舊寫法畫面照樣正常、每一道尺寸守門都會過，只有讀字才看得出來。
+       ⚠ 那個「30 秒」是廠商那張卡上的數字、我們沒有量過，所以**不是紅線是「還沒驗過」**，
+       面板照實印；這裡守的是「不要被誰順手改掉」。 */
+    ok(got.title === TITLE,
+      `${c}/${h}/${t}：標題是「${got.title}」，指定的是「${TITLE}」`);
+    /* 標題放不放得下：卡片 268 − 內距 14×2 ＝ 240px 可用。
+       ⚠ 一行放得下就不可以變成兩行（兩行的第二行只有六個字，讀起來是被擠下去的）。 */
+    if (w >= 360) {
+      ok(got.titleLines.wide <= 240,
+        `${c}/${h}/${t}：標題最寬那一行 ${got.titleLines.wide.toFixed(1)}px，超過可用的 240`);
+      ok(got.titleLines.rows === 1,
+        `${c}/${h}/${t}：標題畫成 ${got.titleLines.rows} 行（量到最寬 ${got.titleLines.wide.toFixed(1)}px，一行放得下就該是一行）`);
+    }
     ok(got.text.includes("05-5339369") || t === "off",
       `${c}/${h}/${t}：電話那把尺不是「不放」，卡上卻找不到 05-5339369`);
     ok(got.btns[0] === WELCOME_BTN,
@@ -175,7 +209,12 @@ if (bad.length) {
     [...new Set(bad)].map((b) => "  ・" + b).join("\n"));
   process.exit(1);
 }
+const t390 = seen.find((s) => s.w === 390);
 console.log("✅ " + seen.length + " 組（8 個寬度 × 3 案 × 2 頭圖 × 3 電話）全部通過：\n" +
   "   資料夾只有 index.html（四個圖都引用別人那一份）、頭圖 1024×512、" +
-  "按鈕逐字 ＝ 招呼圖卡那一顆、\n   電話是現行寫法、紅線 0、沒有抄來的秒數也沒有天數、" +
-  "卡片畫成 268、水平溢出 0、切換條 ≤24%");
+  "按鈕逐字 ＝ 招呼圖卡那一顆、\n   標題逐字 ＝「" + TITLE + "」（畫成 " +
+  t390.titleLines.rows + " 行、最寬 " + t390.titleLines.wide.toFixed(1) + "px／可用 240）、\n" +
+  "   電話是現行寫法、紅線 0、沒有 48 小時也沒有 2 天、" +
+  "卡片畫成 268、水平溢出 0、切換條 ≤24%\n" +
+  "   ⚠ 標題那個「30 秒」是廠商那張卡上的數字，我們沒有量過 —— 面板照實印著，" +
+  "診所自己綁一次計時就能收掉");

@@ -160,6 +160,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 .pv-panel b{color:var(--ink);font-weight:700}
 .pv-panel .ok{color:var(--deep);font-weight:700}
 .pv-panel .no{color:#a33;font-weight:700}
+/* ⚠ 「還沒驗過」是第三級，不是紅線也不是綠的 —— 混成紅色的話，
+   使用者已經定案的字每次打開都被標紅（line-typhoon 25-13 那條教訓）。 */
+.pv-panel .q2{color:#8a6d1f;font-weight:700}
 .pv-note{font-size:.73rem;color:var(--ink-soft);margin:12px 0 0;
   border-left:3px solid var(--rule);padding-left:10px}
 .pv-note b{color:var(--ink)}
@@ -197,7 +200,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   <h1>還沒綁定就按「約診查詢」　<span>提案</span></h1>
   <p class="pv-sub">加了好友、還沒綁定的人按下那一格之後跳出來的那一張。<br>
     <b>這一則已經在跑了</b> —— 你截圖上那張藍色卡就是它，所以這一輪是<b>改版</b>，
-    不是多加一則訊息。頭圖用<b>之前那張綁定圖</b>。切換條在最下面。</p>
+    不是多加一則訊息。頭圖用<b>之前那張綁定圖</b>（＝綁定完成那一張的同一個檔）。<br>
+    <b>標題已經換成你指定的那一句</b>，三案共用，所以切換條那把尺現在調的是
+    <b>標題底下寫什麼</b>。切換條在最下面。</p>
 
   <div class="pv-fact">
     <h2>先把幾件事實放上來</h2>
@@ -243,11 +248,19 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       <dd>① <b>沒有回答他剛剛按的那件事</b>（他按的是「約診查詢」，卡上一個字都沒提到）<br>
         ② <b>整張都是廠商的</b>：兩隻吉祥物、那支藍，芳仁一個記號都沒有<br>
         ③ 「啟用完整服務」是<b>系統的話</b> —— 病人不知道「完整服務」是什麼<br>
-        ④ <b>沒有第二條路</b>：不想綁、綁不起來的人，這張卡就是死路</dd>
+        ④ <b>沒有第二條路</b>：不想綁、綁不起來的人，這張卡就是死路<br>
+        ⚠ <b>你指定把標題換成那一句，所以 ③ 現在由底下那一段接</b> ——
+        Ⓐ 用「你剛剛點的約診查詢」舉一個他現在就用得到的例子、Ⓑ 直接把它拆成兩件事，
+        Ⓒ 則是不翻譯。<b class="y">順帶一件：那句話和圖文選單那張的副標
+        「綁定後啟用完整功能」是同一套詞</b>，兩塊前後腳出現在同一個畫面上，一致是對的。</dd>
 
-      <dt>⚠ 那句「僅需花費30秒」我們不抄</dt>
-      <dd>通則（第三十七節）：<b>別人卡片上的數字不可以照抄，那是他們量的、不是我們的事實</b>。
-        真的想寫，診所自己綁一次、拿碼表量一次就有了。</dd>
+      <dt>⚠ 標題那個「30 秒」是<b>你指定要寫的</b>，它有一個出處問題</dt>
+      <dd>那個數字來自<b>廠商那張公版卡</b>（「僅需花費30秒」），<b class="q">我們自己沒有量過</b> ——
+        這條線的規矩是「別人卡片上的數字不照抄，那是他們量的」。<br>
+        <b class="y">要收掉很便宜</b>：診所自己從頭綁一次、拿手機碼表按一下，
+        真的在 30 秒內就留著，不是就改成實際的數字（或拿掉）。
+        <b>在那之前這張卡上有一個沒有人驗過的承諾。</b><br>
+        ⚠ 綁定的流程是廠商的，所以真正說得準的也是他們 —— 已經寫進下面那五題。</dd>
 
       <dt>⚠ 這顆按鈕不是新的</dt>
       <dd>招呼圖卡上<b>已經有一顆一模一樣的</b>（綠底、白色標誌、「點這裡綁定」）。
@@ -310,7 +323,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 
 <div class="pv-bar" id="pv-bar">
   <button class="fold" id="pv-fold" aria-expanded="true">收起</button>
-  <div class="r"><span class="lb">文案</span><span id="sw-c"></span></div>
+  <div class="r"><span class="lb">標題下</span><span id="sw-c"></span></div>
   <div class="r"><span class="lb">頭圖</span><span id="sw-h"></span></div>
   <div class="r"><span class="lb">電話</span><span id="sw-t"></span></div>
 </div>
@@ -326,37 +339,47 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   var DONE = "../line-bind-done/shot-bind-done.png";
 
   /* ------------------------------------------------------------------
-     文案三案。**每一行都是手動斷的**，規則同這條線其他幾則：
+     標題：**2026-09-10 使用者指定的逐字**（「標題改成 30秒快速綁定 啟用完整服務」）。
+     ⚠ 三案共用同一個標題，所以那把尺現在調的是**標題底下寫什麼**。
+     ⚠⚠ 那個「30 秒」是**廠商那張公版卡上的數字，我們沒有量過** ——
+        照寫是他的決定，頁面上有一列把出處與怎麼收掉寫著（診所自己綁一次計時）。
+        守門因此從「不准出現秒數」改成「一定要逐字等於這一句」。
+     ⚠ 「啟用完整服務」和**圖文選單那張的副標「綁定後啟用完整功能」是同一套詞**，
+        兩塊會前後腳出現在同一個畫面上，用同一組字是對的。
+     ------------------------------------------------------------------ */
+  var TITLE = "30秒快速綁定　啟用完整服務";
+
+  /* ------------------------------------------------------------------
+     底下那一段三案。**每一行都是手動斷的**，規則同這條線其他幾則：
      一行不超過 14 個全形字寬（半形算 0.5）。
      ⚠⚠ 三案都**沒有寫「看診前 48 小時」也沒有寫「看診前 2 天」** ——
         那兩種講法現在一則一種（綁定完成寫 48 小時、招呼圖卡寫 2 天），
-        還沒統一。這一則刻意不帶數字，不要再生出第三種。
+        還沒統一。這一則刻意不帶那個數字，不要再生出第三種。
      ------------------------------------------------------------------ */
   var CASES = {
     a: {
       name: "回答他按的那件事", rec: true,
-      title: "綁定手機，就看得到你的約診",
       /* b:true 的那一段在 Flex 裡是 span + weight:bold（19-18：用加粗取代全形的「」，
          一對「」吃掉 28.3px，而這張卡一行只有 240px）。 */
       body: [{ t: "你剛剛點的" }, { t: "約診查詢", b: true },
              { t: "，\n綁定手機之後就查得到。\n看診前我們也會在這裡提醒你。" }],
-      why: "他按了一顆按鈕、卡片回他一件別的事 —— 現況最貴的一件就是這個。" +
-           "這一案<b>第一句就接上他剛才做的動作</b>，第三句才說綁了還會多拿到什麼。"
+      why: "標題講的是「綁定拿得到什麼」，而他剛剛按的是<b>約診查詢</b> —— " +
+           "這一案<b>第一句就接上他那個動作</b>，等於替標題那句話舉一個他現在就用得到的例子。"
     },
     b: {
       name: "綁了拿得到什麼",
-      title: "綁定手機，約診的事都在這裡",
       body: [{ t: "・自己的約診時間，隨時查得到\n・看診前我們會在這裡提醒你" }],
       fine: "家人的約診也可以綁在同一支\n手機，設定請洽診所櫃檯。",
-      why: "把綁定的好處條列出來。<b>代價是它沒有接住「他剛剛按了什麼」</b>，" +
-           "而且第三行那件事（家人）在<b>綁定完成那一則已經講過一次</b>了。"
+      why: "把「完整服務」四個字拆成看得懂的兩、三件事。" +
+           "<b>代價是它沒有接住「他剛剛按了什麼」</b>，" +
+           "而且家人那一件在<b>綁定完成那一則已經講過一次</b>了。"
     },
     c: {
       name: "只有一句話",
-      title: "綁定手機，就看得到你的約診",
       why: "路障卡的工作只有一件：讓他按下去。<b>字愈少愈容易按</b>，" +
            "而綁了之後拿得到什麼，綁定完成那一張會再講一次。" +
-           "⚠ 代價是綁不起來的人手上什麼都沒有（電話那把尺就是為了這件事）。"
+           "⚠ 代價有兩個：「完整服務」沒有人替他翻譯，" +
+           "而且綁不起來的人手上什麼都沒有（電話那把尺就是為了這件事）。"
     }
   };
   var HEROS = {
@@ -398,7 +421,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       c.appendChild(img);
     }
     var b = el("div", "b");
-    b.appendChild(el("h4", null, C.title));
+    b.appendChild(el("h4", null, TITLE));
     if (C.body) {
       var p = el("p");
       C.body.forEach(function (s) {
@@ -548,12 +571,13 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     { re: /隨時問|馬上回|即時回|盡快回覆|專人回覆|線上客服/,
       why: "承諾了這個帳號做不到的事（沒有專人即時回覆訊息）" }
   ];
-  /* 抄來的數字：別人卡片上的「30秒」不可以照抄（第三十七節）。 */
-  var COPIED = /\d+\s*秒/;
+  /* 標題裡那個秒數。⚠ 它是**廠商那張卡上的數字**，我們自己沒有量過 ——
+     使用者指定要寫，所以這一列不是紅線、是**還沒驗過**，面板照實印出來。 */
+  var COPIED = /(\d+)\s*秒/;
 
   function textOf() {
     var C = CASES[state.c];
-    var s = C.title + "\n" + (C.body ? C.body.map(function (x) { return x.t; }).join("") : "");
+    var s = TITLE + "\n" + (C.body ? C.body.map(function (x) { return x.t; }).join("") : "");
     s += "\n點這裡綁定";
     if (state.t === "btn") s += "\n打 " + TEL;
     if (C.fine) s += "\n" + C.fine;
@@ -573,6 +597,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     var raw = textOf().replace(/沒有專人看訊息/g, "");
     var red = [];
     RED.forEach(function (x) { if (x.re.test(raw)) red.push(x.why); });
+    var secs = COPIED.exec(textOf());
 
     /* 這個螢幕實際給得起卡片多寬 ＝ 那一列扣掉頭像、時間與兩個間隙。
        ⚠ 要從真的那一列量，不要用 .pv-chat 的寬度減常數。 */
@@ -625,9 +650,10 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 
       "紅線 " + (red.length ? '<b class="no">' + red.length + " 處</b>　" + red.join("；")
                             : '<b class="ok">0 處</b>') +
-      "・抄來的數字 " + (COPIED.test(textOf())
-        ? '<b class="no">有</b>（別人卡片上的秒數不要抄）'
-        : '<b class="ok">0 處</b>');
+      "・卡上的秒數 " + (secs
+        ? '<b class="q2">' + secs[0] + "</b>　<span style=\"opacity:.85\">來自廠商那張卡，" +
+          "診所自己綁一次計時就能確認（在那之前是沒有人驗過的承諾）</span>"
+        : '<b class="ok">沒有</b>');
 
     document.getElementById("pv-note").innerHTML = note();
     document.getElementById("pv-ask").innerHTML = ask();
