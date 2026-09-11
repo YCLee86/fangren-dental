@@ -48,6 +48,16 @@ const SPEC_NAME = (() => {
 })();
 
 /* ── 九顆浮水印：形狀讀 brand/shapes/，寬度與顏色讀 wm-sizes.json ───────── */
+/* ⚠ 濃度不可以在這裡寫死：唯一的出處是 booked-card.json 引用的檔名（wm-<形狀>-12.png），
+   那批 PNG 的 alpha 就是烘在檔案裡的（booked-mark.mjs 的 ALPHAS）。換成 -08 這裡要跟著淡。 */
+const WM_A = (() => {
+  const j = readFileSync(join(ROOT, "drafts", "channels", "booked-card.json"), "utf8");
+  const hit = [...j.matchAll(/wm-[^"]*-(\d{2})\.png/g)].map((m) => m[1]);
+  const uniq = [...new Set(hit)];
+  if (uniq.length !== 1) throw new Error(`booked-card.json 的浮水印濃度不只一種：${uniq}`);
+  return Number(uniq[0]) / 100;
+})();
+
 const WM = (() => {
   const sizes = JSON.parse(
     readFileSync(join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
@@ -73,6 +83,11 @@ const WM = (() => {
              色: s.color, 科, w: s.w, ratio: s.ratio };
   });
 })();
+
+/* ⚠⚠ 九顆的相對高度從 0.28 到 0.50 都有（寬度是按墨的面積正規化的，不是等高）——
+   直接排下去，同一列的虛線會落在不同高度（第九節第 28 條 ① 那一種「同一欄不同列對不齊」）。
+   所以每一格的框固定成「最高的那一顆」的長寬比、形狀垂直置中。 */
+const WM_BOX = (1 / Math.max(...WM.map((s) => s.pct / 100 / s.ratio))).toFixed(4);
 
 const CSS = `
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9}
@@ -124,6 +139,9 @@ ul.tick li::before{content:"・";position:absolute;left:0;color:var(--soft)}
   margin:.9em 0 0;background:var(--card);border-radius:11px;padding:15px 14px}
 .nine figure{margin:0;text-align:center}
 .nine svg{display:block;margin:0 auto;height:auto}
+.nine .sw{display:flex;align-items:center;justify-content:center;
+  aspect-ratio:${WM_BOX} / 1}
+.nine .wm{margin-top:8px;border-top:1px dashed var(--rule)}
 .nine figcaption{font-size:.72rem;color:var(--soft);line-height:1.5;margin-top:.45em}
 
 /* ── 大小與位置的對照 ──────────────────────────────────────── */
@@ -190,11 +208,18 @@ micro 卡，不是單張的 mega 卡 —— 所以要一張輪播的截圖才看
 </figure>`.trim();
 
 /* ── ③ 浮水印九顆 ─────────────────────────────────────────── */
+/* ⚠⚠ 兩張是同一份幾何、同一個相對寬度，差的只有濃度：
+   上面是原色（看得出形狀與是哪一科），下面是它在卡片上真正的樣子。
+   ⚠ 九宮格的底本來就是 --card ＝ 卡片色，所以下面那一張不必再墊一層底。 */
+const swatch = (s, a) =>
+  `<svg viewBox="0 0 ${s.vw} ${s.vh}" width="${s.vw}" height="${s.vh}" style="width:${s.pct}%"
+  role="img" aria-label="${a === 1 ? "原色" : "浮水印濃度"} ${esc(s.科)} ${s.n}"><g transform="${s.gt}"><path
+  fill="${s.色}"${a === 1 ? "" : ` fill-opacity="${a}"`} fill-rule="evenodd" d="${s.d}"/></g></svg>`;
+
 const nine = `<div class="nine">
 ${WM.map((s) => `<figure>
-<svg viewBox="0 0 ${s.vw} ${s.vh}" width="${s.vw}" height="${s.vh}" style="width:${s.pct}%"
-  role="img" aria-label="浮水印形狀 ${s.n}"><g transform="${s.gt}"><path fill="${s.色}"
-  fill-rule="evenodd" d="${s.d}"/></g></svg>
+<span class="sw">${swatch(s, 1)}</span>
+<span class="sw wm">${swatch(s, WM_A)}</span>
 <figcaption>${esc(s.科)}<br>${esc(s.n)}・${s.w}px</figcaption>
 </figure>`).join("\n")}
 </div>`;
@@ -326,6 +351,9 @@ ${msgs}
 ${revised}
 
 <h2 class="h2">③ 浮水印那九顆<span class="t">形狀取自 brand/shapes／寬度與顏色取自 wm-sizes.json</span></h2>
+<p class="note">每一格<b>上面是原色</b>（看得出形狀與是哪一科），
+<b>虛線底下是它壓在卡片上真正的濃度</b>（${(WM_A * 100).toFixed(0)}%，就是那批 PNG 烘進去的 alpha）。
+兩張是同一份幾何、同一個相對寬度 —— <b>九顆的寬度不一樣是刻意的</b>（按墨的面積正規化，看起來才一樣重）。</p>
 ${nine}
 <div class="rows">
 <div class="row"><p class="k">現況</p><p class="v">${b(D.浮水印.現況)}</p></div>
