@@ -152,6 +152,12 @@ ul.tick li::before{content:"・";position:absolute;left:0;color:var(--soft)}
 .cmp svg{display:block;width:100%;max-width:268px;height:auto}
 .cmp figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.2em;max-width:268px}
 
+/* ── 綁定完成的兩個方向 ────────────────────────────────────── */
+.dir{background:var(--card);border-radius:11px;padding:13px 15px;margin:.9em 0 0}
+.dir .t{font-size:.95rem;font-weight:600;margin:0 0 .45em}
+.dir p{font-size:.89rem;margin:.5em 0 0}
+.dir i{font-style:normal;color:var(--soft);margin-right:.4em}
+
 /* ── 待答 ──────────────────────────────────────────────────── */
 .grp{margin:1.6em 0 0}
 .grp .t{font-size:.93rem;font-weight:600;margin:0 0 .1em}
@@ -280,7 +286,44 @@ const replies = D.回覆.列.map((r) => `<div class="row">
 <p class="v"><i>還沒回答</i>${b(r.未答)}</p>
 </div>`).join("\n");
 
-/* ── ⑥ 別家帳號 ───────────────────────────────────────────────
+/* ── ⑥ 綁定完成的兩個方向 ─────────────────────────────────────
+   使用者 2026-09-11 指定整理的一節。圖是廠商自己的回覆（他指定要附），
+   ⚠ 別家診所的畫面仍然不進 repo、不上頁面 —— 那是另一件事。 */
+const bind = (() => {
+  const B = D.綁定;
+  const dir = (x) => `<div class="dir">
+<p class="t">${esc(x.標)}</p>
+<p><i>要的是</i>${b(x.要的)}</p>
+<p><i>對方說</i>${b(x.對方)}</p>
+<p><i>現在知道的</i>${b(x.現在知道的)}</p>
+<p><i>還沒有答案的</i>${b(x.還沒有答案的)}</p>
+<p><i>別家的畫面</i>${b(x.別家)}</p>
+</div>`;
+  return `<div class="two">
+<figure class="fig">
+<a href="${esc(B.圖.檔)}"><img src="${esc(B.圖.檔)}" width="${B.圖.w}" height="${B.圖.h}"
+  loading="lazy" alt="廠商 2026-09-10 的回覆"></a>
+<figcaption>${b(B.圖.說)}</figcaption>
+</figure>
+<div>
+${B.方向.map(dir).join("\n")}
+</div>
+</div>
+
+<h3 style="font-size:.95rem;margin:1.8em 0 .2em">別家帳號的三種現象</h3>
+<p style="font-size:.88rem;color:var(--soft);margin:0">${esc(B.現象._說明)}</p>
+<div class="rows">
+${B.現象.列.map((r) => `<div class="row">
+<p class="k">${esc(r.型)}<span style="font-weight:400;color:var(--soft);font-size:.82rem">　${esc(r.家)}</span></p>
+<p class="v"><i>看到</i>${b(r.看到)}</p>
+<p class="v"><i>說明的是</i>${b(r.說明的是)}</p>
+<p class="v"><i>還沒說明的</i>${b(r.還沒說明的)}</p>
+</div>`).join("\n")}
+</div>
+<p class="note">${b(B.一起解)}</p>`;
+})();
+
+/* ── ⑦ 別家帳號 ───────────────────────────────────────────────
    兩張最用得上的寫完整，其餘五張各收成一行 —— 附給廠商時本來就是一次只附
    對應那一句的那一張，五張攤開等於在頁面上重複一件不會一起送出去的事。 */
 const refs = D.參考.主.map((r) => `<div class="row">
@@ -292,7 +335,7 @@ const refs = D.參考.主.map((r) => `<div class="row">
 <ul class="tick">${D.參考.背景.map((r) => `<li><b>${esc(r.家)}</b>　${b(r.說)}</li>`).join("")}</ul>
 </div>`;
 
-/* ── ⑦ 待答 ───────────────────────────────────────────────── */
+/* ── ⑧ 待答 ───────────────────────────────────────────────── */
 const groupKeys = ["廠商", "後台", "診所", "素材"];
 const item = (x) => `<li><span class="s">${x.急 ? "★" : "・"}</span>${b(x.問)}${
   x.為 ? `<span class="y">${b(x.為)}</span>` : ""}</li>`;
@@ -383,13 +426,16 @@ ${rounds}
 ${replies}
 </div>
 
-<h2 class="h2">⑥ 別家帳號的畫面<span class="t">${esc(D.參考._說明.replace(/^[^。]*。/, "").trim())}</span></h2>
+<h2 class="h2">⑥ 綁定完成：兩個方向<span class="t">圖是廠商 ${esc(D.往返[2].日)} 的回覆</span></h2>
+${bind}
+
+<h2 class="h2">⑦ 別家帳號的畫面<span class="t">${esc(D.參考._說明.replace(/^[^。]*。/, "").trim())}</span></h2>
 <div class="rows">
 ${refs}
 </div>
 <p class="note">${b(D.參考.用法)}</p>
 
-<h2 class="h2">⑦ 還沒有答案的 ${total} 題<span class="t">照「誰能答」分開・★ 是最先要的 ${hotAll} 題</span></h2>
+<h2 class="h2">⑧ 還沒有答案的 ${total} 題<span class="t">照「誰能答」分開・★ 是最先要的 ${hotAll} 題</span></h2>
 ${groups}
 
 <p class="foot">

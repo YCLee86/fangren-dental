@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 守門：廠商對接那一頁（preview/line-vendor/）
 //
-// 擋八件：
+// 擋十件：
 //  ① 重跑 build-vendor.mjs、逐位比對（有人手改了頁面，或改了 JSON 卻忘了重跑）
 //  ② ⚠⚠ 頁面上不可以出現「七則訊息的文字」—— 那些字的出處是各自的 Flex JSON 與
 //     auto-reply.txt，抄進來就是第八個真相。這一道從那些檔裡現抽長句去掃。
@@ -11,6 +11,9 @@
 //  ⑥ 內部連結指得到真的檔案
 //  ⑦ 八個寬度水平溢出 0、JS 錯 0
 //  ⑧ 頁上每一張圖都找得到、width/height 對得上實檔、沒有孤兒縮圖
+//  ⑩ 頁面上不可以出現 undefined（欄位名打錯時範本會把它原字印出來），
+//     而且兩個方向與三種現象的欄位要齊全 —— 只寫「它說明了什麼」、不寫
+//     「它還沒說明什麼」的話，讀的人沒有材料判斷它接不接得上那一句話
 //  ⑨ 只敘述事實：不出現「真／假」那一組判語，也不留警示色的標籤
 //     （2026-09-11 使用者：「不要有太情緒或是指控誰說謊　只要基於事實
 //      客觀的敘述就好」。加回去不會讓任何一道版面守門翻臉，所以要有一道盯著。）
@@ -170,6 +173,20 @@ if (j.length) bad.push(`⑨ 出現判語：${j.join("、")}`);
 else if (/class="tag/.test(html)) bad.push("⑨ 還留著警示色的標籤（class=\"tag…\"）");
 else if (html.includes("⚠")) bad.push("⑨ 還留著警示記號（⚠）");
 else ok("⑨ 沒有判語、沒有警示色、沒有警示記號");
+
+/* ⑩ 頁面上不可以出現 undefined ------------------------------------- */
+/* 欄位名打錯時，範本會把 undefined 原字印在頁面上 —— 每一道版面守門都會過，
+   只有把頁面打開看才看得到。順便要求三種現象各自都寫了「還沒說明的」：
+   一個現象只寫它說明了什麼，讀的人就沒有材料判斷它接不接得上那一句話。 */
+if (/\bundefined\b/.test(html)) bad.push("⑩ 頁面上出現 undefined ＝ 有一個欄位名打錯了");
+const LOG = JSON.parse(fs.readFileSync(path.join(HERE, "vendor-log.json"), "utf8"));
+for (const r of LOG.綁定.現象.列)
+  for (const k of ["看到", "說明的是", "還沒說明的"])
+    if (!r[k]) bad.push(`⑩ 現象「${r.型 || "?"}」缺「${k}」`);
+for (const d of LOG.綁定.方向)
+  for (const k of ["要的", "對方", "現在知道的", "還沒有答案的", "別家"])
+    if (!d[k]) bad.push(`⑩ ${d.標 || "?"} 缺「${k}」`);
+if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方向與三種現象欄位齊全");
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }
 console.log("\n全部通過。");
