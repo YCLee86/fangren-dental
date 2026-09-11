@@ -35,9 +35,14 @@ const ok = (cond, msg) => { if (!cond) bad.push(msg); };
 
 /* 使用者 2026-09-10 指定的標題，逐字。⚠ 全形空格 U+3000。 */
 const TITLE = "30秒快速綁定　啟用完整服務";
-/* 2026-09-10 定的那一張：頭圖用他那張、標題底下不寫字、電話不放。
+/* 2026-09-10 定的那一張：頭圖用他那張、標題底下不寫字、電話不放、空格 11px。
    ⚠ 要和 index.html 的 `var state` 一致 —— 那一頁不帶參數時就是這一格。 */
-const DEFAULT = { c: "c", h: "on", t: "off" };
+const DEFAULT = { c: "c", h: "on", t: "off", g: "11" };
+/* ⑪ 標題中間那個空格那把尺（2026-09-10「空格小一點」）。
+   ⚠⚠ **Flex 沒有字距** —— 能改這個空隙的只有那個空格自己的 size，
+      所以頁面上也只准用 font-size 改（用 letter-spacing 的話畫面很像、
+      但那是一條 LINE 上做不到的路，等於在假的東西上做決定）。 */
+const GAPS = ["16", "13", "11", "9"];
 
 /* ── ② 這個資料夾裡只能有 index.html ──────────────────────────
  * 引用的圖都在別人的資料夾，複製一份就是多一個會漂掉的真相。 */
@@ -134,10 +139,16 @@ for (const w of WIDTHS) {
         title: card.querySelector("h4").textContent,
         titleLines: (() => {
           /* 標題畫成幾行、最寬那一行多寬 —— 量墨（Range 逐字、照 top 分組），
-             不要問盒子（h4 是 block，rect 回的是整欄寬 240）。 */
+             不要問盒子（h4 是 block，rect 回的是整欄寬 240）。
+             ⚠⚠ 要走 TreeWalker 不可以只看 firstChild ——
+                標題現在拆成三段（文字／空格的 span／文字）。
+             ⚠⚠ 空白一律跳掉：中間那個空格有**自己的字級**，它的 top 和旁邊的字
+                不一樣，不跳掉的話照 top 分組會多數出一行，而畫面上一行都沒折。 */
           const h = card.querySelector("h4"), r = document.createRange(), tops = {};
-          const n = h.firstChild;
-          for (let i = 0; i < n.length; i++) {
+          const w = document.createTreeWalker(h, NodeFilter.SHOW_TEXT);
+          let n;
+          while ((n = w.nextNode())) for (let i = 0; i < n.length; i++) {
+            if (/\s/.test(n.data[i])) continue;
             r.setStart(n, i); r.setEnd(n, i + 1);
             const b = r.getBoundingClientRect();
             if (!b.width && !b.height) continue;
@@ -154,6 +165,30 @@ for (const w of WIDTHS) {
             Math.abs((v.l - box.left) - (box.right - v.r)));
           return { rows: ws.length, wide: Math.max(...ws), off: Math.max(...gaps) };
         })(),
+        /* ⑪ 標題中間那個空格：宣告的字級、以及**畫出來真的多寬**。
+           ⚠ 屬性寫對 ≠ 畫出來是那個大小（同綁定完成那張 PNG 那一道）。 */
+        gap: (() => {
+          const sp = card.querySelector("h4 .sp");
+          if (!sp) return null;
+          const r = document.createRange();
+          r.selectNodeContents(sp);
+          return {
+            css: parseFloat(getComputedStyle(sp).fontSize),
+            ink: r.getBoundingClientRect().width,
+            /* letter-spacing 在 LINE 上不存在，頁面上也不准拿它來縮這個空格 */
+            ls: getComputedStyle(sp).letterSpacing,
+          };
+        })(),
+        /* ⚠ 每一格都要自己判斷有沒有那個 span —— 直接 getComputedStyle(null)
+           會**丟例外**，守門就變成一句看不懂的 TypeError（負向測時踩到）。 */
+        strip: [...document.querySelectorAll("#pv-gaps .row")].map((x) => {
+          const sp = x.querySelector(".sp");
+          return {
+            g: x.getAttribute("data-gap"),
+            css: sp ? parseFloat(getComputedStyle(sp).fontSize) : null,
+            lab: x.querySelector(".lab").textContent,
+          };
+        }),
         cardW: card.getBoundingClientRect().width,
         btns: [...card.querySelectorAll(".btn > span")].map((s) => s.textContent),
         shotRect: shot ? shot.getBoundingClientRect().width : 0,
@@ -204,6 +239,27 @@ for (const w of WIDTHS) {
       ok(got.titleLines.off <= 1,
         `${c}/${h}/${t}：標題沒有置中（左右留白差 ${got.titleLines.off.toFixed(1)}px）`);
     }
+    /* ⑪ 那個空格：預設就是他挑的那一格，而且**畫出來真的是那個大小**。
+       ⚠ 只用 font-size 改 —— letter-spacing 在 Flex 上不存在，
+         拿它來縮的話畫面很像、卻是一條 LINE 上做不到的路。 */
+    ok(got.gap, `${c}/${h}/${t}：標題裡找不到那個空格的 span（拆不出來就沒有東西可以調）`);
+    if (got.gap) {
+      ok(Math.abs(got.gap.css - +DEFAULT.g) < 0.6,
+        `${c}/${h}/${t}：空格畫成 ${got.gap.css}px，預設應該是 ${DEFAULT.g}px`);
+      /* 墨寬 ＝ 字級 ＋ 它自己那一份 letter-spacing（.01em），容差 1px */
+      ok(Math.abs(got.gap.ink - +DEFAULT.g) <= 1,
+        `${c}/${h}/${t}：空格宣告 ${DEFAULT.g}px、畫出來 ${got.gap.ink.toFixed(1)}px`);
+      ok(got.gap.ls === "normal" || Math.abs(parseFloat(got.gap.ls)) < 0.5,
+        `${c}/${h}/${t}：空格被 letter-spacing ${got.gap.ls} 動過 —— Flex 沒有字距，只能改它的 size`);
+    }
+    /* 那把尺真的在頁上（四格、每一格的空格真的是那個大小） */
+    ok(got.strip.length === GAPS.length,
+      `${c}/${h}/${t}：空格那把尺有 ${got.strip.length} 格，應該是 ${GAPS.length}`);
+    for (const row of got.strip)
+      ok(GAPS.includes(row.g) && row.css != null && Math.abs(row.css - +row.g) < 0.6,
+        `空格那把尺的「${row.g}px」那一格畫成 ${row.css == null ? "（找不到那個 span）" : row.css + "px"}`);
+    ok(got.strip.every((r) => /px/.test(r.lab)),
+      `空格那把尺有一格的標籤是空的 —— 那幾個數字是 measure() 現場填的`);
     ok(got.text.includes("05-5339369") || t === "off",
       `${c}/${h}/${t}：電話那把尺不是「不放」，卡上卻找不到 05-5339369`);
     ok(got.btns[0] === WELCOME_BTN,
@@ -221,13 +277,81 @@ for (const w of WIDTHS) {
   }
   await page.close();
 }
+
+/* ── ⑪ 那把尺的四格各自跑一次 ────────────────────────────────────
+ * ⚠ 不併進上面那個迴圈（18 組 × 4 ＝ 72 組 × 8 個寬度太慢），
+ *   而且要驗的東西只有標題那一行：兩個最窄的寬度就夠。
+ * ⚠⚠ 每一格都要「一行放得下、而且真的畫成一行」——
+ *   空格縮小只會讓標題更短，但**縮小本身也可能把某一格變成兩行**（不會，
+ *   不過這一道是免費的，日後標題的字改了它就開始有用）。 */
+const gaps = [];
+for (const w of [390, 360]) {
+  const page = await browser.newPage({ viewport: { width: w, height: 860 } });
+  for (const g of GAPS) {
+    await page.goto(`file://${PAGE}?g=${g}`);
+    await page.waitForSelector("#pv-chat1 .fx");
+    const got = await page.evaluate(() => {
+      const card = document.querySelector("#pv-chat1 .fx");
+      const h = card.querySelector("h4"), r = document.createRange(), tops = {};
+      const wk = document.createTreeWalker(h, NodeFilter.SHOW_TEXT);
+      let n;
+      while ((n = wk.nextNode())) for (let i = 0; i < n.length; i++) {
+        if (/\s/.test(n.data[i])) continue;
+        r.setStart(n, i); r.setEnd(n, i + 1);
+        const b = r.getBoundingClientRect();
+        if (!b.width && !b.height) continue;
+        const k = Math.round(b.top);
+        tops[k] = tops[k] || { l: Infinity, r: -Infinity };
+        tops[k].l = Math.min(tops[k].l, b.left);
+        tops[k].r = Math.max(tops[k].r, b.right);
+      }
+      const ws = Object.values(tops).map((v) => v.r - v.l);
+      const sp = h.querySelector(".sp");
+      let css = null, ink = null;
+      if (sp) {
+        const rr = document.createRange(); rr.selectNodeContents(sp);
+        css = parseFloat(getComputedStyle(sp).fontSize);
+        ink = rr.getBoundingClientRect().width;
+      }
+      const doc = document.documentElement;
+      return {
+        title: h.textContent,
+        rows: ws.length, wide: Math.max(...ws),
+        css, ink,
+        overflow: doc.scrollWidth - doc.clientWidth,
+      };
+    });
+    gaps.push({ w, g, ...got });
+    /* ⚠⚠ 拆 span 不可以動到那句話 —— textContent 要逐字不變 */
+    ok(got.title === TITLE, `?g=${g}：標題變成「${got.title}」（拆 span 把字改掉了）`);
+    ok(got.css != null, `?g=${g}：標題裡找不到那個空格的 span`);
+    if (got.css != null) {
+      ok(Math.abs(got.css - +g) < 0.6, `?g=${g}：空格畫成 ${got.css}px`);
+      ok(Math.abs(got.ink - +g) <= 1, `?g=${g}：空格畫出來 ${got.ink.toFixed(1)}px`);
+    }
+    ok(got.rows === 1, `${w}px ?g=${g}：標題畫成 ${got.rows} 行`);
+    ok(got.wide <= 240, `${w}px ?g=${g}：標題 ${got.wide.toFixed(1)}px，超過可用的 240`);
+    ok(got.overflow <= 0, `${w}px ?g=${g}：水平溢出 ${got.overflow}px`);
+  }
+  await page.close();
+}
 await browser.close();
 
 /* ── 面板真的有在報（不是印一行空的） ────────────────────────── */
 ok(seen.length === WIDTHS.length * 18, `量到的組合數不對：${seen.length}`);
 /* 那一頁的預設真的是這一格嗎（改了 state 卻忘了改這裡，上面那道就白守了） */
-ok(new RegExp(`var state = \\{ c: "${DEFAULT.c}", h: "${DEFAULT.h}", t: "${DEFAULT.t}" \\}`).test(html),
-  `index.html 的預設不是 ${DEFAULT.c}/${DEFAULT.h}/${DEFAULT.t} —— 「只有標題與按鈕」那一道守的就不是預設那一張了`);
+ok(new RegExp(`var state = \\{ c: "${DEFAULT.c}", h: "${DEFAULT.h}", t: "${DEFAULT.t}", g: "${DEFAULT.g}" \\}`).test(html),
+  `index.html 的預設不是 ${DEFAULT.c}/${DEFAULT.h}/${DEFAULT.t}/空格 ${DEFAULT.g} —— 「只有標題與按鈕」那一道守的就不是預設那一張了`);
+/* ⚠⚠ 標題的空格只准用 font-size 改。頁面上若出現負的字距，畫面會很像
+   （站上那首詩就是這樣縮的），但**那是 LINE 上做不到的路** ——
+   等於在一個做不出來的樣子上做決定。 */
+/* ⚠⚠⚠ 掃之前要先把註解剝掉 —— 這條線每一份檔案都把「為什麼不可以」寫在自己裡面，
+   直接掃整頁一定會撞到自己的說明（第一次跑就被自己的註解擋下來了）。 */
+const noComments = html
+  .replace(/<!--[\s\S]*?-->/g, "")
+  .replace(/\/\*[\s\S]*?\*\//g, "");
+ok(!/letter-spacing:\s*-/.test(noComments),
+  "頁面上用了負的字距 —— Flex 沒有字距，這個空隙只能靠那個空格自己的 size");
 
 if (bad.length) {
   console.error("❌ 擋下 " + bad.length + " 項：\n" +
@@ -235,11 +359,16 @@ if (bad.length) {
   process.exit(1);
 }
 const t390 = seen.find((s) => s.w === 390);
-console.log("✅ " + seen.length + " 組（8 個寬度 × 3 案 × 2 頭圖 × 3 電話）全部通過：\n" +
+console.log("✅ " + seen.length + " 組（8 個寬度 × 3 案 × 2 頭圖 × 3 電話）＋ 空格那把尺 " +
+  gaps.length + " 組全部通過：\n" +
   "   資料夾只有 index.html（四個圖都引用別人那一份）、頭圖 1024×512、" +
   "按鈕逐字 ＝ 招呼圖卡那一顆、\n   標題逐字 ＝「" + TITLE + "」（畫成 " +
   t390.titleLines.rows + " 行、最寬 " + t390.titleLines.wide.toFixed(1) +
   "px／可用 240、置中偏 " + t390.titleLines.off.toFixed(1) + "px）、\n" +
+  "   標題中間那個空格 " + DEFAULT.g + "px（" +
+  gaps.filter((g) => g.w === 390)
+    .map((g) => g.g + "→" + g.wide.toFixed(0)).join("／") +
+  "px，四格都是一行、都收在 240 以內）、\n" +
   "   預設那一張只有標題與按鈕、切換條沒有長回來、\n" +
   "   電話是現行寫法、紅線 0、沒有 48 小時也沒有 2 天、卡片畫成 268、水平溢出 0\n" +
   "   ⚠ 標題那個「30 秒」是廠商那張卡上的數字，我們沒有量過 —— 面板照實印著，" +

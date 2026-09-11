@@ -119,6 +119,13 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
    ⚠⚠ 寫 Flex JSON 時這是那個 text 元件的 `"align": "center"`，不是 CSS。 */
 .fx h4{margin:0;font-size:16px;line-height:1.55;font-weight:700;color:#2a2c27;
   letter-spacing:.01em;white-space:pre-wrap;text-align:center}
+/* ⚠⚠⚠ 標題中間那個全形空格（2026-09-10 使用者：「空格小一點」）。
+   **Flex 沒有字距（letter-spacing）** —— 站上 HERO 那首詩用的
+   `letter-spacing: -.57em` 把全形空格縮窄的做法，**在 LINE 上做不到**。
+   唯一能改這個空隙的是**那個字自己的大小**，所以這裡也只調 font-size，
+   寫 Flex JSON 時就是把標題拆成 contents 的 span、給那個空格自己的 `size`。
+   ⚠ 行高跟著它自己的字級算（1.55 是純數字），所以縮小不會把行框撐開。 */
+.fx h4 .sp{font-size:var(--gap)}
 .fx p{margin:8px 0 0;font-size:14px;line-height:1.75;color:#5c5f57;white-space:pre-wrap}
 .fx p b{color:#2a2c27;font-weight:700}
 .fx .xs{margin-top:11px;font-size:13px;line-height:1.7;color:#5c5f57;white-space:pre-wrap}
@@ -173,6 +180,21 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
 .pv-note ol{margin:6px 0 0 1.1em;padding:0}
 .pv-note li{margin:0 0 5px}
 
+/* ---- 空格那把尺：四格並排 --------------------------------------------
+   ⚠⚠ 每一格都畫成**卡片真正的寬度 268 ＋ 內距 14**、字級也用 Flex 的 16px ——
+   模擬別人的介面時，凡是那一側寫死的尺寸，我們這邊也要寫死
+   （寫成百分比不報錯、畫面也正常，只有拿數字量才看得出來）。 */
+.pv-gaps{margin:10px 0 0;display:flex;flex-direction:column;gap:9px}
+.pv-gaps .row{width:268px;max-width:100%;border-radius:12px;background:#f4f4f5;
+  box-shadow:0 1px 2px rgba(0,0,0,.08);overflow:hidden}
+.pv-gaps .row.on{box-shadow:0 0 0 2px var(--deep),0 1px 2px rgba(0,0,0,.08)}
+.pv-gaps .t{display:block;padding:14px 14px 0;font-size:16px;line-height:1.55;
+  font-weight:700;color:#2a2c27;letter-spacing:.01em;text-align:center;white-space:pre-wrap}
+.pv-gaps .lab{display:block;padding:7px 14px 11px;font-size:.68rem;line-height:1.6;
+  color:var(--ink-soft);text-align:center}
+.pv-gaps .lab b{color:var(--ink);font-weight:700}
+.pv-gaps .lab .rec{color:var(--deep);font-weight:700}
+
 /* ---- 切換條：2026-09-10 整條拿掉（三把尺都定了），樣式一起清掉 ---- */
 </style>
 </head>
@@ -184,8 +206,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     <b>這一則已經在跑了</b> —— 你截圖上那張藍色卡就是它，所以這一輪是<b>改版</b>，
     不是多加一則訊息。頭圖用<b>之前那張綁定圖</b>（＝綁定完成那一張的同一個檔）。<br>
     <b>照你說的收成三樣：頭圖、標題、按鈕。</b>標題底下那一段、家人那一句、
-    電話那一行<b>全部拿掉了</b>，所以<b>切換條也跟著收掉</b> —— 沒有東西要挑了。
-    拿掉的那幾段各帶走什麼，寫在底下那一塊與第 ① 段下面。</p>
+    電話那一行<b>全部拿掉了</b>，所以<b>切換條也跟著收掉</b>。
+    拿掉的那幾段各帶走什麼，寫在底下那一塊與第 ① 段下面。<br>
+    <b class="y">要挑的只剩一件</b>：標題中間那個空格要多小（第 ② 段，四格）。</p>
 
   <div class="pv-fact">
     <h2>先把幾件事實放上來</h2>
@@ -295,7 +318,21 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   <div class="pv-panel" id="pv-panel1"></div>
   <p class="pv-note" id="pv-note"></p>
 
-  <h2 class="pv-h2">② 他綁完之後的那一分鐘</h2>
+  <h2 class="pv-h2">② 那個空格要多小</h2>
+  <p class="pv-sub"><b>先講一件會決定答案的事：LINE 的 Flex 沒有「字距」這個東西。</b><br>
+    站上 HERO 那首詩是用字距把全形空格縮窄的，<b class="n">那個做法搬不過去</b> ——
+    在 LINE 上，能改這個空隙的只有<b>那個空格自己的大小</b>。
+    所以四格差的就是它：標題其餘每一個字都<b>一模一樣</b>。<br>
+    ⚠ <b class="y">11px 那一格有一個別人沒有的好處</b>：它正好是 Flex 內建最小的那一階
+    （<code>xxs</code>），寫 JSON 時給的是<b>一個名字不是一個數字</b>，
+    廠商那邊不會有「你這個 px 值我們的工具吃不吃」的問題。
+    9px 就得寫成 <code>"9px"</code>。</p>
+
+  <div class="pv-gaps" id="pv-gaps"></div>
+  <p class="pv-cap">↑ 每一格都是<b>卡片真正的寬度（268）與字級（16px）</b>，
+    所以看到的空隙就是它在手機上的樣子。目前這一頁用的是打勾那一格。</p>
+
+  <h2 class="pv-h2">③ 他綁完之後的那一分鐘</h2>
   <p class="pv-sub">同一段對話接下去：他按了綁定 → 公版的「綁定成功」→
     我們<b>已經定稿</b>的那張綁定完成卡。<b>擺在一起才看得出一件事</b>：
     同一張圖會在一分鐘內出現兩次。</p>
@@ -313,7 +350,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     廠商說「那是公版、改不了」因此是合理的，<b>而它也不必改</b>：
     在它後面再送我們那一張就好。</p>
 
-  <h2 class="pv-h2">③ 現況（對照）</h2>
+  <h2 class="pv-h2">④ 現況（對照）</h2>
   <p class="pv-sub">照你截圖上那張重畫的<b>結構</b>。
     ⚠ <b>兩隻吉祥物沒有畫上來</b> —— 那是廠商的圖，這個 repo 是公開的；
     要比的是結構與字，不是長相。</p>
@@ -327,7 +364,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
   </div>
   <p class="pv-cap">↑ 現況。字全部烘在圖裡 ＝ <b>一個字都改不了，除非重做那張圖</b>。</p>
 
-  <h2 class="pv-h2">④ 要問廠商的 ＋ 還沒收掉的</h2>
+  <h2 class="pv-h2">⑤ 要問廠商的 ＋ 還沒收掉的</h2>
   <p class="pv-note" id="pv-ask"></p>
 </div>
 
@@ -337,6 +374,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
        ?c=b   標題底下拆成兩件事（＋家人那一句）
        ?h=off 不放頭圖
        ?t=note 電話留成說明句一行　　?t=btn 電話做成第二顆按鈕
+       ?g=16|13|11|9   標題中間那個空格多寬（第 ② 段那四格，預設 11 ＝ xxs）
      ⚠ 面板**沒有**跟著收 —— 卡片多高、有沒有孤字、按鈕的字放不放得下，每次都還要量。 -->
 
 <script>
@@ -359,6 +397,26 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
         兩塊會前後腳出現在同一個畫面上，用同一組字是對的。
      ------------------------------------------------------------------ */
   var TITLE = "30秒快速綁定　啟用完整服務";
+  /* 那個全形空格（U+3000）在標題裡的位置 —— 拆 span 時要用。
+     ⚠ 用 indexOf 找，不要寫死 8：標題的字改了這裡要自己跟上。 */
+  var SP = TITLE.indexOf("　");
+
+  /* ------------------------------------------------------------------
+     那個空格要多寬。**2026-09-10 使用者：「空格小一點」**。
+     ⚠⚠⚠ **Flex 沒有字距** —— 站上 HERO 那首詩把全形空格縮窄用的是
+        `letter-spacing: -.57em`，那條路在 LINE 上不存在。唯一能改這個空隙的是
+        **那個空格自己的 `size`**，所以寫 Flex JSON 時標題要拆成 contents 的三段：
+          文字「30秒快速綁定」 ／ span「　」給自己的 size ／ 文字「啟用完整服務」
+     ⚠ 11 ＝ `xxs` 是 Flex **內建最小的那一階**，給的是名字不是數字 ——
+        廠商那邊不會有「這個 px 值吃不吃」的問題。9 就得寫成 "9px"。
+     ⚠ 16 那一格等於現在這樣，**根本不必拆 span**（標題就是一段字）。
+     ------------------------------------------------------------------ */
+  var GAPS = {
+    "16": { name: "現在這樣", flex: "不必拆 span" },
+    "13": { name: "小一階",   flex: 'span size "xs"' },
+    "11": { name: "再小一階", flex: 'span size "xxs"', rec: true },
+    "9":  { name: "最小",     flex: 'span size "9px"' }
+  };
 
   /* ------------------------------------------------------------------
      底下那一段。**2026-09-10 使用者指定拿掉**（「標題和按鈕保存　其他文字拿掉」），
@@ -403,8 +461,8 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     btn:  { name: "第二顆按鈕" }
   };
 
-  /* 2026-09-10 定：頭圖用他那張、標題底下不寫、電話不放。 */
-  var state = { c: "c", h: "on", t: "off" };
+  /* 2026-09-10 定：頭圖用他那張、標題底下不寫、電話不放。空格預設開在建議那一格。 */
+  var state = { c: "c", h: "on", t: "off", g: "11" };
 
   /* ------------------------------------------------------------------ */
   function el(tag, cls, txt) {
@@ -413,6 +471,30 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     if (txt != null) n.textContent = txt;
     return n;
   }
+  /* 標題：「30秒快速綁定」＋ 一個自己一段的空格 ＋「啟用完整服務」。
+     ⚠ textContent 完全沒變（拆 span 不影響），所以「標題逐字」那道守門照樣成立。
+     ⚠⚠ 空格一律包成 span，連 16px 那一格也是 —— 三格量法要一樣，
+        不然「空格畫出來多寬」會變成兩種量法各一個數字。
+        （Flex JSON 那一側 16px 就不必拆，頁面上這樣做只是為了量。） */
+  function titleNodes(gap) {
+    var f = document.createDocumentFragment();
+    f.appendChild(document.createTextNode(TITLE.slice(0, SP)));
+    var sp = el("span", "sp", TITLE.charAt(SP));
+    sp.style.fontSize = gap + "px";
+    f.appendChild(sp);
+    f.appendChild(document.createTextNode(TITLE.slice(SP + 1)));
+    return f;
+  }
+  /* 那個空格畫出來多寬。⚠ 量那個字自己的框（Range），不要拿兩邊的字相減 ——
+     相減會把 letter-spacing 算進去兩次。 */
+  function gapOf(h) {
+    var sp = h.querySelector(".sp");
+    if (!sp) return 0;
+    var r = document.createRange();
+    r.selectNodeContents(sp);
+    return r.getBoundingClientRect().width;
+  }
+
   function telLine() {
     /* ⚠ 號碼自己一行 —— 和別的字擠在一起時，折行會把 05- 和 5339369 拆開
        （綁定完成那一則踩過）。 */
@@ -433,7 +515,9 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       c.appendChild(img);
     }
     var b = el("div", "b");
-    b.appendChild(el("h4", null, TITLE));
+    var h4 = el("h4");
+    h4.appendChild(titleNodes(+state.g));
+    b.appendChild(h4);
     if (C.body) {
       var p = el("p");
       C.body.forEach(function (s) {
@@ -519,9 +603,28 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     c3.appendChild(row(bub("[約診紀錄查詢]", true), "18:57", true));
     c3.appendChild(row(oemCard(), "18:57"));
 
-    history.replaceState(null, "",
-      location.pathname + "?c=" + state.c + "&h=" + state.h + "&t=" + state.t);
+    gapStrip();
+
+    history.replaceState(null, "", location.pathname + "?c=" + state.c +
+      "&h=" + state.h + "&t=" + state.t + "&g=" + state.g);
     requestAnimationFrame(measure);
+  }
+
+  /* 空格那把尺：四格，每一格畫成卡片真正的寬度與字級。
+     ⚠ 由大排到小 —— 「現在這樣」擺在最上面，他才知道自己是從哪裡開始比的。
+     ⚠⚠ 標籤裡那個「空格畫出來多寬」由 measure() 現場填，不要在這裡寫死一個數字。 */
+  function gapStrip() {
+    var host = document.getElementById("pv-gaps");
+    host.innerHTML = "";
+    Object.keys(GAPS).sort(function (a, b) { return b - a; }).forEach(function (g) {
+      var row = el("div", "row" + (g === state.g ? " on" : ""));
+      row.setAttribute("data-gap", g);
+      var t = el("span", "t");
+      t.appendChild(titleNodes(+g));
+      row.appendChild(t);
+      row.appendChild(el("span", "lab"));
+      host.appendChild(row);
+    });
   }
 
   /* ------------------------------------------------------------------
@@ -535,7 +638,10 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     var walk = document.createTreeWalker(node, NodeFilter.SHOW_TEXT), n;
     while ((n = walk.nextNode())) {
       for (var i = 0; i < n.length; i++) {
-        if (n.data[i] === "\n") continue;
+        /* ⚠⚠ 空白一律跳掉（\n、半形空白、**全形空格 U+3000** —— JS 的 \s 都涵蓋）。
+           量的是墨：標題中間那個空格現在有自己的字級，它的 rect 的 top 和旁邊的字
+           不一樣，不跳掉的話照 top 分組會**多數出一行**，而畫面上一行都沒折。 */
+        if (/\s/.test(n.data[i])) continue;
         r.setStart(n, i); r.setEnd(n, i + 1);
         var b = r.getBoundingClientRect();
         if (!b.width && !b.height) continue;
@@ -561,6 +667,28 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       if (w > wide) wide = w;
     }
     return { mine: mine, drawn: drawn, orp: orp, wide: wide };
+  }
+
+  /* 一段字的**墨**畫成幾行、最寬那一行多寬。
+     ⚠ 不要問盒子 —— h4 是 block，rect 回的是整欄寬 240，不管字多短都一樣。
+     ⚠ 空白跳掉（理由同 lastLine）。 */
+  function inkOf(node) {
+    var r = document.createRange(), tops = {};
+    var walk = document.createTreeWalker(node, NodeFilter.SHOW_TEXT), n;
+    while ((n = walk.nextNode())) {
+      for (var i = 0; i < n.length; i++) {
+        if (/\s/.test(n.data[i])) continue;
+        r.setStart(n, i); r.setEnd(n, i + 1);
+        var b = r.getBoundingClientRect();
+        if (!b.width && !b.height) continue;
+        var k = Math.round(b.top);
+        if (!tops[k]) tops[k] = { l: Infinity, r: -Infinity };
+        tops[k].l = Math.min(tops[k].l, b.left);
+        tops[k].r = Math.max(tops[k].r, b.right);
+      }
+    }
+    var ws = Object.keys(tops).map(function (k) { return tops[k].r - tops[k].l; });
+    return { rows: ws.length, wide: ws.length ? Math.max.apply(null, ws) : 0 };
   }
 
   /* 紅線：這個帳號沒有專人即時回覆訊息（第十一之三節）。
@@ -616,6 +744,26 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
     /* 同一張頭圖在這一分鐘裡出現幾次（綁定完成那一張本來就有一張）。 */
     var heroTimes = state.h === "on" ? 2 : 1;
 
+    /* 標題：墨多寬、畫成幾行、中間那個空格畫出來多寬。
+       ⚠ 空格那一格是使用者要挑的，所以**每次都要印出來**（不然改了它，
+       面板上一個數字都不會動 —— 壞掉檢查擋不住醜）。 */
+    var h4 = document.querySelector("#pv-chat1 .fx h4");
+    var ti = h4 ? inkOf(h4) : { rows: 0, wide: 0 };
+    var gp = h4 ? gapOf(h4) : 0;
+    /* 四格的標籤現場填 —— 不要在 gapStrip() 裡寫死數字。 */
+    document.querySelectorAll("#pv-gaps .row").forEach(function (r0) {
+      var g = r0.getAttribute("data-gap"), G = GAPS[g];
+      /* ⚠ 兩個記號各自一行 —— 擠在「整句 NNN px」後面的話，
+         被挑中那一格會折成三行，讀起來像壞掉（它正好是最該乾淨的那一格）。 */
+      var tag = (G.rec ? "<span class=\"rec\">← 建議</span>" : "") +
+        (g === state.g ? (G.rec ? "　" : "") + "<b>✓ 現在用的</b>" : "");
+      r0.querySelector(".lab").innerHTML =
+        "<b>" + g + "px</b>　" + G.name +
+        "　<span style=\"opacity:.8\">" + G.flex + "</span><br>" +
+        "整句 " + inkOf(r0.querySelector(".t")).wide.toFixed(0) + "px／可用 240" +
+        (tag ? "<br>" + tag : "");
+    });
+
     document.getElementById("pv-panel1").innerHTML =
       "<b>" + CASES[state.c].name + "・頭圖" + HEROS[state.h].name +
       "・電話" + PHONE[state.t].name + "</b>" +
@@ -633,6 +781,11 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
       (cap >= 267.5 ? '<span class="ok">268＝LINE 的真值</span>'
         : '<span class="no">' + cap.toFixed(0) + "px —— 這個螢幕放不下 268，判斷偏鬆 " +
           (268 - cap).toFixed(0) + "px</span>") + "）<br>" +
+
+      "標題 <b class=\"" + (ti.rows > 1 ? "no" : "ok") + "\">" + ti.rows + "</b> 行・" +
+      "墨寬 <b>" + ti.wide.toFixed(0) + "px</b>／可用 240・" +
+      "中間那個空格 <b>" + gp.toFixed(1) + "px</b>" +
+      "<span style=\"opacity:.8\">（" + GAPS[state.g].flex + "）</span><br>" +
 
       "按鈕的字 <b>" + btnW.toFixed(0) + "px</b>／可用 " + room + "px " +
       (btnW > room ? '<span class="no">會從尾巴被截斷</span>' : '<span class="ok">放得下</span>') +
@@ -672,7 +825,7 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
         "代價是這一張在聊天室裡就只是一塊字 —— 而它現在（廠商那張）至少是有圖的。";
     } else {
       s += "<hr><b>頭圖用同一張綁定圖</b>（你指定的那張）。" +
-        "第 ② 段就是為了讓你看一件事：<b>同一張圖會在一分鐘內出現兩次</b>。" +
+        "第 ③ 段就是為了讓你看一件事：<b>同一張圖會在一分鐘內出現兩次</b>。" +
         "那不見得是壞事 —— 兩張是同一件事的前後兩步，同一張圖會讓人一眼認出來；" +
         "但如果你覺得重複，<b>兩個解法都不必重畫</b>：這一張不放圖，" +
         "或綁定完成那一張不放圖（那一則的字已經定稿，動的只是圖）。";
@@ -702,6 +855,14 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
         "要它撥得下去就在那一行掛 <code>tel:</code> 的 action，外觀完全不變 —— " +
         "那件事在綁定完成那一則就問過一次了，<b>你還沒回答</b>。";
     }
+    s += "<hr><b>標題中間那個空格：現在是 " + state.g + "px</b>（" +
+      GAPS[state.g].name + "）。" +
+      "<b class=\"n\">Flex 沒有字距</b> —— 站上那首詩是靠字距把全形空格縮窄的，" +
+      "在 LINE 上只能改<b>那個空格自己的大小</b>，所以四格差的就只有它。" +
+      "<br>⚠ <b>11px ＝ <code>xxs</code> 是 Flex 內建最小的那一階</b>，" +
+      "寫 JSON 時給的是名字不是數字，廠商那邊少一個會出事的地方；9px 就得寫成數字。" +
+      "<br>四格擺在第 ② 段，<b>要換就在網址後面加 <code>?g=16</code>、" +
+      "<code>?g=13</code>、<code>?g=11</code> 或 <code>?g=9</code></b>。";
     return s;
   }
 
@@ -733,12 +894,14 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
         "它現在決定的不再是「要不要做」（這一則已經在跑），而是<b>這一張每個月被幾個人看到</b>。</li>" +
       "<li>Flex 的 JSON <b>等你挑完才寫</b>（同前面每一則的順序）。" +
         "頭圖 <code>hero-bind.jpg</code> 已經在 <code>fangren.net/assets/line/</code> 上了，" +
-        "圖不必再做。</li>" +
+        "圖不必再做。<br>⚠ 空格挑 16px 以外的那幾格時，標題在 JSON 裡要<b>拆成三段</b>" +
+        "（文字／空格自己一個 span 帶 <code>size</code>／文字）—— 畫面完全一樣，" +
+        "但那是 Flex 唯一能改這個空隙的地方。</li>" +
       "</ol>";
   }
 
   /* 網址參數。⚠ 正規式要寫 [a-z0-9]+（寫 [a-z]+ 會吃不到帶數字的值）。 */
-  [["c", CASES], ["h", HEROS], ["t", PHONE]].forEach(function (p) {
+  [["c", CASES], ["h", HEROS], ["t", PHONE], ["g", GAPS]].forEach(function (p) {
     var m = location.search.match(new RegExp("[?&]" + p[0] + "=([a-z0-9]+)"));
     if (m && p[1][m[1]]) state[p[0]] = m[1];
   });
