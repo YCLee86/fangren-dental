@@ -126,6 +126,14 @@ ul.tick li::before{content:"・";position:absolute;left:0;color:var(--soft)}
 .nine svg{display:block;margin:0 auto;height:auto}
 .nine figcaption{font-size:.72rem;color:var(--soft);line-height:1.5;margin-top:.45em}
 
+/* ── 大小與位置的對照 ──────────────────────────────────────── */
+.cmpwrap{margin:1.2em 0 0}
+.cmpt{font-size:.9rem;font-weight:600;margin:0 0 .35em}
+.cmprow{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:14px 10px}
+.cmp{margin:0}
+.cmp svg{display:block;width:100%;max-width:268px;height:auto}
+.cmp figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.2em;max-width:268px}
+
 /* ── 待答 ──────────────────────────────────────────────────── */
 .grp{margin:1.6em 0 0}
 .grp .t{font-size:.93rem;font-weight:600;margin:0 0 .1em}
@@ -190,6 +198,47 @@ ${WM.map((s) => `<figure>
 <figcaption>${esc(s.科)}<br>${esc(s.n)}・${s.w}px</figcaption>
 </figure>`).join("\n")}
 </div>`;
+
+/* ── ③之二 大小與位置的對照 ───────────────────────────────────
+   同一張卡畫三次（我們的 JSON／我們的模擬圖／廠商送來的），形狀與顏色完全一樣，
+   差的只有大小與位置。⚠ 形狀仍然是從 brand/shapes/ 讀回來的那一份，不抄第二份。 */
+const byName = Object.fromEntries(WM.map((s2) => [s2.n, s2]));
+const cmp = D.浮水印.對照;
+const cardBox = cmp.卡;
+const plate = (shape, g) => {
+  const s2 = byName[shape];
+  if (!s2) throw new Error(`對照表用到不存在的形狀 ${shape}`);
+  const h = g.size / s2.ratio;
+  const x = cardBox.w - g.size + g.right;
+  const y = cardBox.h - h + g.bottom;
+  const id = `clip-${shape}-${g.標.length}-${g.size}-${g.right}`;
+  /* 卡片自己會把跑出去的那一塊切掉 —— 所以一定要 clipPath，不然畫出來
+     和廠商實際看到的不一樣（那正是這一節在比的東西） */
+  /* 卡片右下留一塊空白，跑出卡片的那一截才畫得下（三格用同一個框，才比得出來） */
+  const PR = 26, PB = 18, PL = 6, PT = 6;
+  return `<figure class="cmp">
+<svg viewBox="${-PL} ${-PT} ${cardBox.w + PL + PR} ${cardBox.h + PT + PB}"
+  width="${cardBox.w + PL + PR}" height="${cardBox.h + PT + PB}"
+  role="img" aria-label="${esc(g.標)}：浮水印 ${g.size}px，往右 ${g.right}、往下 ${g.bottom}">
+<defs><clipPath id="${id}"><rect x="0" y="0" width="${cardBox.w}" height="${cardBox.h}" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="${cardBox.w}" height="${cardBox.h}" rx="9" fill="#f4f4f5"/>
+<g clip-path="url(#${id})" opacity="0.12">
+<svg x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${g.size}" height="${h.toFixed(2)}"
+  viewBox="0 0 ${s2.vw} ${s2.vh}" preserveAspectRatio="none"><g transform="${s2.gt}"><path
+  fill="${s2.色}" fill-rule="evenodd" d="${s2.d}"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="${cardBox.w - 1}" height="${cardBox.h - 1}" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${g.size}" height="${h.toFixed(2)}"
+  fill="none" stroke="${s2.色}" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>${esc(g.標)}</b>　${g.size}px<br>${b(g.註)}</figcaption>
+</figure>`;
+};
+const compare = cmp.組.map((row) => `<div class="cmpwrap">
+<p class="cmpt">${esc(row.名)}</p>
+<div class="cmprow">${row.格.map((g) => plate(row.形, g)).join("\n")}</div>
+</div>`).join("\n");
 
 /* ── ④ 往返 ───────────────────────────────────────────────── */
 const rounds = D.往返.map((r) => `<div class="row">
@@ -280,7 +329,16 @@ ${revised}
 ${nine}
 <div class="rows">
 <div class="row"><p class="k">現況</p><p class="v">${b(D.浮水印.現況)}</p></div>
-<div class="row"><p class="k">要確認的</p><p class="v">${b(D.浮水印.要確認)}</p></div>
+<div class="row"><p class="k">大小與位置</p><p class="v">${b(D.浮水印.大小與位置)}</p></div>
+</div>
+
+<h3 style="font-size:.95rem;margin:1.8em 0 .2em">同一張卡畫三次</h3>
+<p style="font-size:.88rem;color:var(--soft);margin:0">${esc(cmp._說明)}</p>
+${compare}
+<p class="note">${b(cmp.量)}</p>
+
+<div class="rows" style="margin-top:1.4em">
+<div class="row"><p class="k">還要確認的</p><p class="v">${b(D.浮水印.要確認)}</p></div>
 </div>
 <p class="note">${b(D.浮水印._說明)}</p>
 

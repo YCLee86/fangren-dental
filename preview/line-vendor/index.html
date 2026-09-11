@@ -57,6 +57,14 @@ ul.tick li::before{content:"・";position:absolute;left:0;color:var(--soft)}
 .nine svg{display:block;margin:0 auto;height:auto}
 .nine figcaption{font-size:.72rem;color:var(--soft);line-height:1.5;margin-top:.45em}
 
+/* ── 大小與位置的對照 ──────────────────────────────────────── */
+.cmpwrap{margin:1.2em 0 0}
+.cmpt{font-size:.9rem;font-weight:600;margin:0 0 .35em}
+.cmprow{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:14px 10px}
+.cmp{margin:0}
+.cmp svg{display:block;width:100%;max-width:268px;height:auto}
+.cmp figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.2em;max-width:268px}
+
 /* ── 待答 ──────────────────────────────────────────────────── */
 .grp{margin:1.6em 0 0}
 .grp .t{font-size:.93rem;font-weight:600;margin:0 0 .1em}
@@ -85,9 +93,9 @@ code{font-size:.92em}
 <div class="now">
 <b>現在停在哪</b>
 <ol>
-<li>約診紀錄查詢那張卡的日期會被截斷（maxLines:1）。廠商 09-10 改了那兩則，送來的四張截圖看不出這一項是否已改 —— 需要一張輪播的截圖。</li>
-<li>新版卡上的年份是 2020，而截圖拍攝日是 2026-09-10。需確認是測試資料還是系統算出來的值。（2020 與 2026 的 9/11 都是星期五，星期幾看不出來。）</li>
-<li>浮水印已經在九顆之間變換，但同一筆約診在三分鐘內出現兩顆不同的。需確認換的規則。</li>
+<li>浮水印的大小與位置和我們的規格不一樣：量出來是規格的五到六成，而且它跑出卡片的右下角被切掉，我們的 JSON 寫的是完全收在卡內。廠商 09-10 的訊息說「有再微調圖案呈現，提供給您確認看看」，所以這一題現在等我們回覆。</li>
+<li>新版卡上的年份是 2020，而截圖拍攝日是 2026-09-10。同一批截圖裡的約診查詢顯示的是 2026，所以比較可能是那一筆測試資料，仍需確認。</li>
+<li>浮水印在九顆之間變換，但同一筆約診在三分鐘內出現兩顆不同的。需確認換的規則。</li>
 <li>評價邀約那兩顆按鈕連到哪裡還沒有答案，在那之前先不送。</li>
 </ol>
 </div>
@@ -161,8 +169,8 @@ code{font-size:.92em}
 <div class="rows" style="margin-top:1.4em">
 <p style="font-size:.93rem;margin:0 0 .2em"><b>還沒對上的四件</b></p>
 <div class="row"><p class="k">卡上年份是 2020</p><p class="v">截圖拍攝日是 2026-09-10。若是系統算出來的，每個病人都會收到錯的年份，而這一則是約好的當下就送。</p></div>
-<div class="row"><p class="k">日期格式沒換</p><p class="v">仍是這個帳號裡最長的一種寫法，也正是會被截斷的那一種。</p></div>
-<div class="row"><p class="k">maxLines 看不出來改了沒</p><p class="v">送來的四張是單張 mega 卡，本來就不會截斷；會截斷的是 micro 輪播，需要一張輪播的截圖。</p></div>
+<div class="row"><p class="k">日期格式沒換，但輪播那張沒有被截斷</p><p class="v">四張裡有一張就是約診查詢的輪播，日期「2026/09/11 11:50 星期五」完整顯示、沒有截斷。所以 maxLines 這一項看起來已經處理掉了，只差請對方確認一句。</p></div>
+<div class="row"><p class="k">浮水印的大小與位置不一樣</p><p class="v">量出來是我們規格的五到六成，而且它跑出卡片的右下角被切掉。我們的 JSON 寫的是「照表上那個 px 寬、完全收在卡內」。數字與圖在下一節。</p></div>
 <div class="row"><p class="k">預約狀態還在</p><p class="v">但字從「尚未回覆」換成了「您已取消，請聯絡診所改約」—— 對著病人講、也給了下一步，比原本清楚。所以我們的要求跟著縮小：樂衍後台照舊保留，只問病人自己取消過的那一筆能不能不列在他的查詢清單裡。</p></div>
 </div>
 
@@ -231,8 +239,130 @@ micro 卡，不是單張的 mega 卡 —— 所以要一張輪播的截圖才看
 </figure>
 </div>
 <div class="rows">
-<div class="row"><p class="k">現況</p><p class="v">廠商送來的兩張卡上，浮水印確實是這九顆裡的兩顆，形狀與各自的顏色都對得上（圓形＋紫 ＝ 口腔外科那一顆；寬形＋青綠 ＝ 牙周治療那一顆，量到的長寬比 2.024 對表上的 2.029）。顯示寬度約是表上的六成。</p></div>
-<div class="row"><p class="k">要確認的</p><p class="v">同一筆約診（2020/09/11 09:00）在 14:20 是圓形、14:23 是寬形。我們的規格是「(約診月份＋約診日) % 9」，同一筆不管查幾次都是同一顆。要確認現在是在給我們看候選，還是換的規則沒有綁在那一筆約診上。</p></div>
+<div class="row"><p class="k">現況</p><p class="v">廠商送來的兩張卡上，浮水印確實是這九顆裡的兩顆，形狀與各自的顏色都對得上（圓形＋紫 ＝ 口腔外科那一顆；寬形＋青綠 ＝ 牙周治療那一顆）。</p></div>
+<div class="row"><p class="k">大小與位置</p><p class="v">大小與位置和我們的規格不一樣。量法是拿形狀中間那個牙洞當尺（牙洞占圖寬的比例是固定的），所以圖被切掉也量得出它本來多大。</p></div>
+</div>
+
+<h3 style="font-size:.95rem;margin:1.8em 0 .2em">同一張卡畫三次</h3>
+<p style="font-size:.88rem;color:var(--soft);margin:0">同一張卡（268×149）畫三次：我們 JSON 寫的、我們模擬圖畫的、廠商送來的。三格的形狀與顏色完全一樣，差的只有大小與位置。</p>
+<div class="cmpwrap">
+<p class="cmpt">圓形（口腔外科紫）・預約成功通知</p>
+<div class="cmprow"><figure class="cmp">
+<svg viewBox="-6 -6 300 173"
+  width="300" height="173"
+  role="img" aria-label="我們的 JSON：浮水印 104px，往右 0、往下 0">
+<defs><clipPath id="clip-r3c1-8-104-0"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<g clip-path="url(#clip-r3c1-8-104-0)" opacity="0.12">
+<svg x="164.00" y="45.00" width="104" height="104.00"
+  viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
+  fill="#8e6299" fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="267" height="148" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="164.00" y="45.00" width="104" height="104.00"
+  fill="none" stroke="#8e6299" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>我們的 JSON</b>　104px<br>offsetEnd 0px／offsetBottom 0px ＝ 貼齊右下角、完全收在卡內</figcaption>
+</figure>
+<figure class="cmp">
+<svg viewBox="-6 -6 300 173"
+  width="300" height="173"
+  role="img" aria-label="我們的模擬圖：浮水印 104px，往右 18、往下 10">
+<defs><clipPath id="clip-r3c1-6-104-18"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<g clip-path="url(#clip-r3c1-6-104-18)" opacity="0.12">
+<svg x="182.00" y="55.00" width="104" height="104.00"
+  viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
+  fill="#8e6299" fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="267" height="148" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="182.00" y="55.00" width="104" height="104.00"
+  fill="none" stroke="#8e6299" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>我們的模擬圖</b>　104px<br>提案頁那張 PNG 是往右下溢出的 —— 和我們自己的 JSON 不一致，這件事本來就記著</figcaption>
+</figure>
+<figure class="cmp">
+<svg viewBox="-6 -6 300 173"
+  width="300" height="173"
+  role="img" aria-label="廠商送來的：浮水印 67px，往右 10、往下 7">
+<defs><clipPath id="clip-r3c1-5-67-10"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<g clip-path="url(#clip-r3c1-5-67-10)" opacity="0.12">
+<svg x="211.00" y="89.00" width="67" height="67.00"
+  viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
+  fill="#8e6299" fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="267" height="148" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="211.00" y="89.00" width="67" height="67.00"
+  fill="none" stroke="#8e6299" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>廠商送來的</b>　67px<br>量出來 ＝ 卡寬的 25.1%（規格是 38.8%），而且右下被切掉</figcaption>
+</figure></div>
+</div>
+<div class="cmpwrap">
+<p class="cmpt">寬形（牙周治療青綠）・預約成功通知</p>
+<div class="cmprow"><figure class="cmp">
+<svg viewBox="-6 -6 300 173"
+  width="300" height="173"
+  role="img" aria-label="我們的 JSON：浮水印 150px，往右 0、往下 0">
+<defs><clipPath id="clip-r1c2-8-150-0"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<g clip-path="url(#clip-r1c2-8-150-0)" opacity="0.12">
+<svg x="118.00" y="75.07" width="150" height="73.93"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#317d78" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="267" height="148" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="118.00" y="75.07" width="150" height="73.93"
+  fill="none" stroke="#317d78" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>我們的 JSON</b>　150px<br>同上</figcaption>
+</figure>
+<figure class="cmp">
+<svg viewBox="-6 -6 300 173"
+  width="300" height="173"
+  role="img" aria-label="我們的模擬圖：浮水印 150px，往右 18、往下 10">
+<defs><clipPath id="clip-r1c2-6-150-18"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<g clip-path="url(#clip-r1c2-6-150-18)" opacity="0.12">
+<svg x="136.00" y="85.07" width="150" height="73.93"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#317d78" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="267" height="148" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="136.00" y="85.07" width="150" height="73.93"
+  fill="none" stroke="#317d78" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>我們的模擬圖</b>　150px<br>同上</figcaption>
+</figure>
+<figure class="cmp">
+<svg viewBox="-6 -6 300 173"
+  width="300" height="173"
+  role="img" aria-label="廠商送來的：浮水印 83px，往右 8、往下 6">
+<defs><clipPath id="clip-r1c2-5-83-8"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<g clip-path="url(#clip-r1c2-5-83-8)" opacity="0.12">
+<svg x="193.00" y="114.09" width="83" height="40.91"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#317d78" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="267" height="148" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="193.00" y="114.09" width="83" height="40.91"
+  fill="none" stroke="#317d78" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>廠商送來的</b>　83px<br>＝ 卡寬的 31.1%（規格是 56.0%）</figcaption>
+</figure></div>
+</div>
+<p class="note">約診查詢那條輪播（卡寬約 207）上的寬形也量過：畫出來 80px ＝ 卡寬的 38.6%，規格是 150px ＝ 72.5%。三張合起來，廠商畫的是我們規格的 53~65%。</p>
+
+<div class="rows" style="margin-top:1.4em">
+<div class="row"><p class="k">還要確認的</p><p class="v">同一筆約診（2020/09/11 09:00）在 14:20 是圓形、14:23 是寬形。我們的規格是「(約診月份＋約診日) % 9」，同一筆不管查幾次都是同一顆。要確認現在是在給我們看候選，還是換的規則沒有綁在那一筆約診上。</p></div>
 </div>
 <p class="note">九顆的形狀、顏色與寬度都從 brand/shapes/ 與 preview/line-booked/wm-sizes.json 讀回來，這一頁不抄第二份。九顆的寬度不一樣是刻意的 —— 按墨的面積正規化，看起來才一樣重。</p>
 
@@ -321,21 +451,22 @@ micro 卡，不是單張的 mega 卡 —— 所以要一張輪播的截圖才看
 </div>
 <p class="note">每一張說明的事情不一樣。附給廠商時一次只附對應那一句的那一張，並寫清楚它對應的是哪一句。</p>
 
-<h2 class="h2">⑦ 還沒有答案的 40 題<span class="t">照「誰能答」分開・★ 是最先要的 9 題</span></h2>
+<h2 class="h2">⑦ 還沒有答案的 41 題<span class="t">照「誰能答」分開・★ 是最先要的 8 題</span></h2>
 <div class="grp">
 <p class="t">只有廠商能答</p>
-<p class="c">26 題・其中 6 題最先要</p>
+<p class="c">27 題・其中 5 題最先要</p>
 <ul class="ask">
 <li><span class="s">★</span>這個帳號總共會自動送出哪幾則訊息？（一份清單）<span class="y">目前有四則是從截圖裡發現的，所以還不確定有沒有漏掉。</span></li>
-<li><span class="s">★</span>新版卡上的年份是 2020 —— 那是測試資料，還是系統算出來的值？<span class="y">若是系統算的，每個病人都會收到錯的年份。</span></li>
-<li><span class="s">★</span>約診紀錄查詢那張卡的日期，maxLines 拿掉了嗎？請給一張輪播的截圖。<span class="y">全線唯一一件現在就在出錯的事。要修的是 wrap，換短格式只是多買一層餘裕。</span></li>
+<li><span class="s">★</span>新版卡上的年份是 2020 —— 那是測試資料，還是系統算出來的值？<span class="y">若是系統算的，每個病人都會收到錯的年份。同一批截圖裡的約診查詢顯示 2026，所以比較可能是那一筆測試資料。</span></li>
 <li><span class="s">★</span>同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆 —— 他們的自動回應是怎麼設的？我們能不能照那個設法？<span class="y">不是要求新功能，是問他們手上已經有的設定。</span></li>
 <li><span class="s">★</span>評價邀約那兩顆按鈕分別連到哪裡？<span class="y">若只有「願意」那一顆通向公開評論，那是 review gating。答案出來之前那一則不送。</span></li>
 <li><span class="s">★</span>合約包了什麼：改一則訊息算不算服務範圍內？有沒有次數限制？<span class="y">沒有這個資訊，就不知道該用要求的還是商量的。這一題還沒問過。</span></li>
 </ul>
-<details><summary>其餘 20 題</summary>
+<details><summary>其餘 22 題</summary>
 <ul class="ask">
-<li><span class="s">・</span>浮水印是按什麼規則換的？能不能改成 (約診月份＋約診日) % 9？<span class="y">同一筆約診不管查幾次都同一顆，預約成功與查詢清單裡那一張也要同一顆同一色。</span></li>
+<li><span class="s">・</span>約診查詢那張卡的日期，maxLines 是不是拿掉了？（送來的輪播截圖上「2026/09/11 11:50 星期五」完整顯示，看起來已經處理掉了，請確認一句。）<span class="y">全線唯一一件現在就在出錯的事，看起來已經好了。要修的是 wrap，換短格式只是多買一層餘裕。</span></li>
+<li><span class="s">・</span>浮水印換的規則是什麼？請改成「(約診月份＋約診日) % 9」——同一筆約診不管查幾次都是同一顆，預約成功與查詢清單裡那一張也要同一顆同一色。<span class="y">同一筆約診（2020/09/11）14:20 是圓形、14:23 變寬形。若不是在給我們看候選，就是輪替沒有綁在那一筆上。</span></li>
+<li><span class="s">・</span>浮水印請照規格的大小與位置：size 用那張表上的 px（圓形 104px、寬形 150px），offsetEnd 與 offsetBottom 都是 0px、完全收在卡內。現在畫出來是規格的五到六成，而且右下被切掉。<span class="y">他們 09-10 說「有再微調圖案呈現，提供給您確認看看」，所以這一題等我們回覆。我們自己的模擬圖是往右下溢出 18／10px 的，和我們自己的 JSON 不一致 —— 要先決定給哪一種，再回信。</span></li>
 <li><span class="s">・</span>浮水印用 position: absolute 疊在文字後面，實機上會不會蓋到字？<span class="y">這一項從來沒有實機驗過；09-10 那四張的右下角剛好沒有字。蓋到就退回「右邊一顆不重疊」。</span></li>
 <li><span class="s">・</span>日期可不可以換成「9月11日 (五) 09:00」（去年份、月日中文、括號維持半形）？</li>
 <li><span class="s">・</span>病人自己按過取消的那一筆，能不能不要列在他的 LINE 查詢清單裡？（樂衍後台照舊保留）</li>
