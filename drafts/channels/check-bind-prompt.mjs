@@ -10,9 +10,12 @@
  *     ④ 按鈕的字逐字 ＝ welcome-card.json 那一顆（同一個動作要長一樣）
  *     ⑤ 電話是現行寫法 05-5339369（作廢的 (05)5339-369 不可以出現）
  *     ⑥ 紅線：沒有專人即時回覆的承諾（三案 × 三格全部掃）
- *     ⑦ **我們這張卡上不可以出現秒數**（別人卡片上的數字不照抄）
- *        也不可以出現「48小時／2天」（那兩種講法還沒統一，不要生出第三種）
- *     ⑧ 八個寬度：水平溢出 0、切換條 ≤24%、卡片畫出來就是 268px
+ *     ⑦ 標題逐字 ＝ 使用者指定的那一句，而且一行放得下就要是一行
+ *        卡上不可以出現「48小時／2天」（那兩種講法還沒統一，不要生出第三種）
+ *     ⑧ 八個寬度：水平溢出 0、卡片畫出來就是 268px
+ *     ⑩ **預設那一張只准有標題與按鈕**（2026-09-10 使用者指定「其他文字拿掉」）——
+ *        加一段字回去不會讓任何一道尺寸守門翻臉，只有讀字才看得出來；
+ *        切換條也不可以長回來（三把尺都定了）
  *     ⑨ 綁定完成那張 PNG 的 width/height 屬性要對得上實檔的比例，
  *        而且**畫出來真的是那個大小**（屬性寫對 ≠ 畫出來是那個大小）
  *
@@ -32,6 +35,9 @@ const ok = (cond, msg) => { if (!cond) bad.push(msg); };
 
 /* 使用者 2026-09-10 指定的標題，逐字。⚠ 全形空格 U+3000。 */
 const TITLE = "30秒快速綁定　啟用完整服務";
+/* 2026-09-10 定的那一張：頭圖用他那張、標題底下不寫字、電話不放。
+   ⚠ 要和 index.html 的 `var state` 一致 —— 那一頁不帶參數時就是這一格。 */
+const DEFAULT = { c: "c", h: "on", t: "off" };
 
 /* ── ② 這個資料夾裡只能有 index.html ──────────────────────────
  * 引用的圖都在別人的資料夾，複製一份就是多一個會漂掉的真相。 */
@@ -41,6 +47,8 @@ ok(files.length === 1 && files[0] === "index.html",
 
 const html = fs.readFileSync(PAGE, "utf8");
 ok(/name="robots" content="noindex/.test(html), "少了 noindex（第八節：提案頁三道 noindex）");
+/* ⑩ 切換條 2026-09-10 拿掉了（三把尺都定了）。長回來畫面照樣正常、尺寸守門也都會過。 */
+ok(!/pv-bar/.test(html), "切換條長回來了 —— 三把尺都定了，要回頭比是用網址參數");
 
 /* 引用的四個檔案 */
 const REFS = {
@@ -146,8 +154,6 @@ for (const w of WIDTHS) {
         shotRect: shot ? shot.getBoundingClientRect().width : 0,
         shotAttr: shot ? [+shot.getAttribute("width"), +shot.getAttribute("height")] : null,
         overflow: doc.scrollWidth - doc.clientWidth,
-        barPct: document.getElementById("pv-bar").getBoundingClientRect().height /
-          (window.visualViewport ? window.visualViewport.height : window.innerHeight) * 100,
         panelNo: document.querySelectorAll("#pv-panel1 .no").length,
         missing,
       };
@@ -156,7 +162,6 @@ for (const w of WIDTHS) {
     if (errs.length) { bad.push(`${w}px ${c}/${h}/${t} 有 JS 錯誤：${errs.join(" / ")}`); errs.length = 0; }
     ok(!got.missing.length, `${w}px：這幾張圖載不到 ${got.missing.join("、")}`);
     ok(got.overflow <= 0, `${w}px ${c}/${h}/${t}：水平溢出 ${got.overflow}px`);
-    ok(got.barPct <= 24, `${w}px：切換條佔一屏 ${got.barPct.toFixed(1)}%（上限 24）`);
     /* ⚠ 卡片一定要畫成 268 —— 畫不到的話這一頁做的折行判斷全部偏鬆。
        ⚠⚠ 320 是已知放不下的那一格（面板會自己標紅），不列為失敗。 */
     if (w >= 360) ok(Math.abs(got.cardW - 268) < 0.6,
@@ -196,6 +201,14 @@ for (const w of WIDTHS) {
       `${c}/${h}/${t}：綁定按鈕寫「${got.btns[0]}」，招呼圖卡那一顆是「${WELCOME_BTN}」`);
     ok((t === "btn") === (got.btns.length === 2),
       `${c}/${h}/${t}：按鈕數量對不上（${got.btns.length} 顆）`);
+    /* ⚠⚠⚠ ⑩ 預設那一張（c=c／t=off ＝ 不帶參數時的樣子）卡上只准有標題與按鈕。
+       使用者 2026-09-10：「標題和按鈕保存　其他文字拿掉」——
+       補一段字回去不會讓卡片溢出、不會有孤字、每一道尺寸守門都會過。 */
+    if (c === DEFAULT.c && t === DEFAULT.t) {
+      const want = TITLE + WELCOME_BTN;
+      ok(got.text.replace(/\s+/g, "") === want.replace(/\s+/g, ""),
+        `${w}px 預設那一張卡上多了字：「${got.text.replace(/\s+/g, "")}」，只准有「${want.replace(/\s+/g, "")}」`);
+    }
   }
   await page.close();
 }
@@ -203,6 +216,9 @@ await browser.close();
 
 /* ── 面板真的有在報（不是印一行空的） ────────────────────────── */
 ok(seen.length === WIDTHS.length * 18, `量到的組合數不對：${seen.length}`);
+/* 那一頁的預設真的是這一格嗎（改了 state 卻忘了改這裡，上面那道就白守了） */
+ok(new RegExp(`var state = \\{ c: "${DEFAULT.c}", h: "${DEFAULT.h}", t: "${DEFAULT.t}" \\}`).test(html),
+  `index.html 的預設不是 ${DEFAULT.c}/${DEFAULT.h}/${DEFAULT.t} —— 「只有標題與按鈕」那一道守的就不是預設那一張了`);
 
 if (bad.length) {
   console.error("❌ 擋下 " + bad.length + " 項：\n" +
@@ -214,7 +230,7 @@ console.log("✅ " + seen.length + " 組（8 個寬度 × 3 案 × 2 頭圖 × 3
   "   資料夾只有 index.html（四個圖都引用別人那一份）、頭圖 1024×512、" +
   "按鈕逐字 ＝ 招呼圖卡那一顆、\n   標題逐字 ＝「" + TITLE + "」（畫成 " +
   t390.titleLines.rows + " 行、最寬 " + t390.titleLines.wide.toFixed(1) + "px／可用 240）、\n" +
-  "   電話是現行寫法、紅線 0、沒有 48 小時也沒有 2 天、" +
-  "卡片畫成 268、水平溢出 0、切換條 ≤24%\n" +
+  "   預設那一張只有標題與按鈕、切換條沒有長回來、\n" +
+  "   電話是現行寫法、紅線 0、沒有 48 小時也沒有 2 天、卡片畫成 268、水平溢出 0\n" +
   "   ⚠ 標題那個「30 秒」是廠商那張卡上的數字，我們沒有量過 —— 面板照實印著，" +
   "診所自己綁一次計時就能收掉");
