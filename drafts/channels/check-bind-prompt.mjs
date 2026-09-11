@@ -1,0 +1,181 @@
+#!/usr/bin/env node
+/* 守門：「還沒綁定就按約診查詢」那張提案頁。
+ *   node drafts/channels/check-bind-prompt.mjs
+ *
+ * ⚠ 這一則**還沒定案**，所以還沒有 Flex JSON —— 這一支比對的是
+ *   「頁面說的」和「別處已經定案的事實」對不對得上，以及量得出來的那幾件：
+ *     ① 頁面跑得起來、noindex 在、零 JS 錯誤
+ *     ② 引用的四個檔案都找得到，而且**沒有複製第二份進這個資料夾**
+ *     ③ 頭圖就是綁定完成那一張（同一個檔）、2:1、≤1024
+ *     ④ 按鈕的字逐字 ＝ welcome-card.json 那一顆（同一個動作要長一樣）
+ *     ⑤ 電話是現行寫法 05-5339369（作廢的 (05)5339-369 不可以出現）
+ *     ⑥ 紅線：沒有專人即時回覆的承諾（三案 × 三格全部掃）
+ *     ⑦ **我們這張卡上不可以出現秒數**（別人卡片上的數字不照抄）
+ *        也不可以出現「48小時／2天」（那兩種講法還沒統一，不要生出第三種）
+ *     ⑧ 八個寬度：水平溢出 0、切換條 ≤24%、卡片畫出來就是 268px
+ *     ⑨ 綁定完成那張 PNG 的 width/height 屬性要對得上實檔的比例，
+ *        而且**畫出來真的是那個大小**（屬性寫對 ≠ 畫出來是那個大小）
+ *
+ * ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條）。
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(HERE, "..", "..");
+const DIR = path.join(ROOT, "preview", "line-bind-prompt");
+const PAGE = path.join(DIR, "index.html");
+
+const bad = [];
+const ok = (cond, msg) => { if (!cond) bad.push(msg); };
+
+/* ── ② 這個資料夾裡只能有 index.html ──────────────────────────
+ * 引用的圖都在別人的資料夾，複製一份就是多一個會漂掉的真相。 */
+const files = fs.readdirSync(DIR).sort();
+ok(files.length === 1 && files[0] === "index.html",
+  `這個資料夾裡多了東西：${files.join("、")} —— 圖一律引用別人那一份，不要複製`);
+
+const html = fs.readFileSync(PAGE, "utf8");
+ok(/name="robots" content="noindex/.test(html), "少了 noindex（第八節：提案頁三道 noindex）");
+
+/* 引用的四個檔案 */
+const REFS = {
+  hero: "preview/line-bind-done/hero-bind.jpg",
+  mark: "preview/line-welcome/mark-white.png",
+  tel: "preview/line-remind/mark-tel.png",
+  shot: "preview/line-bind-done/shot-bind-done.png",
+};
+for (const [k, rel] of Object.entries(REFS))
+  ok(fs.existsSync(path.join(ROOT, rel)), `引用的檔案不在：${rel}（${k}）`);
+
+/* ── ③ 頭圖：2:1、≤1024（Flex 的 image 上限） ─────────────────── */
+{
+  const buf = fs.readFileSync(path.join(ROOT, REFS.hero));
+  let i = 2, w = 0, h = 0;
+  while (i < buf.length) {
+    if (buf[i] !== 0xff) { i++; continue; }
+    const m = buf[i + 1];
+    if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) {
+      h = buf.readUInt16BE(i + 5); w = buf.readUInt16BE(i + 7); break;
+    }
+    i += 2 + buf.readUInt16BE(i + 2);
+  }
+  ok(w === 1024 && h === 512, `頭圖不是 1024×512，量到 ${w}×${h}`);
+}
+/* 綁定完成那張 PNG 的真實尺寸（⑨ 要用） */
+const shotBuf = fs.readFileSync(path.join(ROOT, REFS.shot));
+const SHOT = { w: shotBuf.readUInt32BE(16), h: shotBuf.readUInt32BE(20) };
+
+/* ── ④ 按鈕的字要和招呼圖卡那一顆逐字相同 ────────────────────── */
+const welcome = JSON.parse(fs.readFileSync(path.join(HERE, "welcome-card.json"), "utf8"));
+const findBtn = (node) => {
+  if (!node || typeof node !== "object") return null;
+  if (node.action && node.action.type === "uri" && /綁定/.test(node.action.label || ""))
+    return node.action.label;
+  for (const v of Object.values(node)) {
+    if (Array.isArray(v)) for (const c of v) { const r = findBtn(c); if (r) return r; }
+    else if (v && typeof v === "object") { const r = findBtn(v); if (r) return r; }
+  }
+  return null;
+};
+const WELCOME_BTN = findBtn(welcome);
+ok(WELCOME_BTN === "點這裡綁定",
+  `招呼圖卡那顆綁定按鈕的字變了（讀到「${WELCOME_BTN}」）—— 這一頁是照它抄的，兩邊要一起改`);
+
+/* ── 頁面那一側 ──────────────────────────────────────────────── */
+const chrome = (() => {
+  const base = process.env.PLAYWRIGHT_BROWSERS_PATH || "/opt/pw-browsers";
+  for (const d of fs.readdirSync(base)) {
+    const p = path.join(base, d, "chrome-linux", "headless_shell");
+    if (fs.existsSync(p)) return p;
+  }
+  throw new Error("找不到 headless_shell");
+})();
+const mod = await import("/opt/node22/lib/node_modules/playwright/index.js");
+const { chromium } = mod.default ?? mod;
+const browser = await chromium.launch({ executablePath: chrome });
+
+const WIDTHS = [430, 414, 393, 390, 375, 360, 320, 744];
+const CASES = ["a", "b", "c"], TELS = ["off", "note", "btn"], HEROS = ["on", "off"];
+const seen = [];
+
+for (const w of WIDTHS) {
+  const page = await browser.newPage({ viewport: { width: w, height: 860 } });
+  const errs = [];
+  page.on("pageerror", (e) => errs.push(String(e)));
+  for (const c of CASES) for (const t of TELS) for (const h of HEROS) {
+    await page.goto(`file://${PAGE}?c=${c}&h=${h}&t=${t}`);
+    await page.waitForSelector("#pv-chat1 .fx");
+    /* ⚠ 等圖真的載完再量 —— 但條件只能問「結束了沒」，不可以順便問「對不對」：
+       載不到的圖是 complete:true、naturalWidth:0，把「成功」寫進等待條件
+       就會等成永遠（第三十七節那條）。 */
+    await page.evaluate(() => Promise.all([...document.images].map((i) =>
+      i.complete ? null : new Promise((r) => { i.onload = i.onerror = r; }))));
+    const got = await page.evaluate(() => {
+      const card = document.querySelector("#pv-chat1 .fx");
+      const shot = document.querySelector("#pv-chat2 .pv-shot");
+      const doc = document.documentElement;
+      const missing = [...document.images]
+        .filter((i) => !i.naturalWidth).map((i) => i.getAttribute("src"));
+      return {
+        text: card.textContent,
+        cardW: card.getBoundingClientRect().width,
+        btns: [...card.querySelectorAll(".btn > span")].map((s) => s.textContent),
+        shotRect: shot ? shot.getBoundingClientRect().width : 0,
+        shotAttr: shot ? [+shot.getAttribute("width"), +shot.getAttribute("height")] : null,
+        overflow: doc.scrollWidth - doc.clientWidth,
+        barPct: document.getElementById("pv-bar").getBoundingClientRect().height /
+          (window.visualViewport ? window.visualViewport.height : window.innerHeight) * 100,
+        panelNo: document.querySelectorAll("#pv-panel1 .no").length,
+        missing,
+      };
+    });
+    seen.push({ w, c, t, h, ...got });
+    if (errs.length) { bad.push(`${w}px ${c}/${h}/${t} 有 JS 錯誤：${errs.join(" / ")}`); errs.length = 0; }
+    ok(!got.missing.length, `${w}px：這幾張圖載不到 ${got.missing.join("、")}`);
+    ok(got.overflow <= 0, `${w}px ${c}/${h}/${t}：水平溢出 ${got.overflow}px`);
+    ok(got.barPct <= 24, `${w}px：切換條佔一屏 ${got.barPct.toFixed(1)}%（上限 24）`);
+    /* ⚠ 卡片一定要畫成 268 —— 畫不到的話這一頁做的折行判斷全部偏鬆。
+       ⚠⚠ 320 是已知放不下的那一格（面板會自己標紅），不列為失敗。 */
+    if (w >= 360) ok(Math.abs(got.cardW - 268) < 0.6,
+      `${w}px：卡片畫成 ${got.cardW.toFixed(1)}px，不是 268`);
+    /* ⑨ 屬性對得上實檔，而且畫出來真的是那個大小 */
+    if (got.shotAttr) {
+      const [aw, ah] = got.shotAttr;
+      ok(Math.abs(aw / ah - SHOT.w / SHOT.h) < 0.01,
+        `綁定完成那張的 width/height 屬性 ${aw}×${ah} 對不上實檔 ${SHOT.w}×${SHOT.h}`);
+      ok(Math.abs(got.shotRect - aw) < 0.6,
+        `綁定完成那張畫出來 ${got.shotRect.toFixed(1)}px，宣告的是 ${aw}px`);
+    }
+    /* ⑥⑦ 卡片上的字（只掃我們這一張，現況那一張引用了廠商的字） */
+    const scan = got.text.replace(/沒有專人看訊息/g, "");
+    for (const [re, why] of [
+      [/隨時問|馬上回|即時回|盡快回覆|專人回覆|線上客服/, "承諾了這個帳號做不到的事（沒有專人即時回覆）"],
+      [/\d+\s*秒/, "出現秒數 —— 別人卡片上的數字不可以照抄（第三十七節）"],
+      [/48\s*小時|看診前\s*2\s*天/, "出現了提醒的天數／時數 —— 那兩種講法還沒統一，這一則刻意不帶數字"],
+      [/\(05\)|05-533-9369/, "用了作廢的電話寫法（2026-08-27 起全站是 05-5339369）"],
+    ]) ok(!re.test(scan), `${c}/${h}/${t}：${why}`);
+    ok(got.text.includes("05-5339369") || t === "off",
+      `${c}/${h}/${t}：電話那把尺不是「不放」，卡上卻找不到 05-5339369`);
+    ok(got.btns[0] === WELCOME_BTN,
+      `${c}/${h}/${t}：綁定按鈕寫「${got.btns[0]}」，招呼圖卡那一顆是「${WELCOME_BTN}」`);
+    ok((t === "btn") === (got.btns.length === 2),
+      `${c}/${h}/${t}：按鈕數量對不上（${got.btns.length} 顆）`);
+  }
+  await page.close();
+}
+await browser.close();
+
+/* ── 面板真的有在報（不是印一行空的） ────────────────────────── */
+ok(seen.length === WIDTHS.length * 18, `量到的組合數不對：${seen.length}`);
+
+if (bad.length) {
+  console.error("❌ 擋下 " + bad.length + " 項：\n" +
+    [...new Set(bad)].map((b) => "  ・" + b).join("\n"));
+  process.exit(1);
+}
+console.log("✅ " + seen.length + " 組（8 個寬度 × 3 案 × 2 頭圖 × 3 電話）全部通過：\n" +
+  "   資料夾只有 index.html（四個圖都引用別人那一份）、頭圖 1024×512、" +
+  "按鈕逐字 ＝ 招呼圖卡那一顆、\n   電話是現行寫法、紅線 0、沒有抄來的秒數也沒有天數、" +
+  "卡片畫成 268、水平溢出 0、切換條 ≤24%");
