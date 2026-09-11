@@ -114,8 +114,11 @@ h1 span{font-weight:400;font-size:.7em;color:var(--ink-soft)}
    那是呈現屬性，不寫 height:auto 的話 aspect-ratio 蓋不過它。 */
 .fx .hero{display:block;width:100%;height:auto;aspect-ratio:2/1;object-fit:cover}
 .fx .b{padding:14px}
+/* ⚠ 標題置中（2026-09-10 使用者指定）。卡上只剩頭圖、標題、按鈕三樣，
+   而按鈕本來就置中 —— 標題靠左的話那三樣只有它不在中軸上。
+   ⚠⚠ 寫 Flex JSON 時這是那個 text 元件的 `"align": "center"`，不是 CSS。 */
 .fx h4{margin:0;font-size:16px;line-height:1.55;font-weight:700;color:#2a2c27;
-  letter-spacing:.01em;white-space:pre-wrap}
+  letter-spacing:.01em;white-space:pre-wrap;text-align:center}
 .fx p{margin:8px 0 0;font-size:14px;line-height:1.75;color:#5c5f57;white-space:pre-wrap}
 .fx p b{color:#2a2c27;font-weight:700}
 .fx .xs{margin-top:11px;font-size:13px;line-height:1.7;color:#5c5f57;white-space:pre-wrap}
