@@ -88,9 +88,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 /* 輪播：真的可以左右滑，而且要看得到下一張露出一角（同截圖）。
    ⚠ 這裡不是用 CSS 假裝 —— 是排真的 N 張卡（同 og-topic-card 那一輪：
      提案頁要擺真的產出檔，不要用 CSS 把成品再做一次）。 */
-#pv-slot.car,#pv-slot2.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
-#pv-slot.car .row,#pv-slot2.car .row{display:flex;gap:8.7px;padding-bottom:6px}
-#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc{flex:none;width:207px}
+#pv-slot.car,#pv-slot2.car,#pv-slot5.car,#pv-slot6.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
+#pv-slot.car .row,#pv-slot2.car .row,#pv-slot5.car .row,#pv-slot6.car .row{display:flex;gap:8.7px;padding-bottom:6px}
+#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc,#pv-slot5.car .pv-hc,#pv-slot6.car .pv-hc{flex:none;width:207px}
 
 /* ---- 卡片外殼（兩案共用）------------------------------------------- */
 .pv-hc{width:100%;border-radius:14px;overflow:hidden;
@@ -195,6 +195,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
    先問這一行在回答什麼）。 */
 .pv-nw .who{font-size:var(--whofs,13px);line-height:1.6;color:var(--ink-soft);letter-spacing:.02em}
 .pv-nw .who.bot{margin-top:8px}
+/* 約診狀態那一列（只有「廠商移不掉那個欄位」時才會出現，見第 ②之二 節）。
+   ⚠ 標籤維持柔墨、不加粗 —— 那一列的主從是「值」不是「欄位名」。
+   ⚠ 藥丸的圓角吃站上那一族的 8.5px，內距寫 em 不寫 px（字級一改它要跟著收）。 */
+.pv-nw .st{display:flex;align-items:baseline;gap:8px;margin-top:9px;
+  font-size:13px;line-height:1.6}
+.pv-nw .st .lb{color:var(--ink-soft);flex:none}
+.pv-nw .st .v{font-weight:700}
+.pv-nw .st .pill{border-radius:8.5px;padding:.125em .63em;color:#fff;font-weight:700}
 .pv-nw .ix{font-size:13px;line-height:1.6;color:var(--ink-soft);letter-spacing:.02em}
 .pv-nw .cal{display:flex;align-items:baseline;gap:9px;margin-top:6px}
 .pv-nw .cal .mo{font-size:14px;color:var(--ink-soft);line-height:1}
@@ -246,6 +254,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
 /* ---- 小節標題 -------------------------------------------------------- */
 .pv-h2{font-size:1rem;font-weight:700;margin:34px 0 0;letter-spacing:.01em}
+.pv-h3{font-size:.92rem;font-weight:700;margin:26px 0 0;letter-spacing:.01em}
 .pv-h2 + .pv-sub{margin-top:6px}
 
 /* ---- 九顆浮水印的對照表（給廠商）-------------------------------------
@@ -302,6 +311,31 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   </div>
   <p class="pv-cap">↑ 他點了圖文選單的<b>約診紀錄查詢</b>之後回的。⚠ 近似，不是 LINE 自己的算繪。</p>
   <div class="pv-panel" id="pv-panel2"></div>
+
+  <h2 class="pv-h2">②之二 約診狀態那一列（廠商移不掉的話）</h2>
+  <p class="pv-note">
+    <b>這一列不在定稿裡</b> —— 上面第 ② 節那張卡是定案的樣子，整行拿掉了。
+    它只為一件事存在：<b>廠商說那個欄位移不掉的話，那一列該長什麼樣</b>。<br>
+    欄位名與四個值是定案的：<b>約診狀態</b>／已排定・已確認・未回覆・已取消。
+    顏色是挑定的那一組（齒顎矯正・一般牙科・兒童牙科・顯微根管的套色），
+    <b>從 <code>wm-sizes.json</code> 按科讀回來</b>，不在這一頁再寫一份。<br>
+    四張卡各掛一個值 —— 一張卡看不出四種擺在一起的相對份量。
+  </p>
+
+  <h3 class="pv-h3">Ⓐ 字套色</h3>
+  <div class="pv-phone" id="pv-ph5">
+    <div class="pv-head"><img src="../../assets/icon-192.png" alt=""><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
+    <div class="pv-chat" id="pv-chat5"></div>
+  </div>
+  <div class="pv-panel" id="pv-panel5"></div>
+
+  <h3 class="pv-h3">Ⓑ 底套色、白字（藥丸）</h3>
+  <div class="pv-phone" id="pv-ph6">
+    <div class="pv-head"><img src="../../assets/icon-192.png" alt=""><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
+    <div class="pv-chat" id="pv-chat6"></div>
+  </div>
+  <div class="pv-panel" id="pv-panel6"></div>
+  <div id="pv-stwrap"></div>
 
   <h2 class="pv-h2">③ 浮水印：九顆形狀與顏色</h2>
   <p class="pv-sub">用的是<b>九宮格那九個形狀</b>（<code>brand/shapes/shape-r{1,2,3}c{1,2,3}.svg</code>，
@@ -404,6 +438,36 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        示範資料要對得上那個情境，不然「重編號碼」根本演不出來。 */
     { m: 10, d: 3, w: "五", t: "14:00", who: "〔家人姓名〕" }
   ];
+  /* ---- 約診狀態那一列 -------------------------------------------------
+     ⚠⚠⚠ 這一列**不在定稿裡**：2026-09-04 使用者指定「預約狀態整行拿掉」。
+       它只為了一件事存在 —— 廠商說那個欄位移不掉的話，那一列該長什麼樣。
+       所以它畫在自己的第 ②之二 節，第 ② 節那張定稿的卡一個字都沒動。
+     ⚠⚠ 四個值與欄位名是 2026-09-12 定案的（README 第 50-11、50-15 節）：
+       約診狀態／已排定・已確認・未回覆・已取消。
+     ⚠⚠⚠ **顏色不在這裡寫死** —— 從 wm-sizes.json 按「科」讀回來（唯一出處），
+       那正是使用者挑定的 Ⓐ 色票。讀不到就不畫，並在那一節說清楚為什麼。 */
+  var STAT_SPEC = [["已排定", "ortho"], ["已確認", "general"],
+                   ["未回覆", "kids"], ["已取消", "endo"]];
+  function statusList() {
+    if (!SIZES) return null;
+    var byspec = {}, k;
+    for (k in SIZES) byspec[SIZES[k].spec] = SIZES[k].color;
+    var out = [], i;
+    for (i = 0; i < STAT_SPEC.length; i++) {
+      if (!byspec[STAT_SPEC[i][1]]) return null;
+      out.push({ n: STAT_SPEC[i][0], c: byspec[STAT_SPEC[i][1]] });
+    }
+    return out;
+  }
+  function _lin(c) { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
+  function _lum(h) { var n = parseInt(h.slice(1), 16);
+    return 0.2126 * _lin(n >> 16 & 255) + 0.7152 * _lin(n >> 8 & 255) + 0.0722 * _lin(n & 255); }
+  function _cr(a, z) { var x = _lum(a), y = _lum(z);
+    return Math.floor(((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)) * 100) / 100; }
+
+  /* stat：""＝不畫（定稿）／"txt"＝字套色／"pill"＝底套色白字 */
+  var stat = "", STV = null;
+
   var BOOKED = APPTS[1];   /* 預約成功那一則講的是 8/25 那一次（＝截圖裡的那一張） */
 
   /* ---- 日期怎麼寫 -----------------------------------------------------
@@ -675,6 +739,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     }
     /* ⚠⚠ 預約成功那一張 2026-09-05 起**不放地址電話**（使用者指定），
        所以這把尺只剩輪播在用；booked 進來時 ad 已經被壓成 none。 */
+    /* 約診狀態：日期底下、地址那一塊之前。⚠ 只有第 ②之二 節會把 stat 打開。 */
+    if (isQuery && stat && STV && STV[i % STV.length]) {
+      var sv = STV[i % STV.length];
+      h += '<p class="st"><span class="lb">約診狀態</span>'
+        +  (stat === "pill"
+             ? '<span class="pill" style="background:' + sv.c + '">' + sv.n + '</span>'
+             : '<span class="v" style="color:' + sv.c + '">' + sv.n + '</span>')
+        +  '</p>';
+    }
     if (isQuery && nm === "bot" && a.who) h += '<p class="who bot">' + a.who + '</p>';
     if (ad === "box")
       h += '<p class="box">' + ADDR + '\n' + TEL + '</p>';
@@ -725,6 +798,50 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     msg = "query"; v = "nw"; dt = "cn";
     document.getElementById("pv-chat2").innerHTML = queryChat("pv-slot2");
     measure("pv-slot2", "pv-panel2");
+
+    /* ②之二 約診狀態那一列：同一張輪播卡，兩種畫法各畫一次。
+       ⚠ 四張卡各掛一個值，四個值一次看得完（同一張卡看不出四種的相對份量）。 */
+    STV = statusList();
+    var stBox = document.getElementById("pv-stwrap");
+    if (!STV) {
+      stBox.innerHTML = "<p class='pv-note'><span class='no'>讀不到 "
+        + "<code>wm-sizes.json</code></span> —— 這一節的四顆顏色從那一份按科讀回來"
+        + "（跑 <code>node drafts/channels/booked-mark.mjs</code> 重產）。</p>";
+    } else {
+      msg = "query"; v = "nw"; dt = "cn";
+      stat = "txt";
+      document.getElementById("pv-chat5").innerHTML = queryChat("pv-slot5");
+      measure("pv-slot5", "pv-panel5");
+      stat = "pill";
+      document.getElementById("pv-chat6").innerHTML = queryChat("pv-slot6");
+      measure("pv-slot6", "pv-panel6");
+      stat = "";
+      /* ⚠ 這一節自己的數字：對比現算，寬度現量。
+         ⚠⚠ .st 是 flex nowrap，**永遠不會折行** —— 要量的是「放不放得下」。 */
+      var inner = document.querySelector("#pv-slot6 .pv-hc .b");
+      var avail = inner.clientWidth
+        - parseFloat(getComputedStyle(inner).paddingLeft)
+        - parseFloat(getComputedStyle(inner).paddingRight);
+      var need = [].slice.call(document.querySelectorAll("#pv-slot6 .st")).map(function (p) {
+        var w = 0, i;
+        for (i = 0; i < p.children.length; i++) w += p.children[i].getBoundingClientRect().width;
+        return w + (p.children.length - 1) * 8;
+      });
+      stBox.innerHTML = "<p class='pv-note'><b>這一節量到的</b>：卡片 "
+        + document.querySelector("#pv-slot6 .pv-hc").getBoundingClientRect().width.toFixed(0)
+        + "px（＝輪播上那一張真正的寬度）、那一列可用 " + avail.toFixed(0)
+        + "px、藥丸那一版最寬要 " + Math.max.apply(null, need).toFixed(0) + "px。<br>"
+        + "<b>白字壓在填色上</b>："
+        + STV.map(function (x) {
+            var n = _cr("#ffffff", x.c);
+            return x.n + " " + n.toFixed(2) + (n < 4.5 ? "（低於 4.5）" : "");
+          }).join("　") + "　門檻 4.5<br>"
+        + "⚠ <b>兒童牙科那一顆 3.22 不要訂正</b> —— 站上首頁那顆兒童牙科標記按下去"
+        + "就是這個填色配白字，2026-08-08 看過真實版面才定的取捨。<br>"
+        + "⚠ 字套色那一版的四個數字（壓在卡片色上）是 "
+        + STV.map(function (x) { return _cr(x.c, "#F4F4F5").toFixed(2); }).join("／") + " —— "
+        + "<b>藍與橘過不了 4.5</b>，那正是「套色拿來當字是用錯階」。</p>";
+    }
 
     /* ③ 現況・預約成功。
        ⚠⚠ 現況那兩張**各用各的日期格式**，那正是問題本身：同一個帳號、同一件事，

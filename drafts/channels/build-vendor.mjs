@@ -564,6 +564,7 @@ ${pill}
 <div class="row"><p class="k">對比</p><p class="v">${b(PILL.量)}</p></div>
 <div class="row"><p class="k">兒童牙科那一顆</p><p class="v">${b(PILL.兒牙那一顆)}</p></div>
 <div class="row"><p class="k">換到什麼・付出什麼</p><p class="v">${b(PILL.代價)}</p></div>
+<div class="row"><p class="k">套回我們的設計</p><p class="v">${b(SC.套回設計)}</p></div>
 <div class="row"><p class="k">沒有動的</p><p class="v">${b(PILL.沒有動的)}</p></div>
 </div>
 
