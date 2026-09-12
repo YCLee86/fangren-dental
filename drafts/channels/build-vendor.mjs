@@ -332,7 +332,25 @@ const bind = (() => {
 <p><i>還沒有答案的</i>${b(x.還沒有答案的)}</p>
 <p><i>別家的畫面</i>${b(x.別家)}</p>
 </div>`;
-  return `<div class="two">
+  /* 2026-09-12：先擺「我們自己現在長什麼樣」—— 兩個方向都是為了這一張畫面。
+     ⚠ 門號在出圖時就遮掉了（repo 是公開的），不是靠 CSS 蓋。 */
+  const now = B.現況 ? `<div class="two">
+<figure class="fig">
+<a href="${esc(B.現況.圖.檔)}"><img src="${esc(B.現況.圖.檔)}" width="${B.現況.圖.w}" height="${B.現況.圖.h}"
+  alt="綁定完成那一刻，病人那一側看到的畫面"></a>
+<figcaption>${b(B.現況.圖.說)}</figcaption>
+</figure>
+<div class="dir">
+<p class="t">${esc(B.現況.標)}</p>
+<p><i>看到</i>${b(B.現況.看到)}</p>
+<p><i>說明的是</i>${b(B.現況.說明的是)}</p>
+<p><i>還沒說明的</i>${b(B.現況.還沒說明的)}</p>
+<p><i>順帶</i>${b(B.現況.順帶)}</p>
+</div>
+</div>
+
+<h3 style="font-size:.95rem;margin:1.8em 0 .2em">廠商的回覆，與兩個處理方向</h3>` : "";
+  return `${now}<div class="two">
 <figure class="fig">
 <a href="${esc(B.圖.檔)}"><img src="${esc(B.圖.檔)}" width="${B.圖.w}" height="${B.圖.h}"
   loading="lazy" alt="廠商 2026-09-10 的回覆"></a>
@@ -457,7 +475,7 @@ ${rounds}
 ${replies}
 </div>
 
-<h2 class="h2">⑥ 綁定完成：兩個方向<span class="t">圖是廠商 ${esc(D.往返[2].日)} 的回覆</span></h2>
+<h2 class="h2">⑥ 綁定完成：兩個方向<span class="t">先是我們自己那一刻的畫面，再是廠商 ${esc(D.往返[2].日)} 的回覆</span></h2>
 ${bind}
 
 <h2 class="h2">⑦ 別家帳號的畫面<span class="t">${esc(D.參考._說明.replace(/^[^。]*。/, "").trim())}</span></h2>
