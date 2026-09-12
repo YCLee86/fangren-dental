@@ -16,6 +16,14 @@
  *   上緣正好是頭圖與開場那一行 ＝ 最認得出來的那一段。
  *   `shot-query` 是橫的（輪播），裁到的是最左邊那一張卡，一樣成立。
  *
+ * ⚠⚠ **有兩張不是我們自己拍的，是廠商送來的畫面**（`vbooked`／`vquery`）——
+ *   ⑥⑦ 那兩則現在要「我們的定稿」與「廠商那一版」並排對照（使用者 2026-09-12），
+ *   所以來源是 `preview/line-vendor/` 底下那幾張截圖本人。
+ *   ⚠ 它們是 **JPEG 而且是橫的**，所以這一支的來源讀檔要分副檔名，
+ *   裁出來的是**左邊那一塊正方**（橫的圖，短邊是高）。
+ *   ⚠ 那幾張的病人姓名在**做那張圖的時候**就遮掉了（這個 repo 是公開的），
+ *   這一支只縮不改，不要在這裡補遮罩。
+ *
  * ⚠ 出 **JPEG** 不是 PNG：同樣是 210px 見方，PNG 合計 489KB、JPEG 只有約 90KB
  *   （這幾張裡有照片，PNG 對照片本來就不划算），而縮圖看不出畫質差別。
  *
@@ -49,6 +57,9 @@ export const SHOTS = [
   { key: "review",  src: "line-review/shot-review.png" },
   { key: "typhoon", src: "line-typhoon/shot-typhoon.png" },
   { key: "oa",      src: "line-spec/shot-oa-clinic.png" },
+  /* 廠商送來的畫面（JPEG、橫的），給 ⑥⑦ 兩則做對照 */
+  { key: "vbooked", src: "line-vendor/vendor-booked-a-0910.jpg" },
+  { key: "vquery",  src: "line-vendor/vendor-query-0910.jpg" },
 ];
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -63,10 +74,17 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       if (b[i] !== 0xff) { i++; continue; }
       const m = b[i + 1];
       if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc)
-        return { w: b.readUInt16BE(i + 7), h: b.readUInt16BE(i + 5), bytes: b.length };
+        return { w: b.readUInt16BE(i + 7), h: b.readUInt16BE(i + 5), bytes: b.length, buf: b };
       i += 2 + b.readUInt16BE(i + 2);
     }
     throw new Error(`${f} 讀不出 JPEG 尺寸`);
+  };
+
+  /* 來源可能是 PNG（我們自己拍的）也可能是 JPEG（廠商送來的畫面） */
+  const read = (f) => {
+    const jpeg = /\.jpe?g$/i.test(f);
+    const r = jpeg ? jpg(f) : png(f);
+    return { ...r, mime: jpeg ? "image/jpeg" : "image/png" };
   };
 
   const chrome = (() => {
@@ -86,7 +104,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   for (const j of SHOTS) {
     const srcPath = path.join(ROOT, "preview", j.src);
     if (!fs.existsSync(srcPath)) { bad.push(`找不到來源 ${j.src}`); continue; }
-    const s = png(srcPath);
+    const s = read(srcPath);
 
     const r = await pg.evaluate(async ({ uri, side }) => {
       const img = new Image(); img.src = uri; await img.decode();
@@ -102,7 +120,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         if (v < mn) mn = v; if (v > mx) mx = v;
       }
       return { spread: mx - mn, png: c.toDataURL("image/jpeg", 0.84) };
-    }, { uri: `data:image/png;base64,${s.buf.toString("base64")}`, side: SIDE });
+    }, { uri: `data:${s.mime};base64,${s.buf.toString("base64")}`, side: SIDE });
 
     if (r.spread < 30) bad.push(`${j.key}：裁出來幾乎是同一個顏色（明暗只差 ${r.spread.toFixed(0)} 階）`);
 
