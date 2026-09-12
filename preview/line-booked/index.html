@@ -88,9 +88,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 /* 輪播：真的可以左右滑，而且要看得到下一張露出一角（同截圖）。
    ⚠ 這裡不是用 CSS 假裝 —— 是排真的 N 張卡（同 og-topic-card 那一輪：
      提案頁要擺真的產出檔，不要用 CSS 把成品再做一次）。 */
-#pv-slot.car,#pv-slot2.car,#pv-slot5.car,#pv-slot6.car,#pv-slot7.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
-#pv-slot.car .row,#pv-slot2.car .row,#pv-slot5.car .row,#pv-slot6.car .row,#pv-slot7.car .row{display:flex;gap:8.7px;padding-bottom:6px}
-#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc,#pv-slot5.car .pv-hc,#pv-slot6.car .pv-hc,#pv-slot7.car .pv-hc{flex:none;width:207px}
+#pv-slot.car,#pv-slot2.car,#pv-slot5.car,#pv-slot6.car,#pv-slot7.car,#pv-slot8.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
+#pv-slot.car .row,#pv-slot2.car .row,#pv-slot5.car .row,#pv-slot6.car .row,#pv-slot7.car .row,#pv-slot8.car .row{display:flex;gap:8.7px;padding-bottom:6px}
+#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc,#pv-slot5.car .pv-hc,#pv-slot6.car .pv-hc,#pv-slot7.car .pv-hc,#pv-slot8.car .pv-hc{flex:none;width:207px}
 
 /* ---- 卡片外殼（兩案共用）------------------------------------------- */
 .pv-hc{width:100%;border-radius:14px;overflow:hidden;
@@ -216,6 +216,29 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-nw .st .v{font-weight:700}
 .pv-nw .st .pill{border-radius:8.5px;line-height:1;padding:.42em .63em .38em;
   color:#fff;font-weight:700}
+/* 底部對齊（2026-09-12，使用者：「約診狀態和藥丸的底部對齊呢」）。
+   ⚠⚠ **只寫 `align-items: flex-end` 只走了五分之一** —— 那對到的是標籤的**行框**下緣，
+     而行框下緣離那幾個字的**墨**還有一段下伸部的空間（實測墨的下緣仍然比藥丸高 4.52px，
+     基線對齊那一版是 5.52，只差 1px、看不出來）。
+     要真的「看起來齊」就得把標籤的行框也收掉：**`line-height: 1`**，
+     墨的下緣才貼到藥丸下緣（實測只差 0.52px）。
+   ⚠ 同一件事的兩半：藥丸那一邊 `line-height: 1` 是為了讓塊貼住自己的字面，
+     標籤這一邊是為了讓字面貼住自己的盒子。**兩邊都要收，只收一邊就對不齊。** */
+.pv-nw .st.bot{align-items:flex-end}
+.pv-nw .st.bot .lb{line-height:1}
+/* 只加 flex-end 那一種（對照用，不是候選） */
+.pv-nw .st.botbox{align-items:flex-end}
+/* 三種對齊並排比一次 —— 差只有 1~5px，一張卡上看不出來，所以另外放大並排。
+   ⚠ 每一格都是**真的那一列**（同樣 13px、同樣的藥丸），不是另外畫一個示意圖；
+     虛線標的是藥丸的下緣（＝那一列最底下那條線）。 */
+.pv-cmp{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+.pv-cmp>div{flex:0 0 auto;background:var(--card);border:1px solid var(--rule);
+  border-radius:10px;padding:12px 14px 0}
+.pv-cmp .cap{font:500 .72rem/1.5 inherit;color:var(--ink-soft);margin:0 0 8px}
+.pv-cmp .pv-nw{position:relative;padding-bottom:14px}
+.pv-cmp .st{margin-top:0}
+.pv-cmp .pv-nw::after{content:"";position:absolute;left:-14px;right:-14px;bottom:14px;
+  border-bottom:1px dashed var(--ink-soft);opacity:.55}
 /* 零寬探針：量那一行真正的基線在哪（同站上 `--lamp-pad` 與 spec-tag-fit 那一輪）。
    ⚠ 一定要插在標籤**後面** —— 插前面的話標籤被擠到下一行時探針會留在上一行。 */
 .pv-nw .st .bp{display:inline-block;width:0;height:0;vertical-align:baseline}
@@ -366,6 +389,24 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   </div>
   <p class="pv-cap">↑ 和 Ⓑ 逐項相同，<b>只有浮水印換成柔墨</b>（<code>wm-&lt;形狀&gt;-ink12.png</code>）。</p>
   <div class="pv-panel" id="pv-panel7"></div>
+
+  <h3 class="pv-h3">Ⓓ 約診狀態和藥丸「底部對齊」</h3>
+  <p class="pv-note">
+    ⚠⚠ <b>只加一句「靠下對齊」不夠</b> —— 那對到的是標籤的<b>行框</b>下緣，
+    而行框下緣到那幾個字的<b>墨</b>之間還隔著一段下伸部的空白，
+    所以畫出來和基線對齊只差 <b>1px</b>、看不出來。
+    要真的齊，標籤這一邊也要把行框收掉（<code>line-height: 1</code>）——
+    <b>和藥丸那一邊做的是同一件事</b>（塊要貼住自己的字面）。<br>
+    三種並排在下面，虛線是藥丸的下緣。
+  </p>
+  <div class="pv-cmp" id="pv-stcmp"></div>
+
+  <div class="pv-phone" id="pv-ph8">
+    <div class="pv-head"><img src="../../assets/icon-192.png" alt=""><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
+    <div class="pv-chat" id="pv-chat8"></div>
+  </div>
+  <p class="pv-cap">↑ 和 Ⓑ 逐項相同，<b>只有那一列改成底部對齊</b>。</p>
+  <div class="pv-panel" id="pv-panel8"></div>
   <div id="pv-stwrap"></div>
 
   <h2 class="pv-h2">③ 浮水印：九顆形狀與顏色</h2>
@@ -645,6 +686,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   /* 淡墨色那一版的浮水印（2026-09-12，只有第 ②之二 節的 Ⓒ 會打開）——
      ⚠ 形狀、寬度、alpha 全部沒有動，**換掉的只有顏色**（柔墨 #5c5f57）。 */
   var wmink = false;
+  /* 約診狀態那一列：標籤和藥丸怎麼對齊（"" ＝ 基線／"bot" ＝ 底部）。 */
+  var stbot = false;
   var five = false;   /* ?n=5 ＝ 只用兩兩分得出來的那五顆（見上面的代價） */
 
   /* ---- 地址電話 -------------------------------------------------------
@@ -776,7 +819,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     /* 約診狀態：日期底下、地址那一塊之前。⚠ 只有第 ②之二 節會把 stat 打開。 */
     if (isQuery && stat && STV && STV[i % STV.length]) {
       var sv = STV[i % STV.length];
-      h += '<p class="st"><span class="lb">約診狀態<span class="bp"></span></span>'
+      h += '<p class="st' + (stbot ? " bot" : "") + '">'
+        +  '<span class="lb">約診狀態<span class="bp"></span></span>'
         +  (stat === "pill"
              ? '<span class="pill" style="background:' + sv.c + '">' + sv.n + '</span>'
              : '<span class="v" style="color:' + sv.c + '">' + sv.n + '</span>')
@@ -851,6 +895,27 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "這一組 <b>低 0.03~0.09px</b>；改回「行高 1.6 ＋ 上下都 .125em」是 <b>低 1.40px</b>，"
       + "那正是使用者看出來的那一下。</span>";
   }
+  /* Ⓓ 底部對齊：三種各自「標籤的盒子下緣離藥丸下緣多遠」——**現場量對照條那三格**
+     （它們是真的那一列，不是另外畫的示意圖）。
+     ⚠ 「墨的下緣」量不到（要逐像素），所以那三個數字是外面量好的，下面寫明方法。 */
+  function alignNote() {
+    var box = document.getElementById("pv-stcmp");
+    if (!box) return "";
+    var out = [], caps = ["基線", "只加靠下", "底部對齊"];
+    [].slice.call(box.querySelectorAll(".st")).forEach(function (r, i) {
+      var lb = r.querySelector(".lb"), pill = r.querySelector(".pill");
+      if (!lb || !pill) return;
+      var L = lb.getBoundingClientRect(), P = pill.getBoundingClientRect();
+      out.push(caps[i] + " " + (P.bottom - L.bottom).toFixed(2));
+    });
+    if (!out.length) return "";
+    return "<b>標籤的盒子下緣離藥丸下緣多遠</b>：" + out.join("px　") + "px<br>"
+      + "　<span>逐像素量「那幾個字的<b>墨</b>」離藥丸下緣多遠（四個寬度 × 四個值，"
+      + "用比卡色暗多少當權重找上下緣）：基線 <b>5.52px</b>／"
+      + "只加靠下 <b>4.52px</b>（差 1px，看不出來）／"
+      + "底部對齊 <b>0.52px</b>。</span>";
+  }
+
   /* Ⓒ 那一版的浮水印：份量有沒有留在那九顆的帶子裡 —— 算出來給你看，不要用講的。 */
   function inkNote() {
     var SOFT = "#5c5f57", A = .12;
@@ -908,6 +973,24 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       document.getElementById("pv-chat7").innerHTML = queryChat("pv-slot7");
       measure("pv-slot7", "pv-panel7");
       wmink = false;
+      /* Ⓓ ＝ Ⓑ 只換對齊方式，其餘一個字都沒動。 */
+      stbot = true;
+      document.getElementById("pv-chat8").innerHTML = queryChat("pv-slot8");
+      measure("pv-slot8", "pv-panel8");
+      stbot = false;
+      /* 三種對齊放大並排（每一格都是真的那一列，同樣 13px、同樣的藥丸）。 */
+      (function () {
+        var sv = STV[0], box = document.getElementById("pv-stcmp");
+        var rows = [["Ⓐ 基線對齊（Ⓑ／Ⓒ 現在這樣）", ""],
+                    ["Ⓑ′ 只加「靠下對齊」", " botbox"],
+                    ["Ⓓ 底部對齊（標籤行高也收掉）", " bot"]];
+        box.innerHTML = rows.map(function (r) {
+          return '<div><p class="cap">' + r[0] + '</p><div class="pv-nw">'
+            + '<p class="st' + r[1] + '"><span class="lb">約診狀態<span class="bp"></span></span>'
+            + '<span class="pill" style="background:' + sv.c + '">' + sv.n + '</span></p>'
+            + '</div></div>';
+        }).join("");
+      })();
       stat = "";
       /* ⚠ 這一節自己的數字：對比現算，寬度現量。
          ⚠⚠ .st 是 flex nowrap，**永遠不會折行** —— 要量的是「放不放得下」。 */
@@ -934,7 +1017,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + "⚠ 字套色那一版的四個數字（壓在卡片色上）是 "
         + STV.map(function (x) { return _cr(x.c, "#F4F4F5").toFixed(2); }).join("／") + " —— "
         + "<b>藍與橘過不了 4.5</b>，那正是「套色拿來當字是用錯階」。<br>"
-        + fitNote() + "<br>" + inkNote() + "</p>";
+        + fitNote() + "<br>" + alignNote() + "<br>" + inkNote() + "</p>";
     }
 
     /* ③ 現況・預約成功。

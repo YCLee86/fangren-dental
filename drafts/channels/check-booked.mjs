@@ -147,10 +147,25 @@ for (const n of ORDER) {
    （2026-09-12 的 pv-slot5/6 已經踩過一次，見 README 第 50-18 節）。 */
 {
   const html = fs.readFileSync(path.join(DIR, "index.html"), "utf8");
-  for (const sel of [".car{", ".car .row{", ".car .pv-hc{"]) {
-    const line = html.split("\n").find((l) => l.includes("#pv-slot7" + sel));
-    ok(!!line, `樣式表少了 #pv-slot7${sel} —— 那一張輪播會退回 width:100%、畫成 218.6px`);
+  const LINES = [[".car", "overflow-x:auto;scrollbar-width"],
+                 [".car .row", "gap:8.7px"],
+                 [".car .pv-hc", "flex:none;width:207px"]];
+  for (const [sel, body] of LINES) {
+    const line = html.split("\n").find((l) => l.startsWith("#pv-slot") && l.includes(body));
+    if (!line) { bad.push(`找不到「${sel}」那一條輪播寬度的規則`); continue; }
+    for (const id of ["#pv-slot5", "#pv-slot6", "#pv-slot7", "#pv-slot8"])
+      ok(line.includes(id + sel),
+        `${sel} 那一條少了 ${id} —— 那一張輪播會退回 width:100%、畫成 218.6px`);
   }
+  /* ⚠⚠ 底部對齊是**兩條規則合起來**才成立：只留 align-items 的話，對到的是標籤的
+     行框下緣，那幾個字的墨仍然比藥丸高 4.52px（基線對齊是 5.52，差 1px 看不出來）。
+     少了 `line-height: 1` 那一條，畫面完全正常、每一道尺寸守門也都會過。 */
+  ok(/\.st\.bot\{align-items:flex-end\}/.test(html),
+    "底部對齊那一條 align-items 不見了");
+  ok(/\.st\.bot \.lb\{line-height:1\}/.test(html),
+    "底部對齊少了標籤的 line-height:1 —— 只對到行框，那幾個字的墨仍然比藥丸高 4.5px");
+  ok(/stbot \? " bot" : ""/.test(html),
+    "那一列沒有在吃 stbot —— Ⓓ 會畫成和 Ⓑ 一模一樣");
   ok(/wm-'\s*\+\s*sn\s*\+\s*'-'\s*\+\s*\(wmink \?/.test(html),
     "卡片沒有在吃 wmink —— Ⓒ 會畫成和 Ⓑ 一模一樣的彩色浮水印");
   ok(/\.pill\{[^}]*line-height:1;[^}]*padding:\.42em \.63em \.38em/.test(html),
