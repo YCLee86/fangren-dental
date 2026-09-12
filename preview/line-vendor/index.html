@@ -98,6 +98,22 @@ details{margin:.3em 0 0}
 summary{font-size:.87rem;color:var(--soft);cursor:pointer;padding:.5em 0;
   border-bottom:1px solid var(--rule)}
 summary::marker{color:var(--rule)}
+/* ── 約診狀態那四個值的顏色：兩套色票各畫一次 ─────────────────
+   卡片畫成輪播上真正的寬度（207px ＝ 268 × .772），
+   欄位要吃得下手機的寬度，所以是 auto-fit 不是寫死兩欄。 */
+.pal{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));
+  gap:16px;margin:1em 0 0}
+.pal .h{font-size:.93rem;font-weight:600;margin:0 0 .1em}
+.pal .src{font-size:.79rem;color:var(--soft);line-height:1.65;margin:0 0 .55em}
+.stcard{background:var(--card);border:1px solid var(--rule);border-radius:9px;
+  padding:9px 11px}
+.stcard .r{display:flex;gap:9px;align-items:baseline;font-size:13px;
+  line-height:1.95;margin:0}
+.stcard .lb{color:var(--soft);flex:0 0 auto}
+.stcard .vv{font-weight:700}
+.stlist{list-style:none;margin:.6em 0 0;padding:0;
+  font-size:.79rem;color:var(--soft);line-height:1.75}
+.stlist b{font-weight:600;color:var(--ink)}
 .foot{margin:2.8em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
   font-size:.83rem;color:var(--soft);line-height:1.85}
 a{color:#214d48}
@@ -447,7 +463,49 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </div>
 <p class="note">九顆的形狀、顏色與寬度都從 brand/shapes/ 與 preview/line-booked/wm-sizes.json 讀回來，這一頁不抄第二份。九顆的寬度不一樣是刻意的 —— 按墨的面積正規化，看起來才一樣重。</p>
 
-<h2 class="h2">④ 和廠商的四封往返</h2>
+<h2 class="h2">④ 約診狀態那四個值的顏色<span class="t">兩套色票各畫一次・卡片畫成輪播上真正的 207px 寬</span></h2>
+<p class="note">套色不是新的東西，是把現在就有的做法接過去：現況那張卡上，表示會到的那個值本來就是綠色的字。所以要定的只有兩件 —— 四個值各用哪一顆顏色，以及要不要一起加粗。</p>
+<p style="font-size:.88rem;color:var(--soft);margin:1em 0 0">同樣四個值用兩套色票各畫一次。兩版挑的是同樣那四科（齒顎矯正＝藍、一般牙科＝綠、兒童牙科＝橘、顯微根管＝紅），差的只有那一套色票本身 —— 這樣比起來才知道是色票的差別，不是挑色的差別。</p>
+<div>
+<p class="h">Ⓐ 整理頁的 logo 色</p>
+<p class="src">preview/line-booked/wm-sizes.json —— 這一頁第 ③ 節那九顆用的就是這一份<br>那一份是<b>填色</b>用的那一階（首頁標籤按下去整塊填滿的那種顏色）。</p>
+<div class="stcard" style="max-width:207px">
+<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:#4478b5">已排定</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:#3f654a">已確認</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:#c28229">未回覆</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:#ae4f4d">已取消</span></p>
+</div>
+<ul class="stlist">
+<li><b>已排定</b>　齒顎矯正　#4478B5　對比 4.15（低於 4.5）</li>
+<li><b>已確認</b>　一般牙科　#3F654A　對比 6.02</li>
+<li><b>未回覆</b>　兒童牙科　#C28229　對比 2.93（低於 4.5）</li>
+<li><b>已取消</b>　顯微根管　#AE4F4D　對比 4.74</li>
+</ul>
+</div>
+<div>
+<p class="h">Ⓑ 門診表</p>
+<p class="src">preview/line-post-hours/colors.json 的 mix —— 商家貼文那張門診表現在畫出來的就是這一組<br>那一組是<b>小圖形與字</b>用的那一階，本來就是為了站在淺底上而挑的。</p>
+<div class="stcard" style="max-width:207px">
+<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:#31637F">已排定</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:#5A6E4F">已確認</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:#926833">未回覆</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:#944449">已取消</span></p>
+</div>
+<ul class="stlist">
+<li><b>已排定</b>　齒顎矯正　#31637F　對比 5.93</li>
+<li><b>已確認</b>　一般牙科　#5A6E4F　對比 5.05</li>
+<li><b>未回覆</b>　兒童牙科　#926833　對比 4.49（低於 4.5）</li>
+<li><b>已取消</b>　顯微根管　#944449　對比 6.00</li>
+</ul>
+</div>
+<div class="rows" style="margin-top:1.5em">
+<div class="row"><p class="k">對比</p><p class="v">每一顆底下那個數字是它壓在卡片色上的對比，站上要讀的字門檻是 <b>4.5</b>。Ⓐ 那一套當填色很好看，拿來當字的時候藍與橘都掉到門檻底下；Ⓑ 只有橘差一點點。</p></div>
+<div class="row"><p class="k">橘那一顆</p><p class="v">兩版的橘都是四顆裡最緊的那一顆。要那一格也過門檻的話，站上「兒童牙科」還有一階更深的橘 <b>#9E6301</b>（白底上的字用的就是它，量出來 4.50，剛好過），可以只換這一顆、其餘三顆不動。</p></div>
+<div class="row"><p class="k">要不要加粗</p><p class="v">加粗建議跟著做：那四個值是整張卡上唯一會變的一格，而顏色在淺底上的份量本來就比在深底上輕，粗體補得回來。標籤（約診狀態）維持不加粗、不套色，兩樣都動的話那一列就沒有主從了。</p></div>
+<div class="row"><p class="k">要注意的</p><p class="v">這一輪看的畫面是從診所端的後台拍的，不是病人的手機 —— 顏色與粗體看得出來，字的大小與行距不能拿那張圖去量。</p></div>
+</div>
+
+<h2 class="h2">⑤ 和廠商的四封往返</h2>
 <div class="rows">
 <div class="row">
 <p class="k">2026-09-07　廠商（第一封）</p>
@@ -475,7 +533,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </div>
 </div>
 
-<h2 class="h2">⑤ 對方的回覆涵蓋到哪裡<span class="t">「做不到」一律先改寫成「誰做不到」再往下談</span></h2>
+<h2 class="h2">⑥ 對方的回覆涵蓋到哪裡<span class="t">「做不到」一律先改寫成「誰做不到」再往下談</span></h2>
 <div class="rows">
 <div class="row">
 <p class="k">後台送不出 Flex Message</p>
@@ -514,7 +572,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </div>
 </div>
 
-<h2 class="h2">⑥ 綁定完成：兩個方向<span class="t">先是我們自己那一刻的畫面，再是廠商 2026-09-10 的回覆</span></h2>
+<h2 class="h2">⑦ 綁定完成：兩個方向<span class="t">先是我們自己那一刻的畫面，再是廠商 2026-09-10 的回覆</span></h2>
 <div class="two">
 <figure class="fig">
 <a href="bind-live-0912.jpg"><img src="bind-live-0912.jpg" width="750" height="1551"
@@ -580,7 +638,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </div>
 <p class="note">兩個方向卡住的地方是同一件事：<b>那句綁定成功歸誰送</b>。改由廠商的系統在綁定當下直接送我們那張卡，理由 a 與方向二同時成立，而且不必比對任何字串。理由 b（櫃檯查號碼）仍然要先問診所自己。</p>
 
-<h2 class="h2">⑦ 別家帳號的畫面<span class="t">圖沒有進 repo，也沒有貼上任何頁面（別人家的畫面）。</span></h2>
+<h2 class="h2">⑧ 別家帳號的畫面<span class="t">圖沒有進 repo，也沒有貼上任何頁面（別人家的畫面）。</span></h2>
 <div class="rows">
 <div class="row">
 <p class="k">新竹品御牙醫<span style="font-weight:400;color:var(--soft);font-size:.82rem">　最接近我們的狀況</span></p>
@@ -598,7 +656,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </div>
 <p class="note">每一張說明的事情不一樣。分成哪三種、各自說明得了什麼，整理在上一節。</p>
 
-<h2 class="h2">⑧ 還沒有答案的 44 題<span class="t">照「誰能答」分開・★ 是最先要的 13 題</span></h2>
+<h2 class="h2">⑨ 還沒有答案的 44 題<span class="t">照「誰能答」分開・★ 是最先要的 13 題</span></h2>
 <div class="grp">
 <p class="t">只有廠商能答</p>
 <p class="c">29 題・其中 10 題最先要</p>
@@ -610,7 +668,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 <li><span class="s">★</span>合約包了什麼：改一則訊息算不算服務範圍內？有沒有次數限制？<span class="y">沒有這個資訊，就不知道該用要求的還是商量的。這一題還沒問過。</span></li>
 <li><span class="s">★</span>浮水印的 size 你們是寫成 px、關鍵字、還是百分比？填的是哪一個值？我們要的是：size 用 px（圓形 104px、寬形 150px）、offsetEnd 與 offsetBottom 都是 0px。<span class="y">現在畫出來是規格的五到六成，而且右下被切掉。算過不是平台的上限（兩顆的縮小係數不一樣），所以是填的值。我們自己的模擬圖是往右下溢出 18／10px 的，和我們自己的 JSON 不一致 —— 要先決定給哪一種再回信。</span></li>
 <li><span class="s">★</span>病人自己按過取消的那一筆，能不能不要列在他的 LINE 查詢清單裡？（樂衍後台照舊保留）<span class="y">這一題先答。做得到的話，底下那兩題都不必問了 —— 那一列根本不會出現。</span></li>
-<li><span class="s">★</span>那一列若移不掉，三處請照這樣改：提醒發送前那一種不要印未回覆，改成「已排定」；「您已取消，請聯絡診所改約」收成「您已取消」；欄位名「預約狀態」換成「約診狀態」。<span class="y">同一個字現在蓋著兩件不一樣的事：提醒還沒發的時候沒有人問過他，提醒發了之後才是真的還沒回應（診所已確認系統分得出來）。只要第一種換掉，未回覆就只剩一個意思，中間那兩種一個字都不必動。第三種也不要加字（已提醒未回覆、診所已提醒未回覆都不要）：其餘三個都是三個字，多一段就從一組標籤變成一句話；而且「已提醒」的主詞是診所，接在沒回應前面會讀成「我們提醒過了，是你沒回」，那一張卡是收據不是對帳。第一種印「已排定」不印「待提醒」：那一格要講的是這一筆現在是什麼狀態，不是診所接下來會做什麼 —— 寫成等著被提醒，系統哪一天沒送出去，那一行字就變成診所答應過的事，而這套系統是善意的提醒、不是替病人記住。已排定是那一筆自己的事實，答應不了任何人任何事，形狀也和其餘三個一樣是兩個字前面加一個已或未；而且和同一欄的已取消正好成對（取消掉的那幾筆也列在同一張清單裡，那正是這一題的由來）。四個值排在一起是已排定／已確認／未回覆／已取消。欄位名的部分：「預約狀態」不要留，兩個地方會出事 —— 配上第一種的值會變成同一件事講兩次（所以第一種也不能印已預約），配上「已取消」則是標題說這是預約的狀態、值卻說那一筆已經不存在了，而只要診所或病人其中一方更改，那一筆就不再是原來那個預約。「約診狀態」用的是這張卡自己標題上的那個詞，第一種換成已排定之後也不會重複，四種值都裝得下。它沒有治掉的一件：標題說這是約診的狀態、值卻說那一筆已經取消了 —— 那個矛盾在卡片標題上本來就有（那張清單本身就叫已約診時段），換哪一個標籤都不會消失，只有第一層那一題（那一筆不要列出來）治得掉。不要用回覆或確認那一類的字：四種值有兩種在講提醒走到哪裡、兩種在講他按了什麼，寫成回覆或確認都會有一種對不上；「二次確認」在這個帳號裡已經是取消那一段防誤按的名字，而且那是步驟的名字不是狀態的名字。收短那一句是因為那張卡是一份收據，上面既沒有電話也沒有按鈕，改約那條路在他按下取消的當下那一則就給過了。要改的只是卡片上印出來的那個標籤與那幾個字，資料庫欄位叫什麼名字不必動。</span></li>
+<li><span class="s">★</span>那一列若移不掉，三處請照這樣改：提醒發送前那一種不要印未回覆，改成「已排定」；「您已取消，請聯絡診所改約」收成「您已取消」；欄位名「預約狀態」換成「約診狀態」。另外，那四個值請套色並加粗（顏色見下）。<span class="y">同一個字現在蓋著兩件不一樣的事：提醒還沒發的時候沒有人問過他，提醒發了之後才是真的還沒回應（診所已確認系統分得出來）。只要第一種換掉，未回覆就只剩一個意思，中間那兩種一個字都不必動。第三種也不要加字（已提醒未回覆、診所已提醒未回覆都不要）：其餘三個都是三個字，多一段就從一組標籤變成一句話；而且「已提醒」的主詞是診所，接在沒回應前面會讀成「我們提醒過了，是你沒回」，那一張卡是收據不是對帳。第一種印「已排定」不印「待提醒」：那一格要講的是這一筆現在是什麼狀態，不是診所接下來會做什麼 —— 寫成等著被提醒，系統哪一天沒送出去，那一行字就變成診所答應過的事，而這套系統是善意的提醒、不是替病人記住。已排定是那一筆自己的事實，答應不了任何人任何事，形狀也和其餘三個一樣是兩個字前面加一個已或未；而且和同一欄的已取消正好成對（取消掉的那幾筆也列在同一張清單裡，那正是這一題的由來）。四個值排在一起是已排定／已確認／未回覆／已取消。欄位名的部分：「預約狀態」不要留，兩個地方會出事 —— 配上第一種的值會變成同一件事講兩次（所以第一種也不能印已預約），配上「已取消」則是標題說這是預約的狀態、值卻說那一筆已經不存在了，而只要診所或病人其中一方更改，那一筆就不再是原來那個預約。「約診狀態」用的是這張卡自己標題上的那個詞，第一種換成已排定之後也不會重複，四種值都裝得下。它沒有治掉的一件：標題說這是約診的狀態、值卻說那一筆已經取消了 —— 那個矛盾在卡片標題上本來就有（那張清單本身就叫已約診時段），換哪一個標籤都不會消失，只有第一層那一題（那一筆不要列出來）治得掉。不要用回覆或確認那一類的字：四種值有兩種在講提醒走到哪裡、兩種在講他按了什麼，寫成回覆或確認都會有一種對不上；「二次確認」在這個帳號裡已經是取消那一段防誤按的名字，而且那是步驟的名字不是狀態的名字。收短那一句是因為那張卡是一份收據，上面既沒有電話也沒有按鈕，改約那條路在他按下取消的當下那一則就給過了。套色不是新加的行為：現況那張卡上，表示會到的那個值本來就是綠色的字，所以這一項是把已經在跑的做法接到新的四個值上。加粗是因為那四個值是整張卡上唯一會變的一格，而顏色在淺底上的份量比在深底上輕。標籤本身維持不加粗也不套色。要改的只是卡片上印出來的那個標籤與那幾個字，資料庫欄位叫什麼名字不必動。</span></li>
 <li><span class="s">★</span>綁定完成那一則現在是誰回的？改由你們的系統在綁定當下送我們那張卡可不可以？後台的自動回應同時開著會不會兩則一起送？<span class="y">最後那一題會動到已定稿的自動回應（選純文字的理由是字留在自己手上）—— 那是使用者的決定。</span></li>
 <li><span class="s">★</span>若診所櫃檯用不到聊天室那句訊息裡的號碼，系統那一側關不關得掉「綁定成功」自動送出？<span class="y">方向一真正的問法。對方回過的是「不能拿掉」與兩個理由，其中一個理由要先由診所自己確認。</span></li>
 </ul>

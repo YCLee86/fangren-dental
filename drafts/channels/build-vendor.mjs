@@ -182,6 +182,22 @@ details{margin:.3em 0 0}
 summary{font-size:.87rem;color:var(--soft);cursor:pointer;padding:.5em 0;
   border-bottom:1px solid var(--rule)}
 summary::marker{color:var(--rule)}
+/* ── 約診狀態那四個值的顏色：兩套色票各畫一次 ─────────────────
+   卡片畫成輪播上真正的寬度（207px ＝ 268 × .772），
+   欄位要吃得下手機的寬度，所以是 auto-fit 不是寫死兩欄。 */
+.pal{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));
+  gap:16px;margin:1em 0 0}
+.pal .h{font-size:.93rem;font-weight:600;margin:0 0 .1em}
+.pal .src{font-size:.79rem;color:var(--soft);line-height:1.65;margin:0 0 .55em}
+.stcard{background:var(--card);border:1px solid var(--rule);border-radius:9px;
+  padding:9px 11px}
+.stcard .r{display:flex;gap:9px;align-items:baseline;font-size:13px;
+  line-height:1.95;margin:0}
+.stcard .lb{color:var(--soft);flex:0 0 auto}
+.stcard .vv{font-weight:700}
+.stlist{list-style:none;margin:.6em 0 0;padding:0;
+  font-size:.79rem;color:var(--soft);line-height:1.75}
+.stlist b{font-weight:600;color:var(--ink)}
 .foot{margin:2.8em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
   font-size:.83rem;color:var(--soft);line-height:1.85}
 a{color:#214d48}
@@ -323,7 +339,33 @@ const compare = cmp.組.map((row) => `<div class="cmpwrap">
 <div class="cmprow">${row.格.map((g) => plate(row.形, g)).join("\n")}</div>
 </div>`).join("\n");
 
-/* ── ④ 往返 ───────────────────────────────────────────────── */
+/* ── ④ 約診狀態那四個值的顏色 ─────────────────────────────────
+   2026-09-12 使用者：現況那張卡上表示會到的那個值本來就是綠字，所以新版那四個
+   值也要套色、加粗，並且用兩套色票各做一次給他看。
+   對比度**在這裡現算**，不寫進資料 —— 寫死的話哪天換一顆顏色，數字不會跟著動。 */
+const _lin = (c) => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
+const _lum = (h) => { const n = parseInt(h.slice(1), 16);
+  return .2126 * _lin(n >> 16 & 255) + .7152 * _lin(n >> 8 & 255) + .0722 * _lin(n & 255); };
+const _cr = (a, z) => { const x = _lum(a), y = _lum(z);
+  return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+/* 對比度無條件捨去到小數第二位 —— 四捨五入會把 4.4995 印成
+   「4.50（低於 4.5）」，那一行讀起來自相矛盾。捨去只會低報一點點，
+   不會在門檻那一格印出一個不成立的數字。 */
+const SC = D.狀態色;
+const pals = SC.組.map((g) => `<div>
+<p class="h">${esc(g.標)}</p>
+<p class="src">${b(g.源)}<br>${b(g.註)}</p>
+<div class="stcard" style="max-width:${SC.卡.w}px">
+${g.值.map((v) => `<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:${v.色}">${esc(v.名)}</span></p>`).join("\n")}
+</div>
+<ul class="stlist">
+${g.值.map((v) => { const n = Math.floor(_cr(v.色, "#f4f4f5") * 100) / 100;
+  return `<li><b>${esc(v.名)}</b>　${esc(v.科)}　${v.色.toUpperCase()}　對比 ${n.toFixed(2)}${
+    n < 4.5 ? "（低於 4.5）" : ""}</li>`; }).join("\n")}
+</ul>
+</div>`).join("\n");
+
+/* ── ⑤ 往返 ───────────────────────────────────────────────── */
 const rounds = D.往返.map((r) => `<div class="row">
 <p class="k">${esc(r.日)}　${esc(r.誰)}</p>
 <p class="v"><i>他說</i>${b(r.他說)}</p>
@@ -331,7 +373,7 @@ const rounds = D.往返.map((r) => `<div class="row">
 ${r.註 ? `<p class="v">${b(r.註)}</p>` : ""}
 </div>`).join("\n");
 
-/* ── ⑤ 回覆涵蓋到哪裡 ─────────────────────────────────────── */
+/* ── ⑥ 回覆涵蓋到哪裡 ─────────────────────────────────────── */
 const replies = D.回覆.列.map((r) => `<div class="row">
 <p class="k">${esc(r.句)}</p>
 <p class="v"><i>說明的是</i>${b(r.成立)}</p>
@@ -484,26 +526,37 @@ ${compare}
 </div>
 <p class="note">${b(D.浮水印._說明)}</p>
 
-<h2 class="h2">④ 和廠商的四封往返</h2>
+<h2 class="h2">④ 約診狀態那四個值的顏色<span class="t">兩套色票各畫一次・卡片畫成輪播上真正的 ${SC.卡.w}px 寬</span></h2>
+<p class="note">${b(SC.起點)}</p>
+<p style="font-size:.88rem;color:var(--soft);margin:1em 0 0">${b(SC._說明)}</p>
+${pals}
+<div class="rows" style="margin-top:1.5em">
+<div class="row"><p class="k">對比</p><p class="v">${b(SC.量)}</p></div>
+<div class="row"><p class="k">橘那一顆</p><p class="v">${b(SC.橘)}</p></div>
+<div class="row"><p class="k">要不要加粗</p><p class="v">${b(SC.加粗)}</p></div>
+<div class="row"><p class="k">要注意的</p><p class="v">${b(SC.注意)}</p></div>
+</div>
+
+<h2 class="h2">⑤ 和廠商的四封往返</h2>
 <div class="rows">
 ${rounds}
 </div>
 
-<h2 class="h2">⑤ 對方的回覆涵蓋到哪裡<span class="t">「做不到」一律先改寫成「誰做不到」再往下談</span></h2>
+<h2 class="h2">⑥ 對方的回覆涵蓋到哪裡<span class="t">「做不到」一律先改寫成「誰做不到」再往下談</span></h2>
 <div class="rows">
 ${replies}
 </div>
 
-<h2 class="h2">⑥ 綁定完成：兩個方向<span class="t">先是我們自己那一刻的畫面，再是廠商 ${esc(D.往返[2].日)} 的回覆</span></h2>
+<h2 class="h2">⑦ 綁定完成：兩個方向<span class="t">先是我們自己那一刻的畫面，再是廠商 ${esc(D.往返[2].日)} 的回覆</span></h2>
 ${bind}
 
-<h2 class="h2">⑦ 別家帳號的畫面<span class="t">${esc(D.參考._說明.replace(/^[^。]*。/, "").trim())}</span></h2>
+<h2 class="h2">⑧ 別家帳號的畫面<span class="t">${esc(D.參考._說明.replace(/^[^。]*。/, "").trim())}</span></h2>
 <div class="rows">
 ${refs}
 </div>
 <p class="note">${b(D.參考.用法)}</p>
 
-<h2 class="h2">⑧ 還沒有答案的 ${total} 題<span class="t">照「誰能答」分開・★ 是最先要的 ${hotAll} 題</span></h2>
+<h2 class="h2">⑨ 還沒有答案的 ${total} 題<span class="t">照「誰能答」分開・★ 是最先要的 ${hotAll} 題</span></h2>
 ${groups}
 
 <p class="foot">
