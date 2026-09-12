@@ -114,6 +114,10 @@ summary::marker{color:var(--rule)}
 .stlist{list-style:none;margin:.6em 0 0;padding:0;
   font-size:.79rem;color:var(--soft);line-height:1.75}
 .stlist b{font-weight:600;color:var(--ink)}
+.pal .h .pick{font-weight:400;font-size:.79rem;color:var(--soft);margin-left:.4em}
+/* 藥丸：底是那一科的套色、字是白的，形狀照站上那一族（圓角 8.5px） */
+.stcard .pill{display:inline-block;border-radius:8.5px;padding:.125em .63em;
+  color:#fff;font-weight:700;line-height:1.6}
 .foot{margin:2.8em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
   font-size:.83rem;color:var(--soft);line-height:1.85}
 a{color:#214d48}
@@ -467,7 +471,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 <p class="note">套色不是新的東西，是把現在就有的做法接過去：現況那張卡上，表示會到的那個值本來就是綠色的字。所以要定的只有兩件 —— 四個值各用哪一顆顏色，以及要不要一起加粗。</p>
 <p style="font-size:.88rem;color:var(--soft);margin:1em 0 0">同樣四個值用兩套色票各畫一次。兩版挑的是同樣那四科（齒顎矯正＝藍、一般牙科＝綠、兒童牙科＝橘、顯微根管＝紅），差的只有那一套色票本身 —— 這樣比起來才知道是色票的差別，不是挑色的差別。</p>
 <div>
-<p class="h">Ⓐ 整理頁的 logo 色</p>
+<p class="h">Ⓐ 整理頁的 logo 色<span class="pick">挑定</span></p>
 <p class="src">preview/line-booked/wm-sizes.json —— 這一頁第 ③ 節那九顆用的就是這一份<br>那一份是<b>填色</b>用的那一階（首頁標籤按下去整塊填滿的那種顏色）。</p>
 <div class="stcard" style="max-width:207px">
 <p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:#4478b5">已排定</span></p>
@@ -499,10 +503,38 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </ul>
 </div>
 <div class="rows" style="margin-top:1.5em">
+<div class="row"><p class="k">挑定</p><p class="v">Ⓐ 整理頁的 logo 色（2026-09-12 使用者挑的）。下面那一段接著回答「做成藥丸」那一題。</p></div>
 <div class="row"><p class="k">對比</p><p class="v">每一顆底下那個數字是它壓在卡片色上的對比，站上要讀的字門檻是 <b>4.5</b>。Ⓐ 那一套當填色很好看，拿來當字的時候藍與橘都掉到門檻底下；Ⓑ 只有橘差一點點。</p></div>
 <div class="row"><p class="k">橘那一顆</p><p class="v">兩版的橘都是四顆裡最緊的那一顆。要那一格也過門檻的話，站上「兒童牙科」還有一階更深的橘 <b>#9E6301</b>（白底上的字用的就是它，量出來 4.50，剛好過），可以只換這一顆、其餘三顆不動。</p></div>
 <div class="row"><p class="k">要不要加粗</p><p class="v">加粗建議跟著做：那四個值是整張卡上唯一會變的一格，而顏色在淺底上的份量本來就比在深底上輕，粗體補得回來。標籤（約診狀態）維持不加粗、不套色，兩樣都動的話那一列就沒有主從了。</p></div>
 <div class="row"><p class="k">要注意的</p><p class="v">這一輪看的畫面是從診所端的後台拍的，不是病人的手機 —— 顏色與粗體看得出來，字的大小與行距不能拿那張圖去量。</p></div>
+</div>
+
+<h3 style="font-size:.95rem;margin:1.8em 0 .2em">做成藥丸：底套色、白字</h3>
+<p style="font-size:.88rem;color:var(--soft);margin:0">使用者問：這裡可以做成像網站的藥丸標籤、底套色白字嗎。做得到，而且它正好把 Ⓐ 那兩顆過不了門檻的顏色解掉。</p>
+<div class="stcard" style="max-width:207px">
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#4478b5">已排定</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#3f654a">已確認</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#c28229">未回覆</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#ae4f4d">已取消</span></p>
+</div>
+<ul class="stlist">
+<li><b>已排定</b>　齒顎矯正　#4478B5　白字 4.56</li>
+<li><b>已確認</b>　一般牙科　#3F654A　白字 6.62</li>
+<li><b>未回覆</b>　兒童牙科　#C28229　白字 3.22（低於 4.5）</li>
+<li><b>已取消</b>　顯微根管　#AE4F4D　白字 5.21</li>
+</ul>
+<div class="rows" style="margin-top:1.4em">
+<div class="row"><p class="k">為什麼反而變好</p><p class="v">站上的規矩是<b>深階給淺底上的字、套色給填實的塊</b>，而 Ⓐ 那九顆就是套色 —— 拿來當字是用錯階（藍 4.15、橘 2.93），<b>填成塊配白字才是它本來的用法</b>。同一組顏色，四顆全部變好，三顆過 4.5。</p></div>
+<div class="row"><p class="k">Flex 做得到嗎</p><p class="v">Flex 做得到，不是新元件：一個 box 給 `backgroundColor`、`cornerRadius`、`paddingAll`，裡面放一個 `color: "#FFFFFF"` 的 text。要讓它只包住那幾個字而不是撐滿整列，那一列寫成 horizontal box、藥丸那一格給 `flex: 0`，後面補一個 `filler`。</p></div>
+<div class="row"><p class="k">對比</p><p class="v">數字是<b>白字壓在那一塊填色上</b>，門檻一樣是 4.5。四顆全部比當字的時候好，只有兒童牙科那一顆仍然在門檻底下。</p></div>
+<div class="row"><p class="k">兒童牙科那一顆</p><p class="v"><b>3.22 是站上早就接受過的那一格</b> —— 首頁「主題與科別」按下去的兒童牙科標記就是這個填色配白字，2026-08-08 做成真的樣子看過才定的。<b>所以不要拿對比度來訂正它</b>，也不要單獨把這一顆換成更深的橘（那會讓四顆不是同一組顏色）。</p></div>
+<div class="row"><p class="k">換到什麼・付出什麼</p><p class="v">① 藥丸是整張卡上唯一一塊填滿的顏色，<b>份量會比旁邊那行日期重</b> —— 而那張卡是收據、日期本來是主角。② 對廠商來說這從「換一個色碼」變成「那一列要多包一層 box」，<b>要求變大一階</b>（同提醒卡那條：要求的改動愈小愈可能真的改到）。兩件都不是擋路的，寫在這裡是讓他知道換到什麼、付出什麼。</p></div>
+<div class="row"><p class="k">沒有動的</p><p class="v">標籤（約診狀態）維持不加粗也不套色；四個值的字、欄位名、卡片其餘每一個地方一個字都沒動。</p></div>
 </div>
 
 <h2 class="h2">⑤ 和廠商的四封往返</h2>

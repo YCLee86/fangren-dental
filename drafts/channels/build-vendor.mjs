@@ -198,6 +198,10 @@ summary::marker{color:var(--rule)}
 .stlist{list-style:none;margin:.6em 0 0;padding:0;
   font-size:.79rem;color:var(--soft);line-height:1.75}
 .stlist b{font-weight:600;color:var(--ink)}
+.pal .h .pick{font-weight:400;font-size:.79rem;color:var(--soft);margin-left:.4em}
+/* 藥丸：底是那一科的套色、字是白的，形狀照站上那一族（圓角 8.5px） */
+.stcard .pill{display:inline-block;border-radius:8.5px;padding:.125em .63em;
+  color:#fff;font-weight:700;line-height:1.6}
 .foot{margin:2.8em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
   font-size:.83rem;color:var(--soft);line-height:1.85}
 a{color:#214d48}
@@ -353,7 +357,7 @@ const _cr = (a, z) => { const x = _lum(a), y = _lum(z);
    不會在門檻那一格印出一個不成立的數字。 */
 const SC = D.狀態色;
 const pals = SC.組.map((g) => `<div>
-<p class="h">${esc(g.標)}</p>
+<p class="h">${esc(g.標)}${g.挑定 ? `<span class="pick">挑定</span>` : ""}</p>
 <p class="src">${b(g.源)}<br>${b(g.註)}</p>
 <div class="stcard" style="max-width:${SC.卡.w}px">
 ${g.值.map((v) => `<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:${v.色}">${esc(v.名)}</span></p>`).join("\n")}
@@ -364,6 +368,19 @@ ${g.值.map((v) => { const n = Math.floor(_cr(v.色, "#f4f4f5") * 100) / 100;
     n < 4.5 ? "（低於 4.5）" : ""}</li>`; }).join("\n")}
 </ul>
 </div>`).join("\n");
+
+/* ── ④之二 做成藥丸（底套色、白字）─────────────────────────────
+   使用者問的那一題。⚠ 對比度一樣現算，只是這一次量的是「白字壓在填色上」。 */
+const PILL = SC.藥丸;
+const pill = `<div class="stcard" style="max-width:${SC.卡.w}px">
+${PILL.值.map((v) => `<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:${v.色}">${esc(v.名)}</span></p>`).join("\n")}
+</div>
+<ul class="stlist">
+${PILL.值.map((v) => { const n = Math.floor(_cr("#ffffff", v.色) * 100) / 100;
+  return `<li><b>${esc(v.名)}</b>　${esc(v.科)}　${v.色.toUpperCase()}　白字 ${n.toFixed(2)}${
+    n < 4.5 ? "（低於 4.5）" : ""}</li>`; }).join("\n")}
+</ul>`;
 
 /* ── ⑤ 往返 ───────────────────────────────────────────────── */
 const rounds = D.往返.map((r) => `<div class="row">
@@ -531,10 +548,23 @@ ${compare}
 <p style="font-size:.88rem;color:var(--soft);margin:1em 0 0">${b(SC._說明)}</p>
 ${pals}
 <div class="rows" style="margin-top:1.5em">
+<div class="row"><p class="k">挑定</p><p class="v">${b(SC.挑定)}</p></div>
 <div class="row"><p class="k">對比</p><p class="v">${b(SC.量)}</p></div>
 <div class="row"><p class="k">橘那一顆</p><p class="v">${b(SC.橘)}</p></div>
 <div class="row"><p class="k">要不要加粗</p><p class="v">${b(SC.加粗)}</p></div>
 <div class="row"><p class="k">要注意的</p><p class="v">${b(SC.注意)}</p></div>
+</div>
+
+<h3 style="font-size:.95rem;margin:1.8em 0 .2em">做成藥丸：底套色、白字</h3>
+<p style="font-size:.88rem;color:var(--soft);margin:0">${b(PILL._說明)}</p>
+${pill}
+<div class="rows" style="margin-top:1.4em">
+<div class="row"><p class="k">為什麼反而變好</p><p class="v">${b(PILL.為什麼變好)}</p></div>
+<div class="row"><p class="k">Flex 做得到嗎</p><p class="v">${b(PILL.做得到嗎)}</p></div>
+<div class="row"><p class="k">對比</p><p class="v">${b(PILL.量)}</p></div>
+<div class="row"><p class="k">兒童牙科那一顆</p><p class="v">${b(PILL.兒牙那一顆)}</p></div>
+<div class="row"><p class="k">換到什麼・付出什麼</p><p class="v">${b(PILL.代價)}</p></div>
+<div class="row"><p class="k">沒有動的</p><p class="v">${b(PILL.沒有動的)}</p></div>
 </div>
 
 <h2 class="h2">⑤ 和廠商的四封往返</h2>
