@@ -107,6 +107,9 @@ h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
   padding:.7em .85em;margin:.9em 0 0}
 
 /* ── 一則一格：左邊是那一則自己的縮圖 ─────────────────────────── */
+.mg{font-size:.93rem;font-weight:600;margin:1.15em 0 .15em}
+.mg:first-of-type{margin-top:.5em}
+.mg .n{font-weight:400;font-size:.79rem;color:var(--soft);margin-left:.5em}
 .msgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));
   gap:9px;margin:.2em 0 0}
 .msg{display:flex;gap:10px;background:var(--card);border-radius:10px;padding:9px 10px}
@@ -181,17 +184,39 @@ code{font-size:.92em}
 /* ⚠ `圖` 可以是一個字串，也可以是一組（2026-09-12：⑤ 要同時看得到公版藍色卡
    與我們新做的那一張）。兩張時**直向疊**，不要並排 —— 那一欄只有 64px 寬，
    並排會把右邊的字擠到剩 80 幾 px（格子最窄只有 232px）。 */
-const msgs = D.訊息.列.map((r, i) => {
-  const ims = [].concat(r.圖 || []).filter(Boolean);
-  return `<div class="msg">${
-  ims.length
-    ? `<span class="ims">${ims.map((g, k) => `<img src="t-${esc(g)}.jpg" width="210" height="210" ${
-        i > 3 ? 'loading="lazy" ' : ""}alt="${esc(r.名)}的模擬圖${ims.length > 1 ? `（${k + 1}）` : ""}">`).join("")}</span>`
-    : `<span class="ph"></span>`
-}<div class="x">
+/* ⚠⚠ 2026-09-12 使用者：「12 則照順序看有點混亂　先區分成　已完成　待調整
+   （或是有落差）」—— 所以這一節分兩組排，**但 ①~⑫ 那組編號一個都不換**：
+   廠商兩封回信都照那組編號在講，那是雙方共用的詞。組別由資料自己宣告
+   （每一列的 `組`），不要從「狀態」那串字去猜。 */
+const GROUPS = [
+  { k: "done", 標: "已完成" },
+  { k: "open", 標: "待調整（或是有落差）" },
+];
+{
+  const bad = D.訊息.列.filter((r) => !GROUPS.some((g) => g.k === r.組));
+  if (bad.length)
+    throw new Error("這幾列沒有宣告組別（done／open）：" + bad.map((r) => r.n).join("、"));
+}
+let seen = 0;
+const msgs = GROUPS.map((g) => {
+  const rows = D.訊息.列.filter((r) => r.組 === g.k);
+  const cards = rows.map((r) => {
+    const ims = [].concat(r.圖 || []).filter(Boolean);
+    const lazy = seen++ > 3;
+    return `<div class="msg">${
+    ims.length
+      ? `<span class="ims">${ims.map((x, k) => `<img src="t-${esc(x)}.jpg" width="210" height="210" ${
+          lazy ? 'loading="lazy" ' : ""}alt="${esc(r.名)}的模擬圖${ims.length > 1 ? `（${k + 1}）` : ""}">`).join("")}</span>`
+      : `<span class="ph"></span>`
+  }<div class="x">
 <p class="nm">${esc(r.n)}　${esc(r.名)}</p>
 <p class="mt">${esc(r.時機)}／${esc(r.誰送)}送・${esc(r.狀態)}<br>${b(r.註)}</p>
 </div></div>`;
+  }).join("\n");
+  return `<p class="mg">${esc(g.標)}<span class="n">${rows.length} 則</span></p>
+<div class="msgs">
+${cards}
+</div>`;
 }).join("\n");
 
 /* ── ② 09-10 改版 ─────────────────────────────────────────── */
@@ -393,9 +418,7 @@ ${D.現在.map((t) => `<li>${b(t)}</li>`).join("\n")}
 </div>
 
 <h2 class="h2">① 這個帳號會自動送出哪幾則<span class="t">${D.訊息.列.length} 則．圖是那一則自己的規格頁拍的</span></h2>
-<div class="msgs">
 ${msgs}
-</div>
 <p class="note">${b(D.訊息.缺口)}</p>
 
 <h2 class="h2">② 廠商 ${esc(改.日)} 的改版<span class="t">${esc(改._說明)}</span></h2>

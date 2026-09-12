@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 守門：廠商對接那一頁（preview/line-vendor/）
 //
-// 擋十件：
+// 擋十一件：
 //  ① 重跑 build-vendor.mjs、逐位比對（有人手改了頁面，或改了 JSON 卻忘了重跑）
 //  ② ⚠⚠ 頁面上不可以出現「七則訊息的文字」—— 那些字的出處是各自的 Flex JSON 與
 //     auto-reply.txt，抄進來就是第八個真相。這一道從那些檔裡現抽長句去掃。
@@ -19,6 +19,9 @@
 //      客觀的敘述就好」。加回去不會讓任何一道版面守門翻臉，所以要有一道盯著。）
 //     ⚠ 縮圖是 vendor-shots.mjs 從各則規格頁的產出檔縮出來的 —— 那幾頁重跑過
 //       出圖腳本之後，這一支也要重跑，不然這一頁的圖會停在舊版。
+//  ⑪ ① 那一節的十二則要分成「已完成」「待調整（或是有落差）」兩組 —— 每一列都要
+//     自己宣告組別，兩個小標都要在頁上，而且兩組加起來剛好十二則
+//     （2026-09-12 使用者：「12 則照順序看有點混亂　先區分成…」）
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
@@ -187,6 +190,27 @@ for (const d of LOG.綁定.方向)
   for (const k of ["要的", "對方", "現在知道的", "還沒有答案的", "別家"])
     if (!d[k]) bad.push(`⑩ ${d.標 || "?"} 缺「${k}」`);
 if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方向與三種現象欄位齊全");
+
+/* ⑪ 十二則要分成兩組 ------------------------------------------------ */
+/* 組別由資料自己宣告（每一列的 `組`），不是從「狀態」那串字猜的。漏宣告一列
+   的話，產生器會 throw；這一道另外守住「兩個小標真的印在頁上」與「兩組加起來
+   剛好是全部」—— 只驗前者的話，某一列被靜靜地漏掉也不會有人發現。 */
+{
+  const G = [["done", "已完成"], ["open", "待調整（或是有落差）"]];
+  let n = 0;
+  for (const [k, 標] of G) {
+    const rows = LOG.訊息.列.filter((r) => r.組 === k);
+    n += rows.length;
+    if (!html.includes(`<p class="mg">${標}<span class="n">${rows.length} 則</span></p>`))
+      bad.push(`⑪ 頁上找不到「${標}　${rows.length} 則」那個小標`);
+  }
+  const miss = LOG.訊息.列.filter((r) => !G.some(([k]) => k === r.組));
+  if (miss.length) bad.push(`⑪ 這幾列沒有宣告組別：${miss.map((r) => r.n).join("、")}`);
+  if (n !== LOG.訊息.列.length)
+    bad.push(`⑪ 兩組加起來 ${n} 則，全部是 ${LOG.訊息.列.length} 則`);
+  if (!bad.some((x) => x.startsWith("⑪")))
+    ok(`⑪ 十二則分成兩組（已完成 ${LOG.訊息.列.filter((r) => r.組 === "done").length}／待調整 ${LOG.訊息.列.filter((r) => r.組 === "open").length}）`);
+}
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }
 console.log("\n全部通過。");

@@ -23,6 +23,9 @@ h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
   padding:.7em .85em;margin:.9em 0 0}
 
 /* ── 一則一格：左邊是那一則自己的縮圖 ─────────────────────────── */
+.mg{font-size:.93rem;font-weight:600;margin:1.15em 0 .15em}
+.mg:first-of-type{margin-top:.5em}
+.mg .n{font-weight:400;font-size:.79rem;color:var(--soft);margin-left:.5em}
 .msgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));
   gap:9px;margin:.2em 0 0}
 .msg{display:flex;gap:10px;background:var(--card);border-radius:10px;padding:9px 10px}
@@ -111,6 +114,7 @@ code{font-size:.92em}
 </div>
 
 <h2 class="h2">① 這個帳號會自動送出哪幾則<span class="t">12 則．圖是那一則自己的規格頁拍的</span></h2>
+<p class="mg">已完成<span class="n">6 則</span></p>
 <div class="msgs">
 <div class="msg"><span class="ims"><img src="t-welcome.jpg" width="210" height="210" alt="招呼圖卡的模擬圖"></span><div class="x">
 <p class="nm">①　招呼圖卡</p>
@@ -120,11 +124,30 @@ code{font-size:.92em}
 <p class="nm">②　自動回應（一律回應）</p>
 <p class="mt">病人打任何字／診所後台送・已完成<br>純文字。選它的理由是字留在診所自己手上</p>
 </div></div>
+<div class="msg"><span class="ims"><img src="t-cancel.jpg" width="210" height="210" alt="取消確認 → 取消成功的模擬圖"></span><div class="x">
+<p class="nm">⑨　取消確認 → 取消成功</p>
+<p class="mt">他按預約改期／廠商送・已完成<br>按「否」之後長什麼樣還沒看過</p>
+</div></div>
+<div class="msg"><span class="ims"><img src="t-review.jpg" width="210" height="210" alt="評價邀約的模擬圖"></span><div class="x">
+<p class="nm">⑩　評價邀約</p>
+<p class="mt">看診後／廠商送・已完成<br>兩顆按鈕連到哪裡還沒有答案，在那之前先不送</p>
+</div></div>
+<div class="msg"><span class="ims"><img src="t-typhoon.jpg" width="210" height="210" loading="lazy" alt="颱風／臨時休診的模擬圖"></span><div class="x">
+<p class="nm">⑪　颱風／臨時休診</p>
+<p class="mt">縣府宣布之後／診所後台送・診所自行製作<br>用診所每次自己打的那一份字</p>
+</div></div>
+<div class="msg"><span class="ims"><img src="t-oa.jpg" width="210" height="210" loading="lazy" alt="圖文選單點下去回的三組卡的模擬圖"></span><div class="x">
+<p class="nm">⑫　圖文選單點下去回的三組卡</p>
+<p class="mt">他點選單／廠商送・已完成<br>診所資訊／主題與科別七科／衛教懶人包 12 張</p>
+</div></div>
+</div>
+<p class="mg">待調整（或是有落差）<span class="n">6 則</span></p>
+<div class="msgs">
 <div class="msg"><span class="ph"></span><div class="x">
 <p class="nm">③　「綁定成功」那一句</p>
 <p class="mt">綁定完成那一刻／病人那一側送・現況・公版<br>截圖上它在左邊、帶病人頭像。不必取代它，在它後面再送一則</p>
 </div></div>
-<div class="msg"><span class="ims"><img src="t-binddone.jpg" width="210" height="210" alt="綁定完成卡的模擬圖"></span><div class="x">
+<div class="msg"><span class="ims"><img src="t-binddone.jpg" width="210" height="210" loading="lazy" alt="綁定完成卡的模擬圖"></span><div class="x">
 <p class="nm">④　綁定完成卡</p>
 <p class="mt">③ 之後／廠商送・定稿・等送<br>和 ② 會不會兩則一起送還沒有答案</p>
 </div></div>
@@ -143,22 +166,6 @@ code{font-size:.92em}
 <div class="msg"><span class="ims"><img src="t-remind.jpg" width="210" height="210" loading="lazy" alt="看診前 48 小時提醒的模擬圖"></span><div class="x">
 <p class="nm">⑧　看診前 48 小時提醒</p>
 <p class="mt">看診前 48 小時／廠商送・定稿・圖片待抽換<br><b>圖片要抽換</b>（使用者 09-12：圖片 bug）。是哪一個 bug 還沒寫下來。真截圖那一則是 3 天前送的，固不固定還沒有答案</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-cancel.jpg" width="210" height="210" loading="lazy" alt="取消確認 → 取消成功的模擬圖"></span><div class="x">
-<p class="nm">⑨　取消確認 → 取消成功</p>
-<p class="mt">他按預約改期／廠商送・已完成<br>按「否」之後長什麼樣還沒看過</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-review.jpg" width="210" height="210" loading="lazy" alt="評價邀約的模擬圖"></span><div class="x">
-<p class="nm">⑩　評價邀約</p>
-<p class="mt">看診後／廠商送・已完成<br>兩顆按鈕連到哪裡還沒有答案，在那之前先不送</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-typhoon.jpg" width="210" height="210" loading="lazy" alt="颱風／臨時休診的模擬圖"></span><div class="x">
-<p class="nm">⑪　颱風／臨時休診</p>
-<p class="mt">縣府宣布之後／診所後台送・診所自行製作<br>用診所每次自己打的那一份字</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-oa.jpg" width="210" height="210" loading="lazy" alt="圖文選單點下去回的三組卡的模擬圖"></span><div class="x">
-<p class="nm">⑫　圖文選單點下去回的三組卡</p>
-<p class="mt">他點選單／廠商送・已完成<br>診所資訊／主題與科別七科／衛教懶人包 12 張</p>
 </div></div>
 </div>
 <p class="note">這張表是我們從截圖與往返裡整理出來的。「總共會自動送出哪幾則」的完整清單還沒有拿到，目前有四則（滿意度調查卡、預約成功、約診紀錄查詢、還沒綁定按約診查詢）是從截圖裡發現的 —— 所以那份清單仍是第一順位。</p>
