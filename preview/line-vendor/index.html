@@ -26,7 +26,8 @@ h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
 .msgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));
   gap:9px;margin:.2em 0 0}
 .msg{display:flex;gap:10px;background:var(--card);border-radius:10px;padding:9px 10px}
-.msg img{width:64px;height:64px;flex:0 0 64px;border-radius:6px;object-fit:cover;
+.msg .ims{display:flex;flex-direction:column;gap:4px;flex:0 0 64px}
+.msg img{width:64px;height:64px;border-radius:6px;object-fit:cover;
   background:var(--paper)}
 .msg .ph{width:64px;height:64px;flex:0 0 64px;border-radius:6px;background:var(--paper)}
 .msg .x{min-width:0}
@@ -96,7 +97,7 @@ code{font-size:.92em}
 <div class="wrap">
 
 <h1>LINE 廠商對接　現況與待答</h1>
-<p class="lede">更新於 2026-09-11　這一頁不放任何一則訊息的文字，只放四件事：<br>
+<p class="lede">更新於 2026-09-12　這一頁不放任何一則訊息的文字，只放四件事：<br>
 現在有哪幾則在跑、廠商改了什麼、對方的回覆涵蓋到哪裡、還沒有答案的是什麼。</p>
 
 <div class="now">
@@ -111,53 +112,53 @@ code{font-size:.92em}
 
 <h2 class="h2">① 這個帳號會自動送出哪幾則<span class="t">12 則．圖是那一則自己的規格頁拍的</span></h2>
 <div class="msgs">
-<div class="msg"><img src="t-welcome.jpg" width="210" height="210" alt="招呼圖卡的模擬圖"><div class="x">
+<div class="msg"><span class="ims"><img src="t-welcome.jpg" width="210" height="210" alt="招呼圖卡的模擬圖"></span><div class="x">
 <p class="nm">①　招呼圖卡</p>
-<p class="mt">加好友那一刻／診所後台送・定稿<br>改字診所自己來</p>
+<p class="mt">加好友那一刻／診所後台送・已完成<br>改字診所自己來</p>
 </div></div>
-<div class="msg"><img src="t-auto.jpg" width="210" height="210" alt="自動回應（一律回應）的模擬圖"><div class="x">
+<div class="msg"><span class="ims"><img src="t-auto.jpg" width="210" height="210" alt="自動回應（一律回應）的模擬圖"></span><div class="x">
 <p class="nm">②　自動回應（一律回應）</p>
-<p class="mt">病人打任何字／診所後台送・定稿<br>純文字。選它的理由是字留在診所自己手上</p>
+<p class="mt">病人打任何字／診所後台送・已完成<br>純文字。選它的理由是字留在診所自己手上</p>
 </div></div>
 <div class="msg"><span class="ph"></span><div class="x">
 <p class="nm">③　「綁定成功」那一句</p>
 <p class="mt">綁定完成那一刻／病人那一側送・現況・公版<br>截圖上它在左邊、帶病人頭像。不必取代它，在它後面再送一則</p>
 </div></div>
-<div class="msg"><img src="t-binddone.jpg" width="210" height="210" alt="綁定完成卡的模擬圖"><div class="x">
+<div class="msg"><span class="ims"><img src="t-binddone.jpg" width="210" height="210" alt="綁定完成卡的模擬圖"></span><div class="x">
 <p class="nm">④　綁定完成卡</p>
 <p class="mt">③ 之後／廠商送・定稿・等送<br>和 ② 會不會兩則一起送還沒有答案</p>
 </div></div>
-<div class="msg"><span class="ph"></span><div class="x">
+<div class="msg"><span class="ims"><img src="t-bindprompt.jpg" width="210" height="210" loading="lazy" alt="還沒綁定就按約診查詢的模擬圖（1）"><img src="t-bindprompt-old.jpg" width="210" height="210" loading="lazy" alt="還沒綁定就按約診查詢的模擬圖（2）"></span><div class="x">
 <p class="nm">⑤　還沒綁定就按約診查詢</p>
-<p class="mt">他按下去那一刻／廠商送・提案中<br>公版藍色卡，截圖證實已經在跑</p>
+<p class="mt">他按下去那一刻／廠商送・提案中<br>上：我們新做的那一張（30秒快速綁定）。下：現況那張公版藍色卡，截圖證實已經在跑</p>
 </div></div>
-<div class="msg"><img src="t-booked.jpg" width="210" height="210" loading="lazy" alt="預約成功通知的模擬圖"><div class="x">
+<div class="msg"><span class="ims"><img src="t-booked.jpg" width="210" height="210" loading="lazy" alt="預約成功通知的模擬圖"></span><div class="x">
 <p class="nm">⑥　預約成功通知</p>
 <p class="mt">約好當下／廠商送・09-10 改版<br>六件對上、四件還沒對上（見下一節）</p>
 </div></div>
-<div class="msg"><img src="t-query.jpg" width="210" height="210" loading="lazy" alt="約診紀錄查詢的模擬圖"><div class="x">
+<div class="msg"><span class="ims"><img src="t-query.jpg" width="210" height="210" loading="lazy" alt="約診紀錄查詢的模擬圖"></span><div class="x">
 <p class="nm">⑦　約診紀錄查詢</p>
 <p class="mt">他按查詢／廠商送・09-10 改版<br>日期是這個帳號裡最長的一種寫法</p>
 </div></div>
-<div class="msg"><img src="t-remind.jpg" width="210" height="210" loading="lazy" alt="看診前 48 小時提醒的模擬圖"><div class="x">
+<div class="msg"><span class="ims"><img src="t-remind.jpg" width="210" height="210" loading="lazy" alt="看診前 48 小時提醒的模擬圖"></span><div class="x">
 <p class="nm">⑧　看診前 48 小時提醒</p>
-<p class="mt">看診前 48 小時／廠商送・定稿・等送<br>真截圖那一則是 3 天前送的，固不固定還沒有答案</p>
+<p class="mt">看診前 48 小時／廠商送・定稿・圖片待抽換<br><b>圖片要抽換</b>（使用者 09-12：圖片 bug）。是哪一個 bug 還沒寫下來。真截圖那一則是 3 天前送的，固不固定還沒有答案</p>
 </div></div>
-<div class="msg"><img src="t-cancel.jpg" width="210" height="210" loading="lazy" alt="取消確認 → 取消成功的模擬圖"><div class="x">
+<div class="msg"><span class="ims"><img src="t-cancel.jpg" width="210" height="210" loading="lazy" alt="取消確認 → 取消成功的模擬圖"></span><div class="x">
 <p class="nm">⑨　取消確認 → 取消成功</p>
-<p class="mt">他按預約改期／廠商送・定稿・等送<br>按「否」之後長什麼樣還沒看過</p>
+<p class="mt">他按預約改期／廠商送・已完成<br>按「否」之後長什麼樣還沒看過</p>
 </div></div>
-<div class="msg"><img src="t-review.jpg" width="210" height="210" loading="lazy" alt="評價邀約的模擬圖"><div class="x">
+<div class="msg"><span class="ims"><img src="t-review.jpg" width="210" height="210" loading="lazy" alt="評價邀約的模擬圖"></span><div class="x">
 <p class="nm">⑩　評價邀約</p>
-<p class="mt">看診後／廠商送・定稿・先不送<br>兩顆按鈕連到哪裡還沒有答案</p>
+<p class="mt">看診後／廠商送・已完成<br>兩顆按鈕連到哪裡還沒有答案，在那之前先不送</p>
 </div></div>
-<div class="msg"><img src="t-typhoon.jpg" width="210" height="210" loading="lazy" alt="颱風／臨時休診的模擬圖"><div class="x">
+<div class="msg"><span class="ims"><img src="t-typhoon.jpg" width="210" height="210" loading="lazy" alt="颱風／臨時休診的模擬圖"></span><div class="x">
 <p class="nm">⑪　颱風／臨時休診</p>
-<p class="mt">縣府宣布之後／診所人工送・定稿<br>用診所每次自己打的那一份字</p>
+<p class="mt">縣府宣布之後／診所後台送・診所自行製作<br>用診所每次自己打的那一份字</p>
 </div></div>
-<div class="msg"><img src="t-oa.jpg" width="210" height="210" loading="lazy" alt="圖文選單點下去回的三組卡的模擬圖"><div class="x">
+<div class="msg"><span class="ims"><img src="t-oa.jpg" width="210" height="210" loading="lazy" alt="圖文選單點下去回的三組卡的模擬圖"></span><div class="x">
 <p class="nm">⑫　圖文選單點下去回的三組卡</p>
-<p class="mt">他點選單／廠商送・圖與 JSON 都好了<br>診所資訊／主題與科別七科／衛教懶人包 12 張</p>
+<p class="mt">他點選單／廠商送・已完成<br>診所資訊／主題與科別七科／衛教懶人包 12 張</p>
 </div></div>
 </div>
 <p class="note">這張表是我們從截圖與往返裡整理出來的。「總共會自動送出哪幾則」的完整清單還沒有拿到，目前有四則（滿意度調查卡、預約成功、約診紀錄查詢、還沒綁定按約診查詢）是從截圖裡發現的 —— 所以那份清單仍是第一順位。</p>

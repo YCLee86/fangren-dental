@@ -110,7 +110,8 @@ h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
 .msgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));
   gap:9px;margin:.2em 0 0}
 .msg{display:flex;gap:10px;background:var(--card);border-radius:10px;padding:9px 10px}
-.msg img{width:64px;height:64px;flex:0 0 64px;border-radius:6px;object-fit:cover;
+.msg .ims{display:flex;flex-direction:column;gap:4px;flex:0 0 64px}
+.msg img{width:64px;height:64px;border-radius:6px;object-fit:cover;
   background:var(--paper)}
 .msg .ph{width:64px;height:64px;flex:0 0 64px;border-radius:6px;background:var(--paper)}
 .msg .x{min-width:0}
@@ -177,14 +178,21 @@ code{font-size:.92em}
 `.trim();
 
 /* ── ① 現在會自動送出哪幾則 ────────────────────────────────── */
-const msgs = D.訊息.列.map((r, i) => `<div class="msg">${
-  r.圖
-    ? `<img src="t-${esc(r.圖)}.jpg" width="210" height="210" ${i > 3 ? 'loading="lazy" ' : ""}alt="${esc(r.名)}的模擬圖">`
+/* ⚠ `圖` 可以是一個字串，也可以是一組（2026-09-12：⑤ 要同時看得到公版藍色卡
+   與我們新做的那一張）。兩張時**直向疊**，不要並排 —— 那一欄只有 64px 寬，
+   並排會把右邊的字擠到剩 80 幾 px（格子最窄只有 232px）。 */
+const msgs = D.訊息.列.map((r, i) => {
+  const ims = [].concat(r.圖 || []).filter(Boolean);
+  return `<div class="msg">${
+  ims.length
+    ? `<span class="ims">${ims.map((g, k) => `<img src="t-${esc(g)}.jpg" width="210" height="210" ${
+        i > 3 ? 'loading="lazy" ' : ""}alt="${esc(r.名)}的模擬圖${ims.length > 1 ? `（${k + 1}）` : ""}">`).join("")}</span>`
     : `<span class="ph"></span>`
 }<div class="x">
 <p class="nm">${esc(r.n)}　${esc(r.名)}</p>
 <p class="mt">${esc(r.時機)}／${esc(r.誰送)}送・${esc(r.狀態)}<br>${b(r.註)}</p>
-</div></div>`).join("\n");
+</div></div>`;
+}).join("\n");
 
 /* ── ② 09-10 改版 ─────────────────────────────────────────── */
 const 改 = D.改版;

@@ -44,11 +44,16 @@ const DEFAULT = { c: "c", h: "on", t: "off", g: "11" };
       但那是一條 LINE 上做不到的路，等於在假的東西上做決定）。 */
 const GAPS = ["16", "13", "11", "9"];
 
-/* ── ② 這個資料夾裡只能有 index.html ──────────────────────────
- * 引用的圖都在別人的資料夾，複製一份就是多一個會漂掉的真相。 */
+/* ── ② 這個資料夾裡只能有 index.html ＋ 它自己拍的那兩張 ──────────
+ * 引用的圖都在別人的資料夾，複製一份就是多一個會漂掉的真相。
+ * ⚠ 2026-09-12 起多兩個**自己的產出檔**（node drafts/channels/bind-prompt-png.mjs）：
+ *   廠商對接那一頁要看得到這兩張卡。它們是「這一頁畫出來的」不是複製來的，
+ *   所以不違反上面那條 —— 但清單仍然寫死，別的東西照樣擋。 */
+const ALLOW = ["index.html", "shot-bind-prompt-old.png", "shot-bind-prompt.png"];
 const files = fs.readdirSync(DIR).sort();
-ok(files.length === 1 && files[0] === "index.html",
-  `這個資料夾裡多了東西：${files.join("、")} —— 圖一律引用別人那一份，不要複製`);
+ok(files.join("|") === ALLOW.join("|"),
+  `這個資料夾裡的檔案是 ${files.join("、")}，應該是 ${ALLOW.join("、")}`
+  + ` —— 圖一律引用別人那一份，不要複製`);
 
 const html = fs.readFileSync(PAGE, "utf8");
 ok(/name="robots" content="noindex/.test(html), "少了 noindex（第八節：提案頁三道 noindex）");
@@ -361,7 +366,7 @@ if (bad.length) {
 const t390 = seen.find((s) => s.w === 390);
 console.log("✅ " + seen.length + " 組（8 個寬度 × 3 案 × 2 頭圖 × 3 電話）＋ 空格那把尺 " +
   gaps.length + " 組全部通過：\n" +
-  "   資料夾只有 index.html（四個圖都引用別人那一份）、頭圖 1024×512、" +
+  "   資料夾只有 index.html ＋ 它自己拍的那兩張（其餘四個圖都引用別人那一份）、頭圖 1024×512、" +
   "按鈕逐字 ＝ 招呼圖卡那一顆、\n   標題逐字 ＝「" + TITLE + "」（畫成 " +
   t390.titleLines.rows + " 行、最寬 " + t390.titleLines.wide.toFixed(1) +
   "px／可用 240、置中偏 " + t390.titleLines.off.toFixed(1) + "px）、\n" +

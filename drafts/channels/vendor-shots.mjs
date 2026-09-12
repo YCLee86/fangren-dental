@@ -40,6 +40,8 @@ export const SHOTS = [
   { key: "welcome", src: "line-welcome/shot-welcome.png" },
   { key: "auto",    src: "line-auto-reply/shot-auto-reply.png" },
   { key: "binddone",src: "line-bind-done/shot-bind-done.png" },
+  { key: "bindprompt",     src: "line-bind-prompt/shot-bind-prompt.png" },
+  { key: "bindprompt-old", src: "line-bind-prompt/shot-bind-prompt-old.png" },
   { key: "booked",  src: "line-booked/shot-booked.png" },
   { key: "query",   src: "line-booked/shot-query.png" },
   { key: "remind",  src: "line-remind/shot-remind.png" },
