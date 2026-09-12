@@ -75,6 +75,18 @@ const lin = (c) => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .0
 const lum = (rgb) => .2126 * lin(rgb[0]) + .7152 * lin(rgb[1]) + .0722 * lin(rgb[2]);
 const cr = (x, y) => { const a = lum(x), b = lum(y); return (Math.max(a, b) + .05) / (Math.min(a, b) + .05); };
 const ALPHAS = [["08", .08], ["12", .12], ["18", .18]];
+/* ---- 淡墨色那一版（2026-09-12）---------------------------------------
+   使用者：「另外再做一版有藥丸的版本 但 logo 淡墨色 因為藥丸和有顏色的 logo 互相吵架」。
+   ⚠⚠ **顏色沒有新增** —— 用的是站上的柔墨 `--ink-soft #5c5f57`。
+   ⚠⚠⚠ **濃度不可以隨便挑：要落在那九顆的份量裡**。九顆在 12% 疊到卡色之後是
+     L* 89.63~91.75（平均 90.5），而
+       ・柔墨 12% → L* 89.90 ✅ 在帶子裡，而且**alpha 和那九顆一模一樣**
+       ・墨   12% → L* 87.75 ❌ 比九顆每一顆都重
+       ・墨    8% → L* 90.59 ✅ 在帶子裡，但要換一個 alpha
+     取柔墨 12% ＝ **只有顏色變了**，那正好是這一版要比的東西。
+   ⚠ 兩個差 0.7 L*，眼睛分不出來 —— 所以**沒有做成一把尺**
+     （CLAUDE.md：差不出來的尺比沒有尺還糟）。 */
+const SOFT_TAG = "ink12", SOFT_A = .12;
 const BASE = "r1c2";          /* 基準形狀 ＝ 站上頁首那顆 */
 const BASE_W = 150;           /* 它在卡片上的顯示寬度（2026-09-04 那一版） */
 const DPR = 2.8;              /* 出圖倍率（150 × 2.8 = 420，同前一版） */
@@ -225,6 +237,43 @@ for (const name of SHAPES) {
       throw new Error(`${name}-${tag}：墨佔 ${(st.ink * 100).toFixed(1)}%，第一趟量到 ${(cov * 100).toFixed(1)}%`);
     fs.copyFileSync(png, path.join(OUT, `wm-${name}-${tag}.png`));
   }
+  /* 淡墨色那一版：同一顆形狀、同一個寬度、同一個 alpha，只有顏色換成柔墨。 */
+  {
+    const tag = SOFT_TAG, a = SOFT_A, COLOR2 = SOFT;
+    const mixed = hex(CARD).map((c, i) => c * (1 - a) + hex(COLOR2)[i] * a);
+    for (const [nm2, fg] of [["墨", INK], ["柔墨", SOFT]]) {
+      const r2 = cr(hex(fg), mixed);
+      if (r2 < 4.5)
+        throw new Error(`${name}-${tag}（${COLOR2}）：${nm2}壓在最濃處只有 ${r2.toFixed(2)}`);
+    }
+    const svg =
+`<svg xmlns="http://www.w3.org/2000/svg" width="${PW}" height="${PH}" viewBox="${box.x} ${box.y} ${box.w} ${box.h}">
+  <g transform="${gt}"><path fill="${COLOR2}" fill-opacity="${a}" fill-rule="evenodd" d="${d}"/></g>
+</svg>`;
+    const pg = path.join(tmp, `${name}-${tag}.html`), png = path.join(tmp, `${name}-${tag}.png`);
+    fs.writeFileSync(pg, `<!doctype html><meta charset="utf-8"><style>html,body{margin:0}` +
+      `svg{display:block;width:${PW}px;height:${PH}px}</style>${svg}`, "utf8");
+    execFileSync(chrome, ["--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+      "--force-color-profile=srgb", "--default-background-color=00000000",
+      `--screenshot=${png}`, `--window-size=${PW},${PH}`, "file://" + pg], { stdio: "pipe" });
+    const buf = fs.readFileSync(png);
+    if (buf.readUInt32BE(16) !== PW || buf.readUInt32BE(20) !== PH)
+      throw new Error(`${name}-${tag}：出圖尺寸不對`);
+    const st = await page.evaluate(async (src) => {
+      const img = await new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.src = src; });
+      const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height;
+      const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0);
+      const p = cx.getImageData(0, 0, cv.width, cv.height).data;
+      let ink = 0, max = 0;
+      for (let i = 3; i < p.length; i += 4) { if (p[i] > 2) ink++; if (p[i] > max) max = p[i]; }
+      return { ink: ink / (cv.width * cv.height), max };
+    }, "data:image/png;base64," + buf.toString("base64"));
+    const wantA = Math.round(a * 255);
+    if (Math.abs(st.max - wantA) > 3) throw new Error(`${name}-${tag}：最濃 alpha ${st.max}，該是 ${wantA}`);
+    if (Math.abs(st.ink - cov) > .04)
+      throw new Error(`${name}-${tag}：墨佔 ${(st.ink * 100).toFixed(1)}%，第一趟量到 ${(cov * 100).toFixed(1)}%`);
+    fs.copyFileSync(png, path.join(OUT, `wm-${name}-${tag}.png`));
+  }
   rows.push({ name, w: cssW, h: +(cssW / ratio).toFixed(1), ratio: +ratio.toFixed(3),
               cov: +(cov * 100).toFixed(1), png: `${PW}×${PH}` });
 }
@@ -290,4 +339,5 @@ for (const r of rows)
 console.log(`   * ＝ 站上頁首那顆（基準，${BASE_W}px）`);
 console.log(`   墨面積離散度 ${(spread * 100).toFixed(2)}%（按面積正規化過，越小越好）`);
 if (spread > .02) throw new Error(`九顆的墨面積差 ${(spread * 100).toFixed(1)}% —— 正規化沒生效？`);
-console.log(`   共 ${rows.length * ALPHAS.length} 張 ＋ wm-sizes.json`);
+console.log(`   共 ${rows.length * (ALPHAS.length + 1)} 張（含淡墨色那一版 ${rows.length} 張，` +
+            `柔墨 ${SOFT} alpha .${String(SOFT_A).slice(2)}）＋ wm-sizes.json`);

@@ -10,6 +10,7 @@
  *   ③ 顏色（卡 #F4F4F5・墨 #2A2C27・柔墨 #5C5F57，一顆都沒新增）
  *   ④ 浮水印：九顆的寬度與長寬比要**逐筆等於 wm-sizes.json**（唯一出處）
  *   ⑤ 浮水印：九顆 × 三個濃度的 PNG 都在，而且不超過 LINE 的 1024×1024
+ *      ＋ **淡墨色那一版**（`wm-<形狀>-ink12.png`，九張，第 ②之二 節的 Ⓒ 在用）
  *   ⑥ 浮水印的顏色：JSON 的對照表要等於 wm-sizes.json 算出來的那一組
  *   ⑦ 紅線：不可以出現「有問題隨時問」那一類的承諾；emoji 0 個
  *   ⑧ 定案之後規格頁上不可以還有切換條（第十一之五節）
@@ -127,7 +128,7 @@ for (const n of ORDER) {
   ok(t["色"].toLowerCase() === z.color.toLowerCase(),
     `浮水印 ${n} 的顏色 ${t["色"]} 對不上 wm-sizes.json 的 ${z.color}`);
   /* 九顆 × 三個濃度都要在，而且不超過 LINE 的 1024×1024 */
-  for (const k of ["08", "12", "18"]) {
+  for (const k of ["08", "12", "18", "ink12"]) {
     const f = path.join(DIR, `wm-${n}-${k}.png`);
     if (!fs.existsSync(f)) { bad.push(`少了 ${path.basename(f)}（跑 booked-mark.mjs）`); continue; }
     const s = imgSize(f);
@@ -139,6 +140,23 @@ for (const n of ORDER) {
         `${path.basename(f)} 真實長寬比 ${(s.w / s.h).toFixed(3)} 對不上 ${z.ratio}`);
   }
 }
+/* ⚠⚠⚠ 第 ②之二 節的 Ⓒ（藥丸 ＋ 淡墨色的浮水印）是**第三個輪播**，
+   而這一頁的輪播寬度寫在**用 id 列出來**的三條選擇器裡 ——
+   新 slot 沒加進去的話它會退回 `width:100%`、畫成 218.6px，
+   **畫面完全正常**，而在一張 218.6 的卡上判斷「放不放得下」全是假的
+   （2026-09-12 的 pv-slot5/6 已經踩過一次，見 README 第 50-18 節）。 */
+{
+  const html = fs.readFileSync(path.join(DIR, "index.html"), "utf8");
+  for (const sel of [".car{", ".car .row{", ".car .pv-hc{"]) {
+    const line = html.split("\n").find((l) => l.includes("#pv-slot7" + sel));
+    ok(!!line, `樣式表少了 #pv-slot7${sel} —— 那一張輪播會退回 width:100%、畫成 218.6px`);
+  }
+  ok(/wm-'\s*\+\s*sn\s*\+\s*'-'\s*\+\s*\(wmink \?/.test(html),
+    "卡片沒有在吃 wmink —— Ⓒ 會畫成和 Ⓑ 一模一樣的彩色浮水印");
+  ok(/\.pill\{[^}]*line-height:1;[^}]*padding:\.42em \.63em \.38em/.test(html),
+    "藥丸的行高與上下內距被改掉了 —— 塊會離開「約診狀態」那幾個字的字面中線（低 1.40px）");
+}
+
 /* 樣板本身要用變數，不要不小心寫死某一顆 */
 const wmEl = BOOKED.body.contents[1];
 ok(/\{\{watermark\}\}/.test(wmEl.url), "浮水印的網址要用 {{watermark}} 變數（哪一顆由系統算）");
@@ -228,5 +246,5 @@ if (bad.length) {
   bad.forEach((b) => console.error("  ・" + b));
   process.exit(1);
 }
-console.log("✓ 預約成功 ＋ 約診紀錄查詢：JSON ↔ 規格頁 ↔ wm-sizes.json ↔ 27 張 PNG 全部對得上");
+console.log("✓ 預約成功 ＋ 約診紀錄查詢：JSON ↔ 規格頁 ↔ wm-sizes.json ↔ 36 張 PNG 全部對得上");
 console.log("  卡片 268 / 207px　日期 lg 19　姓名 md 16　小字 xs 13　浮水印九顆・濃度 12");

@@ -88,9 +88,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 /* 輪播：真的可以左右滑，而且要看得到下一張露出一角（同截圖）。
    ⚠ 這裡不是用 CSS 假裝 —— 是排真的 N 張卡（同 og-topic-card 那一輪：
      提案頁要擺真的產出檔，不要用 CSS 把成品再做一次）。 */
-#pv-slot.car,#pv-slot2.car,#pv-slot5.car,#pv-slot6.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
-#pv-slot.car .row,#pv-slot2.car .row,#pv-slot5.car .row,#pv-slot6.car .row{display:flex;gap:8.7px;padding-bottom:6px}
-#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc,#pv-slot5.car .pv-hc,#pv-slot6.car .pv-hc{flex:none;width:207px}
+#pv-slot.car,#pv-slot2.car,#pv-slot5.car,#pv-slot6.car,#pv-slot7.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
+#pv-slot.car .row,#pv-slot2.car .row,#pv-slot5.car .row,#pv-slot6.car .row,#pv-slot7.car .row{display:flex;gap:8.7px;padding-bottom:6px}
+#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc,#pv-slot5.car .pv-hc,#pv-slot6.car .pv-hc,#pv-slot7.car .pv-hc{flex:none;width:207px}
 
 /* ---- 卡片外殼（兩案共用）------------------------------------------- */
 .pv-hc{width:100%;border-radius:14px;overflow:hidden;
@@ -197,12 +197,28 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-nw .who.bot{margin-top:8px}
 /* 約診狀態那一列（只有「廠商移不掉那個欄位」時才會出現，見第 ②之二 節）。
    ⚠ 標籤維持柔墨、不加粗 —— 那一列的主從是「值」不是「欄位名」。
-   ⚠ 藥丸的圓角吃站上那一族的 8.5px，內距寫 em 不寫 px（字級一改它要跟著收）。 */
+   ⚠ 藥丸的圓角吃站上那一族的 8.5px，內距寫 em 不寫 px（字級一改它要跟著收）。
+   ⚠⚠⚠ **藥丸的塊要包住「字面框」不是「行框」**（2026-09-12，使用者：「藥丸要與
+     約診狀態垂直置中」）—— 這正是站上 `/history/spec-tag-fit.html` 那一輪的同一件事：
+     行框對的是字型的 ascent／descent，而**中文方塊字用不到那麼多、上下還不一樣多**，
+     所以填滿的塊會**低於旁邊那幾個字的字面中線**。逐像素量到 **低 1.40px**。
+     做法照那一輪：**`line-height: 1`，塊高改由上下兩個內距各自負責**，
+     上 .42 下 .38em（**上多一點**，把塊裡的字往下挪回字面中線上）。
+     ⚠ 那 .04em 的不對稱是量出來的不是挑的：四個寬度 × 四個值實測
+       上下都 .40em 時還差 +0.32px，.42／.38 收到 **+0.08px**、而且列高不會被撐開。
+     ⚠⚠ 塊高 24.05 → 23.39px（矮 0.66），基線對齊沒有動。
+     ⚠⚠⚠ **Flex 那一側複製不了這一招**：`text` 沒有行高可以設，
+       box 裡那個字怎麼坐是 LINE 決定的 —— 我們寫得出 paddingTop／paddingBottom，
+       但**對不對得上要一支測試訊息**（見這一頁最後那一節）。 */
 .pv-nw .st{display:flex;align-items:baseline;gap:8px;margin-top:9px;
   font-size:13px;line-height:1.6}
 .pv-nw .st .lb{color:var(--ink-soft);flex:none}
 .pv-nw .st .v{font-weight:700}
-.pv-nw .st .pill{border-radius:8.5px;padding:.125em .63em;color:#fff;font-weight:700}
+.pv-nw .st .pill{border-radius:8.5px;line-height:1;padding:.42em .63em .38em;
+  color:#fff;font-weight:700}
+/* 零寬探針：量那一行真正的基線在哪（同站上 `--lamp-pad` 與 spec-tag-fit 那一輪）。
+   ⚠ 一定要插在標籤**後面** —— 插前面的話標籤被擠到下一行時探針會留在上一行。 */
+.pv-nw .st .bp{display:inline-block;width:0;height:0;vertical-align:baseline}
 .pv-nw .ix{font-size:13px;line-height:1.6;color:var(--ink-soft);letter-spacing:.02em}
 .pv-nw .cal{display:flex;align-items:baseline;gap:9px;margin-top:6px}
 .pv-nw .cal .mo{font-size:14px;color:var(--ink-soft);line-height:1}
@@ -319,7 +335,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     欄位名與四個值是定案的：<b>約診狀態</b>／已排定・已確認・未回覆・已取消。
     顏色是挑定的那一組（齒顎矯正・一般牙科・兒童牙科・顯微根管的套色），
     <b>從 <code>wm-sizes.json</code> 按科讀回來</b>，不在這一頁再寫一份。<br>
-    四張卡各掛一個值 —— 一張卡看不出四種擺在一起的相對份量。
+    四張卡各掛一個值 —— 一張卡看不出四種擺在一起的相對份量。<br>
+    ⚠⚠ <b>Ⓒ 是 Ⓑ 換掉浮水印的顏色</b>（2026-09-12，使用者：「藥丸和有顏色的 logo
+    互相吵架」）—— 藥丸一填滿，那張卡上就有<b>兩塊彩色</b>在搶同一個位置，
+    而浮水印本來就不是要被看到的東西。形狀、寬度、濃度<b>一個數字都沒有動</b>，
+    換掉的只有顏色（柔墨 <code>#5c5f57</code>，站上既有的一支，<b>沒有新增顏色</b>）。<br>
+    ⚠ <b>濃度是算出來的不是挑的</b>：那九顆在 12% 疊到卡片色之後是 L* 89.6~91.8，
+    柔墨 12% 落在 <b>L* 89.9</b>（墨 12% 是 87.8，比九顆每一顆都重）——
+    所以 Ⓑ 與 Ⓒ 之間<b>只有顏色變了</b>，份量沒有跟著變。
   </p>
 
   <h3 class="pv-h3">Ⓐ 字套色</h3>
@@ -335,6 +358,14 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     <div class="pv-chat" id="pv-chat6"></div>
   </div>
   <div class="pv-panel" id="pv-panel6"></div>
+
+  <h3 class="pv-h3">Ⓒ 藥丸 ＋ 淡墨色的浮水印</h3>
+  <div class="pv-phone" id="pv-ph7">
+    <div class="pv-head"><img src="../../assets/icon-192.png" alt=""><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
+    <div class="pv-chat" id="pv-chat7"></div>
+  </div>
+  <p class="pv-cap">↑ 和 Ⓑ 逐項相同，<b>只有浮水印換成柔墨</b>（<code>wm-&lt;形狀&gt;-ink12.png</code>）。</p>
+  <div class="pv-panel" id="pv-panel7"></div>
   <div id="pv-stwrap"></div>
 
   <h2 class="pv-h2">③ 浮水印：九顆形狀與顏色</h2>
@@ -611,6 +642,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   /* 浮水印和其他三格**可以併用**（例如大日子 ＋ 浮水印）——
      切換條一次只放得下四列（24.7%），所以這一項走網址參數 `?wm=1`。 */
   var wmOn = false;
+  /* 淡墨色那一版的浮水印（2026-09-12，只有第 ②之二 節的 Ⓒ 會打開）——
+     ⚠ 形狀、寬度、alpha 全部沒有動，**換掉的只有顏色**（柔墨 #5c5f57）。 */
+  var wmink = false;
   var five = false;   /* ?n=5 ＝ 只用兩兩分得出來的那五顆（見上面的代價） */
 
   /* ---- 地址電話 -------------------------------------------------------
@@ -707,7 +741,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       var sn = (isQuery && look === "wm1") ? "r1c2" : shapeFor(a);
       var sz = (SIZES && SIZES[sn]) || { w: 150, ratio: 2.029 };
       /* ⚠ 寬度是那一顆自己的（墨面積正規化過的），高度由長寬比算 —— 不要寫死。 */
-      h += '<img class="wm" src="wm-' + sn + '-' + wmk + '.png" alt=""'
+      h += '<img class="wm" src="wm-' + sn + '-' + (wmink ? "ink12" : wmk) + '.png" alt=""'
         +  ' style="width:' + sz.w + 'px"'
         +  ' width="' + sz.w + '" height="' + (sz.w / sz.ratio).toFixed(1) + '"'
         +  ' data-shape="' + sn + '">';
@@ -742,7 +776,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     /* 約診狀態：日期底下、地址那一塊之前。⚠ 只有第 ②之二 節會把 stat 打開。 */
     if (isQuery && stat && STV && STV[i % STV.length]) {
       var sv = STV[i % STV.length];
-      h += '<p class="st"><span class="lb">約診狀態</span>'
+      h += '<p class="st"><span class="lb">約診狀態<span class="bp"></span></span>'
         +  (stat === "pill"
              ? '<span class="pill" style="background:' + sv.c + '">' + sv.n + '</span>'
              : '<span class="v" style="color:' + sv.c + '">' + sv.n + '</span>')
@@ -788,6 +822,60 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + '</div></div></div>';
   }
 
+  /* 藥丸有沒有和「約診狀態」那幾個字垂直對齊 —— 面板每次開頁量一次。
+     ⚠⚠⚠ **不可以拿「字面中線 ＝ 基線上方 0.345em」當現算的判準**：那個常數是
+       站上量 Noto Sans TC 得到的，而**這裡的容器不一定拿得到同一支字型**，
+       回退字型的字面位置差到 0.65px —— 拿它算會報出一個「偏低 0.73px」的假警報
+       （CLAUDE.md：面板要標對級別，不然就從量尺變成一直在勸）。
+     ⚠ 所以現算的是**幾何**（行高、上下內距、基線離塊上下緣多遠），
+       「差多少」那一格是**逐像素量出來的**（四個寬度 × 四個值，下面寫著方法）。
+     ⚠ 零寬探針的上緣 ＝ 那一行真正的基線（同站上 `--lamp-pad` 那個做法）。 */
+  function fitNote() {
+    var row = document.querySelector("#pv-slot6 .st");
+    if (!row) return "";
+    var pill = row.querySelector(".pill"), bp = row.querySelector(".bp");
+    if (!pill || !bp) return "";
+    var cs = getComputedStyle(pill), fs = parseFloat(getComputedStyle(row).fontSize);
+    var lh = cs.lineHeight === "normal" ? null : parseFloat(cs.lineHeight) / fs;
+    var pt = parseFloat(cs.paddingTop), pb = parseFloat(cs.paddingBottom);
+    var P = pill.getBoundingClientRect(), base = bp.getBoundingClientRect().top;
+    var ok = lh !== null && Math.abs(lh - 1) < .01 && Math.abs((pt - pb) / fs - .04) < .005;
+    return "<b>藥丸的垂直位置</b>：行高 " + (lh === null ? "normal" : lh.toFixed(2))
+      + "、上內距 " + pt.toFixed(2) + "px、下內距 " + pb.toFixed(2)
+      + "px、塊高 " + P.height.toFixed(2) + "px"
+      + "（基線離塊上緣 " + (base - P.top).toFixed(2)
+      + "、離塊下緣 " + (P.bottom - base).toFixed(2) + "）"
+      + (ok ? " <span class='ok'>＝ 定案那一組（行高 1 ＋ 上 .42 下 .38em）</span>"
+            : " <span class='no'>不是定案那一組 —— 塊會離開字面中線</span>")
+      + "<br>　<span>逐像素量過（四個寬度 × 四個值，量的是標籤那幾個字的墨的重心對上塊心）："
+      + "這一組 <b>低 0.03~0.09px</b>；改回「行高 1.6 ＋ 上下都 .125em」是 <b>低 1.40px</b>，"
+      + "那正是使用者看出來的那一下。</span>";
+  }
+  /* Ⓒ 那一版的浮水印：份量有沒有留在那九顆的帶子裡 —— 算出來給你看，不要用講的。 */
+  function inkNote() {
+    var SOFT = "#5c5f57", A = .12;
+    function lstar(hexc, a) {
+      var p = [1, 3, 5].map(function (i) { return parseInt(hexc.slice(i, i + 2), 16); });
+      var card = [0xf4, 0xf4, 0xf5];
+      var m = card.map(function (c, i) { return c * (1 - a) + p[i] * a; });
+      var Y = .2126 * _lin(m[0]) + .7152 * _lin(m[1]) + .0722 * _lin(m[2]);
+      var f = Y > 216 / 24389 ? Math.pow(Y, 1 / 3) : (24389 / 27 * Y + 16) / 116;
+      return 116 * f - 16;
+    }
+    if (!SIZES) return "";
+    var cols = Object.keys(SIZES).map(function (k) { return SIZES[k].color; });
+    var ls = cols.map(function (c) { return lstar(c, A); });
+    var mine = lstar(SOFT, A);
+    var lo = Math.min.apply(null, ls), hi = Math.max.apply(null, ls);
+    return "<b>Ⓒ 的浮水印</b>：柔墨 <code>" + SOFT + "</code> alpha ." + String(A).slice(2)
+      + " 疊到卡片色是 <b>L* " + mine.toFixed(1) + "</b>，那九顆是 L* "
+      + lo.toFixed(1) + "~" + hi.toFixed(1)
+      + (mine >= lo - .5 && mine <= hi + .5
+          ? " <span class='ok'>在同一個份量裡 —— 只有顏色變了</span>"
+          : " <span class='no'>掉出那九顆的份量，換的不只是顏色</span>")
+      + "　<span>（墨 12% 是 L* " + lstar("#2a2c27", A).toFixed(1) + "，比九顆每一顆都重）</span>";
+  }
+
   function render() {
     /* ① 新版・預約成功 */
     msg = "booked"; v = "nw"; dt = "cn";
@@ -815,6 +903,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       stat = "pill";
       document.getElementById("pv-chat6").innerHTML = queryChat("pv-slot6");
       measure("pv-slot6", "pv-panel6");
+      /* Ⓒ ＝ Ⓑ 換掉浮水印的顏色，其餘一個字都沒有動。 */
+      wmink = true;
+      document.getElementById("pv-chat7").innerHTML = queryChat("pv-slot7");
+      measure("pv-slot7", "pv-panel7");
+      wmink = false;
       stat = "";
       /* ⚠ 這一節自己的數字：對比現算，寬度現量。
          ⚠⚠ .st 是 flex nowrap，**永遠不會折行** —— 要量的是「放不放得下」。 */
@@ -840,7 +933,8 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + "就是這個填色配白字，2026-08-08 看過真實版面才定的取捨。<br>"
         + "⚠ 字套色那一版的四個數字（壓在卡片色上）是 "
         + STV.map(function (x) { return _cr(x.c, "#F4F4F5").toFixed(2); }).join("／") + " —— "
-        + "<b>藍與橘過不了 4.5</b>，那正是「套色拿來當字是用錯階」。</p>";
+        + "<b>藍與橘過不了 4.5</b>，那正是「套色拿來當字是用錯階」。<br>"
+        + fitNote() + "<br>" + inkNote() + "</p>";
     }
 
     /* ③ 現況・預約成功。
