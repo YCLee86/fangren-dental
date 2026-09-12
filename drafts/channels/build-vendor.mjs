@@ -138,6 +138,14 @@ ul.tick li::before{content:"・";position:absolute;left:0;color:var(--soft)}
 .row .v{font-size:.9rem;margin-top:.25em}
 .row .v i{font-style:normal;color:var(--soft);margin-right:.35em}
 
+/* ── 廠商送來的畫面 ────────────────────────────────────────── */
+.vs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:14px 12px;margin:.5em 0 0}
+.vs figure{margin:0}
+.vs img{display:block;width:100%;height:auto;border-radius:8px;background:var(--card)}
+.vs .t{font-size:.88rem;font-weight:600;margin:.45em 0 0}
+.vs figcaption{font-size:.8rem;color:var(--soft);line-height:1.65;margin-top:.15em}
+
 /* ── 九宮格 ────────────────────────────────────────────────── */
 .nine{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px;
   margin:.9em 0 0;background:var(--card);border-radius:11px;padding:15px 14px}
@@ -234,6 +242,17 @@ const revised = `
 </div>
 </div>
 
+<p style="font-size:.93rem;margin:1.4em 0 0"><b>廠商送來的畫面</b></p>
+<p style="font-size:.88rem;color:var(--soft);margin:.25em 0 0">${b(改.圖說)}</p>
+<div class="vs">
+${改.圖.map((g) => `<figure>
+<a href="${esc(g.檔)}"><img src="${esc(g.檔)}" width="${g.w}" height="${g.h}" loading="lazy"
+  alt="${esc(g.標)}"></a>
+<p class="t">${esc(g.標)}</p>
+<figcaption>${b(g.說)}</figcaption>
+</figure>`).join("\n")}
+</div>
+
 <div class="rows" style="margin-top:1.4em">
 <p style="font-size:.93rem;margin:0 0 .2em"><b>還沒對上的四件</b></p>
 ${改.未對上.map((x) => `<div class="row"><p class="k">${b(x.事)}</p><p class="v">${b(x.說明)}</p></div>`).join("\n")}
@@ -243,7 +262,7 @@ ${改.未對上.map((x) => `<div class="row"><p class="k">${b(x.事)}</p><p clas
 <div class="scroll"><img src="../line-booked/shot-query.png" width="2565" height="366"
   style="width:855px" loading="lazy" alt="我們送過去的約診紀錄查詢規格圖（輪播）"></div>
 <figcaption>我們送過去的規格圖（約診紀錄查詢，輪播．這一條可以左右滑）。日期會被截斷的是這一種
-micro 卡，不是單張的 mega 卡 —— 所以要一張輪播的截圖才看得出 maxLines 改了沒。</figcaption>
+micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>`.trim();
 
 /* ── ③ 浮水印九顆 ─────────────────────────────────────────── */

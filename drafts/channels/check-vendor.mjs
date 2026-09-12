@@ -160,9 +160,10 @@ for (const m of html.matchAll(/<img\s[^>]*>/g)) {
     bad.push(`⑧ ${src} 宣告 ${w}×${h}，實檔是 ${s2.w}×${s2.h}`);
   imgs++;
 }
-/* 孤兒縮圖：改過 vendor-log.json 之後留在資料夾裡沒人引用的那幾張 */
+/* 孤兒圖：改過 vendor-log.json 之後留在資料夾裡沒人引用的那幾張。
+   縮圖與附圖一起掃 —— 這一頁的 .jpg 每一張都該有人引用 */
 for (const f of fs.readdirSync(DIR))
-  if (/^t-.*\.jpg$/.test(f) && !used.has(f)) bad.push(`⑧ 沒有人引用的縮圖：${f}`);
+  if (/\.jpe?g$/i.test(f) && !used.has(f)) bad.push(`⑧ 沒有人引用的圖：${f}`);
 /* 縮圖本身要和來源對得上（尺寸；來源換圖了就重跑 vendor-shots.mjs） */
 try {
   execFileSync("node", [path.join(HERE, "vendor-shots.mjs"), "--check"], { stdio: "pipe" });
