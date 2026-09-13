@@ -15,6 +15,17 @@
 //       不抄第二份；內嵌所以不必多幾個圖檔，也不會有 JS）
 //    ③ 「真／假」那一組判語整組拿掉，改成「這句話說明的是什麼／還沒回答的是什麼」
 //
+// ⚠⚠⚠ 2026-09-13 使用者：「現在頁面有太多說明　與內部說明的敘述　要整理成給廠商
+//    看的頁面　我們已經定案　了解的文字說明都不需要」。所以這一頁的讀者從「我們
+//    自己」換成「廠商」，六節：① 在跑的十二則 ② 09-10 的改版 ③ 浮水印 ④ 約診狀態
+//    的定案 ⑤ 綁定完成的兩個方向 ⑥ 要請對方回答的題目。
+//    ⚠⚠ 拿掉的是「怎麼推出來的」與「我們自己要做的」，**不是把資料刪掉** ——
+//    往返、回覆逐句、別家帳號、綁定.現象、狀態色走到這裡的過程、待答的後台／診所／
+//    素材三組**都還在 vendor-log.json 裡**，只是不再印出來（這條線一貫的做法：
+//    落選理由與推導不要跟著畫面一起消失）。要印回來就把那幾段排版接回去。
+//    ⚠ 節號改成 1~6 的半形數字 —— 圈號 ①~⑫ 留給那十二則訊息，那組編號是雙方
+//      共用的詞（廠商兩封回信都照它在講），一個都不換。
+//
 // 跑完驗：node drafts/channels/check-vendor.mjs
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -351,28 +362,7 @@ const compare = cmp.組.map((row) => `<div class="cmpwrap">
    2026-09-12 使用者：現況那張卡上表示會到的那個值本來就是綠字，所以新版那四個
    值也要套色、加粗，並且用兩套色票各做一次給他看。
    對比度**在這裡現算**，不寫進資料 —— 寫死的話哪天換一顆顏色，數字不會跟著動。 */
-const _lin = (c) => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
-const _lum = (h) => { const n = parseInt(h.slice(1), 16);
-  return .2126 * _lin(n >> 16 & 255) + .7152 * _lin(n >> 8 & 255) + .0722 * _lin(n & 255); };
-const _cr = (a, z) => { const x = _lum(a), y = _lum(z);
-  return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
-/* 對比度無條件捨去到小數第二位 —— 四捨五入會把 4.4995 印成
-   「4.50（低於 4.5）」，那一行讀起來自相矛盾。捨去只會低報一點點，
-   不會在門檻那一格印出一個不成立的數字。 */
 const SC = D.狀態色;
-const pals = SC.組.map((g) => `<div>
-<p class="h">${esc(g.標)}${g.挑定 ? `<span class="pick">挑定</span>` : ""}</p>
-<p class="src">${b(g.源)}<br>${b(g.註)}</p>
-<div class="stcard" style="max-width:${SC.卡.w}px">
-${g.值.map((v) => `<p class="r"><span class="lb">約診狀態</span><span class="vv" style="color:${v.色}">${esc(v.名)}</span></p>`).join("\n")}
-</div>
-<ul class="stlist">
-${g.值.map((v) => { const n = Math.floor(_cr(v.色, "#f4f4f5") * 100) / 100;
-  return `<li><b>${esc(v.名)}</b>　${esc(v.科)}　${v.色.toUpperCase()}　對比 ${n.toFixed(2)}${
-    n < 4.5 ? "（低於 4.5）" : ""}</li>`; }).join("\n")}
-</ul>
-</div>`).join("\n");
-
 /* ── ④之〇 定案（2026-09-12 一格一格挑完的）────────────────────
    放在整節最前面：底下那幾格是走到這裡的過程，這一段才是要拿給廠商的那一份。
    ⚠ 這個註解在樣板字串外面 —— 寫在裡面會被原字印進 HTML（第 ⑨ 道守門擋得到）。 */
@@ -387,37 +377,12 @@ ${SET.條.map(([k, t]) => `<div class="row"><p class="k">${esc(k)}</p><p class="
 <div class="row"><p class="k">還要一支測試訊息</p><p class="v">${b(SET.要一支測試訊息)}</p></div>
 </div>`;
 
-/* ── ④之二 做成藥丸（底套色、白字）─────────────────────────────
-   使用者問的那一題。⚠ 對比度一樣現算，只是這一次量的是「白字壓在填色上」。 */
-const PILL = SC.藥丸;
-const pill = `<div class="stcard" style="max-width:${SC.卡.w}px">
-${PILL.值.map((v) => `<p class="r"><span class="lb">約診狀態</span><span class="pill"
-  style="background:${v.色}">${esc(v.名)}</span></p>`).join("\n")}
-</div>
-<ul class="stlist">
-${PILL.值.map((v) => { const n = Math.floor(_cr("#ffffff", v.色) * 100) / 100;
-  return `<li><b>${esc(v.名)}</b>　${esc(v.科)}　${v.色.toUpperCase()}　白字 ${n.toFixed(2)}${
-    n < 4.5 ? "（低於 4.5）" : ""}</li>`; }).join("\n")}
-</ul>`;
-
-/* ── ⑤ 往返 ───────────────────────────────────────────────── */
-const rounds = D.往返.map((r) => `<div class="row">
-<p class="k">${esc(r.日)}　${esc(r.誰)}</p>
-<p class="v"><i>他說</i>${b(r.他說)}</p>
-<p class="v"><i>我們</i>${b(r.我們)}</p>
-${r.註 ? `<p class="v">${b(r.註)}</p>` : ""}
-</div>`).join("\n");
-
-/* ── ⑥ 回覆涵蓋到哪裡 ─────────────────────────────────────── */
-const replies = D.回覆.列.map((r) => `<div class="row">
-<p class="k">${esc(r.句)}</p>
-<p class="v"><i>說明的是</i>${b(r.成立)}</p>
-<p class="v"><i>還沒回答</i>${b(r.未答)}</p>
-</div>`).join("\n");
-
-/* ── ⑥ 綁定完成的兩個方向 ─────────────────────────────────────
+/* ── 5 綁定完成的兩個方向 ─────────────────────────────────────
    使用者 2026-09-11 指定整理的一節。圖是廠商自己的回覆（他指定要附），
-   ⚠ 別家診所的畫面仍然不進 repo、不上頁面 —— 那是另一件事。 */
+   ⚠ 別家診所的畫面仍然不進 repo、不上頁面 —— 那是另一件事。
+   ⚠⚠ 2026-09-13：這一節只留「現在長什麼樣 ＋ 兩個方向 ＋ 一起解」。
+      我們自己怎麼讀那張畫面（說明的是／還沒說明的／順帶）與別家帳號那三種現象
+      都留在 vendor-log.json 裡、不再印出來。 */
 const bind = (() => {
   const B = D.綁定;
   const dir = (x) => `<div class="dir">
@@ -439,9 +404,6 @@ const bind = (() => {
 <div class="dir">
 <p class="t">${esc(B.現況.標)}</p>
 <p><i>看到</i>${b(B.現況.看到)}</p>
-<p><i>說明的是</i>${b(B.現況.說明的是)}</p>
-<p><i>還沒說明的</i>${b(B.現況.還沒說明的)}</p>
-<p><i>順帶</i>${b(B.現況.順帶)}</p>
 </div>
 </div>
 
@@ -457,33 +419,13 @@ ${B.方向.map(dir).join("\n")}
 </div>
 </div>
 
-<h3 style="font-size:.95rem;margin:1.8em 0 .2em">別家帳號的三種現象</h3>
-<p style="font-size:.88rem;color:var(--soft);margin:0">${esc(B.現象._說明)}</p>
-<div class="rows">
-${B.現象.列.map((r) => `<div class="row">
-<p class="k">${esc(r.型)}<span style="font-weight:400;color:var(--soft);font-size:.82rem">　${esc(r.家)}</span></p>
-<p class="v"><i>看到</i>${b(r.看到)}</p>
-<p class="v"><i>說明的是</i>${b(r.說明的是)}</p>
-<p class="v"><i>還沒說明的</i>${b(r.還沒說明的)}</p>
-</div>`).join("\n")}
-</div>
 <p class="note">${b(B.一起解)}</p>`;
 })();
 
-/* ── ⑦ 別家帳號 ───────────────────────────────────────────────
-   兩張最用得上的寫完整，其餘五張各收成一行 —— 附給廠商時本來就是一次只附
-   對應那一句的那一張，五張攤開等於在頁面上重複一件不會一起送出去的事。 */
-const refs = D.參考.主.map((r) => `<div class="row">
-<p class="k">${esc(r.家)}<span style="font-weight:400;color:var(--soft);font-size:.82rem">　${esc(r.用)}</span></p>
-<p class="v"><i>看到</i>${b(r.看到)}</p>
-<p class="v"><i>說明的是</i>${b(r.說)}</p>
-</div>`).join("\n") + `
-<div class="row"><p class="k">另外五個帳號</p>
-<ul class="tick">${D.參考.背景.map((r) => `<li><b>${esc(r.家)}</b>　${b(r.說)}</li>`).join("")}</ul>
-</div>`;
-
 /* ── ⑧ 待答 ───────────────────────────────────────────────── */
-const groupKeys = ["廠商", "後台", "診所", "素材"];
+/* ⚠⚠ 2026-09-13 起只印「只有廠商能答」那一組 —— 後台／診所／素材那三組是
+   我們自己要去做的事，資料留在 vendor-log.json 裡。 */
+const groupKeys = ["廠商"];
 const item = (x) => `<li><span class="s">${x.急 ? "★" : "・"}</span>${b(x.問)}${
   x.為 ? `<span class="y">${b(x.為)}</span>` : ""}</li>`;
 /* ★ 的永遠攤開，其餘收進 <details> —— 整頁一眼看得完，清單一項都沒有少。
@@ -512,7 +454,7 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>芳仁牙醫診所　LINE 廠商對接　現況與待答</title>
+<title>芳仁牙醫診所　LINE 訊息　現況與請求</title>
 <style>
 ${CSS}
 </style>
@@ -520,25 +462,26 @@ ${CSS}
 <body>
 <div class="wrap">
 
-<h1>LINE 廠商對接　現況與待答</h1>
-<p class="lede">更新於 ${esc(D.更新日)}　這一頁不放任何一則訊息的文字，只放四件事：<br>
-現在有哪幾則在跑、廠商改了什麼、對方的回覆涵蓋到哪裡、還沒有答案的是什麼。</p>
+<h1>LINE 訊息　現況與請求</h1>
+<p class="lede">芳仁牙醫診所　更新於 ${esc(D.更新日)}<br>
+六節：在跑的十二則、${esc(改.日)} 的改版逐項、浮水印、約診狀態那一列、綁定完成、還沒有答案的題目。<br>
+七則訊息的文字、圖檔網址與 Flex 規格在另一頁：<a href="/preview/line-spec/">/preview/line-spec/</a></p>
 
 <div class="now">
-<b>現在停在哪</b>
+<b>現在等你們的四件</b>
 <ol>
 ${D.現在.map((t) => `<li>${b(t)}</li>`).join("\n")}
 </ol>
 </div>
 
-<h2 class="h2">① 這個帳號會自動送出哪幾則<span class="t">${D.訊息.列.length} 則．圖是那一則自己的規格頁拍的</span></h2>
+<h2 class="h2">1　這個帳號會自動送出哪幾則<span class="t">${D.訊息.列.length} 則．圖是我們那一則的模擬圖</span></h2>
 ${msgs}
 <p class="note">${b(D.訊息.缺口)}</p>
 
-<h2 class="h2">② 廠商 ${esc(改.日)} 的改版<span class="t">${esc(改._說明)}</span></h2>
+<h2 class="h2">2　${esc(改.日)} 的改版<span class="t">${esc(改._說明)}</span></h2>
 ${revised}
 
-<h2 class="h2">③ 浮水印那九顆<span class="t">形狀取自 brand/shapes／寬度與顏色取自 wm-sizes.json</span></h2>
+<h2 class="h2">3　浮水印那九顆<span class="t">形狀、顏色與寬度都在下面這張表裡</span></h2>
 <p class="note">每一格<b>上面是原色</b>（看得出形狀與是哪一科），
 <b>虛線底下是它壓在卡片上真正的濃度</b>（${(WM_A * 100).toFixed(0)}%，就是那批 PNG 烘進去的 alpha）。
 兩張是同一份幾何、同一個相對寬度 —— <b>九顆的寬度不一樣是刻意的</b>（按墨的面積正規化，看起來才一樣重）。</p>
@@ -554,69 +497,23 @@ ${compare}
 <p class="note">${b(cmp.量)}</p>
 
 <div class="rows" style="margin-top:1.4em">
-<div class="row"><p class="k">是不是平台的限制</p><p class="v">${b(D.浮水印.是不是平台的限制)}</p></div>
-<div class="row"><p class="k">接下來問什麼</p><p class="v">${b(D.浮水印.接下來問什麼)}</p></div>
-<div class="row"><p class="k">順帶</p><p class="v">${b(D.浮水印.順帶)}</p></div>
-<div class="row"><p class="k">還要確認的</p><p class="v">${b(D.浮水印.要確認)}</p></div>
+<div class="row"><p class="k">要換的規則</p><p class="v">${b(D.浮水印.要確認)}</p></div>
+<div class="row"><p class="k">請照這樣填</p><p class="v">${b(D.浮水印.接下來問什麼)}</p></div>
 </div>
-<p class="note">${b(D.浮水印._說明)}</p>
 
-<h2 class="h2">④ 約診狀態那一列<span class="t">2026-09-12 定案・卡片畫成輪播上真正的 ${SC.卡.w}px 寬</span></h2>
+<h2 class="h2">4　約診狀態那一列<span class="t">2026-09-12 定案・卡片畫成輪播上真正的 ${SC.卡.w}px 寬</span></h2>
 <p class="note">${b(SET._說明)}</p>
 ${settled}
 
-<h3 style="font-size:.95rem;margin:2em 0 .2em">走到這裡的過程：那四個值的顏色</h3>
-<p class="note" style="margin-top:.4em">${b(SC.起點)}</p>
-<p style="font-size:.88rem;color:var(--soft);margin:1em 0 0">${b(SC._說明)}</p>
-${pals}
-<div class="rows" style="margin-top:1.5em">
-<div class="row"><p class="k">挑定</p><p class="v">${b(SC.挑定)}</p></div>
-<div class="row"><p class="k">對比</p><p class="v">${b(SC.量)}</p></div>
-<div class="row"><p class="k">橘那一顆</p><p class="v">${b(SC.橘)}</p></div>
-<div class="row"><p class="k">要不要加粗</p><p class="v">${b(SC.加粗)}</p></div>
-<div class="row"><p class="k">要注意的</p><p class="v">${b(SC.注意)}</p></div>
-</div>
-
-<h3 style="font-size:.95rem;margin:1.8em 0 .2em">做成藥丸：底套色、白字</h3>
-<p style="font-size:.88rem;color:var(--soft);margin:0">${b(PILL._說明)}</p>
-${pill}
-<div class="rows" style="margin-top:1.4em">
-<div class="row"><p class="k">為什麼反而變好</p><p class="v">${b(PILL.為什麼變好)}</p></div>
-<div class="row"><p class="k">Flex 做得到嗎</p><p class="v">${b(PILL.做得到嗎)}</p></div>
-<div class="row"><p class="k">對比</p><p class="v">${b(PILL.量)}</p></div>
-<div class="row"><p class="k">兒童牙科那一顆</p><p class="v">${b(PILL.兒牙那一顆)}</p></div>
-<div class="row"><p class="k">換到什麼・付出什麼</p><p class="v">${b(PILL.代價)}</p></div>
-<div class="row"><p class="k">套回我們的設計</p><p class="v">${b(SC.套回設計)}</p></div>
-<div class="row"><p class="k">沒有動的</p><p class="v">${b(PILL.沒有動的)}</p></div>
-</div>
-
-<h2 class="h2">⑤ 和廠商的四封往返</h2>
-<div class="rows">
-${rounds}
-</div>
-
-<h2 class="h2">⑥ 對方的回覆涵蓋到哪裡<span class="t">「做不到」一律先改寫成「誰做不到」再往下談</span></h2>
-<div class="rows">
-${replies}
-</div>
-
-<h2 class="h2">⑦ 綁定完成：兩個方向<span class="t">先是我們自己那一刻的畫面，再是廠商 ${esc(D.往返[2].日)} 的回覆</span></h2>
+<h2 class="h2">5　綁定完成<span class="t">現在長什麼樣，以及兩個處理方向</span></h2>
 ${bind}
 
-<h2 class="h2">⑧ 別家帳號的畫面<span class="t">${esc(D.參考._說明.replace(/^[^。]*。/, "").trim())}</span></h2>
-<div class="rows">
-${refs}
-</div>
-<p class="note">${b(D.參考.用法)}</p>
-
-<h2 class="h2">⑨ 還沒有答案的 ${total} 題<span class="t">照「誰能答」分開・★ 是最先要的 ${hotAll} 題</span></h2>
+<h2 class="h2">6　還沒有答案的 ${total} 題<span class="t">★ 是最先要的 ${hotAll} 題</span></h2>
 ${groups}
 
 <p class="foot">
-這一頁由 <code>node drafts/channels/build-vendor.mjs</code> 產生，資料在
-<code>drafts/channels/vendor-log.json</code>，縮圖由
-<code>node drafts/channels/vendor-shots.mjs</code> 從各則規格頁的產出檔縮出來。<br>
-七則訊息的文字、圖檔與規格在另一頁：<a href="/preview/line-spec/">/preview/line-spec/</a>
+這一頁是靜態的，內容有更新會直接改在同一個網址上。<br>
+七則訊息的文字、圖檔網址與 Flex 規格：<a href="/preview/line-spec/">/preview/line-spec/</a>
 </p>
 
 </div>
@@ -628,5 +525,5 @@ mkdirSync(OUT, { recursive: true });
 writeFileSync(join(OUT, "index.html"), html);
 console.log(`✓ preview/line-vendor/index.html　${(html.length / 1024).toFixed(1)}KB`);
 console.log(`  在跑的訊息 ${D.訊息.列.length} 則・改版對上 ${改.對上.length}／還沒對上 ${改.未對上.length}`);
-console.log(`  逐句 ${D.回覆.列.length} 句・別家 ${D.參考.主.length + D.參考.背景.length} 家・浮水印 ${WM.length} 顆`);
-console.log(`  待答 ${total} 題（廠商 ${D.待答.廠商.列.length}／後台 ${D.待答.後台.列.length}／診所 ${D.待答.診所.列.length}／素材 ${D.待答.素材.列.length}）・最先要 ${hotAll} 題`);
+console.log(`  浮水印 ${WM.length} 顆・定案 ${SET.條.length} 條`);
+console.log(`  印出來的是廠商那一組 ${total} 題（最先要 ${hotAll} 題）；後台 ${D.待答.後台.列.length}／診所 ${D.待答.診所.列.length}／素材 ${D.待答.素材.列.length} 題留在 JSON 裡沒有印`);
