@@ -78,8 +78,13 @@ for (const t of TILES) {
   run(t.gen, { WM_MODE: "fb" });
   fs.copyFileSync(path.join(ROOT, ...t.img), path.join(OUT, finalOf(t.k)));
 }
-/* ⚠⚠ 一定要用預設（三格版）再跑一次 */
-for (const t of TILES) run(t.gen, {});
+/* ⚠⚠ 一定要用預設（三格版）再跑一次
+   ⚠⚠⚠ 2026-09-13 發現要跑**兩輪**不是一輪：post-docs.mjs 那張三格模擬圖
+   （line-post-docs/profile-3up.png）是把另外兩張從硬碟讀回來拼的，
+   而還原是照 hours → docs → map 的順序跑的 —— 輪到 docs 的那一刻 map 還停在
+   臉書版的浮水印上，那張模擬圖就拼著一張別版的圖存了下來。
+   ⚠ 每一道守門都會過（尺寸、長寬比、孤兒檔、溢出全部正常），只有 git 看得出來。 */
+for (let i = 0; i < 2; i++) for (const t of TILES) run(t.gen, {});
 console.log("  ✓ 已還原：LINE 那三張是三格拼一顆的版本");
 
 /* ---------- 第三步：文字（讀回來，不重打） ---------- */
