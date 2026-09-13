@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 守門：廠商對接那一頁（preview/line-vendor/）
 //
-// 擋十五件：
+// 擋十六件：
 //  ① 重跑 build-vendor.mjs、逐位比對（有人手改了頁面，或改了 JSON 卻忘了重跑）
 //  ② ⚠⚠ 頁面上不可以出現「七則訊息的文字」—— 那些字的出處是各自的 Flex JSON 與
 //     auto-reply.txt，抄進來就是第八個真相。這一道從那些檔裡現抽長句去掃。
@@ -31,6 +31,8 @@
 //  ⑭ ⚠⚠ 這一頁 2026-09-13 起是給廠商看的：那幾段「我們自己怎麼推出來的」不可以
 //     印回頁面上（接回去不會讓任何一道版面守門翻臉），但也不可以從 vendor-log.json
 //     裡刪掉 —— 落選理由與推導不要跟著畫面一起消失
+//  ⑯ 待調整那一組照抬頭那四件排（每一列宣告 `未定案`，圈號一個都不換）、
+//    「已完成」那一組不准宣告、卡片上印得出「未定案 N」
 //  ⑮ 抬頭那一塊「未定案」：四件的順序與子項數目、收掉的那一件沒有印回來、
 //     第 3 節九顆都畫在卡片上、浮水印真的畫成定案的淡墨（而不是各科的原色）、
 //     以及「第 6 節的第 N 題」那個號碼真的指得到一題
@@ -366,6 +368,15 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   const raw = fs.readFileSync(path.join(HERE, "vendor-log.json"), "utf8");
   if (!raw.includes("{{題:")) bad.push("⑮ vendor-log.json 裡的題號被寫死了 —— 要寫成 {{題:關鍵字}} 讓產生器現算");
   if (html.includes("{{題:")) bad.push("⑮ 頁面上還留著沒有換掉的 {{題:…}}");
+  /* 「六件對上、N 件還沒對上」那一類數字同理 —— 收掉一件就會對不上，而畫面完全正常 */
+  if (!raw.includes("{{改版:")) bad.push("⑮ ⑥ 那張卡的「幾件對上／還開著幾件」被寫死了 —— 要寫成 {{改版:欄位}}");
+  if (html.includes("{{改版:")) bad.push("⑮ 頁面上還留著沒有換掉的 {{改版:…}}");
+  {
+    const m = html.match(/(\d+) 件對上、還開著 (\d+) 件/);
+    if (!m) bad.push("⑮ 第 1 節 ⑥ 那張卡上找不到「N 件對上、還開著 N 件」");
+    else if (Number(m[1]) !== (LOG.改版?.對上 || []).length || Number(m[2]) !== (LOG.改版?.未對上 || []).length)
+      bad.push(`⑮ ⑥ 那張卡印的是 ${m[1]}／${m[2]}，資料是 ${LOG.改版.對上.length}／${LOG.改版.未對上.length}`);
+  }
   for (const m of html.matchAll(/第 6 節的第 (\d+) 題/g)) {
     const n = Number(m[1]);
     if (!new RegExp(`<li value="${n}"`).test(html))
@@ -373,6 +384,39 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   }
   if (!bad.some((x) => x.startsWith("⑮")))
     ok(`⑮ 未定案四件（子項 5＋4）、九顆都畫在卡片上、浮水印是淡墨 ${ink}、題號指得到`);
+}
+
+/* ⑯ 待調整那一組的排序 ------------------------------------------------
+   2026-09-13：抬頭換成「未定案」四件之後，這一組要照那四件排。
+   ⚠ 這一道擋的是「排回圈號順序」與「漏宣告」—— 兩種都不會讓任何一道版面守門翻臉。 */
+{
+  const 序 = new Map((LOG.現在?.列 || []).map((x, i) => [x.標, i + 1]));
+  const open = (LOG.訊息?.列 || []).filter((r) => r.組 === "open");
+  const done = (LOG.訊息?.列 || []).filter((r) => r.組 !== "open");
+
+  for (const r of done)
+    if (r.未定案) bad.push(`⑯ ${r.n} 在「已完成」那一組，不可以宣告未定案`);
+  for (const r of open) {
+    if (!r.未定案) bad.push(`⑯ ${r.n} 沒有宣告它屬於未定案的哪一件`);
+    else if (!序.has(r.未定案))
+      bad.push(`⑯ ${r.n} 宣告的「${r.未定案}」不在抬頭那四件裡`);
+  }
+
+  /* 頁面上實際印出來的順序 —— 讀的是產出物不是資料 */
+  const seg = html.split('待調整（或是有落差）')[1] || "";
+  const 印 = [...seg.matchAll(/<p class="nm">(.)　[^<]*?(?:<span class="un">未定案 (\d+)<\/span>)?<\/p>/g)]
+    .slice(0, open.length).map((m) => [m[1], m[2] ? Number(m[2]) : 0]);
+  if (印.length !== open.length)
+    bad.push(`⑯ 待調整那一組頁面上印了 ${印.length} 張，資料有 ${open.length} 列`);
+  else {
+    const 該 = open.map((r) => [r.n, 序.get(r.未定案) || 0])
+      .map((x, i) => [x, i]).sort((a, b) => a[0][1] - b[0][1] || a[1] - b[1]).map(([x]) => x);
+    const f = (a) => a.map(([n, k]) => `${n}(${k})`).join(" ");
+    if (f(印) !== f(該)) bad.push(`⑯ 待調整那一組印出來是「${f(印)}」，照未定案那四件應該是「${f(該)}」`);
+    if (印.some(([, k]) => !k)) bad.push("⑯ 有卡片沒有印出「未定案 N」—— 讀的人連不回抬頭那四件");
+  }
+  if (!bad.some((x) => x.startsWith("⑯")))
+    ok("⑯ 待調整那一組照未定案四件排：" + 印.map(([n, k]) => `${n}→${k}`).join("　"));
 }
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }

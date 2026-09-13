@@ -55,6 +55,9 @@ const D = JSON.parse(readFileSync(join(HERE, "vendor-log.json"), "utf8"));
    待答那一組收掉或補一題，整組的號碼就會位移，而寫死的那個數字**畫面上完全
    正常**、只是指到別題去了。所以資料裡寫的是 {{題:關鍵字}}，號碼在這裡現算；
    找不到或找到不只一題就 throw。 */
+/* ⚠⚠ 同一件事的第二種：「六件對上、四件還沒對上」這一類**數字**也不要寫死。
+   2026-09-13 收掉兩件之後，第 1 節 ⑥ 那張卡的註還寫著「四件還沒對上」——
+   兩個數字都對不上了，而畫面完全正常。資料裡寫 {{改版:欄位}}，長度在這裡現算。 */
 (() => {
   const 列 = D.待答.廠商.列;
   const 號 = (key) => {
@@ -62,14 +65,20 @@ const D = JSON.parse(readFileSync(join(HERE, "vendor-log.json"), "utf8"));
     if (hit.length !== 1) throw new Error(`{{題:${key}}} 在待答裡找到 ${hit.length} 題，要剛好一題`);
     return hit[0][1];
   };
+  const 數 = (key) => {
+    const a = D.改版?.[key];
+    if (!Array.isArray(a)) throw new Error(`{{改版:${key}}} 對不到一組陣列`);
+    return a.length;
+  };
+  const fix = (v) => v
+    .replace(/\{\{題:([^}]+)\}\}/g, (_, k) => 號(k))
+    .replace(/\{\{改版:([^}]+)\}\}/g, (_, k) => 數(k));
   const walk = (n) => {
     if (Array.isArray(n)) return n.forEach((v, i) => {
-      if (typeof v === "string") n[i] = v.replace(/\{\{題:([^}]+)\}\}/g, (_, k) => 號(k));
-      else walk(v);
+      if (typeof v === "string") n[i] = fix(v); else walk(v);
     });
     if (n && typeof n === "object") for (const [k, v] of Object.entries(n)) {
-      if (typeof v === "string") n[k] = v.replace(/\{\{題:([^}]+)\}\}/g, (_, kk) => 號(kk));
-      else walk(v);
+      if (typeof v === "string") n[k] = fix(v); else walk(v);
     }
   };
   walk(D);
@@ -181,6 +190,9 @@ h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
 .msg .x{min-width:0}
 .msg .nm{font-size:.9rem;font-weight:600;line-height:1.45}
 .msg .mt{font-size:.79rem;color:var(--soft);line-height:1.55;margin-top:.15em}
+.msg .un{display:inline-block;font-weight:400;font-size:.72rem;color:var(--soft);
+  border:1px solid var(--rule);border-radius:6px;padding:.1em .42em;margin-left:.45em;
+  vertical-align:.08em;white-space:nowrap}
 
 /* ── 改版：左邊規格圖、右邊逐項 ───────────────────────────────── */
 .fig{margin:.9em 0 0}
@@ -298,9 +310,31 @@ const GROUPS = [
   if (bad.length)
     throw new Error("這幾列沒有宣告組別（done／open）：" + bad.map((r) => r.n).join("、"));
 }
+/* ⚠⚠⚠ 2026-09-13 使用者：「後面待調整的細部內容部分　依照剛剛的文字排序　重新整理」
+   —— 抬頭那一塊換成「未定案」四件之後，這一組還照圈號 ③④⑤⑥⑦⑧ 在排，
+   和上面那四件對不起來。**排序照那四件走，圈號一個都不換**（同 09-12 分兩組那一輪：
+   ①~⑫ 是雙方共用的詞）。⚠ 對照由資料自己宣告（每一列的 `未定案` 寫那一件的標題），
+   不要在這裡寫一份對照表 —— 抬頭那四件改了名字，這裡會 throw 而不是靜靜地排錯。 */
+const 未定案序 = new Map(D.現在.列.map((x, i) => [x.標, i + 1]));
+{
+  for (const r of D.訊息.列) {
+    if (r.組 !== "open") {
+      if (r.未定案) throw new Error(`${r.n} 在「已完成」那一組，不可以宣告未定案`);
+      continue;
+    }
+    if (!r.未定案) throw new Error(`${r.n} 沒有宣告它屬於未定案的哪一件`);
+    if (!未定案序.has(r.未定案))
+      throw new Error(`${r.n} 宣告的「${r.未定案}」不在抬頭那四件裡`);
+  }
+}
 let seen = 0;
 const msgs = GROUPS.map((g) => {
-  const rows = D.訊息.列.filter((r) => r.組 === g.k);
+  const rows = D.訊息.列
+    .filter((r) => r.組 === g.k)
+    .map((r, i) => [r, i])
+    .sort((a, b) =>
+      (未定案序.get(a[0].未定案) || 0) - (未定案序.get(b[0].未定案) || 0) || a[1] - b[1])
+    .map(([r]) => r);
   const cards = rows.map((r) => {
     const ims = [].concat(r.圖 || []).filter(Boolean);
     const lazy = seen++ > 3;
@@ -310,7 +344,8 @@ const msgs = GROUPS.map((g) => {
           lazy ? 'loading="lazy" ' : ""}alt="${esc(r.名)}的模擬圖${ims.length > 1 ? `（${k + 1}）` : ""}">`).join("")}</span>`
       : `<span class="ph"></span>`
   }<div class="x">
-<p class="nm">${esc(r.n)}　${esc(r.名)}</p>
+<p class="nm">${esc(r.n)}　${esc(r.名)}${
+  r.未定案 ? `<span class="un">未定案 ${未定案序.get(r.未定案)}</span>` : ""}</p>
 <p class="mt">${esc(r.時機)}／${esc(r.誰送)}送・${esc(r.狀態)}<br>${b(r.註)}</p>
 </div></div>`;
   }).join("\n");
