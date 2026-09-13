@@ -115,9 +115,13 @@ summary::marker{color:var(--rule)}
   font-size:.79rem;color:var(--soft);line-height:1.75}
 .stlist b{font-weight:600;color:var(--ink)}
 .pal .h .pick{font-weight:400;font-size:.79rem;color:var(--soft);margin-left:.4em}
-/* 藥丸：底是那一科的套色、字是白的，形狀照站上那一族（圓角 8.5px） */
-.stcard .pill{display:inline-block;border-radius:8.5px;padding:.125em .63em;
-  color:#fff;font-weight:700;line-height:1.6}
+/* 藥丸：底是那一科的套色、字是白的，形狀照站上那一族（圓角 8.5px）。
+   行高與上下內距要和 preview/line-booked/ 定案那一份**逐字相同** ——
+   塊要包住「字面框」不是「行框」（同 /history/spec-tag-fit.html 那一輪），
+   寫回 line-height:1.6 ＋ 上下對稱的話，這一頁會畫出一顆低 1.40px 的藥丸，
+   和定案那一頁對不起來，而且畫面看起來完全正常。 */
+.stcard .pill{display:inline-block;border-radius:8.5px;line-height:1;
+  padding:.42em .63em .38em;color:#fff;font-weight:700}
 .foot{margin:2.8em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
   font-size:.83rem;color:var(--soft);line-height:1.85}
 a{color:#214d48}
@@ -189,7 +193,7 @@ code{font-size:.92em}
 </div></div>
 <div class="msg"><span class="ims"><img src="t-query.jpg" width="210" height="210" loading="lazy" alt="約診紀錄查詢的模擬圖（1）"><img src="t-vquery.jpg" width="210" height="210" loading="lazy" alt="約診紀錄查詢的模擬圖（2）"></span><div class="x">
 <p class="nm">⑦　約診紀錄查詢</p>
-<p class="mt">他按查詢／廠商送・09-10 改版<br>上：我們的定稿版本。下：廠商 09-10 送來的那一版（橫著滑的輪播）。日期是這個帳號裡最長的一種寫法，那一版完整顯示、沒有被截斷</p>
+<p class="mt">他按查詢／廠商送・09-10 改版<br>上：我們的定稿版本。下：廠商 09-10 送來的那一版（橫著滑的輪播）。日期是這個帳號裡最長的一種寫法，那一版完整顯示、沒有被截斷。那張卡上「預約狀態」那一列<b>要改成什麼樣子</b>，定案整理在第 ④ 節（欄位名、四個值、藥丸、對齊）</p>
 </div></div>
 <div class="msg"><span class="ims"><img src="t-remind.jpg" width="210" height="210" loading="lazy" alt="看診前 48 小時提醒的模擬圖"></span><div class="x">
 <p class="nm">⑧　看診前 48 小時提醒</p>
@@ -467,8 +471,32 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </div>
 <p class="note">九顆的形狀、顏色與寬度都從 brand/shapes/ 與 preview/line-booked/wm-sizes.json 讀回來，這一頁不抄第二份。九顆的寬度不一樣是刻意的 —— 按墨的面積正規化，看起來才一樣重。</p>
 
-<h2 class="h2">④ 約診狀態那四個值的顏色<span class="t">兩套色票各畫一次・卡片畫成輪播上真正的 207px 寬</span></h2>
-<p class="note">套色不是新的東西，是把現在就有的做法接過去：現況那張卡上，表示會到的那個值本來就是綠色的字。所以要定的只有兩件 —— 四個值各用哪一顆顏色，以及要不要一起加粗。</p>
+<h2 class="h2">④ 約診狀態那一列<span class="t">2026-09-12 定案・卡片畫成輪播上真正的 207px 寬</span></h2>
+<p class="note">2026-09-12 一格一格挑完了，整理成一段可以直接拿給廠商的規格。底下那幾格是走到這裡的過程，留著是為了日後有人問「為什麼是這一種」。</p>
+<div class="stcard" style="max-width:207px">
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#4478b5">已排定</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#3f654a">已確認</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#c28229">未回覆</span></p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#ae4f4d">已取消</span></p>
+</div>
+<div class="rows" style="margin-top:1.2em">
+<div class="row"><p class="k">欄位名</p><p class="v"><b>約診狀態</b>（廠商現在印的是「預約狀態」）。改的只是卡片上印出來的那個標籤，資料庫欄位叫什麼名字不必動。</p></div>
+<div class="row"><p class="k">四個值</p><p class="v"><b>已排定／已確認／未回覆／已取消</b>。四個都是三個字、都在講這一筆走到哪一步、主詞都不是診所、也都沒有答應任何事。</p></div>
+<div class="row"><p class="k">色票</p><p class="v"><b>Ⓐ 整理頁的 logo 色</b>（＝第 ③ 節那九顆的那一份 `wm-sizes.json`）：齒顎矯正 `#4478b5`／一般牙科 `#3f654a`／兒童牙科 `#c28229`／顯微根管 `#ae4f4d`。</p></div>
+<div class="row"><p class="k">畫法</p><p class="v"><b>底套色、白字、加粗的藥丸</b>，圓角 8.5px（站上那一族）。Flex 寫成 horizontal box、藥丸那一格 `flex: 0`、後面補一個 `filler`，藥丸才會只包住那幾個字而不是撐滿整列。</p></div>
+<div class="row"><p class="k">對齊</p><p class="v"><b>基線對齊</b>（三種比過之後挑的）。只寫「靠下對齊」的話，兩個盒子的下緣其實<b>完全一樣</b>（量到 0.00px），看起來卻還差 4.5px —— 那一段是標籤盒子底下的下伸部空白；要真的貼齊得連標籤的行框也收掉（量到 0.52px）。三種只差 1~5px。</p></div>
+<div class="row"><p class="k">標籤</p><p class="v">「約診狀態」那四個字<b>維持不加粗、不套色</b> —— 兩樣都動的話那一列就沒有主從了。</p></div>
+<div class="row"><p class="k">浮水印</p><p class="v">那張卡的浮水印換成<b>淡墨色</b>（`wm-&lt;形狀&gt;-ink12.png`，柔墨 `#5c5f57`）。形狀、寬度、濃度一個數字都沒動，換掉的只有顏色 —— 藥丸一填滿，同一張卡上就會有兩塊彩色在搶同一個位置。</p></div>
+<div class="row"><p class="k">先問的是哪一題</p><p class="v">這一整節只為「那個欄位移不掉」那條路存在。<b>第一層要問的仍然是：病人自己按過取消的那一筆，能不能就不要列在他的查詢清單裡</b> —— 做得到的話那一列根本不會出現，底下這些都不必做。</p></div>
+<div class="row"><p class="k">還要一支測試訊息</p><p class="v">藥丸裡那個字怎麼坐在盒子裡是 LINE 決定的（`text` 沒有行高可以設）。我們寫得出 `paddingTop`／`paddingBottom`，但對不對得上要實際送一則出來看。</p></div>
+</div>
+
+<h3 style="font-size:.95rem;margin:2em 0 .2em">走到這裡的過程：那四個值的顏色</h3>
+<p class="note" style="margin-top:.4em">套色不是新的東西，是把現在就有的做法接過去：現況那張卡上，表示會到的那個值本來就是綠色的字。所以要定的只有兩件 —— 四個值各用哪一顆顏色，以及要不要一起加粗。</p>
 <p style="font-size:.88rem;color:var(--soft);margin:1em 0 0">同樣四個值用兩套色票各畫一次。兩版挑的是同樣那四科（齒顎矯正＝藍、一般牙科＝綠、兒童牙科＝橘、顯微根管＝紅），差的只有那一套色票本身 —— 這樣比起來才知道是色票的差別，不是挑色的差別。</p>
 <div>
 <p class="h">Ⓐ 整理頁的 logo 色<span class="pick">挑定</span></p>

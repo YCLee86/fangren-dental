@@ -22,6 +22,9 @@
 //  ⑫ 頁面上不可以出現完整的手機號碼（repo 是公開的）——
 //     綁定那一刻的畫面裡本來就有一組，出圖時就遮掉了；這一道擋的是「日後
 //     有人把它打進 JSON 裡」，因為那不會讓任何一道版面守門翻臉
+//  ⑬ ④ 那一節的定案要齊（七條 ＋ 前提），而且那顆藥丸的幾何要和
+//     preview/line-booked/ 定案那一份逐字相同 —— 寫回「行高 1.6 ＋ 上下對稱」
+//     的話這一頁會畫出一顆低 1.40px 的藥丸，畫面看起來完全正常
 //  ⑪ ① 那一節的十二則要分成「已完成」「待調整（或是有落差）」兩組 —— 每一列都要
 //     自己宣告組別，兩個小標都要在頁上，而且兩組加起來剛好十二則
 //     （2026-09-12 使用者：「12 則照順序看有點混亂　先區分成…」）
@@ -227,6 +230,36 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   const m = html.match(/09\d{8}/g);
   if (m) bad.push(`⑫ 頁面上出現完整的手機號碼（${m.length} 處）—— repo 是公開的，要遮成 09xxxxxxxx`);
   else ok("⑫ 沒有完整的手機號碼");
+}
+
+/* ⑬ ④ 那一節的定案 -------------------------------------------------- */
+/* 那一節現在是「定案在前、過程在後」。兩件要守：
+   ① 定案那七條與前提都印出來了（少一條不會讓任何一道版面守門翻臉）；
+   ② 這一頁畫出來的藥丸要和 preview/line-booked/ 定案那一份**逐字相同** ——
+      藥丸的塊要包住字面框不是行框（同 /history/spec-tag-fit.html 那一輪），
+      寫回 line-height:1.6 ＋ 上下對稱的話會低 1.40px，而畫面完全正常。
+   ③ 對齊定案是基線，那一列不可以改成 flex-end。 */
+{
+  const SET = LOG.狀態色.定案;
+  if (!SET) bad.push("⑬ 狀態色少了「定案」那一塊");
+  else {
+    /* ⚠ 只照 JSON 跑一遍是不夠的：JSON 裡少掉一條，迴圈也跟著少一圈，
+       那一道等於沒開。七個名字在這裡寫死，少一條才擋得下來。 */
+    const KEYS = ["欄位名", "四個值", "色票", "畫法", "對齊", "標籤", "浮水印"];
+    for (const k of KEYS)
+      if (!SET.條.some(([x]) => x === k)) bad.push(`⑬ 定案的資料少了「${k}」那一條`);
+    for (const [k] of SET.條)
+      if (!html.includes(`<p class="k">${k}</p>`)) bad.push(`⑬ 定案少印了「${k}」那一條`);
+    for (const k of ["前提", "要一支測試訊息"])
+      if (!SET[k]) bad.push(`⑬ 定案缺「${k}」`);
+  }
+  const G = /\.stcard \.pill\{[^}]*line-height:1;\s*\n?\s*padding:\.42em \.63em \.38em/;
+  if (!G.test(html))
+    bad.push("⑬ 這一頁的藥丸不是定案那一組（行高 1 ＋ 上 .42 下 .38em）—— 會低 1.40px");
+  if (!/\.stcard \.r\{[^}]*align-items:baseline/.test(html))
+    bad.push("⑬ 那一列不是基線對齊 —— 2026-09-12 定案是基線");
+  if (!bad.some((x) => x.startsWith("⑬")))
+    ok(`⑬ ④ 定案 ${SET.條.length} 條都在、藥丸與對齊和 line-booked 那一份相同`);
 }
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }

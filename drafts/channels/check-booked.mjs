@@ -157,17 +157,19 @@ for (const n of ORDER) {
       ok(line.includes(id + sel),
         `${sel} 那一條少了 ${id} —— 那一張輪播會退回 width:100%、畫成 218.6px`);
   }
-  /* ⚠⚠ 底部對齊是**兩條規則合起來**才成立：只留 align-items 的話，對到的是標籤的
-     行框下緣，那幾個字的墨仍然比藥丸高 4.52px（基線對齊是 5.52，差 1px 看不出來）。
-     少了 `line-height: 1` 那一條，畫面完全正常、每一道尺寸守門也都會過。 */
-  ok(/\.st\.bot\{align-items:flex-end\}/.test(html),
-    "底部對齊那一條 align-items 不見了");
-  ok(/\.st\.bot \.lb\{line-height:1\}/.test(html),
-    "底部對齊少了標籤的 line-height:1 —— 只對到行框，那幾個字的墨仍然比藥丸高 4.5px");
-  /* ⚠⚠ 那三種高度是**對照條**在切的（卡片一律基線）——三列的 class 少一個，
-     畫面上就變成三列一模一樣，而每一道尺寸守門都會過。 */
-  for (const [c, why] of [['""', "基線"], ['" botbox"', "只加靠下"], ['" bot"', "底部對齊"]])
-    ok(html.includes(", " + c + "]"), `對照條少了「${why}」那一列`);
+  /* ⚠⚠ 對齊 2026-09-12 定案「基線」（使用者從三種裡挑的），所以那一列一定要是
+     `align-items: baseline`，而落選那兩種的樣式與對照帶都已經收掉。
+     ⚠ 改成 flex-end 的話畫面只差 1px、**每一道尺寸守門都會過**，只有讀這條規則才看得出來。 */
+  ok(/\.pv-nw \.st\{[^}]*align-items:baseline/.test(html),
+    "那一列不是基線對齊 —— 2026-09-12 定案是基線");
+  for (const c of [".st.bot", ".st.botbox", "pv-stcmp", 'class="st bot', 'class="st botbox'])
+    ok(!html.includes(c), `落選那兩種的對齊（${c}）又跑回頁面上 —— 定案只留基線那一種`);
+  ok(/h \+= '<p class="st">'/.test(html),
+    "那一列的 class 被動過了 —— 定案只有基線那一種，不該再有變體");
+  /* ⚠⚠ 落選那兩種的數字不可以跟著畫面一起消失 —— 面板要繼續印，
+     不然日後沒有人知道「只加靠下對齊」為什麼不夠。 */
+  for (const n of ["5.52px", "4.52px", "0.52px"])
+    ok(html.includes(n), `面板少印了對齊那三個逐像素量到的數字（${n}）`);
   /* ⚠ 頁面上只剩一張卡，而它一定要是「藥丸 ＋ 淡墨浮水印」那一版
      （2026-09-12 使用者挑定）—— 少了這兩行，畫出來是彩色浮水印配套色的字。 */
   ok(/stat = "pill"; wmink = true;/.test(html),

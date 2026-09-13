@@ -199,9 +199,13 @@ summary::marker{color:var(--rule)}
   font-size:.79rem;color:var(--soft);line-height:1.75}
 .stlist b{font-weight:600;color:var(--ink)}
 .pal .h .pick{font-weight:400;font-size:.79rem;color:var(--soft);margin-left:.4em}
-/* 藥丸：底是那一科的套色、字是白的，形狀照站上那一族（圓角 8.5px） */
-.stcard .pill{display:inline-block;border-radius:8.5px;padding:.125em .63em;
-  color:#fff;font-weight:700;line-height:1.6}
+/* 藥丸：底是那一科的套色、字是白的，形狀照站上那一族（圓角 8.5px）。
+   行高與上下內距要和 preview/line-booked/ 定案那一份**逐字相同** ——
+   塊要包住「字面框」不是「行框」（同 /history/spec-tag-fit.html 那一輪），
+   寫回 line-height:1.6 ＋ 上下對稱的話，這一頁會畫出一顆低 1.40px 的藥丸，
+   和定案那一頁對不起來，而且畫面看起來完全正常。 */
+.stcard .pill{display:inline-block;border-radius:8.5px;line-height:1;
+  padding:.42em .63em .38em;color:#fff;font-weight:700}
 .foot{margin:2.8em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
   font-size:.83rem;color:var(--soft);line-height:1.85}
 a{color:#214d48}
@@ -368,6 +372,20 @@ ${g.值.map((v) => { const n = Math.floor(_cr(v.色, "#f4f4f5") * 100) / 100;
     n < 4.5 ? "（低於 4.5）" : ""}</li>`; }).join("\n")}
 </ul>
 </div>`).join("\n");
+
+/* ── ④之〇 定案（2026-09-12 一格一格挑完的）────────────────────
+   放在整節最前面：底下那幾格是走到這裡的過程，這一段才是要拿給廠商的那一份。
+   ⚠ 這個註解在樣板字串外面 —— 寫在裡面會被原字印進 HTML（第 ⑨ 道守門擋得到）。 */
+const SET = SC.定案, PILLVAL = SC.藥丸.值;
+const settled = `<div class="stcard" style="max-width:${SC.卡.w}px">
+${PILLVAL.map((v) => `<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:${v.色}">${esc(v.名)}</span></p>`).join("\n")}
+</div>
+<div class="rows" style="margin-top:1.2em">
+${SET.條.map(([k, t]) => `<div class="row"><p class="k">${esc(k)}</p><p class="v">${b(t)}</p></div>`).join("\n")}
+<div class="row"><p class="k">先問的是哪一題</p><p class="v">${b(SET.前提)}</p></div>
+<div class="row"><p class="k">還要一支測試訊息</p><p class="v">${b(SET.要一支測試訊息)}</p></div>
+</div>`;
 
 /* ── ④之二 做成藥丸（底套色、白字）─────────────────────────────
    使用者問的那一題。⚠ 對比度一樣現算，只是這一次量的是「白字壓在填色上」。 */
@@ -543,8 +561,12 @@ ${compare}
 </div>
 <p class="note">${b(D.浮水印._說明)}</p>
 
-<h2 class="h2">④ 約診狀態那四個值的顏色<span class="t">兩套色票各畫一次・卡片畫成輪播上真正的 ${SC.卡.w}px 寬</span></h2>
-<p class="note">${b(SC.起點)}</p>
+<h2 class="h2">④ 約診狀態那一列<span class="t">2026-09-12 定案・卡片畫成輪播上真正的 ${SC.卡.w}px 寬</span></h2>
+<p class="note">${b(SET._說明)}</p>
+${settled}
+
+<h3 style="font-size:.95rem;margin:2em 0 .2em">走到這裡的過程：那四個值的顏色</h3>
+<p class="note" style="margin-top:.4em">${b(SC.起點)}</p>
 <p style="font-size:.88rem;color:var(--soft);margin:1em 0 0">${b(SC._說明)}</p>
 ${pals}
 <div class="rows" style="margin-top:1.5em">
