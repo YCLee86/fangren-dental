@@ -140,7 +140,7 @@ for (const n of ORDER) {
         `${path.basename(f)} 真實長寬比 ${(s.w / s.h).toFixed(3)} 對不上 ${z.ratio}`);
   }
 }
-/* ⚠⚠⚠ 第 ②之二 節的 Ⓒ（藥丸 ＋ 淡墨色的浮水印）是**第三個輪播**，
+/* ⚠⚠⚠ 第 ②之二 節那張卡是**第三個輪播**（#pv-slot7），
    而這一頁的輪播寬度寫在**用 id 列出來**的三條選擇器裡 ——
    新 slot 沒加進去的話它會退回 `width:100%`、畫成 218.6px，
    **畫面完全正常**，而在一張 218.6 的卡上判斷「放不放得下」全是假的
@@ -153,7 +153,7 @@ for (const n of ORDER) {
   for (const [sel, body] of LINES) {
     const line = html.split("\n").find((l) => l.startsWith("#pv-slot") && l.includes(body));
     if (!line) { bad.push(`找不到「${sel}」那一條輪播寬度的規則`); continue; }
-    for (const id of ["#pv-slot5", "#pv-slot6", "#pv-slot7", "#pv-slot8"])
+    for (const id of ["#pv-slot7"])
       ok(line.includes(id + sel),
         `${sel} 那一條少了 ${id} —— 那一張輪播會退回 width:100%、畫成 218.6px`);
   }
@@ -164,8 +164,16 @@ for (const n of ORDER) {
     "底部對齊那一條 align-items 不見了");
   ok(/\.st\.bot \.lb\{line-height:1\}/.test(html),
     "底部對齊少了標籤的 line-height:1 —— 只對到行框，那幾個字的墨仍然比藥丸高 4.5px");
-  ok(/stbot \? " bot" : ""/.test(html),
-    "那一列沒有在吃 stbot —— Ⓓ 會畫成和 Ⓑ 一模一樣");
+  /* ⚠⚠ 那三種高度是**對照條**在切的（卡片一律基線）——三列的 class 少一個，
+     畫面上就變成三列一模一樣，而每一道尺寸守門都會過。 */
+  for (const [c, why] of [['""', "基線"], ['" botbox"', "只加靠下"], ['" bot"', "底部對齊"]])
+    ok(html.includes(", " + c + "]"), `對照條少了「${why}」那一列`);
+  /* ⚠ 頁面上只剩一張卡，而它一定要是「藥丸 ＋ 淡墨浮水印」那一版
+     （2026-09-12 使用者挑定）—— 少了這兩行，畫出來是彩色浮水印配套色的字。 */
+  ok(/stat = "pill"; wmink = true;/.test(html),
+    "那一張卡不是「藥丸 ＋ 淡墨浮水印」—— 使用者挑定的是那一版");
+  ok(!/stat = "txt";/.test(html),
+    "頁面上又畫了「字套色」那一版 —— 使用者 2026-09-12 指定只留藥丸那一種");
   ok(/wm-'\s*\+\s*sn\s*\+\s*'-'\s*\+\s*\(wmink \?/.test(html),
     "卡片沒有在吃 wmink —— Ⓒ 會畫成和 Ⓑ 一模一樣的彩色浮水印");
   ok(/\.pill\{[^}]*line-height:1;[^}]*padding:\.42em \.63em \.38em/.test(html),
