@@ -186,7 +186,7 @@ code{font-size:.92em}
 <ol class="sub"><li><b>浮水印的大小與位置和規格不一樣</b>：畫出來是規格的五到六成，而且跑出卡片的右下角被切掉；我們的 JSON 寫的是照表上那個 px 寬、完全收在卡內。第 3 節有三格的對照與數字，<b>九顆各自畫在卡片上該有的樣子也都在那一節</b>。</li>
 <li><b>約診狀態</b>：依系統發送與病人回覆的狀態分成 <b>已排定／已確認／未回覆／已取消</b>。四個值的畫法、色碼與對齊在第 4 節。</li>
 <li><b>浮水印的顏色改成淡墨素色</b>：柔墨 <code>#5c5f57</code>、濃度 12%（<code>wm-&lt;形狀&gt;-ink12.png</code>）。形狀、寬度、位置一個數字都沒動，換掉的只有顏色。</li>
-<li><b>日期的排法要調一件</b>：星期幾移到日期後面、時間放到第二行（「2026/09/11 星期五」＋換行＋「11:50」）。輪播那張卡只有 207px，日期放不下一行，交給它自己折會把星期幾和它的日期拆開。另外請確認那一格沒有限制行數（<code>wrap: true</code>、不要 <code>maxLines</code>）。</li>
+<li><b>日期請排成一行、時間不要換行</b>：<code>09/11 (五) 11:50</code> —— 年份拿掉、星期幾用半形括號接在日期後面（＝你們「看診前提醒」那一則現在的寫法）。輪播那張卡只有 207px，現在那一串放不下一行，時間會被折到第二行。另外請確認那一格沒有限制行數（<code>wrap: true</code>、不要 <code>maxLines</code>）。</li>
 <li><b>九顆浮水印怎麼輪，照我們這個規則</b>：<code>(約診月份 + 約診日) % 9</code>，照第 3 節那張表由上到下的順序取第幾顆。同一筆約診不管查幾次都是同一顆，預約成功通知與查詢清單裡的那一張也要是同一顆、同一色。</li></ol>
 </li>
 <li>
@@ -259,7 +259,8 @@ code{font-size:.92em}
 <h2 class="h2">2　2026-09-10 的改版<span class="t">2026-09-10 廠商把 ⑥⑦ 兩則照我們的規格改了一版。左邊是我們送過去的規格圖，右邊各項是逐項比對的結果。</span></h2>
 <div class="two">
 <figure class="fig">
-<img src="../line-booked/shot-booked.png" width="804" height="450" loading="lazy"
+<img src="../line-booked/shot-booked.png" width="804"
+  height="450" loading="lazy"
   alt="我們送過去的預約成功通知規格圖">
 <figcaption>我們送過去的規格圖（預約成功通知）</figcaption>
 </figure>
@@ -301,12 +302,14 @@ code{font-size:.92em}
 <div class="rows" style="margin-top:1.4em">
 <p style="font-size:.93rem;margin:0 0 .2em"><b>看過之後收掉的 2 件</b></p>
 <div class="row"><p class="k">卡上年份是 2020</p><p class="v">診所確認那是設計用的測試資料，不影響 —— 這一件收掉了。</p></div>
-<div class="row"><p class="k">日期格式</p><p class="v">四張裡有一張就是約診查詢的輪播，日期「2026/09/11 11:50 星期五」完整顯示、沒有被截斷 —— <b>年月日、星期幾、時間這三樣就照這一版</b>，只剩排法要調（星期幾接在日期後面、時間自己一行），見第 3 節。</p></div>
+<div class="row"><p class="k">日期格式</p><p class="v">四張裡有一張就是約診查詢的輪播，日期「2026/09/11 11:50 星期五」完整顯示、沒有被截斷 —— <b>月日、星期幾、時間這三樣就照這一版</b>，只剩排法要調（收短成一行、年份拿掉、星期幾用括號接在日期後面，時間不要被折到第二行），見第 3 節。</p></div>
 </div>
 
 <figure class="fig">
-<div class="scroll"><img src="../line-booked/shot-query.png" width="2565" height="366"
-  style="width:855px" loading="lazy" alt="我們送過去的約診紀錄查詢規格圖（輪播）"></div>
+<div class="scroll"><img src="../line-booked/shot-query.png" width="2565"
+  height="285"
+  style="width:855px" loading="lazy"
+  alt="我們送過去的約診紀錄查詢規格圖（輪播）"></div>
 <figcaption>我們送過去的規格圖（約診紀錄查詢，輪播．這一條可以左右滑）。日期會被截斷的是這一種
 micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>
@@ -410,45 +413,43 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </div>
 
 <h3 style="font-size:.95rem;margin:1.8em 0 .2em">同一張卡畫2次</h3>
-<p style="font-size:.88rem;color:var(--soft);margin:0">同一張卡（268×149）畫兩次：我們要的、廠商 09-10 送來的。卡上四行就是這一則真正的內容，形狀與顏色完全一樣，差的只有浮水印的大小與位置。</p>
+<p style="font-size:.88rem;color:var(--soft);margin:0">同一張卡（268×121）畫兩次：我們要的、廠商 09-10 送來的。卡上四行就是這一則真正的內容，形狀與顏色完全一樣，差的只有浮水印的大小與位置。卡片的高度是那四行自己撐出來的：日期收成一行之後（見第 3 節那一條），比現在那一張矮 28px，文字底下那一塊空白就跟著不見了。</p>
 <div class="cmpwrap">
 <p class="cmpt">圓形（口腔外科紫）・預約成功通知</p>
 <div class="cmprow"><figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="我們要的：浮水印 104px，往右 18、往下 10">
-<defs><clipPath id="clip-1"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-1"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-1)" opacity="0.12">
-<svg x="182.00" y="55.00" width="104" height="104.00"
+<svg x="182.00" y="27.00" width="104" height="104.00"
   viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
   fill="#8e6299" fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="182.00" y="55.00" width="104" height="104.00"
+<rect x="182.00" y="27.00" width="104" height="104.00"
   fill="none" stroke="#8e6299" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>我們要的</b>　104px<br><b>定案</b>：往右下溢出 18／10px（更像浮水印，整顆不會整張貼在角落）。這一顆 104px，看得到的那一塊右下被卡片切掉。</figcaption>
 </figure>
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="廠商送來的：浮水印 67px，往右 10、往下 7">
-<defs><clipPath id="clip-2"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-2"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-2)" opacity="0.12">
-<svg x="211.00" y="89.00" width="67" height="67.00"
+<svg x="211.00" y="61.00" width="67" height="67.00"
   viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
   fill="#8e6299" fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="211.00" y="89.00" width="67" height="67.00"
+<rect x="211.00" y="61.00" width="67" height="67.00"
   fill="none" stroke="#8e6299" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>廠商送來的</b>　67px<br>量出來 ＝ 卡寬的 25.1%（規格是 38.8%），而且右下被切掉</figcaption>
@@ -457,41 +458,39 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 <div class="cmpwrap">
 <p class="cmpt">寬形（牙周治療青綠）・預約成功通知</p>
 <div class="cmprow"><figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="我們要的：浮水印 150px，往右 18、往下 10">
-<defs><clipPath id="clip-3"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-3"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-3)" opacity="0.12">
-<svg x="136.00" y="85.07" width="150" height="73.93"
+<svg x="136.00" y="57.07" width="150" height="73.93"
   viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
   fill="#317d78" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="136.00" y="85.07" width="150" height="73.93"
+<rect x="136.00" y="57.07" width="150" height="73.93"
   fill="none" stroke="#317d78" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>我們要的</b>　150px<br><b>定案</b>：往右下溢出 18／10px（更像浮水印，整顆不會整張貼在角落）。這一顆 150px，看得到的那一塊右下被卡片切掉。</figcaption>
 </figure>
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="廠商送來的：浮水印 83px，往右 8、往下 6">
-<defs><clipPath id="clip-4"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-4"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-4)" opacity="0.12">
-<svg x="193.00" y="114.09" width="83" height="40.91"
+<svg x="193.00" y="86.09" width="83" height="40.91"
   viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
   fill="#317d78" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="193.00" y="114.09" width="83" height="40.91"
+<rect x="193.00" y="86.09" width="83" height="40.91"
   fill="none" stroke="#317d78" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>廠商送來的</b>　83px<br>＝ 卡寬的 31.1%（規格是 56.0%）</figcaption>
@@ -500,184 +499,175 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 <p class="note">約診查詢那條輪播（卡寬約 207）上的寬形也量過：畫出來 80px ＝ 卡寬的 38.6%，規格是 150px ＝ 72.5%。三張合起來，廠商畫的是我們規格的 53~65%。</p>
 
 <h3 style="font-size:.95rem;margin:1.8em 0 .2em">九顆各自畫在卡片上該有的樣子</h3>
-<p style="font-size:.88rem;color:var(--soft);margin:0">九顆各自畫在那張 268×149 的卡上、照規格的寬度往右下<b>溢出 18／10px</b>（＝定案那一種），顏色就是定案的淡墨。<b>卡上那四行就是這一則真正的內容</b>（從我們給你們的那份 Flex JSON 讀出來的，不是另外打一份），所以看得出浮水印是墊在字底下的一層，不是排完字之後另外塞進去、把對話框往下撐開的一塊。<b>九顆都在這裡，不是只有你們已經用過的那兩顆。</b></p>
+<p style="font-size:.88rem;color:var(--soft);margin:0">九顆各自畫在那張 268×121 的卡上、照規格的寬度往右下<b>溢出 18／10px</b>（＝定案那一種），顏色就是定案的淡墨。<b>卡上那四行就是這一則真正的內容</b>（從我們給你們的那份 Flex JSON 讀出來的，不是另外打一份），所以看得出浮水印是墊在字底下的一層，不是排完字之後另外塞進去、把對話框往下撐開的一塊。<b>九顆都在這裡，不是只有你們已經用過的那兩顆。</b></p>
 <div class="onnine">
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="一般牙科・定期檢查：浮水印 107px，往右 18、往下 10">
-<defs><clipPath id="clip-5"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-5"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-5)" opacity="0.12">
-<svg x="179.00" y="52.00" width="107" height="107.00"
+<svg x="179.00" y="24.00" width="107" height="107.00"
   viewBox="0 0 29.273 29.282" preserveAspectRatio="none"><g transform="translate(-166.723 511.764) scale(1 -1)"><path
   fill="#5c5f57" fill-rule="evenodd" d="M 169.138 507.466 C 174.036 512.891 187.403 513.495 193.553 507.466 C 197.569 503.528 195.758 495.329 194.278 492.182 C 192.28 487.935 190.318 482.482 181.357 482.482 C 175.147 482.482 171.687 485.294 168.543 492.182 C 165.68 498.451 166.436 504.473 169.138 507.466 M 183.24 486.006 C 183.489 486.079 183.584 486.097 183.827 486.006 C 183.99 485.945 184.211 485.956 184.372 486.006 C 184.897 486.169 185.415 487.205 185.32 488.523 C 185.225 489.84 181.834 489.657 181.836 488.523 C 181.839 487.619 182.163 486.455 182.609 486.139 C 182.801 486.003 182.943 485.919 183.24 486.006 M 178.786 486.006 C 179.035 486.079 179.13 486.097 179.373 486.006 C 179.536 485.945 179.757 485.956 179.918 486.006 C 180.443 486.169 180.961 487.205 180.866 488.523 C 180.771 489.84 177.379 489.657 177.382 488.523 C 177.385 487.619 177.709 486.455 178.155 486.139 C 178.347 486.003 178.489 485.919 178.786 486.006"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="179.00" y="52.00" width="107" height="107.00"
+<rect x="179.00" y="24.00" width="107" height="107.00"
   fill="none" stroke="#5c5f57" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>一般牙科・定期檢查</b>　107px<br>r1c1・往右下溢出 18／10px，右下那一塊被卡片切掉</figcaption>
 </figure>
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="牙周治療：浮水印 150px，往右 18、往下 10">
-<defs><clipPath id="clip-6"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-6"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-6)" opacity="0.12">
-<svg x="136.00" y="85.07" width="150" height="73.93"
+<svg x="136.00" y="57.07" width="150" height="73.93"
   viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
   fill="#5c5f57" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="136.00" y="85.07" width="150" height="73.93"
+<rect x="136.00" y="57.07" width="150" height="73.93"
   fill="none" stroke="#5c5f57" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>牙周治療</b>　150px<br>r1c2・往右下溢出 18／10px，右下那一塊被卡片切掉</figcaption>
 </figure>
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="齒顎矯正：浮水印 188px，往右 18、往下 10">
-<defs><clipPath id="clip-7"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-7"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-7)" opacity="0.12">
-<svg x="98.00" y="98.04" width="188" height="60.96"
+<svg x="98.00" y="70.04" width="188" height="60.96"
   viewBox="0 0 44.229 14.341" preserveAspectRatio="none"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
   fill="#5c5f57" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="98.00" y="98.04" width="188" height="60.96"
+<rect x="98.00" y="70.04" width="188" height="60.96"
   fill="none" stroke="#5c5f57" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>齒顎矯正</b>　188px<br>r1c3・往右下溢出 18／10px，右下那一塊被卡片切掉</figcaption>
 </figure>
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="顯微根管：浮水印 152px，往右 18、往下 10">
-<defs><clipPath id="clip-8"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-8"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-8)" opacity="0.12">
-<svg x="134.00" y="83.94" width="152" height="75.06"
+<svg x="134.00" y="55.94" width="152" height="75.06"
   viewBox="0 0 44.267 21.861" preserveAspectRatio="none"><g transform="translate(-159.225 433.777) scale(1 -1)"><path
   fill="#5c5f57" fill-rule="evenodd" d="M 200.76 426.819 C 205.142 421.217 203.911 415.88 199.491 412.98 C 196.899 411.28 192.183 411.879 186.857 413.42 C 175.983 416.566 171.53 409.032 163.348 413.214 C 159.665 415.096 156.953 421.343 161.967 426.764 C 171.255 436.805 194.063 435.38 200.76 426.819 M 179.468 430.235 C 179.219 430.162 179.124 430.144 178.881 430.235 C 178.718 430.296 178.497 430.285 178.336 430.235 C 177.811 430.072 177.293 429.036 177.388 427.718 C 177.483 426.401 180.874 426.584 180.872 427.718 C 180.869 428.622 180.545 429.786 180.099 430.102 C 179.907 430.238 179.765 430.322 179.468 430.235 M 183.921 430.235 C 183.672 430.162 183.577 430.144 183.334 430.235 C 183.171 430.296 182.95 430.285 182.789 430.235 C 182.264 430.072 181.746 429.036 181.841 427.718 C 181.936 426.401 185.328 426.584 185.325 427.718 C 185.322 428.622 184.998 429.786 184.552 430.102 C 184.36 430.238 184.218 430.322 183.921 430.235"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="134.00" y="83.94" width="152" height="75.06"
+<rect x="134.00" y="55.94" width="152" height="75.06"
   fill="none" stroke="#5c5f57" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>顯微根管</b>　152px<br>r2c1・往右下溢出 18／10px，右下那一塊被卡片切掉</figcaption>
 </figure>
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="植牙・假牙重建：浮水印 120px，往右 18、往下 10">
-<defs><clipPath id="clip-9"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-9"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-9)" opacity="0.12">
-<svg x="166.00" y="68.91" width="120" height="90.09"
+<svg x="166.00" y="40.91" width="120" height="90.09"
   viewBox="0 0 29.253 21.955" preserveAspectRatio="none"><g transform="translate(-240.487 433.824) scale(1 -1)"><path
   fill="#5c5f57" fill-rule="evenodd" d="M 258.316 412.07 C 263.699 410.812 266.61 415.769 267.523 418.051 C 269.025 421.805 270.191 426.758 269.568 429.365 C 268.74 432.834 265.685 434.439 261.853 433.609 C 253.39 431.776 253.853 432.555 248.515 433.609 C 243.49 434.601 241.244 431.98 240.636 429.365 C 240.028 426.755 241.377 421.108 242.875 418.051 C 244.144 415.462 247.074 410.971 252.502 412.07 C 253.901 412.353 255.844 412.648 258.316 412.07 M 246.025 430.29 C 245.776 430.217 245.681 430.198 245.438 430.29 C 245.275 430.35 245.054 430.34 244.893 430.29 C 244.368 430.126 243.85 429.09 243.945 427.773 C 244.04 426.456 247.432 426.638 247.429 427.773 C 247.426 428.677 247.102 429.84 246.656 430.157 C 246.464 430.292 246.322 430.376 246.025 430.29"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="166.00" y="68.91" width="120" height="90.09"
+<rect x="166.00" y="40.91" width="120" height="90.09"
   fill="none" stroke="#5c5f57" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>植牙・假牙重建</b>　120px<br>r2c2・往右下溢出 18／10px，右下那一塊被卡片切掉</figcaption>
 </figure>
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="口腔外科：浮水印 188px，往右 18、往下 10">
-<defs><clipPath id="clip-10"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-10"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-10)" opacity="0.12">
-<svg x="98.00" y="97.98" width="188" height="61.02"
+<svg x="98.00" y="69.98" width="188" height="61.02"
   viewBox="0 0 44.261 14.366" preserveAspectRatio="none"><g transform="translate(-306.719 430.029) scale(1 -1)"><path
   fill="#5c5f57" fill-rule="evenodd" d="M 312.185 418.502 C 306.828 421.135 305.775 425.468 307.45 427.797 C 309.659 430.869 315.27 430.411 321.373 428.582 C 326.635 427.005 332.793 427.484 336.327 428.617 C 341.177 430.17 346.63 430.902 349.755 428.064 C 352.164 425.877 351.188 420.893 345.319 418.028 C 339.632 415.251 320.637 414.347 312.185 418.502 M 346.101 426.494 C 345.852 426.421 345.757 426.403 345.514 426.494 C 345.351 426.555 345.13 426.544 344.969 426.494 C 344.444 426.331 343.926 425.295 344.021 423.977 C 344.116 422.66 347.507 422.843 347.505 423.977 C 347.502 424.881 347.178 426.045 346.732 426.361 C 346.54 426.497 346.398 426.581 346.101 426.494"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="98.00" y="97.98" width="188" height="61.02"
+<rect x="98.00" y="69.98" width="188" height="61.02"
   fill="none" stroke="#5c5f57" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>口腔外科</b>　188px<br>r2c3・往右下溢出 18／10px，右下那一塊被卡片切掉</figcaption>
 </figure>
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="口腔外科：浮水印 104px，往右 18、往下 10">
-<defs><clipPath id="clip-11"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-11"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-11)" opacity="0.12">
-<svg x="182.00" y="55.00" width="104" height="104.00"
+<svg x="182.00" y="27.00" width="104" height="104.00"
   viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
   fill="#5c5f57" fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="182.00" y="55.00" width="104" height="104.00"
+<rect x="182.00" y="27.00" width="104" height="104.00"
   fill="none" stroke="#5c5f57" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>口腔外科</b>　104px<br>r3c1・往右下溢出 18／10px，右下那一塊被卡片切掉</figcaption>
 </figure>
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="兒童牙科：浮水印 106px，往右 18、往下 10">
-<defs><clipPath id="clip-12"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-12"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-12)" opacity="0.12">
-<svg x="180.00" y="52.89" width="106" height="106.11"
+<svg x="180.00" y="24.89" width="106" height="106.11"
   viewBox="0 0 44.221 44.266" preserveAspectRatio="none"><g transform="translate(-233.002 374.392) scale(1 -1)"><path
   fill="#5c5f57" fill-rule="evenodd" d="M 240.173 330.126 C 237.214 330.126 233.002 331.801 233.002 339.494 C 233.002 339.494 233.365 359.509 246.254 371.273 C 251.307 375.885 259.611 374.953 263.874 371.273 C 272.504 363.821 277.223 347.577 277.223 338.885 C 277.223 332.768 274.88 330.126 270.082 330.126 Z M 257.439 370.907 C 257.19 370.834 257.095 370.816 256.853 370.907 C 256.689 370.968 256.468 370.957 256.307 370.907 C 255.782 370.744 255.264 369.708 255.359 368.39 C 255.454 367.073 258.846 367.256 258.843 368.39 C 258.84 369.294 258.516 370.458 258.07 370.774 C 257.878 370.91 257.736 370.994 257.439 370.907"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="180.00" y="52.89" width="106" height="106.11"
+<rect x="180.00" y="24.89" width="106" height="106.11"
   fill="none" stroke="#5c5f57" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>兒童牙科</b>　106px<br>r3c2・往右下溢出 18／10px，右下那一塊被卡片切掉</figcaption>
 </figure>
 <figure class="cmp">
-<svg viewBox="-6 -6 300 173"
-  width="300" height="173"
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
   role="img" aria-label="一般牙科・定期檢查：浮水印 215px，往右 18、往下 10">
-<defs><clipPath id="clip-13"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<defs><clipPath id="clip-13"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-13)" opacity="0.12">
-<svg x="71.00" y="89.26" width="215" height="69.74"
+<svg x="71.00" y="61.26" width="215" height="69.74"
   viewBox="0 0 44.322 14.378" preserveAspectRatio="none"><g transform="translate(-306.689 359.486) scale(1 -1)"><path
   fill="#5c5f57" fill-rule="evenodd" d="M 326.482 352.763 C 322.051 356.284 318.54 362.303 311.648 357.984 C 304.8 353.692 305.054 344.099 312.348 345.194 C 320.662 346.443 327.623 349.699 339.17 345.971 C 348.848 342.846 350.834 349.33 350.976 350.796 C 351.244 353.557 350.042 358.07 344.814 357.208 C 340.519 356.499 339.1 353.546 335.25 351.658 C 331.729 349.932 328.581 351.095 326.482 352.763 M 316.169 355.937 C 315.92 355.864 315.825 355.846 315.582 355.937 C 315.419 355.998 315.198 355.987 315.037 355.937 C 314.512 355.774 313.994 354.738 314.089 353.42 C 314.184 352.103 317.575 352.286 317.573 353.42 C 317.57 354.324 317.246 355.488 316.8 355.804 C 316.608 355.94 316.466 356.024 316.169 355.937"/></g></svg>
 </g>
-<rect x=".5" y=".5" width="267" height="148" rx="9"
+<rect x=".5" y=".5" width="267" height="120" rx="9"
   fill="none" stroke="#c9ccc9"/>
-<rect x="71.00" y="89.26" width="215" height="69.74"
+<rect x="71.00" y="61.26" width="215" height="69.74"
   fill="none" stroke="#5c5f57" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>一般牙科・定期檢查</b>　215px<br>r3c3・往右下溢出 18／10px，右下那一塊被卡片切掉</figcaption>
@@ -694,8 +684,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 <div class="stgrid">
 <figure class="stwrap">
 <div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p>
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#4478b5">已排定</span></p>
 <svg class="wm" width="188" height="60.96"
@@ -707,8 +696,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>
 <figure class="stwrap">
 <div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p>
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#3f654a">已確認</span></p>
 <svg class="wm" width="188" height="60.96"
@@ -720,8 +708,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>
 <figure class="stwrap">
 <div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p>
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#c28229">未回覆</span></p>
 <svg class="wm" width="188" height="60.96"
@@ -733,8 +720,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>
 <figure class="stwrap">
 <div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0;white-space:pre">2026/09/11 星期五
-11:50</p>
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#ae4f4d">已取消</span></p>
 <svg class="wm" width="188" height="60.96"

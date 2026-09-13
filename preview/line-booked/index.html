@@ -515,6 +515,17 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     long:  { name: "現況・長版", f: function (a) { return "2026/" + two(a.m) + "/" + two(a.d) + " " + a.t + " 星期" + a.w; } },
     short: { name: "現況・短版", f: function (a) { return "2026/" + two(a.m) + "/" + two(a.d) + " (" + a.w + ") " + a.t; } },
     cn:    { name: "新版・中文", f: function (a) { return a.m + "月" + a.d + "日 (" + a.w + ") " + a.t; } },
+    /* ⚠⚠⚠ 2026-09-13 定案改成下面這一格（數字月日）。使用者：「約診完成通知和
+       約診狀態頁面，時間不要斷行。」判準因此變成「整串要放得下一行」，而輪播那張卡
+       只有 207px、扣掉內距可用 179px（日期又是全卡最大的字 19px 粗體）：
+         2026/09/11 星期五 11:50   250px   兩種卡都折
+         2026/09/11 (五) 11:50     230px   單張卡一行、輪播折
+         9月11日 (五) 11:50        188px   他手機上量到 172px，只剩 5px 餘裕 ——
+           ⚠⚠ 而且**中文月日不是固定寬**：10月／11月／12月多一個數字（約 +10px），
+              那三個月在輪播上就會折 ＝ 一年有四分之一的時間，時間會掉到第二行
+         09/11 (五) 11:50          170px   兩種卡、一年十二個月都是一行   ← 定案
+       ⚠ 「月日改中文」那一件因此只留在提醒卡（那張卡 268 寬、日期 22px，放得下）。 */
+    nu:    { name: "新版・數字", f: function (a) { return two(a.m) + "/" + two(a.d) + " (" + a.w + ") " + a.t; } },
     /* ⚠ 2026-09-05 加的：他寫的是「**年**月日（星期）時間」，而上面三格
        只有現況那兩格帶年份。所以把「中文＋年」單獨做一格，讓他看得到
        多那三個字在 240px 上會不會把日期擠到第二行。 */
@@ -667,7 +678,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      （CLAUDE.md 第十一之五節：規格頁不留切換條，網址參數也不留 ——
        留著的話廠商拿到的網址會帶著一組他看不懂的字母，而那一頁又不見得是定案的樣子。）
      使用者挑的六件（兩張截圖上他自己圈的）：
-       日期     新版・中文（去年份、月日改中文）  dt   = "cn"
+       日期     新版・數字（去年份、半形括號）    dt   = "nu"
+                ⚠ 2026-09-13 從「中文月日」換過來，理由在 DATE 那一段：
+                  中文月日不是固定寬，10~12 月在輪播那張卡上會折、時間掉到第二行
        卡片長相 每張不同（九顆浮水印）            look = "wm9"
        字級     日期 19 ・ 姓名 16                tz   = "c"
        小字記號 沒有記號                          fine = "none"
@@ -675,7 +688,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        其餘     不放地址電話／頭圖／頁首標誌      ad/hero/gh = none
      ⚠ `msg` 與 `v` 仍然是變數 —— 這一頁**四段都要畫**（新版兩則 ＋ 現況兩則），
        所以它們是「現在在畫哪一段」，不是使用者的選擇。 */
-  var msg = "booked", v = "nw", dt = "cn", look = "wm9", ad = "none", hero = "n", wmk = "12",
+  var msg = "booked", v = "nw", dt = "nu", look = "wm9", ad = "none", hero = "n", wmk = "12",
       gh = "none", nm = "top", tz = "c", fine = "none";
 
 
@@ -905,12 +918,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   function render() {
     /* ① 新版・預約成功 */
-    msg = "booked"; v = "nw"; dt = "cn";
+    msg = "booked"; v = "nw"; dt = "nu";
     document.getElementById("pv-chat1").innerHTML = bookedChat("pv-slot");
     measure("pv-slot", "pv-panel1");
 
     /* ② 新版・約診紀錄查詢（輪播） */
-    msg = "query"; v = "nw"; dt = "cn";
+    msg = "query"; v = "nw"; dt = "nu";
     document.getElementById("pv-chat2").innerHTML = queryChat("pv-slot2");
     measure("pv-slot2", "pv-panel2");
 
@@ -926,7 +939,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       /* ⚠ 只畫一張：藥丸 ＋ 淡墨色的浮水印（2026-09-12 使用者挑定）。
          「字套色」那一版的程式碼留在 nwCard 裡（stat === "txt"），
          但**頁面上不再畫它** —— 它輸在「套色拿來當字是用錯階」，數字寫在面板上。 */
-      msg = "query"; v = "nw"; dt = "cn";
+      msg = "query"; v = "nw"; dt = "nu";
       stat = "pill"; wmink = true;
       document.getElementById("pv-chat7").innerHTML = queryChat("pv-slot7");
       measure("pv-slot7", "pv-panel7");
@@ -974,7 +987,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     measure("pv-slot4", "pv-panel4");
 
     /* 畫完把狀態還原成定稿那一組，免得之後有人拿它當現值讀。 */
-    msg = "booked"; v = "nw"; dt = "cn";
+    msg = "booked"; v = "nw"; dt = "nu";
 
     wmRef();
     document.getElementById("pv-note").innerHTML = note();

@@ -129,6 +129,9 @@ for (const m of html.matchAll(/href="(\/preview\/[^"]+)"/g)) {
 }
 if (!bad.some((b) => b.startsWith("⑥"))) ok("⑥ 內部連結都通");
 
+/* 資料（⑦ 量日期那一行時就要用到，所以在這裡讀） */
+const LOG = JSON.parse(fs.readFileSync(path.join(HERE, "vendor-log.json"), "utf8"));
+
 /* ⑦ 版面 -------------------------------------------------------------- */
 const chrome = (() => {
   const base = process.env.PLAYWRIGHT_BROWSERS_PATH || "/opt/pw-browsers";
@@ -142,6 +145,14 @@ const mod = await import("/opt/node22/lib/node_modules/playwright/index.js");
 const { chromium } = mod.default ?? mod;
 const browser = await chromium.launch({ executablePath: chrome });
 const errs = [];
+/* ⚠⚠ 日期那一行畫出來**幾行** —— 2026-09-13 定案「時間不要斷行」，判準只有一個：
+   那一行在每一張卡上都只准畫一列。量的是墨（逐字取 rect 照 top 分組、空白跳過），
+   不是屬性；而這台容器的字型比 LINE 寬約一成，所以在這裡放得下 ＝ 在 LINE 上一定
+   放得下。結果交給 ⑰ 判。
+   ⚠⚠ 同一趟順便量第 3 節那張卡的**內容高**：那張卡的高度是那四行自己撐出來的，
+   對不上就會在底下留一塊沒有人解釋得了的空白（2026-09-13 使用者一開始講的正是那一句）。 */
+let 日期行 = null;
+let 卡內容 = null;
 for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
   const page = await browser.newPage({ viewport: { width: w, height: 800 } });
   page.on("pageerror", (e) => errs.push(`${w}: ${e.message}`));
@@ -149,6 +160,37 @@ for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
   const over = await page.evaluate(() =>
     Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth));
   if (over > 0) bad.push(`⑦ ${w} 水平溢出 ${over}px`);
+  if (w === 430) {
+    日期行 = await page.evaluate((d) => {
+      const 目標 = d.replace(/\s+/g, "");
+      const out = [];
+      for (const p of document.querySelectorAll(".cb p")) {
+        if (p.textContent.replace(/\s+/g, "") !== 目標) continue;
+        const node = p.firstChild;
+        if (!node || node.nodeType !== 3) { out.push({ 行: -1, 寬: 0, 可用: 0 }); continue; }
+        const r = document.createRange();
+        const tops = new Map();
+        for (let i = 0; i < node.length; i++) {
+          if (/\s/.test(node.data[i])) continue;   // 量的是墨，空白沒有墨
+          r.setStart(node, i); r.setEnd(node, i + 1);
+          const rc = r.getBoundingClientRect();
+          const k = Math.round(rc.top);
+          const g = tops.get(k) || { l: rc.left, r: rc.right };
+          tops.set(k, { l: Math.min(g.l, rc.left), r: Math.max(g.r, rc.right) });
+        }
+        const 行 = [...tops.values()];
+        out.push({
+          行: 行.length,
+          寬: +Math.max(...行.map((g) => g.r - g.l)).toFixed(1),
+          可用: +p.getBoundingClientRect().width.toFixed(1),
+        });
+      }
+      return out;
+    }, LOG.日期?.例 || "");
+    卡內容 = await page.evaluate(() =>
+      [...document.querySelectorAll("foreignObject .cb")]
+        .map((e) => +e.getBoundingClientRect().height.toFixed(2)));
+  }
   await page.close();
 }
 await browser.close();
@@ -222,7 +264,6 @@ else ok("⑨ 沒有判語、沒有警示色、沒有警示記號");
    只有把頁面打開看才看得到。順便要求三種現象各自都寫了「還沒說明的」：
    一個現象只寫它說明了什麼，讀的人就沒有材料判斷它接不接得上那一句話。 */
 if (/\bundefined\b/.test(html)) bad.push("⑩ 頁面上出現 undefined ＝ 有一個欄位名打錯了");
-const LOG = JSON.parse(fs.readFileSync(path.join(HERE, "vendor-log.json"), "utf8"));
 for (const r of LOG.綁定.現象.列)
   for (const k of ["看到", "說明的是", "還沒說明的"])
     if (!r[k]) bad.push(`⑩ 現象「${r.型 || "?"}」缺「${k}」`);
@@ -471,20 +512,24 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
 }
 
 /* ⑰ 卡片上那幾行 ------------------------------------------------------
-   2026-09-13 使用者兩件：「預約成功通知　對話框裡文字下有一個很大的空白……
+   2026-09-13 使用者三件：「預約成功通知　對話框裡文字下有一個很大的空白……
    我們一開始是把 logo 當浮水印，這樣就不會有很大的空白」、
-   「約診狀態的頁面，星期幾不要和前面的日期斷開」。
+   「約診狀態的頁面，星期幾不要和前面的日期斷開」、
+   稍晚：「約診完成通知和約診狀態頁面，時間不要斷行。」
    ⚠ 這一道擋的每一件加回舊的樣子都不會讓任何一道版面守門翻臉：
-     ① 資料裡的日期被改回「時間在前、星期幾在後」那一種
-     ② 斷行被拿掉（交給寬度去折，折點就跟著字型跑）
+     ① 資料裡的日期被改回長的那一種（帶年份、或星期幾全寫）
+     ② 日期那一行畫出來變成兩行（時間又被折下去）——**量畫出來的墨，不是量屬性**
      ③ 產生器裡另外寫死一個日期
      ④ 那幾張卡退回只畫兩行（＝底下又空一大塊）
      ⑤ 卡上那四行被另外打一份字，而不是從 booked-card.json 讀出來
-     ⑥ 第 4 節少畫一張卡、或浮水印退回 0／0、退回各科原色 */
+     ⑥ 第 4 節少畫一張卡、或浮水印退回 0／0、退回各科原色
+     ⑦ 日期那一行被寫回 white-space: pre —— 那樣畫不下也不會折，會靜靜地
+        溢出到卡片外面，而 ② 那一道就等於關掉了 */
 {
   const DT = LOG.日期 || {};
-  if (!/^\d{4}\/\d{2}\/\d{2} 星期[一二三四五六日]\n\d{2}:\d{2}$/.test(DT.例 || ""))
-    bad.push(`⑰ vendor-log.json 的「日期」不是「年月日 星期幾／換行／時間」：${JSON.stringify(DT.例)}`);
+  if (!/^\d{2}\/\d{2} \([一二三四五六日]\) \d{2}:\d{2}$/.test(DT.例 || ""))
+    bad.push(`⑰ vendor-log.json 的「日期」不是「月/日 (星期) 時間」那一行寫法：${JSON.stringify(DT.例)}`);
+  if (/\n/.test(DT.例 || "")) bad.push("⑰ 日期的例子裡有換行 —— 定案是一行寫完，時間不要斷行");
   if (!/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 星期[一二三四五六日]$/.test(DT.廠商 || ""))
     bad.push(`⑰ vendor-log.json 的「日期.廠商」不是他們 09-10 那一版：${JSON.stringify(DT.廠商)}`);
   if (DT.例 && DT.例 === DT.廠商) bad.push("⑰ 「例」和「廠商」一樣，那就沒有東西要調了");
@@ -532,10 +577,10 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
       if (行文[k] !== esc(t).replace(/<[^>]+>/g, ""))
         bad.push(`⑰ 第 3 節第 ${i + 1} 張卡的第 ${k + 1} 行和 booked-card.json 不一樣`);
     });
-    /* 日期那一行的斷行是我們指定的，所以要 white-space: pre */
-    if (!/white-space:pre/.test(ps[1]))
-      bad.push(`⑰ 第 3 節第 ${i + 1} 張卡的日期那一行沒有 white-space:pre`
-        + " —— 交給寬度去折，折點會跟著字型跑，星期幾就會被拆開");
+    /* ⚠ 反過來了：日期那一行不可以有 white-space: pre（見這一節抬頭第 ⑦ 條） */
+    if (/white-space:pre/.test(ps[1]))
+      bad.push(`⑰ 第 3 節第 ${i + 1} 張卡的日期那一行寫了 white-space:pre`
+        + " —— 畫不下時它不會折、會溢出到卡片外面，「一行」那一道就等於關掉了");
   });
 
   /* 第 4 節：一個值一張卡，每一張都要有那兩行、藥丸與浮水印 */
@@ -553,9 +598,9 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
       if (行文[k] !== esc(t).replace(/<[^>]+>/g, ""))
         bad.push(`⑰ 第 4 節第 ${i + 1} 張卡的第 ${k + 1} 行和 booked-card.json 不一樣`);
     });
-    if (!/white-space:pre/.test(c))
-      bad.push(`⑰ 第 4 節第 ${i + 1} 張卡的日期那一行沒有 white-space:pre`
-        + " —— 那正是星期幾會被折到下一行的成因");
+    if (/white-space:pre/.test(c))
+      bad.push(`⑰ 第 4 節第 ${i + 1} 張卡的日期那一行寫了 white-space:pre`
+        + " —— 畫不下時它不會折、會溢出到卡片外面");
     if (v.色 && !c.includes(`background:${v.色}`))
       bad.push(`⑰ 第 4 節第 ${i + 1} 張卡的藥丸不是「${v.名}」那一顆色 ${v.色}`);
     if (!/<svg class="wm"/.test(c)) bad.push(`⑰ 第 4 節第 ${i + 1} 張卡沒有浮水印`);
@@ -574,9 +619,41 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
       if (!w.includes(`fill="${ink}"`)) bad.push(`⑰ 第 4 節有一張卡的浮水印不是定案的淡墨 ${ink}`);
   }
 
+  /* ⚠⚠⚠ 這一道才是「時間不要斷行」本身：量每一張卡上那一行**畫出來幾列**。
+     頁上一共 13 ＋ 4 張卡，每一張都只准一列；量到兩列就是時間又被折下去了，
+     而畫面上完全正常（卡片高度是固定的，多一列只是擠進去）。 */
+  /* 卡片的高度是那四行自己撐出來的 —— 差太多就是底下又空了一塊（或字被擠出去） */
+  if (!Array.isArray(卡內容) || !卡內容.length)
+    bad.push("⑰ 一張卡的內容高都沒量到 —— 那一道等於沒跑");
+  else {
+    const 卡高 = LOG.浮水印?.對照?.卡?.h;
+    const 差 = 卡內容.map((h) => +(h - 卡高).toFixed(2)).filter((d) => Math.abs(d) > 1.5);
+    if (差.length)
+      bad.push(`⑰ 有 ${差.length} 張卡的內容高和卡高 ${卡高}px 差 ${差[0]}px`
+        + " —— 卡片的高度是那四行撐出來的，對不上就會在底下留一塊空白");
+    else ok(`⑰ 卡高 ${卡高}px ＝ 那四行撐出來的高度（量到 ${卡內容[0]}px），底下沒有空白`);
+  }
+
+  if (!Array.isArray(日期行) || !日期行.length)
+    bad.push("⑰ 一行日期都沒量到 —— 那一道等於沒跑（選擇器或日期的寫法改了？）");
+  else {
+    const 該有 = plates.length + cards.length;
+    if (日期行.length !== 該有)
+      bad.push(`⑰ 量到 ${日期行.length} 行日期，頁上那 ${該有} 張卡每一張都該有一行`);
+    const 折 = 日期行.filter((x) => x.行 !== 1);
+    if (折.length)
+      bad.push(`⑰ 有 ${折.length} 張卡的日期畫成 ${折[0].行} 行 —— 時間被折下去了`
+        + `（那一行要 ${折[0].寬}px，可用 ${折[0].可用}px）`);
+    else {
+      const 最寬 = Math.max(...日期行.map((x) => x.寬));
+      const 最窄 = Math.min(...日期行.map((x) => x.可用));
+      ok(`⑰ 日期那一行 ${最寬}px，最窄的一張卡可用 ${最窄}px —— ${日期行.length} 張都是一行`);
+    }
+  }
+
   if (!bad.some((x) => x.startsWith("⑰")))
     ok(`⑰ 卡上那幾行都是從 booked-card.json 讀出來的（單張 ${MEGA.length} 行、輪播 ${MICRO.length} 行），`
-      + `日期是「${(DT.例 || "").replace("\n", " ／ ")}」，星期幾跟著它的日期`);
+      + `日期是「${DT.例}」，一行寫完、時間沒有被折下去`);
 }
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }

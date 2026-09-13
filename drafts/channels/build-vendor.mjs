@@ -50,6 +50,14 @@ const ROOT = join(HERE, "..", "..");
 const OUT = join(ROOT, "preview", "line-vendor");
 
 const D = JSON.parse(readFileSync(join(HERE, "vendor-log.json"), "utf8"));
+/* 引用別頁那兩張規格圖時，尺寸**現場讀 PNG 檔頭**，不寫死 ——
+   2026-09-13 日期收成一行之後那兩張圖自己矮了（卡片跟著內容縮），
+   寫死的那個高度當場就開始說謊（守門 ⑧ 抓得到，但那時圖已經畫歪了）。 */
+const pngWH = (rel) => {
+  const b = readFileSync(join(OUT, rel));
+  if (b.toString("latin1", 1, 4) !== "PNG") throw new Error(`${rel} 不是 PNG`);
+  return [b.readUInt32BE(16), b.readUInt32BE(20)];
+};
 
 /* ── 「第 6 節的第 N 題」那個號碼不要寫死 ──────────────────────────────
    待答那一組收掉或補一題，整組的號碼就會位移，而寫死的那個數字**畫面上完全
@@ -152,15 +160,23 @@ const WM = (() => {
    與第 4 節那四張 HTML 卡吃的是同一組數字 —— 分成兩份的話，同一頁上會畫出
    兩種字級的同一張卡，而版面完全正常。 */
 const DATE = D.日期;
-/* 2026-09-13：日期的排法調了 —— 星期幾移到日期後面，時間自己一行。
-   使用者：「約診狀態的頁面，星期幾不要和前面的日期斷開」。
-   只把星期幾移過去是不夠的：輪播那張卡只有 207px，日期本來就放不下一行，
-   交給瀏覽器（或 LINE）自己折，折點會跟著字型跑 —— 實測這台容器折在
-   「星期／五」中間，連那三個字自己都被拆開。所以斷行要是**我們指定的**
-   （那一格填成「…星期五」＋換行＋「11:50」），寬度就不再參與這件事。
+/* 2026-09-13（第二輪）：日期收短成**一行**。使用者：「約診完成通知和約診狀態
+   頁面，時間不要斷行。」
+   ⚠⚠ 同一天早上那一版是「星期幾移到日期後面、時間自己一行」，那一版把時間折下去
+   正是他現在要治的東西；而「時間不斷行」與「星期幾跟著它的日期」要同時成立，
+   就只剩一條路 —— **整串放得下一行**。量出來（19px 粗體，這台容器的字型比 LINE
+   寬約一成）：
+     2026/09/11 星期五 11:50   250.4px   單張卡（可用 240）折、輪播（179）折
+     2026/09/11 (五) 11:50     229.7px   單張卡一行、輪播折（時間掉到第二行）
+     09/11 (五) 11:50          169.9px   兩種卡都一行   ← 定案
+   所以定案的兩件是：**年份拿掉**、**星期幾用半形括號接在日期後面**
+   （＝ 提醒卡那一則本來就在用的寫法，對廠商是最便宜的要求）。
+   ⚠ 這一台的字型比 LINE 寬一成，所以「在這裡也放得下」＝ 在 LINE 上一定放得下 ——
+     守門因此直接量這一頁畫出來的行數（⑰），量到兩行就是壞了。
    兩種寫法都留在資料裡：「廠商」是他們 09-10 送來的、「例」是我們要的。 */
-if (!/^\d{4}\/\d{2}\/\d{2} 星期[一二三四五六日]\n\d{2}:\d{2}$/.test(DATE.例 || ""))
-  throw new Error(`日期的例子不是「年月日 星期幾／換行／時間」那一種寫法：${JSON.stringify(DATE.例)}`);
+if (!/^\d{2}\/\d{2} \([一二三四五六日]\) \d{2}:\d{2}$/.test(DATE.例 || ""))
+  throw new Error(`日期的例子不是「月/日 (星期) 時間」那一行寫法：${JSON.stringify(DATE.例)}`);
+if (/\n/.test(DATE.例)) throw new Error("日期的例子裡有換行 —— 定案是一行寫完，時間不要斷行");
 if (!/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 星期[一二三四五六日]$/.test(DATE.廠商 || ""))
   throw new Error(`日期的「廠商」那一欄不是他們 09-10 那一版的寫法：${JSON.stringify(DATE.廠商)}`);
 if (DATE.例 === DATE.廠商) throw new Error("日期的「例」和「廠商」一樣，那就沒有東西要調了");
@@ -174,8 +190,11 @@ const FSIZE = { xxs: 11, xs: 13, sm: 14, md: 16, lg: 19, xl: 22, xxl: 27 };
    2026-09-13 使用者：「預約成功通知　對話框裡文字下有一個很大的空白　看起來會覺得
    是文字寫好，再另外塞 logo 浮水印，但空間不夠所以往下拉對話框。這樣不對；
    我們一開始是把 logo 當浮水印，這樣就不會有很大的空白。」
-   成因是這一頁只畫了兩行，而那張卡是照真正的四行量出來的 268×149 —— 底下那一塊
-   空白是「少畫的兩行」，不是卡片被撐開。所以這裡把四行**從 booked-card.json 讀出來**
+   成因是這一頁只畫了兩行，而那張卡是照真正的四行量出來的 —— 底下那一塊
+   空白是「少畫的兩行」，不是卡片被撐開。
+   ⚠⚠ 2026-09-13 稍晚（日期收成一行那一輪）卡高從 149 改成 121：那四行少了一行，
+   卡片自己就要跟著矮下來 —— 框的高度是內容撐出來的，維持 149 等於又留一塊
+   空白在底下（＝他一開始講的那一句）。守門（⑰）現場量內容高，對不上就擋。所以這裡把四行**從 booked-card.json 讀出來**
    （那一份才是出處，這一頁不另外打一份字）。
    ⚠ 這是這一頁唯一一處會印出訊息文字的地方，所以第 ② 道守門掃之前會先把
      foreignObject 剝掉，另由第 ⑰ 道逐字比對它和 JSON 一不一樣。 */
@@ -192,10 +211,10 @@ const cardLines = (key) => {
     color: t.color || "#2A2C27",
     weight: t.weight === "bold" ? 700 : 400,
     margin: t.margin ? parseFloat(t.margin) : 0,
-    /* 日期那一格的斷行是我們指定的（見上面），所以那一行要 white-space: pre ——
-       交給瀏覽器自己折的話，這台容器的字型比 LINE 寬，會在「星期／五」中間再折
-       一次，而那正是這一輪要治的東西。 */
-    pre: /\{\{date\}\}/.test(t.text || ""),
+    /* ⚠ 日期那一行**不要** white-space: pre：定案是「整串放得下一行」，不是
+       「我們指定一個斷行」。讓它照正常規則排，折到第二行就是壞了，而守門
+       （⑰）量的正是它畫出來幾行 —— 寫 pre 的話畫不下也不會折，會靜靜地
+       溢出到卡片外面，那一道就等於關掉了。 */
     /* span 那一行：粗的那一段（姓名）要跟著粗 */
     html: (t.contents || [{ text: t.text, weight: t.weight }])
       .map((sp) => (sp.weight === "bold" && !t.weight
@@ -204,14 +223,14 @@ const cardLines = (key) => {
 };
 const linesHtml = (rows) => rows.map((r, i) => `<p style="font-size:${r.size}px;`
   + `color:${r.color};font-weight:${r.weight};`
-  + `margin:${i === 0 ? 0 : r.margin}px 0 0${r.pre ? ";white-space:pre" : ""}">${r.html}</p>`).join("");
+  + `margin:${i === 0 ? 0 : r.margin}px 0 0">${r.html}</p>`).join("");
 const SC = D.狀態色;
 
 /* 哪一顆浮水印：`(約診月份 + 約診日) % 9`（＝要請廠商照著填的那條規則）。
    同一筆約診不管是哪一種狀態都是同一顆，所以下面那四張卡共用它。 */
 const 輪 = (() => {
-  const m = DATE.例.match(/^(\d{4})\/(\d{2})\/(\d{2})/);
-  const i2 = (Number(m[2]) + Number(m[3])) % WM.length;
+  const m = DATE.例.match(/^(\d{2})\/(\d{2})/);
+  const i2 = (Number(m[1]) + Number(m[2])) % WM.length;
   return WM[i2];
 })();
 
@@ -441,7 +460,8 @@ const 改 = D.改版;
 const revised = `
 <div class="two">
 <figure class="fig">
-<img src="../line-booked/shot-booked.png" width="804" height="450" loading="lazy"
+<img src="../line-booked/shot-booked.png" width="${pngWH("../line-booked/shot-booked.png")[0]}"
+  height="${pngWH("../line-booked/shot-booked.png")[1]}" loading="lazy"
   alt="我們送過去的預約成功通知規格圖">
 <figcaption>我們送過去的規格圖（預約成功通知）</figcaption>
 </figure>
@@ -473,8 +493,10 @@ ${改.收掉.map((x) => `<div class="row"><p class="k">${b(x.事)}</p><p class="
 </div>
 
 <figure class="fig">
-<div class="scroll"><img src="../line-booked/shot-query.png" width="2565" height="366"
-  style="width:855px" loading="lazy" alt="我們送過去的約診紀錄查詢規格圖（輪播）"></div>
+<div class="scroll"><img src="../line-booked/shot-query.png" width="${pngWH("../line-booked/shot-query.png")[0]}"
+  height="${pngWH("../line-booked/shot-query.png")[1]}"
+  style="width:${pngWH("../line-booked/shot-query.png")[0] / 3}px" loading="lazy"
+  alt="我們送過去的約診紀錄查詢規格圖（輪播）"></div>
 <figcaption>我們送過去的規格圖（約診紀錄查詢，輪播．這一條可以左右滑）。日期會被截斷的是這一種
 micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>`.trim();
