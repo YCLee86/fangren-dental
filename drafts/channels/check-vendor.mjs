@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 守門：廠商對接那一頁（preview/line-vendor/）
 //
-// 擋十六件：
+// 擋十七件：
 //  ① 重跑 build-vendor.mjs、逐位比對（有人手改了頁面，或改了 JSON 卻忘了重跑）
 //  ② ⚠⚠ 頁面上不可以出現「七則訊息的文字」—— 那些字的出處是各自的 Flex JSON 與
 //     auto-reply.txt，抄進來就是第八個真相。這一道從那些檔裡現抽長句去掃。
@@ -31,6 +31,10 @@
 //  ⑭ ⚠⚠ 這一頁 2026-09-13 起是給廠商看的：那幾段「我們自己怎麼推出來的」不可以
 //     印回頁面上（接回去不會讓任何一道版面守門翻臉），但也不可以從 vendor-log.json
 //     裡刪掉 —— 落選理由與推導不要跟著畫面一起消失
+//  ⑰ 卡片上那一行日期：寫法就是廠商 09-10 那一版，而且只有一個出處
+//     （vendor-log.json 的「日期」）。第 3 節那幾張 SVG 卡與第 4 節那四張 HTML 卡
+//     都要畫得出它；產生器裡不可以另外寫死一個日期 —— 寫死的話換一個例子
+//     只會換掉其中一半，而同一頁上會出現兩種日期，畫面完全正常
 //  ⑯ 待調整那一組照抬頭那四件排（每一列宣告 `未定案`，圈號一個都不換）、
 //    「已完成」那一組不准宣告、卡片上印得出「未定案 N」
 //  ⑮ 抬頭那一塊「未定案」：四件的順序與子項數目、收掉的那一件沒有印回來、
@@ -363,7 +367,7 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
     if (new Set(offs).size > 1) bad.push("⑮ 「我們要的」那幾格的溢出量彼此不一樣：" + offs.join("、"));
     const off = offs[0];
     if (off) {
-      const on = (html.match(/<div class="onnine">([\s\S]*?)<\/div>\s*\n/) || [])[1] || "";
+      const on = (html.match(/<div class="onnine">\n([\s\S]*?)\n<\/div>/) || [])[1] || "";
       const [r0, b0] = off.split("/");
       const want = new RegExp(`往右 ${r0}、往下 ${b0}`, "g");
       const hit = (on.match(want) || []).length;
@@ -379,7 +383,7 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   }
 
   /* 九顆都要畫在卡片上，不是只有廠商用過的那兩顆 */
-  const on = (html.match(/<div class="onnine">([\s\S]*?)<\/div>\s*\n/) || [])[1] || "";
+  const on = (html.match(/<div class="onnine">\n([\s\S]*?)\n<\/div>/) || [])[1] || "";
   const plates = (on.match(/<figure class="cmp">/g) || []).length;
   if (plates !== 9) bad.push(`⑮ 九顆上卡那一排畫了 ${plates} 張，應該是九張`);
 
@@ -454,6 +458,68 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   }
   if (!bad.some((x) => x.startsWith("⑯")))
     ok("⑯ 待調整那一組照未定案四件排：" + 印.map(([n, k]) => `${n}→${k}`).join("　"));
+}
+
+/* ⑰ 卡片上那一行日期 --------------------------------------------------
+   2026-09-13 使用者：「把約診狀態和 9 個 logo 依照廠商的日期格式都做一次」。
+   ⚠ 這一道擋四件，四件加回舊的樣子都不會讓任何一道版面守門翻臉：
+     ① 資料裡的例子被改成別種寫法 ② 產生器裡另外寫死一個日期
+     ③ 哪一張卡沒有畫那一行 ④ 第 4 節那四張卡少畫一張、或浮水印退回 0／0 */
+{
+  const DT = LOG.日期 || {};
+  if (!/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 星期[一二三四五六日]$/.test(DT.例 || ""))
+    bad.push(`⑰ vendor-log.json 的「日期」不是廠商 09-10 那一版的寫法：${DT.例}`);
+  if (!DT.姓名) bad.push("⑰ vendor-log.json 的「日期」沒有寫姓名那一行要印什麼");
+
+  const gen = fs.readFileSync(path.join(HERE, "build-vendor.mjs"), "utf8");
+  if (/\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}/.test(gen))
+    bad.push("⑰ build-vendor.mjs 裡寫死了一個日期 —— 唯一出處要是 vendor-log.json");
+
+  if (DT.例) {
+    /* 第 3 節：對照那幾格 ＋ 九顆上卡，每一張都要畫得出那一行 */
+    const 該畫 = (LOG.浮水印?.對照?.組 || []).reduce((n, r) => n + (r.格 || []).length, 0) + 9
+      + (LOG.狀態色?.藥丸?.值 || []).length;
+    const 畫了 = (html.match(new RegExp(`<p class="dt">${DT.例}</p>`, "g")) || []).length;
+    if (畫了 !== 該畫)
+      bad.push(`⑰ 只有 ${畫了} 張卡畫了日期，第 3 節與第 4 節加起來應該是 ${該畫} 張`);
+    const 名了 = (html.match(new RegExp(`<p class="pt">${DT.姓名}</p>`, "g")) || []).length;
+    if (名了 !== 該畫)
+      bad.push(`⑰ 只有 ${名了} 張卡畫了姓名，第 3 節與第 4 節加起來應該是 ${該畫} 張`);
+
+    const fo = (html.match(/<foreignObject /g) || []).length;
+    if (fo !== 該畫 - (LOG.狀態色?.藥丸?.值 || []).length)
+      bad.push(`⑰ 第 3 節有 ${fo} 張卡用 foreignObject 排字 —— 改回 <text> 就要自己估字寬，而估寬會跟著字型跑`);
+
+    /* 第 4 節：一個值一張卡，每一張都要有姓名、日期、藥丸與浮水印 */
+    const cards = html.match(/<div class="stcard cb">[\s\S]*?<\/svg>/g) || [];
+    const vals = LOG.狀態色?.藥丸?.值 || [];
+    if (cards.length !== vals.length)
+      bad.push(`⑰ 第 4 節畫了 ${cards.length} 張卡，四個值應該是 ${vals.length} 張`);
+    cards.forEach((c, i) => {
+      const v = vals[i] || {};
+      if (!c.includes(`<p class="pt">${DT.姓名}</p>`)) bad.push(`⑰ 第 4 節第 ${i + 1} 張卡沒有姓名那一行`);
+      if (!c.includes(`<p class="dt">${DT.例}</p>`)) bad.push(`⑰ 第 4 節第 ${i + 1} 張卡沒有日期那一行`);
+      if (v.色 && !c.includes(`background:${v.色}`))
+        bad.push(`⑰ 第 4 節第 ${i + 1} 張卡的藥丸不是「${v.名}」那一顆色 ${v.色}`);
+      if (!/<svg class="wm"/.test(c)) bad.push(`⑰ 第 4 節第 ${i + 1} 張卡沒有浮水印`);
+    });
+  }
+
+  /* 浮水印要和第 3 節那九張同一種擺法（淡墨 ＋ 往右下溢出），偏移量從對照表讀 */
+  const mine = (LOG.浮水印?.對照?.組?.[0]?.格 || []).find((g) => g.標 === "我們要的");
+  const ink = LOG.浮水印?.顏色?.值;
+  if (mine && ink) {
+    const want = `style="right:${-mine.right}px;bottom:${-mine.bottom}px"`;
+    const hit = (html.match(new RegExp(want.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&"), "g")) || []).length;
+    if (hit !== (LOG.狀態色?.藥丸?.值 || []).length)
+      bad.push(`⑰ 第 4 節的浮水印只有 ${hit} 張是往右下溢出 ${mine.right}／${mine.bottom}px`);
+    const wms = html.match(/<svg class="wm"[\s\S]*?<\/svg>/g) || [];
+    for (const w of wms)
+      if (!w.includes(`fill="${ink}"`)) bad.push(`⑰ 第 4 節有一張卡的浮水印不是定案的淡墨 ${ink}`);
+  }
+
+  if (!bad.some((x) => x.startsWith("⑰")))
+    ok(`⑰ 卡片上的日期就是「${DT.例}」，第 3 節與第 4 節每一張卡都畫得出來`);
 }
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }

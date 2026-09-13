@@ -127,12 +127,22 @@ summary::marker{color:var(--rule)}
   gap:16px;margin:1em 0 0}
 .pal .h{font-size:.93rem;font-weight:600;margin:0 0 .1em}
 .pal .src{font-size:.79rem;color:var(--soft);line-height:1.65;margin:0 0 .55em}
-.stcard{background:var(--card);border:1px solid var(--rule);border-radius:9px;
-  padding:9px 11px}
+.stgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(207px,1fr));
+  gap:16px 12px;margin:1em 0 0}
+.stwrap{margin:0;max-width:207px}
+.stcard{position:relative;overflow:hidden;background:var(--card);
+  border:1px solid var(--rule);border-radius:9px}
+/* 卡上那兩行 —— 第 3 節那幾張 SVG 卡（foreignObject）與第 4 節那四張 HTML 卡
+   吃的是同一組規則，所以兩處的字級、行距與折行一定一樣。 */
+.cb{padding:14px}
+.cb .pt{font-size:16px;line-height:1.35;color:var(--soft);margin:0}
+.cb .dt{font-size:19px;line-height:1.35;font-weight:700;margin:6px 0 0;
+  color:var(--ink)}
 .stcard .r{display:flex;gap:9px;align-items:baseline;font-size:13px;
-  line-height:1.95;margin:0}
+  line-height:1;margin:10px 0 0}
 .stcard .lb{color:var(--soft);flex:0 0 auto}
-.stcard .vv{font-weight:700}
+.stcard .wm{position:absolute;display:block;height:auto;pointer-events:none}
+.stwrap figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.25em}
 .stlist{list-style:none;margin:.6em 0 0;padding:0;
   font-size:.79rem;color:var(--soft);line-height:1.75}
 .stlist b{font-weight:600;color:var(--ink)}
@@ -407,6 +417,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="我們要的：浮水印 104px，往右 18、往下 10">
 <defs><clipPath id="clip-1"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-1)" opacity="0.12">
 <svg x="182.00" y="55.00" width="104" height="104.00"
   viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
@@ -425,6 +436,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="廠商送來的：浮水印 67px，往右 10、往下 7">
 <defs><clipPath id="clip-2"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-2)" opacity="0.12">
 <svg x="211.00" y="89.00" width="67" height="67.00"
   viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
@@ -446,6 +458,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="我們要的：浮水印 150px，往右 18、往下 10">
 <defs><clipPath id="clip-3"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-3)" opacity="0.12">
 <svg x="136.00" y="85.07" width="150" height="73.93"
   viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
@@ -464,6 +477,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="廠商送來的：浮水印 83px，往右 8、往下 6">
 <defs><clipPath id="clip-4"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-4)" opacity="0.12">
 <svg x="193.00" y="114.09" width="83" height="40.91"
   viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
@@ -480,7 +494,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 <p class="note">約診查詢那條輪播（卡寬約 207）上的寬形也量過：畫出來 80px ＝ 卡寬的 38.6%，規格是 150px ＝ 72.5%。三張合起來，廠商畫的是我們規格的 53~65%。</p>
 
 <h3 style="font-size:.95rem;margin:1.8em 0 .2em">九顆各自畫在卡片上該有的樣子</h3>
-<p style="font-size:.88rem;color:var(--soft);margin:0">九顆各自畫在那張 268×149 的卡上、照規格的寬度往右下<b>溢出 18／10px</b>（＝定案那一種），顏色就是定案的淡墨。<b>九顆都在這裡，不是只有你們已經用過的那兩顆。</b></p>
+<p style="font-size:.88rem;color:var(--soft);margin:0">九顆各自畫在那張 268×149 的卡上、照規格的寬度往右下<b>溢出 18／10px</b>（＝定案那一種），顏色就是定案的淡墨。卡上那兩行是〔病人姓名〕與日期，日期就照你們 09-10 那一版的寫法。<b>九顆都在這裡，不是只有你們已經用過的那兩顆。</b></p>
 <div class="onnine">
 <figure class="cmp">
 <svg viewBox="-6 -6 300 173"
@@ -488,6 +502,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="一般牙科・定期檢查：浮水印 107px，往右 18、往下 10">
 <defs><clipPath id="clip-5"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-5)" opacity="0.12">
 <svg x="179.00" y="52.00" width="107" height="107.00"
   viewBox="0 0 29.273 29.282" preserveAspectRatio="none"><g transform="translate(-166.723 511.764) scale(1 -1)"><path
@@ -506,6 +521,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="牙周治療：浮水印 150px，往右 18、往下 10">
 <defs><clipPath id="clip-6"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-6)" opacity="0.12">
 <svg x="136.00" y="85.07" width="150" height="73.93"
   viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
@@ -524,6 +540,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="齒顎矯正：浮水印 188px，往右 18、往下 10">
 <defs><clipPath id="clip-7"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-7)" opacity="0.12">
 <svg x="98.00" y="98.04" width="188" height="60.96"
   viewBox="0 0 44.229 14.341" preserveAspectRatio="none"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
@@ -542,6 +559,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="顯微根管：浮水印 152px，往右 18、往下 10">
 <defs><clipPath id="clip-8"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-8)" opacity="0.12">
 <svg x="134.00" y="83.94" width="152" height="75.06"
   viewBox="0 0 44.267 21.861" preserveAspectRatio="none"><g transform="translate(-159.225 433.777) scale(1 -1)"><path
@@ -560,6 +578,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="植牙・假牙重建：浮水印 120px，往右 18、往下 10">
 <defs><clipPath id="clip-9"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-9)" opacity="0.12">
 <svg x="166.00" y="68.91" width="120" height="90.09"
   viewBox="0 0 29.253 21.955" preserveAspectRatio="none"><g transform="translate(-240.487 433.824) scale(1 -1)"><path
@@ -578,6 +597,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="口腔外科：浮水印 188px，往右 18、往下 10">
 <defs><clipPath id="clip-10"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-10)" opacity="0.12">
 <svg x="98.00" y="97.98" width="188" height="61.02"
   viewBox="0 0 44.261 14.366" preserveAspectRatio="none"><g transform="translate(-306.719 430.029) scale(1 -1)"><path
@@ -596,6 +616,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="口腔外科：浮水印 104px，往右 18、往下 10">
 <defs><clipPath id="clip-11"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-11)" opacity="0.12">
 <svg x="182.00" y="55.00" width="104" height="104.00"
   viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
@@ -614,6 +635,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="兒童牙科：浮水印 106px，往右 18、往下 10">
 <defs><clipPath id="clip-12"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-12)" opacity="0.12">
 <svg x="180.00" y="52.89" width="106" height="106.11"
   viewBox="0 0 44.221 44.266" preserveAspectRatio="none"><g transform="translate(-233.002 374.392) scale(1 -1)"><path
@@ -632,6 +654,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="一般牙科・定期檢查：浮水印 215px，往右 18、往下 10">
 <defs><clipPath id="clip-13"><rect x="0" y="0" width="268" height="149" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="149" rx="9" fill="#f4f4f5"/>
+<foreignObject x="0" y="0" width="268" height="149"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">〔病人姓名〕</p><p class="dt">2026/09/11 11:50 星期五</p></div></foreignObject>
 <g clip-path="url(#clip-13)" opacity="0.12">
 <svg x="71.00" y="89.26" width="215" height="69.74"
   viewBox="0 0 44.322 14.378" preserveAspectRatio="none"><g transform="translate(-306.689 359.486) scale(1 -1)"><path
@@ -653,16 +676,61 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 
 <h2 class="h2">4　約診狀態那一列<span class="t">2026-09-12 定案・卡片畫成輪播上真正的 207px 寬</span></h2>
 <p class="note">2026-09-12 一格一格挑完了，整理成一段可以直接照做的規格。它只為「那個欄位移不掉」那條路存在 —— 第一層要問的仍然是第 6 節的第 7 題。</p>
-<div class="stcard" style="max-width:207px">
+<div class="stgrid">
+<figure class="stwrap">
+<div class="stcard cb">
+<p class="pt">〔病人姓名〕</p>
+<p class="dt">2026/09/11 11:50 星期五</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#4478b5">已排定</span></p>
+<svg class="wm" width="188" height="60.96"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption>已排定　齒顎矯正　<code>#4478b5</code></figcaption>
+</figure>
+<figure class="stwrap">
+<div class="stcard cb">
+<p class="pt">〔病人姓名〕</p>
+<p class="dt">2026/09/11 11:50 星期五</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#3f654a">已確認</span></p>
+<svg class="wm" width="188" height="60.96"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption>已確認　一般牙科　<code>#3f654a</code></figcaption>
+</figure>
+<figure class="stwrap">
+<div class="stcard cb">
+<p class="pt">〔病人姓名〕</p>
+<p class="dt">2026/09/11 11:50 星期五</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#c28229">未回覆</span></p>
+<svg class="wm" width="188" height="60.96"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption>未回覆　兒童牙科　<code>#c28229</code></figcaption>
+</figure>
+<figure class="stwrap">
+<div class="stcard cb">
+<p class="pt">〔病人姓名〕</p>
+<p class="dt">2026/09/11 11:50 星期五</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#ae4f4d">已取消</span></p>
+<svg class="wm" width="188" height="60.96"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
 </div>
+<figcaption>已取消　顯微根管　<code>#ae4f4d</code></figcaption>
+</figure>
+</div>
+<p class="note">四張卡各掛一個值 —— 一張卡上看不出四種的相對份量。卡片畫成輪播上真正的寬度，兩行內容與日期寫法都照你們 09-10 那一版，浮水印是定案的淡墨、往右下溢出。這四張的浮水印是這一筆日期算出來的那一顆（<code>r1c3</code>）。</p>
 <div class="rows" style="margin-top:1.2em">
 <div class="row"><p class="k">欄位名</p><p class="v"><b>約診狀態</b>（廠商現在印的是「預約狀態」）。改的只是卡片上印出來的那個標籤，資料庫欄位叫什麼名字不必動。</p></div>
 <div class="row"><p class="k">四個值</p><p class="v"><b>已排定／已確認／未回覆／已取消</b>。</p></div>

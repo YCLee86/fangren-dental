@@ -146,6 +146,28 @@ const WM = (() => {
 /* ⚠⚠ 九顆的相對高度從 0.28 到 0.50 都有（寬度是按墨的面積正規化的，不是等高）——
    直接排下去，同一列的虛線會落在不同高度（第九節第 28 條 ① 那一種「同一欄不同列對不齊」）。
    所以每一格的框固定成「最高的那一顆」的長寬比、形狀垂直置中。 */
+/* ── 卡片上那兩行：〔病人姓名〕與日期 ──────────────────────────
+   2026-09-13 使用者：「把約診狀態和 9 個 logo 依照廠商的日期格式都做一次」。
+   日期的寫法只有一個出處（vendor-log.json 的「日期」），第 3 節那幾張 SVG 卡
+   與第 4 節那四張 HTML 卡吃的是同一組數字 —— 分成兩份的話，同一頁上會畫出
+   兩種字級的同一張卡，而版面完全正常。 */
+const DATE = D.日期;
+if (!/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 星期[一二三四五六日]$/.test(DATE.例 || ""))
+  throw new Error(`日期的例子不是廠商 09-10 那一版的寫法：${DATE.例}`);
+if (!DATE.姓名) throw new Error("vendor-log.json 的「日期」沒有寫姓名要印什麼");
+/* 字級與間距照 Flex：paddingAll 14、姓名 md 16、日期 lg 19（margin 6）、
+   狀態那一列 xs 13。行高與基線是我們畫的模型，兩處共用同一組。 */
+const CARD = { pad: 14, 名: 16, 日: 19, 隔: 6, 距: 10, 籤: 13, lh: 1.35, base: 1.05 };
+const SC = D.狀態色;
+
+/* 哪一顆浮水印：`(約診月份 + 約診日) % 9`（＝要請廠商照著填的那條規則）。
+   同一筆約診不管是哪一種狀態都是同一顆，所以下面那四張卡共用它。 */
+const 輪 = (() => {
+  const m = DATE.例.match(/^(\d{4})\/(\d{2})\/(\d{2})/);
+  const i2 = (Number(m[2]) + Number(m[3])) % WM.length;
+  return WM[i2];
+})();
+
 const WM_BOX = (1 / Math.max(...WM.map((s) => s.pct / 100 / s.ratio))).toFixed(4);
 
 const CSS = `
@@ -270,12 +292,22 @@ summary::marker{color:var(--rule)}
   gap:16px;margin:1em 0 0}
 .pal .h{font-size:.93rem;font-weight:600;margin:0 0 .1em}
 .pal .src{font-size:.79rem;color:var(--soft);line-height:1.65;margin:0 0 .55em}
-.stcard{background:var(--card);border:1px solid var(--rule);border-radius:9px;
-  padding:9px 11px}
-.stcard .r{display:flex;gap:9px;align-items:baseline;font-size:13px;
-  line-height:1.95;margin:0}
+.stgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(${SC.卡.w}px,1fr));
+  gap:16px 12px;margin:1em 0 0}
+.stwrap{margin:0;max-width:${SC.卡.w}px}
+.stcard{position:relative;overflow:hidden;background:var(--card);
+  border:1px solid var(--rule);border-radius:9px}
+/* 卡上那兩行 —— 第 3 節那幾張 SVG 卡（foreignObject）與第 4 節那四張 HTML 卡
+   吃的是同一組規則，所以兩處的字級、行距與折行一定一樣。 */
+.cb{padding:${CARD.pad}px}
+.cb .pt{font-size:${CARD.名}px;line-height:${CARD.lh};color:var(--soft);margin:0}
+.cb .dt{font-size:${CARD.日}px;line-height:${CARD.lh};font-weight:700;margin:${CARD.隔}px 0 0;
+  color:var(--ink)}
+.stcard .r{display:flex;gap:9px;align-items:baseline;font-size:${CARD.籤}px;
+  line-height:1;margin:${CARD.距}px 0 0}
 .stcard .lb{color:var(--soft);flex:0 0 auto}
-.stcard .vv{font-weight:700}
+.stcard .wm{position:absolute;display:block;height:auto;pointer-events:none}
+.stwrap figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.25em}
 .stlist{list-style:none;margin:.6em 0 0;padding:0;
   font-size:.79rem;color:var(--soft);line-height:1.75}
 .stlist b{font-weight:600;color:var(--ink)}
@@ -444,12 +476,24 @@ const plate = (shape, g, col) => {
      和廠商實際看到的不一樣（那正是這一節在比的東西） */
   /* 卡片右下留一塊空白，跑出卡片的那一截才畫得下（三格用同一個框，才比得出來） */
   const PR = 26, PB = 18, PL = 6, PT = 6;
+  /* 卡上那兩行：〔病人姓名〕與日期。日期的寫法照廠商 09-10 那一版，
+     唯一出處是 vendor-log.json 的「日期」——這裡不寫死。
+     ⚠⚠ 用 foreignObject 讓瀏覽器自己排，不用 <text> ＋ 自己估字寬 ——
+        估出來的寬度會跟著字型跑（這台容器裡沒有 Noto Sans TC，同一行量到的
+        寬度差 6.6%），估錯的那一天字會靜靜地畫到卡片外面而且不報錯。
+        底下第 4 節那四張 HTML 卡吃的是同一組 .cb 規則，兩處一定長一樣。
+     ⚠ 浮水印畫在文字**上面**，和那份 Flex 的 contents 順序一樣
+       （image 排在文字那一塊後面），這樣才看得出它會不會蓋到字。 */
+  const 文 = `<foreignObject x="0" y="0" width="${cardBox.w}" height="${cardBox.h}"`
+    + `><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">${esc(DATE.姓名)}</p>`
+    + `<p class="dt">${esc(DATE.例)}</p></div></foreignObject>`;
   return `<figure class="cmp">
 <svg viewBox="${-PL} ${-PT} ${cardBox.w + PL + PR} ${cardBox.h + PT + PB}"
   width="${cardBox.w + PL + PR}" height="${cardBox.h + PT + PB}"
   role="img" aria-label="${esc(g.標)}：浮水印 ${g.size}px，往右 ${g.right}、往下 ${g.bottom}">
 <defs><clipPath id="${id}"><rect x="0" y="0" width="${cardBox.w}" height="${cardBox.h}" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="${cardBox.w}" height="${cardBox.h}" rx="9" fill="#f4f4f5"/>
+${文}
 <g clip-path="url(#${id})" opacity="${WM_A}">
 <svg x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${g.size}" height="${h.toFixed(2)}"
   viewBox="0 0 ${s2.vw} ${s2.vh}" preserveAspectRatio="none"><g transform="${s2.gt}"><path
@@ -494,15 +538,31 @@ ${WM.map((s) => plate(s.n, {
    2026-09-12 使用者：現況那張卡上表示會到的那個值本來就是綠字，所以新版那四個
    值也要套色、加粗，並且用兩套色票各做一次給他看。
    對比度**在這裡現算**，不寫進資料 —— 寫死的話哪天換一顆顏色，數字不會跟著動。 */
-const SC = D.狀態色;
 /* ── ④之〇 定案（2026-09-12 一格一格挑完的）────────────────────
    放在整節最前面：底下那幾格是走到這裡的過程，這一段才是要拿給廠商的那一份。
    ⚠ 這個註解在樣板字串外面 —— 寫在裡面會被原字印進 HTML（第 ⑨ 道守門擋得到）。 */
 const SET = SC.定案, PILLVAL = SC.藥丸.值;
-const settled = `<div class="stcard" style="max-width:${SC.卡.w}px">
-${PILLVAL.map((v) => `<p class="r"><span class="lb">約診狀態</span><span class="pill"
-  style="background:${v.色}">${esc(v.名)}</span></p>`).join("\n")}
+/* ⚠⚠ 四張卡各掛一個值 —— 一張卡上看不出四種的相對份量（同 line-booked 第 ②之二 節）。
+   卡片畫成輪播上真正的寬度，兩行內容與日期的寫法照廠商 09-10 那一版，
+   浮水印是定案那一種（淡墨、往右下溢出，偏移量和第 3 節那九張同一個出處）。
+   ⚠ 日期在這個寬度上會折成兩行 —— 那正是「那一格不要限制行數」的樣子，不是破圖。 */
+const wmSvg = (s2, off) => `<svg class="wm" width="${s2.w}" height="${(s2.w / s2.ratio).toFixed(2)}"
+  viewBox="0 0 ${s2.vw} ${s2.vh}" preserveAspectRatio="none" aria-hidden="true"
+  style="right:${-off.right}px;bottom:${-off.bottom}px"><g transform="${s2.gt}"><path
+  fill="${INK}" fill-opacity="${WM_A}" fill-rule="evenodd" d="${s2.d}"/></g></svg>`;
+const settled = `<div class="stgrid">
+${PILLVAL.map((v) => `<figure class="stwrap">
+<div class="stcard cb">
+<p class="pt">${esc(DATE.姓名)}</p>
+<p class="dt">${esc(DATE.例)}</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:${v.色}">${esc(v.名)}</span></p>
+${wmSvg(輪, OFF)}
 </div>
+<figcaption>${esc(v.名)}　${esc(v.科)}　<code>${v.色}</code></figcaption>
+</figure>`).join("\n")}
+</div>
+<p class="note">${b(SC.卡.說)}這四張的浮水印是這一筆日期算出來的那一顆（<code>${輪.n}</code>）。</p>
 <div class="rows" style="margin-top:1.2em">
 ${SET.條.map(([k, t]) => `<div class="row"><p class="k">${esc(k)}</p><p class="v">${b(t)}</p></div>`).join("\n")}
 <div class="row"><p class="k">先問的是哪一題</p><p class="v">${b(SET.前提)}</p></div>
