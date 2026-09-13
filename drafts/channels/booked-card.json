@@ -244,12 +244,12 @@
     }
   },
   "約診紀錄查詢": {
-    "_說明": "輪播（carousel）的每一張都是這個 bubble，contents 最多 12 張（LINE 的上限）。",
+    "_說明": "輪播（carousel）的每一張都是這個 bubble，contents 最多 12 張（LINE 的上限）。⚠⚠⚠ 2026-09-13：size 從 micro 改成 deca。bubble 的固定階是 nano／micro／deca／hecto／kilo／mega／giga（⚠ 拼法是 deca 不是 deci），LINE 官方一個 px 都沒有公布；社群（卡米哥 2021 Chatbots Meetup）用 20×20px 的方塊量出每一階的內容寬 ＝ nano 7／micro 9／deca 12／hecto 13／kilo 14／mega 16／giga 26 格。把它加上我們自己的 paddingAll 14（左右各一次）對回廠商那張截圖：mega 320+28 = 348 對量到的 348.7、deca 240+28 = 268 對量到的 269.3（差 0.2% 與 0.5%）—— 所以廠商現在跑的那條輪播就是 deca。原本這裡寫 micro，照那一份交出去會比我們給看過的每一張模擬圖窄約 25%，而且沒有人決定過要窄。⚠ 同一條輪播裡每一張 bubble 必須是同一個 size，要換是整組一起換。⚠ 「病人手機上那張卡到底幾 px」仍然沒有人量過（我們的 268／207 是從診所端後台的截圖推的）—— 戴均民那組『測試寬度名片』送進那支手機就收得掉。",
     "type": "carousel",
     "contents": [
       {
         "type": "bubble",
-        "size": "micro",
+        "size": "deca",
         "body": {
           "type": "box",
           "layout": "vertical",

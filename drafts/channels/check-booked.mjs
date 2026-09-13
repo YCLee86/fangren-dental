@@ -219,14 +219,51 @@ for (const n of ORDER) {
   ok(/--wmr:' \+ wmr \+ 'px/.test(html), "卡片沒有把 wmr 寫進 style —— 那把尺不會生效");
   for (const id of ["pv-wmx", "pv-panelwx", "pv-cwd", "pv-panelcw"])
     ok(html.includes(`id="${id}"`), `少了尺的容器 #${id}`);
-  ok(/var WMX = \[/.test(html) && /var CWD = \[/.test(html), "兩把尺的格子不見了");
+  ok(/var WMX = \[/.test(html) && /var CWD = STEPS\.filter/.test(html),
+    "兩把尺的格子不見了（或 CWD 又被寫成一組固定的 px）");
   ok(/drawScale\("pv-wmx", WMX\)/.test(html) && /drawScale\("pv-cwd", CWD\)/.test(html),
     "尺沒有被畫出來");
-  /* ⚠⚠⚠ 卡片寬度**不是我們挑得了的**（LINE 的固定階，輪播已經在 micro）——
-     這一句不可以從頁面上消失，不然那四格看起來會像一把我們轉得動的旋鈕。 */
-  for (const n of ["這一把尺我們挑不了", "再窄只剩 <code>nano</code> 一階",
-                   "輪播這一張已經在 <code>micro</code>"])
-    ok(html.includes(n), `②之四 少了「${n}」那一句 —— 那四格會看起來像我們挑得了的`);
+  /* ⚠⚠⚠ 卡片寬度**不是我們挑得了的**（LINE 的七個固定階，而且輪播是整組一起換）——
+     這幾句不可以從頁面上消失，不然那幾格看起來會像一把我們轉得動的旋鈕。 */
+  for (const n of ["這一把尺我們挑不了",
+                   "必須是同一個 <code>size</code>",
+                   "LINE 官方一個 px 都沒有公布"])
+    ok(html.includes(n), `②之四 少了「${n}」那一句 —— 那幾格會看起來像我們挑得了的`);
+  /* ⚠⚠ 拼法是 deca 不是 deci（2026-09-13 更正）。 */
+  /* ⚠⚠ 掃「deci」一定會撞到頁面上那句「拼法是 deca 不是 deci」自己
+     （這條線第七次踩到「掃字撞到自己的說明」）—— 那一處包在 <span data-spell> 裡，
+     掃之前剝掉，**而且要驗那個標記還在、只有一個**，不然整段拿掉就等於把這一道關掉。 */
+  {
+    const marks = html.match(/<span data-spell>deci<\/span>/g) || [];
+    ok(marks.length === 1, "頁面上那句「拼法是 deca 不是 deci」的 data-spell 標記不見了或不只一個");
+    const t = html.replace(/<span data-spell>[\s\S]*?<\/span>/g, "");
+    ok(!/deci(?![a-z])/.test(t), "頁面上又出現 deci —— 那一階的拼法是 deca");
+  }
+  /* ⚠⚠⚠ 那幾格的寬度要**從方塊表算出來**，不可以再寫死一組 px
+     （2026-09-13 之前是憑感覺的 185／165／145，畫出來的每一格都不是 LINE 真的有的階）。 */
+  ok(/var STEPS = \[\{ k: "nano", b: 7 \}/.test(html) && /k: "giga", b: 26/.test(html),
+    "方塊表（STEPS）不見了或格數被改過 —— 那是卡米哥量出來的，不是我們挑的");
+  ok(/var BLK = 20;/.test(html) && /var CPAD = 14;/.test(html),
+    "一格 20px 或 paddingAll 14 這兩個常數不見了 —— 那張表換算回 px 全靠它們");
+  ok(/function bubblePx\(s\) \{ return BLK \* s\.b \* kScale\(\) \+ CPAD \* 2; \}/.test(html),
+    "bubblePx 沒有從格數算 —— 尺上的寬度不可以是寫死的 px");
+  ok(!/\{ n: "\d+px", w: \d+ \}/.test(html),
+    "②之四 又出現寫死的 px 格子 —— 那些寬度不是 LINE 真的有的階");
+  /* ⚠⚠⚠ 藥丸那一列是 flex（項目預設 flex-shrink: 1），在窄卡上會被壓縮 ——
+     不先切成 max-content 再量，「內容本來要多寬」會回一個被壓過的數字，
+     nano 那一格因此印成「放不下（差 0px）」**而畫面完全正常**（2026-09-13 踩到）。 */
+  ok(/st\.style\.width = "max-content";/.test(html),
+    "widest() 沒有先把藥丸那一列切成 max-content —— 窄卡上會量到被壓縮後的寬度");
+  /* ⚠⚠⚠ 輪播那一張是 deca 不是 micro（padding 校正：240+28 = 268 對量到的 269.3、
+     mega 320+28 = 348 對量到的 348.7）。JSON 與頁面要指同一階，不然交出去的那一份
+     會比我們給看過的每一張模擬圖窄約 25%，**而且畫面上一切正常**。 */
+  const nowStep = html.match(/var NOW_STEP = "([a-z]+)";/);
+  ok(nowStep && nowStep[1] === "deca",
+    `頁面上那條輪播宣告的是 ${nowStep && nowStep[1]} —— padding 校正對出來的是 deca`);
+  const carSize = card["約診紀錄查詢"].contents[0].size;
+  ok(carSize === (nowStep && nowStep[1]),
+    `booked-card.json 的輪播 bubble 是 ${carSize}、頁面畫的是 ${nowStep && nowStep[1]} —— 兩份要指同一階`);
+  ok(card["預約成功通知"].size === "mega", "單張那一則不是 mega");
   /* ⚠⚠ 那把尺的寬度只能靠 --cw，不可以再去動那條用 id 列出來的 207px 規則。 */
   ok(/\.pv-cw \.pv-hc\{width:var\(--cw,207px\)\}/.test(html),
     "尺的卡片寬度沒有吃 --cw");

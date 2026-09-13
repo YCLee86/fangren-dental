@@ -426,15 +426,29 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <h3 class="pv-h3">②之四　卡片可不可以窄一點</h3>
   <p class="pv-note">
     ⚠⚠⚠ <b>這一把尺我們挑不了 —— 卡片寬度是 LINE 的固定階，不是一個可以轉的旋鈕</b>：
-    bubble 的 <code>size</code> 只有 nano／micro／deci／hecto／kilo／mega／giga 那幾階，
-    而<b>輪播這一張已經在 <code>micro</code></b>（單張那一則是 <code>mega</code>）——
-    <b>再窄只剩 <code>nano</code> 一階，而那一階我們從來沒有量過</b>。<br>
-    ⚠ 連現在這個 <b>207px</b> 也是<b>推導</b>來的（從廠商那張診所端後台的截圖按比例換算，
-    單張 348.7 ／ 輪播 269.3 ＝ 0.772），<b>一張病人手機的截圖就能收掉這件事</b>。<br>
-    ⚠⚠ 所以下面四格是<b>模擬</b>，用途只有一個：<b>先算出地板在哪</b> ——
-    真的換成 nano 之後，這張卡的內容還活不活得下來。面板現場量「內容最寬要多少
-    ／可用多少／日期折成幾行」。<b>浮水印一律維持現在這一版（往右溢出 18px），
-    一把尺一次只動一件事。</b>
+    bubble 的 <code>size</code> 只有 <code>nano／micro／deca／hecto／kilo／mega／giga</code>
+    七階（⚠ 拼法是 <code>deca</code>，不是 <span data-spell>deci</span>），<b>而且同一條輪播裡每一張 bubble
+    必須是同一個 <code>size</code></b> —— 要換是<b>整組一起換</b>，不能只縮其中一張。<br>
+    ⚠⚠ <b>LINE 官方一個 px 都沒有公布</b>（文件反過來建議<b>不要用 px 排版</b>、
+    用 flex 屬性）。下面那張表是<b>社群量出來的</b>：卡米哥在 2021 Chatbots Meetup
+    用 <b>20×20px 的方塊</b>數每一階塞得下幾格（nano 7／micro 9／deca 12／hecto 13／
+    kilo 14／mega 16／giga 26），戴均民再把它做成一組<b>「測試寬度名片」</b>
+    （第一張 nano~kilo、第二張 mega／giga）—— <b>送進那支手機就量得到真值，不必推導</b>。
+    ⚠ 那張表量的是<b>內容寬</b>（扣掉 padding 之後），不是 bubble 的外寬。<br>
+    ⚠⚠⚠ <b>而它當場翻出一件我們自己的矛盾。</b>把那張表加上我們自己的
+    <code>paddingAll 14</code>（左右各一次）對回廠商那張截圖：
+    <b>mega 320＋28 ＝ 348</b> 對量到的 <b>348.7</b>、<b>deca 240＋28 ＝ 268</b> 對量到的
+    <b>269.3</b>（差 0.2% 與 0.5%）—— 所以<b>廠商那條輪播跑的是 <code>deca</code>，
+    不是 <code>micro</code></b>。而 <code>booked-card.json</code> 那張輪播 bubble
+    <b>一直寫著 <code>"size": "micro"</code></b>：照那一份交出去，卡片會比我們給看過的
+    每一張模擬圖<b>窄約 25%</b>。<b>已經改成 <code>deca</code></b> ——
+    那既是我們每一張模擬圖畫的比例，也是廠商現在跑的那一階，<b>等於什麼都不必請他們改</b>。<br>
+    ⚠ <b>收掉的是「那是哪一階」，不是「病人手機上到底幾 px」</b>：這一輪兩條互相獨立的
+    推導對上了（截圖比例 0.772 ／ 表上 268÷348 ＝ 0.770），但<b>兩條的絕對值仍然都來自
+    診所端後台那張截圖</b>。那一題還開著，而<b>測試寬度名片正好一次收得掉它</b>。<br>
+    ⚠⚠ 下面每一格都是<b>真的那張卡</b>，寬度<b>從表上那幾格算出來</b>
+    （現在這一階的可用寬 ÷ 它的格數 ＝ 這台上的比例尺），用途只有一個：<b>算出地板在哪</b>。
+    <b>浮水印一律維持現在這一版（往右溢出 18px），一把尺一次只動一件事。</b>
   </p>
   <div class="pv-cw" id="pv-cwd"></div>
   <div class="pv-panel" id="pv-panelcw"></div>
@@ -1018,10 +1032,38 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
              { n: "貼齊右緣（offsetEnd 0）", r: 0 },
              { n: "往左 24px", r: 24 },
              { n: "往左 48px", r: 48 }];
-  var CWD = [{ n: "207px（現在 · micro）", w: 207 },
-             { n: "185px", w: 185 },
-             { n: "165px", w: 165 },
-             { n: "145px", w: 145 }];
+  /* ---- bubble 的七個固定階（②之四）---------------------------------
+     ⚠⚠ LINE 官方一個 px 都沒有公布（文件反過來建議不要用 px 排版）。
+       下面存的是**格數**：卡米哥在 2021 Chatbots Meetup 用 20×20px 的方塊
+       數每一階塞得下幾格（量的是**內容寬**，不含 padding）；戴均民再把它做成
+       一組「測試寬度名片」，送進那支手機就量得到真值。
+     ⚠ **px 一律用格數算出來，不要在第二個地方再寫一份**。
+     ⚠⚠⚠ NOW_STEP 是 padding 校正對出來的（mega 320+28 = 348 對量到 348.7、
+       deca 240+28 = 268 對量到 269.3）—— 輪播那一張跑的是 **deca** 不是 micro。 */
+  var BLK = 20;            /* 方塊表：一格 20px */
+  var CPAD = 14;           /* 我們 JSON 的 paddingAll，左右各吃一次 */
+  var CAR_W = 207;         /* 輪播那張卡的外寬（＝ 上面那條 id 規則裡的 207px） */
+  var SHOT = { mega: 348.7, car: 269.3 };   /* 廠商那張截圖上量到的兩種卡 */
+  var STEPS = [{ k: "nano", b: 7 }, { k: "micro", b: 9 }, { k: "deca", b: 12 },
+               { k: "hecto", b: 13 }, { k: "kilo", b: 14 }, { k: "mega", b: 16 },
+               { k: "giga", b: 26 }];
+  var NOW_STEP = "deca";
+  function stepOf(k) {
+    var i;
+    for (i = 0; i < STEPS.length; i++) if (STEPS[i].k === k) return STEPS[i];
+    throw new Error("沒有這一階：" + k);
+  }
+  /* 這台上的比例尺 ＝ 現在那張卡的可用寬 ÷ 那一階的內容寬 */
+  function kScale() { return (CAR_W - CPAD * 2) / (BLK * stepOf(NOW_STEP).b); }
+  function bubblePx(s) { return BLK * s.b * kScale() + CPAD * 2; }
+  /* 尺上只放「現在這一階與更窄的」—— 問的是「可不可以窄一點」 */
+  var CWD = STEPS.filter(function (s) { return s.b <= stepOf(NOW_STEP).b; })
+    .reverse()
+    .map(function (s) {
+      return { n: s.k + "　" + bubblePx(s).toFixed(0) + "px"
+                 + (s.k === NOW_STEP ? "（現在）" : ""),
+               w: bubblePx(s) };
+    });
 
   function drawScale(hostId, cases) {
     document.getElementById(hostId).innerHTML = cases.map(function (c) {
@@ -1041,9 +1083,17 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     lines(card.querySelector(".b")).forEach(function (l) { if (l.w > w) w = l.w; });
     var st = card.querySelector(".st");
     if (st) {
+      /* ⚠⚠⚠ 藥丸那一列是 flex，而 flex 項目預設 `flex-shrink: 1` ——
+         在一張窄卡上它會**被壓縮**，直接量子元素會回一個比實際需要還小的數字
+         （2026-09-13 踩到：nano 那一格量成 104px，剛好等於可用寬，於是
+         「放不下」印成「差 0px」）。要問「它本來要多寬」就先把容器切成
+         max-content 再量、量完還原（同 README 第三十五節那三個在 flex 裡量錯的）。 */
+      var sw = st.style.width;
+      st.style.width = "max-content";
       var t = 0, i;
       for (i = 0; i < st.children.length; i++) t += st.children[i].getBoundingClientRect().width;
       t += (st.children.length - 1) * 8;
+      st.style.width = sw;
       if (t > w) w = t;
     }
     return w;
@@ -1215,8 +1265,22 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + "<br>⚠⚠ <b>地板是藥丸那一列不是日期</b>（量出來最寬的是它）——"
         + "所以「窄一點」真正會先撞到的是<b>約診狀態那一列</b>，不是這一輪剛修好的日期。"
         + "<br>⚠⚠⚠ <b>而這把尺我們挑不了</b>：能換的只有 bubble 的 <code>size</code>，"
-        + "輪播已經在 <code>micro</code>，<b>下一階 <code>nano</code> 有多寬我們沒有量過</b> ——"
-        + "要問廠商，或找一個用 nano 的帳號量一次。</p>";
+        + "而且<b>同一條輪播是整組一起換</b>。"
+        + "<br><br><b>七階（卡米哥的方塊表，一格 20px，量的是內容寬）</b>　比例尺 ＝ 這台上 "
+        + (CAR_W - CPAD * 2) + " ÷ " + (BLK * stepOf(NOW_STEP).b) + " ＝ "
+        + kScale().toFixed(4) + "：<br>" + STEPS.map(function (s) {
+            return (s.k === NOW_STEP ? "<b>" : "") + s.k + "</b>　" + s.b
+              + " 格 ＝ 內容 " + (BLK * s.b) + "px（mega 的 "
+              + Math.round(s.b / stepOf("mega").b * 100) + "%）→ 這台上 bubble 約 "
+              + bubblePx(s).toFixed(0) + "px";
+          }).join("<br>")
+        + "<br>⚠⚠⚠ <b>padding 校正</b>（加上我們自己的 paddingAll " + CPAD + " × 2）："
+        + "mega " + (BLK * stepOf("mega").b) + "＋" + CPAD * 2 + " ＝ "
+        + (BLK * stepOf("mega").b + CPAD * 2) + " 對量到的 " + SHOT.mega + "、"
+        + "deca " + (BLK * stepOf("deca").b) + "＋" + CPAD * 2 + " ＝ "
+        + (BLK * stepOf("deca").b + CPAD * 2) + " 對量到的 " + SHOT.car
+        + " —— 所以<b>廠商那條輪播是 <code>deca</code>，不是 JSON 上寫的 <code>micro</code></b>"
+        + "（JSON 已經改成 deca）。</p>";
 
       /* ⚠⚠⚠ **畫完一定要還原**：`render()` 會被呼叫不只一次
          （開頁一次、`wm-sizes.json` 回來一次、每次 resize 一次），
