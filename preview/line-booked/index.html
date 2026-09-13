@@ -42,7 +42,11 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{background:var(--paper);color:var(--ink);
-  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  /* 拉丁字型（Arial）是產圖用的校正，不是版面的一部分：手機與電腦上前面三個中文
+     字型會先命中、它們自己就含拉丁字，所以那一側一個像素都不會變；而出圖的容器
+     沒有那三個字型，拉丁數字會退到比它們寬一成的字型 —— 日期那一行就會在 LINE 上
+     放得下的地方折行（而且折在「星期／六」中間），拍出來的 shot-*.png 會說謊。 */
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,system-ui,sans-serif;
   line-height:1.7;padding-bottom:56px}
 .pv-wrap{max-width:430px;margin:0 auto;padding:14px 14px 0}
 h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
@@ -302,7 +306,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <h1>預約成功通知 ＋ 約診紀錄查詢　<span style="font-weight:400;font-size:.7em">規格</span></h1>
   <p class="pv-sub"><b>2026-09-05 定稿。</b>這兩則是<b>同一張卡的兩個狀態</b>，所以合成一個殼做：
   一個是<b>約好的當下</b>自動送的（單張），一個是<b>他點「約診紀錄查詢」</b>之後回的（輪播，一個約診一張）。<br>
-  定案的六件：日期<b>新版・中文</b>（去掉年份、月日改中文）／輪播<b>每一張的浮水印都不同</b>／
+  定案的六件：日期<b>2026/09/11 星期五 11:50</b>（字一個都不換，星期幾移到日期後面、時間放最後）／輪播<b>每一張的浮水印都不同</b>／
   字級<b>日期 19・姓名 16</b>／小字<b>不加編號</b>／姓名在<b>日期上面</b>／
   <b>不放地址電話、不放頭圖、不放頁首標誌</b>。<br>
   Flex 的 JSON 在 <code>drafts/channels/booked-card.json</code>，守門
@@ -515,17 +519,17 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     long:  { name: "現況・長版", f: function (a) { return "2026/" + two(a.m) + "/" + two(a.d) + " " + a.t + " 星期" + a.w; } },
     short: { name: "現況・短版", f: function (a) { return "2026/" + two(a.m) + "/" + two(a.d) + " (" + a.w + ") " + a.t; } },
     cn:    { name: "新版・中文", f: function (a) { return a.m + "月" + a.d + "日 (" + a.w + ") " + a.t; } },
-    /* ⚠⚠⚠ 2026-09-13 定案改成下面這一格（數字月日）。使用者：「約診完成通知和
-       約診狀態頁面，時間不要斷行。」判準因此變成「整串要放得下一行」，而輪播那張卡
-       只有 207px、扣掉內距可用 179px（日期又是全卡最大的字 19px 粗體）：
-         2026/09/11 星期五 11:50   250px   兩種卡都折
-         2026/09/11 (五) 11:50     230px   單張卡一行、輪播折
-         9月11日 (五) 11:50        188px   他手機上量到 172px，只剩 5px 餘裕 ——
-           ⚠⚠ 而且**中文月日不是固定寬**：10月／11月／12月多一個數字（約 +10px），
-              那三個月在輪播上就會折 ＝ 一年有四分之一的時間，時間會掉到第二行
-         09/11 (五) 11:50          170px   兩種卡、一年十二個月都是一行   ← 定案
-       ⚠ 「月日改中文」那一件因此只留在提醒卡（那張卡 268 寬、日期 22px，放得下）。 */
-    nu:    { name: "新版・數字", f: function (a) { return two(a.m) + "/" + two(a.d) + " (" + a.w + ") " + a.t; } },
+    /* ⚠ 2026-09-13 稍早試過的縮寫（拿掉年份、半形括號）。定案不是它，見下面那一格 —— 留著當紀錄。 */
+    nu:    { name: "縮寫・數字", f: function (a) { return two(a.m) + "/" + two(a.d) + " (" + a.w + ") " + a.t; } },
+    /* ⚠⚠⚠ 2026-09-13 定案這一格。使用者逐字指定：「日期格式錯了　是 2026/09/11 星期五 11:50」。
+       **四樣東西一個都沒換，換的只有順序** —— 廠商 09-10 送來的是
+       `2026/09/11 11:50 星期五`（＝上面的 long 那一格），定案是把星期幾移到日期後面、
+       時間放最後。同樣那些字元、同樣的寬度，對廠商是一個順序的要求，不是換格式。
+       ⚠ 放不放得下（19px 粗體，LINE 上量到約 225px）：
+         單張卡可用 240px  → 一行放得下
+         輪播卡可用 177px  → 放不下，折成兩行；折點落在時間前面，星期幾跟著它的日期
+       折行是 `wrap: true` 該有的樣子，**不可以用 `maxLines` 截掉**。 */
+    ymdw:  { name: "定案・年月日星期", f: function (a) { return "2026/" + two(a.m) + "/" + two(a.d) + " 星期" + a.w + " " + a.t; } },
     /* ⚠ 2026-09-05 加的：他寫的是「**年**月日（星期）時間」，而上面三格
        只有現況那兩格帶年份。所以把「中文＋年」單獨做一格，讓他看得到
        多那三個字在 240px 上會不會把日期擠到第二行。 */
@@ -688,7 +692,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        其餘     不放地址電話／頭圖／頁首標誌      ad/hero/gh = none
      ⚠ `msg` 與 `v` 仍然是變數 —— 這一頁**四段都要畫**（新版兩則 ＋ 現況兩則），
        所以它們是「現在在畫哪一段」，不是使用者的選擇。 */
-  var msg = "booked", v = "nw", dt = "nu", look = "wm9", ad = "none", hero = "n", wmk = "12",
+  var msg = "booked", v = "nw", dt = "ymdw", look = "wm9", ad = "none", hero = "n", wmk = "12",
       gh = "none", nm = "top", tz = "c", fine = "none";
 
 
@@ -918,12 +922,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   function render() {
     /* ① 新版・預約成功 */
-    msg = "booked"; v = "nw"; dt = "nu";
+    msg = "booked"; v = "nw"; dt = "ymdw";
     document.getElementById("pv-chat1").innerHTML = bookedChat("pv-slot");
     measure("pv-slot", "pv-panel1");
 
     /* ② 新版・約診紀錄查詢（輪播） */
-    msg = "query"; v = "nw"; dt = "nu";
+    msg = "query"; v = "nw"; dt = "ymdw";
     document.getElementById("pv-chat2").innerHTML = queryChat("pv-slot2");
     measure("pv-slot2", "pv-panel2");
 
@@ -939,7 +943,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       /* ⚠ 只畫一張：藥丸 ＋ 淡墨色的浮水印（2026-09-12 使用者挑定）。
          「字套色」那一版的程式碼留在 nwCard 裡（stat === "txt"），
          但**頁面上不再畫它** —— 它輸在「套色拿來當字是用錯階」，數字寫在面板上。 */
-      msg = "query"; v = "nw"; dt = "nu";
+      msg = "query"; v = "nw"; dt = "ymdw";
       stat = "pill"; wmink = true;
       document.getElementById("pv-chat7").innerHTML = queryChat("pv-slot7");
       measure("pv-slot7", "pv-panel7");
@@ -987,7 +991,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     measure("pv-slot4", "pv-panel4");
 
     /* 畫完把狀態還原成定稿那一組，免得之後有人拿它當現值讀。 */
-    msg = "booked"; v = "nw"; dt = "nu";
+    msg = "booked"; v = "nw"; dt = "ymdw";
 
     wmRef();
     document.getElementById("pv-note").innerHTML = note();

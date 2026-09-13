@@ -145,10 +145,14 @@ const mod = await import("/opt/node22/lib/node_modules/playwright/index.js");
 const { chromium } = mod.default ?? mod;
 const browser = await chromium.launch({ executablePath: chrome });
 const errs = [];
-/* ⚠⚠ 日期那一行畫出來**幾行** —— 2026-09-13 定案「時間不要斷行」，判準只有一個：
-   那一行在每一張卡上都只准畫一列。量的是墨（逐字取 rect 照 top 分組、空白跳過），
-   不是屬性；而這台容器的字型比 LINE 寬約一成，所以在這裡放得下 ＝ 在 LINE 上一定
-   放得下。結果交給 ⑰ 判。
+/* ⚠⚠ 日期那一行畫出來**幾列、每一列是哪幾個字** —— 2026-09-13 定案
+   `2026/09/11 星期五 11:50`，判準兩件：**單張卡（可用 240px）只准一列**；
+   **輪播卡（可用 177px）放不下，折成兩列是對的，但折點一定要落在時間前面**
+   （星期幾要跟著它的日期，不可以被拆開）。量的是墨（逐字取 rect 照 top 分組、
+   空白跳過）不是屬性，而且要把每一列的字收回來 —— 只數列數的話，折在
+   「星期／五」中間和折在時間前面會量成同一個數字。
+   ⚠ `.cb` 的字型堆疊多插一個拉丁字型當校正（見產生器那一段），所以這裡量到的
+   折點和 LINE 上一樣；拿掉校正的話這一道會在不該折的地方報折。結果交給 ⑰ 判。
    ⚠⚠ 同一趟順便量第 3 節那張卡的**內容高**：那張卡的高度是那四行自己撐出來的，
    對不上就會在底下留一塊沒有人解釋得了的空白（2026-09-13 使用者一開始講的正是那一句）。 */
 let 日期行 = null;
@@ -175,14 +179,15 @@ for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
           r.setStart(node, i); r.setEnd(node, i + 1);
           const rc = r.getBoundingClientRect();
           const k = Math.round(rc.top);
-          const g = tops.get(k) || { l: rc.left, r: rc.right };
-          tops.set(k, { l: Math.min(g.l, rc.left), r: Math.max(g.r, rc.right) });
+          const g = tops.get(k) || { l: rc.left, r: rc.right, t: "" };
+          tops.set(k, { l: Math.min(g.l, rc.left), r: Math.max(g.r, rc.right), t: g.t + node.data[i] });
         }
-        const 行 = [...tops.values()];
+        const 列 = [...tops.entries()].sort((a, b) => a[0] - b[0]);
         out.push({
-          行: 行.length,
-          寬: +Math.max(...行.map((g) => g.r - g.l)).toFixed(1),
+          行: 列.length,
+          寬: +Math.max(...列.map(([, g]) => g.r - g.l)).toFixed(1),
           可用: +p.getBoundingClientRect().width.toFixed(1),
+          列文: 列.map(([, g]) => g.t),
         });
       }
       return out;
@@ -517,27 +522,37 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
    「約診狀態的頁面，星期幾不要和前面的日期斷開」、
    稍晚：「約診完成通知和約診狀態頁面，時間不要斷行。」
    ⚠ 這一道擋的每一件加回舊的樣子都不會讓任何一道版面守門翻臉：
-     ① 資料裡的日期被改回長的那一種（帶年份、或星期幾全寫）
-     ② 日期那一行畫出來變成兩行（時間又被折下去）——**量畫出來的墨，不是量屬性**
+     ① 資料裡的日期被改回廠商那一版的順序（時間夾在中間）、或被縮寫掉年份／星期幾
+     ② 單張卡上那一行畫成兩列（時間被折下去），或輪播卡折在星期幾中間
+        ——**量畫出來的墨、而且要把每一列的字收回來**，只數列數分不出折在哪裡
      ③ 產生器裡另外寫死一個日期
      ④ 那幾張卡退回只畫兩行（＝底下又空一大塊）
      ⑤ 卡上那四行被另外打一份字，而不是從 booked-card.json 讀出來
      ⑥ 第 4 節少畫一張卡、或浮水印退回 0／0、退回各科原色
-     ⑦ 日期那一行被寫回 white-space: pre —— 那樣畫不下也不會折，會靜靜地
-        溢出到卡片外面，而 ② 那一道就等於關掉了 */
+     ⑦ 日期那一行被寫回 white-space: pre／nowrap —— 那樣畫不下也不會折，會靜靜地
+        溢出到卡片外面，而 ② 那一道就等於關掉了
+     ⑧ `.cb` 的拉丁校正字型被拿掉 —— 那樣這台容器畫出來的折點和 LINE 不一樣
+        （日期會在 LINE 上放得下的地方折，而且折在「星期／五」中間） */
 {
   const DT = LOG.日期 || {};
-  if (!/^\d{2}\/\d{2} \([一二三四五六日]\) \d{2}:\d{2}$/.test(DT.例 || ""))
-    bad.push(`⑰ vendor-log.json 的「日期」不是「月/日 (星期) 時間」那一行寫法：${JSON.stringify(DT.例)}`);
-  if (/\n/.test(DT.例 || "")) bad.push("⑰ 日期的例子裡有換行 —— 定案是一行寫完，時間不要斷行");
+  if (!/^\d{4}\/\d{2}\/\d{2} 星期[一二三四五六日] \d{2}:\d{2}$/.test(DT.例 || ""))
+    bad.push(`⑰ vendor-log.json 的「日期」不是定案的「年/月/日 星期X 時間」：${JSON.stringify(DT.例)}`);
+  if (/\n/.test(DT.例 || "")) bad.push("⑰ 日期的例子裡有換行 —— 時間接在最後，不要自己斷行");
   if (!/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 星期[一二三四五六日]$/.test(DT.廠商 || ""))
     bad.push(`⑰ vendor-log.json 的「日期.廠商」不是他們 09-10 那一版：${JSON.stringify(DT.廠商)}`);
   if (DT.例 && DT.例 === DT.廠商) bad.push("⑰ 「例」和「廠商」一樣，那就沒有東西要調了");
   if (!DT.姓名) bad.push("⑰ vendor-log.json 的「日期」沒有寫姓名那一行要印什麼");
 
   const gen = fs.readFileSync(path.join(HERE, "build-vendor.mjs"), "utf8");
-  if (/\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}/.test(gen))
+  /* ⚠ 註解裡會舉那個日期當例子，所以掃之前先把註解剝掉 —— 不剝的話這一道會
+     一直誤報，而誤報久了就會有人把它拿掉 */
+  const gen碼 = gen.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+  if (/\d{4}\/\d{2}\/\d{2} 星期[一二三四五六日] \d{2}:\d{2}/.test(gen碼))
     bad.push("⑰ build-vendor.mjs 裡寫死了一個日期 —— 唯一出處要是 vendor-log.json");
+  if (!/\.cb\{[\s\S]*?font-family:[^;}]*Arial/.test(gen碼))
+    bad.push("⑰ build-vendor.mjs 的 .cb 少了拉丁校正字型（Arial）"
+      + " —— 這台容器沒有 Noto Sans TC，數字會退到寬一成的字型，日期會在 LINE 上"
+      + "放得下的地方折行，而且折在「星期／五」中間，出圖與量測都會說謊");
 
   /* 卡上那幾行的出處：booked-card.json，這一頁不另外打一份 --------------- */
   const BK = JSON.parse(fs.readFileSync(path.join(HERE, "booked-card.json"), "utf8"));
@@ -619,9 +634,10 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
       if (!w.includes(`fill="${ink}"`)) bad.push(`⑰ 第 4 節有一張卡的浮水印不是定案的淡墨 ${ink}`);
   }
 
-  /* ⚠⚠⚠ 這一道才是「時間不要斷行」本身：量每一張卡上那一行**畫出來幾列**。
-     頁上一共 13 ＋ 4 張卡，每一張都只准一列；量到兩列就是時間又被折下去了，
-     而畫面上完全正常（卡片高度是固定的，多一列只是擠進去）。 */
+  /* ⚠⚠⚠ 這一道才是「時間不要斷行」本身：量每一張卡上那一行**畫出來幾列、
+     每一列是哪幾個字**。單張卡（可用 240px）只准一列；輪播卡（177px）放不下，
+     折成兩列是對的，但折點一定要落在時間前面 —— 折在「星期／五」中間的話列數
+     一樣是 2，只有把每一列的字收回來才分得出來。 */
   /* 卡片的高度是那四行自己撐出來的 —— 差太多就是底下又空了一塊（或字被擠出去） */
   if (!Array.isArray(卡內容) || !卡內容.length)
     bad.push("⑰ 一張卡的內容高都沒量到 —— 那一道等於沒跑");
@@ -640,20 +656,35 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
     const 該有 = plates.length + cards.length;
     if (日期行.length !== 該有)
       bad.push(`⑰ 量到 ${日期行.length} 行日期，頁上那 ${該有} 張卡每一張都該有一行`);
-    const 折 = 日期行.filter((x) => x.行 !== 1);
-    if (折.length)
-      bad.push(`⑰ 有 ${折.length} 張卡的日期畫成 ${折[0].行} 行 —— 時間被折下去了`
-        + `（那一行要 ${折[0].寬}px，可用 ${折[0].可用}px）`);
-    else {
-      const 最寬 = Math.max(...日期行.map((x) => x.寬));
-      const 最窄 = Math.min(...日期行.map((x) => x.可用));
-      ok(`⑰ 日期那一行 ${最寬}px，最窄的一張卡可用 ${最窄}px —— ${日期行.length} 張都是一行`);
+    /* 可用寬度分得出是哪一種卡：單張 240px、輪播 177px */
+    const 單 = 日期行.filter((x) => x.可用 > 200);
+    const 輪 = 日期行.filter((x) => x.可用 <= 200);
+    const 無空白 = (t) => (t || "").replace(/\s+/g, "");
+    const 前段 = 無空白((DT.例 || "").replace(/\s+\d{2}:\d{2}$/, ""));   // 2026/09/11星期五
+    const 時間 = 無空白(((DT.例 || "").match(/\d{2}:\d{2}$/) || [""])[0]);
+    const 折單 = 單.filter((x) => x.行 !== 1);
+    if (折單.length)
+      bad.push(`⑰ 單張卡上有 ${折單.length} 張的日期畫成 ${折單[0].行} 列 —— 時間被折下去了`
+        + `（那一行要 ${折單[0].寬}px，可用 ${折單[0].可用}px）`);
+    const 壞輪 = 輪.filter((x) => x.行 > 2
+      || (x.行 === 2 && (無空白(x.列文[0]) !== 前段 || 無空白(x.列文[1]) !== 時間)));
+    if (壞輪.length)
+      bad.push(`⑰ 輪播卡上有 ${壞輪.length} 張的日期折錯地方：`
+        + `「${壞輪[0].列文.join("｜")}」 —— 折點要落在時間前面，星期幾不可以被拆開`);
+    if (!折單.length && !壞輪.length) {
+      const 輪況 = 輪.length
+        ? (輪.every((x) => x.行 === 1)
+          ? `輪播卡（可用 ${輪[0].可用}px）也一行`
+          : `輪播卡（可用 ${輪[0].可用}px）放不下，折成「${輪.find((x) => x.行 === 2).列文.join("｜")}」`)
+        : "頁上沒有輪播卡";
+      ok(`⑰ 日期「${DT.例}」：單張卡 ${Math.max(...單.map((x) => x.寬))}px／可用 `
+        + `${單[0].可用}px、${單.length} 張都是一列；${輪況}`);
     }
   }
 
   if (!bad.some((x) => x.startsWith("⑰")))
     ok(`⑰ 卡上那幾行都是從 booked-card.json 讀出來的（單張 ${MEGA.length} 行、輪播 ${MICRO.length} 行），`
-      + `日期是「${DT.例}」，一行寫完、時間沒有被折下去`);
+      + `日期是「${DT.例}」，字一個都沒換、只換順序`);
 }
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }

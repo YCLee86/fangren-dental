@@ -136,8 +136,13 @@ summary::marker{color:var(--rule)}
    吃的是同一組規則，所以兩處的字級、行距與折行一定一樣。
    字級、顏色、粗細、上外距都是從 booked-card.json 讀回來寫在 style 上的，
    這裡只放 padding 與行高 —— 寫進 CSS 就變成第二份規格。
+   字型堆疊比整頁多一個拉丁字型（Arial）當校正：手機與電腦上前面三個中文字型
+   會先命中、含拉丁字，所以那一側一個像素都不會變；而產圖用的這台容器沒有那三個
+   字型，拉丁數字會退到比整頁寬一成的字型，日期那一行就會在 LINE 上放得下的地方
+   折行 —— 出圖與量到的折點因此都會對不上實機。中日韓的字仍然照原本的堆疊走。
    （這一段在樣板字串裡面，所以會被原字印進 HTML：不要寫警示記號，第 ⑨ 道在掃。） */
-.cb{padding:14px}
+.cb{padding:14px;
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,system-ui,sans-serif}
 .cb p{line-height:1.35;margin:0}
 .cb b{font-weight:700}
 .stcard .r{display:flex;gap:9px;align-items:baseline;font-size:13px;
@@ -186,7 +191,7 @@ code{font-size:.92em}
 <ol class="sub"><li><b>浮水印的大小與位置和規格不一樣</b>：畫出來是規格的五到六成，而且跑出卡片的右下角被切掉；我們的 JSON 寫的是照表上那個 px 寬、完全收在卡內。第 3 節有三格的對照與數字，<b>九顆各自畫在卡片上該有的樣子也都在那一節</b>。</li>
 <li><b>約診狀態</b>：依系統發送與病人回覆的狀態分成 <b>已排定／已確認／未回覆／已取消</b>。四個值的畫法、色碼與對齊在第 4 節。</li>
 <li><b>浮水印的顏色改成淡墨素色</b>：柔墨 <code>#5c5f57</code>、濃度 12%（<code>wm-&lt;形狀&gt;-ink12.png</code>）。形狀、寬度、位置一個數字都沒動，換掉的只有顏色。</li>
-<li><b>日期請排成一行、時間不要換行</b>：<code>09/11 (五) 11:50</code> —— 年份拿掉、星期幾用半形括號接在日期後面（＝你們「看診前提醒」那一則現在的寫法）。輪播那張卡只有 207px，現在那一串放不下一行，時間會被折到第二行。另外請確認那一格沒有限制行數（<code>wrap: true</code>、不要 <code>maxLines</code>）。</li>
+<li><b>日期的順序要調一件</b>：<code>2026/09/11 星期五 11:50</code> —— 字一個都不用換，只是把星期幾移到日期後面、時間放最後，寬度和你們現在送的那一串完全一樣。另外請確認那一格沒有限制行數（<code>wrap: true</code>、不要 <code>maxLines</code>）：輪播那張卡比較窄，放不下一行時要讓它折，不要截掉。</li>
 <li><b>九顆浮水印怎麼輪，照我們這個規則</b>：<code>(約診月份 + 約診日) % 9</code>，照第 3 節那張表由上到下的順序取第幾顆。同一筆約診不管查幾次都是同一顆，預約成功通知與查詢清單裡的那一張也要是同一顆、同一色。</li></ol>
 </li>
 <li>
@@ -302,12 +307,12 @@ code{font-size:.92em}
 <div class="rows" style="margin-top:1.4em">
 <p style="font-size:.93rem;margin:0 0 .2em"><b>看過之後收掉的 2 件</b></p>
 <div class="row"><p class="k">卡上年份是 2020</p><p class="v">診所確認那是設計用的測試資料，不影響 —— 這一件收掉了。</p></div>
-<div class="row"><p class="k">日期格式</p><p class="v">四張裡有一張就是約診查詢的輪播，日期「2026/09/11 11:50 星期五」完整顯示、沒有被截斷 —— <b>月日、星期幾、時間這三樣就照這一版</b>，只剩排法要調（收短成一行、年份拿掉、星期幾用括號接在日期後面，時間不要被折到第二行），見第 3 節。</p></div>
+<div class="row"><p class="k">日期格式</p><p class="v">四張裡有一張就是約診查詢的輪播，日期「2026/09/11 11:50 星期五」完整顯示、沒有被截斷 —— <b>年月日、星期幾、時間這三樣就照這一版，一個字都不用換</b>，只剩順序要調（星期幾接在日期後面、時間放最後），見第 3 節。</p></div>
 </div>
 
 <figure class="fig">
 <div class="scroll"><img src="../line-booked/shot-query.png" width="2565"
-  height="285"
+  height="366"
   style="width:855px" loading="lazy"
   alt="我們送過去的約診紀錄查詢規格圖（輪播）"></div>
 <figcaption>我們送過去的規格圖（約診紀錄查詢，輪播．這一條可以左右滑）。日期會被截斷的是這一種
@@ -422,7 +427,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="我們要的：浮水印 104px，往右 18、往下 10">
 <defs><clipPath id="clip-1"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-1)" opacity="0.12">
 <svg x="182.00" y="27.00" width="104" height="104.00"
   viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
@@ -441,7 +446,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="廠商送來的：浮水印 67px，往右 10、往下 7">
 <defs><clipPath id="clip-2"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-2)" opacity="0.12">
 <svg x="211.00" y="61.00" width="67" height="67.00"
   viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
@@ -463,7 +468,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="我們要的：浮水印 150px，往右 18、往下 10">
 <defs><clipPath id="clip-3"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-3)" opacity="0.12">
 <svg x="136.00" y="57.07" width="150" height="73.93"
   viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
@@ -482,7 +487,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="廠商送來的：浮水印 83px，往右 8、往下 6">
 <defs><clipPath id="clip-4"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-4)" opacity="0.12">
 <svg x="193.00" y="86.09" width="83" height="40.91"
   viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
@@ -507,7 +512,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="一般牙科・定期檢查：浮水印 107px，往右 18、往下 10">
 <defs><clipPath id="clip-5"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-5)" opacity="0.12">
 <svg x="179.00" y="24.00" width="107" height="107.00"
   viewBox="0 0 29.273 29.282" preserveAspectRatio="none"><g transform="translate(-166.723 511.764) scale(1 -1)"><path
@@ -526,7 +531,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="牙周治療：浮水印 150px，往右 18、往下 10">
 <defs><clipPath id="clip-6"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-6)" opacity="0.12">
 <svg x="136.00" y="57.07" width="150" height="73.93"
   viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
@@ -545,7 +550,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="齒顎矯正：浮水印 188px，往右 18、往下 10">
 <defs><clipPath id="clip-7"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-7)" opacity="0.12">
 <svg x="98.00" y="70.04" width="188" height="60.96"
   viewBox="0 0 44.229 14.341" preserveAspectRatio="none"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
@@ -564,7 +569,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="顯微根管：浮水印 152px，往右 18、往下 10">
 <defs><clipPath id="clip-8"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-8)" opacity="0.12">
 <svg x="134.00" y="55.94" width="152" height="75.06"
   viewBox="0 0 44.267 21.861" preserveAspectRatio="none"><g transform="translate(-159.225 433.777) scale(1 -1)"><path
@@ -583,7 +588,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="植牙・假牙重建：浮水印 120px，往右 18、往下 10">
 <defs><clipPath id="clip-9"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-9)" opacity="0.12">
 <svg x="166.00" y="40.91" width="120" height="90.09"
   viewBox="0 0 29.253 21.955" preserveAspectRatio="none"><g transform="translate(-240.487 433.824) scale(1 -1)"><path
@@ -602,7 +607,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="口腔外科：浮水印 188px，往右 18、往下 10">
 <defs><clipPath id="clip-10"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-10)" opacity="0.12">
 <svg x="98.00" y="69.98" width="188" height="61.02"
   viewBox="0 0 44.261 14.366" preserveAspectRatio="none"><g transform="translate(-306.719 430.029) scale(1 -1)"><path
@@ -621,7 +626,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="口腔外科：浮水印 104px，往右 18、往下 10">
 <defs><clipPath id="clip-11"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-11)" opacity="0.12">
 <svg x="182.00" y="27.00" width="104" height="104.00"
   viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
@@ -640,7 +645,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="兒童牙科：浮水印 106px，往右 18、往下 10">
 <defs><clipPath id="clip-12"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-12)" opacity="0.12">
 <svg x="180.00" y="24.89" width="106" height="106.11"
   viewBox="0 0 44.221 44.266" preserveAspectRatio="none"><g transform="translate(-233.002 374.392) scale(1 -1)"><path
@@ -659,7 +664,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   role="img" aria-label="一般牙科・定期檢查：浮水印 215px，往右 18、往下 10">
 <defs><clipPath id="clip-13"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
-<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-13)" opacity="0.12">
 <svg x="71.00" y="61.26" width="215" height="69.74"
   viewBox="0 0 44.322 14.378" preserveAspectRatio="none"><g transform="translate(-306.689 359.486) scale(1 -1)"><path
@@ -684,7 +689,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 <div class="stgrid">
 <figure class="stwrap">
 <div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p>
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#4478b5">已排定</span></p>
 <svg class="wm" width="188" height="60.96"
@@ -696,7 +701,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>
 <figure class="stwrap">
 <div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p>
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#3f654a">已確認</span></p>
 <svg class="wm" width="188" height="60.96"
@@ -708,7 +713,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>
 <figure class="stwrap">
 <div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p>
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#c28229">未回覆</span></p>
 <svg class="wm" width="188" height="60.96"
@@ -720,7 +725,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>
 <figure class="stwrap">
 <div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">09/11 (五) 11:50</p>
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:#ae4f4d">已取消</span></p>
 <svg class="wm" width="188" height="60.96"
