@@ -92,9 +92,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 /* 輪播：真的可以左右滑，而且要看得到下一張露出一角（同截圖）。
    ⚠ 這裡不是用 CSS 假裝 —— 是排真的 N 張卡（同 og-topic-card 那一輪：
      提案頁要擺真的產出檔，不要用 CSS 把成品再做一次）。 */
-#pv-slot.car,#pv-slot2.car,#pv-slot7.car,#pv-slot9.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
-#pv-slot.car .row,#pv-slot2.car .row,#pv-slot7.car .row,#pv-slot9.car .row{display:flex;gap:8.7px;padding-bottom:6px}
-#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc,#pv-slot7.car .pv-hc,#pv-slot9.car .pv-hc{flex:none;width:207px}
+#pv-slot.car,#pv-slot2.car,#pv-slot9.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
+#pv-slot.car .row,#pv-slot2.car .row,#pv-slot9.car .row{display:flex;gap:8.7px;padding-bottom:6px}
+#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc,#pv-slot9.car .pv-hc{flex:none;width:207px}
 
 /* ---- 卡片外殼（兩案共用）------------------------------------------- */
 .pv-hc{width:100%;border-radius:14px;overflow:hidden;
@@ -187,7 +187,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      （面板底下有寫）。 */
 .pv-nw{position:relative;overflow:hidden}
 .pv-nw .wm{position:absolute;display:block;pointer-events:none;
-  right:-18px;bottom:-10px;height:auto}
+  right:var(--wmr,-18px);bottom:-10px;height:auto}
 .pv-nw .b{position:relative}
 /* 右邊一顆（不重疊）—— 100% 支援的退路，不必用 absolute */
 .pv-nw .row{display:flex;align-items:center;gap:10px}
@@ -293,6 +293,16 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      —— 同 og-topic-card 那一輪：提案頁／規格頁上擺的必須是真的會被送出去的檔。
    ⚠ 每一格的寬度是**墨面積正規化**過的（booked-mark.mjs），
      所以看起來會不一樣寬，那是對的、不是排版沒對齊。 */
+/* 尺用的一列真卡（浮水印往左移多少／卡片窄一點）——
+   ⚠ 這裡不走 `#pv-slotN.car .pv-hc` 那條用 id 列出來的規則（已經踩過六次），
+     寬度由每一格自己的 `--cw` 給，加一格不必回頭改選擇器。 */
+.pv-cw{display:flex;gap:12px;overflow-x:auto;scrollbar-width:thin;
+  padding:2px 2px 8px;margin-top:10px}
+.pv-cw > div{flex:none}
+.pv-cw .lb2{font-size:.68rem;color:var(--ink-soft);margin:0 0 6px 1px;
+  font-variant-numeric:tabular-nums}
+.pv-cw .lb2 b{color:var(--ink)}
+.pv-cw .pv-hc{width:var(--cw,207px)}
 .pv-wm{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
 .pv-wm figure{background:var(--card);border:1px solid var(--rule);border-radius:10px;
   padding:10px 8px 8px;text-align:center}
@@ -360,44 +370,32 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     所以<b>只有顏色變了</b>，份量沒有跟著變。
   </p>
 
-  <h3 class="pv-h3">這一列長什麼樣 —— 日期那一行，兩種畫法</h3>
+  <h3 class="pv-h3">這一列長什麼樣 —— 日期 2026-09-13 定案「指定斷行」</h3>
   <p class="pv-note">
-    ⚠⚠⚠ <b>問題是你在手機上看到的那個折點</b>（2026-09-13）：定案的日期是
+    ⚠⚠⚠ <b>起因是你在手機上看到的那個折點</b>：日期是
     <code>2026/08/20 星期四 15:45</code>，而<b>輪播那一張只有 207px 寬、那一行可用 179px</b>，
     整串在 <b>lg 19</b> 要 215px —— <b>放不下就一定會折</b>。<br>
     ⚠⚠⚠ 而<b>中日韓文字每兩個字之間都是合法的折點</b>，所以「折在哪」是
     <b>寬度 × 字型</b>決定的、不是我們排的順序決定的：這一串正好卡在邊界上 ——
     <b>你手機上折在「星期／四」中間</b>（一個字被丟到下一行），
     這台電腦上折在「星期四」後面（面板現場量給你看）。
-    <b>換一支字型、換一台機器，折點就會移位</b>，所以「把星期幾排在日期後面」救不了它。<br>
+    <b>換一支字型、換一台機器折點就會移位</b>，所以「把星期幾排在日期後面」救不了它 ——
+    <b>要它一定不被拆開，只有自己指定斷點</b>。<br>
+    ✅ <b>定案（你挑的）：日期維持 lg 19，斷點自己指定在日期與星期幾之間</b>，
+    「星期四 15:45」自己一行。落選的是「不斷行」——
+    那一版整串收得下一行，但字級<b>只能從 lg 19 降到 sm 14</b>
+    （md 16 要 178px、貼著牆），<b>日期會變得比病人姓名還小</b>，
+    而那張卡上「一眼看到什麼時候」本來是日期在扛。<b>它的數字仍然印在下面的面板上。</b><br>
     ⚠ <b>單張那一則（268px、可用 240px）不受影響</b>：同一串在那裡收得下一行，
-    這一題<b>只有輪播有</b>（面板現場量兩張給你看）。<br>
-    ⚠⚠ 所以只有兩條路，下面各畫一張：<b>Ⓐ 不斷行</b>（整串一行，<b>只能靠降字級換</b>）、
-    <b>Ⓑ 指定斷行</b>（日期維持 lg 19，「星期四 15:45」自己一行）。
-    <b>四個字元、四樣東西一個都沒有換</b>，換的只有排法。
+    這一題<b>只有輪播有</b>。
   </p>
-
-  <h3 class="pv-h3">Ⓐ 不斷行（整串一行）</h3>
-  <div class="pv-phone" id="pv-ph7">
-    <div class="pv-head"><img src="../../assets/icon-192.png" alt=""><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
-    <div class="pv-chat" id="pv-chat7"></div>
-  </div>
-  <p class="pv-cap">↑ 日期整串一行，字級從 <b>lg 19</b> 降到 <b>sm 14</b>
-  （Flex 的固定階裡收得下的最大一階）。⚠ 代價：<b>日期變得比病人姓名還小</b>，
-  而那張卡上「一眼看到什麼時候」本來是日期在扛。</p>
-  <div class="pv-panel" id="pv-panel7"></div>
-
-  <h3 class="pv-h3">Ⓑ 指定斷行（「星期四 15:45」自己一行）</h3>
   <div class="pv-phone" id="pv-ph9">
     <div class="pv-head"><img src="../../assets/icon-192.png" alt=""><span class="b">芳仁牙醫診所</span><span class="x">⋯</span></div>
     <div class="pv-chat" id="pv-chat9"></div>
   </div>
-  <p class="pv-cap">↑ 日期維持 <b>lg 19</b>，斷點<b>自己指定</b>在日期與星期幾之間 ——
-  兩行都遠在可用寬度之內，所以<b>不會再被瀏覽器折第二次</b>，
-  「星期四」與「15:45」都不會被拆開。</p>
+  <p class="pv-cap">↑ 底套色、白字的藥丸 ＋ <b>淡墨色的浮水印</b>（<code>wm-&lt;形狀&gt;-ink12.png</code>），
+  日期<b>自己斷行</b>。</p>
   <div class="pv-panel" id="pv-panel9"></div>
-
-  <p class="pv-cap">↑ 兩張都是底套色、白字的藥丸 ＋ <b>淡墨色的浮水印</b>（<code>wm-&lt;形狀&gt;-ink12.png</code>）。</p>
   <p class="pv-note">
     ⚠⚠ <b>藥丸和「約診狀態」怎麼對齊 —— 2026-09-12 定案「基線對齊」</b>（＝這一張現在的樣子）。
     三種擺出來比過（基線／只加「靠下對齊」／連標籤的行框也收掉），
@@ -409,6 +407,37 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   </p>
 
   <div id="pv-stwrap"></div>
+
+  <h3 class="pv-h3">②之三　浮水印往左移多少（2026-09-13，你要的）</h3>
+  <p class="pv-note">
+    ⚠⚠⚠ <b>這件事 Flex 寫得出來，而且正好解掉一個我們自己的矛盾</b>：
+    往左是 <code>offsetEnd</code> 的<b>正值</b>（離右緣多遠），寫得出來；
+    而現在這一版是<b>往右溢出</b>，<code>offsetEnd</code> <b>不吃負值、寫不出來</b> ——
+    所以 <code>booked-card.json</code> 那兩行一直寫著 <code>0px</code>，
+    我們送給廠商的文字規格與模擬圖<b>互相矛盾</b>（第 42-7 節記著這件事）。
+    <b>只要你挑一格「往左」，那一份 JSON 就寫得死了</b>，不必再請廠商照圖做。<br>
+    ⚠ <b>底下那 10px 的溢出沒有動</b>（你講的是左右），要不要一起收進來是另一題。<br>
+    ⚠⚠ 每一格都是<b>真的那張卡</b>（207px、同一筆約診、同一顆形狀），
+    只有浮水印的左右位置不一樣 —— 面板現場量「看得到多少、左右各切掉多少」。
+  </p>
+  <div class="pv-cw" id="pv-wmx"></div>
+  <div class="pv-panel" id="pv-panelwx"></div>
+
+  <h3 class="pv-h3">②之四　卡片可不可以窄一點</h3>
+  <p class="pv-note">
+    ⚠⚠⚠ <b>這一把尺我們挑不了 —— 卡片寬度是 LINE 的固定階，不是一個可以轉的旋鈕</b>：
+    bubble 的 <code>size</code> 只有 nano／micro／deci／hecto／kilo／mega／giga 那幾階，
+    而<b>輪播這一張已經在 <code>micro</code></b>（單張那一則是 <code>mega</code>）——
+    <b>再窄只剩 <code>nano</code> 一階，而那一階我們從來沒有量過</b>。<br>
+    ⚠ 連現在這個 <b>207px</b> 也是<b>推導</b>來的（從廠商那張診所端後台的截圖按比例換算，
+    單張 348.7 ／ 輪播 269.3 ＝ 0.772），<b>一張病人手機的截圖就能收掉這件事</b>。<br>
+    ⚠⚠ 所以下面四格是<b>模擬</b>，用途只有一個：<b>先算出地板在哪</b> ——
+    真的換成 nano 之後，這張卡的內容還活不活得下來。面板現場量「內容最寬要多少
+    ／可用多少／日期折成幾行」。<b>浮水印一律維持現在這一版（往右溢出 18px），
+    一把尺一次只動一件事。</b>
+  </p>
+  <div class="pv-cw" id="pv-cwd"></div>
+  <div class="pv-panel" id="pv-panelcw"></div>
 
   <h2 class="pv-h2">③ 浮水印：九顆形狀與顏色</h2>
   <p class="pv-sub">用的是<b>九宮格那九個形狀</b>（<code>brand/shapes/shape-r{1,2,3}c{1,2,3}.svg</code>，
@@ -730,8 +759,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   var msg = "booked", v = "nw", dt = "ymdw", look = "wm9", ad = "none", hero = "n", wmk = "12",
       gh = "none", nm = "top", tz = "c", fine = "none",
       /* 日期那一行怎麼畫：free 自由折行（＝廠商現在那一版的行為）、
-         one 不斷行、brk 指定斷行。⚠ 只有第 ②之二 節會動它，畫完要還原。 */
-      dtm = "free";
+         one 不斷行、brk 指定斷行（2026-09-13 定案）。
+         ⚠ 只有第 ②之二 節會動它，畫完要還原。 */
+      dtm = "free",
+      /* 浮水印離卡片右緣多遠：負的 ＝ 往右溢出（現在這樣）、正的 ＝ 往左收進來。
+         ⚠⚠ **往左是 Flex 寫得出來的**（`offsetEnd` 正值），而往右溢出寫不出來
+           （offset 不吃負值）—— 見第 ②之三 節。 */
+      wmr = -18;
 
 
   /* 現況那一張的日期用哪一種：預約成功卡截圖上是短版、查詢卡截圖上是長版。
@@ -784,7 +818,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        輪播只有 207px 寬，日期在那裡本來就比較容易折行，
        但如果兩則的日期字級不一樣，它們就不再是「同一張卡的兩個狀態」了。 */
     var h = '<div class="pv-hc pv-nw" style="--dtfs:' + TYPE[tz].dt
-      + 'px;--whofs:' + TYPE[tz].who + 'px">';
+      + 'px;--whofs:' + TYPE[tz].who + 'px;--wmr:' + wmr + 'px">';
     /* 頭圖：預約成功那一張是「頭圖 或 頂端那行診所名」二選一。
        ⚠⚠ 輪播**預設兩個都不放**（識別由聊天室給，重複 N 次沒有意義），
          但 ?h=y 時也照畫 —— 「一張圖 ＝ N × 104px」這件事要看得到，
@@ -910,7 +944,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        「差多少」那一格是**逐像素量出來的**（四個寬度 × 四個值，下面寫著方法）。
      ⚠ 零寬探針的上緣 ＝ 那一行真正的基線（同站上 `--lamp-pad` 那個做法）。 */
   function fitNote() {
-    var row = document.querySelector("#pv-slot7 .st");
+    var row = document.querySelector("#pv-slot9 .st");
     if (!row) return "";
     var pill = row.querySelector(".pill"), bp = row.querySelector(".bp");
     if (!pill || !bp) return "";
@@ -934,7 +968,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      ⚠ 「墨的下緣」量不到（要逐像素、要 DPR 8），所以那三個數字是外面量好的、
        下面寫明方法 —— **落選那兩種的數字不要跟著畫面一起消失**。 */
   function alignNote() {
-    var rows = [].slice.call(document.querySelectorAll("#pv-slot7 .st"));
+    var rows = [].slice.call(document.querySelectorAll("#pv-slot9 .st"));
     if (!rows.length) return "";
     var d = rows.map(function (r) {
       var L = r.querySelector(".lb").getBoundingClientRect();
@@ -978,6 +1012,43 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "　<span>（墨 12% 是 L* " + lstar("#2a2c27", A).toFixed(1) + "，比九顆每一顆都重）</span>";
   }
 
+  /* ---- 兩把尺（2026-09-13）-------------------------------------------
+     ⚠ 每一格都畫**真的那張卡**（同一筆約診、同一顆形狀），不要用 CSS 另外做一個像的。 */
+  var WMX = [{ n: "現在（往右溢出 18px）", r: -18 },
+             { n: "貼齊右緣（offsetEnd 0）", r: 0 },
+             { n: "往左 24px", r: 24 },
+             { n: "往左 48px", r: 48 }];
+  var CWD = [{ n: "207px（現在 · micro）", w: 207 },
+             { n: "185px", w: 185 },
+             { n: "165px", w: 165 },
+             { n: "145px", w: 145 }];
+
+  function drawScale(hostId, cases) {
+    document.getElementById(hostId).innerHTML = cases.map(function (c) {
+      var save = wmr;
+      wmr = c.r == null ? save : c.r;
+      var card = nwCard(APPTS[0], true, 0, APPTS.length);
+      wmr = save;
+      return '<div style="--cw:' + (c.w || 207) + 'px"><p class="lb2">' + c.n + '</p>'
+        + card + '</div>';
+    }).join("");
+  }
+
+  /* 一張卡裡「最寬的那一段」—— 量墨，外加藥丸那一列（它有底色，墨量不到內距）。
+     ⚠ 不要問盒子：`.b` 是 block，寬度永遠等於可用寬度，問它永遠回「剛剛好」。 */
+  function widest(card) {
+    var w = 0;
+    lines(card.querySelector(".b")).forEach(function (l) { if (l.w > w) w = l.w; });
+    var st = card.querySelector(".st");
+    if (st) {
+      var t = 0, i;
+      for (i = 0; i < st.children.length; i++) t += st.children[i].getBoundingClientRect().width;
+      t += (st.children.length - 1) * 8;
+      if (t > w) w = t;
+    }
+    return w;
+  }
+
   function render() {
     /* ① 新版・預約成功 */
     msg = "booked"; v = "nw"; dt = "ymdw";
@@ -1003,24 +1074,19 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
          但**頁面上不再畫它** —— 它輸在「套色拿來當字是用錯階」，數字寫在面板上。 */
       msg = "query"; v = "nw"; dt = "ymdw";
       stat = "pill"; wmink = true;
-      /* ⚠ 兩張只差日期那一行的畫法，其餘（藥丸、浮水印、字級、間距）逐項相同 ——
-         一把尺同時動兩件事的話，看到的差別就講不清楚是哪一件造成的。 */
-      dtm = "one";
-      document.getElementById("pv-chat7").innerHTML = queryChat("pv-slot7");
-      measure("pv-slot7", "pv-panel7");
+      /* ⚠⚠ 日期 2026-09-13 定案「指定斷行」（使用者挑的），所以頁面上只畫這一種；
+         落選的「不斷行」**不再畫成一張卡**，它的數字仍然由面板現場量給你看
+         （第九節第 28 條 ④：尺收掉了，數字要留著）。 */
       dtm = "brk";
       document.getElementById("pv-chat9").innerHTML = queryChat("pv-slot9");
       measure("pv-slot9", "pv-panel9");
-      dtm = "free";
-      wmink = false;
-      stat = "";
       /* ⚠ 這一節自己的數字：對比現算，寬度現量。
          ⚠⚠ .st 是 flex nowrap，**永遠不會折行** —— 要量的是「放不放得下」。 */
-      var inner = document.querySelector("#pv-slot7 .pv-hc .b");
+      var inner = document.querySelector("#pv-slot9 .pv-hc .b");
       var avail = inner.clientWidth
         - parseFloat(getComputedStyle(inner).paddingLeft)
         - parseFloat(getComputedStyle(inner).paddingRight);
-      var need = [].slice.call(document.querySelectorAll("#pv-slot7 .st")).map(function (p) {
+      var need = [].slice.call(document.querySelectorAll("#pv-slot9 .st")).map(function (p) {
         var w = 0, i;
         for (i = 0; i < p.children.length; i++) w += p.children[i].getBoundingClientRect().width;
         return w + (p.children.length - 1) * 8;
@@ -1031,12 +1097,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
            而這一輪整件事就是「折點落在哪兩個字中間」。
          ⚠⚠ 「整串本來要多寬」要用探針量（widthOf），不能量畫出來的那一行：
            已經折掉的那一段就是量不到的那一段。 */
-      var dtA = document.querySelector("#pv-slot7 .dt");
       var dtB = document.querySelector("#pv-slot9 .dt");
       var dtM = document.querySelector("#pv-slot .dt");        /* 單張那一則 */
       var full = fmt(APPTS[0]);
-      var w19 = widthOf(dtB, full), wA = widthOf(dtA, full);
-      var lnA = lines(dtA), lnB = lines(dtB);
+      var w19 = widthOf(dtB, full);
+      var lnB = lines(dtB);
+      /* 落選那一版（不斷行）要降到哪一階才收得下 —— **用探針量，不必畫那一張卡**。 */
+      var wA = widthAt(dtB, ONE_FS, full), w16 = widthAt(dtB, 16, full);
       var innerM = document.querySelector("#pv-slot .pv-hc .b");
       var availM = innerM.clientWidth
         - parseFloat(getComputedStyle(innerM).paddingLeft)
@@ -1074,12 +1141,13 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
               + "<b>寬度 × 字型</b>決定的，而這一串正好卡在邊界上 —— "
               + "<b>那正是 Ⓑ 要自己指定斷點的理由</b>"
             : "<span class='ok'>收得下</span>")
-        + "<br>・<b>Ⓐ 不斷行</b>：字級 <b>sm " + ONE_FS + "</b>，整串要 " + wA.toFixed(0) + "px "
-        + (wA <= avail ? "<span class='ok'>一行收得下</span>" : "<span class='no'>仍然放不下</span>")
-        + "，實際畫出 <b>" + lnA.length + " 行</b>（" + shows(lnA) + "）。"
-        + "⚠ 代價：日期從 19 掉到 " + ONE_FS + "，<b>比病人姓名（" + TYPE[tz].who
-        + "px）還小</b> —— 那張卡上「一眼看到什麼時候」本來是日期在扛。"
-        + "<br>・<b>Ⓑ 指定斷行</b>：日期維持 <b>lg 19</b>，畫出 <b>" + lnB.length + " 行</b>（"
+        + "<br>・<b>落選那一版（不斷行）</b>：整串在 <b>md 16</b> 要 " + w16.toFixed(0)
+        + "px（可用 " + avail.toFixed(0) + "px，<b>貼著牆</b>，LINE 實機還要再寬約 7% 就超出），"
+        + "降到 <b>sm " + ONE_FS + "</b> 才是 " + wA.toFixed(0) + "px "
+        + (wA <= avail ? "<span class='ok'>真的收得下</span>" : "<span class='no'>仍然放不下</span>")
+        + " —— ⚠ 代價：日期從 19 掉到 " + ONE_FS + "，<b>比病人姓名（" + TYPE[tz].who
+        + "px）還小</b>，而那張卡上「一眼看到什麼時候」本來是日期在扛。"
+        + "<br>・<b>定案・指定斷行</b>：日期維持 <b>lg 19</b>，畫出 <b>" + lnB.length + " 行</b>（"
         + shows(lnB) + "）"
         + (Math.max.apply(null, lnB.map(function (x) { return x.w; })) <= avail
             ? "<span class='ok'>兩行都在可用寬度之內，不會再被折第二次</span>"
@@ -1090,7 +1158,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + (w19M <= availM ? "<span class='ok'>一行收得下</span>" : "<span class='no'>放不下</span>")
         + " —— <b>這一題只有輪播有。</b></p>"
         + "<p class='pv-note'><b>這一節量到的</b>：卡片 "
-        + document.querySelector("#pv-slot7 .pv-hc").getBoundingClientRect().width.toFixed(0)
+        + document.querySelector("#pv-slot9 .pv-hc").getBoundingClientRect().width.toFixed(0)
         + "px（＝輪播上那一張真正的寬度）、那一列可用 " + avail.toFixed(0)
         + "px、藥丸那一版最寬要 " + Math.max.apply(null, need).toFixed(0) + "px。<br>"
         + "<b>白字壓在填色上</b>："
@@ -1104,6 +1172,61 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + STV.map(function (x) { return _cr(x.c, "#F4F4F5").toFixed(2); }).join("／") + " —— "
         + "<b>藍與橘過不了 4.5</b>，那正是「套色拿來當字是用錯階」。<br>"
         + fitNote() + "<br>" + alignNote() + "<br>" + inkNote() + "</p>";
+
+      /* ---- ②之三 浮水印往左移多少 ----------------------------------
+         ⚠ 兩把尺都吃 stat／wmink／dtm，所以還原排在它們**後面**。 */
+      drawScale("pv-wmx", WMX);
+      var wmRows = [].slice.call(document.querySelectorAll("#pv-wmx .pv-hc"))
+        .map(function (c, i) {
+          var im = c.querySelector(".wm");
+          var cb = c.getBoundingClientRect(), ib = im.getBoundingClientRect();
+          var vis = Math.max(0, Math.min(cb.right, ib.right) - Math.max(cb.left, ib.left));
+          return "<b>" + WMX[i].n + "</b>：整顆 " + ib.width.toFixed(0)
+            + "px，看得到 <b>" + vis.toFixed(0) + "px（" + (vis / ib.width * 100).toFixed(0)
+            + "%）</b>，右邊切掉 " + Math.max(0, ib.right - cb.right).toFixed(0)
+            + "、左邊切掉 " + Math.max(0, cb.left - ib.left).toFixed(0)
+            + "px；左緣離卡片左緣 " + (ib.left - cb.left).toFixed(0) + "px";
+        });
+      document.getElementById("pv-panelwx").innerHTML =
+        "<p class='pv-note'>" + wmRows.join("<br>")
+        + "<br>⚠⚠ <b>往左不是免費的</b>：這一顆的寬度是按<b>墨的面積</b>算出來的"
+        + "（九顆各不相同，出處 <code>wm-sizes.json</code>），"
+        + "推過頭就換成<b>左邊</b>被切 —— 面板上那兩個「切掉」的數字要一起看。"
+        + "<br>⚠ <b>形狀會跟著約診日期換</b>（<code>(月＋日) % 9</code>），"
+        + "所以這一格挑的是<b>位置</b>不是那一顆；九顆的寬度 132~215px 各不相同，"
+        + "同一個位置在別的日子露出來的比例會不一樣。</p>";
+
+      /* ---- ②之四 卡片窄一點會怎樣 ---------------------------------- */
+      drawScale("pv-cwd", CWD);
+      var cwRows = [].slice.call(document.querySelectorAll("#pv-cwd .pv-hc"))
+        .map(function (c, i) {
+          var b = c.querySelector(".b");
+          var av = b.clientWidth - parseFloat(getComputedStyle(b).paddingLeft)
+                 - parseFloat(getComputedStyle(b).paddingRight);
+          var wide = widest(c), ln = lines(c.querySelector(".dt"));
+          return "<b>" + CWD[i].n + "</b>：可用 " + av.toFixed(0)
+            + "px、內容最寬要 <b>" + wide.toFixed(0) + "px</b>，日期 " + ln.length + " 行 —— "
+            + (wide <= av
+                ? "<span class='ok'>收得下</span>"
+                : "<span class='no'>放不下（差 " + (wide - av).toFixed(0) + "px）</span>");
+        });
+      document.getElementById("pv-panelcw").innerHTML =
+        "<p class='pv-note'>" + cwRows.join("<br>")
+        + "<br>⚠⚠ <b>地板是藥丸那一列不是日期</b>（量出來最寬的是它）——"
+        + "所以「窄一點」真正會先撞到的是<b>約診狀態那一列</b>，不是這一輪剛修好的日期。"
+        + "<br>⚠⚠⚠ <b>而這把尺我們挑不了</b>：能換的只有 bubble 的 <code>size</code>，"
+        + "輪播已經在 <code>micro</code>，<b>下一階 <code>nano</code> 有多寬我們沒有量過</b> ——"
+        + "要問廠商，或找一個用 nano 的帳號量一次。</p>";
+
+      /* ⚠⚠⚠ **畫完一定要還原**：`render()` 會被呼叫不只一次
+         （開頁一次、`wm-sizes.json` 回來一次、每次 resize 一次），
+         而這三個是整支腳本共用的變數 —— 不還原的話**第二次進來時，
+         ①② 那兩段會跟著畫成藥丸＋淡墨浮水印＋指定斷行**，
+         連 `shot-booked.png`／`shot-query.png` 都會跟著變，
+         **而畫面上一切正常**（2026-09-13 踩到，是出圖的位元組變了才發現）。 */
+      dtm = "free";
+      wmink = false;
+      stat = "";
     }
 
     /* ③ 現況・預約成功。
@@ -1255,6 +1378,19 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     return w;
   }
   function natural(el) { return widthOf(el, el.textContent); }
+  /* 同一支字型、換一個字級量同一串字 —— 「降到哪一階才收得下」用它量，
+     ⚠ 不必真的畫一張卡出來（落選那一版的數字要留著，但不必佔畫面）。 */
+  function widthAt(el, fs, text) {
+    var probe = document.getElementById("pv-probe"), cs = getComputedStyle(el);
+    probe.style.font = cs.font;
+    probe.style.fontSize = fs + "px";
+    probe.style.letterSpacing = cs.letterSpacing;
+    probe.textContent = text;
+    var w = probe.getBoundingClientRect().width;
+    probe.textContent = "";
+    probe.style.fontSize = "";
+    return w;
+  }
 
   function measure(slotId, panelId) {
     var slot = document.getElementById(slotId);
@@ -1492,9 +1628,18 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   /* ⚠ 視窗一改，兩個 268／207 的框與折行判斷都要重量。 */
   window.addEventListener("resize", render);
   render();
+  /* ⚠⚠⚠ 這個 `catch` 以前是空的，而 `render()` 就在它上面那一行 ——
+     所以**第二次 render 只要丟出任何例外都會被它吞掉**，畫面停在第一次
+     （SIZES 還沒回來）那一版、印著「讀不到 wm-sizes.json」，
+     **不報錯、看起來像 JSON 壞了**（2026-09-13 花了十分鐘才發現是選擇器改名沒改完）。
+     現在分開接：JSON 讀不到是預期的（退回值 ＋ 面板會標），render 丟例外要大聲說。 */
   fetch("wm-sizes.json").then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (j) { if (j) { SIZES = j; render(); } })
-    .catch(function () { /* 讀不到就維持退回值，面板會標出來 */ });
+    .catch(function () { return null; })
+    .then(function (j) {
+      if (!j) return;                       /* 讀不到就維持退回值，面板會標出來 */
+      SIZES = j;
+      render();
+    });
 })();
 </script>
 </body>

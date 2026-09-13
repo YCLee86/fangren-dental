@@ -153,7 +153,7 @@ for (const n of ORDER) {
   for (const [sel, body] of LINES) {
     const line = html.split("\n").find((l) => l.startsWith("#pv-slot") && l.includes(body));
     if (!line) { bad.push(`找不到「${sel}」那一條輪播寬度的規則`); continue; }
-    for (const id of ["#pv-slot7", "#pv-slot9"])
+    for (const id of ["#pv-slot9"])
       ok(line.includes(id + sel),
         `${sel} 那一條少了 ${id} —— 那一張輪播會退回 width:100%、畫成 218.6px`);
   }
@@ -181,39 +181,71 @@ for (const n of ORDER) {
   ok(/\.pill\{[^}]*line-height:1;[^}]*padding:\.42em \.63em \.38em/.test(html),
     "藥丸的行高與上下內距被改掉了 —— 塊會離開「約診狀態」那幾個字的字面中線（低 1.40px）");
 
-  /* ---- 日期那一行：兩種畫法（2026-09-13）-----------------------------
+  /* ---- 日期那一行：2026-09-13 定案「指定斷行」-------------------------
      ⚠⚠⚠ 使用者在手機上看到輪播的日期折在「星期／四」中間（一個字被丟到下一行），
-       指定做兩種給他挑：Ⓐ 不斷行、Ⓑ 把「星期四 15:45」斷到第二行。
-       少畫其中一種、或兩張的日期畫成一樣，**畫面完全正常**、每一道尺寸守門都會過。 */
-  for (const [m, why] of [['dtm = "one";', "Ⓐ 不斷行那一張"],
-                          ['dtm = "brk";', "Ⓑ 指定斷行那一張"]])
-    ok(html.includes(m), `第 ②之二 節少了 ${why}（${m}）`);
-  /* ⚠⚠ 還原那一行不可以只用 includes 找 —— 宣告變數那一行本身就寫著 `dtm = "free"`，
-     所以要求它**排在 Ⓑ 畫完之後**，不然畫完沒還原這一道等於沒開（負向測過）。 */
-  ok(/dtm = "brk";[\s\S]{0,400}dtm = "free";[\s\S]{0,40}wmink = false;/.test(html),
-    "畫完沒有把 dtm 還原成 free —— 後面兩段（現況那兩張）會跟著畫成斷行的樣子");
+       兩種擺出來之後挑了「指定斷行」。落選那一版（不斷行）**不再畫成一張卡**，
+       但它的數字要留在面板上（第九節第 28 條 ④）。 */
+  ok(html.includes('dtm = "brk";'), "第 ②之二 節沒有在畫「指定斷行」那一版");
+  ok(!/dtm = "one";/.test(html),
+    "「不斷行」那一版又被畫回頁面上 —— 2026-09-13 使用者挑的是指定斷行");
   ok(/id="pv-chat9"/.test(html) && /queryChat\("pv-slot9"\)/.test(html) && /id="pv-panel9"/.test(html),
-    "Ⓑ 那一張的手機框、slot 或面板不見了 —— 兩種要並著看才比得出來");
+    "定案那一張的手機框、slot 或面板不見了");
   ok(/\.pv-nw \.dt\.one\{white-space:nowrap\}/.test(html),
-    "Ⓐ 那一版沒有 white-space:nowrap —— 它會跟著折，變成和現況一模一樣");
-  /* ⚠⚠ Ⓐ 的字級只能是 Flex 的固定階，而且要小到真的收得下（量出來是 sm 14）。 */
+    "落選那一版的樣式被刪了 —— 它還要拿來量「降到哪一階才收得下」");
+  /* ⚠⚠ 落選那一版的字級只能是 Flex 的固定階，而且要小到真的收得下（量出來是 sm 14）。 */
   const one = html.match(/var ONE_FS = (\d+);/);
   ok(one && [11, 13, 14, 16, 19, 22, 27].includes(+one[1]),
     "ONE_FS 不是 Flex 的固定階（xxs 11／xs 13／sm 14／md 16／lg 19／xl 22／xxl 27）");
   ok(one && +one[1] <= 14,
-    `ONE_FS = ${one && one[1]} 在 179px 的那一行放不下（md 16 要 178px、貼著牆，LINE 上會超出）`);
-  ok(/style="font-size:' \+ ONE_FS \+ 'px"/.test(html),
-    "Ⓐ 的字級沒有吃 ONE_FS —— 卡片與面板會各寫一個數字，改一個不會動另一個");
-  /* ⚠⚠⚠ Ⓑ 的斷點要從 fmt() 現場切，**不可以另打一份日期**：
+    `ONE_FS = ${one && one[1]} 在 179px 的那一行放不下（md 16 量到 182px）`);
+  /* ⚠⚠⚠ 斷點要從 fmt() 現場切，**不可以另打一份日期**：
      DATE 那一份換了寫法時，寫死的那一份會靜靜地變成第二個真相。 */
   ok(/function dtBrk\(a\) \{\s*var s = fmt\(a\)/.test(html),
     "dtBrk 沒有從 fmt() 切 —— 日期不可以在第二個地方再打一份");
   ok(/throw new Error\("日期裡找不到「 星期」/.test(html),
-    "dtBrk 切不到斷點時沒有 throw —— 它會靜靜地退回一行，看起來像 Ⓑ 沒有生效");
-  /* ⚠ 兩種的數字要印在面板上（第九節第 28 條 ④：尺收掉了數字也要留著）。 */
-  for (const n of ["Ⓐ 不斷行", "Ⓑ 指定斷行", "單張那一則"])
+    "dtBrk 切不到斷點時沒有 throw —— 它會靜靜地退回一行，看起來像定案那一版沒有生效");
+  /* ⚠ 面板要留著：落選那一版的數字、以及「單張那一則不受影響」那一句。 */
+  for (const n of ["落選那一版（不斷行）", "定案・指定斷行", "單張那一則"])
     ok(html.includes(n), `面板少了「${n}」那一行量測`);
+
+  /* ---- 兩把新的尺（2026-09-13，使用者：「logo 可以再往左移」）----------
+     ⚠⚠ 浮水印的預設位置**一定要是往右溢出 18px** —— 那是 2026-09-13 定案的樣子，
+       而 shot-booked.png／shot-query.png 與廠商那一頁的規格圖都是照它出的；
+       改掉預設值那幾張圖會跟著變，而每一道尺寸守門都會過。 */
+  ok(/\n      wmr = -18;/.test(html),
+    "浮水印的預設位置不是往右溢出 18px —— 那是定案的值，尺上的格子不可以寫回預設");
+  ok(/right:var\(--wmr,-18px\)/.test(html),
+    "浮水印的 right 沒有吃 --wmr（或退回值不是 -18px）—— 尺會按了沒反應");
+  ok(/--wmr:' \+ wmr \+ 'px/.test(html), "卡片沒有把 wmr 寫進 style —— 那把尺不會生效");
+  for (const id of ["pv-wmx", "pv-panelwx", "pv-cwd", "pv-panelcw"])
+    ok(html.includes(`id="${id}"`), `少了尺的容器 #${id}`);
+  ok(/var WMX = \[/.test(html) && /var CWD = \[/.test(html), "兩把尺的格子不見了");
+  ok(/drawScale\("pv-wmx", WMX\)/.test(html) && /drawScale\("pv-cwd", CWD\)/.test(html),
+    "尺沒有被畫出來");
+  /* ⚠⚠⚠ 卡片寬度**不是我們挑得了的**（LINE 的固定階，輪播已經在 micro）——
+     這一句不可以從頁面上消失，不然那四格看起來會像一把我們轉得動的旋鈕。 */
+  for (const n of ["這一把尺我們挑不了", "再窄只剩 <code>nano</code> 一階",
+                   "輪播這一張已經在 <code>micro</code>"])
+    ok(html.includes(n), `②之四 少了「${n}」那一句 —— 那四格會看起來像我們挑得了的`);
+  /* ⚠⚠ 那把尺的寬度只能靠 --cw，不可以再去動那條用 id 列出來的 207px 規則。 */
+  ok(/\.pv-cw \.pv-hc\{width:var\(--cw,207px\)\}/.test(html),
+    "尺的卡片寬度沒有吃 --cw");
+  /* ⚠⚠⚠ 三個共用的狀態畫完一定要還原，而且要排在**兩把尺後面**
+     —— `render()` 會被呼叫不只一次（開頁、wm-sizes.json 回來、每次 resize），
+     不還原的話**第二次進來時 ①② 那兩段會跟著畫成藥丸＋淡墨浮水印＋指定斷行**，
+     連 shot-booked.png／shot-query.png 都會跟著變，**而畫面上一切正常**
+     （2026-09-13 踩到，是出圖的位元組變了才發現）。
+     ⚠ 不可以只用 includes 找 `dtm = "free"` —— 宣告變數那一行本身就寫著它。 */
+  ok(/drawScale\("pv-cwd", CWD\);[\s\S]{0,3000}dtm = "free";\s*\n\s*wmink = false;\s*\n\s*stat = "";/
+      .test(html),
+    "畫完沒有把 dtm／wmink／stat 還原（或還原排在兩把尺前面）—— 第二次 render 會把 ①② 一起畫成第 ②之二 節那一版");
+
+  /* ⚠⚠⚠ 開頁那段 fetch 的 catch 不可以把 render() 的例外一起吞掉
+     （2026-09-13 踩過：畫面停在「讀不到 wm-sizes.json」、不報錯）。 */
+  ok(/\.catch\(function \(\) \{ return null; \}\)\s*\n\s*\.then\(function \(j\) \{/.test(html),
+    "wm-sizes.json 那段的 catch 又包住 render() 了 —— render 丟例外會被吞掉，畫面停在退回值那一版");
 }
+
 
 /* 樣板本身要用變數，不要不小心寫死某一顆 */
 const wmEl = BOOKED.body.contents[1];
