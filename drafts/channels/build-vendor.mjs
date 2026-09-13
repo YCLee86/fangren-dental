@@ -152,12 +152,59 @@ const WM = (() => {
    與第 4 節那四張 HTML 卡吃的是同一組數字 —— 分成兩份的話，同一頁上會畫出
    兩種字級的同一張卡，而版面完全正常。 */
 const DATE = D.日期;
-if (!/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 星期[一二三四五六日]$/.test(DATE.例 || ""))
-  throw new Error(`日期的例子不是廠商 09-10 那一版的寫法：${DATE.例}`);
+/* 2026-09-13：日期的排法調了 —— 星期幾移到日期後面，時間自己一行。
+   使用者：「約診狀態的頁面，星期幾不要和前面的日期斷開」。
+   只把星期幾移過去是不夠的：輪播那張卡只有 207px，日期本來就放不下一行，
+   交給瀏覽器（或 LINE）自己折，折點會跟著字型跑 —— 實測這台容器折在
+   「星期／五」中間，連那三個字自己都被拆開。所以斷行要是**我們指定的**
+   （那一格填成「…星期五」＋換行＋「11:50」），寬度就不再參與這件事。
+   兩種寫法都留在資料裡：「廠商」是他們 09-10 送來的、「例」是我們要的。 */
+if (!/^\d{4}\/\d{2}\/\d{2} 星期[一二三四五六日]\n\d{2}:\d{2}$/.test(DATE.例 || ""))
+  throw new Error(`日期的例子不是「年月日 星期幾／換行／時間」那一種寫法：${JSON.stringify(DATE.例)}`);
+if (!/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 星期[一二三四五六日]$/.test(DATE.廠商 || ""))
+  throw new Error(`日期的「廠商」那一欄不是他們 09-10 那一版的寫法：${JSON.stringify(DATE.廠商)}`);
+if (DATE.例 === DATE.廠商) throw new Error("日期的「例」和「廠商」一樣，那就沒有東西要調了");
 if (!DATE.姓名) throw new Error("vendor-log.json 的「日期」沒有寫姓名要印什麼");
-/* 字級與間距照 Flex：paddingAll 14、姓名 md 16、日期 lg 19（margin 6）、
-   狀態那一列 xs 13。行高與基線是我們畫的模型，兩處共用同一組。 */
-const CARD = { pad: 14, 名: 16, 日: 19, 隔: 6, 距: 10, 籤: 13, lh: 1.35, base: 1.05 };
+/* 字級與間距照 Flex：paddingAll 14、狀態那一列 xs 13。行高是我們畫的模型。 */
+const CARD = { pad: 14, 距: 10, 籤: 13, lh: 1.35 };
+/* Flex 的字級是固定 px、不是比例 —— 這張階梯沒有 12、15、18、20。 */
+const FSIZE = { xxs: 11, xs: 13, sm: 14, md: 16, lg: 19, xl: 22, xxl: 27 };
+
+/* ── 卡上那幾行從那份 Flex JSON 讀回來 ────────────────────────────
+   2026-09-13 使用者：「預約成功通知　對話框裡文字下有一個很大的空白　看起來會覺得
+   是文字寫好，再另外塞 logo 浮水印，但空間不夠所以往下拉對話框。這樣不對；
+   我們一開始是把 logo 當浮水印，這樣就不會有很大的空白。」
+   成因是這一頁只畫了兩行，而那張卡是照真正的四行量出來的 268×149 —— 底下那一塊
+   空白是「少畫的兩行」，不是卡片被撐開。所以這裡把四行**從 booked-card.json 讀出來**
+   （那一份才是出處，這一頁不另外打一份字）。
+   ⚠ 這是這一頁唯一一處會印出訊息文字的地方，所以第 ② 道守門掃之前會先把
+     foreignObject 剝掉，另由第 ⑰ 道逐字比對它和 JSON 一不一樣。 */
+const BOOKED = JSON.parse(readFileSync(join(HERE, "booked-card.json"), "utf8"));
+const 填 = (t) => t.replace(/\{\{patient\}\}/g, DATE.姓名).replace(/\{\{date\}\}/g, DATE.例);
+const cardLines = (key) => {
+  const bubble = key === "約診紀錄查詢" ? BOOKED[key].contents[0] : BOOKED[key];
+  const box = bubble.body.contents.find((c) => c.type === "box");
+  if (!box) throw new Error(`booked-card.json 的「${key}」裡找不到內容那一塊 box`);
+  const rows = box.contents.filter((c) => c.type === "text");
+  if (!rows.length) throw new Error(`booked-card.json 的「${key}」裡一行字都沒有`);
+  return rows.map((t) => ({
+    size: FSIZE[t.size] || FSIZE.md,
+    color: t.color || "#2A2C27",
+    weight: t.weight === "bold" ? 700 : 400,
+    margin: t.margin ? parseFloat(t.margin) : 0,
+    /* 日期那一格的斷行是我們指定的（見上面），所以那一行要 white-space: pre ——
+       交給瀏覽器自己折的話，這台容器的字型比 LINE 寬，會在「星期／五」中間再折
+       一次，而那正是這一輪要治的東西。 */
+    pre: /\{\{date\}\}/.test(t.text || ""),
+    /* span 那一行：粗的那一段（姓名）要跟著粗 */
+    html: (t.contents || [{ text: t.text, weight: t.weight }])
+      .map((sp) => (sp.weight === "bold" && !t.weight
+        ? `<b>${esc(填(sp.text))}</b>` : esc(填(sp.text)))).join(""),
+  }));
+};
+const linesHtml = (rows) => rows.map((r, i) => `<p style="font-size:${r.size}px;`
+  + `color:${r.color};font-weight:${r.weight};`
+  + `margin:${i === 0 ? 0 : r.margin}px 0 0${r.pre ? ";white-space:pre" : ""}">${r.html}</p>`).join("");
 const SC = D.狀態色;
 
 /* 哪一顆浮水印：`(約診月份 + 約診日) % 9`（＝要請廠商照著填的那條規則）。
@@ -297,12 +344,14 @@ summary::marker{color:var(--rule)}
 .stwrap{margin:0;max-width:${SC.卡.w}px}
 .stcard{position:relative;overflow:hidden;background:var(--card);
   border:1px solid var(--rule);border-radius:9px}
-/* 卡上那兩行 —— 第 3 節那幾張 SVG 卡（foreignObject）與第 4 節那四張 HTML 卡
-   吃的是同一組規則，所以兩處的字級、行距與折行一定一樣。 */
+/* 卡上那幾行 —— 第 3 節那幾張 SVG 卡（foreignObject）與第 4 節那四張 HTML 卡
+   吃的是同一組規則，所以兩處的字級、行距與折行一定一樣。
+   字級、顏色、粗細、上外距都是從 booked-card.json 讀回來寫在 style 上的，
+   這裡只放 padding 與行高 —— 寫進 CSS 就變成第二份規格。
+   （這一段在樣板字串裡面，所以會被原字印進 HTML：不要寫警示記號，第 ⑨ 道在掃。） */
 .cb{padding:${CARD.pad}px}
-.cb .pt{font-size:${CARD.名}px;line-height:${CARD.lh};color:var(--soft);margin:0}
-.cb .dt{font-size:${CARD.日}px;line-height:${CARD.lh};font-weight:700;margin:${CARD.隔}px 0 0;
-  color:var(--ink)}
+.cb p{line-height:${CARD.lh};margin:0}
+.cb b{font-weight:700}
 .stcard .r{display:flex;gap:9px;align-items:baseline;font-size:${CARD.籤}px;
   line-height:1;margin:${CARD.距}px 0 0}
 .stcard .lb{color:var(--soft);flex:0 0 auto}
@@ -458,6 +507,11 @@ ${WM.map((s) => `<figure>
    他挑的是**溢出 18／10px** 那一種，所以「我們的 JSON（貼齊卡內）」那一格整個
    拿掉了（42-7 記著的那個「我們自己送過去的兩份互相矛盾」到此收掉）。
    ⚠ 那兩個數字的唯一出處仍然是資料，這裡不寫死。 */
+/* 兩張卡的內容：單張的預約成功通知（四行）與輪播上的約診紀錄查詢（兩行）。 */
+const MEGA = cardLines("預約成功通知");
+const MICRO = cardLines("約診紀錄查詢");
+if (MEGA.length !== 4) throw new Error(`預約成功通知讀出來是 ${MEGA.length} 行，不是四行`);
+if (MICRO.length !== 2) throw new Error(`約診紀錄查詢讀出來是 ${MICRO.length} 行，不是兩行`);
 const byName = Object.fromEntries(WM.map((s2) => [s2.n, s2]));
 const cmp = D.浮水印.對照;
 const cardBox = cmp.卡;
@@ -482,11 +536,14 @@ const plate = (shape, g, col) => {
         估出來的寬度會跟著字型跑（這台容器裡沒有 Noto Sans TC，同一行量到的
         寬度差 6.6%），估錯的那一天字會靜靜地畫到卡片外面而且不報錯。
         底下第 4 節那四張 HTML 卡吃的是同一組 .cb 規則，兩處一定長一樣。
+     ⚠⚠ 四行是從 booked-card.json 讀出來的真正內容，不是這裡打的 ——
+        只畫兩行的話，這張照四行量出來的卡底下會空一大塊，讀起來像「排完字
+        之後另外塞一顆 logo、把對話框往下撐開」，而浮水印本來就該墊在字底下。
      ⚠ 浮水印畫在文字**上面**，和那份 Flex 的 contents 順序一樣
        （image 排在文字那一塊後面），這樣才看得出它會不會蓋到字。 */
   const 文 = `<foreignObject x="0" y="0" width="${cardBox.w}" height="${cardBox.h}"`
-    + `><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p class="pt">${esc(DATE.姓名)}</p>`
-    + `<p class="dt">${esc(DATE.例)}</p></div></foreignObject>`;
+    + `><div xmlns="http://www.w3.org/1999/xhtml" class="cb">${linesHtml(MEGA)}</div>`
+    + `</foreignObject>`;
   return `<figure class="cmp">
 <svg viewBox="${-PL} ${-PT} ${cardBox.w + PL + PR} ${cardBox.h + PT + PB}"
   width="${cardBox.w + PL + PR}" height="${cardBox.h + PT + PB}"
@@ -553,8 +610,7 @@ const wmSvg = (s2, off) => `<svg class="wm" width="${s2.w}" height="${(s2.w / s2
 const settled = `<div class="stgrid">
 ${PILLVAL.map((v) => `<figure class="stwrap">
 <div class="stcard cb">
-<p class="pt">${esc(DATE.姓名)}</p>
-<p class="dt">${esc(DATE.例)}</p>
+${linesHtml(MICRO)}
 <p class="r"><span class="lb">約診狀態</span><span class="pill"
   style="background:${v.色}">${esc(v.名)}</span></p>
 ${wmSvg(輪, OFF)}

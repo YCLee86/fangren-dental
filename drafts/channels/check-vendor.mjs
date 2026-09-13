@@ -92,10 +92,20 @@ if (fs.existsSync(auto)) { scanned++; texts.push(...fs.readFileSync(auto, "utf8"
 const probes = [...new Set(texts.flatMap((t) => t.split(/\n/)))]
   .map((t) => t.replace(/\{\{\w+\}\}/g, "").trim())
   .filter((t) => t.length >= 10);
-const leaked = probes.filter((t) => html.includes(t));
+/* ⚠⚠ 例外只有一處：第 3 節那幾張卡上畫的是「預約成功通知」真正的四行，
+   而那四行是產生器從 booked-card.json **讀出來**的、不是在這一頁打的
+   （2026-09-13 使用者：那張卡底下那一大塊空白，讀起來像排完字之後另外塞一顆
+   logo 把對話框撐開 —— 成因是只畫了兩行）。所以掃之前把 foreignObject 剝掉，
+   另由第 ⑰ 道逐字比對它和 JSON 一不一樣 —— 單一出處沒有被破壞。
+   ⚠ 剝掉的那幾塊要真的存在，不然這個例外就變成一個誰都能鑽的洞。 */
+const fo郭 = html.match(/<foreignObject [\s\S]*?<\/foreignObject>/g) || [];
+if (!fo郭.length) bad.push("② 頁面上一個 foreignObject 都沒有 ＝ 那幾張卡沒有畫字，這個例外不該存在");
+const html掃 = html.replace(/<foreignObject [\s\S]*?<\/foreignObject>/g, "");
+const leaked = probes.filter((t) => html掃.includes(t));
 if (!scanned) bad.push("② 一份訊息 JSON 都沒讀到 ＝ 這一道等於沒跑");
 else if (leaked.length) bad.push(`② 頁面上抄了訊息的文字（${leaked.length} 句）：${leaked[0].slice(0, 24)}…`);
-else ok(`② 沒有抄任何一則訊息的文字（${scanned} 份來源、${probes.length} 句掃過）`);
+else ok(`② 沒有抄任何一則訊息的文字（${scanned} 份來源、${probes.length} 句掃過；`
+  + `${fo郭.length} 張卡上那幾行是從 booked-card.json 讀出來的，由 ⑰ 逐字比對）`);
 
 /* ③ noindex ----------------------------------------------------------- */
 for (const w of ["noindex", "nofollow", "noarchive"])
@@ -460,50 +470,96 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
     ok("⑯ 待調整那一組照未定案四件排：" + 印.map(([n, k]) => `${n}→${k}`).join("　"));
 }
 
-/* ⑰ 卡片上那一行日期 --------------------------------------------------
-   2026-09-13 使用者：「把約診狀態和 9 個 logo 依照廠商的日期格式都做一次」。
-   ⚠ 這一道擋四件，四件加回舊的樣子都不會讓任何一道版面守門翻臉：
-     ① 資料裡的例子被改成別種寫法 ② 產生器裡另外寫死一個日期
-     ③ 哪一張卡沒有畫那一行 ④ 第 4 節那四張卡少畫一張、或浮水印退回 0／0 */
+/* ⑰ 卡片上那幾行 ------------------------------------------------------
+   2026-09-13 使用者兩件：「預約成功通知　對話框裡文字下有一個很大的空白……
+   我們一開始是把 logo 當浮水印，這樣就不會有很大的空白」、
+   「約診狀態的頁面，星期幾不要和前面的日期斷開」。
+   ⚠ 這一道擋的每一件加回舊的樣子都不會讓任何一道版面守門翻臉：
+     ① 資料裡的日期被改回「時間在前、星期幾在後」那一種
+     ② 斷行被拿掉（交給寬度去折，折點就跟著字型跑）
+     ③ 產生器裡另外寫死一個日期
+     ④ 那幾張卡退回只畫兩行（＝底下又空一大塊）
+     ⑤ 卡上那四行被另外打一份字，而不是從 booked-card.json 讀出來
+     ⑥ 第 4 節少畫一張卡、或浮水印退回 0／0、退回各科原色 */
 {
   const DT = LOG.日期 || {};
-  if (!/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 星期[一二三四五六日]$/.test(DT.例 || ""))
-    bad.push(`⑰ vendor-log.json 的「日期」不是廠商 09-10 那一版的寫法：${DT.例}`);
+  if (!/^\d{4}\/\d{2}\/\d{2} 星期[一二三四五六日]\n\d{2}:\d{2}$/.test(DT.例 || ""))
+    bad.push(`⑰ vendor-log.json 的「日期」不是「年月日 星期幾／換行／時間」：${JSON.stringify(DT.例)}`);
+  if (!/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 星期[一二三四五六日]$/.test(DT.廠商 || ""))
+    bad.push(`⑰ vendor-log.json 的「日期.廠商」不是他們 09-10 那一版：${JSON.stringify(DT.廠商)}`);
+  if (DT.例 && DT.例 === DT.廠商) bad.push("⑰ 「例」和「廠商」一樣，那就沒有東西要調了");
   if (!DT.姓名) bad.push("⑰ vendor-log.json 的「日期」沒有寫姓名那一行要印什麼");
 
   const gen = fs.readFileSync(path.join(HERE, "build-vendor.mjs"), "utf8");
   if (/\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}/.test(gen))
     bad.push("⑰ build-vendor.mjs 裡寫死了一個日期 —— 唯一出處要是 vendor-log.json");
 
-  if (DT.例) {
-    /* 第 3 節：對照那幾格 ＋ 九顆上卡，每一張都要畫得出那一行 */
-    const 該畫 = (LOG.浮水印?.對照?.組 || []).reduce((n, r) => n + (r.格 || []).length, 0) + 9
-      + (LOG.狀態色?.藥丸?.值 || []).length;
-    const 畫了 = (html.match(new RegExp(`<p class="dt">${DT.例}</p>`, "g")) || []).length;
-    if (畫了 !== 該畫)
-      bad.push(`⑰ 只有 ${畫了} 張卡畫了日期，第 3 節與第 4 節加起來應該是 ${該畫} 張`);
-    const 名了 = (html.match(new RegExp(`<p class="pt">${DT.姓名}</p>`, "g")) || []).length;
-    if (名了 !== 該畫)
-      bad.push(`⑰ 只有 ${名了} 張卡畫了姓名，第 3 節與第 4 節加起來應該是 ${該畫} 張`);
+  /* 卡上那幾行的出處：booked-card.json，這一頁不另外打一份 --------------- */
+  const BK = JSON.parse(fs.readFileSync(path.join(HERE, "booked-card.json"), "utf8"));
+  const 讀行 = (key) => {
+    const bub = key === "約診紀錄查詢" ? BK[key].contents[0] : BK[key];
+    const box = bub.body.contents.find((c) => c.type === "box");
+    return box.contents.filter((c) => c.type === "text").map((t) =>
+      (t.contents || [{ text: t.text }]).map((sp) => sp.text).join("")
+        .replace(/\{\{patient\}\}/g, DT.姓名 || "").replace(/\{\{date\}\}/g, DT.例 || ""));
+  };
+  const MEGA = 讀行("預約成功通知"), MICRO = 讀行("約診紀錄查詢");
+  if (MEGA.length !== 4) bad.push(`⑰ booked-card.json 的預約成功通知讀出來是 ${MEGA.length} 行，不是四行`);
+  if (MICRO.length !== 2) bad.push(`⑰ booked-card.json 的約診紀錄查詢讀出來是 ${MICRO.length} 行，不是兩行`);
 
-    const fo = (html.match(/<foreignObject /g) || []).length;
-    if (fo !== 該畫 - (LOG.狀態色?.藥丸?.值 || []).length)
-      bad.push(`⑰ 第 3 節有 ${fo} 張卡用 foreignObject 排字 —— 改回 <text> 就要自己估字寬，而估寬會跟著字型跑`);
+  const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  /* 卡上的字要逐字等於 JSON（<b> 只包姓名那一段，所以比對時先剝掉標記） */
+  const 文字 = (t) => esc(t).replace(/<[^>]+>/g, "");
 
-    /* 第 4 節：一個值一張卡，每一張都要有姓名、日期、藥丸與浮水印 */
-    const cards = html.match(/<div class="stcard cb">[\s\S]*?<\/svg>/g) || [];
-    const vals = LOG.狀態色?.藥丸?.值 || [];
-    if (cards.length !== vals.length)
-      bad.push(`⑰ 第 4 節畫了 ${cards.length} 張卡，四個值應該是 ${vals.length} 張`);
-    cards.forEach((c, i) => {
-      const v = vals[i] || {};
-      if (!c.includes(`<p class="pt">${DT.姓名}</p>`)) bad.push(`⑰ 第 4 節第 ${i + 1} 張卡沒有姓名那一行`);
-      if (!c.includes(`<p class="dt">${DT.例}</p>`)) bad.push(`⑰ 第 4 節第 ${i + 1} 張卡沒有日期那一行`);
-      if (v.色 && !c.includes(`background:${v.色}`))
-        bad.push(`⑰ 第 4 節第 ${i + 1} 張卡的藥丸不是「${v.名}」那一顆色 ${v.色}`);
-      if (!/<svg class="wm"/.test(c)) bad.push(`⑰ 第 4 節第 ${i + 1} 張卡沒有浮水印`);
+  const plates = html.match(/<foreignObject [\s\S]*?<\/foreignObject>/g) || [];
+  const 該畫 = (LOG.浮水印?.對照?.組 || []).reduce((n, r) => n + (r.格 || []).length, 0) + 9;
+  if (plates.length !== 該畫)
+    bad.push(`⑰ 第 3 節有 ${plates.length} 張卡用 foreignObject 排字，應該是 ${該畫} 張`
+      + "（改回 <text> 就要自己估字寬，而估寬會跟著字型跑）");
+  plates.forEach((pl, i) => {
+    const ps = pl.match(/<p style="[^"]*">([\s\S]*?)<\/p>/g) || [];
+    if (ps.length !== MEGA.length) {
+      bad.push(`⑰ 第 3 節第 ${i + 1} 張卡只畫了 ${ps.length} 行，那張卡是照真正的 ${MEGA.length} 行量出來的`
+        + " —— 少畫幾行，底下就會空一大塊");
+      return;
+    }
+    MEGA.forEach((t, k) => {
+      if (文字(ps[k]).replace(/<\/?p[^>]*>/g, "").replace(/^<p[^>]*>/, "") !== undefined) { /* noop */ }
     });
-  }
+    const 行文 = ps.map((x) => x.replace(/^<p [^>]*>/, "").replace(/<\/p>$/, "").replace(/<[^>]+>/g, ""));
+    MEGA.forEach((t, k) => {
+      if (行文[k] !== esc(t).replace(/<[^>]+>/g, ""))
+        bad.push(`⑰ 第 3 節第 ${i + 1} 張卡的第 ${k + 1} 行和 booked-card.json 不一樣`);
+    });
+    /* 日期那一行的斷行是我們指定的，所以要 white-space: pre */
+    if (!/white-space:pre/.test(ps[1]))
+      bad.push(`⑰ 第 3 節第 ${i + 1} 張卡的日期那一行沒有 white-space:pre`
+        + " —— 交給寬度去折，折點會跟著字型跑，星期幾就會被拆開");
+  });
+
+  /* 第 4 節：一個值一張卡，每一張都要有那兩行、藥丸與浮水印 */
+  const cards = html.match(/<div class="stcard cb">[\s\S]*?<\/svg>/g) || [];
+  const vals = LOG.狀態色?.藥丸?.值 || [];
+  if (cards.length !== vals.length)
+    bad.push(`⑰ 第 4 節畫了 ${cards.length} 張卡，四個值應該是 ${vals.length} 張`);
+  cards.forEach((c, i) => {
+    const v = vals[i] || {};
+    const 行文 = (c.match(/<p style="[^"]*">[\s\S]*?<\/p>/g) || [])
+      .map((x) => x.replace(/^<p [^>]*>/, "").replace(/<\/p>$/, "").replace(/<[^>]+>/g, ""));
+    if (行文.length !== MICRO.length)
+      bad.push(`⑰ 第 4 節第 ${i + 1} 張卡畫了 ${行文.length} 行，輪播那張卡是 ${MICRO.length} 行`);
+    else MICRO.forEach((t, k) => {
+      if (行文[k] !== esc(t).replace(/<[^>]+>/g, ""))
+        bad.push(`⑰ 第 4 節第 ${i + 1} 張卡的第 ${k + 1} 行和 booked-card.json 不一樣`);
+    });
+    if (!/white-space:pre/.test(c))
+      bad.push(`⑰ 第 4 節第 ${i + 1} 張卡的日期那一行沒有 white-space:pre`
+        + " —— 那正是星期幾會被折到下一行的成因");
+    if (v.色 && !c.includes(`background:${v.色}`))
+      bad.push(`⑰ 第 4 節第 ${i + 1} 張卡的藥丸不是「${v.名}」那一顆色 ${v.色}`);
+    if (!/<svg class="wm"/.test(c)) bad.push(`⑰ 第 4 節第 ${i + 1} 張卡沒有浮水印`);
+  });
 
   /* 浮水印要和第 3 節那九張同一種擺法（淡墨 ＋ 往右下溢出），偏移量從對照表讀 */
   const mine = (LOG.浮水印?.對照?.組?.[0]?.格 || []).find((g) => g.標 === "我們要的");
@@ -511,7 +567,7 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   if (mine && ink) {
     const want = `style="right:${-mine.right}px;bottom:${-mine.bottom}px"`;
     const hit = (html.match(new RegExp(want.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&"), "g")) || []).length;
-    if (hit !== (LOG.狀態色?.藥丸?.值 || []).length)
+    if (hit !== vals.length)
       bad.push(`⑰ 第 4 節的浮水印只有 ${hit} 張是往右下溢出 ${mine.right}／${mine.bottom}px`);
     const wms = html.match(/<svg class="wm"[\s\S]*?<\/svg>/g) || [];
     for (const w of wms)
@@ -519,7 +575,8 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   }
 
   if (!bad.some((x) => x.startsWith("⑰")))
-    ok(`⑰ 卡片上的日期就是「${DT.例}」，第 3 節與第 4 節每一張卡都畫得出來`);
+    ok(`⑰ 卡上那幾行都是從 booked-card.json 讀出來的（單張 ${MEGA.length} 行、輪播 ${MICRO.length} 行），`
+      + `日期是「${(DT.例 || "").replace("\n", " ／ ")}」，星期幾跟著它的日期`);
 }
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }
