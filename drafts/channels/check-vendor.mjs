@@ -341,6 +341,43 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   if ((LOG.待答?.已決?.列 || []).length !== 4)
     bad.push("⑮ vendor-log.json 的「待答.已決」應該留著四題 —— 收掉的是排版不是資料");
 
+  /* ⚠⚠ 2026-09-13 定案：浮水印往右下溢出 18／10px（使用者在「我們的 JSON（收在卡內）」
+     與「我們的模擬圖（溢出）」之間挑了後者，42-7 那個矛盾到此收掉）。
+     這一段擋三件，三件加回舊的樣子都不會讓任何一道版面守門翻臉：
+     ① 對照那一節不准再出現「我們的 JSON」那一格
+     ② 「我們要的」那幾格真的是溢出、而且彼此同一組數字
+     ③ 九顆上卡那一排畫的是同一組偏移量（不是 0／0） */
+  {
+    const rows = LOG.浮水印?.對照?.組 || [];
+    if (!rows.length) bad.push("⑮ 浮水印的對照表不見了");
+    const offs = [];
+    for (const r of rows) {
+      if ((r.格 || []).some((g) => g.標 === "我們的 JSON"))
+        bad.push(`⑮ 「${r.形}」那一組還留著「我們的 JSON」那一格 —— 2026-09-13 已經挑定溢出那一種`);
+      const mine = (r.格 || []).find((g) => g.標 === "我們要的");
+      if (!mine) { bad.push(`⑮ 「${r.形}」那一組找不到「我們要的」`); continue; }
+      if (!(mine.right > 0 && mine.bottom > 0))
+        bad.push(`⑮ 「${r.形}」的「我們要的」是 ${mine.right}／${mine.bottom} —— 定案是往右下溢出`);
+      offs.push(`${mine.right}/${mine.bottom}`);
+    }
+    if (new Set(offs).size > 1) bad.push("⑮ 「我們要的」那幾格的溢出量彼此不一樣：" + offs.join("、"));
+    const off = offs[0];
+    if (off) {
+      const on = (html.match(/<div class="onnine">([\s\S]*?)<\/div>\s*\n/) || [])[1] || "";
+      const [r0, b0] = off.split("/");
+      const want = new RegExp(`往右 ${r0}、往下 ${b0}`, "g");
+      const hit = (on.match(want) || []).length;
+      if (hit !== 9)
+        bad.push(`⑮ 九顆上卡那一排只有 ${hit} 張是溢出 ${off} —— 九張都要和「我們要的」同一種擺法`);
+    }
+    /* 定案那幾條要印在頁上（少印一條畫面完全正常） */
+    for (const t of LOG.浮水印?.定案?.條 || []) {
+      const key = t.replace(/[*`]/g, "").slice(0, 14);
+      if (!html.replace(/<[^>]+>/g, "").includes(key))
+        bad.push(`⑮ 浮水印的定案少印了一條：「${key}…」`);
+    }
+  }
+
   /* 九顆都要畫在卡片上，不是只有廠商用過的那兩顆 */
   const on = (html.match(/<div class="onnine">([\s\S]*?)<\/div>\s*\n/) || [])[1] || "";
   const plates = (on.match(/<figure class="cmp">/g) || []).length;

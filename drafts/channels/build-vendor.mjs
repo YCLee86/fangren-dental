@@ -420,8 +420,12 @@ ${WM.map((s) => `<figure>
 </div>`;
 
 /* ── ③之二 大小與位置的對照 ───────────────────────────────────
-   同一張卡畫三次（我們的 JSON／我們的模擬圖／廠商送來的），形狀與顏色完全一樣，
-   差的只有大小與位置。⚠ 形狀仍然是從 brand/shapes/ 讀回來的那一份，不抄第二份。 */
+   同一張卡畫兩次（我們要的／廠商送來的），形狀與顏色完全一樣，差的只有大小與位置。
+   ⚠ 形狀仍然是從 brand/shapes/ 讀回來的那一份，不抄第二份。
+   ⚠⚠ 2026-09-13 使用者：「模擬圖放了兩個版面　但我要的應該只是其中一個」——
+   他挑的是**溢出 18／10px** 那一種，所以「我們的 JSON（貼齊卡內）」那一格整個
+   拿掉了（42-7 記著的那個「我們自己送過去的兩份互相矛盾」到此收掉）。
+   ⚠ 那兩個數字的唯一出處仍然是資料，這裡不寫死。 */
 const byName = Object.fromEntries(WM.map((s2) => [s2.n, s2]));
 const cmp = D.浮水印.對照;
 const cardBox = cmp.卡;
@@ -468,10 +472,21 @@ const compare = cmp.組.map((row) => `<div class="cmpwrap">
    2026-09-13 使用者：「9 個 logo 的效果都要放上去，給廠商看到，目前只有針對廠商
    放的兩個做比對，另外七個也要先做好顯示上去」。同一個框、同一個比例尺、
    同一支 plate()，差的只有寬度（每一顆自己的）與顏色（定案的淡墨）。 */
+/* ⚠⚠ 這九顆要和上面那一節「我們要的」同一種擺法（2026-09-13 定案：往右下溢出）——
+   兩處不一樣的話，同一頁上會同時出現兩種浮水印的位置，而版面完全正常。
+   所以偏移量從對照表那一格讀回來，不要在這裡另外寫一組數字。 */
+const OFF = (() => {
+  const gs = cmp.組.map((r) => r.格.find((g) => g.標 === "我們要的"));
+  if (gs.some((g) => !g)) throw new Error("對照表裡找不到「我們要的」那一格");
+  const [r, bm] = [gs[0].right, gs[0].bottom];
+  if (gs.some((g) => g.right !== r || g.bottom !== bm))
+    throw new Error("「我們要的」那幾格的偏移量彼此不一樣：" + JSON.stringify(gs.map((g) => [g.right, g.bottom])));
+  return { right: r, bottom: bm };
+})();
 const onCard = `<div class="onnine">
 ${WM.map((s) => plate(s.n, {
-  標: s.科, size: s.w, right: 0, bottom: 0,
-  註: `${s.n}・貼齊右下角、完全收在卡內`,
+  標: s.科, size: s.w, right: OFF.right, bottom: OFF.bottom,
+  註: `${s.n}・往右下溢出 ${OFF.right}／${OFF.bottom}px，右下那一塊被卡片切掉`,
 }, INK)).join("\n")}
 </div>`;
 
@@ -606,6 +621,8 @@ ${msgs}
 ${revised}
 
 <h2 class="h2">3　浮水印那九顆<span class="t">形狀、顏色與寬度都在下面這張表裡</span></h2>
+<div class="now" style="margin:0 0 1.4em"><b>位置與大小・定案</b>
+<ol>${D.浮水印.定案.條.map((t) => `<li><p class="d">${b(t)}</p></li>`).join("\n")}</ol></div>
 <p class="note">${b(D.浮水印.顏色.說)}<br>
 每一格<b>上面是原色</b>（看得出形狀與是哪一科），<b>虛線底下是它壓在卡片上真正的樣子</b>
 （淡墨 <code>${esc(INK)}</code>，濃度 ${(WM_A * 100).toFixed(0)}%）。
@@ -616,7 +633,7 @@ ${nine}
 <div class="row"><p class="k">大小與位置</p><p class="v">${b(D.浮水印.大小與位置)}</p></div>
 </div>
 
-<h3 style="font-size:.95rem;margin:1.8em 0 .2em">同一張卡畫三次</h3>
+<h3 style="font-size:.95rem;margin:1.8em 0 .2em">同一張卡畫${cmp.組[0].格.length}次</h3>
 <p style="font-size:.88rem;color:var(--soft);margin:0">${esc(cmp._說明)}</p>
 ${compare}
 <p class="note">${b(cmp.量)}</p>
