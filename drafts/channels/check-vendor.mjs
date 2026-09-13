@@ -167,6 +167,15 @@ for (const m of html.matchAll(/<img\s[^>]*>/g)) {
    縮圖與附圖一起掃 —— 這一頁的 .jpg 每一張都該有人引用 */
 for (const f of fs.readdirSync(DIR))
   if (/\.jpe?g$/i.test(f) && !used.has(f)) bad.push(`⑧ 沒有人引用的圖：${f}`);
+/* ⚠⚠ ① 那張表裡每一列都要有圖 —— 圖就是那一則的名字（2026-09-11 那一輪的整個
+   前提）。`圖` 留成空字串的話，那一格會畫出一塊空白，而尺寸、溢出、孤兒圖、
+   連結每一道都會過（2026-09-13 使用者看到 ③ 那一格是空的才發現）。 */
+for (const r of JSON.parse(fs.readFileSync(path.join(HERE, "vendor-log.json"), "utf8")).訊息.列) {
+  const g = r.圖;
+  const list = Array.isArray(g) ? g : [g];
+  if (!list.length || list.some((k) => !k))
+    bad.push(`⑧ ${r.n} 那一列沒有圖 —— 那一格會是一塊空白`);
+}
 /* 縮圖本身要和來源對得上（尺寸；來源換圖了就重跑 vendor-shots.mjs） */
 try {
   execFileSync("node", [path.join(HERE, "vendor-shots.mjs"), "--check"], { stdio: "pipe" });

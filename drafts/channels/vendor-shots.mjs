@@ -60,6 +60,12 @@ export const SHOTS = [
   /* 廠商送來的畫面（JPEG、橫的），給 ⑥⑦ 兩則做對照 */
   { key: "vbooked", src: "line-vendor/vendor-booked-a-0910.jpg" },
   { key: "vquery",  src: "line-vendor/vendor-query-0910.jpg" },
+  /* 綁定那一刻我們自己帳號的畫面（JPEG、直的）。
+     ⚠ `y` ＝ 從原檔第幾列開始裁：這一張的頭四百列是上一次對話的連結預覽卡，
+       照預設從 0 裁的話，那一格的圖會是「一張灰色的卡」而不是那一句綁定成功。
+       350 讓綠泡泡落在正方框的上四分之一，底下接著那一則自動回應 ——
+       正好就是這一列在講的那兩件事。 */
+  { key: "bindlive", src: "line-vendor/bind-live-0912.jpg", y: 350 },
 ];
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -106,13 +112,15 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     if (!fs.existsSync(srcPath)) { bad.push(`找不到來源 ${j.src}`); continue; }
     const s = read(srcPath);
 
-    const r = await pg.evaluate(async ({ uri, side }) => {
+    const r = await pg.evaluate(async ({ uri, side, y }) => {
       const img = new Image(); img.src = uri; await img.decode();
       const n = Math.min(img.naturalWidth, img.naturalHeight);   /* cover：取短邊 */
+      /* 預設從左上角切；有 y 的那一張從指定的那一列切（夾在圖裡面，不要切出界） */
+      const top = Math.max(0, Math.min(y || 0, img.naturalHeight - n));
       const c = document.createElement("canvas"); c.width = side; c.height = side;
       const g = c.getContext("2d");
       g.imageSmoothingQuality = "high";
-      g.drawImage(img, 0, 0, n, n, 0, 0, side, side);            /* 從左上角切 */
+      g.drawImage(img, 0, top, n, n, 0, 0, side, side);
       const d = g.getImageData(0, 0, side, side).data;
       let mn = 255, mx = 0;
       for (let i = 0; i < d.length; i += 4) {
@@ -120,7 +128,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         if (v < mn) mn = v; if (v > mx) mx = v;
       }
       return { spread: mx - mn, png: c.toDataURL("image/jpeg", 0.84) };
-    }, { uri: `data:${s.mime};base64,${s.buf.toString("base64")}`, side: SIDE });
+    }, { uri: `data:${s.mime};base64,${s.buf.toString("base64")}`, side: SIDE, y: j.y });
 
     if (r.spread < 30) bad.push(`${j.key}：裁出來幾乎是同一個顏色（明暗只差 ${r.spread.toFixed(0)} 階）`);
 
