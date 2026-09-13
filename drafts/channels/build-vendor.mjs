@@ -26,6 +26,19 @@
 //    ⚠ 節號改成 1~6 的半形數字 —— 圈號 ①~⑫ 留給那十二則訊息，那組編號是雙方
 //      共用的詞（廠商兩封回信都照它在講），一個都不換。
 //
+// ⚠⚠⚠ 2026-09-13 稍晚：抬頭那一塊從「現在等你們的四件」換成「未定案」四件，
+//    其中兩件各帶子項（3-1~3-5、4-1~4-4），順序是使用者指定的。跟著三件：
+//    ① 第 3 節多一排「九顆各自畫在卡片上該有的樣子」—— 使用者：「9 個 logo 的效果
+//       都要放上去，給廠商看到，目前只有針對廠商放的兩個做比對」。
+//    ② 浮水印的顏色定案成**淡墨素色**（柔墨 #5c5f57、12%），所以九宮格底下那一排
+//       與那九張卡都畫成淡墨；**上面那一排仍然是原色** —— 那一份色是第 4 節那四個
+//       值在用的（定案.條.色票 指著它），拿掉的話那一句就沒有出處了。
+//    ③ 「浮水印換的規則」「日期格式」「年份 2020」「評價邀約的按鈕」四題從待答收掉
+//       （前兩題改成我們自己寫死交過去，後兩題使用者說不必再深入），
+//       題目與收掉的理由留在 vendor-log.json 的「待答.已決」裡。
+//    ⚠ 待答那一組因此改成**編號**（<li value>）—— 頁面上原本只有 ★／・，
+//      而別處寫著「第 6 節的第 N 題」，沒有號碼的話那句話指不到任何東西。
+//
 // 跑完驗：node drafts/channels/check-vendor.mjs
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -38,11 +51,37 @@ const OUT = join(ROOT, "preview", "line-vendor");
 
 const D = JSON.parse(readFileSync(join(HERE, "vendor-log.json"), "utf8"));
 
+/* ── 「第 6 節的第 N 題」那個號碼不要寫死 ──────────────────────────────
+   待答那一組收掉或補一題，整組的號碼就會位移，而寫死的那個數字**畫面上完全
+   正常**、只是指到別題去了。所以資料裡寫的是 {{題:關鍵字}}，號碼在這裡現算；
+   找不到或找到不只一題就 throw。 */
+(() => {
+  const 列 = D.待答.廠商.列;
+  const 號 = (key) => {
+    const hit = 列.map((x, i) => [x, i + 1]).filter(([x]) => x.問.includes(key));
+    if (hit.length !== 1) throw new Error(`{{題:${key}}} 在待答裡找到 ${hit.length} 題，要剛好一題`);
+    return hit[0][1];
+  };
+  const walk = (n) => {
+    if (Array.isArray(n)) return n.forEach((v, i) => {
+      if (typeof v === "string") n[i] = v.replace(/\{\{題:([^}]+)\}\}/g, (_, k) => 號(k));
+      else walk(v);
+    });
+    if (n && typeof n === "object") for (const [k, v] of Object.entries(n)) {
+      if (typeof v === "string") n[k] = v.replace(/\{\{題:([^}]+)\}\}/g, (_, kk) => 號(kk));
+      else walk(v);
+    }
+  };
+  walk(D);
+})();
+
 const esc = (t) =>
   String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 /* **…** 加粗。⚠ 警示色那一條 2026-09-11 拿掉了 —— 這一頁現在只敘述事實，
    不靠顏色喊。 */
-const b = (t) => esc(t).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+const b = (t) => esc(t)
+  .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+  .replace(/`([^`]+)`/g, "<code>$1</code>");
 
 /* ── 科別的中文名：從 index.html 的標記那一排讀回來，不另外維護一份 ───── */
 const SPEC_NAME = (() => {
@@ -111,9 +150,20 @@ h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
 .lede{color:var(--soft);font-size:.92rem;margin:0 0 1.5em}
 .h2{font-size:1.04rem;margin:2.4em 0 .6em;padding-top:1em;border-top:1px solid var(--rule)}
 .h2 .t{display:block;font-size:.79rem;font-weight:400;color:var(--soft);margin-top:.25em}
-.now{background:var(--card);border-radius:11px;padding:13px 15px;margin:0;font-size:.93rem}
-.now ol{margin:.3em 0 0;padding-left:1.2em}
-.now li{margin:.5em 0}
+/* 未定案：四件，其中兩件帶子項。號碼用 CSS 的計數器做成 1 與 3-1，
+   所以 ol 的縮排自己接管（list-style 關掉）。 */
+.now{background:var(--card);border-radius:11px;padding:14px 16px;margin:0;font-size:.93rem}
+.now>b{font-size:1rem}
+.now ol{list-style:none;margin:.45em 0 0;padding:0}
+.now>ol{counter-reset:n}
+.now>ol>li{counter-increment:n;position:relative;padding-left:2em;margin:.85em 0 0}
+.now>ol>li::before{content:counter(n);position:absolute;left:0;top:0;font-weight:700}
+.now .t{font-weight:600;margin:0}
+.now .d{margin:.2em 0 0}
+.now ol.sub{counter-reset:m;margin:.3em 0 0}
+.now ol.sub>li{counter-increment:m;position:relative;padding-left:2.6em;margin:.45em 0 0}
+.now ol.sub>li::before{content:counter(n) "-" counter(m);position:absolute;left:0;top:0;
+  color:var(--soft)}
 .note{font-size:.88rem;color:var(--soft);background:var(--card);border-radius:9px;
   padding:.7em .85em;margin:.9em 0 0}
 
@@ -174,6 +224,9 @@ ul.tick li::before{content:"・";position:absolute;left:0;color:var(--soft)}
 .cmp{margin:0}
 .cmp svg{display:block;width:100%;max-width:268px;height:auto}
 .cmp figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.2em;max-width:268px}
+/* 九顆各自畫在卡片上 —— 和上面那三格同一個框、同一個比例尺，才比得出來 */
+.onnine{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:14px 10px;
+  margin:.9em 0 0}
 
 /* ── 綁定完成的兩個方向 ────────────────────────────────────── */
 .dir{background:var(--card);border-radius:11px;padding:13px 15px;margin:.9em 0 0}
@@ -185,10 +238,15 @@ ul.tick li::before{content:"・";position:absolute;left:0;color:var(--soft)}
 .grp{margin:1.6em 0 0}
 .grp .t{font-size:.93rem;font-weight:600;margin:0 0 .1em}
 .grp .c{font-size:.79rem;color:var(--soft);margin:0}
-ul.ask{list-style:none;margin:.35em 0 0;padding:0}
-ul.ask li{padding:.55em 0;border-bottom:1px solid var(--rule);font-size:.91rem}
-ul.ask .y{display:block;color:var(--soft);font-size:.85rem;margin-top:.2em}
-ul.ask .s{display:inline-block;width:1.35em;color:var(--soft)}
+/* 編號要跨「★ 那幾題」與「其餘」連續，所以每一題自己帶 value ——
+   別處寫著「第 6 節的第 N 題」，指的就是這個號碼。
+   （這一段在樣板字串裡 ＝ 會被印進頁面，所以不要用那個三角形的警示記號 ——
+   守門第 ⑨ 道掃的就是它，連這一句說明自己都會被掃到。） */
+ol.ask{margin:.35em 0 0;padding:0 0 0 2.5em}
+ol.ask li{padding:.55em 0;border-bottom:1px solid var(--rule);font-size:.91rem}
+ol.ask li::marker{color:var(--soft);font-size:.85em}
+ol.ask .y{display:block;color:var(--soft);font-size:.85rem;margin-top:.2em}
+ol.ask .s{color:var(--soft);margin-right:.35em}
 details{margin:.3em 0 0}
 summary{font-size:.87rem;color:var(--soft);cursor:pointer;padding:.5em 0;
   border-bottom:1px solid var(--rule)}
@@ -289,8 +347,13 @@ ${改.圖.map((g) => `<figure>
 </div>
 
 <div class="rows" style="margin-top:1.4em">
-<p style="font-size:.93rem;margin:0 0 .2em"><b>還沒對上的四件</b></p>
+<p style="font-size:.93rem;margin:0 0 .2em"><b>還開著的 ${改.未對上.length} 件</b></p>
 ${改.未對上.map((x) => `<div class="row"><p class="k">${b(x.事)}</p><p class="v">${b(x.說明)}</p></div>`).join("\n")}
+</div>
+
+<div class="rows" style="margin-top:1.4em">
+<p style="font-size:.93rem;margin:0 0 .2em"><b>看過之後收掉的 ${改.收掉.length} 件</b></p>
+${改.收掉.map((x) => `<div class="row"><p class="k">${b(x.事)}</p><p class="v">${b(x.說明)}</p></div>`).join("\n")}
 </div>
 
 <figure class="fig">
@@ -304,15 +367,19 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 /* ⚠⚠ 兩張是同一份幾何、同一個相對寬度，差的只有濃度：
    上面是原色（看得出形狀與是哪一科），下面是它在卡片上真正的樣子。
    ⚠ 九宮格的底本來就是 --card ＝ 卡片色，所以下面那一張不必再墊一層底。 */
-const swatch = (s, a) =>
+const swatch = (s, a, col) =>
   `<svg viewBox="0 0 ${s.vw} ${s.vh}" width="${s.vw}" height="${s.vh}" style="width:${s.pct}%"
   role="img" aria-label="${a === 1 ? "原色" : "浮水印濃度"} ${esc(s.科)} ${s.n}"><g transform="${s.gt}"><path
-  fill="${s.色}"${a === 1 ? "" : ` fill-opacity="${a}"`} fill-rule="evenodd" d="${s.d}"/></g></svg>`;
+  fill="${col || s.色}"${a === 1 ? "" : ` fill-opacity="${a}"`} fill-rule="evenodd" d="${s.d}"/></g></svg>`;
+
+/* 2026-09-13 定案：浮水印的顏色換成淡墨素色。色碼的唯一出處是 vendor-log.json，
+   這裡不寫死 —— 換一顆顏色，九宮格底下那一排與那九張卡會一起跟著換。 */
+const INK = D.浮水印.顏色.值;
 
 const nine = `<div class="nine">
 ${WM.map((s) => `<figure>
 <span class="sw">${swatch(s, 1)}</span>
-<span class="sw wm">${swatch(s, WM_A)}</span>
+<span class="sw wm">${swatch(s, WM_A, INK)}</span>
 <figcaption>${esc(s.科)}<br>${esc(s.n)}・${s.w}px</figcaption>
 </figure>`).join("\n")}
 </div>`;
@@ -323,13 +390,17 @@ ${WM.map((s) => `<figure>
 const byName = Object.fromEntries(WM.map((s2) => [s2.n, s2]));
 const cmp = D.浮水印.對照;
 const cardBox = cmp.卡;
-const plate = (shape, g) => {
+let plateN = 0;
+const plate = (shape, g, col) => {
   const s2 = byName[shape];
   if (!s2) throw new Error(`對照表用到不存在的形狀 ${shape}`);
   const h = g.size / s2.ratio;
   const x = cardBox.w - g.size + g.right;
   const y = cardBox.h - h + g.bottom;
-  const id = `clip-${shape}-${g.標.length}-${g.size}-${g.right}`;
+  /* ⚠ id 用流水號，不要從 標／size／right 拼 —— 兩張畫一樣大、標又一樣長的時候
+     會撞在一起，而撞到的那一張會去吃別人的 clipPath（畫面上看起來很正常）。 */
+  const id = `clip-${++plateN}`;
+  const 色 = col || s2.色;
   /* 卡片自己會把跑出去的那一塊切掉 —— 所以一定要 clipPath，不然畫出來
      和廠商實際看到的不一樣（那正是這一節在比的東西） */
   /* 卡片右下留一塊空白，跑出卡片的那一截才畫得下（三格用同一個框，才比得出來） */
@@ -340,15 +411,15 @@ const plate = (shape, g) => {
   role="img" aria-label="${esc(g.標)}：浮水印 ${g.size}px，往右 ${g.right}、往下 ${g.bottom}">
 <defs><clipPath id="${id}"><rect x="0" y="0" width="${cardBox.w}" height="${cardBox.h}" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="${cardBox.w}" height="${cardBox.h}" rx="9" fill="#f4f4f5"/>
-<g clip-path="url(#${id})" opacity="0.12">
+<g clip-path="url(#${id})" opacity="${WM_A}">
 <svg x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${g.size}" height="${h.toFixed(2)}"
   viewBox="0 0 ${s2.vw} ${s2.vh}" preserveAspectRatio="none"><g transform="${s2.gt}"><path
-  fill="${s2.色}" fill-rule="evenodd" d="${s2.d}"/></g></svg>
+  fill="${色}" fill-rule="evenodd" d="${s2.d}"/></g></svg>
 </g>
 <rect x=".5" y=".5" width="${cardBox.w - 1}" height="${cardBox.h - 1}" rx="9"
   fill="none" stroke="#c9ccc9"/>
 <rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${g.size}" height="${h.toFixed(2)}"
-  fill="none" stroke="${s2.色}" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+  fill="none" stroke="${色}" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
 <figcaption><b>${esc(g.標)}</b>　${g.size}px<br>${b(g.註)}</figcaption>
 </figure>`;
@@ -357,6 +428,17 @@ const compare = cmp.組.map((row) => `<div class="cmpwrap">
 <p class="cmpt">${esc(row.名)}</p>
 <div class="cmprow">${row.格.map((g) => plate(row.形, g)).join("\n")}</div>
 </div>`).join("\n");
+
+/* ── ③之三 九顆各自畫在卡片上該有的樣子 ───────────────────────
+   2026-09-13 使用者：「9 個 logo 的效果都要放上去，給廠商看到，目前只有針對廠商
+   放的兩個做比對，另外七個也要先做好顯示上去」。同一個框、同一個比例尺、
+   同一支 plate()，差的只有寬度（每一顆自己的）與顏色（定案的淡墨）。 */
+const onCard = `<div class="onnine">
+${WM.map((s) => plate(s.n, {
+  標: s.科, size: s.w, right: 0, bottom: 0,
+  註: `${s.n}・貼齊右下角、完全收在卡內`,
+}, INK)).join("\n")}
+</div>`;
 
 /* ── ④ 約診狀態那四個值的顏色 ─────────────────────────────────
    2026-09-12 使用者：現況那張卡上表示會到的那個值本來就是綠字，所以新版那四個
@@ -426,22 +508,25 @@ ${B.方向.map(dir).join("\n")}
 /* ⚠⚠ 2026-09-13 起只印「只有廠商能答」那一組 —— 後台／診所／素材那三組是
    我們自己要去做的事，資料留在 vendor-log.json 裡。 */
 const groupKeys = ["廠商"];
-const item = (x) => `<li><span class="s">${x.急 ? "★" : "・"}</span>${b(x.問)}${
+/* ⚠ value 要帶著它在整組裡的號碼 —— ★ 那幾題被抽到前面，不帶的話 <ol> 會從 1
+   重新數，而別處寫著「第 6 節的第 N 題」。 */
+const item = (x, n) => `<li value="${n}">${x.急 ? `<span class="s">★</span>` : ""}${b(x.問)}${
   x.為 ? `<span class="y">${b(x.為)}</span>` : ""}</li>`;
 /* ★ 的永遠攤開，其餘收進 <details> —— 整頁一眼看得完，清單一項都沒有少。
    ⚠ 用 details 不用 JS（守門連 script 標籤都擋）。 */
 const groups = groupKeys.map((k) => {
   const g = D.待答[k];
-  const hot = g.列.filter((x) => x.急);
-  const rest = g.列.filter((x) => !x.急);
+  const numbered = g.列.map((x, i) => [x, i + 1]);
+  const hot = numbered.filter(([x]) => x.急);
+  const rest = numbered.filter(([x]) => !x.急);
   return `<div class="grp">
 <p class="t">${esc(g.標)}</p>
-<p class="c">${g.列.length} 題${hot.length ? "・其中 " + hot.length + " 題最先要" : ""}</p>
-${hot.length ? `<ul class="ask">\n${hot.map(item).join("\n")}\n</ul>` : ""}
+<p class="c">${g.列.length} 題${hot.length ? "・其中 " + hot.length + " 題最先要（★）" : ""}</p>
+${hot.length ? `<ol class="ask">\n${hot.map(([x, n]) => item(x, n)).join("\n")}\n</ol>` : ""}
 ${rest.length ? `<details><summary>其餘 ${rest.length} 題</summary>
-<ul class="ask">
-${rest.map(item).join("\n")}
-</ul></details>` : ""}
+<ol class="ask">
+${rest.map(([x, n]) => item(x, n)).join("\n")}
+</ol></details>` : ""}
 </div>`;
 }).join("\n");
 
@@ -468,9 +553,13 @@ ${CSS}
 七則訊息的文字、圖檔網址與 Flex 規格在另一頁：<a href="/preview/line-spec/">/preview/line-spec/</a></p>
 
 <div class="now">
-<b>現在等你們的四件</b>
+<b>${esc(D.現在.標)}</b>
 <ol>
-${D.現在.map((t) => `<li>${b(t)}</li>`).join("\n")}
+${D.現在.列.map((x) => `<li>
+<p class="t">${esc(x.標)}</p>
+${x.子 ? `<ol class="sub">${x.子.map((t) => `<li>${b(t)}</li>`).join("\n")}</ol>`
+        : `<p class="d">${b(x.說)}${x.連 ? ` <a href="${esc(x.連)}">${esc(x.連)}</a>` : ""}</p>`}
+</li>`).join("\n")}
 </ol>
 </div>
 
@@ -482,8 +571,9 @@ ${msgs}
 ${revised}
 
 <h2 class="h2">3　浮水印那九顆<span class="t">形狀、顏色與寬度都在下面這張表裡</span></h2>
-<p class="note">每一格<b>上面是原色</b>（看得出形狀與是哪一科），
-<b>虛線底下是它壓在卡片上真正的濃度</b>（${(WM_A * 100).toFixed(0)}%，就是那批 PNG 烘進去的 alpha）。
+<p class="note">${b(D.浮水印.顏色.說)}<br>
+每一格<b>上面是原色</b>（看得出形狀與是哪一科），<b>虛線底下是它壓在卡片上真正的樣子</b>
+（淡墨 <code>${esc(INK)}</code>，濃度 ${(WM_A * 100).toFixed(0)}%）。
 兩張是同一份幾何、同一個相對寬度 —— <b>九顆的寬度不一樣是刻意的</b>（按墨的面積正規化，看起來才一樣重）。</p>
 ${nine}
 <div class="rows">
@@ -495,6 +585,10 @@ ${nine}
 <p style="font-size:.88rem;color:var(--soft);margin:0">${esc(cmp._說明)}</p>
 ${compare}
 <p class="note">${b(cmp.量)}</p>
+
+<h3 style="font-size:.95rem;margin:1.8em 0 .2em">九顆各自畫在卡片上該有的樣子</h3>
+<p style="font-size:.88rem;color:var(--soft);margin:0">${b(D.浮水印.九顆上卡)}</p>
+${onCard}
 
 <div class="rows" style="margin-top:1.4em">
 <div class="row"><p class="k">要換的規則</p><p class="v">${b(D.浮水印.要確認)}</p></div>
@@ -525,5 +619,6 @@ mkdirSync(OUT, { recursive: true });
 writeFileSync(join(OUT, "index.html"), html);
 console.log(`✓ preview/line-vendor/index.html　${(html.length / 1024).toFixed(1)}KB`);
 console.log(`  在跑的訊息 ${D.訊息.列.length} 則・改版對上 ${改.對上.length}／還沒對上 ${改.未對上.length}`);
-console.log(`  浮水印 ${WM.length} 顆・定案 ${SET.條.length} 條`);
+console.log(`  浮水印 ${WM.length} 顆（淡墨 ${INK}，九顆都畫在卡片上）・定案 ${SET.條.length} 條`);
+console.log(`  未定案 ${D.現在.列.length} 件（子項 ${D.現在.列.reduce((n, x) => n + (x.子 ? x.子.length : 0), 0)} 條）・改版還開著 ${改.未對上.length} 件／收掉 ${改.收掉.length} 件`);
 console.log(`  印出來的是廠商那一組 ${total} 題（最先要 ${hotAll} 題）；後台 ${D.待答.後台.列.length}／診所 ${D.待答.診所.列.length}／素材 ${D.待答.素材.列.length} 題留在 JSON 裡沒有印`);

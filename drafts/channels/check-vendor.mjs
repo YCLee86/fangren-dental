@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 守門：廠商對接那一頁（preview/line-vendor/）
 //
-// 擋十四件：
+// 擋十五件：
 //  ① 重跑 build-vendor.mjs、逐位比對（有人手改了頁面，或改了 JSON 卻忘了重跑）
 //  ② ⚠⚠ 頁面上不可以出現「七則訊息的文字」—— 那些字的出處是各自的 Flex JSON 與
 //     auto-reply.txt，抄進來就是第八個真相。這一道從那些檔裡現抽長句去掃。
@@ -31,6 +31,11 @@
 //  ⑭ ⚠⚠ 這一頁 2026-09-13 起是給廠商看的：那幾段「我們自己怎麼推出來的」不可以
 //     印回頁面上（接回去不會讓任何一道版面守門翻臉），但也不可以從 vendor-log.json
 //     裡刪掉 —— 落選理由與推導不要跟著畫面一起消失
+//  ⑮ 抬頭那一塊「未定案」：四件的順序與子項數目、收掉的那一件沒有印回來、
+//     第 3 節九顆都畫在卡片上、浮水印真的畫成定案的淡墨（而不是各科的原色）、
+//     以及「第 6 節的第 N 題」那個號碼真的指得到一題
+//     ⚠ 這五件加回舊的樣子都不會讓任何一道版面守門翻臉：四件少一件、九顆只畫兩顆、
+//       顏色寫回原色、題號對不上 —— 每一種畫出來都很正常
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
@@ -309,6 +314,65 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
       bad.push(`⑭ vendor-log.json 的「${名}」少掉了 —— 不印是一回事，刪掉是另一回事`);
   if (!bad.some((x) => x.startsWith("⑭")))
     ok("⑭ 內部說明沒有印回頁面上，而且資料都還在 JSON 裡");
+}
+
+/* ⑮ 未定案那一塊、九顆上卡、淡墨、題號 ------------------------------- */
+{
+  const N = LOG.現在;
+  const 標 = ["尚未綁定按約診查詢", "看診前 48 小時提醒",
+              "約診通知與紀錄查詢版面", "綁定成功的自動回覆設定"];
+  if (N?.標 !== "未定案") bad.push("⑮ 抬頭那一塊的標題不是「未定案」");
+  if (!Array.isArray(N?.列) || N.列.length !== 4)
+    bad.push("⑮ 未定案應該是四件");
+  else 標.forEach((t, i) => {
+    if (N.列[i].標 !== t) bad.push(`⑮ 未定案第 ${i + 1} 件應該是「${t}」，現在是「${N.列[i].標}」`);
+  });
+  /* 順序是使用者指定的，所以號碼要對得上：3-x 五條、4-x 四條 */
+  const 子 = [[2, 5], [3, 4]];
+  for (const [i, n] of 子)
+    if ((N?.列?.[i]?.子 || []).length !== n)
+      bad.push(`⑮ 未定案第 ${i + 1} 件應該有 ${n} 條子項`);
+  for (const t of 標) if (!html.includes(t)) bad.push(`⑮ 未定案「${t}」沒有印在頁面上`);
+  /* 收掉的那一件不可以印回來（使用者：拿掉，不需要再深入） */
+  if (html.includes("評價邀約那兩顆按鈕"))
+    bad.push("⑮ 「評價邀約那兩顆按鈕連到哪裡」又印回頁面上了 —— 那一題已經收掉");
+  if ((LOG.待答?.已決?.列 || []).length !== 4)
+    bad.push("⑮ vendor-log.json 的「待答.已決」應該留著四題 —— 收掉的是排版不是資料");
+
+  /* 九顆都要畫在卡片上，不是只有廠商用過的那兩顆 */
+  const on = (html.match(/<div class="onnine">([\s\S]*?)<\/div>\s*\n/) || [])[1] || "";
+  const plates = (on.match(/<figure class="cmp">/g) || []).length;
+  if (plates !== 9) bad.push(`⑮ 九顆上卡那一排畫了 ${plates} 張，應該是九張`);
+
+  /* 顏色：定案是淡墨素色，所以那九張與九宮格底下那一排都不可以是各科的原色 */
+  const ink = LOG.浮水印?.顏色?.值;
+  if (!/^#[0-9a-f]{6}$/i.test(ink || "")) bad.push("⑮ vendor-log.json 沒有寫浮水印的色碼");
+  else {
+    if (!on.includes(`fill="${ink}"`))
+      bad.push(`⑮ 九顆上卡那一排沒有畫成定案的淡墨 ${ink}`);
+    const 原色 = [...new Set(Object.values(JSON.parse(fs.readFileSync(
+      path.join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"))).map((x) => x.color))];
+    for (const c of 原色)
+      if (on.includes(`fill="${c}"`))
+        bad.push(`⑮ 九顆上卡那一排還在用科別的原色 ${c} —— 浮水印定案是淡墨`);
+    if (!html.includes(`<code>${ink}</code>`))
+      bad.push(`⑮ 頁面上沒有註記浮水印的色碼 ${ink}`);
+  }
+
+  /* 「第 6 節的第 N 題」那個號碼是 build-vendor.mjs 從待答那一組現算的
+     （資料裡寫的是 {{題:關鍵字}}）—— 所以這裡守兩件：資料那一側還是寫成記號、
+     頁面那一側算出來的號碼真的指得到一題。寫死一個數字的話，待答收掉一題就會
+     靜靜地指到別題去，而畫面完全正常。 */
+  const raw = fs.readFileSync(path.join(HERE, "vendor-log.json"), "utf8");
+  if (!raw.includes("{{題:")) bad.push("⑮ vendor-log.json 裡的題號被寫死了 —— 要寫成 {{題:關鍵字}} 讓產生器現算");
+  if (html.includes("{{題:")) bad.push("⑮ 頁面上還留著沒有換掉的 {{題:…}}");
+  for (const m of html.matchAll(/第 6 節的第 (\d+) 題/g)) {
+    const n = Number(m[1]);
+    if (!new RegExp(`<li value="${n}"`).test(html))
+      bad.push(`⑮ 別處寫著「第 6 節的第 ${n} 題」，但那一節上沒有第 ${n} 題`);
+  }
+  if (!bad.some((x) => x.startsWith("⑮")))
+    ok(`⑮ 未定案四件（子項 5＋4）、九顆都畫在卡片上、浮水印是淡墨 ${ink}、題號指得到`);
 }
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }
