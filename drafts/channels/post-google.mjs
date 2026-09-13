@@ -91,15 +91,15 @@ const cover = (iw, ih, fw, fh) => {
 const TILES = [
   { k: "hours", gen: "post-hours.mjs",
     img: ["preview", "line-post-hours", "fangren-hours-1080.png"],
-    txt: ["preview", "line-post-hours", "detail.txt"],
+    txt: ["preview", "google-post", "detail-hours.txt"],
     name: "門診表", spec: "/preview/line-post-hours/" },
   { k: "docs", gen: "post-docs.mjs",
     img: ["preview", "line-post-docs", "fangren-docs-1080.png"],
-    txt: ["preview", "line-post-docs", "detail.txt"],
+    txt: ["preview", "google-post", "detail-docs.txt"],
     name: "科別與醫師", spec: "/preview/line-post-docs/" },
   { k: "map", gen: "post-map-door.mjs",
     img: ["preview", "line-post-map", "fangren-map-1080.png"],
-    txt: ["preview", "line-post-map", "door-detail.txt"],
+    txt: ["preview", "google-post", "detail-map.txt"],
     name: "位置與周邊停車", spec: "/preview/line-post-map/" },
 ];
 
@@ -253,6 +253,40 @@ for (const t of TILES) {
   texts[t.k] = s;
 }
 
+/* ⚠⚠ 這三段是 Google 專用的（和 LINE 那三則不一樣），但裡面有幾句是**別處已經定案的字**，
+ *   一個字都不可以重打：「國定假日…」那一句是使用者定的、逐字不要潤飾（CLAUDE.md 定案表），
+ *   停車那兩句與三處停車場的名字與距離各有自己的出處。
+ *   ⚠ 網址在這裡全部拿掉了（Google 的說明欄點不下去），所以只比對句子不比對連結。 */
+const srcIndex = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+const srcDoor = fs.readFileSync(path.join(ROOT, "drafts", "door-notice", "body.html"), "utf8");
+const srcLine = fs.readFileSync(path.join(ROOT, "preview", "line-post-map", "door-detail.txt"), "utf8");
+const verbatim = [
+  ["hours", "國定假日與各科特別門診請來電確認。", srcIndex, "index.html 的 .info-note"],
+  ["hours", "08:45–11:30", srcIndex, "index.html 的門診表"],
+  ["hours", "13:45–16:30", srcIndex, "index.html 的門診表"],
+  ["hours", "17:45–20:00", srcIndex, "index.html 的門診表"],
+  ["map", "周邊路段", srcDoor, "門口那張告示"],
+  ["map", "路邊停車格", srcDoor, "門口那張告示"],
+  ["map", "停車計價方式依各業者現場標示為準。", srcDoor, "門口那張告示"],
+  ["map", "P1 壹車房－中華路停車場　190 公尺・步行 3 分鐘", srcLine, "LINE 那一則的詳情"],
+  ["map", "P2 合廷停車場　140 公尺・步行 2 分鐘", srcLine, "LINE 那一則的詳情"],
+  ["map", "P3 斗六永樂站停車場　50 公尺・步行 1 分鐘", srcLine, "LINE 那一則的詳情"],
+  ["map", "雲林縣斗六市永樂街 70 號", srcLine, "LINE 那一則的詳情"],
+];
+for (const [k, frag, src, where] of verbatim) {
+  if (!texts[k].includes(frag)) throw new Error(`${k} 的文字裡找不到「${frag}」`);
+  if (!src.includes(frag)) throw new Error(`「${frag}」和 ${where} 對不上 —— 那幾個字不可以重打`);
+}
+
+/* ⚠ 面板：上限 1500 字，而**預覽只露前面一兩行**，所以第一行要自己講得完。 */
+console.log("\n貼文的說明文字");
+for (const t of TILES) {
+  const lines = texts[t.k].split("\n");
+  console.log(`  ${t.name.padEnd(8, "　")} 共 ${[...texts[t.k]].length} 字（上限 1500）` +
+    `　第一行 ${[...lines[0]].length} 字　共 ${lines.length} 行`);
+  console.log(`      第一行：${lines[0]}`);
+}
+
 /* ---------- 第六步：規格頁 ---------- */
 const png = f => { const b = fs.readFileSync(path.join(OUT, f));
   return { w: b.readUInt32BE(16), h: b.readUInt32BE(20), kb: Math.round(b.length / 1024) }; };
@@ -391,12 +425,30 @@ ${TILES.map(t => shot(finalOf(t.k), 330, t.name)).join("\n")}
 
 <h2 class="pv-h2">貼文的文字<span class="t">整段複製</span></h2>
 <p class="pv-cap">
-這三段和 LINE 那三則<b>逐字相同</b>，是從那一則自己的檔案讀回來的、沒有重打。
-要改文字就回那一頁改，這裡會跟著換。<br>
-⚠ Google 的說明欄上限 1500 字，三段都塞得下；<b>預覽只露前面一兩行</b>，
-所以第一行要放重點（和 LINE 的「詳情」同一條規矩）。<br>
-⚠ Google 這邊<b>不放 hashtag</b>（那是臉書那一份才有的事）。</p>
+⚠⚠ 這三段是 <b>Google 專用的，和 LINE／臉書那三則不一樣</b>
+（<code>preview/google-post/detail-{hours,docs,map}.txt</code>）——
+看 LINE 的人已經加了好友，看這裡的人可能沒聽過這間診所，而且這幾則會被搜尋收錄。
+三件因此換掉了：<br>
+① <b>每一則都寫出「芳仁牙醫診所（雲林斗六・永樂街）」</b>
+—— LINE 那三則從頭到尾沒有出現診所名字、地名或「牙醫」，在這裡那是白丟的。<br>
+② <b>網址全部拿掉</b> —— Google 說明欄裡的網址<b>點不下去</b>，
+八行點不下去的網址只是噪音；連結交給底下那顆按鈕。<br>
+③ <b>「如下圖」改掉</b> —— 這裡圖在文字<b>上面</b>。<br>
+⚠ 上限 1500 字，三段都塞得下；<b>預覽只露前面一兩行</b>，所以第一行要自己講得完。<br>
+⚠ <b>不放 hashtag</b>（那是臉書那一份才有的事）。<br>
+⚠⚠ <b>沒有寫電話號碼</b> —— 號碼就在這則貼文正上方的商家資訊裡，
+而且說明欄放號碼<b>有被退件的說法</b>（二手，這個容器連不出去、沒有查證）。
+要加回去就在「請來電確認」後面接 05-5339369。</p>
 ${TILES.map(t => `<h3 class="pv-h3">${t.name}</h3><pre>${esc(texts[t.k])}</pre>`).join("\n")}
+
+<h2 class="pv-h2">那顆按鈕</h2>
+<p class="pv-cap">
+⚠ Google 的貼文<b>一則只掛得了一顆按鈕、一個網址</b>，那也是這三則唯一點得下去的地方。建議：<br>
+門診表 → 瞭解詳情 → <b>https://fangren.net/</b><br>
+科別與醫師 → 瞭解詳情 → <b>https://fangren.net/#topics</b><br>
+位置與周邊停車 → 瞭解詳情 → <b>https://fangren.net/#clinic</b><br>
+⚠ 三處停車場各自是 Google 地圖上的地點，<b>按鈕帶不了三個</b>；
+文字裡寫出全名，要導航的人在地圖上搜得到。</p>
 
 <h2 class="pv-h2">還沒收掉的</h2>
 <ul>

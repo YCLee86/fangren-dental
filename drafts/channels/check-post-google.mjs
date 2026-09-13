@@ -23,10 +23,13 @@ const ok = (c, m) => { if (!c) bad.push(m); };
 
 const PAD = 54, CANVAS = 1080, OUTW = 1188;
 const BG = [244, 244, 245];
+/* ⚠⚠ 第四欄是**貼文的說明文字**，2026-09-13 起是 Google 專用的、和 LINE 那三則不一樣
+   （住在 google-post/ 自己的資料夾裡）—— 看 LINE 的人已經加了好友，看這裡的人可能沒
+   聽過這間診所，而且這幾則會被搜尋收錄。第五欄是圖，圖仍然和 LINE 那三張同一個出處。 */
 const TILES = [
-  ["hours", "line-post-hours", "fangren-hours-1080.png", "detail.txt", "門診表"],
-  ["docs",  "line-post-docs",  "fangren-docs-1080.png",  "detail.txt", "科別與醫師"],
-  ["map",   "line-post-map",   "fangren-map-1080.png",   "door-detail.txt", "位置與周邊停車"],
+  ["hours", "line-post-hours", "fangren-hours-1080.png", "detail-hours.txt", "門診表"],
+  ["docs",  "line-post-docs",  "fangren-docs-1080.png",  "detail-docs.txt", "科別與醫師"],
+  ["map",   "line-post-map",   "fangren-map-1080.png",   "detail-map.txt", "位置與周邊停車"],
 ];
 const gFile = k => path.join(DIR, `fangren-google-${k}-1188.png`);
 const size = f => { const b = fs.readFileSync(f); return { w: b.readUInt32BE(16), h: b.readUInt32BE(20), n: b.length }; };
@@ -159,10 +162,48 @@ ok(fbWidth("r3c1") === 660, "等重換算的基準跑掉了（r3c1 應該畫 660
 const pres = [...page.matchAll(/<pre>([\s\S]*?)<\/pre>/g)].map(m =>
   m[1].replace(/&lt;/g, "<").replace(/&amp;/g, "&"));
 ok(pres.length === 3, `頁上應該有三段文字，找到 ${pres.length} 段`);
-TILES.forEach(([, dir, , txt, nm], i) => {
-  const want = fs.readFileSync(path.join(ROOT, "preview", dir, txt), "utf8").replace(/\s+$/, "");
+TILES.forEach(([, , , txt, nm], i) => {
+  const want = fs.readFileSync(path.join(DIR, txt), "utf8").replace(/\s+$/, "");
   ok(pres[i] === want, `${nm} 那一段文字和 ${txt} 不一樣（要從那一份讀回來，不要重打）`);
 });
+
+/* ⚠⚠ 三件是這一則和 LINE／臉書那三份**刻意不一樣**的地方，加回去不會讓任何一道版面守門翻臉：
+   ① 每一則都要寫出診所名（LINE 那三則從頭到尾沒有出現「芳仁」「斗六」或「牙醫」，
+      在這裡那是白丟的 —— 這幾則會被搜尋收錄）
+   ② 說明欄裡不放網址（Google 那一欄的網址**點不下去**，連結交給那顆按鈕）
+   ③ 不放電話號碼（號碼就在貼文正上方的商家資訊裡，而且說明欄放號碼有被退件的說法） */
+TILES.forEach(([, , , , nm], i) => {
+  const t = pres[i] || "";
+  ok(/芳仁牙醫診所/.test(t), `${nm} 的文字沒有寫出診所名字 —— 這幾則會被搜尋收錄，讀的人可能沒聽過這間診所`);
+  ok(/斗六/.test(t), `${nm} 的文字沒有出現「斗六」`);
+  ok(!/https?:\/\//.test(t), `${nm} 的文字裡有網址 —— Google 的說明欄點不下去，連結要交給那顆按鈕`);
+  ok(!/\b05-?5339369\b/.test(t), `${nm} 的文字裡有電話號碼 —— 號碼在貼文正上方的商家資訊裡，這裡刻意不寫`);
+  ok(!/#[\u4e00-\u9fff]/.test(t), `${nm} 的文字裡有 hashtag —— 那是臉書那一份才有的事`);
+});
+
+/* ⚠⚠ 裡面有幾句是別處已經定案的字，一個字都不可以重打 */
+const rd = (...q) => fs.readFileSync(path.join(ROOT, ...q), "utf8");
+const srcIndex = rd("index.html"), srcDoor = rd("drafts", "door-notice", "body.html");
+const srcLine = rd("preview", "line-post-map", "door-detail.txt");
+[["hours", "國定假日與各科特別門診請來電確認。", srcIndex, "index.html"],
+ ["hours", "08:45–11:30", srcIndex, "index.html 的門診表"],
+ ["hours", "13:45–16:30", srcIndex, "index.html 的門診表"],
+ ["hours", "17:45–20:00", srcIndex, "index.html 的門診表"],
+ ["map", "停車計價方式依各業者現場標示為準。", srcDoor, "門口那張告示"],
+ ["map", "路邊停車格", srcDoor, "門口那張告示"],
+ ["map", "P1 壹車房－中華路停車場　190 公尺・步行 3 分鐘", srcLine, "LINE 那一則的詳情"],
+ ["map", "P2 合廷停車場　140 公尺・步行 2 分鐘", srcLine, "LINE 那一則的詳情"],
+ ["map", "P3 斗六永樂站停車場　50 公尺・步行 1 分鐘", srcLine, "LINE 那一則的詳情"],
+ ["map", "雲林縣斗六市永樂街 70 號", srcLine, "LINE 那一則的詳情"],
+].forEach(([k, frag, src, where]) => {
+  const i = TILES.findIndex(t => t[0] === k);
+  ok((pres[i] || "").includes(frag), `${TILES[i][4]} 的文字裡找不到「${frag}」`);
+  ok(src.includes(frag), `「${frag}」和 ${where} 對不上 —— 那幾個字不可以重打`);
+});
+
+/* ⚠ 那顆按鈕：一則只掛得了一顆、一個網址，頁面上要寫出是哪一個 */
+["https://fangren.net/", "https://fangren.net/#topics", "https://fangren.net/#clinic"]
+  .forEach(u => ok(page.includes(u), `頁上少了按鈕的網址 ${u}`));
 
 /* ---------- ⑧ 頁上每一張圖、孤兒檔 ---------- */
 const imgs = [...page.matchAll(/<img src="([^"]+)" width="(\d+)" height="(\d+)"/g)];
@@ -179,7 +220,8 @@ for (const [, src, w, h] of imgs) {
   ok(/alt="[^"]+"/.test(page.slice(page.indexOf(src))), `${src} 沒有 alt`);
 }
 for (const f of fs.readdirSync(DIR)) {
-  if (f === "index.html") continue;
+  /* ⚠ 那三份說明文字不是圖，它們是頁面**印出來**的（⑦ 在逐字比對），不算孤兒檔 */
+  if (f === "index.html" || /^detail-.*\.txt$/.test(f)) continue;
   ok(used.has(f), `${f} 沒有被頁面引用（孤兒檔）`);
 }
 
