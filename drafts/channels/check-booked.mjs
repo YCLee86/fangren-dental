@@ -149,7 +149,7 @@ for (const n of ORDER) {
   const html = fs.readFileSync(path.join(DIR, "index.html"), "utf8");
   const LINES = [[".car", "overflow-x:auto;scrollbar-width"],
                  [".car .row", "gap:8.7px"],
-                 [".car .pv-hc", "flex:none;width:207px"]];
+                 [".car .pv-hc", "flex:none;width:var(--carw"]];
   for (const [sel, body] of LINES) {
     const line = html.split("\n").find((l) => l.startsWith("#pv-slot") && l.includes(body));
     if (!line) { bad.push(`找不到「${sel}」那一條輪播寬度的規則`); continue; }
@@ -254,26 +254,52 @@ for (const n of ORDER) {
      nano 那一格因此印成「放不下（差 0px）」**而畫面完全正常**（2026-09-13 踩到）。 */
   ok(/st\.style\.width = "max-content";/.test(html),
     "widest() 沒有先把藥丸那一列切成 max-content —— 窄卡上會量到被壓縮後的寬度");
-  /* ⚠⚠⚠ 輪播那一張是 deca 不是 micro（padding 校正：240+28 = 268 對量到的 269.3、
-     mega 320+28 = 348 對量到的 348.7）。JSON 與頁面要指同一階，不然交出去的那一份
-     會比我們給看過的每一張模擬圖窄約 25%，**而且畫面上一切正常**。 */
-  const nowStep = html.match(/var NOW_STEP = "([a-z]+)";/);
-  ok(nowStep && nowStep[1] === "deca",
-    `頁面上那條輪播宣告的是 ${nowStep && nowStep[1]} —— padding 校正對出來的是 deca`);
+  /* ⚠⚠⚠ 「量到的」和「我們要的」是兩件事，要分開存（2026-09-14）：
+     MEAS_STEP/MEAS_W 是 padding 校正對出來的**廠商現在跑的那一階**（deca／207px，
+     它同時是比例尺的錨），WANT_STEP 是**使用者定案要換過去的那一階**（micro）。
+     兩個混成一個變數的話，換一階就等於換掉比例尺，整把尺一起縮水
+     ——同 post-map 那個 WMREF 的坑。 */
+  const measStep = html.match(/var MEAS_STEP = "([a-z]+)";/);
+  const wantStep = html.match(/var WANT_STEP = "([a-z]+)";/);
+  ok(measStep && measStep[1] === "deca",
+    `頁面上寫的「廠商現在跑的」是 ${measStep && measStep[1]} —— padding 校正對出來的是 deca`);
+  ok(wantStep && wantStep[1] === "micro",
+    `頁面上寫的「我們要的」是 ${wantStep && wantStep[1]} —— 2026-09-14 使用者定案是 micro`);
+  ok(/var MEAS_W = 207;/.test(html), "比例尺的錨（MEAS_W = 207）不見了或被改過");
   const carSize = card["約診紀錄查詢"].contents[0].size;
-  ok(carSize === (nowStep && nowStep[1]),
-    `booked-card.json 的輪播 bubble 是 ${carSize}、頁面畫的是 ${nowStep && nowStep[1]} —— 兩份要指同一階`);
+  ok(carSize === (wantStep && wantStep[1]),
+    `booked-card.json 的輪播 bubble 是 ${carSize}、頁面要的是 ${wantStep && wantStep[1]} —— 兩份要指同一階`);
   ok(card["預約成功通知"].size === "mega", "單張那一則不是 mega");
-  /* ⚠⚠ 那把尺的寬度只能靠 --cw，不可以再去動那條用 id 列出來的 207px 規則。 */
-  ok(/\.pv-cw \.pv-hc\{width:var\(--cw,207px\)\}/.test(html),
-    "尺的卡片寬度沒有吃 --cw");
+  /* ⚠⚠ 卡片寬度一律吃變數（--carw 給那三條用 id 列出來的規則、--cw 給尺），
+     退回值也要是 micro 算出來的那個數字，不然 CSS 沒載到時會畫成 deca。 */
+  ok(/--carw,162px/.test(html) && /width:var\(--cw,162px\)/.test(html),
+    "卡片寬度的退回值不是 micro 算出來的 162px");
+  ok(/setProperty\("--carw", CAR_W \+ "px"\)/.test(html),
+    "render() 沒有把 --carw 設成 CAR_W —— 輪播會停在 CSS 的退回值");
+  ok(/var CAR_W = Math\.round\(bubblePx\(stepOf\(WANT_STEP\)\)\);/.test(html),
+    "CAR_W 沒有從 WANT_STEP 算出來 —— 卡片寬度不可以是寫死的 px");
+
+  /* ⚠⚠⚠ 九顆各畫一次（2026-09-14 使用者要的）—— 而且**形狀是規則算出來的**，
+     不是在那裡把 sn 塞進去；塞進去的話規則哪天壞了這一頁還是很正常。 */
+  ok(/function rotaStats\(year\)/.test(html) && /var RT = rotaStats\(ROTA_YEAR\);/.test(html),
+    "九顆的分布統計（rotaStats）不見了 —— 那幾個數字不可以寫死");
+  ok(/id="pv-nine"/.test(html) && /id="pv-panel-nine"/.test(html) && /id="pv-panel-rota"/.test(html),
+    "九顆那一節或它的兩塊面板不見了");
+  ok(/nwCard\(a, true, k, SHAPES\.length\)/.test(html),
+    "九張卡不是用 nwCard 照真的日期畫的");
+  ok(/im\.getAttribute\("data-shape"\) !== SHAPES\[k\]/.test(html),
+    "九張卡沒有逐張比對「畫出來的形狀 ＝ 規則算出來的那一顆」");
+  /* ⚠ 規則本身要寫在頁面上（使用者 2026-09-14 指定「使用邏輯要寫一下」），
+     而且兩則共用那一句不可以掉 —— 掉了廠商會以為要各寫一條。 */
+  for (const t of ["(月 ＋ 日) % 9", "不是按星期幾", "預約成功那一則和查詢清單裡那一張是同一顆"])
+    ok(html.includes(t), `頁面上那句「${t}」不見了 —— 九顆怎麼輪的規則要寫清楚`);
   /* ⚠⚠⚠ 三個共用的狀態畫完一定要還原，而且要排在**兩把尺後面**
      —— `render()` 會被呼叫不只一次（開頁、wm-sizes.json 回來、每次 resize），
      不還原的話**第二次進來時 ①② 那兩段會跟著畫成藥丸＋淡墨浮水印＋指定斷行**，
      連 shot-booked.png／shot-query.png 都會跟著變，**而畫面上一切正常**
      （2026-09-13 踩到，是出圖的位元組變了才發現）。
      ⚠ 不可以只用 includes 找 `dtm = "free"` —— 宣告變數那一行本身就寫著它。 */
-  ok(/drawScale\("pv-cwd", CWD\);[\s\S]{0,3000}dtm = "free";\s*\n\s*wmink = false;\s*\n\s*stat = "";/
+  ok(/drawScale\("pv-cwd", CWD\);[\s\S]{0,6000}dtm = "free";\s*\n\s*wmink = false;\s*\n\s*stat = "";/
       .test(html),
     "畫完沒有把 dtm／wmink／stat 還原（或還原排在兩把尺前面）—— 第二次 render 會把 ①② 一起畫成第 ②之二 節那一版");
 
@@ -354,7 +380,8 @@ ok(errs.length === 0, "規格頁有 JS 錯誤：" + errs.join(" / "));
 ok(!got.bar, "規格頁上還有切換條 —— 定案之後要拿掉（第十一之五節）");
 ok(!got.tmpl, "規格頁上直接印出了 {{…}} —— 那是給廠商的變數，頁面上要寫看得懂的示範值");
 ok(got.cw === 268, `預約成功那張卡量到 ${got.cw}px，該是 268`);
-ok(got.qw === 207, `輪播那張卡量到 ${got.qw}px，該是 207`);
+/* ✅ 2026-09-14 使用者定案：輪播改用 micro（162px）—— 廠商現在跑的是 deca（207）。 */
+ok(got.qw === 162, `輪播那張卡量到 ${got.qw}px，該是 162（micro）`);
 ok(got.overflow === 0, `規格頁有 ${got.overflow}px 水平捲動`);
 ok(got.dtFs === "19px", `規格頁的日期是 ${got.dtFs}，定案是 19px`);
 ok(got.whoFs === "16px", `規格頁的姓名是 ${got.whoFs}，定案是 16px`);
@@ -374,4 +401,4 @@ if (bad.length) {
   process.exit(1);
 }
 console.log("✓ 預約成功 ＋ 約診紀錄查詢：JSON ↔ 規格頁 ↔ wm-sizes.json ↔ 36 張 PNG 全部對得上");
-console.log("  卡片 268 / 207px　日期 lg 19　姓名 md 16　小字 xs 13　浮水印九顆・濃度 12");
+console.log("  卡片 268 / 162px（micro）　日期 lg 19　姓名 md 16　小字 xs 13　浮水印九顆・濃度 12");

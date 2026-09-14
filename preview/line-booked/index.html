@@ -94,7 +94,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      提案頁要擺真的產出檔，不要用 CSS 把成品再做一次）。 */
 #pv-slot.car,#pv-slot2.car,#pv-slot9.car{flex:1 1 auto;max-width:none;overflow-x:auto;scrollbar-width:thin}
 #pv-slot.car .row,#pv-slot2.car .row,#pv-slot9.car .row{display:flex;gap:8.7px;padding-bottom:6px}
-#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc,#pv-slot9.car .pv-hc{flex:none;width:207px}
+#pv-slot.car .pv-hc,#pv-slot2.car .pv-hc,#pv-slot9.car .pv-hc{flex:none;width:var(--carw,162px)}
 
 /* ---- 卡片外殼（兩案共用）------------------------------------------- */
 .pv-hc{width:100%;border-radius:14px;overflow:hidden;
@@ -302,7 +302,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-cw .lb2{font-size:.68rem;color:var(--ink-soft);margin:0 0 6px 1px;
   font-variant-numeric:tabular-nums}
 .pv-cw .lb2 b{color:var(--ink)}
-.pv-cw .pv-hc{width:var(--cw,207px)}
+.pv-cw .pv-hc{width:var(--cw,162px)}
 .pv-wm{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
 .pv-wm figure{background:var(--card);border:1px solid var(--rule);border-radius:10px;
   padding:10px 8px 8px;text-align:center}
@@ -373,7 +373,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <h3 class="pv-h3">這一列長什麼樣 —— 日期 2026-09-13 定案「指定斷行」</h3>
   <p class="pv-note">
     ⚠⚠⚠ <b>起因是你在手機上看到的那個折點</b>：日期是
-    <code>2026/08/20 星期四 15:45</code>，而<b>輪播那一張只有 207px 寬、那一行可用 179px</b>，
+    <code>2026/08/20 星期四 15:45</code>，而<b>輪播那一張當時是 207px 寬、那一行可用 179px</b>，
     整串在 <b>lg 19</b> 要 215px —— <b>放不下就一定會折</b>。<br>
     ⚠⚠⚠ 而<b>中日韓文字每兩個字之間都是合法的折點</b>，所以「折在哪」是
     <b>寬度 × 字型</b>決定的、不是我們排的順序決定的：這一串正好卡在邊界上 ——
@@ -408,6 +408,39 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   <div id="pv-stwrap"></div>
 
+  <h3 class="pv-h3">九顆浮水印各畫一次（2026-09-14，你要的）</h3>
+  <p class="pv-note">
+    ⚠ 每一格都是<b>真的那張卡</b>（輪播・<code>micro</code>・淡墨浮水印・底套色的藥丸），
+    標題寫著<b>那一顆的名字</b>與<b>一個真的會算到它的看診日</b> ——
+    那個日期是面板現場從 2026 年的行事曆找出來的第一個週一到週五，<b>不是打上去的</b>。<br>
+    ⚠⚠ <b>約診狀態那四個值是輪流掛上去的示範值</b> ——
+    狀態和形狀是<b>兩件不相干的事</b>（狀態跟著這一筆走到哪一步，形狀跟著日期），
+    這裡讓它們一起出現只是為了四個值也一次看得完。<br>
+    ⚠ 顏色<b>跟著形狀走</b>：每一顆各配一支站上的科別色，
+    唯一出處是 <code>wm-sizes.json</code>，這一頁不再寫一份。
+  </p>
+  <div class="pv-cw" id="pv-nine"></div>
+  <div class="pv-panel" id="pv-panel-nine"></div>
+
+  <h3 class="pv-h3">九顆怎麼輪 —— 規則（兩則共用）</h3>
+  <p class="pv-note">
+    ⚠⚠⚠ <b>不是按星期幾</b>（你問到的那一件）。按星期幾的話，診所週一到週五看診、
+    一個月加一天週六 —— <b>九顆裡有三顆永遠不會出現</b>，那正是你擔心的事。<br>
+    <b>規則是「那一筆約診自己的日期」：<code>(月 ＋ 日) % 9</code></b>，
+    落在 <code>r1c1 r1c2 r1c3 r2c1 r2c2 r2c3 r3c1 r3c2 r3c3</code>
+    這個固定順序上（＝九宮格由左到右、由上到下）。
+    <b>算的是那一筆的看診日期</b>，不是今天、也不是它排在清單第幾張。<br>
+    三件因此跟著成立：<br>
+    ・<b>同一筆約診查幾次都是同一顆</b>。按位置輪的話，取消一筆後面全部換人；
+    隨機的話同一筆每次看都不一樣，<b>讀起來就是壞掉</b>。<br>
+    ・<b>預約成功那一則和查詢清單裡那一張是同一顆</b> —— 兩則吃同一條規則，
+    不必各寫一條。<br>
+    ・<b>顏色不必另外定規則</b>：顏色是綁在形狀上的，所以它也跟著日期。<br>
+    ⚠⚠ <b>底下的分布是面板現場算的</b>（2026 整年、只算週一到週五），
+    不是估的 —— 九顆都會用到，而且幾乎一樣多。
+  </p>
+  <div class="pv-panel" id="pv-panel-rota"></div>
+
   <h3 class="pv-h3">②之三　浮水印往左移多少（2026-09-13，你要的）</h3>
   <p class="pv-note">
     ⚠⚠⚠ <b>這件事 Flex 寫得出來，而且正好解掉一個我們自己的矛盾</b>：
@@ -417,7 +450,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     我們送給廠商的文字規格與模擬圖<b>互相矛盾</b>（第 42-7 節記著這件事）。
     <b>只要你挑一格「往左」，那一份 JSON 就寫得死了</b>，不必再請廠商照圖做。<br>
     ⚠ <b>底下那 10px 的溢出沒有動</b>（你講的是左右），要不要一起收進來是另一題。<br>
-    ⚠⚠ 每一格都是<b>真的那張卡</b>（207px、同一筆約診、同一顆形狀），
+    ⚠⚠ 每一格都是<b>真的那張卡</b>（輪播那張、同一筆約診、同一顆形狀），
     只有浮水印的左右位置不一樣 —— 面板現場量「看得到多少、左右各切掉多少」。
   </p>
   <div class="pv-cw" id="pv-wmx"></div>
@@ -733,6 +766,26 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      同一個約診不管查幾次都是同一顆牙齒。按位置的話取消一筆、後面全部換人；
      隨機的話同一筆每次看都不一樣，讀起來就是壞掉。 */
   function shapeFor(a) { return SHAPES[(a.m + a.d) % SHAPES.length]; }
+  /* ---- 九顆怎麼輪：現場算一年的分布（2026-09-14）---------------------
+     ⚠⚠⚠ 使用者問的是「會不會有幾顆用不到」—— 那不可以用講的，要算。
+       只算**週一到週五**（診所的看診日），所以算出來的就是真的會發生的分布。
+     ⚠ 例日也是算出來的：那一年第一個算到這一顆的看診日。
+       寫死九個日期的話，哪天規則或順序改了，頁面會靜靜地開始說謊。 */
+  var ROTA_YEAR = 2026;
+  function rotaStats(year) {
+    var n = SHAPES.length, cnt = [], eg = [], W = "日一二三四五六", tot = 0, m, d, dim, dt, wd, k;
+    for (k = 0; k < n; k++) { cnt[k] = 0; eg[k] = null; }
+    for (m = 1; m <= 12; m++) {
+      dim = new Date(year, m, 0).getDate();
+      for (d = 1; d <= dim; d++) {
+        dt = new Date(year, m - 1, d); wd = dt.getDay();
+        if (wd === 0 || wd === 6) continue;          /* 六日休診 */
+        k = (m + d) % n; cnt[k]++; tot++;
+        if (!eg[k]) eg[k] = { m: m, d: d, w: W.charAt(wd), t: "10:15", who: "〔病人姓名〕" };
+      }
+    }
+    return { cnt: cnt, eg: eg, tot: tot };
+  }
   /* 浮水印的濃度（網址參數 `?k=`）—— 烘在 PNG 的 alpha 裡，Flex 的 image 沒有 opacity。 */
   var WM = { "08": 1, "12": 1, "18": 1 };
   /* 浮水印和其他三格**可以併用**（例如大日子 ＋ 浮水印）——
@@ -1042,26 +1095,36 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
        deca 240+28 = 268 對量到 269.3）—— 輪播那一張跑的是 **deca** 不是 micro。 */
   var BLK = 20;            /* 方塊表：一格 20px */
   var CPAD = 14;           /* 我們 JSON 的 paddingAll，左右各吃一次 */
-  var CAR_W = 207;         /* 輪播那張卡的外寬（＝ 上面那條 id 規則裡的 207px） */
+  /* ⚠⚠⚠ 兩個階要分開放，不可以只留一個：
+       MEAS ＝ **量到的**（廠商那張截圖換算出來的 207px ＝ deca），比例尺的錨；
+       WANT ＝ **我們要的**（2026-09-14 使用者定案 micro，讓對話框窄一點）。
+     合成一個變數的話，換掉要的那一階就等於換掉比例尺（第 28 條 ② 那條）。 */
+  var MEAS_W = 207;        /* 廠商那條輪播在病人手機上換算出來的外寬 */
   var SHOT = { mega: 348.7, car: 269.3 };   /* 廠商那張截圖上量到的兩種卡 */
   var STEPS = [{ k: "nano", b: 7 }, { k: "micro", b: 9 }, { k: "deca", b: 12 },
                { k: "hecto", b: 13 }, { k: "kilo", b: 14 }, { k: "mega", b: 16 },
                { k: "giga", b: 26 }];
-  var NOW_STEP = "deca";
+  var MEAS_STEP = "deca";   /* 上面那 207 落在這一階（padding 校正對出來的） */
+  var WANT_STEP = "micro";  /* ✅ 2026-09-14 使用者定案：輪播改用 micro */
   function stepOf(k) {
     var i;
     for (i = 0; i < STEPS.length; i++) if (STEPS[i].k === k) return STEPS[i];
     throw new Error("沒有這一階：" + k);
   }
   /* 這台上的比例尺 ＝ 現在那張卡的可用寬 ÷ 那一階的內容寬 */
-  function kScale() { return (CAR_W - CPAD * 2) / (BLK * stepOf(NOW_STEP).b); }
+  function kScale() { return (MEAS_W - CPAD * 2) / (BLK * stepOf(MEAS_STEP).b); }
   function bubblePx(s) { return BLK * s.b * kScale() + CPAD * 2; }
+  /* 輪播那張卡現在要畫多寬 —— **算出來的**，不是再寫一個 px。
+     ⚠ 上面那條 id 規則裡的 162px 只是退回值，render() 會把它寫進 --carw；
+       守門有一道在比對那兩個數字（差 1px 以上就 throw）。 */
+  var CAR_W = Math.round(bubblePx(stepOf(WANT_STEP)));
   /* 尺上只放「現在這一階與更窄的」—— 問的是「可不可以窄一點」 */
-  var CWD = STEPS.filter(function (s) { return s.b <= stepOf(NOW_STEP).b; })
+  var CWD = STEPS.filter(function (s) { return s.b <= stepOf(MEAS_STEP).b; })
     .reverse()
     .map(function (s) {
       return { n: s.k + "　" + bubblePx(s).toFixed(0) + "px"
-                 + (s.k === NOW_STEP ? "（現在）" : ""),
+                 + (s.k === MEAS_STEP ? "（廠商現在跑的）"
+                    : s.k === WANT_STEP ? "（✅ 我們要的）" : ""),
                w: bubblePx(s) };
     });
 
@@ -1071,7 +1134,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       wmr = c.r == null ? save : c.r;
       var card = nwCard(APPTS[0], true, 0, APPTS.length);
       wmr = save;
-      return '<div style="--cw:' + (c.w || 207) + 'px"><p class="lb2">' + c.n + '</p>'
+      return '<div style="--cw:' + (c.w || CAR_W) + 'px"><p class="lb2">' + c.n + '</p>'
         + card + '</div>';
     }).join("");
   }
@@ -1100,6 +1163,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   }
 
   function render() {
+    /* ⚠⚠ 輪播的寬度是**算出來的**（micro × 這台的比例尺），寫進 --carw；
+       CSS 那條 id 規則裡的 162px 只是退回值，守門會比對兩個數字。 */
+    document.documentElement.style.setProperty("--carw", CAR_W + "px");
+
     /* ① 新版・預約成功 */
     msg = "booked"; v = "nw"; dt = "ymdw";
     document.getElementById("pv-chat1").innerHTML = bookedChat("pv-slot");
@@ -1223,6 +1290,60 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + "<b>藍與橘過不了 4.5</b>，那正是「套色拿來當字是用錯階」。<br>"
         + fitNote() + "<br>" + alignNote() + "<br>" + inkNote() + "</p>";
 
+      /* ---- 九顆各畫一次 ＋ 輪替規則（2026-09-14）--------------------
+         ⚠ 九張都吃同一組 stat／wmink／dtm（＝上面那張卡的畫法），
+           所以這一段一定要排在還原**之前**。 */
+      var RT = rotaStats(ROTA_YEAR);
+      document.getElementById("pv-nine").innerHTML = SHAPES.map(function (sn, k) {
+        var a = RT.eg[k];
+        /* ⚠ 卡片是用「真的會算到這一顆的日期」畫的 —— shapeFor(a) 自己會挑到 sn，
+             不是在這裡把形狀塞進去。畫出來和規則對不上就是規則壞了。 */
+        return '<div style="--cw:' + CAR_W + 'px"><p class="lb2">' + sn
+          + '　' + a.m + '/' + a.d + '（' + a.w + '）</p>'
+          + nwCard(a, true, k, SHAPES.length) + '</div>';
+      }).join("");
+      var nineBad = [].slice.call(document.querySelectorAll("#pv-nine .wm"))
+        .filter(function (im, k) { return im.getAttribute("data-shape") !== SHAPES[k]; }).length;
+      document.getElementById("pv-panel-nine").innerHTML =
+        "<p class='pv-note'>九張卡的浮水印 "
+        + (nineBad ? "<span class='no'>有 " + nineBad + " 張和標題對不上</span>"
+                   : "<span class='ok'>逐張對得上標題那一顆</span>")
+        + "（形狀是 <code>(月＋日) % 9</code> 從那個日期算出來的，不是塞進去的）。"
+        + "<br>每一顆的寬度各不相同（按<b>墨的面積</b>正規化）："
+        + SHAPES.map(function (sn) {
+            var z = SIZES && SIZES[sn];
+            return sn + " " + (z ? z.w + "px" : "—");
+          }).join("／")
+        + "<br>卡片 <b>" + document.querySelector("#pv-nine .pv-hc")
+            .getBoundingClientRect().width.toFixed(1) + "px</b>（" + WANT_STEP + "）。"
+        /* ⚠⚠⚠ 卡窄一階，浮水印就被切掉更多 —— 這是 micro 的代價，要印出來不要用講的。
+             ⚠ 那三顆 3.08:1 的（r1c3／r2c3／r3c3）**自己就比整張卡還寬**，
+               所以它們看得到的寬度一律等於卡片寬，再往下縮卡就只會愈切愈多。 */
+        + "<br>每一顆<b>在這張卡上看得到多少</b>（往右下溢出的那一塊被卡片邊緣切掉）："
+        + [].slice.call(document.querySelectorAll("#pv-nine > div")).map(function (d) {
+            var cb = d.querySelector(".pv-hc").getBoundingClientRect();
+            var ib = d.querySelector(".wm").getBoundingClientRect();
+            var vis = Math.max(0, Math.min(cb.right, ib.right) - Math.max(cb.left, ib.left));
+            return d.querySelector(".wm").getAttribute("data-shape") + " "
+              + vis.toFixed(0) + "px（" + (vis / ib.width * 100).toFixed(0) + "%）";
+          }).join("／")
+        + "<br>⚠ 三顆 3.08:1 的（r1c3／r2c3／r3c3）<b>整顆比卡片還寬</b>，"
+        + "所以看得到的就是卡片寬本身。</p>";
+      document.getElementById("pv-panel-rota").innerHTML =
+        "<p class='pv-note'><b>" + ROTA_YEAR + " 年週一到週五共 " + RT.tot + " 天</b>"
+        + "（國定假日沒有扣掉，扣了也不影響分布）——<br>"
+        + SHAPES.map(function (sn, k) {
+            return sn + "　<b>" + RT.cnt[k] + " 天</b>（"
+              + (RT.cnt[k] / RT.tot * 100).toFixed(1) + "%）　例："
+              + RT.eg[k].m + "/" + RT.eg[k].d + "（" + RT.eg[k].w + "）";
+          }).join("<br>")
+        + "<br><b>最少 " + Math.min.apply(null, RT.cnt) + " 天、最多 "
+        + Math.max.apply(null, RT.cnt) + " 天</b> —— <span class='ok'>九顆都用得到，"
+        + "而且幾乎一樣多</span>。"
+        + "<br>⚠⚠⚠ <b>對照：若改成按星期幾</b>，週一到週五只會用到 <b>5 顆</b>"
+        + "（加上一個月一天的週六是 6 顆），<b>剩下的 "
+        + (SHAPES.length - 6) + " 顆永遠不會出現</b> —— 那就是你問的那個浪費。</p>";
+
       /* ---- ②之三 浮水印往左移多少 ----------------------------------
          ⚠ 兩把尺都吃 stat／wmink／dtm，所以還原排在它們**後面**。 */
       drawScale("pv-wmx", WMX);
@@ -1254,22 +1375,57 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
           var av = b.clientWidth - parseFloat(getComputedStyle(b).paddingLeft)
                  - parseFloat(getComputedStyle(b).paddingRight);
           var wide = widest(c), ln = lines(c.querySelector(".dt"));
+          /* ⚠⚠⚠ 卡一窄，日期就不只是「多折一行」—— **星期幾會被折斷在中間**
+               （中日韓文字每兩個字之間都是合法的折點），而那正是 2026-09-13
+               使用者退回過的樣子。所以這一欄要現場量「有沒有折斷」，
+               不可以只印行數：行數一樣是 2，折點差一個字，讀起來差很多。 */
+          /* 判準：「星期X」那三個字要整段落在**同一行**裡。
+             ⚠ 不可以只數行數 —— 折成兩行是對的，折在「星期／四」中間才是壞的。 */
+          var tok = "星期" + APPTS[0].w;
+          var wk = ln.length > 1 && !ln.some(function (L) { return L.s.indexOf(tok) >= 0; });
           return "<b>" + CWD[i].n + "</b>：可用 " + av.toFixed(0)
-            + "px、內容最寬要 <b>" + wide.toFixed(0) + "px</b>，日期 " + ln.length + " 行 —— "
+            + "px、內容最寬要 <b>" + wide.toFixed(0) + "px</b>，日期 " + ln.length + " 行"
+            + (ln.length > 1 ? "（" + ln.map(function (L) { return L.s; }).join(" ／ ") + "）" : "")
+            + (wk ? " <span class='no'>⚠ 星期幾被折斷</span>" : "")
+            + " —— "
             + (wide <= av
                 ? "<span class='ok'>收得下</span>"
                 : "<span class='no'>放不下（差 " + (wide - av).toFixed(0) + "px）</span>");
         });
+      /* ⚠⚠⚠ 2026-09-14：卡窄一階，第 ② 節那張（**自由折行**，＝ 09-13 給廠商的
+           那一版）在 micro 上就**折在「星期／四」中間** —— 那正是使用者退回過的樣子。
+         ⚠ 上面那幾格量不到它：這把尺是接在第 ②之二 節後面畫的，吃的是**指定斷行**。
+           所以這一段要另外去量第 ② 節那張卡本人。 */
+      var s2 = document.querySelector("#pv-slot2 .pv-hc .dt");
+      var s2ln = s2 ? lines(s2) : [];
+      var s2tok = "星期" + APPTS[0].w;
+      var s2cut = s2ln.length > 1 && !s2ln.some(function (L) { return L.s.indexOf(s2tok) >= 0; });
+      var cwWarn = !s2 ? "" :
+        "<br><br>⚠⚠⚠ <b>micro 之下，第 ② 節那張（自由折行 ＝ 09-13 給廠商的那一版）</b>"
+        + "折成 <b>" + s2ln.map(function (L) { return L.s; }).join(" ／ ") + "</b>"
+        + (s2cut
+            ? " —— <span class='no'>星期幾被折斷在中間</span>，"
+              + "那正是 2026-09-13 你退回過的樣子。"
+              + "<br>⚠ <b>成因不是排法是寬度</b>：這一格可用 " + s2.getBoundingClientRect().width.toFixed(0)
+              + "px，而「日期 ＋ 星期幾」那一段要 156px —— <b>micro 上放不進同一行</b>，"
+              + "所以 09-13 那句「折點會落在時間前面、星期幾仍然跟著它的日期」"
+              + "<b>在 deca 上成立、在 micro 上不成立了</b>。"
+              + "<br>⚠⚠ 折點還會<b>跟著字型跑</b>（這台沒有 Noto Sans TC），"
+              + "所以在他手機上折在哪一個字前面是賭的。"
+              + "<br>→ 唯一治得住的是<b>指定斷行</b>（那一格填 <code>2026/09/11</code>"
+              + " ＋ 換行 ＋ <code>星期五 11:50</code>）＝ 第 ②之二 節那幾張畫的那一種，"
+              + "<b>要不要改成它是你的決定</b>。"
+            : " —— <span class='ok'>星期幾沒有被折斷</span>。");
       document.getElementById("pv-panelcw").innerHTML =
-        "<p class='pv-note'>" + cwRows.join("<br>")
+        "<p class='pv-note'>" + cwRows.join("<br>") + cwWarn
         + "<br>⚠⚠ <b>地板是藥丸那一列不是日期</b>（量出來最寬的是它）——"
         + "所以「窄一點」真正會先撞到的是<b>約診狀態那一列</b>，不是這一輪剛修好的日期。"
         + "<br>⚠⚠⚠ <b>而這把尺我們挑不了</b>：能換的只有 bubble 的 <code>size</code>，"
         + "而且<b>同一條輪播是整組一起換</b>。"
         + "<br><br><b>七階（卡米哥的方塊表，一格 20px，量的是內容寬）</b>　比例尺 ＝ 這台上 "
-        + (CAR_W - CPAD * 2) + " ÷ " + (BLK * stepOf(NOW_STEP).b) + " ＝ "
+        + (MEAS_W - CPAD * 2) + " ÷ " + (BLK * stepOf(MEAS_STEP).b) + " ＝ "
         + kScale().toFixed(4) + "：<br>" + STEPS.map(function (s) {
-            return (s.k === NOW_STEP ? "<b>" : "") + s.k + "</b>　" + s.b
+            return (s.k === MEAS_STEP || s.k === WANT_STEP ? "<b>" : "") + s.k + "</b>　" + s.b
               + " 格 ＝ 內容 " + (BLK * s.b) + "px（mega 的 "
               + Math.round(s.b / stepOf("mega").b * 100) + "%）→ 這台上 bubble 約 "
               + bubblePx(s).toFixed(0) + "px";
@@ -1279,8 +1435,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + (BLK * stepOf("mega").b + CPAD * 2) + " 對量到的 " + SHOT.mega + "、"
         + "deca " + (BLK * stepOf("deca").b) + "＋" + CPAD * 2 + " ＝ "
         + (BLK * stepOf("deca").b + CPAD * 2) + " 對量到的 " + SHOT.car
-        + " —— 所以<b>廠商那條輪播是 <code>deca</code>，不是 JSON 上寫的 <code>micro</code></b>"
-        + "（JSON 已經改成 deca）。</p>";
+        + " —— 所以<b>廠商那條輪播現在跑的是 <code>deca</code></b>。"
+        + "<br>✅ <b>2026-09-14 使用者定案：改用 <code>micro</code></b>"
+        + "（這一頁與 <code>booked-card.json</code> 都已經是 micro）——"
+        + "所以這<b>是一個要請廠商換的要求</b>，不是對齊他們現在的做法；"
+        + "⚠ <b>整條輪播一起換</b>，不能只縮其中一張。</p>";
 
       /* ⚠⚠⚠ **畫完一定要還原**：`render()` 會被呼叫不只一次
          （開頁一次、`wm-sizes.json` 回來一次、每次 resize 一次），
@@ -1460,7 +1619,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     var slot = document.getElementById(slotId);
     var cards = [].slice.call(slot.querySelectorAll(".pv-hc"));
     var vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    var want = msg === "booked" ? 268 : 207;
+    var want = msg === "booked" ? 268 : CAR_W;
     var cw = cards[0].getBoundingClientRect().width;
     var hs = cards.map(function (c) { return c.getBoundingClientRect().height; });
     var tall = Math.max.apply(null, hs);
