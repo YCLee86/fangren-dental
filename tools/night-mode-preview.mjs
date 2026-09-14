@@ -154,15 +154,14 @@ h = h.replace(/data-views-self=/g, "data-views=");
 if (/data-views-self/.test(h)) throw new Error("× data-views-self 沒剝乾淨");
 h = h.replace(/<title>[^<]*<\/title>/, "<title>夜間模式（提案）｜芳仁牙醫診所</title>");
 
-/* ---------- 2. 頁首的開關（放大鏡後面）與頁尾的開關 ---------- */
+/* ---------- 2. 開關：放在「主題與科別」那一行的最右邊（2026-09-15 第四輪，使用者指定） ----------
+   上一輪試過頁首（手機上放不下，390 寬時診所名和選單疊 8px）與頁尾。
+   ⚠ 只有圖示與字，**寫的是按下去會變成什麼**（白天時寫「夜間模式」＋月亮），同 snowmed 那一站。 */
 /* 圖示：Lucide "moon"／"sun"，ISC 授權，https://lucide.dev */
 const ICON = `<svg class="pv-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="pv-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
-const navQ = /(<a class="nav-q"[\s\S]*?<\/a>)/;
-must(navQ, "放大鏡");
-h = h.replace(navQ, `$1\n      <button class="pv-th pv-th-head" type="button" aria-label="切換到夜間模式">${ICON}</button>`);
-const footNav = /(<ul class="foot-nav">[\s\S]*?<\/ul>)/;
-must(footNav, "頁尾導覽");
-h = h.replace(footNav, `$1\n        <button class="pv-th pv-th-foot" type="button" aria-label="切換到夜間模式">${ICON}<span class="pv-th-t"></span></button>`);
+const topicsHead = /(<section id="topics">\s*<div class="shell">\s*<div class="sec-head">\s*<h2>主題與科別<\/h2>)/;
+must(topicsHead, "主題與科別的標題列");
+h = h.replace(topicsHead, `$1\n        <button class="pv-th" type="button" aria-label="切換到夜間模式">${ICON}<span class="pv-th-t">夜間模式</span></button>`);
 
 /* ---------- 3. 夜間的樣式（放在 <head>，不能塞在頁尾 —— 第一幀就要對） ---------- */
 const palCss = Object.entries(PAL).map(([k, p]) => `
@@ -218,25 +217,21 @@ html[data-theme="dark"] .btt { background-color: color-mix(in srgb, var(--card) 
   color: color-mix(in srgb, var(--ink-soft) 82%, transparent); }
 ${Object.keys(PAL).map((k) => `html[data-theme="dark"][data-pal="${k}"] :is(.foot-addr, .foot-tel) a { color: ${DEEP[k].general}; }`).join("\n")}
 
-/* 開關本身：頁首那一顆只有圖示（同放大鏡）、頁尾那一顆有字 */
-.pv-th { appearance: none; border: 0; background: none; padding: 0; font: inherit; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: .4em;
-  -webkit-tap-highlight-color: transparent; }
+/* 開關本身：主題與科別那一行的最右邊。塊高 34px ＝ 底下那排科別標記，圓角 12px ＝ 門診表那排 */
+#topics .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.pv-th { appearance: none; font: inherit; cursor: pointer; flex: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: .4em;
+  font-size: .88rem; line-height: 1; min-height: 34px; padding: 0 .75rem; border-radius: 12px;
+  background: var(--card); color: var(--ink-soft); border: 1px solid var(--rule);
+  -webkit-tap-highlight-color: transparent; position: relative; }
+/* 觸控下限 44px 靠 ::after 撐，版面維持 34px */
+.pv-th::after { content: ""; position: absolute; inset: -5px 0; }
 .pv-th svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.3;
   stroke-linecap: round; stroke-linejoin: round; }
 .pv-th svg :is(circle, path) { vector-effect: non-scaling-stroke; }
 .pv-th .pv-sun { display: none; }
 html[data-theme="dark"] .pv-th .pv-sun { display: block; }
 html[data-theme="dark"] .pv-th .pv-moon { display: none; }
-/* 頁首那一顆的寬度只有圖示本身（同放大鏡），觸控範圍靠 ::after 撐，不佔版面 */
-.site-nav .pv-th-head { position: relative; color: rgba(255, 255, 255, .88); }
-.site-nav .pv-th-head::after { content: ""; position: absolute; inset: -15px -6px; }
-.pv-th-foot { margin-top: 1rem; color: var(--ink-soft); border: 1px solid var(--rule);
-  border-radius: 8px; padding: .5em .8em; min-height: 44px; font-size: .9rem; }
-html[data-tpos="foot"] .pv-th-head,
-html[data-tpos="head"] .pv-th-foot,
-html[data-tpos="none"] .pv-th { display: none; }
-html[data-qopen="1"] .pv-th-head { opacity: 0; pointer-events: none; }
 </style>`;
 const bodyAt = h.search(/\n<body>\n/);
 if (bodyAt < 0) throw new Error("× 找不到 <body>");
@@ -245,11 +240,17 @@ h = h.slice(0, headEnd) + CSS + "\n" + h.slice(headEnd);
 
 /* 開頁那一刻就決定 data-theme（放 <head> 最前面，不然會先閃一張白天的） */
 const EARLY = `<script>(function(){var u=new URLSearchParams(location.search),r=document.documentElement;
-var th=u.get('th');if(!/^(dark|light)$/.test(th||''))th='dark';
-var p=u.get('pal');if(!/^[ab]$/.test(p||''))p='b';var pos=u.get('pos');if(!/^(head|foot|none)$/.test(pos||''))pos='foot';
+/* 預設跟著系統的深色設定（2026-09-15 第四輪，使用者：「預設跟著手機」）。
+   電腦也一樣：Windows／macOS 都有深色設定，瀏覽器用同一個 prefers-color-scheme 回報，所以不必分裝置。
+   ⚠ 提案頁用網址參數 th=auto|light|dark 記住選擇；正式站會改成 localStorage。 */
+var src=u.get('th');if(!/^(auto|dark|light)$/.test(src||''))src='auto';
+var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
+var th=src==='auto'?(mq&&mq.matches?'dark':'light'):src;
+r.dataset.thsrc=src;
+var p=u.get('pal');if(!/^[ab]$/.test(p||''))p='b';
 var pl=u.get('pill');if(!/^(line|t20|t32)$/.test(pl||''))pl='t20';var mp=u.get('map');if(!/^m[12]$/.test(mp||''))mp='m1';
 var dt=u.get('dot');if(!/^(soft|ink)$/.test(dt||''))dt='soft';
-r.dataset.theme=th;r.dataset.pal=p;r.dataset.tpos=pos;r.dataset.pill=pl;r.dataset.map=mp;r.dataset.dot=dt;})();</script>`;
+r.dataset.theme=th;r.dataset.pal=p;r.dataset.pill=pl;r.dataset.map=mp;r.dataset.dot=dt;})();</script>`;
 h = h.replace(/<head>/, "<head>\n" + EARLY);
 
 /* ---------- 4. 切換條 ---------- */
@@ -277,13 +278,12 @@ const BAR = `
 </style>
 <div class="pv-bar" id="pv-bar">
   <div class="pv-r"><span class="pv-l">模式</span>
-    <button data-k="mode" data-v="light">白天</button><button data-k="mode" data-v="b">夜間</button>
+    <button data-k="mode" data-v="auto">跟著手機</button><button data-k="mode" data-v="light">白天</button><button data-k="mode" data-v="dark">夜間</button>
     <button class="pv-x" id="pv-more">數字</button><button id="pv-hide">收起</button></div>
   <!-- 2026-09-15 第三輪：使用者挑定「Ⓑ 藍灰／藥丸淡色塊／Ⓜ1 路比較亮／圓點次要文字色」，
        那四把尺收成預設值、從切換條上拿掉（網址參數 pal／pill／map／dot 仍然吃得到）。 -->
   <div class="pv-r"><span class="pv-l">已選</span><span style="color:#aaa">Ⓑ 藍灰・藥丸淡色塊・Ⓜ1 路比較亮・圓點次要文字色</span></div>
-  <div class="pv-r"><span class="pv-l">開關放</span>
-    <button data-k="pos" data-v="head">頁首</button><button data-k="pos" data-v="foot">頁尾</button><button data-k="pos" data-v="none">不放（跟手機）</button></div>
+  <div class="pv-r"><span class="pv-l">系統</span><span style="color:#aaa" id="pv-sys"></span></div>
   <div class="pv-panel" id="pv-panel" hidden></div>
 </div>
 <button class="pv-mini" id="pv-mini" hidden>切換條</button>
@@ -291,15 +291,19 @@ const BAR = `
 (function(){
   var r=document.documentElement, NUM=${JSON.stringify(NUM)}, PAL=${JSON.stringify(PAL)}, SN=${JSON.stringify(SPECNAME)},
       PILL=${JSON.stringify(PILL)}, MAP=${JSON.stringify(MAP)};
-  function cur(k){ return k==='mode' ? (r.dataset.theme==='light'?'light':r.dataset.pal) : r.dataset[k]; }
+  var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
+  function cur(k){ return k==='mode' ? r.dataset.thsrc : r.dataset[k]; }
+  function setSrc(s){ r.dataset.thsrc=s; r.dataset.theme = s==='auto' ? (mq&&mq.matches?'dark':'light') : s; }
+  if(mq&&mq.addEventListener) mq.addEventListener('change',function(){ if(r.dataset.thsrc==='auto'){ setSrc('auto'); sync(); } });
   function sync(){
     document.querySelectorAll('.pv-bar [data-k]').forEach(function(b){ b.setAttribute('aria-pressed', cur(b.dataset.k)===b.dataset.v); });
     var dark=r.dataset.theme==='dark';
     document.querySelectorAll('.pv-th').forEach(function(b){ b.setAttribute('aria-label', dark?'切換到白天模式':'切換到夜間模式'); });
     document.querySelectorAll('.pv-th-t').forEach(function(s){ s.textContent = dark?'白天模式':'夜間模式'; });
     var m=document.querySelector('meta[name="theme-color"]'); if(m) m.content = dark ? PAL[r.dataset.pal].paper : '#12656a';
-    var u=new URL(location.href); u.searchParams.set('th',r.dataset.theme); u.searchParams.set('pal',r.dataset.pal); u.searchParams.set('pos',r.dataset.tpos);
-    ['pill','map','dot'].forEach(function(k){ u.searchParams.set(k,r.dataset[k]); });
+    document.getElementById('pv-sys').textContent = '這台裝置現在是'+(mq&&mq.matches?'深色':'淺色')+'　·　目前顯示'+(dark?'夜間':'白天')+(r.dataset.thsrc==='auto'?'（跟著系統）':'（手動選的）');
+    var u=new URL(location.href); u.searchParams.set('th',r.dataset.thsrc); u.searchParams.delete('pos');
+    ['pal','pill','map','dot'].forEach(function(k){ u.searchParams.delete(k); });
     history.replaceState(null,'',u); panel();
   }
   function pillHtml(k){
@@ -318,9 +322,8 @@ const BAR = `
     var sw=function(c){return '<span class="pv-sw" style="background:'+c+'"></span> '+c;};
     var rows=Object.keys(n.spec).map(function(s){var v=n.spec[s];return '<tr><td>'+SN[s]+'</td><td>'+sw(v[0])+'</td><td>字對卡 '+v[1]+'</td><td>填色白字 '+v[2]+'</td></tr>';}).join('');
     var over=document.documentElement.scrollWidth>innerWidth+1;
-    var head='';
-    if(r.dataset.tpos==='head'){var bt=document.querySelector('.brand-text').getBoundingClientRect(),nv=document.querySelector('.site-nav').getBoundingClientRect(),gp=nv.left-bt.right;
-      head='<br>頁首（這個寬度 '+innerWidth+'px）：品牌到選單還剩 '+gp.toFixed(1)+'px　'+(gp<8?'<b style="color:#f88">⚠ 放不下，診所名和選單疊在一起</b>':'✓ 放得下');}
+    var hh=document.querySelector('#topics .sec-head h2').getBoundingClientRect(), tb=document.querySelector('.pv-th').getBoundingClientRect();
+    var head='<br>開關（這個寬度 '+innerWidth+'px）：標題右緣到開關還剩 '+(tb.left-hh.right).toFixed(1)+'px、開關 '+tb.width.toFixed(1)+'×'+tb.height.toFixed(1)+'　'+(Math.abs(tb.top-hh.top)>20?'<b style="color:#f88">⚠ 被擠到下一行</b>':'✓ 和標題同一行');
     document.getElementById('pv-panel').innerHTML =
       'Ⓐ／Ⓑ 目前看的是 <b>'+(k==='a'?'Ⓐ 暗夜':'Ⓑ 窄帶藍灰')+'</b>：底 '+sw(p.paper)+'　卡 '+sw(p.card)+'（亮 '+n.lift.toFixed(1)+' L*）　線 '+sw(p.rule)+
       '<br>主文字 '+sw(p.ink)+' 對底 '+n.ink[0]+'／對卡 '+n.ink[1]+'　次要 '+sw(p.soft)+' 對底 '+n.soft[0]+'／對卡 '+n.soft[1]+
@@ -330,10 +333,9 @@ const BAR = `
   }
   document.querySelectorAll('.pv-bar [data-k]').forEach(function(b){ b.addEventListener('click',function(){
     var k=b.dataset.k, v=b.dataset.v;
-    if(k==='mode'){ if(v==='light') r.dataset.theme='light'; else { r.dataset.theme='dark'; r.dataset.pal=v; } }
-    else { r.dataset[k]=v; if(r.dataset.theme==='light') r.dataset.theme='dark'; }
+    if(k==='mode') setSrc(v); else r.dataset[k]=v;
     sync(); }); });
-  document.querySelectorAll('.pv-th').forEach(function(b){ b.addEventListener('click',function(){ r.dataset.theme = r.dataset.theme==='dark'?'light':'dark'; sync(); }); });
+  document.querySelectorAll('.pv-th').forEach(function(b){ b.addEventListener('click',function(){ setSrc(r.dataset.theme==='dark'?'light':'dark'); sync(); }); });
   document.getElementById('pv-more').onclick=function(){ var q=document.getElementById('pv-panel'); q.hidden=!q.hidden; };
   document.getElementById('pv-hide').onclick=function(){ document.getElementById('pv-bar').hidden=true; document.getElementById('pv-mini').hidden=false; };
   document.getElementById('pv-mini').onclick=function(){ document.getElementById('pv-bar').hidden=false; this.hidden=true; };
