@@ -6,7 +6,8 @@ try{s=localStorage.getItem('fangren:theme')}catch(e){}
 if(s!=='light'&&s!=='dark')s='auto';
 var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
 r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;
-var w=null;try{w=localStorage.getItem('fangren-pv:wm')}catch(e){}if(!/^(s1|s2|w1|w3)$/.test(w||''))w='s1';r.dataset.wm=w;})();</script>
+var w=null;try{w=localStorage.getItem('fangren-pv:wm')}catch(e){}if(!/^(s1|w3)$/.test(w||''))w='s1';r.dataset.wm=w;
+var o=null;try{o=localStorage.getItem('fangren-pv:wmop')}catch(e){}if(!/^o(165|12|09|06)$/.test(o||''))o='o165';r.dataset.wmop=o;})();</script>
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -108,27 +109,31 @@ html[data-theme="dark"] body:not([data-post])[data-spec="endo"] { --accent-deep:
 html[data-theme="dark"] body:not([data-post])[data-spec="surg"] { --accent-deep: #af81bb; --pill-ink: #c092cc; --sk-ink: #b98bc5; }
 html[data-theme="dark"] body:not([data-post])[data-spec="kids"] { --accent-deep: #c5842b; --pill-ink: #de9a42; --sk-ink: #d39038; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="general"] .tp-intro::before { filter: brightness(1.4); }
-html[data-theme="dark"][data-wm="s1"] [data-topic="general"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/general-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s1"] [data-topic="general"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/general-s1.png"); opacity: var(--wm-op, 0.165); }
 html[data-theme="dark"][data-wm="s2"] [data-topic="general"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/general-s2.png"); opacity: 0.33; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="perio"] .tp-intro::before { filter: brightness(1.15); }
-html[data-theme="dark"][data-wm="s1"] [data-topic="perio"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/perio-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s1"] [data-topic="perio"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/perio-s1.png"); opacity: var(--wm-op, 0.165); }
 html[data-theme="dark"][data-wm="s2"] [data-topic="perio"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/perio-s2.png"); opacity: 0.33; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="endo"] .tp-intro::before { filter: brightness(1.2); }
-html[data-theme="dark"][data-wm="s1"] [data-topic="endo"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/endo-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s1"] [data-topic="endo"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/endo-s1.png"); opacity: var(--wm-op, 0.165); }
 html[data-theme="dark"][data-wm="s2"] [data-topic="endo"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/endo-s2.png"); opacity: 0.34; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="kids"] .tp-intro::before { filter: brightness(1); }
-html[data-theme="dark"][data-wm="s1"] [data-topic="kids"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/kids-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s1"] [data-topic="kids"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/kids-s1.png"); opacity: var(--wm-op, 0.165); }
 html[data-theme="dark"][data-wm="s2"] [data-topic="kids"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/kids-s2.png"); opacity: 0.295; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="ortho"] .tp-intro::before { filter: brightness(1.1); }
-html[data-theme="dark"][data-wm="s1"] [data-topic="ortho"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/ortho-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s1"] [data-topic="ortho"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/ortho-s1.png"); opacity: var(--wm-op, 0.165); }
 html[data-theme="dark"][data-wm="s2"] [data-topic="ortho"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/ortho-s2.png"); opacity: 0.33; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="prosth"] .tp-intro::before { filter: brightness(1.45); }
-html[data-theme="dark"][data-wm="s1"] [data-topic="prosth"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/prosth-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s1"] [data-topic="prosth"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/prosth-s1.png"); opacity: var(--wm-op, 0.165); }
 html[data-theme="dark"][data-wm="s2"] [data-topic="prosth"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/prosth-s2.png"); opacity: 0.33; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="surg"] .tp-intro::before { filter: brightness(1.15); }
-html[data-theme="dark"][data-wm="s1"] [data-topic="surg"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/surg-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s1"] [data-topic="surg"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/surg-s1.png"); opacity: var(--wm-op, 0.165); }
 html[data-theme="dark"][data-wm="s2"] [data-topic="surg"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/surg-s2.png"); opacity: 0.32; }
 html[data-theme="dark"][data-wm="w3"] [data-topic] .tp-intro::before { display: none; }
+html[data-wmop="o165"] { --wm-op: 0.165; }
+html[data-wmop="o12"] { --wm-op: 0.12; }
+html[data-wmop="o09"] { --wm-op: 0.09; }
+html[data-wmop="o06"] { --wm-op: 0.06; }
 html[data-theme="dark"] body[data-post] [data-spec="all"] { --accent-deep: #94918f; --pill-ink: #9f9c9b; --sk-ink: #9b9796; }
 html[data-theme="dark"] body[data-post] [data-spec="general"] { --accent-deep: #729b7d; --pill-ink: #7ea788; --sk-ink: #79a284; }
 html[data-theme="dark"] body[data-post] [data-spec="prosth"] { --accent-deep: #7b91c8; --pill-ink: #859bd3; --sk-ink: #8196ce; }
@@ -506,7 +511,7 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
     <button data-mode="auto">跟著系統</button><button data-mode="light">白天</button><button data-mode="dark">夜間</button>
     <button class="pv-x" id="pv-more">數字</button><button id="pv-hide">收起</button></div>
   <div class="pv-r" id="pv-wmrow" hidden><span class="pv-l">浮水印</span>
-    <button data-wm="s1">Ⓢ1 實心・月光白</button><button data-wm="s2">Ⓢ2 實心・套色</button><button data-wm="w1">Ⓦ1 線條（上一版）</button><button data-wm="w3">不放</button></div>
+    <button data-wmop="o165">.165（上一版）</button><button data-wmop="o12">.12</button><button data-wmop="o09">.09</button><button data-wmop="o06">.06</button><button data-wm="w3">不放</button></div>
   <div class="pv-r"><span class="pv-l">狀態</span><span style="color:#aaa" id="pv-sys"></span></div>
   <div class="pv-panel" id="pv-panel" hidden></div>
 </div>
@@ -525,7 +530,7 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
     var v=WM[topic], w=r.dataset.wm, pe=getComputedStyle(document.querySelector('.tp-intro'),'::before'), op=parseFloat(pe.opacity)||0;
     if(w==='w3') return '<br>浮水印：夜間不放。';
     var solid=w==='s1'||w==='s2', line=solid?v[w].fill:v.c1, a=op, bg=mixh(line,NUM.pal.paper,a);
-    return '<br>浮水印 '+(w==='s1'?'Ⓢ1 實心・月光白':w==='s2'?'Ⓢ2 實心・套色':'Ⓦ1 線條提亮（亮度 ×'+v.k1+'）')+'：'+(solid?'填色 '+line+'（佔圖 '+v.area+'%）　濃度 '+op+'（＝次要文字剛好 4.5 的上限，所有寬度同一個值）':'線色 '+line+'　這個寬度的濃度 '+op)+
+    return '<br>浮水印 '+(w==='s1'?'Ⓢ1 實心・月光白':w==='s2'?'Ⓢ2 實心・套色':'Ⓦ1 線條提亮（亮度 ×'+v.k1+'）')+'：'+(solid?'填色 '+line+'（佔圖 '+v.area+'%）　濃度 '+op+'（次要文字剛好 4.5 的上限是 '+v[w].cap+'，所有寬度同一個值）':'線色 '+line+'　這個寬度的濃度 '+op)+
       '<br>　字壓在線上最壞：主文字 '+crr(NUM.pal.ink,bg).toFixed(2)+'　次要文字 '+crr(NUM.pal.soft,bg).toFixed(2)+'　科別字階 '+crr((NUM.spec.filter(function(x){return x[0]===topic;})[0]||[])[1]||NUM.pal.ink,bg).toFixed(2);
   }
   var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
@@ -537,6 +542,7 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
     document.querySelectorAll('.pv-th').forEach(function(b){ b.setAttribute('aria-checked', dark); });
     document.querySelectorAll('.pv-bar [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.mode===r.dataset.thsrc); });
     document.querySelectorAll('.pv-bar [data-wm]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.wm===r.dataset.wm); });
+    document.querySelectorAll('.pv-bar [data-wmop]').forEach(function(b){ b.setAttribute('aria-pressed', r.dataset.wm==='s1'&&b.dataset.wmop===r.dataset.wmop); });
     var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){ saved='（這個瀏覽器不讓網站記東西）'; }
     document.getElementById('pv-sys').textContent='這台裝置是'+(sysDark()?'深色':'淺色')+'　·　記住的選擇：'+(saved==='dark'?'夜間':saved==='light'?'白天':saved?saved:'沒有（跟著系統）');
     var m=document.querySelector('meta[name="theme-color"]'); if(m){ if(!m.dataset.day) m.dataset.day=m.content; m.content = dark ? NUM.pal.paper : m.dataset.day; }
@@ -564,6 +570,10 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
     setSrc(b.dataset.mode); store(b.dataset.mode); sync(); }); });
   document.querySelectorAll('.pv-bar [data-wm]').forEach(function(b){ b.addEventListener('click',function(){
     r.dataset.wm=b.dataset.wm; try{localStorage.setItem('fangren-pv:wm',b.dataset.wm);}catch(e){}
+    if(r.dataset.theme!=='dark'){ setSrc('dark'); store('dark'); } sync(); }); });
+  document.querySelectorAll('.pv-bar [data-wmop]').forEach(function(b){ b.addEventListener('click',function(){
+    r.dataset.wm='s1'; r.dataset.wmop=b.dataset.wmop;
+    try{localStorage.setItem('fangren-pv:wm','s1');localStorage.setItem('fangren-pv:wmop',b.dataset.wmop);}catch(e){}
     if(r.dataset.theme!=='dark'){ setSrc('dark'); store('dark'); } sync(); }); });
   if(mq&&mq.addEventListener) mq.addEventListener('change',function(){ if(r.dataset.thsrc==='auto'){ setSrc('auto'); sync(); } });
   /* 另一個分頁改了，這一頁跟著變 */

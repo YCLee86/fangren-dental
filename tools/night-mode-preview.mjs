@@ -120,6 +120,7 @@ for (const s of ["general", "perio", "endo", "kids", "ortho", "prosth", "surg"])
    → 把線圍起來的區域填滿、線本身挖空，夜間變成「亮的臉、暗的線」＝ 白天那張圖的明暗關係。
    ・Ⓢ1 實心・月光白（填夜間主文字 #e2e5e6）／Ⓢ2 實心・套色（填 Ⓦ1 那一階提亮過的套色）
    ・濃度：夜間一律用「次要文字壓在實心上仍有 4.5」算出來的上限（實心的面積比線大很多，白天那一格的濃度不能沿用）。 */
+const WMOP = { o165: 0.165, o12: 0.12, o09: 0.09, o06: 0.06 };
 const S_FILL = { s1: () => P.ink, s2: (s) => WM[s].c1 };
 for (const s of Object.keys(WM)) {
   for (const k of ["s1", "s2"]) {
@@ -130,9 +131,12 @@ for (const s of Object.keys(WM)) {
 }
 const WM_CSS = Object.entries(WM).map(([s, v]) =>
   `html[data-theme="dark"][data-wm="w1"] [data-topic="${s}"] .tp-intro::before { filter: brightness(${v.k1}); }
-html[data-theme="dark"][data-wm="s1"] [data-topic="${s}"] .tp-intro::before { background-image: url("${BASE}lineart/${s}-s1.png"); opacity: ${v.s1.cap}; }
+html[data-theme="dark"][data-wm="s1"] [data-topic="${s}"] .tp-intro::before { background-image: url("${BASE}lineart/${s}-s1.png"); opacity: var(--wm-op, ${v.s1.cap}); }
 html[data-theme="dark"][data-wm="s2"] [data-topic="${s}"] .tp-intro::before { background-image: url("${BASE}lineart/${s}-s2.png"); opacity: ${v.s2.cap}; }`).join("\n") +
-  `\nhtml[data-theme="dark"][data-wm="w3"] [data-topic] .tp-intro::before { display: none; }`;
+  `\nhtml[data-theme="dark"][data-wm="w3"] [data-topic] .tp-intro::before { display: none; }` +
+  /* 2026-09-15 第十一輪：使用者選 Ⓢ1 月光白，「好像可以再深一點，讓這個底圖再不明顯一點，做幾版讓我挑」
+     → 濃度一條尺（.165 是上一版的上限，往下三格）。 */
+  Object.entries(WMOP).map(([k, v]) => `\nhtml[data-wmop="${k}"] { --wm-op: ${v}; }`).join("");
 
 /* ---- PNG 讀寫（零依賴：zlib 解 IDAT、逐列反濾波；寫出時每列 filter 0） ---- */
 import zlib from "node:zlib";
@@ -299,7 +303,8 @@ try{s=localStorage.getItem('${KEY}')}catch(e){}
 if(s!=='light'&&s!=='dark')s='auto';
 var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
 r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;
-var w=null;try{w=localStorage.getItem('fangren-pv:wm')}catch(e){}if(!/^(s1|s2|w1|w3)$/.test(w||''))w='s1';r.dataset.wm=w;})();</script>`;
+var w=null;try{w=localStorage.getItem('fangren-pv:wm')}catch(e){}if(!/^(s1|w3)$/.test(w||''))w='s1';r.dataset.wm=w;
+var o=null;try{o=localStorage.getItem('fangren-pv:wmop')}catch(e){}if(!/^o(165|12|09|06)$/.test(o||''))o='o165';r.dataset.wmop=o;})();</script>`;
 
 /* 圖示：Lucide "moon"／"sun"，ISC 授權，https://lucide.dev */
 const ICON = `<svg class="pv-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="pv-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
@@ -334,7 +339,7 @@ const BAR = `
     <button data-mode="auto">跟著系統</button><button data-mode="light">白天</button><button data-mode="dark">夜間</button>
     <button class="pv-x" id="pv-more">數字</button><button id="pv-hide">收起</button></div>
   <div class="pv-r" id="pv-wmrow" hidden><span class="pv-l">浮水印</span>
-    <button data-wm="s1">Ⓢ1 實心・月光白</button><button data-wm="s2">Ⓢ2 實心・套色</button><button data-wm="w1">Ⓦ1 線條（上一版）</button><button data-wm="w3">不放</button></div>
+    <button data-wmop="o165">.165（上一版）</button><button data-wmop="o12">.12</button><button data-wmop="o09">.09</button><button data-wmop="o06">.06</button><button data-wm="w3">不放</button></div>
   <div class="pv-r"><span class="pv-l">狀態</span><span style="color:#aaa" id="pv-sys"></span></div>
   <div class="pv-panel" id="pv-panel" hidden></div>
 </div>
@@ -353,7 +358,7 @@ const BAR = `
     var v=WM[topic], w=r.dataset.wm, pe=getComputedStyle(document.querySelector('.tp-intro'),'::before'), op=parseFloat(pe.opacity)||0;
     if(w==='w3') return '<br>浮水印：夜間不放。';
     var solid=w==='s1'||w==='s2', line=solid?v[w].fill:v.c1, a=op, bg=mixh(line,NUM.pal.paper,a);
-    return '<br>浮水印 '+(w==='s1'?'Ⓢ1 實心・月光白':w==='s2'?'Ⓢ2 實心・套色':'Ⓦ1 線條提亮（亮度 ×'+v.k1+'）')+'：'+(solid?'填色 '+line+'（佔圖 '+v.area+'%）　濃度 '+op+'（＝次要文字剛好 4.5 的上限，所有寬度同一個值）':'線色 '+line+'　這個寬度的濃度 '+op)+
+    return '<br>浮水印 '+(w==='s1'?'Ⓢ1 實心・月光白':w==='s2'?'Ⓢ2 實心・套色':'Ⓦ1 線條提亮（亮度 ×'+v.k1+'）')+'：'+(solid?'填色 '+line+'（佔圖 '+v.area+'%）　濃度 '+op+'（次要文字剛好 4.5 的上限是 '+v[w].cap+'，所有寬度同一個值）':'線色 '+line+'　這個寬度的濃度 '+op)+
       '<br>　字壓在線上最壞：主文字 '+crr(NUM.pal.ink,bg).toFixed(2)+'　次要文字 '+crr(NUM.pal.soft,bg).toFixed(2)+'　科別字階 '+crr((NUM.spec.filter(function(x){return x[0]===topic;})[0]||[])[1]||NUM.pal.ink,bg).toFixed(2);
   }
   var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
@@ -365,6 +370,7 @@ const BAR = `
     document.querySelectorAll('.pv-th').forEach(function(b){ b.setAttribute('aria-checked', dark); });
     document.querySelectorAll('.pv-bar [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.mode===r.dataset.thsrc); });
     document.querySelectorAll('.pv-bar [data-wm]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.wm===r.dataset.wm); });
+    document.querySelectorAll('.pv-bar [data-wmop]').forEach(function(b){ b.setAttribute('aria-pressed', r.dataset.wm==='s1'&&b.dataset.wmop===r.dataset.wmop); });
     var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){ saved='（這個瀏覽器不讓網站記東西）'; }
     document.getElementById('pv-sys').textContent='這台裝置是'+(sysDark()?'深色':'淺色')+'　·　記住的選擇：'+(saved==='dark'?'夜間':saved==='light'?'白天':saved?saved:'沒有（跟著系統）');
     var m=document.querySelector('meta[name="theme-color"]'); if(m){ if(!m.dataset.day) m.dataset.day=m.content; m.content = dark ? NUM.pal.paper : m.dataset.day; }
@@ -392,6 +398,10 @@ const BAR = `
     setSrc(b.dataset.mode); store(b.dataset.mode); sync(); }); });
   document.querySelectorAll('.pv-bar [data-wm]').forEach(function(b){ b.addEventListener('click',function(){
     r.dataset.wm=b.dataset.wm; try{localStorage.setItem('fangren-pv:wm',b.dataset.wm);}catch(e){}
+    if(r.dataset.theme!=='dark'){ setSrc('dark'); store('dark'); } sync(); }); });
+  document.querySelectorAll('.pv-bar [data-wmop]').forEach(function(b){ b.addEventListener('click',function(){
+    r.dataset.wm='s1'; r.dataset.wmop=b.dataset.wmop;
+    try{localStorage.setItem('fangren-pv:wm','s1');localStorage.setItem('fangren-pv:wmop',b.dataset.wmop);}catch(e){}
     if(r.dataset.theme!=='dark'){ setSrc('dark'); store('dark'); } sync(); }); });
   if(mq&&mq.addEventListener) mq.addEventListener('change',function(){ if(r.dataset.thsrc==='auto'){ setSrc('auto'); sync(); } });
   /* 另一個分頁改了，這一頁跟著變 */
