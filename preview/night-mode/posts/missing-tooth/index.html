@@ -6,7 +6,7 @@ try{s=localStorage.getItem('fangren:theme')}catch(e){}
 if(s!=='light'&&s!=='dark')s='auto';
 var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
 r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;
-var w=null;try{w=localStorage.getItem('fangren-pv:wm')}catch(e){}if(!/^w[123]$/.test(w||''))w='w1';r.dataset.wm=w;})();</script>
+var w=null;try{w=localStorage.getItem('fangren-pv:wm')}catch(e){}if(!/^(s1|s2|w1|w3)$/.test(w||''))w='s1';r.dataset.wm=w;})();</script>
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -108,19 +108,26 @@ html[data-theme="dark"] body:not([data-post])[data-spec="endo"] { --accent-deep:
 html[data-theme="dark"] body:not([data-post])[data-spec="surg"] { --accent-deep: #af81bb; --pill-ink: #c092cc; --sk-ink: #b98bc5; }
 html[data-theme="dark"] body:not([data-post])[data-spec="kids"] { --accent-deep: #c5842b; --pill-ink: #de9a42; --sk-ink: #d39038; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="general"] .tp-intro::before { filter: brightness(1.4); }
-html[data-theme="dark"][data-wm="w2"] [data-topic="general"] .tp-intro::before { filter: grayscale(1) brightness(1.81) opacity(.6); }
+html[data-theme="dark"][data-wm="s1"] [data-topic="general"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/general-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s2"] [data-topic="general"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/general-s2.png"); opacity: 0.33; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="perio"] .tp-intro::before { filter: brightness(1.15); }
-html[data-theme="dark"][data-wm="w2"] [data-topic="perio"] .tp-intro::before { filter: grayscale(1) brightness(1.52) opacity(.6); }
+html[data-theme="dark"][data-wm="s1"] [data-topic="perio"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/perio-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s2"] [data-topic="perio"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/perio-s2.png"); opacity: 0.33; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="endo"] .tp-intro::before { filter: brightness(1.2); }
-html[data-theme="dark"][data-wm="w2"] [data-topic="endo"] .tp-intro::before { filter: grayscale(1) brightness(1.67) opacity(.6); }
+html[data-theme="dark"][data-wm="s1"] [data-topic="endo"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/endo-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s2"] [data-topic="endo"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/endo-s2.png"); opacity: 0.34; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="kids"] .tp-intro::before { filter: brightness(1); }
-html[data-theme="dark"][data-wm="w2"] [data-topic="kids"] .tp-intro::before { filter: grayscale(1) brightness(1.2) opacity(.6); }
+html[data-theme="dark"][data-wm="s1"] [data-topic="kids"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/kids-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s2"] [data-topic="kids"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/kids-s2.png"); opacity: 0.295; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="ortho"] .tp-intro::before { filter: brightness(1.1); }
-html[data-theme="dark"][data-wm="w2"] [data-topic="ortho"] .tp-intro::before { filter: grayscale(1) brightness(1.46) opacity(.6); }
+html[data-theme="dark"][data-wm="s1"] [data-topic="ortho"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/ortho-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s2"] [data-topic="ortho"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/ortho-s2.png"); opacity: 0.33; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="prosth"] .tp-intro::before { filter: brightness(1.45); }
-html[data-theme="dark"][data-wm="w2"] [data-topic="prosth"] .tp-intro::before { filter: grayscale(1) brightness(1.89) opacity(.6); }
+html[data-theme="dark"][data-wm="s1"] [data-topic="prosth"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/prosth-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s2"] [data-topic="prosth"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/prosth-s2.png"); opacity: 0.33; }
 html[data-theme="dark"][data-wm="w1"] [data-topic="surg"] .tp-intro::before { filter: brightness(1.15); }
-html[data-theme="dark"][data-wm="w2"] [data-topic="surg"] .tp-intro::before { filter: grayscale(1) brightness(1.48) opacity(.6); }
+html[data-theme="dark"][data-wm="s1"] [data-topic="surg"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/surg-s1.png"); opacity: 0.165; }
+html[data-theme="dark"][data-wm="s2"] [data-topic="surg"] .tp-intro::before { background-image: url("/preview/night-mode/lineart/surg-s2.png"); opacity: 0.32; }
 html[data-theme="dark"][data-wm="w3"] [data-topic] .tp-intro::before { display: none; }
 html[data-theme="dark"] body[data-post] [data-spec="all"] { --accent-deep: #94918f; --pill-ink: #9f9c9b; --sk-ink: #9b9796; }
 html[data-theme="dark"] body[data-post] [data-spec="general"] { --accent-deep: #729b7d; --pill-ink: #7ea788; --sk-ink: #79a284; }
@@ -499,14 +506,14 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
     <button data-mode="auto">跟著系統</button><button data-mode="light">白天</button><button data-mode="dark">夜間</button>
     <button class="pv-x" id="pv-more">數字</button><button id="pv-hide">收起</button></div>
   <div class="pv-r" id="pv-wmrow" hidden><span class="pv-l">浮水印</span>
-    <button data-wm="w1">Ⓦ1 線條提亮</button><button data-wm="w2">Ⓦ2 月光灰</button><button data-wm="w3">Ⓦ3 夜間不放</button></div>
+    <button data-wm="s1">Ⓢ1 實心・月光白</button><button data-wm="s2">Ⓢ2 實心・套色</button><button data-wm="w1">Ⓦ1 線條（上一版）</button><button data-wm="w3">不放</button></div>
   <div class="pv-r"><span class="pv-l">狀態</span><span style="color:#aaa" id="pv-sys"></span></div>
   <div class="pv-panel" id="pv-panel" hidden></div>
 </div>
 <button class="pv-mini" id="pv-mini" hidden>切換條</button>
 <script>
 (function(){
-  var r=document.documentElement, KEY='fangren:theme', NUM={"pal":{"paper":"#17191d","card":"#282b31","ink":"#e2e5e6","rule":"#3f4248","soft":"#a3a5a6"},"ink":["13.90","11.20"],"soft":["7.12","5.74"],"spec":[["all","#94918f","4.53","#9f9c9b","4.50"],["general","#729b7d","4.53","#7ea788","4.54"],["prosth","#7b91c8","4.54","#859bd3","4.52"],["perio","#5c9d98","4.55","#6baca7","4.50"],["ortho","#6897b5","4.51","#79a8c6","4.51"],["endo","#e06f72","4.52","#f07d7f","4.54"],["surg","#af81bb","4.51","#c092cc","4.55"],["kids","#c5842b","4.53","#de9a42","4.50"]],"map":{"roadBg":"1.73","inkRoad":"6.49"},"dot":{"soft":"5.74","faint":"1.92"},"sw":{"d":"3.22","n":"7.43","dPage":"2.54","nPage":"2.37"}}, SN={"all":"全部","general":"一般","prosth":"植牙","perio":"牙周","ortho":"矯正","endo":"根管","surg":"口外","kids":"兒牙"}, WM={"general":{"k1":1.4,"c1":"#588d68","k2":1.81,"c2":"#a5a5a5"},"perio":{"k1":1.15,"c1":"#38908a","k2":1.52,"c2":"#a5a5a5"},"endo":{"k1":1.2,"c1":"#d15f5c","k2":1.67,"c2":"#a5a5a5"},"kids":{"k1":1,"c1":"#c28229","k2":1.2,"c2":"#a5a5a5"},"ortho":{"k1":1.1,"c1":"#4b84c7","k2":1.46,"c2":"#a5a5a5"},"prosth":{"k1":1.45,"c1":"#6680c1","k2":1.89,"c2":"#a5a5a5"},"surg":{"k1":1.15,"c1":"#a371b0","k2":1.48,"c2":"#a5a5a5"}};
+  var r=document.documentElement, KEY='fangren:theme', NUM={"pal":{"paper":"#17191d","card":"#282b31","ink":"#e2e5e6","rule":"#3f4248","soft":"#a3a5a6"},"ink":["13.90","11.20"],"soft":["7.12","5.74"],"spec":[["all","#94918f","4.53","#9f9c9b","4.50"],["general","#729b7d","4.53","#7ea788","4.54"],["prosth","#7b91c8","4.54","#859bd3","4.52"],["perio","#5c9d98","4.55","#6baca7","4.50"],["ortho","#6897b5","4.51","#79a8c6","4.51"],["endo","#e06f72","4.52","#f07d7f","4.54"],["surg","#af81bb","4.51","#c092cc","4.55"],["kids","#c5842b","4.53","#de9a42","4.50"]],"map":{"roadBg":"1.73","inkRoad":"6.49"},"dot":{"soft":"5.74","faint":"1.92"},"sw":{"d":"3.22","n":"7.43","dPage":"2.54","nPage":"2.37"}}, SN={"all":"全部","general":"一般","prosth":"植牙","perio":"牙周","ortho":"矯正","endo":"根管","surg":"口外","kids":"兒牙"}, WM={"general":{"k1":1.4,"c1":"#588d68","k2":1.81,"c2":"#a5a5a5","s1":{"fill":"#e2e5e6","cap":0.165},"s2":{"fill":"#588d68","cap":0.33},"area":51.7},"perio":{"k1":1.15,"c1":"#38908a","k2":1.52,"c2":"#a5a5a5","s1":{"fill":"#e2e5e6","cap":0.165},"s2":{"fill":"#38908a","cap":0.33},"area":28.1},"endo":{"k1":1.2,"c1":"#d15f5c","k2":1.67,"c2":"#a5a5a5","s1":{"fill":"#e2e5e6","cap":0.165},"s2":{"fill":"#d15f5c","cap":0.34},"area":37.9},"kids":{"k1":1,"c1":"#c28229","k2":1.2,"c2":"#a5a5a5","s1":{"fill":"#e2e5e6","cap":0.165},"s2":{"fill":"#c28229","cap":0.295},"area":45.4},"ortho":{"k1":1.1,"c1":"#4b84c7","k2":1.46,"c2":"#a5a5a5","s1":{"fill":"#e2e5e6","cap":0.165},"s2":{"fill":"#4b84c7","cap":0.33},"area":53.7},"prosth":{"k1":1.45,"c1":"#6680c1","k2":1.89,"c2":"#a5a5a5","s1":{"fill":"#e2e5e6","cap":0.165},"s2":{"fill":"#6680c1","cap":0.33},"area":38.8},"surg":{"k1":1.15,"c1":"#a371b0","k2":1.48,"c2":"#a5a5a5","s1":{"fill":"#e2e5e6","cap":0.165},"s2":{"fill":"#a371b0","cap":0.32},"area":50.3}};
   var topic=document.body.dataset.topic, wmrow=document.getElementById('pv-wmrow');
   if(topic&&WM[topic]) wmrow.hidden=false;
   function h2r(x){return [1,3,5].map(function(i){return parseInt(x.slice(i,i+2),16)/255;});}
@@ -517,8 +524,8 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
     if(!topic||!WM[topic]||r.dataset.theme!=='dark') return '';
     var v=WM[topic], w=r.dataset.wm, pe=getComputedStyle(document.querySelector('.tp-intro'),'::before'), op=parseFloat(pe.opacity)||0;
     if(w==='w3') return '<br>浮水印：夜間不放。';
-    var line=w==='w1'?v.c1:v.c2, a=w==='w1'?op:op*.6, bg=mixh(line,NUM.pal.paper,a);
-    return '<br>浮水印 '+(w==='w1'?'Ⓦ1 線條提亮（亮度 ×'+v.k1+'）':'Ⓦ2 月光灰（×'+v.k2+'，濃度再乘 .6）')+'：線色 '+line+'　這個寬度的濃度 '+op+(w==='w2'?' × .6 = '+a.toFixed(3):'')+
+    var solid=w==='s1'||w==='s2', line=solid?v[w].fill:v.c1, a=op, bg=mixh(line,NUM.pal.paper,a);
+    return '<br>浮水印 '+(w==='s1'?'Ⓢ1 實心・月光白':w==='s2'?'Ⓢ2 實心・套色':'Ⓦ1 線條提亮（亮度 ×'+v.k1+'）')+'：'+(solid?'填色 '+line+'（佔圖 '+v.area+'%）　濃度 '+op+'（＝次要文字剛好 4.5 的上限，所有寬度同一個值）':'線色 '+line+'　這個寬度的濃度 '+op)+
       '<br>　字壓在線上最壞：主文字 '+crr(NUM.pal.ink,bg).toFixed(2)+'　次要文字 '+crr(NUM.pal.soft,bg).toFixed(2)+'　科別字階 '+crr((NUM.spec.filter(function(x){return x[0]===topic;})[0]||[])[1]||NUM.pal.ink,bg).toFixed(2);
   }
   var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');

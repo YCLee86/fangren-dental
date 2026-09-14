@@ -113,10 +113,99 @@ for (const s of ["general", "perio", "endo", "kids", "ortho", "prosth", "surg"])
   const g2 = Math.round(Math.min(1, grey * k2) * 255).toString(16).padStart(2, "0");
   WM[s] = { k1: +k1.toFixed(2), c1: scaleHex(FILL[s], k1), k2: +k2.toFixed(2), c2: "#" + g2 + g2 + g2 };
 }
+/* ---------- 2026-09-15 第十輪：實心的浮水印 ----------
+   使用者：「浮水印的問題不只是線條顏色不夠亮，而是人臉變黑色的 —— 這跟大家的辨認習慣很不一樣，
+   感覺要換成實心的圖而不是線圖」。他是對的：線稿只有線，臉的內部是透明的，
+   白天透出來的是紙色（亮），夜間透出來的是深底 ＝ 一張「負片」。提亮線條治不到這件事。
+   → 把線圍起來的區域填滿、線本身挖空，夜間變成「亮的臉、暗的線」＝ 白天那張圖的明暗關係。
+   ・Ⓢ1 實心・月光白（填夜間主文字 #e2e5e6）／Ⓢ2 實心・套色（填 Ⓦ1 那一階提亮過的套色）
+   ・濃度：夜間一律用「次要文字壓在實心上仍有 4.5」算出來的上限（實心的面積比線大很多，白天那一格的濃度不能沿用）。 */
+const S_FILL = { s1: () => P.ink, s2: (s) => WM[s].c1 };
+for (const s of Object.keys(WM)) {
+  for (const k of ["s1", "s2"]) {
+    const fillC = S_FILL[k](s);
+    let a = 0; while (a < 0.6 && cr(P.soft, mix(fillC, P.paper, a + 0.005)) >= 4.5) a += 0.005;
+    WM[s][k] = { fill: fillC, cap: +a.toFixed(3) };
+  }
+}
 const WM_CSS = Object.entries(WM).map(([s, v]) =>
   `html[data-theme="dark"][data-wm="w1"] [data-topic="${s}"] .tp-intro::before { filter: brightness(${v.k1}); }
-html[data-theme="dark"][data-wm="w2"] [data-topic="${s}"] .tp-intro::before { filter: grayscale(1) brightness(${v.k2}) opacity(.6); }`).join("\n") +
+html[data-theme="dark"][data-wm="s1"] [data-topic="${s}"] .tp-intro::before { background-image: url("${BASE}lineart/${s}-s1.png"); opacity: ${v.s1.cap}; }
+html[data-theme="dark"][data-wm="s2"] [data-topic="${s}"] .tp-intro::before { background-image: url("${BASE}lineart/${s}-s2.png"); opacity: ${v.s2.cap}; }`).join("\n") +
   `\nhtml[data-theme="dark"][data-wm="w3"] [data-topic] .tp-intro::before { display: none; }`;
+
+/* ---- PNG 讀寫（零依賴：zlib 解 IDAT、逐列反濾波；寫出時每列 filter 0） ---- */
+import zlib from "node:zlib";
+function readPng(file) {
+  const b = fs.readFileSync(file);
+  const w = b.readUInt32BE(16), hgt = b.readUInt32BE(20);
+  if (b[24] !== 8 || b[25] !== 6 || b[28] !== 0) throw new Error("× 只吃 8-bit RGBA 非交錯：" + file);
+  const idat = []; for (let o = 8; o < b.length;) { const len = b.readUInt32BE(o), t = b.toString("ascii", o + 4, o + 8); if (t === "IDAT") idat.push(b.subarray(o + 8, o + 8 + len)); o += 12 + len; }
+  const raw = zlib.inflateSync(Buffer.concat(idat)), bpp = 4, stride = w * bpp, px = Buffer.alloc(hgt * stride);
+  for (let y = 0; y < hgt; y++) {
+    const ft = raw[y * (stride + 1)], src = y * (stride + 1) + 1, dst = y * stride;
+    for (let x = 0; x < stride; x++) {
+      const a = x >= bpp ? px[dst + x - bpp] : 0, up = y ? px[dst - stride + x] : 0, c = x >= bpp && y ? px[dst - stride + x - bpp] : 0;
+      let v = raw[src + x];
+      if (ft === 1) v += a; else if (ft === 2) v += up; else if (ft === 3) v += (a + up) >> 1;
+      else if (ft === 4) { const p = a + up - c, pa = Math.abs(p - a), pb = Math.abs(p - up), pc = Math.abs(p - c); v += pa <= pb && pa <= pc ? a : pb <= pc ? up : c; }
+      px[dst + x] = v & 255;
+    }
+  }
+  return { w, h: hgt, px };
+}
+function writePng(file, w, hgt, px) {
+  const crc = (buf) => zlib.crc32(buf);
+  const chunk = (t, d) => { const len = Buffer.alloc(4); len.writeUInt32BE(d.length); const td = Buffer.concat([Buffer.from(t, "ascii"), d]); const c = Buffer.alloc(4); c.writeUInt32BE(crc(td) >>> 0); return Buffer.concat([len, td, c]); };
+  const ih = Buffer.alloc(13); ih.writeUInt32BE(w, 0); ih.writeUInt32BE(hgt, 4); ih[8] = 8; ih[9] = 6;
+  const raw = Buffer.alloc(hgt * (w * 4 + 1)); for (let y = 0; y < hgt; y++) px.copy(raw, y * (w * 4 + 1) + 1, y * w * 4, (y + 1) * w * 4);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk("IHDR", ih), chunk("IDAT", zlib.deflateSync(raw, { level: 9 })), chunk("IEND", Buffer.alloc(0))]));
+}
+/* 線圍起來的區域：
+   ⚠ 只從**上緣**往內灌「圖外面」—— 人物在下緣與左右緣是被裁掉的，從那幾邊灌會直接灌進身體裡。
+   ⚠ 線有斷口（生成的線稿幾乎一定有），灌之前先把線加粗 GAP 當牆，灌完再把外面往回長 GAP，
+     不然整個剪影會比輪廓胖一圈。 */
+const GAP = 4;
+const SEED_LEFT = new Set(["endo", "ortho"]);
+function dilate(mask, w, hgt, r) {
+  const tmp = new Uint8Array(mask.length), out = new Uint8Array(mask.length);
+  for (let y = 0; y < hgt; y++) { let run = -1e9; for (let x = 0; x < w; x++) { if (mask[y * w + x]) run = x; if (x - run <= r) tmp[y * w + x] = 1; } run = 1e9; for (let x = w - 1; x >= 0; x--) { if (mask[y * w + x]) run = x; if (run - x <= r) tmp[y * w + x] = 1; } }
+  for (let x = 0; x < w; x++) { let run = -1e9; for (let y = 0; y < hgt; y++) { if (tmp[y * w + x]) run = y; if (y - run <= r) out[y * w + x] = 1; } run = 1e9; for (let y = hgt - 1; y >= 0; y--) { if (tmp[y * w + x]) run = y; if (run - y <= r) out[y * w + x] = 1; } }
+  return out;
+}
+function solidLineart(spec) {
+  const { w, h: hgt, px } = readPng(path.join(ROOT, "assets", `lineart-${spec}.png`));
+  const n = w * hgt, line = new Uint8Array(n);
+  for (let i = 0; i < n; i++) line[i] = px[i * 4 + 3] > 60 ? 1 : 0;
+  const wall = dilate(line, w, hgt, GAP), outside = new Uint8Array(n), q = new Int32Array(n);
+  let qh = 0, qt = 0;
+  for (let x = 0; x < w; x++) if (!wall[x]) { outside[x] = 1; q[qt++] = x; }
+  /* ⚠ 顯微根管的吊臂、矯正的看片螢幕都碰到上緣，把左下那一大片背景和上緣隔開 ——
+     只從上緣灌的話整片背景會被當成「圖裡面」填滿（第一版量到填了 79～81%）。
+     這兩科加灌左緣；其餘五科人物有被左緣裁掉（兒牙的椅子、牙周的細菌），加了反而會挖空。 */
+  if (SEED_LEFT.has(spec)) for (let y = 0; y < hgt; y++) { const i = y * w; if (!wall[i] && !outside[i]) { outside[i] = 1; q[qt++] = i; } }
+  while (qh < qt) { const i = q[qh++], x = i % w, y = (i / w) | 0;
+    for (const j of [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < hgt - 1 ? i + w : -1])
+      if (j >= 0 && !outside[j] && !wall[j]) { outside[j] = 1; q[qt++] = j; } }
+  const grown = dilate(outside, w, hgt, GAP);
+  let filled = 0;
+  for (const k of ["s1", "s2"]) {
+    const [fr, fg, fb] = hex2rgb(WM[spec][k].fill).map((v) => Math.round(v * 255));
+    const o = Buffer.alloc(n * 4); filled = 0;
+    for (let i = 0; i < n; i++) {
+      if (grown[i] && !wall[i] || outside[i]) continue;                /* 圖外面 */
+      const la = px[i * 4 + 3]; if (la > 200) continue;                /* 線本身挖空 */
+      o[i * 4] = fr; o[i * 4 + 1] = fg; o[i * 4 + 2] = fb; o[i * 4 + 3] = 255 - la;   /* 線的半透明邊緣跟著挖一半 */
+      filled++;
+    }
+    writePng(path.join(OUT, "lineart", `${spec}-${k}.png`), w, hgt, o);
+  }
+  return +(filled / n * 100).toFixed(1);
+}
+/* ⚠ 清空提案頁資料夾要在產實心圖之前，而且要在切換條的 JSON 組出來之前算好 area（面板要印） */
+fs.rmSync(OUT, { recursive: true, force: true });
+for (const s of Object.keys(WM)) { WM[s].area = solidLineart(s); console.log(`  實心浮水印 ${s}：填了 ${WM[s].area}% 的像素，濃度上限 Ⓢ1 ${WM[s].s1.cap}／Ⓢ2 ${WM[s].s2.cap}`); }
 
 const NUM = {
   pal: P,
@@ -210,7 +299,7 @@ try{s=localStorage.getItem('${KEY}')}catch(e){}
 if(s!=='light'&&s!=='dark')s='auto';
 var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
 r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;
-var w=null;try{w=localStorage.getItem('fangren-pv:wm')}catch(e){}if(!/^w[123]$/.test(w||''))w='w1';r.dataset.wm=w;})();</script>`;
+var w=null;try{w=localStorage.getItem('fangren-pv:wm')}catch(e){}if(!/^(s1|s2|w1|w3)$/.test(w||''))w='s1';r.dataset.wm=w;})();</script>`;
 
 /* 圖示：Lucide "moon"／"sun"，ISC 授權，https://lucide.dev */
 const ICON = `<svg class="pv-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="pv-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
@@ -245,7 +334,7 @@ const BAR = `
     <button data-mode="auto">跟著系統</button><button data-mode="light">白天</button><button data-mode="dark">夜間</button>
     <button class="pv-x" id="pv-more">數字</button><button id="pv-hide">收起</button></div>
   <div class="pv-r" id="pv-wmrow" hidden><span class="pv-l">浮水印</span>
-    <button data-wm="w1">Ⓦ1 線條提亮</button><button data-wm="w2">Ⓦ2 月光灰</button><button data-wm="w3">Ⓦ3 夜間不放</button></div>
+    <button data-wm="s1">Ⓢ1 實心・月光白</button><button data-wm="s2">Ⓢ2 實心・套色</button><button data-wm="w1">Ⓦ1 線條（上一版）</button><button data-wm="w3">不放</button></div>
   <div class="pv-r"><span class="pv-l">狀態</span><span style="color:#aaa" id="pv-sys"></span></div>
   <div class="pv-panel" id="pv-panel" hidden></div>
 </div>
@@ -263,8 +352,8 @@ const BAR = `
     if(!topic||!WM[topic]||r.dataset.theme!=='dark') return '';
     var v=WM[topic], w=r.dataset.wm, pe=getComputedStyle(document.querySelector('.tp-intro'),'::before'), op=parseFloat(pe.opacity)||0;
     if(w==='w3') return '<br>浮水印：夜間不放。';
-    var line=w==='w1'?v.c1:v.c2, a=w==='w1'?op:op*.6, bg=mixh(line,NUM.pal.paper,a);
-    return '<br>浮水印 '+(w==='w1'?'Ⓦ1 線條提亮（亮度 ×'+v.k1+'）':'Ⓦ2 月光灰（×'+v.k2+'，濃度再乘 .6）')+'：線色 '+line+'　這個寬度的濃度 '+op+(w==='w2'?' × .6 = '+a.toFixed(3):'')+
+    var solid=w==='s1'||w==='s2', line=solid?v[w].fill:v.c1, a=op, bg=mixh(line,NUM.pal.paper,a);
+    return '<br>浮水印 '+(w==='s1'?'Ⓢ1 實心・月光白':w==='s2'?'Ⓢ2 實心・套色':'Ⓦ1 線條提亮（亮度 ×'+v.k1+'）')+'：'+(solid?'填色 '+line+'（佔圖 '+v.area+'%）　濃度 '+op+'（＝次要文字剛好 4.5 的上限，所有寬度同一個值）':'線色 '+line+'　這個寬度的濃度 '+op)+
       '<br>　字壓在線上最壞：主文字 '+crr(NUM.pal.ink,bg).toFixed(2)+'　次要文字 '+crr(NUM.pal.soft,bg).toFixed(2)+'　科別字階 '+crr((NUM.spec.filter(function(x){return x[0]===topic;})[0]||[])[1]||NUM.pal.ink,bg).toFixed(2);
   }
   var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
@@ -361,7 +450,6 @@ function build(src, kind) {
   return h;
 }
 
-fs.rmSync(OUT, { recursive: true, force: true });
 const write = (rel, html) => { const p = path.join(OUT, rel); fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, html); };
 write("index.html", build(path.join(ROOT, "index.html"), "home"));
 let n = 1;
