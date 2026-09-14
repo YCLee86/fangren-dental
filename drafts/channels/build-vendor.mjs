@@ -92,8 +92,22 @@ const pngWH = (rel) => {
   walk(D);
 })();
 
+/* ── 「見第 N 節」那個號碼不要寫死 ─────────────────────────────────
+   ⚠⚠⚠ 同一段文字現在會印在兩頁上（這一頁與 build-card-spec.mjs 那一頁），
+   而兩頁的節號不一樣。寫死的那個數字不會壞、不報錯、畫面完全正常 ——
+   它只是指到別節去了（＝ 第 50-22、51-2、54 節那條通則的第三次現場）。
+   所以資料裡寫 {{節:關鍵字}}，號碼在 esc()／b() 現算；找不到就 throw。
+   ⚠ 換頁要先呼叫 設節表()，而且只有「呼叫之後才組出來的字串」會吃到新的一份 ——
+   所以在模組載入時就組好的區塊（revised／settled）都改成函式。 */
+let 節表 = { 訊息: "第 1 節", 改版: "第 2 節", 浮水印: "第 3 節", 約診狀態: "第 4 節", 綁定: "第 5 節", 待答: "第 6 節" };
+const 設節表 = (m) => { 節表 = m; };
+const 節 = (t) => String(t).replace(/\{\{節:([^}]+)\}\}/g, (_, k) => {
+  if (!節表[k]) throw new Error(`{{節:${k}}} 在這一頁沒有對應的節 —— 那一段字要嘛改寫、要嘛補進節表`);
+  return 節表[k];
+});
+
 const esc = (t) =>
-  String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  節(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 /* **…** 加粗。⚠ 警示色那一條 2026-09-11 拿掉了 —— 這一頁現在只敘述事實，
    不靠顏色喊。 */
 const b = (t) => esc(t)
@@ -550,7 +564,7 @@ ${cards}
 
 /* ── ② 09-10 改版 ─────────────────────────────────────────── */
 const 改 = D.改版;
-const revised = `
+const revisedHtml = (P = "") => `
 <div class="two">
 <figure class="fig">
 <img src="../line-booked/shot-booked.png" width="${pngWH("../line-booked/shot-booked.png")[0]}"
@@ -568,7 +582,7 @@ const revised = `
 <p style="font-size:.88rem;color:var(--soft);margin:.25em 0 0">${b(改.圖說)}</p>
 <div class="vs">
 ${改.圖.map((g) => `<figure>
-<a href="${esc(g.檔)}"><img src="${esc(g.檔)}" width="${g.w}" height="${g.h}" loading="lazy"
+<a href="${esc(P + g.檔)}"><img src="${esc(P + g.檔)}" width="${g.w}" height="${g.h}" loading="lazy"
   alt="${esc(g.標)}"></a>
 <p class="t">${esc(g.標)}</p>
 <figcaption>${b(g.說)}</figcaption>
@@ -593,6 +607,7 @@ ${改.收掉.map((x) => `<div class="row"><p class="k">${b(x.事)}</p><p class="
 <figcaption>我們送過去的規格圖（約診紀錄查詢，輪播．這一條可以左右滑）。日期會被截斷的是這一種
 micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>`.trim();
+const revised = revisedHtml();
 
 /* ── ③ 浮水印九顆 ─────────────────────────────────────────── */
 /* ⚠⚠ 兩張是同一份幾何、同一個相對寬度，差的只有濃度：
@@ -846,7 +861,7 @@ ${CARCMP.格.map((g) => carCard(byName[CARCMP.形], g.size,
   `<b>${esc(g.標)}</b>　${g.size}px・卡寬的 ${(g.size / SC.卡.w * 100).toFixed(1)}%<br>${b(g.註)}`)).join("\n")}
 </div>`;
 
-const settled = `<div class="stgrid">
+const settledHtml = () => `<div class="stgrid">
 ${PILLVAL.map((v) => `<figure class="stwrap">
 <div class="stcard cb">
 ${linesHtml(MICRO)}
@@ -863,6 +878,7 @@ ${SET.條.map(([k, t]) => `<div class="row"><p class="k">${esc(k)}</p><p class="
 <div class="row"><p class="k">先問的是哪一題</p><p class="v">${b(SET.前提)}</p></div>
 <div class="row"><p class="k">還要一支測試訊息</p><p class="v">${b(SET.要一支測試訊息)}</p></div>
 </div>`;
+const settled = settledHtml();
 
 /* ── 5 綁定完成的兩個方向 ─────────────────────────────────────
    使用者 2026-09-11 指定整理的一節。圖是廠商自己的回覆（他指定要附），
@@ -1046,6 +1062,11 @@ ${groups}
 </html>
 `;
 
+/* ⚠⚠ 這一支同時是 build-card-spec.mjs 的模組（那一頁只留定案與現況對照，
+   卡片、浮水印、那張表的畫法全部從這裡 import，不抄第二份）。所以寫檔要關在
+   「直接執行」底下 —— 不關的話，產另一頁時會順手把這一頁也重寫一次。 */
+const 直接執行 = process.argv[1] === fileURLToPath(import.meta.url);
+if (直接執行) {
 mkdirSync(OUT, { recursive: true });
 writeFileSync(join(OUT, "index.html"), html);
 console.log(`✓ preview/line-vendor/index.html　${(html.length / 1024).toFixed(1)}KB`);
@@ -1053,3 +1074,11 @@ console.log(`  在跑的訊息 ${D.訊息.列.length} 則・改版對上 ${改.�
 console.log(`  浮水印 ${WM.length} 顆（淡墨 ${INK}，九顆都畫在卡片上）・定案 ${SET.條.length} 條`);
 console.log(`  未定案 ${D.現在.列.length} 件（子項 ${D.現在.列.reduce((n, x) => n + (x.子 ? x.子.length : 0), 0)} 條）・改版還開著 ${改.未對上.length} 件／收掉 ${改.收掉.length} 件`);
 console.log(`  印出來的是廠商那一組 ${total} 題（最先要 ${hotAll} 題）；後台 ${D.待答.後台.列.length}／診所 ${D.待答.診所.列.length}／素材 ${D.待答.素材.列.length} 題留在 JSON 裡沒有印`);
+}
+
+/* build-card-spec.mjs 用得到的那幾塊（定案規格與現況對照）。 */
+export {
+  CSS, esc, b, pngWH, D, DATE, SC, SET, WM, INK, WM_A, cmp, cardBox, CARCMP,
+  revisedHtml, wmTable, nine, compare, onCard, carNine, carCompare, settledHtml, settled,
+  設節表,
+};

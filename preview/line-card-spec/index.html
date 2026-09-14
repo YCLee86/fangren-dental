@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>芳仁牙醫診所　LINE 訊息　現況與請求</title>
+<title>芳仁牙醫診所　約診卡　定案規格與現況對照</title>
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9}
 *{box-sizing:border-box}
@@ -185,98 +185,13 @@ code{font-size:.92em}
 <body>
 <div class="wrap">
 
-<h1>LINE 訊息　現況與請求</h1>
+<h1>約診卡　定案規格與現況對照</h1>
 <p class="lede">芳仁牙醫診所　更新於 2026-09-13<br>
-六節：在跑的十二則、2026-09-10 的改版逐項、浮水印、約診狀態那一列、綁定完成、還沒有答案的題目。<br>
+這一頁只有兩件事：<b>預約成功通知</b>與<b>約診紀錄查詢</b>這兩則的<b>定案規格</b>，
+以及和你們 2026-09-10 那一版的<b>現況對照</b>。<br>
 七則訊息的文字、圖檔網址與 Flex 規格在另一頁：<a href="/preview/line-spec/">/preview/line-spec/</a></p>
 
-<div class="now">
-<b>未定案</b>
-<ol>
-<li>
-<p class="t">尚未綁定按約診查詢</p>
-<p class="d"><b>請抽換現有的藍色圖卡</b>。現在跳出來的是公版那一張，我們已經做好替代的版本 —— 第 1 節第 ⑤ 則旁邊那兩張圖，上面是我們的、下面是現況。</p>
-</li>
-<li>
-<p class="t">看診前 48 小時提醒</p>
-<p class="d"><b>原圖有 bug，請抽換新圖</b>。原本那張頭圖裡被媽媽抱著的幼兒多出一隻手，已經重畫好放上去了，圖檔的網址在這一頁那一則底下： <a href="/preview/line-spec/">/preview/line-spec/</a></p>
-</li>
-<li>
-<p class="t">約診通知與紀錄查詢版面</p>
-<ol class="sub"><li><b>浮水印的大小與位置和規格不一樣</b>：畫出來是規格的五到六成，而且跑出卡片的右下角被切掉；我們的 JSON 寫的是照表上那個 px 寬、完全收在卡內。第 3 節有三格的對照與數字，<b>九顆各自畫在卡片上該有的樣子也都在那一節</b>。</li>
-<li><b>約診狀態</b>：依系統發送與病人回覆的狀態分成 <b>已排定／已確認／未回覆／已取消</b>。四個值的畫法、色碼與對齊在第 4 節。</li>
-<li><b>浮水印的顏色改成淡墨素色</b>：柔墨 <code>#5c5f57</code>、濃度 12%（<code>wm-&lt;形狀&gt;-ink12.png</code>）。形狀、寬度、位置一個數字都沒動，換掉的只有顏色。</li>
-<li><b>日期的順序要調一件</b>：<code>2026/09/11 星期五 11:50</code> —— 字一個都不用換，只是把星期幾移到日期後面、時間放最後，寬度和你們現在送的那一串完全一樣。另外請確認那一格沒有限制行數（<code>wrap: true</code>、不要 <code>maxLines</code>）：輪播那張卡比較窄，放不下一行時要讓它折，不要截掉。</li>
-<li><b>九顆浮水印怎麼輪，照我們這個規則</b>：<code>(約診月份 + 約診日) % 9</code>，照第 3 節那張表由上到下的順序取第幾顆。同一筆約診不管查幾次都是同一顆，預約成功通知與查詢清單裡的那一張也要是同一顆、同一色。</li></ol>
-</li>
-<li>
-<p class="t">綁定成功的自動回覆設定</p>
-<ol class="sub"><li>用戶端送出的那一句「綁定成功」<b>無法（或不建議）移除</b> —— 那是以病人的身分送進聊天室的，而且診所櫃檯會用那個號碼查病歷。</li>
-<li>綁定成功之後跳出來的自動回覆，現況：<b>LINE 商家帳號的自動回應只能設定一種</b>，所以綁定那一刻跳出來的，和平常打字進去收到的是同一則。</li>
-<li><b>其他商家帳號在綁定那一刻送的是另一則</b>，和平常打字進去收到的不一樣 —— 潔客幫、中國信託、國泰世華、玉山四個帳號都是這樣。</li>
-<li><b>同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆。</b> 想請教他們的自動回應是怎麼設的，我們能不能照那個設法。</li></ol>
-</li>
-</ol>
-</div>
-
-<h2 class="h2">1　這個帳號會自動送出哪幾則<span class="t">12 則．圖是我們那一則的模擬圖</span></h2>
-<p class="mg">已完成<span class="n">6 則</span></p>
-<div class="msgs">
-<div class="msg"><span class="ims"><img src="t-welcome.jpg" width="210" height="210" alt="招呼圖卡的模擬圖"></span><div class="x">
-<p class="nm">①　招呼圖卡</p>
-<p class="mt">加好友那一刻／診所後台送・已完成<br>改字診所自己來</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-auto.jpg" width="210" height="210" alt="自動回應（一律回應）的模擬圖"></span><div class="x">
-<p class="nm">②　自動回應（一律回應）</p>
-<p class="mt">病人打任何字／診所後台送・已完成<br>純文字。選它的理由是字留在診所自己手上</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-cancel.jpg" width="210" height="210" alt="取消確認 → 取消成功的模擬圖"></span><div class="x">
-<p class="nm">⑨　取消確認 → 取消成功</p>
-<p class="mt">他按預約改期／廠商送・已完成<br>按「否」之後長什麼樣還沒看過</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-review.jpg" width="210" height="210" alt="評價邀約的模擬圖"></span><div class="x">
-<p class="nm">⑩　評價邀約</p>
-<p class="mt">看診後／廠商送・已完成<br>兩顆按鈕連到哪裡還沒有答案，在那之前先不送</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-typhoon.jpg" width="210" height="210" loading="lazy" alt="颱風／臨時休診的模擬圖"></span><div class="x">
-<p class="nm">⑪　颱風／臨時休診</p>
-<p class="mt">縣府宣布之後／診所後台送・診所自行製作<br>用診所每次自己打的那一份字</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-oa.jpg" width="210" height="210" loading="lazy" alt="圖文選單點下去回的三組卡的模擬圖"></span><div class="x">
-<p class="nm">⑫　圖文選單點下去回的三組卡</p>
-<p class="mt">他點選單／廠商送・已完成<br>診所資訊／主題與科別七科／衛教懶人包 12 張</p>
-</div></div>
-</div>
-<p class="mg">待調整（或是有落差）<span class="n">6 則</span></p>
-<div class="msgs">
-<div class="msg"><span class="ims"><img src="t-bindprompt.jpg" width="210" height="210" loading="lazy" alt="還沒綁定就按約診查詢的模擬圖（1）"><img src="t-bindprompt-old.jpg" width="210" height="210" loading="lazy" alt="還沒綁定就按約診查詢的模擬圖（2）"></span><div class="x">
-<p class="nm">⑤　還沒綁定就按約診查詢<span class="un">未定案 1</span></p>
-<p class="mt">他按下去那一刻／廠商送・提案中<br>上：我們新做的那一張（30秒快速綁定）。下：現況那張公版藍色卡，截圖證實已經在跑</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-remind.jpg" width="210" height="210" loading="lazy" alt="看診前 48 小時提醒的模擬圖"></span><div class="x">
-<p class="nm">⑧　看診前 48 小時提醒<span class="un">未定案 2</span></p>
-<p class="mt">看診前 48 小時／廠商送・定稿・等送<br>頭圖已經換成新版（構圖與版面一個像素都沒動），可以送了。真截圖那一則是看診前 3 天送的，固不固定還沒有答案。</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-booked.jpg" width="210" height="210" loading="lazy" alt="預約成功通知的模擬圖（1）"><img src="t-vbooked.jpg" width="210" height="210" loading="lazy" alt="預約成功通知的模擬圖（2）"></span><div class="x">
-<p class="nm">⑥　預約成功通知<span class="un">未定案 3</span></p>
-<p class="mt">約好當下／廠商送・09-10 改版<br>上：我們的定稿版本。下：廠商 09-10 送來的那一版 —— 6 件對上、還開著 2 件（見下一節）</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-query.jpg" width="210" height="210" loading="lazy" alt="約診紀錄查詢的模擬圖（1）"><img src="t-vquery.jpg" width="210" height="210" loading="lazy" alt="約診紀錄查詢的模擬圖（2）"></span><div class="x">
-<p class="nm">⑦　約診紀錄查詢<span class="un">未定案 3</span></p>
-<p class="mt">他按查詢／廠商送・09-10 改版<br>上：我們的定稿版本。下：廠商 09-10 送來的那一版（橫著滑的輪播）。日期是這個帳號裡最長的一種寫法，那一版完整顯示、沒有被截斷。那張卡上「預約狀態」那一列要改成什麼樣子，整理在第 4 節。</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-bindlive.jpg" width="210" height="210" loading="lazy" alt="「綁定成功」那一句的模擬圖"></span><div class="x">
-<p class="nm">③　「綁定成功」那一句<span class="un">未定案 4</span></p>
-<p class="mt">綁定完成那一刻／病人那一側送・現況・公版<br>由病人那一側送出（右邊的綠泡泡），同一分鐘就觸發了那一則通用的自動回應。不必取代它，在它後面再送一則 —— 見第 5 節。</p>
-</div></div>
-<div class="msg"><span class="ims"><img src="t-binddone.jpg" width="210" height="210" loading="lazy" alt="綁定完成卡的模擬圖"></span><div class="x">
-<p class="nm">④　綁定完成卡<span class="un">未定案 4</span></p>
-<p class="mt">③ 之後／廠商送・定稿・等送<br>和 ② 會不會兩則一起送還沒有答案</p>
-</div></div>
-</div>
-<p class="note">這張表是我們從畫面與往返裡整理出來的，其中四則（滿意度調查卡、預約成功、約診紀錄查詢、還沒綁定按約診查詢）是從截圖裡才發現的 —— 所以「總共會自動送出哪幾則」的完整清單是第 6 節的第 1 題。</p>
-
-<h2 class="h2">2　2026-09-10 的改版<span class="t">2026-09-10 廠商把 ⑥⑦ 兩則照我們的規格改了一版。左邊是我們送過去的規格圖，右邊各項是逐項比對的結果。</span></h2>
+<h2 class="h2">1　現況對照<span class="t">2026-09-10 你們改的那一版，逐項對我們送過去的規格</span></h2>
 <div class="two">
 <figure class="fig">
 <img src="../line-booked/shot-booked.png" width="804"
@@ -294,19 +209,19 @@ code{font-size:.92em}
 <p style="font-size:.88rem;color:var(--soft);margin:.25em 0 0">病人姓名在出圖那一步就遮掉了（這個 repo 是公開的），其餘一個像素都沒有動。</p>
 <div class="vs">
 <figure>
-<a href="vendor-booked-a-0910.jpg"><img src="vendor-booked-a-0910.jpg" width="750" height="524" loading="lazy"
+<a href="../line-vendor/vendor-booked-a-0910.jpg"><img src="../line-vendor/vendor-booked-a-0910.jpg" width="750" height="524" loading="lazy"
   alt="⑥ 預約成功通知（14:20）"></a>
 <p class="t">⑥ 預約成功通知（14:20）</p>
 <figcaption>浮水印是<b>圓形</b>那一顆。</figcaption>
 </figure>
 <figure>
-<a href="vendor-booked-b-0910.jpg"><img src="vendor-booked-b-0910.jpg" width="750" height="465" loading="lazy"
+<a href="../line-vendor/vendor-booked-b-0910.jpg"><img src="../line-vendor/vendor-booked-b-0910.jpg" width="750" height="465" loading="lazy"
   alt="⑥ 同一則，三分鐘後（14:23）"></a>
 <p class="t">⑥ 同一則，三分鐘後（14:23）</p>
 <figcaption>浮水印換成<b>寬的</b>那一顆，位置與大小也不一樣。</figcaption>
 </figure>
 <figure>
-<a href="vendor-query-0910.jpg"><img src="vendor-query-0910.jpg" width="750" height="507" loading="lazy"
+<a href="../line-vendor/vendor-query-0910.jpg"><img src="../line-vendor/vendor-query-0910.jpg" width="750" height="507" loading="lazy"
   alt="⑦ 約診紀錄查詢（14:18）"></a>
 <p class="t">⑦ 約診紀錄查詢（14:18）</p>
 <figcaption>病人按下之後跳出的已約診時段。橫著滑的輪播，右邊那一張被切一半。日期「2026/09/11 11:50 星期五」完整顯示。</figcaption>
@@ -316,13 +231,13 @@ code{font-size:.92em}
 <div class="rows" style="margin-top:1.4em">
 <p style="font-size:.93rem;margin:0 0 .2em"><b>還開著的 2 件</b></p>
 <div class="row"><p class="k">浮水印的大小與位置不一樣</p><p class="v">量出來是我們規格的五到六成，而且它跑出卡片的右下角被切掉。我們的 JSON 寫的是「照表上那個 px 寬、完全收在卡內」。數字與圖在下一節。</p></div>
-<div class="row"><p class="k">預約狀態還在</p><p class="v">字從「尚未回覆」換成了對著病人講的一句，比原本清楚。我們的要求因此排成兩層：先問那一筆能不能不要列在他的查詢清單裡（樂衍後台照舊保留）；移不掉的話，那一列要怎麼改整理在第 4 節。</p></div>
+<div class="row"><p class="k">預約狀態還在</p><p class="v">字從「尚未回覆」換成了對著病人講的一句，比原本清楚。我們的要求因此排成兩層：先問那一筆能不能不要列在他的查詢清單裡（樂衍後台照舊保留）；移不掉的話，那一列要怎麼改整理在第 3-2 節。</p></div>
 </div>
 
 <div class="rows" style="margin-top:1.4em">
 <p style="font-size:.93rem;margin:0 0 .2em"><b>看過之後收掉的 2 件</b></p>
 <div class="row"><p class="k">卡上年份是 2020</p><p class="v">診所確認那是設計用的測試資料，不影響 —— 這一件收掉了。</p></div>
-<div class="row"><p class="k">日期格式</p><p class="v">四張裡有一張就是約診查詢的輪播，日期「2026/09/11 11:50 星期五」完整顯示、沒有被截斷 —— <b>年月日、星期幾、時間這三樣就照這一版，一個字都不用換</b>，只剩順序要調（星期幾接在日期後面、時間放最後），見第 3 節。</p></div>
+<div class="row"><p class="k">日期格式</p><p class="v">四張裡有一張就是約診查詢的輪播，日期「2026/09/11 11:50 星期五」完整顯示、沒有被截斷 —— <b>年月日、星期幾、時間這三樣就照這一版，一個字都不用換</b>，只剩順序要調（星期幾接在日期後面、時間放最後），見第 2 節。</p></div>
 </div>
 
 <figure class="fig">
@@ -334,16 +249,16 @@ code{font-size:.92em}
 micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>
 
-<h2 class="h2">3　浮水印那九顆<span class="t">挑哪一顆、每一顆要填什麼、兩則各要畫多寬</span></h2>
+<h2 class="h2">2　浮水印<span class="t">挑哪一顆、每一顆要填什麼、畫多大、擺在哪</span></h2>
 
-<h3 class="h3">③之一　挑哪一顆</h3>
+<h3 class="h3">2-1　挑哪一顆</h3>
 <ul class="spec"><li><code>形狀 ＝ 順序[(月 ＋ 日) % 9]</code>，順序固定是 r1c1 r1c2 r1c3 r2c1 r2c2 r2c3 r3c1 r3c2 r3c3（＝九宮格由左到右、由上到下）。</li>
 <li>月與日取<b>那一筆約診的看診日期</b> —— 不是今天，也不是它排在清單裡第幾張。</li>
 <li><b>顏色綁在形狀上</b>（下面那張表），不必另外算一條規則。</li>
 <li><b>兩則吃同一條規則</b>：同一筆約診在「預約成功通知」與「約診紀錄查詢」上會是同一顆、同一個顏色。</li>
 <li>所以同一筆查幾次都一樣。不要用清單位置輪流，也不要隨機 —— 前者取消一筆會讓後面每一張都換人，後者同一筆每次看都不一樣。</li></ul>
 
-<h3 class="h3">③之二　每一顆要填什麼</h3>
+<h3 class="h3">2-2　每一顆要填什麼</h3>
 <ul class="spec"><li><code>url</code>　<code>https://fangren.net/assets/line/wm-&lt;形狀&gt;-12.png</code>。12 是濃度：淡是烘在 PNG 的 alpha 裡的，因為 Flex 的 image 沒有 <code>opacity</code>。</li>
 <li><code>size</code>　照下表<b>那一則</b>那一欄。Flex 的 image <code>size</code> 給的是<b>寬度</b>。</li>
 <li><code>aspectRatio</code>　照下表。<b>每一顆不一樣，不要寫死一個</b> —— 寫錯不報錯也不變形，只會靜靜地縮小、四周留白。</li>
@@ -401,20 +316,22 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </tbody></table></div>
 <p class="note"><b>兩欄的數字不一樣，那不是筆誤</b>：兩則的卡片寬差 106px（單張 268 vs 輪播 162），同一個 px 佔掉的比例差很多，所以同一顆在兩則上要畫不同的寬。括號裡標著「原」的那幾格是收窄過的，其餘幾顆兩欄相同。</p>
 
-<h3 class="h3">③之三　卡片本身</h3>
-<ul class="spec"><li>單張（預約成功通知）　bubble <code>size: "mega"</code>（LINE 上約 268px，這一頁的模擬圖就畫這個寬度）。</li>
-<li>輪播（約診紀錄查詢）　bubble <code>size: "micro"</code>（LINE 上約 162px）。<b>你們現在跑的是 <code>deca</code>（約 207px）</b>，這一項是要請你們換的；換的時候<b>同一條輪播必須整組一起換</b>，不能只縮其中一張。</li>
-<li><code>paddingAll</code>　14px（兩則相同）。</li>
-<li><code>backgroundColor</code>　#FFFFFF（兩則相同）。這一項你們現在跑的就是純白，不必換。</li>
-<li>日期那一格<b>一定要 <code>wrap: true</code>、不要 <code>maxLines</code></b>。現在那個 <code>maxLines: 1</code> 正是日期被截成「…15:45 星...」的成因。</li></ul>
-
-<div class="now" style="margin:1.6em 0 1.4em"><b>位置與大小・定案</b>
+<h3 class="h3">2-3　位置與大小</h3>
+<div class="now" style="margin:1.1em 0 1.4em"><b>定案</b>
 <ol><li><p class="d"><b>位置：往右下溢出 18／10px</b>，卡片把跑出去的那一塊切掉 —— 不是貼齊右下角、整顆收在卡內。</p></li>
 <li><p class="d"><b>寬度：兩則各一欄，那不是筆誤</b>（2026-09-14 定案）。九顆的寬度不一樣是刻意的（按墨的面積算的，這樣看起來才一樣重），而兩則的卡片寬差 106px，同一個 px 佔掉的比例差很多 —— 所以那份 Flex JSON 的浮水印 <code>size</code> 拆成兩個欄位：單張吃 <code>watermark_size_single</code>、輪播吃 <code>watermark_size_carousel</code>。<b>每一顆在兩則上各要填多少，見下面那張表</b>（收窄過的那幾格括號裡標著原寬）。</p></li>
 <li><p class="d"><b>顏色</b>：淡墨素色，柔墨 <code>#5c5f57</code>、濃度 12%。</p></li>
 <li><p class="d"><b>卡片底色：純白 <code>#FFFFFF</code></b>（2026-09-14 定案）。<b>這一項你們現在跑的就是純白，不必換</b> —— 逐像素量過你們 09-10 送來的三張截圖，卡片內部是 <code>#FFFFFF</code>；先前我們這一份寫的是 <code>#F4F4F5</code>（診所網站的卡片色），同一天已經改成純白對齊你們。其餘五則沒有動。</p></li>
 <li><p class="d">那份 Flex JSON 裡 <code>offsetEnd</code>／<code>offsetBottom</code> 仍然寫著 <code>0px</code>，因為 Flex 的 offset 不吃負值、表達不出溢出。你們 09-10 那一版已經做出溢出了（量到 8~10／6~7px）—— <b>請照你們的做法，把溢出量統一成 18／10px</b>。</p></li></ol></div>
-<p class="note">浮水印的顏色改成<b>淡墨素色</b>：柔墨 <code>#5c5f57</code>，壓在卡片上的濃度維持 12%（檔名 <code>wm-&lt;形狀&gt;-ink12.png</code>）。<b>形狀、寬度、位置一個數字都沒動，換掉的只有顏色。</b>下面九顆上面那一排仍然印原色，那一份色是第 4 節那四個值在用的，不是浮水印的顏色。<b>那九顆底下寫的「原寬」是按墨的面積算出來的基準，不是要填的值</b> —— 實際要填的是上面那張表那兩欄。<br>
+<div class="rows">
+<div class="row"><p class="k">你們現在送的</p><p class="v">廠商送來的兩張卡上，浮水印確實是這九顆裡的兩顆，形狀與各自的顏色都對得上（圓形＋紫 ＝ 口腔外科那一顆；寬形＋青綠 ＝ 牙周治療那一顆）。</p></div>
+<div class="row"><p class="k">大小與位置</p><p class="v">大小與位置和我們的規格不一樣。量法是拿形狀中間那個牙洞當尺（牙洞占圖寬的比例是固定的），所以圖被切掉也量得出它本來多大。</p></div>
+<div class="row"><p class="k">要換的規則</p><p class="v"><code>(約診月份 + 約診日) % 9</code>，照上面那張表由上到下的順序取第幾顆。同一筆約診不管查幾次都是同一顆；預約成功通知與查詢清單裡的那一張，也要是同一顆、同一色。（送來的那一批裡，同一筆約診 2020/09/11 09:00 在 14:20 是圓形、14:23 是寬形。）</p></div>
+<div class="row"><p class="k">請照這樣填</p><p class="v">問法因此不是「是不是限制」，是<b>你們的 <code>size</code> 寫成 px、關鍵字、還是百分比，填的是哪一個值</b>。三種寫法各有一個會讓它變小的機制，三種都改得動：關鍵字是一把粗的階梯、填不進 104 或 150；百分比的基準是它的父層 box，父層若是有內距的內容框就會小一截；px 就只是填了別的數字。這三條我們只有文件上的理解、沒有實機驗過，所以先當成問題請你們確認；要填的值都在上面那張表裡。</p></div>
+</div>
+
+<h3 class="h3">2-4　九顆的形狀與色碼</h3>
+<p class="note">浮水印的顏色改成<b>淡墨素色</b>：柔墨 <code>#5c5f57</code>，壓在卡片上的濃度維持 12%（檔名 <code>wm-&lt;形狀&gt;-ink12.png</code>）。<b>形狀、寬度、位置一個數字都沒動，換掉的只有顏色。</b>下面九顆上面那一排仍然印原色，那一份色是第 3-2 節那四個值在用的，不是浮水印的顏色。<b>那九顆底下寫的「原寬」是按墨的面積算出來的基準，不是要填的值</b> —— 實際要填的是上面那張表那兩欄。<br>
 每一格<b>上面是原色</b>（看得出形狀與是哪一科），<b>虛線底下是它壓在卡片上真正的樣子</b>
 （淡墨 <code>#5c5f57</code>，濃度 12%）。
 兩張是同一份幾何、同一個相對寬度 —— <b>九顆的寬度不一樣是刻意的</b>（按墨的面積正規化，看起來才一樣重）。</p>
@@ -501,14 +418,86 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 <figcaption>一般牙科・定期檢查<br>r3c3・原寬 215px</figcaption>
 </figure>
 </div>
-<div class="rows">
-<div class="row"><p class="k">現況</p><p class="v">廠商送來的兩張卡上，浮水印確實是這九顆裡的兩顆，形狀與各自的顏色都對得上（圓形＋紫 ＝ 口腔外科那一顆；寬形＋青綠 ＝ 牙周治療那一顆）。</p></div>
-<div class="row"><p class="k">大小與位置</p><p class="v">大小與位置和我們的規格不一樣。量法是拿形狀中間那個牙洞當尺（牙洞占圖寬的比例是固定的），所以圖被切掉也量得出它本來多大。</p></div>
+
+<h2 class="h2">3　卡片<span class="t">兩則各用哪一階、內距、底色、哪一格不要限制行數</span></h2>
+
+<h3 class="h3">3-1　卡片本身</h3>
+<ul class="spec"><li>單張（預約成功通知）　bubble <code>size: "mega"</code>（LINE 上約 268px，這一頁的模擬圖就畫這個寬度）。</li>
+<li>輪播（約診紀錄查詢）　bubble <code>size: "micro"</code>（LINE 上約 162px）。<b>你們現在跑的是 <code>deca</code>（約 207px）</b>，這一項是要請你們換的；換的時候<b>同一條輪播必須整組一起換</b>，不能只縮其中一張。</li>
+<li><code>paddingAll</code>　14px（兩則相同）。</li>
+<li><code>backgroundColor</code>　#FFFFFF（兩則相同）。這一項你們現在跑的就是純白，不必換。</li>
+<li>日期那一格<b>一定要 <code>wrap: true</code>、不要 <code>maxLines</code></b>。現在那個 <code>maxLines: 1</code> 正是日期被截成「…15:45 星...」的成因。</li></ul>
+
+<h3 class="h3">3-2　約診狀態那一列<span class="t"></span></h3>
+<p class="note">2026-09-12 一格一格挑完了，整理成一段可以直接照做的規格。它只為「那個欄位移不掉」那條路存在 —— 第一層要問的仍然是：<b>病人自己按過取消的那一筆，能不能就不要列在他的查詢清單裡</b>（樂衍後台照舊保留）。</p>
+<div class="stgrid">
+<figure class="stwrap">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#4478b5">已排定</span></p>
+<svg class="wm" width="141" height="45.72"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption>已排定　齒顎矯正　<code>#4478b5</code></figcaption>
+</figure>
+<figure class="stwrap">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#3f654a">已確認</span></p>
+<svg class="wm" width="141" height="45.72"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption>已確認　一般牙科　<code>#3f654a</code></figcaption>
+</figure>
+<figure class="stwrap">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#c28229">未回覆</span></p>
+<svg class="wm" width="141" height="45.72"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption>未回覆　兒童牙科　<code>#c28229</code></figcaption>
+</figure>
+<figure class="stwrap">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill"
+  style="background:#ae4f4d">已取消</span></p>
+<svg class="wm" width="141" height="45.72"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption>已取消　顯微根管　<code>#ae4f4d</code></figcaption>
+</figure>
+</div>
+<p class="note">四張卡各掛一個值 —— 一張卡上看不出四種的相對份量。卡片畫成輪播上真正的寬度（207px），兩行內容照你們 09-10 那一版，日期是調過排法的那一種（星期幾接在日期後面、時間自己一行），所以星期幾一定跟著它的日期，不會被折到下一行去。浮水印是定案的淡墨、往右下溢出。這四張的浮水印是這一筆日期算出來的那一顆（<code>r1c3</code>）。</p>
+<div class="rows" style="margin-top:1.2em">
+<div class="row"><p class="k">欄位名</p><p class="v"><b>約診狀態</b>（廠商現在印的是「預約狀態」）。改的只是卡片上印出來的那個標籤，資料庫欄位叫什麼名字不必動。</p></div>
+<div class="row"><p class="k">四個值</p><p class="v"><b>已排定／已確認／未回覆／已取消</b>。</p></div>
+<div class="row"><p class="k">色票</p><p class="v">齒顎矯正 <code>#4478b5</code>／一般牙科 <code>#3f654a</code>／兒童牙科 <code>#c28229</code>／顯微根管 <code>#ae4f4d</code>（＝第 2 節那九顆的同一份色）。</p></div>
+<div class="row"><p class="k">畫法</p><p class="v"><b>底套色、白字、加粗的藥丸</b>，圓角 8.5px（站上那一族）。Flex 寫成 horizontal box、藥丸那一格 <code>flex: 0</code>、後面補一個 <code>filler</code>，藥丸才會只包住那幾個字而不是撐滿整列。</p></div>
+<div class="row"><p class="k">對齊</p><p class="v"><b>基線對齊</b>（三種比過之後挑的）。</p></div>
+<div class="row"><p class="k">標籤</p><p class="v">「約診狀態」那四個字<b>維持不加粗、不套色</b>。</p></div>
+<div class="row"><p class="k">浮水印</p><p class="v">那張卡的浮水印換成<b>淡墨色</b>（柔墨 <code>#5c5f57</code>，<code>wm-&lt;形狀&gt;-ink12.png</code>）。形狀、寬度、濃度一個數字都沒動，換掉的只有顏色。</p></div>
+<div class="row"><p class="k">先問的是哪一題</p><p class="v">這一整節只為「那個欄位移不掉」那條路存在。<b>第一層要問的仍然是：病人自己按過取消的那一筆，能不能就不要列在他的查詢清單裡</b> —— 做得到的話那一列根本不會出現，底下這些都不必做。</p></div>
+<div class="row"><p class="k">還要一支測試訊息</p><p class="v">藥丸裡那個字怎麼坐在盒子裡是 LINE 決定的（<code>text</code> 沒有行高可以設）。我們寫得出 <code>paddingTop</code>／<code>paddingBottom</code>，但對不對得上要實際送一則出來看。</p></div>
 </div>
 
-<h3 class="h3">③之四　預約成功通知（單張 <code>mega</code>）</h3>
+<h2 class="h2">4　照這個規格畫出來的樣子<span class="t">卡片畫成兩則真正的寬度</span></h2>
+
+<h3 class="h3">4-1　預約成功通知（單張 <code>mega</code>）</h3>
 <h4 class="h4">同一張卡畫2次</h4>
-<p style="font-size:.88rem;color:var(--soft);margin:0">同一張卡（268×121）畫兩次：我們要的、廠商 09-10 送來的。卡上四行就是這一則真正的內容，形狀與顏色完全一樣，差的只有浮水印的大小與位置。卡片的高度是那四行自己撐出來的：日期收成一行之後（見第 3 節那一條），比現在那一張矮 28px，文字底下那一塊空白就跟著不見了。</p>
+<p style="font-size:.88rem;color:var(--soft);margin:0">同一張卡（268×121）畫兩次：我們要的、廠商 09-10 送來的。卡上四行就是這一則真正的內容，形狀與顏色完全一樣，差的只有浮水印的大小與位置。卡片的高度是那四行自己撐出來的：日期收成一行之後（見第 2 節那一條），比現在那一張矮 28px，文字底下那一塊空白就跟著不見了。</p>
 <div class="cmpwrap">
 <p class="cmpt">圓形（口腔外科紫）・預約成功通知</p>
 <div class="cmprow"><figure class="cmp">
@@ -769,11 +758,36 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </figure>
 </div>
 
-<h3 class="h3">③之五　約診紀錄查詢（輪播 <code>micro</code>）</h3>
-<p class="note">底下輪播那幾張模擬圖畫的是<b>你們現在跑的 207px</b>，不是我們要的 162px —— 這樣它和第 4 節那四張、和你們送來的截圖才比得起來。換成 <code>micro</code> 之後卡片會再窄 45px，那時日期那一行放不下，要請你們在輪播那一格的值裡帶一個換行（<code>2026/09/11</code> 換行 <code>星期五 11:50</code>），單張那一則維持一行。</p>
+<h3 class="h3">4-2　約診紀錄查詢（輪播 <code>micro</code>）</h3>
+<p class="note">底下輪播那幾張模擬圖畫的是<b>你們現在跑的 207px</b>，不是我們要的 162px —— 這樣它和第 3-2 節那四張、和你們送來的截圖才比得起來。換成 <code>micro</code> 之後卡片會再窄 45px，那時日期那一行放不下，要請你們在輪播那一格的值裡帶一個換行（<code>2026/09/11</code> 換行 <code>星期五 11:50</code>），單張那一則維持一行。</p>
+
+<h4 class="h4">同一張卡畫2次</h4>
+<p style="font-size:.88rem;color:var(--soft);margin:0">約診紀錄查詢那條輪播上的同一顆也量過。兩張差的是<b>大小</b>：你們畫成卡寬的三成八，規格是七成二。位置那一項在輪播這張上沒有單獨量過，所以兩張都照定案的溢出量畫。</p>
+<div class="stgrid">
+<figure class="stwrap">
+<div class="carcard stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+<svg class="wm" width="150" height="73.93"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</div>
+<figcaption><b>我們要的</b>　150px・卡寬的 72.5%<br><b>定案</b>：往右下溢出 18／10px，右下那一塊被卡片切掉。</figcaption>
+</figure>
+<figure class="stwrap">
+<div class="carcard stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+<svg class="wm" width="80" height="39.43"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</div>
+<figcaption><b>廠商送來的</b>　80px・卡寬的 38.6%<br>從你們 09-10 那張輪播的截圖量出來的。</figcaption>
+</figure>
+</div>
 
 <h4 class="h4">九顆各自畫在卡片上該有的樣子</h4>
-<p style="font-size:.88rem;color:var(--soft);margin:0">同樣九顆，這一次畫在<b>輪播</b>那張卡上、照上面那張表<b>輪播那一欄</b>的寬度。卡上那兩行一樣是那份 Flex JSON 裡真正的內容。輪播的卡比單張窄，所以同一顆佔掉的比例大得多 —— 那正是寬度要分成兩欄的理由。這一則多一列「約診狀態」，見第 4 節。</p>
+<p style="font-size:.88rem;color:var(--soft);margin:0">同樣九顆，這一次畫在<b>輪播</b>那張卡上、照上面那張表<b>輪播那一欄</b>的寬度。卡上那兩行一樣是那份 Flex JSON 裡真正的內容。輪播的卡比單張窄，所以同一顆佔掉的比例大得多 —— 那正是寬度要分成兩欄的理由。這一則多一列「約診狀態」，見第 3-2 節。</p>
 <div class="stgrid">
 <figure class="stwrap">
 <div class="carcard stcard cb">
@@ -865,178 +879,6 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 </div>
 <figcaption><b>一般牙科・定期檢查</b>　r3c3・142px・卡寬的 68.6%<br><span class="was">輪播那一欄：215 → 142px</span></figcaption>
 </figure>
-</div>
-
-<h4 class="h4">同一張卡畫2次</h4>
-<p style="font-size:.88rem;color:var(--soft);margin:0">約診紀錄查詢那條輪播上的同一顆也量過。兩張差的是<b>大小</b>：你們畫成卡寬的三成八，規格是七成二。位置那一項在輪播這張上沒有單獨量過，所以兩張都照定案的溢出量畫。</p>
-<div class="stgrid">
-<figure class="stwrap">
-<div class="carcard stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
-<svg class="wm" width="150" height="73.93"
-  viewBox="0 0 44.304 21.834" preserveAspectRatio="none" aria-hidden="true"
-  style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
-  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
-</div>
-<figcaption><b>我們要的</b>　150px・卡寬的 72.5%<br><b>定案</b>：往右下溢出 18／10px，右下那一塊被卡片切掉。</figcaption>
-</figure>
-<figure class="stwrap">
-<div class="carcard stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
-<svg class="wm" width="80" height="39.43"
-  viewBox="0 0 44.304 21.834" preserveAspectRatio="none" aria-hidden="true"
-  style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
-  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
-</div>
-<figcaption><b>廠商送來的</b>　80px・卡寬的 38.6%<br>從你們 09-10 那張輪播的截圖量出來的。</figcaption>
-</figure>
-</div>
-
-<div class="rows" style="margin-top:1.4em">
-<div class="row"><p class="k">要換的規則</p><p class="v"><code>(約診月份 + 約診日) % 9</code>，照上面那張表由上到下的順序取第幾顆。同一筆約診不管查幾次都是同一顆；預約成功通知與查詢清單裡的那一張，也要是同一顆、同一色。（送來的那一批裡，同一筆約診 2020/09/11 09:00 在 14:20 是圓形、14:23 是寬形。）</p></div>
-<div class="row"><p class="k">請照這樣填</p><p class="v">問法因此不是「是不是限制」，是<b>你們的 <code>size</code> 寫成 px、關鍵字、還是百分比，填的是哪一個值</b>。三種寫法各有一個會讓它變小的機制，三種都改得動：關鍵字是一把粗的階梯、填不進 104 或 150；百分比的基準是它的父層 box，父層若是有內距的內容框就會小一截；px 就只是填了別的數字。這三條我們只有文件上的理解、沒有實機驗過，所以先當成問題請你們確認；要填的值都在上面那張表裡。</p></div>
-</div>
-
-<h2 class="h2">4　約診狀態那一列<span class="t">2026-09-12 定案・卡片畫成輪播上真正的 207px 寬</span></h2>
-<p class="note">2026-09-12 一格一格挑完了，整理成一段可以直接照做的規格。它只為「那個欄位移不掉」那條路存在 —— 第一層要問的仍然是：<b>病人自己按過取消的那一筆，能不能就不要列在他的查詢清單裡</b>（樂衍後台照舊保留）。</p>
-<div class="stgrid">
-<figure class="stwrap">
-<div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
-<p class="r"><span class="lb">約診狀態</span><span class="pill"
-  style="background:#4478b5">已排定</span></p>
-<svg class="wm" width="141" height="45.72"
-  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
-  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
-  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
-</div>
-<figcaption>已排定　齒顎矯正　<code>#4478b5</code></figcaption>
-</figure>
-<figure class="stwrap">
-<div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
-<p class="r"><span class="lb">約診狀態</span><span class="pill"
-  style="background:#3f654a">已確認</span></p>
-<svg class="wm" width="141" height="45.72"
-  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
-  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
-  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
-</div>
-<figcaption>已確認　一般牙科　<code>#3f654a</code></figcaption>
-</figure>
-<figure class="stwrap">
-<div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
-<p class="r"><span class="lb">約診狀態</span><span class="pill"
-  style="background:#c28229">未回覆</span></p>
-<svg class="wm" width="141" height="45.72"
-  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
-  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
-  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
-</div>
-<figcaption>未回覆　兒童牙科　<code>#c28229</code></figcaption>
-</figure>
-<figure class="stwrap">
-<div class="stcard cb">
-<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
-<p class="r"><span class="lb">約診狀態</span><span class="pill"
-  style="background:#ae4f4d">已取消</span></p>
-<svg class="wm" width="141" height="45.72"
-  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
-  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
-  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
-</div>
-<figcaption>已取消　顯微根管　<code>#ae4f4d</code></figcaption>
-</figure>
-</div>
-<p class="note">四張卡各掛一個值 —— 一張卡上看不出四種的相對份量。卡片畫成輪播上真正的寬度（207px），兩行內容照你們 09-10 那一版，日期是調過排法的那一種（星期幾接在日期後面、時間自己一行），所以星期幾一定跟著它的日期，不會被折到下一行去。浮水印是定案的淡墨、往右下溢出。這四張的浮水印是這一筆日期算出來的那一顆（<code>r1c3</code>）。</p>
-<div class="rows" style="margin-top:1.2em">
-<div class="row"><p class="k">欄位名</p><p class="v"><b>約診狀態</b>（廠商現在印的是「預約狀態」）。改的只是卡片上印出來的那個標籤，資料庫欄位叫什麼名字不必動。</p></div>
-<div class="row"><p class="k">四個值</p><p class="v"><b>已排定／已確認／未回覆／已取消</b>。</p></div>
-<div class="row"><p class="k">色票</p><p class="v">齒顎矯正 <code>#4478b5</code>／一般牙科 <code>#3f654a</code>／兒童牙科 <code>#c28229</code>／顯微根管 <code>#ae4f4d</code>（＝第 3 節那九顆的同一份色）。</p></div>
-<div class="row"><p class="k">畫法</p><p class="v"><b>底套色、白字、加粗的藥丸</b>，圓角 8.5px（站上那一族）。Flex 寫成 horizontal box、藥丸那一格 <code>flex: 0</code>、後面補一個 <code>filler</code>，藥丸才會只包住那幾個字而不是撐滿整列。</p></div>
-<div class="row"><p class="k">對齊</p><p class="v"><b>基線對齊</b>（三種比過之後挑的）。</p></div>
-<div class="row"><p class="k">標籤</p><p class="v">「約診狀態」那四個字<b>維持不加粗、不套色</b>。</p></div>
-<div class="row"><p class="k">浮水印</p><p class="v">那張卡的浮水印換成<b>淡墨色</b>（柔墨 <code>#5c5f57</code>，<code>wm-&lt;形狀&gt;-ink12.png</code>）。形狀、寬度、濃度一個數字都沒動，換掉的只有顏色。</p></div>
-<div class="row"><p class="k">先問的是哪一題</p><p class="v">這一整節只為「那個欄位移不掉」那條路存在。<b>第一層要問的仍然是：病人自己按過取消的那一筆，能不能就不要列在他的查詢清單裡</b> —— 做得到的話那一列根本不會出現，底下這些都不必做。</p></div>
-<div class="row"><p class="k">還要一支測試訊息</p><p class="v">藥丸裡那個字怎麼坐在盒子裡是 LINE 決定的（<code>text</code> 沒有行高可以設）。我們寫得出 <code>paddingTop</code>／<code>paddingBottom</code>，但對不對得上要實際送一則出來看。</p></div>
-</div>
-
-<h2 class="h2">5　綁定完成<span class="t">現在長什麼樣，以及兩個處理方向</span></h2>
-<div class="two">
-<figure class="fig">
-<a href="bind-live-0912.jpg"><img src="bind-live-0912.jpg" width="750" height="1551"
-  alt="綁定完成那一刻，病人那一側看到的畫面"></a>
-<figcaption>病人那一側看到的畫面。只裁掉最上面的狀態列，門號那幾個字遮成 09xxxxxxxx（這個 repo 是公開的）。</figcaption>
-</figure>
-<div class="dir">
-<p class="t">我們自己的帳號，2026-09-12 中午 12:06</p>
-<p><i>看到</i>12:06 病人那一側送出「✅ 09xxxxxxxx 綁定成功！可以啟用線上相關服務囉！」（畫面右邊、綠泡泡）；<b>同一分鐘</b>，帳號回了那一則通用的自動回應，逐字就是已定稿的那一份。聊天室頁首寫著「此官方帳號正在自動回覆訊息」。</p>
-</div>
-</div>
-
-<h3 style="font-size:.95rem;margin:1.8em 0 .2em">廠商的回覆，與兩個處理方向</h3><div class="two">
-<figure class="fig">
-<a href="reply-0910.jpg"><img src="reply-0910.jpg" width="750" height="1080"
-  loading="lazy" alt="廠商 2026-09-10 的回覆"></a>
-<figcaption>廠商 2026-09-10 的回覆（客戶經理 Sunny）。只裁掉最上面的狀態列與群組名、最下面的輸入列。</figcaption>
-</figure>
-<div>
-<div class="dir">
-<p class="t">方向一　從源頭不要送那一則</p>
-<p><i>要的是</i>在廠商系統那一側關掉「綁定成功」自動送出。做得到的話，<b>「平常打字進去會收到什麼」就不必再設計</b>。</p>
-<p><i>對方說</i>回覆不能拿掉，理由兩個：<b>a 需通知病患已經綁定好</b>、<b>b 診所櫃檯可以馬上透過手機號碼查看病患資料</b>（原文見上圖）。</p>
-<p><i>現在知道的</i>理由 a 我們自己那張綁定完成卡就在做，玉山的做法也是商家自己送一則、不含號碼。<b>理由 b 是這一輪才知道的新資訊</b> —— 那一則同時是櫃檯在聊天室裡查號碼的入口。</p>
-<p><i>還沒有答案的</i><b>櫃檯能不能從別的地方看到那個號碼。這一題要先問診所自己</b>，問到之前方向一談不下去。</p>
-<p><i>別家的畫面</i>BREAD, ESPRESSO &amp; 綁定那一刻病人那一側沒有出現任何訊息 —— 所以「綁定而不送訊息」在 LINE 上成立。它說明不了廠商系統裡有沒有這個開關。</p>
-</div>
-<div class="dir">
-<p class="t">方向二　留著，但讓兩則不一樣</p>
-<p><i>要的是</i>綁定那一刻收到專屬的那一則，平常打字進去收到通用的那一則。</p>
-<p><i>對方說</i>綁定成功訊息發出時會觸發自動回應，而「官方 LINE」無法針對抓關鍵詞跳不同訊息。</p>
-<p><i>現在知道的</i>那一句涵蓋的是<b>後台</b>的自動回應 —— 它是完全一致比對，而那句話含著每個人不同的號碼，抓不到。</p>
-<p><i>還沒有答案的</i><b>這一則不必由後台回。</b>那句話是你們的系統送出來的，你們在那一刻就知道綁定完成，可以直接在它後面送一則，不必比對任何字串。</p>
-<p><i>別家的畫面</i>潔客幫、中國信託、國泰世華在同一個帳號裡，綁定那一則和平常打字回的那一則就是不一樣的兩則。</p>
-</div>
-</div>
-</div>
-
-<p class="note">兩個方向卡住的地方是同一件事：<b>那句綁定成功歸誰送</b>。改由廠商的系統在綁定當下直接送我們那張卡，理由 a 與方向二同時成立，而且不必比對任何字串。理由 b（櫃檯查號碼）仍然要先問診所自己。</p>
-
-<h2 class="h2">6　還沒有答案的 25 題<span class="t">★ 是最先要的 8 題</span></h2>
-<div class="grp">
-<p class="t">只有廠商能答</p>
-<p class="c">25 題・其中 8 題最先要（★）</p>
-<ol class="ask">
-<li value="1"><span class="s">★</span>這個帳號總共會自動送出哪幾則訊息？（一份清單）<span class="y">目前有四則是從截圖裡發現的，所以還不確定有沒有漏掉。</span></li>
-<li value="3"><span class="s">★</span>同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆 —— 他們的自動回應是怎麼設的？我們能不能照那個設法？<span class="y">不是要求新功能，是問他們手上已經有的設定。</span></li>
-<li value="4"><span class="s">★</span>合約包了什麼：改一則訊息算不算服務範圍內？有沒有次數限制？<span class="y">我們手上沒有這份資訊，所以還不知道每一次調整該怎麼提。</span></li>
-<li value="5"><span class="s">★</span>浮水印的 size 你們是寫成 px、關鍵字、還是百分比？填的是哪一個值？我們要的是：size 用 px（圓形 104px、寬形 150px）、offsetEnd 與 offsetBottom 都是 0px。<span class="y">現在畫出來是規格的五到六成，而且右下被切掉。兩顆的縮小係數不一樣，所以不是平台的上限，是填進去的那個值。</span></li>
-<li value="7"><span class="s">★</span>病人自己按過取消的那一筆，能不能不要列在他的 LINE 查詢清單裡？（樂衍後台照舊保留）<span class="y">這一題先答。做得到的話，底下那兩題都不必問了 —— 那一列根本不會出現。</span></li>
-<li value="9"><span class="s">★</span>那一列若移不掉，三處請照這樣改：提醒發送前那一種不要印未回覆，改成「已排定」；「您已取消，請聯絡診所改約」收成「您已取消」；欄位名「預約狀態」換成「約診狀態」。另外，那四個值請套色並加粗（顏色見下）。<span class="y">「未回覆」現在蓋著兩件不一樣的事：提醒還沒發的時候，沒有人問過他；提醒發了之後，才是真的還沒回應。只要把第一種換成「已排定」，「未回覆」就只剩一個意思，中間那兩種一個字都不必動。整套寫法在第 4 節。</span></li>
-<li value="10"><span class="s">★</span>綁定完成那一則現在是誰回的？改由你們的系統在綁定當下送我們那張卡可不可以？後台的自動回應同時開著會不會兩則一起送？<span class="y">後台那一則的文字要留在診所自己手上，所以「會不會兩則一起送」要先確認。</span></li>
-<li value="11"><span class="s">★</span>若診所櫃檯用不到聊天室那句訊息裡的號碼，系統那一側關不關得掉「綁定成功」自動送出？<span class="y">回覆裡的兩個理由，其中一個（櫃檯查號碼）診所會先自己確認。</span></li>
-</ol>
-<details><summary>其餘 17 題</summary>
-<ol class="ask">
-<li value="2">約診查詢那張卡的日期，maxLines 是不是拿掉了？（送來的輪播截圖上「2026/09/11 11:50 星期五」完整顯示，看起來已經處理掉了，請確認一句。）<span class="y">全線唯一一件現在就在出錯的事，看起來已經好了。要修的是 wrap，換短格式只是多買一層餘裕。</span></li>
-<li value="6">浮水印用 position: absolute 疊在文字後面，實機上會不會蓋到字？<span class="y">這一項從來沒有實機驗過；09-10 那四張的右下角剛好沒有字。蓋到就退回「右邊一顆不重疊」。</span></li>
-<li value="8">這一欄總共有幾種值？診所告訴我們是四種：提醒發送前一律顯示未回覆；提醒發送之後，點了確定是已確認、沒有點是未回覆、按了取消是已取消。這四種是全部嗎？<span class="y">欄位名要怎麼改，取決於它裝得下哪幾種值。診所已經確認系統分得出「提醒還沒發」和「提醒發了但還沒回應」，所以下一題做得到。</span></li>
-<li value="12">24 小時沒回應自動取消：計時會不會跳過休診日？被自動取消時會不會通知病人？</li>
-<li value="13">提醒卡是不是固定 48 小時前送？（真截圖那一則是 3 天前）</li>
-<li value="14">「預約改期」那顆按鈕的字改不改得動？（它只取消）</li>
-<li value="15">取消確認那兩顆按鈕的順序可不可以調？（把「不取消」排前面）</li>
-<li value="16">期限外那一種可不可以直接回電話那一則，不要先問一次？</li>
-<li value="17">颱風休診那天，系統裡那些約診會變成什麼？<span class="y">它決定「這次不算你失約」那句能不能寫。</span></li>
-<li value="18">能不能做一個臨時休診公告：診所選一個日期，系統自動發給那天有約的人？</li>
-<li value="19">還沒綁定的人按其他格會怎樣？總共有幾種自動回覆？</li>
-<li value="20">「您尚未有任何預約」那一則要不要一起改？</li>
-<li value="21">圖文選單做不做得到分眾（綁定前後給不同的選單）？</li>
-<li value="22">選單列那行字（現在是「手機註冊」）誰在設、改不改得動？<span class="y">圖上寫「手機綁定」，同一條選單兩個詞。</span></li>
-<li value="23">綁定的網址（我們卡片上那顆按鈕還是佔位符）。</li>
-<li value="24">輪播最多幾張？超過怎麼辦？（LINE 上限 12）</li>
-<li value="25">Flex 裡「可點的 box」有沒有按壓反白？</li>
-</ol></details>
 </div>
 
 <p class="foot">
