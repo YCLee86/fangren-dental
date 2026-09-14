@@ -596,6 +596,28 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
       + " —— 這台容器沒有 Noto Sans TC，數字會退到寬一成的字型，日期會在 LINE 上"
       + "放得下的地方折行，而且折在「星期／五」中間，出圖與量測都會說謊");
 
+  /* 卡片底色（2026-09-14 換成純白）：出處是 line-booked 那一頁的 --wcard。
+     ⚠⚠ 這一頁把同樣那兩張卡畫了兩次（第 3 節九張、第 4 節四張）——
+       抄一份色碼的話，同一張卡在兩頁上會是兩個顏色，而版面完全正常。 */
+  const WCARD = ((fs.readFileSync(
+    path.join(HERE, "..", "..", "preview", "line-booked", "index.html"), "utf8")
+    .match(/--wcard:\s*(#[0-9a-fA-F]{6})/) || [])[1] || "").toLowerCase();
+  if (!/^#[0-9a-f]{6}$/.test(WCARD))
+    bad.push("⑰ line-booked 那一頁上找不到 --wcard —— 卡片底色沒有出處了");
+  if (!/--wcard/.test(gen))
+    bad.push("⑰ build-vendor.mjs 沒有去讀 --wcard —— 底色會和 line-booked 那一頁分家");
+  if (/#f4f4f5/i.test(gen碼.replace(/--card:#f4f4f5/, "")))
+    bad.push("⑰ build-vendor.mjs 裡還留著寫死的 #f4f4f5 —— 那兩張卡的底只准從 --wcard 讀");
+  for (const [節, re] of [["第 3 節", /<rect[^>]*rx="9" fill="([^"]+)"/],
+                          ["第 4 節", /\.stcard\{[^}]*background:([^;]+);/]]) {
+    const m = gen.match(re);
+    if (!m) bad.push(`⑰ ${節}那張卡找不到底色那一行`);
+    else if (m[1].trim() !== "${WCARD}")
+      bad.push(`⑰ ${節}那張卡的底色寫的是 ${m[1].trim()}，不是從 --wcard 讀的`);
+  }
+  /* ⚠ 「產出的那一頁是不是上一輪跑剩的」不必在這裡再驗一次 —— 第 ① 道重跑之後
+     逐位比對，`html` 永遠是剛產出來的那一份。寫一道永遠不會失敗的守門比不寫還糟。 */
+
   /* 卡上那幾行的出處：booked-card.json，這一頁不另外打一份 --------------- */
   const BK = JSON.parse(fs.readFileSync(path.join(HERE, "booked-card.json"), "utf8"));
   const 讀行 = (key) => {

@@ -69,7 +69,17 @@ for (const [a, b] of [["r2c2","r3c2"],["r1c1","r3c1"],["r1c3","r2c3"],
     throw new Error(`${a} 和 ${b} 是「裁切之後分不出來」的一對，顏色不可以一樣`);
 
 /* 墨壓在浮水印最濃處還讀不讀得到 —— 每一色 × 每一濃度都先算過再出圖 */
-const INK = "#2a2c27", SOFT = "#5c5f57", CARD = "#f4f4f5";
+const INK = "#2a2c27", SOFT = "#5c5f57";
+/* 這兩則的卡片底色（2026-09-14 從 #f4f4f5 換成純白）。
+   ⚠⚠ 出處只有一個：規格頁 :root 的 --wcard —— 這裡**讀回來**不要抄一份。
+     這個值只進「墨壓在最濃處還讀不讀得到」那道守門，不會烘進 PNG
+     （顏色與 alpha 都是烘在圖裡的），所以換底色不必重產那 36 張。 */
+const CARD = (() => {
+  const m = fs.readFileSync(path.join(OUT, "index.html"), "utf8")
+    .match(/--wcard:\s*(#[0-9a-fA-F]{6})/);
+  if (!m) throw new Error("規格頁的 :root 裡找不到 --wcard —— 卡片底色沒有出處了");
+  return m[1];
+})();
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const lin = (c) => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
 const lum = (rgb) => .2126 * lin(rgb[0]) + .7152 * lin(rgb[1]) + .0722 * lin(rgb[2]);

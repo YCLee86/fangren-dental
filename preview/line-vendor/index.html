@@ -130,7 +130,7 @@ summary::marker{color:var(--rule)}
 .stgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(207px,1fr));
   gap:16px 12px;margin:1em 0 0}
 .stwrap{margin:0;max-width:207px}
-.stcard{position:relative;overflow:hidden;background:var(--card);
+.stcard{position:relative;overflow:hidden;background:#ffffff;
   border:1px solid var(--rule);border-radius:9px}
 /* 卡上那幾行 —— 第 3 節那幾張 SVG 卡（foreignObject）與第 4 節那四張 HTML 卡
    吃的是同一組規則，所以兩處的字級、行距與折行一定一樣。
@@ -324,6 +324,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 <ol><li><p class="d"><b>位置：往右下溢出 18／10px</b>，卡片把跑出去的那一塊切掉 —— 不是貼齊右下角、整顆收在卡內。</p></li>
 <li><p class="d"><b>寬度：兩則各一欄，那不是筆誤</b>（2026-09-14 定案）。九顆的寬度不一樣是刻意的（按墨的面積算的，這樣看起來才一樣重），而兩則的卡片寬差 106px，同一個 px 佔掉的比例差很多 —— 所以那份 Flex JSON 的浮水印 <code>size</code> 拆成兩個欄位：單張吃 <code>watermark_size_single</code>、輪播吃 <code>watermark_size_carousel</code>。單張（mega）r3c2 106→<b>131</b>、r3c3 215→<b>186</b>，其餘七顆照原寬；輪播（micro）r1c3 188→<b>141</b>、r2c3 188→<b>141</b>、r3c3 215→<b>142</b>，其餘六顆照原寬。下面那九張卡畫的是<b>單張那一欄</b>。</p></li>
 <li><p class="d"><b>顏色</b>：淡墨素色，柔墨 <code>#5c5f57</code>、濃度 12%。</p></li>
+<li><p class="d"><b>卡片底色：純白 <code>#FFFFFF</code></b>（2026-09-14 定案）。這兩則先前寫的是 <code>#F4F4F5</code>（診所網站的卡片色），現在改成純白 —— 那份 Flex JSON 的 <code>backgroundColor</code> 已經是這個值，其餘五則沒有動。</p></li>
 <li><p class="d">那份 Flex JSON 裡 <code>offsetEnd</code>／<code>offsetBottom</code> 仍然寫著 <code>0px</code>，因為 Flex 的 offset 不吃負值、表達不出溢出。你們 09-10 那一版已經做出溢出了（量到 8~10／6~7px）—— <b>請照你們的做法，把溢出量統一成 18／10px</b>。</p></li></ol></div>
 <p class="note">浮水印的顏色改成<b>淡墨素色</b>：柔墨 <code>#5c5f57</code>，壓在卡片上的濃度維持 12%（檔名 <code>wm-&lt;形狀&gt;-ink12.png</code>）。<b>形狀、寬度、位置一個數字都沒動，換掉的只有顏色。</b>下面九顆上面那一排仍然印原色，那一份色是第 4 節那四個值在用的，不是浮水印的顏色。<br>
 每一格<b>上面是原色</b>（看得出形狀與是哪一科），<b>虛線底下是它壓在卡片上真正的樣子</b>
@@ -426,7 +427,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="我們要的：浮水印 104px，往右 18、往下 10">
 <defs><clipPath id="clip-1"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-1)" opacity="0.12">
 <svg x="182.00" y="27.00" width="104" height="104.00"
@@ -445,7 +446,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="廠商送來的：浮水印 67px，往右 10、往下 7">
 <defs><clipPath id="clip-2"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-2)" opacity="0.12">
 <svg x="211.00" y="61.00" width="67" height="67.00"
@@ -467,7 +468,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="我們要的：浮水印 150px，往右 18、往下 10">
 <defs><clipPath id="clip-3"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-3)" opacity="0.12">
 <svg x="136.00" y="57.07" width="150" height="73.93"
@@ -486,7 +487,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="廠商送來的：浮水印 83px，往右 8、往下 6">
 <defs><clipPath id="clip-4"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-4)" opacity="0.12">
 <svg x="193.00" y="86.09" width="83" height="40.91"
@@ -511,7 +512,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="一般牙科・定期檢查：浮水印 107px，往右 18、往下 10">
 <defs><clipPath id="clip-5"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-5)" opacity="0.12">
 <svg x="179.00" y="24.00" width="107" height="107.00"
@@ -530,7 +531,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="牙周治療：浮水印 150px，往右 18、往下 10">
 <defs><clipPath id="clip-6"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-6)" opacity="0.12">
 <svg x="136.00" y="57.07" width="150" height="73.93"
@@ -549,7 +550,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="齒顎矯正：浮水印 188px，往右 18、往下 10">
 <defs><clipPath id="clip-7"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-7)" opacity="0.12">
 <svg x="98.00" y="70.04" width="188" height="60.96"
@@ -568,7 +569,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="顯微根管：浮水印 152px，往右 18、往下 10">
 <defs><clipPath id="clip-8"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-8)" opacity="0.12">
 <svg x="134.00" y="55.94" width="152" height="75.06"
@@ -587,7 +588,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="植牙・假牙重建：浮水印 120px，往右 18、往下 10">
 <defs><clipPath id="clip-9"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-9)" opacity="0.12">
 <svg x="166.00" y="40.91" width="120" height="90.09"
@@ -606,7 +607,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="口腔外科：浮水印 188px，往右 18、往下 10">
 <defs><clipPath id="clip-10"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-10)" opacity="0.12">
 <svg x="98.00" y="69.98" width="188" height="61.02"
@@ -625,7 +626,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="口腔外科：浮水印 104px，往右 18、往下 10">
 <defs><clipPath id="clip-11"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-11)" opacity="0.12">
 <svg x="182.00" y="27.00" width="104" height="104.00"
@@ -644,7 +645,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="兒童牙科：浮水印 131px，往右 18、往下 10">
 <defs><clipPath id="clip-12"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-12)" opacity="0.12">
 <svg x="155.00" y="-0.13" width="131" height="131.13"
@@ -663,7 +664,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
   width="300" height="145"
   role="img" aria-label="一般牙科・定期檢查：浮水印 186px，往右 18、往下 10">
 <defs><clipPath id="clip-13"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="268" height="121" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
 <g clip-path="url(#clip-13)" opacity="0.12">
 <svg x="100.00" y="70.67" width="186" height="60.33"

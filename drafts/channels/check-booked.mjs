@@ -7,7 +7,7 @@
  * 這一支比對八件：
  *   ① 兩則的每一段文字逐字（含加粗的姓名）
  *   ② 字級（LINE Flex 的固定 px 表 —— 定案 日期 lg 19／姓名 md 16／小字 xs 13）
- *   ③ 顏色（卡 #F4F4F5・墨 #2A2C27・柔墨 #5C5F57，一顆都沒新增）
+ *   ③ 顏色（卡 #FFFFFF ＝ 規格頁的 --wcard・墨 #2A2C27・柔墨 #5C5F57，一顆都沒新增）
  *   ④ 浮水印：九顆的寬度與長寬比要**逐筆等於 wm-sizes.json**（唯一出處）
  *   ⑤ 浮水印：九顆 × 三個濃度的 PNG 都在，而且不超過 LINE 的 1024×1024
  *      ＋ **淡墨色那一版**（`wm-<形狀>-ink12.png`，九張，第 ②之二 節的 Ⓒ 在用）
@@ -42,6 +42,15 @@ const bad = [];
 const ok = (cond, msg) => { if (!cond) bad.push(msg); };
 
 const PX = { xxs: 11, xs: 13, sm: 14, md: 16, lg: 19, xl: 22, xxl: 27 };
+
+/* 這兩則的卡片底色（2026-09-14 使用者指定從 #F4F4F5 換成純白）。
+   ⚠⚠ 出處只有一個：規格頁 :root 的 --wcard —— 這裡**讀回來**不要抄一份，
+     抄了之後改一邊，JSON 與畫面會靜靜地分家（而每一道尺寸守門都會過）。 */
+const WCARD = ((fs.readFileSync(PAGE, "utf8")
+  .match(/--wcard:\s*(#[0-9a-fA-F]{6})/) || [])[1] || "").toUpperCase();
+ok(/^#[0-9A-F]{6}$/.test(WCARD), "規格頁的 :root 裡找不到 --wcard —— 卡片底色沒有出處了");
+ok(WCARD === "#FFFFFF",
+  `卡片底色該是純白（2026-09-14 定案），規格頁寫的是 ${WCARD || "（找不到）"}`);
 const ORDER = ["r1c1", "r1c2", "r1c3", "r2c1", "r2c2", "r2c3", "r3c1", "r3c2", "r3c3"];
 const flat = (t) => (t.text != null ? t.text : t.contents.map((c) => c.text).join(""));
 
@@ -64,7 +73,8 @@ for (const [name, b] of [["預約成功", BOOKED], ["查詢輪播", QUERY]]) {
   ok(kids[0].position === "relative",
     `${name}：內容那個 box 要 position: relative，浮水印才會被壓在它下面`);
   ok(kids[1].position === "absolute", `${name}：浮水印要 position: absolute`);
-  ok(b.body.backgroundColor === "#F4F4F5", `${name}：卡色要 #F4F4F5`);
+  ok(b.body.backgroundColor === WCARD,
+    `${name}：卡色要 ${WCARD}（規格頁的 --wcard），現在 ${b.body.backgroundColor}`);
   ok(b.body.paddingAll === "14px", `${name}：內距要 14px（和另外三則同一套）`);
 }
 
@@ -109,10 +119,9 @@ ok(qk[0].color === "#5C5F57", "查詢輪播：姓名要用柔墨（它是標籤�
 /* ---- ③ 沒有按鈕、沒有彩色方塊（這兩則是收據）------------------------ */
 const dump = JSON.stringify([BOOKED, QUERY]);
 ok(!/"action"/.test(dump), "這兩則上不該有任何按鈕（沒有「現在請你做」的動作）");
-ok(!/"backgroundColor":"(?!#F4F4F5)/.test(dump.replace(/\s/g, "")) ||
-   (dump.match(/"backgroundColor": ?"(#[0-9A-Fa-f]{6})"/g) || [])
-     .every((s) => /#F4F4F5/i.test(s)),
-  "這兩則上不該有淡底彩色方塊 —— 那是給警示與行動用的");
+ok((dump.match(/"backgroundColor": ?"(#[0-9A-Fa-f]{6})"/g) || [])
+     .every((s) => s.toUpperCase().includes(WCARD)),
+  "這兩則上不該有淡底彩色方塊 —— 那是給警示與行動用的（底色只准是卡片色）");
 
 /* ---- ④⑤⑥ 浮水印：對照表 ↔ wm-sizes.json ↔ 真的 PNG ------------------ */
 /* ---- 兩則各自的浮水印寬度（＝規格頁那兩張定案的表，這裡現算一次去對）----
@@ -189,6 +198,19 @@ for (const n of ORDER) {
      ⚠ 改成 flex-end 的話畫面只差 1px、**每一道尺寸守門都會過**，只有讀這條規則才看得出來。 */
   ok(/\.pv-nw \.st\{[^}]*align-items:baseline/.test(html),
     "那一列不是基線對齊 —— 2026-09-12 定案是基線");
+
+  /* ⚠⚠ 卡片底色 2026-09-14 換成純白：三個地方要一起吃 --wcard，不然這一頁上
+     「卡片長什麼樣」和「面板算出來的數字」會用兩個不同的底，而畫面完全正常。 */
+  ok(/\.pv-nw\{background:var\(--wcard\)\}/.test(html),
+    "那兩張卡沒有吃 --wcard —— 底色會退回站上的卡片色 #f4f4f5");
+  ok(/\.pv-wm figure\{background:var\(--wcard\)/.test(html),
+    "九顆的對照格沒有吃 --wcard —— 那一格會拿和卡片不一樣的底去展示濃度");
+  ok(/var WCARD = \(getComputedStyle\(document\.documentElement\)/.test(html),
+    "面板沒有從 --wcard 讀底色 —— 寫死的底會讓對比與 L* 從換色那一刻起說謊");
+  /* ⚠ 掃的是「拿來算」的那兩處，不是整頁 —— 頁面上講「先前寫的是 #F4F4F5」
+     是說明不是規格（這條線第九次撞到「掃字會掃到自己的說明」）。 */
+  ok(!/_cr\([^)]*#[fF]4[fF]4[fF]5/.test(html) && !/0xf4, 0xf4, 0xf5/.test(html),
+    "面板還拿寫死的 #f4f4f5 在算對比或 L* —— 底色只准從 --wcard 讀");
   for (const c of [".st.bot", ".st.botbox", "pv-stcmp", 'class="st bot', 'class="st botbox'])
     ok(!html.includes(c), `落選那兩種的對齊（${c}）又跑回頁面上 —— 定案只留基線那一種`);
   ok(/h \+= '<p class="st">'/.test(html),

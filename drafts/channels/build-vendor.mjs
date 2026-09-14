@@ -144,6 +144,17 @@ const WM_TABLES = (() => {
   return { single: one("SPREAD1"), car: one("WIDEK2") };
 })();
 
+/* ── 這兩則的卡片底色（2026-09-14 從 #f4f4f5 換成純白）─────────────────
+   ⚠⚠ 出處一樣只有一個：line-booked 那一頁 :root 的 --wcard。這一頁把同樣那兩張
+     卡畫了兩次（第 3 節那九張、第 4 節那四張），底色抄一份的話同一張卡在兩頁上
+     會是兩個顏色，而版面完全正常。 */
+const WCARD = (() => {
+  const m = readFileSync(join(ROOT, "preview", "line-booked", "index.html"), "utf8")
+    .match(/--wcard:\s*(#[0-9a-fA-F]{6})/);
+  if (!m) throw new Error("line-booked 那一頁上找不到 --wcard —— 卡片底色沒有出處了");
+  return m[1];
+})();
+
 const WM = (() => {
   const sizes = JSON.parse(
     readFileSync(join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
@@ -390,7 +401,7 @@ summary::marker{color:var(--rule)}
 .stgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(${SC.卡.w}px,1fr));
   gap:16px 12px;margin:1em 0 0}
 .stwrap{margin:0;max-width:${SC.卡.w}px}
-.stcard{position:relative;overflow:hidden;background:var(--card);
+.stcard{position:relative;overflow:hidden;background:${WCARD};
   border:1px solid var(--rule);border-radius:9px}
 /* 卡上那幾行 —— 第 3 節那幾張 SVG 卡（foreignObject）與第 4 節那四張 HTML 卡
    吃的是同一組規則，所以兩處的字級、行距與折行一定一樣。
@@ -605,7 +616,7 @@ const plate = (shape, g, col) => {
   width="${cardBox.w + PL + PR}" height="${cardBox.h + PT + PB}"
   role="img" aria-label="${esc(g.標)}：浮水印 ${g.size}px，往右 ${g.right}、往下 ${g.bottom}">
 <defs><clipPath id="${id}"><rect x="0" y="0" width="${cardBox.w}" height="${cardBox.h}" rx="9"/></clipPath></defs>
-<rect x="0" y="0" width="${cardBox.w}" height="${cardBox.h}" rx="9" fill="#f4f4f5"/>
+<rect x="0" y="0" width="${cardBox.w}" height="${cardBox.h}" rx="9" fill="${WCARD}"/>
 ${文}
 <g clip-path="url(#${id})" opacity="${WM_A}">
 <svg x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${g.size}" height="${h.toFixed(2)}"

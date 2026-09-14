@@ -138,8 +138,9 @@ const ITEMS = [
       + " <code>maxLines: 1</code>，在輪播的窄卡上<b>真的被截斷</b>（截圖上是「2026/08/20 15:45 星…」）。"
       + "請改成 <code>wrap: true</code>、<b>不要限制行數</b> —— 放得下一行、放不下折兩行，"
       + "這樣不管卡片多寬都不會有字消失。",
-    note: "<b>背景色：<code>#F4F4F5</code></b>（診所網站的卡片色）—— 不必另外設定，"
-      + "<b>我們給的每一份 JSON 裡本來就寫著它</b>，七則統一，照 JSON 走就好。<br>"
+    note: "<b>背景色：<code>#FFFFFF</code>（維持白底）</b> —— 2026-09-14 定案，"
+      + "這兩則從 <code>#F4F4F5</code>（診所網站的卡片色）改成純白，"
+      + "<b>我們給的 JSON 裡就寫著它</b>；其餘五則沒有動，照各自的 JSON 走就好。<br>"
       + "至於右下角那顆淡標誌：<b>我們要的不是背景圖</b>（Flex 的 box 確實沒有背景圖這個欄位，這一點沒有問題），"
       + "是一個<b>疊在卡片上的圖片元件</b>（<code>image</code> ＋ <code>position: absolute</code>，"
       + "靠 <code>offsetEnd</code>／<code>offsetBottom</code> 貼右下角，淡度已經烘在 PNG 裡）。"

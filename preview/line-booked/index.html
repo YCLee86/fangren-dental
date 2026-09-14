@@ -32,6 +32,12 @@
 <style>
 :root{
   --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  /* 這兩則的對話框底色（2026-09-14 使用者指定從卡片色 #f4f4f5 換成純白）。
+     ⚠ 它是**這兩張卡自己的**顏色，不是站上的 --card —— 頁面其餘每一處
+       （表頭、面板、那九顆的對照格）該吃哪一個各自判斷。
+     ⚠⚠ 這一行是唯一的出處：JS 讀它（WCARD）去算對比與 L*，
+       booked-card.json 的 backgroundColor 也是同一個值，守門兩邊都在比。 */
+  --wcard:#ffffff;
   --ink:#2a2c27; --ink-soft:#5c5f57; --green:#3f654a; --deep:#2c5238;
   /* LINE 那一側的顏色（別人的介面，不進 PALETTE.md） */
   --li-bg:#e9edf1; --li-in:#ffffff; --li-head:#ffffff; --li-meta:#8b96a1; --li-ink:#14181c;
@@ -143,10 +149,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
 /* ---- Ⓑ 新版：和招呼圖卡／綁定完成／提醒卡同一套（內距 14）--------------
    顏色一顆都沒新增，全部回 PALETTE.md 拿：
-     卡 #f4f4f5・墨 #2a2c27・柔墨 #5c5f57・線 #cdd0d2・綠 #3f654a・深階 #2c5238
+     卡 #ffffff（2026-09-14 從 #f4f4f5 換成純白）・墨 #2a2c27・柔墨 #5c5f57・
+     線 #cdd0d2・綠 #3f654a・深階 #2c5238
      紙灰方塊 ＝ --paper 直接鋪（同提醒卡那一塊「就診須知」）
    ⚠ **這一輪一顆淡底彩色方塊都沒有** —— 這兩則沒有警示、也沒有要他現在做什麼。 */
-.pv-nw{background:var(--card)}
+.pv-nw{background:var(--wcard)}
 .pv-nw .hero{display:block;width:100%;height:auto;aspect-ratio:2/1;
   background:var(--paper);border-bottom:1px solid var(--rule);object-fit:cover}
 .pv-nw .top{display:flex;align-items:center;gap:8px;padding:11px 14px 10px;
@@ -315,7 +322,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 .pv-tab .sw{display:inline-block;width:.62em;height:.62em;border-radius:2px;
   border:1px solid rgba(0,0,0,.15);vertical-align:-1px;margin-right:.35em}
 .pv-wm{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.pv-wm figure{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+.pv-wm figure{background:var(--wcard);border:1px solid var(--rule);border-radius:10px;
   padding:10px 8px 8px;text-align:center}
 .pv-wm .im{height:var(--imh,56px);display:flex;align-items:center;justify-content:center;
   overflow:hidden}
@@ -376,9 +383,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     互相吵架」）—— 藥丸一填滿，那張卡上就有<b>兩塊彩色</b>在搶同一個位置，
     而浮水印本來就不是要被看到的東西。形狀、寬度、濃度<b>一個數字都沒有動</b>，
     換掉的只有顏色（柔墨 <code>#5c5f57</code>，站上既有的一支，<b>沒有新增顏色</b>）。<br>
-    ⚠ <b>濃度是算出來的不是挑的</b>：那九顆在 12% 疊到卡片色之後是 L* 89.6~91.8，
-    柔墨 12% 落在 <b>L* 89.9</b>（墨 12% 是 87.8，比九顆每一顆都重）——
-    所以<b>只有顏色變了</b>，份量沒有跟著變。
+    ⚠ <b>濃度是算出來的不是挑的</b>：柔墨 12% 疊到卡片色之後，要落在那九顆的
+    份量帶裡（墨 12% 比九顆每一顆都重）—— 所以<b>只有顏色變了</b>，份量沒有跟著變。
+    ⚠⚠ <b>三個 L* 不寫在這裡，底下那塊面板每次現算</b>：底色 2026-09-14 從
+    <code>#f4f4f5</code> 換成純白，寫死的數字會從那一刻起開始說謊。
   </p>
 
   <h3 class="pv-h3">這一列長什麼樣 —— 日期 2026-09-13 定案「指定斷行」</h3>
@@ -617,6 +625,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     return 0.2126 * _lin(n >> 16 & 255) + 0.7152 * _lin(n >> 8 & 255) + 0.0722 * _lin(n & 255); }
   function _cr(a, z) { var x = _lum(a), y = _lum(z);
     return Math.floor(((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)) * 100) / 100; }
+
+  /* 這兩張卡的底色：唯一的出處是樣式表那一行 --wcard，不要在這裡再寫一個值 ——
+     寫死的話換底色時面板會繼續拿舊的底去算，而畫面完全正常。 */
+  var WCARD = (getComputedStyle(document.documentElement)
+    .getPropertyValue("--wcard") || "#ffffff").trim();
 
   /* stat：""＝不畫（定稿）／"txt"＝字套色／"pill"＝底套色白字 */
   var stat = "", STV = null;
@@ -1225,7 +1238,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     var SOFT = "#5c5f57", A = .12;
     function lstar(hexc, a) {
       var p = [1, 3, 5].map(function (i) { return parseInt(hexc.slice(i, i + 2), 16); });
-      var card = [0xf4, 0xf4, 0xf5];
+      var card = [1, 3, 5].map(function (i) { return parseInt(WCARD.slice(i, i + 2), 16); });
       var m = card.map(function (c, i) { return c * (1 - a) + p[i] * a; });
       var Y = .2126 * _lin(m[0]) + .7152 * _lin(m[1]) + .0722 * _lin(m[2]);
       var f = Y > 216 / 24389 ? Math.pow(Y, 1 / 3) : (24389 / 27 * Y + 16) / 116;
@@ -1407,9 +1420,24 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
           }).join("　") + "　門檻 4.5<br>"
         + "⚠ <b>兒童牙科那一顆 3.22 不要訂正</b> —— 站上首頁那顆兒童牙科標記按下去"
         + "就是這個填色配白字，2026-08-08 看過真實版面才定的取捨。<br>"
+        /* ⚠⚠ 底色 2026-09-14 換成純白之後，這一行的數字整組變了 —— 對比是對稱的，
+           所以「套色的字壓在白底上」和上面那一行「白字壓在套色上」現在**是同一組數字**
+           （在 #f4f4f5 上它們是兩組：4.15／2.93 那兩顆過不了）。
+           ⚠ 誰過不了因此不可以寫死一句話，要現場數。 */
         + "⚠ 拿套色當<b>字</b>（落選那一版）壓在卡片色上是 "
-        + STV.map(function (x) { return _cr(x.c, "#F4F4F5").toFixed(2); }).join("／") + " —— "
-        + "<b>藍與橘過不了 4.5</b>，那正是「套色拿來當字是用錯階」。<br>"
+        + STV.map(function (x) {
+            var n = _cr(x.c, WCARD);
+            return x.n + " " + n.toFixed(2) + (n < 4.5 ? "（低於 4.5）" : "");
+          }).join("　") + " —— "
+        + (function () {
+            var no = STV.filter(function (x) { return _cr(x.c, WCARD) < 4.5; });
+            return no.length
+              ? "<b>" + no.map(function (x) { return x.n; }).join("、") + "過不了 4.5</b>，"
+              : "純白底下四顆都過得了 4.5，";
+          })()
+        + "而<b>落選的理由不在這幾個數字</b>：套色那一階本來就是給「填實的塊」用的，"
+        + "拿來當字是用錯階（2026-09-12 定案）。"
+        + "⚠ 底色換成純白之前，這一行是 4.15／6.62／2.93／5.21，藍與橘都過不了。<br>"
         + fitNote() + "<br>" + alignNote() + "<br>" + inkNote() + "</p>";
 
       /* ---- 九顆各畫一次 ＋ 輪替規則（2026-09-14）--------------------
@@ -1688,6 +1716,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "　⚠⚠ <b>你們現在跑的是 <code>deca</code>，這一項是要請你們換的</b>；"
       + "⚠ <b>同一條輪播必須整組一起換</b>，不能只縮其中一張。<br>"
       + "・<code>paddingAll</code> " + CPAD + "px（兩則相同）。<br>"
+      + "・<b>背景色 <code>backgroundColor</code>　" + WCARD.toUpperCase() + "</b>"
+      + "（兩則相同）　⚠ <b>這一項也是要請你們換的</b>："
+      + "先前這兩則寫的是 <code>#F4F4F5</code>（診所網站的卡片色），"
+      + "2026-09-14 改成<b>純白</b>。<br>"
       + "・⚠⚠⚠ 日期那一格<b>一定要 <code>wrap: true</code>、不要 <code>maxLines</code></b> ——"
       + "現在那個 <code>maxLines: 1</code> 正是日期被截成「…15:45 星...」的成因。</p>";
   }
