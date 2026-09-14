@@ -88,6 +88,52 @@ for (const k in PAL) {
   for (const s in SPEC) DEEP[k][s] = liftTo(SPEC[s], [PAL[k].paper, PAL[k].card], 4.5);
   LIFT[k] = Object.fromEntries(Object.entries(SWATCH).map(([n, c]) => [n, liftTo(c, [PAL[k].paper, PAL[k].card], 4.5)]));
 }
+/* color-mix(in srgb, a p%, b)：sRGB 分量（未線性化）直接內插，和瀏覽器算法一樣 */
+const mix = (a, b, p) => "#" + hex2rgb(a).map((v, i) => Math.round((v * p + hex2rgb(b)[i] * (1 - p)) * 255).toString(16).padStart(2, "0")).join("");
+
+/* ---------- 2026-09-15 第二輪：藥丸、地圖、門診圓點 ----------
+   使用者：「窄帶藍灰比較好　但藥丸標籤底色沒套色時的效果很不好　地圖整個辨識度慘不忍睹
+   門診時段的圓點也很不清楚」。
+   ・藥丸：沒選到的那一態白天是「卡色底＋深階字與框」，搬到深底上只剩一圈細線。
+     改成把套色混進卡色的淡色塊（兩個濃度），字再按那塊底重算到 4.5。
+   ・地圖：白天是「亮的街廓、暗一階的路、柔墨街名」，直接換變數之後街廓與路幾乎一樣深（面板印著上一版的比值），
+     而白字（P、芳仁牙醫、停車場名）寫的是 var(--card) —— 夜間 card 是深的，字就沉下去了。
+   ・圓點：沒這科的那一顆吃 --rule，夜間幾乎和卡色一樣；有這科的吃 --accent，
+     植牙、矯正那幾支深的填色在深底上也看不清。 */
+const PILL_P = { t20: 0.2, t32: 0.32 };
+const PILL = {}, SK = {}, MAP = {};
+for (const k in PAL) {
+  const p = PAL[k];
+  PILL[k] = {}; SK[k] = {};
+  for (const s in SPEC) {
+    PILL[k][s] = {};
+    for (const [lv, pp] of Object.entries(PILL_P)) {
+      const bg = mix(FILL[s], p.card, pp);
+      const ink = liftTo(SPEC[s], [bg], 4.5);
+      PILL[k][s][lv] = { bg, ink, cr: cr(ink, bg).toFixed(2), vsFill: cr(bg, FILL[s]).toFixed(2) };
+    }
+    SK[k][s] = liftTo(SPEC[s], [mix(FILL[s], p.card, 0.12)], 4.5);
+  }
+  const [Lc, Cc, Hc] = toLch(p.card);
+  const park = liftTo("#365685", [p.card, mix("#365685", p.card, 0.1)], 4.5);
+  MAP[k] = {
+    /* Ⓜ1 路比街廓亮（和白天反過來）：街廓＝卡色，路往上提 16 L*，街名用主文字 */
+    m1: { bg: p.card, road: fromLch(Lc + 16, Cc, Hc), ink: p.ink },
+    /* Ⓜ2 路比街廓暗（和白天同方向）：路＝底色，街廓比卡色再亮 8 L*，街名用次要文字 */
+    m2: { bg: fromLch(Lc + 8, Cc, Hc), road: p.paper, ink: p.soft },
+    park,
+  };
+  for (const m of ["m1", "m2"]) {
+    const o = MAP[k][m];
+    o.nums = { roadBg: cr(o.road, o.bg).toFixed(2), inkRoad: cr(o.ink, o.road).toFixed(2), inkBg: cr(o.ink, o.bg).toFixed(2),
+      lotRoad: cr("#7a7d77", o.road).toFixed(2), markRoad: cr("#3f654a", o.road).toFixed(2) };
+  }
+  /* 圓點：沒這科那一顆 ＝ 次要文字混 35% 進卡色（和白天 --rule 對卡的份量同一級） */
+  MAP[k].dotFaint = mix(p.soft, p.card, 0.35);
+  MAP[k].dotNums = { soft: cr(p.soft, p.card).toFixed(2), ink: cr(p.ink, p.card).toFixed(2), faint: cr(MAP[k].dotFaint, p.card).toFixed(2),
+    dayFaint: cr("#cdd0d2", "#f4f4f5").toFixed(2), dayRoad: cr("#cdd0d2", "#f4f4f5").toFixed(2), prevRoad: cr(p.rule, p.card).toFixed(2) };
+}
+
 const NUM = {};
 for (const k in PAL) {
   const p = PAL[k];
@@ -125,7 +171,20 @@ html[data-theme="dark"][data-pal="${k}"] {
   --ink: ${p.ink}; --ink-soft: ${p.soft};
   ${Object.entries(LIFT[k]).map(([n, c]) => `--${n}: ${c};`).join(" ")}
 }
-${Object.keys(SPEC).map((s) => `html[data-theme="dark"][data-pal="${k}"] [data-spec="${s}"] { --accent-deep: ${DEEP[k][s]}; }`).join("\n")}`).join("\n");
+html[data-theme="dark"][data-pal="${k}"][data-map="m1"] { --map-bg: ${MAP[k].m1.bg}; --map-road: ${MAP[k].m1.road}; --map-ink: ${MAP[k].m1.ink}; }
+html[data-theme="dark"][data-pal="${k}"][data-map="m2"] { --map-bg: ${MAP[k].m2.bg}; --map-road: ${MAP[k].m2.road}; --map-ink: ${MAP[k].m2.ink}; }
+html[data-theme="dark"][data-pal="${k}"] { --map-park: ${MAP[k].park}; --dot-faint: ${MAP[k].dotFaint}; }
+${Object.keys(SPEC).map((s) => `html[data-theme="dark"][data-pal="${k}"] [data-spec="${s}"] { --accent-deep: ${DEEP[k][s]}; --pill-ink-t20: ${PILL[k][s].t20.ink}; --pill-ink-t32: ${PILL[k][s].t32.ink}; --sk-ink: ${SK[k][s]}; }`).join("\n")}`).join("\n");
+
+/* 沒選到的那一態。⚠ 選到的（aria-pressed／aria-current／tag-on）與實心的專科藥丸要用 :not 排掉，
+   不然這幾條權重比較高，會把選到的那一態也蓋成淡色塊。 */
+const OFF = `:is(.chips :is(button:not([aria-pressed="true"]), a:not([aria-current="page"])), .hours-filter button:not([aria-pressed="true"]), .card-tag:not(.tag-on), .doc-role.tag-off)`;
+const pillCss = Object.entries(PILL_P).map(([lv, pp]) => `
+html[data-theme="dark"][data-pill="${lv}"] ${OFF} {
+  background: color-mix(in srgb, var(--accent) ${pp * 100}%, var(--card));
+  border-color: color-mix(in srgb, var(--accent) ${pp * 100}%, var(--card));
+  color: var(--pill-ink-${lv});
+}`).join("");
 
 const CSS = `
 <style id="pv-night">
@@ -133,6 +192,27 @@ const CSS = `
 html[data-theme="dark"] { color-scheme: dark; }
 ${palCss}
 html[data-theme="dark"] body { background: var(--paper); color: var(--ink); }
+${pillCss}
+/* 醫師卡亮起來的專長（12% 淡色塊）：字按那塊底重算 */
+html[data-theme="dark"] .sk.tag-on { color: var(--sk-ink); }
+
+/* 地圖：白字那幾樣原本寫 var(--card)，夜間要釘回白天的卡色（它們站在綠塊與灰塊上，不是站在卡上） */
+html[data-theme="dark"] .map-svg :is(.pk, .pk-nm, .cm-nm) { fill: #f4f4f5; }
+html[data-theme="dark"] .map-svg .lot .pk { stroke: #f4f4f5; }
+html[data-theme="dark"] .map-svg .cm-disc { fill: #f4f4f5; }
+html[data-theme="dark"] .map-svg .cm-ul { stroke: #f4f4f5; }
+/* 停車場熄滅那一態釘回白天的值（柔墨混 80% 卡色 ＝ #7a7d77，白 P 4.18）；點到那一態的底維持路牌藍原值（白 P 7.43），
+   只有牌子上的字、圖釘、點狀路線改吃提亮過的 --map-park */
+html[data-theme="dark"] .lot rect, html[data-theme="dark"] .lot path { fill: #7a7d77; }
+html[data-theme="dark"] .lot.on rect, html[data-theme="dark"] .lot.on path { fill: #365685; }
+/* 圖釘的影子原本吃 --ink（夜間是亮的），改成黑 */
+html[data-theme="dark"] .map-svg .cm-sh use { fill: #000; opacity: .07; }
+
+/* 門診表的圓點 */
+html[data-theme="dark"][data-dot="ink"] .hours-grid .d { background: var(--ink); }
+html[data-theme="dark"] .hours-grid .d.faint { background: var(--dot-faint); }
+html[data-theme="dark"] .hours-grid .d.hit { background: var(--accent-deep); }
+
 /* 「回到最上面」那一顆寫死的是白天的卡色與柔墨，換成同一個比例的夜間值 */
 html[data-theme="dark"] .btt { background-color: color-mix(in srgb, var(--card) 80%, transparent);
   color: color-mix(in srgb, var(--ink-soft) 82%, transparent); }
@@ -166,8 +246,10 @@ h = h.slice(0, headEnd) + CSS + "\n" + h.slice(headEnd);
 /* 開頁那一刻就決定 data-theme（放 <head> 最前面，不然會先閃一張白天的） */
 const EARLY = `<script>(function(){var u=new URLSearchParams(location.search),r=document.documentElement;
 var th=u.get('th');if(!/^(dark|light)$/.test(th||''))th='dark';
-var p=u.get('pal');if(!/^[ab]$/.test(p||''))p='a';var pos=u.get('pos');if(!/^(head|foot|none)$/.test(pos||''))pos='foot';
-r.dataset.theme=th;r.dataset.pal=p;r.dataset.tpos=pos;})();</script>`;
+var p=u.get('pal');if(!/^[ab]$/.test(p||''))p='b';var pos=u.get('pos');if(!/^(head|foot|none)$/.test(pos||''))pos='foot';
+var pl=u.get('pill');if(!/^(line|t20|t32)$/.test(pl||''))pl='t20';var mp=u.get('map');if(!/^m[12]$/.test(mp||''))mp='m1';
+var dt=u.get('dot');if(!/^(soft|ink)$/.test(dt||''))dt='ink';
+r.dataset.theme=th;r.dataset.pal=p;r.dataset.tpos=pos;r.dataset.pill=pl;r.dataset.map=mp;r.dataset.dot=dt;})();</script>`;
 h = h.replace(/<head>/, "<head>\n" + EARLY);
 
 /* ---------- 4. 切換條 ---------- */
@@ -195,10 +277,14 @@ const BAR = `
 </style>
 <div class="pv-bar" id="pv-bar">
   <div class="pv-r"><span class="pv-l">模式</span>
-    <button data-k="th" data-v="light">白天（現況）</button><button data-k="th" data-v="dark">夜間</button>
+    <button data-k="mode" data-v="light">白天</button><button data-k="mode" data-v="a">Ⓐ 暗夜</button><button data-k="mode" data-v="b">Ⓑ 藍灰</button>
     <button class="pv-x" id="pv-more">數字</button><button id="pv-hide">收起</button></div>
-  <div class="pv-r"><span class="pv-l">夜間配色</span>
-    <button data-k="pal" data-v="a">Ⓐ 暗夜</button><button data-k="pal" data-v="b">Ⓑ 窄帶藍灰</button></div>
+  <div class="pv-r"><span class="pv-l">藥丸</span>
+    <button data-k="pill" data-v="line">線框（上一版）</button><button data-k="pill" data-v="t20">淡色塊</button><button data-k="pill" data-v="t32">濃一點</button></div>
+  <div class="pv-r"><span class="pv-l">地圖</span>
+    <button data-k="map" data-v="m1">Ⓜ1 路比較亮</button><button data-k="map" data-v="m2">Ⓜ2 路比較暗</button></div>
+  <div class="pv-r"><span class="pv-l">圓點</span>
+    <button data-k="dot" data-v="soft">次要文字色（上一版）</button><button data-k="dot" data-v="ink">主文字色</button></div>
   <div class="pv-r"><span class="pv-l">開關放</span>
     <button data-k="pos" data-v="head">頁首</button><button data-k="pos" data-v="foot">頁尾</button><button data-k="pos" data-v="none">不放（跟手機）</button></div>
   <div class="pv-panel" id="pv-panel" hidden></div>
@@ -206,15 +292,29 @@ const BAR = `
 <button class="pv-mini" id="pv-mini" hidden>切換條</button>
 <script>
 (function(){
-  var r=document.documentElement, NUM=${JSON.stringify(NUM)}, PAL=${JSON.stringify(PAL)}, SN=${JSON.stringify(SPECNAME)};
+  var r=document.documentElement, NUM=${JSON.stringify(NUM)}, PAL=${JSON.stringify(PAL)}, SN=${JSON.stringify(SPECNAME)},
+      PILL=${JSON.stringify(PILL)}, MAP=${JSON.stringify(MAP)};
+  function cur(k){ return k==='mode' ? (r.dataset.theme==='light'?'light':r.dataset.pal) : r.dataset[k]; }
   function sync(){
-    document.querySelectorAll('.pv-bar [data-k]').forEach(function(b){ b.setAttribute('aria-pressed', r.dataset[b.dataset.k]===b.dataset.v); });
+    document.querySelectorAll('.pv-bar [data-k]').forEach(function(b){ b.setAttribute('aria-pressed', cur(b.dataset.k)===b.dataset.v); });
     var dark=r.dataset.theme==='dark';
     document.querySelectorAll('.pv-th').forEach(function(b){ b.setAttribute('aria-label', dark?'切換到白天模式':'切換到夜間模式'); });
     document.querySelectorAll('.pv-th-t').forEach(function(s){ s.textContent = dark?'白天模式':'夜間模式'; });
     var m=document.querySelector('meta[name="theme-color"]'); if(m) m.content = dark ? PAL[r.dataset.pal].paper : '#12656a';
     var u=new URL(location.href); u.searchParams.set('th',r.dataset.theme); u.searchParams.set('pal',r.dataset.pal); u.searchParams.set('pos',r.dataset.tpos);
+    ['pill','map','dot'].forEach(function(k){ u.searchParams.set(k,r.dataset[k]); });
     history.replaceState(null,'',u); panel();
+  }
+  function pillHtml(k){
+    var lv=r.dataset.pill; if(lv==='line') return '<br>藥丸：線框（上一版），字對卡見上表。';
+    var rows=Object.keys(PILL[k]).map(function(s){var v=PILL[k][s][lv];return '<tr><td>'+SN[s]+'</td><td><span class="pv-sw" style="background:'+v.bg+'"></span> 底 '+v.bg+'</td><td>字 '+v.ink+' 對底 '+v.cr+'</td><td>和選到的填色差 '+v.vsFill+'</td></tr>';}).join('');
+    return '<br>藥丸（沒選到那一態，套色混 '+(lv==='t20'?'20':'32')+'% 進卡色，字按那塊底重算到 4.5）：<table>'+rows+'</table>';
+  }
+  function mapHtml(k){
+    var m=MAP[k][r.dataset.map].nums, d=MAP[k].dotNums;
+    return '地圖 '+(r.dataset.map==='m1'?'Ⓜ1 路比較亮':'Ⓜ2 路比較暗')+'：路對街廓 '+m.roadBg+'（白天 '+d.dayRoad+'、上一版 '+d.prevRoad+'）　街名對路 '+m.inkRoad+'／對街廓 '+m.inkBg+
+      '　灰色停車場對路 '+m.lotRoad+'　綠色診所對路 '+m.markRoad+'　白字 P 4.18／路牌藍上 7.43（沒動）'+
+      '<br>門診圓點對卡：'+(r.dataset.dot==='ink'?'主文字色 '+d.ink:'次要文字色 '+d.soft)+'　沒這科的那一顆 '+d.faint+'（白天 '+d.dayFaint+'）　有這科的那一顆吃科別字階（對卡 4.5 以上）';
   }
   function panel(){
     var k=r.dataset.pal, p=PAL[k], n=NUM[k];
@@ -228,9 +328,14 @@ const BAR = `
       'Ⓐ／Ⓑ 目前看的是 <b>'+(k==='a'?'Ⓐ 暗夜':'Ⓑ 窄帶藍灰')+'</b>：底 '+sw(p.paper)+'　卡 '+sw(p.card)+'（亮 '+n.lift.toFixed(1)+' L*）　線 '+sw(p.rule)+
       '<br>主文字 '+sw(p.ink)+' 對底 '+n.ink[0]+'／對卡 '+n.ink[1]+'　次要 '+sw(p.soft)+' 對底 '+n.soft[0]+'／對卡 '+n.soft[1]+
       '<br>科別的字階（同色相、只提亮度到對卡 4.5；填色那一階沒動）：<table>'+rows+'</table>'+
+      pillHtml(k)+mapHtml(k)+
       head.slice(4)+'<br>水平捲動：'+(over?'<b style="color:#f88">有（'+(document.documentElement.scrollWidth-innerWidth)+'px）</b>':'沒有');
   }
-  document.querySelectorAll('.pv-bar [data-k]').forEach(function(b){ b.addEventListener('click',function(){ r.dataset[b.dataset.k]=b.dataset.v; sync(); }); });
+  document.querySelectorAll('.pv-bar [data-k]').forEach(function(b){ b.addEventListener('click',function(){
+    var k=b.dataset.k, v=b.dataset.v;
+    if(k==='mode'){ if(v==='light') r.dataset.theme='light'; else { r.dataset.theme='dark'; r.dataset.pal=v; } }
+    else { r.dataset[k]=v; if(r.dataset.theme==='light') r.dataset.theme='dark'; }
+    sync(); }); });
   document.querySelectorAll('.pv-th').forEach(function(b){ b.addEventListener('click',function(){ r.dataset.theme = r.dataset.theme==='dark'?'light':'dark'; sync(); }); });
   document.getElementById('pv-more').onclick=function(){ var q=document.getElementById('pv-panel'); q.hidden=!q.hidden; };
   document.getElementById('pv-hide').onclick=function(){ document.getElementById('pv-bar').hidden=true; document.getElementById('pv-mini').hidden=false; };
