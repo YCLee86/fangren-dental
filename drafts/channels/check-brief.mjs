@@ -117,7 +117,10 @@ if (!has("⑨")) ok("⑨ 五節與 3-1~3-6 照順序，頁內錨點都指得到"
 /* ⑩ 顏色與網址 */
 const sec = (a, z) => html.slice(html.indexOf(`id="${a}"`), html.indexOf(`id="${z}"`));
 const fills = (s) => [...s.matchAll(/<svg class="wm"[\s\S]*?fill="(#[0-9a-fA-F]{6})"/g)].map((m) => m[1].toLowerCase());
-const f32 = fills(sec("s3-2", "s3-3")), f33 = fills(sec("s3-3", "s3-4"));
+/* 3-3 只數九顆那一格（.gm）—— 上面那兩張「尺寸與位置的示意」也畫著淡墨浮水印 */
+const s33 = sec("s3-3", "s3-4");
+const f32 = fills(sec("s3-2", "s3-3")), f33 = fills(s33.slice(s33.indexOf('<div class="gm">')));
+if (!s33.includes('class="dgwm"')) bad.push("⑩ 3-3 少了尺寸與位置的示意（標了溢出量的虛線框）");
 const INK = "#5c5f57";
 if (f32.length !== 9 || new Set(f32).size < 6 || f32.includes(INK)) bad.push(`⑩ 3-2 應該是九顆各自的原色：${f32.join(" ")}`);
 if (f33.length !== 9 || f33.some((c) => c !== INK)) bad.push(`⑩ 3-3 應該是九顆淡墨：${f33.join(" ")}`);

@@ -194,14 +194,39 @@ ${TAB.map((r) => `<tr><td>${r.i}</td><td><b>${r.s.n}</b></td>
 <td><code>${esc(r.比)}</code></td><td><b>${r.單}</b>px${r.單 === r.s.w ? "" : ` <span class="was">（原 ${r.s.w}）</span>`}</td>
 <td>${u(r.url)}</td></tr>`).join("\n")}
 </tbody></table></div>`;
+/* 2026-09-14 使用者：「約診記錄查詢的 micro 卡上 logo 的尺寸和位置設定要列一下，不然廠商會自己猜」——
+   寬、換算後的高、溢出量、露在卡片裡的寬高全部現算印出來。 */
 const tab33 = `<div class="tabw"><table class="tab"><thead><tr>
-<th>#</th><th>形狀</th><th>色碼</th><th><code>aspectRatio</code></th><th>輪播 <code>size</code></th><th>輪播網址 <code>url</code></th>
+<th>#</th><th>形狀</th><th>色碼</th><th><code>aspectRatio</code></th><th>寬 <code>size</code></th><th>高</th>
+<th>位置（對卡片右下角）</th><th>露在卡內</th><th>輪播網址 <code>url</code></th>
 </tr></thead><tbody>
-${TAB.map((r) => `<tr><td>${r.i}</td><td><b>${r.s.n}</b></td>
+${TAB.map((r) => {
+  const h = r.輪 / r.s.ratio;
+  return `<tr><td>${r.i}</td><td><b>${r.s.n}</b></td>
 <td><span class="chip" style="background:${INK}"></span><code>${INK}</code></td>
 <td><code>${esc(r.比)}</code></td><td><b>${r.輪}</b>px${r.輪 === r.s.w ? "" : ` <span class="was">（原 ${r.s.w}）</span>`}</td>
-<td>${u(r.urlc)}</td></tr>`).join("\n")}
+<td>${h.toFixed(1)}px</td><td>右 +${OFF.right}px／下 +${OFF.bottom}px</td>
+<td>${r.輪 - OFF.right} × ${(h - OFF.bottom).toFixed(1)}px</td>
+<td>${u(r.urlc)}</td></tr>`;
+}).join("\n")}
 </tbody></table></div>`;
+/* 標了尺寸的示意：外框（虛線）＝整顆圖的框，卡片把跑出去的那一截切掉 */
+const diagram = (s2) => {
+  const w = wmWidth(s2, true), h = w / s2.ratio;
+  return `<figure class="dg">
+<div class="dgbox" style="width:${BUB.car}px">
+<div class="stcard cb">
+${linesHtml(withDate(MICRO, `${esc("2026/09/11")}<br>${esc(`星期五 ${時間}`)}`))}
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:${PILLVAL[0].色}">${esc(PILLVAL[0].名)}</span></p>
+${wmSvg(s2, true, INK)}
+</div>
+<span class="dgwm" style="width:${w}px;height:${h.toFixed(1)}px;right:${-OFF.right}px;bottom:${-OFF.bottom}px"></span>
+<span class="dgr" style="bottom:${(h / 2 - OFF.bottom).toFixed(1)}px">→ ${OFF.right}px</span>
+<span class="dgb">↓ ${OFF.bottom}px</span>
+</div>
+<figcaption><b>${s2.n}</b>　寬 ${w}px × 高 ${h.toFixed(1)}px・虛線是整顆圖的框</figcaption>
+</figure>`;
+};
 
 /* ── 3-4 四個值：名字與順序要和 vendor-log 的定案同一份 ───────────────── */
 const S4 = B.s3.三之四;
@@ -253,6 +278,13 @@ pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:
   font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.9em 0 0}
 code.url{font-size:.78em;white-space:nowrap}
 .tabv td:first-child{white-space:nowrap;font-weight:600}
+.dgs{display:flex;flex-wrap:wrap;gap:18px 56px;margin:.9em 0 0}
+.dg{margin:0}
+.dgbox{position:relative;margin:0 44px 30px 0}
+.dgwm{position:absolute;border:1.5px dashed #b0453f;pointer-events:none;z-index:2}
+.dgr{position:absolute;right:-44px;font-size:.72rem;color:#b0453f;white-space:nowrap}
+.dgb{position:absolute;right:0;bottom:-30px;font-size:.72rem;color:#b0453f;white-space:nowrap}
+.dg figcaption{font-size:.76rem;color:var(--soft);line-height:1.6}
 .refs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px 14px;margin:.9em 0 0}
 .refs figure{margin:0}
 .refs img{display:block;width:100%;max-width:300px;height:auto;border-radius:10px}
@@ -338,6 +370,8 @@ ${h3("s3-3", "3-3　約診紀錄查詢・定稿", "卡片 micro、浮水印淡�
 <p style="font-size:.9rem;margin:.3em 0 0">${bb(B.s3.三之三.說)}</p>
 ${list(B.s3.三之三.規格)}
 ${tab33}
+<h4 class="h4">尺寸與位置的示意（卡片 micro 約 ${BUB.car}px 寬）</h4>
+<div class="dgs">${diagram(byName.r1c2)}${diagram(byName.r3c3)}</div>
 <h4 class="h4">九顆各自畫在 micro 卡上（約診狀態輪流掛四個值，只是示範）</h4>
 <div class="gm">
 ${WM.map((s2, i) => micro(s2, 例日[i], PILLVAL[i % PILLVAL.length],
