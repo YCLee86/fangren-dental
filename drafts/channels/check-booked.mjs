@@ -212,7 +212,7 @@ for (const n of ORDER) {
      ⚠⚠ 浮水印的預設位置**一定要是往右溢出 18px** —— 那是 2026-09-13 定案的樣子，
        而 shot-booked.png／shot-query.png 與廠商那一頁的規格圖都是照它出的；
        改掉預設值那幾張圖會跟著變，而每一道尺寸守門都會過。 */
-  ok(/\n      wmr = -18;/.test(html),
+  ok(/\n      wmr = -18[,;]/.test(html),   /* ⚠ 2026-09-14 之後它後面還接著 WIDE3，所以逗號也算 */
     "浮水印的預設位置不是往右溢出 18px —— 那是定案的值，尺上的格子不可以寫回預設");
   ok(/right:var\(--wmr,-18px\)/.test(html),
     "浮水印的 right 沒有吃 --wmr（或退回值不是 -18px）—— 尺會按了沒反應");
@@ -299,9 +299,43 @@ for (const n of ORDER) {
      連 shot-booked.png／shot-query.png 都會跟著變，**而畫面上一切正常**
      （2026-09-13 踩到，是出圖的位元組變了才發現）。
      ⚠ 不可以只用 includes 找 `dtm = "free"` —— 宣告變數那一行本身就寫著它。 */
-  ok(/drawScale\("pv-cwd", CWD\);[\s\S]{0,6000}dtm = "free";\s*\n\s*wmink = false;\s*\n\s*stat = "";/
+  ok(/drawScale\("pv-cwd", CWD\);[\s\S]{0,9000}dtm = "free";\s*\n\s*wmink = false;\s*\n\s*stat = "";\s*\n\s*wideK = 1;/
       .test(html),
-    "畫完沒有把 dtm／wmink／stat 還原（或還原排在兩把尺前面）—— 第二次 render 會把 ①② 一起畫成第 ②之二 節那一版");
+    "畫完沒有把 dtm／wmink／stat／wideK 還原（或還原排在幾把尺前面）—— 第二次 render 會把 ①② 一起畫成第 ②之二 節那一版");
+
+  /* ---- ②之五　那三顆細長的要多大（2026-09-14 使用者看出來的）----------
+     ⚠⚠⚠ 那三顆 3.08:1 的在 micro 上**整顆比卡片還寬**，所以橫貫整張卡、
+       左邊還被切掉 —— 那是換成 micro 才長出來的第二層效應（deca 上九顆都收在卡內）。 */
+  ok(/WIDE3 = \["r1c3", "r2c3", "r3c3"\],\s*\n\s*wideK = 1;/.test(html),
+    "WIDE3 那份名單或 wideK 的預設值（1 ＝ 現況）不見了");
+  ok(/var wk = WIDE3\.indexOf\(sn\) >= 0 \? wideK : 1;/.test(html)
+     && /var ww = Math\.round\(sz\.w \* wk\);/.test(html),
+    "nwCard 沒有真的把倍率乘上去 —— 那把尺會按了沒反應、而且不報錯");
+  ok(/id="pv-w1"/.test(html) && /id="pv-w2"/.test(html) && /id="pv-w3"/.test(html)
+     && /id="pv-panel-wide"/.test(html),
+    "②之五 那三條尺或它的面板不見了");
+  /* ⚠ 三顆一起乘同一個倍率 —— 各縮各的會破壞「彼此等墨」（2026-09-04 那條規則）。 */
+  ok(/WIDE3\.forEach\(function \(sn, j\) \{[\s\S]{0,600}wideK = x\.k;/.test(html),
+    "②之五 那三條尺不是三顆共用同一把 WK —— 各縮各的就不再彼此等墨");
+  const wk4 = html.match(/var WK = \[([\s\S]*?)\];/);
+  ok(wk4 && (wk4[1].match(/\{ k:/g) || []).length === 4,
+    `②之五 那把尺不是四格（數到 ${wk4 ? (wk4[1].match(/\{ k:/g) || []).length : "—"} 格）`);
+  /* ⚠⚠ 名單不可以和資料分家：WIDE3 就是 wm-sizes.json 裡長寬比 > 2.5 的那幾顆，
+     面板要現場驗一次（寫死的名單哪天對不上，畫面完全正常）。 */
+  ok(/SIZES\[n\]\.ratio > 2\.5/.test(html) && /real\.join\(\) === WIDE3\.join\(\)/.test(html),
+    "面板沒有現場驗「WIDE3 ＝ wm-sizes.json 裡長寬比 > 2.5 的那幾顆」");
+  /* ⚠⚠⚠ 「扁扁的」有兩個互相獨立的量：**佔掉卡片多寬**與**多少墨**。
+     只印其中一個會把人帶去改錯的東西 —— 兩個都要在面板上。
+     ⚠ 而且墨要**真的去讀像素**，不可以用倍率²推一個數字出來。 */
+  /* ⚠ 不可以只用 includes 找那兩個詞 —— 這一頁把「為什麼」寫在自己的註解裡，
+     掃整份會掃到說明本身（這條線第八次撞到同一件事）。要找**印出來的那一段**。 */
+  ok(/\+ "，佔卡寬 <b>"/.test(html) && /\+ "，看得到的墨 "/.test(html),
+    "②之五 的面板少了「佔卡寬」或「看得到的墨」—— 那兩個量要一起看");
+  ok(/function inkOn\(im, cb\)/.test(html) && /getImageData\(0, 0, nw, nh\)/.test(html),
+    "墨不是現場讀像素量出來的 —— 用公式推一個數字出來，那一欄就只是在重複倍率");
+  ok(/fillWidePanel\(\);/.test(html)
+     && /if \(!im\.complete\) im\.addEventListener\("load", fillWidePanel/.test(html),
+    "圖載完之後沒有重填 ②之五 的面板 —— 那幾格會一直印「—」");
 
   /* ⚠⚠⚠ 開頁那段 fetch 的 catch 不可以把 render() 的例外一起吞掉
      （2026-09-13 踩過：畫面停在「讀不到 wm-sizes.json」、不報錯）。 */

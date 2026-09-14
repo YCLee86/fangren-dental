@@ -422,6 +422,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   <div class="pv-cw" id="pv-nine"></div>
   <div class="pv-panel" id="pv-panel-nine"></div>
 
+
   <h3 class="pv-h3">九顆怎麼輪 —— 規則（兩則共用）</h3>
   <p class="pv-note">
     ⚠⚠⚠ <b>不是按星期幾</b>（你問到的那一件）。按星期幾的話，診所週一到週五看診、
@@ -485,6 +486,32 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   </p>
   <div class="pv-cw" id="pv-cwd"></div>
   <div class="pv-panel" id="pv-panelcw"></div>
+
+  <h3 class="pv-h3">②之五　那三顆細長的要多大（2026-09-14，你看出來的）</h3>
+  <p class="pv-note">
+    你講的 <b>1/1・1/13・1/7</b> 就是 <code>r1c3</code>／<code>r2c3</code>／<code>r3c3</code> ——
+    <b>九顆裡唯一三顆 3.08:1 的形狀</b>。<br>
+    ⚠⚠⚠ <b>「扁扁的」是量得出來的，而且是換成 micro 才長出來的</b>：
+    卡片從 deca 的 207px 收成 micro 的 <b>162px</b>，而它們的寬度沒有跟著收（188／188／215px）——
+    <b>整顆比卡片還寬</b>，所以它們<b>橫貫整張卡、左邊也被切掉 8／8／35px</b>；
+    另外六顆只佔卡寬的 53~83%，讀起來是「角落的一顆標記」。
+    <b>deca 那一版九顆的左緣全部收在卡內</b>（最緊的 r3c3 還留 10px），所以那時看不出這件事。<br>
+    ⚠⚠ <b>不是「墨變重」也不是「墨變輕」</b>：面板現場量過，九顆在卡上
+    <b>看得到的墨只差 1.28 倍</b>（778~998，而那三顆是 979／997／778）——
+    <b>Ⓐ 那一格它們的份量本來就和另外六顆同一級</b>，差的是<b>形狀佔掉整條卡</b>。<br>
+    ⚠⚠⚠ <b>所以這把尺是真的取捨</b>：縮下去形狀就對了，
+    但墨會掉到另外六顆的 <b>56%／44%／32%</b>（墨 ∝ 倍率²）——
+    面板每一格都把兩邊印出來，<b>不要只看其中一個</b>。<br>
+    ⚠⚠⚠ <b>形狀是 3.08:1 的，不縮小就一定橫貫整卡</b> —— 所以能動的只有「縮多少」。
+    ⚠ <b>三顆一起乘同一個倍率</b>，所以它們彼此仍然等墨（那是 2026-09-04 定下的規則）；
+    另外六顆<b>一個數字都沒動</b>。<br>
+    ⚠⚠ <b>還有一條不必付墨的路寫在面板最後</b>：把那三顆從池子裡拿掉、只用六顆 ——
+    代價是撞號，面板寫著會撞在哪幾個間隔。
+  </p>
+  <div class="pv-cw" id="pv-w1"></div>
+  <div class="pv-cw" id="pv-w2"></div>
+  <div class="pv-cw" id="pv-w3"></div>
+  <div class="pv-panel" id="pv-panel-wide"></div>
 
   <h2 class="pv-h2">③ 浮水印：九顆形狀與顏色</h2>
   <p class="pv-sub">用的是<b>九宮格那九個形狀</b>（<code>brand/shapes/shape-r{1,2,3}c{1,2,3}.svg</code>，
@@ -832,7 +859,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       /* 浮水印離卡片右緣多遠：負的 ＝ 往右溢出（現在這樣）、正的 ＝ 往左收進來。
          ⚠⚠ **往左是 Flex 寫得出來的**（`offsetEnd` 正值），而往右溢出寫不出來
            （offset 不吃負值）—— 見第 ②之三 節。 */
-      wmr = -18;
+      wmr = -18,
+      /* 那三顆 3.08:1 的形狀（＝第 ②之五 節那把尺的對象）。
+         ⚠ 名單不要寫死在別處：它就是 wm-sizes.json 裡長寬比 > 2.5 的那幾顆，
+           但 SIZES 是 fetch 回來的、開頁那一刻還沒有，所以這裡列出來、
+           下面有一道現場驗（對不上就在面板標紅）。
+         ⚠ 名字不要叫 WIDE —— 底下那支量測函式裡已經有一個同名的區域變數
+           （後台那張卡自己的可用寬度），撞名不會報錯、只會在某一支裡讀到另一個東西。 */
+      WIDE3 = ["r1c3", "r2c3", "r3c3"],
+      wideK = 1;
 
 
   /* 現況那一張的日期用哪一種：預約成功卡截圖上是短版、查詢卡截圖上是長版。
@@ -870,6 +905,111 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     if (withStatus)
       h += '<div class="kv"><span class="k">預約狀態</span><span class="v">尚未回覆</span></div>';
     return h + '</div></div>';
+  }
+
+
+  /* 第 ②之五 節那把尺的四格。⚠ 放在外層：面板那支函式也要讀它。 */
+  var WK = [{ k: 1,   n: "Ⓐ 1.00（現在這樣）" },
+            { k: .75, n: "Ⓑ 0.75" },
+            { k: .66, n: "Ⓒ 0.66" },
+            { k: .58, n: "Ⓓ 0.58" }];
+
+  /* ---- 量「這一顆在卡上看得到多少墨」（第 ②之五 節）------------------
+     ⚠⚠⚠ 「扁扁的」有兩個互相獨立的量：**佔掉卡片多寬**（形狀）與**多少墨**（份量）。
+       2026-09-14 量出來九顆看得到的墨只差 1.28 倍（778~998），所以那三顆的問題是前者不是後者 ——
+       **兩個都要印，只印其中一個會把人帶去改錯的東西。**
+     ⚠⚠ 墨要換算回 **CSS px**：那九張 PNG 的原始尺寸各不相同（300×300 ~ 602×195），
+       直接數原圖的像素比不出份量。
+     ⚠ canvas 讀像素在 file:// 上會被判成跨來源而丟例外 —— 接不到就回 null，
+       面板印「—」，不要讓整個面板掛掉（同第九節第 24 條那種「不報錯、只是沒作用」）。 */
+  var _colCache = {};
+  function colSums(im) {
+    var key = im.getAttribute("src");
+    if (key in _colCache) return _colCache[key];
+    var nw = im.naturalWidth, nh = im.naturalHeight;
+    if (!nw || !nh) return null;                 /* 還沒載完 —— 不要寫進快取 */
+    var cv = document.createElement("canvas");
+    cv.width = nw; cv.height = nh;
+    var d;
+    try {
+      cv.getContext("2d").drawImage(im, 0, 0);
+      d = cv.getContext("2d").getImageData(0, 0, nw, nh).data;
+    } catch (e) { return (_colCache[key] = null); }
+    var pre = new Float64Array(nw + 1);
+    for (var x = 0; x < nw; x++) {
+      var s = 0;
+      for (var y = 0; y < nh; y++) s += d[(y * nw + x) * 4 + 3];
+      pre[x + 1] = pre[x] + s / 255;
+    }
+    return (_colCache[key] = pre);
+  }
+  /* 回傳這一顆在那張卡上**看得到的墨**（單位：CSS px² 的不透明面積） */
+  function inkOn(im, cb) {
+    var pre = colSums(im);
+    if (!pre) return null;
+    var ib = im.getBoundingClientRect();
+    if (!ib.width) return null;
+    var nw = im.naturalWidth, sc = ib.width / nw;
+    var l = Math.max(cb.left, ib.left), r = Math.min(cb.right, ib.right);
+    if (r <= l) return 0;
+    var c0 = Math.round((l - ib.left) / sc), c1 = Math.round((r - ib.left) / sc);
+    c0 = Math.max(0, Math.min(nw, c0)); c1 = Math.max(0, Math.min(nw, c1));
+    return (pre[c1] - pre[c0]) * sc * sc;
+  }
+  function pctOf(im, cb) {
+    var ib = im.getBoundingClientRect();
+    return Math.max(0, Math.min(cb.right, ib.right) - Math.max(cb.left, ib.left));
+  }
+
+  /* 第 ②之五 節的面板。⚠ 它會被呼叫兩次（畫完一次、圖載完一次）。 */
+  function fillWidePanel() {
+    var host = document.getElementById("pv-panel-wide");
+    if (!host) return;
+    /* ⚠⚠ 先驗那份名單：WIDE3 就是 wm-sizes.json 裡長寬比 > 2.5 的那幾顆。
+         寫死的名單哪天和資料分家，畫面完全正常、只有這一行會變紅。 */
+    var real = SIZES ? SHAPES.filter(function (n) { return SIZES[n].ratio > 2.5; }) : null;
+    var listOk = real && real.join() === WIDE3.join();
+    /* 另外六顆看得到的墨（＝「別人有多重」的基準） */
+    var six = [], rows = [];
+    [].slice.call(document.querySelectorAll("#pv-nine > div")).forEach(function (d) {
+      var im = d.querySelector(".wm");
+      if (WIDE3.indexOf(im.getAttribute("data-shape")) >= 0) return;
+      var v = inkOn(im, d.querySelector(".pv-hc").getBoundingClientRect());
+      if (v != null) six.push(v);
+    });
+    var avg6 = six.length ? six.reduce(function (a, b) { return a + b; }, 0) / six.length : null;
+    WIDE3.forEach(function (sn, j) {
+      var cells = [].slice.call(document.querySelectorAll("#pv-w" + (j + 1) + " > div"))
+        .map(function (d, i) {
+          var cb = d.querySelector(".pv-hc").getBoundingClientRect();
+          var im = d.querySelector(".wm"), ib = im.getBoundingClientRect();
+          var vis = pctOf(im, cb), ink = inkOn(im, cb);
+          return "　" + WK[i].n + "：整顆 <b>" + ib.width.toFixed(0) + "px</b>"
+            + "，佔卡寬 <b>" + (vis / cb.width * 100).toFixed(0) + "%</b>"
+            + "，左邊切掉 " + Math.max(0, cb.left - ib.left).toFixed(0) + "px"
+            + "，看得到的墨 " + (ink == null ? "—" : "<b>" + ink.toFixed(0) + "</b>"
+                + (avg6 ? "（另外六顆平均 " + avg6.toFixed(0) + "，"
+                    + (ink / avg6 * 100).toFixed(0) + "%）" : ""));
+        });
+      rows.push("<b>" + sn + "</b>（" + (SIZES ? SIZES[sn].w : "—") + "px・"
+        + (SIZES ? SIZES[sn].ratio.toFixed(2) : "—") + ":1）<br>" + cells.join("<br>"));
+    });
+    host.innerHTML = "<p class='pv-note'>"
+      + (listOk
+          ? "<span class='ok'>那三顆就是 <code>wm-sizes.json</code> 裡長寬比 > 2.5 的全部</span>"
+          : "<span class='no'>⚠ 名單和 wm-sizes.json 對不上"
+            + (real ? "（資料是 " + real.join("／") + "）" : "（還沒載到）") + "</span>")
+      + "<br>" + rows.join("<br><br>")
+      + "<br><br>⚠⚠ <b>墨 ∝ 倍率²</b>：縮到 0.75 只剩 56%、0.66 剩 44%、0.58 剩 34% ——"
+      + "面板上那個「另外六顆平均」就是它該落在哪裡的基準。"
+      + "<br>⚠⚠⚠ <b>這一格挑的是取捨不是最佳解</b>："
+      + "倍率愈小愈像「角落的一顆標記」、也愈接近另外六顆的形狀，"
+      + "但<b>墨會跟著掉</b>，縮過頭那三天的浮水印就幾乎看不見了。"
+      + "<br>⚠ <b>另外六顆一個數字都沒動</b>，而且三顆共用同一個倍率，"
+      + "所以它們彼此仍然等墨（2026-09-04 那條規則沒有被破壞）。"
+      + "<br>⚠⚠ <b>還有一條不必付墨的路</b>：把那三顆從池子裡拿掉、只用六顆 ——"
+      + "代價是 <code>(月＋日) % 6</code> 在相差 6／12／18／24／<b>30</b> 天時會撞同一顆，"
+      + "而 <b>30 天是真的會發生的回診間隔</b>（那正是 2026-09-04 選九顆的理由）。</p>";
   }
 
   /* ---- Ⓑ 新版 --------------------------------------------------------
@@ -915,10 +1055,15 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     if (!isQuery || look === "wm1" || look === "wm9" || wmOn) {
       var sn = (isQuery && look === "wm1") ? "r1c2" : shapeFor(a);
       var sz = (SIZES && SIZES[sn]) || { w: 150, ratio: 2.029 };
-      /* ⚠ 寬度是那一顆自己的（墨面積正規化過的），高度由長寬比算 —— 不要寫死。 */
+      /* ⚠ 寬度是那一顆自己的（墨面積正規化過的），高度由長寬比算 —— 不要寫死。
+         ⚠⚠ 三顆 3.08:1 的（WIDE3）在 micro 上會橫貫整張卡、左邊也被切掉，
+           所以它們**一起**乘一個倍率 wideK（三顆共用一個數字，彼此仍然等墨）。
+           預設 1 ＝ 現況；只有第 ②之五 節那把尺會動它，畫完要還原。 */
+      var wk = WIDE3.indexOf(sn) >= 0 ? wideK : 1;
+      var ww = Math.round(sz.w * wk);
       h += '<img class="wm" src="wm-' + sn + '-' + (wmink ? "ink12" : wmk) + '.png" alt=""'
-        +  ' style="width:' + sz.w + 'px"'
-        +  ' width="' + sz.w + '" height="' + (sz.w / sz.ratio).toFixed(1) + '"'
+        +  ' style="width:' + ww + 'px"'
+        +  ' width="' + ww + '" height="' + (ww / sz.ratio).toFixed(1) + '"'
         +  ' data-shape="' + sn + '">';
     }
     h += '<div class="b">';
@@ -1328,7 +1473,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
               + vis.toFixed(0) + "px（" + (vis / ib.width * 100).toFixed(0) + "%）";
           }).join("／")
         + "<br>⚠ 三顆 3.08:1 的（r1c3／r2c3／r3c3）<b>整顆比卡片還寬</b>，"
-        + "所以看得到的就是卡片寬本身。</p>";
+        + "所以看得到的就是卡片寬本身 —— <b>那三顆要多大，尺在第 ②之五 節</b>。</p>";
       document.getElementById("pv-panel-rota").innerHTML =
         "<p class='pv-note'><b>" + ROTA_YEAR + " 年週一到週五共 " + RT.tot + " 天</b>"
         + "（國定假日沒有扣掉，扣了也不影響分布）——<br>"
@@ -1441,6 +1586,27 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + "所以這<b>是一個要請廠商換的要求</b>，不是對齊他們現在的做法；"
         + "⚠ <b>整條輪播一起換</b>，不能只縮其中一張。</p>";
 
+      /* ---- ②之五　那三顆細長的要多大（2026-09-14，使用者看出來的）----
+         ⚠ 這一段吃 stat／wmink／dtm／wideK，所以一定要排在還原**之前**。
+         ⚠⚠ 三顆共用**同一個倍率**（不是各縮各的）—— 九顆的寬度是按墨的面積
+           正規化算出來的，各縮各的就會破壞「彼此等墨」那條規則（2026-09-04）。 */
+      WIDE3.forEach(function (sn, j) {
+        var k3 = SHAPES.indexOf(sn), a3 = RT.eg[k3];
+        document.getElementById("pv-w" + (j + 1)).innerHTML = WK.map(function (x) {
+          wideK = x.k;
+          return '<div style="--cw:' + CAR_W + 'px"><p class="lb2"><b>' + sn + '</b>　'
+            + x.n + '</p>' + nwCard(a3, true, k3, SHAPES.length) + '</div>';
+        }).join("");
+      });
+      wideK = 1;
+      fillWidePanel();
+      /* ⚠ 圖還沒載完的時候量不到墨（canvas 讀不到像素）——
+           載完再填一次，不要留一格「—」在那裡。 */
+      [].slice.call(document.querySelectorAll("#pv-w1 .wm,#pv-w2 .wm,#pv-w3 .wm,#pv-nine .wm"))
+        .forEach(function (im) {
+          if (!im.complete) im.addEventListener("load", fillWidePanel, { once: true });
+        });
+
       /* ⚠⚠⚠ **畫完一定要還原**：`render()` 會被呼叫不只一次
          （開頁一次、`wm-sizes.json` 回來一次、每次 resize 一次），
          而這三個是整支腳本共用的變數 —— 不還原的話**第二次進來時，
@@ -1450,6 +1616,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       dtm = "free";
       wmink = false;
       stat = "";
+      wideK = 1;
     }
 
     /* ③ 現況・預約成功。
