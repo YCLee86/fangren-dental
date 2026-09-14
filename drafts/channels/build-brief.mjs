@@ -482,7 +482,7 @@ ${BIND_DONE_TAB}
 <h3 class="h3" id="s4-plan">綁定成功的方案優先順序</h3>
 <ol class="spec plan">${B.s4.方案.map((t) => `<li>${bb(t)}</li>`).join("\n")}</ol>
 
-<h2 class="h2" id="s5">5　已完成項目<span class="t">${DONE.length} 則，不需要再調整</span></h2>
+<h2 class="h2" id="s5">5　已完成項目<span class="t">${DONE.length} 則，9/10已更新完成，目前運行正常，非常感謝</span></h2>
 <p class="note">${bb(B.s5.說)}</p>
 <div class="done">
 ${DONE.map((r) => `<div class="msg"><span class="ims">${img("../line-vendor/t-" + [].concat(r.圖)[0] + ".jpg", r.名 + "的模擬圖")}</span>
