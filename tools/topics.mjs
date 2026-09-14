@@ -359,6 +359,16 @@ for (const spec of SPECS) {
      https://yclee86.github.io/fangren-dental/ 還活著（第七節），那邊會壞。 */
   h = h.replace(/url\((["']?)assets\//g, "url($1../../assets/");
 
+  /* 1.5 頁首與頁尾的「全部文章」要回首頁（2026-09-15 使用者回報）。
+     快照帶來的是 `href="#topics"`，在著陸頁上等於跳到這一頁自己的標記那一排，
+     **畫面停在目前這一科、看起來像按了沒反應**。改成和文章頁一樣的 `../../#topics`
+     （不用根目錄絕對路徑，理由同上：舊站還活著）。
+     ⚠ 只換「全部文章」那兩個 —— 放大鏡 `.nav-q` 也指 #topics，那是搜尋入口，不動。 */
+  const allRe = /href="#topics">全部文章</g;
+  const allN = (h.match(allRe) || []).length;
+  if (allN !== 2) throw new Error(`「全部文章」應該有 2 處（頁首＋頁尾），找到 ${allN}`);
+  h = h.replace(allRe, 'href="../../#topics">全部文章<');
+
   /* 2. HERO 整塊拿掉（窄帶、詩、瀏覽計數的掛勾都在裡面一起消失） */
   const hs = h.indexOf('  <div class="hero">');
   const he = h.indexOf('  <section id="topics">');
