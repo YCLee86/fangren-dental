@@ -12,7 +12,7 @@ r.dataset.thsrc=src;
 var p=u.get('pal');if(!/^[ab]$/.test(p||''))p='b';
 var pl=u.get('pill');if(!/^(line|t20|t32)$/.test(pl||''))pl='t20';var mp=u.get('map');if(!/^m[12]$/.test(mp||''))mp='m1';
 var dt=u.get('dot');if(!/^(soft|ink)$/.test(dt||''))dt='soft';
-var sw=u.get('sw');if(!/^[abc]$/.test(sw||''))sw='a';r.dataset.sw=sw;
+var sw=u.get('sw');if(!/^[abc]$/.test(sw||''))sw='b';r.dataset.sw=sw;
 r.dataset.theme=th;r.dataset.pal=p;r.dataset.pill=pl;r.dataset.map=mp;r.dataset.dot=dt;})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8077,9 +8077,7 @@ html[data-sw="c"] .pv-th { --sw-track-d: #bfc0be; --sw-knob-d: #c28229; --sw-ico
     <button class="pv-x" id="pv-more">數字</button><button id="pv-hide">收起</button></div>
   <!-- 2026-09-15 第三輪：使用者挑定「Ⓑ 藍灰／藥丸淡色塊／Ⓜ1 路比較亮／圓點次要文字色」，
        那四把尺收成預設值、從切換條上拿掉（網址參數 pal／pill／map／dot 仍然吃得到）。 -->
-  <div class="pv-r"><span class="pv-l">已選</span><span style="color:#aaa">Ⓑ 藍灰・藥丸淡色塊・Ⓜ1 路比較亮・圓點次要文字色</span></div>
-  <div class="pv-r"><span class="pv-l">滑桿</span>
-    <button data-k="sw" data-v="a">Ⓐ 燈在鈕上</button><button data-k="sw" data-v="b">Ⓑ 軌道是天色</button><button data-k="sw" data-v="c">Ⓒ 鈕本身是燈</button></div>
+  <div class="pv-r"><span class="pv-l">已選</span><span style="color:#aaa">Ⓑ 藍灰・藥丸淡色塊・Ⓜ1 路比較亮・圓點次要文字色・滑桿 Ⓑ 軌道是天色</span></div>
   <div class="pv-r"><span class="pv-l">系統</span><span style="color:#aaa" id="pv-sys"></span></div>
   <div class="pv-panel" id="pv-panel" hidden></div>
 </div>
