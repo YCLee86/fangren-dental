@@ -97,6 +97,27 @@ const MAP = { bg: P.card, road: fromLch(Lc + 16, Cc, Hc), ink: P.ink, park: lift
 const DOT_FAINT = mix(P.soft, P.card, 0.35);
 const SW = { d: { track: "#c28229", knob: "#ffffff", icon: "#c28229" }, n: { track: "#365685", knob: "#ffffff", icon: "#365685" } };
 
+/* ---------- 2026-09-15 第九輪：著陸頁的線稿浮水印 ----------
+   使用者：「浮水印我想不到要怎麼辦」。圖檔本身是用該科的**套色**畫的線（tools/topic-lineart.mjs），
+   濃度是白天逐科逐斷點挑的（.10～.48）；壓在深底上就是一團暗暗的污漬。三案，**濃度一律沿用白天那一格**：
+     Ⓦ1 線條提亮：filter: brightness(k)，k 取到線色對底剛好 4.5（＝同色相只提亮度，和字階同一條做法）
+     Ⓦ2 月光灰：grayscale(1) ＋ brightness 到次要文字的亮度，再乘 .6 的濃度
+     Ⓦ3 夜間不放 */
+const scaleHex = (hex, k) => "#" + hex2rgb(hex).map((v) => Math.round(Math.min(1, v * k) * 255).toString(16).padStart(2, "0")).join("");
+const WM = {};
+for (const s of ["general", "perio", "endo", "kids", "ortho", "prosth", "surg"]) {
+  let k1 = 1; while (cr(scaleHex(FILL[s], k1), P.paper) < 4.5 && k1 < 8) k1 += 0.05;
+  const [r, g, b] = hex2rgb(FILL[s]); const grey = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  const softGrey = hex2rgb(P.soft)[1];
+  const k2 = softGrey / grey;
+  const g2 = Math.round(Math.min(1, grey * k2) * 255).toString(16).padStart(2, "0");
+  WM[s] = { k1: +k1.toFixed(2), c1: scaleHex(FILL[s], k1), k2: +k2.toFixed(2), c2: "#" + g2 + g2 + g2 };
+}
+const WM_CSS = Object.entries(WM).map(([s, v]) =>
+  `html[data-theme="dark"][data-wm="w1"] [data-topic="${s}"] .tp-intro::before { filter: brightness(${v.k1}); }
+html[data-theme="dark"][data-wm="w2"] [data-topic="${s}"] .tp-intro::before { filter: grayscale(1) brightness(${v.k2}) opacity(.6); }`).join("\n") +
+  `\nhtml[data-theme="dark"][data-wm="w3"] [data-topic] .tp-intro::before { display: none; }`;
+
 const NUM = {
   pal: P,
   ink: [cr(P.ink, P.paper), cr(P.ink, P.card)].map((v) => v.toFixed(2)),
@@ -122,6 +143,10 @@ html[data-theme="dark"] {
   --map-bg: ${MAP.bg}; --map-road: ${MAP.road}; --map-ink: ${MAP.ink}; --map-park: ${MAP.park}; --dot-faint: ${DOT_FAINT};
 }
 ${specCss(SPEC_HOME, "body:not([data-post]) ")}
+/* ⚠⚠ 著陸頁的 data-spec 掛在 <body> 自己身上（<body data-topic="perio" data-spec="perio">），
+   只寫後代選擇器的話 body 本身吃不到，.tp-* 那些套色字會停在白天的深階（2026-09-15 第九輪，使用者：「7 科頁面的套色文字看不清楚」） */
+${specCss(SPEC_HOME, "body:not([data-post])")}
+${WM_CSS}
 ${specCss(SPEC_POST, "body[data-post] ")}
 ${specCss(SPEC_POST, "body[data-post]")}
 html[data-theme="dark"] body { background: var(--paper); color: var(--ink); }
@@ -184,7 +209,8 @@ const EARLY = `<script>(function(){var r=document.documentElement,s=null;
 try{s=localStorage.getItem('${KEY}')}catch(e){}
 if(s!=='light'&&s!=='dark')s='auto';
 var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
-r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;})();</script>`;
+r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;
+var w=null;try{w=localStorage.getItem('fangren-pv:wm')}catch(e){}if(!/^w[123]$/.test(w||''))w='w1';r.dataset.wm=w;})();</script>`;
 
 /* 圖示：Lucide "moon"／"sun"，ISC 授權，https://lucide.dev */
 const ICON = `<svg class="pv-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="pv-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
@@ -199,6 +225,7 @@ const BAR = `
   padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); backdrop-filter: blur(6px); }
 .pv-bar .pv-r { display: flex; gap: 6px; align-items: center; overflow-x: auto; white-space: nowrap; }
 .pv-bar .pv-r + .pv-r { margin-top: 5px; }
+.pv-bar .pv-r[hidden] { display: none; }
 .pv-bar .pv-l { color: #aaa; min-width: 2.6em; }
 .pv-bar button { appearance: none; border: 1px solid #555; background: #2a2a2c; color: #eee;
   border-radius: 7px; padding: 5px 10px; font: inherit; cursor: pointer; }
@@ -217,13 +244,29 @@ const BAR = `
   <div class="pv-r"><span class="pv-l">模式</span>
     <button data-mode="auto">跟著系統</button><button data-mode="light">白天</button><button data-mode="dark">夜間</button>
     <button class="pv-x" id="pv-more">數字</button><button id="pv-hide">收起</button></div>
+  <div class="pv-r" id="pv-wmrow" hidden><span class="pv-l">浮水印</span>
+    <button data-wm="w1">Ⓦ1 線條提亮</button><button data-wm="w2">Ⓦ2 月光灰</button><button data-wm="w3">Ⓦ3 夜間不放</button></div>
   <div class="pv-r"><span class="pv-l">狀態</span><span style="color:#aaa" id="pv-sys"></span></div>
   <div class="pv-panel" id="pv-panel" hidden></div>
 </div>
 <button class="pv-mini" id="pv-mini" hidden>切換條</button>
 <script>
 (function(){
-  var r=document.documentElement, KEY='${KEY}', NUM=${JSON.stringify(NUM)}, SN=${JSON.stringify(SPECNAME)};
+  var r=document.documentElement, KEY='${KEY}', NUM=${JSON.stringify(NUM)}, SN=${JSON.stringify(SPECNAME)}, WM=${JSON.stringify(WM)};
+  var topic=document.body.dataset.topic, wmrow=document.getElementById('pv-wmrow');
+  if(topic&&WM[topic]) wmrow.hidden=false;
+  function h2r(x){return [1,3,5].map(function(i){return parseInt(x.slice(i,i+2),16)/255;});}
+  function lu(x){return h2r(x).map(function(c){return c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4);}).reduce(function(a,c,i){return a+c*[.2126,.7152,.0722][i];},0);}
+  function crr(a,b){var x=lu(a),y=lu(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
+  function mixh(a,b,p){var A=h2r(a),B=h2r(b);return '#'+A.map(function(v,i){return ('0'+Math.round((v*p+B[i]*(1-p))*255).toString(16)).slice(-2);}).join('');}
+  function wmHtml(){
+    if(!topic||!WM[topic]||r.dataset.theme!=='dark') return '';
+    var v=WM[topic], w=r.dataset.wm, pe=getComputedStyle(document.querySelector('.tp-intro'),'::before'), op=parseFloat(pe.opacity)||0;
+    if(w==='w3') return '<br>浮水印：夜間不放。';
+    var line=w==='w1'?v.c1:v.c2, a=w==='w1'?op:op*.6, bg=mixh(line,NUM.pal.paper,a);
+    return '<br>浮水印 '+(w==='w1'?'Ⓦ1 線條提亮（亮度 ×'+v.k1+'）':'Ⓦ2 月光灰（×'+v.k2+'，濃度再乘 .6）')+'：線色 '+line+'　這個寬度的濃度 '+op+(w==='w2'?' × .6 = '+a.toFixed(3):'')+
+      '<br>　字壓在線上最壞：主文字 '+crr(NUM.pal.ink,bg).toFixed(2)+'　次要文字 '+crr(NUM.pal.soft,bg).toFixed(2)+'　科別字階 '+crr((NUM.spec.filter(function(x){return x[0]===topic;})[0]||[])[1]||NUM.pal.ink,bg).toFixed(2);
+  }
   var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
   function sysDark(){ return !!(mq&&mq.matches); }
   function store(v){ try{ if(v==='auto') localStorage.removeItem(KEY); else localStorage.setItem(KEY,v); }catch(e){} }
@@ -232,6 +275,7 @@ const BAR = `
     var dark=r.dataset.theme==='dark';
     document.querySelectorAll('.pv-th').forEach(function(b){ b.setAttribute('aria-checked', dark); });
     document.querySelectorAll('.pv-bar [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.mode===r.dataset.thsrc); });
+    document.querySelectorAll('.pv-bar [data-wm]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.wm===r.dataset.wm); });
     var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){ saved='（這個瀏覽器不讓網站記東西）'; }
     document.getElementById('pv-sys').textContent='這台裝置是'+(sysDark()?'深色':'淺色')+'　·　記住的選擇：'+(saved==='dark'?'夜間':saved==='light'?'白天':saved?saved:'沒有（跟著系統）');
     var m=document.querySelector('meta[name="theme-color"]'); if(m){ if(!m.dataset.day) m.dataset.day=m.content; m.content = dark ? NUM.pal.paper : m.dataset.day; }
@@ -249,7 +293,7 @@ const BAR = `
       '<br>主文字 '+sw(p.ink)+' 對底 '+NUM.ink[0]+'／對卡 '+NUM.ink[1]+'　次要 '+sw(p.soft)+' 對底 '+NUM.soft[0]+'／對卡 '+NUM.soft[1]+
       '<table>'+rows+'</table>地圖：路對街廓 '+NUM.map.roadBg+'　街名對路 '+NUM.map.inkRoad+'　圓點對卡 '+NUM.dot.soft+'（沒這科 '+NUM.dot.faint+'）'+
       '<br>滑桿：白鈕對軌道 白天 '+NUM.sw.d+'／夜間 '+NUM.sw.n+'　軌道對頁面 白天 '+NUM.sw.dPage+'／夜間 '+NUM.sw.nPage+
-      '<br>'+msg+'<br>水平捲動：'+(over?'<b style="color:#f88">有（'+(document.documentElement.scrollWidth-innerWidth)+'px）</b>':'沒有');
+      wmHtml()+'<br>'+msg+'<br>水平捲動：'+(over?'<b style="color:#f88">有（'+(document.documentElement.scrollWidth-innerWidth)+'px）</b>':'沒有');
   }
   /* 頁面上的滑桿：按一下就翻面，並記住 */
   document.querySelectorAll('.pv-th').forEach(function(b){ b.addEventListener('click',function(){
@@ -257,6 +301,9 @@ const BAR = `
   /* 切換條：「跟著系統」＝ 清掉記住的選擇 */
   document.querySelectorAll('.pv-bar [data-mode]').forEach(function(b){ b.addEventListener('click',function(){
     setSrc(b.dataset.mode); store(b.dataset.mode); sync(); }); });
+  document.querySelectorAll('.pv-bar [data-wm]').forEach(function(b){ b.addEventListener('click',function(){
+    r.dataset.wm=b.dataset.wm; try{localStorage.setItem('fangren-pv:wm',b.dataset.wm);}catch(e){}
+    if(r.dataset.theme!=='dark'){ setSrc('dark'); store('dark'); } sync(); }); });
   if(mq&&mq.addEventListener) mq.addEventListener('change',function(){ if(r.dataset.thsrc==='auto'){ setSrc('auto'); sync(); } });
   /* 另一個分頁改了，這一頁跟著變 */
   addEventListener('storage',function(e){ if(e.key===KEY){ setSrc(e.newValue==='light'||e.newValue==='dark'?e.newValue:'auto'); sync(); } });

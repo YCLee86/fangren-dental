@@ -5,7 +5,8 @@
 try{s=localStorage.getItem('fangren:theme')}catch(e){}
 if(s!=='light'&&s!=='dark')s='auto';
 var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
-r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;})();</script>
+r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;
+var w=null;try{w=localStorage.getItem('fangren-pv:wm')}catch(e){}if(!/^w[123]$/.test(w||''))w='w1';r.dataset.wm=w;})();</script>
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -92,6 +93,31 @@ html[data-theme="dark"] body:not([data-post]) [data-spec="ortho"] { --accent-dee
 html[data-theme="dark"] body:not([data-post]) [data-spec="endo"] { --accent-deep: #e06f72; --pill-ink: #f07d7f; --sk-ink: #e97679; }
 html[data-theme="dark"] body:not([data-post]) [data-spec="surg"] { --accent-deep: #af81bb; --pill-ink: #c092cc; --sk-ink: #b98bc5; }
 html[data-theme="dark"] body:not([data-post]) [data-spec="kids"] { --accent-deep: #c5842b; --pill-ink: #de9a42; --sk-ink: #d39038; }
+/* ⚠⚠ 著陸頁的 data-spec 掛在 <body> 自己身上（<body data-topic="perio" data-spec="perio">），
+   只寫後代選擇器的話 body 本身吃不到，.tp-* 那些套色字會停在白天的深階（2026-09-15 第九輪，使用者：「7 科頁面的套色文字看不清楚」） */
+html[data-theme="dark"] body:not([data-post])[data-spec="all"] { --accent-deep: #94918f; --pill-ink: #9f9c9b; --sk-ink: #9b9796; }
+html[data-theme="dark"] body:not([data-post])[data-spec="general"] { --accent-deep: #729b7d; --pill-ink: #7ea788; --sk-ink: #79a284; }
+html[data-theme="dark"] body:not([data-post])[data-spec="prosth"] { --accent-deep: #7b91c8; --pill-ink: #859bd3; --sk-ink: #8196ce; }
+html[data-theme="dark"] body:not([data-post])[data-spec="perio"] { --accent-deep: #5c9d98; --pill-ink: #6baca7; --sk-ink: #64a6a1; }
+html[data-theme="dark"] body:not([data-post])[data-spec="ortho"] { --accent-deep: #6897b5; --pill-ink: #79a8c6; --sk-ink: #72a1bf; }
+html[data-theme="dark"] body:not([data-post])[data-spec="endo"] { --accent-deep: #e06f72; --pill-ink: #f07d7f; --sk-ink: #e97679; }
+html[data-theme="dark"] body:not([data-post])[data-spec="surg"] { --accent-deep: #af81bb; --pill-ink: #c092cc; --sk-ink: #b98bc5; }
+html[data-theme="dark"] body:not([data-post])[data-spec="kids"] { --accent-deep: #c5842b; --pill-ink: #de9a42; --sk-ink: #d39038; }
+html[data-theme="dark"][data-wm="w1"] [data-topic="general"] .tp-intro::before { filter: brightness(1.4); }
+html[data-theme="dark"][data-wm="w2"] [data-topic="general"] .tp-intro::before { filter: grayscale(1) brightness(1.81) opacity(.6); }
+html[data-theme="dark"][data-wm="w1"] [data-topic="perio"] .tp-intro::before { filter: brightness(1.15); }
+html[data-theme="dark"][data-wm="w2"] [data-topic="perio"] .tp-intro::before { filter: grayscale(1) brightness(1.52) opacity(.6); }
+html[data-theme="dark"][data-wm="w1"] [data-topic="endo"] .tp-intro::before { filter: brightness(1.2); }
+html[data-theme="dark"][data-wm="w2"] [data-topic="endo"] .tp-intro::before { filter: grayscale(1) brightness(1.67) opacity(.6); }
+html[data-theme="dark"][data-wm="w1"] [data-topic="kids"] .tp-intro::before { filter: brightness(1); }
+html[data-theme="dark"][data-wm="w2"] [data-topic="kids"] .tp-intro::before { filter: grayscale(1) brightness(1.2) opacity(.6); }
+html[data-theme="dark"][data-wm="w1"] [data-topic="ortho"] .tp-intro::before { filter: brightness(1.1); }
+html[data-theme="dark"][data-wm="w2"] [data-topic="ortho"] .tp-intro::before { filter: grayscale(1) brightness(1.46) opacity(.6); }
+html[data-theme="dark"][data-wm="w1"] [data-topic="prosth"] .tp-intro::before { filter: brightness(1.45); }
+html[data-theme="dark"][data-wm="w2"] [data-topic="prosth"] .tp-intro::before { filter: grayscale(1) brightness(1.89) opacity(.6); }
+html[data-theme="dark"][data-wm="w1"] [data-topic="surg"] .tp-intro::before { filter: brightness(1.15); }
+html[data-theme="dark"][data-wm="w2"] [data-topic="surg"] .tp-intro::before { filter: grayscale(1) brightness(1.48) opacity(.6); }
+html[data-theme="dark"][data-wm="w3"] [data-topic] .tp-intro::before { display: none; }
 html[data-theme="dark"] body[data-post] [data-spec="all"] { --accent-deep: #94918f; --pill-ink: #9f9c9b; --sk-ink: #9b9796; }
 html[data-theme="dark"] body[data-post] [data-spec="general"] { --accent-deep: #729b7d; --pill-ink: #7ea788; --sk-ink: #79a284; }
 html[data-theme="dark"] body[data-post] [data-spec="prosth"] { --accent-deep: #7b91c8; --pill-ink: #859bd3; --sk-ink: #8196ce; }
@@ -443,6 +469,7 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
   padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); backdrop-filter: blur(6px); }
 .pv-bar .pv-r { display: flex; gap: 6px; align-items: center; overflow-x: auto; white-space: nowrap; }
 .pv-bar .pv-r + .pv-r { margin-top: 5px; }
+.pv-bar .pv-r[hidden] { display: none; }
 .pv-bar .pv-l { color: #aaa; min-width: 2.6em; }
 .pv-bar button { appearance: none; border: 1px solid #555; background: #2a2a2c; color: #eee;
   border-radius: 7px; padding: 5px 10px; font: inherit; cursor: pointer; }
@@ -461,13 +488,29 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
   <div class="pv-r"><span class="pv-l">模式</span>
     <button data-mode="auto">跟著系統</button><button data-mode="light">白天</button><button data-mode="dark">夜間</button>
     <button class="pv-x" id="pv-more">數字</button><button id="pv-hide">收起</button></div>
+  <div class="pv-r" id="pv-wmrow" hidden><span class="pv-l">浮水印</span>
+    <button data-wm="w1">Ⓦ1 線條提亮</button><button data-wm="w2">Ⓦ2 月光灰</button><button data-wm="w3">Ⓦ3 夜間不放</button></div>
   <div class="pv-r"><span class="pv-l">狀態</span><span style="color:#aaa" id="pv-sys"></span></div>
   <div class="pv-panel" id="pv-panel" hidden></div>
 </div>
 <button class="pv-mini" id="pv-mini" hidden>切換條</button>
 <script>
 (function(){
-  var r=document.documentElement, KEY='fangren:theme', NUM={"pal":{"paper":"#17191d","card":"#282b31","ink":"#e2e5e6","rule":"#3f4248","soft":"#a3a5a6"},"ink":["13.90","11.20"],"soft":["7.12","5.74"],"spec":[["all","#94918f","4.53","#9f9c9b","4.50"],["general","#729b7d","4.53","#7ea788","4.54"],["prosth","#7b91c8","4.54","#859bd3","4.52"],["perio","#5c9d98","4.55","#6baca7","4.50"],["ortho","#6897b5","4.51","#79a8c6","4.51"],["endo","#e06f72","4.52","#f07d7f","4.54"],["surg","#af81bb","4.51","#c092cc","4.55"],["kids","#c5842b","4.53","#de9a42","4.50"]],"map":{"roadBg":"1.73","inkRoad":"6.49"},"dot":{"soft":"5.74","faint":"1.92"},"sw":{"d":"3.22","n":"7.43","dPage":"2.54","nPage":"2.37"}}, SN={"all":"全部","general":"一般","prosth":"植牙","perio":"牙周","ortho":"矯正","endo":"根管","surg":"口外","kids":"兒牙"};
+  var r=document.documentElement, KEY='fangren:theme', NUM={"pal":{"paper":"#17191d","card":"#282b31","ink":"#e2e5e6","rule":"#3f4248","soft":"#a3a5a6"},"ink":["13.90","11.20"],"soft":["7.12","5.74"],"spec":[["all","#94918f","4.53","#9f9c9b","4.50"],["general","#729b7d","4.53","#7ea788","4.54"],["prosth","#7b91c8","4.54","#859bd3","4.52"],["perio","#5c9d98","4.55","#6baca7","4.50"],["ortho","#6897b5","4.51","#79a8c6","4.51"],["endo","#e06f72","4.52","#f07d7f","4.54"],["surg","#af81bb","4.51","#c092cc","4.55"],["kids","#c5842b","4.53","#de9a42","4.50"]],"map":{"roadBg":"1.73","inkRoad":"6.49"},"dot":{"soft":"5.74","faint":"1.92"},"sw":{"d":"3.22","n":"7.43","dPage":"2.54","nPage":"2.37"}}, SN={"all":"全部","general":"一般","prosth":"植牙","perio":"牙周","ortho":"矯正","endo":"根管","surg":"口外","kids":"兒牙"}, WM={"general":{"k1":1.4,"c1":"#588d68","k2":1.81,"c2":"#a5a5a5"},"perio":{"k1":1.15,"c1":"#38908a","k2":1.52,"c2":"#a5a5a5"},"endo":{"k1":1.2,"c1":"#d15f5c","k2":1.67,"c2":"#a5a5a5"},"kids":{"k1":1,"c1":"#c28229","k2":1.2,"c2":"#a5a5a5"},"ortho":{"k1":1.1,"c1":"#4b84c7","k2":1.46,"c2":"#a5a5a5"},"prosth":{"k1":1.45,"c1":"#6680c1","k2":1.89,"c2":"#a5a5a5"},"surg":{"k1":1.15,"c1":"#a371b0","k2":1.48,"c2":"#a5a5a5"}};
+  var topic=document.body.dataset.topic, wmrow=document.getElementById('pv-wmrow');
+  if(topic&&WM[topic]) wmrow.hidden=false;
+  function h2r(x){return [1,3,5].map(function(i){return parseInt(x.slice(i,i+2),16)/255;});}
+  function lu(x){return h2r(x).map(function(c){return c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4);}).reduce(function(a,c,i){return a+c*[.2126,.7152,.0722][i];},0);}
+  function crr(a,b){var x=lu(a),y=lu(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
+  function mixh(a,b,p){var A=h2r(a),B=h2r(b);return '#'+A.map(function(v,i){return ('0'+Math.round((v*p+B[i]*(1-p))*255).toString(16)).slice(-2);}).join('');}
+  function wmHtml(){
+    if(!topic||!WM[topic]||r.dataset.theme!=='dark') return '';
+    var v=WM[topic], w=r.dataset.wm, pe=getComputedStyle(document.querySelector('.tp-intro'),'::before'), op=parseFloat(pe.opacity)||0;
+    if(w==='w3') return '<br>浮水印：夜間不放。';
+    var line=w==='w1'?v.c1:v.c2, a=w==='w1'?op:op*.6, bg=mixh(line,NUM.pal.paper,a);
+    return '<br>浮水印 '+(w==='w1'?'Ⓦ1 線條提亮（亮度 ×'+v.k1+'）':'Ⓦ2 月光灰（×'+v.k2+'，濃度再乘 .6）')+'：線色 '+line+'　這個寬度的濃度 '+op+(w==='w2'?' × .6 = '+a.toFixed(3):'')+
+      '<br>　字壓在線上最壞：主文字 '+crr(NUM.pal.ink,bg).toFixed(2)+'　次要文字 '+crr(NUM.pal.soft,bg).toFixed(2)+'　科別字階 '+crr((NUM.spec.filter(function(x){return x[0]===topic;})[0]||[])[1]||NUM.pal.ink,bg).toFixed(2);
+  }
   var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
   function sysDark(){ return !!(mq&&mq.matches); }
   function store(v){ try{ if(v==='auto') localStorage.removeItem(KEY); else localStorage.setItem(KEY,v); }catch(e){} }
@@ -476,6 +519,7 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
     var dark=r.dataset.theme==='dark';
     document.querySelectorAll('.pv-th').forEach(function(b){ b.setAttribute('aria-checked', dark); });
     document.querySelectorAll('.pv-bar [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.mode===r.dataset.thsrc); });
+    document.querySelectorAll('.pv-bar [data-wm]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.wm===r.dataset.wm); });
     var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){ saved='（這個瀏覽器不讓網站記東西）'; }
     document.getElementById('pv-sys').textContent='這台裝置是'+(sysDark()?'深色':'淺色')+'　·　記住的選擇：'+(saved==='dark'?'夜間':saved==='light'?'白天':saved?saved:'沒有（跟著系統）');
     var m=document.querySelector('meta[name="theme-color"]'); if(m){ if(!m.dataset.day) m.dataset.day=m.content; m.content = dark ? NUM.pal.paper : m.dataset.day; }
@@ -493,7 +537,7 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
       '<br>主文字 '+sw(p.ink)+' 對底 '+NUM.ink[0]+'／對卡 '+NUM.ink[1]+'　次要 '+sw(p.soft)+' 對底 '+NUM.soft[0]+'／對卡 '+NUM.soft[1]+
       '<table>'+rows+'</table>地圖：路對街廓 '+NUM.map.roadBg+'　街名對路 '+NUM.map.inkRoad+'　圓點對卡 '+NUM.dot.soft+'（沒這科 '+NUM.dot.faint+'）'+
       '<br>滑桿：白鈕對軌道 白天 '+NUM.sw.d+'／夜間 '+NUM.sw.n+'　軌道對頁面 白天 '+NUM.sw.dPage+'／夜間 '+NUM.sw.nPage+
-      '<br>'+msg+'<br>水平捲動：'+(over?'<b style="color:#f88">有（'+(document.documentElement.scrollWidth-innerWidth)+'px）</b>':'沒有');
+      wmHtml()+'<br>'+msg+'<br>水平捲動：'+(over?'<b style="color:#f88">有（'+(document.documentElement.scrollWidth-innerWidth)+'px）</b>':'沒有');
   }
   /* 頁面上的滑桿：按一下就翻面，並記住 */
   document.querySelectorAll('.pv-th').forEach(function(b){ b.addEventListener('click',function(){
@@ -501,6 +545,9 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
   /* 切換條：「跟著系統」＝ 清掉記住的選擇 */
   document.querySelectorAll('.pv-bar [data-mode]').forEach(function(b){ b.addEventListener('click',function(){
     setSrc(b.dataset.mode); store(b.dataset.mode); sync(); }); });
+  document.querySelectorAll('.pv-bar [data-wm]').forEach(function(b){ b.addEventListener('click',function(){
+    r.dataset.wm=b.dataset.wm; try{localStorage.setItem('fangren-pv:wm',b.dataset.wm);}catch(e){}
+    if(r.dataset.theme!=='dark'){ setSrc('dark'); store('dark'); } sync(); }); });
   if(mq&&mq.addEventListener) mq.addEventListener('change',function(){ if(r.dataset.thsrc==='auto'){ setSrc('auto'); sync(); } });
   /* 另一個分頁改了，這一頁跟著變 */
   addEventListener('storage',function(e){ if(e.key===KEY){ setSrc(e.newValue==='light'||e.newValue==='dark'?e.newValue:'auto'); sync(); } });
