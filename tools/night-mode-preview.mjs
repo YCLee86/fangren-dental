@@ -161,7 +161,10 @@ h = h.replace(/<title>[^<]*<\/title>/, "<title>夜間模式（提案）｜芳仁
 const ICON = `<svg class="pv-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="pv-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
 const topicsHead = /(<section id="topics">\s*<div class="shell">\s*<div class="sec-head">\s*<h2>主題與科別<\/h2>)/;
 must(topicsHead, "主題與科別的標題列");
-h = h.replace(topicsHead, `$1\n        <button class="pv-th" type="button" aria-label="切換到夜間模式">${ICON}<span class="pv-th-t">夜間模式</span></button>`);
+/* 2026-09-15 第五輪：使用者給了 iPhone「設定」裡飛航模式那一列的截圖 ——「開關要做成像圖片這樣，飛航模式的滑桿切換」。
+   所以不再是「寫著按下去會變成什麼」的鈕，改成**狀態開關**：字固定寫「夜間模式」，滑桿亮著 ＝ 現在是夜間。
+   ⚠ role="switch" ＋ aria-checked，螢幕閱讀器才念得出「開／關」。 */
+h = h.replace(topicsHead, `$1\n        <button class="pv-th" type="button" role="switch" aria-checked="false"><span class="pv-th-t">夜間模式</span><span class="pv-tg" aria-hidden="true"><span class="pv-kn"></span></span></button>`);
 
 /* ---------- 3. 夜間的樣式（放在 <head>，不能塞在頁尾 —— 第一幀就要對） ---------- */
 const palCss = Object.entries(PAL).map(([k, p]) => `
@@ -219,19 +222,22 @@ ${Object.keys(PAL).map((k) => `html[data-theme="dark"][data-pal="${k}"] :is(.foo
 
 /* 開關本身：主題與科別那一行的最右邊。塊高 34px ＝ 底下那排科別標記，圓角 12px ＝ 門診表那排 */
 #topics .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-.pv-th { appearance: none; font: inherit; cursor: pointer; flex: none;
-  display: inline-flex; align-items: center; justify-content: center; gap: .4em;
-  font-size: .88rem; line-height: 1; min-height: 34px; padding: 0 .75rem; border-radius: 12px;
-  background: var(--card); color: var(--ink-soft); border: 1px solid var(--rule);
-  -webkit-tap-highlight-color: transparent; position: relative; }
+/* 滑桿：比例照 iOS 的 51×31、圓鈕 27、內縮 2（量自使用者的截圖），縮到 28px 高 → 46×28、圓鈕 24。
+   ⚠ 亮著的顏色**不是 iOS 的綠**，是站上一般牙科的套色 #3f654a（＝主畫面圖示與地圖上診所那塊綠，白鈕 7.12）；
+     關著是柔墨混 35% 進卡色。兩個都不是新顏色。 */
+.pv-th { appearance: none; border: 0; background: none; padding: 0; font: inherit; cursor: pointer; flex: none;
+  display: inline-flex; align-items: center; gap: .55rem; font-size: .88rem; line-height: 1; color: var(--ink-soft);
+  min-height: 34px; -webkit-tap-highlight-color: transparent; position: relative; }
 /* 觸控下限 44px 靠 ::after 撐，版面維持 34px */
-.pv-th::after { content: ""; position: absolute; inset: -5px 0; }
-.pv-th svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.3;
-  stroke-linecap: round; stroke-linejoin: round; }
-.pv-th svg :is(circle, path) { vector-effect: non-scaling-stroke; }
-.pv-th .pv-sun { display: none; }
-html[data-theme="dark"] .pv-th .pv-sun { display: block; }
-html[data-theme="dark"] .pv-th .pv-moon { display: none; }
+.pv-th::after { content: ""; position: absolute; inset: -5px -4px; }
+.pv-tg { position: relative; width: 46px; height: 28px; border-radius: 14px; flex: none;
+  background: color-mix(in srgb, var(--ink-soft) 35%, var(--card)); transition: background-color .2s ease; }
+.pv-kn { position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .28); transition: transform .2s ease; }
+.pv-th[aria-checked="true"] .pv-tg { background: #3f654a; }
+.pv-th[aria-checked="true"] .pv-kn { transform: translateX(18px); }
+.pv-th:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 16px; }
+@media (prefers-reduced-motion: reduce) { .pv-tg, .pv-kn { transition: none; } }
 </style>`;
 const bodyAt = h.search(/\n<body>\n/);
 if (bodyAt < 0) throw new Error("× 找不到 <body>");
@@ -298,8 +304,7 @@ const BAR = `
   function sync(){
     document.querySelectorAll('.pv-bar [data-k]').forEach(function(b){ b.setAttribute('aria-pressed', cur(b.dataset.k)===b.dataset.v); });
     var dark=r.dataset.theme==='dark';
-    document.querySelectorAll('.pv-th').forEach(function(b){ b.setAttribute('aria-label', dark?'切換到白天模式':'切換到夜間模式'); });
-    document.querySelectorAll('.pv-th-t').forEach(function(s){ s.textContent = dark?'白天模式':'夜間模式'; });
+    document.querySelectorAll('.pv-th').forEach(function(b){ b.setAttribute('aria-checked', dark); });
     var m=document.querySelector('meta[name="theme-color"]'); if(m) m.content = dark ? PAL[r.dataset.pal].paper : '#12656a';
     document.getElementById('pv-sys').textContent = '這台裝置現在是'+(mq&&mq.matches?'深色':'淺色')+'　·　目前顯示'+(dark?'夜間':'白天')+(r.dataset.thsrc==='auto'?'（跟著系統）':'（手動選的）');
     var u=new URL(location.href); u.searchParams.set('th',r.dataset.thsrc); u.searchParams.delete('pos');
