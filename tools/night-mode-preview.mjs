@@ -134,6 +134,29 @@ for (const k in PAL) {
     dayFaint: cr("#cdd0d2", "#f4f4f5").toFixed(2), dayRoad: cr("#cdd0d2", "#f4f4f5").toFixed(2), prevRoad: cr(p.rule, p.card).toFixed(2) };
 }
 
+/* ---------- 2026-09-15 第六輪：滑桿的顏色三案 ----------
+   使用者：「滑桿的淡灰色和一般牙科綠要怎麼套用（感覺就不是用一般牙科綠了，而是比較能讓 icon 亮的感覺）」。
+   顏色一個都不另外挑：
+     暖（太陽）  #c28229 兒童牙科的套色（全站唯一的琥珀）
+     夜（月亮）  #365685 地圖上停車場的路牌藍／#17191d 窄帶頂端／#e2e5e6 夜間的主文字（月光）
+     素         白天是柔墨混 35% 進卡色，夜間是 Ⓑ 的分隔線 #3f4248
+   ⚠ 白天時滑桿站在紙色 #e2e5e6 上、夜間站在 Ⓑ 的底 #17191d 上（主題與科別那一節沒有卡片底）。 */
+const DAY_PAPER = "#e2e5e6", NIGHT_PAPER = PAL.b.paper;
+const SW = {
+  a: { name: "Ⓐ 燈在鈕上", d: { track: mix("#5c5f57", "#f4f4f5", 0.35), knob: "#ffffff", icon: "#c28229" },
+                           n: { track: PAL.b.rule, knob: "#e2e5e6", icon: "#365685" } },
+  b: { name: "Ⓑ 軌道是天色", d: { track: "#c28229", knob: "#ffffff", icon: "#c28229" },
+                           n: { track: "#365685", knob: "#ffffff", icon: "#365685" } },
+  c: { name: "Ⓒ 鈕本身是燈", d: { track: mix("#5c5f57", "#f4f4f5", 0.35), knob: "#c28229", icon: "#ffffff" },
+                           n: { track: PAL.b.rule, knob: "#365685", icon: "#e2e5e6" } },  /* 軌道用 #17191d 的話對頁面底是 1.00 ＝ 整條不見 */
+};
+for (const v of Object.values(SW)) {
+  v.nums = {
+    d: { icon: cr(v.d.icon, v.d.knob).toFixed(2), knob: cr(v.d.knob, v.d.track).toFixed(2), track: cr(v.d.track, DAY_PAPER).toFixed(2) },
+    n: { icon: cr(v.n.icon, v.n.knob).toFixed(2), knob: cr(v.n.knob, v.n.track).toFixed(2), track: cr(v.n.track, NIGHT_PAPER).toFixed(2) },
+  };
+}
+
 const NUM = {};
 for (const k in PAL) {
   const p = PAL[k];
@@ -164,7 +187,10 @@ must(topicsHead, "主題與科別的標題列");
 /* 2026-09-15 第五輪：使用者給了 iPhone「設定」裡飛航模式那一列的截圖 ——「開關要做成像圖片這樣，飛航模式的滑桿切換」。
    所以不再是「寫著按下去會變成什麼」的鈕，改成**狀態開關**：字固定寫「夜間模式」，滑桿亮著 ＝ 現在是夜間。
    ⚠ role="switch" ＋ aria-checked，螢幕閱讀器才念得出「開／關」。 */
-h = h.replace(topicsHead, `$1\n        <button class="pv-th" type="button" role="switch" aria-checked="false"><span class="pv-th-t">夜間模式</span><span class="pv-tg" aria-hidden="true"><span class="pv-kn"></span></span></button>`);
+/* 2026-09-15 第六輪：「現在按鈕是用文字，我覺得前幾版有小 icon 比較好，就不需要文字了，
+   icon 可以和滑桿結合：往左切後出現白天的 icon，往右切出現夜間的 icon」。
+   → 字拿掉（只留 aria-label），太陽／月亮畫在**圓鈕上**，跟著圓鈕滑過去。 */
+h = h.replace(topicsHead, `$1\n        <button class="pv-th" type="button" role="switch" aria-checked="false" aria-label="夜間模式"><span class="pv-tg" aria-hidden="true"><span class="pv-kn">${ICON}</span></span></button>`);
 
 /* ---------- 3. 夜間的樣式（放在 <head>，不能塞在頁尾 —— 第一幀就要對） ---------- */
 const palCss = Object.entries(PAL).map(([k, p]) => `
@@ -222,22 +248,31 @@ ${Object.keys(PAL).map((k) => `html[data-theme="dark"][data-pal="${k}"] :is(.foo
 
 /* 開關本身：主題與科別那一行的最右邊。塊高 34px ＝ 底下那排科別標記，圓角 12px ＝ 門診表那排 */
 #topics .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-/* 滑桿：比例照 iOS 的 51×31、圓鈕 27、內縮 2（量自使用者的截圖），縮到 28px 高 → 46×28、圓鈕 24。
-   ⚠ 亮著的顏色**不是 iOS 的綠**，是站上一般牙科的套色 #3f654a（＝主畫面圖示與地圖上診所那塊綠，白鈕 7.12）；
-     關著是柔墨混 35% 進卡色。兩個都不是新顏色。 */
+/* 滑桿：比例照 iOS 的 51×31、圓鈕 27、內縮 2（量自使用者的截圖）。圓鈕上要放圖示，
+   所以高度從 28 放到 30（還在 34px 的標記列塊高以內）→ 50×30、圓鈕 26、圖示 16。
+   顏色三案（data-sw），每一格的值與對比由產生器現算、寫在面板上。 */
 .pv-th { appearance: none; border: 0; background: none; padding: 0; font: inherit; cursor: pointer; flex: none;
-  display: inline-flex; align-items: center; gap: .55rem; font-size: .88rem; line-height: 1; color: var(--ink-soft);
-  min-height: 34px; -webkit-tap-highlight-color: transparent; position: relative; }
+  display: inline-flex; align-items: center; min-height: 34px;
+  -webkit-tap-highlight-color: transparent; position: relative; }
 /* 觸控下限 44px 靠 ::after 撐，版面維持 34px */
-.pv-th::after { content: ""; position: absolute; inset: -5px -4px; }
-.pv-tg { position: relative; width: 46px; height: 28px; border-radius: 14px; flex: none;
-  background: color-mix(in srgb, var(--ink-soft) 35%, var(--card)); transition: background-color .2s ease; }
-.pv-kn { position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%;
-  background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .28); transition: transform .2s ease; }
-.pv-th[aria-checked="true"] .pv-tg { background: #3f654a; }
-.pv-th[aria-checked="true"] .pv-kn { transform: translateX(18px); }
-.pv-th:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 16px; }
-@media (prefers-reduced-motion: reduce) { .pv-tg, .pv-kn { transition: none; } }
+.pv-th::after { content: ""; position: absolute; inset: -7px -4px; }
+.pv-tg { position: relative; width: 50px; height: 30px; border-radius: 15px; flex: none;
+  background: var(--sw-track-d); transition: background-color .22s ease; }
+.pv-kn { position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--sw-knob-d); color: var(--sw-icon-d);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .28); transition: transform .22s ease, background-color .22s ease, color .22s ease; }
+.pv-kn svg { grid-area: 1 / 1; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; transition: opacity .18s ease, transform .22s ease; }
+.pv-kn .pv-moon { opacity: 0; transform: rotate(-60deg) scale(.6); }
+.pv-th[aria-checked="true"] .pv-tg { background: var(--sw-track-n); }
+.pv-th[aria-checked="true"] .pv-kn { transform: translateX(20px); background: var(--sw-knob-n); color: var(--sw-icon-n); }
+.pv-th[aria-checked="true"] .pv-sun { opacity: 0; transform: rotate(60deg) scale(.6); }
+.pv-th[aria-checked="true"] .pv-moon { opacity: 1; transform: none; }
+/* Ⓒ 月亮那一格要實心（滿月的亮面），太陽保持線條 */
+html[data-sw="c"] .pv-kn .pv-moon { fill: currentColor; }
+.pv-th:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 17px; }
+@media (prefers-reduced-motion: reduce) { .pv-tg, .pv-kn, .pv-kn svg { transition: none; } }
+${Object.entries(SW).map(([k, v]) => `html[data-sw="${k}"] .pv-th { --sw-track-d: ${v.d.track}; --sw-knob-d: ${v.d.knob}; --sw-icon-d: ${v.d.icon}; --sw-track-n: ${v.n.track}; --sw-knob-n: ${v.n.knob}; --sw-icon-n: ${v.n.icon}; }`).join("\n")}
 </style>`;
 const bodyAt = h.search(/\n<body>\n/);
 if (bodyAt < 0) throw new Error("× 找不到 <body>");
@@ -256,6 +291,7 @@ r.dataset.thsrc=src;
 var p=u.get('pal');if(!/^[ab]$/.test(p||''))p='b';
 var pl=u.get('pill');if(!/^(line|t20|t32)$/.test(pl||''))pl='t20';var mp=u.get('map');if(!/^m[12]$/.test(mp||''))mp='m1';
 var dt=u.get('dot');if(!/^(soft|ink)$/.test(dt||''))dt='soft';
+var sw=u.get('sw');if(!/^[abc]$/.test(sw||''))sw='a';r.dataset.sw=sw;
 r.dataset.theme=th;r.dataset.pal=p;r.dataset.pill=pl;r.dataset.map=mp;r.dataset.dot=dt;})();</script>`;
 h = h.replace(/<head>/, "<head>\n" + EARLY);
 
@@ -289,6 +325,8 @@ const BAR = `
   <!-- 2026-09-15 第三輪：使用者挑定「Ⓑ 藍灰／藥丸淡色塊／Ⓜ1 路比較亮／圓點次要文字色」，
        那四把尺收成預設值、從切換條上拿掉（網址參數 pal／pill／map／dot 仍然吃得到）。 -->
   <div class="pv-r"><span class="pv-l">已選</span><span style="color:#aaa">Ⓑ 藍灰・藥丸淡色塊・Ⓜ1 路比較亮・圓點次要文字色</span></div>
+  <div class="pv-r"><span class="pv-l">滑桿</span>
+    <button data-k="sw" data-v="a">Ⓐ 燈在鈕上</button><button data-k="sw" data-v="b">Ⓑ 軌道是天色</button><button data-k="sw" data-v="c">Ⓒ 鈕本身是燈</button></div>
   <div class="pv-r"><span class="pv-l">系統</span><span style="color:#aaa" id="pv-sys"></span></div>
   <div class="pv-panel" id="pv-panel" hidden></div>
 </div>
@@ -308,7 +346,7 @@ const BAR = `
     var m=document.querySelector('meta[name="theme-color"]'); if(m) m.content = dark ? PAL[r.dataset.pal].paper : '#12656a';
     document.getElementById('pv-sys').textContent = '這台裝置現在是'+(mq&&mq.matches?'深色':'淺色')+'　·　目前顯示'+(dark?'夜間':'白天')+(r.dataset.thsrc==='auto'?'（跟著系統）':'（手動選的）');
     var u=new URL(location.href); u.searchParams.set('th',r.dataset.thsrc); u.searchParams.delete('pos');
-    ['pal','pill','map','dot'].forEach(function(k){ u.searchParams.delete(k); });
+    ['pal','pill','map','dot'].forEach(function(k){ u.searchParams.delete(k); }); u.searchParams.set('sw', r.dataset.sw);
     history.replaceState(null,'',u); panel();
   }
   function pillHtml(k){
@@ -322,6 +360,12 @@ const BAR = `
       '　灰色停車場對路 '+m.lotRoad+'　綠色診所對路 '+m.markRoad+'　白字 P 4.18／路牌藍上 7.43（沒動）'+
       '<br>門診圓點對卡：'+(r.dataset.dot==='ink'?'主文字色 '+d.ink:'次要文字色 '+d.soft)+'　沒這科的那一顆 '+d.faint+'（白天 '+d.dayFaint+'）　有這科的那一顆吃科別字階（對卡 4.5 以上）';
   }
+  var SW=${JSON.stringify(SW)};
+  function swHtml(){
+    var s=SW[r.dataset.sw], row=function(t,c,n){return t+'：軌道 <span class="pv-sw" style="background:'+c.track+'"></span> '+c.track+'　圓鈕 <span class="pv-sw" style="background:'+c.knob+'"></span> '+c.knob+'　圖示 <span class="pv-sw" style="background:'+c.icon+'"></span> '+c.icon+
+      '<br>　圖示對圓鈕 '+n.icon+'　圓鈕對軌道 '+n.knob+'　軌道對頁面底 '+n.track+'（非文字圖形的門檻是 3）';};
+    return '<br>滑桿 '+s.name+'<br>'+row('白天（太陽）',s.d,s.nums.d)+'<br>'+row('夜間（月亮）',s.n,s.nums.n);
+  }
   function panel(){
     var k=r.dataset.pal, p=PAL[k], n=NUM[k];
     var sw=function(c){return '<span class="pv-sw" style="background:'+c+'"></span> '+c;};
@@ -333,7 +377,7 @@ const BAR = `
       'Ⓐ／Ⓑ 目前看的是 <b>'+(k==='a'?'Ⓐ 暗夜':'Ⓑ 窄帶藍灰')+'</b>：底 '+sw(p.paper)+'　卡 '+sw(p.card)+'（亮 '+n.lift.toFixed(1)+' L*）　線 '+sw(p.rule)+
       '<br>主文字 '+sw(p.ink)+' 對底 '+n.ink[0]+'／對卡 '+n.ink[1]+'　次要 '+sw(p.soft)+' 對底 '+n.soft[0]+'／對卡 '+n.soft[1]+
       '<br>科別的字階（同色相、只提亮度到對卡 4.5；填色那一階沒動）：<table>'+rows+'</table>'+
-      pillHtml(k)+mapHtml(k)+
+      pillHtml(k)+mapHtml(k)+swHtml()+
       head.slice(4)+'<br>水平捲動：'+(over?'<b style="color:#f88">有（'+(document.documentElement.scrollWidth-innerWidth)+'px）</b>':'沒有');
   }
   document.querySelectorAll('.pv-bar [data-k]').forEach(function(b){ b.addEventListener('click',function(){
