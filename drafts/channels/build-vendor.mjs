@@ -1081,4 +1081,6 @@ export {
   CSS, esc, b, pngWH, D, DATE, SC, SET, WM, INK, WM_A, cmp, cardBox, CARCMP,
   revisedHtml, wmTable, nine, compare, onCard, carNine, carCompare, settledHtml, settled,
   設節表,
+  /* build-brief.mjs（待調整項目總整理）另外用到的：卡片的字、兩則的寬度、浮水印的幾何 */
+  OFF, wmWidth, cardLines, linesHtml, MEGA, MICRO, BUB, WCARD, WMTAB, byName, PILLVAL, CARD, FSIZE,
 };

@@ -123,7 +123,8 @@
       "watermark_size_single": "107px",
       "watermark_size_carousel": "107px",
       "watermark_ratio": "1:1",
-      "url": "https://fangren.net/assets/line/wm-r1c1-12.png"
+      "url": "https://fangren.net/assets/line/wm-r1c1-12.png",
+      "url_carousel": "https://fangren.net/assets/line/wm-r1c1-ink12.png"
     },
     "r1c2": {
       "科別": "牙周治療",
@@ -131,7 +132,8 @@
       "watermark_size_single": "150px",
       "watermark_size_carousel": "150px",
       "watermark_ratio": "2.029:1",
-      "url": "https://fangren.net/assets/line/wm-r1c2-12.png"
+      "url": "https://fangren.net/assets/line/wm-r1c2-12.png",
+      "url_carousel": "https://fangren.net/assets/line/wm-r1c2-ink12.png"
     },
     "r1c3": {
       "科別": "齒顎矯正",
@@ -139,7 +141,8 @@
       "watermark_size_single": "188px",
       "watermark_size_carousel": "141px",
       "watermark_ratio": "3.084:1",
-      "url": "https://fangren.net/assets/line/wm-r1c3-12.png"
+      "url": "https://fangren.net/assets/line/wm-r1c3-12.png",
+      "url_carousel": "https://fangren.net/assets/line/wm-r1c3-ink12.png"
     },
     "r2c1": {
       "科別": "顯微根管",
@@ -147,7 +150,8 @@
       "watermark_size_single": "152px",
       "watermark_size_carousel": "152px",
       "watermark_ratio": "2.025:1",
-      "url": "https://fangren.net/assets/line/wm-r2c1-12.png"
+      "url": "https://fangren.net/assets/line/wm-r2c1-12.png",
+      "url_carousel": "https://fangren.net/assets/line/wm-r2c1-ink12.png"
     },
     "r2c2": {
       "科別": "植牙・假牙重建",
@@ -155,7 +159,8 @@
       "watermark_size_single": "120px",
       "watermark_size_carousel": "120px",
       "watermark_ratio": "1.332:1",
-      "url": "https://fangren.net/assets/line/wm-r2c2-12.png"
+      "url": "https://fangren.net/assets/line/wm-r2c2-12.png",
+      "url_carousel": "https://fangren.net/assets/line/wm-r2c2-ink12.png"
     },
     "r2c3": {
       "科別": "口腔外科",
@@ -163,7 +168,8 @@
       "watermark_size_single": "188px",
       "watermark_size_carousel": "141px",
       "watermark_ratio": "3.081:1",
-      "url": "https://fangren.net/assets/line/wm-r2c3-12.png"
+      "url": "https://fangren.net/assets/line/wm-r2c3-12.png",
+      "url_carousel": "https://fangren.net/assets/line/wm-r2c3-ink12.png"
     },
     "r3c1": {
       "科別": "口腔外科",
@@ -171,7 +177,8 @@
       "watermark_size_single": "104px",
       "watermark_size_carousel": "104px",
       "watermark_ratio": "1:1",
-      "url": "https://fangren.net/assets/line/wm-r3c1-12.png"
+      "url": "https://fangren.net/assets/line/wm-r3c1-12.png",
+      "url_carousel": "https://fangren.net/assets/line/wm-r3c1-ink12.png"
     },
     "r3c2": {
       "科別": "兒童牙科",
@@ -179,7 +186,8 @@
       "watermark_size_single": "131px",
       "watermark_size_carousel": "106px",
       "watermark_ratio": "0.999:1",
-      "url": "https://fangren.net/assets/line/wm-r3c2-12.png"
+      "url": "https://fangren.net/assets/line/wm-r3c2-12.png",
+      "url_carousel": "https://fangren.net/assets/line/wm-r3c2-ink12.png"
     },
     "r3c3": {
       "科別": "一般牙科",
@@ -187,7 +195,8 @@
       "watermark_size_single": "186px",
       "watermark_size_carousel": "142px",
       "watermark_ratio": "3.083:1",
-      "url": "https://fangren.net/assets/line/wm-r3c3-12.png"
+      "url": "https://fangren.net/assets/line/wm-r3c3-12.png",
+      "url_carousel": "https://fangren.net/assets/line/wm-r3c3-ink12.png"
     }
   },
   "預約成功通知": {
@@ -299,7 +308,7 @@
             },
             {
               "type": "image",
-              "url": "https://fangren.net/assets/line/wm-{{watermark}}-12.png",
+              "url": "https://fangren.net/assets/line/wm-{{watermark}}-ink12.png",
               "size": "{{watermark_size_carousel}}",
               "aspectRatio": "{{watermark_ratio}}",
               "aspectMode": "fit",

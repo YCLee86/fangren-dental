@@ -46,7 +46,8 @@ const jpeg = (b) => {                      /* 掃 SOF 標記，不能照抄 PNG 
 const want = new Map();                    /* 檔名 → 哪幾份 JSON 在用 */
 for (const f of fs.readdirSync(HERE).filter((n) => n.endsWith(".json"))) {
   const txt = fs.readFileSync(path.join(HERE, f), "utf8");
-  for (const m of txt.matchAll(/"url":\s*"([^"]+)"/g)) {
+  /* url_carousel：約診紀錄查詢那一則的淡墨浮水印（wm-<形狀>-ink12.png，2026-09-14） */
+  for (const m of txt.matchAll(/"url(?:_carousel)?":\s*"([^"]+)"/g)) {
     const url = m[1];
     if (!url.startsWith(BASE)) continue;
     const name = url.slice(BASE.length);

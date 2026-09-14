@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 待調整項目與規格</title>
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:26px 14px 72px}
+h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
+.lede{color:var(--soft);font-size:.92rem;margin:0 0 1.5em}
+.h2{font-size:1.04rem;margin:2.4em 0 .6em;padding-top:1em;border-top:1px solid var(--rule)}
+.h2 .t{display:block;font-size:.79rem;font-weight:400;color:var(--soft);margin-top:.25em}
+/* 未定案：四件，其中兩件帶子項。號碼用 CSS 的計數器做成 1 與 3-1，
+   所以 ol 的縮排自己接管（list-style 關掉）。 */
+.now{background:var(--card);border-radius:11px;padding:14px 16px;margin:0;font-size:.93rem}
+.now>b{font-size:1rem}
+.now ol{list-style:none;margin:.45em 0 0;padding:0}
+.now>ol{counter-reset:n}
+.now>ol>li{counter-increment:n;position:relative;padding-left:2em;margin:.85em 0 0}
+.now>ol>li::before{content:counter(n);position:absolute;left:0;top:0;font-weight:700}
+.now .t{font-weight:600;margin:0}
+.now .d{margin:.2em 0 0}
+.now ol.sub{counter-reset:m;margin:.3em 0 0}
+.now ol.sub>li{counter-increment:m;position:relative;padding-left:2.6em;margin:.45em 0 0}
+.now ol.sub>li::before{content:counter(n) "-" counter(m);position:absolute;left:0;top:0;
+  color:var(--soft)}
+.note{font-size:.88rem;color:var(--soft);background:var(--card);border-radius:9px;
+  padding:.7em .85em;margin:.9em 0 0}
+
+/* ── 一則一格：左邊是那一則自己的縮圖 ─────────────────────────── */
+.mg{font-size:.93rem;font-weight:600;margin:1.15em 0 .15em}
+.mg:first-of-type{margin-top:.5em}
+.mg .n{font-weight:400;font-size:.79rem;color:var(--soft);margin-left:.5em}
+.msgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));
+  gap:9px;margin:.2em 0 0}
+.msg{display:flex;gap:10px;background:var(--card);border-radius:10px;padding:9px 10px}
+.msg .ims{display:flex;flex-direction:column;gap:4px;flex:0 0 64px}
+.msg img{width:64px;height:64px;border-radius:6px;object-fit:cover;
+  background:var(--paper)}
+.msg .ph{width:64px;height:64px;flex:0 0 64px;border-radius:6px;background:var(--paper)}
+.msg .x{min-width:0}
+.msg .nm{font-size:.9rem;font-weight:600;line-height:1.45}
+.msg .mt{font-size:.79rem;color:var(--soft);line-height:1.55;margin-top:.15em}
+.msg .un{display:inline-block;font-weight:400;font-size:.72rem;color:var(--soft);
+  border:1px solid var(--rule);border-radius:6px;padding:.1em .42em;margin-left:.45em;
+  vertical-align:.08em;white-space:nowrap}
+
+/* ── 改版：左邊規格圖、右邊逐項 ───────────────────────────────── */
+.fig{margin:.9em 0 0}
+.fig img{display:block;max-width:100%;height:auto;border-radius:8px;background:var(--card)}
+.fig figcaption{font-size:.8rem;color:var(--soft);margin-top:.4em}
+.scroll{overflow-x:auto}
+.scroll img{max-width:none}
+.two{display:grid;gap:14px;margin:.9em 0 0}
+@media(min-width:620px){.two{grid-template-columns:268px 1fr;align-items:start}}
+ul.tick{list-style:none;margin:.2em 0 0;padding:0;font-size:.92rem}
+ul.tick li{padding:.28em 0 .28em 1.15em;position:relative}
+ul.tick li::before{content:"・";position:absolute;left:0;color:var(--soft)}
+.rows{margin:.2em 0 0}
+.row{border-top:1px solid var(--rule);padding:.8em 0}
+.row .k{font-weight:600;font-size:.93rem}
+.row .v{font-size:.9rem;margin-top:.25em}
+.row .v i{font-style:normal;color:var(--soft);margin-right:.35em}
+
+/* ── 廠商送來的畫面 ────────────────────────────────────────── */
+.vs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:14px 12px;margin:.5em 0 0}
+.vs figure{margin:0}
+.vs img{display:block;width:100%;height:auto;border-radius:8px;background:var(--card)}
+.vs .t{font-size:.88rem;font-weight:600;margin:.45em 0 0}
+.vs figcaption{font-size:.8rem;color:var(--soft);line-height:1.65;margin-top:.15em}
+
+/* ── 九宮格 ────────────────────────────────────────────────── */
+.nine{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px;
+  margin:.9em 0 0;background:var(--card);border-radius:11px;padding:15px 14px}
+.nine figure{margin:0;text-align:center}
+.nine svg{display:block;margin:0 auto;height:auto}
+.nine .sw{display:flex;align-items:center;justify-content:center;
+  aspect-ratio:2.0080 / 1}
+.nine .wm{margin-top:8px;border-top:1px dashed var(--rule)}
+.nine figcaption{font-size:.72rem;color:var(--soft);line-height:1.5;margin-top:.45em}
+
+/* ── 大小與位置的對照 ──────────────────────────────────────── */
+.cmpwrap{margin:1.2em 0 0}
+.cmpt{font-size:.9rem;font-weight:600;margin:0 0 .35em}
+.cmprow{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:14px 10px}
+.cmp{margin:0}
+.cmp svg{display:block;width:100%;max-width:268px;height:auto}
+.cmp figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.2em;max-width:268px}
+/* 九顆各自畫在卡片上 —— 和上面那三格同一個框、同一個比例尺，才比得出來 */
+.onnine{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:14px 10px;
+  margin:.9em 0 0}
+
+/* ── 綁定完成的兩個方向 ────────────────────────────────────── */
+.dir{background:var(--card);border-radius:11px;padding:13px 15px;margin:.9em 0 0}
+.dir .t{font-size:.95rem;font-weight:600;margin:0 0 .45em}
+.dir p{font-size:.89rem;margin:.5em 0 0}
+.dir i{font-style:normal;color:var(--soft);margin-right:.4em}
+
+/* ── 待答 ──────────────────────────────────────────────────── */
+.grp{margin:1.6em 0 0}
+.grp .t{font-size:.93rem;font-weight:600;margin:0 0 .1em}
+.grp .c{font-size:.79rem;color:var(--soft);margin:0}
+/* 編號要跨「★ 那幾題」與「其餘」連續，所以每一題自己帶 value ——
+   別處寫著「第 6 節的第 N 題」，指的就是這個號碼。
+   （這一段在樣板字串裡 ＝ 會被印進頁面，所以不要用那個三角形的警示記號 ——
+   守門第 ⑨ 道掃的就是它，連這一句說明自己都會被掃到。） */
+ol.ask{margin:.35em 0 0;padding:0 0 0 2.5em}
+ol.ask li{padding:.55em 0;border-bottom:1px solid var(--rule);font-size:.91rem}
+ol.ask li::marker{color:var(--soft);font-size:.85em}
+ol.ask .y{display:block;color:var(--soft);font-size:.85rem;margin-top:.2em}
+ol.ask .s{color:var(--soft);margin-right:.35em}
+details{margin:.3em 0 0}
+summary{font-size:.87rem;color:var(--soft);cursor:pointer;padding:.5em 0;
+  border-bottom:1px solid var(--rule)}
+summary::marker{color:var(--rule)}
+/* ── 約診狀態那四個值的顏色：兩套色票各畫一次 ─────────────────
+   卡片畫成輪播上真正的寬度（207px ＝ 268 × .772），
+   欄位要吃得下手機的寬度，所以是 auto-fit 不是寫死兩欄。 */
+.pal{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));
+  gap:16px;margin:1em 0 0}
+.pal .h{font-size:.93rem;font-weight:600;margin:0 0 .1em}
+.pal .src{font-size:.79rem;color:var(--soft);line-height:1.65;margin:0 0 .55em}
+.stgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(207px,1fr));
+  gap:16px 12px;margin:1em 0 0}
+.stwrap{margin:0;max-width:207px}
+.stcard{position:relative;overflow:hidden;background:#ffffff;
+  border:1px solid var(--rule);border-radius:9px}
+/* 卡上那幾行 —— 第 3 節那幾張 SVG 卡（foreignObject）與第 4 節那四張 HTML 卡
+   吃的是同一組規則，所以兩處的字級、行距與折行一定一樣。
+   字級、顏色、粗細、上外距都是從 booked-card.json 讀回來寫在 style 上的，
+   這裡只放 padding 與行高 —— 寫進 CSS 就變成第二份規格。
+   字型堆疊比整頁多一個拉丁字型（Arial）當校正：手機與電腦上前面三個中文字型
+   會先命中、含拉丁字，所以那一側一個像素都不會變；而產圖用的這台容器沒有那三個
+   字型，拉丁數字會退到比整頁寬一成的字型，日期那一行就會在 LINE 上放得下的地方
+   折行 —— 出圖與量到的折點因此都會對不上實機。中日韓的字仍然照原本的堆疊走。
+   （這一段在樣板字串裡面，所以會被原字印進 HTML：不要寫警示記號，第 ⑨ 道在掃。） */
+.cb{padding:14px;
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,system-ui,sans-serif}
+.cb p{line-height:1.35;margin:0}
+.cb b{font-weight:700}
+.stcard .r{display:flex;gap:9px;align-items:baseline;font-size:13px;
+  line-height:1;margin:10px 0 0}
+.stcard .lb{color:var(--soft);flex:0 0 auto}
+.stcard .wm{position:absolute;display:block;height:auto;pointer-events:none}
+.stwrap figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.25em}
+.stlist{list-style:none;margin:.6em 0 0;padding:0;
+  font-size:.79rem;color:var(--soft);line-height:1.75}
+.stlist b{font-weight:600;color:var(--ink)}
+.pal .h .pick{font-weight:400;font-size:.79rem;color:var(--soft);margin-left:.4em}
+/* 藥丸：底是那一科的套色、字是白的，形狀照站上那一族（圓角 8.5px）。
+   行高與上下內距要和 preview/line-booked/ 定案那一份**逐字相同** ——
+   塊要包住「字面框」不是「行框」（同 /history/spec-tag-fit.html 那一輪），
+   寫回 line-height:1.6 ＋ 上下對稱的話，這一頁會畫出一顆低 1.40px 的藥丸，
+   和定案那一頁對不起來，而且畫面看起來完全正常。 */
+.stcard .pill{display:inline-block;border-radius:8.5px;line-height:1;
+  padding:.42em .63em .38em;color:#fff;font-weight:700}
+/* ③ 那幾條規格：一條一行，不用項目符號 —— 廠商是照著填的，不是在讀文章 */
+.spec{list-style:none;margin:.5em 0 0;padding:0;font-size:.9rem;line-height:1.8}
+.spec>li{margin:.5em 0 0;padding-left:1.1em;position:relative}
+.spec>li::before{content:"・";position:absolute;left:0;color:var(--soft)}
+.h3{font-size:.98rem;margin:2em 0 .2em}
+.h4{font-size:.92rem;margin:1.6em 0 .2em;color:var(--soft)}
+/* 那張表在窄螢幕上一定會比版心寬 —— 自己一條捲軸，不要讓整頁橫著捲 */
+.tabw{overflow-x:auto;margin:.9em 0 0;-webkit-overflow-scrolling:touch}
+.tab{border-collapse:collapse;font-size:.82rem;min-width:460px}
+.tab th,.tab td{border:1px solid var(--rule);padding:5px 8px;text-align:left;
+  white-space:nowrap;line-height:1.5}
+.tab thead th{background:var(--card);font-weight:600;font-size:.78rem}
+.tab .chip{display:inline-block;width:.72em;height:.72em;border-radius:2px;
+  margin-right:.4em;vertical-align:-.02em;border:1px solid rgba(0,0,0,.12)}
+.tab .was,.stwrap .was{color:var(--soft);font-weight:400}
+.foot{margin:2.8em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
+  font-size:.83rem;color:var(--soft);line-height:1.85}
+a{color:#214d48}
+code{font-size:.92em}
+.h3 .t{display:block;font-size:.79rem;font-weight:400;color:var(--soft);margin-top:.2em}
+.now a{color:inherit;text-decoration-color:var(--rule);text-underline-offset:3px}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:16px 14px;margin:.9em 0 0}
+.pair figure{margin:0}
+.pair img{display:block;max-width:100%;height:auto;border-radius:10px}
+.pair figcaption{font-size:.8rem;color:var(--soft);line-height:1.65;margin-top:.4em}
+.pair .k{font-size:.88rem;font-weight:600;color:var(--ink);margin:0 0 .35em}
+.gs{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:16px 12px;margin:1em 0 0}
+.gm{display:grid;grid-template-columns:repeat(auto-fill,minmax(162px,1fr));gap:16px 12px;margin:1em 0 0}
+.cw{margin:0}
+.cw figcaption{font-size:.74rem;color:var(--soft);line-height:1.6;margin-top:.25em}
+pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:10px 12px;
+  font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.9em 0 0}
+code.url{font-size:.78em;white-space:nowrap}
+.tabv td:first-child{white-space:nowrap;font-weight:600}
+.done{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:9px;margin:.8em 0 0}
+.done .msg{align-items:flex-start}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>LINE 官方帳號　待調整項目與規格</h1>
+<p class="lede">芳仁牙醫診所　更新於 2026-09-14<br>
+先列未定案的四件，再逐項附上<b>你們現在那一版</b>與<b>我們的定稿</b>、規格與做法；最後是已經完成、不必再調整的項目。<br>
+卡片的模擬圖一律畫成病人手機上的寬度（單張約 268px、輪播 micro 約 162px）。</p>
+
+<div class="now">
+<b>未定案</b>
+<ol>
+<li>
+<p class="t"><a href="#s1">尚未綁定按約診查詢</a></p>
+<p class="d">請抽換現有的公版藍色圖卡。我們已經做好替代的版本。</p>
+</li>
+<li>
+<p class="t"><a href="#s2">看診前 48 小時提醒</a></p>
+<p class="d">原圖有 bug，請抽換新圖。</p>
+</li>
+<li>
+<p class="t"><a href="#s3">約診通知與紀錄查詢版面</a></p>
+<ol class="sub"><li><a href="#s3-1">回傳頁面中浮水印大小與位置和規格不一樣、九顆logo在約診完成通知與約診查詢頁面的樣子，logo出現邏輯已列好。</a></li>
+<li><a href="#s3-2">約診完成通知的版面定稿，9顆logo浮水印顏色、色碼。</a></li>
+<li><a href="#s3-3">約診查詢版面定稿，卡片尺寸為micro，logo浮水印的顏色改成淡墨素色：柔墨 <code>#5c5f57</code>、濃度 12%。</a></li>
+<li><a href="#s3-4">約診狀態：依系統發送與病人回覆的狀態分成 已排定／已確認／未回覆／已取消。四個值的畫法、色碼與對齊在。</a></li>
+<li><a href="#s3-5">日期的順序：2026/09/11 星期五 11:50</a></li>
+<li><a href="#s3-6">九顆浮水印怎麼輪，照我們這個規則：<code>(約診月份 + 約診日) % 9</code>，照第 3 節那張表由上到下的順序取第幾顆。所以同一筆約診不管查幾次都是同一顆，預約成功通知與查詢清單裡的那一張也要是同一顆、同一色。</a></li></ol>
+</li>
+<li>
+<p class="t"><a href="#s4">綁定成功的自動回覆設定</a></p>
+<ol class="sub"><li><a href="#s4-1">用戶端送出的那一句「綁定成功」無法（或不建議）移除 —— 那是以病人的身分送進聊天室的，而且診所櫃檯會用那個號碼查病歷。</a></li>
+<li><a href="#s4-2">綁定成功之後跳出來的自動回覆，現況：LINE 商家帳號的自動回應只能設定一種，所以綁定那一刻跳出來的，和平常打字進去收到的是同一則。</a></li>
+<li><a href="#s4-3">其他商家帳號在綁定那一刻送的是另一則，和平常打字進去收到的不一樣 —— 潔客幫、中國信託、國泰世華、玉山四個帳號都是這樣。</a></li>
+<li><a href="#s4-4">同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆。 想請教他們的自動回應是怎麼設的，我們能不能照那個設法。</a></li></ol>
+</li>
+<li><p class="t"><a href="#s5">已完成項目</a></p></li>
+</ol>
+</div>
+
+<h2 class="h2" id="s1">1　尚未綁定按約診查詢<span class="t">請抽換現有的公版藍色圖卡</span></h2>
+<p class="note">還沒綁定的人按圖文選單「約診查詢」時，現在回的是公版那張藍色圖卡（圖、標題與按鈕都烘在同一張圖裡）。請換成下面這一張 Flex 卡：一張頭圖、一行標題、一顆按鈕。</p>
+<div class="pair">
+<figure><p class="k">現在（公版）</p><img src="../line-bind-prompt/shot-bind-prompt-old.png" width="804" height="759" style="width:268px" alt="現在跳出來的公版藍色圖卡">
+<figcaption>照你們現在那張重畫的結構（吉祥物沒有畫）。</figcaption></figure>
+<figure><p class="k">換成這一張</p><img src="../line-bind-prompt/shot-bind-prompt.png" width="804" height="714" style="width:268px" alt="要換上的綁定圖卡">
+<figcaption>卡片寬 268px 時的樣子。</figcaption></figure>
+</div>
+<h3 class="h3">規格</h3>
+<ul class="spec"><li>卡片　bubble <code>size: "mega"</code>、<code>paddingAll</code> 14px、<code>backgroundColor</code> #F4F4F5。</li>
+<li>頭圖　<code>hero</code>：<code>https://fangren.net/assets/line/hero-bind.jpg</code>（1024×512），<code>size: "full"</code>、<code>aspectRatio: "2:1"</code>、<code>aspectMode: "cover"</code>。</li>
+<li>標題　「30秒快速綁定　啟用完整服務」一行、<code>size: "md"</code>、粗體、<code>color</code> #2A2C27、<code>align: "center"</code>。中間那個全形空格請拆成一個 span、給 <code>size: "xxs"</code>（Flex 沒有字距可以設，空格要縮窄只能縮它自己的字級）。</li>
+<li>按鈕　和招呼圖卡那一顆「點這裡綁定」完全相同（下面的 JSON 就是從那一份照抄的）：可點的 box、底色 #3F654A、圓角 9px、內距 11px，裡面白色標誌 <code>mark-white.png</code> 34px ＋ 白色粗體字。按鈕的網址填你們系統的綁定網址。</li>
+<li>其他格　還沒綁定的人按其他需要綁定的格子，若也是回同一張公版卡，請一起換成這一張。</li></ul>
+<h3 class="h3">Flex JSON<span class="t"><code>{{bind_url}}</code> 請填你們系統的綁定網址</span></h3>
+<details><summary>展開這一張卡的 Flex JSON</summary>
+<pre class="json">{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://fangren.net/assets/line/hero-bind.jpg",
+    "size": "full",
+    "aspectRatio": "2:1",
+    "aspectMode": "cover"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "14px",
+    "backgroundColor": "#F4F4F5",
+    "contents": [
+      {
+        "type": "text",
+        "size": "md",
+        "weight": "bold",
+        "color": "#2A2C27",
+        "align": "center",
+        "wrap": true,
+        "contents": [
+          {
+            "type": "span",
+            "text": "30秒快速綁定"
+          },
+          {
+            "type": "span",
+            "text": "　",
+            "size": "xxs"
+          },
+          {
+            "type": "span",
+            "text": "啟用完整服務"
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "cornerRadius": "9px",
+        "paddingAll": "11px",
+        "spacing": "sm",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "margin": "sm",
+        "action": {
+          "type": "uri",
+          "label": "點這裡綁定",
+          "uri": "{{bind_url}}"
+        },
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/mark-white.png",
+            "size": "34px",
+            "aspectRatio": "2029:1000",
+            "aspectMode": "fit",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "點這裡綁定",
+            "size": "md",
+            "weight": "bold",
+            "color": "#FFFFFF",
+            "flex": 0,
+            "align": "center"
+          }
+        ],
+        "backgroundColor": "#3F654A"
+      }
+    ]
+  }
+}</pre></details>
+
+<h2 class="h2" id="s2">2　看診前 48 小時提醒<span class="t">原圖有 bug，請抽換新圖</span></h2>
+<p class="note">提醒卡的頭圖原本有一個錯：被媽媽抱著的幼兒多畫了一隻手。新圖已經畫好，<b>檔名與網址都沒有變</b>，構圖、尺寸、卡片其餘每一個地方都沒有動。</p>
+<div class="pair">
+<figure><p class="k">新頭圖（1024×512）</p><img src="../line-remind/hero-remind.jpg" width="1024" height="512" loading="lazy" alt="修正後的提醒卡頭圖">
+<figcaption>https://fangren.net/assets/line/hero-remind.jpg</figcaption></figure>
+<figure><p class="k">放進提醒卡的樣子</p><img src="../line-remind/shot-remind.png" width="804" height="1743" style="width:268px" loading="lazy" alt="換上新頭圖的提醒卡"></figure>
+</div>
+<h3 class="h3">做法</h3>
+<ul class="spec"><li>圖檔　<code>https://fangren.net/assets/line/hero-remind.jpg</code>（1024×512），2026-09-10 已經換成新圖。</li>
+<li>若你們是直接引用這個網址：LINE 端可能還拿著舊圖的快取，可以在網址後面加 <code>?v=20260910</code> 讓它重新抓。</li>
+<li>若你們有另外存一份到自己的主機：請重新下載這個檔案覆蓋。</li>
+<li>卡片的文字、按鈕、字級與顏色都不變。</li></ul>
+
+<h2 class="h2" id="s3">3　約診通知與紀錄查詢版面<span class="t">預約成功通知（單張）與約診紀錄查詢（輪播）</span></h2>
+<p class="note">預約成功通知（單張）與約診紀錄查詢（輪播）兩則。下面六項對應抬頭那六條。卡片一律畫成病人手機上的寬度：單張約 268px、輪播 micro 約 162px。</p>
+
+<h3 class="h3" id="s3-1">3-1　浮水印的大小與位置<span class="t">你們 2026-09-10 那一版，對照定稿</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">你們 09-10 送來的那一版，浮水印是規格的五到六成大，而且往右下跑出卡片的量和規格不一樣。三張截圖與逐顆的比對如下。</p>
+<div class="vs">
+<figure><img src="../line-vendor/vendor-booked-a-0910.jpg" width="750" height="524" loading="lazy" alt="⑥ 預約成功通知（14:20）">
+<p class="t">你們送來的：⑥ 預約成功通知（14:20）</p>
+<figcaption>浮水印是<b>圓形</b>那一顆。</figcaption></figure>
+<figure><img src="../line-vendor/vendor-booked-b-0910.jpg" width="750" height="465" loading="lazy" alt="⑥ 同一則，三分鐘後（14:23）">
+<p class="t">你們送來的：⑥ 同一則，三分鐘後（14:23）</p>
+<figcaption>浮水印換成<b>寬的</b>那一顆，位置與大小也不一樣。</figcaption></figure>
+<figure><img src="../line-vendor/vendor-query-0910.jpg" width="750" height="507" loading="lazy" alt="⑦ 約診紀錄查詢（14:18）">
+<p class="t">你們送來的：⑦ 約診紀錄查詢（14:18）</p>
+<figcaption>病人按下之後跳出的已約診時段。橫著滑的輪播，右邊那一張被切一半。日期「2026/09/11 11:50 星期五」完整顯示。</figcaption></figure>
+</div>
+<h4 class="h4">同一張卡、同一顆浮水印：我們要的 vs 你們送來的</h4>
+<div class="cmpwrap">
+<p class="cmpt">圓形（口腔外科紫）・預約成功通知</p>
+<div class="cmprow"><figure class="cmp">
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
+  role="img" aria-label="我們要的：浮水印 104px，往右 18、往下 10">
+<defs><clipPath id="clip-1"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<g clip-path="url(#clip-1)" opacity="0.12">
+<svg x="182.00" y="27.00" width="104" height="104.00"
+  viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
+  fill="#8e6299" fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="267" height="120" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="182.00" y="27.00" width="104" height="104.00"
+  fill="none" stroke="#8e6299" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>我們要的</b>　104px・卡寬的 38.8%<br><b>定案</b>：往右下溢出 18／10px（更像浮水印，整顆不會整張貼在角落）。這一顆 104px，看得到的那一塊右下被卡片切掉。</figcaption>
+</figure>
+<figure class="cmp">
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
+  role="img" aria-label="廠商送來的：浮水印 67px，往右 10、往下 7">
+<defs><clipPath id="clip-2"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<g clip-path="url(#clip-2)" opacity="0.12">
+<svg x="211.00" y="61.00" width="67" height="67.00"
+  viewBox="0 0 29.43 29.43" preserveAspectRatio="none"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
+  fill="#8e6299" fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="267" height="120" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="211.00" y="61.00" width="67" height="67.00"
+  fill="none" stroke="#8e6299" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>廠商送來的</b>　67px・卡寬的 25.0%<br>量出來 ＝ 卡寬的 25.1%（規格是 38.8%），而且右下被切掉</figcaption>
+</figure></div>
+</div>
+<div class="cmpwrap">
+<p class="cmpt">寬形（牙周治療青綠）・預約成功通知</p>
+<div class="cmprow"><figure class="cmp">
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
+  role="img" aria-label="我們要的：浮水印 150px，往右 18、往下 10">
+<defs><clipPath id="clip-3"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<g clip-path="url(#clip-3)" opacity="0.12">
+<svg x="136.00" y="57.07" width="150" height="73.93"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#317d78" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="267" height="120" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="136.00" y="57.07" width="150" height="73.93"
+  fill="none" stroke="#317d78" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>我們要的</b>　150px・卡寬的 56.0%<br><b>定案</b>：往右下溢出 18／10px（更像浮水印，整顆不會整張貼在角落）。這一顆 150px，看得到的那一塊右下被卡片切掉。</figcaption>
+</figure>
+<figure class="cmp">
+<svg viewBox="-6 -6 300 145"
+  width="300" height="145"
+  role="img" aria-label="廠商送來的：浮水印 83px，往右 8、往下 6">
+<defs><clipPath id="clip-4"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
+<rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
+<foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
+<g clip-path="url(#clip-4)" opacity="0.12">
+<svg x="193.00" y="86.09" width="83" height="40.91"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#317d78" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</g>
+<rect x=".5" y=".5" width="267" height="120" rx="9"
+  fill="none" stroke="#c9ccc9"/>
+<rect x="193.00" y="86.09" width="83" height="40.91"
+  fill="none" stroke="#317d78" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+</svg>
+<figcaption><b>廠商送來的</b>　83px・卡寬的 31.0%<br>＝ 卡寬的 31.1%（規格是 56.0%）</figcaption>
+</figure></div>
+</div>
+<h4 class="h4">輪播上的同一顆</h4>
+<div class="stgrid">
+<figure class="stwrap">
+<div class="carcard stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+<svg class="wm" width="150" height="73.93"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</div>
+<figcaption><b>我們要的</b>　150px・卡寬的 72.5%<br><b>定案</b>：往右下溢出 18／10px，右下那一塊被卡片切掉。</figcaption>
+</figure>
+<figure class="stwrap">
+<div class="carcard stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+<svg class="wm" width="80" height="39.43"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</div>
+<figcaption><b>廠商送來的</b>　80px・卡寬的 38.6%<br>從你們 09-10 那張輪播的截圖量出來的。</figcaption>
+</figure>
+</div>
+<h4 class="h4">位置與大小的規格</h4>
+<ul class="spec"><li><code>position: "absolute"</code>，貼卡片右下角，<b>往右溢出 18px、往下溢出 10px</b>，跑出去的那一塊由卡片切掉。</li>
+<li>Flex 的 <code>offsetEnd</code>／<code>offsetBottom</code> 不吃負值，所以 JSON 裡只能寫 <code>0px</code>。你們 09-10 那一版已經做出溢出（量到 8~10／6~7px），請照你們的做法，把溢出量統一成 18／10px。</li>
+<li>一個 box 的第一個子元件不可以是 absolute：先放文字那一塊 box，浮水印排在它後面。</li>
+<li><code>size</code> 是<b>寬度</b>，每一顆、每一則各有自己的值（九顆的寬度不一樣是刻意的，照墨的面積算，看起來才一樣重）—— 見 3-2 與 3-3 那兩張表。<code>aspectRatio</code> 也是每一顆各自的值，<code>aspectMode: "fit"</code>。</li></ul>
+<p class="note">九顆畫在兩則卡片上的樣子：預約成功通知見 <a href="#s3-2">3-2</a>、約診紀錄查詢見 <a href="#s3-3">3-3</a>；挑哪一顆的規則見 <a href="#s3-6">3-6</a>。</p>
+
+<h3 class="h3" id="s3-2">3-2　預約成功通知・定稿<span class="t">九顆浮水印的顏色與色碼</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">單張那一則。浮水印用<b>每一顆自己的顏色</b>、濃度 12%（淡是烘在 PNG 裡的，Flex 的 image 沒有 opacity）。</p>
+<ul class="spec"><li>卡片　bubble <code>size: "mega"</code>、<code>paddingAll</code> 14px、<code>backgroundColor</code> #FFFFFF（你們現在跑的就是純白，不必換）。</li>
+<li>四行字與字級照 <code>booked-card.json</code>：〔病人姓名〕＋「　約好囉」<code>md</code>／日期 <code>lg</code> 粗體 <code>margin</code> 6px／兩行灰字 <code>xs</code> #5C5F57（<code>margin</code> 14px、5px）。每一格都 <code>wrap: true</code>。</li>
+<li>浮水印　<code>url</code> 照下表「單張網址」、<code>size</code> 照「單張 size」。</li></ul>
+<div class="tabw"><table class="tab"><thead><tr>
+<th>#</th><th>形狀</th><th>色碼</th><th><code>aspectRatio</code></th><th>單張 <code>size</code></th><th>單張網址 <code>url</code></th>
+</tr></thead><tbody>
+<tr><td>0</td><td><b>r1c1</b></td>
+<td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td>
+<td><code>1:1</code></td><td><b>107</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r1c1-12.png</code></td></tr>
+<tr><td>1</td><td><b>r1c2</b></td>
+<td><span class="chip" style="background:#317d78"></span><code>#317d78</code></td>
+<td><code>2.029:1</code></td><td><b>150</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r1c2-12.png</code></td></tr>
+<tr><td>2</td><td><b>r1c3</b></td>
+<td><span class="chip" style="background:#4478b5"></span><code>#4478b5</code></td>
+<td><code>3.084:1</code></td><td><b>188</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r1c3-12.png</code></td></tr>
+<tr><td>3</td><td><b>r2c1</b></td>
+<td><span class="chip" style="background:#ae4f4d"></span><code>#ae4f4d</code></td>
+<td><code>2.025:1</code></td><td><b>152</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r2c1-12.png</code></td></tr>
+<tr><td>4</td><td><b>r2c2</b></td>
+<td><span class="chip" style="background:#465885"></span><code>#465885</code></td>
+<td><code>1.332:1</code></td><td><b>120</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r2c2-12.png</code></td></tr>
+<tr><td>5</td><td><b>r2c3</b></td>
+<td><span class="chip" style="background:#8e6299"></span><code>#8e6299</code></td>
+<td><code>3.081:1</code></td><td><b>188</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r2c3-12.png</code></td></tr>
+<tr><td>6</td><td><b>r3c1</b></td>
+<td><span class="chip" style="background:#8e6299"></span><code>#8e6299</code></td>
+<td><code>1:1</code></td><td><b>104</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r3c1-12.png</code></td></tr>
+<tr><td>7</td><td><b>r3c2</b></td>
+<td><span class="chip" style="background:#c28229"></span><code>#c28229</code></td>
+<td><code>0.999:1</code></td><td><b>131</b>px <span class="was">（原 106）</span></td>
+<td><code class="url">https://fangren.net/assets/line/wm-r3c2-12.png</code></td></tr>
+<tr><td>8</td><td><b>r3c3</b></td>
+<td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td>
+<td><code>3.083:1</code></td><td><b>186</b>px <span class="was">（原 215）</span></td>
+<td><code class="url">https://fangren.net/assets/line/wm-r3c3-12.png</code></td></tr>
+</tbody></table></div>
+<h4 class="h4">九顆各自畫在卡片上（日期是照 3-6 規則會算到那一顆的看診日）</h4>
+<div class="gs">
+<figure class="cw" style="max-width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/18 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="107" height="107.00"
+  viewBox="0 0 29.273 29.282" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-166.723 511.764) scale(1 -1)"><path
+  fill="#3f654a" fill-opacity="0.12" fill-rule="evenodd" d="M 169.138 507.466 C 174.036 512.891 187.403 513.495 193.553 507.466 C 197.569 503.528 195.758 495.329 194.278 492.182 C 192.28 487.935 190.318 482.482 181.357 482.482 C 175.147 482.482 171.687 485.294 168.543 492.182 C 165.68 498.451 166.436 504.473 169.138 507.466 M 183.24 486.006 C 183.489 486.079 183.584 486.097 183.827 486.006 C 183.99 485.945 184.211 485.956 184.372 486.006 C 184.897 486.169 185.415 487.205 185.32 488.523 C 185.225 489.84 181.834 489.657 181.836 488.523 C 181.839 487.619 182.163 486.455 182.609 486.139 C 182.801 486.003 182.943 485.919 183.24 486.006 M 178.786 486.006 C 179.035 486.079 179.13 486.097 179.373 486.006 C 179.536 485.945 179.757 485.956 179.918 486.006 C 180.443 486.169 180.961 487.205 180.866 488.523 C 180.771 489.84 177.379 489.657 177.382 488.523 C 177.385 487.619 177.709 486.455 178.155 486.139 C 178.347 486.003 178.489 485.919 178.786 486.006"/></g></svg>
+</div>
+<figcaption><b>#0 r1c1</b>　<code>#3f654a</code>・107px</figcaption>
+</figure>
+<figure class="cw" style="max-width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/28 星期一 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="150" height="73.93"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#317d78" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</div>
+<figcaption><b>#1 r1c2</b>　<code>#317d78</code>・150px</figcaption>
+</figure>
+<figure class="cw" style="max-width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/29 星期二 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="188" height="60.96"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#4478b5" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption><b>#2 r1c3</b>　<code>#4478b5</code>・188px</figcaption>
+</figure>
+<figure class="cw" style="max-width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/21 星期一 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="152" height="75.06"
+  viewBox="0 0 44.267 21.861" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-159.225 433.777) scale(1 -1)"><path
+  fill="#ae4f4d" fill-opacity="0.12" fill-rule="evenodd" d="M 200.76 426.819 C 205.142 421.217 203.911 415.88 199.491 412.98 C 196.899 411.28 192.183 411.879 186.857 413.42 C 175.983 416.566 171.53 409.032 163.348 413.214 C 159.665 415.096 156.953 421.343 161.967 426.764 C 171.255 436.805 194.063 435.38 200.76 426.819 M 179.468 430.235 C 179.219 430.162 179.124 430.144 178.881 430.235 C 178.718 430.296 178.497 430.285 178.336 430.235 C 177.811 430.072 177.293 429.036 177.388 427.718 C 177.483 426.401 180.874 426.584 180.872 427.718 C 180.869 428.622 180.545 429.786 180.099 430.102 C 179.907 430.238 179.765 430.322 179.468 430.235 M 183.921 430.235 C 183.672 430.162 183.577 430.144 183.334 430.235 C 183.171 430.296 182.95 430.285 182.789 430.235 C 182.264 430.072 181.746 429.036 181.841 427.718 C 181.936 426.401 185.328 426.584 185.325 427.718 C 185.322 428.622 184.998 429.786 184.552 430.102 C 184.36 430.238 184.218 430.322 183.921 430.235"/></g></svg>
+</div>
+<figcaption><b>#3 r2c1</b>　<code>#ae4f4d</code>・152px</figcaption>
+</figure>
+<figure class="cw" style="max-width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/22 星期二 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="120" height="90.09"
+  viewBox="0 0 29.253 21.955" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-240.487 433.824) scale(1 -1)"><path
+  fill="#465885" fill-opacity="0.12" fill-rule="evenodd" d="M 258.316 412.07 C 263.699 410.812 266.61 415.769 267.523 418.051 C 269.025 421.805 270.191 426.758 269.568 429.365 C 268.74 432.834 265.685 434.439 261.853 433.609 C 253.39 431.776 253.853 432.555 248.515 433.609 C 243.49 434.601 241.244 431.98 240.636 429.365 C 240.028 426.755 241.377 421.108 242.875 418.051 C 244.144 415.462 247.074 410.971 252.502 412.07 C 253.901 412.353 255.844 412.648 258.316 412.07 M 246.025 430.29 C 245.776 430.217 245.681 430.198 245.438 430.29 C 245.275 430.35 245.054 430.34 244.893 430.29 C 244.368 430.126 243.85 429.09 243.945 427.773 C 244.04 426.456 247.432 426.638 247.429 427.773 C 247.426 428.677 247.102 429.84 246.656 430.157 C 246.464 430.292 246.322 430.376 246.025 430.29"/></g></svg>
+</div>
+<figcaption><b>#4 r2c2</b>　<code>#465885</code>・120px</figcaption>
+</figure>
+<figure class="cw" style="max-width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/14 星期一 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="188" height="61.02"
+  viewBox="0 0 44.261 14.366" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.719 430.029) scale(1 -1)"><path
+  fill="#8e6299" fill-opacity="0.12" fill-rule="evenodd" d="M 312.185 418.502 C 306.828 421.135 305.775 425.468 307.45 427.797 C 309.659 430.869 315.27 430.411 321.373 428.582 C 326.635 427.005 332.793 427.484 336.327 428.617 C 341.177 430.17 346.63 430.902 349.755 428.064 C 352.164 425.877 351.188 420.893 345.319 418.028 C 339.632 415.251 320.637 414.347 312.185 418.502 M 346.101 426.494 C 345.852 426.421 345.757 426.403 345.514 426.494 C 345.351 426.555 345.13 426.544 344.969 426.494 C 344.444 426.331 343.926 425.295 344.021 423.977 C 344.116 422.66 347.507 422.843 347.505 423.977 C 347.502 424.881 347.178 426.045 346.732 426.361 C 346.54 426.497 346.398 426.581 346.101 426.494"/></g></svg>
+</div>
+<figcaption><b>#5 r2c3</b>　<code>#8e6299</code>・188px</figcaption>
+</figure>
+<figure class="cw" style="max-width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/15 星期二 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="104" height="104.00"
+  viewBox="0 0 29.43 29.43" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
+  fill="#8e6299" fill-opacity="0.12" fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
+</div>
+<figcaption><b>#6 r3c1</b>　<code>#8e6299</code>・104px</figcaption>
+</figure>
+<figure class="cw" style="max-width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/16 星期三 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="131" height="131.13"
+  viewBox="0 0 44.221 44.266" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-233.002 374.392) scale(1 -1)"><path
+  fill="#c28229" fill-opacity="0.12" fill-rule="evenodd" d="M 240.173 330.126 C 237.214 330.126 233.002 331.801 233.002 339.494 C 233.002 339.494 233.365 359.509 246.254 371.273 C 251.307 375.885 259.611 374.953 263.874 371.273 C 272.504 363.821 277.223 347.577 277.223 338.885 C 277.223 332.768 274.88 330.126 270.082 330.126 Z M 257.439 370.907 C 257.19 370.834 257.095 370.816 256.853 370.907 C 256.689 370.968 256.468 370.957 256.307 370.907 C 255.782 370.744 255.264 369.708 255.359 368.39 C 255.454 367.073 258.846 367.256 258.843 368.39 C 258.84 369.294 258.516 370.458 258.07 370.774 C 257.878 370.91 257.736 370.994 257.439 370.907"/></g></svg>
+</div>
+<figcaption><b>#7 r3c2</b>　<code>#c28229</code>・131px</figcaption>
+</figure>
+<figure class="cw" style="max-width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/17 星期四 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="186" height="60.33"
+  viewBox="0 0 44.322 14.378" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.689 359.486) scale(1 -1)"><path
+  fill="#3f654a" fill-opacity="0.12" fill-rule="evenodd" d="M 326.482 352.763 C 322.051 356.284 318.54 362.303 311.648 357.984 C 304.8 353.692 305.054 344.099 312.348 345.194 C 320.662 346.443 327.623 349.699 339.17 345.971 C 348.848 342.846 350.834 349.33 350.976 350.796 C 351.244 353.557 350.042 358.07 344.814 357.208 C 340.519 356.499 339.1 353.546 335.25 351.658 C 331.729 349.932 328.581 351.095 326.482 352.763 M 316.169 355.937 C 315.92 355.864 315.825 355.846 315.582 355.937 C 315.419 355.998 315.198 355.987 315.037 355.937 C 314.512 355.774 313.994 354.738 314.089 353.42 C 314.184 352.103 317.575 352.286 317.573 353.42 C 317.57 354.324 317.246 355.488 316.8 355.804 C 316.608 355.94 316.466 356.024 316.169 355.937"/></g></svg>
+</div>
+<figcaption><b>#8 r3c3</b>　<code>#3f654a</code>・186px</figcaption>
+</figure>
+</div>
+
+<h3 class="h3" id="s3-3">3-3　約診紀錄查詢・定稿<span class="t">卡片 micro、浮水印淡墨素色</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">輪播那一則。浮水印一律<b>淡墨素色</b>：柔墨 #5c5f57、濃度 12%（檔名 <code>wm-&lt;形狀&gt;-ink12.png</code>），形狀、位置與 3-2 相同。</p>
+<ul class="spec"><li>卡片　bubble <code>size: "micro"</code>（你們現在跑的是 <code>deca</code>，這一項要換）。<b>同一條輪播裡每一張都要是同一個 size</b>，整組一起換。</li>
+<li><code>paddingAll</code> 14px、<code>backgroundColor</code> #FFFFFF。</li>
+<li>兩行字：〔病人姓名〕<code>md</code> #5C5F57／日期 <code>lg</code> 粗體 <code>margin</code> 6px，接著是約診狀態那一列（見 3-4）。</li>
+<li>日期　micro 放不下一行，請在這一則的日期值裡帶一個換行：<code>2026/09/11</code> 換行 <code>星期五 11:50</code>（見 3-5）。</li>
+<li>浮水印　<code>url</code> 照下表「輪播網址」、<code>size</code> 照「輪播 size」。三顆長形（r1c3／r2c3／r3c3）在輪播上收窄過，括號裡是原寬。</li></ul>
+<div class="tabw"><table class="tab"><thead><tr>
+<th>#</th><th>形狀</th><th>色碼</th><th><code>aspectRatio</code></th><th>輪播 <code>size</code></th><th>輪播網址 <code>url</code></th>
+</tr></thead><tbody>
+<tr><td>0</td><td><b>r1c1</b></td>
+<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><code>1:1</code></td><td><b>107</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r1c1-ink12.png</code></td></tr>
+<tr><td>1</td><td><b>r1c2</b></td>
+<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><code>2.029:1</code></td><td><b>150</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r1c2-ink12.png</code></td></tr>
+<tr><td>2</td><td><b>r1c3</b></td>
+<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><code>3.084:1</code></td><td><b>141</b>px <span class="was">（原 188）</span></td>
+<td><code class="url">https://fangren.net/assets/line/wm-r1c3-ink12.png</code></td></tr>
+<tr><td>3</td><td><b>r2c1</b></td>
+<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><code>2.025:1</code></td><td><b>152</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r2c1-ink12.png</code></td></tr>
+<tr><td>4</td><td><b>r2c2</b></td>
+<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><code>1.332:1</code></td><td><b>120</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r2c2-ink12.png</code></td></tr>
+<tr><td>5</td><td><b>r2c3</b></td>
+<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><code>3.081:1</code></td><td><b>141</b>px <span class="was">（原 188）</span></td>
+<td><code class="url">https://fangren.net/assets/line/wm-r2c3-ink12.png</code></td></tr>
+<tr><td>6</td><td><b>r3c1</b></td>
+<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><code>1:1</code></td><td><b>104</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r3c1-ink12.png</code></td></tr>
+<tr><td>7</td><td><b>r3c2</b></td>
+<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><code>0.999:1</code></td><td><b>106</b>px</td>
+<td><code class="url">https://fangren.net/assets/line/wm-r3c2-ink12.png</code></td></tr>
+<tr><td>8</td><td><b>r3c3</b></td>
+<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><code>3.083:1</code></td><td><b>142</b>px <span class="was">（原 215）</span></td>
+<td><code class="url">https://fangren.net/assets/line/wm-r3c3-ink12.png</code></td></tr>
+</tbody></table></div>
+<h4 class="h4">九顆各自畫在 micro 卡上（約診狀態輪流掛四個值，只是示範）</h4>
+<div class="gm">
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/18<br>星期五 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#4478b5">已排定</span></p>
+<svg class="wm" width="107" height="107.00"
+  viewBox="0 0 29.273 29.282" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-166.723 511.764) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 169.138 507.466 C 174.036 512.891 187.403 513.495 193.553 507.466 C 197.569 503.528 195.758 495.329 194.278 492.182 C 192.28 487.935 190.318 482.482 181.357 482.482 C 175.147 482.482 171.687 485.294 168.543 492.182 C 165.68 498.451 166.436 504.473 169.138 507.466 M 183.24 486.006 C 183.489 486.079 183.584 486.097 183.827 486.006 C 183.99 485.945 184.211 485.956 184.372 486.006 C 184.897 486.169 185.415 487.205 185.32 488.523 C 185.225 489.84 181.834 489.657 181.836 488.523 C 181.839 487.619 182.163 486.455 182.609 486.139 C 182.801 486.003 182.943 485.919 183.24 486.006 M 178.786 486.006 C 179.035 486.079 179.13 486.097 179.373 486.006 C 179.536 485.945 179.757 485.956 179.918 486.006 C 180.443 486.169 180.961 487.205 180.866 488.523 C 180.771 489.84 177.379 489.657 177.382 488.523 C 177.385 487.619 177.709 486.455 178.155 486.139 C 178.347 486.003 178.489 485.919 178.786 486.006"/></g></svg>
+</div>
+<figcaption><b>#0 r1c1</b>・107px</figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/28<br>星期一 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#3f654a">已確認</span></p>
+<svg class="wm" width="150" height="73.93"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</div>
+<figcaption><b>#1 r1c2</b>・150px</figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/29<br>星期二 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#c28229">未回覆</span></p>
+<svg class="wm" width="141" height="45.72"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption><b>#2 r1c3</b>・141px</figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/21<br>星期一 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#ae4f4d">已取消</span></p>
+<svg class="wm" width="152" height="75.06"
+  viewBox="0 0 44.267 21.861" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-159.225 433.777) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 200.76 426.819 C 205.142 421.217 203.911 415.88 199.491 412.98 C 196.899 411.28 192.183 411.879 186.857 413.42 C 175.983 416.566 171.53 409.032 163.348 413.214 C 159.665 415.096 156.953 421.343 161.967 426.764 C 171.255 436.805 194.063 435.38 200.76 426.819 M 179.468 430.235 C 179.219 430.162 179.124 430.144 178.881 430.235 C 178.718 430.296 178.497 430.285 178.336 430.235 C 177.811 430.072 177.293 429.036 177.388 427.718 C 177.483 426.401 180.874 426.584 180.872 427.718 C 180.869 428.622 180.545 429.786 180.099 430.102 C 179.907 430.238 179.765 430.322 179.468 430.235 M 183.921 430.235 C 183.672 430.162 183.577 430.144 183.334 430.235 C 183.171 430.296 182.95 430.285 182.789 430.235 C 182.264 430.072 181.746 429.036 181.841 427.718 C 181.936 426.401 185.328 426.584 185.325 427.718 C 185.322 428.622 184.998 429.786 184.552 430.102 C 184.36 430.238 184.218 430.322 183.921 430.235"/></g></svg>
+</div>
+<figcaption><b>#3 r2c1</b>・152px</figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/22<br>星期二 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#4478b5">已排定</span></p>
+<svg class="wm" width="120" height="90.09"
+  viewBox="0 0 29.253 21.955" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-240.487 433.824) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 258.316 412.07 C 263.699 410.812 266.61 415.769 267.523 418.051 C 269.025 421.805 270.191 426.758 269.568 429.365 C 268.74 432.834 265.685 434.439 261.853 433.609 C 253.39 431.776 253.853 432.555 248.515 433.609 C 243.49 434.601 241.244 431.98 240.636 429.365 C 240.028 426.755 241.377 421.108 242.875 418.051 C 244.144 415.462 247.074 410.971 252.502 412.07 C 253.901 412.353 255.844 412.648 258.316 412.07 M 246.025 430.29 C 245.776 430.217 245.681 430.198 245.438 430.29 C 245.275 430.35 245.054 430.34 244.893 430.29 C 244.368 430.126 243.85 429.09 243.945 427.773 C 244.04 426.456 247.432 426.638 247.429 427.773 C 247.426 428.677 247.102 429.84 246.656 430.157 C 246.464 430.292 246.322 430.376 246.025 430.29"/></g></svg>
+</div>
+<figcaption><b>#4 r2c2</b>・120px</figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/14<br>星期一 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#3f654a">已確認</span></p>
+<svg class="wm" width="141" height="45.76"
+  viewBox="0 0 44.261 14.366" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.719 430.029) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 312.185 418.502 C 306.828 421.135 305.775 425.468 307.45 427.797 C 309.659 430.869 315.27 430.411 321.373 428.582 C 326.635 427.005 332.793 427.484 336.327 428.617 C 341.177 430.17 346.63 430.902 349.755 428.064 C 352.164 425.877 351.188 420.893 345.319 418.028 C 339.632 415.251 320.637 414.347 312.185 418.502 M 346.101 426.494 C 345.852 426.421 345.757 426.403 345.514 426.494 C 345.351 426.555 345.13 426.544 344.969 426.494 C 344.444 426.331 343.926 425.295 344.021 423.977 C 344.116 422.66 347.507 422.843 347.505 423.977 C 347.502 424.881 347.178 426.045 346.732 426.361 C 346.54 426.497 346.398 426.581 346.101 426.494"/></g></svg>
+</div>
+<figcaption><b>#5 r2c3</b>・141px</figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/15<br>星期二 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#c28229">未回覆</span></p>
+<svg class="wm" width="104" height="104.00"
+  viewBox="0 0 29.43 29.43" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-166.615 366.998) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 196.045 352.283 C 196.045 341.067 189.457 337.568 181.33 337.568 C 173.203 337.568 166.615 341.067 166.615 352.283 C 166.615 363.215 173.203 366.998 181.33 366.998 C 189.457 366.998 196.045 363.387 196.045 352.283 M 182.982 341.109 C 183.231 341.182 183.326 341.2 183.569 341.109 C 183.732 341.048 183.953 341.059 184.114 341.109 C 184.639 341.272 185.157 342.308 185.062 343.626 C 184.967 344.943 181.576 344.76 181.578 343.626 C 181.581 342.722 181.905 341.558 182.351 341.242 C 182.543 341.106 182.685 341.022 182.982 341.109"/></g></svg>
+</div>
+<figcaption><b>#6 r3c1</b>・104px</figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/16<br>星期三 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#ae4f4d">已取消</span></p>
+<svg class="wm" width="106" height="106.11"
+  viewBox="0 0 44.221 44.266" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-233.002 374.392) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 240.173 330.126 C 237.214 330.126 233.002 331.801 233.002 339.494 C 233.002 339.494 233.365 359.509 246.254 371.273 C 251.307 375.885 259.611 374.953 263.874 371.273 C 272.504 363.821 277.223 347.577 277.223 338.885 C 277.223 332.768 274.88 330.126 270.082 330.126 Z M 257.439 370.907 C 257.19 370.834 257.095 370.816 256.853 370.907 C 256.689 370.968 256.468 370.957 256.307 370.907 C 255.782 370.744 255.264 369.708 255.359 368.39 C 255.454 367.073 258.846 367.256 258.843 368.39 C 258.84 369.294 258.516 370.458 258.07 370.774 C 257.878 370.91 257.736 370.994 257.439 370.907"/></g></svg>
+</div>
+<figcaption><b>#7 r3c2</b>・106px</figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/17<br>星期四 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#4478b5">已排定</span></p>
+<svg class="wm" width="142" height="46.06"
+  viewBox="0 0 44.322 14.378" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.689 359.486) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 326.482 352.763 C 322.051 356.284 318.54 362.303 311.648 357.984 C 304.8 353.692 305.054 344.099 312.348 345.194 C 320.662 346.443 327.623 349.699 339.17 345.971 C 348.848 342.846 350.834 349.33 350.976 350.796 C 351.244 353.557 350.042 358.07 344.814 357.208 C 340.519 356.499 339.1 353.546 335.25 351.658 C 331.729 349.932 328.581 351.095 326.482 352.763 M 316.169 355.937 C 315.92 355.864 315.825 355.846 315.582 355.937 C 315.419 355.998 315.198 355.987 315.037 355.937 C 314.512 355.774 313.994 354.738 314.089 353.42 C 314.184 352.103 317.575 352.286 317.573 353.42 C 317.57 354.324 317.246 355.488 316.8 355.804 C 316.608 355.94 316.466 356.024 316.169 355.937"/></g></svg>
+</div>
+<figcaption><b>#8 r3c3</b>・142px</figcaption>
+</figure>
+</div>
+
+<h3 class="h3" id="s3-4">3-4　約診狀態<span class="t">四個值的畫法、色碼與對齊</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">約診紀錄查詢那一張卡上的「約診狀態」一列。</p>
+<div class="tabw"><table class="tab tabv"><thead><tr><th>值</th><th>什麼時候</th><th>藥丸底色</th></tr></thead><tbody>
+<tr><td>已排定</td><td>提醒還沒發送之前</td>
+<td><span class="chip" style="background:#4478b5"></span><code>#4478b5</code></td></tr>
+<tr><td>已確認</td><td>提醒發送後，病人按了確認</td>
+<td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td></tr>
+<tr><td>未回覆</td><td>提醒發送後，病人還沒有回應</td>
+<td><span class="chip" style="background:#c28229"></span><code>#c28229</code></td></tr>
+<tr><td>已取消</td><td>提醒發送後，病人按了取消</td>
+<td><span class="chip" style="background:#ae4f4d"></span><code>#ae4f4d</code></td></tr>
+</tbody></table></div>
+<ul class="spec"><li>標籤　「約診狀態」（現在印的是「預約狀態」）。改的只是卡片上印出來的字，資料庫欄位不必改名。標籤 <code>xs</code> #5C5F57，不加粗、不套色。</li>
+<li>值　做成藥丸：底色照下表、白字 #FFFFFF、粗體、<code>xs</code>，圓角 8.5px，內距約上 5px／左右 8px／下 5px。</li>
+<li>寫法　那一列是 <code>layout: "horizontal"</code> 的 box：標籤 text、藥丸 box（<code>flex: 0</code>）、最後補一個 <code>filler</code>，藥丸才會只包住那幾個字。標籤與藥丸<b>基線對齊</b>。</li>
+<li>原本那一句「您已取消，請聯絡診所改約」收成「已取消」。</li>
+<li>藥丸裡的字在盒子裡怎麼坐是 LINE 決定的，請送一則測試訊息確認上下留白一致。</li></ul>
+<div class="gm">
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11<br>星期五 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#4478b5">已排定</span></p>
+<svg class="wm" width="141" height="45.72"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption><b>已排定</b>　<code>#4478b5</code></figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11<br>星期五 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#3f654a">已確認</span></p>
+<svg class="wm" width="141" height="45.72"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption><b>已確認</b>　<code>#3f654a</code></figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11<br>星期五 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#c28229">未回覆</span></p>
+<svg class="wm" width="141" height="45.72"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption><b>未回覆</b>　<code>#c28229</code></figcaption>
+</figure>
+<figure class="cw" style="max-width:162px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11<br>星期五 11:50</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#ae4f4d">已取消</span></p>
+<svg class="wm" width="141" height="45.72"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div>
+<figcaption><b>已取消</b>　<code>#ae4f4d</code></figcaption>
+</figure>
+</div>
+<p class="note">若病人自己按過取消的那一筆可以不列在他的查詢清單裡（樂衍後台照舊保留），那一列「已取消」就不會出現。</p>
+
+<h3 class="h3" id="s3-5">3-5　日期的順序</h3>
+<div class="tabw"><table class="tab tabv"><tbody>
+<tr><td>你們現在</td><td><code>2026/09/11 11:50 星期五</code></td></tr>
+<tr><td>請改成</td><td><code>2026/09/11 星期五 11:50</code></td></tr>
+</tbody></table></div>
+<ul class="spec"><li>四樣東西（年月日／星期幾／時間）照你們 09-10 那一版，一個字都不換，只調順序：星期幾接在日期後面、時間放最後。</li>
+<li>單張（mega）　一行：<code>2026/09/11 星期五 11:50</code>。</li>
+<li>輪播（micro）　卡片窄、放不下一行，值裡帶一個換行：<code>2026/09/11</code> ＋ <code>\n</code> ＋ <code>星期五 11:50</code>，星期幾不會被折斷。</li>
+<li>兩則的日期那一格都要 <code>wrap: true</code>、<b>不要 <code>maxLines</code></b>（設了會被截成「…星...」）。</li></ul>
+
+<h3 class="h3" id="s3-6">3-6　九顆浮水印怎麼輪</h3>
+<ul class="spec"><li><code>形狀 ＝ 順序[(月 ＋ 日) % 9]</code>，順序固定是下表由上到下：r1c1 r1c2 r1c3 r2c1 r2c2 r2c3 r3c1 r3c2 r3c3。</li>
+<li>月與日取<b>那一筆約診的看診日期</b>，不是今天、也不是它排在清單裡第幾張。</li>
+<li>顏色綁在形狀上，不必另外算。</li>
+<li>兩則吃同一條規則：同一筆約診在預約成功通知與約診紀錄查詢上是同一顆、同一色（查詢那一則換成淡墨）。</li>
+<li>不要用清單位置輪流，也不要隨機 —— 前者取消一筆會讓後面每一張換人，後者同一筆每次看都不一樣。</li></ul>
+<p style="font-size:.86rem;color:var(--soft);margin:.8em 0 0">下表是照規則算出來的例子（09-10 送來的那一批裡，同一筆約診 14:20 是圓形、14:23 是寬形，兩次不一樣）。</p>
+<div class="tabw"><table class="tab"><thead><tr><th>看診日</th><th>(月＋日) % 9</th><th>形狀</th><th>單張色碼</th></tr></thead><tbody>
+<tr><td>2026/09/18 星期五</td><td>(9＋18) % 9 ＝ 0</td>
+<td><b>r1c1</b></td><td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td></tr>
+<tr><td>2026/09/28 星期一</td><td>(9＋28) % 9 ＝ 1</td>
+<td><b>r1c2</b></td><td><span class="chip" style="background:#317d78"></span><code>#317d78</code></td></tr>
+<tr><td>2026/09/29 星期二</td><td>(9＋29) % 9 ＝ 2</td>
+<td><b>r1c3</b></td><td><span class="chip" style="background:#4478b5"></span><code>#4478b5</code></td></tr>
+<tr><td>2026/09/21 星期一</td><td>(9＋21) % 9 ＝ 3</td>
+<td><b>r2c1</b></td><td><span class="chip" style="background:#ae4f4d"></span><code>#ae4f4d</code></td></tr>
+<tr><td>2026/09/22 星期二</td><td>(9＋22) % 9 ＝ 4</td>
+<td><b>r2c2</b></td><td><span class="chip" style="background:#465885"></span><code>#465885</code></td></tr>
+<tr><td>2026/09/14 星期一</td><td>(9＋14) % 9 ＝ 5</td>
+<td><b>r2c3</b></td><td><span class="chip" style="background:#8e6299"></span><code>#8e6299</code></td></tr>
+<tr><td>2026/09/15 星期二</td><td>(9＋15) % 9 ＝ 6</td>
+<td><b>r3c1</b></td><td><span class="chip" style="background:#8e6299"></span><code>#8e6299</code></td></tr>
+<tr><td>2026/09/16 星期三</td><td>(9＋16) % 9 ＝ 7</td>
+<td><b>r3c2</b></td><td><span class="chip" style="background:#c28229"></span><code>#c28229</code></td></tr>
+<tr><td>2026/09/17 星期四</td><td>(9＋17) % 9 ＝ 8</td>
+<td><b>r3c3</b></td><td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td></tr>
+</tbody></table></div>
+
+<h2 class="h2" id="s4">4　綁定成功的自動回覆設定<span class="t">現況、我們想要的做法、想請教的兩題</span></h2>
+<ol class="sub4"><li id="s4-1">用戶端送出的那一句「綁定成功」無法（或不建議）移除 —— 那是以病人的身分送進聊天室的，而且診所櫃檯會用那個號碼查病歷。</li>
+<li id="s4-2">綁定成功之後跳出來的自動回覆，現況：LINE 商家帳號的自動回應只能設定一種，所以綁定那一刻跳出來的，和平常打字進去收到的是同一則。</li>
+<li id="s4-3">其他商家帳號在綁定那一刻送的是另一則，和平常打字進去收到的不一樣 —— 潔客幫、中國信託、國泰世華、玉山四個帳號都是這樣。</li>
+<li id="s4-4">同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆。 想請教他們的自動回應是怎麼設的，我們能不能照那個設法。</li></ol>
+<div class="pair">
+<figure><p class="k">現況：我們的帳號，綁定那一刻</p><img src="../line-vendor/bind-live-0912.jpg" width="750" height="1551" loading="lazy" alt="綁定完成那一刻病人那一側的畫面">
+<figcaption>12:06 病人那一側送出「✅ 09xxxxxxxx 綁定成功！…」（右邊、綠泡泡），同一分鐘帳號回了那一則通用的自動回應。門號已遮。</figcaption></figure>
+<figure><p class="k">想接在那一句後面送的：綁定完成卡</p><img src="../line-bind-done/shot-bind-done.png" width="804" height="1857" style="width:268px" loading="lazy" alt="綁定完成卡">
+<figcaption>已定稿（Flex JSON 在 /preview/line-spec/ 的 ③）。</figcaption></figure>
+</div>
+<h3 class="h3">想要的做法</h3>
+<ul class="spec"><li>綁定成功那一句<b>照舊保留</b>。</li>
+<li>那一句是你們的系統送出的，系統在那一刻就知道綁定完成 —— 想請你們在它後面接著送我們已經做好的「綁定完成卡」（上面那一張），不必比對任何字串。</li>
+<li>綁定那一刻不要再跳出通用的自動回應；平常病人打字進來，照舊回通用的那一則。</li></ul>
+<h3 class="h3">想請教</h3>
+<ul class="spec"><li>新竹品御牙醫（同一套系統）綁定成功那一句之後沒有跳出通用回覆，他們的自動回應是怎麼設的？我們能不能照那個設法？</li>
+<li>若改由你們系統在綁定當下送綁定完成卡，後台的自動回應同時開著，會不會兩則一起送？</li></ul>
+<div class="pair">
+<figure><p class="k">你們 2026-09-10 的回覆</p><img src="../line-vendor/reply-0910.jpg" width="750" height="1080" loading="lazy" alt="廠商 2026-09-10 的回覆">
+<figcaption>你們 09-10 的回覆：綁定成功那一句不能拿掉（需通知病患、櫃檯可用號碼查資料），它發出時會觸發自動回應，而官方 LINE 的自動回應無法抓關鍵字跳不同訊息。</figcaption></figure>
+</div>
+
+<h2 class="h2" id="s5">5　已完成項目<span class="t">6 則，不需要再調整</span></h2>
+<p class="note">以下六則已經定稿，文字、圖檔網址與 Flex JSON 在 /preview/line-spec/，不需要再調整。</p>
+<div class="done">
+<div class="msg"><span class="ims"><img src="../line-vendor/t-welcome.jpg" width="210" height="210" loading="lazy" alt="招呼圖卡的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m1">①　招呼圖卡</a></p>
+<p class="mt">加好友那一刻／診所後台送</p></div></div>
+<div class="msg"><span class="ims"><img src="../line-vendor/t-auto.jpg" width="210" height="210" loading="lazy" alt="自動回應（一律回應）的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m2">②　自動回應（一律回應）</a></p>
+<p class="mt">病人打任何字／診所後台送</p></div></div>
+<div class="msg"><span class="ims"><img src="../line-vendor/t-cancel.jpg" width="210" height="210" loading="lazy" alt="取消確認 → 取消成功的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m6">⑨　取消確認 → 取消成功</a></p>
+<p class="mt">他按預約改期／廠商送</p></div></div>
+<div class="msg"><span class="ims"><img src="../line-vendor/t-review.jpg" width="210" height="210" loading="lazy" alt="評價邀約的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m7">⑩　評價邀約</a></p>
+<p class="mt">看診後／廠商送</p></div></div>
+<div class="msg"><span class="ims"><img src="../line-vendor/t-typhoon.jpg" width="210" height="210" loading="lazy" alt="颱風／臨時休診的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m8">⑪　颱風／臨時休診</a></p>
+<p class="mt">縣府宣布之後／診所後台送</p></div></div>
+<div class="msg"><span class="ims"><img src="../line-vendor/t-oa.jpg" width="210" height="210" loading="lazy" alt="圖文選單點下去回的三組卡的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m9">⑫　圖文選單點下去回的三組卡</a></p>
+<p class="mt">他點選單／廠商送</p></div></div>
+</div>
+
+<p class="foot">
+這一頁是靜態的，內容有更新會直接改在同一個網址上。<br>
+七則訊息的文字、圖檔網址與 Flex JSON：<a href="/preview/line-spec/">/preview/line-spec/</a>
+</p>
+
+</div>
+</body>
+</html>
