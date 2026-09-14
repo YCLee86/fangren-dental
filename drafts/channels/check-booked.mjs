@@ -304,8 +304,12 @@ for (const n of ORDER) {
     "MEGA_W 不見了或不是 268 —— 這一排要和第 ① 節那一張逐格一樣寬");
   ok(/dtm = "free"; wmink = false; stat = "";\s*\n\s*document\.getElementById\("pv-nine1"\)/.test(html),
     "單張那一排畫之前沒有把三個共用變數換成這一則定案的樣子（彩色浮水印、沒有藥丸、不斷行）");
-  ok(/\}\)\.join\(""\);\s*\n\s*dtm = "brk"; wmink = true; stat = "pill";/.test(html),
-    "單張那一排畫完沒有把三個共用變數換回輪播那一組 —— 底下三把尺會整批畫錯而且不報錯");
+  /* ⚠ 2026-09-14：①之二 那把尺插在這兩段中間了（它也吃「單張那一則」那一組變數），
+     所以換回去的那一行現在排在 `spreadT = 0; fillSpreadPanel();` 後面。
+     兩件一起守：那把尺畫完要還原成 0，而且三個共用變數要在它之後換回輪播那一組。 */
+  ok(/spreadT = 0;\s*\n\s*fillSpreadPanel\(\);[\s\S]{0,400}dtm = "brk"; wmink = true; stat = "pill";/
+      .test(html),
+    "①之二 那把尺畫完沒有還原成 0，或三個共用變數沒有在它之後換回輪播那一組 —— 底下三把尺會整批畫錯而且不報錯");
   ok(/'<div style="--cw:' \+ MEGA_W \+ 'px">[\s\S]{0,200}nwCard\(a, false, k, SHAPES\.length\)/.test(html),
     "單張那一排不是用 nwCard(…, false) 畫成 MEGA_W 寬 —— 那就不是「真的那張卡」了");
   ok(/var pairBad = SHAPES\.filter/.test(html)
@@ -326,18 +330,56 @@ for (const n of ORDER) {
      連 shot-booked.png／shot-query.png 都會跟著變，**而畫面上一切正常**
      （2026-09-13 踩到，是出圖的位元組變了才發現）。
      ⚠ 不可以只用 includes 找 `dtm = "free"` —— 宣告變數那一行本身就寫著它。 */
-  ok(/drawScale\("pv-cwd", CWD\);[\s\S]{0,9000}dtm = "free";\s*\n\s*wmink = false;\s*\n\s*stat = "";\s*\n\s*wideK = 1;/
+  ok(/drawScale\("pv-cwd", CWD\);[\s\S]{0,9000}dtm = "free";\s*\n\s*wmink = false;\s*\n\s*stat = "";\s*\n\s*wideK = 1;\s*\n\s*spreadT = 0;/
       .test(html),
-    "畫完沒有把 dtm／wmink／stat／wideK 還原（或還原排在幾把尺前面）—— 第二次 render 會把 ①② 一起畫成第 ②之二 節那一版");
+    "畫完沒有把 dtm／wmink／stat／wideK／spreadT 還原（或還原排在幾把尺前面）—— 第二次 render 會把 ①② 一起畫成第 ②之二 節那一版");
+
+  /* ---- ①之二　九顆在這張卡上要多大（2026-09-14 使用者看出來的）--------
+     ⚠⚠⚠ 起因是他講的兩句話方向相反（1/6＝r3c2 偏小、1/7＝r3c3 太大），
+       所以整組放大或整組縮小都治不了 —— 唯一同時治得到的是把九顆的**寬度差距**收窄。
+       這一把尺動的因此是「等重 ↔ 等寬」那條軸，不是倍率。 */
+  /* ⚠ 要指名**宣告**那一行（接在 wideK 後面），不可以只找 `spreadT = 0;` ——
+     還原那兩處寫的是同一串字，預設值被改掉照樣會通過。 */
+  ok(/wideK = 1,[\s\S]{0,400}\n\s*spreadT = 0;/.test(html) && /function spreadK\(sn\)/.test(html)
+     && /Math\.pow\(g \/ SIZES\[sn\]\.w, spreadT\)/.test(html),
+    "spreadT 的預設值（0 ＝ 現況）或 spreadK() 那條幾何平均的內插不見了");
+  ok(/function gmW\(\)/.test(html) && /s \+= Math\.log\(SIZES\[SHAPES\[i\]\]\.w\)/.test(html),
+    "幾何平均不是從 wm-sizes.json 現算的 —— 寫死一個數字的話換過形狀就會靜靜地算錯");
+  const sp4 = html.match(/var SP = \[([\s\S]*?)\];/);
+  ok(sp4 && (sp4[1].match(/\{ t:/g) || []).length === 4,
+    `①之二 那把尺不是四格（數到 ${sp4 ? (sp4[1].match(/\{ t:/g) || []).length : "—"} 格）`);
+  ok([1, 2, 3, 4].every((j) => html.includes('id="pv-sp' + j + '"')
+       && html.includes('id="pv-splb' + j + '"')) && /id="pv-panel-spread"/.test(html),
+    "①之二 那四格、它們的小標或面板不見了");
+  /* ⚠ 四格要畫**真的那張卡**（MEGA_W、彩色浮水印、不斷行），不是另外畫一個示意圖。 */
+  ok(/SP\.forEach\(function \(x, j\) \{\s*\n\s*spreadT = x\.t;/.test(html)
+     && /getElementById\("pv-sp" \+ \(j \+ 1\)\)[\s\S]{0,300}nwCard\(a, false, k, SHAPES\.length\)/
+        .test(html),
+    "①之二 那四格不是靠 spreadT 畫出來的、或不是用 nwCard 畫成 MEGA_W 寬的真卡");
+  /* ⚠⚠⚠ 兩個量都要印：**佔卡寬**（他講的那件事）與**看得到的墨**（收窄要付的代價）——
+     只印其中一個會把人帶去改錯的東西（同 ②之五 那一道）。
+     ⚠ 要找**印出來的那一段**，不要用 includes 掃整份：這一頁把「為什麼」寫在自己的
+       註解裡，掃整份會掃到說明本身（這條線第八次撞到同一件事）。 */
+  ok(/\+ "px・佔卡寬 <b>"/.test(html) && /"　每一顆看得到的墨對 Ⓐ："/.test(html),
+    "①之二 的面板少了「佔卡寬」或「看得到的墨」—— 那兩個量要一起看");
+  /* ⚠⚠ 那九個寬度是**兩則共用的**（wm-sizes.json 是唯一出處）：這裡挑 Ⓑ 以上，
+     輪播那一則跟著換，而 ②之五 那把尺就要重算或收掉。頁面上那句話要在。 */
+  ok(html.includes("那九個寬度是兩則共用的"),
+    "①之二 的面板沒有寫「這九個寬度是兩則共用的、挑定之後輪播也會跟著換」");
+  ok(/fillSpreadPanel\(\);/.test(html)
+     && /if \(!im\.complete\) im\.addEventListener\("load", fillSpreadPanel/.test(html),
+    "圖載完之後沒有重填 ①之二 的面板 —— 那幾格會一直印「—」");
 
   /* ---- ②之五　那三顆細長的要多大（2026-09-14 使用者看出來的）----------
      ⚠⚠⚠ 那三顆 3.08:1 的在 micro 上**整顆比卡片還寬**，所以橫貫整張卡、
        左邊還被切掉 —— 那是換成 micro 才長出來的第二層效應（deca 上九顆都收在卡內）。 */
-  ok(/WIDE3 = \["r1c3", "r2c3", "r3c3"\],\s*\n\s*wideK = 1;/.test(html),
+  ok(/WIDE3 = \["r1c3", "r2c3", "r3c3"\],\s*\n\s*wideK = 1,/.test(html),
     "WIDE3 那份名單或 wideK 的預設值（1 ＝ 現況）不見了");
-  ok(/var wk = WIDE3\.indexOf\(sn\) >= 0 \? wideK : 1;/.test(html)
+  /* ⚠⚠ 兩把尺相乘：wideK 只動那三顆（②之五）、spreadK 動九顆（①之二）。
+     少乘一把的話那一節按了沒反應、不報錯、畫面完全正常。 */
+  ok(/var wk = \(WIDE3\.indexOf\(sn\) >= 0 \? wideK : 1\) \* spreadK\(sn\);/.test(html)
      && /var ww = Math\.round\(sz\.w \* wk\);/.test(html),
-    "nwCard 沒有真的把倍率乘上去 —— 那把尺會按了沒反應、而且不報錯");
+    "nwCard 沒有把兩把尺都乘上去 —— 那一節會按了沒反應、而且不報錯");
   ok(/id="pv-w1"/.test(html) && /id="pv-w2"/.test(html) && /id="pv-w3"/.test(html)
      && /id="pv-panel-wide"/.test(html),
     "②之五 那三條尺或它的面板不見了");

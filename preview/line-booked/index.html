@@ -303,6 +303,10 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   font-variant-numeric:tabular-nums}
 .pv-cw .lb2 b{color:var(--ink)}
 .pv-cw .pv-hc{width:var(--cw,162px)}
+/* 第 ①之二 節那四格的小標（＝每一列上面那一行字） */
+.lbsp{font-size:.74rem;font-weight:700;color:var(--ink);margin:16px 0 0 1px;
+  font-variant-numeric:tabular-nums}
+.lbsp span{font-weight:400;color:var(--ink-soft)}
 .pv-wm{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
 .pv-wm figure{background:var(--card);border:1px solid var(--rule);border-radius:10px;
   padding:10px 8px 8px;text-align:center}
@@ -440,6 +444,33 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   </p>
   <div class="pv-cw" id="pv-nine1"></div>
   <div class="pv-panel" id="pv-panel-nine1"></div>
+
+  <h3 class="pv-h3">①之二　九顆在這張卡上要多大（2026-09-14，你看出來的）</h3>
+  <p class="pv-note">
+    ⚠ 你講的兩顆是 <b>1/6 ＝ <code>r3c2</code></b>（圓的那一顆，整顆 106px、
+    <b>在這張卡上佔 33%</b>）與 <b>1/7 ＝ <code>r3c3</code></b>（最長的那一顆，整顆 215px、
+    <b>佔 74%</b>）—— <b>兩句話指的是同一件事：九顆的寬度差了 2.07 倍。</b><br>
+    ⚠⚠⚠ <b>成因是那九個寬度是按「墨的面積」算的不是按寬度算的</b>（2026-09-04 定的規則：
+    同寬的話細長那幾顆會輕很多）—— 等重換來的代價就是<b>等重不等寬</b>：
+    圓的那幾顆 104~120px、細長的 188~215px。<br>
+    ⚠⚠ <b>而這張卡把那個差距放大了</b>：同樣的 px 放在 268 的卡上比放在 162 的輪播卡上
+    佔掉的比例只有六成 —— 所以<b>圓的那幾顆在這裡才第一次看起來偏小</b>
+    （<code>r3c2</code> 看得到的 88px 在輪播上佔 54%、在這裡只剩 33%）。<br>
+    ⚠⚠⚠ <b>你那兩句話的方向是相反的</b>（一顆要大、一顆要小），
+    所以<b>整組放大或整組縮小都治不了</b> —— 唯一同時治得到的是
+    <b>把九顆的寬度差距收窄</b>：從「等重」往「等寬」走。<br>
+    ⚠ 四格只差那一個參數，<b>其餘每一個字、位置、濃度都沒有動</b>。
+  </p>
+
+  <p class="lbsp" id="pv-splb1"></p>
+  <div class="pv-cw" id="pv-sp1"></div>
+  <p class="lbsp" id="pv-splb2"></p>
+  <div class="pv-cw" id="pv-sp2"></div>
+  <p class="lbsp" id="pv-splb3"></p>
+  <div class="pv-cw" id="pv-sp3"></div>
+  <p class="lbsp" id="pv-splb4"></p>
+  <div class="pv-cw" id="pv-sp4"></div>
+  <div class="pv-panel" id="pv-panel-spread"></div>
 
 
   <h3 class="pv-h3">九顆怎麼輪 —— 規則（兩則共用）</h3>
@@ -886,7 +917,11 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
          ⚠ 名字不要叫 WIDE —— 底下那支量測函式裡已經有一個同名的區域變數
            （後台那張卡自己的可用寬度），撞名不會報錯、只會在某一支裡讀到另一個東西。 */
       WIDE3 = ["r1c3", "r2c3", "r3c3"],
-      wideK = 1;
+      wideK = 1,
+      /* 第 ①之二 節那把尺：0 ＝ 現在這樣（等重）、1 ＝ 九顆同寬。
+         中間是幾何平均的內插，所以每一格仍然是「一條規則算出來的九個寬度」，
+         不是九個各挑一個數字。⚠ 畫完要還原成 0。 */
+      spreadT = 0;
 
 
   /* 現況那一張的日期用哪一種：預約成功卡截圖上是短版、查詢卡截圖上是長版。
@@ -926,6 +961,34 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
     return h + '</div></div>';
   }
 
+
+  /* ---- 第 ①之二 節：九顆的寬度差距要收多窄 --------------------------
+     ⚠⚠⚠ 那九個寬度是**按墨的面積**正規化出來的（2026-09-04），所以它們等重、
+       **但不等寬**（104~215px，差 2.07 倍）。使用者 2026-09-14 在 268 的單張卡上
+       同時說「圓的那顆偏小」與「最長的那顆太吵」——**兩句話方向相反，
+       所以整組放大或縮小都治不了**，唯一同時治得到的是把那個差距收窄。
+     ⚠ 做法是往**幾何平均**內插：`w(t) = w^(1-t) × G^t`（t=0 等重、t=1 等寬）——
+       一條規則算九個寬度，不是九個各挑一個數字。
+     ⚠⚠ **代價會反過來**：墨 ∝ 寬²，所以收窄之後細長那幾顆變輕、圓的那幾顆變重，
+       「九顆一樣重」那條規則就不再成立。**面板兩邊都印，這一格是取捨不是最佳解。** */
+  var SP = [{ t: 0,   n: "Ⓐ 等重（現在這樣）" },
+            { t: .35, n: "Ⓑ 收窄三成五" },
+            { t: .7,  n: "Ⓒ 收窄七成" },
+            { t: 1,   n: "Ⓓ 九顆同寬" }];
+  var _gm = null;
+  function gmW() {
+    if (_gm != null) return _gm;
+    if (!SIZES) return null;
+    var s = 0;
+    for (var i = 0; i < SHAPES.length; i++) s += Math.log(SIZES[SHAPES[i]].w);
+    return (_gm = Math.exp(s / SHAPES.length));
+  }
+  /* 這一顆在目前這一格要乘多少。t=0 一律回 1（＝現況，其餘每一節都吃這個）。 */
+  function spreadK(sn) {
+    if (!spreadT || !SIZES || !SIZES[sn]) return 1;
+    var g = gmW();
+    return g ? Math.pow(g / SIZES[sn].w, spreadT) : 1;
+  }
 
   /* 第 ②之五 節那把尺的四格。⚠ 放在外層：面板那支函式也要讀它。 */
   var WK = [{ k: 1,   n: "Ⓐ 1.00（現在這樣）" },
@@ -1031,6 +1094,63 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       + "而 <b>30 天是真的會發生的回診間隔</b>（那正是 2026-09-04 選九顆的理由）。</p>";
   }
 
+  /* 第 ①之二 節的面板（同上：畫完一次、圖載完一次）。
+     ⚠⚠⚠ 兩個量都要印：**佔卡寬**（他說偏小／太吵的那件事）與**看得到的墨**
+       （收窄要付的代價）—— 只印其中一個會把人帶去改錯的東西（64-3 那一條）。 */
+  function fillSpreadPanel() {
+    var host = document.getElementById("pv-panel-spread");
+    if (!host) return;
+    var rows = [], base = null;
+    SP.forEach(function (x, j) {
+      var cells = [].slice.call(document.querySelectorAll("#pv-sp" + (j + 1) + " > div"))
+        .map(function (d) {
+          var cb = d.querySelector(".pv-hc").getBoundingClientRect();
+          var im = d.querySelector(".wm");
+          return { n: im.getAttribute("data-shape"), w: im.getBoundingClientRect().width,
+                   pct: pctOf(im, cb) / cb.width * 100, ink: inkOn(im, cb) };
+        });
+      if (!cells.length) return;
+      var ws = cells.map(function (c) { return c.w; });
+      var lo = Math.min.apply(null, ws), hi = Math.max.apply(null, ws);
+      var inks = cells.map(function (c) { return c.ink; }).filter(function (v) { return v != null; });
+      if (j === 0 && inks.length) base = inks;
+      var one = function (n) {
+        var c = cells.filter(function (c) { return c.n === n; })[0];
+        if (!c) return n + " —";
+        return "<b>" + n + "</b> " + c.w.toFixed(0) + "px・佔卡寬 <b>"
+          + c.pct.toFixed(0) + "%</b>";
+      };
+      /* 標籤那一行（每一列上面那一句）—— 寬度比是現算的，不是寫上去的 */
+      var lb = document.getElementById("pv-splb" + (j + 1));
+      if (lb) lb.innerHTML = x.n + "　<span>最寬 ÷ 最窄 ＝ "
+        + (hi / lo).toFixed(2) + " 倍（" + lo.toFixed(0) + "~" + hi.toFixed(0) + "px）</span>";
+      var inkTxt = "—";
+      if (inks.length && base && base.length === inks.length) {
+        var mn = 9e9, mx = 0;
+        inks.forEach(function (v, i) {
+          var r = v / base[i]; if (r < mn) mn = r; if (r > mx) mx = r;
+        });
+        inkTxt = "<b>" + (mn * 100).toFixed(0) + "~" + (mx * 100).toFixed(0) + "%</b>";
+      }
+      rows.push("<b>" + x.n + "</b>：寬 " + lo.toFixed(0) + "~" + hi.toFixed(0)
+        + "px（比 <b>" + (hi / lo).toFixed(2) + "</b>）、佔卡寬 "
+        + Math.min.apply(null, cells.map(function (c) { return c.pct; })).toFixed(0) + "~"
+        + Math.max.apply(null, cells.map(function (c) { return c.pct; })).toFixed(0) + "%<br>"
+        + "　你講的兩顆：" + one("r3c2") + "（1/6）／" + one("r3c3") + "（1/7）<br>"
+        + "　每一顆看得到的墨對 Ⓐ：" + inkTxt);
+    });
+    host.innerHTML = "<p class='pv-note'>" + rows.join("<br><br>")
+      + "<br><br>⚠⚠ <b>墨 ∝ 寬²</b>，所以收窄是把墨從細長那幾顆搬到圓的那幾顆 ——"
+      + "<b>「九顆一樣重」那條規則（2026-09-04）會跟著鬆掉</b>，"
+      + "Ⓓ 等寬時最輕與最重差得最多。<b>這一格挑的是取捨不是最佳解。</b>"
+      + "<br>⚠⚠⚠ <b>那九個寬度是兩則共用的</b>（<code>wm-sizes.json</code> 是唯一出處）——"
+      + "挑定之後<b>輪播那一則也會跟著換</b>，"
+      + "而第 ②之五 節那把「三顆細長的要縮多少」正好是這件事的特例："
+      + "<b>這裡挑 Ⓑ 以上的話，那把尺要重算或直接收掉。</b>"
+      + "<br>⚠ 這四格<b>只差那一個參數</b>：位置（往右溢出 18／10px）、濃度、顏色、"
+      + "卡片上的每一個字都沒有動。</p>";
+  }
+
   /* ---- Ⓑ 新版 --------------------------------------------------------
      ⚠⚠ 兩則共用同一個殼，差的只有三件（這就是你說的「一起製作」）：
        ① 預約成功有開場那一行（「幫你約好了」），輪播沒有 ——
@@ -1078,7 +1198,9 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
          ⚠⚠ 三顆 3.08:1 的（WIDE3）在 micro 上會橫貫整張卡、左邊也被切掉，
            所以它們**一起**乘一個倍率 wideK（三顆共用一個數字，彼此仍然等墨）。
            預設 1 ＝ 現況；只有第 ②之五 節那把尺會動它，畫完要還原。 */
-      var wk = WIDE3.indexOf(sn) >= 0 ? wideK : 1;
+      /* ⚠ 兩把尺相乘：wideK 只動那三顆（第 ②之五），spreadK 動九顆（第 ①之二）。
+           兩把的預設都是「不動」，所以其餘每一節畫出來和以前逐格相同。 */
+      var wk = (WIDE3.indexOf(sn) >= 0 ? wideK : 1) * spreadK(sn);
       var ww = Math.round(sz.w * wk);
       h += '<img class="wm" src="wm-' + sn + '-' + (wmink ? "ink12" : wmk) + '.png" alt=""'
         +  ' style="width:' + ww + 'px"'
@@ -1514,7 +1636,6 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
           + '　' + a.m + '/' + a.d + '（' + a.w + '）</p>'
           + nwCard(a, false, k, SHAPES.length) + '</div>';
       }).join("");
-      dtm = "brk"; wmink = true; stat = "pill";
       var nine1Bad = [].slice.call(document.querySelectorAll("#pv-nine1 .wm"))
         .filter(function (im, k) { return im.getAttribute("data-shape") !== SHAPES[k]; }).length;
       /* ⚠ 兩排逐格比對形狀 —— 「兩則同一顆」是那條規則最有價值的性質，
@@ -1560,6 +1681,27 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
         + (nine1Rows[8] ? nine1Rows[8].left.toFixed(0) : "—") + "px），"
         + "在 " + CAR_W + "px 的輪播上卻橫貫整張卡還被切左邊 —— "
         + "<b>第 ②之五 節那把尺不會動到這一則。</b></p>";
+
+      /* ---- ①之二　九顆的寬度差距要收多窄（2026-09-14，使用者看出來的）----
+         ⚠ 仍然在「單張那一則」那一組變數裡（dtm free／彩色浮水印／沒有藥丸），
+           所以這一段一定要排在底下那一行換回輪播**之前**。 */
+      SP.forEach(function (x, j) {
+        spreadT = x.t;
+        document.getElementById("pv-sp" + (j + 1)).innerHTML = SHAPES.map(function (sn, k) {
+          var a = RT.eg[k];
+          return '<div style="--cw:' + MEGA_W + 'px"><p class="lb2">' + sn
+            + '　' + a.m + '/' + a.d + '</p>'
+            + nwCard(a, false, k, SHAPES.length) + '</div>';
+        }).join("");
+      });
+      spreadT = 0;
+      fillSpreadPanel();
+      [].slice.call(document.querySelectorAll(
+          "#pv-sp1 .wm,#pv-sp2 .wm,#pv-sp3 .wm,#pv-sp4 .wm")).forEach(function (im) {
+        if (!im.complete) im.addEventListener("load", fillSpreadPanel, { once: true });
+      });
+
+      dtm = "brk"; wmink = true; stat = "pill";
       document.getElementById("pv-panel-rota").innerHTML =
         "<p class='pv-note'><b>" + ROTA_YEAR + " 年週一到週五共 " + RT.tot + " 天</b>"
         + "（國定假日沒有扣掉，扣了也不影響分布）——<br>"
@@ -1703,6 +1845,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
       wmink = false;
       stat = "";
       wideK = 1;
+      spreadT = 0;
     }
 
     /* ③ 現況・預約成功。
