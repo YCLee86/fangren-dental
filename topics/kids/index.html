@@ -34,6 +34,12 @@
      ============================================================================= -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- NIGHT:START — 由 tools/night-mode.mjs 產生，請勿手動編輯 -->
+<script>(function(){var r=document.documentElement,s=null;try{s=localStorage.getItem('fangren:theme')}catch(e){}
+if(s!=='light'&&s!=='dark')s=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+r.dataset.theme=s;})();</script>
+<script src="../../assets/theme.js" defer></script>
+<!-- NIGHT:END -->
 <!-- <title> 不只給 Google —— Safari 分頁、書籤、加到主畫面、iOS 的分享面板
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
@@ -5292,6 +5298,79 @@ html[data-qopen="1"] .head-search {
   .qx-row :is(a, span) { font-size: .90rem; padding-block: calc((34px - 1.6em - 2px) / 2); }
 }
 </style>
+<style>
+/* NIGHT:START — 由 tools/night-mode.mjs 產生，請勿手動編輯 */
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #17191d; --card: #282b31; --note: #282b31; --rule: #3f4248; --ink: #e2e5e6; --ink-soft: #a3a5a6;
+  --teal: #6d9a93; --taupe: #ae8886; --blue: #7895a9; --moss: #86977d; --brick: #db7276;
+}
+html[data-theme="dark"] body { background: var(--paper); color: var(--ink); }
+html[data-theme="dark"] .btt { background-color: color-mix(in srgb, var(--card) 80%, transparent);
+  color: color-mix(in srgb, var(--ink-soft) 82%, transparent); }
+html[data-theme="dark"] :is(.foot-addr, .foot-tel) a { color: #739b7d; }
+
+/* 開關：滑桿、沒有字，太陽／月亮畫在圓鈕上。比例照 iOS 的 51×31、圓鈕 27、內縮 2 → 50×30、圓鈕 26、圖示 16。
+   ⚠ 圓鈕的位置與圖示看的是 html[data-theme]，不是 aria-checked —— 夜間打開頁面時，
+     <head> 裡那段腳本已經定好 data-theme，而 theme.js 是 defer 的；看 aria-checked 會先閃一下白天的位置。
+   圖示：Lucide "moon"／"sun"，ISC 授權，https://lucide.dev */
+.theme-toggle { appearance: none; border: 0; background: none; padding: 0; font: inherit; cursor: pointer; flex: none;
+  display: inline-flex; align-items: center; min-height: 34px; -webkit-tap-highlight-color: transparent; position: relative; }
+.theme-toggle::after { content: ""; position: absolute; inset: -7px -4px; }
+.tt-track { position: relative; width: 50px; height: 30px; border-radius: 15px; flex: none;
+  background: #c28229; transition: background-color .22s ease; }
+.tt-knob { position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center; background: #fff; color: #c28229;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .28); transition: transform .22s ease, color .22s ease; }
+.tt-knob svg { grid-area: 1 / 1; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; transition: opacity .18s ease, transform .22s ease; }
+.tt-moon { opacity: 0; transform: rotate(-60deg) scale(.6); }
+html[data-theme="dark"] .tt-track { background: #365685; }
+html[data-theme="dark"] .tt-knob { transform: translateX(20px); color: #365685; }
+html[data-theme="dark"] .tt-sun { opacity: 0; transform: rotate(60deg) scale(.6); }
+html[data-theme="dark"] .tt-moon { opacity: 1; transform: none; }
+.theme-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 17px; }
+@media (prefers-reduced-motion: reduce) { .tt-track, .tt-knob, .tt-knob svg { transition: none; } }
+
+html[data-theme="dark"] {
+  --map-bg: #282b31; --map-road: #4c4f55; --map-ink: #e2e5e6; --map-park: #7a96ca; --dot-faint: #53565a;
+}
+html[data-theme="dark"] [data-spec="all"] { --accent-deep: #94918f; --pill-ink: #9f9c9b; --sk-ink: #9b9796; }
+html[data-theme="dark"] [data-spec="general"] { --accent-deep: #729b7d; --pill-ink: #7ea788; --sk-ink: #79a284; }
+html[data-theme="dark"] [data-spec="prosth"] { --accent-deep: #7b91c8; --pill-ink: #859bd3; --sk-ink: #8196ce; }
+html[data-theme="dark"] [data-spec="perio"] { --accent-deep: #5c9d98; --pill-ink: #6baca7; --sk-ink: #64a6a1; }
+html[data-theme="dark"] [data-spec="ortho"] { --accent-deep: #6897b5; --pill-ink: #79a8c6; --sk-ink: #72a1bf; }
+html[data-theme="dark"] [data-spec="endo"] { --accent-deep: #e06f72; --pill-ink: #f07d7f; --sk-ink: #e97679; }
+html[data-theme="dark"] [data-spec="surg"] { --accent-deep: #af81bb; --pill-ink: #c092cc; --sk-ink: #b98bc5; }
+html[data-theme="dark"] [data-spec="kids"] { --accent-deep: #c5842b; --pill-ink: #de9a42; --sk-ink: #d39038; }
+html[data-theme="dark"] :is(.chips :is(button:not([aria-pressed="true"]), a:not([aria-current="page"])), .hours-filter button:not([aria-pressed="true"]), .card-tag:not(.tag-on), .doc-role.tag-off) {
+  background: color-mix(in srgb, var(--accent) 20%, var(--card));
+  border-color: color-mix(in srgb, var(--accent) 20%, var(--card));
+  color: var(--pill-ink);
+}
+html[data-theme="dark"] .sk.tag-on { color: var(--sk-ink); }
+html[data-theme="dark"] .map-svg :is(.pk, .pk-nm, .cm-nm, .cm-disc) { fill: #f4f4f5; }
+html[data-theme="dark"] .map-svg .lot .pk { stroke: #f4f4f5; }
+html[data-theme="dark"] .map-svg .cm-ul { stroke: #f4f4f5; }
+html[data-theme="dark"] .lot rect, html[data-theme="dark"] .lot path { fill: #7a7d77; }
+html[data-theme="dark"] .lot.on rect, html[data-theme="dark"] .lot.on path { fill: #365685; }
+html[data-theme="dark"] .map-svg .cm-sh use { fill: #000; opacity: .07; }
+html[data-theme="dark"] .hours-grid .d.faint { background: var(--dot-faint); }
+html[data-theme="dark"] .hours-grid .d.hit { background: var(--accent-deep); }
+/* 著陸頁的實心浮水印（圖檔由本支產生；url 在著陸頁由 tools/topics.mjs 換成 ../../assets/） */
+html[data-theme="dark"] [data-topic="general"] .tp-intro::before { background-image: url("../../assets/lineart-general-night.png"); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="prosth"] .tp-intro::before { background-image: url("../../assets/lineart-prosth-night.png"); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="perio"] .tp-intro::before { background-image: url("../../assets/lineart-perio-night.png"); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="ortho"] .tp-intro::before { background-image: url("../../assets/lineart-ortho-night.png"); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="endo"] .tp-intro::before { background-image: url("../../assets/lineart-endo-night.png"); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="surg"] .tp-intro::before { background-image: url("../../assets/lineart-surg-night.png"); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image: url("../../assets/lineart-kids-night.png"); opacity: 0.09; }
+/* 開關在「主題與科別」那一行的最右邊（著陸頁接在搜尋框右邊） */
+#topics .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+[data-topic] #topics .sec-head .topic-search { margin-left: auto; }
+/* NIGHT:END */
+</style>
 </head>
 <body data-topic="kids" data-spec="kids">
 
@@ -5378,6 +5457,7 @@ html[data-qopen="1"] .head-search {
           <label class="sr-only" for="q">搜尋文章與醫師</label>
           <input id="q" type="search" placeholder="搜尋文章與醫師" autocomplete="off" spellcheck="false">
         </div>
+        <button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="夜間模式"><span class="tt-track" aria-hidden="true"><span class="tt-knob"><svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span></span></button>
       </div>
       <div class="topic-tools">
         <!-- 「全部」不是一個科別，是「不篩選」。所以它用中性的墨色，不是任何一個科別色 ——

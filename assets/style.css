@@ -1041,3 +1041,51 @@ html[data-qopen="1"] .head-search {
 @media (prefers-reduced-motion: reduce) {
   .head-search, .brand, .site-nav { transition: none; }
 }
+
+/* NIGHT:START — 由 tools/night-mode.mjs 產生，請勿手動編輯 */
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #17191d; --card: #282b31; --note: #282b31; --rule: #3f4248; --ink: #e2e5e6; --ink-soft: #a3a5a6;
+  --teal: #6d9a93; --taupe: #ae8886; --blue: #7895a9; --moss: #86977d; --brick: #db7276;
+}
+html[data-theme="dark"] body { background: var(--paper); color: var(--ink); }
+html[data-theme="dark"] .btt { background-color: color-mix(in srgb, var(--card) 80%, transparent);
+  color: color-mix(in srgb, var(--ink-soft) 82%, transparent); }
+html[data-theme="dark"] :is(.foot-addr, .foot-tel) a { color: #739b7d; }
+
+/* 開關：滑桿、沒有字，太陽／月亮畫在圓鈕上。比例照 iOS 的 51×31、圓鈕 27、內縮 2 → 50×30、圓鈕 26、圖示 16。
+   ⚠ 圓鈕的位置與圖示看的是 html[data-theme]，不是 aria-checked —— 夜間打開頁面時，
+     <head> 裡那段腳本已經定好 data-theme，而 theme.js 是 defer 的；看 aria-checked 會先閃一下白天的位置。
+   圖示：Lucide "moon"／"sun"，ISC 授權，https://lucide.dev */
+.theme-toggle { appearance: none; border: 0; background: none; padding: 0; font: inherit; cursor: pointer; flex: none;
+  display: inline-flex; align-items: center; min-height: 34px; -webkit-tap-highlight-color: transparent; position: relative; }
+.theme-toggle::after { content: ""; position: absolute; inset: -7px -4px; }
+.tt-track { position: relative; width: 50px; height: 30px; border-radius: 15px; flex: none;
+  background: #c28229; transition: background-color .22s ease; }
+.tt-knob { position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center; background: #fff; color: #c28229;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .28); transition: transform .22s ease, color .22s ease; }
+.tt-knob svg { grid-area: 1 / 1; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; transition: opacity .18s ease, transform .22s ease; }
+.tt-moon { opacity: 0; transform: rotate(-60deg) scale(.6); }
+html[data-theme="dark"] .tt-track { background: #365685; }
+html[data-theme="dark"] .tt-knob { transform: translateX(20px); color: #365685; }
+html[data-theme="dark"] .tt-sun { opacity: 0; transform: rotate(60deg) scale(.6); }
+html[data-theme="dark"] .tt-moon { opacity: 1; transform: none; }
+.theme-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 17px; }
+@media (prefers-reduced-motion: reduce) { .tt-track, .tt-knob, .tt-knob svg { transition: none; } }
+
+html[data-theme="dark"] [data-spec="all"] { --accent-deep: #94918f; --pill-ink: #9f9c9b; --sk-ink: #9b9796; }
+html[data-theme="dark"] [data-spec="general"] { --accent-deep: #729b7d; --pill-ink: #7ea788; --sk-ink: #79a284; }
+html[data-theme="dark"] [data-spec="prosth"] { --accent-deep: #7b91c8; --pill-ink: #859bd3; --sk-ink: #8196ce; }
+html[data-theme="dark"] [data-spec="perio"] { --accent-deep: #5c9d98; --pill-ink: #6baca7; --sk-ink: #64a6a1; }
+html[data-theme="dark"] [data-spec="ortho"] { --accent-deep: #6897b5; --pill-ink: #79a8c6; --sk-ink: #72a1bf; }
+html[data-theme="dark"] [data-spec="endo"] { --accent-deep: #e06f72; --pill-ink: #f07d7f; --sk-ink: #e97679; }
+html[data-theme="dark"] [data-spec="surg"] { --accent-deep: #af81bb; --pill-ink: #c092cc; --sk-ink: #b98bc5; }
+html[data-theme="dark"] [data-spec="kids"] { --accent-deep: #c48434; --pill-ink: #de9a49; --sk-ink: #d39040; }
+html[data-theme="dark"] .table-scroll th { background: #3f4248; }
+html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-color: var(--accent-deep); }
+/* 開關在文章頂端那一行（首頁 › 科別 › 日期 › 瀏覽數）的最右邊 */
+.crumbs .theme-toggle { margin-left: auto; min-height: 0; }
+/* NIGHT:END */

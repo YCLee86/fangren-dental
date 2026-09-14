@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>night-mode｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>night-mode — 夜間模式</h1>
+<p class="meta">
+  2026-09-15 開、當天十二輪定案上線<br>
+  原網址 <code>/preview/night-mode/</code>（已刪除 2026-09-15；最後幾輪是整站鏡像：首頁＋十三篇文章＋七科）<br>
+  整頁還原：<code>git show 75f6ff8:preview/night-mode/index.html</code>（文章與著陸頁在 <code>posts/&lt;slug&gt;/</code>、<code>topics/&lt;spec&gt;/</code>）<br>
+  提案期的產生器 <code>tools/night-mode-preview.mjs</code>（定案時刪掉，同一個 sha 還原得到）<br>
+  正式站的產生器 <code>tools/night-mode.mjs</code>（留在版控裡，改顏色或換線稿要重跑）
+</p>
+
+<h2>起點</h2>
+<div class="note"><pre>使用者給了 https://snowmed-taiwan.com/：「去這個網站上看他有設定白天／夜間模式，然後做一個診所網站夜間模式的提案頁給我看。」
+
+那一站的做法（實際量的）：
+  ・預設深色（深藍底），不看系統設定，只認手動那一顆；按過記在 localStorage
+  ・開關在頁首最右邊：有框的鈕、圖示＋「白天模式／夜間模式」
+  ・整站配色是一組 CSS 變數，[data-theme] 整組換掉</pre></div>
+
+<h2>定案</h2>
+<div class="note"><pre>配色　　Ⓑ 窄帶藍灰（落選 Ⓐ 暗夜，PALETTE.md 第四節 A）
+　　　　底 #17191d　卡 #282b31（HERO 底下那條窄帶的漸層）
+　　　　分隔線與次要文字：同色相、亮度對齊 Ⓐ 那兩階（算出來的）
+　　　　主文字 ＝ 白天的紙色 #e2e5e6（主文字對底 13.90、次要 7.12）
+字階　　七科的 --accent-deep 與色票裡被當成字用的幾支：同色相同彩度、只提亮度到對底與卡都 4.5
+藥丸　　沒選到的那一態 ＝ 套色混 20% 進卡色的淡色塊，字按那塊底重算到 4.5（落選：線框、32%）
+地圖　　Ⓜ1 路比街廓亮（路 ＝ 卡色 +16 L*，路對街廓 1.73）（落選 Ⓜ2 路比較暗）
+　　　　白字釘回 #f4f4f5、停車場熄滅態釘回 #7a7d77、點到仍是 #365685
+圓點　　次要文字色（落選：主文字色）；沒這科的那一顆 ＝ 次要文字混 35% 進卡色
+浮水印　著陸頁的線稿換成實心（線圍起來的地方填 #e2e5e6、線挖空），濃度 .09
+　　　　（落選：線條提亮、月光灰、套色實心、.165／.12／.06、不放）
+開關　　iOS 那種滑桿、沒有字，太陽／月亮畫在圓鈕上
+　　　　軌道白天琥珀 #c28229、夜間路牌藍 #365685、白鈕（落選：燈在鈕上、鈕本身是燈、有字的滑桿）
+　　　　首頁與七科：「主題與科別」那一行最右邊（七科接在搜尋框右邊）
+　　　　文章頁：頂端那一行（首頁 › 科別 › 日期 › 瀏覽數）最右邊
+預設　　跟著系統的 prefers-color-scheme（手機電腦同一條，不另設電腦版預設）
+記住　　按過就記在 localStorage 'fangren:theme'；換頁、重整、另一個分頁都跟著</pre></div>
+
+<h2>值得記住的</h2>
+<div class="note"><pre>・頁首放不下開關：390 寬時診所名和選單疊 8px（375 寬只剩 16.6px 可用）。不要搬回頁首。
+・著陸頁的 data-spec 掛在 &lt;body&gt; 自己身上。提亮規則只寫後代選擇器的話 body 吃不到，
+　.tp-* 那些套色字會停在白天的深階（使用者：「7 科頁面的套色文字看不清楚，文章沒這個問題」）。
+・線稿夜間是負片：臉的內部是透明的，白天透出紙色、夜間透出深底 ＝ 臉是黑的。
+　使用者：「這跟大家的辨認習慣很不一樣，感覺要換成實心的圖」—— 提亮線條治不到這件事。
+　實心圖只從上緣灌「圖外面」（人物在下緣與左右緣被裁掉）；顯微根管與矯正的器材碰到上緣、
+　把左下背景隔開，這兩科加灌左緣（不加的話填了 79～81% ＝ 整片背景被填滿，打開圖才看得出來）。
+・實心的面積比線大很多，白天那一格的濃度（.10～.48）不能沿用；次要文字剛好 4.5 的上限是 .165，
+　使用者再往下選到 .09。
+・圓鈕的位置看 html[data-theme] 不看 aria-checked：theme.js 是 defer 的，看 aria-checked
+　會讓夜間打開頁面時先閃一下白天的位置。
+・文章頁的開關在 &lt;main&gt; 裡，第一次寫入會動到內容雜湊；那不是內容更新，十三篇的日期照 CLAUDE.md 第五節還原。
+・320 寬的文章頁，開關會掉到頂端那一行的第二列（仍靠右）。</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄</footer>
+</div></body>
+</html>
