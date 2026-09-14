@@ -70,14 +70,19 @@ for (const [tag] of html.matchAll(/<img\s[^>]*>/g)) {
   const w = Number((tag.match(/\swidth="(\d+)"/) || [])[1]);
   const h = Number((tag.match(/\sheight="(\d+)"/) || [])[1]);
   if (!/alt="[^"]+"/.test(tag)) bad.push(`⑦ ${src} 沒有 alt`);
-  if (!src || !src.startsWith("../")) { bad.push(`⑦ ${src} 不是引用隔壁資料夾`); continue; }
+  /* 例外：其他商家帳號的截圖（ref-*.jpg）只有這一頁用，放在自己的資料夾裡 */
+  if (!src || !(src.startsWith("../") || /^ref-[a-z-]+\.jpg$/.test(src))) { bad.push(`⑦ ${src} 不是引用隔壁資料夾`); continue; }
   const f = path.resolve(DIR, src);
   if (!fs.existsSync(f)) { bad.push(`⑦ 找不到圖：${src}`); continue; }
   const s = sizeOf(f);
   if (!s || s[0] !== w || s[1] !== h) bad.push(`⑦ ${src} 宣告 ${w}×${h}，實檔 ${s}`);
   imgs++;
 }
-for (const f of fs.readdirSync(DIR)) if (f !== "index.html") bad.push(`⑦ 資料夾裡多了 ${f}`);
+for (const f of fs.readdirSync(DIR)) {
+  if (f === "index.html") continue;
+  if (/^ref-[a-z-]+\.jpg$/.test(f) && html.includes(`src="${f}"`)) continue;
+  bad.push(`⑦ 資料夾裡多了 ${f}（不是這一頁引用的 ref-*.jpg）`);
+}
 if (!has("⑦")) ok(`⑦ ${imgs} 張圖都對，資料夾裡只有 index.html`);
 
 /* ⑧ 未定案逐字 */

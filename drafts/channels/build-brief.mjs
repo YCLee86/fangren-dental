@@ -253,6 +253,11 @@ pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:
   font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.9em 0 0}
 code.url{font-size:.78em;white-space:nowrap}
 .tabv td:first-child{white-space:nowrap;font-weight:600}
+.refs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px 14px;margin:.9em 0 0}
+.refs figure{margin:0}
+.refs img{display:block;width:100%;max-width:300px;height:auto;border-radius:10px}
+.refs .k{font-size:.88rem;font-weight:600;margin:0 0 .35em}
+.refs figcaption{font-size:.8rem;color:var(--soft);line-height:1.65;margin-top:.4em;max-width:300px}
 .done{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:9px;margin:.8em 0 0}
 .done .msg{align-items:flex-start}
 </style>
@@ -373,6 +378,16 @@ ${WM.map((s2, i) => `<tr><td>${esc(例日[i].ymd)} ${esc(例日[i].wd)}</td><td>
 <figcaption>${bb(B.s4.看到)}門號已遮。</figcaption></figure>
 <figure><p class="k">想接在那一句後面送的：綁定完成卡</p>${img("../line-bind-done/shot-bind-done.png", "綁定完成卡", 3)}
 <figcaption>已定稿（Flex JSON 在 /preview/line-spec/ 的 ③）。</figcaption></figure>
+</div>
+<h3 class="h3" id="s4-ref">其他商家帳號：綁定那一刻送的是另一則<span class="t">對應 4-3。手機號碼與姓名已遮</span></h3>
+<div class="refs">
+${B.s4.其他帳號.map(([f, k, cap]) => `<figure><p class="k">${esc(k)}</p>${img("ref-" + f + ".jpg", k)}
+<figcaption>${bb(cap)}</figcaption></figure>`).join("\n")}
+</div>
+<h3 class="h3" id="s4-pinyu">新竹品御牙醫：綁定成功那一句之後沒有跳出通用回覆<span class="t">對應 4-4</span></h3>
+<div class="refs">
+<figure><p class="k">${esc(B.s4.品御[1])}</p>${img("ref-" + B.s4.品御[0] + ".jpg", B.s4.品御[1])}
+<figcaption>${bb(B.s4.品御[2])}</figcaption></figure>
 </div>
 <h3 class="h3">想要的做法</h3>
 ${list(B.s4.想要的)}
