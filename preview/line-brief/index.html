@@ -192,13 +192,16 @@ code{font-size:.92em}
 .cw{margin:0}
 /* 2026-09-14 使用者：「約診狀態的藥丸和文字應該是不透明的，排列順序要壓在淡墨 logo 浮水印上」——
    浮水印是 absolute、排在文字後面，會畫在字與藥丸上面（藥丸看起來被刷淡）。字那幾行拉到上層。 */
-.cw .stcard>p{position:relative;z-index:1}
-.cw .stcard .wm{z-index:0}
+.stcard>p{position:relative;z-index:1}
+.stcard .wm{z-index:0}
 .cw figcaption{font-size:.74rem;color:var(--soft);line-height:1.6;margin-top:.25em}
 pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:10px 12px;
   font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.9em 0 0}
 code.url{font-size:.78em;white-space:nowrap}
 .tabv td:first-child{white-space:nowrap;font-weight:600}
+ol.plan{list-style:decimal;padding-left:1.6em}
+ol.plan>li{padding-left:.2em}
+ol.plan>li::before{content:none}
 .dgs{display:flex;flex-wrap:wrap;gap:18px 56px;margin:.9em 0 0}
 .dg{margin:0}
 .dgbox{position:relative;margin:0 44px 30px 0}
@@ -496,45 +499,95 @@ code.url{font-size:.78em;white-space:nowrap}
 <li>四行字與字級照 <code>booked-card.json</code>：〔病人姓名〕＋「　約好囉」<code>md</code>／日期 <code>lg</code> 粗體 <code>margin</code> 6px／兩行灰字 <code>xs</code> #5C5F57（<code>margin</code> 14px、5px）。每一格都 <code>wrap: true</code>。</li>
 <li>浮水印　<code>url</code> 照下表「單張網址」、<code>size</code> 照「單張 size」。</li></ul>
 <div class="tabw"><table class="tab"><thead><tr>
-<th>#</th><th>形狀</th><th>色碼</th><th><code>aspectRatio</code></th><th>單張 <code>size</code></th><th>單張網址 <code>url</code></th>
+<th>#</th><th>形狀</th><th>原色（檔案用的）</th><th>卡上看到的顏色</th><th><code>aspectRatio</code></th><th>寬 <code>size</code></th><th>高</th>
+<th>位置（對卡片右下角）</th><th>露在卡內</th><th>單張網址 <code>url</code></th>
 </tr></thead><tbody>
 <tr><td>0</td><td><b>r1c1</b></td>
-<td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td>
+<td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td><td><span class="chip" style="background:#E8EDE9"></span><code>#E8EDE9</code></td>
 <td><code>1:1</code></td><td><b>107</b>px</td>
+<td>107.0px</td><td>右 +18px／下 +10px</td>
+<td>89 × 97.0px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r1c1-12.png</code></td></tr>
 <tr><td>1</td><td><b>r1c2</b></td>
-<td><span class="chip" style="background:#317d78"></span><code>#317d78</code></td>
+<td><span class="chip" style="background:#317d78"></span><code>#317d78</code></td><td><span class="chip" style="background:#E6EFEF"></span><code>#E6EFEF</code></td>
 <td><code>2.029:1</code></td><td><b>150</b>px</td>
+<td>73.9px</td><td>右 +18px／下 +10px</td>
+<td>132 × 63.9px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r1c2-12.png</code></td></tr>
 <tr><td>2</td><td><b>r1c3</b></td>
-<td><span class="chip" style="background:#4478b5"></span><code>#4478b5</code></td>
+<td><span class="chip" style="background:#4478b5"></span><code>#4478b5</code></td><td><span class="chip" style="background:#E9EFF6"></span><code>#E9EFF6</code></td>
 <td><code>3.084:1</code></td><td><b>188</b>px</td>
+<td>61.0px</td><td>右 +18px／下 +10px</td>
+<td>170 × 51.0px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r1c3-12.png</code></td></tr>
 <tr><td>3</td><td><b>r2c1</b></td>
-<td><span class="chip" style="background:#ae4f4d"></span><code>#ae4f4d</code></td>
+<td><span class="chip" style="background:#ae4f4d"></span><code>#ae4f4d</code></td><td><span class="chip" style="background:#F5EAEA"></span><code>#F5EAEA</code></td>
 <td><code>2.025:1</code></td><td><b>152</b>px</td>
+<td>75.1px</td><td>右 +18px／下 +10px</td>
+<td>134 × 65.1px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r2c1-12.png</code></td></tr>
 <tr><td>4</td><td><b>r2c2</b></td>
-<td><span class="chip" style="background:#465885"></span><code>#465885</code></td>
+<td><span class="chip" style="background:#465885"></span><code>#465885</code></td><td><span class="chip" style="background:#E9EBF0"></span><code>#E9EBF0</code></td>
 <td><code>1.332:1</code></td><td><b>120</b>px</td>
+<td>90.1px</td><td>右 +18px／下 +10px</td>
+<td>102 × 80.1px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r2c2-12.png</code></td></tr>
 <tr><td>5</td><td><b>r2c3</b></td>
-<td><span class="chip" style="background:#8e6299"></span><code>#8e6299</code></td>
+<td><span class="chip" style="background:#8e6299"></span><code>#8e6299</code></td><td><span class="chip" style="background:#F1ECF3"></span><code>#F1ECF3</code></td>
 <td><code>3.081:1</code></td><td><b>188</b>px</td>
+<td>61.0px</td><td>右 +18px／下 +10px</td>
+<td>170 × 51.0px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r2c3-12.png</code></td></tr>
 <tr><td>6</td><td><b>r3c1</b></td>
-<td><span class="chip" style="background:#8e6299"></span><code>#8e6299</code></td>
+<td><span class="chip" style="background:#8e6299"></span><code>#8e6299</code></td><td><span class="chip" style="background:#F1ECF3"></span><code>#F1ECF3</code></td>
 <td><code>1:1</code></td><td><b>104</b>px</td>
+<td>104.0px</td><td>右 +18px／下 +10px</td>
+<td>86 × 94.0px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r3c1-12.png</code></td></tr>
 <tr><td>7</td><td><b>r3c2</b></td>
-<td><span class="chip" style="background:#c28229"></span><code>#c28229</code></td>
+<td><span class="chip" style="background:#c28229"></span><code>#c28229</code></td><td><span class="chip" style="background:#F8F0E5"></span><code>#F8F0E5</code></td>
 <td><code>0.999:1</code></td><td><b>131</b>px <span class="was">（原 106）</span></td>
+<td>131.1px</td><td>右 +18px／下 +10px</td>
+<td>113 × 121.1px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r3c2-12.png</code></td></tr>
 <tr><td>8</td><td><b>r3c3</b></td>
-<td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td>
+<td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td><td><span class="chip" style="background:#E8EDE9"></span><code>#E8EDE9</code></td>
 <td><code>3.083:1</code></td><td><b>186</b>px <span class="was">（原 215）</span></td>
+<td>60.3px</td><td>右 +18px／下 +10px</td>
+<td>168 × 50.3px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r3c3-12.png</code></td></tr>
 </tbody></table></div>
+<p class="note">「卡上看到的顏色」＝ 原色以 12% 的濃度疊在卡片底色 #FFFFFF 上的結果（淡是烘在 PNG 的 alpha 裡的），給你們對照畫面用；Flex 裡不必填這個色碼，填上表的網址就好。</p>
+<h4 class="h4">尺寸與位置的示意（卡片 mega 約 268px 寬）</h4>
+<div class="dgs"><figure class="dg">
+<div class="dgbox" style="width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="150" height="73.93"
+  viewBox="0 0 44.304 21.834" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
+  fill="#317d78" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
+</div>
+<span class="dgwm" style="width:150px;height:73.9px;right:-18px;bottom:-10px"></span>
+<span class="dgr" style="bottom:27.0px">→ 18px</span>
+<span class="dgb">↓ 10px</span>
+</div>
+<figcaption><b>r1c2</b>　寬 150px × 高 73.9px・虛線是整顆圖的框</figcaption>
+</figure><figure class="dg">
+<div class="dgbox" style="width:268px">
+<div class="stcard cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<svg class="wm" width="186" height="60.33"
+  viewBox="0 0 44.322 14.378" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.689 359.486) scale(1 -1)"><path
+  fill="#3f654a" fill-opacity="0.12" fill-rule="evenodd" d="M 326.482 352.763 C 322.051 356.284 318.54 362.303 311.648 357.984 C 304.8 353.692 305.054 344.099 312.348 345.194 C 320.662 346.443 327.623 349.699 339.17 345.971 C 348.848 342.846 350.834 349.33 350.976 350.796 C 351.244 353.557 350.042 358.07 344.814 357.208 C 340.519 356.499 339.1 353.546 335.25 351.658 C 331.729 349.932 328.581 351.095 326.482 352.763 M 316.169 355.937 C 315.92 355.864 315.825 355.846 315.582 355.937 C 315.419 355.998 315.198 355.987 315.037 355.937 C 314.512 355.774 313.994 354.738 314.089 353.42 C 314.184 352.103 317.575 352.286 317.573 353.42 C 317.57 354.324 317.246 355.488 316.8 355.804 C 316.608 355.94 316.466 356.024 316.169 355.937"/></g></svg>
+</div>
+<span class="dgwm" style="width:186px;height:60.3px;right:-18px;bottom:-10px"></span>
+<span class="dgr" style="bottom:20.2px">→ 18px</span>
+<span class="dgb">↓ 10px</span>
+</div>
+<figcaption><b>r3c3</b>　寬 186px × 高 60.3px・虛線是整顆圖的框</figcaption>
+</figure></div>
 <h4 class="h4">九顆各自畫在卡片上（日期是照 3-6 規則會算到那一顆的看診日）</h4>
 <div class="gs">
 <figure class="cw" style="max-width:268px">
@@ -639,64 +692,65 @@ code.url{font-size:.78em;white-space:nowrap}
 <li><b>浮水印的尺寸與位置（每一顆不一樣，請照下表，不要自己估）</b>：<code>position: "absolute"</code>，貼卡片<b>右下角</b>；圖的<b>右緣在卡片右緣再往右 18px、下緣在卡片下緣再往下 10px</b>，跑出卡片的那一截由卡片切掉。<code>size</code> ＝ 表上的寬（px），高度由 <code>aspectRatio</code> 決定（表上也列出換算後的高）；<code>aspectMode: "fit"</code>。</li>
 <li>Flex 的 <code>offsetEnd</code>／<code>offsetBottom</code> 不吃負值，JSON 只能寫 <code>0px</code>；請照你們 09-10 那一版做出溢出的做法，把溢出量統一成 18／10px。浮水印在最底層，姓名、日期與約診狀態那一列壓在它上面（見 3-1）。</li></ul>
 <div class="tabw"><table class="tab"><thead><tr>
-<th>#</th><th>形狀</th><th>色碼</th><th><code>aspectRatio</code></th><th>寬 <code>size</code></th><th>高</th>
+<th>#</th><th>形狀</th><th>原色（檔案用的）</th><th>卡上看到的顏色</th><th><code>aspectRatio</code></th><th>寬 <code>size</code></th><th>高</th>
 <th>位置（對卡片右下角）</th><th>露在卡內</th><th>輪播網址 <code>url</code></th>
 </tr></thead><tbody>
 <tr><td>0</td><td><b>r1c1</b></td>
-<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td><td><span class="chip" style="background:#EBECEB"></span><code>#EBECEB</code></td>
 <td><code>1:1</code></td><td><b>107</b>px</td>
 <td>107.0px</td><td>右 +18px／下 +10px</td>
 <td>89 × 97.0px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r1c1-ink12.png</code></td></tr>
 <tr><td>1</td><td><b>r1c2</b></td>
-<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td><td><span class="chip" style="background:#EBECEB"></span><code>#EBECEB</code></td>
 <td><code>2.029:1</code></td><td><b>150</b>px</td>
 <td>73.9px</td><td>右 +18px／下 +10px</td>
 <td>132 × 63.9px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r1c2-ink12.png</code></td></tr>
 <tr><td>2</td><td><b>r1c3</b></td>
-<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td><td><span class="chip" style="background:#EBECEB"></span><code>#EBECEB</code></td>
 <td><code>3.084:1</code></td><td><b>141</b>px <span class="was">（原 188）</span></td>
 <td>45.7px</td><td>右 +18px／下 +10px</td>
 <td>123 × 35.7px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r1c3-ink12.png</code></td></tr>
 <tr><td>3</td><td><b>r2c1</b></td>
-<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td><td><span class="chip" style="background:#EBECEB"></span><code>#EBECEB</code></td>
 <td><code>2.025:1</code></td><td><b>152</b>px</td>
 <td>75.1px</td><td>右 +18px／下 +10px</td>
 <td>134 × 65.1px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r2c1-ink12.png</code></td></tr>
 <tr><td>4</td><td><b>r2c2</b></td>
-<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td><td><span class="chip" style="background:#EBECEB"></span><code>#EBECEB</code></td>
 <td><code>1.332:1</code></td><td><b>120</b>px</td>
 <td>90.1px</td><td>右 +18px／下 +10px</td>
 <td>102 × 80.1px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r2c2-ink12.png</code></td></tr>
 <tr><td>5</td><td><b>r2c3</b></td>
-<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td><td><span class="chip" style="background:#EBECEB"></span><code>#EBECEB</code></td>
 <td><code>3.081:1</code></td><td><b>141</b>px <span class="was">（原 188）</span></td>
 <td>45.8px</td><td>右 +18px／下 +10px</td>
 <td>123 × 35.8px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r2c3-ink12.png</code></td></tr>
 <tr><td>6</td><td><b>r3c1</b></td>
-<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td><td><span class="chip" style="background:#EBECEB"></span><code>#EBECEB</code></td>
 <td><code>1:1</code></td><td><b>104</b>px</td>
 <td>104.0px</td><td>右 +18px／下 +10px</td>
 <td>86 × 94.0px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r3c1-ink12.png</code></td></tr>
 <tr><td>7</td><td><b>r3c2</b></td>
-<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td><td><span class="chip" style="background:#EBECEB"></span><code>#EBECEB</code></td>
 <td><code>0.999:1</code></td><td><b>106</b>px</td>
 <td>106.1px</td><td>右 +18px／下 +10px</td>
 <td>88 × 96.1px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r3c2-ink12.png</code></td></tr>
 <tr><td>8</td><td><b>r3c3</b></td>
-<td><span class="chip" style="background:#5c5f57"></span><code>#5c5f57</code></td>
+<td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td><td><span class="chip" style="background:#EBECEB"></span><code>#EBECEB</code></td>
 <td><code>3.083:1</code></td><td><b>142</b>px <span class="was">（原 215）</span></td>
 <td>46.1px</td><td>右 +18px／下 +10px</td>
 <td>124 × 36.1px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r3c3-ink12.png</code></td></tr>
 </tbody></table></div>
+<p class="note">「卡上看到的顏色」＝ 淡墨 #5C5F57 以 12% 疊在卡片底色 #FFFFFF 上的結果，給你們對照畫面用；Flex 裡不必填這個色碼。</p>
 <h4 class="h4">尺寸與位置的示意（卡片 micro 約 162px 寬）</h4>
 <div class="dgs"><figure class="dg">
 <div class="dgbox" style="width:162px">
@@ -957,7 +1011,7 @@ code.url{font-size:.78em;white-space:nowrap}
 <figure><p class="k">國泰世華・綁定完成</p><img src="ref-cathay-bind.jpg" width="600" height="1299" loading="lazy" alt="國泰世華・綁定完成">
 <figcaption>綁定完成後，病人那一側自動送出「綁定」，帳號接著回的是專屬的個人化服務卡；平常打其他字回的是另一則（上方「無法理解該字詞」那一張）。</figcaption></figure>
 <figure><p class="k">玉山銀行・綁定完成</p><img src="ref-esun-bind.jpg" width="600" height="1299" loading="lazy" alt="玉山銀行・綁定完成">
-<figcaption>綁定完成後由帳號送出「您已成功申請『個人化通知服務』」這一則，內容不含手機號碼。</figcaption></figure>
+<figcaption>綁定完成後由帳號送出「您已成功申請『個人化通知服務』」這一則。</figcaption></figure>
 <figure><p class="k">台北富邦銀行・綁定完成</p><img src="ref-fubon-bind.jpg" width="600" height="1299" loading="lazy" alt="台北富邦銀行・綁定完成">
 <figcaption>綁定完成後帳號送的是專屬的一則「恭喜成為我們的綁定好友」，附行動銀行的下載連結。</figcaption></figure>
 <figure><p class="k">BREAD, ESPRESSO &amp;・綁定完成</p><img src="ref-bread-bind.jpg" width="600" height="1299" loading="lazy" alt="BREAD, ESPRESSO &amp;・綁定完成">
@@ -968,10 +1022,27 @@ code.url{font-size:.78em;white-space:nowrap}
 <figure><p class="k">新竹品御牙醫・同一套系統</p><img src="ref-pinyu-bind.jpg" width="600" height="1299" loading="lazy" alt="新竹品御牙醫・同一套系統">
 <figcaption>按約診查詢 → 同一張藍色公版卡 → 病人那一側送出綁定成功那一句 → 之後沒有跳出通用回覆（頁首寫著「此官方帳號正在自動回覆訊息」）。</figcaption></figure>
 </div>
-<h3 class="h3">想要的做法</h3>
-<ul class="spec"><li>綁定成功那一句<b>照舊保留</b>。</li>
-<li>那一句是你們的系統送出的，系統在那一刻就知道綁定完成 —— 想請你們在它後面接著送我們已經做好的「綁定完成卡」（上面那一張），不必比對任何字串。</li>
-<li>綁定那一刻不要再跳出通用的自動回應；平常病人打字進來，照舊回通用的那一則。</li></ul>
+<h3 class="h3" id="s4-card">綁定完成卡的字級、粗體與顏色</h3>
+<p style="font-size:.9rem;margin:.3em 0 0">字級、粗體、文字色與兩塊淡色底框的色碼，全部照 bind-done-card.json（下表就是從那一份讀出來的）。卡片底色 #F4F4F5、<code>paddingAll</code> 14px。</p>
+<div class="tabw"><table class="tab"><thead><tr>
+<th>文字（開頭）</th><th>字級</th><th>粗體</th><th>文字色</th><th>底框色</th><th>底框圓角・內距</th>
+</tr></thead><tbody>
+<tr><td>綁定完成～</td><td>md（16px）</td><td>整段粗體</td><td><span class="chip" style="background:#2A2C27"></span><code>#2A2C27</code></td>
+<td>—</td><td>—</td></tr>
+<tr><td>點下面選單的約診查詢，…</td><td>sm（14px）</td><td>只有「約診查詢」粗體</td><td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td>
+<td>—</td><td>—</td></tr>
+<tr><td>看診前48小時這裡會發送訊息…</td><td>sm（14px）</td><td>—</td><td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td>
+<td>—</td><td>—</td></tr>
+<tr><td>若24小時內無回應，…</td><td>sm（14px）</td><td>整段粗體</td><td><span class="chip" style="background:#14181C"></span><code>#14181C</code></td>
+<td><span class="chip" style="background:#EEE5E6"></span><code>#EEE5E6</code></td><td>8px・上下 10px／左右 12px</td></tr>
+<tr><td>這裡沒有專人即時回覆訊息。…</td><td>sm（14px）</td><td>—</td><td><span class="chip" style="background:#2A2C27"></span><code>#2A2C27</code></td>
+<td><span class="chip" style="background:#E2E8EF"></span><code>#E2E8EF</code></td><td>8px・上下 10px／左右 12px</td></tr>
+<tr><td>家人的約診也可以綁定在同一隻…</td><td>xs（13px）</td><td>—</td><td><span class="chip" style="background:#5C5F57"></span><code>#5C5F57</code></td>
+<td>—</td><td>—</td></tr>
+</tbody></table></div>
+<h3 class="h3" id="s4-plan">綁定成功的方案優先順序</h3>
+<ol class="spec plan"><li><b>自動發送綁定成功圖卡</b>：像其他幾家帳號那樣，綁定成功之後另外發送一則綁定成功的訊息 —— 就是上面那張「綁定完成卡」。綁定成功那一句是你們的系統送出的，系統在那一刻就知道綁定完成，不必比對任何字串。</li>
+<li><b>綁定成功用戶端訊息送出後，後台不自動發送回覆</b>：像新竹品御牙醫那樣，綁定成功那一句之後不再跳出通用的自動回應；平常病人打字進來，照舊回通用的那一則。</li></ol>
 <h3 class="h3">想請教</h3>
 <ul class="spec"><li>新竹品御牙醫（同一套系統）綁定成功那一句之後沒有跳出通用回覆，他們的自動回應是怎麼設的？我們能不能照那個設法？</li>
 <li>若改由你們系統在綁定當下送綁定完成卡，後台的自動回應同時開著，會不會兩則一起送？</li></ul>

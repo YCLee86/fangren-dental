@@ -185,25 +185,67 @@ const TAB = WM.map((s2, i) => {
   if (/ink/.test(one.url)) throw new Error("booked-card.json 單張那一則的浮水印網址不應該是淡墨");
   if (BOOKED.約診紀錄查詢.contents[0].size !== "micro") throw new Error("booked-card.json 輪播不是 micro");
 }
+const FSIZE_PX = { xxs: 11, xs: 13, sm: 14, md: 16, lg: 19, xl: 22, xxl: 27 };
 const u = (x) => `<code class="url">${esc(x)}</code>`;
+/* 實際看到的顏色：色碼 × 濃度 疊在卡片底色上（PNG 的淡是烘在 alpha 裡的，所以卡上看到的是這個） */
+const onCardHex = (hex) => {
+  const c = (h, i) => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
+  return "#" + [0, 1, 2].map((i) => Math.round(c(hex, i) * WM_A + c(WCARD, i) * (1 - WM_A))
+    .toString(16).padStart(2, "0")).join("").toUpperCase();
+};
+const chip = (hex) => `<span class="chip" style="background:${hex}"></span><code>${hex}</code>`;
+/* 2026-09-14 使用者：「預約成功通知的 logo 尺寸和位置也列一下」—— 同 3-3 那一張的欄位 */
 const tab32 = `<div class="tabw"><table class="tab"><thead><tr>
-<th>#</th><th>形狀</th><th>色碼</th><th><code>aspectRatio</code></th><th>單張 <code>size</code></th><th>單張網址 <code>url</code></th>
+<th>#</th><th>形狀</th><th>原色（檔案用的）</th><th>卡上看到的顏色</th><th><code>aspectRatio</code></th><th>寬 <code>size</code></th><th>高</th>
+<th>位置（對卡片右下角）</th><th>露在卡內</th><th>單張網址 <code>url</code></th>
 </tr></thead><tbody>
-${TAB.map((r) => `<tr><td>${r.i}</td><td><b>${r.s.n}</b></td>
-<td><span class="chip" style="background:${r.s.色}"></span><code>${r.s.色}</code></td>
+${TAB.map((r) => {
+  const h = r.單 / r.s.ratio;
+  return `<tr><td>${r.i}</td><td><b>${r.s.n}</b></td>
+<td>${chip(r.s.色)}</td><td>${chip(onCardHex(r.s.色))}</td>
 <td><code>${esc(r.比)}</code></td><td><b>${r.單}</b>px${r.單 === r.s.w ? "" : ` <span class="was">（原 ${r.s.w}）</span>`}</td>
-<td>${u(r.url)}</td></tr>`).join("\n")}
+<td>${h.toFixed(1)}px</td><td>右 +${OFF.right}px／下 +${OFF.bottom}px</td>
+<td>${Math.min(r.單 - OFF.right, BUB.mega)} × ${(h - OFF.bottom).toFixed(1)}px</td>
+<td>${u(r.url)}</td></tr>`;
+}).join("\n")}
 </tbody></table></div>`;
+/* ── 4 綁定完成卡：字級、粗體、文字色、淡色底框，從 bind-done-card.json 讀 ── */
+const BIND_DONE_TAB = (() => {
+  const j = JSON.parse(readFileSync(join(HERE, "bind-done-card.json"), "utf8"));
+  const rows = [];
+  const txt = (t, box) => {
+    const s = t.text ?? (t.contents || []).map((x) => x.text).join("");
+    const boldSpans = (t.contents || []).filter((x) => x.weight === "bold").map((x) => x.text);
+    rows.push({
+      s: s.split("\n")[0] + (s.includes("\n") ? "…" : ""),
+      size: `${t.size}（${FSIZE_PX[t.size]}px）`,
+      bold: t.weight === "bold" ? "整段粗體" : boldSpans.length ? `只有「${boldSpans.join("、")}」粗體` : "—",
+      color: t.color, box,
+    });
+  };
+  for (const c of j.body.contents) {
+    if (c.type === "text") txt(c, null);
+    else if (c.type === "box") for (const t of c.contents.filter((x) => x.type === "text"))
+      txt(t, { bg: c.backgroundColor, r: c.cornerRadius, pad: `上下 ${c.paddingTop}／左右 ${c.paddingStart}` });
+  }
+  if (rows.filter((r) => r.box).length !== 2) throw new Error("bind-done-card.json 裡的淡色底框不是兩塊");
+  return `<div class="tabw"><table class="tab"><thead><tr>
+<th>文字（開頭）</th><th>字級</th><th>粗體</th><th>文字色</th><th>底框色</th><th>底框圓角・內距</th>
+</tr></thead><tbody>
+${rows.map((r) => `<tr><td>${esc(r.s)}</td><td>${esc(r.size)}</td><td>${esc(r.bold)}</td><td>${chip(r.color.toUpperCase())}</td>
+<td>${r.box ? chip(r.box.bg.toUpperCase()) : "—"}</td><td>${r.box ? esc(`${r.box.r}・${r.box.pad}`) : "—"}</td></tr>`).join("\n")}
+</tbody></table></div>`;
+})();
 /* 2026-09-14 使用者：「約診記錄查詢的 micro 卡上 logo 的尺寸和位置設定要列一下，不然廠商會自己猜」——
    寬、換算後的高、溢出量、露在卡片裡的寬高全部現算印出來。 */
 const tab33 = `<div class="tabw"><table class="tab"><thead><tr>
-<th>#</th><th>形狀</th><th>色碼</th><th><code>aspectRatio</code></th><th>寬 <code>size</code></th><th>高</th>
+<th>#</th><th>形狀</th><th>原色（檔案用的）</th><th>卡上看到的顏色</th><th><code>aspectRatio</code></th><th>寬 <code>size</code></th><th>高</th>
 <th>位置（對卡片右下角）</th><th>露在卡內</th><th>輪播網址 <code>url</code></th>
 </tr></thead><tbody>
 ${TAB.map((r) => {
   const h = r.輪 / r.s.ratio;
   return `<tr><td>${r.i}</td><td><b>${r.s.n}</b></td>
-<td><span class="chip" style="background:${INK}"></span><code>${INK}</code></td>
+<td>${chip(INK.toUpperCase())}</td><td>${chip(onCardHex(INK))}</td>
 <td><code>${esc(r.比)}</code></td><td><b>${r.輪}</b>px${r.輪 === r.s.w ? "" : ` <span class="was">（原 ${r.s.w}）</span>`}</td>
 <td>${h.toFixed(1)}px</td><td>右 +${OFF.right}px／下 +${OFF.bottom}px</td>
 <td>${r.輪 - OFF.right} × ${(h - OFF.bottom).toFixed(1)}px</td>
@@ -211,14 +253,18 @@ ${TAB.map((r) => {
 }).join("\n")}
 </tbody></table></div>`;
 /* 標了尺寸的示意：外框（虛線）＝整顆圖的框，卡片把跑出去的那一截切掉 */
-const diagram = (s2) => {
-  const w = wmWidth(s2, true), h = w / s2.ratio;
-  return `<figure class="dg">
-<div class="dgbox" style="width:${BUB.car}px">
-<div class="stcard cb">
-${linesHtml(withDate(MICRO, `${esc("2026/09/11")}<br>${esc(`星期五 ${時間}`)}`))}
+const diagram = (s2, isCar = true) => {
+  const w = wmWidth(s2, isCar), h = w / s2.ratio;
+  const body = isCar
+    ? `${linesHtml(withDate(MICRO, `${esc("2026/09/11")}<br>${esc(`星期五 ${時間}`)}`))}
 <p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:${PILLVAL[0].色}">${esc(PILLVAL[0].名)}</span></p>
-${wmSvg(s2, true, INK)}
+${wmSvg(s2, true, INK)}`
+    : `${linesHtml(MEGA)}
+${wmSvg(s2, false, s2.色)}`;
+  return `<figure class="dg">
+<div class="dgbox" style="width:${isCar ? BUB.car : BUB.mega}px">
+<div class="stcard cb">
+${body}
 </div>
 <span class="dgwm" style="width:${w}px;height:${h.toFixed(1)}px;right:${-OFF.right}px;bottom:${-OFF.bottom}px"></span>
 <span class="dgr" style="bottom:${(h / 2 - OFF.bottom).toFixed(1)}px">→ ${OFF.right}px</span>
@@ -271,13 +317,16 @@ ${CSS}
 .cw{margin:0}
 /* 2026-09-14 使用者：「約診狀態的藥丸和文字應該是不透明的，排列順序要壓在淡墨 logo 浮水印上」——
    浮水印是 absolute、排在文字後面，會畫在字與藥丸上面（藥丸看起來被刷淡）。字那幾行拉到上層。 */
-.cw .stcard>p{position:relative;z-index:1}
-.cw .stcard .wm{z-index:0}
+.stcard>p{position:relative;z-index:1}
+.stcard .wm{z-index:0}
 .cw figcaption{font-size:.74rem;color:var(--soft);line-height:1.6;margin-top:.25em}
 pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:10px 12px;
   font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.9em 0 0}
 code.url{font-size:.78em;white-space:nowrap}
 .tabv td:first-child{white-space:nowrap;font-weight:600}
+ol.plan{list-style:decimal;padding-left:1.6em}
+ol.plan>li{padding-left:.2em}
+ol.plan>li::before{content:none}
 .dgs{display:flex;flex-wrap:wrap;gap:18px 56px;margin:.9em 0 0}
 .dg{margin:0}
 .dgbox{position:relative;margin:0 44px 30px 0}
@@ -360,6 +409,9 @@ ${h3("s3-2", "3-2　預約成功通知・定稿", "九顆浮水印的顏色與�
 <p style="font-size:.9rem;margin:.3em 0 0">${bb(B.s3.三之二.說)}</p>
 ${list(B.s3.三之二.規格)}
 ${tab32}
+<p class="note">「卡上看到的顏色」＝ 原色以 ${Math.round(WM_A * 100)}% 的濃度疊在卡片底色 ${WCARD.toUpperCase()} 上的結果（淡是烘在 PNG 的 alpha 裡的），給你們對照畫面用；Flex 裡不必填這個色碼，填上表的網址就好。</p>
+<h4 class="h4">尺寸與位置的示意（卡片 mega 約 ${BUB.mega}px 寬）</h4>
+<div class="dgs">${diagram(byName.r1c2, false)}${diagram(byName.r3c3, false)}</div>
 <h4 class="h4">九顆各自畫在卡片上（日期是照 3-6 規則會算到那一顆的看診日）</h4>
 <div class="gs">
 ${WM.map((s2, i) => single(s2, 例日[i],
@@ -370,6 +422,7 @@ ${h3("s3-3", "3-3　約診紀錄查詢・定稿", "卡片 micro、浮水印淡�
 <p style="font-size:.9rem;margin:.3em 0 0">${bb(B.s3.三之三.說)}</p>
 ${list(B.s3.三之三.規格)}
 ${tab33}
+<p class="note">「卡上看到的顏色」＝ 淡墨 ${INK.toUpperCase()} 以 ${Math.round(WM_A * 100)}% 疊在卡片底色 ${WCARD.toUpperCase()} 上的結果，給你們對照畫面用；Flex 裡不必填這個色碼。</p>
 <h4 class="h4">尺寸與位置的示意（卡片 micro 約 ${BUB.car}px 寬）</h4>
 <div class="dgs">${diagram(byName.r1c2)}${diagram(byName.r3c3)}</div>
 <h4 class="h4">九顆各自畫在 micro 卡上（約診狀態輪流掛四個值，只是示範）</h4>
@@ -423,8 +476,11 @@ ${B.s4.其他帳號.map(([f, k, cap]) => `<figure><p class="k">${esc(k)}</p>${im
 <figure><p class="k">${esc(B.s4.品御[1])}</p>${img("ref-" + B.s4.品御[0] + ".jpg", B.s4.品御[1])}
 <figcaption>${bb(B.s4.品御[2])}</figcaption></figure>
 </div>
-<h3 class="h3">想要的做法</h3>
-${list(B.s4.想要的)}
+<h3 class="h3" id="s4-card">綁定完成卡的字級、粗體與顏色</h3>
+<p style="font-size:.9rem;margin:.3em 0 0">${bb(B.s4.綁定完成卡)}</p>
+${BIND_DONE_TAB}
+<h3 class="h3" id="s4-plan">綁定成功的方案優先順序</h3>
+<ol class="spec plan">${B.s4.方案.map((t) => `<li>${bb(t)}</li>`).join("\n")}</ol>
 <h3 class="h3">想請教</h3>
 ${list(B.s4.請教)}
 <p class="note">${bb(B.s4.回覆)}</p>
