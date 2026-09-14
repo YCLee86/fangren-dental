@@ -276,6 +276,39 @@ const wmWidth = (s2, isCar) => {
 
 const WM_BOX = (1 / Math.max(...WM.map((s) => s.pct / 100 / s.ratio))).toFixed(4);
 
+/* ── 兩則的 bubble 各要畫多寬（2026-09-14 從 line-booked 合併過來）──────
+   ⚠⚠ 一樣不抄第二份：MEGA_W／CAR_W／CPAD 的唯一出處是 preview/line-booked/index.html。
+     那一頁的 CAR_W 是**算出來的**（micro × 這台的比例尺），所以這裡照它的算式再算一次，
+     不是把 162 抄過來 —— 抄過來的話，哪天那一階換了，這一頁會靜靜地留在舊數字上。
+   ⚠ MEGA_W 在那一頁是刻意寫死 268（bubblePx("mega") 回 267，差 0.5%），這裡照讀。 */
+const BUB = (() => {
+  const p = readFileSync(join(ROOT, "preview", "line-booked", "index.html"), "utf8");
+  const num = (name) => {
+    const m = p.match(new RegExp("var " + name + " = (\\d+)"));
+    if (!m) throw new Error(`line-booked 那一頁上找不到 ${name}`);
+    return Number(m[1]);
+  };
+  const str = (name) => {
+    const m = p.match(new RegExp("var " + name + " = \"([a-z]+)\""));
+    if (!m) throw new Error(`line-booked 那一頁上找不到 ${name}`);
+    return m[1];
+  };
+  const steps = Object.fromEntries([...p.matchAll(/\{ k: "([a-z]+)", b: (\d+) \}/g)]
+    .map((m) => [m[1], Number(m[2])]));
+  const [BLK, CPAD, MEAS_W] = ["BLK", "CPAD", "MEAS_W"].map(num);
+  const [meas, want] = ["MEAS_STEP", "WANT_STEP"].map(str);
+  if (!steps[meas] || !steps[want]) throw new Error("line-booked 的 bubble 階梯讀不出來");
+  const k = (MEAS_W - CPAD * 2) / (BLK * steps[meas]);
+  const car = Math.round(BLK * steps[want] * k + CPAD * 2);
+  const mega = num("MEGA_W");
+  if (car >= mega) throw new Error(`輪播算出 ${car}px、單張 ${mega}px —— 輪播不可能比單張寬`);
+  return { mega, car, pad: CPAD, 現況: MEAS_W, 階: want };
+})();
+if (BUB.pad !== CARD.pad)
+  throw new Error(`paddingAll 兩邊不一樣：line-booked ${BUB.pad}、這一頁 ${CARD.pad}`);
+if (BUB.現況 !== SC.卡.w)
+  throw new Error(`廠商現在跑的卡寬兩邊不一樣：line-booked ${BUB.現況}、vendor-log ${SC.卡.w}`);
+
 const CSS = `
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9}
 *{box-sizing:border-box}
@@ -432,6 +465,21 @@ summary::marker{color:var(--rule)}
    和定案那一頁對不起來，而且畫面看起來完全正常。 */
 .stcard .pill{display:inline-block;border-radius:8.5px;line-height:1;
   padding:.42em .63em .38em;color:#fff;font-weight:700}
+/* ③ 那幾條規格：一條一行，不用項目符號 —— 廠商是照著填的，不是在讀文章 */
+.spec{list-style:none;margin:.5em 0 0;padding:0;font-size:.9rem;line-height:1.8}
+.spec>li{margin:.5em 0 0;padding-left:1.1em;position:relative}
+.spec>li::before{content:"・";position:absolute;left:0;color:var(--soft)}
+.h3{font-size:.98rem;margin:2em 0 .2em}
+.h4{font-size:.92rem;margin:1.6em 0 .2em;color:var(--soft)}
+/* 那張表在窄螢幕上一定會比版心寬 —— 自己一條捲軸，不要讓整頁橫著捲 */
+.tabw{overflow-x:auto;margin:.9em 0 0;-webkit-overflow-scrolling:touch}
+.tab{border-collapse:collapse;font-size:.82rem;min-width:460px}
+.tab th,.tab td{border:1px solid var(--rule);padding:5px 8px;text-align:left;
+  white-space:nowrap;line-height:1.5}
+.tab thead th{background:var(--card);font-weight:600;font-size:.78rem}
+.tab .chip{display:inline-block;width:.72em;height:.72em;border-radius:2px;
+  margin-right:.4em;vertical-align:-.02em;border:1px solid rgba(0,0,0,.12)}
+.tab .was,.stwrap .was{color:var(--soft);font-weight:400}
 .foot{margin:2.8em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
   font-size:.83rem;color:var(--soft);line-height:1.85}
 a{color:#214d48}
@@ -563,7 +611,7 @@ const nine = `<div class="nine">
 ${WM.map((s) => `<figure>
 <span class="sw">${swatch(s, 1)}</span>
 <span class="sw wm">${swatch(s, WM_A, INK)}</span>
-<figcaption>${esc(s.科)}<br>${esc(s.n)}・${s.w}px</figcaption>
+<figcaption>${esc(s.科)}<br>${esc(s.n)}・原寬 ${s.w}px</figcaption>
 </figure>`).join("\n")}
 </div>`;
 
@@ -628,7 +676,7 @@ ${文}
 <rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${g.size}" height="${h.toFixed(2)}"
   fill="none" stroke="${色}" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
-<figcaption><b>${esc(g.標)}</b>　${g.size}px<br>${b(g.註)}</figcaption>
+<figcaption><b>${esc(g.標)}</b>　${g.size}px・卡寬的 ${(g.size / cardBox.w * 100).toFixed(1)}%<br>${b(g.註)}</figcaption>
 </figure>`;
 };
 const compare = cmp.組.map((row) => `<div class="cmpwrap">
@@ -651,6 +699,40 @@ const OFF = (() => {
     throw new Error("「我們要的」那幾格的偏移量彼此不一樣：" + JSON.stringify(gs.map((g) => [g.right, g.bottom])));
   return { right: r, bottom: bm };
 })();
+/* ── {{值:…}} ─────────────────────────────────────────────────────────
+   ⚠⚠ 規格那一節裡的每一個數字（順序、兩則的卡片寬、內距、底色、溢出量、濃度）
+     **都不要打進資料** —— 打進去就是第二份，改一邊會靜靜地分家。資料裡寫
+     {{值:名字}}，在這裡現算。⚠ 這一道要排在 OFF 之後：溢出量是從對照表讀回來的。
+   ⚠ 頭上那一道 walk 跑得太早（那時 WM／BUB 都還沒算出來），所以分成兩道。 */
+(() => {
+  const V = {
+    順序: WM.map((x) => x.n).join(" "),
+    濃度: String(Math.round(WM_A * 100)),
+    單張卡寬: String(BUB.mega),
+    輪播卡寬: String(BUB.car),
+    現況卡寬: String(BUB.現況),
+    卡寬差: String(BUB.mega - BUB.car),
+    窄多少: String(BUB.現況 - BUB.car),
+    內距: String(BUB.pad),
+    底色: WCARD.toUpperCase(),
+    右溢: String(OFF.right),
+    下溢: String(OFF.bottom),
+  };
+  const fix = (v) => v.replace(/\{\{值:([^}]+)\}\}/g, (_, k) => {
+    if (!(k in V)) throw new Error(`{{值:${k}}} 沒有這個值`);
+    return V[k];
+  });
+  const walk = (n) => {
+    if (Array.isArray(n)) return n.forEach((v, i) => {
+      if (typeof v === "string") n[i] = fix(v); else walk(v);
+    });
+    if (n && typeof n === "object") for (const [k, v] of Object.entries(n)) {
+      if (typeof v === "string") n[k] = fix(v); else walk(v);
+    }
+  };
+  walk(D);
+})();
+
 const onCard = `<div class="onnine">
 ${WM.map((s) => plate(s.n, {
   標: s.科, size: wmWidth(s, false), right: OFF.right, bottom: OFF.bottom,
@@ -658,6 +740,56 @@ ${WM.map((s) => plate(s.n, {
     + (wmWidth(s, false) === s.w ? "" : `（單張這一欄：${s.w} → ${wmWidth(s, false)}px）`),
 }, INK)).join("\n")}
 </div>`;
+
+/* ── ③之一 九顆要填什麼：一張算出來的表 ───────────────────────
+   2026-09-14 從 preview/line-booked/ 合併過來（使用者：「把 line-booked 提案頁裡的
+   資料合併回 line-vendor」）。
+   ⚠⚠⚠ 這張表**不是在這裡算的，是從 booked-card.json 的 _浮水印 讀出來的** ——
+     那一份才是要交出去的東西，頁面上印一份自己算的話，交出去的 JSON 和廠商
+     照著看的表有一天會分家，而兩邊各自都很正常。
+   ⚠ 但也不是照單全收：每一列都拿 wmWidth()（那兩張定案的倍率表）與 wm-sizes.json
+     的顏色、長寬比對一次，對不上就 throw —— 那一份 JSON 是手維護的。 */
+const WMTAB = (() => {
+  const t = BOOKED._浮水印;
+  if (!t) throw new Error("booked-card.json 裡沒有 _浮水印 那張表");
+  const names = Object.keys(t);
+  if (names.length !== WM.length)
+    throw new Error(`booked-card.json 的 _浮水印 有 ${names.length} 顆，wm-sizes.json 是 ${WM.length} 顆`);
+  return WM.map((s2) => {
+    const r = t[s2.n];
+    if (!r) throw new Error(`booked-card.json 的 _浮水印 裡沒有 ${s2.n}`);
+    const px = (v, 欄) => {
+      const m = String(v).match(/^(\d+)px$/);
+      if (!m) throw new Error(`${s2.n} 的 ${欄} 不是 NNNpx：${v}`);
+      return Number(m[1]);
+    };
+    const 單 = px(r.watermark_size_single, "watermark_size_single");
+    const 輪 = px(r.watermark_size_carousel, "watermark_size_carousel");
+    if (單 !== wmWidth(s2, false))
+      throw new Error(`${s2.n} 單張那一欄 booked-card.json 寫 ${單}px，定案那張表算出來是 ${wmWidth(s2, false)}px`);
+    if (輪 !== wmWidth(s2, true))
+      throw new Error(`${s2.n} 輪播那一欄 booked-card.json 寫 ${輪}px，定案那張表算出來是 ${wmWidth(s2, true)}px`);
+    if ((r.色 || "").toLowerCase() !== s2.色.toLowerCase())
+      throw new Error(`${s2.n} 的色碼兩邊不一樣：booked-card.json ${r.色}、wm-sizes.json ${s2.色}`);
+    const 比 = String(r.watermark_ratio || "");
+    if (!/^[\d.]+:1$/.test(比)) throw new Error(`${s2.n} 的 aspectRatio 不是 X:1：${比}`);
+    if (Math.abs(parseFloat(比) - s2.ratio) > 0.005)
+      throw new Error(`${s2.n} 的 aspectRatio ${比} 對不上 wm-sizes.json 的 ${s2.ratio}`);
+    if (!String(r.url || "").includes(`wm-${s2.n}-`))
+      throw new Error(`${s2.n} 的 url 對不上：${r.url}`);
+    return { s: s2, 單, 輪, 比, url: r.url };
+  });
+})();
+const wmTable = `<div class="tabw"><table class="tab"><thead><tr>
+<th>形狀</th><th>色碼</th><th>科別（色的出處）</th><th><code>aspectRatio</code></th>
+<th>單張<br><code>mega</code></th><th>輪播<br><code>micro</code></th>
+</tr></thead><tbody>
+${WMTAB.map((r) => `<tr><td><b>${esc(r.s.n)}</b></td>
+<td><span class="chip" style="background:${r.s.色}"></span><code>${esc(r.s.色)}</code></td>
+<td>${esc(r.s.科)}</td><td><code>${esc(r.比)}</code></td>
+<td><b>${r.單}</b>px${r.單 === r.s.w ? "" : ` <span class="was">（原 ${r.s.w}）</span>`}</td>
+<td><b>${r.輪}</b>px${r.輪 === r.s.w ? "" : ` <span class="was">（原 ${r.s.w}）</span>`}</td></tr>`).join("\n")}
+</tbody></table></div>`;
 
 /* ── ④ 約診狀態那四個值的顏色 ─────────────────────────────────
    2026-09-12 使用者：現況那張卡上表示會到的那個值本來就是綠字，所以新版那四個
@@ -671,10 +803,49 @@ const SET = SC.定案, PILLVAL = SC.藥丸.值;
    卡片畫成輪播上真正的寬度，兩行內容與日期的寫法照廠商 09-10 那一版，
    浮水印是定案那一種（淡墨、往右下溢出，偏移量和第 3 節那九張同一個出處）。
    ⚠ 日期在這個寬度上會折成兩行 —— 那正是「那一格不要限制行數」的樣子，不是破圖。 */
-const wmSvg = (s2, off, isCar = true) => `<svg class="wm" width="${wmWidth(s2, isCar)}" height="${(wmWidth(s2, isCar) / s2.ratio).toFixed(2)}"
+const wmSvg = (s2, off, isCar = true, w0) => {
+  const w = w0 || wmWidth(s2, isCar);
+  return `<svg class="wm" width="${w}" height="${(w / s2.ratio).toFixed(2)}"
   viewBox="0 0 ${s2.vw} ${s2.vh}" preserveAspectRatio="none" aria-hidden="true"
   style="right:${-off.right}px;bottom:${-off.bottom}px"><g transform="${s2.gt}"><path
   fill="${INK}" fill-opacity="${WM_A}" fill-rule="evenodd" d="${s2.d}"/></g></svg>`;
+};
+/* ── ③之三 輪播那一則（約診紀錄查詢）──────────────────────────
+   九顆各畫一次 ＋ 你們送來的那一張的大小對照。
+   ⚠⚠ 卡片畫成 SC.卡.w（＝你們現在跑的那一階）不是規格的 micro —— 這樣它和
+     第 4 節那四張、和你們送來的截圖才比得起來；換階那一件寫在規格那一節裡。
+   ⚠ 用的是第 4 節那一套 .stcard／.cb 規則（多一個 class 而已），所以兩節的
+     字級、行距與折行一定一樣；守門（⑰）是靠 class 分辨兩節的卡的。 */
+const carCard = (s2, w0, 說) => `<figure class="stwrap">
+<div class="carcard stcard cb">
+${linesHtml(MICRO)}
+${wmSvg(s2, OFF, true, w0)}
+</div>
+<figcaption>${說}</figcaption>
+</figure>`;
+const carNine = `<div class="stgrid">
+${WM.map((s2) => carCard(s2, null,
+  `<b>${esc(s2.科)}</b>　${esc(s2.n)}・${wmWidth(s2, true)}px`
+  + `・卡寬的 ${(wmWidth(s2, true) / SC.卡.w * 100).toFixed(1)}%`
+  + (wmWidth(s2, true) === s2.w ? "" : `<br><span class="was">輪播那一欄：${s2.w} → ${wmWidth(s2, true)}px</span>`))).join("\n")}
+</div>`;
+const CARCMP = (() => {
+  const c = D.浮水印.對照.輪播;
+  if (!c || !Array.isArray(c.格) || c.格.length !== 2)
+    throw new Error("vendor-log.json 的浮水印.對照.輪播 要有兩格");
+  const s2 = byName[c.形];
+  if (!s2) throw new Error(`輪播那一節用到不存在的形狀 ${c.形}`);
+  const mine = c.格.find((g) => g.標 === "我們要的");
+  if (!mine) throw new Error("輪播那一節找不到「我們要的」那一格");
+  if (mine.size !== wmWidth(s2, true))
+    throw new Error(`輪播對照的「我們要的」寫 ${mine.size}px，定案那張表算出來是 ${wmWidth(s2, true)}px`);
+  return c;
+})();
+const carCompare = `<div class="stgrid">
+${CARCMP.格.map((g) => carCard(byName[CARCMP.形], g.size,
+  `<b>${esc(g.標)}</b>　${g.size}px・卡寬的 ${(g.size / SC.卡.w * 100).toFixed(1)}%<br>${b(g.註)}`)).join("\n")}
+</div>`;
+
 const settled = `<div class="stgrid">
 ${PILLVAL.map((v) => `<figure class="stwrap">
 <div class="stcard cb">
@@ -804,8 +975,20 @@ ${msgs}
 <h2 class="h2">2　${esc(改.日)} 的改版<span class="t">${esc(改._說明)}</span></h2>
 ${revised}
 
-<h2 class="h2">3　浮水印那九顆<span class="t">形狀、顏色與寬度都在下面這張表裡</span></h2>
-<div class="now" style="margin:0 0 1.4em"><b>位置與大小・定案</b>
+<h2 class="h2">3　浮水印那九顆<span class="t">挑哪一顆、每一顆要填什麼、兩則各要畫多寬</span></h2>
+
+<h3 class="h3">③之一　挑哪一顆</h3>
+<ul class="spec">${D.浮水印.規格.挑哪一顆.map((t) => `<li>${b(t)}</li>`).join("\n")}</ul>
+
+<h3 class="h3">③之二　每一顆要填什麼</h3>
+<ul class="spec">${D.浮水印.規格.欄位.map((t) => `<li>${b(t)}</li>`).join("\n")}</ul>
+${wmTable}
+<p class="note">${b(D.浮水印.規格.表說)}</p>
+
+<h3 class="h3">③之三　卡片本身</h3>
+<ul class="spec">${D.浮水印.規格.卡片.map((t) => `<li>${b(t)}</li>`).join("\n")}</ul>
+
+<div class="now" style="margin:1.6em 0 1.4em"><b>位置與大小・定案</b>
 <ol>${D.浮水印.定案.條.map((t) => `<li><p class="d">${b(t)}</p></li>`).join("\n")}</ol></div>
 <p class="note">${b(D.浮水印.顏色.說)}<br>
 每一格<b>上面是原色</b>（看得出形狀與是哪一科），<b>虛線底下是它壓在卡片上真正的樣子</b>
@@ -817,14 +1000,26 @@ ${nine}
 <div class="row"><p class="k">大小與位置</p><p class="v">${b(D.浮水印.大小與位置)}</p></div>
 </div>
 
-<h3 style="font-size:.95rem;margin:1.8em 0 .2em">同一張卡畫${cmp.組[0].格.length}次</h3>
+<h3 class="h3">③之四　預約成功通知（單張 <code>mega</code>）</h3>
+<h4 class="h4">同一張卡畫${cmp.組[0].格.length}次</h4>
 <p style="font-size:.88rem;color:var(--soft);margin:0">${esc(cmp._說明)}</p>
 ${compare}
 <p class="note">${b(cmp.量)}</p>
 
-<h3 style="font-size:.95rem;margin:1.8em 0 .2em">九顆各自畫在卡片上該有的樣子</h3>
+<h4 class="h4">九顆各自畫在卡片上該有的樣子</h4>
 <p style="font-size:.88rem;color:var(--soft);margin:0">${b(D.浮水印.九顆上卡)}</p>
 ${onCard}
+
+<h3 class="h3">③之五　約診紀錄查詢（輪播 <code>micro</code>）</h3>
+<p class="note">${b(D.浮水印.規格.輪播模擬圖畫多寬)}</p>
+
+<h4 class="h4">九顆各自畫在卡片上該有的樣子</h4>
+<p style="font-size:.88rem;color:var(--soft);margin:0">${b(D.浮水印.九顆上卡輪播)}</p>
+${carNine}
+
+<h4 class="h4">同一張卡畫${CARCMP.格.length}次</h4>
+<p style="font-size:.88rem;color:var(--soft);margin:0">${b(CARCMP._說明)}</p>
+${carCompare}
 
 <div class="rows" style="margin-top:1.4em">
 <div class="row"><p class="k">要換的規則</p><p class="v">${b(D.浮水印.要確認)}</p></div>

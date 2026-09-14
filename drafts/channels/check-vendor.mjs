@@ -91,7 +91,12 @@ if (fs.existsSync(auto)) { scanned++; texts.push(...fs.readFileSync(auto, "utf8"
 /* 只拿「夠長、夠獨特」的句子去掃 —— 短詞（例如「綁定」）本來就會出現在說明裡 */
 const probes = [...new Set(texts.flatMap((t) => t.split(/\n/)))]
   .map((t) => t.replace(/\{\{\w+\}\}/g, "").trim())
-  .filter((t) => t.length >= 10);
+  .filter((t) => t.length >= 10)
+  /* ⚠ 只有網址、沒有別的字的那一行不算「訊息的文字」—— auto-reply.txt 裡有一行
+     就是光溜溜的 https://fangren.net，而這一頁本來就要印圖檔的網址（它是規格的
+     一部分）。掃它的結果是把一個合法的規格欄位判成「抄了訊息」。
+     ⚠⚠ 收窄的只有這一種：**整行就是一條網址**；網址後面接著任何一個字都照掃。 */
+  .filter((t) => !/^https?:\/\/\S+$/.test(t));
 /* ⚠⚠ 例外只有一處：第 3 節那幾張卡上畫的是「預約成功通知」真正的四行，
    而那四行是產生器從 booked-card.json **讀出來**的、不是在這一頁打的
    （2026-09-13 使用者：那張卡底下那一大塊空白，讀起來像排完字之後另外塞一顆
@@ -685,14 +690,49 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
     if (!/<svg class="wm"/.test(c)) bad.push(`⑰ 第 4 節第 ${i + 1} 張卡沒有浮水印`);
   });
 
+  /* ③之五 輪播那幾張卡：九顆各一張 ＋ 大小對照兩張。
+     ⚠ 它們和第 4 節那四張吃同一組 .stcard／.cb 規則，靠多一個 class 分辨 ——
+       數錯的話「第 4 節畫了幾張卡」那一道會連帶誤報。 */
+  const carcards = html.match(/<div class="carcard stcard cb">[\s\S]*?<\/svg>/g) || [];
+  const 該有輪 = (LOG.浮水印?.對照?.輪播?.格 || []).length + 9;
+  if (carcards.length !== 該有輪)
+    bad.push(`⑰ ③之五 畫了 ${carcards.length} 張輪播卡，應該是 ${該有輪} 張（九顆 ＋ 對照兩張）`);
+  carcards.forEach((c, i) => {
+    const 行文 = (c.match(/<p style="[^"]*">[\s\S]*?<\/p>/g) || [])
+      .map((x) => x.replace(/^<p [^>]*>/, "").replace(/<\/p>$/, "").replace(/<[^>]+>/g, ""));
+    if (行文.length !== MICRO.length)
+      bad.push(`⑰ ③之五 第 ${i + 1} 張卡畫了 ${行文.length} 行，輪播那張卡是 ${MICRO.length} 行`);
+    else MICRO.forEach((t, k) => {
+      if (行文[k] !== esc(t).replace(/<[^>]+>/g, ""))
+        bad.push(`⑰ ③之五 第 ${i + 1} 張卡的第 ${k + 1} 行和 booked-card.json 不一樣`);
+    });
+    if (!/<svg class="wm"/.test(c)) bad.push(`⑰ ③之五 第 ${i + 1} 張卡沒有浮水印`);
+    /* 這一節是浮水印的大小，所以卡上不可以有約診狀態那一列（那是第 4 節的事） */
+    if (/class="pill"/.test(c)) bad.push(`⑰ ③之五 第 ${i + 1} 張卡多畫了約診狀態那一列`);
+  });
+  /* 九顆那一排的寬度要照「輪播那一欄」，不是單張那一欄 */
+  {
+    const sz = JSON.parse(fs.readFileSync(
+      path.join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
+    const tab = JSON.parse(fs.readFileSync(path.join(HERE, "booked-card.json"), "utf8"))._浮水印 || {};
+    for (const [n, z] of Object.entries(sz)) {
+      const want = Number(String(tab[n]?.watermark_size_carousel || "").replace("px", ""));
+      if (!want) { bad.push(`⑰ booked-card.json 的 _浮水印 裡 ${n} 沒有輪播那一欄`); continue; }
+      if (!carcards.some((c) => c.includes(`${n}・${want}px`) || c.includes(`width="${want}"`)))
+        bad.push(`⑰ ③之五 的 ${n} 沒有照輪播那一欄畫成 ${want}px`);
+      void z;
+    }
+  }
+
   /* 浮水印要和第 3 節那九張同一種擺法（淡墨 ＋ 往右下溢出），偏移量從對照表讀 */
   const mine = (LOG.浮水印?.對照?.組?.[0]?.格 || []).find((g) => g.標 === "我們要的");
   const ink = LOG.浮水印?.顏色?.值;
   if (mine && ink) {
     const want = `style="right:${-mine.right}px;bottom:${-mine.bottom}px"`;
     const hit = (html.match(new RegExp(want.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&"), "g")) || []).length;
-    if (hit !== vals.length)
-      bad.push(`⑰ 第 4 節的浮水印只有 ${hit} 張是往右下溢出 ${mine.right}／${mine.bottom}px`);
+    if (hit !== vals.length + carcards.length)
+      bad.push(`⑰ 第 4 節與 ③之五 的浮水印只有 ${hit} 張是往右下溢出 ${mine.right}／${mine.bottom}px`
+        + `，應該是 ${vals.length + carcards.length} 張`);
     const wms = html.match(/<svg class="wm"[\s\S]*?<\/svg>/g) || [];
     for (const w of wms)
       if (!w.includes(`fill="${ink}"`)) bad.push(`⑰ 第 4 節有一張卡的浮水印不是定案的淡墨 ${ink}`);
@@ -717,7 +757,7 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   if (!Array.isArray(日期行) || !日期行.length)
     bad.push("⑰ 一行日期都沒量到 —— 那一道等於沒跑（選擇器或日期的寫法改了？）");
   else {
-    const 該有 = plates.length + cards.length;
+    const 該有 = plates.length + cards.length + carcards.length;
     if (日期行.length !== 該有)
       bad.push(`⑰ 量到 ${日期行.length} 行日期，頁上那 ${該有} 張卡每一張都該有一行`);
     /* 可用寬度分得出是哪一種卡：單張 240px、輪播 177px */
@@ -749,6 +789,88 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   if (!bad.some((x) => x.startsWith("⑰")))
     ok(`⑰ 卡上那幾行都是從 booked-card.json 讀出來的（單張 ${MEGA.length} 行、輪播 ${MICRO.length} 行），`
       + `日期是「${DT.例}」，字一個都沒換、只換順序`);
+}
+
+/* ⑱ ③ 那一節的規格（2026-09-14 從 line-booked 合併過來）-----------------
+   使用者：「把 line-booked 提案頁裡的資料合併回 line-vendor」。合併之後
+   **同一份規格只剩這一頁在印**，所以那一節少一條、或那張表自己在這裡另外算一份，
+   都不會讓任何一道版面守門翻臉 —— 這一道專門守它。
+   守的是「頁面上印出來的東西」：
+     ① 規格那幾組（挑哪一顆／欄位／表說／卡片）每一條都要印得出來
+     ② 那張表九列，每一列的色碼、aspectRatio 與兩欄的寬度**逐格 ＝ booked-card.json
+        的 _浮水印**（那一份才是要交出去的）
+     ③ 產生器是從 booked-card.json 讀那張表的，不是自己算一份
+     ④ 那幾句沒有它廠商就會做錯的話：算式、mega／micro、wrap 不要 maxLines */
+{
+  const 規 = LOG.浮水印?.規格;
+  if (!規) bad.push("⑱ vendor-log.json 裡沒有浮水印.規格 —— 第 3 節那一整段規格沒有出處了");
+  else {
+    /* ⚠ 資料裡的數字寫成 {{值:…}}（產生器現算），所以比對之前要把那幾格切掉，
+       把剩下的每一段字面都在頁面上找一次 —— 拿原字去 includes 會全部誤報。 */
+    const esc2 = (t) => String(t)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    /* 加粗與 `code` 會在字中間插進標記、{{值:…}} 是產生器現算的 —— 所以在那三種
+       邊界上切開，剩下的每一段字面都要在頁面上找得到。拿整條原字去 includes 會全部誤報。 */
+    const 有印 = (t) => String(t).split(/\*\*|`|\{\{[^}]*\}\}/)
+      .map((x) => esc2(x).trim()).filter((x) => x.length >= 8)
+      .every((x) => html.includes(x));
+    let n = 0;
+    for (const k of ["挑哪一顆", "欄位", "卡片"]) {
+      const a = 規[k];
+      if (!Array.isArray(a) || !a.length) { bad.push("⑱ 浮水印.規格." + k + " 不是一組非空的陣列"); continue; }
+      for (const t of a) {
+        n++;
+        if (!有印(t)) bad.push("⑱ 規格「" + k + "」少印了一條：「" + String(t).slice(0, 18) + "…」");
+      }
+    }
+    for (const k of ["表說", "輪播模擬圖畫多寬"]) {
+      if (!規[k]) { bad.push("⑱ 浮水印.規格." + k + " 不見了"); continue; }
+      n++;
+      if (!有印(規[k])) bad.push("⑱ 規格「" + k + "」沒有印出來");
+    }
+    /* 那幾句沒有它廠商就會做錯的 */
+    for (const [句, 為什麼] of [
+      ["(月 ＋ 日) % 9", "挑哪一顆的算式"],
+      ["aspectMode", "aspectMode 那一欄"],
+      ["第一個子元件不可以是", "absolute 不可以排第一個"],
+      ["wrap: true", "日期那一格要 wrap"],
+      ["maxLines", "不要 maxLines"],
+      ["mega", "單張那一階"],
+      ["micro", "輪播那一階"],
+    ]) if (!html.includes(句.replace(/</g, "&lt;").replace(/>/g, "&gt;")))
+      bad.push("⑱ 規格裡沒有「" + 句 + "」（" + 為什麼 + "）—— 少了這一句廠商會做錯");
+
+    /* 那張表：九列，逐格對 booked-card.json 的 _浮水印 */
+    const tab = JSON.parse(fs.readFileSync(path.join(HERE, "booked-card.json"), "utf8"))._浮水印;
+    const sz = JSON.parse(fs.readFileSync(
+      path.join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
+    if (!tab) bad.push("⑱ booked-card.json 裡沒有 _浮水印 那張表 —— 頁上那張表沒有出處了");
+    else {
+      const body = (html.match(/<table class="tab">[\s\S]*?<\/table>/) || [])[0] || "";
+      const 列 = (body.match(/<tr>[\s\S]*?<\/tr>/g) || []).filter((r) => /<td>/.test(r));
+      if (列.length !== 9) bad.push("⑱ 第 3 節那張表有 " + 列.length + " 列，應該是九列");
+      for (const [k, r] of Object.entries(tab)) {
+        const row = 列.find((x) => x.includes("<b>" + k + "</b>"));
+        if (!row) { bad.push("⑱ 那張表上找不到 " + k); continue; }
+        for (const [v, 欄] of [[r.色, "色碼"], [r.watermark_ratio, "aspectRatio"]])
+          if (!row.includes(String(v))) bad.push("⑱ 那張表上 " + k + " 的" + 欄 + "不是 " + v);
+        for (const [v, 欄] of [[r.watermark_size_single, "單張"], [r.watermark_size_carousel, "輪播"]]) {
+          const px = String(v).replace("px", "");
+          if (!row.includes("<b>" + px + "</b>px"))
+            bad.push("⑱ 那張表上 " + k + " 的" + 欄 + "那一欄不是 " + v);
+        }
+        if (sz[k] && String(r.色).toLowerCase() !== String(sz[k].color).toLowerCase())
+          bad.push("⑱ " + k + " 的色碼兩份對不上：booked-card.json " + r.色
+            + "、wm-sizes.json " + sz[k].color);
+      }
+    }
+    /* 產生器要讀那一份，不可以自己算一張表 */
+    if (!/BOOKED\._浮水印/.test(fs.readFileSync(path.join(HERE, "build-vendor.mjs"), "utf8")))
+      bad.push("⑱ build-vendor 沒有從 booked-card.json 讀那張表"
+        + " —— 自己算一份的話，交出去的 JSON 和頁上那張表會分家");
+    if (!bad.some((x) => x.startsWith("⑱")))
+      ok("⑱ 第 3 節的規格 " + n + " 條都印出來了、那張表九列逐格 ＝ booked-card.json 的 _浮水印");
+  }
 }
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }
