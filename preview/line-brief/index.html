@@ -223,7 +223,7 @@ ol.plan>li::before{content:none}
 
 <h1>LINE 官方帳號　待調整項目與規格</h1>
 <p class="lede">芳仁牙醫診所　更新於 2026-09-14<br>
-先列未定案的四件，再逐項附上<b>你們現在那一版</b>與<b>我們的定稿</b>、規格與做法；最後是已經完成、不必再調整的項目。<br>
+先列未定案的四件，再逐項附上<b>翔評現在那一版</b>與<b>診所的定稿</b>、規格與做法；最後是已經完成、不必再調整的項目。<br>
 卡片的模擬圖一律畫成病人手機上的寬度（單張約 268px、輪播 micro 約 162px）。</p>
 
 <div class="now">
@@ -231,7 +231,7 @@ ol.plan>li::before{content:none}
 <ol>
 <li>
 <p class="t"><a href="#s1">尚未綁定按約診查詢</a></p>
-<p class="d">請抽換現有的公版藍色圖卡。我們已經做好替代的版本。</p>
+<p class="d">請抽換現有的公版藍色圖卡。診所已經做好替代的版本。</p>
 </li>
 <li>
 <p class="t"><a href="#s2">看診前 48 小時提醒</a></p>
@@ -244,14 +244,14 @@ ol.plan>li::before{content:none}
 <li><a href="#s3-3">約診查詢版面定稿，卡片尺寸為micro，logo浮水印的顏色改成淡墨素色：柔墨 <code>#5c5f57</code>、濃度 12%。</a></li>
 <li><a href="#s3-4">約診狀態：依系統發送與病人回覆的狀態分成 已排定／已確認／未回覆／已取消。四個值的畫法、色碼與對齊在。</a></li>
 <li><a href="#s3-5">日期的順序：2026/09/11 星期五 11:50</a></li>
-<li><a href="#s3-6">九顆浮水印怎麼輪，照我們這個規則：<code>(約診月份 + 約診日) % 9</code>，照第 3 節那張表由上到下的順序取第幾顆。所以同一筆約診不管查幾次都是同一顆，預約成功通知與查詢清單裡的那一張也要是同一顆、同一色。</a></li></ol>
+<li><a href="#s3-6">九顆浮水印怎麼輪，照診所這個規則：<code>(約診月份 + 約診日) % 9</code>，照第 3 節那張表由上到下的順序取第幾顆。所以同一筆約診不管查幾次都是同一顆，預約成功通知與查詢清單裡的那一張也要是同一顆、同一色。</a></li></ol>
 </li>
 <li>
 <p class="t"><a href="#s4">綁定成功的自動回覆設定</a></p>
 <ol class="sub"><li><a href="#s4-1">用戶端送出的那一句「綁定成功」無法（或不建議）移除 —— 那是以病人的身分送進聊天室的，而且診所櫃檯會用那個號碼查病歷。</a></li>
 <li><a href="#s4-2">綁定成功之後跳出來的自動回覆，現況：LINE 商家帳號的自動回應只能設定一種，所以綁定那一刻跳出來的，和平常打字進去收到的是同一則。</a></li>
 <li><a href="#s4-3">其他商家帳號在綁定那一刻送的是另一則，和平常打字進去收到的不一樣 —— 潔客幫、中國信託、國泰世華、玉山四個帳號都是這樣。</a></li>
-<li><a href="#s4-4">同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆。 想請教他們的自動回應是怎麼設的，我們能不能照那個設法。</a></li></ol>
+<li><a href="#s4-4">同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆。 想請教他們的自動回應是怎麼設的，診所能不能照那個設法。</a></li></ol>
 </li>
 <li><p class="t"><a href="#s5">已完成項目</a></p></li>
 </ol>
@@ -261,7 +261,7 @@ ol.plan>li::before{content:none}
 <p class="note">還沒綁定的人按圖文選單「約診查詢」時，現在回的是公版那張藍色圖卡（圖、標題與按鈕都烘在同一張圖裡）。請換成下面這一張 Flex 卡：一張頭圖、一行標題、一顆按鈕。</p>
 <div class="pair">
 <figure><p class="k">現在（公版）</p><img src="../line-bind-prompt/shot-bind-prompt-old.png" width="804" height="759" style="width:268px" alt="現在跳出來的公版藍色圖卡">
-<figcaption>照你們現在那張重畫的結構（吉祥物沒有畫）。</figcaption></figure>
+<figcaption>照翔評現在那張重畫的結構（吉祥物沒有畫）。</figcaption></figure>
 <figure><p class="k">換成這一張</p><img src="../line-bind-prompt/shot-bind-prompt.png" width="804" height="714" style="width:268px" alt="要換上的綁定圖卡">
 <figcaption>卡片寬 268px 時的樣子。</figcaption></figure>
 </div>
@@ -269,9 +269,9 @@ ol.plan>li::before{content:none}
 <ul class="spec"><li>卡片　bubble <code>size: "mega"</code>、<code>paddingAll</code> 14px、<code>backgroundColor</code> #F4F4F5。</li>
 <li>頭圖　<code>hero</code>：<code>https://fangren.net/assets/line/hero-bind.jpg</code>（1024×512），<code>size: "full"</code>、<code>aspectRatio: "2:1"</code>、<code>aspectMode: "cover"</code>。</li>
 <li>標題　「30秒快速綁定　啟用完整服務」一行、<code>size: "md"</code>、粗體、<code>color</code> #2A2C27、<code>align: "center"</code>。中間那個全形空格請拆成一個 span、給 <code>size: "xxs"</code>（Flex 沒有字距可以設，空格要縮窄只能縮它自己的字級）。</li>
-<li>按鈕　和招呼圖卡那一顆「點這裡綁定」完全相同（下面的 JSON 就是從那一份照抄的）：可點的 box、底色 #3F654A、圓角 9px、內距 11px，裡面白色標誌 <code>mark-white.png</code> 34px ＋ 白色粗體字。按鈕的網址填你們系統的綁定網址。</li>
+<li>按鈕　和招呼圖卡那一顆「點這裡綁定」完全相同（下面的 JSON 就是從那一份照抄的）：可點的 box、底色 #3F654A、圓角 9px、內距 11px，裡面白色標誌 <code>mark-white.png</code> 34px ＋ 白色粗體字。按鈕的網址填翔評系統的綁定網址。</li>
 <li>其他格　還沒綁定的人按其他需要綁定的格子，若也是回同一張公版卡，請一起換成這一張。</li></ul>
-<h3 class="h3">Flex JSON<span class="t"><code>{{bind_url}}</code> 請填你們系統的綁定網址</span></h3>
+<h3 class="h3">Flex JSON<span class="t"><code>{{bind_url}}</code> 請填翔評系統的綁定網址</span></h3>
 <details><summary>展開這一張卡的 Flex JSON</summary>
 <pre class="json">{
   "type": "bubble",
@@ -360,33 +360,33 @@ ol.plan>li::before{content:none}
 </div>
 <h3 class="h3">做法</h3>
 <ul class="spec"><li>圖檔　<code>https://fangren.net/assets/line/hero-remind.jpg</code>（1024×512），2026-09-10 已經換成新圖。</li>
-<li>若你們是直接引用這個網址：LINE 端可能還拿著舊圖的快取，可以在網址後面加 <code>?v=20260910</code> 讓它重新抓。</li>
-<li>若你們有另外存一份到自己的主機：請重新下載這個檔案覆蓋。</li>
+<li>若翔評是直接引用這個網址：LINE 端可能還拿著舊圖的快取，可以在網址後面加 <code>?v=20260910</code> 讓它重新抓。</li>
+<li>若翔評有另外存一份到自己的主機：請重新下載這個檔案覆蓋。</li>
 <li>卡片的文字、按鈕、字級與顏色都不變。</li></ul>
 
 <h2 class="h2" id="s3">3　約診通知與紀錄查詢版面<span class="t">預約成功通知（單張）與約診紀錄查詢（輪播）</span></h2>
 <p class="note">預約成功通知（單張）與約診紀錄查詢（輪播）兩則。下面六項對應抬頭那六條。卡片一律畫成病人手機上的寬度：單張約 268px、輪播 micro 約 162px。</p>
 
-<h3 class="h3" id="s3-1">3-1　浮水印的大小與位置<span class="t">你們 2026-09-10 那一版，對照定稿</span></h3>
-<p style="font-size:.9rem;margin:.3em 0 0">你們 09-10 送來的那一版，浮水印是規格的五到六成大，而且往右下跑出卡片的量和規格不一樣。三張截圖與逐顆的比對如下。</p>
+<h3 class="h3" id="s3-1">3-1　浮水印的大小與位置<span class="t">翔評 2026-09-10 那一版，對照定稿</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">翔評 09-10 送來的那一版，浮水印是規格的五到六成大，而且往右下跑出卡片的量和規格不一樣。三張截圖與逐顆的比對如下。</p>
 <div class="vs">
 <figure><img src="../line-vendor/vendor-booked-a-0910.jpg" width="750" height="524" loading="lazy" alt="⑥ 預約成功通知（14:20）">
-<p class="t">你們送來的：⑥ 預約成功通知（14:20）</p>
+<p class="t">翔評送來的：⑥ 預約成功通知（14:20）</p>
 <figcaption>浮水印是<b>圓形</b>那一顆。</figcaption></figure>
 <figure><img src="../line-vendor/vendor-booked-b-0910.jpg" width="750" height="465" loading="lazy" alt="⑥ 同一則，三分鐘後（14:23）">
-<p class="t">你們送來的：⑥ 同一則，三分鐘後（14:23）</p>
+<p class="t">翔評送來的：⑥ 同一則，三分鐘後（14:23）</p>
 <figcaption>浮水印換成<b>寬的</b>那一顆，位置與大小也不一樣。</figcaption></figure>
 <figure><img src="../line-vendor/vendor-query-0910.jpg" width="750" height="507" loading="lazy" alt="⑦ 約診紀錄查詢（14:18）">
-<p class="t">你們送來的：⑦ 約診紀錄查詢（14:18）</p>
+<p class="t">翔評送來的：⑦ 約診紀錄查詢（14:18）</p>
 <figcaption>病人按下之後跳出的已約診時段。橫著滑的輪播，右邊那一張被切一半。日期「2026/09/11 11:50 星期五」完整顯示。</figcaption></figure>
 </div>
-<h4 class="h4">同一張卡、同一顆浮水印：我們要的 vs 你們送來的</h4>
+<h4 class="h4">同一張卡、同一顆浮水印：診所要的 vs 翔評送來的</h4>
 <div class="cmpwrap">
 <p class="cmpt">圓形（口腔外科紫）・預約成功通知</p>
 <div class="cmprow"><figure class="cmp">
 <svg viewBox="-6 -6 300 145"
   width="300" height="145"
-  role="img" aria-label="我們要的：浮水印 104px，往右 18、往下 10">
+  role="img" aria-label="診所要的：浮水印 104px，往右 18、往下 10">
 <defs><clipPath id="clip-1"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
@@ -400,7 +400,7 @@ ol.plan>li::before{content:none}
 <rect x="182.00" y="27.00" width="104" height="104.00"
   fill="none" stroke="#8e6299" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
-<figcaption><b>我們要的</b>　104px・卡寬的 38.8%<br><b>定案</b>：往右下溢出 18／10px（更像浮水印，整顆不會整張貼在角落）。這一顆 104px，看得到的那一塊右下被卡片切掉。</figcaption>
+<figcaption><b>診所要的</b>　104px・卡寬的 38.8%<br><b>定案</b>：往右下溢出 18／10px（更像浮水印，整顆不會整張貼在角落）。這一顆 104px，看得到的那一塊右下被卡片切掉。</figcaption>
 </figure>
 <figure class="cmp">
 <svg viewBox="-6 -6 300 145"
@@ -427,7 +427,7 @@ ol.plan>li::before{content:none}
 <div class="cmprow"><figure class="cmp">
 <svg viewBox="-6 -6 300 145"
   width="300" height="145"
-  role="img" aria-label="我們要的：浮水印 150px，往右 18、往下 10">
+  role="img" aria-label="診所要的：浮水印 150px，往右 18、往下 10">
 <defs><clipPath id="clip-3"><rect x="0" y="0" width="268" height="121" rx="9"/></clipPath></defs>
 <rect x="0" y="0" width="268" height="121" rx="9" fill="#ffffff"/>
 <foreignObject x="0" y="0" width="268" height="121"><div xmlns="http://www.w3.org/1999/xhtml" class="cb"><p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p></div></foreignObject>
@@ -441,7 +441,7 @@ ol.plan>li::before{content:none}
 <rect x="136.00" y="57.07" width="150" height="73.93"
   fill="none" stroke="#317d78" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
 </svg>
-<figcaption><b>我們要的</b>　150px・卡寬的 56.0%<br><b>定案</b>：往右下溢出 18／10px（更像浮水印，整顆不會整張貼在角落）。這一顆 150px，看得到的那一塊右下被卡片切掉。</figcaption>
+<figcaption><b>診所要的</b>　150px・卡寬的 56.0%<br><b>定案</b>：往右下溢出 18／10px（更像浮水印，整顆不會整張貼在角落）。這一顆 150px，看得到的那一塊右下被卡片切掉。</figcaption>
 </figure>
 <figure class="cmp">
 <svg viewBox="-6 -6 300 145"
@@ -473,7 +473,7 @@ ol.plan>li::before{content:none}
   style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
   fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
 </div>
-<figcaption><b>我們要的</b>　150px・卡寬的 72.5%<br><b>定案</b>：往右下溢出 18／10px，右下那一塊被卡片切掉。</figcaption>
+<figcaption><b>診所要的</b>　150px・卡寬的 72.5%<br><b>定案</b>：往右下溢出 18／10px，右下那一塊被卡片切掉。</figcaption>
 </figure>
 <figure class="stwrap">
 <div class="carcard stcard cb">
@@ -483,19 +483,19 @@ ol.plan>li::before{content:none}
   style="right:-18px;bottom:-10px"><g transform="translate(-232.961 508.04) scale(1 -1)"><path
   fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 240.209 487.446 C 241.935 486.069 245.46 485.682 249.029 487.213 C 253.879 489.293 257.918 488.395 262.026 486.949 C 263.228 486.526 267.473 485.41 270.118 487.153 C 273.262 489.224 280.279 498.838 275.826 504.844 C 272.119 509.845 266.349 507.596 265.114 507.153 C 260.697 505.569 253.068 503.774 243.299 507.364 C 241.585 507.994 236.084 509.263 233.702 504.844 C 231.137 500.086 235.697 491.047 240.209 487.446 M 264.256 489.721 C 264.505 489.794 264.6 489.812 264.842 489.721 C 265.006 489.66 265.227 489.671 265.388 489.721 C 265.913 489.884 266.431 490.92 266.336 492.238 C 266.241 493.555 262.849 493.372 262.852 492.238 C 262.855 491.334 263.179 490.17 263.625 489.854 C 263.817 489.718 263.959 489.634 264.256 489.721"/></g></svg>
 </div>
-<figcaption><b>廠商送來的</b>　80px・卡寬的 38.6%<br>從你們 09-10 那張輪播的截圖量出來的。</figcaption>
+<figcaption><b>廠商送來的</b>　80px・卡寬的 38.6%<br>從翔評 09-10 那張輪播的截圖量出來的。</figcaption>
 </figure>
 </div>
 <h4 class="h4">位置與大小的規格</h4>
 <ul class="spec"><li><code>position: "absolute"</code>，貼卡片右下角，<b>往右溢出 18px、往下溢出 10px</b>，跑出去的那一塊由卡片切掉。</li>
-<li>Flex 的 <code>offsetEnd</code>／<code>offsetBottom</code> 不吃負值，所以 JSON 裡只能寫 <code>0px</code>。你們 09-10 那一版已經做出溢出（量到 8~10／6~7px），請照你們的做法，把溢出量統一成 18／10px。</li>
+<li>Flex 的 <code>offsetEnd</code>／<code>offsetBottom</code> 不吃負值，所以 JSON 裡只能寫 <code>0px</code>。翔評 09-10 那一版已經做出溢出（量到 8~10／6~7px），請照翔評的做法，把溢出量統一成 18／10px。</li>
 <li><b>浮水印在最底層</b>：姓名、日期、灰字與約診狀態那一列（標籤與藥丸）都要不透明地壓在浮水印上面，浮水印不可以蓋到字或把藥丸刷淡。Flex 裡排在後面的元件會畫在上面，而一個 box 的第一個子元件不可以是 absolute —— 做法之一是 contents 依序放：一個空的 box → 浮水印 image（absolute）→ 文字那一塊 box。請送一則測試訊息確認疊的順序。</li>
 <li><code>size</code> 是<b>寬度</b>，每一顆、每一則各有自己的值（九顆的寬度不一樣是刻意的，照墨的面積算，看起來才一樣重）—— 見 3-2 與 3-3 那兩張表。<code>aspectRatio</code> 也是每一顆各自的值，<code>aspectMode: "fit"</code>。</li></ul>
 <p class="note">九顆畫在兩則卡片上的樣子：預約成功通知見 <a href="#s3-2">3-2</a>、約診紀錄查詢見 <a href="#s3-3">3-3</a>；挑哪一顆的規則見 <a href="#s3-6">3-6</a>。</p>
 
 <h3 class="h3" id="s3-2">3-2　預約成功通知・定稿<span class="t">九顆浮水印的顏色與色碼</span></h3>
 <p style="font-size:.9rem;margin:.3em 0 0">單張那一則。浮水印用<b>每一顆自己的顏色</b>、濃度 12%（淡是烘在 PNG 裡的，Flex 的 image 沒有 opacity）。</p>
-<ul class="spec"><li>卡片　bubble <code>size: "mega"</code>、<code>paddingAll</code> 14px、<code>backgroundColor</code> #FFFFFF（你們現在跑的就是純白，不必換）。</li>
+<ul class="spec"><li>卡片　bubble <code>size: "mega"</code>、<code>paddingAll</code> 14px、<code>backgroundColor</code> #FFFFFF（翔評現在跑的就是純白，不必換）。</li>
 <li>四行字與字級照 <code>booked-card.json</code>：〔病人姓名〕＋「　約好囉」<code>md</code>／日期 <code>lg</code> 粗體 <code>margin</code> 6px／兩行灰字 <code>xs</code> #5C5F57（<code>margin</code> 14px、5px）。每一格都 <code>wrap: true</code>。</li>
 <li>浮水印　<code>url</code> 照下表「單張網址」、<code>size</code> 照「單張 size」。</li></ul>
 <div class="tabw"><table class="tab"><thead><tr>
@@ -557,7 +557,7 @@ ol.plan>li::before{content:none}
 <td>168 × 50.3px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r3c3-12.png</code></td></tr>
 </tbody></table></div>
-<p class="note">「卡上看到的顏色」＝ 原色以 12% 的濃度疊在卡片底色 #FFFFFF 上的結果（淡是烘在 PNG 的 alpha 裡的），給你們對照畫面用；Flex 裡不必填這個色碼，填上表的網址就好。</p>
+<p class="note">「卡上看到的顏色」＝ 原色以 12% 的濃度疊在卡片底色 #FFFFFF 上的結果（淡是烘在 PNG 的 alpha 裡的），給翔評對照畫面用；Flex 裡不必填這個色碼，填上表的網址就好。</p>
 <h4 class="h4">尺寸與位置的示意（卡片 mega 約 268px 寬）</h4>
 <div class="dgs"><figure class="dg">
 <div class="dgbox" style="width:268px">
@@ -684,13 +684,13 @@ ol.plan>li::before{content:none}
 
 <h3 class="h3" id="s3-3">3-3　約診紀錄查詢・定稿<span class="t">卡片 micro、浮水印淡墨素色</span></h3>
 <p style="font-size:.9rem;margin:.3em 0 0">輪播那一則。浮水印一律<b>淡墨素色</b>：柔墨 #5c5f57、濃度 12%（檔名 <code>wm-&lt;形狀&gt;-ink12.png</code>），形狀、位置與 3-2 相同。</p>
-<ul class="spec"><li>卡片　bubble <code>size: "micro"</code>（你們現在跑的是 <code>deca</code>，這一項要換）。<b>同一條輪播裡每一張都要是同一個 size</b>，整組一起換。</li>
+<ul class="spec"><li>卡片　bubble <code>size: "micro"</code>（翔評現在跑的是 <code>deca</code>，這一項要換）。<b>同一條輪播裡每一張都要是同一個 size</b>，整組一起換。</li>
 <li><code>paddingAll</code> 14px、<code>backgroundColor</code> #FFFFFF。</li>
 <li>兩行字：〔病人姓名〕<code>md</code> #5C5F57／日期 <code>lg</code> 粗體 <code>margin</code> 6px，接著是約診狀態那一列（見 3-4）。</li>
 <li>日期　micro 放不下一行，請在這一則的日期值裡帶一個換行：<code>2026/09/11</code> 換行 <code>星期五 11:50</code>（見 3-5）。</li>
 <li>浮水印　<code>url</code> 照下表「輪播網址」、<code>size</code> 照「輪播 size」。三顆長形（r1c3／r2c3／r3c3）在輪播上收窄過，括號裡是原寬。</li>
 <li><b>浮水印的尺寸與位置（每一顆不一樣，請照下表，不要自己估）</b>：<code>position: "absolute"</code>，貼卡片<b>右下角</b>；圖的<b>右緣在卡片右緣再往右 18px、下緣在卡片下緣再往下 10px</b>，跑出卡片的那一截由卡片切掉。<code>size</code> ＝ 表上的寬（px），高度由 <code>aspectRatio</code> 決定（表上也列出換算後的高）；<code>aspectMode: "fit"</code>。</li>
-<li>Flex 的 <code>offsetEnd</code>／<code>offsetBottom</code> 不吃負值，JSON 只能寫 <code>0px</code>；請照你們 09-10 那一版做出溢出的做法，把溢出量統一成 18／10px。浮水印在最底層，姓名、日期與約診狀態那一列壓在它上面（見 3-1）。</li></ul>
+<li>Flex 的 <code>offsetEnd</code>／<code>offsetBottom</code> 不吃負值，JSON 只能寫 <code>0px</code>；請照翔評 09-10 那一版做出溢出的做法，把溢出量統一成 18／10px。浮水印在最底層，姓名、日期與約診狀態那一列壓在它上面（見 3-1）。</li></ul>
 <div class="tabw"><table class="tab"><thead><tr>
 <th>#</th><th>形狀</th><th>原色（檔案用的）</th><th>卡上看到的顏色</th><th><code>aspectRatio</code></th><th>寬 <code>size</code></th><th>高</th>
 <th>位置（對卡片右下角）</th><th>露在卡內</th><th>輪播網址 <code>url</code></th>
@@ -750,7 +750,7 @@ ol.plan>li::before{content:none}
 <td>124 × 36.1px</td>
 <td><code class="url">https://fangren.net/assets/line/wm-r3c3-ink12.png</code></td></tr>
 </tbody></table></div>
-<p class="note">「卡上看到的顏色」＝ 淡墨 #5C5F57 以 12% 疊在卡片底色 #FFFFFF 上的結果，給你們對照畫面用；Flex 裡不必填這個色碼。</p>
+<p class="note">「卡上看到的顏色」＝ 淡墨 #5C5F57 以 12% 疊在卡片底色 #FFFFFF 上的結果，給翔評對照畫面用；Flex 裡不必填這個色碼。</p>
 <h4 class="h4">尺寸與位置的示意（卡片 micro 約 162px 寬）</h4>
 <div class="dgs"><figure class="dg">
 <div class="dgbox" style="width:162px">
@@ -953,10 +953,10 @@ ol.plan>li::before{content:none}
 
 <h3 class="h3" id="s3-5">3-5　日期的順序</h3>
 <div class="tabw"><table class="tab tabv"><tbody>
-<tr><td>你們現在</td><td><code>2026/09/11 11:50 星期五</code></td></tr>
+<tr><td>翔評現在</td><td><code>2026/09/11 11:50 星期五</code></td></tr>
 <tr><td>請改成</td><td><code>2026/09/11 星期五 11:50</code></td></tr>
 </tbody></table></div>
-<ul class="spec"><li>四樣東西（年月日／星期幾／時間）照你們 09-10 那一版，一個字都不換，只調順序：星期幾接在日期後面、時間放最後。</li>
+<ul class="spec"><li>四樣東西（年月日／星期幾／時間）照翔評 09-10 那一版，一個字都不換，只調順序：星期幾接在日期後面、時間放最後。</li>
 <li>單張（mega）　一行：<code>2026/09/11 星期五 11:50</code>。</li>
 <li>輪播（micro）　卡片窄、放不下一行，值裡帶一個換行：<code>2026/09/11</code> ＋ <code>\n</code> ＋ <code>星期五 11:50</code>，星期幾不會被折斷。</li>
 <li>兩則的日期那一格都要 <code>wrap: true</code>、<b>不要 <code>maxLines</code></b>（設了會被截成「…星...」）。</li></ul>
@@ -989,13 +989,13 @@ ol.plan>li::before{content:none}
 <td><b>r3c3</b></td><td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td></tr>
 </tbody></table></div>
 
-<h2 class="h2" id="s4">4　綁定成功的自動回覆設定<span class="t">現況、我們想要的做法、想請教的兩題</span></h2>
+<h2 class="h2" id="s4">4　綁定成功的自動回覆設定<span class="t">現況、診所想要的做法、想請教的兩題</span></h2>
 <ol class="sub4"><li id="s4-1">用戶端送出的那一句「綁定成功」無法（或不建議）移除 —— 那是以病人的身分送進聊天室的，而且診所櫃檯會用那個號碼查病歷。</li>
 <li id="s4-2">綁定成功之後跳出來的自動回覆，現況：LINE 商家帳號的自動回應只能設定一種，所以綁定那一刻跳出來的，和平常打字進去收到的是同一則。</li>
 <li id="s4-3">其他商家帳號在綁定那一刻送的是另一則，和平常打字進去收到的不一樣 —— 潔客幫、中國信託、國泰世華、玉山四個帳號都是這樣。</li>
-<li id="s4-4">同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆。 想請教他們的自動回應是怎麼設的，我們能不能照那個設法。</li></ol>
+<li id="s4-4">同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆。 想請教他們的自動回應是怎麼設的，診所能不能照那個設法。</li></ol>
 <div class="pair">
-<figure><p class="k">現況：我們的帳號，綁定那一刻</p><img src="../line-vendor/bind-live-0912.jpg" width="750" height="1551" loading="lazy" alt="綁定完成那一刻病人那一側的畫面">
+<figure><p class="k">現況：診所的帳號，綁定那一刻</p><img src="../line-vendor/bind-live-0912.jpg" width="750" height="1551" loading="lazy" alt="綁定完成那一刻病人那一側的畫面">
 <figcaption>12:06 病人那一側送出「✅ 09xxxxxxxx 綁定成功！…」（右邊、綠泡泡），同一分鐘帳號回了那一則通用的自動回應。門號已遮。</figcaption></figure>
 <figure><p class="k">想接在那一句後面送的：綁定完成卡</p><img src="../line-bind-done/shot-bind-done.png" width="804" height="1857" style="width:268px" loading="lazy" alt="綁定完成卡">
 <figcaption>已定稿（Flex JSON 在 /preview/line-spec/ 的 ③）。</figcaption></figure>
@@ -1041,12 +1041,12 @@ ol.plan>li::before{content:none}
 <td>—</td><td>—</td></tr>
 </tbody></table></div>
 <h3 class="h3" id="s4-plan">綁定成功的方案優先順序</h3>
-<ol class="spec plan"><li><b>自動發送綁定成功圖卡</b>：像其他幾家帳號那樣，綁定成功之後另外發送一則綁定成功的訊息 —— 就是上面那張「綁定完成卡」。綁定成功那一句是你們的系統送出的，系統在那一刻就知道綁定完成，不必比對任何字串。</li>
+<ol class="spec plan"><li><b>自動發送綁定成功圖卡</b>：像其他幾家帳號那樣，綁定成功之後另外發送一則綁定成功的訊息 —— 就是上面那張「綁定完成卡」。綁定成功那一句是翔評的系統送出的，系統在那一刻就知道綁定完成，不必比對任何字串。</li>
 <li><b>綁定成功用戶端訊息送出後，後台不自動發送回覆</b>：像新竹品御牙醫那樣，綁定成功那一句之後不再跳出通用的自動回應；平常病人打字進來，照舊回通用的那一則。</li></ol>
 <h3 class="h3">想請教</h3>
-<ul class="spec"><li>新竹品御牙醫（同一套系統）綁定成功那一句之後沒有跳出通用回覆，他們的自動回應是怎麼設的？我們能不能照那個設法？</li>
-<li>若改由你們系統在綁定當下送綁定完成卡，後台的自動回應同時開著，會不會兩則一起送？</li></ul>
-<p class="note">你們 09-10 的回覆：綁定成功那一句不能拿掉（需通知病患、櫃檯可用號碼查資料），它發出時會觸發自動回應，而官方 LINE 的自動回應無法抓關鍵字跳不同訊息。</p>
+<ul class="spec"><li>新竹品御牙醫（同一套系統）綁定成功那一句之後沒有跳出通用回覆，他們的自動回應是怎麼設的？診所能不能照那個設法？</li>
+<li>若改由翔評系統在綁定當下送綁定完成卡，後台的自動回應同時開著，會不會兩則一起送？</li></ul>
+<p class="note">翔評 09-10 的回覆：綁定成功那一句不能拿掉（需通知病患、櫃檯可用號碼查資料），它發出時會觸發自動回應，而官方 LINE 的自動回應無法抓關鍵字跳不同訊息。</p>
 
 <h2 class="h2" id="s5">5　已完成項目<span class="t">6 則，不需要再調整</span></h2>
 <p class="note">以下六則已經定稿，文字、圖檔網址與 Flex JSON 在 /preview/line-spec/，不需要再調整。</p>

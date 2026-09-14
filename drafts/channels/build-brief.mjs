@@ -503,8 +503,13 @@ ${DONE.map((r) => `<div class="msg"><span class="ims">${img("../line-vendor/t-" 
 </html>
 `;
 
+/* 2026-09-14 使用者：「提案頁裡 你們 改成 翔評、我們 改成 診所」—— 整頁一次換。
+   ⚠ 「」裡是別家帳號自己送的原文（例如富邦的「恭喜成為我們的綁定好友」），不可以動。 */
+const 稱謂 = (t) => t.split(/(「[^」]*」)/).map((seg, i) =>
+  i % 2 ? seg : seg.replace(/你們/g, "翔評").replace(/我們/g, "診所")).join("");
+const out = 稱謂(html);
 mkdirSync(OUT, { recursive: true });
-writeFileSync(join(OUT, "index.html"), html);
+writeFileSync(join(OUT, "index.html"), out);
 console.log(`✓ preview/line-brief/index.html　${(html.length / 1024).toFixed(1)}KB`);
 console.log(`  卡寬：單張 ${BUB.mega}px・輪播 micro ${BUB.car}px・溢出 ${OFF.right}／${OFF.bottom}px`);
 console.log(`  九顆例日：${例日.map((f, i) => `${WM[i].n}=${f.m}/${f.d}`).join(" ")}`);

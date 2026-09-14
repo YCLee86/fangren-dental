@@ -88,7 +88,12 @@ if (!has("⑦")) ok(`⑦ ${imgs} 張圖都對，資料夾裡只有 index.html`);
 /* ⑧ 未定案逐字 */
 const B = JSON.parse(fs.readFileSync(path.join(HERE, "brief.json"), "utf8"));
 const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const 印 = (t) => String(t).split(/\*\*|`/).map((x) => esc(x).trim()).filter((x) => x.length >= 2)
+/* 頁面上「你們／我們」一律換成「翔評／診所」（「」裡的原文除外），比對前照樣換一次 */
+const 稱謂 = (t) => String(t).split(/(「[^」]*」)/).map((seg, i) =>
+  i % 2 ? seg : seg.replace(/你們/g, "翔評").replace(/我們/g, "診所")).join("");
+if (/(^|」)[^「]*(你們|我們)/.test(本文.replace(/<[^>]+>/g, "").replace(/「[^」]*」/g, "")))
+  bad.push("⑧ 頁面上還有「你們」或「我們」沒換成翔評／診所");
+const 印 = (t) => 稱謂(t).split(/\*\*|`/).map((x) => esc(x).trim()).filter((x) => x.length >= 2)
   .every((x) => html.includes(x));
 let n8 = 0;
 for (const x of B.未定案) {
