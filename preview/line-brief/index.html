@@ -190,6 +190,10 @@ code{font-size:.92em}
 .gs{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:16px 12px;margin:1em 0 0}
 .gm{display:grid;grid-template-columns:repeat(auto-fill,minmax(162px,1fr));gap:16px 12px;margin:1em 0 0}
 .cw{margin:0}
+/* 2026-09-14 使用者：「約診狀態的藥丸和文字應該是不透明的，排列順序要壓在淡墨 logo 浮水印上」——
+   浮水印是 absolute、排在文字後面，會畫在字與藥丸上面（藥丸看起來被刷淡）。字那幾行拉到上層。 */
+.cw .stcard>p{position:relative;z-index:1}
+.cw .stcard .wm{z-index:0}
 .cw figcaption{font-size:.74rem;color:var(--soft);line-height:1.6;margin-top:.25em}
 pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:10px 12px;
   font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.9em 0 0}
@@ -470,7 +474,7 @@ code.url{font-size:.78em;white-space:nowrap}
 <h4 class="h4">位置與大小的規格</h4>
 <ul class="spec"><li><code>position: "absolute"</code>，貼卡片右下角，<b>往右溢出 18px、往下溢出 10px</b>，跑出去的那一塊由卡片切掉。</li>
 <li>Flex 的 <code>offsetEnd</code>／<code>offsetBottom</code> 不吃負值，所以 JSON 裡只能寫 <code>0px</code>。你們 09-10 那一版已經做出溢出（量到 8~10／6~7px），請照你們的做法，把溢出量統一成 18／10px。</li>
-<li>一個 box 的第一個子元件不可以是 absolute：先放文字那一塊 box，浮水印排在它後面。</li>
+<li><b>浮水印在最底層</b>：姓名、日期、灰字與約診狀態那一列（標籤與藥丸）都要不透明地壓在浮水印上面，浮水印不可以蓋到字或把藥丸刷淡。Flex 裡排在後面的元件會畫在上面，而一個 box 的第一個子元件不可以是 absolute —— 做法之一是 contents 依序放：一個空的 box → 浮水印 image（absolute）→ 文字那一塊 box。請送一則測試訊息確認疊的順序。</li>
 <li><code>size</code> 是<b>寬度</b>，每一顆、每一則各有自己的值（九顆的寬度不一樣是刻意的，照墨的面積算，看起來才一樣重）—— 見 3-2 與 3-3 那兩張表。<code>aspectRatio</code> 也是每一顆各自的值，<code>aspectMode: "fit"</code>。</li></ul>
 <p class="note">九顆畫在兩則卡片上的樣子：預約成功通知見 <a href="#s3-2">3-2</a>、約診紀錄查詢見 <a href="#s3-3">3-3</a>；挑哪一顆的規則見 <a href="#s3-6">3-6</a>。</p>
 
@@ -884,10 +888,7 @@ code.url{font-size:.78em;white-space:nowrap}
 <h3 class="h3">想請教</h3>
 <ul class="spec"><li>新竹品御牙醫（同一套系統）綁定成功那一句之後沒有跳出通用回覆，他們的自動回應是怎麼設的？我們能不能照那個設法？</li>
 <li>若改由你們系統在綁定當下送綁定完成卡，後台的自動回應同時開著，會不會兩則一起送？</li></ul>
-<div class="pair">
-<figure><p class="k">你們 2026-09-10 的回覆</p><img src="../line-vendor/reply-0910.jpg" width="750" height="1080" loading="lazy" alt="廠商 2026-09-10 的回覆">
-<figcaption>你們 09-10 的回覆：綁定成功那一句不能拿掉（需通知病患、櫃檯可用號碼查資料），它發出時會觸發自動回應，而官方 LINE 的自動回應無法抓關鍵字跳不同訊息。</figcaption></figure>
-</div>
+<p class="note">你們 09-10 的回覆：綁定成功那一句不能拿掉（需通知病患、櫃檯可用號碼查資料），它發出時會觸發自動回應，而官方 LINE 的自動回應無法抓關鍵字跳不同訊息。</p>
 
 <h2 class="h2" id="s5">5　已完成項目<span class="t">6 則，不需要再調整</span></h2>
 <p class="note">以下六則已經定稿，文字、圖檔網址與 Flex JSON 在 /preview/line-spec/，不需要再調整。</p>

@@ -244,6 +244,10 @@ ${CSS}
 .gs{display:grid;grid-template-columns:repeat(auto-fill,minmax(${BUB.mega}px,1fr));gap:16px 12px;margin:1em 0 0}
 .gm{display:grid;grid-template-columns:repeat(auto-fill,minmax(${BUB.car}px,1fr));gap:16px 12px;margin:1em 0 0}
 .cw{margin:0}
+/* 2026-09-14 使用者：「約診狀態的藥丸和文字應該是不透明的，排列順序要壓在淡墨 logo 浮水印上」——
+   浮水印是 absolute、排在文字後面，會畫在字與藥丸上面（藥丸看起來被刷淡）。字那幾行拉到上層。 */
+.cw .stcard>p{position:relative;z-index:1}
+.cw .stcard .wm{z-index:0}
 .cw figcaption{font-size:.74rem;color:var(--soft);line-height:1.6;margin-top:.25em}
 pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:10px 12px;
   font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.9em 0 0}
@@ -374,10 +378,7 @@ ${WM.map((s2, i) => `<tr><td>${esc(例日[i].ymd)} ${esc(例日[i].wd)}</td><td>
 ${list(B.s4.想要的)}
 <h3 class="h3">想請教</h3>
 ${list(B.s4.請教)}
-<div class="pair">
-<figure><p class="k">你們 2026-09-10 的回覆</p>${img("../line-vendor/reply-0910.jpg", "廠商 2026-09-10 的回覆")}
-<figcaption>${bb(B.s4.回覆)}</figcaption></figure>
-</div>
+<p class="note">${bb(B.s4.回覆)}</p>
 
 <h2 class="h2" id="s5">5　已完成項目<span class="t">${DONE.length} 則，不需要再調整</span></h2>
 <p class="note">${bb(B.s5.說)}</p>
