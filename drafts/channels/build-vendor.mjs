@@ -125,6 +125,25 @@ const WM_A = (() => {
   return Number(uniq[0]) / 100;
 })();
 
+/* ── 浮水印在兩則上各要畫多寬（2026-09-14 定案）─────────────────────────
+   ⚠⚠⚠ 九顆的寬度是按墨的面積正規化的（等重、但不等寬 104~215px），而兩則的
+     卡片寬差 106px —— 同一顆在兩則上要畫不同的寬。兩張倍率表的**唯一出處是
+     preview/line-booked/index.html**（SPREAD1／WIDEK2），這裡讀回來、不抄第二份：
+     抄一份之後改一邊，交出去的兩份規格會靜靜地分家。 */
+const WM_TABLES = (() => {
+  const page = readFileSync(
+    join(ROOT, "preview", "line-booked", "index.html"), "utf8");
+  const one = (name) => {
+    const m = page.match(new RegExp("var " + name + " = \\{([^}]*)\\};"));
+    if (!m) throw new Error(`line-booked 那一頁上找不到 ${name} 那張定案的表`);
+    const o = {};
+    for (const [, k, v] of m[1].matchAll(/(\w+):\s*(\.?[\d.]+)/g)) o[k] = parseFloat(v);
+    if (!Object.keys(o).length) throw new Error(`${name} 讀出來是空的`);
+    return o;
+  };
+  return { single: one("SPREAD1"), car: one("WIDEK2") };
+})();
+
 const WM = (() => {
   const sizes = JSON.parse(
     readFileSync(join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
@@ -234,6 +253,15 @@ const 輪 = (() => {
   const i2 = (Number(m[1]) + Number(m[2])) % WM.length;
   return WM[i2];
 })();
+
+/* 這一顆在**哪一則**上要畫幾 px。單張往九顆的幾何平均收窄（指數內插），
+   輪播是那三顆 3.08:1 的各乘一個倍率。⚠ 兩則不一樣，所以一定要帶 isCar。 */
+const WM_GM = Math.exp(WM.reduce((a, s2) => a + Math.log(s2.w), 0) / WM.length);
+const wmWidth = (s2, isCar) => {
+  if (isCar) return Math.round(s2.w * (WM_TABLES.car[s2.n] || 1));
+  const t = WM_TABLES.single[s2.n];
+  return t ? Math.round(s2.w * Math.pow(WM_GM / s2.w, t)) : s2.w;
+};
 
 const WM_BOX = (1 / Math.max(...WM.map((s) => s.pct / 100 / s.ratio))).toFixed(4);
 
@@ -614,8 +642,9 @@ const OFF = (() => {
 })();
 const onCard = `<div class="onnine">
 ${WM.map((s) => plate(s.n, {
-  標: s.科, size: s.w, right: OFF.right, bottom: OFF.bottom,
-  註: `${s.n}・往右下溢出 ${OFF.right}／${OFF.bottom}px，右下那一塊被卡片切掉`,
+  標: s.科, size: wmWidth(s, false), right: OFF.right, bottom: OFF.bottom,
+  註: `${s.n}・往右下溢出 ${OFF.right}／${OFF.bottom}px，右下那一塊被卡片切掉`
+    + (wmWidth(s, false) === s.w ? "" : `（單張這一欄：${s.w} → ${wmWidth(s, false)}px）`),
 }, INK)).join("\n")}
 </div>`;
 
@@ -631,7 +660,7 @@ const SET = SC.定案, PILLVAL = SC.藥丸.值;
    卡片畫成輪播上真正的寬度，兩行內容與日期的寫法照廠商 09-10 那一版，
    浮水印是定案那一種（淡墨、往右下溢出，偏移量和第 3 節那九張同一個出處）。
    ⚠ 日期在這個寬度上會折成兩行 —— 那正是「那一格不要限制行數」的樣子，不是破圖。 */
-const wmSvg = (s2, off) => `<svg class="wm" width="${s2.w}" height="${(s2.w / s2.ratio).toFixed(2)}"
+const wmSvg = (s2, off, isCar = true) => `<svg class="wm" width="${wmWidth(s2, isCar)}" height="${(wmWidth(s2, isCar) / s2.ratio).toFixed(2)}"
   viewBox="0 0 ${s2.vw} ${s2.vh}" preserveAspectRatio="none" aria-hidden="true"
   style="right:${-off.right}px;bottom:${-off.bottom}px"><g transform="${s2.gt}"><path
   fill="${INK}" fill-opacity="${WM_A}" fill-rule="evenodd" d="${s2.d}"/></g></svg>`;

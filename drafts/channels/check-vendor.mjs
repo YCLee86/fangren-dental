@@ -443,6 +443,48 @@ if (!bad.some((x) => x.startsWith("⑩"))) ok("⑩ 沒有 undefined、兩個方�
   const plates = (on.match(/<figure class="cmp">/g) || []).length;
   if (plates !== 9) bad.push(`⑮ 九顆上卡那一排畫了 ${plates} 張，應該是九張`);
 
+  /* ⚠⚠⚠ 寬度：2026-09-14 起**兩則各一欄**（單張 r3c2→131／r3c3→186、
+     輪播 r1c3→141／r2c3→141／r3c3→142）。兩張倍率表的唯一出處是
+     preview/line-booked/index.html 的 SPREAD1／WIDEK2 —— 這一頁要**讀回來算**，
+     在 build-vendor 裡抄一份的話，交出去的兩份規格會靜靜地分家。
+     ⚠ 那九張畫的是**單張那一欄**（卡片 268px）。 */
+  {
+    const page = fs.readFileSync(
+      path.join(ROOT, "preview", "line-booked", "index.html"), "utf8");
+    const one = (n) => {
+      const m = page.match(new RegExp("var " + n + " = \\{([^}]*)\\};"));
+      const o = {};
+      if (m) for (const [, k, v] of m[1].matchAll(/(\w+):\s*(\.?[\d.]+)/g)) o[k] = parseFloat(v);
+      return o;
+    };
+    const SP1 = one("SPREAD1"), WK2 = one("WIDEK2");
+    if (!Object.keys(SP1).length || !Object.keys(WK2).length)
+      bad.push("⑮ line-booked 那一頁上讀不到 SPREAD1／WIDEK2 兩張定案的表");
+    const sz = JSON.parse(fs.readFileSync(
+      path.join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
+    const ns = Object.keys(sz).sort();
+    const gm = Math.exp(ns.reduce((a2, n) => a2 + Math.log(sz[n].w), 0) / ns.length);
+    const want = (n) => SP1[n] ? Math.round(sz[n].w * Math.pow(gm / sz[n].w, SP1[n])) : sz[n].w;
+    /* ⚠⚠⚠ 要驗**真的畫成幾 px**，不是驗註解那一句 —— 只改 size、註解照舊算的話，
+       圖畫小了而註解還寫著對的數字，那一道等於沒開（2026-09-14 負向測到）。
+       每一張 <figure> 的 aria-label 裡就寫著它真正畫的寬度。 */
+    for (const chunk of on.split('<figure class="cmp">').slice(1)) {
+      const n = (chunk.match(/([a-z]\dc\d)・往右下溢出/) || [])[1];
+      if (!n || !sz[n]) { bad.push("⑮ 九顆上卡那一排有一張認不出是哪一顆"); continue; }
+      if (!chunk.includes(`浮水印 ${want(n)}px`))
+        bad.push(`⑮ 九顆上卡那一排的 ${n} 沒有照單張那一欄畫成 ${want(n)}px`);
+    }
+    if (!/const wmWidth = \(s2, isCar\)/.test(
+          fs.readFileSync(path.join(HERE, "build-vendor.mjs"), "utf8")))
+      bad.push("⑮ build-vendor 沒有把兩則的寬度分開算（wmWidth(s2, isCar)）—— 兩則會畫成同一個寬度");
+    if (!/var SPREAD1 = /.test(fs.readFileSync(path.join(HERE, "build-vendor.mjs"), "utf8"))
+        && !/one\("SPREAD1"\)/.test(fs.readFileSync(path.join(HERE, "build-vendor.mjs"), "utf8")))
+      bad.push("⑮ build-vendor 沒有從 line-booked 那一頁讀那兩張表 —— 抄一份就會分家");
+    const wr = LOG.浮水印?.定案?.條?.find((t) => t.includes("寬度"));
+    if (!wr || !/watermark_size_single/.test(wr) || !/watermark_size_carousel/.test(wr))
+      bad.push("⑮ 定案那幾條沒有寫出「兩則各一欄」與那兩個欄位名 —— 廠商會照舊填一個 size");
+  }
+
   /* 顏色：定案是淡墨素色，所以那九張與九宮格底下那一排都不可以是各科的原色 */
   const ink = LOG.浮水印?.顏色?.值;
   if (!/^#[0-9a-f]{6}$/i.test(ink || "")) bad.push("⑮ vendor-log.json 沒有寫浮水印的色碼");

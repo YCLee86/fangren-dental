@@ -76,9 +76,16 @@
     "  ・按位置輪流 ✗：取消一筆，後面每一張全部換人。",
     "  ・隨機 ✗：同一筆每次看都不一樣，讀起來就是壞掉。",
     "  ・算不了的退路：整包同一顆，或兩則各固定一顆（靜態、零依賴）。",
-    "⚠⚠ **九顆的寬度各不相同**（`watermark_size`），因為它們有四種長寬比；",
-    "  同寬的話細長那幾顆看起來會輕很多。那九個數字是按**墨的面積**算出來的，",
-    "  唯一的出處是 preview/line-booked/wm-sizes.json，**不要自己改**。",
+    "⚠⚠ **九顆的寬度各不相同**，因為它們有四種長寬比；同寬的話細長那幾顆看起來會輕很多。",
+    "  基準的那九個數字是按**墨的面積**算出來的，唯一的出處是",
+    "  preview/line-booked/wm-sizes.json，**不要自己改**。",
+    "⚠⚠⚠ **兩則的寬度不一樣，那不是筆誤**（2026-09-14 使用者逐顆挑的）——",
+    "  單張吃 `watermark_size_single`、輪播吃 `watermark_size_carousel`：",
+    "  ・單張（mega 268px）：r3c2 106→131、r3c3 215→186，其餘七顆不動。",
+    "    （九顆的寬度差 2.07 倍，在這張大卡上圓的那顆讀起來偏小、最長的那顆太吵。）",
+    "  ・輪播（micro 162px）：r1c3 188→141、r2c3 188→141、r3c3 215→142，其餘六顆不動。",
+    "    （那三顆 3.08:1 的原本整顆比卡片還寬，橫貫整張卡、左邊也被切掉。）",
+    "  同一顆 r3c3 因此在兩則上是 186px 與 142px —— **請照那一則自己那一欄**。",
     "⚠⚠ **淡是烘在 PNG 的 alpha 裡的**（Flex 的 image 沒有 opacity）。",
     "  檔名末兩碼是濃度：08 / 12 / 18，**這一版用 12**。",
     "⚠⚠ **box 沒有背景圖**（`background` 只認 linearGradient），所以浮水印是一個",
@@ -111,63 +118,72 @@
     "r1c1": {
       "科別": "一般牙科",
       "色": "#3f654a",
-      "watermark_size": "107px",
+      "watermark_size_single": "107px",
+      "watermark_size_carousel": "107px",
       "watermark_ratio": "1:1",
       "url": "https://fangren.net/assets/line/wm-r1c1-12.png"
     },
     "r1c2": {
       "科別": "牙周治療",
       "色": "#317d78",
-      "watermark_size": "150px",
+      "watermark_size_single": "150px",
+      "watermark_size_carousel": "150px",
       "watermark_ratio": "2.029:1",
       "url": "https://fangren.net/assets/line/wm-r1c2-12.png"
     },
     "r1c3": {
       "科別": "齒顎矯正",
       "色": "#4478b5",
-      "watermark_size": "188px",
+      "watermark_size_single": "188px",
+      "watermark_size_carousel": "141px",
       "watermark_ratio": "3.084:1",
       "url": "https://fangren.net/assets/line/wm-r1c3-12.png"
     },
     "r2c1": {
       "科別": "顯微根管",
       "色": "#ae4f4d",
-      "watermark_size": "152px",
+      "watermark_size_single": "152px",
+      "watermark_size_carousel": "152px",
       "watermark_ratio": "2.025:1",
       "url": "https://fangren.net/assets/line/wm-r2c1-12.png"
     },
     "r2c2": {
       "科別": "植牙・假牙重建",
       "色": "#465885",
-      "watermark_size": "120px",
+      "watermark_size_single": "120px",
+      "watermark_size_carousel": "120px",
       "watermark_ratio": "1.332:1",
       "url": "https://fangren.net/assets/line/wm-r2c2-12.png"
     },
     "r2c3": {
       "科別": "口腔外科",
       "色": "#8e6299",
-      "watermark_size": "188px",
+      "watermark_size_single": "188px",
+      "watermark_size_carousel": "141px",
       "watermark_ratio": "3.081:1",
       "url": "https://fangren.net/assets/line/wm-r2c3-12.png"
     },
     "r3c1": {
       "科別": "口腔外科",
       "色": "#8e6299",
-      "watermark_size": "104px",
+      "watermark_size_single": "104px",
+      "watermark_size_carousel": "104px",
       "watermark_ratio": "1:1",
       "url": "https://fangren.net/assets/line/wm-r3c1-12.png"
     },
     "r3c2": {
       "科別": "兒童牙科",
       "色": "#c28229",
-      "watermark_size": "106px",
+      "watermark_size_single": "131px",
+      "watermark_size_carousel": "106px",
       "watermark_ratio": "0.999:1",
       "url": "https://fangren.net/assets/line/wm-r3c2-12.png"
     },
     "r3c3": {
       "科別": "一般牙科",
       "色": "#3f654a",
-      "watermark_size": "215px",
+      "watermark_size_single": "186px",
+      "watermark_size_carousel": "142px",
       "watermark_ratio": "3.083:1",
       "url": "https://fangren.net/assets/line/wm-r3c3-12.png"
     }
@@ -233,7 +249,7 @@
         {
           "type": "image",
           "url": "https://fangren.net/assets/line/wm-{{watermark}}-12.png",
-          "size": "{{watermark_size}}",
+          "size": "{{watermark_size_single}}",
           "aspectRatio": "{{watermark_ratio}}",
           "aspectMode": "fit",
           "position": "absolute",
@@ -282,7 +298,7 @@
             {
               "type": "image",
               "url": "https://fangren.net/assets/line/wm-{{watermark}}-12.png",
-              "size": "{{watermark_size}}",
+              "size": "{{watermark_size_carousel}}",
               "aspectRatio": "{{watermark_ratio}}",
               "aspectMode": "fit",
               "position": "absolute",

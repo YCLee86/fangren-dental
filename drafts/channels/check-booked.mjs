@@ -34,6 +34,7 @@ const ROOT = path.resolve(HERE, "..", "..");
 const DIR = path.join(ROOT, "preview", "line-booked");
 const JSONF = path.join(HERE, "booked-card.json");
 const SIZESF = path.join(DIR, "wm-sizes.json");
+const PAGE = path.join(DIR, "index.html");
 
 const card = JSON.parse(fs.readFileSync(JSONF, "utf8"));
 const sizes = JSON.parse(fs.readFileSync(SIZESF, "utf8"));
@@ -114,6 +115,25 @@ ok(!/"backgroundColor":"(?!#F4F4F5)/.test(dump.replace(/\s/g, "")) ||
   "這兩則上不該有淡底彩色方塊 —— 那是給警示與行動用的");
 
 /* ---- ④⑤⑥ 浮水印：對照表 ↔ wm-sizes.json ↔ 真的 PNG ------------------ */
+/* ---- 兩則各自的浮水印寬度（＝規格頁那兩張定案的表，這裡現算一次去對）----
+   ⚠ 倍率的出處只有一個：規格頁的 SPREAD1／WIDEK2。守門把它們**從頁面讀回來**，
+     不要在這裡抄一份 —— 抄了之後改一邊，兩邊會靜靜地分家。 */
+const SPREAD1 = readTable("SPREAD1"), WIDEK2 = readTable("WIDEK2");
+function readTable(name) {
+  const m = fs.readFileSync(PAGE, "utf8").match(
+    new RegExp("var " + name + " = \\{([^}]*)\\};"));
+  if (!m) { bad.push(`規格頁上找不到 ${name} 那張定案的表`); return {}; }
+  const o = {};
+  for (const [, k, v] of m[1].matchAll(/(\w+):\s*(\.?[\d.]+)/g)) o[k] = parseFloat(v);
+  return o;
+}
+const GM = Math.exp(ORDER.reduce((a, n) => a + Math.log(sizes[n].w), 0) / ORDER.length);
+function wantW(n, isQuery) {
+  const w = sizes[n].w;
+  if (isQuery) return Math.round(w * (WIDEK2[n] || 1));
+  return SPREAD1[n] ? Math.round(w * Math.pow(GM / w, SPREAD1[n])) : w;
+}
+
 const table = card["_浮水印"];
 ok(Object.keys(table).length === 9, `浮水印對照表該有九筆，現在 ${Object.keys(table).length}`);
 ok(JSON.stringify(Object.keys(table)) === JSON.stringify(ORDER),
@@ -121,8 +141,15 @@ ok(JSON.stringify(Object.keys(table)) === JSON.stringify(ORDER),
 for (const n of ORDER) {
   const t = table[n], z = sizes[n];
   if (!t || !z) { bad.push(`浮水印 ${n} 少了一邊`); continue; }
-  ok(t.watermark_size === z.w + "px",
-    `浮水印 ${n} 的寬度 ${t.watermark_size} 對不上 wm-sizes.json 的 ${z.w}px`);
+  /* ⚠⚠⚠ 2026-09-14 起**兩則各一欄**（使用者逐顆挑的）：單張 r3c2→131／r3c3→186，
+     輪播 r1c3→141／r2c3→141／r3c3→142，其餘維持 wm-sizes.json 的原寬。
+     ⚠ 這裡**現算一次**去對，不在守門裡再抄一份數字 —— 抄一份就是第三個真相。 */
+  ok(t.watermark_size_single === wantW(n, false) + "px",
+    `浮水印 ${n} 的單張寬度 ${t.watermark_size_single} 對不上算出來的 ${wantW(n, false)}px`);
+  ok(t.watermark_size_carousel === wantW(n, true) + "px",
+    `浮水印 ${n} 的輪播寬度 ${t.watermark_size_carousel} 對不上算出來的 ${wantW(n, true)}px`);
+  ok(!("watermark_size" in t),
+    `浮水印 ${n} 還留著舊的 watermark_size —— 兩則的寬度不一樣，那一欄已經拆成兩欄`);
   ok(t.watermark_ratio === z.ratio + ":1",
     `浮水印 ${n} 的長寬比 ${t.watermark_ratio} 對不上 wm-sizes.json 的 ${z.ratio}`);
   ok(t["色"].toLowerCase() === z.color.toLowerCase(),
@@ -146,7 +173,7 @@ for (const n of ORDER) {
    **畫面完全正常**，而在一張 218.6 的卡上判斷「放不放得下」全是假的
    （2026-09-12 的 pv-slot5/6 已經踩過一次，見 README 第 50-18 節）。 */
 {
-  const html = fs.readFileSync(path.join(DIR, "index.html"), "utf8");
+  const html = fs.readFileSync(PAGE, "utf8");
   const LINES = [[".car", "overflow-x:auto;scrollbar-width"],
                  [".car .row", "gap:8.7px"],
                  [".car .pv-hc", "flex:none;width:var(--carw"]];
@@ -217,43 +244,21 @@ for (const n of ORDER) {
   ok(/right:var\(--wmr,-18px\)/.test(html),
     "浮水印的 right 沒有吃 --wmr（或退回值不是 -18px）—— 尺會按了沒反應");
   ok(/--wmr:' \+ wmr \+ 'px/.test(html), "卡片沒有把 wmr 寫進 style —— 那把尺不會生效");
-  for (const id of ["pv-wmx", "pv-panelwx", "pv-cwd", "pv-panelcw"])
-    ok(html.includes(`id="${id}"`), `少了尺的容器 #${id}`);
-  ok(/var WMX = \[/.test(html) && /var CWD = STEPS\.filter/.test(html),
-    "兩把尺的格子不見了（或 CWD 又被寫成一組固定的 px）");
-  ok(/drawScale\("pv-wmx", WMX\)/.test(html) && /drawScale\("pv-cwd", CWD\)/.test(html),
-    "尺沒有被畫出來");
-  /* ⚠⚠⚠ 卡片寬度**不是我們挑得了的**（LINE 的七個固定階，而且輪播是整組一起換）——
-     這幾句不可以從頁面上消失，不然那幾格看起來會像一把我們轉得動的旋鈕。 */
-  for (const n of ["這一把尺我們挑不了",
-                   "必須是同一個 <code>size</code>",
-                   "LINE 官方一個 px 都沒有公布"])
-    ok(html.includes(n), `②之四 少了「${n}」那一句 —— 那幾格會看起來像我們挑得了的`);
-  /* ⚠⚠ 拼法是 deca 不是 deci（2026-09-13 更正）。 */
-  /* ⚠⚠ 掃「deci」一定會撞到頁面上那句「拼法是 deca 不是 deci」自己
-     （這條線第七次踩到「掃字撞到自己的說明」）—— 那一處包在 <span data-spell> 裡，
-     掃之前剝掉，**而且要驗那個標記還在、只有一個**，不然整段拿掉就等於把這一道關掉。 */
-  {
-    const marks = html.match(/<span data-spell>deci<\/span>/g) || [];
-    ok(marks.length === 1, "頁面上那句「拼法是 deca 不是 deci」的 data-spell 標記不見了或不只一個");
-    const t = html.replace(/<span data-spell>[\s\S]*?<\/span>/g, "");
-    ok(!/deci(?![a-z])/.test(t), "頁面上又出現 deci —— 那一階的拼法是 deca");
-  }
-  /* ⚠⚠⚠ 那幾格的寬度要**從方塊表算出來**，不可以再寫死一組 px
-     （2026-09-13 之前是憑感覺的 185／165／145，畫出來的每一格都不是 LINE 真的有的階）。 */
-  ok(/var STEPS = \[\{ k: "nano", b: 7 \}/.test(html) && /k: "giga", b: 26/.test(html),
-    "方塊表（STEPS）不見了或格數被改過 —— 那是卡米哥量出來的，不是我們挑的");
-  ok(/var BLK = 20;/.test(html) && /var CPAD = 14;/.test(html),
-    "一格 20px 或 paddingAll 14 這兩個常數不見了 —— 那張表換算回 px 全靠它們");
-  ok(/function bubblePx\(s\) \{ return BLK \* s\.b \* kScale\(\) \+ CPAD \* 2; \}/.test(html),
-    "bubblePx 沒有從格數算 —— 尺上的寬度不可以是寫死的 px");
-  ok(!/\{ n: "\d+px", w: \d+ \}/.test(html),
-    "②之四 又出現寫死的 px 格子 —— 那些寬度不是 LINE 真的有的階");
-  /* ⚠⚠⚠ 藥丸那一列是 flex（項目預設 flex-shrink: 1），在窄卡上會被壓縮 ——
-     不先切成 max-content 再量，「內容本來要多寬」會回一個被壓過的數字，
-     nano 那一格因此印成「放不下（差 0px）」**而畫面完全正常**（2026-09-13 踩到）。 */
-  ok(/st\.style\.width = "max-content";/.test(html),
-    "widest() 沒有先把藥丸那一列切成 max-content —— 窄卡上會量到被壓縮後的寬度");
+  /* ---- 那兩把尺 2026-09-14 收掉了，留下來的是它們量出來的那一件事 ------
+     ⚠⚠⚠ 「浮水印往左移多少」從來沒挑，而且和「往右溢出 18px」那個定案互相矛盾；
+       「卡片可不可以窄一點」micro 已經定案。**尺收掉了，數字不可以跟著消失。**
+     ⚠ 留下來的是：卡片換成 micro 之後，第 ② 節那張（**自由折行** ＝ 09-13 給廠商
+       的那一版）折在「星期／四」中間 —— 那正是 09-13 使用者退回過的樣子。 */
+  ok(/id="pv-panel-dtwarn"/.test(html), "少了第 ② 節那張日期的量測面板 #pv-panel-dtwarn");
+  ok(/var s2 = document\.querySelector\("#pv-slot2 \.pv-hc \.dt"\);/.test(html),
+    "那一段沒有去量第 ② 節那張卡本人 —— 上面那幾張吃的是指定斷行，量不到它");
+  /* ⚠ 判準是「星期X 那三個字要整段落在同一行」，不可以只數行數 ——
+     折成兩行是對的，折在「星期／四」中間才是壞的，兩者行數一模一樣。 */
+  ok(/var s2tok = "星期" \+ APPTS\[0\]\.w;/.test(html)
+     && /!s2ln\.some\(function \(L\) \{ return L\.s\.indexOf\(s2tok\) >= 0; \}\)/.test(html),
+    "那一段沒有現場量「星期幾有沒有被折斷」—— 只數行數分不出來");
+  ok(html.includes("治得住的只有<b>指定斷行</b>"),
+    "那一段沒有寫出唯一治得住的做法（指定斷行）");
   /* ⚠⚠⚠ 「量到的」和「我們要的」是兩件事，要分開存（2026-09-14）：
      MEAS_STEP/MEAS_W 是 padding 校正對出來的**廠商現在跑的那一階**（deca／207px，
      它同時是比例尺的錨），WANT_STEP 是**使用者定案要換過去的那一階**（micro）。
@@ -307,9 +312,9 @@ for (const n of ORDER) {
   /* ⚠ 2026-09-14：①之二 那把尺插在這兩段中間了（它也吃「單張那一則」那一組變數），
      所以換回去的那一行現在排在 `spreadT = 0; fillSpreadPanel();` 後面。
      兩件一起守：那把尺畫完要還原成 0，而且三個共用變數要在它之後換回輪播那一組。 */
-  ok(/spreadT = 0;\s*\n\s*fillSpreadPanel\(\);[\s\S]{0,400}dtm = "brk"; wmink = true; stat = "pill";/
+  ok(/getElementById\("pv-panel-nine1"\)[\s\S]{0,3000}dtm = "brk"; wmink = true; stat = "pill";/
       .test(html),
-    "①之二 那把尺畫完沒有還原成 0，或三個共用變數沒有在它之後換回輪播那一組 —— 底下三把尺會整批畫錯而且不報錯");
+    "單張那一排畫完沒有把三個共用變數換回輪播那一組 —— 底下那一段量測會畫錯而且不報錯");
   ok(/'<div style="--cw:' \+ MEGA_W \+ 'px">[\s\S]{0,200}nwCard\(a, false, k, SHAPES\.length\)/.test(html),
     "單張那一排不是用 nwCard(…, false) 畫成 MEGA_W 寬 —— 那就不是「真的那張卡」了");
   ok(/var pairBad = SHAPES\.filter/.test(html)
@@ -330,81 +335,72 @@ for (const n of ORDER) {
      連 shot-booked.png／shot-query.png 都會跟著變，**而畫面上一切正常**
      （2026-09-13 踩到，是出圖的位元組變了才發現）。
      ⚠ 不可以只用 includes 找 `dtm = "free"` —— 宣告變數那一行本身就寫著它。 */
-  ok(/drawScale\("pv-cwd", CWD\);[\s\S]{0,9000}dtm = "free";\s*\n\s*wmink = false;\s*\n\s*stat = "";\s*\n\s*wideK = 1;\s*\n\s*spreadT = 0;/
+  ok(/getElementById\("pv-panel-dtwarn"\)[\s\S]{0,3000}dtm = "free";\s*\n\s*wmink = false;\s*\n\s*stat = "";/
       .test(html),
-    "畫完沒有把 dtm／wmink／stat／wideK／spreadT 還原（或還原排在幾把尺前面）—— 第二次 render 會把 ①② 一起畫成第 ②之二 節那一版");
+    "畫完沒有把 dtm／wmink／stat 還原（或還原排在那一段量測前面）—— 第二次 render 會把 ①② 一起畫成第 ②之二 節那一版");
 
-  /* ---- ①之二　九顆在這張卡上要多大（2026-09-14 使用者看出來的）--------
-     ⚠⚠⚠ 起因是他講的兩句話方向相反（1/6＝r3c2 偏小、1/7＝r3c3 太大），
-       所以整組放大或整組縮小都治不了 —— 唯一同時治得到的是把九顆的**寬度差距**收窄。
-       這一把尺動的因此是「等重 ↔ 等寬」那條軸，不是倍率。 */
-  /* ⚠ 要指名**宣告**那一行（接在 wideK 後面），不可以只找 `spreadT = 0;` ——
-     還原那兩處寫的是同一串字，預設值被改掉照樣會通過。 */
-  ok(/wideK = 1,[\s\S]{0,400}\n\s*spreadT = 0;/.test(html) && /function spreadK\(sn\)/.test(html)
-     && /Math\.pow\(g \/ SIZES\[sn\]\.w, spreadT\)/.test(html),
-    "spreadT 的預設值（0 ＝ 現況）或 spreadK() 那條幾何平均的內插不見了");
+  /* ---- 浮水印要畫多寬：兩則各一張定案的表（2026-09-14 使用者逐顆挑的）----
+     ⚠⚠⚠ 兩則的倍率**不一樣**，所以 nwCard 一定要把 isQuery 帶進去；
+       只看形狀的話同一顆在兩則上會畫成同一個寬度，**而畫面完全正常**。 */
+  ok(/var SPREAD1 = \{ r3c2: \.70, r3c3: \.35 \};/.test(html),
+    "①之二 定案那張表（單張：r3c2 .70／r3c3 .35）不見了或值被改過");
+  ok(/var WIDEK2 = \{ r1c3: \.75, r2c3: \.75, r3c3: \.66 \};/.test(html),
+    "②之五 定案那張表（輪播：r1c3 .75／r2c3 .75／r3c3 .66）不見了或值被改過");
+  ok(/function wmK\(sn, isQuery\)/.test(html)
+     && /Math\.pow\(g \/ SIZES\[sn\]\.w, t\)/.test(html),
+    "wmK() 或那條幾何平均的內插不見了 —— 單張那兩顆不可以寫死成兩個 px");
   ok(/function gmW\(\)/.test(html) && /s \+= Math\.log\(SIZES\[SHAPES\[i\]\]\.w\)/.test(html),
     "幾何平均不是從 wm-sizes.json 現算的 —— 寫死一個數字的話換過形狀就會靜靜地算錯");
-  const sp4 = html.match(/var SP = \[([\s\S]*?)\];/);
-  ok(sp4 && (sp4[1].match(/\{ t:/g) || []).length === 4,
-    `①之二 那把尺不是四格（數到 ${sp4 ? (sp4[1].match(/\{ t:/g) || []).length : "—"} 格）`);
-  ok([1, 2, 3, 4].every((j) => html.includes('id="pv-sp' + j + '"')
-       && html.includes('id="pv-splb' + j + '"')) && /id="pv-panel-spread"/.test(html),
-    "①之二 那四格、它們的小標或面板不見了");
-  /* ⚠ 四格要畫**真的那張卡**（MEGA_W、彩色浮水印、不斷行），不是另外畫一個示意圖。 */
-  ok(/SP\.forEach\(function \(x, j\) \{\s*\n\s*spreadT = x\.t;/.test(html)
-     && /getElementById\("pv-sp" \+ \(j \+ 1\)\)[\s\S]{0,300}nwCard\(a, false, k, SHAPES\.length\)/
-        .test(html),
-    "①之二 那四格不是靠 spreadT 畫出來的、或不是用 nwCard 畫成 MEGA_W 寬的真卡");
-  /* ⚠⚠⚠ 兩個量都要印：**佔卡寬**（他講的那件事）與**看得到的墨**（收窄要付的代價）——
-     只印其中一個會把人帶去改錯的東西（同 ②之五 那一道）。
-     ⚠ 要找**印出來的那一段**，不要用 includes 掃整份：這一頁把「為什麼」寫在自己的
-       註解裡，掃整份會掃到說明本身（這條線第八次撞到同一件事）。 */
-  ok(/\+ "px・佔卡寬 <b>"/.test(html) && /"　每一顆看得到的墨對 Ⓐ："/.test(html),
-    "①之二 的面板少了「佔卡寬」或「看得到的墨」—— 那兩個量要一起看");
-  /* ⚠⚠ 那九個寬度是**兩則共用的**（wm-sizes.json 是唯一出處）：這裡挑 Ⓑ 以上，
-     輪播那一則跟著換，而 ②之五 那把尺就要重算或收掉。頁面上那句話要在。 */
-  ok(html.includes("那九個寬度是兩則共用的"),
-    "①之二 的面板沒有寫「這九個寬度是兩則共用的、挑定之後輪播也會跟著換」");
-  ok(/fillSpreadPanel\(\);/.test(html)
-     && /if \(!im\.complete\) im\.addEventListener\("load", fillSpreadPanel/.test(html),
-    "圖載完之後沒有重填 ①之二 的面板 —— 那幾格會一直印「—」");
-
-  /* ---- ②之五　那三顆細長的要多大（2026-09-14 使用者看出來的）----------
-     ⚠⚠⚠ 那三顆 3.08:1 的在 micro 上**整顆比卡片還寬**，所以橫貫整張卡、
-       左邊還被切掉 —— 那是換成 micro 才長出來的第二層效應（deca 上九顆都收在卡內）。 */
-  ok(/WIDE3 = \["r1c3", "r2c3", "r3c3"\],\s*\n\s*wideK = 1,/.test(html),
-    "WIDE3 那份名單或 wideK 的預設值（1 ＝ 現況）不見了");
-  /* ⚠⚠ 兩把尺相乘：wideK 只動那三顆（②之五）、spreadK 動九顆（①之二）。
-     少乘一把的話那一節按了沒反應、不報錯、畫面完全正常。 */
-  ok(/var wk = \(WIDE3\.indexOf\(sn\) >= 0 \? wideK : 1\) \* spreadK\(sn\);/.test(html)
-     && /var ww = Math\.round\(sz\.w \* wk\);/.test(html),
-    "nwCard 沒有把兩把尺都乘上去 —— 那一節會按了沒反應、而且不報錯");
-  ok(/id="pv-w1"/.test(html) && /id="pv-w2"/.test(html) && /id="pv-w3"/.test(html)
-     && /id="pv-panel-wide"/.test(html),
-    "②之五 那三條尺或它的面板不見了");
-  /* ⚠ 三顆一起乘同一個倍率 —— 各縮各的會破壞「彼此等墨」（2026-09-04 那條規則）。 */
-  ok(/WIDE3\.forEach\(function \(sn, j\) \{[\s\S]{0,600}wideK = x\.k;/.test(html),
-    "②之五 那三條尺不是三顆共用同一把 WK —— 各縮各的就不再彼此等墨");
-  const wk4 = html.match(/var WK = \[([\s\S]*?)\];/);
-  ok(wk4 && (wk4[1].match(/\{ k:/g) || []).length === 4,
-    `②之五 那把尺不是四格（數到 ${wk4 ? (wk4[1].match(/\{ k:/g) || []).length : "—"} 格）`);
-  /* ⚠⚠ 名單不可以和資料分家：WIDE3 就是 wm-sizes.json 裡長寬比 > 2.5 的那幾顆，
-     面板要現場驗一次（寫死的名單哪天對不上，畫面完全正常）。 */
-  ok(/SIZES\[n\]\.ratio > 2\.5/.test(html) && /real\.join\(\) === WIDE3\.join\(\)/.test(html),
-    "面板沒有現場驗「WIDE3 ＝ wm-sizes.json 裡長寬比 > 2.5 的那幾顆」");
-  /* ⚠⚠⚠ 「扁扁的」有兩個互相獨立的量：**佔掉卡片多寬**與**多少墨**。
-     只印其中一個會把人帶去改錯的東西 —— 兩個都要在面板上。
-     ⚠ 而且墨要**真的去讀像素**，不可以用倍率²推一個數字出來。 */
-  /* ⚠ 不可以只用 includes 找那兩個詞 —— 這一頁把「為什麼」寫在自己的註解裡，
-     掃整份會掃到說明本身（這條線第八次撞到同一件事）。要找**印出來的那一段**。 */
+  ok(/var ww = Math\.round\(sz\.w \* wmK\(sn, isQuery\)\);/.test(html),
+    "nwCard 沒有把 isQuery 帶進 wmK —— 兩則會畫成同一個寬度而且不報錯");
+  ok(/function wmW\(sn, isQuery\)/.test(html),
+    "wmW() 不見了 —— 面板與規格表的 px 要現算，不可以另外打一份");
+  /* ⚠⚠ 尺收掉了，但它們量出來的兩個量不可以跟著消失：
+     **佔掉卡片多寬**（使用者講的那件事）與**多少墨**（收窄要付的代價）。
+     ⚠ 要找**印出來的那一段**，不要用 includes 掃整份 —— 這一頁把「為什麼」寫在
+       自己的註解裡，掃整份會掃到說明本身（這條線第八次撞到同一件事）。 */
+  ok(/id=['"]pv-ninewide['"]/.test(html) && /id=['"]pv-nine1wide['"]/.test(html),
+    "兩排那幾顆「被縮過的」現在有多重 —— 那兩塊量測不見了");
   ok(/\+ "，佔卡寬 <b>"/.test(html) && /\+ "，看得到的墨 "/.test(html),
-    "②之五 的面板少了「佔卡寬」或「看得到的墨」—— 那兩個量要一起看");
+    "面板少了「佔卡寬」或「看得到的墨」—— 那兩個量要一起看");
   ok(/function inkOn\(im, cb\)/.test(html) && /getImageData\(0, 0, nw, nh\)/.test(html),
     "墨不是現場讀像素量出來的 —— 用公式推一個數字出來，那一欄就只是在重複倍率");
-  ok(/fillWidePanel\(\);/.test(html)
-     && /if \(!im\.complete\) im\.addEventListener\("load", fillWidePanel/.test(html),
-    "圖載完之後沒有重填 ②之五 的面板 —— 那幾格會一直印「—」");
+  ok(/function inkRows\(hostSel, only, isQuery\)/.test(html)
+     && /fillInkNotes\(\);/.test(html)
+     && /if \(!im\.complete\) im\.addEventListener\("load", fillInkNotes/.test(html),
+    "圖載完之後沒有重填那兩塊量測 —— 會一直印「—」");
+  /* ⚠⚠⚠ 三顆**不再共用同一個倍率**（0.75／0.75／0.66），所以 2026-09-04 那條
+     「彼此等墨」在輪播那一則不再成立 —— 那是挑定的取捨，頁面上要寫出來，
+     不然日後有人會把它「訂正」回同一個數字。 */
+  ok(html.includes("不再共用同一個倍率"),
+    "頁面上沒有寫「三顆不再共用同一個倍率，所以彼此不再等墨」—— 那是挑定的取捨");
+  ok(/WIDE3 = \["r1c3", "r2c3", "r3c3"\];/.test(html),
+    "WIDE3 那份名單不見了");
+  /* ⚠⚠ 名單不可以和資料分家：WIDE3 就是 wm-sizes.json 裡長寬比 > 2.5 的那幾顆。 */
+  ok(/SIZES\[n\]\.ratio > 2\.5/.test(html) || /ratio > 2\.5/.test(html),
+    "沒有任何一處把 WIDE3 對回 wm-sizes.json 的長寬比");
+
+  /* ---- 第 ③ 節：給廠商工程師的規格（2026-09-14 使用者要的）------------
+     ⚠⚠⚠ 整張表要**算出來**，不可以在頁面上再打一份 px —— 打了之後倍率一改，
+       交出去的規格會靜靜地開始說謊。 */
+  ok(/id="pv-spec"/.test(html) && /function wmSpec\(\)/.test(html) && /\n    wmSpec\(\);/.test(html),
+    "第 ③ 節那份規格（#pv-spec／wmSpec()／render 裡呼叫它）不見了");
+  /* ⚠ 要指名**那一段**：wmW() 在別的面板裡也出現，掃整份的話把這裡改成 z.w 照樣會過。 */
+  ok(/var rows = ALL9\.map\(function \(n\) \{[\s\S]{0,300}wmW\(n, false\)[\s\S]{0,80}wmW\(n, true\)/
+      .test(html),
+    "規格表那幾格不是用 wmW() 現算的 —— 寫死的數字會跟頁面分家");
+  for (const t of ["一、挑哪一顆", "二、九顆：色碼、長寬比、兩則各要畫多寬",
+                   "三、擺在對話框裡的哪裡", "四、卡片本身"])
+    ok(html.includes(t), `規格少了「${t}」那一段`);
+  /* ⚠ 四件缺一不可：規則、色碼、位置（含 Flex 不吃負值那一句）、bubble 的階。 */
+  for (const t of ["形狀 ＝ 順序[(月 ＋ 日) % 9]",
+                   "不吃負值",
+                   "同一條輪播必須整組一起換",
+                   "aspectMode",
+                   "一定要 <code>wrap: true</code>、不要 <code>maxLines</code>"])
+    ok(html.includes(t), `規格少了「${t}」那一句 —— 少了它廠商會照舊做`);
+  ok(html.includes("第一個子元件不可以是 absolute"),
+    "規格少了「一個 box 的第一個子元件不可以是 absolute」—— 照寫會整張畫不出來");
 
   /* ⚠⚠⚠ 開頁那段 fetch 的 catch 不可以把 render() 的例外一起吞掉
      （2026-09-13 踩過：畫面停在「讀不到 wm-sizes.json」、不報錯）。 */
@@ -417,8 +413,15 @@ for (const n of ORDER) {
 const wmEl = BOOKED.body.contents[1];
 ok(/\{\{watermark\}\}/.test(wmEl.url), "浮水印的網址要用 {{watermark}} 變數（哪一顆由系統算）");
 ok(/-12\.png$/.test(wmEl.url), "浮水印定案用濃度 12");
-ok(wmEl.size === "{{watermark_size}}" && wmEl.aspectRatio === "{{watermark_ratio}}",
-  "浮水印的 size 與 aspectRatio 要跟著那一顆走（九顆各不相同）");
+ok(wmEl.size === "{{watermark_size_single}}" && wmEl.aspectRatio === "{{watermark_ratio}}",
+  "單張那一則的浮水印 size 要吃 {{watermark_size_single}}（兩則的寬度不一樣）");
+{
+  const q = QUERY.body.contents[1];
+  ok(q && q.size === "{{watermark_size_carousel}}" && q.aspectRatio === "{{watermark_ratio}}",
+    "輪播那一則的浮水印 size 要吃 {{watermark_size_carousel}}（兩則的寬度不一樣）");
+  ok(!/\{\{watermark_size\}\}/.test(JSON.stringify(card)),
+    "JSON 裡還留著舊的 {{watermark_size}} —— 那個佔位符已經拆成兩個");
+}
 
 /* ---- ⑦ 紅線 --------------------------------------------------------- */
 const LIE = ["隨時問", "都可以問", "問到", "有人回", "馬上回", "找得到人", "有專人"];
