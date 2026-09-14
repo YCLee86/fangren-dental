@@ -7,16 +7,46 @@ if(s!=='light'&&s!=='dark')s='auto';
 var mq=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)');
 r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;})();</script>
 <meta name="robots" content="noindex, nofollow, noarchive">
+<!-- =============================================================================
+     科別著陸頁　兒童牙科　/topics/kids/
+     -----------------------------------------------------------------------------
+     ⚠⚠ **這一頁是產生出來的，不要手改。**
+       由 tools/topics.mjs 從 index.html 產生（是那一份的快照）。
+       ・要改**文字** → tools/topic-copy.mjs
+       ・要改**版型或樣式** → index.html（著陸頁的樣式在它樣式表的最後一段）
+       改完跑 `node tools/topics.mjs`，七頁一起重產。
+
+     為什麼是「index.html 的快照」而不是自己寫一頁（2026-08-18 使用者定案）
+     -----------------------------------------------------------------------------
+     「現在首頁怎麼做的著陸頁就怎麼做，只是增加篩選下的科別說明或介紹而已。」
+     照這個做法，chips、搜尋框、醫師卡、門診表、地圖的 CSS 與 JS 全部沿用，
+     不必抄第二份、也不會走樣。
+
+     兩個和 SEO 有關、不能省的處理
+     -----------------------------------------------------------------------------
+     ・**別科的文章與醫師是真的刪掉，不是靠 JS 藏起來** —— 靠 JS 篩的話
+       Google 抓到的仍然是七科全部，這一頁就不是這一科的頁了，繞回原點
+       （同 CLAUDE.md 第一節第 1 條的精神）。
+     ・**chips 是 <a> 不是 <button>** —— 按鈕沒有網址，爬蟲點不下去、
+       AI 引用不了、也分享不出去。那一排同時是全站的科別導覽列，
+       八頁互連，錨點文字正好是科別名。
+
+     ⚠ 「按下那一科」的套色（醫師專長淡色填滿、專科藥丸退階、文章標籤套色）
+       是在**產生時就寫進 HTML** 的（第 7.5 步）—— 那三件在首頁是 JS 掛的 class，
+       而這一頁的 chips 已經是連結、沒有人按，JS 不會跑到那一段。
+
+     文字的推導、每一科被退回幾次、為什麼這樣寫：COPY.md 第九節（九之一 ~ 九之十九），
+     方法的總表在第九之十七節「著陸頁的檢查表」。
+     ============================================================================= -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- <title> 不只給 Google —— Safari 分頁、書籤、加到主畫面、iOS 的分享面板
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
      「在地四十年」拿掉的理由和頁尾那句一樣：每年都在漂，沒人會回來改。 -->
-<title>（夜間模式提案）芳仁牙醫診所｜雲林斗六・永樂街</title>
+<title>（夜間模式提案）兒童牙科 — 芳仁牙醫診所（雲林斗六）</title>
 <!-- 這句只出現在搜尋結果，可以長。「1983 年創立」和「現址永樂街」要分開講 ——
      1983 年開的是中華路那間。 -->
-<meta name="description" content="芳仁牙醫診所，1983 年創立，現址雲林縣斗六市永樂街。這裡整理刷牙、牙周、兒童牙科、缺牙重建與定期檢查的衛教文章。">
 <meta name="theme-color" content="#12656a">
 <!-- 分享到 LINE／FB 時對方看到的卡片。這幾行畫面上看不到，只有各家的爬蟲會讀。
      ⚠⚠ 2026-08-22 整組換掉了（推導在 /history/og-home.html）。
@@ -27,16 +57,12 @@ r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;}
      ③ 地名與 1983 那些事實**現在印在圖上了**，卡片上再寫一次是浪費那兩行。
      現在只留詩的第四句，逐字取自站上已上線的那一行。
      ⚠ 氣泡只露兩行（實測 27 個全形字），這一句 12 個字，一行就放得下。 -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="芳仁牙醫診所">
 <!-- 分隔符有兩階，不是隨便挑的：全形直線切三個並列的段落，
      中點只用在地址內部（縣市／街名）—— 那是同一段裡的細分，不該和上一階同重量。
      試過並否決的：全形空格（像 HERO 那首詩的斷句，刻意留白感）、
      連續兩個半形空格（以 HTML 解析的爬蟲會併成一個，寬度不保證）、
      整句都用中點（三顆同重量的點，讀起來碎）。 -->
-<meta property="og:description" content="到巷口的芳仁　一起想辦法">
 <meta property="og:site_name" content="芳仁牙醫診所">
-<meta property="og:url" content="https://fangren.net/">
 <!-- 原本沒設 og:image，那張夜景是 LINE 自己從頁面裡撿的 —— 版面一改就可能變成別張。
      ⚠⚠ 2026-08-22 換成專門做的 /assets/og-home.jpg（由 tools/og-home.mjs 產生）。
      原本直接指 hero-clinic-night.jpg，量出來兩個問題：
@@ -47,11 +73,6 @@ r.dataset.thsrc=s;r.dataset.theme=s==='auto'?(mq&&mq.matches?'dark':'light'):s;}
      ② **沒有識別** —— 照片裡診所自己的招牌在 212px 的卡上只有幾個像素寬，
         而圖會單獨旅行（轉存再轉發時只剩圖），圖上的字是唯一還在的識別。
      ⚠ 換圖或換那三格的數字要重跑 `node tools/og-home.mjs`。 -->
-<meta property="og:image" content="https://fangren.net/assets/og-home.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="628">
-<meta property="og:image:alt" content="入夜後的永樂街街角，芳仁牙醫診所的清水模建築與亮著燈的騎樓；左上是診所標誌與名稱，下緣一條深色帶寫著 1983年中華路開業、9位醫師駐診、6個部定專科">
-<link rel="canonical" href="https://fangren.net/">
 <link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
 <!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，兩者刻意分開 ——
      差別與理由寫在 /assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
@@ -5297,7 +5318,7 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
 @media (prefers-reduced-motion: reduce) { .pv-tg, .pv-kn, .pv-kn svg { transition: none; } }
 </style>
 </head>
-<body>
+<body data-topic="kids" data-spec="kids">
 
 
 <a class="skip-link" href="#main">跳到主要內容</a>
@@ -5371,179 +5392,17 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
 </script>
 
 <main id="main">
-  <h1 class="sr-only">芳仁牙醫診所 — 雲林斗六永樂街，在地四十年</h1>
 
-  <div class="hero">
-    <figure class="hero-photo">
-      <!-- ⚠⚠ sizes 不能寫 100vw（2026-08-15 修）。
-           照片是 object-fit: cover 而框比它瘦，**縮放倍率是由高度那一項決定的** ——
-           瀏覽器挑 srcset 卻只看版面寬度（100vw ＝ 390px），於是嚴重低估。
-           改動前那一天量到的實況：
-
-               裝置                     挑到的檔        實際需要   放大
-               iPhone 14 Pro DPR3      1600w（1058列）  2157 列    2.04 倍
-               DPR2 的手機              800w（529列）    1438 列    2.72 倍  ← 最慘
-               iPad Pro 11 DPR2        1600w            1672 列    1.58 倍
-
-           正確的請求寬度 ＝ 照片**整張**在畫面上有多寬 ＝ 1.512 × 照片高度
-           （1.512 ＝ 2000/1323，原圖的長寬比）。照片高度在各版型是
-           62svh ~ 100svh，統一用 100vh 去估，最多高估 18%，換來一條式子走遍全站。
-           ⚠ 這裡要用 vh 不是 svh —— sizes 是在版面之前算的，svh 支援度沒有 vh 廣。
-           ⚠ 電腦版 1440×900 DPR1 算出 1361 → 仍然挑 1600w，沒有被迫多載。
-
-           2000w 是使用者 2026-08-15 提供的原檔（2000×1323），**沒有重新壓過**。
-           要再更好只能換更大的原檔：DPR2/3 的手機與 iPad 現在仍在放大 1.6~1.9 倍，
-           要完全不放大得要 2400~3200px 寬。
-           ⚠ width/height 仍然寫 1600×1058（＝ src 那一張），比例和 2000 那張
-              差 0.04%，不影響版面保留（aspect-ratio 用的是這兩個值）。 -->
-      <!-- .hero-shot 只是一層 overflow:hidden（position:absolute; inset:0，
-           幾何和沒有它時一模一樣）。照片緩慢推進時 <img> 會溢出 <figure>，
-           要夾住；**不能把 overflow 加在 .hero-photo 上** —— 那會連
-           .hero-copy 一起裁，收尾句底下那塊 blur 的暗斑會裁出一條硬邊。
-           完整理由在上面樣式表「HERO 照片：緩慢的推進」那一段。 -->
-      <span class="hero-shot">
-      <img src="/assets/hero-clinic-night.jpg"
-           srcset="/assets/hero-clinic-night-800.jpg 800w,
-                   /assets/hero-clinic-night.jpg 1600w,
-                   /assets/hero-clinic-night-2000.jpg 2000w"
-           sizes="calc(1.512 * 100vh)"
-           alt="芳仁牙醫診所夜間的清水模建築外觀，一樓門面亮著燈"
-           width="1600" height="1058" fetchpriority="high">
-      </span>
-
-      <!-- 照片還沒畫出來就先把緩慢推進按住（2026-08-16）。
-           完整理由在樣式表 html.hero-hold 那一段：節流下量到照片 1756ms 才解好，
-           那一刻 10% 的行程已經走掉 37%，而且用掉的是先快後慢裡最快的那一段。
-
-           ⚠ 這支要**緊接在 <img> 後面**，不能搬到頁尾那一堆腳本裡 ——
-             搬過去的話，中間那幾百毫秒的動畫已經先跑掉了。
-           ⚠ 只在「照片還沒好」時才掛 class。快取命中時 img.complete 已經是 true，
-             一次都不會掛上，不會多一次重排。
-           ⚠ 沒有 JS 就整支不執行 ＝ class 永遠不會出現 ＝ 動畫照舊立刻開跑，
-             退回 2026-08-15 上線的行為。不要把預設改成 paused。 -->
-      <script>
-      (function () {
-        var img = document.currentScript.previousElementSibling.querySelector('img');
-        if (!img || (img.complete && img.naturalWidth)) return;
-        var root = document.documentElement;
-        root.classList.add('hero-hold');
-        var go = function () { root.classList.remove('hero-hold'); };
-        img.addEventListener('load', go, { once: true });
-        img.addEventListener('error', go, { once: true });
-        setTimeout(go, 3000);        /* 保險絲：圖再慢也要讓照片開始動 */
-      })();
-      </script>
-
-      <!-- 詩與收尾句放在 <figure> 裡面、不是外面 —— 這樣照片的框如果被限制寬度
-           （見下面 HERO 的三種裁切模式），文字會自動跟著照片走，不會飄到旁邊的暗底上。 -->
-      <div class="hero-copy">
-        <div class="shell">
-          <!-- 三行已定稿（COPY.md 第一節）。分隔用全形空格，整首詩沒有標點。
-
-               每一行中間的**全形空格包在 <span class="g"> 裡**（2026-08-10）。
-               **一個字都沒有改**：span 裡裝的仍然是那個全形空格 U+3000，
-               複製出來的文字、螢幕閱讀器念的內容都和以前一樣。
-               包起來是為了讓手機版能單獨把它縮窄（見下面 @media 裡的 .hero-poem .g）——
-               手機的詩要往下坐，就得先變窄，否則會壓到照片裡的房子。
-               電腦版沒有任何規則指到 .g，所以那裡完全照舊。 -->
-          <p class="hero-poem">
-            <span class="lead">小時候被大人牽著來<span class="g">　</span>現在牽著別人</span>
-            <span>從中華路到永樂街<span class="g">　</span>四十多年</span>
-            <!-- 第三行 2026-08-16 改寫（COPY.md 第一節）。原本是
-                 「有跟著換的　也有一直顧的」——換的是什麼、顧的是什麼都沒指名，
-                 使用者說「還是比較模糊」。要講的是：四十年間設備、空間、環境
-                 一直在換，但講究沒有變、品質一直有人守著。
-                 ⚠ 這一行有**兩個斷點**，第二個是次級的（.g2，四分之一形）——
-                   「講究」與「顧牢牢」是並列的兩件事（自我要求／守住不放），
-                   但它們合起來才是這一句的下半。三個等寬的斷點會被讀成
-                   三件並列的事，那是錯的。 -->
-            <span>裡裡外外都在換<span class="g">　</span>講究<span class="g g2">　</span>顧牢牢</span>
-          </p>
-        </div>
-        <div class="shell">
-          <p class="hero-sign">到巷口的芳仁　一起想辦法</p>
-        </div>
-      </div>
-    </figure>
-
-    <div class="band">
-    <div class="shell">
-      <!-- 往下看的指標（電腦版，2026-08-14）。站在窄帶上緣的正中央、瀏覽數的正上方，
-           點下去跳到「主題與科別」（＝頁首「全部文章」同一個錨點，篩選工具在那裡）。
-           它是 .shell 的絕對定位子元素，**完全不參與版面** —— 窄帶的 84px、
-           瀏覽數與 1983／9／6 的位置一個像素都沒有動（見 CSS 那一段）。
-           素材出處：Lucide "chevron-down"，ISC 授權，https://lucide.dev ——
-           這一行註解就是署名，改圖或搬檔的時候不要刪。
-           ⚠ viewBox 是**貼著角形本身**的 12×6，不是 Lucide 原本那個 24 格的方框。
-              原框裡那個角形只佔中間 9~15 列，用原框的話「離窄帶多遠」要多算一段
-              空白（實測差 9px），而且那段空白會跟著字級／框大小一起變。
-              路徑一個節點都沒有動，只是把座標原點搬到角形的左上角。
-           圖形本身 aria-hidden，可讀的內容由 aria-label 給。 -->
-      <a class="hero-cue" href="#topics" aria-label="往下看主題與科別">
-        <svg viewBox="0 0 12 6" aria-hidden="true"><path d="m0 0 6 6 6-6"/></svg>
-      </a>
-
-      <!-- 瀏覽數。data-views="home" 是 /assets/counter.js 的掛勾：它先幫首頁 +1，
-           再從 D1 取回真實數字，然後呼叫 window.fangrenCountUp(n) 跑往上數的動畫。
-           **self** 不能寫成 data-views —— 後者只顯示不加總，首頁的數字就永遠不會長。
-
-           ⚠ 這裡**不要**寫死 data-count。提案頁當初的示範數字（8642）跟著版型一起被
-           搬進正式站，結果真實的 190 被一個假數字蓋掉，還不會動。真值一律由 D1 給。
-
-           數字跑動時一直在變，讓螢幕閱讀器跟著念沒有意義，所以動的那一段整個
-           aria-hidden，另外放一句 .sr-only 講最終結果（由 JS 填）。 -->
-      <p class="band-views" data-views="home">
-        <span class="sr-only"></span>
-        <span class="views-n" aria-hidden="true">0</span><small aria-hidden="true">次瀏覽</small>
-      </p>
-
-      <!-- 地址與電話。**電腦版**：絕對定位貼在版心外緣，看起來在窄帶右側，
-           完全不參與版面（1983／9／6 才推不動 —— 第一輪讓它參與版面時，
-           實測三格的中軸被往左推了 42.4px）。
-           **手機版**：絕對定位關掉，它就照這裡的順序夾在瀏覽數與 1983／9／6
-           之間，一行置中。兩邊共用這一份標記，一個字都沒有重複。
-           ⚠ 它**必須待在 .shell 裡面**：手機要它排在兩者「之間」，就得參與
-              .shell 這個直向 flex 的流。移到 .shell 外面手機就排不進中間了。
-           推導與所有落選案：preview/hero-contact/（電腦版六輪）、
-           preview/hero-contact-mobile/（手機版兩輪）。 -->
-      <div class="contact-pair">
-      <p class="hero-contact c-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
-        <!-- 線條空心的地圖釘。頁尾那顆是 Font Awesome 的實心版，這裡刻意不沿用 ——
-             實心圖示疊在夜景照片上會變成一個小黑塊，而窄帶裡其他東西全是細的。
-             素材出處：Lucide "map-pin"，ISC 授權，https://lucide.dev ——
-             這一行註解就是署名，改圖或搬檔的時候不要刪。
-             aria-hidden：地址本身已經是連結的可讀內容，圖示再念一次是重複。 -->
-        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10.4c0 5.4-8 12.1-8 12.1s-8-6.7-8-12.1a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10.2" r="3"/></svg></span>
-        <span class="t">雲林縣斗六市永樂街&nbsp;70&nbsp;號</span>
-      </a></p>
-
-      <p class="hero-contact c-tel"><a href="tel:+88655339369">
-        <!-- 線條空心的話筒。素材出處：Lucide "phone"，ISC 授權，https://lucide.dev ——
-             這一行註解就是署名，改圖或搬檔的時候不要刪。 -->
-        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 0 1-2.1 1.9 18.8 18.8 0 0 1-8.2-2.9 18.5 18.5 0 0 1-5.7-5.7A18.8 18.8 0 0 1 2.6 4.7 1.9 1.9 0 0 1 4.5 2.6h2.8a1.9 1.9 0 0 1 1.9 1.6c.1.9.3 1.8.7 2.7a1.9 1.9 0 0 1-.4 2L8.3 10.1a15.2 15.2 0 0 0 5.7 5.7l1.2-1.2a1.9 1.9 0 0 1 2-.4c.9.4 1.8.6 2.7.7a1.9 1.9 0 0 1 1.6 2Z"/></svg></span>
-        <data class="t" value="05-5339369">05-5339369</data>
-      </a></p>
-      </div>
-
-      <ul class="stats">
-        <li><b>1983<small>年</small></b><span>中華路開業</span></li>
-        <li><b>9<small>位</small></b><span>醫師駐診</span></li>
-        <!-- 這個數字是「頁面上列得出來的、不同的衛福部部定專科」種數，不是醫師人數：
-             家庭牙醫、齒顎矯正、兒童牙科、口腔顎面外科、贋復牙科、牙髓病科 = 6。
-             ⚠ 2026-08-30 從 5 變成 6：陳芷鈴醫師取得牙髓病科部定專科。
-             改任何一位醫師的資歷欄都要回來數一次，見 COPY.md 第八之一節。
-             ⚠ 這個數字**同時烘在 /assets/og-home.jpg 上**（tools/og-plate.mjs 的
-               STATS_CELLS 是第二份），改了要跑 `node tools/og-home.mjs`。 -->
-        <li><b>6<small>個</small></b><span>部定專科</span></li>
-      </ul>
-    </div>
-    </div>
-  </div>
-
+  <!-- HERO 在著陸頁上拿掉：那張照片與那首詩是全站的門面，
+       七頁各放一次會把它稀釋掉，而且會把真正的內容推到很下面。 -->
   <section id="topics">
     <div class="shell">
       <div class="sec-head">
         <h2>主題與科別</h2>
+        <div class="topic-search">
+          <label class="sr-only" for="q">搜尋文章與醫師</label>
+          <input id="q" type="search" placeholder="搜尋文章與醫師" autocomplete="off" spellcheck="false">
+        </div>
         <button class="pv-th" type="button" role="switch" aria-checked="false" aria-label="夜間模式"><span class="pv-tg" aria-hidden="true"><span class="pv-kn"><svg class="pv-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="pv-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span></span></button>
       </div>
       <div class="topic-tools">
@@ -5564,11 +5423,11 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
                頁首那顆「全部文章」本來就指 `#topics`，這一顆跟它一致。
                ⚠ 在首頁上按它會捲到這一排（它自己），那是對的：這一顆的意思一直都是
                「不篩選」，而不篩選的畫面就是這一頁。 -->
-          <li><a href="/preview/night-mode/#topics" data-spec="all"      aria-current="page">全部</a></li>
+          <li><a href="/preview/night-mode/#topics" data-spec="all">全部</a></li>
           <li><a href="/preview/night-mode/topics/general/" data-spec="general" >一般牙科・定期檢查</a></li>
           <li><a href="/preview/night-mode/topics/perio/" data-spec="perio"   >牙周治療</a></li>
           <li><a href="/preview/night-mode/topics/endo/" data-spec="endo"    >顯微根管</a></li>
-          <li><a href="/preview/night-mode/topics/kids/" data-spec="kids"    >兒童牙科</a></li>
+          <li><a href="/preview/night-mode/topics/kids/" data-spec="kids" aria-current="page"    >兒童牙科</a></li>
           <li><a href="/preview/night-mode/topics/ortho/" data-spec="ortho"   >齒顎矯正</a></li>
           <li><a href="/preview/night-mode/topics/prosth/" data-spec="prosth"  >植牙・假牙重建</a></li>
           <li><a href="/preview/night-mode/topics/surg/" data-spec="surg"    >口腔外科</a></li>
@@ -5729,12 +5588,55 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
 
              ＊按鈕上的字要和 tools/build.mjs 的 SPEC 對照表用同一個詞
                （「顯微根管」「口腔外科」），日後那兩科的文章才篩得到。 -->
-        <div class="topic-search">
-          <label class="sr-only" for="q">搜尋文章與醫師</label>
-          <input id="q" type="search" placeholder="搜尋文章與醫師" autocomplete="off" spellcheck="false">
-        </div>
       </div>
       <p class="filter-note" hidden></p>
+
+      <!-- ===== 科別介紹（2026-08-18 版面定案）==========================
+           走到這個版面經過使用者七輪修正，推導寫在 COPY.md 第九節。
+           順序：h1 → 幾位醫師幾篇文章 →〔開場句 lead〕→ 三個處境 →〔一句回應 stance〕
+           → 流程（標題在 topic-copy.mjs 的 flowTitle）→ 收尾。
+           ⚠⚠ 第三種節奏（2026-08-19，兒牙用的）：**groups** ——
+             把現場分成兩組，**每一組後面各接一句回應**（一組 cases ＋ 一個 reply）。
+             適合「這一科其實有兩種很不一樣的人」的時候：
+             兒牙是「沒喊痛但怪怪的」與「已經很痛又不肯配合」。
+             ⚠ 用 groups 就不要再寫 lead —— 兩種都想收的那一句話會寫成
+               「苦的香的我們都有賣」（使用者的原話），那是攤販不是診所。
+             ⚠⚠ 這一段註解裡**不要出現反引號** —— 它在模板字串裡面
+               （CLAUDE.md 第八節那個坑，hero-line3 那一輪踩過）。
+           ⚠⚠ **lead 與 stance 是兩種節奏，一科只挑一種**（2026-08-19）：
+             ・stance 在後 ＝ 先讓他對號入座，再一句話回完（牙周）。
+             ・lead 在前 ＝ 先把最重要的那句話講掉，再舉例（兒牙：家長最想聽的
+               是「這不是孩子的體質」，那句話擺後面就太晚了）。
+             **不要兩個都給** —— 那會變成同一件事講兩次，而且七頁長得一模一樣
+             就是使用者說的「看起來像複製貼上」。
+           ⚠⚠ **整塊要收在手機的一屏之內**（2026-08-18 使用者第二輪）：
+             「這樣子的內容我希望在這個版面上能都放進去，而且要讓他覺得下面還有
+               東西往下滑 —— 著陸頁的文案不能超過這個版面。」
+             所以每一步一行、三種處境也各一行。改文案之後要重量一次，
+             量法與基準寫在 COPY.md 第九之十節。
+           ⚠ 文字在 tools/topic-copy.mjs，**不要改這裡**。 -->
+      <div class="tp-intro">
+        <h1>兒童牙科</h1>
+        <p class="tp-count"><a href="#doctors"><span class="tp-n">2 位</span><span class="tp-t">醫師</span></a><span class="tp-dot" aria-hidden="true">・</span><a href="#articles"><span class="tp-n">3 篇</span><span class="tp-t">文章</span></a></p>
+        <p class="tp-case">吃飯越來越慢、不愛吃，以為只是挑食。</p>
+        <p class="tp-case">總覺得怪怪的，但檢查都說沒問題。</p>
+        <p class="tp-reply">不喊痛<strong>不代表沒事</strong>，這種要專門看才找得到。</p>
+        <p class="tp-case">「不配合，沒辦法處理。」可是他真的在痛。</p>
+        <p class="tp-case">同一顆補了又掉，已經好幾次了。</p>
+        <p class="tp-reply">這一種<strong>比較複雜</strong>，要找兒童牙科的醫師處理。</p>
+
+        <div class="tp-first">
+          <p class="tp-first-h">兒童牙科多做的，是這幾件</p>
+          <p class="tp-step"><b>看得出</b>他說不出來的不舒服，檢查看得到。</p>
+          <p class="tp-step"><b>很痛時</b>會痛多半蛀得深，處理完還要修回來。</p>
+          <p class="tp-step"><b>不再掉</b>補不住的就換個做法，讓它留到換牙。</p>
+          <p class="tp-step"><b>留位置</b>乳牙留不住，先幫恆牙留著位置。</p>
+          <p class="tp-step"><b>換牙</b>排不下的時候，早期矯正是一個選項。</p>
+          <p class="tp-step"><b>先試過</b>能配合多少先試，不行才談舒眠。</p>
+          <p class="tp-close">孩子願意來、牙齒撐得住，其他的我們一起來努力。</p>
+        </div>
+      </div>
+
       <div class="qx" hidden></div>
     </div>
   </section>
@@ -5745,10 +5647,10 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
     <div class="shell">
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
-      <a class="card" href="posts/kids-crown/" data-spec="kids">
+      <a class="card" href="../../posts/kids-crown/" data-spec="kids">
         <img class="card-thumb" src="/assets/hero-kids-crown-photo-1600.jpg" srcset="/assets/hero-kids-crown-photo-800.jpg 800w, /assets/hero-kids-crown-photo-1600.jpg 1600w, /assets/hero-kids-crown-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="四格插畫。上排三格：同一位媽媽帶著兒子看了三位不同的牙醫師，三位都露出為難又抱歉的樣子——第一位攤著手、額頭冒汗，第二位低頭看著小卡片、頭上浮著一團打結的線，第三位搔著後腦不好意思地朝門口比；媽媽從雙手合十拜託、按著胸口焦急，到最後一格眉頭深鎖。下面一整條寬格是兒童牙科的診間：戴著印花手術帽、白袍敞開的兒牙醫師坐在小圓椅上微笑解說，左邊是穿圓點刷手服、端著托盤的助理，右邊是坐在治療椅上的男孩與在旁邊微笑的爸媽；醫師左右各一個對話框，每個裡面都有三顆牙，左邊中間那顆包著銀色的牙套、右邊中間那顆包著白色的牙套" width="1600" height="893" loading="lazy">
         <div class="card-body">
-          <span class="card-tag">兒童牙科</span>
+          <span class="card-tag tag-on">兒童牙科</span>
           <h3>同一顆補了又掉：小朋友的牙套什麼時候該做，怎麼選</h3>
           <p>「同一顆牙補了又掉，已經好幾次了。」很多爸媽的第一個念頭是孩子的牙齒特別不好——可能說對了一半。蛀過的那顆牙結構確實被弱化了，但補得住與補不住，差別多半不在孩子身上，而在那顆牙當下的條件。</p>
           <p class="card-date">
@@ -5759,94 +5661,10 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
           </p>
         </div>
       </a>
-      <a class="card" href="posts/three-month-recall/" data-spec="general">
-        <img class="card-thumb" src="/assets/hero-recall-photo-1600.jpg" srcset="/assets/hero-recall-photo-800.jpg 800w, /assets/hero-recall-photo-1600.jpg 1600w, /assets/hero-recall-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="七格拼起來的鑲嵌畫，六個人各自在自己家裡：孕婦坐在沙發上看小冊子、拿拐杖的阿嬤在廚房伸手拿杯子、早餐桌上量血糖的先生、桌上放著藥袋若有所思的中年男子、半夜起來倒水喝的女性、綁著頭巾在藤椅上看書笑出來的女性；右下角那一格是診所，白袍的醫師與穿刷手服的護理師一起往左上方看，醫師的手向那幾格攤開" width="1600" height="1194" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag">定期檢查</span>
-          <h3>三個月一次的洗牙與塗氟：哪些人適用，為什麼是三個月</h3>
-          <p>一般人半年洗一次牙，是因為拿牙刷的手還穩、唾液正常、傷口癒合正常。這些條件少了一項，同樣三個月，口腔裡累積出來的東西就和一般人不是同一個量級——健保因此把間隔縮短到三個月，塗氟也不再只是小孩才做的事。這一篇說哪些人適用、為什麼是三個月，以及來的時候要帶什麼。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-09-05">2026/09/05</time></span>
-            <span class="dot" aria-hidden="true">·</span>
-            <span class="views" data-views="three-month-recall" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="posts/crown-materials/" data-spec="prosth">
-        <img class="card-thumb" src="/assets/hero-crown-photo-1600.jpg" srcset="/assets/hero-crown-photo-800.jpg 800w, /assets/hero-crown-photo-1600.jpg 1600w, /assets/hero-crown-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="診間裡女醫師捧著一副打開的上下顎牙齒模型向病患解說，模型上有幾顆牙的外層瓷剝落、露出深灰色的金屬；她的對話泡泡裡是一棟貼磁磚的公寓，整面牆的磁磚東一塊西一塊掉下來" width="1600" height="893" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag">贋復假牙</span>
-          <h3>一體成型的假牙好在哪：金屬燒瓷、全瓷與全鋯冠的差別</h3>
-          <p>真正把幾種牙冠分開的，是一件不太會出現在價目表上的事：它是一塊材料做出來的，還是兩層堆起來的。那個差別會長出兩個弱點，也決定了要讓出多少自己的齒質。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-08-27">2026/08/27</time></span>
-            <span class="dot" aria-hidden="true">·</span>
-            <span class="views" data-views="crown-materials" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="posts/bioceramic/" data-spec="endo">
-        <img class="card-thumb" src="/assets/hero-bioceramic-photo-1600.jpg" srcset="/assets/hero-bioceramic-photo-800.jpg 800w, /assets/hero-bioceramic-photo-1600.jpg 1600w, /assets/hero-bioceramic-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="左邊是明亮的診間諮詢室，短髮的女醫師隔著桌子向年輕的男病患解說，上方的思考泡泡裡是一顆牙齒的剖面，根管內滿是黃濁的膿、根尖下方的骨頭裡有一個膿包；右邊是治療室，同一位醫師伏在顯微鏡前工作，病患嘴上蓋著粉紅色的橡皮障，泡泡裡的同一顆牙正被注射器灌入淡粉紅色的糊劑" width="1600" height="893" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag">顯微根管</span>
-          <h3>根管治療的生物陶瓷：它多做了什麼</h3>
-          <p>「都已經抽過神經了，牙齦怎麼又長膿包？」根管末端的分支往往比器械到得了的地方複雜。生物陶瓷在根管治療裡做三件事：封填的糊劑、活髓治療的修復材料、根管破孔的修補——這一篇聊聊它的密封與鹼性環境多做了什麼，以及什麼樣的牙齒用得上。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-08-21">2026/08/21</time></span>
-            <span class="dot" aria-hidden="true">·</span>
-            <span class="views" data-views="bioceramic" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="posts/orthodontics/" data-spec="ortho">
-        <img class="card-thumb" src="/assets/hero-ortho-photo-1600.jpg" srcset="/assets/hero-ortho-photo-800.jpg 800w, /assets/hero-ortho-photo-1600.jpg 1600w, /assets/hero-ortho-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="街邊小吃店前，戴著金屬矯正器的年輕人和朋友笑著自拍；右邊兩格是合菜桌上把隱形牙套收進盒子裡，以及夜裡床頭放著牙套盒的房間" width="1600" height="893" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag">齒顎矯正</span>
-          <h3>牙齒矯正：年齡、矯正器與第一次諮詢</h3>
-          <p>為了外觀走進來沒有什麼不好意思，但牙齒的位置一改變，跟著改變的還有清潔與咬合的長期條件。幾歲開始還來得及、金屬與隱形怎麼選、時間與費用怎麼看，以及第一次諮詢會做哪些事。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-08-20">2026/08/20</time></span>
-            <span class="dot" aria-hidden="true">·</span>
-            <span class="views" data-views="orthodontics" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="posts/wisdom-tooth/" data-spec="surg">
-        <img class="card-thumb" src="/assets/hero-wisdom-photo-1600.jpg" srcset="/assets/hero-wisdom-photo-800.jpg 800w, /assets/hero-wisdom-photo-1600.jpg 1600w, /assets/hero-wisdom-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="診間裡醫師向手扶著臉頰的病患解說，上方的思考泡泡分三格畫出智齒往前擠、拔完的窩洞不敢刷、填入填補材料並縫合；右邊是幾天後他在街上邊走邊吃紅豆餅" width="1600" height="893" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag">口腔外科</span>
-          <h3>拔智齒之後：傷口填補、術後照顧與保險怎麼問</h3>
-          <p>怕的通常是「拔」的那一下，但決定接下來一週好不好過的，是拔完留下的那個洞。血塊為什麼不能被破壞、膠原蛋白與骨粉各自補足什麼，以及門診手術的保險該問什麼。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-08-19">2026/08/19</time></span>
-            <span class="dot" aria-hidden="true">·</span>
-            <span class="views" data-views="wisdom-tooth" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="posts/perio-laser/" data-spec="perio">
-        <img class="card-thumb" src="/assets/hero-perio-photo-1600.jpg" srcset="/assets/hero-perio-photo-800.jpg 800w, /assets/hero-perio-photo-1600.jpg 1600w, /assets/hero-perio-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="診間裡醫師握著細長的水雷射手機，射出青綠色光束打掉巨大臼齒表面結痂的牙結石，助理舉著防護盾護著後方的病患，細菌四散逃竄" width="1600" height="893" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag">牙周照護</span>
-          <h3>牙周病治療：清創、水雷射與再生手術</h3>
-          <p>牙齒像一棵樹，牙周組織是托著它的那塊土壤。牙周治療分成三個層次：健保的基礎清創、自費水雷射能補上什麼，以及骨頭已經流失時的牙周再生手術。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-08-16">2026/08/16</time></span>
-            <span class="dot" aria-hidden="true">·</span>
-            <span class="views" data-views="perio-laser" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="posts/kids-arch-expansion/" data-spec="kids">
+      <a class="card" href="../../posts/kids-arch-expansion/" data-spec="kids">
         <img class="card-thumb" src="/assets/hero-arch-photo-1600.jpg" srcset="/assets/hero-arch-photo-800.jpg 800w, /assets/hero-arch-photo-1600.jpg 1600w, /assets/hero-arch-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="三格畫面：男孩在鏡前看擠在一起的上排門牙、夜裡張著嘴睡、隔天早上在玄關垂著頭沒什麼精神" width="1600" height="893" loading="lazy">
         <div class="card-body">
-          <span class="card-tag">兒童牙科</span>
+          <span class="card-tag tag-on">兒童牙科</span>
           <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
           <p>牙弓不夠寬，恆牙就像在擠公車，沒位置站只能前後亂鑽。6 到 12 歲顎骨還沒定型，是引導牙弓向外擴張的黃金期。認識兒童隱適美與肌功能矯正，以及爸媽在家就能觀察的三個徵兆。</p>
           <p class="card-date">
@@ -5857,72 +5675,16 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
           </p>
         </div>
       </a>
-      <a class="card" href="posts/regular-checkup/" data-spec="general">
-        <img class="card-thumb" src="/assets/hero-checkup-photo-1600.jpg" srcset="/assets/hero-checkup-photo-800.jpg 800w, /assets/hero-checkup-photo-1600.jpg 1600w, /assets/hero-checkup-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="明亮的診所櫃檯前，老太太的集章卡被蓋上新的一格，小男孩踮著腳仰頭看，候診區坐著各個年紀的人" width="1600" height="893" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag">定期檢查</span>
-          <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
-          <p>洗牙不會把牙齒洗薄，也不是美白。它清的是自己刷不掉的牙結石，順便讓醫師在問題還小的時候先看見它。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-07-08">2026/07/08</time></span>
-            <span class="dot" aria-hidden="true">·</span>
-            <span class="views" data-views="regular-checkup" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="posts/missing-tooth/" data-spec="prosth">
-        <img class="card-thumb" src="/assets/hero-implant-photo-1600.jpg" srcset="/assets/hero-implant-photo-800.jpg 800w, /assets/hero-implant-photo-1600.jpg 1600w, /assets/hero-implant-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="三格畫面：火鍋、夜市與家族聚餐上被熱情勸食卻舉手推辭的三個人，思考泡泡裡分別是咬不動、後排少一顆牙、只能喝粥" width="1600" height="893" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag">缺牙重建</span>
-          <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
-          <p>缺一顆牙不只是缺一顆牙。旁邊的牙會倒、對面的牙會長長、齒槽骨會流失。三種重建方式各自的原理、代價與限制。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-06-02">2026/06/02</time></span>
-            <span class="dot" aria-hidden="true">·</span>
-            <span class="views" data-views="missing-tooth" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="posts/kids-first-visit/" data-spec="kids">
+      <a class="card" href="../../posts/kids-first-visit/" data-spec="kids">
         <img class="card-thumb" src="/assets/hero-kids-photo-1600.jpg" srcset="/assets/hero-kids-photo-800.jpg 800w, /assets/hero-kids-photo-1600.jpg 1600w, /assets/hero-kids-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="一家人圍在餐桌旁，中間的孩子高舉著剛掉下來的乳牙張嘴大笑，爸媽與兩個手足湊過來一起看" width="1600" height="893" loading="lazy">
         <div class="card-body">
-          <span class="card-tag">兒童牙科</span>
+          <span class="card-tag tag-on">兒童牙科</span>
           <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
           <p>「乳牙反正會換掉」是最常見也最昂貴的誤解。從第一顆牙長出來後的六個月談起，帶爸媽看懂塗氟、窩溝封填與健保給付。</p>
           <p class="card-date">
             <span><span class="sr-only">上架 </span><time datetime="2026-05-06">2026/05/06</time></span>
             <span class="dot" aria-hidden="true">·</span>
             <span class="views" data-views="kids-first-visit" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="posts/gum-bleeding/" data-spec="perio">
-        <img class="card-thumb" src="/assets/hero-gum-photo-1600.jpg" srcset="/assets/hero-gum-photo-800.jpg 800w, /assets/hero-gum-photo-1600.jpg 1600w, /assets/hero-gum-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="四格畫面：悶熱的一天裡搧著扇子、買一杯冰飲、吹電扇冰敷臉頰，最後在鏡子前掀開嘴唇看牙齦" width="1600" height="893" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag">牙周照護</span>
-          <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
-          <p>健康的牙齦被牙刷碰到不會出血。流血代表牙齦正在發炎，而發炎和退火無關，是牙菌斑長期堆積的結果。認識牙齦炎與牙周炎那條關鍵的分界線。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-04-15">2026/04/15</time></span>
-            <span class="dot" aria-hidden="true">·</span>
-            <span class="views" data-views="gum-bleeding" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
-            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
-          </p>
-        </div>
-      </a>
-      <a class="card" href="posts/bass-brushing/" data-spec="general">
-        <img class="card-thumb" src="/assets/hero-brushing-photo-1600.jpg" srcset="/assets/hero-brushing-photo-800.jpg 800w, /assets/hero-brushing-photo-1600.jpg 1600w, /assets/hero-brushing-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="洗手台前一整排人各自對著鏡子刷牙，上方三個放大圈畫出刷毛斜靠在牙齦溝上與小幅度來回的方向" width="1600" height="893" loading="lazy">
-        <div class="card-body">
-          <span class="card-tag">日常保健</span>
-          <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
-          <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙，原地來回十次——這是把牙菌斑真正刷掉的方法。</p>
-          <p class="card-date">
-            <span><span class="sr-only">上架 </span><time datetime="2026-03-11">2026/03/11</time></span>
-            <span class="dot" aria-hidden="true">·</span>
-            <span class="views" data-views="bass-brushing" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
             <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
@@ -5939,77 +5701,12 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
         <h2>醫師介紹</h2>
       </div>
       <div class="docs">
-        <article class="doc" data-spec="general">
-          <h3>李柄輝<span class="doc-role">創辦醫師</span></h3>
-          <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="general">口腔檢查</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><span class="sep">、</span><span class="sk" data-spec="perio">牙周照護</span></dd>
-            <dt>資歷</dt><dd>台灣國際植牙醫師學會專科醫師（ATIOI）<br>國際牙醫學院院士（TICD）<br>衛生福利部家庭牙醫專科</dd>
-            <dt>學歷</dt><dd>中山醫學大學牙醫學學士<br>中山醫學大學牙醫學碩士<br>中山醫學大學牙醫學博士</dd>
-          </dl>
-        </article>
-        <article class="doc" data-spec="perio">
-          <h3>李侑津<span class="doc-role">醫師</span></h3>
-          <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="perio">牙周病治療</span><span class="sep">、</span><span class="sk" data-spec="perio">牙周再生手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">植牙手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">活動假牙</span><span class="sep">、</span><span class="sk" data-spec="perio">水雷射牙周治療</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
-            <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
-            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>國立陽明交通大學牙醫學碩士</dd>
-          </dl>
-        </article>
-        <article class="doc" data-spec="ortho">
-          <h3>王俊偉<span class="doc-role">矯正專科醫師</span></h3>
-          <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk" data-spec="ortho">隱適美</span></dd>
-            <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺北醫學大學附設醫院齒顎矯正科<br>臺安醫院主治醫師</dd>
-            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>臺北醫學大學牙醫學碩士</dd>
-          </dl>
-        </article>
-        <article class="doc" data-spec="ortho">
-          <h3>廖立揚<span class="doc-role">矯正專科醫師</span></h3>
-          <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk" data-spec="ortho">隱適美</span><span class="sep">、</span><span class="sk" data-spec="ortho">阻生齒矯正</span></dd>
-            <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺中榮民總醫院齒顎矯正科<br>國立臺灣大學附設醫院</dd>
-            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
-          </dl>
-        </article>
         <article class="doc" data-spec="kids">
           <h3>林晏妤<span class="doc-role">兒牙專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk tag-on" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk tag-on" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk tag-on" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk tag-on" data-spec="kids">兒童齲齒治療</span></dd>
             <dt>資歷</dt><dd>衛生福利部兒童牙科專科<br>隱適美認證醫師<br>臺中榮民總醫院兒童牙科</dd>
             <dt>學歷</dt><dd>高雄醫學大學牙醫學學士</dd>
-          </dl>
-        </article>
-        <article class="doc" data-spec="surg">
-          <h3>許馨文<span class="doc-role">口外專科醫師</span></h3>
-          <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="surg">阻生齒拔除</span><span class="sep">、</span><span class="sk" data-spec="surg">齒槽骨保留術</span></dd>
-            <dt>資歷</dt><dd>衛生福利部口腔顎面外科專科<br>奇美醫學中心口腔顎面外科總醫師<br>保提拉肉毒學院認證醫師</dd>
-            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
-          </dl>
-        </article>
-        <article class="doc" data-spec="prosth">
-          <h3>楊小瑩<span class="doc-role">贋復假牙專科醫師</span></h3>
-          <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="prosth">活動假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">牙橋</span><span class="sep">、</span><span class="sk" data-spec="prosth">全口重建</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
-            <dt>資歷</dt><dd>衛生福利部贋復牙科專科<br>台大醫院補綴科兼任主治醫師<br>台大雲林分院主治醫師</dd>
-            <dt>學歷</dt><dd>高雄醫學大學牙醫學學士</dd>
-          </dl>
-        </article>
-        <article class="doc" data-spec="endo">
-          <!-- ⚠ 2026-08-30：藥丸改回「顯微根管專科醫師」—— 陳芷鈴醫師**已經取得**
-               衛生福利部牙髓病科專科醫師，資歷欄第一行從「成大醫院牙髓病專科訓練」
-               換成部定專科本身（訓練的地方仍看得到，在下一行的成大總醫師）。
-               ⚠ 資歷欄寫「衛生福利部牙髓病科專科」**不帶「醫師」**（2026-08-30 使用者指定）——
-               資歷那一欄五位的寫法一致，「專科醫師」只出現在藥丸上。
-               這一改推翻了 2026-08-09 那一輪（COPY.md 第八之三節）—— 當時降成只寫科別
-               的理由是「專科**訓練**不等於部定專科」，現在證照真的有了，理由消失。
-               ⚠ 連帶：窄帶那個「部定專科」種數 5 → 6（牙髓病科回到頁面上）。
-               規則見 COPY.md 第八之一節。 -->
-          <h3>陳芷鈴<span class="doc-role">顯微根管專科醫師</span></h3>
-          <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="endo">顯微根管</span><span class="sep">、</span><span class="sk" data-spec="endo">根尖手術</span><span class="sep">、</span><span class="sk" data-spec="endo">活髓治療</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span></dd>
-            <dt>資歷</dt><dd>衛生福利部牙髓病科專科<br>成大醫院口腔醫學部總醫師<br>臺北榮民總醫院</dd>
-            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
           </dl>
         </article>
         <article class="doc" data-spec="kids">
@@ -6018,7 +5715,7 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
                規則見 COPY.md 第八節。這和林晏妤醫師不一樣是刻意的，不要「順手統一」。 -->
           <h3>謝耀慶<span class="doc-role">兒童牙科</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk tag-on" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk tag-on" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk tag-on" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk tag-on" data-spec="kids">兒童齲齒治療</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
             <dt>資歷</dt><dd>臺北榮總兒童牙科總醫師<br>日本新潟大學吞嚥功能受訓醫師<br>隱適美認證醫師</dd>
             <dt>學歷</dt><dd>國立陽明交通大學牙醫學學士</dd>
           </dl>
@@ -6027,6 +5724,8 @@ html[data-theme="dark"] .btn-ghost:hover { color: var(--accent-deep); border-col
       <p class="empty-note" data-for="doctors" hidden>這一科目前沒有駐診醫師。</p>
     </div>
   </section>
+
+  <p class="tp-note">本頁為一般口腔衛教資訊，不能取代臨床診斷。實際狀況需經檢查後由醫師評估。</p>
 
   <section id="clinic">
     <div class="shell">
