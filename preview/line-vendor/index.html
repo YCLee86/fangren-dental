@@ -324,7 +324,7 @@ micro 卡，不是單張的 mega 卡。</figcaption>
 <ol><li><p class="d"><b>位置：往右下溢出 18／10px</b>，卡片把跑出去的那一塊切掉 —— 不是貼齊右下角、整顆收在卡內。</p></li>
 <li><p class="d"><b>寬度：兩則各一欄，那不是筆誤</b>（2026-09-14 定案）。九顆的寬度不一樣是刻意的（按墨的面積算的，這樣看起來才一樣重），而兩則的卡片寬差 106px，同一個 px 佔掉的比例差很多 —— 所以那份 Flex JSON 的浮水印 <code>size</code> 拆成兩個欄位：單張吃 <code>watermark_size_single</code>、輪播吃 <code>watermark_size_carousel</code>。單張（mega）r3c2 106→<b>131</b>、r3c3 215→<b>186</b>，其餘七顆照原寬；輪播（micro）r1c3 188→<b>141</b>、r2c3 188→<b>141</b>、r3c3 215→<b>142</b>，其餘六顆照原寬。下面那九張卡畫的是<b>單張那一欄</b>。</p></li>
 <li><p class="d"><b>顏色</b>：淡墨素色，柔墨 <code>#5c5f57</code>、濃度 12%。</p></li>
-<li><p class="d"><b>卡片底色：純白 <code>#FFFFFF</code></b>（2026-09-14 定案）。這兩則先前寫的是 <code>#F4F4F5</code>（診所網站的卡片色），現在改成純白 —— 那份 Flex JSON 的 <code>backgroundColor</code> 已經是這個值，其餘五則沒有動。</p></li>
+<li><p class="d"><b>卡片底色：純白 <code>#FFFFFF</code></b>（2026-09-14 定案）。<b>這一項你們現在跑的就是純白，不必換</b> —— 逐像素量過你們 09-10 送來的三張截圖，卡片內部是 <code>#FFFFFF</code>；先前我們這一份寫的是 <code>#F4F4F5</code>（診所網站的卡片色），同一天已經改成純白對齊你們。其餘五則沒有動。</p></li>
 <li><p class="d">那份 Flex JSON 裡 <code>offsetEnd</code>／<code>offsetBottom</code> 仍然寫著 <code>0px</code>，因為 Flex 的 offset 不吃負值、表達不出溢出。你們 09-10 那一版已經做出溢出了（量到 8~10／6~7px）—— <b>請照你們的做法，把溢出量統一成 18／10px</b>。</p></li></ol></div>
 <p class="note">浮水印的顏色改成<b>淡墨素色</b>：柔墨 <code>#5c5f57</code>，壓在卡片上的濃度維持 12%（檔名 <code>wm-&lt;形狀&gt;-ink12.png</code>）。<b>形狀、寬度、位置一個數字都沒動，換掉的只有顏色。</b>下面九顆上面那一排仍然印原色，那一份色是第 4 節那四個值在用的，不是浮水印的顏色。<br>
 每一格<b>上面是原色</b>（看得出形狀與是哪一科），<b>虛線底下是它壓在卡片上真正的樣子</b>
