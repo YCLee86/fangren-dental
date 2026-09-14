@@ -458,7 +458,7 @@ ${WM.map((s2, i) => `<tr><td>${esc(例日[i].ymd)} ${esc(例日[i].wd)}</td><td>
 <td><b>${s2.n}</b></td><td><span class="chip" style="background:${s2.色}"></span><code>${s2.色}</code></td></tr>`).join("\n")}
 </tbody></table></div>
 
-<h2 class="h2" id="s4">4　綁定成功的自動回覆設定<span class="t">現況、我們想要的做法、想請教的兩題</span></h2>
+<h2 class="h2" id="s4">4　綁定成功的自動回覆設定<span class="t">現況、其他帳號的做法、綁定完成卡的規格、方案優先順序</span></h2>
 <ol class="sub4">${B.未定案[3].子.map((t, k) => `<li id="s4-${k + 1}">${b(t)}</li>`).join("\n")}</ol>
 <div class="pair">
 <figure><p class="k">現況：我們的帳號，綁定那一刻</p>${img("../line-vendor/bind-live-0912.jpg", "綁定完成那一刻病人那一側的畫面")}
