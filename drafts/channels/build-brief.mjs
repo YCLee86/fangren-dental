@@ -481,9 +481,6 @@ ${B.s4.其他帳號.map(([f, k, cap]) => `<figure><p class="k">${esc(k)}</p>${im
 ${BIND_DONE_TAB}
 <h3 class="h3" id="s4-plan">綁定成功的方案優先順序</h3>
 <ol class="spec plan">${B.s4.方案.map((t) => `<li>${bb(t)}</li>`).join("\n")}</ol>
-<h3 class="h3">想請教</h3>
-${list(B.s4.請教)}
-<p class="note">${bb(B.s4.回覆)}</p>
 
 <h2 class="h2" id="s5">5　已完成項目<span class="t">${DONE.length} 則，不需要再調整</span></h2>
 <p class="note">${bb(B.s5.說)}</p>
