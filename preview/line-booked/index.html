@@ -408,7 +408,7 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
 
   <div id="pv-stwrap"></div>
 
-  <h3 class="pv-h3">九顆浮水印各畫一次（2026-09-14，你要的）</h3>
+  <h3 class="pv-h3">九顆浮水印各畫一次・輪播（約診紀錄查詢，2026-09-14 你要的）</h3>
   <p class="pv-note">
     ⚠ 每一格都是<b>真的那張卡</b>（輪播・<code>micro</code>・淡墨浮水印・底套色的藥丸），
     標題寫著<b>那一顆的名字</b>與<b>一個真的會算到它的看診日</b> ——
@@ -421,6 +421,25 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
   </p>
   <div class="pv-cw" id="pv-nine"></div>
   <div class="pv-panel" id="pv-panel-nine"></div>
+
+  <h3 class="pv-h3">九顆浮水印各畫一次・單張（預約成功通知，2026-09-14 你要的）</h3>
+  <p class="pv-note">
+    ⚠ 同一件事在<b>另一則</b>上的樣子：每一格是<b>真的那張卡</b>
+    （單張・<code>mega</code>・268px・<b>彩色</b>浮水印・<b>沒有</b>約診狀態那一列），
+    標題一樣寫著那一顆的名字與一個真的會算到它的看診日。<br>
+    ⚠⚠ <b>這一則的浮水印是彩色的，不是淡墨 —— 那不是漏改成一致</b>：
+    淡墨是第 ②之二 節為了「藥丸和有顏色的 logo 互相吵架」才換的，
+    而這一則<b>沒有藥丸</b>，所以它維持第 ① 節定案的樣子（顏色跟著形狀走）。<br>
+    ⚠ <b>兩排並排看，第 k 格一定是同一顆</b> —— 兩則吃同一條
+    <code>(月 ＋ 日) % 9</code>，所以同一筆約診在預約成功與查詢清單上，
+    標誌與顏色都相同。<b>那正是這條規則最有價值的地方。</b><br>
+    ⚠⚠⚠ 而<b>「扁扁的」那件事在這裡不會發生</b>：卡片 268px、浮水印貼右緣往右溢出 18px，
+    所以左緣 ＝ <code>286 − 整顆寬</code>，最寬的 <code>r3c3</code>（215px）左緣仍在 71px ——
+    <b>九顆左邊一顆都沒有被切到</b>，被切掉的只有右邊那 18px。
+    <b>所以第 ②之五 節那把尺只作用在輪播，這一則一個數字都不必動。</b>
+  </p>
+  <div class="pv-cw" id="pv-nine1"></div>
+  <div class="pv-panel" id="pv-panel-nine1"></div>
 
 
   <h3 class="pv-h3">九顆怎麼輪 —— 規則（兩則共用）</h3>
@@ -1263,6 +1282,12 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
      ⚠ 上面那條 id 規則裡的 162px 只是退回值，render() 會把它寫進 --carw；
        守門有一道在比對那兩個數字（差 1px 以上就 throw）。 */
   var CAR_W = Math.round(bubblePx(stepOf(WANT_STEP)));
+  /* 單張那一則（預約成功通知）要畫多寬。
+     ⚠⚠ **寫死 268，不要拿 bubblePx("mega") 去算** —— 那條算式回 267（差 0.5%），
+       而這一頁每一處單張的卡（第 ① 節、③ 節、量測的 want）用的都是 268；
+       這一排要和第 ① 節那一張**逐格一樣寬**，不然它就不是「真的那張卡」了。
+     ⚠ 268 這個數字本身仍然是從診所端後台那張截圖推導的（26-6 還開著）。 */
+  var MEGA_W = 268;
   /* 尺上只放「現在這一階與更窄的」—— 問的是「可不可以窄一點」 */
   var CWD = STEPS.filter(function (s) { return s.b <= stepOf(MEAS_STEP).b; })
     .reverse()
@@ -1474,6 +1499,67 @@ h1{font-size:1rem;font-weight:700;letter-spacing:.02em}
           }).join("／")
         + "<br>⚠ 三顆 3.08:1 的（r1c3／r2c3／r3c3）<b>整顆比卡片還寬</b>，"
         + "所以看得到的就是卡片寬本身 —— <b>那三顆要多大，尺在第 ②之五 節</b>。</p>";
+
+      /* ---- 九顆各畫一次・單張（預約成功通知，2026-09-14）------------
+         ⚠⚠ 這一則和上面那一排**不是同一種卡**，所以畫之前要把三個共用變數
+           換成**這一則定案的樣子**（第 ① 節那一張）：日期不指定斷行、
+           浮水印是彩色的、沒有約診狀態那一列。
+           ⚠ 畫完要換回去 —— 底下 ②之三／②之四／②之五 吃的仍然是輪播那一組。
+         ⚠⚠⚠ **不要順手改成一致**：淡墨是 ②之二 為了「藥丸和彩色 logo 吵架」
+           才換的，而這一則沒有藥丸。 */
+      dtm = "free"; wmink = false; stat = "";
+      document.getElementById("pv-nine1").innerHTML = SHAPES.map(function (sn, k) {
+        var a = RT.eg[k];
+        return '<div style="--cw:' + MEGA_W + 'px"><p class="lb2">' + sn
+          + '　' + a.m + '/' + a.d + '（' + a.w + '）</p>'
+          + nwCard(a, false, k, SHAPES.length) + '</div>';
+      }).join("");
+      dtm = "brk"; wmink = true; stat = "pill";
+      var nine1Bad = [].slice.call(document.querySelectorAll("#pv-nine1 .wm"))
+        .filter(function (im, k) { return im.getAttribute("data-shape") !== SHAPES[k]; }).length;
+      /* ⚠ 兩排逐格比對形狀 —— 「兩則同一顆」是那條規則最有價值的性質，
+           要用量的不要用講的（哪天有人在某一則裡另寫一條規則，這裡會紅）。 */
+      var pairBad = SHAPES.filter(function (sn, k) {
+        var q = document.querySelectorAll("#pv-nine .wm")[k];
+        var m = document.querySelectorAll("#pv-nine1 .wm")[k];
+        return !q || !m || q.getAttribute("data-shape") !== m.getAttribute("data-shape");
+      }).length;
+      var nine1Rows = [].slice.call(document.querySelectorAll("#pv-nine1 > div")).map(function (d) {
+        var cb = d.querySelector(".pv-hc").getBoundingClientRect();
+        var ib = d.querySelector(".wm").getBoundingClientRect();
+        var vis = Math.max(0, Math.min(cb.right, ib.right) - Math.max(cb.left, ib.left));
+        return { n: d.querySelector(".wm").getAttribute("data-shape"),
+                 w: ib.width, vis: vis, left: ib.left - cb.left };
+      });
+      var cutL = nine1Rows.filter(function (r) { return r.left < -0.5; }).length;
+      document.getElementById("pv-panel-nine1").innerHTML =
+        "<p class='pv-note'>九張卡的浮水印 "
+        + (nine1Bad ? "<span class='no'>有 " + nine1Bad + " 張和標題對不上</span>"
+                    : "<span class='ok'>逐張對得上標題那一顆</span>")
+        + "；<b>和上面那一排逐格比對</b> "
+        + (pairBad ? "<span class='no'>有 " + pairBad + " 格不一樣</span>"
+                   : "<span class='ok'>九格全部是同一顆</span>")
+        + "（兩則吃同一條 <code>(月＋日) % 9</code>）。"
+        + "<br>卡片 <b>" + (document.querySelector("#pv-nine1 .pv-hc")
+            ? document.querySelector("#pv-nine1 .pv-hc").getBoundingClientRect().width.toFixed(1)
+            : "—") + "px</b>（<code>mega</code>，＝第 ① 節那一張）。"
+        + "<br>每一顆<b>在這張卡上看得到多少</b>（浮水印貼右緣、往右溢出 "
+        + Math.abs(wmr) + "px）："
+        + nine1Rows.map(function (r) {
+            return r.n + " " + r.vis.toFixed(0) + "px（"
+              + (r.vis / r.w * 100).toFixed(0) + "%）";
+          }).join("／")
+        + "<br>左緣離卡片左邊："
+        + nine1Rows.map(function (r) { return r.n + " " + r.left.toFixed(0) + "px"; }).join("／")
+        + " —— "
+        + (cutL ? "<span class='no'>有 " + cutL + " 顆的左邊被切掉了</span>"
+                : "<span class='ok'>九顆左邊一顆都沒有被切到</span>")
+        + "，被切掉的只有右邊那 " + Math.abs(wmr) + "px。"
+        + "<br>⚠⚠⚠ <b>所以「扁扁的」只有輪播有</b>：同樣那三顆 3.08:1 的"
+        + "（r1c3／r2c3／r3c3）在 268px 上整顆放得下（最寬的 r3c3 左緣還在 "
+        + (nine1Rows[8] ? nine1Rows[8].left.toFixed(0) : "—") + "px），"
+        + "在 " + CAR_W + "px 的輪播上卻橫貫整張卡還被切左邊 —— "
+        + "<b>第 ②之五 節那把尺不會動到這一則。</b></p>";
       document.getElementById("pv-panel-rota").innerHTML =
         "<p class='pv-note'><b>" + ROTA_YEAR + " 年週一到週五共 " + RT.tot + " 天</b>"
         + "（國定假日沒有扣掉，扣了也不影響分布）——<br>"
