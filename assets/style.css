@@ -1065,12 +1065,27 @@ html[data-theme="dark"] :is(.foot-addr, .foot-tel) a { color: #739b7d; }
   background: #c28229; transition: background-color .22s ease; }
 .tt-knob { position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%;
   display: grid; place-items: center; background: #fff; color: #c28229;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, .28); transition: transform .22s ease, color .22s ease; }
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .28);
+  transition: transform .22s ease, color .22s ease, background-color .22s ease; }
 .tt-knob svg { grid-area: 1 / 1; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2;
   stroke-linecap: round; stroke-linejoin: round; transition: opacity .18s ease, transform .22s ease; }
+/* ⚠ 月亮是**填實**的、太陽仍然是線稿（2026-09-15 第二輪定案）——
+     實心的墨佔圓鈕 15.6%、線稿只有 10.5%，圓鈕變深之後要靠這五成把份量補回來。
+   ⚠⚠ 填實那一條**一定要寫成 svg.tt-moon**（兩個 class ＋ 一個型別）——
+     只寫 .tt-moon 的話權重輸給上面那條「.tt-knob svg 的 fill: none」，月亮會靜靜地
+     退回線稿：背景色、字色、位移每一個數字都還是對的，畫面也完全正常，
+     **只有量 computed 的 fill 才看得出來**（定案當天踩過一次）。 */
 .tt-moon { opacity: 0; transform: rotate(-60deg) scale(.6); }
+.tt-knob svg.tt-moon { fill: currentColor; stroke: none; }
 html[data-theme="dark"] .tt-track { background: #365685; }
-html[data-theme="dark"] .tt-knob { transform: translateX(20px); color: #365685; }
+/* ⚠⚠ 夜間的圓鈕是**深藍配淡藍的月亮**（Ⓖ2，2026-09-15 第二輪，使用者：
+     「月亮那塊圓的地方很亮……如果反過來　圓形是深藍色　月亮　淡藍色」）。
+   ⚠ 兩支都是路牌藍 #365685 的同色相同彩度、只動亮度，沒有新增顏色。
+   ⚠⚠ 已知取捨：圓鈕對軌道只有 1.90，低於 3:1 —— 那是**幾何決定的不是偏好**
+     （軌道 L* 36.2、往下的地板是 0，最多只到 1.9:1），圓的邊界因此比白鈕那一版弱，
+     由實心月亮（對圓鈕 7.00、對紙底 8.72）接手。**不要拿對比度來訂正它。**
+   ⚠ 白天那一態一個值都沒有動。 */
+html[data-theme="dark"] .tt-knob { transform: translateX(20px); background: #012c53; color: #9cb7ed; }
 html[data-theme="dark"] .tt-sun { opacity: 0; transform: rotate(60deg) scale(.6); }
 html[data-theme="dark"] .tt-moon { opacity: 1; transform: none; }
 .theme-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 17px; }

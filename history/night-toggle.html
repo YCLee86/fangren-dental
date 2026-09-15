@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>night-toggle｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>night-toggle — 夜間模式那顆圓鈕反過來</h1>
+<p class="meta">
+  2026-09-15 開、當天兩輪定案上線（夜間模式定案當天稍晚）<br>
+  原網址 <code>/preview/night-toggle/</code>（已刪除 2026-09-15）<br>
+  整頁還原：<code>git show 662a710:preview/night-toggle/index.html</code><br>
+  正式站的產生器仍然是 <code>tools/night-mode.mjs</code>（兩個值寫回它的開關那一段）
+</p>
+
+<h2>起點</h2>
+<div class="note"><pre>使用者的兩張手機截圖（同一個畫面的白天與夜間）：
+
+「白天的按鈕滑桿沒什麼問題　但夜間的滑桿　月亮那塊圓的地方很亮，
+　只有月亮是夜間模式的深藍色　如果反過來　圓形是深藍色　月亮　淡藍色
+　效果怎麼樣？」
+
+第二輪：「Ⓓ ＋ 實心月亮做給我看」　→　第三輪：「選 Ⓖ2　定稿　上線」</pre></div>
+
+<h2>定案</h2>
+<div class="note"><pre>夜間那一態：圓鈕 #012c53、月亮 #9cb7ed 而且**填實**（不是線稿）。
+軌道仍然是路牌藍 #365685，白天那一態（琥珀軌道＋白鈕＋線稿太陽）**一個值都沒有動**
+（逐像素比對過：150×105 的開關 0 個像素有差）。
+
+兩支都是路牌藍 #365685 的**同色相同彩度、只動亮度**，沒有新增顏色。</pre></div>
+
+<h2>量出來的三件</h2>
+<div class="note"><pre>① **現況那顆白鈕，是整顆開關在夜間頁面上最顯眼的東西**（對紙底 17.60）。
+   反過來之後最亮的一塊掉到 2.37（＝軌道對紙底），開關要靠月亮被看見。
+   **這是這一輪唯一真正的取捨**，提案頁因此多做了兩格去接它（Ⓔ 一圈細框、Ⓕ 實心月亮）。
+
+② **圓鈕能有多深是幾何決定的，不是偏好。**
+   軌道 L* 36.2、往下的地板是 0，所以「圓鈕比軌道暗」最多只到 1.9:1；
+   再暗就比頁面的底（L* 8.7）還暗，而且對比幾乎不再增加。
+   **沒有任何一格到得了 3:1** —— 圓的邊界一定比白鈕那一版弱，這是已知取捨，
+   **不要拿對比度來訂正它**（同兒牙填色白字 3.22、分享卡帶子 4.40 那一類）。
+
+③ **實心月亮的墨佔圓鈕 15.6%、線稿只有 10.5%**（Path2D ＋ 離屏 canvas 現場數像素，
+   不是估的）。圓鈕變深之後，份量就是靠這多出來的五成接回來的 ——
+   也因此同一支藍在實心版上讀起來更亮，Ⓖ 那三格才要重新給一次尺。</pre></div>
+
+<h2>尺（兩輪，九格）</h2>
+<div class="note"><pre>第一輪六格（圓鈕多深 × 要不要補邊界）：
+  Ⓐ 現況　　　　　　圓鈕 #ffffff　月亮 #365685　　圓鈕對軌道 7.43
+  Ⓑ 反過來・淺　　　圓鈕 #224573　月亮 #96b2e7　　1.30
+  Ⓒ 反過來・中　　　圓鈕 #153c69　月亮 #b7ceff　　1.50
+  Ⓓ 反過來・深　　　圓鈕 #012c53　月亮 #9cb7ed　　1.90
+  Ⓔ Ⓒ ＋ 圓鈕一圈淡藍細框（#8aa6da，1px inset）
+  Ⓕ Ⓒ ＋ 月亮改成實心
+
+第二輪三格（圓鈕釘在 Ⓓ、月亮改成實心，只剩「月亮多亮」一個變數）：
+  Ⓖ1 月亮 #8aa6da　對圓鈕 5.75　對紙底 7.16
+  Ⓖ2 月亮 #9cb7ed　對圓鈕 7.00　對紙底 8.72　　← **定案**
+  Ⓖ3 月亮 #b7ceff　對圓鈕 8.94　對紙底 11.13
+
+⚠ 落選的 Ⓔ（一圈細框）方向是對的 —— 它是唯一把「圓的邊界」補回 3:1 以上的做法。
+  使用者選了 Ⓖ2，代表這一輪接受「邊界弱、份量由實心月亮接手」。
+  日後若有人回報「看不出那是一顆鈕」，Ⓔ 那條路還在（inset box-shadow 一行）。</pre></div>
+
+<h2>提案頁本身學到的</h2>
+<div class="note"><pre>・**這一頁不是 index.html 的複本，是獨立寫的**（同 clinic-schedule 那一輪），
+  所以 CLAUDE.md 第八節那四個坑一個都踩不到。開關的幾何與 SVG 路徑
+  從 tools/night-mode.mjs 逐字照抄，只把狀態選擇器換成每一格自己的 data-s，
+  這樣**每一顆都是真的開關**（按一下翻到白天，六格的白天一模一樣，當場看得到「沒有動到」）。
+
+・**一把尺要連它的「盡頭」一起算出來再送出去**（第九節第 28 條 ③）：
+  這一輪的盡頭是 1.9:1，所以第一輪就不必給「更深」那一格，
+  而是把力氣花在「邊界怎麼補回來」的兩格上。
+
+・**面板要分兩個量講「找不找得到」**：最亮的一「塊」與月亮那幾筆「線」。
+  只報其中一個都會給出錯的結論（只看塊 → 以為整顆不見了；只看線 → 以為沒有代價）。</pre></div>
+
+<h2>三個坑，三個都不報錯</h2>
+<div class="note"><pre>① **CSS 註解裡寫了註解的結束記號**（第九節第 8 條）——
+   我在註解裡寫「以下到『／＊ 開關結束 ＊／』為止」，整段註解就在那裡提早關掉，
+   底下的規則全部失效。症狀：開關的軌道量到 0×0、頁面多 26px 水平捲動，
+   **畫面看起來只是「少了一條軌道」，主控台一個錯都沒有。**
+
+② **填實那一條的權重輸掉了**（定案寫回產生器那一天）——
+   `.tt-knob svg { fill: none }` 是 (0,1,1)，`.tt-moon` 只有 (0,1,0)，
+   所以月亮**靜靜地退回線稿**：背景色、字色、位移每一個數字都還是對的、畫面完全正常，
+   **只有量 computed 的 fill 才看得出來**。要寫成 `.tt-knob svg.tt-moon`。
+   ⚠ 通則：**驗一個「換了畫法」的改動，要量那個畫法本身**（fill／stroke），
+     不要只量顏色 —— 顏色兩種畫法都會對。
+
+③ **產生器是模板字串，CSS 註解裡不能出現反引號**（第九節第 8 條的近親，這一站第六次）。</pre></div>
+
+<h2>驗收</h2>
+<div class="note"><pre>首頁／著陸頁（牙周）／文章頁（矯正）× 夜間與白天，390×844 DPR3：
+  夜間　圓鈕 rgb(1,44,83)、月亮 fill rgb(156,183,237)、stroke none、
+        軌道 rgb(54,86,133)、位移 22.0px、軌道 50×30、水平溢出 0、JS 錯 0
+  白天　圓鈕 #fff、太陽 #c28229（線稿）、位移 2.0px —— 和改動前**逐像素相同**
+
+⚠ 這一輪只改 index.html 與 assets/style.css 的 NIGHT 區塊（CSS），
+  posts/* 的標記一個字都沒動，所以十三篇文章的日期沒有跳。</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄　|　<a href="/history/">回到目錄</a></footer>
+</div></body>
+</html>
