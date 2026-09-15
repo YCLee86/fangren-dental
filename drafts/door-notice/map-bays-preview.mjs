@@ -196,9 +196,13 @@ html[data-pv-num="on"] .pv-ns { display: inline; }
 .card-map[data-bays="1"] .map-svg text.lbl[data-pv-mv="wenhua"] { transform: translate(62px, 0); }
 /* ⚠⚠ 永樂街在壹車房亮著的時候，站上是**整條不見**（2026-08-14 使用者定的，
    那條 .lbl.hide 的 opacity 0）。2026-09-15 他改主意：「應該把永樂街的路名移位就好」。
-   所以這裡不讓它消失，改成往上讓開那條點狀路線（往上 116 ＝ 字底退到 y250，
-   而路線從 y258 才開始）。⚠ 這一項會動到站上現在的行為，還沒併進 index.html。 */
-.card-map[data-yl="up"]   .map-svg text.lbl[data-pv-mv="yongle"] { transform: translate(0, -116px); }
+   所以這裡不讓它消失，改成往上讓開。
+   ⚠⚠ 往上要讓開的**不只是那條點狀路線，還有診所圖釘與它那片影子**
+   （2026-09-15 使用者：「移位後會被診所圖釘的影子蓋到」）——
+   影子 .cm-sh 量到 x266~351、y228~245，正好伸進永樂街那一欄（x324~354）。
+   所以是 **往上 191**（字底退到 y175，圖釘 .cm-pin 從 y183 才開始），
+   不是原本那個 116（字底 y250、剛好落在影子上）。⚠ 這一項會動到站上現在的行為，還沒併進 index.html。 */
+.card-map[data-yl="up"]   .map-svg text.lbl[data-pv-mv="yongle"] { transform: translate(0, -191px); }
 .card-map[data-yl="down"] .map-svg text.lbl[data-pv-mv="yongle"] { transform: translate(0, 154px); }
 /* 格子出現時那一版排在後面 —— 同權重靠順序決勝（那時沒有停車場亮著，不會打架，
    寫在後面只是保險）。 */
@@ -235,6 +239,19 @@ html[data-pv-w="on"] .pv-w { display: inline; }
   }
 }
 .pv-mapchips button[aria-pressed="true"] { background: var(--pv-bay); color: #fff; border-color: var(--pv-bay); }
+/* ⚠⚠ 夜間沒點亮的時候要和站上其他藥丸一樣是**淡色塊**，不是「白底套色框」
+   （2026-09-15 使用者指出）。站上那條就在 index.html 的 NIGHT 區塊裡：
+     background / border-color: color-mix(in srgb, var(--accent) 20%, var(--card))
+     color: var(--pill-ink)   ← 那一支是「同色相只提亮度到 4.5」算出來的
+   路牌藍沒有現成的 --pill-ink，所以照同一條規則現算：
+   淡色塊是 #384050（#7a96ca 的 20% 混進夜間卡色 #282b31），
+   原色壓在上面只有 3.47，同色相提亮到 L* 69.9 ＝ **#90abe1**（4.50 ✓）。
+   ⚠ 白天那一態一個值都沒動。 */
+html[data-theme="dark"] .pv-mapchips button:not([aria-pressed="true"]) {
+  background: color-mix(in srgb, var(--pv-bay) 20%, var(--card));
+  border-color: color-mix(in srgb, var(--pv-bay) 20%, var(--card));
+  color: #90abe1;
+}
 html[data-pv-p="side"] .pv-top, html[data-pv-p="side"] .pv-bot { display: none; }
 html[data-pv-p="top"]  .pv-side, html[data-pv-p="top"] .pv-bot  { display: none; }
 html[data-pv-p="bot"]  .pv-side, html[data-pv-p="bot"] .pv-top  { display: none; }
@@ -280,14 +297,14 @@ html[data-pv-p="bot"]  .pv-side, html[data-pv-p="bot"] .pv-top  { display: none;
      要回頭比對還開得出來（同 head-search 那一輪）。
    ⚠ 只留新的那一條：虛線多疏、多粗 —— 那是他還沒看過的東西，
      所以給一把尺不是給一個我估的值（第九節第 28 條 ①）。 */
-/* ⚠ 「虛線顏色」2026-09-15 定了（夜間那支），收成寫死的值、從切換條上拿掉，
-     網址參數仍然吃得到（?k=ink|soft|card）。 */
-const R = [
-  ['c',  '格子',   [['out', '空心'], ['fill', '實心']]],
-  ['d',  '框線',   [['n', '實線'], ['a', '最細密'], ['b', '細'], ['c', '中'], ['d', '疏']]],
-  ['ow', '框線粗細', [['24', '2.4'], ['20', '2.0'], ['16', '1.6'], ['12', '1.2']]],
-  ['o',  '實心透感', [['1', '不透'], ['85', '85%'], ['72', '72%'], ['55', '55%']]],
-];
+/* ⚠⚠ 2026-09-15 使用者定案 —— **每一條尺都收成寫死的預設值、切換條整條拿掉**
+   （同 head-search、night-map-park 那兩輪）。網址參數仍然吃得到，要回頭比對還開得出來：
+     ?p=top|bot（標籤放哪裡）　?c=fill（實心）　?d=a|b|c|d（虛線）
+     ?ow=24|20|12（框線粗細）　?o=1|85|55（實心的透感）　?k=ink|soft|card（虛線顏色）
+     ?num=on（寫號碼）　?lots=keep（按下去停車場照舊）　?w=off（不畫未清查那一排）
+   ⚠ **量測面板不跟著收**（第九節第 28 條 ④）—— 收掉的話日後改了任何一個值，
+     這裡不會有任何一個數字變。 */
+const R = [];
 const bar =
 '<button class="pv-mini" type="button" id="pv-open" hidden>提案</button>\n' +
 '<div class="pv-bar" id="pv-bar">\n' +
@@ -350,13 +367,19 @@ R.map(([k, label, opts]) =>
   }
   function placeYongle0() {
     card.removeAttribute('data-yl');
-    var dots = svg.querySelector('.dots.on');
-    if (!dots || !dots.getClientRects().length) { unhide(); return; }
-    var o = boxOf(dots); if (!o) return;
+    /* ⚠ 障礙物不只那條點狀路線 —— 診所圖釘（含影子）、綠塊、亮起來的那塊牌子
+       都要算進來。只比路線的話會讓到影子上（2026-09-15 踩過）。 */
+    var obs = [];
+    ['.dots.on', '.rlab.on', '.cm-pin', '.cm-plot'].forEach(function (sel) {
+      var e = svg.querySelector(sel);
+      if (e && e.getClientRects().length) { var o = boxOf(e); if (o) obs.push(o); }
+    });
+    if (!obs.length) { unhide(); return; }
     var a = yl.getBBox();                      // ⚠ 原位，不吃自己的 transform
-    if (!hit(a, 0, o)) { unhide(); return; }
-    if (!hit(a, -116, o)) { card.setAttribute('data-yl', 'up');   unhide(); return; }
-    if (!hit(a,  154, o)) { card.setAttribute('data-yl', 'down'); unhide(); return; }
+    var free = function (dy) { return !obs.some(function (o) { return hit(a, dy, o); }); };
+    if (free(0))    { unhide(); return; }
+    if (free(-191)) { card.setAttribute('data-yl', 'up');   unhide(); return; }
+    if (free(154))  { card.setAttribute('data-yl', 'down'); unhide(); return; }
     /* 真的沒地方 —— 交還給站上那條 */
   }
 
