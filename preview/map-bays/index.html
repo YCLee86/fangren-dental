@@ -5900,6 +5900,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
    ⚠ 標籤沒按下去的時候，地圖與站上**逐像素相同**（#pv-bays 是 display:none）。 */
 :root { --pv-bay: var(--map-park); }
 html[data-pv-c="ink"] { --pv-bay: var(--ink-soft); }
+/* ⚠ 「實心」的值叫 fill；?c=blue 是上一版的寫法，留著吃得到 */
 
 #pv-bays { display: none; }
 .card-map[data-bays="1"] #pv-bays { display: inline; }
@@ -5921,11 +5922,17 @@ html[data-pv-k="night"] { --pv-dash: #282b31; }
 html[data-pv-k="ink"]   { --pv-dash: var(--ink); }
 html[data-pv-k="soft"]  { --pv-dash: var(--ink-soft); }
 html[data-pv-k="card"]  { --pv-dash: var(--card); }
+html[data-pv-d="n"] { --pv-dw: 1.4; --pv-da: none; }
 html[data-pv-d="a"] { --pv-dw: 1.2; --pv-da: 2 1.6; }
 html[data-pv-d="b"] { --pv-dw: 1.4; --pv-da: 3 2.4; }
 html[data-pv-d="c"] { --pv-dw: 1.8; --pv-da: 4 3.2; }
 html[data-pv-d="d"] { --pv-dw: 2.2; --pv-da: 5.5 4.4; }
-html[data-pv-c="out"] .pv-bay { fill: none; stroke: var(--map-park); stroke-width: 2.6; }
+/* 空心（2026-09-15 使用者：「藍實心好像怪怪的，做成空心給我看看」）——
+   沒有底，框線本身就是那一格，所以框線換成路牌藍、也畫粗一點。
+   ⚠ 這一態吃不到「虛線顏色」那條尺（框線就是格子的顏色），只吃疏密。 */
+html[data-pv-c="out"] .pv-bay {
+  fill: none; stroke: var(--pv-bay); stroke-width: var(--pv-ow, 2.4);
+}
 
 .pv-n { fill: var(--ink); font-weight: 600; letter-spacing: .02em; }
 .pv-ns { display: none; }
@@ -5942,6 +5949,14 @@ html[data-pv-num="on"] .pv-ns { display: inline; }
      只寫 transform 會把它蓋掉，街名淡下去那一下就變成硬切）。 */
 .card-map .map-svg text.lbl { transition: opacity .18s ease, transform .18s ease; }
 .card-map[data-bays="1"] .map-svg text.lbl[data-pv-mv="wenhua"] { transform: translate(62px, 0); }
+/* ⚠⚠ 永樂街在壹車房亮著的時候，站上是**整條不見**（2026-08-14 使用者定的，
+   那條 .lbl.hide 的 opacity 0）。2026-09-15 他改主意：「應該把永樂街的路名移位就好」。
+   所以這裡不讓它消失，改成往上讓開那條點狀路線（往上 116 ＝ 字底退到 y250，
+   而路線從 y258 才開始）。⚠ 這一項會動到站上現在的行為，還沒併進 index.html。 */
+.card-map[data-yl="up"]   .map-svg text.lbl[data-pv-mv="yongle"] { transform: translate(0, -116px); }
+.card-map[data-yl="down"] .map-svg text.lbl[data-pv-mv="yongle"] { transform: translate(0, 154px); }
+/* 格子出現時那一版排在後面 —— 同權重靠順序決勝（那時沒有停車場亮著，不會打架，
+   寫在後面只是保險）。 */
 .card-map[data-bays="1"] .map-svg text.lbl[data-pv-mv="yongle"] { transform: translate(0, 154px); }
 .card-map[data-bays="1"] .map-svg text.lbl[data-pv-mv="yongan"] { transform: translate(0, 140px); }
 
@@ -8753,13 +8768,14 @@ html[data-pv-p="bot"]  .pv-side, html[data-pv-p="bot"] .pv-top  { display: none;
 <button class="pv-mini" type="button" id="pv-open" hidden>提案</button>
 <div class="pv-bar" id="pv-bar">
   <button type="button" id="pv-hide">收起</button>
-  <div class="pv-row" data-k="d"><b>虛線疏密</b><button type="button" data-v="a">最細密</button><button type="button" data-v="b">細</button><button type="button" data-v="c">中</button><button type="button" data-v="d">疏</button></div>
+  <div class="pv-row" data-k="c"><b>格子</b><button type="button" data-v="out">空心</button><button type="button" data-v="fill">實心</button></div>
+  <div class="pv-row" data-k="d"><b>框線</b><button type="button" data-v="n">實線</button><button type="button" data-v="a">最細密</button><button type="button" data-v="b">細</button><button type="button" data-v="c">中</button><button type="button" data-v="d">疏</button></div>
   <div class="pv-row" data-k="k"><b>虛線顏色</b><button type="button" data-v="night">夜間那支</button><button type="button" data-v="ink">墨</button><button type="button" data-v="soft">柔墨</button><button type="button" data-v="card">白（原本）</button></div>
   <div class="pv-panel" id="pv-panel">量測中…</div>
 </div>
 <script>
 (function () {
-  var DEF = { p: 'side', c: 'blue', num: 'off', lots: 'off', w: 'on', d: 'd', k: 'night' };
+  var DEF = { p: 'side', c: 'out', num: 'off', lots: 'off', w: 'on', d: 'n', k: 'night' };
   var root = document.documentElement, q = new URLSearchParams(location.search);
   var st = {};
   /* ⚠ 網址參數的正規式要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 第九節）*/
@@ -8777,16 +8793,60 @@ html[data-pv-p="bot"]  .pv-side, html[data-pv-p="bot"] .pv-top  { display: none;
   var again = 0;
   var on = false;
 
-  function paint() {
-    card.setAttribute('data-bays', on ? '1' : '0');
-    function syncDim() {
+  /* ⚠⚠ 永樂街：被亮起來的那條點狀路線壓到時，**移位不是消失**（2026-09-15）。
+     ⚠ 量的是 viewBox 的使用者單位不是螢幕座標 —— 這個標籤身上掛著 .18s 的
+       transform transition，用 getBoundingClientRect 量會量到「動到一半」的位置；
+       getBBox() 不吃元素自己的 transform，所以永遠是它的原位。
+     ⚠ 三段階梯：往上 → 往下 → 真的沒地方就交還給站上那條「藏起來」。 */
+  var yl = svg.querySelector('text.lbl[data-pv-mv="yongle"]');
+  function boxOf(el) {                        // 螢幕座標 → viewBox 使用者單位
+    var m = svg.getScreenCTM(); if (!m) return null;
+    var inv = m.inverse(), r = el.getBoundingClientRect();
+    var a = svg.createSVGPoint(), c = svg.createSVGPoint();
+    a.x = r.left; a.y = r.top; c.x = r.right; c.y = r.bottom;
+    var A = a.matrixTransform(inv), C = c.matrixTransform(inv);
+    return { x: A.x, y: A.y, r: C.x, b: C.y };
+  }
+  function hit(a, dy, o) {
+    return !(a.x + a.width < o.x || a.x > o.r || a.y + dy + a.height < o.y || a.y + dy > o.b);
+  }
+  /* ⚠⚠ 防遞迴：這一段自己會動到 yl 的 class，而它又被 MutationObserver 盯著 ——
+     classList.remove() 就算那個 class 本來就不在，也會寫一次 class 屬性、
+     再觸發一次觀察者。第一版就是這樣讓整頁卡死（開頁永遠 load 不完，
+     而且主控台一個錯都沒有）。所以①只在真的有那個 class 時才拿掉
+     ②整段用一個旗標關起來。 */
+  var inYL = false;
+  function unhide() { if (yl.classList.contains('hide')) yl.classList.remove('hide'); }
+  function placeYongle() {
+    if (!yl || inYL) return;
+    inYL = true;
+    try { placeYongle0(); } finally { inYL = false; }
+  }
+  function placeYongle0() {
+    card.removeAttribute('data-yl');
+    var dots = svg.querySelector('.dots.on');
+    if (!dots || !dots.getClientRects().length) { unhide(); return; }
+    var o = boxOf(dots); if (!o) return;
+    var a = yl.getBBox();                      // ⚠ 原位，不吃自己的 transform
+    if (!hit(a, 0, o)) { unhide(); return; }
+    if (!hit(a, -116, o)) { card.setAttribute('data-yl', 'up');   unhide(); return; }
+    if (!hit(a,  154, o)) { card.setAttribute('data-yl', 'down'); unhide(); return; }
+    /* 真的沒地方 —— 交還給站上那條 */
+  }
+
+  function syncDim() {
     var want = on && st.lots === 'off';
     var has = svg.classList.contains('dim');
     if (want && !has) svg.classList.add('dim');
+    placeYongle();
   }
   new MutationObserver(syncDim).observe(svg, { attributes: true, attributeFilter: ['class'] });
+  /* 站上那支 paintLots() 每次跑都會重新掛 .hide，所以這個標籤自己也要看著 */
+  if (yl) new MutationObserver(placeYongle).observe(yl, { attributes: true, attributeFilter: ['class'] });
 
-  chips.forEach(function (b) { b.setAttribute('aria-pressed', String(on)); });
+  function paint() {
+    card.setAttribute('data-bays', on ? '1' : '0');
+    chips.forEach(function (b) { b.setAttribute('aria-pressed', String(on)); });
     /* 「停車場熄滅」＝ 借站上自己那條規則：點地圖的其他地方就全部收回。
        ⚠ 那支 IIFE 是關起來的，外面叫不到 paintLots()，所以用它自己的
          figure click handler（pinned = null）。 */
@@ -8918,11 +8978,17 @@ html[data-pv-p="bot"]  .pv-side, html[data-pv-p="bot"] .pv-top  { display: none;
           (nCut ? '　⚠ 有 ' + nCut + ' 個被裁到' : '　沒有被裁到')
         : '不寫') +
       '　亮著的停車場 ' + lotOn + ' 塊　水平溢出 ' + ov + 'px\n' +
-      '虛線 一段 ' + (da[0] * k).toFixed(1) + 'px・空 ' + ((da[1] || da[0]) * k).toFixed(1) +
-      'px・粗 ' + (dw * k).toFixed(2) + 'px　一圈 ' + (per ? (62 / per).toFixed(1) : '—') + ' 段' +
-      ((da[0] * k) < 2.5 ? '　⚠ 一段不到 2.5px，畫出來讀不出是虛線' : '') +
+      '框線 ' + (st.c === 'out' ? '空心' : '實心') + '・粗 ' + (dw * k).toFixed(2) + 'px　' +
+      (per
+        ? '虛線 一段 ' + (da[0] * k).toFixed(1) + 'px・空 ' + ((da[1] || da[0]) * k).toFixed(1) +
+          'px・一圈 ' + (62 / per).toFixed(1) + ' 段' +
+          ((da[0] * k) < 2.5 ? '　⚠ 一段不到 2.5px，畫出來讀不出是虛線' : '')
+        : '實線') +
       '　街名 ' + (svg.classList.contains('dim') ? '淡下去了' : '滿的') + '\n' +
-      '路名被格子蓋到 ' + (hitNames.length ? '⚠ ' + hitNames.length + ' 條：' + hitNames.join('、') : '0 條');
+      '路名被格子蓋到 ' + (hitNames.length ? '⚠ ' + hitNames.length + ' 條：' + hitNames.join('、') : '0 條') +
+      '　永樂街 ' + (card.getAttribute('data-yl') === 'up' ? '往上讓開路線'
+        : card.getAttribute('data-yl') === 'down' ? '往下讓開路線'
+        : (yl && yl.classList.contains('hide')) ? '⚠ 藏起來了（沒地方讓）' : '原位');
   }
   addEventListener('resize', measure);
   addEventListener('load', measure);
