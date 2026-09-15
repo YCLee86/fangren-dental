@@ -135,9 +135,17 @@ html[data-pv-c="ink"] { --pv-bay: var(--ink-soft); }
    ⚠ dasharray 的單位是 viewBox 的使用者單位，會跟著圖一起縮 ——
      手機上 1 單位 ＝ 0.748px，所以 3 個單位畫出來只有 2.2px。 */
 .pv-bay {
-  fill: var(--pv-bay); stroke: var(--pv-dash, #282b31);
+  fill: var(--pv-bay); fill-opacity: var(--pv-fo, .72);
+  stroke: var(--pv-dash, #282b31);
   stroke-width: var(--pv-dw, 1.4); stroke-dasharray: var(--pv-da, 3 2.4);
 }
+/* 實心帶一點透感（2026-09-15 使用者指定）—— 底下透出來的是路面 --map-road，
+   所以那是「路面上畫的一格」不是「疊在路面上的一塊板子」。
+   ⚠ 用 fill-opacity 不是 opacity：opacity 會連框線一起淡掉。 */
+html[data-pv-o="1"]  { --pv-fo: 1; }
+html[data-pv-o="85"] { --pv-fo: .85; }
+html[data-pv-o="72"] { --pv-fo: .72; }
+html[data-pv-o="55"] { --pv-fo: .55; }
 /* 虛線的顏色（2026-09-15 使用者：「白天模式停車格白虛線感覺怪怪的，
    改成和夜間一樣的虛線顏色看看」）。
    ⚠ #282b31 **不是新顏色** —— 就是夜間模式的卡色（index.html 第 5810 行），
@@ -156,8 +164,20 @@ html[data-pv-d="d"] { --pv-dw: 2.2; --pv-da: 5.5 4.4; }
    沒有底，框線本身就是那一格，所以框線換成路牌藍、也畫粗一點。
    ⚠ 這一態吃不到「虛線顏色」那條尺（框線就是格子的顏色），只吃疏密。 */
 html[data-pv-c="out"] .pv-bay {
-  fill: none; stroke: var(--pv-bay); stroke-width: var(--pv-ow, 2.4);
+  fill: none; stroke: var(--pv-bay); stroke-width: var(--pv-ow, 1.6);
 }
+/* 空心那條框線多細（2026-09-15 使用者：「框線細一點」）。
+   ⚠ 單位是 viewBox 的使用者單位，會跟著圖縮 —— 手機上 1 單位 ＝ 0.748px，
+     所以 1.2 畫出來只有 0.9px（面板會報畫出來幾 px）。 */
+html[data-pv-ow="24"] { --pv-ow: 2.4; }
+html[data-pv-ow="20"] { --pv-ow: 2.0; }
+html[data-pv-ow="16"] { --pv-ow: 1.6; }
+html[data-pv-ow="12"] { --pv-ow: 1.2; }
+
+/* ⚠ 兩條尺各自只對一種格子有意義，所以**只顯示現在這一種的那一條** ——
+   切換條在手機上不能吃掉半個畫面（第八節），四列會頂到 30%。 */
+html[data-pv-c="out"]  .pv-row[data-k="o"]  { display: none; }
+html[data-pv-c="fill"] .pv-row[data-k="ow"] { display: none; }
 
 .pv-n { fill: var(--ink); font-weight: 600; letter-spacing: .02em; }
 .pv-ns { display: none; }
@@ -260,10 +280,13 @@ html[data-pv-p="bot"]  .pv-side, html[data-pv-p="bot"] .pv-top  { display: none;
      要回頭比對還開得出來（同 head-search 那一輪）。
    ⚠ 只留新的那一條：虛線多疏、多粗 —— 那是他還沒看過的東西，
      所以給一把尺不是給一個我估的值（第九節第 28 條 ①）。 */
+/* ⚠ 「虛線顏色」2026-09-15 定了（夜間那支），收成寫死的值、從切換條上拿掉，
+     網址參數仍然吃得到（?k=ink|soft|card）。 */
 const R = [
-  ['c', '格子',     [['out', '空心'], ['fill', '實心']]],
-  ['d', '框線',     [['n', '實線'], ['a', '最細密'], ['b', '細'], ['c', '中'], ['d', '疏']]],
-  ['k', '虛線顏色', [['night', '夜間那支'], ['ink', '墨'], ['soft', '柔墨'], ['card', '白（原本）']]],
+  ['c',  '格子',   [['out', '空心'], ['fill', '實心']]],
+  ['d',  '框線',   [['n', '實線'], ['a', '最細密'], ['b', '細'], ['c', '中'], ['d', '疏']]],
+  ['ow', '框線粗細', [['24', '2.4'], ['20', '2.0'], ['16', '1.6'], ['12', '1.2']]],
+  ['o',  '實心透感', [['1', '不透'], ['85', '85%'], ['72', '72%'], ['55', '55%']]],
 ];
 const bar =
 '<button class="pv-mini" type="button" id="pv-open" hidden>提案</button>\n' +
@@ -278,7 +301,7 @@ R.map(([k, label, opts]) =>
 '</div>\n' +
 `<script>
 (function () {
-  var DEF = { p: 'side', c: 'out', num: 'off', lots: 'off', w: 'on', d: 'n', k: 'night' };
+  var DEF = { p: 'side', c: 'out', num: 'off', lots: 'off', w: 'on', d: 'n', k: 'night', ow: '16', o: '72' };
   var root = document.documentElement, q = new URLSearchParams(location.search);
   var st = {};
   /* ⚠ 網址參數的正規式要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 第九節）*/
@@ -465,6 +488,7 @@ R.map(([k, label, opts]) =>
              .split(/[ ,]+/).map(parseFloat).filter(function (v) { return v === v; });
     var dw = parseFloat(getComputedStyle(svg.querySelector('#pv-bays .pv-bay')).strokeWidth) || 0;
     var per = da.length ? (da[0] + (da[1] || da[0])) : 0;
+    var fo = parseFloat(getComputedStyle(svg.querySelector('#pv-bays .pv-bay')).fillOpacity);
     p.textContent =
       '標籤 ' + (on ? '按下去了' : '沒按') +
       '　畫出來 ' + (cb ? Math.round(cb.width) + '×' + Math.round(cb.height) + 'px' : '—') +
@@ -481,7 +505,8 @@ R.map(([k, label, opts]) =>
           (nCut ? '　⚠ 有 ' + nCut + ' 個被裁到' : '　沒有被裁到')
         : '不寫') +
       '　亮著的停車場 ' + lotOn + ' 塊　水平溢出 ' + ov + 'px\\n' +
-      '框線 ' + (st.c === 'out' ? '空心' : '實心') + '・粗 ' + (dw * k).toFixed(2) + 'px　' +
+      '框線 ' + (st.c === 'out' ? '空心' : '實心・底 ' + Math.round(fo * 100) + '%') +
+      '・粗 ' + (dw * k).toFixed(2) + 'px' + ((dw * k) < 0.8 ? '（不到 0.8px，會糊）' : '') + '　' +
       (per
         ? '虛線 一段 ' + (da[0] * k).toFixed(1) + 'px・空 ' + ((da[1] || da[0]) * k).toFixed(1) +
           'px・一圈 ' + (62 / per).toFixed(1) + ' 段' +
