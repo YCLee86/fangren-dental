@@ -75,10 +75,10 @@ function bitsCap(ver, ecl) {
 }
 
 /* ---- 編碼 -------------------------------------------------------------- */
-function encode(str, ecl) {
+function encode(str, ecl, minVer = 1) {
   const bytes = new TextEncoder().encode(str);
   let ver = 0;
-  for (let v = 1; v <= 10; v++) {
+  for (let v = minVer; v <= 10; v++) {
     /* 模式 4 位元 ＋ 長度 8 位元（v1~9）／16 位元（v10 起） */
     const lenBits = v < 10 ? 8 : 16;
     if (4 + lenBits + bytes.length * 8 <= bitsCap(v, ecl)) { ver = v; break; }
@@ -267,8 +267,11 @@ function buildMatrix(ver, ecl, words, forceMask = -1) {
 }
 
 /* ---- 對外 -------------------------------------------------------------- */
-export function qrMatrix(text, ecl = 'Q', forceMask = -1) {
-  const { ver, words } = encode(text, ecl);
+/* minVer ＝ 最低版本。給大於「剛好裝得下」的版本，格子會變多、
+   三顆定位點相對整張碼就變小 —— 特斯拉那一張就是這樣做的。
+   ⚠ 資料沒變多，多出來的位元組是填充，掃描行為不受影響。 */
+export function qrMatrix(text, ecl = 'Q', forceMask = -1, minVer = 1) {
+  const { ver, words } = encode(text, ecl, minVer);
   return buildMatrix(ver, ecl, words, forceMask);
 }
 /* 給測試用：吐出版本與交錯後的碼字，方便和參考實作對答案。 */
