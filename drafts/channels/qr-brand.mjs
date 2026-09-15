@@ -85,11 +85,11 @@ const GTAG  = GROUP.match(/<g[^>]*>/)[0];
 
 /* 牙洞填白：外形照舊（evenodd 挖穿），再把洞那一條子路徑單獨填白疊上去。
    ⚠ 一定要放進原本那個 <g> 裡面（見檔頭第 ③ 條）。 */
-const MARK_WHITE_HOLE =
+export const MARK_WHITE_HOLE =
   `${GTAG}<path d="${D_ALL}" fill="currentColor" fill-rule="evenodd"/>`
   + `<path d="${SUBS[1]}" fill="${LITE}"/></g>`;
 /* 遮罩用的「填實」版本（見檔頭第 ② 條） */
-const MARK_SOLID = GROUP
+export const MARK_SOLID = GROUP
   .replace(/ d="([^"]+)"/, ` d="${SUBS[0]}"`)
   .replace(/\s*fill-rule="[^"]*"/g, '');
 
