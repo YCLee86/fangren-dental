@@ -88,7 +88,44 @@ const SWATCH = { teal: "#214D48", taupe: "#7D5A58", blue: "#3C596B", moss: "#5D6
 const LIFT = Object.fromEntries(Object.entries(SWATCH).map(([n, c]) => [n, liftTo(c, [P.paper, P.card], 4.5)]));
 const [Lc, Cc, Hc] = toLch(P.card);
 const MAP_ROAD = fromLch(Lc + 16, Cc, Hc);
+/* ⚠ 夜間的 --map-park **只剩路線的點與牌子在用**，不再是「點到的那一塊」（見下面那三條）。 */
 const MAP_PARK = liftTo("#365685", [P.card, mix("#365685", P.card, 0.1)], 4.5);
+/* ---- 停車場那三塊（2026-09-15 第二輪，三格都是使用者在提案頁上挑的） ----
+ * 起因是他的手機截圖：「停車場的藍在夜間變得不太清楚……入口的指標就幾乎看不到了」，
+ * 接著第二輪：「沒點到的停車場感覺可以暗一點」。
+ * ⚠⚠⚠ 成因是同一個，而且是第九節第 28 條 ② 那一種：第一輪把白天那兩支
+ *   （路牌藍 #365685、停車場灰 #7a7d77）**原封不動釘回來**，可是它們周圍的東西
+ *   全部換過了 —— 白天的路面比街廓**暗**、夜間比街廓**亮 16 L 星**（Ⓜ1 是他挑的），
+ *   白天的卡是 L 星 96、夜間的街廓是 17.5。同一支顏色因此換了個意思：
+ *     ・入口指標壓在路面上，4.79 → **1.11**（1.00 就是完全看不見）。
+ *     ・點到的方塊對街廓 6.76 → 1.91，而且從「比沒點到暗 3.6」變成「暗 15.8」——
+ *       深底上暗就是退後，**點下去那一塊反而沉下去**，語意翻面。
+ *     ・沒點到的那三塊變成整張圖上最亮的一群大塊（對街廓 3.40），
+ *       **比診所自己那塊綠（2.14）還跳** —— 一張「診所在哪」的地圖份量排錯了。
+ * ⚠⚠ 三個值必須各自算，不能共用一支：方塊的底是街廓、箭頭的底是路面，
+ *   夜間那兩塊差 16 L 星。要箭頭對路面過 3:1 得走到 L 星 64.5，
+ *   而白色的 P 壓在那個亮度上只剩 2.49 —— **白 P 就是方塊那一把尺的天花板**。
+ * ⚠ 錨點只有三個，全部有出處，改任何一個這三支都會自己跟著動：
+ *   白天那支停車場灰 #7a7d77（點到的亮度）／診所那塊綠 #3f654a（沒點到的份量）／路面（箭頭）。
+ * ⚠ 落選：點到 對街廓 3:1（白 P 只剩 4.30）、= --map-park（白 P 2.71）；
+ *   沒點到 暗一階 2.74、再暗一階 1.74（**對路面 1.01，貼著路的那一邊就沒有邊界了** ——
+ *   路面是 L 星 33.5，塊走到那附近是死區）。 */
+const LOT_DAY = "#7a7d77";                                  /* 白天那支：柔墨混 80% */
+const [Ld, Cd, Hd] = toLch(LOT_DAY);
+const [, Cp, Hp] = toLch("#365685");
+/* 點到：釘在白天那支灰的亮度上（白天兩態幾乎同亮，只差 3.6 L 星 ＝ 換色相）。
+   ⚠ 釘的是**白天那一支**不是夜間的沒點到 —— 不然沒點到一暗，這一顆會跟著掉下去。 */
+const LOT_ON = fromLch(Ld, Cp, Hp);
+/* 入口指標：它的底是路面，3:1 是裝飾性圖形的門檻（同 iPad 那顆指標那一輪）。 */
+const LOT_ENT = liftTo("#365685", [MAP_ROAD], 3);
+/* 沒點到：往下暗到和診所那塊綠同一個份量 —— 停車場不該比診所自己還跳。
+   ⚠ 順帶修好另一格：白色的 P 壓在上面本來只有 3.80，暗下去變 6.08。 */
+const darkTo = (hex, bg, target) => {
+  const [L0, C, H] = toLch(hex);
+  for (let L = L0; L >= 0; L -= 0.1) { const c = fromLch(L, C, H); if (cr(c, bg) <= target) return c; }
+  throw new Error("暗不到 " + target + "：" + hex);
+};
+const LOT_OFF = darkTo(LOT_DAY, P.card, cr("#3f654a", P.card));
 const DOT_FAINT = mix(P.soft, P.card, 0.35);
 const FOOT_LINK = liftTo("#3f654a", [P.paper, P.card], 4.5);
 const specRules = (deep) => Object.keys(FILL).map((s) => {
@@ -148,8 +185,9 @@ html[data-theme="dark"] .sk.tag-on { color: var(--sk-ink); }
 html[data-theme="dark"] .map-svg :is(.pk, .pk-nm, .cm-nm, .cm-disc) { fill: #f4f4f5; }
 html[data-theme="dark"] .map-svg .lot .pk { stroke: #f4f4f5; }
 html[data-theme="dark"] .map-svg .cm-ul { stroke: #f4f4f5; }
-html[data-theme="dark"] .lot rect, html[data-theme="dark"] .lot path { fill: #7a7d77; }
-html[data-theme="dark"] .lot.on rect, html[data-theme="dark"] .lot.on path { fill: #365685; }
+html[data-theme="dark"] .lot :is(rect, path) { fill: ${LOT_OFF}; }
+html[data-theme="dark"] .lot.on :is(rect, path) { fill: ${LOT_ON}; }
+html[data-theme="dark"] .lot.on .ent { fill: ${LOT_ENT}; }
 html[data-theme="dark"] .map-svg .cm-sh use { fill: #000; opacity: .07; }
 html[data-theme="dark"] .hours-grid .d.faint { background: var(--dot-faint); }
 html[data-theme="dark"] .hours-grid .d.hit { background: var(--accent-deep); }

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>night-map-park｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>night-map-park — 夜間地圖的停車場藍與入口指標</h1>
+<p class="meta">
+  2026-09-15 開、當天兩輪定案上線（夜間模式定案當天稍晚）<br>
+  原網址 <code>/preview/night-map-park/</code>（已刪除 2026-09-15）<br>
+  整頁還原：<code>git show 2389773:preview/night-map-park/index.html</code><br>
+  提案期的產生器 <code>tools/night-map-preview.mjs</code>（定案時刪掉，同一個 sha 還原得到）<br>
+  正式站的產生器仍然是 <code>tools/night-mode.mjs</code>（這三個值寫回它，都是算出來的）
+</p>
+
+<h2>起點</h2>
+<div class="note"><pre>使用者的手機截圖（夜間、首頁的地圖）：
+「停車場的藍好像在夜間模式變得不太清楚，雖然停車場因為圖形不小還算可以辨認，
+　但入口的指標就幾乎看不到了。」
+
+第二輪（第一輪定案之後）：「這樣可以，那沒點到的停車場感覺可以暗一點。」</pre></div>
+
+<h2>成因 —— 三件事同一個根</h2>
+<div class="note"><pre>夜間模式那一輪（同一天稍早）把白天那兩支顏色**原封不動釘回來**：
+路牌藍 #365685（點到）與停車場灰 #7a7d77（沒點到）。可是它們周圍的東西全部換過了：
+
+  白天　街廓 L* 96.2　路面 L* 83.3　　←　路面比街廓**暗**
+  夜間　街廓 L* 17.5　路面 L* 33.5　　←　路面比街廓**亮 16 L***（Ⓜ1 是使用者挑的）
+
+同一支顏色因此換了個意思，量出來是三件：
+
+  ① 入口指標壓在**路面**上　　　對比 4.79 → **1.11**（1.00 ＝ 完全看不見）
+  ② 點到的方塊對**街廓**　　　　對比 6.76 → 1.91
+     而且從「比沒點到暗 3.6 L*」變成「暗 15.8」——
+     深底上暗就是退後，**點下去那一塊反而沉下去**，語意翻面
+  ③ 沒點到的那三塊對街廓 3.40 ＝ 整張圖上最亮的一群大塊，
+     **比診所自己那塊綠（2.14）還跳** —— 一張「診所在哪」的地圖，份量排錯了
+
+⚠⚠ ① 沒有第二條路：要比路面（L* 33.5）暗到 3:1 需要負的亮度，**只能提亮**。</pre></div>
+
+<h2>定案（三格都是使用者在提案頁上挑的）</h2>
+<div class="note"><pre>入口指標　　#819dd1　對路面 3.00（裝飾性圖形的門檻，同 iPad 那顆指標那一輪）
+　　　　　　落選：現況 1.11／= --map-park #7a96ca 2.75（不新增顏色，但差 2.7 L* 幾乎看不出來）
+　　　　　　　　　#a6c1f7 4.53
+點到的塊　　#607daf　對街廓 3.41・對路面 1.98・白 P 3.78
+　　　　　　＝ 釘在**白天那支停車場灰**的亮度（L* 52.0）上，只換色相
+　　　　　　落選：現況 1.91／對街廓 3:1 #5774a5（白 P 4.30）／= --map-park #7a96ca（白 P 只剩 2.71）
+沒點到的塊　#5a5d58　對街廓 2.12（＝診所那塊綠的 2.14）・對路面 1.23・白 P 6.08
+　　　　　　落選：現況 3.40／暗一階 #6b6e69 2.74／再暗一階 #4e504b 1.74（對路面 1.01）</pre></div>
+
+<h2>值得記住的</h2>
+<div class="note"><pre>⚠⚠⚠ **三個值不能共用一支顏色，那是幾何不是偏好。** 方塊的底是街廓、箭頭的底是路面，
+　夜間那兩塊差 16 L*。要箭頭對路面過 3:1 得走到 L* 64.5，而**白色的 P 壓在那個亮度上
+　只剩 2.49** —— 白 P 就是方塊那一把尺的天花板，這件事要在送尺出去的時候先講
+　（CLAUDE.md 第九節第 28 條 ③：自己推出來的限制正在壓縮成品時要當場講）。
+
+⚠⚠ **路面附近是死區**：路面 L* 33.5，沒點到的塊走到那附近時「貼著路的那一邊」
+　就沒有邊界了（落選那一格對路面 1.01）。三塊都有一角是貼著路的，所以面板要一起量。
+
+⚠⚠ **錨點只有三個，而且都有出處**，改任何一個那三支都會自己跟著動：
+　白天那支停車場灰 #7a7d77（點到的亮度）／診所那塊綠 #3f654a（沒點到的份量）／路面（箭頭）。
+　⚠ 點到那一支釘的是**白天那一支**不是夜間的沒點到 —— 不然沒點到一暗，它會跟著掉下去。
+
+⚠ 第二輪把第一輪那句理由弄成假的（第 28 條 ②）：尺二當時的理由是「和沒點到同亮、
+　只換色相」，沒點到往下退之後變成「點到比沒點到亮 13 L*」。方向仍然是對的
+　（深底上亮 ＝ 站出來），但那句話要改口成「點到釘在 L* 52，沒點到往下退」。
+
+⚠ 提案頁自己踩到一個「量測壞掉但畫面正常」：面板只在 load ＋300ms 量一次，
+　而站上那支「開頁先亮壹車房」在手機 4G 上比它慢 —— 使用者手機上的面板一直停在
+　「點一下地圖上的三塊停車場」，而畫面完全正常。改成量到為止（最多 8 秒）
+　＋ MutationObserver 監看 .lot 的 class。
+
+⚠ 面板不可以讀自訂屬性去算對比：getPropertyValue('--map-road') 回的是原字
+　（一串 16 進位），拿去配對數字會撿到色碼裡的位數（第一版量出 NaN 與 7.12）。
+　要讀**畫出來的那個元素**的 computed fill。
+
+⚠ 驗收：白天逐位元組相同（390×844 DPR3，地圖那張卡的截圖 md5 一樣）；
+　夜間首頁與七科著陸頁量到的三個 fill 逐字 ＝ 定案值；八個寬度水平溢出 0。
+　文章頁沒有地圖，這一輪一個字都沒動到 assets/style.css 與 posts/*。</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄</footer>
+</div></body>
+</html>
