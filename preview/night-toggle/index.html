@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>夜間模式的開關：圓鈕與月亮反過來（提案）</title>
+<!--
+  2026-09-15 提案：夜間那顆圓鈕反過來 —— 圓形深藍、月亮淡藍。
+  起因（使用者，看著自己手機上的首頁）：
+    「白天的按鈕滑桿沒什麼問題　但夜間的滑桿　月亮那塊圓的地方很亮，
+      只有月亮是夜間模式的深藍色　如果反過來　圓形是深藍色　月亮　淡藍色
+      效果怎麼樣？」
+
+  ⚠ 這一頁是**獨立寫的**、不是 index.html 的複本（同 clinic-schedule 那一輪），
+    所以 CLAUDE.md 第八節那四個坑一個都踩不到。
+  ⚠ 開關的幾何（50×30、圓鈕 26、圖示 16、位移 20px、兩段 transition）
+    與月亮／太陽的 path，全部從 tools/night-mode.mjs **逐字照抄**，
+    只把狀態選擇器從 html[data-theme="dark"] 換成 .smp[data-s="dark"]
+    —— 這樣每一顆可以各自翻面（按一下就看得到白天那一態沒有被動到）。
+    定案時要寫回 tools/night-mode.mjs，這一頁的值不是出處。
+
+  ---- 量出來的三件（面板每次開頁現算，讀的是畫出來的那個元素） ----
+  ① 現況那顆白鈕對夜間的紙底是 17.60 —— **整顆開關在夜間頁面上最顯眼的東西就是它**。
+     反過來之後那一塊亮的沒有了，開關的存在感要靠月亮那幾筆線（線很細）。
+     這是這一輪唯一真正的取捨，Ⓔ（一圈細框）與 Ⓕ（實心月亮）就是為它做的。
+  ② 圓鈕能有多深是**幾何決定的，不是偏好**：軌道是 L* 36.2，往下的地板是 0，
+     所以「圓鈕比軌道暗」最多只到 1.9:1 左右（再暗就比紙底 L* 8.7 還暗，
+     而且對比幾乎不再增加）。**任何一格都達不到 3:1**，圓的邊界一定比現在弱。
+  ③ 月亮可以很亮 —— 它的底是圓鈕（很暗），所以 4.5 甚至 7:1 都做得到。
+     真正要挑的是「月亮亮到什麼程度，這顆開關才還看得見」。
+
+  ---- 顏色的出處 ----
+  三支都是**路牌藍 #365685 的同色相同彩度、只動亮度**（夜間軌道就是它）。
+  沒有新增第二個色相，也沒有從色票裡另外挑一支。
+
+  ---- 定案時要做的 ----
+  ① 把選上那一格的兩（三）個值寫進 tools/night-mode.mjs 的開關那一段
+  ② node tools/night-mode.mjs → node tools/topics.mjs → node tools/build.mjs
+  ③ 刪掉這一頁，文字搬進 history/night-toggle.html
+-->
+<style>
+/* ---- 夜間配色（tools/night-mode.mjs 的 P，逐字） ---- */
+:root { --paper: #17191d; --card: #282b31; --rule: #3a3d44; --ink: #e2e5e6; --ink-soft: #9a9ea3; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Hiragino Sans TC",
+               system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px; line-height: 1.85; letter-spacing: .01em; }
+.shell { max-width: 640px; margin: 0 auto; padding: 1.6rem 14px 4rem; }
+h1 { font-size: 1.12rem; line-height: 1.6; margin: 0 0 .4rem; letter-spacing: .02em; }
+.lead { color: var(--ink-soft); font-size: .9rem; line-height: 1.7; margin: 0 0 1.6rem; }
+.lead b { color: var(--ink); font-weight: 600; }
+
+/* 每一格：標籤 ＋ 一條仿「主題與科別」的列（首頁上開關就在這一行的最右邊） */
+.smp { margin: 0 0 1.5rem; }
+.tag { display: flex; align-items: baseline; gap: .5rem; font-size: .84rem; color: var(--ink-soft); margin-bottom: .35rem; }
+.tag b { color: var(--ink); font-size: .95rem; font-weight: 600; letter-spacing: .02em; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  background: var(--paper); padding: .5rem 0; }
+.row h2 { margin: 0; font-size: 1.12rem; line-height: 1.5; letter-spacing: .02em; font-weight: 700; }
+.num { font-size: .78rem; line-height: 1.65; color: var(--ink-soft); margin: .15rem 0 0;
+  font-variant-numeric: tabular-nums; }
+.num i { font-style: normal; color: var(--ink); }
+.num .warn { color: #e8a2a6; }
+
+/* ==========================================================================
+   開關 —— 以下到「開關結束」那一行為止，是 tools/night-mode.mjs 那一段的複本。
+   （⚠ 這一句原本把「開關結束」那個註解記號寫進來，整段註解就在那裡提早關掉、
+     底下的規則全部失效 —— CLAUDE.md 第九節第 8 條那個坑，這裡踩過一次。）
+   幾何、transition、位移一個數字都沒有改；只有狀態選擇器換成 .smp[data-s="dark"]。
+   ========================================================================== */
+.theme-toggle { appearance: none; border: 0; background: none; padding: 0; font: inherit; cursor: pointer; flex: none;
+  display: inline-flex; align-items: center; min-height: 34px; -webkit-tap-highlight-color: transparent; position: relative; }
+.theme-toggle::after { content: ""; position: absolute; inset: -7px -4px; }
+.tt-track { position: relative; width: 50px; height: 30px; border-radius: 15px; flex: none;
+  background: #c28229; transition: background-color .22s ease; }
+.tt-knob { position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center; background: #fff; color: #c28229;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .28); transition: transform .22s ease, color .22s ease, background-color .22s ease; }
+.tt-knob svg { grid-area: 1 / 1; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; transition: opacity .18s ease, transform .22s ease; }
+.tt-moon { opacity: 0; transform: rotate(-60deg) scale(.6); }
+.smp[data-s="dark"] .tt-track { background: #365685; }
+.smp[data-s="dark"] .tt-knob { transform: translateX(20px); color: #365685; }
+.smp[data-s="dark"] .tt-sun { opacity: 0; transform: rotate(60deg) scale(.6); }
+.smp[data-s="dark"] .tt-moon { opacity: 1; transform: none; }
+.theme-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 17px; }
+@media (prefers-reduced-motion: reduce) { .tt-track, .tt-knob, .tt-knob svg { transition: none; } }
+/* 開關結束 */
+
+/* ---- 每一格自己的顏色（只在夜間那一態；白天完全沒有動） ---- */
+.smp[data-s="dark"] .tt-knob { background: var(--k, #fff); color: var(--m, #365685); }
+.smp[data-s="dark"] .tt-knob { box-shadow: var(--ring, 0 1px 3px rgba(0, 0, 0, .28)); }
+.smp[data-fill="1"][data-s="dark"] .tt-moon { fill: currentColor; stroke: none; }
+
+.note { border-top: 1px solid var(--rule); margin-top: 2.4rem; padding-top: 1.2rem;
+  font-size: .86rem; line-height: 1.8; color: var(--ink-soft); }
+.note b { color: var(--ink); }
+.note ul { padding-left: 1.1rem; margin: .4rem 0 1rem; }
+.note li { margin-bottom: .45rem; }
+</style>
+</head>
+<body>
+<div class="shell">
+<h1>夜間模式的開關：圓鈕與月亮反過來</h1>
+<p class="lead">每一顆都是<b>真的開關</b>，按一下會翻到白天再按一下翻回來 ——
+白天那一態六格完全相同，<b>一個值都沒有動</b>。<br>
+底下的數字是開頁現場量的（讀的是畫出來的那個元素，不是變數）。</p>
+
+<div id="list"></div>
+
+<div class="note">
+<b>量出來的三件</b>
+<ul>
+<li><b>現況那顆白鈕，是整顆開關在夜間頁面上最顯眼的東西</b>（對紙底 17.6）。反過來之後那一塊亮的沒有了，開關要靠月亮那幾筆細線被看見 —— 這是這一輪唯一真正的取捨，<b>Ⓔ</b>（圓鈕加一圈淡藍細框）和 <b>Ⓕ</b>（月亮改成實心）就是為它做的。</li>
+<li><b>圓鈕能有多深是幾何決定的，不是偏好。</b>軌道是 L* 36.2、往下的地板是 0，所以「圓鈕比軌道暗」最多走到 1.9:1 左右，再暗就比頁面的底還暗、對比也不再增加。<b>沒有任何一格到得了 3:1</b>，圓的邊界一定比現在弱一階。</li>
+<li><b>月亮可以很亮</b>（它的底是很暗的圓鈕），所以要挑的其實是「月亮亮到什麼程度，這顆開關還看得見」。</li>
+</ul>
+<b>顏色沒有新增</b>：三支都是路牌藍 <code>#365685</code>（＝夜間軌道本人）的同色相同彩度，只動亮度。
+</div>
+</div>
+
+<script>
+/* 候選。dark 那一態的三個值：k 圓鈕、m 月亮、ring 圓鈕的陰影或框線 */
+var CASES = [
+  { id: "Ⓐ", name: "現況",            note: "白鈕 ＋ 深藍月亮",              k: "#ffffff", m: "#365685" },
+  { id: "Ⓑ", name: "反過來・淺",      note: "圓鈕只比軌道暗一點",            k: "#224573", m: "#96b2e7" },
+  { id: "Ⓒ", name: "反過來・中",      note: "最安靜的一格",                  k: "#153c69", m: "#b7ceff" },
+  { id: "Ⓓ", name: "反過來・深",      note: "圓鈕壓到最暗（再暗沒有用）",    k: "#012c53", m: "#9cb7ed" },
+  { id: "Ⓔ", name: "Ⓒ ＋ 一圈細框",   note: "建議 —— 圓的邊界用線補回來",    k: "#153c69", m: "#b7ceff",
+    ring: "0 1px 3px rgba(0,0,0,.28), inset 0 0 0 1px #8aa6da" },
+  { id: "Ⓕ", name: "Ⓒ ＋ 實心月亮",   note: "月亮從線稿改成填實",            k: "#153c69", m: "#b7ceff", fill: 1 }
+];
+var ICON = '<svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+
+var list = document.getElementById("list");
+CASES.forEach(function (c, i) {
+  var d = document.createElement("div");
+  d.className = "smp"; d.dataset.s = "dark"; d.dataset.i = i;
+  if (c.fill) d.dataset.fill = "1";
+  d.style.setProperty("--k", c.k); d.style.setProperty("--m", c.m);
+  if (c.ring) d.style.setProperty("--ring", c.ring);
+  d.innerHTML =
+    '<div class="tag"><b>' + c.id + ' ' + c.name + '</b>' + c.note + '</div>' +
+    '<div class="row"><h2>主題與科別</h2>' +
+    '<button class="theme-toggle" type="button" role="switch" aria-checked="true" aria-label="夜間模式">' +
+    '<span class="tt-track" aria-hidden="true"><span class="tt-knob">' + ICON + '</span></span></button></div>' +
+    '<p class="num"></p>';
+  list.appendChild(d);
+  d.querySelector(".theme-toggle").addEventListener("click", function () {
+    var on = d.dataset.s === "dark";
+    d.dataset.s = on ? "light" : "dark";
+    this.setAttribute("aria-checked", on ? "false" : "true");
+    setTimeout(measure, 260);
+  });
+});
+
+/* ---- 量測：一律讀畫出來的那個元素的 computed 值 ---- */
+function rgb(s) {
+  var m = s.match(/[\d.]+/g); return m ? [ +m[0], +m[1], +m[2] ] : [0, 0, 0];
+}
+function lum(c) {
+  var v = c.map(function (x) { x /= 255; return x <= .04045 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4); });
+  return .2126 * v[0] + .7152 * v[1] + .0722 * v[2];
+}
+function cr(a, b) { var x = lum(a), y = lum(b); if (x < y) { var t = x; x = y; y = t; } return (x + .05) / (y + .05); }
+function measure() {
+  var paper = rgb(getComputedStyle(document.body).backgroundColor);
+  document.querySelectorAll(".smp").forEach(function (d) {
+    var night = d.dataset.s === "dark";
+    var knob = rgb(getComputedStyle(d.querySelector(".tt-knob")).backgroundColor);
+    var moon = rgb(getComputedStyle(d.querySelector(".tt-knob")).color);
+    var track = rgb(getComputedStyle(d.querySelector(".tt-track")).backgroundColor);
+    var kt = cr(knob, track), mk = cr(moon, knob);
+    /* 「這顆開關在頁面上找不找得到」要分兩個量講：
+       ① 最亮的那一「塊」（軌道或圓鈕）—— 現況是一整塊白，17.60；
+       ② 月亮那幾筆「線」—— 亮但很細（2px 的筆畫，圖示只有 16px）。
+       只報其中一個都會給出錯的結論。 */
+    var blk = Math.max(cr(knob, paper), cr(track, paper)), mp = cr(moon, paper);
+    var ring = getComputedStyle(d.querySelector(".tt-knob")).boxShadow.indexOf("inset") >= 0;
+    var p = d.querySelector(".num");
+    if (!night) { p.innerHTML = "（白天那一態，六格完全相同 —— 這一輪一個值都沒有動）"; return; }
+    p.innerHTML =
+      "圓鈕對軌道 <i>" + kt.toFixed(2) + "</i>（圓的邊界" +
+        (kt >= 3 ? "" : ring ? "：<i>靠那一圈細框</i>" : mk >= 4.5 ? "：<span class=\"warn\">只剩月亮在撐</span>" : "：<span class=\"warn\">幾乎讀不出來</span>") + "）" +
+      "　月亮對圓鈕 <i>" + mk.toFixed(2) + "</i>" +
+      "<br>在頁面上找得到嗎：最亮的一塊 <i>" + blk.toFixed(2) + "</i>、月亮那幾筆線 <i>" + mp.toFixed(2) + "</i>" +
+      (blk >= 5 ? "（一整塊亮的）" : "（<span class=\"warn\">塊不亮了，改由線在講話</span>）");
+  });
+}
+addEventListener("load", function () { setTimeout(measure, 300); });
+measure();
+</script>
+</body>
+</html>
