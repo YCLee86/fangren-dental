@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>map-bays｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>map-bays — 「鄰近停車格」那顆標籤</h1>
+<p class="meta">
+  2026-09-15 開、2026-09-16 定案上線<br>
+  原網址 <code>/preview/map-bays/</code>（已刪除 2026-09-16）<br>
+  整頁還原：<code>git show 4459978:preview/map-bays/index.html</code><br>
+  產生器 <code>drafts/door-notice/map-bays-preview.mjs</code>（一次性，定案時一併刪掉）<br>
+  切換條 <code>?p=</code> 標籤位置 ／ <code>?c=</code> 空心實心 ／ <code>?d=</code> 虛線 ／
+  <code>?ow=</code> 框線粗細 ／ <code>?o=</code> 透感 ／ <code>?k=</code> 虛線顏色 ／
+  <code>?num=</code> 號碼 ／ <code>?lots=</code> 按下去時 ／ <code>?w=</code> 未清查那一排
+</p>
+
+<h2>起因</h2>
+<p>使用者：「目前網站上的呈現只有付費停車場　保留原來網站的樣子　我另外加一個標籤是鄰近停車格　按下去再顯示這些位置　先做成預覽給我看」。</p>
+<p>格子的來源是 2026-09 那一輪的現地清查（<code>drafts/door-notice/parking-survey.json</code>，
+共 19 格 ＋ 文化路・平和街口以西 5 格示意）。</p>
+
+<h2>定案</h2>
+<pre>標籤　　　　「位置與周邊停車」旁邊，同一列
+　　　　　　幾何整組照抄它左邊那顆 h3（.88rem、上下內距那條 calc、圓角 12px）
+　　　　　　⚠ 兩顆藥丸並排，高度不可以各算各的 —— 站上那顆在 ≥721px 乘了
+　　　　　　　 --type-scale，這裡也要乘，不然電腦版一顆 38.25、一顆 32.2
+夜間沒點亮　套色 20% 的淡色塊（#384050）＋ #90abe1 的字（實測 4.51）
+格子　　　　實心路牌藍 ＋ 最細密的虛線框（dasharray 2 1.6、粗 1.2）
+虛線的顏色　#282b31 ＝ 夜間模式的卡色，白天夜間釘死成同一支
+透感　　　　白天 fill-opacity .55、夜間 .72
+號碼　　　　不寫
+按下去　　　三塊停車場熄滅、街名一起淡下去；點停車場則格子收起來（兩種模式互斥）
+未清查那排　畫出來（class .bay-est）
+永樂街　　　被壓到時**移位不是消失**：往上 191、退而往下 154、真的沒地方才藏起來
+文化路　　　格子出現時往東 62
+永安路　　　格子出現時往南 140</pre>
+
+<h2>逐輪</h2>
+<pre>09-15 ①　第一版：標籤在標題底下、格子路牌藍實心配卡色（白）的虛線框、
+　　　　　五條尺（標籤位置／顏色／號碼／按下去時／未清查那一排）
+　　②　「點停車格的時候 停車場要滅掉 道路文字也要滅掉／未清查那一排要畫出來／
+　　　　不用號碼／格子用路牌藍但邊框虛線／標籤放位置與周邊停車旁邊」
+　　③　「點停車場的時候不要顯示停車格」→ 兩種模式互斥
+　　④　「白天模式停車格白虛線感覺怪怪的，改成和夜間一樣的虛線顏色看看」
+　　　　「停車格顯示時有幾個路名被蓋到（文化路 永樂街 永安路）換個不會蓋到的位置」
+　　⑤　「框線細一點」「實心的時候帶一點透感」
+　　⑥　「定案。不過夜間模式的標籤沒點亮的時候要和其他標籤一樣是套色的，不是框套色」
+　　　　「永樂街移位後會被診所圖釘的影子蓋到，應該要再往上一點」
+　　⑦　⚠ 我把「定案」收成當下的程式預設（空心＋實線），他補傳截圖更正：
+　　　　**實心 ＋ 最細密**。通則見下面。
+09-16 ⑧　「白天55 夜間72 定案」→ 上線</pre>
+
+<h2>量出來的</h2>
+<pre>・標籤沒按下去時，地圖與改動前**逐位元組相同**
+  （430／393／390／375／360／320／834／1440，DPR 3，白天夜間都驗過）——
+  唯一的差是永樂街那一條路名（177 個元素逐項比對，只有那個 text 與它三個 tspan）
+・上線之後整頁 69 項版面量測對改動前 **0 項有差**（六個寬度）
+・一格在手機（390）上畫出來 8.2×15.0px，1 個 viewBox 單位 ＝ 0.748px
+・⚠ 文化路・平和街口以西那 5 格，**手機上只看得到 1 格** ——
+  站上的地圖在手機是 preserveAspectRatio slice、左右各裁 65 個單位，
+  而那一排落在 x 4~84。電腦與 iPad 五格都看得到。
+  **格子的位置是量出來的，不要為了讓它出現在手機上把它往右挪。**
+・⚠ 號碼若打開，永安路東側那一排有 **9 個數字**被同一條裁切線切掉 ——
+  那是「不寫號碼」的依據，不是憑感覺。
+・⚠ 已知取捨：夜間**點亮**那一態白字對 #7a96ca 只有 2.98 ——
+  站上夜間的填色藥丸本來就是這一級（--accent 在夜間沒有被覆寫，兒牙 2.54）。</pre>
+
+<h2>踩過、下次還會踩的</h2>
+<pre>⚠⚠⚠ **使用者說「定案」的時候，定的是他螢幕上那一格，不是產生器裡的預設值。**
+　　　收尺之前要先跟他手上那張截圖逐格對一次。（這一輪錯了一次，他補傳截圖才更正。）
+
+⚠⚠⚠ **用 String.replace 往產生器裡插一段程式，錨點要連縮排一起寫死。**
+　　　錨點寫「兩個空白 ＋ chips.forEach(...)」，先命中了**縮排四格、在 paint() 裡面
+　　　的那一個**，整塊就靜靜地被塞進 paint()：measure() 讀不到那些變數、
+　　　而且每按一次標籤就多掛一組 MutationObserver。
+　　　→ 產生器因此多一道守門（那支 inline script 要編得過 ＋ 幾支函式只准在最外層各一次）。
+
+⚠⚠⚠ **自己會動到某個 class、又用 MutationObserver 盯著它，就會無限遞迴。**
+　　　classList.remove() 就算那個 class 本來不在，也會寫一次 class 屬性、再觸發一次觀察者。
+　　　症狀是**整頁卡死在載入中，而且主控台一個錯都沒有**。
+
+⚠⚠⚠ **量一個掛著 transition 的東西的「原位」要用 getBBox() 不是 getBoundingClientRect()。**
+　　　後者會量到「動到一半」的位置，下一次判斷就踩在錯的基準上。
+　　　同一族：量藥丸的顏色也要等 .15s 的 transition 跑完（不然背景回一串 oklab(...)、
+　　　字色還是舊的，**看起來像規則寫錯**）。
+
+⚠⚠ **placeYongle() 要排在 paintLots() 的最後。** 它量的是 .dots.on／.rlab.on 的實際外框，
+　　排在那兩行 toggle 之前的話量到的是上一次的狀態 —— **開頁那一次就會停在原位**。
+
+⚠⚠ **驗「路名有沒有被蓋到」要一路往上看祖先的 opacity。** 那幾組點狀路線與牌子是靠
+　　**父層**藏起來的，只問元素自己會把看不見的東西全部算進來（誤報八項）。
+
+⚠⚠ **「路名被格子蓋到幾條」要等過場跑完再量**（讓開是 .18s 的 transition，
+　　按下去的當下量到的還是舊位置，會誤報兩條）—— 那是量測的假警報不是版面的 bug。
+
+⚠⚠ **那四條 ?o= 的規則和「白天／夜間」那兩條同權重、靠順序決勝**，
+　　所以預設**不可以掛 data-pv-o** —— 掛了就永遠贏過那兩條、白天夜間會變成同一個值，
+　　**而且畫面看起來完全正常**。
+
+⚠⚠ **往上要讓開的不只那條點狀路線，還有診所圖釘與它那片影子**
+　　（.cm-sh 量到 x266~351、y228~245，正好伸進永樂街那一欄 x324~354）——
+　　只比路線的話會讓到影子上。116 不夠，191 才夠。
+
+⚠ **實心的透感要用 fill-opacity 不是 opacity**（後者會連框線一起淡掉）。
+⚠ **路名讓開要用 CSS 的 transform 不要改 x／y** —— 標籤要能原封不動退回去。
+　 transition 要把 opacity 一起寫回來（站上那條 .lbl 本來就有，只寫 transform 會把它蓋掉）。
+⚠ **模板字串的 CSS 註解裡不能有反引號** —— 這一站第八次。</pre>
+
+<h2>上線之後東西在哪</h2>
+<pre>index.html
+  ・標籤的標記：那顆 h3「位置與周邊停車」後面的 .bay-chips
+  ・格子的標記：#map-clip 裡的 BAYS:START ~ BAYS:END
+    ⚠ **不要手改那一段** —— 由 drafts/door-notice/map-bays.mjs 產生
+  ・樣式：.card-map h3 那一條後面「鄰近停車格」那一整段
+    ⚠ 夜間那三條刻意寫在那裡、**不在 NIGHT:START 區裡** —— 那一區是
+      tools/night-mode.mjs 產的，手改會被下一次重跑蓋掉
+  ・行為：地圖那支 IIFE 裡的 placeYongle()／setBays()／paintLots()
+
+drafts/door-notice/map-bays.mjs      把格子寫進 index.html（清查改了就重跑，
+                                     接著跑 node tools/topics.mjs 與 node tools/build.mjs）
+drafts/door-notice/parking-map.mjs   座標的唯一出處（同時也產清查那張 PNG）
+drafts/door-notice/parking-survey.json  號碼的唯一出處（parking-map.mjs 有守門在對）
+drafts/door-notice/README.md         現地清查的全部推導與還沒有答案的題目</pre>
+
+<footer><a href="/history/">← 改版紀錄</a></footer>
+
+</div></body>
+</html>

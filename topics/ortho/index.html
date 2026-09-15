@@ -3940,6 +3940,65 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
   background: #5f5d5c; color: #fff; border: 1px solid #5f5d5c;
 }
 
+/* ---- 鄰近停車格（2026-09-15）------------------------------------------
+   推導在 /history/map-bays.html。格子的座標由 drafts/door-notice/map-bays.mjs
+   從現地清查（drafts/door-notice/parking-survey.json）寫進 #map-clip 裡的
+   BAYS:START 區塊 —— **那一段不要手改**。
+   ⚠ 顏色一個都沒新增：吃 --map-park（路牌藍，＝「點到的停車場」那一支）；
+     虛線的框是夜間模式的卡色 #282b31（白天夜間釘死成同一支，使用者指定）。 */
+.bay-chips { display: inline-flex; flex-wrap: wrap; gap: .45rem; padding: 0; list-style: none;
+  margin: 0 0 .55rem .45rem; vertical-align: top; }
+.bay-chip {
+  font: inherit; font-size: .88rem; line-height: 1.6; letter-spacing: normal;
+  padding: calc((34px - 1.6em - 2px) / 2) .7rem;
+  border-radius: 12px; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  background: var(--card); color: var(--map-park); border: 1px solid var(--map-park);
+  transition: background-color .15s ease, color .15s ease;
+}
+.bay-chip[aria-pressed="true"] { background: var(--map-park); color: #fff; border-color: var(--map-park); }
+
+/* 格子：實心路牌藍 ＋ 最細密的虛線框。
+   ⚠ 標籤沒按下去的時候整組 display:none —— 那時的地圖和改動前逐位元組相同。
+   ⚠ 透感用 fill-opacity 不是 opacity（後者會連框線一起淡掉）。
+   ⚠⚠ 白天 55%、夜間 72% **不是漏改成一致**：白天的路面是 --rule 淺灰，路牌藍壓上去
+     本來就重、要透多一點才退得下去；夜間的路面是 #4c4f55、格子是提亮過的 #7a96ca，
+     透太多就沉進路面裡。 */
+#bays { display: none; }
+.card-map[data-bays="1"] #bays { display: inline; }
+.bay {
+  fill: var(--map-park); fill-opacity: .55;
+  stroke: #282b31; stroke-width: 1.2; stroke-dasharray: 2 1.6;
+}
+
+/* 格子出現的時候，被蓋到的那三條路名讓開。
+   ⚠⚠ 用 transform 不要去改 x／y —— 標籤要能原封不動退回去。
+   ⚠ transition 要把 opacity 一起寫回來（上面那條 .lbl 本來就有，
+     只寫 transform 會把它蓋掉，街名淡下去那一下就變成硬切）。 */
+.map-svg text.lbl { transition: opacity .18s ease, transform .18s ease; }
+.card-map[data-bays="1"] .map-svg text.lbl[data-mv="wenhua"] { transform: translate(62px, 0); }
+.card-map[data-bays="1"] .map-svg text.lbl[data-mv="yongan"] { transform: translate(0, 140px); }
+/* 永樂街：被亮起來的那條點狀路線（或圖釘、牌子）壓到時**移位不是消失**
+   （2026-09-15 使用者改主意；2026-08-14 原本是整條不見）。
+   往上 191 ＝ 字底退到 y175，而圖釘 .cm-pin 從 y183 才開始 ——
+   ⚠ 116 不夠：圖釘的影子 .cm-sh 量到 y228~245，正好伸進永樂街那一欄（x324~354）。 */
+.card-map[data-yl="up"]   .map-svg text.lbl[data-mv="yongle"] { transform: translate(0, -191px); }
+.card-map[data-yl="down"] .map-svg text.lbl[data-mv="yongle"] { transform: translate(0, 154px); }
+.card-map[data-bays="1"]  .map-svg text.lbl[data-mv="yongle"] { transform: translate(0, 154px); }
+
+/* ⚠⚠ 夜間那三條刻意寫在這裡，**不在 NIGHT:START 那一區裡面** ——
+   那一區是 tools/night-mode.mjs 產的，手改會被下一次重跑蓋掉。
+   值是照那支的規則算的：沒點亮的藥丸 ＝ 套色 20% 混進卡色（#384050），
+   字「同色相只提亮度到 4.5」＝ #90abe1（實測 4.51，和站上其他藥丸的 4.54 同一級）。
+   ⚠ 已知取捨：點亮那一態白字對 #7a96ca 只有 2.98 —— 站上夜間的填色藥丸本來就是
+     這一級（--accent 在夜間沒有被覆寫，兒牙是 2.54），不要拿對比度來訂正它。 */
+html[data-theme="dark"] .bay-chip:not([aria-pressed="true"]) {
+  background: color-mix(in srgb, var(--map-park) 20%, var(--card));
+  border-color: color-mix(in srgb, var(--map-park) 20%, var(--card));
+  color: #90abe1;
+}
+html[data-theme="dark"] .bay { fill-opacity: .72; }
+
 /* ---- 地圖本體 ---------------------------------------------------------- */
 /* ⚠⚠ **整張地圖要關掉 iOS 的點擊高亮**（2026-08-17，使用者的螢幕錄影：
      「停車場切換的時候會很快速短暫的出現黑影」）。那片黑影**不是這一站的
@@ -5778,7 +5837,12 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
              ⚠ 三個停車場的連結是**使用者本人分享出來的短網址**，
                不是拼出來的 place id。動它之前先在手機上點過確認對應沒錯。 -->
         <div class="info-card card-map">
-          <h3>位置與周邊停車</h3>
+          <h3>位置與周邊停車</h3><!-- ⚠⚠ 這顆標籤按下去才畫出路邊停車格（2026-09-15 定案，推導在
+               /history/map-bays.html）。它和三塊停車場**互斥**：按標籤 ＝ 停車場熄滅、
+               點停車場 ＝ 格子收起來。行為全部在底下那支地圖的 IIFE 裡。
+               ⚠ 幾何整組照抄它左邊那顆 <h3>（字級 .88rem、上下內距那條 calc、圓角 12px）——
+                 兩顆藥丸並排，高度就不可以各算各的。 -->
+          <ul class="bay-chips"><li><button type="button" class="bay-chip" aria-pressed="false">鄰近停車格</button></li></ul>
           <figure class="map-fig">
             <!-- ⚠ preserveAspectRatio 是 slice（2026-08-15）：手機那一段 CSS 給了它一個比
                    viewBox 更瘦的 aspect-ratio，slice 就會**裁掉左右兩側**、讓中間那塊放大。
@@ -5873,12 +5937,12 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
                      ⚠ **19 巷的字縮一階（20→16）並往西挪到 x176**，離開診所那一頭
                        —— 使用者：「應該不會有人從 19 巷來找」。它留著是為了說明
                        診所那一格的北緣，不是拿來指路的。 -->
-                <text class="lbl" x="200" y="49"  text-anchor="middle">文化路</text>
+                <text data-mv="wenhua" class="lbl" x="200" y="49"  text-anchor="middle">文化路</text>
                 <text class="lbl" x="200" y="431" text-anchor="middle">大同路</text>
                 <text class="lbl" x="200" y="569" text-anchor="middle">中華路</text>
                 <text class="lbl" x="109" y="308" text-anchor="middle"><tspan x="109">平</tspan><tspan x="109" dy="26">和</tspan><tspan x="109" dy="26">街</tspan></text>
-                <text class="lbl" x="339" y="308" text-anchor="middle"><tspan x="339">永</tspan><tspan x="339" dy="26">樂</tspan><tspan x="339" dy="26">街</tspan></text>
-                <text class="lbl" x="471" y="308" text-anchor="middle"><tspan x="471">永</tspan><tspan x="471" dy="26">安</tspan><tspan x="471" dy="26">路</tspan></text>
+                <text data-mv="yongle" class="lbl" x="339" y="308" text-anchor="middle"><tspan x="339">永</tspan><tspan x="339" dy="26">樂</tspan><tspan x="339" dy="26">街</tspan></text>
+                <text data-mv="yongan" class="lbl" x="471" y="308" text-anchor="middle"><tspan x="471">永</tspan><tspan x="471" dy="26">安</tspan><tspan x="471" dy="26">路</tspan></text>
                 <text class="lbl-xs" x="176" y="232" text-anchor="middle">平和街19巷</text>
                 <!-- 33 巷（2026-09-15 補，使用者指定「規格按照平和街19巷」）：
                      同一個 class、同一個 x（和 19 巷上下對齊）。
@@ -6104,6 +6168,10 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
                 </a>
 
                 </g>
+
+              <!-- BAYS:START —— 由 drafts/door-notice/map-bays.mjs 產生，請勿手動編輯 -->
+                <g id="bays" aria-hidden="true"><rect class="bay" x="343" y="224" width="11" height="20" rx="2.5"/><rect class="bay" x="343" y="292" width="11" height="20" rx="2.5"/><rect class="bay" x="324" y="294" width="11" height="20" rx="2.5"/><rect class="bay" x="324" y="345" width="11" height="20" rx="2.5"/><rect class="bay" x="324" y="375" width="11" height="20" rx="2.5"/><rect class="bay" x="476" y="113" width="11" height="20" rx="2.5"/><rect class="bay" x="476" y="133" width="11" height="20" rx="2.5"/><rect class="bay" x="476" y="153" width="11" height="20" rx="2.5"/><rect class="bay" x="476" y="173" width="11" height="20" rx="2.5"/><rect class="bay" x="476" y="193" width="11" height="20" rx="2.5"/><rect class="bay" x="476" y="213" width="11" height="20" rx="2.5"/><rect class="bay" x="476" y="233" width="11" height="20" rx="2.5"/><rect class="bay" x="476" y="262" width="11" height="20" rx="2.5"/><rect class="bay" x="476" y="293" width="11" height="20" rx="2.5"/><rect class="bay" x="456" y="375" width="11" height="20" rx="2.5"/><rect class="bay" x="456" y="518" width="11" height="20" rx="2.5"/><rect class="bay" x="150" y="22" width="20" height="11" rx="2.5"/><rect class="bay" x="170" y="22" width="20" height="11" rx="2.5"/><rect class="bay" x="252" y="404" width="20" height="11" rx="2.5"/><rect class="bay bay-est" x="4" y="22" width="20" height="11" rx="2.5"/><rect class="bay bay-est" x="24" y="22" width="20" height="11" rx="2.5"/><rect class="bay bay-est" x="44" y="22" width="20" height="11" rx="2.5"/><rect class="bay bay-est" x="64" y="22" width="20" height="11" rx="2.5"/><rect class="bay bay-est" x="44" y="47" width="20" height="11" rx="2.5"/></g>
+                <!-- BAYS:END -->
 
               </g>
             </svg>
@@ -7263,6 +7331,8 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 (function () {
   var fig = document.querySelector('.map-fig');
   if (!fig) return;
+  var card = fig.closest('.card-map');
+  var svgEl = fig.querySelector('.map-svg');
 
   // ---- 停車場的點選：一次總有一個亮著，點另一個就換過去 -------------------
   // 桌機另外吃 hover（預覽），滑開就回到「釘住」的那一個。
@@ -7543,7 +7613,9 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
   // 被亮起來的那條路線／那塊牌子壓到的街名，這個模式下整個藏起來。
   // 兩個外框相交就算壓到（各留 2 個單位的餘裕）。
   function hideCovered(id) {
-    var labels = fig.querySelectorAll('.lbl, .lbl-s, .lbl-xs, .ent');
+    // ⚠ 永樂街不在這裡處理 —— 它被壓到時是**移位不是消失**（2026-09-15 使用者改主意，
+    //   見底下 placeYongle）。掃描清單因此要把它排除，不然會先被藏起來。
+    var labels = fig.querySelectorAll('.lbl:not([data-mv="yongle"]), .lbl-s, .lbl-xs, .ent');
     if (!id) { labels.forEach(function (l) { l.classList.remove('hide'); }); return; }
     // ⚠ 這裡用 getBoundingClientRect() 不是 getBBox()：
     //   `getBBox()` **不吃元素自己的 transform**，而入口箭頭是用
@@ -7565,9 +7637,67 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     });
   }
 
+  // ---- 永樂街：被壓到時移位，不是消失 -------------------------------------
+  // 2026-08-14 使用者定的是「壓到就整條不見」；2026-09-15 他改主意：
+  //   「永樂街在壹車房亮的時候被我拿掉了，現在看應該把永樂街的路名移位就好」。
+  // ⚠⚠ 要讓開的不只那條點狀路線，還有**診所圖釘與它那片影子**（.cm-sh 量到
+  //   x266~351、y228~245，正好伸進永樂街那一欄 x324~354）、綠塊與亮著的牌子。
+  //   只比路線的話會讓到影子上（踩過）。
+  // ⚠⚠ 量標籤的原位要用 getBBox() 不要 getBoundingClientRect()：那個標籤身上掛著
+  //   .18s 的 transform transition，用螢幕座標會量到「動到一半」的位置，
+  //   下一次判斷就踩在錯的基準上。getBBox() 不吃元素自己的 transform。
+  var yl = fig.querySelector('text.lbl[data-mv="yongle"]');
+  function boxOf(el) {                       // 螢幕座標 → viewBox 的使用者單位
+    var m = svgEl.getScreenCTM(); if (!m) return null;
+    var inv = m.inverse(), r = el.getBoundingClientRect();
+    var a = svgEl.createSVGPoint(), c = svgEl.createSVGPoint();
+    a.x = r.left; a.y = r.top; c.x = r.right; c.y = r.bottom;
+    var A = a.matrixTransform(inv), C = c.matrixTransform(inv);
+    return { x: A.x, y: A.y, r: C.x, b: C.y };
+  }
+  function placeYongle() {
+    if (!yl) return;
+    card.removeAttribute('data-yl');
+    var obs = [];
+    ['.dots.on', '.rlab.on', '.cm-pin', '.cm-plot'].forEach(function (sel) {
+      var e = fig.querySelector(sel);
+      if (e && e.getClientRects().length) { var o = boxOf(e); if (o) obs.push(o); }
+    });
+    if (!obs.length) { yl.classList.remove('hide'); return; }
+    var a = yl.getBBox();                    // ⚠ 原位，不吃自己的 transform
+    var free = function (dy) {
+      return !obs.some(function (o) {
+        return !(a.x + a.width < o.x || a.x > o.r || a.y + dy + a.height < o.y || a.y + dy > o.b);
+      });
+    };
+    if (free(0))    { yl.classList.remove('hide'); return; }
+    if (free(-191)) { card.setAttribute('data-yl', 'up');   yl.classList.remove('hide'); return; }
+    if (free(154))  { card.setAttribute('data-yl', 'down'); yl.classList.remove('hide'); return; }
+    yl.classList.add('hide');                // 真的沒地方讓 —— 才退回「藏起來」
+  }
+
+  // ---- 鄰近停車格：按標籤才畫，和三塊停車場互斥 ---------------------------
+  // ⚠ 兩種模式互斥（2026-09-15 使用者：「點停車場的時候不要顯示停車格」）：
+  //   按標籤 ＝ 停車場熄滅、點停車場 ＝ 格子收起來。
+  // ⚠ 桌機的 hover 不跟著收 —— 那只是預覽，滑開就回去，跟著收會一直閃。
+  var baysOn = false;
+  var chip = card && card.querySelector('.bay-chip');
+  function setBays(v) {
+    baysOn = v;
+    if (card) card.setAttribute('data-bays', v ? '1' : '0');
+    if (chip) chip.setAttribute('aria-pressed', String(v));
+  }
+  if (chip) chip.addEventListener('click', function () {
+    if (!baysOn) pinned = null;              // 打開格子 ＝ 三塊停車場一起熄滅
+    setBays(!baysOn);
+    paintLots();
+  });
+
   function paintLots() {
     var id = hovered || pinned;
-    fig.querySelector('.map-svg').classList.toggle('dim', !!id);
+    // 格子出現的時候也要把街名淡下去（2026-09-15 使用者：「道路文字也要滅掉」）——
+    // 那一態沒有任何停車場亮著，所以 dim 不能只看 id。
+    fig.querySelector('.map-svg').classList.toggle('dim', !!id || baysOn);
     hideCovered(id);
     fig.querySelectorAll('.lot').forEach(function (g) {
       var on = g.dataset.lot === id;
@@ -7577,16 +7707,19 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     fig.querySelectorAll('.dots, .rlab').forEach(function (el) {
       el.classList.toggle('on', el.dataset.lot === id);
     });
+    // ⚠ 一定要排在**最後** —— 它量的是 .dots.on／.rlab.on 的實際外框，
+    //   排在上面那兩行之前的話，量到的是上一次的狀態（開頁那一次就會停在原位）。
+    placeYongle();
   }
   fig.querySelectorAll('.lot').forEach(function (g) {
     var id = g.dataset.lot;
     // ⚠ 點完 blur()：不然 Chrome 會把滑鼠點擊也算成 focus-visible，
     //   在停車場外面畫一個框（使用者 2026-08-14 回報）。鍵盤走過來的不受影響。
     g.addEventListener('click', function (e) {
-      e.stopPropagation(); pinned = id; paintLots(); g.blur();
+      e.stopPropagation(); setBays(false); pinned = id; paintLots(); g.blur();
     });
     g.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pinned = id; paintLots(); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setBays(false); pinned = id; paintLots(); }
     });
     if (fine) {
       g.addEventListener('mouseenter', function () { hovered = id; paintLots(); });
