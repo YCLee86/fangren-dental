@@ -141,7 +141,14 @@ html[data-pv-c="ink"] { --pv-bay: var(--ink-soft); }
 }
 /* 實心帶一點透感（2026-09-15 使用者指定）—— 底下透出來的是路面 --map-road，
    所以那是「路面上畫的一格」不是「疊在路面上的一塊板子」。
-   ⚠ 用 fill-opacity 不是 opacity：opacity 會連框線一起淡掉。 */
+   ⚠ 用 fill-opacity 不是 opacity：opacity 會連框線一起淡掉。
+   ⚠⚠ **白天 55%、夜間 72%**（2026-09-15 定案）—— 兩邊不一樣不是漏改成一致：
+     白天的路面是 --rule 淺灰，路牌藍壓上去本來就重，要透多一點才退得下去；
+     夜間的路面是 #4c4f55、格子是提亮過的 #7a96ca，透太多就沉進路面裡。 */
+:root                     { --pv-fo: .55; }
+html[data-theme="dark"]   { --pv-fo: .72; }
+/* ⚠ 底下這四條是網址參數用的，**權重和上面那條一樣，所以靠順序決勝**；
+   而且預設**不掛 data-pv-o**（掛了就永遠贏過上面那兩條、白天夜間會變成同一個值）。 */
 html[data-pv-o="1"]  { --pv-fo: 1; }
 html[data-pv-o="85"] { --pv-fo: .85; }
 html[data-pv-o="72"] { --pv-fo: .72; }
@@ -304,12 +311,9 @@ html[data-pv-p="bot"]  .pv-side, html[data-pv-p="bot"] .pv-top  { display: none;
      ?num=on（寫號碼）　?lots=keep（按下去停車場照舊）　?w=off（不畫未清查那一排）
    ⚠ **量測面板不跟著收**（第九節第 28 條 ④）—— 收掉的話日後改了任何一個值，
      這裡不會有任何一個數字變。 */
-/* ⚠⚠ 2026-09-15 他補傳兩張截圖更正定案：**實心 ＋ 最細密的虛線框**
-   （我上一版寫成空心＋實線，錯了）。⚠ 兩張截圖只差透感一格（72% 與 55%），
-   所以**只留那一條尺**，其餘全部收成寫死的值。 */
-const R = [
-  ['o', '實心透感', [['1', '不透'], ['85', '85%'], ['72', '72%'], ['55', '55%']]],
-];
+/* ⚠⚠ 2026-09-15 全部定案（實心 ＋ 最細密的虛線框 ＋ 白天 55%／夜間 72%），
+   切換條整條拿掉。網址參數仍然吃得到，見上面 DEF 那一段。 */
+const R = [];
 const bar =
 '<button class="pv-mini" type="button" id="pv-open" hidden>提案</button>\n' +
 '<div class="pv-bar" id="pv-bar">\n' +
@@ -323,7 +327,7 @@ R.map(([k, label, opts]) =>
 '</div>\n' +
 `<script>
 (function () {
-  var DEF = { p: 'side', c: 'fill', num: 'off', lots: 'off', w: 'on', d: 'a', k: 'night', ow: '16', o: '72' };
+  var DEF = { p: 'side', c: 'fill', num: 'off', lots: 'off', w: 'on', d: 'a', k: 'night', ow: '16' };
   var root = document.documentElement, q = new URLSearchParams(location.search);
   var st = {};
   /* ⚠ 網址參數的正規式要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 第九節）*/
@@ -332,6 +336,9 @@ R.map(([k, label, opts]) =>
     st[k] = (v && /^[a-z0-9]+$/.test(v)) ? v : DEF[k];
     root.setAttribute('data-pv-' + k, st[k]);
   });
+  /* ⚠ 透感沒有預設值可以掛 —— 白天 55%／夜間 72% 是 CSS 自己分的，
+     掛上 data-pv-o 就永遠贏過那兩條。只有網址真的帶了才掛。 */
+  { var vo = q.get('o'); if (vo && /^[a-z0-9]+$/.test(vo)) { st.o = vo; root.setAttribute('data-pv-o', vo); } }
 
   var card = document.querySelector('.card-map');
   var fig  = document.querySelector('.map-fig');
