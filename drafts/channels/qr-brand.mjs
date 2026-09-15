@@ -128,7 +128,7 @@ function speakLine() {
 
 /* ---- 畫一顆碼 ---------------------------------------------------------- */
 let uid = 0;
-export function qr({ url, logo, logoSolid, logoVB, logoW, logoDX = 0, liteCells = [] }) {
+export function qr({ url, logo, logoSolid, logoVB, logoW, logoDX = 0, logoDY = 0, liteCells = [] }) {
   const { n, g } = qrMatrix(url, CFG.ecl, -1, CFG.minVer);
   const Q = CFG.Q, N = n + Q * 2, U = `q${++uid}`;   // ⚠ 每顆碼自己的 id（檔頭第 ④ 條）
   const isFinder = (r, c) => (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
@@ -158,8 +158,9 @@ export function qr({ url, logo, logoSolid, logoVB, logoW, logoDX = 0, liteCells 
   /* ⚠⚠ logoVB 的原點不一定是 (0,0)（檔頭第 ⑤ 條） */
   const vx = logoVB[0] ?? 0, vy = logoVB[1] ?? 0;
   const w = n * logoW, h = w / (logoVB[2] / logoVB[3]), s = w / logoVB[2];
+  /* 位移以「幾格」為單位（logoDX 0.06 ＝ 往右 2.22 格） */
   const lx = Q + (n - w) / 2 - s * vx + n * logoDX;
-  const ly = Q + (n - h) / 2 - s * vy;
+  const ly = Q + (n - h) / 2 - s * vy + n * logoDY;
   const T = `translate(${lx.toFixed(3)} ${ly.toFixed(3)}) scale(${s.toFixed(5)})`;
   /* 只把標誌真正蓋到的地方挖掉（貼合輪廓，不是一個方框）——
      用 stroke 把輪廓往外撐就等於沿著形狀擴張 */
