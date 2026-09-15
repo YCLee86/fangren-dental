@@ -6418,7 +6418,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-09-15">2026 年 9 月 15 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-09-16">2026 年 9 月 16 日</time></span>
     </div>
   </div>
 </footer>
@@ -7737,7 +7737,12 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     if (chip) chip.setAttribute('aria-pressed', String(v));
   }
   if (chip) chip.addEventListener('click', function () {
-    if (!baysOn) pinned = null;              // 打開格子 ＝ 三塊停車場一起熄滅
+    // 打開格子 ＝ 三塊停車場一起熄滅；關掉格子 ＝ **回到開頁那一態**（壹車房亮著、
+    // 帶著它那條點狀路線）。⚠ 2026-09-16 使用者：「鄰近停車格標籤不亮的時候，
+    // 要讓壹車房的停車場和路線亮」—— 關掉之後停在「全部熄滅」那一態是空的。
+    // ⚠ 「點地圖空白處 ＝ 全部熄滅」那一態**沒有動**（2026-08-14 第四十二輪
+    //   使用者退回過我拿掉它的做法：要看清楚路名就得有一個什麼都沒選的狀態）。
+    pinned = baysOn ? DEFAULT_LOT : null;
     setBays(!baysOn);
     paintLots();
   });
