@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>clinic-map-alley｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>clinic-map-alley — 簡易地圖補一條沒畫到的小巷</h1>
+<p class="meta">
+  2026-09-15 開、當天兩輪定案上線<br>
+  原網址 <code>/preview/clinic-map-alley/</code>（已刪除 2026-09-15）<br>
+  整頁還原：<code>git show 560b3d8:preview/clinic-map-alley/index.html</code><br>
+  提案期的產生器 <code>tools/map-alley-preview.mjs</code>（定案時刪掉，同一個 sha 還原得到）<br>
+  成品：<code>index.html</code> 的簡易地圖，文化路北邊那一排街廓（只動兩個 rect）
+</p>
+
+<h2>起因</h2>
+<p>
+  使用者拿站上的地圖與 Google 地圖並排：「我發現網站的簡易地圖少畫了一條路。
+  文化路上平和街口跟元大銀行中間有一條小巷。」
+</p>
+
+<h2>位置是量出來的，不是抓的</h2>
+<p>
+  從使用者那張 Google 地圖截圖（1125 寬的原圖）逐像素掃road 的色帶：
+</p>
+<pre>平和街　中心 x 169（色帶 130~208）
+永樂街　中心 x 890（色帶 856~936，北邊 845~925）
+那條小巷　中心 x 491（色帶在 y500 是 453~508、y700 是 460~514，微微向右斜）
+文化路　　y 742~913
+
+→ 小巷落在平和街與永樂街之間的 (491 − 169) / (890 − 169) ＝ <b>44.7%</b></pre>
+<p>
+  地圖的 viewBox 裡平和街中心 109、永樂街中心 339，
+  所以 109 + 0.4466 × 230 ＝ <b>211.7 → 中心 x 212</b>（提案頁的面板現場量到 44.8%）。
+</p>
+<p>
+  <b>它只往北通到文化路，不往南</b>（x=482 那一條在文化路以南沒有任何縱向色帶），
+  所以在這張圖上它是文化路<b>上面</b>那一排街廓裡的一小段缺口，
+  和平和街、永樂街、永安路在最上緣露出來的那一截一樣高（21 個單位，390 寬的手機上約 15.7px）。
+</p>
+
+<h2>寬度：一把四格的尺，使用者選 12</h2>
+<pre>現況　沒有這條巷子
+Ⓐ 12　＝ 站上那兩條沒有名字的巷子（19 巷北邊那條平行巷、平和街 33 巷）　← 定案
+Ⓑ 17　＝ 平和街 19 巷、永安路 14 巷（有名字的那兩條）
+Ⓒ 21　＝ 照實際比例換算（它在 Google 上約是永樂街的 70%）</pre>
+<p>
+  三格的寬度比一條街（30）＝ 40% / 57% / 70%。使用者選 <b>Ⓐ 12</b>。
+  那條巷子在 Google 上<b>沒有名字</b>，所以圖上沒有標字。
+</p>
+
+<h2>⚠⚠ 第二輪：平和街到文化路就到底，沒有穿過去</h2>
+<p>
+  使用者看過第一版之後補的：「而且平和街到文化路就到底了　沒有穿過去。」
+  他是對的，而且<b>資料本來就在第一輪自己量的那張表裡</b> ——
+  x=174（平和街）那一條掃出來只有文化路那一段橫帶（y 742~913），北邊一個像素都沒有，
+  我量到了卻沒有去讀它。
+</p>
+<p>
+  <b>通則：為了 A 去量出來的東西，往往同時回答了 B —— 量完要把整張表唸過一次，
+  不要只讀自己當下在找的那一格。</b>
+</p>
+
+<h2>定案的做法（只動兩個 rect）</h2>
+<pre>文化路北邊那一排（y -20 ~ 21）：
+
+　平和街以西　 x -20　width 114　→　x -20　width <b>226</b>　（-20 ~ 206，橫跨平和街）
+　平和街～永樂街 x 124　width 200　→　x <b>218</b>　width <b>106</b>　（218 ~ 324）
+
+　中間 206 ~ 218 就是那條小巷（寬 12、中心 212）。</pre>
+<p>
+  <b>街廓與街道的座標一個單位都沒動</b> —— 那張圖排了四十二輪，這一輪只改這兩塊的
+  x 與 width，rx=4 的圓角、其餘四排、所有街名、三塊停車場、圖釘與路線全部原封不動。
+  其他三排仍然留著平和街的缺口（它從文化路往南是真的存在）。
+</p>
+
+<h2>沒有動的一件</h2>
+<p>
+  <b>永安路北邊那一截</b>。它落在那張截圖的右邊界外（換算過去約在 x 1304，而圖只有 1125 寬），
+  看不到它有沒有穿過文化路，<b>沒有證據就不改</b>。日後確認了再一起處理。
+  永樂街那一截<b>是對的</b>（截圖上 x 845~925 在文化路以北量得到）。
+</p>
+
+<h2>提案頁本身</h2>
+<p>
+  <code>tools/map-alley-preview.mjs</code>，index.html 的<b>快照</b>（照 CLAUDE.md 第八節那四件做：
+  相對路徑往上兩層、計數器整支拿掉並驗過、noindex、切換條插在最後一個 body 結束標籤前面）。
+  切換條只有一排四格，面板現場量：小巷在圖上多寬、往北那一截多長、中心 x 換算成
+  「平和街到永樂街之間的百分之幾」、寬度比一條街多少、比例尺、水平捲動。
+</p>
+<p>
+  ⚠ <b>「對照現況」那一格要逐格等於站上</b> —— 第二輪多了「平和街封起來」之後，
+  現況那一格仍然是平和街穿過去、也沒有小巷，不然比不出差別。
+</p>
+<p>
+  ⚠ 螢幕上多大<b>拿 SVG 自己的 getScreenCTM() 算</b>，不要自己推
+  <code>preserveAspectRatio: slice</code> 的比例尺（手機上那張圖是裁掉左右的）。
+</p>
+
+<h2>驗收</h2>
+<pre>390×844 DPR3 與 1440×900 DPR2 × 四格：水平捲動 0、JS 錯誤 0
+中心 x 212 ＝ 44.8%（Google 上量到 44.7%）
+小巷寬 12 → 390 上 9.0px、1440 上 10.3px；往北那一截 21 → 15.7px / 18.0px
+上線後：node tools/topics.mjs（七科的著陸頁跟上）→ node tools/build.mjs
+　　　　 node tools/night-mode.mjs --check 全部一致（沒有動到任何顏色）
+　　　　 十三篇文章的日期一個都沒有跳（地圖不在 &lt;main&gt; 的雜湊範圍裡）</pre>
+
+<footer>
+  改版紀錄・<a href="/history/">回目錄</a>　｜　<a href="/">回首頁</a>
+</footer>
+
+</div></body>
+</html>
