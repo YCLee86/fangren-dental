@@ -104,8 +104,10 @@ h1 { font-size: 1.12rem; line-height: 1.6; margin: 0 0 .4rem; letter-spacing: .0
 <body>
 <div class="shell">
 <h1>夜間模式的開關：圓鈕與月亮反過來</h1>
-<p class="lead">每一顆都是<b>真的開關</b>，按一下會翻到白天再按一下翻回來 ——
-白天那一態六格完全相同，<b>一個值都沒有動</b>。<br>
+<p class="lead"><b>Ⓖ1～Ⓖ3 是這一輪新加的</b>（Ⓓ 的深藍圓鈕 ＋ 實心月亮，三格只差月亮多亮）；
+Ⓐ～Ⓕ 是上一輪那六格，留著對照。<br>
+每一顆都是<b>真的開關</b>，按一下會翻到白天再按一下翻回來 ——
+白天那一態<b>每一格完全相同</b>，這兩輪一個值都沒有動。<br>
 底下的數字是開頁現場量的（讀的是畫出來的那個元素，不是變數）。</p>
 
 <div id="list"></div>
@@ -124,6 +126,14 @@ h1 { font-size: 1.12rem; line-height: 1.6; margin: 0 0 .4rem; letter-spacing: .0
 <script>
 /* 候選。dark 那一態的三個值：k 圓鈕、m 月亮、ring 圓鈕的陰影或框線 */
 var CASES = [
+  /* 2026-09-15 第二輪：使用者「Ⓓ ＋ 實心月亮做給我看」。
+     圓鈕釘在 Ⓓ（#012c53，往下已經沒有空間可以再暗），月亮改成填實 ——
+     只剩「月亮多亮」一個變數，所以這三格就是它的尺。
+     ⚠ 實心月亮的墨比線稿多約五成（面板現場量：15.6% vs 10.5%），同一支藍讀起來
+       會更亮，所以不要直接沿用 Ⓓ 線稿那一版的值當唯一解。 */
+  { id: "Ⓖ1", name: "Ⓓ ＋ 實心月亮・淡", note: "",           k: "#012c53", m: "#8aa6da", fill: 1 },
+  { id: "Ⓖ2", name: "Ⓓ ＋ 實心月亮・中", note: "建議（＝Ⓓ 原本那一支藍）", k: "#012c53", m: "#9cb7ed", fill: 1 },
+  { id: "Ⓖ3", name: "Ⓓ ＋ 實心月亮・亮", note: "",           k: "#012c53", m: "#b7ceff", fill: 1 },
   { id: "Ⓐ", name: "現況",            note: "白鈕 ＋ 深藍月亮",              k: "#ffffff", m: "#365685" },
   { id: "Ⓑ", name: "反過來・淺",      note: "圓鈕只比軌道暗一點",            k: "#224573", m: "#96b2e7" },
   { id: "Ⓒ", name: "反過來・中",      note: "最安靜的一格",                  k: "#153c69", m: "#b7ceff" },
@@ -165,6 +175,26 @@ function lum(c) {
   return .2126 * v[0] + .7152 * v[1] + .0722 * v[2];
 }
 function cr(a, b) { var x = lum(a), y = lum(b); if (x < y) { var t = x; x = y; y = t; } return (x + .05) / (y + .05); }
+/* 月亮的墨佔圓鈕的面積多少 —— 實心 15.6%、線稿 10.5%，這就是「同一支藍讀起來更亮」的量。
+   ⚠ 量的是真的畫出來的路徑（Path2D ＋ 離屏 canvas 數像素），不是估的。
+     圖示 16px 畫在 26px 的圓鈕上，所以比例尺是 16/24（viewBox 24）與 π×13²。 */
+var MOON_D = "M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401";
+var inkCache = {};
+function moonInk(solid) {
+  var key = solid ? "fill" : "line";
+  if (inkCache[key] != null) return inkCache[key];
+  var S = 8, n = 24 * S, cv = document.createElement("canvas");
+  cv.width = cv.height = n;
+  var x = cv.getContext("2d"); x.scale(S, S);
+  var path = new Path2D(MOON_D);
+  if (solid) { x.fillStyle = "#fff"; x.fill(path); }
+  else { x.strokeStyle = "#fff"; x.lineWidth = 2; x.lineCap = "round"; x.lineJoin = "round"; x.stroke(path); }
+  var data = x.getImageData(0, 0, n, n).data, px = 0;
+  for (var i = 3; i < data.length; i += 4) if (data[i] > 8) px++;
+  var iconPx = px / (S * S) * (16 / 24) * (16 / 24);   /* 換算成畫面上的 px² */
+  inkCache[key] = iconPx / (Math.PI * 13 * 13) * 100;
+  return inkCache[key];
+}
 function measure() {
   var paper = rgb(getComputedStyle(document.body).backgroundColor);
   document.querySelectorAll(".smp").forEach(function (d) {
@@ -180,13 +210,16 @@ function measure() {
     var blk = Math.max(cr(knob, paper), cr(track, paper)), mp = cr(moon, paper);
     var ring = getComputedStyle(d.querySelector(".tt-knob")).boxShadow.indexOf("inset") >= 0;
     var p = d.querySelector(".num");
-    if (!night) { p.innerHTML = "（白天那一態，六格完全相同 —— 這一輪一個值都沒有動）"; return; }
+    if (!night) { p.innerHTML = "（白天那一態，每一格完全相同 —— 這兩輪一個值都沒有動）"; return; }
+    var ink = moonInk(d.dataset.fill === "1");
     p.innerHTML =
       "圓鈕對軌道 <i>" + kt.toFixed(2) + "</i>（圓的邊界" +
         (kt >= 3 ? "" : ring ? "：<i>靠那一圈細框</i>" : mk >= 4.5 ? "：<span class=\"warn\">只剩月亮在撐</span>" : "：<span class=\"warn\">幾乎讀不出來</span>") + "）" +
       "　月亮對圓鈕 <i>" + mk.toFixed(2) + "</i>" +
-      "<br>在頁面上找得到嗎：最亮的一塊 <i>" + blk.toFixed(2) + "</i>、月亮那幾筆線 <i>" + mp.toFixed(2) + "</i>" +
-      (blk >= 5 ? "（一整塊亮的）" : "（<span class=\"warn\">塊不亮了，改由線在講話</span>）");
+      "<br>在頁面上找得到嗎：最亮的一塊 <i>" + blk.toFixed(2) + "</i>、月亮" +
+        (d.dataset.fill === "1" ? "（實心）" : "那幾筆線") + " <i>" + mp.toFixed(2) + "</i>" +
+      (blk >= 5 ? "（一整塊亮的）" : "（<span class=\"warn\">塊不亮了，改由月亮在講話</span>）") +
+      "　月亮的墨佔圓鈕 <i>" + ink.toFixed(1) + "%</i>";
   });
 }
 addEventListener("load", function () { setTimeout(measure, 300); });
