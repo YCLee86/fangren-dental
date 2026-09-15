@@ -6,7 +6,8 @@
      臨時裝（只給驗證用、不是專案依賴）：
          pip install zxing-cpp opencv-python-headless
    ========================================================================== */
-import { build, URL_LINE, URL_WEB, INK, LITE, PLATE, PNG_PX } from './qr-brand.mjs';
+import { build, URL_LINE, URL_WEB, INK, LITE, PLATE, PNG_PX,
+         ARROW, CURSOR, HOLE_X, WEB_DX, WEB_DY, BUBBLE, VB } from './qr-brand.mjs';
 import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -48,6 +49,28 @@ for (const [k, s] of Object.entries(svgs)) {
   /* 標誌外面那個 scale(1 -1) 一定要跟著（只抄 path 會上下顛倒又不報錯） */
   s.includes('scale(1 -1)') ? null : no(`${k}：標誌的 scale(1 -1) 掉了`);
 }
+/* ②之二 網站那顆的滑鼠游標
+   ⚠⚠ 游標整個不見的話，版型、掃描、PNG 每一道都會過（碼還是碼）——
+     只有把圖打開看才看得到。所以這裡直接找那條路徑。 */
+web.svg.includes(ARROW) ? ok('網站那顆有游標') : no('網站那顆的游標不見了');
+line.svg.includes(ARROW) ? no('LINE 那顆多了一個游標') : ok('LINE 那顆沒有游標');
+/* ⚠⚠⚠ 牙洞是這顆標誌唯一的識別特徵，游標碰到就不是芳仁的標誌了。
+   算的是「游標最左邊」（尖端再往左半條框線）離牙洞右緣多遠，換算成格。 */
+{
+  const half = VB[3] * BUBBLE.stroke / 2 / VB[2];      // 半條框線，以標誌寬為單位
+  const gapMark = (CURSOR.tipx - half) - HOLE_X[1];
+  const gap = +(gapMark * line.mouth * line.n).toFixed(2);   // 換算成「幾格」
+  gap >= 0.3
+    ? ok(`游標離牙洞 ${gap} 格（牙洞 ${HOLE_X[0].toFixed(3)}~${HOLE_X[1].toFixed(3)}、尖端 ${CURSOR.tipx}）`)
+    : no(`游標離牙洞只剩 ${gap} 格 —— 快碰到牙洞了`);
+}
+/* 定稿那三個值真的寫回常數了 —— 改了畫面照樣正常、每一道尺寸守門都會過，
+   而使用者挑的就是這三格（2026-09-15） */
+for (const [what, got, want] of [['游標高度', CURSOR.h, 0.40],
+                                 ['往右', +(WEB_DX * line.n).toFixed(2), 0.74],
+                                 ['往下', +(WEB_DY * line.n).toFixed(2), 3.33]])
+  got === want ? ok(`網站那顆 ${what} ${got}`) : no(`網站那顆 ${what} 是 ${got}，定稿是 ${want}`);
+
 /* 兩顆碼的 id 不可以撞名（並排放在同一份文件裡時第二顆會去吃第一顆的 defs） */
 const ids = a => [...a.matchAll(/id="([^"]+)"/g)].map(m => m[1]);
 ids(line.svg).some(i => ids(web.svg).includes(i))

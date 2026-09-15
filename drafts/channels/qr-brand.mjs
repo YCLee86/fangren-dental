@@ -15,7 +15,7 @@
    ・底板 #c9d4cc（品牌綠 28%）—— 深點、淺點、底色三層，同特斯拉那一張
    ・三顆定位點圓角 0.25 格
    ・LINE 那顆：診所標誌（嘴，牙洞填白）＋ LINE 的對話框（白底、字與框線套色）
-   ・網站那顆：只有標誌，置中
+   ・網站那顆：診所標誌 ＋ 右下角一個滑鼠游標（同樣白底、套色框線、同一個粗細）
    ・兩顆碼上「嘴」的實際大小一樣（0.4697 × 邊長）—— 它們會並排擺
 
    ── ⚠⚠⚠ 六個不知道就會踩的 ─────────────────────────────────────────
@@ -66,7 +66,7 @@ export const PLATE = '#c9d4cc';   // 品牌綠 28% 混進白
 
 /* ---- 幾何（每一格都是使用者在對照圖上挑的）----------------------------- */
 const CFG = { minVer: 5, ecl: 'H', Q: 4, dot: 0.90, finderR: 0.25, halo: 0 };
-const BUBBLE = { size: 0.45, x: 0.87, y: -0.47, stroke: 0.045 };  // 對話框：多大、擺哪、框線多粗
+export const BUBBLE = { size: 0.45, x: 0.87, y: -0.47, stroke: 0.045 };  // 對話框：多大、擺哪、框線多粗
 const COMPOSITE_W = 0.62;   // 合成圖形佔碼面幾成（不含框線那一版的基準）
 const COMPOSITE_DX = 0.06;  // 整組往右 2.22 格（0.06 × 37）
 /* ⚠⚠ 尾巴的尖端正好頂在這一格深色的牙上，兩塊連成一片、尾巴讀起來不像尾巴。
@@ -74,6 +74,19 @@ const COMPOSITE_DX = 0.06;  // 整組往右 2.22 格（0.06 × 37）
    連通塊，把每一格的中心點丟進去看落在不在同一塊裡，落在的就是黏著的那幾格；
    其中最下面那一格（＝尾巴尖）就是它。動到大小、位置或框線粗細都要重新量。 */
 const TAIL_CELL = [[17, 27]];
+
+/* 網站那顆的滑鼠游標：h ＝ 高度佔標誌寬幾成，tipx／tipy ＝ 尖端擺在標誌座標的哪裡
+   （同樣以標誌寬為單位）。
+   ⚠ **不要旋轉** —— 游標永遠是這個角度，轉了就不像游標。
+   ⚠⚠ 尖端 x 0.80 是量出來的不是挑的：牙洞橫跨標誌寬的 0.675~0.755，
+      所以留了 0.78 格的空隙。**牙洞是這顆標誌唯一的識別特徵**，碰到就不是它了。 */
+export const CURSOR = { h: 0.40, tipx: 0.80, tipy: 0.40 };
+/* ⚠⚠ 為什麼要往下：LINE 那顆的對話框往**上**長、這顆的游標往**下**長，
+   所以「合成圖形置中」的時候，兩顆碼上的嘴差了 15.4 個百分點（LINE 59.3%、
+   這顆 43.9%）。完全對齊要往下 0.1877，使用者挑的是 0.09；
+   往右 0.02 也是他挑的（嘴心因此落在 50.3% / 51.3%）。 */
+export const WEB_DX = 0.02;   // 往右 0.74 格
+export const WEB_DY = 0.09;   // 往下 3.33 格
 
 /* ---- 標誌 -------------------------------------------------------------- */
 const markSrc = readFileSync(join(ROOT, 'brand', 'shapes', 'mark.svg'), 'utf8');
@@ -101,6 +114,11 @@ const TOOTH = {
   cx: (Math.min(...hx) + Math.max(...hx)) / 2, cy: (Math.min(...hy) + Math.max(...hy)) / 2,
   w: Math.max(...hx) - Math.min(...hx), h: Math.max(...hy) - Math.min(...hy),
 };
+/* 牙洞在標誌上橫跨哪一段（以標誌寬為單位）。⚠ 要把 <g> 那個 translate 算進去 ——
+   不算的話得到的是原檔座標，看起來還很合理（第 ③ 條的近親）。
+   游標不可以碰到這一段，守門在盯。 */
+const GTX = +(GTAG.match(/translate\(\s*(-?[\d.]+)/)?.[1] ?? 0);
+export const HOLE_X = [(Math.min(...hx) + GTX) / VB[2], (Math.max(...hx) + GTX) / VB[2]];
 
 /* ---- 嘴 ＋ 對話框 ------------------------------------------------------ */
 const B = JSON.parse(readFileSync(join(HERE, 'line-bubble.json'), 'utf8'));
@@ -123,6 +141,27 @@ function speakLine() {
       + ` stroke="currentColor" stroke-width="${(sw / s).toFixed(2)}" stroke-linejoin="round"/></g>`,
     /* 沒有框線時的框寬 —— 兩顆碼要對齊「嘴」的大小，基準取它 */
     vb0w: Math.max(MW, bx + bw) - Math.min(0, bx),
+  };
+}
+
+/* ---- 嘴 ＋ 滑鼠游標 ---------------------------------------------------- */
+/* 標準的箭頭游標（尖端在自己的左上角 0,0）。寬 14.2 / 高 22。 */
+export const ARROW = 'M0 0L0 19.2L4.9 14.7L8.2 22L11.3 20.6L8 13.5L14.2 13.5Z';
+const AW = 14.2, AH = 22;
+function pointer() {
+  const MW = VB[2], MH = VB[3];
+  const sw = MH * BUBBLE.stroke;            // ＝ 對話框那條框線，兩顆碼才像同一組
+  const ah = MW * CURSOR.h, aw = ah * AW / AH, s = ah / AH;
+  const tx = MW * CURSOR.tipx, ty = MW * CURSOR.tipy;
+  const T = `translate(${tx.toFixed(3)} ${ty.toFixed(3)}) scale(${s.toFixed(5)})`;
+  const line = ` stroke-width="${(sw / s).toFixed(2)}" stroke-linejoin="round"`;
+  const x0 = Math.min(0, tx - sw / 2), y0 = Math.min(0, ty - sw / 2);
+  return {
+    vb: [x0, y0, Math.max(MW, tx + aw + sw / 2) - x0, Math.max(MH, ty + ah + sw / 2) - y0],
+    inner: MARK_WHITE_HOLE
+      + `<g transform="${T}"><path d="${ARROW}" fill="${LITE}" stroke="${INK}"${line}/></g>`,
+    solid: MARK_SOLID
+      + `<g transform="${T}"><path d="${ARROW}" fill="currentColor" stroke="currentColor"${line}/></g>`,
   };
 }
 
@@ -185,15 +224,21 @@ export function build() {
   const wLine = +(COMPOSITE_W * S.vb[2] / S.vb0w).toFixed(4);
   const line = qr({ url: URL_LINE, logo: S.inner, logoSolid: S.solid, logoVB: S.vb,
                     logoW: wLine, logoDX: COMPOSITE_DX, liteCells: TAIL_CELL });
-  const web  = qr({ url: URL_WEB, logo: MARK_WHITE_HOLE, logoSolid: MARK_SOLID, logoVB: VB,
-                    logoW: +(COMPOSITE_W * VB[2] / S.vb0w).toFixed(4) });
+  /* 游標那一版同理（它自己的 viewBox 也被框線撐大過），所以式子和上面一模一樣 */
+  const P = pointer();
+  const web  = qr({ url: URL_WEB, logo: P.inner, logoSolid: P.solid, logoVB: P.vb,
+                    logoW: +(COMPOSITE_W * P.vb[2] / S.vb0w).toFixed(4),
+                    logoDX: WEB_DX, logoDY: WEB_DY });
   if (line.mouth !== web.mouth) throw new Error(`兩顆碼上的嘴不一樣大：${line.mouth} vs ${web.mouth}`);
   return { line, web };
 }
 
-/* 給印刷／廠商的是 SVG（向量，印多大都不會糊）。PNG 只是方便在手機上看，
-   ⚠ 存成 2000px 是因為再小就開始在花紋的邊緣上損失 —— 一格 44px。 */
-export const PNG_PX = 2000;
+/* 給印刷／廠商的是 SVG（向量，印多大、投多大都不會糊）。
+   ⚠⚠ PNG 存 4000px 是因為使用者要**放到大螢幕上**（2026-09-15）——
+   4K 螢幕整屏高 2160，4000 這一張就算滿版擺仍然是縮小不是放大。
+   一格 96px，花紋的邊緣一個像素都沒有損失。
+   ⚠ 真的要投影還是優先給 SVG，PNG 只是「貼進投影片就能用」的那一份。 */
+export const PNG_PX = 4000;
 async function png(svg, out) {
   const { default: pkg } = await import('/opt/node22/lib/node_modules/playwright/index.js');
   const b = await pkg.chromium.launch({
@@ -218,7 +263,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       if (old !== s) { console.log('✗ 和檔案裡的不一樣：' + f); bad++; }
     } else writeFileSync(p, s);
   }
-  console.log(`${line.n}×${line.n} 格・嘴 ${line.mouth} × 邊長・整組往右 ${(COMPOSITE_DX * line.n).toFixed(2)} 格`);
+  console.log(`${line.n}×${line.n} 格・嘴 ${line.mouth} × 邊長`
+    + `・LINE 往右 ${(COMPOSITE_DX * line.n).toFixed(2)} 格`
+    + `・網站往右 ${(WEB_DX * line.n).toFixed(2)} 格、往下 ${(WEB_DY * line.n).toFixed(2)} 格`
+    + `・PNG ${PNG_PX}px`);
   if (check) { console.log(bad ? `✗ ${bad} 個檔案對不上` : '✓ 兩個檔案都對得上'); process.exit(bad ? 1 : 0); }
   for (const [f, s] of Object.entries(files))
     await png(s, join(OUT, f.replace(/\.svg$/, '.png')));
