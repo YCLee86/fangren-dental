@@ -97,7 +97,10 @@ const chip = pos =>
 {
   const a = '          <h3>位置與周邊停車</h3>';
   if (!h.includes(a)) throw new Error('找不到「位置與周邊停車」那個標題');
-  h = h.replace(a, a + '\n          ' + chip('top'));
+  /* ⚠ 「標題旁邊」那一版直接接在 <h3> 後面 —— 那個 h3 本來就是 inline-block
+     的灰藥丸（.info-card h3），所以不必另外包一層 flex；包了會動到站上的
+     margin 與 :first-child，那是這一頁最不該動的地方。 */
+  h = h.replace(a, a + chip('side') + '\n          ' + chip('top'));
   const b = '            <figcaption class="map-note">';
   if (!h.includes(b)) throw new Error('找不到地圖的圖說');
   h = h.replace(b, '            ' + chip('bot') + '\n' + b);
@@ -116,7 +119,18 @@ html[data-pv-c="ink"] { --pv-bay: var(--ink-soft); }
 #pv-bays { display: none; }
 .card-map[data-bays="1"] #pv-bays { display: inline; }
 
-.pv-bay { fill: var(--pv-bay); stroke: var(--card); stroke-width: 1.2; }
+/* 格子：路牌藍的實心塊 ＋ **虛線的框**（2026-09-15 使用者指定）。
+   ⚠ 虛線的顏色是卡色（＝路面上畫出來的白線那個意思），不是新顏色。
+   ⚠ dasharray 的單位是 viewBox 的使用者單位，會跟著圖一起縮 ——
+     手機上 1 單位 ＝ 0.748px，所以 3 個單位畫出來只有 2.2px。 */
+.pv-bay {
+  fill: var(--pv-bay); stroke: var(--card);
+  stroke-width: var(--pv-dw, 1.4); stroke-dasharray: var(--pv-da, 3 2.4);
+}
+html[data-pv-d="a"] { --pv-dw: 1.2; --pv-da: 2 1.6; }
+html[data-pv-d="b"] { --pv-dw: 1.4; --pv-da: 3 2.4; }
+html[data-pv-d="c"] { --pv-dw: 1.8; --pv-da: 4 3.2; }
+html[data-pv-d="d"] { --pv-dw: 2.2; --pv-da: 5.5 4.4; }
 html[data-pv-c="out"] .pv-bay { fill: none; stroke: var(--map-park); stroke-width: 2.6; }
 
 .pv-n { fill: var(--ink); font-weight: 600; letter-spacing: .02em; }
@@ -127,22 +141,35 @@ html[data-pv-num="on"] .pv-ns { display: inline; }
 .pv-w { display: none; }
 html[data-pv-w="on"] .pv-w { display: inline; }
 
-/* 標籤 —— 照站上「開診時段」那一排的做法（.hours-filter），只換顏色 */
-.pv-mapchips { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0 0 1.15rem; padding: 0; list-style: none; }
-.pv-mapchips.pv-bot { margin: .7rem 0 0; }
+/* 標籤 —— **幾何整組照抄它旁邊那顆 .card-map h3**（字級 .88rem、
+   上下內距 calc((34px − 1.6em − 2px)/2)、圓角 12px），只換顏色。
+   ⚠ 兩顆藥丸並排，高度就不可以各算各的 —— 站上那顆在 ≥721px 會乘 --type-scale，
+     這裡也要乘，不然電腦版一顆 38.25、一顆 32.2。
+   ⚠ 上下內距**不要換算成 px**（字級一改塊高就被頂開，第九節那一條）。 */
+.pv-mapchips {
+  display: inline-flex; flex-wrap: wrap; gap: .45rem; padding: 0; list-style: none;
+  margin: 0 0 .55rem .45rem; vertical-align: top;
+}
+.pv-mapchips.pv-top { display: flex; margin: 0 0 1.15rem; }
+.pv-mapchips.pv-bot { display: flex; margin: .7rem 0 0; }
 .pv-mapchips button {
-  font: inherit; font-size: .8rem; line-height: 1.6;
-  padding: .2rem .7rem; border-radius: 12px; cursor: pointer;
+  font: inherit; font-size: .88rem; line-height: 1.6; letter-spacing: normal;
+  padding: calc((34px - 1.6em - 2px) / 2) .7rem;
+  border-radius: 12px; cursor: pointer;
   -webkit-appearance: none; appearance: none;
   background: var(--card); color: var(--pv-bay); border: 1px solid var(--pv-bay);
   transition: background-color .15s ease, color .15s ease;
 }
-.pv-mapchips button[aria-pressed="true"] { background: var(--pv-bay); color: #fff; border-color: var(--pv-bay); }
-@media (max-width: 720px) {
-  .pv-mapchips button { font-size: .88rem; padding-block: calc((34px - 1.6em - 2px) / 2); }
+@media (min-width: 721px) {
+  .pv-mapchips button {
+    padding: calc((34px * var(--type-scale) - 1.6em - 2px) / 2) .7rem;
+    border-radius: calc(12px * var(--type-scale));
+  }
 }
-html[data-pv-p="top"] .pv-bot { display: none; }
-html[data-pv-p="bot"] .pv-top { display: none; }
+.pv-mapchips button[aria-pressed="true"] { background: var(--pv-bay); color: #fff; border-color: var(--pv-bay); }
+html[data-pv-p="side"] .pv-top, html[data-pv-p="side"] .pv-bot { display: none; }
+html[data-pv-p="top"]  .pv-side, html[data-pv-p="top"] .pv-bot  { display: none; }
+html[data-pv-p="bot"]  .pv-side, html[data-pv-p="bot"] .pv-top  { display: none; }
 
 /* ===== 切換條（定案時整條刪掉）===================================== */
 /* ⚠ 切換條在手機上不能吃掉半個畫面（第八節 hero-motion-mobile 那一輪）——
@@ -178,12 +205,15 @@ html[data-pv-p="bot"] .pv-top { display: none; }
 }
 
 /* ── 7. 切換條 ＋ 腳本（一定要用 lastIndexOf，註解裡就寫著那個標籤）──── */
+/* ⚠ 2026-09-15 使用者把五條尺一次挑完了（標籤放標題旁邊／路牌藍＋虛線框／
+     不寫號碼／按下去停車場與街名一起熄滅／未清查那一排畫出來），
+     所以那五條**收成寫死的預設值、從切換條上拿掉** ——
+     網址參數仍然吃得到（?p=top|bot、?c=ink|out、?num=on、?lots=keep、?w=off），
+     要回頭比對還開得出來（同 head-search 那一輪）。
+   ⚠ 只留新的那一條：虛線多疏、多粗 —— 那是他還沒看過的東西，
+     所以給一把尺不是給一個我估的值（第九節第 28 條 ①）。 */
 const R = [
-  ['p',   '標籤放哪裡', [['top', '標題底下'], ['bot', '圖說上面']]],
-  ['c',   '格子顏色',   [['blue', '路牌藍'], ['ink', '柔墨'], ['out', '只有框線']]],
-  ['num', '號碼',       [['off', '不寫'], ['on', '寫']]],
-  ['lots','按下去時',   [['keep', '停車場照舊'], ['off', '停車場熄滅']]],
-  ['w',   '未清查那排', [['off', '不畫'], ['on', '畫（示意）']]],
+  ['d', '虛線', [['a', '最細密'], ['b', '細'], ['c', '中'], ['d', '疏']]],
 ];
 const bar =
 '<button class="pv-mini" type="button" id="pv-open" hidden>提案</button>\n' +
@@ -198,7 +228,7 @@ R.map(([k, label, opts]) =>
 '</div>\n' +
 `<script>
 (function () {
-  var DEF = { p: 'top', c: 'blue', num: 'off', lots: 'keep', w: 'off' };
+  var DEF = { p: 'side', c: 'blue', num: 'off', lots: 'off', w: 'on', d: 'd' };
   var root = document.documentElement, q = new URLSearchParams(location.search);
   var st = {};
   /* ⚠ 網址參數的正規式要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 第九節）*/
@@ -217,11 +247,25 @@ R.map(([k, label, opts]) =>
 
   function paint() {
     card.setAttribute('data-bays', on ? '1' : '0');
-    chips.forEach(function (b) { b.setAttribute('aria-pressed', String(on)); });
+    function syncDim() {
+    var want = on && st.lots === 'off';
+    var has = svg.classList.contains('dim');
+    if (want && !has) svg.classList.add('dim');
+  }
+  new MutationObserver(syncDim).observe(svg, { attributes: true, attributeFilter: ['class'] });
+
+  chips.forEach(function (b) { b.setAttribute('aria-pressed', String(on)); });
     /* 「停車場熄滅」＝ 借站上自己那條規則：點地圖的其他地方就全部收回。
        ⚠ 那支 IIFE 是關起來的，外面叫不到 paintLots()，所以用它自己的
          figure click handler（pinned = null）。 */
     if (on && st.lots === 'off') fig.click();
+    /* ⚠⚠ 街名要跟著淡下去（2026-09-15 使用者：「道路文字也要滅掉」）——
+       站上那一條是 .map-svg.dim .lbl 的 opacity .28，而 dim 只有在
+       「有停車場亮著」時才會掛上；這裡是**沒有**停車場亮著的狀態，
+       所以自己補掛。顏色與那個 .28 都是站上的，一個值都沒新增。
+       ⚠ 站上那支 paintLots() 每次跑都會把 dim 拿掉（它看的是有沒有停車場亮著），
+         所以不能只掛一次 —— 底下那個 MutationObserver 負責補回來。 */
+    syncDim();
     measure();
   }
   chips.forEach(function (b) {
@@ -287,13 +331,20 @@ R.map(([k, label, opts]) =>
     var nPx = nEl && nEl.getClientRects().length ? parseFloat(getComputedStyle(nEl).fontSize) : 0;
     var lotOn = [].slice.call(svg.querySelectorAll('.lot.on')).length;
     var ov = document.documentElement.scrollWidth - document.documentElement.clientWidth;
-    var chip = document.querySelector('html[data-pv-p="' + st.p + '"] .pv-' + st.p + ' .pv-chip');
-    var cb = chip ? chip.getBoundingClientRect() : null;
+    var chip = document.querySelector('.pv-' + st.p + ' .pv-chip');
+    var cb = (chip && chip.getClientRects().length) ? chip.getBoundingClientRect() : null;
+    var h3h = card.querySelector('h3').getBoundingClientRect().height;
+    /* 虛線一段畫出來多長 —— dasharray 的單位是 viewBox 的使用者單位，會跟著圖縮 */
+    var da = (getComputedStyle(svg.querySelector('#pv-bays .pv-bay')).strokeDasharray || '')
+             .split(/[ ,]+/).map(parseFloat).filter(function (v) { return v === v; });
+    var dw = parseFloat(getComputedStyle(svg.querySelector('#pv-bays .pv-bay')).strokeWidth) || 0;
+    var per = da.length ? (da[0] + (da[1] || da[0])) : 0;
     p.textContent =
       '標籤 ' + (on ? '按下去了' : '沒按') +
       '　畫出來 ' + (cb ? Math.round(cb.width) + '×' + Math.round(cb.height) + 'px' : '—') +
-      /* ⚠ 34px ＝ 站上那兩排科別標記的塊高（2026-08-13 定案），不是缺陷，只印事實 */
-      (cb ? '（站上的標籤是 34px）' : '') + '\\n' +
+      /* ⚠ 拿它旁邊那顆 .card-map h3 現場量一次比對 —— 兩顆藥丸並排，高度要一樣；
+         寫死 34px 的話電腦版會誤報（那邊乘了 --type-scale）*/
+      (cb ? '（旁邊那顆標題 ' + h3h.toFixed(1) + 'px，' + (Math.abs(cb.height - h3h) < .6 ? '一樣高' : '差 ' + (cb.height - h3h).toFixed(1) + 'px') + '）' : '') + '\\n' +
       '格子 ' + shown.length + ' 個' +
       (shown.length ? '　看得到 ' + vis + '　被裁掉 ' + cut : '') +
       (cut ? '　⚠ 手機是 slice，左右會裁' : '') + '\\n' +
@@ -303,7 +354,11 @@ R.map(([k, label, opts]) =>
         ? nPx.toFixed(1) + 'px' + (nPx < 9 ? '（小於 9px）' : '') +
           (nCut ? '　⚠ 有 ' + nCut + ' 個被裁到' : '　沒有被裁到')
         : '不寫') +
-      '　亮著的停車場 ' + lotOn + ' 塊　水平溢出 ' + ov + 'px';
+      '　亮著的停車場 ' + lotOn + ' 塊　水平溢出 ' + ov + 'px\\n' +
+      '虛線 一段 ' + (da[0] * k).toFixed(1) + 'px・空 ' + ((da[1] || da[0]) * k).toFixed(1) +
+      'px・粗 ' + (dw * k).toFixed(2) + 'px　一圈 ' + (per ? (62 / per).toFixed(1) : '—') + ' 段' +
+      ((da[0] * k) < 2.5 ? '　⚠ 一段不到 2.5px，畫出來讀不出是虛線' : '') +
+      '　街名 ' + (svg.classList.contains('dim') ? '淡下去了' : '滿的');
   }
   addEventListener('resize', measure);
   addEventListener('load', measure);
