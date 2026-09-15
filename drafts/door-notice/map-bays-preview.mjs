@@ -304,7 +304,12 @@ html[data-pv-p="bot"]  .pv-side, html[data-pv-p="bot"] .pv-top  { display: none;
      ?num=on（寫號碼）　?lots=keep（按下去停車場照舊）　?w=off（不畫未清查那一排）
    ⚠ **量測面板不跟著收**（第九節第 28 條 ④）—— 收掉的話日後改了任何一個值，
      這裡不會有任何一個數字變。 */
-const R = [];
+/* ⚠⚠ 2026-09-15 他補傳兩張截圖更正定案：**實心 ＋ 最細密的虛線框**
+   （我上一版寫成空心＋實線，錯了）。⚠ 兩張截圖只差透感一格（72% 與 55%），
+   所以**只留那一條尺**，其餘全部收成寫死的值。 */
+const R = [
+  ['o', '實心透感', [['1', '不透'], ['85', '85%'], ['72', '72%'], ['55', '55%']]],
+];
 const bar =
 '<button class="pv-mini" type="button" id="pv-open" hidden>提案</button>\n' +
 '<div class="pv-bar" id="pv-bar">\n' +
@@ -318,7 +323,7 @@ R.map(([k, label, opts]) =>
 '</div>\n' +
 `<script>
 (function () {
-  var DEF = { p: 'side', c: 'out', num: 'off', lots: 'off', w: 'on', d: 'n', k: 'night', ow: '16', o: '72' };
+  var DEF = { p: 'side', c: 'fill', num: 'off', lots: 'off', w: 'on', d: 'a', k: 'night', ow: '16', o: '72' };
   var root = document.documentElement, q = new URLSearchParams(location.search);
   var st = {};
   /* ⚠ 網址參數的正規式要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 第九節）*/
