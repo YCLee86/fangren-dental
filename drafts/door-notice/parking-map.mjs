@@ -13,6 +13,7 @@
 // ⚠ 永安路東側那九格的先後順序還沒現地確認，圖上是由北往南 010→002 的推定畫法。
 
 import { readFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 import pkg from '/opt/node22/lib/node_modules/playwright/index.js';
 const { chromium } = pkg;
 
@@ -23,14 +24,14 @@ const SOFT = '#8b8f89';   // 號碼還沒讀到的那幾格
 
 // 道路走廊（從 index.html 的街廓 rect 反推）
 //   永樂街 x324–354  永安路 x455–487  文化路 y21–59  大同路 y403–441
-const W = 11, L = 20;
+export const W = 11, L = 20;
 
 // 直的格子：x = 矩形左緣, y = 上緣, side = 號碼擺哪一邊
 // 橫的格子：x = 左緣, y = 上緣, an = 號碼的對齊（middle／end／start）
 const V = (st, x, y, n, side, dim) => ({ t: 'v', st, x, y, n, side, dim });
 const H = (st, x, y, n, an, dim) => ({ t: 'h', st, x, y, n, an: an || 'middle', dim });
 
-const BAYS = [
+export const BAYS = [
   // ── 永樂街（走廊 x324–354）─────────────────────────────
   // 東側（貼東緣 354）
   V('永樂街', 343, 224, '002', 'e'),
@@ -58,9 +59,9 @@ const BAYS = [
 ];
 
 // 郵局門口的裝卸貨車專用區，靠文化路那一頭
-const LOAD = V('永安路', 456, 80, '卸貨', 'w');
+export const LOAD = V('永安路', 456, 80, '卸貨', 'w');
 
-const HBAYS = [
+export const HBAYS = [
   // 文化路北側・平和街口（x94~124）與那條小巷（x206~218）之間
   H('文化路', 150, 22, '039', 'end'),
   H('文化路', 170, 22, '040', 'start'),
@@ -70,7 +71,7 @@ const HBAYS = [
 
 // 文化路・平和街口以西（照片沒拍，號碼還沒清查）——
 // 北側一整排連續、南側一格。⚠ 畫的數量是示意，不是清查結果。
-const WEST = [
+export const WEST = [
   ...[4, 24, 44, 64].map(x => ({ t: 'h', st: '文化路西', x, y: 22, n: '', an: 'middle' })),
   { t: 'h', st: '文化路西', x: 44, y: 47, n: '', an: 'middle' },
 ];
@@ -97,6 +98,11 @@ const WEST = [
     throw new Error('停車格對不上 parking-survey.json —— 圖上少了 [' + 少 + ']、多了 [' + 多 + ']');
 }
 
+
+// ⚠⚠ 底下那一段（開 Chromium 截圖）只在「直接跑這一支」時才做 —— 上面那幾組
+//    座標是 export 出去的，preview/map-bays/ 那一頁的產生器 import 它們，
+//    **格子的位置因此只有一個出處**。不關起來的話，產那一頁會順手重畫這一張。
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
 
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 const p = await b.newPage({ viewport: { width: 1200, height: 1400 }, deviceScaleFactor: 2 });
@@ -209,3 +215,4 @@ await p.waitForTimeout(400);
 await p.locator('#shotbox').screenshot({ path: new URL('./parking-survey-map.png', import.meta.url).pathname });
 await b.close();
 console.log('ok');
+}
