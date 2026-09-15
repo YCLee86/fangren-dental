@@ -529,9 +529,18 @@ a:hover { color: var(--accent); }
 /* 標題上面那一行：首頁 › 科別藥丸 ・ 發布日 ・ 瀏覽數（2026-08-08 定案，
    標記在 <main> 裡，不要動）。原本是麵包屑在標題上、「發布・最後更新・瀏覽數」
    在標題下，分成兩行；合併的理由是兩行講的是同一件事，而「最後更新」對讀者
-   沒有意義 —— 那是給排序用的，首頁卡片上還看得到。 */
+   沒有意義 —— 那是給排序用的，首頁卡片上還看得到。
+
+   ⚠⚠ 2026-09-15 這一列多了一顆夜間開關（50px），整列因此排不下、開關掉到
+   第二列 —— 每一支手機都會，不是只有 320。定案是 Ⓒ：日期換成
+   「2026/09/07」這一種（＝首頁卡片與延伸閱讀早就在用的寫法，改的是
+   posts 那十三個 time 的字，datetime 屬性沒動），加上這裡的橫向溝
+   .7rem → .5rem。兩件合起來省 51px，一行的最小螢幕寬從 416 收到 364。
+   ⚠ 那個 .5rem 只作用在這一列，全站別處的間距一個都沒有動。
+   ⚠ 縱向那個 .45rem 是折行之後的列距，刻意沒有跟著收。
+   推導與落選的四案在 /history/crumbs-line.html。 */
 .crumbs {
-  display: flex; flex-wrap: wrap; align-items: center; gap: .45rem .7rem;
+  display: flex; flex-wrap: wrap; align-items: center; gap: .45rem .5rem;
   margin: 0 0 .85rem;
   font-size: .8rem; color: var(--ink-soft);
 }

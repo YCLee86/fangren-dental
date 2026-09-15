@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>crumbs-line｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>crumbs-line — 文章頁頂端那一行，開關掉到第二列</h1>
+<p class="meta">
+  2026-09-15 開、當天一輪定案上線（夜間模式那一天的第四件）<br>
+  原網址 <code>/preview/crumbs-line/</code>（已刪除 2026-09-15）<br>
+  整頁還原：<code>git show 72d3966:preview/crumbs-line/index.html</code><br>
+  產生器 <code>tools/crumbs-preview.mjs</code> 一併刪掉（一次性，但有進版控 —— 它是
+  <code>posts/kids-crown/</code> 的快照，main 被推過就要重跑）
+</p>
+
+<h2>起因</h2>
+<p>使用者附一張文章頁的手機截圖：「首頁那一行還有空間可以壓縮給 白天/夜間模式切換滑桿嗎」。
+那一行是<b>首頁 › 科別藥丸 › 日期 › 瀏覽數</b>，夜間模式定案那天在最右邊多掛了一顆 50px 的開關，
+於是整列排不下、開關自己掉到第二列。</p>
+
+<h2>先量再答 —— 而且量出來的第一件事是紀錄寫錯了</h2>
+<p>CLAUDE.md 定案表那一列寫著「⚠ 320 寬的文章頁開關會掉到頂端那一行的第二列（仍靠右）」。
+<b>那句話是錯的：每一支手機都會掉，不是只有 320。</b>390 上量到 ——</p>
+<pre>可用寬      362.0px   （版心 390 − 左右內距 14×2）
+排成一列要  387.0px
+        →  差 25.0px
+
+各段：首頁 26.3 ｜ › 5.3 ｜ 兒童牙科 70.6 ｜ 2026 年 9 月 7 日 110.6
+      ｜ 128 次瀏覽 68.3 ｜ 開關 50.0 ｜ 五道溝 11.2×5 ＝ 56.0
+
+一行的最小螢幕寬 416px
+  → 430 一行；414／393／390／375／360／320 全部兩列</pre>
+<p><b>而且它還會再變差。</b>日期是全列最長的一段，而現在最長只到「8 月 27 日」——
+<b>10 月起兩位數的月份進來，那一行要 412px，連 430 都會掉</b>（四位數的瀏覽數再多約 14px）。
+所以這不是「窄螢幕的邊緣情況」，是一個兩週後會變成全面的問題。</p>
+
+<h2>五案（提案頁的第一排）</h2>
+<p>括號是「一行的最小螢幕寬」，<b>日期取最長的那一種、瀏覽數取四位數</b> ——
+第五十九節那條通則：一把剛剛好放得下的尺，要先問那個字串會不會變長。</p>
+<pre>Ⓐ 現況                                          440px（10 月起）
+Ⓑ 日期換成 2026/09/07                            389px  ⚠ 剛好壓在 390 上，只餘 1px
+Ⓒ Ⓑ ＋ 那幾道溝 .7rem → .5rem     ← 定案         373px
+Ⓓ Ⓒ ＋「次瀏覽」收成眼睛圖示 ＋ 數字                348px
+Ⓔ 不壓縮：開關釘在右上角、讓文字自己折下去          每個寬度開關都在第一列</pre>
+<p>第二排是另一把尺：<b>日期長度</b>（9/7 最短／8/27 現在最長／12/11 十月起），
+所以「兩個月後會怎樣」在提案頁上按得到，不必等它發生。</p>
+
+<h2>定案 Ⓒ</h2>
+<p>使用者在 375 的手機上按到 Ⓒ ＋ 12/11 那一格：「照這樣 定案」。上線的是兩件 ——</p>
+<pre>① posts/*/index.html 十三篇 crumbs 那個 time 的**字**
+     2026 年 9 月 7 日  →  2026/09/07
+   （datetime 屬性一個字都沒動）
+
+② assets/style.css 的 .crumbs 橫向溝
+     gap: .45rem .7rem  →  .45rem .5rem
+   （縱向那個 .45rem 是折行之後的列距，刻意沒有跟著收）
+
+合起來省 51px，一行的最小螢幕寬 416 → 364
+（四位數瀏覽數是 373）</pre>
+<p>上線後實測（四篇文章 × 七個寬度 × 三位數與四位數瀏覽數）：<b>430／414／393/390／375 一律一列，開關在第一列</b>；
+360 與 320 仍是兩列。溝量到 8px、日期寫法逐篇正確、水平溢出 0、JS 錯誤 0。</p>
+
+<h2>那個日期寫法不是新發明的</h2>
+<p>「2026/09/07」<b>是首頁卡片與延伸閱讀早就在印的那一種</b>（<code>tools/build.mjs</code> 的
+<code>slashDate()</code>）。所以這一輪要挑的從來不是「用什麼格式」，是「要不要把文章頁也改成
+站上已經有的那一種」——<b>提案之前先去站上找有沒有現成的寫法，找得到就不要自己發明一個。</b></p>
+<p>它還順手解掉一件：<b>這一種是固定寬的</b>，12/11 和 9/7 一樣寬，
+所以上面那個「10 月會變差」從此不存在，不是變好一點而是整個消失。</p>
+
+<h2>代價與落選</h2>
+<ul>
+<li><b>360 與 320 仍然是兩列</b>，那是知情的取捨。要進 360 得走 Ⓓ（再收 25px），
+而 Ⓓ 的眼睛圖示是<b>把一個站上刻意關掉的東西重新打開</b>（<code>.views svg</code> 一直是
+<code>display:none</code>），而且首頁卡片印的是「數字 · 次瀏覽」，改成圖示兩邊就不一致。
+<b>320 連 Ⓓ 都進不來</b>（要收到 292px），只剩拿掉「首頁 ›」或整個瀏覽數兩條路。</li>
+<li><b>Ⓔ 沒有落選得很乾脆，它是另一個方向</b>：不壓縮任何東西，只把開關釘在右上角、
+讓文字自己折下去 —— 320 到 430 每一個寬度開關都在第一列，而且<b>一個字都不必改</b>（純 CSS）。
+日後若有人要再多掛一顆東西進那一行、或是要照顧 320，這條路還在，
+做法是 <code>.crumbs</code> 給 <code>position: relative</code> ＋ 右內距 61px、開關絕對定位，
+再用一根零寬 30px 高的 <code>::before</code> 把第一列撐到和開關一樣高（負的右外距抵消它多佔的那道溝）。</li>
+<li><b>日期那一行在 <code>&lt;main&gt;</code> 裡，所以十三篇的內容雜湊都動了</b> ——
+照第五節的程序把 <code>tools/build-manifest.json</code> 的 <code>updated</code> 還原（雜湊留新的）再跑一次 build，
+十三篇的最後更新日一個都沒有跳。判準是第五節那一條：<b>這次改動對讀者來說算不算內容變了</b> ——
+換一種日期寫法是版型連動，不算。</li>
+</ul>
+
+<h2>提案頁本身學到的</h2>
+<ul>
+<li><b>提案頁是 <code>posts/kids-crown/</code> 的完整複本</b>，所以第八節那幾個坑一起處理了：
+SEO 區塊整段換成 noindex（不然等於對外宣告一個不存在的頁面）、canonical 剝掉、
+同層連結 <code>../&lt;slug&gt;/</code> 一律改絕對路徑、切換條插在最後一個 body 結束標籤前面、樣式放 head。</li>
+<li><b>計數器降級不是剝掉</b>（<code>data-views-self</code> → <code>data-views</code>，counter.js 留著）——
+同 chip-carry 那一輪：只有 <code>-self</code> 會 POST +1，所以既不灌計數，又<b>印得出真的數字</b>。
+這一頁尤其非這樣做不可：<b>要判斷的就是那一列排不排得下</b>，瀏覽數印一條破折號的話量出來的寬度是假的。</li>
+<li><b>切換條第一版量到 27.1%（320 上 38.3%），太高</b> —— 收法是把按鈕的字縮成
+「Ⓐ 現況／Ⓑ 日期／Ⓒ ＋溝／Ⓓ ＋圖示／Ⓔ 釘右上」、面板從六行併成四行，
+收到 19.9%（360／320 是 24.3%），另加一顆「收起」。</li>
+<li><b>日期那把尺是用 CSS 切的不是用 JS 改字</b>：六個 span（三種長度 × 兩種寫法）擺在
+<code>&lt;time&gt;</code> 裡，靠 <code>html[data-pv][data-pv-d]</code> 只露一個。
+面板每一次都驗「現在只有一個 span 露出來」。</li>
+<li><b>面板要下判斷不要只印數字</b>：現在幾列、開關在不在第一列、差或餘幾 px、
+<b>一行的最小螢幕寬夠不夠「你這支手機」</b>（現場拿 <code>window.innerWidth</code> 比）、
+四位數瀏覽數會再多幾 px、水平溢出。</li>
+</ul>
+
+<footer>
+  芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a>
+</footer>
+
+</div></body>
+</html>
