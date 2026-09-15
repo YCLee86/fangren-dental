@@ -5886,6 +5886,10 @@ html[data-theme="dark"][data-pv-l="a"] .lot.on :is(rect, path):not(.ent) { fill:
 html[data-theme="dark"][data-pv-l="b"] .lot.on :is(rect, path):not(.ent) { fill: #5774a5; }
 html[data-theme="dark"][data-pv-l="c"] .lot.on :is(rect, path):not(.ent) { fill: #607daf; }
 html[data-theme="dark"][data-pv-l="d"] .lot.on :is(rect, path):not(.ent) { fill: #7a96ca; }
+html[data-theme="dark"][data-pv-o="a"] .lot:not(.on) :is(rect, path) { fill: #7a7d77; }
+html[data-theme="dark"][data-pv-o="b"] .lot:not(.on) :is(rect, path) { fill: #6b6e69; }
+html[data-theme="dark"][data-pv-o="c"] .lot:not(.on) :is(rect, path) { fill: #5a5d58; }
+html[data-theme="dark"][data-pv-o="d"] .lot:not(.on) :is(rect, path) { fill: #4e504b; }
 .pv-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
   background: color-mix(in srgb, var(--card) 92%, transparent);
   backdrop-filter: blur(8px) saturate(1.1); -webkit-backdrop-filter: blur(8px) saturate(1.1);
@@ -8638,8 +8642,7 @@ html[data-theme="dark"][data-pv-l="d"] .lot.on :is(rect, path):not(.ent) { fill:
      ⚠ 兩支都用 `document.body.dataset.topic` 擋住，首頁上等於不存在。 -->
 
 <div class="pv-bar" id="pv-bar">
-  <div class="pv-row"><b>入口指標</b><span class="pv-seg"><button type="button" data-e="a">現況</button><button type="button" data-e="b">路線的點</button><button type="button" data-e="c">剛好 3:1</button><button type="button" data-e="d">再亮一階</button></span></div>
-  <div class="pv-row"><b>點到的塊</b><span class="pv-seg"><button type="button" data-l="a">現況</button><button type="button" data-l="b">對街廓 3:1</button><button type="button" data-l="c">和沒點到同亮</button><button type="button" data-l="d">路線的點</button></span></div>
+  <div class="pv-row"><b>沒點到的</b><span class="pv-seg"><button type="button" data-o="a">現況</button><button type="button" data-o="b">暗一階</button><button type="button" data-o="c">和診所同級</button><button type="button" data-o="d">再暗一階</button></span></div>
   <div class="pv-panel" id="pv-panel"></div>
   <div class="pv-foot">
     <button type="button" id="pv-day">對照白天</button>
@@ -8651,10 +8654,13 @@ html[data-theme="dark"][data-pv-l="d"] .lot.on :is(rect, path):not(.ent) { fill:
 <script>
 (function () {
   var r = document.documentElement, bar = document.getElementById('pv-bar');
-  var qs = location.search, mE = qs.match(/[?&]e=([a-z0-9]+)/), mL = qs.match(/[?&]l=([a-z0-9]+)/);
-  var E = ["a","b","c","d"], L = ["a","b","c","d"];
+  var qs = location.search, mE = qs.match(/[?&]e=([a-z0-9]+)/), mL = qs.match(/[?&]l=([a-z0-9]+)/), mO = qs.match(/[?&]o=([a-z0-9]+)/);
+  var E = ["a","b","c","d"], L = ["a","b","c","d"], O = ["a","b","c","d"];
+  /* 入口指標與點到的那一塊 2026-09-15 第一輪已經定案（他挑的都是 c），
+     所以收成寫死的值、從切換條上拿掉；網址參數仍然吃得到，要回頭比隨時開得出來。 */
   var e = mE && E.indexOf(mE[1]) >= 0 ? mE[1] : 'c';
   var l = mL && L.indexOf(mL[1]) >= 0 ? mL[1] : 'c';
+  var o = mO && O.indexOf(mO[1]) >= 0 ? mO[1] : 'c';
 
   /* 對比與 L 星都現場從 computed style 算 —— 面板不印任何寫死的數字。 */
   function rgb(s) { var m = String(s).match(/(-?[\d.]+)/g); return m ? m.slice(0, 3).map(Number) : [0, 0, 0]; }
@@ -8665,9 +8671,8 @@ html[data-theme="dark"][data-pv-l="d"] .lot.on :is(rect, path):not(.ent) { fill:
   function f2(n) { return n.toFixed(2); }
 
   function paint() {
-    r.setAttribute('data-pv-e', e); r.setAttribute('data-pv-l', l);
-    Array.prototype.forEach.call(bar.querySelectorAll('[data-e]'), function (b) { b.setAttribute('aria-pressed', b.dataset.e === e); });
-    Array.prototype.forEach.call(bar.querySelectorAll('[data-l]'), function (b) { b.setAttribute('aria-pressed', b.dataset.l === l); });
+    r.setAttribute('data-pv-e', e); r.setAttribute('data-pv-l', l); r.setAttribute('data-pv-o', o);
+    Array.prototype.forEach.call(bar.querySelectorAll('[data-o]'), function (b) { b.setAttribute('aria-pressed', b.dataset.o === o); });
     measure();
   }
 
@@ -8685,20 +8690,23 @@ html[data-theme="dark"][data-pv-l="d"] .lot.on :is(rect, path):not(.ent) { fill:
     var pk = on.querySelector('.pk');
     var cp = pk ? rgb(getComputedStyle(pk).fill) : [244, 244, 245];
     var dL = Ls(cb) - Ls(co);
-    var entOK = cr(ce, road), pOK = cr(cp, cb);
+    /* 診所那塊綠是這一輪的錨點：沒點到的停車場不該比診所自己還跳。 */
+    var gm = document.querySelector('.map-svg .cm-solid, .map-svg .cm-plot');
+    var cg = gm ? rgb(getComputedStyle(gm).fill) : card;
+    var pOff = cr(cp, co), road2 = cr(co, road);
     var row = function (s) { return '<div>' + s + '</div>'; };
     p.innerHTML =
-      row('入口指標壓在路面上 <b class="' + (entOK < 3 ? 'pv-no' : '') + '">' + f2(entOK) + '</b>'
-          + (entOK < 1.5 ? '（門檻 3・幾乎看不到）' : '（門檻 3）') + '　白天 4.79') +
-      row('點到的方塊對街廓 <b>' + f2(cr(cb, card)) + '</b>・對路面 ' + f2(cr(cb, road)) + '　白天 6.76') +
-      row('白色的 P 壓在方塊上 <b class="' + (pOK < 3 ? 'pv-no' : '') + '">' + f2(pOK) + '</b>　沒點到那塊是 ' + f2(cr(cp, co))) +
-      row('點到比沒點到<b>' + (dL >= 0 ? '亮 ' : '暗 ') + Math.abs(dL).toFixed(1) + '</b> L 星　白天是暗 3.6（＝換色相）');
+      row('沒點到的塊對街廓 <b class="' + (cr(co, card) > cr(cg, card) ? 'pv-no' : '') + '">' + f2(cr(co, card))
+          + '</b>　診所那塊綠是 ' + f2(cr(cg, card)) + (cr(co, card) > cr(cg, card) ? '（比診所還跳）' : '')) +
+      row('　　　　對路面 <b class="' + (road2 < 1.2 ? 'pv-no' : '') + '">' + f2(road2) + '</b>'
+          + (road2 < 1.2 ? '（貼著路的那一邊沒有邊界了）' : '') + '　白 P 壓在上面 <b>' + f2(pOff) + '</b>') +
+      row('點到的塊對街廓 ' + f2(cr(cb, card)) + '・白 P ' + f2(cr(cp, cb)) + '　入口指標壓在路面上 ' + f2(cr(ce, road))) +
+      row('點到比沒點到<b>' + (dL >= 0 ? '亮 ' : '暗 ') + Math.abs(dL).toFixed(1) + '</b> L 星　白天是暗 3.6（那時底是亮的）');
   }
 
   bar.addEventListener('click', function (ev) {
     var b = ev.target.closest('button'); if (!b) return;
-    if (b.dataset.e) { e = b.dataset.e; paint(); }
-    else if (b.dataset.l) { l = b.dataset.l; paint(); }
+    if (b.dataset.o) { o = b.dataset.o; paint(); }
     else if (b.id === 'pv-day') { r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark'; measure(); }
     else if (b.id === 'pv-map') { var f = document.querySelector('.card-map'); if (f) f.scrollIntoView({ block: 'center' }); }
     else if (b.id === 'pv-fold') { bar.hidden = true; document.getElementById('pv-open').hidden = false; }
@@ -8710,6 +8718,19 @@ html[data-theme="dark"][data-pv-l="d"] .lot.on :is(rect, path):not(.ent) { fill:
   var fig = document.querySelector('.map-fig');
   if (fig) fig.addEventListener('click', function () { setTimeout(measure, 260); });
   paint();
+  /* ⚠⚠ 站上那支「開頁先亮壹車房」是等圖與腳本都跑完才掛上 .on 的，
+     手機上（4G）比這裡慢很多 —— 第一版只在 load ＋300ms 量一次，
+     使用者手機上的面板因此一直停在「點一下地圖上的三塊停車場」，
+     而畫面完全正常。改成量到為止（最多 8 秒），並在 class 變動時重量。 */
+  var tries = 0, timer = setInterval(function () {
+    if (document.querySelector('.lot.on') || ++tries > 32) { clearInterval(timer); measure(); }
+  }, 250);
+  if (window.MutationObserver) {
+    var mo = new MutationObserver(function () { measure(); });
+    Array.prototype.forEach.call(document.querySelectorAll('.lot'), function (g) {
+      mo.observe(g, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
   /* 開頁直接停在地圖上 —— 這一頁只有那一塊要看，不要讓他自己滑一屏。 */
   addEventListener('load', function () {
     if (location.hash) return;
@@ -8717,7 +8738,6 @@ html[data-theme="dark"][data-pv-l="d"] .lot.on :is(rect, path):not(.ent) { fill:
     var prev = r.style.scrollBehavior; r.style.scrollBehavior = 'auto';
     f.scrollIntoView({ block: 'center' });
     r.style.scrollBehavior = prev;
-    setTimeout(measure, 300);
   });
 })();
 </script>
