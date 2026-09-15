@@ -277,6 +277,22 @@ R.map(([k, label, opts]) =>
     });
   });
 
+  /* ⚠⚠ 點三塊停車場的時候，格子要收起來（2026-09-15 使用者：「點停車場的時候
+     不要顯示停車格」）—— 兩種模式互斥：按標籤 ＝ 停車場熄滅、點停車場 ＝ 格子收起來。
+     ⚠ 一定要用**捕獲階段**（第三個參數 true）：站上那三塊自己的 handler 有
+       stopPropagation()，掛在冒泡階段的永遠收不到。捕獲比目標早跑，所以
+       我們先把格子收掉，站上那支 paintLots() 再照它自己的邏輯把停車場點亮。
+     ⚠ 桌機的 hover 不管 —— 那只是預覽，滑開就回去，跟著收會一直閃。 */
+  function offOnLot(e) {
+    if (!on) return;
+    var t = e.target;
+    if (t && t.closest && t.closest('.lot')) { on = false; paint(); }
+  }
+  fig.addEventListener('click', offOnLot, true);
+  fig.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') offOnLot(e);
+  }, true);
+
   document.querySelectorAll('.pv-row[data-k]').forEach(function (row) {
     var k = row.dataset.k;
     row.querySelectorAll('button').forEach(function (b) {
