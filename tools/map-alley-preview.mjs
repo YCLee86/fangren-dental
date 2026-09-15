@@ -47,13 +47,19 @@ h = h.replace(/<link rel="canonical"[^>]*>\n/, '');
 h = h.replace('<title>芳仁牙醫診所｜雲林斗六・永樂街</title>',
   '<title>提案：地圖補一條小巷｜芳仁牙醫</title>');
 
-/* ---- 4. 把文化路北邊那一塊街廓拆成兩塊，中間留給小巷 --------------------- */
-/*    ⚠ 街廓的座標一個單位都沒動 —— 只是把 x124 那一塊(寬 200)切成左右兩段，
-      寬度由切換條現算：現況 ＝ 左段寬 200、右段寬 0（等於沒有切）。 */
-const OLD = '<rect x="124" y="-20" width="200" height="41" rx="4"/>';
-if (h.split(OLD).length !== 2) throw new Error('文化路北邊那一塊街廓找不到、或不只一塊');
-h = h.replace(OLD,
-  '<rect class="pv-blk-l" x="124" y="-20" width="200" height="41" rx="4"/>\n' +
+/* ---- 4. 文化路北邊那一排街廓 --------------------------------------------- */
+/*    兩件事都發生在同一排：
+        ・補一條小巷（x 212 附近）
+        ・平和街到文化路就到底了，北邊那一截要補起來（使用者 2026-09-15 指出）
+      ⚠ 街廓與街道的座標一個單位都沒動 —— 只是把那一排的兩塊各自換成可以現算寬度的
+        三塊，由切換條決定：現況 ＝ 逐格等於站上那兩塊。 */
+const OLD_W = '                  <rect x="-20" y="-20" width="114" height="41" rx="4"/>';
+const OLD_M = '                  <rect x="124" y="-20" width="200" height="41" rx="4"/>';
+if (h.split(OLD_W).length !== 2) throw new Error('平和街以西、文化路北邊那一塊找不到、或不只一塊');
+if (h.split(OLD_M).length !== 2) throw new Error('平和街～永樂街、文化路北邊那一塊找不到、或不只一塊');
+h = h.replace(OLD_W, '                  <rect class="pv-blk-w" x="-20" y="-20" width="114" height="41" rx="4"/>');
+h = h.replace(OLD_M,
+  '                  <rect class="pv-blk-l" x="124" y="-20" width="200" height="41" rx="4"/>\n' +
   '                  <rect class="pv-blk-r" x="324" y="-20" width="0" height="41" rx="4"/>');
 
 /* ---- 5. 提案用的樣式（pv 前綴，見 CLAUDE.md 第八節） --------------------- */
@@ -111,15 +117,25 @@ const BAR = [
 '  var m = /[?&]w=([a-z0-9]+)/.exec(location.search);',
 '  if (m && W[m[1]] !== undefined) cur = m[1];',
 '',
+'  var blkW = document.querySelector(".pv-blk-w");',
 '  var blkL = document.querySelector(".pv-blk-l");',
 '  var blkR = document.querySelector(".pv-blk-r");',
 '  var svg  = document.querySelector(".map-svg");',
 '',
+'  /* 平和街以西那一塊的原樣（現況 ＝ -20 到 94，北邊留著平和街的缺口）。 */',
+'  var WX = -20, WR = 94;',
+'',
 '  function paint() {',
 '    var w = W[cur];',
-'    if (!w) { blkL.setAttribute("width", R0 - L0); blkR.setAttribute("x", R0); blkR.setAttribute("width", 0); }',
-'    else {',
-'      blkL.setAttribute("width", (CX - w / 2) - L0);',
+'    if (!w) {',
+'      /* 對照現況：逐格等於站上那兩塊。 */',
+'      blkW.setAttribute("width", WR - WX);',
+'      blkL.setAttribute("x", L0); blkL.setAttribute("width", R0 - L0);',
+'      blkR.setAttribute("x", R0); blkR.setAttribute("width", 0);',
+'    } else {',
+'      /* 平和街到文化路就到底 —— 西邊那一塊直接長到小巷的左緣，中間那一塊收成 0。 */',
+'      blkW.setAttribute("width", (CX - w / 2) - WX);',
+'      blkL.setAttribute("x", CX - w / 2); blkL.setAttribute("width", 0);',
 '      blkR.setAttribute("x", CX + w / 2);',
 '      blkR.setAttribute("width", R0 - (CX + w / 2));',
 '    }',
@@ -142,7 +158,8 @@ const BAR = [
 '    var out = document.documentElement.scrollWidth - document.documentElement.clientWidth;',
 '    p.innerHTML =',
 '      (w ? "小巷 <b>寬 " + w + "</b>（圖上 " + (w * k).toFixed(1) + "px）・往北一段 " + stub +',
-'           "（圖上 " + (stub * k).toFixed(1) + "px）" : "<b>現況：沒有這條巷子</b>") +',
+'           "（圖上 " + (stub * k).toFixed(1) + "px）<br>平和街 <b>到文化路就到底</b>，北邊那一截補起來了"',
+'         : "<b>現況：沒有這條巷子，而且平和街穿過文化路往北</b>") +',
 '      "<br>中心 x <b>" + CX + "</b>　＝ 平和街到永樂街之間的 <b>" + pct + "%</b>" +',
 '      "（Google 地圖上量到 44.7%）" +',
 '      "<br>寬度比一條街（" + road + "）＝ " + (w ? (w / road * 100).toFixed(0) + "%" : "—") +',

@@ -6709,7 +6709,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
                        12 巷只切最西邊那一欄、14 巷切永樂街以東兩欄、33 巷切西邊三欄。 -->
                 <g fill="var(--map-bg)">
                   <!-- 平和街以西 -->
-                  <rect x="-20" y="-20" width="114" height="41" rx="4"/>
+                  <rect class="pv-blk-w" x="-20" y="-20" width="114" height="41" rx="4"/>
                   <rect x="-20" y="59" width="114" height="116" rx="4"/>
                   <rect x="-20" y="187" width="114" height="216" rx="4"/>
                   <rect x="-20" y="441" width="114" height="100" rx="4"/>
@@ -8668,15 +8668,25 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
   var m = /[?&]w=([a-z0-9]+)/.exec(location.search);
   if (m && W[m[1]] !== undefined) cur = m[1];
 
+  var blkW = document.querySelector(".pv-blk-w");
   var blkL = document.querySelector(".pv-blk-l");
   var blkR = document.querySelector(".pv-blk-r");
   var svg  = document.querySelector(".map-svg");
 
+  /* 平和街以西那一塊的原樣（現況 ＝ -20 到 94，北邊留著平和街的缺口）。 */
+  var WX = -20, WR = 94;
+
   function paint() {
     var w = W[cur];
-    if (!w) { blkL.setAttribute("width", R0 - L0); blkR.setAttribute("x", R0); blkR.setAttribute("width", 0); }
-    else {
-      blkL.setAttribute("width", (CX - w / 2) - L0);
+    if (!w) {
+      /* 對照現況：逐格等於站上那兩塊。 */
+      blkW.setAttribute("width", WR - WX);
+      blkL.setAttribute("x", L0); blkL.setAttribute("width", R0 - L0);
+      blkR.setAttribute("x", R0); blkR.setAttribute("width", 0);
+    } else {
+      /* 平和街到文化路就到底 —— 西邊那一塊直接長到小巷的左緣，中間那一塊收成 0。 */
+      blkW.setAttribute("width", (CX - w / 2) - WX);
+      blkL.setAttribute("x", CX - w / 2); blkL.setAttribute("width", 0);
       blkR.setAttribute("x", CX + w / 2);
       blkR.setAttribute("width", R0 - (CX + w / 2));
     }
@@ -8699,7 +8709,8 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     var out = document.documentElement.scrollWidth - document.documentElement.clientWidth;
     p.innerHTML =
       (w ? "小巷 <b>寬 " + w + "</b>（圖上 " + (w * k).toFixed(1) + "px）・往北一段 " + stub +
-           "（圖上 " + (stub * k).toFixed(1) + "px）" : "<b>現況：沒有這條巷子</b>") +
+           "（圖上 " + (stub * k).toFixed(1) + "px）<br>平和街 <b>到文化路就到底</b>，北邊那一截補起來了"
+         : "<b>現況：沒有這條巷子，而且平和街穿過文化路往北</b>") +
       "<br>中心 x <b>" + CX + "</b>　＝ 平和街到永樂街之間的 <b>" + pct + "%</b>" +
       "（Google 地圖上量到 44.7%）" +
       "<br>寬度比一條街（" + road + "）＝ " + (w ? (w / road * 100).toFixed(0) + "%" : "—") +
