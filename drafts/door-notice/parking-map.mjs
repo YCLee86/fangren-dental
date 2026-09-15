@@ -25,59 +25,84 @@ const SOFT = '#8b8f89';   // 號碼還沒讀到的那幾格
 //   永樂街 x324–354  永安路 x455–487  文化路 y21–59  大同路 y403–441
 const W = 11, L = 20;
 
-// 直的格子：x = 矩形左緣, y = 上緣, lab = 號碼, side = 號碼擺哪一邊
-const V = (x, y, n, side, dim) => ({ t: 'v', x, y, n, side, dim });
-const H = (x, y, n, side, dim) => ({ t: 'h', x, y, n, side, dim });
+// 直的格子：x = 矩形左緣, y = 上緣, side = 號碼擺哪一邊
+// 橫的格子：x = 左緣, y = 上緣, an = 號碼的對齊（middle／end／start）
+const V = (st, x, y, n, side, dim) => ({ t: 'v', st, x, y, n, side, dim });
+const H = (st, x, y, n, an, dim) => ({ t: 'h', st, x, y, n, an: an || 'middle', dim });
 
 const BAYS = [
-  // 永樂街・東側（貼東緣 354）
-  V(343, 196, '002', 'e'),
-  V(343, 232, '001', 'e'),
-  // 永樂街・西側＝診所這一側（貼西緣 324）
-  V(324, 282, '005', 'w'),
-  V(324, 320, '004', 'w'),
-  V(324, 372, '003', 'w'),
-  // 永安路・東側（貼東緣 487），文化路→大同路那一段，九格
-  ...['010','009','008','007','006','005','004','003','002']
-      .map((n, i) => V(476, 118 + i * 27, n, 'e', n === '009' || n === '004')),
-  // 永安路・西側（貼西緣 455）
-  V(456, 118, '013', 'w'),
-  V(456, 458, '012', 'w'),
-];
-const LOAD = V(456, 80, '卸貨', 'w');          // 郵局裝卸貨車專用區，靠文化路那一頭
-const HBAYS = [
-  H(226, 22, '039', 'n'),                      // 文化路北側
-  H(256, 22, '040', 'n'),
-  H(252, 404, '001', 'n'),                     // 大同路北側
+  // ── 永樂街（走廊 x324–354）─────────────────────────────
+  // 東側（貼東緣 354）
+  V('永樂街', 343, 224, '002', 'e'),
+  V('永樂街', 343, 292, '001', 'e'),
+  // 西側＝診所這一側（貼西緣 324）
+  //   005 在「平和街33巷（y321~333）與診所（y236~276）之間」那一塊
+  V('永樂街', 324, 282, '005', 'w'),
+  //   003 與 004 同一個街區（33 巷以南 ~ 大同路 y403 以北），003 最靠大同路
+  V('永樂街', 324, 345, '004', 'w'),
+  V('永樂街', 324, 375, '003', 'w'),
+
+  // ── 永安路・東側（貼東緣 487）────────────────────────────
+  //   010→004 連續（一格接一格），004 的南邊界 y253 ＝ 合廷停車場的入口
+  //   （那顆入口箭頭在 index.html 裡是 translate(466 253)）
+  ...['010','009','008','007','006','005','004']
+      .map((n, i) => V('永安路', 476, 113 + i * L, n, 'e', n === '009' || n === '004')),
+  //   003 與 004 隔一點、002 與 003 再隔一點
+  V('永安路', 476, 262, '003', 'e'),
+  V('永安路', 476, 293, '002', 'e'),
+
+  // ── 永安路・西側（貼西緣 455）────────────────────────────
+  V('永安路', 456, 375, '013', 'w'),   // 幾乎在永安路與大同路口（大同路 y403 起）
+  V('永安路', 456, 518, '012', 'w'),   // 大同路與中華路之間
 ];
 
+// 郵局門口的裝卸貨車專用區，靠文化路那一頭
+const LOAD = V('永安路', 456, 80, '卸貨', 'w');
+
+const HBAYS = [
+  // 文化路北側・平和街口（x94~124）與那條小巷（x206~218）之間
+  H('文化路', 150, 22, '039', 'end'),
+  H('文化路', 170, 22, '040', 'start'),
+  // 大同路北側
+  H('大同路', 252, 404, '001'),
+];
+
+// 文化路・平和街口以西（照片沒拍，號碼還沒清查）——
+// 北側一整排連續、南側一格。⚠ 畫的數量是示意，不是清查結果。
+const WEST = [
+  ...[4, 24, 44, 64].map(x => ({ t: 'h', st: '文化路西', x, y: 22, n: '', an: 'middle' })),
+  { t: 'h', st: '文化路西', x: 44, y: 47, n: '', an: 'middle' },
+];
 
 // ── 守門：圖上畫的格號要和 parking-survey.json 對得起來 ────────────────
+// ⚠ 只比對「有號碼」的格子 —— 文化路平和街口以西那一排還沒清查號碼，
+//   資料裡是空的、圖上也不寫號碼，兩邊都跳過。
 {
   const d = JSON.parse(readFileSync(new URL('./parking-survey.json', import.meta.url), 'utf8'));
+  const 純 = t => t.replace(/（.*/, '').replace(/[（(].*/, '');
   const 清查 = new Set();
   for (const st of d['街'])
-    for (const b of st['停車格'] || [])
-      if (b['網站地圖範圍內'] !== false)
-        清查.add(st['路名'].replace(/（.*/, '') + '/' + b['號'].replace(/（.*/, ''));
-  const 圖上 = new Set([
-    ...BAYS.filter(o => o.x < 400).map(o => '永樂街/' + o.n),
-    ...BAYS.filter(o => o.x >= 400).map(o => '永安路/' + o.n),
-    ...HBAYS.slice(0, 2).map(o => '文化路/' + o.n),
-    '大同路/' + HBAYS[2].n,
-  ]);
+    for (const b of st['停車格'] || []) {
+      const n = 純(b['號']);
+      if (!/^\d+$/.test(n)) continue;                       // 未確認的跳過
+      if (b['網站地圖範圍內'] === false) continue;
+      清查.add(純(st['路名']) + '/' + n);
+    }
+  const 圖上 = new Set(
+    [...BAYS, ...HBAYS].filter(o => /^\d+$/.test(o.n)).map(o => o.st + '/' + o.n));
   const 少 = [...清查].filter(k => !圖上.has(k));
   const 多 = [...圖上].filter(k => !清查.has(k));
   if (少.length || 多.length)
     throw new Error('停車格對不上 parking-survey.json —— 圖上少了 [' + 少 + ']、多了 [' + 多 + ']');
 }
 
+
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 const p = await b.newPage({ viewport: { width: 1200, height: 1400 }, deviceScaleFactor: 2 });
 await p.goto('file:///home/user/fangren-dental/index.html', { waitUntil: 'load' });
 await p.waitForTimeout(1200);
 
-await p.evaluate(({ BAYS, LOAD, HBAYS, BLUE, GREY, SOFT, W, L }) => {
+await p.evaluate(({ BAYS, LOAD, HBAYS, WEST, BLUE, GREY, SOFT, W, L }) => {
   const svg = document.querySelector('svg.map-svg');
   const NS = 'http://www.w3.org/2000/svg';
 
@@ -98,7 +123,7 @@ await p.evaluate(({ BAYS, LOAD, HBAYS, BLUE, GREY, SOFT, W, L }) => {
     });
   };
   move(339, 462);   // 永樂街 → 大同路與中華路之間
-  move(471, 505);   // 永安路 → 再往南，讓開 012
+  move(471, 448);   // 永安路 → 讓開西側的 013(y375) 與 012(y518)
 
   const g = document.createElementNS(NS, 'g');
   g.setAttribute('id', 'pbays');
@@ -133,12 +158,16 @@ await p.evaluate(({ BAYS, LOAD, HBAYS, BLUE, GREY, SOFT, W, L }) => {
   };
   const drawH = (o, fill) => {
     rect(o.x, o.y, L, W, fill);
-    label(o.x + L / 2, o.y - 5, o.n, 'middle', '#2a2c27', 12);
+    if (!o.n) return;                       // 還沒清查號碼的那一排不寫字
+    // 兩格緊鄰時號碼會疊在一起 —— 靠左那一格的字靠右切齊、靠右那一格靠左切齊
+    const lx = o.an === 'end' ? o.x + L - 2 : o.an === 'start' ? o.x + 2 : o.x + L / 2;
+    label(lx, o.y - 5, o.n, o.an, o.dim ? SOFT : '#2a2c27', 12);
   };
 
   BAYS.forEach(o => drawV(o, BLUE));
   drawV(LOAD, GREY);
   HBAYS.forEach(o => drawH(o, BLUE));
+  WEST.forEach(o => drawH(o, BLUE));
 
   svg.querySelector('#map-clip').appendChild(g);
 
@@ -167,12 +196,13 @@ await p.evaluate(({ BAYS, LOAD, HBAYS, BLUE, GREY, SOFT, W, L }) => {
   note.style.cssText = 'padding:10px 4px 0;font-size:12.5px;color:#5c5f57';
   note.innerHTML =
     '永樂街 5 格、文化路北側 2 格（039 · 040）、大同路北側 1 格、永安路 11 格（東側 9 ＋ 西側 013 · 012），另有郵局門口裝卸貨車專用區 1 格。<br>' +
-    '平和街、平和街33巷、文化路南側、文化路往東、大同路往西過平和街與往東到永安路 —— 現地確認沒有汽車停車格。<br>' +
+    '平和街、平和街33巷、文化路南側（平和街口以東）、文化路往東、大同路往西過平和街與往東到永安路 —— 現地確認沒有汽車停車格。<br>' +
+    '⚠ 文化路・平和街口以西那幾格（北側一排、南側一格）<b>照片沒拍到、號碼還沒清查</b> —— 圖上畫的數量是示意，不是清查結果。<br>' +
     '⚠ 永安路東側那九格的先後順序還沒確認（圖上是由北往南 010→002 的推定畫法）；另有一格 011 現場還沒找到，圖上沒有畫。';
   box.appendChild(note);
 
   document.querySelectorAll('body > *:not(#shotbox)').forEach(e => e.style.display = 'none');
-}, { BAYS, LOAD, HBAYS, BLUE, GREY, SOFT, W, L });
+}, { BAYS, LOAD, HBAYS, WEST, BLUE, GREY, SOFT, W, L });
 
 await p.waitForTimeout(400);
 await p.locator('#shotbox').screenshot({ path: new URL('./parking-survey-map.png', import.meta.url).pathname });
