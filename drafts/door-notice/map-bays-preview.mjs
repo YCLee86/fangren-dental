@@ -82,6 +82,16 @@ const bays =
   '<g class="pv-ns">' + nums.join('') + '</g>' +
   '</g>\n';
 
+/* 那三條路名各打一個記號（位置由上面那段 CSS 決定，這裡只認人）*/
+for (const [find, id] of [
+  ['<text class="lbl" x="200" y="49"  text-anchor="middle">文化路</text>', 'wenhua'],
+  ['<text class="lbl" x="339" y="308" text-anchor="middle">', 'yongle'],
+  ['<text class="lbl" x="471" y="308" text-anchor="middle">', 'yongan'],
+]) {
+  if (!h.includes(find)) throw new Error('找不到路名：' + id);
+  h = h.replace(find, find.replace('<text class="lbl"', `<text data-pv-mv="${id}" class="lbl"`));
+}
+
 {
   const s = h.indexOf('<g id="map-clip"');
   if (s === -1) throw new Error('找不到 #map-clip');
@@ -124,9 +134,18 @@ html[data-pv-c="ink"] { --pv-bay: var(--ink-soft); }
    ⚠ dasharray 的單位是 viewBox 的使用者單位，會跟著圖一起縮 ——
      手機上 1 單位 ＝ 0.748px，所以 3 個單位畫出來只有 2.2px。 */
 .pv-bay {
-  fill: var(--pv-bay); stroke: var(--card);
+  fill: var(--pv-bay); stroke: var(--pv-dash, #282b31);
   stroke-width: var(--pv-dw, 1.4); stroke-dasharray: var(--pv-da, 3 2.4);
 }
+/* 虛線的顏色（2026-09-15 使用者：「白天模式停車格白虛線感覺怪怪的，
+   改成和夜間一樣的虛線顏色看看」）。
+   ⚠ #282b31 **不是新顏色** —— 就是夜間模式的卡色（index.html 第 5810 行），
+     所以「和夜間一樣」＝ 把它釘死成同一支，白天夜間都是它。
+   ⚠ 其餘三格也全部是站上既有的：墨、柔墨、卡色（＝原本那個白）。 */
+html[data-pv-k="night"] { --pv-dash: #282b31; }
+html[data-pv-k="ink"]   { --pv-dash: var(--ink); }
+html[data-pv-k="soft"]  { --pv-dash: var(--ink-soft); }
+html[data-pv-k="card"]  { --pv-dash: var(--card); }
 html[data-pv-d="a"] { --pv-dw: 1.2; --pv-da: 2 1.6; }
 html[data-pv-d="b"] { --pv-dw: 1.4; --pv-da: 3 2.4; }
 html[data-pv-d="c"] { --pv-dw: 1.8; --pv-da: 4 3.2; }
@@ -136,6 +155,20 @@ html[data-pv-c="out"] .pv-bay { fill: none; stroke: var(--map-park); stroke-widt
 .pv-n { fill: var(--ink); font-weight: 600; letter-spacing: .02em; }
 .pv-ns { display: none; }
 html[data-pv-num="on"] .pv-ns { display: inline; }
+
+/* 格子出現的時候，被蓋到的那三條路名讓開（2026-09-15 使用者指定）。
+   ⚠⚠ **用 CSS 的 transform，不要去改 x／y** —— 標籤要能原封不動退回去，
+     標籤沒按下去時地圖要和站上逐位元組相同，那是這一頁的硬條件。
+   ⚠ 位移量與清查那張圖用的是同一組（parking-map.mjs 的 move()）：
+     永樂街 → 大同路與中華路之間、永安路 → 讓開西側的 013 與 012；
+     文化路是橫的，往東讓開 039／040 與平和街口以西那一排。
+   ⚠ 在 SVG 裡 transform 的 px ＝ viewBox 的使用者單位，會跟著圖一起縮。
+   ⚠ transition 要把 opacity 一起寫回來（站上那條 .lbl 本來就有，
+     只寫 transform 會把它蓋掉，街名淡下去那一下就變成硬切）。 */
+.card-map .map-svg text.lbl { transition: opacity .18s ease, transform .18s ease; }
+.card-map[data-bays="1"] .map-svg text.lbl[data-pv-mv="wenhua"] { transform: translate(62px, 0); }
+.card-map[data-bays="1"] .map-svg text.lbl[data-pv-mv="yongle"] { transform: translate(0, 154px); }
+.card-map[data-bays="1"] .map-svg text.lbl[data-pv-mv="yongan"] { transform: translate(0, 140px); }
 
 /* 文化路・平和街口以西那一排：數量是示意的、號碼還沒清查 */
 .pv-w { display: none; }
@@ -213,7 +246,8 @@ html[data-pv-p="bot"]  .pv-side, html[data-pv-p="bot"] .pv-top  { display: none;
    ⚠ 只留新的那一條：虛線多疏、多粗 —— 那是他還沒看過的東西，
      所以給一把尺不是給一個我估的值（第九節第 28 條 ①）。 */
 const R = [
-  ['d', '虛線', [['a', '最細密'], ['b', '細'], ['c', '中'], ['d', '疏']]],
+  ['d', '虛線疏密', [['a', '最細密'], ['b', '細'], ['c', '中'], ['d', '疏']]],
+  ['k', '虛線顏色', [['night', '夜間那支'], ['ink', '墨'], ['soft', '柔墨'], ['card', '白（原本）']]],
 ];
 const bar =
 '<button class="pv-mini" type="button" id="pv-open" hidden>提案</button>\n' +
@@ -228,7 +262,7 @@ R.map(([k, label, opts]) =>
 '</div>\n' +
 `<script>
 (function () {
-  var DEF = { p: 'side', c: 'blue', num: 'off', lots: 'off', w: 'on', d: 'd' };
+  var DEF = { p: 'side', c: 'blue', num: 'off', lots: 'off', w: 'on', d: 'd', k: 'night' };
   var root = document.documentElement, q = new URLSearchParams(location.search);
   var st = {};
   /* ⚠ 網址參數的正規式要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到帶數字的值（CLAUDE.md 第九節）*/
@@ -243,6 +277,7 @@ R.map(([k, label, opts]) =>
   var win  = document.querySelector('.map-win');
   var svg  = document.querySelector('svg.map-svg');
   var chips = [].slice.call(document.querySelectorAll('.pv-chip'));
+  var again = 0;
   var on = false;
 
   function paint() {
@@ -267,6 +302,9 @@ R.map(([k, label, opts]) =>
          所以不能只掛一次 —— 底下那個 MutationObserver 負責補回來。 */
     syncDim();
     measure();
+    /* ⚠ 路名讓開是 .18s 的 transition —— 按下去的當下量到的還是舊位置，
+       「路名被格子蓋到」那一列會誤報。等過場跑完再量一次。 */
+    clearTimeout(again); again = setTimeout(measure, 260);
   }
   chips.forEach(function (b) {
     b.addEventListener('click', function (e) {
@@ -341,6 +379,18 @@ R.map(([k, label, opts]) =>
       var b = e.getBoundingClientRect();
       if (!(b.right < wr.right - 1 && b.left > wr.left + 1)) nCut++;
     });
+    /* 有沒有格子壓在路名上 —— 讓開的位移量對不對，要用量的不是用看的。
+       ⚠ 量的是墨的外框，而且要跳過已經淡成 0 的那幾個（站上的 .hide）。 */
+    var hitNames = [];
+    [].slice.call(svg.querySelectorAll('.lbl, .lbl-s, .lbl-xs')).forEach(function (l) {
+      if (!l.getClientRects().length || getComputedStyle(l).opacity === '0') return;
+      var lb = l.getBoundingClientRect();
+      var hit = shown.some(function (r) {
+        var bb = r.getBoundingClientRect();
+        return !(lb.right < bb.left || lb.left > bb.right || lb.bottom < bb.top || lb.top > bb.bottom);
+      });
+      if (hit) hitNames.push(l.textContent.trim());
+    });
     var one = shown[0] ? shown[0].getBoundingClientRect() : null;
     var k = svg.getBoundingClientRect().width / 560;
     var nEl = svg.querySelector('#pv-bays .pv-n');
@@ -374,7 +424,8 @@ R.map(([k, label, opts]) =>
       '虛線 一段 ' + (da[0] * k).toFixed(1) + 'px・空 ' + ((da[1] || da[0]) * k).toFixed(1) +
       'px・粗 ' + (dw * k).toFixed(2) + 'px　一圈 ' + (per ? (62 / per).toFixed(1) : '—') + ' 段' +
       ((da[0] * k) < 2.5 ? '　⚠ 一段不到 2.5px，畫出來讀不出是虛線' : '') +
-      '　街名 ' + (svg.classList.contains('dim') ? '淡下去了' : '滿的');
+      '　街名 ' + (svg.classList.contains('dim') ? '淡下去了' : '滿的') + '\\n' +
+      '路名被格子蓋到 ' + (hitNames.length ? '⚠ ' + hitNames.length + ' 條：' + hitNames.join('、') : '0 條');
   }
   addEventListener('resize', measure);
   addEventListener('load', measure);
