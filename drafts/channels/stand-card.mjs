@@ -60,7 +60,7 @@
  *
  * ⚠ 那四張卡是用 CSS 排的，**不是完稿**：這一輪只處理文字，插圖與版面下一輪。
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build as buildQR, PLATE_MODE } from "./qr-brand.mjs";
@@ -352,79 +352,45 @@ const card = (c, now = false, o = {}) => {
 const 尺卡 = S.案.find((c) => c.id === "e");
 /* ⚠⚠ 案數現算，不可以寫死「四案」—— 2026-09-16 拿掉四案之後，寫死的那個詞會靜靜地說謊
  *   （同第五十三、五十四節那條：一個「第 N 個」或「共 N 件」的數字，要嘛不寫，要嘛現算）。 */
-const 案數詞 = "零一兩三四五六七八九"[S.案.length] ?? String(S.案.length);
+/* ⚠⚠ 數的是**畫出來的那幾張**（2026-09-16 起 Ⓕ 留在資料裡但不畫）—— 拿 S.案.length 去數的話，
+ *   頁面上會寫著一個看不到的數字。 */
+export const 印的案 = S.案.filter((c) => !c.不印);
+export const 不印的 = S.案.filter((c) => c.不印);
+if (!印的案.length) throw new Error("每一案都標了「不印」—— 這一頁就沒有東西了");
+const 案數詞 = "零一兩三四五六七八九"[印的案.length] ?? String(印的案.length);
 /* ⚠⚠⚠ 兩把間距的尺 2026-09-16 稍晚定案（Ⓗ7 ＋ Ⓙ4），**卡片從頁面上拿掉、只留表**
  *   —— 同 50-22 與 71-13：尺可以收，它量出來的數字不可以跟著消失。
  * ⚠ 「・定案」是**算出來的**（`值 === 預設`），不要寫進標籤裡
  *   （兩邊都寫的話印出來會是「完全不留（定案）・定案」）。
  * ⚠⚠ 每一格的數字都現算，而且**兩把尺會互相牽動**：段距一改，Ⓗ 那張表整欄會跟著動。 */
-const 記H = (k) => "Ⓗ" + (k.id === "now" ? "1" : k.id[1]);
-const 記J = (k) => "Ⓙ" + (k.id === "now" ? "1" : k.id[1]);
 
-const 尺間距 =
-`<table><thead><tr><th>　</th><th>上外距</th><th>抬頭到主文</th>
-<th>÷ 主文行距</th><th>QR 底下到帶子</th></tr></thead><tbody>${
-  CARD.抬頭到主文案.map((k) => {
-    const 抬 = 抬頭到主文mm(尺卡, k.值), 行 = 行距mm(尺卡), 定 = k.值 === BDGAP;
-    /* ⚠ 淡掉的是「現況」那一列（對照用的），不是定案那一列 —— 兩張表要同一個規矩 */
-    return `<tr${k.id === "now" ? ' class="nowr"' : ""}><th>${記H(k)} ${esc(k.標籤)}${定 ? "・定案" : ""}</th>
-<td>卡寬 ${(k.值 * 100).toFixed(1)}%</td><td>${抬} mm</td>
-<td class="${抬 / 行 < 1 ? "bad" : ""}">${(抬 / 行).toFixed(1)} 倍${抬 / 行 < 1 ? "　⚠ 比主文行距還窄" : ""}</td>
-<td>${餘裕mm(尺卡, k.值)} mm</td></tr>`;
-  }).join("\n")}</tbody></table>`;
 
-/* ⚠⚠⚠ 第二把尺（2026-09-16）：主文段與段之間。
- *   ⚠ 它和上面那一把**不是獨立的** —— 抬頭到主文那一段的中間那一截就是它，
- *     所以這張表的「抬頭到主文」那一欄會跟著動，而且**分母（行距）掉得更快**：
- *     收段距會讓抬頭那一段讀起來**更遠**，那正是他同一句話裡講到兩件事的原因。 */
-const 尺段距 =
-`<table><thead><tr><th>　</th><th>段落上下外距</th><th>主文行距</th>
-<th>抬頭到主文</th><th>÷ 主文行距</th><th>QR 底下到帶子</th></tr></thead><tbody>${
-  CARD.段距案.map((k) => {
-    const 行 = 行距mm(尺卡, k.值), 抬 = 抬頭到主文mm(尺卡, BDGAP, k.值), 定 = k.值 === PGAP;
-    return `<tr${k.id === "now" ? ' class="nowr"' : ""}><th>${記J(k)} ${esc(k.標籤)}${定 ? "・定案" : ""}</th>
-<td>${k.值} em</td><td>${行} mm</td><td>${抬} mm</td>
-<td class="${抬 / 行 < 1 ? "bad" : ""}">${(抬 / 行).toFixed(1)} 倍</td>
-<td>${餘裕mm(尺卡, BDGAP, k.值)} mm</td></tr>`;
-  }).join("\n")}</tbody></table>`;
 
-/* ⚠⚠ 標誌左右的留白 2026-09-16 定案（Ⓘ4 ＝ 12%），**收成寫死的值、對照帶從頁面上拿掉** ——
- *   但五格量出來的東西要留著（同 50-22：尺可以收，它量出來的數字不可以跟著消失）。
- * ⚠⚠⚠ 定案那一格**低於我們手上記的 25%**，所以這張表多一欄「對規範」：
- *   哪一格守得住、哪幾格跨過去，一眼看得到。**那條線不可以跟著尺一起消失。** */
+/* ⚠⚠⚠ 2026-09-16 使用者：「以上還有其他下面的都不需要了　不要放在提案頁裏」——
+ *   四把尺（Ⓗ 抬頭到主文／Ⓙ 每段之間／Ⓘ 標誌留白／Ⓚ Ⓛ 帶子）的表、拆解那六件、
+ *   現況那一張、待答那幾題，全部從**頁面上**拿掉了。
+ * ⚠⚠ **它們量出來的數字沒有跟著消失** —— 改由底下那塊面板接手，每跑一次產生器就印一次
+ *   （尺可以收，數字不可以；同 50-22、71-13、71-14）。資料一筆都沒有刪，守門照舊在驗。
+ * ⚠⚠⚠ 定案的留白**低於我們手上記的 25%**，所以那條線非印不可 —— 面板在跨線時會講一句。 */
 const 規範留白 = 0.25;
-const 尺留白 = `<table><thead><tr><th>　</th><th>左右各留</th><th>卡片上</th><th>對規範（${(規範留白 * 100).toFixed(0)}%）</th></tr></thead><tbody>${
-  S.標誌.留白案.map((k) => {
-    const hd = hdOf(尺卡, k.比), 定 = k.比 === 留白比;
-    return `<tr${k.id === "now" ? ' class="nowr"' : ""}><th>Ⓘ${k.id === "now" ? "1" : k.id[1]} ${esc(k.標籤)}${定 ? "・定案" : ""}</th>
-<td><b>${(k.比 * 100).toFixed(1)}%</b> 個標誌高</td><td>＝ <b>${(hd.留白em * hd.fs * CARD.寬mm).toFixed(2)} mm</b></td>
-<td>${k.例外 ? `<span class="bad">⚠ ${esc(k.例外)}</span>` : "守得住"}</td></tr>`;
-  }).join("\n")}</tbody></table>`;
 
 /* ⚠⚠ 拿掉的那幾案要留一筆紀錄 —— 不見的時候要說人話，不要在一百行外丟 TypeError */
-if (!S.刪案?.走了?.length || !S.刪案.取回 || !S.刪案.說明?.length) {
-  throw new Error("資料裡沒有「刪案」那一筆（走了哪幾案／去哪裡取回來／為什麼）—— 拿掉的是畫面，不是理由");
+if (!S.刪案?.走了?.length || !S.刪案.取回 || !S.刪案.說明?.length || !S.刪案.節?.length) {
+  throw new Error("資料裡的「刪案」缺了一半（走了哪幾案／收掉了哪幾節／去哪裡取回來／為什麼）—— 拿掉的是畫面，不是理由");
 }
 
-const 拆解 = S.拆解.map((d, i) =>
-  `<div class="it"><p class="t"><span class="n">${i + 1}</span>${b(d.標)}</p>${para(d.文)}</div>`).join("\n");
 
-const 案 = S.案.map((c) => `<div class="one">
+/* ⚠⚠⚠ 2026-09-16 使用者：「保留 E 就好　F 拿掉」——**拿掉的是畫面，不是那一案**。
+ *   Ⓕ 在資料裡標了 `不印`，所以它不畫出來，但它仍然存在：Ⓔ 的字級釘在它身上、
+ *   它是紅線那一道唯一乾淨的一案、也是那一條紅線唯一寫下來的最小改法。
+ *   ⚠ 直接從「案」裡搬走的話，產生器會在 fsOf() 那一行 throw（那正是它該 throw 的時候）。 */
+const 案 = 印的案.map((c) => `<div class="one">
 <p class="lb">${esc(c.標籤)}</p>
 ${card(c)}
 <div class="note">${para(c.註)}</div>
 </div>`).join("\n");
 
-const tbl = `<table><thead><tr><th>　</th><th>主文行數</th><th>最長一行</th>
-<th>字可以多大</th><th>那一行佔卡寬</th><th>紅線</th></tr></thead><tbody>${
-  rows.map((r) => `<tr${r.id === "now" ? ' class="nowr"' : ""}><th>${esc(r.標籤)}</th>
-<td>${r.行數}</td><td>${r.最長} 字</td><td>${r.字高mm} mm${
-  r.照 ? `<br><small>釘在 ${esc(r.照)}・規則會算 ${r.自然mm}</small>` : ""}</td><td>${r.佔卡寬}%</td>
-<td class="${r.紅線.length ? "bad" : "ok"}">${r.紅線.length ? r.紅線.map((x) => esc(x.字)).join("、") : "0"}</td></tr>`).join("\n")
-}</tbody></table>`;
 
-const 待答 = S.待答.map((d, i) =>
-  `<li><b>${b(d.標)}</b><br>${b(d.文)}</li>`).join("\n");
 
 const HTML = `<!doctype html>
 <html lang="zh-Hant-TW">
@@ -432,7 +398,7 @@ const HTML = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>櫃檯的小立牌　文字改版（${案數詞}案）</title>
+<title>櫃檯的小立牌　文字改版</title>
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
   --brick:#8c3b32;--green:#3f654a;--cw:300px;--hd-ls:${HDLS}em;--li-h:${LIH}em;--li-gap:${LIGAP}em;--bd-gap:calc(var(--cw) * ${BDGAP});--p-gap:${PGAP}em}
@@ -494,37 +460,12 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .card .band.logos{background:transparent;padding:0;display:block}
 .card .band.logos .bnd{width:var(--cw);height:auto;display:block}
 .card.now .bd p{white-space:normal}
-/* 尺上那幾條：擺成卡片真正的寬度（--cw），不然比出來的「多小」是假的 */
-.bandonly{width:var(--cw);border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.14)}
-.bandonly .bnd{width:100%;height:auto;display:block}
 .note{font-size:.86rem;color:var(--soft);margin:.6em 0 0}
 .note p{margin:.35em 0}
 
-/* ── 拆解 ─────────────────────────────────────────────────────── */
-.it{background:var(--card);border-radius:11px;padding:12px 15px;margin:.7em 0;font-size:.93rem}
-.it .t{font-weight:600;margin:0 0 .3em}
-.it .n{display:inline-block;min-width:1.5em;color:var(--brick);font-weight:700}
-.it p{margin:.35em 0}
-
-table{border-collapse:collapse;width:100%;font-size:.86rem;margin:.6em 0 0;
-  background:var(--card);border-radius:10px;overflow:hidden}
-th,td{padding:.5em .6em;text-align:center;border-bottom:1px solid var(--rule)}
-thead th{font-weight:600;font-size:.8rem;color:var(--soft)}
-tbody th{text-align:left;font-weight:600}
-tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
-.nowr th,.nowr td{color:var(--soft)}
-.bad{color:var(--brick);font-weight:700}
-.ok{color:var(--green)}
-ol.ask{padding-left:1.4em;font-size:.93rem}
-ol.ask li{margin:.7em 0}
-/* ⚠⚠ 底板那把尺的三格：**擺的是真的碼**（定案那一格就是卡上那一個檔案本人）。
-   ⚠ 底一定要白 —— 頁面的底是紙色，而落選那兩格的靜區是透明的，擺在紙色上看到的
-   就不是它印在白卡上的樣子。 */
-.qrcmp{display:flex;flex-wrap:wrap;gap:16px;margin:.9em 0 0}
-.qrcmp figure{flex:1 1 170px;max-width:220px;margin:0}
-.qrcmp img{width:100%;height:auto;display:block;background:#fff;border-radius:6px}
-.qrcmp figcaption{font-size:.84rem;margin-top:.45em}
-.qrcmp figcaption span{display:block;color:var(--soft);margin-top:.2em}
+/* ⚠⚠ 2026-09-16 收成一張卡之後，拆解那幾塊、四張表、待答那一列與底板那把尺的三格
+   都不在頁上了，所以它們的樣式也一起收掉（留著死 CSS 會讓下一個人以為那幾節還在）。
+   ⚠ 色票那兩個變數（brick／green）留著：那是這一站的顏色，不是這幾節的東西。 */
 .foot{margin-top:2.6em;padding-top:1em;border-top:1px solid var(--rule);
   font-size:.82rem;color:var(--soft)}
 @media (max-width:719px){:root{--cw:min(300px,88vw)}.one{max-width:none}}
@@ -534,106 +475,14 @@ ol.ask li{margin:.7em 0}
 <div class="wrap">
 
 <h1>櫃檯的小立牌　文字改版</h1>
-<p class="lede">這一輪<b>只處理文字</b>（插圖與版面下一輪）。底下那${案數詞}張卡是用網頁排的，
-<b>不是完稿</b> —— 字級是用一條規則自動算的，${案數詞}案比的是文字本身。</p>
+<p class="lede">底下那${案數詞}張卡是用網頁排的，<b>不是完稿</b> —— 這一輪只處理文字，插圖與版面下一輪。</p>
 
-<p class="h2">現況那一張<span class="t">照片上逐字抄的，一個字都沒有改寫</span></p>
-<div class="cards"><div class="one">${card(S.現況, true)}</div>
-<div class="one"><div class="box">
-${para(CARD._量法)}
-</div></div></div>
-
-<p class="h2">抬頭那顆 LINE 標誌<span class="t">官方授權的檔案，不是我們畫的</span></p>
-<div class="box">${para(S.標誌._說明)}
-<p>⚠ 現在畫出來：<code>${esc(S.標誌.檔)}</code> ${LOGO.寬}×${LOGO.高}（長寬比 ${LOGO.比}），
-高 ${LIH} em ＝ 卡片上 <b>${(LIH * hdOf(S.案[0]).fs * CARD.寬mm).toFixed(1)} mm</b>，
-左右各留 <b>${(留白比 * 100).toFixed(0)}%</b> 個標誌高${留白比 < 規範留白 ? `　—— <b class="bad">低於我們手上記的 ${(規範留白 * 100).toFixed(0)}%</b>，那是使用者挑的，見底下那一節` : ""}。</p></div>
-
-<p class="h2">那個 QR 掃出來是什麼<span class="t">拿解碼器掃過，不是用眼睛看的</span></p>
-<div class="box"><p><code>${esc(S.QR.內容)}</code></p>${para(S.QR.說明)}</div>
-
-<p class="h2">QR 周圍那圈淡綠色的邊<span class="t">那是靜區被上了色，不是外框</span></p>
-<div class="box">${para(S.QR.底板.說明)}</div>
-<div class="qrcmp">${QRPLATE.map((a) => `<figure><img src="${a.檔}" width="45" height="45" alt="${esc(a.標籤)}">
-<figcaption><b>${esc(a.標籤)}${a.定案 ? "・定案" : ""}</b><span>${esc(a.註)}</span></figcaption></figure>`).join("")}</div>
-
-<p class="h2">為什麼要改<span class="t">六件，每一件都有出處</span></p>
-${拆解}
-
-<p class="h2">${案數詞}案<span class="t">Ⓔ 是他寫的，Ⓕ 是同一份字的最小改法</span></p>
-<p class="lede">抬頭每一案都一樣：<b>${mark(S.案[0].抬頭)}</b>（使用者 2026-09-16 指定的逐字，
-那顆標誌是他提供的<b>官方授權檔</b>）。<b>Ⓔ 是他自己寫的三行</b>，一個字都沒有改 ——
-所以底下那張表上它會亮紅，那不是壞掉（見那一案的註）。</p>
 <div class="cards">${案}</div>
 <div class="note">${para(S.刪案.說明)}
-<p>拿掉的：${S.刪案.走了.map(esc).join("、")}（${esc(S.刪案.時間)}）。
+<p>拿掉的案：${S.刪案.走了.map(esc).join("、")}（${esc(S.刪案.時間)}）；
+${不印的.map((c) => esc(c.標籤)).join("、")} 只是<b>不畫出來</b>，資料與守門都還在。
+同一天從這一頁上收掉的幾節：${S.刪案.節.map(esc).join("、")}。
 要回頭比：<code>${esc(S.刪案.取回)}</code></p></div>
-
-<p class="h2">抬頭到主文的間距<span class="t">收上面，空間留給下面的插圖</span></p>
-<div class="box">${para(CARD.抬頭到主文_說明)}</div>
-${尺間距}
-
-<p class="h2">主文每段之間<span class="t">和上面那一把互相牽動，不是兩件各自獨立的事</span></p>
-<div class="box">${para(CARD.段距_說明)}</div>
-${尺段距}
-
-<p class="h2">標誌左右的留白<span class="t">他寫的那兩個半形空白，換成一個算得出來的規格</span></p>
-<div class="box">${para(S.標誌.留白_說明)}</div>
-${尺留白}
-
-<p class="h2">底下那條帶子<span class="t">診所自己的 logo，白的，壓在一般牙科那塊綠上</span></p>
-<div class="box">${para(S.帶子._說明)}
-<p>⚠ 定案這一條畫出來：<b>${BAND.顆數}</b> 顆、間距 <b>${BAND.間距}</b>（＝最高那一顆的 ${(BAND.間距 * 100).toFixed(0)}%），
-合計 <b>${BAND.總寬.toFixed(0)}</b> 個單位寬 × <b>${BAND.總高.toFixed(0)}</b> 高，縮到 ${CARD.寬mm} mm 的卡上是
-<b>${(CARD.寬mm * BAND.總高 / BAND.總寬).toFixed(1)} mm</b> 高、最高的那一顆 <b>${(CARD.寬mm * BAND.高 / BAND.總寬).toFixed(1)} mm</b>、
-<b>四邊與顆與顆之間都是 ${(CARD.寬mm * BAND.gap / BAND.總寬).toFixed(2)} mm</b>。
-底色 <code>${底色}</code>（讀 wm-sizes.json 的 r1c1 ＝ 一般牙科）、標誌 <code>${墨色}</code>，
-白壓在那塊綠上是 <b>${(() => { const l = (h) => { const c = [1, 3, 5].map((i) => { const v = parseInt(底色.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }; return (1.05 / (l() + 0.05)).toFixed(2); })()}</b>。</p></div>
-<div class="bandonly" style="--cw:min(300px, 86vw)">${bandSvg()}</div>
-
-<p class="h2">帶子・多少顆<span class="t">Ⓚ　定案十一顆。整條一律縮到卡片寬，所以顆數愈多每一顆愈小</span></p>
-<div class="box"><p>⚠⚠ 重複的挑 <b>站上真的在用的那兩顆</b>：<code>r1c2</code>（頁首那顆）與
-<code>r3c1</code>（商家貼文那三張圖的浮水印）。⚠ 三個順序案**每一個**都要守住那三條限制
-（同形狀不相鄰、三顆最長的不相鄰、同色不相鄰），守門三個都在盯。</p>
-<p>⚠ 兩把尺 2026-09-16 定案（<b>Ⓚ3 ＋ Ⓛ2</b>），<b>帶子條已經從這一頁上收掉、兩張表留著</b> ——
-尺可以收，它量出來的數字不可以跟著消失。要回頭比就看表，不必重做。</p></div>
-<table><thead><tr><th>　</th><th>一顆最高</th><th>四邊與中間</th><th>帶子高</th></tr></thead><tbody>${
-S.帶子.順序案.map((k) => { const b = 帶(k.顆), s2 = CARD.寬mm / b.總寬;
-  return `<tr><th>${esc(k.標籤)}${k.顆 === BAND.顆數 ? "・定案" : ""}</th><td>${(b.高 * s2).toFixed(2)} mm</td><td>${(b.gap * s2).toFixed(2)} mm</td><td>${(b.總高 * s2).toFixed(1)} mm</td></tr>`;
-}).join("\n")}</tbody></table>
-
-<p class="h2">帶子・間距<span class="t">Ⓛ　定案 .50。四邊與中間吃同一個值，它一大每一顆就變小</span></p>
-<table><thead><tr><th>　</th><th>一顆最高</th><th>四邊與中間</th><th>帶子高</th></tr></thead><tbody>${
-S.帶子.間距案.map((k) => { const b = 帶(undefined, k.值), s2 = CARD.寬mm / b.總寬;
-  return `<tr><th>${esc(k.標籤)}${k.值 === BAND.間距 ? "・定案" : ""}</th><td>${(b.高 * s2).toFixed(2)} mm</td><td>${(b.gap * s2).toFixed(2)} mm</td><td>${(b.總高 * s2).toFixed(1)} mm</td></tr>`;
-}).join("\n")}</tbody></table>
-<div class="box">${para(S.帶子.色案_落選)}</div>
-
-<p class="h2">字可以多大<span class="t">字少的自動變大 —— 這是兩案真正的差別之一</span></p>
-<div class="box"><p>主文字高 ＝ <b>min(卡寬的 6%，版心 84% ÷ 最長那一行的字數)</b>，
-也就是「讓最長那一行剛好撐滿版心，但不超過 6%」。${案數詞}案用同一條規則，所以底下這張表比的是
-<b>文字本身</b>，不是我替每一案挑的字級。</p>
-<p>⚠⚠ <b>一案可以宣告「字級照另一案」</b>（Ⓔ 就是釘在 Ⓕ 上的）——
-規則本身一個字都沒有改：那一列同時印著<b>規則會算幾 mm</b>，所以看得出這一釘是往上還是往下。
-⚠ 釘上去之後最長那一行放不下的話產生器會 throw ——
-卡片是 <code>overflow:hidden</code>，不擋的話畫面上只會少掉最後幾個字，而每一道尺寸守門都會過。</p>
-<p>⚠ <b>版心那個 84% 就是從現況那一行量來的</b>（最長那一行 22 個全形字、佔卡片寬度 84%），
-所以現況那一列是這條規則的<b>定義</b>、不是驗證。${案數詞}案之間的比較仍然成立 —— 它們吃同一條規則。</p>
-<p>⚠ <b>抬頭另算一條</b>：min(卡寬的 8.5%，版心 84% ÷ (全形當量 ＋ 字距 ＋ 標誌佔幾個字))。
-那顆標誌會把那一行撐寬 <b>${LIW}</b> 個字（＝它的高度 ${LIH} em × 長寬比 ${LOGO.比}，
-<b>長寬比是從 PNG 的檔頭讀回來的</b>），不算進去的話抬頭會靜靜地溢出卡片
-（卡片是 <code>overflow:hidden</code>，畫面上只會少掉最後一個字）。
-每一案的抬頭都是 <b>${(hdOf(S.案[0]).fs * CARD.寬mm).toFixed(2)} mm</b>，
-那顆標誌因此印出來高 <b>${(LIH * hdOf(S.案[0]).fs * CARD.寬mm).toFixed(1)} mm</b>。</p>
-<p>⚠ 字高是照卡片寬 ${CARD.寬mm} mm 換算的（那個數字還要用尺量一次，見底下第 ${qn("尺寸")} 題）。
-櫃檯是站著看的，一般建議內文不要小於 3.5 mm。</p></div>
-${tbl}
-<div class="note">${para(S.紅線._說明)}</div>
-
-<p class="h2">還沒有答案的</p>
-<ol class="ask">
-${待答}
-</ol>
 
 <p class="foot">文字的唯一出處是 <code>drafts/channels/stand-card.json</code>；
 這一頁由 <code>node drafts/channels/stand-card.mjs</code> 產生、
@@ -652,18 +501,20 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const q = join(OUT, QRFILE);
     if (!existsSync(q)) throw new Error("preview/line-stand/" + QRFILE + " 不見了 —— 跑一次產生器把它搬過來");
     if (!readFileSync(q).equals(readFileSync(QRSRC))) throw new Error(QRFILE + " 和 drafts/channels/qr/ 那一份對不起來 —— 改要改 qr-brand.mjs 再重跑，不要改 preview 底下那一份");
-    for (const [f2, svg] of QRVAR()) {
-      const p2 = join(OUT, f2);
-      if (!existsSync(p2)) throw new Error("preview/line-stand/" + f2 + " 不見了 —— 跑一次產生器");
-      if (readFileSync(p2, "utf8") !== svg) throw new Error(f2 + " 和 qr-brand.mjs 現算的對不起來（底板那把尺）");
+    /* ⚠⚠ 底板那把尺 2026-09-16 定案（Ⓝ2）並從頁面上收掉，所以落選那兩格**不再產檔** ——
+       它們量出來的東西（三格各自的長相、三格都掃得出來）改由面板印。 */
+    for (const [f2] of QRVAR()) {
+      if (existsSync(join(OUT, f2)))
+        throw new Error("preview/line-stand/" + f2 + " 還在 —— 底板那把尺已經收掉了，落選那兩格不再產檔");
     }
-    console.log("✓ 逐位相同（含那顆 QR 與底板那把尺的兩格）");
+    console.log("✓ 逐位相同（含那顆 QR）");
   } else {
     mkdirSync(OUT, { recursive: true });
     writeFileSync(f, HTML);
     writeFileSync(join(OUT, QRFILE), readFileSync(QRSRC));
-    for (const [f2, svg] of QRVAR()) writeFileSync(join(OUT, f2), svg);
-    console.log("寫出 preview/line-stand/index.html ＋ " + [QRFILE, ...QRVAR().map((x) => x[0])].join(" ＋ "));
+    /* 尺收掉了 —— 落選那兩格若還躺在資料夾裡，跟著清掉（守門那張白名單也不再放行它們） */
+    for (const [f2] of QRVAR()) if (existsSync(join(OUT, f2))) rmSync(join(OUT, f2));
+    console.log("寫出 preview/line-stand/index.html ＋ " + QRFILE);
   }
   const pad = (s, n) => String(s) + " ".repeat(Math.max(0, n - cw(String(s)) * 2));
   console.log("");
@@ -690,6 +541,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   }
   console.log("");
   console.log(`標誌 ${S.標誌.檔} ${LOGO.寬}×${LOGO.高}（長寬比 ${LOGO.比}）—— 官方授權檔，只等比例縮放`);
+  /* ⚠⚠⚠ 留白那把尺（Ⓘ）2026-09-16 連同表一起從頁面上收掉 —— 五格量出來的東西改在這裡印。
+     ⚠ 定案那一格**低於我們手上記的規範**，那條線非印不可（第九節第 28 條 ④：
+       壞掉檢查擋不住「靜靜地跨過去」）。 */
+  console.log(`     Ⓘ 左右留白 ${S.標誌.留白案.map((k) => { const h = hdOf(尺卡, k.比);
+    return `${(k.比 * 100).toFixed(1)}%→${(h.留白em * h.fs * CARD.寬mm).toFixed(2)}${k.比 < 規範留白 ? "⚠" : ""}`;
+  }).join("　")}（mm，現在 ${(留白比 * 100).toFixed(1)}%${留白比 < 規範留白 ? `　⚠ 低於規範的 ${(規範留白 * 100).toFixed(0)}%，那是使用者挑的` : ""}）`);
   {
     const s2 = CARD.寬mm / BAND.總寬;
     console.log(`帶子 ${BAND.顆數} 顆 ${BAND.it.map((x) => x.k).join(" ")}（間距 ${BAND.間距}）`);
@@ -713,6 +570,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       `　框 ${(CARD.QR佔卡寬 * 100).toFixed(0)}% 卡寬 ＝ ${box.toFixed(1)} mm、` +
       `碼本身 ${(box * (vb - Q * 2) / vb).toFixed(1)} mm（下限 15）` +
       `　現況那一張仍然是灰色佔位方塊（它是照片的對照）`);
+    /* ⚠⚠ 底板那把尺 2026-09-16 定案（Ⓝ2）並收掉了 —— 三格各自的長相留在這裡
+       （尺可以收，它量出來的數字不可以跟著消失）。三格都在印刷尺寸上拿 zxing 掃過。 */
+    for (const a of QRPLATE)
+      console.log(`     ${a.標籤}${a.定案 ? "・定案" : ""}　${a.註}`);
   }
   console.log("");
 }
