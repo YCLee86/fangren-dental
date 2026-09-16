@@ -377,9 +377,9 @@ const lum = (h) => {
     .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
   return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
 };
-const bandSvg = (B = BAND) => {
+const bandSvg = (B = BAND, cls = "bnd") => {
   const { it, 總寬, 總高 } = B;
-  return `<svg class="bnd" viewBox="0 0 ${總寬.toFixed(1)} ${總高.toFixed(1)}" role="img" aria-label="芳仁牙醫診所的標誌排成的一條分隔線">` +
+  return `<svg class="${cls}" viewBox="0 0 ${總寬.toFixed(1)} ${總高.toFixed(1)}" role="img" aria-label="芳仁牙醫診所的標誌排成的一條分隔線">` +
     it.map((o) => {
       const { vb, inner } = SHAPE(o.k);
       return `<svg x="${o.x.toFixed(1)}" y="${o.y.toFixed(1)}" width="${o.w}" height="${o.h.toFixed(1)}" viewBox="${vb}" style="color:${墨色}">${inner}</svg>`;
@@ -455,6 +455,71 @@ if (!S.刪案?.走了?.length || !S.刪案.取回 || !S.刪案.說明?.length ||
   throw new Error("資料裡的「刪案」缺了一半（走了哪幾案／收掉了哪幾節／去哪裡取回來／為什麼）—— 拿掉的是畫面，不是理由");
 }
 
+
+/* ── 插圖裁成什麼樣（只有一份）──────────────────────────────────
+ * 「那一條」多高，這張圖就要裁成多寬的比例 —— 兩個方向各有各的做法，而且不可以對調：
+ *   比那一條寬（矮）→ 從頭頂上那塊白把高度借回來；比那一條瘦（高）→ 從下緣裁掉一截。
+ * ⚠⚠⚠ **這一份要和 `stand-illus-crop.mjs` 共用** —— 那一支量墨的框、這一頁讀 JSON 記下來的
+ *   同一個框（那一支每次跑都會對一次），**裁法各寫一份的話，頁面上會出現一個和真的裁出來
+ *   對不起來的數字，而且不報錯**。
+ * ⚠ 下緣裁超過墨的 20% ＝ 切到手與胸口，那是那把尺真正的盡頭。 */
+export const 裁法 = (那一條, 墨, 邊白 = 8) => {
+  const { L, R, T, B } = 墨, [W, H] = S.插圖.原尺寸;
+  const x0 = Math.max(0, L - 邊白), x1 = Math.min(W - 1, R + 邊白), cw = x1 - x0 + 1;
+  const 需高 = Math.round(cw / (CARD.寬mm / 那一條));
+  const y0墨 = Math.max(0, T - 邊白), 可用 = H - y0墨;
+  const y0 = 需高 <= 可用 ? y0墨 : Math.max(0, H - 需高);
+  const y1 = Math.min(H - 1, y0 + 需高 - 1), ch = y1 - y0 + 1;
+  const 墨高 = B - T + 1, 裁 = Math.max(0, B - y1);
+  const dpi = ch * 25.4 / 那一條;
+  return { cw, ch, 需高, 裁, 補: Math.max(0, y0墨 - y0), 裁比: 裁 / 墨高,
+    dpi, 過: 裁 <= 墨高 * 0.2 && dpi >= 300 && ch === 需高 };
+};
+
+/* ── Ⓜ 分隔線要多大（2026-09-16 那把尺又打開了）──────────────────
+ * 使用者：「Logo 分隔線好像縮太小了　放大一點看看」。上一輪的三倍是他自己講的
+ *   「三到四倍」，畫出來一顆只有 1.60 mm、牙洞 0.13 mm（低於平版印刷的 0.2~0.3）。
+ * ⚠⚠ **一把尺一次只動一件事**：基數（Ⓚ3）與間距（Ⓛ2）都已經由他挑定，而且基數一動
+ *   就會換掉「哪幾顆重複」—— 所以這一輪只開倍數。
+ * ⚠⚠⚠ **每一格的數字都現算**，而且**一格會牽動三個地方**：帶子自己多高、
+ *   抬頭到主文因此多遠、以及插圖那一條還剩多少（卡片是固定長寬比，
+ *   分隔線長高多少那一條就矮多少 —— 第九節第 28 條 ②）。 */
+export const 倍格 = () => S.帶子.倍案.map((k) => {
+  const b = 帶(S.帶子.顆數 * k.值);
+  const s = CARD.寬mm / b.總寬;
+  /* 這一格比現在高多少 mm —— 抬頭到主文加這個數，插圖那一條就減這個數 */
+  const d = (b.總高 / b.總寬 - 帶高()) * CARD.寬mm;
+  return {
+    ...k, 帶: b, 顆: b.顆數, 現在: k.值 === S.帶子.倍,
+    帶高mm: +(b.總高 * s).toFixed(2),
+    一顆mm: +(b.高 * s).toFixed(2),
+    間隔mm: +(b.gap * s).toFixed(2),
+    洞mm: +Math.min(...b.it.map((l) => 洞比(l.k) * l.w / b.總寬 * CARD.寬mm)).toFixed(3),
+    到主文mm: +(抬頭到主文mm(尺卡) + d).toFixed(1),
+    那一條: +(那一條mm(尺卡) - d).toFixed(1),
+    get 裁() { return 裁法(this.那一條, S.插圖.墨框); },
+  };
+});
+/* ⚠⚠ 尺上那幾格畫的是**真的那一條**（同一支 bandSvg、同一個滿版寬度），
+ *   不是用 CSS 另外畫一排像它的東西 —— 大小這種東西並排才比得出來。
+ * ⚠ 「・現在這樣」是**算出來的**（`值 === S.帶子.倍`），不要寫進標籤裡。 */
+const 倍尺 = 倍格().filter((k) => !k.不畫);
+if (倍尺.length < 2) throw new Error("倍數那把尺畫出來只剩一格 —— 那就不是尺了");
+const 插圖比 = (S.插圖.裁成[0] / S.插圖.裁成[1]).toFixed(3);
+const 尺區 = `<div class="h2">Ⓜ 分隔線要多大<span class="t">一把尺三格，每一格都是真的那一條、畫在和卡片一樣寬的地方</span></div>
+<div class="note"><p>上一輪的顆數是「三到四倍」，三倍畫出來一顆只有 ${倍格().find((k) => k.現在).一顆mm} mm、
+牙洞 ${倍格().find((k) => k.現在).洞mm} mm —— 低於平版印刷守得住的 0.2~0.3 mm，所以那一排讀起來是一條線。
+往回走只有一條路：<b>少排幾次</b>。⚠ 顆數只給基數（${S.帶子.顆數} 顆）的整數倍，
+因為那三條相鄰的限制要在接縫上也成立 —— 所以 ${S.帶子.顆數 * 2} 和 ${S.帶子.顆數} 之間沒有停格。</p></div>
+<div class="mcmp">${倍尺.map((k) => `<div class="mrow"><b>${esc(k.標籤)}・${k.顆} 顆${k.現在 ? "・現在這樣" : ""}</b><span class="mn">一顆最高 ${k.一顆mm.toFixed(2)} mm・牙洞 ${k.洞mm.toFixed(3)} mm・四邊與中間 ${k.間隔mm.toFixed(2)} mm・帶子高 ${k.帶高mm.toFixed(2)} mm<br>抬頭到主文 ${k.到主文mm} mm・插圖那一條 ${k.那一條} mm（比例 ${(CARD.寬mm / k.那一條).toFixed(3)}${k.現在 ? "，現在這一版就是裁成這樣" : "，插圖要重裁"}）<br>插圖裁成 ${k.裁.cw}×${k.裁.ch}・下緣裁掉墨的 ${(k.裁.裁比 * 100).toFixed(0)}%・${k.裁.dpi.toFixed(0)} dpi${k.裁.過 ? "" : "　<b class=\"no\">✗ 裁圖那一支會擋下來（下緣裁超過 20% ＝ 切到手與胸口）</b>"}</span>${bandSvg(k.帶, "bnd mrb")}</div>`).join("")}</div>
+<div class="note"><p>⚠⚠ <b>每一格都會動到插圖</b>：卡片是固定長寬比，分隔線長高多少，「QR 底下到卡片下緣」就矮多少。
+現在這一版裁成 ${插圖比}，比例對不上就要重裁 ——
+裁不裁得動由 <code>node drafts/channels/stand-illus-crop.mjs</code> 說了算（它逐格印裁完長什麼樣，
+下緣裁超過墨的 20% 就擋下來）。<b>那把尺的盡頭不在版面上，在那張圖上</b> —— 上面每一格都現算過了，
+標了 ✗ 的那一格<b>選了也印不出來</b>（要走它得回去讓人物畫矮一點）。</p>
+<p>⚠ 基數（哪幾顆重複）與間距這兩把尺不在這一輪：兩把 2026-09-16 都已經挑定，
+而且間距那把買得很少（.40 只從 ${倍格().find((k) => k.現在).一顆mm} 走到 ${(帶(undefined, 0.4).高 * CARD.寬mm / 帶(undefined, 0.4).總寬).toFixed(2)} mm）。
+要一格落在 ${S.帶子.顆數 * 2} 和 ${S.帶子.顆數} 之間，只能換基數（9×2 ＝ 18、10×2 ＝ 20）—— 那是他自己挑過的東西。</p></div>`;
 
 /* ⚠⚠⚠ 2026-09-16 使用者：「保留 E 就好　F 拿掉」——**拿掉的是畫面，不是那一案**。
  *   Ⓕ 在資料裡標了 `不印`，所以它不畫出來，但它仍然存在：Ⓔ 的字級釘在它身上、
@@ -556,6 +621,17 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .card.now .bd p{white-space:normal}
 .note{font-size:.86rem;color:var(--soft);margin:.6em 0 0}
 .note p{margin:.35em 0}
+/* Ⓜ 倍數那把尺：三格都是**真的那一條**，用同一支 bandSvg 畫、擺在和卡片一樣寬的白底上
+   疊起來、左緣對齊 —— 大小這種東西並排才比得出來（同 71-12 那條對照帶）。
+   ⚠⚠ 這裡不可以補左右 padding：那一條在卡片上是滿版的，補了就不是它在卡上的樣子。 */
+.mcmp{width:var(--cw);background:#fff;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.14);
+  padding:12px 0;margin:.7em 0 0}
+.mrow{margin:0 0 1.15em}
+.mrow:last-child{margin-bottom:0}
+.mrow b{display:block;font-size:.84rem;padding:0 11px}
+.mrow .mn{display:block;font-size:.76rem;line-height:1.55;color:var(--soft);padding:0 11px;margin:.1em 0 .5em}
+.mrow .bnd{width:var(--cw);height:auto;display:block}
+.mrow .no{color:var(--brick)}
 
 /* ⚠⚠ 2026-09-16 收成一張卡之後，拆解那幾塊、四張表、待答那一列與底板那把尺的三格
    都不在頁上了，所以它們的樣式也一起收掉（留著死 CSS 會讓下一個人以為那幾節還在）。
@@ -572,6 +648,9 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 <p class="lede">底下那${案數詞}張卡是用網頁排的，<b>不是完稿</b> —— 這一輪只處理文字，插圖與版面下一輪。</p>
 
 <div class="cards">${案}</div>
+
+${尺區}
+
 <div class="note">${para(S.刪案.說明)}
 <p>拿掉的案：${S.刪案.走了.map(esc).join("、")}（${esc(S.刪案.時間)}）；
 ${不印的.map((c) => esc(c.標籤)).join("、")} 只是<b>不畫出來</b>，資料與守門都還在。
@@ -648,8 +727,14 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.log(`     在 ${CARD.寬mm} mm 的卡上　帶子高 ${(BAND.總高 * s2).toFixed(1)} mm・一顆最高 ${(BAND.高 * s2).toFixed(2)} mm・四邊與中間都是 ${(BAND.gap * s2).toFixed(2)} mm`);
     console.log(`     沒有底色・標誌 ${墨色}（淡墨，牙洞挖穿透出白紙）・壓在白紙上 ${(1.05 / (lum(墨色) + 0.05)).toFixed(2)}`);
     console.log(`     ⚠ 牙洞在這個尺寸 ${(最小洞 * 1000).toFixed(0)} µm ＝ ${最小洞.toFixed(2)} mm —— 平版印刷大約守得住 0.2~0.3 mm，所以那一排讀起來是一條線不是十一個標誌`);
-    console.log(`     Ⓜ 倍數 ${S.帶子.倍案.map((k) => { const b = 帶(S.帶子.顆數 * k); const s3 = CARD.寬mm / b.總寬;
-      return `${k}倍(${S.帶子.顆數 * k}顆)→高 ${(b.總高 * s3).toFixed(2)}・一顆最寬 ${(Math.max(...b.it.map((x) => x.w)) * s3).toFixed(2)}`; }).join("　")}（mm，現在 ${S.帶子.倍} 倍）`);
+    /* ⚠⚠ Ⓜ 那把尺 2026-09-16 又打開了（「縮太小了　放大一點看看」）——
+       逐格印，而且一格要印三件：帶子自己多高、抬頭到主文因此多遠、插圖那一條還剩多少。
+       ⚠ 頁面上不畫的那一格（四倍）也要印 —— 尺可以收，數字不可以（同 50-22）。 */
+    console.log(`     Ⓜ 倍數（一把尺 ${倍格().length} 格，頁面上畫 ${倍尺.length} 格；基數 ${S.帶子.顆數} 顆，只給整數倍）`);
+    for (const k of 倍格())
+      console.log(`       ${k.標籤}　${String(k.顆).padStart(2)} 顆　一顆最高 ${k.一顆mm.toFixed(2)}・牙洞 ${k.洞mm.toFixed(3)}・間隔 ${k.間隔mm.toFixed(2)}・帶子高 ${k.帶高mm.toFixed(2)}` +
+        `　→ 抬頭到主文 ${k.到主文mm}・插圖那一條 ${k.那一條}（比例 ${(CARD.寬mm / k.那一條).toFixed(3)}）` +
+        `${k.現在 ? "　← 現在" : ""}${k.不畫 ? "　（頁面上不畫）" : ""}`);
     console.log(`     Ⓚ 基數 ${S.帶子.順序案.map((k) => { const b = 帶(k.顆 * S.帶子.倍); return `${k.顆}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在基數 ${S.帶子.顆數} 顆 × ${S.帶子.倍}）`);
     console.log(`     分隔線 上 ${(分上 * CARD.寬mm).toFixed(2)} ／ 下 ${(分下 * CARD.寬mm).toFixed(2)} mm・抬頭到主文因此變成 ${抬頭到主文mm(尺卡)} mm`);
     console.log(`     Ⓛ 間距 ${S.帶子.間距案.map((k) => { const b = 帶(undefined, k.值); return `${k.值}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在 ${BAND.間距}）`);

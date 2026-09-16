@@ -26,7 +26,7 @@
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 墨色, CARD, 分上, 分下, 洞比, 最小洞, 那一條mm,
+import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 倍格, 墨色, CARD, 分上, 分下, 洞比, 最小洞, 那一條mm,
   切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm, 帶高, ID上, ID下, ID字級,
   QRSRC, QRFILE, QRPLATE, QRVAR, 印的案, 不印的 } from "./stand-card.mjs";
 
@@ -210,8 +210,24 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
      直接拿真的排出來的那一列（BAND.it）逐對驗一次，接縫就一起驗到了。
      ⚠ 只驗 JSON 裡那幾格的話，接縫是唯一沒有人看過的地方。 */
   ok(BAND.顆數 % B.顆數 === 0, `分隔線 ${BAND.顆數} 顆不是基數 ${B.顆數} 的整數倍 —— 接縫沒有人驗過`);
-  ok(B.倍案.includes(B.倍), `倍數 ${B.倍} 不在倍案裡`);
+  /* ⚠⚠⚠ Ⓜ 那把尺 2026-09-16 又打開了（使用者：「Logo 分隔線好像縮太小了　放大一點看看」）——
+     ⚠ **每一格都要真的守得住那三條相鄰的限制**：整數倍是「把同一段接回它自己」，
+       所以每一格都要重排一次逐對驗，不可以只驗現在那一格。 */
+  ok(B.倍案.some((k) => k.值 === B.倍), `倍數 ${B.倍} 不在倍案裡`);
   ok(B.倍案.length >= 2, "倍數那把尺只剩一格 —— 那就不是尺了");
+  for (const k of B.倍案) {
+    ok(Number.isInteger(k.值) && k.值 >= 1, `倍案裡的 ${k.標籤} 不是正整數倍 —— 接縫沒有人驗過`);
+    ok(!k.標籤.includes("定案"), `${k.標籤} 的標籤裡自己寫著「定案」`);
+    ok(!/\d+\s*顆/.test(k.標籤), `${k.標籤} 的標籤裡寫死了顆數 —— 那個數字要現算（基數一改它就會說謊）`);
+    const b = 帶(B.顆數 * k.值);
+    ok(b.顆數 === B.顆數 * k.值, `${k.標籤} 排出來不是 ${B.顆數 * k.值} 顆`);
+    for (let i = 1; i < b.it.length; i++) {
+      const a = WM[b.it[i - 1].k], c = WM[b.it[i].k];
+      ok(b.it[i - 1].k !== b.it[i].k, `${k.標籤} 第 ${i}、${i + 1} 顆是同一個形狀（接縫？）`);
+      ok(!(a.ratio > 2.5 && c.ratio > 2.5), `${k.標籤} 第 ${i}、${i + 1} 顆都是最長的那一種`);
+      ok(a.color !== c.color, `${k.標籤} 第 ${i}、${i + 1} 顆同一個顏色`);
+    }
+  }
   for (let i = 1; i < BAND.it.length; i++) {
     const a = WM[BAND.it[i - 1].k], c = WM[BAND.it[i].k];
     ok(BAND.it[i - 1].k !== BAND.it[i].k, `分隔線上第 ${i}、${i + 1} 顆是同一個形狀（接縫？）`);
@@ -264,16 +280,22 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
   ok(最小洞 > 0 && 洞比(BAND.it[0].k) > 0.02, "量不到牙洞 —— 形狀的最後一個子路徑不是洞了");
   ok(/最小洞/.test(GEN) && /µm/.test(GEN), "面板沒有印牙洞在這個尺寸多大 —— 那是這一輪唯一的取捨");
   /* 頁上每一條的形狀數、底色、墨色 */
-  const bands = [...H.matchAll(/<svg class="bnd"[\s\S]*?<\/svg><\/svg>/g)];
+  /* ⚠⚠ 2026-09-16 Ⓜ 那把尺打開之後，頁上有**兩種**分隔線：卡片上那一條（class="bnd"）
+     與尺上那幾格（class="bnd mrb"）—— 顏色、牙洞、fill 那幾道兩種都要驗，
+     但「幾顆」一定要分開算（尺上每一格顆數本來就不一樣）。 */
+  const bands = [...H.matchAll(/<svg class="bnd[^"]*"[\s\S]*?<\/svg><\/svg>/g)].map((m) => m[0]);
+  const 卡條 = bands.filter((x) => x.startsWith('<svg class="bnd"'));
+  const 尺條 = bands.filter((x) => x.startsWith('<svg class="bnd mrb"'));
+  ok(卡條.length + 尺條.length === bands.length, "頁上有一條分隔線的 class 不是 bnd 也不是 bnd mrb");
   /* ⚠ 尺上那幾張也是真的卡，所以也各有一條帶子 —— 數的時候要算進來。
      ⚠⚠ 不可以照尺的格數算：兩把間距的尺都已經收成表、不再畫卡了（踩過），
         而且它們還會再被打開（Ⓗ 那把就打開過一次）—— 所以這個數字一律從頁面上數。
      ⚠⚠⚠ 2026-09-16 那條單獨的示範帶（.bandonly）也跟著整節收掉了，所以只剩卡片上那幾條。 */
   const 尺數 = (H.match(/class="card sc"/g) ?? []).length;
-  ok(bands.length === 印的案.length + 尺數,
-    `頁上畫出 ${bands.length} 條分隔線（應該是 ${印的案.length} 張卡 ＋ ${尺數} 格尺）`);
+  ok(卡條.length === 印的案.length + 尺數,
+    `頁上畫出 ${卡條.length} 條卡片的分隔線（應該是 ${印的案.length} 張卡 ＋ ${尺數} 格尺）`);
   ok(!/class="bandonly"/.test(H), "那條單獨的示範帶又回來了 —— 帶子整節 2026-09-16 收掉了");
-  for (const m of bands) {
+  for (const m of bands.map((x) => [x])) {
     /* ⚠⚠⚠ 牙洞是 fill-rule evenodd 挖穿的，底下那塊綠自己會透出來 ——
        所以整條只准有兩種 fill：那塊底色的 rect，以及形狀自己的 currentColor。
        另外畫一塊綠色的洞上去畫出來一模一樣，但形狀一改就會對不準，**而且不報錯**。 */
@@ -283,9 +305,41 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
     ok(/fill-rule="evenodd"/.test(m[0]), "有一條分隔線的形狀掉了 fill-rule evenodd —— 牙洞會被填滿");
     ok(!new RegExp("color:(?!" + 墨色 + ")").test(m[0]), "有一條分隔線的標誌不是淡墨");
   }
-  for (const m of bands)
-    ok((m[0].match(/<svg x="/g) ?? []).length === BAND.顆數,
-      `卡上那一條不是 ${BAND.顆數} 顆`);
+  for (const m of 卡條)
+    ok((m.match(/<svg x="/g) ?? []).length === BAND.顆數, `卡上那一條不是 ${BAND.顆數} 顆`);
+  /* ── Ⓜ 那把尺：頁上那幾格 ────────────────────────────────────
+     ⚠⚠⚠ 尺上畫的是**真的那一條**（同一支 bandSvg、同一個滿版寬度），不是用 CSS
+       另外排一排像它的東西 —— 所以這裡逐格比對顆數，對不上就是有人另外畫了一份。
+     ⚠ 「不畫」那幾格不畫在頁上，但它們的數字仍然要印在面板（尺可以收，數字不可以）。 */
+  {
+    const 畫 = 倍格().filter((k) => !k.不畫);
+    ok(畫.length >= 2, "Ⓜ 那把尺頁面上只剩一格 —— 那就不是尺了");
+    ok(畫.some((k) => k.現在), "Ⓜ 那把尺上沒有『現在這樣』那一格 —— 沒有錨點就比不出大小");
+    ok(尺條.length === 畫.length, `Ⓜ 那把尺畫出 ${尺條.length} 格（應該是 ${畫.length} 格）`);
+    畫.forEach((k, i) => {
+      /* ⚠ 那一格整個不見的時候要說人話，不要在這裡丟 TypeError —— 那正是它最該說話的時候 */
+      ok(尺條[i] != null && (尺條[i].match(/<svg x="/g) ?? []).length === k.顆,
+        `Ⓜ 那把尺第 ${i + 1} 格（${k.標籤}）${尺條[i] == null ? "根本沒有畫出來" : `畫出來不是 ${k.顆} 顆`}`);
+      /* ⚠⚠ 每一格的數字都要印在頁上（尺不是只給人看粗細的，要看得出代價） */
+      for (const t of [`${k.一顆mm.toFixed(2)} mm`, `${k.洞mm.toFixed(3)} mm`, `${k.那一條} mm`])
+        ok(H.includes(t), `Ⓜ 那把尺 ${k.標籤} 少印了「${t}」`);
+      /* ⚠⚠⚠ 裁不動的那一格一定要標出來 —— 一格「選了也印不出來」而頁面上看不出來，
+         那就是送了一個假選項（給出去的每一格都要是選了就能上線的）。 */
+      if (!k.裁.過) ok(/class="no"/.test(H), `Ⓜ 那把尺 ${k.標籤} 裁不動，頁面上卻沒有標出來`);
+    });
+    /* ⚠ 「・現在這樣」是算出來的（值 === S.帶子.倍），不可以寫進標籤裡 */
+    ok(/k\.現在 \? "・現在這樣"/.test(GEN), "『現在這樣』又被寫死進標籤了 —— 那是算出來的");
+    /* ⚠⚠ 裁法只有一份：這一頁與裁圖那一支都 import 它，各寫一份的話頁面上會印一組
+       和真的裁出來對不起來的數字，而且不報錯。 */
+    ok(/export const 裁法 =/.test(GEN), "裁法那一份不見了");
+    ok(/import \{[^}]*裁法[^}]*\} from "\.\/stand-card\.mjs"/.test(
+      readFileSync(join(HERE, "stand-illus-crop.mjs"), "utf8")),
+      "裁圖那一支沒有 import 裁法 —— 它又自己算了一份");
+    ok(/插圖\.墨框/.test(readFileSync(join(HERE, "stand-illus-crop.mjs"), "utf8")),
+      "裁圖那一支沒有在對 JSON 記的墨框 —— 那一欄會變成第二個真相");
+    ok(S.插圖.墨框 && ["L", "R", "T", "B"].every((k) => Number.isInteger(S.插圖.墨框[k])),
+      "資料裡的 插圖.墨框 缺了一半 —— 提案頁算不出每一格裁不裁得動");
+  }
   /* ⚠⚠⚠ 2026-09-16 那兩張表跟著整節從**頁面上**收掉了（使用者：「以上……都不需要了」），
      所以這一道再翻一次面：每一格量出來的數字改由**面板**印，而且落選那幾格一格都不可以刪。
      ⚠ 同 50-22：尺可以收、表也可以收，它量出來的數字不可以跟著消失。 */

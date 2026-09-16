@@ -16,7 +16,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pkg from "/opt/node22/lib/node_modules/playwright/index.js";
-import { S, CARD, 那一條mm, 印的案 } from "./stand-card.mjs";
+import { S, CARD, 那一條mm, 印的案, 倍格, 裁法 } from "./stand-card.mjs";
 const { chromium } = pkg;
 
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -97,6 +97,16 @@ if (r.T < 2)
   bad.push(`墨碰到原檔的上緣（y 從 ${r.T}）—— 頭被切掉了，要回去重生成；上緣也是唯一可以補白的那一側`);
 if (r.L < 2 || r.R > r.W - 3)
   console.log(`（兩側出血：墨 x ${r.L}..${r.R} / ${r.W} —— v2 是刻意的，v1 不是）`);
+/* ⚠⚠⚠ JSON 的 `插圖.墨框` 是這一支量出來的，記在那裡只為了讓提案頁算得出「Ⓜ 那把尺
+   每一格裁不裁得動」。**這一道是它不會變成第二個真相的唯一保證** ——
+   換一版圖忘了更新那一欄，這裡就會擋下來（不擋的話頁面上會印一組對不起來的數字，
+   而且每一道版面守門都會過）。 */
+{
+  const 記 = S.插圖.墨框 ?? {};
+  const 量 = { L: r.L, R: r.R, T: r.T, B: r.B };
+  for (const k of ["L", "R", "T", "B"])
+    if (記[k] !== 量[k]) bad.push(`stand-card.json 的 插圖.墨框.${k} 記的是 ${記[k]}，量出來是 ${量[k]} —— 那一欄要跟著這一版的圖更新`);
+}
 if (Math.abs(比 - 上限比) > 0.005)
   bad.push(`裁完比例 ${比.toFixed(3)} 對不上那一條的 ${上限比.toFixed(3)} —— 左右或上下會留白`);
 /* ⚠ 下緣裁掉的是身體，可是裁過頭就會切到手、切到胸口。上限拿墨的高度當基準。 */
@@ -114,6 +124,20 @@ console.log(`裁成 ${r.cw}×${r.ch}（比例 ${比.toFixed(3)}）` +
   (r.裁 ? `　⚠ 下緣裁掉 ${r.裁}px 的身體（裁到墨是 ${(r.cw / (r.B - r.y0 + 1)).toFixed(3)}，比那一條瘦）` : ""));
 console.log(`放進卡片那一條（${卡寬mm} × ${那一塊mm} mm ＝ QR 底下到卡片下緣）：畫出來 ${畫出來寬} × ${那一塊mm} mm，左右各餘 ${((卡寬mm - 畫出來寬) / 2).toFixed(1)} mm`);
 console.log(`印出來 ${(r.ch * 25.4 / 那一塊mm).toFixed(0)} dpi`);
+/* ── Ⓜ 分隔線那把尺：每一格的插圖會裁成什麼樣（2026-09-16）───────────
+ * 分隔線長高多少，「那一條」就矮多少（卡片是固定長寬比）—— 所以換一格，這張圖就要重裁。
+ * ⚠⚠⚠ **那把尺的盡頭不在版面上、在這張圖上**：下緣裁超過墨的 20% 這一支就會擋，
+ *   而擋不擋得住只有這裡算得出來（墨的框是這一支量的）。所以逐格印在這裡，不是在 stand-card.mjs。 */
+{
+  console.log("Ⓜ 分隔線那把尺　每一格的插圖會裁成：");
+  for (const k of 倍格()) {
+    const c = k.裁;   /* ⚠ 裁法只有一份（stand-card.mjs），這裡不要再算一次 */
+    console.log(`   ${k.標籤}　${String(k.顆).padStart(2)} 顆　那一條 ${k.那一條} mm（比例 ${(卡寬mm / k.那一條).toFixed(3)}）` +
+      `→ 裁成 ${c.cw}×${c.ch}・下緣裁 ${c.裁} 列 ＝ 墨的 ${(c.裁比 * 100).toFixed(0)}%` +
+      `${c.補 ? `・上緣補白 ${c.補}` : ""}・${c.dpi.toFixed(0)} dpi　${c.過 ? "✓" : "✗ 這一支會擋下來"}` +
+      `${k.現在 ? "　← 現在" : ""}`);
+  }
+}
 console.log(`（對照：整張 16:9 直接放，照寬度縮會高 ${(卡寬mm / (r.W / r.H)).toFixed(1)} mm ＝ 爆框 ${(卡寬mm / (r.W / r.H) - 那一塊mm).toFixed(1)} mm）`);
 
 if (bad.length) { bad.forEach((b) => console.error("✗ " + b)); process.exit(1); }
