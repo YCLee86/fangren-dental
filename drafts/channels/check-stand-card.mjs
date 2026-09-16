@@ -27,7 +27,7 @@ import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 底色, 墨色, CARD,
-  切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm,
+  切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm, 帶高, ID上, ID下, ID字級,
   QRSRC, QRFILE, QRPLATE, QRVAR, 印的案, 不印的 } from "./stand-card.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -433,7 +433,9 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
  *   以及**直接引用原檔**（比例一換就爆框，而 <img> 會靜靜地照 contain 縮小）。 */
 {
   const [w, h] = S.插圖.裁成, [ow, oh] = S.插圖.原尺寸;
-  const 塊 = 餘裕mm(印的案.find((c) => c.id === "e"));
+  /* ⚠⚠ 2026-09-16 起插圖**沉進帶子後面**（使用者：「腳藏進帶子裡」），
+     所以要比的是「那一條」＝ QR 底下到帶子 ＋ 一個帶子高，不是 餘裕mm 本身。 */
+  const 塊 = +(餘裕mm(印的案.find((c) => c.id === "e")) + 帶高() * CARD.寬mm).toFixed(1);
   const 卡 = [...H.matchAll(/<div class="card[^"]*">[\s\S]*?\n<\/div>/g)].map((m) => m[0]);
   ok(existsSync(join(DIR, S.插圖.檔)), `插圖 ${S.插圖.檔} 不在 —— 先跑 node drafts/channels/stand-illus-crop.mjs`);
   ok(existsSync(join(ROOT, S.插圖.原檔)), `原檔 ${S.插圖.原檔} 不在版控裡 —— 換一版就沒有回去的路了`);
@@ -460,6 +462,15 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
   ok(/\.card \.illus\{flex:1 1 auto;min-height:0;width:100%;object-fit:contain/.test(GEN),
     "插圖那一條 CSS 被動過 —— flex:1 ／ min-height:0 ／ object-fit:contain 三個少一個都會出事");
   ok(!/\.illus\{[^}]*object-fit:cover/.test(GEN), "插圖改成 cover 了 —— 左右兩個人會各被切掉一截，而畫面看起來很正常");
+  /* ⚠⚠⚠ 腳藏進帶子裡（2026-09-16）：負的下外距讓它沉進去、帶子補一個堆疊脈絡畫在上面。
+     兩件都是「拿掉之後畫面看起來很正常」的 —— 少了負外距只是圖小一截，
+     少了 z-index 則是人的腳蓋在標誌那一條上。 */
+  ok(/\.card \.illus\{[\s\S]*?margin-bottom:calc\(var\(--cw\) \* -\$\{帶高\(\)/.test(GEN),
+    "插圖沒有沉進帶子後面了 —— 那是使用者指定的「腳藏進帶子裡」");
+  ok(/object-position:bottom center/.test(GEN),
+    "插圖少了 object-position:bottom center —— 哪天圖比那一條還寬，它會浮在帶子上面、腳露出來");
+  ok(/\.card \.band\{[^}]*position:relative;z-index:1\}/.test(GEN),
+    "帶子少了 position:relative;z-index:1 —— img 畫在區塊背景後面，人的腳會蓋在標誌上");
   for (const c of 卡)
     ok(new RegExp(`<img class="illus" src="${S.插圖.檔}" width="${w}" height="${h}"`).test(c),
       "案卡上少了插圖，或它的 width／height 和實檔對不起來");
@@ -470,6 +481,32 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
      但那條回去的路一走回來，照片的逐字對照上就會多一張我們自己的插圖。 */
   ok(/\$\{now \? "" : `<img class="illus"/.test(GEN),
     "card() 少了「現況那一張不畫插圖」那個閘門 —— 它是照片的逐字對照");
+}
+
+/* ── ⑦之三 QR 上面那一行（2026-09-16）────────────────────────────
+ * 使用者：「QRcode 上面加一串字 @fafa070（line 商家帳號 ID）」。
+ * ⚠⚠⚠ 這幾道守的是**它花掉多少**：那一行吃的正好是他同一句話裡要變大的插圖那一條，
+ *   改回 .cue 那個通用的間距會多花 5.5 mm，**而畫面看起來完全正常**。 */
+{
+  const ID = S.帳號ID?.字;
+  ok(!!ID, "S.帳號ID.字 不在 —— 那一行的字要有一個出處");
+  for (const c of 印的案)
+    ok(c.QR上 === ID, c.標籤 + " 的 QR上 是「" + c.QR上 + "」，不是 " + ID);
+  if (ID) ok(H.includes(`<div class="cue id" style="font-size:`) && H.includes(`>${ID}</div>`),
+    "那一行沒有印在頁上，或它少了 .id（掛回通用的 .cue 就多花 5.5 mm）");
+  ok(ID上 > ID下,
+    `那一行上面 ${ID上} 不比下面 ${ID下} 寬 —— 它會被讀成主文的第四行，不是這顆碼的名字`);
+  ok(new RegExp(`\\.card \\.cue\\.id\\{margin-top:calc\\(var\\(--cw\\) \\* \\$\\{ID上\\}\\)\\}`).test(GEN),
+    ".card .cue.id 那一條 CSS 不見了，或它寫死了一個數字（要吃 ID上）");
+  ok(new RegExp(`\\.card \\.cue\\.id \\+ \\.qr\\{margin-top:calc\\(var\\(--cw\\) \\* \\$\\{ID下\\}\\)\\}`).test(GEN),
+    ".card .cue.id + .qr 那一條不見了 —— 沒有它，那一行底下還會多一個 QR 自己的 .04");
+  ok(/\(c\.QR上 \? ID上 \+ 1\.5 \* ID字級 \+ ID下 : 0\.04\)/.test(GEN),
+    "疊高() 沒有吃那三個常數 —— CSS 和算式一分家，面板的餘裕就和畫面對不上");
+  /* ⚠ 只切出 疊高() 那個函式來掃 —— 面板那一行刻意印著「用通用的 .cue 間距要幾 mm」，
+     掃整份一定會掃到它自己的說明（這條線第十四次）。 */
+  const 疊 = GEN.slice(GEN.indexOf("export const 疊高"), GEN.indexOf("export const 餘裕mm"));
+  ok(疊.length > 100 && !/0\.07 \+ 1\.5 \* 0\.038/.test(疊),
+    "疊高() 還留著通用 .cue 那一組寫死的數字");
 }
 
 /* ── ⑥之六 兩把間距的尺（2026-09-16 稍晚）─────────────────────────
@@ -734,7 +771,14 @@ for (const w of [430, 350, 320]) {
       /* ⚠ 最底下那一塊不一定是最後一個 .cue —— 有的案只有 QR 上面那一行，
          拿它當底會把整顆 QR 一起算進餘裕裡（踩過）。取「底邊最低」的那一個。 */
       const 底 = [qr, ...cue].reduce((a, b) => (b.bottom > a.bottom ? b : a));
-      return { 框mm: mm(ps[0].top - hr.bottom), 餘mm: mm(band.top - 底.bottom), ...留白(hd) };
+      /* QR 上面那一行：上面（主文最後一行 → 它）要比下面（它 → QR）寬，
+         不然它會被讀成主文的第四行。⚠ 量的是兩個框之間的距離 ＝ 那一條外距本身。 */
+      const idr = c.querySelector(".cue.id")?.getBoundingClientRect() ?? null;
+      const im = c.querySelector("img.illus")?.getBoundingClientRect() ?? null;
+      return { 框mm: mm(ps[0].top - hr.bottom), 餘mm: mm(band.top - 底.bottom), ...留白(hd),
+        id上: idr ? mm(idr.top - ps[ps.length - 1].bottom) : null,
+        id下: idr ? mm(qr.top - idr.bottom) : null,
+        沉mm: im ? mm(im.bottom - band.top) : null };
     });
     return 卡;
   });
@@ -752,6 +796,19 @@ for (const w of [430, 350, 320]) {
       c.標籤 + " 抬頭到主文量到 " + r.框mm.toFixed(2) + " mm，預設值算出來是 " + 該.toFixed(2));
     ok(Math.abs(r.餘mm - 餘裕mm(c)) < 0.4,
       c.標籤 + " QR 底下到帶子量到 " + r.餘mm.toFixed(1) + " mm，算出來是 " + 餘裕mm(c) + " —— 疊高() 算錯了");
+    /* ⚠ 那一行的上下間距：算出來的那兩個常數要真的畫得出來（相鄰兄弟那一條被蓋掉就會差 3.9 mm） */
+    /* ⚠⚠ 上面那一段是**兩截**：主文最後一段自己的下外距（PGAP）＋ 那一行的上外距 ——
+       .bd 是 flex 項目，兩截不會合併（同「抬頭到主文」那一段的老坑）。 */
+    const id上該 = (ID上 + PGAP * fsOf(c).fs) * 98, id下該 = ID下 * 98;
+    ok(r.id上 != null && Math.abs(r.id上 - id上該) < 0.3 && Math.abs(r.id下 - id下該) < 0.3,
+      c.標籤 + " QR 上面那一行量到 上 " + (r.id上 ?? NaN).toFixed(1) + "／下 " + (r.id下 ?? NaN).toFixed(1) +
+      " mm，算出來是 " + id上該.toFixed(1) + "／" + id下該.toFixed(1));
+    ok(r.id上 > r.id下 * 1.5,
+      c.標籤 + " 那一行上面 " + (r.id上 ?? NaN).toFixed(1) + " mm 沒有比下面 " + (r.id下 ?? NaN).toFixed(1) +
+      " mm 寬多少 —— 它會被讀成主文的第四行，不是這顆碼的名字");
+    /* ⚠⚠⚠ 插圖真的沉進帶子後面了嗎 —— 少了那個負外距畫面只是圖小一截，不會有任何一道尺寸守門翻臉 */
+    ok(r.沉mm != null && Math.abs(r.沉mm - 帶高() * 98) < 0.5,
+      c.標籤 + " 插圖的下緣只到帶子上緣底下 " + (r.沉mm ?? NaN).toFixed(1) + " mm，應該是一整個帶子 " + (帶高() * 98).toFixed(1));
     ok(r.左 != null && Math.abs(r.左 - 留白比) < 0.01 && Math.abs(r.右 - 留白比) < 0.01,
       c.標籤 + " 標誌左右量到 " + (r.左 * 100).toFixed(1) + "%／" + (r.右 * 100).toFixed(1) +
       "%，預設是 " + (留白比 * 100).toFixed(1) + "%");

@@ -50,6 +50,11 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .card .bd p{margin:var(--p-gap) 0;white-space:nowrap}
 .card .cue{margin-top:calc(var(--cw) * .07);color:#555}
 .card .cue.lo{margin-top:calc(var(--cw) * .03)}
+/* QR 上面那一行（帳號 ID）：上面比下面寬，它才會讀成「這顆碼叫什麼」而不是主文的第四行。
+   ⚠⚠ 底下那一條是**相鄰兄弟**選擇器 —— 它蓋掉 .qr 自己的 .04，所以多這一行實際只花
+   .035 + 1.5×.038 + .018 − .04 ＝ 卡寬的 7.0%（面板每次印）。 */
+.card .cue.id{margin-top:calc(var(--cw) * 0.035)}
+.card .cue.id + .qr{margin-top:calc(var(--cw) * 0.018)}
 /* ⚠⚠ QR 一律 calc(--cw * k) 不可以用百分比（參照會變成父層那一欄）。
    ⚠⚠⚠ 案那幾張擺的是**真的那顆碼**（drafts/channels/qr/ 複製過來的，一個像素都沒有重畫）；
    現況那一張刻意維持灰色佔位方塊 —— 它是照片的逐字對照，畫上新設計的碼就不是對照了。 */
@@ -62,9 +67,12 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
    所以它不會把卡片撐開，也不會動到帶子的位置（帶子的 margin-top:auto 因此歸零）。
    ⚠⚠ 一定要 object-fit:contain —— 這張圖比那一塊瘦（2.091 vs 2.237），
    cover 會把左右兩個人各切掉一截，而且**畫面看起來很正常**。 */
-.card .illus{flex:1 1 auto;min-height:0;width:100%;object-fit:contain;display:block}
+.card .illus{flex:1 1 auto;min-height:0;width:100%;object-fit:contain;object-position:bottom center;
+  margin-bottom:calc(var(--cw) * -0.09614);display:block}
+/* ⚠⚠⚠ position/z-index 是為了插圖沉進來才加的：img 是行內取代元素，
+   **畫在區塊背景後面**，不給帶子一個堆疊脈絡的話，人的腳會蓋在標誌上。 */
 .card .band{margin:auto calc(var(--pad) * -1) 0;width:var(--cw);padding:calc(var(--cw) * .026) 0;
-  background:#3c4657;color:#fff;letter-spacing:.03em}
+  background:#3c4657;color:#fff;letter-spacing:.03em;position:relative;z-index:1}
 .card .band.empty{background:transparent;border-top:1px dashed #d5d5d5;color:transparent}
 /* 標誌那一條：滿版、沒有字。⚠⚠ 底色與四邊的內距**都在 SVG 裡**（那一塊 rect ＋
    viewBox 的留白）—— 這裡不可以再補 padding，補了兩邊就又和中間不一致了。 */
@@ -94,7 +102,7 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
   <div class="hd" style="font-size:calc(var(--cw) * 0.0850)">芳仁牙醫有<img class="li" src="line-logo.png" alt="LINE" width="1001" height="1000">囉</div>
   
   <div class="bd" style="font-size:calc(var(--cw) * 0.0560)"><p>掃碼加入，完成手機綁定</p><p>看診前2天自動提醒！</p><p>輕鬆接收診所新訊！</p></div>
-  
+  <div class="cue id" style="font-size:calc(var(--cw) * 0.038)">@fafa070</div>
   <img class="qr" src="qr-line.svg" width="45" height="45" alt="芳仁牙醫診所 LINE 官方帳號的 QR code">
   
   <img class="illus" src="illus.jpg" width="1784" height="853" alt="四位芳仁牙醫的醫事人員，一位指著上方喊、一位雙手展示、一位舉著手機對準、一位低頭看手機">
@@ -130,7 +138,10 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 <p>⚠⚠⚠ <b>「很難和立牌結合」量出來是「框不合」不是「圖不合」</b> ——原檔是 <b>2000×1116（16:9）</b>，上面留著 <b>17.5%</b> 的白（提示詞刻意要的），而卡片上這一塊只有 <b>98 × 43.8 mm ＝ 比例 2.24</b>：整張直接放進來，照寬度縮會高 <b>54.7 mm ＝ 爆框 10.9 mm</b>，照高度縮則左右空掉 19.5 mm、四個人再縮小四分之一。</p>
 <p><b>裁到墨的框就合了</b>（<code>node drafts/channels/stand-illus-crop.mjs</code>）：1784×853 ＝ 比例 <b>2.091</b>，比這一塊瘦一點，所以是<b>高度在卡</b> —— 畫出來 <b>91.6 × 43.8 mm，左右各餘 3.2 mm</b>，印出來 <b>495 dpi</b>。<b>版面一個數字都沒有動</b>（這張圖是 <code>flex:1</code>，那一塊剩多少就畫多高）。</p>
 <p>一個人在卡片上：Ⓐ 18.7 ／ Ⓑ 27.4 ／ Ⓒ 16.1 ／ Ⓓ 17.2 mm 寬，站著約 <b>40~44 mm 高</b>，一顆頭約 <b>7.3 mm</b>。</p>
-<p>⚠⚠ <b>還沒決定的六件都還開著</b>（提示詞那一份第六節）——尤其<b>Ⓐ 要不要對著讀的人喊</b>、<b>只畫三個人</b>（一人 27 mm，臉會大一半）、以及<b>腳要不要藏進帶子裡</b>（換到的是把下面那一截空白收回來）。⚠ 這一版<b>沒有畫頭上那三條短線</b>（廠商那隻吉祥物有），也還是四個人。</p></div>
+<p>⚠⚠ <b>還沒決定的六件都還開著</b>（提示詞那一份第六節）——尤其<b>Ⓐ 要不要對著讀的人喊</b>、<b>只畫三個人</b>（一人 27 mm，臉會大一半）、以及<b>腳要不要藏進帶子裡</b>（換到的是把下面那一截空白收回來）。⚠ 這一版<b>沒有畫頭上那三條短線</b>（廠商那隻吉祥物有），也還是四個人。</p>
+<p>⚠⚠⚠ <b>2026-09-16 稍晚：使用者四件</b>（「人太少 再多一點 8-9個人比較熱鬧」／「要有人擠進來畫面裡高興熱情推廣介紹的感覺」／「腳藏進帶子裡，人臉和動作要大一點 現在好小」／「QRcode 上面加一串字 @fafa070」）。前三件是 <b>v2 的規格</b>（提示詞那一份第四節），第四件已經做了（見「帳號ID」那一塊）。</p>
+<p>⚠⚠⚠ <b>① 和 ③ 直接打架，而 ② 正是讓它們同時成立的那一件</b> ——  一條 98 mm 寬的帶子，<b>臉多大由「一個人佔掉這一條多少高度」決定、人數由寬度決定</b>：  ・只加人不改別的：4 人頭 7.3 → 6 人 4.9 → 8 人 3.6 → <b>9 人 3.2 mm</b>（愈熱鬧臉愈小）。  ・腳藏進帶子：那一條從 43.8 變成 <b>53.2 mm</b>（多出來的在帶子後面）。  ・再把下半身切掉（人擠人、互相重疊）：整個人 頭 8.5／切在小腿 10.0／    <b>切在大腿 12.2</b>／切在腰 15.5 mm。  <b>定案走「切在大腿」</b>：9 個人、每人只前進約半個肩寬（49%）＝ 真的擠在一起，  一顆頭 <b>7.3 → 12.2 mm（大 67%）</b>。</p>
+<p><b>卡片這一側已經做好了</b>（版面一個數字都沒有動）：插圖給一個負的下外距沉進帶子後面、帶子補 <code>position:relative; z-index:1</code> 畫在它上面。⚠⚠⚠ <b>那個 z-index 非加不可</b>：<code>&lt;img&gt;</code> 是行內取代元素，<b>畫在區塊背景後面</b> ——  不加的話人的腳會蓋在標誌那一條上，而且畫面看起來很正常。⚠ v1 這一版因此也跟著沉下去（腳踝以下看不到了），那是預覽用的 ——   <b>v2 要照新的比例畫</b>，面板每次印那個目標比例。</p></div>
 </div></div>
 <div class="note"><p>2026-09-16 使用者兩次指定：「<b>提案頁其他可以先刪掉了</b>」（Ⓐ Ⓑ Ⓒ Ⓓ 四案），以及「<b>保留 E 就好　F 拿掉</b>／<b>以上還有其他下面的都不需要了　不要放在提案頁裏</b>」——所以這一頁收成<b>一張卡</b>。</p>
 <p>⚠⚠ <b>拿掉的是畫面，不是理由</b>：現況那一張、Ⓕ、拆解、四把尺與待答，全部還在 <code>drafts/channels/stand-card.json</code> 裡、守門照舊在驗，而它們量出來的數字改由<b>產生器跑完印在終端機上的那塊面板</b>接手（尺可以收，數字不可以跟著消失）。</p>

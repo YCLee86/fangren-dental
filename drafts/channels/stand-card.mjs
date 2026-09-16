@@ -176,14 +176,24 @@ export const BDGAP = CARD.抬頭到主文;
  * ⚠⚠ 它同時是「抬頭到主文」那一段的第二截（第一行段落自己的上外距），
  *   所以收這一把，抬頭那一段也會跟著收一點點 —— 兩把尺不是獨立的。 */
 export const PGAP = CARD.段距;
+/* ── QR 上面那一行（2026-09-16）─────────────────────────────────
+ * 使用者：「QRcode 上面加一串字 @fafa070（line 商家帳號 ID）」。
+ * ⚠⚠⚠ **它不是免費的，而且吃的正好是他同一句話裡要變大的那一塊** ——
+ *   卡片是固定長寬比，多一行就從「QR 底下到帶子」那一塊扣，所以這裡**不用**
+ *   .cue 那個通用的 .07 間距（那樣要 12.4 mm），另外給兩個窄的。
+ * ⚠⚠ **上面要比下面寬**（接近律）：那一行是「這顆碼叫什麼」，要讀成 QR 的名字
+ *   而不是主文的第四行 —— 上 .035 ／ 下 .018 ＝ 約 2:1。
+ * ⚠ 三個都是具名常數：CSS 與 疊高() 吃同一份，分家的話面板會算出一個
+ *   和畫面對不上的餘裕，而版面看起來完全正常。 */
+export const ID上 = 0.035, ID下 = 0.018, ID字級 = 0.038;
 /* ⚠ 那一條現在是**滿版**（底色要頂到卡片兩邊），所以它的高 ＝ 卡寬 × 總高÷總寬；
    內距烘在 SVG 的 viewBox 裡，`.band.logos` 自己沒有 padding。 */
-const 帶高 = () => BAND.總高 / BAND.總寬;
+export const 帶高 = () => BAND.總高 / BAND.總寬;
 export const 疊高 = (c, M = BDGAP, g = PGAP) => {
   const { fs } = fsOf(c), hd = hdOf(c), n = c.主文.length;
   const bd = M + g * fs + n * 1.5 * fs + (n - 1) * g * fs + g * fs;
   return 0.06 + 1.5 * hd.fs + bd
-    + (c.QR上 ? 0.07 + 1.5 * 0.038 : 0) + 0.04 + CARD.QR佔卡寬
+    + (c.QR上 ? ID上 + 1.5 * ID字級 + ID下 : 0.04) + CARD.QR佔卡寬
     + (c.QR下 ? 0.03 + 1.5 * 0.036 : 0) + 帶高();
 };
 /* QR 底下那一行到帶子之間還剩多少 —— 人物插圖要畫在這裡 */
@@ -347,7 +357,7 @@ const card = (c, now = false, o = {}) => {
   <div class="hd" style="font-size:${f(hd.fs.toFixed(4))}">${now ? esc(c.抬頭) : mark(c.抬頭)}</div>
   ${c.副標 ? `<div class="sub" style="font-size:${f(0.05)}">${esc(c.副標)}</div>` : ""}
   <div class="bd" style="font-size:${f(fs.toFixed(4))}">${c.主文.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
-  ${c.QR上 ? `<div class="cue" style="font-size:${f(0.038)}">${esc(c.QR上)}</div>` : ""}
+  ${c.QR上 ? `<div class="cue id" style="font-size:${f(ID字級)}">${esc(c.QR上)}</div>` : ""}
   ${now
     ? `<div class="qr ph"><span>QR</span></div>`
     : `<img class="qr" src="${QRFILE}" width="45" height="45" alt="芳仁牙醫診所 LINE 官方帳號的 QR code">`}
@@ -457,6 +467,11 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .card .bd p{margin:var(--p-gap) 0;white-space:nowrap}
 .card .cue{margin-top:calc(var(--cw) * .07);color:#555}
 .card .cue.lo{margin-top:calc(var(--cw) * .03)}
+/* QR 上面那一行（帳號 ID）：上面比下面寬，它才會讀成「這顆碼叫什麼」而不是主文的第四行。
+   ⚠⚠ 底下那一條是**相鄰兄弟**選擇器 —— 它蓋掉 .qr 自己的 .04，所以多這一行實際只花
+   .035 + 1.5×.038 + .018 − .04 ＝ 卡寬的 7.0%（面板每次印）。 */
+.card .cue.id{margin-top:calc(var(--cw) * ${ID上})}
+.card .cue.id + .qr{margin-top:calc(var(--cw) * ${ID下})}
 /* ⚠⚠ QR 一律 calc(--cw * k) 不可以用百分比（參照會變成父層那一欄）。
    ⚠⚠⚠ 案那幾張擺的是**真的那顆碼**（drafts/channels/qr/ 複製過來的，一個像素都沒有重畫）；
    現況那一張刻意維持灰色佔位方塊 —— 它是照片的逐字對照，畫上新設計的碼就不是對照了。 */
@@ -469,9 +484,12 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
    所以它不會把卡片撐開，也不會動到帶子的位置（帶子的 margin-top:auto 因此歸零）。
    ⚠⚠ 一定要 object-fit:contain —— 這張圖比那一塊瘦（2.091 vs 2.237），
    cover 會把左右兩個人各切掉一截，而且**畫面看起來很正常**。 */
-.card .illus{flex:1 1 auto;min-height:0;width:100%;object-fit:contain;display:block}
+.card .illus{flex:1 1 auto;min-height:0;width:100%;object-fit:contain;object-position:bottom center;
+  margin-bottom:calc(var(--cw) * -${帶高().toFixed(5)});display:block}
+/* ⚠⚠⚠ position/z-index 是為了插圖沉進來才加的：img 是行內取代元素，
+   **畫在區塊背景後面**，不給帶子一個堆疊脈絡的話，人的腳會蓋在標誌上。 */
 .card .band{margin:auto calc(var(--pad) * -1) 0;width:var(--cw);padding:calc(var(--cw) * .026) 0;
-  background:#3c4657;color:#fff;letter-spacing:.03em}
+  background:#3c4657;color:#fff;letter-spacing:.03em;position:relative;z-index:1}
 .card .band.empty{background:transparent;border-top:1px dashed #d5d5d5;color:transparent}
 /* 標誌那一條：滿版、沒有字。⚠⚠ 底色與四邊的內距**都在 SVG 裡**（那一塊 rect ＋
    viewBox 的留白）—— 這裡不可以再補 padding，補了兩邊就又和中間不一致了。 */
@@ -579,12 +597,26 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     /* 人物插圖：那一塊剩多少 → 這張圖畫出來多大。⚠ 兩個數字都現算，
        上面的間距一動、或換一張比例不同的圖，這裡就要跟著變。 */
     const [w, h] = S.插圖.裁成, [ow, oh] = S.插圖.原尺寸, 塊 = 餘裕mm(尺卡);
+    /* ⚠⚠ 2026-09-16 起插圖**沉進帶子後面**（使用者：「腳藏進帶子裡」）——
+       所以它畫出來的那一條比「QR 底下到帶子」還高一個帶子，而版面一個數字都沒有動
+       （負的下外距，帶子的位置與高度完全不變）。 */
+    const 帶mm = +(帶高() * CARD.寬mm).toFixed(1), 條 = +(塊 + 帶mm).toFixed(1);
     console.log(`人物插圖 ${S.插圖.檔}　原檔 ${ow}×${oh}（比例 ${(ow/oh).toFixed(3)}）→ 裁到墨的框 ${w}×${h}（比例 ${(w/h).toFixed(3)}）`);
-    console.log(`     那一塊 ${CARD.寬mm} × ${塊} mm（比例 ${(CARD.寬mm/塊).toFixed(3)}）→ 高度在卡，畫出來 ${(w/h*塊).toFixed(1)} × ${塊} mm・左右各餘 ${((CARD.寬mm - w/h*塊)/2).toFixed(1)} mm・${(h*25.4/塊).toFixed(0)} dpi`);
-    console.log(`     ⚠ 整張 16:9 直接放：照寬度縮會高 ${(CARD.寬mm/(ow/oh)).toFixed(1)} mm ＝ 爆框 ${(CARD.寬mm/(ow/oh)-塊).toFixed(1)} mm`);
+    console.log(`     那一條 ${CARD.寬mm} × ${條} mm（QR 底下到帶子 ${塊} ＋ 沉進帶子後面 ${帶mm}）＝ 比例 ${(CARD.寬mm/條).toFixed(3)}`);
+    console.log(`     → ${w/h < CARD.寬mm/條 ? "高度在卡" : "⚠ 寬度在卡（圖比那一條還寬，下緣會離開帶子）"}，畫出來 ${(w/h*條).toFixed(1)} × ${條} mm・左右各餘 ${((CARD.寬mm - w/h*條)/2).toFixed(1)} mm・${(h*25.4/條).toFixed(0)} dpi・看得到 ${(塊/條*100).toFixed(0)}%`);
+    console.log(`     ⚠ 整張 16:9 直接放：照寬度縮會高 ${(CARD.寬mm/(ow/oh)).toFixed(1)} mm ＝ 爆框 ${(CARD.寬mm/(ow/oh)-條).toFixed(1)} mm`);
+    console.log(`     ⚠⚠ 下一版要畫成 ${(CARD.寬mm/條).toFixed(2)}:1（裁到墨之後），v1 是 ${(w/h).toFixed(3)} —— 對不上就會左右留白`);
   }
   console.log(`卡片 ${CARD.寬mm} mm 寬・比例 ${CARD.比例}（${Math.round(CARD.寬mm * CARD.比例)} mm 高）—— 2026-09-16 拿尺貼著現況那張量過 ≈ 97×146，差 1%`);
   console.log(`QR ＝ ${S.QR.內容}（兩張照片各自解過一次；卡上那顆新的碼編的是同一個字串）`);
+  /* ⚠ 第九節第 28 條 ③：那一行 ID 吃掉的正是使用者同一句話裡要變大的那一塊，要印出來。 */
+  {
+    const 有 = 印的案.filter((c) => c.QR上), 花 = (ID上 + 1.5 * ID字級 + ID下 - 0.04) * CARD.寬mm;
+    console.log(`     QR 上面那一行 ${有.length ? 有.map((c) => c.QR上).join("／") : "（沒有印）"}` +
+      `　字 ${(ID字級 * CARD.寬mm).toFixed(1)} mm・上 ${(ID上 * CARD.寬mm).toFixed(1)}／下 ${(ID下 * CARD.寬mm).toFixed(1)} mm` +
+      `　花掉插圖那一條 ${花.toFixed(1)} mm（用通用的 .cue 間距要 ${((0.07 + 1.5 * 0.038) * CARD.寬mm).toFixed(1)}）`);
+    console.log(`     ⚠⚠ 那一行印的是帳號 ID，而這顆碼編的是 ${S.QR.內容} —— 兩個去的地方不一樣（掃完會發生什麼還沒有人驗過）`);
+  }
   /* ⚠ 第九節第 28 條 ④：換了一顆真的碼上去，它畫出來多大每次都要印 —— 印出來太小就掃不到。 */
   {
     const box = CARD.寬mm * CARD.QR佔卡寬;
