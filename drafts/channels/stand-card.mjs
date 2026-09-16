@@ -36,10 +36,15 @@
  *   ⚠ 地板是 25%（我們手上記的 LINE 規範）—— 選了就要印得出去的才放進尺裡；那條規範是二手的。
  *   ⚠ 現況那一張的「LINE」**刻意不換成標誌** —— 那一張是照片上逐字抄的，加工就不是對照了。
  *
- * ⚠⚠ 底下那條帶子 2026-09-16 換成**診所自己的九顆 logo**（使用者指定）：
+ * ⚠⚠ 底下那條帶子 2026-09-16 換成**診所自己的 logo**（使用者指定）：
  *   形狀讀 brand/shapes/，寬度讀 preview/line-booked/wm-sizes.json（按墨的面積正規化，
- *   所以九顆一樣重）。**等墨不等高**，所以每一格的框固定成最高的那一顆、形狀垂直置中。
+ *   所以每一顆一樣重）。**等墨不等高**，所以每一格的框固定成最高的那一顆、形狀垂直置中。
  *   ⚠ 排的順序寫在 JSON 裡 —— 印出來的東西不能真的隨機。
+ *   ⚠⚠⚠ 同一天稍晚五件（使用者）：**四邊與中間的間隔要一致／logo 小一點／多放一兩個／
+ *   底色用一般牙科主題色／logo 白色、牙洞就是那塊底色**。前兩件變成兩把尺（Ⓚ 顆數、
+ *   Ⓛ 間距），後三件是決定。整條**由一張 SVG 畫完**（底色是裡面一塊 rect，四邊的留白
+ *   烘在 viewBox 裡）—— 那五個間隔因此出自同一個算式，不可能不一致。
+ *   ⚠⚠ **牙洞不要另外填色**：單一路徑 ＋ fill-rule evenodd，填白之後洞自己透出底下那塊綠。
  *
  * ⚠⚠⚠ 抬頭到主文那一段的間距 2026-09-16 稍晚也變成一把尺（使用者：「這兩行中間有很大的
  *   間隔，縮小一點，要預留空間給下面畫診所人物插圖」）。量出來他是對的：改動前那一段是
@@ -71,7 +76,7 @@ export const cw = (s) => [...String(s)].reduce((a, c) => a + (c.charCodeAt(0) > 
 /* ── 那一張卡上所有會被印出來的字（紅線掃描與字級規則都吃這一份） ──── */
 export const lines = (c) => [c.抬頭, c.副標, ...c.主文, c.QR上, c.QR下, c.帶子 ?? ""].filter(Boolean);
 
-const CARD = S.卡片;
+export const CARD = S.卡片;
 const MAXFS = 0.06;                                  /* 主文字高的上限（佔卡寬） */
 const 自然fs = (c) => Math.min(MAXFS, CARD.版心 / Math.max(...c.主文.map(cw)));
 
@@ -149,13 +154,15 @@ export const BDGAP = CARD.抬頭到主文;
  * ⚠⚠ 它同時是「抬頭到主文」那一段的第二截（第一行段落自己的上外距），
  *   所以收這一把，抬頭那一段也會跟著收一點點 —— 兩把尺不是獨立的。 */
 export const PGAP = CARD.段距;
-const 帶高 = () => CARD.版心 * BAND.高 / BAND.總寬;
+/* ⚠ 那一條現在是**滿版**（底色要頂到卡片兩邊），所以它的高 ＝ 卡寬 × 總高÷總寬；
+   內距烘在 SVG 的 viewBox 裡，`.band.logos` 自己沒有 padding。 */
+const 帶高 = () => BAND.總高 / BAND.總寬;
 export const 疊高 = (c, M = BDGAP, g = PGAP) => {
   const { fs } = fsOf(c), hd = hdOf(c), n = c.主文.length;
   const bd = M + g * fs + n * 1.5 * fs + (n - 1) * g * fs + g * fs;
   return 0.06 + 1.5 * hd.fs + bd
     + (c.QR上 ? 0.07 + 1.5 * 0.038 : 0) + 0.04 + CARD.QR佔卡寬
-    + (c.QR下 ? 0.03 + 1.5 * 0.036 : 0) + 0.035 + 帶高() + 0.04;
+    + (c.QR下 ? 0.03 + 1.5 * 0.036 : 0) + 帶高();
 };
 /* QR 底下那一行到帶子之間還剩多少 —— 人物插圖要畫在這裡 */
 export const 餘裕mm = (c, M = BDGAP, g = PGAP) => +((CARD.比例 - 疊高(c, M, g)) * CARD.寬mm).toFixed(1);
@@ -255,33 +262,48 @@ const SHAPE = (k) => {
   if (!inner.includes("<path")) throw new Error(k + " 抽不到形狀");
   return { vb: vb[1], inner };
 };
-export const BAND = (() => {
-  const B = S.帶子;
-  const ks = B.順序;
-  const it = ks.map((k) => {
-    const m = WM[k];
-    if (!m) throw new Error("wm-sizes.json 裡沒有 " + k);
-    return { k, w: m.w, h: m.w / m.ratio, 色: m.color, spec: m.spec };
+/* ⚠⚠⚠ 2026-09-16 定案：整條**由一張 SVG 畫完** —— 底色是 SVG 裡的一塊 `rect`，
+ *   標誌排在它上面，**四邊與顆與顆之間吃同一個 `間距`**（＝最高那一顆的幾成）。
+ *   改動前兩邊那個間隔是「版心對滿版」剩下的頁面內距（7.8 mm）、中間那個是 SVG 裡
+ *   算出來的（2.1 mm），差 3.7 倍 —— **那兩個間隔本來就不是同一個東西給的**，
+ *   所以「調成一致」不是挑一個數字，是讓它們出自同一個算式。
+ * ⚠⚠ **標誌填白、牙洞不要另外填** —— 單一路徑 ＋ `fill-rule: evenodd`，洞是挖穿的，
+ *   底下那塊綠自己會透出來。另外畫一塊綠色的洞上去畫出來一模一樣，但形狀一改就會
+ *   對不準，**而且不報錯**。
+ * ⚠ 底色那一支綠也讀 wm-sizes.json（`r1c1` ＝ 一般牙科），不在這裡再抄一份色碼。 */
+export const 底色 = WM.r1c1.color;
+export const 墨色 = S.帶子.墨;
+export const 序of = (n) => {
+  const k = S.帶子.順序案.find((x) => x.顆 === n);
+  if (!k) throw new Error("順序案裡沒有 " + n + " 顆那一格");
+  return k.序;
+};
+export const 帶 = (n = S.帶子.顆數, k = S.帶子.間距) => {
+  const it = 序of(n).map((key) => {
+    const m = WM[key];
+    if (!m) throw new Error("wm-sizes.json 裡沒有 " + key);
+    return { k: key, w: m.w, h: m.w / m.ratio, 色: m.color, spec: m.spec };
   });
   const H = Math.max(...it.map((x) => x.h));
-  const gap = H * B.間距;
-  let x = 0;
-  for (const o of it) { o.x = x; o.y = (H - o.h) / 2; x += o.w + gap; }
-  return { it, H, 總寬: x - gap, 高: H };
-})();
-const bandSvg = (色) => {
-  const { it, H, 總寬 } = BAND;
-  return `<svg class="bnd" viewBox="0 0 ${總寬.toFixed(1)} ${H.toFixed(1)}" role="img" aria-label="芳仁牙醫診所的九個標誌">` +
+  const gap = H * k;
+  let x = gap;
+  for (const l of it) { l.x = x; l.y = gap + (H - l.h) / 2; x += l.w + gap; }
+  return { it, 高: H, gap, 顆數: n, 間距: k, 總寬: x, 總高: H + 2 * gap };
+};
+export const BAND = 帶();
+const bandSvg = (B = BAND) => {
+  const { it, 總寬, 總高 } = B;
+  return `<svg class="bnd" viewBox="0 0 ${總寬.toFixed(1)} ${總高.toFixed(1)}" role="img" aria-label="芳仁牙醫診所的${B.顆數}個標誌">` +
+    `<rect width="${總寬.toFixed(1)}" height="${總高.toFixed(1)}" fill="${底色}"/>` +
     it.map((o) => {
       const { vb, inner } = SHAPE(o.k);
-      const c = 色 === "spec" ? o.色 : 色;
-      return `<svg x="${o.x.toFixed(1)}" y="${o.y.toFixed(1)}" width="${o.w}" height="${o.h.toFixed(1)}" viewBox="${vb}" style="color:${c}">${inner}</svg>`;
+      return `<svg x="${o.x.toFixed(1)}" y="${o.y.toFixed(1)}" width="${o.w}" height="${o.h.toFixed(1)}" viewBox="${vb}" style="color:${墨色}">${inner}</svg>`;
     }).join("") + "</svg>";
 };
 
 /* ⚠ 兩把尺（抬頭到主文、標誌左右留白）可以逐張覆寫 —— 尺上那幾格就是這樣畫的。
    ⚠⚠ 覆寫留白**一定要連字級一起重算**（hdOf 吃同一個比例），不然那一行的寬度會算錯。 */
-const card = (c, now = false, 色 = null, o = {}) => {
+const card = (c, now = false, o = {}) => {
   const { fs } = fsOf(c);
   const hd = hdOf(c, o.留白 ?? 留白比);
   const f = (k) => `calc(var(--cw) * ${k})`;
@@ -297,7 +319,7 @@ const card = (c, now = false, 色 = null, o = {}) => {
   ${c.QR下 ? `<div class="cue lo" style="font-size:${f(0.036)}">${esc(c.QR下)}</div>` : ""}
   ${now
     ? `<div class="band" style="font-size:${f(0.04)}">${esc(c.帶子 ?? "")}</div>`
-    : `<div class="band logos">${bandSvg(色 ?? S.帶子.色)}</div>`}
+    : `<div class="band logos">${bandSvg()}</div>`}
 </div>`;
 };
 
@@ -439,14 +461,16 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .card .band{margin:auto calc(var(--pad) * -1) 0;width:var(--cw);padding:calc(var(--cw) * .026) 0;
   background:#3c4657;color:#fff;letter-spacing:.03em}
 .card .band.empty{background:transparent;border-top:1px dashed #d5d5d5;color:transparent}
-/* 九顆 logo 那一條：沒有底色、沒有字，寬度就是版心 */
-.card .band.logos{background:transparent;padding:calc(var(--cw) * .035) 0 calc(var(--cw) * .04);
-  display:flex;justify-content:center}
-.card .band.logos .bnd{width:calc(var(--cw) * ${CARD.版心});height:auto;display:block}
+/* 標誌那一條：滿版、沒有字。⚠⚠ 底色與四邊的內距**都在 SVG 裡**（那一塊 rect ＋
+   viewBox 的留白）—— 這裡不可以再補 padding，補了兩邊就又和中間不一致了。 */
+.card .band.logos{background:transparent;padding:0;display:block}
+.card .band.logos .bnd{width:var(--cw);height:auto;display:block}
 .card.now .bd p{white-space:normal}
-.bandonly{background:#fff;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.14);
-  padding:calc(var(--cw) * .05) calc(var(--cw) * .08);display:flex;justify-content:center}
+/* 尺上那幾條：擺成卡片真正的寬度（--cw），不然比出來的「多小」是假的 */
+.bandonly{width:var(--cw);border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.14)}
 .bandonly .bnd{width:100%;height:auto;display:block}
+.bandrow{display:flex;flex-direction:column;gap:1.1rem;align-items:center;margin:1rem 0}
+.bandrow .lb{margin:0 0 .3em;font-size:.86rem;color:var(--soft)}
 .note{font-size:.86rem;color:var(--soft);margin:.6em 0 0}
 .note p{margin:.35em 0}
 
@@ -518,15 +542,35 @@ ${尺段距}
 <div class="box">${para(S.標誌.留白_說明)}</div>
 ${尺留白}
 
-<p class="h2">底下那條帶子<span class="t">換成診所自己的九顆 logo</span></p>
+<p class="h2">底下那條帶子<span class="t">診所自己的 logo，白的，壓在一般牙科那塊綠上</span></p>
 <div class="box">${para(S.帶子._說明)}
-<p>⚠ 現在畫出來：九顆合計 <b>${BAND.總寬.toFixed(0)}</b> 個單位寬、最高的那一顆 <b>${BAND.高.toFixed(0)}</b>，
-所以那一條在 ${CARD.寬mm} mm 的卡上高 <b>${(CARD.寬mm * CARD.版心 * BAND.高 / BAND.總寬).toFixed(1)} mm</b>。</p></div>
-<div class="cards">${S.帶子.色案.map((k) => `<div class="one">
-<p class="lb">${esc(k.標籤)}</p>
-<div class="bandonly">${bandSvg(k.id === "spec" ? "spec" : k.色)}</div>
-<div class="note">${para(k.說明)}</div>
-</div>`).join("\n")}</div>
+<p>⚠ 定案這一條畫出來：<b>${BAND.顆數}</b> 顆、間距 <b>${BAND.間距}</b>（＝最高那一顆的 ${(BAND.間距 * 100).toFixed(0)}%），
+合計 <b>${BAND.總寬.toFixed(0)}</b> 個單位寬 × <b>${BAND.總高.toFixed(0)}</b> 高，縮到 ${CARD.寬mm} mm 的卡上是
+<b>${(CARD.寬mm * BAND.總高 / BAND.總寬).toFixed(1)} mm</b> 高、最高的那一顆 <b>${(CARD.寬mm * BAND.高 / BAND.總寬).toFixed(1)} mm</b>、
+<b>四邊與顆與顆之間都是 ${(CARD.寬mm * BAND.gap / BAND.總寬).toFixed(2)} mm</b>。
+底色 <code>${底色}</code>（讀 wm-sizes.json 的 r1c1 ＝ 一般牙科）、標誌 <code>${墨色}</code>，
+白壓在那塊綠上是 <b>${(() => { const l = (h) => { const c = [1, 3, 5].map((i) => { const v = parseInt(底色.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }; return (1.05 / (l() + 0.05)).toFixed(2); })()}</b>。</p></div>
+<div class="bandonly" style="--cw:min(300px, 86vw)">${bandSvg()}</div>
+
+<p class="h2">帶子・多少顆<span class="t">Ⓚ　整條一律縮到卡片寬，所以顆數愈多每一顆愈小</span></p>
+<div class="box"><p>⚠⚠ 重複的挑 <b>站上真的在用的那兩顆</b>：<code>r1c2</code>（頁首那顆）與
+<code>r3c1</code>（商家貼文那三張圖的浮水印）。⚠ 三個順序案**每一個**都要守住那三條限制
+（同形狀不相鄰、三顆最長的不相鄰、同色不相鄰），守門三個都在盯。</p></div>
+<table><thead><tr><th>　</th><th>一顆最高</th><th>四邊與中間</th><th>帶子高</th></tr></thead><tbody>${
+S.帶子.順序案.map((k) => { const b = 帶(k.顆), s2 = CARD.寬mm / b.總寬;
+  return `<tr><th>${esc(k.標籤)}${k.顆 === BAND.顆數 ? "・定案" : ""}</th><td>${(b.高 * s2).toFixed(2)} mm</td><td>${(b.gap * s2).toFixed(2)} mm</td><td>${(b.總高 * s2).toFixed(1)} mm</td></tr>`;
+}).join("\n")}</tbody></table>
+<div class="bandrow">${S.帶子.順序案.map((k) => `<div><p class="lb">${esc(k.標籤)}</p>
+<div class="bandonly" style="--cw:min(300px, 86vw)">${bandSvg(帶(k.顆))}</div></div>`).join("\n")}</div>
+
+<p class="h2">帶子・間距<span class="t">Ⓛ　四邊與中間吃同一個值，它一大每一顆就變小</span></p>
+<table><thead><tr><th>　</th><th>一顆最高</th><th>四邊與中間</th><th>帶子高</th></tr></thead><tbody>${
+S.帶子.間距案.map((k) => { const b = 帶(undefined, k.值), s2 = CARD.寬mm / b.總寬;
+  return `<tr><th>${esc(k.標籤)}${k.值 === BAND.間距 ? "・定案" : ""}</th><td>${(b.高 * s2).toFixed(2)} mm</td><td>${(b.gap * s2).toFixed(2)} mm</td><td>${(b.總高 * s2).toFixed(1)} mm</td></tr>`;
+}).join("\n")}</tbody></table>
+<div class="bandrow">${S.帶子.間距案.map((k) => `<div><p class="lb">${esc(k.標籤)}</p>
+<div class="bandonly" style="--cw:min(300px, 86vw)">${bandSvg(帶(undefined, k.值))}</div></div>`).join("\n")}</div>
+<div class="box">${para(S.帶子.色案_落選)}</div>
 
 <p class="h2">字可以多大<span class="t">字少的自動變大 —— 這是兩案真正的差別之一</span></p>
 <div class="box"><p>主文字高 ＝ <b>min(卡寬的 6%，版心 84% ÷ 最長那一行的字數)</b>，
@@ -599,9 +643,15 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   }
   console.log("");
   console.log(`標誌 ${S.標誌.檔} ${LOGO.寬}×${LOGO.高}（長寬比 ${LOGO.比}）—— 官方授權檔，只等比例縮放`);
-  console.log(`帶子 九顆 ${S.帶子.順序.join(" ")}`);
-  console.log(`     合計 ${BAND.總寬.toFixed(0)} 單位寬・最高 ${BAND.高.toFixed(0)}（最矮 ${Math.min(...BAND.it.map((x) => x.h)).toFixed(0)}，差 ${(BAND.高 / Math.min(...BAND.it.map((x) => x.h))).toFixed(2)} 倍 —— 所以要垂直置中）`);
-  console.log(`     在 ${CARD.寬mm} mm 的卡上高 ${(CARD.寬mm * CARD.版心 * BAND.高 / BAND.總寬).toFixed(1)} mm・顏色還沒挑（${S.帶子.色案.map((k) => k.標籤).join("／")}）`);
+  {
+    const s2 = CARD.寬mm / BAND.總寬;
+    console.log(`帶子 ${BAND.顆數} 顆 ${BAND.it.map((x) => x.k).join(" ")}（間距 ${BAND.間距}）`);
+    console.log(`     合計 ${BAND.總寬.toFixed(0)}×${BAND.總高.toFixed(0)} 單位・最高的那一顆 ${BAND.高.toFixed(0)}（最矮 ${Math.min(...BAND.it.map((x) => x.h)).toFixed(0)}，差 ${(BAND.高 / Math.min(...BAND.it.map((x) => x.h))).toFixed(2)} 倍 —— 所以要垂直置中）`);
+    console.log(`     在 ${CARD.寬mm} mm 的卡上　帶子高 ${(BAND.總高 * s2).toFixed(1)} mm・一顆最高 ${(BAND.高 * s2).toFixed(2)} mm・四邊與中間都是 ${(BAND.gap * s2).toFixed(2)} mm`);
+    console.log(`     底色 ${底色}（wm-sizes.json 的 r1c1 ＝ 一般牙科）・標誌 ${墨色}（牙洞挖穿，透出底色）`);
+    console.log(`     Ⓚ 顆數 ${S.帶子.順序案.map((k) => { const b = 帶(k.顆); return `${k.顆}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在 ${BAND.顆數} 顆）`);
+    console.log(`     Ⓛ 間距 ${S.帶子.間距案.map((k) => { const b = 帶(undefined, k.值); return `${k.值}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在 ${BAND.間距}）`);
+  }
   console.log("");
   console.log(`卡片 ${CARD.寬mm} mm 寬・比例 ${CARD.比例}（${Math.round(CARD.寬mm * CARD.比例)} mm 高）—— 從照片量的，還要用尺量一次`);
   console.log(`QR ＝ ${S.QR.內容}（兩張照片各自解過一次）`);

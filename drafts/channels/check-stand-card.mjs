@@ -23,7 +23,7 @@
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM,
+import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 底色, 墨色, CARD,
   切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm } from "./stand-card.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -145,49 +145,110 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
   ok(/readUInt32BE\(16\)/.test(GEN), "產生器沒有從 PNG 的檔頭讀長寬比（寫死的話換一個檔，抬頭會靜靜地溢出）");
 }
 
-/* ── ⑥之四 底下那條帶子：九顆 logo ───────────────────────────────── */
+/* ── ⑥之四 底下那條帶子：診所自己的 logo ─────────────────────────
+   ⚠⚠⚠ 2026-09-16 使用者五件：四邊與中間的間隔要一致／小一點／多放一兩個／
+   底色用一般牙科主題色／標誌白色、牙洞就是那塊底色。前兩件是尺（Ⓚ 顆數、Ⓛ 間距），
+   後三件是決定 —— 每一件改回去畫面都還是很正常，所以每一件都要有一道。 */
 {
   const B = S.帶子;
-  ok(B.順序.length === 9 && new Set(B.順序).size === 9, `帶子那一排不是九顆不重複的（現在 ${B.順序.length} 顆）`);
-  for (const k of B.順序) {
-    ok(!!WM[k], `wm-sizes.json 裡沒有 ${k}`);
-    ok(existsSync(join(ROOT, "brand", "shapes", `shape-${k}.svg`)), `brand/shapes 裡沒有 shape-${k}.svg`);
+  ok(B.順序案.length >= 2, "顆數那把尺只剩一格 —— 那就不是尺了");
+  ok(B.順序案.some((k) => k.顆 === B.顆數), `順序案裡沒有定案那一格（${B.顆數} 顆）`);
+  ok(B.間距案.some((k) => k.值 === B.間距), `間距案裡沒有定案那一格（${B.間距}）`);
+  /* ⚠⚠⚠ 三個順序案**每一個**都要守住那三條限制 —— 只驗定案那一格的話，
+     另外兩格排錯了照樣畫在頁面上，而且畫面完全正常。 */
+  for (const 案 of B.順序案) {
+    ok(案.序.length === 案.顆, `${案.標籤} 寫著 ${案.顆} 顆、序裡有 ${案.序.length} 個`);
+    for (const k of 案.序) {
+      ok(!!WM[k], `wm-sizes.json 裡沒有 ${k}`);
+      ok(existsSync(join(ROOT, "brand", "shapes", `shape-${k}.svg`)), `brand/shapes 裡沒有 shape-${k}.svg`);
+    }
+    /* 重複的那幾顆要挑「站上真的在用的那兩顆」—— 那是一個設計項，不是隨手多拿一個 */
+    const 多 = 案.序.filter((k, i) => 案.序.indexOf(k) !== i);
+    for (const k of 多) ok(B.重複.includes(k), `${案.標籤} 重複了 ${k}，而它不在「重複」那張清單裡`);
+    ok(new Set(案.序).size === 案.序.length - 多.length, `${案.標籤} 有一顆重複了三次`);
+    for (let i = 1; i < 案.序.length; i++) {
+      const a = WM[案.序[i - 1]], c = WM[案.序[i]];
+      ok(案.序[i - 1] !== 案.序[i], `${案.標籤} 第 ${i}、${i + 1} 顆是同一個形狀（${案.序[i]}）`);
+      ok(!(a.ratio > 2.5 && c.ratio > 2.5), `${案.標籤} 第 ${i}、${i + 1} 顆都是最長的那一種（${案.序[i - 1]}／${案.序[i]}）`);
+      ok(a.color !== c.color, `${案.標籤} 第 ${i}、${i + 1} 顆同一個顏色（${案.序[i - 1]}／${案.序[i]}）`);
+    }
   }
-  /* ⚠⚠⚠ 「隨機」是一個定下來的順序，而它有兩條限制（見 JSON 的說明）——
-     排錯了畫面完全正常，只是那一條讀起來結成一團或同一個顏色連著兩顆。 */
-  for (let i = 1; i < B.順序.length; i++) {
-    const a = WM[B.順序[i - 1]], c = WM[B.順序[i]];
-    ok(!(a.ratio > 2.5 && c.ratio > 2.5), `帶子上第 ${i}、${i + 1} 顆都是最長的那一種（${B.順序[i - 1]}／${B.順序[i]}）`);
-    ok(a.color !== c.color, `帶子上第 ${i}、${i + 1} 顆同一個顏色（${B.順序[i - 1]}／${B.順序[i]}）`);
-  }
-  /* 等墨不等高 → 每一顆要垂直置中（y ＝ (最高 − 自己) / 2） */
+  /* 等墨不等高 → 每一顆要垂直置中（上下都留一個間距，中間那一段再置中） */
   for (const o of BAND.it)
-    ok(Math.abs(o.y - (BAND.高 - o.h) / 2) < 0.01, `帶子上的 ${o.k} 沒有垂直置中`);
+    ok(Math.abs(o.y - (BAND.gap + (BAND.高 - o.h) / 2)) < 0.01, `帶子上的 ${o.k} 沒有垂直置中`);
   ok(BAND.高 / Math.min(...BAND.it.map((x) => x.h)) > 1.5,
-    "九顆的高度差不到 1.5 倍 —— 那幾個寬度不再是按墨的面積正規化的，垂直置中那條理由要重寫");
-  /* 形狀與寬度都要是讀回來的，不可以抄第二份 */
+    "那幾顆的高度差不到 1.5 倍 —— 那幾個寬度不再是按墨的面積正規化的，垂直置中那條理由要重寫");
+  /* ⚠⚠⚠ 四邊與中間那五個間隔要**一模一樣**（使用者 2026-09-16）——
+     改動前兩邊那個是「版心對滿版」剩下的頁面內距（7.8 mm）、中間那個是 SVG 裡算出來的
+     （2.1 mm），差 3.7 倍。現在它們出自同一個算式，這一道是那件事的證明。 */
+  ok(Math.abs(BAND.it[0].x - BAND.gap) < 0.01, "帶子左邊那個間隔和中間不一樣");
+  const 尾 = BAND.it[BAND.it.length - 1];
+  ok(Math.abs(BAND.總寬 - (尾.x + 尾.w) - BAND.gap) < 0.01, "帶子右邊那個間隔和中間不一樣");
+  ok(Math.abs(BAND.總高 - BAND.高 - 2 * BAND.gap) < 0.01, "帶子上下那個間隔和中間不一樣");
+  for (let i = 1; i < BAND.it.length; i++)
+    ok(Math.abs(BAND.it[i].x - (BAND.it[i - 1].x + BAND.it[i - 1].w) - BAND.gap) < 0.01,
+      `帶子上第 ${i}、${i + 1} 顆之間的間隔和別處不一樣`);
+  /* ⚠⚠ 內距烘在 viewBox 裡，所以 CSS 不可以再補一層 —— 補了兩邊就又和中間不一致了，
+     而且畫面完全正常。同理那一條一定要滿版（--cw），不是版心。 */
+  ok(/\.card \.band\.logos\{background:transparent;padding:0;display:block\}/.test(GEN),
+    ".band.logos 又長出 padding 或底色了 —— 底色與四邊的留白都在 SVG 裡");
+  ok(/\.card \.band\.logos \.bnd\{width:var\(--cw\)/.test(GEN),
+    "那一條不是滿版 —— 底色要頂到卡片兩邊，而且兩邊的間隔要由 SVG 給");
+  /* 形狀與寬度都要是讀回來的，不可以抄第二份；底色也讀 wm-sizes.json */
   ok(/brand", "shapes"/.test(GEN), "產生器沒有從 brand/shapes 讀形狀");
   ok(/wm-sizes\.json/.test(GEN), "產生器沒有從 wm-sizes.json 讀寬度");
   ok(!/\bd="M [\d.]+ /.test(GEN), "產生器裡出現了寫死的路徑資料 —— 形狀只有 brand/shapes 一份出處");
-  /* 三格顏色都要畫出來，而且每一格都是九顆 */
+  ok(/export const 底色 = WM\.r1c1\.color;/.test(GEN),
+    "底色沒有讀 wm-sizes.json 的 r1c1 —— 一般牙科那支綠不要在這裡再抄一份色碼");
+  ok(底色.toLowerCase() === "#3f654a", `底色算出來是 ${底色}，不是一般牙科那支綠`);
+  /* 白壓在那塊綠上（裝飾性圖形，但順手量一次） */
+  const lum = (h) => { const c = [1, 3, 5].map((i) => { const v = parseInt(h.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+  ok(1.05 / (lum(底色) + 0.05) >= 4.5, "白壓在帶子底色上低於 4.5");
+  /* 頁上每一條的形狀數、底色、墨色 */
   const bands = [...H.matchAll(/<svg class="bnd"[\s\S]*?<\/svg><\/svg>/g)];
   /* ⚠ 尺上那幾張也是真的卡，所以也各有一條帶子 —— 數的時候要算進來。
      ⚠⚠ 不可以照尺的格數算：兩把間距的尺都已經收成表、不再畫卡了（踩過），
         而且它們還會再被打開（Ⓗ 那把就打開過一次）—— 所以這個數字一律從頁面上數。 */
   const 尺數 = (H.match(/class="card sc"/g) ?? []).length;
-  ok(bands.length === S.案.length + 尺數 + B.色案.length,
-    `頁上畫出 ${bands.length} 條帶子（應該是 ${S.案.length} 張卡 ＋ ${尺數} 格尺 ＋ ${B.色案.length} 格顏色）`);
-  for (const m of bands)
-    ok((m[0].match(/<svg x="/g) ?? []).length === 9, "有一條帶子不是九顆");
-  /* ⓐ 那一格要真的九個顏色，ⓑⓒ 要真的只有一個 */
-  const spec = bands[bands.length - B.色案.length][0];
-  ok(new Set([...spec.matchAll(/color:(#[0-9a-f]{6})/gi)].map((x) => x[1].toLowerCase())).size >= 7,
-    "「各自的科別色」那一格畫出來的顏色不到七種");
+  ok(bands.length === S.案.length + 尺數 + 1 + B.順序案.length + B.間距案.length,
+    `頁上畫出 ${bands.length} 條帶子（應該是 ${S.案.length} 張卡 ＋ ${尺數} 格尺 ＋ 定案那一條 ＋ ${B.順序案.length} 格 Ⓚ ＋ ${B.間距案.length} 格 Ⓛ）`);
+  for (const m of bands) {
+    /* ⚠⚠⚠ 牙洞是 fill-rule evenodd 挖穿的，底下那塊綠自己會透出來 ——
+       所以整條只准有兩種 fill：那塊底色的 rect，以及形狀自己的 currentColor。
+       另外畫一塊綠色的洞上去畫出來一模一樣，但形狀一改就會對不準，**而且不報錯**。 */
+    const fills = [...m[0].matchAll(/fill="([^"]+)"/g)].map((x) => x[1].toLowerCase());
+    ok(fills.every((f) => f === 底色.toLowerCase() || f === "currentcolor"),
+      `有一條帶子多出別的 fill（${[...new Set(fills)].join("／")}）—— 牙洞不要另外填色`);
+    ok(fills.filter((f) => f === 底色.toLowerCase()).length === 1, "有一條帶子的底色不是一塊 rect");
+    ok(/fill-rule="evenodd"/.test(m[0]), "有一條帶子的形狀掉了 fill-rule evenodd —— 牙洞會被填滿");
+    ok(!/color:(?!#ffffff)/.test(m[0]), "有一條帶子的標誌不是白的");
+  }
+  for (const m of bands.slice(0, S.案.length + 尺數 + 1))
+    ok((m[0].match(/<svg x="/g) ?? []).length === BAND.顆數,
+      `卡上那一條不是 ${BAND.顆數} 顆`);
+  /* 兩把尺的表：每一格的三個數字都要印出來，「・定案」是算的不是寫在標籤裡的 */
+  for (const [案, 取, 預設, 記] of [[B.順序案, (k) => 帶(k.顆), B.顆數, (k) => k.顆],
+                                    [B.間距案, (k) => 帶(undefined, k.值), B.間距, (k) => k.值]]) {
+    for (const k of 案) {
+      const b = 取(k), s2 = CARD.寬mm / b.總寬;
+      ok(H.includes("<th>" + k.標籤 + (記(k) === 預設 ? "・定案" : "") + "</th>"),
+        `${k.標籤} 那一格的抬頭不對（「・定案」要算出來，不要寫進標籤裡）`);
+      ok(!k.標籤.includes("定案"), `${k.標籤} 的標籤裡自己寫著「定案」`);
+      for (const v of [(b.高 * s2).toFixed(2), (b.gap * s2).toFixed(2), (b.總高 * s2).toFixed(1)])
+        ok(H.includes(">" + v + " mm<"), `${k.標籤} 少印了 ${v} mm`);
+    }
+  }
+  /* ⚠⚠ 尺可以收，量出來的數字不可以跟著消失（同 50-22、71-13、71-14） */
+  ok(/class="bandrow"/.test(H), "兩把尺的帶子沒有畫出來");
+  ok(B.色案_落選.join("").includes("前提換掉了"),
+    "那三格沒有底色的顏色案，落選的理由不見了 —— 它們不是被比下去的，是前提換掉了");
 }
 
 /* 每次出圖都要印抬頭那一行（換抬頭、動字距或標誌，這裡要有一個數字跟著變） */
 ok(/抬頭「\$\{c\.抬頭\}」/.test(GEN), "面板沒有印抬頭那一行");
-ok(/帶子 九顆/.test(GEN), "面板沒有印帶子那九顆");
+ok(/帶子 \$\{BAND\.顆數\} 顆/.test(GEN), "面板沒有印帶子那幾顆");
+ok(/四邊與中間都是/.test(GEN), "面板沒有印那五個間隔 —— 那正是這一輪要治的東西（第 28 條 ④）");
+ok(/Ⓚ 顆數/.test(GEN) && /Ⓛ 間距/.test(GEN), "面板沒有印那兩把尺");
 
 /* ── ⑥之五 字級的例外要在資料裡宣告，而且看得出是往哪一邊釘 ─────────
    ⚠⚠⚠ 2026-09-16 使用者：「用 E 但字級照 F」。做法是**替那一案宣告一個例外**，
@@ -531,4 +592,4 @@ await browser.close();
 console.log(shots.join("\n"));
 console.log("");
 if (bad.length) { console.error("✗ " + bad.length + " 件\n" + bad.map((x) => "  ・" + x).join("\n")); process.exit(1); }
-console.log(`✓ 全綠（${rows.length} 張卡、現況掃出 ${nowRed.length} 個紅線詞、${乾淨} 案乾淨、標誌 ${LOGO.寬}×${LOGO.高}、帶子九顆）`);
+console.log(`✓ 全綠（${rows.length} 張卡、現況掃出 ${nowRed.length} 個紅線詞、${乾淨} 案乾淨、標誌 ${LOGO.寬}×${LOGO.高}、帶子 ${BAND.顆數} 顆）`);
