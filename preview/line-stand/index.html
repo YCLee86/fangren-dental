@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>櫃檯的小立牌　文字改版（四案）</title>
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
+  --brick:#8c3b32;--green:#3f654a;--cw:300px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:26px 14px 72px}
+h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
+.lede{color:var(--soft);font-size:.92rem;margin:0 0 1.4em}
+.h2{font-size:1.04rem;margin:2.3em 0 .6em;padding-top:1em;border-top:1px solid var(--rule)}
+.h2 .t{display:block;font-size:.79rem;font-weight:400;color:var(--soft);margin-top:.25em}
+p{margin:.5em 0}
+.box{background:var(--card);border-radius:11px;padding:13px 15px;font-size:.93rem}
+.box p:first-child{margin-top:0}.box p:last-child{margin-bottom:0}
+.q{border-left:3px solid var(--rule);padding-left:.8em;color:var(--soft);font-size:.9rem}
+code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
+
+/* ── 那張卡（CSS 排的，不是完稿） ─────────────────────────────── */
+.cards{display:flex;flex-wrap:wrap;gap:22px;margin:.6em 0 0}
+.one{flex:1 1 var(--cw);max-width:var(--cw)}
+.lb{font-weight:600;font-size:.95rem;margin:0 0 .45em}
+.card{--pad:calc(var(--cw) * .06);width:var(--cw);aspect-ratio:98 / 146;
+  background:#fff;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.14);
+  padding:var(--pad) var(--pad) 0;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  color:#333;line-height:1.5;overflow:hidden}
+.card .hd{font-weight:700;letter-spacing:.04em}
+.card .sub{margin-top:.25em;color:#444}
+.card .bd{margin-top:calc(var(--cw) * .08);width:100%}
+.card .bd p{margin:.28em 0;white-space:nowrap}
+.card .cue{margin-top:calc(var(--cw) * .07);color:#555}
+.card .cue.lo{margin-top:calc(var(--cw) * .03)}
+.card .qr{width:calc(var(--cw) * 0.45);aspect-ratio:1;margin-top:calc(var(--cw) * .04);
+  background:repeating-linear-gradient(45deg,#dcdcdc 0 6px,#ececec 6px 12px);
+  border-radius:3px;display:flex;align-items:center;justify-content:center}
+.card .qr span{font-size:.72rem;color:#8a8a8a;letter-spacing:.1em}
+.card .band{margin:auto calc(var(--pad) * -1) 0;width:var(--cw);padding:calc(var(--cw) * .026) 0;
+  background:#3c4657;color:#fff;letter-spacing:.03em}
+.card .band.empty{background:transparent;border-top:1px dashed #d5d5d5;color:transparent}
+.card.now .bd p{white-space:normal}
+.note{font-size:.86rem;color:var(--soft);margin:.6em 0 0}
+.note p{margin:.35em 0}
+
+/* ── 拆解 ─────────────────────────────────────────────────────── */
+.it{background:var(--card);border-radius:11px;padding:12px 15px;margin:.7em 0;font-size:.93rem}
+.it .t{font-weight:600;margin:0 0 .3em}
+.it .n{display:inline-block;min-width:1.5em;color:var(--brick);font-weight:700}
+.it p{margin:.35em 0}
+
+table{border-collapse:collapse;width:100%;font-size:.86rem;margin:.6em 0 0;
+  background:var(--card);border-radius:10px;overflow:hidden}
+th,td{padding:.5em .6em;text-align:center;border-bottom:1px solid var(--rule)}
+thead th{font-weight:600;font-size:.8rem;color:var(--soft)}
+tbody th{text-align:left;font-weight:600}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+.nowr th,.nowr td{color:var(--soft)}
+.bad{color:var(--brick);font-weight:700}
+.ok{color:var(--green)}
+ol.ask{padding-left:1.4em;font-size:.93rem}
+ol.ask li{margin:.7em 0}
+.foot{margin-top:2.6em;padding-top:1em;border-top:1px solid var(--rule);
+  font-size:.82rem;color:var(--soft)}
+@media (max-width:719px){:root{--cw:min(300px,88vw)}.one{max-width:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>櫃檯的小立牌　文字改版</h1>
+<p class="lede">這一輪<b>只處理文字</b>（插圖與版面下一輪）。底下那四張卡是用網頁排的，
+<b>不是完稿</b> —— 字級是用一條規則自動算的，四案比的是文字本身。</p>
+
+<p class="h2">現況那一張<span class="t">照片上逐字抄的，一個字都沒有改寫</span></p>
+<div class="cards"><div class="one"><div class="card now">
+  <div class="hd" style="font-size:calc(var(--cw) * 0.085)">芳仁牙醫診所</div>
+  <div class="sub" style="font-size:calc(var(--cw) * 0.05)">在 LINE 官方帳號為您服務！！</div>
+  <div class="bd" style="font-size:calc(var(--cw) * 0.0382)"><p>掃描後手機驗證、收到綁定成功通知，立即加入！</p><p>往後約診提醒即可自動推播！</p><p>再也不怕忘記看診時間，輕鬆接收診所新訊！</p></div>
+  <div class="cue" style="font-size:calc(var(--cw) * 0.038)">▼ 下方掃碼立即加入 ▼</div>
+  <div class="qr"><span>QR</span></div>
+  
+  <div class="band" style="font-size:calc(var(--cw) * 0.04)">AlleyPin｜打造醫病好關係</div>
+</div></div>
+<div class="one"><div class="box">
+<p>從使用者拍的兩張照片量的（他特地把尺放進去）：・寬：那條橫尺上 0 到 10 cm ＝ 1045 px，卡片的深色帶子左右緣相距 1021 px → <b>約 98 mm</b>。・比例：同一張照片裡卡片高 ÷ 寬 ＝ 1.52，另一張 1.44（相機角度不同）→ 取 <b>1.49</b>。・98 × 1.49 ＝ 146 mm。最接近的標準尺寸是 <b>4×6 吋（102×152 mm）</b>。⚠ 這是從照片推的，<b>要請診所用尺量一次印刷品本身</b>（或量壓克力座的內槽）。</p>
+<p>現況的字級也是從照片量的：主文最長那一行 22 個全形字、佔卡片寬度的 84%，所以每個字約 3.8% 卡寬 ＝ 98 mm 的卡上約 3.7 mm 高。QR 的邊長約 45% 卡寬。</p>
+</div></div></div>
+
+<p class="h2">那個 QR 掃出來是什麼<span class="t">拿解碼器掃過，不是用眼睛看的</span></p>
+<div class="box"><p><code>https://q.1talk.co/HQPRd</code></p><p>⚠⚠⚠ <b>那個 QR 不是 LINE 的加好友碼。</b> 解出來是廠商（1talk／AlleyPin）的短網址，不是 <code>line.me/R/ti/p/@445rpiiv</code>。所以「掃完會先加好友還是先驗證」是<b>廠商那條流程決定的，不是我們</b> —— 而它決定這張卡要寫一步還是兩步。</p>
+<p>解碼方法：兩張照片<b>各自解過一次</b>，用 opencv 的 QRCodeDetector，同一個字串（同一張照片再用 Otsu 二值化解第二次，也是同一個）。⚠ 這條線的規矩：QR 不可以用眼睛驗收，要真的拿解碼器掃過。⚠ 那個短網址會轉去哪裡<b>查不到</b> —— 這個容器連不出去（代理回 403）。</p></div>
+
+<p class="h2">為什麼要改<span class="t">六件，每一件都有出處</span></p>
+<div class="it"><p class="t"><span class="n">1</span>三句的順序和實際的流程對不起來</p><p>「掃描後手機驗證、收到綁定成功通知，立即加入！」讀起來是「驗證完才加入」，可是這個帳號的招呼圖卡上還放著一顆「點這裡綁定」的按鈕 —— 那是為「已經加了好友、但還沒綁定」的人做的。<b>到底是幾步，我們自己也還沒有答案</b>（那個 QR 是廠商的短網址，見上面那一段）。⚠ 這一條要先有答案，四案的文字才定得下來：<b>診所拿一支沒加過的手機掃一次就知道</b>。</p></div>
+<div class="it"><p class="t"><span class="n">2</span>「再也不怕忘記看診時間」是一句我們保證不了的承諾</p><p>使用者 2026-09-12 自己講過同一件事（當時在定約診卡上那一欄要印什麼）：</p>
+<p class="q">「那如果系統哪一天出問題　沒發送提醒　患者就說　那是你們診所的問題　沒提醒我　我忘了（看似很合理）　診所購置這個系統是友善提醒　不代表患者自己可以不用記得」</p>
+<p>⚠⚠ <b>印在立牌上比印在訊息上嚴重</b>：訊息會被後面的訊息蓋過去，這張卡會擺在櫃檯一年，而且會被拍照。真的漏送一次，它就是白紙黑字的那一句。→ 四案都只寫「我們會提醒你」，一個都沒有寫「你不會忘記」。</p></div>
+<div class="it"><p class="t"><span class="n">3</span>「輕鬆接收診所新訊」承諾了一個診所沒有在做的服務</p><p>診所自己講過：「診所沒有特別推播什麼。只有重大事件例如調漲掛號費和颱風天休診，針對有被影響的約診病人群發訊息。」⚠ 而且<b>封鎖率只有 2.2%（3,205 個好友裡 70 個）正是因為幾乎不發</b> —— 那是這個帳號現在的資產。印「接收新訊」有兩個後果：等不到的人覺得被騙；想要新訊的人因為沒有而封鎖。</p></div>
+<div class="it"><p class="t"><span class="n">4</span>「自動推播」「即可」是系統的詞，主詞是機器不是人</p><p>站上與 LINE 那七則訊息一律寫「我們會提醒你」。<b>同一件事，差別在誰在說話。</b></p></div>
+<div class="it"><p class="t"><span class="n">5</span>五個驚嘆號 ＋「為您服務」</p><p>COPY.md 第十節：「貼近在地」是語氣（站在誰那一邊），「口語化／行銷體」是文體。兩者不衝突 —— 語氣可以親近，但「為您服務！！」是廣告的聲音，不是這間診所的。</p></div>
+<div class="it"><p class="t"><span class="n">6</span>底下那條帶子是廠商的品牌</p><p>「AlleyPin｜打造醫病好關係」擺在芳仁自己的櫃檯上。新版那一條要換成診所自己的東西，或者留白給下一輪的插圖 —— 見「還沒有答案的」第 5 題。</p></div>
+
+<p class="h2">四案<span class="t">形狀不一樣，不只是換字</span></p>
+<div class="cards"><div class="one">
+<p class="lb">Ⓐ 先講你會拿到什麼</p>
+<div class="card">
+  <div class="hd" style="font-size:calc(var(--cw) * 0.085)">芳仁牙醫診所</div>
+  <div class="sub" style="font-size:calc(var(--cw) * 0.05)">官方 LINE</div>
+  <div class="bd" style="font-size:calc(var(--cw) * 0.0560)"><p>看診前，我們會在這裡提醒你一次</p><p>下次約在哪一天、幾點，也查得到</p></div>
+  <div class="cue" style="font-size:calc(var(--cw) * 0.038)">掃碼加入，再完成手機綁定</div>
+  <div class="qr"><span>QR</span></div>
+  <div class="cue lo" style="font-size:calc(var(--cw) * 0.036)">綁定之後才收得到提醒</div>
+  <div class="band empty" style="font-size:calc(var(--cw) * 0.04)"></div>
+</div>
+<div class="note"><p><b>照「講他拿得到什麼」寫的</b>（那也是這個帳號一直沒解決的缺口：3,205 個好友裡有多少人綁了，到現在沒有人知道 —— 加了沒綁的人永遠收不到提醒）。先給好處、再給動作，站在櫃檯的人一眼看到的是「我會拿到什麼」。</p></div>
+</div>
+<div class="one">
+<p class="lb">Ⓑ 先講兩個步驟</p>
+<div class="card">
+  <div class="hd" style="font-size:calc(var(--cw) * 0.085)">芳仁牙醫診所</div>
+  <div class="sub" style="font-size:calc(var(--cw) * 0.05)">官方 LINE</div>
+  <div class="bd" style="font-size:calc(var(--cw) * 0.0600)"><p>① 掃下面的 QR，加入好友</p><p>② 跟著畫面完成手機綁定</p></div>
+  
+  <div class="qr"><span>QR</span></div>
+  <div class="cue lo" style="font-size:calc(var(--cw) * 0.036)">兩步都做完，看診前我們會在 LINE 提醒你</div>
+  <div class="band empty" style="font-size:calc(var(--cw) * 0.04)"></div>
+</div>
+<div class="note"><p><b>這一案最好指</b> —— 多數人是櫃檯請他掃的，櫃檯可以指著①②講。⚠ 但它建立在「真的是兩步」上（見「為什麼要改」第 1 條）。掃完一次做完的話，這一案要收成一句。</p></div>
+</div>
+<div class="one">
+<p class="lb">Ⓒ 只有一句，字最大</p>
+<div class="card">
+  <div class="hd" style="font-size:calc(var(--cw) * 0.085)">芳仁牙醫診所</div>
+  <div class="sub" style="font-size:calc(var(--cw) * 0.05)">官方 LINE</div>
+  <div class="bd" style="font-size:calc(var(--cw) * 0.0600)"><p>掃碼加入，完成手機綁定</p><p>看診前我們會提醒你一次</p></div>
+  
+  <div class="qr"><span>QR</span></div>
+  
+  <div class="band empty" style="font-size:calc(var(--cw) * 0.04)"></div>
+</div>
+<div class="note"><p>字數少 ＝ 同樣的卡片上字可以放到最大（底下那張表印得出來）。櫃檯是<b>站著看</b>的，字大一階比多一句話有用。代價是沒有講「查得到自己約在哪一天」。</p></div>
+</div>
+<div class="one">
+<p class="lb">Ⓓ 回答「加了會不會一直被傳訊息」</p>
+<div class="card">
+  <div class="hd" style="font-size:calc(var(--cw) * 0.085)">芳仁牙醫診所</div>
+  <div class="sub" style="font-size:calc(var(--cw) * 0.05)">官方 LINE</div>
+  <div class="bd" style="font-size:calc(var(--cw) * 0.0525)"><p>加入之後，看診前我們會提醒你一次</p><p>平常不會拿它傳別的東西給你</p></div>
+  <div class="cue" style="font-size:calc(var(--cw) * 0.038)">掃碼加入，再完成手機綁定</div>
+  <div class="qr"><span>QR</span></div>
+  
+  <div class="band empty" style="font-size:calc(var(--cw) * 0.04)"></div>
+</div>
+<div class="note"><p>這一案治的是<b>他不想加的那個理由</b>，而且它是真的（診所本來就不做定期推播）——在別家都在推銷的時候，這句話本身就是這個品牌。⚠⚠ <b>但它是一個承諾，要診所自己點頭</b>：颱風休診、費用異動那兩種群發還是會發。「平常」兩個字是刻意留的餘地，仍然要他確認這樣寫沒問題。</p></div>
+</div></div>
+
+<p class="h2">字可以多大<span class="t">字少的自動變大 —— 這是四案真正的差別之一</span></p>
+<div class="box"><p>主文字高 ＝ <b>min(卡寬的 6%，版心 84% ÷ 最長那一行的字數)</b>，
+也就是「讓最長那一行剛好撐滿版心，但不超過 6%」。四案用同一條規則，所以底下這張表比的是
+<b>文字本身</b>，不是我替每一案挑的字級。</p>
+<p>⚠ <b>版心那個 84% 就是從現況那一行量來的</b>（最長那一行 22 個全形字、佔卡片寬度 84%），
+所以現況那一列是這條規則的<b>定義</b>、不是驗證。四案之間的比較仍然成立 —— 它們吃同一條規則。</p>
+<p>⚠ 字高是照卡片寬 98 mm 換算的（那個數字還要用尺量一次，見底下第 3 題）。
+櫃檯是站著看的，一般建議內文不要小於 3.5 mm。</p></div>
+<table><thead><tr><th>　</th><th>主文行數</th><th>最長一行</th>
+<th>字可以多大</th><th>那一行佔卡寬</th><th>紅線</th></tr></thead><tbody><tr class="nowr"><th>現況（廠商那一版）</th>
+<td>3</td><td>22 字</td><td>3.74 mm</td><td>84%</td>
+<td class="bad">再也不、不怕忘、新訊、推播、即可、為您服務</td></tr>
+<tr><th>Ⓐ 先講你會拿到什麼</th>
+<td>2</td><td>15 字</td><td>5.49 mm</td><td>84%</td>
+<td class="ok">0</td></tr>
+<tr><th>Ⓑ 先講兩個步驟</th>
+<td>2</td><td>12 字</td><td>5.88 mm</td><td>72%</td>
+<td class="ok">0</td></tr>
+<tr><th>Ⓒ 只有一句，字最大</th>
+<td>2</td><td>11 字</td><td>5.88 mm</td><td>66%</td>
+<td class="ok">0</td></tr>
+<tr><th>Ⓓ 回答「加了會不會一直被傳訊息」</th>
+<td>2</td><td>16 字</td><td>5.14 mm</td><td>84%</td>
+<td class="ok">0</td></tr></tbody></table>
+<div class="note"><p>⚠⚠ 這張掃描表<b>只掃四張卡上的字</b>，不掃整頁 —— 這一頁本身就在解釋「為什麼不可以寫『再也不怕忘記』」，掃整頁一定會掃到自己的說明。（這條線第九次撞到同一件事，見 CLAUDE.md 第十一之六節。）⚠⚠⚠ <b>現況那一張也畫成卡片，所以它會亮紅</b> —— 那是刻意的：它同時是這道掃描的<b>正向對照</b>，證明它真的在掃。一道永遠不會亮的掃描等於沒有掃。</p></div>
+
+<p class="h2">還沒有答案的</p>
+<ol class="ask">
+<li><b>掃那個 QR 之後到底會發生什麼</b><br>先加好友再跳驗證？一次做完？還是要自己按一顆按鈕？<b>這一題決定卡片寫一步還是兩步。</b> ⚠ 不必等廠商 —— 拿一支沒加過這個帳號的手機掃一次，三十秒就知道。</li>
+<li><b>新版還要沿用同一個 QR 嗎</b><br>現在這一顆是廠商的短網址（q.1talk.co），停用或換掉都不在診所手上。換成 LINE 自己的加好友碼，流程就一定是「加好友 → 再綁定」兩步；沿用廠商那一顆，就照他們那條流程寫。</li>
+<li><b>卡片的實際尺寸</b><br>照片上量到寬約 98 mm、比例 1.49（≈ 4×6 吋）。<b>請用尺量一次印刷品本身或壓克力座的內槽</b>，下一輪的版面要照那個數字排。</li>
+<li><b>提醒的時間要不要印上去</b><br><b>建議不印。</b> 招呼圖卡寫「看診前2天」、綁定完成那一則寫「48 小時」，兩種講法到現在還沒統一 —— 而印出來的東西改不了。四案都只寫「看診前」。</li>
+<li><b>底下那條帶子換成什麼</b><br>① 留白，給下一輪的插畫人物 ② 診所名＋地址＋電話 05-5339369 ③ fangren.net。⚠ 這張卡的工作是讓人掃那顆 QR，多一個出口會分掉它。</li>
+<li><b>Ⓓ 那一句要不要寫</b><br>「平常不會拿它傳別的東西給你」是一個承諾，要診所自己點頭（見 Ⓓ 的註）。</li>
+</ol>
+
+<p class="foot">文字的唯一出處是 <code>drafts/channels/stand-card.json</code>；
+這一頁由 <code>node drafts/channels/stand-card.mjs</code> 產生、
+<code>node drafts/channels/check-stand-card.mjs</code> 守門。<b>不要手改這一頁。</b></p>
+
+</div>
+</body>
+</html>
