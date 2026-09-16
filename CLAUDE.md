@@ -2758,6 +2758,10 @@ node drafts/channels/remind-a4.mjs        # **櫃檯要印的那張 A4**（提�
                                           #   —— 挑定的值已寫回預設；--hero／--name=〔病人姓名〕 是回去的路
                                           # ⚠⚠⚠ 頭像（綠圓＋白標誌）**在卡片上面不是左邊** —— 形狀讀 brand/shapes/mark.svg，
                                           #   牙洞靠 evenodd 透出底下的綠；規格頁那個模擬畫的是文字泡泡那一種，不要互相訂正
+                                          # ⚠⚠⚠ **標誌佔圓寬 0.772、而且比圓心低 0.102 個直徑**（不是垂直置中）——
+                                          #   位置與大小（30／6／3）量自**聊天室**截圖、圓裡面長什麼樣量自**帳號主頁**截圖
+                                          #   （同一顆圓在那裡有 171px，大六倍才量得準）。**兩張各答各的，不要互相訂正**
+                                          # ⚠⚠ 示範日期 2026-09-16 使用者指定 `2026/11/20 08:45`，**星期是照日期算的不要寫死**
 node drafts/channels/review-png.mjs      # 評價邀約的圖片檔（同上三張）→ preview/line-review/
 node drafts/channels/review-hero-crop.mjs # 評價邀約的頭圖 16:9 → 1024×512 → preview/line-review/hero-review.jpg
 node drafts/channels/remind-marks.mjs    # 提醒卡那兩顆新標誌（翻過來的 shape-r2c3 ＋ 頁尾的話筒）→ preview/line-remind/

@@ -6,7 +6,7 @@
  *     → drafts/channels/芳仁-約診提醒-A4.pdf    （要印的就是這一份）
  *     → drafts/channels/remind-a4.png          （看一眼用的）
  *
- *   可帶：--date="…"（換掉示範日期；預設是現算的「兩天後」）　--pad=12（紙的上下留白 mm）
+ *   可帶：--date="…"（換掉示範日期；預設 2026/11/20 08:45）　--pad=12（紙的上下留白 mm）
  *         --hero（把頭圖放回來）　--name=〔病人姓名〕（把姓名那一格放回來）
  *
  * 起點是使用者 2026-09-16 的照片：櫃檯現在印著**廠商那一版**的 A4（護貝在資料袋裡），
@@ -64,19 +64,28 @@ const OUT_PDF = path.join(HERE, "芳仁-約診提醒-A4.pdf");
 const OUT_PNG = path.join(HERE, "remind-a4.png");
 const CARD_W = 268;                    /* LINE 上圖卡的實寬，整條線共用的那個數字 */
 /* ---- 頭像（LINE 聊天室裡那顆圓形的診所大頭）--------------------------
-   量自使用者 2026-09-16 的手機截圖（1125×2436 ＝ 375 CSS px 的 3×）：
+   **位置與大小**量自使用者 2026-09-16 的聊天室截圖（1125×2436 ＝ 375 CSS px 的 3×）：
      圓 x 24~113、y 836~928 → **30×30 CSS px**
      卡片上緣 y 945、左緣 x 33 → 頭像**底緣離卡片上緣 5.7px、左緣比卡片左 3px**
-     圓裡那顆白色標誌寬 x 34~102 ＝ 22.7px ＝ 圓的 **75.6%**
+   ⚠⚠⚠ **標誌在圓裡長什麼樣，改量同一天那張「LINE 帳號主頁」的截圖**（使用者：
+     「你截取的 line 帳號大頭貼不太對　再比對調整」）—— 主頁那顆圓是 **171px**，
+     聊天室那顆只有 30px，同一件事在大六倍的圖上才量得準。量出兩件：
+     ・寬 132px ＝ 圓的 **77.2%**（原本照聊天室那顆量成 75.6%）
+     ・⚠⚠ **標誌不在圓的正中央，它坐在中線底下 0.102 個直徑**
+       （圓上緣到標誌 71px、標誌到圓下緣 37px ＝ 上面幾乎是下面的兩倍）——
+       第一版把它垂直置中，所以整顆讀起來「不太對」而每一個數字都還很合理。
    ⚠ 圓的顏色**沒有從截圖取**（iPhone 的截圖有色彩描述檔，量到的 rgb(61,95,82)
      和站上任何一支都對不起來）—— 用站上一般牙科的套色 `#3f654a`，
      那也正是 `assets/icon.svg`／`assets/logo.png` 用的那一支。不新增顏色。
    ⚠⚠ 形狀不抄第二份：直接讀 `brand/shapes/mark.svg`（單一路徑、牙洞是
-     `fill-rule: evenodd` 挖穿的，所以填白之後洞會透出底下的綠 ＝ 截圖上的樣子）。 */
-const AV = 30;        /* 頭像直徑 */
-const AV_GAP = 6;     /* 頭像底緣到卡片上緣 */
-const AV_DX = -3;     /* 頭像左緣相對卡片左緣 */
-const AV_MARK = 0.756;/* 白色標誌佔圓的寬度比 */
+     `fill-rule: evenodd` 挖穿的，所以填白之後洞會透出底下的綠 ＝ 截圖上的樣子）。
+     牙洞在主頁那張上量到落在標誌外框的 0.689／0.738，mark.svg 自己是 0.714／0.752
+     —— 對得上，所以方向沒有鏡射。 */
+const AV = 30;        /* 頭像直徑（聊天室截圖） */
+const AV_GAP = 6;     /* 頭像底緣到卡片上緣（聊天室截圖） */
+const AV_DX = -3;     /* 頭像左緣相對卡片左緣（聊天室截圖） */
+const AV_MARK = 0.772;   /* 白色標誌佔圓的寬度比（主頁截圖：132 ÷ 171） */
+const AV_MARK_DY = 0.102;/* 標誌比圓心低幾個直徑（主頁截圖：上 71 下 37） */
 const AV_BG = "#3f654a"; /* ＝ 一般牙科的套色，站上 icon.svg／logo.png 用的同一支 */
 const A4 = { w: 210, h: 297 };    /* mm */
 const MM = 96 / 25.4;             /* 1mm 在 96dpi 底下的 CSS px */
@@ -100,16 +109,20 @@ const NOHERO = !process.argv.includes("--hero");
      不要拿它「訂正」現行的寫法。
    ⚠ 要給廠商的 `reminder-card.json` 那一句仍然寫著「去掉年份、月日改中文」——
      **那是對 LINE 上那張卡的要求，這裡是紙上的示範值，兩件事**；這張紙不是規格。
-   ⚠ 日期本身仍然是現算的（取兩天後、跳過六日），`--date="…"` 吃任何字串。    */
-function sampleDate() {
-  const d = new Date();
-  d.setDate(d.getDate() + 2);
-  while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() + 1);
-  const p2 = (n) => String(n).padStart(2, "0");
-  const wk = "日一二三四五六"[d.getDay()];
-  return `${d.getFullYear()}/${p2(d.getMonth() + 1)}/${p2(d.getDate())} (${wk}) 09:00`;
+   ⚠⚠ 2026-09-16 稍晚：示範值改成使用者指定的 **`2026/11/20 08:45`**（原本是現算的
+     「兩天後」）。⚠⚠⚠ **星期是照那個日期算出來的，不是打上去的** —— 寫死一個
+     星期幾，換日期的那一天它就變成一句錯話，而且印在紙上沒有人會回頭對。
+   ⚠ `--date="…"` 仍然吃任何字串（給的字串不是 `YYYY/MM/DD HH:MM` 就原樣印）。 */
+const SAMPLE = "2026/11/20 08:45";
+function sampleDate(s) {
+  const m = s.match(/^(\d{4})\/(\d{2})\/(\d{2})[ \u3000]+(\d{1,2}:\d{2})$/);
+  if (!m) return s;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  if (d.getMonth() + 1 !== Number(m[2]) || d.getDate() !== Number(m[3]))
+    throw new Error("示範日期不存在：" + s);
+  return `${m[1]}/${m[2]}/${m[3]} (${"日一二三四五六"[d.getDay()]}) ${m[4]}`;
 }
-const DATE = arg("date", sampleDate());
+const DATE = sampleDate(arg("date", SAMPLE));
 const NAME = arg("name", "");
 
 /* ---- 1. 從規格頁把那張卡整個抓下來 ------------------------------------- */
@@ -211,10 +224,12 @@ if ((markInner.match(/\bM /g) || []).length < 2) throw new Error("那條路徑�
 const markRatio = Number(markVB.split(/\s+/)[2]) / Number(markVB.split(/\s+/)[3]);
 const markW = AV * AV_MARK;
 const markH = markW / markRatio;
+/* ⚠⚠ 標誌**不是垂直置中的**（見上面那段量測）—— 往下挪 AV_MARK_DY 個直徑。 */
+const markY = (AV - markH) / 2 + AV * AV_MARK_DY;
 const avatarSvg = `<svg class="a4-av" width="${AV}" height="${AV}" viewBox="0 0 ${AV} ${AV}"
  style="color:#fff" role="img" aria-label="芳仁牙醫診所">
 <circle cx="${AV / 2}" cy="${AV / 2}" r="${AV / 2}" fill="${AV_BG}"/>
-<svg x="${((AV - markW) / 2).toFixed(2)}" y="${((AV - markH) / 2).toFixed(2)}"
+<svg class="a4-mk" x="${((AV - markW) / 2).toFixed(2)}" y="${markY.toFixed(2)}"
  width="${markW.toFixed(2)}" height="${markH.toFixed(2)}" viewBox="${markVB}">${markInner}</svg>
 </svg>`;
 
@@ -298,8 +313,12 @@ const nat = await p1.evaluate(() => {
   const r = document.querySelector(".holder").getBoundingClientRect();
   const c = document.querySelector(".pv-hc").getBoundingClientRect();
   const a = document.querySelector(".a4-av").getBoundingClientRect();
+  const k = document.querySelector(".a4-mk").getBoundingClientRect();
   return { w: r.width, h: r.height, ch: c.height,
-    av: a.width, gap: c.top - a.bottom, dx: a.left - c.left };
+    av: a.width, gap: c.top - a.bottom, dx: a.left - c.left,
+    /* ⚠ 量的是**畫出來的框**不是屬性：屬性寫對不等於畫出來是那個大小。 */
+    mk: k.width / a.width,
+    mdy: ((k.top + k.bottom) / 2 - (a.top + a.bottom) / 2) / a.width };
 });
 await p1.close();
 if (e1.length) throw new Error("A4 那一頁有 JS 錯誤：" + e1.join(" / "));
@@ -310,10 +329,14 @@ const off = Math.abs(nat.ch - REF_H) / REF_H;
 console.log("卡片原生 %s×%s（定稿那張%s 268×%s，差 %s%%）",
   CARD_W.toFixed(1), nat.ch.toFixed(1), NOHERO ? "扣掉頭圖" : "", REF_H.toFixed(1),
   (off * 100).toFixed(1));
-console.log("頭像 %spx・底緣離卡片上緣 %spx・左緣比卡片左 %spx（截圖量到 %s／%s／%s）",
+console.log("頭像 %spx・底緣離卡片上緣 %spx・左緣比卡片左 %spx（聊天室截圖 %s／%s／%s）",
   nat.av.toFixed(1), nat.gap.toFixed(1), (-nat.dx).toFixed(1), AV, AV_GAP, -AV_DX);
+console.log("圓裡那顆標誌 佔圓寬 %s・比圓心低 %s 個直徑（主頁截圖 %s／%s）",
+  nat.mk.toFixed(3), nat.mdy.toFixed(3), AV_MARK, AV_MARK_DY);
 if (Math.abs(nat.av - AV) > 0.5 || Math.abs(nat.gap - AV_GAP) > 0.5
   || Math.abs(nat.dx - AV_DX) > 0.5) throw new Error("頭像的位置或大小和量到的對不上");
+if (Math.abs(nat.mk - AV_MARK) > 0.01) throw new Error("圓裡那顆標誌的大小和量到的對不上");
+if (Math.abs(nat.mdy - AV_MARK_DY) > 0.01) throw new Error("標誌又被擺回垂直置中了");
 if (nat.gap < 0) throw new Error("頭像壓在卡片上了");
 if (off > 0.08) throw new Error("卡片高度和定稿那張差太多，先去看一眼規格頁");
 
