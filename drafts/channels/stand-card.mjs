@@ -63,6 +63,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { build as buildQR, PLATE_MODE } from "./qr-brand.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..");
@@ -132,6 +133,19 @@ export const LIW = +(LIH * LOGO.比 + LIGAP * 2).toFixed(4);   /* 標誌佔抬�
  * ⚠⚠ 它和照片上那一顆**編碼的是同一個字串**（廠商的短網址），所以這是換長相不是換流程。 */
 export const QRSRC = join(ROOT, "drafts", "channels", "qr", "fangren-line-qr.svg");
 export const QRFILE = "qr-line.svg";
+
+/* ⚠⚠⚠ 底板那把尺（2026-09-16「QRcode 周圍有淡綠色的邊可以拿掉嗎」）——
+ *   定案那一格畫的就是 `qr-line.svg` 本人（＝ drafts/channels/qr/ 那一份），
+ *   落選那兩格另外產成檔案。**三格都是真的碼，沒有一格是用 CSS 畫的** ——
+ *   用 CSS 模擬出來的「很像的碼」看起來完全正常，只有拿解碼器掃才知道掃不掃得出來。 */
+export const QRPLATE = S.QR.底板.案.map((a) => ({
+  ...a, 定案: a.碼 === S.QR.底板.預設,
+  檔: a.碼 === S.QR.底板.預設 ? QRFILE : `qr-plate-${a.碼}.svg`,
+}));
+if (S.QR.底板.預設 !== PLATE_MODE)
+  throw new Error(`stand-card.json 的底板預設（${S.QR.底板.預設}）和 qr-brand.mjs 的 PLATE_MODE（${PLATE_MODE}）對不起來`);
+export const QRVAR = () => QRPLATE.filter((a) => !a.定案)
+  .map((a) => [a.檔, buildQR({ plate: a.碼 }).line.svg]);
 
 /* ⚠⚠ 切的時候連 LINE 左右那**一個**半形空白一起切掉 —— 它們現在是標誌的左右留白。
  *   算字級與畫出來吃的是同一條切法，分家的話抬頭會算出一個放得下、畫出去卻溢出的字級。 */
@@ -503,6 +517,14 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
 .ok{color:var(--green)}
 ol.ask{padding-left:1.4em;font-size:.93rem}
 ol.ask li{margin:.7em 0}
+/* ⚠⚠ 底板那把尺的三格：**擺的是真的碼**（定案那一格就是卡上那一個檔案本人）。
+   ⚠ 底一定要白 —— 頁面的底是紙色，而落選那兩格的靜區是透明的，擺在紙色上看到的
+   就不是它印在白卡上的樣子。 */
+.qrcmp{display:flex;flex-wrap:wrap;gap:16px;margin:.9em 0 0}
+.qrcmp figure{flex:1 1 170px;max-width:220px;margin:0}
+.qrcmp img{width:100%;height:auto;display:block;background:#fff;border-radius:6px}
+.qrcmp figcaption{font-size:.84rem;margin-top:.45em}
+.qrcmp figcaption span{display:block;color:var(--soft);margin-top:.2em}
 .foot{margin-top:2.6em;padding-top:1em;border-top:1px solid var(--rule);
   font-size:.82rem;color:var(--soft)}
 @media (max-width:719px){:root{--cw:min(300px,88vw)}.one{max-width:none}}
@@ -529,6 +551,11 @@ ${para(CARD._量法)}
 
 <p class="h2">那個 QR 掃出來是什麼<span class="t">拿解碼器掃過，不是用眼睛看的</span></p>
 <div class="box"><p><code>${esc(S.QR.內容)}</code></p>${para(S.QR.說明)}</div>
+
+<p class="h2">QR 周圍那圈淡綠色的邊<span class="t">那是靜區被上了色，不是外框</span></p>
+<div class="box">${para(S.QR.底板.說明)}</div>
+<div class="qrcmp">${QRPLATE.map((a) => `<figure><img src="${a.檔}" width="45" height="45" alt="${esc(a.標籤)}">
+<figcaption><b>${esc(a.標籤)}${a.定案 ? "・定案" : ""}</b><span>${esc(a.註)}</span></figcaption></figure>`).join("")}</div>
 
 <p class="h2">為什麼要改<span class="t">六件，每一件都有出處</span></p>
 ${拆解}
@@ -625,12 +652,18 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const q = join(OUT, QRFILE);
     if (!existsSync(q)) throw new Error("preview/line-stand/" + QRFILE + " 不見了 —— 跑一次產生器把它搬過來");
     if (!readFileSync(q).equals(readFileSync(QRSRC))) throw new Error(QRFILE + " 和 drafts/channels/qr/ 那一份對不起來 —— 改要改 qr-brand.mjs 再重跑，不要改 preview 底下那一份");
-    console.log("✓ 逐位相同（含那顆 QR）");
+    for (const [f2, svg] of QRVAR()) {
+      const p2 = join(OUT, f2);
+      if (!existsSync(p2)) throw new Error("preview/line-stand/" + f2 + " 不見了 —— 跑一次產生器");
+      if (readFileSync(p2, "utf8") !== svg) throw new Error(f2 + " 和 qr-brand.mjs 現算的對不起來（底板那把尺）");
+    }
+    console.log("✓ 逐位相同（含那顆 QR 與底板那把尺的兩格）");
   } else {
     mkdirSync(OUT, { recursive: true });
     writeFileSync(f, HTML);
     writeFileSync(join(OUT, QRFILE), readFileSync(QRSRC));
-    console.log("寫出 preview/line-stand/index.html ＋ " + QRFILE);
+    for (const [f2, svg] of QRVAR()) writeFileSync(join(OUT, f2), svg);
+    console.log("寫出 preview/line-stand/index.html ＋ " + [QRFILE, ...QRVAR().map((x) => x[0])].join(" ＋ "));
   }
   const pad = (s, n) => String(s) + " ".repeat(Math.max(0, n - cw(String(s)) * 2));
   console.log("");
@@ -675,7 +708,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const vb = +(readFileSync(QRSRC, "utf8").match(/viewBox="0 0 (\d+(?:\.\d+)?) /) ?? [])[1];
     if (!vb) throw new Error("讀不到那顆 QR 的 viewBox");
     const Q = 4;   /* 靜區四格（qr-brand.mjs 的 CFG.Q）*/
-    console.log(`     案那幾張擺的是 ${QRFILE}（逐位元組 ＝ drafts/channels/qr/ 那一份，只搬不畫）` +
+    console.log(`     底板 ${S.QR.底板.預設}（${QRPLATE.find((a) => a.定案).標籤}）、落選 ${QRPLATE.filter((a) => !a.定案).map((a) => a.碼).join("／")}　` +
+      `案那幾張擺的是 ${QRFILE}（逐位元組 ＝ drafts/channels/qr/ 那一份，只搬不畫）` +
       `　框 ${(CARD.QR佔卡寬 * 100).toFixed(0)}% 卡寬 ＝ ${box.toFixed(1)} mm、` +
       `碼本身 ${(box * (vb - Q * 2) / vb).toFixed(1)} mm（下限 15）` +
       `　現況那一張仍然是灰色佔位方塊（它是照片的對照）`);

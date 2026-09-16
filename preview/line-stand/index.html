@@ -89,6 +89,14 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
 .ok{color:var(--green)}
 ol.ask{padding-left:1.4em;font-size:.93rem}
 ol.ask li{margin:.7em 0}
+/* ⚠⚠ 底板那把尺的三格：**擺的是真的碼**（定案那一格就是卡上那一個檔案本人）。
+   ⚠ 底一定要白 —— 頁面的底是紙色，而落選那兩格的靜區是透明的，擺在紙色上看到的
+   就不是它印在白卡上的樣子。 */
+.qrcmp{display:flex;flex-wrap:wrap;gap:16px;margin:.9em 0 0}
+.qrcmp figure{flex:1 1 170px;max-width:220px;margin:0}
+.qrcmp img{width:100%;height:auto;display:block;background:#fff;border-radius:6px}
+.qrcmp figcaption{font-size:.84rem;margin-top:.45em}
+.qrcmp figcaption span{display:block;color:var(--soft);margin-top:.2em}
 .foot{margin-top:2.6em;padding-top:1em;border-top:1px solid var(--rule);
   font-size:.82rem;color:var(--soft)}
 @media (max-width:719px){:root{--cw:min(300px,88vw)}.one{max-width:none}}
@@ -128,6 +136,14 @@ ol.ask li{margin:.7em 0}
 <p class="h2">那個 QR 掃出來是什麼<span class="t">拿解碼器掃過，不是用眼睛看的</span></p>
 <div class="box"><p><code>https://q.1talk.co/HQPRd</code></p><p>⚠⚠⚠ <b>那個 QR 不是 LINE 的加好友碼。</b> 解出來是廠商（1talk／AlleyPin）的短網址，不是 <code>line.me/R/ti/p/@445rpiiv</code>。所以「掃完會先加好友還是先驗證」是<b>廠商那條流程決定的，不是我們</b> —— 而它決定這張卡要寫一步還是兩步。</p>
 <p>解碼方法：兩張照片<b>各自解過一次</b>，用 opencv 的 QRCodeDetector，同一個字串（同一張照片再用 Otsu 二值化解第二次，也是同一個）。⚠ 這條線的規矩：QR 不可以用眼睛驗收，要真的拿解碼器掃過。⚠ 那個短網址會轉去哪裡<b>查不到</b> —— 這個容器連不出去（代理回 403）。</p></div>
+
+<p class="h2">QR 周圍那圈淡綠色的邊<span class="t">那是靜區被上了色，不是外框</span></p>
+<div class="box"><p>⚠⚠⚠ <b>2026-09-16 使用者：「QRcode 周圍有淡綠色的邊可以拿掉嗎」</b> —— 可以，已經拿掉了。那圈邊不是外框也不是陰影，是<b>靜區</b>（碼四周一定要留的四格空白）被連同碼面一起塗上了底板的顏色（<code>#c9d4cc</code> ＝ 品牌綠 28% 混進白）。所以「拿掉」＝ 底板只鋪在碼面上、靜區留白，<b>碼本身一個模組都沒有動</b>。</p>
+<p>⚠⚠ <b>底板不是裝飾，不可以整塊拿掉了事</b>：那些<b>淺色的牙是白的</b>，底板一拿掉它們就  和紙一樣白、整片花紋只剩深色那一半（Ⓝ3）。三格都掃得出來，但 Ⓝ3 是<b>另一種長相</b>，  不是「只是少一圈邊」。⚠ 靜區本身<b>一格都沒有收</b>（四格照舊）—— 收靜區會真的影響掃描，收顏色不會。⚠⚠⚠ 改的是 <code>qr-brand.mjs</code>，所以 <b><code>drafts/channels/qr/</code> 那兩顆成品（印刷與廠商用的  那一份）也跟著換了</b>，不只這張卡；網站那顆同一支產生器、同一個設定。⚠ 三格都在印刷尺寸（521px ＝ 44.1 mm @300dpi）上<b>真的拿 zxing 掃過</b>，  三格都讀回 <code>https://q.1talk.co/HQPRd</code>。</p></div>
+<div class="qrcmp"><figure><img src="qr-plate-full.svg" width="45" height="45" alt="Ⓝ1 靜區也上色">
+<figcaption><b>Ⓝ1 靜區也上色</b><span>2026-09-15 定案的樣子 —— 就是那圈淡綠色的邊。</span></figcaption></figure><figure><img src="qr-line.svg" width="45" height="45" alt="Ⓝ2 只有碼面上色">
+<figcaption><b>Ⓝ2 只有碼面上色・定案</b><span>邊不見了，花紋一個像素都沒變 —— 淺色的牙仍然靠底板才看得見。</span></figcaption></figure><figure><img src="qr-plate-none.svg" width="45" height="45" alt="Ⓝ3 整張不上色">
+<figcaption><b>Ⓝ3 整張不上色</b><span>⚠ 淺色那一半的牙跟著消失，只剩深色的點。掃得出來，但那是另一種長相。</span></figcaption></figure></div>
 
 <p class="h2">為什麼要改<span class="t">六件，每一件都有出處</span></p>
 <div class="it"><p class="t"><span class="n">1</span>三句的順序和實際的流程對不起來</p><p>「掃描後手機驗證、收到綁定成功通知，立即加入！」讀起來是「驗證完才加入」，可是這個帳號的招呼圖卡上還放著一顆「點這裡綁定」的按鈕 —— 那是為「已經加了好友、但還沒綁定」的人做的。<b>到底是幾步，我們自己也還沒有答案</b>（那個 QR 是廠商的短網址，見上面那一段）。⚠ 這一條要先有答案，四案的文字才定得下來：<b>診所拿一支沒加過的手機掃一次就知道</b>。</p></div>

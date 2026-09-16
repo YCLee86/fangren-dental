@@ -25,7 +25,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 底色, 墨色, CARD,
   切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm,
-  QRSRC, QRFILE } from "./stand-card.mjs";
+  QRSRC, QRFILE, QRPLATE, QRVAR } from "./stand-card.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..");
@@ -343,6 +343,24 @@ ok(/Ⓚ 顆數/.test(GEN) && /Ⓛ 間距/.test(GEN), "面板沒有印那兩把�
   ok(!/viewBox="0 0 45 45"/.test(GEN), "產生器裡自己畫了一份 QR —— 這一頁只准搬 drafts/channels/qr/ 那一份");
   /* ⚠⚠ 印出來太小就掃不到（那一輪訂的下限 1.5 cm），所以尺寸每次出圖都要印 */
   ok(/碼本身 \$\{/.test(GEN), "面板沒有印那顆碼畫出來多大（第 28 條 ④）");
+  /* ⚠⚠⚠ 底板那把尺（2026-09-16「周圍那圈淡綠色的邊」）：三格都要是**真的碼**
+   *   —— 用 CSS 或 <path> 模擬一顆「很像的」看起來完全正常，只有解碼器分得出來。
+   * ⚠ 定案那一格畫的就是 QRFILE 本人，落選那兩格要和 qr-brand.mjs 現算的逐位相同。
+   * ⚠⚠ 靜區一格都不可以收（收顏色不影響掃描，收格數會）。 */
+  ok(QRPLATE.length >= 3, `底板那把尺只剩 ${QRPLATE.length} 格`);
+  ok(QRPLATE.filter((a) => a.定案).length === 1, "底板那把尺沒有剛好一格是定案的");
+  ok(QRPLATE.find((a) => a.定案).檔 === QRFILE, "定案那一格擺的不是卡上那顆碼本人");
+  for (const a of QRPLATE) {
+    ok(new RegExp(`<img src="${a.檔}"`).test(H), `底板那把尺少了 ${a.標籤} 那一格`);
+    ok(!/定案/.test(a.標籤), `${a.標籤}：標籤自己不可以寫「定案」（那個記號是算出來的）`);
+  }
+  for (const [f2, svg] of QRVAR()) {
+    const p2 = join(DIR, f2);
+    ok(existsSync(p2), `${f2} 不見了 —— 跑一次產生器`);
+    if (existsSync(p2)) ok(readFileSync(p2, "utf8") === svg, `${f2} 和 qr-brand.mjs 現算的對不起來`);
+  }
+  ok(/\.qrcmp img\{[^}]*background:#fff/.test(GEN),
+    "底板那把尺的底不是白的 —— 落選那兩格的靜區是透明的，擺在紙色上看到的不是它印在白卡上的樣子");
   {
     const vb = +(readFileSync(QRSRC, "utf8").match(/viewBox="0 0 (\d+(?:\.\d+)?) /) ?? [])[1];
     ok(vb > 0, "讀不到那顆 QR 的 viewBox");
@@ -357,7 +375,7 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
 /* ⚠⚠ 2026-09-16 起多一個官方標誌檔，所以這一道從「只准有 index.html」放寬成
    **一張寫死的清單** —— 放寬成「大概可以」等於把它關掉（同 check-bind-prompt 那一輪）。 */
 {
-  const 准 = ["index.html", S.標誌.檔, QRFILE].sort();
+  const 准 = ["index.html", S.標誌.檔, QRFILE, ...QRVAR().map((x) => x[0])].sort();
   const 有 = readdirSync(DIR).sort();
   ok(有.join() === 准.join(), `這個資料夾裡只准有 ${准.join("、")}（現在有 ${有.join("、")}）`);
 }

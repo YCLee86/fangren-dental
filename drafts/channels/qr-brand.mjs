@@ -61,6 +61,10 @@ export const URL_WEB  = 'https://fangren.net';
 export const INK   = '#3f654a';   // 一般牙科的套色 ＝ 標誌的品牌真值
 export const LITE  = '#ffffff';
 export const PLATE = '#c9d4cc';   // 品牌綠 28% 混進白
+/* 底板鋪多大（2026-09-16 使用者：「QRcode 周圍有淡綠色的邊可以拿掉嗎」）——
+   那圈邊 ＝ **靜區**被連同碼面一起上了色。定案 'code'：底板只鋪在碼面上、靜區留白。
+   ⚠ 靜區一格都沒有收（收顏色不影響掃描，收格數會）。 */
+export const PLATE_MODE = 'code';
 /* ⚠ 28% 不是憑感覺挑的：特斯拉那一張量出來「底板 ÷ 淺色點」是 1.52，
    這一支在 8~36% 之間掃過都讀得到，1.52 落在 28%。 */
 
@@ -167,7 +171,12 @@ function pointer() {
 
 /* ---- 畫一顆碼 ---------------------------------------------------------- */
 let uid = 0;
-export function qr({ url, logo, logoSolid, logoVB, logoW, logoDX = 0, logoDY = 0, liteCells = [] }) {
+/* plate ＝ 底板畫多大（2026-09-16 使用者：「QRcode 周圍有淡綠色的邊可以拿掉嗎」）：
+     'full' 連靜區一起上色（2026-09-15 定案的樣子）／'code' 只有碼面、靜區留白／
+     'none' 整張不上色。
+   ⚠⚠ 底板不是裝飾：**淺色的那些牙是白的**，底板一拿掉它們就看不見了，
+     花紋只剩深色那一半（仍然掃得出來，但那是另一種長相，不是「只是少一圈邊」）。 */
+export function qr({ url, logo, logoSolid, logoVB, logoW, logoDX = 0, logoDY = 0, liteCells = [], plate = 'full' }) {
   const { n, g } = qrMatrix(url, CFG.ecl, -1, CFG.minVer);
   const Q = CFG.Q, N = n + Q * 2, U = `q${++uid}`;   // ⚠ 每顆碼自己的 id（檔頭第 ④ 條）
   const isFinder = (r, c) => (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
@@ -210,25 +219,28 @@ export function qr({ url, logo, logoSolid, logoVB, logoW, logoDX = 0, logoDY = 0
 
   return { n, N, mouth: +(logoW * VB[2] / logoVB[2]).toFixed(4),
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${N} ${N}">${defs}${mask}`
-      + `<rect width="${N}" height="${N}" fill="${PLATE}"/>`
+      + (plate === 'none' ? ''
+         : plate === 'code' ? `<rect x="${Q}" y="${Q}" width="${n}" height="${n}" fill="${PLATE}"/>`
+         : `<rect width="${N}" height="${N}" fill="${PLATE}"/>`)
       + `<g mask="url(#m${U})"><g>${light}</g><g fill="${INK}">${dark}</g></g>`
       + `<g transform="${T}" fill="${INK}" color="${INK}">${logo}</g></svg>` };
 }
 
 /* ---- 兩顆成品 ---------------------------------------------------------- */
-export function build() {
+export function build({ plate = PLATE_MODE } = {}) {
+  if (!['full', 'code', 'none'].includes(plate)) throw new Error('plate 只有 full／code／none：' + plate);
   const S = speakLine();
   /* ⚠⚠ 框線會把合成圖形的 viewBox 撐大，所以「佔碼面幾成」要跟著放大才能
      讓嘴維持同一個實際大小 —— 方向很容易寫反（寫反的話嘴會小 1.7%，
      而每一道守門都會過，只有把兩顆碼並排量才看得出來）。 */
   const wLine = +(COMPOSITE_W * S.vb[2] / S.vb0w).toFixed(4);
   const line = qr({ url: URL_LINE, logo: S.inner, logoSolid: S.solid, logoVB: S.vb,
-                    logoW: wLine, logoDX: COMPOSITE_DX, liteCells: TAIL_CELL });
+                    logoW: wLine, logoDX: COMPOSITE_DX, liteCells: TAIL_CELL, plate });
   /* 游標那一版同理（它自己的 viewBox 也被框線撐大過），所以式子和上面一模一樣 */
   const P = pointer();
   const web  = qr({ url: URL_WEB, logo: P.inner, logoSolid: P.solid, logoVB: P.vb,
                     logoW: +(COMPOSITE_W * P.vb[2] / S.vb0w).toFixed(4),
-                    logoDX: WEB_DX, logoDY: WEB_DY });
+                    logoDX: WEB_DX, logoDY: WEB_DY, plate });
   if (line.mouth !== web.mouth) throw new Error(`兩顆碼上的嘴不一樣大：${line.mouth} vs ${web.mouth}`);
   return { line, web };
 }
