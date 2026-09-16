@@ -418,9 +418,58 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
 /* ⚠⚠ 2026-09-16 起多一個官方標誌檔，所以這一道從「只准有 index.html」放寬成
    **一張寫死的清單** —— 放寬成「大概可以」等於把它關掉（同 check-bind-prompt 那一輪）。 */
 {
-  const 准 = ["index.html", S.標誌.檔, QRFILE].sort();
+  const 准 = ["index.html", S.標誌.檔, QRFILE, S.插圖.檔].sort();
   const 有 = readdirSync(DIR).sort();
   ok(有.join() === 准.join(), `這個資料夾裡只准有 ${准.join("、")}（現在有 ${有.join("、")}）`);
+}
+
+/* ── ⑦之二 人物插圖（2026-09-16）───────────────────────────────
+ * 使用者：「圖片畫好了　但這樣好像很難跟這個立牌結合欸?」——
+ * 量出來是**框不合不是圖不合**：原檔 16:9、上面留著 17.5% 的白，
+ * 而卡片上那一塊是 98 × 43.8 mm ＝ 比例 2.237，整張放進去爆框 10.9 mm。
+ * 裁到墨的框（2.091）就比那一塊瘦，變成**高度在卡**、畫出來 91.6 × 43.8。
+ * ⚠⚠ 這幾道擋的都是「改回去畫面完全正常、每一道尺寸守門都會過」的：
+ *   換成 cover（左右兩個人各被切掉一截）、拿掉 flex:1（圖把卡片撐開或縮成一條）、
+ *   以及**直接引用原檔**（比例一換就爆框，而 <img> 會靜靜地照 contain 縮小）。 */
+{
+  const [w, h] = S.插圖.裁成, [ow, oh] = S.插圖.原尺寸;
+  const 塊 = 餘裕mm(印的案.find((c) => c.id === "e"));
+  const 卡 = [...H.matchAll(/<div class="card[^"]*">[\s\S]*?\n<\/div>/g)].map((m) => m[0]);
+  ok(existsSync(join(DIR, S.插圖.檔)), `插圖 ${S.插圖.檔} 不在 —— 先跑 node drafts/channels/stand-illus-crop.mjs`);
+  ok(existsSync(join(ROOT, S.插圖.原檔)), `原檔 ${S.插圖.原檔} 不在版控裡 —— 換一版就沒有回去的路了`);
+  /* 真的去讀那個檔的長寬，不是信 JSON 寫的
+     ⚠ 檔不在就跳過這一段 —— 上面那一道已經說過人話了，再讓 readFileSync 丟一個
+       ENOENT 出來，守門失敗的樣子會比不檢查還難懂（同第 ① 道那條）。 */
+  if (existsSync(join(DIR, S.插圖.檔))) {
+    const b = readFileSync(join(DIR, S.插圖.檔));
+    let i = 2, W = 0, Hh = 0;
+    while (i < b.length) {
+      if (b[i] !== 0xff) { i++; continue; }
+      const m = b[i + 1];
+      if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) { Hh = b.readUInt16BE(i + 5); W = b.readUInt16BE(i + 7); break; }
+      i += 2 + b.readUInt16BE(i + 2);
+    }
+    ok(W === w && Hh === h, `${S.插圖.檔} 實際是 ${W}×${Hh}，資料寫的是 ${w}×${h}`);
+  }
+  ok(w / h <= CARD.寬mm / 塊 + 1e-9,
+    `插圖比例 ${(w / h).toFixed(3)} 比那一塊（${(CARD.寬mm / 塊).toFixed(3)}）還寬 —— 那就變成寬度在卡、人物比這一塊給得起的還小`);
+  /* 裁掉的是上下那兩條白，所以裁完一定比原檔**寬**（比例變大） */
+  ok(w / h > ow / oh + 1e-9,
+    "插圖沒有裁過（比例還是原檔的）—— 整張 16:9 放進那一塊會爆框 10.9 mm");
+  ok(h * 25.4 / 塊 >= 300, `插圖印出來只有 ${(h * 25.4 / 塊).toFixed(0)} dpi`);
+  ok(/\.card \.illus\{flex:1 1 auto;min-height:0;width:100%;object-fit:contain/.test(GEN),
+    "插圖那一條 CSS 被動過 —— flex:1 ／ min-height:0 ／ object-fit:contain 三個少一個都會出事");
+  ok(!/\.illus\{[^}]*object-fit:cover/.test(GEN), "插圖改成 cover 了 —— 左右兩個人會各被切掉一截，而畫面看起來很正常");
+  for (const c of 卡)
+    ok(new RegExp(`<img class="illus" src="${S.插圖.檔}" width="${w}" height="${h}"`).test(c),
+      "案卡上少了插圖，或它的 width／height 和實檔對不起來");
+  for (const c of 卡)
+    ok(/<img class="illus"[^>]*alt="[^"]{8,}"/.test(c), "插圖少了 alt");
+  /* ⚠⚠ 現況那一張 2026-09-16 起不畫在頁上了，所以掃頁面等於沒掃 —— 要守的是
+     **產生器裡那個閘門**（`now ? "" : …`）：拿掉它不會讓任何一道版面守門翻臉，
+     但那條回去的路一走回來，照片的逐字對照上就會多一張我們自己的插圖。 */
+  ok(/\$\{now \? "" : `<img class="illus"/.test(GEN),
+    "card() 少了「現況那一張不畫插圖」那個閘門 —— 它是照片的逐字對照");
 }
 
 /* ── ⑥之六 兩把間距的尺（2026-09-16 稍晚）─────────────────────────

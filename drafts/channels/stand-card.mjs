@@ -325,6 +325,17 @@ const bandSvg = (B = BAND) => {
 
 /* ⚠ 兩把尺（抬頭到主文、標誌左右留白）可以逐張覆寫 —— 尺上那幾格就是這樣畫的。
    ⚠⚠ 覆寫留白**一定要連字級一起重算**（hdOf 吃同一個比例），不然那一行的寬度會算錯。 */
+/* 人物插圖（2026-09-16，v1 草稿）—— `node drafts/channels/stand-illus-crop.mjs` 從
+ * `drafts/stand-card-illus-v1-src.jpg` 裁出來的。
+ * ⚠⚠⚠ **裁的是墨的框，不是整張 16:9** —— 原檔上下各留著大片白（提示詞要的），
+ *   整張放進來照寬度縮會高 54.7 mm、爆掉 10.9 mm；裁到墨之後是 1784×853 ＝ 比例 2.091，
+ *   在這一塊（98 × 43.8 mm）裡畫出來 **91.6 × 43.8 mm**，左右各餘 3.2 mm。
+ * ⚠⚠ 所以它是**高度在卡**：`object-fit: contain` ＋ `flex:1`，那一塊有多高就畫多高，
+ *   而那一塊是 `疊高()` 剩下來的 —— 上面的間距一動，這張圖就跟著變大或變小。
+ * ⚠ 現況那一張不畫（它是照片的逐字對照）。 */
+const ILLUS = "illus.jpg";
+const ILLUSW = 1784, ILLUSH = 853;
+
 const card = (c, now = false, o = {}) => {
   const { fs } = fsOf(c);
   const hd = hdOf(c, o.留白 ?? 留白比);
@@ -341,6 +352,7 @@ const card = (c, now = false, o = {}) => {
     ? `<div class="qr ph"><span>QR</span></div>`
     : `<img class="qr" src="${QRFILE}" width="45" height="45" alt="芳仁牙醫診所 LINE 官方帳號的 QR code">`}
   ${c.QR下 ? `<div class="cue lo" style="font-size:${f(0.036)}">${esc(c.QR下)}</div>` : ""}
+  ${now ? "" : `<img class="illus" src="${ILLUS}" width="${ILLUSW}" height="${ILLUSH}" alt="四位芳仁牙醫的醫事人員，一位指著上方喊、一位雙手展示、一位舉著手機對準、一位低頭看手機">`}
   ${now
     ? `<div class="band" style="font-size:${f(0.04)}">${esc(c.帶子 ?? "")}</div>`
     : `<div class="band logos">${bandSvg()}</div>`}
@@ -388,6 +400,7 @@ const 案 = 印的案.map((c) => `<div class="one">
 <p class="lb">${esc(c.標籤)}</p>
 ${card(c)}
 <div class="note">${para(c.註)}</div>
+<div class="note">${para(S.插圖.說明)}</div>
 </div>`).join("\n");
 
 
@@ -452,6 +465,11 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .card .qr.ph{background:repeating-linear-gradient(45deg,#dcdcdc 0 6px,#ececec 6px 12px);
   display:flex;align-items:center;justify-content:center}
 .card .qr.ph span{font-size:.72rem;color:#8a8a8a;letter-spacing:.1em}
+/* 人物插圖：**QR 底下到帶子剩多少就畫多高**（flex:1 ＋ min-height:0），
+   所以它不會把卡片撐開，也不會動到帶子的位置（帶子的 margin-top:auto 因此歸零）。
+   ⚠⚠ 一定要 object-fit:contain —— 這張圖比那一塊瘦（2.091 vs 2.237），
+   cover 會把左右兩個人各切掉一截，而且**畫面看起來很正常**。 */
+.card .illus{flex:1 1 auto;min-height:0;width:100%;object-fit:contain;display:block}
 .card .band{margin:auto calc(var(--pad) * -1) 0;width:var(--cw);padding:calc(var(--cw) * .026) 0;
   background:#3c4657;color:#fff;letter-spacing:.03em}
 .card .band.empty{background:transparent;border-top:1px dashed #d5d5d5;color:transparent}
@@ -557,6 +575,14 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.log(`     Ⓛ 間距 ${S.帶子.間距案.map((k) => { const b = 帶(undefined, k.值); return `${k.值}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在 ${BAND.間距}）`);
   }
   console.log("");
+  {
+    /* 人物插圖：那一塊剩多少 → 這張圖畫出來多大。⚠ 兩個數字都現算，
+       上面的間距一動、或換一張比例不同的圖，這裡就要跟著變。 */
+    const [w, h] = S.插圖.裁成, [ow, oh] = S.插圖.原尺寸, 塊 = 餘裕mm(尺卡);
+    console.log(`人物插圖 ${S.插圖.檔}　原檔 ${ow}×${oh}（比例 ${(ow/oh).toFixed(3)}）→ 裁到墨的框 ${w}×${h}（比例 ${(w/h).toFixed(3)}）`);
+    console.log(`     那一塊 ${CARD.寬mm} × ${塊} mm（比例 ${(CARD.寬mm/塊).toFixed(3)}）→ 高度在卡，畫出來 ${(w/h*塊).toFixed(1)} × ${塊} mm・左右各餘 ${((CARD.寬mm - w/h*塊)/2).toFixed(1)} mm・${(h*25.4/塊).toFixed(0)} dpi`);
+    console.log(`     ⚠ 整張 16:9 直接放：照寬度縮會高 ${(CARD.寬mm/(ow/oh)).toFixed(1)} mm ＝ 爆框 ${(CARD.寬mm/(ow/oh)-塊).toFixed(1)} mm`);
+  }
   console.log(`卡片 ${CARD.寬mm} mm 寬・比例 ${CARD.比例}（${Math.round(CARD.寬mm * CARD.比例)} mm 高）—— 2026-09-16 拿尺貼著現況那張量過 ≈ 97×146，差 1%`);
   console.log(`QR ＝ ${S.QR.內容}（兩張照片各自解過一次；卡上那顆新的碼編的是同一個字串）`);
   /* ⚠ 第九節第 28 條 ④：換了一顆真的碼上去，它畫出來多大每次都要印 —— 印出來太小就掃不到。 */
