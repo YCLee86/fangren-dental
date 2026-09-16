@@ -145,23 +145,27 @@ export const redOf = (c) => {
  *   上面收多少，QR 底下到帶子之間就多多少 —— 那正好是要畫人物插圖的那一塊。
  *   這裡把整疊算出來，守門會拿瀏覽器量一次去對（算錯的話那一道會亮）。 */
 export const BDGAP = CARD.抬頭到主文;
+/* 主文段與段之間（`.bd p` 的上下外距，em）—— 2026-09-16 開的第二把尺。
+ * ⚠⚠ 它同時是「抬頭到主文」那一段的第二截（第一行段落自己的上外距），
+ *   所以收這一把，抬頭那一段也會跟著收一點點 —— 兩把尺不是獨立的。 */
+export const PGAP = CARD.段距;
 const 帶高 = () => CARD.版心 * BAND.高 / BAND.總寬;
-export const 疊高 = (c, M = BDGAP) => {
+export const 疊高 = (c, M = BDGAP, g = PGAP) => {
   const { fs } = fsOf(c), hd = hdOf(c), n = c.主文.length;
-  const bd = M + 0.28 * fs + n * 1.5 * fs + (n - 1) * 0.28 * fs + 0.28 * fs;
+  const bd = M + g * fs + n * 1.5 * fs + (n - 1) * g * fs + g * fs;
   return 0.06 + 1.5 * hd.fs + bd
     + (c.QR上 ? 0.07 + 1.5 * 0.038 : 0) + 0.04 + CARD.QR佔卡寬
     + (c.QR下 ? 0.03 + 1.5 * 0.036 : 0) + 0.035 + 帶高() + 0.04;
 };
 /* QR 底下那一行到帶子之間還剩多少 —— 人物插圖要畫在這裡 */
-export const 餘裕mm = (c, M = BDGAP) => +((CARD.比例 - 疊高(c, M)) * CARD.寬mm).toFixed(1);
+export const 餘裕mm = (c, M = BDGAP, g = PGAP) => +((CARD.比例 - 疊高(c, M, g)) * CARD.寬mm).toFixed(1);
 /* 抬頭的字面框下緣 → 第一行主文的字面框上緣（行高 1.5，所以上下各半行距 .25em） */
-export const 抬頭到主文mm = (c, M = BDGAP) => {
+export const 抬頭到主文mm = (c, M = BDGAP, g = PGAP) => {
   const { fs } = fsOf(c), hd = hdOf(c);
-  return +((M + 0.28 * fs + 0.25 * hd.fs + 0.25 * fs) * CARD.寬mm).toFixed(1);
+  return +((M + g * fs + 0.25 * hd.fs + 0.25 * fs) * CARD.寬mm).toFixed(1);
 };
 /* 主文行與行之間的同一個量（合併後的 .28em ＋ 上下各半行距） */
-export const 行距mm = (c) => +((0.28 + 0.5) * fsOf(c).fs * CARD.寬mm).toFixed(1);
+export const 行距mm = (c, g = PGAP) => +((g + 0.5) * fsOf(c).fs * CARD.寬mm).toFixed(1);
 
 /* ── 面板的數字（算的，不是量的） ───────────────────────────────── */
 export const rows = [{ 標籤: "現況（廠商那一版）", ...S.現況, id: "now" }, ...S.案].map((c) => {
@@ -282,6 +286,7 @@ const card = (c, now = false, 色 = null, o = {}) => {
   const hd = hdOf(c, o.留白 ?? 留白比);
   const f = (k) => `calc(var(--cw) * ${k})`;
   const st = [o.間距 != null ? `--bd-gap:${f(o.間距)}` : "",
+    o.段距 != null ? `--p-gap:${o.段距}em` : "",
     o.留白 != null ? `--li-gap:${LIGAPOF(o.留白)}em` : ""].filter(Boolean).join(";");
   return `<div class="card${now ? " now" : ""}${o.尺 ? " sc" : ""}"${st ? ` style="${st}"` : ""}>
   <div class="hd" style="font-size:${f(hd.fs.toFixed(4))}">${now ? esc(c.抬頭) : mark(c.抬頭)}</div>
@@ -303,16 +308,44 @@ const 尺卡 = S.案.find((c) => c.id === "e");
 /* ⚠⚠ 案數現算，不可以寫死「四案」—— 2026-09-16 拿掉四案之後，寫死的那個詞會靜靜地說謊
  *   （同第五十三、五十四節那條：一個「第 N 個」或「共 N 件」的數字，要嘛不寫，要嘛現算）。 */
 const 案數詞 = "零一兩三四五六七八九"[S.案.length] ?? String(S.案.length);
-/* ⚠⚠ 抬頭到主文那把尺 2026-09-16 定案（Ⓗ4），**收成寫死的值、從頁面上拿掉** ——
- *   但四格量出來的東西要留著（同 50-22：尺可以收，它量出來的數字不可以跟著消失）。 */
-const 尺間距 = `<table><thead><tr><th>　</th><th>上外距</th><th>抬頭到主文</th>
+/* ⚠⚠ 抬頭到主文那把尺 2026-09-16 上午定案（Ⓗ4）、收成一張表，**同一天稍晚又打開了**
+ *   （使用者：「感覺離最上段還有不少空間」）—— 表上多了三格（Ⓗ5～Ⓗ7），
+ *   而且**比預設緊的那幾格重新畫成真的卡片**：間距這種東西並排才比得出來。
+ * ⚠⚠⚠ 哪幾格要畫成卡是**算的不是列的**（`值 <= 預設`），插一格不必回來改這裡。
+ * ⚠ 每一格的數字都現算，而且**兩把尺會互相牽動**：段距一改，這張表整欄會跟著動。 */
+const 尺H格 = CARD.抬頭到主文案.filter((k) => k.值 <= BDGAP);
+const 記H = (k) => "Ⓗ" + (k.id === "now" ? "1" : k.id[1]);
+const 記J = (k) => "Ⓙ" + (k.id === "now" ? "1" : k.id[1]);
+const 尺卡片 = (格, 記, o) => `<div class="cards">${格.map((k) => `<div class="one sc">
+<p class="lb">${記(k)} ${esc(k.標籤)}</p>
+${card(尺卡, false, null, { ...o(k), 尺: true })}
+</div>`).join("\n")}</div>`;
+
+const 尺間距 = 尺卡片(尺H格, 記H, (k) => ({ 間距: k.值 })) +
+`<table><thead><tr><th>　</th><th>上外距</th><th>抬頭到主文</th>
 <th>÷ 主文行距</th><th>QR 底下到帶子</th></tr></thead><tbody>${
   CARD.抬頭到主文案.map((k) => {
     const 抬 = 抬頭到主文mm(尺卡, k.值), 行 = 行距mm(尺卡), 定 = k.值 === BDGAP;
     /* ⚠ 淡掉的是「現況」那一列（對照用的），不是定案那一列 —— 兩張表要同一個規矩 */
-    return `<tr${k.id === "now" ? ' class="nowr"' : ""}><th>Ⓗ${k.id === "now" ? "1" : k.id[1]} ${esc(k.標籤)}${定 ? "・定案" : ""}</th>
-<td>卡寬 ${(k.值 * 100).toFixed(1)}%</td><td>${抬} mm</td><td>${(抬 / 行).toFixed(1)} 倍</td>
+    return `<tr${k.id === "now" ? ' class="nowr"' : ""}><th>${記H(k)} ${esc(k.標籤)}${定 ? "・現在的預設" : ""}</th>
+<td>卡寬 ${(k.值 * 100).toFixed(1)}%</td><td>${抬} mm</td>
+<td class="${抬 / 行 < 1 ? "bad" : ""}">${(抬 / 行).toFixed(1)} 倍${抬 / 行 < 1 ? "　⚠ 比主文行距還窄" : ""}</td>
 <td>${餘裕mm(尺卡, k.值)} mm</td></tr>`;
+  }).join("\n")}</tbody></table>`;
+
+/* ⚠⚠⚠ 第二把尺（2026-09-16）：主文段與段之間。
+ *   ⚠ 它和上面那一把**不是獨立的** —— 抬頭到主文那一段的中間那一截就是它，
+ *     所以這張表的「抬頭到主文」那一欄會跟著動，而且**分母（行距）掉得更快**：
+ *     收段距會讓抬頭那一段讀起來**更遠**，那正是他同一句話裡講到兩件事的原因。 */
+const 尺段距 = 尺卡片(CARD.段距案, 記J, (k) => ({ 段距: k.值 })) +
+`<table><thead><tr><th>　</th><th>段落上下外距</th><th>主文行距</th>
+<th>抬頭到主文</th><th>÷ 主文行距</th><th>QR 底下到帶子</th></tr></thead><tbody>${
+  CARD.段距案.map((k) => {
+    const 行 = 行距mm(尺卡, k.值), 抬 = 抬頭到主文mm(尺卡, BDGAP, k.值), 定 = k.值 === PGAP;
+    return `<tr${k.id === "now" ? ' class="nowr"' : ""}><th>${記J(k)} ${esc(k.標籤)}${定 ? "・現在的預設" : ""}</th>
+<td>${k.值} em</td><td>${行} mm</td><td>${抬} mm</td>
+<td class="${抬 / 行 < 1 ? "bad" : ""}">${(抬 / 行).toFixed(1)} 倍</td>
+<td>${餘裕mm(尺卡, BDGAP, k.值)} mm</td></tr>`;
   }).join("\n")}</tbody></table>`;
 
 /* ⚠⚠ 標誌左右的留白 2026-09-16 定案（Ⓘ4 ＝ 12%），**收成寫死的值、對照帶從頁面上拿掉** ——
@@ -362,7 +395,7 @@ const HTML = `<!doctype html>
 <title>櫃檯的小立牌　文字改版（${案數詞}案）</title>
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
-  --brick:#8c3b32;--green:#3f654a;--cw:300px;--hd-ls:${HDLS}em;--li-h:${LIH}em;--li-gap:${LIGAP}em;--bd-gap:calc(var(--cw) * ${BDGAP})}
+  --brick:#8c3b32;--green:#3f654a;--cw:300px;--hd-ls:${HDLS}em;--li-h:${LIH}em;--li-gap:${LIGAP}em;--bd-gap:calc(var(--cw) * ${BDGAP});--p-gap:${PGAP}em}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -402,7 +435,7 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 /* ⚠⚠ 抬頭到主文那一段有**兩段**：這個上外距，加上第一行段落自己的 .28em ——
    .bd 是 flex 項目，兩段不會合併。要收間距兩段都要算進去。 */
 .card .bd{margin-top:var(--bd-gap);width:100%}
-.card .bd p{margin:.28em 0;white-space:nowrap}
+.card .bd p{margin:var(--p-gap) 0;white-space:nowrap}
 .card .cue{margin-top:calc(var(--cw) * .07);color:#555}
 .card .cue.lo{margin-top:calc(var(--cw) * .03)}
 .card .qr{width:calc(var(--cw) * ${CARD.QR佔卡寬});aspect-ratio:1;margin-top:calc(var(--cw) * .04);
@@ -483,6 +516,10 @@ ${拆解}
 <div class="box">${para(CARD.抬頭到主文_說明)}</div>
 ${尺間距}
 
+<p class="h2">主文每段之間<span class="t">和上面那一把互相牽動，不是兩件各自獨立的事</span></p>
+<div class="box">${para(CARD.段距_說明)}</div>
+${尺段距}
+
 <p class="h2">標誌左右的留白<span class="t">他寫的那兩個半形空白，換成一個算得出來的規格</span></p>
 <div class="box">${para(S.標誌.留白_說明)}</div>
 ${尺留白}
@@ -556,6 +593,15 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const h = hdOf(c);
     console.log(`抬頭「${c.抬頭}」${(h.fs * CARD.寬mm).toFixed(2)} mm・佔卡寬 ${(h.寬 * h.fs * 100).toFixed(1)}%` +
       (h.標誌 ? `（含 ${h.標誌} 顆標誌，一顆 ${LIW} 個字 ＝ ${(LIH * h.fs * CARD.寬mm).toFixed(1)} mm 高、左右各留 ${(留白比 * 100).toFixed(0)}%${留白比 < 規範留白 ? `　⚠ 低於規範的 ${(規範留白 * 100).toFixed(0)}%（使用者挑的）` : ""}）` : `（沒有標誌）`));
+  }
+  console.log("");
+  {
+    const 行 = 行距mm(尺卡), 抬 = 抬頭到主文mm(尺卡);
+    console.log(`間距（畫在 ${尺卡.標籤} 上）　抬頭到主文 ${抬} mm・主文行距 ${行} mm ＝ ${(抬 / 行).toFixed(2)} 倍` +
+      `　QR 底下到帶子還剩 ${餘裕mm(尺卡)} mm`);
+    console.log(`     Ⓗ 抬頭到主文 ${CARD.抬頭到主文案.map((k) => `${(k.值 * 100).toFixed(1)}%→${抬頭到主文mm(尺卡, k.值)}`).join("　")}（mm，現在 ${(BDGAP * 100).toFixed(1)}%）`);
+    console.log(`     Ⓙ 每段之間　 ${CARD.段距案.map((k) => `${k.值}em→${行距mm(尺卡, k.值)}`).join("　")}（mm，現在 ${PGAP}em）`);
+    console.log(`     ⚠ 兩把互相牽動：段距一收，抬頭那一段也收一點、但行距收更多 —— 比值反而變大`);
   }
   console.log("");
   console.log(`標誌 ${S.標誌.檔} ${LOGO.寬}×${LOGO.高}（長寬比 ${LOGO.比}）—— 官方授權檔，只等比例縮放`);
