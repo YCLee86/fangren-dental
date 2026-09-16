@@ -37,12 +37,33 @@
     { cx: 339, cy: 118, s: '永樂街', dir: 'ns' },
     { cx: 471, cy: 326, s: '永安路', dir: 'ns' }
   ];
-  /* 巷名。⚠ 給的一樣是「字面中心要落在哪裡」：19 巷那條帶是 y 219~236，中心 227.5。 */
+  /* 巷名。⚠ 給的一樣是「字面中心要落在哪裡」：19 巷那條帶是 y 219~236，中心 227.5；
+     33 巷那條帶是 y 321~333，中心 327。
+     ⚠⚠ 2026-09-16：這張表**改成照名字對，不再照順序**。原本是
+       LANES[i] ↔ svg.querySelectorAll('.lbl-xs')[i]，而 index.html 2026-09-15
+       在 19 巷與 14 巷**中間**插了一條「平和街33巷」—— 於是整組往後位移一格：
+       33 巷被當成 14 巷（跟著 off 藏起來，看不出異狀），而 14 巷落在表外，
+       **既沒有轉正也沒有被藏起來**，就以站上那張圖的角度斜躺在 P2 與路線上。
+       ⚠ 症狀是「多一條歪掉的巷名」，每一道尺寸守門都會過（那是一個合法的元素）。
+       通則：這一頁是 index.html 的算繪，凡是「按順序配對」的地方，
+       站上多一個同類的元素就會靜靜地錯位 —— 一律照名字配，配不到就出聲。 */
   var LANES = [
     { cx: 176, cy: 227.5, s: '平和街19巷', dir: 'ew' },
+    /* ⚠ 33 巷與 14 巷都不畫，理由同一條（見下面 paint() 裡那一段）：
+       它們和三個停車場、那條路線都無關，標了只是雜訊。
+       座標留著 —— 哪天要放出來，把 off 拿掉就好。 */
+    { cx: 176, cy: 327,   s: '平和街33巷', dir: 'ew', off: true },
     { cx: 402, cy: 188,   s: '永安路14巷', dir: 'ew', off: true }
   ];
   var lblXs = svg.querySelectorAll('.lbl-xs');
+  /* 名字 → 那一條的設定。⚠ 對不到就是 index.html 又多了一條巷名，
+     那時要回來決定它在這張海報上要不要畫，**不要讓它自己漏出去**。 */
+  function laneOf(t) {
+    var s = (t.textContent || '').replace(/\s+/g, '');
+    for (var i = 0; i < LANES.length; i++) if (LANES[i].s === s) return LANES[i];
+    throw new Error('門口那張圖：index.html 多了一條沒有登記的巷名「' + s
+      + '」—— 請到 drafts/door-notice/script.js 的 LANES 決定它畫不畫');
+  }
   /* 停車場的代號與色塊中心（使用者指定：P1 壹車房、P2 合廷、P3 永樂站）。 */
   var LOTS = [
     { lot: 'a', tag: 'P3', cx: 235,   cy: 188 },
@@ -230,9 +251,10 @@
 
     /* 巷名：只留「平和街19巷」（2026-08-21 使用者指定要標）。
        ⚠ 它是診所那一格的北緣，看的人靠它確認自己在哪一格。
-       永安路14巷沒有留 —— 那一條和三個停車場、路線都無關，標了只是雜訊。 */
-    LANES.forEach(function (st, i) {
-      var t = lblXs[i]; if (!t || st.off) return;
+       永安路14巷與平和街33巷都沒有留 —— 那兩條和三個停車場、路線都無關，
+       標了只是雜訊（33 巷是 2026-09-15 站上新補的，這裡照同一條規則不畫）。 */
+    Array.prototype.forEach.call(lblXs, function (t) {
+      var st = laneOf(t); if (st.off) return;
       /* ⚠ 巷名比街名小兩階（使用者：「整個巷名的字級再小一點」）——
          它是輔助資訊，和街名一樣大會搶戲。站上是 16，海報上收成 12.5。 */
       var fs = LANE_FS;
@@ -385,8 +407,8 @@
     svg.querySelectorAll('.dots').forEach(function (d) { d.classList.add('on'); });
     svg.querySelectorAll('.rlab').forEach(function (r) { r.style.display = 'none'; });
     /* 巷名只留「平和街19巷」（見上面 LANES 那一段）。 */
-    Array.prototype.forEach.call(lblXs, function (t, i) {
-      t.style.display = (LANES[i] && LANES[i].off) ? 'none' : '';
+    Array.prototype.forEach.call(lblXs, function (t) {
+      t.style.display = laneOf(t).off ? 'none' : '';
     });
     /* ⚠ P3（斗六永樂站）不畫入口箭頭 —— 使用者指定；那一場從巷子進去只有一條路，
        站上那段註解本來就寫著「一看就知道，不需要標示」。 */

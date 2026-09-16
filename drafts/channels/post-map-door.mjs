@@ -316,6 +316,16 @@ const shotMap = async (targetW, { orient = "w", you = "clinic", ns = "c" } = {})
     const you = document.querySelector(".map-svg text.you");
     /* ⚠⚠ 六條主街的字**每一條都要畫得出來** —— 上面那個坑的症狀就是
        其中一條的外框變成 0×0（元素還在、字沒了），而尺寸守門一個都抓不到。 */
+    /* 巷名：畫出來的是哪幾條。⚠⚠ 2026-09-16 踩過 —— index.html 在 19 巷與
+       14 巷中間插了一條 33 巷，而門口那支腳本是**照順序**配對的，於是 14 巷
+       落在表外、既沒轉正也沒藏起來，斜躺在 P2 與那條路線上。
+       尺寸、長寬比、溢出每一道守門都會過（它是一個合法的元素）。 */
+    const lanes = [...svg.querySelectorAll("text.lbl-xs")].filter(t => {
+      const cs = getComputedStyle(t);
+      if (cs.display === "none" || cs.visibility === "hidden" || +cs.opacity === 0) return false;
+      const q = t.getBoundingClientRect();
+      return q.width > 0 && q.height > 0;
+    }).map(t => t.textContent.replace(/\s+/g, ""));
     const labs = [...svg.querySelectorAll("text.lbl")].map(t => {
       const q = t.getBoundingClientRect();
       return { s: t.textContent.replace(/\s+/g, ""), w: +q.width.toFixed(1), h: +q.height.toFixed(1) };
@@ -325,7 +335,7 @@ const shotMap = async (targetW, { orient = "w", you = "clinic", ns = "c" } = {})
     const kk = r.width / vb[2];
     const nsw = nswG ? { h: +(nswG.getBBox().height * kk).toFixed(1),
                          fs: +(parseFloat(getComputedStyle(nswT).fontSize) * kk).toFixed(1) } : null;
-    return { w: r.width, h: r.height, vb, k: kk, labs, nsw,
+    return { w: r.width, h: r.height, vb, k: kk, labs, lanes, nsw,
              you: you && you.style.display !== "none" ? [...you.querySelectorAll("tspan")]
                .map(t => t.textContent).join("") : null,
              type: Object.fromEntries([["街名", ".map-svg .lbl"], ["巷名", ".map-svg .lbl-xs"],
@@ -336,6 +346,16 @@ const shotMap = async (targetW, { orient = "w", you = "clinic", ns = "c" } = {})
                })) };
   });
   if (meta.labs.length !== 6) throw new Error(`地圖上的主街讀到 ${meta.labs.length} 條，應該是 6`);
+  /* ⚠⚠ 這張海報上只准出現「平和街19巷」一條巷名（見 door-notice/script.js 的
+     LANES）。多一條 ＝ 站上又補了一條巷名而這裡沒有跟上，那一條會以站上那張圖
+     的角度斜躺在地圖上，**每一道尺寸守門都會過**。 */
+  const LANE_OK = ["平和街19巷"];
+  const badLane = meta.lanes.filter(s => !LANE_OK.includes(s));
+  if (badLane.length) throw new Error(`地圖上多了沒有登記的巷名：${badLane.join("、")}`
+    + "（它不會被轉正、也不會被藏起來，就斜躺在圖上）"
+    + " —— 到 drafts/door-notice/script.js 的 LANES 決定它畫不畫");
+  const missLane = LANE_OK.filter(s => !meta.lanes.includes(s));
+  if (missLane.length) throw new Error(`地圖上少了巷名：${missLane.join("、")}`);
   const gone = meta.labs.filter(l => !(l.w > 0 && l.h > 0)).map(l => l.s || "(空的)");
   if (gone.length) throw new Error(`地圖上有 ${gone.length} 條街名沒有畫出來：${gone.join("、")}`
     + "（尺寸與長寬比都會是對的，只有把圖打開看才看得到）");
