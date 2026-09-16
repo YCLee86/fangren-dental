@@ -27,13 +27,28 @@
  *   所以它對那一行的貢獻從「LINE 四個字 ＋ 泡泡的左右內距 ＝ 2.52 個字」變成
  *   「高度 × 長寬比 ＝ 1.10 個字」——**長寬比從 PNG 的檔頭讀，不手填**。
  *   ⚠⚠⚠ 那是別人的商標：只等比例縮放，不重上色、不裁、不變形。
- *   ⚠ 標誌左右的留白**不是我們補的**，是使用者指定的抬頭本來就有那兩個半形空白。
+ *   ⚠⚠⚠ 標誌左右的留白 2026-09-16 稍晚變成一把尺（使用者：「line logo 和前後文字間距
+ *   也有點大」）：原本是他抬頭裡那兩個半形空白給的（量出來 35.3% 個標誌高），
+ *   **但半形空白實際多寬跟著字型跑** —— 這張卡要交給美編照規格排，規格不可以是那種東西。
+ *   所以畫出來的抬頭**把 LINE 左右那一個半形空白切掉**，改由 `留白比`（標誌自己高度的幾成）給；
+ *   切法與字級算式吃同一個函式（`切抬頭`），分家的話抬頭會算出一個放得下、畫出去卻溢出的字級。
+ *   ⚠ **JSON 裡他寫的抬頭一個字都沒有動**（守門兩邊都在盯）。
+ *   ⚠ 地板是 25%（我們手上記的 LINE 規範）—— 選了就要印得出去的才放進尺裡；那條規範是二手的。
  *   ⚠ 現況那一張的「LINE」**刻意不換成標誌** —— 那一張是照片上逐字抄的，加工就不是對照了。
  *
  * ⚠⚠ 底下那條帶子 2026-09-16 換成**診所自己的九顆 logo**（使用者指定）：
  *   形狀讀 brand/shapes/，寬度讀 preview/line-booked/wm-sizes.json（按墨的面積正規化，
  *   所以九顆一樣重）。**等墨不等高**，所以每一格的框固定成最高的那一顆、形狀垂直置中。
  *   ⚠ 排的順序寫在 JSON 裡 —— 印出來的東西不能真的隨機。
+ *
+ * ⚠⚠⚠ 抬頭到主文那一段的間距 2026-09-16 稍晚也變成一把尺（使用者：「這兩行中間有很大的
+ *   間隔，縮小一點，要預留空間給下面畫診所人物插圖」）。量出來他是對的：改動前那一段是
+ *   12.8 mm、主文行距只有 4.3 mm，差三倍。**那個間距有兩段各自獨立**：`.bd` 自己的上外距
+ *   加上第一行段落的 .28em —— `.bd` 是 flex 項目，兩段不會合併。
+ *   ⚠⚠ **省下來的高度真的會落到下面**：卡片是固定長寬比、帶子靠 margin-top:auto 釘在最下面，
+ *   所以上面收多少，QR 底下到帶子之間就多多少（那正是要畫人物插圖的那一塊）。
+ *   整疊由 `疊高()` 算出來，**守門會拿瀏覽器量一次去對**。
+ *   ⚠ 地板不是 0：收到比主文行距還小，抬頭就會被讀成主文的第一行。
  *
  * ⚠ 這一頁**零 JS**。字寬不在這裡量、用全形當量算 —— 這個容器沒有 Noto Sans TC，
  *   量出來的字寬會比實際寬約一成（CLAUDE.md 第五十九節），拿來判斷「放不放得下」是假的。
@@ -81,7 +96,15 @@ export const fsOf = (c) => {
 /* ── 抬頭：同一條規則，但要把字距與那顆綠泡泡的左右內距一起算進去 ──── */
 export const HDLS = 0.04;        /* 抬頭的 letter-spacing（em）—— CSS 那一行吃同一個值 */
 export const LIH = S.標誌.高em;  /* 標誌的高度（em）—— 同上 */
-export const LIGAP = S.標誌.留白em; /* 標誌左右各補多少（em）—— 0：留白是抬頭那兩個半形空白給的 */
+/* ⚠⚠⚠ 標誌左右的留白（2026-09-16 使用者：「line logo 和前後文字間距也有點大」）——
+ *   **單位是「標誌自己的高度」不是 em**：LINE 的規範就是這樣講的，而且換一個標誌檔、
+ *   換一個字級都不必重挑。這裡再乘 LIH 換成抬頭的 em。
+ * ⚠⚠ 他寫的抬頭裡 LINE 前後各有一個半形空白，**畫出來的時候那兩個空白拿掉**、改由這個值給 ——
+ *   半形空白實際多寬跟著字型跑（這台 0.348 em），而這張卡最後要交給美編照規格排，
+ *   規格不可以是一個會跟著字型跑的東西。JSON 裡他寫的那一行一個字都沒有動。 */
+export const 留白比 = S.標誌.留白比;
+export const LIGAPOF = (比 = 留白比) => +(比 * LIH).toFixed(4);
+export const LIGAP = LIGAPOF();  /* 標誌左右各補多少（抬頭的 em） */
 const HDMAX = 0.085;             /* 抬頭字高的上限（佔卡寬） */
 
 /* ⚠⚠⚠ 標誌的長寬比**從 PNG 的檔頭讀**，不手填 —— 手填的話哪天換一個檔，
@@ -97,14 +120,18 @@ export const LOGO = (() => {
 })();
 export const LIW = +(LIH * LOGO.比 + LIGAP * 2).toFixed(4);   /* 標誌佔抬頭幾個全形字 */
 
-export const hdOf = (c) => {
+/* ⚠⚠ 切的時候連 LINE 左右那**一個**半形空白一起切掉 —— 它們現在是標誌的左右留白。
+ *   算字級與畫出來吃的是同一條切法，分家的話抬頭會算出一個放得下、畫出去卻溢出的字級。 */
+export const 切抬頭 = (t) => String(t).split(/ ?LINE ?/);
+export const hdOf = (c, 比 = 留白比) => {
   const t = String(c.抬頭);
   /* 現況那一張逐字照抄、不換標誌，所以不切 */
-  const seg = c === S.現況 ? [t] : t.split("LINE");
+  const seg = c === S.現況 ? [t] : 切抬頭(t);
   const n = seg.length - 1;
   const txt = seg.join("");
-  const w = cw(txt) + HDLS * [...txt].length + LIW * n;
-  return { 寬: +w.toFixed(3), fs: Math.min(HDMAX, CARD.版心 / w), 標誌: n };
+  const liw = LIH * LOGO.比 + LIGAPOF(比) * 2;
+  const w = cw(txt) + HDLS * [...txt].length + liw * n;
+  return { 寬: +w.toFixed(3), fs: Math.min(HDMAX, CARD.版心 / w), 標誌: n, 留白em: LIGAPOF(比) };
 };
 
 /* ── 紅線：只掃卡片上的字 ───────────────────────────────────────── */
@@ -112,6 +139,29 @@ export const redOf = (c) => {
   const t = lines(c).join("\n");
   return S.紅線.詞.filter((r) => t.includes(r.字));
 };
+
+/* ── 兩把間距的尺（2026-09-16）───────────────────────────────────
+ * ⚠⚠ 卡片是固定長寬比、底下那條帶子靠 margin-top:auto 釘在最下面，所以
+ *   上面收多少，QR 底下到帶子之間就多多少 —— 那正好是要畫人物插圖的那一塊。
+ *   這裡把整疊算出來，守門會拿瀏覽器量一次去對（算錯的話那一道會亮）。 */
+export const BDGAP = CARD.抬頭到主文;
+const 帶高 = () => CARD.版心 * BAND.高 / BAND.總寬;
+export const 疊高 = (c, M = BDGAP) => {
+  const { fs } = fsOf(c), hd = hdOf(c), n = c.主文.length;
+  const bd = M + 0.28 * fs + n * 1.5 * fs + (n - 1) * 0.28 * fs + 0.28 * fs;
+  return 0.06 + 1.5 * hd.fs + bd
+    + (c.QR上 ? 0.07 + 1.5 * 0.038 : 0) + 0.04 + CARD.QR佔卡寬
+    + (c.QR下 ? 0.03 + 1.5 * 0.036 : 0) + 0.035 + 帶高() + 0.04;
+};
+/* QR 底下那一行到帶子之間還剩多少 —— 人物插圖要畫在這裡 */
+export const 餘裕mm = (c, M = BDGAP) => +((CARD.比例 - 疊高(c, M)) * CARD.寬mm).toFixed(1);
+/* 抬頭的字面框下緣 → 第一行主文的字面框上緣（行高 1.5，所以上下各半行距 .25em） */
+export const 抬頭到主文mm = (c, M = BDGAP) => {
+  const { fs } = fsOf(c), hd = hdOf(c);
+  return +((M + 0.28 * fs + 0.25 * hd.fs + 0.25 * fs) * CARD.寬mm).toFixed(1);
+};
+/* 主文行與行之間的同一個量（合併後的 .28em ＋ 上下各半行距） */
+export const 行距mm = (c) => +((0.28 + 0.5) * fsOf(c).fs * CARD.寬mm).toFixed(1);
 
 /* ── 面板的數字（算的，不是量的） ───────────────────────────────── */
 export const rows = [{ 標籤: "現況（廠商那一版）", ...S.現況, id: "now" }, ...S.案].map((c) => {
@@ -149,7 +199,7 @@ const fill = (t) => String(t)
   /* ⚠ 標誌畫出來多高、左右留白佔它自己的幾成 —— 現算，不寫死：
      換一個檔或動 高em，資料裡那一句要跟著變 */
   .replace(/\{\{標誌高mm\}\}/g, () => (LIH * hdOf(S.案[0]).fs * CARD.寬mm).toFixed(1))
-  .replace(/\{\{標誌留白\}\}/g, () => (((0.5 + HDLS + LIGAP) / LIH) * 100).toFixed(0))
+  .replace(/\{\{標誌留白\}\}/g, () => (留白比 * 100).toFixed(0))
   /* ⚠ 字級也不要寫死：「照 Ⓕ」那一格算出來幾 mm、規則本來會算幾 mm，兩個都現算 */
   .replace(/\{\{字級mm:([a-z]+)\}\}/g, (_, k) => (CARD.寬mm * fsOf(caseOf(k)).fs).toFixed(2))
   .replace(/\{\{自然mm:([a-z]+)\}\}/g, (_, k) => (CARD.寬mm * fsOf(caseOf(k)).自然).toFixed(2));
@@ -182,8 +232,8 @@ const para = (a) => {
 
 /* ⚠⚠ 資料裡不放 HTML（那條規矩沒有變）—— 標誌是這裡套上去的，套的是 esc 過的字。
  *   ⚠ alt 一定要寫 "LINE"：守門逐行比對卡片上的字時，會把 <img> 還原成它的 alt。 */
-const mark = (t) => esc(t).replace(/LINE/g,
-  `<img class="li" src="${S.標誌.檔}" alt="LINE" width="${LOGO.寬}" height="${LOGO.高}">`);
+const LIIMG = `<img class="li" src="${S.標誌.檔}" alt="LINE" width="${LOGO.寬}" height="${LOGO.高}">`;
+const mark = (t) => 切抬頭(t).map(esc).join(LIIMG);
 
 /* ── 底下那條帶子：診所自己的九顆 logo ─────────────────────────────
  * ⚠⚠ 形狀讀 brand/shapes/，寬度讀 preview/line-booked/wm-sizes.json —— 兩份都是既有的
@@ -225,11 +275,15 @@ const bandSvg = (色) => {
     }).join("") + "</svg>";
 };
 
-const card = (c, now = false, 色 = null) => {
+/* ⚠ 兩把尺（抬頭到主文、標誌左右留白）可以逐張覆寫 —— 尺上那幾格就是這樣畫的。
+   ⚠⚠ 覆寫留白**一定要連字級一起重算**（hdOf 吃同一個比例），不然那一行的寬度會算錯。 */
+const card = (c, now = false, 色 = null, o = {}) => {
   const { fs } = fsOf(c);
-  const hd = hdOf(c);
+  const hd = hdOf(c, o.留白 ?? 留白比);
   const f = (k) => `calc(var(--cw) * ${k})`;
-  return `<div class="card${now ? " now" : ""}">
+  const st = [o.間距 != null ? `--bd-gap:${f(o.間距)}` : "",
+    o.留白 != null ? `--li-gap:${LIGAPOF(o.留白)}em` : ""].filter(Boolean).join(";");
+  return `<div class="card${now ? " now" : ""}${o.尺 ? " sc" : ""}"${st ? ` style="${st}"` : ""}>
   <div class="hd" style="font-size:${f(hd.fs.toFixed(4))}">${now ? esc(c.抬頭) : mark(c.抬頭)}</div>
   ${c.副標 ? `<div class="sub" style="font-size:${f(0.05)}">${esc(c.副標)}</div>` : ""}
   <div class="bd" style="font-size:${f(fs.toFixed(4))}">${c.主文.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
@@ -241,6 +295,31 @@ const card = (c, now = false, 色 = null) => {
     : `<div class="band logos">${bandSvg(色 ?? S.帶子.色)}</div>`}
 </div>`;
 };
+
+/* ⚠⚠ 兩把尺都畫在 **Ⓔ 那一張**（他挑定的那一案）上，而且每一格都是真的卡片 ——
+ *   間距這種東西並排才比得出來，一格一格單看是分不出 1~2 mm 的。
+ * ⚠ 面板的數字每一格現算，不是寫上去的：換字、換字級、換卡片尺寸都會跟著動。 */
+const 尺卡 = S.案.find((c) => c.id === "e");
+const 尺間距 = CARD.抬頭到主文案.map((k) => {
+  const 抬 = 抬頭到主文mm(尺卡, k.值), 行 = 行距mm(尺卡), 餘 = 餘裕mm(尺卡, k.值);
+  return `<div class="one sc">
+<p class="lb">Ⓗ${k.id === "now" ? "1" : k.id[1]} ${esc(k.標籤)}${k.值 === BDGAP ? "" : ""}</p>
+${card(尺卡, false, null, { 間距: k.值, 尺: true })}
+<div class="note"><p>抬頭到主文 <b>${抬} mm</b>（字面框到字面框）＝ 主文行距 ${行} mm 的
+<b>${(抬 / 行).toFixed(1)} 倍</b>。</p>
+<p>QR 底下到帶子之間空出 <b>${餘} mm</b>（插圖畫在這裡）。</p></div>
+</div>`;
+}).join("\n");
+const 尺留白 = S.標誌.留白案.map((k) => {
+  const hd = hdOf(尺卡, k.比);
+  return `<div class="one sc">
+<p class="lb">Ⓘ${k.id === "now" ? "1" : k.id[1]} ${esc(k.標籤)}</p>
+${card(尺卡, false, null, { 留白: k.比, 尺: true })}
+<div class="note"><p>左右各留 <b>${(k.比 * 100).toFixed(1)}%</b> 個標誌高
+＝ <b>${(hd.留白em * hd.fs * CARD.寬mm).toFixed(2)} mm</b>。</p>
+<p>抬頭那一行佔卡寬 <b>${(hd.寬 * hd.fs * 100).toFixed(1)}%</b>（版心 ${CARD.版心 * 100}）。</p></div>
+</div>`;
+}).join("\n");
 
 const 拆解 = S.拆解.map((d, i) =>
   `<div class="it"><p class="t"><span class="n">${i + 1}</span>${b(d.標)}</p>${para(d.文)}</div>`).join("\n");
@@ -271,7 +350,7 @@ const HTML = `<!doctype html>
 <title>櫃檯的小立牌　文字改版（四案）</title>
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
-  --brick:#8c3b32;--green:#3f654a;--cw:300px;--hd-ls:${HDLS}em;--li-h:${LIH}em;--li-gap:${LIGAP}em}
+  --brick:#8c3b32;--green:#3f654a;--cw:300px;--hd-ls:${HDLS}em;--li-h:${LIH}em;--li-gap:${LIGAP}em;--bd-gap:calc(var(--cw) * ${BDGAP})}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -290,6 +369,9 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 /* ── 那張卡（CSS 排的，不是完稿） ─────────────────────────────── */
 .cards{display:flex;flex-wrap:wrap;gap:22px;margin:.6em 0 0}
 .one{flex:1 1 var(--cw);max-width:var(--cw)}
+/* ⚠ 尺上那幾張要**並排**才比得出 1~2 mm 的差 —— 四格一排的寬度是算出來的：
+   (版心 760 − 左右內距 28 − 三條溝 22) ÷ 4 ＝ 166.5，取 166。手機上兩張一排，仍然是並排的。 */
+.one.sc{--cw:166px}
 .lb{font-weight:600;font-size:.95rem;margin:0 0 .45em}
 .card{--pad:calc(var(--cw) * .06);width:var(--cw);aspect-ratio:${CARD.寬mm} / ${Math.round(CARD.寬mm * CARD.比例)};
   background:#fff;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.14);
@@ -304,7 +386,9 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .li{display:inline-block;height:var(--li-h);width:auto;
   margin:0 var(--li-gap);vertical-align:-.19em}
 .card .sub{margin-top:.25em;color:#444}
-.card .bd{margin-top:calc(var(--cw) * .08);width:100%}
+/* ⚠⚠ 抬頭到主文那一段有**兩段**：這個上外距，加上第一行段落自己的 .28em ——
+   .bd 是 flex 項目，兩段不會合併。要收間距兩段都要算進去。 */
+.card .bd{margin-top:var(--bd-gap);width:100%}
 .card .bd p{margin:.28em 0;white-space:nowrap}
 .card .cue{margin-top:calc(var(--cw) * .07);color:#555}
 .card .cue.lo{margin-top:calc(var(--cw) * .03)}
@@ -365,7 +449,7 @@ ${para(CARD._量法)}
 <div class="box">${para(S.標誌._說明)}
 <p>⚠ 現在畫出來：<code>${esc(S.標誌.檔)}</code> ${LOGO.寬}×${LOGO.高}（長寬比 ${LOGO.比}），
 高 ${LIH} em ＝ 卡片上 <b>${(LIH * hdOf(S.案[0]).fs * CARD.寬mm).toFixed(1)} mm</b>，
-左右各留 <b>${(((0.5 + HDLS + LIGAP) / LIH) * 100).toFixed(0)}%</b> 個標誌高。</p></div>
+左右各留 <b>${(留白比 * 100).toFixed(0)}%</b> 個標誌高。</p></div>
 
 <p class="h2">那個 QR 掃出來是什麼<span class="t">拿解碼器掃過，不是用眼睛看的</span></p>
 <div class="box"><p><code>${esc(S.QR.內容)}</code></p>${para(S.QR.說明)}</div>
@@ -378,6 +462,14 @@ ${拆解}
 那顆標誌是他提供的<b>官方授權檔</b>）。<b>Ⓔ 是他自己寫的三行</b>，一個字都沒有改 ——
 所以底下那張表上它會亮紅，那不是壞掉（見那一案的註）。</p>
 <div class="cards">${案}</div>
+
+<p class="h2">抬頭到主文的間距<span class="t">收上面，空間留給下面的插圖</span></p>
+<div class="box">${para(CARD.抬頭到主文_說明)}</div>
+<div class="cards">${尺間距}</div>
+
+<p class="h2">標誌左右的留白<span class="t">他寫的那兩個半形空白，換成一個算得出來的規格</span></p>
+<div class="box">${para(S.標誌.留白_說明)}</div>
+<div class="cards">${尺留白}</div>
 
 <p class="h2">底下那條帶子<span class="t">換成診所自己的九顆 logo</span></p>
 <div class="box">${para(S.帶子._說明)}
@@ -447,7 +539,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   for (const c of [S.現況, ...S.案].filter((x, i, a) => a.findIndex((y) => y.抬頭 === x.抬頭) === i)) {
     const h = hdOf(c);
     console.log(`抬頭「${c.抬頭}」${(h.fs * CARD.寬mm).toFixed(2)} mm・佔卡寬 ${(h.寬 * h.fs * 100).toFixed(1)}%` +
-      (h.標誌 ? `（含 ${h.標誌} 顆標誌，一顆 ${LIW} 個字 ＝ ${(LIH * h.fs * CARD.寬mm).toFixed(1)} mm 高、左右各留 ${(((0.5 + HDLS + LIGAP) / LIH) * 100).toFixed(0)}%）` : `（沒有標誌）`));
+      (h.標誌 ? `（含 ${h.標誌} 顆標誌，一顆 ${LIW} 個字 ＝ ${(LIH * h.fs * CARD.寬mm).toFixed(1)} mm 高、左右各留 ${(留白比 * 100).toFixed(0)}%）` : `（沒有標誌）`));
   }
   console.log("");
   console.log(`標誌 ${S.標誌.檔} ${LOGO.寬}×${LOGO.高}（長寬比 ${LOGO.比}）—— 官方授權檔，只等比例縮放`);
