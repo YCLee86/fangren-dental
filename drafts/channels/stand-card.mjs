@@ -58,9 +58,24 @@ export const lines = (c) => [c.抬頭, c.副標, ...c.主文, c.QR上, c.QR下, 
 
 const CARD = S.卡片;
 const MAXFS = 0.06;                                  /* 主文字高的上限（佔卡寬） */
+const 自然fs = (c) => Math.min(MAXFS, CARD.版心 / Math.max(...c.主文.map(cw)));
+
+/* ⚠⚠⚠ 一案可以在資料裡宣告「字級照另一案」（2026-09-16 使用者：「用 E 但字級照 F」）——
+ *   **規則本身一個字都沒有改**：自然那一格照算、面板照印，所以看得出這一釘是往上還是往下。
+ *   ⚠ 釘上去之後最長那一行可能就放不下了，而卡片是 overflow:hidden ——
+ *     畫面上只會少掉最後幾個字，每一道尺寸守門都會過。所以這裡直接 throw。 */
 export const fsOf = (c) => {
   const w = Math.max(...c.主文.map(cw));
-  return { 最長: w, fs: Math.min(MAXFS, CARD.版心 / w) };
+  const 自然 = 自然fs(c);
+  if (!c.字級?.照) return { 最長: w, fs: 自然, 自然, 照: "" };
+  const t = S.案.find((x) => x.id === c.字級.照);
+  if (!t) throw new Error(c.標籤 + " 的字級要照 " + c.字級.照 + "，可是沒有那一案");
+  if (t.字級?.照) throw new Error(c.標籤 + " 照的那一案自己也在照別人 —— 字級不要接龍");
+  const fs = 自然fs(t);
+  if (w * fs > CARD.版心 + 1e-9)
+    throw new Error(c.標籤 + " 釘在 " + t.標籤 + " 的字級之後，最長那一行佔 " +
+      (w * fs * 100).toFixed(1) + "% 卡寬（版心 " + (CARD.版心 * 100) + "）—— 會被切掉，先斷行");
+  return { 最長: w, fs, 自然, 照: t.標籤 };
 };
 
 /* ── 抬頭：同一條規則，但要把字距與那顆綠泡泡的左右內距一起算進去 ──── */
@@ -100,10 +115,11 @@ export const redOf = (c) => {
 
 /* ── 面板的數字（算的，不是量的） ───────────────────────────────── */
 export const rows = [{ 標籤: "現況（廠商那一版）", ...S.現況, id: "now" }, ...S.案].map((c) => {
-  const { 最長, fs } = fsOf(c);
+  const { 最長, fs, 自然, 照 } = fsOf(c);
   return {
-    id: c.id, 標籤: c.標籤, 行數: c.主文.length, 最長,
+    id: c.id, 標籤: c.標籤, 行數: c.主文.length, 最長, 照,
     字高mm: +(CARD.寬mm * fs).toFixed(2),
+    自然mm: +(CARD.寬mm * 自然).toFixed(2),
     佔卡寬: +(最長 * fs * 100).toFixed(1),
     紅線: redOf(c),
   };
@@ -117,6 +133,11 @@ export const qn = (kw) => {
   if (hit.length !== 1) throw new Error("{{題:" + kw + "}} 在待答裡找到 " + hit.length + " 題");
   return hit[0][1] + 1;
 };
+export const caseOf = (id) => {
+  const hit = S.案.find((x) => x.id === id);
+  if (!hit) throw new Error("{{字級mm:" + id + "}} 找不到那一案");
+  return hit;
+};
 export const cn = (kw) => {
   const hit = S.拆解.map((d, i) => [d, i]).filter(([d]) => d.標.includes(kw));
   if (hit.length !== 1) throw new Error("{{條:" + kw + "}} 在拆解裡找到 " + hit.length + " 條");
@@ -128,7 +149,10 @@ const fill = (t) => String(t)
   /* ⚠ 標誌畫出來多高、左右留白佔它自己的幾成 —— 現算，不寫死：
      換一個檔或動 高em，資料裡那一句要跟著變 */
   .replace(/\{\{標誌高mm\}\}/g, () => (LIH * hdOf(S.案[0]).fs * CARD.寬mm).toFixed(1))
-  .replace(/\{\{標誌留白\}\}/g, () => (((0.5 + HDLS + LIGAP) / LIH) * 100).toFixed(0));
+  .replace(/\{\{標誌留白\}\}/g, () => (((0.5 + HDLS + LIGAP) / LIH) * 100).toFixed(0))
+  /* ⚠ 字級也不要寫死：「照 Ⓕ」那一格算出來幾 mm、規則本來會算幾 mm，兩個都現算 */
+  .replace(/\{\{字級mm:([a-z]+)\}\}/g, (_, k) => (CARD.寬mm * fsOf(caseOf(k)).fs).toFixed(2))
+  .replace(/\{\{自然mm:([a-z]+)\}\}/g, (_, k) => (CARD.寬mm * fsOf(caseOf(k)).自然).toFixed(2));
 const esc = (s) => String(s).replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
 /* **粗體** 與 `等寬`；資料裡不放 HTML */
 const b = (s) => esc(fill(s)).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>");
@@ -230,7 +254,8 @@ ${card(c)}
 const tbl = `<table><thead><tr><th>　</th><th>主文行數</th><th>最長一行</th>
 <th>字可以多大</th><th>那一行佔卡寬</th><th>紅線</th></tr></thead><tbody>${
   rows.map((r) => `<tr${r.id === "now" ? ' class="nowr"' : ""}><th>${esc(r.標籤)}</th>
-<td>${r.行數}</td><td>${r.最長} 字</td><td>${r.字高mm} mm</td><td>${r.佔卡寬}%</td>
+<td>${r.行數}</td><td>${r.最長} 字</td><td>${r.字高mm} mm${
+  r.照 ? `<br><small>釘在 ${esc(r.照)}・規則會算 ${r.自然mm}</small>` : ""}</td><td>${r.佔卡寬}%</td>
 <td class="${r.紅線.length ? "bad" : "ok"}">${r.紅線.length ? r.紅線.map((x) => esc(x.字)).join("、") : "0"}</td></tr>`).join("\n")
 }</tbody></table>`;
 
@@ -368,6 +393,10 @@ ${拆解}
 <div class="box"><p>主文字高 ＝ <b>min(卡寬的 6%，版心 84% ÷ 最長那一行的字數)</b>，
 也就是「讓最長那一行剛好撐滿版心，但不超過 6%」。四案用同一條規則，所以底下這張表比的是
 <b>文字本身</b>，不是我替每一案挑的字級。</p>
+<p>⚠⚠ <b>一案可以宣告「字級照另一案」</b>（Ⓔ 就是釘在 Ⓕ 上的）——
+規則本身一個字都沒有改：那一列同時印著<b>規則會算幾 mm</b>，所以看得出這一釘是往上還是往下。
+⚠ 釘上去之後最長那一行放不下的話產生器會 throw ——
+卡片是 <code>overflow:hidden</code>，不擋的話畫面上只會少掉最後幾個字，而每一道尺寸守門都會過。</p>
 <p>⚠ <b>版心那個 84% 就是從現況那一行量來的</b>（最長那一行 22 個全形字、佔卡片寬度 84%），
 所以現況那一列是這條規則的<b>定義</b>、不是驗證。四案之間的比較仍然成立 —— 它們吃同一條規則。</p>
 <p>⚠ <b>抬頭另算一條</b>：min(卡寬的 8.5%，版心 84% ÷ (全形當量 ＋ 字距 ＋ 標誌佔幾個字))。
@@ -412,7 +441,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   for (const r of rows)
     console.log(pad(r.標籤, 26) + pad(r.行數, 8) + pad(r.最長 + " 字", 12) +
       pad(r.字高mm + " mm", 10) + pad(r.佔卡寬 + "%", 10) +
-      (r.紅線.length ? r.紅線.map((x) => x.字).join("、") : "0"));
+      (r.紅線.length ? r.紅線.map((x) => x.字).join("、") : "0") +
+      (r.照 ? "　（釘在 " + r.照 + "，規則會算 " + r.自然mm + " mm）" : ""));
   console.log("");
   for (const c of [S.現況, ...S.案].filter((x, i, a) => a.findIndex((y) => y.抬頭 === x.抬頭) === i)) {
     const h = hdOf(c);
