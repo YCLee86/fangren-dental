@@ -24,7 +24,8 @@ import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 底色, 墨色, CARD,
-  切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm } from "./stand-card.mjs";
+  切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm,
+  QRSRC, QRFILE } from "./stand-card.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..");
@@ -210,8 +211,8 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
      ⚠⚠ 不可以照尺的格數算：兩把間距的尺都已經收成表、不再畫卡了（踩過），
         而且它們還會再被打開（Ⓗ 那把就打開過一次）—— 所以這個數字一律從頁面上數。 */
   const 尺數 = (H.match(/class="card sc"/g) ?? []).length;
-  ok(bands.length === S.案.length + 尺數 + 1 + B.順序案.length + B.間距案.length,
-    `頁上畫出 ${bands.length} 條帶子（應該是 ${S.案.length} 張卡 ＋ ${尺數} 格尺 ＋ 定案那一條 ＋ ${B.順序案.length} 格 Ⓚ ＋ ${B.間距案.length} 格 Ⓛ）`);
+  ok(bands.length === S.案.length + 尺數 + 1,
+    `頁上畫出 ${bands.length} 條帶子（應該是 ${S.案.length} 張卡 ＋ ${尺數} 格尺 ＋ 定案那一條）`);
   for (const m of bands) {
     /* ⚠⚠⚠ 牙洞是 fill-rule evenodd 挖穿的，底下那塊綠自己會透出來 ——
        所以整條只准有兩種 fill：那塊底色的 rect，以及形狀自己的 currentColor。
@@ -223,7 +224,7 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
     ok(/fill-rule="evenodd"/.test(m[0]), "有一條帶子的形狀掉了 fill-rule evenodd —— 牙洞會被填滿");
     ok(!/color:(?!#ffffff)/.test(m[0]), "有一條帶子的標誌不是白的");
   }
-  for (const m of bands.slice(0, S.案.length + 尺數 + 1))
+  for (const m of bands)
     ok((m[0].match(/<svg x="/g) ?? []).length === BAND.顆數,
       `卡上那一條不是 ${BAND.顆數} 顆`);
   /* 兩把尺的表：每一格的三個數字都要印出來，「・定案」是算的不是寫在標籤裡的 */
@@ -238,8 +239,19 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
         ok(H.includes(">" + v + " mm<"), `${k.標籤} 少印了 ${v} mm`);
     }
   }
-  /* ⚠⚠ 尺可以收，量出來的數字不可以跟著消失（同 50-22、71-13、71-14） */
-  ok(/class="bandrow"/.test(H), "兩把尺的帶子沒有畫出來");
+  /* ⚠⚠⚠ 2026-09-16 定案 Ⓚ3 ＋ Ⓛ2，兩把尺的帶子條**收掉了**，所以這一道翻面 ——
+     而上面那兩張表逐格比對的每一個數字都還在（同 50-22、71-13、71-14：
+     尺可以收，它量出來的數字不可以跟著消失）。
+     ⚠ 定案那兩格仍然要在案裡（上面那一圈就是拿它們算「・定案」的），
+       所以這裡另外守「那兩案一格都沒有被刪掉」。 */
+  ok(!/class="bandrow"/.test(H), "兩把尺的帶子條又畫回來了 —— Ⓚ3／Ⓛ2 已定案，那兩把尺收成表了");
+  ok(!/bandrow/.test(GEN), "產生器裡還留著 bandrow");
+  ok(B.順序案.some((k) => k.顆 === B.顆數) && B.間距案.some((k) => k.值 === B.間距),
+    "定案那一格不在案裡 —— 尺收掉之後，定案值要留在表上才看得出它是從哪一格挑的");
+  ok(B.順序案.length >= 2 && B.間距案.length >= 2,
+    "落選那幾格被從資料裡刪掉了 —— 拿掉的是畫面不是理由");
+  ok(String(B.顆數_定案 ?? "").includes("Ⓚ3") && String(B.間距_定案 ?? "").includes("Ⓛ2"),
+    "兩把尺的定案那一句沒有寫下來");
   ok(B.色案_落選.join("").includes("前提換掉了"),
     "那三格沒有底色的顏色案，落選的理由不見了 —— 它們不是被比下去的，是前提換掉了");
 }
@@ -303,13 +315,49 @@ ok(/Ⓚ 顆數/.test(GEN) && /Ⓛ 間距/.test(GEN), "面板沒有印那兩把�
   ok(!/第\s*\d+\s*(題|條)/.test(gen), "產生器裡寫死了「第 N 題／條」");
 }
 
+/* ── ⑥之五 卡上那顆 QR（2026-09-16）─────────────────────────────
+ * 使用者：「其他對話做好的 lineQRcode 放進來」。
+ * ⚠⚠⚠ 這一頁**只搬不畫**：那顆碼是 2026-09-15 在另一條對話定案的成品，
+ *   產生器把 `drafts/channels/qr/fangren-line-qr.svg` 原封不動複製過來。
+ *   在這裡重畫一份就是第二個真相 —— 改了 qr-brand.mjs 這一頁不會跟著變，
+ *   而且**畫面完全正常**，只有拿解碼器掃才知道掃不掃得出來。
+ * ⚠⚠ 現況那一張刻意維持灰色佔位方塊：它是照片的逐字對照，
+ *   把新設計的碼畫上去就不是對照了。 */
+{
+  const q = join(DIR, QRFILE);
+  ok(existsSync(q), `${QRFILE} 不見了 —— 跑一次產生器把它搬過來`);
+  if (existsSync(q))
+    ok(readFileSync(q).equals(readFileSync(QRSRC)),
+      `${QRFILE} 和 drafts/channels/qr/ 那一份對不起來 —— 改要改 qr-brand.mjs 再重跑`);
+  /* 案那幾張擺真的碼、現況那一張擺佔位方塊 */
+  const 卡 = [...H.matchAll(/<div class="card[^"]*">[\s\S]*?\n<\/div>/g)].map((m) => m[0]);
+  const 現 = 卡.filter((c) => /class="card now/.test(c));
+  const 案 = 卡.filter((c) => !/class="card now/.test(c));
+  ok(現.length >= 1 && 案.length >= 1, `抓不到卡（現況 ${現.length}／其餘 ${案.length}）`);
+  for (const c of 案) ok(new RegExp(`<img class="qr" src="${QRFILE}"`).test(c),
+    "有一張案卡沒有擺真的那顆碼");
+  for (const c of 案) ok(!/class="qr ph"/.test(c), "有一張案卡還擺著灰色佔位方塊");
+  for (const c of 現) ok(/class="qr ph"/.test(c) && !/<img class="qr"/.test(c),
+    "現況那一張被換成新設計的碼了 —— 它是照片的對照，不可以換");
+  /* ⚠ 產生器裡不可以自己再畫一份（同一顆碼有兩份，改一份另一份不會動） */
+  ok(!/viewBox="0 0 45 45"/.test(GEN), "產生器裡自己畫了一份 QR —— 這一頁只准搬 drafts/channels/qr/ 那一份");
+  /* ⚠⚠ 印出來太小就掃不到（那一輪訂的下限 1.5 cm），所以尺寸每次出圖都要印 */
+  ok(/碼本身 \$\{/.test(GEN), "面板沒有印那顆碼畫出來多大（第 28 條 ④）");
+  {
+    const vb = +(readFileSync(QRSRC, "utf8").match(/viewBox="0 0 (\d+(?:\.\d+)?) /) ?? [])[1];
+    ok(vb > 0, "讀不到那顆 QR 的 viewBox");
+    const 碼mm = CARD.寬mm * CARD.QR佔卡寬 * (vb - 8) / vb;   /* 8 ＝ 靜區四格 × 2 */
+    ok(碼mm >= 15, `那顆碼印出來只有 ${碼mm.toFixed(1)} mm，低於 15 mm 的下限`);
+  }
+}
+
 /* ── ⑦ noindex／零 JS ─────────────────────────────────────────── */
 ok(/name="robots" content="noindex/.test(H), "少了 noindex");
 ok(!/<script/i.test(H), "這一頁不可以有 <script>");
 /* ⚠⚠ 2026-09-16 起多一個官方標誌檔，所以這一道從「只准有 index.html」放寬成
    **一張寫死的清單** —— 放寬成「大概可以」等於把它關掉（同 check-bind-prompt 那一輪）。 */
 {
-  const 准 = ["index.html", S.標誌.檔].sort();
+  const 准 = ["index.html", S.標誌.檔, QRFILE].sort();
   const 有 = readdirSync(DIR).sort();
   ok(有.join() === 准.join(), `這個資料夾裡只准有 ${准.join("、")}（現在有 ${有.join("、")}）`);
 }
@@ -493,7 +541,11 @@ const { chromium } = mod.default ?? mod;
 const browser = await chromium.launch({ executablePath: chrome });
 const pg = await browser.newPage();
 const shots = [];
-for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
+/* ⚠ 寬度從八個收到三個（2026-09-16）：430／393／390／375／360／834／1440 量出來
+   **逐格完全一樣**（卡片都是 300×446.9 —— 它有 `max-width` 上限，超過就不再變），
+   只有 320 是另一種（281.6×419.5）。留下的三個 ＝ 上限那一段、上限的邊界、最窄那一台。
+   ⚠⚠ 卡片寬度的算式一改（現在是 min(300px, 86vw)）就要把中間那幾格加回來。 */
+for (const w of [430, 350, 320]) {
   await pg.setViewportSize({ width: w, height: 900 });
   await pg.goto("file://" + F);
   const m = await pg.evaluate(() => {

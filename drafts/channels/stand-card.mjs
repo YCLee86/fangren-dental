@@ -125,6 +125,14 @@ export const LOGO = (() => {
 })();
 export const LIW = +(LIH * LOGO.比 + LIGAP * 2).toFixed(4);   /* 標誌佔抬頭幾個全形字 */
 
+/* ⚠⚠⚠ 卡上那顆 QR 是 2026-09-15 在另一條對話定案的成品（推導在 README 第七十四節），
+ *   這一支**只搬不畫**：從 drafts/channels/qr/ 原封不動複製過來
+ *   —— `drafts/` 進不了 `_site`，所以非複製一份不可；守門逐位元組比對兩份。
+ *   要改那顆碼就改 `qr-brand.mjs` 再重跑，不要改 preview 底下那一份。
+ * ⚠⚠ 它和照片上那一顆**編碼的是同一個字串**（廠商的短網址），所以這是換長相不是換流程。 */
+export const QRSRC = join(ROOT, "drafts", "channels", "qr", "fangren-line-qr.svg");
+export const QRFILE = "qr-line.svg";
+
 /* ⚠⚠ 切的時候連 LINE 左右那**一個**半形空白一起切掉 —— 它們現在是標誌的左右留白。
  *   算字級與畫出來吃的是同一條切法，分家的話抬頭會算出一個放得下、畫出去卻溢出的字級。 */
 export const 切抬頭 = (t) => String(t).split(/ ?LINE ?/);
@@ -315,7 +323,9 @@ const card = (c, now = false, o = {}) => {
   ${c.副標 ? `<div class="sub" style="font-size:${f(0.05)}">${esc(c.副標)}</div>` : ""}
   <div class="bd" style="font-size:${f(fs.toFixed(4))}">${c.主文.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
   ${c.QR上 ? `<div class="cue" style="font-size:${f(0.038)}">${esc(c.QR上)}</div>` : ""}
-  <div class="qr"><span>QR</span></div>
+  ${now
+    ? `<div class="qr ph"><span>QR</span></div>`
+    : `<img class="qr" src="${QRFILE}" width="45" height="45" alt="芳仁牙醫診所 LINE 官方帳號的 QR code">`}
   ${c.QR下 ? `<div class="cue lo" style="font-size:${f(0.036)}">${esc(c.QR下)}</div>` : ""}
   ${now
     ? `<div class="band" style="font-size:${f(0.04)}">${esc(c.帶子 ?? "")}</div>`
@@ -454,10 +464,14 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .card .bd p{margin:var(--p-gap) 0;white-space:nowrap}
 .card .cue{margin-top:calc(var(--cw) * .07);color:#555}
 .card .cue.lo{margin-top:calc(var(--cw) * .03)}
+/* ⚠⚠ QR 一律 calc(--cw * k) 不可以用百分比（參照會變成父層那一欄）。
+   ⚠⚠⚠ 案那幾張擺的是**真的那顆碼**（drafts/channels/qr/ 複製過來的，一個像素都沒有重畫）；
+   現況那一張刻意維持灰色佔位方塊 —— 它是照片的逐字對照，畫上新設計的碼就不是對照了。 */
 .card .qr{width:calc(var(--cw) * ${CARD.QR佔卡寬});aspect-ratio:1;margin-top:calc(var(--cw) * .04);
-  background:repeating-linear-gradient(45deg,#dcdcdc 0 6px,#ececec 6px 12px);
-  border-radius:3px;display:flex;align-items:center;justify-content:center}
-.card .qr span{font-size:.72rem;color:#8a8a8a;letter-spacing:.1em}
+  height:auto;display:block;border-radius:3px}
+.card .qr.ph{background:repeating-linear-gradient(45deg,#dcdcdc 0 6px,#ececec 6px 12px);
+  display:flex;align-items:center;justify-content:center}
+.card .qr.ph span{font-size:.72rem;color:#8a8a8a;letter-spacing:.1em}
 .card .band{margin:auto calc(var(--pad) * -1) 0;width:var(--cw);padding:calc(var(--cw) * .026) 0;
   background:#3c4657;color:#fff;letter-spacing:.03em}
 .card .band.empty{background:transparent;border-top:1px dashed #d5d5d5;color:transparent}
@@ -469,8 +483,6 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 /* 尺上那幾條：擺成卡片真正的寬度（--cw），不然比出來的「多小」是假的 */
 .bandonly{width:var(--cw);border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.14)}
 .bandonly .bnd{width:100%;height:auto;display:block}
-.bandrow{display:flex;flex-direction:column;gap:1.1rem;align-items:center;margin:1rem 0}
-.bandrow .lb{margin:0 0 .3em;font-size:.86rem;color:var(--soft)}
 .note{font-size:.86rem;color:var(--soft);margin:.6em 0 0}
 .note p{margin:.35em 0}
 
@@ -552,24 +564,22 @@ ${尺留白}
 白壓在那塊綠上是 <b>${(() => { const l = (h) => { const c = [1, 3, 5].map((i) => { const v = parseInt(底色.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }; return (1.05 / (l() + 0.05)).toFixed(2); })()}</b>。</p></div>
 <div class="bandonly" style="--cw:min(300px, 86vw)">${bandSvg()}</div>
 
-<p class="h2">帶子・多少顆<span class="t">Ⓚ　整條一律縮到卡片寬，所以顆數愈多每一顆愈小</span></p>
+<p class="h2">帶子・多少顆<span class="t">Ⓚ　定案十一顆。整條一律縮到卡片寬，所以顆數愈多每一顆愈小</span></p>
 <div class="box"><p>⚠⚠ 重複的挑 <b>站上真的在用的那兩顆</b>：<code>r1c2</code>（頁首那顆）與
 <code>r3c1</code>（商家貼文那三張圖的浮水印）。⚠ 三個順序案**每一個**都要守住那三條限制
-（同形狀不相鄰、三顆最長的不相鄰、同色不相鄰），守門三個都在盯。</p></div>
+（同形狀不相鄰、三顆最長的不相鄰、同色不相鄰），守門三個都在盯。</p>
+<p>⚠ 兩把尺 2026-09-16 定案（<b>Ⓚ3 ＋ Ⓛ2</b>），<b>帶子條已經從這一頁上收掉、兩張表留著</b> ——
+尺可以收，它量出來的數字不可以跟著消失。要回頭比就看表，不必重做。</p></div>
 <table><thead><tr><th>　</th><th>一顆最高</th><th>四邊與中間</th><th>帶子高</th></tr></thead><tbody>${
 S.帶子.順序案.map((k) => { const b = 帶(k.顆), s2 = CARD.寬mm / b.總寬;
   return `<tr><th>${esc(k.標籤)}${k.顆 === BAND.顆數 ? "・定案" : ""}</th><td>${(b.高 * s2).toFixed(2)} mm</td><td>${(b.gap * s2).toFixed(2)} mm</td><td>${(b.總高 * s2).toFixed(1)} mm</td></tr>`;
 }).join("\n")}</tbody></table>
-<div class="bandrow">${S.帶子.順序案.map((k) => `<div><p class="lb">${esc(k.標籤)}</p>
-<div class="bandonly" style="--cw:min(300px, 86vw)">${bandSvg(帶(k.顆))}</div></div>`).join("\n")}</div>
 
-<p class="h2">帶子・間距<span class="t">Ⓛ　四邊與中間吃同一個值，它一大每一顆就變小</span></p>
+<p class="h2">帶子・間距<span class="t">Ⓛ　定案 .50。四邊與中間吃同一個值，它一大每一顆就變小</span></p>
 <table><thead><tr><th>　</th><th>一顆最高</th><th>四邊與中間</th><th>帶子高</th></tr></thead><tbody>${
 S.帶子.間距案.map((k) => { const b = 帶(undefined, k.值), s2 = CARD.寬mm / b.總寬;
   return `<tr><th>${esc(k.標籤)}${k.值 === BAND.間距 ? "・定案" : ""}</th><td>${(b.高 * s2).toFixed(2)} mm</td><td>${(b.gap * s2).toFixed(2)} mm</td><td>${(b.總高 * s2).toFixed(1)} mm</td></tr>`;
 }).join("\n")}</tbody></table>
-<div class="bandrow">${S.帶子.間距案.map((k) => `<div><p class="lb">${esc(k.標籤)}</p>
-<div class="bandonly" style="--cw:min(300px, 86vw)">${bandSvg(帶(undefined, k.值))}</div></div>`).join("\n")}</div>
 <div class="box">${para(S.帶子.色案_落選)}</div>
 
 <p class="h2">字可以多大<span class="t">字少的自動變大 —— 這是兩案真正的差別之一</span></p>
@@ -612,11 +622,15 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   if (CHECK) {
     if (!existsSync(f)) throw new Error("preview/line-stand/index.html 還沒產生");
     if (readFileSync(f, "utf8") !== HTML) throw new Error("preview/line-stand/index.html 和產生器對不起來 —— 有人手改了頁面，或改了 JSON 卻沒有重跑");
-    console.log("✓ 逐位相同");
+    const q = join(OUT, QRFILE);
+    if (!existsSync(q)) throw new Error("preview/line-stand/" + QRFILE + " 不見了 —— 跑一次產生器把它搬過來");
+    if (!readFileSync(q).equals(readFileSync(QRSRC))) throw new Error(QRFILE + " 和 drafts/channels/qr/ 那一份對不起來 —— 改要改 qr-brand.mjs 再重跑，不要改 preview 底下那一份");
+    console.log("✓ 逐位相同（含那顆 QR）");
   } else {
     mkdirSync(OUT, { recursive: true });
     writeFileSync(f, HTML);
-    console.log("寫出 preview/line-stand/index.html");
+    writeFileSync(join(OUT, QRFILE), readFileSync(QRSRC));
+    console.log("寫出 preview/line-stand/index.html ＋ " + QRFILE);
   }
   const pad = (s, n) => String(s) + " ".repeat(Math.max(0, n - cw(String(s)) * 2));
   console.log("");
@@ -654,6 +668,17 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   }
   console.log("");
   console.log(`卡片 ${CARD.寬mm} mm 寬・比例 ${CARD.比例}（${Math.round(CARD.寬mm * CARD.比例)} mm 高）—— 從照片量的，還要用尺量一次`);
-  console.log(`QR ＝ ${S.QR.內容}（兩張照片各自解過一次）`);
+  console.log(`QR ＝ ${S.QR.內容}（兩張照片各自解過一次；卡上那顆新的碼編的是同一個字串）`);
+  /* ⚠ 第九節第 28 條 ④：換了一顆真的碼上去，它畫出來多大每次都要印 —— 印出來太小就掃不到。 */
+  {
+    const box = CARD.寬mm * CARD.QR佔卡寬;
+    const vb = +(readFileSync(QRSRC, "utf8").match(/viewBox="0 0 (\d+(?:\.\d+)?) /) ?? [])[1];
+    if (!vb) throw new Error("讀不到那顆 QR 的 viewBox");
+    const Q = 4;   /* 靜區四格（qr-brand.mjs 的 CFG.Q）*/
+    console.log(`     案那幾張擺的是 ${QRFILE}（逐位元組 ＝ drafts/channels/qr/ 那一份，只搬不畫）` +
+      `　框 ${(CARD.QR佔卡寬 * 100).toFixed(0)}% 卡寬 ＝ ${box.toFixed(1)} mm、` +
+      `碼本身 ${(box * (vb - Q * 2) / vb).toFixed(1)} mm（下限 15）` +
+      `　現況那一張仍然是灰色佔位方塊（它是照片的對照）`);
+  }
   console.log("");
 }
