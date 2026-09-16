@@ -1073,6 +1073,28 @@ motion lines, icons; anybody drawn faded, translucent, ghostly or outline-only; 
 （⚠ `sparkles`／`speech bubbles`／`icons` 三個仍然禁，見下面那一段）——
 **這是「每一輪都要把自己上一版的 `AVOID` 逐條唸過一次」那條的第三次現場。**
 
+### ⚠⚠⚠ 這一版只改一件 —— 人物與衣著維持 v4，使用者指定
+
+原本這一節還排了兩件「反正要重新生成，順手一起修」（磚紅有兩個人穿、⑨ 的帽子和上衣
+不同色）。**使用者兩次否決：「這個不要改了」「人物和穿著就先這樣　重新給提示詞」。**
+所以 v5 的射程收成**只有線**，而且提示詞要跟著整份重寫，不是把那兩句刪掉就算。
+
+⚠⚠⚠ **真正的工作不在刪那兩句，在「刪完會留下一堆孤兒指令」** ——
+v4 的提示詞裡有一整組**為那兩件寫的祈使句**：`EXACTLY ONE PERSON` 的磚紅、
+`NEVER MORE THAN TWO PEOPLE IN THE SAME PLAIN COLOUR`、
+`A PLAIN CAP IN A DIFFERENT COLOUR FROM ITS WEARER'S OWN TOP` 那幾條 `AVOID`。
+**而 v4 的成品違反其中兩條** —— 那幾句留在 v5 裡，就等於一邊說「衣服照抄參考圖 ⑤」、
+一邊說「磚紅只准一個人」，**模型會照後者把衣服重新擲一次骰子**，
+而人物與衣著正是他指定不要動的東西。
+**通則（「上一版的病名會變成下一版的指令」的第五次現場）：把一件事從射程裡拿掉時，
+要連它在正文與 `AVOID` 裡留下的每一條祈使句一起拿掉** ——
+只改抬頭那一塊「這一版改什麼」，底下那些句子照樣會生效。
+
+做法：第 6 段（穿什麼）與第 10 段（顏色）改寫成**「這一塊參考圖 ⑤ 已經畫好了，逐個照抄、
+不要重新分配」**，數量的硬條件（`EXACTLY ONE`／`at most two`／帽子同色那一條）
+**整組從正文與 `AVOID` 拿掉**，換成一條反向的禁令：
+**「任何人的刷手服、帽子、印花或顏色都不可以改」**。
+
 ### 先認人（v4 成品，左 → 右，量過不是猜的）
 
 | | 誰 | 在做什麼 | 這一版加線嗎 |
@@ -1085,16 +1107,20 @@ motion lines, icons; anybody drawn faded, translucent, ghostly or outline-only; 
 | ⑥ | 恐龍印花 女 | 雙手把手機舉起來 | 一道 |
 | ⑦ | 深綠帽＋深綠上衣 男（後排） | 站著微笑 | **不加** |
 | ⑧ | **磚紅素色 馬尾 女** | **低頭看手機打字** | ⭐ 他說的「右邊拿手機打字」 |
-| ⑨ | 藍綠帽＋藍灰上衣 男（後排） | 站著微笑 | **不加** ⚠ 帽與上衣不同色（v4 留下的瑕疵） |
+| ⑨ | 藍綠帽＋藍灰上衣 男（後排） | 站著微笑 | **不加** |
 | ⑩ | 紫帽＋紫上衣 ＋ 白袍 女 | 站著微笑 | **不加** |
+
+⚠ 表上那兩件 v4 留下的瑕疵（**① 與 ⑧ 同樣是磚紅**、**⑨ 的帽 `#447378` 配上衣 `#5a677e`**）
+**這一版刻意不修**，所以上面那一欄不再標它們 —— 標著就會有人順手寫回提示詞裡。
+要修是下一版的事，寫在第六節。
 
 ### ⚠⚠⚠ 一條只有量過才知道的硬邊界：線不可以往上長
 
 原檔 2000×989，**墨的框從 y=104 開始**（上面 104 列是白的），而裁圖那一支
-（`stand-illus-crop.mjs`）為了把比例撐到卡片那一條的 2.117，**已經從那塊白裡借走 60 列**
-（裁出來是 y 44..988）。所以**還剩 44 列的餘裕 ＝ 畫面高度的 4.5%**。
+（`stand-illus-crop.mjs`）為了把比例撐到卡片那一條，**已經從那塊白裡借走 60 列**。
+所以**還剩 44 列的餘裕 ＝ 畫面高度的 4.5%**。
 
-線如果畫到 y=44 以上，裁出來就會比那一條**高**，`object-fit: contain` 會改成高度在卡、
+線如果畫到那裡以上，裁出來就會比那一條**高**，`object-fit: contain` 會改成高度在卡、
 **左右各留一條白** —— 而「人被左右緣切掉」從 v2 起是規格，留白就會被讀成畫錯。
 **所以第 0 段那條「上面留一條白」這一版要多一句：那條白不可以被任何線佔用。**
 
@@ -1106,27 +1132,20 @@ motion lines, icons; anybody drawn faded, translucent, ghostly or outline-only; 
 要更熱鬧還有第二條路：**給後排的人動作**（拍肩、探頭、兩手比讚）——
 那會動到構圖、等於重畫，**沒有自己走**，寫進第六節。
 
-### ⚠ 順手一起修 v4 留下的兩件（反正要重新生成，修它是免費的）
-
-1. **磚紅有兩個人穿**（①與⑧），提示詞寫的是 EXACTLY ONE。
-   → **⑧ 留著磚紅**（她在前排、完整看得到、離塗鴉那位最遠 ＝ 提示詞自己那三條），
-   **① 換成深綠 `#3f654a`**（⑦ 也是深綠，兩個人剛好在最左與偏右、不相鄰）。
-2. **⑨ 的帽 `#447378`（藍綠）配上衣 `#5a677e`（藍灰）** —— 和 v4 那一輪點名的第一件
-   同一種、只是換了一個人（＝**「一條『每一個都要如何』的規則，模型只會改被點名的那一個」**）。
-
 ### 要附的參考圖
 
 **同五之三那五張**，第 ⑤ 張換成 **`drafts/stand-card-illus-v4-src.jpg`（v4 的成品本人）**，
-標籤要寫成：**「整張照抄 —— 畫風、臉、姿勢、擠在一起的密度、三種印花、白袍、裁法；
-⚠ 只有三件要改：加幾道動作與聲音的短線、最左那位的磚紅換成深綠、
-後排右邊那位的帽子換成和上衣同色」**。
+標籤要寫成：**「整張照抄 —— 畫風、臉、姿勢、擠在一起的密度、三種印花、白袍、每一個人身上
+的衣服與帽子、裁法；⚠ 只有一件要改：加幾道動作與聲音的短線」**。
+
+⚠⚠ **沒有這一張，已經對的東西會被重新擲一次骰子**（v4 那一輪學到的，同颱風第二十五節）。
 
 ### 提示詞（v5，逐字）
 
-⚠ 和 v4 比，**沒有動的**：第 0 段以外的第 1~10 段（畫風、臉的畫法、畫到髖下、
-一顆頭佔四分之一、零文字、不要畫 QR、四個動作、印花要大而少、白袍要有邊、顏色）。
-**改的是最前面那一塊「這一版只改三件」、第 0 段多一句、新增第 11 段，
-`COMPOSITION ANCHORS` 與 `AVOID` 跟著換。**
+⚠ 和 v4 比，**沒有動的**：第 1~5、7~9 段（畫風、臉的畫法、畫到髖下、一顆頭佔四分之一、
+零文字、不要畫 QR、四個動作、印花要大而少、白袍要有邊）。
+**改的是最前面那一塊「這一版只改一件」、第 0 段多一句、第 6 段與第 10 段改寫成「照抄」、
+新增第 11 段，`COMPOSITION ANCHORS` 與 `AVOID` 跟著換。**
 
 ```
 Editorial illustration for a printed counter card, drawn as A SINGLE WIDE HORIZONTAL BAND OF
@@ -1140,16 +1159,13 @@ THAT IS NOT IN THE PICTURE - it is on the card ABOVE THE TOP EDGE. They are pres
 both sides to get into the picture, waving, pointing and calling other people over to look.
 
 WHAT CHANGES IN THIS VERSION - reference image 5 is the previous version and IT IS ALREADY
-ALMOST RIGHT. Keep its style, its faces, its poses, its crowding, its three printed fabrics, its
-white coats and its framing - DO NOT RE-DRAW THE GROUP. ONLY THREE THINGS CHANGE, and everything
-else below is there for you to check against, not to redo:
-  (i)   ADD A FEW SHORT ACTION AND SOUND LINES - see section 11. THIS IS THE MAIN CHANGE.
-  (ii)  TWO people wear brick red in the previous version and only ONE may. THE WOMAN ON THE
-        RIGHT WHO IS LOOKING DOWN AT HER PHONE KEEPS HER BRICK RED (#ae4f4d); THE WOMAN AT THE
-        FAR LEFT - the one the left edge cuts through, who is waving - CHANGES TO MUTED DEEP
-        GREEN (#3f654a).
-  (iii) The man in the back row on the right wears a TEAL cap over a SLATE BLUE top. HIS CAP
-        BECOMES EXACTLY THE SAME SLATE BLUE AS HIS OWN TOP.
+RIGHT. Keep its style, its faces, its poses, its crowding, its three printed fabrics, its white
+coats, ITS CLOTHING AND ITS COLOURS EXACTLY AS THEY ARE, and its framing - DO NOT RE-DRAW THE
+GROUP. EXACTLY ONE THING CHANGES:
+  ADD A FEW SHORT ACTION AND SOUND LINES - see section 11. THAT IS THE ONLY CHANGE.
+NOBODY'S SCRUBS, CAP, PRINT OR COLOUR MAY CHANGE, NOBODY MOVES, NOBODY IS ADDED OR REMOVED, AND
+NOBODY'S POSE IS ADJUSTED. Everything below apart from section 11 is there for you to check what
+you have copied, NOT for you to redo.
 
 0. THE FRAME. Leave A NARROW EMPTY WHITE BAND ACROSS THE TOP, about 8% of the height - nothing
    but white paper there, it will be trimmed off, AND NOTHING MAY REACH INTO IT: no hand, no
@@ -1221,43 +1237,28 @@ else below is there for you to check against, not to redo:
    small cheer, a hand on a colleague's shoulder, leaning in to look, one arm up beckoning.
    No two of them make the same gesture.
 
-6. WHAT THEY ARE WEARING - THIS IS THE BRAND DETAIL, DRAW IT CAREFULLY. They all wear V-neck
-   short-sleeved scrubs.
-   A CAP AND A TOP ARE ALWAYS ONE SET - GO THROUGH THE PEOPLE WHO WEAR A CAP ONE BY ONE AND CHECK
-   THIS. If someone wears a PRINTED cap, their top is cut from THE SAME PRINTED CLOTH. If someone
-   wears a PLAIN top, any cap they wear is PLAIN AND EXACTLY THE SAME COLOUR AS THAT TOP - not a
-   different shade, not a neighbouring colour, THE SAME COLOUR. A green cap over a blue top, or a
-   teal cap over a green top, is WRONG. NEVER a printed cap over a plain top. If in doubt, leave
-   the cap off.
-   THREE PRINTED FABRICS MUST BE THERE, ONE PERSON EACH - and only one person each - in the
-   front row where they can be seen:
-   (a) PRINTED DOODLE SCRUBS, exactly the ones in reference image 1 - THIS ONE IS REQUIRED, AND
-       EXACTLY ONE PERSON IN THE WHOLE PICTURE WEARS THIS PRINT: her CAP and her TOP are cut from
-       ONE AND THE SAME PRINTED FABRIC - warm off-white cloth (#f4ead8) scattered with SIMPLE
-       FLAT CHILDLIKE DOODLES (little bears, chicks, clouds, stars, small flowers) in ONLY TWO
-       COLOURS, amber (#c28229) and deep caramel (#9e6301). On her head A TIE-BACK SURGICAL CAP
-       of the same cloth. Over it A WHITE COAT HANGING OPEN.
+6. WHAT THEY ARE WEARING - THIS IS ALREADY DRAWN IN REFERENCE IMAGE 5, SO COPY IT EXACTLY, PERSON
+   BY PERSON. EACH PERSON KEEPS THE SAME SCRUBS, THE SAME CAP, THE SAME PRINT AND THE SAME COLOUR
+   AS THEY HAVE IN THAT IMAGE. DO NOT CHANGE ANYBODY'S CLOTHING IN THIS VERSION AND DO NOT
+   REDISTRIBUTE THE COLOURS ACROSS THE GROUP - not even to make them more even. The description
+   below is only so that you can check what you have copied.
+   They all wear V-neck short-sleeved scrubs. THREE PRINTED FABRICS APPEAR, ONE PERSON EACH, in
+   the front row where they can be seen:
+   (a) PRINTED DOODLE SCRUBS, exactly the ones in reference image 1: her CAP and her TOP are cut
+       from ONE AND THE SAME PRINTED FABRIC - warm off-white cloth (#f4ead8) scattered with
+       SIMPLE FLAT CHILDLIKE DOODLES (little bears, chicks, clouds, stars, small flowers) in ONLY
+       TWO COLOURS, amber (#c28229) and deep caramel (#9e6301). On her head A TIE-BACK SURGICAL
+       CAP of the same cloth. Over it A WHITE COAT HANGING OPEN.
    (b) PRINTED PINE-TREE SCRUBS, the motifs of reference image 2 ONLY: little pine trees, round
        bushes and tiny triangles, SIMPLE FLAT TWO-COLOUR SHAPES in deep teal (#317d78) and
        off-white, on A PALE TINT OF THAT SAME TEAL, with a matching tie-back cap.
    (c) PRINTED DINOSAUR SCRUBS, the motifs of reference image 3 ONLY: a long-necked dinosaur, a
        spotted plated dinosaur and a small flying one, SIMPLE FLAT TWO-COLOUR SHAPES in deep
        blue (#4478b5) and off-white, on A PALE TINT OF THAT SAME BLUE.
-   EVERYONE ELSE WEARS PLAIN SCRUBS, AND THEIR COLOURS COME FROM THIS LIST OF FIVE - SPREAD THEM
-   ACROSS THE GROUP, NEVER BUNCHED TOGETHER:
-       muted deep green (#3f654a)        - at most two people
-       deep teal (#317d78)               - at most two people
-       muted slate blue (#465885)        - at most two people
-       MUTED BRICK RED (#ae4f4d)         - EXACTLY ONE PERSON, NO MORE AND NO FEWER
-       MUTED PLUM PURPLE (#8e6299)       - EXACTLY ONE PERSON, NO MORE AND NO FEWER
-   THE BRICK-RED PERSON AND THE PLUM-PURPLE PERSON ARE BOTH IN THE FRONT ROW, FULLY VISIBLE, AND
-   THEY STAND ON OPPOSITE SIDES OF THE GROUP - not next to each other. Keep the brick-red person
-   AWAY FROM the amber doodle person (two warm colours side by side merge into one patch), and
-   keep the plain deep-teal person AWAY FROM the pine-tree person. If either of them wears a cap,
-   THAT CAP IS PLAIN AND EXACTLY THE SAME BRICK RED OR PLUM PURPLE AS THEIR OWN TOP.
-   NEVER MORE THAN TWO PEOPLE IN THE SAME PLAIN COLOUR. FOUR of them wear A WHITE COAT HANGING
-   OPEN over their scrubs; one or two wear a plain cap matching their own top. Nobody wears a
-   solid saturated yellow, mustard, mint or turquoise garment.
+   EVERYONE ELSE WEARS PLAIN SCRUBS in the muted colours they already have in reference image 5 -
+   deep green (#3f654a), deep teal (#317d78), slate blue (#465885), brick red (#ae4f4d) and plum
+   purple (#8e6299). FOUR of them wear A WHITE COAT HANGING OPEN over their scrubs; some wear a
+   plain cap. Nobody wears a solid saturated yellow, mustard, mint or turquoise garment.
 
 7. THE TWO PRINTS MUST BE BIG AND FEW, NOT SMALL AND BUSY - THIS IS THE EASIEST THING TO GET
    WRONG. Each motif is ABOUT A QUARTER OF THE WIDTH OF THE WEARER'S BODY, with a clear gap of
@@ -1280,16 +1281,16 @@ else below is there for you to check against, not to redo:
    image. Warm, calm, cheerful - never slick, never corporate, never a stock illustration.
 
 10. COLOUR. The white background is the largest area by far and stays empty. The only strong
-    colours are the uniforms: amber doodles, pale teal with teal trees, pale blue with blue
-    dinosaurs, and the plains - deep green, deep teal, slate blue, ONE BRICK RED (#ae4f4d) AND ONE
-    PLUM PURPLE (#8e6299) - spread evenly across the group rather than bunched together. NO ONE
-    COLOUR MAY DOMINATE THE UNIFORMS. Skin is a warm flat tone; hair is warm near-black; the
-    phones are a neutral warm grey. THE ONLY RED IN THE PICTURE IS THAT ONE MUTED BRICK-RED
-    UNIFORM: no fire-engine red, no scarlet, no crimson, nothing that could read as blood. NO
-    neon, NO gold, NO surgical blue or bright green, NO grey-blue clinical cast.
+    colours are the uniforms, AND THEY ARE ALREADY DISTRIBUTED IN REFERENCE IMAGE 5 - KEEP THAT
+    DISTRIBUTION EXACTLY: amber doodles, pale teal with teal trees, pale blue with blue
+    dinosaurs, and the plains - deep green, deep teal, slate blue, brick red and plum purple.
+    Skin is a warm flat tone; hair is warm near-black; the phones are a neutral warm grey. THE
+    ONLY RED IN THE PICTURE IS THE MUTED BRICK RED OF THE SCRUBS: no fire-engine red, no scarlet,
+    no crimson, nothing that could read as blood. NO neon, NO gold, NO surgical blue or bright
+    green, NO grey-blue clinical cast.
 
-11. A FEW SHORT ACTION LINES - NEW IN THIS VERSION, AND THE ONLY REAL ADDITION. The picture is a
-    little too quiet. Add SMALL HAND-DRAWN MOTION AND SOUND MARKS, drawn WITH THE SAME PEN AS THE
+11. A FEW SHORT ACTION LINES - NEW IN THIS VERSION, AND THE ONLY CHANGE. The picture is a little
+    too quiet. Add SMALL HAND-DRAWN MOTION AND SOUND MARKS, drawn WITH THE SAME PEN AS THE
     FIGURES' OUTLINES and in the same dark ink - never in colour, never thin and hairline, never
     a different style from the drawing.
     THE SHAPE, AND IT IS ALWAYS THE SAME SHAPE: A GROUP OF THREE OR FOUR SHORT STRAIGHT STROKES,
@@ -1320,11 +1321,10 @@ COMPOSITION ANCHORS: the top 8% of the picture is empty white, will be cut off, 
 REACHES INTO IT; the group touches and runs off the left edge, the right edge and the bottom edge;
 the bottom edge cuts every figure just below the hips; a head is about a quarter of the picture
 height; nine adults, five in front and four behind whose heads are as high as the front row's;
-every face complete and inside the picture; the plain uniforms use five colours with at most two
-people in any one of them, and EXACTLY ONE brick-red uniform and EXACTLY ONE plum-purple uniform;
-every cap is the same cloth or the same colour as its own wearer's top; every raised arm wears its
-owner's own sleeve; AND A FEW GROUPS OF SHORT PARALLEL ACTION STROKES, ONLY BESIDE PEOPLE WHO ARE
-ALREADY MOVING, SIXTEEN STROKES AT THE VERY MOST.
+every face complete and inside the picture; EVERY PERSON'S SCRUBS, CAP, PRINT AND COLOUR COPIED
+EXACTLY FROM REFERENCE IMAGE 5, WITH NOTHING REDISTRIBUTED; every raised arm wears its owner's own
+sleeve; AND A FEW GROUPS OF SHORT PARALLEL ACTION STROKES, ONLY BESIDE PEOPLE WHO ARE ALREADY
+MOVING, SIXTEEN STROKES AT THE VERY MOST.
 
 AVOID: any text, letters, numbers, words or logos anywhere; a QR code, barcode, matrix of dots,
 poster, sign, board, placard or framed rectangle; anything visible on a phone screen; any
@@ -1334,22 +1334,23 @@ or at the sides; a neat evenly spaced row of separated figures; anybody looking 
 A FACE OR A HEAD CUT BY THE EDGE OF THE PICTURE; A HEAD WITH NO BODY UNDER IT, OR A FIGURE WHOSE
 OUTLINE STOPS IN MID-AIR; A BACK-ROW HEAD DOWN AT CHEST HEIGHT; A CHILD OR A CHILD-SIZED FIGURE;
 A HAND, ARM OR SLEEVE THAT BELONGS TO NOBODY; A WHITE COAT SLEEVE ON THE RAISED ARM OF SOMEBODY
-WHO IS NOT WEARING A WHITE COAT, OR ANY SLEEVE THAT IS NOT THE GARMENT ITS OWNER IS WEARING; A
-PRINTED CAP WORN WITH A PLAIN TOP; A PLAIN CAP IN A DIFFERENT COLOUR FROM ITS WEARER'S OWN TOP;
-MORE THAN ONE PERSON IN THE DOODLE PRINT; MORE THAN TWO PEOPLE IN THE SAME PLAIN COLOUR; MORE THAN
-ONE BRICK-RED UNIFORM OR MORE THAN ONE PLUM-PURPLE UNIFORM, OR NONE OF EITHER; face masks; needles,
-syringes, drills, dental instruments, blood; a dental chair; solid saturated yellow, mustard,
-mint or turquoise uniforms; tiny busy multicoloured patterns; speech bubbles, thought bubbles,
-arrows, sparkles, stars, hearts, musical notes, exclamation marks, sweat drops, icons or any other
-comic-book symbol; AN ACTION LINE BESIDE SOMEBODY WHO IS STANDING STILL; A SINGLE LONG CURVED
-SWOOSH, A SPIRAL, OR A RING OF RAYS AROUND A HEAD; COLOURED OR RAINBOW ACTION LINES; MORE THAN
-SIXTEEN STROKES IN TOTAL; ANY STROKE IN THE EMPTY WHITE BAND AT THE TOP OR IN THE BOTTOM FIFTH OF
-THE PICTURE; anybody drawn faded, translucent, ghostly or outline-only; photorealism; 3D
-rendering; heavy even black outlines; a thick drop shadow.
+WHO IS NOT WEARING A WHITE COAT, OR ANY SLEEVE THAT IS NOT THE GARMENT ITS OWNER IS WEARING;
+ANY CHANGE AT ALL TO ANYBODY'S SCRUBS, CAP, PRINT OR COLOUR - THE CLOTHING IS COPIED FROM
+REFERENCE IMAGE 5 EXACTLY, EVEN WHERE IT LOOKS UNEVEN; MOVING, ADDING OR REMOVING A PERSON, OR
+CHANGING ANYBODY'S POSE; face masks; needles, syringes, drills, dental instruments, blood; a
+dental chair; solid saturated yellow, mustard, mint or turquoise uniforms; tiny busy multicoloured
+patterns; speech bubbles, thought bubbles, arrows, sparkles, stars, hearts, musical notes,
+exclamation marks, sweat drops, icons or any other comic-book symbol; AN ACTION LINE BESIDE
+SOMEBODY WHO IS STANDING STILL; A SINGLE LONG CURVED SWOOSH, A SPIRAL, OR A RING OF RAYS AROUND A
+HEAD; COLOURED OR RAINBOW ACTION LINES; MORE THAN SIXTEEN STROKES IN TOTAL; ANY STROKE IN THE
+EMPTY WHITE BAND AT THE TOP OR IN THE BOTTOM FIFTH OF THE PICTURE; anybody drawn faded,
+translucent, ghostly or outline-only; photorealism; 3D rendering; heavy even black outlines; a
+thick drop shadow.
 ```
 
-⚠⚠ 上面那一整塊**就是要送出去的全文**（第 1~10 段已經把 v4 的原字貼進來了）——
-這一版只有「這一版只改三件」、第 0 段最後那一句、第 11 段、`COMPOSITION ANCHORS` 與 `AVOID` 和 v4 不一樣。
+⚠⚠ 上面那一整塊**就是要送出去的全文**（第 1~5、7~9 段已經把 v4 的原字貼進來了）——
+這一版和 v4 不一樣的只有：抬頭那塊「這一版只改一件」、第 0 段最後那一句、
+第 6 段與第 10 段改寫成「照抄」、第 11 段、`COMPOSITION ANCHORS` 與 `AVOID`。
 
 ### v5 的驗收（出圖之後逐條跑一次）
 
@@ -1361,11 +1362,12 @@ rendering; heavy even black outlines; a thick drop shadow.
    面板印的「左右各餘」必須還是 **0.0 mm**。不是 0 就表示線畫進上面那條白裡了，
    **那一條會變成左右留白、人被邊緣切掉就讀成畫錯**。
 4. **總數不超過 16 道**（數得出來，不是感覺）。
-5. **磚紅正好一人**（右邊拿手機那位），**紫正好一人**，最左那位是深綠。
-6. **每一頂帽子和它自己的上衣同色或同一塊布** —— 一個一個看過，⑨ 那位要對上。
-7. v4 已經對的那幾件**一件都沒有壞掉**：十張臉都完整、沒有浮著的頭、後排的頭不在前排胸口、
+5. ⚠⚠⚠ **衣服逐個對 v4，一件都不可以變** —— 十個人的上衣、帽子、印花、白袍逐個比對
+   `drafts/stand-card-illus-v4-src.jpg`。**磚紅仍然是兩個人（① 與 ⑧）、⑨ 的帽子仍然是
+   藍綠配藍灰**：那兩件是使用者指定不修的，**看到它們還在才算對**。
+6. **人數、站位、姿勢一個都沒動**：十張臉都完整、沒有浮著的頭、後排的頭不在前排胸口、
    沒有腳沒有影子、圖裡零文字零 QR、螢幕空白。
-8. **把圖縮到 98 mm 寬看一次** —— 線在那個尺寸還讀得出是線、不是一團灰。
+7. **把圖縮到 98 mm 寬看一次** —— 線在那個尺寸還讀得出是線、不是一團灰。
 
 ---
 
