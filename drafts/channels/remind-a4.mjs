@@ -6,9 +6,8 @@
  *     → drafts/channels/芳仁-約診提醒-A4.pdf    （要印的就是這一份）
  *     → drafts/channels/remind-a4.png          （看一眼用的）
  *
- *   可帶：--date="9月18日 (五) 09:00"　--name=〔病人姓名〕　--pad=12（紙的上下留白 mm）
- *         --nohero（不放頭圖 —— 卡片矮 134px，放大倍率因此從 1.78 跳到 2.31、
- *                   字大三成；代價是這張紙上一個「芳仁」都沒有了，見底下第 ④ 條）
+ *   可帶：--date="9月18日 (五) 09:00"　--pad=12（紙的上下留白 mm）
+ *         --hero（把頭圖放回來）　--name=〔病人姓名〕（把姓名那一格放回來）
  *
  * 起點是使用者 2026-09-16 的照片：櫃檯現在印著**廠商那一版**的 A4（護貝在資料袋裡），
  * 約診時拿給病人看，告訴他看診前會收到這一則、要回覆。他：「我們已經做好新的，
@@ -26,10 +25,16 @@
  * ⚠⚠ 換媒介要逐項問的（CLAUDE.md 第九節第 28 條 ⑤）：
  *   ① **紙上的按鈕按不下去** —— 三顆都還在，因為這張紙的用途正是「你手機上會看到這個」；
  *      按鈕是那則訊息的一部分，拿掉反而看不懂。
- *   ② **〔病人姓名〕與日期是系統填的**，紙上只能印示範值（同廠商那一版印著 2025/01/11）。
+ *   ② **姓名與日期是系統填的** —— 日期紙上印示範值（同廠商那一版印著 2025/01/11），
+ *      **姓名那一格 2026-09-16 使用者指定連同括號一起拿掉**，開場只剩「哈囉」：
+ *      紙上印一個永遠不會是他的名字，比不印還怪（`--name=〔病人姓名〕` 放得回來）。
  *   ③ **電話在紙上撥不了**，但號碼讀得出來，不必改。
  *   ④ **沒有加抬頭、沒有加任何一句我們自己的話** —— 廠商那一版也沒有（它就是一張截圖），
  *      而這條線每一則的字都是使用者自己寫的。要加一句，等他開口。
+ *   ⑤ **頭圖 2026-09-16 使用者指定拿掉** —— 卡片矮 134px，同一張 A4 因此放得下更大的
+ *      倍率（1.78 → 2.31、字大三成）。⚠ **代價是這張紙上一個「芳仁」都沒有了**
+ *      （廠商那一版有一條寫著診所名的綠帶子），他看過數字之後仍然選它。
+ *      `--hero` 放得回來。
  *
  * ⚠ 紙上的卡多了一圈很淡的框線：卡片色 #F4F4F5 壓在白紙上幾乎看不出邊，
  *   螢幕上那一圈陰影印不出來。那是**印刷需要**，不是版面改動。
@@ -48,8 +53,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..", "..");
 const SRC = path.join(ROOT, "preview", "line-remind", "index.html");
 const OUT_HTML = path.join(HERE, "remind-a4.html");
-const OUT_PDF = () => path.join(HERE, NOHERO ? "芳仁-約診提醒-A4-無頭圖.pdf" : "芳仁-約診提醒-A4.pdf");
-const OUT_PNG = () => path.join(HERE, NOHERO ? "remind-a4-nohero.png" : "remind-a4.png");
+const OUT_PDF = path.join(HERE, "芳仁-約診提醒-A4.pdf");
+const OUT_PNG = path.join(HERE, "remind-a4.png");
 const CARD_W = 268;               /* LINE 上圖卡的實寬，整條線共用的那個數字 */
 const A4 = { w: 210, h: 297 };    /* mm */
 const MM = 96 / 25.4;             /* 1mm 在 96dpi 底下的 CSS px */
@@ -59,7 +64,9 @@ const arg = (k, d) => {
   return hit ? hit.slice(k.length + 3) : d;
 };
 const PAD = Number(arg("pad", "12"));   /* 紙的上下留白（mm）—— 卡片撐滿剩下的高度 */
-const NOHERO = process.argv.includes("--nohero");
+/* ⚠ 2026-09-16 定案：不放頭圖、不印姓名那一格（挑定的值寫回預設，見檔頭 ②⑤）。
+   `--hero`／`--name=…` 是回去的路，不是預設。 */
+const NOHERO = !process.argv.includes("--hero");
 
 /* ---- 示範日期 ----------------------------------------------------------
    卡上那一句寫的是「提醒2天後有約要看牙齒喔」，所以示範日期就取**兩天後**，
@@ -73,7 +80,7 @@ function sampleDate() {
   return `${d.getMonth() + 1}月${d.getDate()}日 (${wk}) 09:00`;
 }
 const DATE = arg("date", sampleDate());
-const NAME = arg("name", "〔病人姓名〕");
+const NAME = arg("name", "");
 
 /* ---- 1. 從規格頁把那張卡整個抓下來 ------------------------------------- */
 const chrome = (() => {
@@ -101,7 +108,13 @@ const picked = await page.evaluate(({ date, name }) => {
   const hiB = card.querySelector(".hi b");
   const before = { dt: dt.textContent, name: hiB.textContent };
   dt.textContent = date;
-  hiB.textContent = name;
+  if (name) hiB.textContent = name;
+  else {
+    /* 姓名整格拿掉時，前面那個全形空格也要拿掉 —— 不然「哈囉」後面掛著一個空格 */
+    const hi = hiB.parentNode;
+    hiB.remove();
+    hi.innerHTML = hi.innerHTML.replace(/[\s\u3000]+$/, "");
+  }
   const css = [...document.querySelectorAll("style")].map((s) => s.textContent).join("\n");
   return { html: card.outerHTML, css, before, text: card.innerText };
 }, { date: DATE, name: NAME });
@@ -128,15 +141,17 @@ for (const t of want) {
   if (!flat.includes(s)) throw new Error("卡上少了 JSON 裡的這一段字：" + t);
 }
 if (!picked.html.includes(DATE)) throw new Error("示範日期沒有換進去");
-if (!picked.html.includes(NAME)) throw new Error("示範姓名沒有換進去");
+if (NAME && !picked.html.includes(NAME)) throw new Error("示範姓名沒有換進去");
+if (!NAME && /<b>/.test(picked.html)) throw new Error("姓名那一格沒有拿掉");
+if (!NAME && !/哈囉</.test(picked.html)) throw new Error("開場那一行的全形空格沒有收掉");
 
-/* ⚠ --nohero：只有這一張紙上拿掉，**規格頁與要給廠商的 JSON 一個字都沒動**。
+/* ⚠ 不放頭圖：只有這一張紙上拿掉，**規格頁與要給廠商的 JSON 一個字都沒動**。
    卡片矮了 134px，所以同一張 A4 放得下更大的倍率 —— 換到的是字大三成，
    付出的是「這張紙上再也沒有診所的名字或臉」（廠商那一版有一條寫著診所名的綠帶子）。 */
 if (NOHERO) {
   const before = cardHtmlLen(picked.html);
   picked.html = picked.html.replace(/<img class="hero"[^>]*>/, "");
-  if (cardHtmlLen(picked.html) >= before) throw new Error("--nohero 沒有把頭圖拿掉");
+  if (cardHtmlLen(picked.html) >= before) throw new Error("頭圖沒有拿掉");
 }
 function cardHtmlLen(h) { return (h.match(/<img/g) || []).length; }
 
@@ -266,17 +281,18 @@ console.log("紙上：卡片 %smm×%smm　留白 上%s 下%s 左%s 右%s（mm）
 if (Math.min(box.t, box.b, box.l, box.r) < PAD * MM - 2)
   throw new Error("卡片超出留白，紙上會被切到");
 
-await p2.screenshot({ path: OUT_PNG(), clip: { x: 0, y: 0, width: box.sw, height: box.sh }, scale: "css" });
-await p2.pdf({ path: OUT_PDF(), printBackground: true, preferCSSPageSize: true,
+await p2.screenshot({ path: OUT_PNG, clip: { x: 0, y: 0, width: box.sw, height: box.sh }, scale: "css" });
+await p2.pdf({ path: OUT_PDF, printBackground: true, preferCSSPageSize: true,
   margin: { top: 0, right: 0, bottom: 0, left: 0 } });
 await p2.close();
 await browser.close();
 
 /* ⚠ PDF 一定要只有一頁 —— 多一頁就是版面溢出了（PDF 的頁數在 trailer 的 /Count） */
-const pdf = fs.readFileSync(OUT_PDF()).toString("latin1");
+const pdf = fs.readFileSync(OUT_PDF).toString("latin1");
 const pages = Math.max(...[...pdf.matchAll(/\/Count\s+(\d+)/g)].map((m) => +m[1]), 0);
 if (pages !== 1) throw new Error("PDF 不是一頁，是 " + pages + " 頁");
 
-console.log("放大 %s 倍　示範值：%s／%s", k.toFixed(3), NAME, DATE);
+console.log("放大 %s 倍　頭圖：%s　姓名那一格：%s　示範日期：%s",
+  k.toFixed(3), NOHERO ? "不放" : "放", NAME || "不印", DATE);
 console.log("好了：\n  %s\n  %s\n  %s",
-  path.relative(ROOT, OUT_PDF()), path.relative(ROOT, OUT_PNG()), path.relative(ROOT, OUT_HTML));
+  path.relative(ROOT, OUT_PDF), path.relative(ROOT, OUT_PNG), path.relative(ROOT, OUT_HTML));

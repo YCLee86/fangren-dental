@@ -10,7 +10,6 @@ Thumbs.db
 drafts/door-notice/preview.html
 drafts/door-notice/*.pdf
 # 櫃檯那張 A4 的產出（一行指令重做，見 drafts/channels/README.md 第七十一節）
-# ⚠ 要印的 drafts/channels/芳仁-約診提醒-A4.pdf 已經進版控，這裡擋的是其餘三個
+# ⚠ 要印的 drafts/channels/芳仁-約診提醒-A4.pdf 已經進版控，這裡擋的是另外兩個
 drafts/channels/remind-a4.html
 drafts/channels/remind-a4*.png
-drafts/channels/芳仁-約診提醒-A4-無頭圖.pdf
