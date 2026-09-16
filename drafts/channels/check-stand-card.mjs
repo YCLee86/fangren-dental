@@ -26,7 +26,7 @@
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 底色, 墨色, CARD,
+import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 墨色, CARD, 分上, 分下, 洞比, 最小洞, 那一條mm,
   切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm, 帶高, ID上, ID下, ID字級,
   QRSRC, QRFILE, QRPLATE, QRVAR, 印的案, 不印的 } from "./stand-card.mjs";
 
@@ -176,10 +176,12 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
   ok(/readUInt32BE\(16\)/.test(GEN), "產生器沒有從 PNG 的檔頭讀長寬比（寫死的話換一個檔，抬頭會靜靜地溢出）");
 }
 
-/* ── ⑥之四 底下那條帶子：診所自己的 logo ─────────────────────────
-   ⚠⚠⚠ 2026-09-16 使用者五件：四邊與中間的間隔要一致／小一點／多放一兩個／
-   底色用一般牙科主題色／標誌白色、牙洞就是那塊底色。前兩件是尺（Ⓚ 顆數、Ⓛ 間距），
-   後三件是決定 —— 每一件改回去畫面都還是很正常，所以每一件都要有一道。 */
+/* ── ⑥之四 抬頭底下那條分隔線：診所自己的 logo ───────────────────
+   ⚠⚠⚠ 2026-09-16 稍晚**那一條搬家了**（使用者：「下面的 logo 帶反而太吵雜　把 logo
+   縮小改成淡墨色　移到　芳仁牙醫有 line 囉　當作是分隔線的概念……三到四倍」）。
+   三件一起換：位置（卡片最下面 → 抬頭底下）、顏色（白標誌壓在綠底 → 淡墨畫在白紙上、
+   底色那塊 rect 拿掉）、顆數（11 → 基數的整數倍）。
+   ⚠ 每一件改回去畫面都還是很正常，所以每一件都要有一道。 */
 {
   const B = S.帶子;
   ok(B.順序案.length >= 2, "顆數那把尺只剩一格 —— 那就不是尺了");
@@ -204,6 +206,18 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
       ok(a.color !== c.color, `${案.標籤} 第 ${i}、${i + 1} 顆同一個顏色（${案.序[i - 1]}／${案.序[i]}）`);
     }
   }
+  /* ⚠⚠⚠ 顆數是基數的整數倍 ＝ 把同一段接回它自己，所以**接縫那一對也要守那三條** ——
+     直接拿真的排出來的那一列（BAND.it）逐對驗一次，接縫就一起驗到了。
+     ⚠ 只驗 JSON 裡那幾格的話，接縫是唯一沒有人看過的地方。 */
+  ok(BAND.顆數 % B.顆數 === 0, `分隔線 ${BAND.顆數} 顆不是基數 ${B.顆數} 的整數倍 —— 接縫沒有人驗過`);
+  ok(B.倍案.includes(B.倍), `倍數 ${B.倍} 不在倍案裡`);
+  ok(B.倍案.length >= 2, "倍數那把尺只剩一格 —— 那就不是尺了");
+  for (let i = 1; i < BAND.it.length; i++) {
+    const a = WM[BAND.it[i - 1].k], c = WM[BAND.it[i].k];
+    ok(BAND.it[i - 1].k !== BAND.it[i].k, `分隔線上第 ${i}、${i + 1} 顆是同一個形狀（接縫？）`);
+    ok(!(a.ratio > 2.5 && c.ratio > 2.5), `分隔線上第 ${i}、${i + 1} 顆都是最長的那一種`);
+    ok(a.color !== c.color, `分隔線上第 ${i}、${i + 1} 顆同一個顏色`);
+  }
   /* 等墨不等高 → 每一顆要垂直置中（上下都留一個間距，中間那一段再置中） */
   for (const o of BAND.it)
     ok(Math.abs(o.y - (BAND.gap + (BAND.高 - o.h) / 2)) < 0.01, `帶子上的 ${o.k} 沒有垂直置中`);
@@ -221,20 +235,34 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
       `帶子上第 ${i}、${i + 1} 顆之間的間隔和別處不一樣`);
   /* ⚠⚠ 內距烘在 viewBox 裡，所以 CSS 不可以再補一層 —— 補了兩邊就又和中間不一致了，
      而且畫面完全正常。同理那一條一定要滿版（--cw），不是版心。 */
-  ok(/\.card \.band\.logos\{background:transparent;padding:0;display:block\}/.test(GEN),
-    ".band.logos 又長出 padding 或底色了 —— 底色與四邊的留白都在 SVG 裡");
-  ok(/\.card \.band\.logos \.bnd\{width:var\(--cw\)/.test(GEN),
-    "那一條不是滿版 —— 底色要頂到卡片兩邊，而且兩邊的間隔要由 SVG 給");
+  ok(/\.card \.sep\{width:var\(--cw\)/.test(GEN) && /padding:0;display:block\}/.test(GEN),
+    ".card .sep 又長出 padding 或不是滿版了 —— 四邊的留白都在 SVG 的 viewBox 裡");
+  ok(!/\.card \.band\.logos/.test(GEN), "那一條又叫 .band.logos 了 —— 它已經不是卡片下面那條帶子");
+  /* ⚠⚠⚠ 位置：分隔線要在**抬頭底下、主文上面**（使用者指定的「當作是分隔線的概念」）——
+     搬回卡片最下面畫面照樣正常，而且每一道尺寸守門都會過。 */
+  {
+    /* ⚠ 不要用有長度上限的正規式去比先後 —— 中間隔著 33 個 <svg>，隨便就幾萬字。
+       直接比字串位置，而且要在**同一張卡**裡面比。 */
+    const 一張 = (H.match(/<div class="card">[\s\S]*?\n<\/div>/) ?? [""])[0];
+    const i分 = 一張.indexOf('class="sep"'), i主 = 一張.indexOf('<div class="bd"'), i圖 = 一張.indexOf('class="illus"');
+    ok(i分 > -1 && i主 > -1 && i分 < i主, "分隔線不在抬頭與主文之間");
+    ok(i圖 === -1 || i分 < i圖, "分隔線又跑到插圖底下了 —— 它是抬頭底下那條分隔線");
+  }
   /* 形狀與寬度都要是讀回來的，不可以抄第二份；底色也讀 wm-sizes.json */
   ok(/brand", "shapes"/.test(GEN), "產生器沒有從 brand/shapes 讀形狀");
   ok(/wm-sizes\.json/.test(GEN), "產生器沒有從 wm-sizes.json 讀寬度");
   ok(!/\bd="M [\d.]+ /.test(GEN), "產生器裡出現了寫死的路徑資料 —— 形狀只有 brand/shapes 一份出處");
-  ok(/export const 底色 = WM\.r1c1\.color;/.test(GEN),
-    "底色沒有讀 wm-sizes.json 的 r1c1 —— 一般牙科那支綠不要在這裡再抄一份色碼");
-  ok(底色.toLowerCase() === "#3f654a", `底色算出來是 ${底色}，不是一般牙科那支綠`);
-  /* 白壓在那塊綠上（裝飾性圖形，但順手量一次） */
+  /* ⚠⚠⚠ 搬家之後**底色那塊 rect 拿掉了**，標誌改成淡墨直接畫在白紙上。
+     補回一塊底色畫面照樣正常（那正是改動前的樣子），所以要有一道擋著。 */
+  ok(!/export const 底色/.test(GEN), "底色那個常數又回來了 —— 分隔線沒有底色，標誌直接畫在白紙上");
+  ok(!/<rect /.test(GEN), "分隔線裡又出現一塊 rect —— 那是改動前那條帶子的底色");
+  ok(墨色.toLowerCase() === "#5c5f57", `標誌算出來是 ${墨色}，不是淡墨（使用者指定「改成淡墨色」）`);
   const lum = (h) => { const c = [1, 3, 5].map((i) => { const v = parseInt(h.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
-  ok(1.05 / (lum(底色) + 0.05) >= 4.5, "白壓在帶子底色上低於 4.5");
+  ok(1.05 / (lum(墨色) + 0.05) >= 3, "淡墨壓在白紙上低於 3 —— 那一條會看不見");
+  /* ⚠⚠⚠ 牙洞在這個尺寸印不印得出來：這不是壞掉檢查，是**要印出來讓人知道**的取捨
+     （第九節第 28 條 ④）。面板每次出圖都要講，低於印刷的下限時那一排讀起來是一條線。 */
+  ok(最小洞 > 0 && 洞比(BAND.it[0].k) > 0.02, "量不到牙洞 —— 形狀的最後一個子路徑不是洞了");
+  ok(/最小洞/.test(GEN) && /µm/.test(GEN), "面板沒有印牙洞在這個尺寸多大 —— 那是這一輪唯一的取捨");
   /* 頁上每一條的形狀數、底色、墨色 */
   const bands = [...H.matchAll(/<svg class="bnd"[\s\S]*?<\/svg><\/svg>/g)];
   /* ⚠ 尺上那幾張也是真的卡，所以也各有一條帶子 —— 數的時候要算進來。
@@ -243,18 +271,17 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
      ⚠⚠⚠ 2026-09-16 那條單獨的示範帶（.bandonly）也跟著整節收掉了，所以只剩卡片上那幾條。 */
   const 尺數 = (H.match(/class="card sc"/g) ?? []).length;
   ok(bands.length === 印的案.length + 尺數,
-    `頁上畫出 ${bands.length} 條帶子（應該是 ${印的案.length} 張卡 ＋ ${尺數} 格尺）`);
+    `頁上畫出 ${bands.length} 條分隔線（應該是 ${印的案.length} 張卡 ＋ ${尺數} 格尺）`);
   ok(!/class="bandonly"/.test(H), "那條單獨的示範帶又回來了 —— 帶子整節 2026-09-16 收掉了");
   for (const m of bands) {
     /* ⚠⚠⚠ 牙洞是 fill-rule evenodd 挖穿的，底下那塊綠自己會透出來 ——
        所以整條只准有兩種 fill：那塊底色的 rect，以及形狀自己的 currentColor。
        另外畫一塊綠色的洞上去畫出來一模一樣，但形狀一改就會對不準，**而且不報錯**。 */
     const fills = [...m[0].matchAll(/fill="([^"]+)"/g)].map((x) => x[1].toLowerCase());
-    ok(fills.every((f) => f === 底色.toLowerCase() || f === "currentcolor"),
-      `有一條帶子多出別的 fill（${[...new Set(fills)].join("／")}）—— 牙洞不要另外填色`);
-    ok(fills.filter((f) => f === 底色.toLowerCase()).length === 1, "有一條帶子的底色不是一塊 rect");
-    ok(/fill-rule="evenodd"/.test(m[0]), "有一條帶子的形狀掉了 fill-rule evenodd —— 牙洞會被填滿");
-    ok(!/color:(?!#ffffff)/.test(m[0]), "有一條帶子的標誌不是白的");
+    ok(fills.every((f) => f === "currentcolor"),
+      `分隔線上多出別的 fill（${[...new Set(fills)].join("／")}）—— 牙洞不要另外填色、也不要補底色`);
+    ok(/fill-rule="evenodd"/.test(m[0]), "有一條分隔線的形狀掉了 fill-rule evenodd —— 牙洞會被填滿");
+    ok(!new RegExp("color:(?!" + 墨色 + ")").test(m[0]), "有一條分隔線的標誌不是淡墨");
   }
   for (const m of bands)
     ok((m[0].match(/<svg x="/g) ?? []).length === BAND.顆數,
@@ -271,7 +298,7 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
      ⚠ 定案那兩格仍然要在案裡（上面那一圈就是拿它們算「・定案」的），
        所以這裡另外守「那兩案一格都沒有被刪掉」。 */
   ok(!/class="bandrow"/.test(H), "兩把尺的帶子條又畫回來了 —— Ⓚ3／Ⓛ2 已定案，那兩把尺收成表了");
-  ok(/Ⓚ 顆數 \$\{S\.帶子\.順序案/.test(GEN) && /Ⓛ 間距 \$\{S\.帶子\.間距案/.test(GEN),
+  ok(/Ⓚ 基數 \$\{S\.帶子\.順序案/.test(GEN) && /Ⓛ 間距 \$\{S\.帶子\.間距案/.test(GEN),
     "面板沒有逐格印那兩把尺 —— 表收掉之後，那是它們量出來的數字唯一的去處");
   ok(!/bandrow/.test(GEN), "產生器裡還留著 bandrow");
   ok(B.順序案.some((k) => k.顆 === B.顆數) && B.間距案.some((k) => k.值 === B.間距),
@@ -286,9 +313,10 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
 
 /* 每次出圖都要印抬頭那一行（換抬頭、動字距或標誌，這裡要有一個數字跟著變） */
 ok(/抬頭「\$\{c\.抬頭\}」/.test(GEN), "面板沒有印抬頭那一行");
-ok(/帶子 \$\{BAND\.顆數\} 顆/.test(GEN), "面板沒有印帶子那幾顆");
+ok(/分隔線 \$\{BAND\.顆數\} 顆/.test(GEN), "面板沒有印分隔線那幾顆");
 ok(/四邊與中間都是/.test(GEN), "面板沒有印那五個間隔 —— 那正是這一輪要治的東西（第 28 條 ④）");
-ok(/Ⓚ 顆數/.test(GEN) && /Ⓛ 間距/.test(GEN), "面板沒有印那兩把尺");
+ok(/Ⓜ 倍數/.test(GEN) && /Ⓚ 基數/.test(GEN) && /Ⓛ 間距/.test(GEN), "面板沒有印那三把尺");
+ok(/分隔線 上 /.test(GEN), "面板沒有印分隔線上下那兩個間距 —— 它們是這一輪新的，而且會動到抬頭到主文");
 
 /* ── ⑥之五 字級的例外要在資料裡宣告，而且看得出是往哪一邊釘 ─────────
    ⚠⚠⚠ 2026-09-16 使用者：「用 E 但字級照 F」。做法是**替那一案宣告一個例外**，
@@ -439,9 +467,9 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
  *   以及**直接引用原檔**（比例一換就爆框，而 <img> 會靜靜地照 contain 縮小）。 */
 {
   const [w, h] = S.插圖.裁成, [ow, oh] = S.插圖.原尺寸;
-  /* ⚠⚠ 2026-09-16 起插圖**沉進帶子後面**（使用者：「腳藏進帶子裡」），
-     所以要比的是「那一條」＝ QR 底下到帶子 ＋ 一個帶子高，不是 餘裕mm 本身。 */
-  const 塊 = +(餘裕mm(印的案.find((c) => c.id === "e")) + 帶高() * CARD.寬mm).toFixed(1);
+  /* ⚠⚠⚠ 2026-09-16 稍晚：那條帶子搬到抬頭底下當分隔線，所以「那一條」＝ QR 底下到
+     **卡片下緣**（`那一條mm`），插圖的下緣就是卡片的下緣、沒有東西蓋在它上面。 */
+  const 塊 = 那一條mm(印的案.find((c) => c.id === "e"));
   const 卡 = [...H.matchAll(/<div class="card[^"]*">[\s\S]*?\n<\/div>/g)].map((m) => m[0]);
   ok(existsSync(join(DIR, S.插圖.檔)), `插圖 ${S.插圖.檔} 不在 —— 先跑 node drafts/channels/stand-illus-crop.mjs`);
   ok(existsSync(join(ROOT, S.插圖.原檔)), `原檔 ${S.插圖.原檔} 不在版控裡 —— 換一版就沒有回去的路了`);
@@ -472,8 +500,10 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
     }
     ok(W === w && Hh === h, `${S.插圖.檔} 實際是 ${W}×${Hh}，資料寫的是 ${w}×${h}`);
   }
-  ok(w / h <= CARD.寬mm / 塊 + 1e-9,
-    `插圖比例 ${(w / h).toFixed(3)} 比那一塊（${(CARD.寬mm / 塊).toFixed(3)}）還寬 —— 那就變成寬度在卡、人物比這一塊給得起的還小`);
+  /* ⚠⚠⚠ 裁圖那一支現在**兩個方向都湊到正好**（比那一條寬就從頭頂借白、比那一條瘦就裁下緣），
+     所以這裡不再是「不可以更寬」，是「要一模一樣」—— 差一點就是左右或上下留白。 */
+  ok(Math.abs(w / h - CARD.寬mm / 塊) < 0.005,
+    `插圖比例 ${(w / h).toFixed(3)} 對不上那一條的 ${(CARD.寬mm / 塊).toFixed(3)} —— 左右或上下會留白`);
   /* 裁掉的是上下那兩條白，所以裁完一定比原檔**寬**（比例變大） */
   ok(w / h > ow / oh + 1e-9,
     "插圖沒有裁過（比例還是原檔的）—— 整張 16:9 放進那一塊會爆框 10.9 mm");
@@ -485,15 +515,15 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
   ok(/\.card \.illus\{[\s\S]*?margin:0 calc\(var\(--pad\) \* -1\)/.test(GEN),
     "插圖少了負的左右外距 —— 它會縮回內距框裡（86.2 mm），兩側各留一條白");
   ok(!/\.illus\{[^}]*object-fit:cover/.test(GEN), "插圖改成 cover 了 —— 左右兩個人會各被切掉一截，而畫面看起來很正常");
-  /* ⚠⚠⚠ 腳藏進帶子裡（2026-09-16）：負的下外距讓它沉進去、帶子補一個堆疊脈絡畫在上面。
-     兩件都是「拿掉之後畫面看起來很正常」的 —— 少了負外距只是圖小一截，
-     少了 z-index 則是人的腳蓋在標誌那一條上。 */
-  ok(/\.card \.illus\{[\s\S]*?calc\(var\(--cw\) \* -\$\{帶高\(\)/.test(GEN),
-    "插圖沒有沉進帶子後面了 —— 那是使用者指定的「腳藏進帶子裡」");
+  /* ⚠⚠⚠ 2026-09-16 稍晚那條帶子搬走了，所以「沉進帶子後面」那兩道**翻面** ——
+     負的下外距與帶子的堆疊脈絡都不可以留著（留著的話插圖會被拉到卡片外面 9.4 mm，
+     而畫面看起來只是人被切得比較高）。 */
+  ok(!/\.card \.illus\{[\s\S]*?calc\(var\(--cw\) \* -\$\{帶高\(\)/.test(GEN),
+    "插圖還留著那個負的下外距 —— 帶子已經搬到抬頭底下，底下沒有東西可以沉了");
+  ok(!/\.card \.band\{[^}]*z-index/.test(GEN),
+    "帶子還留著那個堆疊脈絡 —— 那是為了讓插圖沉進去才加的，現在沒有東西要沉");
   ok(/object-position:bottom center/.test(GEN),
-    "插圖少了 object-position:bottom center —— 哪天圖比那一條還寬，它會浮在帶子上面、腳露出來");
-  ok(/\.card \.band\{[^}]*position:relative;z-index:1\}/.test(GEN),
-    "帶子少了 position:relative;z-index:1 —— img 畫在區塊背景後面，人的腳會蓋在標誌上");
+    "插圖少了 object-position:bottom center —— 哪天圖比那一條還瘦，人會往上浮、腳離開卡片下緣");
   for (const c of 卡)
     ok(new RegExp(`<img class="illus" src="${S.插圖.檔}" width="${w}" height="${h}"`).test(c),
       "案卡上少了插圖，或它的 width／height 和實檔對不起來");
@@ -812,7 +842,10 @@ for (const w of [430, 350, 320]) {
       const ps = [...c.querySelectorAll(".bd p")].map((x) => x.getBoundingClientRect());
       const qr = c.querySelector(".qr").getBoundingClientRect();
       const cue = [...c.querySelectorAll(".cue")].map((x) => x.getBoundingClientRect());
-      const band = c.querySelector(".band").getBoundingClientRect();
+      /* ⚠⚠ 2026-09-16 稍晚：卡片最下面那條帶子搬去當分隔線了，所以「還剩多少」
+         量的是**卡片自己的下緣**；分隔線另外量它自己那一塊。 */
+      const cr = c.getBoundingClientRect();
+      const sep = c.querySelector(".sep")?.getBoundingClientRect() ?? null;
       /* ⚠ 最底下那一塊不一定是最後一個 .cue —— 有的案只有 QR 上面那一行，
          拿它當底會把整顆 QR 一起算進餘裕裡（踩過）。取「底邊最低」的那一個。 */
       const 底 = [qr, ...cue].reduce((a, b) => (b.bottom > a.bottom ? b : a));
@@ -820,10 +853,13 @@ for (const w of [430, 350, 320]) {
          不然它會被讀成主文的第四行。⚠ 量的是兩個框之間的距離 ＝ 那一條外距本身。 */
       const idr = c.querySelector(".cue.id")?.getBoundingClientRect() ?? null;
       const im = c.querySelector("img.illus")?.getBoundingClientRect() ?? null;
-      return { 框mm: mm(ps[0].top - hr.bottom), 餘mm: mm(band.top - 底.bottom), ...留白(hd),
+      return { 框mm: mm(ps[0].top - hr.bottom), 餘mm: mm(cr.bottom - 底.bottom), ...留白(hd),
         id上: idr ? mm(idr.top - ps[ps.length - 1].bottom) : null,
         id下: idr ? mm(qr.top - idr.bottom) : null,
-        沉mm: im ? mm(im.bottom - band.top) : null };
+        分高: sep ? mm(sep.height) : null,
+        分上: sep ? mm(sep.top - hr.bottom) : null,
+        分下: sep ? mm(ps[0].top - sep.bottom) : null,
+        插到底: im ? mm(cr.bottom - im.bottom) : null };
     });
     return 卡;
   });
@@ -836,11 +872,17 @@ for (const w of [430, 350, 320]) {
     const r = 卡[i];
     ok(!!r, "量不到 " + c.標籤 + " 那一張卡");
     if (!r) continue;
-    const 該 = (BDGAP + PGAP * fsOf(c).fs) * 98;
-    ok(Math.abs(r.框mm - 該) < 0.3,
-      c.標籤 + " 抬頭到主文量到 " + r.框mm.toFixed(2) + " mm，預設值算出來是 " + 該.toFixed(2));
-    ok(Math.abs(r.餘mm - 餘裕mm(c)) < 0.4,
-      c.標籤 + " QR 底下到帶子量到 " + r.餘mm.toFixed(1) + " mm，算出來是 " + 餘裕mm(c) + " —— 疊高() 算錯了");
+    const 該 = (分上 + 帶高() + 分下 + BDGAP + PGAP * fsOf(c).fs) * 98;
+    ok(Math.abs(r.框mm - 該) < 0.4,
+      c.標籤 + " 抬頭到主文量到 " + r.框mm.toFixed(2) + " mm，預設值算出來是 " + 該.toFixed(2) + "（含中間那條分隔線）");
+    ok(Math.abs(r.餘mm - 那一條mm(c)) < 0.4,
+      c.標籤 + " QR 底下到卡片下緣量到 " + r.餘mm.toFixed(1) + " mm，算出來是 " + 那一條mm(c) + " —— 疊高() 算錯了");
+    /* ⚠⚠⚠ 分隔線那一塊：高度與上下兩個外距都要畫得出來 —— 少了外距畫面只是擠一點，
+       而「抬頭到主文」那一道會跟著錯，但它只會說「差 3 mm」，不會說是誰吃掉的。 */
+    ok(r.分高 != null && Math.abs(r.分高 - 帶高() * 98) < 0.3,
+      c.標籤 + " 分隔線量到 " + (r.分高 ?? NaN).toFixed(2) + " mm 高，算出來是 " + (帶高() * 98).toFixed(2));
+    ok(Math.abs(r.分上 - 分上 * 98) < 0.3 && Math.abs(r.分下 - (分下 + PGAP * fsOf(c).fs) * 98) < 0.4,
+      c.標籤 + " 分隔線上下量到 " + (r.分上 ?? NaN).toFixed(2) + "／" + (r.分下 ?? NaN).toFixed(2) + " mm");
     /* ⚠ 那一行的上下間距：算出來的那兩個常數要真的畫得出來（相鄰兄弟那一條被蓋掉就會差 3.9 mm） */
     /* ⚠⚠ 上面那一段是**兩截**：主文最後一段自己的下外距（PGAP）＋ 那一行的上外距 ——
        .bd 是 flex 項目，兩截不會合併（同「抬頭到主文」那一段的老坑）。 */
@@ -851,9 +893,10 @@ for (const w of [430, 350, 320]) {
     ok(r.id上 > r.id下 * 1.5,
       c.標籤 + " 那一行上面 " + (r.id上 ?? NaN).toFixed(1) + " mm 沒有比下面 " + (r.id下 ?? NaN).toFixed(1) +
       " mm 寬多少 —— 它會被讀成主文的第四行，不是這顆碼的名字");
-    /* ⚠⚠⚠ 插圖真的沉進帶子後面了嗎 —— 少了那個負外距畫面只是圖小一截，不會有任何一道尺寸守門翻臉 */
-    ok(r.沉mm != null && Math.abs(r.沉mm - 帶高() * 98) < 0.5,
-      c.標籤 + " 插圖的下緣只到帶子上緣底下 " + (r.沉mm ?? NaN).toFixed(1) + " mm，應該是一整個帶子 " + (帶高() * 98).toFixed(1));
+    /* ⚠⚠⚠ 那條帶子搬走之後，插圖的下緣就是**卡片的下緣** —— 留一條白畫面只是圖小一截，
+       不會有任何一道尺寸守門翻臉（改動前那個負外距的守門翻面成這一道）。 */
+    ok(r.插到底 != null && Math.abs(r.插到底) < 0.5,
+      c.標籤 + " 插圖的下緣離卡片下緣 " + (r.插到底 ?? NaN).toFixed(2) + " mm —— 它應該畫到底");
     ok(r.左 != null && Math.abs(r.左 - 留白比) < 0.01 && Math.abs(r.右 - 留白比) < 0.01,
       c.標籤 + " 標誌左右量到 " + (r.左 * 100).toFixed(1) + "%／" + (r.右 * 100).toFixed(1) +
       "%，預設是 " + (留白比 * 100).toFixed(1) + "%");

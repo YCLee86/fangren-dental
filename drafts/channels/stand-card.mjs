@@ -182,26 +182,43 @@ export const PGAP = CARD.段距;
  *   卡片是固定長寬比，多一行就從「QR 底下到帶子」那一塊扣，所以這裡**不用**
  *   .cue 那個通用的 .07 間距（那樣要 12.4 mm），另外給兩個窄的。
  * ⚠⚠ **上面要比下面寬**（接近律）：那一行是「這顆碼叫什麼」，要讀成 QR 的名字
- *   而不是主文的第四行 —— 上 .035 ／ 下 .018 ＝ 約 2:1。
+ *   而不是主文的第四行 —— 2026-09-16 使用者「上下間隔有點大　縮小一點」，
+ *   從 .035／.018 收到 **.024／.012**（2.35／1.18 mm），**2:1 沒有動**。
  * ⚠ 三個都是具名常數：CSS 與 疊高() 吃同一份，分家的話面板會算出一個
  *   和畫面對不上的餘裕，而版面看起來完全正常。 */
-export const ID上 = 0.035, ID下 = 0.018, ID字級 = 0.038;
-/* ⚠ 那一條現在是**滿版**（底色要頂到卡片兩邊），所以它的高 ＝ 卡寬 × 總高÷總寬；
-   內距烘在 SVG 的 viewBox 裡，`.band.logos` 自己沒有 padding。 */
+export const ID上 = 0.024, ID下 = 0.012, ID字級 = 0.038;
+/* ── 分隔線（2026-09-16 那一條搬家）───────────────────────────────
+ * 使用者：「插圖已經很豐富了　下面的 logo 帶反而太吵雜　把 logo 縮小改成淡墨色
+ *   移到『芳仁牙醫有 LINE 囉』　當作是分隔線的概念　因為要很小　logo 的數量應該會是
+ *   現在的三到四倍」。所以那一條**不在卡片最下面了**：它變成抬頭底下的一條分隔線，
+ *   底色拿掉、標誌改成淡墨、顆數變成基數的整數倍。
+ * ⚠⚠ 它一走，卡片最下面那 9.4 mm 就還給插圖 —— 插圖因此**不再沉進帶子後面**，
+ *   人的下半身改由**卡片自己的下緣**切掉（那本來就是規格）。
+ * ⚠ 上下這兩個間距是分隔線自己的，和 Ⓗ（抬頭到主文）是兩件事；
+ *   Ⓗ7 那句「抬頭到主文 3.9 mm」因此不再描述這個版面（第九節第 28 條 ②），
+ *   面板現在印的是加了分隔線之後的實際距離。 */
+export const 分上 = 0.016, 分下 = 0.016;
+/* ⚠ 那一條仍然是**滿版**，高 ＝ 卡寬 × 總高÷總寬；四邊的留白烘在 SVG 的 viewBox 裡，
+   `.sep` 自己沒有 padding。 */
 export const 帶高 = () => BAND.總高 / BAND.總寬;
 export const 疊高 = (c, M = BDGAP, g = PGAP) => {
   const { fs } = fsOf(c), hd = hdOf(c), n = c.主文.length;
   const bd = M + g * fs + n * 1.5 * fs + (n - 1) * g * fs + g * fs;
-  return 0.06 + 1.5 * hd.fs + bd
+  return 0.06 + 1.5 * hd.fs + 分上 + 帶高() + 分下 + bd
     + (c.QR上 ? ID上 + 1.5 * ID字級 + ID下 : 0.04) + CARD.QR佔卡寬
-    + (c.QR下 ? 0.03 + 1.5 * 0.036 : 0) + 帶高();
+    + (c.QR下 ? 0.03 + 1.5 * 0.036 : 0);
 };
-/* QR 底下那一行到帶子之間還剩多少 —— 人物插圖要畫在這裡 */
+/* 插圖那一條有多高 —— **只有一個出處**：裁圖那一支（stand-illus-crop.mjs）import 它。
+ * ⚠⚠ 2026-09-16 那條帶子搬到抬頭底下之後，這一條**不再含一個帶子高** ——
+ *   插圖的下緣就是卡片的下緣，沒有東西蓋在它上面了。 */
+export const 那一條mm = (c, M = BDGAP, g = PGAP) => 餘裕mm(c, M, g);
+/* QR 底下那一行到卡片下緣還剩多少 —— 人物插圖要畫在這裡 */
 export const 餘裕mm = (c, M = BDGAP, g = PGAP) => +((CARD.比例 - 疊高(c, M, g)) * CARD.寬mm).toFixed(1);
-/* 抬頭的字面框下緣 → 第一行主文的字面框上緣（行高 1.5，所以上下各半行距 .25em） */
+/* 抬頭的字面框下緣 → 第一行主文的字面框上緣（行高 1.5，所以上下各半行距 .25em）
+   ⚠⚠ 2026-09-16 起中間多了一條分隔線，所以這個量含 分上 ＋ 帶高 ＋ 分下。 */
 export const 抬頭到主文mm = (c, M = BDGAP, g = PGAP) => {
   const { fs } = fsOf(c), hd = hdOf(c);
-  return +((M + g * fs + 0.25 * hd.fs + 0.25 * fs) * CARD.寬mm).toFixed(1);
+  return +((分上 + 帶高() + 分下 + M + g * fs + 0.25 * hd.fs + 0.25 * fs) * CARD.寬mm).toFixed(1);
 };
 /* 主文行與行之間的同一個量（合併後的 .28em ＋ 上下各半行距） */
 export const 行距mm = (c, g = PGAP) => +((g + 0.5) * fsOf(c).fs * CARD.寬mm).toFixed(1);
@@ -302,15 +319,25 @@ const SHAPE = (k) => {
  * ⚠⚠ **標誌填白、牙洞不要另外填** —— 單一路徑 ＋ `fill-rule: evenodd`，洞是挖穿的，
  *   底下那塊綠自己會透出來。另外畫一塊綠色的洞上去畫出來一模一樣，但形狀一改就會
  *   對不準，**而且不報錯**。
- * ⚠ 底色那一支綠也讀 wm-sizes.json（`r1c1` ＝ 一般牙科），不在這裡再抄一份色碼。 */
-export const 底色 = WM.r1c1.color;
+ * ⚠⚠⚠ 2026-09-16：**底色那塊 rect 拿掉了** —— 那一條搬去當分隔線，標誌改成淡墨
+ *   直接畫在白紙上。所以整條只剩一種 fill（形狀自己的 currentColor），
+ *   而「牙洞挖穿透出底色」變成「透出白紙」，evenodd 一樣非有不可。 */
 export const 墨色 = S.帶子.墨;
+/* ⚠⚠⚠ 2026-09-16：顆數變成**基數的整數倍**（使用者：「三到四倍」）。
+ *   只給整數倍，是因為那三條相鄰的限制**在接縫上也要成立** —— 整數倍等於把同一段
+ *   接回它自己，接縫那一對（最後一顆與第一顆）驗一次就代表每一個接縫；
+ *   非整數倍要另外寫一份順序進 JSON，不可以就地截一段（截口沒有人驗過）。 */
 export const 序of = (n) => {
   const k = S.帶子.順序案.find((x) => x.顆 === n);
-  if (!k) throw new Error("順序案裡沒有 " + n + " 顆那一格");
-  return k.序;
+  if (k) return k.序;
+  /* 挑一份「顆數整除得了 n」的順序接起來（基數優先） */
+  const 基 = [S.帶子.顆數, ...S.帶子.順序案.map((x) => x.顆)]
+    .find((m) => n % m === 0 && S.帶子.順序案.some((x) => x.顆 === m));
+  if (!基) throw new Error("順序案裡沒有 " + n + " 顆那一格，也沒有任何一格整除得了它");
+  const b = S.帶子.順序案.find((x) => x.顆 === 基);
+  return Array.from({ length: n / 基 }, () => b.序).flat();
 };
-export const 帶 = (n = S.帶子.顆數, k = S.帶子.間距) => {
+export const 帶 = (n = S.帶子.顆數 * S.帶子.倍, k = S.帶子.間距) => {
   const it = 序of(n).map((key) => {
     const m = WM[key];
     if (!m) throw new Error("wm-sizes.json 裡沒有 " + key);
@@ -323,10 +350,36 @@ export const 帶 = (n = S.帶子.顆數, k = S.帶子.間距) => {
   return { it, 高: H, gap, 顆數: n, 間距: k, 總寬: x, 總高: H + 2 * gap };
 };
 export const BAND = 帶();
+/* ── 牙洞在這個尺寸還看不看得到（2026-09-16）─────────────────────
+ * 那一條縮成分隔線之後，每一顆只有 1~2 mm 寬 —— 洞跟著縮。這裡**現場量**每一顆的
+ * 洞（路徑的最後一個子路徑）佔外框多寬，換算成印出來幾 mm，讓面板印出來。
+ * ⚠⚠ 不是裝飾性的數字：平版印刷守得住的細節大約 0.2~0.3 mm，低於它那一排就會
+ *   讀成「一條有節奏的線」而不是十一個標誌 —— 那正是分隔線要的，但要知道它會發生。 */
+const 子路徑 = (d) => d.trim().split(/(?=M)/).map((x) => x.trim()).filter(Boolean);
+const 框 = (seg) => {
+  const n = (seg.match(/-?\d*\.?\d+(?:e-?\d+)?/g) || []).map(Number);
+  let x0 = Infinity, x1 = -Infinity;
+  for (let i = 0; i + 1 < n.length; i += 2) { if (n[i] < x0) x0 = n[i]; if (n[i] > x1) x1 = n[i]; }
+  return x1 - x0;
+};
+export const 洞比 = (k) => {
+  const src = readFileSync(join(ROOT, "brand", "shapes", `shape-${k}.svg`), "utf8");
+  const d = (src.match(/ d="([^"]+)"/) || [])[1];
+  if (!d) throw new Error(k + " 抽不到 d");
+  const ps = 子路徑(d);
+  if (ps.length < 2) throw new Error(k + " 只有一個子路徑 —— 牙洞不見了");
+  return 框(ps[ps.length - 1]) / 框(ps[0]);
+};
+export const 最小洞 = Math.min(...BAND.it.map((l) => 洞比(l.k) * l.w / BAND.總寬 * CARD.寬mm));
+/* 相對亮度（只給面板算對比用） */
+const lum = (h) => {
+  const c = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255)
+    .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
 const bandSvg = (B = BAND) => {
   const { it, 總寬, 總高 } = B;
-  return `<svg class="bnd" viewBox="0 0 ${總寬.toFixed(1)} ${總高.toFixed(1)}" role="img" aria-label="芳仁牙醫診所的${B.顆數}個標誌">` +
-    `<rect width="${總寬.toFixed(1)}" height="${總高.toFixed(1)}" fill="${底色}"/>` +
+  return `<svg class="bnd" viewBox="0 0 ${總寬.toFixed(1)} ${總高.toFixed(1)}" role="img" aria-label="芳仁牙醫診所的標誌排成的一條分隔線">` +
     it.map((o) => {
       const { vb, inner } = SHAPE(o.k);
       return `<svg x="${o.x.toFixed(1)}" y="${o.y.toFixed(1)}" width="${o.w}" height="${o.h.toFixed(1)}" viewBox="${vb}" style="color:${墨色}">${inner}</svg>`;
@@ -358,6 +411,7 @@ const card = (c, now = false, o = {}) => {
   return `<div class="card${now ? " now" : ""}${o.尺 ? " sc" : ""}"${st ? ` style="${st}"` : ""}>
   <div class="hd" style="font-size:${f(hd.fs.toFixed(4))}">${now ? esc(c.抬頭) : mark(c.抬頭)}</div>
   ${c.副標 ? `<div class="sub" style="font-size:${f(0.05)}">${esc(c.副標)}</div>` : ""}
+  ${now ? "" : `<div class="sep">${bandSvg()}</div>`}
   <div class="bd" style="font-size:${f(fs.toFixed(4))}">${c.主文.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
   ${c.QR上 ? `<div class="cue id" style="font-size:${f(ID字級)}">${esc(c.QR上)}</div>` : ""}
   ${now
@@ -365,9 +419,7 @@ const card = (c, now = false, o = {}) => {
     : `<img class="qr" src="${QRFILE}" width="45" height="45" alt="芳仁牙醫診所 LINE 官方帳號的 QR code">`}
   ${c.QR下 ? `<div class="cue lo" style="font-size:${f(0.036)}">${esc(c.QR下)}</div>` : ""}
   ${now ? "" : `<img class="illus" src="${ILLUS}" width="${ILLUSW}" height="${ILLUSH}" alt="一群芳仁牙醫的醫事人員擠在一起，有人揮手、有人指著上方喊、有人舉著手機">`}
-  ${now
-    ? `<div class="band" style="font-size:${f(0.04)}">${esc(c.帶子 ?? "")}</div>`
-    : `<div class="band logos">${bandSvg()}</div>`}
+  ${now ? `<div class="band" style="font-size:${f(0.04)}">${esc(c.帶子 ?? "")}</div>` : ""}
 </div>`;
 };
 
@@ -491,16 +543,16 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
    症狀是兩側各留一條白（人被邊緣切掉就讀成畫錯，不是出血）、圖變成寬度在卡、
    上面空一截、一顆頭小 12% —— **每一道尺寸守門都會過**。 */
 .card .illus{flex:1 1 auto;min-height:0;width:var(--cw);object-fit:contain;object-position:bottom center;
-  margin:0 calc(var(--pad) * -1) calc(var(--cw) * -${帶高().toFixed(5)});display:block}
-/* ⚠⚠⚠ position/z-index 是為了插圖沉進來才加的：img 是行內取代元素，
-   **畫在區塊背景後面**，不給帶子一個堆疊脈絡的話，人的腳會蓋在標誌上。 */
+  margin:0 calc(var(--pad) * -1);display:block}
 .card .band{margin:auto calc(var(--pad) * -1) 0;width:var(--cw);padding:calc(var(--cw) * .026) 0;
-  background:#3c4657;color:#fff;letter-spacing:.03em;position:relative;z-index:1}
+  background:#3c4657;color:#fff;letter-spacing:.03em}
 .card .band.empty{background:transparent;border-top:1px dashed #d5d5d5;color:transparent}
-/* 標誌那一條：滿版、沒有字。⚠⚠ 底色與四邊的內距**都在 SVG 裡**（那一塊 rect ＋
-   viewBox 的留白）—— 這裡不可以再補 padding，補了兩邊就又和中間不一致了。 */
-.card .band.logos{background:transparent;padding:0;display:block}
-.card .band.logos .bnd{width:var(--cw);height:auto;display:block}
+/* 抬頭底下那條分隔線：滿版、沒有字、沒有底色。⚠⚠ 四邊的留白**在 SVG 的 viewBox 裡** ——
+   這裡不可以補 padding，補了兩邊就又和中間不一致了（那五個間隔要出自同一個算式）。
+   ⚠ 上下這兩個外距是分隔線自己的，和 Ⓗ（抬頭到主文）是兩件事。 */
+.card .sep{width:var(--cw);margin:calc(var(--cw) * ${分上}) calc(var(--pad) * -1) calc(var(--cw) * ${分下});
+  padding:0;display:block}
+.card .sep .bnd{width:var(--cw);height:auto;display:block}
 .card.now .bd p{white-space:normal}
 .note{font-size:.86rem;color:var(--soft);margin:.6em 0 0}
 .note p{margin:.35em 0}
@@ -576,7 +628,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   {
     const 行 = 行距mm(尺卡), 抬 = 抬頭到主文mm(尺卡);
     console.log(`間距（畫在 ${尺卡.標籤} 上）　抬頭到主文 ${抬} mm・主文行距 ${行} mm ＝ ${(抬 / 行).toFixed(2)} 倍` +
-      `　QR 底下到帶子還剩 ${餘裕mm(尺卡)} mm`);
+      `　QR 底下到卡片下緣還剩 ${那一條mm(尺卡)} mm`);
     console.log(`     Ⓗ 抬頭到主文 ${CARD.抬頭到主文案.map((k) => `${(k.值 * 100).toFixed(1)}%→${抬頭到主文mm(尺卡, k.值)}`).join("　")}（mm，現在 ${(BDGAP * 100).toFixed(1)}%）`);
     console.log(`     Ⓙ 每段之間　 ${CARD.段距案.map((k) => `${k.值}em→${行距mm(尺卡, k.值)}`).join("　")}（mm，現在 ${PGAP}em）`);
     console.log(`     ⚠ 兩把互相牽動：段距一收，抬頭那一段也收一點、但行距收更多 —— 比值反而變大`);
@@ -591,25 +643,28 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   }).join("　")}（mm，現在 ${(留白比 * 100).toFixed(1)}%${留白比 < 規範留白 ? `　⚠ 低於規範的 ${(規範留白 * 100).toFixed(0)}%，那是使用者挑的` : ""}）`);
   {
     const s2 = CARD.寬mm / BAND.總寬;
-    console.log(`帶子 ${BAND.顆數} 顆 ${BAND.it.map((x) => x.k).join(" ")}（間距 ${BAND.間距}）`);
+    console.log(`分隔線 ${BAND.顆數} 顆（基數 ${S.帶子.顆數} × ${S.帶子.倍}）（間距 ${BAND.間距}）`);
     console.log(`     合計 ${BAND.總寬.toFixed(0)}×${BAND.總高.toFixed(0)} 單位・最高的那一顆 ${BAND.高.toFixed(0)}（最矮 ${Math.min(...BAND.it.map((x) => x.h)).toFixed(0)}，差 ${(BAND.高 / Math.min(...BAND.it.map((x) => x.h))).toFixed(2)} 倍 —— 所以要垂直置中）`);
     console.log(`     在 ${CARD.寬mm} mm 的卡上　帶子高 ${(BAND.總高 * s2).toFixed(1)} mm・一顆最高 ${(BAND.高 * s2).toFixed(2)} mm・四邊與中間都是 ${(BAND.gap * s2).toFixed(2)} mm`);
-    console.log(`     底色 ${底色}（wm-sizes.json 的 r1c1 ＝ 一般牙科）・標誌 ${墨色}（牙洞挖穿，透出底色）`);
-    console.log(`     Ⓚ 顆數 ${S.帶子.順序案.map((k) => { const b = 帶(k.顆); return `${k.顆}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在 ${BAND.顆數} 顆）`);
+    console.log(`     沒有底色・標誌 ${墨色}（淡墨，牙洞挖穿透出白紙）・壓在白紙上 ${(1.05 / (lum(墨色) + 0.05)).toFixed(2)}`);
+    console.log(`     ⚠ 牙洞在這個尺寸 ${(最小洞 * 1000).toFixed(0)} µm ＝ ${最小洞.toFixed(2)} mm —— 平版印刷大約守得住 0.2~0.3 mm，所以那一排讀起來是一條線不是十一個標誌`);
+    console.log(`     Ⓜ 倍數 ${S.帶子.倍案.map((k) => { const b = 帶(S.帶子.顆數 * k); const s3 = CARD.寬mm / b.總寬;
+      return `${k}倍(${S.帶子.顆數 * k}顆)→高 ${(b.總高 * s3).toFixed(2)}・一顆最寬 ${(Math.max(...b.it.map((x) => x.w)) * s3).toFixed(2)}`; }).join("　")}（mm，現在 ${S.帶子.倍} 倍）`);
+    console.log(`     Ⓚ 基數 ${S.帶子.順序案.map((k) => { const b = 帶(k.顆 * S.帶子.倍); return `${k.顆}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在基數 ${S.帶子.顆數} 顆 × ${S.帶子.倍}）`);
+    console.log(`     分隔線 上 ${(分上 * CARD.寬mm).toFixed(2)} ／ 下 ${(分下 * CARD.寬mm).toFixed(2)} mm・抬頭到主文因此變成 ${抬頭到主文mm(尺卡)} mm`);
     console.log(`     Ⓛ 間距 ${S.帶子.間距案.map((k) => { const b = 帶(undefined, k.值); return `${k.值}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在 ${BAND.間距}）`);
   }
   console.log("");
   {
     /* 人物插圖：那一塊剩多少 → 這張圖畫出來多大。⚠ 兩個數字都現算，
        上面的間距一動、或換一張比例不同的圖，這裡就要跟著變。 */
-    const [w, h] = S.插圖.裁成, [ow, oh] = S.插圖.原尺寸, 塊 = 餘裕mm(尺卡);
-    /* ⚠⚠ 2026-09-16 起插圖**沉進帶子後面**（使用者：「腳藏進帶子裡」）——
-       所以它畫出來的那一條比「QR 底下到帶子」還高一個帶子，而版面一個數字都沒有動
-       （負的下外距，帶子的位置與高度完全不變）。 */
-    const 帶mm = +(帶高() * CARD.寬mm).toFixed(1), 條 = +(塊 + 帶mm).toFixed(1);
+    const [w, h] = S.插圖.裁成, [ow, oh] = S.插圖.原尺寸;
+    /* ⚠⚠⚠ 2026-09-16 稍晚：那一條帶子搬到抬頭底下當分隔線，所以插圖**不再沉進任何東西後面** ——
+       它畫出來的那一條就是「QR 底下到卡片下緣」，人的下半身由卡片自己的下緣切掉。 */
+    const 條 = 那一條mm(尺卡);
     console.log(`人物插圖 ${S.插圖.檔}　原檔 ${ow}×${oh}（比例 ${(ow/oh).toFixed(3)}）→ 裁到墨的框 ${w}×${h}（比例 ${(w/h).toFixed(3)}）`);
-    console.log(`     那一條 ${CARD.寬mm} × ${條} mm（QR 底下到帶子 ${塊} ＋ 沉進帶子後面 ${帶mm}）＝ 比例 ${(CARD.寬mm/條).toFixed(3)}`);
-    console.log(`     → ${w/h < CARD.寬mm/條 ? "高度在卡" : "⚠ 寬度在卡（圖比那一條還寬，下緣會離開帶子）"}，畫出來 ${(w/h*條).toFixed(1)} × ${條} mm・左右各餘 ${((CARD.寬mm - w/h*條)/2).toFixed(1)} mm・${(h*25.4/條).toFixed(0)} dpi・看得到 ${(塊/條*100).toFixed(0)}%`);
+    console.log(`     那一條 ${CARD.寬mm} × ${條} mm（QR 底下到卡片下緣，沒有東西蓋在它上面）＝ 比例 ${(CARD.寬mm/條).toFixed(3)}`);
+    console.log(`     → ${w/h < CARD.寬mm/條 ? "⚠ 高度在卡（圖比那一條瘦，左右會留白）" : "寬度在卡"}，畫出來 ${(w/h*條).toFixed(1)} × ${條} mm・左右各餘 ${((CARD.寬mm - w/h*條)/2).toFixed(1)} mm・${(h*25.4/條).toFixed(0)} dpi`);
     console.log(`     ⚠ 整張原檔直接放（不裁）：照寬度縮會高 ${(CARD.寬mm/(ow/oh)).toFixed(1)} mm ＝ 爆框 ${(CARD.寬mm/(ow/oh)-條).toFixed(1)} mm`);
     console.log(`     ⚠⚠ 下一版要畫成 ${(CARD.寬mm/條).toFixed(2)}:1（裁到墨之後），這一版是 ${(w/h).toFixed(3)} —— 對不上就會左右留白`);
   }

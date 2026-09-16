@@ -16,7 +16,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pkg from "/opt/node22/lib/node_modules/playwright/index.js";
-import { S, CARD, 餘裕mm, 帶高, 印的案 } from "./stand-card.mjs";
+import { S, CARD, 那一條mm, 印的案 } from "./stand-card.mjs";
 const { chromium } = pkg;
 
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -28,11 +28,12 @@ const CHECK = process.argv.includes("--check");
 
 /* 卡片上那一塊（和 stand-card.mjs 的 CARD.寬mm ／ 餘裕mm 對得起來，
    數字在那一支現算，這裡只記它算出來的結果當守門的上限） */
-/* ⚠⚠ 2026-09-16 起插圖**沉進帶子後面**（使用者：「腳藏進帶子裡」），所以要比的是
-   「那一條」＝ QR 底下到帶子 ＋ 一個帶子高 —— 兩個數字都在 stand-card.mjs 現算，
-   這裡一個都不寫死（那一行 ID 加上去之後它就變了，寫死的話這裡會靜靜地說謊）。 */
+/* ⚠⚠⚠ 2026-09-16 稍晚：那一條標誌帶搬到抬頭底下當分隔線，所以插圖**不再沉進任何東西後面** ——
+   「那一條」＝ QR 底下到**卡片下緣**，人的下半身由卡片自己的下緣切掉。
+   ⚠ 它在 stand-card.mjs 現算（`那一條mm`），這裡一個數字都不寫死 ——
+   上面任何一個間距一動，這裡就要跟著變，寫死的話它會靜靜地說謊。 */
 const 卡寬mm = CARD.寬mm;
-const 那一塊mm = +(餘裕mm(印的案.find((c) => c.id === "e")) + 帶高() * CARD.寬mm).toFixed(1);
+const 那一塊mm = 那一條mm(印的案.find((c) => c.id === "e"));
 const 上限比 = 卡寬mm / 那一塊mm;
 const 邊白 = 8;                            // 裁完四邊各留幾 px 的白
 const 門檻 = 12;                           // 離純白多遠才算墨
@@ -59,22 +60,25 @@ const r = await p.evaluate(async ({ src, 門檻, 邊白, 上限比 }) => {
     }
   }
   const x0 = Math.max(0, L - 邊白), x1 = Math.min(W - 1, Rr + 邊白);
-  const y1 = Math.min(H - 1, B + 邊白);
   const cw = x1 - x0 + 1;
-  /* ⚠⚠⚠ 上緣**把白補回來**，不是裁到墨就算了 —— 裁到墨之後若比那一條還寬，
-     就變成寬度在卡、人物比那一條給得起的還小。頭頂上那塊白本來就是空的，
-     從那裡借回來一點，比例就正好是那一條，而借回來的白落在畫面最上緣、看不出來。
-     ⚠ **只補不裁**：比那一條瘦是好的那一種（高度在卡、填滿整條）。 */
-  const 需高 = Math.ceil(cw / 上限比);
+  /* ⚠⚠⚠ 高度一律**湊到正好是那一條的比例**，兩個方向各有各的做法，而且不可以對調：
+     ・裁到墨之後**比那一條寬**（矮）→ 從**頭頂上那塊白**把高度借回來（白落在最上緣，看不出來）。
+     ・裁到墨之後**比那一條瘦**（高）→ 從**下緣裁掉**一截 —— 那裡是身體，而「下半身被畫面
+       下緣切掉」從 v2 起就是規格，切高一點只是切在大腿還是髖部的差別。
+     ⚠⚠ **上緣永遠不准裁**（那是頭），下緣永遠不准補白（那會在卡片最下面留一條白）。 */
+  const 需高 = Math.round(cw / 上限比);
   const y0墨 = Math.max(0, T - 邊白);
-  const y0 = 需高 > y1 - y0墨 + 1 ? Math.max(0, y1 - 需高 + 1) : y0墨;
+  const 可用 = H - y0墨;
+  let y0, y1;
+  if (需高 <= 可用) { y0 = y0墨; y1 = y0 + 需高 - 1; }
+  else { y1 = H - 1; y0 = Math.max(0, y1 - 需高 + 1); }
   const ch = y1 - y0 + 1;
   const o = document.createElement("canvas"); o.width = cw; o.height = ch;
   const og = o.getContext("2d");
   og.fillStyle = "#ffffff"; og.fillRect(0, 0, cw, ch);
   og.drawImage(img, x0, y0, cw, ch, 0, 0, cw, ch);
   return {
-    W, H, L, R: Rr, T, B, x0, y0, cw, ch, 補: y0墨 - y0,
+    W, H, L, R: Rr, T, B, x0, y0, cw, ch, 補: y0墨 - y0, 裁: Math.max(0, B - y1),
     jpg: o.toDataURL("image/jpeg", 0.92).split(",")[1],
   };
 }, { src: `data:image/jpeg;base64,${b64}`, 門檻, 邊白, 上限比 });
@@ -93,8 +97,11 @@ if (r.T < 2)
   bad.push(`墨碰到原檔的上緣（y 從 ${r.T}）—— 頭被切掉了，要回去重生成；上緣也是唯一可以補白的那一側`);
 if (r.L < 2 || r.R > r.W - 3)
   console.log(`（兩側出血：墨 x ${r.L}..${r.R} / ${r.W} —— v2 是刻意的，v1 不是）`);
-if (比 > 上限比 + 1e-6)
-  bad.push(`裁完比例 ${比.toFixed(3)} > ${上限比.toFixed(3)}，而且頭頂上的白已經借光了 —— 原檔要再高一點（人畫得太扁）`);
+if (Math.abs(比 - 上限比) > 0.005)
+  bad.push(`裁完比例 ${比.toFixed(3)} 對不上那一條的 ${上限比.toFixed(3)} —— 左右或上下會留白`);
+/* ⚠ 下緣裁掉的是身體，可是裁過頭就會切到手、切到胸口。上限拿墨的高度當基準。 */
+if (r.裁 > (r.B - r.T + 1) * 0.2)
+  bad.push(`下緣裁掉 ${r.裁} 列 ＝ 墨的 ${(r.裁 / (r.B - r.T + 1) * 100).toFixed(0)}%，超過 20% —— 那一版畫得太高，回去讓人畫矮一點`);
 if (r.ch < 900 / 2)
   bad.push(`裁完只有 ${r.ch}px 高 —— 印 ${那一塊mm} mm 至少要 ${Math.ceil(那一塊mm / 25.4 * 300)}px（300 dpi）`);
 if (r.ch * 25.4 / 那一塊mm < 300)
@@ -103,9 +110,9 @@ if (r.ch * 25.4 / 那一塊mm < 300)
 console.log(`原檔 ${r.W}×${r.H}（比例 ${(r.W / r.H).toFixed(3)}）`);
 console.log(`墨的框 x ${r.L}..${r.R}  y ${r.T}..${r.B}`);
 console.log(`裁成 ${r.cw}×${r.ch}（比例 ${比.toFixed(3)}）` +
-  (r.補 ? `　⚠ 上緣把 ${r.補}px 的白補回來了（裁到墨是 ${(r.cw / (r.ch - r.補)).toFixed(3)}，比那一條寬）` : ""));
-console.log(`放進卡片那一條（${卡寬mm} × ${那一塊mm} mm ＝ QR 底下到帶子 ＋ 沉進帶子後面）：畫出來 ${畫出來寬} × ${那一塊mm} mm，左右各餘 ${((卡寬mm - 畫出來寬) / 2).toFixed(1)} mm`);
-console.log(`（下面 ${(帶高() * 卡寬mm / 那一塊mm * 100).toFixed(0)}% 會被那條標誌帶子蓋住 —— 重要的東西不要放在那裡）`);
+  (r.補 ? `　⚠ 上緣把 ${r.補}px 的白補回來了（裁到墨是 ${(r.cw / (r.ch - r.補)).toFixed(3)}，比那一條寬）` : "") +
+  (r.裁 ? `　⚠ 下緣裁掉 ${r.裁}px 的身體（裁到墨是 ${(r.cw / (r.B - r.y0 + 1)).toFixed(3)}，比那一條瘦）` : ""));
+console.log(`放進卡片那一條（${卡寬mm} × ${那一塊mm} mm ＝ QR 底下到卡片下緣）：畫出來 ${畫出來寬} × ${那一塊mm} mm，左右各餘 ${((卡寬mm - 畫出來寬) / 2).toFixed(1)} mm`);
 console.log(`印出來 ${(r.ch * 25.4 / 那一塊mm).toFixed(0)} dpi`);
 console.log(`（對照：整張 16:9 直接放，照寬度縮會高 ${(卡寬mm / (r.W / r.H)).toFixed(1)} mm ＝ 爆框 ${(卡寬mm / (r.W / r.H) - 那一塊mm).toFixed(1)} mm）`);
 

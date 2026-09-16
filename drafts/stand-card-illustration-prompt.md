@@ -1060,6 +1060,315 @@ motion lines, icons; anybody drawn faded, translucent, ghostly or outline-only; 
 
 ---
 
+## 五之七、v5 的提示詞（2026-09-16，使用者：圖片有點太安靜了）
+
+> 「我覺得圖片有點太安靜了　雖然很多人也有動作　加一點線條　例如　左三黃衣服的看起來是
+> 往上叫喊的樣子　或是右邊拿手機打字　應該都可以加點線條或標示動作　聲音的感覺
+> 其他人也可以稍微加一點　給提示詞」
+
+⚠⚠⚠ **他決定的正是第六節第 5 項，而且範圍比那一條大。** 那一條寫的是
+「頭上那三條短線要不要畫……**只給 Ⓐ 一個人**」，講的是**情緒**（「哇」）；
+他要的是**動作與聲音**，而且點名了兩個人、還加一句「其他人也可以稍微加一點」。
+所以 `AVOID` 那一行明文禁止的 `motion lines` **這一版要拿掉**
+（⚠ `sparkles`／`speech bubbles`／`icons` 三個仍然禁，見下面那一段）——
+**這是「每一輪都要把自己上一版的 `AVOID` 逐條唸過一次」那條的第三次現場。**
+
+### 先認人（v4 成品，左 → 右，量過不是猜的）
+
+| | 誰 | 在做什麼 | 這一版加線嗎 |
+| --- | --- | --- | --- |
+| ① | 磚紅素色 女（被左緣切到） | 舉手打招呼 | 一到兩道 |
+| ② | 藍灰帽＋藍灰上衣 男（後排） | 站著微笑 | **不加** |
+| ③ | **米黃塗鴉印花 ＋ 白袍 女** | **張嘴往上喊**、一手張開舉起 | ⭐ **這一張最響的一組**（他說的「左三黃衣服」） |
+| ④ | 深青綠素色 女（後排） | 食指往上指 | 一到兩道 |
+| ⑤ | 松樹印花 ＋ 青綠帽 男 | 手臂高舉揮手 | 一到兩道 |
+| ⑥ | 恐龍印花 女 | 雙手把手機舉起來 | 一道 |
+| ⑦ | 深綠帽＋深綠上衣 男（後排） | 站著微笑 | **不加** |
+| ⑧ | **磚紅素色 馬尾 女** | **低頭看手機打字** | ⭐ 他說的「右邊拿手機打字」 |
+| ⑨ | 藍綠帽＋藍灰上衣 男（後排） | 站著微笑 | **不加** ⚠ 帽與上衣不同色（v4 留下的瑕疵） |
+| ⑩ | 紫帽＋紫上衣 ＋ 白袍 女 | 站著微笑 | **不加** |
+
+### ⚠⚠⚠ 一條只有量過才知道的硬邊界：線不可以往上長
+
+原檔 2000×989，**墨的框從 y=104 開始**（上面 104 列是白的），而裁圖那一支
+（`stand-illus-crop.mjs`）為了把比例撐到卡片那一條的 2.117，**已經從那塊白裡借走 60 列**
+（裁出來是 y 44..988）。所以**還剩 44 列的餘裕 ＝ 畫面高度的 4.5%**。
+
+線如果畫到 y=44 以上，裁出來就會比那一條**高**，`object-fit: contain` 會改成高度在卡、
+**左右各留一條白** —— 而「人被左右緣切掉」從 v2 起是規格，留白就會被讀成畫錯。
+**所以第 0 段那條「上面留一條白」這一版要多一句：那條白不可以被任何線佔用。**
+
+### ⚠⚠ 誠實的一半：線加得再多，站著不動的人還是安靜的
+
+這一版的規矩是「**一道線沒有在解釋畫面裡已經發生的動作就不要畫**」
+（＝颱風那一輪第 25-19 節那條），而九（十）個人裡**只有四個有動作**，其餘是站著微笑。
+所以線治得到的是「有動作的人看起來更用力」，治不到「一半的人只是站著」。
+要更熱鬧還有第二條路：**給後排的人動作**（拍肩、探頭、兩手比讚）——
+那會動到構圖、等於重畫，**沒有自己走**，寫進第六節。
+
+### ⚠ 順手一起修 v4 留下的兩件（反正要重新生成，修它是免費的）
+
+1. **磚紅有兩個人穿**（①與⑧），提示詞寫的是 EXACTLY ONE。
+   → **⑧ 留著磚紅**（她在前排、完整看得到、離塗鴉那位最遠 ＝ 提示詞自己那三條），
+   **① 換成深綠 `#3f654a`**（⑦ 也是深綠，兩個人剛好在最左與偏右、不相鄰）。
+2. **⑨ 的帽 `#447378`（藍綠）配上衣 `#5a677e`（藍灰）** —— 和 v4 那一輪點名的第一件
+   同一種、只是換了一個人（＝**「一條『每一個都要如何』的規則，模型只會改被點名的那一個」**）。
+
+### 要附的參考圖
+
+**同五之三那五張**，第 ⑤ 張換成 **`drafts/stand-card-illus-v4-src.jpg`（v4 的成品本人）**，
+標籤要寫成：**「整張照抄 —— 畫風、臉、姿勢、擠在一起的密度、三種印花、白袍、裁法；
+⚠ 只有三件要改：加幾道動作與聲音的短線、最左那位的磚紅換成深綠、
+後排右邊那位的帽子換成和上衣同色」**。
+
+### 提示詞（v5，逐字）
+
+⚠ 和 v4 比，**沒有動的**：第 0 段以外的第 1~10 段（畫風、臉的畫法、畫到髖下、
+一顆頭佔四分之一、零文字、不要畫 QR、四個動作、印花要大而少、白袍要有邊、顏色）。
+**改的是最前面那一塊「這一版只改三件」、第 0 段多一句、新增第 11 段，
+`COMPOSITION ANCHORS` 與 `AVOID` 跟著換。**
+
+```
+Editorial illustration for a printed counter card, drawn as A SINGLE WIDE HORIZONTAL BAND OF
+PEOPLE - a frieze, not a scene. Wide landscape, about 2:1 (for example 1200 x 600 px). Printed
+only 98 mm wide, so keep every shape big and simple, no small detail, and ABSOLUTELY NO TEXT,
+LETTERS, NUMBERS OR LOGOS ANYWHERE IN THE PICTURE.
+
+THE STORY IN ONE SENTENCE - READ THIS BEFORE DRAWING ANYTHING: NINE members of a small dental
+clinic's staff have crowded together in a cheerful huddle, all of them delighted about A QR CODE
+THAT IS NOT IN THE PICTURE - it is on the card ABOVE THE TOP EDGE. They are pressing in from
+both sides to get into the picture, waving, pointing and calling other people over to look.
+
+WHAT CHANGES IN THIS VERSION - reference image 5 is the previous version and IT IS ALREADY
+ALMOST RIGHT. Keep its style, its faces, its poses, its crowding, its three printed fabrics, its
+white coats and its framing - DO NOT RE-DRAW THE GROUP. ONLY THREE THINGS CHANGE, and everything
+else below is there for you to check against, not to redo:
+  (i)   ADD A FEW SHORT ACTION AND SOUND LINES - see section 11. THIS IS THE MAIN CHANGE.
+  (ii)  TWO people wear brick red in the previous version and only ONE may. THE WOMAN ON THE
+        RIGHT WHO IS LOOKING DOWN AT HER PHONE KEEPS HER BRICK RED (#ae4f4d); THE WOMAN AT THE
+        FAR LEFT - the one the left edge cuts through, who is waving - CHANGES TO MUTED DEEP
+        GREEN (#3f654a).
+  (iii) The man in the back row on the right wears a TEAL cap over a SLATE BLUE top. HIS CAP
+        BECOMES EXACTLY THE SAME SLATE BLUE AS HIS OWN TOP.
+
+0. THE FRAME. Leave A NARROW EMPTY WHITE BAND ACROSS THE TOP, about 8% of the height - nothing
+   but white paper there, it will be trimmed off, AND NOTHING MAY REACH INTO IT: no hand, no
+   finger, no hair and NONE OF THE NEW ACTION LINES. EVERYWHERE ELSE THE PICTURE IS FULL: the
+   people RUN OFF THE LEFT EDGE, OFF THE RIGHT EDGE AND OFF THE BOTTOM EDGE. Do not leave an
+   empty margin at the bottom or at the sides, and do not shrink the group to fit inside the
+   frame.
+
+1. HOW MUCH OF EACH PERSON WE SEE - THIS IS THE MOST IMPORTANT INSTRUCTION. WE SEE THEM FROM THE
+   TOP OF THE HEAD DOWN TO JUST BELOW THE HIPS, AND THAT FILLS THE WHOLE HEIGHT OF THE PICTURE.
+   THE BOTTOM EDGE OF THE PICTURE CUTS STRAIGHT THROUGH THEM JUST BELOW THE HIPS. NO LEGS, NO
+   KNEES, NO FEET, NO SHOES, NO SHADOWS ON THE GROUND, NO GROUND LINE - the lower body simply
+   continues past the bottom edge. A HEAD IS ABOUT A QUARTER OF THE HEIGHT OF THE PICTURE. They
+   are drawn at natural human proportions - not big-headed, not chibi; they look large because
+   we are close to them, not because their heads are oversized.
+
+2. THE BACKGROUND IS PLAIN WHITE AND COMPLETELY EMPTY. No room, no wall, no floor, no horizon
+   line, no furniture, no frame, no border, no panel, no background colour, no scenery of any
+   kind. The picture must look like nine people drawn straight onto white paper.
+
+3. THERE IS NO QR CODE IN THIS PICTURE - THIS IS A HARD RULE. Do not draw a QR code, a square of
+   black and white dots, a barcode, a phone screen with a code on it, a sign, a poster, a board,
+   a card or a framed rectangle anywhere. Everyone is looking at, pointing at or aiming a phone
+   at SOMETHING JUST ABOVE THE TOP EDGE OF THE PICTURE, which we cannot see. Their eyes and
+   their hands go UP AND SLIGHTLY TOWARDS THE CENTRE of the top edge.
+
+4. HOW THEY ARE CROWDED - TWO ROWS, PRESSED TOGETHER. ALL NINE ARE ADULTS OF ROUGHLY THE SAME
+   BUILD; THERE ARE NO CHILDREN IN THIS PICTURE.
+   FIVE of them stand in front, shoulder to shoulder, OVERLAPPING EACH OTHER BY ABOUT HALF A
+   SHOULDER so the row is genuinely packed.
+   THE OTHER FOUR STAND BEHIND AND LEAN IN. Draw them like this, and check each one:
+     - THEIR HEADS SIT AT THE SAME HEIGHT AS THE FRONT ROW'S HEADS OR SLIGHTLY HIGHER. A BACK-ROW
+       HEAD MUST NEVER APPEAR DOWN AT THE CHEST HEIGHT OF THE PEOPLE IN FRONT.
+     - THEY ARE THE SAME SIZE AS THE FRONT ROW, or at most a little smaller - never small enough
+       to read as a child.
+     - EACH ONE SHOWS A HEAD AND AT LEAST ONE WHOLE SHOULDER, AND THE BODY CONTINUES DOWNWARDS
+       AND DISAPPEARS BEHIND THE PERSON IN FRONT. NOBODY'S OUTLINE MAY SIMPLY STOP IN MID-AIR: no
+       head floating with nothing under it, no half a person wedged between two others.
+   THE SIDE EDGES CUT THROUGH BODIES, NOT THROUGH FACES. The person at each end is cut by the
+   edge THROUGH THE SHOULDER, THE ARM OR THE TORSO, and leans inwards as if squeezing into the
+   picture - but ALL NINE FACES ARE COMPLETE AND FULLY INSIDE THE PICTURE. Never cut a face,
+   never cut a head in half.
+   EVERY ARM AND EVERY HAND MUST CLEARLY BELONG TO A PERSON WE CAN SEE - follow each raised arm
+   back to its own shoulder. No hand or sleeve floating on its own.
+   AND THE SLEEVE ON THAT ARM MUST BE THE GARMENT ITS OWNER IS ACTUALLY WEARING - CHECK EVERY
+   RAISED ARM ONE BY ONE. Scrubs have SHORT sleeves, so a person who is NOT wearing a white coat
+   raises A BARE FOREARM, with the short sleeve ending high on the upper arm. ONLY the people who
+   wear a white coat have a white sleeve running down to the wrist. Never draw a white coat
+   sleeve on somebody who has no white coat, and never draw a bare forearm coming out of a coat.
+   Nobody is evenly spaced; nobody stands alone. They are EAST ASIAN, mixed ages, both sexes.
+   NOBODY WEARS A FACE MASK; every face is visible and smiling. NOBODY LOOKS OUT AT THE VIEWER -
+   every face is turned up towards the top edge or sideways towards a neighbour.
+
+5. WHAT THEY ARE DOING - the whole group is enthusiastic, warm and a little noisy. Somewhere in
+   the front row, EXACTLY THESE FOUR ACTIONS MUST BE THERE, one person each:
+   (a) A WOMAN CALLING OTHER PEOPLE OVER: one arm raised, POINTING UP AND OUT OF THE TOP OF THE
+       PICTURE with one finger, her other hand beside her mouth, head turned away to one side,
+       mouth open in a cheerful shout.
+   (b) A MAN PRESENTING IT WITH BOTH HANDS: BOTH ARMS RAISED AND OPEN, palms turned upwards and
+       outwards towards the top edge, elbows bent - the plain "here it is, please look" gesture.
+   (c) A WOMAN ABOUT TO SCAN IT: A PLAIN SMARTPHONE HELD UP IN BOTH HANDS at about the height of
+       her own face, THE BACK OF THE PHONE TOWARDS US AND THE TOP OF THE PHONE TILTED UP, as if
+       lining up a camera. We see the back of the phone, not the screen: a plain rounded
+       rectangle with one small camera circle.
+   (d) A WOMAN ALREADY LOOKING AT HER PHONE: phone in one hand at chest height, THE SCREEN
+       TURNED AWAY FROM US so we cannot see anything on it, head tilted down, smiling to
+       herself. THE SCREEN IS BLANK AND FEATURELESS - no icons, no text, no picture.
+   The other five are simply glad to be there: waving with one hand, both hands raised in a
+   small cheer, a hand on a colleague's shoulder, leaning in to look, one arm up beckoning.
+   No two of them make the same gesture.
+
+6. WHAT THEY ARE WEARING - THIS IS THE BRAND DETAIL, DRAW IT CAREFULLY. They all wear V-neck
+   short-sleeved scrubs.
+   A CAP AND A TOP ARE ALWAYS ONE SET - GO THROUGH THE PEOPLE WHO WEAR A CAP ONE BY ONE AND CHECK
+   THIS. If someone wears a PRINTED cap, their top is cut from THE SAME PRINTED CLOTH. If someone
+   wears a PLAIN top, any cap they wear is PLAIN AND EXACTLY THE SAME COLOUR AS THAT TOP - not a
+   different shade, not a neighbouring colour, THE SAME COLOUR. A green cap over a blue top, or a
+   teal cap over a green top, is WRONG. NEVER a printed cap over a plain top. If in doubt, leave
+   the cap off.
+   THREE PRINTED FABRICS MUST BE THERE, ONE PERSON EACH - and only one person each - in the
+   front row where they can be seen:
+   (a) PRINTED DOODLE SCRUBS, exactly the ones in reference image 1 - THIS ONE IS REQUIRED, AND
+       EXACTLY ONE PERSON IN THE WHOLE PICTURE WEARS THIS PRINT: her CAP and her TOP are cut from
+       ONE AND THE SAME PRINTED FABRIC - warm off-white cloth (#f4ead8) scattered with SIMPLE
+       FLAT CHILDLIKE DOODLES (little bears, chicks, clouds, stars, small flowers) in ONLY TWO
+       COLOURS, amber (#c28229) and deep caramel (#9e6301). On her head A TIE-BACK SURGICAL CAP
+       of the same cloth. Over it A WHITE COAT HANGING OPEN.
+   (b) PRINTED PINE-TREE SCRUBS, the motifs of reference image 2 ONLY: little pine trees, round
+       bushes and tiny triangles, SIMPLE FLAT TWO-COLOUR SHAPES in deep teal (#317d78) and
+       off-white, on A PALE TINT OF THAT SAME TEAL, with a matching tie-back cap.
+   (c) PRINTED DINOSAUR SCRUBS, the motifs of reference image 3 ONLY: a long-necked dinosaur, a
+       spotted plated dinosaur and a small flying one, SIMPLE FLAT TWO-COLOUR SHAPES in deep
+       blue (#4478b5) and off-white, on A PALE TINT OF THAT SAME BLUE.
+   EVERYONE ELSE WEARS PLAIN SCRUBS, AND THEIR COLOURS COME FROM THIS LIST OF FIVE - SPREAD THEM
+   ACROSS THE GROUP, NEVER BUNCHED TOGETHER:
+       muted deep green (#3f654a)        - at most two people
+       deep teal (#317d78)               - at most two people
+       muted slate blue (#465885)        - at most two people
+       MUTED BRICK RED (#ae4f4d)         - EXACTLY ONE PERSON, NO MORE AND NO FEWER
+       MUTED PLUM PURPLE (#8e6299)       - EXACTLY ONE PERSON, NO MORE AND NO FEWER
+   THE BRICK-RED PERSON AND THE PLUM-PURPLE PERSON ARE BOTH IN THE FRONT ROW, FULLY VISIBLE, AND
+   THEY STAND ON OPPOSITE SIDES OF THE GROUP - not next to each other. Keep the brick-red person
+   AWAY FROM the amber doodle person (two warm colours side by side merge into one patch), and
+   keep the plain deep-teal person AWAY FROM the pine-tree person. If either of them wears a cap,
+   THAT CAP IS PLAIN AND EXACTLY THE SAME BRICK RED OR PLUM PURPLE AS THEIR OWN TOP.
+   NEVER MORE THAN TWO PEOPLE IN THE SAME PLAIN COLOUR. FOUR of them wear A WHITE COAT HANGING
+   OPEN over their scrubs; one or two wear a plain cap matching their own top. Nobody wears a
+   solid saturated yellow, mustard, mint or turquoise garment.
+
+7. THE TWO PRINTS MUST BE BIG AND FEW, NOT SMALL AND BUSY - THIS IS THE EASIEST THING TO GET
+   WRONG. Each motif is ABOUT A QUARTER OF THE WIDTH OF THE WEARER'S BODY, with a clear gap of
+   about the same size between motifs, so that only THREE OR FOUR MOTIFS ARE VISIBLE ACROSS THE
+   CHEST. Do not copy the density of the reference fabrics - they are photographs of real cloth
+   and at this size that density turns into grey speckle. Each print uses only its two colours.
+   No letters, no numbers, no words in any pattern.
+
+8. THE WHITE COATS MUST STILL READ ON WHITE PAPER. Draw each coat with a clear thin hand-drawn
+   outline and ONE STEP OF WARM GREY shading in the folds, the lapels and under the arms, so the
+   coat separates from the empty white background. Never a flat pure-white shape with no edge.
+
+9. STYLE. Thin hand-drawn linework whose weight varies and sometimes breaks - NOT a thick even
+   outline, NOT a ruled vector line. Each face is ONE FLAT SKIN TONE with no shading: only the
+   outline, two eyes drawn as small simple dots, two short eyebrows, a tiny nose mark, a small
+   mouth and an ear - no wrinkles, no cheek lines. Hair is a flat shape in two tones. EVERY
+   PERSON IS DRAWN WITH EXACTLY THE SAME LINE WEIGHT AND SOLIDITY, including the ones further
+   back - nobody is faded, greyed out or drawn as an outline only. Flat fills in two or three
+   steps per colour, no gradients except to describe light. Fine paper grain over the whole
+   image. Warm, calm, cheerful - never slick, never corporate, never a stock illustration.
+
+10. COLOUR. The white background is the largest area by far and stays empty. The only strong
+    colours are the uniforms: amber doodles, pale teal with teal trees, pale blue with blue
+    dinosaurs, and the plains - deep green, deep teal, slate blue, ONE BRICK RED (#ae4f4d) AND ONE
+    PLUM PURPLE (#8e6299) - spread evenly across the group rather than bunched together. NO ONE
+    COLOUR MAY DOMINATE THE UNIFORMS. Skin is a warm flat tone; hair is warm near-black; the
+    phones are a neutral warm grey. THE ONLY RED IN THE PICTURE IS THAT ONE MUTED BRICK-RED
+    UNIFORM: no fire-engine red, no scarlet, no crimson, nothing that could read as blood. NO
+    neon, NO gold, NO surgical blue or bright green, NO grey-blue clinical cast.
+
+11. A FEW SHORT ACTION LINES - NEW IN THIS VERSION, AND THE ONLY REAL ADDITION. The picture is a
+    little too quiet. Add SMALL HAND-DRAWN MOTION AND SOUND MARKS, drawn WITH THE SAME PEN AS THE
+    FIGURES' OUTLINES and in the same dark ink - never in colour, never thin and hairline, never
+    a different style from the drawing.
+    THE SHAPE, AND IT IS ALWAYS THE SAME SHAPE: A GROUP OF THREE OR FOUR SHORT STRAIGHT STROKES,
+    PARALLEL TO EACH OTHER, EVENLY SPACED, ALL ABOUT THE SAME LENGTH. ONE STROKE IS ABOUT A
+    QUARTER TO A THIRD OF A HEAD LONG - they are short. Each group sits JUST OUTSIDE the thing it
+    explains, starting about half a stroke away from it, and NEVER touches a face, a hand or a
+    garment. A group is NEVER a single long curve, never a spiral, never a full ring of rays
+    around a head.
+    WHERE THEY GO - and nowhere else:
+    (a) THE WOMAN CALLING OUT (the one in the doodle print with the white coat, her mouth open and
+        her head turned up): THREE OR FOUR strokes just outside the corner of her open mouth,
+        FANNING OUT SLIGHTLY in the direction she is shouting. This is the loudest mark in the
+        picture and the only group of four.
+    (b) THE WOMAN LOOKING DOWN AT HER PHONE: TWO OR THREE VERY SHORT strokes above the top edge of
+        the phone - HALF THE LENGTH of the shouting marks - and one or two tiny strokes beside the
+        fingertips of the hand that is tapping. NOTHING ELSE: no speech bubble, no message bubble,
+        no hearts, no icons, and HER SCREEN STAYS BLANK.
+    (c) EVERY OTHER PERSON WHO IS ALREADY MOVING gets ONE OR TWO strokes only, tucked against the
+        part that moves: beside a waving palm, above a pointing fingertip, beside the phone that
+        is being held up. THE PEOPLE WHO ARE ONLY STANDING AND SMILING GET NOTHING AT ALL.
+    HOW MANY ALTOGETHER: about TWELVE, AND NEVER MORE THAN SIXTEEN STROKES IN THE WHOLE PICTURE.
+    IF A STROKE IS NOT EXPLAINING A MOVEMENT THAT IS ALREADY HAPPENING IN THE PICTURE, DO NOT DRAW
+    IT.
+    AND THEY STAY INSIDE THE PICTURE: NO STROKE MAY REACH UP INTO THE EMPTY WHITE BAND ACROSS THE
+    TOP (section 0), and no stroke may be drawn in the bottom fifth of the picture.
+
+COMPOSITION ANCHORS: the top 8% of the picture is empty white, will be cut off, and NOTHING
+REACHES INTO IT; the group touches and runs off the left edge, the right edge and the bottom edge;
+the bottom edge cuts every figure just below the hips; a head is about a quarter of the picture
+height; nine adults, five in front and four behind whose heads are as high as the front row's;
+every face complete and inside the picture; the plain uniforms use five colours with at most two
+people in any one of them, and EXACTLY ONE brick-red uniform and EXACTLY ONE plum-purple uniform;
+every cap is the same cloth or the same colour as its own wearer's top; every raised arm wears its
+owner's own sleeve; AND A FEW GROUPS OF SHORT PARALLEL ACTION STROKES, ONLY BESIDE PEOPLE WHO ARE
+ALREADY MOVING, SIXTEEN STROKES AT THE VERY MOST.
+
+AVOID: any text, letters, numbers, words or logos anywhere; a QR code, barcode, matrix of dots,
+poster, sign, board, placard or framed rectangle; anything visible on a phone screen; any
+background, room, wall, floor, furniture, horizon line, frame or border; any coloured background
+panel; legs, knees, feet, shoes, ground shadows or a ground line; an empty margin at the bottom
+or at the sides; a neat evenly spaced row of separated figures; anybody looking at the viewer;
+A FACE OR A HEAD CUT BY THE EDGE OF THE PICTURE; A HEAD WITH NO BODY UNDER IT, OR A FIGURE WHOSE
+OUTLINE STOPS IN MID-AIR; A BACK-ROW HEAD DOWN AT CHEST HEIGHT; A CHILD OR A CHILD-SIZED FIGURE;
+A HAND, ARM OR SLEEVE THAT BELONGS TO NOBODY; A WHITE COAT SLEEVE ON THE RAISED ARM OF SOMEBODY
+WHO IS NOT WEARING A WHITE COAT, OR ANY SLEEVE THAT IS NOT THE GARMENT ITS OWNER IS WEARING; A
+PRINTED CAP WORN WITH A PLAIN TOP; A PLAIN CAP IN A DIFFERENT COLOUR FROM ITS WEARER'S OWN TOP;
+MORE THAN ONE PERSON IN THE DOODLE PRINT; MORE THAN TWO PEOPLE IN THE SAME PLAIN COLOUR; MORE THAN
+ONE BRICK-RED UNIFORM OR MORE THAN ONE PLUM-PURPLE UNIFORM, OR NONE OF EITHER; face masks; needles,
+syringes, drills, dental instruments, blood; a dental chair; solid saturated yellow, mustard,
+mint or turquoise uniforms; tiny busy multicoloured patterns; speech bubbles, thought bubbles,
+arrows, sparkles, stars, hearts, musical notes, exclamation marks, sweat drops, icons or any other
+comic-book symbol; AN ACTION LINE BESIDE SOMEBODY WHO IS STANDING STILL; A SINGLE LONG CURVED
+SWOOSH, A SPIRAL, OR A RING OF RAYS AROUND A HEAD; COLOURED OR RAINBOW ACTION LINES; MORE THAN
+SIXTEEN STROKES IN TOTAL; ANY STROKE IN THE EMPTY WHITE BAND AT THE TOP OR IN THE BOTTOM FIFTH OF
+THE PICTURE; anybody drawn faded, translucent, ghostly or outline-only; photorealism; 3D
+rendering; heavy even black outlines; a thick drop shadow.
+```
+
+⚠⚠ 上面那一整塊**就是要送出去的全文**（第 1~10 段已經把 v4 的原字貼進來了）——
+這一版只有「這一版只改三件」、第 0 段最後那一句、第 11 段、`COMPOSITION ANCHORS` 與 `AVOID` 和 v4 不一樣。
+
+### v5 的驗收（出圖之後逐條跑一次）
+
+1. **線的形狀**：每一組都是**三到四道同向、等距、等長的短直線**，一道長度 ≈ 一顆頭的 1/4~1/3；
+   沒有一條長曲線、沒有螺旋、沒有整圈放射狀的光芒。
+2. **線的位置**：只出現在**有動作的人**旁邊（喊、揮手、指、舉手機、打字），
+   站著微笑的四個人身上**一道都沒有**；沒有任何一道碰到臉或手。
+3. ⚠⚠⚠ **墨的框上緣不可以往上跑** —— 跑 `node drafts/channels/stand-illus-crop.mjs`，
+   面板印的「左右各餘」必須還是 **0.0 mm**。不是 0 就表示線畫進上面那條白裡了，
+   **那一條會變成左右留白、人被邊緣切掉就讀成畫錯**。
+4. **總數不超過 16 道**（數得出來，不是感覺）。
+5. **磚紅正好一人**（右邊拿手機那位），**紫正好一人**，最左那位是深綠。
+6. **每一頂帽子和它自己的上衣同色或同一塊布** —— 一個一個看過，⑨ 那位要對上。
+7. v4 已經對的那幾件**一件都沒有壞掉**：十張臉都完整、沒有浮著的頭、後排的頭不在前排胸口、
+   沒有腳沒有影子、圖裡零文字零 QR、螢幕空白。
+8. **把圖縮到 98 mm 寬看一次** —— 線在那個尺寸還讀得出是線、不是一團灰。
+
+---
+
 ## 六、還沒決定的
 
 1. **Ⓐ 要不要對著讀的人喊**（現在是朝畫面左外側）。
@@ -1072,14 +1381,21 @@ motion lines, icons; anybody drawn faded, translucent, ghostly or outline-only; 
    **通則：一條「A 和 B 只能選一個」的取捨，先問有沒有第三個量可以動。**
 4. **要不要有一位是病人不是醫事人員** —— 使用者寫的是「這些人是診所的醫事人員」，
    所以這一版四個人全部是自己人；⚠ 代價是「快來喔」那一喊沒有人接。
-5. ⚠⚠⚠ **頭上那三條短線要不要畫** —— 這是唯一一件廠商那張真的會改到提示詞的：
-   **他們畫了**（三條同向的短斜線，表示「哇」），而我們現在的 `AVOID` 明文禁止
-   `sparkles, motion lines`。⚠ 站上對這件事其實是**評價最高**的
-   （ILLUSTRATION.md 第三節「✓✓ 線畫抽象的東西」：用線去畫看不見的東西），
-   只是站上一直畫的是**風與氣流**，不是情緒。
-   **要畫就照那一條的規格**：三到四條**同向、等距的短直線**，不可以是一條長曲線
-   （第七節第 17 條：一條會被讀成靈魂出竅），而且**只給 Ⓐ 一個人**
-   —— 四個人頭上都有就變成漫畫。**沒有自己改掉 AVOID，等使用者決定。**
+5. ~~**頭上那三條短線要不要畫**~~ —— ✅ **2026-09-16 使用者決定：畫，而且範圍比這一條大**
+   （「圖片有點太安靜了……加一點線條……其他人也可以稍微加一點」）。
+   ⚠ 這一條當時寫的**只給 Ⓐ 一個人**、講的是**情緒**；他要的是**動作與聲音**，
+   點名了兩個人（往上喊、低頭打字）並要其他有動作的人也加一點。
+   規格與 v5 的提示詞在**五之七**，`AVOID` 那一行的 `motion lines` 已經拿掉
+   （`sparkles`／`speech bubbles`／`icons` 仍然禁）。
+   ⚠⚠ 站上那條「用線畫看不見的東西」（ILLUSTRATION.md 第三節）因此第一次從
+   **風與氣流**擴到**動作與聲音**，而形狀的規格照抄颱風那一輪（第 25-19 節）：
+   一組三到四道**同向等距的短直線**，不可以是一條長曲線。
+
+6.5 ⚠⚠ **要不要給後排那幾個人動作** —— v5 加線之後仍然會剩下「一半的人只是站著微笑」，
+   因為規則是「**一道線沒有在解釋畫面裡已經發生的動作就不要畫**」。
+   要真的更熱鬧只有給他們動作（拍肩、探頭、兩手比讚），而**那會動到構圖 ＝ 等於重畫**，
+   **沒有自己走**。
+
 6. ~~**腳要不要藏進帶子裡**~~ —— ✅ **2026-09-16 使用者決定：藏**（「腳藏進帶子裡」）。
    ⚠ 這一條當時寫的代價（貼齊帶子上緣、下緣不留白）成立，**但漏掉了真正的收穫**：
    那一條因此從 43.8 長到 46.3 mm，而且**多出來的那一截不必畫得好看**（在帶子後面）——
