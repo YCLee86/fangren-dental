@@ -17,15 +17,23 @@
  *     和照片上量到的 4.0% 相同。
  *
  * ⚠⚠⚠ 抬頭那一行也是一條規則算的（2026-09-16 使用者指定抬頭寫「芳仁牙醫有 LINE 囉」、
- *   LINE 用綠泡泡框起來）：
- *       抬頭字高 ＝ min(卡寬的 8.5%, 版心 84% ÷ (全形當量 ＋ 字距 ＋ 泡泡的左右內距))
- *   —— 泡泡會把那一行撐寬，不把它算進去的話，抬頭會**靜靜地溢出卡片**（卡片 overflow:hidden，
+ *   LINE 用官方的標誌換掉）：
+ *       抬頭字高 ＝ min(卡寬的 8.5%, 版心 84% ÷ (全形當量 ＋ 字距 ＋ 標誌佔幾個字))
+ *   —— 標誌會把那一行撐寬，不把它算進去的話，抬頭會**靜靜地溢出卡片**（卡片 overflow:hidden，
  *   畫面上只是最後一個字不見了，而每一道尺寸守門都會過）。所以那兩項要出現在算式裡，
- *   而且**要和 CSS 那兩個值對得起來**（`--hd-ls`、`--li-pad`，兩邊只有一份出處）。
+ *   而且**要和 CSS 那兩個值對得起來**（`--hd-ls`、`--li-h`，兩邊只有一份出處）。
  *   ⚠ 抬頭是 `nowrap` —— 放不下要被守門擋下來，不可以靜靜地折成兩行。
- *   ⚠⚠ 那顆綠泡泡是**用 CSS 畫的示意**，不是 LINE 官方的標誌檔；印之前要照
- *   LINE 的標誌使用規範換成正式的（那是待答的一題，頁面上寫著）。
- *   ⚠ 現況那一張的「LINE」**刻意不套泡泡** —— 那一張是照片上逐字抄的，加工就不是對照了。
+ *   ⚠⚠ 2026-09-16 稍晚那顆泡泡換成**官方授權的標誌檔**（使用者提供）。它是一張 1:1 的圖，
+ *   所以它對那一行的貢獻從「LINE 四個字 ＋ 泡泡的左右內距 ＝ 2.52 個字」變成
+ *   「高度 × 長寬比 ＝ 1.10 個字」——**長寬比從 PNG 的檔頭讀，不手填**。
+ *   ⚠⚠⚠ 那是別人的商標：只等比例縮放，不重上色、不裁、不變形。
+ *   ⚠ 標誌左右的留白**不是我們補的**，是使用者指定的抬頭本來就有那兩個半形空白。
+ *   ⚠ 現況那一張的「LINE」**刻意不換成標誌** —— 那一張是照片上逐字抄的，加工就不是對照了。
+ *
+ * ⚠⚠ 底下那條帶子 2026-09-16 換成**診所自己的九顆 logo**（使用者指定）：
+ *   形狀讀 brand/shapes/，寬度讀 preview/line-booked/wm-sizes.json（按墨的面積正規化，
+ *   所以九顆一樣重）。**等墨不等高**，所以每一格的框固定成最高的那一顆、形狀垂直置中。
+ *   ⚠ 排的順序寫在 JSON 裡 —— 印出來的東西不能真的隨機。
  *
  * ⚠ 這一頁**零 JS**。字寬不在這裡量、用全形當量算 —— 這個容器沒有 Noto Sans TC，
  *   量出來的字寬會比實際寬約一成（CLAUDE.md 第五十九節），拿來判斷「放不放得下」是假的。
@@ -57,13 +65,31 @@ export const fsOf = (c) => {
 
 /* ── 抬頭：同一條規則，但要把字距與那顆綠泡泡的左右內距一起算進去 ──── */
 export const HDLS = 0.04;        /* 抬頭的 letter-spacing（em）—— CSS 那一行吃同一個值 */
-export const LIPAD = 0.26;       /* 綠泡泡左右各留多少（em）—— 同上 */
+export const LIH = S.標誌.高em;  /* 標誌的高度（em）—— 同上 */
+export const LIGAP = S.標誌.留白em; /* 標誌左右各補多少（em）—— 0：留白是抬頭那兩個半形空白給的 */
 const HDMAX = 0.085;             /* 抬頭字高的上限（佔卡寬） */
+
+/* ⚠⚠⚠ 標誌的長寬比**從 PNG 的檔頭讀**，不手填 —— 手填的話哪天換一個檔，
+ *   抬頭會算出一個「放得下」的字級、實際畫出去溢出卡片（overflow:hidden，
+ *   畫面上只少掉最後一個字，每一道尺寸守門都會過）。 */
+export const LOGO = (() => {
+  const p = join(OUT, S.標誌.檔);
+  if (!existsSync(p)) throw new Error("找不到官方標誌檔 " + p);
+  const b = readFileSync(p);
+  if (b.readUInt32BE(0) !== 0x89504e47) throw new Error(S.標誌.檔 + " 不是 PNG");
+  const w = b.readUInt32BE(16), h = b.readUInt32BE(20);
+  return { 寬: w, 高: h, 比: +(w / h).toFixed(4) };
+})();
+export const LIW = +(LIH * LOGO.比 + LIGAP * 2).toFixed(4);   /* 標誌佔抬頭幾個全形字 */
+
 export const hdOf = (c) => {
   const t = String(c.抬頭);
-  const pill = c === S.現況 ? 0 : (t.match(/LINE/g) ?? []).length;   /* 現況不套泡泡 */
-  const w = cw(t) + HDLS * [...t].length + LIPAD * 2 * pill;
-  return { 寬: +w.toFixed(3), fs: Math.min(HDMAX, CARD.版心 / w), 泡泡: pill };
+  /* 現況那一張逐字照抄、不換標誌，所以不切 */
+  const seg = c === S.現況 ? [t] : t.split("LINE");
+  const n = seg.length - 1;
+  const txt = seg.join("");
+  const w = cw(txt) + HDLS * [...txt].length + LIW * n;
+  return { 寬: +w.toFixed(3), fs: Math.min(HDMAX, CARD.版心 / w), 標誌: n };
 };
 
 /* ── 紅線：只掃卡片上的字 ───────────────────────────────────────── */
@@ -98,7 +124,11 @@ export const cn = (kw) => {
 };
 const fill = (t) => String(t)
   .replace(/\{\{題:([^}]+)\}\}/g, (_, k) => String(qn(k)))
-  .replace(/\{\{條:([^}]+)\}\}/g, (_, k) => String(cn(k)));
+  .replace(/\{\{條:([^}]+)\}\}/g, (_, k) => String(cn(k)))
+  /* ⚠ 標誌畫出來多高、左右留白佔它自己的幾成 —— 現算，不寫死：
+     換一個檔或動 高em，資料裡那一句要跟著變 */
+  .replace(/\{\{標誌高mm\}\}/g, () => (LIH * hdOf(S.案[0]).fs * CARD.寬mm).toFixed(1))
+  .replace(/\{\{標誌留白\}\}/g, () => (((0.5 + HDLS + LIGAP) / LIH) * 100).toFixed(0));
 const esc = (s) => String(s).replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
 /* **粗體** 與 `等寬`；資料裡不放 HTML */
 const b = (s) => esc(fill(s)).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>");
@@ -126,21 +156,65 @@ const para = (a) => {
   return out.join("\n");
 };
 
-/* ⚠⚠ 資料裡不放 HTML（那條規矩沒有變）—— 泡泡是這裡套上去的，套的是 esc 過的字。 */
-const pill = (t) => esc(t).replace(/LINE/g, '<span class="li">LINE</span>');
+/* ⚠⚠ 資料裡不放 HTML（那條規矩沒有變）—— 標誌是這裡套上去的，套的是 esc 過的字。
+ *   ⚠ alt 一定要寫 "LINE"：守門逐行比對卡片上的字時，會把 <img> 還原成它的 alt。 */
+const mark = (t) => esc(t).replace(/LINE/g,
+  `<img class="li" src="${S.標誌.檔}" alt="LINE" width="${LOGO.寬}" height="${LOGO.高}">`);
 
-const card = (c, now = false) => {
+/* ── 底下那條帶子：診所自己的九顆 logo ─────────────────────────────
+ * ⚠⚠ 形狀讀 brand/shapes/，寬度讀 preview/line-booked/wm-sizes.json —— 兩份都是既有的
+ *   出處，一個路徑資料都不抄第二份。
+ * ⚠⚠ 那九個寬度是按**墨的面積**正規化的，所以九顆一樣重、但**不一樣高**（61~107，差 1.75 倍）。
+ *   排成一條的時候每一格的框固定成最高的那一顆、形狀垂直置中，不然就是一排高高低低。
+ * ⚠ 用「SVG 裡面再放 SVG」排，不是 flex —— 每一顆各自的 viewBox 原封不動帶著走，
+ *   位置是算出來的、不會有排版的捨入誤差。 */
+export const WM = JSON.parse(readFileSync(join(ROOT, "preview", "line-booked", "wm-sizes.json"), "utf8"));
+const SHAPE = (k) => {
+  const src = readFileSync(join(ROOT, "brand", "shapes", `shape-${k}.svg`), "utf8");
+  const vb = src.match(/viewBox="([^"]+)"/);
+  if (!vb) throw new Error(k + " 沒有 viewBox");
+  const inner = src.replace(/^[\s\S]*?<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "").trim();
+  if (!inner.includes("<path")) throw new Error(k + " 抽不到形狀");
+  return { vb: vb[1], inner };
+};
+export const BAND = (() => {
+  const B = S.帶子;
+  const ks = B.順序;
+  const it = ks.map((k) => {
+    const m = WM[k];
+    if (!m) throw new Error("wm-sizes.json 裡沒有 " + k);
+    return { k, w: m.w, h: m.w / m.ratio, 色: m.color, spec: m.spec };
+  });
+  const H = Math.max(...it.map((x) => x.h));
+  const gap = H * B.間距;
+  let x = 0;
+  for (const o of it) { o.x = x; o.y = (H - o.h) / 2; x += o.w + gap; }
+  return { it, H, 總寬: x - gap, 高: H };
+})();
+const bandSvg = (色) => {
+  const { it, H, 總寬 } = BAND;
+  return `<svg class="bnd" viewBox="0 0 ${總寬.toFixed(1)} ${H.toFixed(1)}" role="img" aria-label="芳仁牙醫診所的九個標誌">` +
+    it.map((o) => {
+      const { vb, inner } = SHAPE(o.k);
+      const c = 色 === "spec" ? o.色 : 色;
+      return `<svg x="${o.x.toFixed(1)}" y="${o.y.toFixed(1)}" width="${o.w}" height="${o.h.toFixed(1)}" viewBox="${vb}" style="color:${c}">${inner}</svg>`;
+    }).join("") + "</svg>";
+};
+
+const card = (c, now = false, 色 = null) => {
   const { fs } = fsOf(c);
   const hd = hdOf(c);
   const f = (k) => `calc(var(--cw) * ${k})`;
   return `<div class="card${now ? " now" : ""}">
-  <div class="hd" style="font-size:${f(hd.fs.toFixed(4))}">${now ? esc(c.抬頭) : pill(c.抬頭)}</div>
+  <div class="hd" style="font-size:${f(hd.fs.toFixed(4))}">${now ? esc(c.抬頭) : mark(c.抬頭)}</div>
   ${c.副標 ? `<div class="sub" style="font-size:${f(0.05)}">${esc(c.副標)}</div>` : ""}
   <div class="bd" style="font-size:${f(fs.toFixed(4))}">${c.主文.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
   ${c.QR上 ? `<div class="cue" style="font-size:${f(0.038)}">${esc(c.QR上)}</div>` : ""}
   <div class="qr"><span>QR</span></div>
   ${c.QR下 ? `<div class="cue lo" style="font-size:${f(0.036)}">${esc(c.QR下)}</div>` : ""}
-  <div class="band${c.帶子 ? "" : " empty"}" style="font-size:${f(0.04)}">${esc(c.帶子 ?? "")}</div>
+  ${now
+    ? `<div class="band" style="font-size:${f(0.04)}">${esc(c.帶子 ?? "")}</div>`
+    : `<div class="band logos">${bandSvg(色 ?? S.帶子.色)}</div>`}
 </div>`;
 };
 
@@ -172,7 +246,7 @@ const HTML = `<!doctype html>
 <title>櫃檯的小立牌　文字改版（四案）</title>
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
-  --brick:#8c3b32;--green:#3f654a;--cw:300px;--hd-ls:${HDLS}em;--li-pad:${LIPAD}em}
+  --brick:#8c3b32;--green:#3f654a;--cw:300px;--hd-ls:${HDLS}em;--li-h:${LIH}em;--li-gap:${LIGAP}em}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -198,11 +272,12 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
   display:flex;flex-direction:column;align-items:center;text-align:center;
   color:#333;line-height:1.5;overflow:hidden}
 .card .hd{font-weight:700;letter-spacing:var(--hd-ls);white-space:nowrap}
-/* ⚠ 那顆綠泡泡是示意，不是 LINE 官方的標誌檔（\#06C755 是 LINE 的品牌綠）。
-   左右內距與上面那個字距，抬頭的字級規則算過一模一樣的值 —— 改這裡要一起改那邊。 */
-.card .li{display:inline-block;background:#06C755;color:#fff;
-  border-radius:.26em;padding:0 var(--li-pad);
-  letter-spacing:.02em;line-height:1.3;vertical-align:-.06em}
+/* ⚠⚠⚠ 官方授權的標誌檔（使用者 2026-09-16 提供）。**一個像素都不要改** ——
+   這裡只有等比例縮放，沒有 filter、沒有 border、沒有 border-radius、沒有背景。
+   高度與左右留白，抬頭的字級規則算過一模一樣的值 —— 改這裡要一起改那邊。
+   ⚠ 標誌左右的空白是抬頭那兩個半形空白給的，所以 --li-gap 是 0。 */
+.li{display:inline-block;height:var(--li-h);width:auto;
+  margin:0 var(--li-gap);vertical-align:-.19em}
 .card .sub{margin-top:.25em;color:#444}
 .card .bd{margin-top:calc(var(--cw) * .08);width:100%}
 .card .bd p{margin:.28em 0;white-space:nowrap}
@@ -215,7 +290,14 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .card .band{margin:auto calc(var(--pad) * -1) 0;width:var(--cw);padding:calc(var(--cw) * .026) 0;
   background:#3c4657;color:#fff;letter-spacing:.03em}
 .card .band.empty{background:transparent;border-top:1px dashed #d5d5d5;color:transparent}
+/* 九顆 logo 那一條：沒有底色、沒有字，寬度就是版心 */
+.card .band.logos{background:transparent;padding:calc(var(--cw) * .035) 0 calc(var(--cw) * .04);
+  display:flex;justify-content:center}
+.card .band.logos .bnd{width:calc(var(--cw) * ${CARD.版心});height:auto;display:block}
 .card.now .bd p{white-space:normal}
+.bandonly{background:#fff;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.14);
+  padding:calc(var(--cw) * .05) calc(var(--cw) * .08);display:flex;justify-content:center}
+.bandonly .bnd{width:100%;height:auto;display:block}
 .note{font-size:.86rem;color:var(--soft);margin:.6em 0 0}
 .note p{margin:.35em 0}
 
@@ -254,6 +336,12 @@ ol.ask li{margin:.7em 0}
 ${para(CARD._量法)}
 </div></div></div>
 
+<p class="h2">抬頭那顆 LINE 標誌<span class="t">官方授權的檔案，不是我們畫的</span></p>
+<div class="box">${para(S.標誌._說明)}
+<p>⚠ 現在畫出來：<code>${esc(S.標誌.檔)}</code> ${LOGO.寬}×${LOGO.高}（長寬比 ${LOGO.比}），
+高 ${LIH} em ＝ 卡片上 <b>${(LIH * hdOf(S.案[0]).fs * CARD.寬mm).toFixed(1)} mm</b>，
+左右各留 <b>${(((0.5 + HDLS + LIGAP) / LIH) * 100).toFixed(0)}%</b> 個標誌高。</p></div>
+
 <p class="h2">那個 QR 掃出來是什麼<span class="t">拿解碼器掃過，不是用眼睛看的</span></p>
 <div class="box"><p><code>${esc(S.QR.內容)}</code></p>${para(S.QR.說明)}</div>
 
@@ -261,10 +349,20 @@ ${para(CARD._量法)}
 ${拆解}
 
 <p class="h2">四案<span class="t">形狀不一樣，不只是換字</span></p>
-<p class="lede">抬頭四案相同：<b>${pill(S.案[0].抬頭)}</b>（使用者 2026-09-16 指定的逐字）。
-⚠ 那顆綠色泡泡是<b>用網頁畫的示意</b>，不是 LINE 官方的標誌檔 ——
-印之前要照 LINE 的標誌使用規範換成正式的（見底下第 ${qn("泡泡")} 題）。</p>
+<p class="lede">抬頭每一案都一樣：<b>${mark(S.案[0].抬頭)}</b>（使用者 2026-09-16 指定的逐字，
+那顆標誌是他提供的<b>官方授權檔</b>）。<b>Ⓔ 是他自己寫的三行</b>，一個字都沒有改 ——
+所以底下那張表上它會亮紅，那不是壞掉（見那一案的註）。</p>
 <div class="cards">${案}</div>
+
+<p class="h2">底下那條帶子<span class="t">換成診所自己的九顆 logo</span></p>
+<div class="box">${para(S.帶子._說明)}
+<p>⚠ 現在畫出來：九顆合計 <b>${BAND.總寬.toFixed(0)}</b> 個單位寬、最高的那一顆 <b>${BAND.高.toFixed(0)}</b>，
+所以那一條在 ${CARD.寬mm} mm 的卡上高 <b>${(CARD.寬mm * CARD.版心 * BAND.高 / BAND.總寬).toFixed(1)} mm</b>。</p></div>
+<div class="cards">${S.帶子.色案.map((k) => `<div class="one">
+<p class="lb">${esc(k.標籤)}</p>
+<div class="bandonly">${bandSvg(k.id === "spec" ? "spec" : k.色)}</div>
+<div class="note">${para(k.說明)}</div>
+</div>`).join("\n")}</div>
 
 <p class="h2">字可以多大<span class="t">字少的自動變大 —— 這是四案真正的差別之一</span></p>
 <div class="box"><p>主文字高 ＝ <b>min(卡寬的 6%，版心 84% ÷ 最長那一行的字數)</b>，
@@ -272,10 +370,12 @@ ${拆解}
 <b>文字本身</b>，不是我替每一案挑的字級。</p>
 <p>⚠ <b>版心那個 84% 就是從現況那一行量來的</b>（最長那一行 22 個全形字、佔卡片寬度 84%），
 所以現況那一列是這條規則的<b>定義</b>、不是驗證。四案之間的比較仍然成立 —— 它們吃同一條規則。</p>
-<p>⚠ <b>抬頭另算一條</b>：min(卡寬的 8.5%，版心 84% ÷ (全形當量 ＋ 字距 ＋ 泡泡的左右內距))。
-那顆泡泡會把那一行撐寬 ${(LIPAD * 2 * 100).toFixed(0)}% 個字，不算進去的話抬頭會靜靜地溢出卡片
+<p>⚠ <b>抬頭另算一條</b>：min(卡寬的 8.5%，版心 84% ÷ (全形當量 ＋ 字距 ＋ 標誌佔幾個字))。
+那顆標誌會把那一行撐寬 <b>${LIW}</b> 個字（＝它的高度 ${LIH} em × 長寬比 ${LOGO.比}，
+<b>長寬比是從 PNG 的檔頭讀回來的</b>），不算進去的話抬頭會靜靜地溢出卡片
 （卡片是 <code>overflow:hidden</code>，畫面上只會少掉最後一個字）。
-四案的抬頭都是 <b>${(hdOf(S.案[0]).fs * CARD.寬mm).toFixed(2)} mm</b>。</p>
+每一案的抬頭都是 <b>${(hdOf(S.案[0]).fs * CARD.寬mm).toFixed(2)} mm</b>，
+那顆標誌因此印出來高 <b>${(LIH * hdOf(S.案[0]).fs * CARD.寬mm).toFixed(1)} mm</b>。</p>
 <p>⚠ 字高是照卡片寬 ${CARD.寬mm} mm 換算的（那個數字還要用尺量一次，見底下第 ${qn("尺寸")} 題）。
 櫃檯是站著看的，一般建議內文不要小於 3.5 mm。</p></div>
 ${tbl}
@@ -317,8 +417,13 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   for (const c of [S.現況, ...S.案].filter((x, i, a) => a.findIndex((y) => y.抬頭 === x.抬頭) === i)) {
     const h = hdOf(c);
     console.log(`抬頭「${c.抬頭}」${(h.fs * CARD.寬mm).toFixed(2)} mm・佔卡寬 ${(h.寬 * h.fs * 100).toFixed(1)}%` +
-      (h.泡泡 ? `（含綠泡泡的左右內距 ${(LIPAD * 2).toFixed(2)} 個字）` : "（沒有泡泡）"));
+      (h.標誌 ? `（含 ${h.標誌} 顆標誌，一顆 ${LIW} 個字 ＝ ${(LIH * h.fs * CARD.寬mm).toFixed(1)} mm 高、左右各留 ${(((0.5 + HDLS + LIGAP) / LIH) * 100).toFixed(0)}%）` : `（沒有標誌）`));
   }
+  console.log("");
+  console.log(`標誌 ${S.標誌.檔} ${LOGO.寬}×${LOGO.高}（長寬比 ${LOGO.比}）—— 官方授權檔，只等比例縮放`);
+  console.log(`帶子 九顆 ${S.帶子.順序.join(" ")}`);
+  console.log(`     合計 ${BAND.總寬.toFixed(0)} 單位寬・最高 ${BAND.高.toFixed(0)}（最矮 ${Math.min(...BAND.it.map((x) => x.h)).toFixed(0)}，差 ${(BAND.高 / Math.min(...BAND.it.map((x) => x.h))).toFixed(2)} 倍 —— 所以要垂直置中）`);
+  console.log(`     在 ${CARD.寬mm} mm 的卡上高 ${(CARD.寬mm * CARD.版心 * BAND.高 / BAND.總寬).toFixed(1)} mm・顏色還沒挑（${S.帶子.色案.map((k) => k.標籤).join("／")}）`);
   console.log("");
   console.log(`卡片 ${CARD.寬mm} mm 寬・比例 ${CARD.比例}（${Math.round(CARD.寬mm * CARD.比例)} mm 高）—— 從照片量的，還要用尺量一次`);
   console.log(`QR ＝ ${S.QR.內容}（兩張照片各自解過一次）`);
