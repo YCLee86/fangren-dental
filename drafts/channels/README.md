@@ -14341,4 +14341,5 @@ node drafts/channels/remind-a4.mjs --nohero      # 163.3×273.0mm、2.304 倍、
 四邊留白都還在（不然紙上會被切到）／**PDF 只有一頁**（多一頁就是溢出了）。
 
 ⚠ 產出的三個檔裡**只有 PDF 進版控**：那是櫃檯要印的東西，而重跑它需要一台有網路
-（要抓字型子集）又裝得起 playwright 的機器。HTML 與 PNG 沒有進（重跑就有）。
+（要抓字型子集）又裝得起 playwright 的機器。HTML 與 PNG、以及 `--nohero` 那一份
+**寫進 `.gitignore` 了**（同門口那張告示的產出），重跑就有。
