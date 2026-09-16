@@ -335,16 +335,18 @@ const bandSvg = (B = BAND) => {
 
 /* ⚠ 兩把尺（抬頭到主文、標誌左右留白）可以逐張覆寫 —— 尺上那幾格就是這樣畫的。
    ⚠⚠ 覆寫留白**一定要連字級一起重算**（hdOf 吃同一個比例），不然那一行的寬度會算錯。 */
-/* 人物插圖（2026-09-16，v1 草稿）—— `node drafts/channels/stand-illus-crop.mjs` 從
- * `drafts/stand-card-illus-v1-src.jpg` 裁出來的。
- * ⚠⚠⚠ **裁的是墨的框，不是整張 16:9** —— 原檔上下各留著大片白（提示詞要的），
- *   整張放進來照寬度縮會高 54.7 mm、爆掉 10.9 mm；裁到墨之後是 1784×853 ＝ 比例 2.091，
- *   在這一塊（98 × 43.8 mm）裡畫出來 **91.6 × 43.8 mm**，左右各餘 3.2 mm。
+/* 人物插圖（2026-09-16 定案 v3）—— `node drafts/channels/stand-illus-crop.mjs` 從
+ * `插圖.原檔`（現在是 `drafts/stand-card-illus-v3-src.jpg`）裁出來的。
+ * ⚠⚠⚠ **裁的是墨的框，不是整張原檔** —— 原檔上面留著一條白（提示詞要的），
+ *   整張放進來照寬度縮會爆框；裁到墨之後 v3 是 2000×945 ＝ 比例 2.116，
+ *   正好貼著那一塊（98 × 46.3 mm ＝ 2.117），畫出來 **98.0 × 46.3 mm、左右各餘 0.0**。
  * ⚠⚠ 所以它是**高度在卡**：`object-fit: contain` ＋ `flex:1`，那一塊有多高就畫多高，
  *   而那一塊是 `疊高()` 剩下來的 —— 上面的間距一動，這張圖就跟著變大或變小。
+ * ⚠⚠⚠ **尺寸讀 `插圖.裁成`，不要在這裡再寫一份** —— 換一版圖只改 JSON 那一處，
+ *   寫死的話 `<img>` 宣告的長寬會和實檔對不上（守門在擋）。
  * ⚠ 現況那一張不畫（它是照片的逐字對照）。 */
-const ILLUS = "illus.jpg";
-const ILLUSW = 1784, ILLUSH = 853;
+const ILLUS = S.插圖.檔;
+const [ILLUSW, ILLUSH] = S.插圖.裁成;
 
 const card = (c, now = false, o = {}) => {
   const { fs } = fsOf(c);
@@ -362,7 +364,7 @@ const card = (c, now = false, o = {}) => {
     ? `<div class="qr ph"><span>QR</span></div>`
     : `<img class="qr" src="${QRFILE}" width="45" height="45" alt="芳仁牙醫診所 LINE 官方帳號的 QR code">`}
   ${c.QR下 ? `<div class="cue lo" style="font-size:${f(0.036)}">${esc(c.QR下)}</div>` : ""}
-  ${now ? "" : `<img class="illus" src="${ILLUS}" width="${ILLUSW}" height="${ILLUSH}" alt="四位芳仁牙醫的醫事人員，一位指著上方喊、一位雙手展示、一位舉著手機對準、一位低頭看手機">`}
+  ${now ? "" : `<img class="illus" src="${ILLUS}" width="${ILLUSW}" height="${ILLUSH}" alt="一群芳仁牙醫的醫事人員擠在一起，有人揮手、有人指著上方喊、有人舉著手機">`}
   ${now
     ? `<div class="band" style="font-size:${f(0.04)}">${esc(c.帶子 ?? "")}</div>`
     : `<div class="band logos">${bandSvg()}</div>`}
@@ -482,10 +484,14 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .card .qr.ph span{font-size:.72rem;color:#8a8a8a;letter-spacing:.1em}
 /* 人物插圖：**QR 底下到帶子剩多少就畫多高**（flex:1 ＋ min-height:0），
    所以它不會把卡片撐開，也不會動到帶子的位置（帶子的 margin-top:auto 因此歸零）。
-   ⚠⚠ 一定要 object-fit:contain —— 這張圖比那一塊瘦（2.091 vs 2.237），
-   cover 會把左右兩個人各切掉一截，而且**畫面看起來很正常**。 */
-.card .illus{flex:1 1 auto;min-height:0;width:100%;object-fit:contain;object-position:bottom center;
-  margin-bottom:calc(var(--cw) * -${帶高().toFixed(5)});display:block}
+   ⚠⚠ 一定要 object-fit:contain —— cover 會把左右兩個人各切掉一截，
+   而且**畫面看起來很正常**。
+   ⚠⚠⚠ **一定要滿版（負的左右外距，同帶子那一條）** —— 寫 width:100% 的話它只有
+   內距框那麼寬（98 − 2×pad ＝ 86.2 mm），而裁圖那一支與面板從第一版起都拿 98 在算：
+   症狀是兩側各留一條白（人被邊緣切掉就讀成畫錯，不是出血）、圖變成寬度在卡、
+   上面空一截、一顆頭小 12% —— **每一道尺寸守門都會過**。 */
+.card .illus{flex:1 1 auto;min-height:0;width:var(--cw);object-fit:contain;object-position:bottom center;
+  margin:0 calc(var(--pad) * -1) calc(var(--cw) * -${帶高().toFixed(5)});display:block}
 /* ⚠⚠⚠ position/z-index 是為了插圖沉進來才加的：img 是行內取代元素，
    **畫在區塊背景後面**，不給帶子一個堆疊脈絡的話，人的腳會蓋在標誌上。 */
 .card .band{margin:auto calc(var(--pad) * -1) 0;width:var(--cw);padding:calc(var(--cw) * .026) 0;
@@ -604,8 +610,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.log(`人物插圖 ${S.插圖.檔}　原檔 ${ow}×${oh}（比例 ${(ow/oh).toFixed(3)}）→ 裁到墨的框 ${w}×${h}（比例 ${(w/h).toFixed(3)}）`);
     console.log(`     那一條 ${CARD.寬mm} × ${條} mm（QR 底下到帶子 ${塊} ＋ 沉進帶子後面 ${帶mm}）＝ 比例 ${(CARD.寬mm/條).toFixed(3)}`);
     console.log(`     → ${w/h < CARD.寬mm/條 ? "高度在卡" : "⚠ 寬度在卡（圖比那一條還寬，下緣會離開帶子）"}，畫出來 ${(w/h*條).toFixed(1)} × ${條} mm・左右各餘 ${((CARD.寬mm - w/h*條)/2).toFixed(1)} mm・${(h*25.4/條).toFixed(0)} dpi・看得到 ${(塊/條*100).toFixed(0)}%`);
-    console.log(`     ⚠ 整張 16:9 直接放：照寬度縮會高 ${(CARD.寬mm/(ow/oh)).toFixed(1)} mm ＝ 爆框 ${(CARD.寬mm/(ow/oh)-條).toFixed(1)} mm`);
-    console.log(`     ⚠⚠ 下一版要畫成 ${(CARD.寬mm/條).toFixed(2)}:1（裁到墨之後），v1 是 ${(w/h).toFixed(3)} —— 對不上就會左右留白`);
+    console.log(`     ⚠ 整張原檔直接放（不裁）：照寬度縮會高 ${(CARD.寬mm/(ow/oh)).toFixed(1)} mm ＝ 爆框 ${(CARD.寬mm/(ow/oh)-條).toFixed(1)} mm`);
+    console.log(`     ⚠⚠ 下一版要畫成 ${(CARD.寬mm/條).toFixed(2)}:1（裁到墨之後），這一版是 ${(w/h).toFixed(3)} —— 對不上就會左右留白`);
   }
   console.log(`卡片 ${CARD.寬mm} mm 寬・比例 ${CARD.比例}（${Math.round(CARD.寬mm * CARD.比例)} mm 高）—— 2026-09-16 拿尺貼著現況那張量過 ≈ 97×146，差 1%`);
   console.log(`QR ＝ ${S.QR.內容}（兩張照片各自解過一次；卡上那顆新的碼編的是同一個字串）`);

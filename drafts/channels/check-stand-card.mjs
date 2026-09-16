@@ -439,6 +439,19 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
   const 卡 = [...H.matchAll(/<div class="card[^"]*">[\s\S]*?\n<\/div>/g)].map((m) => m[0]);
   ok(existsSync(join(DIR, S.插圖.檔)), `插圖 ${S.插圖.檔} 不在 —— 先跑 node drafts/channels/stand-illus-crop.mjs`);
   ok(existsSync(join(ROOT, S.插圖.原檔)), `原檔 ${S.插圖.原檔} 不在版控裡 —— 換一版就沒有回去的路了`);
+  /* ⚠⚠⚠ **illus.jpg 真的是從 `原檔` 裁出來的** —— 重跑裁圖那一支逐位比對。
+     沒有這一道的話，把 `原檔` 指回舊的那一版、卻忘了重裁，**每一道守門都會過**：
+     版面、長寬、比例、dpi 全部對得上（它們量的是 illus.jpg 自己），
+     只有「這張圖是哪一版畫的」沒有人在看（2026-09-16 負向測時才發現）。 */
+  if (existsSync(join(ROOT, S.插圖.原檔)) && existsSync(join(DIR, S.插圖.檔))) {
+    const { execFileSync } = await import("node:child_process");
+    try {
+      execFileSync(process.execPath, [join(HERE, "stand-illus-crop.mjs"), "--check"], { stdio: "pipe" });
+    } catch (e) {
+      const 句 = (String(e.stderr ?? "").match(/Error: (.*)/) ?? [, "裁圖 --check 沒有過"])[1];
+      ok(false, `${S.插圖.檔} 和 ${S.插圖.原檔} 對不起來 —— ${句}`);
+    }
+  }
   /* 真的去讀那個檔的長寬，不是信 JSON 寫的
      ⚠ 檔不在就跳過這一段 —— 上面那一道已經說過人話了，再讓 readFileSync 丟一個
        ENOENT 出來，守門失敗的樣子會比不檢查還難懂（同第 ① 道那條）。 */
@@ -459,13 +472,17 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
   ok(w / h > ow / oh + 1e-9,
     "插圖沒有裁過（比例還是原檔的）—— 整張 16:9 放進那一塊會爆框 10.9 mm");
   ok(h * 25.4 / 塊 >= 300, `插圖印出來只有 ${(h * 25.4 / 塊).toFixed(0)} dpi`);
-  ok(/\.card \.illus\{flex:1 1 auto;min-height:0;width:100%;object-fit:contain/.test(GEN),
+  ok(/\.card \.illus\{flex:1 1 auto;min-height:0;width:var\(--cw\);object-fit:contain/.test(GEN),
     "插圖那一條 CSS 被動過 —— flex:1 ／ min-height:0 ／ object-fit:contain 三個少一個都會出事");
+  /* ⚠⚠⚠ 滿版那一條（2026-09-16 定案 v3 時查出來的）：寫回 width:100% 的話它只有內距框
+     那麼寬，兩側的出血變成兩條白 —— 上面那一道量的是畫出來的 rect，這一道擋原始碼。 */
+  ok(/\.card \.illus\{[\s\S]*?margin:0 calc\(var\(--pad\) \* -1\)/.test(GEN),
+    "插圖少了負的左右外距 —— 它會縮回內距框裡（86.2 mm），兩側各留一條白");
   ok(!/\.illus\{[^}]*object-fit:cover/.test(GEN), "插圖改成 cover 了 —— 左右兩個人會各被切掉一截，而畫面看起來很正常");
   /* ⚠⚠⚠ 腳藏進帶子裡（2026-09-16）：負的下外距讓它沉進去、帶子補一個堆疊脈絡畫在上面。
      兩件都是「拿掉之後畫面看起來很正常」的 —— 少了負外距只是圖小一截，
      少了 z-index 則是人的腳蓋在標誌那一條上。 */
-  ok(/\.card \.illus\{[\s\S]*?margin-bottom:calc\(var\(--cw\) \* -\$\{帶高\(\)/.test(GEN),
+  ok(/\.card \.illus\{[\s\S]*?calc\(var\(--cw\) \* -\$\{帶高\(\)/.test(GEN),
     "插圖沒有沉進帶子後面了 —— 那是使用者指定的「腳藏進帶子裡」");
   ok(/object-position:bottom center/.test(GEN),
     "插圖少了 object-position:bottom center —— 哪天圖比那一條還寬，它會浮在帶子上面、腳露出來");
@@ -723,10 +740,27 @@ for (const w of [430, 350, 320]) {
        手機上和卡片不一樣寬，同一張 300px 的卡在 430 與 390 上會有不同的內距，
        而畫面看起來完全正常（踩過：24.1 vs 21.7）。 */
     const c0 = document.querySelector(".card");
+    /* ⚠⚠⚠ 人物插圖要**滿版**（負的左右外距，同帶子那一條）——
+       寫 width:100% 的話它只有內距框那麼寬（98 − 2×pad ＝ 86.2 mm），
+       而裁圖那一支與面板都拿整張卡寬在算：兩側各留一條白（人被邊緣切掉就讀成畫錯，
+       不是出血）、圖從高度在卡變成寬度在卡、上面空一截、一顆頭小 12% ——
+       **每一道尺寸守門都會過，只有量 rect 才看得到**（第九節第 28 條 ④）。 */
+    const im = document.querySelector(".card:not(.now) .illus");
+    let illus = null;
+    if (im) {
+      const r = im.getBoundingClientRect(), cr = im.closest(".card").getBoundingClientRect();
+      const nr = im.naturalWidth / im.naturalHeight, br = r.width / r.height;
+      illus = {
+        左: +(r.left - cr.left).toFixed(2), 右: +(cr.right - r.right).toFixed(2),
+        框寬: +r.width.toFixed(2), 卡寬: +cr.width.toFixed(2),
+        /* contain 之後真正有畫素的那一塊：圖比框寬 ＝ 高度在卡，反之上面會空一截 */
+        上面空: +(br > nr ? 0 : r.height - r.width / nr).toFixed(2),
+      };
+    }
     return {
       doc: document.documentElement.scrollWidth, win: window.innerWidth,
       pad: +parseFloat(getComputedStyle(c0).paddingLeft).toFixed(2),
-      cards, over, logo,
+      cards, over, logo, illus,
     };
   });
   ok(m.doc <= m.win + 1, `${w} 寬有 ${m.doc - m.win}px 水平溢出`);
@@ -737,7 +771,12 @@ for (const w of [430, 350, 320]) {
   const r = m.cards[0];
   ok(Math.abs(m.pad - r.w * 0.06) < 0.5, `${w} 寬的卡片內距量到 ${m.pad}px，應該是卡片寬的 6% ＝ ${(r.w * 0.06).toFixed(2)}px`);
   ok(Math.abs(r.h / r.w - S.卡片.比例) < 0.02, `${w} 寬的卡片比例 ${(r.h / r.w).toFixed(3)}，應該是 ${S.卡片.比例}`);
-  shots.push(`${w}：卡片 ${r.w}×${r.h}・溢出 0`);
+  ok(m.illus, `${w} 寬的案卡上沒有人物插圖`);
+  ok(Math.abs(m.illus.左) < 0.6 && Math.abs(m.illus.右) < 0.6,
+    `${w} 寬的人物插圖沒有滿版（左右各離卡 ${m.illus.左}／${m.illus.右}px）—— 那兩側的出血會讀成畫錯`);
+  ok(m.illus.上面空 < 1,
+    `${w} 寬的人物插圖上面空了 ${m.illus.上面空}px —— 它變成寬度在卡了（框比圖還瘦），人物會比那一塊給得起的小`);
+  shots.push(`${w}：卡片 ${r.w}×${r.h}・插圖滿版・溢出 0`);
 }
 /* ── ⑧之二 兩把尺挑定的值，量出來的要和算出來的一樣 ─────────────────
  * ⚠⚠⚠ 整疊（疊高）是算的，這一段是唯一會告訴我算錯的東西 ——
