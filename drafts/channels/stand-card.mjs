@@ -16,6 +16,17 @@
  *   ⚠ 這條規則拿現況驗過：現況最長那一行 21 個字 → 算出 4.0% 卡寬，
  *     和照片上量到的 4.0% 相同。
  *
+ * ⚠⚠⚠ 抬頭那一行也是一條規則算的（2026-09-16 使用者指定抬頭寫「芳仁牙醫有 LINE 囉」、
+ *   LINE 用綠泡泡框起來）：
+ *       抬頭字高 ＝ min(卡寬的 8.5%, 版心 84% ÷ (全形當量 ＋ 字距 ＋ 泡泡的左右內距))
+ *   —— 泡泡會把那一行撐寬，不把它算進去的話，抬頭會**靜靜地溢出卡片**（卡片 overflow:hidden，
+ *   畫面上只是最後一個字不見了，而每一道尺寸守門都會過）。所以那兩項要出現在算式裡，
+ *   而且**要和 CSS 那兩個值對得起來**（`--hd-ls`、`--li-pad`，兩邊只有一份出處）。
+ *   ⚠ 抬頭是 `nowrap` —— 放不下要被守門擋下來，不可以靜靜地折成兩行。
+ *   ⚠⚠ 那顆綠泡泡是**用 CSS 畫的示意**，不是 LINE 官方的標誌檔；印之前要照
+ *   LINE 的標誌使用規範換成正式的（那是待答的一題，頁面上寫著）。
+ *   ⚠ 現況那一張的「LINE」**刻意不套泡泡** —— 那一張是照片上逐字抄的，加工就不是對照了。
+ *
  * ⚠ 這一頁**零 JS**。字寬不在這裡量、用全形當量算 —— 這個容器沒有 Noto Sans TC，
  *   量出來的字寬會比實際寬約一成（CLAUDE.md 第五十九節），拿來判斷「放不放得下」是假的。
  *
@@ -42,6 +53,17 @@ const MAXFS = 0.06;                                  /* 主文字高的上限（
 export const fsOf = (c) => {
   const w = Math.max(...c.主文.map(cw));
   return { 最長: w, fs: Math.min(MAXFS, CARD.版心 / w) };
+};
+
+/* ── 抬頭：同一條規則，但要把字距與那顆綠泡泡的左右內距一起算進去 ──── */
+export const HDLS = 0.04;        /* 抬頭的 letter-spacing（em）—— CSS 那一行吃同一個值 */
+export const LIPAD = 0.26;       /* 綠泡泡左右各留多少（em）—— 同上 */
+const HDMAX = 0.085;             /* 抬頭字高的上限（佔卡寬） */
+export const hdOf = (c) => {
+  const t = String(c.抬頭);
+  const pill = c === S.現況 ? 0 : (t.match(/LINE/g) ?? []).length;   /* 現況不套泡泡 */
+  const w = cw(t) + HDLS * [...t].length + LIPAD * 2 * pill;
+  return { 寬: +w.toFixed(3), fs: Math.min(HDMAX, CARD.版心 / w), 泡泡: pill };
 };
 
 /* ── 紅線：只掃卡片上的字 ───────────────────────────────────────── */
@@ -104,12 +126,16 @@ const para = (a) => {
   return out.join("\n");
 };
 
+/* ⚠⚠ 資料裡不放 HTML（那條規矩沒有變）—— 泡泡是這裡套上去的，套的是 esc 過的字。 */
+const pill = (t) => esc(t).replace(/LINE/g, '<span class="li">LINE</span>');
+
 const card = (c, now = false) => {
   const { fs } = fsOf(c);
+  const hd = hdOf(c);
   const f = (k) => `calc(var(--cw) * ${k})`;
   return `<div class="card${now ? " now" : ""}">
-  <div class="hd" style="font-size:${f(0.085)}">${esc(c.抬頭)}</div>
-  <div class="sub" style="font-size:${f(0.05)}">${esc(c.副標)}</div>
+  <div class="hd" style="font-size:${f(hd.fs.toFixed(4))}">${now ? esc(c.抬頭) : pill(c.抬頭)}</div>
+  ${c.副標 ? `<div class="sub" style="font-size:${f(0.05)}">${esc(c.副標)}</div>` : ""}
   <div class="bd" style="font-size:${f(fs.toFixed(4))}">${c.主文.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
   ${c.QR上 ? `<div class="cue" style="font-size:${f(0.038)}">${esc(c.QR上)}</div>` : ""}
   <div class="qr"><span>QR</span></div>
@@ -146,7 +172,7 @@ const HTML = `<!doctype html>
 <title>櫃檯的小立牌　文字改版（四案）</title>
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
-  --brick:#8c3b32;--green:#3f654a;--cw:300px}
+  --brick:#8c3b32;--green:#3f654a;--cw:300px;--hd-ls:${HDLS}em;--li-pad:${LIPAD}em}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -171,7 +197,12 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
   padding:var(--pad) var(--pad) 0;
   display:flex;flex-direction:column;align-items:center;text-align:center;
   color:#333;line-height:1.5;overflow:hidden}
-.card .hd{font-weight:700;letter-spacing:.04em}
+.card .hd{font-weight:700;letter-spacing:var(--hd-ls);white-space:nowrap}
+/* ⚠ 那顆綠泡泡是示意，不是 LINE 官方的標誌檔（\#06C755 是 LINE 的品牌綠）。
+   左右內距與上面那個字距，抬頭的字級規則算過一模一樣的值 —— 改這裡要一起改那邊。 */
+.card .li{display:inline-block;background:#06C755;color:#fff;
+  border-radius:.26em;padding:0 var(--li-pad);
+  letter-spacing:.02em;line-height:1.3;vertical-align:-.06em}
 .card .sub{margin-top:.25em;color:#444}
 .card .bd{margin-top:calc(var(--cw) * .08);width:100%}
 .card .bd p{margin:.28em 0;white-space:nowrap}
@@ -230,6 +261,9 @@ ${para(CARD._量法)}
 ${拆解}
 
 <p class="h2">四案<span class="t">形狀不一樣，不只是換字</span></p>
+<p class="lede">抬頭四案相同：<b>${pill(S.案[0].抬頭)}</b>（使用者 2026-09-16 指定的逐字）。
+⚠ 那顆綠色泡泡是<b>用網頁畫的示意</b>，不是 LINE 官方的標誌檔 ——
+印之前要照 LINE 的標誌使用規範換成正式的（見底下第 ${qn("泡泡")} 題）。</p>
 <div class="cards">${案}</div>
 
 <p class="h2">字可以多大<span class="t">字少的自動變大 —— 這是四案真正的差別之一</span></p>
@@ -238,6 +272,10 @@ ${拆解}
 <b>文字本身</b>，不是我替每一案挑的字級。</p>
 <p>⚠ <b>版心那個 84% 就是從現況那一行量來的</b>（最長那一行 22 個全形字、佔卡片寬度 84%），
 所以現況那一列是這條規則的<b>定義</b>、不是驗證。四案之間的比較仍然成立 —— 它們吃同一條規則。</p>
+<p>⚠ <b>抬頭另算一條</b>：min(卡寬的 8.5%，版心 84% ÷ (全形當量 ＋ 字距 ＋ 泡泡的左右內距))。
+那顆泡泡會把那一行撐寬 ${(LIPAD * 2 * 100).toFixed(0)}% 個字，不算進去的話抬頭會靜靜地溢出卡片
+（卡片是 <code>overflow:hidden</code>，畫面上只會少掉最後一個字）。
+四案的抬頭都是 <b>${(hdOf(S.案[0]).fs * CARD.寬mm).toFixed(2)} mm</b>。</p>
 <p>⚠ 字高是照卡片寬 ${CARD.寬mm} mm 換算的（那個數字還要用尺量一次，見底下第 ${qn("尺寸")} 題）。
 櫃檯是站著看的，一般建議內文不要小於 3.5 mm。</p></div>
 ${tbl}
@@ -275,6 +313,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.log(pad(r.標籤, 26) + pad(r.行數, 8) + pad(r.最長 + " 字", 12) +
       pad(r.字高mm + " mm", 10) + pad(r.佔卡寬 + "%", 10) +
       (r.紅線.length ? r.紅線.map((x) => x.字).join("、") : "0"));
+  console.log("");
+  for (const c of [S.現況, ...S.案].filter((x, i, a) => a.findIndex((y) => y.抬頭 === x.抬頭) === i)) {
+    const h = hdOf(c);
+    console.log(`抬頭「${c.抬頭}」${(h.fs * CARD.寬mm).toFixed(2)} mm・佔卡寬 ${(h.寬 * h.fs * 100).toFixed(1)}%` +
+      (h.泡泡 ? `（含綠泡泡的左右內距 ${(LIPAD * 2).toFixed(2)} 個字）` : "（沒有泡泡）"));
+  }
   console.log("");
   console.log(`卡片 ${CARD.寬mm} mm 寬・比例 ${CARD.比例}（${Math.round(CARD.寬mm * CARD.比例)} mm 高）—— 從照片量的，還要用尺量一次`);
   console.log(`QR ＝ ${S.QR.內容}（兩張照片各自解過一次）`);

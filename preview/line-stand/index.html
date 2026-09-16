@@ -7,7 +7,7 @@
 <title>櫃檯的小立牌　文字改版（四案）</title>
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
-  --brick:#8c3b32;--green:#3f654a;--cw:300px}
+  --brick:#8c3b32;--green:#3f654a;--cw:300px;--hd-ls:0.04em;--li-pad:0.26em}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -32,7 +32,12 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
   padding:var(--pad) var(--pad) 0;
   display:flex;flex-direction:column;align-items:center;text-align:center;
   color:#333;line-height:1.5;overflow:hidden}
-.card .hd{font-weight:700;letter-spacing:.04em}
+.card .hd{font-weight:700;letter-spacing:var(--hd-ls);white-space:nowrap}
+/* ⚠ 那顆綠泡泡是示意，不是 LINE 官方的標誌檔（#06C755 是 LINE 的品牌綠）。
+   左右內距與上面那個字距，抬頭的字級規則算過一模一樣的值 —— 改這裡要一起改那邊。 */
+.card .li{display:inline-block;background:#06C755;color:#fff;
+  border-radius:.26em;padding:0 var(--li-pad);
+  letter-spacing:.02em;line-height:1.3;vertical-align:-.06em}
 .card .sub{margin-top:.25em;color:#444}
 .card .bd{margin-top:calc(var(--cw) * .08);width:100%}
 .card .bd p{margin:.28em 0;white-space:nowrap}
@@ -80,7 +85,7 @@ ol.ask li{margin:.7em 0}
 
 <p class="h2">現況那一張<span class="t">照片上逐字抄的，一個字都沒有改寫</span></p>
 <div class="cards"><div class="one"><div class="card now">
-  <div class="hd" style="font-size:calc(var(--cw) * 0.085)">芳仁牙醫診所</div>
+  <div class="hd" style="font-size:calc(var(--cw) * 0.0850)">芳仁牙醫診所</div>
   <div class="sub" style="font-size:calc(var(--cw) * 0.05)">在 LINE 官方帳號為您服務！！</div>
   <div class="bd" style="font-size:calc(var(--cw) * 0.0382)"><p>掃描後手機驗證、收到綁定成功通知，立即加入！</p><p>往後約診提醒即可自動推播！</p><p>再也不怕忘記看診時間，輕鬆接收診所新訊！</p></div>
   <div class="cue" style="font-size:calc(var(--cw) * 0.038)">▼ 下方掃碼立即加入 ▼</div>
@@ -104,15 +109,19 @@ ol.ask li{margin:.7em 0}
 <p>⚠⚠ <b>印在立牌上比印在訊息上嚴重</b>：訊息會被後面的訊息蓋過去，這張卡會擺在櫃檯一年，而且會被拍照。真的漏送一次，它就是白紙黑字的那一句。→ 四案都只寫「我們會提醒你」，一個都沒有寫「你不會忘記」。</p></div>
 <div class="it"><p class="t"><span class="n">3</span>「輕鬆接收診所新訊」承諾了一個診所沒有在做的服務</p><p>診所自己講過：「診所沒有特別推播什麼。只有重大事件例如調漲掛號費和颱風天休診，針對有被影響的約診病人群發訊息。」⚠ 而且<b>封鎖率只有 2.2%（3,205 個好友裡 70 個）正是因為幾乎不發</b> —— 那是這個帳號現在的資產。印「接收新訊」有兩個後果：等不到的人覺得被騙；想要新訊的人因為沒有而封鎖。</p></div>
 <div class="it"><p class="t"><span class="n">4</span>「自動推播」「即可」是系統的詞，主詞是機器不是人</p><p>站上與 LINE 那七則訊息一律寫「我們會提醒你」。<b>同一件事，差別在誰在說話。</b></p></div>
-<div class="it"><p class="t"><span class="n">5</span>五個驚嘆號 ＋「為您服務」</p><p>COPY.md 第十節：「貼近在地」是語氣（站在誰那一邊），「口語化／行銷體」是文體。兩者不衝突 —— 語氣可以親近，但「為您服務！！」是廣告的聲音，不是這間診所的。</p></div>
-<div class="it"><p class="t"><span class="n">6</span>底下那條帶子是廠商的品牌</p><p>「AlleyPin｜打造醫病好關係」擺在芳仁自己的櫃檯上。新版那一條要換成診所自己的東西，或者留白給下一輪的插圖 —— 見「還沒有答案的」第 5 題。</p></div>
+<div class="it"><p class="t"><span class="n">5</span>「在 LINE 官方帳號為您服務」讓人以為 LINE 上有人會回</p><p>使用者：「不要說在 LINE 為您服務，這樣會覺得好像 LINE 上可以回覆留言、即時回答。」</p>
+<p><b>這不是口氣的問題，是第十一之三節那條紅線</b>：這個帳號<b>沒有專人即時回覆訊息</b>（自動回應與綁定完成那兩則自己就寫著）。「為您服務」四個字沒有承諾任何具體的事，但它開了一扇門 —— 讀的人自然會以為加了之後在這裡問就有人答。⚠⚠ <b>而這張卡是招募入口</b>：在這裡種下那個期待，落空的地方會在他真的打字進去之後。→ 四案的標題因此只講一件事實（<b>芳仁牙醫有 LINE 囉</b>），底下只寫這個帳號真的會做的事（看診前提醒、查得到自己約在哪一天）。⚠ 順帶：五個驚嘆號也一起拿掉 —— COPY.md 第十節，「貼近在地」是語氣，行銷體是文體。</p></div>
+<div class="it"><p class="t"><span class="n">6</span>底下那條帶子是廠商的品牌</p><p>「AlleyPin｜打造醫病好關係」擺在芳仁自己的櫃檯上。新版那一條要換成診所自己的東西，或者留白給下一輪的插圖 —— 見「還沒有答案的」第 6 題。</p></div>
 
 <p class="h2">四案<span class="t">形狀不一樣，不只是換字</span></p>
+<p class="lede">抬頭四案相同：<b>芳仁牙醫有 <span class="li">LINE</span> 囉</b>（使用者 2026-09-16 指定的逐字）。
+⚠ 那顆綠色泡泡是<b>用網頁畫的示意</b>，不是 LINE 官方的標誌檔 ——
+印之前要照 LINE 的標誌使用規範換成正式的（見底下第 5 題）。</p>
 <div class="cards"><div class="one">
 <p class="lb">Ⓐ 先講你會拿到什麼</p>
 <div class="card">
-  <div class="hd" style="font-size:calc(var(--cw) * 0.085)">芳仁牙醫診所</div>
-  <div class="sub" style="font-size:calc(var(--cw) * 0.05)">官方 LINE</div>
+  <div class="hd" style="font-size:calc(var(--cw) * 0.0840)">芳仁牙醫有 <span class="li">LINE</span> 囉</div>
+  
   <div class="bd" style="font-size:calc(var(--cw) * 0.0560)"><p>看診前，我們會在這裡提醒你一次</p><p>下次約在哪一天、幾點，也查得到</p></div>
   <div class="cue" style="font-size:calc(var(--cw) * 0.038)">掃碼加入，再完成手機綁定</div>
   <div class="qr"><span>QR</span></div>
@@ -124,8 +133,8 @@ ol.ask li{margin:.7em 0}
 <div class="one">
 <p class="lb">Ⓑ 先講兩個步驟</p>
 <div class="card">
-  <div class="hd" style="font-size:calc(var(--cw) * 0.085)">芳仁牙醫診所</div>
-  <div class="sub" style="font-size:calc(var(--cw) * 0.05)">官方 LINE</div>
+  <div class="hd" style="font-size:calc(var(--cw) * 0.0840)">芳仁牙醫有 <span class="li">LINE</span> 囉</div>
+  
   <div class="bd" style="font-size:calc(var(--cw) * 0.0600)"><p>① 掃下面的 QR，加入好友</p><p>② 跟著畫面完成手機綁定</p></div>
   
   <div class="qr"><span>QR</span></div>
@@ -137,8 +146,8 @@ ol.ask li{margin:.7em 0}
 <div class="one">
 <p class="lb">Ⓒ 只有一句，字最大</p>
 <div class="card">
-  <div class="hd" style="font-size:calc(var(--cw) * 0.085)">芳仁牙醫診所</div>
-  <div class="sub" style="font-size:calc(var(--cw) * 0.05)">官方 LINE</div>
+  <div class="hd" style="font-size:calc(var(--cw) * 0.0840)">芳仁牙醫有 <span class="li">LINE</span> 囉</div>
+  
   <div class="bd" style="font-size:calc(var(--cw) * 0.0600)"><p>掃碼加入，完成手機綁定</p><p>看診前我們會提醒你一次</p></div>
   
   <div class="qr"><span>QR</span></div>
@@ -150,8 +159,8 @@ ol.ask li{margin:.7em 0}
 <div class="one">
 <p class="lb">Ⓓ 回答「加了會不會一直被傳訊息」</p>
 <div class="card">
-  <div class="hd" style="font-size:calc(var(--cw) * 0.085)">芳仁牙醫診所</div>
-  <div class="sub" style="font-size:calc(var(--cw) * 0.05)">官方 LINE</div>
+  <div class="hd" style="font-size:calc(var(--cw) * 0.0840)">芳仁牙醫有 <span class="li">LINE</span> 囉</div>
+  
   <div class="bd" style="font-size:calc(var(--cw) * 0.0525)"><p>加入之後，看診前我們會提醒你一次</p><p>平常不會拿它傳別的東西給你</p></div>
   <div class="cue" style="font-size:calc(var(--cw) * 0.038)">掃碼加入，再完成手機綁定</div>
   <div class="qr"><span>QR</span></div>
@@ -167,6 +176,10 @@ ol.ask li{margin:.7em 0}
 <b>文字本身</b>，不是我替每一案挑的字級。</p>
 <p>⚠ <b>版心那個 84% 就是從現況那一行量來的</b>（最長那一行 22 個全形字、佔卡片寬度 84%），
 所以現況那一列是這條規則的<b>定義</b>、不是驗證。四案之間的比較仍然成立 —— 它們吃同一條規則。</p>
+<p>⚠ <b>抬頭另算一條</b>：min(卡寬的 8.5%，版心 84% ÷ (全形當量 ＋ 字距 ＋ 泡泡的左右內距))。
+那顆泡泡會把那一行撐寬 52% 個字，不算進去的話抬頭會靜靜地溢出卡片
+（卡片是 <code>overflow:hidden</code>，畫面上只會少掉最後一個字）。
+四案的抬頭都是 <b>8.23 mm</b>。</p>
 <p>⚠ 字高是照卡片寬 98 mm 換算的（那個數字還要用尺量一次，見底下第 3 題）。
 櫃檯是站著看的，一般建議內文不要小於 3.5 mm。</p></div>
 <table><thead><tr><th>　</th><th>主文行數</th><th>最長一行</th>
@@ -193,6 +206,7 @@ ol.ask li{margin:.7em 0}
 <li><b>新版還要沿用同一個 QR 嗎</b><br>現在這一顆是廠商的短網址（q.1talk.co），停用或換掉都不在診所手上。換成 LINE 自己的加好友碼，流程就一定是「加好友 → 再綁定」兩步；沿用廠商那一顆，就照他們那條流程寫。</li>
 <li><b>卡片的實際尺寸</b><br>照片上量到寬約 98 mm、比例 1.49（≈ 4×6 吋）。<b>請用尺量一次印刷品本身或壓克力座的內槽</b>，下一輪的版面要照那個數字排。</li>
 <li><b>提醒的時間要不要印上去</b><br><b>建議不印。</b> 招呼圖卡寫「看診前2天」、綁定完成那一則寫「48 小時」，兩種講法到現在還沒統一 —— 而印出來的東西改不了。四案都只寫「看診前」。</li>
+<li><b>標題那顆 LINE 綠泡泡照不照得了官方規範</b><br>那顆泡泡是 <b>LINE 的商標</b>不是我們的色票（頁面上先畫成 LINE 的品牌綠 <code>#06C755</code>）。LINE 對標誌有使用規範（顏色、最小尺寸、周圍留白、不可以變形或改色），<b>印刷之前要照那一份對一次</b> —— 這是現在那張卡上唯一一個不屬於診所的視覺元素。</li>
 <li><b>底下那條帶子換成什麼</b><br>① 留白，給下一輪的插畫人物 ② 診所名＋地址＋電話 05-5339369 ③ fangren.net。⚠ 這張卡的工作是讓人掃那顆 QR，多一個出口會分掉它。</li>
 <li><b>Ⓓ 那一句要不要寫</b><br>「平常不會拿它傳別的東西給你」是一個承諾，要診所自己點頭（見 Ⓓ 的註）。</li>
 </ol>
