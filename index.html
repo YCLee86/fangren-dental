@@ -8551,8 +8551,9 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     // 打開格子 ＝ 三塊停車場一起熄滅；關掉格子 ＝ **回到開頁那一態**（壹車房亮著、
     // 帶著它那條點狀路線）。⚠ 2026-09-16 使用者：「鄰近停車格標籤不亮的時候，
     // 要讓壹車房的停車場和路線亮」—— 關掉之後停在「全部熄滅」那一態是空的。
-    // ⚠ 「點地圖空白處 ＝ 全部熄滅」那一態**沒有動**（2026-08-14 第四十二輪
-    //   使用者退回過我拿掉它的做法：要看清楚路名就得有一個什麼都沒選的狀態）。
+    // ⚠ 「點地圖空白處 ＝ 全部熄滅」那一態**還在**，但 2026-09-16 往後挪了一步：
+    //   格子亮著的時候第一下走的是這裡同一條路（回壹車房），第二下才全部熄滅。
+    //   見底下 fig 那個 click handler。
     pinned = baysOn ? DEFAULT_LOT : null;
     setBays(!baysOn);
     paintLots();
@@ -8597,7 +8598,21 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
   //   <figure> 是一般的 HTML 盒子，連圖說那幾行字一起算進來，整塊都收得回。
   //   ⚠ 停車場自己的 handler 有 stopPropagation，牌子上那三個連結也有，
   //     所以不會互踩。
-  fig.addEventListener('click', function () { pinned = null; paintLots(); });
+  // ⚠⚠ 2026-09-16 使用者：「鄰近停車格的標籤亮的情況下，點地圖任一個位置，
+  //   也是回到壹車房停車場亮的模式」—— 格子亮著時整張圖沒有任何停車場亮著，
+  //   再收成「全部熄滅」等於從一個空的狀態走到另一個空的狀態。
+  //   所以那一下**逐字等於把標籤關掉**（走同一條路：setBays(false) ＋ 回到 DEFAULT_LOT）。
+  // ⚠ 「點地圖空白處 ＝ 全部熄滅」那一態**還在**，只是往後挪了一步：
+  //   格子沒亮的時候照舊一下就全部熄滅（2026-08-14 第四十二輪使用者退回過
+  //   我拿掉它的做法 —— 要看清楚路名就得有一個什麼都沒選的狀態），
+  //   格子亮著的時候是「第一下回壹車房、第二下才全部熄滅」。
+  // ⚠ 標籤那顆 <button> 在 <figure> **外面**（.bay-chips 是 .card-map 的子元素、
+  //   figure 的兄弟），所以按標籤不會冒泡到這裡、不會按一下被算成兩下。
+  fig.addEventListener('click', function () {
+    if (baysOn) { setBays(false); pinned = DEFAULT_LOT; }
+    else pinned = null;
+    paintLots();
+  });
   paintLots();
 
 })();
