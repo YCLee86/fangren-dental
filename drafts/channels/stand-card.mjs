@@ -300,34 +300,38 @@ const card = (c, now = false, 色 = null, o = {}) => {
  *   間距這種東西並排才比得出來，一格一格單看是分不出 1~2 mm 的。
  * ⚠ 面板的數字每一格現算，不是寫上去的：換字、換字級、換卡片尺寸都會跟著動。 */
 const 尺卡 = S.案.find((c) => c.id === "e");
+/* ⚠⚠ 案數現算，不可以寫死「四案」—— 2026-09-16 拿掉四案之後，寫死的那個詞會靜靜地說謊
+ *   （同第五十三、五十四節那條：一個「第 N 個」或「共 N 件」的數字，要嘛不寫，要嘛現算）。 */
+const 案數詞 = "零一兩三四五六七八九"[S.案.length] ?? String(S.案.length);
 /* ⚠⚠ 抬頭到主文那把尺 2026-09-16 定案（Ⓗ4），**收成寫死的值、從頁面上拿掉** ——
  *   但四格量出來的東西要留著（同 50-22：尺可以收，它量出來的數字不可以跟著消失）。 */
 const 尺間距 = `<table><thead><tr><th>　</th><th>上外距</th><th>抬頭到主文</th>
 <th>÷ 主文行距</th><th>QR 底下到帶子</th></tr></thead><tbody>${
   CARD.抬頭到主文案.map((k) => {
     const 抬 = 抬頭到主文mm(尺卡, k.值), 行 = 行距mm(尺卡), 定 = k.值 === BDGAP;
-    return `<tr${定 ? ' class="nowr"' : ""}><th>Ⓗ${k.id === "now" ? "1" : k.id[1]} ${esc(k.標籤)}${定 ? "・定案" : ""}</th>
+    /* ⚠ 淡掉的是「現況」那一列（對照用的），不是定案那一列 —— 兩張表要同一個規矩 */
+    return `<tr${k.id === "now" ? ' class="nowr"' : ""}><th>Ⓗ${k.id === "now" ? "1" : k.id[1]} ${esc(k.標籤)}${定 ? "・定案" : ""}</th>
 <td>卡寬 ${(k.值 * 100).toFixed(1)}%</td><td>${抬} mm</td><td>${(抬 / 行).toFixed(1)} 倍</td>
 <td>${餘裕mm(尺卡, k.值)} mm</td></tr>`;
   }).join("\n")}</tbody></table>`;
 
-/* ⚠⚠⚠ 2026-09-16 使用者：「標誌左右的留白我看不出差別」—— 四格只差 0.94 mm，
- *   而且分在四張卡上。**那種差距一定要並排、而且要有同一條基準線**，所以改成
- *   「只有抬頭那一行」疊起來、左緣對齊、一條虛線標著現況那顆標誌的左緣。
- * ⚠ 用 cqw 讓那幾行跟著容器放大（電腦上約 2.4 倍卡片大小），差別才看得見；
- *   ⚠⚠ 標的 mm 仍然是**那張 98 mm 的卡上的 mm**，不是畫面上量到的。 */
-const 現況留白 = S.標誌.留白案.find((k) => k.id === "now").比;
-/* 基準線 ＝ 現況那一顆標誌的左緣。⚠ 那幾行的字級是 8.5cqw ＝ **容器寬的 8.5%**，
-   所以這裡換算成「佔容器寬的百分之幾」就好，不要再除版心（除了會落到標誌右邊去）。 */
-const 線左 = (cw("芳仁牙醫有") + HDLS * 5 + 現況留白 * LIH) * hdOf(尺卡).fs * 100;
-const 尺留白 = `<div class="hdcmp" style="--line:${線左.toFixed(2)}">${
+/* ⚠⚠ 標誌左右的留白 2026-09-16 定案（Ⓘ4 ＝ 12%），**收成寫死的值、對照帶從頁面上拿掉** ——
+ *   但五格量出來的東西要留著（同 50-22：尺可以收，它量出來的數字不可以跟著消失）。
+ * ⚠⚠⚠ 定案那一格**低於我們手上記的 25%**，所以這張表多一欄「對規範」：
+ *   哪一格守得住、哪幾格跨過去，一眼看得到。**那條線不可以跟著尺一起消失。** */
+const 規範留白 = 0.25;
+const 尺留白 = `<table><thead><tr><th>　</th><th>左右各留</th><th>卡片上</th><th>對規範（${(規範留白 * 100).toFixed(0)}%）</th></tr></thead><tbody>${
   S.標誌.留白案.map((k) => {
-    const hd = hdOf(尺卡, k.比);
-    return `<div class="hdrow" style="--li-gap:${LIGAPOF(k.比)}em">
-<span class="hd">${mark(尺卡.抬頭)}</span>
-<span class="hdlb">Ⓘ${k.id === "now" ? "1" : k.id[1]}　左右各留 <b>${(k.比 * 100).toFixed(1)}%</b> 個標誌高 ＝ <b>${(hd.留白em * hd.fs * CARD.寬mm).toFixed(2)} mm</b>${k.例外 ? `　<span class="warn">⚠ ${esc(k.例外)}</span>` : ""}</span>
-</div>`;
-  }).join("\n")}</div>`;
+    const hd = hdOf(尺卡, k.比), 定 = k.比 === 留白比;
+    return `<tr${k.id === "now" ? ' class="nowr"' : ""}><th>Ⓘ${k.id === "now" ? "1" : k.id[1]} ${esc(k.標籤)}${定 ? "・定案" : ""}</th>
+<td><b>${(k.比 * 100).toFixed(1)}%</b> 個標誌高</td><td>＝ <b>${(hd.留白em * hd.fs * CARD.寬mm).toFixed(2)} mm</b></td>
+<td>${k.例外 ? `<span class="bad">⚠ ${esc(k.例外)}</span>` : "守得住"}</td></tr>`;
+  }).join("\n")}</tbody></table>`;
+
+/* ⚠⚠ 拿掉的那幾案要留一筆紀錄 —— 不見的時候要說人話，不要在一百行外丟 TypeError */
+if (!S.刪案?.走了?.length || !S.刪案.取回 || !S.刪案.說明?.length) {
+  throw new Error("資料裡沒有「刪案」那一筆（走了哪幾案／去哪裡取回來／為什麼）—— 拿掉的是畫面，不是理由");
+}
 
 const 拆解 = S.拆解.map((d, i) =>
   `<div class="it"><p class="t"><span class="n">${i + 1}</span>${b(d.標)}</p>${para(d.文)}</div>`).join("\n");
@@ -355,7 +359,7 @@ const HTML = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>櫃檯的小立牌　文字改版（四案）</title>
+<title>櫃檯的小立牌　文字改版（${案數詞}案）</title>
 <style>
 :root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;
   --brick:#8c3b32;--green:#3f654a;--cw:300px;--hd-ls:${HDLS}em;--li-h:${LIH}em;--li-gap:${LIGAP}em;--bd-gap:calc(var(--cw) * ${BDGAP})}
@@ -380,22 +384,6 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 /* ⚠ 尺上那幾張要**並排**才比得出 1~2 mm 的差 —— 四格一排的寬度是算出來的：
    (版心 760 − 左右內距 28 − 三條溝 22) ÷ 4 ＝ 166.5，取 166。手機上兩張一排，仍然是並排的。 */
 .one.sc{--cw:166px}
-/* ⚠⚠⚠ 「只有抬頭那一行」的對照帶：0.3 mm 的差距要並排＋同一條基準線才看得出來。
-   ⚠ 用 cqw 讓那幾行跟著容器放大（電腦上約 2.4 倍卡片大小），
-     所以 8.5cqw 就是「卡寬的 8.5%」那條抬頭字級規則、換算到這一條帶子上。
-   ⚠ 標的 mm 仍然是那張 98 mm 的卡上的 mm，不是畫面上量到的。 */
-.hdcmp{container-type:inline-size;position:relative;background:var(--card);
-  border-radius:11px;padding:14px 15px;margin:.6em 0 0}
-.hdcmp::before{content:"";position:absolute;top:8px;bottom:8px;/* ⚠⚠⚠ 這裡一定要用 cqw，不可以用 % —— left 的百分比吃的是 padding box，
-     而那幾行的字級是 cqw（吃 content box），兩個基準差一個左右內距（實測差 12.6px），
-     線就會落到標誌右邊去，而畫面上只是「多一條虛線」、每一道尺寸守門都會過。 */
-  left:calc(15px + var(--line) * 1cqw);
-  border-left:1px dashed #9aa09a}
-.hdrow{position:relative;margin:.55em 0}
-.hdrow .hd{display:block;font-weight:700;font-size:8.5cqw;line-height:1.5;
-  letter-spacing:var(--hd-ls);white-space:nowrap;color:#333}
-.hdlb{display:block;font-size:.82rem;color:var(--soft);line-height:1.5}
-.hdlb .warn{color:var(--brick)}
 .lb{font-weight:600;font-size:.95rem;margin:0 0 .45em}
 .card{--pad:calc(var(--cw) * .06);width:var(--cw);aspect-ratio:${CARD.寬mm} / ${Math.round(CARD.寬mm * CARD.比例)};
   background:#fff;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.14);
@@ -406,7 +394,8 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 /* ⚠⚠⚠ 官方授權的標誌檔（使用者 2026-09-16 提供）。**一個像素都不要改** ——
    這裡只有等比例縮放，沒有 filter、沒有 border、沒有 border-radius、沒有背景。
    高度與左右留白，抬頭的字級規則算過一模一樣的值 —— 改這裡要一起改那邊。
-   ⚠ 標誌左右的空白是抬頭那兩個半形空白給的，所以 --li-gap 是 0。 */
+   ⚠⚠ 左右的留白吃 --li-gap，它是「標誌自己高度的幾成」（2026-09-16 定案 12%）——
+   不是抬頭裡那兩個半形空白給的（那個寫法跟著字型跑，已經換掉）。 */
 .li{display:inline-block;height:var(--li-h);width:auto;
   margin:0 var(--li-gap);vertical-align:-.19em}
 .card .sub{margin-top:.25em;color:#444}
@@ -460,8 +449,8 @@ ol.ask li{margin:.7em 0}
 <div class="wrap">
 
 <h1>櫃檯的小立牌　文字改版</h1>
-<p class="lede">這一輪<b>只處理文字</b>（插圖與版面下一輪）。底下那四張卡是用網頁排的，
-<b>不是完稿</b> —— 字級是用一條規則自動算的，四案比的是文字本身。</p>
+<p class="lede">這一輪<b>只處理文字</b>（插圖與版面下一輪）。底下那${案數詞}張卡是用網頁排的，
+<b>不是完稿</b> —— 字級是用一條規則自動算的，${案數詞}案比的是文字本身。</p>
 
 <p class="h2">現況那一張<span class="t">照片上逐字抄的，一個字都沒有改寫</span></p>
 <div class="cards"><div class="one">${card(S.現況, true)}</div>
@@ -473,7 +462,7 @@ ${para(CARD._量法)}
 <div class="box">${para(S.標誌._說明)}
 <p>⚠ 現在畫出來：<code>${esc(S.標誌.檔)}</code> ${LOGO.寬}×${LOGO.高}（長寬比 ${LOGO.比}），
 高 ${LIH} em ＝ 卡片上 <b>${(LIH * hdOf(S.案[0]).fs * CARD.寬mm).toFixed(1)} mm</b>，
-左右各留 <b>${(留白比 * 100).toFixed(0)}%</b> 個標誌高。</p></div>
+左右各留 <b>${(留白比 * 100).toFixed(0)}%</b> 個標誌高${留白比 < 規範留白 ? `　—— <b class="bad">低於我們手上記的 ${(規範留白 * 100).toFixed(0)}%</b>，那是使用者挑的，見底下那一節` : ""}。</p></div>
 
 <p class="h2">那個 QR 掃出來是什麼<span class="t">拿解碼器掃過，不是用眼睛看的</span></p>
 <div class="box"><p><code>${esc(S.QR.內容)}</code></p>${para(S.QR.說明)}</div>
@@ -481,11 +470,14 @@ ${para(CARD._量法)}
 <p class="h2">為什麼要改<span class="t">六件，每一件都有出處</span></p>
 ${拆解}
 
-<p class="h2">四案<span class="t">形狀不一樣，不只是換字</span></p>
+<p class="h2">${案數詞}案<span class="t">Ⓔ 是他寫的，Ⓕ 是同一份字的最小改法</span></p>
 <p class="lede">抬頭每一案都一樣：<b>${mark(S.案[0].抬頭)}</b>（使用者 2026-09-16 指定的逐字，
 那顆標誌是他提供的<b>官方授權檔</b>）。<b>Ⓔ 是他自己寫的三行</b>，一個字都沒有改 ——
 所以底下那張表上它會亮紅，那不是壞掉（見那一案的註）。</p>
 <div class="cards">${案}</div>
+<div class="note">${para(S.刪案.說明)}
+<p>拿掉的：${S.刪案.走了.map(esc).join("、")}（${esc(S.刪案.時間)}）。
+要回頭比：<code>${esc(S.刪案.取回)}</code></p></div>
 
 <p class="h2">抬頭到主文的間距<span class="t">收上面，空間留給下面的插圖</span></p>
 <div class="box">${para(CARD.抬頭到主文_說明)}</div>
@@ -494,10 +486,6 @@ ${尺間距}
 <p class="h2">標誌左右的留白<span class="t">他寫的那兩個半形空白，換成一個算得出來的規格</span></p>
 <div class="box">${para(S.標誌.留白_說明)}</div>
 ${尺留白}
-<div class="cards"><div class="one">
-<p class="lb">畫在卡片上（現在這樣）</p>
-${card(尺卡, false, null, { 尺: true })}
-</div></div>
 
 <p class="h2">底下那條帶子<span class="t">換成診所自己的九顆 logo</span></p>
 <div class="box">${para(S.帶子._說明)}
@@ -509,16 +497,16 @@ ${card(尺卡, false, null, { 尺: true })}
 <div class="note">${para(k.說明)}</div>
 </div>`).join("\n")}</div>
 
-<p class="h2">字可以多大<span class="t">字少的自動變大 —— 這是四案真正的差別之一</span></p>
+<p class="h2">字可以多大<span class="t">字少的自動變大 —— 這是兩案真正的差別之一</span></p>
 <div class="box"><p>主文字高 ＝ <b>min(卡寬的 6%，版心 84% ÷ 最長那一行的字數)</b>，
-也就是「讓最長那一行剛好撐滿版心，但不超過 6%」。四案用同一條規則，所以底下這張表比的是
+也就是「讓最長那一行剛好撐滿版心，但不超過 6%」。${案數詞}案用同一條規則，所以底下這張表比的是
 <b>文字本身</b>，不是我替每一案挑的字級。</p>
 <p>⚠⚠ <b>一案可以宣告「字級照另一案」</b>（Ⓔ 就是釘在 Ⓕ 上的）——
 規則本身一個字都沒有改：那一列同時印著<b>規則會算幾 mm</b>，所以看得出這一釘是往上還是往下。
 ⚠ 釘上去之後最長那一行放不下的話產生器會 throw ——
 卡片是 <code>overflow:hidden</code>，不擋的話畫面上只會少掉最後幾個字，而每一道尺寸守門都會過。</p>
 <p>⚠ <b>版心那個 84% 就是從現況那一行量來的</b>（最長那一行 22 個全形字、佔卡片寬度 84%），
-所以現況那一列是這條規則的<b>定義</b>、不是驗證。四案之間的比較仍然成立 —— 它們吃同一條規則。</p>
+所以現況那一列是這條規則的<b>定義</b>、不是驗證。${案數詞}案之間的比較仍然成立 —— 它們吃同一條規則。</p>
 <p>⚠ <b>抬頭另算一條</b>：min(卡寬的 8.5%，版心 84% ÷ (全形當量 ＋ 字距 ＋ 標誌佔幾個字))。
 那顆標誌會把那一行撐寬 <b>${LIW}</b> 個字（＝它的高度 ${LIH} em × 長寬比 ${LOGO.比}，
 <b>長寬比是從 PNG 的檔頭讀回來的</b>），不算進去的話抬頭會靜靜地溢出卡片
@@ -567,7 +555,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   for (const c of [S.現況, ...S.案].filter((x, i, a) => a.findIndex((y) => y.抬頭 === x.抬頭) === i)) {
     const h = hdOf(c);
     console.log(`抬頭「${c.抬頭}」${(h.fs * CARD.寬mm).toFixed(2)} mm・佔卡寬 ${(h.寬 * h.fs * 100).toFixed(1)}%` +
-      (h.標誌 ? `（含 ${h.標誌} 顆標誌，一顆 ${LIW} 個字 ＝ ${(LIH * h.fs * CARD.寬mm).toFixed(1)} mm 高、左右各留 ${(留白比 * 100).toFixed(0)}%）` : `（沒有標誌）`));
+      (h.標誌 ? `（含 ${h.標誌} 顆標誌，一顆 ${LIW} 個字 ＝ ${(LIH * h.fs * CARD.寬mm).toFixed(1)} mm 高、左右各留 ${(留白比 * 100).toFixed(0)}%${留白比 < 規範留白 ? `　⚠ 低於規範的 ${(規範留白 * 100).toFixed(0)}%（使用者挑的）` : ""}）` : `（沒有標誌）`));
   }
   console.log("");
   console.log(`標誌 ${S.標誌.檔} ${LOGO.寬}×${LOGO.高}（長寬比 ${LOGO.比}）—— 官方授權檔，只等比例縮放`);

@@ -95,7 +95,15 @@ for (const c of S.案) {
   ok(c.抬頭 === "芳仁牙醫有 LINE 囉", `${c.標籤} 的抬頭不是使用者指定的那一行`);
   ok(!c.副標, `${c.標籤} 還留著副標「${c.副標}」—— 抬頭那一輪已經收成一行`);
 }
-ok(無數字 >= 1, "每一案都印了時間的數字 —— 那條規矩等於沒有了");
+/* ⚠⚠⚠ 2026-09-16 拿掉 Ⓐ~Ⓓ 之後，**沒有任何一案是不印數字的了** ——
+   那幾案正好是「不印數字」那條路唯一的現場。這一道因此翻面而不是放水：
+   一案都不乾淨的時候，**頁面上非得講得出那條路不可**（建議不印 ＋ 那兩種講法差在哪），
+   不然那條規矩就只剩一句寫在資料裡、沒有人看得到的話。
+   ⚠ 它和紅線那一道的「至少要有一案乾淨」是同一個精神，差別是紅線那一側 Ⓕ 還守得住。 */
+if (無數字 === 0) {
+  ok(/建議不印/.test(H) && H.includes("48 小時") && H.includes("看診前2天"),
+    "每一案都印了時間的數字，而頁面上也不再講得出「建議不印」與那兩種講法差在哪 —— 那條規矩等於沒有了");
+}
 const GEN = readFileSync(join(HERE, "stand-card.mjs"), "utf8");
 
 /* ⚠⚠ 現況那一張的 LINE **不可以**換成標誌（它是照片上逐字抄的對照，加工就不是對照了） */
@@ -288,8 +296,21 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
      而且**至少要有一格是不跨線的**（不然一張「大家都有例外」的表會把這一道靜靜地關掉）。
      ⚠ 我們自己**不跨過去**：預設那一格一定要在線上或線內。 */
   const 規範 = 0.25;
-  ok(留白比 >= 規範 - 1e-9,
-    "預設的標誌留白 " + (留白比 * 100).toFixed(1) + "% 低於規範的 25% —— 那條線要由使用者跨，不是我們");
+  /* ⚠⚠⚠ 2026-09-16 定案 Ⓘ4 ＝ 12%，**跨過那條線了**（使用者：「選這個」）。
+   *   所以這一道翻面：預設**可以**低於規範，但只准在三件同時成立的時候 ——
+   *   ① 那一格在資料裡宣告了例外 ② 那句話印在頁上 ③ **頁面上仍然講得出那條線在哪**。
+   * ⚠⚠ 第 ③ 件是這一道真正在守的東西：尺收掉之後，最容易一起消失的就是那個地板。 */
+  const 預設格 = 尺I.find((k) => k.比 === 留白比);
+  ok(預設格, "預設的標誌留白不在尺上，連它有沒有跨線都判斷不了");
+  if (預設格 && 留白比 < 規範 - 1e-9) {
+    ok(!!預設格.例外, "預設的標誌留白 " + (留白比 * 100).toFixed(1) +
+      "% 低於規範的 " + (規範 * 100).toFixed(0) + "%，卻沒有在資料裡宣告例外 —— 跨線要是一個決定，不是一個值");
+    ok(!!S.標誌.留白比_定案, "標誌留白跨過規範那條線，卻沒有寫下那是誰在什麼時候挑的");
+    /* ⚠⚠ 要找的是那一欄的抬頭，不是頁面上任何一個 25% —— 別處順便提到也會命中，
+       那樣這一道就等於沒開（這條線第十二次「掃整頁等於沒掃」）。 */
+    ok(H.includes("對規範（" + (規範 * 100).toFixed(0) + "%）"),
+      "那張表上沒有「對規範（" + (規範 * 100).toFixed(0) + "%）」那一欄 —— 尺收掉了，地板不可以跟著消失");
+  }
   ok(尺I.some((k) => k.比 >= 規範 - 1e-9), "標誌留白的尺上沒有任何一格守得住規範 —— 那就沒有基準了");
   for (const k of 尺I) {
     if (k.比 >= 規範 - 1e-9) { ok(!k.例外, k.標籤 + " 沒有跨線，卻宣告了例外"); continue; }
@@ -312,18 +333,37 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
       "尺上「" + k.標籤 + "」那一格沒有印出留白幾 mm");
   }
 
-  /* ⚠⚠⚠ 那把尺改成「只有抬頭那一行」疊起來比 —— 0.3 mm 的差距分在四張卡上是看不出來的。
-     基準線與列數都要在，少了基準線就退回「四張卡各看各的」。 */
-  ok(/<div class="hdcmp" style="--line:[\d.]+">/.test(H), "沒有那一條對照帶（或少了基準線的位置）");
-  ok((H.match(/class="hdrow"/g) ?? []).length === 尺I.length,
-    "對照帶上有 " + (H.match(/class="hdrow"/g) ?? []).length + " 列（尺上是 " + 尺I.length + " 格）");
-  ok(/border-left:1px dashed/.test(H), "對照帶上沒有那條基準虛線");
-  ok(/left:calc\(15px \+ var\(--line\) \* 1cqw\)/.test(H),
-    "基準線用的不是 cqw —— left 的百分比吃 padding box，和那幾行的字級差一個左右內距");
-  ok(/\.hdrow \.hd\{[^}]*font-size:8\.5cqw/.test(H),
-    "對照帶那幾行不是用 cqw 跟著容器放大 —— 不放大就看不出 0.3 mm 的差");
+  /* ⚠⚠ 2026-09-16 定案，那條對照帶收掉了 —— 那幾列與基準線都不可以再留在頁上
+     （留著的話那把尺看起來還開著，而它已經有答案了）。 */
+  ok(!/class="hdcmp"|class="hdrow"/.test(H), "那條對照帶還在頁上 —— 尺已經定案（Ⓘ4），收掉");
+  /* ⚠⚠⚠ 但它量出來的每一格都要留在那張表上（同 50-22：尺可以收，數字不可以跟著消失）——
+     上面那個逐格 includes 已經在守數字，這裡守的是「那一欄真的把線畫在哪裡講出來了」。 */
+  ok(H.includes("對規範"), "收成表之後沒有「對規範」那一欄 —— 哪一格跨線就看不出來了");
+  ok(H.includes("・定案"), "那張表上沒有任何一格標著定案");
+  /* ⚠⚠ 跨線這件事每次出圖都要印一次（第九節第 28 條 ④：壞掉檢查擋不住「靜靜地跨過去」）——
+     面板與頁上那一句都要講，不然日後有人改了留白比，這裡一個數字都不會變。 */
+  ok(/低於規範的/.test(GEN), "面板沒有在跨線的時候講一句 —— 那會變成一個沒有人會發現的決定");
+  ok((H.match(/<span class="bad">⚠ /g) ?? []).length >= 尺I.filter((k) => k.例外).length,
+    "跨線那幾格在表上沒有標紅");
 }
 
+
+/* ── ⑥之七 拿掉的那四案 ───────────────────────────────────────────
+ * ⚠⚠⚠ 2026-09-16 使用者：「提案頁其他可以先刪掉了」。**拿掉的是畫面，不是理由** ——
+ *   哪幾案走了、什麼時候走的、去哪裡取回來，三件都要留在資料裡而且印在頁上。
+ * ⚠⚠ 而且 Ⓕ 不可以跟著走：Ⓔ 的字級釘在它身上（⑥之五 已經在守），
+ *   它又是紅線那一道唯一乾淨的一案（③ 在守）。這裡守的是「紀錄還在」。 */
+{
+  const D = S.刪案;
+  ok(D && Array.isArray(D.走了) && D.走了.length >= 1, "四案拿掉了，卻沒有留下「拿掉了哪幾案」");
+  for (const t of D.走了) ok(H.includes(t), "拿掉的「" + t + "」沒有印在頁上 —— 走掉的案名要留得住");
+  ok(D.取回 && /^git show [0-9a-f]{7,}:/.test(D.取回) && H.includes(D.取回),
+    "沒有印出「要回頭比從哪裡取」的那一行指令");
+  ok(!S.案.some((c) => D.走了.includes(c.標籤)), "拿掉的案還在案裡");
+  /* ⚠ 案數是現算的，不可以寫死「四案」—— 拿掉之後那個詞會靜靜地說謊 */
+  ok(/const 案數詞 = /.test(GEN) && !/>四案</.test(H),
+    "頁面上還寫著「四案」（現在是 " + S.案.length + " 案）—— 那個數字要現算");
+}
 
 /* ── ⑧ 版面：八個寬度 ─────────────────────────────────────────── */
 const chrome = (() => {
@@ -373,15 +413,15 @@ for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
   ok(Math.abs(r.h / r.w - S.卡片.比例) < 0.02, `${w} 寬的卡片比例 ${(r.h / r.w).toFixed(3)}，應該是 ${S.卡片.比例}`);
   shots.push(`${w}：卡片 ${r.w}×${r.h}・溢出 0`);
 }
-/* ── ⑧之二 兩把尺量出來的要和算出來的一樣 ───────────────────────────
+/* ── ⑧之二 兩把尺挑定的值，量出來的要和算出來的一樣 ─────────────────
  * ⚠⚠⚠ 整疊（疊高）是算的，這一段是唯一會告訴我算錯的東西 ——
  *   而「省下來的高度有沒有真的落到下面」正是使用者要那一塊的理由。
- * ⚠⚠⚠ 對照帶那幾列都掛著 inline 覆寫，所以**預設值只有「案」那幾張卡在吃** ——
- *   兩邊都要量，不然預設值是這一頁上唯一沒有人驗過的東西。 */
+ * ⚠⚠ 兩把尺都定案了（Ⓗ4 ＋ Ⓘ4），所以量的是**預設值**：抬頭到主文的框距、
+ *   標誌左右的留白、QR 底下到帶子還剩多少 —— 三件都在「案」那幾張卡上。 */
 {
   await pg.setViewportSize({ width: 1440, height: 900 });
   await pg.goto("file://" + F);
-  const [列, 卡] = await pg.evaluate(() => {
+  const 卡 = await pg.evaluate(() => {
     const rg = document.createRange();
     /* ⚠ 量墨不要量整段文字節點 —— 兩邊都不再有空白，但日後有人加回去這裡要還是對的 */
     const ink = (n) => { const d = n.data; let a = 0, z = d.length;
@@ -395,17 +435,6 @@ for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
       if (tn.length !== 2) return { 左: null, 右: null };
       return { 左: (ir.left - ink(tn[0]).right) / ir.height, 右: (ink(tn[1]).left - ir.right) / ir.height };
     };
-    const cmp = document.querySelector(".hdcmp");
-    const cb = cmp.getBoundingClientRect();
-    /* ⚠ 和 CSS 一樣用 content box 當基準（cqw），不是 padding box */
-    const pl = parseFloat(getComputedStyle(cmp).paddingLeft), pr = parseFloat(getComputedStyle(cmp).paddingRight);
-    const 線 = (parseFloat(getComputedStyle(cmp).getPropertyValue("--line")) / 100) * (cb.width - pl - pr) + pl;
-    const 列 = [...document.querySelectorAll(".hdrow")].map((r) => {
-      const img = r.querySelector("img.li");
-      return { 標: r.querySelector(".hdlb").textContent.trim(),
-        線差: img ? img.getBoundingClientRect().left - (cb.left + 線) : null,
-        ...留白(r.querySelector(".hd")) };
-    });
     const 卡 = [...document.querySelectorAll(".one:not(.sc) .card:not(.now)")].map((c) => {
       const cw = c.getBoundingClientRect().width, mm = (v) => v / cw * 98;
       const hd = c.querySelector(".hd"), hr = hd.getBoundingClientRect();
@@ -418,31 +447,12 @@ for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
       const 底 = [qr, ...cue].reduce((a, b) => (b.bottom > a.bottom ? b : a));
       return { 框mm: mm(ps[0].top - hr.bottom), 餘mm: mm(band.top - 底.bottom), ...留白(hd) };
     });
-    return [列, 卡];
+    return 卡;
   });
 
-  /* 對照帶：每一列的留白 ＝ 它宣告的那一格，而且左右一樣寬 */
-  for (const k of S.標誌.留白案) {
-    const r = 列.find((x) => x.標.includes((k.比 * 100).toFixed(1) + "%"));
-    ok(!!r, "對照帶上找不到「" + k.標籤 + "」那一列");
-    if (!r) continue;
-    ok(r.左 != null && Math.abs(r.左 - k.比) < 0.01 && Math.abs(r.右 - k.比) < 0.01,
-      "「" + k.標籤 + "」量到 " + (r.左 * 100).toFixed(1) + "%／" + (r.右 * 100).toFixed(1) +
-      "%，應該各是 " + (k.比 * 100).toFixed(1) + "%");
-    ok(Math.abs(r.左 - r.右) < 0.005, "「" + k.標籤 + "」標誌左右不一樣寬");
-  }
-  /* ⚠⚠ 那條基準線要真的落在現況那一列的標誌左緣 —— 算錯的話它會落到標誌右邊去，
-     而畫面上只是「多一條虛線」，每一道尺寸守門都會過（踩過：多除了一次版心）。 */
-  ok(Math.abs(列[0].線差) < 2,
-    "基準線沒有落在第一列的標誌左緣（差 " + 列[0].線差.toFixed(1) + "px）");
-  /* ⚠ 對照帶要真的看得出差別：最鬆與最緊那兩列的留白至少要差一倍 */
-  {
-    const 比 = S.標誌.留白案.map((k) => k.比);
-    ok(Math.max(...比) / Math.min(...比) >= 2,
-      "對照帶上最鬆與最緊只差 " + (Math.max(...比) / Math.min(...比)).toFixed(2) +
-      " 倍 —— 使用者說「看不出差別」，尺要拉得開才有用");
-  }
-
+  /* ⚠⚠⚠ 對照帶 2026-09-16 收掉了（Ⓘ4 定案），所以這一段只剩「案」那幾張卡 ——
+     **而它們吃的正是預設值**，也就是真的會印出去的那一組。
+     ⚠ 尺在的時候那幾列都掛著 inline 覆寫，預設值反而是唯一沒有人量過的東西（踩過）。 */
   /* 案那幾張吃的是預設值 —— 這一段驗的就是真的會印出去的那一組 */
   for (const [i, c] of S.案.entries()) {
     const r = 卡[i];
@@ -458,7 +468,7 @@ for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
       "%，預設是 " + (留白比 * 100).toFixed(1) + "%");
   }
   /* ⚠ 那兩個半形空白不可以再被畫出來（它們現在是標誌的左右留白） */
-  const txt = await pg.evaluate(() => [...document.querySelectorAll(".card:not(.now) .hd, .hdrow .hd")]
+  const txt = await pg.evaluate(() => [...document.querySelectorAll(".card:not(.now) .hd")]
     .map((e) => e.textContent).join("|"));
   ok(!/\s/.test(txt), "抬頭那一行還畫著空白（" + txt + "）—— 那兩個半形空白要由留白比接手");
 }
