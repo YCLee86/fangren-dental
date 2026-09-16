@@ -164,7 +164,9 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
   /* 三格顏色都要畫出來，而且每一格都是九顆 */
   const bands = [...H.matchAll(/<svg class="bnd"[\s\S]*?<\/svg><\/svg>/g)];
   /* ⚠ 兩把尺上那幾張也是真的卡，所以也各有一條帶子 —— 數的時候要算進來 */
-  const 尺數 = S.卡片.抬頭到主文案.length + S.標誌.留白案.length;
+  /* ⚠ 尺上那幾張也是真的卡，所以也各有一條帶子 —— 數的時候要算進來。
+     ⚠⚠ 不可以照尺的格數算：抬頭到主文那把已經收成一張表、不再畫卡了（踩過）。 */
+  const 尺數 = (H.match(/class="card sc"/g) ?? []).length;
   ok(bands.length === S.案.length + 尺數 + B.色案.length,
     `頁上畫出 ${bands.length} 條帶子（應該是 ${S.案.length} 張卡 ＋ ${尺數} 格尺 ＋ ${B.色案.length} 格顏色）`);
   for (const m of bands)
@@ -244,23 +246,23 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
 }
 
 /* ── ⑥之六 兩把間距的尺（2026-09-16 稍晚）─────────────────────────
- * 使用者兩句：「這兩行中間有很大的間隔　縮小一點　要預留空間給下面畫診所人物插圖」、
- * 「line logo 和前後文字間距也有點大」。兩件各自一把尺，互不相干。 */
+ * 使用者三句：「這兩行中間有很大的間隔　縮小一點　要預留空間給下面畫診所人物插圖」、
+ * 「line logo 和前後文字間距也有點大」、「標誌左右的留白我看不出差別　感覺 Ⓘ4 都還不夠」。
+ * 抬頭到主文那把**已經定案（Ⓗ4）、收成一張表**；標誌留白那把**改成疊起來比、而且跨過規範那條線**。 */
 {
   /* ⚠⚠⚠ 切法只能有一份 —— mark() 與抬頭的字級算式要吃同一個函式，
      分家的話抬頭會算出一個放得下、畫出去卻溢出卡片的字級（overflow:hidden，只少最後一個字）。 */
   ok(/export const 切抬頭 =/.test(GEN), "產生器沒有 切抬頭 —— 那兩個半形空白的切法不見了");
-  ok(/切抬頭\(t\)/.test(GEN) && /切抬頭\(t\)\.map\(esc\)\.join\(LIIMG\)/.test(GEN),
+  ok(/切抬頭\(t\)\.map\(esc\)\.join\(LIIMG\)/.test(GEN),
     "mark() 不再用 切抬頭 畫抬頭 —— 切法和字級算式會分家");
   ok(!/\(0\.5 \+ HDLS \+ LIGAP\)/.test(GEN),
     "還留著舊的留白算式（半形空白 ＋ 字距）—— 那個值現在是 留白比 給的，兩份會分家");
   ok(typeof S.標誌.留白比 === "number" && !("留白em" in S.標誌),
     "標誌的留白還是 留白em —— 單位要換成「標誌自己高度的幾成」（LINE 規範的單位，換字級也不必重挑）");
 
-  /* ⚠⚠⚠ --bd-gap 一定要是一個**長度**：寫成純數字（0.035）的話 margin-top 整條無效 ＝ 0，
-     而畫面完全正常、每一道尺寸守門都會過。踩過一次。 */
-  /* ⚠⚠⚠ 一定要指名 :root 那一行 —— 尺上那八張卡的 style 裡也寫著同一串字，
-     拿整頁去 test 的話，預設值被改壞照樣會過（踩過，這一站第十一次「掃整頁等於沒掃」）。 */
+  /* ⚠⚠⚠ --bd-gap 一定要是一個**長度**：寫成純數字（0.02）的話 margin-top 整條無效 ＝ 0，
+     而畫面完全正常、每一道尺寸守門都會過。踩過一次。
+     ⚠ 這一道要**指名 :root 那一塊** —— 別處的 inline style 裡也寫著同一串字（第十一次「掃整頁等於沒掃」）。 */
   {
     const root = (H.match(/:root\{[\s\S]*?\}/) ?? [""])[0];
     ok(/--bd-gap:calc\(var\(--cw\) \* [\d.]+\)/.test(root),
@@ -269,42 +271,59 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
   ok(/\.card \.bd\{margin-top:var\(--bd-gap\)/.test(H), "抬頭到主文那一段沒有吃 --bd-gap");
   ok(/\.li\{[^}]*margin:0 var\(--li-gap\)/.test(H), "標誌的左右留白沒有吃 --li-gap");
 
-  /* 兩把尺：格數、現況那一格、預設值要在尺上、地板 */
   const 尺H = S.卡片.抬頭到主文案, 尺I = S.標誌.留白案;
+  const e = S.案.find((c) => c.id === "e");
   ok(尺H.length >= 3 && 尺I.length >= 3, "尺不到三格 —— 間距這種東西並排才比得出來");
   ok(尺H.some((k) => k.值 === 0.08), "抬頭到主文那把尺上沒有現況那一格（比不出改了多少）");
   ok(尺I.some((k) => Math.abs(k.比 - 0.353) < 1e-9), "標誌留白那把尺上沒有現況那一格");
-  ok(尺H.some((k) => k.值 === BDGAP), `預設的抬頭到主文 ${BDGAP} 不在尺上 —— 他挑的那一格和畫出來的會分家`);
-  ok(尺I.some((k) => k.比 === 留白比), `預設的標誌留白 ${留白比} 不在尺上`);
-  /* ⚠⚠ 地板是規範不是美感：選了就要印得出去的才放進尺裡 */
-  ok(Math.min(...尺I.map((k) => k.比)) >= 0.25 - 1e-9,
-    "標誌留白的尺走到 25% 以下了 —— 那低於我們手上記的規範，印不出去的格子不要放進尺裡");
+  ok(尺H.some((k) => k.值 === BDGAP), "預設的抬頭到主文 " + BDGAP + " 不在那張表上 —— 他挑的那一格和畫出來的會分家");
+  ok(尺I.some((k) => k.比 === 留白比), "預設的標誌留白 " + 留白比 + " 不在尺上");
+
   /* ⚠ 地板不是 0：收到比主文行距還小，抬頭就會被讀成主文的第一行 */
-  {
-    const e = S.案.find((c) => c.id === "e");
-    const 最小 = Math.min(...尺H.map((k) => k.值));
-    ok(抬頭到主文mm(e, 最小) >= 行距mm(e) * 1.4,
-      `尺上最小那一格算出來只有行距的 ${(抬頭到主文mm(e, 最小) / 行距mm(e)).toFixed(1)} 倍 —— 抬頭會被讀成主文的第一行`);
+  ok(抬頭到主文mm(e, BDGAP) >= 行距mm(e) * 1.4,
+    "定案那一格算出來只有行距的 " + (抬頭到主文mm(e, BDGAP) / 行距mm(e)).toFixed(1) + " 倍 —— 抬頭會被讀成主文的第一行");
+
+  /* ⚠⚠⚠ 2026-09-16 使用者：「感覺 Ⓘ4 都還不夠」—— 他要的比我們手上記的規範還緊。
+     做法同 紅線 那一輪：**做出來給他看、但跨線的那幾格要在資料裡宣告、而且那句話要印在頁上**，
+     而且**至少要有一格是不跨線的**（不然一張「大家都有例外」的表會把這一道靜靜地關掉）。
+     ⚠ 我們自己**不跨過去**：預設那一格一定要在線上或線內。 */
+  const 規範 = 0.25;
+  ok(留白比 >= 規範 - 1e-9,
+    "預設的標誌留白 " + (留白比 * 100).toFixed(1) + "% 低於規範的 25% —— 那條線要由使用者跨，不是我們");
+  ok(尺I.some((k) => k.比 >= 規範 - 1e-9), "標誌留白的尺上沒有任何一格守得住規範 —— 那就沒有基準了");
+  for (const k of 尺I) {
+    if (k.比 >= 規範 - 1e-9) { ok(!k.例外, k.標籤 + " 沒有跨線，卻宣告了例外"); continue; }
+    ok(!!k.例外, k.標籤 + " 低於規範的 25%，卻沒有在資料裡宣告例外");
+    ok(H.includes(k.例外), k.標籤 + " 的例外沒有印在頁上 —— 跨線這件事不可以只寫在資料裡");
   }
 
   /* 每一格的數字都要印在頁上（整句找，不是找那個數字 —— 同一個值在別處也會出現） */
-  {
-    const e = S.案.find((c) => c.id === "e");
-    for (const k of 尺H) {
-      const 抬 = 抬頭到主文mm(e, k.值), 行 = 行距mm(e);
-      ok(H.includes(`抬頭到主文 <b>${抬} mm</b>`), `尺上「${k.標籤}」那一格沒有印出抬頭到主文 ${抬} mm`);
-      ok(H.includes(`到帶子之間空出 <b>${餘裕mm(e, k.值)} mm</b>`),
-        `尺上「${k.標籤}」那一格沒有印出空出來多少 —— 那正是他要那一塊的理由`);
-      ok(H.includes(`<b>${(抬 / 行).toFixed(1)} 倍</b>`), `尺上「${k.標籤}」那一格沒有印出它是行距的幾倍`);
-    }
-    for (const k of 尺I) {
-      const hd = hdOf(e, k.比);
-      ok(H.includes(`<b>${(k.比 * 100).toFixed(1)}%</b> 個標誌高`), `尺上「${k.標籤}」那一格沒有印出留白幾成`);
-      ok(H.includes(`＝ <b>${(hd.留白em * hd.fs * S.卡片.寬mm).toFixed(2)} mm</b>`),
-        `尺上「${k.標籤}」那一格沒有印出留白幾 mm`);
-    }
+  for (const k of 尺H) {
+    const 抬 = 抬頭到主文mm(e, k.值), 行 = 行距mm(e);
+    ok(H.includes("<td>" + 抬 + " mm</td>"), "那張表上「" + k.標籤 + "」沒有印出抬頭到主文 " + 抬 + " mm");
+    ok(H.includes("<td>" + (抬 / 行).toFixed(1) + " 倍</td>"), "那張表上「" + k.標籤 + "」沒有印出它是行距的幾倍");
+    ok(H.includes("<td>" + 餘裕mm(e, k.值) + " mm</td>"),
+      "那張表上「" + k.標籤 + "」沒有印出空出來多少 —— 那正是他要那一塊的理由");
   }
+  for (const k of 尺I) {
+    const hd = hdOf(e, k.比);
+    ok(H.includes("<b>" + (k.比 * 100).toFixed(1) + "%</b> 個標誌高"), "尺上「" + k.標籤 + "」那一格沒有印出留白幾成");
+    ok(H.includes("＝ <b>" + (hd.留白em * hd.fs * S.卡片.寬mm).toFixed(2) + " mm</b>"),
+      "尺上「" + k.標籤 + "」那一格沒有印出留白幾 mm");
+  }
+
+  /* ⚠⚠⚠ 那把尺改成「只有抬頭那一行」疊起來比 —— 0.3 mm 的差距分在四張卡上是看不出來的。
+     基準線與列數都要在，少了基準線就退回「四張卡各看各的」。 */
+  ok(/<div class="hdcmp" style="--line:[\d.]+">/.test(H), "沒有那一條對照帶（或少了基準線的位置）");
+  ok((H.match(/class="hdrow"/g) ?? []).length === 尺I.length,
+    "對照帶上有 " + (H.match(/class="hdrow"/g) ?? []).length + " 列（尺上是 " + 尺I.length + " 格）");
+  ok(/border-left:1px dashed/.test(H), "對照帶上沒有那條基準虛線");
+  ok(/left:calc\(15px \+ var\(--line\) \* 1cqw\)/.test(H),
+    "基準線用的不是 cqw —— left 的百分比吃 padding box，和那幾行的字級差一個左右內距");
+  ok(/\.hdrow \.hd\{[^}]*font-size:8\.5cqw/.test(H),
+    "對照帶那幾行不是用 cqw 跟著容器放大 —— 不放大就看不出 0.3 mm 的差");
 }
+
 
 /* ── ⑧ 版面：八個寬度 ─────────────────────────────────────────── */
 const chrome = (() => {
@@ -355,78 +374,95 @@ for (const w of [430, 393, 390, 375, 360, 320, 834, 1440]) {
   shots.push(`${w}：卡片 ${r.w}×${r.h}・溢出 0`);
 }
 /* ── ⑧之二 兩把尺量出來的要和算出來的一樣 ───────────────────────────
- * ⚠⚠⚠ 整疊（疊高）是算的，這一道是唯一會告訴我算錯的東西 ——
- *   而「省下來的高度有沒有真的落到下面」正是使用者要那一塊的理由。 */
+ * ⚠⚠⚠ 整疊（疊高）是算的，這一段是唯一會告訴我算錯的東西 ——
+ *   而「省下來的高度有沒有真的落到下面」正是使用者要那一塊的理由。
+ * ⚠⚠⚠ 對照帶那幾列都掛著 inline 覆寫，所以**預設值只有「案」那幾張卡在吃** ——
+ *   兩邊都要量，不然預設值是這一頁上唯一沒有人驗過的東西。 */
 {
   await pg.setViewportSize({ width: 1440, height: 900 });
   await pg.goto("file://" + F);
-  const [m, m2] = await pg.evaluate(() => {
-    const 量 = (one) => {
-      const lb = one.querySelector(".lb").textContent.trim();
-      const c = one.querySelector(".card");
+  const [列, 卡] = await pg.evaluate(() => {
+    const rg = document.createRange();
+    /* ⚠ 量墨不要量整段文字節點 —— 兩邊都不再有空白，但日後有人加回去這裡要還是對的 */
+    const ink = (n) => { const d = n.data; let a = 0, z = d.length;
+      while (a < z && /\s/.test(d[a])) a++; while (z > a && /\s/.test(d[z - 1])) z--;
+      rg.setStart(n, a); rg.setEnd(n, z); return rg.getBoundingClientRect(); };
+    const 留白 = (host) => {
+      const img = host.querySelector("img.li");
+      if (!img) return { 左: null, 右: null };
+      const ir = img.getBoundingClientRect();
+      const tn = [...host.childNodes].filter((n) => n.nodeType === 3 && n.data.trim());
+      if (tn.length !== 2) return { 左: null, 右: null };
+      return { 左: (ir.left - ink(tn[0]).right) / ir.height, 右: (ink(tn[1]).left - ir.right) / ir.height };
+    };
+    const cmp = document.querySelector(".hdcmp");
+    const cb = cmp.getBoundingClientRect();
+    /* ⚠ 和 CSS 一樣用 content box 當基準（cqw），不是 padding box */
+    const pl = parseFloat(getComputedStyle(cmp).paddingLeft), pr = parseFloat(getComputedStyle(cmp).paddingRight);
+    const 線 = (parseFloat(getComputedStyle(cmp).getPropertyValue("--line")) / 100) * (cb.width - pl - pr) + pl;
+    const 列 = [...document.querySelectorAll(".hdrow")].map((r) => {
+      const img = r.querySelector("img.li");
+      return { 標: r.querySelector(".hdlb").textContent.trim(),
+        線差: img ? img.getBoundingClientRect().left - (cb.left + 線) : null,
+        ...留白(r.querySelector(".hd")) };
+    });
+    const 卡 = [...document.querySelectorAll(".one:not(.sc) .card:not(.now)")].map((c) => {
       const cw = c.getBoundingClientRect().width, mm = (v) => v / cw * 98;
       const hd = c.querySelector(".hd"), hr = hd.getBoundingClientRect();
       const ps = [...c.querySelectorAll(".bd p")].map((x) => x.getBoundingClientRect());
       const qr = c.querySelector(".qr").getBoundingClientRect();
       const cue = [...c.querySelectorAll(".cue")].map((x) => x.getBoundingClientRect());
       const band = c.querySelector(".band").getBoundingClientRect();
-      const img = hd.querySelector("img.li"), ir = img.getBoundingClientRect();
-      /* ⚠ 量墨不要量文字節點整段 —— 兩邊都不再有空白，但日後有人加回去這裡要還是對的 */
-      const rg = document.createRange();
-      const ink = (n) => { const d = n.data; let a = 0, z = d.length;
-        while (a < z && /\s/.test(d[a])) a++; while (z > a && /\s/.test(d[z - 1])) z--;
-        rg.setStart(n, a); rg.setEnd(n, z); return rg.getBoundingClientRect(); };
-      const tn = [...hd.childNodes].filter((n) => n.nodeType === 3 && n.data.trim());
       /* ⚠ 最底下那一塊不一定是最後一個 .cue —— 有的案只有 QR 上面那一行，
-         拿它當底的話會把整顆 QR 一起算進餘裕裡（踩過）。取「底邊最低」的那一個。 */
+         拿它當底會把整顆 QR 一起算進餘裕裡（踩過）。取「底邊最低」的那一個。 */
       const 底 = [qr, ...cue].reduce((a, b) => (b.bottom > a.bottom ? b : a));
-      return { lb,
-        左: tn.length === 2 ? (ir.left - ink(tn[0]).right) / ir.height : null,
-        右: tn.length === 2 ? (ink(tn[1]).left - ir.right) / ir.height : null,
-        框mm: mm(ps[0].top - hr.bottom), 餘mm: mm(band.top - 底.bottom) };
-    };
-    return [[...document.querySelectorAll(".one.sc")].map(量),
-      [...document.querySelectorAll(".one:not(.sc)")].filter((o) => o.querySelector(".card:not(.now)")).map(量)];
+      return { 框mm: mm(ps[0].top - hr.bottom), 餘mm: mm(band.top - 底.bottom), ...留白(hd) };
+    });
+    return [列, 卡];
   });
-  /* ⚠⚠⚠ 尺上那八張都掛著 inline 覆寫，所以**預設值從來不會被它們量到** ——
-     真正會印出去的是「案」那幾張。這一段量的就是它們。 */
+
+  /* 對照帶：每一列的留白 ＝ 它宣告的那一格，而且左右一樣寬 */
+  for (const k of S.標誌.留白案) {
+    const r = 列.find((x) => x.標.includes((k.比 * 100).toFixed(1) + "%"));
+    ok(!!r, "對照帶上找不到「" + k.標籤 + "」那一列");
+    if (!r) continue;
+    ok(r.左 != null && Math.abs(r.左 - k.比) < 0.01 && Math.abs(r.右 - k.比) < 0.01,
+      "「" + k.標籤 + "」量到 " + (r.左 * 100).toFixed(1) + "%／" + (r.右 * 100).toFixed(1) +
+      "%，應該各是 " + (k.比 * 100).toFixed(1) + "%");
+    ok(Math.abs(r.左 - r.右) < 0.005, "「" + k.標籤 + "」標誌左右不一樣寬");
+  }
+  /* ⚠⚠ 那條基準線要真的落在現況那一列的標誌左緣 —— 算錯的話它會落到標誌右邊去，
+     而畫面上只是「多一條虛線」，每一道尺寸守門都會過（踩過：多除了一次版心）。 */
+  ok(Math.abs(列[0].線差) < 2,
+    "基準線沒有落在第一列的標誌左緣（差 " + 列[0].線差.toFixed(1) + "px）");
+  /* ⚠ 對照帶要真的看得出差別：最鬆與最緊那兩列的留白至少要差一倍 */
+  {
+    const 比 = S.標誌.留白案.map((k) => k.比);
+    ok(Math.max(...比) / Math.min(...比) >= 2,
+      "對照帶上最鬆與最緊只差 " + (Math.max(...比) / Math.min(...比)).toFixed(2) +
+      " 倍 —— 使用者說「看不出差別」，尺要拉得開才有用");
+  }
+
+  /* 案那幾張吃的是預設值 —— 這一段驗的就是真的會印出去的那一組 */
   for (const [i, c] of S.案.entries()) {
-    const r = m2[i];
-    ok(!!r, `量不到 ${c.標籤} 那一張卡`);
+    const r = 卡[i];
+    ok(!!r, "量不到 " + c.標籤 + " 那一張卡");
     if (!r) continue;
     const 該 = (BDGAP + 0.28 * fsOf(c).fs) * 98;
     ok(Math.abs(r.框mm - 該) < 0.3,
-      `${c.標籤} 抬頭到主文量到 ${r.框mm.toFixed(2)} mm，預設值算出來是 ${該.toFixed(2)}`);
+      c.標籤 + " 抬頭到主文量到 " + r.框mm.toFixed(2) + " mm，預設值算出來是 " + 該.toFixed(2));
     ok(Math.abs(r.餘mm - 餘裕mm(c)) < 0.4,
-      `${c.標籤} QR 底下到帶子量到 ${r.餘mm.toFixed(1)} mm，算出來是 ${餘裕mm(c)} —— 疊高() 算錯了`);
+      c.標籤 + " QR 底下到帶子量到 " + r.餘mm.toFixed(1) + " mm，算出來是 " + 餘裕mm(c) + " —— 疊高() 算錯了");
     ok(r.左 != null && Math.abs(r.左 - 留白比) < 0.01 && Math.abs(r.右 - 留白比) < 0.01,
-      `${c.標籤} 標誌左右量到 ${(r.左 * 100).toFixed(1)}%／${(r.右 * 100).toFixed(1)}%，預設是 ${(留白比 * 100).toFixed(1)}%`);
-  }
-  const e = S.案.find((c) => c.id === "e");
-  const { fs } = fsOf(e);
-  for (const k of S.卡片.抬頭到主文案) {
-    const r = m.find((x) => x.lb.includes(k.標籤));
-    ok(!!r, `尺上找不到「${k.標籤}」那一格`);
-    if (!r) continue;
-    const 該 = (k.值 + 0.28 * fs) * 98;
-    ok(Math.abs(r.框mm - 該) < 0.3,
-      `「${k.標籤}」抬頭到主文量到 ${r.框mm.toFixed(2)} mm，算出來是 ${該.toFixed(2)}`);
-    ok(Math.abs(r.餘mm - 餘裕mm(e, k.值)) < 0.4,
-      `「${k.標籤}」QR 底下到帶子量到 ${r.餘mm.toFixed(1)} mm，算出來是 ${餘裕mm(e, k.值)} —— 疊高() 算錯了`);
-  }
-  for (const k of S.標誌.留白案) {
-    const r = m.find((x) => x.lb.includes(k.標籤));
-    ok(!!r, `尺上找不到「${k.標籤}」那一格`);
-    if (!r) continue;
-    ok(Math.abs(r.左 - k.比) < 0.01 && Math.abs(r.右 - k.比) < 0.01,
-      `「${k.標籤}」標誌左右量到 ${(r.左 * 100).toFixed(1)}%／${(r.右 * 100).toFixed(1)}%，應該各是 ${(k.比 * 100).toFixed(1)}%`);
-    ok(Math.abs(r.左 - r.右) < 0.005, `「${k.標籤}」標誌左右不一樣寬`);
+      c.標籤 + " 標誌左右量到 " + (r.左 * 100).toFixed(1) + "%／" + (r.右 * 100).toFixed(1) +
+      "%，預設是 " + (留白比 * 100).toFixed(1) + "%");
   }
   /* ⚠ 那兩個半形空白不可以再被畫出來（它們現在是標誌的左右留白） */
-  const txt = await pg.evaluate(() => [...document.querySelectorAll(".card:not(.now) .hd")]
+  const txt = await pg.evaluate(() => [...document.querySelectorAll(".card:not(.now) .hd, .hdrow .hd")]
     .map((e) => e.textContent).join("|"));
-  ok(!/\s/.test(txt), `抬頭那一行還畫著空白（${txt}）—— 那兩個半形空白要由留白比接手`);
+  ok(!/\s/.test(txt), "抬頭那一行還畫著空白（" + txt + "）—— 那兩個半形空白要由留白比接手");
 }
+
 await browser.close();
 
 console.log(shots.join("\n"));

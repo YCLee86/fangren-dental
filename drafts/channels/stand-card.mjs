@@ -300,26 +300,34 @@ const card = (c, now = false, 色 = null, o = {}) => {
  *   間距這種東西並排才比得出來，一格一格單看是分不出 1~2 mm 的。
  * ⚠ 面板的數字每一格現算，不是寫上去的：換字、換字級、換卡片尺寸都會跟著動。 */
 const 尺卡 = S.案.find((c) => c.id === "e");
-const 尺間距 = CARD.抬頭到主文案.map((k) => {
-  const 抬 = 抬頭到主文mm(尺卡, k.值), 行 = 行距mm(尺卡), 餘 = 餘裕mm(尺卡, k.值);
-  return `<div class="one sc">
-<p class="lb">Ⓗ${k.id === "now" ? "1" : k.id[1]} ${esc(k.標籤)}${k.值 === BDGAP ? "" : ""}</p>
-${card(尺卡, false, null, { 間距: k.值, 尺: true })}
-<div class="note"><p>抬頭到主文 <b>${抬} mm</b>（字面框到字面框）＝ 主文行距 ${行} mm 的
-<b>${(抬 / 行).toFixed(1)} 倍</b>。</p>
-<p>QR 底下到帶子之間空出 <b>${餘} mm</b>（插圖畫在這裡）。</p></div>
+/* ⚠⚠ 抬頭到主文那把尺 2026-09-16 定案（Ⓗ4），**收成寫死的值、從頁面上拿掉** ——
+ *   但四格量出來的東西要留著（同 50-22：尺可以收，它量出來的數字不可以跟著消失）。 */
+const 尺間距 = `<table><thead><tr><th>　</th><th>上外距</th><th>抬頭到主文</th>
+<th>÷ 主文行距</th><th>QR 底下到帶子</th></tr></thead><tbody>${
+  CARD.抬頭到主文案.map((k) => {
+    const 抬 = 抬頭到主文mm(尺卡, k.值), 行 = 行距mm(尺卡), 定 = k.值 === BDGAP;
+    return `<tr${定 ? ' class="nowr"' : ""}><th>Ⓗ${k.id === "now" ? "1" : k.id[1]} ${esc(k.標籤)}${定 ? "・定案" : ""}</th>
+<td>卡寬 ${(k.值 * 100).toFixed(1)}%</td><td>${抬} mm</td><td>${(抬 / 行).toFixed(1)} 倍</td>
+<td>${餘裕mm(尺卡, k.值)} mm</td></tr>`;
+  }).join("\n")}</tbody></table>`;
+
+/* ⚠⚠⚠ 2026-09-16 使用者：「標誌左右的留白我看不出差別」—— 四格只差 0.94 mm，
+ *   而且分在四張卡上。**那種差距一定要並排、而且要有同一條基準線**，所以改成
+ *   「只有抬頭那一行」疊起來、左緣對齊、一條虛線標著現況那顆標誌的左緣。
+ * ⚠ 用 cqw 讓那幾行跟著容器放大（電腦上約 2.4 倍卡片大小），差別才看得見；
+ *   ⚠⚠ 標的 mm 仍然是**那張 98 mm 的卡上的 mm**，不是畫面上量到的。 */
+const 現況留白 = S.標誌.留白案.find((k) => k.id === "now").比;
+/* 基準線 ＝ 現況那一顆標誌的左緣。⚠ 那幾行的字級是 8.5cqw ＝ **容器寬的 8.5%**，
+   所以這裡換算成「佔容器寬的百分之幾」就好，不要再除版心（除了會落到標誌右邊去）。 */
+const 線左 = (cw("芳仁牙醫有") + HDLS * 5 + 現況留白 * LIH) * hdOf(尺卡).fs * 100;
+const 尺留白 = `<div class="hdcmp" style="--line:${線左.toFixed(2)}">${
+  S.標誌.留白案.map((k) => {
+    const hd = hdOf(尺卡, k.比);
+    return `<div class="hdrow" style="--li-gap:${LIGAPOF(k.比)}em">
+<span class="hd">${mark(尺卡.抬頭)}</span>
+<span class="hdlb">Ⓘ${k.id === "now" ? "1" : k.id[1]}　左右各留 <b>${(k.比 * 100).toFixed(1)}%</b> 個標誌高 ＝ <b>${(hd.留白em * hd.fs * CARD.寬mm).toFixed(2)} mm</b>${k.例外 ? `　<span class="warn">⚠ ${esc(k.例外)}</span>` : ""}</span>
 </div>`;
-}).join("\n");
-const 尺留白 = S.標誌.留白案.map((k) => {
-  const hd = hdOf(尺卡, k.比);
-  return `<div class="one sc">
-<p class="lb">Ⓘ${k.id === "now" ? "1" : k.id[1]} ${esc(k.標籤)}</p>
-${card(尺卡, false, null, { 留白: k.比, 尺: true })}
-<div class="note"><p>左右各留 <b>${(k.比 * 100).toFixed(1)}%</b> 個標誌高
-＝ <b>${(hd.留白em * hd.fs * CARD.寬mm).toFixed(2)} mm</b>。</p>
-<p>抬頭那一行佔卡寬 <b>${(hd.寬 * hd.fs * 100).toFixed(1)}%</b>（版心 ${CARD.版心 * 100}）。</p></div>
-</div>`;
-}).join("\n");
+  }).join("\n")}</div>`;
 
 const 拆解 = S.拆解.map((d, i) =>
   `<div class="it"><p class="t"><span class="n">${i + 1}</span>${b(d.標)}</p>${para(d.文)}</div>`).join("\n");
@@ -372,6 +380,22 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 /* ⚠ 尺上那幾張要**並排**才比得出 1~2 mm 的差 —— 四格一排的寬度是算出來的：
    (版心 760 − 左右內距 28 − 三條溝 22) ÷ 4 ＝ 166.5，取 166。手機上兩張一排，仍然是並排的。 */
 .one.sc{--cw:166px}
+/* ⚠⚠⚠ 「只有抬頭那一行」的對照帶：0.3 mm 的差距要並排＋同一條基準線才看得出來。
+   ⚠ 用 cqw 讓那幾行跟著容器放大（電腦上約 2.4 倍卡片大小），
+     所以 8.5cqw 就是「卡寬的 8.5%」那條抬頭字級規則、換算到這一條帶子上。
+   ⚠ 標的 mm 仍然是那張 98 mm 的卡上的 mm，不是畫面上量到的。 */
+.hdcmp{container-type:inline-size;position:relative;background:var(--card);
+  border-radius:11px;padding:14px 15px;margin:.6em 0 0}
+.hdcmp::before{content:"";position:absolute;top:8px;bottom:8px;/* ⚠⚠⚠ 這裡一定要用 cqw，不可以用 % —— left 的百分比吃的是 padding box，
+     而那幾行的字級是 cqw（吃 content box），兩個基準差一個左右內距（實測差 12.6px），
+     線就會落到標誌右邊去，而畫面上只是「多一條虛線」、每一道尺寸守門都會過。 */
+  left:calc(15px + var(--line) * 1cqw);
+  border-left:1px dashed #9aa09a}
+.hdrow{position:relative;margin:.55em 0}
+.hdrow .hd{display:block;font-weight:700;font-size:8.5cqw;line-height:1.5;
+  letter-spacing:var(--hd-ls);white-space:nowrap;color:#333}
+.hdlb{display:block;font-size:.82rem;color:var(--soft);line-height:1.5}
+.hdlb .warn{color:var(--brick)}
 .lb{font-weight:600;font-size:.95rem;margin:0 0 .45em}
 .card{--pad:calc(var(--cw) * .06);width:var(--cw);aspect-ratio:${CARD.寬mm} / ${Math.round(CARD.寬mm * CARD.比例)};
   background:#fff;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.14);
@@ -465,11 +489,15 @@ ${拆解}
 
 <p class="h2">抬頭到主文的間距<span class="t">收上面，空間留給下面的插圖</span></p>
 <div class="box">${para(CARD.抬頭到主文_說明)}</div>
-<div class="cards">${尺間距}</div>
+${尺間距}
 
 <p class="h2">標誌左右的留白<span class="t">他寫的那兩個半形空白，換成一個算得出來的規格</span></p>
 <div class="box">${para(S.標誌.留白_說明)}</div>
-<div class="cards">${尺留白}</div>
+${尺留白}
+<div class="cards"><div class="one">
+<p class="lb">畫在卡片上（現在這樣）</p>
+${card(尺卡, false, null, { 尺: true })}
+</div></div>
 
 <p class="h2">底下那條帶子<span class="t">換成診所自己的九顆 logo</span></p>
 <div class="box">${para(S.帶子._說明)}
