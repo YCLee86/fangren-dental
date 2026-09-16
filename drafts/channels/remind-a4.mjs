@@ -31,6 +31,12 @@
  *   ③ **電話在紙上撥不了**，但號碼讀得出來，不必改。
  *   ④ **沒有加抬頭、沒有加任何一句我們自己的話** —— 廠商那一版也沒有（它就是一張截圖），
  *      而這條線每一則的字都是使用者自己寫的。要加一句，等他開口。
+ *   ⑥ **診所的頭像 2026-09-16 補上**（使用者：「要把左邊那個診所 logo 貼上去，
+ *      這樣才像 line 裡的樣子」）——⚠⚠ 它**在卡片上面不是左邊**：
+ *      從他的手機截圖逐像素量，Flex 的 mega 卡吃滿整條可用寬度，LINE 因此把頭像
+ *      擺到卡片**上方**（頭像 30px、底緣離卡片上緣 6px、左緣比卡片左緣再左 3px）。
+ *      **不是「左邊那一欄」** —— 規格頁那個聊天室模擬畫的是文字泡泡那一種（頭像在旁邊），
+ *      這張紙上的是圖卡，兩者不一樣。
  *   ⑤ **頭圖 2026-09-16 使用者指定拿掉** —— 卡片矮 134px，同一張 A4 因此放得下更大的
  *      倍率（1.78 → 2.31、字大三成）。⚠ **代價是這張紙上一個「芳仁」都沒有了**
  *      （廠商那一版有一條寫著診所名的綠帶子），他看過數字之後仍然選它。
@@ -55,7 +61,22 @@ const SRC = path.join(ROOT, "preview", "line-remind", "index.html");
 const OUT_HTML = path.join(HERE, "remind-a4.html");
 const OUT_PDF = path.join(HERE, "芳仁-約診提醒-A4.pdf");
 const OUT_PNG = path.join(HERE, "remind-a4.png");
-const CARD_W = 268;               /* LINE 上圖卡的實寬，整條線共用的那個數字 */
+const CARD_W = 268;                    /* LINE 上圖卡的實寬，整條線共用的那個數字 */
+/* ---- 頭像（LINE 聊天室裡那顆圓形的診所大頭）--------------------------
+   量自使用者 2026-09-16 的手機截圖（1125×2436 ＝ 375 CSS px 的 3×）：
+     圓 x 24~113、y 836~928 → **30×30 CSS px**
+     卡片上緣 y 945、左緣 x 33 → 頭像**底緣離卡片上緣 5.7px、左緣比卡片左 3px**
+     圓裡那顆白色標誌寬 x 34~102 ＝ 22.7px ＝ 圓的 **75.6%**
+   ⚠ 圓的顏色**沒有從截圖取**（iPhone 的截圖有色彩描述檔，量到的 rgb(61,95,82)
+     和站上任何一支都對不起來）—— 用站上一般牙科的套色 `#3f654a`，
+     那也正是 `assets/icon.svg`／`assets/logo.png` 用的那一支。不新增顏色。
+   ⚠⚠ 形狀不抄第二份：直接讀 `brand/shapes/mark.svg`（單一路徑、牙洞是
+     `fill-rule: evenodd` 挖穿的，所以填白之後洞會透出底下的綠 ＝ 截圖上的樣子）。 */
+const AV = 30;        /* 頭像直徑 */
+const AV_GAP = 6;     /* 頭像底緣到卡片上緣 */
+const AV_DX = -3;     /* 頭像左緣相對卡片左緣 */
+const AV_MARK = 0.756;/* 白色標誌佔圓的寬度比 */
+const AV_BG = "#3f654a"; /* ＝ 一般牙科的套色，站上 icon.svg／logo.png 用的同一支 */
 const A4 = { w: 210, h: 297 };    /* mm */
 const MM = 96 / 25.4;             /* 1mm 在 96dpi 底下的 CSS px */
 
@@ -165,6 +186,29 @@ let cardHtml = picked.html.replace(/src="([^"]+)"/g, (m, src) => {
   return `src="data:${mime};base64,${fs.readFileSync(f).toString("base64")}"`;
 });
 
+/* ---- 3.5 頭像：綠圓 ＋ 白色標誌（形狀讀 brand/shapes/mark.svg）------------
+   ⚠⚠ **不要另外存一個 PNG**：那顆標誌的幾何只有 brand/shapes/ 那一份，
+     而且牙洞是 `fill-rule: evenodd` 挖穿的 —— 填白之後洞會透出底下的綠，
+     那正是截圖上的樣子。存成圖檔就等於把它凍在某一個版本上。
+   ⚠ **不可以只抄 <path d>**：那條路徑有兩段（外框 ＋ 牙洞），少抄一段畫出來是一顆
+     實心的牙、而且每一個數字看起來都還很合理（brand/README.md 記過同一件事）。 */
+const markSvg = fs.readFileSync(path.join(ROOT, "brand", "shapes", "mark.svg"), "utf8");
+const markVB = (markSvg.match(/viewBox="([^"]+)"/) || [])[1];
+const markInner = (markSvg.match(/<svg[^>]*>([\s\S]*)<\/svg>/) || [])[1];
+if (!markVB || !markInner) throw new Error("讀不懂 brand/shapes/mark.svg");
+if ((markInner.match(/<path/g) || []).length !== 1) throw new Error("mark.svg 不是單一路徑");
+if (!/fill-rule="evenodd"/.test(markInner)) throw new Error("mark.svg 沒有 evenodd（牙洞會被填滿）");
+if ((markInner.match(/\bM /g) || []).length < 2) throw new Error("那條路徑只有一段 —— 牙洞不見了");
+const markRatio = Number(markVB.split(/\s+/)[2]) / Number(markVB.split(/\s+/)[3]);
+const markW = AV * AV_MARK;
+const markH = markW / markRatio;
+const avatarSvg = `<svg class="a4-av" width="${AV}" height="${AV}" viewBox="0 0 ${AV} ${AV}"
+ style="color:#fff" role="img" aria-label="芳仁牙醫診所">
+<circle cx="${AV / 2}" cy="${AV / 2}" r="${AV / 2}" fill="${AV_BG}"/>
+<svg x="${((AV - markW) / 2).toFixed(2)}" y="${((AV - markH) / 2).toFixed(2)}"
+ width="${markW.toFixed(2)}" height="${markH.toFixed(2)}" viewBox="${markVB}">${markInner}</svg>
+</svg>`;
+
 /* ---- 4. 字型：只取這張紙用得到的那幾個字 -------------------------------- */
 async function subsetFont() {
   const chars = [...new Set(picked.text.replace(/\s/g, "") + DATE + NAME)].join("");
@@ -217,6 +261,8 @@ html,body{background:#fff;padding:0;margin:0}
 .sheet{width:${A4.w}mm;height:${A4.h}mm;margin:0 auto;background:#fff;
   display:flex;align-items:center;justify-content:center;overflow:hidden}
 .holder{width:${CARD_W}px;transform:scale(${k});transform-origin:center center}
+/* 頭像：LINE 把圖卡的頭像擺在卡片**上面**（不是左邊）—— 見檔頭 ⑥ */
+.a4-av{display:block;margin:0 0 ${AV_GAP}px ${AV_DX}px}
 /* 卡片色壓在白紙上幾乎看不出邊，螢幕上那圈陰影又印不出來 —— 補一條很淡的框線 */
 .holder .pv-hc{box-shadow:none;border:1px solid var(--rule)}
 @media screen{body{background:#e9edf1;padding:16px 0}
@@ -224,7 +270,7 @@ html,body{background:#fff;padding:0;margin:0}
 </style>
 </head>
 <body>
-<div class="sheet"><div class="holder">${cardHtml}</div></div>
+<div class="sheet"><div class="holder">${avatarSvg}${cardHtml}</div></div>
 </body>
 </html>`;
 }
@@ -240,19 +286,26 @@ await p1.goto("file://" + OUT_HTML);
 await p1.evaluate(() => document.fonts.ready);
 await p1.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth > 0));
 const nat = await p1.evaluate(() => {
-  const c = document.querySelector(".pv-hc");
-  const r = c.getBoundingClientRect();
-  return { w: r.width, h: r.height };
+  const r = document.querySelector(".holder").getBoundingClientRect();
+  const c = document.querySelector(".pv-hc").getBoundingClientRect();
+  const a = document.querySelector(".a4-av").getBoundingClientRect();
+  return { w: r.width, h: r.height, ch: c.height,
+    av: a.width, gap: c.top - a.bottom, dx: a.left - c.left };
 });
 await p1.close();
 if (e1.length) throw new Error("A4 那一頁有 JS 錯誤：" + e1.join(" / "));
 
 /* 定稿那張卡量到的是 268×585.9（規格頁）。差太多就是有人動過版面或字，要先看一眼。 */
 const REF_H = NOHERO ? 585.9 - 134 : 585.9;
-const off = Math.abs(nat.h - REF_H) / REF_H;
+const off = Math.abs(nat.ch - REF_H) / REF_H;
 console.log("卡片原生 %s×%s（定稿那張%s 268×%s，差 %s%%）",
-  nat.w.toFixed(1), nat.h.toFixed(1), NOHERO ? "扣掉頭圖" : "", REF_H.toFixed(1),
+  CARD_W.toFixed(1), nat.ch.toFixed(1), NOHERO ? "扣掉頭圖" : "", REF_H.toFixed(1),
   (off * 100).toFixed(1));
+console.log("頭像 %spx・底緣離卡片上緣 %spx・左緣比卡片左 %spx（截圖量到 %s／%s／%s）",
+  nat.av.toFixed(1), nat.gap.toFixed(1), (-nat.dx).toFixed(1), AV, AV_GAP, -AV_DX);
+if (Math.abs(nat.av - AV) > 0.5 || Math.abs(nat.gap - AV_GAP) > 0.5
+  || Math.abs(nat.dx - AV_DX) > 0.5) throw new Error("頭像的位置或大小和量到的對不上");
+if (nat.gap < 0) throw new Error("頭像壓在卡片上了");
 if (off > 0.08) throw new Error("卡片高度和定稿那張差太多，先去看一眼規格頁");
 
 const availH = (A4.h - PAD * 2) * MM;
@@ -269,9 +322,10 @@ await p2.evaluate(() => document.fonts.ready);
 await p2.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth > 0));
 const box = await p2.evaluate(() => {
   const s = document.querySelector(".sheet").getBoundingClientRect();
-  const c = document.querySelector(".pv-hc").getBoundingClientRect();
+  const c = document.querySelector(".holder").getBoundingClientRect();
+  const k2 = document.querySelector(".pv-hc").getBoundingClientRect();
   return { sw: s.width, sh: s.height, l: c.left - s.left, t: c.top - s.top,
-    r: s.right - c.right, b: s.bottom - c.bottom, w: c.width, h: c.height };
+    r: s.right - c.right, b: s.bottom - c.bottom, w: k2.width, h: k2.height };
 });
 if (e2.length) throw new Error("A4 那一頁有 JS 錯誤：" + e2.join(" / "));
 const mm = (px) => px / MM;
