@@ -26,7 +26,7 @@
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 顆格, 淡格, 淡色, 重複of, 墨色, CARD, 分上, 分下, 洞比, 最小洞, 那一條mm,
+import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 顆格, 淡格, 淡色, 重複of, 墨色, 套色, CARD, 分上, 分下, 洞比, 最小洞, 那一條mm,
   切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm, 帶高, ID上, ID下, ID字級,
   QRSRC, QRFILE, QRPLATE, QRVAR, 印的案, 不印的 } from "./stand-card.mjs";
 
@@ -360,8 +360,25 @@ ok(/\.card \.hd\{[^}]*white-space:nowrap/.test(H), "抬頭不是 nowrap —— �
   /* ⚠⚠ 顏色現在有兩種：卡片與顆數那把尺畫在**預設那一格**上，顏色那把尺每一格各自一個色。
      ⚠⚠⚠ 顏色那把尺的每一格都要是 `淡案` 裡真的有的值 —— 自己另外挑一支灰畫上去，
        畫面完全正常，而那一格就不是他挑得到的東西了。 */
-  for (const m of [...卡條, ...尺條])
-    ok(!new RegExp("color:(?!" + 墨色 + ")").test(m), `有一條分隔線的標誌不是預設那一格的灰（${墨色}）`);
+  /* ⚠⚠⚠ 2026-09-17：卡片那一條有**七顆套自己那一科的色** —— 所以它不再是「整條同一個灰」。
+     七科各一顆、位置逐顆對 JSON，其餘一律淡墨。⚠ 尺上那幾格沒有套色（顆數不一樣、位置對不上）。 */
+  const 科色 = new Set(Object.values(WM).map((m) => m.color.toLowerCase()));
+  for (const m of 尺條)
+    ok(!new RegExp("color:(?!" + 墨色 + ")").test(m), `尺上有一條分隔線的標誌不是預設那一格的灰（${墨色}）`);
+  for (const m of 卡條) {
+    const cs = [...m.matchAll(/style="color:([^"]+)"/g)].map((x) => x[1].toLowerCase());
+    const 套 = cs.map((c, i) => [c, i]).filter(([c]) => c !== 墨色.toLowerCase());
+    ok(cs.length === BAND.顆數, `卡片那一條數到 ${cs.length} 顆（應該是 ${BAND.顆數}）`);
+    ok(套.length === 科色.size, `卡片那一條套色的有 ${套.length} 顆 —— 要七科各一顆`);
+    ok(new Set(套.map(([c]) => c)).size === 套.length && 套.every(([c]) => 科色.has(c)),
+      `套色那幾顆不是七科各一顆，或有一顆不是站上的科別色（${套.map(([c]) => c).join("／")}）`);
+    ok(套.map(([, i]) => i).join() === 套色.位.join(),
+      `套色畫在第 ${套.map(([, i]) => i).join("／")} 顆，和 JSON 的 著色.位置（${套色.位.join("／")}）對不上`);
+  }
+  /* ⚠⚠ 那兩句話（不要太規律、不要太集中）是量得出來的，所以面板每次出圖都要印 —— 
+     位置一改，這裡會自己變（`套色檢查()` 在產生器那一側就會 throw）。 */
+  ok(套色.間隔.every((g) => g >= 3) && 套色.相鄰相同 <= 1, "套色的間隔太集中或太規律");
+  ok(/套色 七科各一顆/.test(GEN), "面板沒有印套色的位置與間隔");
   /* ── Ⓟ 那把尺：2026-09-16 定案 Ⓟ2（混白五成），帶子條收掉了 ──
      ⚠⚠⚠ 翻面不放水（同 Ⓜ、71-13、71-18）：頁面上一格都不准畫，四格量出來的色碼與
        對白要改由**面板**逐格印，資料裡一格都不可以刪。 */

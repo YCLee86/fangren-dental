@@ -364,12 +364,38 @@ export const 帶 = (n = S.帶子.顆數 * S.帶子.倍, k = S.帶子.間距, 基
     if (!m) throw new Error("wm-sizes.json 裡沒有 " + key);
     return { k: key, w: m.w, h: m.w / m.ratio, 色: m.color, spec: m.spec };
   });
+  /* 七顆套自己那一科的色，其餘淡墨 —— 位置在 JSON 的 著色.位置，底下 套色檢查() 在驗。
+     ⚠ 只有預設那一格（27 顆）套色：尺上其他顆數的位置對不上，一律淡墨。 */
+  const 套 = n === S.帶子.顆數 * S.帶子.倍 ? new Set(S.帶子.著色.位置) : new Set();
+  it.forEach((l, i) => { l.套色 = 套.has(i); });
   const H = Math.max(...it.map((x) => x.h));
   const gap = H * k;
   let x = gap;
   for (const l of it) { l.x = x; l.y = gap + (H - l.h) / 2; x += l.w + gap; }
   return { it, 高: H, gap, 顆數: n, 間距: k, 基: 基of(n, 基), 總寬: x, 總高: H + 2 * gap };
 };
+/* ⚠⚠⚠ 2026-09-17：七顆套科別色（使用者：「各一顆套七顆主題色　間隔不要太規律　也不要太集中」）。
+ *   那兩句話是**量得出來的兩件事**，所以做成守門而不是排好看就算：
+ *   ・不要太集中 ＝ 相鄰兩顆套色的至少隔 3 顆
+ *   ・不要太規律 ＝ 相鄰兩個間隔相同的最多一對
+ *   ⚠⚠ 「一對都不准相同」做不到：每一科的三顆固定落在 mod 9 的同一個餘數上，
+ *     可挑的位置本來就被鎖死（8748 種組合全掃過）。**那是幾何不是沒挑好。** */
+export const 套色檢查 = () => {
+  const n = S.帶子.顆數 * S.帶子.倍, 序 = 序of(n), p = S.帶子.著色.位置;
+  const 七科 = new Set(Object.values(WM).map((m) => m.spec));
+  if (p.length !== 七科.size) throw new Error(`著色.位置 有 ${p.length} 顆，站上有 ${七科.size} 科`);
+  if (new Set(p).size !== p.length || p.some((i) => !(i >= 0 && i < n)))
+    throw new Error("著色.位置 有重複的或超出 " + n + " 顆");
+  const cs = p.map((i) => WM[序[i]].spec);
+  if (new Set(cs).size !== 七科.size || cs.some((c) => !七科.has(c)))
+    throw new Error("套色那幾顆不是七科各一顆（" + cs.join("／") + "）");
+  const s = [...p].sort((a, b) => a - b), g = s.slice(1).map((x, i) => x - s[i]);
+  if (Math.min(...g) < 3) throw new Error("套色太集中：最小間隔 " + Math.min(...g) + " 顆（下限 3）");
+  const 同 = g.filter((x, i) => i && x === g[i - 1]).length;
+  if (同 > 1) throw new Error("套色太規律：相鄰間隔相同的有 " + 同 + " 對（上限 1）");
+  return { 位: s, 間隔: g, 前: s[0], 後: n - 1 - s[s.length - 1], 相鄰相同: 同, 科: cs };
+};
+export const 套色 = 套色檢查();
 export const BAND = 帶();
 /* ── 牙洞在這個尺寸還看不看得到（2026-09-16）─────────────────────
  * 那一條縮成分隔線之後，每一顆只有 1~2 mm 寬 —— 洞跟著縮。這裡**現場量**每一顆的
@@ -403,7 +429,7 @@ const bandSvg = (B = BAND, cls = "bnd", 色 = 墨色) => {
   return `<svg class="${cls}" viewBox="0 0 ${總寬.toFixed(1)} ${總高.toFixed(1)}" role="img" aria-label="芳仁牙醫診所的標誌排成的一條分隔線">` +
     it.map((o) => {
       const { vb, inner } = SHAPE(o.k);
-      return `<svg x="${o.x.toFixed(1)}" y="${o.y.toFixed(1)}" width="${o.w}" height="${o.h.toFixed(1)}" viewBox="${vb}" style="color:${色}">${inner}</svg>`;
+      return `<svg x="${o.x.toFixed(1)}" y="${o.y.toFixed(1)}" width="${o.w}" height="${o.h.toFixed(1)}" viewBox="${vb}" style="color:${o.套色 ? o.色 : 色}">${inner}</svg>`;
     }).join("") + "</svg>";
 };
 
@@ -772,6 +798,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       console.log(`       ${k.標籤}　${k.色}　壓在白紙上 ${k.對白.toFixed(2)}${k.對白 >= 3 ? "（過 3:1）" : ""}${k.現在 ? "　← 現在" : ""}`);
     console.log(`     Ⓚ 基數 ${S.帶子.順序案.map((k) => { const b = 帶(k.顆 * S.帶子.倍, undefined, k.顆); return `${k.顆}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在基數 ${S.帶子.顆數} 顆 × ${S.帶子.倍}）`);
     console.log(`     分隔線 上 ${(分上 * CARD.寬mm).toFixed(2)} ／ 下 ${(分下 * CARD.寬mm).toFixed(2)} mm・抬頭到主文因此變成 ${抬頭到主文mm(尺卡)} mm`);
+    console.log(`     套色 七科各一顆（第 ${套色.位.join("／")} 顆，間隔 ${套色.間隔.join("／")}，前 ${套色.前}、後 ${套色.後}）　其餘 ${BAND.顆數 - 套色.位.length} 顆淡墨`);
     console.log(`     Ⓛ 間距 ${S.帶子.間距案.map((k) => { const b = 帶(undefined, k.值); return `${k.值}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在 ${BAND.間距}）`);
   }
   console.log("");
