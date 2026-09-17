@@ -191,7 +191,12 @@ export const PGAP = CARD.段距;
  *   （量在底下的面板上）。所以這一輪只做「插圖一個像素都不動」做得到的那一段：
  *   上 .024 → .014、下 .012 → .007，省下來的 1.47 mm 原封不動加給 QR。
  * ⚠⚠ **上仍然是下的兩倍**（接近律）——那一行是「這顆碼叫什麼」，不是主文的第四行。 */
-export const ID上 = 0.014, ID下 = 0.007, ID字級 = 0.038;
+export const ID上 = 0.005, ID下 = 0.002, ID字級 = 0.038;
+/* ⚠⚠⚠ 2026-09-17 使用者：「先用這兩個」（@fafa070 上下剩的 2.1、卡片上內距收一半 2.9）。
+ *   **上內距因此獨立成自己一個常數，左右仍然是 .06** —— 左右一動版心就跟著動，
+ *   而主文的字級是版心算出來的、那一行要貼齊的目標寬度也是它算的：一起動就變成追自己的影子。
+ * ⚠ 省下來的 4.3 mm 原封不動加給 QR，**插圖那一條一個像素都沒動**。 */
+export const 上內距 = 0.03;
 /* ── 分隔線（2026-09-16 那一條搬家）───────────────────────────────
  * 使用者：「插圖已經很豐富了　下面的 logo 帶反而太吵雜　把 logo 縮小改成淡墨色
  *   移到『芳仁牙醫有 LINE 囉』　當作是分隔線的概念　因為要很小　logo 的數量應該會是
@@ -209,7 +214,7 @@ export const 帶高 = () => BAND.總高 / BAND.總寬;
 export const 疊高 = (c, M = BDGAP, g = PGAP) => {
   const { fs } = fsOf(c), hd = hdOf(c), n = c.主文.length;
   const bd = M + g * fs + n * 1.5 * fs + (n - 1) * g * fs + g * fs;
-  return 0.06 + 1.5 * hd.fs + 分上 + 帶高() + 分下 + bd
+  return 上內距 + 1.5 * hd.fs + 分上 + 帶高() + 分下 + bd
     + (c.QR上 ? ID上 + 1.5 * ID字級 + ID下 : 0.04) + CARD.QR佔卡寬
     + (c.QR下 ? 0.03 + 1.5 * 0.036 : 0);
 };
@@ -626,7 +631,7 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .lb{font-weight:600;font-size:.95rem;margin:0 0 .45em}
 .card{--pad:calc(var(--cw) * .06);width:var(--cw);aspect-ratio:${CARD.寬mm} / ${Math.round(CARD.寬mm * CARD.比例)};
   background:#fff;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.14);
-  padding:var(--pad) var(--pad) 0;
+  padding:calc(var(--cw) * ${上內距}) var(--pad) 0;
   display:flex;flex-direction:column;align-items:center;text-align:center;
   color:#333;line-height:1.5;overflow:hidden}
 .card .hd{font-weight:700;letter-spacing:var(--hd-ls);white-space:nowrap}
@@ -847,8 +852,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       const c = 印的案[0], 目標 = 8 * fsOf(c).fs * CARD.寬mm;
       const 要的框 = 目標 * vb / (vb - Q * 2);
       console.log(`     ⚠ 貼齊「輕鬆接收診所新訊」要碼 ${目標.toFixed(1)} mm ＝ 框 ${要的框.toFixed(1)} mm，` +
-        `還差 ${(要的框 - box).toFixed(1)} mm　可動的只有：@fafa070 上下剩 ${((ID上 + ID下) * CARD.寬mm).toFixed(1)}、` +
-        `插圖讓到裁切上限 5.1、卡片上內距收一半 2.9 —— 三個全用掉才夠，而插圖那一塊他說不要動`);
+        `還差 ${(要的框 - box).toFixed(1)} mm（碼差 ${(目標 - box * (vb - Q * 2) / vb).toFixed(1)}）　` +
+        `剩下可動的：@fafa070 上下 ${((ID上 + ID下) * CARD.寬mm).toFixed(1)}（收到 0）、` +
+        `上內距再收 ${(上內距 * CARD.寬mm).toFixed(1)}（收到 0 ＝ 抬頭貼著卡片上緣）、` +
+        `插圖讓到裁切上限 5.1 ——**插圖那一塊他說不要動**`);
     }
     /* ⚠⚠ 底板那把尺 2026-09-16 定案（Ⓝ2）並收掉了 —— 三格各自的長相留在這裡
        （尺可以收，它量出來的數字不可以跟著消失）。三格都在印刷尺寸上拿 zxing 掃過。 */
