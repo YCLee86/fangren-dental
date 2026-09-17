@@ -16,7 +16,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pkg from "/opt/node22/lib/node_modules/playwright/index.js";
-import { S, CARD, 那一條mm, 印的案, 倍格, 裁法 } from "./stand-card.mjs";
+import { S, CARD, 那一條mm, 印的案, 顆格, 裁法 } from "./stand-card.mjs";
 const { chromium } = pkg;
 
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -130,7 +130,7 @@ console.log(`印出來 ${(r.ch * 25.4 / 那一塊mm).toFixed(0)} dpi`);
  *   而擋不擋得住只有這裡算得出來（墨的框是這一支量的）。所以逐格印在這裡，不是在 stand-card.mjs。 */
 {
   console.log("Ⓜ 分隔線那把尺　每一格的插圖會裁成：");
-  for (const k of 倍格()) {
+  for (const k of 顆格()) {
     const c = k.裁;   /* ⚠ 裁法只有一份（stand-card.mjs），這裡不要再算一次 */
     console.log(`   ${k.標籤}　${String(k.顆).padStart(2)} 顆　那一條 ${k.那一條} mm（比例 ${(卡寬mm / k.那一條).toFixed(3)}）` +
       `→ 裁成 ${c.cw}×${c.ch}・下緣裁 ${c.裁} 列 ＝ 墨的 ${(c.裁比 * 100).toFixed(0)}%` +

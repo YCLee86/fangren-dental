@@ -322,23 +322,44 @@ const SHAPE = (k) => {
  * ⚠⚠⚠ 2026-09-16：**底色那塊 rect 拿掉了** —— 那一條搬去當分隔線，標誌改成淡墨
  *   直接畫在白紙上。所以整條只剩一種 fill（形狀自己的 currentColor），
  *   而「牙洞挖穿透出底色」變成「透出白紙」，evenodd 一樣非有不可。 */
-export const 墨色 = S.帶子.墨;
+/* ⚠⚠⚠ 2026-09-16（使用者：「顏色再淡一點」）——**變的是「混多少白」不是換一支色**：
+ *   `墨` 仍然是柔墨 `#5c5f57`（站上 `--ink-soft`），`淡` 是往白色混幾成，
+ *   所以**色相一個度都沒有動**（同夜間模式那條：同色相只提亮度）。
+ * ⚠ 混白七成畫出來對白 1.56，正好是站上 `--rule`（`#cdd0d2`，全站每一條分隔線）
+ *   的份量（1.55）—— 那把尺的盡頭是站上自己那條線，不是憑感覺挑的。 */
+export const 混白 = (h, t) => "#" + [1, 3, 5]
+  .map((i) => Math.round(parseInt(h.slice(i, i + 2), 16) * (1 - t) + 255 * t))
+  .map((v) => v.toString(16).padStart(2, "0")).join("");
+export const 淡色 = (t = S.帶子.淡) => 混白(S.帶子.墨, t);
+export const 墨色 = 淡色();
 /* ⚠⚠⚠ 2026-09-16：顆數變成**基數的整數倍**（使用者：「三到四倍」）。
  *   只給整數倍，是因為那三條相鄰的限制**在接縫上也要成立** —— 整數倍等於把同一段
  *   接回它自己，接縫那一對（最後一顆與第一顆）驗一次就代表每一個接縫；
  *   非整數倍要另外寫一份順序進 JSON，不可以就地截一段（截口沒有人驗過）。 */
-export const 序of = (n) => {
-  const k = S.帶子.順序案.find((x) => x.顆 === n);
-  if (k) return k.序;
-  /* 挑一份「顆數整除得了 n」的順序接起來（基數優先） */
-  const 基 = [S.帶子.顆數, ...S.帶子.順序案.map((x) => x.顆)]
-    .find((m) => n % m === 0 && S.帶子.順序案.some((x) => x.顆 === m));
-  if (!基) throw new Error("順序案裡沒有 " + n + " 顆那一格，也沒有任何一格整除得了它");
+/* ⚠⚠ 2026-09-16：顆數那把尺開了中間兩格之後，**基數不再一定是 11**
+ *   （33 ＝ 11×3、30 ＝ 10×3、27 ＝ 9×3、22 ＝ 11×2）—— 所以「這一格用的是哪一份
+ *   順序」要拿得出來：**基數換了，「哪幾顆重複」就跟著換**，而那是他挑定過的一格。 */
+const 序組 = (n, 基指定) => {
+  const k = 基指定 == null && S.帶子.順序案.find((x) => x.顆 === n);
+  if (k) return { 基: n, 序: k.序 };
+  /* 挑一份「顆數整除得了 n」的順序接起來（指定優先，其次基數，其次任何一份） */
+  const 基 = [基指定, S.帶子.顆數, ...S.帶子.順序案.map((x) => x.顆)]
+    .find((m) => m != null && n % m === 0 && S.帶子.順序案.some((x) => x.顆 === m));
+  if (!基) throw new Error(基指定 != null
+    ? `顆案裡指定的基數 ${基指定} 顆，順序案裡沒有那一份（或 ${n} 不是它的整數倍）`
+    : "順序案裡沒有 " + n + " 顆那一格，也沒有任何一格整除得了它");
   const b = S.帶子.順序案.find((x) => x.顆 === 基);
-  return Array.from({ length: n / 基 }, () => b.序).flat();
+  return { 基, 序: Array.from({ length: n / 基 }, () => b.序).flat() };
 };
-export const 帶 = (n = S.帶子.顆數 * S.帶子.倍, k = S.帶子.間距) => {
-  const it = 序of(n).map((key) => {
+export const 序of = (n, 基) => 序組(n, 基).序;
+export const 基of = (n, 基) => 序組(n, 基).基;
+/* 那一份順序裡「排了不只一次」的形狀 —— 11 顆是 r1c2 與 r3c1、10 顆只有 r1c2、9 顆一顆都沒有 */
+export const 重複of = (基) => {
+  const 序 = S.帶子.順序案.find((x) => x.顆 === 基).序;
+  return [...new Set(序.filter((k, i) => 序.indexOf(k) !== i))];
+};
+export const 帶 = (n = S.帶子.顆數 * S.帶子.倍, k = S.帶子.間距, 基) => {
+  const it = 序of(n, 基).map((key) => {
     const m = WM[key];
     if (!m) throw new Error("wm-sizes.json 裡沒有 " + key);
     return { k: key, w: m.w, h: m.w / m.ratio, 色: m.color, spec: m.spec };
@@ -347,7 +368,7 @@ export const 帶 = (n = S.帶子.顆數 * S.帶子.倍, k = S.帶子.間距) => 
   const gap = H * k;
   let x = gap;
   for (const l of it) { l.x = x; l.y = gap + (H - l.h) / 2; x += l.w + gap; }
-  return { it, 高: H, gap, 顆數: n, 間距: k, 總寬: x, 總高: H + 2 * gap };
+  return { it, 高: H, gap, 顆數: n, 間距: k, 基: 基of(n, 基), 總寬: x, 總高: H + 2 * gap };
 };
 export const BAND = 帶();
 /* ── 牙洞在這個尺寸還看不看得到（2026-09-16）─────────────────────
@@ -377,12 +398,12 @@ const lum = (h) => {
     .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
   return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
 };
-const bandSvg = (B = BAND, cls = "bnd") => {
+const bandSvg = (B = BAND, cls = "bnd", 色 = 墨色) => {
   const { it, 總寬, 總高 } = B;
   return `<svg class="${cls}" viewBox="0 0 ${總寬.toFixed(1)} ${總高.toFixed(1)}" role="img" aria-label="芳仁牙醫診所的標誌排成的一條分隔線">` +
     it.map((o) => {
       const { vb, inner } = SHAPE(o.k);
-      return `<svg x="${o.x.toFixed(1)}" y="${o.y.toFixed(1)}" width="${o.w}" height="${o.h.toFixed(1)}" viewBox="${vb}" style="color:${墨色}">${inner}</svg>`;
+      return `<svg x="${o.x.toFixed(1)}" y="${o.y.toFixed(1)}" width="${o.w}" height="${o.h.toFixed(1)}" viewBox="${vb}" style="color:${色}">${inner}</svg>`;
     }).join("") + "</svg>";
 };
 
@@ -484,42 +505,73 @@ export const 裁法 = (那一條, 墨, 邊白 = 8) => {
  * ⚠⚠⚠ **每一格的數字都現算**，而且**一格會牽動三個地方**：帶子自己多高、
  *   抬頭到主文因此多遠、以及插圖那一條還剩多少（卡片是固定長寬比，
  *   分隔線長高多少那一條就矮多少 —— 第九節第 28 條 ②）。 */
-export const 倍格 = () => S.帶子.倍案.map((k) => {
-  const b = 帶(S.帶子.顆數 * k.值);
-  const s = CARD.寬mm / b.總寬;
+export const 顆格 = () => S.帶子.顆案.map((k) => {
+  const n = k.基 * k.倍;
+  const bd = 帶(n, undefined, k.基);
+  const s = CARD.寬mm / bd.總寬;
   /* 這一格比現在高多少 mm —— 抬頭到主文加這個數，插圖那一條就減這個數 */
-  const d = (b.總高 / b.總寬 - 帶高()) * CARD.寬mm;
+  const d = (bd.總高 / bd.總寬 - 帶高()) * CARD.寬mm;
   return {
-    ...k, 帶: b, 顆: b.顆數, 現在: k.值 === S.帶子.倍,
-    帶高mm: +(b.總高 * s).toFixed(2),
-    一顆mm: +(b.高 * s).toFixed(2),
-    間隔mm: +(b.gap * s).toFixed(2),
-    洞mm: +Math.min(...b.it.map((l) => 洞比(l.k) * l.w / b.總寬 * CARD.寬mm)).toFixed(3),
+    ...k, 帶: bd, 顆: n, 現在: n === BAND.顆數 && k.基 === BAND.基,
+    重複: 重複of(k.基),
+    帶高mm: +(bd.總高 * s).toFixed(2),
+    一顆mm: +(bd.高 * s).toFixed(2),
+    間隔mm: +(bd.gap * s).toFixed(2),
+    洞mm: +Math.min(...bd.it.map((l) => 洞比(l.k) * l.w / bd.總寬 * CARD.寬mm)).toFixed(3),
     到主文mm: +(抬頭到主文mm(尺卡) + d).toFixed(1),
     那一條: +(那一條mm(尺卡) - d).toFixed(1),
     get 裁() { return 裁法(this.那一條, S.插圖.墨框); },
   };
 });
+/* Ⓟ 顏色那把（2026-09-16）：變的是**混多少白**，色相固定在柔墨上。 */
+export const 淡格 = () => S.帶子.淡案.map((k) => {
+  const 色 = 淡色(k.值);
+  return { ...k, 色, 對白: +(1.05 / (lum(色) + 0.05)).toFixed(2), 現在: k.值 === S.帶子.淡 };
+});
 /* ⚠⚠ 尺上那幾格畫的是**真的那一條**（同一支 bandSvg、同一個滿版寬度），
- *   不是用 CSS 另外畫一排像它的東西 —— 大小這種東西並排才比得出來。
- * ⚠ 「・現在這樣」是**算出來的**（`值 === S.帶子.倍`），不要寫進標籤裡。 */
-const 倍尺 = 倍格().filter((k) => !k.不畫);
-if (倍尺.length < 2) throw new Error("倍數那把尺畫出來只剩一格 —— 那就不是尺了");
+ *   不是用 CSS 另外畫一排像它的東西 —— 大小與深淺這種東西並排才比得出來。
+ * ⚠ 「・現在這樣」是**算出來的**，不要寫進標籤裡。
+ * ⚠⚠⚠ 兩把尺互相獨立，所以**各自畫在對方的預設值上**：顆數那把畫在 Ⓟ 的預設色上、
+ *   顏色那把畫在預設的顆數上。兩件都挑定之後才會同時生效。 */
+const 顆尺 = 顆格().filter((k) => !k.不畫);
+if (顆尺.length < 2) throw new Error("顆數那把尺畫出來只剩一格 —— 那就不是尺了");
+const 淡尺 = 淡格();
+if (淡尺.length < 2) throw new Error("顏色那把尺畫出來只剩一格 —— 那就不是尺了");
+const 現顆 = 顆格().find((k) => k.現在);
+if (!現顆) throw new Error("顆案裡沒有一格是現在這樣 —— 那把尺量不出「改了多少」");
 const 插圖比 = (S.插圖.裁成[0] / S.插圖.裁成[1]).toFixed(3);
-const 尺區 = `<div class="h2">Ⓜ 分隔線要多大<span class="t">一把尺三格，每一格都是真的那一條、畫在和卡片一樣寬的地方</span></div>
-<div class="note"><p>上一輪的顆數是「三到四倍」，三倍畫出來一顆只有 ${倍格().find((k) => k.現在).一顆mm} mm、
-牙洞 ${倍格().find((k) => k.現在).洞mm} mm —— 低於平版印刷守得住的 0.2~0.3 mm，所以那一排讀起來是一條線。
-往回走只有一條路：<b>少排幾次</b>。⚠ 顆數只給基數（${S.帶子.顆數} 顆）的整數倍，
-因為那三條相鄰的限制要在接縫上也成立 —— 所以 ${S.帶子.顆數 * 2} 和 ${S.帶子.顆數} 之間沒有停格。</p></div>
-<div class="mcmp">${倍尺.map((k) => `<div class="mrow"><b>${esc(k.標籤)}・${k.顆} 顆${k.現在 ? "・現在這樣" : ""}</b><span class="mn">一顆最高 ${k.一顆mm.toFixed(2)} mm・牙洞 ${k.洞mm.toFixed(3)} mm・四邊與中間 ${k.間隔mm.toFixed(2)} mm・帶子高 ${k.帶高mm.toFixed(2)} mm<br>抬頭到主文 ${k.到主文mm} mm・插圖那一條 ${k.那一條} mm（比例 ${(CARD.寬mm / k.那一條).toFixed(3)}${k.現在 ? "，現在這一版就是裁成這樣" : "，插圖要重裁"}）<br>插圖裁成 ${k.裁.cw}×${k.裁.ch}・下緣裁掉墨的 ${(k.裁.裁比 * 100).toFixed(0)}%・${k.裁.dpi.toFixed(0)} dpi${k.裁.過 ? "" : "　<b class=\"no\">✗ 裁圖那一支會擋下來（下緣裁超過 20% ＝ 切到手與胸口）</b>"}</span>${bandSvg(k.帶, "bnd mrb")}</div>`).join("")}</div>
+const RULE = "#cdd0d2";
+const 尺區 = `<div class="h2">Ⓜ 分隔線要多大<span class="t">一把尺 ${顆尺.length} 格，每一格都是真的那一條、畫在和卡片一樣寬的地方</span></div>
+<div class="note"><p>上一輪只動<b>倍數</b>（基數固定 ${S.帶子.顆數} 顆），而
+${S.帶子.顆數} 的整數倍之間沒有停格 —— 所以「介於 ${S.帶子.顆數 * 3} 和 ${S.帶子.顆數 * 2} 之間」
+在那把尺上<b>畫不出來</b>。要中間那兩格，<b>只能換基數</b>。</p>
+<p>⚠⚠ <b>換基數就換掉「哪幾顆重複」</b>，而那正是 2026-09-16 挑定的那一格
+（${S.帶子.顆數} 顆重複 ${S.帶子.重複.join("、")}、10 顆只重複 ${重複of(10).join("、")}、9 顆一顆都不重複）——
+所以中間那兩格<b>選了就等於同時改掉它</b>，不是免費的。每一格的重複都印在下面。</p></div>
+<div class="mcmp">${顆尺.map((k) => `<div class="mrow"><b>${esc(k.標籤)}・${k.顆} 顆（基數 ${k.基} × ${k.倍}）${k.現在 ? "・現在這樣" : ""}</b><span class="mn">一顆最高 ${k.一顆mm.toFixed(2)} mm・牙洞 ${k.洞mm.toFixed(3)} mm・四邊與中間 ${k.間隔mm.toFixed(2)} mm・帶子高 ${k.帶高mm.toFixed(2)} mm<br>重複的形狀 ${k.重複.length ? k.重複.join("、") : "一顆都沒有"}${k.基 === S.帶子.顆數 ? "（＝挑定的那一格）" : "　<b class=\"no\">⚠ 和挑定的那一格不一樣</b>"}<br>抬頭到主文 ${k.到主文mm} mm・插圖那一條 ${k.那一條} mm（比例 ${(CARD.寬mm / k.那一條).toFixed(3)}${k.現在 ? "，現在這一版就是裁成這樣" : "，插圖要重裁"}）<br>插圖裁成 ${k.裁.cw}×${k.裁.ch}・下緣裁掉墨的 ${(k.裁.裁比 * 100).toFixed(0)}%・${k.裁.dpi.toFixed(0)} dpi${k.裁.過 ? "" : "　<b class=\"no\">✗ 裁圖那一支會擋下來（下緣裁超過 20% ＝ 切到手與胸口）</b>"}</span>${bandSvg(k.帶, "bnd mrb")}</div>`).join("")}</div>
 <div class="note"><p>⚠⚠ <b>每一格都會動到插圖</b>：卡片是固定長寬比，分隔線長高多少，「QR 底下到卡片下緣」就矮多少。
 現在這一版裁成 ${插圖比}，比例對不上就要重裁 ——
 裁不裁得動由 <code>node drafts/channels/stand-illus-crop.mjs</code> 說了算（它逐格印裁完長什麼樣，
-下緣裁超過墨的 20% 就擋下來）。<b>那把尺的盡頭不在版面上，在那張圖上</b> —— 上面每一格都現算過了，
-標了 ✗ 的那一格<b>選了也印不出來</b>（要走它得回去讓人物畫矮一點）。</p>
-<p>⚠ 基數（哪幾顆重複）與間距這兩把尺不在這一輪：兩把 2026-09-16 都已經挑定，
-而且間距那把買得很少（.40 只從 ${倍格().find((k) => k.現在).一顆mm} 走到 ${(帶(undefined, 0.4).高 * CARD.寬mm / 帶(undefined, 0.4).總寬).toFixed(2)} mm）。
-要一格落在 ${S.帶子.顆數 * 2} 和 ${S.帶子.顆數} 之間，只能換基數（9×2 ＝ 18、10×2 ＝ 20）—— 那是他自己挑過的東西。</p></div>`;
+下緣裁超過墨的 20% 就擋下來）。<b>那把尺的盡頭不在版面上，在那張圖上。</b></p>
+<p>⚠ 上一輪那個 ${S.帶子.顆數} 顆（一倍）<b>從畫面上拿掉了</b>：它的插圖下緣要裁掉墨的
+${顆格().find((k) => k.不畫) ? (顆格().find((k) => k.不畫).裁.裁比 * 100).toFixed(0) : "—"}%，
+選了也印不出來。<b>拿掉的是畫面不是那一格</b> —— 它留在資料裡，數字仍然印在面板上。
+間距那把（Ⓛ2 .50）也不在這一輪，它買得很少（.40 只從 ${現顆.一顆mm.toFixed(2)} 走到 ${(帶(undefined, 0.4).高 * CARD.寬mm / 帶(undefined, 0.4).總寬).toFixed(2)} mm）。</p></div>
+
+<div class="h2">Ⓟ 分隔線要多淡<span class="t">同一支柔墨往白色混，色相一個度都沒有動</span></div>
+<div class="note"><p>變的是<b>混多少白</b>不是換一支色：<code>${S.帶子.墨}</code> 就是站上的
+<code>--ink-soft</code>（也是這一條 2026-09-16 定案的那一支），往白色混之後<b>色相不變、只變亮度</b>
+—— 同夜間模式那條。</p>
+<p>⚠⚠ <b>這把尺的盡頭是站上自己那條線</b>：最淡那一格畫出來對白
+${淡格()[淡格().length - 1].對白.toFixed(2)}，而站上的 <code>--rule</code>（<code>${RULE}</code>，
+全站每一條分隔線都是它）對白是 ${(1.05 / (lum(RULE) + 0.05)).toFixed(2)} —— <b>一模一樣的份量</b>。
+⚠ 只有 ${淡格().filter((k) => k.對白 >= 3).map((k) => k.標籤.split(" ")[0]).join("、")} 還過得了裝飾性圖形那條 3:1，
+其餘每一格都在它底下 —— <b>那是刻意的</b>：這一條的工作是分隔不是傳達，站上那條 <code>--rule</code> 自己也只有 1.55。</p></div>
+<div class="mcmp">${淡尺.map((k) => `<div class="mrow"><b>${esc(k.標籤)}・<code>${k.色}</code>${k.現在 ? "・現在這樣" : ""}</b><span class="mn">壓在白紙上 ${k.對白.toFixed(2)}${k.對白 >= 3 ? "（過得了裝飾性圖形那條 3:1）" : "　<b class=\"no\">低於 3:1</b>"}${Math.abs(k.對白 - 1.05 / (lum(RULE) + 0.05)) < 0.1 ? "　＝ 站上 <code>--rule</code> 那一支的份量" : ""}</span>${bandSvg(BAND, "bnd nrb", k.色)}</div>`).join("")}</div>
+<div class="note"><p>⚠ 兩把尺互相獨立，所以<b>各自畫在對方的預設值上</b>：上面那一把畫在
+<code>${墨色}</code> 上、這一把畫在 ${BAND.顆數} 顆上。兩件都挑定之後才會同時生效。</p>
+<p>⚠ 淡下去之後那一排更會讀成「一條有節奏的線」而不是 ${BAND.顆數} 個標誌 —— <b>那正是分隔線要的</b>
+（牙洞在這個尺寸本來就印不出來：最小的一顆只有 ${最小洞.toFixed(3)} mm，平版印刷守得住的大約 0.2~0.3 mm）。</p></div>`;
 
 /* ⚠⚠⚠ 2026-09-16 使用者：「保留 E 就好　F 拿掉」——**拿掉的是畫面，不是那一案**。
  *   Ⓕ 在資料裡標了 `不印`，所以它不畫出來，但它仍然存在：Ⓔ 的字級釘在它身上、
@@ -621,14 +673,16 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 .card.now .bd p{white-space:normal}
 .note{font-size:.86rem;color:var(--soft);margin:.6em 0 0}
 .note p{margin:.35em 0}
-/* Ⓜ 倍數那把尺：三格都是**真的那一條**，用同一支 bandSvg 畫、擺在和卡片一樣寬的白底上
+/* Ⓜ 顆數／Ⓟ 顏色那兩把尺：每一格都是**真的那一條**，用同一支 bandSvg 畫、擺在和卡片一樣寬的白底上
    疊起來、左緣對齊 —— 大小這種東西並排才比得出來（同 71-12 那條對照帶）。
    ⚠⚠ 這裡不可以補左右 padding：那一條在卡片上是滿版的，補了就不是它在卡上的樣子。 */
 .mcmp{width:var(--cw);background:#fff;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.14);
   padding:12px 0;margin:.7em 0 0}
 .mrow{margin:0 0 1.15em}
 .mrow:last-child{margin-bottom:0}
-.mrow b{display:block;font-size:.84rem;padding:0 11px}
+/* ⚠ 一定要寫直接子選擇器：那一格的說明裡也有 b（✗ 裁不動／低於 3:1），
+   寫成後代選擇器會把它們一個個推成自己一行、還跟著縮排。 */
+.mrow>b{display:block;font-size:.84rem;padding:0 11px}
 .mrow .mn{display:block;font-size:.76rem;line-height:1.55;color:var(--soft);padding:0 11px;margin:.1em 0 .5em}
 .mrow .bnd{width:var(--cw);height:auto;display:block}
 .mrow .no{color:var(--brick)}
@@ -730,12 +784,18 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     /* ⚠⚠ Ⓜ 那把尺 2026-09-16 又打開了（「縮太小了　放大一點看看」）——
        逐格印，而且一格要印三件：帶子自己多高、抬頭到主文因此多遠、插圖那一條還剩多少。
        ⚠ 頁面上不畫的那一格（四倍）也要印 —— 尺可以收，數字不可以（同 50-22）。 */
-    console.log(`     Ⓜ 倍數（一把尺 ${倍格().length} 格，頁面上畫 ${倍尺.length} 格；基數 ${S.帶子.顆數} 顆，只給整數倍）`);
-    for (const k of 倍格())
-      console.log(`       ${k.標籤}　${String(k.顆).padStart(2)} 顆　一顆最高 ${k.一顆mm.toFixed(2)}・牙洞 ${k.洞mm.toFixed(3)}・間隔 ${k.間隔mm.toFixed(2)}・帶子高 ${k.帶高mm.toFixed(2)}` +
+    console.log(`     Ⓜ 顆數（一把尺 ${顆格().length} 格，頁面上畫 ${顆尺.length} 格；顆數 ＝ 基數 × 倍數，只給整數倍）`);
+    for (const k of 顆格())
+      console.log(`       ${k.標籤}　${String(k.顆).padStart(2)} 顆（${k.基}×${k.倍}）　一顆最高 ${k.一顆mm.toFixed(2)}・牙洞 ${k.洞mm.toFixed(3)}・間隔 ${k.間隔mm.toFixed(2)}・帶子高 ${k.帶高mm.toFixed(2)}` +
         `　→ 抬頭到主文 ${k.到主文mm}・插圖那一條 ${k.那一條}（比例 ${(CARD.寬mm / k.那一條).toFixed(3)}）` +
+        `　重複 ${k.重複.length ? k.重複.join("、") : "無"}${k.基 === S.帶子.顆數 ? "" : "（⚠ 和挑定的那一格不一樣）"}` +
         `${k.現在 ? "　← 現在" : ""}${k.不畫 ? "　（頁面上不畫）" : ""}`);
-    console.log(`     Ⓚ 基數 ${S.帶子.順序案.map((k) => { const b = 帶(k.顆 * S.帶子.倍); return `${k.顆}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在基數 ${S.帶子.顆數} 顆 × ${S.帶子.倍}）`);
+    /* ⚠⚠ Ⓟ 顏色那把（2026-09-16「顏色再淡一點」）：變的是混多少白，色相固定。
+       ⚠ 對白低於 3 不是壞掉 —— 站上那條 --rule 自己也只有 1.55（面板要標對級別）。 */
+    console.log(`     Ⓟ 顏色（一把尺 ${淡格().length} 格，色相固定在 ${S.帶子.墨}；站上 --rule #cdd0d2 對白 1.55）`);
+    for (const k of 淡格())
+      console.log(`       ${k.標籤}　${k.色}　壓在白紙上 ${k.對白.toFixed(2)}${k.對白 >= 3 ? "（過 3:1）" : ""}${k.現在 ? "　← 現在" : ""}`);
+    console.log(`     Ⓚ 基數 ${S.帶子.順序案.map((k) => { const b = 帶(k.顆 * S.帶子.倍, undefined, k.顆); return `${k.顆}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在基數 ${S.帶子.顆數} 顆 × ${S.帶子.倍}）`);
     console.log(`     分隔線 上 ${(分上 * CARD.寬mm).toFixed(2)} ／ 下 ${(分下 * CARD.寬mm).toFixed(2)} mm・抬頭到主文因此變成 ${抬頭到主文mm(尺卡)} mm`);
     console.log(`     Ⓛ 間距 ${S.帶子.間距案.map((k) => { const b = 帶(undefined, k.值); return `${k.值}→${(b.高 * CARD.寬mm / b.總寬).toFixed(2)}`; }).join("　")}（一顆最高 mm，現在 ${BAND.間距}）`);
   }
