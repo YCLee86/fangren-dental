@@ -54,11 +54,11 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
    ⚠⚠ 底下那一條是**相鄰兄弟**選擇器 —— 它蓋掉 .qr 自己的 .04，所以多這一行實際只花
    .035 + 1.5×.038 + .018 − .04 ＝ 卡寬的 7.0%（面板每次印）。 */
 .card .cue.id{margin-top:calc(var(--cw) * 0.005)}
-.card .cue.id + .qr{margin-top:calc(var(--cw) * 0.002)}
+.card .cue.id + .qr{margin-top:calc(var(--cw) * -0.04355)}
 /* ⚠⚠ QR 一律 calc(--cw * k) 不可以用百分比（參照會變成父層那一欄）。
    ⚠⚠⚠ 案那幾張擺的是**真的那顆碼**（drafts/channels/qr/ 複製過來的，一個像素都沒有重畫）；
    現況那一張刻意維持灰色佔位方塊 —— 它是照片的逐字對照，畫上新設計的碼就不是對照了。 */
-.card .qr{width:calc(var(--cw) * 0.509);aspect-ratio:1;margin-top:calc(var(--cw) * .04);
+.card .qr{width:calc(var(--cw) * 0.54506);aspect-ratio:1;margin-top:calc(var(--cw) * .04);
   height:auto;display:block;border-radius:3px}
 .card .qr.ph{background:repeating-linear-gradient(45deg,#dcdcdc 0 6px,#ececec 6px 12px);
   display:flex;align-items:center;justify-content:center}
@@ -177,7 +177,7 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
   <div class="cue id" style="font-size:calc(var(--cw) * 0.038)">@fafa070</div>
   <img class="qr" src="qr-line.svg" width="45" height="45" alt="芳仁牙醫診所 LINE 官方帳號的 QR code">
   
-  <img class="illus" src="illus.jpg" width="1456" height="609" alt="一群芳仁牙醫的醫事人員擠在一起，有人揮手、有人指著上方喊、有人舉著手機">
+  <img class="illus" src="illus.jpg" width="1456" height="624" alt="一群芳仁牙醫的醫事人員擠在一起，有人揮手、有人指著上方喊、有人舉著手機">
   
 </div>
 <div class="note"><p><b>這幾行是使用者 2026-09-16 逐字寫的</b>（第一行和我們擬的一案撞在一起，那一案已經拿掉了）。同一天他指定四件：「約診前」改成「<b>看</b>診前」、<b>字級照 Ⓕ</b>、<b>把「再也不怕忘記看診時間，」那一行拿掉</b>（它原本和最後一行是同一句、斷在那個逗號上），以及<b>把後面兩行的驚嘆號拿掉</b>（「上面兩段文字的驚嘆號拿掉」）。</p>

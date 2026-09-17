@@ -27,7 +27,7 @@ import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { S, lines, rows, fsOf, hdOf, cw, qn, cn, HDLS, LIH, LIGAP, LIW, LOGO, BAND, WM, 帶, 顆格, 淡格, 淡色, 重複of, 墨色, 套色, CARD, 分上, 分下, 洞比, 最小洞, 那一條mm,
-  切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm, 帶高, ID上, ID下, ID字級,
+  切抬頭, 留白比, LIGAPOF, BDGAP, PGAP, 餘裕mm, 抬頭到主文mm, 行距mm, 帶高, ID上, ID下, ID字級, 碼上空, 靜區佔框,
   QRSRC, QRFILE, QRPLATE, QRVAR, 印的案, 不印的 } from "./stand-card.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -694,10 +694,13 @@ ok(!/<script/i.test(H), "這一頁不可以有 <script>");
     `那一行上面 ${ID上} 不比下面 ${ID下} 寬 —— 它會被讀成主文的第四行，不是這顆碼的名字`);
   ok(new RegExp(`\\.card \\.cue\\.id\\{margin-top:calc\\(var\\(--cw\\) \\* \\$\\{ID上\\}\\)\\}`).test(GEN),
     ".card .cue.id 那一條 CSS 不見了，或它寫死了一個數字（要吃 ID上）");
-  ok(new RegExp(`\\.card \\.cue\\.id \\+ \\.qr\\{margin-top:calc\\(var\\(--cw\\) \\* \\$\\{ID下\\}\\)\\}`).test(GEN),
-    ".card .cue.id + .qr 那一條不見了 —— 沒有它，那一行底下還會多一個 QR 自己的 .04");
-  ok(/\(c\.QR上 \? ID上 \+ 1\.5 \* ID字級 \+ ID下 : 0\.04\)/.test(GEN),
-    "疊高() 沒有吃那三個常數 —— CSS 和算式一分家，面板的餘裕就和畫面對不上");
+  /* ⚠⚠⚠ 2026-09-17：那一條的 margin 要**自己把靜區扣掉**（ID下 是看得到的間距，不是 margin）——
+     不扣的話眼睛看到的是 margin ＋ 4.75 mm 的透明靜區，而每一道尺寸守門都會過。 */
+  ok(/\.card \.cue\.id \+ \.qr\{margin-top:calc\(var\(--cw\) \* \$\{\(ID下 - 碼上空\(\)\)\.toFixed\(5\)\}\)\}/.test(GEN),
+    ".card .cue.id + .qr 那一條不見了，或它沒有把靜區扣掉（ID下 是看得到的間距）");
+  ok(/\(c\.QR上 \? ID上 \+ 1\.5 \* ID字級 \+ ID下 - 碼上空\(\) : 0\.04\)/.test(GEN),
+    "疊高() 沒有吃那三個常數（含靜區那一項）—— CSS 和算式一分家，面板的餘裕就和畫面對不上");
+  ok(Math.abs(靜區佔框 - 4 / 45) < 1e-9, "靜區不是四格 —— 收格數會掃不出來");
   /* ⚠ 只切出 疊高() 那個函式來掃 —— 面板那一行刻意印著「用通用的 .cue 間距要幾 mm」，
      掃整份一定會掃到它自己的說明（這條線第十四次）。 */
   const 疊 = GEN.slice(GEN.indexOf("export const 疊高"), GEN.indexOf("export const 餘裕mm"));
@@ -1029,11 +1032,18 @@ for (const w of [430, 350, 320]) {
     /* ⚠ 那一行的上下間距：算出來的那兩個常數要真的畫得出來（相鄰兄弟那一條被蓋掉就會差 3.9 mm） */
     /* ⚠⚠ 上面那一段是**兩截**：主文最後一段自己的下外距（PGAP）＋ 那一行的上外距 ——
        .bd 是 flex 項目，兩截不會合併（同「抬頭到主文」那一段的老坑）。 */
-    const id上該 = (ID上 + PGAP * fsOf(c).fs) * 98, id下該 = ID下 * 98;
+    /* ⚠⚠⚠ 量到的是**盒子**的間距 ＝ CSS 的 margin（會是負的）；ID下 是**看得到的**間距，
+       兩者差一塊透明的靜區。兩個都要驗，只驗其中一個都會放過一半。 */
+    const id上該 = (ID上 + PGAP * fsOf(c).fs) * 98, id下該 = (ID下 - 碼上空()) * 98;
     ok(r.id上 != null && Math.abs(r.id上 - id上該) < 0.3 && Math.abs(r.id下 - id下該) < 0.3,
       c.標籤 + " QR 上面那一行量到 上 " + (r.id上 ?? NaN).toFixed(1) + "／下 " + (r.id下 ?? NaN).toFixed(1) +
       " mm，算出來是 " + id上該.toFixed(1) + "／" + id下該.toFixed(1));
-    ok(r.id上 > r.id下 * 1.5,
+    /* ⚠⚠ 接近律要拿**看得到的**兩個間距比（上面那一截含主文的下外距，下面那一截含靜區）——
+       拿 margin 比的話，margin 是負的就永遠會過。 */
+    ok(id上該 > ID下 * 98,
+      c.標籤 + " 看得到的間距：上 " + id上該.toFixed(1) + "／下 " + (ID下 * 98).toFixed(1) +
+      " mm —— 下面不比上面窄，那一行會讀成主文的第四行，不是這顆碼的名字");
+    ok(r.id上 > r.id下 * 1.5 || r.id下 < 0,
       c.標籤 + " 那一行上面 " + (r.id上 ?? NaN).toFixed(1) + " mm 沒有比下面 " + (r.id下 ?? NaN).toFixed(1) +
       " mm 寬多少 —— 它會被讀成主文的第四行，不是這顆碼的名字");
     /* ⚠⚠⚠ 那條帶子搬走之後，插圖的下緣就是**卡片的下緣** —— 留一條白畫面只是圖小一截，
