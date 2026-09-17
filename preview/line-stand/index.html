@@ -53,12 +53,12 @@ code{font-size:.86em;background:#dfe3e4;border-radius:4px;padding:.05em .35em}
 /* QR 上面那一行（帳號 ID）：上面比下面寬，它才會讀成「這顆碼叫什麼」而不是主文的第四行。
    ⚠⚠ 底下那一條是**相鄰兄弟**選擇器 —— 它蓋掉 .qr 自己的 .04，所以多這一行實際只花
    .035 + 1.5×.038 + .018 − .04 ＝ 卡寬的 7.0%（面板每次印）。 */
-.card .cue.id{margin-top:calc(var(--cw) * 0.024)}
-.card .cue.id + .qr{margin-top:calc(var(--cw) * 0.012)}
+.card .cue.id{margin-top:calc(var(--cw) * 0.014)}
+.card .cue.id + .qr{margin-top:calc(var(--cw) * 0.007)}
 /* ⚠⚠ QR 一律 calc(--cw * k) 不可以用百分比（參照會變成父層那一欄）。
    ⚠⚠⚠ 案那幾張擺的是**真的那顆碼**（drafts/channels/qr/ 複製過來的，一個像素都沒有重畫）；
    現況那一張刻意維持灰色佔位方塊 —— 它是照片的逐字對照，畫上新設計的碼就不是對照了。 */
-.card .qr{width:calc(var(--cw) * 0.45);aspect-ratio:1;margin-top:calc(var(--cw) * .04);
+.card .qr{width:calc(var(--cw) * 0.465);aspect-ratio:1;margin-top:calc(var(--cw) * .04);
   height:auto;display:block;border-radius:3px}
 .card .qr.ph{background:repeating-linear-gradient(45deg,#dcdcdc 0 6px,#ececec 6px 12px);
   display:flex;align-items:center;justify-content:center}
