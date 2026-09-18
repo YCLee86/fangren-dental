@@ -4904,12 +4904,21 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠⚠ **目前有圖的是一般牙科、牙周、顯微根管三科**（2026-08-24）。
      其餘四科（兒牙／植牙／口外／矯正）畫好之後，把 `[data-topic="kids"]` 這種
      選擇器加進下面那一條的清單裡，不要改成 `[data-topic]` 一網打盡 ——
-     沒有圖的科目會畫出一個空的偽元素。 */
+     沒有圖的科目會畫出一個空的偽元素。
+   ⚠⚠ **WebP 那一行的寫法**（2026-09-18 起，七科七條都一樣）：線稿是 CSS 的
+     background，包不了 <picture>，所以用 `image-set()` 做格式協商 ——
+     **前面那一行只有 PNG 的宣告一定要留著**，不支援 image-set 的瀏覽器
+     （Safari 16 以下）會把整行丟掉，留著它才有退路。
+     ⚠ 只覆寫 `background-image`，位置／大小／repeat 仍然由上一行的簡寫決定。
+     ⚠ 圖檔由 `node tools/webp.mjs` 產生（白天那七張走無損，比 PNG 小 65~70%）。
+     ⚠ 夜間那七條在 NIGHT 區塊裡，由 `tools/night-mode.mjs` 產生，不要手改。 */
 [data-topic="general"] .tp-intro { position: relative; }
 [data-topic="general"] .tp-intro::before {
   content: ""; position: absolute; right: 0; bottom: 0;
   width: min(76%, 360px); aspect-ratio: 832 / 788;
   background: url("../../assets/lineart-general.png") center / contain no-repeat;
+  background-image: image-set(url("../../assets/lineart-general.webp") type("image/webp"),
+                              url("../../assets/lineart-general.png") type("image/png"));
   opacity: .10; pointer-events: none; z-index: 0;
 }
 @media (min-width: 834px) { [data-topic="general"] .tp-intro::before { opacity: .48; } }
@@ -4936,6 +4945,8 @@ body[data-topic] #topics { padding-top: 1rem; }
   content: ""; position: absolute; right: 0; bottom: 0;
   width: min(81.25%, 390px); aspect-ratio: 832 / 755;   /* ＝ 1024 裁掉右邊 192 */
   background: url("../../assets/lineart-perio.png") left center / auto 100% no-repeat;
+  background-image: image-set(url("../../assets/lineart-perio.webp") type("image/webp"),
+                              url("../../assets/lineart-perio.png") type("image/png"));
   opacity: .115; pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) {
@@ -4965,6 +4976,8 @@ body[data-topic] #topics { padding-top: 1rem; }
   content: ""; position: absolute; right: 0; bottom: 0;
   width: min(76%, 360px); aspect-ratio: 887 / 949;
   background: url("../../assets/lineart-endo.png") center / contain no-repeat;
+  background-image: image-set(url("../../assets/lineart-endo.webp") type("image/webp"),
+                              url("../../assets/lineart-endo.png") type("image/png"));
   opacity: .107; pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) {
@@ -4995,6 +5008,8 @@ body[data-topic] #topics { padding-top: 1rem; }
   content: ""; position: absolute; right: -10px; bottom: 0;
   width: min(68%, 360px); aspect-ratio: 829 / 912;
   background: url("../../assets/lineart-ortho.png") no-repeat; background-size: contain;
+  background-image: image-set(url("../../assets/lineart-ortho.webp") type("image/webp"),
+                              url("../../assets/lineart-ortho.png") type("image/png"));
   background-position: calc(50% + 16px) center;
   opacity: .121; pointer-events: none; z-index: 0;
 }
@@ -5038,6 +5053,8 @@ body[data-topic] #topics { padding-top: 1rem; }
   content: ""; position: absolute; right: 0px; bottom: 0;
   width: min(92%, 360px); aspect-ratio: 972 / 896;
   background: url("../../assets/lineart-prosth.png") no-repeat; background-size: contain;
+  background-image: image-set(url("../../assets/lineart-prosth.webp") type("image/webp"),
+                              url("../../assets/lineart-prosth.png") type("image/png"));
   background-position: calc(50% + 48px) center;
   opacity: .121; pointer-events: none; z-index: 0;
 }
@@ -5082,6 +5099,8 @@ body[data-topic] #topics { padding-top: 1rem; }
   content: ""; position: absolute; right: 0px; bottom: 0;
   width: min(52%, 188px); aspect-ratio: 478 / 943;
   background: url("../../assets/lineart-surg.png") no-repeat; background-size: contain;
+  background-image: image-set(url("../../assets/lineart-surg.webp") type("image/webp"),
+                              url("../../assets/lineart-surg.png") type("image/png"));
   background-position: calc(50% + 32px) center;
   opacity: .18; pointer-events: none; z-index: 0;
 }
@@ -5122,6 +5141,8 @@ body[data-topic] #topics { padding-top: 1rem; }
   content: ""; position: absolute; right: -14px; bottom: 0;
   width: min(85.6%, 419px); aspect-ratio: 854 / 857;
   background: url("../../assets/lineart-kids.png") left center / auto 100% no-repeat;
+  background-image: image-set(url("../../assets/lineart-kids.webp") type("image/webp"),
+                              url("../../assets/lineart-kids.png") type("image/png"));
   opacity: .152; pointer-events: none; z-index: 0;
 }
 @media (min-width: 721px) {
@@ -5458,14 +5479,17 @@ html[data-theme="dark"] .lot.on .ent { fill: #819dd1; }
 html[data-theme="dark"] .map-svg .cm-sh use { fill: #000; opacity: .07; }
 html[data-theme="dark"] .hours-grid .d.faint { background: var(--dot-faint); }
 html[data-theme="dark"] .hours-grid .d.hit { background: var(--accent-deep); }
-/* 著陸頁的實心浮水印（圖檔由本支產生；url 在著陸頁由 tools/topics.mjs 換成 ../../assets/） */
-html[data-theme="dark"] [data-topic="general"] .tp-intro::before { background-image: url("../../assets/lineart-general-night.png"); opacity: 0.09; }
-html[data-theme="dark"] [data-topic="prosth"] .tp-intro::before { background-image: url("../../assets/lineart-prosth-night.png"); opacity: 0.09; }
-html[data-theme="dark"] [data-topic="perio"] .tp-intro::before { background-image: url("../../assets/lineart-perio-night.png"); opacity: 0.09; }
-html[data-theme="dark"] [data-topic="ortho"] .tp-intro::before { background-image: url("../../assets/lineart-ortho-night.png"); opacity: 0.09; }
-html[data-theme="dark"] [data-topic="endo"] .tp-intro::before { background-image: url("../../assets/lineart-endo-night.png"); opacity: 0.09; }
-html[data-theme="dark"] [data-topic="surg"] .tp-intro::before { background-image: url("../../assets/lineart-surg-night.png"); opacity: 0.09; }
-html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image: url("../../assets/lineart-kids-night.png"); opacity: 0.09; }
+/* 著陸頁的實心浮水印（圖檔由本支產生；url 在著陸頁由 tools/topics.mjs 換成 ../../assets/）
+   ⚠ background-image 刻意寫兩次：後面那個 image-set 讓吃得到 WebP 的瀏覽器少載 20~30%，
+     前面那個只有 PNG 的是退路 —— 不支援 image-set 的（Safari 16 以下）會把整行丟掉。
+     .webp 由 node tools/webp.mjs 產生，換過線稿要跟著重跑。 */
+html[data-theme="dark"] [data-topic="general"] .tp-intro::before { background-image: url("../../assets/lineart-general-night.png"); background-image: image-set(url("../../assets/lineart-general-night.webp") type("image/webp"), url("../../assets/lineart-general-night.png") type("image/png")); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="prosth"] .tp-intro::before { background-image: url("../../assets/lineart-prosth-night.png"); background-image: image-set(url("../../assets/lineart-prosth-night.webp") type("image/webp"), url("../../assets/lineart-prosth-night.png") type("image/png")); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="perio"] .tp-intro::before { background-image: url("../../assets/lineart-perio-night.png"); background-image: image-set(url("../../assets/lineart-perio-night.webp") type("image/webp"), url("../../assets/lineart-perio-night.png") type("image/png")); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="ortho"] .tp-intro::before { background-image: url("../../assets/lineart-ortho-night.png"); background-image: image-set(url("../../assets/lineart-ortho-night.webp") type("image/webp"), url("../../assets/lineart-ortho-night.png") type("image/png")); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="endo"] .tp-intro::before { background-image: url("../../assets/lineart-endo-night.png"); background-image: image-set(url("../../assets/lineart-endo-night.webp") type("image/webp"), url("../../assets/lineart-endo-night.png") type("image/png")); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="surg"] .tp-intro::before { background-image: url("../../assets/lineart-surg-night.png"); background-image: image-set(url("../../assets/lineart-surg-night.webp") type("image/webp"), url("../../assets/lineart-surg-night.png") type("image/png")); opacity: 0.09; }
+html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image: url("../../assets/lineart-kids-night.png"); background-image: image-set(url("../../assets/lineart-kids-night.webp") type("image/webp"), url("../../assets/lineart-kids-night.png") type("image/png")); opacity: 0.09; }
 /* 開關在「主題與科別」那一行的最右邊（著陸頁接在搜尋框右邊） */
 #topics .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 [data-topic] #topics .sec-head .topic-search { margin-left: auto; }

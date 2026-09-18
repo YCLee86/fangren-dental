@@ -208,9 +208,12 @@ html[data-theme="dark"] .lot.on .ent { fill: ${LOT_ENT}; }
 html[data-theme="dark"] .map-svg .cm-sh use { fill: #000; opacity: .07; }
 html[data-theme="dark"] .hours-grid .d.faint { background: var(--dot-faint); }
 html[data-theme="dark"] .hours-grid .d.hit { background: var(--accent-deep); }
-/* 著陸頁的實心浮水印（圖檔由本支產生；url 在著陸頁由 tools/topics.mjs 換成 ../../assets/） */
+/* 著陸頁的實心浮水印（圖檔由本支產生；url 在著陸頁由 tools/topics.mjs 換成 ../../assets/）
+   ⚠ background-image 刻意寫兩次：後面那個 image-set 讓吃得到 WebP 的瀏覽器少載 20~30%，
+     前面那個只有 PNG 的是退路 —— 不支援 image-set 的（Safari 16 以下）會把整行丟掉。
+     .webp 由 node tools/webp.mjs 產生，換過線稿要跟著重跑。 */
 ${Object.keys(FILL).filter((s) => s !== "all").map((s) =>
-  `html[data-theme="dark"] [data-topic="${s}"] .tp-intro::before { background-image: url("assets/lineart-${s}-night.png"); opacity: ${WM_OPACITY}; }`).join("\n")}
+  `html[data-theme="dark"] [data-topic="${s}"] .tp-intro::before { background-image: url("assets/lineart-${s}-night.png"); background-image: image-set(url("assets/lineart-${s}-night.webp") type("image/webp"), url("assets/lineart-${s}-night.png") type("image/png")); opacity: ${WM_OPACITY}; }`).join("\n")}
 /* 開關在「主題與科別」那一行的最右邊（著陸頁接在搜尋框右邊） */
 #topics .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 [data-topic] #topics .sec-head .topic-search { margin-left: auto; }

@@ -416,7 +416,7 @@ tools/
                         每一科：lead 或 stance 或 groups／cases／flowTitle／flow／close／ask
   serve.mjs             本機預覽伺服器
   night-mode.mjs        夜間模式（2026-09-15）。寫 index.html／assets/style.css／posts/* 的 NIGHT 區塊、
-                        assets/theme.js、assets/lineart-<spec>-night.png。**跑完接著跑 topics.mjs 與 build.mjs**；
+                        assets/theme.js、assets/lineart-<spec>-night.png。**跑完接著跑 webp.mjs、topics.mjs 與 build.mjs**；
                         --check 只比對。動到白天的科別色或換線稿都要重跑
   sync.mjs              同步遠端（SessionStart hook 自動呼叫）
   setup.ps1 / setup.sh  新電腦一鍵環境設定
@@ -432,11 +432,15 @@ tools/
                         那張是 4:3）。⚠ 對話裡貼的圖落在
                         /root/.claude/uploads/<session-id>/，不在 /tmp；
                         **落不進去的時候去逐字稿的 base64 撈**，見第九節第 26 條
-  webp.mjs              站上照片的 WebP 版本 → assets/<原檔名>.webp（Chromium canvas、品質 0.82）。
-                        頁面用 <picture> ＋ <source type="image/webp">，<img> 那一行仍是 JPEG。
-                        清單不是寫死的：掃 index.html 與 posts/*/ 的 src／srcset ——
+  webp.mjs              站上圖片的 WebP 版本 → assets/<原檔名>.webp（Chromium canvas）。
+                        **照片**（JPEG，品質 0.82）→ 頁面用 <picture> ＋ <source type="image/webp">，
+                        <img> 那一行仍是 JPEG；**七科的線稿**（PNG，無損與 0.82 取檔案小的）
+                        → CSS 用 image-set()，前一行只有 PNG 的宣告留著當退路。
+                        清單不是寫死的：掃 index.html／assets/style.css／posts/*/ 的
+                        src／srcset 與 CSS 的 url() ——
                         ⚠ 所以 og:image 與 JSON-LD 的圖掃不到，**那是刻意的**（爬蟲一律吃 JPEG）。
                         只有換過圖才要跑，npm run build 不會呼叫它；--check 只比對不寫檔。
+                        ⚠ 換過線稿要跑它，而且要在 night-mode.mjs 之後（夜間那七張也要轉）。
                         ⚠ AVIF 產不出來而且不會報錯，見 DECISIONS.md 那張坑表第 29 條
   logo-png.mjs          從 index.html 頁首的標誌路徑產生 assets/logo.png
                         （給 Google 的 Organization logo，**站上不顯示**）。
@@ -485,8 +489,9 @@ tools/
 - `tools/build-manifest.json`
 - `assets/icon-*.png`（四張主畫面圖示，由 `tools/app-icons.mjs` 從 `assets/icon.svg` 算出來。
   要改就改 `icon.svg` 再重跑，`npm run build` 不會呼叫它）
-- `assets/*.webp`（44 張，由 `tools/webp.mjs` 從同名的 `.jpg` 轉出來。同上，`npm run build`
-  不會呼叫它 —— 換過圖就跑一次 `node tools/webp.mjs`，`--check` 可以先看差在哪）
+- `assets/*.webp`（58 張 ＝ 44 張照片 ＋ 14 張線稿，由 `tools/webp.mjs` 從同名的 `.jpg`／`.png`
+  轉出來。同上，`npm run build` 不會呼叫它 —— 換過圖就跑一次 `node tools/webp.mjs`，
+  `--check` 可以先看差在哪。⚠ 換線稿的順序是 `night-mode.mjs` → `webp.mjs` → `topics.mjs` → `build.mjs`）
 - `sitemap.xml`（首頁那一筆的 `lastmod` 和文章一樣是**比對首頁自己的內容雜湊**得來的，
   不是抄最新文章的日期 —— 只改首頁、沒發新文章時它也要動，否則等於在跟 Google 說「別來了」）
 - `robots.txt`（**每次 build 整個重寫**，要加規則請改 `tools/build.mjs` 的產生字串）
