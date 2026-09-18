@@ -263,6 +263,14 @@ body, p, li, td, th, h1, h2, h3, h4, dd, dt, figcaption, blockquote {
 
 img, svg, video, iframe { max-width: 100%; height: auto; display: block; }
 
+/* <picture> 只是裝 <source> 的殼，不該在版面上佔位置（2026-09-18 起，WebP 那一輪）。
+   站上有三處 <img> 坐在 flex 容器裡（首頁文章卡、延伸閱讀卡、HERO 的 .hero-shot），
+   包上 <picture> 之後變成那個殼才是 flex item、<img> 退成孫子 ——
+   display: contents 讓殼整個不生盒子，版面和沒包之前逐像素相同（已用截圖比對過）。
+   ⚠ 不要改成 display: block／inline 之類 —— 那會多一個盒子出來。
+   ⚠ 這份和另一份（首頁內嵌樣式／assets/style.css）必須一模一樣，改一邊就要改另一邊。 */
+picture { display: contents; }
+
 /* 連結、標題、按鈕都走這一篇的科別色。頁尾的電話仍是深綠松（頁尾是全站共用的落款，
    不屬於某一篇文章），所以那一條在下面自己指定 var(--teal)。 */
 a { color: var(--accent-deep); }

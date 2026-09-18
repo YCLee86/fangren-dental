@@ -286,6 +286,14 @@ body {
 }
 body, p, li, h1, h2, h3, h4, dd { overflow-wrap: break-word; word-break: break-word; }
 img { max-width: 100%; height: auto; display: block; }
+
+/* <picture> 只是裝 <source> 的殼，不該在版面上佔位置（2026-09-18 起，WebP 那一輪）。
+   站上有三處 <img> 坐在 flex 容器裡（首頁文章卡、延伸閱讀卡、HERO 的 .hero-shot），
+   包上 <picture> 之後變成那個殼才是 flex item、<img> 退成孫子 ——
+   display: contents 讓殼整個不生盒子，版面和沒包之前逐像素相同（已用截圖比對過）。
+   ⚠ 不要改成 display: block／inline 之類 —— 那會多一個盒子出來。
+   ⚠ 這份和另一份（首頁內嵌樣式／assets/style.css）必須一模一樣，改一邊就要改另一邊。 */
+picture { display: contents; }
 a { color: var(--teal); }
 .sr-only {
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -5792,7 +5800,10 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
       <a class="card" href="../../posts/crown-materials/" data-spec="prosth">
-        <img class="card-thumb" src="../../assets/hero-crown-photo-1600.jpg" srcset="../../assets/hero-crown-photo-800.jpg 800w, ../../assets/hero-crown-photo-1600.jpg 1600w, ../../assets/hero-crown-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="診間裡女醫師捧著一副打開的上下顎牙齒模型向病患解說，模型上有幾顆牙的外層瓷剝落、露出深灰色的金屬；她的對話泡泡裡是一棟貼磁磚的公寓，整面牆的磁磚東一塊西一塊掉下來" width="1600" height="893" loading="lazy">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-crown-photo-800.webp 800w, ../../assets/hero-crown-photo-1600.webp 1600w, ../../assets/hero-crown-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-crown-photo-1600.jpg" srcset="../../assets/hero-crown-photo-800.jpg 800w, ../../assets/hero-crown-photo-1600.jpg 1600w, ../../assets/hero-crown-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="診間裡女醫師捧著一副打開的上下顎牙齒模型向病患解說，模型上有幾顆牙的外層瓷剝落、露出深灰色的金屬；她的對話泡泡裡是一棟貼磁磚的公寓，整面牆的磁磚東一塊西一塊掉下來" width="1600" height="893" loading="lazy">
+        </picture>
         <div class="card-body">
           <span class="card-tag tag-on">贋復假牙</span>
           <h3>一體成型的假牙好在哪：金屬燒瓷、全瓷與全鋯冠的差別</h3>
@@ -5806,7 +5817,10 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
         </div>
       </a>
       <a class="card" href="../../posts/missing-tooth/" data-spec="prosth">
-        <img class="card-thumb" src="../../assets/hero-implant-photo-1600.jpg" srcset="../../assets/hero-implant-photo-800.jpg 800w, ../../assets/hero-implant-photo-1600.jpg 1600w, ../../assets/hero-implant-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="三格畫面：火鍋、夜市與家族聚餐上被熱情勸食卻舉手推辭的三個人，思考泡泡裡分別是咬不動、後排少一顆牙、只能喝粥" width="1600" height="893" loading="lazy">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-implant-photo-800.webp 800w, ../../assets/hero-implant-photo-1600.webp 1600w, ../../assets/hero-implant-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-implant-photo-1600.jpg" srcset="../../assets/hero-implant-photo-800.jpg 800w, ../../assets/hero-implant-photo-1600.jpg 1600w, ../../assets/hero-implant-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="三格畫面：火鍋、夜市與家族聚餐上被熱情勸食卻舉手推辭的三個人，思考泡泡裡分別是咬不動、後排少一顆牙、只能喝粥" width="1600" height="893" loading="lazy">
+        </picture>
         <div class="card-body">
           <span class="card-tag tag-on">缺牙重建</span>
           <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
@@ -6336,13 +6350,19 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
       </div>
       <div class="gallery">
         <figure>
-          <img src="../../assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
-               alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
+          <picture>
+            <source type="image/webp" srcset="../../assets/clinic-room-1-600.webp">
+            <img src="../../assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
+                 alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
+          </picture>
           <figcaption>獨立診療空間，每張診療椅旁都配有影像螢幕，方便看診時一起討論。</figcaption>
         </figure>
         <figure>
-          <img src="../../assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
-               alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
+          <picture>
+            <source type="image/webp" srcset="../../assets/clinic-room-2-600.webp">
+            <img src="../../assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
+                 alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
+          </picture>
           <figcaption>診療區以隔屏分隔，保留採光也維持看診時的隱私。</figcaption>
         </figure>
       </div>

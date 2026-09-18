@@ -77,6 +77,31 @@ const heroSrcset = (hero, prefix) => {
 /* srcset 有值才寫這兩個屬性；hero 還是 .svg 的話整組省略，維持舊寫法。 */
 const srcsetAttr = (srcset, sizes) => (srcset ? ` srcset="${srcset}" sizes="${sizes}"` : "");
 
+const missingWebp = new Set();
+
+/* 同一組 srcset 的 WebP 版本（2026-09-18 起）。檔案由 tools/webp.mjs 產生 ——
+   `npm run build` **不會**呼叫它，換過圖之後要自己跑一次。
+   ⚠ 三個寬度**缺一張就整組回空字串**，那時呼叫端退回只有 JPEG 的舊寫法：
+     忘了跑產生器只會少省一點流量，不會變成破圖。 */
+const webpSrcset = (hero, prefix) => {
+  const m = /^(.*)-1600\.jpg$/.exec(hero || "");
+  if (!m) return "";
+  for (const w of HERO_WIDTHS) {
+    if (!fs.existsSync(path.join(ROOT, "assets", `${m[1]}-${w}.webp`))) { missingWebp.add(m[1]); return ""; }
+  }
+  return HERO_WIDTHS.map((w) => `${prefix}${m[1]}-${w}.webp ${w}w`).join(", ");
+};
+
+/* 把產好的 <img …> 包成 <picture> ＋ 一行 WebP 的 <source>。
+   ⚠ <source> 也要自己的 sizes —— 它不會去抄 <img> 那一份。
+   ⚠ 版面靠樣式表那條 `picture { display: contents }` 保持不變
+     （首頁卡與延伸閱讀卡的 <img> 都是 flex item，殼一生盒子就換它當 item）。 */
+const picture = (hero, prefix, sizes, indent, imgTag) => {
+  const ws = webpSrcset(hero, prefix);
+  if (!ws) return imgTag;
+  return `<picture>\n${indent}  <source type="image/webp" srcset="${ws}" sizes="${sizes}">\n${indent}  ${imgTag}\n${indent}</picture>`;
+};
+
 /* JPEG 的寬高：掃檔頭的 SOF 標記。這站沒有任何 npm 依賴，所以自己讀。
    og:image:width / og:image:height 寫錯的話，分享出去的卡片比例會歪。 */
 const jpegSize = (file) => {
@@ -437,7 +462,7 @@ const relCard = (p) => {
   const spec = SPEC[p.tag];
   return `        <li class="rel-card"${spec ? ` data-spec="${spec}"` : ""}>
           <a href="../${esc(p.slug)}/">
-            <img src="../../assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "../../assets/"), SIZES_REL)} alt=""${heroDim(p.hero)} loading="lazy">
+            ${picture(p.hero, "../../assets/", SIZES_REL, "            ", `<img src="../../assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "../../assets/"), SIZES_REL)} alt=""${heroDim(p.hero)} loading="lazy">`)}
             <span class="rel-body">
               <span class="rel-tag">${esc(p.tag)}</span>
               <span class="rel-title">${esc(p.title)}</span>
@@ -494,7 +519,7 @@ const card = (p) => {
   const spec = SPEC[p.tag];
   if (!spec) console.warn(`  ⚠ 標籤「${p.tag}」沒有對應的科別代碼，${p.slug} 不會被主題與科別篩到`);
   return `      <a class="card" href="posts/${esc(p.slug)}/"${spec ? ` data-spec="${spec}"` : ""}>
-        <img class="card-thumb" src="assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "assets/"), SIZES_THUMB)} alt="${esc(p.heroAlt || p.title)}"${heroDim(p.hero)} loading="lazy">
+        ${picture(p.hero, "assets/", SIZES_THUMB, "        ", `<img class="card-thumb" src="assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "assets/"), SIZES_THUMB)} alt="${esc(p.heroAlt || p.title)}"${heroDim(p.hero)} loading="lazy">`)}
         <div class="card-body">
           <span class="card-tag">${esc(p.tag)}</span>
           <h3>${esc(p.title)}</h3>
@@ -734,5 +759,10 @@ for (const p of posts) {
 }
 console.log(`\n首頁 lastmod：${homeUpdated}${homeChanged ? "（內容有變動，已換成今天）" : "（內容沒動，沿用）"}`);
 if (changed.length) console.log(`內容有變動、已換成今天(${today()})的：${changed.join(", ")}`);
+if (missingWebp.size) {
+  /* 只是少省流量，不是壞掉 —— 那幾張的卡片會退回只有 JPEG 的舊寫法。 */
+  console.log(`\n提示：這幾張還沒有 WebP，卡片暫時只出 JPEG：${[...missingWebp].join(", ")}`);
+  console.log("      跑一次 node tools/webp.mjs 再 build 就會補上。");
+}
 if (!siteUrl) console.log("\n提示：site.json 尚未填入 url，這次略過 canonical、sitemap.xml 與 robots.txt。");
 console.log(CHECK_ONLY ? "\n(--check 模式，未寫入任何檔案)" : "\n完成。");

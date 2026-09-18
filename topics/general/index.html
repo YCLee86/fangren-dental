@@ -286,6 +286,14 @@ body {
 }
 body, p, li, h1, h2, h3, h4, dd { overflow-wrap: break-word; word-break: break-word; }
 img { max-width: 100%; height: auto; display: block; }
+
+/* <picture> 只是裝 <source> 的殼，不該在版面上佔位置（2026-09-18 起，WebP 那一輪）。
+   站上有三處 <img> 坐在 flex 容器裡（首頁文章卡、延伸閱讀卡、HERO 的 .hero-shot），
+   包上 <picture> 之後變成那個殼才是 flex item、<img> 退成孫子 ——
+   display: contents 讓殼整個不生盒子，版面和沒包之前逐像素相同（已用截圖比對過）。
+   ⚠ 不要改成 display: block／inline 之類 —— 那會多一個盒子出來。
+   ⚠ 這份和另一份（首頁內嵌樣式／assets/style.css）必須一模一樣，改一邊就要改另一邊。 */
+picture { display: contents; }
 a { color: var(--teal); }
 .sr-only {
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -5793,7 +5801,10 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
       <div class="cards">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
       <a class="card" href="../../posts/three-month-recall/" data-spec="general">
-        <img class="card-thumb" src="../../assets/hero-recall-photo-1600.jpg" srcset="../../assets/hero-recall-photo-800.jpg 800w, ../../assets/hero-recall-photo-1600.jpg 1600w, ../../assets/hero-recall-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="七格拼起來的鑲嵌畫，六個人各自在自己家裡：孕婦坐在沙發上看小冊子、拿拐杖的阿嬤在廚房伸手拿杯子、早餐桌上量血糖的先生、桌上放著藥袋若有所思的中年男子、半夜起來倒水喝的女性、綁著頭巾在藤椅上看書笑出來的女性；右下角那一格是診所，白袍的醫師與穿刷手服的護理師一起往左上方看，醫師的手向那幾格攤開" width="1600" height="1194" loading="lazy">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-recall-photo-800.webp 800w, ../../assets/hero-recall-photo-1600.webp 1600w, ../../assets/hero-recall-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-recall-photo-1600.jpg" srcset="../../assets/hero-recall-photo-800.jpg 800w, ../../assets/hero-recall-photo-1600.jpg 1600w, ../../assets/hero-recall-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="七格拼起來的鑲嵌畫，六個人各自在自己家裡：孕婦坐在沙發上看小冊子、拿拐杖的阿嬤在廚房伸手拿杯子、早餐桌上量血糖的先生、桌上放著藥袋若有所思的中年男子、半夜起來倒水喝的女性、綁著頭巾在藤椅上看書笑出來的女性；右下角那一格是診所，白袍的醫師與穿刷手服的護理師一起往左上方看，醫師的手向那幾格攤開" width="1600" height="1194" loading="lazy">
+        </picture>
         <div class="card-body">
           <span class="card-tag tag-on">定期檢查</span>
           <h3>三個月一次的洗牙與塗氟：哪些人適用，為什麼是三個月</h3>
@@ -5807,7 +5818,10 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
         </div>
       </a>
       <a class="card" href="../../posts/regular-checkup/" data-spec="general">
-        <img class="card-thumb" src="../../assets/hero-checkup-photo-1600.jpg" srcset="../../assets/hero-checkup-photo-800.jpg 800w, ../../assets/hero-checkup-photo-1600.jpg 1600w, ../../assets/hero-checkup-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="明亮的診所櫃檯前，老太太的集章卡被蓋上新的一格，小男孩踮著腳仰頭看，候診區坐著各個年紀的人" width="1600" height="893" loading="lazy">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-checkup-photo-800.webp 800w, ../../assets/hero-checkup-photo-1600.webp 1600w, ../../assets/hero-checkup-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-checkup-photo-1600.jpg" srcset="../../assets/hero-checkup-photo-800.jpg 800w, ../../assets/hero-checkup-photo-1600.jpg 1600w, ../../assets/hero-checkup-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="明亮的診所櫃檯前，老太太的集章卡被蓋上新的一格，小男孩踮著腳仰頭看，候診區坐著各個年紀的人" width="1600" height="893" loading="lazy">
+        </picture>
         <div class="card-body">
           <span class="card-tag tag-on">定期檢查</span>
           <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
@@ -5821,7 +5835,10 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
         </div>
       </a>
       <a class="card" href="../../posts/bass-brushing/" data-spec="general">
-        <img class="card-thumb" src="../../assets/hero-brushing-photo-1600.jpg" srcset="../../assets/hero-brushing-photo-800.jpg 800w, ../../assets/hero-brushing-photo-1600.jpg 1600w, ../../assets/hero-brushing-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="洗手台前一整排人各自對著鏡子刷牙，上方三個放大圈畫出刷毛斜靠在牙齦溝上與小幅度來回的方向" width="1600" height="893" loading="lazy">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-brushing-photo-800.webp 800w, ../../assets/hero-brushing-photo-1600.webp 1600w, ../../assets/hero-brushing-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-brushing-photo-1600.jpg" srcset="../../assets/hero-brushing-photo-800.jpg 800w, ../../assets/hero-brushing-photo-1600.jpg 1600w, ../../assets/hero-brushing-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="洗手台前一整排人各自對著鏡子刷牙，上方三個放大圈畫出刷毛斜靠在牙齦溝上與小幅度來回的方向" width="1600" height="893" loading="lazy">
+        </picture>
         <div class="card-body">
           <span class="card-tag tag-on">日常保健</span>
           <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
@@ -6353,13 +6370,19 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
       </div>
       <div class="gallery">
         <figure>
-          <img src="../../assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
-               alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
+          <picture>
+            <source type="image/webp" srcset="../../assets/clinic-room-1-600.webp">
+            <img src="../../assets/clinic-room-1-600.jpg" width="600" height="389" loading="lazy"
+                 alt="診療室內部，木質地板與收納櫃，配有診療椅與螢幕">
+          </picture>
           <figcaption>獨立診療空間，每張診療椅旁都配有影像螢幕，方便看診時一起討論。</figcaption>
         </figure>
         <figure>
-          <img src="../../assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
-               alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
+          <picture>
+            <source type="image/webp" srcset="../../assets/clinic-room-2-600.webp">
+            <img src="../../assets/clinic-room-2-600.jpg" width="600" height="400" loading="lazy"
+                 alt="診療區一景，白色牆面與隔屏、軌道燈與診療設備">
+          </picture>
           <figcaption>診療區以隔屏分隔，保留採光也維持看診時的隱私。</figcaption>
         </figure>
       </div>

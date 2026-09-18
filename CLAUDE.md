@@ -315,7 +315,7 @@ ILLUSTRATION.md         插畫規範。畫或改任何插圖之前先讀這份�
 TEAM.md                 團隊分工與流程。誰負責、要交什麼、PM 怎麼回報。內部文件，不進 _site/
 DECISIONS.md            **已經定案的事與踩過的坑**（2026-09-18 從本檔第九節搬出來）。
                         動任何已定案的東西之前先查那張表；寫產生器、提案頁、量測腳本
-                        之前先讀那 28 條。節號與條號沒有變，別處的指路仍然對得上
+                        之前先讀那 30 條。節號與條號沒有變，別處的指路仍然對得上
 LINE.md                 **LINE 官方帳號那條線**（2026-09-18 從本檔第十一節搬出來）。
                         成品不在站上，做網站那一側完全用不到它。
                         商家貼文、臉書相簿、櫃檯立牌也在裡面。小節編號沒有變
@@ -432,6 +432,12 @@ tools/
                         那張是 4:3）。⚠ 對話裡貼的圖落在
                         /root/.claude/uploads/<session-id>/，不在 /tmp；
                         **落不進去的時候去逐字稿的 base64 撈**，見第九節第 26 條
+  webp.mjs              站上照片的 WebP 版本 → assets/<原檔名>.webp（Chromium canvas、品質 0.82）。
+                        頁面用 <picture> ＋ <source type="image/webp">，<img> 那一行仍是 JPEG。
+                        清單不是寫死的：掃 index.html 與 posts/*/ 的 src／srcset ——
+                        ⚠ 所以 og:image 與 JSON-LD 的圖掃不到，**那是刻意的**（爬蟲一律吃 JPEG）。
+                        只有換過圖才要跑，npm run build 不會呼叫它；--check 只比對不寫檔。
+                        ⚠ AVIF 產不出來而且不會報錯，見 DECISIONS.md 那張坑表第 29 條
   logo-png.mjs          從 index.html 頁首的標誌路徑產生 assets/logo.png
                         （給 Google 的 Organization logo，**站上不顯示**）。
                         只有改過頁首那條路徑或要換顏色時才要跑；--check 只比對
@@ -479,6 +485,8 @@ tools/
 - `tools/build-manifest.json`
 - `assets/icon-*.png`（四張主畫面圖示，由 `tools/app-icons.mjs` 從 `assets/icon.svg` 算出來。
   要改就改 `icon.svg` 再重跑，`npm run build` 不會呼叫它）
+- `assets/*.webp`（44 張，由 `tools/webp.mjs` 從同名的 `.jpg` 轉出來。同上，`npm run build`
+  不會呼叫它 —— 換過圖就跑一次 `node tools/webp.mjs`，`--check` 可以先看差在哪）
 - `sitemap.xml`（首頁那一筆的 `lastmod` 和文章一樣是**比對首頁自己的內容雜湊**得來的，
   不是抄最新文章的日期 —— 只改首頁、沒發新文章時它也要動，否則等於在跟 Google 說「別來了」）
 - `robots.txt`（**每次 build 整個重寫**，要加規則請改 `tools/build.mjs` 的產生字串）
@@ -1086,12 +1094,12 @@ tools/
 | 你要做的事 | 去 DECISIONS.md 讀哪一段 |
 | --- | --- |
 | 動任何已定案的東西 | **「已經定案的（不要再問、不要重做）」那張表** |
-| 寫產生器、提案頁、量測腳本 | **「這一輪學到、很容易再踩的坑」28 條** |
+| 寫產生器、提案頁、量測腳本 | **「這一輪學到、很容易再踩的坑」30 條** |
 | 新開提案頁／把提案頁搬進正式站 | 「把提案頁搬進正式站時要一起帶的東西」＋「提案頁的切換條」 |
 | 七科著陸頁、SEO／GEO | 九之〇 |
 | 還沒決定、還沒問到的事 | 「還沒決定的」 |
 
-### 最常踩的五條（其餘 23 條在 DECISIONS.md）
+### 最常踩的五條（其餘 25 條在 DECISIONS.md）
 
 留在這裡是因為**每一次寫腳本或改樣式都可能踩到**，而且五條的症狀都一樣：
 **不報錯、畫面完全正常，只有拿數字量才看得出來。**
