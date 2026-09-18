@@ -7182,57 +7182,86 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     { host: '.docs .doc h3',      cls: 'doc-role',  all: '.doc-role',
       pad: 0.405, v: '--role-', lift: false }
   ];
-  function fitOne(job) {
-    var host = document.querySelector(job.host);
-    if (!host) return;
-    var probe = document.createElement('span');
-    probe.className = job.cls;
-    probe.textContent = '測';
-    probe.style.cssText = 'position:absolute;visibility:hidden;left:-9999px;top:0';
-    host.appendChild(probe);
-    var scs = getComputedStyle(probe), pcs = getComputedStyle(host);
-    var fsT = parseFloat(scs.fontSize), fsP = parseFloat(pcs.fontSize);
-
-    /* ① 字面框。400px 量一次再等比例縮 —— actualBoundingBox 的顆粒很粗，
-          直接用 12px 量會少掉半個像素。取這個元件**全部文字的極值**，
-          它底下每一顆才會同高、同對齊（逐顆量會長成不同高度的塊）。 */
-    var ctx, N = 400, A = 0, D = 0;
-    try { ctx = document.createElement('canvas').getContext('2d'); } catch (e) { ctx = null; }
-    if (!ctx || !('actualBoundingBoxAscent' in ctx.measureText('測'))) { probe.remove(); return; }
-    ctx.font = scs.fontStyle + ' ' + scs.fontWeight + ' ' + N + 'px ' + scs.fontFamily;
-    Array.prototype.forEach.call(document.querySelectorAll(job.all), function (w) {
-      var m = ctx.measureText(w.textContent);
-      if (m.actualBoundingBoxAscent > A) A = m.actualBoundingBoxAscent;
-      if (m.actualBoundingBoxDescent > D) D = m.actualBoundingBoxDescent;
-    });
-    A /= N; D /= N;
-    if (!(A > 0) || !(D > 0)) { probe.remove(); return; }
-
-    /* ② 現況：塊上下緣離字面上下緣各有多少。塊內基線用零寬、對基線的
-          inline-block 探針量（零寬的東西不會自己折行）。 */
-    var inner = document.createElement('span');
-    inner.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
-    probe.appendChild(inner);
-    var base = inner.getBoundingClientRect().bottom;
-    var r = probe.getBoundingClientRect();
-    var padT = parseFloat(scs.paddingTop), padB = parseFloat(scs.paddingBottom);
-    var slackTop = (base - A * fsT) - r.top;
-    var slackBottom = r.bottom - (base + D * fsT);
-    probe.remove();
-    if (!r.height) return;
-
-    /* ③ 補成上下一樣多。slackTop 只跟 padding-top 有關、slackBottom 只跟
-          padding-bottom 有關，所以兩邊各自加差額就好。 */
-    var want = job.pad * fsT, root = document.documentElement;
-    root.style.setProperty(job.v + 'padT', Math.max(0, padT + (want - slackTop)).toFixed(3) + 'px');
-    root.style.setProperty(job.v + 'padB', Math.max(0, padB + (want - slackBottom)).toFixed(3) + 'px');
-    /* ④ 上下對稱之後塊心就是自己那幾個字的字面中線，抬升量因此退化成
-          「兩行字的字面中線對在一起」這條最單純的式子。 */
-    if (job.lift) root.style.setProperty(job.v + 'lift', ((A - D) / 2 * (fsP - fsT)).toFixed(3) + 'px');
-  }
+  /* ⚠⚠ **兩個 job 一起插探針、一起量**（2026-09-18，PageSpeed 的
+       「強制自動重排」那一條）。原本是 fitOne(job) 一個一個跑：
+       插一支探針（appendChild）→ 立刻 getComputedStyle 去讀它，
+       每一次都逼瀏覽器把整份樣式重算一次 —— 實測 66.8 毫秒，全站最貴的一筆。
+     ⚠ 拆成「插 → 量 → 收 → 寫」四段之後算出來一模一樣，理由是
+       **兩支探針都是 position:absolute、不在流裡**，同時存在不會互相影響；
+       而那顆零寬的基線探子（inner）本來就是在量之前才進 DOM 的，
+       只是從「量的中途」提前到「插的那一段」，probe 的 computed style
+       與行框都不受一個 0×0 的 inline-block 影響（五個值已逐一比對過）。
+     ⚠ 日後要再加一個 job，照樣加進 FIT 就好，不必動這四段。 */
   function skFit() {
     if (!window.getComputedStyle) return;
-    for (var i = 0; i < FIT.length; i++) fitOne(FIT[i]);
+    var ctx;
+    try { ctx = document.createElement('canvas').getContext('2d'); } catch (e) { ctx = null; }
+    if (!ctx || !('actualBoundingBoxAscent' in ctx.measureText('測'))) return;
+
+    /* ① 插：兩支探針與各自的基線探子一次插完，之後才開始讀 */
+    var live = [];
+    FIT.forEach(function (job) {
+      var host = document.querySelector(job.host);
+      if (!host) return;
+      var probe = document.createElement('span');
+      probe.className = job.cls;
+      probe.textContent = '測';
+      probe.style.cssText = 'position:absolute;visibility:hidden;left:-9999px;top:0';
+      /* 塊內基線用零寬、對基線的 inline-block 探針量（零寬的東西不會自己折行）。 */
+      var inner = document.createElement('span');
+      inner.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+      probe.appendChild(inner);
+      host.appendChild(probe);
+      live.push({ job: job, host: host, probe: probe, inner: inner });
+    });
+    if (!live.length) return;
+
+    /* ② 量：到這裡才第一次讀，全部 job 共用同一次樣式與版面計算 */
+    var out = [];
+    live.forEach(function (L) {
+      var job = L.job;
+      var scs = getComputedStyle(L.probe), pcs = getComputedStyle(L.host);
+      var fsT = parseFloat(scs.fontSize), fsP = parseFloat(pcs.fontSize);
+
+      /* 字面框。400px 量一次再等比例縮 —— actualBoundingBox 的顆粒很粗，
+         直接用 12px 量會少掉半個像素。取這個元件**全部文字的極值**，
+         它底下每一顆才會同高、同對齊（逐顆量會長成不同高度的塊）。 */
+      var N = 400, A = 0, D = 0;
+      ctx.font = scs.fontStyle + ' ' + scs.fontWeight + ' ' + N + 'px ' + scs.fontFamily;
+      Array.prototype.forEach.call(document.querySelectorAll(job.all), function (w) {
+        var m = ctx.measureText(w.textContent);
+        if (m.actualBoundingBoxAscent > A) A = m.actualBoundingBoxAscent;
+        if (m.actualBoundingBoxDescent > D) D = m.actualBoundingBoxDescent;
+      });
+      A /= N; D /= N;
+      if (!(A > 0) || !(D > 0)) return;
+
+      /* 現況：塊上下緣離字面上下緣各有多少。 */
+      var base = L.inner.getBoundingClientRect().bottom;
+      var r = L.probe.getBoundingClientRect();
+      if (!r.height) return;
+      var padT = parseFloat(scs.paddingTop), padB = parseFloat(scs.paddingBottom);
+      out.push({
+        job: job, fsT: fsT, fsP: fsP, A: A, D: D, padT: padT, padB: padB,
+        slackTop: (base - A * fsT) - r.top,
+        slackBottom: r.bottom - (base + D * fsT),
+      });
+    });
+
+    /* ③ 收：探針全部拿掉 */
+    live.forEach(function (L) { L.probe.remove(); });
+
+    /* ④ 寫：補成上下一樣多。slackTop 只跟 padding-top 有關、
+           slackBottom 只跟 padding-bottom 有關，所以兩邊各自加差額就好。
+       ⑤ 上下對稱之後塊心就是自己那幾個字的字面中線，抬升量因此退化成
+          「兩行字的字面中線對在一起」這條最單純的式子。 */
+    var rt = document.documentElement;
+    out.forEach(function (m) {
+      var want = m.job.pad * m.fsT;
+      rt.style.setProperty(m.job.v + 'padT', Math.max(0, m.padT + (want - m.slackTop)).toFixed(3) + 'px');
+      rt.style.setProperty(m.job.v + 'padB', Math.max(0, m.padB + (want - m.slackBottom)).toFixed(3) + 'px');
+      if (m.job.lift) rt.style.setProperty(m.job.v + 'lift', ((m.A - m.D) / 2 * (m.fsP - m.fsT)).toFixed(3) + 'px');
+    });
   }
   skFit();
   /* 字型還沒下載完時量到的是後備字型，好了再量一次；換裝置像素比也要重量。 */
@@ -7246,8 +7275,17 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
      ⚠ 冪等：讀的是標題的高度，和摘要收成幾行無關，跑幾次都是同一個答案。
      ⚠ 篩選只是把卡藏起來（`is-filtered-out`），欄寬沒變、標題不會重新折行，
        所以不必掛在 apply() 上；藏起來的卡量到 0，那時直接跳過。 */
+  /* ⚠⚠ **兩趟：十三張卡全部量完，才一起寫**（2026-09-18，PageSpeed 的
+       「強制自動重排」那一條）。量一張寫一張的話，每一次 setProperty 都讓
+       版面變髒，下一張的 getComputedStyle 就被迫重算一次 —— 實測十三次
+       強制重排、59 毫秒，是全站第二貴的一筆。
+     ⚠ 拆得開的理由就是上面那句「冪等」：h3 的高度只跟欄寬與標題長度有關，
+       和摘要收成幾行無關，所以「先全部量完」和「量一張寫一張」算出來
+       是同一組值（已逐卡比對過）。**日後若有人讓 --card-clamp 影響到
+       h3 的高度，這個拆法就不成立了，要一起改回去。** */
   function cardClamp() {
     if (!window.getComputedStyle) return;
+    var jobs = [];
     Array.prototype.forEach.call(document.querySelectorAll('.cards .card'), function (card) {
       var h3 = card.querySelector('h3');
       var p  = card.querySelector('.card-body > p:not(.card-date)');
@@ -7255,8 +7293,10 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
       var lh = parseFloat(getComputedStyle(h3).lineHeight);
       var hh = h3.getBoundingClientRect().height;
       if (!(lh > 0) || !(hh > 0)) return;
-      var lines = Math.round(hh / lh);
-      p.style.setProperty('--card-clamp', Math.min(3, Math.max(2, 5 - lines)));
+      jobs.push([p, Math.round(hh / lh)]);
+    });
+    jobs.forEach(function (j) {
+      j[0].style.setProperty('--card-clamp', Math.min(3, Math.max(2, 5 - j[1])));
     });
   }
   cardClamp();
