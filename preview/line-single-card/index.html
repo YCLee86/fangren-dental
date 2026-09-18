@@ -186,6 +186,10 @@ code{font-size:.92em}
 .sgl.car .cb p{white-space:pre-line}
 .swrap .was{color:var(--soft);font-weight:400}
 .sgl .bnd{display:block;width:100%;height:auto}
+/* 下面那一塊自己有內距，所以它的第一個東西不要再帶上外距 —— 那個上外距
+   （小字那一行的 14px、約診狀態那一列的 10px）本來是用來和上面那一段隔開的，
+   而現在隔開它們的是帶子。⚠ 第二個以後的東西照舊（單張那一則底下還有一行）。 */
+.sgl .cb.bot>:first-child{margin-top:0}
 .swrap figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.35em}
 .swrap figcaption b{color:var(--ink)}
 .h3{font-size:.98rem;margin:2em 0 .2em}
@@ -197,7 +201,8 @@ code{font-size:.92em}
 
 <h1>約診卡　單一版型（帶子壓在下緣）</h1>
 <p class="lede">芳仁牙醫診所　2026-09-18<br>
-預約成功通知與約診紀錄查詢<b>共用同一張卡</b>；浮水印拿掉，改用立牌上那條標誌帶，<b>滿版壓在卡片下緣</b>。<br>
+預約成功通知與約診紀錄查詢<b>共用同一張卡</b>；浮水印拿掉，改用立牌上那條標誌帶，<b>滿版夾在約診時間底下</b>
+—— 單張那一則隔開底下那兩行小字，輪播那一則隔開約診狀態。<br>
 現在送出去的那一版（浮水印）在另一頁：<a href="/preview/line-card-spec/">/preview/line-card-spec/</a></p>
 
 <h2 class="h2">1　換掉浮水印<span class="t">同一張卡，其餘一個字都沒動</span></h2>
@@ -213,10 +218,13 @@ code{font-size:.92em}
 </div><figcaption><b>現在這樣</b>　浮水印疊在右下角、往外溢出 18／10px</figcaption></figure>
 <figure class="swrap"><div class="stcard sgl" style="width:268px">
 <div class="cb">
-<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 </div>
 <img class="bnd" src="band-27-set.png" width="1024" height="40" alt="芳仁牙醫診所的標誌排成的一條帶子">
-</div><figcaption><b>這一版</b>　帶子 10.5px・最高那一顆 5.2px</figcaption></figure>
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
+</div><figcaption><b>這一版</b>　帶子夾在日期與那兩行小字之間・帶子 10.5px・最高那一顆 5.2px</figcaption></figure>
 </div>
 
 <h2 class="h2">2　兩則同一個殼<span class="t">姓名・日期・約診狀態・帶子</span></h2>
@@ -224,42 +232,57 @@ code{font-size:.92em}
 <div class="sgrid">
 <figure class="swrap"><div class="stcard sgl" style="width:268px">
 <div class="cb">
-<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
-<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#4478b5">已排定</span></p>
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 </div>
 <img class="bnd" src="band-27-set.png" width="1024" height="40" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#4478b5">已排定</span></p>
+</div>
 </div><figcaption><b>預約成功通知</b>　單張 <code>mega</code>・268px</figcaption></figure>
 <figure class="swrap"><div class="stcard sgl car" style="width:162px">
 <div class="cb">
 <p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11
 星期五 11:50</p>
-<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#3f654a">已確認</span></p>
 </div>
 <img class="bnd" src="band-27-set.png" width="1024" height="40" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#3f654a">已確認</span></p>
+</div>
 </div><figcaption><b>約診紀錄查詢</b>　輪播 <code>micro</code>・162px</figcaption></figure>
 </div>
 
-<h2 class="h2">3　帶子多少顆<span class="t">滿版，所以顆數 ＝ 帶子多高</span></h2>
-<p class="note">只給 9 的整數倍 —— 那三條相鄰的限制在接縫上也要成立。這一排都是淡墨（一把尺只動一件事）。</p>
+<h2 class="h2">3　單張那一則的帶子多少顆<span class="t">滿版，所以顆數 ＝ 帶子多高</span></h2>
+<p class="note">預約成功通知（<code>mega</code>・268px）。這一排都是淡墨 —— 一把尺只動一件事，顏色是第 4 節。</p>
 <div class="sgrid">
 <figure class="swrap"><div class="stcard sgl" style="width:268px">
 <div class="cb">
-<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
-</div>
-<img class="bnd" src="band-9-ink.png" width="1024" height="117" alt="芳仁牙醫診所的標誌排成的一條帶子">
-</div><figcaption><b>9 顆</b>　帶子 30.8px・最高那一顆 15.4px</figcaption></figure>
-<figure class="swrap"><div class="stcard sgl" style="width:268px">
-<div class="cb">
-<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 </div>
 <img class="bnd" src="band-18-ink.png" width="1024" height="60" alt="芳仁牙醫診所的標誌排成的一條帶子">
-</div><figcaption><b>18 顆</b>　帶子 15.6px・最高那一顆 7.8px</figcaption></figure>
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
+</div><figcaption><b>18 顆</b>　帶子 15.6px・最高那一顆 7.8px<br>9 顆那一份 × 2</figcaption></figure>
 <figure class="swrap"><div class="stcard sgl" style="width:268px">
 <div class="cb">
-<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+</div>
+<img class="bnd" src="band-22-ink.png" width="1024" height="50" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
+</div><figcaption><b>22 顆</b>　帶子 13.0px・最高那一顆 6.5px<br>11 顆那一份 × 2・r1c2 2 次、r3c1 2 次</figcaption></figure>
+<figure class="swrap"><div class="stcard sgl" style="width:268px">
+<div class="cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 </div>
 <img class="bnd" src="band-27-ink.png" width="1024" height="40" alt="芳仁牙醫診所的標誌排成的一條帶子">
-</div><figcaption><b>27 顆</b>　帶子 10.5px・最高那一顆 5.2px</figcaption></figure>
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
+</div><figcaption><b>27 顆</b>　帶子 10.5px・最高那一顆 5.2px<br>9 顆那一份 × 3</figcaption></figure>
 </div>
 
 <h2 class="h2">4　帶子的顏色</h2>
@@ -267,51 +290,79 @@ code{font-size:.92em}
 <div class="sgrid">
 <figure class="swrap"><div class="stcard sgl" style="width:268px">
 <div class="cb">
-<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 </div>
 <img class="bnd" src="band-27-set.png" width="1024" height="40" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
 </div><figcaption><b>七顆套科別色</b>　立牌上定案那一條，原封不動</figcaption></figure>
 <figure class="swrap"><div class="stcard sgl" style="width:268px">
 <div class="cb">
-<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 </div>
 <img class="bnd" src="band-27-ink.png" width="1024" height="40" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
 </div><figcaption><b>整條淡墨</b>　全部 #aeafab</figcaption></figure>
 <figure class="swrap"><div class="stcard sgl" style="width:268px">
 <div class="cb">
-<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
 </div>
 <img class="bnd" src="band-27-spec.png" width="1024" height="40" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
 </div><figcaption><b>每一顆自己的科別色</b>　九顆一循環，同色仍然不相鄰</figcaption></figure>
 </div>
 
-<h2 class="h2">5　輪播那一張要不要少幾顆<span class="t">卡片窄 106px，同一條帶子跟著細下去</span></h2>
+<h2 class="h2">5　輪播那一則的帶子多少顆<span class="t">卡片窄 106px，同一條帶子跟著細下去</span></h2>
+<p class="note">約診紀錄查詢（<code>micro</code>・162px）。帶子夾在日期與約診狀態之間。</p>
 <div class="sgrid">
 <figure class="swrap"><div class="stcard sgl car" style="width:162px">
 <div class="cb">
 <p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11
 星期五 11:50</p>
+</div>
+<img class="bnd" src="band-9-ink.png" width="1024" height="117" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+
 <p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#3f654a">已確認</span></p>
 </div>
-<img class="bnd" src="band-27-set.png" width="1024" height="40" alt="芳仁牙醫診所的標誌排成的一條帶子">
-</div><figcaption><b>和單張同一條</b>　帶子 6.3px・最高那一顆 3.2px　<span class="was">單張上是 10.5px</span></figcaption></figure>
+</div><figcaption><b>9 顆</b>　帶子 18.6px・最高那一顆 9.3px<br>9 顆自己一份順序</figcaption></figure>
 <figure class="swrap"><div class="stcard sgl car" style="width:162px">
 <div class="cb">
 <p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11
 星期五 11:50</p>
+</div>
+<img class="bnd" src="band-13-ink.png" width="1024" height="85" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+
 <p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#3f654a">已確認</span></p>
 </div>
+</div><figcaption><b>13 顆</b>　帶子 13.4px・最高那一顆 6.7px<br>13 顆自己一份順序・r1c2 3 次、r3c1 3 次</figcaption></figure>
+<figure class="swrap"><div class="stcard sgl car" style="width:162px">
+<div class="cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11
+星期五 11:50</p>
+</div>
 <img class="bnd" src="band-18-ink.png" width="1024" height="60" alt="芳仁牙醫診所的標誌排成的一條帶子">
-</div><figcaption><b>少一輪</b>　帶子 9.4px・最高那一顆 4.7px　<span class="was">單張上是 15.6px</span></figcaption></figure>
+<div class="cb bot">
+
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#3f654a">已確認</span></p>
+</div>
+</div><figcaption><b>18 顆</b>　帶子 9.4px・最高那一顆 4.7px<br>9 顆那一份 × 2</figcaption></figure>
 </div>
 
 <h2 class="h2">6　換掉浮水印之後</h2>
 <div class="rows">
 <div class="row"><p class="k">要廠商填的值</p><p class="v">九顆各一組（兩欄寬度、長寬比、網址）→ <b>一張圖、<code>size: full</code>，一個數字都不必填</b></p></div>
-<div class="row"><p class="k"><code>position: absolute</code></p><p class="v">浮水印非疊不可（<b>那一項到今天還沒有實機驗過</b>）→ 帶子排在文字那一塊後面就好，<b>不必疊</b></p></div>
+<div class="row"><p class="k"><code>position: absolute</code></p><p class="v">浮水印非疊不可（<b>那一項到今天還沒有實機驗過</b>）→ 內容拆成<b>兩塊 box</b>、帶子夾在中間，<b>不必疊</b></p></div>
 <div class="row"><p class="k">圖檔</p><p class="v">18 張（九顆 × 兩種濃度）→ <b>1 張</b></p></div>
 <div class="row"><p class="k">換來的</p><p class="v">顏色不再跟著那一筆約診換（浮水印是 <code>(月＋日)%9</code>）—— 帶子固定一條，兩則、每一筆都一樣</p></div>
-<div class="row"><p class="k">還沒決定</p><p class="v">帶子多少顆、哪一種顏色、輪播要不要少一輪；<b>約診狀態那一列在單張上也會出現</b>（值是「已排定」）</p></div>
+<div class="row"><p class="k">Flex 怎麼寫</p><p class="v">body <code>paddingAll: 0</code> → box A（<code>paddingAll: 14px</code>，姓名＋日期）→ <code>image</code>／<code>size: full</code> → box B（同內距，那兩行小字或約診狀態）</p></div>
+<div class="row"><p class="k">還沒決定</p><p class="v">兩則各要幾顆（單張 18／22／27・輪播 9／13／18）、哪一種顏色；<b>約診狀態那一列在單張上也會出現</b>（值是「已排定」）</p></div>
 </div>
 
 <p class="foot">

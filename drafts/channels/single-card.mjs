@@ -8,6 +8,16 @@
  *   我想另外做一個單一版型。不要之前用的 logo 浮水印效果，改用 line 立牌上的
  *   帶子 logo，壓在頁面的下緣。」
  *
+ * 2026-09-18 稍晚他改了位置與顆數：「把帶子移到約診時間下方　和異動請在2天前這段區隔／
+ *   輪播那張和約診狀態區隔／約診成功通知　保留18顆和27顆　另外作一版22顆／
+ *   輪播那張18顆　另外做一版　9顆　13顆」。
+ * ⚠⚠⚠ 位置換了，卡片的**結構**就跟著換：帶子不再是「排在文字那一塊後面」，
+ *   而是把內容拆成**兩塊 box**（上：姓名＋日期／下：那兩行小字或約診狀態），夾在中間。
+ *   Flex 那一側也是這樣寫 —— body `paddingAll: 0` → box A（`paddingAll: 14`）→
+ *   帶子 `image`／`size: full` → box B（`paddingAll: 14`）。**帶子仍然不必疊**。
+ * ⚠⚠ 切在哪裡不是挑的：**切在日期那一行後面**（兩則都是第 2 行），底下在驗那一行
+ *   真的是日期 —— 那幾行是從 booked-card.json 讀回來的，順序哪天換了要當場停下來。
+ *
  * ⚠⚠⚠ 這一頁不新寫任何東西：
  *   ・卡上那幾行、字級、內距、兩則的卡片寬、現況那顆浮水印 —— 全部 import
  *     build-vendor.mjs（它的出處又是 booked-card.json ＋ wm-sizes.json ＋ vendor-log.json）。
@@ -20,8 +30,14 @@
  *   （同 og-topic-card 那一輪：提案頁要擺真的產出檔）。
  * ⚠ Flex 的 image 不吃 SVG，所以上線本來就要 PNG —— 這幾張就是那幾張。
  *
- * ⚠⚠ 顆數只給 9 的整數倍：那三條相鄰的限制（同形狀不相鄰、三顆最長的不相鄰、
- *   同色不相鄰）**在接縫上也要成立**，整數倍等於把同一段接回它自己（band/README.md）。
+ * ⚠⚠ 顆數要嘛是某一份順序的整數倍、要嘛自己有一份順序：那三條相鄰的限制
+ *   （同形狀不相鄰、三顆最長的不相鄰、同色不相鄰）**在接縫上也要成立**，
+ *   整數倍等於把同一段接回它自己（band/README.md）。所以這一頁每一格都寫著它的基數：
+ *   **9／18／27 ＝ 基 9、22 ＝ 基 11（立牌 Ⓚ3 那一份 × 2）、13 ＝ 自己一份**
+ *   （2026-09-18 新寫進 stand-card.json 的 Ⓚ4，**不可以就地截一段**）。
+ * ⚠⚠⚠ 13 顆有一個算得出來的代價：九個形狀、白名單只有兩顆可以重複（r1c2、r3c1）——
+ *   最多只排得到 11 顆，要 13 就得讓那兩顆**各出現三次**。那是這條線第一次有形狀
+ *   出現三次，`check-stand-card.mjs` 的上限（`1 + ⌈(n − 9) ÷ 2⌉`）在盯著它。
  * ⚠⚠⚠ 七顆套色的位置是挑過的（間隔 ≥3 顆、相鄰間隔相同的最多一對），
  *   **只有 27 顆那一份有** —— 9 與 18 顆一律淡墨，那不是漏上色。
  */
@@ -45,8 +61,8 @@ const 基 = S.帶子.顆數;                 /* 9 —— 顆數只給它的整�
 const 定 = S.帶子.顆數 * S.帶子.倍;     /* 27 —— 立牌上定案那一條，也是唯一有套色的那一份 */
 
 /* ── 帶子：三種上色，同一份幾何 ──────────────────────────────── */
-const 條 = (n, 模) => {
-  const B = 帶(n, S.帶子.間距, 基);
+const 條 = (n, 模, 底 = 基) => {
+  const B = 帶(n, S.帶子.間距, 底);
   if (模 === "set" && n !== 定) throw new Error(`套色那七顆只有 ${定} 顆那一份有（要的是 ${n} 顆）`);
   if (模 === "ink") B.it.forEach((l) => { l.套色 = false; });
   if (模 === "spec") B.it.forEach((l) => { l.套色 = true; });
@@ -149,9 +165,11 @@ const 帶案 = [
   { 檔: "band-27-set.png", n: 定, 模: "set", 標: "七顆套科別色", 註: "立牌上定案那一條，原封不動" },
   { 檔: "band-27-ink.png", n: 定, 模: "ink", 標: "整條淡墨", 註: `全部 ${墨色}` },
   { 檔: "band-27-spec.png", n: 定, 模: "spec", 標: "每一顆自己的科別色", 註: "九顆一循環，同色仍然不相鄰" },
-  { 檔: "band-18-ink.png", n: 基 * 2, 模: "ink", 標: "18 顆", 註: "" },
-  { 檔: "band-9-ink.png", n: 基, 模: "ink", 標: "9 顆", 註: "接得起來的最小一段" },
-].map((a) => ({ ...a, B: 條(a.n, a.模), ...出圖(a.檔, 條(a.n, a.模), a.模) }));
+  { 檔: "band-22-ink.png", n: 22, 模: "ink", 底: 11 },
+  { 檔: "band-18-ink.png", n: 基 * 2, 模: "ink" },
+  { 檔: "band-13-ink.png", n: 13, 模: "ink", 底: 13 },
+  { 檔: "band-9-ink.png", n: 基, 模: "ink" },
+].map((a) => ({ ...a, B: 條(a.n, a.模, a.底), ...出圖(a.檔, 條(a.n, a.模, a.底), a.模) }));
 對定案(bandSvg(條(定, "set"), "bnd", 墨色));
 const 帶by = Object.fromEntries(帶案.map((a) => [a.檔, a]));
 const 帶高 = (a, w) => w * a.B.總高 / a.B.總寬;
@@ -174,13 +192,46 @@ const 輪播行 = (() => {
   if (`${上} ${下}` !== DATE.例) throw new Error("切出來的兩段接不回原本那一行");
   return MICRO.map((r) => (/2026/.test(r.html) ? { ...r, html: esc(`${上}\n${下}`) } : r));
 })();
-const 卡 = (w, 行, { 帶檔, 丸, 印, 折 } = {}) => `<div class="stcard sgl${折 ? " car" : ""}" style="width:${w}px">
+/* ⚠⚠⚠ 帶子夾在**日期那一行後面** —— 兩則都切在第 2 行：
+     單張　姓名／日期　│帶子│　異動請在2天前…／看診前2天…
+     輪播　姓名／日期　│帶子│　約診狀態
+   所以上下是兩塊各自有內距的 box，帶子滿版夾在中間（Flex 那一側也是兩塊 box）。
+   ⚠ 「切在第 2 行」不是挑的：底下這一行在驗那一行真的是日期 —— 那幾行是從
+     booked-card.json 讀回來的，順序哪天換了要當場停下來，不要靜靜地切在別的地方。 */
+const 切 = 2;
+const 驗切 = (行) => {
+  if (行.length < 切 || !/2026/.test(行[切 - 1].html))
+    throw new Error(`第 ${切} 行不是日期那一行（卡上讀到 ${行.length} 行）—— 帶子會夾在別的地方`);
+  return 行;
+};
+const 卡 = (w, 行, { 帶檔, 丸, 印, 折 } = {}) => {
+  const 上 = 帶檔 ? 驗切(行).slice(0, 切) : 行;
+  const 下 = 帶檔 ? 行.slice(切) : [];
+  const 丸h = 丸 ? "\n" + 藥丸(丸) : "";
+  const 帶h = 帶檔 ? `\n<img class="bnd" src="${帶檔}" width="${帶by[帶檔].w}" height="${帶by[帶檔].h}" alt="芳仁牙醫診所的標誌排成的一條帶子">` : "";
+  const 下h = 帶檔 && (下.length || 丸) ? `\n<div class="cb bot">\n${linesHtml(下)}${丸h}\n</div>` : "";
+  return `<div class="stcard sgl${折 ? " car" : ""}" style="width:${w}px">
 <div class="cb">
-${linesHtml(行)}${丸 ? "\n" + 藥丸(丸) : ""}
-</div>${印 ? "\n" + 印 : ""}${帶檔 ? `\n<img class="bnd" src="${帶檔}" width="${帶by[帶檔].w}" height="${帶by[帶檔].h}" alt="芳仁牙醫診所的標誌排成的一條帶子">` : ""}
+${linesHtml(上)}${帶檔 ? "" : 丸h}
+</div>${帶h}${下h}${印 ? "\n" + 印 : ""}
 </div>`;
+};
 const 格 = (卡html, 說) => `<figure class="swrap">${卡html}<figcaption>${說}</figcaption></figure>`;
 const 說帶 = (檔, w) => `帶子 ${帶高(帶by[檔], w).toFixed(1)}px・最高那一顆 ${顆高(帶by[檔], w).toFixed(1)}px`;
+/* 那一格是拿哪一份順序排出來的 —— **現算，不要在標籤裡寫死一個基數**：
+   接得起來的顆數是「某一份順序的整數倍」或「它自己有一份」，而順序案哪天多一份、
+   或某一份改了重複哪幾顆，這一行要跟著動。 */
+const 基註 = (B) => {
+  const o = S.帶子.順序案.find((x) => x.顆 === B.基);
+  if (!o) throw new Error(`順序案裡沒有基數 ${B.基} 那一份`);
+  const 次 = new Map();
+  for (const k of o.序) 次.set(k, (次.get(k) || 0) + 1);
+  const 多 = [...次].filter(([, n]) => n > 1).map(([k, n]) => `${k} ${n} 次`);
+  const 頭 = B.基 === B.顆數
+    ? `${B.基} 顆自己一份順序`
+    : `${B.基} 顆那一份 × ${B.顆數 / B.基}`;
+  return 多.length ? `${頭}・${多.join("、")}` : 頭;
+};
 
 const 現況卡 = 卡(BUB.mega, MEGA, { 印: wmSvg(輪, OFF, false) });
 const CSS2 = `
@@ -190,6 +241,10 @@ const CSS2 = `
 .sgl.car .cb p{white-space:pre-line}
 .swrap .was{color:var(--soft);font-weight:400}
 .sgl .bnd{display:block;width:100%;height:auto}
+/* 下面那一塊自己有內距，所以它的第一個東西不要再帶上外距 —— 那個上外距
+   （小字那一行的 14px、約診狀態那一列的 ${CARD.距}px）本來是用來和上面那一段隔開的，
+   而現在隔開它們的是帶子。⚠ 第二個以後的東西照舊（單張那一則底下還有一行）。 */
+.sgl .cb.bot>:first-child{margin-top:0}
 .swrap figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.35em}
 .swrap figcaption b{color:var(--ink)}
 .h3{font-size:.98rem;margin:2em 0 .2em}
@@ -211,13 +266,14 @@ ${CSS}${CSS2}
 
 <h1>約診卡　單一版型（帶子壓在下緣）</h1>
 <p class="lede">芳仁牙醫診所　2026-09-18<br>
-預約成功通知與約診紀錄查詢<b>共用同一張卡</b>；浮水印拿掉，改用立牌上那條標誌帶，<b>滿版壓在卡片下緣</b>。<br>
+預約成功通知與約診紀錄查詢<b>共用同一張卡</b>；浮水印拿掉，改用立牌上那條標誌帶，<b>滿版夾在約診時間底下</b>
+—— 單張那一則隔開底下那兩行小字，輪播那一則隔開約診狀態。<br>
 現在送出去的那一版（浮水印）在另一頁：<a href="/preview/line-card-spec/">/preview/line-card-spec/</a></p>
 
 <h2 class="h2">1　換掉浮水印<span class="t">同一張卡，其餘一個字都沒動</span></h2>
 <div class="sgrid">
 ${格(現況卡, `<b>現在這樣</b>　浮水印疊在右下角、往外溢出 ${OFF.right}／${OFF.bottom}px`)}
-${格(卡(BUB.mega, MEGA, { 帶檔: "band-27-set.png" }), `<b>這一版</b>　${說帶("band-27-set.png", BUB.mega)}`)}
+${格(卡(BUB.mega, MEGA, { 帶檔: "band-27-set.png" }), `<b>這一版</b>　帶子夾在日期與那兩行小字之間・${說帶("band-27-set.png", BUB.mega)}`)}
 </div>
 
 <h2 class="h2">2　兩則同一個殼<span class="t">姓名・日期・約診狀態・帶子</span></h2>
@@ -229,11 +285,12 @@ ${格(卡(BUB.car, 輪播行, { 帶檔: "band-27-set.png", 丸: PILLVAL[1], 折:
   `<b>約診紀錄查詢</b>　輪播 <code>${BUB.階}</code>・${BUB.car}px`)}
 </div>
 
-<h2 class="h2">3　帶子多少顆<span class="t">滿版，所以顆數 ＝ 帶子多高</span></h2>
-<p class="note">只給 ${基} 的整數倍 —— 那三條相鄰的限制在接縫上也要成立。這一排都是淡墨（一把尺只動一件事）。</p>
+<h2 class="h2">3　單張那一則的帶子多少顆<span class="t">滿版，所以顆數 ＝ 帶子多高</span></h2>
+<p class="note">預約成功通知（<code>mega</code>・${BUB.mega}px）。這一排都是淡墨 —— 一把尺只動一件事，顏色是第 4 節。</p>
 <div class="sgrid">
-${[["band-9-ink.png", "9 顆"], ["band-18-ink.png", "18 顆"], ["band-27-ink.png", "27 顆"]]
-  .map(([f, 標]) => 格(卡(BUB.mega, MEGA, { 帶檔: f }), `<b>${標}</b>　${說帶(f, BUB.mega)}`)).join("\n")}
+${["band-18-ink.png", "band-22-ink.png", "band-27-ink.png"]
+  .map((f) => 格(卡(BUB.mega, MEGA, { 帶檔: f }),
+    `<b>${帶by[f].B.顆數} 顆</b>　${說帶(f, BUB.mega)}<br>${esc(基註(帶by[f].B))}`)).join("\n")}
 </div>
 
 <h2 class="h2">4　帶子的顏色</h2>
@@ -243,20 +300,22 @@ ${帶案.filter((a) => a.n === 定)
   .map((a) => 格(卡(BUB.mega, MEGA, { 帶檔: a.檔 }), `<b>${esc(a.標)}</b>　${esc(a.註)}`)).join("\n")}
 </div>
 
-<h2 class="h2">5　輪播那一張要不要少幾顆<span class="t">卡片窄 ${BUB.mega - BUB.car}px，同一條帶子跟著細下去</span></h2>
+<h2 class="h2">5　輪播那一則的帶子多少顆<span class="t">卡片窄 ${BUB.mega - BUB.car}px，同一條帶子跟著細下去</span></h2>
+<p class="note">約診紀錄查詢（<code>${BUB.階}</code>・${BUB.car}px）。帶子夾在日期與約診狀態之間。</p>
 <div class="sgrid">
-${[["band-27-set.png", "和單張同一條"], ["band-18-ink.png", "少一輪"]]
-  .map(([f, 標]) => 格(卡(BUB.car, 輪播行, { 帶檔: f, 丸: PILLVAL[1], 折: true }),
-    `<b>${標}</b>　${說帶(f, BUB.car)}　<span class="was">單張上是 ${帶高(帶by[f], BUB.mega).toFixed(1)}px</span>`)).join("\n")}
+${["band-9-ink.png", "band-13-ink.png", "band-18-ink.png"]
+  .map((f) => 格(卡(BUB.car, 輪播行, { 帶檔: f, 丸: PILLVAL[1], 折: true }),
+    `<b>${帶by[f].B.顆數} 顆</b>　${說帶(f, BUB.car)}<br>${esc(基註(帶by[f].B))}`)).join("\n")}
 </div>
 
 <h2 class="h2">6　換掉浮水印之後</h2>
 <div class="rows">
 <div class="row"><p class="k">要廠商填的值</p><p class="v">九顆各一組（兩欄寬度、長寬比、網址）→ <b>一張圖、<code>size: full</code>，一個數字都不必填</b></p></div>
-<div class="row"><p class="k"><code>position: absolute</code></p><p class="v">浮水印非疊不可（<b>那一項到今天還沒有實機驗過</b>）→ 帶子排在文字那一塊後面就好，<b>不必疊</b></p></div>
+<div class="row"><p class="k"><code>position: absolute</code></p><p class="v">浮水印非疊不可（<b>那一項到今天還沒有實機驗過</b>）→ 內容拆成<b>兩塊 box</b>、帶子夾在中間，<b>不必疊</b></p></div>
 <div class="row"><p class="k">圖檔</p><p class="v">${WM.length * 2} 張（九顆 × 兩種濃度）→ <b>1 張</b></p></div>
 <div class="row"><p class="k">換來的</p><p class="v">顏色不再跟著那一筆約診換（浮水印是 <code>(月＋日)%9</code>）—— 帶子固定一條，兩則、每一筆都一樣</p></div>
-<div class="row"><p class="k">還沒決定</p><p class="v">帶子多少顆、哪一種顏色、輪播要不要少一輪；<b>約診狀態那一列在單張上也會出現</b>（值是「${esc(PILLVAL[0].名)}」）</p></div>
+<div class="row"><p class="k">Flex 怎麼寫</p><p class="v">body <code>paddingAll: 0</code> → box A（<code>paddingAll: ${CARD.pad}px</code>，姓名＋日期）→ <code>image</code>／<code>size: full</code> → box B（同內距，那兩行小字或約診狀態）</p></div>
+<div class="row"><p class="k">還沒決定</p><p class="v">兩則各要幾顆（單張 18／22／27・輪播 9／13／18）、哪一種顏色；<b>約診狀態那一列在單張上也會出現</b>（值是「${esc(PILLVAL[0].名)}」）</p></div>
 </div>
 
 <p class="foot">
