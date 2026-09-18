@@ -441,3 +441,270 @@ node drafts/kids-sedation/measure-ink.mjs <原檔>         # 邊緣密度 ≥ 30
 
 ⚠ `measure-ink.mjs` 裡的人物框是**第一版那張圖**的座標，換成四格之後要重寫
 （一格一個框，或逐人給框）。不改就會量到別的東西。
+
+---
+
+## Ⓗ 第二版的產出（2026-09-18）—— 檔案 `hero-v2.jpg`，1200×896
+
+### 三個門檻：**全部過**
+
+| | 門檻 | 第一版 | 第二版 |
+| --- | --- | --- | --- |
+| 無彩空白（S<12 且 L>80） | < 5% | 4.8% | **0%** ✅ |
+| 邊緣密度 | ≥ 30% | 18.9% ⚠ | **36.2%** ✅ |
+| 四格的線一樣實（最暗 5 百分位） | 差 < 20 階 | — | ①40.0／②35.8／③40.6／④34.2，**差 6.4** ✅ |
+
+⚠ `measure-ink.mjs` 的框已經改成**一格一個**（第一版那張是單一場景、逐人給框，換梗之後不能沿用）。
+
+### ⚠⚠ palePct ＝ 0% 正好量到使用者說的「太黃」
+
+整張圖**沒有任何一塊是「淺而無彩」的**，每一塊都帶著暖色。
+所以「改亮、改乾淨」這件事有很大的空間：一路加到 5% 才碰門檻。
+⚠ 但**不要用純白牆**去換 —— 那會直接把 palePct 推上去。做法是
+**極淺但仍帶一點彩度的牆**（淡到接近白，色相留一點），而且**牆上要有東西**。
+
+### ⚠ 尺寸不夠：1200×896
+
+比例 1.339，落在 4:3 的容許範圍內（`RATIO_TOL` 0.02）✅，但**寬度只有 1200**。
+站上要 2000／1600／800 三個尺寸，**定案那一張一定要出 2000 以上**
+（同 kids-crown 第七版那一條「定案那一張要出大的」）。
+
+### 使用者的六點回饋（2026-09-18，逐字）
+
+> 治療那張　醫療人員還是要戴口罩　這四張圖的背景都太黃了　特別是診所場景的三張
+> 診所應該是明亮乾淨的空間　周圍也要比較像是牙醫診所的環境細節　噢最後一張麻醉醫師
+> 拿著文件不能戴手套　另外這四張明顯很安靜　能不能用一些氛圍的線條貫穿整個四張圖
+> 比較有點流動感　第一張小孩的臉要有點紅腫表示牙齒有問題的樣子
+
+⚠⚠ **第一點推翻了第二版提示詞裡「NOBODY WEARS A FACE MASK IN ANY PANEL」那一條。**
+當初寫它的理由是「戴了臉就沒了，而這張圖靠的全是表情」—— 但**第三格本來就不是靠表情**
+（那一格要傳達的是分工與監測），而且不戴口罩在臨床上是錯的。
+定案：**只有第三格戴口罩**，其餘三格不戴；口罩是素面的，眼睛與眉毛要看得見。
+
+⚠ **第五點要改掉版面規則。** 第二版寫著「Nothing crosses those two lines」，
+氛圍帶要貫穿四格就一定得跨線。定案：**只有那一條氛圍帶可以跨線，其他一律不行。**
+帶子照 ILLUSTRATION.md 第十之六節的規矩：可以長，但**不從任何人身上出來、不打圈、
+不跨過任何一張臉**。顏色取**極淡的薄荷藍綠** —— 和麻醉那一隊的 teal 同一支色相，
+等於用顏色把「這條路」串起來。
+
+⚠ **第六點要靠輪廓線，不能靠陰影。** 臉只有單一平塗（STYLE 那一段的硬規定），
+所以「紅腫」＝ **臉的下半邊輪廓往外鼓一點** ＋ **一塊比腮紅更大、位置更低的淡紅暈染**，
+另外半邊維持正常。**不可以畫成陰影或漸層。**
+
+## 完整提示詞（第三版・整份可貼）
+
+⚠ 從第二版那一份改，只換出問題的段落 —— 改動的是 LAYOUT（氛圍帶可以跨線）、
+小孩第一格的臉、口罩與手套、房間的色調與細節、輸出尺寸。其餘逐字沒動。
+
+```
+Editorial illustration for a dental clinic's article. ASPECT RATIO 4:3 (four units wide by
+three units tall). OUTPUT AT LEAST 2000 PIXELS WIDE — this is a hard requirement.
+
+FOUR PANELS IN A 2x2 GRID telling one story in four stages, read LEFT TO RIGHT then DOWN:
+panel 1 top-left, panel 2 top-right, panel 3 bottom-left, panel 4 bottom-right. ONE hand-drawn
+vertical line and ONE hand-drawn horizontal line separate them — thin, slightly wobbly, drawn
+by hand, NOT thick white gutters. NO border around the whole image. Each panel is itself a 4:3
+scene and each panel is FULL — no panel has a large empty area of blank paper.
+
+⚠ THE ONE THING THAT CROSSES THE PANELS — A RIBBON OF AIR. One single continuous, VERY PALE
+MINT-TEAL ribbon, like a slow wide current of air, enters at the top-left of panel 1, drifts
+right into panel 2, turns down and sweeps back left into panel 3, and leaves at the bottom-right
+of panel 4, fading out at both ends. It is the ONLY thing in the picture allowed to cross the
+two dividing lines, and it must cross them so the four panels read as one moving story. It is
+soft-edged, barely tinted, and sits BEHIND all the people and furniture. It NEVER comes out of
+a person's body or mouth, NEVER curls into a loop or a spiral, NEVER crosses a face, and NEVER
+turns into steam, smoke, sparkles or stars.
+
+REFERENCE IMAGE — one reference picture is attached. USE IT ONLY for what is in panel 3: which
+people and which equipment belong in a paediatric dental sedation room (the sleeping child on
+the treatment chair under a light blanket, the drip stand, the vital-signs monitor, the
+paediatric dentist working at the child's head, the anaesthesia staff beside the monitor).
+DO NOT copy its drawing style, its colours, its rendering, its shading, its clock, its flying
+tooth fairies, or the numbers on its monitor screen. The style of the picture you draw is
+defined entirely by the STYLE section below.
+
+=====================================================================
+⚠⚠⚠ READ THESE THREE LISTS BEFORE DRAWING ANY FACE.
+Three people each appear in more than one panel. THEIR FACES ARE DELIBERATELY DIFFERENT FROM
+PANEL TO PANEL, and no expression or pose may be copied from one panel into another. ALL OF
+THEM MATTER EQUALLY; give each face the same care.
+
+THE BOY'S FOUR FACES (he is in all four panels)
+  • PANEL 1 — SHAKEN, AND ONE CHEEK IS SWOLLEN. Standing, pressed against his mother's side,
+    BOTH HANDS gripping her clothes, shoulders drawn up. Eyes open and round, the rims a little
+    pink. Mouth closed in a small tight line. HE IS NOT CRYING AND THERE ARE NO TEARS — he has
+    already stopped; this is the moment just after.
+    ⚠ HIS LEFT CHEEK (the viewer's right) IS PUFFY because of a bad tooth. Draw it with TWO
+    things only: (a) the OUTLINE of the lower half of that side of his face bulges outward in a
+    soft curve, clearly wider than the other side; (b) over that bulge, ONE SOFT PATCH OF WARM
+    RED — BIGGER and LOWER than a blush patch, sitting over the jaw and lower cheek. The other
+    cheek keeps its small ordinary round pink blush. DO NOT draw the swelling with shading, a
+    gradient, a shadow or extra lines — outline and one flat patch of colour only.
+  • PANEL 2 — RELAXED AND BUSY. Sitting on the floor playing with wooden blocks, seen from the
+    side. Eyes down on the toy, mouth slightly open, shoulders loose. He is not paying any
+    attention to the adults. Completely untroubled. HIS FACE IS BACK TO NORMAL — no swelling.
+  • PANEL 3 — ASLEEP. Lying on the treatment chair, eyes CLOSED (each eye a simple closed
+    curve), mouth slightly open, face completely smooth, a light blanket up to his chest, one
+    foot showing at the end of the chair with a small sensor taped to it. Peaceful. NOT
+    frightened, NOT grimacing.
+  • PANEL 4 — HALF AWAKE. Draped over his father's shoulder, cheek against it, hair slightly
+    messy. Eyes HALF CLOSED (each eye a shallow droopy curve), mouth closed and soft. Drowsy
+    and safe.
+
+THE MOTHER'S THREE FACES (panels 1, 2 and 4 — SHE IS NOT IN PANEL 3)
+  • PANEL 1 — WORRIED. Crouching or sitting beside the boy, one arm around him. Inner ends of
+    the eyebrows RAISED, mouth closed in a short line, eyes on the paediatric dentist. Not
+    smiling, not angry, not crying.
+  • PANEL 2 — FOCUSED. Sitting at the dining table, a phone held to her ear with one hand, a
+    pen in the other. Eyebrows LEVEL, mouth slightly OPEN because she is speaking. Neither
+    worried nor smiling — she is concentrating.
+  • PANEL 4 — RELIEVED. Standing, SHOULDERS CLEARLY DROPPED AND RELAXED, eyes on the two
+    doctors, mouth open with BOTH CORNERS CURVING UP. She is the one person in the whole
+    picture who is plainly smiling with an open mouth.
+
+THE FATHER'S THREE FACES (panels 1, 2 and 4 — HE IS NOT IN PANEL 3)
+  • PANEL 1 — CONCERNED. Standing behind the mother, one hand on her shoulder. Mouth closed,
+    inner ends of the eyebrows slightly raised, eyes on the dentist.
+  • PANEL 2 — LEANING IN. Sitting beside her, head tilted towards the phone, one finger
+    resting on the paper on the table, mouth closed, eyebrows level.
+  • PANEL 4 — CARRYING HIS SON. Both arms holding the boy against his shoulder, a small
+    relaxed CLOSED-MOUTH smile, eyes on the doctors.
+
+SELF-CHECK — before you finish, put the boy's four faces side by side and read them in order:
+  1st — eyes open, tight mouth, ONE CHEEK CLEARLY PUFFY AND RED, NOT crying.
+  2nd — looking down at a toy, at ease, face normal on both sides.
+  3rd — eyes fully closed, mouth slightly open, completely smooth.
+  4th — eyes half closed and droopy, on his father's shoulder.
+If any two of the four look the same, the drawing is wrong. Then check that the MOTHER and the
+FATHER DO NOT APPEAR AT ALL in panel 3, and that the mother is smiling ONLY in panel 4.
+=====================================================================
+
+STYLE. Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly varies
+along a stroke, strokes taper and sometimes break and run dry at the end. Colour applied like
+soft coloured pencil and light marker; colour edges a little loose. Flat fills with two or
+three tones per hue — no gradients, no airbrush, no glow. A fine even paper grain over every
+surface.
+
+⚠⚠ OVERALL COLOUR — THE THREE CLINIC PANELS ARE BRIGHT, CLEAN AND AIRY, NOT YELLOW.
+Panels 1, 3 and 4 are lit like a well-lit modern clinic: the walls are VERY PALE and READ AS
+CLEAN — a soft near-white with only the faintest cool tint of mint or pale sky, never cream,
+never beige, never butter, never amber. Cabinets, worktops and equipment are white and very
+pale grey. The floor is a pale cool grey or a very light grey-toned wood. ⚠ Do NOT flood these
+three panels with warm yellow light and do NOT paint a band of amber along the lower wall. The
+warm colours in these panels are LOCAL AND SMALL ONLY: the wooden toys, a wooden stool, the
+dentist's printed fabric, a plant pot.
+⚠ BUT THE WALLS ARE NOT BLANK WHITE PAPER — they always carry something: a cabinet, a shelf, a
+window, a washbasin. Pale, clean, and furnished.
+PANEL 2 (the home) IS THE EXCEPTION and is the only warm panel: warm wood, a warm lamp.
+
+FACES AND HANDS. Every face and every hand is ONE single flat tone: no shading, no cheekbones,
+no jawline. On a face draw ONLY these six things plus blush: the outline of the head, the eyes,
+the eyebrows, the nose, the mouth, the ears — and two soft round patches of warm pink blush
+high on each cheek. An eye is one small dark curved mark. NO eyelashes, NO whites of the eyes,
+NO catchlights, NO eyelid crease, NO wrinkle, NO line beside the nose, NO shadow under the eye.
+Hair is two or three flat shapes and stays very dark. IF A FACE LOOKS LIKE A PORTRAIT, IT IS
+WRONG. Every person has exactly two hands and two arms, and every hand that touches another
+person can be traced along a visible arm back to its own shoulder. No spare hand, no floating
+hand, no sleeve without an arm in it.
+
+EVERYONE IN THIS PICTURE IS TAIWANESE.
+
+ECONOMY OF LINE. Each object is drawn with the fewest strokes that still make it recognisable.
+The rooms are LESS detailed than the people, but they are clearly dental rooms.
+
+CRITICAL — NO WRITING ANYWHERE IN THE IMAGE. No letters, no numbers, no words, no logos, no
+labels. In particular: THE MONITOR SCREEN IN PANEL 3 SHOWS ONLY THREE SIMPLE COLOURED WAVY
+LINES AND NOTHING ELSE — no digits, no readouts. Every sheet of paper and every clipboard is
+BLANK. There is NO CLOCK anywhere in the picture.
+
+MASKS AND GLOVES — this matters and applies differently per panel.
+  • PANEL 3 ONLY: ALL THREE STAFF WEAR A PLAIN SURGICAL FACE MASK covering nose and mouth, and
+    ALL THREE WEAR THIN MEDICAL GLOVES. The masks are plain, single-colour and un-patterned;
+    the EYES AND EYEBROWS STAY FULLY VISIBLE above them, and every one of the three still reads
+    as calm and attentive.
+  • PANELS 1, 2 AND 4: NOBODY WEARS A MASK AND NOBODY WEARS GLOVES — every face is fully
+    visible and every hand is a bare hand. ⚠ In panel 4 the anaesthetist holds a sheet of paper
+    with BARE HANDS; he must not be wearing gloves.
+
+CLOTHING — fixed, and the same in every panel the person appears in.
+  • THE MOTHER — dusty-rose blouse.
+  • THE BOY — sage-green T-shirt and dark shorts.
+  • THE FATHER — muted slate-blue shirt with the sleeves rolled to the forearm, dark grey
+    trousers.
+  • THE PAEDIATRIC DENTIST — a woman in her thirties, hair tied back. Her TIE-BACK SURGICAL
+    CAP, top and trousers are all cut from ONE printed fabric: warm off-white cloth (#f4ead8)
+    with SIMPLE FLAT CHILDLIKE DOODLES — bears, chicks, clouds, stars, small flowers — in ONLY
+    amber (#c28229) and deep caramel (#9e6301), BIG AND FEW; over it a WHITE CLINICAL COAT
+    hanging open and unbuttoned.
+  • THE ANAESTHETIST — a man in his forties, PLAIN DEEP TEAL-BLUE scrubs and a matching plain
+    teal cap, NO pattern, NO white coat.
+  • THE ANAESTHESIA NURSE — a woman, PLAIN scrubs in a LIGHTER SHADE OF THE SAME TEAL, and a
+    matching plain cap.
+⚠ THE TWO TEAMS ARE TOLD APART BY COLOUR: the dental side wears the off-white printed fabric,
+the anaesthesia side wears plain teal. Keep that separation in every panel.
+
+PANEL 1 (TOP LEFT) — THE RECOMMENDATION. A bright, clean children's dental treatment room, just
+after a short procedure. On the LEFT the PAEDIATRIC DENTIST sits on a low round stool, BOTH FEET
+ON THE FLOOR, leaning forward, one hand open palm-up, talking gently to the parents, no mask, no
+gloves. On the RIGHT the MOTHER, the BOY and the FATHER stand together as one group, faces as
+described above. DENTAL DETAIL, drawn simply but unmistakably: a proper dental chair with a
+headrest and a swing-out instrument arm with hoses, a small tray table beside it, an overhead
+operating light folded up out of the way, a white wall cabinet with a worktop, a washbasin with
+a tall tap. Plus a basket of wooden toys and a height chart with NO numbers on it.
+
+PANEL 2 (TOP RIGHT) — THE PHONE CALL. The family's home, the one warm panel: a wooden dining
+table, a hanging lamp above it, a potted plant, a sofa behind. The MOTHER sits at the table with
+a phone to her ear and a pen in her other hand; a BLANK sheet of paper and a small card lie on
+the table in front of her. The FATHER sits beside her leaning in. The BOY plays with wooden
+blocks on the floor in the foreground. FLOATING ABOVE AND BESIDE THE PHONE, a single hand-drawn
+ROUND SPEECH BUBBLE with its tail pointing at the phone: inside it, head and shoulders of THE
+ANAESTHETIST in his plain teal scrubs and cap, NO MASK, holding a telephone handset to his ear,
+looking down at a BLANK sheet of paper, friendly and attentive. The bubble is plain white with a
+thin hand-drawn outline and contains nothing else.
+
+PANEL 3 (BOTTOM LEFT) — THE TREATMENT. The same bright clean dental room, busiest panel of the
+four, ALL THREE STAFF MASKED AND GLOVED. Arranged across the width: the BOY ASLEEP on the
+treatment chair under a light blanket in the centre; the PAEDIATRIC DENTIST at his head on the
+left, leaning in, working calmly with a small mirror in one hand; the ANAESTHETIST standing just
+behind the child's head, one hand on the controls of the vital-signs monitor, HIS EYES ON THE
+CHILD, not on the machine; the ANAESTHESIA NURSE standing on the right holding a clipboard and
+writing on it. EQUIPMENT: a drip stand with a bag and a line running down to the child's arm;
+the vital-signs monitor on a slim trolley, ITS SCREEN SHOWING ONLY THREE SIMPLE COLOURED WAVY
+LINES; the dental unit's instrument arm with its hoses and a suction tube; a tray of instruments
+on a small table; the overhead operating light angled down over the child; a white cabinet run
+along the back wall. ⚠ NO PARENTS IN THIS PANEL AT ALL — exactly four people: the boy and the
+three staff. Everyone is calm and unhurried; this is routine work, not an emergency.
+
+PANEL 4 (BOTTOM RIGHT) — AFTERWARDS. A bright, clean corner of the same clinic. On the LEFT the
+PAEDIATRIC DENTIST and the ANAESTHETIST stand side by side facing the parents, NO MASKS AND NO
+GLOVES, both warm and unhurried; the dentist is speaking with one hand open, the anaesthetist
+holds a BLANK sheet of paper in his BARE HANDS at waist height and is nodding. On the RIGHT the
+FATHER carries the sleepy BOY against his shoulder, and the MOTHER stands beside them, relieved
+and smiling. Room: pale clean walls, a low white cabinet, a washbasin, a potted plant, a window
+with a white frame letting in soft daylight.
+
+CROP SAFETY — this picture will sometimes be shown cropped to a wide band, so KEEP EVERY FACE
+AND EVERY IMPORTANT OBJECT OUT OF THE TOP 13% AND THE BOTTOM 13% OF THE WHOLE IMAGE. In the top
+two panels push the heads down a little; in the bottom two panels lift them a little.
+
+LIGHT AND COLOUR. Panels 1, 3 and 4 are bright, clean and cool-leaning, lit by even daylight;
+panel 2 (the home) is warm, lit by the lamp over the table. The teal of the anaesthesia team,
+the wavy lines on the monitor and the pale mint-teal ribbon of air are the cool notes that tie
+the four panels together, and they should read as quiet, not bright.
+
+AVOID — any writing, letters, numbers, digits or logos anywhere; numbers or readouts on the
+monitor screen; writing on any paper or clipboard; a clock; warm yellow or cream walls in panels
+1, 3 and 4; a band of amber along the lower wall; a whole panel flooded with yellow light; blank
+white featureless walls; gloves on anyone in panels 1, 2 or 4; a mask on anyone in panels 1, 2
+or 4; an unmasked or ungloved person in panel 3; a child crying, screaming, held down or
+restrained; tears; anyone looking alarmed, rushed or panicked; the parents appearing in panel 3;
+the mother smiling in panel 1 or panel 2; the same expression on the boy in more than one panel;
+the boy's cheek still swollen in panels 2, 3 or 4; swelling drawn as shading or a gradient; a
+fifth person in panel 3; a third hand, a spare hand or a floating hand on anyone; the ribbon of
+air coming out of a person, curling into a loop, crossing a face, or turning into steam, smoke,
+sparkles or stars; anything other than the ribbon crossing the two dividing lines; thick white
+gutters between the panels; blood; an anatomical or textbook diagram; a cross section; teeth
+drawn on their own; photorealism; a portrait-like face; grey-scale; a border or frame around the
+whole image.
+```
