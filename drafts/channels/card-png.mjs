@@ -14,7 +14,7 @@
  *   所以這張圖 → 提案頁 → Flex 的 JSON 是同一條鏈。
  * ⚠ 卡片實寬 268px（LINE 聊天室裡的真實大小），這裡用 deviceScaleFactor 3 出圖，
  *   所以檔案是 804px 寬 —— 存下來縮放檢視都還清楚。
- * ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 一律 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 import path from "node:path";

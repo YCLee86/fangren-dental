@@ -10,7 +10,7 @@
 - **slug**：`kids-crown`（照 `kids-first-visit`／`kids-arch-expansion` 的命名）
 - **tag**：兒童牙科（`data-spec="kids"`）
 - **定案那天**：`git mv drafts/kids-crown/BODY.html` 的內容貼進 `posts/kids-crown/index.html`
-  —— ⚠ **只搬 `index.html`，不要 `git mv` 整個資料夾**（CLAUDE.md 第九節第 27 條）
+  —— ⚠ **只搬 `index.html`，不要 `git mv` 整個資料夾**（DECISIONS.md 第九節第 27 條）
 
 ## 作家的三行說明
 

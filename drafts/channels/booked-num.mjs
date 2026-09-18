@@ -18,7 +18,7 @@
  * ⚠ 顏色沒有新增：底＝`--paper #e2e5e6`、數字＝一般牙科的**深階** `#2c5238`
  *   （PALETTE：深階給淺底上的**字**）。
  * ⚠ 數字是**襯線**（站上 2026-08-08 那條：數字襯線、單位黑體）。
- * ⚠ 出 1024×512（2:1）＝ 這條線頭圖的統一規格（CLAUDE.md 第十一之二節）。
+ * ⚠ 出 1024×512（2:1）＝ 這條線頭圖的統一規格（LINE.md 第十一之二節）。
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -36,7 +36,7 @@ const chrome = (() => {
   const base = process.env.PLAYWRIGHT_BROWSERS_PATH || "/opt/pw-browsers";
   for (const dir of fs.readdirSync(base)) {
     const p = path.join(base, dir, "chrome-linux", "headless_shell");
-    if (fs.existsSync(p)) return p;    /* ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條） */
+    if (fs.existsSync(p)) return p;    /* ⚠ 一律 headless_shell（DECISIONS.md 第九節第 18 條） */
   }
   throw new Error("找不到 headless_shell");
 })();

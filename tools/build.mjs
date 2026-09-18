@@ -47,7 +47,7 @@ const OG_HEIGHT = 900;
 const HERO_WIDTHS = [800, 1600, 2000];
 
 /* 各個位置的 sizes。⚠ 一律不准寫 100vw —— 高 DPR 的手機會挑到太小的檔再放大，
-   版面看起來沒問題但照片是糊的（CLAUDE.md 第九節第 15 條踩過）。
+   版面看起來沒問題但照片是糊的（DECISIONS.md 第九節第 15 條踩過）。
    ⚠ 這幾個值是在瀏覽器裡**量出來的**，不是估的：文章頁的欄寬上限是 --content 44rem
      ＝ 704px，所以 721~1159 那一段圖不會跟著視窗長（實測 900 上是 650 不是 846）。
      延伸閱讀那三張在 ≥1041 是 395.73px、721~1040 約 29vw。
@@ -395,7 +395,7 @@ posts.sort((a, b) =>
    而且語意上也對 —— 這是補充導覽，不是這篇文章的內容，所以用 <aside>。
 
    **刻意沒有可見的小標題**，只留 aria-label。這不是偷懶，是照首頁已經定案的做法：
-   首頁「最新文章」那個小標題 2026-08-07 就被拿掉了，只留 aria-label（CLAUDE.md 第九節）。
+   首頁「最新文章」那個小標題 2026-08-07 就被拿掉了，只留 aria-label（DECISIONS.md 第九節）。
    同一個站不該一邊拿掉、一邊又加一個回來。
 
    挑哪三篇：**同科別的優先**（照更新日新到舊），不夠再用其他科別的最新文章補滿。
@@ -684,7 +684,7 @@ if (siteUrl && !CHECK_ONLY) {
        所以 lastmod 直接用**首頁那一個**，不另外算一份雜湊。
      ⚠ 目錄不存在就整段略過（還沒跑過 tools/topics.mjs 的環境）。
      ⚠ 沒有 <image:image>：著陸頁目前一張自己的圖都沒有
-       （CLAUDE.md 第九節第 19 項還沒定案），不要拿別科文章的 HERO 頂。 */
+       （DECISIONS.md 第九節第 19 項還沒定案），不要拿別科文章的 HERO 頂。 */
   const topicsDir = path.join(ROOT, "topics");
   const topics = fs.existsSync(topicsDir)
     ? fs.readdirSync(topicsDir).filter((d) =>

@@ -54,7 +54,7 @@ function cycle() {
 const bin = ['/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
              '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'].find(p => existsSync(p));
 if (!bin) throw new Error('找不到 Chromium');
-if (bin.endsWith('chrome')) console.warn('⚠ 用到完整版 chrome，畫面會少 87px（CLAUDE.md 第九節第 18 條）');
+if (bin.endsWith('chrome')) console.warn('⚠ 用到完整版 chrome，畫面會少 87px（DECISIONS.md 第九節第 18 條）');
 
 for (const [name, body] of [['linear', linear()], ['cycle', cycle()]]) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">${body}</svg>`;

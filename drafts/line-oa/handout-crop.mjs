@@ -117,7 +117,7 @@ function cardBox(src, W, H) {
 }
 
 /* 那圈框的顏色：取左右兩條邊上「最有彩」那一群像素的中位數。
-   ⚠ 不要取平均 —— 框裡混著白底與陰影，平均會被拉淡（同 CLAUDE.md 第九節第 11 條）。 */
+   ⚠ 不要取平均 —— 框裡混著白底與陰影，平均會被拉淡（同 DECISIONS.md 第九節第 11 條）。 */
 function frameColor(box, heroRows) {
   const { g, w, t, b, l, r } = box.grid;
   const picks = [];

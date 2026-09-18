@@ -20,7 +20,7 @@
  *   那是使用者逐字寫的、刻意照寫的東西，規格頁的面板有一列在標紅。
  *   守門的工作是「JSON 和頁面說的是同一件事」，不是替他改字。
  * ⚠ 頁面是 JS 產生的，要真的用瀏覽器跑一次再讀，不能用正規式掃 HTML。
- * ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 一律 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 import path from "node:path";

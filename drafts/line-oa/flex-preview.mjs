@@ -14,7 +14,7 @@
  *   自己用 box 做的那顆外框鈕，cornerRadius 是我們指定的，會照著畫。
  *
  * 用法：node drafts/line-oa/flex-preview.mjs  →  drafts/line-oa/preview.png
- * ⚠ 一定要用 headless_shell，不要用完整版 chrome（CLAUDE.md 第九節第 18 條：
+ * ⚠ 一定要用 headless_shell，不要用完整版 chrome（DECISIONS.md 第九節第 18 條：
  *   完整版畫出來的高度比 --window-size 少 87px，而且不報錯）。
  */
 import fs from "node:fs";
@@ -206,7 +206,7 @@ const outHtml = path.join(HERE, ".preview.html");
 fs.writeFileSync(outHtml, html);
 
 /* ⚠ playwright 是 CommonJS：ESM 要整包 default import 再解構，
-   具名匯入會拿到 undefined（CLAUDE.md 第九節第 11 條）。 */
+   具名匯入會拿到 undefined（DECISIONS.md 第九節第 11 條）。 */
 const pw = (await import("/opt/node22/lib/node_modules/playwright/index.js")).default;
 const { chromium } = pw;
 const CANDIDATES = [

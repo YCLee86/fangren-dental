@@ -337,7 +337,7 @@ a { color: var(--teal); }
    minmax(0,1fr)，軌道演算法會先把 max-content 那一欄長到滿，剩下的才給 fr ——
    所以擠的時候是**選單**被壓（Chromium 實測會直接疊到品牌上，最多重疊 209px），
    而品牌自己那個 `<small>` 是唯一沒有 nowrap 的東西，就在那裡斷成兩行。
-   ⚠ 這一格本來就是全站最緊的（[CLAUDE.md](CLAUDE.md) 第九節：iPad +19% 之後
+   ⚠ 這一格本來就是全站最緊的（[DECISIONS.md](DECISIONS.md) 第九節：iPad +19% 之後
      744 上「品牌 → 選單」只剩 94.6px），真機再套上瀏覽器的「最小字級／文字縮放」
      就會不夠 —— 實測最小字級設 20px 時那一格只剩 9.3px。
    現在反過來：**選單 max-content（絕不讓步，它是三個固定寬的框），品牌 1fr（可縮）**，
@@ -1366,7 +1366,7 @@ html.hero-hold .hero-photo img { animation-play-state: paused; }
 
    ---- 為什麼只有電腦版 ----
    使用者指定「電腦版」。手機那一版的「第一屏的下面還有」2026-08-13 已經看過
-   並且**沒有選**（見 CLAUDE.md 第九節 cta-mobile 那一列的七項落選清單），
+   並且**沒有選**（見 DECISIONS.md 第九節 cta-mobile 那一列的七項落選清單），
    所以 ≤720 明確關掉。iPad 直放與旋轉螢幕的窄帶是**接在照片下面**、不是壓在
    照片上，`bottom: 100%` 會把角形丟到照片裡收尾句的那一區，那兩段也一起關掉
    —— 那不是漏做，是那兩個版型還沒給使用者看過。
@@ -2601,7 +2601,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
         結束記號，整段註解在那裡被提早關掉**，底下的 .band 整條規則跟著失效
         （量出來 background-image 是 none、接縫又跳回 +2.7，而且是靜悄悄的）。
         和「CSS 註解裡不能出現樣式表的結束標籤」是同一類的坑
-        （CLAUDE.md 第九節第 8 條）。單位一律寫「每像素」。
+        （DECISIONS.md 第九節第 8 條）。單位一律寫「每像素」。
 
      ---- 第四版：黑再往下壓（2026-08-12，現在這一版）----
      使用者：「看起來黑漸層可以再往下一點。」
@@ -2792,7 +2792,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   /* ---- 窄帶：三格各佔三分之一（390px 上排不下靠內容寬度）------------- */
   /* 「往下看」那顆角形只做電腦版（2026-08-14 使用者指定）。手機那一版的
      「第一屏的下面還有」2026-08-13 在 cta-mobile 的十九項裡看過、沒有選上
-     （CLAUDE.md 第九節那七項落選清單），所以這裡明確關掉，不是漏做。
+     （DECISIONS.md 第九節那七項落選清單），所以這裡明確關掉，不是漏做。
      而且手機的窄帶是靜態接在照片下面的，`bottom: 100%` 那個位置也不成立。 */
   .hero-cue { display: none; }
   .band .shell { flex-direction: column; align-items: stretch; gap: .55rem; padding-block: .85rem; }
@@ -3058,7 +3058,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      ⚠ 上一版一條用 CSS 邊框（13×13 轉 45 度 ＝ 水平跨距 18.4px）、一條用 SVG
        （18px），使用者一眼看出「長度好像不太一樣」。
      ⚠ data URI 的 SVG **一定要寫 width/height**，只有 viewBox 的話 Safari
-       當背景圖時有時直接不畫（CLAUDE.md 第九節，橫捲提示那一輪踩過同一條）。
+       當背景圖時有時直接不畫（DECISIONS.md 第九節，橫捲提示那一輪踩過同一條）。
    ・底 ＝ 電腦版那一塊（`rgba(226,229,230,.10)` ＋ `--frame-r` 的圓角），沒有框線。
 
    ---- 定案的四個值（都是使用者一階一階挑的）------------------------------
@@ -3073,7 +3073,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      `scroll-behavior: smooth`，所以會平滑捲到「主題與科別」。
      逐幀量過：0 → 18 → 132 → 300 → 518 → 689 → 891 → 1034 → 1106 → 1118，
      約 500ms。**不要改成 preventDefault 自己 scrollTo** —— 那會把那一步歷史
-     紀錄弄丟，上一頁就回不到第一屏（CLAUDE.md 第九節第 13 條同一條）。
+     紀錄弄丟，上一頁就回不到第一屏（DECISIONS.md 第九節第 13 條同一條）。
    ========================================================================== */
 @media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
   .hero-cue {
@@ -3110,7 +3110,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      「那個角形按鈕在 iPad 上沒有慢速浮動」）。iOS 的「減少動態效果」很多人
      開著，看它就等於這顆永遠不動 —— 而它會動正是它存在的理由（不動的角形
      使用者已經說過「看不出在幹嘛」）。
-     判準和窄帶那個往上數的數字同一條（CLAUDE.md 第九節的定案表）：那個設定
+     判準和窄帶那個往上數的數字同一條（DECISIONS.md 第九節的定案表）：那個設定
      針對的是位移／視差／縮放這種會讓人不舒服的大動作，**原地上下 4px、
      2.4 秒一次**不屬於那一類。
      ⚠ **點下去的捲動仍然看那個設定** —— 平滑捲動正是它要關掉的東西，
@@ -3492,7 +3492,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
      算的，用 .72rem 代進去才等於 .158em；.8rem 應該是 .108em，差 0.64px。
      **刻意維持 .158em**：提案頁上使用者看過並定案的就是這個組合，
      為了公式去改會讓正式站和他點頭的那一版不一樣。0.64px 也在看不出來的範圍。
-     日後若要重算，公式與量法在 /history/cta-mobile.html 與 CLAUDE.md 第九節第 9 條。
+     日後若要重算，公式與量法在 /history/cta-mobile.html 與 DECISIONS.md 第九節第 9 條。
    ⚠ 藥丸的上下內距不受影響 —— 那兩個是 em 而且由 JS 現量（--role-padT/padB）。 */
 .doc-role                                   { font-size: .8rem; }
 .doc dt                                     { font-size: .81rem; }
@@ -3671,7 +3671,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
             捲 2px 就只淡 2px，起點與終點自然是 0，三態的切換整個不必存在。
        ② **線性漸層的兩端各是一條可見的線。** alpha 從 0 起跑、到 1 停住，
           值連續但**一階導數跳階**（馬赫帶）—— 這一站 2026-08-12 在照片與窄帶
-          的接縫上已經記過同一條（CLAUDE.md 第九節第 10 條）。他說的
+          的接縫上已經記過同一條（DECISIONS.md 第九節第 10 條）。他說的
           「看起來不是連續的漸層」就是這個。
           → 改成 **smoothstep（3t²−2t³）**，頭尾兩端的斜率都是 0。
             八個色停逼近，端點斜率從 1.00 降到 0.22。**顏色一個都沒動。**
@@ -3931,7 +3931,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
    ⚠⚠ **上下內距一定要寫 `calc((34px - 1.6em - 2px) / 2)`，不要換算成 px。**
      34 是那一排藥丸的塊高、1.6 是 line-height、1em 是**自己當下的字級**、
      2 是上下框線。寫死之後字級一改塊高就被頂開 —— 這條規則 index.html 裡
-     也有（CLAUDE.md 第九節「手機的可讀性與橫捲標記」那一條）。
+     也有（DECISIONS.md 第九節「手機的可讀性與橫捲標記」那一條）。
    ⚠ 它仍然是 `<h3>` 卡片標題，不是可以按的鈕 —— 抄的是外觀，不是行為。 */
 .card-map h3 {
   font-size: .88rem; line-height: 1.6; letter-spacing: normal;
@@ -4052,7 +4052,7 @@ html[data-theme="dark"] .bay { fill-opacity: .72; }
 .card-map .map-note { max-width: 480px; margin-inline: auto; }
 /* 撇清關係那一句自己一段、不加粗也不變色 —— 它是要看得到，不是要跳出來喊。
    ⚠ 不要用 --brick：這張卡上一個紅字都沒有，那顆紅在首頁本來就沒在用了
-   （CLAUDE.md 第九節「看診時間本身」那一條）。 */
+   （DECISIONS.md 第九節「看診時間本身」那一條）。 */
 .mn-first { display: block; margin-bottom: .35rem; }
 
 
@@ -4520,7 +4520,7 @@ html[data-theme="dark"] .bay { fill-opacity: .72; }
   .doc dd { font-size: .926rem; }
   :root   { --sk-fs: .926rem; }
   .doc dt { font-size: .90rem; }
-  /* 醫師名一變大，專科藥丸的抬升量就要重算（CLAUDE.md 第九節第 9 條）：
+  /* 醫師名一變大，專科藥丸的抬升量就要重算（DECISIONS.md 第九節第 9 條）：
 
        .158em（站上的值）　＋　0.345 × 1.05rem ÷ .8rem × (1.179/1.05 − 1)
        ＝ .158 ＋ .4528 × .12286 ＝ **.2136em**
@@ -4626,7 +4626,7 @@ html[data-theme="dark"] .bay { fill-opacity: .72; }
        兩個字 31.2 ＋ 內距 12.8 ＝ 44，還在 51.2 裡面。
      ⚠ **醫師名跟著抬到 19.84**（＝ Ⓐ 的標題那一級）：不抬的話 16.8 的名字
        只比 16 的內文大 0.8，卡片的層級幾乎沒有了。這是連動，不是另外一件事。
-     ⚠ 醫師名一變大，專科藥丸的抬升量就要重算（CLAUDE.md 第九節第 9 條）。
+     ⚠ 醫師名一變大，專科藥丸的抬升量就要重算（DECISIONS.md 第九節第 9 條）。
        公式（字對字）＝ 0.345 ×（19.84 − 12.8）÷ 12.8 ＝ .190em，
        但**這一顆要對的是「塊」不是「字」**，所以照那一節的方法實測：
        零寬探針插在藥丸**後面**量出那一行的基線，再用 canvas 的
@@ -4789,7 +4789,7 @@ html[data-theme="dark"] .bay { fill-opacity: .72; }
      `.site-head .shell { height: auto }` ＋ `padding-block: 3.736vw`，
      高度由內容撐，和那個變數無關（390 上實際 61px，變數卻是 76px，高估 15px）。
      所以照這個 repo 既有的做法**開頁量一次寫進 CSS 變數**（`--lamp-pad`、
-     `--ar-y` 都是這樣，CLAUDE.md 第九節第 9 條）。沒有 JS 時退回 `--head-h`：
+     `--ar-y` 都是這樣，DECISIONS.md 第九節第 9 條）。沒有 JS 時退回 `--head-h`：
      偏大一點，但不會破圖。 */
 body[data-topic] #main { padding-top: var(--topic-pad, var(--head-h)); }
 
@@ -5097,7 +5097,7 @@ body[data-topic] #topics { padding-top: 1rem; }
      不要改用 transform：CSS 翻轉之後「往右」在未翻轉的座標裡是「往左」，
      背景位置與量測都要跟著鏡射，很容易寫反（提案頁那一版就踩過）。
    ⚠⚠ **right 給負值 −14px**（把圖推到貼齊螢幕邊）。手機的頁面內距就是 14px，
-     再多就凸出螢幕、整頁可以左右拉（CLAUDE.md 第九節記過）。
+     再多就凸出螢幕、整頁可以左右拉（DECISIONS.md 第九節記過）。
      ≥721 那一段量出來只有 22.5px 的餘裕（iPad mini 744）——**上限不是版心留白，是最窄的那台**。
    ⚠ 濃度 .152 是這一科**算出來的 AA 上限**（柔墨 #5c5f57 壓在 #c28229 上剛好 4.50）：
      四科各不同 —— 一般牙科 .101／牙周 .116／顯微根管 .107／兒牙 **.152**（套色最淺所以最寬鬆）。
@@ -7340,7 +7340,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
        ② 中文的字面中線本來就在行框中線上方
      ⚠⚠ **不能寫死成一個 em 值。** Blink 把行內盒的基線位置進位到整數 px，
        偏移量不是字級的線性函數，同一個字級在不同 DPR 上還會落在不同的整數
-       （CLAUDE.md 第九節第 9 條記過同一個坑）。所以現場量。
+       （DECISIONS.md 第九節第 9 條記過同一個坑）。所以現場量。
      ⚠ 量字面框要**在 400px 上量再等比例縮** —— Blink 回來的
        actualBoundingBox 顆粒很粗（以 1/64 em 為階）。
      ⚠ 這支**不掛在 scroll 上**：捲動不會改變垂直位置。 */
@@ -7544,7 +7544,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
       //     所以**眼睛量到的空隙比數字小**：看起來的空隙是從平底那一列算的，
       //     比 .172em 那條深線還多將近 3 個單位。
       // ⚠ 要在 400px 上量再等比例縮 —— Blink 回來的值顆粒很粗
-      //   （CLAUDE.md 第九節第 9 條，量字面框那一段）。
+      //   （DECISIONS.md 第九節第 9 條，量字面框那一段）。
       //   ⚠⚠ **2026-08-15：那兩個常數改成跟著字級走。** 使用者把牌子的字放大
       //     之後回報「超連結的底線和字快黏在一起了……感覺都跑掉了」——
       //     2.2 是在 16px 上調出來的，換算成比例是 .1375em；字放大到 22.4px
@@ -7859,7 +7859,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
       那條 CSS**，直接跳到位。所以這一顆改成自己用 rAF 捲。
 
    ⚠⚠ **一定要把那一步歷史紀錄補回去，而且要在動畫「之前」推。**
-      CLAUDE.md 第九節第 13 條記過：preventDefault 之後自己 scrollTo，會把錨點
+      DECISIONS.md 第九節第 13 條記過：preventDefault 之後自己 scrollTo，會把錨點
       導覽那一步的歷史弄丟，「上一頁」就回不到原本那一節。這裡用
       history.pushState 把 #topics 補上 —— 但**推的時機很要命**：
       放在動畫結束才推，瀏覽器記在「上一步」那一格的捲動位置已經被更新成

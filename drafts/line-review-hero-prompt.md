@@ -641,7 +641,7 @@ STILL COMPLETELY BLANK` —— **模型把那幾個大寫的英文字直接畫�
   —— 等使用者在 Ⓐ／Ⓑ 之間挑完文案才寫（同前幾則的順序）。
 - 上線時圖要放到 `https://fangren.net/assets/line/hero-review.jpg`
   （Flex 只吃 HTTPS 的網址）—— 那個資料夾**還不存在**，
-  `tools/dist.mjs` 也還沒有它（CLAUDE.md 第十一之七節第 4 項）。
+  `tools/dist.mjs` 也還沒有它（LINE.md 第十一之七節第 4 項）。
 
 ### ✅ 已經做完的（2026-09-05）
 

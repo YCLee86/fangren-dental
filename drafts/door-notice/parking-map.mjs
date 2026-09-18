@@ -9,7 +9,7 @@
 //    兩邊對不上就 throw（見底下那道守門）——不擋的話，清查資料改了圖還是舊的，
 //    而畫面完全正常。
 // ⚠ 顏色一個都沒新增：停車格 --map-park #365685、卸貨區 --ink-soft #5c5f57。
-// ⚠ 容器裡要用 headless_shell，完整版 chrome 會少畫 87px（CLAUDE.md 第九節第 18 條）。
+// ⚠ 容器裡要用 headless_shell，完整版 chrome 會少畫 87px（DECISIONS.md 第九節第 18 條）。
 // ⚠ 永安路東側那九格的先後順序還沒現地確認，圖上是由北往南 010→002 的推定畫法。
 
 import { readFileSync } from 'node:fs';

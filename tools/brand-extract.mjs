@@ -47,7 +47,7 @@
    ・裁到形狀自己的外框（viewBox 從 0 起算），要多大就給多大。
    ・路徑的數字**逐字沿用原件**，沒有重算 —— 只用一層 transform 把座標搬過去。
 
-   ⚠⚠ Chromium 要挑 headless_shell、不能挑完整版 chrome（CLAUDE.md 第九節第 18 條：
+   ⚠⚠ Chromium 要挑 headless_shell、不能挑完整版 chrome（DECISIONS.md 第九節第 18 條：
    完整版畫出來會比 --window-size 少 87px，而且不報錯）。
    ============================================================================= */
 

@@ -187,7 +187,7 @@
 整塊就插進樣式表中間、完全不會顯示。要從 <code>&lt;/head&gt;</code> 之後才開始找。</p>
 <p>⚠ <code>&lt;!-- SEO:START</code> 後面還跟著一句「由 tools/topics.mjs 產生，請勿手動編輯」，
 <b>不能用整串比對</b>，只找前綴。</p>
-<p>⚠ <b>模板字串裡的 CSS 註解不能出現反引號</b>（CLAUDE.md 第九節第 8 條的近親）——
+<p>⚠ <b>模板字串裡的 CSS 註解不能出現反引號</b>（DECISIONS.md 第九節第 8 條的近親）——
 寫了就把樣板提早關掉，整支腳本語法錯誤。這一輪踩了兩次。</p>
 <p>⚠⚠ <b>CSS 裡的 <code>url()</code> 在做著陸頁快照時也要改路徑。</b>
 <code>tools/topics.mjs</code> 原本只換 <code>href=</code>／<code>src=</code>／<code>srcset=</code>，

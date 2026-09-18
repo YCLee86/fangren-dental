@@ -9,7 +9,7 @@
  *   這一支只做「等比例縮小 ＋ 裁成正方」。要換圖去改那一則自己的出圖腳本。
  *
  * ⚠ 為什麼要縮：十張原檔合計約 3.3MB，而 Worker 對 `/preview/*` 設 `no-store`
- *   （CLAUDE.md 第九節第 23 條）—— 每次開頁都重載一次。縮成 210px 見方的 JPEG
+ *   （DECISIONS.md 第九節第 23 條）—— 每次開頁都重載一次。縮成 210px 見方的 JPEG
  *   之後十張合計約 90KB。
  *
  * ⚠ 裁的是**上緣那一塊正方**（`cover` ＋ 對齊上緣）：這幾張都是直的卡片，
@@ -30,7 +30,7 @@
  * ⚠ 兩道守門：① 出來的一定要是正方（縮放算錯會靜靜地變形）
  *              ② 不可以整片同一個顏色（裁到空白處 ＝ 那一格等於沒有圖，
  *                 而尺寸守門照樣會過）
- * ⚠ 產圖一律用 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 產圖一律用 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 import path from "node:path";

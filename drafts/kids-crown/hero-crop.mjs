@@ -10,10 +10,10 @@
  * ⚠⚠ 裁的量不是只有白邊：下面多裁 2 列，是為了讓長寬比**正好**回到站上那一族
  *   （2000/1116 = 1.792115）。這樣 hero-resize 產出的三張會是 2000×1116／
  *   1600×893／800×446 —— 和現在站上那三張逐格相同，文章頁那個手寫的
- *   width/height 一個字都不必改（CLAUDE.md 第九節「文章 HERO 的比例」那一列）。
+ *   width/height 一個字都不必改（DECISIONS.md 第九節「文章 HERO 的比例」那一列）。
  *
  * ⚠ 輸出 PNG 不是 JPEG：這只是中繼檔，再壓一次 JPEG 等於白白掉一次品質。
- * ⚠ 產生器一律挑 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 產生器一律挑 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 import path from "node:path";

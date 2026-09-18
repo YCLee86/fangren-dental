@@ -40,7 +40,7 @@
     "  寫怎麼聯繫**。沒有自己加回去，規格頁的面板有一列一直標著。",
     "",
     "⚠⚠ **兩顆按鈕在 Flex 裡都是「可以點的 box」，不是 button** ——",
-    "  因為 Flex 的 button 只有一個文字標籤、放不進圖示（CLAUDE.md 第十一之二節），",
+    "  因為 Flex 的 button 只有一個文字標籤、放不進圖示（LINE.md 第十一之二節），",
     "  而這一站的按鈕上要有標誌。代價：box 沒有 button 內建的按壓效果",
     "  （LINE 會不會給一層淡淡的按壓反白，我們沒有實機驗過 —— 那一題在廠商清單上）。",
     "",
@@ -62,7 +62,7 @@
     "⚠ 〔病人姓名〕是**系統填的欄位**，不要寫死（這裡用 {{patient}}）。",
     "",
     "⚠ 上線前要把圖放到 https://fangren.net/assets/line/（那個資料夾現在還不存在，",
-    "  tools/dist.mjs 也還沒有它 —— CLAUDE.md 第十一之七節第 4 項）：",
+    "  tools/dist.mjs 也還沒有它 —— LINE.md 第十一之七節第 4 項）：",
     "  hero-review.jpg、mark-white.png、mark-chev-white.png、mark-nogo.png。"
   ],
   "type": "bubble",

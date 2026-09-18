@@ -9,7 +9,7 @@
    ⚠ 出在 preview/ 不是 drafts/ —— drafts 進不了 _site，使用者在手機上拿不到。
 */
 import { existsSync, readdirSync, mkdirSync } from "node:fs";
-/* ⚠ playwright 是 CommonJS，具名匯入會失敗（CLAUDE.md 第九節第 11 條）。 */
+/* ⚠ playwright 是 CommonJS，具名匯入會失敗（DECISIONS.md 第九節第 11 條）。 */
 import pkg from "/opt/node22/lib/node_modules/playwright/index.js";
 const { chromium } = pkg;
 

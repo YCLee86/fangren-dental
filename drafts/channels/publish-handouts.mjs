@@ -8,7 +8,7 @@
  * 這一支補掉 2026-09-07 查出來的三件（三件都不報錯，只有拿數字量才看得到）：
  *
  *   ① **十張頭圖全部超過 LINE 的 1024**（1124／1200／1060／1058／1056 寬）——
- *      Flex 的 image 上限是 1024×1024（CLAUDE.md 第十一之二節），送上去會出事。
+ *      Flex 的 image 上限是 1024×1024（LINE.md 第十一之二節），送上去會出事。
  *      → 等比例縮到 1024 寬，並把**實際的 W×H 寫回 JSON 的 aspectRatio**
  *        （不要留著舊的 1124:588 —— 那會變成第二個真相）。
  *   ② **三張「看大圖」的副檔名對不上**：JSON 寫 `handout-{calculus,denture,implant}.jpg`，
@@ -19,7 +19,7 @@
  *
  * ⚠ 「看大圖」是 uri action、在瀏覽器裡開，**沒有 1024 的限制**，所以只有頭圖要縮。
  * ⚠ `assets/` 在 `tools/dist.mjs` 的 ALWAYS 裡，放進去就會跟著上線，不必改 dist.mjs。
- * ⚠ 產圖一律用 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 產圖一律用 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 import path from "node:path";

@@ -29,7 +29,7 @@
  *
  * ⚠ 顏色一律**深階 `#2c5238`** —— 這三顆都在**外框按鈕**上（卡片底色），
  *   同招呼卡 `.btn.line` 那一顆。白色那顆只給實心綠底用。
- * ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 一律 headless_shell（DECISIONS.md 第九節第 18 條）。
  * ⚠ 要量外框一定用 `getBBox()`，不要自己拆 path 的數字（mark-png.mjs 檔頭那條）。
  */
 import fs from "node:fs";

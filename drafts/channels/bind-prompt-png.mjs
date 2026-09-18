@@ -13,7 +13,7 @@
  * ⚠⚠ 現況那一張是**我們照截圖重畫的結構**，不是廠商的截圖本人
  *   （吉祥物沒有畫；repo 是公開的）。
  * ⚠ 卡片實寬 268px，deviceScaleFactor 3 → 檔案 804px 寬。
- * ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 一律 headless_shell（DECISIONS.md 第九節第 18 條）。
  * ⚠ 這是這個資料夾裡唯一准許存在的兩個產出檔 —— check-bind-prompt.mjs 的第 ② 道
  *   仍然擋著「複製別人的圖進來」。
  */

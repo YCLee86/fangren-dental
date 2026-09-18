@@ -20,7 +20,7 @@
  *   規格頁寫看得懂的示範值）—— 改成檢查「兩邊都是變數的位置 ＋
  *   規格頁上不准直接印 {{…}}」（check-remind 那一輪踩過，照字面比會誤報）。
  * ⚠ 頁面是 JS 產生的，要真的用瀏覽器跑一次再讀，不能用正規式掃 HTML。
- * ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 一律 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 import path from "node:path";

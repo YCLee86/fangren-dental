@@ -44,7 +44,7 @@
  * ⚠ 約診提醒沒有格子：它是推播，沒有可以點的去處。
  *
  * 照著站上既有的規矩做的四件：
- * ① Chromium 一律挑 headless_shell（CLAUDE.md 第九節第 18 條：完整版 chrome
+ * ① Chromium 一律挑 headless_shell（DECISIONS.md 第九節第 18 條：完整版 chrome
  *    畫出來會少 87px，而且 PNG 仍輸出完整尺寸、不報錯）。
  * ② 帶子的 alpha 用 smoothstep 不用線性（第 10 條：線性漸層的起點是一條可見的線）。
  * ③ 字型是真的 Noto Sans TC —— 容器裡只有文泉驛，所以從 Google Fonts 取回
@@ -91,7 +91,7 @@ const C = {
   bandSolid: "#1b1e22",   /* 帶子的實色，接在照片下面 */
 };
 
-/* 帶子的 alpha：smoothstep，頭尾斜率 0（CLAUDE.md 第九節第 10 條） */
+/* 帶子的 alpha：smoothstep，頭尾斜率 0（DECISIONS.md 第九節第 10 條） */
 const smooth = (from, to, stops = 10) => {
   const out = [];
   for (let i = 0; i <= stops; i++) {

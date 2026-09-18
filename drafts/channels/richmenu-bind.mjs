@@ -28,7 +28,7 @@
  *   小型 ＝ 375×126、大型 ＝ 375×253。原圖裡一個人頭 85px 高，
  *   縮到小型的圖欄裡只剩 14 CSS px —— 面板每一格都會把這個數字印出來。
  *
- * ⚠ 產圖一律用 headless_shell，不要用完整版 chrome（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 產圖一律用 headless_shell，不要用完整版 chrome（DECISIONS.md 第九節第 18 條）。
  * ⚠ 容器裡沒有 Noto Sans TC，中文會落到 WenQuanYi Zen Hei（同 post-hours.mjs、
  *   post-map.mjs 那幾張已經上線的貼文圖），所以字面寬度和使用者手機上會有幾 % 的差。
  */

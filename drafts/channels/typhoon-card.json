@@ -55,7 +55,7 @@
     "  （第一段離頭圖 14+8＝22px）。守門會逐項比對，不要只改一邊。",
     "",
     "顏色只有兩個，都是站上的：卡底 #F4F4F5（--card）、內文 #5C5F57（--ink-soft）。",
-    "字級 sm ＝ 14px（LINE 的固定 px，見 CLAUDE.md 第十一之二節）。",
+    "字級 sm ＝ 14px（LINE 的固定 px，見 LINE.md 第十一之二節）。",
     "",
     "改完要跑：node drafts/channels/check-typhoon.mjs"
   ],

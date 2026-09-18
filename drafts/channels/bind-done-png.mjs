@@ -21,7 +21,7 @@
  *   哪天那一頁改了這些圖就開始說謊（同 og-topic-card 那一輪：要擺真的產出檔）。
  * ⚠ 卡片實寬 268px（LINE 聊天室裡的真實大小），這裡用 deviceScaleFactor 3 出圖，
  *   所以檔案是 804px 寬。
- * ⚠⚠ 切換條是 fixed 的，**Playwright 的元素截圖照樣拍得到它**（CLAUDE.md 第九節
+ * ⚠⚠ 切換條是 fixed 的，**Playwright 的元素截圖照樣拍得到它**（DECISIONS.md 第九節
  *   第 22 條）—— 拍之前一定要先藏起來。
  * ⚠ 一律 headless_shell（第九節第 18 條）。
  */

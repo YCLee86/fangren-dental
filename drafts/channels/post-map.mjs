@@ -23,7 +23,7 @@
  *
  * ⚠ 顏色一個都沒有新增：地圖自己帶著站上的每一顆色，畫布只用
  *   --card／--rule／--ink／--ink-soft。
- * ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 一律 headless_shell（DECISIONS.md 第九節第 18 條）。
  * ⚠ 容器裡沒有 Noto Sans TC，中文落到 WenQuanYi Zen Hei —— 這條線每一張圖都是這樣。
  */
 import fs from "node:fs";
@@ -359,7 +359,7 @@ const build = async (tag, { title = TITLES.t1, ts = 46, fs2 = 32, all = true, pa
   if (m.band.y < MARGIN - .5 || m.band.y + m.band.h > H - MARGIN + .5)
     throw new Error(`${tag}：內容 ${m.band.y.toFixed(0)}~${(m.band.y + m.band.h).toFixed(0)}，`
       + `超出留白 ${MARGIN}`);
-  /* ⚠⚠⚠ 這一條不是壞掉檢查，是「讀起來對不對」（CLAUDE.md 第九節第 28 條 ④）：
+  /* ⚠⚠⚠ 這一條不是壞掉檢查，是「讀起來對不對」（DECISIONS.md 第九節第 28 條 ④）：
      這張圖是給**小格**的，整張會縮到 410px —— 標題與頁尾是那個尺寸下
      **唯一讀得出來的兩樣東西**，小於 10px 就等於這張圖什麼都沒說。
      ⚠ 地圖上的字**不在這一條裡**：它在 410px 一定小於 10px，那是知情的取捨

@@ -473,7 +473,7 @@ blank and dark with nothing on it at all.
 **還沒做的（要等使用者挑完六案）：**
 
 - 圖上線要放到 `https://fangren.net/assets/line/hero-bind.jpg`（Flex 只吃 HTTPS 的網址）。
-  ⚠ 那個資料夾**還不存在**，`tools/dist.mjs` 也還沒有它（CLAUDE.md 第十一之七節第 3 項）。
+  ⚠ 那個資料夾**還不存在**，`tools/dist.mjs` 也還沒有它（LINE.md 第十一之七節第 3 項）。
 - 寫 `drafts/channels/bind-done-card.json`（Flex 的 JSON，`hero.url` 指過去）。
 - **招呼圖卡那張頭圖 1040×520 要回去重切成 1024**（同第 1 點的理由，長相不會變）。
 

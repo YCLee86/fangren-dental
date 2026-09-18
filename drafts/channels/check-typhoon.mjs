@@ -24,7 +24,7 @@
  *   紅線是「寫了就是說謊」，口氣是「我覺得可以更好」，而使用者已經決定用自己的字。
  * ⚠⚠ 頭圖是 **JPEG 不是 PNG**，所以尺寸要自己掃 SOF 標記（不能照抄別支的 PNG 讀法）。
  * ⚠ 頁面是 JS 產生的，要真的用瀏覽器跑一次再讀，不能用正規式掃 HTML。
- * ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 一律 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 import path from "node:path";

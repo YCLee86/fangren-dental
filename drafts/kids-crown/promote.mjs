@@ -8,7 +8,7 @@
 //   ② 計數器要有，而且是 data-views-self="kids-crown"（少了 -self 就不會 +1）
 //   ③ 內文的同層連結維持 ../<slug>/ 的原形（BODY.html 本來就是照 posts/ 寫的）
 //   ④ RELATED:START~RELATED:END 的標記留著，build.mjs 會填三張卡
-// ⚠ CLAUDE.md 第九節第 27 條：**只搬 index.html**，drafts/kids-crown/ 底下的
+// ⚠ DECISIONS.md 第九節第 27 條：**只搬 index.html**，drafts/kids-crown/ 底下的
 //   ARTICLE／FACTCHECK／HERO-PROMPTS／原圖一律留在原地（dist.mjs 會遞迴複製 posts/）。
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';

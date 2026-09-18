@@ -11,7 +11,7 @@
  * ⚠⚠ 出 **1024×512** 不是招呼圖卡那張的 1040×520：LINE 對 Flex 的 `image` 元件
  *     明文寫著「最大 1024×1024 px」，1040 已經超過。兩張看起來完全一樣（差 1.5%），
  *     但這一張是在規格內的。**招呼圖卡那張 1040×520 要回去重切**（見 channels/README 第十九節）。
- * ⚠ 產圖一律用 headless_shell，不要用完整版 chrome（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 產圖一律用 headless_shell，不要用完整版 chrome（DECISIONS.md 第九節第 18 條）。
  * ⚠ 出圖後有三道守門：長寬比、四邊有沒有烘進白框、墨有沒有被裁到。
  */
 import fs from "node:fs";

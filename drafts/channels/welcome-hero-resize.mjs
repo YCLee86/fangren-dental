@@ -3,7 +3,7 @@
  *   preview/line-hello/hero-current.jpg  →  preview/line-welcome/hero-welcome.jpg
  *
  * ⚠⚠⚠ 為什麼要多這一支：**LINE Flex 的 image 上限是 1024×1024**
- *   （CLAUDE.md 第十一之二節），而招呼圖卡的頭圖是七則裡唯一一張 1040 寬的 ——
+ *   （LINE.md 第十一之二節），而招呼圖卡的頭圖是七則裡唯一一張 1040 寬的 ——
  *   其餘五張頭圖（綁定完成／提醒／評價／颱風）本來就出 1024×512。
  *   `welcome-card.json` 從一開始就寫著 `hero-welcome.jpg`，但**沒有任何一支腳本產它**，
  *   所以那個網址一直是空的。這一支就是補上那個缺口。
@@ -17,7 +17,7 @@
  *
  * ⚠ 這是**純等比例縮小，不是裁切** —— 兩邊都是 2:1，所以構圖一個像素都沒有移動。
  *   守門因此比的是「墨的外框在正規化座標裡有沒有跑掉」（跑掉就代表被裁到或被拉伸）。
- * ⚠ 產圖一律用 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 產圖一律用 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 const SRC = "preview/line-hello/hero-current.jpg";

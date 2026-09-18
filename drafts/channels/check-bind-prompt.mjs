@@ -19,7 +19,7 @@
  *     ⑨ 綁定完成那張 PNG 的 width/height 屬性要對得上實檔的比例，
  *        而且**畫出來真的是那個大小**（屬性寫對 ≠ 畫出來是那個大小）
  *
- * ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 一律 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 import path from "node:path";

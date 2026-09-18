@@ -21,7 +21,7 @@
  *     browser.close()
  *   不是通用的 Playwright 替代品，缺什麼再補什麼。
  *
- * ⚠⚠ CLAUDE.md 第九節第 18 條：完整版 chrome 畫出來會比 --window-size 少 87px。
+ * ⚠⚠ DECISIONS.md 第九節第 18 條：完整版 chrome 畫出來會比 --window-size 少 87px。
  *   這一支不靠視窗大小 —— 用 `Emulation.setDeviceMetricsOverride` 指定畫面尺寸，
  *   截圖用 `Page.captureScreenshot`，並在回傳前**驗一次寬高**，對不上就 throw。
  *
@@ -97,7 +97,7 @@ class Page {
       format: type, ...(type === "jpeg" ? { quality } : {}), captureBeyondViewport: false,
     }, this.sid);
     const buf = Buffer.from(r.data, "base64");
-    /* CLAUDE.md 第九節第 18 條：畫出來的尺寸一定要驗，被平切時不會有人報錯 */
+    /* DECISIONS.md 第九節第 18 條：畫出來的尺寸一定要驗，被平切時不會有人報錯 */
     const got = pngJpegSize(buf);
     const want = { w: this.size.width * this.size.deviceScaleFactor, h: this.size.height * this.size.deviceScaleFactor };
     if (got && (got.w !== want.w || got.h !== want.h)) {

@@ -12,7 +12,7 @@
  *   ⑥ 紅線：不可以出現「有問題隨時問」那一類的承諾
  *
  * ⚠ 頁面是 JS 產生的，所以要真的用瀏覽器跑一次再讀，不能用正規式掃 HTML。
- * ⚠ 一律 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 一律 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 import path from "node:path";

@@ -14,7 +14,7 @@
  *   ① 四邊有沒有烘進去的白框（第七節第 6 條，〈牙齦流血〉那張踩過）
  *   ② 裁切量太大（> 8%）—— 那通常表示拿錯了原檔，不是比例微調
  *
- * ⚠ 一律挑 headless_shell，不要挑完整版 chrome（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 一律挑 headless_shell，不要挑完整版 chrome（DECISIONS.md 第九節第 18 條）。
  */
 
 import fs from "node:fs";

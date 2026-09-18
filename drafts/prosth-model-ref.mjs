@@ -57,7 +57,7 @@ writeFileSync('/tmp/prosth-model-ref.html', `<!doctype html><meta charset="utf-8
 const bin = ['/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
              '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'].find(p => existsSync(p));
 if (!bin) throw new Error('找不到 Chromium');
-if (bin.endsWith('chrome')) console.warn('⚠ 用到完整版 chrome，畫面會少 87px（CLAUDE.md 第九節第 18 條）');
+if (bin.endsWith('chrome')) console.warn('⚠ 用到完整版 chrome，畫面會少 87px（DECISIONS.md 第九節第 18 條）');
 execFileSync(bin, ['--headless', '--no-sandbox', '--disable-gpu', '--hide-scrollbars',
   '--force-device-scale-factor=1', '--window-size=1000,380',
   '--screenshot=drafts/prosth-model-ref.png', '/tmp/prosth-model-ref.html'], { stdio: 'ignore' });

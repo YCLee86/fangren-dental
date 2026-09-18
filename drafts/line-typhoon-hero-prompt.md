@@ -2936,4 +2936,4 @@ photo-realism; 3D rendering; dental instruments, chairs, X-rays or teeth.
    排好的模板**，要跟廠商談成「〔颱風名〕〔日期〕×2〔星期〕四格做成可填欄位」。
    談不成就退回純文字或「先貼圖再貼字」，**兩條退路吃的都是這一張圖，不會白畫**。
 5. **上線時要把 `hero-typhoon.jpg` 放到 `https://fangren.net/assets/line/`**
-   （同其餘幾張頭圖，見 CLAUDE.md 第十一之七節第 4 項）。
+   （同其餘幾張頭圖，見 LINE.md 第十一之七節第 4 項）。

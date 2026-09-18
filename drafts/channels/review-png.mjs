@@ -22,7 +22,7 @@
  * ⚠⚠ 頭圖**還沒畫**，卡上是佔位框（使用者 2026-09-04：「先保留圖卡空間」）——
  *   佔位框和真圖一樣高（aspect-ratio 2/1），所以圖進來之後卡片高度不會變。
  * ⚠ 卡片實寬 268px（LINE 聊天室裡的真實大小），deviceScaleFactor 3 → 檔案 804px 寬。
- * ⚠⚠ 切換條是 fixed 的，Playwright 的元素截圖照樣拍得到它（CLAUDE.md 第九節第 22 條）
+ * ⚠⚠ 切換條是 fixed 的，Playwright 的元素截圖照樣拍得到它（DECISIONS.md 第九節第 22 條）
  *   —— 拍之前一定要先藏起來。
  * ⚠ 連聊天室拍要用 **430 寬**：429 以下手機框會貼齊頁面兩邊、圓角與左右框線都被拿掉
  *   （那是為了在真手機上擠出 268px 的卡片，不是給截圖用的）。
@@ -76,7 +76,7 @@ async function shot(q, file, whole) {
   await page.waitForFunction(() =>
     [...document.images].every((i) => i.complete && i.naturalWidth > 0));
   if (errs.length) throw new Error("那一頁有 JS 錯誤：" + errs.join(" / "));
-  /* ⚠⚠ 切換條是 fixed 的，元素截圖照樣拍得到（CLAUDE.md 第九節第 22 條）—— 先藏起來 */
+  /* ⚠⚠ 切換條是 fixed 的，元素截圖照樣拍得到（DECISIONS.md 第九節第 22 條）—— 先藏起來 */
   await page.evaluate(() => {
     const bar = document.querySelector(".pv-bar");
     if (bar) bar.style.display = "none";

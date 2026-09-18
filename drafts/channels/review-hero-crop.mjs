@@ -23,7 +23,7 @@
  *   **「牌子是比背板白的白」**（牌子其實也是米白，R−B < 12 一列都命中不到）。
  *   上緣改成看**成品最上面 40 列有沒有長橫線**（＝被切一半的牌子、頭或白板的框；
  *   彩旗與燈的最長橫向連續只有幾十）。
- * ⚠ 產圖一律用 headless_shell，不要用完整版 chrome（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 產圖一律用 headless_shell，不要用完整版 chrome（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 const SRC = "drafts/review-hero-src.jpg";

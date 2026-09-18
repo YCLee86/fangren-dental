@@ -117,7 +117,7 @@ const chrome = () => {
   const base = process.env.PLAYWRIGHT_BROWSERS_PATH || "/opt/pw-browsers";
   for (const d of readdirSync(base)) {
     const p = join(base, d, "chrome-linux", "headless_shell");
-    if (existsSync(p)) return p;   /* 一律 headless_shell（CLAUDE.md 第九節第 18 條） */
+    if (existsSync(p)) return p;   /* 一律 headless_shell（DECISIONS.md 第九節第 18 條） */
   }
   throw new Error("找不到 headless_shell");
 };

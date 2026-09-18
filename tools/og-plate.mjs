@@ -371,7 +371,7 @@ img.bg{width:${W}px;height:${H}px;display:block;object-fit:cover}
   text-shadow:0 1px 2px rgba(20,24,20,.28)}
 /* ⚠ --locpos stack ＝ **手機版首頁**那一種排法，四件事都是照 index.html
    max-width: 720px 那一段逐條抄的（2026-08-22）。
-   ⚠ 這一段是模板字串裡的 CSS 註解，**不能出現反引號**（CLAUDE.md 第九節）：
+   ⚠ 這一段是模板字串裡的 CSS 註解，**不能出現反引號**（DECISIONS.md 第九節）：
    ・上下兩行（.brand-text 改成 display:block，b 與 small **都要**改成 block ——
      只改外層的話兩個行內元素仍然排在同一行，那是站上踩過的坑）
    ・**細豎線與左內距一起拿掉**（small::before 設成 display:none）——

@@ -15,7 +15,7 @@
  * ⚠ 兩道守門：① 長寬比不可以跑掉（等比例縮小不該動）
  *              ② 縮完不可以整片空白（拿墨的比例當地標 —— 這幾張的底是黑的，
  *                 所以「墨」＝ 不是黑底的那些像素）
- * ⚠ 產圖一律用 headless_shell（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 產圖一律用 headless_shell（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 import path from "node:path";

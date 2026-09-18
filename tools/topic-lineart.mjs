@@ -122,7 +122,7 @@ const chromePath = (() => {
   }
   const hit = c.find((p) => fs.existsSync(p));
   if (!hit) throw new Error("找不到 Chromium");
-  return hit;   // ⚠ headless_shell 排在前面（CLAUDE.md 第九節第 18 條）
+  return hit;   // ⚠ headless_shell 排在前面（DECISIONS.md 第九節第 18 條）
 })();
 const pwPaths = [process.env.PLAYWRIGHT_MODULE, "/opt/node22/lib/node_modules/playwright/index.js", "playwright"].filter(Boolean);
 let chromium = null;

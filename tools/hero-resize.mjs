@@ -14,7 +14,7 @@
  *   ⚠ 原本文件裡寫的 PowerShell System.Drawing 只在 Windows 那台跑得動。
  *
  * ⚠⚠ 產生器一律挑 headless_shell，不要挑完整版 chrome
- *    （CLAUDE.md 第九節第 18 條：完整版畫出來會比 --window-size 少 87px）。
+ *    （DECISIONS.md 第九節第 18 條：完整版畫出來會比 --window-size 少 87px）。
  *    這一支不靠視窗尺寸截圖（用 canvas + toDataURL），但清單照抄同一份，
  *    免得日後有人改成截圖又踩回去。
  *

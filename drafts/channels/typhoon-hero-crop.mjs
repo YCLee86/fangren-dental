@@ -19,7 +19,7 @@
  *   ・下面 40 列全是積水與倒影（最低的鞋子在第 700 列上下，黃雨鞋收在第 678 列）。
  *   ⚠ 從上面裁會讓二樓那幾扇窗的上緣跑出畫面 —— 那是對的，原檔右半本來就有
  *     好幾扇窗是貼著上緣被切掉的。
- * ⚠ 產圖一律用 headless_shell，不要用完整版 chrome（CLAUDE.md 第九節第 18 條）。
+ * ⚠ 產圖一律用 headless_shell，不要用完整版 chrome（DECISIONS.md 第九節第 18 條）。
  */
 import fs from "node:fs";
 const SRC = "drafts/typhoon-hero-src.jpg";
