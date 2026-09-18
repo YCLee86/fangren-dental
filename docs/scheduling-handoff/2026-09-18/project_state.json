@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "project": "診所助理排班工具",
+  "snapshot_date": "2026-09-18",
+  "data_as_of": "2026-09-16",
+  "status": "requirements_and_skill_data_preparation",
+  "confirmed": {
+    "active_employee_filter": "在職中且員工編號以1或2開頭",
+    "active_employee_count": 14,
+    "admin_shift_eligible_employee_ids": ["1001", "1004", "1013"],
+    "other_admin_shift_status": "待確認",
+    "skill_source_date": "2026-09-01",
+    "skill_item_count": 117,
+    "normalized_skill_record_count": 1638,
+    "unrated_employee_ids": ["1031"]
+  },
+  "rating_legend": {
+    "◎": "熟練",
+    "Ø": "尚未熟練",
+    "△": "需加強",
+    "※": "學習中",
+    "blank": "未評分"
+  },
+  "employees": [
+    {"employee_id":"1001","name":"高淑婷","hire_date_104":"2015-10-01","admin_shift":"可排"},
+    {"employee_id":"1004","name":"賴宜君","hire_date_104":"2022-09-20","admin_shift":"可排"},
+    {"employee_id":"1013","name":"張家羚","hire_date_104":"2024-10-01","admin_shift":"可排"},
+    {"employee_id":"1019","name":"鄭語馨","hire_date_104":"2025-04-07","admin_shift":"待確認"},
+    {"employee_id":"1020","name":"楊芮芸","hire_date_104":"2025-04-23","admin_shift":"待確認"},
+    {"employee_id":"1025","name":"張愷芝","hire_date_104":"2026-02-23","admin_shift":"待確認"},
+    {"employee_id":"1026","name":"鄭芷昕","hire_date_104":"2026-03-02","admin_shift":"待確認"},
+    {"employee_id":"1027","name":"林欣瑩","hire_date_104":"2026-03-09","admin_shift":"待確認"},
+    {"employee_id":"1028","name":"王苡琳","hire_date_104":"2026-01-13","admin_shift":"待確認","full_time_start":"未確認"},
+    {"employee_id":"1029","name":"高儀","hire_date_104":"2025-11-24","admin_shift":"待確認","full_time_start":"未確認"},
+    {"employee_id":"1030","name":"董家綸","hire_date_104":"2025-12-02","admin_shift":"待確認","full_time_start":"未確認"},
+    {"employee_id":"1031","name":"張雯綺","hire_date_104":"2026-09-01","admin_shift":"待確認","skills":"未評分"},
+    {"employee_id":"2006","name":"陳柏享","hire_date_104":"2026-03-09","admin_shift":"待確認"},
+    {"employee_id":"2007","name":"何自婷","hire_date_104":"2025-01-06","admin_shift":"待確認"}
+  ],
+  "work_sections": ["流動工作","衛教","李柄輝醫師","李侑津醫師","廖立揚醫師","楊小瑩醫師","王俊偉醫師","許馨文醫師","林晏妤醫師","謝耀慶醫師","陳醫師","櫃台"],
+  "open_questions": [
+    "1028、1029、1030的全職生效日期",
+    "主管名單與主管班規則",
+    "班別時間與工時限制",
+    "全職與兼職可排時數",
+    "醫師班表與每診所需助理數",
+    "各醫師或診療項目的必要技能",
+    "資淺助理與資深助理的陪同規則",
+    "休假、換班、代班與鎖班流程",
+    "院區與跨院區限制",
+    "網站帳號權限、備份與個資存取紀錄"
+  ],
+  "completed_files": {
+    "104_active_employees.xlsx": "2512B5310B25282761AF27BAEC043BA3520CAF7A52686077BBA1E00086B23F1C",
+    "assistant_skill_matrix.xlsx": "3ADD64DA8E81D567456E36576291515998ABAE24EABCBAEE745443C0C730A508"
+  },
+  "merge_policy": {
+    "employee_key": ["employee_id"],
+    "skill_key": ["employee_id","work_section","category","skill_item"],
+    "precedence": ["user_confirmed","authoritative_source","derived_summary"],
+    "blank_is_not": ["不可排","不會","零"],
+    "conflict_action": "列入待確認，不自動覆寫"
+  },
+  "recommended_next_step": "比對另一台電腦的成果，確認差異後建立醫師需求矩陣與資深助理陪同規則"
+}
+
