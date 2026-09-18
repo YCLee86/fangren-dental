@@ -1,0 +1,11 @@
+import { FileBlob, SpreadsheetFile } from "@oai/artifact-tool";
+const path = "../outputs/clinic-assistant-model/assistant_skill_matrix_v1_pilot.xlsx";
+const wb = await SpreadsheetFile.importXlsx(await FileBlob.load(path));
+const sheet = wb.worksheets.getItem("班次檢核總覽");
+const formulas = [];
+for (let r = 7; r <= 36; r++) formulas.push([`=IF($A${r}="","",COUNTIFS('排班配置輸入'!$B$7:$B$66,$A${r},'排班配置輸入'!$E$7:$E$66,"主跟診",'排班配置輸入'!$J$7:$J$66,"初步可獨立")+COUNTIFS('排班配置輸入'!$B$7:$B$66,$A${r},'排班配置輸入'!$E$7:$E$66,"主跟診",'排班配置輸入'!$J$7:$J$66,"初步可條件排"))`]);
+sheet.getRange("K7:K36").formulas = formulas;
+wb.recalculate();
+console.log((await wb.inspect({ kind: "match", searchTerm: "#REF!|#DIV/0!|#VALUE!|#NAME\\?|#N/A|#NUM!|#NULL!|#SPILL!|#CALC!", options: { useRegex: true, maxResults: 300 }, maxChars: 10000 })).ndjson);
+const out = await SpreadsheetFile.exportXlsx(wb);
+await out.save(path);
