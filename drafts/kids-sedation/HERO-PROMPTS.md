@@ -2357,3 +2357,51 @@ gutters between the panels; blood; an anatomical or textbook diagram; a cross se
 drawn on their own; photorealism; a portrait-like face; grey-scale; a border or frame around the
 whole image.
 ```
+
+---
+
+## ✅ Ⓝ 定案（2026-09-18）—— `hero-final.jpg`，2000×1493，4:3
+
+第八版的產出，使用者選定：「用這張　先合上去給我看　還不要上網站」。
+
+| | 門檻 | 定案這張 |
+| --- | --- | --- |
+| 無彩空白（S<12 且 L>80） | < 5% | **2.3%** ✅ |
+| 邊緣密度 | ≥ 30% | **23.8%** ⚠ 記例外，理由見 Ⓚ 那一節 |
+| 四格的線一樣實 | 差 < 20 階 | ①21.4／②22.2／③25.3／④23.0，**差 3.9** ✅（四版裡最好的一次） |
+
+### 接上去做了什麼
+
+```bash
+node tools/hero-resize.mjs drafts/kids-sedation/hero-final.jpg kids-sedation-photo
+node drafts/kids-sedation/preview-gen.mjs
+```
+
+・`assets/hero-kids-sedation-photo-{2000,1600,800}.jpg` 已產生（440／320／114 KB）。
+・`preview-gen.mjs` 的佔位框換成真的 `<img srcset>`，`post-meta` 的 `hero`／`heroAlt` 也填了。
+・⚠ **這一頁刻意只用 JPEG，沒有包 `<picture>`**：`tools/webp.mjs` 只掃 `index.html`、
+  `assets/style.css` 與各篇文章資料夾，掃不到 `preview`，所以現在沒有對應的 `.webp`。
+  **搬進文章那天跑一次 `node tools/webp.mjs` 就會有。**
+
+### 版面實測
+
+| 視窗 | 整頁有沒有水平捲動 | HERO 實際尺寸 |
+| --- | --- | --- |
+| 390×844 | 沒有 | 362×270 |
+| 1440×900 | 沒有 | 656×490 |
+
+⚠ 桌機上 HERO 高 490px，比 16:9 的那一批（656×366）高 124px。
+這是 4:3 的必然，也是使用者要的（「垂直幅度應該要拉長一點」）。
+
+### ⚠⚠ 首頁卡的縮圖會裁掉上下各 12.4%
+
+`hero-resize.mjs` 自己印了這個警告。四格排成 2×2，上下各裁 12.4% ＝
+**上排會被切掉頂端約四分之一、下排會被切掉底端約四分之一**。
+第八版的提示詞已經寫了 CROP SAFETY（臉與關鍵的東西不要進上下 13%），
+**但這一張還沒有在 16:9 的裁法下逐格看過** —— 搬進文章之前要補這一關。
+
+### ⚠ 又踩了一次：註解裡不能出現註解的結束記號
+
+在 `preview-gen.mjs` 的區塊註解裡寫了資料夾路徑「posts 斜線星號斜線」，
+那個記號把整段註解提早關掉，整支語法錯誤。
+DECISIONS.md 第九節那張坑表第 1 條，**2026-09-18 又踩了一次**。

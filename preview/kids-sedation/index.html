@@ -51,11 +51,6 @@ r.dataset.theme=s;})();</script>
 .pv-flag { max-width: var(--content); margin: 0 auto; padding: .55rem var(--pad); font-size: .82rem;
            color: var(--ink-soft); text-align: center; letter-spacing: .02em; }
 .pv-flag b { color: var(--accent-deep); }
-.pv-hero-slot { display: flex; flex-direction: column; align-items: center; justify-content: center;
-                aspect-ratio: 16 / 9; border: 2px dashed var(--rule); border-radius: 10px;
-                background: var(--card); color: var(--ink-soft); text-align: center;
-                font-size: .95rem; line-height: 1.8; gap: .2rem; }
-.pv-hero-slot small { font-size: .78rem; }
 </style>
 
 <script type="application/json" id="post-meta">
@@ -66,8 +61,8 @@ r.dataset.theme=s;})();</script>
   "tag": "兒童牙科",
   "author": "芳仁牙醫診所 編輯室",
   "published": "【上線那天填】",
-  "hero": "【還沒有圖 —— 見 drafts/kids-sedation/HERO-PROMPTS.md】",
-  "heroAlt": "【出圖之後補】",
+  "hero": "hero-kids-sedation-photo-1600.jpg",
+  "heroAlt": "四格插畫，由左上、右上、左下到右下說一個故事。左上：明亮的兒童牙科診間，戴著印花手術帽、白袍敞開的兒牙醫師坐在小圓椅上伸手說明；右邊是一家三口，媽媽蹲著摟住男孩，男孩雙手抓著媽媽的衣服、一邊的下顎有點鼓、臉色泛紅，爸爸站在後面一手搭著媽媽的肩。右上：家裡的餐桌，媽媽拿著手機講電話、另一手拿筆，爸爸在旁邊探頭看桌上的紙，男孩在地上玩積木；右上角一個圓形對話框，裡面是穿松樹印花刷手服、戴同布手術帽的麻醉科醫師拿著話筒看著一張空白的紙。左下：治療進行中，男孩蓋著薄毯睡在治療椅上，兒牙醫師在他頭側工作，麻醉科醫師站在後方一手放在生理監視器上、眼睛看著孩子，麻醉護理師在右邊拿著板夾記錄，三位都戴口罩與手套，旁邊有點滴架與只顯示三條波形的螢幕。右下：治療結束，兒牙醫師與麻醉科醫師並肩向家長說明，麻醉科醫師空手拿著一張空白的紙；右邊爸爸抱著趴在肩上半夢半醒的男孩，媽媽在旁邊笑著。四格之間有幾條極細的白線貫穿。",
   "about": [
     { "type": "MedicalProcedure", "name": "牙科鎮靜" },
     { "type": "MedicalProcedure", "name": "全身麻醉" },
@@ -146,7 +141,12 @@ r.dataset.theme=s;})();</script>
       <h1>這麼小就要麻醉？認識兒童舒眠牙科治療</h1>
     </div>
     <figure class="post-hero">
-      <div class="pv-hero-slot">HERO 插圖還沒畫<br><small>提示詞已經寫好，出圖之後換上這一格</small></div>
+      <img src="../../assets/hero-kids-sedation-photo-1600.jpg"
+           srcset="../../assets/hero-kids-sedation-photo-800.jpg 800w,
+                   ../../assets/hero-kids-sedation-photo-1600.jpg 1600w,
+                   ../../assets/hero-kids-sedation-photo-2000.jpg 2000w"
+           sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+           alt="四格插畫，由左上、右上、左下到右下說一個故事。左上：明亮的兒童牙科診間，戴著印花手術帽、白袍敞開的兒牙醫師坐在小圓椅上伸手說明；右邊是一家三口，媽媽蹲著摟住男孩，男孩雙手抓著媽媽的衣服、一邊的下顎有點鼓、臉色泛紅，爸爸站在後面一手搭著媽媽的肩。右上：家裡的餐桌，媽媽拿著手機講電話、另一手拿筆，爸爸在旁邊探頭看桌上的紙，男孩在地上玩積木；右上角一個圓形對話框，裡面是穿松樹印花刷手服、戴同布手術帽的麻醉科醫師拿著話筒看著一張空白的紙。左下：治療進行中，男孩蓋著薄毯睡在治療椅上，兒牙醫師在他頭側工作，麻醉科醫師站在後方一手放在生理監視器上、眼睛看著孩子，麻醉護理師在右邊拿著板夾記錄，三位都戴口罩與手套，旁邊有點滴架與只顯示三條波形的螢幕。右下：治療結束，兒牙醫師與麻醉科醫師並肩向家長說明，麻醉科醫師空手拿著一張空白的紙；右邊爸爸抱著趴在肩上半夢半醒的男孩，媽媽在旁邊笑著。四格之間有幾條極細的白線貫穿。" width="2000" height="1493">
     </figure>
   </div>
 

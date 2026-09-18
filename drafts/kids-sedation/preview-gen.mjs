@@ -32,6 +32,8 @@ let out = readFileSync(resolve(root, 'posts/kids-first-visit/index.html'), 'utf8
 
 const TITLE = '這麼小就要麻醉？認識兒童舒眠牙科治療';
 const DESC  = '孩子蛀了好幾顆、一坐上診療椅就哭，醫師提到舒眠。它和全身麻醉差在哪、什麼情況才會被建議、安全看的是什麼，以及禁食與術後那一天要注意什麼。';
+const HERO = "hero-kids-sedation-photo";
+const HERO_ALT = "四格插畫，由左上、右上、左下到右下說一個故事。左上：明亮的兒童牙科診間，戴著印花手術帽、白袍敞開的兒牙醫師坐在小圓椅上伸手說明；右邊是一家三口，媽媽蹲著摟住男孩，男孩雙手抓著媽媽的衣服、一邊的下顎有點鼓、臉色泛紅，爸爸站在後面一手搭著媽媽的肩。右上：家裡的餐桌，媽媽拿著手機講電話、另一手拿筆，爸爸在旁邊探頭看桌上的紙，男孩在地上玩積木；右上角一個圓形對話框，裡面是穿松樹印花刷手服、戴同布手術帽的麻醉科醫師拿著話筒看著一張空白的紙。左下：治療進行中，男孩蓋著薄毯睡在治療椅上，兒牙醫師在他頭側工作，麻醉科醫師站在後方一手放在生理監視器上、眼睛看著孩子，麻醉護理師在右邊拿著板夾記錄，三位都戴口罩與手套，旁邊有點滴架與只顯示三條波形的螢幕。右下：治療結束，兒牙醫師與麻醉科醫師並肩向家長說明，麻醉科醫師空手拿著一張空白的紙；右邊爸爸抱著趴在肩上半夢半醒的男孩，媽媽在旁邊笑著。四格之間有幾條極細的白線貫穿。";
 const EXCERPT = '孩子滿口蛀牙，一坐上診療椅就哭、就掙扎。醫師提到「舒眠治療」的時候，多數爸媽第一個冒出來的念頭往往不是別的，是安全——這麼小就讓他睡著看牙，真的可以嗎？舒眠不是一個開關，是一條從清醒到睡著的連續刻度；決定它安不安全的，是旁邊有誰在看著、看的是什麼。';
 
 const swap = (from, to, what) => {
@@ -68,8 +70,8 @@ out = out.slice(0, metaStart) + `<script type="application/json" id="post-meta">
   "tag": "兒童牙科",
   "author": "芳仁牙醫診所 編輯室",
   "published": "【上線那天填】",
-  "hero": "【還沒有圖 —— 見 drafts/kids-sedation/HERO-PROMPTS.md】",
-  "heroAlt": "【出圖之後補】",
+  "hero": "${HERO}-1600.jpg",
+  "heroAlt": "${HERO_ALT}",
   "about": [
     { "type": "MedicalProcedure", "name": "牙科鎮靜" },
     { "type": "MedicalProcedure", "name": "全身麻醉" },
@@ -91,12 +93,24 @@ swap('<time datetime="2026-05-06">2026/05/06</time>',
      '<time datetime="2026-09-18">草稿・尚未上線</time>', 'date');
 swap('<h1>孩子第一次看牙：時機、氟化物與窩溝封填</h1>', `<h1>${TITLE}</h1>`, 'h1');
 
-/* ── ③ HERO：還沒有圖，放佔位框 ───────────────────────────── */
+/* ── ③ HERO ───────────────────────────────────────────────
+ * 2026-09-18 定案（第七版）。原檔 drafts/kids-sedation/hero-final.jpg（2000×1493，4:3），
+ * 三個尺寸由 `node tools/hero-resize.mjs drafts/kids-sedation/hero-final.jpg kids-sedation-photo` 產生。
+ * ⚠ 這一頁刻意只用 JPEG，不包 <picture>：tools/webp.mjs 只掃 index.html、style.css 與各篇文章
+ *   資料夾，掃不到 preview，所以現在還沒有對應的 .webp。搬進文章那天跑一次 webp.mjs 就會有。
+ *   ⚠⚠ 上一行原本寫成「posts 斜線星號斜線」，那個記號會把這段註解提早關掉，整支語法錯誤
+ *   （DECISIONS.md 第九節那張坑表第 1 條，2026-09-18 又踩了一次）。
+ * 逐版的提示詞與每一輪改了什麼，寫在 drafts/kids-sedation/HERO-PROMPTS.md。 */
 const figStart = out.indexOf('    <figure class="post-hero">');
 const figEnd = out.indexOf('</figure>', figStart) + '</figure>'.length;
 if (figStart < 0) throw new Error('找不到 post-hero');
 out = out.slice(0, figStart) + `    <figure class="post-hero">
-      <div class="pv-hero-slot">HERO 插圖還沒畫<br><small>提示詞已經寫好，出圖之後換上這一格</small></div>
+      <img src="../../assets/${HERO}-1600.jpg"
+           srcset="../../assets/${HERO}-800.jpg 800w,
+                   ../../assets/${HERO}-1600.jpg 1600w,
+                   ../../assets/${HERO}-2000.jpg 2000w"
+           sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+           alt="${HERO_ALT}" width="2000" height="1493">
     </figure>` + out.slice(figEnd);
 
 /* ── ④ 內文（唯一出處：BODY.html） ────────────────────────── */
@@ -129,11 +143,6 @@ const css = `<style>
 .pv-flag { max-width: var(--content); margin: 0 auto; padding: .55rem var(--pad); font-size: .82rem;
            color: var(--ink-soft); text-align: center; letter-spacing: .02em; }
 .pv-flag b { color: var(--accent-deep); }
-.pv-hero-slot { display: flex; flex-direction: column; align-items: center; justify-content: center;
-                aspect-ratio: 16 / 9; border: 2px dashed var(--rule); border-radius: 10px;
-                background: var(--card); color: var(--ink-soft); text-align: center;
-                font-size: .95rem; line-height: 1.8; gap: .2rem; }
-.pv-hero-slot small { font-size: .78rem; }
 </style>`;
 swap('<link rel="stylesheet" href="../../assets/style.css">',
      '<link rel="stylesheet" href="../../assets/style.css">\n' + css, 'style');
@@ -148,7 +157,7 @@ const must = [
   [TITLE, '標題沒換到'],
   ['data-spec="kids"', '科別標記掉了'],
   ['潮氣末二氧化碳', '內文沒接上'],
-  ['pv-hero-slot', 'HERO 佔位框不見了 —— 圖到了要改這一支，不是刪掉守門'],
+  [`${HERO}-1600.jpg`, 'HERO 沒接上'],
 ];
 for (const [s, msg] of must) if (!out.includes(s)) throw new Error(msg);
 const banned = [
@@ -165,6 +174,7 @@ const banned = [
   ['健保', '⚠ 給付還沒問到診所，這一篇不寫（同上）'],
   ['萬元', '同上'],
   // ⚠ 診所實際做到哪一格還沒問到，全篇一律用通稱，不可出現第一人稱
+  ['pv-hero-slot', '⚠ HERO 佔位框又跑回來了 —— 圖已經定案（drafts/kids-sedation/hero-final.jpg）'],
   ['本院', '⚠ 診所實際做到哪一格還沒問到，不可用第一人稱（FACTCHECK 第二節）'],
   ['我們診所', '同上'],
 ];
