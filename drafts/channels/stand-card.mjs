@@ -449,7 +449,7 @@ const lum = (h) => {
     .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
   return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
 };
-const bandSvg = (B = BAND, cls = "bnd", 色 = 墨色) => {
+export const bandSvg = (B = BAND, cls = "bnd", 色 = 墨色) => {
   const { it, 總寬, 總高 } = B;
   return `<svg class="${cls}" viewBox="0 0 ${總寬.toFixed(1)} ${總高.toFixed(1)}" role="img" aria-label="芳仁牙醫診所的標誌排成的一條分隔線">` +
     it.map((o) => {
