@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>map-alley-east｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>map-alley-east — 33 巷過了永樂街那一條更窄的巷子</h1>
+<p class="meta">
+  2026-09-18 當天開、當天定案上線<br>
+  原網址 <code>/preview/map-alley-east/</code>（已刪除 2026-09-18）<br>
+  整頁還原：<code>git show ef234ba:preview/map-alley-east/index.html</code><br>
+  產生器 <code>tools/map-alley-preview.mjs</code>（一次性，定案時一併刪掉）<br>
+  切換條 <code>?on=</code> 有沒有 ／ <code>?w=</code> 多寬 ／ <code>?y=</code> 中心落在哪
+</p>
+
+<h2>起因</h2>
+<p>使用者拿 Google 地圖的空照截圖（2436×1125）：「網站上的地圖調整　仔細看平和街33巷過了永樂街，有一條更窄的既有道路連通到永安路」。</p>
+
+<h2>現況（viewBox 0 0 560 620 的使用者單位）</h2>
+<pre>永樂街～永安路那一欄　一整塊街廓 x 354~455、y 197~403（北接永安路14巷、南接大同路）
+33 巷　　　　　　　　只切「平和街～永樂街」那一欄：y 321~333（寬 12、中心 327），過了永樂街就停住
+站上的路寬分三族　　主要道路 38~46（大同路 38、中華路 46）
+　　　　　　　　　　街 30~32（平和街、永樂街、永安路）
+　　　　　　　　　　巷 12~17（19 巷 17、14 巷 17、33 巷 12、文化路北邊那條沒有名字的 12）
+　　　　　　　　　　→ 站上最窄的就是 12，所以「更窄」＝ 要開一個比 12 更小的階</pre>
+
+<h2>定案</h2>
+<pre>寬　6（＝ 33 巷的 50%，站上新的最窄一階）
+位置　中心 y 335（比 33 巷的 327 往南 8）—— 不是一直線過去
+兩端　西接永樂街 x354、東到永安路 x455（長 101）
+街廓　x354 y197 h206 一塊 → y197 h135（197~332）＋ y338 h65（338~403）
+街名　不標（那條巷子沒有名字，同文化路北邊那條與 19 巷北邊那條平行巷）</pre>
+<p class="note"><b>兩個值都是使用者在提案頁上逐格挑的</b>（原話「寬6 往南8 定案 上線」）。
+⚠ 「往南 8」推翻了我送出去時的預設（齊 33 巷）—— <b>它不是 33 巷的延伸，是另一條巷子</b>，
+那正是提案頁把「位置」做成一把尺、而不是直直畫過去的理由。</p>
+
+<h2>那張截圖上量得到的</h2>
+<pre>永樂街中心 x≈1300、永安路中心 x≈2025　→　1 個 viewBox 單位 ≈ 5.5 個截圖像素
+Google 自己畫的 33 巷路帶（半透明灰）在 x≈1330 就收成一個圓頭
+　→ 它的圖資裡 33 巷過了永樂街就沒有了</pre>
+<p>所以這一條是<b>「地上有、圖資沒有」</b>的那一種 —— 使用者叫我「仔細看」的是空照影像不是路名。
+⚠ 日後不要拿 Google 的路名回頭訂正這一條。</p>
+<p class="note"><b>旁證在自己家的檔案裡。</b>
+<code>drafts/door-notice/parking-survey.json</code> 那一輪使用者現地走過，
+「平和街33巷　整條　約 230 m」；而同一份清查裡文化路第 9 段（永樂街 → 平和街）約 100 m、
+大同路第 7 段（永樂街 → 永安路）約 85 m —— 兩段加起來 185 m，<b>比 230 m 短</b>。
+33 巷那一條確實比「只到永樂街」長得多。<br>
+<b>通則：使用者從外面的畫面指出一件事時，先翻一次自己家的檔案有沒有對得上的紀錄</b> ——
+這一件的旁證就躺在一年前自己做的現地清查裡。</p>
+
+<h2>量不到的（所以做成尺，不是送一個我估的值）</h2>
+<p>那條巷子<b>實際多寬</b>、以及<b>到底齊不齊 33 巷</b>。那張截圖上 1 個 viewBox 單位只有 5.5px，
+巷子本身只有幾個像素寬，而且是斜照的 3D 影像（房子會倒），逐像素放大到底還是糊的。
+容器連不出去，Overpass（OpenStreetMap）那條路也被 egress 擋掉。</p>
+<pre>三條尺　這一條有沒有（對照現況）
+　　　　多寬　6・8・10・12（12 ＝ 同 33 巷）
+　　　　位置　往北 8・齊 33 巷・往南 8
+預設　　有 ＋ 寬 8 ＋ 齊 33 巷　→　使用者挑的是 寬 6 ＋ 往南 8，兩格都不是預設</pre>
+
+<h2>畫法</h2>
+<p class="note"><b>街廓是真的兩塊 rect，不是在街廓上蓋一條路面色的長條。</b>
+站上每一塊街廓都有 rx=4 的圓角（2026-08-14 使用者指定），蓋長條的話巷子兩側會是直角 ——
+那就不是站上那張圖的畫法，而是一張看起來很像的假圖。
+提案頁因此把那一欄原本那塊 rect 換成上下兩塊，尺一動就由 JS 改它們的 y 與 height。</p>
+
+<h2>驗收</h2>
+<pre>提案頁切到「沒有（對照現況）」　390／375／430／834／1440 × DPR 3，對站上逐像素 0 個有差
+上線之後　　　　　　　　　　　　站上那張地圖對提案頁「他挑的那一格」（?w=6&amp;y=335）逐像素相同
+水平溢出 0・JS 錯 0・切換條 18.8% 一屏（390）
+最近的鄰居　合廷停車場下緣 273（離 59）・永安路14巷 那三個字在 y192・鄰近停車格最上面那一格 y375
+手機　　　　slice 之後看得到 viewBox 的 x 75~505，這一條 354~455 整條都在畫面裡
+夜間　　　　顏色一個都沒動（吃 --map-bg／--map-road），night-mode --check 全綠</pre>
+<p class="note"><b>「定案」定的是他螢幕上那一格</b>（map-bays 那一輪的教訓）——
+所以上線之後量的不是「有沒有照著改」，是<b>站上那張圖和提案頁 <code>?w=6&amp;y=335</code> 逐像素相同</b>。</p>
+
+<h2>跟著動的</h2>
+<pre>node tools/topics.mjs　　七科的著陸頁是 index.html 的快照
+node tools/build.mjs　　　首頁的 lastmod 跟著換成當天（文章的日期一個都沒有跳 —— 地圖不在文章的 main 裡）
+node drafts/channels/post-map-door.mjs　商家貼文「位置與周邊停車」那張圖是讀 index.html 畫的
+node drafts/channels/post-fb.mjs　　　　臉書那三張同理（跑完會用預設值再跑一次，把 LINE 那三張還原成三格版）</pre>
+<p class="note">⚠ <b>那兩張貼文圖是已經匯出給使用者、可能已經貼出去的成品</b> ——
+這一輪它們跟著重畫了（同一張地圖，不能有兩個真相），
+<b>要不要把貼出去的那幾張換掉是使用者的決定</b>。<br>
+⚠ <code>drafts/door-notice/parking-survey-map.png</code> 也是拿站上那張圖當底的，
+但它的產生器在暫存區（沒進版控），<b>這一輪沒有跟著重畫</b>。</p>
+
+<h2>順手訂正的一件</h2>
+<p>地圖那段抬頭的註解寫著「14 巷切永樂街以東兩欄、33 巷切西邊三欄」，
+和底下實際畫出來的 rect 對不起來（14 巷只切永樂街～永安路那一欄、33 巷只切平和街～永樂街那一欄）。
+這一輪改那一行的時候一起訂正了。</p>
+
+<h2>還沒問到的</h2>
+<pre>・那條巷子有沒有名字（Google 上沒有標）—— 這一版不標
+・空照圖上另外看得到一條南北向的窄巷，落在這一欄的中間（換算約 viewBox x≈388、寬約 7），
+　從這一條往北通。要不要一起畫還沒問。</pre>
+
+<footer><a href="/history/">← 回改版紀錄</a>　｜　<a href="/">芳仁牙醫診所</a></footer>
+
+</div></body>
+</html>
