@@ -68,7 +68,7 @@ const 文 = html.replace(/<[^>]+>/g, "");
 /* ④ 圖檔：只准有這幾個，尺寸對得上檔頭，而且都 ≤1024（Flex 的上限） */
 {
   const 該 = ["index.html", "band-27-set.png", "band-27-ink.png", "band-27-spec.png",
-    "band-22-ink.png", "band-18-ink.png", "band-13-ink.png", "band-9-ink.png"];
+    "band-22-set.png", "band-18-set.png", "band-16-set.png", "band-13-set.png"];
   const 有 = readdirSync(DIR).sort();
   const 多 = 有.filter((f) => !該.includes(f)), 少 = 該.filter((f) => !有.includes(f));
   if (多.length || 少.length) no(`④ 資料夾對不上（多 ${多.join("、") || "—"}／少 ${少.join("、") || "—"}）`);
@@ -94,6 +94,17 @@ const 文 = html.replace(/<[^>]+>/g, "");
   if (!/noindex/.test(html)) 壞.push("沒有 noindex");
   if (/undefined/.test(文)) 壞.push("頁面上印出了 undefined");
   if (壞.length) no("⑤ " + 壞.join("；")); else ok("⑤ 零 JS・noindex・沒有 undefined");
+}
+
+/* ⑤之二 小節的號碼要照文件順序由小到大 —— 2026-09-18 踩過：拿掉一節之後把剩下的
+   重新編號，可是**區塊沒有跟著搬**，印出來是 1、2、4、3、5。版面完全正常，
+   每一道守門都會過，只有把頁面從頭讀一次才看得出來。 */
+{
+  const n = [...html.matchAll(/<h2 class="h2">(\d+)　/g)].map((m) => Number(m[1]));
+  const 亂 = n.some((x, i) => i && x <= n[i - 1]);
+  if (!n.length) no("⑤之二 一個小節都找不到");
+  else if (亂) no("⑤之二 小節的號碼沒有照順序：" + n.join("、"));
+  else ok(`⑤之二 ${n.length} 個小節照順序（${n.join("、")}）`);
 }
 
 /* ⑥ 紅線：這個帳號沒有專人即時回覆（第十一之三節） */

@@ -405,20 +405,54 @@ export const 帶 = (n = S.帶子.顆數 * S.帶子.倍, k = S.帶子.間距, 基
  *   ・不要太規律 ＝ 相鄰兩個間隔相同的最多一對
  *   ⚠⚠ 「一對都不准相同」做不到：每一科的三顆固定落在 mod 9 的同一個餘數上，
  *     可挑的位置本來就被鎖死（8748 種組合全掃過）。**那是幾何不是沒挑好。** */
-export const 套色檢查 = () => {
-  const n = S.帶子.顆數 * S.帶子.倍, 序 = 序of(n), p = S.帶子.著色.位置;
+/* ⚠⚠ 套色那幾顆的共同檢查（立牌與約診卡共用一份）——「七科各一顆」「散得開不開」
+   「規不規律」是同一件事，兩邊各寫一份就會有一天不一樣。
+   ⚠ 「隔一個間隔相同」也要算：`[2,3,2,3,2,3]` 的相鄰相同是 0，可是它讀起來一樣是花紋。 */
+export const 套色算 = (序, p) => {
+  const n = 序.length;
   const 七科 = new Set(Object.values(WM).map((m) => m.spec));
-  if (p.length !== 七科.size) throw new Error(`著色.位置 有 ${p.length} 顆，站上有 ${七科.size} 科`);
-  if (new Set(p).size !== p.length || p.some((i) => !(i >= 0 && i < n)))
-    throw new Error("著色.位置 有重複的或超出 " + n + " 顆");
+  if (p.length !== 七科.size) throw new Error(`套色位置有 ${p.length} 顆，站上有 ${七科.size} 科`);
+  if (new Set(p).size !== p.length || p.some((i) => !(Number.isInteger(i) && i >= 0 && i < n)))
+    throw new Error("套色位置有重複的或超出 " + n + " 顆");
   const cs = p.map((i) => WM[序[i]].spec);
-  if (new Set(cs).size !== 七科.size || cs.some((c) => !七科.has(c)))
-    throw new Error("套色那幾顆不是七科各一顆（" + cs.join("／") + "）");
-  const s = [...p].sort((a, b) => a - b), g = s.slice(1).map((x, i) => x - s[i]);
-  if (Math.min(...g) < 3) throw new Error("套色太集中：最小間隔 " + Math.min(...g) + " 顆（下限 3）");
+  if (new Set(cs).size !== 七科.size) throw new Error("套色那幾顆不是七科各一顆（" + cs.join("／") + "）");
+  const s2 = [...p].sort((a, b) => a - b), g = s2.slice(1).map((x, i) => x - s2[i]);
   const 同 = g.filter((x, i) => i && x === g[i - 1]).length;
-  if (同 > 1) throw new Error("套色太規律：相鄰間隔相同的有 " + 同 + " 對（上限 1）");
-  return { 位: s, 間隔: g, 前: s[0], 後: n - 1 - s[s.length - 1], 相鄰相同: 同, 科: cs };
+  const 隔 = g.filter((x, i) => i >= 2 && x === g[i - 2]).length;
+  return { 位: s2, 間隔: g, 最小: Math.min(...g), 前: s2[0], 後: n - 1 - s2[s2.length - 1], 相鄰相同: 同, 隔一相同: 隔, 科: cs };
+};
+/* ⚠⚠⚠ 那一格「做得到的最好」是算出來的，不是挑的：一科挑一個位置，全部窮舉
+   （每一科可挑的位置不多，27 顆也才 8748 種），照
+   **最小間隔愈大 → （相鄰相同＋隔一個相同）愈少 → 兩端餘量愈大** 排序。
+   ⚠ 約診卡那四格的守門就是拿它比對「資料裡那一組真的是這一組」。 */
+export const 套色最佳 = (序) => {
+  const 七科 = [...new Set(Object.values(WM).map((m) => m.spec))].sort();
+  const 可 = 七科.map((sp) => 序.map((k, i) => (WM[k].spec === sp ? i : -1)).filter((i) => i >= 0));
+  if (可.some((a) => !a.length)) throw new Error("這一份順序裡有一科一顆都沒有，挑不出七科各一顆");
+  let 好 = null;
+  const 走 = (i, 取) => {
+    if (i === 可.length) {
+      const q = 套色算(序, 取);
+      const k = [-q.最小, q.相鄰相同 + q.隔一相同, -Math.min(q.前, q.後)];
+      /* ⚠ 兩個陣列直接 `<` 會先各自轉成字串再比 —— `[-10,…]` 會排在 `[-3,…]` 後面。
+         名次要逐項比，而且**只有最小間隔那一項大於 9 時才看得出來**，所以不會被
+         現在這幾格的數字抓到（13~27 顆的間隔都是個位數）。 */
+      if (!好 || k.some((v, i) => v !== 好.k[i] && v < 好.k[i] && k.slice(0, i).every((u, j) => u === 好.k[j]))) 好 = { k, q };
+      return;
+    }
+    for (const x of 可[i]) if (!取.includes(x)) 走(i + 1, [...取, x]);
+  };
+  走(0, []);
+  return 好.q;
+};
+export const 套色檢查 = () => {
+  const n = S.帶子.顆數 * S.帶子.倍, 序 = 序of(n);
+  const q = 套色算(序, S.帶子.著色.位置);
+  /* 立牌那一組是**他挑的**（2026-09-17），所以這裡守的是他那兩句話的下限，
+     不是「做得到的最好」—— 約診卡那四格才是算出來的，見 著色.位置案。 */
+  if (q.最小 < 3) throw new Error("套色太集中：最小間隔 " + q.最小 + " 顆（下限 3）");
+  if (q.相鄰相同 > 1) throw new Error("套色太規律：相鄰間隔相同的有 " + q.相鄰相同 + " 對（上限 1）");
+  return q;
 };
 export const 套色 = 套色檢查();
 export const BAND = 帶();
