@@ -383,7 +383,7 @@ ${B.s4.四之四之一.圖說.map(([f, cap]) => `<figure>${img(f, cap)}<figcapti
 <div class="fin"><p class="k">${bb(B.s4.四之四之一.讀出來導)}</p>
 <ul class="spec">${B.s4.四之四之一.讀出來.map((t) => `<li>${bb(t)}</li>`).join("\n")}</ul></div>
 
-${h3("s4-6", esc(B.s4.四之六.標), "診所這邊對照 LINE 官方文件查證過")}
+${h3("s4-6", esc(B.s4.四之六.標), esc(B.s4.四之六.副標))}
 <p style="font-size:.9rem;margin:.3em 0 0">${bb(B.s4.四之六.導)}</p>
 <p class="note">${bb(B.s4.四之六.主張)}</p>
 <div class="rows">

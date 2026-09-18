@@ -618,14 +618,14 @@ pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:
 <li><b>三個做法都是在設定「後台的自動回應」</b>，而診所問的 4-1、4-2 是另一件事：那句綁定成功是<b>翔評的系統</b>送出的，系統在那一刻就知道綁定完成了。<b>由翔評的系統在綁定當下直接送綁定完成卡，不經過後台的自動回應</b> —— 那一項還沒有回覆。</li>
 <li>紅字擔心的「沒綁定的人也會收到」，指的是把綁定完成卡放進<b>後台的自動回應</b>。若改由翔評的系統送，只有真的綁定完成的人會收到，那個顧慮就不成立 —— 診所想確認的正是這一條做不做得到。</li></ul></div>
 
-<h3 class="h3" id="s4-6">4-6　正確的做法：不要用一般自動回覆，改由系統只對那一位病人送<span class="t">診所這邊對照 LINE 官方文件查證過</span></h3>
+<h3 class="h3" id="s4-6">4-6　正確的做法：不要用一般自動回覆，改由系統只對那一位病人送<span class="t">以下為AI 提取的LINE官方文件</span></h3>
 <p style="font-size:.9rem;margin:.3em 0 0">翔評說的情況，在「使用 LINE 官方帳號後台的一般自動回覆」這個前提下是正確的。因為那個功能只是：<b>收到任何用戶訊息 → 一律送出同一組自動回覆</b>，它不知道患者是否真的完成綁定。因此把「綁定成功圖卡」放進去後，患者傳「你好」、貼圖或其他問題，都可能收到綁定成功圖卡。</p>
 <p class="note">但正確的處理方法不是用一般自動回覆，而是：<b>患者完成綁定 → 翔評系統確認綁定成功 → 只對該患者發送綁定成功 Flex 圖卡</b>。一般文字或貼圖則走原本的普通回覆，不會觸發綁定圖卡。</p>
 <div class="rows">
 <div class="row"><p class="k">甲　用 LINE 的帳號連結機制</p><p class="v">綁定成功會產生 <code>accountLink</code> 成功事件，系統可以針對<b>該事件</b>單獨回覆。</p></div>
 <div class="row"><p class="k">乙　用翔評自己的綁定頁面</p><p class="v">後端在資料庫寫入「綁定成功」後，直接用 LINE User ID <b>主動推送</b>該張 Flex 圖卡。</p></div>
 </div>
-<h4 class="h4">以上兩條在 LINE 官方文件上查證過，逐條如下：</h4>
+<h4 class="h4">以下兩條的依據，AI 從 LINE 官方文件提取如下：</h4>
 <ul class="spec">
 <li><b><code>accountLink</code> 事件存在，而且回得了</b><br>帳號連結成功時 LINE 平台會送出 <code>accountLink</code> 事件，<code>link.result</code> 為 <code>ok</code>（失敗是 <code>failed</code>），事件裡帶 <code>source.userId</code>。<b>成功那一次帶 <code>replyToken</code></b>（失敗那一次不帶），所以可以只針對這一個事件回一則訊息。<br><span class="src2">出處：<a href="https://developers.line.biz/en/docs/messaging-api/linking-accounts/" rel="noopener">帳號連結事件</a> <code class="url">https://developers.line.biz/en/docs/messaging-api/linking-accounts/</code></span></li>
 <li><b>Flex 圖卡可以只送給指定的一個人</b><br>Messaging API 的 push（<code>POST /v2/bot/message/push</code>）指定 <code>to</code> ＝ 那位使用者的 LINE User ID，訊息型別可以是 Flex Message。<br><span class="src2">出處：<a href="https://developers.line.biz/en/docs/messaging-api/sending-messages/" rel="noopener">發送訊息</a> <code class="url">https://developers.line.biz/en/docs/messaging-api/sending-messages/</code></span></li>
@@ -635,7 +635,7 @@ pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:
 <div class="fin"><p class="k">還有兩件請翔評確認（文件上查不到，實測一次就知道）：</p>
 <ul class="spec"><li>後台的「自動回應訊息」是針對<b>用戶傳來的訊息</b>回的，而 <code>accountLink</code> 不是用戶傳的訊息 —— 照理不會觸發它。官方文件沒有明講這一句，請實測一次。</li>
 <li>現在那一句「✅ 09xxxxxxxx 綁定成功！」在畫面上是<b>靠右的綠色泡泡</b>，也就是<b>以病人的身分送進聊天室的一則真訊息</b>（見上面 4-2 那張現況圖）—— 自動回應會被觸發，成因就在這裡。若走甲那條路，綁定完成不必再讓病人送出一則訊息，這個觸發從源頭就不存在了；請確認現在的綁定流程有沒有辦法不送那一句。</li></ul></div>
-<p class="note">這一節的四條查證是診所這邊對照 LINE 官方文件寫的，若和翔評系統的實作有出入，以翔評實測為準。</p>
+<p class="note">這一節是 AI 從 LINE 官方文件提取的，若和翔評系統的實作有出入，以翔評實測為準。</p>
 
 <h3 class="h3" id="s4-ref">其他商家帳號：綁定那一刻送的是另一則<span class="t">對應 4-3。手機號碼與姓名已遮</span></h3>
 <div class="refs">
