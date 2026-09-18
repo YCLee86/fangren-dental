@@ -118,12 +118,20 @@ if (!/\.now ol\.sub>li::before\{content:counter\(n\) "-" counter\(m\)/.test(html
 if (!/<li value="3">/.test(html)) bad.push("⑨ 未定案那一塊沒有從 3 開始（編號被重編了）");
 if (!/<h2 class="h2" id="s3">3　/.test(html)) bad.push("⑨ 第 3 節的標題不是「3　…」");
 if (!/<h2 class="h2" id="s4">4　/.test(html)) bad.push("⑨ 第 4 節的標題不是「4　…」");
-if (!html.includes('id="s4-4-1"') || !html.includes("4-4-1")) bad.push("⑨ 找不到 4-4-1");
+/* ⚠ 翔評回覆那一塊在抬頭的清單裡是第 5 條，CSS counter 因此把它畫成 4-5；
+   標題原本寫 4-4-1，同一塊東西兩個名字（使用者接著就用 4-6 指下一條）。
+   定案：標題改 4-5、舊的錨點 s4-4-1 留著，兩個都要指得到。 */
+for (const a of ["s4-4-1", "s4-5", "s4-6"])
+  if (!html.includes(`id="${a}"`)) bad.push(`⑨ 找不到 #${a}`);
+if (!/id="s4-5"[^>]*>4-5　/.test(html)) bad.push("⑨ 翔評回覆那一節的標題不是「4-5　…」");
+if (!/id="s4-6"[^>]*>4-6　/.test(html)) bad.push("⑨ 新的那一節的標題不是「4-6　…」");
+if (/4-4-1　/.test(本文.replace(/上一版寫的 4-4-1[^<]*/g, "")))
+  bad.push("⑨ 還有地方把那一塊叫成 4-4-1（同一塊東西只能有一個名字）");
 for (let i = 1; i <= 4; i++) if (!html.includes(`id="s4-${i}"`)) bad.push(`⑨ 找不到 4-${i}`);
 if (!has("⑨")) ok("⑨ 編號沒有重編（3 還是 3、4 還是 4、4-1~4-4 ＋ 4-4-1 都在）");
 
 /* ⑩ 順序與錨點 */
-const ids = ["s3", "s3-1", "s3-2", "s3-3", "s3-4", "s3-5", "s3-6", "s4", "s4-4-1", "s5"];
+const ids = ["s3", "s3-1", "s3-2", "s3-3", "s3-4", "s3-5", "s3-6", "s4", "s4-4-1", "s4-5", "s4-6", "s5"];
 let last = -1;
 for (const id of ids) {
   const i = html.indexOf(`id="${id}"`);
@@ -230,6 +238,30 @@ if (!has("⑪")) ok(`⑪ 兩張帶子（${顆.mega}／${顆.car} 顆）已上線
   if (!has("⑭")) ok("⑭ 已完成那一節含 1 與 2，站內連結都指得到");
 }
 
+/* ⑰ 4-6：兩條實作路徑、四條查證各自帶出處、還沒查到的兩件都要在 */
+{
+  const S6 = B.s4.四之六, 出處 = B.s4.出處;
+  const s46 = html.slice(html.indexOf('id="s4-6"'), html.indexOf('id="s4-ref"'));
+  if (!s46) bad.push("⑰ 找不到 4-6 那一節");
+  if (S6.作法.length !== 2) bad.push("⑰ 實作不是兩條（帳號連結機制／自己的綁定頁面）");
+  for (const [k] of S6.作法) if (!印(k)) bad.push(`⑰ 這一條實作沒有印出來：${k}`);
+  if (S6.查證.length < 3) bad.push("⑰ 查證少於三條");
+  for (const [k, , 源] of S6.查證) {
+    if (!印(k)) bad.push(`⑰ 這一條查證沒有印出來：${k}`);
+    /* ⚠⚠ 每一條查證都要帶得出出處 —— 不帶出處的「查證過」和沒查過看起來一模一樣 */
+    if (!出處[源]) { bad.push(`⑰ s4.出處 裡沒有「${源}」`); continue; }
+    if (!s46.includes(esc(出處[源]))) bad.push(`⑰ 4-6 上找不到「${源}」的網址`);
+  }
+  for (const u of Object.values(出處))
+    if (!/^https:\/\/(developers\.line\.biz|tw\.linebiz\.com)\//.test(u))
+      bad.push(`⑰ 出處不是 LINE 官方的網址：${u}`);
+  /* ⚠⚠⚠ 查證過的和還沒查到的一定要分開印 —— 混在一起就是拿推論當事實 */
+  if (!S6.待確認 || S6.待確認.length < 2) bad.push("⑰ 「還沒查到、要請翔評確認」不是兩件");
+  for (const t of S6.待確認) if (!印(t)) bad.push(`⑰ 待確認這一句沒有印出來：${String(t).slice(0, 18)}…`);
+  if (!印(S6.註)) bad.push("⑰ 少了「以翔評實測為準」那一句");
+  if (!has("⑰")) ok(`⑰ 4-6：兩條實作・${S6.查證.length} 條查證各自帶 LINE 官方出處・${S6.待確認.length} 件還要確認`);
+}
+
 /* ⑮ 不印過程 */
 const 過程 = ["落選", "提案中", "三種比過", "走到這裡", "還沒決定"].filter((w) => 本文.includes(w));
 if (過程.length) bad.push(`⑮ 印了過程的字眼：${過程.join("、")}`); else ok("⑮ 沒有印過程");
@@ -260,4 +292,4 @@ if (過程.length) bad.push(`⑮ 印了過程的字眼：${過程.join("、")}`)
 }
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }
-console.log("\n✓ preview/line-brief-0918/ 十六道全過");
+console.log("\n✓ preview/line-brief-0918/ 十七道全過");

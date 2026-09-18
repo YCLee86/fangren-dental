@@ -102,6 +102,16 @@ const fill = (t) => String(t).replace(/\{\{([^}:]+)(?::([^}]+))?\}\}/g, (_, k, a
 });
 const bb = (t) => b(fill(t));
 const list = (rows) => `<ul class="spec">${rows.map((t) => `<li>${bb(t)}</li>`).join("\n")}</ul>`;
+/* 抬頭那一塊的連結不要再印一次號碼（號碼是 CSS 的 counter 畫的） */
+const 去號 = (t) => String(t).replace(/^4-\d+(?:-\d+)?　/, "");
+/* 出處：只准引用 s4.出處 裡登記過的那幾條，網址不在這裡手打 */
+const 連 = (名) => {
+  const u = B.s4.出處[名];
+  if (!u) throw new Error(`brief2.json 的 s4.出處 裡沒有「${名}」`);
+  if (!/^https:\/\/(developers\.line\.biz|tw\.linebiz\.com)\//.test(u))
+    throw new Error(`出處不是 LINE 官方的網址：${u}`);
+  return `<span class="src2">出處：<a href="${u}" rel="noopener">${esc(名)}</a> <code class="url">${esc(u)}</code></span>`;
+};
 const h3 = (id, t, sub = "") => `<h3 class="h3" id="${id}">${t}${sub ? `<span class="t">${sub}</span>` : ""}</h3>`;
 
 /* ── 兩張帶子：這一頁只是「拿來用」，尺寸從 single-card.mjs 那一份讀 ───── */
@@ -238,6 +248,8 @@ pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:
 .refs figcaption{font-size:.8rem;color:var(--soft);line-height:1.65;margin-top:.4em;max-width:320px}
 .done{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:9px;margin:.8em 0 0}
 .done .msg{align-items:flex-start}
+.src2{display:block;font-size:.78rem;color:var(--soft);margin-top:.25em}
+.src2 .url{white-space:normal;word-break:break-all}
 .quo{margin:.6em 0 0;padding:.05em 0 .05em .9em;border-left:3px solid var(--rule)}
 .quo p{font-size:.9rem;line-height:1.85;margin:.45em 0 0}
 .quo p:first-child{margin-top:0}
@@ -271,7 +283,8 @@ ${bb(B.抬頭)}<br>
 <ol class="sub">${B.s3.子.map((t, k) => `<li><a href="#s3-${k + 1}">${b(t)}</a></li>`).join("\n")}</ol></li>
 <li><p class="t"><a href="#s4">${esc(件4.標)}</a></p>
 <ol class="sub">${件4.子.map((t, k) => `<li><a href="#s4-${k + 1}">${b(t)}</a></li>`).join("\n")}
-<li><a href="#s4-4-1">${esc(B.s4.四之四之一.標.replace(/^4-4-1　/, ""))}</a></li></ol></li>
+<li><a href="#s4-5">${esc(去號(B.s4.四之五標))}</a></li>
+<li><a href="#s4-6">${esc(去號(B.s4.四之六.標))}</a></li></ol></li>
 <li><p class="t"><a href="#s5">已完成項目</a>（含 1 與 2）</p></li>
 </ol>
 </div>
@@ -356,7 +369,8 @@ ${list(B.s3.三之六.規格)}
 <figcaption>已定稿（Flex JSON 在 /preview/line-spec/ 的 ③）。</figcaption></figure>
 </div>
 
-${h3("s4-4-1", esc(B.s4.四之四之一.標), "9/18 收到")}
+<span id="s4-4-1"></span>
+${h3("s4-5", esc(B.s4.四之五標), "9/18 收到（上一版寫的 4-4-1 就是這一節）")}
 <p style="font-size:.9rem;margin:.3em 0 0">${bb(B.s4.四之四之一.導)}</p>
 <div class="quo"><p>${b(B.s4.四之四之一.品御)}</p></div>
 <p class="note">${bb(B.s4.四之四之一.選項導)}</p>
@@ -368,6 +382,20 @@ ${B.s4.四之四之一.圖說.map(([f, cap]) => `<figure>${img(f, cap)}<figcapti
 </div>
 <div class="fin"><p class="k">${bb(B.s4.四之四之一.讀出來導)}</p>
 <ul class="spec">${B.s4.四之四之一.讀出來.map((t) => `<li>${bb(t)}</li>`).join("\n")}</ul></div>
+
+${h3("s4-6", esc(B.s4.四之六.標), "診所這邊對照 LINE 官方文件查證過")}
+<p style="font-size:.9rem;margin:.3em 0 0">${bb(B.s4.四之六.導)}</p>
+<p class="note">${bb(B.s4.四之六.主張)}</p>
+<div class="rows">
+${B.s4.四之六.作法.map(([k, v]) => `<div class="row"><p class="k">${bb(k)}</p><p class="v">${bb(v)}</p></div>`).join("\n")}
+</div>
+<h4 class="h4">${bb(B.s4.四之六.查證導)}</h4>
+<ul class="spec">
+${B.s4.四之六.查證.map(([k, v, 源]) => `<li><b>${bb(k)}</b><br>${bb(v)}<br>${連(源)}</li>`).join("\n")}
+</ul>
+<div class="fin"><p class="k">${bb(B.s4.四之六.待確認導)}</p>
+<ul class="spec">${B.s4.四之六.待確認.map((t) => `<li>${bb(t)}</li>`).join("\n")}</ul></div>
+<p class="note">${bb(B.s4.四之六.註)}</p>
 
 <h3 class="h3" id="s4-ref">其他商家帳號：綁定那一刻送的是另一則<span class="t">對應 4-3。手機號碼與姓名已遮</span></h3>
 <div class="refs">
