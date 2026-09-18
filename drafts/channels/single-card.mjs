@@ -32,6 +32,9 @@
  *
  * 2026-09-18 再一輪：「兩則同一個殼　整段拿掉／約診成功那張　保留 18/22/27顆　並挑選
  *   7顆做主題套色／約診查詢保留 13/18顆　再做一版16顆　並挑選7顆做主題套色」。
+ * 2026-09-18 定案：「預約成功　18顆　預約成功不要顯示約診狀態／約診記錄查詢　13顆」——
+ *   兩把顆數的尺收掉（落選那幾格的數字留在面板上），單張那一則拿掉約診狀態那一列。
+ * ⚠⚠ 顆數兩則不一樣，所以**帶子是兩張圖不是一張**（上線要 18 顆與 13 顆各一張）。
  * ⚠⚠ 顆數要嘛是某一份順序的整數倍、要嘛自己有一份順序：那三條相鄰的限制
  *   （同形狀不相鄰、三顆最長的不相鄰、同色不相鄰）**在接縫上也要成立**，
  *   整數倍等於把同一段接回它自己（band/README.md）。所以這一頁每一格都寫著它的基數：
@@ -190,15 +193,22 @@ const 出圖 = (檔, B, 模) => {
   return { 檔, buf, w: PW, h: PH, 佔: q.佔, 色數: 要.length };
 };
 
+/* ⚠⚠⚠ 2026-09-18 定案：**預約成功 18 顆、約診紀錄查詢 13 顆**（使用者挑的），
+   兩把顆數的尺因此收掉 —— **尺可以收，它量出來的數字不可以跟著消失**（同 50-22、71-13），
+   所以落選那幾格（16／22／27）留在 `量案` 裡，每次跑仍然逐格印在面板上。
+   ⚠ 資料那一側（順序案、著色.位置案）一格都沒有刪。 */
+const 定顆 = { mega: 基 * 2, car: 13 };
+const 量案 = [
+  { n: 13, 底: 13 }, { n: 16, 底: 16 }, { n: 基 * 2 }, { n: 22, 底: 11 }, { n: 定 },
+].map((a) => ({ ...a, B: 條(a.n, "set", a.底) }));
 const 帶案 = [
-  { 檔: "band-27-set.png", n: 定, 模: "set", 標: "七顆套科別色", 註: "立牌上定案那一條，原封不動" },
-  { 檔: "band-27-ink.png", n: 定, 模: "ink", 標: "整條淡墨", 註: `全部 ${墨色}` },
-  { 檔: "band-27-spec.png", n: 定, 模: "spec", 標: "每一顆自己的科別色", 註: "九顆一循環，同色仍然不相鄰" },
-  { 檔: "band-22-set.png", n: 22, 模: "set", 底: 11 },
-  { 檔: "band-18-set.png", n: 基 * 2, 模: "set" },
-  { 檔: "band-16-set.png", n: 16, 模: "set", 底: 16 },
-  { 檔: "band-13-set.png", n: 13, 模: "set", 底: 13 },
+  { 檔: "band-18-set.png", n: 定顆.mega, 模: "set", 標: "七顆套科別色", 註: "現在這樣 —— 七科各一顆" },
+  { 檔: "band-18-ink.png", n: 定顆.mega, 模: "ink", 標: "整條淡墨", 註: `全部 ${墨色}` },
+  { 檔: "band-18-spec.png", n: 定顆.mega, 模: "spec", 標: "每一顆自己的科別色", 註: "九顆一循環，同色仍然不相鄰" },
+  { 檔: "band-13-set.png", n: 定顆.car, 模: "set", 底: 13 },
 ].map((a) => ({ ...a, B: 條(a.n, a.模, a.底), ...出圖(a.檔, 條(a.n, a.模, a.底), a.模) }));
+/* ⚠ 27 顆那一條這一輪沒有人在用了，但這一道守門要留著：它證明我們的 `帶()`
+   仍然畫得出立牌那一條定案（逐位元組），和頁面上擺不擺它是兩件事。 */
 對定案(bandSvg(條(定, "set"), "bnd", 墨色));
 const 帶by = Object.fromEntries(帶案.map((a) => [a.檔, a]));
 const 帶高 = (a, w) => w * a.B.總高 / a.B.總寬;
@@ -319,31 +329,29 @@ ${CSS}${CSS2}
 <h2 class="h2">1　換掉浮水印<span class="t">同一張卡，其餘一個字都沒動</span></h2>
 <div class="sgrid">
 ${格(現況卡, `<b>現在這樣</b>　浮水印疊在右下角、往外溢出 ${OFF.right}／${OFF.bottom}px`)}
-${格(卡(BUB.mega, MEGA, { 帶檔: "band-27-set.png" }), `<b>這一版</b>　帶子夾在日期與那兩行小字之間・${說帶("band-27-set.png", BUB.mega)}`)}
+${格(卡(BUB.mega, MEGA, { 帶檔: "band-18-set.png" }), `<b>這一版</b>　帶子夾在日期與那兩行小字之間・${說帶("band-18-set.png", BUB.mega)}`)}
 </div>
 
-<h2 class="h2">2　預約成功通知　帶子多少顆<span class="t">滿版，所以顆數 ＝ 帶子多高</span></h2>
-<p class="note">單張 <code>mega</code>・${BUB.mega}px。三格都是<b>七顆套科別色</b>（七科各一顆），
-位置一格一組、算出來的 —— 先散得開，再不規律。</p>
+<h2 class="h2">2　預約成功通知<span class="t">單張 <code>mega</code>・${BUB.mega}px</span></h2>
+<p class="note"><b>${定顆.mega} 顆</b>，七顆套科別色（七科各一顆）。
+<b>約診狀態那一列不放</b> —— 這一則是「約好了」的通知，狀態是查詢那一則在回答的事。</p>
 <div class="sgrid">
-${["band-18-set.png", "band-22-set.png", "band-27-set.png"]
-  .map((f) => 格(卡(BUB.mega, MEGA, { 帶檔: f, 丸: PILLVAL[0] }),
-    `<b>${帶by[f].B.顆數} 顆</b>　${說帶(f, BUB.mega)}<br>${esc(基註(帶by[f].B))}<br>${esc(套註(帶by[f].B))}`)).join("\n")}
+${格(卡(BUB.mega, MEGA, { 帶檔: "band-18-set.png" }),
+  `<b>${定顆.mega} 顆</b>　${說帶("band-18-set.png", BUB.mega)}<br>${esc(基註(帶by["band-18-set.png"].B))}<br>${esc(套註(帶by["band-18-set.png"].B))}`)}
 </div>
 
-<h2 class="h2">3　約診紀錄查詢　帶子多少顆<span class="t">卡片窄 ${BUB.mega - BUB.car}px，同一條帶子跟著細下去</span></h2>
-<p class="note">輪播 <code>${BUB.階}</code>・${BUB.car}px，帶子夾在日期與約診狀態之間。同樣三格都是七顆套科別色。</p>
+<h2 class="h2">3　約診紀錄查詢<span class="t">輪播 <code>${BUB.階}</code>・${BUB.car}px</span></h2>
+<p class="note"><b>${定顆.car} 顆</b>，同樣七顆套科別色。帶子夾在日期與約診狀態之間 ——
+<b>這一則有那一列</b>（值照 <a href="/preview/line-vendor/">/preview/line-vendor/</a> 第 4 節定案的四種）。</p>
 <div class="sgrid">
-${["band-13-set.png", "band-16-set.png", "band-18-set.png"]
-  .map((f) => 格(卡(BUB.car, 輪播行, { 帶檔: f, 丸: PILLVAL[1], 折: true }),
-    `<b>${帶by[f].B.顆數} 顆</b>　${說帶(f, BUB.car)}<br>${esc(基註(帶by[f].B))}<br>${esc(套註(帶by[f].B))}`)).join("\n")}
+${格(卡(BUB.car, 輪播行, { 帶檔: "band-13-set.png", 丸: PILLVAL[1], 折: true }),
+  `<b>${定顆.car} 顆</b>　${說帶("band-13-set.png", BUB.car)}<br>${esc(基註(帶by["band-13-set.png"].B))}<br>${esc(套註(帶by["band-13-set.png"].B))}`)}
 </div>
 
-<h2 class="h2">4　帶子的顏色<span class="t">上面兩節挑的是顆數，這一節挑上色的方式</span></h2>
-<p class="note">拿 27 顆那一條比三種上色法。<b>七顆套科別色</b>那一格就是立牌上定案的那一條（原封不動）；
-其餘顆數的七顆在哪裡是算出來的，規則見上面兩節。</p>
+<h2 class="h2">4　帶子的顏色<span class="t">顆數定了，這一節挑上色的方式</span></h2>
+<p class="note">拿定案那一條（${定顆.mega} 顆）比三種上色法 —— 顆數、位置、間距一個數字都沒動，只換顏色。</p>
 <div class="sgrid">
-${帶案.filter((a) => a.n === 定)
+${帶案.filter((a) => a.n === 定顆.mega)
   .map((a) => 格(卡(BUB.mega, MEGA, { 帶檔: a.檔 }), `<b>${esc(a.標)}</b>　${esc(a.註)}`)).join("\n")}
 </div>
 
@@ -351,10 +359,12 @@ ${帶案.filter((a) => a.n === 定)
 <div class="rows">
 <div class="row"><p class="k">要廠商填的值</p><p class="v">九顆各一組（兩欄寬度、長寬比、網址）→ <b>一張圖、<code>size: full</code>，一個數字都不必填</b></p></div>
 <div class="row"><p class="k"><code>position: absolute</code></p><p class="v">浮水印非疊不可（<b>那一項到今天還沒有實機驗過</b>）→ 內容拆成<b>兩塊 box</b>、帶子夾在中間，<b>不必疊</b></p></div>
-<div class="row"><p class="k">圖檔</p><p class="v">${WM.length * 2} 張（九顆 × 兩種濃度）→ <b>1 張</b></p></div>
+<div class="row"><p class="k">圖檔</p><p class="v">${WM.length * 2} 張（九顆 × 兩種濃度）→ <b>2 張</b>（兩則的顆數不一樣：${定顆.mega} 顆與 ${定顆.car} 顆各一張）</p></div>
 <div class="row"><p class="k">換來的</p><p class="v">顏色不再跟著那一筆約診換（浮水印是 <code>(月＋日)%9</code>）—— 帶子固定一條，兩則、每一筆都一樣</p></div>
 <div class="row"><p class="k">Flex 怎麼寫</p><p class="v">body <code>paddingAll: 0</code> → box A（<code>paddingAll: ${CARD.pad}px</code>，姓名＋日期）→ <code>image</code>／<code>size: full</code> → box B（同內距，那兩行小字或約診狀態）</p></div>
-<div class="row"><p class="k">還沒決定</p><p class="v">兩則各要幾顆（預約成功 ${["band-18-set.png", "band-22-set.png", "band-27-set.png"].map((f) => 帶by[f].B.顆數).join("／")}・約診查詢 ${["band-13-set.png", "band-16-set.png", "band-18-set.png"].map((f) => 帶by[f].B.顆數).join("／")}）、哪一種上色方式；<b>約診狀態那一列在單張上也會出現</b>（值是「${esc(PILLVAL[0].名)}」）</p></div>
+<div class="row"><p class="k">顆數</p><p class="v">預約成功 <b>${定顆.mega} 顆</b>、約診紀錄查詢 <b>${定顆.car} 顆</b>（2026-09-18 定案）—— 兩則的帶子因此是<b>兩張不同的圖</b>，不是同一張</p></div>
+<div class="row"><p class="k">約診狀態</p><p class="v"><b>預約成功那一則不要那一列</b>、約診紀錄查詢照舊（2026-09-18 定案）</p></div>
+<div class="row"><p class="k">還沒決定</p><p class="v">帶子的上色方式（第 4 節那三種）</p></div>
 </div>
 
 <p class="foot">
@@ -389,6 +399,14 @@ if (CHECK) {
     console.log(`  ${a.檔}　${a.w}×${a.h}・${a.B.顆數} 顆・${a.色數} 色・墨佔 ${(a.佔 * 100).toFixed(1)}%`
       + `　→ 單張 ${帶高(a, BUB.mega).toFixed(1)}px（最高那一顆 ${顆高(a, BUB.mega).toFixed(1)}）`
       + `・輪播 ${帶高(a, BUB.car).toFixed(1)}px（最高那一顆 ${顆高(a, BUB.car).toFixed(1)}）`);
-  console.log(`  卡片 單張 ${BUB.mega}px／輪播 ${BUB.car}px（${BUB.階}）・內距 ${CARD.pad}px・底 ${WCARD}`);
+  /* ⚠⚠ 兩把顆數的尺 2026-09-18 收掉了（預約成功 18／約診紀錄查詢 13），
+     **落選那幾格量出來的東西要留在這裡** —— 同 50-22、71-13：尺可以收，數字不可以跟著消失。 */
+  console.log(`  顆數（尺已收，定案 單張 ${定顆.mega}／輪播 ${定顆.car}）`);
+  for (const a of 量案)
+    console.log(`    ${String(a.B.顆數).padStart(2)} 顆　${基註(a.B)}`
+      + `　→ 單張 ${帶高(a, BUB.mega).toFixed(1)}px（最高那一顆 ${顆高(a, BUB.mega).toFixed(1)}）`
+      + `・輪播 ${帶高(a, BUB.car).toFixed(1)}px（最高那一顆 ${顆高(a, BUB.car).toFixed(1)}）`
+      + `　${套註(a.B)}${a.B.顆數 === 定顆.mega ? "　← 預約成功" : ""}${a.B.顆數 === 定顆.car ? "　← 約診紀錄查詢" : ""}`);
+  console.log(`  卡片 單張 ${BUB.mega}px（沒有約診狀態那一列）／輪播 ${BUB.car}px（${BUB.階}，有那一列）・內距 ${CARD.pad}px・底 ${WCARD}`);
   console.log(`  現況那顆浮水印：${輪.n}・淡墨 ${INK} ${(WM_A * 100).toFixed(0)}%・溢出 ${OFF.right}／${OFF.bottom}px`);
 }

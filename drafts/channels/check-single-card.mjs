@@ -67,8 +67,8 @@ const 文 = html.replace(/<[^>]+>/g, "");
 
 /* ④ 圖檔：只准有這幾個，尺寸對得上檔頭，而且都 ≤1024（Flex 的上限） */
 {
-  const 該 = ["index.html", "band-27-set.png", "band-27-ink.png", "band-27-spec.png",
-    "band-22-set.png", "band-18-set.png", "band-16-set.png", "band-13-set.png"];
+  const 該 = ["index.html", "band-18-set.png", "band-18-ink.png", "band-18-spec.png",
+    "band-13-set.png"];
   const 有 = readdirSync(DIR).sort();
   const 多 = 有.filter((f) => !該.includes(f)), 少 = 該.filter((f) => !有.includes(f));
   if (多.length || 少.length) no(`④ 資料夾對不上（多 ${多.join("、") || "—"}／少 ${少.join("、") || "—"}）`);
@@ -163,6 +163,7 @@ else {
           /* 帶子的下緣到底下那一塊第一個東西的上緣（要 ≥0 ＝ 那一塊真的在帶子下面） */
           帶下: im && 首 ? +(首.getBoundingClientRect().top - ib.bottom).toFixed(2) : null,
           下有: !!首,
+          丸: !!c.querySelector(".pill"),
           下文: 首 ? 首.textContent.trim().slice(0, 6) : null,
           底: im ? +(box.bottom - ib.bottom).toFixed(2) : null,
           日: d ? 列(d) : null,
@@ -183,6 +184,10 @@ else {
         if (c.帶下 < -0.5) 壞.push(`${w} 寬：第 ${i + 1} 張「${c.下文}」沒有在帶子下面（差 ${c.帶下}px）`);
         if (c.底 < 1.5) 壞.push(`${w} 寬：第 ${i + 1} 張的帶子還貼在卡片下緣（離 ${c.底}px）`);
       }
+      /* ⚠ 2026-09-18 定案：預約成功（單張 268）那一則**不顯示約診狀態**，輪播照舊。
+         加回去畫面完全正常、每一道尺寸守門都會過，所以這一道量的是「有沒有那一列」。 */
+      if (Math.round(c.w) === 268 && c.丸) 壞.push(`${w} 寬：第 ${i + 1} 張（單張）多了約診狀態那一列`);
+      if (Math.round(c.w) === 162 && !c.丸) 壞.push(`${w} 寬：第 ${i + 1} 張（輪播）少了約診狀態那一列`);
       if (Math.round(c.w) === 162) {
         if (!c.日 || c.日.length !== 2) 壞.push(`${w} 寬：輪播那張卡的日期畫成 ${c.日 ? c.日.length : 0} 列（該是 2）`);
         else if (!c.日[1].startsWith("星期")) 壞.push(`${w} 寬：輪播那張卡的星期幾被拆開了（${c.日.join(" ／ ")}）`);
@@ -193,7 +198,7 @@ else {
   await br.close();
   /* ⚠ 同一件事會在三個寬度 × 十二張卡上重複幾十次 —— 印前四條就夠，後面只報還有幾條 */
   if (壞.length) no("⑦ " + 壞.slice(0, 4).join("；") + (壞.length > 4 ? `　…還有 ${壞.length - 4} 條` : ""));
-  else ok(`⑦ 三個寬度 × ${卡數} 張卡：卡寬 268／162、帶子滿版夾在日期底下（底下還有東西）、輪播的日期兩列且星期幾沒被拆、水平溢出 0`);
+  else ok(`⑦ 三個寬度 × ${卡數} 張卡：卡寬 268／162、帶子滿版夾在日期底下（底下還有東西）、約診狀態只出現在輪播那一則、輪播的日期兩列且星期幾沒被拆、水平溢出 0`);
 }
 
 console.log("");
