@@ -4728,14 +4728,31 @@ html[data-theme="dark"] .bay { fill-opacity: .72; }
   /* ⚠⚠ **地圖這一整組只在手機生效**（2026-08-15 使用者定稿：「手機版就這樣
        上線，電腦版和 iPad 版都不動」）。所以凡是會被電腦版看到的東西 ——
        viewBox、clipPath、markup 的座標、JS 的預設常數 —— 一律沒有動，
-       要改的四件全部走 CSS 變數，只在這一段覆寫：
+       要改的五件全部走 CSS 變數，只在這一段覆寫：
          --map-ul-gap  底線離字面（.1375 → .16）
          --map-tail    盒子邊到尖端（診所那塊 1 → 11 ＝「和綠塊拉開」）
          --map-dy      整塊再位移（壹車房 0 → −18 ＝「往上一點」）
+         --map-drop    **只有盒子**往下、尖端不動（壹車房 0 → 16，見下面那一條）
        裁切本身則由外面那層視窗做（見下面）—— 左右餘裕因此可以直接算，
        內容的中心 290.5 和 viewBox 的中心 280 差 10.5 那件事也一併吸收掉。 */
   .map-svg                                   { --map-ul-gap: .16; }
-  .map-svg .rlab[data-lot="c"]               { --map-dy: -18; }
+  /* ⚠⚠ 壹車房那塊牌子在手機上有**兩個**位移，兩個的意思完全不同：
+       --map-dy: -18   整塊（連尖端）往上 —— 2026-08-15 使用者挑的，尖端因此
+                       落在 y476 而不是電腦版的 y492。**不要動它**，
+                       他 2026-09-18 特別交代「對話框指向的位置不要變」。
+       --map-drop: 16  **只有盒子**往下，尖端留在 y476 —— 底邊跟著往下、但會被
+                       clamp 往上拉回「剛好含住尖端」（底邊上緣 ＝ 尖端那一列），
+                       所以尾巴的上緣是水平的、下緣斜下去，整塊讀起來就是
+                       「對話框往左下拉出來」。缺口那件事見那支 sizeLabels()。
+     ⚠ 16 不是挑的，是算出來的：手機的牌子比電腦版高 16（字級 16 → 22.4），
+       整塊又往上 18，所以上下的餘裕從電腦版的 28／29.5 變成 **4.3／37**
+       ——「大同路正常顯示」壞在上面那 4.3（hideCovered 的餘裕是 2 個螢幕
+       像素，而 iOS 的字面框比這裡量到的高，他的手機上那一格是 0、所以整條
+       街名被藏起來）。取 (37 − 4.3) ÷ 2 ≈ 16 ＝ **把兩邊拉回電腦版那種對稱**，
+       390 上量到 20.3／21.4（七個手機寬度 19.7~22.9）。
+     ⚠ 上限不是美感是幾何：再往下 20 以上，牌子的下緣會壓到中華路那條街名
+       （換它被藏起來），而 iOS 的字面框又更高一階 —— 20 已經是安全的那一側。 */
+  .map-svg .rlab[data-lot="c"]               { --map-dy: -18; --map-drop: 16; }
   .map-svg .rlab text                        { font-size: 21px; }
   .map-svg .rlab .rl-nm                      { font-size: 22.4px; }
   /* ⚠ 診所那一塊（.cm-nm）**刻意不在這裡放大** —— 它被關在 96 個單位寬的綠塊裡，
@@ -6416,7 +6433,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-09-16">2026 年 9 月 16 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-09-18">2026 年 9 月 18 日</time></span>
     </div>
   </div>
 </footer>
@@ -7599,12 +7616,22 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
       // 尾巴長度與整塊的位移都可以用 CSS 變數依版型覆寫（見樣式表最後那一段）：
       //   --map-tail  盒子邊到尖端（預設 14；診所那塊電腦版 1、手機 11）
       //   --map-dy    整塊沿「非尾巴方向」再移動多少（壹車房手機 −18）
+      //   --map-drop  **只有盒子往下，尖端留在原地**（壹車房手機 16）
+      // ⚠⚠ --map-dy 和 --map-drop 是兩件事，不要合成一個：
+      //   --map-dy 連尖端一起搬（壹車房手機那 −18 就是它，尖端因此比電腦版高 16），
+      //   --map-drop 只搬盒子 —— 尾巴從水平變成斜的，讀起來是「對話框往左下拉出來」。
+      //   2026-09-18 使用者：「壹車房的對話框可以往下移一點，讓大同路正常顯示，
+      //   **對話框指向的位置不要變**，讓整個對話框呈現往左下拉出來的感覺。」
+      // ⚠ 只有 dir === 'right' 吃它（尾巴朝右，往下拉才有斜度可言）。
+      //   朝下那兩塊（永樂站、合廷）要斜就得另外給一個「底邊中心」，
+      //   同診所那塊朝上的 data-bx／data-tx —— 現在沒有人需要，所以沒有做。
       var cs2 = getComputedStyle(g);
       var TAIL = parseFloat(cs2.getPropertyValue('--map-tail'));
       if (isNaN(TAIL)) TAIL = g.dataset.tail === undefined ? 14 : +g.dataset.tail;
       var off = parseFloat(cs2.getPropertyValue('--map-dy')) || 0;
+      var DROP = dir === 'right' ? (parseFloat(cs2.getPropertyValue('--map-drop')) || 0) : 0;
       var dx = 0, dy = 0;
-      if (dir === 'right')   { dx = (tip.x - TAIL) - (bx0 + bw0); dy = off; }
+      if (dir === 'right')   { dx = (tip.x - TAIL) - (bx0 + bw0); dy = off + DROP; }
       else if (dir === 'up') { dy = (tip.y + TAIL) - by0;        dx = off; }
       else                   { dy = (tip.y - TAIL) - (by0 + bh0); dx = off; }
       // ⚠ 不動就**不要留 transform**：`translate(0 0)` 也會讓那一段重新光柵化，
@@ -7615,7 +7642,24 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
         body.removeAttribute('transform');
       }
       bx0 += dx; by0 += dy;
-      if (dir === 'right') { tip.y = by0 + bh0 / 2; bc = tip.y; }
+      // ⚠⚠ 尖端與底邊中心**分開算**：尖端退回 DROP 之前那一列 ＝ 盒子沒有往下時
+      //   它本來指的地方；底邊中心跟著盒子。bubblePath 的右邊那一段本來就吃兩個
+      //   不同的值（bc 與 tip），所以尾巴自己就長成斜的，不必另外畫
+      //   （同診所那塊當年 data-bx ≠ data-tx 的斜尾巴）。
+      // ⚠⚠⚠ **底邊要往上挪到「剛好把尖端含進來」為止** —— 尖端跑到底邊外面的話，
+      //   那一側的輪廓會從盒子邊往回折出一個**缺口**（右邊 → 往下走到底邊上緣 →
+      //   再往上飛到尖端），畫出來是一支帶鉤子的細旗子，不是對話框的尾巴。
+      //   2026-08-15 使用者就是為了同一種形狀退過一次（「壹車房的對話標籤形狀很怪」，
+      //   那次是盒子的右緣越過尖端）。挪完之後尾巴的上緣是水平的、下緣斜下去，
+      //   整塊讀起來就是「盒子往左下拉出來」。
+      // ⚠ 這條式子在 DROP 為 0 時 max() 回 0 ＝ 和改動前逐字相同（電腦版與 iPad
+      //   因此一個像素都沒有動）。要讓尾巴本身更斜就加寬底邊（data-bw，預設 7），
+      //   不要改這裡的 clamp —— 缺口就是它在擋的東西。
+      if (dir === 'right') {
+        var mid = by0 + bh0 / 2;
+        tip.y = mid - DROP;
+        bc = mid - Math.max(0, DROP - bw);
+      }
       bub.setAttribute('d', bubblePath(bx0, by0, bw0, bh0, 6, dir, tip, bc, bw));
       if (!tail) return;
       // 尾巴那個三角**另外再畫一次**，疊在盒子上面。
