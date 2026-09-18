@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>芳仁牙醫診所　約診卡測試</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#111;color:#2a2c27;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+.wrap{max-width:760px;margin:auto;padding:28px 14px 70px}.head{color:#fff;margin:0 0 24px}.head h1{font-size:21px;margin:0 0 5px}.head p{color:#aaa;font-size:14px;line-height:1.6;margin:0}
+h2{color:#fff;font-size:16px;margin:28px 0 10px}.stage{overflow-x:auto;padding:4px 0 10px}.row{display:flex;gap:12px;align-items:flex-start;width:max-content}
+.card{overflow:hidden;background:#fff;border-radius:10px;flex:none}.booked{width:268px}.query{width:162px}.pad{padding:14px}.patient{font-size:16px;line-height:1.35;margin:0;color:#5c5f57}.booked .patient{color:#2a2c27}.date{font-size:19px;line-height:1.35;font-weight:700;margin:6px 0 0;white-space:nowrap}.query .date{white-space:normal}.fine{font-size:13px;line-height:1.35;color:#5c5f57;margin:0}.fine+.fine{margin-top:5px}.band{display:block;width:100%;height:auto}.status{display:flex;align-items:center;gap:9px;color:#5c5f57;font-size:13px;white-space:nowrap}.pill{display:inline-block;color:#fff;font-weight:700;border-radius:8px;padding:5px 8px;line-height:1}.note{color:#aaa;font-size:13px;line-height:1.65;margin:8px 0 0}a{color:#8fc8c3}
+</style></head><body><main class="wrap">
+<header class="head"><h1>約診卡　實際送出前測試</h1><p>只用假資料。版面依照單一版型第 2、3 節：預約成功 18 顆；約診查詢 13 顆與四個約診狀態。</p></header>
+<h2>2　預約成功通知</h2><div class="stage"><article class="card booked">
+  <div class="pad top"><p class="patient"><b>〔測試患者〕</b>　約好囉</p><p class="date">2026/09/18 星期五 11:50</p></div>
+  <img class="band" src="../band-18-set.png" width="1024" height="60" alt="18 顆標誌帶">
+  <div class="pad bottom"><p class="fine">異動請在2天前(不含假日)與診所聯繫</p><p class="fine">看診前2天會再提醒一次，記得回覆喔～</p></div>
+</article></div><p class="note">單張 mega；不顯示約診狀態。</p>
+<h2>3　約診紀錄查詢</h2><div class="stage"><div class="row"><article class="card query">
+  <div class="pad top"><p class="patient">〔測試患者 A〕</p><p class="date">2026/09/21<br>星期一 09:30</p></div>
+  <img class="band" src="../band-13-set.png" width="1024" height="87" alt="13 顆標誌帶">
+  <div class="pad bottom"><div class="status"><span>約診狀態</span><span class="pill" style="background:#4478B5">已排定</span></div></div>
+</article><article class="card query">
+  <div class="pad top"><p class="patient">〔測試患者 B〕</p><p class="date">2026/09/22<br>星期二 14:00</p></div>
+  <img class="band" src="../band-13-set.png" width="1024" height="87" alt="13 顆標誌帶">
+  <div class="pad bottom"><div class="status"><span>約診狀態</span><span class="pill" style="background:#3F654A">已確認</span></div></div>
+</article><article class="card query">
+  <div class="pad top"><p class="patient">〔測試患者 C〕</p><p class="date">2026/09/23<br>星期三 16:30</p></div>
+  <img class="band" src="../band-13-set.png" width="1024" height="87" alt="13 顆標誌帶">
+  <div class="pad bottom"><div class="status"><span>約診狀態</span><span class="pill" style="background:#C28229">未回覆</span></div></div>
+</article><article class="card query">
+  <div class="pad top"><p class="patient">〔測試患者 D〕</p><p class="date">2026/09/24<br>星期四 11:00</p></div>
+  <img class="band" src="../band-13-set.png" width="1024" height="87" alt="13 顆標誌帶">
+  <div class="pad bottom"><div class="status"><span>約診狀態</span><span class="pill" style="background:#AE4F4D">已取消</span></div></div>
+</article></div></div>
+<p class="note">輪播 micro；四張依序驗證已排定、已確認、未回覆、已取消。</p>
+<p class="note"><a href="messages.json">查看這一頁所用的 LINE Flex JSON</a></p>
+</main></body></html>

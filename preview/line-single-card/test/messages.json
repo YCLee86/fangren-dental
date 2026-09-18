@@ -1,0 +1,441 @@
+[
+  {
+    "type": "flex",
+    "altText": "預約成功通知（測試）",
+    "contents": {
+      "type": "bubble",
+      "size": "mega",
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "paddingAll": "0px",
+        "backgroundColor": "#FFFFFF",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "14px",
+            "contents": [
+              {
+                "type": "text",
+                "size": "md",
+                "color": "#2A2C27",
+                "wrap": true,
+                "contents": [
+                  {
+                    "type": "span",
+                    "text": "〔測試患者〕",
+                    "weight": "bold"
+                  },
+                  {
+                    "type": "span",
+                    "text": "　約好囉"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "2026/09/18 星期五 11:50",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "margin": "6px",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "url": "https://fangren.net/preview/line-single-card/band-18-set.png",
+            "size": "full",
+            "aspectRatio": "1024:60",
+            "aspectMode": "fit"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "14px",
+            "contents": [
+              {
+                "type": "text",
+                "text": "異動請在2天前(不含假日)與診所聯繫",
+                "size": "xs",
+                "color": "#5C5F57",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "看診前2天會再提醒一次，記得回覆喔～",
+                "size": "xs",
+                "color": "#5C5F57",
+                "margin": "5px",
+                "wrap": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "flex",
+    "altText": "約診紀錄查詢（四種狀態測試）",
+    "contents": {
+      "type": "carousel",
+      "contents": [
+        {
+          "type": "bubble",
+          "size": "micro",
+          "body": {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "0px",
+            "backgroundColor": "#FFFFFF",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "paddingAll": "14px",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "〔測試患者 A〕",
+                    "size": "md",
+                    "color": "#5C5F57",
+                    "wrap": true
+                  },
+                  {
+                    "type": "text",
+                    "text": "2026/09/21\n星期一 09:30",
+                    "size": "lg",
+                    "weight": "bold",
+                    "color": "#2A2C27",
+                    "margin": "6px",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "image",
+                "url": "https://fangren.net/preview/line-single-card/band-13-set.png",
+                "size": "full",
+                "aspectRatio": "1024:87",
+                "aspectMode": "fit"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "paddingAll": "14px",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "alignItems": "center",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "約診狀態",
+                        "size": "xs",
+                        "color": "#5C5F57",
+                        "flex": 0
+                      },
+                      {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "backgroundColor": "#4478B5",
+                        "cornerRadius": "8px",
+                        "paddingTop": "5px",
+                        "paddingBottom": "5px",
+                        "paddingStart": "8px",
+                        "paddingEnd": "8px",
+                        "margin": "9px",
+                        "flex": 0,
+                        "contents": [
+                          {
+                            "type": "text",
+                            "text": "已排定",
+                            "size": "xs",
+                            "color": "#FFFFFF",
+                            "weight": "bold",
+                            "flex": 0
+                          }
+                        ]
+                      },
+                      {
+                        "type": "filler"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "bubble",
+          "size": "micro",
+          "body": {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "0px",
+            "backgroundColor": "#FFFFFF",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "paddingAll": "14px",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "〔測試患者 B〕",
+                    "size": "md",
+                    "color": "#5C5F57",
+                    "wrap": true
+                  },
+                  {
+                    "type": "text",
+                    "text": "2026/09/22\n星期二 14:00",
+                    "size": "lg",
+                    "weight": "bold",
+                    "color": "#2A2C27",
+                    "margin": "6px",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "image",
+                "url": "https://fangren.net/preview/line-single-card/band-13-set.png",
+                "size": "full",
+                "aspectRatio": "1024:87",
+                "aspectMode": "fit"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "paddingAll": "14px",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "alignItems": "center",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "約診狀態",
+                        "size": "xs",
+                        "color": "#5C5F57",
+                        "flex": 0
+                      },
+                      {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "backgroundColor": "#3F654A",
+                        "cornerRadius": "8px",
+                        "paddingTop": "5px",
+                        "paddingBottom": "5px",
+                        "paddingStart": "8px",
+                        "paddingEnd": "8px",
+                        "margin": "9px",
+                        "flex": 0,
+                        "contents": [
+                          {
+                            "type": "text",
+                            "text": "已確認",
+                            "size": "xs",
+                            "color": "#FFFFFF",
+                            "weight": "bold",
+                            "flex": 0
+                          }
+                        ]
+                      },
+                      {
+                        "type": "filler"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "bubble",
+          "size": "micro",
+          "body": {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "0px",
+            "backgroundColor": "#FFFFFF",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "paddingAll": "14px",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "〔測試患者 C〕",
+                    "size": "md",
+                    "color": "#5C5F57",
+                    "wrap": true
+                  },
+                  {
+                    "type": "text",
+                    "text": "2026/09/23\n星期三 16:30",
+                    "size": "lg",
+                    "weight": "bold",
+                    "color": "#2A2C27",
+                    "margin": "6px",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "image",
+                "url": "https://fangren.net/preview/line-single-card/band-13-set.png",
+                "size": "full",
+                "aspectRatio": "1024:87",
+                "aspectMode": "fit"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "paddingAll": "14px",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "alignItems": "center",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "約診狀態",
+                        "size": "xs",
+                        "color": "#5C5F57",
+                        "flex": 0
+                      },
+                      {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "backgroundColor": "#C28229",
+                        "cornerRadius": "8px",
+                        "paddingTop": "5px",
+                        "paddingBottom": "5px",
+                        "paddingStart": "8px",
+                        "paddingEnd": "8px",
+                        "margin": "9px",
+                        "flex": 0,
+                        "contents": [
+                          {
+                            "type": "text",
+                            "text": "未回覆",
+                            "size": "xs",
+                            "color": "#FFFFFF",
+                            "weight": "bold",
+                            "flex": 0
+                          }
+                        ]
+                      },
+                      {
+                        "type": "filler"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "bubble",
+          "size": "micro",
+          "body": {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "0px",
+            "backgroundColor": "#FFFFFF",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "paddingAll": "14px",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "〔測試患者 D〕",
+                    "size": "md",
+                    "color": "#5C5F57",
+                    "wrap": true
+                  },
+                  {
+                    "type": "text",
+                    "text": "2026/09/24\n星期四 11:00",
+                    "size": "lg",
+                    "weight": "bold",
+                    "color": "#2A2C27",
+                    "margin": "6px",
+                    "wrap": true
+                  }
+                ]
+              },
+              {
+                "type": "image",
+                "url": "https://fangren.net/preview/line-single-card/band-13-set.png",
+                "size": "full",
+                "aspectRatio": "1024:87",
+                "aspectMode": "fit"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "paddingAll": "14px",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "alignItems": "center",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "約診狀態",
+                        "size": "xs",
+                        "color": "#5C5F57",
+                        "flex": 0
+                      },
+                      {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "backgroundColor": "#AE4F4D",
+                        "cornerRadius": "8px",
+                        "paddingTop": "5px",
+                        "paddingBottom": "5px",
+                        "paddingStart": "8px",
+                        "paddingEnd": "8px",
+                        "margin": "9px",
+                        "flex": 0,
+                        "contents": [
+                          {
+                            "type": "text",
+                            "text": "已取消",
+                            "size": "xs",
+                            "color": "#FFFFFF",
+                            "weight": "bold",
+                            "flex": 0
+                          }
+                        ]
+                      },
+                      {
+                        "type": "filler"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
