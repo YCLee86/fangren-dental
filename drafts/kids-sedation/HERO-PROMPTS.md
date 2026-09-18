@@ -659,7 +659,7 @@ a phone to her ear and a pen in her other hand; a BLANK sheet of paper and a sma
 the table in front of her. The FATHER sits beside her leaning in. The BOY plays with wooden
 blocks on the floor in the foreground. FLOATING ABOVE AND BESIDE THE PHONE, a single hand-drawn
 ROUND SPEECH BUBBLE with its tail pointing at the phone: inside it, head and shoulders of THE
-ANAESTHETIST in his plain teal scrubs and cap, NO MASK, holding a telephone handset to his ear,
+ANAESTHETIST in his pine-tree printed scrubs and matching printed cap, NO MASK, holding a telephone handset to his ear,
 looking down at a BLANK sheet of paper, friendly and attentive. The bubble is plain white with a
 thin hand-drawn outline and contains nothing else.
 
@@ -943,7 +943,7 @@ a phone to her ear and a pen in her other hand; a BLANK sheet of paper and a sma
 the table in front of her. The FATHER sits beside her leaning in. The BOY plays with wooden
 blocks on the floor in the foreground. FLOATING ABOVE AND BESIDE THE PHONE, a single hand-drawn
 ROUND SPEECH BUBBLE with its tail pointing at the phone: inside it, head and shoulders of THE
-ANAESTHETIST in his plain teal scrubs and cap, NO MASK, holding a telephone handset to his ear,
+ANAESTHETIST in his pine-tree printed scrubs and matching printed cap, NO MASK, holding a telephone handset to his ear,
 looking down at a BLANK sheet of paper, friendly and attentive. The bubble is plain white with a
 thin hand-drawn outline and contains nothing else.
 
@@ -1250,7 +1250,7 @@ a phone to her ear and a pen in her other hand; a BLANK sheet of paper and a sma
 the table in front of her. The FATHER sits beside her leaning in. The BOY plays with wooden
 blocks on the floor in the foreground. FLOATING ABOVE AND BESIDE THE PHONE, a single hand-drawn
 ROUND SPEECH BUBBLE with its tail pointing at the phone: inside it, head and shoulders of THE
-ANAESTHETIST in his plain teal scrubs and cap, NO MASK, holding a telephone handset to his ear,
+ANAESTHETIST in his pine-tree printed scrubs and matching printed cap, NO MASK, holding a telephone handset to his ear,
 looking down at a BLANK sheet of paper, friendly and attentive. The bubble is plain white with a
 thin hand-drawn outline and contains nothing else.
 
