@@ -1083,4 +1083,6 @@ export {
   設節表,
   /* build-brief.mjs（待調整項目總整理）另外用到的：卡片的字、兩則的寬度、浮水印的幾何 */
   OFF, wmWidth, cardLines, linesHtml, MEGA, MICRO, BUB, WCARD, WMTAB, byName, PILLVAL, CARD, FSIZE,
+  /* single-card.mjs（單一版型那一頁）另外用到的：現況那張卡的浮水印怎麼畫、這一筆算到哪一顆 */
+  wmSvg, 輪,
 };
