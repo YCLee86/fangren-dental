@@ -26,8 +26,10 @@ const CHECK = process.argv.includes("--check");
 const BASE = "https://fangren.net/assets/line/";
 
 /* 每一個檔案實際住在哪（各自那一則的 preview 資料夾） */
+/* ⚠ 2026-09-18 多一個 line-single-card：約診卡單一版型那兩張帶子（band-18-set.png／
+   band-13-set.png）住在那裡，被 single-card-band.json 引用。 */
 const HOMES = ["line-welcome", "line-remind", "line-booked", "line-bind-done",
-  "line-review", "line-typhoon", "line-cancel"].map((d) => path.join(ROOT, "preview", d));
+  "line-review", "line-typhoon", "line-cancel", "line-single-card"].map((d) => path.join(ROOT, "preview", d));
 
 const png = (b) => [b.readUInt32BE(16), b.readUInt32BE(20)];
 const jpeg = (b) => {                      /* 掃 SOF 標記，不能照抄 PNG 的讀法 */

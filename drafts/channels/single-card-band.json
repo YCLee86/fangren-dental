@@ -1,0 +1,169 @@
+{
+ "_說明": "約診卡・單一版型（帶子壓在約診時間底下）要交給廠商的那兩份 Flex。⚠⚠ 這一份是 build-brief2.mjs **產生的，不要手改** —— 卡上的字出自 booked-card.json、帶子的顆數與網址出自 single-card.mjs（再上去是 stand-card.json 與 wm-sizes.json）。⚠ 它取代 booked-card.json 那兩則的**版面**（九顆浮水印那一版）；文字一個字都沒有換。要填的值：{{patient}} 病人姓名／{{date}} 日期（單張一行）／{{date_two_lines}} 日期（輪播，中間帶一個換行）／{{status}} 約診狀態的四個值之一／{{status_color}} 那個值的底色。",
+ "預約成功通知": {
+  "type": "bubble",
+  "size": "mega",
+  "body": {
+   "type": "box",
+   "layout": "vertical",
+   "paddingAll": "0px",
+   "backgroundColor": "#FFFFFF",
+   "contents": [
+    {
+     "type": "box",
+     "layout": "vertical",
+     "paddingAll": "14px",
+     "contents": [
+      {
+       "type": "text",
+       "size": "md",
+       "color": "#2A2C27",
+       "wrap": true,
+       "contents": [
+        {
+         "type": "span",
+         "text": "{{patient}}",
+         "weight": "bold"
+        },
+        {
+         "type": "span",
+         "text": "　約好囉"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "text": "{{date}}",
+       "size": "lg",
+       "weight": "bold",
+       "color": "#2A2C27",
+       "margin": "6px",
+       "wrap": true
+      }
+     ]
+    },
+    {
+     "type": "image",
+     "url": "https://fangren.net/assets/line/band-18-set.png",
+     "size": "full",
+     "aspectMode": "fit",
+     "aspectRatio": "1024:60"
+    },
+    {
+     "type": "box",
+     "layout": "vertical",
+     "paddingAll": "14px",
+     "contents": [
+      {
+       "type": "text",
+       "text": "異動請在2天前(不含假日)與診所聯繫",
+       "size": "xs",
+       "color": "#5C5F57",
+       "wrap": true
+      },
+      {
+       "type": "text",
+       "text": "看診前2天會再提醒一次，記得回覆喔～",
+       "size": "xs",
+       "color": "#5C5F57",
+       "margin": "5px",
+       "wrap": true
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "約診紀錄查詢": {
+  "type": "carousel",
+  "contents": [
+   {
+    "type": "bubble",
+    "size": "micro",
+    "body": {
+     "type": "box",
+     "layout": "vertical",
+     "paddingAll": "0px",
+     "backgroundColor": "#FFFFFF",
+     "contents": [
+      {
+       "type": "box",
+       "layout": "vertical",
+       "paddingAll": "14px",
+       "contents": [
+        {
+         "type": "text",
+         "text": "{{patient}}",
+         "size": "md",
+         "color": "#5C5F57",
+         "wrap": true
+        },
+        {
+         "type": "text",
+         "text": "{{date_two_lines}}",
+         "size": "lg",
+         "weight": "bold",
+         "color": "#2A2C27",
+         "margin": "6px",
+         "wrap": true
+        }
+       ]
+      },
+      {
+       "type": "image",
+       "url": "https://fangren.net/assets/line/band-13-set.png",
+       "size": "full",
+       "aspectMode": "fit",
+       "aspectRatio": "1024:87"
+      },
+      {
+       "type": "box",
+       "layout": "vertical",
+       "paddingAll": "14px",
+       "contents": [
+        {
+         "type": "box",
+         "layout": "horizontal",
+         "alignItems": "baseline",
+         "contents": [
+          {
+           "type": "text",
+           "text": "約診狀態",
+           "size": "xs",
+           "color": "#5C5F57",
+           "flex": 0
+          },
+          {
+           "type": "box",
+           "layout": "vertical",
+           "flex": 0,
+           "backgroundColor": "{{status_color}}",
+           "cornerRadius": "8.5px",
+           "paddingTop": "5px",
+           "paddingBottom": "5px",
+           "paddingStart": "8px",
+           "paddingEnd": "8px",
+           "margin": "9px",
+           "contents": [
+            {
+             "type": "text",
+             "text": "{{status}}",
+             "size": "xs",
+             "weight": "bold",
+             "color": "#FFFFFF"
+            }
+           ]
+          },
+          {
+           "type": "filler"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

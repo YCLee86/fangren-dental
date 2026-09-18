@@ -113,14 +113,14 @@ const 對定案 = (svg) => {
 
 /* ── PNG：1024 寬（Flex 的 image 上限），透明底 ──────────────── */
 const PW = 1024;
-const chrome = (() => {
+const chrome = () => {
   const base = process.env.PLAYWRIGHT_BROWSERS_PATH || "/opt/pw-browsers";
   for (const d of readdirSync(base)) {
     const p = join(base, d, "chrome-linux", "headless_shell");
     if (existsSync(p)) return p;   /* 一律 headless_shell（CLAUDE.md 第九節第 18 條） */
   }
   throw new Error("找不到 headless_shell");
-})();
+};
 
 /* 自己解 PNG（8 bit、非交錯 —— Chromium 的擷圖就是這一種）。
    守門要看的是「真的畫出東西了沒」與「有幾種顏色」：一張全透明的帶子在頁面上
@@ -169,8 +169,9 @@ const 墨量 = (im) => {
 };
 const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(",");
 
-const tmp = mkdtempSync(join(tmpdir(), "band-"));
+let tmp = null;
 const 出圖 = (檔, B, 模) => {
+  tmp ??= mkdtempSync(join(tmpdir(), "band-"));
   const PH = Math.round(PW * B.總高 / B.總寬);
   const pg = join(tmp, 檔.replace(/\.png$/, ".html")), png = join(tmp, 檔);
   /* ⚠⚠⚠ 選擇器一定要寫 `svg.bnd`，不可以寫 `svg` —— 那一條會連**巢狀的**那 27 個
@@ -179,7 +180,7 @@ const 出圖 = (檔, B, 模) => {
      症狀：尺寸、長寬比、墨量每一項都正常，**只有那一顆的顏色一個像素都沒有**。 */
   writeFileSync(pg, `<!doctype html><meta charset="utf-8"><style>html,body{margin:0}`
     + `svg.bnd{display:block;width:${PW}px;height:${PH}px}</style>${bandSvg(B, "bnd", 墨色)}`, "utf8");
-  execFileSync(chrome, ["--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+  execFileSync(chrome(), ["--no-sandbox", "--disable-gpu", "--hide-scrollbars",
     "--force-color-profile=srgb", "--default-background-color=00000000",
     `--screenshot=${png}`, `--window-size=${PW},${PH}`, "file://" + pg], { stdio: "pipe" });
   const buf = readFileSync(png);
@@ -191,6 +192,20 @@ const 出圖 = (檔, B, 模) => {
   const 缺 = 要.filter((h) => (q.數.get(rgb(h)) || 0) < 20);
   if (缺.length) throw new Error(`${檔}：這幾支顏色一個實心像素都沒畫到 ${缺.join("、")}`);
   return { 檔, buf, w: PW, h: PH, 佔: q.佔, 色數: 要.length };
+};
+
+/* ⚠⚠ 這一支同時是 build-brief2.mjs 的模組（9/18 那一版給廠商的整理頁，卡片與帶子
+   全部從這裡 import、不抄第二份）。所以**出圖與寫檔都關在「直接執行」底下** ——
+   不關的話，產另一頁時會跑四次 Chromium，還會順手把這一頁重寫一次（同 build-vendor.mjs）。
+   被 import 的時候改成**讀那四張已經產好的 PNG 的檔頭**拿寬高：頁面上要畫的只有尺寸，
+   而那四張就是上線要交出去的那幾張。⚠ 讀不到就 throw，不要靜靜地畫一張沒有尺寸的圖。 */
+const 直接執行 = process.argv[1] === fileURLToPath(import.meta.url);
+const 備圖 = (檔, B, 模) => {
+  if (直接執行) return 出圖(檔, B, 模);
+  const f = join(OUT, 檔);
+  if (!existsSync(f)) throw new Error(`${檔} 還沒產生 —— 先跑一次 node drafts/channels/single-card.mjs`);
+  const x = readFileSync(f);
+  return { 檔, buf: x, w: x.readUInt32BE(16), h: x.readUInt32BE(20), 佔: null, 色數: null };
 };
 
 /* ⚠⚠⚠ 2026-09-18 定案：**預約成功 18 顆、約診紀錄查詢 13 顆**（使用者挑的），
@@ -206,7 +221,7 @@ const 帶案 = [
   { 檔: "band-18-ink.png", n: 定顆.mega, 模: "ink", 標: "整條淡墨", 註: `全部 ${墨色}` },
   { 檔: "band-18-spec.png", n: 定顆.mega, 模: "spec", 標: "每一顆自己的科別色", 註: "九顆一循環，同色仍然不相鄰" },
   { 檔: "band-13-set.png", n: 定顆.car, 模: "set", 底: 13 },
-].map((a) => ({ ...a, B: 條(a.n, a.模, a.底), ...出圖(a.檔, 條(a.n, a.模, a.底), a.模) }));
+].map((a) => ({ ...a, B: 條(a.n, a.模, a.底), ...備圖(a.檔, 條(a.n, a.模, a.底), a.模) }));
 /* ⚠ 27 顆那一條這一輪沒有人在用了，但這一道守門要留著：它證明我們的 `帶()`
    仍然畫得出立牌那一條定案（逐位元組），和頁面上擺不擺它是兩件事。 */
 對定案(bandSvg(條(定, "set"), "bnd", 墨色));
@@ -243,11 +258,13 @@ const 驗切 = (行) => {
     throw new Error(`第 ${切} 行不是日期那一行（卡上讀到 ${行.length} 行）—— 帶子會夾在別的地方`);
   return 行;
 };
-const 卡 = (w, 行, { 帶檔, 丸, 印, 折 } = {}) => {
+/* ⚠ 前綴：別頁引用這兩張帶子時要加 `../line-single-card/`（圖一律引用隔壁資料夾
+   那一份，不複製第二份）。這一頁自己用空字串 ＝ 和改動前逐字相同。 */
+const 卡 = (w, 行, { 帶檔, 丸, 印, 折, 前綴 = "" } = {}) => {
   const 上 = 帶檔 ? 驗切(行).slice(0, 切) : 行;
   const 下 = 帶檔 ? 行.slice(切) : [];
   const 丸h = 丸 ? "\n" + 藥丸(丸) : "";
-  const 帶h = 帶檔 ? `\n<img class="bnd" src="${帶檔}" width="${帶by[帶檔].w}" height="${帶by[帶檔].h}" alt="芳仁牙醫診所的標誌排成的一條帶子">` : "";
+  const 帶h = 帶檔 ? `\n<img class="bnd" src="${前綴}${帶檔}" width="${帶by[帶檔].w}" height="${帶by[帶檔].h}" alt="芳仁牙醫診所的標誌排成的一條帶子">` : "";
   const 下h = 帶檔 && (下.length || 丸) ? `\n<div class="cb bot">\n${linesHtml(下)}${丸h}\n</div>` : "";
   return `<div class="stcard sgl${折 ? " car" : ""}" style="width:${w}px">
 <div class="cb">
@@ -385,10 +402,11 @@ const 落 = (檔, buf) => {
   if (!舊 || !舊.equals(buf)) 差.push(檔);
   if (!CHECK) writeFileSync(p, buf);
 };
+if (直接執行) {
 if (!CHECK) mkdirSync(OUT, { recursive: true });
 落("index.html", Buffer.from(html, "utf8"));
 for (const a of 帶案) 落(a.檔, a.buf);
-rmSync(tmp, { recursive: true, force: true });
+if (tmp) rmSync(tmp, { recursive: true, force: true });
 
 if (CHECK) {
   if (差.length) { console.error("✗ 對不上：" + 差.join("、")); process.exit(1); }
@@ -410,3 +428,9 @@ if (CHECK) {
   console.log(`  卡片 單張 ${BUB.mega}px（沒有約診狀態那一列）／輪播 ${BUB.car}px（${BUB.階}，有那一列）・內距 ${CARD.pad}px・底 ${WCARD}`);
   console.log(`  現況那顆浮水印：${輪.n}・淡墨 ${INK} ${(WM_A * 100).toFixed(0)}%・溢出 ${OFF.right}／${OFF.bottom}px`);
 }
+}
+
+/* build-brief2.mjs（9/18 給廠商那一版）用得到的那幾塊 ——
+   ⚠ 這一頁是「已經定案的東西」，那一頁是「把它交出去」：卡片怎麼畫、帶子幾顆、
+     套色在哪幾格，兩邊一定要是同一份。 */
+export { 定顆, 帶案, 帶by, 卡, 輪播行, 帶高, 顆高, 基註, 套註, 條, 量案, 藥丸 };

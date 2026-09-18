@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 待調整項目與規格（9/18）</title>
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:26px 14px 72px}
+h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
+.lede{color:var(--soft);font-size:.92rem;margin:0 0 1.5em}
+.h2{font-size:1.04rem;margin:2.4em 0 .6em;padding-top:1em;border-top:1px solid var(--rule)}
+.h2 .t{display:block;font-size:.79rem;font-weight:400;color:var(--soft);margin-top:.25em}
+/* 未定案：四件，其中兩件帶子項。號碼用 CSS 的計數器做成 1 與 3-1，
+   所以 ol 的縮排自己接管（list-style 關掉）。 */
+.now{background:var(--card);border-radius:11px;padding:14px 16px;margin:0;font-size:.93rem}
+.now>b{font-size:1rem}
+.now ol{list-style:none;margin:.45em 0 0;padding:0}
+.now>ol{counter-reset:n}
+.now>ol>li{counter-increment:n;position:relative;padding-left:2em;margin:.85em 0 0}
+.now>ol>li::before{content:counter(n);position:absolute;left:0;top:0;font-weight:700}
+.now .t{font-weight:600;margin:0}
+.now .d{margin:.2em 0 0}
+.now ol.sub{counter-reset:m;margin:.3em 0 0}
+.now ol.sub>li{counter-increment:m;position:relative;padding-left:2.6em;margin:.45em 0 0}
+.now ol.sub>li::before{content:counter(n) "-" counter(m);position:absolute;left:0;top:0;
+  color:var(--soft)}
+.note{font-size:.88rem;color:var(--soft);background:var(--card);border-radius:9px;
+  padding:.7em .85em;margin:.9em 0 0}
+
+/* ── 一則一格：左邊是那一則自己的縮圖 ─────────────────────────── */
+.mg{font-size:.93rem;font-weight:600;margin:1.15em 0 .15em}
+.mg:first-of-type{margin-top:.5em}
+.mg .n{font-weight:400;font-size:.79rem;color:var(--soft);margin-left:.5em}
+.msgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));
+  gap:9px;margin:.2em 0 0}
+.msg{display:flex;gap:10px;background:var(--card);border-radius:10px;padding:9px 10px}
+.msg .ims{display:flex;flex-direction:column;gap:4px;flex:0 0 64px}
+.msg img{width:64px;height:64px;border-radius:6px;object-fit:cover;
+  background:var(--paper)}
+.msg .ph{width:64px;height:64px;flex:0 0 64px;border-radius:6px;background:var(--paper)}
+.msg .x{min-width:0}
+.msg .nm{font-size:.9rem;font-weight:600;line-height:1.45}
+.msg .mt{font-size:.79rem;color:var(--soft);line-height:1.55;margin-top:.15em}
+.msg .un{display:inline-block;font-weight:400;font-size:.72rem;color:var(--soft);
+  border:1px solid var(--rule);border-radius:6px;padding:.1em .42em;margin-left:.45em;
+  vertical-align:.08em;white-space:nowrap}
+
+/* ── 改版：左邊規格圖、右邊逐項 ───────────────────────────────── */
+.fig{margin:.9em 0 0}
+.fig img{display:block;max-width:100%;height:auto;border-radius:8px;background:var(--card)}
+.fig figcaption{font-size:.8rem;color:var(--soft);margin-top:.4em}
+.scroll{overflow-x:auto}
+.scroll img{max-width:none}
+.two{display:grid;gap:14px;margin:.9em 0 0}
+@media(min-width:620px){.two{grid-template-columns:268px 1fr;align-items:start}}
+ul.tick{list-style:none;margin:.2em 0 0;padding:0;font-size:.92rem}
+ul.tick li{padding:.28em 0 .28em 1.15em;position:relative}
+ul.tick li::before{content:"・";position:absolute;left:0;color:var(--soft)}
+.rows{margin:.2em 0 0}
+.row{border-top:1px solid var(--rule);padding:.8em 0}
+.row .k{font-weight:600;font-size:.93rem}
+.row .v{font-size:.9rem;margin-top:.25em}
+.row .v i{font-style:normal;color:var(--soft);margin-right:.35em}
+
+/* ── 廠商送來的畫面 ────────────────────────────────────────── */
+.vs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:14px 12px;margin:.5em 0 0}
+.vs figure{margin:0}
+.vs img{display:block;width:100%;height:auto;border-radius:8px;background:var(--card)}
+.vs .t{font-size:.88rem;font-weight:600;margin:.45em 0 0}
+.vs figcaption{font-size:.8rem;color:var(--soft);line-height:1.65;margin-top:.15em}
+
+/* ── 九宮格 ────────────────────────────────────────────────── */
+.nine{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px;
+  margin:.9em 0 0;background:var(--card);border-radius:11px;padding:15px 14px}
+.nine figure{margin:0;text-align:center}
+.nine svg{display:block;margin:0 auto;height:auto}
+.nine .sw{display:flex;align-items:center;justify-content:center;
+  aspect-ratio:2.0080 / 1}
+.nine .wm{margin-top:8px;border-top:1px dashed var(--rule)}
+.nine figcaption{font-size:.72rem;color:var(--soft);line-height:1.5;margin-top:.45em}
+
+/* ── 大小與位置的對照 ──────────────────────────────────────── */
+.cmpwrap{margin:1.2em 0 0}
+.cmpt{font-size:.9rem;font-weight:600;margin:0 0 .35em}
+.cmprow{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:14px 10px}
+.cmp{margin:0}
+.cmp svg{display:block;width:100%;max-width:268px;height:auto}
+.cmp figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.2em;max-width:268px}
+/* 九顆各自畫在卡片上 —— 和上面那三格同一個框、同一個比例尺，才比得出來 */
+.onnine{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:14px 10px;
+  margin:.9em 0 0}
+
+/* ── 綁定完成的兩個方向 ────────────────────────────────────── */
+.dir{background:var(--card);border-radius:11px;padding:13px 15px;margin:.9em 0 0}
+.dir .t{font-size:.95rem;font-weight:600;margin:0 0 .45em}
+.dir p{font-size:.89rem;margin:.5em 0 0}
+.dir i{font-style:normal;color:var(--soft);margin-right:.4em}
+
+/* ── 待答 ──────────────────────────────────────────────────── */
+.grp{margin:1.6em 0 0}
+.grp .t{font-size:.93rem;font-weight:600;margin:0 0 .1em}
+.grp .c{font-size:.79rem;color:var(--soft);margin:0}
+/* 編號要跨「★ 那幾題」與「其餘」連續，所以每一題自己帶 value ——
+   別處寫著「第 6 節的第 N 題」，指的就是這個號碼。
+   （這一段在樣板字串裡 ＝ 會被印進頁面，所以不要用那個三角形的警示記號 ——
+   守門第 ⑨ 道掃的就是它，連這一句說明自己都會被掃到。） */
+ol.ask{margin:.35em 0 0;padding:0 0 0 2.5em}
+ol.ask li{padding:.55em 0;border-bottom:1px solid var(--rule);font-size:.91rem}
+ol.ask li::marker{color:var(--soft);font-size:.85em}
+ol.ask .y{display:block;color:var(--soft);font-size:.85rem;margin-top:.2em}
+ol.ask .s{color:var(--soft);margin-right:.35em}
+details{margin:.3em 0 0}
+summary{font-size:.87rem;color:var(--soft);cursor:pointer;padding:.5em 0;
+  border-bottom:1px solid var(--rule)}
+summary::marker{color:var(--rule)}
+/* ── 約診狀態那四個值的顏色：兩套色票各畫一次 ─────────────────
+   卡片畫成輪播上真正的寬度（207px ＝ 268 × .772），
+   欄位要吃得下手機的寬度，所以是 auto-fit 不是寫死兩欄。 */
+.pal{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));
+  gap:16px;margin:1em 0 0}
+.pal .h{font-size:.93rem;font-weight:600;margin:0 0 .1em}
+.pal .src{font-size:.79rem;color:var(--soft);line-height:1.65;margin:0 0 .55em}
+.stgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(207px,1fr));
+  gap:16px 12px;margin:1em 0 0}
+.stwrap{margin:0;max-width:207px}
+.stcard{position:relative;overflow:hidden;background:#ffffff;
+  border:1px solid var(--rule);border-radius:9px}
+/* 卡上那幾行 —— 第 3 節那幾張 SVG 卡（foreignObject）與第 4 節那四張 HTML 卡
+   吃的是同一組規則，所以兩處的字級、行距與折行一定一樣。
+   字級、顏色、粗細、上外距都是從 booked-card.json 讀回來寫在 style 上的，
+   這裡只放 padding 與行高 —— 寫進 CSS 就變成第二份規格。
+   字型堆疊比整頁多一個拉丁字型（Arial）當校正：手機與電腦上前面三個中文字型
+   會先命中、含拉丁字，所以那一側一個像素都不會變；而產圖用的這台容器沒有那三個
+   字型，拉丁數字會退到比整頁寬一成的字型，日期那一行就會在 LINE 上放得下的地方
+   折行 —— 出圖與量到的折點因此都會對不上實機。中日韓的字仍然照原本的堆疊走。
+   （這一段在樣板字串裡面，所以會被原字印進 HTML：不要寫警示記號，第 ⑨ 道在掃。） */
+.cb{padding:14px;
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,system-ui,sans-serif}
+.cb p{line-height:1.35;margin:0}
+.cb b{font-weight:700}
+.stcard .r{display:flex;gap:9px;align-items:baseline;font-size:13px;
+  line-height:1;margin:10px 0 0}
+.stcard .lb{color:var(--soft);flex:0 0 auto}
+.stcard .wm{position:absolute;display:block;height:auto;pointer-events:none}
+.stwrap figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.25em}
+.stlist{list-style:none;margin:.6em 0 0;padding:0;
+  font-size:.79rem;color:var(--soft);line-height:1.75}
+.stlist b{font-weight:600;color:var(--ink)}
+.pal .h .pick{font-weight:400;font-size:.79rem;color:var(--soft);margin-left:.4em}
+/* 藥丸：底是那一科的套色、字是白的，形狀照站上那一族（圓角 8.5px）。
+   行高與上下內距要和 preview/line-booked/ 定案那一份**逐字相同** ——
+   塊要包住「字面框」不是「行框」（同 /history/spec-tag-fit.html 那一輪），
+   寫回 line-height:1.6 ＋ 上下對稱的話，這一頁會畫出一顆低 1.40px 的藥丸，
+   和定案那一頁對不起來，而且畫面看起來完全正常。 */
+.stcard .pill{display:inline-block;border-radius:8.5px;line-height:1;
+  padding:.42em .63em .38em;color:#fff;font-weight:700}
+/* ③ 那幾條規格：一條一行，不用項目符號 —— 廠商是照著填的，不是在讀文章 */
+.spec{list-style:none;margin:.5em 0 0;padding:0;font-size:.9rem;line-height:1.8}
+.spec>li{margin:.5em 0 0;padding-left:1.1em;position:relative}
+.spec>li::before{content:"・";position:absolute;left:0;color:var(--soft)}
+.h3{font-size:.98rem;margin:2em 0 .2em}
+.h4{font-size:.92rem;margin:1.6em 0 .2em;color:var(--soft)}
+/* 那張表在窄螢幕上一定會比版心寬 —— 自己一條捲軸，不要讓整頁橫著捲 */
+.tabw{overflow-x:auto;margin:.9em 0 0;-webkit-overflow-scrolling:touch}
+.tab{border-collapse:collapse;font-size:.82rem;min-width:460px}
+.tab th,.tab td{border:1px solid var(--rule);padding:5px 8px;text-align:left;
+  white-space:nowrap;line-height:1.5}
+.tab thead th{background:var(--card);font-weight:600;font-size:.78rem}
+.tab .chip{display:inline-block;width:.72em;height:.72em;border-radius:2px;
+  margin-right:.4em;vertical-align:-.02em;border:1px solid rgba(0,0,0,.12)}
+.tab .was,.stwrap .was{color:var(--soft);font-weight:400}
+.foot{margin:2.8em 0 0;padding-top:1.1em;border-top:1px solid var(--rule);
+  font-size:.83rem;color:var(--soft);line-height:1.85}
+a{color:#214d48}
+code{font-size:.92em}
+/* ⚠⚠⚠ 未定案那一塊剩下 3 和 4，**編號不重編**（4-4-1 這個標號只有在 4 還是 4 的時候
+   才指得到東西）。那一塊的號碼是 CSS 的 counter 畫的，而 li 的 value 屬性對 counter
+   一點作用都沒有 —— 只寫 value 的話 HTML 看起來對，畫出來仍然是 1、2（踩過）。
+   所以要從 2 起跳，讓第一個 counter-increment 把它加成 3；value 一起寫著，
+   是給不吃 CSS 的地方（複製貼上、朗讀）用的。
+   ⚠ 這一段寫在樣板字串裡面，所以註解裡不可以出現反引號（這一站第八次）。 */
+.now>ol{counter-reset:n 2}
+.h3 .t{display:block;font-size:.79rem;font-weight:400;color:var(--soft);margin-top:.2em}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:16px 14px;margin:.9em 0 0}
+.pair figure{margin:0}
+.pair img{display:block;max-width:100%;height:auto;border-radius:10px}
+.pair figcaption{font-size:.8rem;color:var(--soft);line-height:1.65;margin-top:.4em}
+.pair .k{font-size:.88rem;font-weight:600;color:var(--ink);margin:0 0 .35em}
+.sgrid{display:flex;flex-wrap:wrap;gap:20px 16px;margin:1em 0 0;align-items:flex-start}
+.swrap{margin:0}
+.sgl{overflow:hidden;box-sizing:content-box}
+.sgl.car .cb p{white-space:pre-line}
+.sgl .bnd{display:block;width:100%;height:auto}
+.sgl .cb.bot>:first-child{margin-top:0}
+.swrap figcaption{font-size:.76rem;color:var(--soft);line-height:1.6;margin-top:.35em;max-width:300px}
+.swrap figcaption b{color:var(--ink)}
+.vid{margin:1em 0 0;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-start}
+.vid video{width:250px;max-width:100%;height:auto;border-radius:12px;background:#111;display:block}
+.vid figcaption{font-size:.82rem;color:var(--soft);line-height:1.7;max-width:360px}
+pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:10px 12px;
+  font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.9em 0 0}
+.refs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px 14px;margin:.9em 0 0}
+.refs figure{margin:0}
+.refs img{display:block;width:100%;max-width:320px;height:auto;border-radius:10px}
+.refs .k{font-size:.88rem;font-weight:600;margin:0 0 .35em}
+.refs figcaption{font-size:.8rem;color:var(--soft);line-height:1.65;margin-top:.4em;max-width:320px}
+.done{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:9px;margin:.8em 0 0}
+.done .msg{align-items:flex-start}
+.quo{margin:.6em 0 0;padding:.05em 0 .05em .9em;border-left:3px solid var(--rule)}
+.quo p{font-size:.9rem;line-height:1.85;margin:.45em 0 0}
+.quo p:first-child{margin-top:0}
+.fin{background:#eef1ee;border:1px solid var(--rule);border-radius:10px;padding:.7em .9em;margin:.9em 0 0}
+.fin .k{font-size:.82rem;font-weight:600;color:var(--soft);margin:0 0 .3em}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>LINE 官方帳號　待調整項目與規格</h1>
+<p class="lede">芳仁牙醫診所　更新於 2026-09-18<br>
+上一版（9/14）列了四件未定案。<b>1 與 2 已經處理完</b>，搬到最下面的已完成項目；<b>3 換了做法</b>（九顆浮水印改成一條帶狀 logo）；<b>4 收到翔評 9/18 的回覆</b>，記在 4-4-1。<br>
+卡片的模擬圖一律畫成病人手機上的寬度（單張約 268px、輪播 micro 約 162px）。</p>
+
+<div class="now">
+<b>未定案</b>
+<ol>
+<li value="3"><p class="t"><a href="#s3">約診通知與紀錄查詢版面</a></p>
+<ol class="sub"><li><a href="#s3-1">九顆浮水印整組換掉，改用一條<b>帶狀 logo</b>：九顆標誌排成一條，做成<b>一張圖</b>壓在卡片裡。</a></li>
+<li><a href="#s3-2">帶子<b>不疊在文字上</b>，是夾在約診時間底下 —— 卡片內容拆成上下兩塊，帶子滿版夾在中間。</a></li>
+<li><a href="#s3-3">預約成功通知（單張 mega）：帶子 18 顆；<b>這一則不放約診狀態那一列</b>。</a></li>
+<li><a href="#s3-4">約診紀錄查詢（輪播）：卡片 micro，帶子 13 顆，約診狀態那一列照舊。</a></li>
+<li><a href="#s3-5">約診狀態的四個值、色碼與畫法（和上一版相同）。</a></li>
+<li><a href="#s3-6">日期的順序（和上一版相同）：2026/09/11 星期五 11:50。</a></li></ol></li>
+<li><p class="t"><a href="#s4">綁定成功的自動回覆設定</a></p>
+<ol class="sub"><li><a href="#s4-1">用戶端送出的那一句「綁定成功」無法（或不建議）移除 —— 那是以病人的身分送進聊天室的，而且診所櫃檯會用那個號碼查病歷。</a></li>
+<li><a href="#s4-2">綁定成功之後跳出來的自動回覆，現況：LINE 商家帳號的自動回應只能設定一種，所以綁定那一刻跳出來的，和平常打字進去收到的是同一則。</a></li>
+<li><a href="#s4-3">其他商家帳號在綁定那一刻送的是另一則，和平常打字進去收到的不一樣 —— 潔客幫、中國信託、國泰世華、玉山四個帳號都是這樣。</a></li>
+<li><a href="#s4-4">同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆。 想請教他們的自動回應是怎麼設的，診所能不能照那個設法。</a></li>
+<li><a href="#s4-4-1">翔評回覆</a></li></ol></li>
+<li><p class="t"><a href="#s5">已完成項目</a>（含 1 與 2）</p></li>
+</ol>
+</div>
+
+<h2 class="h2" id="s3">3　約診通知與紀錄查詢版面<span class="t">九顆浮水印改成一條帶狀 logo</span></h2>
+<p class="note">上一版是九顆浮水印、每一筆約診換一顆。這一版整組換掉：<b>九顆排成一條帶子、做成一張圖</b>，兩則各一張，不隨約診換。下面的卡片一律畫成病人手機上的寬度：單張約 268px、輪播 micro 約 162px。</p>
+
+<h3 class="h3" id="s3-1">3-1　改用帶狀 logo<span class="t">為什麼換、換掉之後要填什麼</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">換做法的起點是翔評 9/18 的回覆。</p>
+<div class="quo"><p>「約診查詢如有多筆，也都是套用同一圖示」、「不能修改順序」。</p>
+<p>「圖，決定要哪一個圖示、大小可以稍微放大、縮小　如以下提供：　預約當下提醒：r1c1，圖稍微縮小　約診查詢：r3c1，圖稍微縮小」</p></div>
+<p class="note">所以不必在九顆裡挑一顆 —— 九顆<b>排成一條帶子</b>、做成<b>一張圖</b>，兩則各一張，一筆約診算哪一顆的規則整條不必做了。大小也不必另外估：帶子是滿版的（<code>size: "full"</code>），高度由圖自己的長寬比決定。</p>
+<div class="sgrid">
+<figure class="swrap"><div class="stcard sgl" style="width:268px">
+<div class="cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:14px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
+<svg class="wm" width="188" height="60.96"
+  viewBox="0 0 44.229 14.341" preserveAspectRatio="none" aria-hidden="true"
+  style="right:-18px;bottom:-10px"><g transform="translate(-306.733 500.546) scale(1 -1)"><path
+  fill="#5c5f57" fill-opacity="0.12" fill-rule="evenodd" d="M 337.898 486.531 C 343.216 485.392 347.423 487.307 349.66 491.139 C 350.569 492.695 351.347 495.836 350.756 497.888 C 350.135 500.046 347.124 501.416 342.429 499.89 C 334.383 497.276 325.991 496.766 316.359 499.873 C 314.096 500.603 309.587 501.39 307.484 498.423 C 305.638 495.817 307.705 492.15 308.282 491.269 C 311.078 487 314.621 485.707 318.948 486.376 C 327.759 487.738 329.033 488.43 337.898 486.531 M 337.958 489.721 C 338.207 489.794 338.302 489.812 338.545 489.721 C 338.708 489.66 338.929 489.671 339.09 489.721 C 339.614 489.884 340.133 490.92 340.037 492.238 C 339.943 493.555 336.551 493.372 336.554 492.238 C 336.557 491.334 336.881 490.17 337.327 489.854 C 337.518 489.718 337.66 489.634 337.958 489.721"/></g></svg>
+</div><figcaption><b>現在這樣</b>　浮水印疊在文字後面、每一筆約診換一顆（這一張是 r1c3）</figcaption></figure>
+<figure class="swrap"><div class="stcard sgl" style="width:268px">
+<div class="cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+</div>
+<img class="bnd" src="../line-single-card/band-18-set.png" width="1024" height="60" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
+</div><figcaption><b>這一版</b>　帶子夾在日期與那兩行小字之間・18 顆・圖檔 1024×60px・畫在卡上 15.6px 高（最高那一顆 7.8px）</figcaption></figure>
+</div>
+<div class="rows">
+<div class="row"><p class="k">要填的值</p><p class="v">九顆各一組（兩欄寬度、長寬比、網址）→ <b>一張圖、<code>size: "full"</code>，一個數字都不必填</b></p></div>
+<div class="row"><p class="k"><code>position: "absolute"</code></p><p class="v">浮水印非疊不可（那一項到今天還沒有實機驗過）→ 內容拆成<b>兩塊 box</b>、帶子夾在中間，<b>不必疊</b></p></div>
+<div class="row"><p class="k">圖檔</p><p class="v">18 張（九顆 × 兩種濃度）→ <b>2 張</b>（兩則的顆數不一樣，各一張）</p></div>
+<div class="row"><p class="k">挑哪一顆的規則</p><p class="v"><code>(月＋日) % 9</code>　→ <b>不必做了</b></p></div>
+<div class="row"><p class="k">換來的</p><p class="v">顏色不再跟著那一筆約診換 —— 帶子固定一條，兩則、每一筆都一樣</p></div>
+</div>
+<h4 class="h4">實機畫面（示意）</h4>
+<figure class="vid">
+<video src="demo-band.mp4" poster="demo-band.jpg" width="750" height="1622"
+ controls loop muted playsinline preload="none"></video>
+<figcaption>9/18 在診所自己的測試帳號上實際送出的畫面：上面是預約成功通知（單張），底下是約診紀錄查詢（輪播，左右滑過四張，示範四個約診狀態）。資料是假的。</figcaption>
+</figure>
+
+<h3 class="h3" id="s3-2">3-2　預約成功通知・定稿<span class="t">單張 <code>mega</code>・268px</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">單張那一則。帶子 <b>18 顆</b>，其中七顆套診所七個科別的顏色、其餘淡墨。</p>
+<ul class="spec"><li>卡片　bubble <code>size: "mega"</code>、<code>backgroundColor</code> #FFFFFF（翔評現在跑的就是純白，不必換）。</li>
+<li><b><code>body</code> 的 <code>paddingAll</code> 改成 <code>0px</code></b>，內距移到上下兩塊 box 上（各 <code>paddingAll</code> 14px）—— 帶子才滿得到卡片的左右邊。</li>
+<li>上面那一塊：〔病人姓名〕＋「　約好囉」<code>md</code>／日期 <code>lg</code> 粗體 <code>margin</code> 6px。</li>
+<li>帶子：<code>image</code>、<code>url</code> 見 3-6、<code>size: "full"</code>、<code>aspectMode: "fit"</code>。夾在日期與底下那兩行之間，<b>不是 <code>absolute</code>、不必疊</b>。</li>
+<li>下面那一塊：兩行灰字 <code>xs</code> #5C5F57（第一行不要 <code>margin</code>，隔開它們的已經是帶子了）。</li>
+<li>每一格都 <code>wrap: true</code>。<b>這一則不放約診狀態那一列。</b></li></ul>
+<div class="sgrid">
+<figure class="swrap"><div class="stcard sgl" style="width:268px">
+<div class="cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+</div>
+<img class="bnd" src="../line-single-card/band-18-set.png" width="1024" height="60" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
+</div><figcaption><b>定稿</b>　18 顆・圖檔 1024×60px・畫在卡上 15.6px 高（最高那一顆 7.8px）<br>9 顆那一份 × 2<br>套色 7 顆・間隔 2、3、2、5、3、2</figcaption></figure>
+</div>
+
+<h3 class="h3" id="s3-3">3-3　約診紀錄查詢・定稿<span class="t">輪播 <code>micro</code>・162px</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">輪播那一則。帶子 <b>13 顆</b>（卡片窄，顆數跟著少一點），同樣七顆套色。</p>
+<ul class="spec"><li>卡片　bubble <code>size: "micro"</code>（翔評現在跑的是 <code>deca</code>，這一項要換）。<b>同一條輪播裡每一張都要是同一個 size</b>，整組一起換。</li>
+<li><code>body</code> 的 <code>paddingAll</code> 同樣改成 <code>0px</code>，上下兩塊各 <code>paddingAll</code> 14px，<code>backgroundColor</code> #FFFFFF。</li>
+<li>上面那一塊：〔病人姓名〕<code>md</code> #5C5F57／日期 <code>lg</code> 粗體 <code>margin</code> 6px。</li>
+<li>日期　micro 放不下一行，請在這一則的日期值裡帶一個換行：<code>2026/09/11</code> 換行 <code>星期五 11:50</code>（見 3-5）。</li>
+<li>帶子：同 3-2，<code>size: "full"</code>，夾在日期與約診狀態之間。<b>檔案和單張那一則不是同一張</b>（顆數不一樣）。</li>
+<li>下面那一塊：約診狀態那一列（見 3-4）。</li></ul>
+<div class="sgrid">
+<figure class="swrap"><div class="stcard sgl car" style="width:162px">
+<div class="cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11
+星期五 11:50</p>
+</div>
+<img class="bnd" src="../line-single-card/band-13-set.png" width="1024" height="87" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#4478b5">已排定</span></p>
+</div>
+</div><figcaption><b>已排定</b>　<code>#4478b5</code></figcaption></figure>
+<figure class="swrap"><div class="stcard sgl car" style="width:162px">
+<div class="cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11
+星期五 11:50</p>
+</div>
+<img class="bnd" src="../line-single-card/band-13-set.png" width="1024" height="87" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#3f654a">已確認</span></p>
+</div>
+</div><figcaption><b>已確認</b>　<code>#3f654a</code></figcaption></figure>
+<figure class="swrap"><div class="stcard sgl car" style="width:162px">
+<div class="cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11
+星期五 11:50</p>
+</div>
+<img class="bnd" src="../line-single-card/band-13-set.png" width="1024" height="87" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#c28229">未回覆</span></p>
+</div>
+</div><figcaption><b>未回覆</b>　<code>#c28229</code></figcaption></figure>
+<figure class="swrap"><div class="stcard sgl car" style="width:162px">
+<div class="cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11
+星期五 11:50</p>
+</div>
+<img class="bnd" src="../line-single-card/band-13-set.png" width="1024" height="87" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#ae4f4d">已取消</span></p>
+</div>
+</div><figcaption><b>已取消</b>　<code>#ae4f4d</code></figcaption></figure>
+</div>
+<p class="note">13 顆・圖檔 1024×87px・畫在卡上 13.8px 高（最高那一顆 6.9px）。13 顆自己一份順序・九顆各一次 ＋ 最窄的 4 顆各多一次（r3c1／r3c2／r1c1／r2c2）；套色 7 顆・間隔 2、2、2、2、2、2（7 顆散進 13 格只排得出這一種）。</p>
+
+<h3 class="h3" id="s3-4">3-4　約診狀態<span class="t">四個值的畫法、色碼與對齊</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">約診紀錄查詢那一張卡上的「約診狀態」一列。</p>
+<div class="tabw"><table class="tab tabv"><thead><tr><th>值</th><th>什麼時候</th><th>藥丸底色</th></tr></thead><tbody>
+<tr><td>已排定</td><td>提醒還沒發送之前</td>
+<td><span class="chip" style="background:#4478b5"></span><code>#4478b5</code></td></tr>
+<tr><td>已確認</td><td>提醒發送後，病人按了確認</td>
+<td><span class="chip" style="background:#3f654a"></span><code>#3f654a</code></td></tr>
+<tr><td>未回覆</td><td>提醒發送後，病人還沒有回應</td>
+<td><span class="chip" style="background:#c28229"></span><code>#c28229</code></td></tr>
+<tr><td>已取消</td><td>提醒發送後，病人按了取消</td>
+<td><span class="chip" style="background:#ae4f4d"></span><code>#ae4f4d</code></td></tr>
+</tbody></table></div>
+<ul class="spec"><li>標籤　「約診狀態」（現在印的是「預約狀態」）。改的只是卡片上印出來的字，資料庫欄位不必改名。標籤 <code>xs</code> #5C5F57，不加粗、不套色。</li>
+<li>值　做成藥丸：底色照下表、白字 #FFFFFF、粗體、<code>xs</code>，圓角 8.5px，內距約上 5px／左右 8px／下 5px。</li>
+<li>寫法　那一列是 <code>layout: "horizontal"</code> 的 box：標籤 text、藥丸 box（<code>flex: 0</code>）、最後補一個 <code>filler</code>，藥丸才會只包住那幾個字。標籤與藥丸<b>基線對齊</b>。</li>
+<li>原本那一句「您已取消，請聯絡診所改約」收成「已取消」。</li>
+<li>藥丸裡的字在盒子裡怎麼坐是 LINE 決定的，請送一則測試訊息確認上下留白一致。</li></ul>
+<p class="note">若病人自己按過取消的那一筆可以不列在他的查詢清單裡（樂衍後台照舊保留），那一列「已取消」就不會出現。</p>
+
+<h3 class="h3" id="s3-5">3-5　日期的順序</h3>
+<div class="tabw"><table class="tab tabv"><tbody>
+<tr><td>翔評現在</td><td><code>2026/09/11 11:50 星期五</code></td></tr>
+<tr><td>請改成</td><td><code>2026/09/11 星期五 11:50</code></td></tr>
+</tbody></table></div>
+<ul class="spec"><li>四樣東西（年月日／星期幾／時間）照翔評 09-10 那一版，一個字都不換，只調順序：星期幾接在日期後面、時間放最後。</li>
+<li>單張（mega）　一行：<code>2026/09/11 星期五 11:50</code>。</li>
+<li>輪播（micro）　卡片窄、放不下一行，值裡帶一個換行：<code>2026/09/11</code> ＋ <code>\n</code> ＋ <code>星期五 11:50</code>，星期幾不會被折斷。</li>
+<li>兩則的日期那一格都要 <code>wrap: true</code>、<b>不要 <code>maxLines</code></b>（設了會被截成「…星...」）。</li></ul>
+
+<h3 class="h3" id="s3-6">3-6　帶子的圖檔與 Flex JSON<span class="t">兩張圖已經上線，直接引用網址</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">兩張帶子的圖檔已經放上去了，直接引用這兩個網址就好（透明底 PNG，1024px 寬，在 LINE 的 1024×1024 之內）。</p>
+<div class="tabw"><table class="tab"><thead><tr><th>用在哪一則</th><th>顆數</th><th>圖檔</th><th>網址</th><th>畫在卡上</th></tr></thead><tbody>
+<tr><td>預約成功通知（單張）</td>
+<td>18 顆</td><td>1024×60px・PNG・透明底</td>
+<td><code class="url">https://fangren.net/assets/line/band-18-set.png</code></td>
+<td>15.6px 高（卡片 268px）</td></tr>
+<tr><td>約診紀錄查詢（輪播）</td>
+<td>13 顆</td><td>1024×87px・PNG・透明底</td>
+<td><code class="url">https://fangren.net/assets/line/band-13-set.png</code></td>
+<td>13.8px 高（卡片 162px）</td></tr>
+</tbody></table></div>
+<ul class="spec"><li>帶子是<b>滿版</b>的：<code>size: "full"</code> ＋ <code>aspectMode: "fit"</code>，寬度跟著卡片、高度由圖自己的長寬比決定，<b>不要自己填 px</b>。</li>
+<li>兩則的圖<b>不可以互換</b>：單張那一張 18 顆、輪播那一張 13 顆，換過來會讓標誌變形或大小不一致。</li>
+<li>圖是透明底的，卡片底色照舊填 #FFFFFF。</li>
+<li>底下兩份 JSON 就是照這個規格寫好的，裡面用大括號框起來的 patient（病人姓名）、date／date_two_lines（日期）、status 與 status_color（約診狀態與它的底色）是要翔評填的值。</li></ul>
+<details><summary>展開　預約成功通知（單張 mega）的 Flex JSON</summary>
+<pre class="json">{
+  "type": "bubble",
+  "size": "mega",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "0px",
+    "backgroundColor": "#FFFFFF",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "paddingAll": "14px",
+        "contents": [
+          {
+            "type": "text",
+            "size": "md",
+            "color": "#2A2C27",
+            "wrap": true,
+            "contents": [
+              {
+                "type": "span",
+                "text": "{{patient}}",
+                "weight": "bold"
+              },
+              {
+                "type": "span",
+                "text": "　約好囉"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "{{date}}",
+            "size": "lg",
+            "weight": "bold",
+            "color": "#2A2C27",
+            "margin": "6px",
+            "wrap": true
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "url": "https://fangren.net/assets/line/band-18-set.png",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1024:60"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "paddingAll": "14px",
+        "contents": [
+          {
+            "type": "text",
+            "text": "異動請在2天前(不含假日)與診所聯繫",
+            "size": "xs",
+            "color": "#5C5F57",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "看診前2天會再提醒一次，記得回覆喔～",
+            "size": "xs",
+            "color": "#5C5F57",
+            "margin": "5px",
+            "wrap": true
+          }
+        ]
+      }
+    ]
+  }
+}</pre></details>
+<details><summary>展開　約診紀錄查詢（輪播 micro）的 Flex JSON</summary>
+<pre class="json">{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "micro",
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "paddingAll": "0px",
+        "backgroundColor": "#FFFFFF",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "14px",
+            "contents": [
+              {
+                "type": "text",
+                "text": "{{patient}}",
+                "size": "md",
+                "color": "#5C5F57",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "{{date_two_lines}}",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "margin": "6px",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/band-13-set.png",
+            "size": "full",
+            "aspectMode": "fit",
+            "aspectRatio": "1024:87"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "14px",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "alignItems": "baseline",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "約診狀態",
+                    "size": "xs",
+                    "color": "#5C5F57",
+                    "flex": 0
+                  },
+                  {
+                    "type": "box",
+                    "layout": "vertical",
+                    "flex": 0,
+                    "backgroundColor": "{{status_color}}",
+                    "cornerRadius": "8.5px",
+                    "paddingTop": "5px",
+                    "paddingBottom": "5px",
+                    "paddingStart": "8px",
+                    "paddingEnd": "8px",
+                    "margin": "9px",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "{{status}}",
+                        "size": "xs",
+                        "weight": "bold",
+                        "color": "#FFFFFF"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "filler"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}</pre></details>
+
+<h2 class="h2" id="s4">4　綁定成功的自動回覆設定<span class="t">現況、其他帳號的做法、綁定完成卡的規格、翔評 9/18 的回覆</span></h2>
+<ol class="sub4"><li id="s4-1">用戶端送出的那一句「綁定成功」無法（或不建議）移除 —— 那是以病人的身分送進聊天室的，而且診所櫃檯會用那個號碼查病歷。</li>
+<li id="s4-2">綁定成功之後跳出來的自動回覆，現況：LINE 商家帳號的自動回應只能設定一種，所以綁定那一刻跳出來的，和平常打字進去收到的是同一則。</li>
+<li id="s4-3">其他商家帳號在綁定那一刻送的是另一則，和平常打字進去收到的不一樣 —— 潔客幫、中國信託、國泰世華、玉山四個帳號都是這樣。</li>
+<li id="s4-4">同一套系統的新竹品御牙醫，綁定成功那一句之後沒有跳出通用回覆。 想請教他們的自動回應是怎麼設的，診所能不能照那個設法。</li></ol>
+<div class="pair">
+<figure><p class="k">現況：診所的帳號，綁定那一刻</p><img src="../line-vendor/bind-live-0912.jpg" width="750" height="1551" loading="lazy" alt="綁定完成那一刻病人那一側的畫面">
+<figcaption>12:06 病人那一側送出「✅ 09xxxxxxxx 綁定成功！…」（右邊、綠泡泡），同一分鐘帳號回了那一則通用的自動回應。門號已遮。</figcaption></figure>
+<figure><p class="k">想接在那一句後面送的：綁定完成卡</p><img src="../line-bind-done/shot-bind-done.png" width="804" height="1857" style="width:268px" loading="lazy" alt="綁定完成卡">
+<figcaption>已定稿（Flex JSON 在 /preview/line-spec/ 的 ③）。</figcaption></figure>
+</div>
+
+<h3 class="h3" id="s4-4-1">4-4-1　翔評回覆<span class="t">9/18 收到</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">以下是 9/18 收到的回覆，逐字照抄。</p>
+<div class="quo"><p>關於 4-4（新竹品御牙醫）：「他們是手動回覆，沒有開自動回應訊息功能。」</p></div>
+<p class="note">關於整件事，回覆給了三個做法：</p>
+<div class="quo"><p>－維持自動回應訊息，文字內容改為上述建議</p>
+<p>－維持自動回應訊息，文字內容自行調整，若要多加圖文/多頁訊息，診所可自行於 LINE 官方帳號後台-圖文訊息/多頁訊息製作</p>
+<p>－關閉自動回應訊息，任何來訊、綁定都不會跳出回應(不建議）</p></div>
+<p class="note">回覆另外在診所送過去的兩張圖上標了三段說明：</p>
+<div class="quo"><p>「此為LINE官方帳號–自動回應訊息功能　這個自動回應＝用戶傳訊就會跳出　不論他是傳訊息傳貼圖or綁定完成，都會跳出此則回覆」</p>
+<p>「如果加上　「綁定完成的訊息」傳送一般訊息、或是傳個貼圖的患者，也都會一起收到這則綁定完成訊息」</p>
+<p>「且LINE官方帳號的自動回應訊息功能　就是針對來訊者統一丟出回覆，是不會判斷有無綁定的　所以加上綁定完成訊息，患者沒有綁定的話，也會收到該內容，易造成混淆」</p></div>
+<div class="refs">
+<figure><img src="reply-0918-chat.jpg" width="750" height="1206" loading="lazy" alt="翔評 9/18 的回覆（LINE 對話）"><figcaption>翔評 9/18 的回覆（LINE 對話）</figcaption></figure>
+<figure><img src="reply-0918-bind.jpg" width="1100" height="772" loading="lazy" alt="回覆標在「綁定完成卡」那一張上的三段說明"><figcaption>回覆標在「綁定完成卡」那一張上的三段說明</figcaption></figure>
+<figure><img src="reply-0918-pinyu.jpg" width="1000" height="694" loading="lazy" alt="回覆標在「新竹品御牙醫」那一張上的答案"><figcaption>回覆標在「新竹品御牙醫」那一張上的答案</figcaption></figure>
+</div>
+<div class="fin"><p class="k">診所這邊讀到的是：</p>
+<ul class="spec"><li><b>4-4 有答案了</b>：品御是把後台的自動回應<b>關掉</b>、改用人工回覆。所以照他們那個設法，代價是病人平常打字進來不會有任何回應 —— 那正是上面第三個做法（不建議）的同一件事。</li>
+<li><b>三個做法都是在設定「後台的自動回應」</b>，而診所問的 4-1、4-2 是另一件事：那句綁定成功是<b>翔評的系統</b>送出的，系統在那一刻就知道綁定完成了。<b>由翔評的系統在綁定當下直接送綁定完成卡，不經過後台的自動回應</b> —— 那一項還沒有回覆。</li>
+<li>紅字擔心的「沒綁定的人也會收到」，指的是把綁定完成卡放進<b>後台的自動回應</b>。若改由翔評的系統送，只有真的綁定完成的人會收到，那個顧慮就不成立 —— 診所想確認的正是這一條做不做得到。</li></ul></div>
+
+<h3 class="h3" id="s4-ref">其他商家帳號：綁定那一刻送的是另一則<span class="t">對應 4-3。手機號碼與姓名已遮</span></h3>
+<div class="refs">
+<figure><p class="k">潔客幫・綁定那一刻</p><img src="../line-brief/ref-jieke-bind.jpg" width="600" height="1299" loading="lazy" alt="潔客幫・綁定那一刻">
+<figcaption>綁定完成那一刻送的是專屬的一則（謝謝你完成好友綁定＋折價券）與綁定好禮卡。</figcaption></figure>
+<figure><p class="k">潔客幫・平常打字</p><img src="../line-brief/ref-jieke-hello.jpg" width="600" height="1299" loading="lazy" alt="潔客幫・平常打字">
+<figcaption>同一個帳號，之後打「早安」回的是通用的客服訊息 —— 和綁定那一則不一樣。</figcaption></figure>
+<figure><p class="k">中國信託・綁定完成</p><img src="../line-brief/ref-ctbc-bind.jpg" width="600" height="1299" loading="lazy" alt="中國信託・綁定完成">
+<figcaption>綁定完成送的是一張專屬的圖卡（數位會員超值優惠＋四顆按鈕）。</figcaption></figure>
+<figure><p class="k">國泰世華・綁定完成</p><img src="../line-brief/ref-cathay-bind.jpg" width="600" height="1299" loading="lazy" alt="國泰世華・綁定完成">
+<figcaption>綁定完成後，病人那一側自動送出「綁定」，帳號接著回的是專屬的個人化服務卡；平常打其他字回的是另一則（上方「無法理解該字詞」那一張）。</figcaption></figure>
+<figure><p class="k">玉山銀行・綁定完成</p><img src="../line-brief/ref-esun-bind.jpg" width="600" height="1299" loading="lazy" alt="玉山銀行・綁定完成">
+<figcaption>綁定完成後由帳號送出「您已成功申請『個人化通知服務』」這一則。</figcaption></figure>
+<figure><p class="k">台北富邦銀行・綁定完成</p><img src="../line-brief/ref-fubon-bind.jpg" width="600" height="1299" loading="lazy" alt="台北富邦銀行・綁定完成">
+<figcaption>綁定完成後帳號送的是專屬的一則「恭喜成為我們的綁定好友」，附行動銀行的下載連結。</figcaption></figure>
+<figure><p class="k">BREAD, ESPRESSO &amp;・綁定完成</p><img src="../line-brief/ref-bread-bind.jpg" width="600" height="1299" loading="lazy" alt="BREAD, ESPRESSO &amp;・綁定完成">
+<figcaption>按「綁定會員」完成之後，帳號送的是「恭喜您已接受邀請成為『麵包學徒』」與一張入會歡迎禮卡。</figcaption></figure>
+</div>
+<h3 class="h3" id="s4-pinyu">新竹品御牙醫：綁定成功那一句之後沒有跳出通用回覆<span class="t">對應 4-4</span></h3>
+<div class="refs">
+<figure><p class="k">新竹品御牙醫・同一套系統</p><img src="../line-brief/ref-pinyu-bind.jpg" width="600" height="1299" loading="lazy" alt="新竹品御牙醫・同一套系統">
+<figcaption>按約診查詢 → 同一張藍色公版卡 → 病人那一側送出綁定成功那一句 → 之後沒有跳出通用回覆（頁首寫著「此官方帳號正在自動回覆訊息」）。</figcaption></figure>
+</div>
+
+<h2 class="h2" id="s5">5　已完成項目<span class="t">9/18 這一輪 2 件 ＋ 先前 6 則</span></h2>
+<p class="note">以下是已經完成、不必再調整的項目。上面兩件是 9/18 這一輪完成的；底下六則先前就已經在跑，文字、圖檔網址與 Flex JSON 在 /preview/line-spec/。</p>
+
+<h3 class="h3" id="s5-1">1　尚未綁定按約診查詢<span class="t">9/18 已完成・在那十二則裡是 ⑤</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">公版那張藍色圖卡已經換成診所的版本（一張頭圖、一行標題、一顆按鈕）。</p>
+<div class="pair">
+<figure><p class="k">換之前（公版）</p><img src="../line-bind-prompt/shot-bind-prompt-old.png" width="804" height="759" style="width:268px" loading="lazy" alt="換之前（公版）"></figure>
+<figure><p class="k">換之後</p><img src="../line-bind-prompt/shot-bind-prompt.png" width="804" height="714" style="width:268px" loading="lazy" alt="換之後"></figure>
+</div>
+
+<h3 class="h3" id="s5-2">2　看診前 48 小時提醒<span class="t">9/18 已完成・在那十二則裡是 ⑧</span></h3>
+<p style="font-size:.9rem;margin:.3em 0 0">頭圖的 bug（被媽媽抱著的幼兒多一隻手）已經抽換成新圖，檔名與網址都沒有變。</p>
+<div class="pair">
+<figure><p class="k">換上新頭圖的提醒卡</p><img src="../line-remind/shot-remind.png" width="804" height="1743" style="width:268px" loading="lazy" alt="換上新頭圖的提醒卡"></figure>
+</div>
+<h3 class="h3">先前已完成的 6 則</h3>
+<div class="done">
+<div class="msg"><span class="ims"><img src="../line-vendor/t-welcome.jpg" width="210" height="210" loading="lazy" alt="招呼圖卡的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m1">①　招呼圖卡</a></p>
+<p class="mt">加好友那一刻／診所後台送</p></div></div>
+<div class="msg"><span class="ims"><img src="../line-vendor/t-auto.jpg" width="210" height="210" loading="lazy" alt="自動回應（一律回應）的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m2">②　自動回應（一律回應）</a></p>
+<p class="mt">病人打任何字／診所後台送</p></div></div>
+<div class="msg"><span class="ims"><img src="../line-vendor/t-cancel.jpg" width="210" height="210" loading="lazy" alt="取消確認 → 取消成功的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m6">⑨　取消確認 → 取消成功</a></p>
+<p class="mt">他按預約改期／廠商送</p></div></div>
+<div class="msg"><span class="ims"><img src="../line-vendor/t-review.jpg" width="210" height="210" loading="lazy" alt="評價邀約的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m7">⑩　評價邀約</a></p>
+<p class="mt">看診後／廠商送</p></div></div>
+<div class="msg"><span class="ims"><img src="../line-vendor/t-typhoon.jpg" width="210" height="210" loading="lazy" alt="颱風／臨時休診的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m8">⑪　颱風／臨時休診</a></p>
+<p class="mt">縣府宣布之後／診所後台送</p></div></div>
+<div class="msg"><span class="ims"><img src="../line-vendor/t-oa.jpg" width="210" height="210" loading="lazy" alt="圖文選單點下去回的三組卡的模擬圖"></span>
+<div class="x"><p class="nm"><a href="/preview/line-spec/#m9">⑫　圖文選單點下去回的三組卡</a></p>
+<p class="mt">他點選單／廠商送</p></div></div>
+</div>
+
+<p class="foot">
+這一頁是靜態的，內容有更新會直接改在同一個網址上。<br>
+七則訊息的文字、圖檔網址與 Flex JSON：<a href="/preview/line-spec/">/preview/line-spec/</a>
+</p>
+
+</div>
+</body>
+</html>
