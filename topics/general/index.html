@@ -2144,9 +2144,21 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
      ⚠ 只有頭像那一列往左，資料那一塊用同樣的量補回來（見下面 `> dl` 的 padding-left），
        所以九張卡的「專長／資歷／學歷」左緣仍然完全對齊、沒有照片的那幾張一個值都沒動。 */
   --face-pull: 6px;
-  padding-left: calc(1.2rem - var(--face-pull));
+  /* 照片四周的三個間距鎖成同一個值（2026-09-19 使用者指定「名字和照片右緣的間距，
+     要和照片和圖卡左緣的間距一樣」＋「再往上移一點」）：
+         卡片左緣 → 照片　　照片 → 名字　　卡片上緣 → 照片
+     ⚠ 改之前量出來：左 14.19／到名字 14.39（本來就幾乎一樣）／**上 18.59** ——
+       差的只有上面那個，多了 4.4px，所以「往上移一點」和「間距一樣」是同一件事。
+     ⚠ `--face-gap` 不必逐斷點寫：`1.2rem` 會跟著主字級縮放
+       （手機 rem 16 → 19.2、iPad 19 → 22.8、電腦 18 → 21.6），
+       實測三個斷點算出來的 13.2／16.8／15.6 和原本的 `padding-left` 逐項相同。
+     ⚠ `column-gap` 要 **＋1px**：左緣與上緣那兩個間距是從**看得到的卡片邊**算的，
+       中間隔著 1px 的框線；到名字那一段沒有框線，補 1px 三個才會看起來一樣。 */
+  --face-gap: calc(1.2rem - var(--face-pull));
+  padding-left: var(--face-gap);
+  padding-top:  var(--face-gap);
   display: grid; grid-template-columns: var(--face) 1fr;
-  column-gap: .9rem; row-gap: 8px; align-items: start;
+  column-gap: calc(var(--face-gap) + 1px); row-gap: 8px; align-items: start;
   /* ⚠⚠ align-content: start 不可以拿掉（2026-09-19 第二天補的）。
      這張卡是 grid、兩列都是 auto，而外層 .docs 會把同一列的卡**拉到最高那張
      的高度**。多出來的空間，grid 預設（align-content: stretch）會**平均分給
@@ -6614,7 +6626,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-09-19">2026 年 9 月 19 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-09-20">2026 年 9 月 20 日</time></span>
     </div>
   </div>
 </footer>
