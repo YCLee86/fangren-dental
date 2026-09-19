@@ -2137,6 +2137,17 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .doc[data-face] {
   display: grid; grid-template-columns: 76px 1fr;
   column-gap: .9rem; row-gap: 8px; align-items: start;
+  /* ⚠⚠ align-content: start 不可以拿掉（2026-09-19 第二天補的）。
+     這張卡是 grid、兩列都是 auto，而外層 .docs 會把同一列的卡**拉到最高那張
+     的高度**。多出來的空間，grid 預設（align-content: stretch）會**平均分給
+     那兩個 auto 列** —— 頭像那一列跟著長高，名字被推低、專長被推遠。
+     實測（1440，三欄）：李柄輝那張最高不受影響（8／−0.39），
+     被拉伸的李侑津是 21.45／+6.78、王俊偉是 34.14／+13.13。
+     ⚠ 手機一欄沒有這個現象（每張卡自己一列、沒有多餘空間），
+       所以**只量手機、或只量第一張卡，都驗不出來**——
+       第一張是內容最長的那張，永遠不會被拉伸。
+       驗收要掃過每一張有照片的卡 × 每一個斷點。 */
+  align-content: start;
 }
 .doc-face { display: block; grid-column: 1; grid-row: 1; }
 .doc-face img {
