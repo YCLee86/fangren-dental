@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>doctor-photo｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>doctor-photo — 醫師的形象照怎麼跟醫師圖卡結合</h1>
+<p class="meta">
+  2026-09-19 開、當天三輪定案上線<br>
+  原網址 <code>/preview/doctor-photo/</code>（已刪除 2026-09-19）<br>
+  整頁還原：<code>git show 12ce87e7:preview/doctor-photo/index.html</code><br>
+  提案期的產生器 <code>tools/doctor-photo-preview.mjs</code>（定案時刪掉，同一個 sha 還原得到）<br>
+  裁切器 <code>tools/doctor-photo-crop.mjs</code> <strong>留在版控裡</strong> ——
+  它現在是正式站那兩張頭像的來源，還有七位要進來<br>
+  原檔 <code>drafts/doctor-photo/src/&lt;slug&gt;.png</code>（不進 _site）
+</p>
+
+<h2>起點</h2>
+<div class="note"><pre>使用者丟了一張李柄輝醫師的形象圖照（PNG 1145×1374）：
+「這個是李柄輝醫師的形象圖照　討論一下可以怎麼跟現有的醫師圖卡結合　做給我看」
+
+第二輪：「先用圓 大　但頭像和圖卡 文字 排版有點擠在一起 雜亂的感覺 調一下」
+第三輪：「照這樣　另外這張是李侑津醫師 也放上去給我看預覽」（1086×1448）
+第四輪：「先這樣 定案上線」</pre></div>
+
+<h2>定案（＝ 現在站上的）</h2>
+<div class="note"><pre>放法　Ⓑ 圓頭像　　名字左邊一顆 76px 的圓，專長／資歷／學歷跨整列
+排法　Ⓐ 資料全寬　資料仍從卡的最左邊開始（不跟著頭像縮排）
+留白　Ⓐ 8px　　　 頭像下緣到「專長」那一列
+份量　Ⓑ 76px　　　手機、iPad、電腦同一個值（字級有逐段放大，頭像刻意沒跟）
+檔案　assets/doctor-&lt;slug&gt;-400.jpg ＋ .webp，&lt;picture&gt; 吃 WebP、&lt;img&gt; 留 JPEG
+
+⚠⚠ 留白那一格是 8，不是 12。12 最接近「沒有頭像時名字到專長的 11.2px」，
+   面板上也是這樣寫的，但使用者在自己手機上挑了更緊的 8。
+   **不要看到「12 比較接近現況」就改回去。**</pre></div>
+
+<h2>第一輪：四種放法，以及三件在挑版面之前就要決定的事</h2>
+<div class="note"><pre>① **九位醫師，當時只有一張圖。** 這才是那一輪真正的題目，不是「圖要多大」。
+   九張卡排三欄三列，其中一張有臉、八張沒有 —— grid 會把同一列拉齊，
+   所以代價不是「這張變高」，是**旁邊那兩張字底下多出一片空白**：
+
+     Ⓐ 現況　　　53px（本來就有，各人資歷行數不一樣）
+     Ⓑ 圓頭像　　76px
+     Ⓒ 卡片頂圖　285px　← 1440 寬實測
+
+② **那張是 AI 生成的形象圖，不是實拍。** 天花板的管線接不起來、左邊那台燈的
+   支臂、白袍的皺褶都是畫的。這一點在提案頁與對話裡提過兩次
+   （診所網站把一張臉標上真實醫師的姓名，等於對讀者宣告一件事實），
+   使用者看過之後指定上線。**紀錄在這裡，不是待辦。**
+
+③ **第一張的背景不是芳仁的診間。** 同一頁往下捲就是兩張真的診間照
+   （木地板、白牆、沒有藍綠色診療椅），那張是藍綠椅＋深色檯面＋裸露管線。
+   → 裁得愈緊問題愈小，這也是圓頭像勝出的理由之一（幾乎看不到背景）。
+   ⚠ 第二張（李侑津）的背景反而**看起來像診所真實的空間**（木地板、白牆、
+     點狀霧面玻璃），和站上那兩張診間照對得上。兩張的色溫差很多
+     （冷灰診間 vs 暖木走廊），九張到齊時要整組再看一次。
+
+四格：
+  Ⓐ 現況（基準，和正式站逐像素相同）
+  Ⓑ 圓頭像　　　侵入最小、背景幾乎看不到、卡高幾乎不變　　　　← 定案
+  Ⓒ 卡片頂圖　　份量最重，代價也最貴（上面那 285px）
+  Ⓓ 創辦醫師橫幅　跨整列、圖左文右，其餘八張原封不動
+
+⚠⚠ Ⓓ 當時的理由是「只有一張圖的時候，唯一不必解釋『為什麼別人沒有』的放法
+   —— 創辦醫師本來就不同級」。**第二張圖進來之後那句話就不成立了**
+   （會變成兩條橫幅）。這是第 28 條那個坑的又一次：
+   **一輪寫下的理由，會被下一輪弄成假的。**
+
+⚠ 提案頁上「另外八位」那條尺有兩格（空著／字首圓章）。定案時是「空著」——
+  沒有圖的那幾位維持原本的文字卡，不放任何佔位圖。
+  JSON-LD 同理：沒有照片的那幾位整個略過 image 欄位，
+  **不要放診所的標誌或佔位圖代打**，那等於指認錯的人。</pre></div>
+
+<h2>第二輪：「擠、雜亂」的成因 —— 兩個缺陷、一個選擇</h2>
+<div class="note"><pre>使用者選了圓頭像＋大（當時的大 ＝ 76px），回報排版擠。在 375 寬量出三件事：
+
+  ① 頭像下緣到「專長」那一列 ＝ **0px**（沒有頭像時是 11.2px）
+     成因：h3 的 margin-bottom（11.2px）**整個被 76px 的頭像吃掉**了 ——
+     那一列的高度由頭像決定，h3 連同下邊距只有 41px，全部落在列裡面。
+     → 下邊距歸零，距離交給 grid 的 row-gap，和頭像多大脫鉤。
+
+  ② 名字的墨比頭像中心**高 5.98px**
+     成因：align-self: center 對齊的是 h3 那個**盒子**（含那 11.2px），
+     眼睛讀的是墨 —— DECISIONS.md 第九節第 5 條那個坑。
+     → ① 修完順手歸零（11.2 ÷ 2 ≒ 5.6，實測收到 −0.39）。
+
+  ③ 資料左緣比名字左緣往左 90px，視線要「往右看名字、再折回最左讀資料」
+     → **這一件是選擇不是缺陷**，做成一條三格的尺。
+
+**前兩件沒有放上切換條，直接修掉。** 沒有人會選「貼在一起」或「名字偏高」。
+
+---- 尺一：排法（375／1440 實測）----------------------------------------
+  Ⓐ 資料全寬　資料欄 244／281，最長那一欄 4 行，卡最矮　　　　← 定案
+              代價：視線折返 90px
+  Ⓑ 跟著縮排　資料對齊名字左緣、視線不折返，但**手機代價很重**：
+              資料欄 244 → 154、最長那一欄 4 行 → **7 行**
+              （電腦版三欄撐得住：189，仍是 4 行）
+  Ⓒ 上下疊　　頭像在上、名字在下，資料欄和 Ⓐ 一樣寬也是 4 行，
+              視線一路往下，但**每張卡高 +85px**（九張 ≈ 760px）
+
+---- 另外兩件 -------------------------------------------------------------
+・面板當場印出紅字「原檔 200 不夠（需 228）」＝ 76px × 使用者手機的 DPR 3。
+  圓頭像的裁切因此從 200 改成 **400**（份量加到 88 也蓋得住，26~28KB，
+  不值得為它做 srcset）。**量測面板真的擋下了一次會上線的錯。**
+・已定案的兩條尺（放法、另外八位）**收成預設值、從切換條上拿掉**，
+  網址參數仍然吃得到（?dp= ?ph=）—— 同 head-search 與 night-map-park 那兩輪，
+  切換條不會愈長愈長。新的三條（排法／留白／份量）接上去。</pre></div>
+
+<h2>第三輪：第二張圖進來，兩張要看起來像同一組</h2>
+<div class="note"><pre>⚠⚠ **裁切框不能各裁各的。** 做法是先在原圖上量四個點，再換算成李柄輝那張
+   的比例（他是第一張，所以他就是基準）：
+
+     眼睛在框高的 44.2%　臉中線在框寬的 49.3%　頭高佔框高 63%
+
+     李柄輝 1145×1374：髮頂 175、眼睛 400、下巴 610、臉中線 545 → sq 205,95,690,690
+     李侑津 1086×1448：髮頂 290、眼睛 520、下巴 700、臉中線 540 → sq 244,255,590,590
+
+⚠ **框的大小要照「頭寬」算，不要照「頭高」算。** 每個人的頭寬高比不一樣 ——
+  李侑津的臉窄，照頭高算出來是 651、照頭寬算是 591，用 651 的話他在圓裡
+  會明顯比李柄輝小一號。算完還要把候選**並排**看一次：
+  590／625／640 三顆圓擺在一起，625 與 640 的臉都偏左，數字看起來都很合理。
+
+⚠⚠ **產生器改成吃醫師清單時，錨點不可以用姓氏。** 第一版想拿
+   data-initial="李" 定位 —— **九位裡面姓李的有兩位**（李柄輝 general、
+   李侑津 perio），會把圖掛到錯的那一張，而且畫面完全正常，只是圖長在別人身上。
+   改成用完整的 &lt;h3&gt;（名字＋藥丸文字，全站唯一）定位、再往回找最近的
+   &lt;article&gt;，末尾加一道「掛上去的張數 ＝ 清單長度」的守門。</pre></div>
+
+<h2>上線時踩到的一個會靜靜出錯的地方</h2>
+<div class="note"><pre>⚠⚠ 標記用的是 **`data-face` 屬性**，不是 class `has-face`。
+
+tools/schema.mjs 讀醫師是這一條：
+
+    /&lt;article class="doc"[^&gt;]*data-spec="([^"]+)"[^&gt;]*&gt;([\s\S]*?)&lt;\/article&gt;/g
+
+`&lt;article class="doc"` 後面**緊接一個引號**。寫成 class="doc has-face" 的話
+那一位會從 JSON-LD 的 @graph 裡整個消失 —— 畫面完全正常、不報錯，
+只有去讀結構化資料才看得出來。用獨立屬性就落在 [^&gt;]* 裡面，兩邊都成立。
+
+順帶定下另一件：JSON-LD 的 image **讀的是卡上 &lt;img&gt; 的 src**，
+不另外維護一份對照表（卡上換了圖，JSON-LD 自己跟上）。
+取 &lt;img&gt; 不取 &lt;source&gt; —— &lt;source&gt; 是 WebP，爬蟲一律吃 JPEG。</pre></div>
+
+<h2>再加一位醫師要做什麼</h2>
+<div class="note"><pre>① 原檔放 drafts/doctor-photo/src/&lt;slug&gt;.png（不會進 _site）
+② 在原圖上量髮頂／眼睛／下巴／臉中線，照上面的比例算出框，加進
+   tools/doctor-photo-crop.mjs 的 FACES；算完把候選和已經上線的那幾顆圓並排看
+③ node tools/doctor-photo-crop.mjs &lt;slug&gt;
+④ index.html 那張卡補 data-face 與 &lt;picture&gt;（照現有那兩張抄）
+⑤ node tools/webp.mjs && node tools/topics.mjs && node tools/build.mjs
+
+⚠ 第 ④ 步漏掉 data-face 的症狀是：圖出現了但版面沒有變成兩欄
+  （方形大圖擠在卡最上面）。漏掉 &lt;picture&gt; 只是少了 WebP，不會壞。</pre></div>
+
+<h2>驗收</h2>
+<div class="note"><pre>提案期間
+  四種放法 × 375／1440 都沒有水平捲動
+  Ⓐ 現況對正式站的 .docs 在 390／744／1440 逐像素比對，
+  連比三次其中一次是 **diffPx 0／maxDelta 0** ——
+  那個時有時無的差是 fixed 的「回到最上面」按鈕的淡入狀態，不是版面
+  （同一份程式碼兩次截圖的雜訊基準是 maxDelta 1）
+
+上線後（本機 node tools/serve.mjs）
+  375／744／1440 與 /topics/perio/：頭像 76×76、圓角 50%、
+  頭像下緣到「專長」8.00、名字的墨對頭像中心 −0.39 / −0.81 / +0.06、
+  有圖的卡 2 張、水平捲動 0，主控台無錯誤
+  WebP 有被吃到（Network 收到的是 .webp 不是 .jpg）
+  夜間模式逐張看過：兩張都不刺眼（裁得緊，沒有大片白袍）
+  JSON-LD：九位都在（沒有漏掉任何一位），其中兩位有 image
+  node tools/night-mode.mjs --check → 全部一致</pre></div>
+
+<footer>
+  <a href="/history/">← 回改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>

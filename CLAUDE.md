@@ -381,6 +381,8 @@ preview/<name>/index.html  進行中的提案頁；定案上線後刪掉、文�
 drafts/                 **還沒定案的草稿**（文章、提示詞、參考圖）。不會進 _site，
                         build.mjs 也掃不到 —— 見第二節那個 2026-08-20 的警告。
                         定案那天用 git mv 搬進 posts/<slug>/index.html
+  doctor-photo/src/     **醫師形象照的原檔**（2026-09-19 起）。裁切器是
+                        tools/doctor-photo-crop.mjs，成品在 assets/doctor-*.jpg
   door-notice/          **門口的停車告示**（2026-08-23）**＋ 周邊路邊停車格的現地清查**（2026-09-15）。
                         ⚠⚠ `map-bays.mjs` 把停車格寫進 `index.html` 的 `BAYS:START` 區塊
                         （座標出處 `parking-map.mjs`、號碼出處 `parking-survey.json`，
@@ -453,6 +455,14 @@ tools/
                         畫成黑的就消失在牙齒裡，而且**不會報錯**（2026-09-03 踩過）。
                         CMYK→RGB 是查表（來源是 pptx 裡 Illustrator 自己的匯出），
                         **不是算的**；表裡沒有的顏色會 throw。四道守門見它的檔頭
+  doctor-photo-crop.mjs 醫師形象照 → assets/doctor-<slug>-400.jpg（圓頭像，顯示 76px）。
+                        2026-09-19 上線，目前九位裡兩位有照片。
+                        ⚠⚠ 裁切框逐張手量、**不能各裁各的** —— 九張要像同一組。
+                        量髮頂／眼睛／下巴／臉中線，換算成第一張（李柄輝）的比例，
+                        而且**框的大小照「頭寬」算不要照「頭高」算**。四道守門與
+                        「再加一位要做什麼」寫在它的檔頭，推導在 /history/doctor-photo.html。
+                        ⚠ 原檔在 drafts/doctor-photo/src/，不進 _site。
+                        ⚠ 只有換圖才要跑，npm run build 不會呼叫它；--check 只比對
   qr.mjs                QR code 產生器（純 JS、零依賴、吐 SVG 的 path，向量）。
                         ⚠ 驗收不能用眼睛 —— 格式資訊反過來的話畫面一模一樣但掃不出來。
                         驗證方式寫在它的檔頭（臨時裝 segno ＋ opencv 真的掃一次）

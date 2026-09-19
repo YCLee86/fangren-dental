@@ -210,6 +210,12 @@ export function parseDoctors(indexHtml, warn = console.warn) {
       }
     }
 
+    /* 形象照（2026-09-19 起，只有部分醫師有）。讀的是那張卡上 <img> 的
+       src，不另外維護一份對照表 —— 卡上換了圖，JSON-LD 自己跟上。
+       ⚠ 取 <img> 不是 <source>：<source> 是 WebP，而 Google 的爬蟲吃 JPEG
+         （同第十節第 4 條「分享圖不能用 SVG」那條的理由）。 */
+    const face = body.match(/<img src="(assets\/doctor-[^"]+\.jpg)"/);
+
     out.push({
       spec,
       name: clean(head[1]),
@@ -217,6 +223,7 @@ export function parseDoctors(indexHtml, warn = console.warn) {
       skills,
       career,
       boardCerts,
+      photo: face ? face[1] : null,
       schools: edu.map((line) => schoolOf(line, warn)).filter(Boolean),
     });
   }
@@ -315,6 +322,9 @@ export function homeGraph({ site, clinic, facts, title, description, updatedToke
       /* 執業地點就是診所本身。Physician 需要 address 才算完整的醫療實體。 */
       address: { "@type": "PostalAddress", ...clinic.address },
     };
+    /* 有形象照才寫 image —— 沒有的那幾位整個略過這個欄位，
+       不要放診所的標誌或任何佔位圖代打（那等於指認錯的人）。 */
+    if (d.photo) node.image = abs(d.photo);
     const knows = [facts.topics[d.spec], ...d.skills].filter(Boolean);
     if (knows.length) node.knowsAbout = [...new Set(knows)];
     if (d.career.length) node.description = d.career.join("、");
