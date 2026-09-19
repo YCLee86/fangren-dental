@@ -2154,6 +2154,33 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   display: block; width: 76px; height: 76px;
   border-radius: 50%; object-fit: cover;
 }
+/* ---- 名字和藥丸放不下時要斷行，而且藥丸要和名字切齊左緣 ----------------
+   （2026-09-19 使用者指定：「如果名字和藥丸標籤放不下要斷行，藥丸標籤和名字
+   要靠左對齊」。發生在 320 寬、藥丸六個字以上的那幾位，例如王俊偉醫師。）
+
+   成因：`.doc-role` 帶著 `margin-left: .5rem`，**那個邊界在換行之後還在**，
+   所以折到第二行的藥丸左緣比名字多 8px。純 CSS 沒辦法「只在行首取消邊界」，
+   所以 h3 改成 flex ＋ `column-gap`（gap 不會出現在行首）。
+
+   ⚠⚠ **flex 會讓 `vertical-align` 完全失效**，而那顆藥丸的抬升量是使用者
+       2026-08-11 看過五輪才定的（DECISIONS 那張表「專長標記的貼合」那一列，
+       實測比字面高 1.48px，**不是算出來的正確值、是他點頭的那一個**）。
+       所以這裡用 `position: relative` ＋ `bottom` 把同一個量原值還回去。
+       ⚠ 那個值因此收成 `--role-rise`，和 `vertical-align` 共用同一份宣告
+       （三個斷點各一處：.158em ／ iPad .2136em ／ 手機 .21em）——
+       **要改抬升量只改那三處，不要在這裡另外寫一個數字。**
+   ⚠ 實測（藥丸上緣減名字上緣）：改前 −0.87／−2.45／−3.48（375／744／1440），
+     改後逐項相同；折行時藥丸左緣對名字左緣從 8 收到 0。
+   ⚠ 只掛在有照片的卡上：沒有照片的那幾張目前在 320 都不會折
+     （最長的「贋復假牙專科醫師」也放得下），而 flex 會讓 h3 在 ≥1041 矮 0.48px。
+     等九張都有照片，這條自然就涵蓋全部。 */
+.doc[data-face] > h3 {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  column-gap: .5rem; row-gap: .2rem;
+}
+.doc[data-face] > h3 .doc-role {
+  margin-left: 0; position: relative; bottom: var(--role-rise);
+}
 .doc[data-face] > h3 { grid-column: 2; grid-row: 1; align-self: center; margin-bottom: 0; }
 .doc[data-face] > dl { grid-column: 1 / -1; grid-row: 2; }
 
@@ -3512,7 +3539,7 @@ html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0;
    （Noto Sans TC 實測 0.345em）。在那之前 .doc-role 沒有 vertical-align，
    那顆藥丸的字一直比名字低 1.82px。用的是「字對字」的量
    （0.345 × (16.8 − 11.52) ÷ 11.52 = .158em）。 */
-.doc-role { vertical-align: .158em; }
+.doc-role { --role-rise: .158em; vertical-align: var(--role-rise); }
 
 /* ==========================================================================
    2026-08-13 定案上線 —— 手機的可讀性、觸控目標、橫捲的科別標記
@@ -4588,7 +4615,7 @@ html[data-theme="dark"] .bay { fill-opacity: .72; }
      ⚠ 量法：零寬探針插在藥丸**後面**（插前面的話標記換行時會留在上一行）量
        那一行的基線，再用 canvas 的 actualBoundingBox 在 400px 上量「李柄輝」
        的字面框、等比例縮回來，比「塊上緣高多少」與「塊下緣低多少」。 */
-  .doc-role { vertical-align: .2136em; }
+  .doc-role { --role-rise: .2136em; vertical-align: var(--role-rise); }
 
   /* ---- 診所資訊 Ⓒ（門診表 ＋ 兩句說明 ＋ 停車 ＋ 診間照說明）------------
      ⚠⚠ **`col.lab` 一定要跟著字級長。** 表格是 `table-layout: fixed` ＋
@@ -4692,7 +4719,7 @@ html[data-theme="dark"] .bay { fill-opacity: .72; }
   .doc dd    { font-size: 1rem; }
   :root      { --sk-fs: 1rem; }
   .doc dt    { font-size: .976rem; }
-  .doc-role  { vertical-align: .21em; }
+  .doc-role  { --role-rise: .21em; vertical-align: var(--role-rise); }
 
   /* ---- 看診時段（門診表）＋ 位置與周邊停車 -----------------------------
      兩張卡的內文：門診表的星期、時段與時間，以及底下那兩句說明。
