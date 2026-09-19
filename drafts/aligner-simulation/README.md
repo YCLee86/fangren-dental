@@ -1,14 +1,15 @@
 # 〈隱形矯正：電腦跑得順，牙齒不一定跟得上〉— 文章草稿
 
-2026-09-19 開。**成品是站上第十五篇文章**，預定網址 `/posts/aligner-simulation/`，
-標籤「齒顎矯正」（`data-spec="ortho"`）。
+✅ **2026-09-19 定案上線**，成品在 **`/posts/aligner-simulation/`**（齒顎矯正，站上第十五篇）。
+這個資料夾現在只留草稿期的資料：提示詞、查核表、參考圖、HERO 原檔與裁邊腳本。
+推導的文字存檔在 **`/history/aligner-article.html`**。
 
 材料來自使用者口述的臨床邏輯（模擬與口腔現實的落差、分期會排出跟不上的區段、
 偏離之後怎麼處理、規劃節奏），文獻只用來把每一個論點的數字補上，不另外加論點。
 
-⚠ **這一份還在 `drafts/`，所以它進不了 `_site`、`tools/build.mjs` 也掃不到**
-（CLAUDE.md 第二節那個 2026-08-20 的警告）。首頁卡、sitemap、allowed-slugs、
-延伸閱讀都不會冒出這一篇。
+⚠ 這個資料夾仍然在 `drafts/`，所以裡面的 `.md`、參考圖與原檔**進不了 `_site`** ——
+上線時**只把 `index.html` 搬進 `posts/`**，其餘留在原地（`tools/dist.mjs` 的 `ALWAYS`
+整個複製 `posts/`，把提示詞與臨床照一起搬過去就會跟著上線）。
 
 ---
 
@@ -188,13 +189,27 @@ in crowding cases: a systematic review」（Clin Oral Investig 2024），
 3. **`post-nav` 的上一篇**現在指〈這麼小就要麻醉？〉（站上最新的一篇）。
    中間若有別的文章先上線，要跟著改。
 
-## 四、定案上線要做的事
+## 四、✅ 定案上線那天實際做的（2026-09-19）
 
 ```bash
-git mv drafts/aligner-simulation posts/aligner-simulation
-# 把 <head> 裡那段「取代 SEO:START ~ SEO:END」的註解與 noindex 整段刪掉
-node tools/build.mjs        # SEO 區塊、首頁卡、sitemap、allowed-slugs、延伸閱讀
-node tools/topics.mjs       # 七科著陸頁是 index.html 的快照，會跟著多一張卡
+git mv drafts/aligner-simulation/index.html posts/aligner-simulation/index.html
+# <head> 裡那段取代 SEO 區塊的 noindex 整段刪掉
+node tools/webp.mjs      # 先跑它，三張 .webp 才生得出來
+# 再照 posts/orthodontics/ 把 <picture> ＋ <source type="image/webp"> 包回來
+node tools/build.mjs     # SEO 區塊、首頁卡、sitemap、allowed-slugs、延伸閱讀
+node tools/topics.mjs    # 七科著陸頁是 index.html 的快照，矯正那一頁會多一張卡
 ```
 
-上線之後 `preview/aligner-article/`（若已經開給使用者看過）要刪掉。
+同一輪還做了四件：
+1. 免責那一句收成一句（使用者指定拿掉後面兩句）。
+2. 刪掉 `preview/aligner-article/` 與 `drafts/aligner-simulation/preview.mjs`
+   （提案頁定案上線後刪掉，CLAUDE.md 第八節第 3 條）。
+3. 推導文字搬進 `history/aligner-article.html`，目錄 `history/index.html` 加一條。
+4. 驗收：首頁卡在第一張且吃到 WebP、文章頁七條外連與三張延伸閱讀都在、
+   HERO 寬度＝內文欄寬、`/topics/ortho/` 多一張卡、四頁零失敗請求
+   （本機只有計數器 API 的 404，那是預期的 —— 本機沒有 Worker）。
+
+⚠ 還沒做、只有使用者能做的兩件：
+・**七條研究連結要一條一條點過**（容器連不到 pubmed／pmc／ajodo，見二之二）。
+・Google Search Console 的「要求建立索引」——新文章要被收錄還是會慢幾天到幾週
+  （CLAUDE.md 第七節）。

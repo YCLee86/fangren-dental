@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>aligner-article｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>aligner-article — 〈隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位〉</h1>
+<p class="meta">
+  2026-09-19 開、當天定案上線・<strong>文章草稿的預覽，不是設計提案</strong>（同 <code>ortho-article</code>／<code>bioceramic-article</code> 那一種）<br>
+  原網址 <code>/preview/aligner-article/</code>（已刪除 2026-09-19）<br>
+  整頁還原：<code>git show c0f6a43:preview/aligner-article/index.html</code><br>
+  成品 <code>/posts/aligner-simulation/</code>（齒顎矯正，站上第十五篇）<br>
+  草稿期的資料（提示詞、查核表、參考圖、原檔）留在 <code>drafts/aligner-simulation/</code>
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者貼進來一篇他自己整理好的長文（七節、約 5200 字），交代：
+「調整這個文章　貼和診所品牌價值　到適合貼在網站上」。
+
+那一篇是寫給同業看的評論：夾註文獻、有立場、結尾是
+「能把這幾題回答清楚的，才是真正在做矯正治療，而不是在賣牙套」。</pre></div>
+
+<h2>品牌那一關改掉的六處（TEAM.md 第 7 節）</h2>
+<div class="note"><pre>  「才是真正在做矯正，而不是在賣牙套」   整句拿掉 → 換成「開始之前可以先問清楚的幾件事」
+  「把軟體輸出當成答案」                 指控改成解釋
+  「常見的隱藏支出項目」                 → 「條件與費用怎麼計算」（「隱藏」是在說別人收錢不老實）
+  「我們認為合理的規劃節奏」             → 「芳仁的矯正門診怎麼安排」
+  Invisalign／ClinCheck／power ridge     → 「隱形矯正廠商的軟體」「輔助的設計」
+  逐段夾註的數字                         只留四個撐得住論點的，其餘改成程度描述
+
+⚠ 共同點：**不暗示同業比較**（截圖轉傳出去診所擔不起），
+   以及 COPY.md 第三節那道紅線 —— 功課要病患自己做，診所給的是燈。</pre></div>
+
+<h2>⚠⚠ 標題換過兩次，而且第二次是整篇的視角</h2>
+<div class="note"><pre>①〈隱形矯正：電腦跑得順，牙齒不一定跟得上〉（使用者自己的句子，第一輪留著）
+②〈隱形矯正：模擬之後，醫師怎麼讓牙齒走得準〉
+③〈隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位〉（定案）
+
+②的成因是使用者：「這樣感覺比較不是和廠商合作關係，我們不要和廠商製造對立。
+比較像是**懂得怎麼運用工具的醫師，讓這個新科技的工具用起來更順暢、病患體驗更好**。」
+
+⚠⚠ **換標題不是只換那一行**，②那一輪跟著改了五處，不然標題和內文會各講各的：
+  小標「模擬畫面上**看不到**的三件事」→「模擬畫面之外，**醫師還要看的**三件事」
+  「**軟體排出來的**某一副會要求⋯」→「**分期就會出現**移動量比較大的一副」（主詞不要是軟體在找碴）
+  「模擬是規劃，不是結果」後面補「把規劃走成結果的那一段，是醫師一副一副對照出來的」
+  醫師小叮嚀先肯定工具，再講醫師補什麼，收在病患的好處
+  lede 收尾與重點整理第一題，「誰來處理」寫明是醫師
+
+③只換了收尾三個字：「走得準」偏書面、講方向對不對；
+「跑到位」講的是有沒有真的走到該到的位置 —— 正好是這一篇在講的事。
+⚠ 兩者字數相同，版面一格都沒動。
+
+⚠ **這一條是整篇的視角，不只是標題**：日後再改這一篇，
+不要寫成「軟體不準、醫師來救」，要寫「工具把力量傳得穩，醫師讓它跑到位」。</pre></div>
+
+<h2>⚠ 七處研究改成內文超連結（使用者指定，推翻了站上原本的做法）</h2>
+<div class="note"><pre>原本的規矩是「頁面上不放外連，查核表給使用者看就好」
+（TEAM.md 第 3 節：醫療內容連出去等於背書，那是品牌決定不是編輯決定）。
+使用者當天指定要放，所以七處都連了，連結文字就是原本那句「一份⋯的研究」。
+
+⚠⚠ **這七個網址沒有辦法在容器裡開起來驗** —— 這個 session 的網路政策擋掉
+pubmed／pmc／ncbi／ajodo（curl 回 403、WebFetch 回 EGRESS_BLOCKED）。
+網址是搜尋結果逐字回傳的，不是自己拼的。**上線前請使用者一條一條點過。**
+同一個坑見 CLAUDE.md 第十節第 3 條（Wikidata 的 Q 編號就是因為連不到而始終沒填）。
+
+⚠ 第六條（18.2 vs 14.5 個月）是七條裡期刊層級最弱的一篇（Bioinformation）。
+要換的話，同一句可以改引 Clin Oral Investig 2024 的系統性回顧，
+但那一篇沒有這兩個數字，句子要跟著改寫成程度描述。
+
+查核時有兩筆沒有放行：
+  體外模擬「規劃 4.62° 牙根轉矩、實際 0.03°」 —— 四種關鍵字都搜不到，整段拿掉
+  「七到八成需要中途修正」                     —— 找不到出處，改寫成查得到的那一句
+另有一筆原稿把兩件事混成一句：第二次重製 21.95% 提出的其實是**經驗較少**的醫師，
+經驗多的醫師提得多的是**第一次**。文章裡只留第一次那一句。</pre></div>
+
+<h2>外連的樣式：assets/style.css 加了一條（會進正式站，但對既有頁面無作用）</h2>
+<div class="note"><pre>.post-body a[href^="http"]::after { content: '\2197'; … }
+
+・站內連結一律是相對路徑，所以 [href^="http"] 只會命中外連。
+・加進來的當下，十四篇文章的內文一條外連都沒有 ——
+  首頁、posts/orthodontics/、topics/ortho/ 三頁實測命中數都是 **0**。
+・顏色一顆都沒新增：箭頭吃 currentColor，跟著連結自己的色走
+  （白天 rgb(49,99,127)、夜間 rgb(104,151,181)，都是 NIGHT 區塊裡本來就定好的那一組）。
+・箭頭用 ::after 產生、不寫進 HTML —— 寫成文字節點的話首頁那支搜尋會把它算進內文。
+・七條都是 target="_blank" rel="noopener"（站上第一次用 _blank）。</pre></div>
+
+<h2>精簡到原文的 3/5（使用者：「文章內容沒問題　但太長」）</h2>
+<div class="note"><pre>3234 字 → 1958 字（60.5%），一段都沒有拿掉，七條研究連結全部留著。
+
+  重點整理        814 → 328   五題收成四題，每題答案收到一兩句
+  三件事          681 → 421   表格的「為什麼」欄逐格收短
+  偏離了怎麼處理  345 → 175   醫師小叮嚀從四句收成一句
+  為什麼戴不下去  314 → 209
+  其餘六段       1080 → 825
+
+⚠ **砍的優先序是「重複的先砍」**：重點整理原本幾乎是內文的複述，
+   它一塊就吃掉總砍量的四成，而讀者實際少讀到的東西最少。
+⚠ **不砍的三種**：帶研究連結的句子、診所事實那一段的數字、免責那一句。
+⚠ 上線前使用者再把免責那一句收成一句
+   （「適不適合以隱形矯正處理⋯」與「文中的箭頭連結會開啟原始論文。」兩句拿掉）。</pre></div>
+
+<h2>⚠⚠ HERO 六輪：只有一個人要改的時候，不要重生成</h2>
+<div class="note"><pre>梗（使用者指定）：沿用矯正著陸頁 og-topic-ortho 那張「飄浮螢幕」的語彙，
+再加上一群人一起運算的場面 —— 一間規劃室，四個人、一個連續的空間。
+中央那面大螢幕上有一顆牙被拉出來放大、整根牙根插進半透明的齒槽骨剖面，
+那正是整篇的論點，也是縮圖尺寸下唯一要讀懂的東西。
+
+六輪逐輪：
+  ① 第一版：右邊第二個人物風格不搭、牙弓太整齊、工程師太輕鬆、螢幕上不該是 logo
+  ② 加 ERROR 警示牌、牙弓寫死四條亂、工程師改成在打字、六台裝置逐台寫死
+  ③ 加動作線與說話標記、警示牌加 200+ 與無限符號
+  ④ **牙弓的亂度改成「照參考圖」** —— 使用者附了三張上顎咬合面觀的臨床照
+  ⑤ 白袍女醫師換成男醫師（**整張重生成，構圖跑掉了**）
+  ⑥ 改回第四輪那張，**只改那一個人** → 定案
+
+⚠⚠ **第五輪那次是這一輪最貴的一課**：文生圖每一次都是重擲骰子，
+   構圖、角度、光、每個人的位置全部會重來，已經對的九成因此被賠掉。
+   使用者：「我比較喜歡原版的角度和畫面呈現」。
+   **只有一個人（或一塊）要改，就改圖，不要重生成**
+   —— 這條路 og-topic-general 那一輪早就驗證過而且有數字。
+
+⚠ **第四輪那件也是通則**：前三輪都在用文字加碼「要更亂」（轉三十度、切端呈鋸齒⋯），
+   模型每次都往整齊退。換成附臨床照片一次就到位 ——
+   ILLUSTRATION.md 第十之一節：**形狀不要用文字描述，用參考圖。**
+
+⚠ 「男醫師有點老」的成因不是年齡寫錯，是 STYLE 段那條「每個色相用兩三階」
+   被套到皮膚上（第十之五節，站上第二次踩到）。治法是正面講死皮膚一個平塗色、
+   臉上只准六樣，並給**畫面內的錨點**：「不可以比左邊穿芥末黃毛衣那位看起來老」。
+
+⚠ 「程式碼」直接撞上整份提示詞的 NO WRITING，解法是寫一段
+   **怎麼畫程式碼才不會長出字**：一行一行長短不一的短橫線與小點、分段縮排、
+   左邊一條等距小點當行號，遠看是程式碼、近看一個字母都沒有。
+   ⚠ 這段紋理和「海報上不可以有短橫線模仿文字」那條會打架，兩邊都要指名範圍。</pre></div>
+
+<h2>接圖踩到的一件</h2>
+<div class="note"><pre>原檔 1375×768，四邊有烘進去的白邊（下 3px、右 2px），
+被 tools/hero-resize.mjs 的守門擋下來，所以多寫了一支
+drafts/aligner-simulation/hero-crop.mjs 裁邊。
+
+⚠ 那支的判準第一版自己定了「95% 的像素 ≥248」，裁完仍然過不了 ——
+   改成**和 hero-resize.mjs 逐字相同**（每隔三像素取亮度，平均 &gt; 238 且標準差 &lt; 6）
+   才一次過。**守門的判準要抄同一份，不要自己另定一套。**
+
+裁掉 上1 左1 右2 下3 → 1372×764（比例 1.7958，在 ±0.02 內）
+→ 2000×1114／1600×891／800×445。</pre></div>
+
+<h2>已知取捨（放大檢查過，都不改）</h2>
+<div class="note"><pre>・牆上那張海報底下仍然有三條模仿文字的短橫線（提示詞擋過兩次，第四次還是畫了）。
+  首頁卡片上那張海報只有約 4px 寬 —— 照 og-topic-general 那一輪的通則：
+  **修圖要看那一塊在最終尺寸上佔多大，看不到的地方不值得冒險。**
+・警示牌第二行的無限符號畫成兩個分開的圈，近看像 oo。212px 的分享卡上看不出來。
+・「芳仁的矯正門診怎麼安排」那一段的數字（30~40 副／六到八個月／兩到三次／兩年上下）
+  是使用者口述的診所事實。
+・收費那一段刻意留空：文章只列「要問清楚」，沒寫診所怎麼算 —— 寧可不寫，不能猜。</pre></div>
+
+<footer>
+  規則：<code>CLAUDE.md</code> 第八節（提案頁定案後刪掉、文字搬進 <code>history/</code>）。
+  文體規範：<code>COPY.md</code> 第十節。插畫：<code>ILLUSTRATION.md</code> 第七、九節。
+</footer>
+
+</div></body>
+</html>

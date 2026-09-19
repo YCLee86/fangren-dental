@@ -79,13 +79,156 @@ r.dataset.theme=s;})();</script>
 }
 </script>
 
-<!-- ⚠ 這一段取代了正式站的 SEO:START ~ SEO:END。
-     草稿階段一定要是 noindex：這一頁宣告的 canonical／og:* 指向一個
-     還沒上線的網址，被收錄等於對外宣告一個不存在的頁面（CLAUDE.md 第八節
-     ortho-article 那一輪的教訓）。
-     定案 git mv 進 posts/aligner-simulation/ 的時候，把這整段刪掉，
-     跑一次 node tools/build.mjs，SEO 區塊會自己長回來。 -->
-<meta name="robots" content="noindex, nofollow, noarchive">
+<!-- SEO:START — 由 tools/build.mjs 產生，請勿手動編輯 -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta property="og:url" content="https://fangren.net/posts/aligner-simulation/">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://fangren.net/assets/hero-aligner-photo-1600.jpg">
+<meta property="og:image:width" content="1600">
+<meta property="og:image:height" content="891">
+<meta property="og:image:alt" content="插畫是一間明亮的診所規劃室。畫面中央偏左有一面飄浮在空中的半透明藍色大螢幕，上面用白色線條畫著上排牙齒的俯視圖：牙齒互相重疊、有的擠到外側有的縮在後面，排成一條歪斜的弧線，旁邊散著白色的彎箭頭與五個琥珀色的驚嘆號三角形；螢幕右半有一顆被放大的牙齒，整根牙根插在一塊半透明的骨頭裡，牙根尖端有一道琥珀色的短線，上方一個琥珀色的提示牌寫著 ERROR，下面一行是一個牙套圖示、200+ 與無限符號。螢幕前站著一位穿白袍、裡面是藍灰色刷手服的男醫師，側身朝著螢幕，抬起一手用食指點在那顆放大的牙上，指尖旁有三道短線，另一手垂在身側拿著一支細筆，閉著嘴微笑。畫面左邊，一位穿芥末黃毛衣的男生坐在淺色長桌前，身體前傾、雙手放在筆電鍵盤上，手腕旁有兩道短線；筆電螢幕是深色底、一行一行的淺色程式碼，右下角有一個白色的牙弓圖示，旁邊飄著一面淡藍色的小螢幕，上面同樣是程式碼與牙弓，筆電右邊立著一台沒有開機的深灰色平板。畫面右邊，一位穿藍灰色刷手服的男性一手拿著平板（上面是同一顆牙與牙根）、一手張開手掌比向大螢幕，手掌外緣與嘴邊各有兩道短線；他身旁一位穿淡綠色上衣的女性低頭看著手機。背景是白色的牆與淺色地板，木質檯面上放著兩個馬克杯和一個陶土色的杯子，矮櫃上擺著一副石膏牙模與一副透明牙套，牆上掛著一張只有牙弓線條圖的海報，右側有一盆綠色植物，房間上方橫過幾道長長的白色弧線。">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="article:published_time" content="2026-09-19">
+<meta property="article:modified_time" content="2026-09-19">
+<meta property="article:section" content="齒顎矯正">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://fangren.net/posts/aligner-simulation/#article",
+      "headline": "隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位",
+      "description": "模擬動畫把牙齒一格一格挪到整齊的位置，那是一份規劃；把規劃走成結果的那一段，是醫師在療程中一副一副對照出來的。畫面上為什麼沒有牙根與骨頭、牙套為什麼會戴不下去、什麼時候該重新規劃，以及開始之前值得先問清楚的幾件事。",
+      "datePublished": "2026-09-19",
+      "dateModified": "2026-09-19",
+      "inLanguage": "zh-Hant-TW",
+      "articleSection": "齒顎矯正",
+      "keywords": [
+        "齒顎矯正"
+      ],
+      "isAccessibleForFree": true,
+      "author": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "publisher": {
+        "@id": "https://fangren.net/#dentist"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://fangren.net/posts/aligner-simulation/#webpage"
+      },
+      "isPartOf": {
+        "@id": "https://fangren.net/posts/aligner-simulation/#webpage"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://fangren.net/assets/hero-aligner-photo-1600.jpg",
+        "width": 1600,
+        "height": 891
+      },
+      "about": [
+        {
+          "@type": "MedicalProcedure",
+          "name": "隱形矯正"
+        },
+        {
+          "@type": "MedicalProcedure",
+          "name": "齒顎矯正"
+        },
+        {
+          "@type": "MedicalCondition",
+          "name": "齒列擁擠"
+        },
+        {
+          "@type": "MedicalCondition",
+          "name": "深咬"
+        }
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://fangren.net/posts/aligner-simulation/#webpage",
+      "url": "https://fangren.net/posts/aligner-simulation/",
+      "name": "隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位",
+      "description": "模擬動畫把牙齒一格一格挪到整齊的位置，那是一份規劃；把規劃走成結果的那一段，是醫師在療程中一副一副對照出來的。畫面上為什麼沒有牙根與骨頭、牙套為什麼會戴不下去、什麼時候該重新規劃，以及開始之前值得先問清楚的幾件事。",
+      "isPartOf": {
+        "@id": "https://fangren.net/#website"
+      },
+      "breadcrumb": {
+        "@id": "https://fangren.net/posts/aligner-simulation/#breadcrumb"
+      },
+      "inLanguage": "zh-Hant-TW",
+      "datePublished": "2026-09-19",
+      "dateModified": "2026-09-19",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://fangren.net/assets/hero-aligner-photo-1600.jpg"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://fangren.net/posts/aligner-simulation/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首頁",
+          "item": "https://fangren.net/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "齒顎矯正",
+          "item": "https://fangren.net/#topics"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位"
+        }
+      ]
+    },
+    {
+      "@type": "Dentist",
+      "@id": "https://fangren.net/#dentist",
+      "name": "芳仁牙醫診所",
+      "url": "https://fangren.net/",
+      "telephone": "+886-5-533-9369",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "永樂街70號",
+        "addressLocality": "斗六市",
+        "addressRegion": "雲林縣",
+        "postalCode": "640",
+        "addressCountry": "TW"
+      },
+      "alternateName": "芳仁牙醫",
+      "image": "https://fangren.net/assets/hero-clinic-night.jpg",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://fangren.net/#logo",
+        "url": "https://fangren.net/assets/logo.png"
+      },
+      "sameAs": [
+        "https://maps.app.goo.gl/bKSrVyS2Qu2xvnMj7",
+        "https://www.facebook.com/share/1Bwe9BMkP3/",
+        "https://line.me/R/ti/p/@445rpiiv"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://fangren.net/#website",
+      "url": "https://fangren.net/",
+      "name": "芳仁牙醫診所",
+      "inLanguage": "zh-Hant-TW",
+      "publisher": {
+        "@id": "https://fangren.net/#dentist"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
 </head>
 <!-- data-spec：這一篇的科別，讓 assets/style.css 把重點色換成首頁
      「主題與科別」標記的同一個顏色。標籤 → 代碼的對照表在 tools/build.mjs。 -->
@@ -148,38 +291,40 @@ r.dataset.theme=s;})();</script>
         <span class="sep" aria-hidden="true">&rsaquo;</span>
         <span class="post-tag" data-spec="ortho">齒顎矯正</span>
         <time datetime="2026-09-19">2026/09/19</time>
+        <span class="views" data-views-self="aligner-simulation" data-state="loading">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span class="views-n">&mdash;</span> 次瀏覽
+        </span>
         <button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="夜間模式"><span class="tt-track" aria-hidden="true"><span class="tt-knob"><svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span></span></button>
       </p>
       <h1>隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位</h1>
     </div>
-    <!-- ⚠ 這一段還沒有 <source type="image/webp">，是刻意的：
-         tools/webp.mjs 只掃 index.html／assets/style.css／posts/*/，掃不到 drafts/，
-         所以現在還沒有對應的 .webp 檔；先寫 source 的話預覽頁會拿到 404 而不是退回 JPEG
-         （<picture> 的 source 載入失敗不會自動退回 <img>）。
-         ⚠⚠ 定案 git mv 進 posts/ 之後要做兩件，順序不能反：
-           ① node tools/webp.mjs          產生三張 .webp
-           ② 照 posts/orthodontics/ 那一段把 <picture> ＋ <source> 包回來
-         README.md 第三節那張待辦表上也記著同一件。 -->
     <figure class="post-hero">
-      <img src="../../assets/hero-aligner-photo-1600.jpg"
-           srcset="../../assets/hero-aligner-photo-800.jpg 800w,
-                   ../../assets/hero-aligner-photo-1600.jpg 1600w,
-                   ../../assets/hero-aligner-photo-2000.jpg 2000w"
-           sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
-           alt="插畫是一間明亮的診所規劃室。畫面中央偏左有一面飄浮在空中的半透明藍色大螢幕，上面用白色線條畫著上排牙齒的俯視圖：牙齒互相重疊、有的擠到外側有的縮在後面，排成一條歪斜的弧線，旁邊散著白色的彎箭頭與五個琥珀色的驚嘆號三角形；螢幕右半有一顆被放大的牙齒，整根牙根插在一塊半透明的骨頭裡，牙根尖端有一道琥珀色的短線，上方一個琥珀色的提示牌寫著 ERROR，下面一行是一個牙套圖示、200+ 與無限符號。螢幕前站著一位穿白袍、裡面是藍灰色刷手服的男醫師，側身朝著螢幕，抬起一手用食指點在那顆放大的牙上，指尖旁有三道短線，另一手垂在身側拿著一支細筆，閉著嘴微笑。畫面左邊，一位穿芥末黃毛衣的男生坐在淺色長桌前，身體前傾、雙手放在筆電鍵盤上，手腕旁有兩道短線；筆電螢幕是深色底、一行一行的淺色程式碼，右下角有一個白色的牙弓圖示，旁邊飄著一面淡藍色的小螢幕，上面同樣是程式碼與牙弓，筆電右邊立著一台沒有開機的深灰色平板。畫面右邊，一位穿藍灰色刷手服的男性一手拿著平板（上面是同一顆牙與牙根）、一手張開手掌比向大螢幕，手掌外緣與嘴邊各有兩道短線；他身旁一位穿淡綠色上衣的女性低頭看著手機。背景是白色的牆與淺色地板，木質檯面上放著兩個馬克杯和一個陶土色的杯子，矮櫃上擺著一副石膏牙模與一副透明牙套，牆上掛著一張只有牙弓線條圖的海報，右側有一盆綠色植物，房間上方橫過幾道長長的白色弧線。" width="2000" height="1114">
+      <picture>
+        <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w,
+                                          ../../assets/hero-aligner-photo-1600.webp 1600w,
+                                          ../../assets/hero-aligner-photo-2000.webp 2000w"
+                sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)">
+        <img src="../../assets/hero-aligner-photo-1600.jpg"
+             srcset="../../assets/hero-aligner-photo-800.jpg 800w,
+                     ../../assets/hero-aligner-photo-1600.jpg 1600w,
+                     ../../assets/hero-aligner-photo-2000.jpg 2000w"
+             sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+             alt="插畫是一間明亮的診所規劃室。畫面中央偏左有一面飄浮在空中的半透明藍色大螢幕，上面用白色線條畫著上排牙齒的俯視圖：牙齒互相重疊、有的擠到外側有的縮在後面，排成一條歪斜的弧線，旁邊散著白色的彎箭頭與五個琥珀色的驚嘆號三角形；螢幕右半有一顆被放大的牙齒，整根牙根插在一塊半透明的骨頭裡，牙根尖端有一道琥珀色的短線，上方一個琥珀色的提示牌寫著 ERROR，下面一行是一個牙套圖示、200+ 與無限符號。螢幕前站著一位穿白袍、裡面是藍灰色刷手服的男醫師，側身朝著螢幕，抬起一手用食指點在那顆放大的牙上，指尖旁有三道短線，另一手垂在身側拿著一支細筆，閉著嘴微笑。畫面左邊，一位穿芥末黃毛衣的男生坐在淺色長桌前，身體前傾、雙手放在筆電鍵盤上，手腕旁有兩道短線；筆電螢幕是深色底、一行一行的淺色程式碼，右下角有一個白色的牙弓圖示，旁邊飄著一面淡藍色的小螢幕，上面同樣是程式碼與牙弓，筆電右邊立著一台沒有開機的深灰色平板。畫面右邊，一位穿藍灰色刷手服的男性一手拿著平板（上面是同一顆牙與牙根）、一手張開手掌比向大螢幕，手掌外緣與嘴邊各有兩道短線；他身旁一位穿淡綠色上衣的女性低頭看著手機。背景是白色的牆與淺色地板，木質檯面上放著兩個馬克杯和一個陶土色的杯子，矮櫃上擺著一副石膏牙模與一副透明牙套，牆上掛著一張只有牙弓線條圖的海報，右側有一盆綠色植物，房間上方橫過幾道長長的白色弧線。" width="2000" height="1114">
+      </picture>
     </figure>
   </div>
 
   <div class="post-body wrap-text">
     <p class="lede">戴上第一副透明牙套之前，多數人看過的是那段模擬動畫：牙齒一格一格挪動，最後停在整齊的位置。真正讓人不安的問題都在後面——這一副怎麼壓不下去、醫師為什麼說要重新掃描再做一套。這一篇講的就是那段落差，以及醫師怎麼把它補上。</p>
-    <p>幾歲開始、金屬與隱形怎麼選，在〈<a href="/posts/orthodontics/">牙齒矯正：年齡、矯正器與第一次諮詢</a>〉那一篇。</p>
+    <p>幾歲開始、金屬與隱形怎麼選，在〈<a href="../orthodontics/">牙齒矯正：年齡、矯正器與第一次諮詢</a>〉那一篇。</p>
 
     <h2>一套透明牙套是怎麼做出來的</h2>
     <p>醫師口掃之後，資料送進隱形矯正廠商的軟體，軟體算出模擬與分期，廠商照著做出一整套牙套。聽起來像是先把結果看完再照著做，但<strong>模擬是規劃，不是結果</strong>——把規劃走成結果的那一段，是醫師一副一副對照出來的。</p>
 
     <h2>模擬畫面之外，醫師還要看的三件事</h2>
     <ul>
-      <li><strong>骨頭的厚薄</strong>：牙齒能走到哪裡，是<strong>齒槽骨</strong>（包著牙根的骨頭）決定的，而虛擬排牙多半只處理牙冠。<a href="https://pubmed.ncbi.nlm.nih.gov/38506775/" target="_blank" rel="noopener">一份讓醫師同時看到牙根與骨頭的研究</a>發現，看過三維影像之後原本的規劃往往會被改掉：排得漂亮的位置，牙根可能已經頂到骨頭外緣。（骨頭高度也和牙周有關，見〈<a href="/posts/perio-laser/">牙周病治療</a>〉。）</li>
+      <li><strong>骨頭的厚薄</strong>：牙齒能走到哪裡，是<strong>齒槽骨</strong>（包著牙根的骨頭）決定的，而虛擬排牙多半只處理牙冠。<a href="https://pubmed.ncbi.nlm.nih.gov/38506775/" target="_blank" rel="noopener">一份讓醫師同時看到牙根與骨頭的研究</a>發現，看過三維影像之後原本的規劃往往會被改掉：排得漂亮的位置，牙根可能已經頂到骨頭外緣。（骨頭高度也和牙周有關，見〈<a href="../perio-laser/">牙周病治療</a>〉。）</li>
       <li><strong>牙根的位置</strong>：畫面上移動的是牙冠，支點卻在牙根。整顆連根移動，和牙冠倒過去、牙根沒動，在動畫裡看起來一樣。<a href="https://pubmed.ncbi.nlm.nih.gov/39046382/" target="_blank" rel="noopener">一份針對門牙牙根角度的研究</a>中，規劃超過 10 度的案例只達成約四成。</li>
       <li><strong>不同的移動，難易差很多</strong>：</li>
     </ul>
@@ -249,11 +394,11 @@ r.dataset.theme=s;})();</script>
       <dd>配戴體驗確實比較好，但沒有比較快——試驗中隱形組平均 18.2 個月、固定組 14.5 個月，咬合改善沒有顯著差異。</dd>
     </dl>
 
-    <p class="note">本文為一般口腔衛教資訊，不能取代臨床診斷。適不適合以隱形矯正處理、需要多少副、療程中如何調整，都要經矯正專科醫師檢查與評估後決定。文中的箭頭連結會開啟原始論文。</p>
+    <p class="note">本文為一般口腔衛教資訊，不能取代臨床診斷。</p>
 
     <div class="post-foot">
       <nav class="post-nav" aria-label="文章導覽">
-        <a class="btn btn-ghost" href="/posts/kids-sedation/">&larr; 上一篇：這麼小就要麻醉？</a>
+        <a class="btn btn-ghost" href="../kids-sedation/">&larr; 上一篇：這麼小就要麻醉？</a>
         <a class="btn" href="../../#articles">回文章列表 &rarr;</a>
       </nav>
     </div>
@@ -262,6 +407,54 @@ r.dataset.theme=s;})();</script>
 
 </article>
 </main>
+
+<!-- RELATED:START — 由 tools/build.mjs 產生，請勿手動編輯 -->
+<aside class="related" aria-label="延伸閱讀">
+  <div class="wrap">
+    <ul class="rel-list">
+        <li class="rel-card" data-spec="ortho">
+          <a href="../orthodontics/">
+            <picture>
+              <source type="image/webp" srcset="../../assets/hero-ortho-photo-800.webp 800w, ../../assets/hero-ortho-photo-1600.webp 1600w, ../../assets/hero-ortho-photo-2000.webp 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)">
+              <img src="../../assets/hero-ortho-photo-1600.jpg" srcset="../../assets/hero-ortho-photo-800.jpg 800w, ../../assets/hero-ortho-photo-1600.jpg 1600w, ../../assets/hero-ortho-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="1600" height="893" loading="lazy">
+            </picture>
+            <span class="rel-body">
+              <span class="rel-tag">齒顎矯正</span>
+              <span class="rel-title">牙齒矯正：年齡、矯正器與第一次諮詢</span>
+              <time class="rel-date" datetime="2026-08-20">2026/08/20</time>
+            </span>
+          </a>
+        </li>
+        <li class="rel-card" data-spec="kids">
+          <a href="../kids-crown/">
+            <picture>
+              <source type="image/webp" srcset="../../assets/hero-kids-crown-photo-800.webp 800w, ../../assets/hero-kids-crown-photo-1600.webp 1600w, ../../assets/hero-kids-crown-photo-2000.webp 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)">
+              <img src="../../assets/hero-kids-crown-photo-1600.jpg" srcset="../../assets/hero-kids-crown-photo-800.jpg 800w, ../../assets/hero-kids-crown-photo-1600.jpg 1600w, ../../assets/hero-kids-crown-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="1600" height="893" loading="lazy">
+            </picture>
+            <span class="rel-body">
+              <span class="rel-tag">兒童牙科</span>
+              <span class="rel-title">同一顆補了又掉：小朋友的牙套什麼時候該做，怎麼選</span>
+              <time class="rel-date" datetime="2026-09-07">2026/09/07</time>
+            </span>
+          </a>
+        </li>
+        <li class="rel-card" data-spec="general">
+          <a href="../three-month-recall/">
+            <picture>
+              <source type="image/webp" srcset="../../assets/hero-recall-photo-800.webp 800w, ../../assets/hero-recall-photo-1600.webp 1600w, ../../assets/hero-recall-photo-2000.webp 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)">
+              <img src="../../assets/hero-recall-photo-1600.jpg" srcset="../../assets/hero-recall-photo-800.jpg 800w, ../../assets/hero-recall-photo-1600.jpg 1600w, ../../assets/hero-recall-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="1600" height="1194" loading="lazy">
+            </picture>
+            <span class="rel-body">
+              <span class="rel-tag">定期檢查</span>
+              <span class="rel-title">三個月一次的洗牙與塗氟：哪些人適用，為什麼是三個月</span>
+              <time class="rel-date" datetime="2026-09-05">2026/09/05</time>
+            </span>
+          </a>
+        </li>
+    </ul>
+  </div>
+</aside>
+<!-- RELATED:END -->
 
 
 
