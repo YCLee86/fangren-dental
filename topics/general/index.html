@@ -2181,7 +2181,20 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   column-gap: .5rem; row-gap: .2rem;
 }
 .doc[data-face] > h3 .doc-role {
-  margin-left: 0; position: relative; bottom: var(--role-rise);
+  /* ⚠⚠⚠ 抬升一定要寫 `top: calc(-1 * …)`，**不可以寫 `bottom: …`**
+       （2026-09-19 踩過，使用者回報「藥丸形狀和文字的位置很明顯是不一樣的」）。
+       成因：底下那支 `skFit()` 會把一個 `class="doc-role"` 的探針插進
+       **第一張** `.docs .doc h3` 裡現量藥丸的上下內距。那支探針是
+       `position:absolute` ＋ 行內 `top:0`；再吃到這裡的 `bottom` 就變成
+       **top / bottom / height 三者同時指定**，瀏覽器改用「容器高 − top − bottom」
+       去解高度，量出來的塊高整個是別的數字 ——
+       結果 `--role-padB` 被算成 **0**（正確值 2.587／3.901），
+       藥丸矮了 2.6~3.9px、字貼著塊底。
+       ⚠ 而且 `--role-padT/padB` 是寫在 `:root` 上的，**九張卡全部中招**，
+         不是只有有照片的那三張。
+       ⚠ 寫成 `top` 就沒事：探針的**行內** `top:0` 權重高於這條規則，
+         `bottom` 維持 auto，量到的東西和沒有 flex 時逐項相同。 */
+  margin-left: 0; position: relative; top: calc(-1 * var(--role-rise));
 }
 /* ⚠⚠ 名字那一行**靠上、再補一個「等於單行置中時」的上邊距**，不要用
      `align-self: center`（2026-09-19 使用者回報「藥丸標籤的版型跑掉了」）。
@@ -7370,8 +7383,19 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     var rt = document.documentElement;
     out.forEach(function (m) {
       var want = m.job.pad * m.fsT;
-      rt.style.setProperty(m.job.v + 'padT', Math.max(0, m.padT + (want - m.slackTop)).toFixed(3) + 'px');
-      rt.style.setProperty(m.job.v + 'padB', Math.max(0, m.padB + (want - m.slackBottom)).toFixed(3) + 'px');
+      var t = m.padT + (want - m.slackTop), bt = m.padB + (want - m.slackBottom);
+      /* ⚠⚠ 守門：算出 ≤0 就整個 job 不要寫，留著樣式表裡的預設值
+         （--sk-padT/padB 與 --role-padT/padB 都有寫死的後備）。
+         `want` 是字級的 0.28~0.405 倍、行高又是 1，所以正常量出來絕對是正數；
+         會掉到 0 只有一種可能：**探針量錯了**。
+         2026-09-19 踩過一次：新加的一條 `.doc-role { bottom: … }` 也套到了
+         探針身上，而探針是 position:absolute ＋ 行內 top:0 —— top / bottom /
+         height 三者同時指定，瀏覽器改用「容器高 − top − bottom」解高度，
+         `--role-padB` 因此被寫成 0，**九張卡的藥丸一起矮掉 2.6~3.9px、字貼著底**，
+         畫面沒有任何錯誤訊息。有這道守門的話，那一次會自己退回預設值。 */
+      if (!(t > 0) || !(bt > 0)) return;
+      rt.style.setProperty(m.job.v + 'padT', t.toFixed(3) + 'px');
+      rt.style.setProperty(m.job.v + 'padB', bt.toFixed(3) + 'px');
       if (m.job.lift) rt.style.setProperty(m.job.v + 'lift', ((m.A - m.D) / 2 * (m.fsP - m.fsT)).toFixed(3) + 'px');
     });
   }
