@@ -41,8 +41,10 @@ const FACES = {
 };
 
 /* 每一種要出的寬度（1x 與 2x）。卡片在電腦版 389、手機 343，所以 400/800 夠用；
-   圓頭像顯示 56~76px，200 已經是 2.6x。 */
-const WIDTHS = { sq: [200], wide: [400, 800], tall: [400, 800] };
+   圓頭像 2026-09-19 從 200 改成 400：那一輪使用者選了 76px，他手機的 DPR 是 3，
+   需要 228 —— 面板當場就印出紅字「200 不夠」。階往上加到 88 之後需要 264，
+   一張 400 全部蓋得住（30KB，不值得為它做 srcset）。 */
+const WIDTHS = { sq: [400], wide: [400, 800], tall: [400, 800] };
 const QUALITY = 0.82;   /* 和 tools/hero-resize.mjs、tools/webp.mjs 同一個值 */
 
 const only = process.argv[2];

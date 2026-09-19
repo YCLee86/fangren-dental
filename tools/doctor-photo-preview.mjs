@@ -27,7 +27,7 @@ const DIR  = join(ROOT, 'preview', 'doctor-photo');
 const OUT  = join(DIR, 'index.html');
 
 /* 圖檔要先在（不在的話整頁會是破圖，而這一頁要判斷的正是圖）。 */
-['li-binghui-sq-200.jpg', 'li-binghui-wide-400.jpg', 'li-binghui-tall-400.jpg']
+['li-binghui-sq-400.jpg', 'li-binghui-wide-400.jpg', 'li-binghui-tall-400.jpg']
   .forEach((f) => {
     if (!existsSync(join(DIR, 'img', f)))
       throw new Error(`找不到 img/${f} —— 先跑 node tools/doctor-photo-crop.mjs`);
@@ -103,8 +103,44 @@ const NOTE = `<!-- =============================================================
        ・夜間模式：白袍在深底上很亮，這一頁可以直接開站上的日夜開關看。
        ・alt 文字：現在寫的是暫定值。
 
+     ==== 第二輪（同日）：使用者選了「Ⓑ 圓頭像 ＋ 大」====================
+
+     回報：「頭像和圖卡文字排版有點擠在一起、雜亂的感覺。」
+     在 375 寬量出三件事 —— **前兩件是缺陷，直接修掉，沒有放上切換條**：
+
+       ① 頭像下緣到「專長」那一列 ＝ **0px**（沒有頭像時是 11.2px）
+          h3 的 margin-bottom 被 76px 的頭像整個吃掉。
+          → h3 下邊距歸零，距離交給 grid 的 row-gap，和頭像大小脫鉤。
+       ② 名字的墨比頭像中心高 **5.98px**
+          align-self: center 對的是盒子（含那 11.2px），眼睛讀的是墨。
+          → ① 修完順手歸零（實測 −0.39）。
+       ③ 資料左緣比名字左緣往左 90px，視線要折回去 —— **這件是選擇**，
+          做成尺一的三格。
+
+     另外，面板當場印出紅字「原檔 200 不夠（需 228）」：76px × 他手機的
+     DPR 3。圓頭像的裁切因此從 200 改成 **400**（份量加到 88 也蓋得住）。
+
+     ---- 尺一：排法（375 / 1440 實測）--------------------------------------
+       Ⓐ 資料全寬  資料欄 244／281，最長那一欄 4 行。卡最矮。
+                    代價：視線往右看名字、再折回最左讀資料。
+       Ⓑ 跟著縮排  資料對齊名字左緣，視線不折返。
+                    **手機代價很重**：資料欄 244 → 154、最長那一欄 4 → 7 行。
+                    電腦版三欄撐得住（189，仍是 4 行）。
+       Ⓒ 上下疊    頭像在上、名字在下，全部靠左。資料欄和 Ⓐ 一樣寬、
+                    也是 4 行，視線一路往下，但每張卡高 **+85px**（九張 ≈ 760）。
+
+     ---- 尺二：留白 8／12／18（頭像下緣到「專長」）--------------------------
+     中間那格 12 最接近現況（沒有頭像時名字到專長是 11.2）。
+
+     ---- 尺三：份量 64／76／88（重新定階，他選的 76 收進中間那一格）--------
+
+     ---- 已定案、從切換條上收掉的兩條（網址參數仍然吃得到）-----------------
+       ?dp=off|av|top|bn   放法（定案 av）
+       ?ph=none|ini        另外八位（目前 none）
+     做法同 head-search 與 night-map-park 那兩輪，切換條不會愈長愈長。
+
      ---- 切換條 -------------------------------------------------------------
-     網址參數 ?dp=off|av|top|bn 、?ph=none|ini 、?sz=s|m|l
+     網址參數 ?al=full|indent|stack 、?gp=s|m|l 、?sz=s|m|l
      ========================================================================== -->`;
 
 /* ── ① 相對路徑往上兩層 ──────────────────────────────────────────────────
@@ -150,7 +186,7 @@ const ALT = '李柄輝醫師的形象照，身著白袍站在診療室內';
 html = html
   .replace('<article class="doc" data-initial="李" data-spec="general">',
            '<article class="doc" data-photo="li-binghui" data-initial="李" data-spec="general">')
-  .replace(H3, `<img class="pv-face pv-sq" src="img/li-binghui-sq-200.jpg" width="200" height="200" alt="${ALT}">
+  .replace(H3, `<img class="pv-face pv-sq" src="img/li-binghui-sq-400.jpg" width="400" height="400" alt="${ALT}">
           <img class="pv-face pv-wide" src="img/li-binghui-wide-400.jpg" srcset="img/li-binghui-wide-400.jpg 1x, img/li-binghui-wide-800.jpg 2x" width="400" height="267" alt="${ALT}">
           <img class="pv-face pv-tall" src="img/li-binghui-tall-400.jpg" srcset="img/li-binghui-tall-400.jpg 1x, img/li-binghui-tall-800.jpg 2x" width="400" height="480" alt="${ALT}">
           ${H3}`);
@@ -162,31 +198,52 @@ html = html
 const RULERS = `
 <style>
 /* 尺三的三個值，一個 data-sz 餵三種放法各自的變數。 */
-:root            { --pv-av: 64px;  --pv-top: 3/2; --pv-bn: 230px; }
-:root[data-sz="s"] { --pv-av: 56px; --pv-top: 5/2; --pv-bn: 180px; }
-:root[data-sz="l"] { --pv-av: 76px; --pv-top: 4/3; --pv-bn: 280px; }
+/* 份量：2026-09-19 第二輪重新定階 —— 使用者在第一輪選了當時的「大」76px，
+   所以把 76 收成中間那一格，上下各再給一格（64／76／88）。
+   留白 ＝ 頭像下緣到「專長」那一列的距離，中間那格 12 最接近現況
+   （沒有頭像時名字到專長是 11.2px）。 */
+:root               { --pv-av: 76px; --pv-gap: 12px; --pv-top: 3/2; --pv-bn: 230px; }
+:root[data-sz="s"]  { --pv-av: 64px; --pv-top: 5/2; --pv-bn: 180px; }
+:root[data-sz="l"]  { --pv-av: 88px; --pv-top: 4/3; --pv-bn: 280px; }
+:root[data-gp="s"]  { --pv-gap: 8px; }
+:root[data-gp="l"]  { --pv-gap: 18px; }
 
 .pv-face { display: none; }
 
-/* ---- Ⓑ 圓頭像：名字左邊一顆圓，卡的高度不變 ---------------------------- */
-:root[data-dp="av"] .doc[data-photo] {
+/* ---- Ⓑ 圓頭像 ----------------------------------------------------------
+   2026-09-19 第二輪：使用者選了圓頭像＋大，回報「頭像和圖卡文字排版有點擠
+   在一起、雜亂」。在 375 寬量出三件事，前兩件是缺陷、第三件才是選擇：
+
+     ① 頭像下緣到「專長」那一列 ＝ **0px**
+        h3 的 margin-bottom（11.2px）整個被 76px 的頭像吃掉了 —— 那一列的
+        高度由頭像決定，h3 連同下邊距只有 41px，全部落在列裡面。
+        沒有頭像時，名字到專長本來有 11.2px。
+        → 修法：h3 的下邊距歸零，改由 grid 的 row-gap（--pv-gap）負責，
+          這樣不論頭像多大、名字折幾行，那段距離都是同一個值。
+     ② 名字的墨比頭像中心高 **5.98px**
+        align-self: center 對齊的是 h3 那個**盒子**（含 11.2px 下邊距），
+        眼睛讀的是墨 —— CLAUDE.md 第九節第 5 條那個坑。
+        → ① 的「下邊距歸零」順手把這件事一起修掉（11.2 ÷ 2 ≒ 5.6）。
+     ③ 文字左緣和名字左緣差 14.4px
+        名字在頭像右邊，專長／資歷／學歷卻從卡的最左邊重新開始，
+        視線「往右看名字、再折回最左讀資料」。**這一件是選擇不是缺陷**，
+        所以做成尺一的三格。
+
+   ⚠ 三種排法對「另外八位」的字首圓章要一模一樣，否則切到 ?ph=ini
+     會看到九張卡用兩套排版。底下每一條都寫成兩個選擇器並列。 */
+
+:root[data-dp="av"] .doc[data-photo],
+:root[data-dp="av"][data-ph="ini"] .doc {
   display: grid; grid-template-columns: var(--pv-av) 1fr;
-  column-gap: .9rem; align-items: start;
+  column-gap: .9rem; row-gap: var(--pv-gap); align-items: start;
 }
 :root[data-dp="av"] .doc[data-photo] .pv-sq {
   display: block; grid-column: 1; grid-row: 1;
   width: var(--pv-av); height: var(--pv-av);
   border-radius: 50%; object-fit: cover;
 }
-:root[data-dp="av"] .doc[data-photo] > h3 { grid-column: 2; grid-row: 1; align-self: center; }
-:root[data-dp="av"] .doc[data-photo] > dl { grid-column: 1 / -1; grid-row: 2; }
-
-/* 尺二 Ⓑ：其餘八張的字首圓章。::before 當 grid item 用。
+/* 其餘八張的字首圓章。::before 當 grid item 用；
    底是各自的科別色（--accent 掛在 [data-spec] 上），字用 --on-fill。 */
-:root[data-dp="av"][data-ph="ini"] .doc:not([data-photo]) {
-  display: grid; grid-template-columns: var(--pv-av) 1fr;
-  column-gap: .9rem; align-items: start;
-}
 :root[data-dp="av"][data-ph="ini"] .doc:not([data-photo])::before {
   content: attr(data-initial); grid-column: 1; grid-row: 1;
   width: var(--pv-av); height: var(--pv-av); border-radius: 50%;
@@ -194,8 +251,34 @@ const RULERS = `
   background: var(--accent); color: var(--on-fill);
   font-size: calc(var(--pv-av) * .42); font-weight: 500; line-height: 1;
 }
-:root[data-dp="av"][data-ph="ini"] .doc:not([data-photo]) > h3 { grid-column: 2; grid-row: 1; align-self: center; }
-:root[data-dp="av"][data-ph="ini"] .doc:not([data-photo]) > dl { grid-column: 1 / -1; grid-row: 2; }
+/* ⚠ margin-bottom 一定要歸零 —— 見上面 ① ②，那 11.2px 同時造成
+     「貼著專長」與「名字偏高」兩個症狀。距離一律交給 row-gap。 */
+:root[data-dp="av"] .doc[data-photo] > h3,
+:root[data-dp="av"][data-ph="ini"] .doc > h3 {
+  grid-column: 2; grid-row: 1; align-self: center; margin-bottom: 0;
+}
+:root[data-dp="av"] .doc[data-photo] > dl,
+:root[data-dp="av"][data-ph="ini"] .doc > dl { grid-column: 1 / -1; grid-row: 2; }
+
+/* 尺一 Ⓑ 跟著縮排：資料欄改對齊名字的左緣，視線不折回去。
+   代價是文字欄窄掉一個頭像＋間距（面板會印出窄多少、最長那一句折幾行）。 */
+:root[data-dp="av"][data-al="indent"] .doc[data-photo] > dl,
+:root[data-dp="av"][data-al="indent"][data-ph="ini"] .doc > dl { grid-column: 2; }
+
+/* 尺一 Ⓒ 上下疊：頭像在上、名字在下，全部靠左，視線一路往下不折返。
+   ⚠ 這一格 row-gap 要關掉（三列各自的距離不一樣），改用各自的 margin。 */
+:root[data-dp="av"][data-al="stack"] .doc[data-photo],
+:root[data-dp="av"][data-al="stack"][data-ph="ini"] .doc {
+  grid-template-columns: 1fr; row-gap: 0;
+}
+:root[data-dp="av"][data-al="stack"] .doc[data-photo] > h3,
+:root[data-dp="av"][data-al="stack"][data-ph="ini"] .doc > h3 {
+  grid-column: 1; grid-row: 2; align-self: start; margin: .55rem 0 0;
+}
+:root[data-dp="av"][data-al="stack"] .doc[data-photo] > dl,
+:root[data-dp="av"][data-al="stack"][data-ph="ini"] .doc > dl {
+  grid-column: 1; grid-row: 3; margin-top: var(--pv-gap);
+}
 
 /* ---- Ⓒ 卡片頂圖：圖滿到卡的三個邊，靠 overflow 切圓角 ------------------ */
 :root[data-dp="top"] .doc[data-photo] { padding-top: 0; overflow: hidden; }
@@ -315,26 +398,26 @@ const BAR = `
 </style>
 
 <div class="pvbar" data-open="0">
-  <button class="pvbar-btn" type="button" aria-expanded="false">醫師圖卡 <b></b></button>
+  <button class="pvbar-btn" type="button" aria-expanded="false">圓頭像 <b></b></button>
   <div class="pvbar-panel">
     <div class="pvbar-body">
-      <div class="pvbar-g">放法　<em>圖擺在卡的哪裡</em></div>
-      <div class="pvbar-row" data-k="dp">
-        <button type="button" data-v="off">Ⓐ<small>現況</small></button>
-        <button type="button" data-v="av">Ⓑ<small>圓頭像</small></button>
-        <button type="button" data-v="top">Ⓒ<small>卡片頂圖</small></button>
-        <button type="button" data-v="bn">Ⓓ<small>創辦橫幅</small></button>
+      <div class="pvbar-g">排法　<em>名字和資料怎麼排</em></div>
+      <div class="pvbar-row" data-k="al">
+        <button type="button" data-v="full">Ⓐ<small>資料全寬</small></button>
+        <button type="button" data-v="indent">Ⓑ<small>跟著縮排</small></button>
+        <button type="button" data-v="stack">Ⓒ<small>上下疊</small></button>
       </div>
-      <div class="pvbar-g">另外八位　<em>圖還沒到的那八張怎麼辦</em></div>
-      <div class="pvbar-row" data-k="ph">
-        <button type="button" data-v="none">Ⓐ<small>空著</small></button>
-        <button type="button" data-v="ini">Ⓑ<small>字首圓章</small></button>
+      <div class="pvbar-g">留白　<em>頭像下緣到「專長」</em></div>
+      <div class="pvbar-row" data-k="gp">
+        <button type="button" data-v="s">Ⓐ<small>8</small></button>
+        <button type="button" data-v="m">Ⓑ<small>12</small></button>
+        <button type="button" data-v="l">Ⓒ<small>18</small></button>
       </div>
-      <div class="pvbar-g">份量　<em>圖佔多大</em></div>
+      <div class="pvbar-g">份量　<em>頭像直徑</em></div>
       <div class="pvbar-row" data-k="sz">
-        <button type="button" data-v="s">Ⓐ<small>小</small></button>
-        <button type="button" data-v="m">Ⓑ<small>中</small></button>
-        <button type="button" data-v="l">Ⓒ<small>大</small></button>
+        <button type="button" data-v="s">Ⓐ<small>64</small></button>
+        <button type="button" data-v="m">Ⓑ<small>76</small></button>
+        <button type="button" data-v="l">Ⓒ<small>88</small></button>
       </div>
     </div>
     <div class="pvbar-foot"></div>
@@ -348,10 +431,18 @@ const BAR = `
   var box  = document.querySelector('.pvbar');
   var btn  = box.querySelector('.pvbar-btn');
   var foot = box.querySelector('.pvbar-foot');
-  var KEYS = { dp: ['off','av','top','bn'], ph: ['none','ini'], sz: ['s','m','l'] };
-  var DEF  = { dp: 'off', ph: 'none', sz: 'm' };
-  var LBL  = { off: '現況', av: '圓頭像', top: '卡片頂圖', bn: '創辦橫幅' };
-  var st   = { dp: DEF.dp, ph: DEF.ph, sz: DEF.sz };
+  /* ⚠ 已定案的那兩條尺（放法 dp、另外八位 ph）2026-09-19 從切換條上收掉了
+     —— 使用者選了「圓頭像＋大」。**網址參數仍然吃得到**（?dp=off|av|top|bn、
+     ?ph=none|ini），要回去看落選的三案或八張圓章直接改網址，不必重開一頁。
+     做法同 head-search 與 night-map-park 那兩輪：已定案的收成預設值、
+     新的尺接上去，切換條不會愈長愈長。 */
+  var KEYS = { dp: ['off','av','top','bn'], ph: ['none','ini'],
+               al: ['full','indent','stack'], gp: ['s','m','l'], sz: ['s','m','l'] };
+  var DEF  = { dp: 'av', ph: 'none', al: 'full', gp: 'm', sz: 'm' };
+  var BARK = ['al','gp','sz'];   /* 切換條上看得到的三條 */
+  var LBL  = { full: '全寬', indent: '縮排', stack: '上下疊' };
+  var st   = {};
+  Object.keys(KEYS).forEach(function (k) { st[k] = DEF[k]; });
 
   var qs = new URLSearchParams(location.search);
   Object.keys(KEYS).forEach(function (k) {
@@ -360,25 +451,26 @@ const BAR = `
   });
 
   function apply() {
-    Object.keys(KEYS).forEach(function (k) {
-      root.setAttribute('data-' + k, st[k]);
+    Object.keys(KEYS).forEach(function (k) { root.setAttribute('data-' + k, st[k]); });
+    BARK.forEach(function (k) {
       var row = box.querySelector('.pvbar-row[data-k="' + k + '"]');
       Array.prototype.forEach.call(row.querySelectorAll('button'), function (b) {
         b.setAttribute('aria-pressed', String(b.dataset.v === st[k]));
       });
     });
-    /* 尺二在 Ⓐ 現況與 Ⓓ 橫幅底下沒有作用（那兩格的另外八張本來就不動），
-       尺三在 Ⓐ 也沒有作用 —— 淡掉，不要讓人以為按了沒反應。 */
-    box.querySelector('.pvbar-row[data-k="ph"]').classList.toggle('is-off', st.dp === 'off' || st.dp === 'bn');
-    box.querySelector('.pvbar-row[data-k="sz"]').classList.toggle('is-off', st.dp === 'off');
+    /* 三條尺都只對圓頭像有作用 —— 用 ?dp= 切到別的放法時淡掉，
+       不要讓人以為按了沒反應。 */
+    BARK.forEach(function (k) {
+      box.querySelector('.pvbar-row[data-k="' + k + '"]').classList.toggle('is-off', st.dp !== 'av');
+    });
     var q = new URLSearchParams();
     Object.keys(KEYS).forEach(function (k) { if (st[k] !== DEF[k]) q.set(k, st[k]); });
     history.replaceState(null, '', q.toString() ? '?' + q : location.pathname);
-    btn.querySelector('b').textContent = LBL[st.dp];
+    btn.querySelector('b').textContent = st.dp === 'av' ? LBL[st.al] + '　' + getComputedStyle(root).getPropertyValue('--pv-av').trim() : '?dp=' + st.dp;
     measure();
   }
 
-  Object.keys(KEYS).forEach(function (k) {
+  BARK.forEach(function (k) {
     box.querySelector('.pvbar-row[data-k="' + k + '"]').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       st[k] = b.dataset.v; apply();
@@ -396,7 +488,7 @@ const BAR = `
        ② 最後一列缺幾格（Ⓓ 抽掉一張之後 8 張排三欄是 3＋3＋2）
        ③ 圖在畫面上多大、原檔夠不夠這個尺寸的兩倍
      ⚠ 量的是**畫出來的東西**（getBoundingClientRect），不是 width 屬性。 */
-  var SRC = { sq: 200, wide: 800, tall: 800 };   /* 各裁切最大的那一檔的寬 */
+  var SRC = { sq: 400, wide: 800, tall: 800 };   /* 各裁切最大的那一檔的寬 */
   function n(x) { return (Math.round(x * 100) / 100).toFixed(2); }
   function measure() {
     if (box.dataset.open !== '1') return;
@@ -433,6 +525,67 @@ const BAR = `
       var el = hero.querySelector('.pv-' + k);
       if (el && getComputedStyle(el).display !== 'none') { shown = el; kind = k; }
     });
+    /* ── 圓頭像那三個數字（2026-09-19 第二輪使用者回報「擠、雜亂」的成因）──
+       ⚠ 全部量**畫出來的墨**，不是盒子、也不是屬性：
+         ・名字要用 Range 框住那個文字節點 —— 量 h3 的盒子會連下邊距一起算，
+           那正是第一版偏高 5.98px 的原因。
+         ・折幾行要把 Range 的 rect 照 top 分組，直接數 rect 會誤判
+           （CLAUDE.md 第九節第 2 條那個近親）。 */
+    function inkRect(el) {
+      var t = el.firstChild;
+      if (!t || t.nodeType !== 3) return null;
+      var rg = document.createRange(); rg.setStart(t, 0); rg.setEnd(t, t.length);
+      var r = rg.getBoundingClientRect();
+      return r.width ? r : null;
+    }
+    function lineCount(el) {
+      var rg = document.createRange(); rg.selectNodeContents(el);
+      var tops = [];
+      Array.prototype.forEach.call(rg.getClientRects(), function (r) {
+        if (r.width < .5 && r.height < .5) return;
+        for (var i = 0; i < tops.length; i++) if (Math.abs(tops[i] - r.top) < 3) return;
+        tops.push(r.top);
+      });
+      return tops.length;
+    }
+    var avRows = '';
+    if (st.dp === 'av') {
+      var face = hero.querySelector('.pv-sq');
+      var h3   = hero.querySelector('h3');
+      var dlEl = hero.querySelector('dl');
+      var fr = face.getBoundingClientRect();
+      var ink = inkRect(h3);
+      /* ⚠ Ⓒ 上下疊時，頭像和名字**不在同一列**，所以「對中心」那一項沒有
+           意義（會印出 +61 這種嚇人的數字），而「頭像下緣到專長」中間還隔著
+           一整行名字。那一格改量「名字下緣到專長」，並把對中心那一行拿掉。 */
+      var above = st.al === 'stack' ? (ink || h3.getBoundingClientRect()) : fr;
+      var below = dlEl.getBoundingClientRect().top - above.bottom;
+      avRows += '<div class="m ' + (below >= 7 ? 'good' : 'bad') + '">' +
+        '<span>' + (st.al === 'stack' ? '名字下緣到「專長」' : '頭像下緣到「專長」') + '</span><b>' + n(below) + '</b></div>';
+      if (ink && st.al !== 'stack') {
+        var off = (ink.top + ink.bottom) / 2 - (fr.top + fr.bottom) / 2;
+        avRows += '<div class="m ' + (Math.abs(off) <= 1.5 ? 'good' : 'bad') + '">' +
+          '<span>名字的墨對頭像中心</span><b>' + (off > 0 ? '+' : '') + n(off) + '</b></div>';
+      }
+      if (ink) {
+        avRows += '<div class="m ' + (st.al === 'full' ? '' : 'good') + '">' +
+          '<span>資料左緣對名字左緣</span><b>' + n(dlEl.getBoundingClientRect().left - ink.left) + '</b></div>';
+      }
+      if (st.al === 'stack') {
+        avRows += '<div class="m"><span>卡比 Ⓐ 高</span><b>+' +
+          n(fr.height + parseFloat(getComputedStyle(h3).marginTop)) + '</b></div>';
+      }
+      /* 縮排那一格的代價：資料欄窄掉多少、最長那一句變幾行。 */
+      var dds = hero.querySelectorAll('dd');
+      var maxLines = 0, ddW = 0;
+      Array.prototype.forEach.call(dds, function (el) {
+        maxLines = Math.max(maxLines, lineCount(el));
+        ddW = Math.max(ddW, el.getBoundingClientRect().width);
+      });
+      avRows += '<div class="m"><span>資料欄寬</span><b>' + n(ddW) + '</b></div>';
+      avRows += '<div class="m ' + (maxLines > 4 ? 'bad' : '') + '">' +
+        '<span>最長那一欄折</span><b>' + maxLines + ' 行</b></div>';
+    }
     var over = document.documentElement.scrollWidth - document.documentElement.clientWidth;
     var dark = root.getAttribute('data-theme') === 'dark'
       || (!root.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
@@ -474,20 +627,29 @@ const BAR = `
       rows += '<div class="pvbar-note">字最長那一行的右緣到卡的右緣。' +
         '跨整列之後字沒有跟著變多，空白會很明顯 —— 把「份量」調大可以吃掉一部分。</div>';
     }
+    rows += avRows;
     rows += '<div class="m ' + (over > 0 ? 'bad' : 'good') + '"><span>水平捲動</span><b>' + (over > 0 ? over + 'px' : '無') + '</b></div>';
     rows += '<div class="m"><span>現在是</span><b>' + (dark ? '夜間' : '白天') + '</b></div>';
     rows += '<hr>';
-    rows += '<div class="pvbar-note">' + ({
+    rows += '<div class="pvbar-note">' + (st.dp === 'av' ? ({
+      full:   '<b>Ⓐ 資料全寬</b>：名字在頭像右邊，專長／資歷／學歷仍從卡的最左邊開始。' +
+              '文字欄最寬，代價是視線「往右看名字、再折回最左讀資料」。',
+      indent: '<b>Ⓑ 跟著縮排</b>：資料改對齊名字的左緣，整張卡變成乾淨的兩欄、' +
+              '視線不折返。<b>代價在手機上很重</b> —— 資料欄從 244 掉到 154、' +
+              '最長那一欄從 4 行變 7 行。電腦版三欄比較撐得住（見上面的實測）。',
+      stack:  '<b>Ⓒ 上下疊</b>：頭像在上、名字在下，全部靠左，一路往下讀。' +
+              '最不會亂，但卡會長高一個頭像。'
+    })[st.al] + '<br>⚠ 這三條尺只管圓頭像。要回去看落選的三案用網址：' +
+       '<b>?dp=off</b>（現況）<b>?dp=top</b>（卡片頂圖）<b>?dp=bn</b>（創辦橫幅）；' +
+       '八張字首圓章是 <b>?ph=ini</b>。' : ({
       off: '<b>Ⓐ 現況</b>：九張都沒有圖，和正式站一模一樣，拿來比對用的。',
-      av:  '<b>Ⓑ 圓頭像</b>：卡的高度幾乎不變、背景也幾乎看不到（裁得最緊）。' +
-           '代價是九張要湊齊才不奇怪 —— 把「另外八位」切到 Ⓑ 看看撐得住嗎。',
       top: '<b>Ⓒ 卡片頂圖</b>：份量最重，代價也最貴 —— 1440 上同一列另外兩張' +
            '字底下會空 <b>285px</b>（Ⓐ 現況是 53）。而且圖裡的診間' +
            '<b>不是芳仁的診間</b>（往下捲就是兩張真的診間照）。',
       bn:  '<b>Ⓓ 創辦橫幅</b>：其餘八張原封不動，' +
            '<b>只有一張圖的時候唯一不必解釋「為什麼別人沒有」的放法</b>。' +
            '代價在上面那一行：八張排三欄，最後一列缺一格。'
-    })[st.dp] + '</div>';
+    })[st.dp]) + '</div>';
     foot.innerHTML = rows;
   }
   addEventListener('resize', measure);
