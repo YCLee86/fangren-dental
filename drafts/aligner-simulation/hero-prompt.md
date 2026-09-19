@@ -105,6 +105,52 @@
 
 ---
 
+## 二之三、第三輪：動起來，以及警示牌上的數字（2026-09-19）
+
+使用者：「雖然有白色線條氛圍感了　還是可以加一點動作或是說話的提示標記線條
+讓場面沒那麼靜止」「因為牙齒很亂系統跳出的驚嘆提醒　也可以加入數字
+（例如 200 到無限大之類的表示會需要很多組牙套）或是呈現治療時間要很久
+（6-9 年以上）的概念」
+
+### 1. 動作線與說話標記：五個位置，一種規格
+
+新增 `MOTION AND SPEECH MARKS` 一段。**規格完全照 ILLUSTRATION 第七節第 17 條**
+（那一條是〈擴張牙弓〉的氣流被讀成靈魂出竅學來的）：
+**二到四條、同向、等距、極短（不超過手掌寬的三分之一）、起點實往外飛白、
+不繞圈、不閉合、不比它所屬的東西大。**
+
+五個位置：醫師的指尖（剛點了一下）／螢幕上那顆剛被轉動的牙（沿箭頭方向兩條）／
+工程師的手腕上方（正在打字）／右邊那位抬起的手掌外緣／**同一個人的嘴邊兩條短斜線**（正在說話）。
+
+⚠ **說話只用嘴邊那兩條，不給泡泡。** 泡泡是〈拔智齒〉那張的語彙（第八節），
+再用會撞；而且泡泡一出現就會想往裡面填東西，那是長字的落點。
+⚠ AVOID 補四條：背景速度線、集中線、星芒、任何形式的對話框。
+
+### 2. ⚠⚠ 警示牌上的數字：放了「200+ ∞」，**沒有放年份**
+
+放進去的：牌子變成兩行，上行是驚嘆號三角 ＋ `ERROR`，
+下行小一點，是**一個牙套的小圖示 ＋ `200+` ＋ 無限符號**。
+同一輪把工程師頭上那面小螢幕從「五副牙套」改成
+**一長排牙套往畫面外延伸、越遠越淡、數不完** —— 數量這件事主要靠這個講，
+牌子上的數字只是補一刀。
+
+**沒有放年份，這是刻意的，成因寫在這裡免得日後被當成漏做：**
+
+- **這張 HERO 同時是這一篇的 `og:image`。** 分享到 LINE 的時候圖是單獨出現的，
+  旁邊沒有文章。圖上寫「6-9 年」，讀者會讀成「在這裡矯正要六到九年」，
+  而文章正文寫的是**兩年上下**（使用者自己口述的規劃節奏）。
+- 矯正著陸頁當初就是**刻意一個數字都沒有**（COPY.md 第九之十六節、
+  `tools/topic-copy.mjs` 的 `ask`：療程長度與回診間隔還沒問到診所），
+  而且 `og-topic-ortho` 的規則明文寫著「⚠⚠ 任何時間暗示：日曆、月份、進度條」不准。
+- 「6-9 年」這個數字本身也沒有來源。站上寧可不寫，不能猜（CLAUDE.md 第二節）。
+
+**療程很長這件事改用畫面講**：那一排戴不完的牙套本身就是「要很久」。
+⚠ 使用者若仍要年份，改法只有一句：把牌子下行的 `200+` 換成
+`6-9 YEARS`（或兩者並列），並把 CRITICAL 段裡「no years, no months, no units of time」
+那幾個字拿掉 —— **但那三條紅線是同時放掉的，要知道自己在放什麼。**
+
+---
+
 ## 三、要附的參考圖（三張，說明分開寫）
 
 | # | 檔案 | 附圖時要寫的話 |
@@ -113,7 +159,7 @@
 | 2 | `assets/hero-ortho-photo-1600.jpg` | 「**畫法、質感、明度照這張**：線寬有變化、色鉛筆顆粒、大量紙白透出來、整體淡。⚠ **不要照它的分格**，這一張是一個連續的空間。」 |
 | 3 | `assets/logo.png` | 「**左上角那面小螢幕與筆電待機畫面上的標誌，形狀照這張**（透明底、一色）。⚠ 只照**形狀**，顏色不要照 —— 那是深綠，螢幕上要用白色線條或淡色。⚠ 畫面上**不要**再出現第二個標誌，也不要在標誌旁邊加任何字。」（2026-09-19 第二輪新增） |
 
-## 四、提示詞（第二輪，逐字，可直接複製）
+## 四、提示詞（第三輪，逐字，可直接複製）
 
 ```
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST.
@@ -189,11 +235,20 @@ corners and a faint glow at its edges. On it, drawn in white line only:
     REACHED THE OUTER EDGE OF THE BONE — a short AMBER LINE marks the bone exactly where
     the root tip is pressing against it.
   • A SMALL AMBER WARNING BADGE — a rounded rectangle in soft amber — FLOATS JUST ABOVE
-    THE ENLARGED TOOTH. Inside the badge, side by side: a TRIANGLE WITH AN EXCLAMATION
-    MARK inside it, and the single word ERROR in plain, evenly spaced, upright uppercase
-    sans-serif letters — E, R, R, O, R — spelled exactly like that and nothing else. The
-    badge reads as the planning software politely flagging this one movement for the team
-    to look at. THIS BADGE IS THE ONLY PLACE IN THE WHOLE PICTURE WHERE LETTERS APPEAR.
+    THE ENLARGED TOOTH. It has TWO LINES inside it:
+      – TOP LINE: a TRIANGLE WITH AN EXCLAMATION MARK inside it, and beside it the single
+        word ERROR in plain, evenly spaced, upright uppercase sans-serif letters —
+        E, R, R, O, R — spelled exactly like that and nothing else.
+      – BOTTOM LINE, smaller: a TINY OUTLINE OF ONE CLEAR ALIGNER TRAY (a small horseshoe),
+        then the characters 200+ (the digits two, zero, zero followed by a plus sign),
+        then a MATHEMATICAL INFINITY SYMBOL — a simple sideways figure of eight.
+    The badge reads as the planning software flagging this one movement and estimating that
+    an unreasonable number of trays would be needed — it is the software doing its job and
+    asking the team to look, NOT a broken machine and NOT an accusation.
+    THE ONLY CHARACTERS ANYWHERE IN THIS PICTURE ARE: E R R O R, the digits 2 0 0, a plus
+    sign and an infinity symbol, ALL INSIDE THIS ONE BADGE. There are NO OTHER letters,
+    digits or symbols anywhere — in particular NO YEARS, NO MONTHS, NO DATES and NO UNITS
+    OF TIME appear anywhere in the picture.
 
   Nothing else is on this screen.
 
@@ -217,9 +272,11 @@ but he is not strained either: his shoulders stay down, his brow is smooth.
 WHAT IS ON EACH DEVICE — FOLLOW THIS EXACTLY. Most devices are simply blank.
   • THE BIG FLOATING SCREEN: the crowded arch, the enlarged tooth in bone, the arrows and
     the amber badge, as described above.
-  • ONE SMALL SCREEN FLOATING ABOVE THE ENGINEER'S DESK: a row of FIVE CLEAR ALIGNER TRAYS
-    lined up left to right, each a simple horseshoe outline, all the same size, white line
-    on pale blue. Nothing else.
+  • ONE SMALL SCREEN FLOATING ABOVE THE ENGINEER'S DESK: A LONG ROW OF CLEAR ALIGNER TRAYS,
+    each a simple horseshoe outline, marching from left to right and CONTINUING PAST THE
+    RIGHT-HAND EDGE OF THAT SCREEN, the furthest ones getting fainter and fainter until
+    they fade out — there are far too many of them to count. White line on pale blue.
+    Nothing else on this screen: no numbers, no labels.
   • A SECOND SMALL SCREEN FLOATING IN THE UPPER-LEFT CORNER OF THE ROOM: THE CLINIC LOGO
     ONLY, resting on a pale blue background like a standby screen. THE LOGO IS THE SHAPE
     IN THE ATTACHED LOGO IMAGE — one solid, smooth, wide organic shape with soft rounded
@@ -258,10 +315,32 @@ of the room, behind the people, giving the air a sense of movement. THEY MUST NO
 OF ANYONE'S MOUTH, NOSE, HANDS OR BODY, they must not loop back on themselves, and they
 must not be thicker at the far end than at the start.
 
-CRITICAL — EXACTLY ONE WORD EXISTS IN THIS PICTURE, AND IT IS "ERROR" INSIDE THE AMBER
-BADGE. THERE IS NO OTHER WRITING ANYWHERE.
-No other text, no lettering, no words, no letters, no numbers, no digits, no percentages,
-no dates, no labels, no captions, no logos other than the clinic logo described above, no
+MOTION AND SPEECH MARKS — small hand-drawn comic marks that keep the room from looking
+frozen. THE SPEC FOR EVERY ONE OF THEM IS THE SAME: a group of TWO TO FOUR very short
+strokes, all running the SAME WAY, evenly spaced, NONE OF THEM LONGER THAN A THIRD OF A
+HAND'S WIDTH, solid where they start and fading to a dry, broken end. They never curl
+round, never close into a loop, never cross each other, and no group is ever bigger than
+the thing it belongs to. Put them in exactly these five places and nowhere else:
+  • at the DENTIST'S FINGERTIP where it touches the enlarged tooth — three tiny strokes
+    fanning out from the point of contact, as if she has just tapped it;
+  • on the SCREEN beside the tooth she is turning — two short strokes trailing behind it
+    along the direction of its white arrow, so it reads as having just moved;
+  • above each of the ENGINEER'S WRISTS — two short horizontal strokes, so his hands read
+    as moving over the keys;
+  • outside the raised OPEN PALM of the man on the right — two short strokes following the
+    edge of his hand, so the gesture reads as live;
+  • beside that same man's MOUTH — two very short diagonal strokes angled away from his
+    lips, the ordinary comic mark for someone who is speaking. THIS IS THE ONLY SPEECH
+    INDICATION IN THE PICTURE: there is NO speech bubble, NO thought bubble, NO tail, NO
+    balloon, NO words coming out of anyone.
+NOWHERE ELSE gets motion marks. No speed lines across the background, no radiating focus
+lines, no starbursts, no impact flashes, no dust puffs, no sparkles.
+
+CRITICAL — THE ONLY CHARACTERS IN THIS PICTURE ARE INSIDE THE AMBER BADGE: the word
+ERROR, the digits 200, a plus sign and an infinity symbol. THERE IS NO OTHER WRITING
+ANYWHERE.
+No other text, no lettering, no words, no letters, no other numbers, no other digits, no
+percentages, no years, no months, no dates, no units of time, no labels, no captions, no logos other than the clinic logo described above, no
 brand marks, no watermark and no signature — not on the floating screens, not on the
 laptop, not on the tablets, not on the phone, not on the poster, not on the mugs, not on
 the clothing, not on any name badge, not on the cabinet. There are NO user-interface
@@ -274,6 +353,9 @@ AVOID — a dental chair, a patient, a person lying down, an overhead surgical l
 of instruments, syringes, needles, drills, blood, a mouth held open, a close-up of a real
 mouth, cartoon teeth with faces, arms, legs or eyes, a tidy evenly spaced dental arch,
 before-and-after pairs, a calendar, a clock, a progress bar, a timeline, a countdown,
+any number of years or months written anywhere, speed lines across the background,
+radiating focus lines, starbursts, impact flashes, sparkles, a speech balloon of any
+kind,
 anyone frowning, gritting their teeth, holding their head in their hands, rubbing their
 temples, sighing, sweating, looking exhausted, stacks of paperwork, an untidy desk, anyone
 leaning back with a hand under the chin, anyone cheering, laughing out loud, giving a
