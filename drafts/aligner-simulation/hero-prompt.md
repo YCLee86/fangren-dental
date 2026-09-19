@@ -297,9 +297,10 @@ corners and a faint glow at its edges. On it, drawn in white line only:
     an unreasonable number of trays would be needed — it is the software doing its job and
     asking the team to look, NOT a broken machine and NOT an accusation.
     THE ONLY CHARACTERS ANYWHERE IN THIS PICTURE ARE: E R R O R, the digits 2 0 0, a plus
-    sign and an infinity symbol, ALL INSIDE THIS ONE BADGE. There are NO OTHER letters,
-    digits or symbols anywhere — in particular NO YEARS, NO MONTHS, NO DATES and NO UNITS
-    OF TIME appear anywhere in the picture.
+    sign and an infinity symbol inside this badge, together with the exclamation marks in
+    the small amber triangles on the crowded teeth. There are NO OTHER letters, digits or
+    symbols anywhere — in particular NO YEARS, NO MONTHS, NO DATES and NO UNITS OF TIME
+    appear anywhere in the picture.
 
   Nothing else is on this screen.
 
@@ -335,6 +336,12 @@ WHAT IS ON EACH DEVICE — FOLLOW THIS EXACTLY. Most devices are simply blank.
   • THE ENGINEER'S LAPTOP SCREEN: the same again — the screen is FULL OF DENSE CODE from
     edge to edge, with ONE SMALL WHITE DIAGRAM OF THE CROWDED ARCH tucked into a corner.
     There is NO logo on this screen either.
+  • THE TABLET PROPPED ON A STAND BESIDE THE LAPTOP: SWITCHED OFF — a plain, empty dark
+    grey rectangle with nothing on it at all.
+  • THE TABLET HELD BY THE MAN ON THE RIGHT: the same enlarged tooth with its root in
+    bone, in white line on pale blue — he is holding it up against the big screen to
+    compare. Nothing else.
+  • THE ASSISTANT'S PHONE: SWITCHED OFF — a plain, empty dark rectangle. Nothing on it.
 
 HOW TO DRAW "CODE" WITHOUT WRITING ANYTHING — READ THIS CAREFULLY. The code on those two
 screens is drawn as ROWS OF SHORT HORIZONTAL DASHES, TICKS AND DOTS OF VARYING LENGTH,
@@ -345,12 +352,6 @@ CONTAINS NO ACTUAL LETTERS, NO DIGITS, NO WORDS AND NO PUNCTUATION — every "wo
 simply a small blank dash. A few dashes may be tinted a different colour, the way syntax
 highlighting looks. THIS DASH-TEXTURE IS ALLOWED ONLY ON THOSE TWO SCREENS AND NOWHERE
 ELSE IN THE PICTURE.
-  • THE TABLET PROPPED ON A STAND BESIDE THE LAPTOP: SWITCHED OFF — a plain, empty dark
-    grey rectangle with nothing on it at all.
-  • THE TABLET HELD BY THE MAN ON THE RIGHT: the same enlarged tooth with its root in
-    bone, in white line on pale blue — he is holding it up against the big screen to
-    compare. Nothing else.
-  • THE ASSISTANT'S PHONE: SWITCHED OFF — a plain, empty dark rectangle. Nothing on it.
 
 RIGHT SIDE — A MAN IN HIS LATE TWENTIES IN BLUE-GREY SCRUBS STANDS HOLDING THAT TABLET
 flat in one hand at chest height, his other hand lifted with an open palm towards the big
