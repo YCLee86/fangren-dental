@@ -458,11 +458,27 @@ const heroDim = (hero) => {
   return ` width="${px.width}" height="${px.height}"`;
 };
 
+/* 首頁卡與延伸閱讀卡要用的圖（2026-09-19 起）。
+   post-meta 的 **選填**欄位 `card`：有就用它，沒有就照舊用 `hero`。
+   ⚠ 為什麼要有這個欄位：卡片的縮圖是 `aspect-ratio: 16/9` ＋ `object-fit: cover`，
+     **非 16:9 的 hero 會被置中裁掉上下**（4:3 各裁 12.3%）。四格式的插畫因此會被
+     切斷上排的頭頂與下排的腳 —— 〈兒童舒眠治療〉那一篇當場被使用者抓到。
+     那一篇的解法是另外給卡片一張「只有一格」的 16:9 圖。
+   ⚠ 站上另一篇 4:3 的 HERO（〈三個月一次的洗牙與塗氟〉）也有同樣的裁切，
+     只是它是蜂巢狀分格、切到的不是臉，所以沒有填這個欄位。
+   ⚠ `card` 不必是 `-1600.jpg` 那種三尺寸的檔名：檔名不符時
+     heroSrcset／webpSrcset 會回空字串，呼叫端自動退回單張 <img> 的舊寫法。 */
+const cardImg = (p) => p.card || p.hero;
+/* 卡片的替代文字。⚠ 有 `card` 的時候**不能沿用 heroAlt** —— 那一段描述的是完整的
+   HERO，而卡片上只看得到裁出來的那一小塊，唸出來會和畫面對不上。
+   所以 `card` 一定要配一個 `cardAlt`；沒填就退回 heroAlt（再沒有就用標題）。 */
+const cardAlt = (p) => (p.card ? p.cardAlt : null) || p.heroAlt || p.title;
+
 const relCard = (p) => {
   const spec = SPEC[p.tag];
   return `        <li class="rel-card"${spec ? ` data-spec="${spec}"` : ""}>
           <a href="../${esc(p.slug)}/">
-            ${picture(p.hero, "../../assets/", SIZES_REL, "            ", `<img src="../../assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "../../assets/"), SIZES_REL)} alt=""${heroDim(p.hero)} loading="lazy">`)}
+            ${picture(cardImg(p), "../../assets/", SIZES_REL, "            ", `<img src="../../assets/${esc(cardImg(p))}"${srcsetAttr(heroSrcset(cardImg(p), "../../assets/"), SIZES_REL)} alt=""${heroDim(cardImg(p))} loading="lazy">`)}
             <span class="rel-body">
               <span class="rel-tag">${esc(p.tag)}</span>
               <span class="rel-title">${esc(p.title)}</span>
@@ -519,7 +535,7 @@ const card = (p) => {
   const spec = SPEC[p.tag];
   if (!spec) console.warn(`  ⚠ 標籤「${p.tag}」沒有對應的科別代碼，${p.slug} 不會被主題與科別篩到`);
   return `      <a class="card" href="posts/${esc(p.slug)}/"${spec ? ` data-spec="${spec}"` : ""}>
-        ${picture(p.hero, "assets/", SIZES_THUMB, "        ", `<img class="card-thumb" src="assets/${esc(p.hero)}"${srcsetAttr(heroSrcset(p.hero, "assets/"), SIZES_THUMB)} alt="${esc(p.heroAlt || p.title)}"${heroDim(p.hero)} loading="lazy">`)}
+        ${picture(cardImg(p), "assets/", SIZES_THUMB, "        ", `<img class="card-thumb" src="assets/${esc(cardImg(p))}"${srcsetAttr(heroSrcset(cardImg(p), "assets/"), SIZES_THUMB)} alt="${esc(cardAlt(p))}"${heroDim(cardImg(p))} loading="lazy">`)}
         <div class="card-body">
           <span class="card-tag">${esc(p.tag)}</span>
           <h3>${esc(p.title)}</h3>

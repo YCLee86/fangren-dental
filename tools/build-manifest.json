@@ -27,6 +27,10 @@
     "hash": "bd52c98154389927",
     "updated": "2026-08-18"
   },
+  "kids-sedation": {
+    "hash": "7bfedaa8ee2e7b27",
+    "updated": "2026-09-19"
+  },
   "missing-tooth": {
     "hash": "d26a8f8545344028",
     "updated": "2026-08-18"
@@ -52,7 +56,7 @@
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "59b8d4a77afe0ca4",
-    "updated": "2026-09-18"
+    "hash": "91a532dca64f2b44",
+    "updated": "2026-09-19"
   }
 }
