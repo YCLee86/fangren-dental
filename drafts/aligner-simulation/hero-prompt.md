@@ -406,8 +406,9 @@ inside the small amber warning triangles on the crowded teeth. The "code" on the
 engineer's two screens is made of blank dashes, NOT of letters. THERE IS NO OTHER WRITING
 ANYWHERE.
 No other text, no lettering, no words, no letters, no other numbers, no other digits, no
-percentages, no years, no months, no dates, no units of time, no labels, no captions, no logos other than the clinic logo described above, no
-brand marks, no watermark and no signature — not on the floating screens, not on the
+percentages, no years, no months, no dates, no units of time, no labels, no captions, NO LOGOS OR BRAND MARKS OF ANY KIND
+(the clinic logo was removed this round — there is no logo anywhere in the picture), no
+watermark and no signature — not on the floating screens, not on the
 laptop, not on the tablets, not on the phone, not on the poster, not on the mugs, not on
 the clothing, not on any name badge, not on the cabinet. There are NO user-interface
 elements: no buttons, no sliders, no menus, no toolbars, no progress bars, no tabs, no
