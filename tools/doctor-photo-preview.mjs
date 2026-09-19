@@ -26,12 +26,14 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIR  = join(ROOT, 'preview', 'doctor-photo');
 const OUT  = join(DIR, 'index.html');
 
-/* 圖檔要先在（不在的話整頁會是破圖，而這一頁要判斷的正是圖）。 */
-['li-binghui-sq-400.jpg', 'li-binghui-wide-400.jpg', 'li-binghui-tall-400.jpg']
-  .forEach((f) => {
-    if (!existsSync(join(DIR, 'img', f)))
-      throw new Error(`找不到 img/${f} —— 先跑 node tools/doctor-photo-crop.mjs`);
-  });
+/* 圖檔要先在（不在的話整頁會是破圖，而這一頁要判斷的正是圖）。
+   ⚠ 守門放在最前面：缺圖的時候要在寫檔之前就停，不要產出一頁破圖。 */
+const NEED = ['li-binghui', 'li-youjin'];
+NEED.forEach((slug) => ['sq-400', 'wide-400', 'wide-800', 'tall-400', 'tall-800'].forEach((k) => {
+  const f = `${slug}-${k}.jpg`;
+  if (!existsSync(join(DIR, 'img', f)))
+    throw new Error(`找不到 img/${f} —— 先跑 node tools/doctor-photo-crop.mjs`);
+}));
 
 let html = readFileSync(join(ROOT, 'index.html'), 'utf8');
 
@@ -139,6 +141,38 @@ const NOTE = `<!-- =============================================================
        ?ph=none|ini        另外八位（目前 none）
      做法同 head-search 與 night-map-park 那兩輪，切換條不會愈長愈長。
 
+     ==== 第三輪（同日）：第二張圖進來 =======================================
+
+     使用者：「照這樣」（＝ Ⓐ 資料全寬／留白 12／份量 76 定下來了），
+     並給了**李侑津醫師**的形象照（1086×1448，3:4）。
+
+     ⚠⚠ 產生器因此從「寫死一位」改成吃一份 DOCTORS 清單。第一版想拿
+       data-initial="李" 當錨點 —— **九位裡面姓李的有兩位**
+       （李柄輝 general、李侑津 perio），會把圖掛到錯的那一張，
+       而且畫面完全正常，只是圖長在別人身上。改成用完整的 <h3>
+       （名字＋藥丸文字，全站唯一）定位、再往回找最近的 <article>，
+       末尾加一道「掛上去的張數 ＝ 清單長度」的守門。
+
+     ⚠⚠ **兩張要看起來像同一組，裁切框不能各裁各的。** 先在原圖上量
+       髮頂／眼睛／下巴／臉中線，換算成李柄輝那張的比例（眼睛在框高
+       44.2%、臉中線在框寬 49.3%、頭高佔 63%）：
+         李柄輝 1145×1374：髮頂 175、眼睛 400、下巴 610、臉中線 545
+         李侑津 1086×1448：髮頂 290、眼睛 520、下巴 700、臉中線 540
+       ⚠ 兩人的頭寬高比不一樣（李侑津的臉窄），照**頭高**算出來的框
+         （651）會讓他在圓裡看起來比較小，照**頭寬**算（591）才對得上。
+         最後是把 590／625／640 三個圓和李柄輝並排比出來的 —— 625 與 640
+         的臉都偏左。定案 sq = 244,255,590,590。
+
+     ⚠ 兩張圖的**背景色溫差很多**（李柄輝冷灰診間、李侑津暖木走廊），
+       圓頭像裁得緊所以影響小，但九張到齊時要整組再看一次。
+       另外李侑津那張的背景**看起來像診所真實的空間**（木地板、白牆、
+       點狀霧面玻璃），和站上那兩張診間照對得上；李柄輝那張不是
+       —— 見上面第一輪的第 ③ 點。
+
+     ⚠ Ⓓ 橫幅那一格的理由（「創辦醫師本來就不同級」）**有兩張圖之後
+       就不成立了** —— 它現在會變成兩條橫幅。那一格仍然在
+       （?dp=bn），但不要再拿第一輪那句話去說服自己。
+
      ---- 切換條 -------------------------------------------------------------
      網址參數 ?al=full|indent|stack 、?gp=s|m|l 、?sz=s|m|l
      ========================================================================== -->`;
@@ -177,19 +211,40 @@ html = html.replace(
   (m, a, mid, name, tail) => { initials++; return `${a} data-initial="${name.trim()[0]}" ${mid}${name}${tail}`; });
 if (initials !== 9) throw new Error(`data-initial 只補到 ${initials} 張，預期 9 張`);
 
-/* ── 李柄輝那張卡：掛 data-photo，把三份裁切塞在 <h3> 前面 ────────────
-   三張同時在文件裡、由 CSS 決定顯示哪一張。只有一張卡，多載兩個檔
-   （合計 47KB）換來切換不必等下載，值得。 */
-const H3 = '<h3>李柄輝<span class="doc-role">創辦醫師</span></h3>';
-if (html.split(H3).length !== 2) throw new Error('找不到（或找到不只一個）李柄輝的 <h3>');
-const ALT = '李柄輝醫師的形象照，身著白袍站在診療室內';
-html = html
-  .replace('<article class="doc" data-initial="李" data-spec="general">',
-           '<article class="doc" data-photo="li-binghui" data-initial="李" data-spec="general">')
-  .replace(H3, `<img class="pv-face pv-sq" src="img/li-binghui-sq-400.jpg" width="400" height="400" alt="${ALT}">
-          <img class="pv-face pv-wide" src="img/li-binghui-wide-400.jpg" srcset="img/li-binghui-wide-400.jpg 1x, img/li-binghui-wide-800.jpg 2x" width="400" height="267" alt="${ALT}">
-          <img class="pv-face pv-tall" src="img/li-binghui-tall-400.jpg" srcset="img/li-binghui-tall-400.jpg 1x, img/li-binghui-tall-800.jpg 2x" width="400" height="480" alt="${ALT}">
-          ${H3}`);
+/* ── 有圖的那幾張卡：掛 data-photo，把三份裁切塞在 <h3> 前面 ────────────
+   三張同時在文件裡、由 CSS 決定顯示哪一張。一位多載兩個檔（約 50KB）
+   換來切換不必等下載，值得 —— 提案頁是 no-store，本來每次都要重抓。
+
+   ⚠⚠ **不可以拿 `<article class="doc" data-initial="X"` 當錨點** ——
+       九位裡面姓李的有兩位（李柄輝 general、李侑津 perio），
+       字首一樣的錨點會換到錯的那一張，而且畫面上看起來完全正常
+       （只是圖長在別人身上）。做法改成：先用**完整的 <h3>**（名字＋
+       藥丸文字，全站唯一）定位，再往回找**離它最近的**那個 <article>。
+   ⚠ 圖要插在 <h3> 前面而不是 <article> 後面 —— 有兩張卡的
+     <article> 與 <h3> 之間夾著一段註解，插在 <article> 後面會讓
+     註解跑到圖的後面，grid 的列序跟著亂掉。 */
+const DOCTORS = [
+  { slug: 'li-binghui', name: '李柄輝', role: '創辦醫師',
+    alt: '李柄輝醫師的形象照，身著白袍站在診療室內' },
+  { slug: 'li-youjin',  name: '李侑津', role: '醫師',
+    alt: '李侑津醫師的形象照，身著診療服站在診所走廊' },
+];
+const TAG = '<article class="doc"';
+DOCTORS.forEach((d) => {
+  const h3 = `<h3>${d.name}<span class="doc-role">${d.role}</span></h3>`;
+  if (html.split(h3).length !== 2) throw new Error(`找不到（或找到不只一個）${d.name} 的 <h3>`);
+  const at  = html.indexOf(h3);
+  const art = html.lastIndexOf(TAG, at);
+  if (art < 0) throw new Error(`${d.name} 的 <h3> 前面找不到 <article>`);
+  html = html.slice(0, art) + `${TAG} data-photo="${d.slug}"` + html.slice(art + TAG.length);
+  html = html.replace(h3, `<img class="pv-face pv-sq" src="img/${d.slug}-sq-400.jpg" width="400" height="400" alt="${d.alt}">
+          <img class="pv-face pv-wide" src="img/${d.slug}-wide-400.jpg" srcset="img/${d.slug}-wide-400.jpg 1x, img/${d.slug}-wide-800.jpg 2x" width="400" height="267" alt="${d.alt}">
+          <img class="pv-face pv-tall" src="img/${d.slug}-tall-400.jpg" srcset="img/${d.slug}-tall-400.jpg 1x, img/${d.slug}-tall-800.jpg 2x" width="400" height="480" alt="${d.alt}">
+          ${h3}`);
+});
+/* 守門：掛上去的張數要等於清單長度（換到錯的卡、或名字改過都會在這裡停）。 */
+const got = (html.match(/<article class="doc" data-photo=/g) || []).length;
+if (got !== DOCTORS.length) throw new Error(`data-photo 掛了 ${got} 張，預期 ${DOCTORS.length} 張`);
 
 /* ── 四種放法的樣式 ──────────────────────────────────────────────────────
    ⚠⚠ 覆寫 :root 的變數不能寫 html —— :root 是虛擬類別（0,1,0），
@@ -503,6 +558,8 @@ const BAR = `
            一定一樣高，比出來永遠是 0（第一版就是這樣，量了等於沒量）。
            變高的是整列，代價落在**旁邊那張卡的字底下多出來的空白**。
            所以量的是「卡的下緣 − 最後一個元素的下緣 − 卡自己的下內距」。 */
+    var withPic = all.filter(function (d) { return d.hasAttribute('data-photo'); }).length;
+    var noPic   = all.length - withPic;
     var others = all.filter(function (d) { return d !== hero; });
     var rowMates = others.filter(function (d) { return Math.abs(d.offsetTop - hero.offsetTop) < 4; });
     function slack(card) {
@@ -639,16 +696,17 @@ const BAR = `
               '最長那一欄從 4 行變 7 行。電腦版三欄比較撐得住（見上面的實測）。',
       stack:  '<b>Ⓒ 上下疊</b>：頭像在上、名字在下，全部靠左，一路往下讀。' +
               '最不會亂，但卡會長高一個頭像。'
-    })[st.al] + '<br>⚠ 這三條尺只管圓頭像。要回去看落選的三案用網址：' +
-       '<b>?dp=off</b>（現況）<b>?dp=top</b>（卡片頂圖）<b>?dp=bn</b>（創辦橫幅）；' +
-       '八張字首圓章是 <b>?ph=ini</b>。' : ({
+    })[st.al] + '<br>目前 <b>' + withPic + ' 位有圖、' + noPic + ' 位還沒有</b>。' +
+       '<br>⚠ 這三條尺只管圓頭像。要回去看落選的三案用網址：' +
+       '<b>?dp=off</b>（現況）<b>?dp=top</b>（卡片頂圖）<b>?dp=bn</b>（橫幅）；' +
+       '沒有圖的那幾張補字首圓章是 <b>?ph=ini</b>。' : ({
       off: '<b>Ⓐ 現況</b>：九張都沒有圖，和正式站一模一樣，拿來比對用的。',
       top: '<b>Ⓒ 卡片頂圖</b>：份量最重，代價也最貴 —— 1440 上同一列另外兩張' +
            '字底下會空 <b>285px</b>（Ⓐ 現況是 53）。而且圖裡的診間' +
            '<b>不是芳仁的診間</b>（往下捲就是兩張真的診間照）。',
-      bn:  '<b>Ⓓ 創辦橫幅</b>：其餘八張原封不動，' +
-           '<b>只有一張圖的時候唯一不必解釋「為什麼別人沒有」的放法</b>。' +
-           '代價在上面那一行：八張排三欄，最後一列缺一格。'
+      bn:  '<b>Ⓓ 橫幅</b>：有圖的那幾張跨整列、其餘原封不動。' +
+           '⚠ 這一格是<b>一張圖</b>的時候提的（創辦醫師本來就不同級）；' +
+           '有兩張之後會變成兩條橫幅，理由就不成立了。'
     })[st.dp]) + '</div>';
     foot.innerHTML = rows;
   }
