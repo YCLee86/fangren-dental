@@ -185,6 +185,26 @@
 
 ---
 
+## 二之五、第五輪：白袍醫師換成男性（2026-09-19）
+
+使用者看第四輪出圖：「很不錯　只有一個地方要調整　白袍女醫師換成男醫師」。
+那一版其餘全部保留（牙弓的亂度、四個驚嘆號、假程式碼、動作線、ERROR 牌）。
+
+**換性別不是只改一個字**，同一輪跟著改三處：
+
+| 位置 | 改了什麼 |
+| --- | --- |
+| 主角那一段 | `A WOMAN DENTIST` → `A MAN DENTIST, IN HIS EARLY FORTIES`，整段代名詞 she／her → he／his |
+| STYLE 段的對照句 | 「和**白袍女性**畫得一樣簡單」→「和**白袍那位醫師**」（那句話是用來壓右邊那位的風格的，主詞換了就要跟著換） |
+| MOTION 段 | 指尖與被轉動的那顆牙那兩條，`she` → `he` |
+
+⚠ **換成男性之後房間裡是三男一女**，所以主角加了**細框眼鏡**（兩個圓角矩形加一條橋），
+避免三個短髮男性在縮圖尺寸下分不出來。眼鏡是**六樣臉部元素以外唯一的例外**，
+提示詞裡明講了這件事，不然模型會順手把「可以多畫一樣」擴張到別的地方（第十之五節那個坑）。
+⚠ 助理仍然是女性 —— 不要四個人全換成男性。
+
+---
+
 ## 三、要附的參考圖（五張，說明分開寫）
 
 | # | 檔案 | 附圖時要寫的話 |
@@ -195,7 +215,7 @@
 
 ⚠ `assets/logo.png` **第四輪起不再附**：使用者退回了螢幕上的標誌（見二之四）。
 
-## 四、提示詞（第四輪，逐字，可直接複製）
+## 四、提示詞（第五輪，逐字，可直接複製）
 
 ```
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST.
@@ -214,7 +234,7 @@ no eyelashes, no glossy irises, no catchlights), same eyebrows (one short stroke
 same simple hair drawn as ONE flat shape with two or three interior strokes. NO ONE is
 rendered more realistically, more softly shaded or with more facial detail than the
 others — IN PARTICULAR THE MAN STANDING ON THE RIGHT IN SCRUBS MUST BE DRAWN EXACTLY AS
-SIMPLY AS THE WOMAN IN THE WHITE COAT. No manga or anime styling on any face, no cheek
+SIMPLY AS THE DENTIST IN THE WHITE COAT. No manga or anime styling on any face, no cheek
 blush, no airbrushed or shaded skin, no rendered hair strands.
 
 SKIN IS THE ONE EXCEPTION TO THE TWO-OR-THREE-STEPS RULE: every face and hand is ONE
@@ -304,14 +324,18 @@ corners and a faint glow at its edges. On it, drawn in white line only:
 
   Nothing else is on this screen.
 
-A WOMAN DENTIST STANDS IN FRONT OF THAT SCREEN, seen from the waist up, turned
-three-quarters towards the screen, on the LEFT of it. She wears a white coat over
-blue-grey scrubs. The hand nearer the viewer is raised to chest height with the index
-finger extended, its tip touching the enlarged tooth as if turning it a few degrees; her
-other arm hangs relaxed, holding a slim pen. Her shoulders are low and relaxed, her head
-tilts slightly towards the screen, and her eyes look at her own fingertip. HER MOUTH IS
-ONE SHORT LINE CURVING GENTLY UPWARDS AT BOTH ENDS — a small, closed, easy smile. She is
-absorbed and completely at ease: she has seen this before and she knows what to do next.
+A MAN DENTIST, IN HIS EARLY FORTIES, STANDS IN FRONT OF THAT SCREEN, seen from the waist
+up, turned three-quarters towards the screen, on the LEFT of it. He wears a white coat
+over blue-grey scrubs. HIS HAIR IS SHORT AND SIDE-PARTED, drawn as one flat shape with
+two or three interior strokes, and HE WEARS THIN-FRAMED GLASSES — two simple rounded
+rectangles joined by a bridge, which is the ONE addition allowed to the six facial
+features; the glasses keep him clearly distinct from the two other men in the room. The
+hand nearer the viewer is raised to chest height with the index finger extended, its tip
+touching the enlarged tooth as if turning it a few degrees; his other arm hangs relaxed,
+holding a slim pen. His shoulders are low and relaxed, his head tilts slightly towards
+the screen, and his eyes look at his own fingertip. HIS MOUTH IS ONE SHORT LINE CURVING
+GENTLY UPWARDS AT BOTH ENDS — a small, closed, easy smile. He is absorbed and completely
+at ease: he has seen this before and he knows what to do next.
 
 FAR LEFT — A MAN IN HIS THIRTIES, A DESIGN ENGINEER IN A MUSTARD-YELLOW KNIT TOP, SITS AT
 A LOW DESK AND IS ACTIVELY WORKING. HE LEANS FORWARD TOWARDS HIS LAPTOP WITH BOTH HANDS
@@ -386,8 +410,8 @@ HAND'S WIDTH, solid where they start and fading to a dry, broken end. They never
 round, never close into a loop, never cross each other, and no group is ever bigger than
 the thing it belongs to. Put them in exactly these five places and nowhere else:
   • at the DENTIST'S FINGERTIP where it touches the enlarged tooth — three tiny strokes
-    fanning out from the point of contact, as if she has just tapped it;
-  • on the SCREEN beside the tooth she is turning — two short strokes trailing behind it
+    fanning out from the point of contact, as if he has just tapped it;
+  • on the SCREEN beside the tooth he is turning — two short strokes trailing behind it
     along the direction of its white arrow, so it reads as having just moved;
   • above each of the ENGINEER'S WRISTS — two short horizontal strokes, so his hands read
     as moving over the keys;
