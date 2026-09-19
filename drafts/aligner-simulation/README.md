@@ -138,7 +138,9 @@ in crowding cases: a systematic review」（Clin Oral Investig 2024），
 
 ## 三、還沒做的事（定案前要補）
 
-1. **HERO 插畫還沒畫。** `post-meta` 的 `hero` 先寫了 `hero-aligner-photo-1600.jpg`、
+1. **HERO 插畫還沒畫** —— 提示詞已經寫好在 **[`hero-prompt.md`](hero-prompt.md)**
+   （2026-09-19，使用者指定沿用矯正著陸頁那張「飄浮螢幕」的語彙，再加上一群人一起運算的場面）。
+   `post-meta` 的 `hero` 先寫了 `hero-aligner-photo-1600.jpg`、
    `heroAlt` 是待補的佔位字串，版面上那一塊目前是註解。
    畫完之後：`node tools/hero-resize.mjs` 出 800／1600／2000 三張 →
    `node tools/webp.mjs` → 補 `heroAlt` → 把 `posts/orthodontics/` 的 post-hero 區塊照抄回來。
