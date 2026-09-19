@@ -619,6 +619,21 @@ a:hover { color: var(--accent); }
 .post-body li { margin-bottom: .5rem; }
 .post-body strong { color: var(--ink); font-weight: 700; }
 
+/* 內文裡連到站外的連結（目前只有引用原始論文的那幾條）。
+   站內連結一律是相對路徑，所以 [href^="http"] 只會命中外連 —— 這條規則加進來的
+   當下，十四篇文章的內文一條外連都沒有，等於對既有頁面完全沒有作用。
+
+   ⚠ 顏色一顆都沒新增：箭頭吃 currentColor，跟著連結自己的色走，
+     所以夜間模式不必另外寫一條（那一組色在 NIGHT 區塊裡已經定好了）。
+   ⚠ 箭頭用 ::after 產生、不寫進 HTML —— 寫成文字節點的話，首頁那支搜尋
+     會把它一起算進內文（同 .card-more-t 那一條的理由）。
+   ⚠ aria-hidden 不必寫：CSS 產生的內容本來就不在無障礙樹的朗讀順序裡。 */
+.post-body a[href^="http"]::after {
+  content: '\2197';                     /* 右上箭頭，表示會離開這個網站 */
+  margin-inline-start: .12em; font-size: .82em; vertical-align: .08em;
+  text-decoration: none;                /* 底線不要跟著長到箭頭上 */
+}
+
 .lede { font-size: 1.05rem; color: var(--ink-soft); }
 
 /* 重點框：卡色底＋左邊一條深綠松。和首頁的卡片同一個陰影、同一個圓角。 */
