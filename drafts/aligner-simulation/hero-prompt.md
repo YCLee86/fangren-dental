@@ -151,15 +151,51 @@
 
 ---
 
-## 三、要附的參考圖（三張，說明分開寫）
+## 二之四、第四輪：亂度照臨床照片、螢幕改成程式碼（2026-09-19）
+
+使用者看第三輪的出圖：「好多了　不過大螢幕上的牙齒還是太整齊　像照片這樣才夠亂
+而且亂的牙齒在螢幕上要標記驚嘆號　另外工程師電腦螢幕顯示 logo 很怪　應該是密密麻麻的
+程式碼和牙齒排列的圖示　他眼前飄浮在空中的螢幕也是　不應該是 logo」
+並附了**三張上顎咬合面觀的臨床照片**。
+
+| # | 改了什麼 |
+| --- | --- |
+| 1 | **牙弓的亂度改成「照參考圖」**，不再只用文字描述。這正是 ILLUSTRATION 第十之一節那條通則：**形狀不要用文字描述，用參考圖** —— 前三輪都在用文字加碼（轉三十度、切端呈鋸齒⋯），模型每次都往「整齊一點」退。文字仍然留著當第二道保險，但改寫成照片上真正看得到的六件：弓形左右不對稱、一顆往唇側一顆往腭側形成鋸齒狀的進出、至少四對相鄰牙重疊三分之一到一半、至少兩顆明顯旋轉、一顆幾乎整個被卡在兩顆後面、間距時擠時開 |
+| 2 | **四個琥珀色小驚嘆號三角形**直接標在最擠的那四顆牙旁邊，像軟體逐點標記；每個不寬於一顆牙 |
+| 3 | **兩面螢幕的標誌整個拿掉**，改成**密密麻麻的程式碼 ＋ 一個小的牙弓圖示**（筆電、以及他眼前那面飄浮螢幕）。畫面上**不再有任何標誌** |
+
+### ⚠⚠ 「程式碼」怎麼畫才不會變成長字
+
+新增一段 `HOW TO DRAW "CODE" WITHOUT WRITING ANYTHING`：
+**一行一行長短不一的短橫線、小點與勾，密密地疊起來、照程式碼的樣子分段縮排，
+左邊一條等距的小點當行號。遠看就是一整螢幕的程式碼，近看一個字母都沒有。**
+可以有兩三條不同顏色的短線，模擬語法高亮。
+
+⚠⚠ **這一段和海報那條規則會打架，所以兩邊都要寫死範圍。**
+海報那條原本寫著「不可以有排成行的短橫線去模仿文字」（第二輪加的，因為第一版海報
+長出了假手寫字），現在螢幕上偏偏就要這個紋理。做法是**兩邊都指名**：
+程式碼紋理「只准出現在工程師那兩面螢幕上」，海報那邊補一句
+「前兩版都長出了假手寫字，不可以再發生」。
+⚠ 第三輪的出圖海報上**仍然有兩條波浪線** —— 這一條是第三次寫了，要盯。
+
+### 這一輪的字符例外清單（又多了一項）
+
+`ERROR`、`200`、`+`、`∞`、**四個驚嘆號**。程式碼那一片是短橫線不是字母，不算。
+其餘一律留白。
+
+---
+
+## 三、要附的參考圖（五張，說明分開寫）
 
 | # | 檔案 | 附圖時要寫的話 |
 | --- | --- | --- |
 | 1 | `assets/og-topic-ortho.jpg` | 「**飄浮螢幕的語彙、螢幕的藍、白色氛圍弧線、人物長相與服裝**照這張。⚠ 不要照它的**構圖**（那是醫師對病人講解，這一張沒有病人）；⚠ 不要照它上面那條藍色的標題帶。」 |
 | 2 | `assets/hero-ortho-photo-1600.jpg` | 「**畫法、質感、明度照這張**：線寬有變化、色鉛筆顆粒、大量紙白透出來、整體淡。⚠ **不要照它的分格**，這一張是一個連續的空間。」 |
-| 3 | `assets/logo.png` | 「**左上角那面小螢幕與筆電待機畫面上的標誌，形狀照這張**（透明底、一色）。⚠ 只照**形狀**，顏色不要照 —— 那是深綠，螢幕上要用白色線條或淡色。⚠ 畫面上**不要**再出現第二個標誌，也不要在標誌旁邊加任何字。」（2026-09-19 第二輪新增） |
+| 3~5 | `drafts/aligner-simulation/ref-crowding-{1,2,3}`（使用者提供的三張臨床照，上顎咬合面觀） | 「**大螢幕上那個牙弓的亂度與排列照這三張**：哪一顆卡在前面、重疊多少、弓形怎麼歪。⚠⚠ **只照排列**，不要照它們的寫實、顏色、牙齦、嘴唇、舌頭與反光 —— 螢幕上仍然是藍底白線的線條圖。」（2026-09-19 第四輪新增） |
 
-## 四、提示詞（第三輪，逐字，可直接複製）
+⚠ `assets/logo.png` **第四輪起不再附**：使用者退回了螢幕上的標誌（見二之四）。
+
+## 四、提示詞（第四輪，逐字，可直接複製）
 
 ```
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST.
@@ -213,18 +249,33 @@ CENTRE-LEFT, THE FOCAL POINT — A LARGE TRANSLUCENT BLUE SCREEN FLOATS IN MID-A
 55% of the picture height, tilted very slightly towards the viewer, with soft rounded
 corners and a faint glow at its edges. On it, drawn in white line only:
 
-  • A TOP-DOWN VIEW OF AN UPPER DENTAL ARCH — AND THESE TEETH ARE CLEARLY CROWDED AND
-    OUT OF LINE, NOT a tidy even row. THIS IS IMPORTANT: the arch must read as a problem
-    that still has to be solved.
-      – ONE FRONT TOOTH IS ROTATED about thirty degrees, standing at an angle to its
-        neighbours;
-      – ONE TOOTH IS PUSHED BACK BEHIND THE ARCH so that the two teeth beside it overlap
-        its edges and hide part of it;
-      – ONE TOOTH LEANS SIDEWAYS over the tooth next to it;
-      – THE LINE ALONG THE BITING EDGES OF THE FRONT TEETH IS JAGGED AND UNEVEN, like a
-        broken saw edge, NEVER a smooth continuous curve.
+  • A TOP-DOWN (OCCLUSAL) VIEW OF AN UPPER DENTAL ARCH, drawn in white line.
+    THESE TEETH ARE SEVERELY CROWDED. FOLLOW THE ATTACHED CLINICAL PHOTOGRAPHS OF CROWDED
+    UPPER ARCHES FOR THE ARRANGEMENT OF THE TEETH — that degree of disorder is what is
+    wanted, and the previous attempts were far too tidy. TAKE ONLY THE ARRANGEMENT from
+    those photographs: which tooth sits in front of which, how far they overlap, how
+    irregular the curve is. DO NOT take their realism, their colours, the gums, the lips,
+    the tongue or the wet shine — on this screen everything remains a clean white line
+    drawing on blue.
+    The arrangement must contain ALL of the following:
+      – THE ARCH IS NOT A SMOOTH SYMMETRICAL HORSESHOE: its left and right sides clearly
+        differ, and the curve is dented and irregular;
+      – ON EACH SIDE ONE TOOTH IS PUSHED RIGHT OUT OF THE ARCH TOWARDS THE LIPS while a
+        neighbouring tooth IS PUSHED INWARDS BEHIND THE ARCH, so the row zig-zags in and
+        out instead of following one curve;
+      – AT LEAST FOUR PAIRS OF NEIGHBOURING TEETH VISIBLY OVERLAP, each one hiding a third
+        to a half of the tooth beside it;
+      – AT LEAST TWO TEETH ARE CLEARLY ROTATED, standing at an angle to their neighbours;
+      – ONE TOOTH IS ALMOST COMPLETELY TRAPPED BEHIND ITS TWO NEIGHBOURS, with only a
+        sliver of it still showing;
+      – THE SPACING IS UNEVEN: in places the teeth are jammed hard against one another,
+        elsewhere an obvious gap opens up.
     Every tooth is still a clean white shape — no decay, no black spots, no missing teeth,
-    no blood, no gums drawn in detail.
+    no blood, no gums, no tongue, no lips, no photographic detail.
+  • FOUR SMALL AMBER EXCLAMATION MARKS SIT ON THE CROWDED TEETH — each one a tiny triangle
+    with an exclamation mark inside it, placed right beside one of the four worst-crowded
+    teeth, as if the software were tagging each problem spot in turn. Each mark is small:
+    no wider than a single tooth.
   • THREE THIN WHITE CURVED ARROWS, each beside a different tooth, showing it turning or
     sliding a small amount.
   • ONE TOOTH IS PULLED OUT OF THE ARCH AND ENLARGED at the right-hand side of the screen.
@@ -277,15 +328,23 @@ WHAT IS ON EACH DEVICE — FOLLOW THIS EXACTLY. Most devices are simply blank.
     RIGHT-HAND EDGE OF THAT SCREEN, the furthest ones getting fainter and fainter until
     they fade out — there are far too many of them to count. White line on pale blue.
     Nothing else on this screen: no numbers, no labels.
-  • A SECOND SMALL SCREEN FLOATING IN THE UPPER-LEFT CORNER OF THE ROOM: THE CLINIC LOGO
-    ONLY, resting on a pale blue background like a standby screen. THE LOGO IS THE SHAPE
-    IN THE ATTACHED LOGO IMAGE — one solid, smooth, wide organic shape with soft rounded
-    lobes, like a gentle wide pebble, with ONE SMALL TOOTH-SHAPED HOLE cut clean through
-    it towards the right side, the background showing through that hole. Reproduce that
-    silhouette faithfully. It is NOT a tooth, NOT a heart, NOT a leaf, NOT a cloud, NOT
-    lettering, and there is NO text beside it.
-  • THE ENGINEER'S LAPTOP SCREEN: THE SAME CLINIC LOGO, small and centred, on a dark
-    standby background. Nothing else.
+  • A SECOND SMALL SCREEN FLOATS IN FRONT OF THE ENGINEER AT EYE LEVEL, showing THE
+    PLANNING SOFTWARE AT WORK: the upper two thirds is DENSE CODE, packed tight, and the
+    lower third is A SMALL WHITE OUTLINE OF THAT SAME CROWDED DENTAL ARCH. Draw the code
+    as described under HOW TO DRAW "CODE" below. There is NO logo on this screen.
+  • THE ENGINEER'S LAPTOP SCREEN: the same again — the screen is FULL OF DENSE CODE from
+    edge to edge, with ONE SMALL WHITE DIAGRAM OF THE CROWDED ARCH tucked into a corner.
+    There is NO logo on this screen either.
+
+HOW TO DRAW "CODE" WITHOUT WRITING ANYTHING — READ THIS CAREFULLY. The code on those two
+screens is drawn as ROWS OF SHORT HORIZONTAL DASHES, TICKS AND DOTS OF VARYING LENGTH,
+stacked in many closely spaced lines and INDENTED IN BLOCKS the way real program code is,
+with a narrow column of evenly spaced dots down the left edge standing in for the line
+numbers. From arm's length it reads instantly as a screen full of code. UP CLOSE IT
+CONTAINS NO ACTUAL LETTERS, NO DIGITS, NO WORDS AND NO PUNCTUATION — every "word" is
+simply a small blank dash. A few dashes may be tinted a different colour, the way syntax
+highlighting looks. THIS DASH-TEXTURE IS ALLOWED ONLY ON THOSE TWO SCREENS AND NOWHERE
+ELSE IN THE PICTURE.
   • THE TABLET PROPPED ON A STAND BESIDE THE LAPTOP: SWITCHED OFF — a plain, empty dark
     grey rectangle with nothing on it at all.
   • THE TABLET HELD BY THE MAN ON THE RIGHT: the same enlarged tooth with its root in
@@ -307,8 +366,12 @@ of an upper arch of teeth, and one clear aligner tray resting beside it.
 
 ON THE BACK WALL hangs ONE POSTER showing ONLY a simple line drawing of a dental arch — an
 abstract horseshoe of rounded shapes. THE POSTER CONTAINS NOTHING ELSE: no title, no
-caption, and NO ROWS OF SHORT HORIZONTAL LINES, DASHES OR SQUIGGLES THAT IMITATE LINES OF
-WRITING. The space around the drawing is simply empty.
+caption, and ABSOLUTELY NO ROWS OF SHORT LINES, DASHES, WAVY LINES OR SQUIGGLES THAT
+IMITATE LINES OF WRITING — the two previous attempts both grew fake handwriting under the
+drawing, and that must not happen again. The space around the drawing is simply EMPTY
+PAPER. (The dash-texture described under HOW TO DRAW "CODE" belongs ONLY on the
+engineer's two screens; it must never appear on this poster, on the walls, on the mugs or
+anywhere else.)
 
 ATMOSPHERE LINES — Three or four long, soft, pale-white arcs sweep across the upper part
 of the room, behind the people, giving the air a sense of movement. THEY MUST NOT COME OUT
@@ -336,8 +399,10 @@ the thing it belongs to. Put them in exactly these five places and nowhere else:
 NOWHERE ELSE gets motion marks. No speed lines across the background, no radiating focus
 lines, no starbursts, no impact flashes, no dust puffs, no sparkles.
 
-CRITICAL — THE ONLY CHARACTERS IN THIS PICTURE ARE INSIDE THE AMBER BADGE: the word
-ERROR, the digits 200, a plus sign and an infinity symbol. THERE IS NO OTHER WRITING
+CRITICAL — THE ONLY REAL CHARACTERS IN THIS PICTURE ARE: the word ERROR, the digits 200,
+a plus sign and an infinity symbol INSIDE THE AMBER BADGE, plus the exclamation marks
+inside the small amber warning triangles on the crowded teeth. The "code" on the
+engineer's two screens is made of blank dashes, NOT of letters. THERE IS NO OTHER WRITING
 ANYWHERE.
 No other text, no lettering, no words, no letters, no other numbers, no other digits, no
 percentages, no years, no months, no dates, no units of time, no labels, no captions, no logos other than the clinic logo described above, no
