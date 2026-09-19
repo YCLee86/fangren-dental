@@ -138,13 +138,24 @@ in crowding cases: a systematic review」（Clin Oral Investig 2024），
 
 ## 三、還沒做的事（定案前要補）
 
-1. **HERO 插畫還沒畫** —— 提示詞已經寫好在 **[`hero-prompt.md`](hero-prompt.md)**
-   （2026-09-19，使用者指定沿用矯正著陸頁那張「飄浮螢幕」的語彙，再加上一群人一起運算的場面）。
-   `post-meta` 的 `hero` 先寫了 `hero-aligner-photo-1600.jpg`、
-   `heroAlt` 是待補的佔位字串，版面上那一塊目前是註解。
-   畫完之後：`node tools/hero-resize.mjs` 出 800／1600／2000 三張 →
-   `node tools/webp.mjs` → 補 `heroAlt` → 把 `posts/orthodontics/` 的 post-hero 區塊照抄回來。
-   ⚠ `hero` 是 `tools/build.mjs` 的必填欄位（第 288 行那張清單），沒有它 build 會擋下來。
+1. ✅ **HERO 已經畫好並接上去了**（2026-09-19，六輪）。提示詞 [`hero-prompt.md`](hero-prompt.md)、
+   改圖提示詞 [`hero-edit-prompt.md`](hero-edit-prompt.md)、原檔 `hero-src.jpg`、
+   裁掉白邊的 `hero-src-cropped.jpg`（`hero-crop.mjs` 產生）、
+   成品 `assets/hero-aligner-photo-{2000,1600,800}.jpg`，`heroAlt` 也照實際畫面補好了。
+   四個視窗實測：HERO 寬度＝內文欄寬（375／390 是 347／362，834／1440 是 654／656）、
+   無水平捲動、無失敗請求，`srcset` 在手機挑 800、桌機挑 1600。
+   ⚠⚠ **還差兩件，定案時做，順序不能反**：
+   ① `node tools/webp.mjs`（它只掃 `index.html`／`style.css`／`posts/*/`，
+      掃不到 `drafts/`，所以現在還沒有 `.webp`）
+   ② 照 `posts/orthodontics/` 把 `<picture>` ＋ `<source type="image/webp">` 包回來
+      （現在刻意只有 `<img>`：先寫 `source` 的話預覽頁會拿到 404 而不是退回 JPEG）
+
+   **已知取捨（都看過、都不改）：**
+   ・牆上那張海報底下仍然有三條短橫線（模仿文字）。提示詞第二、四輪各擋過一次，
+     模型第四次還是畫了。首頁卡片上那張海報只有約 4px 寬，看不到 ——
+     照 `og-topic-general` 那一輪的通則：**修圖要看那一塊在最終尺寸上佔多大，
+     看不到的地方不值得冒險**（每改一次，已經對的東西就多一次被弄壞的機會）。
+   ・警示牌第二行的無限符號畫成兩個分開的圈，近看比較像 `oo`。同上，212px 的分享卡上看不出來。
 2. **`published`／`updated` 先填 2026-09-19**，真正上線那天要改成當天。
 3. **`post-nav` 的上一篇**現在指〈這麼小就要麻醉？〉（站上最新的一篇）。
    中間若有別的文章先上線，要跟著改。
