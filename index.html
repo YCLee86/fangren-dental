@@ -681,7 +681,7 @@ r.dataset.theme=s;})();</script>
         "@id": "https://fangren.net/#dentist"
       },
       "inLanguage": "zh-Hant-TW",
-      "dateModified": "2026-09-19",
+      "dateModified": "2026-09-20",
       "primaryImageOfPage": {
         "@type": "ImageObject",
         "url": "https://fangren.net/assets/hero-clinic-night.jpg"
@@ -2644,6 +2644,14 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .doc[data-face] {
   /* 頭像直徑出現在四個地方（欄寬、圖的寬高、名字那一行的上邊距），收成一個值。 */
   --face: 76px;
+  /* 頭像那一行（頭像＋名字＋藥丸）往左移多少（2026-09-19 使用者指定「可以往左移一點」）。
+     ⚠ 這是**視覺補償不是對齊錯誤** —— 量出來頭像的左緣和「專長」那顆標籤本來就
+       切齊（差 0.00），但圓形的最左點只在它的垂直中央，上下都往內收，
+       所以和方形切齊時看起來偏右。**不要把它「訂正」回 0。**
+     ⚠ 只有頭像那一列往左，資料那一塊用同樣的量補回來（見下面 `> dl` 的 padding-left），
+       所以九張卡的「專長／資歷／學歷」左緣仍然完全對齊、沒有照片的那幾張一個值都沒動。 */
+  --face-pull: 6px;
+  padding-left: calc(1.2rem - var(--face-pull));
   display: grid; grid-template-columns: var(--face) 1fr;
   column-gap: .9rem; row-gap: 8px; align-items: start;
   /* ⚠⚠ align-content: start 不可以拿掉（2026-09-19 第二天補的）。
@@ -2721,7 +2729,8 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
   grid-column: 2; grid-row: 1; margin-bottom: 0;
   align-self: start; margin-top: calc((var(--face) - 1.5em) / 2);
 }
-.doc[data-face] > dl { grid-column: 1 / -1; grid-row: 2; }
+/* 資料那一塊把左移的量補回來 —— 只有頭像那一行往左，這裡維持原位。 */
+.doc[data-face] > dl { grid-column: 1 / -1; grid-row: 2; padding-left: var(--face-pull); }
 
 /* ---- 圓角：比例對齊，不是同一個數字。基準是醫師藥丸的 半徑÷框高 = 0.384。
    這幾個元件的字級和手機版一樣，所以手機版量出來的值原樣沿用。 ---------- */
@@ -7491,7 +7500,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-09-19">2026 年 9 月 19 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-09-20">2026 年 9 月 20 日</time></span>
     </div>
   </div>
 </footer>
