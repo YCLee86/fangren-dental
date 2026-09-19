@@ -2642,7 +2642,9 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ⚠ 沒有照片的卡一個值都不會動 —— 規則全部關在 `.doc[data-face]` 裡。
    ⚠ 76px 在手機、iPad、電腦是同一個值（字級有逐段放大，頭像刻意沒跟）。 */
 .doc[data-face] {
-  display: grid; grid-template-columns: 76px 1fr;
+  /* 頭像直徑出現在四個地方（欄寬、圖的寬高、名字那一行的上邊距），收成一個值。 */
+  --face: 76px;
+  display: grid; grid-template-columns: var(--face) 1fr;
   column-gap: .9rem; row-gap: 8px; align-items: start;
   /* ⚠⚠ align-content: start 不可以拿掉（2026-09-19 第二天補的）。
      這張卡是 grid、兩列都是 auto，而外層 .docs 會把同一列的卡**拉到最高那張
@@ -2658,7 +2660,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 }
 .doc-face { display: block; grid-column: 1; grid-row: 1; }
 .doc-face img {
-  display: block; width: 76px; height: 76px;
+  display: block; width: var(--face); height: var(--face);
   border-radius: 50%; object-fit: cover;
 }
 /* ---- 名字和藥丸放不下時要斷行，而且藥丸要和名字切齊左緣 ----------------
@@ -2688,7 +2690,24 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .doc[data-face] > h3 .doc-role {
   margin-left: 0; position: relative; bottom: var(--role-rise);
 }
-.doc[data-face] > h3 { grid-column: 2; grid-row: 1; align-self: center; margin-bottom: 0; }
+/* ⚠⚠ 名字那一行**靠上、再補一個「等於單行置中時」的上邊距**，不要用
+     `align-self: center`（2026-09-19 使用者回報「藥丸標籤的版型跑掉了」）。
+     成因：藥丸折到第二行之後，整塊 h3 變成兩行、**置中就會把第一行往上推** ——
+     1042 寬實測，王俊偉那張的名字比同一列另外兩張**高 13.6px**（+10.6 對 +24.2），
+     而名字是一整列裡最強的視覺錨點，一張歪掉整列就散了。
+     `calc((var(--face) - 1.5em) / 2)` 裡的 `1.5em` 就是 `.doc h3` 的行高
+     （`line-height: 1.5`），所以**單行時和置中完全等價**（實測 375／744／1042／1440
+     四個斷點的名字上緣與「頭像下緣到專長」逐項相同），折行時第一行不動、藥丸往下掛。
+   ⚠ 已知取捨：折行的那張卡，藥丸會比頭像低 8.5px，所以它的「專長」比同列低 6px。
+     名字齊平比那 6px 重要 —— 兩者不可能同時成立（藥丸要有地方掛）。
+   ⚠⚠ **藥丸放不下這件事躲不掉**：1042（三欄的下界）是全站最窄的卡（316px），
+     名字那一行只有 175px；楊小瑩「贋復假牙專科醫師」與陳芷鈴「顯微根管專科醫師」
+     都是八個字，之後放照片一定會折。**不要試著用縮字級去硬塞**
+     （算過：要塞得下得把藥丸縮到 10.9px，現在是 14.4px）。 */
+.doc[data-face] > h3 {
+  grid-column: 2; grid-row: 1; margin-bottom: 0;
+  align-self: start; margin-top: calc((var(--face) - 1.5em) / 2);
+}
 .doc[data-face] > dl { grid-column: 1 / -1; grid-row: 2; }
 
 /* ---- 圓角：比例對齊，不是同一個數字。基準是醫師藥丸的 半徑÷框高 = 0.384。
