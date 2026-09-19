@@ -70,14 +70,50 @@
 所以提示詞裡**每一面螢幕、每一台裝置、牆上那張海報的內容全部寫死**，
 `NO WRITING ANYWHERE` 獨立成段、逐項點名。
 
-## 三、要附的參考圖（兩張，說明分開寫）
+## 二之二、第二輪：第一版出圖之後使用者退回的四件（2026-09-19）
+
+| # | 使用者說的 | 改了什麼 |
+| --- | --- | --- |
+| 1 | 「右邊數來的第二個的人物風格明顯不搭」 | STYLE 段新增一整段 **ALL FOUR PEOPLE ARE DRAWN BY THE SAME HAND**，並**指名**右邊那位穿刷手服的男性要畫得和白袍醫師一樣簡單；AVOID 補一條 `one person drawn in a different style from the rest`。⚠ 成因和第十之五節是同一個：STYLE 段只要留一點空間，模型就會對某一張臉多加細節 |
+| 2 | 「大螢幕上牙齒排列蠻整齊的　應該要亂一點」 | 牙弓改成**四條寫死的亂**：一顆轉三十度、一顆退到後面被左右蓋住、一顆往旁邊倒、**切端連線呈鋸齒不是平順的弧**。最後那一條是 ILLUSTRATION 第七節第 10 條的教訓（縮圖尺寸下眼睛讀的就是那條線）。AVOID 補 `a tidy evenly spaced dental arch` |
+| 3 | 「並顯示類似 error 之類的標語」 | 放大的那顆牙上方加一個**琥珀色警示牌**：驚嘆號三角形 ＋ 單字 `ERROR`，逐字母拼出來；牙根抵到骨頭外緣的那一段也用同色標一下，讓人看懂警示在講哪一件事 |
+| 4 | 「左一的先生表情太過輕鬆　不像認真工作的工程師」 | 從「往後靠、手托下巴」改成**身體前傾、雙手在鍵盤上、視線在自己的筆電、嘴是一條平直的閉合線**。AVOID 補 `anyone leaning back with a hand under the chin`。⚠ 「胸有成竹」這個調性移到女醫師身上（她的淺笑），不再要求每個人都帶一點 |
+| 5 | 「挑幾台畫成診所 Logo　其他電腦或手機不用每台都壓圖片」 | 新增一整段 **WHAT IS ON EACH DEVICE**，六台逐台寫死：大螢幕（亂牙弓＋牙根＋警示）／小飄浮螢幕（五副牙套）／左上小螢幕（**診所標誌**）／筆電（**診所標誌**待機）／立架上的平板（**關機，全黑空白**）／技師的平板（牙根對照）／助理的手機（**關機**）。⚠ 少一個有內容的表面就少一個長字與外溢的落點（第七節第 6 條） |
+
+另外自己抓到一件使用者沒提的：**第一版牆上那張海報長出了假文字**（幾條短橫線排成像句子的樣子）。
+提示詞因此加了一句「海報上不可以有排成行的短橫線、破折號或曲線去模仿文字」。
+
+### ⚠⚠ 兩個新的風險（出圖前先知道）
+
+1. **`ERROR` 這個字八成會歪。** 整份提示詞原本的 `NO WRITING ANYWHERE` 就是因為
+   模型會長出 `Brashriashing`／`Rowch teeth` 這種亂碼（第七節第 4 條）。
+   現在刻意開了一個字的例外，所以**那五個字母要逐個放大檢查**。
+   歪掉的話有兩條路：① 只留驚嘆號三角形、不要字（圖示本身就讀得懂「這裡要注意」）；
+   ② 出圖時那一格留白，事後用腳本把乾淨的字疊上去（站上 `tools/og-plate.mjs`
+   已經在做同一件事）。
+2. **標誌會被畫走樣。** 模型畫品牌標誌幾乎一定會變形。**附 `assets/logo.png` 當參考圖**
+   可以拉近，但要有心理準備要幾輪；真的要準，也是走上面第 ② 條那條路（留白後疊上去）。
+   ⚠ 站上的標誌不是牙齒、不是愛心、不是葉子 —— 是一片有兩個圓弧的寬形，
+   右側挖一個牙齒形狀的洞，洞是**真的穿透**的。
+
+### ⚠ 品牌那一關：`ERROR` 不會變成在罵廠商嗎
+
+不會，但寫法有差。提示詞裡那個警示牌寫成
+**「規劃軟體自己把這一步標出來，請團隊看一下」** —— 是工具在做它該做的事，
+正好接上這一篇定下來的視角（工具把力量傳得穩，醫師讓它走得準），
+不是「軟體算錯了」。⚠ **不要改寫成螢幕當機、紅色大叉、系統崩潰那種畫面。**
+
+---
+
+## 三、要附的參考圖（三張，說明分開寫）
 
 | # | 檔案 | 附圖時要寫的話 |
 | --- | --- | --- |
 | 1 | `assets/og-topic-ortho.jpg` | 「**飄浮螢幕的語彙、螢幕的藍、白色氛圍弧線、人物長相與服裝**照這張。⚠ 不要照它的**構圖**（那是醫師對病人講解，這一張沒有病人）；⚠ 不要照它上面那條藍色的標題帶。」 |
 | 2 | `assets/hero-ortho-photo-1600.jpg` | 「**畫法、質感、明度照這張**：線寬有變化、色鉛筆顆粒、大量紙白透出來、整體淡。⚠ **不要照它的分格**，這一張是一個連續的空間。」 |
+| 3 | `assets/logo.png` | 「**左上角那面小螢幕與筆電待機畫面上的標誌，形狀照這張**（透明底、一色）。⚠ 只照**形狀**，顏色不要照 —— 那是深綠，螢幕上要用白色線條或淡色。⚠ 畫面上**不要**再出現第二個標誌，也不要在標誌旁邊加任何字。」（2026-09-19 第二輪新增） |
 
-## 四、提示詞（逐字，可直接複製）
+## 四、提示詞（第二輪，逐字，可直接複製）
 
 ```
 STYLE — THIS IS THE MOST IMPORTANT SECTION, READ IT FIRST.
@@ -90,12 +126,21 @@ Every surface carries a fine pencil grain; large areas of pale paper are left sh
 through. Flat fills with two or three steps of the same hue for shading — no gradients
 except where light falls, no airbrush, no photo-realism, no 3D render, no greyscale.
 
+ALL FOUR PEOPLE ARE DRAWN BY THE SAME HAND, IN EXACTLY THE SAME STYLE. Same outline
+weight, same single flat skin colour, same simplified eyes (two short curving strokes —
+no eyelashes, no glossy irises, no catchlights), same eyebrows (one short stroke each),
+same simple hair drawn as ONE flat shape with two or three interior strokes. NO ONE is
+rendered more realistically, more softly shaded or with more facial detail than the
+others — IN PARTICULAR THE MAN STANDING ON THE RIGHT IN SCRUBS MUST BE DRAWN EXACTLY AS
+SIMPLY AS THE WOMAN IN THE WHITE COAT. No manga or anime styling on any face, no cheek
+blush, no airbrushed or shaded skin, no rendered hair strands.
+
 SKIN IS THE ONE EXCEPTION TO THE TWO-OR-THREE-STEPS RULE: every face and hand is ONE
 FLAT COLOUR with no modelling at all. A face contains ONLY six things — the outline of
 the head, the eyes, the eyebrows, the nose, the mouth and the ears. NO wrinkles, no
-nasolabial folds, no under-eye lines, no cheek shading, no jaw shading, no blush
-gradients. Everyone is East Asian (Taiwanese), aged about 28 to 45, with natural human
-head-to-body proportions. NOBODY LOOKS AT THE VIEWER.
+nasolabial folds, no under-eye lines, no cheek shading, no jaw shading. Everyone is East
+Asian (Taiwanese), aged about 28 to 45, with natural human head-to-body proportions.
+NOBODY LOOKS AT THE VIEWER.
 
 COLOUR TARGET: most colour blocks sit around HSL saturation 30–50 and lightness 70–85,
 and roughly half the picture is chromatic rather than paper white. AT LEAST SIX clearly
@@ -114,22 +159,42 @@ THE SCENE — ONE SINGLE CONTINUOUS ROOM. DO NOT DIVIDE THE PICTURE INTO PANELS,
 GRIDS OR SPEECH BUBBLES.
 
 A bright, calm planning room in a dental clinic — cool white walls, a pale grey floor, a
-low wooden worktop running along the back wall, a leafy potted plant in the far corner,
-two plain mugs on the worktop. It is a room where a treatment is being worked out, NOT a
-treatment room: there is NO dental chair, NO patient, NO overhead surgical lamp, NO
-instruments.
+low wooden worktop along the back wall, a leafy potted plant in the far corner, two plain
+mugs on the worktop. It is a room where a treatment is being worked out, NOT a treatment
+room: there is NO dental chair, NO patient, NO overhead surgical lamp, NO instruments.
 
 CENTRE-LEFT, THE FOCAL POINT — A LARGE TRANSLUCENT BLUE SCREEN FLOATS IN MID-AIR, about
 55% of the picture height, tilted very slightly towards the viewer, with soft rounded
 corners and a faint glow at its edges. On it, drawn in white line only:
-  • a top-down view of an upper dental arch, the teeth as simple rounded white shapes;
-  • three thin white curved arrows, each beside a different tooth, showing it turning or
-    sliding a small amount;
+
+  • A TOP-DOWN VIEW OF AN UPPER DENTAL ARCH — AND THESE TEETH ARE CLEARLY CROWDED AND
+    OUT OF LINE, NOT a tidy even row. THIS IS IMPORTANT: the arch must read as a problem
+    that still has to be solved.
+      – ONE FRONT TOOTH IS ROTATED about thirty degrees, standing at an angle to its
+        neighbours;
+      – ONE TOOTH IS PUSHED BACK BEHIND THE ARCH so that the two teeth beside it overlap
+        its edges and hide part of it;
+      – ONE TOOTH LEANS SIDEWAYS over the tooth next to it;
+      – THE LINE ALONG THE BITING EDGES OF THE FRONT TEETH IS JAGGED AND UNEVEN, like a
+        broken saw edge, NEVER a smooth continuous curve.
+    Every tooth is still a clean white shape — no decay, no black spots, no missing teeth,
+    no blood, no gums drawn in detail.
+  • THREE THIN WHITE CURVED ARROWS, each beside a different tooth, showing it turning or
+    sliding a small amount.
   • ONE TOOTH IS PULLED OUT OF THE ARCH AND ENLARGED at the right-hand side of the screen.
     THIS ENLARGED TOOTH IS THE WHOLE POINT OF THE PICTURE: it is drawn COMPLETE, with its
     CROWN ABOVE AND ITS LONG ROOT BELOW, and the root is embedded in a translucent
-    cut-away slab of jawbone so that the viewer can see how much bone sits on each side of
-    the root. A single thin white arrow shows the root tilting.
+    cut-away slab of jawbone so the viewer can see how much bone sits on each side of the
+    root. A single thin white arrow shows the root tilting, and THE TIP OF THE ROOT HAS
+    REACHED THE OUTER EDGE OF THE BONE — a short AMBER LINE marks the bone exactly where
+    the root tip is pressing against it.
+  • A SMALL AMBER WARNING BADGE — a rounded rectangle in soft amber — FLOATS JUST ABOVE
+    THE ENLARGED TOOTH. Inside the badge, side by side: a TRIANGLE WITH AN EXCLAMATION
+    MARK inside it, and the single word ERROR in plain, evenly spaced, upright uppercase
+    sans-serif letters — E, R, R, O, R — spelled exactly like that and nothing else. The
+    badge reads as the planning software politely flagging this one movement for the team
+    to look at. THIS BADGE IS THE ONLY PLACE IN THE WHOLE PICTURE WHERE LETTERS APPEAR.
+
   Nothing else is on this screen.
 
 A WOMAN DENTIST STANDS IN FRONT OF THAT SCREEN, seen from the waist up, turned
@@ -139,64 +204,84 @@ finger extended, its tip touching the enlarged tooth as if turning it a few degr
 other arm hangs relaxed, holding a slim pen. Her shoulders are low and relaxed, her head
 tilts slightly towards the screen, and her eyes look at her own fingertip. HER MOUTH IS
 ONE SHORT LINE CURVING GENTLY UPWARDS AT BOTH ENDS — a small, closed, easy smile. She is
-absorbed and completely at ease.
+absorbed and completely at ease: she has seen this before and she knows what to do next.
 
-FAR LEFT — A MAN IN HIS THIRTIES, A DESIGN ENGINEER, sits at a low desk in a
-mustard-yellow knit top, an open laptop in front of him and a tablet propped on a stand
-beside it. HE IS LEANING BACK A LITTLE, one hand resting under his chin, giving a small
-nod towards the big screen: he has just seen how to solve it. His eyebrows are LEVEL and
-his mouth is a short, faintly upturned closed line. TWO SMALL FLOATING SCREENS hover above
-his desk, each showing white line drawings only:
-  • the upper one shows A ROW OF FIVE CLEAR ALIGNER TRAYS lined up left to right, each one
-    a simple horseshoe outline, identical in size;
-  • the lower one shows A SINGLE TOOTH WITH ONE SMALL ROUNDED-SQUARE BLOCK BONDED TO ITS
-    FRONT SURFACE — the block is a plain rounded square with flat sides, it has no crown,
-    no root and no face.
-  THE LAPTOP SCREEN SHOWS A PALE, SMALLER COPY OF THE SAME DENTAL ARCH and nothing else.
-  THE TABLET ON THE STAND SHOWS THE SAME ARCH, PALER STILL, and nothing else.
+FAR LEFT — A MAN IN HIS THIRTIES, A DESIGN ENGINEER IN A MUSTARD-YELLOW KNIT TOP, SITS AT
+A LOW DESK AND IS ACTIVELY WORKING. HE LEANS FORWARD TOWARDS HIS LAPTOP WITH BOTH HANDS
+ON THE KEYBOARD, mid-keystroke, his eyes down on his own laptop screen, his back inclined
+towards the work. HIS EYEBROWS ARE LEVEL AND HIS MOUTH IS A SHORT, STRAIGHT, CLOSED LINE —
+concentrated and businesslike, in the middle of a task. HE IS NOT LEANING BACK, NOT
+resting his chin or cheek on his hand, NOT folding his arms, NOT smiling, NOT lounging —
+but he is not strained either: his shoulders stay down, his brow is smooth.
 
-RIGHT SIDE — A MAN IN HIS LATE TWENTIES IN BLUE-GREY SCRUBS STANDS HOLDING A TABLET flat
-in one hand at chest height, his other hand lifted with an open palm towards the big
-screen, comparing the two. HIS TABLET SHOWS THE SAME ENLARGED TOOTH WITH ITS ROOT, in
-white line, and nothing else. He is serious and attentive but NOT tense: his brow is
-smooth, his lips are just parted as if he is about to say one short sentence.
+WHAT IS ON EACH DEVICE — FOLLOW THIS EXACTLY. Most devices are simply blank.
+  • THE BIG FLOATING SCREEN: the crowded arch, the enlarged tooth in bone, the arrows and
+    the amber badge, as described above.
+  • ONE SMALL SCREEN FLOATING ABOVE THE ENGINEER'S DESK: a row of FIVE CLEAR ALIGNER TRAYS
+    lined up left to right, each a simple horseshoe outline, all the same size, white line
+    on pale blue. Nothing else.
+  • A SECOND SMALL SCREEN FLOATING IN THE UPPER-LEFT CORNER OF THE ROOM: THE CLINIC LOGO
+    ONLY, resting on a pale blue background like a standby screen. THE LOGO IS THE SHAPE
+    IN THE ATTACHED LOGO IMAGE — one solid, smooth, wide organic shape with soft rounded
+    lobes, like a gentle wide pebble, with ONE SMALL TOOTH-SHAPED HOLE cut clean through
+    it towards the right side, the background showing through that hole. Reproduce that
+    silhouette faithfully. It is NOT a tooth, NOT a heart, NOT a leaf, NOT a cloud, NOT
+    lettering, and there is NO text beside it.
+  • THE ENGINEER'S LAPTOP SCREEN: THE SAME CLINIC LOGO, small and centred, on a dark
+    standby background. Nothing else.
+  • THE TABLET PROPPED ON A STAND BESIDE THE LAPTOP: SWITCHED OFF — a plain, empty dark
+    grey rectangle with nothing on it at all.
+  • THE TABLET HELD BY THE MAN ON THE RIGHT: the same enlarged tooth with its root in
+    bone, in white line on pale blue — he is holding it up against the big screen to
+    compare. Nothing else.
+  • THE ASSISTANT'S PHONE: SWITCHED OFF — a plain, empty dark rectangle. Nothing on it.
+
+RIGHT SIDE — A MAN IN HIS LATE TWENTIES IN BLUE-GREY SCRUBS STANDS HOLDING THAT TABLET
+flat in one hand at chest height, his other hand lifted with an open palm towards the big
+screen, comparing the two. He is serious and attentive but NOT tense: his brow is smooth,
+his lips just parted as if he is about to say one short sentence. DRAWN IN THE SAME
+SIMPLE STYLE AS EVERYONE ELSE — flat skin, six facial features, no shading.
 
 BESIDE HIM, SLIGHTLY BEHIND — A YOUNG WOMAN ASSISTANT in a pale sage-green top looks down
-at a PHONE held in both hands, calm and unhurried. HER PHONE SCREEN SHOWS THE SAME PALE
-ARCH, tiny, and nothing else.
+at her phone held in both hands, calm and unhurried.
 
 ON THE LOW CABINET BETWEEN THEM stand TWO REAL OBJECTS, not screens: a small plaster model
 of an upper arch of teeth, and one clear aligner tray resting beside it.
 
-ON THE BACK WALL hangs ONE POSTER showing ONLY a simple line drawing of a dental arch —
-an abstract horseshoe of rounded shapes. THE POSTER HAS NO WRITING OF ANY KIND.
+ON THE BACK WALL hangs ONE POSTER showing ONLY a simple line drawing of a dental arch — an
+abstract horseshoe of rounded shapes. THE POSTER CONTAINS NOTHING ELSE: no title, no
+caption, and NO ROWS OF SHORT HORIZONTAL LINES, DASHES OR SQUIGGLES THAT IMITATE LINES OF
+WRITING. The space around the drawing is simply empty.
 
 ATMOSPHERE LINES — Three or four long, soft, pale-white arcs sweep across the upper part
 of the room, behind the people, giving the air a sense of movement. THEY MUST NOT COME OUT
 OF ANYONE'S MOUTH, NOSE, HANDS OR BODY, they must not loop back on themselves, and they
 must not be thicker at the far end than at the start.
 
-CRITICAL — NO WRITING ANYWHERE IN THE PICTURE.
-There is NO text, NO lettering, NO words, NO letters, NO numbers, NO digits, NO
-percentages, NO dates, NO labels, NO captions, NO logos, NO brand marks, NO watermark and
-NO signature — not on the floating screens, not on the laptop, not on the tablets, not on
-the phone, not on the poster, not on the mugs, not on the clothing, not on any name badge,
-and not on the cabinet. There are NO user-interface elements: no buttons, no sliders, no
-menus, no toolbars, no progress bars, no tabs, no cursors, no charts, no graphs, no axes,
-no rulers, no scales, no gauges, no tick marks, no keyboard letters — the laptop keys are
-plain blank rectangles. Wherever writing would normally appear, LEAVE THE SURFACE BLANK.
+CRITICAL — EXACTLY ONE WORD EXISTS IN THIS PICTURE, AND IT IS "ERROR" INSIDE THE AMBER
+BADGE. THERE IS NO OTHER WRITING ANYWHERE.
+No other text, no lettering, no words, no letters, no numbers, no digits, no percentages,
+no dates, no labels, no captions, no logos other than the clinic logo described above, no
+brand marks, no watermark and no signature — not on the floating screens, not on the
+laptop, not on the tablets, not on the phone, not on the poster, not on the mugs, not on
+the clothing, not on any name badge, not on the cabinet. There are NO user-interface
+elements: no buttons, no sliders, no menus, no toolbars, no progress bars, no tabs, no
+cursors, no charts, no graphs, no axes, no rulers, no scales, no gauges, no tick marks, no
+keyboard letters — the laptop keys are plain blank rectangles. Wherever writing would
+normally appear, LEAVE THE SURFACE BLANK.
 
 AVOID — a dental chair, a patient, a person lying down, an overhead surgical lamp, trays
 of instruments, syringes, needles, drills, blood, a mouth held open, a close-up of a real
-mouth, cartoon teeth with faces, arms, legs or eyes, before-and-after pairs, a calendar, a
-clock, a progress bar, a timeline, a countdown, anyone frowning, gritting their teeth,
-holding their head in their hands, rubbing their temples, sighing, sweating, looking
-exhausted, stacks of paperwork, an untidy desk, anyone cheering, laughing out loud, giving
-a thumbs-up or a high five, anyone looking at the viewer, a person in silhouette, dramatic
-backlighting, a dark server room, glowing neon, holographic rainbow or chrome gradients,
-floating particles, circuit-board patterns, network node diagrams, DNA helices, a robot,
-a brain icon, panel dividers, comic frames, speech bubbles, thought bubbles, photo-realism,
-3D rendering, greyscale.
+mouth, cartoon teeth with faces, arms, legs or eyes, a tidy evenly spaced dental arch,
+before-and-after pairs, a calendar, a clock, a progress bar, a timeline, a countdown,
+anyone frowning, gritting their teeth, holding their head in their hands, rubbing their
+temples, sighing, sweating, looking exhausted, stacks of paperwork, an untidy desk, anyone
+leaning back with a hand under the chin, anyone cheering, laughing out loud, giving a
+thumbs-up or a high five, anyone looking at the viewer, one person drawn in a different
+style from the rest, a person in silhouette, dramatic backlighting, a dark server room,
+glowing neon, holographic rainbow or chrome gradients, floating particles, circuit-board
+patterns, network node diagrams, DNA helices, a robot, a brain icon, panel dividers, comic
+frames, speech bubbles, thought bubbles, photo-realism, 3D rendering, greyscale.
 ```
 
 ## 五、出圖之後要做的事
