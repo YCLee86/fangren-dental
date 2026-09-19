@@ -205,6 +205,30 @@
 
 ---
 
+## 二之六、⚠⚠ 第六輪：只有一個人要改的時候，不要重生成（2026-09-19）
+
+第五輪把「換成男醫師」寫進完整提示詞**重新生成**，結果**整張的角度與構圖都跑掉了**
+（`v5-output-rejected.jpg`：鏡頭推近、大螢幕被切掉一塊、人物比例變大），
+那位男醫師臉上還長出法令紋與眼下陰影。使用者：
+「新作的男醫師有點老　而且原版只有女醫師要調整　**我比較喜歡原版的角度和畫面呈現**」。
+
+**通則：文生圖每一次都是重擲骰子** —— 構圖、角度、光、每個人的位置全部會重來，
+已經對的九成因此被賠掉。**只有一個人（或一塊）要改，就改圖，不要重生成。**
+提示詞在 **[`hero-edit-prompt.md`](hero-edit-prompt.md)**，底圖是 `v4-output.jpg`。
+
+⚠ 站上這條路早就驗證過，而且有數字：`drafts/og-topic-general-edit-prompt.md` 那一輪
+「只編輯一小塊」的成品對原版，無彩空白 0.5% vs 0.5%、邊緣密度 37.5% vs 37.4%、
+暖色 24.6% vs 24.6%，四項幾乎逐項相同。
+⚠ 那一份同時記著改圖自己的坑：**一次只改一件**、**用畫面上的位置指代不要用名字**、
+**要明確保護不准動的那一半**。
+
+⚠ 「有點老」的成因不是年齡寫錯，是 STYLE 段那條「每個色相用兩三階」被套到皮膚上
+（ILLUSTRATION 第十之五節，站上第二次踩到）。治法是**正面講死**皮膚一個平塗色、
+臉上只准六樣，並給一個**畫面內的錨點**：「不可以比左邊穿芥末黃毛衣那位看起來老」。
+⚠ 第五輪加的細框眼鏡**拿掉了** —— 白袍本來就分得出他是誰，多一樣東西就多一個走鐘的點。
+
+---
+
 ## 三、要附的參考圖（五張，說明分開寫）
 
 | # | 檔案 | 附圖時要寫的話 |
@@ -324,13 +348,14 @@ corners and a faint glow at its edges. On it, drawn in white line only:
 
   Nothing else is on this screen.
 
-A MAN DENTIST, IN HIS EARLY FORTIES, STANDS IN FRONT OF THAT SCREEN, seen from the waist
+A MAN DENTIST, IN HIS EARLY THIRTIES, STANDS IN FRONT OF THAT SCREEN, seen from the waist
 up, turned three-quarters towards the screen, on the LEFT of it. He wears a white coat
-over blue-grey scrubs. HIS HAIR IS SHORT AND SIDE-PARTED, drawn as one flat shape with
-two or three interior strokes, and HE WEARS THIN-FRAMED GLASSES — two simple rounded
-rectangles joined by a bridge, which is the ONE addition allowed to the six facial
-features; the glasses keep him clearly distinct from the two other men in the room. The
-hand nearer the viewer is raised to chest height with the index finger extended, its tip
+over blue-grey scrubs. HIS HAIR IS SHORT, BLACK AND NEATLY SIDE-PARTED, drawn as one flat
+shape with two or three interior strokes, and he is clean-shaven. HE MUST NOT LOOK OLD:
+no wrinkles, no nasolabial folds, no shadow under the eyes, no shading on the cheeks or
+jaw, no grey hair — his face is drawn exactly as simply as the engineer's, and he must not
+look any older than the engineer. The white coat is what tells him apart from the other
+two men; he needs no other distinguishing feature. The hand nearer the viewer is raised to chest height with the index finger extended, its tip
 touching the enlarged tooth as if turning it a few degrees; his other arm hangs relaxed,
 holding a slim pen. His shoulders are low and relaxed, his head tilts slightly towards
 the screen, and his eyes look at his own fingertip. HIS MOUTH IS ONE SHORT LINE CURVING
