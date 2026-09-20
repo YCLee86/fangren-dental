@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>插畫資料庫體檢 — 芳仁牙醫</title>
+<style>
+:root{
+  --paper:#e2e5e6; --card:#f4f4f5; --rule:#cdd0d2;
+  --ink:#2a2c27; --ink-soft:#5c5f57;
+  --teal:#214D48; --blue:#3C596B; --brick:#AF4C52; --moss:#5D6D55;
+  --head:#393736;
+  --pad:clamp(1.25rem,3vw,2.5rem);
+  --radius:12px;
+  --shadow:0 1px 2px rgba(42,44,39,.07),0 4px 10px rgba(42,44,39,.09);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Hiragino Sans TC",
+              system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:17px; line-height:1.85; letter-spacing:.01em; overflow-x:hidden;
+}
+.wrap{max-width:52rem; margin:0 auto; padding:0 var(--pad) 5rem}
+
+.pv-head{background:var(--head); color:#f4f4f5; padding:2rem var(--pad) 1.6rem; margin-bottom:1.8rem}
+.pv-head .in{max-width:52rem; margin:0 auto}
+.pv-head .kick{font-size:.78rem; letter-spacing:.16em; opacity:.72; margin:0 0 .3rem}
+.pv-head h1{font-size:1.5rem; line-height:1.4; margin:0 0 .6rem; letter-spacing:.02em}
+.pv-head p{margin:0; font-size:.95rem; line-height:1.75; opacity:.88}
+
+.nums{display:grid; grid-template-columns:repeat(2,1fr); gap:.6rem; margin:1.4rem 0 2.4rem}
+.num{background:var(--card); border-radius:var(--radius); padding:.9rem .9rem .8rem; box-shadow:var(--shadow)}
+.num b{display:block; font-size:1.6rem; line-height:1.2; letter-spacing:.01em}
+.num span{display:block; font-size:.78rem; line-height:1.5; color:var(--ink-soft); margin-top:.25rem}
+.num.bad b{color:var(--brick)}
+.num.ok b{color:var(--teal)}
+
+h2{font-size:1.18rem; line-height:1.5; margin:3rem 0 .5rem; padding-top:1.4rem; border-top:2px solid var(--rule)}
+h2 .n{color:var(--ink-soft); font-size:.86rem; letter-spacing:.1em; display:block; margin-bottom:.2rem}
+h3{font-size:1rem; line-height:1.6; margin:2rem 0 .4rem}
+p{margin:.5rem 0 1rem}
+.lead{color:var(--ink-soft); font-size:.95rem; margin-top:0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.86em;
+     background:rgba(42,44,39,.07); padding:.08em .35em; border-radius:4px}
+
+.card{background:var(--card); border-radius:var(--radius); padding:1rem 1.1rem;
+      box-shadow:var(--shadow); margin:1rem 0 1.4rem}
+.card h3{margin-top:0}
+
+.quote{border-left:4px solid var(--brick); background:rgba(175,76,82,.06);
+       border-radius:0 8px 8px 0; padding:.7rem .9rem; margin:.8rem 0;
+       font-size:.92rem; line-height:1.8}
+.quote.good{border-left-color:var(--teal); background:rgba(33,77,72,.07)}
+.quote .src{display:block; font-size:.74rem; color:var(--ink-soft); letter-spacing:.04em;
+            margin-bottom:.35rem; font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.quote .strike{text-decoration:line-through; text-decoration-color:var(--brick)}
+
+.vs{display:grid; gap:.8rem; margin:1rem 0}
+@media(min-width:680px){ .vs{grid-template-columns:1fr 1fr} }
+.vs .col{background:var(--card); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow)}
+.vs .col img{display:block; width:100%; height:auto}
+.vs .col .cap{padding:.6rem .8rem .8rem; font-size:.84rem; line-height:1.65}
+.vs .col .tag{display:inline-block; font-size:.72rem; letter-spacing:.06em; padding:.1em .5em;
+              border-radius:4px; margin-bottom:.25rem; color:#f4f4f5}
+.tag.no{background:var(--brick)} .tag.yes{background:var(--teal)} .tag.mid{background:var(--blue)}
+
+.strip{display:flex; gap:.5rem; overflow-x:auto; padding:.2rem .2rem .8rem;
+       scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch}
+.strip figure{margin:0; flex:0 0 46%; max-width:190px; scroll-snap-align:start}
+@media(min-width:680px){ .strip figure{flex:0 0 160px} }
+.strip img{display:block; width:100%; aspect-ratio:16/9; object-fit:cover;
+           border-radius:8px; background:var(--rule); box-shadow:var(--shadow)}
+.strip.tall img{aspect-ratio:1/1; object-fit:contain; background:var(--card); padding:4px}
+.strip figcaption{font-size:.72rem; line-height:1.5; margin-top:.3rem; color:var(--ink-soft)}
+.strip figcaption .mk{font-weight:700}
+.mk.no{color:var(--brick)} .mk.yes{color:var(--teal)}
+.hint{font-size:.78rem; color:var(--ink-soft); margin:.1rem 0 1.2rem}
+
+table{width:100%; border-collapse:collapse; font-size:.88rem; line-height:1.65; margin:.8rem 0 1.4rem}
+th,td{text-align:left; padding:.5rem .6rem; border-bottom:1px solid var(--rule); vertical-align:top}
+th{font-size:.78rem; letter-spacing:.06em; color:var(--ink-soft); font-weight:600}
+td b{font-weight:700}
+.tw{overflow-x:auto}
+
+ul,ol{margin:.4rem 0 1.2rem; padding-left:1.3rem}
+li{margin:.3rem 0}
+.ask{background:var(--card); border-radius:var(--radius); padding:1rem 1.1rem;
+     box-shadow:var(--shadow); margin:.8rem 0; border-left:4px solid var(--blue)}
+.ask > b:first-child{display:block; margin-bottom:.2rem}
+.foot-note{font-size:.82rem; color:var(--ink-soft); line-height:1.7; margin-top:2.4rem;
+           padding-top:1.2rem; border-top:1px solid var(--rule)}
+.sample{background:#fff; border:1px solid var(--rule); border-radius:8px; padding:.8rem .9rem;
+        font-size:.84rem; line-height:1.7; margin:.8rem 0}
+.sample .row{display:flex; gap:.6rem; padding:.35rem 0; border-bottom:1px dashed var(--rule)}
+.sample .row:last-child{border-bottom:0}
+.sample .row .sec{flex:0 0 3.6rem; color:var(--ink-soft);
+                  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.78rem}
+</style>
+</head>
+<body>
+
+<header class="pv-head">
+  <div class="in">
+    <p class="kick">內部體檢・2026-09-20</p>
+    <h1>插畫資料庫體檢</h1>
+    <p>結論：<b>資料庫本身很完整，缺口在「新的沒回寫」和「舊的指令過期」</b>——
+       而過期的那三條，照著做會出錯。這一頁把我引用到的每一段原文、每一張圖都真的放進來。</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="nums">
+  <div class="num"><b>16</b><span>張文章 HERO（各 3 尺寸 ＋ WebP）</span></div>
+  <div class="num bad"><b>5</b><span>張在 ILLUSTRATION.md 裡查無紀錄</span></div>
+  <div class="num bad"><b>09-06</b><span>資料庫最後一筆內容的日期</span></div>
+  <div class="num bad"><b>3</b><span>條照做會出錯的過期指令</span></div>
+</div>
+
+<p class="lead">ILLUSTRATION.md 目前 2704 行、19.8 萬字元、十七節。下面每一條都附原文與行號，
+你可以直接對著看。</p>
+
+
+<h2><span class="n">§ 1</span>先看家當：插畫的成品一共五類</h2>
+
+<h3>A・文章 HERO　16 張</h3>
+<p class="hint">← 左右滑。綠勾 ＝ ILLUSTRATION.md 裡查得到推導；紅叉 ＝ 查不到。</p>
+<div class="strip">
+  <figure><img loading="lazy" src="/assets/hero-brushing-photo-800.jpg" alt="貝氏刷牙法"><figcaption><span class="mk yes">✓</span> 貝氏刷牙法</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-gum-photo-800.jpg" alt="牙齦流血"><figcaption><span class="mk yes">✓</span> 牙齦流血</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-checkup-photo-800.jpg" alt="半年一次的洗牙"><figcaption><span class="mk yes">✓</span> 半年一次的洗牙</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-arch-photo-800.jpg" alt="擴張牙弓"><figcaption><span class="mk yes">✓</span> 擴張牙弓</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-implant-photo-800.jpg" alt="缺牙之後"><figcaption><span class="mk yes">✓</span> 缺牙之後</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-kids-photo-800.jpg" alt="孩子第一次看牙"><figcaption><span class="mk yes">✓</span> 第一次看牙</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-wisdom-photo-800.jpg" alt="拔智齒之後"><figcaption><span class="mk yes">✓</span> 拔智齒</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-ortho-photo-800.jpg" alt="牙齒矯正"><figcaption><span class="mk yes">✓</span> 牙齒矯正</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-bioceramic-photo-800.jpg" alt="生物陶瓷"><figcaption><span class="mk yes">✓</span> 生物陶瓷</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-recall-photo-800.jpg" alt="三個月一次的洗牙與塗氟"><figcaption><span class="mk yes">✓</span> 三個月一次</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-kids-crown-photo-800.jpg" alt="小朋友的牙套"><figcaption><span class="mk yes">✓</span> 小朋友的牙套</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-crown-photo-800.jpg" alt="一體成型的假牙"><figcaption><span class="mk no">✕</span> 一體成型的假牙</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-perio-photo-800.jpg" alt="牙周病治療"><figcaption><span class="mk no">✕</span> 牙周病治療</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-kids-sedation-photo-800.jpg" alt="兒童舒眠"><figcaption><span class="mk no">✕</span> 兒童舒眠</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-aligner-photo-800.jpg" alt="隱形矯正"><figcaption><span class="mk no">✕</span> 隱形矯正</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/hero-perio-prevalence-photo-800.jpg" alt="八成人有牙周病"><figcaption><span class="mk no">✕</span> 八成人有牙周病</figcaption></figure>
+</div>
+
+<h3>B・七科著陸頁的線稿底圖　7 張（＋夜間版 7 張）</h3>
+<div class="strip tall">
+  <figure><img loading="lazy" src="/assets/lineart-general.png" alt="一般牙科線稿"><figcaption>一般牙科</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/lineart-perio.png" alt="牙周病線稿"><figcaption>牙周病</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/lineart-endo.png" alt="顯微根管線稿"><figcaption>顯微根管</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/lineart-kids.png" alt="兒童牙科線稿"><figcaption>兒童牙科</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/lineart-ortho.png" alt="齒顎矯正線稿"><figcaption>齒顎矯正</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/lineart-prosth.png" alt="植牙假牙線稿"><figcaption>植牙・假牙</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/lineart-surg.png" alt="口腔外科線稿"><figcaption>口腔外科</figcaption></figure>
+</div>
+
+<h3>C・分享圖（別人收到連結時看到的那張）　8 張</h3>
+<div class="strip">
+  <figure><img loading="lazy" src="/assets/og-home.jpg" alt="首頁分享圖"><figcaption>首頁</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/og-topic-general.jpg" alt="一般牙科分享圖"><figcaption>一般牙科</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/og-topic-perio.jpg" alt="牙周病分享圖"><figcaption>牙周病</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/og-topic-endo.jpg" alt="顯微根管分享圖"><figcaption>顯微根管</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/og-topic-kids.jpg" alt="兒童牙科分享圖"><figcaption>兒童牙科</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/og-topic-ortho.jpg" alt="齒顎矯正分享圖"><figcaption>齒顎矯正</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/og-topic-prosth.jpg" alt="植牙假牙分享圖"><figcaption>植牙・假牙</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/og-topic-surg.jpg" alt="口腔外科分享圖"><figcaption>口腔外科</figcaption></figure>
+</div>
+
+<h3>D・LINE 衛教懶人包的頭圖　12 張　<span style="color:var(--brick)">← 整類不在插畫資料庫裡</span></h3>
+<div class="strip">
+  <figure><img loading="lazy" src="/assets/handout-caries-hero.jpg" alt="蛀牙懶人包"><figcaption>蛀牙</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-perio-hero.jpg" alt="牙周病懶人包"><figcaption>牙周病</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-perioearly-hero.jpg" alt="牙周病早期懶人包"><figcaption>牙周早期</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-calculus-hero.jpg" alt="牙結石懶人包"><figcaption>牙結石</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-wisdom-hero.jpg" alt="智齒懶人包"><figcaption>智齒</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-surgcare-hero.jpg" alt="術後照顧懶人包"><figcaption>術後照顧</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-implant-hero.jpg" alt="植牙懶人包"><figcaption>植牙</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-denture-hero.jpg" alt="假牙懶人包"><figcaption>假牙</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-prosth-hero.jpg" alt="補綴懶人包"><figcaption>補綴</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-aligner-hero.jpg" alt="隱形矯正懶人包"><figcaption>隱形矯正</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-whitening-hero.jpg" alt="美白懶人包"><figcaption>美白</figcaption></figure>
+  <figure><img loading="lazy" src="/assets/handout-xray-hero.jpg" alt="X光懶人包"><figcaption>X 光</figcaption></figure>
+</div>
+
+<h3>E・LINE 的頭圖（借名畫、評價邀約、颱風…）</h3>
+<p>這一類 <b>有</b> 寫進資料庫（第十三、十四、十五節），但圖檔住在 <code>drafts/</code>，
+  不會上站，所以這一頁沒有辦法把圖擺出來給你看。</p>
+
+
+<h2><span class="n">§ 2</span>三條「照著做會做錯」的過期指令</h2>
+<p class="lead">這三條最該先修——它們不是資訊過時而已，是會直接指揮下一個人做錯事。</p>
+
+<div class="card">
+  <h3>① 叫人去跑一支已經沒用的工具</h3>
+  <div class="quote">
+    <span class="src">ILLUSTRATION.md 第五節第 3 條（第 463–464 行）</span>
+    <b>分享圖不能用 SVG。</b> Facebook 與 LINE 的爬蟲不吃。<span class="strike">換了插圖要跑
+    <code>node tools/og-images.mjs</code> 產生 <code>assets/hero-*-1600.png</code> 並一起 commit。</span>
+  </div>
+  <div class="quote good">
+    <span class="src">實際上（CLAUDE.md 第十節第 4 條）</span>
+    2026-08-16 六篇改成點陣之後，<code>og:image</code> 直接指向那張 <code>-1600.jpg</code>，
+    <b><code>og-images.mjs</code> 已經沒有用途</b>。而真正每次換圖都要跑的
+    <code>node tools/webp.mjs</code>——<b>整份 ILLUSTRATION.md 一個字都沒寫</b>。
+  </div>
+</div>
+
+<div class="card">
+  <h3>② 縮圖的做法寫的是另一台電腦才跑得動的東西</h3>
+  <div class="quote">
+    <span class="src">ILLUSTRATION.md 第七節「收到新圖要做的事」第 1 條（第 571–572 行）</span>
+    <span class="strike">⚠ 這一站沒有任何 npm 依賴，縮圖是用 PowerShell 的 <code>System.Drawing</code>
+    （<code>HighQualityBicubic</code>、JPEG 品質 82）做的，不是 sharp。</span>
+  </div>
+  <div class="quote good">
+    <span class="src">實際上——連 tools/hero-resize.mjs 自己的檔頭都這樣寫（第 14 行）</span>
+    「⚠ 原本文件裡寫的 PowerShell System.Drawing <b>只在 Windows 那台跑得動</b>。」<br>
+    現在的做法是 <code>node tools/hero-resize.mjs &lt;原檔&gt; &lt;name&gt;</code>，
+    Chromium canvas、JPEG 0.82，而且它會<b>擋兩件事</b>：四邊烘進去的白框、
+    長寬比不在允許清單裡（<code>RATIOS</code> ＝ 16:9 與 4:3）。
+    <b><code>RATIOS</code> 這個字在 ILLUSTRATION.md 裡出現 0 次。</b>
+  </div>
+</div>
+
+<div class="card">
+  <h3>③ 交圖清單少了最後一步</h3>
+  <p>第七節那張「收到新圖要做的事」六條，講到存三個尺寸、寫 <code>post-meta</code>、
+     <code>sizes</code>、alt、白框——<b>唯獨沒有 WebP 那一步</b>。
+     站上每一張 HERO 都有 <code>.webp</code>，文章裡是
+     <code>&lt;picture&gt;</code> ＋ <code>&lt;source type="image/webp"&gt;</code>。</p>
+  <p class="hint">查證：<code>&lt;picture&gt;</code> 與 <code>webp</code> 在 ILLUSTRATION.md 只出現在
+     提示詞的英文內文與一條 Behance 的註記裡，和交圖流程無關。</p>
+</div>
+
+
+<h2><span class="n">§ 3</span>一整片空白：「夜間」出現 0 次</h2>
+<div class="card">
+  <p>夜間模式 2026-09-15 上線，七科線稿因此各多了一張
+     <code>lineart-&lt;spec&gt;-night.png</code>（站上現在共 14 張線稿）。
+     可是<b>插畫資料庫第十二節（線稿那一節）完全沒有這件事</b>。</p>
+  <p>下次換線稿的正確順序是：</p>
+  <div class="sample">
+    <div class="row"><span class="sec">1</span><span><code>node tools/night-mode.mjs</code>　產夜間那一張</span></div>
+    <div class="row"><span class="sec">2</span><span><code>node tools/webp.mjs</code>　白天＋夜間都要轉</span></div>
+    <div class="row"><span class="sec">3</span><span><code>node tools/topics.mjs</code>　七科快照跟上</span></div>
+    <div class="row"><span class="sec">4</span><span><code>node tools/build.mjs</code></span></div>
+  </div>
+  <p class="hint">這四步目前只寫在 CLAUDE.md 的檔案清單裡，畫圖的人不會翻到那裡。</p>
+</div>
+
+
+<h2><span class="n">§ 4</span>做過、但沒回寫進資料庫的五張</h2>
+<p class="lead">這應該就是你覺得「少了一些東西」的地方。
+  而且方向是<b>單向</b>的：新的每一輪都會去引用資料庫（「見第七節第 18 條」），
+  但沒有任何一條新的被寫回去。</p>
+
+<h3>4-1　〈一體成型的假牙好在哪〉——十二個梗、十四份提示詞，資料庫 0 提及</h3>
+<p>2026-08-26 定案。<code>drafts/</code> 裡完整留著十二次嘗試與十四份提示詞
+  （<code>drafts/prompts/01-palm.txt</code> … <code>14-consult-tiles-v6.txt</code>），
+  但 ILLUSTRATION.md 搜「<code>hero-crown</code>」「假牙好在哪」都是 <b>0 筆</b>。</p>
+<div class="vs">
+  <div class="col"><img loading="lazy" src="ex/crownmat-try1.jpg" alt="第一個梗：手掌">
+    <div class="cap"><span class="tag no">落選 ①</span><br>手掌托著牙冠</div></div>
+  <div class="col"><img loading="lazy" src="ex/crownmat-try3.jpg" alt="第三個梗：紀念碑">
+    <div class="cap"><span class="tag no">落選 ③</span><br>紀念碑</div></div>
+  <div class="col"><img loading="lazy" src="ex/crownmat-try7.jpg" alt="第七個梗：鍋子">
+    <div class="cap"><span class="tag no">落選 ⑦</span><br>鍋子（琺瑯鍋比喻燒瓷）</div></div>
+  <div class="col"><img loading="lazy" src="ex/crownmat-try8.jpg" alt="第八個梗：診間諮詢第一版">
+    <div class="cap"><span class="tag mid">轉折 ⑧</span><br>診間諮詢，第一次出現磁磚大樓</div></div>
+</div>
+<div class="vs">
+  <div class="col"><img loading="lazy" src="/assets/hero-crown-photo-800.jpg" alt="定稿">
+    <div class="cap"><span class="tag yes">定稿・已上線</span><br>
+      牙齒在手上（畫面是牙科的事）、比喻在泡泡裡（不必讀者自己跳）。<br>
+      <span class="hint">這句推導現在只存在於 <code>drafts/prompts/09-consult-tiles.txt</code> 的第二行。</span></div></div>
+</div>
+<div class="quote">
+  <span class="src">⚠ 更正我在對話裡講錯的一件</span>
+  我先前說「<code>drafts/prompts/</code> 的十四份是〈小朋友的牙套〉的」——<b>不對，那是這一篇（假牙材質）的。</b>
+  〈小朋友的牙套〉的圖在 <code>drafts/kids-crown/</code>，而且它<b>有</b>寫進資料庫第十七節。
+</div>
+
+<h3>4-2　〈隱形矯正〉——最值得寫進去的一條：<b>只改一個人，就不要重生成</b></h3>
+<p>2026-09-19 第五輪把「換成男醫師」寫進完整提示詞重新生成，結果整張跑掉。</p>
+<div class="vs">
+  <div class="col"><img loading="lazy" src="ex/aligner-v4.jpg" alt="第四版">
+    <div class="cap"><span class="tag yes">第四版</span><br>
+      構圖、角度、光、每個人的位置都對，<b>只有白袍那位要換性別</b></div></div>
+  <div class="col"><img loading="lazy" src="ex/aligner-v5-rejected.jpg" alt="第五版，被退回">
+    <div class="cap"><span class="tag no">第五版・被退回</span><br>
+      鏡頭推近、大螢幕被切掉一塊、人物比例變大，<b>男醫師臉上還長出法令紋與眼下陰影</b></div></div>
+</div>
+<div class="quote">
+  <span class="src">你當時的原話</span>
+  「新作的男醫師有點老　而且原版只有女醫師要調整　我比較喜歡原版的角度和畫面呈現」
+</div>
+<div class="quote good">
+  <span class="src">drafts/aligner-simulation/hero-edit-prompt.md</span>
+  ⚠⚠ <b>通則：只有一個人要改的時候，不要重生成。</b> 文生圖每一次都是重擲骰子，
+  構圖、角度、光、每個人的位置全部會重來；已經對的九成因此被賠掉。<br>
+  而且「顯老」的成因不是年齡寫錯，是 STYLE 段那條「每個色相用兩三階」被套到皮膚上——
+  解法是給一個<b>畫面內的錨點</b>：「不可以比左邊穿芥末黃毛衣那位看起來老」。
+</div>
+<p>這條和資料庫第十七節結尾那句「同一個部位第三次出事就改用局部重繪」<b>是同一件事</b>，
+   現在拆在兩個檔案裡。</p>
+
+<h3>4-3　〈兒童舒眠〉——中途換梗，順便把比例從 16:9 改成 4:3</h3>
+<div class="vs">
+  <div class="col"><img loading="lazy" src="ex/sedation-v1.jpg" alt="第一版">
+    <div class="cap"><span class="tag no">第一版・整個放掉</span><br>16:9，不畫療程</div></div>
+  <div class="col"><img loading="lazy" src="ex/sedation-final.jpg" alt="定稿">
+    <div class="cap"><span class="tag yes">定稿・已上線</span><br>
+      你指定的四個階段，2×2，<b>4:3</b></div></div>
+</div>
+<div class="quote good">
+  <span class="src">drafts/kids-sedation/HERO-PROMPTS.md</span>
+  ⚠⚠ <b>代價</b>：首頁卡的縮圖是 <code>aspect-ratio:16/9</code> ＋ <code>object-fit:cover</code>，
+  4:3 會被<b>置中裁掉上下各 12.4%</b>。所以提示詞把「臉與關鍵的東西不要落在上下 13%」
+  寫成硬規定，而且 2×2 的上排要把頭壓低一點、下排要把頭抬高一點。
+</div>
+
+<h3>4-4　〈八成人有牙周病〉——「四個人長得一樣」，成因是自己上一輪寫的</h3>
+<div class="quote">
+  <span class="src">你看第二版的原話（2026-09-20）</span>
+  「好很多，但周邊四個的醫事人員表情都一樣」
+</div>
+<div class="quote good">
+  <span class="src">drafts/perio-prevalence/hero-prompt.md 七之三</span>
+  第二輪為了治「太安靜」，我在四格裡<b>每一格都寫了同一句</b>
+  「mouth slightly open because she/he is speaking」——模型一視同仁照做，
+  四個人就變成同一張臉。<br>
+  <b>通則：凡是四個地方都要出現的東西，就要四個地方各寫各的，不能寫一句共用的。</b>
+</div>
+<p>這條是資料庫第十七節「屬性會串台」的近親，也是第七節第 18 條
+   「為了修一件事加的句子，會把另一件事壓平」的第三次重演。</p>
+
+<h3>4-5　〈牙周病治療〉——最嚴重的一張：<b>連提示詞都沒有留</b></h3>
+<div class="card">
+  <p>2026-08-16 上線（<code>228ab88d</code>）。ILLUSTRATION.md 查無紀錄，
+     <code>drafts/</code> 裡也找不到那張 HERO 的提示詞
+     （有的是同一科的<b>線稿</b>與<b>分享圖</b>提示詞，不是文章 HERO）。</p>
+  <p><b>影響</b>：這張要改、或要再畫一張同系列的，等於從零開始——
+     其他十五張都還原得回去，只有這張不行。</p>
+</div>
+
+
+<h2><span class="n">§ 5</span>兩類東西根本不在插畫資料庫裡</h2>
+<div class="card">
+  <h3>衛教懶人包 12 張</h3>
+  <p>不是 AI 畫的，是紙本掃描之後裁切＋套該科顏色（<code>handout-crop.mjs</code>）。
+     推導全部只寫在 <code>drafts/line-oa/README.md</code>。</p>
+  <div class="quote">
+    <span class="src">⚠ 順帶一件比文件缺口更要緊的：授權沒結案</span>
+    <code>drafts/line-oa/README.md</code> 自己寫著：「<b>而且授權還沒確認</b>
+    （「侑津製圖」是不是李侑津醫師）」。
+  </div>
+</div>
+<div class="card">
+  <h3>醫師形象照（2026-09-19 上線）</h3>
+  <p>不是插畫，但「九張要像同一組、裁切框照<b>頭寬</b>算不照頭高」是實打實的視覺規格，
+     資料庫裡 0 提及，至少該有一行指路。</p>
+</div>
+
+
+<h2><span class="n">§ 6</span>第六節「還沒決定的」——有一半已經被行動回答了</h2>
+<div class="tw">
+<table>
+  <tr><th>第六節的題目</th><th>現在的實際狀態</th></tr>
+  <tr><td>5. 具體色票還沒定</td>
+      <td><b>半答了。</b>第十一、十二節已經定出「套色是量出來的，不是挑的」「線稿不准實心填色」</td></tr>
+  <tr><td>6. 這個風格要用在哪</td>
+      <td><b>已答。</b>四個用途：文章 HERO／七科線稿／分享圖／LINE 頭圖，各有各的硬規格</td></tr>
+  <tr><td>7. 六張舊 SVG 要不要清掉</td>
+      <td><b>真的還沒問你。</b>六張 <code>hero-*.svg</code> ＋ <code>hero-*-1600.png</code> 目前沒有人引用</td></tr>
+  <tr><td>9.「縮圖點開」是什麼互動</td>
+      <td><b>真的還沒問你。</b>站上現在點 HERO 沒有反應</td></tr>
+</table>
+</div>
+
+
+<h2><span class="n">§ 7</span>結構：2704 行、十七節、<b>沒有目錄</b></h2>
+<p>十三～十七節每一節都藏著一條可以推廣到任何一張圖的通則，但要整節讀完才挖得到。
+   建議照 CLAUDE.md 第九節那張「最常踩的五條」的做法，在開頭放一張速查表：</p>
+<div class="sample">
+  <div class="row"><span class="sec">十之一</span><span>形狀不要用文字描述，<b>用參考圖</b></span></div>
+  <div class="row"><span class="sec">十之五</span><span>臉會顯老，成因是 STYLE 段自己造成的</span></div>
+  <div class="row"><span class="sec">十三</span><span>借名畫：換風格參考時，逐項問「這一項是我們的，還是它的」</span></div>
+  <div class="row"><span class="sec">十四</span><span><b>鏡頭站在誰的位置，看的人就是誰</b></span></div>
+  <div class="row"><span class="sec">十五</span><span>方向不可以用「和某某同方向」講</span></div>
+  <div class="row"><span class="sec">十六</span><span>「太寫實」的成因不是顏色，是<b>畫得太準</b></span></div>
+  <div class="row"><span class="sec">十七</span><span>多格圖裡角色的屬性會串台，<b>方向跟著份量走</b></span></div>
+  <div class="row"><span class="sec">新</span><span>只有一個人要改，就改圖，<b>不要重生成</b>（§4-2）</span></div>
+  <div class="row"><span class="sec">新</span><span>四個地方都要出現的東西，四個地方各寫各的（§4-4）</span></div>
+</div>
+
+
+<h2><span class="n">§ 8</span>要你決定的</h2>
+
+<div class="ask"><b>① 先做哪幾件？</b>
+  我建議的順序：<b>§2 三條過期指令 ＋ §3 夜間</b>（會讓人做錯事）→
+  <b>§4 五張回寫、和第十七節併成一條通則</b> → <b>§7 開頭的速查表</b> →
+  §5 懶人包與醫師照補指路。</div>
+
+<div class="ask"><b>② 那六張沒人引用的舊 <code>hero-*.svg</code> 要不要清掉？</b>
+  連同 <code>hero-*-1600.png</code> 與 <code>tools/og-images.mjs</code>。
+  （CLAUDE.md 寫著「不要自己動手刪」，所以我沒動。）</div>
+
+<div class="ask"><b>③ 懶人包的「侑津製圖」是李侑津醫師嗎？</b>
+  這件會影響那 12 張能不能繼續掛在 LINE 上。</div>
+
+<div class="ask"><b>④〈牙周病治療〉那張要不要補做一份紀錄？</b>
+  提示詞已經找不回來了，能做的是「從成品逆推一份規格」，或是<b>乾脆之後重畫一張</b>。</div>
+
+<p class="foot-note">
+  這一頁是內部體檢頁，三道 noindex 都在（頁面 meta、Worker 的標頭、robots.txt），
+  搜尋引擎抓不到，但<b>拿到網址的人看得到</b>。<br>
+  範例圖：<code>ex/</code> 底下六張是從 <code>drafts/</code> 縮成 760px 的複本
+  （Chromium canvas、JPEG 0.72，做法照 <code>tools/hero-resize.mjs</code>）；
+  其餘全部直接引用站上正在用的檔案。
+</p>
+
+</div>
+</body>
+</html>
