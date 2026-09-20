@@ -47,6 +47,10 @@
     "hash": "24c5dddb74f0b9fb",
     "updated": "2026-08-18"
   },
+  "perio-prevalence": {
+    "hash": "e1484d80bb361d5f",
+    "updated": "2026-09-20"
+  },
   "regular-checkup": {
     "hash": "cc85eb79fb036385",
     "updated": "2026-08-18"
@@ -60,7 +64,7 @@
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "dfafe72870d8f953",
+    "hash": "4fe13106806a1868",
     "updated": "2026-09-20"
   }
 }
