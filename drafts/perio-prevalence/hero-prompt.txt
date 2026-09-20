@@ -12,13 +12,19 @@ SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each han
 single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
 On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
 the nose, the mouth and the ears. Nothing else at all — no wrinkles, no lines beside the
-nose, no lines under the eyes, no cheek shadow, no neck shading.
+nose, no lines under the eyes, no cheek shadow, no neck shading. Eyes are small solid dots
+or short lines — never closed crescents, never large glossy cartoon eyes.
+EVERY PERSON IS A DIFFERENT PERSON. No two people in this picture share the same face, the
+same hairstyle, the same age or the same expression. In particular THE FOUR CLINICIANS IN
+THE FOUR SIDE PANELS MUST NOT LOOK LIKE THE SAME PERSON REPEATED FOUR TIMES: they differ in
+sex, age, hair, posture and expression, and ONLY ONE OF THEM HAS AN OPEN MOUTH. Their exact
+descriptions are given below and must be followed one by one.
 HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
 #4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair on anyone.
-EVERY PERSON IN THIS PICTURE IS DRAWN BY THE SAME HAND, at the same level of simplicity:
-every single figure — including anyone waiting in a queue and anyone appearing on a screen
-— has a drawn face, drawn hands and coloured clothes. NOBODY is a flat grey silhouette,
-a shadow, a blob or an empty outline.
+EVERY PERSON IS DRAWN BY THE SAME HAND, at the same level of simplicity: every single
+figure — including anyone waiting in a queue and anyone appearing on a screen — has a drawn
+face, drawn hands and coloured clothes. NOBODY is a flat grey silhouette, a shadow, a blob
+or an empty outline.
 
 STRUCTURE — ONE single illustration divided by THIN HAND-DRAWN LINES into a large middle
 panel and four small side panels. NO ARROWS ANYWHERE.
@@ -29,24 +35,25 @@ panel and four small side panels. NO ARROWS ANYWHERE.
 THE MIDDLE PANEL — A MODERN CONNECTED OPERATIONS AND VIDEO-CONFERENCE ROOM: the room a
 public-health team works in while a nationwide survey is running, with colleagues in other
 cities joined in by video. IT MUST NOT LOOK LIKE A SCHOOL CLASSROOM OR A LECTURE ROOM. It
-is bright and daylit, but it is clearly a technical working room, not a teaching room.
+is bright and daylit, but clearly a technical working room, not a teaching room.
 BUILD THE ROOM FROM THESE NAMED THINGS, all of them drawn:
   • THE MAIN DISPLAY: a large wall-mounted flat display with a THIN DARK BEZEL and a slim
     metal mounting arm behind it, hung slightly proud of the wall — a piece of equipment,
     never a whiteboard in a wooden frame and never a projection screen on a tripod.
   • A SLIM CAMERA BAR mounted directly above the main display, with one small round lens.
-  • A ROW OF THREE SMALL SCREENS mounted in a line on the wall to one side of the main
-    display, all the same size, each with the same thin dark bezel. EACH ONE SHOWS ONE
-    REMOTE COLLEAGUE, head and shoulders only, facing forward, drawn exactly as simply as
-    everyone else in the picture: three different people, three different clothing colours.
-    There is NO name bar, NO caption and NO text under or around them.
-  • A LONG LOW MEETING TABLE in pale wood with slim metal legs, running across the lower
-    middle of the room, with THREE OPEN LAPTOPS on it and ONE SMALL ROUND GREY
-    SPEAKERPHONE PUCK in the centre of the table with three tiny dots on its top face.
-  • A GLASS PARTITION WALL with a slim dark metal frame along the right-hand side of the
-    room; through the glass a second, quieter room is faintly visible.
-  • A SLIM EQUIPMENT RACK standing against the back wall: a narrow cabinet with a few
-    horizontal slots and a few small round dots on its front. No lights, no glow.
+  • A COLUMN OF EXACTLY THREE SMALL SCREENS — three, not two — mounted one above another on
+    the wall to the right of the main display, all the same size, each with the same thin
+    dark bezel. EACH ONE SHOWS ONE REMOTE COLLEAGUE, head and shoulders only, facing
+    forward: three clearly different people of different ages, in three different clothing
+    colours, each drawn exactly as simply as everyone else. NO name bar, NO caption, NO text
+    under or around them.
+  • A LONG LOW MEETING TABLE in pale wood with slim metal legs across the lower middle of
+    the room, with THREE OPEN LAPTOPS on it and ONE SMALL ROUND GREY SPEAKERPHONE PUCK in
+    the centre with three tiny dots on its top face.
+  • A GLASS PARTITION WALL with a slim dark metal frame along the right-hand side; through
+    the glass a second, quieter room is faintly visible.
+  • A SLIM EQUIPMENT RACK against the back wall: a narrow cabinet with a few horizontal
+    slots and a few small round dots on its front. No lights, no glow.
   • TWO RECESSED LINEAR CEILING LIGHTS running front to back, and a THIN CABLE TRAY running
     horizontally along the upper wall.
   • THE FLOOR IS PALE COOL GREY with a faint seam grid, not wooden boards.
@@ -60,21 +67,24 @@ ON THE MAIN DISPLAY:
     FOR ITS STYLE: clearly TALLER THAN IT IS WIDE, about twice as tall as it is wide; its
     western edge smooth and gently curved, its eastern edge straighter and steeper; the
     northern end blunt, the southern end narrowing to a soft point. Draw the island TALL —
-    it takes up at least two thirds of the height of the display. It is the single most
-    important object in the whole picture and must still read as an island when the picture
-    is shrunk to the size of a postage stamp.
+    at least two thirds of the height of the display. It is the single most important object
+    in the whole picture and must still read as an island when the picture is shrunk to the
+    size of a postage stamp.
   • THE ISLAND IS SHADED LIKE A HEAT MAP in three flat steps of ONE colour: the palest areas
     a light tint of #317d78, the middle areas #317d78 itself, the few deepest patches
-    #2a6d69. Soft irregular patches meeting edge to edge. DO NOT draw internal borders,
-    administrative regions, county outlines, grid lines or a dotted coastline.
+    #2a6d69. THE PATCHES HAVE NO OUTLINE OF THEIR OWN — they are areas of colour only,
+    meeting edge to edge, with ONE clean drawn outline around the island as a whole and
+    nothing else. DO NOT draw internal borders, administrative regions, county outlines,
+    grid lines or a dotted coastline.
   • FOUR SMALL AMBER DOTS (#c28229) sit on the island, spread from north to south.
   • FOUR NUMBERS float beside the island, two on its left and two on its right, each joined
     to the EDGE of the island by one thin short leader line. They are exactly: 78.7% and
     24.7% on one side, 9.3% and 6.9% on the other — plain, upright, evenly spaced sans-serif
     digits followed by a percent sign, nothing else. EACH NUMBER SITS CLEARLY OUTSIDE THE
     ISLAND with a gap around it: no number touches, overlaps or sits on top of the island.
-  • TWO SMALL AMBER WARNING TRIANGLES (#c28229), each no wider than a finger, sit near the
-    island — a plain triangle with a short vertical stroke and a dot below it inside.
+  • EXACTLY TWO SMALL AMBER WARNING TRIANGLES (#c28229) — two, no more — each no wider than
+    a finger, near the island: a plain triangle with a short vertical stroke and a dot below
+    it inside.
   • CHARTS SIT ROUND THE ISLAND ON THE SAME DISPLAY, small and simple, clean flat shapes: a
     column chart of FIVE bars of clearly different heights; a line chart rising gently to
     the right with small round dots at its turning points; a horizontal bar chart of FOUR
@@ -89,66 +99,84 @@ the exact centre of the panel:
     the side, much smaller than the display: a woman on the left with a short bob, wearing a
     SLIM HEADSET WITH A BOOM MICROPHONE, pointing with one finger at the middle of the
     island, her mouth slightly open because she is speaking; a man beside her holding an
-    open paper folder against his chest, looking where she points.
+    open paper folder against his chest, looking where she points, mouth closed.
   • ONE MAN SITS AT THE MEETING TABLE in the lower left, leaning forward, both hands on a
-    laptop keyboard, looking at his own laptop screen.
+    laptop keyboard, looking at his own laptop screen, mouth a short closed line.
   • ONE WOMAN WALKS ACROSS the lower right carrying a stack of papers, her head turned
     towards the main display, one hand raised slightly as she says something, mouth
     slightly open.
   • ONE MAN STANDS at the equipment rack on the right wearing a SLIM HEADSET, one hand
-    reaching up to the rack, his head turned back towards the main display.
-Their expressions are calm, alert and busy — they are working, mid-task, mid-sentence.
-Nobody is alarmed, nobody is celebrating, nobody is pointing at the viewer.
+    reaching up to the rack, his head turned back towards the main display, mouth closed.
+Their expressions are calm, alert and busy — they are working, mid-task. Nobody is alarmed,
+nobody is celebrating, nobody is pointing at the viewer.
 THE LAPTOP SCREENS each show ONE simple shape only: one a small column chart of four bars,
 one a single rising line, one a small plain island silhouette. Nothing else on them — no
 code, no text, no icons, no logos.
 
 THE FOUR SIDE PANELS — four different places where ordinary people are having their teeth
-checked on an ordinary day. These panels must NOT look bare: each one is a real, furnished,
-lived-in room with the named props below, and in each one SOMETHING IS HAPPENING — someone
-is speaking, reaching, handing something over or leaning in. Each panel is warm and calm:
-nobody is frightened, nobody is in pain, no blood, no close-up of an open mouth.
-  • TOP LEFT — A CLINIC RECEPTION DESK. A woman in her fifties stands at the counter handing
-    a small plain card to a receptionist in a pale clinic top, who reaches out to take it
-    with one hand while her other hand gestures towards a doorway; her mouth is slightly
-    open because she is speaking. PROPS, ALL DRAWN: a wide counter with a panelled front, a
-    small upright card terminal with a blank face, a desk organiser holding three upright
-    folders with blank spines, a small potted plant on the counter, a low shelf behind with
-    two stacked boxes, a framed picture of a single tooth shape on the wall with NO writing
-    on it, and a doorway behind the desk through which the corner of a dental chair and a
-    lamp arm are visible.
-  • BOTTOM LEFT — A DENTAL SURGERY. A patient lies back in a dental chair, mouth closed,
-    eyes calm, one hand resting on the armrest; a dentist in a pale clinic top sits beside
-    him on a rolling stool, leaning in, holding a small round mouth mirror, mouth slightly
-    open because he is explaining what he is doing. PROPS, ALL DRAWN: a round overhead lamp
-    on a jointed arm, a small instrument tray on a swing arm holding two simple instruments
-    lying flat, a curling suction hose, a cup in a holder at the side of the chair, a low
-    cabinet with plain drawer fronts, a tissue box, and a monitor on an arm turned away from
-    us showing only its plain back.
-  • TOP RIGHT — A COMMUNITY HALL OR SCHOOL ROOM SET UP FOR A CHECK-UP DAY. A dentist in a
-    pale clinic top sits at a folding table with one hand raised as she explains something,
-    mouth slightly open; a teenage boy sits opposite with his hands on his knees. BEHIND
-    THEM, TWO MORE PEOPLE WAIT THEIR TURN — a woman and a young girl, each with a drawn face,
-    drawn hands and their own clothing colours, NOT grey silhouettes. PROPS, ALL DRAWN: a
-    folding table with a paper pad and a small penlight on it, a portable lamp on a stand, a
-    stack of spare folding chairs against the wall, a cardboard supply box on the floor, a
-    tall window with simple curtains, and a plain cloth-covered noticeboard with NOTHING
-    pinned to it.
-  • BOTTOM RIGHT — LOOKING AT AN X-RAY TOGETHER. A dentist stands beside a pale lightbox on
-    the wall with one hand raised towards it, mouth slightly open because he is explaining;
-    a man in his thirties sits on a stool leaning forward with one hand on his knee, looking
-    at it. PROPS, ALL DRAWN: the lightbox showing A SINGLE SIMPLE ROW OF TOOTH SHAPES in
-    pale grey with NO numbers, NO letters and NO detail; a wall-mounted X-ray arm partly
-    entering the panel from the edge; a lead apron hanging on a wall hook; a small side desk
-    with a keyboard and a monitor whose screen is blank; a rolling stool; and a small potted
-    plant on the floor.
+checked on an ordinary day. These panels must NOT look bare: each is a real, furnished,
+lived-in room with the named props below, and in each one SOMETHING IS HAPPENING. Each panel
+is warm and calm: nobody is frightened, nobody is in pain, no blood, no close-up of an open
+mouth.
+
+THE FOUR CLINICIANS ARE FOUR DIFFERENT PEOPLE — READ THIS CAREFULLY. They must not share a
+face, an age, a hairstyle, a posture or an expression, and only the third one is speaking:
+  1. RECEPTION — A YOUNG WOMAN IN HER TWENTIES with her hair tied back in a ponytail. She is
+     STANDING BEHIND THE COUNTER, leaning slightly forward, taking a small plain card with
+     one hand while her other hand gestures towards a doorway. HER MOUTH IS A CLOSED UPWARD
+     CURVE — a warm, welcoming, closed-mouth smile; her eyebrows are relaxed and level. SHE
+     IS NOT SPEAKING AND HER MOUTH IS NOT OPEN.
+  2. DENTAL CHAIR — A MAN IN HIS FORTIES with short, neatly cut hair and a slightly heavier
+     build. He is SITTING ON A ROLLING STOOL, bent well forward over the patient, both
+     forearms brought in close, holding a small round mouth mirror. HE IS CONCENTRATING: his
+     mouth is ONE SHORT STRAIGHT CLOSED LINE, his eyebrows are drawn very slightly lower and
+     level, his eyes are directed down at his work and not at the patient's face. HE IS NOT
+     SPEAKING AND HE IS NOT SMILING.
+  3. COMMUNITY HALL — A WOMAN IN HER THIRTIES with a short bob. She is SITTING AT A FOLDING
+     TABLE, turned towards the boy, one hand raised open-palmed as she explains. SHE IS THE
+     ONLY CLINICIAN IN THE WHOLE PICTURE WITH AN OPEN MOUTH: a small open shape, friendly
+     and mid-sentence, eyebrows slightly raised.
+  4. X-RAY — A MAN IN HIS FIFTIES, taller and thinner, with short hair parted at one side.
+     He is STANDING beside the lightbox, weight on one leg, his body turned half towards the
+     seated man, one index finger touching the film. HIS MOUTH IS CLOSED WITH ONE CORNER
+     LIFTED — a small, dry, reassuring half-smile — and his head is tilted slightly towards
+     the man he is with. HE IS NOT SPEAKING.
+
+  • TOP LEFT — A CLINIC RECEPTION DESK. Clinician 1 above, and a woman in her fifties
+    standing at the counter handing over the card, her free hand holding a shoulder bag
+    strap. PROPS, ALL DRAWN: a wide counter with a panelled front, a small upright card
+    terminal with a blank face, a desk organiser holding three upright folders with blank
+    spines, a small potted plant on the counter, a low shelf behind with two stacked boxes,
+    a framed picture of a single tooth shape on the wall with NO writing on it, and a
+    doorway behind the desk through which the corner of a dental chair and a lamp arm are
+    visible.
+  • BOTTOM LEFT — A DENTAL SURGERY. Clinician 2 above, and a patient lying back in the
+    chair, mouth closed, eyes calm, one hand resting on the armrest and one knee slightly
+    raised. PROPS, ALL DRAWN: a round overhead lamp on a jointed arm, a small instrument
+    tray on a swing arm holding two simple instruments lying flat, a curling suction hose, a
+    cup in a holder at the side of the chair, a low cabinet with plain drawer fronts, a
+    tissue box, and a monitor on an arm turned away from us showing only its plain back.
+  • TOP RIGHT — A COMMUNITY HALL OR SCHOOL ROOM SET UP FOR A CHECK-UP DAY. Clinician 3
+    above, and a teenage boy sitting opposite her with his hands on his knees, leaning back
+    a little. BEHIND THEM, TWO MORE PEOPLE WAIT THEIR TURN — a woman and a young girl, each
+    with a drawn face, drawn hands and their own clothing colours, NOT grey silhouettes; the
+    girl is holding the woman's hand and looking up at her. PROPS, ALL DRAWN: a folding
+    table with a paper pad and a small penlight on it, a portable lamp on a stand, a stack of
+    spare folding chairs against the wall, a cardboard supply box on the floor, a tall window
+    with simple curtains, and a plain cloth-covered noticeboard with NOTHING pinned to it.
+  • BOTTOM RIGHT — LOOKING AT AN X-RAY TOGETHER. Clinician 4 above, and a man in his
+    thirties sitting on a stool leaning forward with one hand on his knee, looking up at the
+    film. PROPS, ALL DRAWN: the lightbox showing A SINGLE SIMPLE ROW OF TOOTH SHAPES in pale
+    grey with NO numbers, NO letters and NO detail; a wall-mounted X-ray arm partly entering
+    the panel from the edge; a lead apron hanging on a wall hook; a small side desk with a
+    keyboard and a monitor whose screen is blank; a rolling stool; and a small potted plant
+    on the floor.
 
 PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes, a
 simple line mouth, a small nose), natural realistic head-to-body proportions, believable
 ages, East Asian faces. Not photorealistic. Not faceless. No oversized heads, no noodle
 limbs. Nobody looks at the viewer. Roughly half are women and half are men, of mixed ages
-from young child to sixties. When someone is speaking, draw the mouth as a small open shape
-rather than a closed line — never an exaggerated cartoon shout.
+from young child to sixties. Vary the builds and heights: not everyone is the same size.
 CLOTHING — clinic staff wear short-sleeved clinic tops in #b7d7d3 with their folds and
 shadows in #99b8b4. Everyone else wears ordinary everyday clothes, and EVERY PERSON'S
 GARMENT IS A DIFFERENT COLOUR from the people next to them — muted clay rose, mustard,
@@ -159,13 +187,14 @@ collar, cuff, sleeve seam, hem, a pocket.
 
 LIGHT AND COLOUR — Ordinary bright indoor daytime, ONE light source: clean daylight from
 the left, warm and even. No long orange shadows, not sunset, not lamplight, no spotlight,
-no screens lighting faces from below, no dark room. Across the upper part of the middle
-panel only, above the people and not touching them, draw FOUR OR FIVE long, thin, white
-hand-drawn lines running the same way at the same shallow angle, evenly spaced, solid where
-they begin and thinning to dry flecks — soft chalk quality, clearly hand-made. These lines
-must never begin at anyone's mouth, nose, hand or body, must never loop or curl back on
-themselves, must never cross the panel dividing lines, and must never resemble smoke, steam
-or breath.
+no screens lighting faces from below, no dark room.
+THE WHITE ATMOSPHERE LINES ARE REQUIRED — DO NOT LEAVE THEM OUT. Across the upper part of
+the middle panel only, above the people and not touching them, draw FOUR OR FIVE long,
+thin, white hand-drawn lines running the same way at the same shallow angle, evenly spaced,
+solid where they begin and thinning to dry flecks — soft chalk quality, clearly hand-made,
+clearly visible against the wall. These lines must never begin at anyone's mouth, nose, hand
+or body, must never loop or curl back on themselves, must never cross the panel dividing
+lines, and must never resemble smoke, steam or breath.
 Most coloured areas sit in the range HSL saturation 30–50 and lightness 70–85 — clearly
 coloured and readable, never washed out into near-white pastels and never heavy or muddy.
 About half the picture is chromatic. Use AT LEAST FIVE clearly different colours in each
@@ -176,22 +205,24 @@ appears ONLY in the four small dots, the two warning triangles and one highlight
 NOT wash the image in either colour, do NOT tint the skin, the walls, the floor or the paper
 with them, and do NOT make them vivid.
 
-MOTION AND SPEECH MARKS — THE WHOLE PICTURE SHOULD FEEL BUSY, NOT STILL. Every mark is the
-same kind: TWO OR THREE very short, straight, same-angle hand-drawn strokes, no longer than
-a third of a palm's width, solid where they begin and fading out, never curled, never
-looping, never bigger than the thing they belong to. Place them in these nine places and
-nowhere else:
+MOTION AND SPEECH MARKS — THE PICTURE SHOULD FEEL BUSY, NOT STILL. Every mark is the same
+kind: TWO OR THREE very short, straight, same-angle hand-drawn strokes, no longer than a
+third of a palm's width, solid where they begin and fading out, never curled, never looping,
+never bigger than the thing they belong to. Place them in these eight places and nowhere
+else:
   • beside the pointing woman's fingertip, and two short diagonal strokes beside her mouth
     because she is speaking;
   • above the seated man's wrists as he types;
   • beside the walking woman's shoulder, and two short strokes beside her mouth;
   • beside the standing man's hand at the equipment rack;
-  • TOP LEFT PANEL: two short strokes beside the receptionist's mouth, and two beside the
-    card as it changes hands;
-  • BOTTOM LEFT PANEL: two short strokes beside the dentist's mouth;
+  • TOP LEFT PANEL: two short strokes beside the card as it changes hands — NONE at her
+    mouth, because she is not speaking;
+  • BOTTOM LEFT PANEL: two short strokes beside the mouth mirror in the dentist's hand —
+    NONE at his mouth, because he is not speaking;
   • TOP RIGHT PANEL: two short strokes beside the dentist's raised hand and two beside her
-    mouth;
-  • BOTTOM RIGHT PANEL: two short strokes beside the dentist's raised hand.
+    mouth, because she is the one who is speaking;
+  • BOTTOM RIGHT PANEL: two short strokes beside the dentist's pointing finger where it
+    touches the film — NONE at his mouth, because he is not speaking.
 NO speech bubbles of any kind, no thought bubbles, no speed lines across a background, no
 radiating focus lines, no sparkles, no musical notes, no hearts.
 
@@ -205,17 +236,18 @@ boxes, doors or clothing, in any language or alphabet. Do NOT draw rows of short
 squiggles or wavy lines anywhere to imitate lines of writing. Where writing would normally
 appear, leave the surface plain. There are no logos and no watermarks.
 
-AVOID — a classroom, a lecture room, a whiteboard, a blackboard, a chalk tray, a teacher's
-desk, rows of identical chairs all facing one way, a projection screen on a tripod; grey
-silhouette people, shadow people, faceless waiting figures or empty outlines of people; a
-bare undecorated room with blank walls in any panel; greyscale; photorealism; a
-photorealistic mouth, gum or tooth; faceless or noodle-limbed figures; thick uniform black
-outlines; even mechanical vector linework; a dark room; glowing monitors; neon; chrome,
-metallic or iridescent gradients; glow, sparkle or lens flare; grey, silver, white or
-blue-grey hair; wrinkles, cheek shadow or facial modelling; a frightened, sad or pained
-face; anyone shouting, celebrating or high-fiving; blood, wounds or red inflamed gums;
-decayed, dark, broken or missing teeth; a red or orange heat map; county borders, grid lines
-or dotted coastlines on the island; a number overlapping the island; a second island or any
-other country; a world map; arrows of any kind; ticks, crosses, plus or minus signs; speech
-bubbles; a crowd; anyone looking at the viewer; a whole image tinted green; flat untextured
-single-tone clothing.
+AVOID — the four clinicians sharing one face, one hairstyle, one age or one expression; four
+people all with open mouths; everyone smiling the same smile; a classroom, a lecture room, a
+whiteboard, a blackboard, a chalk tray, a teacher's desk, rows of identical chairs all facing
+one way, a projection screen on a tripod; grey silhouette people, shadow people, faceless
+waiting figures or empty outlines of people; a bare undecorated room with blank walls in any
+panel; greyscale; photorealism; a photorealistic mouth, gum or tooth; faceless or
+noodle-limbed figures; thick uniform black outlines; even mechanical vector linework; a dark
+room; glowing monitors; neon; chrome, metallic or iridescent gradients; glow, sparkle or lens
+flare; grey, silver, white or blue-grey hair; wrinkles, cheek shadow or facial modelling; a
+frightened, sad or pained face; anyone shouting, celebrating or high-fiving; blood, wounds or
+red inflamed gums; decayed, dark, broken or missing teeth; a red or orange heat map; outlined
+patches, county borders, grid lines or dotted coastlines on the island; a number overlapping
+the island; more than two warning triangles; a second island or any other country; a world
+map; arrows of any kind; ticks, crosses, plus or minus signs; speech bubbles; a crowd; anyone
+looking at the viewer; a whole image tinted green; flat untextured single-tone clothing.
