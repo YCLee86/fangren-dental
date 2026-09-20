@@ -16,8 +16,8 @@
     "updated": "2026-08-27"
   },
   "gum-bleeding": {
-    "hash": "63e18a3eeac3590c",
-    "updated": "2026-08-18"
+    "hash": "f8aed473e2290b22",
+    "updated": "2026-09-20"
   },
   "kids-arch-expansion": {
     "hash": "d4bd9eb739fe93cd",
@@ -28,12 +28,12 @@
     "updated": "2026-09-07"
   },
   "kids-first-visit": {
-    "hash": "b6287524a4b7179c",
-    "updated": "2026-08-18"
+    "hash": "fbdd7e0f6eef05d7",
+    "updated": "2026-09-20"
   },
   "kids-sedation": {
-    "hash": "97ee71de19f7efa5",
-    "updated": "2026-09-19"
+    "hash": "b6f181566f3fbbed",
+    "updated": "2026-09-20"
   },
   "missing-tooth": {
     "hash": "b4c49b86e2344adf",
@@ -44,27 +44,27 @@
     "updated": "2026-08-20"
   },
   "perio-laser": {
-    "hash": "6118f50929fd7038",
-    "updated": "2026-08-18"
+    "hash": "ae62b338a5e3d34e",
+    "updated": "2026-09-20"
   },
   "perio-prevalence": {
     "hash": "0e5b2b5f54c9b926",
     "updated": "2026-09-20"
   },
   "regular-checkup": {
-    "hash": "263e6db75bd5e3d3",
-    "updated": "2026-08-18"
+    "hash": "c23840e329832524",
+    "updated": "2026-09-20"
   },
   "three-month-recall": {
-    "hash": "7dac2dc7ac93a90e",
-    "updated": "2026-09-05"
+    "hash": "0794dc120d2ef6ed",
+    "updated": "2026-09-20"
   },
   "wisdom-tooth": {
     "hash": "b5160394af3cec6e",
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "4fe13106806a1868",
+    "hash": "30c4c993204a121b",
     "updated": "2026-09-20"
   }
 }
