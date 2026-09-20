@@ -108,7 +108,7 @@ if (bodyStart < 0 || bodyEnd < 0) throw new Error('找不到內文範圍');
 out = out.slice(0, bodyStart) + `    <p class="lede">「植牙可以用一輩子嗎？」這是還沒決定要不要做的人，最常問的一句。</p>
     <p>要回答它，可以先看兩位患者。他們的植體是世界上最早的那幾顆，而且一直被追蹤到今天。</p>
 
-    <h2>世界第一顆植牙，陪了他四十年</h2>
+    <h2>世界第一顆植牙，用了四十年</h2>
     <p>1965 年，瑞典哥德堡大學的 Per-Ingvar Brånemark 教授，為一位名叫 Gösta Larsson 的患者植入人類史上第一組骨整合鈦金屬植體。Larsson 天生顎骨發育異常，當時已經全口無牙；那天植入下顎的四顆鈦植體撐起一副固定式的全口假牙，他終於能夠正常進食與說話。</p>
     <p><a href="https://www.dental-tribune.com/news/the-man-who-made-people-smile/" target="_blank" rel="noopener">Larsson 在 2006 年過世</a>，距離那場手術超過四十年，四顆植體仍在原位、功能正常。這是骨整合能夠長期使用的第一個證據。</p>
 
@@ -120,7 +120,7 @@ out = out.slice(0, bodyStart) + `    <p class="lede">「植牙可以用一輩子
       <p><b>這兩組還是最早期的設計。</b>當年用的是直壁、外六角的植體，表面處理與接合方式都和現在不一樣。今天的植體在這些地方已經改良很多，但那兩組最原始的設計，本身就撐過了數十年。</p>
     </div>
 
-    <h2>那一般人呢：十年與二十年的數字</h2>
+    <h2>那一般人呢：九成都可以用到 10 年、20 年</h2>
     <p>個案讓人振奮，但要決定自己做不做，看的是群體的數字。</p>
     <div class="table-scroll">
       <table>
