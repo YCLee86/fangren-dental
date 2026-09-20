@@ -338,12 +338,22 @@ const CMD = {
     const list = (await api(key, WM + '/sites/' + encodeURIComponent(site) + '/sitemaps')).sitemap || [];
     if (args.json) return console.log(JSON.stringify(list, null, 2));
     console.log('\n' + site + ' 的 sitemap：\n');
-    table(['檔案', '最後下載', '收錄數', '錯誤', '警告'], list.map(s => [
+    /* ⚠ contents 是**一種類型一列**（web／image／video），不可以加總 ——
+       加起來會得到一個比實際頁數大很多的數字（這一站是 21 頁 ＋ 16 圖 ＝ 37，
+       看起來像「收錄 37 頁」，其實只有 21 頁）。2026-09-20 踩過，所以拆開印。
+       ⚠ 另外 contents[].indexed **Google 已經廢棄，永遠回 0**，不要印它 ——
+       印出來會被讀成「一頁都沒收錄」，那是假的。真正的收錄狀態要用
+       urlInspection 逐頁問（這一支的 inspect 子指令）。 */
+    const num = (s, t) => {
+      const hit = (s.contents || []).find(c => c.type === t);
+      return hit ? Number(hit.submitted || 0) : 0;
+    };
+    table(['檔案', '最後下載', '網頁', '圖片', '錯誤', '警告'], list.map(s => [
       s.path,
       s.lastDownloaded ? s.lastDownloaded.slice(0, 10) : '（還沒抓過）',
-      (s.contents || []).reduce((a, c) => a + Number(c.submitted || 0), 0) || '—',
+      num(s, 'web') || '—', num(s, 'image') || '—',
       s.errors || 0, s.warnings || 0,
-    ]), [2, 3, 4]);
+    ]), [2, 3, 4, 5]);
     console.log('');
   },
 
