@@ -757,10 +757,61 @@ if (siteUrl && !CHECK_ONLY) {
   );
   /* history/ 是改版紀錄（定案後留下的文字），preview/ 是進行中的提案頁，
      兩者都不要被收錄。
-     這個檔案每次 build 都整個重寫，所以規則要寫在這裡，手改 robots.txt 會被蓋掉。 */
+     這個檔案每次 build 都整個重寫，所以規則要寫在這裡，手改 robots.txt 會被蓋掉。
+
+     ⚠⚠ 2026-09-20 加了 AI 機器人的立場（使用者定案「擋訓練、放檢索」）。
+       三件不知道就會做錯的事：
+       ① **檢索型與訓練型是兩組不同的機器人**，不是一個開關。擋錯邊 ＝ 從那一家的
+          AI 回答裡消失，而且沒有任何補償。
+       ② **robots.txt 是「最明確的那一組全拿」** —— 替某支機器人開了自己的群組，
+          它就不看 `*` 那一組了。所以檢索型那一組要把 /history/ 與 /preview/
+          再寫一次，否則對它們變成開放的。
+       ③ **Google-Extended 不要擋**：它不影響 AI Overviews／AI Mode，但擋了
+          連 Gemini 的引用也會一起沒有。
+     ⚠ 這擋不住不守規矩的爬蟲（Bytespider 之類），原理上也做不到 ——
+       真要擋只能在 Cloudflare 的 WAF 那一層。而且這個 repo 是 public 的，
+       同一份 HTML 在 GitHub 上誰都讀得到。**不要再往這個方向加碼**
+       （同 assets/img-guard.js 檔頭那一條）。 */
   fs.writeFileSync(
     path.join(ROOT, "robots.txt"),
-    `User-agent: *\nAllow: /\nDisallow: /history/\nDisallow: /preview/\nDisallow: /version.txt\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
+    [
+      "# 一般的搜尋引擎（含 Googlebot —— AI Overviews 與 AI Mode 吃的就是這一份索引）",
+      "User-agent: *",
+      "Allow: /",
+      "Disallow: /history/",
+      "Disallow: /preview/",
+      "Disallow: /version.txt",
+      "",
+      "# 檢索型的 AI 機器人：有人發問的當下才來抓，而且會在答案裡附上連結。",
+      "# ⚠⚠ 這一組**一定要放行** —— 擋掉等於從 ChatGPT／Claude／Perplexity 的",
+      "#   回答裡整個消失（2026-09-20 使用者定案）。",
+      "# ⚠ 規則要在這裡再寫一次：robots.txt 是「最明確的那一組全拿」，",
+      "#   一旦替某支機器人開了自己的群組，它就**完全不看上面那個 * 群組**了，",
+      "#   不重寫的話 /history/ 與 /preview/ 對它們就變成開放的。",
+      "User-agent: OAI-SearchBot",
+      "User-agent: ChatGPT-User",
+      "User-agent: Claude-SearchBot",
+      "User-agent: Claude-User",
+      "User-agent: PerplexityBot",
+      "Allow: /",
+      "Disallow: /history/",
+      "Disallow: /preview/",
+      "Disallow: /version.txt",
+      "",
+      "# 訓練型：只拿內容去訓練模型，不會回連。2026-09-20 使用者選擇擋掉。",
+      "User-agent: GPTBot",
+      "Disallow: /",
+      "",
+      "User-agent: ClaudeBot",
+      "Disallow: /",
+      "",
+      "# ⚠⚠ **Google-Extended 刻意不擋。** 它不影響 AI Overviews 與 AI Mode",
+      "#   （那兩個看的是上面那個 * 群組），但它同時管 Gemini 的 grounding ——",
+      "#   擋掉的話訓練停了，Gemini 的**引用也會一起沒有**。使用者定案不擋。",
+      "",
+      `Sitemap: ${siteUrl}/sitemap.xml`,
+      "",
+    ].join("\n"),
     "utf8"
   );
 }

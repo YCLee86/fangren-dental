@@ -489,6 +489,31 @@ for (const spec of SPECS) {
      ⚠⚠ 還要補 `.sec-head .sec-h { font-weight: 700 }` —— h2 的粗體是**瀏覽器
        的預設值**，不是那條規則給的，降成 p 之後會從 700 掉到 400。
        位置一個像素都不動，只有粗細變了，而且不報錯。 */
+  /* 5.45 先把這一科的線稿底圖預抓（2026-09-20 SEO／GEO 體檢 F1）。
+     -----------------------------------------------------------------------
+     ⚠⚠ **著陸頁的 LCP 不是圖片元素，是 .tp-intro 那一塊**，而它之所以慢，
+       是被底下 `.tp-intro::before` 那張線稿的**背景圖**拖住的。
+       量出來（390x844、DPR 2、模擬 4G）：
+         /topics/perio/  LCP 3264ms　lineart-perio.webp 3223ms 才載完
+         /topics/kids/   LCP 3800ms　lineart-kids.webp  3780ms
+       兩個都超過 2.5 秒的門檻。成因是背景圖要等**整份 74KB 的內嵌樣式表解析完
+       ＋ 版面算出來**才會被發現，而這一頁的 HTML 有 213KB。
+
+     ⚠ 所以這裡加的不是 fetchpriority（那是給 <img> 的，這一頁根本沒有那張 img），
+       是 rel=preload —— 放在 <head> 最前面，第一個封包到就開始抓。
+     ⚠⚠ **一定要跟著主題挑對那一張**：夜間是 lineart-<spec>-night.webp。
+       寫死白天那張的話，開著夜間模式的人會白下載 42~63KB，而且真正要用的
+       那一張照樣晚到。所以接在 NIGHT 那支腳本後面 —— 那時 dataset.theme 已經定了。
+     ⚠ 帶 type="image/webp"：瀏覽器不支援 webp 就會跳過這個 preload，
+       不會下載到一張用不到的檔（CSS 那邊是 image-set，會自己退回 PNG）。 */
+  const PRELOAD = `<!-- NIGHT:END -->
+<script>(function(){var d=document.documentElement.dataset.theme==='dark'?'-night':'';
+var l=document.createElement('link');l.rel='preload';l.as='image';l.type='image/webp';
+l.setAttribute('fetchpriority','high');l.href='../../assets/lineart-${spec}'+d+'.webp';
+document.head.appendChild(l);})();</script>`;
+  if (!h.includes("<!-- NIGHT:END -->")) throw new Error("找不到 NIGHT:END，night-mode.mjs 的結構可能改過了");
+  h = h.replace("<!-- NIGHT:END -->", PRELOAD);
+
   const SEC_H2 = "<h2>主題與科別</h2>";
   if (!h.includes(SEC_H2)) throw new Error("找不到「主題與科別」那顆 h2");
   h = h.replace(SEC_H2, '<p class="sec-h">主題與科別</p>');

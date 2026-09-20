@@ -185,9 +185,18 @@ for (const pg of pages) {
   /* F1 —— 首屏那張圖有沒有給瀏覽器優先權 */
   const imgs = [...html.matchAll(/<img\b[^>]*>/gi)].map((m) => m[0]);
   const heroImg = imgs.find((i) => !/loading="lazy"/.test(i)) || "";
-  s.F1 = (/<picture/.test(html) ? 1 : 0)
-       + (heroImg && /fetchpriority="high"/.test(heroImg) ? 1 : 0)
-       + (/rel="preload"[^>]*as="image"/.test(html) ? 1 : 0);
+  /* ⚠ 2026-09-20 修正：RUBRIC.md 第六節寫的是「fetchpriority **或** preload」，
+     這裡原本卻當成兩項各給一分 —— 量錯的是評分器不是網站。
+     三個要件是：① 首屏那張圖有拿到優先權（兩種寫法任一）② WebP ③ responsive srcset。
+     ⚠ 著陸頁的 LCP 不是 <img> 是 .tp-intro（線稿是 CSS 背景圖），
+       所以它只能走 preload 那條，fetchpriority 對它沒有意義。 */
+  const gotPriority =
+    (heroImg && /fetchpriority="high"/.test(heroImg)) ||
+    /rel=['"]?preload['"]?[\s\S]{0,120}?as=['"]?image/.test(html) ||
+    /l\.rel\s*=\s*'preload'[\s\S]{0,80}?l\.as\s*=\s*'image'/.test(html);
+  s.F1 = (gotPriority ? 1 : 0)
+       + (/<picture|image-set\(/.test(html) ? 1 : 0)
+       + (/srcset=/.test(html) ? 1 : 0);
 
   /* F2 */
   const noDim = imgs.filter((i) => !(/\bwidth=/.test(i) && /\bheight=/.test(i))).length;

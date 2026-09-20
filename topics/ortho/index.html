@@ -40,6 +40,10 @@ if(s!=='light'&&s!=='dark')s=(window.matchMedia&&matchMedia('(prefers-color-sche
 r.dataset.theme=s;})();</script>
 <script src="../../assets/theme.js" defer></script>
 <!-- NIGHT:END -->
+<script>(function(){var d=document.documentElement.dataset.theme==='dark'?'-night':'';
+var l=document.createElement('link');l.rel='preload';l.as='image';l.type='image/webp';
+l.setAttribute('fetchpriority','high');l.href='../../assets/lineart-ortho'+d+'.webp';
+document.head.appendChild(l);})();</script>
 <!-- <title> 不只給 Google —— Safari 分頁、書籤、加到主畫面、iOS 的分享面板
      顯示的都是它（分享面板不看 og:title）。所以要短到那些地方放得下，
      又要留住「牙醫診所 ＋ 斗六」這組真正在被搜尋的字。
