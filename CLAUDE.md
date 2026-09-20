@@ -332,7 +332,11 @@ site.json               網站正式網址（給 sitemap 用）
 wrangler.toml           Worker、靜態資產、自訂網域、D1 綁定
 d1-schema.sql           計數器資料表定義，執行一次即可
 src/
-  worker.js             計數器 API ＋ www 轉址 ＋ /history/* 的 noindex
+  worker.js             計數器 API ＋ 搜尋紀錄 API ＋ www 轉址 ＋ /history/* 的 noindex
+  search.js             **搜尋紀錄**的寫入與查詢（2026-09-20）。被 worker.js 匯入。
+                        ⚠⚠ 存的只有「字串、來源、搜到幾筆、時間」——**沒有 IP、沒有
+                        User-Agent、沒有 cookie**。理由在它的檔頭與 DECISIONS.md 那一列，
+                        **不要順手加**。資料表它會自己建，不必跑 wrangler
   allowed-slugs.js      白名單，由 build 產生，勿手改
 assets/
   style.css             全站樣式
@@ -342,6 +346,10 @@ assets/
                         style.css 各一份）。三種頁面都載（首頁／文章／著陸頁）。
                         ⚠⚠ **擋不住有心的人，原理上也做不到** —— 不要再往這個方向加碼，
                         理由與落選的做法寫在它的檔頭與 DECISIONS.md 那一列
+  search-log.js         **搜尋紀錄**的前端那一側（2026-09-20）。只在「這次搜尋結束」
+                        時送一筆（Enter／失焦／離開頁面／停手 8 秒），不是每按一鍵送一次。
+                        ⚠ 首頁與七科頁共用它（七科頁的快照由 topics.mjs 產生，
+                        所以改完 index.html 要記得重跑那一支，不然七頁不會送）
   head-search.js        頁首那顆放大鏡的行為（2026-08-26）。首頁就地篩選，
                         文章頁與著陸頁按 Enter 送回 /?q=…#topics。
                         ⚠ 三份標記共用它（index.html／posts/*／topics/*），
@@ -380,6 +388,10 @@ topics/<spec>/index.html 科別著陸頁（七科，2026-08-21 上線）。**由
                         版型改 tools/topics.mjs，改完重跑產生器。已進版控
 history/<name>.html     改版紀錄（原提案頁的推導文字，定案後只留這個。見第八節）
 history/index.html      改版紀錄的目錄
+admin/search/index.html **搜尋紀錄報告**（2026-09-20，網址 /admin/search/）。
+                        ⚠ 這一頁**本身沒有任何資料**，只有一個密碼框——資料要帶
+                        Cloudflare 加密變數 REPORT_KEY 跟 /api/search-report 要。
+                        ⚠ 刻意**不寫進 robots.txt**，理由在 worker.js 的 ADMIN_PREFIX
 preview/<name>/index.html  進行中的提案頁；定案上線後刪掉、文字搬進 history/
                         ⚠ **`preview/line-*/` 是例外**：那幾頁的成品在 LINE 不在站上，
                         定案之後只拿掉切換條、頁面留著當規格頁。見第十一之五節
@@ -468,6 +480,11 @@ tools/
                         「再加一位要做什麼」寫在它的檔頭，推導在 /history/doctor-photo.html。
                         ⚠ 原檔在 drafts/doctor-photo/src/，不進 _site。
                         ⚠ 只有換圖才要跑，npm run build 不會呼叫它；--check 只比對
+  search-test.mjs       **搜尋紀錄那條線的守門**（2026-09-20）。47 項，零依賴
+                        （資料庫用 node 內建的 node:sqlite 假裝成 D1，瀏覽器用站上
+                        既有的那顆 Chromium）。`--site` 改對 _site/ 跑、`--shot` 順便截圖。
+                        ⚠ 改過 src/search.js、assets/search-log.js、admin/search/，
+                        或改過 index.html 的搜尋那一段，都要跑它
   qr.mjs                QR code 產生器（純 JS、零依賴、吐 SVG 的 path，向量）。
                         ⚠ 驗收不能用眼睛 —— 格式資訊反過來的話畫面一模一樣但掃不出來。
                         驗證方式寫在它的檔頭（臨時裝 segno ＋ opencv 真的掃一次）

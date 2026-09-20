@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>搜尋紀錄 — 芳仁牙醫診所</title>
+<!--
+  搜尋紀錄報告（2026-09-20）
+  ---------------------------------------------------------------------------
+  使用者要的五件事：
+    ① 每一筆都有時間戳記        → 最底下那張「逐筆明細」
+    ② 同樣的字累計次數看排名    → 中間那兩張排名表
+    ③ 一週～兩年各自的排名      → 最上面那排「期間」
+    ④ 搜到的、搜不到的分開      → 兩張表分開，而且同一個字可以同時出現在兩張裡
+                                   （站上後來多了那篇文章，它就從搜不到變成搜得到，
+                                     把它硬歸成一類會讓其中一張表說謊）
+    ⑤ 只有他看得到              → 資料一律要帶密碼跟 /api/search-report 要
+
+  ⚠ **這一頁本身沒有任何資料**，它只是一個框。資料在 D1，要密碼才拿得到，
+     密碼在 Cloudflare 的加密變數 REPORT_KEY 裡（不在這個 public repo 裡）。
+     所以這個檔案被誰看到都不要緊——他看到的是一個空的密碼框。
+
+  ⚠ 顏色全部是 index.html :root 裡已經有的值，沒有新挑任何一個
+     （PALETTE.md 的規矩）。這一頁不是對外的品牌介面，但也沒有理由另立一套。
+-->
+<style>
+:root {
+  /* index.html :root 的原值，一個都沒有改 */
+  --paper: #e2e5e6;
+  --card: #f4f4f5;
+  --rule: #cdd0d2;
+  --ink: #2a2c27;
+  --ink-soft: #5c5f57;
+  --teal: #214D48;
+  --blue: #3C596B;
+  --brick: #AF4C52;
+  /* 搜得到 ＝ 松綠、搜不到 ＝ 磚紅。白天實算：teal 對卡 8.61、brick 對卡 4.80。
+     ⚠ brick 對**紙**只有 4.17，所以它只能出現在卡片上（表格、密碼框裡的錯誤訊息），
+       不要拿去寫在頁面底色上。 */
+  --hit: var(--teal);
+  --miss: var(--brick);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 夜間那一組。底、卡、字是 PALETTE.md 第六之二十三節定案的值；
+       線、次要字、以及下面那兩支色，是拿 tools/night-mode.mjs 裡**同一支**
+       liftTo()／fromLch() 算出來的（同色相同彩度、只提亮度到對紙與對卡都 4.5），
+       不是另外挑的。實算：teal 4.52／5.61、brick 4.51／5.60、次要字 5.74／7.12。
+       ⚠ 官方色票的原值在這個底上撐不住字（teal 只有 1.50、brick 2.69），
+         所以夜間一定要用推上來的那兩支，不要直接寫 var(--teal)。 */
+    --paper: #17191d;
+    --card: #282b31;
+    --rule: #3f4248;
+    --ink: #e2e5e6;
+    --ink-soft: #a3a5a6;
+    --hit: #6d9a93;
+    --miss: #db7276;
+  }
+  button.go { background: var(--hit); color: #17191d; border-color: var(--hit); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  font-size: 15px; line-height: 1.65;
+}
+main { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 4rem; }
+h1 { font-size: 1.25rem; margin: 0 0 .25rem; letter-spacing: .02em; }
+h2 { font-size: 1rem; margin: 2rem 0 .5rem; letter-spacing: .02em; }
+h2 small { font-weight: 400; color: var(--ink-soft); font-size: .8rem; margin-left: .4rem; }
+p.sub { margin: 0 0 1.25rem; color: var(--ink-soft); font-size: .82rem; }
+
+/* ---- 密碼 ---------------------------------------------------------------- */
+.gate { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 1rem; }
+.gate label { display: block; font-size: .85rem; margin-bottom: .4rem; }
+.gate input[type=password] {
+  width: 100%; font-size: 16px; padding: .55rem .6rem; color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 8px; background: var(--paper);
+}
+.gate .row { display: flex; align-items: center; gap: .75rem; margin-top: .75rem; }
+.gate .row label { margin: 0; font-size: .8rem; color: var(--ink-soft); }
+button {
+  font: inherit; font-size: .85rem; cursor: pointer; color: var(--ink);
+  background: var(--card); border: 1px solid var(--rule);
+  border-radius: 999px; padding: .35rem .8rem; min-height: 36px;
+}
+button.go { background: var(--teal); color: #fff; border-color: var(--teal); padding-inline: 1.2rem; }
+.err { color: var(--miss); font-size: .82rem; margin: .6rem 0 0; }
+
+/* ---- 兩排尺 -------------------------------------------------------------- */
+.bar { display: flex; flex-wrap: wrap; gap: .35rem; margin: 0 0 .6rem; }
+.bar b { align-self: center; font-size: .78rem; font-weight: 500; color: var(--ink-soft); margin-right: .2rem; }
+.bar button[aria-pressed=true] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ---- 摘要 ---------------------------------------------------------------- */
+.sum { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1rem 0 0; }
+.sum div { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: .6rem .5rem; text-align: center; }
+.sum span { display: block; font-size: .72rem; color: var(--ink-soft); }
+.sum strong { font-size: 1.35rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ---- 表 ------------------------------------------------------------------ */
+table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+th, td { text-align: left; padding: .45rem .55rem; border-top: 1px solid var(--rule); font-size: .85rem; vertical-align: top; }
+thead th { border-top: 0; font-weight: 500; font-size: .75rem; color: var(--ink-soft); background: transparent; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.t, th.t { color: var(--ink-soft); font-size: .72rem; white-space: nowrap; }
+td.q { word-break: break-word; }
+.rank td.n b { font-size: 1rem; }
+.hit td.n b { color: var(--hit); }
+.miss td.n b { color: var(--miss); }
+.tag { display: inline-block; font-size: .65rem; padding: .05rem .35rem; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink-soft); margin-left: .35rem; white-space: nowrap; }
+.empty { color: var(--ink-soft); font-size: .85rem; background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: .9rem; margin: 0; }
+.foot { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.foot p { margin: 0; flex: 1 1 100%; color: var(--ink-soft); font-size: .75rem; }
+@media (max-width: 400px) {
+  .sum { grid-template-columns: 1fr 1fr; }
+  .sum div:first-child { grid-column: 1 / -1; }
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>搜尋紀錄</h1>
+  <p class="sub">訪客在站上搜尋框打過的字。沒有記錄 IP、瀏覽器或任何身分資訊。</p>
+
+  <form class="gate" id="gate">
+    <label for="key">密碼</label>
+    <input id="key" type="password" autocomplete="current-password" inputmode="text" spellcheck="false">
+    <div class="row">
+      <button class="go" type="submit">看報告</button>
+      <input id="keep" type="checkbox" checked>
+      <label for="keep">記住這台裝置</label>
+    </div>
+    <p class="err" id="err" hidden></p>
+  </form>
+
+  <div id="app" hidden>
+    <div class="bar" id="wins"><b>期間</b></div>
+    <div class="bar" id="scopes"><b>來源</b></div>
+
+    <div class="sum">
+      <div><span>總搜尋次數</span><strong id="s-all">—</strong></div>
+      <div><span>不重複的字</span><strong id="s-uniq">—</strong></div>
+      <div><span>搜不到</span><strong id="s-miss">—</strong></div>
+    </div>
+
+    <h2>搜得到的排名<small id="h-hit"></small></h2>
+    <div id="t-hit"></div>
+
+    <h2>搜不到的排名<small>這些字站上沒有東西可以給他</small></h2>
+    <div id="t-miss"></div>
+
+    <h2>逐筆明細<small>最近 200 筆</small></h2>
+    <div id="t-log"></div>
+
+    <div class="foot">
+      <p id="span"></p>
+      <button type="button" id="reload">重新整理</button>
+      <button type="button" id="csv">下載 CSV</button>
+      <button type="button" id="out">登出這台裝置</button>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  var STORE = 'fangren:report-key';
+  var API   = '../../api/search-report';
+
+  var SPEC = { general: '一般牙科', perio: '牙周治療', kids: '兒童牙科', endo: '顯微根管',
+               ortho: '齒顎矯正', prosth: '植牙假牙', surg: '口腔外科' };
+
+  /* 使用者指定的七格，加一格「全部」。value 是天數代碼，給 /api/search-report。 */
+  var WINS = [['7d', '一週'], ['30d', '一個月'], ['60d', '兩個月'], ['90d', '三個月'],
+              ['180d', '半年'], ['365d', '一年'], ['730d', '兩年'], ['all', '全部']];
+  var SCOPES = [['', '全部'], ['home', '全站搜尋'], ['topic', '各科頁內']];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var key = '', win = '30d', scope = '', data = null;
+
+  /* ---- 時間：資料庫存的是 UTC 的 ISO 字串，畫面上一律台灣時間 -------------
+     ⚠ 不要自己 +8 —— toLocaleString 帶 timeZone 才會處理各種邊界，
+       而且格式也交給瀏覽器，不必自己補零。 */
+  function tw(iso, withSec) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    var o = { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit',
+              hour: '2-digit', minute: '2-digit', hour12: false };
+    if (withSec) o.second = '2-digit';
+    return d.toLocaleString('zh-TW', o).replace(/\//g, '-');
+  }
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function scopeName(s) {
+    if (s === 'home') return '全站';
+    var m = /^topic:(.+)$/.exec(s || '');
+    return m ? (SPEC[m[1]] || m[1]) + '頁' : s;
+  }
+  function inScope(s) {
+    if (!scope) return true;
+    if (scope === 'home') return s === 'home';
+    return String(s).indexOf('topic:') === 0;
+  }
+
+  /* ---- 尺 ----------------------------------------------------------------- */
+  function bar(el, list, cur, pick) {
+    Array.prototype.slice.call(el.querySelectorAll('button')).forEach(function (b) { b.remove(); });
+    list.forEach(function (it) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = it[1];
+      b.setAttribute('aria-pressed', String(it[0] === cur));
+      b.addEventListener('click', function () { pick(it[0]); });
+      el.appendChild(b);
+    });
+  }
+  function bars() {
+    bar($('wins'), WINS, win, function (v) { win = v; load(); });
+    bar($('scopes'), SCOPES, scope, function (v) { scope = v; render(); });
+  }
+
+  /* ---- 表 ----------------------------------------------------------------- */
+  function rankTable(box, rows, pick, cls, empty) {
+    var list = rows.filter(function (r) { return inScope(r.scope) && pick(r) > 0; })
+                   .sort(function (a, b) { return pick(b) - pick(a) || (b.last < a.last ? -1 : 1); });
+    if (!list.length) { box.innerHTML = '<p class="empty">' + empty + '</p>'; return; }
+    var showScope = !scope;
+    var h = '<table class="rank ' + cls + '"><thead><tr><th>搜尋的字</th><th class="n">次數</th>' +
+            '<th class="t">最近一次</th></tr></thead><tbody>';
+    list.slice(0, 100).forEach(function (r) {
+      h += '<tr><td class="q">' + esc(r.q) +
+           (showScope ? '<span class="tag">' + esc(scopeName(r.scope)) + '</span>' : '') +
+           '</td><td class="n"><b>' + pick(r) + '</b></td>' +
+           '<td class="t">' + tw(r.last) + '</td></tr>';
+    });
+    box.innerHTML = h + '</tbody></table>';
+  }
+
+  function logTable(box, rows) {
+    var list = rows.filter(function (r) { return inScope(r.scope); });
+    if (!list.length) { box.innerHTML = '<p class="empty">這段期間沒有紀錄。</p>'; return; }
+    var h = '<table><thead><tr><th class="t">時間</th><th>搜尋的字</th><th class="n">結果</th></tr></thead><tbody>';
+    list.forEach(function (r) {
+      h += '<tr><td class="t">' + tw(r.at, true) + '</td><td class="q">' + esc(r.q) +
+           '<span class="tag">' + esc(scopeName(r.scope)) + '</span></td>' +
+           '<td class="n">' + (r.hits ? r.hits + ' 筆' : '<b style="color:var(--miss)">0</b>') + '</td></tr>';
+    });
+    box.innerHTML = h + '</tbody></table>';
+  }
+
+  function render() {
+    if (!data) return;
+    bars();
+
+    var sums = (data.sums || []).filter(function (r) { return inScope(r.scope); });
+    var all = 0, miss = 0;
+    sums.forEach(function (r) { all += r.n; miss += r.miss; });
+    var uniq = {};
+    (data.rows || []).forEach(function (r) { if (inScope(r.scope)) uniq[r.q] = 1; });
+
+    $('s-all').textContent = all;
+    $('s-uniq').textContent = Object.keys(uniq).length;
+    $('s-miss').textContent = miss + (all ? '（' + Math.round(miss / all * 100) + '%）' : '');
+
+    var rows = data.rows || [];
+    $('h-hit').textContent = '';
+    rankTable($('t-hit'), rows, function (r) { return r.n - r.miss; }, 'hit',
+              '這段期間沒有「有找到東西」的搜尋。');
+    rankTable($('t-miss'), rows, function (r) { return r.miss; }, 'miss',
+              '這段期間每一次搜尋都有找到東西。');
+    logTable($('t-log'), data.recent || []);
+
+    /* 資料從哪天開始 —— 「兩年」那一格在上線初期一定比實際資料長很多，
+       不講清楚的話那張空表看起來會像壞掉。 */
+    var sp = data.span || {};
+    var txt;
+    if (!sp.first) {
+      txt = '目前資料庫裡還沒有任何一筆紀錄。上線之後要等有人用搜尋框才會開始累積。';
+    } else {
+      var days = Math.max(1, Math.round((Date.now() - new Date(sp.first)) / 86400000));
+      txt = '資料從 ' + tw(sp.first) + ' 開始累積（第 ' + days + ' 天），總共 ' + sp.n + ' 筆。';
+      if (data.since && data.since > sp.first) txt += ' 這一格只看 ' + tw(data.since) + ' 之後的。';
+      else if (win !== 'all') txt += ' 這一格涵蓋的期間比現有資料長，所以等於全部。';
+    }
+    $('span').textContent = txt + '　時間是台灣時間。';
+  }
+
+  /* ---- 取資料 -------------------------------------------------------------- */
+  function load() {
+    $('err').hidden = true;
+    fetch(API + '?win=' + encodeURIComponent(win), { headers: { 'X-Report-Key': key } })
+      .then(function (r) {
+        if (r.status === 401) throw new Error('密碼不對。');
+        if (!r.ok) throw new Error('伺服器回了 ' + r.status + '，等一下再試一次。');
+        return r.json();
+      })
+      .then(function (j) {
+        data = j;
+        $('gate').hidden = true;
+        $('app').hidden = false;
+        render();
+      })
+      .catch(function (e) {
+        $('gate').hidden = false;
+        $('app').hidden = true;
+        $('err').textContent = e.message || '連不上。';
+        $('err').hidden = false;
+        try { localStorage.removeItem(STORE); } catch (x) {}
+      });
+  }
+
+  $('gate').addEventListener('submit', function (e) {
+    e.preventDefault();
+    key = $('key').value;
+    if (!key) return;
+    if ($('keep').checked) { try { localStorage.setItem(STORE, key); } catch (x) {} }
+    load();
+  });
+  $('reload').addEventListener('click', load);
+  $('out').addEventListener('click', function () {
+    try { localStorage.removeItem(STORE); } catch (x) {}
+    key = ''; data = null;
+    $('key').value = '';
+    $('app').hidden = true;
+    $('gate').hidden = false;
+  });
+
+  /* CSV 是在這一頁上用目前這批資料拼的，不另外跟伺服器要一份。
+     ⚠ 前面那個 ﻿ 是給 Excel 認 UTF-8 的，少了它中文會變亂碼。 */
+  $('csv').addEventListener('click', function () {
+    if (!data) return;
+    var q = function (s) { return '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"'; };
+    var lines = ['時間,搜尋的字,來源,結果筆數'];
+    (data.recent || []).filter(function (r) { return inScope(r.scope); }).forEach(function (r) {
+      lines.push([q(tw(r.at, true)), q(r.q), q(scopeName(r.scope)), r.hits].join(','));
+    });
+    lines.push('');
+    lines.push('搜尋的字,總次數,其中搜不到,最近一次');
+    (data.rows || []).filter(function (r) { return inScope(r.scope); }).forEach(function (r) {
+      lines.push([q(r.q), r.n, r.miss, q(tw(r.last, true))].join(','));
+    });
+    var blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'search-' + win + '-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  });
+
+  bars();
+  try {
+    var saved = localStorage.getItem(STORE);
+    if (saved) { key = saved; $('key').value = saved; load(); }
+  } catch (x) {}
+})();
+</script>
+</body>
+</html>

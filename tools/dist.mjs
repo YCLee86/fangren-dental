@@ -32,7 +32,10 @@ const ALWAYS = ["index.html", "404.html", "favicon.ico", "site.webmanifest", "to
    所以這個資料夾常常是空的甚至不存在 —— 一樣是選配。
    兩者都靠三道 noindex 擋搜尋引擎（頁面自己的 meta、Worker 的 X-Robots-Tag、
    robots.txt 的 Disallow），沒有鎖。 */
-const OPTIONAL = ["sitemap.xml", "robots.txt", "history", "preview"];
+/* admin/ 是搜尋紀錄報告（2026-09-20）。頁面本身沒有任何資料，只有一個密碼框——
+   資料在 D1，要帶 REPORT_KEY 跟 /api/search-report 要才拿得到。
+   ⚠ 它**刻意不寫進 robots.txt**，理由在 src/worker.js 的 ADMIN_PREFIX 那一段。 */
+const OPTIONAL = ["sitemap.xml", "robots.txt", "history", "preview", "admin"];
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });

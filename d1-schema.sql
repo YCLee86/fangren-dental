@@ -14,3 +14,36 @@ CREATE TABLE IF NOT EXISTS page_views (
 -- 首頁本身也算一筆，先建好避免第一次讀取時是空的
 INSERT INTO page_views (slug, views) VALUES ('home', 0)
   ON CONFLICT (slug) DO NOTHING;
+
+-- =============================================================================
+-- 搜尋紀錄（2026-09-20）
+-- -----------------------------------------------------------------------------
+-- ⚠ 這三張表**不必手動執行**：src/search.js 會在第一次用到的時候自己建
+--    （CREATE TABLE IF NOT EXISTS，每個 isolate 只跑一次）。
+--    寫在這裡是為了讓人一眼看得到資料長什麼樣，兩邊的定義必須一致。
+--
+-- 存的只有「字串、從哪一區搜的、搜到幾筆、什麼時候」。
+-- **沒有 IP、沒有 User-Agent、沒有 cookie、沒有任何能串起同一個人的識別碼**——
+-- 這是牙醫診所的站，訪客會打進去的字本身就可能涉及健康狀況。
+-- 要加這類欄位之前先想清楚個資法那條線，不要順手加。
+--
+-- at 是 Worker 寫進來的 ISO 8601（UTC、帶 Z），不是 SQLite 的 datetime('now')：
+-- ISO 字串照字典序排就是照時間排，而且丟進 JS 的 new Date() 不會被當成本地時間。
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS search_log (
+  id    INTEGER PRIMARY KEY AUTOINCREMENT,
+  q     TEXT    NOT NULL,              -- 正規化後的查詢字串（NFKC、空白收斂、小寫、最多 40 字）
+  scope TEXT    NOT NULL DEFAULT 'home',  -- 'home' 或 'topic:<spec>'
+  hits  INTEGER NOT NULL DEFAULT 0,    -- 當下畫面上搜到幾筆（0 ＝ 搜不到）
+  at    TEXT    NOT NULL               -- 例：2026-09-20T07:15:03Z
+);
+
+CREATE INDEX IF NOT EXISTS idx_search_at ON search_log (at);
+CREATE INDEX IF NOT EXISTS idx_search_q  ON search_log (q);
+
+-- 每日收件上限，擋的是有人拿這個端點灌資料表（見 src/search.js 的 DAY_CAP）。
+CREATE TABLE IF NOT EXISTS search_quota (
+  day TEXT    PRIMARY KEY,
+  n   INTEGER NOT NULL DEFAULT 0
+);

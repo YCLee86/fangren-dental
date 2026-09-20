@@ -10,6 +10,9 @@
      /history/*                               → 靜態檔＋noindex（見下方 HISTORY_PREFIX）
      GET  /api/views?slugs=home,bass-brushing → { "counts": { "home": 12, ... } }
      POST /api/views   body: { "slug": "home" } → { "slug": "home", "views": 13 }
+     POST /api/search  body: { "q": "植牙", "scope": "home", "hits": 3 } → { ok: true }
+     GET  /api/search-report?win=30d           → 報告要的數字（要 X-Report-Key）
+     /admin/*                                 → 報告頁＋noindex＋no-store（見下方 ADMIN_PREFIX）
      其他                                        → 靜態檔，沒有就給 404 頁
 
    只接受 src/allowed-slugs.js 裡列出的代碼，那份清單由 tools/build.mjs
@@ -17,6 +20,7 @@
    ============================================================================= */
 
 import { ALLOWED } from "./allowed-slugs.js";
+import { logSearch, searchReport } from "./search.js";
 
 const allowed = new Set(ALLOWED);
 
@@ -102,6 +106,19 @@ async function postViews(request, env) {
       拿到的還是上一版，會以為改沒生效。history/ 是寫完就不動的，不必。 */
 const PREVIEW_PREFIX = "/preview/";
 
+/* /admin/* — 搜尋紀錄報告（2026-09-20）
+   -----------------------------------------------------------------------------
+   頁面本身是公開的靜態檔（裡面沒有任何一筆資料，只有一個密碼框），
+   **資料一律要經過 /api/search-report 並帶對密碼**才拿得到。
+   所以這裡和 /preview/ 做的事一樣：noindex ＋ no-store。
+
+   ⚠ **刻意不寫進 robots.txt。** /history/ 與 /preview/ 都有 Disallow，
+      但那兩條的目的是「別浪費檢索預算」；這一頁的目的是「不要出現在搜尋結果裡」，
+      而 robots.txt 擋的是**檢索**不是**收錄**——被擋住的網址 Google 照樣可以
+      憑外部連結把網址本身列出來，反而等於在一份公開檔案上公告這條路徑存在。
+      真正有效的是這裡這個 X-Robots-Tag（頁面自己的 meta 也有一份）。 */
+const ADMIN_PREFIX = "/admin/";
+
 const HISTORY_PREFIX = "/history/";
 
 /* 走到這裡代表沒有對應的檔案，補上自己的 404 頁。
@@ -138,6 +155,18 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    /* 搜尋紀錄。寫入不需要密碼（任何訪客的搜尋都要記得到），
+       讀報告一定要——密碼在 Cloudflare 的加密變數 REPORT_KEY 裡，見 src/search.js。 */
+    if (url.pathname === "/api/search") {
+      if (request.method === "POST") return logSearch(request, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
+    if (url.pathname === "/api/search-report") {
+      if (request.method === "GET") return searchReport(request, url, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
     if (url.pathname === "/api/views") {
       if (request.method === "GET") return getViews(url, env);
       if (request.method === "POST") return postViews(request, env);
@@ -150,6 +179,15 @@ export default {
       const archive = new Response(page.body, page);
       archive.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
       return archive;
+    }
+
+    if (url.pathname.startsWith(ADMIN_PREFIX)) {
+      const page = await env.ASSETS.fetch(request);
+      if (page.status === 404) return notFound(request, env);
+      const adm = new Response(page.body, page);
+      adm.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+      adm.headers.set("Cache-Control", "no-store");
+      return adm;
     }
 
     if (url.pathname.startsWith(PREVIEW_PREFIX)) {
