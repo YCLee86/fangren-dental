@@ -188,6 +188,16 @@ export async function searchReport(request, url, env) {
       },
     });
 
+  /* 後台還沒設 REPORT_KEY —— 這時候一律拒絕（fail closed，不會變成「沒設＝不用密碼」），
+     但要**說實話**。回「密碼不對」的話，人會在一組其實是對的密碼上反覆試，
+     而真正的原因在伺服器那一側，他怎麼試都不會對。
+     ⚠ 這句話等於承認「這裡有一個還沒設定好的端點」，但它同時什麼都不給——
+       沒設的時候它拒絕**所有**請求，所以講清楚不會換來任何存取。
+       設好之後這句話就再也不會出現。 */
+  if (!env.REPORT_KEY) {
+    return json({ ok: false, error: "unconfigured" }, 503);
+  }
+
   const given = request.headers.get("X-Report-Key") || "";
   if (!keyOk(given, env.REPORT_KEY)) {
     /* 慢一點回，猜密碼的成本才不會等於零 */

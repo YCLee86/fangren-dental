@@ -295,6 +295,10 @@ td.q { word-break: break-word; }
     fetch(API + '?win=' + encodeURIComponent(win), { headers: { 'X-Report-Key': key } })
       .then(function (r) {
         if (r.status === 401) throw new Error('密碼不對。');
+        /* ⚠ 503 ＝ Cloudflare 後台還沒設 REPORT_KEY。這跟密碼打錯是兩件事，
+           混在一起講的話，人會在一組其實正確的密碼上反覆試。 */
+        if (r.status === 503) throw new Error('Cloudflare 後台還沒有設密碼（REPORT_KEY）——' +
+          '不是你打錯。設好之後回到這一頁重按一次就會進去。');
         if (!r.ok) throw new Error('伺服器回了 ' + r.status + '，等一下再試一次。');
         return r.json();
       })
@@ -309,7 +313,9 @@ td.q { word-break: break-word; }
         $('app').hidden = true;
         $('err').textContent = e.message || '連不上。';
         $('err').hidden = false;
-        try { localStorage.removeItem(STORE); } catch (x) {}
+        /* ⚠ 只有「密碼不對」才把記住的密碼清掉。後台還沒設好（503）或網路不通的時候
+           清掉的話，他下次回來還要再打一次那串亂碼，而密碼從頭到尾都是對的。 */
+        if (/密碼不對/.test(e.message || '')) { try { localStorage.removeItem(STORE); } catch (x) {} }
       });
   }
 

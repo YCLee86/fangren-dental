@@ -100,7 +100,11 @@ eq((await report("30d", "wrong")).status, 401, "密碼錯 → 401");
 eq((await report("30d", null)).status, 401, "沒帶密碼 → 401");
 {
   const saved = env.REPORT_KEY; env.REPORT_KEY = undefined;
-  eq((await report("30d", "")).status, 401, "後台沒設 REPORT_KEY 時一律拒絕（不會變成不用密碼）");
+  const r = await report("30d", KEY);
+  eq(r.status, 503, "後台沒設 REPORT_KEY 時一律拒絕（不會變成「沒設＝不用密碼」）");
+  eq(r.body.error, "unconfigured",
+     "而且要說實話：回的是「還沒設密碼」不是「密碼不對」——混在一起講的話，人會在一組其實正確的密碼上反覆試");
+  eq((await report("30d", null)).status, 503, "沒設的時候連空密碼也一樣擋掉");
   env.REPORT_KEY = saved;
 }
 eq((await report()).status, 200, "密碼對 → 200");
@@ -258,6 +262,20 @@ console.log("\n【九】報告頁");
   await page.click("button.go");
   await page.waitForTimeout(700);
   eq(await page.isVisible("#app"), false, "密碼錯進不去");
+
+  /* 後台還沒設 REPORT_KEY 的那一刻——這是上線後第一眼最可能看到的畫面 */
+  {
+    const saved = web.REPORT_KEY; web.REPORT_KEY = undefined;
+    await page.fill("#key", KEY);
+    await page.click("button.go");
+    await page.waitForTimeout(500);
+    const msg = await page.textContent("#err");
+    eq(/還沒有設密碼/.test(msg) && !/打錯/.test(msg.replace("不是你打錯", "")), true,
+       `還沒設密碼時講的是實話，不是「密碼不對」（畫面上：${msg}）`);
+    eq(await page.evaluate(() => localStorage.getItem("fangren:report-key")), KEY,
+       "而且不可以把記住的密碼清掉——密碼是對的，只是伺服器還沒準備好");
+    web.REPORT_KEY = saved;
+  }
   await page.fill("#key", KEY);
   await page.click("button.go");
   await page.waitForSelector("#app:not([hidden])");
