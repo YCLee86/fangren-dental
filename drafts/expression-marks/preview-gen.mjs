@@ -69,6 +69,36 @@ const MARKS = [
      <path d="M 22 24 L 14 17" ${S}/><path d="M 78 24 L 86 17" ${S}/>` },
 ];
 
+/* 「被禁的那四個」長什麼樣 —— 使用者 2026-09-20 問「這是什麼」，畫出來比形容有用 */
+const T = `fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"`;
+const BANNED = [
+  { name: "背景速度線", what: "人或物後面拉一排平行長線，表示<b>跑得很快</b>。",
+    who: "漫畫用的，和我們這種手繪雜誌插畫不同調",
+    svg: [0,1,2,3,4,5].map(i=>`<path d="M ${6+i%2*6} ${18+i*11} L ${62+i%2*5} ${18+i*11}" ${T}/>`).join("")
+       + `<circle cx="80" cy="50" r="13" ${T}/>` },
+  { name: "集中線", what: "從畫面四周往一個點聚攏的放射狀密線，表示<b>震驚、快看這裡</b>。",
+    who: "日本漫畫的招牌手法",
+    svg: Array.from({length:28},(_,i)=>{const a=i/28*Math.PI*2;
+      return `<path d="M ${(50+Math.cos(a)*52).toFixed(1)} ${(50+Math.sin(a)*52).toFixed(1)} L ${(50+Math.cos(a)*24).toFixed(1)} ${(50+Math.sin(a)*24).toFixed(1)}" ${T}/>`;}).join("") },
+  { name: "爆炸狀星芒", what: "一圈<b>鋸齒狀</b>的爆炸形，或從一點射出很多條長短不一的光。",
+    who: "⚠ 左邊是它，右邊是我們要的<b>四角星</b> —— <b>兩件事</b>",
+    svg: `<g transform="translate(-6 0) scale(.78)">`
+       + `<path d="${Array.from({length:24},(_,i)=>{const a=i/24*Math.PI*2-Math.PI/2, r=i%2?20:48;
+           return `${i?"L":"M"} ${(50+Math.cos(a)*r).toFixed(1)} ${(50+Math.sin(a)*r).toFixed(1)}`;}).join(" ")} z" fill="currentColor"/></g>`
+       + `<path d="M 50 6 Q 56 44 92 50 Q 56 56 50 94 Q 44 56 8 50 Q 44 44 50 6 z" fill="currentColor"
+            transform="translate(72 30) scale(.42)"/>` },
+  { name: "對話框", what: "白色泡泡，<b>裡面要填字</b>。",
+    who: "⚠ 這一個我建議<b>維持禁用</b>，理由在下面",
+    svg: `<path d="M 10 16 h 80 a 6 6 0 0 1 6 6 v 40 a 6 6 0 0 1 -6 6 h -46 l -18 16 v -16 h -16 a 6 6 0 0 1 -6 -6 v -40 a 6 6 0 0 1 6 -6 z" ${T}/>` },
+];
+const bannedCells = BANNED.map((x) => `
+  <figure class="mk bad">
+    <svg viewBox="-6 -6 112 112" role="img" aria-label="${x.name}">${x.svg}</svg>
+    <figcaption><b class="nm">${x.name}</b>
+      <span class="mean">${x.what}</span>
+      <span class="warn">${x.who}</span></figcaption>
+  </figure>`).join("");
+
 /* 把一個標記擺到頭旁邊，高度 = 頭高 × pct */
 const placed = (draw, pct, x, y) => {
   const k = (HEAD_UNITS * pct / 100) / 100;
@@ -177,6 +207,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;
   background:var(--blue);border-radius:4px;padding:.05em .45em;margin:.15rem 0 .3rem}
 .mk .mean{display:block;color:var(--ink-soft)}
 .mk .use{display:block;margin-top:.3rem}
+.mk.bad{border-left:4px solid var(--brick)}
 .mk .warn{display:block;margin-top:.35rem;padding-top:.35rem;border-top:1px dashed var(--rule);
   color:var(--brick);font-size:.76rem;line-height:1.6}
 
@@ -303,20 +334,40 @@ li{margin:.35rem 0}
      而且縮到首頁卡 335px 的時候<b>符號會先糊掉</b>，等於什麼都沒講。</p>
 </div>
 
-<h2><span class="n">§ 8</span>這一輪推翻了一條我們自己定的規則</h2>
+<h2><span class="n">§ 8</span>⚠ 那條「禁用清單」——我要先認一件事</h2>
 <div class="quote bad">
-  〈隱形矯正〉那一輪的禁用清單寫著：背景速度線、集中線、<b>星芒</b>、任何形式的對話框。
+  你問「這是什麼　怎麼會有這個禁止」。查完了：<b>那不是你定的，是我自己加的。</b><br><br>
+  2026-09-19 我在寫〈隱形矯正〉第三輪的提示詞時，順手加了一行
+  「AVOID：背景速度線、集中線、星芒、任何形式的對話框」——
+  <b>那只是那一張圖的一行防守</b>，怕模型飄成漫畫風。<br>
+  它<b>不在紅線表裡</b>（A 類是你親口說的、B 類是我推的、可以被推翻），
+  <b>兩類都沒有它</b>。然後我在寫這份規格時，
+  把它升格成「全站全禁、一條都沒放寬」——<b>那是我越權。</b>
 </div>
-<p>可是你貼的三組都大方用了四角星。<b>兩邊都對，因為講的不是同一件事</b> ——
-   那條禁令寫在<b>動作線</b>那一段，禁的是漫畫式的爆炸光芒／集中線。</p>
-<div class="quote good">
-  <b>新的界線：</b><br>
-  ・<b>動作線仍然全禁</b>：背景速度線、集中線、爆炸狀星芒、任何對話框。一條都沒放寬。<br>
-  ・<b>情緒標記放行</b>，四個條件：① 只有<b>四</b>個角；② 一組（一顆或一大一小）；
-    ③ 在頭的斜上方，不在背景也不在物體上；④ 高度<b>不超過頭高的 1/4</b>。
-</div>
-<p class="cap">⚠ 已經上線的〈隱形矯正〉那張<b>不必回去改</b>（那張圖沒有情緒標記）。
-  但日後同一張圖要同時用兩個家族時，禁用清單<b>不可以再原句照抄</b>。</p>
+
+<h3>先看那四個到底長什麼樣</h3>
+<div class="grid">${bannedCells}</div>
+
+<h3>它們現在的狀態（已更正）</h3>
+<div class="tw"><table>
+  <tr><th></th><th>狀態</th><th>理由</th></tr>
+  <tr><td><b>爆炸狀星芒</b></td><td>維持不要</td>
+      <td>它和你參考圖裡那顆<b>四角星是兩件事</b>。四角星已經放行</td></tr>
+  <tr><td><b>對話框</b></td><td><b>建議維持禁用</b></td>
+      <td>這一條有真的理由，不是我的偏好：全站硬紅線是「圖裡不准有任何文字」，
+          而<b>泡泡一出現，模型就會想往裡面填字</b>。〈口腔外科〉那一輪已經踩過三種漏字</td></tr>
+  <tr><td><b>背景速度線</b></td><td>⬇ 降成<b>「我推的，可以推翻」</b></td>
+      <td>我的理由只有「會變漫畫風」。<b>那是美感判斷，該你決定，不是我</b></td></tr>
+  <tr><td><b>集中線</b></td><td>⬇ 同上</td><td>同上</td></tr>
+</table></div>
+<div class="quote good"><b>所以要不要用，你說了算。</b>
+  我把後面兩條移到「可以被推翻」那一類了，日後不會再拿它擋你。</div>
+
+<h3>四角星那一條（這個沒變）</h3>
+<p>你貼的三組參考都大方用了四角星，所以它放行，四個條件：
+   ① 只有<b>四</b>個角；② 一組（一顆或一大一小）；③ 在頭的斜上方，不在背景也不在物體上；
+   ④ 高度<b>不超過頭高的 1/4</b>。</p>
+<p class="cap">⚠ 已經上線的〈隱形矯正〉那張<b>不必回去改</b>（那張圖沒有情緒標記）。</p>
 
 <h2><span class="n">§ 9</span>順帶解掉一個踩過兩次的坑</h2>
 <div class="quote good">
