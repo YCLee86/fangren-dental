@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>b5-updated｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .86rem; margin: .6rem 0 1.2rem; }
+  th, td { border: 1px solid var(--rule); padding: .45rem .6rem; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 600; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>b5-updated — 文章頁印出「最後更新」，貼在 HERO 圖下緣</h1>
+<p class="meta">
+  2026-09-20 開、當天三輪定案上線<br>
+  原網址 <code>/preview/b5-updated/</code>（已刪除 2026-09-20）<br>
+  整頁還原：<code>git show 6abc0c1a:preview/b5-updated/index.html</code><br>
+  產生器：<code>tools/b5-preview.mjs</code>（一次性，已刪除；<code>git show 6abc0c1a:tools/b5-preview.mjs</code>）<br>
+  依據：<code>drafts/seo-geo-audit/REPORT.md</code>（SEO／GEO 體檢的 B5 那一項）
+</p>
+
+<h2>起因</h2>
+<p>使用者看完體檢報告：「畫面上看不到最後更新　但程式碼裡應該有　這樣對 SEO/GEO 沒幫助嗎」。
+Google 對文章日期的要求是<strong>畫面上與結構化資料兩邊都要有、而且要一致</strong>，
+而且畫面上那個常常有顯示優先權。這一站 2026-08-18 之後<strong>畫面上任何一處都不顯示
+<code>updated</code></strong>（第一節第 3 條），所以 B5 那一分一直拿不到。</p>
+<p>接著他說：「B5 我很擔心會吃版面」。</p>
+
+<h2>⚠⚠ 第一輪：「頂端那一行還剩多少」量錯了，而且畫面完全正常</h2>
+<p>第一版的折行偵測是「子元素的 <code>top</code> 不一樣就算一列」，量出來
+<strong>六個寬度全部都說「已經折行」</strong>。可是同一支腳本同時報出
+<code>.crumbs</code> 的高度在每個寬度都是固定的 30px —— 兩列的 flex 不可能只有 30px。</p>
+<p><strong>那一行是 flex，各子元素高度不同</strong>（<code>time</code> 23.7px、夜間開關 30px），
+垂直對齊之後 <code>top</code> 本來就不一樣。改成照
+<strong>「左緣有沒有往回跳」</strong>數才對：</p>
+<pre>for (let i = 1; i &lt; rects.length; i++)
+  if (rects[i].x &lt; rects[i - 1].x - 0.5) rows++;</pre>
+<p>⚠ 差一點就拿這個數字去跟使用者說「那一行本來就在折行」——
+那會同時和 <code>/history/crumbs-line.html</code> 那一輪的紀錄打架（那一輪是把它從 440
+壓到 373px 才進得了 390 的螢幕）。<strong>一個和既有紀錄打架的量測結果，先懷疑量測。</strong></p>
+
+<h2>⚠⚠ 第二件量錯的：本機沒有 Worker，瀏覽數整個被藏起來</h2>
+<p><code>.views</code> 在本機會落到 <code>data-state="error"</code>，而 CSS 對那一態是
+<code>display: none</code>。不補回去的話那一行會多量出 68~80px 的空白，
+「還剩多少」整組偏大。補成真值之後才是真的（同 2026-08-27 <code>card-more-button</code> 那一輪）。</p>
+
+<h2>Ⓐ 出局：頂端那一行連 430px 都塞不下</h2>
+<table>
+  <tr><th>螢幕寬</th><th>瀏覽數 190</th><th>瀏覽數 1,286</th></tr>
+  <tr><td>430px</td><td>中間空著 67px</td><td>54.5px</td></tr>
+  <tr><td>414px</td><td>51px</td><td>38.5px</td></tr>
+  <tr><td>390px</td><td>27px</td><td>14.5px</td></tr>
+  <tr><td>375px</td><td>12px</td><td><strong>−0.5px（已折行）</strong></td></tr>
+  <tr><td>360px</td><td><strong>−3px（已折行）</strong></td><td>−15.5px</td></tr>
+  <tr><td>320px</td><td>−43px</td><td>−55.5px</td></tr>
+</table>
+<p>最短的寫法「· 更新 09/20」量出來要 <strong>76.4px</strong>（寫全要 114.1px），
+<strong>連最寬的手機都塞不下</strong>。塞進去的話 390 上文件高 +31px、那一行從 30 變 60.9px，
+而那 31px 是加在<strong>大標題正上方</strong>。</p>
+<p class="note">順帶量到一件現況（不是這一輪改的）：<strong>瀏覽數破千之後，375px 以下那一行本來就已經在折行了。</strong>
+留著紀錄，日後看到不要當成 bug。</p>
+
+<h2>一個原本擔心、查完發現早就填好的坑</h2>
+<p>日期印在 <code>&lt;main&gt;</code> 裡會有迴圈風險：印上去 → 內容雜湊變了 → 更新日跳成今天 →
+印的字又變。但 <code>tools/build.mjs</code> 的 <code>normalize()</code> 裡已經寫著</p>
+<pre>.replace(/&lt;time class="post-updated"[^&gt;]*&gt;[^&lt;]*&lt;\/time&gt;/g,
+         '&lt;time class="post-updated"&gt;@&lt;/time&gt;')</pre>
+<p>而且 build.mjs 裡那一段回填的程式碼也還在（2026-08-18 之後一直空轉，註解裡就寫著
+「日後若要在文章頁補一行『最後更新』，加上 class 就會自動接上」）。
+<strong>擺在哪裡因此純粹是版面問題，沒有技術限制。</strong></p>
+
+<h2>五個候選與各自吃掉的高度（390×844）</h2>
+<table>
+  <tr><th></th><th>文件高</th><th>1280 上</th><th>那一行本身</th></tr>
+  <tr><td>Ⓑ 併進文末免責那一句</td><td>+25px</td><td>+0px</td><td>15px</td></tr>
+  <tr><td>Ⓒ 免責上面獨立一行</td><td>+42px</td><td>+43px</td><td>25px</td></tr>
+  <tr><td>Ⓓ「延伸閱讀」上面（<code>&lt;/main&gt;</code> 外）</td><td>+50px</td><td>+51px</td><td>25px</td></tr>
+  <tr><td><strong>Ⓔ 貼著 HERO 圖下緣</strong></td><td><strong>+32px</strong></td><td>+32px</td><td>23px</td></tr>
+  <tr><td>Ⓕ 內文開頭、導言上面</td><td>+42px</td><td>+43px</td><td>25px</td></tr>
+</table>
+<p>Ⓑ~Ⓓ 是第一輪給的三格（都在文末）。使用者看過之後直接改了方向：
+<strong>「如果只要內文有　首頁圖卡不用的話　把日期壓在文章裡　圖片的下方就好了」</strong>，
+Ⓔ 與 Ⓕ 是第二輪照這句話做出來的。<strong>定案 Ⓔ。</strong></p>
+
+<h2>Ⓔ 的規格：跟 <code>.post-hero figcaption</code> 借</h2>
+<pre>.post-updated-line {
+  max-width: var(--content); padding-inline: var(--pad);
+  margin: .55rem auto 0; font-size: .78rem; color: var(--ink-soft);
+}</pre>
+<p>上距、字級、次要色三樣都和站上原本就有的 <code>.post-hero figcaption</code> 相同，
+寬度也吃同一組 <code>--content</code> ＋ <code>--pad</code>，所以字的左緣和圖的左緣、
+和導言的左緣是<strong>同一條</strong>。</p>
+<p>⚠ <strong>它沒有真的做成 <code>&lt;figcaption&gt;</code></strong> —— 日期不是圖說，借的只是視覺規格。
+它是 <code>&lt;figure&gt;</code> 後面的一個 <code>&lt;p&gt;</code>。</p>
+
+<h2>⚠ 量左緣不可以量盒子</h2>
+<p><code>.post-updated-line</code> 有 <code>padding-inline</code>，所以
+<code>getBoundingClientRect().left</code> 回的是 0（390 上），字其實在 14。
+第一版就是這樣量出「圖 14、那一行 0」，看起來像沒對齊。
+要用 <code>Range.selectNodeContents()</code> 量<strong>畫出來的字</strong>（第九節第 5 條）。
+改對之後十六篇兩個寬度全部一致：</p>
+<pre>390px 　圖 14 　那一行 14 　導言 14
+1280px　圖 312　那一行 312　導言 312</pre>
+
+<h2>驗收</h2>
+<ul>
+  <li>十六篇 × 390／1280 兩個寬度：左緣、離圖下緣 8.8px、高 23.1px、字級 12.48px 全部一致，無水平捲動。</li>
+  <li>對比 <strong>5.92:1</strong>（白天 #5c5f57 on #f4f4f5）、<strong>5.74:1</strong>（夜間 #a3a5a6 on #282b31）。</li>
+  <li>十六篇的畫面日期 ＝ <code>post-meta.updated</code> ＝ JSON-LD <code>dateModified</code> ＝ <code>article:modified_time</code>，逐篇比對過。</li>
+  <li><code>node tools/night-mode.mjs --check</code> 全部一致（新規則只用既有的變數，夜間不必另外寫一份）。</li>
+  <li>首頁、七科著陸頁、<code>sitemap.xml</code>、<code>robots.txt</code> 零差異。</li>
+</ul>
+
+<h2>⚠ 日期照第五節還原了</h2>
+<p>那一行在 <code>&lt;main&gt;</code> 裡，十六篇的內容雜湊全部動了，build 把十六篇的
+<code>updated</code> 一起換成當天。<strong>但這是版型連動、不是內容變了</strong>
+（同 2026-08-16 換 HERO、2026-08-17 改手機內距），所以照第五節那個程序把
+<code>tools/build-manifest.json</code> 裡的 <code>updated</code> 還原、雜湊留新的，再跑一次 build。
+實際被誤傷的是七篇（其餘九篇本來就是當天）。</p>
+<p class="note">⚠⚠ 如果不還原，十六篇會一起印出「最後更新：2026/09/20」——
+<strong>那才是真的說謊</strong>，而且這一輪的成品正好就是把那個日期印在畫面上，
+誤傷的後果比以前任何一次都嚴重。<strong>日後再動到全部文章的 <code>&lt;main&gt;</code>
+時，這一條要先想。</strong></p>
+
+<h2>格式：斜線不是「年月日」</h2>
+<p>build.mjs 原本那一行用的是 <code>zhDate()</code>（「2026 年 9 月 20 日」）。
+改成 <code>2026/09/20</code>，因為<strong>同一頁頂端那一行的上架日期就是斜線寫法</strong>，
+兩個日期要看起來是同一種東西。頁尾那句「網站最後更新」仍然用 <code>zhDate()</code>，那是另一件事。</p>
+
+<h2>首頁卡與延伸閱讀卡沒有動</h2>
+<p>使用者指定「首頁圖卡不用」，正好和第一節第 3 條一致：
+<strong>卡片一律顯示 <code>published</code>、首頁也依 <code>published</code> 排序</strong>。
+結果是文章頁同時看得到兩個日期 —— 頂端那一行是上架日、圖下這一行是最後更新日。
+<strong>那正是 Google 要的</strong>（兩個都給、而且和 <code>datePublished</code>／<code>dateModified</code> 對得上）。</p>
+
+<h2>提案頁本身</h2>
+<p>文章頁的完整複本，照第八節四件事處理：SEO 區塊<strong>與手寫在區塊外面的
+<code>&lt;link rel="canonical"&gt;</code></strong>換成 noindex、<code>data-views-self</code>
+降成 <code>data-views</code>（不灌計數但印得出真數字，同 <code>chip-carry</code> 那一輪）、
+同層的 <code>../&lt;slug&gt;/</code> 改絕對路徑、切換條用 <code>lastIndexOf</code> 插在最後一個
+body 結尾前面。六道守門。</p>
+<p>⚠ 第二輪加到六顆按鈕時，切換條在 320 上吃掉 <strong>22.6%</strong>，
+而這一頁要判斷的正是「那一行貼在圖下面好不好看」。
+把上一輪那三格<strong>收進摺疊</strong>之後回到 18.7%（390 上 16.7%）——
+同 2026-08-16 <code>hero-motion-mobile</code> 那一輪。</p>
+<p>⚠ 選中的按鈕第一版用 <code>var(--accent-deep)</code> 配白字，
+<strong>夜間模式的 <code>--accent-deep</code> 是亮青，白字壓不住</strong>。
+改成 <code>--ink</code> / <code>--paper</code> 反白，兩個主題分別是 11.15:1 與 13.9:1。</p>
+
+<h2>成績</h2>
+<p>B5 0 → 1，B 組 17.5 → 18.5，<strong>總分 88 → 89</strong>。</p>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>

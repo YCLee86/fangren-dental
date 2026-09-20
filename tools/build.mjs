@@ -325,14 +325,21 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
     html = html.replace(/("updated"\s*:\s*")[^"]*"/, `$1${updated}"`);
     meta.updated = updated;
   }
-  /* 舊版在文章頁上也印一次「最後更新」，靠這個 class 找到它。
-     現在**畫面上不再有任何一處顯示 updated**（2026-08-18，見下面第 3 節的長註解）：
-     文章頁 crumbs 那個 <time> 是手寫的上架日期、沒有這個 class，所以這一行
-     現在是空轉的。留著是因為它無害，而且日後若要在文章頁補一行「最後更新」，
-     加上 class 就會自動接上。 */
+  /* 文章頁 HERO 圖下面那一行「最後更新」，靠這個 class 找到它。
+     ⚠ 2026-08-18 到 2026-09-20 之間這一行是空轉的（那段時間畫面上任何一處
+       都不顯示 updated）。**2026-09-20 起它真的有對象了**：十六篇的 HERO 圖
+       下面各有一個 <p class="post-updated-line">，裡面就是這個 time。
+       所以上面那句「留著只是因為無害」已經不成立，不要照它去清掉這一段。
+     ⚠ 首頁卡與延伸閱讀卡仍然顯示 published（第 3 節那段長註解沒有被推翻），
+       只有文章頁多這一行。
+     ⚠ 格式是 2026/09/20 不是 zhDate 的「2026 年 9 月 20 日」——
+       同一頁頂端那一行的上架日期就是斜線寫法，兩個日期要看起來是同一種東西。
+       頁尾那句「網站最後更新」仍然用 zhDate，那是另一件事。
+     ⚠ 這一行的內容**不進內容雜湊** —— normalize() 已經把它換成佔位符了，
+       否則會變成「寫進新日期 → 雜湊變了 → 下次又換成今天」的迴圈。 */
   html = html.replace(
     /<time class="post-updated"[^>]*>[^<]*<\/time>/,
-    `<time class="post-updated" datetime="${updated}">${zhDate(updated)}</time>`
+    `<time class="post-updated" datetime="${updated}">${updated.replace(/-/g, "/")}</time>`
   );
 
   html = withCanonical(html, `${siteUrl}/posts/${meta.slug}/`);

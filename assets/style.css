@@ -629,6 +629,21 @@ a:hover { color: var(--accent); }
 }
 .post-hero figcaption { margin-top: .55rem; font-size: .78rem; color: var(--ink-soft); }
 
+/* 文章的「最後更新」——貼著 HERO 圖的下緣（2026-09-20 定案，見 /history/b5-updated.html）。
+   規格是跟上面那條 figcaption 借的：同樣的上距、字級與次要色，寬度也跟著 HERO 圖
+   （--content 加 --pad），所以字的左緣和圖的左緣、和導言的左緣是同一條。
+   ⚠ 它不是 figcaption —— 日期不是圖說，借的只是視覺規格。
+   ⚠ 首頁卡與延伸閱讀卡**不加**，那兩處顯示的是上架日期（CLAUDE.md 第一節第 3 條）。
+     文章頁因此同時看得到兩個日期：頂端那一行是上架日、這一行是最後更新日。
+     兩個都給、而且和 JSON-LD 的 datePublished 與 dateModified 對得上，
+     正是 Google 對文章日期的要求。
+   ⚠ 日期那幾個字由 tools/build.mjs 寫（它靠 time.post-updated 這個 class 找到），
+     不要手改。 */
+.post-updated-line {
+  max-width: var(--content); padding-inline: var(--pad);
+  margin: .55rem auto 0; font-size: .78rem; color: var(--ink-soft);
+}
+
 .post-body { padding-block: clamp(1.8rem, 5vw, 2.6rem); }
 .post-body > * { max-width: var(--content); margin-inline: auto; }
 /* 小節標題前的那一小段枝條，和首頁「醫師介紹／診所資訊」用的是同一個做法：
