@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>topic-stance｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>topic-stance — 那三句回應（一般牙科／顯微根管／植牙假牙）</h1>
+<p class="meta">
+  2026-09-20 開、當天定案上線<br>
+  原網址 <code>/preview/topic-stance/</code>、<code>/preview/topic-stance-endo/</code>、
+  <code>/preview/topic-stance-prosth/</code>（已刪除 2026-09-20）<br>
+  整頁還原：<code>git show f76c74e4:preview/topic-stance/index.html</code><br>
+  產生器：<code>tools/stance-preview.mjs</code>（已刪除，同一個 commit 裡還原得到）<br>
+  依據：<code>drafts/seo-geo-audit/REPORT.md</code>（SEO／GEO 體檢，C4）
+</p>
+
+<h2>起因</h2>
+<p>SEO／GEO 體檢的 <strong>C4（Q&amp;A／重點整理，3 分）卡在 2.5</strong>，缺的 0.5 全部在這三頁。
+七科著陸頁最上面那一塊「三個處境」，四科是 <code>&lt;dl&gt;</code>（三個 <code>dt</code> 共用一個
+<code>dd</code>，＝「問句 → 直答」，評分器 3 分），這三科是 <code>&lt;ul&gt;</code>（1 分）。</p>
+<p><strong>差別不在標記，在文案</strong>：這三科只有 <code>lead</code> 沒有 <code>stance</code>，
+而**沒有回應句就寫不出合法的 <code>dl</code>**（只有 <code>dt</code> 沒有 <code>dd</code>）。
+所以補那 0.5 分＝替三科各寫一句回應，而那正好踩到 <code>tools/topic-copy.mjs</code> 裡
+2026-08-19 的決定：<strong>「lead 與 stance 是兩種節奏，一科只挑一種，不要兩個都給」</strong>
+（理由：同一件事講兩次，七頁會像複製貼上）。顯微根管與植牙那兩頁還標著
+「✅✅ 定案，不要再重寫這一頁」。</p>
+<p>因此 2026-09-20 先開提案頁，正式站一個字都沒動。使用者看過之後：<strong>「都選 C　定案上線」</strong>。</p>
+
+<h2>提案頁長什麼樣</h2>
+<p>三頁，都是 <code>topics/&lt;spec&gt;/index.html</code> 的<strong>真快照</strong>（不是模擬）。
+切換條兩排：候選四格（現況／Ⓐ／Ⓑ／Ⓒ）＋ 三科互跳，選擇用 <code>?g=</code>／<code>?e=</code>／<code>?p=</code>
+三個參數<strong>跟著換頁走</strong>（同 chip-carry 那一輪：按下去就換頁，模式放在記憶體裡會掉）。
+底下是現場量測面板。</p>
+<p>這一輪多示範四件事：</p>
+<pre>・整個元素要換掉（ul ↔ dl），不能把四個候選都留在 DOM 裡用 display 切
+  —— 站上那條 .tp-intro dl.tp-cases:last-of-type dd.tp-reply 比的是元素型別，
+  旁邊多留一個藏起來的 dl，下緣就差 6.7px，量到的不等於上線後的數字。
+
+・量四個候選各自的高度要用「影子」：把 .tp-intro 複製一份到畫面外、
+  同寬，在那裡換來換去量。拿畫面上那一塊直接換，使用者會看到它跳。
+
+・守門「掃整頁等於沒掃」（第九節第 4 條）又差點踩到：切換條那支腳本裡面
+  也寫著 dd class="tp-reply"，數整頁會數到兩個。守門要先切出介紹那一塊再數。
+
+・候選按鈕的字要短到不折行（Ⓐ 不痛時／Ⓑ 幫家人／Ⓒ 兩行版）——
+  第一版用了「Ⓐ 不是一眼看得出」這種長標籤，那一排折成兩列，
+  切換條從 21% 長到 26%。而這一頁要判斷的正好是最上面那一塊。</pre>
+
+<h2>⚠⚠ 第二件要一起決定的事：一屏</h2>
+<p>COPY.md 第九之十一節的規矩是「介紹整塊收在一屏之內，而且下一區露出一角」。
+加一句回應的代價量出來是：</p>
+<pre>兩行的回應　整塊 +60px
+一行的回應　整塊 +32px（一行 ≤ 22 字是 390 寬量到的折行線）
+
+　　　　　　現況      一行版           兩行版（定案）
+一般牙科　　663　　　695 ✅　　　　　723 ❌ 超出 23
+顯微根管　　660　　　692 ✅　　　　　719 ❌ 超出 19
+植牙假牙　　663　　　695 ✅　　　　　723 ❌ 超出 23
+（390x700。430x769 三頁全部收得進去：729／726／729）</pre>
+<p><strong>使用者看過這組數字之後，三科都挑了兩行版。</strong>
+這和兒牙那一次是同一種取捨（2026-08-19「那個蠻好的，先加回來，<strong>不要管版面的限制</strong>」，
+代價是 390 上超出 27px、375 上超出 65px）——<strong>內容比那一格版面重要，
+這是知情後的選擇，不是 bug，日後不要「修」它</strong>。</p>
+<p>⚠ 分數上一行與兩行<strong>沒有差別</strong>（評分器只看有沒有 <code>dl</code> ＋ 回應），
+所以那 20px 買的純粹是文案的完整度：三個處境都被接住。</p>
+
+<h2>定案的三句（Ⓒ）</h2>
+<pre>一般牙科・定期檢查
+  這三種都很常見。**不痛不代表沒事** —— 自己來、幫家人問，先看過再決定。
+  ⚠ 停在「現在就可以看」這一層，不把中段那一塊的話講掉
+    （flowTitle 就是「在芳仁，我們是這樣想的」，診所的看法是那一塊的工作）。
+  ⚠ 三種人都接到：想不起上次／不痛就沒去／人在外地幫爸媽找。
+
+顯微根管
+  第一次做、做過又發作，**怕的都是白做一次** —— 原因找得到，才談得上留。
+  ⚠ 刻意不再講一次「先看清楚」——lead 已經講了（顯微鏡下看清楚，牙齒就多一次機會）。
+    它接的是第三個現場（怕白做）。
+  ⚠ 「才談得上留」是標準不是承諾，不可以寫成留得住。整頁仍然沒有一個「快」字。
+
+植牙・假牙重建
+  **問題不只一顆，答案也不只一種** —— 整口看過，才分得出哪些要動。
+  ⚠ 不回答「從哪裡開始」——那是 lead 的問句，而中段的 flowTitle 才是它的答案。
+    這一句停在「範圍」這一層。
+  ⚠ 檢查表 D：不要讓每個人都覺得自己很嚴重（所以不是「才知道要弄多大」）。
+  ⚠ 檢查表 J：不可以再列一次「補過的、缺的、鬆的」。</pre>
+
+<h2>落選的（一行版，留著紀錄）</h2>
+<pre>一般　Ⓐ 不痛的時候，**最看得出剛開始的問題**。（17 字）
+　　　Ⓑ 自己看牙、幫家人找，**都從一次檢查開始**。（19 字）
+根管　Ⓐ 能不能留，**不是一眼看得出來的**。（15 字）
+　　　Ⓑ **救得回的要看得到，救不回的要講清楚**。（18 字）
+植牙　Ⓐ **不是每一顆都要動，也不是只動那一顆**。（18 字）
+　　　Ⓑ 問題不只一顆，**答案也不只一種**。（15 字）</pre>
+
+<h2>⚠⚠ 被推翻的那條規則（現在的寫法）</h2>
+<p>2026-08-19 那條「一科只挑一種、不要兩個都給」<strong>取消了</strong>。
+但<strong>當初的理由沒有失效，只是降級成寫作要求</strong>：</p>
+<div class="note">
+<p>lead 與 stance 並存的時候，<strong>stance 不可以重講 lead 已經講完的事</strong> ——
+要接的是三個現場裡 lead 沒有接住的那一個（顯微根管接「怕白做」、植牙接「說法都不一樣」）。
+做不到就不要硬寫。</p>
+</div>
+<p>這句話現在寫在三個地方，三處要一起看：<code>tools/topic-copy.mjs</code> 檔頭 stance 那一格、
+<code>tools/topics.mjs</code> 那一段註解（會被印進七頁）、<code>index.html</code> 的 <code>.tp-lead</code> 樣式註解。
+⚠ 這是第九節第 28 條那個坑的實例：<strong>一輪定案之後，那一輪寫下的理由可能被下一輪弄成假的</strong>
+——「值沒有錯，要改的是它的理由」。</p>
+
+<h2>兒牙那一頁沒有動</h2>
+<p>兒牙走的是 <code>groups</code>（兩組現場各接一句回應），本來就有 <code>dd</code>、本來就是 3 分。
+它的註解原本寫著「因此這一科沒有 stance，只有 lead。不要兩個都寫」——
+<strong>後半那句是引用被取消的通則</strong>，已經改掉；前半仍然成立，但理由換成
+「它走的是 groups」。</p>
+
+<h2>成績</h2>
+<pre>C4  2.5 → 3.0（滿分）
+C 組 16.5 → 17.0　　總分 89 → 89.5
+著陸頁平均 72 → 74（逐頁平均 85）
+逐頁：/topics/general/ 71 → 75、/topics/endo/ 69 → 73、/topics/prosth/ 69 → 73
+
+⚠ 另外四科一個像素都沒動 —— 這一輪它們只改到註解，而上線版（_site/）
+  是剝過註解的，所以那四頁逐位元組相同。</pre>
+
+<footer><a href="/history/">← 改版紀錄</a></footer>
+
+</div></body>
+</html>

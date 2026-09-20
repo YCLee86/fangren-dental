@@ -5325,8 +5325,10 @@ body[data-topic] #topics { padding-top: 1rem; }
    ⚠ 靠深淺分出對話關係就夠了，**不要加項目符號** ——
      一加就變回被否決的「症狀清單」的樣子（COPY.md 第九之七節）。 */
 /* 3-1b 開場句（lead）：排在三個處境**之前**，是「我們」的聲音，所以用墨。
-   ⚠ 有 lead 的科就不要再寫 stance（規則見產生器檔頭）——
-     一頁只需要一句要被記住的話，講兩次就兩句都不會被記住。 */
+   ⚠ 有 lead 的科**也可以**有 stance（2026-09-20 起，一般牙科／顯微根管／植牙假牙
+     三科就是）—— 原本那條「有 lead 就不要再寫 stance」已經取消，規則見產生器檔頭。
+     ⚠ 但那句「講兩次就兩句都不會被記住」仍然成立，所以並存的時候
+       stance 要接 lead 沒有接住的那一個現場，不可以重講同一件事。 */
 .tp-lead { margin: 0 0 .55rem; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
 .tp-lead strong { color: var(--accent-deep); font-weight: 700; }
 
@@ -5962,12 +5964,16 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
                「苦的香的我們都有賣」（使用者的原話），那是攤販不是診所。
              ⚠⚠ 這一段註解裡**不要出現反引號** —— 它在模板字串裡面
                （CLAUDE.md 第八節那個坑，hero-line3 那一輪踩過）。
-           ⚠⚠ **lead 與 stance 是兩種節奏，一科只挑一種**（2026-08-19）：
+           ⚠⚠ **lead 與 stance 是兩種節奏**（2026-08-19）：
              ・stance 在後 ＝ 先讓他對號入座，再一句話回完（牙周）。
              ・lead 在前 ＝ 先把最重要的那句話講掉，再舉例（兒牙：家長最想聽的
                是「這不是孩子的體質」，那句話擺後面就太晚了）。
-             **不要兩個都給** —— 那會變成同一件事講兩次，而且七頁長得一模一樣
-             就是使用者說的「看起來像複製貼上」。
+             ⚠⚠ **原本還有一條「一科只挑一種、不要兩個都給」，2026-09-20 取消了。**
+             取消的成因是這一塊的標記：沒有 stance 就寫不出問答的 dl（只有 dt
+             沒有 dd 不合法），那三科因此只能出 ul，被檢索系統讀成一串處境。
+             ⚠ 當初的理由（同一件事講兩次、七頁像複製貼上）沒有失效，只是降級成
+             寫作要求：**並存的時候 stance 不可以重講 lead 已經講完的事**。
+             一般牙科、顯微根管、植牙假牙三科 2026-09-20 起兩個都有。
            ⚠⚠ **整塊要收在手機的一屏之內**（2026-08-18 使用者第二輪）：
              「這樣子的內容我希望在這個版面上能都放進去，而且要讓他覺得下面還有
                東西往下滑 —— 著陸頁的文案不能超過這個版面。」
@@ -5978,11 +5984,12 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
         <h1>一般牙科・定期檢查</h1>
         <p class="tp-count"><a href="#doctors"><span class="tp-n">4 位</span><span class="tp-t">醫師</span></a><span class="tp-dot" aria-hidden="true">・</span><a href="#articles"><span class="tp-n">3 篇</span><span class="tp-t">文章</span></a></p>
         <p class="tp-lead">牙齒沒事的時候，<strong>反而很難決定要找哪一間</strong>。</p>
-        <ul class="tp-cases">
-          <li class="tp-case">上一次看牙是什麼時候，想不太起來。</li>
-          <li class="tp-case">不痛就沒去，反正也沒什麼感覺。</li>
-          <li class="tp-case">爸媽說牙不舒服，可是我人在外地。</li>
-        </ul>
+        <dl class="tp-cases">
+          <dt class="tp-case">上一次看牙是什麼時候，想不太起來。</dt>
+          <dt class="tp-case">不痛就沒去，反正也沒什麼感覺。</dt>
+          <dt class="tp-case">爸媽說牙不舒服，可是我人在外地。</dt>
+          <dd class="tp-reply">這三種都很常見。<strong>不痛不代表沒事</strong> —— 自己來、幫家人問，先看過再決定。</dd>
+        </dl>
 
         <div class="tp-first">
           <h2 class="tp-first-h">在芳仁，我們是這樣想的</h2>
