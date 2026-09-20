@@ -794,6 +794,27 @@ body {
 body, p, li, h1, h2, h3, h4, dd { overflow-wrap: break-word; word-break: break-word; }
 img { max-width: 100%; height: auto; display: block; }
 
+/* ---- 圖片的「順手保護」（2026-09-20，使用者指定）----------------------
+   -webkit-touch-callout: none  手機長按不跳出「儲存影像」那張選單（iOS 就靠這條）
+   -webkit-user-drag: none      不能把圖拖到桌面
+   user-select: none            圖不會被選取起來一起複製
+   右鍵另存要靠 JS（assets/img-guard.js，用事件代理只擋 <img>）。
+
+   ⚠⚠⚠ 這一組**擋不住有心的人，原理上也做不到** —— 瀏覽器要把圖畫出來就得先
+     把檔案下載到使用者電腦，開發者工具、關掉 JS、或直接截圖都繞得過。
+     真正有效的是「站上不放原檔」（drafts 進不了 _site）。細節寫在 img-guard.js 的檔頭。
+   ⚠ 只掛在 `img` 上，**不要擴到整頁或 `a`** —— 那會連「在新分頁開啟連結」
+     和「複製這段字」一起擋掉。
+   ⚠ 線稿底圖是 CSS 的 background-image、地圖是 inline SVG，本來就沒有
+     「另存圖片」那個選單項，不必處理。 */
+img {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+
 /* <picture> 只是裝 <source> 的殼，不該在版面上佔位置（2026-09-18 起，WebP 那一輪）。
    站上有三處 <img> 坐在 flex 容器裡（首頁文章卡、延伸閱讀卡、HERO 的 .hero-shot），
    包上 <picture> 之後變成那個殼才是 flex item、<img> 退成孫子 ——
@@ -8517,6 +8538,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 })();
 </script>
 
+<script src="assets/img-guard.js" defer></script>
 <script src="assets/counter.js" defer></script>
 <script src="assets/head-search.js" defer></script>
 

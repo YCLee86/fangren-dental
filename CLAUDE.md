@@ -337,6 +337,11 @@ src/
 assets/
   style.css             全站樣式
   counter.js            前端計數器
+  img-guard.js          圖片不給人順手存走（2026-09-20）。事件代理只擋 <img> 的右鍵與拖曳，
+                        手機長按靠 CSS 的 -webkit-touch-callout（index.html 內嵌那份與
+                        style.css 各一份）。三種頁面都載（首頁／文章／著陸頁）。
+                        ⚠⚠ **擋不住有心的人，原理上也做不到** —— 不要再往這個方向加碼，
+                        理由與落選的做法寫在它的檔頭與 DECISIONS.md 那一列
   head-search.js        頁首那顆放大鏡的行為（2026-08-26）。首頁就地篩選，
                         文章頁與著陸頁按 Enter 送回 /?q=…#topics。
                         ⚠ 三份標記共用它（index.html／posts/*／topics/*），
