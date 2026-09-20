@@ -2832,13 +2832,13 @@ drafts/expression-marks/
 | **汗滴** | 一顆倒水滴，尖端朝上 | 尷尬、有點為難 | 家長的「會不會很貴」那種為難 |
 | **螺旋＋小圈** | 繞兩圈的細線，末端帶一兩個小圈 | 困擾、想不通 | 資訊太多、選項太多 |
 | **四角星** | 四個尖角，兩長兩短；可一大一小成組 | 想通了、發亮、變好了 | ⚠ **推翻了一條我們自己定的 AVOID，見十八之六** |
-| **三個漸大的圓** | 由小到大三顆空心圓，斜著排 | 正在想事情 | 「要不要做」的猶豫；⚠ **只畫引導泡，不畫泡泡本體** |
+| **三個漸大的圓** | 由小到大三顆空心圓，斜著排 | 正在想事情（思考泡的**尾巴**） | 「要不要做」的猶豫。⚠ 2026-09-20 起**泡泡本體可以接上去了**（十八之十三） |
 | **耳邊同心弧線** | **一隻手拿著手機貼在耳邊**，弧線從手機那一側散出，二到三條同心弧 | ⚠ **正在講電話**（**不是**「在聽別人說話」） | 打電話預約；**麻醉醫師打電話來做術前諮詢**（〈兒童舒眠〉第二格正是這個場面） |
 | **燈泡** | 小燈泡＋四五條短放射線 | 想到了 | ⚠ **最像廣告的一個**，見下面那條 |
 
-⚠⚠ **三個漸大的圓有陷阱**：畫了引導泡，模型會很想把**泡泡本體**也畫出來，
-而泡泡一出現就會想往裡面填東西 —— **那是長字的落點**（同〈隱形矯正〉不給對話框的理由）。
-`AVOID` 要明寫 `no thought balloon, only the three lead-in circles`。
+~~⚠⚠ 三個漸大的圓有陷阱：畫了引導泡，模型會把泡泡本體也畫出來，那是長字的落點。~~
+→ **2026-09-20 使用者推翻了**：「對話框可以用　裡面也是用插圖呈現　偶爾有一點字也可以接受」。
+**泡泡本體現在可以畫**，這三顆圓就是它的尾巴。規格見**十八之十三**。
 
 ⚠⚠⚠ **⑱ 最後一格是「白袍 ＋ 頭上燈泡」，那一格我們不可以照抄。**
 第十四節那條「**圖上的符號也會構成承諾**」在這裡直接命中：
@@ -2868,7 +2868,7 @@ A 類（使用者親口說的）沒有它，B 類（我推的、可以被推翻�
 | | 狀態 | 理由 |
 | --- | --- | --- |
 | **爆炸狀星芒** | **維持不要** | 它和 ⑮⑰⑱ 那顆**四角星是兩件事**（一圈鋸齒 vs 四個角）。四角星已放行，見下 |
-| **對話框／泡泡** | **維持禁用** | ⭐ **這一條有真理由，不是偏好**：全站硬紅線是第七節第 4 條「圖裡不准有任何文字」，而**泡泡一出現模型就會想往裡面填字**（〈口腔外科〉那一輪踩過三種漏字的形式）。〈拔智齒〉已經用過泡泡，再用也會撞語彙 |
+| **對話框／泡泡** | ⭐ **2026-09-20 使用者放行** | 我原本建議維持禁用（怕長字）。**使用者的決定：可以用，框裡放插圖，偶爾一點字也可以。** 六條規格在**十八之十三**，「一點字」走既有的**字符白名單**機制 |
 | **背景速度線** | ⬇ **降成 B 類（我推的，可以被推翻）** | 我的理由只有「會變漫畫風」。**那是美感判斷，該使用者決定** |
 | **集中線** | ⬇ 同上 | 同上 |
 
@@ -2944,10 +2944,11 @@ a PHONE HELD TO THE EAR BY THE PERSON'S OWN HAND — never draw those arcs besid
 unless the hand and the phone are drawn too.
 ONE PERSON GETS ONE SYMBOL. Never put a symbol on a person who already has motion lines.
 Name the panels that have none.
-AVOID: any writing or lettering used as a mark; thought balloons or speech balloons of
-any kind (the three lead-in circles are allowed, the balloon itself is not); background
-speed lines; converging action lines; burst or explosion starbursts; six- or eight-
-pointed stars; a light bulb above a clinician's head; a symbol overlapping hair or face.
+AVOID: burst or explosion starbursts; six- or eight-pointed stars; a light bulb above a
+clinician's head; more than one symbol on one person; a symbol overlapping hair or face;
+any writing that has not been listed in this prompt's own whitelist of allowed characters.
+(⚠ 2026-09-20: speech and thought balloons are NO LONGER banned — see 十八之十三. If this
+particular picture should not have one, say so here explicitly; do not rely on this list.)
 ```
 
 ### 十八之十一、⭐ 第一次試用：〈八成人有牙周病〉那張（2026-09-20，使用者指定）
@@ -3050,4 +3051,56 @@ pointed stars; a light bulb above a clinician's head; a symbol overlapping hair 
 **這張圖到此為止，不要再改它。** 它過不了「頭 180px」那一關，再改幾輪也一樣。
 要試這套字彙，**先去量十六張 HERO 的頭有多高，挑過得了門檻的那一張**
 （單格、一到兩個人的圖才有機會；四格分割的一定不行）。
+
+### 十八之十三、⭐ 對話框 —— 2026-09-20 使用者放行
+
+> 使用者原話（逐字）：「**對話框可以用　裡面也是用插圖呈現　偶爾有一點字也可以接受**」
+
+**這一句推翻了我寫的三條**（三處都已改掉）：
+
+| 被推翻的 | 原本寫在哪 |
+| --- | --- |
+| 對話框「維持禁用」 | 十八之六那張表 |
+| 三個漸大的圓「只畫引導泡，**不畫泡泡本體**」 | 十八之五 |
+| 「說話只用嘴邊那兩條，**不給泡泡**」 | 〈隱形矯正〉第三輪（`drafts/aligner-simulation/hero-prompt.md` 二之三） |
+
+⚠ **`drafts/aligner-simulation/hero-prompt.md` 那一份沒有回去改** —— 它如實記錄著
+當時那一張圖的決定，那是對的。**這裡的規格才是現行的。**
+
+#### 六條規格
+
+1. **框裡優先放圖，不放字。** 使用者指定的順序就是這個 —— 插圖第一，字是例外。
+2. **框裡只放一樣東西**（一顆牙、一支牙刷、一個時鐘）。兩樣以上縮到手機就糊成一團。
+3. **尾巴決定它是「說」還是「想」**：
+   ・**連續的三角尖尾**，指向說話的人的嘴 ＝ **說**
+   ・**三個漸大的圓** ＝ **想**（那正是十八之五那個標記，現在它可以接上本體了）
+4. **框線比圖裡的線細一階**，框是白底，**不吃科別套色**。
+5. **一張圖最多一個框**（同「一人一組」的規矩）。
+6. **要放字就走字符白名單**，見下。
+
+#### ⚠⚠ 「偶爾有一點字」要怎麼做才不會長出亂碼
+
+**站上已經做過兩次，機制是現成的**：〈隱形矯正〉開了 `ERROR`／`200+`／`∞`；
+〈八成人有牙周病〉開了四個數字與警示三角裡的驚嘆號。做法都一樣 ——
+**在提示詞裡逐字列出准許出現的字符，其餘一律留白。**
+
+⚠ 不列白名單的下場是實測過的（第七節第 4 條）：第一版的海報上長出了
+`Brashriashing`／`Rowch teeth` 這種亂碼英文。
+**所以第七節第 4 條沒有被廢掉，它變成「預設無字 ＋ 明列例外」** —— 那本來就是它的運作方式。
+
+⚠ **我推的一條（B 類，可以推翻）**：⑬ 那幾格用**日文假名**當語氣標記，建議不要沿用 ——
+我們是中文站。要字就**中文或數字**。
+
+#### ⚠⚠ 尺寸門檻比標記更嚴
+
+框裡那個圖要認得出來，在手機上至少要 **24px**；換算回母檔
+（文章頁的圖在手機上顯示 335px 寬）＝ 那個圖要 **143px**、**整個框要 200px 上下**。
+
+**所以對話框只放得進「單格、一兩個人、頭 ≥180px」的圖**（十八之四那條下限）。
+多格分割的圖連標記都放不下，更放不下框。
+
+#### 畫出來了
+
+三種框（說話框／思考泡／有一點字的框）畫在規格頁 `/preview/expression-marks/` §9，
+產生器是 `drafts/expression-marks/preview-gen.mjs` 的 `BALLOONS`。
 

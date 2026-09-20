@@ -54,7 +54,7 @@ const MARKS = [
     warn: "只有<b>四</b>個角；一顆，或一大一小兩顆", draw:
     `<path d="M 50 6 Q 56 44 92 50 Q 56 56 50 94 Q 44 56 8 50 Q 44 44 50 6 z" fill="currentColor"/>` },
   { name: "三個漸大的圓", pct: 49, mean: "正在想事情", use: "「要不要做」的猶豫",
-    warn: "⚠ 只畫引導泡，<b>不畫泡泡本體</b> —— 那是長字的落點", draw:
+    warn: "⚠ 2026-09-20 起<b>泡泡本體可以畫了</b>（見 §9）—— 這三顆圓就是它的尾巴", draw:
     `<circle cx="18" cy="86" r="7" ${S}/><circle cx="44" cy="58" r="12" ${S}/><circle cx="76" cy="24" r="18" ${S}/>` },
   { name: "耳邊同心弧線", pct: 35, mean: "⚠ <b>正在講電話</b>（<b>不是</b>「在聽別人說話」）",
     use: "打電話預約；<b>麻醉醫師打電話來做術前諮詢</b>",
@@ -97,6 +97,40 @@ const bannedCells = BANNED.map((x) => `
     <figcaption><b class="nm">${x.name}</b>
       <span class="mean">${x.what}</span>
       <span class="warn">${x.who}</span></figcaption>
+  </figure>`).join("");
+
+/* ⭐ 2026-09-20 使用者放行對話框：「裡面也是用插圖呈現　偶爾有一點字也可以接受」 */
+const B = `fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"`;
+const tooth = (x, y, k) => `<g transform="translate(${x} ${y}) scale(${k})">
+  <path d="M -11 -13 q 11 -7 22 0 q 5 11 0 18 q -2 9 -5.5 9 q -3.5 0 -4.5 -7 q -1 -7 -2 0
+           q -1 7 -4.5 7 q -3.5 0 -5.5 -9 q -5 -7 0 -18 z" ${B}/></g>`;
+const balloon = (tail) => `<path d="M 14 12 h 66 a 9 9 0 0 1 9 9 v 34 a 9 9 0 0 1 -9 9
+  ${tail === "say" ? "h -34 l -15 15 v -15 h -17" : "h -66"}
+  a 9 9 0 0 1 -9 -9 v -34 a 9 9 0 0 1 9 -9 z" ${B}/>`;
+const BALLOONS = [
+  { name: "說話框（框裡放圖）", ok: true,
+    what: "⭐ <b>這是使用者要的那一種</b>：框裡放一個<b>插圖</b>，不放字。",
+    warn: "尾巴是一條<b>連續的三角尖尾</b>，指向說話的人的嘴",
+    svg: balloon("say") + tooth(47, 38, 1.18) },
+  { name: "思考泡（想，不是說）", ok: true,
+    what: "同一個框，<b>換尾巴就換意思</b>：三個漸大的圓 ＝ 他<b>在想</b>。",
+    warn: "那三顆圓就是字彙表裡的「三個漸大的圓」—— 現在它可以接上本體了",
+    svg: balloon("think") + tooth(47, 38, 1.18)
+       + `<circle cx="20" cy="76" r="5" ${B}/><circle cx="11" cy="89" r="3.2" ${B}/>` },
+  { name: "有一點字的框", ok: true,
+    what: "「偶爾有一點字也可以接受」—— 但<b>要指定是哪幾個字</b>。",
+    warn: "⚠ 走<b>字符白名單</b>：提示詞裡逐字列出准許出現的字，其餘一律留白。不列就會長出亂碼英文",
+    svg: balloon("say")
+       + `<text x="47" y="48" text-anchor="middle" font-size="30" font-weight="700"
+            fill="currentColor" font-family="ui-monospace,monospace">3</text>`
+       + tooth(70, 38, 0.62) },
+];
+const balloonCells = BALLOONS.map((x) => `
+  <figure class="mk">
+    <svg viewBox="-6 -6 112 112" role="img" aria-label="${x.name}">${x.svg}</svg>
+    <figcaption><b class="nm">${x.name}</b>
+      <span class="mean">${x.what}</span>
+      <span class="warn" style="color:var(--ink-soft)">${x.warn}</span></figcaption>
   </figure>`).join("");
 
 /* 把一個標記擺到頭旁邊，高度 = 頭高 × pct */
@@ -353,9 +387,9 @@ li{margin:.35rem 0}
   <tr><th></th><th>狀態</th><th>理由</th></tr>
   <tr><td><b>爆炸狀星芒</b></td><td>維持不要</td>
       <td>它和你參考圖裡那顆<b>四角星是兩件事</b>。四角星已經放行</td></tr>
-  <tr><td><b>對話框</b></td><td><b>建議維持禁用</b></td>
-      <td>這一條有真的理由，不是我的偏好：全站硬紅線是「圖裡不准有任何文字」，
-          而<b>泡泡一出現，模型就會想往裡面填字</b>。〈口腔外科〉那一輪已經踩過三種漏字</td></tr>
+  <tr><td><b>對話框</b></td><td>⭐ <b>2026-09-20 你放行了</b></td>
+      <td>我原本建議維持禁用（怕長字）。<b>你的決定：可以用，框裡放插圖，
+          偶爾一點字也可以</b> —— 做法見 §9</td></tr>
   <tr><td><b>背景速度線</b></td><td>⬇ 降成<b>「我推的，可以推翻」</b></td>
       <td>我的理由只有「會變漫畫風」。<b>那是美感判斷，該你決定，不是我</b></td></tr>
   <tr><td><b>集中線</b></td><td>⬇ 同上</td><td>同上</td></tr>
@@ -369,7 +403,39 @@ li{margin:.35rem 0}
    ④ 高度<b>不超過頭高的 1/4</b>。</p>
 <p class="cap">⚠ 已經上線的〈隱形矯正〉那張<b>不必回去改</b>（那張圖沒有情緒標記）。</p>
 
-<h2><span class="n">§ 9</span>順帶解掉一個踩過兩次的坑</h2>
+<h2><span class="n">§ 9</span>⭐ 對話框 —— 你 2026-09-20 放行的</h2>
+<div class="quote good">你的原話：<b>「對話框可以用　裡面也是用插圖呈現　偶爾有一點字也可以接受」</b></div>
+<p class="lead">這推翻了我寫的三條（都已改掉）：對話框「維持禁用」、
+  三個漸大的圓「只畫引導泡不畫泡泡本體」、以及〈隱形矯正〉那輪的「說話只給嘴邊兩條、不給泡泡」。</p>
+<div class="grid">${balloonCells}</div>
+
+<h3>用它的六條</h3>
+<ol>
+  <li><b>框裡優先放圖，不放字。</b>你指定的順序就是這個 —— 插圖第一，字是例外。</li>
+  <li><b>框裡只放一樣東西。</b>一顆牙、一支牙刷、一個時鐘。
+      兩樣以上，縮到手機上就糊成一團。</li>
+  <li><b>尾巴決定它是「說」還是「想」</b>：連續的三角尖尾 ＝ 說；三個漸大的圓 ＝ 想。</li>
+  <li><b>框線比圖裡的線細一階</b>，框是白底，不吃科別套色。</li>
+  <li><b>一張圖最多一個框</b>（同「一人一組」的規矩）。</li>
+  <li><b>要放字就走「字符白名單」</b> —— 見下面那格。</li>
+</ol>
+
+<div class="quote"><b>⚠ 「偶爾有一點字」要怎麼做才不會長出亂碼</b><br>
+  這站已經做過兩次：〈隱形矯正〉開了 <code>ERROR</code>、<code>200+</code>、<code>∞</code>；
+  〈八成人有牙周病〉開了四個數字。做法都一樣 ——
+  <b>在提示詞裡逐字列出准許出現的字，其餘一律留白</b>。<br>
+  不列白名單的下場是實測過的：第一版的海報上長出了
+  <code>Brashriashing</code>、<code>Rowch teeth</code> 這種亂碼英文。</div>
+
+<div class="quote bad"><b>⚠⚠ 尺寸門檻比標記更嚴。</b>
+  框裡那個圖要認得出來，在手機上至少要 <b>24px</b> ——
+  換算回原圖 ＝ 那個圖要 143px、整個框要 200px 上下。
+  <b>所以對話框只放得進「單格、一兩個人、頭 ≥180px」的圖</b>，
+  多格分割的圖連標記都放不下，更放不下框。</div>
+<p class="cap">⚠ 還有一條是<b>我推的，可以推翻</b>：參考圖裡有幾格用<b>日文假名</b>當語氣標記，
+  我建議不要沿用 —— 我們是中文站。要字就中文或數字。</p>
+
+<h2><span class="n">§ 10</span>順帶解掉一個踩過兩次的坑</h2>
 <div class="quote good">
   你補的那組<b>全男性</b>的參考，八張男臉<b>沒有一張有法令紋或眼下陰影</b> ——
   皮膚一個平塗色，臉上只有眉、眼、鼻的小勾、嘴四樣，
@@ -378,7 +444,7 @@ li{margin:.35rem 0}
   <b>下次畫男性角色，那一張就是參考圖</b> —— 比在提示詞裡寫「三十出頭、不要顯老」可靠得多。
 </div>
 
-<h2><span class="n">§ 10</span>第一次試用的結果（〈八成人有牙周病〉）</h2>
+<h2><span class="n">§ 11</span>第一次試用的結果（〈八成人有牙周病〉）</h2>
 <div class="quote bad"><b>你看完第一句話是「好像沒差多少」。量完之後證實你是對的，
   而且原因不是你的眼睛 —— 是那張圖根本不夠大。</b></div>
 
@@ -425,7 +491,7 @@ li{margin:.35rem 0}
 <div class="quote good"><b>串台沒有發生。</b>左上、左下與中控室那五個人身上
   <b>一個標記都沒有多長出來</b>。§9 那三個配套（逐格點名、四格等重、兩邊都寫）有效。</div>
 
-<h2><span class="n">§ 11</span>要你決定的</h2>
+<h2><span class="n">§ 12</span>要你決定的</h2>
 <div class="ask"><b>那張圖到此為止，不要再改它。</b>
   它過不了「頭 180px」那一關，再改幾輪也一樣。</div>
 <div class="ask"><b>要不要我去量十六張文章 HERO 的頭有多高，挑一張過得了門檻的？</b>
