@@ -1227,12 +1227,13 @@ tools/
    > ⚠ **已知取捨**：標誌是暗綠，**深色底上會偏弱**。使用者看過四種底色的對照表
    > 之後接受了。要解是另做一個深色底專用的亮色版（得先回 PALETTE.md 挑階），
    > 不是把這一張改一改。**不要自己動手加白底。**
-3. **文章 `about` 的 `sameAs`** —— 六篇的 `about` 已於 2026-08-10 填好
-   （`post-meta` 的 `about` 欄位，實體全部是從各篇自己的 `<h2>` 與內文挑的），
-   但**沒有填 Wikidata 的 `sameAs`**：雲端 session 連不到 wikidata.org，
-   而 Q 編號猜錯等於把文章綁到另一個疾病上。
-   要補的格式是 `{ "type": …, "name": …, "sameAs": "https://www.wikidata.org/wiki/Q…" }`，
-   在有網路的電腦上做。沒填 `about` 的文章會整個略過這個欄位。
+3. ~~**文章 `about` 的 `sameAs`**~~ —— **2026-09-20 補上並上線**（十六篇、56 個實體，
+   43 個不重複的詞去 Wikidata 查，38 個找到對應項目、5 個查不到就留白）。
+   格式是 `{ "type": …, "name": …, "sameAs": "https://www.wikidata.org/wiki/Q…" }`。
+   ⚠ **要改或再加一篇之前先讀 [DECISIONS.md](DECISIONS.md)「文章 `about` 的 Wikidata」那一列** ——
+   那裡有 43 筆對照、四個「不是完全等號」的判斷，以及五個刻意留白的詞。
+   ⚠ 這件事**只能在有網路的電腦上做**：雲端 session 連不到 wikidata.org，
+   而 Q 編號猜錯等於把文章綁到另一個疾病上（不報錯、畫面也看不出來）。
 4. **`sameAs` 的完整網址** —— Google 地圖與 FB 放的是分享短網址（會轉址，Google 跟得上，
    但完整網址更穩）。LINE 那條 2026-08-10 已由使用者提供並確認：
    `https://line.me/R/ti/p/@445rpiiv`（系統 ID）。
