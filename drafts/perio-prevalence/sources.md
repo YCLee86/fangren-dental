@@ -84,6 +84,32 @@
 **沒有查證，也不知道現行條文**，所以頁面上只寫「是值得先做一次牙周檢查的時機」，
 沒有提任何給付或間隔。要寫的話得先查健保署現行規定，而且回診間隔屬於診所事實。
 
+## 第五版：使用者貼了六條研究連結（2026-09-20）
+
+使用者傳來一份他自己加好超連結的 HTML（`perio-prevalence-linked.html`），六條都合併進來了。
+**六條逐條查證過，全部是真的論文，而且對得上該段的主張**（這個容器抓不到頁面，
+但搜尋得到期刊端的書目與摘要）：
+
+| 連結文字 | 是哪一篇 | 判定 |
+| --- | --- | --- |
+| 一項從十四歲追蹤到四十六歲的長期研究 | Löe H, Ånerud Å, Boysen H, Morrison E. *Natural history of periodontal disease in man… Sri Lankan laborers 14 to 46 years of age.* J Clin Periodontol 1986（PMID 3487557） | ✅ |
+| 身體反應的方式變了 | Murakami S, Mealey BL, Mariotti A, Chapple ILC. *Dental plaque–induced gingival conditions.* J Periodontol 2018;89(S1):S17-S27（doi 10.1002/JPER.17-0095）。這一篇列的就是性荷爾蒙、高血糖、藥物那一組修飾因子 | ✅ |
+| 荷爾蒙的變化會放大牙齦對原本那些刺激的反應 | Figuero E, et al. *Effect of pregnancy on gingival inflammation in systemically healthy women: a systematic review.* J Clin Periodontol 2013;40(5):457-73（doi 10.1111/jcpe.12053） | ✅ |
+| 流血這個最早的警訊被壓下去 | Dietrich T, Bernimoulin JP, Glynn RJ. *The effect of cigarette smoking on gingival bleeding.* J Periodontol 2004;75:16-22。NHANES III，抽菸者出現探測出血的機率少 1.7–1.8 倍 | ✅ |
+| 大型調查估計，四成左右的牙周炎可以歸因於抽菸 | Tomar SL, Asma S. *Smoking-attributable periodontitis in the United States: findings from NHANES III.* J Periodontol 2000;71(5):743-51（PMID 10872955）。**41.9%**，所以「四成左右」是對的 | ✅ |
+| 有些人骨頭掉得比別人快 | Michalowicz BS, et al. *Evidence of a substantial genetic basis for risk of adult periodontitis.* J Periodontol 2000（PMID 11128917）。雙胞胎研究，約 50% 的變異來自遺傳，且校正抽菸與就醫行為後不變 | ✅ |
+
+### 合併時動的兩件（都要讓使用者知道）
+
+1. **⚠ Löe 那一條的句子微調過。** 他貼的版本是「一項…長期研究顯示，**老年人**牙齒掉得多，
+   不是因為年紀本身…」，但**那份研究的對象是 14–46 歲，裡面沒有老年人**。
+   改成：研究「記錄的就是這個過程：在沒有接受治療的情況下，牙周的附連與牙齒是一年一年
+   地流失的」，後面關於老年人的那一句維持原樣、但**不再掛在那份研究名下**（那是本文自己
+   的推論）。⚠ 這是查核師那一條「不要把研究沒說的事寫成研究說的」。
+2. **⚠ 他那份檔案裡沒有原本那三條政府調查的連結**（112 年調查、性別分析、日本令和 6 年），
+   判斷是他把文字貼進別的工具加連結時掉的，不是他要拿掉 —— **所以三條都保留了**。
+   要拿掉的話說一聲。**這一頁現在共十條外連。**
+
 ## 一、寫進頁面的每一筆
 
 | 主張（頁面上的說法） | 判定 | 來源 |
