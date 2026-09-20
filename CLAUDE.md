@@ -502,6 +502,19 @@ tools/
                         既有的那顆 Chromium）。`--site` 改對 _site/ 跑、`--shot` 順便截圖。
                         ⚠ 改過 src/search.js、assets/search-log.js、admin/search/，
                         或改過 index.html 的搜尋那一段，都要跑它
+  gsc.mjs               **Google Search Console API** 客戶端（2026-09-20，零依賴 ——
+                        用 node:crypto 自己簽服務帳戶的 JWT 換 token）。
+                        `sites`／`query`（搜尋字詞）／`inspect`（索引狀態）／`sitemaps`，
+                        `selftest` 不需要金鑰就能驗簽章那一段（10 項）。
+                        ⚠⚠ **「要求建立索引」API 做不到** —— GSC API 整組沒有這個方法，
+                        urlInspection 是唯讀的。另一支 Indexing API 看起來像可以，但
+                        Google 明文限定只吃 JobPosting 與 BroadcastEvent，**而且這條
+                        限制在 schema 裡看不出來**。催索引仍然只有使用者到後台手按
+                        那一條（第七節那句話沒有被取代）。
+                        ⚠⚠ **金鑰絕對不要進版控** —— 這個 repo 是 public 的。
+                        .gitignore 擋了 .gsc-key.json，但 push 前自己再看一眼。
+                        ⚠ 報表有 2~3 天時差，所以 query 預設「結束於 3 天前」不是到今天。
+                        設定步驟（全部在網頁後台點）見 docs/search-console-api.md
   qr.mjs                QR code 產生器（純 JS、零依賴、吐 SVG 的 path，向量）。
                         ⚠ 驗收不能用眼睛 —— 格式資訊反過來的話畫面一模一樣但掃不出來。
                         驗證方式寫在它的檔頭（臨時裝 segno ＋ opencv 真的掃一次）
