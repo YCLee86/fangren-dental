@@ -2,8 +2,8 @@
 export const ALLOWED = [
   "home",
   "perio-prevalence",
-  "aligner-simulation",
   "kids-sedation",
+  "aligner-simulation",
   "kids-crown",
   "three-month-recall",
   "crown-materials",

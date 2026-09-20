@@ -87,11 +87,16 @@ for (const pg of pages) {
   /* B2 */
   s.B2 = /class="note"/.test(body) ? 3 : 0;
 
-  /* B4 —— 只算真的權威來源（學會、政府、期刊、PubMed），不算自家與地圖連結。 */
-  const AUTH = /pubmed|ncbi\.nlm|nih\.gov|who\.int|cdc\.gov|ada\.org|nhi\.gov\.tw|mohw\.gov\.tw|\.edu|ajodo|jada|cochrane|sciencedirect|springer|wiley|nature\.com/i;
+  /* B4 —— 只算真的權威來源（政府、法規、學會、期刊、PubMed／DOI），不算自家與地圖連結。
+     ⚠ 2026-09-20 補上台灣這一側實際會用到的：法規資料庫、牙醫師公會全聯會、
+       牙周病醫學會、兒童牙科醫學會、麻醉醫學會、AAPD，以及 doi.org。
+     ⚠⚠ 同日改成**用網址去重，不是用網域** —— 原本算「不重複的主機」，
+       所以兩條都指向健保署的不同公告只算一個來源。RUBRIC.md 第二節寫的是
+       「引到…並附連結」，兩份不同的公告本來就是兩個來源。量錯的是評分器。 */
+  const AUTH = /pubmed|ncbi\.nlm|nih\.gov|who\.int|cdc\.gov|ada\.org|aapd\.org|nhi\.gov\.tw|mohw\.gov\.tw|law\.moj\.gov\.tw|cda\.org\.tw|taop\.org\.tw|tapd\.org\.tw|anesth\.org\.tw|doi\.org|\.edu|ajodo|jada|cochrane|sciencedirect|springer|wiley|nature\.com/i;
   const ext = [...html.matchAll(/href="(https?:\/\/[^"]+)"/g)].map((m) => m[1])
     .filter((u) => !u.includes("fangren.net"));
-  const auth = new Set(ext.filter((u) => AUTH.test(u)).map((u) => { try { return new URL(u).host; } catch { return u; } }));
+  const auth = new Set(ext.filter((u) => AUTH.test(u)));
   s.B4 = Math.min(4, auth.size * 2);
 
   /* B6 —— 文章 1200 字為及格線、2000 字滿分；著陸頁看「不與首頁重複的字」 */

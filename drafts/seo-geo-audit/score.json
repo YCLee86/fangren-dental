@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-20T05:21:49.304Z",
+ "generated": "2026-09-20T07:35:08.790Z",
  "full": {
   "post": 55,
   "topic": 48,
@@ -389,9 +389,13 @@
    "pct": 89.0909090909091,
    "types": "BlogPosting|ImageObject|MedicalProcedure|MedicalCondition|WebPage|BreadcrumbList|ListItem|Dentist|PostalAddress|WebSite",
    "auth": [
-    "pubmed.ncbi.nlm.nih.gov",
-    "www.ncbi.nlm.nih.gov",
-    "www.ajodo.org"
+    "https://pubmed.ncbi.nlm.nih.gov/38506775/",
+    "https://pubmed.ncbi.nlm.nih.gov/39046382/",
+    "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12564582/",
+    "https://www.ajodo.org/article/S0889-5406(22)00773-9/fulltext",
+    "https://pubmed.ncbi.nlm.nih.gov/40435056/",
+    "https://pubmed.ncbi.nlm.nih.gov/41466679/",
+    "https://pubmed.ncbi.nlm.nih.gov/42270616/"
    ]
   },
   {
@@ -464,7 +468,7 @@
    "url": "/posts/crown-materials/",
    "file": "/home/user/fangren-dental/_site/posts/crown-materials/index.html",
    "kind": "post",
-   "kb": 34.0703125,
+   "kb": 33.517578125,
    "chars": 3213,
    "s": {
     "A1": 4,
@@ -497,19 +501,19 @@
    "url": "/posts/gum-bleeding/",
    "file": "/home/user/fangren-dental/_site/posts/gum-bleeding/index.html",
    "kind": "post",
-   "kb": 26.03515625,
-   "chars": 1534,
+   "kb": 25.7373046875,
+   "chars": 1565,
    "s": {
     "A1": 4,
     "A2": 3,
     "B2": 3,
-    "B4": 0,
+    "B4": 4,
     "B6": 2,
     "C1": 3,
     "C2": 2,
     "_entRatio": 0.3333333333333333,
-    "C3": 4,
-    "_ansRatio": 0.8,
+    "C3": 3,
+    "_ansRatio": 0.6,
     "C4": 3,
     "C5": 3,
     "C6": 3,
@@ -520,11 +524,14 @@
     "F2": 2,
     "F3": 3
    },
-   "got": 47,
+   "got": 50,
    "full": 55,
-   "pct": 85.45454545454545,
+   "pct": 90.9090909090909,
    "types": "BlogPosting|ImageObject|MedicalCondition|MedicalTherapy|WebPage|BreadcrumbList|ListItem|Dentist|PostalAddress|WebSite",
-   "auth": []
+   "auth": [
+    "https://doi.org/10.1111/jcpe.12940",
+    "https://doi.org/10.1111/jcpe.12946"
+   ]
   },
   {
    "url": "/posts/kids-arch-expansion/",
@@ -596,17 +603,17 @@
    "url": "/posts/kids-first-visit/",
    "file": "/home/user/fangren-dental/_site/posts/kids-first-visit/index.html",
    "kind": "post",
-   "kb": 25.9638671875,
-   "chars": 1720,
+   "kb": 26.3115234375,
+   "chars": 1766,
    "s": {
     "A1": 4,
     "A2": 3,
     "B2": 3,
-    "B4": 0,
+    "B4": 4,
     "B6": 2,
     "C1": 3,
-    "C2": 4,
-    "_entRatio": 0.8571428571428571,
+    "C2": 3,
+    "_entRatio": 0.7142857142857143,
     "C3": 4,
     "_ansRatio": 1,
     "C4": 3,
@@ -619,23 +626,26 @@
     "F2": 2,
     "F3": 3
    },
-   "got": 49,
+   "got": 52,
    "full": 55,
-   "pct": 89.0909090909091,
+   "pct": 94.54545454545455,
    "types": "BlogPosting|ImageObject|MedicalCondition|MedicalProcedure|WebPage|BreadcrumbList|ListItem|Dentist|PostalAddress|WebSite",
-   "auth": []
+   "auth": [
+    "https://www.tapd.org.tw/people/about/recommend_content.php?id=4",
+    "https://dep.mohw.gov.tw/DOOH/cp-6543-71336-124.html"
+   ]
   },
   {
    "url": "/posts/kids-sedation/",
    "file": "/home/user/fangren-dental/_site/posts/kids-sedation/index.html",
    "kind": "post",
-   "kb": 41.408203125,
-   "chars": 4275,
+   "kb": 42.1318359375,
+   "chars": 4382,
    "s": {
     "A1": 4,
     "A2": 3,
     "B2": 3,
-    "B4": 0,
+    "B4": 4,
     "B6": 3,
     "C1": 3,
     "C2": 1,
@@ -652,17 +662,21 @@
     "F2": 2,
     "F3": 3
    },
-   "got": 46,
+   "got": 50,
    "full": 55,
-   "pct": 83.63636363636364,
+   "pct": 90.9090909090909,
    "types": "BlogPosting|ImageObject|MedicalProcedure|MedicalCondition|WebPage|BreadcrumbList|ListItem|Dentist|PostalAddress|WebSite",
-   "auth": []
+   "auth": [
+    "https://www.anesth.org.tw/news/content.asp?ID=2094",
+    "https://www.aapd.org/globalassets/media/policies_guidelines/bp_monitoringsedation25.pdf",
+    "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=L0020075"
+   ]
   },
   {
    "url": "/posts/missing-tooth/",
    "file": "/home/user/fangren-dental/_site/posts/missing-tooth/index.html",
    "kind": "post",
-   "kb": 26.8583984375,
+   "kb": 26.3056640625,
    "chars": 1621,
    "s": {
     "A1": 4,
@@ -728,19 +742,19 @@
    "url": "/posts/perio-laser/",
    "file": "/home/user/fangren-dental/_site/posts/perio-laser/index.html",
    "kind": "post",
-   "kb": 28.0048828125,
-   "chars": 1976,
+   "kb": 27.6591796875,
+   "chars": 2005,
    "s": {
     "A1": 4,
     "A2": 3,
     "B2": 3,
-    "B4": 0,
-    "B6": 2,
+    "B4": 2,
+    "B6": 3,
     "C1": 3,
     "C2": 2,
     "_entRatio": 0.3333333333333333,
     "C3": 4,
-    "_ansRatio": 1,
+    "_ansRatio": 0.8571428571428571,
     "C4": 3,
     "C5": 3,
     "C6": 3,
@@ -751,11 +765,13 @@
     "F2": 2,
     "F3": 3
    },
-   "got": 47,
+   "got": 50,
    "full": 55,
-   "pct": 85.45454545454545,
+   "pct": 90.9090909090909,
    "types": "BlogPosting|ImageObject|MedicalCondition|MedicalTherapy|MedicalProcedure|WebPage|BreadcrumbList|ListItem|Dentist|PostalAddress|WebSite",
-   "auth": []
+   "auth": [
+    "https://www.nhi.gov.tw/ch/cp-6968-7f6d8-3255-1.html"
+   ]
   },
   {
    "url": "/posts/perio-prevalence/",
@@ -789,22 +805,28 @@
    "pct": 92.72727272727273,
    "types": "BlogPosting|ImageObject|MedicalCondition|MedicalTherapy|WebPage|BreadcrumbList|ListItem|Dentist|PostalAddress|WebSite",
    "auth": [
-    "dep.mohw.gov.tw",
-    "pubmed.ncbi.nlm.nih.gov",
-    "link.springer.com"
+    "https://dep.mohw.gov.tw/DOOH/lp-6553-124.html",
+    "https://dep.mohw.gov.tw/DOS/cp-5112-77454-113.html",
+    "https://pubmed.ncbi.nlm.nih.gov/3487557/",
+    "https://doi.org/10.1002/JPER.17-0095",
+    "https://doi.org/10.1111/jcpe.12053",
+    "https://doi.org/10.1902/jop.2004.75.1.16",
+    "https://pubmed.ncbi.nlm.nih.gov/10872955/",
+    "https://link.springer.com/article/10.1007/s00125-011-2342-y",
+    "https://pubmed.ncbi.nlm.nih.gov/11128917/"
    ]
   },
   {
    "url": "/posts/regular-checkup/",
    "file": "/home/user/fangren-dental/_site/posts/regular-checkup/index.html",
    "kind": "post",
-   "kb": 26.0068359375,
-   "chars": 1546,
+   "kb": 26.4033203125,
+   "chars": 1607,
    "s": {
     "A1": 4,
     "A2": 3,
     "B2": 3,
-    "B4": 0,
+    "B4": 4,
     "B6": 2,
     "C1": 3,
     "C2": 2,
@@ -821,23 +843,26 @@
     "F2": 2,
     "F3": 3
    },
-   "got": 47,
+   "got": 51,
    "full": 55,
-   "pct": 85.45454545454545,
+   "pct": 92.72727272727273,
    "types": "BlogPosting|ImageObject|MedicalCondition|MedicalProcedure|WebPage|BreadcrumbList|ListItem|Dentist|PostalAddress|WebSite",
-   "auth": []
+   "auth": [
+    "https://www.nhi.gov.tw/ch/lp-3778-1.html",
+    "https://www.nhi.gov.tw/ch/dl-66093-a34d92f8e6b64b38b72668aeed6bb554-1.pdf"
+   ]
   },
   {
    "url": "/posts/three-month-recall/",
    "file": "/home/user/fangren-dental/_site/posts/three-month-recall/index.html",
    "kind": "post",
-   "kb": 27.2724609375,
-   "chars": 1603,
+   "kb": 27.5166015625,
+   "chars": 1637,
    "s": {
     "A1": 4,
     "A2": 3,
     "B2": 3,
-    "B4": 0,
+    "B4": 2,
     "B6": 2,
     "C1": 3,
     "C2": 2,
@@ -854,11 +879,13 @@
     "F2": 2,
     "F3": 3
    },
-   "got": 44,
+   "got": 46,
    "full": 55,
-   "pct": 80,
+   "pct": 83.63636363636364,
    "types": "BlogPosting|ImageObject|MedicalProcedure|MedicalCondition|WebPage|BreadcrumbList|ListItem|Dentist|PostalAddress|WebSite",
-   "auth": []
+   "auth": [
+    "https://www.nhi.gov.tw/ch/dl-80920-f6c1407c04ce4445b89ac6ce32991a51-1.pdf"
+   ]
   },
   {
    "url": "/posts/wisdom-tooth/",
