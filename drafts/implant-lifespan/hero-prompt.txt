@@ -8,8 +8,10 @@ even mechanical vector line. Colour applied like soft coloured pencil and light 
 colour edges a little loose and not always meeting the line. Flat fills with two or three
 tones per hue — no smooth decorative gradients, no airbrush, no glow, no neon. A fine even
 paper grain over every surface of the whole image, including the background.
-THE WHOLE PICTURE IS BRIGHT AND HIGH-KEY, on a warm cream paper ground. This is a
-daylight-bright hand-drawn picture, not a dark glowing sci-fi image.
+THE ONE EXCEPTION IS THE BACKGROUND TUNNEL, which is painted in loose wet watercolour that
+blooms and bleeds between colours; the people, the sled and the clocks stay flat and
+hand-drawn exactly as described above. The people and the sled are always the brightest,
+highest-key part of the picture.
 This is NOT anime, NOT manga, NOT cel-shaded animation, NOT a screenshot from a cartoon.
 
 FACES AND HANDS — READ THIS SECOND.
@@ -21,27 +23,30 @@ beside the nose, no lines under the eyes, no cheek shadow, no neck shading, no h
 in the eye. Eyes are small solid dots or short lines — never closed crescents, never large
 glossy cartoon eyes, never white eyeballs with a shine. Hands are simple: four fingers and
 a thumb, no knuckle lines, no nails.
-HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
-#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair on anyone, including the
-oldest passenger: her age is shown by her posture, her glasses and her clothes, not by
-white hair.
+EVERY SINGLE PERSON'S HAIR IS THE SAME WARM DARK BROWN — #3f3330, its shadowed side
+#2e2523, its lit edge #4d403c — however many people there are and however long their hair
+is. No blonde, no caramel, no light brown, no auburn, and never grey, silver, white, ash,
+steel or blue-grey, including the oldest passenger: her age is shown by her posture, her
+glasses and her clothes, not by white hair.
 EVERY PERSON IS DRAWN BY THE SAME HAND, at the same level of simplicity: every figure has
 a drawn face, drawn hands and coloured clothes. NOBODY is a flat grey silhouette, a
 shadow, a blob or an empty outline. EVERY PERSON IS A DIFFERENT PERSON: no two share a
 face, a hairstyle, an age or an expression.
 
-THE SCENE — A SMALL HOMEMADE FLYING SLED CARRYING SEVEN PEOPLE, travelling through a wide
+THE SCENE — A SMALL HOMEMADE FLYING SLED CARRYING EIGHT PEOPLE, travelling through a wide
 swirling tunnel of time with clocks floating past it. The sled is seen from the front and
 slightly to the side, moving diagonally towards the lower left of the frame, so that the
 people are turned three-quarters away from us and NOBODY LOOKS AT THE VIEWER. The sled and
 its passengers together fill roughly the middle half of the picture and sit slightly right
 of centre; the tunnel opens away behind them towards the upper right. The mood is warm,
 funny and companionable — a crowded family outing, not an action shot and not a rescue.
+THE DECK IS LONG ENOUGH FOR ALL EIGHT: every person has both feet planted on the deck or
+is sitting on it, and nobody hangs over the edge or floats beside it.
 
 THE SLED IS BUILT OUT OF DENTAL-CLINIC FURNITURE — this is the joke of the picture, and
 every part of it must be drawn:
-  • THE DECK: a flat pale-wood board like a small sled, its front edge curling up, with
-    FOUR CREAM-COLOURED BALL FEET underneath, one at each corner. Its side edge is a
+  • THE DECK: a long flat pale-wood board like a small sled, its front edge curling up,
+    with FOUR CREAM-COLOURED BALL FEET underneath, one at each corner. Its side edge is a
     simple pale blue band (#465885).
   • THE CONTROL DESK at the front of the deck: a mobile dental instrument cart with a
     plain pale front panel, a slim chrome-free metal frame and, on its top surface, TWO
@@ -58,69 +63,93 @@ every part of it must be drawn:
 This craft is our own invention, assembled from clinic furniture. It is not a vehicle from
 any existing cartoon, comic, film or franchise.
 
-THE SEVEN PASSENGERS — three clinic staff and four members of the public, all East Asian,
-crowded onto the small deck so that they are almost spilling off it. Both hands of every
-person are accounted for. Only one person's mouth is open.
-  1. THE DRIVER — a woman in her thirties with her hair tied in a ponytail, in a
-     short-sleeved clinic top (#b7d7d3, folds #99b8b4). She STANDS behind the control desk,
-     feet apart, leaning forward into the wind. BOTH HANDS grip the two hand levers. She
-     looks ahead along the direction of travel. HER MOUTH IS A CLOSED UPWARD CURVE — a
-     confident, closed-mouth smile.
-  2. THE DENTIST — a man in his forties with short neat hair, in the same clinic top WITH A
-     WHITE COAT OVER IT, the hem of the coat blown back behind him. He STANDS to the
-     driver's left. HIS RIGHT HAND grips the lamp arm above his head; HIS LEFT ARM is
-     stretched out pointing ahead past the lamp. HE IS THE ONLY PERSON IN THE PICTURE WITH
-     AN OPEN MOUTH — a small open shape, mid-shout, eyebrows raised, delighted.
-  3. THE ASSISTANT — a young woman in her twenties with a short bob, in a clinic top. She
-     CROUCHES at the front edge of the deck, knees together. BOTH HANDS hold the curled
-     front rim of the deck. She looks out and down at the clocks going past. HER MOUTH IS A
-     SMALL CLOSED SMILE and her eyebrows are raised.
-  4. THE TEENAGER — a boy of about fifteen in a school uniform shirt with a satchel across
-     his body. He STANDS at the left edge of the deck. HIS LEFT HAND grips the lamp arm;
-     HIS RIGHT HAND points up at one large clock drifting past. He looks up at that clock.
-     HIS MOUTH IS A SMALL CLOSED SMILE, eyebrows high with surprise.
-  5. THE YOUNG WOMAN — in her twenties, long hair streaming back. She STANDS just behind
-     the dental chair. HER RIGHT HAND rests on the back of the chair; HER LEFT HAND presses
-     her own hair down at the side of her head. She looks ahead. HER MOUTH IS A CLOSED
-     SMILE, eyes narrowed with laughter.
-  6. THE MIDDLE-AGED MAN — in his fifties, slightly heavier build, short hair, in a
+THE EIGHT PASSENGERS — three clinic staff and five members of the public, all East Asian,
+crowded onto the deck so that they are almost spilling off it. Both hands of every person
+are accounted for. Only one person's mouth is open. EACH OF THE THREE CLINIC STAFF WEARS A
+DIFFERENT COLOUR OF SCRUBS — they are not a matching uniform.
+  1. THE DRIVER — a woman in her thirties with her hair tied in a ponytail, in PALE TEAL
+     SCRUBS (#b7d7d3, folds #99b8b4). She STANDS behind the control desk, feet apart,
+     leaning forward into the wind. BOTH HANDS grip the two hand levers. She looks ahead
+     along the direction of travel. HER MOUTH IS A CLOSED UPWARD CURVE — a confident,
+     closed-mouth smile.
+  2. THE DENTIST — a man in his forties with short neat hair, in DUSTY BLUE SCRUBS
+     (#a9bcd4, folds #8fa3bd) WITH A WHITE COAT OVER THEM, the hem of the coat blown back
+     behind him, his scrub collar and sleeves clearly visible. He STANDS to the driver's
+     left. HIS RIGHT HAND grips the lamp arm above his head; HIS LEFT ARM is stretched out
+     pointing ahead past the lamp. HE IS THE ONLY PERSON IN THE PICTURE WITH AN OPEN MOUTH
+     — a small open shape, mid-shout, eyebrows raised, delighted.
+  3. THE ASSISTANT — a young woman in her twenties with a short bob, in SOFT SAGE-GREEN
+     SCRUBS (#bccfae, folds #a3b894). She CROUCHES at the front edge of the deck, knees
+     together. BOTH HANDS hold the curled front rim of the deck. She looks out and down at
+     the clocks going past. HER MOUTH IS A SMALL CLOSED SMILE and her eyebrows are raised.
+  4. THE TEENAGER — a boy of about fifteen in a plain white school shirt with a satchel
+     across his body. He STANDS at the left edge of the deck. HIS LEFT HAND grips the lamp
+     arm; HIS RIGHT HAND points up at one large clock drifting past. He looks up at that
+     clock. HIS MOUTH IS A SMALL CLOSED SMILE, eyebrows high with surprise.
+  5. THE YOUNG WIFE — a woman of about thirty with long hair streaming back, in a
+     clay-rose blouse. She STANDS just behind the dental chair, close beside her husband.
+     HER LEFT HAND is tucked through her husband's arm; HER RIGHT HAND presses her own
+     hair down at the side of her head. She looks ahead. HER MOUTH IS A CLOSED SMILE, eyes
+     narrowed with laughter.
+  6. THE YOUNG HUSBAND — a man of about thirty, slim, short hair, in a cream shirt with
+     the sleeves rolled up. He STANDS immediately to his wife's right, shoulder to
+     shoulder with her, leaning slightly into the wind. HIS LEFT HAND holds the back rail
+     of the dental chair; HIS RIGHT HAND holds his wife's hand where it rests on his arm.
+     He looks up at the clocks. HIS MOUTH IS A CLOSED SMILE, eyebrows relaxed.
+     THESE TWO ARE CLEARLY ONE COUPLE: they stand touching, they lean the same way, and
+     there is a small gap between them and everyone else on the deck.
+  7. THE MIDDLE-AGED MAN — in his fifties, slightly heavier build, short hair, in a
      mustard-yellow polo shirt. He STANDS to the right of the chair, leaning back a little
      against the wind. HIS LEFT HAND holds the chair's armrest; HIS RIGHT HAND holds the
-     back edge of the deck behind him. He looks down at the passing clocks. HIS MOUTH IS
-     ONE SHORT CLOSED LINE, his eyebrows slightly raised: cautious, but enjoying it.
-  7. THE OLDEST PASSENGER — a woman in her seventies with dark hair pinned up, small round
-     glasses, a clay-rose blouse and a cardigan. SHE IS THE ONLY ONE SITTING: she sits
-     calmly and upright IN THE DENTAL CHAIR, BOTH HANDS resting on its armrests, her
-     shoulders relaxed. She looks up and to the side at a clock floating above her. HER
-     MOUTH IS A CLOSED UPWARD CURVE — a settled, contented smile. She is not frightened and
-     not being helped: she is the most comfortable person on board.
+     back edge of the deck behind him. He looks down at the passing clocks. HIS MOUTH IS A
+     SHORT LEVEL LINE WITH ONE CORNER LIFTED and his eyebrows are relaxed and level: he is
+     enjoying this. HIS MOUTH DOES NOT TURN DOWN AT THE CORNERS, HIS BROW IS NOT LOWERED
+     AND HE IS NOT FROWNING, GRUMPY, TIRED OR DISAPPROVING.
+  8. THE OLDEST PASSENGER — a woman in her seventies with dark hair pinned up, small round
+     glasses, a plum blouse and a cardigan. SHE IS THE ONLY ONE SITTING: she sits calmly
+     and upright IN THE DENTAL CHAIR, BOTH HANDS resting on its armrests, her shoulders
+     relaxed. She looks up and to the side at a clock floating above her. HER MOUTH IS A
+     CLOSED UPWARD CURVE — a settled, contented smile. She is not frightened and not being
+     helped: she is the most comfortable person on board.
 
-THE TUNNEL — a wide, calm, hand-drawn spiral of time, NOT a dark neon vortex. Its vanishing
-point sits in the upper right of the frame. Build it from long concentric hand-drawn arcs
-of flat colour sweeping from the lower left round to the vanishing point, each band a
-different flat tone: pale sage, pale teal (#b7d7d3), soft blue (a light tint of #465885),
-warm cream and a little pale amber (#c28229 heavily tinted). The bands are wide and calm,
-their edges drawn with the same dry hand-drawn line as everything else, with paper grain
-across all of them. Warm cream paper shows through between the bands. The centre of the
-spiral is the LIGHTEST part of the picture, not the darkest.
+THE TUNNEL — a wide swirling tunnel of time, painted in LOOSE WET WATERCOLOUR: broad bands
+of colour spiralling from the lower left round to a vanishing point in the upper right,
+their edges soft and bleeding into one another with visible blooms, backruns and granulated
+pigment, on a paper ground whose grain shows through everywhere. It is colourful and
+saturated, but it is PAINT, never light: no glow, no neon, no electric streaks, no lens
+flare, no airbrush, no digital blur.
+  • THE OUTER RINGS, at the four corners and along the edges of the frame, are the DEEPEST
+    AND MOST SATURATED: deep indigo blue (#2a4677), violet and plum purple (#784e84 and
+    #8e6299), and deep teal green (#2a6d69), bleeding into each other.
+  • THE MIDDLE RINGS step up in lightness through mid blue (#465885), teal (#317d78) and
+    soft lavender.
+  • THE INNERMOST RINGS, around the vanishing point, fade to pale teal, pale cream and
+    warm paper white. THE CENTRE OF THE SPIRAL IS THE LIGHTEST PART OF THE BACKGROUND, so
+    the eye travels into it.
+  • A FEW SMALL AMBER ACCENTS (#c28229) float in the wash, no more than a handful.
+THE SLED AND EVERYONE ON IT STAY LIGHT AND BRIGHT AGAINST THIS: the deep colour belongs to
+the tunnel only. Do not tint the faces, the hands, the clothes, the white coat, the wooden
+deck or the dental chair with the background colours, and do not darken anyone.
 
 THE FLOATING CLOCKS — clocks of many kinds drift through the tunnel around the sled: round
 wall clocks, small pocket watches on chains, one or two sand timers, a couple of clocks
 gently bent and softened as if made of cloth. They are larger near the sled and smaller
 towards the vanishing point, tilted at many different angles, each drawn as a simple flat
-shape with a clean outline. EVERY CLOCK FACE IN THIS PICTURE IS BLANK EXCEPT FOR ITS HANDS
-AND A RING OF PLAIN SHORT TICK MARKS — however many clocks there are, and wherever they
-are. The hands of each clock point a different way from the others. The clocks are drawn
-in the same palette as the tunnel, never metallic, never glowing.
+shape with a clean hand-drawn outline. THEIR FACES ARE WARM CREAM AND THEIR RIMS ARE A
+PALE WOODY AMBER, so that every clock stays clearly readable against the deep painted
+rings behind it. EVERY CLOCK FACE IN THIS PICTURE IS BLANK EXCEPT FOR ITS HANDS AND A RING
+OF PLAIN SHORT TICK MARKS — however many clocks there are, and wherever they are. The hands
+of each clock point a different way from the others. The clocks are never metallic and
+never glowing.
 
-LIGHT AND COLOUR — bright, even, daylight-like light with no single hard source: the
-picture reads as an illustration on paper, not as a lit room. Most coloured areas sit in
-the range HSL saturation 30–50 and lightness 70–85 — clearly coloured and readable, never
-washed out to near-white and never heavy or muddy. Give each named object its own colour:
-the clinic tops, the white coat, the school shirt, the polo shirt, the cardigan, the chair
-upholstery, the wooden deck, the lamp head. NOBODY wears the same colour as the person
-beside them. #c28229 (amber) is used only in small amounts: the lamp's warm glow, one or
-two tick rings, one clock rim.
+LIGHT AND COLOUR — the people and the sled are lit by bright, even, daylight-like light
+with no single hard source, and they read as a high-key hand-drawn illustration sitting on
+top of the painted tunnel. Their coloured areas sit in the range HSL saturation 30–50 and
+lightness 70–85 — clearly coloured, never washed out to near-white and never heavy or
+muddy. Give each named object its own colour: the three different sets of scrubs, the
+white coat, the school shirt, the rose blouse, the cream shirt, the polo shirt, the plum
+blouse and cardigan, the chair upholstery, the wooden deck, the lamp head. NOBODY wears
+the same colour as the person beside them.
 THE WHITE ATMOSPHERE LINES ARE REQUIRED — DO NOT LEAVE THEM OUT. Draw SIX OR SEVEN long,
 thin, white hand-drawn lines sweeping through the tunnel in the same direction as the
 spiral bands, passing behind and beside the sled but never touching any person: solid where
@@ -139,19 +168,21 @@ no hearts, and no speech bubbles or thought bubbles of any kind.
 CRITICAL — THERE IS NO WRITING ANYWHERE IN THIS PICTURE, IN ANY LANGUAGE OR ALPHABET, and
 no numerals at all. Every clock face carries hands and plain tick marks only. Leave the
 surface plain on the instrument cart, the control desk, the cup, the tray, the white coat,
-the clinic tops, the satchel, the school shirt, the chair and every clock. There is no name
+the scrubs, the satchel, the school shirt, the chair and every clock. There is no name
 badge, no logo, no watermark, no signature, no caption and no title. Do NOT draw rows of
 short dashes, squiggles or wavy lines anywhere to imitate lines of writing.
 
 AVOID — any recognisable cartoon, anime or comic character; any mascot; any animal
 character; any character with a large round blue head; any vehicle copied from an existing
 cartoon, comic or film; anime or manga styling; cel shading; glossy digital rendering;
-large shiny eyes; a dark background; a black or midnight-blue void; neon; glowing edges;
-electric streaks; lens flare; chrome, metallic or iridescent gradients; a deep saturated
-purple and magenta vortex; numerals on clock faces; digital clock displays; grey, silver or
-white hair; wrinkles, cheek shadow or facial modelling; anyone looking at the viewer;
-anyone falling, screaming or frightened; anyone being held up or rescued; the oldest
-passenger looking frail, sad or ill; a wheelchair; a hospital bed; a drip stand; blood;
-teeth drawn inside anyone's mouth; a close-up of an open mouth; syringes, drills or piles
-of instruments; arrows of any kind; speech bubbles; greyscale; thick uniform black
-outlines; even mechanical vector linework; flat untextured single-tone clothing.
+large shiny eyes; neon; glowing edges; electric streaks; lens flare; chrome, metallic or
+iridescent gradients; an airbrushed or digitally blurred background; the people or the sled
+darkened, tinted or silhouetted by the background colours; all three staff in the same
+colour scrubs; numerals on clock faces; digital clock displays; blonde, caramel, light
+brown, auburn, grey, silver or white hair; wrinkles, cheek shadow or facial modelling;
+anyone looking at the viewer; anyone frowning, scowling, grumpy or disapproving; anyone
+falling, screaming or frightened; anyone being held up or rescued; the oldest passenger
+looking frail, sad or ill; a wheelchair; a hospital bed; a drip stand; blood; teeth drawn
+inside anyone's mouth; a close-up of an open mouth; syringes, drills or piles of
+instruments; arrows of any kind; speech bubbles; greyscale; thick uniform black outlines;
+even mechanical vector linework; flat untextured single-tone clothing.
