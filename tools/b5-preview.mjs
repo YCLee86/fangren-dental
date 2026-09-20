@@ -8,6 +8,12 @@
      Ⓑ 併進文末免責那一句
      Ⓒ 免責上面獨立一行（在 main 裡面）
      Ⓓ「延伸閱讀」上面獨立一行（在 main 外面）
+     Ⓔ 貼著 HERO 圖的下緣（照 .post-hero figcaption 的規格：.55rem／.78rem／ink-soft）
+     Ⓕ 內文開頭、導言上面
+
+   ⚠ 首頁與延伸閱讀的卡片**不加**，那兩處照 CLAUDE.md 第一節第 3 條顯示 published。
+      文章頁因此會同時看得到兩個日期：頂端那一行是上架日，這一行是最後更新日 ——
+      那正是 Google 對文章日期的要求（兩個都給、而且要和結構化資料對得上）。
 
    日期不會造成雜湊迴圈：tools/build.mjs 的 normalize() 已經有一條
    把 time.post-updated 的內容換成佔位符的規則，所以印在 main 裡面也安全。
@@ -67,6 +73,20 @@ html = html.slice(0, noteAt + '<p class="note">'.length) +
 const noteAt2 = html.indexOf('<p class="note">');
 html = html.slice(0, noteAt2) + LINE("c") + "\n    " + html.slice(noteAt2);
 
+// Ⓔ：貼著 HERO 圖的下緣（在 figure 後面，不是塞進 figure 當 figcaption ——
+//     日期不是圖說，借的只是它的視覺規格）
+const figEnd = html.indexOf("</figure>");
+if (figEnd < 0) throw new Error("找不到 HERO 那張圖");
+html = html.slice(0, figEnd + "</figure>".length) + "\n      " +
+  LINE("e").replace('class="pv-updline pv-e"', 'class="pv-updline pv-e pv-figline"') +
+  html.slice(figEnd + "</figure>".length);
+
+// Ⓕ：內文開頭（導言上面）
+const bodyAt = html.indexOf('<div class="post-body wrap-text">');
+if (bodyAt < 0) throw new Error("找不到內文那一塊");
+const bodyEnd = bodyAt + '<div class="post-body wrap-text">'.length;
+html = html.slice(0, bodyEnd) + "\n    " + LINE("f") + html.slice(bodyEnd);
+
 // Ⓓ：延伸閱讀上面（在 main 外）
 const relAt = html.indexOf('<aside class="related"');
 if (relAt < 0) throw new Error("找不到延伸閱讀那一塊");
@@ -86,6 +106,14 @@ const STYLE = `
 [data-upd="b"] .pv-b { display: inline; }
 [data-upd="c"] .pv-c { display: block; }
 [data-upd="d"] .pv-d { display: block; }
+[data-upd="e"] .pv-e { display: block; }
+[data-upd="f"] .pv-f { display: block; }
+/* Ⓔ 借 .post-hero figcaption 的規格：同樣的上距、字級與次要色，
+   寬度也跟著 HERO 圖（--content ＋ --pad），所以左緣會對齊圖的左緣 */
+.pv-figline {
+  max-width: var(--content); padding-inline: var(--pad);
+  margin: .55rem auto 0; font-size: .78rem;
+}
 
 /* 切換條 —— class 一律 pv- 前綴，站上短名字幾乎一定會撞（.foot 就是頁尾） */
 .pv-bar {
@@ -104,10 +132,19 @@ const STYLE = `
 }
 /* 選中那一格用 ink/paper 反白 —— 夜間模式的 accent-deep 是亮青，白字壓不住 */
 .pv-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+/* 上一輪那三格收起來 —— 六顆按鈕全攤開的話，切換條在 320 上吃掉 22.6%，
+   而這一頁要判斷的正是「那一行貼在圖下面好不好看」。收起來之後是 15% 上下。 */
+.pv-sub {
+  display: block; margin: .45rem 0 0; padding: .15rem 0;
+  font: inherit; font-size: .72rem; color: var(--ink-soft);
+  background: none; border: 0; cursor: pointer; text-align: left;
+}
+.pv-fold { display: none; margin-top: .3rem; }
+[data-more="1"] .pv-fold { display: flex; }
 .pv-panel { margin-top: .5rem; font-size: .76rem; color: var(--ink-soft); line-height: 1.5; }
 .pv-panel b { color: var(--ink); font-weight: 600; }
 /* 頁尾要墊高，不然切換條會蓋住最後一行 */
-body { padding-bottom: 8.5rem; }
+body { padding-bottom: 13rem; }
 </style>`;
 html = html.replace("</head>", STYLE + "\n</head>");
 
@@ -116,6 +153,11 @@ const BAR = `
 <div class="pv-bar" role="group" aria-label="候選切換">
   <div class="pv-row">
     <button class="pv-btn" type="button" data-u="off">現況</button>
+    <button class="pv-btn" type="button" data-u="e">Ⓔ 貼著圖下緣</button>
+    <button class="pv-btn" type="button" data-u="f">Ⓕ 內文開頭</button>
+  </div>
+  <button class="pv-sub" type="button" id="pv-more" aria-expanded="false">＋ 上一輪那三格（擺在文末）</button>
+  <div class="pv-row pv-fold">
     <button class="pv-btn" type="button" data-u="b">Ⓑ 併進免責</button>
     <button class="pv-btn" type="button" data-u="c">Ⓒ 免責上面</button>
     <button class="pv-btn" type="button" data-u="d">Ⓓ 延伸閱讀</button>
@@ -152,9 +194,7 @@ const BAR = `
     if (u === "off") base = docH();
     var h = docH();
     var d = base == null ? 0 : h - base;
-    var el = u === "b" ? document.querySelector(".pv-b")
-           : u === "c" ? document.querySelector(".pv-c")
-           : u === "d" ? document.querySelector(".pv-d") : null;
+    var el = u === "off" ? null : document.querySelector(".pv-" + u);
     var eh = el ? Math.round(el.getBoundingClientRect().height) : 0;
     var over = document.documentElement.scrollWidth > window.innerWidth + 1;
     var parts = [];
@@ -167,6 +207,12 @@ const BAR = `
   }
   function apply(u, push) {
     root.setAttribute("data-upd", u);
+    if ("bcd".indexOf(u) >= 0 && root.getAttribute("data-more") !== "1") {
+      root.setAttribute("data-more", "1");
+      var mb = document.getElementById("pv-more");
+      mb.setAttribute("aria-expanded", "true");
+      mb.textContent = "− 上一輪那三格（擺在文末）";
+    }
     btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.u === u)); });
     if (push) {
       var q = new URLSearchParams(location.search);
@@ -180,9 +226,16 @@ const BAR = `
   btns.forEach(function (b) {
     b.addEventListener("click", function () { apply(b.dataset.u, true); });
   });
+  var more = document.getElementById("pv-more");
+  more.addEventListener("click", function () {
+    var on = root.getAttribute("data-more") === "1";
+    root.setAttribute("data-more", on ? "0" : "1");
+    more.setAttribute("aria-expanded", String(!on));
+    more.textContent = (on ? "＋" : "−") + " 上一輪那三格（擺在文末）";
+  });
   // 網址參數的正規式要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到 glass1 這種值
   var m = /[?&]u=([a-z0-9]+)/.exec(location.search);
-  var init = m && ["off", "b", "c", "d"].indexOf(m[1]) >= 0 ? m[1] : "off";
+  var init = m && ["off", "b", "c", "d", "e", "f"].indexOf(m[1]) >= 0 ? m[1] : "off";
   // 先量一次現況當基準，再切到使用者選的那一格
   apply("off", false);
   window.addEventListener("load", function () {
@@ -204,7 +257,9 @@ const guards = [
   ["還留著指向正式網址的 canonical", /rel="canonical"/.test(html)],
   ["沒有 noindex", !/noindex/.test(html)],
   ["切換條掉到 head 裡了", html.indexOf('class="pv-bar"') < html.indexOf("</head>")],
-  ["三個候選沒有都塞進去", !(/pv-b"/.test(html) && /pv-c/.test(html) && /pv-d/.test(html))],
+  ["五個候選沒有都塞進去", !"bcdef".split("").every((k) => html.includes("pv-" + k))],
+  ["切換條的按鈕和候選對不起來",
+    [...html.matchAll(/data-u="([a-z]+)"/g)].map((m) => m[1]).sort().join() !== "b,c,d,e,f,off"],
   ["兄弟連結還指向 preview 底下", /href="\.\.\/[a-z0-9-]+\/"/.test(html)],
 ];
 const bad = guards.filter((g) => g[1]).map((g) => g[0]);

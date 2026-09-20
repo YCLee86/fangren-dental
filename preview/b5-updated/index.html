@@ -88,6 +88,14 @@ r.dataset.theme=s;})();</script>
 [data-upd="b"] .pv-b { display: inline; }
 [data-upd="c"] .pv-c { display: block; }
 [data-upd="d"] .pv-d { display: block; }
+[data-upd="e"] .pv-e { display: block; }
+[data-upd="f"] .pv-f { display: block; }
+/* Ⓔ 借 .post-hero figcaption 的規格：同樣的上距、字級與次要色，
+   寬度也跟著 HERO 圖（--content ＋ --pad），所以左緣會對齊圖的左緣 */
+.pv-figline {
+  max-width: var(--content); padding-inline: var(--pad);
+  margin: .55rem auto 0; font-size: .78rem;
+}
 
 /* 切換條 —— class 一律 pv- 前綴，站上短名字幾乎一定會撞（.foot 就是頁尾） */
 .pv-bar {
@@ -106,10 +114,19 @@ r.dataset.theme=s;})();</script>
 }
 /* 選中那一格用 ink/paper 反白 —— 夜間模式的 accent-deep 是亮青，白字壓不住 */
 .pv-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+/* 上一輪那三格收起來 —— 六顆按鈕全攤開的話，切換條在 320 上吃掉 22.6%，
+   而這一頁要判斷的正是「那一行貼在圖下面好不好看」。收起來之後是 15% 上下。 */
+.pv-sub {
+  display: block; margin: .45rem 0 0; padding: .15rem 0;
+  font: inherit; font-size: .72rem; color: var(--ink-soft);
+  background: none; border: 0; cursor: pointer; text-align: left;
+}
+.pv-fold { display: none; margin-top: .3rem; }
+[data-more="1"] .pv-fold { display: flex; }
 .pv-panel { margin-top: .5rem; font-size: .76rem; color: var(--ink-soft); line-height: 1.5; }
 .pv-panel b { color: var(--ink); font-weight: 600; }
 /* 頁尾要墊高，不然切換條會蓋住最後一行 */
-body { padding-bottom: 8.5rem; }
+body { padding-bottom: 13rem; }
 </style>
 </head>
 <!-- data-spec：這一篇的科別，讓 assets/style.css 把重點色換成首頁
@@ -195,9 +212,11 @@ body { padding-bottom: 8.5rem; }
              fetchpriority="high" alt="四格連續的畫面：一位女性坐在床邊搧著扇子、手扶著臉頰；到櫃檯前買一杯冰的飲料；側躺在沙發上吹電扇、拿冰袋敷著臉；最後站在鏡子前掀開嘴唇看自己的牙齦。四格都畫著代表悶熱與火氣的白色波紋" width="2000" height="1116">
       </picture>
     </figure>
+      <p class="pv-updline pv-e pv-figline">最後更新：<time class="post-updated" datetime="2026-09-20">2026/09/20</time></p>
   </div>
 
   <div class="post-body wrap-text">
+    <p class="pv-updline pv-f">最後更新：<time class="post-updated" datetime="2026-09-20">2026/09/20</time></p>
     <p class="lede">「最近火氣大，刷牙都流血。」這句話在診間出現的頻率極高，而它幾乎總是誤判。健康的牙齦被牙刷碰到不會出血，就像健康的手臂被毛巾擦過不會滲血一樣。出血是發炎的訊號，不是體質問題。</p>
 
     <h2>流血從哪裡來</h2>
@@ -420,6 +439,11 @@ body { padding-bottom: 8.5rem; }
 <div class="pv-bar" role="group" aria-label="候選切換">
   <div class="pv-row">
     <button class="pv-btn" type="button" data-u="off">現況</button>
+    <button class="pv-btn" type="button" data-u="e">Ⓔ 貼著圖下緣</button>
+    <button class="pv-btn" type="button" data-u="f">Ⓕ 內文開頭</button>
+  </div>
+  <button class="pv-sub" type="button" id="pv-more" aria-expanded="false">＋ 上一輪那三格（擺在文末）</button>
+  <div class="pv-row pv-fold">
     <button class="pv-btn" type="button" data-u="b">Ⓑ 併進免責</button>
     <button class="pv-btn" type="button" data-u="c">Ⓒ 免責上面</button>
     <button class="pv-btn" type="button" data-u="d">Ⓓ 延伸閱讀</button>
@@ -456,9 +480,7 @@ body { padding-bottom: 8.5rem; }
     if (u === "off") base = docH();
     var h = docH();
     var d = base == null ? 0 : h - base;
-    var el = u === "b" ? document.querySelector(".pv-b")
-           : u === "c" ? document.querySelector(".pv-c")
-           : u === "d" ? document.querySelector(".pv-d") : null;
+    var el = u === "off" ? null : document.querySelector(".pv-" + u);
     var eh = el ? Math.round(el.getBoundingClientRect().height) : 0;
     var over = document.documentElement.scrollWidth > window.innerWidth + 1;
     var parts = [];
@@ -471,6 +493,12 @@ body { padding-bottom: 8.5rem; }
   }
   function apply(u, push) {
     root.setAttribute("data-upd", u);
+    if ("bcd".indexOf(u) >= 0 && root.getAttribute("data-more") !== "1") {
+      root.setAttribute("data-more", "1");
+      var mb = document.getElementById("pv-more");
+      mb.setAttribute("aria-expanded", "true");
+      mb.textContent = "− 上一輪那三格（擺在文末）";
+    }
     btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.u === u)); });
     if (push) {
       var q = new URLSearchParams(location.search);
@@ -484,9 +512,16 @@ body { padding-bottom: 8.5rem; }
   btns.forEach(function (b) {
     b.addEventListener("click", function () { apply(b.dataset.u, true); });
   });
+  var more = document.getElementById("pv-more");
+  more.addEventListener("click", function () {
+    var on = root.getAttribute("data-more") === "1";
+    root.setAttribute("data-more", on ? "0" : "1");
+    more.setAttribute("aria-expanded", String(!on));
+    more.textContent = (on ? "＋" : "−") + " 上一輪那三格（擺在文末）";
+  });
   // 網址參數的正規式要寫 [a-z0-9]+，寫 [a-z]+ 會吃不到 glass1 這種值
   var m = /[?&]u=([a-z0-9]+)/.exec(location.search);
-  var init = m && ["off", "b", "c", "d"].indexOf(m[1]) >= 0 ? m[1] : "off";
+  var init = m && ["off", "b", "c", "d", "e", "f"].indexOf(m[1]) >= 0 ? m[1] : "off";
   // 先量一次現況當基準，再切到使用者選的那一格
   apply("off", false);
   window.addEventListener("load", function () {
