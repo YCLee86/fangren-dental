@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-20T05:09:13.214Z",
+ "generated": "2026-09-20T05:21:49.304Z",
  "full": {
   "post": 55,
   "topic": 48,
@@ -97,8 +97,8 @@
    "url": "/",
    "file": "/home/user/fangren-dental/_site/index.html",
    "kind": "home",
-   "kb": 261.1171875,
-   "chars": 2591,
+   "kb": 265.2900390625,
+   "chars": 2736,
    "s": {
     "A1": 4,
     "A2": 3,
@@ -107,7 +107,7 @@
     "B6": 3,
     "C1": 3,
     "C2": null,
-    "_entRatio": 0.7241379310344828,
+    "_entRatio": 0.7333333333333333,
     "C3": null,
     "_ansRatio": 0,
     "C4": null,
@@ -130,7 +130,7 @@
    "url": "/topics/endo/",
    "file": "/home/user/fangren-dental/_site/topics/endo/index.html",
    "kind": "topic",
-   "kb": 210.333984375,
+   "kb": 210.3896484375,
    "chars": 669,
    "s": {
     "A1": 4,
@@ -163,7 +163,7 @@
    "url": "/topics/general/",
    "file": "/home/user/fangren-dental/_site/topics/general/index.html",
    "kind": "topic",
-   "kb": 217.5068359375,
+   "kb": 217.5625,
    "chars": 1152,
    "s": {
     "A1": 4,
@@ -196,7 +196,7 @@
    "url": "/topics/kids/",
    "file": "/home/user/fangren-dental/_site/topics/kids/index.html",
    "kind": "topic",
-   "kb": 217.0068359375,
+   "kb": 217.0625,
    "chars": 1108,
    "s": {
     "A1": 4,
@@ -229,7 +229,7 @@
    "url": "/topics/ortho/",
    "file": "/home/user/fangren-dental/_site/topics/ortho/index.html",
    "kind": "topic",
-   "kb": 214.41796875,
+   "kb": 214.4736328125,
    "chars": 835,
    "s": {
     "A1": 4,
@@ -262,8 +262,8 @@
    "url": "/topics/perio/",
    "file": "/home/user/fangren-dental/_site/topics/perio/index.html",
    "kind": "topic",
-   "kb": 213.5283203125,
-   "chars": 842,
+   "kb": 217.7607421875,
+   "chars": 987,
    "s": {
     "A1": 4,
     "A2": 3,
@@ -272,7 +272,7 @@
     "B6": 1,
     "C1": 3,
     "C2": null,
-    "_entRatio": 0.3333333333333333,
+    "_entRatio": 0.4,
     "C3": 1,
     "_ansRatio": 0,
     "C4": 3,
@@ -295,7 +295,7 @@
    "url": "/topics/prosth/",
    "file": "/home/user/fangren-dental/_site/topics/prosth/index.html",
    "kind": "topic",
-   "kb": 214.3896484375,
+   "kb": 214.4453125,
    "chars": 889,
    "s": {
     "A1": 4,
@@ -328,7 +328,7 @@
    "url": "/topics/surg/",
    "file": "/home/user/fangren-dental/_site/topics/surg/index.html",
    "kind": "topic",
-   "kb": 209.8369140625,
+   "kb": 209.892578125,
    "chars": 611,
    "s": {
     "A1": 4,
@@ -361,7 +361,7 @@
    "url": "/posts/aligner-simulation/",
    "file": "/home/user/fangren-dental/_site/posts/aligner-simulation/index.html",
    "kind": "post",
-   "kb": 32.5546875,
+   "kb": 32.6181640625,
    "chars": 1703,
    "s": {
     "A1": 4,
@@ -398,7 +398,7 @@
    "url": "/posts/bass-brushing/",
    "file": "/home/user/fangren-dental/_site/posts/bass-brushing/index.html",
    "kind": "post",
-   "kb": 26.400390625,
+   "kb": 26.474609375,
    "chars": 1741,
    "s": {
     "A1": 4,
@@ -431,7 +431,7 @@
    "url": "/posts/bioceramic/",
    "file": "/home/user/fangren-dental/_site/posts/bioceramic/index.html",
    "kind": "post",
-   "kb": 32.486328125,
+   "kb": 32.537109375,
    "chars": 2783,
    "s": {
     "A1": 4,
@@ -464,7 +464,7 @@
    "url": "/posts/crown-materials/",
    "file": "/home/user/fangren-dental/_site/posts/crown-materials/index.html",
    "kind": "post",
-   "kb": 33.443359375,
+   "kb": 34.0703125,
    "chars": 3213,
    "s": {
     "A1": 4,
@@ -497,7 +497,7 @@
    "url": "/posts/gum-bleeding/",
    "file": "/home/user/fangren-dental/_site/posts/gum-bleeding/index.html",
    "kind": "post",
-   "kb": 25.408203125,
+   "kb": 26.03515625,
    "chars": 1534,
    "s": {
     "A1": 4,
@@ -530,7 +530,7 @@
    "url": "/posts/kids-arch-expansion/",
    "file": "/home/user/fangren-dental/_site/posts/kids-arch-expansion/index.html",
    "kind": "post",
-   "kb": 22.9482421875,
+   "kb": 23.0224609375,
    "chars": 839,
    "s": {
     "A1": 4,
@@ -629,7 +629,7 @@
    "url": "/posts/kids-sedation/",
    "file": "/home/user/fangren-dental/_site/posts/kids-sedation/index.html",
    "kind": "post",
-   "kb": 41.333984375,
+   "kb": 41.408203125,
    "chars": 4275,
    "s": {
     "A1": 4,
@@ -662,7 +662,7 @@
    "url": "/posts/missing-tooth/",
    "file": "/home/user/fangren-dental/_site/posts/missing-tooth/index.html",
    "kind": "post",
-   "kb": 26.2314453125,
+   "kb": 26.8583984375,
    "chars": 1621,
    "s": {
     "A1": 4,
@@ -695,7 +695,7 @@
    "url": "/posts/orthodontics/",
    "file": "/home/user/fangren-dental/_site/posts/orthodontics/index.html",
    "kind": "post",
-   "kb": 29.0859375,
+   "kb": 29.13671875,
    "chars": 2226,
    "s": {
     "A1": 4,
@@ -728,7 +728,7 @@
    "url": "/posts/perio-laser/",
    "file": "/home/user/fangren-dental/_site/posts/perio-laser/index.html",
    "kind": "post",
-   "kb": 27.3779296875,
+   "kb": 28.0048828125,
    "chars": 1976,
    "s": {
     "A1": 4,
@@ -758,10 +758,47 @@
    "auth": []
   },
   {
+   "url": "/posts/perio-prevalence/",
+   "file": "/home/user/fangren-dental/_site/posts/perio-prevalence/index.html",
+   "kind": "post",
+   "kb": 40.529296875,
+   "chars": 3392,
+   "s": {
+    "A1": 4,
+    "A2": 3,
+    "B2": 3,
+    "B4": 4,
+    "B6": 3,
+    "C1": 3,
+    "C2": 1,
+    "_entRatio": 0.3,
+    "C3": 4,
+    "_ansRatio": 0.7777777777777778,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3,
+    "D2": 4,
+    "D3": 3,
+    "E2": 2,
+    "F1": 3,
+    "F2": 2,
+    "F3": 3
+   },
+   "got": 51,
+   "full": 55,
+   "pct": 92.72727272727273,
+   "types": "BlogPosting|ImageObject|MedicalCondition|MedicalTherapy|WebPage|BreadcrumbList|ListItem|Dentist|PostalAddress|WebSite",
+   "auth": [
+    "dep.mohw.gov.tw",
+    "pubmed.ncbi.nlm.nih.gov",
+    "link.springer.com"
+   ]
+  },
+  {
    "url": "/posts/regular-checkup/",
    "file": "/home/user/fangren-dental/_site/posts/regular-checkup/index.html",
    "kind": "post",
-   "kb": 25.9326171875,
+   "kb": 26.0068359375,
    "chars": 1546,
    "s": {
     "A1": 4,
@@ -794,7 +831,7 @@
    "url": "/posts/three-month-recall/",
    "file": "/home/user/fangren-dental/_site/posts/three-month-recall/index.html",
    "kind": "post",
-   "kb": 27.1982421875,
+   "kb": 27.2724609375,
    "chars": 1603,
    "s": {
     "A1": 4,
@@ -827,7 +864,7 @@
    "url": "/posts/wisdom-tooth/",
    "file": "/home/user/fangren-dental/_site/posts/wisdom-tooth/index.html",
    "kind": "post",
-   "kb": 30.5439453125,
+   "kb": 30.5947265625,
    "chars": 2572,
    "s": {
     "A1": 4,
