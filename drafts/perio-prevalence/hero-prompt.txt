@@ -1,0 +1,165 @@
+Editorial illustration, 16:9 landscape.
+
+STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
+Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
+warm dark brown or soft charcoal, NEVER pure black: thin, hand-drawn, the weight visibly
+varies along a stroke, strokes taper and sometimes break and run dry at the end — never an
+even mechanical vector line. Colour applied like soft coloured pencil and light marker;
+colour edges a little loose and not always meeting the line. Flat fills with two or three
+tones per hue — no smooth decorative gradients, no airbrush, no glow. A fine even paper
+grain over every surface of the whole image.
+SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
+single flat tone, with no modelling, no blush, no shading, no cheekbones and no jawline.
+On a face, draw ONLY these six things: the outline of the head, the eyes, the eyebrows,
+the nose, the mouth and the ears. Nothing else at all — no wrinkles, no lines beside the
+nose, no lines under the eyes, no cheek shadow, no neck shading.
+HAIR IS ALWAYS A WARM DARK BROWN — #3f3330, its shadowed side #2e2523, its lit edge
+#4d403c. NEVER grey, silver, white, ash, steel or blue-grey hair on anyone.
+EVERY PERSON IN THIS PICTURE IS DRAWN BY THE SAME HAND, at the same level of simplicity:
+nobody is rendered in more detail than anybody else, and nobody is drawn in a different
+style from the rest.
+
+STRUCTURE — ONE single illustration divided by THIN HAND-DRAWN LINES into a large middle
+panel and four small side panels. NO ARROWS ANYWHERE.
+  • THE MIDDLE PANEL fills the central 56% of the width and the full height. It is the main
+    picture and everything in it is drawn large.
+  • TWO SMALL PANELS are stacked in the left 22% of the width, and TWO SMALL PANELS are
+    stacked in the right 22%. Each small panel holds ONE simple scene with only TWO people
+    in it — never more — because these panels are small and must stay readable.
+
+THE MIDDLE PANEL — A BRIGHT, ORDINARY DAYTIME OPERATIONS ROOM, seen wide. Pale walls, a
+large window on the left letting in clean daylight, a pale wooden floor, low desks with
+keyboards and paper folders, a potted plant, a wheeled chair, and a round wall clock whose
+face is completely blank. This is NOT a dark high-tech command centre: it is a light, calm,
+ordinary working room.
+  • THE BIG SCREEN IS THE FOCAL POINT: one large, thin, PALE TRANSLUCENT screen standing
+    against the back wall, filling most of the upper two thirds of this panel. It is pale
+    and airy, never a glowing dark monitor.
+  • ON THAT SCREEN, IN THE CENTRE, THERE IS ONE ISLAND — the island of Taiwan, drawn as a
+    single simplified silhouette. USE THE ATTACHED REFERENCE IMAGE FOR ITS SHAPE AND
+    PROPORTIONS ONLY, NOT FOR ITS STYLE: the island is clearly TALLER THAN IT IS WIDE, about
+    twice as tall as it is wide; its western edge is smooth and gently curved, its eastern
+    edge is straighter and steeper; the northern end is blunt and the southern end narrows
+    to a soft point. Draw the island TALL — it takes up at least two thirds of the height of
+    the screen. It is the single most important object in the whole picture and it must
+    still read as an island when the picture is shrunk to the size of a postage stamp.
+  • THE ISLAND IS SHADED LIKE A HEAT MAP, in three flat steps of ONE colour: the palest
+    areas are a light tint of #317d78, the middle areas are #317d78 itself, and the few
+    deepest patches are #2a6d69. The patches are soft irregular shapes that meet edge to
+    edge. DO NOT draw internal borders, administrative regions, county outlines, grid lines
+    or a dotted coastline — just soft shaded areas inside one clean island outline.
+  • FOUR SMALL AMBER DOTS (#c28229) sit on the island, spread from north to south.
+  • FOUR NUMBERS float on the screen beside the island, two on its left and two on its
+    right, each joined to the EDGE of the island by one thin short leader line. The four
+    numbers are exactly: 78.7% and 24.7% on one side, 9.3% and 6.9% on the other. They are
+    plain, upright, evenly spaced sans-serif digits followed by a percent sign, and nothing
+    else — no words, no place names, no labels beside them.
+  • TWO SMALL AMBER WARNING TRIANGLES (#c28229), each no wider than a finger, sit near the
+    island — each one a plain triangle with a single short vertical exclamation stroke and a
+    dot below it inside the triangle.
+  • CHARTS SIT ROUND THE ISLAND ON THE SAME SCREEN, small and simple, drawn as clean flat
+    shapes: a column chart of FIVE bars of clearly different heights; a line chart whose
+    line rises gently to the right with small round dots at its turning points; a horizontal
+    bar chart of FOUR bars; a pie chart divided into just TWO parts, the larger part about
+    three quarters of the circle; and a five-pointed radar chart with one filled polygon
+    inside it. EVERY CHART HAS NO AXIS LABELS, NO LEGEND, NO TITLE AND NO NUMBERS ON IT —
+    the charts are shapes only. Use the pale tint, #317d78 and #2a6d69 for the chart shapes,
+    with #c28229 used only once or twice as a single highlighted bar or dot.
+  • FIVE PEOPLE WORK IN THIS ROOM, all East Asian, none of them looking at the viewer, none
+    of them standing in the exact centre of the panel:
+      – TWO PEOPLE STAND TOGETHER IN FRONT OF THE BIG SCREEN, seen from behind and slightly
+        to the side, much smaller than the screen: a woman on the left with a short bob
+        pointing with one finger at the middle of the island, and a man beside her holding
+        an open paper folder against his chest, looking where she points.
+      – ONE MAN SITS AT A DESK in the lower left of the panel, leaning slightly forward,
+        both hands on a keyboard, looking at his own small screen.
+      – ONE WOMAN WALKS ACROSS the lower right of the panel carrying a stack of papers, her
+        head turned towards the big screen.
+      – ONE MAN CROUCHES beside a small screen on a side desk on the right, one hand resting
+        on the desk, checking it.
+    Their expressions are calm, attentive and ordinary — they are doing their work. Nobody
+    is alarmed, nobody is celebrating, nobody is pointing at the viewer.
+  • THE SMALL SCREENS in this room (the one on the seated man's desk and the one the
+    crouching man is checking) each show ONE simple shape only: one shows a single column
+    chart of four bars, the other a single rising line. Nothing else on them — no code, no
+    text, no icons, no logos.
+
+THE FOUR SIDE PANELS — four different places where ordinary people are having their teeth
+checked on an ordinary day. EACH PANEL HAS EXACTLY TWO PEOPLE, drawn simply and larger than
+you would expect, because these panels are small. Each panel is a warm, calm, everyday
+moment — nobody is frightened, nobody is in pain, no blood, no close-up of an open mouth.
+  • TOP LEFT — A CLINIC RECEPTION DESK. A woman in her fifties stands at the counter handing
+    a small plain card to a receptionist in a pale clinic top who reaches out to take it. On
+    the wall behind them hangs one framed picture of a single tooth shape, a drawing only,
+    with NO writing on it.
+  • BOTTOM LEFT — A DENTAL CHAIR. A patient lies back in a dental chair with his mouth
+    closed and his eyes calm; a dentist in a pale clinic top sits beside him holding a small
+    round mouth mirror, leaning in to look. A simple round overhead lamp on an arm is above
+    them. No blood, no drill, no tray of instruments in close-up.
+  • TOP RIGHT — A COMMUNITY HALL OR SCHOOL ROOM. A folding table with two simple chairs; a
+    dentist in a pale clinic top sits on one side and a teenage boy sits on the other with
+    his hands on his knees, waiting his turn. Behind them, THREE very small simplified
+    figures stand in a short queue, drawn as simple shapes.
+  • BOTTOM RIGHT — LOOKING AT AN X-RAY. A dentist stands beside a pale lightbox on the wall
+    with one hand raised towards it, explaining; a man in his thirties sits on a stool
+    looking at it. The image on the lightbox is a SINGLE SIMPLE ROW OF TOOTH SHAPES in pale
+    grey, with NO numbers, NO letters and NO detail.
+
+PEOPLE — Simplified illustrative people: minimal features (small dot or short-line eyes, a
+simple line mouth, a small nose), natural realistic head-to-body proportions, believable
+ages, East Asian faces. Not photorealistic. Not faceless. No oversized heads, no noodle
+limbs. Nobody looks at the viewer. Roughly half the people are women and half are men, of
+mixed ages from teenage to sixties.
+CLOTHING — clinic staff wear short-sleeved clinic tops in #b7d7d3 with their folds and
+shadows in #99b8b4. Everyone else wears ordinary everyday clothes, and EVERY PERSON'S
+GARMENT IS A DIFFERENT COLOUR from the people next to them — muted clay rose, mustard,
+sage, soft blue, cream, warm grey. Clothes are NEVER flat single-tone shapes: model every
+garment with two or three tones of its own colour, with soft coloured-pencil shading in the
+folds, along the sleeves, under the collar and at the hem, and draw the real details —
+collar, cuff, sleeve seam, hem, a pocket.
+
+LIGHT AND COLOUR — Ordinary bright indoor daytime, ONE light source: clean daylight from
+the left, warm and even. No long orange shadows, not sunset, not lamplight, no spotlight,
+no screens lighting faces from below, no dark room. Across the upper part of the middle
+panel only, above the people and not touching them, draw FOUR OR FIVE long, thin, white
+hand-drawn lines running the same way at the same shallow angle, evenly spaced, solid where
+they begin and thinning to dry flecks — soft chalk quality, clearly hand-made. These lines
+must never begin at anyone's mouth, nose, hand or body, must never loop or curl back on
+themselves, must never cross the panel dividing lines, and must never resemble smoke, steam
+or breath.
+Most coloured areas sit in the range HSL saturation 30–50 and lightness 70–85 — clearly
+coloured and readable, never washed out into near-white pastels and never heavy or muddy.
+About half the picture is chromatic. Use AT LEAST FIVE clearly different colours in each
+panel and give each to a named object: the clinic tops, the patients' clothes, the walls,
+the wooden desks, the potted plant, the chairs, the folders.
+ACCENT — #317d78 and #2a6d69 belong to the island, the charts and the clinic tops. #c28229
+appears ONLY in the four small dots, the two warning triangles and one highlighted bar. Do
+NOT wash the image in either colour, do NOT tint the skin, the walls, the floor or the paper
+with them, and do NOT make them vivid.
+
+MOTION MARKS — in exactly three places, draw TWO OR THREE very short, straight, same-angle
+hand-drawn strokes, no longer than a third of a palm's width, solid where they begin and
+fading out: beside the pointing woman's fingertip, above the seated man's wrists as he
+types, and beside the walking woman's shoulder. Nothing else. No speed lines across the
+background, no radiating focus lines, no sparkles, no speech bubbles of any kind.
+
+CRITICAL — THE ONLY CHARACTERS ANYWHERE IN THIS PICTURE ARE: the digits and percent signs
+78.7% , 24.7% , 9.3% and 6.9% on the big screen, and the exclamation stroke inside the two
+small amber warning triangles. THERE IS NO OTHER WRITING OF ANY KIND ANYWHERE — no place
+names, no country name, no axis labels, no legends, no chart titles, no headings, no
+captions, no numbers on the clock, no numbers on the charts, no words on folders, keyboards,
+screens, pictures, badges, doors or clothing, in any language or alphabet. Do NOT draw rows
+of short dashes, squiggles or wavy lines anywhere to imitate lines of writing. Where writing
+would normally appear, leave the surface plain. There are no logos and no watermarks.
+
+AVOID — greyscale; photorealism; a photorealistic mouth, gum or tooth; faceless or
+noodle-limbed figures; thick uniform black outlines; even mechanical vector linework; a dark
+room; glowing monitors; neon; chrome, metallic or iridescent gradients; glow, sparkle or
+lens flare; grey, silver, white or blue-grey hair; wrinkles, cheek shadow or facial
+modelling; a frightened, sad or pained face; anyone shouting, celebrating or high-fiving;
+blood, wounds or red inflamed gums; decayed, dark, broken or missing teeth; a red or orange
+heat map; county borders, grid lines or dotted coastlines on the island; a second island or
+any other country in the picture; a world map; arrows of any kind; ticks, crosses, plus or
+minus signs; speech bubbles; more than two people in any side panel; a crowd; anyone looking
+at the viewer; a whole image tinted green; flat untextured single-tone clothing; a bare
+empty room.
