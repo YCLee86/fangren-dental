@@ -120,11 +120,23 @@ for (const pg of pages) {
   s.C2 = Math.round(4 * Math.min(1, ratio / 0.85)); /* 85% 視為滿分，其餘線性 */
   s._entRatio = ratio;
 
-  /* C3 —— 每個 h2 底下第一段的字數，落在 40–120 才容易被整段擷取引用 */
-  const firsts = body.split(/<h2[^>]*>/).slice(1).map((p) => {
-    const m = p.match(/<p[^>]*>([\s\S]*?)<\/p>/);
-    return m ? detag(m[1]).replace(/\s+/g, "").length : 0;
-  }).filter((n) => n > 0);
+  /* C3 —— 每個 h2 底下第一段的字數，落在 40–120 才容易被整段擷取引用。
+     ⚠⚠ 2026-09-20 修正兩件，**量錯的是評分器不是文章**：
+     ① **引導句接清單不算太短。**「牙周治療不是『洗一洗就好』，它有明確的階段：」
+        後面接一張表 —— 那一段的答案是「引導句 ＋ 那張表」，本來就自足也好擷取，
+        硬加長到 40 字只是灌水。量過：25 段不合格裡有 11 段是這一種。
+     ② **「重點整理」那一節不算** —— 它是問答區塊（C4 在評），不是內文的一節。 */
+  const firsts = body.split(/<h2[^>]*>/).slice(1)
+    .filter((p) => !/^[^<]{0,12}重點整理/.test(p))
+    .map((p) => {
+      const m = p.match(/<p[^>]*>([\s\S]*?)<\/p>/);
+      if (!m) return 0;
+      const n = detag(m[1]).replace(/\s+/g, "").length;
+      if (n === 0) return 0;
+      const after = p.slice(m.index + m[0].length, m.index + m[0].length + 400);
+      if (n < 40 && /^\s*<(ul|ol|table|div class="table-scroll")/.test(after)) return 80;
+      return n;
+    }).filter((n) => n > 0);
   const good = firsts.filter((n) => n >= 40 && n <= 120).length;
   const gr = firsts.length ? good / firsts.length : 0;
   s.C3 = firsts.length < 2 ? null : gr >= 0.75 ? 4 : gr >= 0.6 ? 3 : gr >= 0.4 ? 2 : 1;

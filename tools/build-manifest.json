@@ -8,31 +8,31 @@
     "updated": "2026-08-18"
   },
   "bioceramic": {
-    "hash": "db3788dc960a67e4",
+    "hash": "0eeba12afce16323",
     "updated": "2026-08-28"
   },
   "crown-materials": {
-    "hash": "e37bf9978d6a2f03",
+    "hash": "97733302b4a0b375",
     "updated": "2026-08-27"
   },
   "gum-bleeding": {
-    "hash": "f8aed473e2290b22",
+    "hash": "9beef7118ccecde2",
     "updated": "2026-09-20"
   },
   "kids-arch-expansion": {
-    "hash": "d4bd9eb739fe93cd",
-    "updated": "2026-08-18"
+    "hash": "128a52abc77a3d34",
+    "updated": "2026-09-20"
   },
   "kids-crown": {
-    "hash": "42acae61e21dc372",
-    "updated": "2026-09-07"
+    "hash": "66ece43e2ada60f2",
+    "updated": "2026-09-20"
   },
   "kids-first-visit": {
     "hash": "fbdd7e0f6eef05d7",
     "updated": "2026-09-20"
   },
   "kids-sedation": {
-    "hash": "b6f181566f3fbbed",
+    "hash": "8404ab8f663b9351",
     "updated": "2026-09-20"
   },
   "missing-tooth": {
@@ -56,7 +56,7 @@
     "updated": "2026-09-20"
   },
   "three-month-recall": {
-    "hash": "0794dc120d2ef6ed",
+    "hash": "9c1d5c00ee0542e5",
     "updated": "2026-09-20"
   },
   "wisdom-tooth": {

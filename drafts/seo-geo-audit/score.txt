@@ -10,27 +10,27 @@
 /topics/perio/                  4   3   ·   0   1   3   ·   1   3   3   3   4   3   2   3   2   0   35   48    73
 /topics/prosth/                 4   3   ·   0   1   3   ·   1   1   3   3   4   3   2   3   2   0   33   48    69
 /topics/surg/                   4   3   ·   0   1   3   ·   1   3   3   3   4   3   2   3   2   0   35   48    73
-/posts/aligner-simulation/      4   3   3   4   2   3   2   2   3   3   3   4   3   2   3   2   3   49   55    89
+/posts/aligner-simulation/      4   3   3   4   2   3   2   4   3   3   3   4   3   2   3   2   3   51   55    93
 /posts/bass-brushing/           4   3   3   0   2   3   3   4   3   3   3   4   3   2   3   2   3   48   55    87
-/posts/bioceramic/              4   3   3   0   3   3   2   2   3   3   3   4   3   2   3   2   3   46   55    84
+/posts/bioceramic/              4   3   3   0   3   3   2   4   3   3   3   4   3   2   3   2   3   48   55    87
 /posts/crown-materials/         4   3   3   0   3   3   2   4   3   3   3   4   3   2   3   2   3   48   55    87
-/posts/gum-bleeding/            4   3   3   4   2   3   2   3   3   3   3   4   3   2   3   2   3   50   55    91
-/posts/kids-arch-expansion/     4   3   3   0   1   3   3   3   3   1   3   4   3   2   3   2   3   44   55    80
-/posts/kids-crown/              4   3   3   0   2   3   3   3   3   1   3   4   3   2   3   2   3   45   55    82
+/posts/gum-bleeding/            4   3   3   4   2   3   2   4   3   3   3   4   3   2   3   2   3   51   55    93
+/posts/kids-arch-expansion/     4   3   3   0   1   3   2   4   3   3   3   4   3   2   3   2   3   46   55    84
+/posts/kids-crown/              4   3   3   0   2   3   3   4   3   3   3   4   3   2   3   2   3   48   55    87
 /posts/kids-first-visit/        4   3   3   4   2   3   3   4   3   3   3   4   3   2   3   2   3   52   55    95
-/posts/kids-sedation/           4   3   3   4   3   3   1   3   3   3   3   4   3   2   3   2   3   50   55    91
-/posts/missing-tooth/           4   3   3   0   2   3   2   3   3   3   3   4   3   2   3   2   3   46   55    84
+/posts/kids-sedation/           4   3   3   4   3   3   1   4   3   3   3   4   3   2   3   2   3   51   55    93
+/posts/missing-tooth/           4   3   3   0   2   3   2   4   3   3   3   4   3   2   3   2   3   47   55    85
 /posts/orthodontics/            4   3   3   0   3   3   2   4   3   3   3   4   3   2   3   2   3   48   55    87
 /posts/perio-laser/             4   3   3   2   3   3   2   4   3   3   3   4   3   2   3   2   3   50   55    91
 /posts/perio-prevalence/        4   3   3   4   3   3   1   4   3   3   3   4   3   2   3   2   3   51   55    93
 /posts/regular-checkup/         4   3   3   4   2   3   2   4   3   3   3   4   3   2   3   2   3   51   55    93
-/posts/three-month-recall/      4   3   3   2   2   3   2   3   3   1   3   4   3   2   3   2   3   46   55    84
+/posts/three-month-recall/      4   3   3   2   2   3   2   4   3   3   3   4   3   2   3   2   3   49   55    89
 /posts/wisdom-tooth/            4   3   3   0   3   3   2   4   3   3   3   4   3   2   3   2   3   48   55    87
 ---------------------------------------------------------------------------------------------------
-平均                             4.0 3.0 3.0 1.2 2.1 3.0 2.1 2.7 2.7 2.8 3.0 4.0 3.0 2.0 3.0 2.0 2.0              83
+平均                             4.0 3.0 3.0 1.2 2.1 3.0 2.1 3.1 2.7 3.0 3.0 4.0 3.0 2.0 3.0 2.0 2.0              84
   home 平均                                                                                     92
   topic 平均                                                                                    72
-  post 平均                                                                                     88
+  post 平均                                                                                     89
 
 === 逐項平均（滿分／實得） ===
 A1 robots meta 正確         ████████████████████ 4.00 / 4
@@ -39,10 +39,10 @@ B2 醫療免責聲明                 ██████████████
 B4 外部權威引用                 ██████·············· 1.22 / 4
 B6 內容深度                   ██████████████······ 2.08 / 3
 C1 H1 唯一・階層正確             ████████████████████ 3.00 / 3
-C2 標題帶實體                  ███████████········· 2.13 / 4
-C3 answer-first 段長        █████████████······· 2.65 / 4
+C2 標題帶實體                  ██████████·········· 2.06 / 4
+C3 answer-first 段長        ███████████████····· 3.09 / 4
 C4 Q&A／重點整理               ██████████████████·· 2.74 / 3
-C5 表格與清單                  ██████████████████·· 2.75 / 3
+C5 表格與清單                  ████████████████████ 3.00 / 3
 C6 語意 HTML                ████████████████████ 3.00 / 3
 D2 頁面 schema              ████████████████████ 4.00 / 4
 D3 BreadcrumbList 指向      ████████████████████ 3.00 / 3
@@ -63,13 +63,12 @@ F3 頁面重量                   █████████████···�
 /posts/bass-brushing/          B4 外部權威引用
 /posts/bioceramic/             B4 外部權威引用
 /posts/crown-materials/        B4 外部權威引用
-/posts/kids-arch-expansion/    B4 外部權威引用、B6 內容深度、C5 表格與清單
-/posts/kids-crown/             B4 外部權威引用、C5 表格與清單
+/posts/kids-arch-expansion/    B4 外部權威引用、B6 內容深度
+/posts/kids-crown/             B4 外部權威引用
 /posts/kids-sedation/          C2 標題帶實體
 /posts/missing-tooth/          B4 外部權威引用
 /posts/orthodontics/           B4 外部權威引用
 /posts/perio-prevalence/       C2 標題帶實體
-/posts/three-month-recall/     C5 表格與清單
 /posts/wisdom-tooth/           B4 外部權威引用
 
 → drafts/seo-geo-audit/score.json
