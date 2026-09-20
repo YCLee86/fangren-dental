@@ -35,16 +35,11 @@ face, a hairstyle, an age or an expression.
 
 THE SCENE — A SMALL HOMEMADE FLYING SLED CARRYING EIGHT PEOPLE, travelling through a wide
 swirling tunnel of time with clocks floating past it. The sled is seen from the front and
-slightly to the side, and IT IS TRAVELLING AWAY FROM US INTO THE TUNNEL, towards the bright
-centre of the spiral in the upper right of the frame, so that the people are turned
-three-quarters away from us and NOBODY LOOKS AT THE VIEWER. The sled and its passengers
-together fill roughly the middle half of the picture and sit slightly right of centre. The
-mood is warm, funny and companionable — a crowded family outing, not an action shot and not
-a rescue.
-BECAUSE THEY ARE TRAVELLING TOWARDS THE UPPER RIGHT, THE WIND RUSHES PAST THEM TOWARDS THE
-LOWER LEFT. Everything loose on the sled streams the same way — towards the lower left of
-the frame: long hair, the hem of the white coat, loose shirt tails and the strap of the
-satchel. Nothing streams towards the right, and nothing hangs straight down.
+slightly to the side, moving diagonally towards the lower left of the frame, so that the
+people are turned three-quarters away from us and NOBODY LOOKS AT THE VIEWER. The sled and
+its passengers together fill roughly the middle half of the picture and sit slightly right
+of centre; the tunnel opens away behind them towards the upper right. The mood is warm,
+funny and companionable — a crowded family outing, not an action shot and not a rescue.
 THE DECK IS LONG ENOUGH FOR ALL EIGHT: every person has both feet planted on the deck or
 is sitting on it, and nobody hangs over the edge or floats beside it.
 
@@ -78,8 +73,8 @@ DIFFERENT COLOUR OF SCRUBS — they are not a matching uniform.
      along the direction of travel. HER MOUTH IS A CLOSED UPWARD CURVE — a confident,
      closed-mouth smile.
   2. THE DENTIST — a man in his forties with short neat hair, in DUSTY BLUE SCRUBS
-     (#a9bcd4, folds #8fa3bd) WITH A WHITE COAT OVER THEM, the hem of the coat streaming out
-     towards the LOWER LEFT of the frame, his scrub collar and sleeves clearly visible. He STANDS to the driver's
+     (#a9bcd4, folds #8fa3bd) WITH A WHITE COAT OVER THEM, the hem of the coat blown back
+     behind him, his scrub collar and sleeves clearly visible. He STANDS to the driver's
      left. HIS RIGHT HAND grips the lamp arm above his head; HIS LEFT ARM is stretched out
      pointing ahead past the lamp. HE IS THE ONLY PERSON IN THE PICTURE WITH AN OPEN MOUTH
      — a small open shape, mid-shout, eyebrows raised, delighted.
@@ -91,8 +86,8 @@ DIFFERENT COLOUR OF SCRUBS — they are not a matching uniform.
      across his body. He STANDS at the left edge of the deck. HIS LEFT HAND grips the lamp
      arm; HIS RIGHT HAND points up at one large clock drifting past. He looks up at that
      clock. HIS MOUTH IS A SMALL CLOSED SMILE, eyebrows high with surprise.
-  5. THE YOUNG WIFE — a woman of about thirty with long hair streaming out TOWARDS THE
-     LOWER LEFT OF THE FRAME, in a clay-rose blouse. She STANDS just behind the dental chair, close beside her husband.
+  5. THE YOUNG WIFE — a woman of about thirty with long hair streaming back, in a
+     clay-rose blouse. She STANDS just behind the dental chair, close beside her husband.
      HER LEFT HAND is tucked through her husband's arm; HER RIGHT HAND presses her own
      hair down at the side of her head. She looks ahead. HER MOUTH IS A CLOSED SMILE, eyes
      narrowed with laughter.
@@ -155,22 +150,12 @@ muddy. Give each named object its own colour: the three different sets of scrubs
 white coat, the school shirt, the rose blouse, the cream shirt, the polo shirt, the plum
 blouse and cardigan, the chair upholstery, the wooden deck, the lamp head. NOBODY wears
 the same colour as the person beside them.
-THE WHITE LINES — THERE ARE TWO DIFFERENT KINDS AND BOTH ARE REQUIRED. Both are drawn in
-the same soft white chalk quality, solid where they begin and thinning to dry flecks,
-clearly hand-made. Neither kind ever begins at anyone's mouth, nose, hand or body, and
-neither ever looks like smoke, steam or breath.
-  • THE SPIN MARKS — MANY SHORT CURVED WHITE STROKES scattered around the tunnel, each one
-    following the curve of the painted band it sits on, so that the whole spiral reads as
-    turning. They are short — about the length of a hand — and they sit mostly in the
-    middle and outer rings, in loose groups of two or three, denser near the sled and
-    sparser at the edges.
-  • THE LONG FLOWING WIND LINES — SIX OR SEVEN LONG, THIN, UNBROKEN WHITE LINES sweeping
-    right across the picture, EACH ONE RUNNING FROM THE UPPER RIGHT DOWN TOWARDS THE LOWER
-    LEFT, gently curved and roughly parallel to each other, some passing behind the sled
-    and some in front of the lower edge of the deck, but never touching a face or a hand.
-    They are much longer than the spin marks — each one crosses a third to a half of the
-    whole picture. THEY RUN THE SAME WAY AS THE FLYING HAIR AND THE FLYING COAT HEM: down
-    and to the left. They never loop, never curl back and never close into a ring.
+THE WHITE ATMOSPHERE LINES ARE REQUIRED — DO NOT LEAVE THEM OUT. Draw SIX OR SEVEN long,
+thin, white hand-drawn lines sweeping through the tunnel in the same direction as the
+spiral bands, passing behind and beside the sled but never touching any person: solid where
+they begin and thinning to dry flecks, soft chalk quality, clearly hand-made. They must
+never begin at anyone's mouth, nose, hand or body, never loop or curl back on themselves,
+and never look like smoke, steam or breath.
 
 MOTION MARKS — EXACTLY THREE GROUPS, and nowhere else. Each is TWO OR THREE very short,
 straight, same-angle hand-drawn strokes, no longer than a third of a palm's width, solid
@@ -191,9 +176,7 @@ AVOID — any recognisable cartoon, anime or comic character; any mascot; any an
 character; any character with a large round blue head; any vehicle copied from an existing
 cartoon, comic or film; anime or manga styling; cel shading; glossy digital rendering;
 large shiny eyes; neon; glowing edges; electric streaks; lens flare; chrome, metallic or
-iridescent gradients; an airbrushed or digitally blurred background; long white lines that run
-upwards to the right while the hair blows the other way; hair, coat and white lines
-streaming in different directions; a picture with only short marks and no long lines; the people or the sled
+iridescent gradients; an airbrushed or digitally blurred background; the people or the sled
 darkened, tinted or silhouetted by the background colours; all three staff in the same
 colour scrubs; numerals on clock faces; digital clock displays; blonde, caramel, light
 brown, auburn, grey, silver or white hair; wrinkles, cheek shadow or facial modelling;
