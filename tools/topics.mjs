@@ -206,6 +206,7 @@ const seoBlock = (spec, t, canonical, cnt) => {
 <meta property="og:image:width" content="${og.w}">
 <meta property="og:image:height" content="${og.h}">
 <meta property="og:image:alt" content="${og.alt}">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
 ${JSON.stringify(ld, null, 2)}
 </script>
@@ -322,16 +323,30 @@ const introBlock = (spec, t, cnt) => `
         <p class="tp-count">${countLine(cnt.a, cnt.d)}</p>
 ${t.lead ? `        <p class="tp-lead">${todo(t.lead)}</p>\n` : ""}\
 ${(t.groups || [{ cases: t.cases, reply: t.stance }])
-  .map(
-    (g) =>
-      g.cases.map((x) => `        <p class="tp-case">${todo(x)}</p>`).join("\n") +
-      (g.reply ? `\n        <p class="tp-reply">${todo(g.reply)}</p>` : "")
+  .map((g) =>
+    /* ⚠⚠ 2026-09-20：一組處境 ＋ 一句回應包成一個 <dl>，三個 <dt> 共用一個 <dd>。
+       HTML 本來就允許這樣寫，所以**文案一個字都不用改**，三問一答的節奏原樣保留，
+       只是變成機器讀得懂的問答對 —— 這一塊是七頁唯一不與首頁重複的內容
+       （重疊 68~77%），也是 AI 最會引用的形狀。推導在 drafts/seo-geo-audit/REPORT.md。
+       ⚠ 沒有 reply 的那一組**維持 <p>** —— 只有 dt 沒有 dd 的 dl 是不合法的。 */
+    g.reply
+      ? `        <dl class="tp-cases">\n` +
+        g.cases.map((x) => `          <dt class="tp-case">${todo(x)}</dt>`).join("\n") +
+        `\n          <dd class="tp-reply">${todo(g.reply)}</dd>\n        </dl>`
+      : /* lead 型的那三科（一般牙科、顯微根管、植牙假牙）沒有回應句 ——
+           只有 dt 沒有 dd 的 dl 不合法，但它們本來就是「一串處境」，
+           收成 <ul> 一樣是一個抓得出來的區塊。 */
+        `        <ul class="tp-cases">\n` +
+        g.cases.map((x) => `          <li class="tp-case">${todo(x)}</li>`).join("\n") +
+        `\n        </ul>`
   )
   .join("\n")}
 
         <div class="tp-first">
-          <p class="tp-first-h">${t.flowTitle}</p>
-${t.flow.map(([k, v]) => `          <p class="tp-step"><b>${k}</b>${todo(v)}</p>`).join("\n")}
+          <h2 class="tp-first-h">${t.flowTitle}</h2>
+          <ol class="tp-steps">
+${t.flow.map(([k, v]) => `            <li class="tp-step"><b>${k}</b>${todo(v)}</li>`).join("\n")}
+          </ol>
           <p class="tp-close">${todo(t.close)}</p>
         </div>
       </div>
@@ -460,6 +475,23 @@ for (const spec of SPECS) {
   } else {
     throw new Error("找不到搜尋框那一段，index.html 的結構可能改過了");
   }
+
+  /* 5.4 「主題與科別」在著陸頁降成純文字標籤（2026-09-20 SEO／GEO 體檢 P1-2）。
+     -----------------------------------------------------------------------
+     這一頁是 index.html 的快照，所以首頁那個 <h2>主題與科別</h2> 會**排在
+     這一科自己的 h1 前面**，大綱長成 h2 -> h1 -> h3。對段落級的檢索來說，
+     那等於說「這一頁的主題是『主題與科別』」。
+     在首頁它是一個章節標題，在著陸頁它只是那排連結的標籤 —— 降成 <p> 才對。
+
+     ⚠ 畫面完全不變：index.html 的 `.sec-head h2` 那幾條規則已經改成
+       `.sec-head :is(h2, .sec-h)`（兩個中斷點各一份、另有兩條 [data-topic] 的
+       版型規則，四條要一起改，只改一條會在手機上跑掉）。
+     ⚠⚠ 還要補 `.sec-head .sec-h { font-weight: 700 }` —— h2 的粗體是**瀏覽器
+       的預設值**，不是那條規則給的，降成 p 之後會從 700 掉到 400。
+       位置一個像素都不動，只有粗細變了，而且不報錯。 */
+  const SEC_H2 = "<h2>主題與科別</h2>";
+  if (!h.includes(SEC_H2)) throw new Error("找不到「主題與科別」那顆 h2");
+  h = h.replace(SEC_H2, '<p class="sec-h">主題與科別</p>');
 
   /* 5.5 免責聲明放在頁面內容的最後（診所資訊之前），不要卡在開場的答案前面 ——
      文章頁本來就是這樣排的（.note 是 .post-body 的最後一個元素）。

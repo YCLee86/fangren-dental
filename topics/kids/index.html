@@ -129,6 +129,7 @@ r.dataset.theme=s;})();</script>
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="628">
 <meta property="og:image:alt" content="明亮的兒童牙科診間裡，戴著塗鴉印花手術帽的醫師單膝蹲在診療椅旁，舉著一面小鏡子，和坐在椅子上的小男孩平視；男孩笑著伸手指鏡子、腳在晃，媽媽站在右邊看著他，妹妹跪在小凳上探頭，後方的助理正在檯面上放紙杯。">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1618,7 +1619,7 @@ section + section { border-top: 1px solid var(--rule); }
 /* 分隔線要通到底、內容仍然對齊版心 —— 所以線畫在 section 上，
    內距交給裡面的 .shell。 */
 .sec-head { margin-bottom: 1.5rem; }
-.sec-head h2 { margin: 0; font-size: 1.35rem; line-height: 1.5; letter-spacing: .02em; }
+.sec-head :is(h2, .sec-h) { margin: 0; font-size: 1.35rem; line-height: 1.5; letter-spacing: .02em; }
 html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 /* 主題與科別。每一顆是真的 <button> —— 按下去會同時篩下面的文章與醫師，不是裝飾。
@@ -3015,7 +3016,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
   /* ---- 內文區：字級與間距收一階 ------------------------------------- */
   .sec-head { margin-bottom: 1.1rem; }
-  .sec-head h2 { font-size: 1.12rem; }
+  .sec-head :is(h2, .sec-h) { font-size: 1.12rem; }
   .chips { gap: .45rem; }
   /* 搜尋框自己一列。font-size 一定要 16px 以上，
      不然 iOS Safari 一聚焦就會把整頁放大。 */
@@ -4991,7 +4992,7 @@ body[data-topic] #topics { padding-top: 1rem; }
   display: flex; align-items: center; justify-content: space-between;
   gap: .8rem 1rem; flex-wrap: nowrap;
 }
-[data-topic] #topics .sec-head h2 { flex: 0 0 auto; }
+[data-topic] #topics .sec-head :is(h2, .sec-h) { flex: 0 0 auto; }
 [data-topic] #topics .sec-head .topic-search { flex: 0 1 10rem; min-width: 0; margin-top: 0; }
 
 /* chips 從 <button> 換成 <a>（爬蟲點不下去按鈕，連結才有網址）。
@@ -5362,6 +5363,40 @@ body[data-topic] #topics { padding-top: 1rem; }
 /* 收尾那一句是「我們」，回到墨色 —— 和上面那句回應同一個聲音。 */
 .tp-close { margin: .35rem 0 0; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
 
+/* ===== 著陸頁的問答與流程（2026-09-20 SEO／GEO 體檢 P1-2）==================
+   三個處境改成 dl（三個 dt 共用一個 dd）、五步流程改成 ol、小標改成真的 h2，
+   並且把「主題與科別」那顆 h2 在著陸頁降成 <p class="sec-h">，
+   讓那一科的 h1 變成頁面的第一個標題（原本大綱是 h2 -> h1 -> h3）。
+   **文案一個字都沒有改，改的只有標記。**
+
+   為什麼：段落級的檢索（AI Overviews、AI Mode 與各家 LLM 抓的是段落不是整頁）
+   靠標題定界。原本那一塊整個沒有標題，而它正是七頁唯一不與首頁重複的內容
+   （重疊 68~77%，獨有只有 200~350 字），也正是最該被引用的兩種形狀：
+   病人真的會問的問題，和一條有順序的流程。推導在 drafts/seo-geo-audit/REPORT.md。
+
+   下面這幾條的唯一目的是**讓畫面完全不變** —— dl／dd／ol／h2 都帶著瀏覽器的
+   預設邊界與字級，不歸零就會位移。改完在 390x844 用 Chromium 逐節點量過：
+   35 個文字節點的位置、字級、粗細、顏色與改之前完全相同。 */
+.tp-cases { margin: 0; padding: 0; }
+ul.tp-cases { list-style: none; }
+.tp-cases dt, .tp-cases li { margin: 0 0 .2rem; }
+.tp-cases dd { margin-inline-start: 0; }
+.tp-intro dd.tp-reply { margin: .28rem 0 .62rem; }
+/* 原本 .tp-reply:last-of-type 比的是「同一層最後一個 p」；換成 dd 之後
+   每個 dl 各只有一個 dd、每一個都會是 last-of-type，所以錨要改釘在 dl 上。
+   ⚠ 兒牙那一科有兩組（groups），不改這一條它兩組的下緣都會縮。 */
+.tp-intro dl.tp-cases:last-of-type dd.tp-reply { margin-bottom: .2rem; }
+.tp-steps { margin: 0; padding: 0; list-style: none; }
+.tp-steps li { margin: 0 0 .1rem; }
+/* h2 自己帶 1.5em 的字級，這一行本來是 p，要釘回去。
+   ⚠ **只釘 font-size，不要連 line-height 一起釘成 var(--tp-lh)** ——
+     那個 p 的行高是繼承 body 的，釘錯整塊流程會往上跑 2px。 */
+h2.tp-first-h { font-size: 1rem; line-height: inherit; }
+/* h2 的粗體來自瀏覽器預設值，不是 .sec-head 那條規則給的 ——
+   降成 <p class="sec-h"> 之後 font-weight 會從 700 掉到 400（位置完全沒動，
+   只有粗細，而且不報錯）。 */
+.sec-head .sec-h { font-weight: 700; }
+
 /* 3-3「第一次來，大概是這樣」。
    ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明；
      這裡要的是把話接著講下去，所以就是接在開場後面的兩段。
@@ -5718,7 +5753,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
   <section id="topics">
     <div class="shell">
       <div class="sec-head">
-        <h2>主題與科別</h2>
+        <p class="sec-h">主題與科別</p>
         <div class="topic-search">
           <label class="sr-only" for="q">搜尋文章與醫師</label>
           <input id="q" type="search" placeholder="搜尋文章與醫師" autocomplete="off" spellcheck="false">
@@ -5938,21 +5973,27 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
       <div class="tp-intro">
         <h1>兒童牙科</h1>
         <p class="tp-count"><a href="#doctors"><span class="tp-n">2 位</span><span class="tp-t">醫師</span></a><span class="tp-dot" aria-hidden="true">・</span><a href="#articles"><span class="tp-n">4 篇</span><span class="tp-t">文章</span></a></p>
-        <p class="tp-case">吃飯越來越慢、不愛吃，以為只是挑食。</p>
-        <p class="tp-case">總覺得怪怪的，但檢查都說沒問題。</p>
-        <p class="tp-reply">不喊痛<strong>不代表沒事</strong>，這種要專門看才找得到。</p>
-        <p class="tp-case">「不配合，沒辦法處理。」可是他真的在痛。</p>
-        <p class="tp-case">同一顆補了又掉，已經好幾次了。</p>
-        <p class="tp-reply">這一種<strong>比較複雜</strong>，要找兒童牙科的醫師處理。</p>
+        <dl class="tp-cases">
+          <dt class="tp-case">吃飯越來越慢、不愛吃，以為只是挑食。</dt>
+          <dt class="tp-case">總覺得怪怪的，但檢查都說沒問題。</dt>
+          <dd class="tp-reply">不喊痛<strong>不代表沒事</strong>，這種要專門看才找得到。</dd>
+        </dl>
+        <dl class="tp-cases">
+          <dt class="tp-case">「不配合，沒辦法處理。」可是他真的在痛。</dt>
+          <dt class="tp-case">同一顆補了又掉，已經好幾次了。</dt>
+          <dd class="tp-reply">這一種<strong>比較複雜</strong>，要找兒童牙科的醫師處理。</dd>
+        </dl>
 
         <div class="tp-first">
-          <p class="tp-first-h">兒童牙科多做的，是這幾件</p>
-          <p class="tp-step"><b>看得出</b>他說不出來的不舒服，檢查看得到。</p>
-          <p class="tp-step"><b>很痛時</b>會痛多半蛀得深，處理完還要修回來。</p>
-          <p class="tp-step"><b>不再掉</b>補不住的就換個做法，讓它留到換牙。</p>
-          <p class="tp-step"><b>留位置</b>乳牙留不住，先幫恆牙留著位置。</p>
-          <p class="tp-step"><b>換牙</b>排不下的時候，早期矯正是一個選項。</p>
-          <p class="tp-step"><b>先試過</b>能配合多少先試，不行才談舒眠。</p>
+          <h2 class="tp-first-h">兒童牙科多做的，是這幾件</h2>
+          <ol class="tp-steps">
+            <li class="tp-step"><b>看得出</b>他說不出來的不舒服，檢查看得到。</li>
+            <li class="tp-step"><b>很痛時</b>會痛多半蛀得深，處理完還要修回來。</li>
+            <li class="tp-step"><b>不再掉</b>補不住的就換個做法，讓它留到換牙。</li>
+            <li class="tp-step"><b>留位置</b>乳牙留不住，先幫恆牙留著位置。</li>
+            <li class="tp-step"><b>換牙</b>排不下的時候，早期矯正是一個選項。</li>
+            <li class="tp-step"><b>先試過</b>能配合多少先試，不行才談舒眠。</li>
+          </ol>
           <p class="tp-close">孩子願意來、牙齒撐得住，其他的我們一起來努力。</p>
         </div>
       </div>

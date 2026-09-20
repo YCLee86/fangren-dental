@@ -126,7 +126,12 @@ for (const pg of pages) {
   s._ansRatio = gr;
 
   /* C4 */
-  s.C4 = /<dl class="keypoints"/.test(body) ? 3 : /重點整理/.test(body) ? 2 : 0;
+  /* 2026-09-20：著陸頁也有問答區塊了（dl.tp-cases，三個 dt 共用一個 dd）。
+     ⚠ ul.tp-cases 是「一串處境」不是問答，只給 1 分 —— 它是個抓得出來的區塊，
+       但沒有「問句 → 直答」那一層。 */
+  s.C4 = /<dl class="(keypoints|tp-cases)"/.test(body) ? 3
+       : /<ul class="tp-cases"/.test(body) ? 1
+       : /重點整理/.test(body) ? 2 : 0;
 
   /* C5 */
   const tbl = (body.match(/<table/g) || []).length;
@@ -157,7 +162,10 @@ for (const pg of pages) {
   const bc = /"BreadcrumbList"/.test(html);
   const toTopic = /"item":\s*"https:\/\/fangren\.net\/topics\//.test(html);
   const toAnchor = /"item":\s*"https:\/\/fangren\.net\/#topics"/.test(html);
-  s.D3 = pg.kind === "home" ? 3 : !bc ? 0 : toTopic ? 3 : toAnchor ? 1 : 2;
+  /* ⚠ 著陸頁的第 2 層就是它自己（最後一層不帶 item，那是對的），
+     不要拿「有沒有指到 /topics/」去扣它的分 —— 那是量錯東西。 */
+  s.D3 = pg.kind === "home" ? 3 : !bc ? 0
+       : pg.kind === "topic" ? 3 : toTopic ? 3 : toAnchor ? 1 : 2;
 
   /* E2 */
   const head = html.slice(0, html.indexOf("</head>"));

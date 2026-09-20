@@ -403,7 +403,7 @@ function publisherNode(site, clinic) {
   return node;
 }
 
-export function postGraph({ site, clinic, meta, image, topics, warn = console.warn }) {
+export function postGraph({ site, clinic, meta, image, spec, topics, warn = console.warn }) {
   const url = `${site}/posts/${meta.slug}/`;
   const homeId = (frag) => `${site}/#${frag}`;
 
@@ -466,13 +466,22 @@ export function postGraph({ site, clinic, meta, image, topics, warn = console.wa
   if (image) webpage.primaryImageOfPage = { "@type": "ImageObject", url: image.url };
 
   /* 麵包屑。畫面上那一列（首頁 › 科別 › 標題）本來就在，這裡只是讓機器也讀得到。
-     第二層指向 #topics，和頁首「全部文章」的目的地一致 —— 篩選工具在那裡。 */
+
+     ⚠⚠ 第二層 2026-09-20 從 #topics 改成 /topics/<spec>/。
+       原本指的是首頁的錨點（和頁首「全部文章」同一個目的地，篩選工具在那裡），
+       但**七個科別著陸頁 2026-08-21 就上線了** —— 繼續指首頁等於在跟爬蟲說
+       「這一篇的上一層是首頁」，那七頁的 hub 地位建不起來。
+       SEO／GEO 體檢量出來：15 篇文章沒有任何一篇回指著陸頁，
+       七頁各只有 8 個站內入口（推導在 drafts/seo-geo-audit/REPORT.md 的 P1-1）。
+     ⚠ spec 沒給就退回舊行為，不要產生一個不存在的網址。 */
+  if (!spec) warn(`  ⚠ ${meta.slug} 的標籤「${meta.tag}」對不到科別，麵包屑退回 #topics`);
   const breadcrumb = {
     "@type": "BreadcrumbList",
     "@id": `${url}#breadcrumb`,
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "首頁", item: `${site}/` },
-      { "@type": "ListItem", position: 2, name: meta.tag, item: `${site}/#topics` },
+      { "@type": "ListItem", position: 2, name: meta.tag,
+        item: spec ? `${site}/topics/${spec}/` : `${site}/#topics` },
       { "@type": "ListItem", position: 3, name: meta.title },
     ],
   };

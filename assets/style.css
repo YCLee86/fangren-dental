@@ -582,6 +582,14 @@ a:hover { color: var(--accent); }
    圓角照 PALETTE 第六之二節的比例 0.384：框高 12×1.6 ＋ 2×1.92 ＝ 23.04px → 9px。
    （rem 認的是 html 的 16px，不是 body 的 17px，所以 .75rem 是 12px。）
    letter-spacing 會在最後一個字後面多留一格，右內距因此比左邊少 .07rem。 */
+/* ⚠⚠ 這一條是 2026-09-20 把科別那一格接到著陸頁時量出來的：
+   .crumbs a 的權重（0,2,0）贏過 .post-tag（0,1,0），所以 <span> 一換成 <a>，
+   那顆藥丸的白字會被染成 ink-soft（底色還在，看起來像褪色）。
+   ⚠ 顏色照 .post-tag 自己那一份 var(--on-fill)，不要寫死 #fff ——
+     夜間模式那一支會重算它。 */
+.crumbs a.post-tag { color: var(--on-fill); text-decoration: none; }
+.crumbs a.post-tag:hover { color: var(--on-fill); text-decoration: none; filter: brightness(1.08); }
+
 .post-tag {
   display: inline-block;
   font-size: .75rem; line-height: 1.6; letter-spacing: .08em;

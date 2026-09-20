@@ -129,6 +129,7 @@ r.dataset.theme=s;})();</script>
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="628">
 <meta property="og:image:alt" content="明亮的診間裡，矯正專科醫師站在一圈浮空的藍色螢幕之間，戴著藍色手套、指尖發亮，正把主螢幕上牙弓裡一顆歪掉的牙移回它的位置；旁邊幾張小螢幕畫著牙齒上的矯正器與弓線，坐在一旁的中年男性抬起手指著那顆牙，後方的助理在整理另一組螢幕。">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1618,7 +1619,7 @@ section + section { border-top: 1px solid var(--rule); }
 /* 分隔線要通到底、內容仍然對齊版心 —— 所以線畫在 section 上，
    內距交給裡面的 .shell。 */
 .sec-head { margin-bottom: 1.5rem; }
-.sec-head h2 { margin: 0; font-size: 1.35rem; line-height: 1.5; letter-spacing: .02em; }
+.sec-head :is(h2, .sec-h) { margin: 0; font-size: 1.35rem; line-height: 1.5; letter-spacing: .02em; }
 html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
 /* 主題與科別。每一顆是真的 <button> —— 按下去會同時篩下面的文章與醫師，不是裝飾。
@@ -3015,7 +3016,7 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 
   /* ---- 內文區：字級與間距收一階 ------------------------------------- */
   .sec-head { margin-bottom: 1.1rem; }
-  .sec-head h2 { font-size: 1.12rem; }
+  .sec-head :is(h2, .sec-h) { font-size: 1.12rem; }
   .chips { gap: .45rem; }
   /* 搜尋框自己一列。font-size 一定要 16px 以上，
      不然 iOS Safari 一聚焦就會把整頁放大。 */
@@ -4991,7 +4992,7 @@ body[data-topic] #topics { padding-top: 1rem; }
   display: flex; align-items: center; justify-content: space-between;
   gap: .8rem 1rem; flex-wrap: nowrap;
 }
-[data-topic] #topics .sec-head h2 { flex: 0 0 auto; }
+[data-topic] #topics .sec-head :is(h2, .sec-h) { flex: 0 0 auto; }
 [data-topic] #topics .sec-head .topic-search { flex: 0 1 10rem; min-width: 0; margin-top: 0; }
 
 /* chips 從 <button> 換成 <a>（爬蟲點不下去按鈕，連結才有網址）。
@@ -5362,6 +5363,40 @@ body[data-topic] #topics { padding-top: 1rem; }
 /* 收尾那一句是「我們」，回到墨色 —— 和上面那句回應同一個聲音。 */
 .tp-close { margin: .35rem 0 0; font-size: 1rem; line-height: var(--tp-lh); color: var(--ink); }
 
+/* ===== 著陸頁的問答與流程（2026-09-20 SEO／GEO 體檢 P1-2）==================
+   三個處境改成 dl（三個 dt 共用一個 dd）、五步流程改成 ol、小標改成真的 h2，
+   並且把「主題與科別」那顆 h2 在著陸頁降成 <p class="sec-h">，
+   讓那一科的 h1 變成頁面的第一個標題（原本大綱是 h2 -> h1 -> h3）。
+   **文案一個字都沒有改，改的只有標記。**
+
+   為什麼：段落級的檢索（AI Overviews、AI Mode 與各家 LLM 抓的是段落不是整頁）
+   靠標題定界。原本那一塊整個沒有標題，而它正是七頁唯一不與首頁重複的內容
+   （重疊 68~77%，獨有只有 200~350 字），也正是最該被引用的兩種形狀：
+   病人真的會問的問題，和一條有順序的流程。推導在 drafts/seo-geo-audit/REPORT.md。
+
+   下面這幾條的唯一目的是**讓畫面完全不變** —— dl／dd／ol／h2 都帶著瀏覽器的
+   預設邊界與字級，不歸零就會位移。改完在 390x844 用 Chromium 逐節點量過：
+   35 個文字節點的位置、字級、粗細、顏色與改之前完全相同。 */
+.tp-cases { margin: 0; padding: 0; }
+ul.tp-cases { list-style: none; }
+.tp-cases dt, .tp-cases li { margin: 0 0 .2rem; }
+.tp-cases dd { margin-inline-start: 0; }
+.tp-intro dd.tp-reply { margin: .28rem 0 .62rem; }
+/* 原本 .tp-reply:last-of-type 比的是「同一層最後一個 p」；換成 dd 之後
+   每個 dl 各只有一個 dd、每一個都會是 last-of-type，所以錨要改釘在 dl 上。
+   ⚠ 兒牙那一科有兩組（groups），不改這一條它兩組的下緣都會縮。 */
+.tp-intro dl.tp-cases:last-of-type dd.tp-reply { margin-bottom: .2rem; }
+.tp-steps { margin: 0; padding: 0; list-style: none; }
+.tp-steps li { margin: 0 0 .1rem; }
+/* h2 自己帶 1.5em 的字級，這一行本來是 p，要釘回去。
+   ⚠ **只釘 font-size，不要連 line-height 一起釘成 var(--tp-lh)** ——
+     那個 p 的行高是繼承 body 的，釘錯整塊流程會往上跑 2px。 */
+h2.tp-first-h { font-size: 1rem; line-height: inherit; }
+/* h2 的粗體來自瀏覽器預設值，不是 .sec-head 那條規則給的 ——
+   降成 <p class="sec-h"> 之後 font-weight 會從 700 掉到 400（位置完全沒動，
+   只有粗細，而且不報錯）。 */
+.sec-head .sec-h { font-weight: 700; }
+
 /* 3-3「第一次來，大概是這樣」。
    ⚠ 刻意**不做成卡片**：加了框就變成一張表單／FAQ，讀起來是流程說明；
      這裡要的是把話接著講下去，所以就是接在開場後面的兩段。
@@ -5718,7 +5753,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
   <section id="topics">
     <div class="shell">
       <div class="sec-head">
-        <h2>主題與科別</h2>
+        <p class="sec-h">主題與科別</p>
         <div class="topic-search">
           <label class="sr-only" for="q">搜尋文章與醫師</label>
           <input id="q" type="search" placeholder="搜尋文章與醫師" autocomplete="off" spellcheck="false">
@@ -5938,18 +5973,22 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
       <div class="tp-intro">
         <h1>齒顎矯正</h1>
         <p class="tp-count"><a href="#doctors"><span class="tp-n">2 位</span><span class="tp-t">醫師</span></a><span class="tp-dot" aria-hidden="true">・</span><a href="#articles"><span class="tp-n">2 篇</span><span class="tp-t">文章</span></a></p>
-        <p class="tp-case">笑起來總想把嘴閉上，想弄很久了。</p>
-        <p class="tp-case">矯正過一次，後來又跑掉了。</p>
-        <p class="tp-case">年紀不小了，現在弄還來得及嗎？</p>
-        <p class="tp-reply"><strong>排整齊只是一半</strong> —— 咬得不對，拆掉之後很容易又跑回去。</p>
+        <dl class="tp-cases">
+          <dt class="tp-case">笑起來總想把嘴閉上，想弄很久了。</dt>
+          <dt class="tp-case">矯正過一次，後來又跑掉了。</dt>
+          <dt class="tp-case">年紀不小了，現在弄還來得及嗎？</dt>
+          <dd class="tp-reply"><strong>排整齊只是一半</strong> —— 咬得不對，拆掉之後很容易又跑回去。</dd>
+        </dl>
 
         <div class="tp-first">
-          <p class="tp-first-h">矯正專科醫師在看的，是這幾件</p>
-          <p class="tp-step"><b>咬合</b>上下咬得對不對，決定做完穩不穩。</p>
-          <p class="tp-step"><b>骨頭</b>上下顎的位置，也要一起看。</p>
-          <p class="tp-step"><b>拔不拔</b>拍照、照 X 光看過，才知道要不要。</p>
-          <p class="tp-step"><b>難的</b>不對稱拔牙、牙沒長出來，都會評估。</p>
-          <p class="tp-step"><b>要多久</b>每個人不一樣，照順序做到好。</p>
+          <h2 class="tp-first-h">矯正專科醫師在看的，是這幾件</h2>
+          <ol class="tp-steps">
+            <li class="tp-step"><b>咬合</b>上下咬得對不對，決定做完穩不穩。</li>
+            <li class="tp-step"><b>骨頭</b>上下顎的位置，也要一起看。</li>
+            <li class="tp-step"><b>拔不拔</b>拍照、照 X 光看過，才知道要不要。</li>
+            <li class="tp-step"><b>難的</b>不對稱拔牙、牙沒長出來，都會評估。</li>
+            <li class="tp-step"><b>要多久</b>每個人不一樣，照順序做到好。</li>
+          </ol>
           <p class="tp-close">查到的不妨帶來問問，好處壞處應該都要弄清楚。</p>
         </div>
       </div>

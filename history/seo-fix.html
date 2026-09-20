@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>seo-fix｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>seo-fix — 著陸頁的標記結構、文章的麵包屑與引用版位</h1>
+<p class="meta">
+  2026-09-20 開、當天定案上線（①②；③ 等網址）<br>
+  原網址 <code>/preview/seo-fix-topic/</code>、<code>/preview/seo-fix-post/</code>（已刪除 2026-09-20）<br>
+  整頁還原：<code>git show cc76f6c8:preview/seo-fix-topic/index.html</code>、<code>git show cc76f6c8:preview/seo-fix-post/index.html</code><br>
+  產生器 <code>tools/seo-fix-preview.mjs</code>（一次性，定案時一併刪掉）<br>
+  依據：<code>drafts/seo-geo-audit/REPORT.md</code>（SEO／GEO 體檢，76/100）
+</p>
+
+<h2>起因</h2>
+<p>使用者：「根據最新的 SEO/GEO 規則更新你對 SEO/GEO 的了解　然後根據這個了解　設定 100 分評分表
+去檢查我的網站和頁面　出報告給我」。體檢量出來 76/100，逐頁平均 73：<strong>首頁 89、文章 78、
+科別著陸頁 59</strong>。落差集中在七個著陸頁 —— 它們是 2026-08-21 專為 SEO 做的，卻是三組裡最低的。
+使用者看完報告：「①②③都做，先開提案頁給我看」，隔一輪定案<strong>標題層級 Ⓑ、科別那格 Ⓑ</strong>，
+③ 的網址他自己給。</p>
+
+<h2>① 文章與著陸頁之間，連結是單向的</h2>
+<p>量出來：著陸頁 → 文章有（每頁 1~4 篇），<strong>文章 → 著陸頁 15 篇全部是零</strong>。
+文章的內部連結只指向 <code>/</code>、<code>/#topics</code>、<code>/#doctors</code>、<code>/#clinic</code>
+與另外 5 篇文章。JSON-LD 的 <code>BreadcrumbList</code> 第 2 層指向
+<code>https://fangren.net/#topics</code>（首頁錨點）；畫面上那一格科別是
+<code>&lt;span class="post-tag" data-spec="perio"&gt;</code>，<strong>是 span 不是連結</strong>。</p>
+<p>⚠ <code>data-spec</code> 早就在那個 span 上了 —— 對應關係一直都知道，只是沒接起來。
+結果七個著陸頁各只有 8 個站內入口（首頁 1 ＋ 七頁互連 7），而且等於在跟爬蟲說
+「這一篇的上一層是首頁」。</p>
+<p>定案 <strong>Ⓑ：接到 <code>/topics/&lt;spec&gt;/</code>，文字維持文章標籤</strong>
+（Ⓒ 是改成科別名「牙周治療」，沒有選上 —— 那一格是文章的標籤不是目的地的標題）。</p>
+
+<h2>② 著陸頁：h1 排在 h2 後面，獨有內容整塊沒有標題</h2>
+<p>著陸頁是 <code>index.html</code> 的快照，所以首頁那顆
+<code>&lt;h2&gt;主題與科別&lt;/h2&gt;</code> 會排在這一科自己的 h1 前面，大綱長成 h2 → h1 → h3。
+而那一頁<strong>唯一不與首頁重複的內容</strong>（三個病人的問句、一句回應、五步流程）
+整塊沒有任何 h2／h3，全部是 <code>&lt;p class="tp-case"&gt;</code> 與
+<code>&lt;p class="tp-step"&gt;&lt;b&gt;檢查&lt;/b&gt;…</code>。</p>
+<pre>與首頁的文字重疊率（四字詞）      獨有的四字詞
+/topics/general/   77.0%              44
+/topics/kids/      76.8%              42
+/topics/prosth/    75.4%              35
+/topics/ortho/     75.2%              35
+/topics/surg/      71.6%              31
+/topics/perio/     69.7%              43
+/topics/endo/      68.1%              38</pre>
+<p>七頁各有 68~77% 的文字和首頁一樣，獨有的只有 200~350 個中文字，而且沒有標題可以
+讓段落級的檢索把它切成一段。那一塊正好是 AI 最會引用的兩種形狀（病人真的會問的問題、
+一條有順序的流程），現在卻是最抓不到的。</p>
+<p>定案 <strong>Ⓑ：把「主題與科別」降成 <code>&lt;p class="sec-h"&gt;</code></strong>（畫面完全不變），
+而不是 Ⓒ（把這一科的標題整塊搬到 chips 上面，會動到版面）。同時：</p>
+<pre>三個處境 ＋ 一句回應   →  &lt;dl class="tp-cases"&gt;，三個 &lt;dt&gt; 共用一個 &lt;dd&gt;
+沒有回應句的那三科     →  &lt;ul class="tp-cases"&gt;（只有 dt 沒有 dd 的 dl 不合法）
+五步流程               →  &lt;ol class="tp-steps"&gt;
+「從檢查到維護…」那一行 →  真的 &lt;h2 class="tp-first-h"&gt;
+七頁都缺的 twitter:card →  補上</pre>
+<p><strong>文案一個字都沒有改，改的只有標記</strong> —— 所以不必回 COPY.md 重審。</p>
+
+<h2>③ 外部權威引用（版位定了，網址還沒）</h2>
+<p>15 篇裡 14 篇沒有引用任何外部權威來源（只有 <code>aligner-simulation</code> 有
+PubMed／NCBI／AJODO，那六條是 2026-09-20 稍早使用者自己給的）。B4 平均 0.18/4，是全表最低。</p>
+<p>⚠⚠ <strong>這一輪沒有補網址</strong>：雲端容器連不到 <code>nhi.gov.tw</code>、
+<code>cda.org.tw</code>、<code>taop.org.tw</code> 與 <code>pubmed</code>
+（<code>curl</code> 回 000、WebFetch 回 EGRESS_BLOCKED）。沒查證過的網址不可以寫進
+醫療網站 —— 猜一個等於把讀者送到一個不知道是什麼的地方。同
+<code>CLAUDE.md</code> 第十節那個 Wikidata <code>sameAs</code> 的處理方式：
+<strong>使用者自己給連結</strong>。提案頁上那兩個版位因此是沒有 href 的、標著「網址待查證」。</p>
+
+<h2>量出來的 —— 改的只有標記，畫面一個像素都沒動</h2>
+<p>用 Chromium ＋ CDP 在 <strong>390×844 與 1280</strong> 兩個寬度，
+對每一個文字節點量 <code>Range.getBoundingClientRect()</code> 與 computed style
+（位置、寬高、字級、粗細、顏色），拿改動前的版本當基準逐項比對：</p>
+<pre>/topics/endo/     ✅ 逐節點相同（35 個）
+/topics/general/  ✅ 逐節點相同（39 個）
+/topics/kids/     ✅ 逐節點相同（41 個）
+/topics/ortho/    ✅ 逐節點相同（34 個）
+/topics/perio/    ✅ 逐節點相同（35 個）
+/topics/prosth/   ✅ 逐節點相同（35 個）
+/topics/surg/     ✅ 逐節點相同（32 個）
+文章的麵包屑        ✅ 逐節點相同
+麵包屑那顆藥丸      白天與夜間都是 #fff on rgb(49,125,120)，對比 4.84，位置 0 位移</pre>
+
+<h2>⚠⚠ 四件只有量才看得出來的事（都不報錯、畫面也正常）</h2>
+<pre>・h2 的粗體是**瀏覽器的預設值**，不是 .sec-head 那條規則給的。
+  降成 &lt;p class="sec-h"&gt; 之後 font-weight 從 700 掉到 400 ——
+  位置一個像素都不動，只有粗細變了。要補 .sec-head .sec-h { font-weight: 700 }。
+
+・.tp-first-h 那個 p 的行高是**繼承 body 的，不是 --tp-lh**。
+  換成 h2 時若順手把 line-height 釘成 var(--tp-lh)，整塊流程往上跑 2px。
+  只釘 font-size 就對了。
+
+・.crumbs a 的權重（0,2,0）**贏過** .post-tag（0,1,0）。
+  &lt;span&gt; 一換成 &lt;a&gt;，那顆藥丸的白字會被染成 ink-soft（底色還在，像褪色）。
+  要補 .crumbs a.post-tag { color: var(--on-fill); text-decoration: none }
+  —— 顏色照 .post-tag 自己那一份 var(--on-fill)，不要寫死 #fff（夜間那一支會重算它）。
+
+・.tp-reply:last-of-type 比的是「同一層最後一個 p」；換成 dd 之後每個 dl 各只有
+  一個 dd、每一個都會是 last-of-type，所以錨要改釘在 dl 上
+  （.tp-intro dl.tp-cases:last-of-type dd.tp-reply）。
+  ⚠ 兒牙那一科有兩組 groups，不改這一條它兩組的下緣都會縮。</pre>
+
+<h2>⚠ 做提案頁本身踩到的四個坑（同樣都不報錯）</h2>
+<pre>・產生器的註解裡寫了 preview/seo-fix-*&#47;，那個註解結束記號把註解提早關掉
+  （CLAUDE.md 第九節第 1 條，這一站的老坑）。
+
+・引用版位第一版用 indexOf 掃整頁，兩個錨點分別命中了
+  ① &lt;head&gt; 裡 og:description 的**屬性值**（整個 meta 被塞進一個 span）
+  ② 底部「重點整理」的 &lt;dd&gt;（那裡的句子和內文很像）
+  —— 第九節第 4 條「掃整頁等於沒掃」。要先切出內文那一段。
+
+・錨點寫成純文字「而這一步不可逆」，但內文是「而這一步&lt;strong&gt;不可逆&lt;/strong&gt;」。
+  錨點要連標籤一起寫死。
+
+・量測面板用到了 apply() 的區域變數 label，整個 measure() 丟 ReferenceError，
+  面板變成空的一條 —— 畫面完全正常，只有量它的高度（124px vs 242px）才看得出來。</pre>
+
+<h2>⚠ 15 篇的日期</h2>
+<p>那一行麵包屑在 <code>&lt;main&gt;</code> 裡面（量過：<code>&lt;main&gt;</code> 在第 10870 字元、
+<code>crumbs</code> 在 10961），所以 15 篇的內容雜湊全部變了、<code>updated</code> 一起跳成當天。
+照 <code>CLAUDE.md</code> 第五節的判準，這一種是「對讀者不算內容變了」（只是把科別接成連結），
+所以 build 之後把 <code>tools/build-manifest.json</code> 那 15 筆的 <code>updated</code> 改回原值、
+再跑一次 build。<strong>雜湊留新的，日期還原</strong>，驗完 15 篇一個都沒有跳。</p>
+
+<h2>改到的檔案</h2>
+<pre>tools/schema.mjs      postGraph 收 spec，麵包屑第 2 層 → /topics/&lt;spec&gt;/
+tools/build.mjs       SPEC 那張表搬到文章迴圈**前面**（const 有暫時性死區，
+                      留在原地會在 postGraph 那一行炸 ReferenceError）；傳 spec 進去
+posts/*/index.html    15 篇：&lt;span class="post-tag"&gt; → &lt;a class="post-tag" href="/topics/…/"&gt;
+assets/style.css      .crumbs a.post-tag 的顏色與底線
+index.html            .sec-head h2 → .sec-head :is(h2, .sec-h)（**四條規則一起改**，
+                      兩個中斷點各一份 ＋ 兩條 [data-topic] 的版型規則）；
+                      著陸頁新標記的樣式（.tp-cases／.tp-steps／h2.tp-first-h／.sec-h）
+tools/topics.mjs      introBlock 的標記、主題與科別降級、twitter:card
+
+跟著重跑的：node tools/topics.mjs → node tools/build.mjs（還原日期後再跑一次）
+night-mode --check 全部一致（沒有動到任何顏色）</pre>
+
+<h2>還沒做的</h2>
+<pre>③ 的網址（使用者自己給）。最該補的六篇與各自該引的那一類，
+   寫在 drafts/seo-geo-audit/REPORT.md 的 P2-1。
+其餘 P2／P3（AI 爬蟲政策、首頁與著陸頁的 175KB 內嵌 CSS/JS、
+   文章 HERO 的 fetchpriority、三個 description 長度、三篇沒有表格的文章、
+   幾個抓出來看不懂的標題）一樣在那一份報告裡。</pre>
+
+<footer><a href="/history/">← 改版紀錄</a></footer>
+
+</div></body>
+</html>

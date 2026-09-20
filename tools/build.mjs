@@ -256,6 +256,19 @@ const manifest = fs.existsSync(MANIFEST_FILE)
   ? JSON.parse(read(MANIFEST_FILE))
   : {};
 
+/* 標籤 → 科別代碼。首頁的「主題與科別」用 data-spec 同時篩文章與醫師，
+   三個地方（chip、文章標籤、醫師藥丸）共用同一組代碼，同一科才會是同一個色。
+   新增標籤時要一起加進來，不然那篇文章不會被任何一顆 chip 篩到。 */
+const SPEC = {
+  "一般牙科": "general", "定期檢查": "general", "日常保健": "general",
+  "牙周照護": "perio",   "牙周治療": "perio",   "植牙": "perio",
+  "兒童牙科": "kids",
+  "齒顎矯正": "ortho",
+  "缺牙重建": "prosth",  "贋復假牙": "prosth",
+  "口腔外科": "surg",
+  "顯微根管": "endo",
+};
+
 const nextManifest = {};
 const posts = [];
 const changed = [];
@@ -371,7 +384,11 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
       metaTag("property", "article:published_time", meta.published),
       metaTag("property", "article:modified_time", updated),
       metaTag("property", "article:section", meta.tag),
-      ldScript(postGraph({ site: siteUrl, clinic, meta: { ...meta, updated }, image })),
+      /* spec 是麵包屑第二層要指到哪一個著陸頁用的（2026-09-20）。
+         ⚠ SPEC 那張表因此搬到這個迴圈**前面**了 —— const 有暫時性死區，
+           留在原地（第 513 行附近）會在這一行炸 ReferenceError。 */
+      ldScript(postGraph({ site: siteUrl, clinic, meta: { ...meta, updated }, image,
+                          spec: SPEC[meta.tag] })),
     ].join("\n");
 
     html = injectSeo(html, seo);
@@ -510,18 +527,6 @@ const injectRelated = (html, block) => {
   return html.replace(/<\/main>/i, `</main>\n\n${block}`);
 };
 
-/* 標籤 → 科別代碼。首頁的「主題與科別」用 data-spec 同時篩文章與醫師，
-   三個地方（chip、文章標籤、醫師藥丸）共用同一組代碼，同一科才會是同一個色。
-   新增標籤時要一起加進來，不然那篇文章不會被任何一顆 chip 篩到。 */
-const SPEC = {
-  "一般牙科": "general", "定期檢查": "general", "日常保健": "general",
-  "牙周照護": "perio",   "牙周治療": "perio",   "植牙": "perio",
-  "兒童牙科": "kids",
-  "齒顎矯正": "ortho",
-  "缺牙重建": "prosth",  "贋復假牙": "prosth",
-  "口腔外科": "surg",
-  "顯微根管": "endo",
-};
 
 /* ⚠ 那顆分隔點 2026-08-27 從全形的「・」換成半形的「·」。
    起因是使用者在 iPad 上：「日期跟瀏覽次數中間間隔還大的，這邊空空看起來怪怪的。」

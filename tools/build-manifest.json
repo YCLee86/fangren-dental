@@ -1,66 +1,66 @@
 {
   "aligner-simulation": {
-    "hash": "4b7ab3a3cf89019d",
+    "hash": "32e28e4f6bfc4e1f",
     "updated": "2026-09-19"
   },
   "bass-brushing": {
-    "hash": "ccea2e965868137b",
+    "hash": "3fce22e81c09cec2",
     "updated": "2026-08-18"
   },
   "bioceramic": {
-    "hash": "9ea72a10ae712f4e",
+    "hash": "d8b09b35c15c1ec6",
     "updated": "2026-08-28"
   },
   "crown-materials": {
-    "hash": "72cf7054cc1a9682",
+    "hash": "30e29e3c9bad4e33",
     "updated": "2026-08-27"
   },
   "gum-bleeding": {
-    "hash": "72b7f02f4ef0e096",
+    "hash": "4f229508f03ccedf",
     "updated": "2026-08-18"
   },
   "kids-arch-expansion": {
-    "hash": "4d90241be3426ba5",
+    "hash": "68b8c3ca453a0c9c",
     "updated": "2026-08-18"
   },
   "kids-crown": {
-    "hash": "de8c2735c6732009",
+    "hash": "cea602bdaaf6b007",
     "updated": "2026-09-07"
   },
   "kids-first-visit": {
-    "hash": "bd52c98154389927",
+    "hash": "7f2d8d5523e9dfce",
     "updated": "2026-08-18"
   },
   "kids-sedation": {
-    "hash": "7bfedaa8ee2e7b27",
+    "hash": "41d15d3fb179fcaf",
     "updated": "2026-09-19"
   },
   "missing-tooth": {
-    "hash": "d26a8f8545344028",
+    "hash": "67f1caa93e81438e",
     "updated": "2026-08-18"
   },
   "orthodontics": {
-    "hash": "2e514d58835c5e86",
+    "hash": "d15c8a111700ecf9",
     "updated": "2026-08-20"
   },
   "perio-laser": {
-    "hash": "d05478b3d139feee",
+    "hash": "24c5dddb74f0b9fb",
     "updated": "2026-08-18"
   },
   "regular-checkup": {
-    "hash": "ebbd362792f0da43",
+    "hash": "cc85eb79fb036385",
     "updated": "2026-08-18"
   },
   "three-month-recall": {
-    "hash": "a21a8bd7357c6363",
+    "hash": "70db56251dbef7de",
     "updated": "2026-09-05"
   },
   "wisdom-tooth": {
-    "hash": "14ee6fec7362ae82",
+    "hash": "3682ec0aeaf9d1b2",
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "2cade9ab6bdc2c1d",
+    "hash": "f42df701386b3725",
     "updated": "2026-09-20"
   }
 }
