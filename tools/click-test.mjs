@@ -286,7 +286,13 @@ console.log("\n【九】文章頁");
 await page.goto(base + "/posts/missing-tooth/", { waitUntil: "load" });
 await page.waitForTimeout(200);
 await one('.post-tag', "tag:prosth", "post:missing-tooth", "文章上的科別標記");
-await one('.rel-card a', "rel:crown-materials", "post:missing-tooth", "延伸閱讀");
+/* ⚠ 延伸閱讀那三張卡是 build 產的，**發一篇新文章就會換人**（2026-09-21
+   〈植牙能用多久〉上線那天中了：第一張從 crown-materials 變成 implant-lifespan）。
+   所以這一項不寫死是哪一篇，改成現場讀那個連結指到哪裡、再要求代碼對得上 ——
+   要驗的本來就是「代碼是不是從那個 href 推出來的」，不是「那一格現在放誰」。 */
+const relSlug = await page.evaluate(() =>
+  new URL(document.querySelector(".rel-card a").href).pathname.split("/").filter(Boolean).pop());
+await one('.rel-card a', "rel:" + relSlug, "post:missing-tooth", `延伸閱讀（現在第一張是 ${relSlug}）`);
 await one('.post-nav a.btn-ghost', "prev:kids-first-visit", "post:missing-tooth", "上一篇");
 await one('.post-nav a.btn:not(.btn-ghost)', "next:regular-checkup", "post:missing-tooth", "下一篇");
 await one('.foot-tel a', "tel", "post:missing-tooth", "文章頁尾的電話");

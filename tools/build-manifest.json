@@ -19,6 +19,10 @@
     "hash": "ab922a2b1e0909b0",
     "updated": "2026-09-20"
   },
+  "implant-lifespan": {
+    "hash": "6e0b173e84784084",
+    "updated": "2026-09-21"
+  },
   "kids-arch-expansion": {
     "hash": "e4d0304897afe9d0",
     "updated": "2026-09-20"
@@ -64,7 +68,7 @@
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "072ae3dab47867b3",
-    "updated": "2026-09-20"
+    "hash": "30b4734f85b690b2",
+    "updated": "2026-09-21"
   }
 }

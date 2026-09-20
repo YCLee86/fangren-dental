@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>implant-lifespan｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  h3 { font-size: .9rem; margin: 1.4rem 0 .4rem; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .86rem; margin: .6rem 0; }
+  th, td { border-bottom: 1px solid var(--rule); padding: .35rem .3rem; text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; white-space: normal; }
+  .tw { overflow-x: auto; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>implant-lifespan — 〈植牙能用多久：世界第一顆植牙用了四十年〉</h1>
+<p class="meta">
+  〔文章草稿的預覽，不是設計提案〕<code>preview/implant-lifespan/</code><br>
+  2026-09-20 當天開、2026-09-21 定案上線。成品是 <code>/posts/implant-lifespan/</code>（缺牙重建，站上第十七篇）。
+</p>
+
+<h2>起點</h2>
+<p>使用者貼進來一份自己整理好的稿（植牙能用多久，從 Brånemark 的前兩位患者講到五個失敗原因），
+交代「把這篇整理成適合在診所網站文章的樣子」。所以這一輪的工作不是寫一篇新的，
+是<strong>把一份已經有骨架的稿改寫成這個站的文體</strong>，並且逐條查證裡面的數字。</p>
+
+<h2>改寫時做的四件</h2>
+<ul>
+  <li><strong>文體</strong>（COPY.md 第十節）：語氣親近、用詞精確。原稿的「📄 文獻」清單
+      整批拿掉，換成<strong>內文裡的連結</strong>（同〈八成人有牙周病〉〈隱形矯正〉的做法）——
+      這一站的外連掛在句子上，不是學術體例。</li>
+  <li>補上「重點整理」五組問答與免責那一段（站上十六篇都有）。</li>
+  <li>兩張表（十年／二十年的存活率、早期／晚期失敗），五個原因改成 h3 分段。</li>
+  <li>內文接到〈缺牙之後〉與〈八成人有牙周病〉。</li>
+</ul>
+
+<h2>⚠⚠ 查證：三處和原稿不一樣</h2>
+<div class="note">
+<p>出處逐條留在 <code>drafts/implant-lifespan/SOURCES.md</code>（每一列都是當天實際查到的頁面，不是憑印象）。</p>
+</div>
+<ul>
+  <li><strong>磨牙「2.2 至 4.7 倍」沒有採用</strong> —— 查到的兩份原文給的是
+      OR 3.83／4.72（Zhou 2016）與失敗率 13.0%／4.6%（Chrcanovic 2016），
+      下界 2.2 找不到對應的出處。內文改成「約四倍」＋把兩組真實數字寫出來。</li>
+  <li><strong>「從 1967 算到今天將近六十年」沒有採用</strong> —— 公開紀錄停在四十八年那一篇報導，
+      再往後推是我們自己算的。改成「紀錄上至少四十八年」。
+      ⚠ 這一條的通則：<strong>個案的年數只能引用到「有人報導過的那一年」為止</strong>。</li>
+  <li>原稿引的兩篇 2025 年文獻查不到可確認的頁面，沒有採用（它們講的事前面幾篇已經涵蓋）。</li>
+</ul>
+<p>⚠ 雲端 session 的網路政策擋掉 pubmed／doi.org／crossref（curl 回 000、WebFetch 回 EGRESS_BLOCKED），
+<strong>但 WebSearch 可用、wikidata.org 也連得到</strong>。所以：文獻的網址只用搜尋結果裡真的出現過的那幾個，
+<code>about</code> 的三個 Q 編號是當天真的查過的（人工植牙 Q68892328、植體周圍炎 Q601168、磨牙症 Q994942）。
+這是第一次在雲端 session 裡把 Wikidata 補齊 —— CLAUDE.md 第十節第 3 項那句「雲端連不到 wikidata」
+<strong>已經不成立了，但 pubmed 仍然連不到</strong>。</p>
+
+<h2>使用者逐條改的三件（都在收尾）</h2>
+<table>
+  <tr><th>原本</th><th>改成</th></tr>
+  <tr><td>小標「世界第一顆植牙，陪了他四十年」</td><td>「<strong>用了</strong>四十年」</td></tr>
+  <tr><td>結語「1965 年那四顆陪了患者四十年」</td><td>同上，順帶把 description 與 excerpt 那兩份一起換掉（站上不留兩種說法）</td></tr>
+  <tr><td>小標「那一般人呢：十年與二十年的數字」</td><td>「那一般人呢：<strong>10 年九成以上，20 年約八成</strong>」</td></tr>
+</table>
+<p>⚠ 中間那一版他先給的是「九成都可以用到 10 年、20 年」，我回報了 20 年插補後是 78%，
+他自己收成「10 年九成以上，20 年約八成」。<strong>把數字攤開給他看，比替他決定要保守多少有用。</strong></p>
+
+<h2>我自己抓到的一件</h2>
+<p>磨牙那兩句原本寫「咬合的設計與<strong>夜間的保護裝置</strong>要一起規劃」——
+<strong>站上從來沒有任何一頁提過咬合板</strong>，寫了就等於承諾一個不存在的服務（COPY.md 第十節那條紅線，
+〈拔智齒〉的「醫師開立的漱口水」踩過一模一樣的）。改成「要在規劃的時候就講出來」。</p>
+
+<h2>HERO：三輪，梗是使用者指定的</h2>
+<p>第一版我提的是三格（剛做好那一天／每天早上用牙間刷／多年後的回診），沒有出圖就被換掉了——
+使用者傳了三張時光機穿越時光隧道的截圖：「把上面的人物換成診所醫事人員　有的穿刷手服　有的加白袍
+和幾個一般民眾　青少年　青年　中年　老年（應該是坐著）一起搭乘。風格還是要網站一致的插畫風喔」。
+三份提示詞都留在 <code>drafts/implant-lifespan/</code>（<code>hero-prompt-a-three-panels.txt</code>、
+<code>hero-prompt-v1.txt</code>、<code>hero-prompt-v2.txt</code>、定稿 <code>hero-prompt.txt</code>）。</p>
+
+<h3>借梗的時候改掉的三件（通則在 ILLUSTRATION.md 第十三節）</h3>
+<ul>
+  <li><strong>車子整台換成診所自己的家具</strong>：治療燈的關節臂當車頭燈、移動式器械推車當操縱台、
+      <strong>一張診療椅當座位</strong>（老年那位坐在上面），只保留雪橇板與四顆圓球腳。
+      除了版權，更實際的理由是<strong>照抄原作的話，讀者第一眼讀到的是那部卡通</strong>。</li>
+  <li><strong>隧道不是深色霓虹漩渦</strong>（第一版）——站上的調性是高明度、紙色透出來。
+      ⚠ 第二輪使用者指定「再繽紛一點　深藍　紫　青綠　渲染的效果」，
+      <strong>B 類紅線第 5、6 條由他推翻</strong>（那兩條本來就是我推的）。
+      兩道護欄：<strong>「渲染」＝ 水彩暈染不是發光</strong>（blooms／backruns／紙紋，擋掉 neon 與數位模糊）、
+      <strong>深色只屬於隧道</strong>（外圈最深、中心最亮，車上那團人仍是全圖最亮的地方）。
+      連帶把鐘面改成奶油白、鐘框淡琥珀，不然深底上那些鐘會消失。
+      ⚠ 用的四支色<strong>全部是站上七科自己的色</strong>（贋復藍 #465885／#2a4677、口外紫 #784e84／#8e6299、牙周青綠 #2a6d69）——
+      「繽紛」不等於離開這個站的色盤。</li>
+  <li><strong>鐘面零數字</strong>（只有指針與刻度）。規則照第十四節那兩條附錄寫：
+      <strong>不綁數量</strong>（「每一個鐘面…不管有幾個」）、<strong>不要把「上面沒有字」寫成大寫的標籤片語</strong>
+      （評價那張的牌子上真的長出過 <code>STILL BLANK</code>）。</li>
+</ul>
+
+<h3>三輪各修了什麼</h3>
+<table>
+  <tr><th>輪</th><th>使用者</th><th>我自己抓到的</th></tr>
+  <tr><td>一</td><td>「蠻有趣的」＋加一組青年夫妻、刷手服顏色不一樣、隧道更繽紛</td>
+      <td>青年女性的頭髮被畫成淺棕（規則改成不綁對象）、中年那位嘴角往下（在診所場景會讀成對診所有意見）、甲板要加長讓八個人都踩得到</td></tr>
+  <tr><td>二</td><td>「蠻好的」＋旋轉的白色短弧要保留、上一版的長流動白線加回來</td>
+      <td>八項逐條對過都對了，所以這一輪只動白線與方向、其餘一字未改</td></tr>
+  <tr><td>三</td><td>「圖片好了　合上去　定案上線」</td><td>—</td></tr>
+</table>
+
+<h3>⚠⚠ 這一輪最值得記的兩件</h3>
+<ul>
+  <li><strong>那些旋轉的白色短弧是模型自己加的，提示詞裡從來沒有。</strong>
+      第二輪為了寫隧道的渲染，我把白線那一段擠成一句（第七節第 18 條又中一次），模型自己補了一堆
+      順著色帶弧度的短弧 —— 那正是使用者要留的「旋轉感」。
+      <strong>看到喜歡的東西就要立刻寫進提示詞，不能靠它自己記得。</strong>
+      定案的寫法是把白線拆成<strong>兩族</strong>：短弧（讓漩渦讀起來在轉）＋六到七條長的流動線（讓畫面讀起來在往前衝）。</li>
+  <li><strong>方向不可以寫「和頭髮同方向」</strong>（第十五節）。改成一句物理 ＋ 三處絕對方向：
+      車往右上那個亮的中心飛 → 風往左下 → 頭髮、白袍下襬、長白線<strong>三樣都寫「往畫面左下」</strong>。
+      ⚠ 順帶把「車子往哪飛」改成照第二版畫出來的那一種（往隧道深處），
+      它比我原本寫的「往左下飛」好：同時把「往前走」和「隧道深處」講完了。</li>
+</ul>
+
+<h2>上線那天做了什麼</h2>
+<ul>
+  <li><code>node tools/hero-resize.mjs</code>（原檔 2000×1116，16:9 一次過）→ <code>node tools/webp.mjs</code>（新寫 3 張）。</li>
+  <li>草稿從產生器搬進 <code>posts/implant-lifespan/index.html</code>，補 <code>hero</code>／<code>heroAlt</code>／
+      <code>about</code>／published，同層連結從 <code>../../posts/</code> 改回 <code>../</code>。</li>
+  <li><code>build.mjs</code> → <code>topics.mjs</code> → <code>build.mjs</code>。
+      ⚠ <strong>十六篇舊文的 <code>updated</code> 一個都沒有跳</strong>（延伸閱讀在 <code>&lt;main&gt;</code> 外面，不進雜湊）——
+      只有那三張卡換了人。</li>
+  <li>⚠ <strong><code>tools/click-test.mjs</code> 掛了一項</strong>：它寫死了「missing-tooth 的第一張延伸閱讀是 crown-materials」，
+      而新文章一上線那一格就換人。改成<strong>現場讀那個連結指到哪裡再要求代碼對得上</strong> ——
+      要驗的本來就是「代碼是不是從 href 推出來的」，不是「那一格現在放誰」。
+      <strong>通則：守門不要把 build 產物的內容寫死。</strong>
+      （92 項通過；<code>search-test.mjs</code> 51 項也全過。）</li>
+  <li>發布日期用 <strong>2026-09-21</strong>：容器是 UTC，但 <code>build.mjs</code> 的「今天」算的是台北時間，
+      推上去的當下台北已經是 21 號。published 和 updated 對齊，卡片與圖下那一行才不會差一天。</li>
+</ul>
+
+<h2>還沒做的</h2>
+<ul>
+  <li>沒有去 Google Search Console 要求索引（上線幾天再送）。</li>
+  <li>文獻的四個 doi.org／pubmed 連結<strong>容器連不出去，沒有真的點開過</strong> ——
+      請使用者在自己的手機上各點一次。</li>
+</ul>
+
+<footer>
+  完整的提案頁留在 git：<br>
+  <code>git show f64b2a25:preview/implant-lifespan/index.html</code>
+</footer>
+
+</div></body>
+</html>

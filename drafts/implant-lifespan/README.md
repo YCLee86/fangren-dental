@@ -1,25 +1,23 @@
-# 〈植牙能用多久〉—— 文章草稿（還沒上線）
+# 〈植牙能用多久〉—— ✅ 2026-09-21 定案上線
 
-- 預覽頁：`/preview/implant-lifespan/`（noindex，只給使用者在手機上讀）
-- 產生器：`node drafts/implant-lifespan/preview-gen.mjs`
-  （骨架抓 `posts/missing-tooth/index.html`，**內文就寫在那一支裡面**，改文字改它再重跑）
-- 出處：`SOURCES.md`（每個數字都對得上一篇查過的文獻，改數字前先看）
+成品：`/posts/implant-lifespan/`（缺牙重建 `prosth`，站上第十七篇）
+推導與逐輪紀錄：`/history/implant-lifespan.html`
+提案頁與產生器已刪（CLAUDE.md 第八節規則 3）——
+整頁還原：`git show f64b2a25:preview/implant-lifespan/index.html`
 
-來源是使用者 2026-09-20 貼進來的一份整理稿，這一版做的事：
-把它改寫成這個站的文體（COPY.md 第十節：語氣親近、用詞精確），
-把「📄 文獻」那種清單換成內文裡的連結（同〈八成人有牙周病〉〈隱形矯正〉的做法），
-補上「重點整理」與免責那一段，並逐條查證數字（三處和原稿不一樣，見 SOURCES.md）。
+這個資料夾留下來的是**日後還用得到的東西**：
 
-## 定案那天要做的事
+| 檔案 | 是什麼 |
+| --- | --- |
+| `SOURCES.md` | 文中每一個數字的出處（查過的頁面，不是憑印象）。**要改任何數字前先看這一份** |
+| `hero-prompt.md` | HERO 的設計判斷、版面尺寸、出圖檢查表 |
+| `hero-prompt.txt` | **定稿的提示詞**（第三輪）。⚠ 第七節第 19 條：定稿不留在 repo，下一輪就會被從零重寫 |
+| `hero-prompt-v1.txt`／`-v2.txt` | 第一、二輪（出過圖） |
+| `hero-prompt-a-three-panels.txt` | 最早那個三格的梗，沒有出圖就被換掉了 |
 
-1. `git mv` 內文進 `posts/implant-lifespan/index.html`（草稿在 `drafts/` 是刻意的，
-   放 `posts/` 會被 `tools/build.mjs` 掃到、直接出現在首頁）。
-2. `post-meta` 補三個欄位：`published`（上線日）、`hero`、`heroAlt`。
-3. HERO 插畫還沒畫 —— 先讀 ILLUSTRATION.md，圖是開場那一幕（兩位患者那一段）。
-   畫好之後 `tools/hero-resize.mjs` → `tools/webp.mjs`。
-4. `about` 的 `sameAs`：「人工植牙」已經有（Q68892328，抄自〈缺牙之後〉）；
-   「植體周圍炎」「磨牙症」還沒查 —— **要在有網路的電腦上查 Wikidata**
-   （雲端 session 連不到，Q 編號猜錯會把文章綁到別的病上）。
-5. 文末導覽的「上一篇」改成當時真正的上一篇。
-6. 跑 `node tools/build.mjs`，然後把 `preview/implant-lifespan/` 與這個資料夾的
-   產生器刪掉（`SOURCES.md` 留著）。
+HERO 的成品在 `assets/hero-implant-lifespan-photo-{800,1600,2000}.jpg`（＋同名 `.webp`）。
+換圖要跑 `node tools/hero-resize.mjs <原檔> implant-lifespan-photo` 再跑 `node tools/webp.mjs`。
+
+⚠ **還沒做的兩件**（都不影響上線）：
+Google Search Console 的「要求建立索引」（上線幾天再送）；
+文中四個 doi.org／pubmed 連結**容器連不出去、沒有真的點開過**，請在手機上各點一次。
