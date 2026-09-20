@@ -354,6 +354,11 @@ src/
                         ⚠⚠ 存的只有「字串、來源、搜到幾筆、時間」——**沒有 IP、沒有
                         User-Agent、沒有 cookie**。理由在它的檔頭與 DECISIONS.md 那一列，
                         **不要順手加**。資料表它會自己建，不必跑 wrangler
+  click.js              **點擊紀錄**的寫入與查詢（2026-09-20）。被 worker.js 匯入。
+                        ⚠⚠ 存的只有「按了哪一顆、在哪一頁、什麼時候」——**沒有 IP、沒有
+                        User-Agent、沒有 cookie，連這次瀏覽的流水號都沒有**（有流水號就能
+                        把動作串成軌跡）。⚠ 代碼是白名單，站上多一顆可以按的東西時，
+                        這裡與 assets/click-log.js 的規則表要一起加
   allowed-slugs.js      白名單，由 build 產生，勿手改
 assets/
   style.css             全站樣式
@@ -363,6 +368,16 @@ assets/
                         style.css 各一份）。三種頁面都載（首頁／文章／著陸頁）。
                         ⚠⚠ **擋不住有心的人，原理上也做不到** —— 不要再往這個方向加碼，
                         理由與落選的做法寫在它的檔頭與 DECISIONS.md 那一列
+  post-titles.json      **代碼 → 文章中文標題**（2026-09-20，由 build 產生，勿手改）。
+                        只有 /admin/search/ 的點擊報告會載它（站上任何一頁都不載）——
+                        代碼裡是 slug，three-month-recall 與 regular-checkup 看字面分不出來
+  click-log.js          **點擊紀錄**的前端那一側（2026-09-20）。事件代理，**站上的標記
+                        一個字都沒有改** —— 代碼從既有的 class 與 href 推（不加 data-click
+                        是因為文章頁的連結在 <main> 裡，動到就會讓十六篇的「最後更新」跳成當天）。
+                        ⚠⚠ 掛在**捕獲階段**：地圖那三顆的 handler 有 stopPropagation，
+                        寫成冒泡的話那三顆一筆都記不到而畫面完全正常。
+                        ⚠ 三種頁面都載（首頁／文章／著陸頁），改完 index.html 要重跑 topics.mjs。
+                        ⚠ 版面改了 class 那一顆就靜靜地不再被記 —— 改完跑 tools/click-test.mjs
   search-log.js         **搜尋紀錄**的前端那一側（2026-09-20）。只在「這次搜尋結束」
                         時送一筆（Enter／失焦／離開頁面／停手 8 秒），不是每按一鍵送一次。
                         ⚠ 首頁與七科頁共用它（七科頁的快照由 topics.mjs 產生，
@@ -405,7 +420,8 @@ topics/<spec>/index.html 科別著陸頁（七科，2026-08-21 上線）。**由
                         版型改 tools/topics.mjs，改完重跑產生器。已進版控
 history/<name>.html     改版紀錄（原提案頁的推導文字，定案後只留這個。見第八節）
 history/index.html      改版紀錄的目錄
-admin/search/index.html **搜尋紀錄報告**（2026-09-20，網址 /admin/search/）。
+admin/search/index.html **搜尋紀錄 ＋ 點擊紀錄報告**（2026-09-20，網址 /admin/search/）。
+                        兩份在同一頁，上面一排分頁切換，共用同一把密碼與同一排「期間」。
                         ⚠ 這一頁**本身沒有任何資料**，只有一個密碼框——資料要帶
                         Cloudflare 加密變數 REPORT_KEY 跟 /api/search-report 要。
                         ⚠ 刻意**不寫進 robots.txt**，理由在 worker.js 的 ADMIN_PREFIX
@@ -497,6 +513,10 @@ tools/
                         「再加一位要做什麼」寫在它的檔頭，推導在 /history/doctor-photo.html。
                         ⚠ 原檔在 drafts/doctor-photo/src/，不進 _site。
                         ⚠ 只有換圖才要跑，npm run build 不會呼叫它；--check 只比對
+  click-test.mjs        **點擊紀錄那條線的守門**（2026-09-20）。89 項，零依賴（做法同
+                        search-test.mjs）。會真的在瀏覽器裡把每一顆按一次，對不上就擋下來。
+                        ⚠ 改過 src/click.js、assets/click-log.js、admin/search/，
+                        **或改過站上任何一顆可以按的東西的 class**，都要跑它
   search-test.mjs       **搜尋紀錄那條線的守門**（2026-09-20）。47 項，零依賴
                         （資料庫用 node 內建的 node:sqlite 假裝成 D1，瀏覽器用站上
                         既有的那顆 Chromium）。`--site` 改對 _site/ 跑、`--shot` 順便截圖。
@@ -535,6 +555,7 @@ tools/
   路邊停車格，由 `drafts/door-notice/map-bays.mjs` 從現地清查產生）。
   ⚠ 它**不是** build 產物 —— `node tools/build.mjs` 不會重跑它
 - `src/allowed-slugs.js`
+- `assets/post-titles.json`（十六篇的「slug → 標題」，只給 `/admin/search/` 的點擊報告用）
 - `tools/build-manifest.json`
 - `assets/icon-*.png`（四張主畫面圖示，由 `tools/app-icons.mjs` 從 `assets/icon.svg` 算出來。
   要改就改 `icon.svg` 再重跑，`npm run build` 不會呼叫它）

@@ -47,3 +47,35 @@ CREATE TABLE IF NOT EXISTS search_quota (
   day TEXT    PRIMARY KEY,
   n   INTEGER NOT NULL DEFAULT 0
 );
+
+-- =============================================================================
+-- 點擊紀錄（2026-09-20）
+-- -----------------------------------------------------------------------------
+-- ⚠ 同上，**不必手動執行**：src/click.js 會在第一次用到的時候自己建。
+--    寫在這裡是為了讓人一眼看得到資料長什麼樣，兩邊的定義必須一致。
+--
+-- 存的只有「按了哪一顆、在哪一頁、什麼時候」。
+-- **沒有 IP、沒有 User-Agent、沒有 cookie，連「這次瀏覽的流水號」都沒有**——
+-- 有流水號就能把同一個人的動作串成軌跡（看了植牙那篇 → 打電話），
+-- 那和一張點擊次數表是兩種東西。要加之前先想清楚個資法那條線。
+--
+-- code  是白名單裡的代碼（src/click.js 的 FLAT 與 normCode，例如 tel、map:pin、
+--       card:<slug>、chip:<spec>、theme:dark）。外面塞得進來的假代碼會被丟掉。
+-- scope 是「從哪一頁按的」：home／topic:<spec>／post:<slug>。
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS click_log (
+  id    INTEGER PRIMARY KEY AUTOINCREMENT,
+  code  TEXT    NOT NULL,              -- 按了哪一顆（白名單代碼）
+  scope TEXT    NOT NULL,              -- 從哪一頁按的
+  at    TEXT    NOT NULL               -- 例：2026-09-20T07:15:03Z
+);
+
+CREATE INDEX IF NOT EXISTS idx_click_at   ON click_log (at);
+CREATE INDEX IF NOT EXISTS idx_click_code ON click_log (code);
+
+-- 每日收件上限（src/click.js 的 DAY_CAP）。同 search_quota，擋的是灌資料表。
+CREATE TABLE IF NOT EXISTS click_quota (
+  day TEXT    PRIMARY KEY,
+  n   INTEGER NOT NULL DEFAULT 0
+);

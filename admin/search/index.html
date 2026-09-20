@@ -4,10 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>搜尋紀錄 — 芳仁牙醫診所</title>
+<title>站上的紀錄 — 芳仁牙醫診所</title>
 <!--
-  搜尋紀錄報告（2026-09-20）
+  搜尋紀錄 ＋ 點擊紀錄報告（2026-09-20）
   ---------------------------------------------------------------------------
+  兩份報告在同一頁，上面一排分頁切換，**共用同一把密碼與同一排「期間」**。
+  第二份（點擊）是同一天稍晚加的：使用者問「能記錄網站上的按鈕或超連結
+  點擊次數嗎」，接著指定「都要記」——所以離站的三件（打電話、開導航、加 LINE）
+  與站內每一顆會動的東西都記，資料那一側在 src/click.js。
+  ⚠ 點擊那一份的兩張排名表**刻意先分離站／站內再排名次**：次數天生就多的
+     站內元件（回到最上面、科別標記）混在一起的話，會把真正重要的那幾顆擠掉。
+
   使用者要的五件事：
     ① 每一筆都有時間戳記        → 最底下那張「逐筆明細」
     ② 同樣的字累計次數看排名    → 中間那兩張排名表
@@ -17,7 +24,7 @@
                                      把它硬歸成一類會讓其中一張表說謊）
     ⑤ 只有他看得到              → 資料一律要帶密碼跟 /api/search-report 要
 
-  ⚠ **這一頁本身沒有任何資料**，它只是一個框。資料在 D1，要密碼才拿得到，
+  ⚠ **這一頁本身沒有任何資料**（兩份都是），它只是一個框。資料在 D1，要密碼才拿得到，
      密碼在 Cloudflare 的加密變數 REPORT_KEY 裡（不在這個 public repo 裡）。
      所以這個檔案被誰看到都不要緊——他看到的是一個空的密碼框。
 
@@ -57,7 +64,8 @@
     --hit: #6d9a93;
     --miss: #db7276;
   }
-  button.go { background: var(--hit); color: #17191d; border-color: var(--hit); }
+  button.go,
+  .bar.tabs button[aria-pressed=true] { background: var(--hit); color: #17191d; border-color: var(--hit); }
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
@@ -89,10 +97,14 @@ button {
 button.go { background: var(--teal); color: #fff; border-color: var(--teal); padding-inline: 1.2rem; }
 .err { color: var(--miss); font-size: .82rem; margin: .6rem 0 0; }
 
-/* ---- 兩排尺 -------------------------------------------------------------- */
+/* ---- 分頁與兩排尺 --------------------------------------------------------- */
+/* 分頁（搜尋／點擊）比底下那兩排尺重一點——它換的是整份報告，不是篩選。 */
 .bar { display: flex; flex-wrap: wrap; gap: .35rem; margin: 0 0 .6rem; }
 .bar b { align-self: center; font-size: .78rem; font-weight: 500; color: var(--ink-soft); margin-right: .2rem; }
 .bar button[aria-pressed=true] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.bar.tabs { margin-bottom: 1rem; }
+.bar.tabs button { font-size: .9rem; padding-inline: 1rem; }
+.bar.tabs button[aria-pressed=true] { background: var(--teal); color: #fff; border-color: var(--teal); }
 
 /* ---- 摘要 ---------------------------------------------------------------- */
 .sum { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1rem 0 0; }
@@ -122,8 +134,8 @@ td.q { word-break: break-word; }
 </head>
 <body>
 <main>
-  <h1>搜尋紀錄</h1>
-  <p class="sub">訪客在站上搜尋框打過的字。沒有記錄 IP、瀏覽器或任何身分資訊。</p>
+  <h1 id="h1">搜尋紀錄</h1>
+  <p class="sub" id="sub">訪客在站上搜尋框打過的字。沒有記錄 IP、瀏覽器或任何身分資訊。</p>
 
   <form class="gate" id="gate">
     <label for="key">密碼</label>
@@ -137,23 +149,48 @@ td.q { word-break: break-word; }
   </form>
 
   <div id="app" hidden>
+    <!-- 兩份報告同一頁、同一把密碼、同一排「期間」——分開兩頁的話他要記兩個網址，
+         而「這一週搜了什麼、又按了什麼」本來就是同一件事的兩面。 -->
+    <div class="bar tabs" id="tabs"><b>報告</b></div>
     <div class="bar" id="wins"><b>期間</b></div>
     <div class="bar" id="scopes"><b>來源</b></div>
 
-    <div class="sum">
-      <div><span>總搜尋次數</span><strong id="s-all">—</strong></div>
-      <div><span>不重複的字</span><strong id="s-uniq">—</strong></div>
-      <div><span>搜不到</span><strong id="s-miss">—</strong></div>
+    <div id="view-search">
+      <div class="sum">
+        <div><span>總搜尋次數</span><strong id="s-all">—</strong></div>
+        <div><span>不重複的字</span><strong id="s-uniq">—</strong></div>
+        <div><span>搜不到</span><strong id="s-miss">—</strong></div>
+      </div>
+
+      <h2>搜得到的排名<small id="h-hit"></small></h2>
+      <div id="t-hit"></div>
+
+      <h2>搜不到的排名<small>這些字站上沒有東西可以給他</small></h2>
+      <div id="t-miss"></div>
+
+      <h2>逐筆明細<small>最近 200 筆</small></h2>
+      <div id="t-log"></div>
     </div>
 
-    <h2>搜得到的排名<small id="h-hit"></small></h2>
-    <div id="t-hit"></div>
+    <!-- 點擊那一份（2026-09-20）。⚠ 兩張排名表刻意先分「離站／站內」再排名次：
+         按了「撥電話」和按了「回到最上面」不是同一種事，混在一張表上，
+         次數天生就多的站內元件會把那幾顆真正重要的擠到看不見的地方。 -->
+    <div id="view-click" hidden>
+      <div class="sum">
+        <div><span>總點擊次數</span><strong id="c-all">—</strong></div>
+        <div><span>不重複的項目</span><strong id="c-uniq">—</strong></div>
+        <div><span>離站動作</span><strong id="c-out">—</strong></div>
+      </div>
 
-    <h2>搜不到的排名<small>這些字站上沒有東西可以給他</small></h2>
-    <div id="t-miss"></div>
+      <h2>離站動作<small>打電話、開導航、加 LINE —— 真的採取行動的那幾顆</small></h2>
+      <div id="c-t-out"></div>
 
-    <h2>逐筆明細<small>最近 200 筆</small></h2>
-    <div id="t-log"></div>
+      <h2>站內的每一顆<small>按下去不會離開網站的</small></h2>
+      <div id="c-t-in"></div>
+
+      <h2>逐筆明細<small>最近 200 筆</small></h2>
+      <div id="c-t-log"></div>
+    </div>
 
     <div class="foot">
       <p id="span"></p>
@@ -164,21 +201,99 @@ td.q { word-break: break-word; }
   </div>
 </main>
 
+
 <script>
 (function () {
   var STORE = 'fangren:report-key';
-  var API   = '../../api/search-report';
+  /* 兩份報告、兩個端點，**同一把密碼**（Cloudflare 的 REPORT_KEY）。
+     ⚠ 不要寫成根目錄絕對路徑——理由同站上那幾支腳本（舊站還活著）。 */
+  var API = { search: '../../api/search-report', click: '../../api/click-report' };
 
   var SPEC = { general: '一般牙科', perio: '牙周治療', kids: '兒童牙科', endo: '顯微根管',
                ortho: '齒顎矯正', prosth: '植牙假牙', surg: '口腔外科' };
+  var HASH = { topics: '全部文章', doctors: '醫師介紹', clinic: '診所資訊', articles: '文章' };
 
-  /* 使用者指定的七格，加一格「全部」。value 是天數代碼，給 /api/search-report。 */
+  /* 使用者指定的七格，加一格「全部」。value 是天數代碼，給兩個報告端點共用。 */
   var WINS = [['7d', '一週'], ['30d', '一個月'], ['60d', '兩個月'], ['90d', '三個月'],
               ['180d', '半年'], ['365d', '一年'], ['730d', '兩年'], ['all', '全部']];
-  var SCOPES = [['', '全部'], ['home', '全站搜尋'], ['topic', '各科頁內']];
+  var TABS = [['search', '搜尋紀錄'], ['click', '點擊紀錄']];
+  /* 「來源」那把尺兩份不一樣：搜尋框只出現在首頁與七科頁，點擊則每一頁都有。 */
+  var SCOPES = {
+    search: [['', '全部'], ['home', '全站搜尋'], ['topic', '各科頁內']],
+    click:  [['', '全部'], ['home', '首頁'], ['topic', '科別頁'], ['post', '文章頁']]
+  };
+  var TITLE = {
+    search: ['搜尋紀錄', '訪客在站上搜尋框打過的字。沒有記錄 IP、瀏覽器或任何身分資訊。'],
+    click:  ['點擊紀錄', '訪客按過站上哪些連結與按鈕。同樣沒有記錄 IP、瀏覽器或任何身分資訊。']
+  };
+
+  /* ---- 代碼 → 看得懂的名字（對照 src/click.js 的白名單）-------------------
+     ⚠ 這張表只管「怎麼印」。站上新增一顆要按的東西時，真正要改的是
+       assets/click-log.js 的 RULES 與 src/click.js 的白名單；漏改這裡
+       只會印出原始代碼，不會少記。 */
+  var NAME = {
+    tel: '撥電話', line: '加 LINE 官方帳號',
+    'map:clinic': '地址 → Google 地圖', 'map:pin': '地圖上的診所 → Google 地圖',
+    'park:a': '斗六永樂站停車場 → Google 地圖', 'park:b': '合廷停車場 → Google 地圖',
+    'park:c': '壹車房停車場 → Google 地圖',
+    'lot:a': '地圖上點「斗六永樂站」', 'lot:b': '地圖上點「合廷」', 'lot:c': '地圖上點「壹車房」',
+    brand: '頁首標誌（回首頁）', skip: '跳到主要內容', 'hero-cue': 'HERO 底下的往下看',
+    'search-open': '頁首的放大鏡', 'search-close': '關閉搜尋', btt: '回到最上面',
+    bays: '鄰近停車格', 'back-list': '回文章列表'
+  };
+  var PREFIX = {
+    chip: '科別標記', hours: '門診表篩選', tag: '文章上的科別', nav: '頁首選單',
+    foot: '頁尾導覽', count: '著陸頁的醫師／文章數', card: '文章卡', rel: '延伸閱讀',
+    prev: '上一篇', next: '下一篇'
+  };
+  /* ---- 文章的中文標題 ------------------------------------------------------
+     代碼裡的是 slug（three-month-recall 與 regular-checkup 看字面分不出來），
+     報告上要印中文。來源是 build 產生的 assets/post-titles.json（唯一來源仍是
+     各篇的 post-meta，這一頁不另外維護一份）。
+     ⚠ 拿不到就退回印 slug——這一份純粹是「看得懂一點」，不是資料的一部分，
+       不可以因為它掛掉就讓整份報告打不開。 */
+  var TITLES = null;
+  function title(slug, n) {
+    var t = (TITLES && TITLES[slug]) || slug;
+    if (n) {
+      t = t.split(/[：:]/)[0];                 /* 標題多半是「短句：說明」，取冒號前那一段 */
+      if (t.length > n) t = t.slice(0, n) + '…';
+    } else if (t.length > 24) {
+      t = t.slice(0, 24) + '…';
+    }
+    return t;
+  }
+  (function () {
+    var done = function () { if (tab === 'click' && data.click) render(); };
+    try {
+      fetch('../../assets/post-titles.json')
+        .then(function (r) { return r.json(); })
+        .then(function (j) { TITLES = j; done(); })
+        .catch(function () { TITLES = {}; done(); });
+    } catch (e) { TITLES = {}; }
+  })();
+
+  function codeName(code) {
+    if (NAME[code]) return NAME[code];
+    var i = String(code).indexOf(':');
+    if (i < 0) return code;
+    var k = code.slice(0, i), v = code.slice(i + 1);
+    if (k === 'theme') return '夜間開關 → ' + (v === 'dark' ? '夜間' : '白天');
+    if (k === 'chip' || k === 'hours') return PREFIX[k] + '：' + (v === 'all' ? '全部' : (SPEC[v] || v));
+    if (k === 'tag') return PREFIX[k] + '：' + (SPEC[v] || v);
+    if (k === 'nav' || k === 'foot' || k === 'count') return PREFIX[k] + '：' + (HASH[v] || v);
+    if (k === 'card' || k === 'rel' || k === 'prev' || k === 'next') return PREFIX[k] + '：' + title(v);
+    if (PREFIX[k]) return PREFIX[k] + '：' + v;
+    return code;
+  }
+  /* 離站 ＝ 按下去人就離開 fangren.net 了（打電話、開導航、加 LINE）。
+     這幾顆是這一份報告真正要回答的事，所以自己一張表。 */
+  function isOut(code) { return /^(tel$|line$|map:|park:)/.test(String(code)); }
 
   var $ = function (id) { return document.getElementById(id); };
-  var key = '', win = '30d', scope = '', data = null;
+  var key = '', win = '30d', tab = 'search';
+  var scope = { search: '', click: '' };
+  var data = { search: null, click: null };
 
   /* ---- 時間：資料庫存的是 UTC 的 ISO 字串，畫面上一律台灣時間 -------------
      ⚠ 不要自己 +8 —— toLocaleString 帶 timeZone 才會處理各種邊界，
@@ -196,14 +311,19 @@ td.q { word-break: break-word; }
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
   function scopeName(s) {
-    if (s === 'home') return '全站';
+    if (s === 'home') return '首頁';
     var m = /^topic:(.+)$/.exec(s || '');
-    return m ? (SPEC[m[1]] || m[1]) + '頁' : s;
+    if (m) return (SPEC[m[1]] || m[1]) + '頁';
+    m = /^post:(.+)$/.exec(s || '');
+    /* ⚠ 這個字會落在 white-space: nowrap 的那一欄，所以只取冒號前那一段再截短，
+       整句標題會把表格撐破（390 寬就破框了）。 */
+    return m ? title(m[1], 9) + '頁' : s;
   }
   function inScope(s) {
-    if (!scope) return true;
-    if (scope === 'home') return s === 'home';
-    return String(s).indexOf('topic:') === 0;
+    var cur = scope[tab];
+    if (!cur) return true;
+    if (cur === 'home') return s === 'home';
+    return String(s).indexOf(cur + ':') === 0;
   }
 
   /* ---- 尺 ----------------------------------------------------------------- */
@@ -219,8 +339,18 @@ td.q { word-break: break-word; }
     });
   }
   function bars() {
+    bar($('tabs'), TABS, tab, function (v) { if (v !== tab) { tab = v; show(); } });
     bar($('wins'), WINS, win, function (v) { win = v; load(); });
-    bar($('scopes'), SCOPES, scope, function (v) { scope = v; render(); });
+    bar($('scopes'), SCOPES[tab], scope[tab], function (v) { scope[tab] = v; render(); });
+  }
+
+  /* 換分頁：標題與兩塊畫面先換，資料沒有或期間不同才去拿。 */
+  function show() {
+    $('h1').textContent = TITLE[tab][0];
+    $('sub').textContent = TITLE[tab][1];
+    $('view-search').hidden = tab !== 'search';
+    $('view-click').hidden = tab !== 'click';
+    if (!data[tab] || data[tab].win !== win) load(); else render();
   }
 
   /* ---- 表 ----------------------------------------------------------------- */
@@ -228,7 +358,7 @@ td.q { word-break: break-word; }
     var list = rows.filter(function (r) { return inScope(r.scope) && pick(r) > 0; })
                    .sort(function (a, b) { return pick(b) - pick(a) || (b.last < a.last ? -1 : 1); });
     if (!list.length) { box.innerHTML = '<p class="empty">' + empty + '</p>'; return; }
-    var showScope = !scope;
+    var showScope = !scope[tab];
     var h = '<table class="rank ' + cls + '"><thead><tr><th>搜尋的字</th><th class="n">次數</th>' +
             '<th class="t">最近一次</th></tr></thead><tbody>';
     list.slice(0, 100).forEach(function (r) {
@@ -252,38 +382,106 @@ td.q { word-break: break-word; }
     box.innerHTML = h + '</tbody></table>';
   }
 
-  function render() {
-    if (!data) return;
-    bars();
+  /* 點擊的排名表。⚠ 同一顆在不同頁面上是分開存的（首頁的電話 vs 文章頁的電話），
+     「來源」選全部的時候要**合起來算一個名次**再把各來源列在後面，
+     不然一顆電話會散成三列，看起來每一列都很少。 */
+  function clickTable(box, rows, want, cls, empty) {
+    var byCode = {};
+    rows.forEach(function (r) {
+      if (!inScope(r.scope) || want(r.code) !== true) return;
+      var c = byCode[r.code] || (byCode[r.code] = { code: r.code, n: 0, last: '', from: [] });
+      c.n += r.n;
+      if (r.last > c.last) c.last = r.last;
+      c.from.push([r.scope, r.n]);
+    });
+    var list = Object.keys(byCode).map(function (k) { return byCode[k]; })
+                     .sort(function (a, b) { return b.n - a.n || (b.last < a.last ? -1 : 1); });
+    if (!list.length) { box.innerHTML = '<p class="empty">' + empty + '</p>'; return; }
+    var h = '<table class="rank ' + cls + '"><thead><tr><th>按了哪一顆</th><th class="n">次數</th>' +
+            '<th class="t">最近一次</th></tr></thead><tbody>';
+    list.slice(0, 200).forEach(function (r) {
+      var from = '';
+      if (!scope[tab] && r.from.length > 1) {
+        from = r.from.sort(function (a, b) { return b[1] - a[1]; }).map(function (f) {
+          return '<span class="tag">' + esc(scopeName(f[0])) + ' ' + f[1] + '</span>';
+        }).join('');
+      }
+      h += '<tr><td class="q">' + esc(codeName(r.code)) + from +
+           '</td><td class="n"><b>' + r.n + '</b></td>' +
+           '<td class="t">' + tw(r.last) + '</td></tr>';
+    });
+    box.innerHTML = h + '</tbody></table>';
+  }
 
-    var sums = (data.sums || []).filter(function (r) { return inScope(r.scope); });
+  function clickLogTable(box, rows) {
+    var list = rows.filter(function (r) { return inScope(r.scope); });
+    if (!list.length) { box.innerHTML = '<p class="empty">這段期間沒有紀錄。</p>'; return; }
+    var h = '<table><thead><tr><th class="t">時間</th><th>按了哪一顆</th><th class="t">在哪一頁</th></tr></thead><tbody>';
+    list.forEach(function (r) {
+      h += '<tr><td class="t">' + tw(r.at, true) + '</td><td class="q">' + esc(codeName(r.code)) +
+           (isOut(r.code) ? '<span class="tag">離站</span>' : '') +
+           '</td><td class="t">' + esc(scopeName(r.scope)) + '</td></tr>';
+    });
+    box.innerHTML = h + '</tbody></table>';
+  }
+
+  function renderSearch(d) {
+    var sums = (d.sums || []).filter(function (r) { return inScope(r.scope); });
     var all = 0, miss = 0;
     sums.forEach(function (r) { all += r.n; miss += r.miss; });
     var uniq = {};
-    (data.rows || []).forEach(function (r) { if (inScope(r.scope)) uniq[r.q] = 1; });
+    (d.rows || []).forEach(function (r) { if (inScope(r.scope)) uniq[r.q] = 1; });
 
     $('s-all').textContent = all;
     $('s-uniq').textContent = Object.keys(uniq).length;
     $('s-miss').textContent = miss + (all ? '（' + Math.round(miss / all * 100) + '%）' : '');
 
-    var rows = data.rows || [];
+    var rows = d.rows || [];
     $('h-hit').textContent = '';
     rankTable($('t-hit'), rows, function (r) { return r.n - r.miss; }, 'hit',
               '這段期間沒有「有找到東西」的搜尋。');
     rankTable($('t-miss'), rows, function (r) { return r.miss; }, 'miss',
               '這段期間每一次搜尋都有找到東西。');
-    logTable($('t-log'), data.recent || []);
+    logTable($('t-log'), d.recent || []);
+  }
+
+  function renderClick(d) {
+    var rows = d.rows || [];
+    var all = 0, out = 0, uniq = {};
+    rows.forEach(function (r) {
+      if (!inScope(r.scope)) return;
+      all += r.n;
+      if (isOut(r.code)) out += r.n;
+      uniq[r.code] = 1;
+    });
+    $('c-all').textContent = all;
+    $('c-uniq').textContent = Object.keys(uniq).length;
+    $('c-out').textContent = out + (all ? '（' + Math.round(out / all * 100) + '%）' : '');
+
+    clickTable($('c-t-out'), rows, function (c) { return isOut(c); }, 'hit',
+               '這段期間沒有人打電話、開導航或加 LINE。');
+    clickTable($('c-t-in'), rows, function (c) { return !isOut(c); }, '',
+               '這段期間沒有站內的點擊。');
+    clickLogTable($('c-t-log'), d.recent || []);
+  }
+
+  function render() {
+    var d = data[tab];
+    if (!d) return;
+    bars();
+    if (tab === 'search') renderSearch(d); else renderClick(d);
 
     /* 資料從哪天開始 —— 「兩年」那一格在上線初期一定比實際資料長很多，
        不講清楚的話那張空表看起來會像壞掉。 */
-    var sp = data.span || {};
+    var sp = d.span || {};
+    var what = tab === 'search' ? '搜尋' : '點擊';
     var txt;
     if (!sp.first) {
-      txt = '目前資料庫裡還沒有任何一筆紀錄。上線之後要等有人用搜尋框才會開始累積。';
+      txt = '目前資料庫裡還沒有任何一筆' + what + '紀錄。上線之後要等有人用才會開始累積。';
     } else {
       var days = Math.max(1, Math.round((Date.now() - new Date(sp.first)) / 86400000));
       txt = '資料從 ' + tw(sp.first) + ' 開始累積（第 ' + days + ' 天），總共 ' + sp.n + ' 筆。';
-      if (data.since && data.since > sp.first) txt += ' 這一格只看 ' + tw(data.since) + ' 之後的。';
+      if (d.since && d.since > sp.first) txt += ' 這一格只看 ' + tw(d.since) + ' 之後的。';
       else if (win !== 'all') txt += ' 這一格涵蓋的期間比現有資料長，所以等於全部。';
     }
     $('span').textContent = txt + '　時間是台灣時間。';
@@ -291,8 +489,9 @@ td.q { word-break: break-word; }
 
   /* ---- 取資料 -------------------------------------------------------------- */
   function load() {
+    var t = tab;
     $('err').hidden = true;
-    fetch(API + '?win=' + encodeURIComponent(win), { headers: { 'X-Report-Key': key } })
+    fetch(API[t] + '?win=' + encodeURIComponent(win), { headers: { 'X-Report-Key': key } })
       .then(function (r) {
         if (r.status === 401) throw new Error('密碼不對。');
         /* ⚠ 503 ＝ Cloudflare 後台還沒設 REPORT_KEY。這跟密碼打錯是兩件事，
@@ -303,10 +502,14 @@ td.q { word-break: break-word; }
         return r.json();
       })
       .then(function (j) {
-        data = j;
+        data[t] = j;
         $('gate').hidden = true;
         $('app').hidden = false;
-        render();
+        $('h1').textContent = TITLE[tab][0];
+        $('sub').textContent = TITLE[tab][1];
+        $('view-search').hidden = tab !== 'search';
+        $('view-click').hidden = tab !== 'click';
+        if (t === tab) render();
       })
       .catch(function (e) {
         $('gate').hidden = false;
@@ -326,33 +529,49 @@ td.q { word-break: break-word; }
     if ($('keep').checked) { try { localStorage.setItem(STORE, key); } catch (x) {} }
     load();
   });
-  $('reload').addEventListener('click', load);
+  $('reload').addEventListener('click', function () { load(); });
   $('out').addEventListener('click', function () {
     try { localStorage.removeItem(STORE); } catch (x) {}
-    key = ''; data = null;
+    key = ''; data = { search: null, click: null };
     $('key').value = '';
     $('app').hidden = true;
     $('gate').hidden = false;
   });
 
   /* CSV 是在這一頁上用目前這批資料拼的，不另外跟伺服器要一份。
-     ⚠ 前面那個 ﻿ 是給 Excel 認 UTF-8 的，少了它中文會變亂碼。 */
+     ⚠ 開頭那個 \ufeff（BOM）是給 Excel 認 UTF-8 的，少了它中文會變亂碼。
+     ⚠ 下載的是**目前這個分頁**那一份，檔名也跟著換。 */
   $('csv').addEventListener('click', function () {
-    if (!data) return;
+    var d = data[tab];
+    if (!d) return;
     var q = function (s) { return '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"'; };
-    var lines = ['時間,搜尋的字,來源,結果筆數'];
-    (data.recent || []).filter(function (r) { return inScope(r.scope); }).forEach(function (r) {
-      lines.push([q(tw(r.at, true)), q(r.q), q(scopeName(r.scope)), r.hits].join(','));
-    });
-    lines.push('');
-    lines.push('搜尋的字,總次數,其中搜不到,最近一次');
-    (data.rows || []).filter(function (r) { return inScope(r.scope); }).forEach(function (r) {
-      lines.push([q(r.q), r.n, r.miss, q(tw(r.last, true))].join(','));
-    });
+    var lines;
+    if (tab === 'search') {
+      lines = ['時間,搜尋的字,來源,結果筆數'];
+      (d.recent || []).filter(function (r) { return inScope(r.scope); }).forEach(function (r) {
+        lines.push([q(tw(r.at, true)), q(r.q), q(scopeName(r.scope)), r.hits].join(','));
+      });
+      lines.push('');
+      lines.push('搜尋的字,總次數,其中搜不到,最近一次');
+      (d.rows || []).filter(function (r) { return inScope(r.scope); }).forEach(function (r) {
+        lines.push([q(r.q), r.n, r.miss, q(tw(r.last, true))].join(','));
+      });
+    } else {
+      lines = ['時間,按了哪一顆,代碼,在哪一頁,離站'];
+      (d.recent || []).filter(function (r) { return inScope(r.scope); }).forEach(function (r) {
+        lines.push([q(tw(r.at, true)), q(codeName(r.code)), q(r.code), q(scopeName(r.scope)),
+                    isOut(r.code) ? '是' : ''].join(','));
+      });
+      lines.push('');
+      lines.push('按了哪一顆,代碼,在哪一頁,次數,最近一次');
+      (d.rows || []).filter(function (r) { return inScope(r.scope); }).forEach(function (r) {
+        lines.push([q(codeName(r.code)), q(r.code), q(scopeName(r.scope)), r.n, q(tw(r.last, true))].join(','));
+      });
+    }
     var blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'search-' + win + '-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.download = tab + '-' + win + '-' + new Date().toISOString().slice(0, 10) + '.csv';
     a.click();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
   });
@@ -364,5 +583,6 @@ td.q { word-break: break-word; }
   } catch (x) {}
 })();
 </script>
+
 </body>
 </html>

@@ -62,10 +62,14 @@ async function ensure(env) {
   READY.add(env.DB);
 }
 
-/* 現在時間，ISO 8601、UTC、秒為止（毫秒切掉，省位元組也夠用了）。 */
-const nowIso = () => new Date().toISOString().replace(/\.\d+Z$/, "Z");
+/* ⚠ 底下這四支（nowIso／agoIso／WINDOWS／keyOk）**點擊紀錄那一支也在用**
+   （src/click.js 直接匯入）。兩份報告的「一週」必須指同一段時間、密碼也是同一把，
+   各寫一份遲早會走鐘——所以它們是 export 的，不要改成區域變數。
+
+   現在時間，ISO 8601、UTC、秒為止（毫秒切掉，省位元組也夠用了）。 */
+export const nowIso = () => new Date().toISOString().replace(/\.\d+Z$/, "Z");
 /* n 天前的同一時刻，格式同上——區間查詢就是 `at >= 這個字串`。 */
-const agoIso = (days) =>
+export const agoIso = (days) =>
   new Date(Date.now() - days * 86400000).toISOString().replace(/\.\d+Z$/, "Z");
 
 /* -----------------------------------------------------------------------------
@@ -158,14 +162,14 @@ export async function logSearch(request, env) {
    **不在這個 repo 裡**——repo 是 public 的，寫進來等於沒鎖。
    沒設 REPORT_KEY 的時候一律拒絕（fail closed），不會變成「沒設＝不用密碼」。
    ============================================================================= */
-const WINDOWS = {
+export const WINDOWS = {
   "7d": 7, "30d": 30, "60d": 60, "90d": 90,
   "180d": 180, "365d": 365, "730d": 730, all: 0,
 };
 
 /* 定時比較，不要用 ===。字串比較會在第一個不同的位元組就回來，
    逐位元組試出密碼是真的做得到的事。 */
-function keyOk(given, want) {
+export function keyOk(given, want) {
   if (!want) return false;
   const enc = new TextEncoder();
   const a = enc.encode(String(given == null ? "" : given));

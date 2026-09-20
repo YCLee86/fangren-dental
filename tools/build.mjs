@@ -719,6 +719,23 @@ if (!CHECK_ONLY) {
   }
 }
 
+/* ---------- 4之二. 點擊報告要用的「代碼 → 中文標題」 ----------
+   /admin/search/ 的點擊紀錄那一份會印出「文章卡：<slug>」，而 slug 是英文的
+   （three-month-recall、regular-checkup 這兩個看字面分不出來）。報告頁載入這一份
+   把它換成文章真正的標題。
+   ⚠ 這是**產生的檔案**，不要手改；標題的唯一來源仍然是各篇的 post-meta。
+   ⚠ 站上任何一頁都不會載它，只有報告頁會——所以它不影響首頁的載入。 */
+
+if (!CHECK_ONLY) {
+  const titles = {};
+  for (const p of posts) titles[p.slug] = p.title;
+  const titlesFile = path.join(ROOT, "assets", "post-titles.json");
+  const titlesSrc = JSON.stringify(titles, null, 2) + "\n";
+  if (!fs.existsSync(titlesFile) || read(titlesFile) !== titlesSrc) {
+    fs.writeFileSync(titlesFile, titlesSrc, "utf8");
+  }
+}
+
 /* ---------- 5. sitemap ---------- */
 
 if (siteUrl && !CHECK_ONLY) {

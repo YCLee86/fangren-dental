@@ -12,6 +12,8 @@
      POST /api/views   body: { "slug": "home" } → { "slug": "home", "views": 13 }
      POST /api/search  body: { "q": "植牙", "scope": "home", "hits": 3 } → { ok: true }
      GET  /api/search-report?win=30d           → 報告要的數字（要 X-Report-Key）
+     POST /api/click   body: { "code": "tel", "scope": "post:missing-tooth" } → { ok: true }
+     GET  /api/click-report?win=30d            → 同上（同一把 X-Report-Key）
      /admin/*                                 → 報告頁＋noindex＋no-store（見下方 ADMIN_PREFIX）
      其他                                        → 靜態檔，沒有就給 404 頁
 
@@ -21,6 +23,7 @@
 
 import { ALLOWED } from "./allowed-slugs.js";
 import { logSearch, searchReport } from "./search.js";
+import { logClick, clickReport } from "./click.js";
 
 const allowed = new Set(ALLOWED);
 
@@ -106,10 +109,10 @@ async function postViews(request, env) {
       拿到的還是上一版，會以為改沒生效。history/ 是寫完就不動的，不必。 */
 const PREVIEW_PREFIX = "/preview/";
 
-/* /admin/* — 搜尋紀錄報告（2026-09-20）
+/* /admin/* — 搜尋紀錄與點擊紀錄的報告（2026-09-20）
    -----------------------------------------------------------------------------
    頁面本身是公開的靜態檔（裡面沒有任何一筆資料，只有一個密碼框），
-   **資料一律要經過 /api/search-report 並帶對密碼**才拿得到。
+   **資料一律要經過 /api/search-report 與 /api/click-report 並帶對密碼**才拿得到。
    所以這裡和 /preview/ 做的事一樣：noindex ＋ no-store。
 
    ⚠ **刻意不寫進 robots.txt。** /history/ 與 /preview/ 都有 Disallow，
@@ -164,6 +167,18 @@ export default {
 
     if (url.pathname === "/api/search-report") {
       if (request.method === "GET") return searchReport(request, url, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
+    /* 點擊紀錄（2026-09-20）。寫入不用密碼、讀報告要——和上面那兩條同一個形狀，
+       報告也共用同一把 REPORT_KEY（見 src/click.js）。 */
+    if (url.pathname === "/api/click") {
+      if (request.method === "POST") return logClick(request, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
+    if (url.pathname === "/api/click-report") {
+      if (request.method === "GET") return clickReport(request, url, env);
       return json({ error: "method not allowed" }, 405);
     }
 
