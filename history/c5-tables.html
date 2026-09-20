@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>c5-tables｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>c5-tables — 三篇補對照表，十段在句尾斷開</h1>
+<p class="meta">
+  2026-09-20 開、當天定案上線<br>
+  原網址 <code>/preview/c5-three-month-recall/</code>、<code>/preview/c5-kids-crown/</code>、
+  <code>/preview/c5-kids-arch-expansion/</code>（已刪除 2026-09-20）<br>
+  整頁還原：<code>git show 37276357:preview/c5-kids-crown/index.html</code><br>
+  產生器：一次性、在暫存區，沒有進版控<br>
+  依據：<code>drafts/seo-geo-audit/REPORT.md</code>（SEO／GEO 體檢，C3 與 C5 兩項）
+</p>
+
+<h2>起因</h2>
+<p>使用者看完體檢報告的剩餘項目：「C3 到 C5 先做」。三項裡<strong>只做了兩項</strong> ——
+C4 卡在一條已經定案的文案規則上，見最後一節。</p>
+
+<h2>C3　answer-first 段長　2.5 → 3.0</h2>
+<p>量出來 25 段的首段不在 40–120 字的區間裡。<strong>但先分類再動手</strong>：</p>
+<pre>引導句 ＋ 清單    11 段   ← 不是問題
+真的太短           2 段
+太長              12 段   ← 真正要動的</pre>
+<p>⚠⚠ <strong>那 11 段是「引導句接清單」</strong>，像「牙周治療不是『洗一洗就好』，
+它有明確的階段：」後面接一張表。那一段的答案是<strong>引導句 ＋ 那張表</strong>，
+本來就自足也好擷取，<strong>硬加長到 40 字只是灌水</strong>。
+所以那一批要改的是<strong>評分器</strong>不是文章 ——
+量錯東西比不量還糟（CLAUDE.md 第九節第 5 條）。</p>
+<p>評分器一起修兩件：引導句接清單不算太短；「重點整理」那一節不算內文的一節
+（它是問答區塊，C4 在評它）。</p>
+
+<h3>太長的 12 段：在句尾斷成兩段，一個字都沒改</h3>
+<p>做法是先把每一段的句尾標點位置算出來，挑一個落在 40–120 的，
+在那裡插一個段落界線。<strong>沒有加字、沒有刪字、沒有換字。</strong></p>
+<pre>bioceramic         填完之後…            121 → 61 ＋ 其餘
+bioceramic         什麼時候會走到這一步    156 → 64 ＋ 其餘
+crown-materials    什麼時候會需要做牙冠    166 → 41 ＋ 其餘
+crown-materials    做好之後…            149 → 77 ＋ 其餘
+gum-bleeding       那條關鍵的分界線       139 → 104 ＋ 其餘
+kids-crown         短時間內補了又掉       137 → 86 ＋ 其餘
+kids-crown         補了又掉、掉了又蛀…    150 → 74 ＋ 其餘
+kids-sedation      治療後的照護          129 → 67 ＋ 其餘
+three-month-recall 哪些人適用           163 → 80 ＋ 其餘
+three-month-recall 在吃骨鬆藥…          148 → 80 ＋ 其餘</pre>
+<p><strong>兩段刻意沒動</strong>（留著當紀錄，不要日後有人「補做」）：</p>
+<pre>kids-sedation  治療當天的流程   202 字   唯一的斷點在 131，斷了還是太長
+perio-laser    第一步永遠是清創  142 字   第一句只有 13 字，斷了會變成孤句</pre>
+<p>⚠ 斷點的位置是用<strong>純文字</strong>算的，再對回 HTML 的位置
+（中間夾著 <code>&lt;strong&gt;</code> 之類的標籤）。守門有兩道：算得出斷點、
+而且那個位置的前一個字元必須是句號、驚嘆號或問號。</p>
+
+<h2>C5　表格　2.5 → 3.0（滿分，16 篇全部有表格）</h2>
+<pre>three-month-recall   三條「條件 → 影響」排成兩欄，**字一個都沒改**
+kids-crown           兩種牙套後面補「一次看懂差異」
+kids-arch-expansion  兩種方案排成對照表</pre>
+<p>後兩篇照 <code>crown-materials</code> 與 <code>missing-tooth</code> 的
+<strong>既有慣例</strong>（逐項說明 ＋ 一張「一次看懂差異」），不是新發明的版型。
+內容<strong>全部取自那一篇自己的文字</strong>，沒有新增任何事實。</p>
+<p>為什麼值得做：2025 年一份一萬筆 AI 引用的分析，
+<strong>有表格的頁被引用約 4.2 倍</strong> —— 表格能直接對應到 LLM 可以改寫、
+引用、重排的結構化資料。</p>
+
+<h2>⚠⚠ C4 沒有做（那 0.5 分要付的代價太大）</h2>
+<p>剩下的三個著陸頁（一般牙科、顯微根管、植牙假牙）的處境是
+<code>&lt;ul class="tp-cases"&gt;</code> 而不是問答的 <code>&lt;dl&gt;</code>，
+因為<strong>它們沒有回應句</strong>。補三句就能升成問答 —— 但
+<code>tools/topic-copy.mjs</code> 裡寫著 2026-08-19 的決定：</p>
+<pre>⚠⚠ lead 與 stance 是兩種節奏，一科只挑一種。
+   ・stance 在後 ＝ 先讓他對號入座，再一句話回完（牙周）
+   ・lead 在前 ＝ 先把最重要的那句話講掉，再舉例（兒牙）
+   **不要兩個都給** —— 那會變成同一件事講兩次，而且七頁長得一模一樣
+   就是使用者說的「看起來像複製貼上」。</pre>
+<p>那三科走的正是 <code>lead</code> 在前。而且 <code>endo</code> 與
+<code>prosth</code> 兩頁都標著 <strong>✅✅ 定案，不要再重寫這一頁</strong>。
+補那三句 ＝ 同時給 <code>lead</code> 和 <code>stance</code>，正好踩到那一條。
+<strong>要做得先問使用者。</strong></p>
+
+<h2>日期怎麼處理的</h2>
+<p>照 CLAUDE.md 第五節那個判準「這次改動對讀者來說算不算內容變了」<strong>分成兩批</strong>：</p>
+<pre>加了對照表的三篇    → **讓它跳**（真的多了一個看得懂的東西）
+   kids-arch-expansion、kids-crown、three-month-recall
+只斷句沒改字的兩篇  → **還原**（版面調整，對讀者不算內容變了）
+   bioceramic、crown-materials</pre>
+<p>⚠ 其餘幾篇（gum-bleeding、kids-sedation）當天稍早才因為補外部權威引用跳過一次，
+本來就是今天，不必另外處理。驗過：該跳的跳了、不該動的一篇都沒動。</p>
+
+<h2>順手訂正的</h2>
+<p>報告那張分組表有兩處加總寫錯：E 組寫成 11.5（實際 10.5）、
+C 組在這一輪之前寫成 16.5（實際 15.5）。<strong>兩處相抵，總分一直是對的</strong>，
+但分組數字現在才是真的。</p>
+
+<h2>成績</h2>
+<pre>C3  2.5 → 3.0
+C5  2.5 → 3.0（滿分）
+C 組 15.5 → 16.5　　總分 87 → 88
+文章平均 88 → 89（首頁 92、著陸頁 72）</pre>
+
+<footer><a href="/history/">← 改版紀錄</a></footer>
+
+</div></body>
+</html>
