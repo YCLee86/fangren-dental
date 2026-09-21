@@ -308,6 +308,12 @@ r.dataset.theme=s;})();</script>
       <h1>隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位</h1>
     </div>
     <figure class="post-hero">
+      <!-- HERO 的動態疊層（2026-09-21 定案上線）。規格、理由與三件被退掉的做法
+           全部寫在 assets/style.css 的「文章 HERO 的動態疊層」那一段，改之前先讀。
+           ⚠ 疊層與 <img> 共用同一個盒子，兩者的長寬比也一樣（2000:1114 ＝ viewBox
+             800:445.6），所以永遠對齊。
+           ⚠ <image> 的 href 和底下那個 <img> 是**同一個網址**，走快取，沒有多下載。 -->
+      <span class="hero-fx-wrap">
       <picture>
         <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w,
                                           ../../assets/hero-aligner-photo-1600.webp 1600w,
@@ -320,6 +326,41 @@ r.dataset.theme=s;})();</script>
              sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
              fetchpriority="high" alt="插畫是一間明亮的診所規劃室。畫面中央偏左有一面飄浮在空中的半透明藍色大螢幕，上面用白色線條畫著上排牙齒的俯視圖：牙齒互相重疊、有的擠到外側有的縮在後面，排成一條歪斜的弧線，旁邊散著白色的彎箭頭與五個琥珀色的驚嘆號三角形；螢幕右半有一顆被放大的牙齒，整根牙根插在一塊半透明的骨頭裡，牙根尖端有一道琥珀色的短線，上方一個琥珀色的提示牌寫著 ERROR，下面一行是一個牙套圖示、200+ 與無限符號。螢幕前站著一位穿白袍、裡面是藍灰色刷手服的男醫師，側身朝著螢幕，抬起一手用食指點在那顆放大的牙上，指尖旁有三道短線，另一手垂在身側拿著一支細筆，閉著嘴微笑。畫面左邊，一位穿芥末黃毛衣的男生坐在淺色長桌前，身體前傾、雙手放在筆電鍵盤上，手腕旁有兩道短線；筆電螢幕是深色底、一行一行的淺色程式碼，右下角有一個白色的牙弓圖示，旁邊飄著一面淡藍色的小螢幕，上面同樣是程式碼與牙弓，筆電右邊立著一台沒有開機的深灰色平板。畫面右邊，一位穿藍灰色刷手服的男性一手拿著平板（上面是同一顆牙與牙根）、一手張開手掌比向大螢幕，手掌外緣與嘴邊各有兩道短線；他身旁一位穿淡綠色上衣的女性低頭看著手機。背景是白色的牆與淺色地板，木質檯面上放著兩個馬克杯和一個陶土色的杯子，矮櫃上擺著一副石膏牙模與一副透明牙套，牆上掛著一張只有牙弓線條圖的海報，右側有一盆綠色植物，房間上方橫過幾道長長的白色弧線。" width="2000" height="1114">
       </picture>
+      <!-- 警告標示的放大縮小。⚠⚠ 這一塊**一定要是 <picture>、而且 srcset 與 sizes
+           和上面那一份逐字相同** —— 這樣瀏覽器挑到的會是同一個檔案，直接命中快取，
+           一個位元組都不會多載。第一版寫成 SVG 的 <image href="…-1600.jpg">，
+           結果是：<picture> 給了 WebP、<image> 又硬拉一份 JPEG，手機上多了 151 KiB。
+           改過 sizes 或 srcset 的話，**兩份要一起改**。 -->
+      <span class="hero-fx-err" aria-hidden="true">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w,
+                                            ../../assets/hero-aligner-photo-1600.webp 1600w,
+                                            ../../assets/hero-aligner-photo-2000.webp 2000w"
+                  sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)">
+          <img src="../../assets/hero-aligner-photo-1600.jpg"
+               srcset="../../assets/hero-aligner-photo-800.jpg 800w,
+                       ../../assets/hero-aligner-photo-1600.jpg 1600w,
+                       ../../assets/hero-aligner-photo-2000.jpg 2000w"
+               sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+               alt="" width="2000" height="1114">
+        </picture>
+      </span>
+      <svg class="hero-fx" viewBox="0 0 800 445.6" preserveAspectRatio="xMidYMid meet"
+           aria-hidden="true" focusable="false">
+        <defs>
+          <radialGradient id="hfxGlow">
+            <stop offset="0"   stop-color="#ffffff" stop-opacity=".95"/>
+            <stop offset=".55" stop-color="#ffffff" stop-opacity=".45"/>
+            <stop offset="1"   stop-color="#ffffff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle class="hero-fx-blip" style="--ox:226px; --oy:91px;  --i:0" cx="226" cy="91"  r="12" fill="url(#hfxGlow)"/>
+        <circle class="hero-fx-blip" style="--ox:354px; --oy:95px;  --i:1" cx="354" cy="95"  r="12" fill="url(#hfxGlow)"/>
+        <circle class="hero-fx-blip" style="--ox:314px; --oy:126px; --i:2" cx="314" cy="126" r="12" fill="url(#hfxGlow)"/>
+        <circle class="hero-fx-blip" style="--ox:199px; --oy:161px; --i:3" cx="199" cy="161" r="12" fill="url(#hfxGlow)"/>
+        <circle class="hero-fx-blip" style="--ox:261px; --oy:186px; --i:4" cx="261" cy="186" r="12" fill="url(#hfxGlow)"/>
+      </svg>
+      </span>
     </figure>
       <p class="post-updated-line">最後更新：<time class="post-updated" datetime="2026-09-19">2026/09/19</time></p>
   </div>

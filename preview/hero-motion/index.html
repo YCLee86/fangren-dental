@@ -20,7 +20,7 @@
 
      這一頁拿站上三張已經上線的文章 HERO，各示範一種動法：
        ① 植牙能用多久      轉        大鐘的秒針 + 兩顆小鐘 + 沙漏落沙
-       ② 隱形矯正的模擬    亮與縮放  黃色警告標示放大縮小 + 五個驚嘆號依序亮
+       ② 隱形矯正的模擬    ✅ 已上線 —— 從這一頁拿掉了，看 /posts/aligner-simulation/
        ③ 貝氏刷牙法        呼吸      三個放大圈依序亮一圈環 + 刷頭小幅度來回
 
      ② 走過四輪，現在只剩兩件在動（每一輪都是使用者指定的）：
@@ -101,6 +101,9 @@ body {
   white-space: nowrap;
 }
 .pv-what { margin: .4rem 0 0; font-size: .84rem; color: var(--ink-soft); }
+.pv-done { opacity: .82; }
+.pv-done .pv-kind { border-color: var(--ink-soft); color: var(--ink-soft); }
+.pv-done .pv-what a { color: var(--teal); word-break: break-all; }
 
 /* 舞台：圖與 SVG 疊在同一個盒子裡，兩者共用同一個長寬比，所以永遠對齊 */
 .pv-stage {
@@ -156,59 +159,9 @@ html[data-still="1"] .pv-fx { display: none; }
   100% { transform: scaleY(.06); }
 }
 
-/* 亮：驚嘆號依序亮一下。
-   ✅ 2026-09-21 第五輪定案：**中速（3.4 秒一輪）**（使用者：「驚嘆號中」）。
-   ⚠ 這個值已經收成寫死的，不要再跟著警告標示一起調 —— 兩者是**各自**定案的，
-     警告標示那一項是快的（見下面 .pv-err）。切換條上那支「速度」是**整體**的
-     倍率，兩者的相對關係不會變。 */
-.pv-blip {
-  transform-box: view-box;
-  transform-origin: var(--ox) var(--oy);
-  animation: pvBlip calc(3.4s * var(--fx-spd)) ease-out infinite;
-  animation-delay: calc(var(--i) * .28s * var(--fx-spd));
-  opacity: 0;
-}
-@keyframes pvBlip {
-  0%   { opacity: 0; transform: scale(.45); }
-  8%   { opacity: calc(.95 * var(--fx-op)); transform: scale(calc(1 + .25 * var(--fx-amp))); }
-  26%  { opacity: 0; transform: scale(calc(1.5 + .5 * var(--fx-amp))); }
-  100% { opacity: 0; transform: scale(.45); }
-}
-
-/* ⛔ 2026-09-21 第四輪：**牙齒的轉動整個拿掉了**（使用者：「牙齒不要動好了」）。
-   前三輪的經過留在這裡，因為那三個坑日後想再做一定會重踩：
-     ・第二輪 ±7°：使用者「要很仔細看才看得出來」。成因是尺度 ——
-       手機上整張圖只有 360px 寬，一顆牙齒約 11px，±7° 牙尖只走 0.7px。
-     ・第三輪加到 24°、從三顆加到五顆（含兩顆大臼齒）、節奏改成「停住→快轉→停住」。
-       轉大之後遮罩貼著牙齒邊緣會在整顆牙外面糊出一圈白霧（牙齒的深色輪廓落在
-       柔邊裡，白牙與藍底一混）；放大到整顆裝得下（要 rx 26）又會把旁邊的
-       驚嘆號與牙弓白線一起捲進去轉。**治法是把遮罩縮進牙齒內部**（半徑 ≤ 13），
-       邊界兩側都是牙齒內部的白，轉起來零白霧。
-     ・即使如此，24° 在手機上也只讓溝紋走 2~3px。使用者看過之後決定不要。
-   ⚠ 日後若有人要把牙齒的動態加回來：**先量那顆牙在目標裝置上有幾個像素**，
-     11px 的東西再怎麼轉都是這個量級，問題不在角度。
-
-   底下 .pv-err 那一段是**同一套做法**（把同一張圖再畫一次、柔邊遮罩、再變形），
-   它留著 —— 警告標示有 64×44 單位，尺度夠大，看得清楚。 */
-
-/* 放大縮小：右上角那塊黃色的警告標示。把同一張圖再畫一次（同一個網址，瀏覽器
-   直接用快取裡那一份，沒有多下載），用柔邊遮罩只留那一小塊，再縮放。
-   倍率回到 1 的時候和底下那張逐像素相同，所以接縫看不出來。
-   ⚠ 這一項刻意不吃「幅度」的濃淡，只吃倍率 —— 理由寫在上面 .pv-fx 那一段。
-
-   ✅ 2026-09-21 第五輪定案：**快（1.24 秒一次）**（使用者：「警告標示快」）。
-   ⚠ 1.24 = 原本的 2 秒 × 切換條上「快」那一格的 0.62。**快慢已經烘進這個值裡**，
-     所以切換條回到「中」看到的就是使用者挑的那一格。⚠ 不要把它改回 2 秒，
-     也不要為了「和驚嘆號一致」把兩者調成同一個數字 —— 一中一快是他分開挑的。 */
-.pv-err {
-  transform-box: view-box;
-  transform-origin: var(--ox) var(--oy);
-  animation: pvErr calc(1.24s * var(--fx-spd)) ease-in-out infinite;
-}
-@keyframes pvErr {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(calc(1 + .13 * var(--fx-amp))); }
-}
+/* ⚠ ②（隱形矯正）那一組的 CSS 已經搬進 assets/style.css 的
+   「文章 HERO 的動態疊層」那一段，這裡不再留第二份 —— 留著遲早兩邊不一樣。
+   驚嘆號與警告標示的定案值、四輪的經過、以及牙齒那三個坑都寫在那裡。 */
 
 /* 呼吸：放大圈外面亮一圈環，三個錯開 */
 .pv-ring {
@@ -337,50 +290,20 @@ html[data-bar="0"] .pv-mini { display: flex; justify-content: flex-end; }
   </section>
 
   <!-- ② 掃 ------------------------------------------------------------------ -->
-  <section class="pv-item">
+  <!-- ✅ ② 隱形矯正那張 2026-09-21 定案上線了，所以從這一頁拿掉 ——
+       正式站的版本才是唯一的那一份，留一份在這裡遲早會兩邊不一樣。
+       上線的規格與四輪的經過寫在 assets/style.css 的「文章 HERO 的動態疊層」那一段。 -->
+  <section class="pv-item pv-done">
     <div class="pv-cap">
-      <span class="pv-kind">② 亮與縮放</span>
+      <span class="pv-kind">② 已上線</span>
       <h2>隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位</h2>
     </div>
-    <div class="pv-stage" style="--ar: 1600 / 891">
-      <img src="../../assets/hero-aligner-photo-1600.jpg" width="1600" height="891"
-           alt="醫師在半透明螢幕前講解牙弓模擬，螢幕上有多個警示標記">
-      <svg class="pv-fx" viewBox="0 0 800 445.5" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <defs>
-          <radialGradient id="pvBlipGrad">
-            <stop offset="0"   stop-color="#ffffff" stop-opacity=".95"/>
-            <stop offset=".55" stop-color="#ffffff" stop-opacity=".45"/>
-            <stop offset="1"   stop-color="#ffffff" stop-opacity="0"/>
-          </radialGradient>
-
-          <!-- 柔邊。遮罩的邊要糊掉，硬邊的話牙齒一轉就看得到一圈接縫 -->
-          <!-- 柔邊。遮罩的邊要糊掉，硬邊的話一放大就看得到一圈接縫 -->
-          <filter id="pvSoftBox" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="5"/>
-          </filter>
-
-          <!-- 右上角那塊黃色的警告標示 -->
-          <mask id="pvErr"><rect x="384" y="64" width="80" height="56" rx="12" fill="#fff" filter="url(#pvSoftBox)"/></mask>
-        </defs>
-
-        <!-- ⛔ 牙齒的轉動 2026-09-21 第四輪整組拿掉了（使用者指定），
-             經過與三個坑留在樣式表那一段的註解裡。 -->
-
-        <!-- 黃色的警告標示放大縮小。
-             href 和底下那個 <img> 是同一個網址，瀏覽器直接用快取裡那一份，沒有多下載。 -->
-        <g class="pv-err" style="--ox:424px; --oy:92px">
-          <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvErr)"/>
-        </g>
-
-        <!-- 五個驚嘆號依序亮一下 -->
-        <circle class="pv-blip" style="--ox:226px; --oy:91px;  --i:0" cx="226" cy="91"  r="12" fill="url(#pvBlipGrad)"/>
-        <circle class="pv-blip" style="--ox:354px; --oy:95px;  --i:1" cx="354" cy="95"  r="12" fill="url(#pvBlipGrad)"/>
-        <circle class="pv-blip" style="--ox:314px; --oy:126px; --i:2" cx="314" cy="126" r="12" fill="url(#pvBlipGrad)"/>
-        <circle class="pv-blip" style="--ox:199px; --oy:161px; --i:3" cx="199" cy="161" r="12" fill="url(#pvBlipGrad)"/>
-        <circle class="pv-blip" style="--ox:261px; --oy:186px; --i:4" cx="261" cy="186" r="12" fill="url(#pvBlipGrad)"/>
-      </svg>
-    </div>
-    <p class="pv-what">動的是：右上角那塊黃色的警告標示放大縮小（<b>快</b>，1.24 秒一次）、五個驚嘆號由左而右依序亮一下（<b>中</b>，3.4 秒一輪）。<br>兩個速度已經<b>各自定案</b>並寫死；底下那支「速度」是整體倍率，動它兩者的快慢關係不變。<br><b>牙齒的轉動已經整組拿掉</b>，整面螢幕的光帶也早在上一輪拿掉了。</p>
+    <p class="pv-what">
+      這一張已經定案上線，看正式站那一頁就好（底下的切換條對它沒有作用）：<br>
+      <a href="/posts/aligner-simulation/">https://fangren.net/posts/aligner-simulation/</a><br>
+      定案的是：黃色警告標示放大縮小（<b>速度中 2 秒、幅度 Ⓒ 明顯</b>）、五個驚嘆號依序亮一下（<b>速度中 3.4 秒、幅度 Ⓑ 中</b>）。
+      整面螢幕的光帶與牙齒的轉動都已經拿掉。
+    </p>
   </section>
 
   <!-- ③ 呼吸 ---------------------------------------------------------------- -->
