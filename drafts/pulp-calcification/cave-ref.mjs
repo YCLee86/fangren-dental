@@ -173,8 +173,15 @@ const bugs = `
   <clipPath id="c2"><circle cx="${SX}" cy="${SY}" r="${SR-5}"/></clipPath>
   <g clip-path="url(#c2)">
     <rect x="${SX-SR}" y="${SY-SR}" width="${SR*2}" height="${SR*2}" fill="#efe3cb"/>
+    <!-- 髒亂：地上的水窪、牆上的潑濺、飛出去的碎屑（第八版加，使用者指定） -->
+    <ellipse cx="${SX-30}" cy="${SY+104}" rx="70" ry="17" fill="#a8a795" opacity=".8"/>
+    <ellipse cx="${SX+74}" cy="${SY+112}" rx="42" ry="12" fill="#a8a795" opacity=".7"/>
+    <path d="M ${SX-118} ${SY-78} q 26 -22 52 -6 q -14 24 -52 6 Z" fill="#a8a795" opacity=".75"/>
+    <path d="M ${SX+86} ${SY-72} q 22 -18 44 -4 q -12 20 -44 4 Z" fill="#a8a795" opacity=".75"/>
+    ${[[-104,18],[-88,-8],[24,-96],[52,-80],[108,54],[-36,96],[92,-14],[-70,66]]
+      .map(([dx,dy]) => `<circle cx="${SX+dx}" cy="${SY+dy}" r="4.5" fill="#8c8672"/>`).join('')}
     ${[[-72,-40,26],[-14,-62,20],[46,-34,24],[-54,26,22],[8,14,28],[70,30,21],[-6,74,19],[62,82,17]]
-      .map(([dx,dy,r]) => `<circle cx="${SX+dx}" cy="${SY+dy}" r="${r}" fill="#b9b1a4"/>`).join('')}
+      .map(([dx,dy,r]) => `<circle cx="${SX+dx}" cy="${SY+dy}" r="${r}" fill="#9a9081"/>`).join('')}
   </g>
   <circle cx="${SX}" cy="${SY}" r="${SR}" fill="none" stroke="${INK}" stroke-width="8"/>`;
 
