@@ -107,7 +107,7 @@ const bodyEnd = out.indexOf('    <div class="post-foot">');
 if (bodyStart < 0 || bodyEnd < 0) throw new Error('找不到內文範圍');
 out = out.slice(0, bodyStart) + BODY() + out.slice(bodyEnd);
 
-function BODY() { return `    <p class="lede">「這顆牙要做根管治療。」然後醫師看著 X 光片又補了一句：「不過它鈣化了。」——或者療程已經開始，你在診療椅上躺了很久，最後聽到的是「今天先到這裡」。這一篇講的就是這個處境：<strong>這顆牙很可能要、或者已經確定要做根管治療，偏偏那條管子已經被封起來了，接下來會怎麼處理。</strong></p>
+function BODY() { return `    <p class="lede">「這顆牙要做根管治療。」然後醫師看著 X 光片又補了一句：「不過它鈣化了。」——或者療程已經開始，你在診療椅上躺了很久，最後聽到的是「今天先到這裡」。這一篇講的就是這個處境：<strong>這顆牙很可能要、或者已經確定要做根管治療，偏偏那條神經已經被塞住了，接下來會怎麼處理。</strong></p>
 
     <div class="callout">
       <p><b>先分清楚兩件事。</b>如果你是在檢查時被順便告知「這顆有鈣化」，而那顆牙不痛、X 光上根尖也乾淨，那是另一回事——<strong>鈣化本身不是治療的理由，追蹤就好</strong>。小時候撞過、後來慢慢變黃的門牙尤其如此：還在繼續鈣化，代表那條神經還活著（壞死的牙髓不會造牙本質），對冷測沒反應也是這種牙的常態。北歐一份追蹤 <a href="https://pubmed.ncbi.nlm.nih.gov/9198446/" target="_blank" rel="noopener">82 顆這樣的門牙平均 16 年</a>的研究裡，後來真的出現根尖病灶的只有 8.5%。這一篇講的是另外那一半：<strong>這顆牙已經需要處理了，而鈣化擋著入口。</strong></p>
