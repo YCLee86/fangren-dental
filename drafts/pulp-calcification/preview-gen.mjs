@@ -30,7 +30,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const src = readFileSync(resolve(root, 'posts/bioceramic/index.html'), 'utf8');
 
-const TITLE = '根管鈣化：要做根管治療，卻找不到那條管子';
+const TITLE = '根管鈣化：要做根管治療、抽神經，卻找不到那條神經';
 const DESC  = '「這顆牙要做根管治療，不過它鈣化了。」需要根管治療的牙齒往往正是被刺激很久的那一顆，兩件事是同一個原因的兩個結果。鈣化會讓這一次多出什麼、打不通的時候還有哪些路（導引式開髓、根尖手術、意向性再植），以及過程中真的出狀況了怎麼處理。';
 const OGDESC = '鈣化會讓這一次的根管治療多出什麼、打不通的時候還有哪些路，以及過程中真的出狀況了怎麼處理。';
 
