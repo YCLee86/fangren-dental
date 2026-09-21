@@ -29,12 +29,27 @@
 | 文中寫的 | 出處 | 核對狀態 |
 | --- | --- | --- |
 | 補過的牙齒出現髓石的機率是沒補過的 **2.1 倍**、上顎 **4.7 倍**（皆 p < 0.0001）；144 人裡 **120 人（83.3%）**至少有一顆牙有髓石；**第一大臼齒 50.0%** 最高 | Hsieh CY, Wu YC, Su CC, Chung MP, Huang RY, Ting PY, et al. *The prevalence and distribution of radiopaque, calcified pulp stones: A cone-beam computed tomography study in a northern Taiwanese population.* J Dent Sci. 2018;13(2):138–44. <https://www.sciencedirect.com/science/article/pii/S1991790217301289> | ✅ 搜尋結果逐字對上三組數字 |
-| 北歐追蹤：**82 顆**外傷後鈣化恆門齒、平均 **16 年**；出現根尖病灶 **8.5%** | Robertson A, Andreasen FM, Bergenholtz G, Andreasen JO, Norén JG. *Incidence of pulp necrosis subsequent to pulp canal obliteration from trauma of permanent incisors.* J Endod. 1996;22(10):557–60. <https://pubmed.ncbi.nlm.nih.gov/9198446/> | ✅ 搜尋結果逐字對上（同時對上 51% 電測正常／另 40% 正常範圍，第二版只留 8.5%） |
 | 漏找根管：整體 **18%**、上顎第一大臼齒 **40.6%**；有漏找根管者 **90%** 併發根尖牙周炎 | *Prevalence of Missed Canals and Their Association with Apical Periodontitis in Posterior Endodontically Treated Teeth: A CBCT Study*（2021）<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8257386/> | ✅ 搜尋結果逐字對上三個數字 |
 | 導引式開髓在準確度與保留齒質上優於徒手；2023 年系統性回顧收 **45 篇** | Peña-Bengoa F, Valenzuela M, Flores MJ, Dufey N, Pinto KP, Silva EJ. *Effectiveness of guided endodontics in locating calcified root canals: a systematic review.* Clin Oral Investig. 2023;27:2359–74. <https://link.springer.com/article/10.1007/s00784-023-04863-0> | ✅ 搜尋結果對上「forty-five studies」與 43/45 認為有效 |
 | **根尖手術可以當成這種牙齒的第一線做法**，不是只在失敗之後才用 | Mou 等. *Endodontic Microsurgery as a Primary Treatment for Pulp Canal Obliteration With Apical Periodontitis: Case Reports.* Case Rep Dent. 2026. <https://pmc.ncbi.nlm.nih.gov/articles/PMC13535158/> | ✅ 摘要對上（"primary EMS may represent a feasible alternative for selected cases of PCO with AP"）。⚠ 是**病例報告**，文中因此寫「近年的病例報告把它當成…討論」，沒有寫成定論 |
 | **鈣化多半從牙冠往根尖進行，根尖那三分之一常常還留著**（文中出現兩次，是「打不通還有哪些路」那一節的前提） | 原稿第五節 5-1 的判讀重點；另以搜尋核對到多篇病例與一份分級系統的描述（cervical／middle third 完全閉鎖、apical third 仍部分通暢） | ✅ 方向一致。⚠ **沒有找到一個可引用的比例**，所以文中只寫「常常」「多半」，**不印數字** |
 | 意向性再植是前面幾條都走不通時的選項 | 同上搜尋結果（"intentional replantation may be considered as a last solution to preserve the tooth"） | ✅ 語氣一致。⚠ 文中寫「條件嚴格、步驟多」，沒有寫成常規做法 |
+
+## 第四版（2026-09-21）：開頭那個 callout 整段拿掉了
+
+使用者：「這段不用了」。那一段是第二版用來**界定這一篇不是在講誰**的
+（沒有症狀的鈣化追蹤就好、外傷後變黃代表神經還活著、Robertson 那 82 顆）。
+
+⚠ **那個提醒沒有消失，它在重點整理的最後一問**（「那如果我的牙齒只是鈣化、
+沒有症狀呢？」→「那就不是這一篇講的情況…」）。位置從開頭的關卡換成結尾的問答，
+**不要因為開頭沒有了就再加一段回去**。
+
+⚠ 連帶：**Robertson 1996 那一筆不再出現在文中**（外部連結因此從五個剩四個）。
+那一筆核對過是對的，日後要寫外傷或無症狀鈣化的專篇可以直接用：
+
+| 文中原本寫的 | 出處 | 核對狀態 |
+| --- | --- | --- |
+| 北歐追蹤：**82 顆**外傷後鈣化恆門齒、平均 **16 年**；出現根尖病灶 **8.5%** | Robertson A, Andreasen FM, Bergenholtz G, Andreasen JO, Norén JG. *Incidence of pulp necrosis subsequent to pulp canal obliteration from trauma of permanent incisors.* J Endod. 1996;22(10):557–60. <https://pubmed.ncbi.nlm.nih.gov/9198446/> | ✅ 搜尋結果逐字對上（同時對上 51% 電測正常／另 40% 正常範圍，第二版只留 8.5%） |
 
 ## 第一版用過、第二版拿掉的
 
