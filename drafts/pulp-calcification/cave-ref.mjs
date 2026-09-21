@@ -69,18 +69,37 @@ const body = `
            C ${TX-R*0.99} ${TY+R*0.12} ${TX-R} ${TY+20} ${TX-R} ${TY-40} Z"
         fill="${SIDE}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>`;
 
+
+/* ── ⚠⚠ 第二版加的：虛線畫出鈣化的牙髓腔與狹窄根管（使用者指定） ──────
+   三件刻意的：
+   ・**腔室畫得又小又扁** —— 鈣化過的髓腔本來就被壓低，畫大就不叫鈣化。
+   ・**兩條根管是「一條線」不是「一個管」** —— 細到只剩一條虛線，
+     而且**全長一樣細**（文章第五版已經拿掉「只有上半段會鈣化」那句）。
+   ・**從那個小凹洞有一小段虛線接下來** —— 那是「入口在這裡」的意思。 */
+const DASH = '#8c7b62';
+const ghost = `
+  <g fill="none" stroke="${DASH}" stroke-width="3" stroke-dasharray="11 9" stroke-linecap="round" opacity=".92">
+    <path d="M ${PITX} ${PITY+8} L ${TX+R*0.01} ${TY+R*0.66}"/>
+    <path d="M ${TX-R*0.30} ${TY+R*0.80}
+             C ${TX-R*0.32} ${TY+R*0.70} ${TX-R*0.16} ${TY+R*0.66} ${TX} ${TY+R*0.66}
+             C ${TX+R*0.16} ${TY+R*0.66} ${TX+R*0.32} ${TY+R*0.70} ${TX+R*0.30} ${TY+R*0.80}
+             C ${TX+R*0.24} ${TY+R*0.92} ${TX-R*0.24} ${TY+R*0.92} ${TX-R*0.30} ${TY+R*0.80} Z"/>
+    <path d="M ${TX-R*0.17} ${TY+R*0.90} C ${TX-R*0.26} ${TY+330} ${TX-R*0.36} ${TY+430} ${TX-R*0.38} ${TY+498}"/>
+    <path d="M ${TX+R*0.17} ${TY+R*0.90} C ${TX+R*0.26} ${TY+330} ${TX+R*0.38} ${TY+430} ${TX+R*0.42} ${TY+500}"/>
+  </g>`;
+
 /* ── 左邊：放大鏡的圓框，裡面是那個洞被放大之後的洞口 ──────── */
-const CX = 440, CY = 430, CR = 268;
+const CX = 402, CY = 448, CR = 340;   // ⚠ 第二版放大（使用者：放大鏡的視野和裡面的人物有點小）
 const cave = `
   <clipPath id="c"><circle cx="${CX}" cy="${CY}" r="${CR-6}"/></clipPath>
   <g clip-path="url(#c)">
     <rect x="${CX-CR}" y="${CY-CR}" width="${CR*2}" height="${CR*2}" fill="${SIDE}"/>
-    <path d="M ${CX-CR} ${CY+120} C ${CX-150} ${CY+40} ${CX+150} ${CY+40} ${CX+CR} ${CY+120}
+    <path d="M ${CX-CR} ${CY+186} C ${CX-150} ${CY+140} ${CX+150} ${CY+140} ${CX+CR} ${CY+186}
              L ${CX+CR} ${CY+CR} L ${CX-CR} ${CY+CR} Z" fill="${RIM}"/>
-    <path d="M ${CX-118} ${CY+96} C ${CX-104} ${CY-96} ${CX+104} ${CY-96} ${CX+118} ${CY+96}
-             C ${CX+60} ${CY+132} ${CX-60} ${CY+132} ${CX-118} ${CY+96} Z" fill="${DARK}"/>
-    <path d="M ${CX-74} ${CY+82} C ${CX-64} ${CY-46} ${CX+64} ${CY-46} ${CX+74} ${CY+82}
-             C ${CX+38} ${CY+106} ${CX-38} ${CY+106} ${CX-74} ${CY+82} Z" fill="${GLOW}" opacity=".55"/>
+    <path d="M ${CX-196} ${CY+170} C ${CX-178} ${CY-224} ${CX+178} ${CY-224} ${CX+196} ${CY+170}
+             C ${CX+100} ${CY+214} ${CX-100} ${CY+214} ${CX-196} ${CY+170} Z" fill="${DARK}"/>
+    <path d="M ${CX-130} ${CY+152} C ${CX-116} ${CY-160} ${CX+116} ${CY-160} ${CX+130} ${CY+152}
+             C ${CX+66} ${CY+184} ${CX-66} ${CY+184} ${CX-130} ${CY+152} Z" fill="${GLOW}" opacity=".55"/>
   </g>
   <circle cx="${CX}" cy="${CY}" r="${CR}" fill="none" stroke="${INK}" stroke-width="9"/>`;
 
@@ -94,7 +113,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
   ${leader}
   ${body}
   <path d="${occl}" fill="${ENAM}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
-  ${cusps}${fissure}${pit}
+  ${cusps}${fissure}${ghost}${pit}
   ${cave}
 </svg>`;
 
