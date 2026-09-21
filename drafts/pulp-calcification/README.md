@@ -55,7 +55,7 @@ node drafts/pulp-calcification/preview-gen.mjs
 | **HERO 插畫** | 還沒畫。預覽頁上是一塊虛線佔位。畫之前先讀 ILLUSTRATION.md；出圖後跑 `node tools/hero-resize.mjs <原檔> pulp-calcification-photo` 再跑 `node tools/webp.mjs` |
 | **上線日期** | `post-meta` 的 `published` 是佔位符，定案那天填 |
 | **`about` 的 Wikidata** | 根管鈣化、髓石**查不到對應項目，留白**（CLAUDE.md 第十節第 3 項允許）。⚠ 不要猜 Q 編號 |
-| **四個外部連結** | 容器連不出去（`curl` 403、`WebFetch` 被 egress proxy 擋），**沒有真的點開過**。請在手機上各點一次 |
+| **兩個外部連結** | 容器連不出去（`curl` 403、`WebFetch` 被 egress proxy 擋），**沒有真的點開過**。請在手機上各點一次 |
 | **要不要問診所** | 文中「芳仁的顯微根管門診由受過牙髓病專科訓練的醫師看診，根尖手術也在同一個門診處理」沿用 `/topics/endo/` 上已經寫過的事實（陳芷鈴醫師專長列了根尖手術）。**導引式開髓刻意沒有寫成診所有提供**，只寫它存在、需要額外設備、不是每一間診所都有。**意向性再植同樣沒有寫成診所有做**。診所若真的有做，這兩處可以改寫 |\n| **費用** | 文中只寫「費用與次數會在治療計畫確定的時候一併說明」（沿用 `posts/bioceramic` 的寫法）。**沒有寫任何金額，也沒有寫健保給不給付** —— 那是 CLAUDE.md 第一段列的「還沒問到診所的事」之一 |
 
 ## 定案那天要做的事

@@ -30,10 +30,54 @@
 | --- | --- | --- |
 | 補過的牙齒出現髓石的機率是沒補過的 **2.1 倍**、上顎 **4.7 倍**（皆 p < 0.0001）；144 人裡 **120 人（83.3%）**至少有一顆牙有髓石；**第一大臼齒 50.0%** 最高 | Hsieh CY, Wu YC, Su CC, Chung MP, Huang RY, Ting PY, et al. *The prevalence and distribution of radiopaque, calcified pulp stones: A cone-beam computed tomography study in a northern Taiwanese population.* J Dent Sci. 2018;13(2):138–44. <https://www.sciencedirect.com/science/article/pii/S1991790217301289> | ✅ 搜尋結果逐字對上三組數字 |
 | 漏找根管：整體 **18%**、上顎第一大臼齒 **40.6%**；有漏找根管者 **90%** 併發根尖牙周炎 | *Prevalence of Missed Canals and Their Association with Apical Periodontitis in Posterior Endodontically Treated Teeth: A CBCT Study*（2021）<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8257386/> | ✅ 搜尋結果逐字對上三個數字 |
+
+## 第五版（2026-09-21）：「打不通的時候還有哪些做法」整節拿掉
+
+使用者同一輪給了七項修改，其中兩項動到結構：
+
+1. **「打不通的時候，還有哪些做法」整節拿掉** —— 小標、開場句、
+   導引式開髓／根尖手術／意向性再植／拔除重建那張四列表、以及最後
+   「排這個順序的依據」那一段，全部。
+2. **「什麼時候會建議換個地方做」的小標與第一段拿掉**，後兩段留著，
+   改掛在新的小標〈芳仁這邊的做法〉底下。
+
+⚠⚠ 另外一項是**醫療事實的更正**（使用者是牙醫師）：
+
+> 「鈣化不只上半部，也有跟冠中段、末端鈣化，都是增加根管治療的困難度」
+
+所以**「鈣化多半是從牙冠往根尖進行、根尖那三分之一常常還留著」那個說法拿掉了**。
+那個說法在 PCO 的文獻裡**站得住**（第四版是照文獻寫的），但它只適用於
+外傷後的根管閉鎖，**推廣到所有的鈣化就不對** —— 髓石與瀰漫性鈣化在中段、
+根尖段一樣常見。⚠ **不要因為在文獻裡讀到就把它加回去。**
+現在那一段寫的是「鈣化可以發生在任何一段，位置不同、難的地方也不同，
+但沒有哪一種是輕鬆的」。
+
+同一個方向的還有兩處語氣：小標從「你遇到的是哪一種鈣化，**接下來差很多**」
+改成「鈣化分三種，成因不一樣，**但都讓治療變難**」；
+「先講一件會讓人鬆一口氣的事：真正整條封死的並不多」整句拿掉。
+**判準是：不要讓任何一種鈣化聽起來很輕鬆。**
+
+### 連帶拿掉的引用（外部連結從四個剩兩個）
+
+這幾筆都核對過是對的，日後要寫相關的專篇可以直接用：
+
+| 文中原本寫的 | 出處 | 核對狀態 |
+| --- | --- | --- |
 | 導引式開髓在準確度與保留齒質上優於徒手；2023 年系統性回顧收 **45 篇** | Peña-Bengoa F, Valenzuela M, Flores MJ, Dufey N, Pinto KP, Silva EJ. *Effectiveness of guided endodontics in locating calcified root canals: a systematic review.* Clin Oral Investig. 2023;27:2359–74. <https://link.springer.com/article/10.1007/s00784-023-04863-0> | ✅ 搜尋結果對上「forty-five studies」與 43/45 認為有效 |
 | **根尖手術可以當成這種牙齒的第一線做法**，不是只在失敗之後才用 | Mou 等. *Endodontic Microsurgery as a Primary Treatment for Pulp Canal Obliteration With Apical Periodontitis: Case Reports.* Case Rep Dent. 2026. <https://pmc.ncbi.nlm.nih.gov/articles/PMC13535158/> | ✅ 摘要對上（"primary EMS may represent a feasible alternative for selected cases of PCO with AP"）。⚠ 是**病例報告**，文中因此寫「近年的病例報告把它當成…討論」，沒有寫成定論 |
 | **鈣化多半從牙冠往根尖進行，根尖那三分之一常常還留著**（文中出現兩次，是「打不通還有哪些路」那一節的前提） | 原稿第五節 5-1 的判讀重點；另以搜尋核對到多篇病例與一份分級系統的描述（cervical／middle third 完全閉鎖、apical third 仍部分通暢） | ✅ 方向一致。⚠ **沒有找到一個可引用的比例**，所以文中只寫「常常」「多半」，**不印數字** |
 | 意向性再植是前面幾條都走不通時的選項 | 同上搜尋結果（"intentional replantation may be considered as a last solution to preserve the tooth"） | ✅ 語氣一致。⚠ 文中寫「條件嚴格、步驟多」，沒有寫成常規做法 |
+
+### 連帶修掉的六處（不修就會指向不存在的東西）
+
+| 哪裡 | 原本 | 改成 |
+| --- | --- | --- |
+| 「狀況表」最後一列 | 「或改用**上一節那幾種做法**」 | 「或和你討論接下來怎麼做」 |
+| 小標 | 「**打得通的時候**，醫師在做什麼」（和已經不在的「打不通的時候」成對） | 「顯微鏡下實際在做什麼」 |
+| 重點整理第三問的答案 | 答的是那三種做法 | 改成「停下來、重新拍片評估、再和你討論」 |
+| 重點整理第一問、免責段落 | 「萬一打不通時**要換哪一種做法**」 | 「萬一打不通時接下來怎麼處理」 |
+| 〈芳仁這邊的做法〉最後一段 | 直接寫「導引式開髓需要額外的設備」——**介紹它的那張表已經不在了** | 補一句夾註說明它是什麼 |
+| `DESC`／`OGDESC`／`excerpt` | 都還在講「打不通的時候還有哪些做法」 | 換成「顯微鏡下實際在做什麼」 |
 
 ## 第四版（2026-09-21）：開頭那個 callout 整段拿掉了
 
