@@ -91,14 +91,23 @@ outlines — as if the enamel were faintly transparent — is the calcified pulp
 COPY ITS SHAPE FROM THE FIRST REFERENCE IMAGE. IT IS ONE SINGLE CONTINUOUS OUTLINE, NOT SEVERAL
 SEPARATE MARKS — one unbroken dashed contour that flows from the crown all the way down
 into both roots, the way a real pulp does:
-  • at the top, a SMALL, FLATTENED CHAMBER sitting low inside the crown, well below the
-    biting surface, with two or three shallow points rising towards the cusps. It is
-    conspicuously small for such a big tooth, because years of new dentine have closed in
-    around it.
-  • from the floor of that chamber the outline narrows smoothly and CONTINUES AS TWO
-    EXTREMELY FINE CANALS, one down the middle of each root, ending near the root tips.
-    THESE TWO CANALS ARE AS THIN AS A HAIR ALONG THEIR WHOLE LENGTH — never wide anywhere,
-    and never wide at the top while thin at the bottom.
+  • at the top, a SMALL, LOW, FLATTENED CHAMBER sitting well down inside the crown, far
+    below the biting surface. Its roof carries TWO SOFT POINTS rising towards the two cusps
+    with a shallow dip between them, and ITS FLOOR ARCHES GENTLY UPWARDS in the middle, so
+    the whole chamber is A WIDE, SHALLOW, FLATTENED SPACE — much lower and much narrower
+    than the pulp chamber in a textbook diagram of a healthy tooth, because years of new
+    dentine have closed in around it. It is never a tall box, never a big rounded blob and
+    never as roomy as the crown could hold.
+  • from the two ends of that arched floor the outline narrows smoothly and CONTINUES AS TWO
+    EXTREMELY FINE CANALS, one inside each root. EACH CANAL FOLLOWS THE SHAPE OF ITS OWN
+    ROOT: it runs down the middle of the root, curving with it as the root curves, always
+    parallel to both walls of that root and always the same distance from each, and it comes
+    to A FINE POINT a little short of the root tip. The two canals are streamlined and
+    flowing, like two long tapering hairs laid inside the roots — never straight rods driven
+    into the roots, never bent at an angle, never running off-centre into a root wall.
+    THEY ARE FINER THAN THE CANALS IN ANY ORDINARY DENTAL DIAGRAM — barely thicker than the
+    dashed line that draws them, so thin along their whole length that you have to look for
+    them. Never wide anywhere, and never wide at the top while thin at the bottom.
 There is no floating ellipse, no separate blob and no gap between the chamber and the
 canals: it is one shape.
 These dashed lines are light and quiet: a hint of what is inside, never darker or heavier
@@ -382,7 +391,10 @@ drawn large enough to show faces or limbs; specks scattered elsewhere on the too
 magnified view showing a cave in open ground instead of the inside of a narrow tunnel; a
 tiny pit drawn large, wide or gaping on the surface of the giant tooth; the
 dashed pulp chamber drawn large, round or full-size; the dashed canals drawn as wide tubes;
-canals that are wide at the top and thin at the bottom; the pulp inside the tooth drawn in
+canals that are wide at the top and thin at the bottom; canals
+as wide as those in a standard dental illustration; a canal drawn as a straight rod rather
+than following the curve of its root; a canal running off-centre or touching a root wall; a
+tall, boxy or roomy pulp chamber; a pulp chamber with a flat or a hollowed-out floor; the pulp inside the tooth drawn in
 solid lines or filled in with colour; the dashed lines turned into arrows or into a
 measurement line with end bars; the giant tooth drawn as a cut-open cross-section; a small
 lens with four tiny figures lost in empty space; a wide strip of empty floor or empty wall

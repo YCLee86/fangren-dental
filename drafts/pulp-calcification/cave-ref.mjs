@@ -103,25 +103,35 @@ const fissure = `
 const PITX = TX - R*0.34, PITY = TOP - 3, PITW = (2*R)/28;
 const pit = `<ellipse cx="${PITX}" cy="${PITY}" rx="${(PITW/2).toFixed(1)}" ry="${(PITW/2*0.70).toFixed(1)}" fill="${DARK}"/>`;
 
-/* ── ⚠⚠⚠ 牙髓腔與根管：**一整條連起來的形狀** ──────────────────
-   使用者：「牙髓腔和根管的虛線不自然」。前四版是「一個浮著的橢圓 ＋ 兩條沒接上的線」。
-   真的牙髓是**一個連續的腔**：上面幾個淺牙尖角、中間扁扁的腔室、
-   底下收成兩條細管一路到根尖。
-   ⚠ 腔室刻意**又小又扁**（被鈣化壓小的樣子）；兩條管子**全長一樣細**，不可以上粗下細。 */
-const CH_T = TOP + 108, CH_B = CEJ - 18, CH_W = 38;
+/* ── ⚠⚠⚠ 牙髓腔與根管：**一整條連起來、順著牙根走的形狀** ──────────
+   第四版使用者說「不自然」，第十一版他給了一張標準的牙齒剖面圖並且指出三件：
+   ① **根管要順著牙根的形狀走**，是流線的，不是兩條插進去的直線；
+   ② **鈣化的根管比那張圖還細**；
+   ③ **髓腔比那張圖更窄更扁**。
+   所以這一版的畫法是：髓腔 ＝ 兩個髓角 ＋ 中間凹下去的頂 ＋ **往上拱的底**，
+   兩個根管口從那個拱的兩端各自往下，**沿著牙根的中線彎過去**，一路收到根尖前變成一個點。
+   ⚠ 全程只有一條封閉的輪廓，髓腔和根管之間沒有斷口。 */
+const CH_T = TOP + 134;      // 髓角的高度（兩個尖）
+const CH_R = TOP + 160;      // 兩個髓角之間凹下去的那一點 —— ⚠ 只凹一點點，
+                             //   凹太深的話中間被夾扁，整個形狀會讀成「上下兩塊」而不是一個腔
+const CH_B = CEJ - 52;       // 髓腔底（拱的兩端）
+const CH_W = 50;             // 髓腔最寬處的半寬 —— ⚠ 比參考圖窄
+const ORI  = 36;             // 根管口離中線多遠
+const AP   = 66;             // 根管末端離中線多遠（＝牙根的中線）
+const APY  = APEX - 46;      // 根管末端的高度
 const pulp = `
-  M ${TX-CH_W} ${CH_T+24}
-  C ${TX-CH_W} ${CH_T-2} ${TX-20} ${CH_T-10} ${TX-13} ${CH_T+8}
-  C ${TX-3} ${CH_T-12} ${TX+9} ${CH_T-12} ${TX+17} ${CH_T+8}
-  C ${TX+25} ${CH_T-6} ${TX+CH_W} ${CH_T} ${TX+CH_W} ${CH_T+26}
-  L ${TX+20} ${CH_B}
-  C ${TX+29} ${CEJ+104} ${TX+50} ${CEJ+228} ${TX+62} ${APEX-46}
-  L ${TX+55} ${APEX-46}
-  C ${TX+43} ${CEJ+230} ${TX+23} ${CEJ+110} ${TX+13} ${CH_B+8}
-  C ${TX+7} ${CH_B+17} ${TX-7} ${CH_B+17} ${TX-13} ${CH_B+8}
-  C ${TX-23} ${CEJ+110} ${TX-43} ${CEJ+230} ${TX-55} ${APEX-46}
-  L ${TX-62} ${APEX-46}
-  C ${TX-50} ${CEJ+228} ${TX-29} ${CEJ+104} ${TX-20} ${CH_B} Z`;
+  M ${TX-CH_W} ${CH_T}
+  C ${TX-CH_W+8} ${CH_R-26} ${TX-22} ${CH_R} ${TX} ${CH_R}
+  C ${TX+22} ${CH_R} ${TX+CH_W-8} ${CH_R-26} ${TX+CH_W} ${CH_T}
+  C ${TX+CH_W+4} ${CH_T+60} ${TX+CH_W-2} ${CH_B-32} ${TX+ORI+14} ${CH_B}
+  C ${TX+52} ${CEJ+72} ${TX+63} ${CEJ+192} ${TX+AP+1} ${APY}
+  C ${TX+AP} ${APY+10} ${TX+AP-1} ${APY+10} ${TX+AP-2} ${APY}
+  C ${TX+57} ${CEJ+192} ${TX+45} ${CEJ+74} ${TX+ORI-6} ${CH_B+2}
+  C ${TX+16} ${CH_B-10} ${TX-16} ${CH_B-10} ${TX-ORI+6} ${CH_B+2}
+  C ${TX-45} ${CEJ+74} ${TX-57} ${CEJ+192} ${TX-AP+2} ${APY}
+  C ${TX-AP+1} ${APY+10} ${TX-AP} ${APY+10} ${TX-AP-1} ${APY}
+  C ${TX-63} ${CEJ+192} ${TX-52} ${CEJ+72} ${TX-ORI-14} ${CH_B}
+  C ${TX-CH_W+2} ${CH_B-32} ${TX-CH_W-4} ${CH_T+60} ${TX-CH_W} ${CH_T} Z`;
 const ghost = `<path d="${pulp}" fill="none" stroke="${DASH}" stroke-width="3"
    stroke-dasharray="11 9" stroke-linecap="round" opacity=".92"/>`;
 
@@ -172,7 +182,7 @@ const cave = `
      d ＝ 點到圓心的距離、γ ＝ acos(r/d)、φ ＝ 圓心看向那一點的角度
      兩個切點 ＝ 圓心 ＋ r·(cos(φ±γ), sin(φ±γ))
    這樣兩條線會自然地包住整個圓，看起來才像「這個圓在看那一點」。 */
-const ZX = TX - 46, ZY = CEJ + 186;          // 放大的那一點：左邊那條根管的中段
+const ZX = TX - 58, ZY = CEJ + 186;          // 放大的那一點：左邊那條根管的中段
 const leaderTo = (cx, cy, r, px, py) => {
   const dx = px - cx, dy = py - cy, d = Math.hypot(dx, dy);
   if (d <= r) throw new Error('那一點落在圓裡面，畫不出外切線');
