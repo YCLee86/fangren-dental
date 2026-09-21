@@ -19,9 +19,19 @@
      這正是 CSS 最便宜的一種 —— 不必換圖、不必多載任何檔案。
 
      這一頁拿站上三張已經上線的文章 HERO，各示範一種動法：
-       ① 植牙能用多久      轉      大鐘的秒針 + 兩顆小鐘 + 沙漏落沙
-       ② 隱形矯正的模擬    掃      螢幕的掃描光帶 + 五個警示標記依序亮
-       ③ 貝氏刷牙法        呼吸    三個放大圈依序亮一圈環 + 刷頭小幅度來回
+       ① 植牙能用多久      轉        大鐘的秒針 + 兩顆小鐘 + 沙漏落沙
+       ② 隱形矯正的模擬    轉與亮    三顆歪牙左右轉 + 黃色警告標示放大縮小 + 五個驚嘆號依序亮
+       ③ 貝氏刷牙法        呼吸      三個放大圈依序亮一圈環 + 刷頭小幅度來回
+
+     ② 2026-09-21 第二輪改的四件（使用者指定）：
+       ・整面螢幕由上而下的光帶**拿掉**（連同 clipPath 與漸層一起刪）
+       ・驚嘆號亮一下**保留**
+       ・歪掉的幾顆牙齒**加上小幅度轉動**
+       ・右上角黃色的警告標示**加上放大縮小**
+     後兩件的做法：把同一張圖（同一個網址，走快取不多下載）再畫一次，
+     用柔邊遮罩只留那一小塊，再轉／再縮放。角度回到 0、倍率回到 1 的時候
+     和底下那張逐像素相同，所以接縫看不出來。
+     ⚠ 因此濃淡（--fx-op）不能加在整層 .pv-fx 上，會變成疊影 —— 見那一段註解。
 
      ⚠ 三張圖檔一個位元組都沒有改，動的東西全部是疊在圖上面的 SVG。
      ⚠ 顏色只用 PALETTE.md 既有的三個官方色票（brick／stool／teal）與白，
@@ -100,9 +110,11 @@ body {
   border: 1px solid var(--rule);
 }
 .pv-stage img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* ⚠ 濃淡（--fx-op）**不加在這一層**。②那張的牙齒與 ERROR 是「把原圖再畫一次
+   再轉／再放大」，整層調半透明的話會同時看到原本那一顆和轉過去的那一顆，
+   變成疊影。所以濃淡是逐項加在「憑空加上去的」那些元素上。 */
 .pv-fx {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  opacity: var(--fx-op);
   pointer-events: none;
 }
 
@@ -119,33 +131,26 @@ html[data-still="1"] .pv-fx { display: none; }
 .pv-spin {
   transform-box: view-box;
   transform-origin: var(--ox) var(--oy);
+  opacity: var(--fx-op);
   animation: pvSpin calc(var(--dur) * var(--fx-spd)) linear infinite;
 }
 @keyframes pvSpin { to { transform: rotate(360deg); } }
 
 /* 落沙：短虛線往下跑，看起來就是一顆一顆掉下去 */
-.pv-sand { animation: pvFall calc(.62s * var(--fx-spd)) linear infinite; }
+.pv-sand { opacity: var(--fx-op); animation: pvFall calc(.62s * var(--fx-spd)) linear infinite; }
 @keyframes pvFall { to { stroke-dashoffset: -6; } }
 
 /* 沙堆：慢慢長高，長滿了重來 */
 .pv-pile {
   transform-box: view-box;
   transform-origin: var(--ox) var(--oy);
+  opacity: calc(.55 * var(--fx-op));
   animation: pvPile calc(7s * var(--fx-spd)) linear infinite;
 }
 @keyframes pvPile {
   0%   { transform: scaleY(.06); }
   92%  { transform: scaleY(1); }
   100% { transform: scaleY(.06); }
-}
-
-/* 掃：一條光帶由上往下掃過螢幕 */
-.pv-scan { animation: pvScan calc(4.2s * var(--fx-spd)) cubic-bezier(.45,.02,.5,.98) infinite; }
-@keyframes pvScan {
-  0%   { transform: translateY(-70px); opacity: 0; }
-  12%  { opacity: 1; }
-  82%  { opacity: 1; }
-  100% { transform: translateY(240px); opacity: 0; }
 }
 
 /* 亮：警示標記依序亮一下 */
@@ -158,9 +163,37 @@ html[data-still="1"] .pv-fx { display: none; }
 }
 @keyframes pvBlip {
   0%   { opacity: 0; transform: scale(.45); }
-  8%   { opacity: .95; transform: scale(calc(1 + .25 * var(--fx-amp))); }
+  8%   { opacity: calc(.95 * var(--fx-op)); transform: scale(calc(1 + .25 * var(--fx-amp))); }
   26%  { opacity: 0; transform: scale(calc(1.5 + .5 * var(--fx-amp))); }
   100% { opacity: 0; transform: scale(.45); }
+}
+
+/* 轉：歪掉的那幾顆牙齒。做法是把**同一張圖**再畫一次（同一個網址，瀏覽器直接用
+   快取裡那一份，沒有多下載），用柔邊的遮罩只留下那一顆，再繞著它自己的中心轉。
+   角度回到 0 的時候和底下那張逐像素相同，所以接縫看不出來。
+   ⚠ 這一項刻意不吃「幅度」的濃淡，只吃角度 —— 理由寫在上面 .pv-fx 那一段。 */
+.pv-tooth {
+  transform-box: view-box;
+  transform-origin: var(--ox) var(--oy);
+  animation: pvTooth calc(3s * var(--fx-spd)) ease-in-out infinite;
+  animation-delay: calc(var(--i) * .5s * var(--fx-spd));
+}
+@keyframes pvTooth {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(calc(7deg * var(--fx-amp))); }
+  75%      { transform: rotate(calc(-7deg * var(--fx-amp))); }
+}
+
+/* 放大縮小：右上角那塊黃色的警告標示。同上，是同一張圖的一小塊在縮放，
+   倍率回到 1 的時候和底下那張完全重合。 */
+.pv-err {
+  transform-box: view-box;
+  transform-origin: var(--ox) var(--oy);
+  animation: pvErr calc(2s * var(--fx-spd)) ease-in-out infinite;
+}
+@keyframes pvErr {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(calc(1 + .13 * var(--fx-amp))); }
 }
 
 /* 呼吸：放大圈外面亮一圈環，三個錯開 */
@@ -172,14 +205,15 @@ html[data-still="1"] .pv-fx { display: none; }
   opacity: 0;
 }
 @keyframes pvRing {
-  0%   { opacity: 0;  transform: scale(1); }
-  10%  { opacity: .9; transform: scale(1.01); }
-  62%  { opacity: 0;  transform: scale(calc(1.1 + .1 * var(--fx-amp))); }
-  100% { opacity: 0;  transform: scale(1); }
+  0%   { opacity: 0; transform: scale(1); }
+  10%  { opacity: calc(.9 * var(--fx-op)); transform: scale(1.01); }
+  62%  { opacity: 0; transform: scale(calc(1.1 + .1 * var(--fx-amp))); }
+  100% { opacity: 0; transform: scale(1); }
 }
 
 /* 來回：刷頭的小幅度往復，這是貝氏刷牙法的重點動作 */
 .pv-swing {
+  opacity: calc(.92 * var(--fx-op));
   animation: pvSwing calc(1.25s * var(--fx-spd)) ease-in-out infinite alternate;
 }
 @keyframes pvSwing {
@@ -291,7 +325,7 @@ html[data-bar="0"] .pv-mini { display: flex; justify-content: flex-end; }
   <!-- ② 掃 ------------------------------------------------------------------ -->
   <section class="pv-item">
     <div class="pv-cap">
-      <span class="pv-kind">② 掃</span>
+      <span class="pv-kind">② 轉與亮</span>
       <h2>隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位</h2>
     </div>
     <div class="pv-stage" style="--ar: 1600 / 891">
@@ -299,25 +333,46 @@ html[data-bar="0"] .pv-mini { display: flex; justify-content: flex-end; }
            alt="醫師在半透明螢幕前講解牙弓模擬，螢幕上有多個警示標記">
       <svg class="pv-fx" viewBox="0 0 800 445.5" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
         <defs>
-          <clipPath id="pvScreenClip">
-            <polygon points="174,31 468,56 464,243 170,234"/>
-          </clipPath>
-          <linearGradient id="pvScanGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0"   stop-color="#ffffff" stop-opacity="0"/>
-            <stop offset=".5"  stop-color="#ffffff" stop-opacity=".85"/>
-            <stop offset="1"   stop-color="#ffffff" stop-opacity="0"/>
-          </linearGradient>
           <radialGradient id="pvBlipGrad">
             <stop offset="0"   stop-color="#ffffff" stop-opacity=".95"/>
             <stop offset=".55" stop-color="#ffffff" stop-opacity=".45"/>
             <stop offset="1"   stop-color="#ffffff" stop-opacity="0"/>
           </radialGradient>
+
+          <!-- 柔邊。遮罩的邊要糊掉，硬邊的話牙齒一轉就看得到一圈接縫 -->
+          <filter id="pvSoft" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="3"/>
+          </filter>
+          <filter id="pvSoftBox" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="5"/>
+          </filter>
+
+          <!-- 三顆歪掉的牙齒，各自一塊柔邊的遮罩 -->
+          <mask id="pvT1"><ellipse cx="280"   cy="88.5" rx="11"   ry="9.5"  fill="#fff" filter="url(#pvSoft)"/></mask>
+          <mask id="pvT2"><ellipse cx="246.5" cy="112"  rx="11.5" ry="13"   fill="#fff" filter="url(#pvSoft)"/></mask>
+          <mask id="pvT3"><ellipse cx="319"   cy="104"  rx="10"   ry="10.5" fill="#fff" filter="url(#pvSoft)"/></mask>
+          <!-- 右上角那塊黃色的警告標示 -->
+          <mask id="pvErr"><rect x="384" y="64" width="80" height="56" rx="12" fill="#fff" filter="url(#pvSoftBox)"/></mask>
         </defs>
-        <!-- 掃描光帶，裁在螢幕那一塊四邊形裡面 -->
-        <g clip-path="url(#pvScreenClip)">
-          <rect class="pv-scan" x="165" y="20" width="310" height="52" fill="url(#pvScanGrad)"/>
+
+        <!-- 歪掉的三顆牙齒左右轉一點。
+             href 和底下那個 <img> 是同一個網址，瀏覽器直接用快取裡那一份，沒有多下載。 -->
+        <g class="pv-tooth" style="--ox:280px; --oy:87.5px; --i:0">
+          <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvT1)"/>
         </g>
-        <!-- 五個警示標記依序亮一下 -->
+        <g class="pv-tooth" style="--ox:246.5px; --oy:112px; --i:1">
+          <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvT2)"/>
+        </g>
+        <g class="pv-tooth" style="--ox:319px; --oy:104px; --i:2">
+          <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvT3)"/>
+        </g>
+
+        <!-- 黃色的警告標示放大縮小 -->
+        <g class="pv-err" style="--ox:424px; --oy:92px">
+          <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvErr)"/>
+        </g>
+
+        <!-- 五個驚嘆號依序亮一下 -->
         <circle class="pv-blip" style="--ox:226px; --oy:91px;  --i:0" cx="226" cy="91"  r="12" fill="url(#pvBlipGrad)"/>
         <circle class="pv-blip" style="--ox:354px; --oy:95px;  --i:1" cx="354" cy="95"  r="12" fill="url(#pvBlipGrad)"/>
         <circle class="pv-blip" style="--ox:314px; --oy:126px; --i:2" cx="314" cy="126" r="12" fill="url(#pvBlipGrad)"/>
@@ -325,7 +380,7 @@ html[data-bar="0"] .pv-mini { display: flex; justify-content: flex-end; }
         <circle class="pv-blip" style="--ox:261px; --oy:186px; --i:4" cx="261" cy="186" r="12" fill="url(#pvBlipGrad)"/>
       </svg>
     </div>
-    <p class="pv-what">動的是：一條光帶由上往下掃過那面螢幕（4.2 秒一次），以及螢幕上五個警示標記由左而右依序亮一下。</p>
+    <p class="pv-what">動的是：三顆歪掉的牙齒各自左右轉一點（3 秒一個來回，錯開）、右上角那塊黃色的警告標示放大縮小（2 秒一次）、五個驚嘆號由左而右依序亮一下。<b>整面螢幕的光帶已經拿掉。</b></p>
   </section>
 
   <!-- ③ 呼吸 ---------------------------------------------------------------- -->
