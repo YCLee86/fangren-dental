@@ -1,4 +1,4 @@
-Editorial illustration, 16:9 landscape. One single scene, no panels, no borders, no frames.
+Editorial illustration, 16:9 landscape. One single scene, no panels, no borders.
 
 STYLE — READ THIS FIRST; IT MATTERS MORE THAN ANY OTHER SECTION.
 Contemporary printed-magazine editorial illustration, hand-made throughout. Linework in
@@ -8,9 +8,9 @@ even mechanical vector line. Colour applied like soft coloured pencil and light 
 colour edges a little loose and not always meeting the line. Flat fills with two or three
 tones per hue — no smooth decorative gradients, no airbrush, no glow, no neon, no
 cel-shading. A fine even paper grain over every surface of the whole image, including the
-background. The picture is high-key and warm: plenty of pale cream paper showing through,
-but every named object still carries a real colour. This is NOT anime, NOT manga, NOT a
-screenshot from a cartoon, NOT 3D rendering.
+background. The picture is high-key and warm, with plenty of pale cream paper showing
+through, but every named object still carries a real colour. This is NOT anime, NOT manga,
+NOT a screenshot from a cartoon, NOT 3D rendering.
 
 FACES AND HANDS — READ THIS SECOND.
 SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
@@ -19,131 +19,137 @@ jawline. On a face, draw ONLY these six things: the outline of the head, the eye
 eyebrows, the nose, the mouth and the ears. Nothing else at all — no wrinkles, no lines
 beside the nose, no lines under the eyes, no cheek shadow, no neck shading, no highlight
 in the eye. Eyes are small solid dots or short lines — never large glossy cartoon eyes,
-never white eyeballs with a shine. Hands are simple: four fingers and a thumb, no knuckle
-lines, no nails.
-BOTH PEOPLE'S HAIR IS THE SAME WARM DARK BROWN WITH A RED CAST — #483837, its shadowed
-side #392928, its lit edge #4f4040 — however long the hair is. It is never pure black,
-never neutral grey-black, and never blonde, caramel, light brown, auburn, grey, silver or
-white.
-THE TWO PEOPLE ARE CLEARLY TWO DIFFERENT PEOPLE: different face, different hairstyle,
-different age, different expression. Both are East Asian. Both are drawn by the same hand
-at the same level of simplicity — nobody is a flat grey silhouette, a shadow or an empty
-outline.
+never white eyeballs with a shine. Eyebrows are one short thin arc set well away from the
+eye, and THE EYEBROWS ARE WHAT CARRY THE FEELING: every eyebrow in this picture is raised.
+Hands are simple: four fingers and a thumb, no knuckle lines, no nails.
+EVERY SINGLE PERSON'S HAIR IS THE SAME WARM DARK BROWN WITH A RED CAST — #483837, its
+shadowed side #392928, its lit edge #4f4040 — however many people there are and however
+long their hair is. It is never pure black, never neutral grey-black, and never blonde,
+caramel, light brown, auburn, grey, silver or white, including the oldest explorer: his age
+is shown by his posture, his glasses and his clothes, not by white hair.
+EVERY PERSON IS A DIFFERENT PERSON: no two share a face, a hairstyle, an age or an
+expression. Every figure has a drawn face, drawn hands and coloured clothes — nobody is a
+flat grey silhouette, a shadow or an empty outline.
 
-THE SCENE — A BRIGHT, CALM CONSULTATION CORNER OF A SMALL DENTAL CLINIC. A woman dentist
-and a man in his forties sit at the same side-on desk, turned towards each other and
-towards a screen that stands on the desk between them, angled so that BOTH of them and WE
-can see its face. They are looking at the screen together. The camera is a little to the
-side and slightly above the desk, so both people are seen three-quarters from behind the
-shoulder and NEITHER OF THEM LOOKS AT THE VIEWER. The mood is unhurried, warm and
-explanatory — two people working something out together. This is not a treatment scene:
-nobody is lying down, there is no rubber dam, no microscope, no gloves and no mask.
+THE SCENE — ONE ENORMOUS TOOTH FILLS THE PICTURE, and a round magnifying lens beside it
+opens a second, much smaller world.
+COPY THE SHAPES, THE ANGLE AND ESPECIALLY THE SIZE RELATIONSHIP FROM THE ATTACHED
+REFERENCE IMAGE, BUT NOT ITS FLAT DIAGRAM FINISH: redraw everything in this picture's own
+hand-made line and coloured-pencil colour, with the same paper grain as the rest.
 
-THE SCREEN IS THE SUBJECT OF THE PICTURE. It is a plain rectangular monitor on a simple
-stand, its bezel a soft pale grey with no buttons and no markings, standing slightly LEFT
-of the centre of the frame and filling roughly a third of the width of the whole picture.
-Its face is warm cream, lit gently from within, and it is the brightest rectangle in the
-image.
-ON THE SCREEN, SIDE BY SIDE, ARE THREE DRAWINGS OF THE SAME SINGLE TOOTH SEEN IN
-CROSS-SECTION — the same tooth at three different times, in the same position and at the
-same size in all three, like three frames of one sequence. COPY THE SHAPES FROM THE
-ATTACHED REFERENCE IMAGE EXACTLY, BUT NOT ITS FLAT DIAGRAM FINISH: redraw them in this
-picture's own hand-made line and coloured-pencil colour, with the same paper grain as
-everything else.
-  • Each tooth is a lower molar with a rounded crown and TWO roots, its enamel warm white
-    with a hand-drawn brown outline, set into a band of pale pink gum above a block of
-    cream-coloured bone.
-  • INSIDE each tooth is a soft rose-pink shape: a chamber inside the crown and two fine
-    canals running from it down the whole length of both roots to the root tips.
-  • THIS ROSE-PINK SHAPE IS WIDE IN THE FIRST DRAWING, CLEARLY NARROWER IN THE SECOND, AND
-    ONLY A FINE THREAD IN THE THIRD. IT GETS THINNER ALONG ITS WHOLE LENGTH IN EVERY
-    DRAWING — the chamber, the middle of each root and the tip all narrow together. It is
-    never the case that only the upper part narrows while the lower part stays wide.
-  • The space the pink used to occupy is filled in around it with a slightly warmer
-    off-white, so that in the second and third drawings you can see new material has grown
-    inwards from the walls.
-  • IN THE THIRD DRAWING ONLY, the top of the chamber is roofed over by that same
-    off-white, and where the two canal entrances used to be there are TWO SMALL SHALLOW
-    DIMPLES IN A SLIGHTLY DARKER TONE — the entrances are COVERED OVER, not broken, not
-    cracked, not decayed, and NOT black holes.
-  • On the biting surface: the first tooth has one tiny brown pit; the second has a small
-    pale grey filling; the third has a LARGE pale grey filling that reaches deep towards
-    the chamber. Nothing else is drawn on any of the three teeth.
-  • The three drawings sit on the warm cream screen with clear space between them. There
-    is nothing else on the screen at all — no border, no panel, no toolbar, no icons, no
-    scale bar, no arrows, no numbers and no writing of any kind.
+THE GIANT TOOTH occupies the right-hand two thirds of the frame: a lower molar seen from
+above and slightly in front, so that we look down onto its whole biting surface and also
+see a little of its front wall and the tops of its two roots, which run off the bottom edge
+of the picture. Its enamel is a warm off-white with two or three soft tones, drawn with a
+loose brown outline. Four rounded cusps sit at its corners and a shallow groove runs
+across the biting surface between them. It is a healthy, handsome tooth: no decay, no dark
+stains, no cracks, no filling, no blood, and it has NO FACE, no eyes and no mouth — it is a
+tooth, not a character.
+SOMEWHERE ALONG THAT GROOVE, ALMOST AT THE CENTRE OF THE BITING SURFACE, THERE IS ONE
+SINGLE TINY DARK PIT. THIS IS THE MOST IMPORTANT MEASUREMENT IN THE PICTURE: THE PIT IS
+ABSURDLY SMALL — ITS WIDTH IS ABOUT ONE TWENTY-EIGHTH OF THE WIDTH OF THE TOOTH'S BITING
+SURFACE, a dark speck you could easily miss. It is a shallow dimple, not a hole punched
+through the tooth. There is exactly one of them. Do not enlarge it, do not draw a second
+one, and do not open it into a wide cavern on the tooth itself.
 
-THE TWO PEOPLE — both hands of each person are accounted for, and only one mouth is open.
-  1. THE DENTIST — a woman in her thirties with her hair tied back, in SOFT DUSTY-ROSE
-     SCRUBS (#d7b7b7, folds and shadows #b89999). She sits at the LEFT of the desk, leaning
-     slightly forward towards the screen. HER RIGHT HAND is raised with the index finger
-     extended, pointing at the THIRD, RIGHT-HAND drawing on the screen; HER LEFT HAND rests
-     flat and relaxed on the desk. She looks at the screen. SHE IS THE ONLY PERSON IN THE
-     PICTURE WITH AN OPEN MOUTH — a small open shape, mid-sentence, eyebrows relaxed, warm
-     and matter-of-fact. She is explaining, not warning.
-  2. THE PATIENT — a man in his forties with short neat hair, in a pale blue shirt
-     (#a9bcd4, folds #8fa3bd) with the collar open. He sits at the RIGHT of the desk, turned
-     towards the screen, shoulders down and relaxed, leaning in a little to look. BOTH HANDS
-     are loosely clasped together on the desk in front of him. He looks at the screen. HIS
-     MOUTH IS CLOSED, a small upward curve at one corner, and HIS EYEBROWS ARE SLIGHTLY
-     RAISED — he has just understood something. HE IS NOT WORRIED, NOT FROWNING, NOT
-     ANXIOUS, NOT IN PAIN AND NOT SAD.
+THE MAGNIFYING LENS sits in the left third of the frame, overlapping the paper background
+and not the tooth: a large clean CIRCLE with a simple hand-drawn rim in warm brass, and a
+short plain handle angled down to the lower left. TWO FINE STRAIGHT LINES run from the
+edge of the circle across to the tiny dark pit, showing that the circle is looking at that
+pit. The lines are plain thin strokes — they are NOT arrows and they have no arrowheads.
+INSIDE THE CIRCLE WE SEE THAT SAME TINY PIT ENORMOUSLY MAGNIFIED, and it has become THE
+MOUTH OF A CAVE: a rounded arched opening in a pale cream floor of tooth, its rim softly
+raised, with a WARM GENTLE LIGHT — like daylight, not a lamp and not a glow effect —
+spilling out of it towards us so that the inside of the cave reads as inviting and open,
+never as a black pit and never as a bottomless drop. A few gentle undulations of the cream
+floor lead towards the mouth. Everything inside the circle is drawn in exactly the same
+hand-made style as everything outside it.
 
-THE ROOM — a real small clinic, not an empty white box. Draw all of these, kept simple and
-low-contrast so they never compete with the screen: a pale wooden desk; two simple chairs;
-behind them a wall in a soft off-white with a low sage-green painted band along the bottom;
-a shelf of tidy folders in muted colours; a wall poster that carries A SIMPLE DRAWING OF A
-TOOTH AND NOTHING ELSE — no words on it; a clear plastic model of a jaw on a small stand;
-one potted plant with broad green leaves; a tall window at the far left with daylight
-coming in. On the desk beside the screen: one small white tooth model and one plain pen
-lying flat. Nothing else on the desk. Through a doorway at the right edge, the pale
-mint-green arm of a dental chair is just visible.
+THE EXPLORING PARTY — FOUR PEOPLE, standing INSIDE THE CIRCLE on the cream floor just in
+front of the cave mouth, tiny against it: the cave mouth is roughly twice as tall as the
+tallest of them. They are seen three-quarters from behind, facing the cave, and NOBODY
+LOOKS AT THE VIEWER. The whole group is bunched close together and leaning slightly
+forward, the way people do at the start of something interesting. THE MOOD IS CURIOUS AND
+QUIETLY EXCITED — an outing, a discovery, the moment before you go in. It is NOT tense, NOT
+frightened, NOT a rescue and NOT an emergency. All four are East Asian. Both hands of every
+person are accounted for, and only one mouth is open.
+  1. THE GUIDE — a woman in her thirties in SOFT DUSTY-ROSE SCRUBS (#d7b7b7, folds and
+     shadows #b89999), her hair tied back, wearing a simple HEADBAND WITH A SMALL ROUND
+     LAMP and a pair of small magnifying loupes on it. She stands at the front of the group,
+     closest to the cave mouth. HER RIGHT HAND holds up a small lantern on a slim pole — the
+     lantern is a plain round pale lamp head, the kind on a dental treatment light, with a
+     soft warm light inside it. HER LEFT ARM reaches back and slightly out, gathering the
+     others along, palm open. She looks into the cave. SHE IS THE ONLY PERSON IN THE PICTURE
+     WITH AN OPEN MOUTH — a small open shape, mid-sentence, eyebrows raised, warm and
+     encouraging. She is inviting them in, not warning them.
+  2. THE TEENAGER — a boy of about fifteen in a plain pale yellow t-shirt and a small
+     backpack. He stands just behind the guide on her left. HIS RIGHT HAND points up at the
+     top of the cave mouth; HIS LEFT HAND holds the strap of his backpack. He looks up at
+     the arch. HIS MOUTH IS A SMALL CLOSED SMILE and his eyebrows are high with surprise.
+  3. THE WOMAN IN HER THIRTIES — in a sage-green jacket over a cream top, her hair loose to
+     the shoulder. She stands to the guide's right, one step back. HER LEFT HAND rests on
+     the older man's forearm, steadying him companionably; HER RIGHT HAND is raised to
+     shield her eyes as she looks towards the light coming out of the cave. HER MOUTH IS A
+     SMALL CLOSED SMILE, eyes narrowed with pleasure.
+  4. THE OLDER MAN — in his sixties, small round glasses, a soft blue cardigan over a
+     pale shirt. He stands at the right of the group, upright and steady. HIS RIGHT HAND
+     rests on a plain walking stick planted on the floor; HIS LEFT ARM is the one the woman
+     is holding. He looks straight ahead into the cave. HIS MOUTH IS A CLOSED UPWARD CURVE —
+     a settled, interested smile, eyebrows lifted. HE IS NOT FRAIL, NOT FRIGHTENED AND NOT
+     BEING HELD UP: he is standing on his own and he is enjoying this.
 
-LIGHT AND COLOUR — bright, even, midday daylight from the window at the left; one soft
-warm light source only, no hard shadows, no lamplight, no sunset, no long orange shadows.
-The coloured areas of the picture sit in the range HSL saturation 30–50 and lightness
-70–85: clearly coloured, never washed out to near-white, never heavy or muddy. AT LEAST
-SIX DIFFERENT COLOURS MUST BE VISIBLE AND EACH BELONGS TO A NAMED OBJECT: the dusty-rose
-scrubs, the pale blue shirt, the sage-green wall band, the pale wooden desk, the green
-plant, the cream screen, the mint-green chair arm. THE TWO PEOPLE DO NOT WEAR THE SAME
-COLOUR AS EACH OTHER, and neither wears the colour of the wall behind them. The warm cream
-screen is the lightest thing in the picture and the eye should go to it first.
+THE BACKGROUND, OUTSIDE THE CIRCLE AND BEHIND THE GIANT TOOTH — kept simple and pale so
+that nothing competes with the tooth and the circle. Along the bottom, a band of pale pink
+gum; at the far left and right edges, the shoulders of two NEIGHBOURING TEETH, cropped and
+paler than the main one; behind everything, a soft wash of pale sage green and warm cream
+with the paper grain showing through. No room, no furniture, no horizon, no sky.
+
+LIGHT AND COLOUR — bright, even, daylight-like light with no hard shadows, no lamplight
+mood, no sunset and no long orange shadows. The coloured areas of the picture sit in the
+range HSL saturation 30–50 and lightness 70–85: clearly coloured, never washed out to
+near-white and never heavy or muddy. AT LEAST SIX DIFFERENT COLOURS MUST BE VISIBLE AND
+EACH BELONGS TO A NAMED OBJECT: the dusty-rose scrubs, the pale yellow t-shirt, the
+sage-green jacket, the soft blue cardigan, the warm brass rim of the lens, the pale pink
+gum, the warm light in the cave mouth. NO TWO PEOPLE WEAR THE SAME COLOUR. The warm light
+coming out of the cave mouth is the brightest thing inside the circle, and the biting
+surface of the giant tooth is the brightest thing outside it.
 
 THE ATMOSPHERE LINES — THREE OR FOUR LONG, THIN, GENTLY CURVED WHITE CHALK LINES drifting
-horizontally across the UPPER part of the picture, well above both heads, solid where they
-begin and thinning to dry flecks. They are decoration in the air of the room. NONE OF THEM
-TOUCHES A PERSON: not one of them begins at anyone's mouth, nose, hand or body, none
-crosses a face, and none looks like smoke, steam, breath or a spirit leaving a body. They
-never loop, never curl back and never close into a ring.
+horizontally across the UPPER part of the picture, above the giant tooth, solid where they
+begin and thinning to dry flecks. NONE OF THEM TOUCHES A PERSON OR THE TOOTH: not one
+begins at anyone's mouth, nose, hand or body, none crosses a face, and none looks like
+smoke, steam, breath or a spirit leaving a body. They never loop, never curl back and
+never close into a ring.
 
 MOTION MARKS — EXACTLY ONE GROUP, and nowhere else: TWO OR THREE very short, straight,
-same-angle hand-drawn strokes just beside the dentist's pointing fingertip, no longer than
-a third of a palm's width, solid where they begin and fading out, never curled, never
+same-angle hand-drawn strokes beside the teenager's pointing fingertip, no longer than a
+third of a palm's width, solid where they begin and fading out, never curled, never
 looping. There are no speed lines anywhere else, no radiating focus lines, no sparkles, no
 stars, no hearts, no musical notes, no emotion symbols above anyone's head, and no speech
 bubbles or thought bubbles of any kind in this picture.
 
 CRITICAL — THERE IS NO WRITING ANYWHERE IN THIS PICTURE, IN ANY LANGUAGE OR ALPHABET, and
-no numerals at all. THE SCREEN IS THE MOST IMPORTANT PLACE FOR THIS RULE: it carries the
-three tooth drawings and nothing else — no patient name, no date, no reference number, no
-menu bar, no tabs, no icons, no buttons, no ruler and no caption under the drawings. Leave
-the surface plain on the poster, the folders on the shelf, the desk, the pen, the scrubs,
-the shirt, the screen bezel and the jaw model. There is no name badge, no logo, no
-watermark, no signature and no title. Do NOT draw rows of short dashes, squiggles or wavy
-lines anywhere to imitate lines of writing.
+no numerals at all. Leave the surface plain on the scrubs, the headband, the lantern, the
+backpack, the t-shirt, the jacket, the cardigan, the walking stick and the rim and handle
+of the magnifying lens. There is no name badge, no logo, no watermark, no signature, no
+caption and no title, and no map, chart, sign or plaque anywhere. Do NOT draw rows of short
+dashes, squiggles or wavy lines anywhere to imitate lines of writing.
 
-AVOID — writing, letters, numbers or symbols on the screen; a toolbar or window frame
-around the drawings on the screen; an X-ray look, a dark or black screen, a glowing or
-backlit blue screen; only the upper part of the canal narrowing while the lower part stays
-wide; a canal drawn as a black hole, a crack or a cavity in the third drawing; three
-different teeth instead of one tooth at three times; arrows, circles, callouts or pointers
-drawn on the screen; a magnifying glass; a microscope; a rubber dam; gloves; a face mask;
-syringes, drills, files or piles of instruments; blood; a close-up of an open mouth; teeth
-drawn inside either person's mouth; the patient frowning, worried, anxious, sad or in
-pain; anyone looking at the viewer; both people with open mouths; a third person; an empty
-white room with bare walls; anime or manga styling; cel shading; glossy digital rendering;
-large shiny eyes; wrinkles, cheek shadow or facial modelling; blonde, caramel, light brown,
-auburn, grey, silver or white hair; pure black linework; neon; glowing edges; chrome,
-metallic or iridescent gradients; greyscale; thick uniform black outlines; even mechanical
-vector linework; flat untextured single-tone clothing; white lines that start at a person's
-mouth, nose or hands.
+AVOID — a tiny pit drawn large, wide or gaping on the surface of the giant tooth; more than
+one pit; a hole that goes right through the tooth; a tooth with a face, eyes or a mouth; a
+cartoon tooth character; decay, dark stains, cracks, chips or a filling on the giant tooth;
+blood; a dark, black, bottomless or menacing cave; a cave that looks like a throat or a set
+of jaws; stalactites or stalagmites shaped like teeth; bats, skulls, bones, spiders, webs or
+anything frightening inside the cave; a glowing or neon light source; a torch flame; anyone
+looking scared, tense, worried or in danger; anyone falling, climbing a rope or hanging off
+a ledge; anyone being carried or rescued; the older man looking frail, sad or ill; a
+wheelchair, a hospital bed or a drip stand; explorer or adventure-movie costume — no
+pith helmets, no fedoras, no whips, no climbing harnesses, no pickaxes, no coils of rope;
+piles of instruments, drills, syringes or dental files; a microscope; arrows or arrowheads
+on the two lines from the lens; a comic burst or explosion shape around the circle; the
+circle drawn as a speech balloon; more than one circle; anyone looking at the viewer; more
+than one open mouth; blonde, caramel, light brown, auburn, grey, silver or white hair;
+wrinkles, cheek shadow or facial modelling; large shiny eyes; anime or manga styling; cel
+shading; glossy digital rendering; chrome, metallic or iridescent gradients; greyscale;
+thick uniform black outlines; even mechanical vector linework; flat untextured single-tone
+clothing.
