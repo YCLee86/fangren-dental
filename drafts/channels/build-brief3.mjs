@@ -251,7 +251,8 @@ ${bb(B.抬頭)}<br>
 <li><a href="#s3-8">對上了什麼、還差什麼</a></li>
 <li><a href="#s3-9">底色只有一個的話，那四個值怎麼分</a></li>
 <li><a href="#s3-10">約診狀態：兩次的回覆不一樣</a></li>
-<li><a href="#s3-11">請翔評回覆的四題</a></li>
+<li><a href="#s3-11">診所這一側看到的：在樂衍上刪除，那一筆就不會顯示</a></li>
+<li><a href="#s3-12">請翔評回覆的五題</a></li>
 </ol></li>
 <li value="4"><p class="t">綁定成功的自動回覆設定</p>
 <p class="d">還沒有新的回覆，內容在 <a href="/preview/line-brief-0918/#s4">9/18 那一頁</a>。</p></li>
@@ -317,9 +318,18 @@ ${B.三之十.兩次.map(([誰, 句, 讀]) => `<div class="row"><p class="k">${e
 <div class="fin"><p class="k">為什麼要先確認這一件 —— 底下三件都跟著它走</p>
 <ul class="spec">${B.三之十.跟著.map((t) => `<li>${bb(t)}</li>`).join("\n")}</ul></div>
 
+<p class="note">${bb(B.三之十.接)}</p>
+
 ${h3("s3-11", B.三之十一.標)}
+<p style="font-size:.9rem;margin:.3em 0 0">${bb(B.三之十一.導)}</p>
+${list(B.三之十一.事實)}
+<div class="fin"><p class="k">請翔評確認的</p>
+<p style="font-size:.9rem;margin:0">${bb(B.三之十一.問)}</p></div>
+<p class="note">${bb(B.三之十一.接)}</p>
+
+${h3("s3-12", B.三之十二.標)}
 <ol class="ask">
-${B.三之十一.題.map(([q, y]) => `<li>${bb(q)}<span class="y">${bb(y)}</span></li>`).join("\n")}
+${B.三之十二.題.map(([q, y]) => `<li>${bb(q)}<span class="y">${bb(y)}</span></li>`).join("\n")}
 </ol>
 
 <h2 class="h2" id="s5">已完成<span class="t">這一輪</span></h2>
