@@ -8,46 +8,70 @@
 所以下面每一筆都是**用 WebSearch 的搜尋結果摘要核對的，沒有真的點開過全文**。
 上線前請在有網路的電腦或手機上各點一次。
 
+> ## ⚠⚠ 2026-09-21 第二輪：**整篇的對象換了**
+>
+> 使用者退回第一版：「這篇文章要說的並不是好好的牙齒鈣化要怎麼辦，
+> 而是**這顆牙齒很有可能要根管治療（或是已經確定要根管治療）但根管鈣化了，該怎麼辦**。」
+>
+> 第一版把重心放在「要不要打開」（無症狀 PCO 的觀察等待），那是**另一種讀者**。
+> 第二版把那一整節壓縮成開頭的一個 callout（界定這一篇不是在講誰），
+> 重心換成**已經要治療的那一顆接下來會怎麼走**，並補上第一版完全沒寫的那一段：
+> **打不通的時候還有哪些路**（導引式開髓／根尖手術／意向性再植／拔除後重建）。
+>
+> 台灣與全球的盛行率因此也降級：**只留下「為什麼偏偏是我這一顆」用得到的那幾個數字**
+> （補過的牙 2.1／4.7 倍、83.3%、第一大臼齒 50.0%），
+> 全球統合值 36.53% 與「各國數字為什麼差三倍」那一整段拿掉了。
+
 ---
 
-## 留下來的數字
+## 文章現在還在用的數字與說法
 
 | 文中寫的 | 出處 | 核對狀態 |
 | --- | --- | --- |
-| 台灣北部 CBCT：144 人／2,554 顆，**83.3%** 個案、**31.3%** 牙齒有髓石 | Hsieh CY, Wu YC, Su CC, Chung MP, Huang RY, Ting PY, et al. *The prevalence and distribution of radiopaque, calcified pulp stones: A cone-beam computed tomography study in a northern Taiwanese population.* J Dent Sci. 2018;13(2):138–44. <https://www.sciencedirect.com/science/article/pii/S1991790217301289> | ✅ 搜尋結果逐字對上「120 patients (83.3%) and 800 (31.3%) teeth」 |
-| 同一篇：第一大臼齒 **50.0%** 最高、第一小臼齒 **18.8%** 最少 | 同上 | ✅ 搜尋結果逐字對上 |
-| 同一篇：補過的牙髓石機率 **2.1 倍**、上顎 **4.7 倍**（皆 p < 0.0001） | 同上 | ✅ 搜尋結果逐字對上「increased the chance … by 2.1 times in all teeth … and by 4.7 times in maxillary teeth」 |
-| 中國北方只收 20–40 歲完整牙列 → **28.4%** | 原稿引的 *Computed Tomographic Analysis of Associations Between Pulp Stones and Demographic and Tooth-Related Factors in a North China Population*（PMC13150082） | ⚠ 只在搜尋結果的標題層級確認這篇存在，**28.4% 這個數字沒有在摘要裡看到**。文中因此只寫「只收 20–40 歲的完整牙列，數字就低很多」，**沒有印出 28.4%** |
-| 全球統合分析：**36.53%**（95% CI 27.17–45.88）個案、**9.57%** 牙齒；16 篇研究、14,093 人、193,687 顆牙 | Jannati R, Afshari M, Moosazadeh M, et al. *Prevalence of pulp stones: A systematic review and meta-analysis.* J Evid Based Med. 2019;12(2):133–9. <https://onlinelibrary.wiley.com/doi/10.1111/jebm.12331> | ✅ 搜尋結果逐字對上兩個比例與 193,687 顆牙 |
-| 外傷後 PCO：恆牙 **27.6%**（95% CI 18.7–37.7）、乳牙 21.9% | Abreu MGL, Fernandes TO, Antunes LS, et al. *Prevalence of pulp canal obliteration after traumatic dental injuries: a systematic review and meta-analysis.* Braz Oral Res. 2024;38:e092. <https://www.scielo.br/j/bor/a/CRsJdZQnpWNmcXRy6VkdFXc/abstract/?lang=en> | ✅ 搜尋結果逐字對上，34 篇納入 |
-| 北歐追蹤：**82 顆**外傷後鈣化恆門齒、追蹤 **7–22 年（平均 16 年）**；**51%** 電測正常、另 **40%** 電測無反應但臨床與影像正常；出現根尖病灶 **7 顆（8.5%）** | Robertson A, Andreasen FM, Bergenholtz G, Andreasen JO, Norén JG. *Incidence of pulp necrosis subsequent to pulp canal obliteration from trauma of permanent incisors.* J Endod. 1996;22(10):557–60. <https://pubmed.ncbi.nlm.nih.gov/9198446/> | ✅ 搜尋結果逐字對上四個數字 |
-| 漏找根管：整體 **18%**、上顎第一大臼齒 **40.6%**；有漏找根管者 **90%** 併發根尖牙周炎 | *Prevalence of Missed Canals and Their Association with Apical Periodontitis in Posterior Endodontically Treated Teeth: A CBCT Study*（2021，PMC8257386）<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8257386/> | ✅ 搜尋結果逐字對上三個數字 |
+| 補過的牙齒出現髓石的機率是沒補過的 **2.1 倍**、上顎 **4.7 倍**（皆 p < 0.0001）；144 人裡 **120 人（83.3%）**至少有一顆牙有髓石；**第一大臼齒 50.0%** 最高 | Hsieh CY, Wu YC, Su CC, Chung MP, Huang RY, Ting PY, et al. *The prevalence and distribution of radiopaque, calcified pulp stones: A cone-beam computed tomography study in a northern Taiwanese population.* J Dent Sci. 2018;13(2):138–44. <https://www.sciencedirect.com/science/article/pii/S1991790217301289> | ✅ 搜尋結果逐字對上三組數字 |
+| 北歐追蹤：**82 顆**外傷後鈣化恆門齒、平均 **16 年**；出現根尖病灶 **8.5%** | Robertson A, Andreasen FM, Bergenholtz G, Andreasen JO, Norén JG. *Incidence of pulp necrosis subsequent to pulp canal obliteration from trauma of permanent incisors.* J Endod. 1996;22(10):557–60. <https://pubmed.ncbi.nlm.nih.gov/9198446/> | ✅ 搜尋結果逐字對上（同時對上 51% 電測正常／另 40% 正常範圍，第二版只留 8.5%） |
+| 漏找根管：整體 **18%**、上顎第一大臼齒 **40.6%**；有漏找根管者 **90%** 併發根尖牙周炎 | *Prevalence of Missed Canals and Their Association with Apical Periodontitis in Posterior Endodontically Treated Teeth: A CBCT Study*（2021）<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8257386/> | ✅ 搜尋結果逐字對上三個數字 |
 | 導引式開髓在準確度與保留齒質上優於徒手；2023 年系統性回顧收 **45 篇** | Peña-Bengoa F, Valenzuela M, Flores MJ, Dufey N, Pinto KP, Silva EJ. *Effectiveness of guided endodontics in locating calcified root canals: a systematic review.* Clin Oral Investig. 2023;27:2359–74. <https://link.springer.com/article/10.1007/s00784-023-04863-0> | ✅ 搜尋結果對上「forty-five studies」與 43/45 認為有效 |
-| 觀察等待是最常被採用的策略；**變色但無症狀的牙以外漂白處理，不把根管治療當成預防性介入** | Vinagre A, Castanheira C, Messias A, Palma PJ, Ramos JC. *Management of Pulp Canal Obliteration—Systematic Review of Case Reports.* Medicina. 2021;57(11):1237. <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8625069/> | ✅ 結論逐句對上（"external bleaching is advocated and the RCT approach should not be implemented as a preventive intervention strategy"） |
+| **根尖手術可以當成這種牙齒的第一線做法**，不是只在失敗之後才用 | Mou 等. *Endodontic Microsurgery as a Primary Treatment for Pulp Canal Obliteration With Apical Periodontitis: Case Reports.* Case Rep Dent. 2026. <https://pmc.ncbi.nlm.nih.gov/articles/PMC13535158/> | ✅ 摘要對上（"primary EMS may represent a feasible alternative for selected cases of PCO with AP"）。⚠ 是**病例報告**，文中因此寫「近年的病例報告把它當成…討論」，沒有寫成定論 |
+| **鈣化多半從牙冠往根尖進行，根尖那三分之一常常還留著**（文中出現兩次，是「打不通還有哪些路」那一節的前提） | 原稿第五節 5-1 的判讀重點；另以搜尋核對到多篇病例與一份分級系統的描述（cervical／middle third 完全閉鎖、apical third 仍部分通暢） | ✅ 方向一致。⚠ **沒有找到一個可引用的比例**，所以文中只寫「常常」「多半」，**不印數字** |
+| 意向性再植是前面幾條都走不通時的選項 | 同上搜尋結果（"intentional replantation may be considered as a last solution to preserve the tooth"） | ✅ 語氣一致。⚠ 文中寫「條件嚴格、步驟多」，沒有寫成常規做法 |
+
+## 第一版用過、第二版拿掉的
+
+| 數字 | 為什麼拿掉 |
+| --- | --- |
+| 全球統合分析 36.53%／9.57%（Jannati 2019） | 第二版不談跨族群比較 |
+| 「為什麼各國數字差三倍」那一整段（影像方式／年齡範圍／有沒有排除修復牙） | 那是寫給撰稿者的話，不是寫給「明天要治療」的讀者 |
+| 外傷後恆牙 PCO 27.6%（Abreu 2024, Braz Oral Res） | 外傷那條線壓縮成開頭的 callout 之後沒有位置。**數字本身核對過是對的**，日後要寫外傷專篇可以直接用：<https://www.scielo.br/j/bor/a/CRsJdZQnpWNmcXRy6VkdFXc/abstract/?lang=en> |
+| 「觀察等待是最常被採用的做法」（Vinagre 2021, Medicina） | 同上，那是另一種讀者的事。結論本身核對過：<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8625069/> |
+| 51% 電測反應正常／另 40% 臨床影像正常（Robertson 1996） | callout 裡只留 8.5%，三個數字會把那一塊撐得太長 |
 
 ---
 
-## 刻意**沒有**寫進文章的（原稿有，但不適合放在診所的衛教頁）
+## 從頭到尾就**沒有**寫進文章的（原稿有，但不適合放在診所的衛教頁）
 
 | 原稿的內容 | 為什麼不寫 |
 | --- | --- |
-| 「案例系列系統性回顧：36.4% 以觀察等待成功管理」 | **這個百分比沒有核對到。** 搜尋結果只確認那篇收了 20 篇病例報告、27 位病患，沒看到 36.4%。改成寫那篇的**結論**（觀察等待是最常被採用的策略、變色以外漂白處理），不印數字 |
-| 沙烏地、土耳其、印度的盛行率表 | 病患不需要跨國比較表。只留台灣與全球統合值，並說明「為什麼數字差這麼多」 |
+| 「案例系列系統性回顧：36.4% 以觀察等待成功管理」 | **這個百分比沒有核對到。** 搜尋結果只確認那篇收了 20 篇病例報告、27 位病患，沒看到 36.4% |
+| 沙烏地、土耳其、印度的盛行率表 | 病患不需要跨國比較表 |
 | 糖尿病、心血管疾病與髓石的關聯 | 原稿自己就寫「證據衝突、是開放問題，不宜寫成定論」。診所的衛教頁寫這個只會讓人擔心 |
 | C 形根管、遠心舌側根的東亞盛行率 | 那是解剖變異、不是鈣化，而且是給醫師判斷難度用的 |
-| 器械品項（Munce／LN bur、C+ file、ProGlider…）、材料濃度（17% EDTA、5.25% NaOCl）、AAE 難度分級表 | 給醫師看的操作規格。文中只保留「在顯微鏡下、用超音波一層一層去除、先設停損點」這幾件病患感受得到的事 |
-| 矯正力讓髓石發生率增加 2.2–4% | 原稿自己註明「亦有觀點認為是矯正前既有的震盪傷害所致」。文中保留這件事，但**不印數字**，並把兩種說法都寫出來 |
-| 「處理不當的後果」那整節的併發症清單（strip perforation、ledge、器械分離…） | 寫全了會變成在嚇人、也像在指責別的醫師。保留四項病患真的需要知道的，並且**明講「這些風險大多來自打開它的過程，不是鈣化本身」**——那正是原稿自己的結論 |
-| 「引用數據時務必確認作者定義的是哪一種」「撰文建議」 | 那是寫給撰稿者的話，不是寫給讀者的。改寫成文中「新聞上看到的鈣化盛行率，說的幾乎都是髓石」那一句 |
+| 器械品項（Munce／LN bur、C+ file、ProGlider…）、材料濃度（17% EDTA、5.25% NaOCl）、AAE 難度分級表 | 給醫師看的操作規格。文中只保留「顯微鏡下辨色、超音波逐層去除、雙重確認、先設停損點」這幾件病患感受得到的事 |
+| 矯正力讓髓石發生率增加 2.2–4% | 原稿自己註明「亦有觀點認為是矯正前既有的震盪傷害所致」。第二版連矯正這一項都沒有單獨列，併進「被刺激很久的牙齒」那一段 |
+| 「引用數據時務必確認作者定義的是哪一種」「撰文建議」 | 那是寫給撰稿者的話，不是寫給讀者的 |
 
 ---
 
-## 兩個醫療事實，文中的講法是刻意的
+## 三個講法是刻意的
 
-1. **「外傷後會繼續鈣化，代表神經還活著」** —— 原稿的關鍵觀念（死髓不會造牙本質）。
-   這是全篇最重要的一句，放在第四節整節講，因為病患看到門牙變黃第一個念頭就是「死掉了」。
-2. **「冷測沒反應是鈣化牙的常態，不等於壞死」** —— 同上。文中接著列出醫師真正會一起看的
-   四件事（自發痛、腫脹、竇道、根尖暗影），避免讀者拿單一一項自我診斷。
+1. **「『需要根管治療』和『鈣化』是同一個原因的兩個結果」** ——
+   這是第二版的主軸，也是把原稿第一節那張機制表翻譯給病患的唯一有用方式。
+   讀者問的其實是「為什麼偏偏是我這一顆」。
+2. **「這些風險大多不是鈣化造成的，是打開它的過程造成的」** ——
+   原稿第四節自己的結論。寫全那一串併發症會變成在嚇人、也像在指責別的醫師，
+   所以改成一張「遇到了怎麼辦」的表，每一列都有下一步。
+3. **「停下來不是放棄」** —— 停損點那一條在文中出現兩次（操作那一節、狀況表最後一列）。
+   受益者一律寫出來（COPY.md 第十之三節）：停下來保住的是**你這顆牙剩下的齒質**。
 
 ## `about` 的 Wikidata
 
