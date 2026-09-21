@@ -12,7 +12,9 @@ background. The picture is high-key and warm, with plenty of pale cream paper sh
 through, but every named object still carries a real colour. This is NOT anime, NOT manga,
 NOT a screenshot from a cartoon, NOT 3D rendering.
 
-FACES AND HANDS — READ THIS SECOND.
+FACES AND HANDS — READ THIS SECOND. THIS WHOLE SECTION IS ABOUT THE HUMAN CHARACTERS ONLY.
+It does not apply to the bacteria in the second circle, who are drawn quite differently and
+have their own rules further down.
 SKIN IS THE ONE EXCEPTION to the two-or-three-tones rule: each face and each hand is ONE
 single flat warm tone, with no modelling, no blush, no shading, no cheekbones and no
 jawline. On a face, draw ONLY these six things: the outline of the head, the eyes, the
@@ -31,15 +33,23 @@ EVERY PERSON IS A DIFFERENT PERSON: no two share a face, a hairstyle, an age or 
 expression. Every figure has a drawn face, drawn hands and coloured clothes — nobody is a
 flat grey silhouette, a shadow or an empty outline.
 
+THREE REFERENCE IMAGES ARE ATTACHED AND EACH ONE HAS EXACTLY ONE JOB. THE FIRST is a flat
+diagram: it gives the LAYOUT, THE SHAPES AND THE SIZE RELATIONSHIPS, and nothing else — never
+its flat finish, never its grey. THE SECOND is a photograph of a disinfection worker: it
+gives THE SHAPE OF THE PROTECTIVE GARMENT, and nothing else. THE THIRD shows bacteria drawn
+earlier for this clinic: it gives THE WAY THE BACTERIA ARE DRAWN, and nothing else. Never
+take colour, line style, pose, composition or background from the second or the third, and
+never reproduce any of the three.
+
 THE SCENE — ONE ENORMOUS TOOTH FILLS THE PICTURE, and a round magnifying lens beside it
 opens a second, much smaller world.
-COPY THE SHAPES, THE ANGLE AND ESPECIALLY THE SIZE RELATIONSHIP FROM THE ATTACHED
+COPY THE SHAPES, THE ANGLE AND ESPECIALLY THE SIZE RELATIONSHIP FROM THE FIRST
 REFERENCE IMAGE, BUT NOT ITS FLAT DIAGRAM FINISH: redraw everything in this picture's own
 hand-made line and coloured-pencil colour, with the same paper grain as the rest.
 
 THE GIANT TOOTH occupies the right-hand HALF of the frame: ONE WHOLE LOWER MOLAR, drawn
 complete from its biting surface down to the tips of its roots, standing upright. COPY ITS
-SHAPE FROM THE REFERENCE IMAGE. It is built like a real molar, not like a barrel or a box:
+SHAPE FROM THE FIRST REFERENCE IMAGE. It is built like a real molar, not like a barrel or a box:
   • THE BITING SURFACE IS A FLATTENED OVAL seen from slightly above, sitting on top of the
     crown like a shallow lid, with FOUR SOFT ROUNDED CUSPS on it and a shallow groove
     running between them.
@@ -68,7 +78,7 @@ through the tooth. There is exactly one of them. Do not enlarge it, do not draw 
 one, and do not open it into a wide cavern on the tooth itself.
 SEEN THROUGH THE TOOTH, DRAWN AS FINE DASHED LINES in the same warm brown ink as the
 outlines — as if the enamel were faintly transparent — is the calcified pulp inside it.
-COPY ITS SHAPE FROM THE REFERENCE IMAGE. IT IS ONE SINGLE CONTINUOUS OUTLINE, NOT SEVERAL
+COPY ITS SHAPE FROM THE FIRST REFERENCE IMAGE. IT IS ONE SINGLE CONTINUOUS OUTLINE, NOT SEVERAL
 SEPARATE MARKS — one unbroken dashed contour that flows from the crown all the way down
 into both roots, the way a real pulp does:
   • at the top, a SMALL, FLATTENED CHAMBER sitting low inside the crown, well below the
@@ -136,7 +146,7 @@ circle is drawn in exactly the same hand-made style as everything outside it.
 
 THE EXPLORING PARTY — FOUR PEOPLE, standing INSIDE THE CIRCLE on the floor of the tunnel,
 two of them to the left of the slender passage and two to the right, so that the passage
-stays visible between them. THE FOUR GREY SHAPES IN THE REFERENCE IMAGE GIVE ONLY THEIR
+stays visible between them. THE FOUR GREY SHAPES IN THE FIRST REFERENCE IMAGE GIVE ONLY THEIR
 POSITIONS AND THEIR SIZES — draw them as fully drawn people with faces, hands and coloured
 clothes, never as grey shapes or silhouettes. THE TALLEST OF THEM IS ABOUT ONE THIRD AS
 TALL AS THE CIRCLE IS WIDE, and the four together span roughly six tenths of the circle's
@@ -144,16 +154,22 @@ width, leaving a wide clear band of tunnel between the outermost person and the 
 that size their faces and hands are easy to read. They are seen three-quarters from behind,
 facing the passage, and NOBODY
 LOOKS AT THE VIEWER. The whole group is bunched close together and leaning slightly
-forward, the way people do at the start of something interesting. THE MOOD IS CURIOUS AND
+forward, the way people do at the start of something interesting. (Everything said about the
+four of them here is about the four humans only — the bacteria in the second circle are not
+bound by any of it.) THE MOOD IS CURIOUS AND
 QUIETLY EXCITED — an outing, a discovery, the moment before you go in. It is NOT tense, NOT
 frightened, NOT a rescue and NOT an emergency. All four are East Asian. Both hands of every
 person are accounted for, and only one mouth is open.
 ALL FOUR ARE DRESSED AS A DECONTAMINATION TEAM — NOT AS ORDINARY PEOPLE OUT FOR A WALK.
-THERE IS A SECOND REFERENCE IMAGE SHOWING A DISINFECTION WORKER IN PROTECTIVE CLOTHING. TAKE
+THE SECOND REFERENCE IMAGE SHOWS A DISINFECTION WORKER IN PROTECTIVE CLOTHING. TAKE
 FROM IT ONLY THE SHAPE OF THE GARMENT — the hooded one-piece coverall, the gathered cuffs,
 the clear face shield, the boot covers, the backpack sprayer. DO NOT COPY ITS COLOURS, ITS
 LINE STYLE, ITS POSE OR ITS PROPORTIONS, and never reproduce that drawing: redraw the
 garment from scratch in this picture's own hand-made line and coloured-pencil colour.
+ALL FOUR OF THEM WEAR IT — THE GUIDE, THE BOY, THE WOMAN AND THE OLDER MAN ALIKE. NOT ONE OF
+THE FOUR IS IN ORDINARY CLOTHES ALONE, AND NOT ONE OF THE FOUR IS WITHOUT A HOOD OR WITHOUT A
+FACE SHIELD; the older man is wearing his hood up and his face shield on exactly like the
+other three, over his cardigan.
 THE SUIT, ON ALL FOUR OF THEM: a loose one-piece coverall with A HOOD PULLED UP OVER THE
 HEAD and drawn closed around the face, elasticated cuffs at the wrists, plain gloves, and
 soft boot covers over the shoes. IN FRONT OF THE FACE IS A CLEAR CURVED FACE SHIELD — you
@@ -200,32 +216,52 @@ never reads as a pile of dental instruments and never as weapons.
      a settled, interested smile, eyebrows lifted. HE IS NOT FRAIL, NOT FRIGHTENED AND NOT
      BEING HELD UP: he is standing on his own and he is enjoying this.
 
-AT THE TIP OF THE LEFT-HAND ROOT, JUST OUTSIDE THE TOOTH, THERE IS A CYST: one round,
+AT THE TIP OF THE RIGHT-HAND ROOT, JUST OUTSIDE THE TOOTH, THERE IS A CYST: one round,
 pale, soft-edged pocket sitting in the bone against the very end of the root, about as wide
 as the root tip itself, drawn with the same quiet dashed line as the pulp and filled with a
 slightly warmer cream than the gum around it. There is exactly one of it, it touches the
 root tip, and it is calm and tidy — no redness, no blood, no jagged edges, nothing alarming.
 
-THE SECOND CIRCLE — A SMALLER ROUND LENS, low in the middle of the picture between the big
-circle and the roots of the tooth, with the same warm brass rim and NO HANDLE. Its diameter
-is a little over a third of the big circle's. TWO FINE LINES run from it to the cyst as the
-two tangents to this circle, drawn exactly the same way as the first pair: each grazing the
-rim at a single point, one above and one below, neither crossing into the circle.
+THE SECOND CIRCLE — A SMALLER ROUND LENS, IN THE LOWER RIGHT-HAND CORNER OF THE PICTURE, to
+the RIGHT of the giant tooth and below the row of teeth, sitting over the pink gum, with the
+same warm brass rim and NO HANDLE. IT IS PULLED OUT TO THE RIGHT, NOT TO THE LEFT: the left
+half of the picture is completely filled by the big circle and there is no room there. Its
+diameter is about HALF the big circle's — clearly bigger than a small inset, and still
+clearly smaller than the big circle. It does not overlap the tooth or the big circle, and it
+stays fully inside the frame with a clear margin at the right edge.
+TWO FINE LINES run from it to the cyst on the right-hand root tip as the two tangents to this
+circle, drawn exactly the same way as the first pair: each grazing the rim at a single point,
+one above and one below, neither crossing into the circle. Because the cyst is on the RIGHT
+root and the circle is to the RIGHT of it, these two lines are short and they run to the
+right — THEY NEVER CROSS THE TOOTH, THEY NEVER CROSS THE BIG CIRCLE, AND THEY NEVER RUN TO
+THE LEFT.
 INSIDE IT WE SEE THAT CYST ENORMOUSLY MAGNIFIED, AND A GANG OF BACTERIA IS WRECKING THE
 PLACE. THEY ARE PESTS, NOT PETS: they are not playing together, they are vandalising.
+⚠⚠⚠ THERE IS A THIRD REFERENCE IMAGE SHOWING BACTERIA CHARACTERS DRAWN EARLIER FOR THIS SAME
+CLINIC. THE BACTERIA IN THIS PICTURE MUST MATCH THEM. Take from that image ONLY the way the
+bacteria themselves are drawn — their build, their limbs, their faces, their outline weight
+and their colour range — and take NOTHING ELSE from it: ignore its background, its room, its
+props, its circle and its composition completely, and never reproduce that drawing.
+THEY ARE LITTLE STANDING CHARACTERS, NOT BLOBS OR SPOTS. Each one has A PLUMP BEAN-SHAPED,
+CAPSULE-SHAPED OR ROUNDED BODY, and — THIS IS THE PART THAT WAS MISSING — EVERY ONE OF THEM
+HAS FOUR THIN STICK LIMBS: TWO ARMS AND TWO LEGS, simple tapering strokes with small rounded
+hands and feet, so that each bacterium stands, walks, swings, kicks and throws. Several of
+them also have SHORT BRISTLY HAIRS OR STUBBY SPIKES sticking out all round the body edge, and
+one or two are bent rods rather than beans. No two are the same size or the same shape.
+EVERY ONE IS DRAWN WITH A THICK, CONFIDENT DARK-BROWN OUTLINE — noticeably heavier than the
+line used anywhere else in the picture — and filled with flat colour carrying a little
+speckled texture. Short hand-drawn motion strokes sit beside the ones that are moving.
+THEIR FACES ARE BIG AND LOUD: TWO ROUND WHITE EYEBALLS WITH DARK PUPILS INSIDE THEM (these
+bacteria are the ONE exception in this picture to the rule about eyes — the human characters
+still have small dot eyes and no eyeballs), ANGRY SLANTED EYEBROWS driving down towards the
+nose, and A WIDE OPEN SHOUTING MOUTH on most of them, a crooked sneer or a smirk with a
+tongue out on the rest. They look bad-tempered, mischievous and pleased with the damage. NOT
+sweet, NOT round-eyed and innocent, NOT a mascot and NOT a children's character.
 THEIR COLOUR IS THE STRONGEST IN THE WHOLE PICTURE. Each one is a solid, clearly saturated
 colour — deep plum purple, dull brick red, dark mustard, murky olive, muddy teal — noticeably
-deeper and more saturated than anything else in the image, so that this small circle reads
-as the one dirty corner of an otherwise clean, pale picture. They are never pale, never
-pastel, never washed out. (Still coloured pencil and flat fills, never neon and never
-glowing.)
-THEIR SHAPES ARE UGLY AND UNEVEN, NOT CUTE: lumpy, lopsided blobs and bent rods with knobbly
-bumps, a few stubby spikes and untidy little limbs — no two the same, none of them a neat
-symmetrical circle, none of them plump and smooth like a soft toy. On each face there are
-only two small dot eyes and one mouth, but the expressions are SLY AND PLEASED WITH
-THEMSELVES: crooked smirks, one sneering with a tongue out, one grinning sideways, a couple
-with one eyebrow cocked. NOT sweet, NOT round-eyed, NOT smiling innocently, NOT a mascot and
-NOT a children's character.
+deeper and more saturated than anything else in the image, so that this circle reads as the
+one dirty corner of an otherwise clean, pale picture. They are never pale, never pastel,
+never washed out. (Still coloured pencil and flat fills, never neon and never glowing.)
 THERE ARE ABOUT EIGHT OF THEM AND EVERY ONE IS CAUSING DAMAGE — name what each is doing:
 one is HURLING A CHUNK OF LOOSE DEBRIS across the circle; one is KICKING A HOLE in the pale
 wall so that crumbs fly off it; one is SQUIRTING A JET OF MURKY LIQUID from a little nozzle
@@ -253,7 +289,9 @@ that nothing competes with the tooth and the two circles. Along the bottom, a ba
 gum; at the far left and right edges, TWO NEIGHBOURING TEETH of exactly the same size and at
 exactly the same height as the main one, cropped by the edges of the picture and a little
 paler, showing their crowns only; behind everything, a soft wash of pale sage green and warm cream
-with the paper grain showing through. No room, no furniture, no horizon, no sky.
+with the paper grain showing through. No room, no furniture, no horizon, no sky. THE LOWER
+RIGHT-HAND CORNER OF THE GUM IS WHERE THE SECOND CIRCLE SITS, so keep that area otherwise
+empty.
 
 LIGHT AND COLOUR — bright, even, daylight-like light with no hard shadows, no lamplight
 mood, no sunset and no long orange shadows. The coloured areas of the picture sit in the
@@ -274,10 +312,13 @@ begins at anyone's mouth, nose, hand or body, none crosses a face, and none look
 smoke, steam, breath or a spirit leaving a body. They never loop, never curl back and
 never close into a ring.
 
-MOTION MARKS — EXACTLY ONE GROUP, and nowhere else: TWO OR THREE very short, straight,
+MOTION MARKS — OUTSIDE THE SECOND CIRCLE THERE IS EXACTLY ONE GROUP AND NOWHERE ELSE (inside
+the second circle the bacteria have their own short motion strokes, which are intended):
+TWO OR THREE very short, straight,
 same-angle hand-drawn strokes beside the shoulder the boy is pushing into the slot, no longer than a
 third of a palm's width, solid where they begin and fading out, never curled, never
-looping. There are no speed lines anywhere else, no radiating focus lines, no sparkles, no
+looping. There are no speed lines anywhere else outside that circle, no radiating focus
+lines, no sparkles, no
 stars, no hearts, no musical notes, no emotion symbols above anyone's head, and no speech
 bubbles or thought bubbles of any kind in this picture.
 
@@ -290,12 +331,18 @@ dashes, squiggles or wavy lines anywhere to imitate lines of writing.
 
 AVOID — a handle, a stem or a grip on either lens; a third circle; the second circle as big
 as or bigger than the first; bacteria drawn anywhere outside the second circle; bacteria drawn pale,
-pastel or washed out; bacteria drawn as neat symmetrical circles; bacteria that look cute,
-sweet, plump, soft-toy-like or like a children's mascot; bacteria merely playing, dancing or
-having fun together without damaging anything; a clean, tidy cyst interior; red liquid or
+pastel or washed out; bacteria drawn as plain spots, dots or limbless blobs;
+BACTERIA WITHOUT ARMS AND LEGS; bacteria without white eyeballs; bacteria with only tiny dot
+eyes; bacteria drawn in a thin, faint outline; bacteria that look sweet, innocent or like a
+children's mascot; bacteria merely playing, dancing or having fun together without damaging
+anything; bacteria drawn in a different style from the third reference image; white eyeballs
+on any of the four human characters; a clean, tidy cyst interior; red liquid or
 anything that reads as blood; skulls, gore, dripping fangs or glowing red eyes; a dark or
 frightening cyst; a red, bleeding or inflamed-looking cyst; more than one cyst; a cyst that
-floats away from the root tip; four people who read as ordinary members of the public out for
+floats away from the root tip; a cyst on the left-hand root; the second circle placed on the
+left of the picture or between the big circle and the tooth; the second circle drawn small or
+as a minor inset; leader lines from the second circle running leftwards or crossing the
+tooth; the second circle overlapping the big circle or the tooth; four people who read as ordinary members of the public out for
 a walk rather than as a decontamination team; anyone without a hood or without a face shield;
 a mask over anyone's mouth; a mirrored, tinted or dark visor; a fishbowl or bubble helmet; a
 face hidden, cropped or obscured by the hood or the shield; an opaque white hazmat suit; a
@@ -334,8 +381,8 @@ wheelchair, a hospital bed or a drip stand; explorer or adventure-movie costume 
 pith helmets, no fedoras, no whips, no climbing harnesses, no pickaxes, no coils of rope;
 piles of instruments, drills, syringes or dental files; a microscope; arrows or arrowheads
 on the two lines from the lens; a comic burst or explosion shape around the circle; a
-circle drawn as a speech balloon; anyone looking at the viewer; more
-than one open mouth; blonde, caramel, light brown, auburn, grey, silver or white hair;
+circle drawn as a speech balloon; any of the four humans looking at the viewer; more
+than one open mouth among the four humans; blonde, caramel, light brown, auburn, grey, silver or white hair;
 wrinkles, cheek shadow or facial modelling; large shiny eyes; anime or manga styling; cel
 shading; glossy digital rendering; chrome, metallic or iridescent gradients; greyscale;
 thick uniform black outlines; even mechanical vector linework; flat untextured single-tone

@@ -160,28 +160,50 @@ const leaderTo = (cx, cy, r, px, py) => {
 };
 const leader = leaderTo(CX, CY, CR, ZX, ZY);
 
-/* ── ⚠⚠ 第七版加的第二個圈：根尖的囊腫（使用者指定） ──────────
-   左邊那支牙根的根尖外面有一個囊腫（骨頭裡一個圓的淡色病灶），
-   另外拉一個小圈出來，裡面是一堆細菌在裡面開派對。
-   ⚠ 小圈**明顯比左邊那個小**（直徑約大圈的 0.42）—— 主角仍然是找入口那一件。 */
-const YX = TX - 66, YY = APEX + 10;                 // 囊腫的位置：左根尖外面
+/* ── ⚠⚠ 第二個圈：根尖的囊腫（第七版加，第九版搬到右邊並放大） ──────────
+   ⚠⚠⚠ 第九版：使用者「細菌的放大圈圈現在是往左拉，但左邊沒什麼空間，改成往右拉
+   可以大一點」。左邊整個被大圈佔滿了，小圈擠在兩者之間，所以：
+   ・**囊腫從左根尖搬到右根尖** —— 不搬的話引線要橫過整顆牙根才到得了右邊的圈。
+   ・**圈搬到牙齒右下方的牙齦上**，那一片本來就是空的。
+   ・直徑從大圈的 0.38 放大到 **0.51**（仍然明顯小於大圈 —— 主角還是找入口那一件）。 */
+const YX = TX + 66, YY = APEX + 10;                 // 囊腫的位置：**右**根尖外面
 const YR = 40;                                      // 囊腫的半徑
-const SX = 800, SY = 735, SR = 130;                 // 第二個圈
+const SX = 1408, SY = 646, SR = 172;                // 第二個圈：右下、放大過
 const cyst = `<circle cx="${YX}" cy="${YY}" r="${YR}" fill="#e9dcc4" stroke="${DASH}" stroke-width="3"/>`;
 const leader2 = leaderTo(SX, SY, SR, YX, YY);
+
+/* ⚠⚠⚠ 第九版：細菌改成**站著的小角色**，不再是一團一團的斑點。
+   使用者給了三張站上舊圖的細菌，共同點是「豆子形的身體 ＋ 四肢 ＋ 一張有表情的臉」——
+   前一版的參考圖只有圓斑，模型就照著畫出沒有手腳的斑點。
+   ⚠ 這張圖只給**形狀與站位**：顏色、線條、表情一律回提示詞與使用者那張舊圖拿。 */
+const bug = (dx, dy, s, lean) => {
+  const x = SX + dx, y = SY + dy, L = s * 0.95;
+  return `<g transform="translate(${x},${y}) rotate(${lean})">
+    <line x1="${-s*0.55}" y1="${s*0.95}" x2="${-s*0.75}" y2="${s*1.75}" stroke="#7d7566" stroke-width="${s*0.20}" stroke-linecap="round"/>
+    <line x1="${s*0.45}" y1="${s*0.95}" x2="${s*0.80}" y2="${s*1.70}" stroke="#7d7566" stroke-width="${s*0.20}" stroke-linecap="round"/>
+    <line x1="${-s*0.85}" y1="${-s*0.10}" x2="${-s*1.70}" y2="${-s*0.75}" stroke="#7d7566" stroke-width="${s*0.20}" stroke-linecap="round"/>
+    <line x1="${s*0.85}" y1="${-s*0.10}" x2="${s*1.65}" y2="${s*0.35}" stroke="#7d7566" stroke-width="${s*0.20}" stroke-linecap="round"/>
+    <ellipse cx="0" cy="0" rx="${s}" ry="${L*1.25}" fill="#8f877a" stroke="#5f584c" stroke-width="${s*0.16}"/>
+    <circle cx="${-s*0.34}" cy="${-s*0.30}" r="${s*0.20}" fill="#ffffff" stroke="#5f584c" stroke-width="${s*0.07}"/>
+    <circle cx="${s*0.34}" cy="${-s*0.30}" r="${s*0.20}" fill="#ffffff" stroke="#5f584c" stroke-width="${s*0.07}"/>
+    <circle cx="${-s*0.30}" cy="${-s*0.26}" r="${s*0.09}" fill="#3f3a32"/>
+    <circle cx="${s*0.38}" cy="${-s*0.26}" r="${s*0.09}" fill="#3f3a32"/>
+    <ellipse cx="0" cy="${s*0.42}" rx="${s*0.30}" ry="${s*0.22}" fill="#3f3a32"/>
+  </g>`;
+};
 const bugs = `
   <clipPath id="c2"><circle cx="${SX}" cy="${SY}" r="${SR-5}"/></clipPath>
   <g clip-path="url(#c2)">
     <rect x="${SX-SR}" y="${SY-SR}" width="${SR*2}" height="${SR*2}" fill="#efe3cb"/>
-    <!-- 髒亂：地上的水窪、牆上的潑濺、飛出去的碎屑（第八版加，使用者指定） -->
-    <ellipse cx="${SX-30}" cy="${SY+104}" rx="70" ry="17" fill="#a8a795" opacity=".8"/>
-    <ellipse cx="${SX+74}" cy="${SY+112}" rx="42" ry="12" fill="#a8a795" opacity=".7"/>
-    <path d="M ${SX-118} ${SY-78} q 26 -22 52 -6 q -14 24 -52 6 Z" fill="#a8a795" opacity=".75"/>
-    <path d="M ${SX+86} ${SY-72} q 22 -18 44 -4 q -12 20 -44 4 Z" fill="#a8a795" opacity=".75"/>
-    ${[[-104,18],[-88,-8],[24,-96],[52,-80],[108,54],[-36,96],[92,-14],[-70,66]]
-      .map(([dx,dy]) => `<circle cx="${SX+dx}" cy="${SY+dy}" r="4.5" fill="#8c8672"/>`).join('')}
-    ${[[-72,-40,26],[-14,-62,20],[46,-34,24],[-54,26,22],[8,14,28],[70,30,21],[-6,74,19],[62,82,17]]
-      .map(([dx,dy,r]) => `<circle cx="${SX+dx}" cy="${SY+dy}" r="${r}" fill="#9a9081"/>`).join('')}
+    <!-- 髒亂：地上的水窪、牆上的潑濺、飛出去的碎屑 -->
+    <ellipse cx="${SX-44}" cy="${SY+132}" rx="86" ry="20" fill="#a8a795" opacity=".8"/>
+    <ellipse cx="${SX+92}" cy="${SY+142}" rx="52" ry="14" fill="#a8a795" opacity=".7"/>
+    <path d="M ${SX-150} ${SY-98} q 32 -28 66 -8 q -18 30 -66 8 Z" fill="#a8a795" opacity=".75"/>
+    <path d="M ${SX+104} ${SY-92} q 28 -22 56 -6 q -16 26 -56 6 Z" fill="#a8a795" opacity=".75"/>
+    ${[[-132,24],[-112,-10],[30,-122],[66,-102],[138,68],[-46,122],[118,-18],[-90,84]]
+      .map(([dx,dy]) => `<circle cx="${SX+dx}" cy="${SY+dy}" r="5" fill="#8c8672"/>`).join('')}
+    ${[[-96,-46,20,-14],[-20,-86,16,9],[62,-52,18,-7],[-72,42,17,12],[14,16,21,-5],[96,36,16,8],[-16,104,15,-10],[84,106,14,6]]
+      .map(([dx,dy,s,lean]) => bug(dx,dy,s,lean)).join('')}
   </g>
   <circle cx="${SX}" cy="${SY}" r="${SR}" fill="none" stroke="${INK}" stroke-width="8"/>`;
 
