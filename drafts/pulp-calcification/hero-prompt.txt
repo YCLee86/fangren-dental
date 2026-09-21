@@ -50,9 +50,19 @@ hand-made line and coloured-pencil colour, with the same paper grain as the rest
 THE GIANT TOOTH occupies the right-hand HALF of the frame: ONE WHOLE LOWER MOLAR, drawn
 complete from its biting surface down to the tips of its roots, standing upright. COPY ITS
 SHAPE FROM THE FIRST REFERENCE IMAGE. It is built like a real molar, not like a barrel or a box:
-  • THE BITING SURFACE IS A FLATTENED OVAL seen from slightly above, sitting on top of the
-    crown like a shallow lid, with FOUR SOFT ROUNDED CUSPS on it and a shallow groove
-    running between them.
+  • ⚠⚠⚠ THE TOP OF THE CROWN IS NOT FLAT. A real molar is lumpy on top, and the silhouette
+    says so: THE TOP EDGE OF THE CROWN RISES INTO TWO ROUNDED CUSPS — two soft domes, like
+    two low hills side by side — WITH A CLEAR VALLEY DIPPING DOWN BETWEEN THEM. It is never
+    a straight line, never a flat plateau, never a level lid and never a squared-off top.
+  • We are looking at the tooth from very slightly above, so BEHIND that front pair of cusps
+    a NARROW BAND OF THE BITING SURFACE IS VISIBLE, receding away from us, and IT TOO IS
+    LUMPY: a second, nearer row of two rounded cusps runs across it in front, drawn as a
+    soft undulating ridge line rather than a straight one. The band is widest in the middle
+    and tapers to nothing at both ends of the crown, so it reads as a shallow dish between
+    two rows of bumps, not as an oval lid laid on a flat top.
+  • ALONG THE BOTTOM OF THAT DISH, BETWEEN THE TWO ROWS OF CUSPS, RUNS ONE SHALLOW GROOVE,
+    curving gently from one end of the crown to the other, with one short branch running off
+    it towards each row. Nothing else is drawn on the biting surface.
   • THE CROWN below it BULGES OUT at its widest and then DRAWS IN AGAIN to a clear waist at
     the neck of the tooth.
   • BELOW THE WAIST THE TOOTH DIVIDES INTO TWO ROOTS that taper as they go down, curve
@@ -359,7 +369,9 @@ larger than its neighbours; a row of teeth at different heights; dashed pulp lin
 neighbouring tooth; a leader line that cuts across the circle or crosses its rim; two leader
 lines that are not tangents; a tooth shaped like a barrel, a bucket, a box or a straight-sided tub; a tooth
 whose roots are cut off by the edge of the picture; a tooth with a flat square biting
-surface; a pulp drawn as a floating ellipse with two separate lines below it; a gap between
+surface; a crown with a FLAT, LEVEL OR STRAIGHT TOP EDGE; a crown whose top is a plateau, a
+lid or a flat disc; a biting surface drawn as a plain oval sitting on a flat crown; a crown
+with no valley between its cusps; a pulp drawn as a floating ellipse with two separate lines below it; a gap between
 the pulp chamber and the canals; a third leader line; a leader line that does not touch the
 rim of the lens; a leader line that stops in empty space; stray ticks, short diagonal
 strokes or hatching anywhere on the tooth; ANY PERSON, OR ANY PART OF A PERSON, DRAWN OUTSIDE THE RIM OF THE MAGNIFYING LENS;

@@ -38,8 +38,28 @@ const GUM = '#f0c0c4';   // 牙齦
 const TX = 1118, TOP = 214, R = 168, RY = 50;   // 中線／咬合面橢圓的中心與半徑
 const CEJ = 486, APEX = 812;                    // 牙頸線／根尖
 
+/* ⚠⚠⚠ 第十版重畫咬合面（使用者：「牙齒的形狀回覆到正常咬合面　現在是扁平的」）。
+   前一版把咬合面畫成「一個壓扁的橢圓蓋在平平的牙冠頂上」—— 那是俯視圖的畫法，
+   貼到這個「稍微從上面看」的角度上，出圖就變成一顆平頭的牙齒。
+   正常的下顎大臼齒從這個角度看是**兩排牙尖**：
+   ・近的那排（頰側）在畫面下方，是一條**起伏的稜線**，不是直線；
+   ・遠的那排（舌側）在畫面上方，就是**牙冠的輪廓頂端**，所以輪廓本身要有兩個峰；
+   ・兩排之間凹下去就是**中央溝**，那個洞就開在溝上。
+   兩排在近心／遠心兩側收攏到同一點（邊緣脊），所以咬合面是個梭形不是橢圓。 */
+const CTOP = TOP + 30;                    // 兩排牙尖在左右兩端收攏的高度（邊緣脊）
+const cuspsFar = `
+  C ${TX+R*0.90} ${TOP-16} ${TX+R*0.72} ${TOP-48} ${TX+R*0.50} ${TOP-48}
+  C ${TX+R*0.30} ${TOP-48} ${TX+R*0.18} ${TOP-26} ${TX} ${TOP-26}
+  C ${TX-R*0.18} ${TOP-26} ${TX-R*0.30} ${TOP-48} ${TX-R*0.50} ${TOP-48}
+  C ${TX-R*0.72} ${TOP-48} ${TX-R*0.90} ${TOP-16} ${TX-R} ${CTOP}`;
+const cuspsNear = `
+  C ${TX-R*0.88} ${TOP+22} ${TX-R*0.70} ${TOP+12} ${TX-R*0.48} ${TOP+12}
+  C ${TX-R*0.26} ${TOP+12} ${TX-R*0.16} ${TOP+40} ${TX} ${TOP+40}
+  C ${TX+R*0.16} ${TOP+40} ${TX+R*0.26} ${TOP+12} ${TX+R*0.48} ${TOP+12}
+  C ${TX+R*0.70} ${TOP+12} ${TX+R*0.88} ${TOP+22} ${TX+R} ${CTOP}`;
+
 const tooth = `
-  M ${TX-R} ${TOP}
+  M ${TX-R} ${CTOP}
   C ${TX-R-16} ${TOP+116} ${TX-158} ${CEJ-62} ${TX-130} ${CEJ}
   C ${TX-122} ${CEJ+106} ${TX-106} ${CEJ+224} ${TX-86} ${APEX-22}
   C ${TX-78} ${APEX+10} ${TX-52} ${APEX+10} ${TX-46} ${APEX-22}
@@ -48,7 +68,8 @@ const tooth = `
   C ${TX+25} ${CEJ+128} ${TX+34} ${CEJ+226} ${TX+46} ${APEX-22}
   C ${TX+52} ${APEX+10} ${TX+78} ${APEX+10} ${TX+86} ${APEX-22}
   C ${TX+106} ${CEJ+224} ${TX+122} ${CEJ+106} ${TX+130} ${CEJ}
-  C ${TX+158} ${CEJ-62} ${TX+R+16} ${TOP+116} ${TX+R} ${TOP} Z`;
+  C ${TX+158} ${CEJ-62} ${TX+R+16} ${TOP+116} ${TX+R} ${CTOP}
+  ${cuspsFar} Z`;
 const body = `<path d="${tooth}" fill="${SIDE}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>`;
 
 /* ⚠⚠ 鄰牙（第六版加，使用者：「這顆牙齒特別高　和周圍的牙齒應該一樣高度」）——
@@ -63,21 +84,23 @@ const neighbours = neighbour(-396) + neighbour(396);
    主角那顆畫在牙齦前面，牙根與虛線的髓腔才看得到（透視的只有它一顆）。 */
 const gum = `<rect x="0" y="${CEJ+10}" width="${W}" height="${H-CEJ-10}" fill="${GUM}"/>`;
 
-/* 咬合面：壓扁的橢圓 ＋ 四個淺淺的牙尖 ＋ 中央的溝 */
+/* 咬合面 ＝ 遠排牙尖與近排牙尖之間那一塊，兩端收攏成梭形 */
 const table = `
-  <ellipse cx="${TX}" cy="${TOP}" rx="${R}" ry="${RY}" fill="${ENAM}" stroke="${INK}" stroke-width="4.4"/>` +
-  [[-0.50,-0.40],[0.44,-0.36],[0.48,0.34],[-0.46,0.30]].map(([a,b]) =>
-    `<ellipse cx="${TX+R*a}" cy="${TOP+RY*b}" rx="${R*0.30}" ry="${RY*0.46}" fill="${SIDE}" opacity=".8"/>`).join('');
+  <path d="M ${TX-R} ${CTOP} ${cuspsNear.replace(/\s+/g,' ')}
+           ${cuspsFar.replace(/\s+/g,' ')} Z" fill="${ENAM}" stroke="none"/>
+  <path d="M ${TX-R} ${CTOP} ${cuspsNear.replace(/\s+/g,' ')}"
+        fill="none" stroke="${INK}" stroke-width="4.4" stroke-linecap="round"/>`;
 const fissure = `
-  <path d="M ${TX-R*0.62} ${TOP-2} C ${TX-R*0.24} ${TOP-12} ${TX+R*0.16} ${TOP-10} ${TX+R*0.60} ${TOP-2}"
+  <path d="M ${TX-R*0.78} ${TOP+16} C ${TX-R*0.44} ${TOP-10} ${TX-R*0.18} ${TOP-2} ${TX} ${TOP-2}
+           C ${TX+R*0.18} ${TOP-2} ${TX+R*0.44} ${TOP-10} ${TX+R*0.78} ${TOP+16}"
         fill="none" stroke="${GROOVE}" stroke-width="4.6" stroke-linecap="round"/>
-  <path d="M ${TX-R*0.04} ${TOP-RY*0.56} C ${TX-R*0.02} ${TOP-14} ${TX} ${TOP-8} ${TX+R*0.01} ${TOP-3}"
-        fill="none" stroke="${GROOVE}" stroke-width="4.2" stroke-linecap="round"/>
-  <path d="M ${TX+R*0.03} ${TOP+2} C ${TX+R*0.05} ${TOP+14} ${TX+R*0.07} ${TOP+RY*0.52} ${TX+R*0.08} ${TOP+RY*0.66}"
-        fill="none" stroke="${GROOVE}" stroke-width="4.2" stroke-linecap="round"/>`;
+  <path d="M ${TX+2} ${TOP-2} L ${TX+2} ${TOP-22}"
+        fill="none" stroke="${GROOVE}" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M ${TX+2} ${TOP-2} L ${TX+2} ${TOP+30}"
+        fill="none" stroke="${GROOVE}" stroke-width="3.6" stroke-linecap="round"/>`;
 
 /* ⚠⚠ 那個洞：寬度 ＝ 牙冠寬 (2R) 的 1/28。就是要這麼小。 */
-const PITX = TX - 2, PITY = TOP - 4, PITW = (2*R)/28;
+const PITX = TX - R*0.34, PITY = TOP - 3, PITW = (2*R)/28;
 const pit = `<ellipse cx="${PITX}" cy="${PITY}" rx="${(PITW/2).toFixed(1)}" ry="${(PITW/2*0.70).toFixed(1)}" fill="${DARK}"/>`;
 
 /* ── ⚠⚠⚠ 牙髓腔與根管：**一整條連起來的形狀** ──────────────────
