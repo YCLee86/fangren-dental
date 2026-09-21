@@ -127,6 +127,11 @@ const cave = `
          四個人橫向約佔圈寬的六成，每個人離鏡框都留著一大段空白。
          ⚠ 這裡是**灰色的塊**，只給位置與大小 —— 提示詞要明講「畫成有臉有手、
          穿彩色衣服的人，不是剪影」（A 類紅線第 2 條）。 -->
+    <!-- ⚠ 正在擠進那條窄通道的那一位（使用者指定）：身體比別人窄、貼著通道口 -->
+    <g transform="translate(${CX-4},${CY+40}) rotate(-8)">
+      <rect x="-13" y="-150" width="26" height="150" rx="13" fill="#a49b8d"/>
+      <circle cx="0" cy="-164" r="16" fill="#a49b8d"/>
+    </g>
     ${[[-168,0.86],[-100,1.0],[96,0.94],[162,0.88]].map(([dx,k]) => {
         const h = CR*2/3*k, w = h*0.30, by = CY+190;
         return `<rect x="${CX+dx-w/2}" y="${by-h}" width="${w}" height="${h}" rx="${w*0.45}"
@@ -145,16 +150,33 @@ const cave = `
      兩個切點 ＝ 圓心 ＋ r·(cos(φ±γ), sin(φ±γ))
    這樣兩條線會自然地包住整個圓，看起來才像「這個圓在看那一點」。 */
 const ZX = TX - 46, ZY = CEJ + 186;          // 放大的那一點：左邊那條根管的中段
-const tangents = (() => {
-  const dx = ZX - CX, dy = ZY - CY, d = Math.hypot(dx, dy);
-  if (d <= CR) throw new Error('那一點落在圓裡面，畫不出外切線');
-  const phi = Math.atan2(dy, dx), gamma = Math.acos(CR / d);
+const leaderTo = (cx, cy, r, px, py) => {
+  const dx = px - cx, dy = py - cy, d = Math.hypot(dx, dy);
+  if (d <= r) throw new Error('那一點落在圓裡面，畫不出外切線');
+  const phi = Math.atan2(dy, dx), gamma = Math.acos(r / d);
   return [phi + gamma, phi - gamma].map((a) =>
-    [CX + CR * Math.cos(a), CY + CR * Math.sin(a)]);
-})();
-const leader = tangents.map(([tx, ty]) =>
-  `<line x1="${tx.toFixed(1)}" y1="${ty.toFixed(1)}" x2="${ZX}" y2="${ZY}"
-     stroke="${LINE}" stroke-width="3"/>`).join('');
+    `<line x1="${(cx + r*Math.cos(a)).toFixed(1)}" y1="${(cy + r*Math.sin(a)).toFixed(1)}"
+       x2="${px.toFixed(1)}" y2="${py.toFixed(1)}" stroke="${LINE}" stroke-width="3"/>`).join('');
+};
+const leader = leaderTo(CX, CY, CR, ZX, ZY);
+
+/* ── ⚠⚠ 第七版加的第二個圈：根尖的囊腫（使用者指定） ──────────
+   左邊那支牙根的根尖外面有一個囊腫（骨頭裡一個圓的淡色病灶），
+   另外拉一個小圈出來，裡面是一堆細菌在裡面開派對。
+   ⚠ 小圈**明顯比左邊那個小**（直徑約大圈的 0.42）—— 主角仍然是找入口那一件。 */
+const YX = TX - 66, YY = APEX + 10;                 // 囊腫的位置：左根尖外面
+const YR = 40;                                      // 囊腫的半徑
+const SX = 800, SY = 735, SR = 130;                 // 第二個圈
+const cyst = `<circle cx="${YX}" cy="${YY}" r="${YR}" fill="#e9dcc4" stroke="${DASH}" stroke-width="3"/>`;
+const leader2 = leaderTo(SX, SY, SR, YX, YY);
+const bugs = `
+  <clipPath id="c2"><circle cx="${SX}" cy="${SY}" r="${SR-5}"/></clipPath>
+  <g clip-path="url(#c2)">
+    <rect x="${SX-SR}" y="${SY-SR}" width="${SR*2}" height="${SR*2}" fill="#efe3cb"/>
+    ${[[-72,-40,26],[-14,-62,20],[46,-34,24],[-54,26,22],[8,14,28],[70,30,21],[-6,74,19],[62,82,17]]
+      .map(([dx,dy,r]) => `<circle cx="${SX+dx}" cy="${SY+dy}" r="${r}" fill="#b9b1a4"/>`).join('')}
+  </g>
+  <circle cx="${SX}" cy="${SY}" r="${SR}" fill="none" stroke="${INK}" stroke-width="8"/>`;
 
 /* ⚠⚠ 根管上那幾個「很小很小的人（甚至只有點）」（使用者指定）——
    它是整張圖的比例尺：看到管子裡有幾顆小點，才知道圈裡那群人正在**管子裡**。
@@ -168,8 +190,9 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
   <rect width="${W}" height="${H}" fill="#ffffff"/>
   ${neighbours}
   ${gum}
-  ${leader}
-  ${body}${ghost}${table}${fissure}${pit}${dots}
+  ${leader}${leader2}
+  ${body}${cyst}${ghost}${table}${fissure}${pit}${dots}
+  ${bugs}
   ${cave}
 </svg>`;
 
