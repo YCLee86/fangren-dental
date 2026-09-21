@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>文章 HERO 的 SVG 動態 — 提案（芳仁牙醫診所）</title>
+
+<!-- ===========================================================================
+     提案：文章 HERO 圖用 SVG + CSS 加上「簡單的動畫感」（2026-09-21）
+
+     起點：使用者在台北捷運車廂上方的燈箱面板錄了五段影片，指著說
+     「像這種簡單的動畫感」，並問「使用者瀏覽會需要讀取很久造成使用者體驗不好嗎」。
+     逐格查過 IMG_4957 之後確認那個面板真的在播動畫：粉紅色的長指針以右上角的
+     紅點為軸逆時針掃（0.0 秒時畫面上一顆粉紅色像素都沒有，0.5 秒 908 顆，
+     2.5 秒 1,800 顆），左下角的貓從坐姿變趴姿再坐回來，約 1.3~1.5 秒一個來回。
+
+     那種動畫的共同點是：**背景完全不動，只有幾個小東西在動。**
+     這正是 CSS 最便宜的一種 —— 不必換圖、不必多載任何檔案。
+
+     這一頁拿站上三張已經上線的文章 HERO，各示範一種動法：
+       ① 植牙能用多久      轉      大鐘的秒針 + 兩顆小鐘 + 沙漏落沙
+       ② 隱形矯正的模擬    掃      螢幕的掃描光帶 + 五個警示標記依序亮
+       ③ 貝氏刷牙法        呼吸    三個放大圈依序亮一圈環 + 刷頭小幅度來回
+
+     ⚠ 三張圖檔一個位元組都沒有改，動的東西全部是疊在圖上面的 SVG。
+     ⚠ 顏色只用 PALETTE.md 既有的三個官方色票（brick／stool／teal）與白，
+       沒有新調任何顏色。
+     ⚠ 切換條預設**不跟**系統的「減少動態效果」—— 使用者自己的 iPhone 與 iPad
+       都開著那個設定（見 DECISIONS.md 的 HERO 緩慢推進那一條），跟了的話
+       他在自己手機上會什麼都看不到，整個提案頁就失去意義。切換條上有開關可以切。
+
+     定案之後照 CLAUDE.md 第八節：刪掉這一頁、文字搬進 history/hero-motion.html。
+     =========================================================================== -->
+
+<style>
+:root { color-scheme: light; }
+
+/* 顏色全部取自 PALETTE.md 既有的值，這一頁沒有新調任何色 */
+:root {
+  --paper: #e2e5e6;
+  --card:  #f4f4f5;
+  --rule:  #cdd0d2;
+  --note:  #f9f9fa;
+  --ink:   #2a2c27;
+  --ink-soft: #5c5f57;
+  --teal:  #214D48;
+  --brick: #AF4C52;
+  --stool: #8d5e3a;
+  --band-bg: #282b31;
+
+  /* 切換條選定的兩支尺，預設 Ⓑ 中 ＋ 中速 */
+  --fx-op: .65;    /* 特效整體的不透明度 */
+  --fx-amp: 1;     /* 位移與脈動的幅度倍率 */
+  --fx-spd: 1;     /* 時間倍率，數字愈大愈慢 */
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui,
+               -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px; line-height: 1.85; letter-spacing: .01em;
+  overflow-x: hidden;
+  padding-bottom: 210px;   /* 讓最後一塊不要被固定在底部的切換條蓋住 */
+}
+
+.pv-shell { max-width: 780px; margin: 0 auto; padding: 0 14px; }
+
+.pv-head { padding: 2rem 0 .4rem; }
+.pv-head h1 { font-size: 1.3rem; line-height: 1.5; margin: 0 0 .5rem; letter-spacing: .01em; }
+.pv-head p  { margin: 0 0 .7rem; font-size: .93rem; color: var(--ink-soft); }
+.pv-head ol { margin: 0; padding-left: 1.35em; font-size: .93rem; color: var(--ink-soft); }
+.pv-head li { margin-bottom: .2em; }
+.pv-head b  { color: var(--ink); }
+
+.pv-item { margin: 1.6rem 0 0; }
+.pv-cap { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .6rem; margin-bottom: .45rem; }
+.pv-cap h2 { font-size: 1rem; margin: 0; line-height: 1.6; }
+.pv-kind {
+  font-size: .74rem; letter-spacing: .08em; padding: .1rem .5rem;
+  border: 1px solid var(--teal); border-radius: 999px; color: var(--teal);
+  white-space: nowrap;
+}
+.pv-what { margin: .4rem 0 0; font-size: .84rem; color: var(--ink-soft); }
+
+/* 舞台：圖與 SVG 疊在同一個盒子裡，兩者共用同一個長寬比，所以永遠對齊 */
+.pv-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--ar);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--rule);
+}
+.pv-stage img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pv-fx {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: var(--fx-op);
+  pointer-events: none;
+}
+
+/* 「對照現況」＝ 整層特效拿掉，剩下的就是現在站上的那一張圖 */
+html[data-still="1"] .pv-fx { display: none; }
+</style>
+
+<style id="pv-fx-css">
+/* ===========================================================================
+   這一段就是「動」的全部。量測面板算的位元組指的是這一段 ＋ 三個 SVG 的標記。
+   =========================================================================== */
+
+/* 轉：秒針。transform-origin 用 viewBox 的使用者座標（transform-box 預設就是 view-box） */
+.pv-spin {
+  transform-box: view-box;
+  transform-origin: var(--ox) var(--oy);
+  animation: pvSpin calc(var(--dur) * var(--fx-spd)) linear infinite;
+}
+@keyframes pvSpin { to { transform: rotate(360deg); } }
+
+/* 落沙：短虛線往下跑，看起來就是一顆一顆掉下去 */
+.pv-sand { animation: pvFall calc(.62s * var(--fx-spd)) linear infinite; }
+@keyframes pvFall { to { stroke-dashoffset: -6; } }
+
+/* 沙堆：慢慢長高，長滿了重來 */
+.pv-pile {
+  transform-box: view-box;
+  transform-origin: var(--ox) var(--oy);
+  animation: pvPile calc(7s * var(--fx-spd)) linear infinite;
+}
+@keyframes pvPile {
+  0%   { transform: scaleY(.06); }
+  92%  { transform: scaleY(1); }
+  100% { transform: scaleY(.06); }
+}
+
+/* 掃：一條光帶由上往下掃過螢幕 */
+.pv-scan { animation: pvScan calc(4.2s * var(--fx-spd)) cubic-bezier(.45,.02,.5,.98) infinite; }
+@keyframes pvScan {
+  0%   { transform: translateY(-70px); opacity: 0; }
+  12%  { opacity: 1; }
+  82%  { opacity: 1; }
+  100% { transform: translateY(240px); opacity: 0; }
+}
+
+/* 亮：警示標記依序亮一下 */
+.pv-blip {
+  transform-box: view-box;
+  transform-origin: var(--ox) var(--oy);
+  animation: pvBlip calc(3.4s * var(--fx-spd)) ease-out infinite;
+  animation-delay: calc(var(--i) * .28s * var(--fx-spd));
+  opacity: 0;
+}
+@keyframes pvBlip {
+  0%   { opacity: 0; transform: scale(.45); }
+  8%   { opacity: .95; transform: scale(calc(1 + .25 * var(--fx-amp))); }
+  26%  { opacity: 0; transform: scale(calc(1.5 + .5 * var(--fx-amp))); }
+  100% { opacity: 0; transform: scale(.45); }
+}
+
+/* 呼吸：放大圈外面亮一圈環，三個錯開 */
+.pv-ring {
+  transform-box: view-box;
+  transform-origin: var(--ox) var(--oy);
+  animation: pvRing calc(3.2s * var(--fx-spd)) ease-out infinite;
+  animation-delay: calc(var(--i) * .5s * var(--fx-spd));
+  opacity: 0;
+}
+@keyframes pvRing {
+  0%   { opacity: 0;  transform: scale(1); }
+  10%  { opacity: .9; transform: scale(1.01); }
+  62%  { opacity: 0;  transform: scale(calc(1.1 + .1 * var(--fx-amp))); }
+  100% { opacity: 0;  transform: scale(1); }
+}
+
+/* 來回：刷頭的小幅度往復，這是貝氏刷牙法的重點動作 */
+.pv-swing {
+  animation: pvSwing calc(1.25s * var(--fx-spd)) ease-in-out infinite alternate;
+}
+@keyframes pvSwing {
+  from { transform: translateX(calc(-15px * var(--fx-amp))); }
+  to   { transform: translateX(calc(15px * var(--fx-amp))); }
+}
+
+/* 使用者在切換條上按下「跟系統設定」時才生效。預設不跟，理由見本頁開頭的註解 */
+@media (prefers-reduced-motion: reduce) {
+  html[data-rm="1"] .pv-fx * { animation: none !important; }
+  html[data-rm="1"] .pv-fx { opacity: calc(var(--fx-op) * .5); }
+}
+</style>
+
+<style>
+/* ===========================================================================
+   切換條。固定在底部，手機上要控制在一屏的兩成以內 —— 這一頁要判斷的正是
+   「圖上那幾個小東西動得夠不夠」，切換條吃掉半個畫面就看不出來了。
+   =========================================================================== */
+.pv-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  background: rgba(244,244,245,.96);
+  border-top: 1px solid var(--rule);
+  backdrop-filter: blur(8px);
+  padding: .5rem 12px calc(.5rem + env(safe-area-inset-bottom));
+  font-size: .8rem;
+}
+.pv-bar .pv-in { max-width: 780px; margin: 0 auto; }
+.pv-row { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; margin-bottom: .34rem; }
+.pv-row:last-child { margin-bottom: 0; }
+.pv-lab { color: var(--ink-soft); font-size: .76rem; margin-right: .1rem; }
+.pv-bar button {
+  font: inherit; font-size: .78rem; line-height: 1.5;
+  padding: .16rem .52rem; border-radius: 999px;
+  border: 1px solid var(--rule); background: var(--note); color: var(--ink-soft);
+  cursor: pointer; white-space: nowrap;
+}
+.pv-bar button[aria-pressed="true"] { background: var(--teal); border-color: var(--teal); color: #fff; }
+.pv-sep { width: 1px; height: 1.1rem; background: var(--rule); margin: 0 .22rem; }
+
+.pv-panel {
+  margin-top: .3rem; padding-top: .3rem; border-top: 1px dashed var(--rule);
+  font-size: .68rem; line-height: 1.42; color: var(--ink-soft);
+  display: none; max-height: 34vh; overflow: auto;
+}
+html[data-panel="1"] .pv-panel { display: block; }
+.pv-panel b { color: var(--ink); font-weight: 600; }
+.pv-panel .pv-grid { display: grid; grid-template-columns: auto 1fr; gap: 0 .5rem; }
+.pv-panel .pv-grid > div:nth-child(odd) { white-space: nowrap; }
+
+html[data-bar="0"] .pv-bar .pv-in > *:not(.pv-mini) { display: none; }
+.pv-mini { display: none; }
+html[data-bar="0"] .pv-mini { display: flex; justify-content: flex-end; }
+
+.pv-foot { margin: 2rem 0 .5rem; font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+
+<body>
+
+<div class="pv-shell">
+
+  <header class="pv-head">
+    <h1>文章 HERO 的「簡單動畫感」— 用 SVG ＋ CSS 做</h1>
+    <p>三張都是站上已經上線的圖，<b>圖檔一個位元組都沒有改</b>。會動的東西是疊在圖上面的 SVG。</p>
+    <ol>
+      <li>底下的切換條可以調<b>幅度</b>與<b>速度</b>，各三格，挑一格告訴我。</li>
+      <li>按<b>「對照現況」</b>可以把特效整個關掉，那就是現在站上的樣子。</li>
+      <li>你的手機開著「減少動態效果」，所以這一頁<b>預設不跟</b>它 —— 切換條上可以切回去看差別。</li>
+      <li>按<b>「量測」</b>看這三段特效實際多花了多少位元組、以及現在的幀率。</li>
+    </ol>
+  </header>
+
+  <!-- ① 轉 ------------------------------------------------------------------ -->
+  <section class="pv-item">
+    <div class="pv-cap">
+      <span class="pv-kind">① 轉</span>
+      <h2>植牙能用多久：世界第一顆植牙用了四十年</h2>
+    </div>
+    <div class="pv-stage" style="--ar: 1600 / 893">
+      <img src="../../assets/hero-implant-lifespan-photo-1600.jpg" width="1600" height="893"
+           alt="時間漩渦裡的牙科診療場景，四周漂浮著各式時鐘與沙漏">
+      <svg class="pv-fx" viewBox="0 0 800 446.5" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <!-- 大鐘的秒針。原本畫上去的時針分針不動，這一支是新加的 -->
+        <g class="pv-spin" style="--ox:129px; --oy:161px; --dur:14s">
+          <line x1="129" y1="167" x2="129" y2="127" stroke="#AF4C52" stroke-width="1.7" stroke-linecap="round"/>
+          <circle cx="129" cy="161" r="2.4" fill="#AF4C52"/>
+        </g>
+        <!-- 右上那顆鐘 -->
+        <g class="pv-spin" style="--ox:462px; --oy:40px; --dur:11s">
+          <line x1="462" y1="43" x2="462" y2="25" stroke="#AF4C52" stroke-width="1.1" stroke-linecap="round"/>
+          <circle cx="462" cy="40" r="1.4" fill="#AF4C52"/>
+        </g>
+        <!-- 下方那顆鐘 -->
+        <g class="pv-spin" style="--ox:592px; --oy:418px; --dur:18s">
+          <line x1="592" y1="422" x2="592" y2="399" stroke="#AF4C52" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="592" cy="418" r="1.7" fill="#AF4C52"/>
+        </g>
+        <!-- 沙漏：落下的沙 ＋ 慢慢長高的沙堆 -->
+        <line class="pv-sand" x1="675" y1="318" x2="675" y2="340"
+              stroke="#8d5e3a" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="2 4"/>
+        <path class="pv-pile" style="--ox:675px; --oy:345px"
+              d="M666 345 L684 345 L675 333 Z" fill="#8d5e3a" opacity=".5"/>
+      </svg>
+    </div>
+    <p class="pv-what">動的是：大鐘的秒針（14 秒一圈）、另外兩顆鐘的秒針（11／18 秒，故意不同步）、沙漏的落沙與慢慢長高的沙堆。</p>
+  </section>
+
+  <!-- ② 掃 ------------------------------------------------------------------ -->
+  <section class="pv-item">
+    <div class="pv-cap">
+      <span class="pv-kind">② 掃</span>
+      <h2>隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位</h2>
+    </div>
+    <div class="pv-stage" style="--ar: 1600 / 891">
+      <img src="../../assets/hero-aligner-photo-1600.jpg" width="1600" height="891"
+           alt="醫師在半透明螢幕前講解牙弓模擬，螢幕上有多個警示標記">
+      <svg class="pv-fx" viewBox="0 0 800 445.5" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <clipPath id="pvScreenClip">
+            <polygon points="174,31 468,56 464,243 170,234"/>
+          </clipPath>
+          <linearGradient id="pvScanGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0"   stop-color="#ffffff" stop-opacity="0"/>
+            <stop offset=".5"  stop-color="#ffffff" stop-opacity=".85"/>
+            <stop offset="1"   stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="pvBlipGrad">
+            <stop offset="0"   stop-color="#ffffff" stop-opacity=".95"/>
+            <stop offset=".55" stop-color="#ffffff" stop-opacity=".45"/>
+            <stop offset="1"   stop-color="#ffffff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- 掃描光帶，裁在螢幕那一塊四邊形裡面 -->
+        <g clip-path="url(#pvScreenClip)">
+          <rect class="pv-scan" x="165" y="20" width="310" height="52" fill="url(#pvScanGrad)"/>
+        </g>
+        <!-- 五個警示標記依序亮一下 -->
+        <circle class="pv-blip" style="--ox:226px; --oy:91px;  --i:0" cx="226" cy="91"  r="12" fill="url(#pvBlipGrad)"/>
+        <circle class="pv-blip" style="--ox:354px; --oy:95px;  --i:1" cx="354" cy="95"  r="12" fill="url(#pvBlipGrad)"/>
+        <circle class="pv-blip" style="--ox:314px; --oy:126px; --i:2" cx="314" cy="126" r="12" fill="url(#pvBlipGrad)"/>
+        <circle class="pv-blip" style="--ox:199px; --oy:161px; --i:3" cx="199" cy="161" r="12" fill="url(#pvBlipGrad)"/>
+        <circle class="pv-blip" style="--ox:261px; --oy:186px; --i:4" cx="261" cy="186" r="12" fill="url(#pvBlipGrad)"/>
+      </svg>
+    </div>
+    <p class="pv-what">動的是：一條光帶由上往下掃過那面螢幕（4.2 秒一次），以及螢幕上五個警示標記由左而右依序亮一下。</p>
+  </section>
+
+  <!-- ③ 呼吸 ---------------------------------------------------------------- -->
+  <section class="pv-item">
+    <div class="pv-cap">
+      <span class="pv-kind">③ 呼吸</span>
+      <h2>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h2>
+    </div>
+    <div class="pv-stage" style="--ar: 1600 / 893">
+      <img src="../../assets/hero-brushing-photo-1600.jpg" width="1600" height="893"
+           alt="公共盥洗室裡一排人在刷牙，上方三個圓形放大圈畫出刷毛與牙齦的角度">
+      <svg class="pv-fx" viewBox="0 0 800 446.5" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <!-- 三個放大圈各亮一圈環，依序 -->
+        <circle class="pv-ring" style="--ox:284px; --oy:97px; --i:0" cx="284" cy="97" r="50"
+                fill="none" stroke="#214D48" stroke-width="2.2"/>
+        <circle class="pv-ring" style="--ox:477px; --oy:97px; --i:1" cx="477" cy="97" r="51"
+                fill="none" stroke="#214D48" stroke-width="2.2"/>
+        <circle class="pv-ring" style="--ox:710px; --oy:97px; --i:2" cx="710" cy="97" r="54"
+                fill="none" stroke="#214D48" stroke-width="2.2"/>
+        <!-- 第三個圈裡：刷頭沿著那支白色箭頭小幅度來回 -->
+        <rect class="pv-swing" x="694" y="119" width="17" height="7" rx="3.5"
+              fill="#ffffff" opacity=".92"/>
+      </svg>
+    </div>
+    <p class="pv-what">動的是：三個放大圈由左而右依序亮一圈環（3.2 秒一輪），第三個圈裡多一個刷頭沿著原本那支箭頭小幅度來回 —— 那正是貝氏刷牙法的動作。</p>
+  </section>
+
+  <p class="pv-foot">
+    三張圖的檔案、尺寸、<code>srcset</code> 都沒有動。這一頁沒有載入任何影片、GIF 或額外的圖。
+  </p>
+
+</div>
+
+<!-- 切換條 ------------------------------------------------------------------ -->
+<div class="pv-bar">
+  <div class="pv-in">
+
+    <div class="pv-row">
+      <span class="pv-lab">幅度</span>
+      <button data-k="amp" data-v="a">Ⓐ 淡</button>
+      <button data-k="amp" data-v="b">Ⓑ 中</button>
+      <button data-k="amp" data-v="c">Ⓒ 明顯</button>
+      <span class="pv-sep"></span>
+      <span class="pv-lab">速度</span>
+      <button data-k="spd" data-v="1">慢</button>
+      <button data-k="spd" data-v="2">中</button>
+      <button data-k="spd" data-v="3">快</button>
+    </div>
+
+    <div class="pv-row">
+      <button id="pv-still" aria-pressed="false">對照現況</button>
+      <button id="pv-rm" aria-pressed="false">跟系統設定</button>
+      <button id="pv-meas" aria-pressed="false">量測</button>
+      <button id="pv-hide">收起</button>
+    </div>
+
+    <div class="pv-panel">
+      <div class="pv-grid" id="pv-out"></div>
+    </div>
+
+    <div class="pv-row pv-mini">
+      <button id="pv-show">切換條</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  /* 兩支尺的實際值。幅度同時調不透明度與位移倍率 —— 一條尺只調一樣的話，
+     淡的那一格會變成「動得一樣大但看不清楚」，那不是使用者要比的東西。 */
+  var AMP = { a: { op: .34, amp: .55 }, b: { op: .65, amp: 1 }, c: { op: 1, amp: 1.6 } };
+  var SPD = { '1': 1.7, '2': 1, '3': .62 };
+
+  var state = { amp: 'b', spd: '2', still: '0', rm: '0', panel: '0', bar: '1' };
+
+  /* 網址參數。正規式一定要寫 [a-z0-9]+ —— 寫成 [a-z]+ 會吃不到 "1" 這種值，
+     比對失敗之後會悄悄退回預設，等於參數沒作用（DECISIONS.md 那一條踩過）。 */
+  var q = location.search.slice(1).split('&');
+  for (var i = 0; i < q.length; i++) {
+    var m = /^([a-z]+)=([a-z0-9]+)$/.exec(q[i]);
+    if (m && state.hasOwnProperty(m[1])) state[m[1]] = m[2];
+  }
+
+  function apply() {
+    var a = AMP[state.amp] || AMP.b;
+    var s = SPD[state.spd] || 1;
+    root.style.setProperty('--fx-op', a.op);
+    root.style.setProperty('--fx-amp', a.amp);
+    root.style.setProperty('--fx-spd', s);
+    root.setAttribute('data-still', state.still);
+    root.setAttribute('data-rm', state.rm);
+    root.setAttribute('data-panel', state.panel);
+    root.setAttribute('data-bar', state.bar);
+
+    var btns = document.querySelectorAll('.pv-bar button[data-k]');
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      b.setAttribute('aria-pressed', state[b.getAttribute('data-k')] === b.getAttribute('data-v') ? 'true' : 'false');
+    }
+    document.getElementById('pv-still').setAttribute('aria-pressed', state.still === '1' ? 'true' : 'false');
+    document.getElementById('pv-rm').setAttribute('aria-pressed', state.rm === '1' ? 'true' : 'false');
+    document.getElementById('pv-meas').setAttribute('aria-pressed', state.panel === '1' ? 'true' : 'false');
+
+    var keep = [];
+    for (var k in state) if (state[k] !== '' ) keep.push(k + '=' + state[k]);
+    history.replaceState(null, '', location.pathname + '?' + keep.join('&'));
+  }
+
+  document.querySelector('.pv-bar').addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('button') : null;
+    if (!b) return;
+    if (b.hasAttribute('data-k')) { state[b.getAttribute('data-k')] = b.getAttribute('data-v'); apply(); return; }
+    if (b.id === 'pv-still') { state.still = state.still === '1' ? '0' : '1'; apply(); return; }
+    if (b.id === 'pv-rm')    { state.rm    = state.rm    === '1' ? '0' : '1'; apply(); return; }
+    if (b.id === 'pv-meas')  { state.panel = state.panel === '1' ? '0' : '1'; apply(); measure(); return; }
+    if (b.id === 'pv-hide')  { state.bar = '0'; apply(); return; }
+    if (b.id === 'pv-show')  { state.bar = '1'; apply(); return; }
+  });
+
+  /* ---- 量測面板 -------------------------------------------------------- */
+  /* 這一頁真正要回答的是「會不會讀很久」，所以面板算的是**真的多出來的位元組**：
+     三個 SVG 的標記 ＋ 驅動它們的那一段 CSS。不是估的，是現場數出來的。 */
+
+  var fps = 0, frames = 0, last = performance.now();
+  (function tick(now) {
+    frames++;
+    if (now - last >= 500) { fps = Math.round(frames * 1000 / (now - last)); frames = 0; last = now; }
+    requestAnimationFrame(tick);
+  })(performance.now());
+
+  function bytes(str) { return new Blob([str]).size; }
+
+  function measure() {
+    if (state.panel !== '1') return;
+    var svgs = document.querySelectorAll('.pv-fx');
+    var svgBytes = 0, anim = 0;
+    for (var i = 0; i < svgs.length; i++) {
+      svgBytes += bytes(svgs[i].outerHTML);
+      /* 數「真的正在跑」的動畫，不是數標記 —— 按下「跟系統設定」之後這個數字
+         才會誠實地掉到 0，數 class 的話會一直顯示 15，那就是在說謊 */
+      var kids = svgs[i].querySelectorAll('*');
+      for (var k = 0; k < kids.length; k++) {
+        var cs = getComputedStyle(kids[k]);
+        if (state.still !== '1' && cs.animationName && cs.animationName !== 'none' &&
+            cs.animationPlayState === 'running') anim++;
+      }
+    }
+    var cssBytes = bytes(document.getElementById('pv-fx-css').textContent);
+    var total = svgBytes + cssBytes;
+
+    var imgs = document.querySelectorAll('.pv-stage img');
+    var imgBytes = 0, shown = [];
+    for (var j = 0; j < imgs.length; j++) {
+      shown.push(Math.round(imgs[j].getBoundingClientRect().width));
+      var e = performance.getEntriesByName(imgs[j].currentSrc)[0];
+      if (e && e.encodedBodySize) imgBytes += e.encodedBodySize;
+    }
+
+    var over = root.scrollWidth > root.clientWidth;
+    var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var rows = [
+      ['特效多花的位元組', total.toLocaleString() + ' B（SVG ' + svgBytes.toLocaleString() +
+        ' ＋ CSS ' + cssBytes.toLocaleString() + '），<b>壓縮後約 ' + Math.round(total / 4).toLocaleString() + ' B</b>'],
+      ['三張圖本身', imgBytes ? Math.round(imgBytes / 1024).toLocaleString() + ' KiB（一個位元組都沒有多載）' : '量不到（快取命中）'],
+      ['多載的檔案數', '<b>0</b> 個（沒有影片、沒有 GIF、沒有額外的圖）'],
+      ['現在的幀率', fps ? fps + ' fps' : '量測中'],
+      ['正在跑的動畫', anim + ' 個'],
+      ['圖的顯示寬度', shown.join(' / ') + ' px'],
+      ['水平捲動', over ? '<b>⚠ 有，破框了</b>' : '沒有'],
+      ['減少動態效果', '你的系統' + (rm ? '<b>開著</b>' : '關著') + '，這一頁' +
+        (state.rm === '1' ? '跟' + (rm ? '（所以全部停住）' : '') : '不跟')],
+      ['視窗', window.innerWidth + ' × ' + window.innerHeight]
+    ];
+    var html = '';
+    for (var r = 0; r < rows.length; r++) html += '<div>' + rows[r][0] + '</div><div>' + rows[r][1] + '</div>';
+    document.getElementById('pv-out').innerHTML = html;
+  }
+
+  setInterval(function () { measure(); }, 1000);
+  apply();
+})();
+</script>
+
+</body>
+</html>
