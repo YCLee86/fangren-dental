@@ -180,23 +180,56 @@ summary::marker{color:var(--rule)}
   font-size:.83rem;color:var(--soft);line-height:1.85}
 a{color:#214d48}
 code{font-size:.92em}
-/* 號碼是 CSS 的 counter 畫的，**兩層都要自己設起點**：外層從 2 起跳（第一個
-   counter-increment 把它加成 3）、子層從 6 起跳（加成 3-7）。
-   li 的 value 屬性對 counter 一點作用都沒有 —— 只寫 value 的話 HTML 看起來對，
-   畫出來仍然是 1、2 與 1-7（這一輪又踩了一次，外層漏設）。
-   這一段在樣板字串裡面，所以註解裡不可以出現反引號。 */
-.now>ol{counter-reset:n 2}
-.now ol.sub{counter-reset:m 6}
 .h3 .t{display:block;font-size:.79rem;font-weight:400;color:var(--soft);margin-top:.2em}
+.txt{font-size:.9rem;margin:.35em 0 0}
 .shot{margin:.9em 0 0}
 .shot img{display:block;width:100%;max-width:520px;height:auto;border-radius:10px;background:var(--card)}
 .shot figcaption{font-size:.8rem;color:var(--soft);line-height:1.65;margin-top:.4em;max-width:520px}
+
+/* ── 摘要表：一眼看完。狀態那一欄只有兩種，用顏色分 ───────────────── */
+.tab.sum{min-width:0;width:100%}
+.tab.sum td,.tab.sum th{white-space:normal}
+.tab.sum td:first-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.tab.sum .q{width:100%}
+.tab.sum .done{color:#2f5c3a;font-weight:600;white-space:nowrap}
+.tab.sum .wait{color:#8a5a12;font-weight:600;white-space:nowrap}
+.tab .got{font-weight:600}
+.tab .who{font-weight:600;vertical-align:top}
+.tab .rd{display:inline-block;color:var(--soft);line-height:1.7;margin-top:.2em}
+.tab.tabv td{white-space:normal}
+/* 句子型的表格（3-8）讓它折行，不要逼出一條橫捲軸 —— 手機上那一條很難發現。 */
+.tab.wrapt{min-width:0;width:100%}
+.tab.wrapt td,.tab.wrapt th{white-space:normal}
+.tab.wrapt td:first-child,.tab.wrapt th:first-child{white-space:nowrap}
+
+/* ── 一件事 ＝ 三格（問題／事件／解決方案）。標籤靠左、固定寬，
+   三格才對得齊；窄螢幕上標籤退成自己一行。 ───────────────────── */
+.item{background:var(--card);border-radius:11px;padding:13px 15px;margin:1em 0 0}
+.item .ih{font-size:.97rem;font-weight:700;margin:0 0 .5em}
+.cell{display:grid;grid-template-columns:4.6em 1fr;gap:0 10px;
+  padding:.5em 0;border-top:1px solid var(--rule)}
+.cell:first-of-type{border-top:0;padding-top:0}
+.cell .lbl{font-size:.78rem;font-weight:600;color:var(--soft);margin:.22em 0 0;white-space:nowrap}
+.cell .txt{font-size:.9rem;margin:0}
+.cell .spec{margin:0}
+.cell .spec>li:first-child{margin-top:0}
+.cell .tabw{margin:0}
+/* ⚠ 手機上標籤退成自己一行**比並排矮**（量過：390 寬 8.4k vs 9.9k px）——
+   並排會把內文欄壓到 265px，每一段都多折一兩行。斷點放 400，
+   390／375／320 都走堆疊。 */
+@media(max-width:400px){
+  .cell{grid-template-columns:1fr}
+  .cell .lbl{margin:0 0 .15em}
+}
+.item .xtra{font-size:.85rem;color:var(--soft);line-height:1.75;margin:.7em 0 0;
+  padding-top:.6em;border-top:1px solid var(--rule)}
+.item .way,.item .sbs,.item .tabw{margin-top:.9em}
+
 .sbs{display:flex;flex-wrap:wrap;gap:18px 16px;margin:1em 0 0;align-items:flex-start}
 .sbs figure{margin:0}
 /* 裁出來的那兩張卡是 327px 寬的實檔 —— 不收的話 320 那一格整頁會橫著捲（踩過）。 */
 .sbs figure>img{display:block;width:210px;max-width:100%;height:auto;border-radius:10px}
 .sbs figcaption{font-size:.78rem;color:var(--soft);line-height:1.6;margin-top:.35em;max-width:230px}
-.sbs figcaption b{color:var(--ink)}
 .swrap{margin:0}
 .sgl{overflow:hidden;box-sizing:content-box}
 .sgl.car .cb p{white-space:pre-line}
@@ -207,15 +240,11 @@ code{font-size:.92em}
 .quo{margin:.6em 0 0;padding:.05em 0 .05em .9em;border-left:3px solid var(--rule)}
 .quo p{font-size:.9rem;line-height:1.85;margin:.45em 0 0}
 .quo p:first-child{margin-top:0}
-.fin{background:#eef1ee;border:1px solid var(--rule);border-radius:10px;padding:.7em .9em;margin:.9em 0 0}
-.fin .k{font-size:.82rem;font-weight:600;color:var(--soft);margin:0 0 .3em}
-.way{background:var(--card);border-radius:11px;padding:13px 15px;margin:.9em 0 0}
-.way .t{font-size:.95rem;font-weight:600;margin:0 0 .2em}
+.way{background:#eef1ee;border:1px solid var(--rule);border-radius:10px;padding:.7em .9em;margin:.9em 0 0}
+.way .t{font-size:.92rem;font-weight:600;margin:0}
 .tab td .pill{display:inline-block;border-radius:8.5px;line-height:1;
   padding:.42em .63em .38em;color:#fff;font-weight:700;font-size:13px}
 .tab td .pill.bare{background:none;padding-left:0;padding-right:0}
-.gap{font-size:.9rem;margin:.35em 0 0}
-.gap .s{display:block;color:var(--soft);font-size:.85rem;margin-top:.25em}
 
 </style>
 </head>
@@ -223,42 +252,47 @@ code{font-size:.92em}
 <div class="wrap">
 
 <h1>LINE 官方帳號　9/21 的回覆與規格</h1>
-<p class="lede">芳仁牙醫診所　更新於 2026-09-21<br>
-上一版（9/18）剩兩件未定案：<b>3 約診通知與紀錄查詢版面</b>、<b>4 綁定成功的自動回覆設定</b>。3 的<b>預約成功通知已經照定稿上線</b>；<b>約診紀錄查詢</b>收到 9/21 的回覆與實機畫面，逐項比對在 3-8。<b>4 還沒有新的回覆</b>，內容不在這一頁重複。<br>
-卡片的模擬圖一律畫成病人手機上的寬度（輪播 micro 約 162px）。</p>
+<p class="lede">芳仁牙醫診所　更新於 2026-09-21<br>上一版（9/18）剩兩件未定案。<b>3 約診通知與紀錄查詢版面</b>：預約成功通知已上線，約診紀錄查詢收到 9/21 的回覆，逐項在下。<b>4 綁定成功的自動回覆設定</b>還沒有新的回覆，內容不在這一頁重複。</p>
 
-<div class="now">
-<b>這一頁</b>
-<ol>
-<li value="3"><p class="t">約診通知與紀錄查詢版面</p>
-<ol class="sub">
-<li value="7"><a href="#s3-7">9/21 收到的</a></li>
-<li><a href="#s3-8">對上了什麼、還差什麼</a></li>
-<li><a href="#s3-9">底色只有一個的話，那四個值怎麼分</a></li>
-<li><a href="#s3-10">約診狀態：兩次的回覆不一樣</a></li>
-<li><a href="#s3-11">診所這一側看到的：在樂衍上刪除，那一筆就不會顯示</a></li>
-<li><a href="#s3-12">請翔評回覆的五題</a></li>
-</ol></li>
-<li value="4"><p class="t">綁定成功的自動回覆設定</p>
-<p class="d">還沒有新的回覆，內容在 <a href="/preview/line-brief-0918/#s4">9/18 那一頁</a>。</p></li>
-</ol>
-</div>
+<h2 class="h2" id="sum">一眼看完</h2>
+<div class="tabw"><table class="tab sum"><thead><tr><th>項次</th><th>問題</th><th>狀態</th></tr></thead><tbody>
+<tr><td><a href="#s3-8">3-8</a></td><td class="q">約診紀錄查詢的版面七項</td><td class="done">已對上</td></tr>
+<tr><td><a href="#s3-9-1">3-9-1</a></td><td class="q">日期的順序</td><td class="wait">待翔評回覆</td></tr>
+<tr><td><a href="#s3-9-2">3-9-2</a></td><td class="q">四個值的用字</td><td class="wait">待翔評回覆</td></tr>
+<tr><td><a href="#s3-9-3">3-9-3</a></td><td class="q">藥丸的底色（紅字藍底讀不出來）</td><td class="wait">待翔評選甲或乙</td></tr>
+<tr><td><a href="#s3-9-4">3-9-4</a></td><td class="q">藥丸的位置與內距</td><td class="wait">待翔評調整</td></tr>
+<tr><td><a href="#s3-10">3-10</a></td><td class="q">約診狀態：兩次回覆不一致</td><td class="wait">待翔評釐清</td></tr>
+<tr><td><a href="#s3-11">3-11</a></td><td class="q">樂衍的「刪除」與「取消」是不是兩件事</td><td class="wait">待翔評釐清</td></tr>
+<tr><td>—</td><td class="q">預約成功通知（單張）</td><td class="done">已上線</td></tr>
+</tbody></table></div>
+<p class="note">卡片的模擬圖一律畫成病人手機上的寬度（輪播 <code>micro</code> 162px）。
+4 那一件在 <a href="/preview/line-brief-0918/#s4">9/18 那一頁</a>。</p>
 
-<h2 class="h2" id="s3">3　約診通知與紀錄查詢版面<span class="t">9/21 的回覆</span></h2>
+<h2 class="h2" id="s3">3　約診通知與紀錄查詢版面</h2>
 
-<h3 class="h3" id="s3-7">3-7　9/21 收到的</h3>
-<p style="font-size:.9rem;margin:.3em 0 0">以下是 9/21 收到的畫面與標註，逐字照抄。</p>
+<h3 class="h3" id="s3-7">3-7　9/21 的回覆</h3>
+<p class="txt">收到的畫面與標註，逐字照抄。</p>
 <div class="quo"><p>「時間格式為系統固定」</p>
 <p>「無法針對不同狀態對應調整底色　會統一套用相同底色」</p>
 <p>「註：診所端取消預約的話，則會顯示 “已取消“（紅字）套用底色就會變成紅字藍底呈現」</p></div>
 <figure class="shot"><img src="reply-0921-query.jpg" width="804" height="624" loading="lazy" alt="翔評 9/21 送來的約診紀錄查詢">
-<figcaption>翔評 9/21 送來的約診紀錄查詢。紅色的字與箭頭是翔評標上去的，卡片上的資料是假的。</figcaption></figure>
+<figcaption>紅色的字與箭頭是翔評標的，卡片上的資料是假的。</figcaption></figure>
 
-<h3 class="h3" id="s3-8">3-8　約診紀錄查詢：這一版對上了什麼、還差什麼</h3>
-<p style="font-size:.9rem;margin:.3em 0 0">底下每一項都是從那張截圖量出來的。</p>
+<h3 class="h3" id="s3-8">3-8　已對上的七項</h3>
+<p class="txt">不必再調整。數字是從 3-7 那張截圖量出來的。</p>
+<div class="tabw"><table class="tab wrapt"><thead><tr><th>項目</th><th>規格</th><th>9/21 量到</th></tr></thead><tbody>
+<tr><td>帶狀 logo</td><td>夾在日期與約診狀態之間，不疊在文字上（3-1）</td><td class="got">對</td></tr>
+<tr><td>帶子顆數</td><td>13 顆（3-3）</td><td class="got">13 顆</td></tr>
+<tr><td>帶子滿版</td><td><code>size: "full"</code> ＋ <code>body</code> 的 <code>paddingAll: 0</code>（3-6）</td><td class="got">墨 155.0 ＋ 左右 3.5／3.5 ＝ 卡片寬</td></tr>
+<tr><td>帶子高度</td><td>照 1024:87 換算（3-6）</td><td class="got">13.8px</td></tr>
+<tr><td>bubble</td><td><code>micro</code> 162px（3-3）</td><td class="got">162.1px</td></tr>
+<tr><td>日期折行</td><td><code>wrap</code> 有、<code>maxLines</code> 沒有（3-5）</td><td class="got">折兩行，沒被截掉</td></tr>
+<tr><td>欄位名</td><td>「約診狀態」（3-4）</td><td class="got">對</td></tr>
+</tbody></table></div>
+<p class="note">量法：「約診狀態」那四個字是 <code>xs</code>，而中日韓的字<b>一個字的進位就等於字級</b> —— 進位 ÷ 13 ＝ 比例尺。日期（<code>lg</code>）與姓名（<code>md</code>）除以同一把比例尺要落回 19 與 16，當交叉驗證。<b>不用「假設卡片是 micro」倒推</b>，那是這一段要下的結論之一。</p>
 <div class="sbs">
 <figure><img src="shot-0921-cancel.jpg" width="327" height="421" loading="lazy" alt="翔評 9/21 的約診紀錄查詢，取消的那一張">
-<figcaption><b>翔評 9/21</b>　取消的那一張（紅字是翔評標的）</figcaption></figure>
+<figcaption><b>翔評 9/21</b></figcaption></figure>
 <figure class="swrap"><div class="stcard sgl car" style="width:162px">
 <div class="cb">
 <p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11
@@ -269,47 +303,41 @@ code{font-size:.92em}
 
 <p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#ae4f4d">已取消</span></p>
 </div>
-</div><figcaption><b>定稿</b>　3-3 ＋ 3-4 ＋ 3-5 那一版（值收成「已取消」、日期的順序調過、藥丸貼著標籤）</figcaption></figure>
-</div>
-<h4 class="h4">對上的</h4>
-<ul class="spec">
-<li><b>帶狀 logo 進去了</b>，而且是夾在日期與約診狀態之間、不是疊在文字上（3-1）。</li>
-<li><b>13 顆一顆都不少</b>，套色那幾顆的位置也對（3-3）。</li>
-<li><b>帶子是滿版的</b>：左右各留 3.5px，正好是圖檔自己的留白 —— 沒有被裁、也沒有被拉扁（3-6）。</li>
-<li><b><code>body</code> 的 <code>paddingAll</code> 已經是 0</b>：帶子滿得到卡片的左右邊，內距移到上下兩塊 box 上了（3-2／3-3）。</li>
-<li><b>bubble 已經換成 <code>micro</code></b>：卡片量到 162.1px，規格寫的是 162px（3-3）。</li>
-<li><b>日期折成兩行、沒有被截掉</b>：<code>wrap</code> 有、<code>maxLines</code> 沒有（3-5）。</li>
-<li><b>欄位名已經是「約診狀態」</b>（原本印的是「預約狀態」）（3-4）。</li>
-</ul>
-<p class="note">上面第 3 項與第 5 項是這一輪最值得記的：帶子在卡上量到 13.8px 高（<code>size: "full"</code> 照 1024:87 算出來就是這個數），左右留白也對得上 —— 換句話說那張圖是照規格畫的，不是縮放過的。</p>
-<h4 class="h4">還差的</h4>
-<div class="rows">
-<div class="row"><p class="k">日期的順序（3-5）</p>
-<p class="gap">現在是 <code>2026/09/11 11:50 星期五</code>；定稿是 <code>2026/09/11 星期五 11:50</code>（例子沿用 3-5 那一組，和截圖上是同一種排法）。<b>四樣東西一個字都沒有多、也沒有少，只有順序不同。</b> 翔評回「時間格式為系統固定」—— 請看 3-11 第 1 題。<span class="s">⚠ 順序調過來之後，那一格<b>仍然要在值裡自己帶一個換行</b>（3-3）：交給 LINE 自己折的話，它會折在「星期／五」中間（實測過），那是 2026-09-13 退回過的樣子。</span></p></div>
-<div class="row"><p class="k">四個值的用字（3-4）</p>
-<p class="gap">截圖上是「尚未回覆」與「您已取消，請聯絡診所改約」；定稿是「未回覆」與「已取消」。這一項和底色無關，是純文字。<span class="s">順帶：「您已取消，請聯絡診所改約」在 <code>micro</code> 上放不下一行，會折成三行、藥丸變成一整塊色（截圖左邊那一張就是）。收成「已取消」之後就不會折。</span></p></div>
-<div class="row"><p class="k">藥丸的底色（3-4）</p>
-<p class="gap">翔評回「無法針對不同狀態對應調整底色」。診所這一側的處理方式在 3-9。</p></div>
-<div class="row"><p class="k">藥丸在那一列的位置（3-4）</p>
-<p class="gap">定稿那一列是「標籤、藥丸、<code>filler</code>」三格，藥丸貼著標籤；截圖上藥丸靠在卡片的右邊（標籤到藥丸之間 16.7px、藥丸右緣到卡片邊 10.1px）。<span class="s">同一塊還量到：<b>底下那一塊的內距比上面那一塊小</b> —— 兩塊的字緣差 4.6px（扣掉字身自己的側邊留白，實際差 3 到 4px）。規格是上下兩塊都 14px。差得不多，但既然要改那一列了就一起收。</span></p></div>
+</div><figcaption><b>定稿</b>　3-3 ＋ 3-4 ＋ 3-5</figcaption></figure>
 </div>
 
-<h3 class="h3" id="s3-9">3-9　底色只有一個的話，那四個值怎麼分</h3>
-<p style="font-size:.9rem;margin:.3em 0 0">翔評回「無法針對不同狀態對應調整底色，會統一套用相同底色」。<b>這個限制診所照做</b>，只有一件要先講：「紅字藍底」那一種請不要出。底下是量出來的數字。</p>
+<h3 class="h3" id="s3-9">3-9　待解決四項</h3>
+<p class="txt">每一項三格：問題、事件、解決方案。</p>
+<div class="item">
+<p class="ih" id="s3-9-1">3-9-1　日期的順序</p>
+<div class="cell"><p class="lbl">問題</p><p class="txt">四樣東西的順序和定稿不同。</p></div>
+<div class="cell"><p class="lbl">事件</p><p class="txt">現在 <code>2026/09/11 11:50 星期五</code>，定稿 <code>2026/09/11 星期五 11:50</code>。<b>字一個沒多、一個沒少，只有順序。</b> 翔評回「時間格式為系統固定」。</p></div>
+<div class="cell"><p class="lbl">解決方案</p><p class="txt">待翔評回覆「系統」是指哪一層（3-12 第 1 題）。改不動就回一句，診所再決定。</p></div>
+<p class="xtra">順序改過來之後，那一格<b>仍然要在值裡自己帶一個換行</b>（3-3）—— 交給 LINE 自己折，它會折在「星期／五」中間（實測過）。</p>
+</div>
+<div class="item">
+<p class="ih" id="s3-9-2">3-9-2　四個值的用字</p>
+<div class="cell"><p class="lbl">問題</p><p class="txt">值的字比定稿長，「您已取消，請聯絡診所改約」在 <code>micro</code> 上折成三行、藥丸變成一整塊色。</p></div>
+<div class="cell"><p class="lbl">事件</p><p class="txt">截圖是「尚未回覆」與「您已取消，請聯絡診所改約」；定稿是「未回覆」與「已取消」。</p></div>
+<div class="cell"><p class="lbl">解決方案</p><p class="txt">改成定稿那兩個值。<b>純文字，和底色無關。</b> 另請回覆「已排定」那一種在不在（提醒還沒發出去之前的那一種，截圖上看不到）。</p></div>
+
+</div>
+<div class="item">
+<p class="ih" id="s3-9-3">3-9-3　藥丸的底色</p>
+<div class="cell"><p class="lbl">問題</p><p class="txt">底色只能有一個 —— 這個限制診所照做；但翔評提的「紅字藍底」在手機上讀不出來。</p></div>
+<div class="cell"><p class="lbl">事件</p><p class="txt">統一套的那顆藍取樣 <code>#4478b4</code>，<b>等於定稿裡「已排定」那一色 <code>#4478b5</code></b>（差 1）。紅字壓在它上面 <b>1.14:1</b>（綠 1.45、琥珀 1.42），小字一般要 4.5。白字在它上面 4.57:1，過。</p></div>
+<div class="cell"><p class="lbl">解決方案</p><p class="txt">兩案擇一，請回哪一條做得到。</p></div>
+
 <div class="sbs">
 <figure><img src="shot-0921-wait.jpg" width="327" height="421" loading="lazy" alt="翔評 9/21 的約診紀錄查詢，尚未回覆的那一張">
-<figcaption>翔評標在「尚未回覆」那一張上的說明。底色統一的限制就是寫在這裡。</figcaption></figure>
+<figcaption>翔評標在「尚未回覆」那一張上的說明 —— 底色統一的限制寫在這裡。</figcaption></figure>
 </div>
-<ul class="spec"><li>現在統一套的那一顆藍，從截圖上取樣是 <code>#4478b4</code>，<b>等於定稿裡「已排定」那一色 <code>#4478b5</code></b>（只差 1）。所以統一底色這件事，等於是把四個值都套成了「已排定」那一顆。</li>
-<li><b>紅字壓在那顆藍上只有 1.14:1。</b> 小字要讀得出來，一般的門檻是 4.5:1 —— 那幾個字在手機上會糊在底色裡。另外兩色也一樣（綠 1.45、琥珀 1.42）。<b>白字在那顆藍上是 4.57:1，過。</b></li></ul>
-<p class="note">所以底色只留一個的話，只有兩條路走得通。請翔評回哪一條做得到：</p>
-<div class="way"><p class="t">甲　底色統一、四個值一律白字</p><ul class="spec"><li>底色就維持現在這一顆 <code>#4478b5</code>，四個值一律<b>白字、粗體、<code>xs</code></b> —— 和現在的畫法完全一樣，只有字串要換。</li>
+<div class="way"><p class="t">甲　底色統一，四個值一律白字</p><ul class="spec"><li>底色維持現在這顆 <code>#4478b5</code>，四個值一律白字、粗體、<code>xs</code>。畫法不變，只換字串。</li>
 <li>對比 4.57:1，過。</li>
-<li>翔評那一側要動的只有兩個字串：「尚未回覆」→「未回覆」、「您已取消，請聯絡診所改約」→「已取消」。</li>
-<li>代價：四個值不再靠顏色分，只靠那三個字。</li></ul></div>
-<div class="way"><p class="t">乙　不要底色，四個值用套色的字</p><ul class="spec"><li>從「已取消（紅字）」那一句看起來，<b>字的顏色是可以跟著狀態換的</b> —— 如果是這樣，把藥丸的底拿掉，四個值直接用<b>粗體的套色字</b>印在白卡上。</li>
-<li>四個色只有一個要換：「未回覆」那一顆琥珀 <code>#c28229</code> 在白底上是 3.22，不夠；改用同一族的字階 <code>#9e6301</code>（4.95）。其餘三色不動。</li>
-<li>這一條留得住顏色，代價是那一列看起來比較輕（沒有色塊）。</li></ul></div>
+<li>代價：四個值不靠顏色分，只靠那三個字。</li></ul></div>
+<div class="way"><p class="t">乙　不要底色，四個值用套色的字</p><ul class="spec"><li>藥丸的底拿掉，四個值用粗體的套色字印在白卡上。<b>前提：字的顏色可以跟著狀態換</b>（「已取消（紅字）」那一句看起來可以）。</li>
+<li>四個色只有一個要換：「未回覆」的琥珀 <code>#c28229</code> 在白底上 3.22，改用同一族的字階 <code>#9e6301</code>（4.95）。其餘三色不動。</li>
+<li>代價：那一列看起來比較輕（沒有色塊）。</li></ul></div>
 <div class="tabw"><table class="tab tabv"><thead><tr><th>值</th><th>什麼時候</th><th>甲：底統一、白字</th><th>乙：沒有底、套色字</th></tr></thead><tbody>
 <tr><td>已排定</td><td>提醒還沒發送之前</td>
 <td><span class="pill" style="background:#4478b5">已排定</span><br><code>#4478b5</code> ＋ 白字 4.57</td>
@@ -348,46 +376,51 @@ code{font-size:.92em}
 </div>
 </div><figcaption><b>乙</b>　沒有底、字用 <code>#ae4f4d</code></figcaption></figure>
 </div>
-<p class="note">⚠ 不管走哪一條，<b>「已排定」那一種在不在</b>請一併回覆 —— 那是「提醒還沒發出去之前」的那一種，截圖上的四張卡裡看不到它。</p>
-
-<h3 class="h3" id="s3-10">3-10　約診狀態：兩次的回覆不一樣</h3>
-<p style="font-size:.9rem;margin:.3em 0 0">這一項不是版面，是行為。同一件事，兩次的回覆給了不一樣的答案，請確認現在的系統是哪一種。</p>
-<div class="rows">
-<div class="row"><p class="k">9/10（客戶經理）</p>
-<div class="quo"><p>「約診狀態要留下，因為病患取消後診所要在樂衍上取消才算正式取消」</p></div>
-<p class="gap">診所當時讀到的是：<b>診所端在樂衍上取消之後，那一筆就不會再出現在病人的查詢裡</b>；那一欄的存在理由，是「病人按了取消、診所還沒做掉」的那一段空窗。</p></div>
-<div class="row"><p class="k">9/21（這一次）</p>
-<div class="quo"><p>「註：診所端取消預約的話，則會顯示 “已取消“（紅字）」</p></div>
-<p class="gap"><b>診所端取消之後，那一筆仍然列在病人的查詢裡</b>，只是值變成已取消。</p></div>
 </div>
-<div class="fin"><p class="k">為什麼要先確認這一件 —— 底下三件都跟著它走</p>
-<ul class="spec"><li><b>清單會不會一直長</b>：若診所端取消之後那一筆還留著，病人的查詢會累積取消掉的約診。請問那張輪播是怎麼取的（最近幾筆、多久以內、還是全部），超過 LINE 的 12 張上限時怎麼辦。</li>
-<li><b>「您已取消」在診所端取消的時候是錯的</b> —— 取消的人不是病人。所以「已取消」這一個值現在蓋著幾種情形（病人自己按取消／診所在樂衍上取消／24 小時沒回應自動取消），請列一次；蓋不只一種的話，那幾種要不要分成不同的值，診所這邊再決定。</li>
-<li><b>9/14 問過、到今天還沒有答案的那一題仍然成立</b>：病人自己按過取消的那一筆，能不能就不要列在他的 LINE 查詢清單裡（樂衍後台照舊保留）。做得到的話，3-9 那兩條路都不必走了。</li></ul></div>
+<div class="item">
+<p class="ih" id="s3-9-4">3-9-4　藥丸的位置與內距</p>
+<div class="cell"><p class="lbl">問題</p><p class="txt">藥丸靠在卡片右邊，底下那一塊的內距比上面小。</p></div>
+<div class="cell"><p class="lbl">事件</p><p class="txt">定稿那一列是「標籤、藥丸、<code>filler</code>」，藥丸貼著標籤。截圖量到：標籤到藥丸 16.7px、藥丸右緣到卡片邊 10.1px；上下兩塊的字緣差 4.6px（扣掉字身的側邊留白，實際差 3 到 4px），規格是兩塊都 14px。</p></div>
+<div class="cell"><p class="lbl">解決方案</p><p class="txt">藥丸改成貼著標籤（<code>filler</code> 排最後），上下兩塊內距都 14px。<b>和 3-9-2 一起改。</b></p></div>
 
-<p class="note">⚠ 診所自己在樂衍後台看到的是<b>第三件事實</b>，寫在 3-11 —— 它和 9/10 那一次對得上。</p>
+</div>
 
-<h3 class="h3" id="s3-11">3-11　診所這一側看到的：在樂衍上刪除，那一筆就不會顯示</h3>
-<p style="font-size:.9rem;margin:.3em 0 0">這一段不是推論，是診所自己在樂衍後台操作、再從病人那一側點開約診查詢看到的。</p>
-<ul class="spec"><li><b>目前的做法是：診所在樂衍系統上把那一筆約診「刪除」。</b> 刪除之後，病人點約診查詢，<b>那一筆就不會出現</b>。</li>
-<li>9/21 的回覆說的是另一件事：<b>即便診所端取消，病人那一側還是看得到，只是值改成「已取消」。</b></li>
-<li>兩句話有可能都成立 —— 前提是樂衍後台的「<b>刪除</b>」與「<b>取消</b>」是<b>兩顆不同的按鈕</b>，結果也不一樣。診所這一側講的是刪除，9/21 的回覆寫的是取消。</li></ul>
-<div class="fin"><p class="k">請翔評確認的</p>
-<p style="font-size:.9rem;margin:0">所以請翔評確認：樂衍後台對一筆約診有幾種動作、各自的結果是什麼（病人的查詢會不會列出那一筆、列的話值是什麼）。若「刪除」和「取消」真的是兩件事，<b>櫃檯現在按的是哪一顆、日後該按哪一顆</b>，診所要照這個答案改作業流程。</p></div>
-<p class="note">⚠ 這一件和 3-10 的第 3 小件是同一題的兩面：若「刪除」本來就能讓那一筆不顯示，那麼<b>病人自己按取消的那一筆</b>能不能比照辦理（樂衍後台照舊保留紀錄），就只剩一個設定的問題。</p>
+<h3 class="h3" id="s3-10">3-10　待釐清①　約診狀態：兩次回覆不一致</h3>
+<div class="item">
+<div class="cell"><p class="lbl">問題</p><p class="txt">診所端把那一筆處理掉之後，病人的約診查詢還列不列它 —— 兩次回覆的答案不一樣。</p></div>
+<div class="cell"><p class="lbl">事件</p>
+<div class="tabw"><table class="tab wrapt"><tbody>
+<tr><td class="who">9/10（客戶經理）</td><td>「約診狀態要留下，因為病患取消後診所要在樂衍上取消才算正式取消」<br><span class="rd">診所讀到的是：<b>診所端處理掉之後，那一筆就不再出現</b>；那一欄是為了「病人按了取消、診所還沒做掉」的空窗而存在。</span></td></tr>
+<tr><td class="who">9/21（這一次）</td><td>「註：診所端取消預約的話，則會顯示 “已取消“（紅字）」<br><span class="rd"><b>那一筆仍然列著</b>，只是值變成已取消。</span></td></tr>
+</tbody></table></div></div>
+<div class="cell"><p class="lbl">解決方案</p><p class="txt">待翔評回覆現在的系統是哪一種（3-12 第 4 題）。跟著它走的三件：</p>
+<ul class="spec"><li><b>清單會不會一直長</b> —— 若處理掉還留著，查詢會累積取消掉的約診。請說明那張輪播怎麼取（最近幾筆／多久以內／全部），超過 LINE 的 12 張上限時怎麼辦。</li>
+<li><b>「您已取消」在診所端取消時是錯的</b> —— 取消的人不是病人。請列出「已取消」現在蓋著幾種情形（病人自己按取消／診所在樂衍上取消／24 小時沒回應自動取消）。</li>
+<li><b>9/14 問過、還沒有答案的那一題仍然成立</b> —— 病人自己按過取消的那一筆，能不能就不列在他的 LINE 查詢清單裡（樂衍後台照舊保留）。做得到的話 3-9-3 那兩案都不必走了。</li></ul></div>
+<p class="xtra">診所自己在樂衍後台看到的是<b>第三件事實</b>，在 3-11 —— 它和 9/10 那一次對得上。</p>
+</div>
 
-<h3 class="h3" id="s3-12">3-12　請翔評回覆的五題</h3>
+<h3 class="h3" id="s3-11">3-11　待釐清②　樂衍的「刪除」與「取消」</h3>
+<div class="item">
+
+<div class="cell"><p class="lbl">問題</p><p class="txt">診所這一側講的是<b>刪除</b>，9/21 的回覆寫的是<b>取消</b> —— 可能是兩顆不同的按鈕，那麼兩句話就都成立。</p></div>
+<div class="cell"><p class="lbl">事件</p><ul class="spec"><li><b>診所在樂衍系統上把那一筆約診「刪除」，病人點約診查詢，那一筆就不會出現。</b> 這是診所自己在後台按下去、再從病人那一側點開看到的，不是推論。</li><li>9/21 的回覆：即便診所端<b>取消</b>，病人那一側仍然看得到，只是值改成「已取消」。</li></ul></div>
+<div class="cell"><p class="lbl">解決方案</p><p class="txt">待翔評說明：樂衍後台對一筆約診有幾種動作、各自的結果是什麼（病人的查詢會不會列出那一筆、列的話值是什麼）。若「刪除」與「取消」真的是<b>兩顆不同的按鈕</b>，請說明櫃檯現在按的是哪一顆、日後該按哪一顆 —— 診所要照這個答案改作業流程（3-12 第 5 題）。</p></div>
+
+</div>
+
+<h3 class="h3" id="s3-12">3-12　待翔評回覆（五題）</h3>
+<p class="txt">括號裡是它屬於哪一節。</p>
 <ol class="ask">
-<li>「時間格式為系統固定」是指哪一層？<span class="y">那一串字是在樂衍那一側組好、再填進 Flex 的 <code>text</code> 的話，LINE 不決定它的順序。請確認要調順序需不需要翔評那邊改程式、要不要另外估時間。改不動的話回一句就好，診所這邊再決定要不要收掉這一項。</span></li>
-<li>3-9 的甲和乙，哪一條做得到？<span class="y">乙要先確認一件事：<b>字的顏色可以跟著狀態換嗎</b>（「已取消」那一句是紅字，看起來可以）。</span></li>
-<li>那四個值的用字改不改得動？<span class="y">「尚未回覆」→「未回覆」、「您已取消，請聯絡診所改約」→「已取消」。另外「已排定」那一種在不在。</span></li>
-<li>3-10 與 3-11 那幾件。<span class="y">清單怎麼取、「已取消」蓋著幾種情形、病人自己取消的那一筆能不能不列。</span></li>
-<li>樂衍後台的「刪除」和「取消」是不是兩個不一樣的動作？<span class="y">見 3-11：診所這一側講的是<b>刪除</b>，9/21 的回覆寫的是<b>取消</b>。若那是兩顆不同的按鈕，請說明各自的結果 —— 病人的查詢會不會列出那一筆、列的話值是什麼。櫃檯要知道該按哪一顆。</span></li>
+<li>「時間格式為系統固定」是指哪一層？（3-9-1）<span class="y">那一串字若是在樂衍那一側組好、再填進 Flex 的 <code>text</code>，LINE 不決定它的順序。請確認調順序要不要翔評改程式、要不要另外估時間。改不動的話回一句就好。</span></li>
+<li>甲和乙，哪一條做得到？（3-9-3）<span class="y">乙要先確認一件事：<b>字的顏色可以跟著狀態換嗎</b>。</span></li>
+<li>四個值的用字改不改得動？（3-9-2）<span class="y">「尚未回覆」→「未回覆」、「您已取消，請聯絡診所改約」→「已取消」。另外「已排定」那一種在不在。</span></li>
+<li>診所端處理掉之後，病人的查詢還列不列那一筆？（3-10）<span class="y">以及清單怎麼取、「已取消」蓋著幾種情形、病人自己取消的那一筆能不能不列。</span></li>
+<li>樂衍後台的「刪除」和「取消」是不是兩個不一樣的動作？（3-11）<span class="y">若是，請說明各自的結果，以及櫃檯該按哪一顆。</span></li>
 </ol>
 
-<h2 class="h2" id="s5">已完成<span class="t">這一輪</span></h2>
-<h3 class="h3" id="s5-1">預約成功通知（單張）已經上線</h3>
-<p style="font-size:.9rem;margin:.3em 0 0">單張那一則已經照 3-2 的定稿送出來了。帶子 18 顆、<code>size: "full"</code> 夾在日期底下，這一則不放約診狀態那一列。底下這一張是定稿的畫法。</p>
+<h3 class="h3" id="sdone">已完成　預約成功通知（單張）</h3>
+<p class="txt">已照 3-2 的定稿上線。帶子 18 顆、<code>size: "full"</code> 夾在日期底下，這一則不放約診狀態那一列。</p>
 <div class="sbs">
 <figure class="swrap"><div class="stcard sgl" style="width:268px">
 <div class="cb">
@@ -397,7 +430,7 @@ code{font-size:.92em}
 <div class="cb bot">
 <p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
 </div>
-</div><figcaption><b>定稿・已上線</b>　18 顆・帶子 15.6px 高（最高那一顆 7.8px）<br>9 顆那一份 × 2<br>套色 7 顆・間隔 2、3、2、5、3、2</figcaption></figure>
+</div><figcaption><b>定稿・已上線</b>　18 顆・帶子 15.6px 高</figcaption></figure>
 </div>
 
 <p class="foot">

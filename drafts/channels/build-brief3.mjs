@@ -129,7 +129,8 @@ if (對比("#ffffff", 丸底色) < 4.5) throw new Error("甲那一條：白字�
 const V = {
   顆數: String(定顆.car), 單張顆數: String(定顆.mega), 階: BUB.階,
   卡寬: 卡寬.toFixed(1), 規格卡寬: String(BUB.car), 規格內距: String(CARD.pad),
-  帶留白: 帶留白.toFixed(1), 帶高: 帶高(帶, 卡寬).toFixed(1), 帶比: `${帶.w}:${帶.h}`,
+  帶留白: 帶留白.toFixed(1), 帶右留白: 帶右留白.toFixed(1), 帶墨寬: 帶墨寬.toFixed(1),
+  帶高: 帶高(帶, 卡寬).toFixed(1), 帶比: `${帶.w}:${帶.h}`,
   丸距: 丸距.toFixed(1), 丸右: 丸右.toFixed(1), 內距差: 內距差.toFixed(1),
   現日期: DATE.廠商, 定日期: DATE.例,
   丸底: M.藥丸底色, 丸底色: 丸底色, 已排定色: 已排定.色,
@@ -181,23 +182,56 @@ const 丸樣 = (v, 色) => `<span class="pill" style="background:${色}">${esc(v
 const 字樣 = (v) => `<span class="pill bare" style="color:${乙字(v)}">${esc(v.名)}</span>`;
 
 const CSS3 = `
-/* 號碼是 CSS 的 counter 畫的，**兩層都要自己設起點**：外層從 2 起跳（第一個
-   counter-increment 把它加成 3）、子層從 6 起跳（加成 3-7）。
-   li 的 value 屬性對 counter 一點作用都沒有 —— 只寫 value 的話 HTML 看起來對，
-   畫出來仍然是 1、2 與 1-7（這一輪又踩了一次，外層漏設）。
-   這一段在樣板字串裡面，所以註解裡不可以出現反引號。 */
-.now>ol{counter-reset:n 2}
-.now ol.sub{counter-reset:m 6}
 .h3 .t{display:block;font-size:.79rem;font-weight:400;color:var(--soft);margin-top:.2em}
+.txt{font-size:.9rem;margin:.35em 0 0}
 .shot{margin:.9em 0 0}
 .shot img{display:block;width:100%;max-width:520px;height:auto;border-radius:10px;background:var(--card)}
 .shot figcaption{font-size:.8rem;color:var(--soft);line-height:1.65;margin-top:.4em;max-width:520px}
+
+/* ── 摘要表：一眼看完。狀態那一欄只有兩種，用顏色分 ───────────────── */
+.tab.sum{min-width:0;width:100%}
+.tab.sum td,.tab.sum th{white-space:normal}
+.tab.sum td:first-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.tab.sum .q{width:100%}
+.tab.sum .done{color:#2f5c3a;font-weight:600;white-space:nowrap}
+.tab.sum .wait{color:#8a5a12;font-weight:600;white-space:nowrap}
+.tab .got{font-weight:600}
+.tab .who{font-weight:600;vertical-align:top}
+.tab .rd{display:inline-block;color:var(--soft);line-height:1.7;margin-top:.2em}
+.tab.tabv td{white-space:normal}
+/* 句子型的表格（3-8）讓它折行，不要逼出一條橫捲軸 —— 手機上那一條很難發現。 */
+.tab.wrapt{min-width:0;width:100%}
+.tab.wrapt td,.tab.wrapt th{white-space:normal}
+.tab.wrapt td:first-child,.tab.wrapt th:first-child{white-space:nowrap}
+
+/* ── 一件事 ＝ 三格（問題／事件／解決方案）。標籤靠左、固定寬，
+   三格才對得齊；窄螢幕上標籤退成自己一行。 ───────────────────── */
+.item{background:var(--card);border-radius:11px;padding:13px 15px;margin:1em 0 0}
+.item .ih{font-size:.97rem;font-weight:700;margin:0 0 .5em}
+.cell{display:grid;grid-template-columns:4.6em 1fr;gap:0 10px;
+  padding:.5em 0;border-top:1px solid var(--rule)}
+.cell:first-of-type{border-top:0;padding-top:0}
+.cell .lbl{font-size:.78rem;font-weight:600;color:var(--soft);margin:.22em 0 0;white-space:nowrap}
+.cell .txt{font-size:.9rem;margin:0}
+.cell .spec{margin:0}
+.cell .spec>li:first-child{margin-top:0}
+.cell .tabw{margin:0}
+/* ⚠ 手機上標籤退成自己一行**比並排矮**（量過：390 寬 8.4k vs 9.9k px）——
+   並排會把內文欄壓到 265px，每一段都多折一兩行。斷點放 400，
+   390／375／320 都走堆疊。 */
+@media(max-width:400px){
+  .cell{grid-template-columns:1fr}
+  .cell .lbl{margin:0 0 .15em}
+}
+.item .xtra{font-size:.85rem;color:var(--soft);line-height:1.75;margin:.7em 0 0;
+  padding-top:.6em;border-top:1px solid var(--rule)}
+.item .way,.item .sbs,.item .tabw{margin-top:.9em}
+
 .sbs{display:flex;flex-wrap:wrap;gap:18px 16px;margin:1em 0 0;align-items:flex-start}
 .sbs figure{margin:0}
 /* 裁出來的那兩張卡是 327px 寬的實檔 —— 不收的話 320 那一格整頁會橫著捲（踩過）。 */
 .sbs figure>img{display:block;width:210px;max-width:100%;height:auto;border-radius:10px}
 .sbs figcaption{font-size:.78rem;color:var(--soft);line-height:1.6;margin-top:.35em;max-width:230px}
-.sbs figcaption b{color:var(--ink)}
 .swrap{margin:0}
 .sgl{overflow:hidden;box-sizing:content-box}
 .sgl.car .cb p{white-space:pre-line}
@@ -208,20 +242,33 @@ const CSS3 = `
 .quo{margin:.6em 0 0;padding:.05em 0 .05em .9em;border-left:3px solid var(--rule)}
 .quo p{font-size:.9rem;line-height:1.85;margin:.45em 0 0}
 .quo p:first-child{margin-top:0}
-.fin{background:#eef1ee;border:1px solid var(--rule);border-radius:10px;padding:.7em .9em;margin:.9em 0 0}
-.fin .k{font-size:.82rem;font-weight:600;color:var(--soft);margin:0 0 .3em}
-.way{background:var(--card);border-radius:11px;padding:13px 15px;margin:.9em 0 0}
-.way .t{font-size:.95rem;font-weight:600;margin:0 0 .2em}
+.way{background:#eef1ee;border:1px solid var(--rule);border-radius:10px;padding:.7em .9em;margin:.9em 0 0}
+.way .t{font-size:.92rem;font-weight:600;margin:0}
 .tab td .pill{display:inline-block;border-radius:8.5px;line-height:1;
   padding:.42em .63em .38em;color:#fff;font-weight:700;font-size:${CARD.籤}px}
 .tab td .pill.bare{background:none;padding-left:0;padding-right:0}
-.gap{font-size:.9rem;margin:.35em 0 0}
-.gap .s{display:block;color:var(--soft);font-size:.85rem;margin-top:.25em}
 `;
 
-const 對上 = B.三之八.對上.map((t) => `<li>${bb(t)}</li>`).join("\n");
-const 還差 = B.三之八.還差.map(([k, v, s]) => `<div class="row"><p class="k">${bb(k)}</p>
-<p class="gap">${bb(v)}${s ? `<span class="s">${bb(s)}</span>` : ""}</p></div>`).join("\n");
+/* ── 一件事 ＝ 三格（問題／事件／解決方案）。2026-09-21 使用者指定的形狀，
+   見 TEAM.md 第一節「資深 PM」那四條。⚠ 三格都要有：解決方案還沒有就寫
+   「待○○回覆」，**不要留白** —— 底下在驗。 */
+const 三格 = (x, 額 = "") => {
+  for (const k of ["問題", "事件", "解決"]) {
+    const v = x[k];
+    if (!v || (Array.isArray(v) && !v.length)) throw new Error(`「${x.標}」的「${k}」是空的 —— 三格都要有`);
+  }
+  const 格 = (名, v) => `<div class="cell"><p class="lbl">${名}</p>`
+    + (Array.isArray(v) ? `<ul class="spec">${v.map((t) => `<li>${bb(t)}</li>`).join("")}</ul>`
+      : `<p class="txt">${bb(v)}</p>`) + `</div>`;
+  /* 3-11 的標題是由外面那個 h3 印的 —— 這裡再印一次就會重複（踩過）。 */
+  return `<div class="item">
+${x.隱標 ? "" : `<p class="ih" id="${x.id || ""}">${esc(x.標)}</p>`}
+${格("問題", x.問題)}
+${格("事件", x.事件)}
+${格("解決方案", x.解決)}
+${x.附 ? `<p class="xtra">${bb(x.附)}</p>` : ""}${額}
+</div>`;
+};
 
 const html = `<!doctype html>
 <html lang="zh-Hant-TW">
@@ -238,60 +285,48 @@ ${CSS}${CSS3}
 <div class="wrap">
 
 <h1>LINE 官方帳號　9/21 的回覆與規格</h1>
-<p class="lede">芳仁牙醫診所　更新於 ${esc(B.更新日)}<br>
-${bb(B.抬頭)}<br>
-卡片的模擬圖一律畫成病人手機上的寬度（輪播 ${BUB.階} 約 ${BUB.car}px）。</p>
+<p class="lede">芳仁牙醫診所　更新於 ${esc(B.更新日)}<br>${bb(B.抬頭)}</p>
 
-<div class="now">
-<b>這一頁</b>
-<ol>
-<li value="3"><p class="t">約診通知與紀錄查詢版面</p>
-<ol class="sub">
-<li value="7"><a href="#s3-7">9/21 收到的</a></li>
-<li><a href="#s3-8">對上了什麼、還差什麼</a></li>
-<li><a href="#s3-9">底色只有一個的話，那四個值怎麼分</a></li>
-<li><a href="#s3-10">約診狀態：兩次的回覆不一樣</a></li>
-<li><a href="#s3-11">診所這一側看到的：在樂衍上刪除，那一筆就不會顯示</a></li>
-<li><a href="#s3-12">請翔評回覆的五題</a></li>
-</ol></li>
-<li value="4"><p class="t">綁定成功的自動回覆設定</p>
-<p class="d">還沒有新的回覆，內容在 <a href="/preview/line-brief-0918/#s4">9/18 那一頁</a>。</p></li>
-</ol>
-</div>
+<h2 class="h2" id="sum">${esc(B.摘要標)}</h2>
+<div class="tabw"><table class="tab sum"><thead><tr>${B.摘要頭.map((t) => `<th>${esc(t)}</th>`).join("")}</tr></thead><tbody>
+${B.摘要.map(([n, q, st]) => {
+  const 完 = /已/.test(st);
+  const 連 = n === "—" ? esc(n) : `<a href="#s${n.replace(/-/g, "-")}">${esc(n)}</a>`;
+  return `<tr><td>${連}</td><td class="q">${bb(q)}</td><td class="${完 ? "done" : "wait"}">${esc(st)}</td></tr>`;
+}).join("\n")}
+</tbody></table></div>
+<p class="note">卡片的模擬圖一律畫成病人手機上的寬度（輪播 <code>${BUB.階}</code> ${BUB.car}px）。
+4 那一件在 <a href="/preview/line-brief-0918/#s4">9/18 那一頁</a>。</p>
 
-<h2 class="h2" id="s3">3　約診通知與紀錄查詢版面<span class="t">9/21 的回覆</span></h2>
+<h2 class="h2" id="s3">3　約診通知與紀錄查詢版面</h2>
 
 ${h3("s3-7", B.三之七.標)}
-<p style="font-size:.9rem;margin:.3em 0 0">${bb(B.三之七.導)}</p>
+<p class="txt">${bb(B.三之七.導)}</p>
 <div class="quo">${B.三之七.翔評.map((t) => `<p>${b(t)}</p>`).join("\n")}</div>
 <figure class="shot">${img(B.量.截圖, "翔評 9/21 送來的約診紀錄查詢")}
 <figcaption>${bb(B.三之七.圖說)}</figcaption></figure>
 
 ${h3("s3-8", B.三之八.標)}
-<p style="font-size:.9rem;margin:.3em 0 0">${bb(B.三之八.導)}</p>
+<p class="txt">${bb(B.三之八.導)}</p>
+<div class="tabw"><table class="tab wrapt"><thead><tr>${B.三之八.表頭.map((t) => `<th>${esc(t)}</th>`).join("")}</tr></thead><tbody>
+${B.三之八.列.map(([a, c, d]) => `<tr><td>${bb(a)}</td><td>${bb(c)}</td><td class="got">${bb(d)}</td></tr>`).join("\n")}
+</tbody></table></div>
+<p class="note">${bb(B.三之八.註)}</p>
 <div class="sbs">
 <figure>${img("shot-0921-cancel.jpg", "翔評 9/21 的約診紀錄查詢，取消的那一張")}
-<figcaption><b>翔評 9/21</b>　取消的那一張（紅字是翔評標的）</figcaption></figure>
-${卡格(查詢卡(by名("已取消")), `<b>定稿</b>　3-3 ＋ 3-4 ＋ 3-5 那一版（值收成「已取消」、日期的順序調過、藥丸貼著標籤）`)}
-</div>
-<h4 class="h4">對上的</h4>
-<ul class="spec">
-${對上}
-</ul>
-<p class="note">${bb(B.三之八.對上註)}</p>
-<h4 class="h4">還差的</h4>
-<div class="rows">
-${還差}
+<figcaption><b>翔評 9/21</b></figcaption></figure>
+${卡格(查詢卡(by名("已取消")), `<b>定稿</b>　3-3 ＋ 3-4 ＋ 3-5`)}
 </div>
 
 ${h3("s3-9", B.三之九.標)}
-<p style="font-size:.9rem;margin:.3em 0 0">${bb(B.三之九.導)}</p>
+<p class="txt">${bb(B.三之九.導)}</p>
+${三格({ ...B.三之九.項[0], id: "s3-9-1" })}
+${三格({ ...B.三之九.項[1], id: "s3-9-2" })}
+${三格({ ...B.三之九.項[2], id: "s3-9-3" }, `
 <div class="sbs">
 <figure>${img("shot-0921-wait.jpg", "翔評 9/21 的約診紀錄查詢，尚未回覆的那一張")}
 <figcaption>${bb(B.三之九.圖說)}</figcaption></figure>
 </div>
-${list(B.三之九.事實)}
-<p class="note">${bb(B.三之九.路導)}</p>
 <div class="way"><p class="t">${bb(B.三之九.甲.標)}</p>${list(B.三之九.甲.點)}</div>
 <div class="way"><p class="t">${bb(B.三之九.乙.標)}</p>${list(B.三之九.乙.點)}</div>
 <div class="tabw"><table class="tab tabv"><thead><tr>${B.三之九.表頭.map((t) => `<th>${esc(t)}</th>`).join("")}</tr></thead><tbody>
@@ -305,40 +340,35 @@ ${B1.s3.三之四.值.map(([名, 時]) => {
 <div class="sbs">
 ${卡格(查詢卡({ 名: "已取消", 色: 丸底色 }), `<b>甲</b>　底統一 <code>${丸底色}</code>、白字`)}
 ${卡格(去底(查詢卡(by名("已取消")), by名("已取消")), `<b>乙</b>　沒有底、字用 <code>${by名("已取消").色}</code>`)}
-</div>
-<p class="note">${bb(B.三之九.尾)}</p>
+</div>`)}
+${三格({ ...B.三之九.項[3], id: "s3-9-4" })}
 
 ${h3("s3-10", B.三之十.標)}
-<p style="font-size:.9rem;margin:.3em 0 0">${bb(B.三之十.導)}</p>
-<div class="rows">
-${B.三之十.兩次.map(([誰, 句, 讀]) => `<div class="row"><p class="k">${esc(誰)}</p>
-<div class="quo"><p>${b(句)}</p></div>
-<p class="gap">${bb(讀)}</p></div>`).join("\n")}
-</div>
-<div class="fin"><p class="k">為什麼要先確認這一件 —— 底下三件都跟著它走</p>
+<div class="item">
+<div class="cell"><p class="lbl">問題</p><p class="txt">${bb(B.三之十.問題)}</p></div>
+<div class="cell"><p class="lbl">事件</p>
+<div class="tabw"><table class="tab wrapt"><tbody>
+${B.三之十.兩次.map(([誰, 句, 讀]) => `<tr><td class="who">${esc(誰)}</td><td>${b(句)}<br><span class="rd">${bb(讀)}</span></td></tr>`).join("\n")}
+</tbody></table></div></div>
+<div class="cell"><p class="lbl">解決方案</p><p class="txt">${bb(B.三之十.解決)}</p>
 <ul class="spec">${B.三之十.跟著.map((t) => `<li>${bb(t)}</li>`).join("\n")}</ul></div>
-
-<p class="note">${bb(B.三之十.接)}</p>
+<p class="xtra">${bb(B.三之十.接)}</p>
+</div>
 
 ${h3("s3-11", B.三之十一.標)}
-<p style="font-size:.9rem;margin:.3em 0 0">${bb(B.三之十一.導)}</p>
-${list(B.三之十一.事實)}
-<div class="fin"><p class="k">請翔評確認的</p>
-<p style="font-size:.9rem;margin:0">${bb(B.三之十一.問)}</p></div>
-<p class="note">${bb(B.三之十一.接)}</p>
+${三格({ ...B.三之十一, 隱標: true })}
 
 ${h3("s3-12", B.三之十二.標)}
+<p class="txt">${bb(B.三之十二.導)}</p>
 <ol class="ask">
 ${B.三之十二.題.map(([q, y]) => `<li>${bb(q)}<span class="y">${bb(y)}</span></li>`).join("\n")}
 </ol>
 
-<h2 class="h2" id="s5">已完成<span class="t">這一輪</span></h2>
-${h3("s5-1", B.完成.標)}
-<p style="font-size:.9rem;margin:.3em 0 0">${bb(B.完成.說)}</p>
+${h3("sdone", B.完成.標)}
+<p class="txt">${bb(B.完成.說)}</p>
 <div class="sbs">
 ${卡格(卡(BUB.mega, MEGA, { 帶檔: 帶檔.mega, 前綴 }),
-  `<b>${esc(B.完成.圖說)}</b>　${定顆.mega} 顆・帶子 ${帶高(帶by[帶檔.mega], BUB.mega).toFixed(1)}px 高`
-  + `（最高那一顆 ${顆高(帶by[帶檔.mega], BUB.mega).toFixed(1)}px）<br>${esc(基註(帶by[帶檔.mega].B))}<br>${esc(套註(帶by[帶檔.mega].B))}`)}
+  `<b>${esc(B.完成.圖說)}</b>　${定顆.mega} 顆・帶子 ${帶高(帶by[帶檔.mega], BUB.mega).toFixed(1)}px 高`)}
 </div>
 
 <p class="foot">

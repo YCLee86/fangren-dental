@@ -7,13 +7,15 @@
 //     （這一頁不印 Flex JSON，所以連那五個要廠商填的值都不該出現）
 //  ⑥ 不可以出現完整的手機號碼（repo 是公開的）
 //  ⑦ 圖：找得到、width/height ＝ 實檔、有 alt；資料夾裡只准有 index.html ＋ 9/21 那三個檔
-//  ⑧ ⚠⚠ **編號沒有重編**：這一輪是 3-7 ~ 3-12，不是 1 ~ 6；而且畫出來真的是 3-7
-//     （li 的 value 對 CSS 的 counter 沒有作用 —— counter-reset 的起點兩層都要設，踩過兩次）
+//  ⑧ ⚠⚠ **編號沒有重編**：這一輪是 3-7 ~ 3-12（3-9 底下再拆 3-9-1 ~ 3-9-4）；
+//     摘要表每一列的錨點都要指得到頁內真的存在的 id
 //  ⑨ 翔評 9/21 那三句逐字，而且是**引號裡的原文**（不可以順手改標點）
 //  ⑩ ⚠⚠⚠ 對比度不可以寫死：頁面上每一個「x.xx」都要和現算的對得起來
 //  ⑪ 四個值與它們的色碼出自 PILLVAL；乙那一條的四個字色都要過 4.5
 //  ⑫ 量到的數字要自洽：卡片 ≈ micro、帶子滿版（墨 ＋ 左右留白 ＝ 卡片寬）
 //  ⑬ 站內連結指得到（9/18 那一頁的 #s4、line-spec）
+//  ⑯ ⚠⚠ 資深 PM 的形狀（TEAM.md 第一節那四條）：摘要表在最前面；每一個項目都是
+//     問題／事件／解決方案三格，一格都不准少（沒答案就寫「待○○回覆」，不留白）
 //  ⑮ ⚠⚠⚠ 3-11 的「刪除」與「取消」是**兩個不一樣的詞**，不可以被順手統一掉
 //     （統一掉那一節就什麼都沒說了 —— 整件事就是在問這兩顆是不是同一顆按鈕）
 //  ⑭ ⚠⚠ 不可以替診所答應任何事：頁面上不准出現「診所接受」這一類的話
@@ -87,15 +89,19 @@ for (const f of fs.readdirSync(DIR))
 for (const f of 自家) if (!html.includes(f)) bad.push(`⑦ ${f} 沒有被用到`);
 if (!has("⑦")) ok(`⑦ 圖 ${imgs} 張，尺寸與 alt 都對，資料夾裡沒有多餘的檔`);
 
-/* ⑧ ⚠⚠ 編號：counter 的起點兩層都要設，而且畫出來真的要是 3-7 —— 只驗 HTML 會漏掉。
-   這一頁零 JS，所以在這裡驗的是「CSS 裡有沒有那兩條 counter-reset」＋「li 的 value 也寫著」。 */
-if (!/\.now>ol\{counter-reset:n 2\}/.test(html)) bad.push("⑧ 外層的 counter-reset 沒設，畫出來會是 1、2");
-if (!/\.now ol\.sub\{counter-reset:m 6\}/.test(html)) bad.push("⑧ 子層的 counter-reset 沒設，畫出來會是 3-1");
-for (const n of ["3-7", "3-8", "3-9", "3-10", "3-11", "3-12"])
-  if (!本文.includes(`${n}　`)) bad.push(`⑧ 找不到節號 ${n}`);
+/* ⑧ 編號：節號在、不重編，而且摘要表每一列都連得到。
+   ⚠ 號碼**不可以交給 CSS 的 counter 畫**（9/21 之前那一版就是，li 的 value 對 counter
+   沒有作用，外層漏設 counter-reset 就靜靜地印成 1-7）—— 現在全部是寫死的字。 */
+const 節號 = ["3-7", "3-8", "3-9", "3-9-1", "3-9-2", "3-9-3", "3-9-4", "3-10", "3-11", "3-12"];
+for (const n of 節號) if (!本文.includes(`${n}　`)) bad.push(`⑧ 找不到節號 ${n}`);
 for (const n of ["3-1　", "3-2　", "3-3　", "3-4　", "3-5　", "3-6　"])
   if (本文.includes(n)) bad.push(`⑧ 這一頁不該自己開 ${n.trim()} 那一節（它在 9/18 那一頁）`);
-if (!has("⑧")) ok("⑧ 編號接在 3-6 後面（3-7 ~ 3-12），兩層的 counter 起點都設了");
+/* 共用的 CSS 裡本來就有 .now 那一族的 counter 規則（別頁在用），所以掃樣式表沒有意義 ——
+   要驗的是**這一頁有沒有用到它**：節號一律是寫死的字，頁上不可以出現那一塊。 */
+if (/class="now"/.test(本文)) bad.push("⑧ 又把號碼交給 CSS 的 counter 畫了（.now 那一塊）");
+for (const [, href] of html.matchAll(/href="#([^"]+)"/g))
+  if (!html.includes(`id="${href}"`)) bad.push(`⑧ 摘要表連到 #${href}，頁內沒有這個 id`);
+if (!has("⑧")) ok(`⑧ 節號 ${節號.length} 個都在（3-7 ~ 3-12），頁內連結都指得到`);
 
 /* ⑨ 翔評 9/21 那三句逐字 */
 const B = JSON.parse(fs.readFileSync(path.join(HERE, "brief3.json"), "utf8"));
@@ -168,6 +174,23 @@ else ok("⑭ 沒有替診所答應任何事（日期那一項留給使用者決�
   }
 }
 if (!has("⑮")) ok("⑮ 3-11 的「刪除」與「取消」兩個詞都還在，沒有被統一掉");
+
+/* ⑯ */
+{
+  const items = [...html.matchAll(/<div class="item">([\s\S]*?)\n<\/div>/g)].map((m) => m[1]);
+  if (items.length < 6) bad.push(`⑯ 只找到 ${items.length} 個三格項目，該有 6 個（3-9 的四項 ＋ 3-10 ＋ 3-11）`);
+  for (const [k, it] of items.entries()) {
+    const lbl = [...it.matchAll(/<p class="lbl">([^<]+)<\/p>/g)].map((m) => m[1]);
+    if (lbl.join("／") !== "問題／事件／解決方案")
+      bad.push(`⑯ 第 ${k + 1} 個項目的三格是「${lbl.join("／") || "（空）"}」`);
+    for (const c of it.split('<div class="cell">').slice(1))
+      if (!/<(p class="txt"|ul class="spec"|div class="tabw")/.test(c)) bad.push(`⑯ 第 ${k + 1} 個項目有一格是空的`);
+  }
+  const 摘 = html.indexOf('class="tab sum"'), 首節 = html.indexOf('id="s3-7"');
+  if (摘 < 0 || 首節 < 0 || 摘 > 首節) bad.push("⑯ 摘要表不在最前面");
+  if ((html.match(/<tr>/g) || []).length < B.摘要.length) bad.push("⑯ 摘要表的列數不對");
+}
+if (!has("⑯")) ok("⑯ 摘要表在最前面；六個項目各有問題／事件／解決方案三格，沒有一格是空的");
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }
 console.log("\n✓ 全部通過");
