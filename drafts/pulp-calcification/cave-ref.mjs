@@ -94,26 +94,57 @@ const cave = `
   <clipPath id="c"><circle cx="${CX}" cy="${CY}" r="${CR-6}"/></clipPath>
   <g clip-path="url(#c)">
     <rect x="${CX-CR}" y="${CY-CR}" width="${CR*2}" height="${CR*2}" fill="${SIDE}"/>
-    <path d="M ${CX-CR} ${CY+186} C ${CX-150} ${CY+140} ${CX+150} ${CY+140} ${CX+CR} ${CY+186}
-             L ${CX+CR} ${CY+CR} L ${CX-CR} ${CY+CR} Z" fill="${RIM}"/>
-    <path d="M ${CX-196} ${CY+170} C ${CX-178} ${CY-224} ${CX+178} ${CY-224} ${CX+196} ${CY+170}
-             C ${CX+100} ${CY+214} ${CX-100} ${CY+214} ${CX-196} ${CY+170} Z" fill="${DARK}"/>
-    <path d="M ${CX-130} ${CY+152} C ${CX-116} ${CY-160} ${CX+116} ${CY-160} ${CX+130} ${CY+152}
-             C ${CX+66} ${CY+184} ${CX-66} ${CY+184} ${CX-130} ${CY+152} Z" fill="${GLOW}" opacity=".55"/>
+    <rect x="${CX-CR}" y="${CY-CR}" width="${CR*2}" height="${CR*2}" fill="${SIDE}"/>
+    <!-- 管壁：左右兩片往中間收，上面一片天花板，下面是地面 -->
+    <path d="M ${CX-CR} ${CY-CR} L ${CX-CR} ${CY+CR} L ${CX-118} ${CY+128}
+             C ${CX-150} ${CY-40} ${CX-142} ${CY-150} ${CX-CR} ${CY-CR} Z" fill="${RIM}"/>
+    <path d="M ${CX+CR} ${CY-CR} L ${CX+CR} ${CY+CR} L ${CX+118} ${CY+128}
+             C ${CX+150} ${CY-40} ${CX+142} ${CY-150} ${CX+CR} ${CY-CR} Z" fill="${RIM}"/>
+    <path d="M ${CX-CR} ${CY-CR} L ${CX+CR} ${CY-CR} L ${CX+112} ${CY-138}
+             C ${CX+40} ${CY-176} ${CX-40} ${CY-176} ${CX-112} ${CY-138} Z" fill="${RIM}"/>
+    <path d="M ${CX-CR} ${CY+CR} L ${CX+CR} ${CY+CR} L ${CX+CR} ${CY+150}
+             C ${CX+90} ${CY+120} ${CX-90} ${CY+120} ${CX-CR} ${CY+150} Z" fill="${GLOW}" opacity=".5"/>
+    <!-- 前方那條還沒找到的窄通道：細細的、暗一階，不是黑洞 -->
+    <path d="M ${CX-21} ${CY+150} C ${CX-29} ${CY-44} ${CX-12} ${CY-140} ${CX} ${CY-146}
+             C ${CX+12} ${CY-140} ${CX+29} ${CY-44} ${CX+21} ${CY+150}
+             C ${CX+10} ${CY+164} ${CX-10} ${CY+164} ${CX-21} ${CY+150} Z" fill="${DARK}" opacity=".88"/>
+    <!-- ⚠⚠ 四個人：這一版把「位置與大小」畫進參考圖，因為上一輪壞的就是構圖
+         （人整組跑到鏡框外面）。最高那位 ＝ 圓圈直徑的三分之一，
+         四個人橫向約佔圈寬的六成，每個人離鏡框都留著一大段空白。
+         ⚠ 這裡是**灰色的塊**，只給位置與大小 —— 提示詞要明講「畫成有臉有手、
+         穿彩色衣服的人，不是剪影」（A 類紅線第 2 條）。 -->
+    ${[[-168,0.86],[-100,1.0],[96,0.94],[162,0.88]].map(([dx,k]) => {
+        const h = CR*2/3*k, w = h*0.30, by = CY+190;
+        return `<rect x="${CX+dx-w/2}" y="${by-h}" width="${w}" height="${h}" rx="${w*0.45}"
+                 fill="#b9b1a4"/><circle cx="${CX+dx}" cy="${by-h-w*0.34}" r="${w*0.40}" fill="#b9b1a4"/>`;
+      }).join('')}
   </g>
   <circle cx="${CX}" cy="${CY}" r="${CR}" fill="none" stroke="${INK}" stroke-width="9"/>`;
 
-// 兩條細線，把圈連到那個洞（⚠ 不是箭頭 —— 箭頭是第十一節擋掉的東西）
+/* ⚠⚠⚠ 第三版最重要的改動（使用者指定）：
+   **引線的起點是「根管上的一點」，不是咬合面那個洞。**
+   這一篇講的是**根管**鈣化 —— 放大鏡要放大的是管子裡面，
+   不是牙齒表面。接錯的話，圈裡那一群人就變成在牙齒表面的坑裡，
+   和文章沒有關係。⚠ 不是箭頭（箭頭是第十一節擋掉的東西）。 */
+const ZX = TX - R*0.26, ZY = TY + 352;      // 放大的那一點：左邊那條根管的中段
 const leader = `
-  <line x1="${CX+CR*0.74}" y1="${CY-CR*0.68}" x2="${PITX-14}" y2="${PITY-10}" stroke="${LINE}" stroke-width="3"/>
-  <line x1="${CX+CR*0.96}" y1="${CY+CR*0.26}" x2="${PITX-12}" y2="${PITY+12}" stroke="${LINE}" stroke-width="3"/>`;
+  <line x1="${CX+CR*0.70}" y1="${CY-CR*0.62}" x2="${ZX-16}" y2="${ZY-26}" stroke="${LINE}" stroke-width="3"/>
+  <line x1="${CX+CR*0.88}" y1="${CY+CR*0.40}" x2="${ZX-14}" y2="${ZY+26}" stroke="${LINE}" stroke-width="3"/>`;
+
+/* ⚠⚠ 根管上那幾個「很小很小的人（甚至只有點）」（使用者指定）——
+   它是整張圖的比例尺：看到管子裡有幾顆小點，才知道圈裡那群人正在**管子裡**。
+   ⚠ 一顆點的直徑約 5px，在 1600 寬的圖上幾乎看不見 —— 就是要這麼小。 */
+const dots = `<g fill="${DASH}">` +
+  [[-2,-30],[0,-10],[2,10],[-1,30]].map(([dx,dy],i) =>
+    `<circle cx="${(ZX+dx).toFixed(1)}" cy="${(ZY+dy).toFixed(1)}" r="${2.6-i*0.15}"/>`).join('') +
+  `</g>`;
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <rect width="${W}" height="${H}" fill="#ffffff"/>
   ${leader}
   ${body}
   <path d="${occl}" fill="${ENAM}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
-  ${cusps}${fissure}${ghost}${pit}
+  ${cusps}${fissure}${ghost}${pit}${dots}
   ${cave}
 </svg>`;
 
