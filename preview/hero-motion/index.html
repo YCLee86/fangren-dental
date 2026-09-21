@@ -20,18 +20,19 @@
 
      這一頁拿站上三張已經上線的文章 HERO，各示範一種動法：
        ① 植牙能用多久      轉        大鐘的秒針 + 兩顆小鐘 + 沙漏落沙
-       ② 隱形矯正的模擬    轉與亮    三顆歪牙左右轉 + 黃色警告標示放大縮小 + 五個驚嘆號依序亮
+       ② 隱形矯正的模擬    亮與縮放  黃色警告標示放大縮小 + 五個驚嘆號依序亮
        ③ 貝氏刷牙法        呼吸      三個放大圈依序亮一圈環 + 刷頭小幅度來回
 
-     ② 2026-09-21 第二輪改的四件（使用者指定）：
-       ・整面螢幕由上而下的光帶**拿掉**（連同 clipPath 與漸層一起刪）
-       ・驚嘆號亮一下**保留**
-       ・歪掉的幾顆牙齒**加上小幅度轉動**
-       ・右上角黃色的警告標示**加上放大縮小**
-     後兩件的做法：把同一張圖（同一個網址，走快取不多下載）再畫一次，
-     用柔邊遮罩只留那一小塊，再轉／再縮放。角度回到 0、倍率回到 1 的時候
-     和底下那張逐像素相同，所以接縫看不出來。
+     ② 走過四輪，現在只剩兩件在動（每一輪都是使用者指定的）：
+       第二輪  整面螢幕由上而下的光帶**拿掉**（連同 clipPath 與漸層一起刪）；
+               驚嘆號**保留**；牙齒**加上轉動**；警告標示**加上放大縮小**
+       第三輪  牙齒「幅度有點小」→ 7° 加到 24°、三顆加到五顆、節奏改成快轉
+       第四輪  **牙齒整組拿掉**（「牙齒不要動好了」）
+     警告標示的做法：把同一張圖（同一個網址，走快取不多下載）再畫一次，
+     用柔邊遮罩只留那一小塊，再縮放。倍率回到 1 的時候和底下那張逐像素相同，
+     所以接縫看不出來。
      ⚠ 因此濃淡（--fx-op）不能加在整層 .pv-fx 上，會變成疊影 —— 見那一段註解。
+     ⚠ 牙齒那三個坑留在樣式表的註解裡，日後要再做之前先讀。
 
      ⚠ 三張圖檔一個位元組都沒有改，動的東西全部是疊在圖上面的 SVG。
      ⚠ 顏色只用 PALETTE.md 既有的三個官方色票（brick／stool／teal）與白，
@@ -168,31 +169,26 @@ html[data-still="1"] .pv-fx { display: none; }
   100% { opacity: 0; transform: scale(.45); }
 }
 
-/* 轉：歪掉的那幾顆牙齒。做法是把**同一張圖**再畫一次（同一個網址，瀏覽器直接用
-   快取裡那一份，沒有多下載），用柔邊的遮罩只留下那一顆，再繞著它自己的中心轉。
-   角度回到 0 的時候和底下那張逐像素相同，所以接縫看不出來。
-   ⚠ 這一項刻意不吃「幅度」的濃淡，只吃角度 —— 理由寫在上面 .pv-fx 那一段。 */
-/* ⚠ 2026-09-21 第三輪：使用者「牙齒轉動的幅度有點小　要很仔細看才看得出來」。
-   成因是尺度 —— 手機上整張圖只有 360px 寬，一顆牙齒約 11px；原本 ±7° 繞自己的
-   中心轉，牙尖只走 0.7px。三件一起改：
-     ① 角度從 ±7° 加到 18°（Ⓑ），而且**不是來回擺，是「歪 ↔ 正」兩態切換**
-     ② 多加兩顆**左下的大臼齒**（半徑是門牙的一倍半，同樣角度走的距離就多一倍半）
-     ③ 節奏改成「停住 → 0.26 秒轉過去 → 停住 → 轉回來」，
-        突然的移動比緩慢的漂移顯眼得多 */
-.pv-tooth {
-  transform-box: view-box;
-  transform-origin: var(--ox) var(--oy);
-  animation: pvTooth calc(3.2s * var(--fx-spd)) ease-in-out infinite;
-  animation-delay: calc(var(--i) * .34s * var(--fx-spd));
-}
-@keyframes pvTooth {
-  0%,  38%  { transform: rotate(0deg); }
-  46%, 84%  { transform: rotate(calc(24deg * var(--fx-amp) * var(--dir))); }
-  92%, 100% { transform: rotate(0deg); }
-}
+/* ⛔ 2026-09-21 第四輪：**牙齒的轉動整個拿掉了**（使用者：「牙齒不要動好了」）。
+   前三輪的經過留在這裡，因為那三個坑日後想再做一定會重踩：
+     ・第二輪 ±7°：使用者「要很仔細看才看得出來」。成因是尺度 ——
+       手機上整張圖只有 360px 寬，一顆牙齒約 11px，±7° 牙尖只走 0.7px。
+     ・第三輪加到 24°、從三顆加到五顆（含兩顆大臼齒）、節奏改成「停住→快轉→停住」。
+       轉大之後遮罩貼著牙齒邊緣會在整顆牙外面糊出一圈白霧（牙齒的深色輪廓落在
+       柔邊裡，白牙與藍底一混）；放大到整顆裝得下（要 rx 26）又會把旁邊的
+       驚嘆號與牙弓白線一起捲進去轉。**治法是把遮罩縮進牙齒內部**（半徑 ≤ 13），
+       邊界兩側都是牙齒內部的白，轉起來零白霧。
+     ・即使如此，24° 在手機上也只讓溝紋走 2~3px。使用者看過之後決定不要。
+   ⚠ 日後若有人要把牙齒的動態加回來：**先量那顆牙在目標裝置上有幾個像素**，
+     11px 的東西再怎麼轉都是這個量級，問題不在角度。
 
-/* 放大縮小：右上角那塊黃色的警告標示。同上，是同一張圖的一小塊在縮放，
-   倍率回到 1 的時候和底下那張完全重合。 */
+   底下 .pv-err 那一段是**同一套做法**（把同一張圖再畫一次、柔邊遮罩、再變形），
+   它留著 —— 警告標示有 64×44 單位，尺度夠大，看得清楚。 */
+
+/* 放大縮小：右上角那塊黃色的警告標示。把同一張圖再畫一次（同一個網址，瀏覽器
+   直接用快取裡那一份，沒有多下載），用柔邊遮罩只留那一小塊，再縮放。
+   倍率回到 1 的時候和底下那張逐像素相同，所以接縫看不出來。
+   ⚠ 這一項刻意不吃「幅度」的濃淡，只吃倍率 —— 理由寫在上面 .pv-fx 那一段。 */
 .pv-err {
   transform-box: view-box;
   transform-origin: var(--ox) var(--oy);
@@ -332,7 +328,7 @@ html[data-bar="0"] .pv-mini { display: flex; justify-content: flex-end; }
   <!-- ② 掃 ------------------------------------------------------------------ -->
   <section class="pv-item">
     <div class="pv-cap">
-      <span class="pv-kind">② 轉與亮</span>
+      <span class="pv-kind">② 亮與縮放</span>
       <h2>隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位</h2>
     </div>
     <div class="pv-stage" style="--ar: 1600 / 891">
@@ -347,51 +343,20 @@ html[data-bar="0"] .pv-mini { display: flex; justify-content: flex-end; }
           </radialGradient>
 
           <!-- 柔邊。遮罩的邊要糊掉，硬邊的話牙齒一轉就看得到一圈接縫 -->
-          <filter id="pvSoft" x="-70%" y="-70%" width="240%" height="240%">
-            <feGaussianBlur stdDeviation="2.2"/>
-          </filter>
-          <filter id="pvSoftBig" x="-70%" y="-70%" width="240%" height="240%">
-            <feGaussianBlur stdDeviation="3"/>
-          </filter>
+          <!-- 柔邊。遮罩的邊要糊掉，硬邊的話一放大就看得到一圈接縫 -->
           <filter id="pvSoftBox" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="5"/>
           </filter>
 
-          <!-- 五顆歪掉的牙齒，各自一塊柔邊的遮罩。T4／T5 是左下那兩顆大臼齒。
-               ⚠⚠ 遮罩**要縮在牙齒裡面**（約牙齒半徑的 0.7），不可以外擴到牙齒邊緣。
-                 外擴過三次都是同一個症狀：牙齒的深色輪廓落在遮罩的柔邊裡，
-                 白牙與藍底一混就在整顆牙外面糊出一圈白霧。縮進去之後邊界兩側
-                 都是牙齒內部的白，轉起來乾乾淨淨。
-               ⚠ 也不可以「放大到整顆都裝得下」（要 rx 26）—— 那會把旁邊的驚嘆號
-                 和牙弓白線一起捲進去轉，線會在遮罩邊界斷掉。 -->
-          <mask id="pvT1"><ellipse cx="280"   cy="88.5" rx="8"    ry="7"    fill="#fff" filter="url(#pvSoft)"/></mask>
-          <mask id="pvT2"><ellipse cx="246.5" cy="112"  rx="8"    ry="9.5"  fill="#fff" filter="url(#pvSoft)"/></mask>
-          <mask id="pvT3"><ellipse cx="319"   cy="104"  rx="7"    ry="7.2"  fill="#fff" filter="url(#pvSoft)"/></mask>
-          <mask id="pvT4"><ellipse cx="233"   cy="176"  rx="12"   ry="11"   fill="#fff" filter="url(#pvSoftBig)"/></mask>
-          <mask id="pvT5"><ellipse cx="225"   cy="206"  rx="10.5" ry="10"   fill="#fff" filter="url(#pvSoftBig)"/></mask>
           <!-- 右上角那塊黃色的警告標示 -->
           <mask id="pvErr"><rect x="384" y="64" width="80" height="56" rx="12" fill="#fff" filter="url(#pvSoftBox)"/></mask>
         </defs>
 
-        <!-- 歪掉的三顆牙齒左右轉一點。
-             href 和底下那個 <img> 是同一個網址，瀏覽器直接用快取裡那一份，沒有多下載。 -->
-        <g class="pv-tooth" style="--ox:280px; --oy:88.5px; --i:0; --dir:1">
-          <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvT1)"/>
-        </g>
-        <g class="pv-tooth" style="--ox:246.5px; --oy:112px; --i:1; --dir:-1">
-          <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvT2)"/>
-        </g>
-        <g class="pv-tooth" style="--ox:319px; --oy:104px; --i:2; --dir:1">
-          <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvT3)"/>
-        </g>
-        <g class="pv-tooth" style="--ox:233px; --oy:176px; --i:3; --dir:-1">
-          <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvT4)"/>
-        </g>
-        <g class="pv-tooth" style="--ox:225px; --oy:206px; --i:4; --dir:1">
-          <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvT5)"/>
-        </g>
+        <!-- ⛔ 牙齒的轉動 2026-09-21 第四輪整組拿掉了（使用者指定），
+             經過與三個坑留在樣式表那一段的註解裡。 -->
 
-        <!-- 黃色的警告標示放大縮小 -->
+        <!-- 黃色的警告標示放大縮小。
+             href 和底下那個 <img> 是同一個網址，瀏覽器直接用快取裡那一份，沒有多下載。 -->
         <g class="pv-err" style="--ox:424px; --oy:92px">
           <image href="../../assets/hero-aligner-photo-1600.jpg" x="0" y="0" width="800" height="445.5" mask="url(#pvErr)"/>
         </g>
@@ -404,7 +369,7 @@ html[data-bar="0"] .pv-mini { display: flex; justify-content: flex-end; }
         <circle class="pv-blip" style="--ox:261px; --oy:186px; --i:4" cx="261" cy="186" r="12" fill="url(#pvBlipGrad)"/>
       </svg>
     </div>
-    <p class="pv-what">動的是：<b>五顆</b>歪掉的牙齒（含左下兩顆大臼齒）停一下、快速轉過去、再轉回來，Ⓑ 是 <b>24°</b>（前一版是 7°）；右上角那塊黃色的警告標示放大縮小；五個驚嘆號由左而右依序亮一下。<br>⚠ 一顆牙齒在手機上只有 11px 寬，再大的角度看起來也有限 —— 覺得還不夠就按 <b>Ⓒ 明顯</b>（38°）。</p>
+    <p class="pv-what">動的是：右上角那塊黃色的警告標示放大縮小（2 秒一次）、五個驚嘆號由左而右依序亮一下（3.4 秒一輪）。<br><b>牙齒的轉動已經整組拿掉</b>，整面螢幕的光帶也早在上一輪拿掉了。</p>
   </section>
 
   <!-- ③ 呼吸 ---------------------------------------------------------------- -->
