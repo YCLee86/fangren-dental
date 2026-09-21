@@ -112,8 +112,8 @@ joining the specks to the centre of the circle. They are plain thin strokes: the
 arrows and they have no arrowheads.
 EACH CIRCLE IS A WINDOW, NOT AN OVERLAY. Everything belonging to the magnified world is drawn
 STRICTLY INSIDE the rim and is cut off cleanly by it, like the view through a porthole.
-ALL FOUR PEOPLE ARE COMPLETELY INSIDE THE CIRCLE: no head, no raised arm, no foot, no
-backpack, no lantern and no walking stick crosses the rim or appears anywhere outside it,
+ALL FOUR PEOPLE ARE COMPLETELY INSIDE THE BIG CIRCLE: no head, no raised arm, no foot, no
+tank, no lantern and no walking stick crosses the rim or appears anywhere outside it,
 and a clear band of tunnel wall is visible between every person and the rim. OUTSIDE THE
 RIM THERE ARE NO PEOPLE AT ALL — only the giant tooth, the gum and the pale background.
 INSIDE THE CIRCLE WE ARE STANDING INSIDE THAT ROOT CANAL, ENORMOUSLY MAGNIFIED. It is a
@@ -215,7 +215,7 @@ the canal, and this smaller one showing the cyst. The big one is the main subjec
 smaller one is a side note and must never be drawn as large as it.
 
 THE BACKGROUND, OUTSIDE THE CIRCLES AND BEHIND THE GIANT TOOTH — kept simple and pale so
-that nothing competes with the tooth and the circle. Along the bottom, a band of pale pink
+that nothing competes with the tooth and the two circles. Along the bottom, a band of pale pink
 gum; at the far left and right edges, TWO NEIGHBOURING TEETH of exactly the same size and at
 exactly the same height as the main one, cropped by the edges of the picture and a little
 paler, showing their crowns only; behind everything, a soft wash of pale sage green and warm cream
@@ -226,10 +226,11 @@ mood, no sunset and no long orange shadows. The coloured areas of the picture si
 range HSL saturation 30–50 and lightness 70–85: clearly coloured, never washed out to
 near-white and never heavy or muddy. AT LEAST SIX DIFFERENT COLOURS MUST BE VISIBLE AND
 EACH BELONGS TO A NAMED OBJECT: the dusty-rose scrubs, the pale yellow t-shirt, the
-sage-green jacket, the soft blue cardigan, the warm brass rim of the lens, the pale pink
-gum, the lantern light on the tunnel walls. NO TWO PEOPLE WEAR THE SAME COLOUR. The lantern and
-the wall it lights are the brightest things inside the circle, and the biting
-surface of the giant tooth is the brightest thing outside it.
+sage-green jacket, the soft blue cardigan, the warm brass rims of the two lenses, the pale
+pink gum, the lantern light on the tunnel walls. NO TWO PEOPLE WEAR THE SAME COLOUR — the
+translucent coveralls must not flatten them into one colour. The lantern and the wall it
+lights are the brightest things inside the big circle, and the biting surface of the giant
+tooth is the brightest thing outside both circles.
 
 THE ATMOSPHERE LINES — THREE OR FOUR LONG, THIN, GENTLY CURVED WHITE CHALK LINES drifting
 horizontally across the UPPER part of the picture, above the giant tooth, solid where they
@@ -239,7 +240,7 @@ smoke, steam, breath or a spirit leaving a body. They never loop, never curl bac
 never close into a ring.
 
 MOTION MARKS — EXACTLY ONE GROUP, and nowhere else: TWO OR THREE very short, straight,
-same-angle hand-drawn strokes beside the teenager's pointing fingertip, no longer than a
+same-angle hand-drawn strokes beside the shoulder the boy is pushing into the slot, no longer than a
 third of a palm's width, solid where they begin and fading out, never curled, never
 looping. There are no speed lines anywhere else, no radiating focus lines, no sparkles, no
 stars, no hearts, no musical notes, no emotion symbols above anyone's head, and no speech
@@ -247,8 +248,8 @@ bubbles or thought bubbles of any kind in this picture.
 
 CRITICAL — THERE IS NO WRITING ANYWHERE IN THIS PICTURE, IN ANY LANGUAGE OR ALPHABET, and
 no numerals at all. Leave the surface plain on the scrubs, the headband, the lantern, the
-backpack, the t-shirt, the jacket, the cardigan, the walking stick and the rim and handle
-of the magnifying lens. There is no name badge, no logo, no watermark, no signature, no
+backpack, the t-shirt, the jacket, the cardigan, the walking stick, the tank on the guide's back
+and the rims of both lenses. There is no name badge, no logo, no watermark, no signature, no
 caption and no title, and no map, chart, sign or plaque anywhere. Do NOT draw rows of short
 dashes, squiggles or wavy lines anywhere to imitate lines of writing.
 
@@ -290,8 +291,8 @@ a ledge; anyone being carried or rescued; the older man looking frail, sad or il
 wheelchair, a hospital bed or a drip stand; explorer or adventure-movie costume — no
 pith helmets, no fedoras, no whips, no climbing harnesses, no pickaxes, no coils of rope;
 piles of instruments, drills, syringes or dental files; a microscope; arrows or arrowheads
-on the two lines from the lens; a comic burst or explosion shape around the circle; the
-circle drawn as a speech balloon; more than one circle; anyone looking at the viewer; more
+on the two lines from the lens; a comic burst or explosion shape around the circle; a
+circle drawn as a speech balloon; anyone looking at the viewer; more
 than one open mouth; blonde, caramel, light brown, auburn, grey, silver or white hair;
 wrinkles, cheek shadow or facial modelling; large shiny eyes; anime or manga styling; cel
 shading; glossy digital rendering; chrome, metallic or iridescent gradients; greyscale;
