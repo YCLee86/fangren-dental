@@ -21,9 +21,11 @@
  *   ④ preview/ 已經在 tools/dist.mjs 的 OPTIONAL 裡
  *   另外把 <meta name="robots"> 換成 noindex。
  *
- * ⚠ 疊層的 CSS **不在這一頁裡**：.hero-fx-blip / .hero-fx-err 已經上線在
- *   assets/style.css，這份快照連的就是同一支，所以動的規格與正式站一模一樣。
- *   這一頁只補「卡片才需要」的三條（外框、hover 一起縮放、座標微調）。
+ * ⚠⚠ 疊層的動畫規格**從文章頁的 <head> 整段抄過來**（style#hero-fx-css）。
+ *   2026-09-22 之前它在共用樣式表裡，使用者在手機上看到「沒有動畫、只有驚嘆號
+ *   全亮」—— 成因是他的瀏覽器手上是舊的樣式表。HTML 和它的 CSS 一起送就不會對不上。
+ *   規格只有一份（文章頁那一份），這一頁只補「卡片才需要」的三條
+ *   （外框、hover 一起縮放、座標微調）。
  *
  * ⚠ main 被另一台推過東西的話要重跑這一支，快照才會跟上（所以它進版控，
  *   不放暫存區）。
@@ -68,11 +70,12 @@ if (!m) throw new Error("找不到 " + SLUG + " 那張卡 —— 首頁卡片的
    不要自己重寫（重寫過一次就會兩邊不一樣，然後多載一份圖）。 */
 const pic = m[2];
 const overlay =
-  '<span class="pv-shot">' + pic +
-  '\n          <span class="pv-card-err" aria-hidden="true">' +
+  '<span class="pv-shot" style="position:relative;display:block">' + pic +
+  '\n          <span class="pv-card-err" aria-hidden="true" style="position:absolute;inset:0;display:block;pointer-events:none">' +
   pic.replace(/class="card-thumb"/, 'class="pv-card-img"').replace(/ alt="[^"]*"/, ' alt=""') +
   '</span>' +
-  '\n          <svg class="pv-card-fx" viewBox="0 0 800 450" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
+  '\n          <svg class="pv-card-fx" viewBox="0 0 800 450" preserveAspectRatio="none" aria-hidden="true" focusable="false"' +
+  ' style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">' +
   '\n            <defs><radialGradient id="pvcGlow">' +
   '<stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>' +
   '<stop offset=".55" stop-color="#ffffff" stop-opacity=".45"/>' +
@@ -92,11 +95,24 @@ function blips() {
   return pts.map(([x, y], i) => {
     const cx = (x / 800 - 0.0059) / 0.9882 * 800;
     const cy = y / 445.6 * 450;
-    return '\n            <circle class="hero-fx-blip pv-blip" style="--ox:' + cx.toFixed(1) +
-      'px; --oy:' + cy.toFixed(1) + 'px; --i:' + i + '" cx="' + cx.toFixed(1) +
+    /* ⚠ origin 與 delay 寫死在 style 屬性裡，不用 calc(var(--i) * .28s) ——
+       理由同文章頁 <head> 那一段的註解（iOS Safari 驗不到，不要冒這個險）。 */
+    return '\n            <circle class="hero-fx-blip pv-blip" style="opacity:0; transform-box:view-box;' +
+      ' transform-origin:' + cx.toFixed(1) + 'px ' + cy.toFixed(1) + 'px;' +
+      ' animation-delay:' + (i * 0.28).toFixed(2) + 's" cx="' + cx.toFixed(1) +
       '" cy="' + cy.toFixed(1) + '" r="12.1" fill="url(#pvcGlow)"/>';
   }).join("");
 }
+
+/* ---------- 疊層的動畫規格：從文章頁的 <head> 原封不動抄過來 --------------
+   ⚠⚠ 2026-09-22 起這一段**不在 assets/style.css 裡了**（使用者在手機上看到
+   「沒有動畫、只有驚嘆號全亮」，成因是他的瀏覽器手上是舊的樣式表）。
+   規格只有一份，就是文章頁 <head> 裡那個 style#hero-fx-css —— 這裡整段複製，
+   不要在提案頁另外寫一份，兩邊遲早會不一樣。 */
+const ART = fs.readFileSync(path.join(ROOT, "posts", SLUG, "index.html"), "utf8");
+const fxm = /<style id="hero-fx-css">[\s\S]*?<\/style>/.exec(ART);
+if (!fxm) throw new Error("文章頁的 <head> 裡找不到 style#hero-fx-css —— 它被搬走了嗎？");
+const FXCSS = fxm[0];
 
 /* ---------- 只有卡片才需要的那幾條樣式 ------------------------------------ */
 const CSS = [
@@ -164,7 +180,7 @@ const CSS = [
 '</style>'
 ].join("\n");
 
-s = s.replace("</head>", CSS + "\n</head>");
+s = s.replace("</head>", FXCSS + "\n" + CSS + "\n</head>");
 
 /* ---------- 切換條 ＋ 量測面板 -------------------------------------------- */
 const BAR = [
@@ -271,10 +287,15 @@ s = s.slice(0, bodyAt) + BAR + "\n" + s.slice(bodyAt);
 const gate = [];
 if (/data-views-self/.test(s)) gate.push("計數器沒有降級（還有 data-views-self）");
 if (!/noindex/.test(s)) gate.push("少了 noindex");
-if (/["'(\s]assets\//.test(s)) gate.push("還有沒改到的 assets/ 相對路徑");
+/* ⚠ 先把 HTML 與 CSS 的註解拿掉再掃：註解裡寫到那個字不是 bug。
+   這一條踩過兩次 —— 第一次是自己寫的註解，第二次是從文章頁抄進來的那一段。 */
+const noComment = s.replace(/<!--[\s\S]*?-->/g, "").replace(/\/\*[\s\S]*?\*\//g, "");
+if (/["'(\s]assets\//.test(noComment)) gate.push("還有沒改到的 assets/ 相對路徑");
 if (!/\.\.\/\.\.\/assets\/style\.css/.test(s)) gate.push("樣式表的路徑不對");
 if ((s.match(/class="pv-shot"/g) || []).length !== 1) gate.push("疊層的外框不是剛好一個");
 if ((s.match(/class="hero-fx-blip pv-blip"/g) || []).length !== 5) gate.push("驚嘆號不是五個");
+if (!/@keyframes heroFxBlip/.test(s) || !/@keyframes heroFxErr/.test(s)) gate.push("快照裡沒有動畫規格（style#hero-fx-css 沒抄進來）");
+if ((s.match(/opacity:0; transform-box:view-box;/g) || []).length !== 5) gate.push("驚嘆號少了 inline 的 opacity:0／origin／delay");
 if (s.lastIndexOf('<div class="pvbar">') < s.lastIndexOf("</main>")) gate.push("切換條插在 </main> 前面了");
 /* 注入的那一段 <script> 逐行數單引號與雙引號，奇數就是字串被切斷了 */
 const inj = BAR.slice(BAR.indexOf("<script>"));
@@ -288,5 +309,5 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.writeFileSync(OUT, s);
 console.log("✓ preview/card-motion/index.html");
 console.log("  來源 index.html " + (before / 1024).toFixed(0) + "KB → 產出 " + (s.length / 1024).toFixed(0) + "KB");
-console.log("  守門 8 項全過（計數器降級、noindex、相對路徑、外框、驚嘆號五個、切換條位置、引號成對）");
+console.log("  守門 10 項全過（計數器降級、noindex、相對路徑、外框、驚嘆號五個、切換條位置、引號成對）");
 console.log("  網址 /preview/card-motion/?cm=a|b|c&cmh=0|1&cmp=0|1");

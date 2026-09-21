@@ -6180,6 +6180,129 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 [data-topic] #topics .sec-head .topic-search { margin-left: auto; }
 /* NIGHT:END */
 </style>
+<style id="hero-fx-css">
+/* ⚠⚠⚠ 2026-09-22：這一段**從 assets/style.css 搬到這裡**（只有這一頁用得到）。
+   成因是使用者在手機上回報「沒有動畫，只有驚嘆號全亮」——
+   他的瀏覽器手上是**舊的 style.css**（這一站的樣式表檔名沒有內容雜湊，
+   邊緣與瀏覽器都會存住舊的，DECISIONS.md 第 23 條那一條）。模擬舊樣式表實測，
+   症狀逐項對上，而且還多一個更糟的：
+     ・.hero-fx-blip 沒有規則 → 不透明度回到 1 → **五個驚嘆號全部永久亮著**
+     ・@keyframes 不存在 → **什麼都不會動**
+     ・.hero-fx-err 沒有 position: absolute → 那份複本變成**第二張滿版的 HERO 圖
+       疊在下面**（實測真的多出一張 201px 高的圖）
+   HTML 和它的 CSS 一起送，就不可能對不上。⚠ 不要再搬回共用樣式表。
+
+   ⚠ 另外三處結構宣告（position／inset／width／height）刻意**寫在標記的 style 屬性裡**：
+     萬一這一段樣式整個沒生效，那份複本也會正好疊在原圖上（同一張圖、同一個位置）
+     → 看起來就是「沒有特效」，而不是多一張圖。驚嘆號同理，inline 寫死 opacity:0。
+     ⚠ CSS 動畫的優先序高於 style 屬性，所以動起來的時候會正常蓋過那個 0。
+*/
+
+/* ==========================================================================
+   文章 HERO 的動態疊層（2026-09-21 定案上線）
+   --------------------------------------------------------------------------
+   起點：使用者在捷運車廂的燈箱面板錄了影片，指著說「像這種簡單的動畫感」，
+   並問會不會讓網站讀取很久。逐格查過那段影片之後確認面板真的在播動畫，
+   而那種動畫的共同點是「背景不動、只有幾個小東西在動」——
+   那正是 CSS 最便宜的一種：**不換圖、不多載任何檔案**。
+   推導、量測與落選的做法現在還在提案頁 /preview/hero-motion/ 的註解裡 ——
+   那一頁還開著（〈植牙能用多久〉與〈貝氏刷牙法〉兩張使用者說「先保留、之後再看」），
+   ⚠ 等那兩張也收掉、提案頁刪掉的時候，文字要搬進 /history/hero-motion.html，
+     那時記得回來把這兩行改成指向 history。
+
+   目前只有〈隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位〉那一篇用，兩件在動：
+     ・五個驚嘆號依序亮一下 —— 速度中（3.4 秒一輪）、幅度 Ⓑ 中
+     ・右上角黃色的警告標示放大縮小 —— 速度中（2 秒一次）、幅度 Ⓒ 明顯
+   兩組數字是使用者逐項挑的（2026-09-21「速度都用中　驚嘆號幅度中　警告標示明顯」），
+   **不要改**。⚠ 前一輪他曾經挑過「警告標示快」（1.24 秒），最後一輪改成都用中 ——
+   日後在舊紀錄裡看到 1.24 秒，那是作廢的版本，不要拿它回頭訂正這裡。
+
+   ⚠⚠ 警告標示的做法是「把同一張圖再疊一份、用柔邊遮罩只留那一小塊、再縮放」。
+     倍率回到 1 的時候和底下那張逐像素相同，所以接縫看不出來。
+     ⚠ 因此**絕對不要把它調成半透明** —— 那會同時看到原本那一塊和放大之後那一塊，
+       變成疊影。濃淡只能寫在「憑空加上去」的那些元素（驚嘆號）的 keyframes 裡。
+     ⚠⚠ 那一份**一定要是 `<picture>`，而且 srcset 與 sizes 和主圖逐字相同** ——
+       這樣瀏覽器挑到的是同一個檔案，直接命中快取，一個位元組都不會多載。
+       第一版寫成 SVG 的 `<image href="…-1600.jpg">`，結果 `<picture>` 給了 WebP、
+       `<image>` 又硬拉一份 JPEG，手機上多載 151 KiB（實測才發現，畫面完全正常）。
+
+   ⚠ 上面那條 `.post-hero img, .post-hero svg` 會給 svg 一個卡片底色與陰影，
+     疊層一定要把那三項蓋掉，不然會整片把照片遮住。
+
+   ⚠ pointer-events: none 是必要的：疊層蓋在 <img> 上面，不關掉指標事件的話
+     assets/img-guard.js 的右鍵與拖曳攔截會收不到事件（症狀是圖忽然可以按右鍵存）。
+
+   ⚠⚠ **這裡刻意不看 prefers-reduced-motion**，和 index.html 的 HERO 緩慢推進
+     同一個理由（2026-08-16 使用者定的，推導在 /history/hero-motion-mobile.html）：
+     使用者自己的 iPhone 與 iPad 都開著那個設定，跟了的話這組動畫在他手上
+     從上線那天起就不存在。他是在「不跟」的狀態下看過三輪才定案的。
+     要改成跟，就是在底下兩個 animation 外面包一層 @media 把它們關掉，一行的事。
+
+   ⛔ 曾經做過、被使用者退掉的三件（不要再加回來）：
+     ・整面螢幕由上而下的掃描光帶
+     ・歪掉的牙齒轉動 —— 手機上一顆牙齒只有 11px 寬，24° 也只走 2~3px；
+       而且遮罩貼著牙齒邊緣會在整顆牙外面糊出一圈白霧（治法是把遮罩縮進
+       牙齒內部，半徑 ≤ 13，但使用者看過之後仍然決定不要）
+     ・那三個坑的完整經過在 /history/hero-motion.html
+   ========================================================================== */
+/* ⚠⚠ overflow: hidden 是必要的，不是保險。警告標示放大到 1.208 的時候，
+   疊層的右緣會伸出圖外 35px（原點在 53%，(1.208−1) × 0.47 × 圖寬），
+   390 的手機上直接撐出水平捲動 —— 而且只在放大的那半秒發生，
+   量的時機不對就會以為沒事（第一次量就是這樣漏掉的）。
+   ⚠ 陰影要改掛在這一層：留在 <img> 上會被 overflow 裁掉。圓角也要跟著搬，
+     不然裁出來的是直角。 */
+.post-hero .hero-fx-wrap {
+  position: relative; display: block;
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.post-hero .hero-fx-wrap img { display: block; box-shadow: none; }
+.post-hero svg.hero-fx {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  background: none; box-shadow: none; border-radius: 0;
+  pointer-events: none;
+}
+
+/* 驚嘆號依序亮一下。速度中（3.4 秒）、幅度 Ⓑ 中：不透明度 .62（＝ .95 × .65）、放大到 1.25 再散到 2。
+   ⚠⚠ 每一顆的 transform-origin 與 animation-delay **寫死在標記的 style 屬性裡**，
+     這裡不再用 calc(var(--i) * .28s) 那種寫法。理由：那是唯一一處要瀏覽器自己去解
+     「自訂屬性 ＋ calc」的地方，而 iOS Safari 這台我驗不到；萬一它解不出來，
+     delay 會整組退回 0（五顆一起閃）、origin 會退回 viewBox 中心（光暈飛到別的地方），
+     而且**不會報錯**。寫死就沒有這個風險，成本是多幾十個位元組。 */
+.hero-fx-blip {
+  animation: heroFxBlip 3.4s ease-out infinite;
+  opacity: 0;
+}
+@keyframes heroFxBlip {
+  0%   { opacity: 0;   transform: scale(.45); }
+  8%   { opacity: .62; transform: scale(1.25); }
+  26%  { opacity: 0;   transform: scale(2); }
+  100% { opacity: 0;   transform: scale(.45); }
+}
+
+/* 黃色的警告標示放大縮小。速度中（2 秒）、幅度 Ⓒ 明顯：1 → 1.208 → 1（＝ 1 加 .13 × 1.6）。
+   遮罩是一顆橢圓的漸層：實心的部分蓋住整塊標示（半徑 5% × 6.4%，標示本身是
+   5% × 6.28%），再往外淡出到 6.4% × 8.2%，淡出的那一圈落在螢幕的空白處。
+   ⚠ 再往外就會碰到螢幕的右緣（在 58.3%），放大時那條邊會跟著糊掉。 */
+.post-hero .hero-fx-err {
+  position: absolute; inset: 0; display: block; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 6.4% 8.2% at 53% 20.65%, #000 78%, transparent 100%);
+          mask-image: radial-gradient(ellipse 6.4% 8.2% at 53% 20.65%, #000 78%, transparent 100%);
+  transform-origin: 53% 20.65%;
+  animation: heroFxErr 2s ease-in-out infinite;
+}
+/* ⚠ 上面那條 .post-hero img 會給它圓角、陰影與卡片底色，三項都要蓋掉；
+   height 也要從 auto 改成 100%，不然疊層會比底下那張矮。 */
+.post-hero .hero-fx-err img {
+  display: block; width: 100%; height: 100%;
+  border-radius: 0; box-shadow: none; background: none;
+}
+@keyframes heroFxErr {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.208); }
+}
+</style>
 <style id="pv-card-css">
 /* 提案頁自己的樣式。⚠ class 一律 pv- 前綴 —— 這是 index.html 的完整複本，
    站上有的名字全部都在，短名字幾乎一定會撞（hero-motion 那一輪踩過 .foot）。
@@ -6746,21 +6869,21 @@ body { padding-bottom: 150px; }
         </div>
       </a>
       <a class="card" href="/posts/aligner-simulation/" data-spec="ortho">
-        <span class="pv-shot"><picture>
+        <span class="pv-shot" style="position:relative;display:block"><picture>
           <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w, ../../assets/hero-aligner-photo-1600.webp 1600w, ../../assets/hero-aligner-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="card-thumb" src="../../assets/hero-aligner-photo-1600.jpg" srcset="../../assets/hero-aligner-photo-800.jpg 800w, ../../assets/hero-aligner-photo-1600.jpg 1600w, ../../assets/hero-aligner-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫是一間明亮的診所規劃室。畫面中央偏左有一面飄浮在空中的半透明藍色大螢幕，上面用白色線條畫著上排牙齒的俯視圖：牙齒互相重疊、有的擠到外側有的縮在後面，排成一條歪斜的弧線，旁邊散著白色的彎箭頭與五個琥珀色的驚嘆號三角形；螢幕右半有一顆被放大的牙齒，整根牙根插在一塊半透明的骨頭裡，牙根尖端有一道琥珀色的短線，上方一個琥珀色的提示牌寫著 ERROR，下面一行是一個牙套圖示、200+ 與無限符號。螢幕前站著一位穿白袍、裡面是藍灰色刷手服的男醫師，側身朝著螢幕，抬起一手用食指點在那顆放大的牙上，指尖旁有三道短線，另一手垂在身側拿著一支細筆，閉著嘴微笑。畫面左邊，一位穿芥末黃毛衣的男生坐在淺色長桌前，身體前傾、雙手放在筆電鍵盤上，手腕旁有兩道短線；筆電螢幕是深色底、一行一行的淺色程式碼，右下角有一個白色的牙弓圖示，旁邊飄著一面淡藍色的小螢幕，上面同樣是程式碼與牙弓，筆電右邊立著一台沒有開機的深灰色平板。畫面右邊，一位穿藍灰色刷手服的男性一手拿著平板（上面是同一顆牙與牙根）、一手張開手掌比向大螢幕，手掌外緣與嘴邊各有兩道短線；他身旁一位穿淡綠色上衣的女性低頭看著手機。背景是白色的牆與淺色地板，木質檯面上放著兩個馬克杯和一個陶土色的杯子，矮櫃上擺著一副石膏牙模與一副透明牙套，牆上掛著一張只有牙弓線條圖的海報，右側有一盆綠色植物，房間上方橫過幾道長長的白色弧線。" width="1600" height="891" loading="lazy">
         </picture>
-          <span class="pv-card-err" aria-hidden="true"><picture>
+          <span class="pv-card-err" aria-hidden="true" style="position:absolute;inset:0;display:block;pointer-events:none"><picture>
           <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w, ../../assets/hero-aligner-photo-1600.webp 1600w, ../../assets/hero-aligner-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="pv-card-img" src="../../assets/hero-aligner-photo-1600.jpg" srcset="../../assets/hero-aligner-photo-800.jpg 800w, ../../assets/hero-aligner-photo-1600.jpg 1600w, ../../assets/hero-aligner-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="" width="1600" height="891" loading="lazy">
         </picture></span>
-          <svg class="pv-card-fx" viewBox="0 0 800 450" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <svg class="pv-card-fx" viewBox="0 0 800 450" preserveAspectRatio="none" aria-hidden="true" focusable="false" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
             <defs><radialGradient id="pvcGlow"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset=".55" stop-color="#ffffff" stop-opacity=".45"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient></defs>
-            <circle class="hero-fx-blip pv-blip" style="--ox:223.9px; --oy:91.9px; --i:0" cx="223.9" cy="91.9" r="12.1" fill="url(#pvcGlow)"/>
-            <circle class="hero-fx-blip pv-blip" style="--ox:353.5px; --oy:95.9px; --i:1" cx="353.5" cy="95.9" r="12.1" fill="url(#pvcGlow)"/>
-            <circle class="hero-fx-blip pv-blip" style="--ox:313.0px; --oy:127.2px; --i:2" cx="313.0" cy="127.2" r="12.1" fill="url(#pvcGlow)"/>
-            <circle class="hero-fx-blip pv-blip" style="--ox:196.6px; --oy:162.6px; --i:3" cx="196.6" cy="162.6" r="12.1" fill="url(#pvcGlow)"/>
-            <circle class="hero-fx-blip pv-blip" style="--ox:259.3px; --oy:187.8px; --i:4" cx="259.3" cy="187.8" r="12.1" fill="url(#pvcGlow)"/>
+            <circle class="hero-fx-blip pv-blip" style="opacity:0; transform-box:view-box; transform-origin:223.9px 91.9px; animation-delay:0.00s" cx="223.9" cy="91.9" r="12.1" fill="url(#pvcGlow)"/>
+            <circle class="hero-fx-blip pv-blip" style="opacity:0; transform-box:view-box; transform-origin:353.5px 95.9px; animation-delay:0.28s" cx="353.5" cy="95.9" r="12.1" fill="url(#pvcGlow)"/>
+            <circle class="hero-fx-blip pv-blip" style="opacity:0; transform-box:view-box; transform-origin:313.0px 127.2px; animation-delay:0.56s" cx="313.0" cy="127.2" r="12.1" fill="url(#pvcGlow)"/>
+            <circle class="hero-fx-blip pv-blip" style="opacity:0; transform-box:view-box; transform-origin:196.6px 162.6px; animation-delay:0.84s" cx="196.6" cy="162.6" r="12.1" fill="url(#pvcGlow)"/>
+            <circle class="hero-fx-blip pv-blip" style="opacity:0; transform-box:view-box; transform-origin:259.3px 187.8px; animation-delay:1.12s" cx="259.3" cy="187.8" r="12.1" fill="url(#pvcGlow)"/>
           </svg>
         </span>
         <div class="card-body">
