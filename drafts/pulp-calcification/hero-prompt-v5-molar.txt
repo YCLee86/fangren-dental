@@ -48,14 +48,6 @@ SHAPE FROM THE REFERENCE IMAGE. It is built like a real molar, not like a barrel
   • BELOW THE WAIST THE TOOTH DIVIDES INTO TWO ROOTS that taper as they go down, curve
     gently apart and then back together, and END IN ROUNDED BLUNT TIPS that are fully
     visible inside the picture. Between the two roots there is a smooth arched notch.
-THE TOOTH STANDS IN A ROW WITH ITS NEIGHBOURS AND IS EXACTLY AS TALL AS THEY ARE. Its
-biting surface sits at THE SAME HEIGHT as the biting surfaces of the teeth on either side of
-it, and it is the SAME SIZE as them — it is only more complete, because the neighbours are
-cropped by the edges of the picture. It never rises above the row, and it is never drawn
-bigger than the teeth beside it.
-The neighbours are ordinary teeth: only their crowns show, their roots hidden behind the
-gum. THE MAIN TOOTH IS THE ONLY ONE WE SEE THROUGH: its roots and its dashed pulp are
-visible over the pink gum, and no neighbouring tooth has any dashed lines inside it.
 Its enamel is a warm off-white with two or three soft tones, drawn with a loose brown
 outline. It is a healthy, handsome tooth: no decay, no dark
 stains, no cracks, no filling, no blood, and it has NO FACE, no eyes and no mouth — it is a
@@ -101,15 +93,10 @@ HALF THE WIDTH OF THE WHOLE PICTURE, and it very nearly reaches the top and the 
 edges of the frame. TWO FINE STRAIGHT LINES run from the
 edge of the circle across to THAT CLUSTER OF FOUR SPECKS ON THE DASHED ROOT CANAL, halfway
 down the root. THE CIRCLE IS MAGNIFYING THE INSIDE OF THAT CANAL — it is NOT magnifying the
-little pit on the biting surface, and the lines must NOT run to that pit. THERE ARE EXACTLY TWO OF THESE LINES, NO MORE, AND THEY ARE THE TWO TANGENTS TO THE CIRCLE
-FROM THAT POINT — exactly the way a magnifier is drawn in a diagram. Each line leaves the
-cluster of specks and runs to the rim, JUST GRAZING THE CIRCLE AND TOUCHING IT AT A SINGLE
-POINT: one touches the rim high on its right-hand side, the other touches it low on its
-right-hand side, so that the two lines open out symmetrically and enclose the whole circle
-between them. NEITHER LINE CROSSES INTO THE CIRCLE, neither cuts across the rim, neither
-stops short in empty space, and the two are mirror images of each other about the line
-joining the specks to the centre of the circle. They are plain thin strokes: they are NOT
-arrows and they have no arrowheads.
+little pit on the biting surface, and the lines must NOT run to that pit. THERE ARE EXACTLY TWO OF THESE LINES, NO MORE. EACH ONE STARTS ON THE RIM OF THE CIRCLE
+AND ENDS AT THE CLUSTER OF SPECKS — neither line begins or ends in empty space, and neither
+line stops short of the circle. They are plain thin strokes: they are NOT arrows and they
+have no arrowheads.
 THE CIRCLE IS A WINDOW, NOT AN OVERLAY. Everything belonging to the magnified world is drawn
 STRICTLY INSIDE the rim and is cut off cleanly by it, like the view through a porthole.
 ALL FOUR PEOPLE ARE COMPLETELY INSIDE THE CIRCLE: no head, no raised arm, no foot, no
@@ -169,9 +156,8 @@ person are accounted for, and only one mouth is open.
 
 THE BACKGROUND, OUTSIDE THE CIRCLE AND BEHIND THE GIANT TOOTH — kept simple and pale so
 that nothing competes with the tooth and the circle. Along the bottom, a band of pale pink
-gum; at the far left and right edges, TWO NEIGHBOURING TEETH of exactly the same size and at
-exactly the same height as the main one, cropped by the edges of the picture and a little
-paler, showing their crowns only; behind everything, a soft wash of pale sage green and warm cream
+gum; at the far left and right edges, the shoulders of two NEIGHBOURING TEETH, cropped and
+paler than the main one; behind everything, a soft wash of pale sage green and warm cream
 with the paper grain showing through. No room, no furniture, no horizon, no sky.
 
 LIGHT AND COLOUR — bright, even, daylight-like light with no hard shadows, no lamplight
@@ -205,10 +191,7 @@ of the magnifying lens. There is no name badge, no logo, no watermark, no signat
 caption and no title, and no map, chart, sign or plaque anywhere. Do NOT draw rows of short
 dashes, squiggles or wavy lines anywhere to imitate lines of writing.
 
-AVOID — the main tooth standing taller than the teeth beside it; the main tooth drawn
-larger than its neighbours; a row of teeth at different heights; dashed pulp lines inside a
-neighbouring tooth; a leader line that cuts across the circle or crosses its rim; two leader
-lines that are not tangents; a tooth shaped like a barrel, a bucket, a box or a straight-sided tub; a tooth
+AVOID — a tooth shaped like a barrel, a bucket, a box or a straight-sided tub; a tooth
 whose roots are cut off by the edge of the picture; a tooth with a flat square biting
 surface; a pulp drawn as a floating ellipse with two separate lines below it; a gap between
 the pulp chamber and the canals; a third leader line; a leader line that does not touch the

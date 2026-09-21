@@ -28,6 +28,7 @@ const W = 1600, H = 900;
 const INK = '#4a3c33', ENAM = '#ffffff', SIDE = '#f3ece0', GROOVE = '#b9a98e';
 const DARK = '#6b5b49', GLOW = '#f6e2c4', RIM = '#e6d9c2', LINE = '#c9c2b6';
 const DASH = '#8c7b62';   // 虛線（髓腔、根管、根管上那四顆小點）
+const GUM = '#f0c0c4';   // 牙齦
 
 /* ── 右邊：一顆下顎大臼齒 ────────────────────────────────────
    ⚠⚠⚠ 第五版重畫（使用者：「牙齒的形狀變得很奇怪」）。
@@ -49,6 +50,18 @@ const tooth = `
   C ${TX+106} ${CEJ+224} ${TX+122} ${CEJ+106} ${TX+130} ${CEJ}
   C ${TX+158} ${CEJ-62} ${TX+R+16} ${TOP+116} ${TX+R} ${TOP} Z`;
 const body = `<path d="${tooth}" fill="${SIDE}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>`;
+
+/* ⚠⚠ 鄰牙（第六版加，使用者：「這顆牙齒特別高　和周圍的牙齒應該一樣高度」）——
+   同一排牙齒本來就一樣高。前五版的參考圖只有一顆牙，模型就把主角那顆畫得比鄰牙高一大截。
+   **左右各一顆、同樣大小、咬合面同高**，被畫面邊緣裁掉。 */
+const neighbour = (dx) => `<g transform="translate(${dx},0)" opacity=".85">
+  <path d="${tooth}" fill="${SIDE}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
+  <ellipse cx="${TX}" cy="${TOP}" rx="${R}" ry="${RY}" fill="${ENAM}" stroke="${INK}" stroke-width="4.4"/>
+</g>`;
+const neighbours = neighbour(-396) + neighbour(396);
+/* ⚠ 牙齦畫在鄰牙**後面那一層的前面**：鄰牙只露牙冠（正常的畫法），
+   主角那顆畫在牙齦前面，牙根與虛線的髓腔才看得到（透視的只有它一顆）。 */
+const gum = `<rect x="0" y="${CEJ+10}" width="${W}" height="${H-CEJ-10}" fill="${GUM}"/>`;
 
 /* 咬合面：壓扁的橢圓 ＋ 四個淺淺的牙尖 ＋ 中央的溝 */
 const table = `
@@ -122,21 +135,26 @@ const cave = `
   </g>
   <circle cx="${CX}" cy="${CY}" r="${CR}" fill="none" stroke="${INK}" stroke-width="9"/>`;
 
-/* ⚠⚠⚠ 第三版最重要的改動（使用者指定）：
-   **引線的起點是「根管上的一點」，不是咬合面那個洞。**
-   這一篇講的是**根管**鈣化 —— 放大鏡要放大的是管子裡面，
-   不是牙齒表面。接錯的話，圈裡那一群人就變成在牙齒表面的坑裡，
-   和文章沒有關係。⚠ 不是箭頭（箭頭是第十一節擋掉的東西）。 */
+/* ⚠⚠⚠ 引線：起點是「根管上的一點」，不是咬合面那個洞（第三版起）。
+   這一篇講的是**根管**鈣化 —— 放大鏡要放大的是管子裡面，不是牙齒表面。
 
-/* ⚠⚠⚠ 第三版最重要的改動（使用者指定）：
-   **引線的起點是「根管上的一點」，不是咬合面那個洞。**
-   這一篇講的是**根管**鈣化 —— 放大鏡要放大的是管子裡面，
-   不是牙齒表面。接錯的話，圈裡那一群人就變成在牙齒表面的坑裡，
-   和文章沒有關係。⚠ 不是箭頭（箭頭是第十一節擋掉的東西）。 */
+   ⚠⚠ 第六版（使用者：「下面那條應該要像上面做成放大鏡框的外切線」）：
+   **兩條都是從那一點畫到圓的外切線**，不是隨便從鏡框上挑兩個點。
+   外切線有公式，用算的不要用目測：
+     d ＝ 點到圓心的距離、γ ＝ acos(r/d)、φ ＝ 圓心看向那一點的角度
+     兩個切點 ＝ 圓心 ＋ r·(cos(φ±γ), sin(φ±γ))
+   這樣兩條線會自然地包住整個圓，看起來才像「這個圓在看那一點」。 */
 const ZX = TX - 46, ZY = CEJ + 186;          // 放大的那一點：左邊那條根管的中段
-const leader = `
-  <line x1="${CX+CR*0.62}" y1="${CY-CR*0.72}" x2="${ZX-14}" y2="${ZY-24}" stroke="${LINE}" stroke-width="3"/>
-  <line x1="${CX+CR*0.92}" y1="${CY+CR*0.30}" x2="${ZX-12}" y2="${ZY+24}" stroke="${LINE}" stroke-width="3"/>`;
+const tangents = (() => {
+  const dx = ZX - CX, dy = ZY - CY, d = Math.hypot(dx, dy);
+  if (d <= CR) throw new Error('那一點落在圓裡面，畫不出外切線');
+  const phi = Math.atan2(dy, dx), gamma = Math.acos(CR / d);
+  return [phi + gamma, phi - gamma].map((a) =>
+    [CX + CR * Math.cos(a), CY + CR * Math.sin(a)]);
+})();
+const leader = tangents.map(([tx, ty]) =>
+  `<line x1="${tx.toFixed(1)}" y1="${ty.toFixed(1)}" x2="${ZX}" y2="${ZY}"
+     stroke="${LINE}" stroke-width="3"/>`).join('');
 
 /* ⚠⚠ 根管上那幾個「很小很小的人（甚至只有點）」（使用者指定）——
    它是整張圖的比例尺：看到管子裡有幾顆小點，才知道圈裡那群人正在**管子裡**。
@@ -148,6 +166,8 @@ const dots = `<g fill="${DASH}">` +
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <rect width="${W}" height="${H}" fill="#ffffff"/>
+  ${neighbours}
+  ${gum}
   ${leader}
   ${body}${ghost}${table}${fissure}${pit}${dots}
   ${cave}
