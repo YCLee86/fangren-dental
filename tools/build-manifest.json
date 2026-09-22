@@ -67,12 +67,16 @@
     "hash": "b49d61719866e8a2",
     "updated": "2026-09-20"
   },
+  "wisdom-eruption": {
+    "hash": "be7148c1dd0d387a",
+    "updated": "2026-09-22"
+  },
   "wisdom-tooth": {
     "hash": "07dde81f3dd5e2c4",
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "a741c7969ec05455",
+    "hash": "c63eeefc8ab78971",
     "updated": "2026-09-22"
   }
 }

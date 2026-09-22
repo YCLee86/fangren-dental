@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>wisdom-eruption｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>wisdom-eruption — 〈智齒要不要拔：該拔的，要趁早〉</h1>
+<p class="meta">
+  2026-09-21 開、2026-09-22 定案上線・<strong>文章草稿的預覽，不是設計提案</strong>（同 <code>bioceramic-article</code> 那一種）<br>
+  原網址 <code>/preview/wisdom-eruption/</code>（已刪除 2026-09-22）<br>
+  成品 <code>/posts/wisdom-eruption/</code>（口腔外科，站上第十九篇）<br>
+  文案六版、HERO 七版・沒有切換條，用途只是讓使用者在手機上讀完整篇<br>
+  整頁存檔：<code>git show 7a837bd4:preview/wisdom-eruption/index.html</code>
+</p>
+
+<h2>起點</h2>
+<p>使用者貼進來一份六節的整理稿（萌發年齡、長期追蹤、族群差異、四種命運、無症狀的牙周狀況、四個建議）。
+站上已經有 <code>/posts/wisdom-tooth/</code>〈拔智齒之後〉，講的是<strong>已經決定要拔之後</strong>的事；
+這一篇講的是<strong>在那之前的那一段</strong>。兩篇互相連著，立場一致，定案時沒有動那一篇。</p>
+
+<h2>文案：四次被退回，兩次是方向不是文字</h2>
+
+<div class="note">
+<p><strong>① 第一版的標題與收尾方向錯了 —— 而且錯的是我加的一句，不是原稿。</strong></p>
+<p>原稿只寫「時機有差」。我查到台灣那份健保資料（PLOS ONE 2021，16,609 人）寫著
+「年齡不是乾性齒槽炎／術後感染／顳顎關節症狀的風險因子」，就拿它去補了一個但書，
+說「手術難度」和「併發症機率」是兩件事，並把標題訂成〈二十歲拍的那張 X 光，還不是定局〉。</p>
+<p>使用者（牙醫師）退回：「這樣寫會誤導。等到三四十或甚至年紀更大再處理，骨頭更硬更難弄，
+術後腫痛也會更明顯……趁年輕骨頭軟早點處理，對手術難度和病患本身日常影響還是比較小。」</p>
+<p><strong>那是過度推論</strong>：那份資料統計的是「要不要多跑一趟門診處理併發症」，
+它的終點裡<strong>沒有</strong>手術難度、沒有磨掉多少骨頭、沒有腫幾天。
+拿一份沒有量那些東西的資料去反駁「趁年輕拔比較輕鬆」，等於用 A 的數字否定 B 的問題。
+而且它擺在收尾，讀者讀完最後的印象就是「不急」。</p>
+<p>處理：標題換成〈該拔的趁早，該留的看著它〉（第四輪再收短成〈該拔的，要趁早〉）；
+那句「年齡不是風險因子」<strong>整句從文章裡拿掉</strong>（它是真的，但在這一篇裡只會被讀成「所以不急」）；
+台灣那兩個數字（3.6%／0.17%）留著，用途改成「這是可預期的手術」；
+新增一節〈確定要拔的話，愈早愈省事〉，三條各自有出處。
+<strong>⚠ 追蹤研究那三份沒有拿掉也沒有削弱</strong> —— 它們回答的是「這顆會不會自己長出來」，
+不是「該不該拖」，要做的是把兩個問題分開。</p>
+</div>
+
+<div class="note">
+<p><strong>② 原稿「推估台灣約六成」是推的，不是量的。</strong></p>
+<p>原稿從港、星華人的數字推估台灣年輕成人「至少有一顆阻生智齒」約六成。
+台灣沒有全國性的智齒萌發狀態調查（國內的口腔健康調查以 28 顆恆牙計算，不含智齒），
+所以那是推論不是量測。文章改成明講台灣人自己的比例還沒有人測過，港、星的數字標明是別人的資料。
+<strong>⚠ 這一條後來靠「不寫」守住</strong>：第三輪使用者指定把那段說明也拿掉
+（「這段也是偏學術討論」），所以文章裡<strong>沒有出現任何一個台灣的阻生率數字</strong>。</p>
+</div>
+
+<div class="note">
+<p><strong>③ 逐字改六處（2026-09-22）。</strong></p>
+<p>開場的引號換成診間真的會講的話：「你的智齒是阻生齒，建議拔掉。」→「<strong>這顆智齒建議要拔掉喔！</strong>」；
+「大學時期的一張全景 X 光片前面」→「<strong>大學時牙齒檢查的時候</strong>」；
+「判斷得早，該拔的那幾顆會好拔很多」→「<strong>時間抓對，拔智齒的後續影響會減少很多</strong>」。
+另外兩段學術討論整段拿掉（兩份研究「分母不一樣」、台灣沒有全國調查），
+台灣那一段只留「台灣的健保資料顯示：上下顎智齒是國人最常被拔掉的兩個牙位」。
+<strong>⚠ 那兩個限制仍然成立</strong>，所以文章裡也沒有把新加坡與香港那兩個數字拿去互相比大小。</p>
+</div>
+
+<div class="note">
+<p><strong>④ 事實修正：完全埋伏「反而常年相安無事」是錯的。</strong></p>
+<p>使用者：「智齒埋伏在骨頭裡不一定是常安無事，也有變成囊腫、吃掉周圍骨頭。」
+補了兩段（他指定「文章大概提到就好」）：牙囊會變成含齒囊腫、長大前不痛不腫只有 X 光看得到；
+影像上看得到的約 0.8%（其他研究 2～6%），四分之三是含齒囊腫，而且<strong>隨年齡上升</strong>
+（六十幾歲 7.3%、七十幾歲 18.6%，泰國兩萬多顆的統計）。</p>
+<p><strong>⚠ 順帶修掉一個補進去才浮現的矛盾</strong>：〈三個問題〉那三題（刷得到嗎／有沒有在咀嚼／
+有沒有影響前一顆）套在完全埋伏的牙齒上會全部答「否」，讀起來就變成「埋著的都該拔」。
+加了一行界定：<strong>那三題問的是看得到的那幾顆</strong>，完全埋伏的那一種靠定期拍片追蹤。</p>
+</div>
+
+<h2>查證：原稿的數字逐條查，七個查不到的拿掉</h2>
+<p>容器的 <code>curl</code> 與 <code>WebFetch</code> 被 egress proxy 擋掉（pubmed、pmc、springer 全部 403），
+<strong>能用的只有 WebSearch</strong>。十四個數字逐字對上，<strong>七個查不到的全部拿掉</strong>：
+中國北方 15–16 歲、馬來西亞 67.6%、先天缺牙 3.4% 四顆全缺、Garaas 的 16%／26%、
+Blakey 的 33%／17%／38%。另有一個改了：原稿「完全萌發平均要到 22 歲」，
+查到的德國 605 張全景片是 <strong>20.8–21.8 歲</strong>，文章改成「平均要到二十一歲上下」。
+逐條理由留在 <code>drafts/wisdom-eruption/SOURCES.md</code>。
+<strong>⚠ 十七個外部連結在容器裡一條都點不開</strong>，要使用者自己點過 ——
+同 aligner-article、perio-prevalence、Wikidata 那個坑，已經第五次。</p>
+
+<h2>HERO：七版</h2>
+<p>使用者給的梗：「年輕患者因為智齒阻生的問題來找醫師，畫面是患者和醫師在諮詢，
+年輕患者那一側畫出從小嬰兒在地上爬、幼兒園、小學、國中、高中，每個階段的樣子，
+最後到患者現在的階段要來處理智齒的問題。」</p>
+
+<div class="note">
+<p><strong>第一版：成長列做成畫面下緣獨立的一帶，用細橫線和診間隔開。</strong>
+那是從 ILLUSTRATION.md 第八節第 3 條推的（〈拔智齒〉把「幾天後的他」畫在窗外，被讀成
+「路人剛好走過，而且長得一模一樣」）。<strong>退回：「分上下很難聯想起來，應該是同一個水平。」</strong>
+那條規則解的是「同一個人出現兩次」，不是「兩個時間怎麼連起來」。</p>
+<p><strong>第二版</strong>改成同一個地面上的一條帶子（使用者給的 Pixta 成長圖用的就是這個解法），
+並把<strong>第六個階段做成坐著的病患本人</strong> —— 這一招同時把第八節第 3 條那個坑治掉：
+畫面裡不會有兩個長得一樣的人。同一輪另外兩件：病患在說不是醫師在講解（加對話框）、
+醫師改成女性鮑伯頭＋紫色刷手服＋醫師袍。</p>
+<p><strong>⚠ 紫色刷手服會動到整段 COLOUR</strong>：原本照第八節第 15 條把科別色拆成四個小點綴
+（牆上一條帶、椅墊、領口細邊、分隔線），刷手服整套變紫之後那四個<strong>全部拿掉</strong>，
+否則整張泛紫。</p>
+</div>
+
+<div class="note">
+<p><strong>第三版：帶子躺在地板上像地毯，而且因此五個小孩變成「診間裡真的有很多人」。</strong>
+使用者兩句話其實是同一件事：<strong>那條帶子要離開地板</strong>。
+改成畫在畫面平面上的平面圖形（face-on，像浮在房間前面的緞帶），不吃地板透視，
+地板與踢腳板從它底下看得到。</p>
+<p><strong>⚠ 漸層是使用者指定的例外。</strong> ILLUSTRATION.md 第三節寫著「漸層只用來描述光，不當裝飾」——
+這支箭頭是那一條唯一的例外，其餘仍然平塗。
+<strong>⚠ 「不要箭頭」那條擋線整段翻掉</strong>：第八節第 2 條管的是泡泡裡的分隔，不是這一支。</p>
+<p><strong>⚠ 同一輪最要緊的是風格。</strong>使用者：「插圖風格和網站現有的很不一樣。」
+對照站上〈拔智齒之後〉那張，差四件而且方向一致 —— 生出來的<strong>太向量、太乾淨</strong>：
+線偏黑偏粗（站上是暖灰棕、細、微抖）、色太實（站上是淡粉彩、大量白紙露出）、
+硬邊平塗（站上是鉛筆感、邊緣微柔）、臉沒有腮紅。
+解法照第七節第 18 條最後一條：<strong>把站上已上線的那張一起餵進去當風格參考</strong>，
+STYLE 整段照它重寫（原本那段是從十二個作品集推的規格，<strong>不是站上現況</strong>，那是我前兩版的錯），
+並擋掉「把內容也抄過去」。</p>
+</div>
+
+<div class="note">
+<p><strong>第四版：房間太空蕩、X 光片讀起來像「牆上掛了一幅 X 光片的畫」。</strong>
+使用者這一句講到根源：<strong>問題不在片子，在它的外框</strong> —— 深灰厚框＋沒有光就是相框。
+新增一段把「它是設備不是畫」拆成三件一定要畫出來的事：燈板會發光且牆上有光暈、
+上緣有夾子吊著片子且下緣露出一條白光帶、有電源線與開關。</p>
+<p>房間同時補了一整段家具，<strong>⚠ 但「畫淡」明講只適用於家具、不適用於人</strong> ——
+A 類紅線的鄰居：次要角色靠小、靠位置、靠被遮住，<strong>絕不可以靠把線畫淡</strong>
+（2026-08-22 那張畫出來是鬼魂）。提示詞因此寫成兩句，並補 <code>never fade a person</code>。</p>
+<p>片子本身同日改版：<strong>牙根改短改粗、顆數 16 → 14</strong>。
+「上一版比較好」的差別是<strong>片子被畫大之後，細長的牙根變成一排火柴棒</strong>；
+顆數減少則讓每顆分到的像素變多（同第七節第 10 條「圈存在不代表像素夠」）。</p>
+</div>
+
+<div class="note">
+<p><strong>⚠⚠ 第五版：生長階段整組畫反了 —— 錯在提示詞不在參考圖。</strong></p>
+<p>那一句寫著 <code>Counting BACKWARDS FROM THE ARROWHEAD, <strong>that is right to left along the arrow</strong></code>。
+箭頭尖在左、尾在右，所以「從箭頭往回數」在畫面上是<strong>由左往右</strong>，我卻寫成 right to left。
+前後半自相矛盾，模型跟了後半。參考圖本身是對的。</p>
+<p><strong>定案的寫法：只用畫面上的絕對位置，不要用相對的方向詞。</strong>
+「往回數」「沿著箭頭」「backwards」這種詞需要先決定基準點，<strong>模型會自己挑一個</strong>。
+改成三句沒有基準點的話：箭頭尖在左端貼著坐著的人、尾在右緣／離他最近的小孩是五個裡最大的、
+嬰兒在最右邊／身高由右往左遞增，和參考圖一樣。</p>
+<p><strong>這一條可以推廣：凡是「順序」的指令，用畫面上的左右上下講，
+不要用「沿著某個東西往回／往前」。</strong></p>
+</div>
+
+<p><strong>第六版</strong>箭頭改成口腔外科的紫，三段漸層（尾 <code>#e6dce9</code> → 中 <code>#8e6299</code> →
+箭頭尖 <code>#784e84</code>）。⚠ COLOUR 那一段要跟著改，不能只改箭頭：原本寫「<code>#8e6299</code> 只屬於
+刷手服，而且只出現在那一個地方」，紫在畫面上變成兩處之後那句話會和箭頭打架。
+<strong>第七版</strong>在腫起來的位置加痛的圖案（三到四道短閃電折線＋一小塊淡排線）。
+三個判斷：用暗磚紅不用鮮紅（站上是淡粉彩色域，一道消防車紅會變成最搶眼的東西，
+而且要比他的鏽紅外套深一階否則兩個紅會糊在一起）、只放一個位置（對話框裡那塊腫起來的牙齦不加）、
+臉不跟著加重（符號負責表情，第七節第 9 條：梗放在情節上，不要放在把臉畫醜上）。
+⚠ 使用者附的 Pixta 截圖<strong>刻意不餵</strong>：上面有 <code>Painful Illustration Set</code> 的字樣與浮水印，
+參考圖上的字會被畫進成品（第十一節踩過三種形式）。</p>
+
+<h2>接圖：交件門檻與那個誤報</h2>
+<p>交回來那張<strong>下緣有 17px 烘進去的白列</strong>，<code>tools/hero-resize.mjs</code> 第一道守門擋下來
+（第七節第 6 條）。去白邊後 1376×753、比例 1.832 超出 ±0.02 容差，
+所以再<strong>置中裁寬</strong>回 1349×753（1.7915，目標 1.7921）。</p>
+<p>三個門檻：無彩空白 <strong>3.9%</strong>（&lt; 5%）、邊緣密度 <strong>33.9%</strong>（≥ 30%）、
+每個人的線一樣實 —— 七個人最暗 5 百分位 68.7～75.6，<strong>極差 6.9 階</strong>（&lt; 20）。</p>
+<p><strong>⚠⚠ 最後那一項第一次量出 24.1 不過，是我把嬰兒的框畫太大</strong> ——
+框裡大半是淡色的地板與箭頭，5 百分位被抬高；收緊到只框住嬰兒就是 70.9。
+<strong>框畫錯會冤枉一張沒問題的圖。</strong></p>
+
+<h2>還沒問到的（文章裡刻意都沒有寫）</h2>
+<ul>
+  <li>這裡拔智齒的流程與次數 —— 文章只寫到「和醫師討論」，沒有寫診所怎麼安排。</li>
+  <li>全景 X 光在這裡怎麼收費、健保給不給付 —— 文章建議「十八到二十二歲之間拍一張」，
+      但<strong>沒有寫費用，也沒有寫給付</strong>。</li>
+  <li>智齒的追蹤間隔 —— 借的是站上已經定案的「半年一次的例行檢查」，沒有另外訂一個。</li>
+  <li><code>about</code> 的智齒冠周炎查不到 Wikidata 對應項目，<strong>留白</strong>（容器連不到 wikidata.org，不猜 Q 編號）。</li>
+</ul>
+
+<p class="meta">查核表與每一個數字的出處在 <code>drafts/wisdom-eruption/SOURCES.md</code>，
+HERO 的提示詞全文與逐輪推導在 <code>drafts/wisdom-eruption/hero-prompt.md</code>／<code>hero-prompt.txt</code>。</p>
+
+<footer>
+  規則：<code>CLAUDE.md</code> 第八節（提案頁定案後刪掉、文字搬進 <code>history/</code>）。
+  文體規範：<code>COPY.md</code> 第十節。插畫：<code>ILLUSTRATION.md</code> 第七、十節。
+</footer>
+
+</div></body>
+</html>

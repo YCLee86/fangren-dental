@@ -1,14 +1,17 @@
-# 〈智齒要不要拔〉—— 草稿（2026-09-21 開）
+# 〈智齒要不要拔〉—— ✅ 2026-09-22 定案上線
+
+成品：`/posts/wisdom-eruption/`（口腔外科，站上第十九篇）。
+推導文字搬進 `/history/wisdom-eruption.html`，預覽頁與 `preview-gen.mjs` 已刪。
+這個資料夾留著的是**出處、提示詞與三張參考圖**（日後要改文或改圖從這裡開始）。
 
 來源是使用者貼進來的一份整理稿（六節：萌發年齡、長期追蹤、族群差異、四種命運、
 無症狀的牙周狀況、四個建議）。這一份把它改寫成**站上的衛教文章**：
 `/posts/wisdom-eruption/`（口腔外科 `surg`，站上第十八篇）。
 
-預覽頁：`/preview/wisdom-eruption/`（noindex，定案上線後刪掉）
+~~預覽頁：`/preview/wisdom-eruption/`~~（已刪除 2026-09-22，整頁存檔 `git show 7a837bd4:preview/wisdom-eruption/index.html`）
 
 | 檔案 | 是什麼 |
 | --- | --- |
-| `preview-gen.mjs` | 產生預覽頁。骨架抓 `posts/wisdom-tooth/index.html`（同一科）。**改內文改這一支再重跑**，不要手改 `preview/` 底下那一頁 |
 | `SOURCES.md` | 文中每一個數字的出處，以及**刻意沒有寫進文章的那些**與理由。⚠ 改任何數字前先看這一份 |
 
 ```bash
@@ -145,12 +148,16 @@ node drafts/wisdom-eruption/preview-gen.mjs
 - 內文 4,188 字、最長一段 176 字 —— 兩項都在站上十七篇的範圍內
   （最長段的十七篇區間是 93～226）。
 
-## 定案那天要做的事
+## ✅ 定案那天做了什麼（2026-09-22）
 
-1. `git mv` 預覽頁的內容搬成 `posts/wisdom-eruption/index.html`
-   （照 CLAUDE.md 第五節：改 `<head>`、`post-meta`、`data-views-self="wisdom-eruption"`，
-   把 noindex 與 `.pv-*` 那些東西拿掉，補回 HERO 與計數器那一塊）
-2. **`node tools/webp.mjs`**（搬進 `posts/` 之後才掃得到那三張 JPEG），
-   並把 HERO 改寫成 `<picture>` ＋ `<source type="image/webp">`
-3. `node tools/build.mjs`（首頁卡、sitemap、allowed-slugs、延伸閱讀、JSON-LD 會自己跟上）
-4. 刪掉 `preview/wisdom-eruption/` 與 `preview-gen.mjs`，推導文字搬進 `history/`
+1. `publish.mjs`（一次性，跑完刪掉）從定稿的預覽頁把內文整段搬進
+   `posts/wisdom-eruption/index.html` —— 骨架仍抓 `posts/wisdom-tooth/`，但
+   **SEO:START/END、RELATED:START/END、計數器、「最後更新」那一行全部留著**
+   （少了它們 build 接不上）。站內連結從 `../../posts/<slug>/` 收成站上慣例的 `../<slug>/`。
+   ⚠ 禁語守門只掃手寫的那一半 —— SEO 與 RELATED 兩段當下還是骨架那一篇的內容
+   （舊標題就藏在 JSON-LD 與延伸閱讀卡裡），掃整頁會誤報。
+2. `node tools/webp.mjs`（搬進 `posts/` 才掃得到那三張 JPEG，新寫 3 張）
+3. `node tools/build.mjs` → `node tools/topics.mjs` → `build --check` 確認穩定
+4. `tools/search-test.mjs` 51 項、`tools/click-test.mjs` 92 項全過
+5. 刪掉 `preview/wisdom-eruption/` 與 `preview-gen.mjs`，推導搬進 `history/wisdom-eruption.html`
+   並補進 `history/index.html`（115 → 116）

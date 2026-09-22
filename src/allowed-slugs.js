@@ -2,6 +2,7 @@
 export const ALLOWED = [
   "home",
   "pulp-calcification",
+  "wisdom-eruption",
   "implant-lifespan",
   "perio-prevalence",
   "kids-sedation",
