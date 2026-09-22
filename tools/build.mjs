@@ -25,6 +25,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { homeGraph, parseDoctors, parseHours, parseTopics, postGraph } from "./schema.mjs";
+import { CARD_FX, cardCss, cardOverlay, readFxCss } from "./card-motion.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const POSTS_DIR = path.join(ROOT, "posts");
@@ -546,8 +547,11 @@ const injectRelated = (html, block) => {
 const card = (p) => {
   const spec = SPEC[p.tag];
   if (!spec) console.warn(`  ⚠ 標籤「${p.tag}」沒有對應的科別代碼，${p.slug} 不會被主題與科別篩到`);
+  const pic = picture(cardImg(p), "assets/", SIZES_THUMB, "        ", `<img class="card-thumb" src="assets/${esc(cardImg(p))}"${srcsetAttr(heroSrcset(cardImg(p), "assets/"), SIZES_THUMB)} alt="${esc(cardAlt(p))}"${heroDim(cardImg(p))} loading="lazy">`);
+  /* 有動態疊層的那幾篇（目前只有〈隱形矯正〉）把 <picture> 再包一層。
+     規格與座標的由來見 tools/card-motion.mjs 的檔頭。 */
   return `      <a class="card" href="posts/${esc(p.slug)}/"${spec ? ` data-spec="${spec}"` : ""}>
-        ${picture(cardImg(p), "assets/", SIZES_THUMB, "        ", `<img class="card-thumb" src="assets/${esc(cardImg(p))}"${srcsetAttr(heroSrcset(cardImg(p), "assets/"), SIZES_THUMB)} alt="${esc(cardAlt(p))}"${heroDim(cardImg(p))} loading="lazy">`)}
+        ${cardOverlay(p.slug, pic)}
         <div class="card-body">
           <span class="card-tag">${esc(p.tag)}</span>
           <h3>${esc(p.title)}</h3>
@@ -596,6 +600,28 @@ nextIndex = nextIndex.replace(
   /(<b data-post-count>)[^<]*(<\/b>)/,
   `$1${posts.length}$2`
 );
+
+/* ---------- 3.35 首頁圖卡的動態疊層（2026-09-22 定案上線）----------
+   ⚠ 動畫的規格（速度、幅度）是從文章頁 <head> 的 style#hero-fx-css 讀出來的，
+     這裡只是把它 ＋ 卡片才需要的那幾條寫進首頁的 <head>。規格只有一份。
+   ⚠ 首頁沒有連共用樣式表（它的 CSS 全部內嵌），所以寫在這裡就不會有
+     「HTML 換了、CSS 還是舊的」那種問題 —— 2026-09-22 在文章頁踩過一次。
+   ⚠ 沒有任何一篇要疊層的時候，這一段會是空的（區塊仍然留著）。 */
+const CARDFX_START = "<!-- CARDFX:START — 由 tools/build.mjs 產生，請勿手動編輯 -->";
+const CARDFX_END = "<!-- CARDFX:END -->";
+{
+  const slugs = posts.map((p) => p.slug).filter((sl) => CARD_FX[sl]);
+  const body = slugs.length
+    ? `<style>\n${cardCss(readFxCss(ROOT, slugs[0]))}\n</style>`
+    : "";
+  const blk = `${CARDFX_START}\n${body}\n${CARDFX_END}`;
+  const a = nextIndex.indexOf("<!-- CARDFX:START");
+  const b = nextIndex.indexOf(CARDFX_END);
+  nextIndex = (a !== -1 && b !== -1)
+    ? nextIndex.slice(0, a) + blk + nextIndex.slice(b + CARDFX_END.length)
+    : nextIndex.replace(/<\/head>/i, `${blk}\n</head>`);
+  if (slugs.length > 1) console.warn(`  ⚠ 有 ${slugs.length} 篇要疊層，但 CSS 只吃得下一組遮罩座標 —— 要做第二篇得先改 tools/card-motion.mjs`);
+}
 
 nextIndex = withCanonical(nextIndex, `${siteUrl}/`);
 

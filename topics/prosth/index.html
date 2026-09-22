@@ -5678,6 +5678,56 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 [data-topic] #topics .sec-head .topic-search { margin-left: auto; }
 /* NIGHT:END */
 </style>
+<!-- CARDFX:START — 由 tools/build.mjs 產生，請勿手動編輯 -->
+<style>
+/* ⚠ 這一段由 tools/card-motion.mjs 產生，請勿手動編輯。
+   動畫的規格（速度、幅度）是從 posts/aligner-simulation/index.html 的
+   style#hero-fx-css 讀出來的 —— 規格只有一份，要改去改那裡。 */
+.hero-fx-blip {
+  animation: heroFxBlip 3.4s ease-out infinite;
+  opacity: 0;
+}
+@keyframes heroFxBlip {
+  0%   { opacity: 0;   transform: scale(.45); }
+  8%   { opacity: .62; transform: scale(1.25); }
+  26%  { opacity: 0;   transform: scale(2); }
+  100% { opacity: 0;   transform: scale(.45); }
+}
+@keyframes heroFxErr {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.208); }
+}
+
+/* 外框：圖與疊層擺在同一個盒子裡，hover 的放大搬到這一層。
+   ⚠⚠ 不搬的話桌機上滑過去那一刻兩層會錯開，警告標示會浮到旁邊去。 */
+.card-shot { display: block; position: relative; transition: transform .5s cubic-bezier(.22, .61, .36, 1); }
+.card:hover .card-shot { transform: scale(1.05); }
+.card-shot .card-thumb { transition: none; }
+.card:hover .card-shot .card-thumb { transform: none; }
+
+/* 黃色的警告標示放大縮小。外層只負責「切在哪裡」，而且**不跟著放大**。 */
+.card-fx-err {
+  position: absolute; inset: 0; display: block; pointer-events: none;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="375.7" y="64.6" width="85" height="60.6" rx="12" fill="%23fff" filter="url(%23b)"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="375.7" y="64.6" width="85" height="60.6" rx="12" fill="%23fff" filter="url(%23b)"/></svg>');
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  clip-path: inset(12.12% 41.4% 69.93% 45.7%);
+}
+.card-fx-err-in {
+  display: block; width: 100%; height: 100%;
+  transform-origin: 57.46% 21.05%;
+  animation: heroFxErr 2s ease-in-out infinite;
+}
+.card-fx-err img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.card-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+@media (max-width: 720px) {
+  /* 手機沒有 hover，那兩條規則用不到；留著也無妨，寫在這裡只是提醒 */
+  .card:hover .card-shot { transform: none; }
+}
+</style>
+<!-- CARDFX:END -->
 </head>
 <body data-topic="prosth" data-spec="prosth">
 
@@ -6689,7 +6739,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-09-21">2026 年 9 月 21 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-09-22">2026 年 9 月 22 日</time></span>
     </div>
   </div>
 </footer>

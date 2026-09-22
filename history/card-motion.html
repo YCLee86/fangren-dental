@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>card-motion｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>card-motion — 首頁文章圖卡的動態疊層</h1>
+<p class="meta">
+  2026-09-21 開、2026-09-22 定案上線<br>
+  原網址 <code>/preview/card-motion/</code>（已刪除 2026-09-22）<br>
+  整頁還原：<code>git show 6b1f3d43:preview/card-motion/index.html</code><br>
+  切換條 <code>?cm=a|b|c&amp;cmh=0|1&amp;cmp=0|1</code><br>
+  產生器 <code>tools/card-motion-preview.mjs</code>（一次性，定案時一併刪除）<br>
+  上線後的產生器是 <code>tools/card-motion.mjs</code>（被 <code>tools/build.mjs</code> 匯入，留在版控裡）
+</p>
+
+<h2>起點</h2>
+<p>〈隱形矯正〉的文章頁 HERO 上線之後，使用者問「首頁的文章圖卡也能呈現嗎」。
+量過之後答案是可以、而且零成本，但「一排靜止的卡裡有一張在動會不會突兀」量不出來，
+所以先開提案頁。三格：Ⓐ 不動（現況）／Ⓑ 只有驚嘆號／Ⓒ 和文章頁一樣。
+使用者看過之後說「可以了　上線」，定案 Ⓒ。</p>
+
+<h2>為什麼零成本（實測，不是推論）</h2>
+<pre>卡片用的就是同一批 HERO 圖、同一份 srcset，所以疊層直接複製那張卡的
+&lt;picture&gt;（連 sizes 與 loading="lazy" 都照抄）→ 五個視窗各只抓 1 次圖，
+多載檔案數 0。
+
+顯示尺寸也幾乎一樣：
+  卡片   320→290×163   375→345×194   390→360×203   744→333×187   1440→392×220
+  文章頁 HERO                          390→362×202             1440→656×365
+所以可見度和文章頁同一級，不會變成「要很仔細看」。
+
+上線真正多花的：標記 + CSS，壓縮後約 1.3 KB。</pre>
+
+<h2>三個非處理不可的細節</h2>
+<pre>① .card:hover .card-thumb 會把圖放大 1.05 倍。疊層不跟著放大的話，
+   桌機上滑過去那一刻兩層就錯開，警告標示浮到旁邊。
+   做法：加一層 .card-shot 把圖與疊層包起來，hover 的放大搬到那一層。
+   實測靜止與 hover 兩種狀態，兩層左緣都差 0 px。
+
+② 卡片是 16/9 的 object-fit: cover。實測左右各裁掉 0.59~0.69%、上下 0%
+   （盒子 1.7778、圖 1.799~1.803）。橫向座標一律 (x/800 − 0.0059) / 0.9882，
+   縱向不動，遮罩的 viewBox 高度用 450 不是文章頁的 445.6。
+   換算之後橫向差 0.2px —— 看不出來，但還是把對的值寫進去。
+
+③ 卡片由 tools/build.mjs 產生（首頁卡片不可以手改），所以疊層要接在產生器裡，
+   而且要讓它知道哪幾篇有。新增 tools/card-motion.mjs 當唯一的那一份規格來源：
+   動畫的速度與幅度**從文章頁 &lt;head&gt; 的 style#hero-fx-css 讀出來**，
+   這一支只補「卡片才需要」的三條。規格只有一份，不會兩邊不一樣。</pre>
+
+<h2>提案期間修掉的兩個 bug（兩個都不會報錯）</h2>
+<pre>⚠⚠ 一、「手機上沒有動畫，只有驚嘆號全亮」
+   成因不是動畫壞掉，是**使用者的瀏覽器手上是舊的 assets/style.css**
+   （這一站的樣式表檔名沒有內容雜湊）。模擬舊樣式表實測，症狀逐項對上：
+     ・.hero-fx-blip 沒有規則 → 不透明度回到 1 → 五個驚嘆號全部永久亮著
+     ・@keyframes 不存在 → 什麼都不會動
+     ・.hero-fx-err 沒有 position: absolute → 那份複本變成第二張滿版的 HERO 圖
+       疊在下面（實測多出一張 201px 高的圖、頁高 6882 → 7285）
+   治法：把那一段 CSS 從共用樣式表**搬進文章頁自己的 &lt;head&gt;**（HTML 和它的
+   CSS 一起送就不可能對不上），並把結構宣告寫進 style 屬性當保險 ——
+   樣式整段失效時會退化成「兩張圖完全重疊、什麼都不動」，而不是壞掉的版面。
+   順手把驚嘆號的 transform-origin 與 animation-delay 從 calc(var(--i) * .28s)
+   改成寫死在標記裡（那是唯一一處要瀏覽器解「自訂屬性 ＋ calc」的地方，
+   而 iOS Safari 驗不到；解不出來的話五顆會一起閃、光暈會飛走，都不報錯）。
+
+⚠⚠ 二、「警告標示放大的時候，連旁邊的藍色框框都放大，還跑出插圖的螢幕範圍」
+   三件事一起錯（800×445.6 座標系；標示實際 x 394~459 y 70.6~117，螢幕藍框在 470）：
+     ① 遮罩以 424 為心、半徑 51.2 → 右緣伸到 475，把藍框含進去了。
+        成因是**用橢圓罩一個扁長方形**：要罩住四角，半徑一定得開得比方形大很多。
+     ② 軸心在標示中心 → 藍框那一帶被往右推 9.6 個單位，推出螢幕。
+     ③ 沒有任何東西擋住「畫到螢幕外面」。
+   三件各自治：遮罩換成**圓角矩形**（data-URI 的 SVG ＋ feGaussianBlur）、
+   **軸心移到標示的右緣**（放大時右邊幾乎不動，長的那一邊往左邊的空白處長）、
+   外層多一道 **clip-path 當硬邊界而且不跟著放大**（放大搬到內層）。
+
+⚠⚠⚠ 這兩個 bug 的共同點：**量測面板都抓不到**。
+   面板量的是「有沒有水平捲動」，而第二件發生在圖**裡面**。
+   正確的驗法是「把倍率停在最大、和疊層關掉逐像素相減」——
+   現在螢幕藍框右邊那一片的最大差是 0（文章頁、首頁卡、提案頁三處都是）。</pre>
+
+<h2>定案的值</h2>
+<pre>驚嘆號   五個依序亮一下   速度中 3.4 秒一輪、幅度 Ⓑ 中（不透明度 .62、1.25 → 2）
+警告標示 放大縮小         速度中 2 秒一次、幅度 Ⓒ 明顯（1 → 1.208 → 1）
+         遮罩 rect x375.7 y64.6 w85 h60.6 rx12、模糊 3.5（viewBox 800×450）
+         硬邊界 clip-path: inset(12.12% 41.4% 69.93% 45.7%)
+         軸心 57.46% 21.05%（＝ 標示的右緣）
+
+⚠ 前一輪使用者曾挑過「警告標示快」（1.24 秒），最後一輪改成都用中 ——
+  日後在舊紀錄裡看到 1.24 秒，那是作廢的版本。
+⚠ 刻意不看 prefers-reduced-motion，同 index.html 的 HERO 緩慢推進。</pre>
+
+<h2>驗收</h2>
+<pre>・五個寬度（320／375／390／744／1440）掃過整個動畫週期：零水平捲動
+・每個視窗只抓 1 次圖（390 拿 1600.webp，其餘拿 800.webp）→ 多載檔案數 0
+・倍率回到 1 時與「疊層關掉」逐像素比對：0.0026 灰階
+・倍率停在最大時，螢幕外那一片最大差 0
+・17 張卡只有 1 張有疊層；七科著陸頁（index.html 的快照）也跟著長出來
+・tools/click-test.mjs 92 項、tools/search-test.mjs 51 項全過</pre>
+
+<footer>芳仁牙醫診所・改版紀錄　<a href="/history/">回目錄</a></footer>
+</div></body>
+</html>
