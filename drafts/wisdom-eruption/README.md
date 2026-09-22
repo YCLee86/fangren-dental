@@ -114,7 +114,7 @@ node drafts/wisdom-eruption/preview-gen.mjs
 
 | | |
 | --- | --- |
-| **HERO 插畫** | **梗已定（2026-09-22 使用者給的）＋ 提示詞與兩張參考圖已備妥，還沒出圖。** 預覽頁上仍是一塊虛線佔位。<br>・提示詞：`hero-prompt.txt`（可直接貼，出圖用 Gemini）<br>・推導與每一條在擋什麼：`hero-prompt.md`<br>・參考圖：`growth-row-ref.png`（身高級距）、`pano-ref.png`（片子裡的排列）—— **兩張都要一起餵**<br>・出圖後跑那三個交件門檻，再 `node tools/hero-resize.mjs <原檔> wisdom-eruption-photo` 與 `node tools/webp.mjs` |
+| **HERO 插畫** | **梗已定（2026-09-22 使用者給的）＋ 提示詞與兩張參考圖已備妥，還沒出圖。** 預覽頁上仍是一塊虛線佔位。<br>・提示詞：`hero-prompt.txt`（可直接貼，出圖用 Gemini）<br>・推導與每一條在擋什麼：`hero-prompt.md`<br>・參考圖：`growth-ribbon-ref.png`（帶子的走向 ＋ 身高級距）、`pano-ref.png`（片子裡的排列）—— **兩張都要一起餵**<br>・⚠ 第一版出過一張圖，使用者退回三件（病患在說不是醫師在講解／醫師是女的・鮑伯頭・紫色刷手服＋醫師袍／成長列要用帶子串、和診間同一個水平）。第二版全部改掉了，推導在 `hero-prompt.md`<br>・出圖後跑那三個交件門檻，再 `node tools/hero-resize.mjs <原檔> wisdom-eruption-photo` 與 `node tools/webp.mjs` |
 | **上線日期** | `post-meta` 的 `published` 是佔位符，定案那天填 |
 | **`about` 的 Wikidata** | 阻生智齒 Q1968827、智齒拔除 Q849893、牙周病 Q520127 沿用站上已經查證過的三筆；**智齒冠周炎留白**（容器連不到 wikidata.org，不要猜 Q 編號） |
 | **十七個外部連結** | 容器連不出去（`curl` 與 `WebFetch` 都被 egress proxy 擋，只有 `WebSearch` 能用），**沒有真的點開過**。請在手機上各點一次 |
