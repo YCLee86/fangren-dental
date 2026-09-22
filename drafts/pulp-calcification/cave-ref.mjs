@@ -234,24 +234,17 @@ const SX = 1410, SY = 706, SR = 152;                // 第二個圈：右下、�
 const cyst = `<circle cx="${YX}" cy="${YY}" r="${YR}" fill="#e9dcc4" stroke="${DASH}" stroke-width="3"/>`;
 const leader2 = leaderTo(SX, SY, SR, YX, YY);
 
-/* ⚠⚠⚠ 第九版：細菌改成**站著的小角色**，不再是一團一團的斑點。
-   使用者給了三張站上舊圖的細菌，共同點是「豆子形的身體 ＋ 四肢 ＋ 一張有表情的臉」——
-   前一版的參考圖只有圓斑，模型就照著畫出沒有手腳的斑點。
-   ⚠ 這張圖只給**形狀與站位**：顏色、線條、表情一律回提示詞與使用者那張舊圖拿。 */
+/* ⚠⚠⚠ 第十四版把細菌改回**沒有臉、沒有四肢的灰塊**（使用者：「圖片變的很簡化」）。
+   第九版我為了交代「牠們有手有腳有表情」，在這張結構圖上把細菌畫成小角色 ——
+   結果出圖回來的細菌**逐項照抄這張圖**：灰的、圓的、一圈短刺、兩點眼睛、沒有手腳，
+   和第三張參考圖（站上舊圖那批有手有腳、深色、張嘴大叫的）完全無關。
+   ⚠⚠⚠ 成因：**這張圖是結構圖，它一旦畫了「長相」，就會蓋過真正負責長相的那張參考圖。**
+   （ILLUSTRATION.md 第十二節：一組參考圖只准提供一件事 —— 這張的那一件是「版面」。）
+   所以細菌和人一樣，只給**位置、大小、數量**，長相一律回提示詞與第三張參考圖拿。 */
 const bug = (dx, dy, s, lean) => {
-  const x = SX + dx, y = SY + dy, L = s * 0.95;
-  return `<g transform="translate(${x},${y}) rotate(${lean})">
-    <line x1="${-s*0.55}" y1="${s*0.95}" x2="${-s*0.75}" y2="${s*1.75}" stroke="#7d7566" stroke-width="${s*0.20}" stroke-linecap="round"/>
-    <line x1="${s*0.45}" y1="${s*0.95}" x2="${s*0.80}" y2="${s*1.70}" stroke="#7d7566" stroke-width="${s*0.20}" stroke-linecap="round"/>
-    <line x1="${-s*0.85}" y1="${-s*0.10}" x2="${-s*1.70}" y2="${-s*0.75}" stroke="#7d7566" stroke-width="${s*0.20}" stroke-linecap="round"/>
-    <line x1="${s*0.85}" y1="${-s*0.10}" x2="${s*1.65}" y2="${s*0.35}" stroke="#7d7566" stroke-width="${s*0.20}" stroke-linecap="round"/>
-    <ellipse cx="0" cy="0" rx="${s}" ry="${L*1.25}" fill="#8f877a" stroke="#5f584c" stroke-width="${s*0.16}"/>
-    <circle cx="${-s*0.34}" cy="${-s*0.30}" r="${s*0.20}" fill="#ffffff" stroke="#5f584c" stroke-width="${s*0.07}"/>
-    <circle cx="${s*0.34}" cy="${-s*0.30}" r="${s*0.20}" fill="#ffffff" stroke="#5f584c" stroke-width="${s*0.07}"/>
-    <circle cx="${-s*0.30}" cy="${-s*0.26}" r="${s*0.09}" fill="#3f3a32"/>
-    <circle cx="${s*0.38}" cy="${-s*0.26}" r="${s*0.09}" fill="#3f3a32"/>
-    <ellipse cx="0" cy="${s*0.42}" rx="${s*0.30}" ry="${s*0.22}" fill="#3f3a32"/>
-  </g>`;
+  const x = SX + dx, y = SY + dy;
+  return `<ellipse cx="${x}" cy="${y}" rx="${s}" ry="${s*1.22}"
+            transform="rotate(${lean} ${x} ${y})" fill="#9a9081"/>`;
 };
 const bugs = `
   <clipPath id="c2"><circle cx="${SX}" cy="${SY}" r="${SR-5}"/></clipPath>

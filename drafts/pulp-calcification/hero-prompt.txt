@@ -33,9 +33,20 @@ EVERY PERSON IS A DIFFERENT PERSON: no two share a face, a hairstyle, an age or 
 expression. Every figure has a drawn face, drawn hands and coloured clothes — nobody is a
 flat grey silhouette, a shadow or an empty outline.
 
-THREE REFERENCE IMAGES ARE ATTACHED AND EACH ONE HAS EXACTLY ONE JOB. THE FIRST is a flat
-diagram: it gives the LAYOUT, THE SHAPES AND THE SIZE RELATIONSHIPS, and nothing else — never
-its flat finish, never its grey. THE SECOND is a photograph of a disinfection worker: it
+THREE REFERENCE IMAGES ARE ATTACHED AND EACH ONE HAS EXACTLY ONE JOB.
+⚠⚠⚠ THE FIRST IS A FLAT GREY TECHNICAL DIAGRAM AND THE FINISHED PICTURE MUST NOT LOOK
+ANYTHING LIKE IT. Take from it ONLY WHERE THINGS GO, HOW BIG THEY ARE AND WHAT SHAPE THEY
+ARE. Take NOTHING of how it is drawn: not its flat grey, not its even mechanical outlines,
+not its blank untextured fills, not its plainness. The finished picture is a warm, richly
+coloured, hand-drawn editorial illustration with visible paper grain, varying line weight and
+two or three tones in every colour — everything the STYLE section says. If your result looks
+like a clean vector diagram, a flat infographic or a simplified clip-art tooth, you have
+copied the wrong thing from it and the picture is wrong.
+⚠⚠ THE PEOPLE AND THE BACTERIA IN THAT FIRST IMAGE ARE DELIBERATELY BLANK PLACEHOLDERS —
+featureless grey lumps with no faces, no limbs, no clothes and no colour. They tell you HOW
+MANY there are and WHERE THEY STAND, and NOTHING WHATSOEVER about what they look like. Never
+draw a grey lump. The people are described in full below; the bacteria come from the third
+reference image. THE SECOND is a photograph of a disinfection worker: it
 gives THE SHAPE OF THE PROTECTIVE GARMENT, and nothing else. THE THIRD shows bacteria drawn
 earlier for this clinic: it gives THE WAY THE BACTERIA ARE DRAWN, and nothing else. Never
 take colour, line style, pose, composition or background from the second or the third, and
@@ -242,7 +253,7 @@ the boy has a small tank clipped at his hip; the woman carries a plain spray bot
 hand; the older man has a small bucket hooked over his wrist. All of it is simple and
 rounded, with no dials, no gauges, no hoses in tangles and no markings of any kind — it
 never reads as a pile of dental instruments and never as weapons.
-  1. THE GUIDE — a woman in her thirties in SOFT DUSTY-ROSE SCRUBS (#d7b7b7, folds and
+  1. THE GUIDE — HOOD UP, CLEAR FACE SHIELD ON — a woman in her thirties in SOFT DUSTY-ROSE SCRUBS (#d7b7b7, folds and
      shadows #b89999) under the coverall, her hair tied back inside the hood. A SMALL ROUND
      LAMP IS MOUNTED ON THE FRONT OF HER HOOD, just above the face shield, throwing a soft
      warm light down the tunnel; a pair of small magnifying loupes sits on the shield in
@@ -252,19 +263,19 @@ never reads as a pile of dental instruments and never as weapons.
      gathering the others along, palm open. She looks along the tunnel towards the slender passage. SHE IS THE ONLY PERSON IN THE PICTURE
      WITH AN OPEN MOUTH — a small open shape, mid-sentence, eyebrows raised, warm and
      encouraging. She is telling them she can see the way on, not warning them.
-  2. THE TEENAGER — a boy of about fifteen in a plain pale yellow t-shirt, under the same
-     translucent coverall. HE IS THE ONE SQUEEZING INTO THE SLENDER PASSAGE, standing right
+  2. THE TEENAGER — HOOD UP, CLEAR FACE SHIELD ON — a boy of about fifteen in a plain pale
+     yellow t-shirt, under the same translucent coverall. HE IS THE ONE SQUEEZING INTO THE SLENDER PASSAGE, standing right
      at its mouth and turned sideways to it. HIS RIGHT ARM AND RIGHT SHOULDER are already
      pushed into the slot; HIS LEFT HAND is braced flat on the wall beside the opening. One
      knee is lifted as he edges in. The slot pinches him — he is plainly too big for it. HIS
      MOUTH IS A SMALL DETERMINED LINE and his eyebrows are up: he is enjoying the attempt.
-  3. THE WOMAN IN HER THIRTIES — in a sage-green jacket over a cream top under the
+  3. THE WOMAN IN HER THIRTIES — HOOD UP, CLEAR FACE SHIELD ON — in a sage-green jacket over a cream top under the
      coverall, her hair loose to the shoulder inside the hood. She stands on the far side of
      the passage from the guide, one step back. HER LEFT HAND rests on the older man's
      forearm, steadying him companionably; HER RIGHT HAND holds her spray bottle, lowered at
      her side, as she looks towards the glimmer deep in the passage. HER MOUTH IS A SMALL
      CLOSED SMILE, eyes narrowed with pleasure.
-  4. THE OLDER MAN — in his sixties, small round glasses, a soft blue cardigan over a
+  4. THE OLDER MAN — HOOD UP, CLEAR FACE SHIELD ON — in his sixties, small round glasses, a soft blue cardigan over a
      pale shirt. He stands at the far right of the group, upright and
      steady. HIS RIGHT HAND rests on a plain walking stick planted on the floor, with the
      small bucket hooked over that same wrist; HIS LEFT ARM is the one the woman is holding.
@@ -302,7 +313,8 @@ is one straight stroke that the tooth happens to cover part of.
 INSIDE IT WE SEE THAT CYST ENORMOUSLY MAGNIFIED, AND A GANG OF BACTERIA IS WRECKING THE
 PLACE. THEY ARE PESTS, NOT PETS: they are not playing together, they are vandalising.
 ⚠⚠⚠ THERE IS A THIRD REFERENCE IMAGE SHOWING BACTERIA CHARACTERS DRAWN EARLIER FOR THIS SAME
-CLINIC. THE BACTERIA IN THIS PICTURE MUST MATCH THEM. Take from that image ONLY the way the
+CLINIC. THE BACTERIA IN THIS PICTURE MUST MATCH THEM — AND MUST NOT RESEMBLE THE GREY LUMPS
+IN THE FIRST REFERENCE IMAGE, WHICH ARE ONLY PLACEHOLDERS FOR HOW MANY AND WHERE. Take from that image ONLY the way the
 bacteria themselves are drawn — their build, their limbs, their faces, their outline weight
 and their colour range — and take NOTHING ELSE from it: ignore its background, its room, its
 props, its circle and its composition completely, and never reproduce that drawing.
@@ -470,3 +482,12 @@ face; anime or manga styling; cel
 shading; glossy digital rendering; chrome, metallic or iridescent gradients; greyscale;
 pure black outlines anywhere, including on the bacteria; even mechanical vector linework; flat untextured single-tone
 clothing.
+
+LAST OF ALL, LOOK AT THE WHOLE PICTURE ONCE MORE AND ASK: DOES IT LOOK HAND-MADE? Every
+outline should vary in weight and taper; every surface should carry paper grain; every colour
+should have two or three tones in it; the tunnel walls, the enamel, the gum and the coveralls
+should all be softly modelled rather than flat. A thin, even, unvarying outline with plain
+flat fills means the picture has drifted towards the first reference image's diagram look —
+go back to the STYLE section. The bacteria in the small circle should be the most strongly
+coloured things in the picture, with arms, legs and loud faces, and the mess around them
+should be obvious at a glance.
