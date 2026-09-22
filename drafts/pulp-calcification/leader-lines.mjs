@@ -22,17 +22,15 @@ const IN = process.argv[2], OUT = process.argv[3];
 if (!IN || !OUT) { console.error('用法：node leader-lines.mjs <輸入> <輸出.png>'); process.exit(1); }
 
 /* ── 這一張（1678×937）量到的幾何 ─────────────────────────── */
-const C = { x: 426, y: 462, r: 356 };   // 大圈：圓心與外緣半徑（解圓方程得來）
+/* ⚠⚠⚠ 這個圈**不是正圓**（手畫的）：沿著不同方向量，金框外緣落在 r 353~371 之間。
+   所以半徑不能只給一個數 —— 給一個數的話，上面那條剛好切在外框、
+   下面那條就切進內框去了（使用者：「下面那條切到內框　應該切到外框」）。
+   做法：**切線的角度與半徑一起迭代** —— 先用一個起始半徑算出切線角度，
+   沿那個角度掃出金框**外緣**真正的半徑，再算一次，兩三輪就收斂。 */
+const C = { x: 426, y: 462, r0: 360 };  // 圓心 ＋ 迭代用的起始半徑
 const P = { x: 1095, y: 684 };          // 終點：左邊那條根管的上段
 const TOOTH_X = 995;                    // 牙齒左緣：過了這裡一律要畫（那邊是米白不是粉紅）
 const GUM_FROM = 600;                   // 這之前都是牙齦，不必檢查
-
-const dx = P.x - C.x, dy = P.y - C.y, d = Math.hypot(dx, dy);
-if (d <= C.r) throw new Error('那一點落在圓裡面，畫不出外切線');
-const phi = Math.atan2(dy, dx), gamma = Math.acos(C.r / d);
-const T = [phi + gamma, phi - gamma].map((a) => ({
-  x: C.x + C.r * Math.cos(a), y: C.y + C.r * Math.sin(a),
-}));
 
 const pwDir = process.env.PLAYWRIGHT_BROWSERS_PATH || '/opt/pw-browsers';
 const cands = [];
@@ -47,13 +45,40 @@ const pg = await browser.newPage();
 const mime = IN.endsWith('.png') ? 'png' : 'jpeg';
 const uri = `data:image/${mime};base64,` + readFileSync(IN).toString('base64');
 
-const b64 = await pg.evaluate(async ({ src, T, P, TOOTH_X, GUM_FROM }) => {
+const b64 = await pg.evaluate(async ({ src, C, P, TOOTH_X, GUM_FROM }) => {
   const img = new Image(); img.src = src; await img.decode();
   const W = img.naturalWidth, H = img.naturalHeight;
   const cv = new OffscreenCanvas(W, H), cx = cv.getContext('2d');
   cx.drawImage(img, 0, 0);
   const d = cx.getImageData(0, 0, W, H).data;
   const pink = (x, y) => { const i = ((y | 0) * W + (x | 0)) * 4; return d[i] - d[i + 1] > 16; };
+  const at = (x, y) => { const i = ((y | 0) * W + (x | 0)) * 4; return [d[i], d[i + 1], d[i + 2]]; };
+  const isGold = (p) => p[0] - p[2] > 50 && p[0] > 105 && p[0] < 235;
+
+  /* 沿著某個方向掃出金框**外緣**的半徑 */
+  const outerR = (a) => {
+    let last = null;
+    for (let r = 320; r <= 410; r += 0.5) {
+      if (isGold(at(C.x + r * Math.cos(a), C.y + r * Math.sin(a)))) last = r;
+    }
+    if (last === null) throw new Error('那個方向掃不到金框');
+    return last;
+  };
+
+  /* 外切線：角度與半徑一起迭代（見檔頭）。sign ＝ +1 下面那條、−1 上面那條。 */
+  const dxp = P.x - C.x, dyp = P.y - C.y, dist = Math.hypot(dxp, dyp);
+  const phi = Math.atan2(dyp, dxp);
+  const solve = (sign) => {
+    let r = C.r0, a = phi;
+    for (let k = 0; k < 6; k++) {
+      if (r >= dist) throw new Error('那一點落在圓裡面，畫不出外切線');
+      a = phi + sign * Math.acos(r / dist);
+      r = outerR(a);
+    }
+    return { x: C.x + r * Math.cos(a), y: C.y + r * Math.sin(a), r, a };
+  };
+  const T = [solve(+1), solve(-1)];
+
 
   cx.strokeStyle = 'rgba(56,41,31,0.93)';
   cx.lineWidth = 2.1; cx.lineCap = 'butt'; cx.lineJoin = 'round';
@@ -79,8 +104,8 @@ const b64 = await pg.evaluate(async ({ src, T, P, TOOTH_X, GUM_FROM }) => {
   const buf = new Uint8Array(await blob.arrayBuffer());
   let s = ''; for (const v of buf) s += String.fromCharCode(v);
   return btoa(s);
-}, { src: uri, T, P, TOOTH_X, GUM_FROM });
+}, { src: uri, C, P, TOOTH_X, GUM_FROM });
 
 await browser.close();
 writeFileSync(OUT, Buffer.from(b64, 'base64'));
-console.log(`切點 ${T.map((t) => `(${t.x.toFixed(0)}, ${t.y.toFixed(0)})`).join(' 與 ')} → 終點 (${P.x}, ${P.y})　寫好了：${OUT}`);
+console.log(`終點 (${P.x}, ${P.y})　寫好了：${OUT}`);
