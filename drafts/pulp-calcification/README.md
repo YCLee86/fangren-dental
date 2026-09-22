@@ -65,3 +65,37 @@ node drafts/pulp-calcification/preview-gen.mjs
    把 noindex 與 `.pv-*` 那些東西拿掉，補回 HERO 與計數器那一塊）
 2. `node tools/build.mjs`（首頁卡、sitemap、allowed-slugs、延伸閱讀、JSON-LD 會自己跟上）
 3. 刪掉 `preview/pulp-calcification/` 與 `preview-gen.mjs`，推導文字搬進 `history/`
+
+---
+
+## ✅ 2026-09-22 定案上線 —— `/posts/pulp-calcification/`（站上第十九篇）
+
+`preview/pulp-calcification/` 已刪。**這個資料夾留著，因為它仍然是這一篇的唯一來源。**
+
+```bash
+node drafts/pulp-calcification/preview-gen.mjs --publish   # → posts/pulp-calcification/index.html
+node tools/webp.mjs                                        # 換過 HERO 才要跑
+node tools/topics.mjs                                      # index.html 動過就要跑
+node tools/build.mjs
+```
+
+⚠⚠ **不要手改 `posts/pulp-calcification/index.html`** —— 內文與 `post-meta` 改
+`preview-gen.mjs`，改完重跑上面那串。那一支同時是守門：比喻的「路／走／方向」上限 3 次、
+上架日不可以是佔位符、正式站不可以有 noindex、計數器要接對這一篇、
+SEO／RELATED 的標記要留著給 build 填。
+
+### HERO 是怎麼來的（前後二十一輪）
+
+`hero-prompt.md` 一輪一節記著。成品 `hero-v17-lines.png` → `assets/hero-pulp-calcification-photo-*.jpg`。
+
+⚠ **最後那兩條引線是程式畫的，不是模型畫的**（`leader-lines.mjs`）——
+模型連壞三輪（接到膿包、移動時舊的沒刪、多長一條），而外切線有公式。
+換圖要重跑那一支，**而且要重量一次座標**（圓心、半徑、終點都寫在它的檔頭）。
+
+### 還沒補的
+
+- `about` 裡「根管鈣化」與「髓石」查不到 Wikidata 對應項目，`sameAs` 刻意留白。
+  ⚠ 這件事只能在**有網路的電腦**上做，雲端 session 連不到 wikidata.org，猜 Q 編號
+  等於把文章綁到另一個疾病上（CLAUDE.md 第十節第 3 條）。
+- 圖裡有兩個人站在放大鏡框外面（提示詞寫的是全部在框內）。使用者看過之後選了這一張，
+  `heroAlt` 也照實描述。要收掉得整張重出。

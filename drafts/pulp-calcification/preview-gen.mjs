@@ -1,6 +1,13 @@
 // 產生 preview/pulp-calcification/index.html —— 〈根管鈣化〉的文章草稿預覽
 //
-// 用法：node drafts/pulp-calcification/preview-gen.mjs
+// 用法：node drafts/pulp-calcification/preview-gen.mjs            → preview/pulp-calcification/
+//       node drafts/pulp-calcification/preview-gen.mjs --publish  → posts/pulp-calcification/
+//
+// ⚠⚠ 定案之後**不要手改 posts/ 底下那一份**：內文與 post-meta 的唯一來源仍然是這一支。
+//    `--publish` 只是把下面那六件「給草稿用的」反過來做：
+//    ① SEO 區塊留著（build 會重產）②計數器留著 ③日期填真的上架日
+//    ④ HERO 包回 <picture>（webp.mjs 會產 .webp）⑤「最後更新」那一行留著（build 會寫）
+//    ⑥ RELATED 標記留著（build 會填）；另外不放 pv- 樣式與草稿橫幅。
 //
 // 骨架抓 posts/bioceramic/index.html（同一科 endo、同一個 tag「顯微根管」），只換內容。
 // ⚠ 這一頁是**文章草稿的預覽，不是設計提案**：沒有切換條、沒有候選案，
@@ -27,6 +34,8 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+const PUBLISH = process.argv.includes('--publish');
+const PUBDATE = '2026-09-22';                     // 上架日（--publish 才用得到）
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const src = readFileSync(resolve(root, 'posts/bioceramic/index.html'), 'utf8');
 
@@ -43,21 +52,35 @@ const swap = (from, to, what) => {
 
 /* ── ① <head> ─────────────────────────────────────────────── */
 swap('<title>根管治療的生物陶瓷：它多做了什麼 — 芳仁牙醫診所</title>',
-     `<title>${TITLE} — 芳仁牙醫診所（草稿預覽）</title>\n<meta name="robots" content="noindex, nofollow, noarchive">`,
+     PUBLISH ? `<title>${TITLE} — 芳仁牙醫診所</title>`
+             : `<title>${TITLE} — 芳仁牙醫診所（草稿預覽）</title>\n<meta name="robots" content="noindex, nofollow, noarchive">`,
      'title');
 
 out = out.replace(/<meta name="description"[^>]*>\n/, `<meta name="description" content="${DESC}">\n`);
 out = out.replace(/<meta property="og:title"[^>]*>\n/, `<meta property="og:title" content="${TITLE}">\n`);
 out = out.replace(/<meta property="og:description"[^>]*>\n/, `<meta property="og:description" content="${OGDESC}">\n`);
-out = out.replace(/<link rel="canonical"[^>]*>\n/, '');
-
-const seoStart = out.indexOf('<!-- SEO:START');
-const seoEnd = out.indexOf('<!-- SEO:END -->');
-if (seoStart < 0 || seoEnd < 0) throw new Error('找不到 SEO 區塊');
-out = out.slice(0, seoStart) +
-  '<!-- 這一頁是還沒上線的草稿預覽：原本 build 產的 SEO 區塊（canonical／og:url／JSON-LD）\n' +
-  '     整段拿掉了 —— 那些欄位會指向一個還不存在的網址。noindex 寫在 <title> 底下。 -->\n' +
-  out.slice(seoEnd + '<!-- SEO:END -->'.length + 1);
+if (PUBLISH) {
+  /* canonical 與 SEO 的**標記**都留著 —— tools/build.mjs 會照 post-meta 重產。
+     ⚠ 但標記**之間的內容要清空**：那是骨架那一篇的 JSON-LD 與 og:image，
+     留在 repo 裡即使只到 build 跑完之前，也是一份指著別篇的假資料。 */
+  out = out.replace(/<link rel="canonical" href="[^"]*">/,
+    '<link rel="canonical" href="https://fangren.net/posts/pulp-calcification/">');
+  const a = out.indexOf('<!-- SEO:START');
+  const z = out.indexOf('<!-- SEO:END -->');
+  if (a < 0 || z < 0) throw new Error('找不到 SEO 區塊');
+  out = out.slice(0, a) +
+    '<!-- SEO:START — 由 tools/build.mjs 產生，請勿手動編輯 -->\n' +
+    out.slice(z);
+} else {
+  out = out.replace(/<link rel="canonical"[^>]*>\n/, '');
+  const seoStart = out.indexOf('<!-- SEO:START');
+  const seoEnd = out.indexOf('<!-- SEO:END -->');
+  if (seoStart < 0 || seoEnd < 0) throw new Error('找不到 SEO 區塊');
+  out = out.slice(0, seoStart) +
+    '<!-- 這一頁是還沒上線的草稿預覽：原本 build 產的 SEO 區塊（canonical／og:url／JSON-LD）\n' +
+    '     整段拿掉了 —— 那些欄位會指向一個還不存在的網址。noindex 寫在 <title> 底下。 -->\n' +
+    out.slice(seoEnd + '<!-- SEO:END -->'.length + 1);
+}
 
 /* post-meta：換成這一篇的（給人看的規格，build 掃不到 preview/）
    ⚠ 根管鈣化與髓石查不到 Wikidata 對應項目，sameAs 留白 —— 不要猜 Q 編號。 */
@@ -70,8 +93,8 @@ out = out.slice(0, metaStart) + `<script type="application/json" id="post-meta">
   "excerpt": "「這顆牙要做根管治療。」然後醫師又補了一句：「不過它鈣化了。」這一篇講的就是這個處境——為什麼偏偏是要治療的這一顆鈣化、這一次會多出什麼、顯微鏡下實際在做什麼，以及過程中真的出了狀況該怎麼處理。",
   "tag": "顯微根管",
   "author": "芳仁牙醫診所 編輯室",
-  "published": "【上線那天填】",
-  "hero": "assets/hero-pulp-calcification-photo-1600.jpg",
+  "published": "${PUBLISH ? PUBDATE : '【上線那天填】'}",
+  "hero": "hero-pulp-calcification-photo-1600.jpg",
   "heroAlt": "插畫。右邊是一顆巨大的下顎大臼齒，站在一排同高的牙齒中間，下半截埋在粉紅色的牙齦裡；咬合面的溝上只有一個極小的深色凹洞。透過琺瑯質看得見裡面用虛線畫出的牙髓：一個又低又扁的髓腔，往下收成兩條細如髮絲的根管，順著牙根的弧度一路收到根尖前才變成一個點。左邊是一個很大的圓形放大鏡框，框裡是那條根管被放大之後的樣子——一條淡米色的隧道，前方收窄成一道又高又細的暗縫。框裡有四個人，都穿著半透明的淡薄荷青防護衣、帽兜戴起來、戴著透明面罩：最左邊一位站著；旁邊是穿藕粉色刷手服、帽兜前緣有一盞小燈、手握細噴桿的領隊；一名穿淡黃上衣的男孩側身把半個身體擠進那道細縫，衣服被夾得皺起來；另一位單膝跪在他身旁抬手比著。圓框外面的牙齦上還站著兩位：穿鼠尾草綠外套、手拿噴瓶的女性，以及拄著手杖、手腕掛著小水桶的老先生。兩條細線從放大鏡框的外緣拉出來，收在牙根上段那條根管的同一點上。左邊那支牙根的根尖外面有一個淡色的膿包，另外兩條細線把它連到右下角的第二個圓框；框裡是那個膿包被放大之後的內部，一群深色的細菌在裡面搗亂——丟碎屑、噴出濁綠色的液體，地上與牆上都是水坑和污痕。",
   "about": [
     { "type": "MedicalCondition", "name": "根管鈣化" },
@@ -86,31 +109,58 @@ out = out.slice(0, metaStart) + `<script type="application/json" id="post-meta">
 /* ── ② 標題列：拿掉計數器、換日期與標題 ───────────────────── */
 /* ⚠ 夜間模式的開關就接在 .views 後面，所以終點抓 .theme-toggle 那一行的開頭，
    不要抓「</span> 之後的 </p>」——那會把開關一起切掉。 */
-const viewsStart = out.indexOf('        <span class="views"');
-const toggleStart = out.indexOf('        <button class="theme-toggle"', viewsStart);
-if (viewsStart < 0 || toggleStart < 0) throw new Error('找不到 .views 那一塊');
-out = out.slice(0, viewsStart) + out.slice(toggleStart);
+if (PUBLISH) {
+  swap('data-views-self="bioceramic"', 'data-views-self="pulp-calcification"', 'views');
+} else {
+  const viewsStart = out.indexOf('        <span class="views"');
+  const toggleStart = out.indexOf('        <button class="theme-toggle"', viewsStart);
+  if (viewsStart < 0 || toggleStart < 0) throw new Error('找不到 .views 那一塊');
+  out = out.slice(0, viewsStart) + out.slice(toggleStart);
+}
 
 swap('<time datetime="2026-08-21">2026/08/21</time>',
-     '<time datetime="2026-09-21">草稿・尚未上線</time>', 'date');
+     PUBLISH ? `<time datetime="${PUBDATE}">${PUBDATE.replace(/-/g, '/')}</time>`
+             : '<time datetime="2026-09-21">草稿・尚未上線</time>', 'date');
 swap('<h1>根管治療的生物陶瓷：它多做了什麼</h1>', `<h1>${TITLE}</h1>`, 'h1');
 
 /* ── ③ HERO：還沒畫，放一塊佔位說明；「最後更新」那一行一起拿掉 ── */
 const figStart = out.indexOf('    <figure class="post-hero">');
+const figEnd = out.indexOf('</figure>', figStart) + '</figure>'.length;
 const updEnd = out.indexOf('</p>', out.indexOf('<p class="post-updated-line">')) + '</p>'.length;
 if (figStart < 0 || updEnd < 3) throw new Error('找不到 HERO 那一塊');
+const HERO = 'hero-pulp-calcification-photo';
+const SIZES = '(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)';
+if (PUBLISH) {
+  /* 正式站包 <picture>：webp.mjs 會掃 posts/ 產出同名的 .webp。
+     ⚠ 「最後更新」那一行留著，build.mjs 會把日期寫進去。 */
+  out = out.slice(0, figStart) + `    <figure class="post-hero">
+      <picture>
+        <source type="image/webp" srcset="../../assets/${HERO}-800.webp 800w,
+                                          ../../assets/${HERO}-1600.webp 1600w,
+                                          ../../assets/${HERO}-2000.webp 2000w"
+                sizes="${SIZES}">
+        <img src="../../assets/${HERO}-1600.jpg"
+             srcset="../../assets/${HERO}-800.jpg 800w,
+                     ../../assets/${HERO}-1600.jpg 1600w,
+                     ../../assets/${HERO}-2000.jpg 2000w"
+             sizes="${SIZES}"
+             fetchpriority="high" alt="${ALT}" width="2000" height="1117">
+      </picture>
+    </figure>` + out.slice(figEnd);
+} else {
 /* ⚠ 提案頁刻意只放 <img>、不包 <picture>：`tools/webp.mjs` **故意不掃 preview/**
    （它的檔頭寫著「提案頁與存檔不是正式站的效能問題」），所以 .webp 不存在，
    包了 <source> 反而會指到不存在的檔。定案搬進 posts/ 之後跑一次 webp.mjs，
    再照 posts/bioceramic/ 把 <picture> 補回去。 */
 out = out.slice(0, figStart) + `    <figure class="post-hero">
-      <img src="../../assets/hero-pulp-calcification-photo-1600.jpg"
-           srcset="../../assets/hero-pulp-calcification-photo-800.jpg 800w,
-                   ../../assets/hero-pulp-calcification-photo-1600.jpg 1600w,
-                   ../../assets/hero-pulp-calcification-photo-2000.jpg 2000w"
-           sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+      <img src="../../assets/${HERO}-1600.jpg"
+           srcset="../../assets/${HERO}-800.jpg 800w,
+                   ../../assets/${HERO}-1600.jpg 1600w,
+                   ../../assets/${HERO}-2000.jpg 2000w"
+           sizes="${SIZES}"
            fetchpriority="high" alt="${ALT}" width="2000" height="1117">
     </figure>` + out.slice(updEnd);
+}
 
 /* ── ④ 內文 ───────────────────────────────────────────────── */
 const bodyStart = out.indexOf('    <p class="lede">');
@@ -238,16 +288,22 @@ function BODY() { return `    <p class="lede">「這顆牙要做根管治療。�
 `; }
 
 /* ── ⑤ 文末導覽：同層連結會指到 preview/ 底下，一律改成絕對深度 ── */
+/* ⚠ 站上的慣例：最新那一篇只往回指一篇，右邊固定是「回文章列表」，
+   而且**不去改前一篇**（perio-prevalence／implant-lifespan 都是這樣）——
+   動到前一篇的 post-nav 會讓它的「最後更新」跳成今天，那是導覽不是內容。 */
 swap('        <a class="btn btn-ghost" href="../orthodontics/">&larr; 上一篇：牙齒矯正</a>\n' +
      '        <a class="btn" href="../crown-materials/">下一篇：一體成型的假牙好在哪 &rarr;</a>\n',
-     '        <a class="btn btn-ghost" href="../../posts/bioceramic/">&larr; 根管治療的生物陶瓷</a>\n' +
+     (PUBLISH
+       ? '        <a class="btn btn-ghost" href="../implant-lifespan/">&larr; 上一篇：植牙能用多久</a>\n'
+       : '        <a class="btn btn-ghost" href="../../posts/bioceramic/">&larr; 根管治療的生物陶瓷</a>\n') +
      '        <a class="btn" href="../../#articles">回文章列表 &rarr;</a>\n', 'post-nav');
 
 /* ── ⑥ RELATED 區塊整段拿掉（build 產物） ─────────────────── */
 const relStart = out.indexOf('<!-- RELATED:START');
 const relEnd = out.indexOf('<!-- RELATED:END -->');
 if (relStart < 0 || relEnd < 0) throw new Error('找不到 RELATED 區塊');
-out = out.slice(0, relStart) + out.slice(relEnd + '<!-- RELATED:END -->'.length + 1);
+/* ⚠ 正式站要**留著標記**（build 會填三張卡）；只有草稿預覽整段拿掉。 */
+if (!PUBLISH) out = out.slice(0, relStart) + out.slice(relEnd + '<!-- RELATED:END -->'.length + 1);
 
 /* ── ⑦ 這一頁自己的樣式（pv- 前綴）＋草稿橫幅 ───────────── */
 const css = `<style>
@@ -260,12 +316,14 @@ const css = `<style>
                 border-radius: 12px; color: var(--ink-soft); font-size: .92rem; }
 .pv-hero-slot small { font-size: .82rem; opacity: .85; }
 </style>`;
-swap('<link rel="stylesheet" href="../../assets/style.css">',
-     '<link rel="stylesheet" href="../../assets/style.css">\n' + css, 'style');
+if (!PUBLISH) {
+  swap('<link rel="stylesheet" href="../../assets/style.css">',
+       '<link rel="stylesheet" href="../../assets/style.css">\n' + css, 'style');
 
-swap('<main id="main">\n<article>',
-     '<main id="main">\n<p class="pv-flag"><b>草稿預覽</b>：這一頁還沒上線，網址沒有被搜尋引擎收錄。</p>\n<article>',
-     'flag');
+  swap('<main id="main">\n<article>',
+       '<main id="main">\n<p class="pv-flag"><b>草稿預覽</b>：這一頁還沒上線，網址沒有被搜尋引擎收錄。</p>\n<article>',
+       'flag');
+}
 
 /* ── 守門 ─────────────────────────────────────────────────── */
 /* ⚠⚠ 守門：比喻的「路／走」不可以撐起整篇（2026-09-21 使用者當面指出）
@@ -295,25 +353,43 @@ swap('<main id="main">\n<article>',
 }
 
 const must = [
-  ['noindex', 'noindex 不見了'],
   ['根管鈣化：要做根管治療', '標題沒換到'],
   ['theme-toggle', '夜間模式的開關被切掉了'],
   ['重點整理', '重點整理不見了'],
   ['class="note"', '免責段落不見了'],
+  ...(PUBLISH ? [
+    ['data-views-self="pulp-calcification"', '計數器沒接上這一篇'],
+    ['<!-- SEO:START', 'SEO 區塊不見了：build 會找不到地方寫'],
+    ['<!-- RELATED:START', 'RELATED 標記不見了：延伸閱讀會生不出來'],
+    ['post-updated-line', '「最後更新」那一行不見了'],
+    ['<source type="image/webp"', '正式站的 HERO 要包 <picture>'],
+    ['"published": "' + PUBDATE + '"', '上架日沒填進 post-meta'],
+  ] : [['noindex', 'noindex 不見了']]),
 ];
 for (const [s, msg] of must) if (!out.includes(s)) throw new Error(msg);
 const banned = [
-  ['data-views-self', '計數器沒拿掉：每開一次預覽就會 POST +1'],
-  ['SEO:START', 'SEO 區塊沒拿掉：canonical／og:url 會指向還不存在的網址'],
-  ['RELATED:START', 'RELATED 區塊沒拿掉'],
-  ['post-updated-line', '「最後更新」那一行沒拿掉：草稿沒有上線日期'],
   ['生物陶瓷：它多做了什麼 —', '舊標題殘留'],
   ['hero-bioceramic-photo', '舊的 HERO 圖殘留'],
+  ...(PUBLISH ? [
+    ['【上線那天填】', '上架日還是佔位符'],
+    ['noindex', '正式站不可以有 noindex'],
+    ['pv-flag', '草稿橫幅殘留'],
+    ['pv-hero-slot', '草稿的 HERO 佔位殘留'],
+    ['data-views-self="bioceramic"', '計數器還指著骨架那一篇'],
+  ] : [
+    ['data-views-self', '計數器沒拿掉：每開一次預覽就會 POST +1'],
+    ['SEO:START', 'SEO 區塊沒拿掉：canonical／og:url 會指向還不存在的網址'],
+    ['RELATED:START', 'RELATED 區塊沒拿掉'],
+    ['post-updated-line', '「最後更新」那一行沒拿掉：草稿沒有上線日期'],
+  ]),
 ];
 for (const [s, msg] of banned) if (out.includes(s)) throw new Error(msg);
-if (/href="\.\.\/(?!\.\/)[a-z]/.test(out)) throw new Error('還有同層的 ../<資料夾>/ 連結');
+/* ⚠ 草稿頁不可以有同層連結（會指到 preview/ 底下）；正式站那一份**本來就該有**。 */
+if (!PUBLISH && /href="\.\.\/(?!\.\/)[a-z]/.test(out)) throw new Error('還有同層的 ../<資料夾>/ 連結');
 
-const dest = resolve(root, 'preview/pulp-calcification/index.html');
+const dest = resolve(root, PUBLISH ? 'posts/pulp-calcification/index.html'
+                                   : 'preview/pulp-calcification/index.html');
 mkdirSync(dirname(dest), { recursive: true });
 writeFileSync(dest, out);
-console.log('寫好了：preview/pulp-calcification/index.html　' + out.length + ' 字元');
+console.log('寫好了：' + (PUBLISH ? 'posts' : 'preview') +
+  '/pulp-calcification/index.html　' + out.length + ' 字元');

@@ -55,6 +55,10 @@
     "hash": "380905b8a89e6757",
     "updated": "2026-09-20"
   },
+  "pulp-calcification": {
+    "hash": "f4d243c0e9cbf71e",
+    "updated": "2026-09-22"
+  },
   "regular-checkup": {
     "hash": "015d38fcf09b1622",
     "updated": "2026-09-20"
@@ -68,7 +72,7 @@
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "99d595683883c1db",
+    "hash": "a741c7969ec05455",
     "updated": "2026-09-22"
   }
 }
