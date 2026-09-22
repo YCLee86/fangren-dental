@@ -151,7 +151,11 @@ const CX = 402, CY = 448, CR = 368;
    第十二版減到三個是我自己多減的：他說的「少一個」是**從模型畫出來的六個**算，
    不是從提示詞寫的四個算。⚠ 通則：**使用者說「少一個」的時候，
    要先確認他在數的是哪一份** —— 畫面上的那一份，還是規格上的那一份。 */
-const FOLK = [[-168,1.0],[100,0.94],[190,0.86]];
+/* ⚠⚠ 第十六版加第五個（使用者：「那個要擠進去的描繪不太夠…看起來要多畫一個人
+   比較有感覺」）。多的那一位**蹲在通道口下方**（k 小＝蹲著），在後面推擠進去的那位 ——
+   ⚠ 這件事一個人做不來：一個人站在洞口旁邊比手勢，讀起來只是「站著」；
+   **兩個人一起卡在洞口**，那個洞才真的顯得太小。 */
+const FOLK = [[-170,1.0],[52,0.62],[140,0.94],[218,0.86]];
 const cave = `
   <clipPath id="c"><circle cx="${CX}" cy="${CY}" r="${CR-6}"/></clipPath>
   <g clip-path="url(#c)">
@@ -282,7 +286,7 @@ const bugs = `
    它是整張圖的比例尺：看到管子裡有幾顆小點，才知道圈裡那群人正在**管子裡**。
    ⚠ 一顆點的直徑約 5px，在 1600 寬的圖上幾乎看不見 —— 就是要這麼小。 */
 /* ⚠ 三顆，和圈裡三個人一樣多（第十二版：人數從四改成三，這裡忘了改就又是文圖打架）。 */
-const DOTS = [[-6,-30],[-4,-10],[-3,10],[-1,30]];
+const DOTS = [[-7,-34],[-5,-17],[-4,0],[-3,17],[-1,34]];
 const dots = `<g fill="${DASH}">` +
   DOTS.map(([dx,dy],i) =>
     `<circle cx="${(ZX+dx).toFixed(1)}" cy="${(ZY+dy).toFixed(1)}" r="${3.3-i*0.2}"/>`).join('') +
@@ -320,14 +324,14 @@ if (/[A-Za-z0-9]/.test(svg.replace(/<[^>]*>/g, ''))) throw new Error('圖上長�
 
 /* ⚠⚠⚠ 守門：圈裡的人數要和提示詞裡的人數一樣（第十二版踩過，文字四個、圖五個）。 */
 {
-  const want = 4;
+  const want = 5;
   const got = FOLK.length + 1;          // ＋1 ＝ 擠通道那一位
   if (got !== want) throw new Error(`圈裡畫了 ${got} 個人，提示詞寫的是 ${want} 個`);
   if (DOTS.length !== want) throw new Error(`根管上畫了 ${DOTS.length} 顆點，人卻有 ${want} 個`);
   const promptFile = resolve(here, 'hero-prompt.txt');
   if (existsSync(promptFile)) {
     const t = (await import('node:fs')).readFileSync(promptFile, 'utf8');
-    if (!/EXACTLY FOUR PEOPLE/.test(t) || /EXACTLY THREE PEOPLE/.test(t)) {
+    if (!/EXACTLY FIVE PEOPLE/.test(t) || /EXACTLY (THREE|FOUR) PEOPLE/.test(t)) {
       throw new Error('提示詞裡的人數和參考圖的四個對不起來');
     }
   }
