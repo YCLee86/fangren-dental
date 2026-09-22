@@ -141,8 +141,13 @@ const ghost = `<path d="${pulp}" fill="none" stroke="${DASH}" stroke-width="3"
    340 → 368，而且**人從四個減成三個**（使用者：「醫療人員少一個」）。
    兩件事是同一件：圈裡塞不下就會溢出來，治法是「圈更大 ＋ 人更少」兩邊一起。 */
 const CX = 402, CY = 448, CR = 368;
-/* ⚠ 圈裡的人 ＝ 這張表 ＋ 擠通道那一位。改人數只改這張表，最後那道守門會數。 */
-const FOLK = [[-152,1.0],[150,0.90]];
+/* ⚠ 圈裡的人 ＝ 這張表 ＋ 擠通道那一位。改人數只改這張表，最後那道守門會數。
+   ⚠⚠ 第十三版回到四個（使用者：「上次 6 個人太多超出圈圈　應該 4 個人就好 ——
+   醫師和要擠進洞穴的人還有旁邊兩個一般民眾（太太＋老先生）保留」）。
+   第十二版減到三個是我自己多減的：他說的「少一個」是**從模型畫出來的六個**算，
+   不是從提示詞寫的四個算。⚠ 通則：**使用者說「少一個」的時候，
+   要先確認他在數的是哪一份** —— 畫面上的那一份，還是規格上的那一份。 */
+const FOLK = [[-168,1.0],[100,0.94],[190,0.86]];
 const cave = `
   <clipPath id="c"><circle cx="${CX}" cy="${CY}" r="${CR-6}"/></clipPath>
   <g clip-path="url(#c)">
@@ -196,10 +201,12 @@ const cave = `
    應該拉到和上緣切線在根管裡差不多的位置」）。
    成因：這一點原本在 CEJ+186，離根尖的膿包只有 150px，大圈的**下緣**切線掃下來
    終點就落在膿包旁邊 —— 模型於是把它接到膿包上，變成「大圈在放大膿包」。
-   往上搬到 CEJ+120 之後，兩個目標差 216px，下緣切線在膿包上方 212px 處就停了。
+   ⚠⚠ 第十三版再往上搬一次（CEJ+120 → CEJ+90）：第十二版還是不夠，出圖回來
+   四條線互相接錯（小圈的上緣切線沒接到膿包、大圈的下緣切線糊掉、還多長一條）。
+   現在兩個目標差 246px，大圈的下緣切線在膿包上方 240px 處就停了。
    ⚠ 通則：**兩組引線的終點要離得夠遠**，不然模型會把它們併成一組；
    這種錯在參考圖上看起來只是「有點近」，出圖才會變成接錯。 */
-const ZX = TX - 53, ZY = CEJ + 120;          // 放大的那一點：左邊那條根管的中上段
+const ZX = TX - 51, ZY = CEJ + 90;           // 放大的那一點：左邊那條根管的上段
 const leaderTo = (cx, cy, r, px, py) => {
   const dx = px - cx, dy = py - cy, d = Math.hypot(dx, dy);
   if (d <= r) throw new Error('那一點落在圓裡面，畫不出外切線');
@@ -266,7 +273,7 @@ const bugs = `
    它是整張圖的比例尺：看到管子裡有幾顆小點，才知道圈裡那群人正在**管子裡**。
    ⚠ 一顆點的直徑約 5px，在 1600 寬的圖上幾乎看不見 —— 就是要這麼小。 */
 /* ⚠ 三顆，和圈裡三個人一樣多（第十二版：人數從四改成三，這裡忘了改就又是文圖打架）。 */
-const DOTS = [[-5,-24],[-3,0],[-1,24]];
+const DOTS = [[-6,-30],[-4,-10],[-3,10],[-1,30]];
 const dots = `<g fill="${DASH}">` +
   DOTS.map(([dx,dy],i) =>
     `<circle cx="${(ZX+dx).toFixed(1)}" cy="${(ZY+dy).toFixed(1)}" r="${3.3-i*0.2}"/>`).join('') +
@@ -304,15 +311,15 @@ if (/[A-Za-z0-9]/.test(svg.replace(/<[^>]*>/g, ''))) throw new Error('圖上長�
 
 /* ⚠⚠⚠ 守門：圈裡的人數要和提示詞裡的人數一樣（第十二版踩過，文字四個、圖五個）。 */
 {
-  const want = 3;
+  const want = 4;
   const got = FOLK.length + 1;          // ＋1 ＝ 擠通道那一位
   if (got !== want) throw new Error(`圈裡畫了 ${got} 個人，提示詞寫的是 ${want} 個`);
   if (DOTS.length !== want) throw new Error(`根管上畫了 ${DOTS.length} 顆點，人卻有 ${want} 個`);
   const promptFile = resolve(here, 'hero-prompt.txt');
   if (existsSync(promptFile)) {
     const t = (await import('node:fs')).readFileSync(promptFile, 'utf8');
-    if (/\bFOUR PEOPLE\b/.test(t) || /ALL FOUR/.test(t)) {
-      throw new Error('提示詞裡還留著「四個人」，和參考圖的三個對不起來');
+    if (!/EXACTLY FOUR PEOPLE/.test(t) || /EXACTLY THREE PEOPLE/.test(t)) {
+      throw new Error('提示詞裡的人數和參考圖的四個對不起來');
     }
   }
 }
