@@ -30,7 +30,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const src = readFileSync(resolve(root, 'posts/wisdom-tooth/index.html'), 'utf8');
 
-const TITLE = '智齒要不要拔：該拔的趁早，該留的看著它';
+const TITLE = '智齒要不要拔：該拔的，要趁早';
 const DESC  = '「你的智齒是阻生齒，建議拔掉。」智齒什麼時候長、東亞人為什麼比較容易阻生、為什麼「長得正」不等於「刷得到」，以及為什麼確定要拔的那幾顆，愈早處理對你愈省事。';
 const OGDESC = '什麼時候長、為什麼「長得正」不等於「刷得到」，以及確定要拔的那幾顆為什麼愈早處理愈省事。';
 
@@ -325,7 +325,7 @@ swap('<main id="main">\n<article>',
 
 const must = [
   ['noindex', 'noindex 不見了'],
-  ['智齒要不要拔：該拔的趁早', '標題沒換到'],
+  ['智齒要不要拔：該拔的，要趁早', '標題沒換到'],
   ['theme-toggle', '夜間模式的開關被切掉了'],
   ['重點整理', '重點整理不見了'],
   ['class="note"', '免責段落不見了'],
