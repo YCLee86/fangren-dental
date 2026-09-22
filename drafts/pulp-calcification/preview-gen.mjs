@@ -30,6 +30,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const src = readFileSync(resolve(root, 'posts/bioceramic/index.html'), 'utf8');
 
+const ALT = '插畫。右邊是一顆巨大的下顎大臼齒，站在一排同高的牙齒中間，下半截埋在粉紅色的牙齦裡；咬合面的溝上只有一個極小的深色凹洞。透過琺瑯質看得見裡面用虛線畫出的牙髓：一個又低又扁的髓腔，往下收成兩條細如髮絲的根管，順著牙根的弧度一路收到根尖前才變成一個點。左邊是一個很大的圓形放大鏡框，框裡是那條根管被放大之後的樣子——一條淡米色的隧道，前方收窄成一道又高又細的暗縫。框裡有四個人，都穿著半透明的淡薄荷青防護衣、帽兜戴起來、戴著透明面罩：最左邊一位站著；旁邊是穿藕粉色刷手服、帽兜前緣有一盞小燈、手握細噴桿的領隊；一名穿淡黃上衣的男孩側身把半個身體擠進那道細縫，衣服被夾得皺起來；另一位單膝跪在他身旁抬手比著。圓框外面的牙齦上還站著兩位：穿鼠尾草綠外套、手拿噴瓶的女性，以及拄著手杖、手腕掛著小水桶的老先生。兩條細線從放大鏡框的外緣拉出來，收在牙根上段那條根管的同一點上。左邊那支牙根的根尖外面有一個淡色的膿包，另外兩條細線把它連到右下角的第二個圓框；框裡是那個膿包被放大之後的內部，一群深色的細菌在裡面搗亂——丟碎屑、噴出濁綠色的液體，地上與牆上都是水坑和污痕。'.replace(/\s+/g,'');
 const TITLE = '根管鈣化：要做根管治療、抽神經，卻找不到那條神經';
 const DESC  = '「這顆牙要做根管治療，不過它鈣化了。」需要根管治療的牙齒往往正是被刺激很久的那一顆，兩件事是同一個原因的兩個結果。根管鈣化怎麼辦：這一次的療程會多出什麼、顯微鏡下實際在做什麼，以及過程中真的出狀況了怎麼處理。';
 const OGDESC = '鈣化會讓這一次的根管治療多出什麼、顯微鏡下實際在做什麼，以及過程中真的出狀況了怎麼處理。';
@@ -70,7 +71,8 @@ out = out.slice(0, metaStart) + `<script type="application/json" id="post-meta">
   "tag": "顯微根管",
   "author": "芳仁牙醫診所 編輯室",
   "published": "【上線那天填】",
-  "hero": "【還沒畫】",
+  "hero": "assets/hero-pulp-calcification-photo-1600.jpg",
+  "heroAlt": "插畫。右邊是一顆巨大的下顎大臼齒，站在一排同高的牙齒中間，下半截埋在粉紅色的牙齦裡；咬合面的溝上只有一個極小的深色凹洞。透過琺瑯質看得見裡面用虛線畫出的牙髓：一個又低又扁的髓腔，往下收成兩條細如髮絲的根管，順著牙根的弧度一路收到根尖前才變成一個點。左邊是一個很大的圓形放大鏡框，框裡是那條根管被放大之後的樣子——一條淡米色的隧道，前方收窄成一道又高又細的暗縫。框裡有四個人，都穿著半透明的淡薄荷青防護衣、帽兜戴起來、戴著透明面罩：最左邊一位站著；旁邊是穿藕粉色刷手服、帽兜前緣有一盞小燈、手握細噴桿的領隊；一名穿淡黃上衣的男孩側身把半個身體擠進那道細縫，衣服被夾得皺起來；另一位單膝跪在他身旁抬手比著。圓框外面的牙齦上還站著兩位：穿鼠尾草綠外套、手拿噴瓶的女性，以及拄著手杖、手腕掛著小水桶的老先生。兩條細線從放大鏡框的外緣拉出來，收在牙根上段那條根管的同一點上。左邊那支牙根的根尖外面有一個淡色的膿包，另外兩條細線把它連到右下角的第二個圓框；框裡是那個膿包被放大之後的內部，一群深色的細菌在裡面搗亂——丟碎屑、噴出濁綠色的液體，地上與牆上都是水坑和污痕。",
   "about": [
     { "type": "MedicalCondition", "name": "根管鈣化" },
     { "type": "MedicalCondition", "name": "髓石" },
@@ -97,9 +99,18 @@ swap('<h1>根管治療的生物陶瓷：它多做了什麼</h1>', `<h1>${TITLE}<
 const figStart = out.indexOf('    <figure class="post-hero">');
 const updEnd = out.indexOf('</p>', out.indexOf('<p class="post-updated-line">')) + '</p>'.length;
 if (figStart < 0 || updEnd < 3) throw new Error('找不到 HERO 那一塊');
-out = out.slice(0, figStart) + `    <div class="wrap-text">
-      <p class="pv-hero-slot">HERO 插畫的位置<br><small>文案定案之後才畫（圖是開場那一幕的畫面，兩件事是一組的）</small></p>
-    </div>` + out.slice(updEnd);
+/* ⚠ 提案頁刻意只放 <img>、不包 <picture>：`tools/webp.mjs` **故意不掃 preview/**
+   （它的檔頭寫著「提案頁與存檔不是正式站的效能問題」），所以 .webp 不存在，
+   包了 <source> 反而會指到不存在的檔。定案搬進 posts/ 之後跑一次 webp.mjs，
+   再照 posts/bioceramic/ 把 <picture> 補回去。 */
+out = out.slice(0, figStart) + `    <figure class="post-hero">
+      <img src="../../assets/hero-pulp-calcification-photo-1600.jpg"
+           srcset="../../assets/hero-pulp-calcification-photo-800.jpg 800w,
+                   ../../assets/hero-pulp-calcification-photo-1600.jpg 1600w,
+                   ../../assets/hero-pulp-calcification-photo-2000.jpg 2000w"
+           sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+           fetchpriority="high" alt="${ALT}" width="2000" height="1117">
+    </figure>` + out.slice(updEnd);
 
 /* ── ④ 內文 ───────────────────────────────────────────────── */
 const bodyStart = out.indexOf('    <p class="lede">');
