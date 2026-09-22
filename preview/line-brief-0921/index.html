@@ -245,6 +245,14 @@ code{font-size:.92em}
 .tab td .pill{display:inline-block;border-radius:8.5px;line-height:1;
   padding:.42em .63em .38em;color:#fff;font-weight:700;font-size:13px}
 .tab td .pill.bare{background:none;padding-left:0;padding-right:0}
+/* 3-13：醫師那一列的間距照 Flex 那一側（日期下 10px、標籤到姓名 9px），
+   已經是 .stcard .r 的預設，這裡不另外寫。 */
+.stcard .r.dr b{font-weight:700}
+details{margin:.9em 0 0;font-size:.88rem}
+details+details{margin-top:.5em}
+summary{cursor:pointer;color:#214d48}
+pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:10px 12px;
+  font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.6em 0 0}
 
 </style>
 </head>
@@ -252,7 +260,7 @@ code{font-size:.92em}
 <div class="wrap">
 
 <h1>LINE 官方帳號　9/21 的回覆與規格</h1>
-<p class="lede">芳仁牙醫診所　更新於 2026-09-21<br>上一版（9/18）剩兩件未定案。<b>3 約診通知與紀錄查詢版面</b>：預約成功通知已上線，約診紀錄查詢收到 9/21 的回覆，逐項在下。<b>4 綁定成功的自動回覆設定</b>還沒有新的回覆，內容不在這一頁重複。</p>
+<p class="lede">芳仁牙醫診所　更新於 2026-09-22<br>上一版（9/18）剩兩件未定案。<b>3 約診通知與紀錄查詢版面</b>：預約成功通知已上線，約診紀錄查詢收到 9/21 的回覆，逐項在下；9/22 兩則再加一列「預約醫師」（3-13）。<b>4 綁定成功的自動回覆設定</b>還沒有新的回覆，內容不在這一頁重複。</p>
 
 <h2 class="h2" id="sum">一眼看完</h2>
 <div class="tabw"><table class="tab sum"><thead><tr><th>項次</th><th>問題</th><th>狀態</th></tr></thead><tbody>
@@ -263,6 +271,7 @@ code{font-size:.92em}
 <tr><td><a href="#s3-9-4">3-9-4</a></td><td class="q">藥丸的位置與內距</td><td class="wait">待翔評調整</td></tr>
 <tr><td><a href="#s3-10">3-10</a></td><td class="q">約診狀態：兩次回覆不一致</td><td class="wait">待翔評釐清</td></tr>
 <tr><td><a href="#s3-11">3-11</a></td><td class="q">樂衍的「刪除」與「取消」是不是兩件事</td><td class="wait">待翔評釐清</td></tr>
+<tr><td><a href="#s3-13">3-13</a></td><td class="q">兩則加「預約醫師」一列</td><td class="wait">待翔評回覆</td></tr>
 <tr><td>—</td><td class="q">預約成功通知（單張）</td><td class="done">已上線</td></tr>
 </tbody></table></div>
 <p class="note">卡片的模擬圖一律畫成病人手機上的寬度（輪播 <code>micro</code> 162px）。
@@ -418,6 +427,263 @@ code{font-size:.92em}
 <li>診所端處理掉之後，病人的查詢還列不列那一筆？（3-10）<span class="y">以及清單怎麼取、「已取消」蓋著幾種情形、病人自己取消的那一筆能不能不列。</span></li>
 <li>樂衍後台的「刪除」和「取消」是不是兩個不一樣的動作？（3-11）<span class="y">若是，請說明各自的結果，以及櫃檯該按哪一顆。</span></li>
 </ol>
+
+<h3 class="h3" id="s3-13">3-13　兩則加「預約醫師」</h3>
+<div class="item">
+
+<div class="cell"><p class="lbl">問題</p><p class="txt">定稿的兩則（預約成功通知、約診紀錄查詢）都沒有醫師，病人看不到這一次約的是哪一位。</p></div>
+<div class="cell"><p class="lbl">事件</p><p class="txt">9/22 在翔評後台「預約設定」看到：預約當下的通知示意圖已經印著「預約醫師」。<b>資料在系統裡</b>，只是定稿的兩則沒有接。</p></div>
+<div class="cell"><p class="lbl">解決方案</p><ul class="spec"><li>兩則都在<b>日期底下、帶子上面</b>加一列：左邊標籤「預約醫師」、右邊醫師姓名。其餘一個字都不動。</li><li>排法和「約診狀態」那一列同一種：標籤 <code>xs</code> 灰字 <code>#5C5F57</code>、間距 9px、兩者對齊基線。</li><li>姓名 <code>sm</code> 粗體 <code>#2A2C27</code>，<b>只填姓名</b>（標籤已經寫了「醫師」）。和日期相距 10px。</li><li>放得下：<code>micro</code> 可用 134px，這一列 103px（姓名三個字）。</li><li>Flex 多一個要填的值：醫師姓名。兩則完整的 JSON 在底下。</li><li>待翔評回覆：兩則能不能帶出醫師姓名；有沒有<b>沒指定醫師的約診</b>，有的話那一列整列不出現，不要印空白或「—」。</li></ul></div>
+<p class="xtra">預約成功通知已經上線，這一則要請翔評照這一版再改一次。</p>
+<figure class="shot"><img src="ref-0922-doctor.jpg" width="1240" height="463" loading="lazy" alt="翔評後台的預約設定，通知示意圖上有預約醫師">
+<figcaption>翔評後台「預約設定」，示意圖上的資料是假的。</figcaption></figure>
+<div class="sbs">
+<figure class="swrap"><div class="stcard sgl" style="width:268px">
+<div class="cb">
+<p style="font-size:16px;color:#2A2C27;font-weight:400;margin:0px 0 0"><b>〔病人姓名〕</b>　約好囉</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11 星期五 11:50</p>
+<p class="r dr"><span class="lb">預約醫師</span><b style="font-size:14px;color:#2A2C27">李柄輝</b></p>
+</div>
+<img class="bnd" src="../line-single-card/band-18-set.png" width="1024" height="60" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+<p style="font-size:13px;color:#5C5F57;font-weight:400;margin:0px 0 0">異動請在2天前(不含假日)與診所聯繫</p><p style="font-size:13px;color:#5C5F57;font-weight:400;margin:5px 0 0">看診前2天會再提醒一次，記得回覆喔～</p>
+</div>
+</div><figcaption><b>預約成功通知</b>　mega 268px</figcaption></figure>
+<figure class="swrap"><div class="stcard sgl car" style="width:162px">
+<div class="cb">
+<p style="font-size:16px;color:#5C5F57;font-weight:400;margin:0px 0 0">〔病人姓名〕</p><p style="font-size:19px;color:#2A2C27;font-weight:700;margin:6px 0 0">2026/09/11
+星期五 11:50</p>
+<p class="r dr"><span class="lb">預約醫師</span><b style="font-size:14px;color:#2A2C27">李柄輝</b></p>
+</div>
+<img class="bnd" src="../line-single-card/band-13-set.png" width="1024" height="87" alt="芳仁牙醫診所的標誌排成的一條帶子">
+<div class="cb bot">
+
+<p class="r"><span class="lb">約診狀態</span><span class="pill" style="background:#3f654a">已確認</span></p>
+</div>
+</div><figcaption><b>約診紀錄查詢</b>　micro 162px</figcaption></figure>
+</div>
+<details><summary>展開　預約成功通知（單張 mega）的 Flex JSON</summary>
+<pre class="json">{
+  "type": "bubble",
+  "size": "mega",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "0px",
+    "backgroundColor": "#FFFFFF",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "paddingAll": "14px",
+        "contents": [
+          {
+            "type": "text",
+            "size": "md",
+            "color": "#2A2C27",
+            "wrap": true,
+            "contents": [
+              {
+                "type": "span",
+                "text": "{{patient}}",
+                "weight": "bold"
+              },
+              {
+                "type": "span",
+                "text": "　約好囉"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "{{date}}",
+            "size": "lg",
+            "weight": "bold",
+            "color": "#2A2C27",
+            "margin": "6px",
+            "wrap": true
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "baseline",
+            "margin": "10px",
+            "contents": [
+              {
+                "type": "text",
+                "text": "預約醫師",
+                "size": "xs",
+                "color": "#5C5F57",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "{{doctor}}",
+                "size": "sm",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "flex": 0,
+                "margin": "9px"
+              },
+              {
+                "type": "filler"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "url": "https://fangren.net/assets/line/band-18-set.png",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1024:60"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "paddingAll": "14px",
+        "contents": [
+          {
+            "type": "text",
+            "text": "異動請在2天前(不含假日)與診所聯繫",
+            "size": "xs",
+            "color": "#5C5F57",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "看診前2天會再提醒一次，記得回覆喔～",
+            "size": "xs",
+            "color": "#5C5F57",
+            "margin": "5px",
+            "wrap": true
+          }
+        ]
+      }
+    ]
+  }
+}</pre></details>
+<details><summary>展開　約診紀錄查詢（輪播 micro）的 Flex JSON</summary>
+<pre class="json">{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "micro",
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "paddingAll": "0px",
+        "backgroundColor": "#FFFFFF",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "14px",
+            "contents": [
+              {
+                "type": "text",
+                "text": "{{patient}}",
+                "size": "md",
+                "color": "#5C5F57",
+                "wrap": true
+              },
+              {
+                "type": "text",
+                "text": "{{date_two_lines}}",
+                "size": "lg",
+                "weight": "bold",
+                "color": "#2A2C27",
+                "margin": "6px",
+                "wrap": true
+              },
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "alignItems": "baseline",
+                "margin": "10px",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "預約醫師",
+                    "size": "xs",
+                    "color": "#5C5F57",
+                    "flex": 0
+                  },
+                  {
+                    "type": "text",
+                    "text": "{{doctor}}",
+                    "size": "sm",
+                    "weight": "bold",
+                    "color": "#2A2C27",
+                    "flex": 0,
+                    "margin": "9px"
+                  },
+                  {
+                    "type": "filler"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "url": "https://fangren.net/assets/line/band-13-set.png",
+            "size": "full",
+            "aspectMode": "fit",
+            "aspectRatio": "1024:87"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "14px",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "alignItems": "baseline",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "約診狀態",
+                    "size": "xs",
+                    "color": "#5C5F57",
+                    "flex": 0
+                  },
+                  {
+                    "type": "box",
+                    "layout": "vertical",
+                    "flex": 0,
+                    "backgroundColor": "{{status_color}}",
+                    "cornerRadius": "8.5px",
+                    "paddingTop": "5px",
+                    "paddingBottom": "5px",
+                    "paddingStart": "8px",
+                    "paddingEnd": "8px",
+                    "margin": "9px",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "{{status}}",
+                        "size": "xs",
+                        "weight": "bold",
+                        "color": "#FFFFFF"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "filler"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}</pre></details>
+</div>
 
 <h3 class="h3" id="sdone">已完成　預約成功通知（單張）</h3>
 <p class="txt">已照 3-2 的定稿上線。帶子 18 顆、<code>size: "full"</code> 夾在日期底下，這一則不放約診狀態那一列。</p>

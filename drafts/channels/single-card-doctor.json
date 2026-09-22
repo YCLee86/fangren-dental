@@ -1,0 +1,223 @@
+{
+ "_說明": "約診卡・兩則加「預約醫師」那一列（2026-09-22，/preview/line-brief-0921/ 的 3-13）。⚠⚠ 這一份是 build-brief3.mjs **產生的，不要手改** —— 從 single-card-band.json（帶子那一版的定稿）讀回來，只在日期後面插一列，其餘一個字都沒有換。要填的值：single-card-band.json 那五個，再加 {{doctor}} 醫師姓名（只填姓名，不加「醫師」）。",
+ "預約成功通知": {
+  "type": "bubble",
+  "size": "mega",
+  "body": {
+   "type": "box",
+   "layout": "vertical",
+   "paddingAll": "0px",
+   "backgroundColor": "#FFFFFF",
+   "contents": [
+    {
+     "type": "box",
+     "layout": "vertical",
+     "paddingAll": "14px",
+     "contents": [
+      {
+       "type": "text",
+       "size": "md",
+       "color": "#2A2C27",
+       "wrap": true,
+       "contents": [
+        {
+         "type": "span",
+         "text": "{{patient}}",
+         "weight": "bold"
+        },
+        {
+         "type": "span",
+         "text": "　約好囉"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "text": "{{date}}",
+       "size": "lg",
+       "weight": "bold",
+       "color": "#2A2C27",
+       "margin": "6px",
+       "wrap": true
+      },
+      {
+       "type": "box",
+       "layout": "horizontal",
+       "alignItems": "baseline",
+       "margin": "10px",
+       "contents": [
+        {
+         "type": "text",
+         "text": "預約醫師",
+         "size": "xs",
+         "color": "#5C5F57",
+         "flex": 0
+        },
+        {
+         "type": "text",
+         "text": "{{doctor}}",
+         "size": "sm",
+         "weight": "bold",
+         "color": "#2A2C27",
+         "flex": 0,
+         "margin": "9px"
+        },
+        {
+         "type": "filler"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "image",
+     "url": "https://fangren.net/assets/line/band-18-set.png",
+     "size": "full",
+     "aspectMode": "fit",
+     "aspectRatio": "1024:60"
+    },
+    {
+     "type": "box",
+     "layout": "vertical",
+     "paddingAll": "14px",
+     "contents": [
+      {
+       "type": "text",
+       "text": "異動請在2天前(不含假日)與診所聯繫",
+       "size": "xs",
+       "color": "#5C5F57",
+       "wrap": true
+      },
+      {
+       "type": "text",
+       "text": "看診前2天會再提醒一次，記得回覆喔～",
+       "size": "xs",
+       "color": "#5C5F57",
+       "margin": "5px",
+       "wrap": true
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "約診紀錄查詢": {
+  "type": "carousel",
+  "contents": [
+   {
+    "type": "bubble",
+    "size": "micro",
+    "body": {
+     "type": "box",
+     "layout": "vertical",
+     "paddingAll": "0px",
+     "backgroundColor": "#FFFFFF",
+     "contents": [
+      {
+       "type": "box",
+       "layout": "vertical",
+       "paddingAll": "14px",
+       "contents": [
+        {
+         "type": "text",
+         "text": "{{patient}}",
+         "size": "md",
+         "color": "#5C5F57",
+         "wrap": true
+        },
+        {
+         "type": "text",
+         "text": "{{date_two_lines}}",
+         "size": "lg",
+         "weight": "bold",
+         "color": "#2A2C27",
+         "margin": "6px",
+         "wrap": true
+        },
+        {
+         "type": "box",
+         "layout": "horizontal",
+         "alignItems": "baseline",
+         "margin": "10px",
+         "contents": [
+          {
+           "type": "text",
+           "text": "預約醫師",
+           "size": "xs",
+           "color": "#5C5F57",
+           "flex": 0
+          },
+          {
+           "type": "text",
+           "text": "{{doctor}}",
+           "size": "sm",
+           "weight": "bold",
+           "color": "#2A2C27",
+           "flex": 0,
+           "margin": "9px"
+          },
+          {
+           "type": "filler"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "image",
+       "url": "https://fangren.net/assets/line/band-13-set.png",
+       "size": "full",
+       "aspectMode": "fit",
+       "aspectRatio": "1024:87"
+      },
+      {
+       "type": "box",
+       "layout": "vertical",
+       "paddingAll": "14px",
+       "contents": [
+        {
+         "type": "box",
+         "layout": "horizontal",
+         "alignItems": "baseline",
+         "contents": [
+          {
+           "type": "text",
+           "text": "約診狀態",
+           "size": "xs",
+           "color": "#5C5F57",
+           "flex": 0
+          },
+          {
+           "type": "box",
+           "layout": "vertical",
+           "flex": 0,
+           "backgroundColor": "{{status_color}}",
+           "cornerRadius": "8.5px",
+           "paddingTop": "5px",
+           "paddingBottom": "5px",
+           "paddingStart": "8px",
+           "paddingEnd": "8px",
+           "margin": "9px",
+           "contents": [
+            {
+             "type": "text",
+             "text": "{{status}}",
+             "size": "xs",
+             "weight": "bold",
+             "color": "#FFFFFF"
+            }
+           ]
+          },
+          {
+           "type": "filler"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

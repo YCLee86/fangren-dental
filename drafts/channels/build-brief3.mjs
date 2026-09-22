@@ -28,7 +28,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   CSS, esc, b, DATE, 設節表,
-  MEGA, BUB, WCARD, CARD, PILLVAL,
+  MEGA, BUB, WCARD, CARD, PILLVAL, FSIZE,
 } from "./build-vendor.mjs";
 import { 定顆, 帶by, 卡, 輪播行, 帶高, 顆高, 基註, 套註, 藥丸 } from "./single-card.mjs";
 
@@ -125,8 +125,62 @@ for (const v of PILLVAL)
   if (對比(乙字(v), WCARD) < 4.5) throw new Error(`乙那一條：「${v.名}」${乙字(v)} 在卡片底上只有 ${比(乙字(v), WCARD)}`);
 if (對比("#ffffff", 丸底色) < 4.5) throw new Error("甲那一條：白字在那顆藍上沒有過 4.5");
 
+/* ── 3-13 預約醫師那一列（2026-09-22）────────────────────────────
+   ⚠⚠ 兩則的 Flex 不重打：從 single-card-band.json（build-brief2.mjs 產生的定稿）讀回來，
+   只在**日期那一個 text 後面**插一列，寫成 single-card-doctor.json。定稿哪天換了，
+   重跑這一支就跟著換；日期那一格找不到就當場停下來，不要插在別的地方。
+   ⚠ 例子用站上真的有的醫師（從 index.html 的 #doctors 驗），不要編一個名字。 */
+const 醫例 = "李柄輝";
+if (!readFileSync(join(ROOT, "index.html"), "utf8").includes(`"name": "${醫例}"`))
+  throw new Error(`index.html 的醫師名冊裡沒有「${醫例}」`);
+const 醫標 = "預約醫師", 醫距 = CARD.距, 醫間 = 9;
+/* 中日韓的字一個字的進位 ＝ 字級，所以這一列的寬是算得出來的（三個字的姓名）。 */
+const 醫寬 = 醫標.length * FSIZE.xs + 醫間 + 3 * FSIZE.sm;
+const 可用 = BUB.car - 2 * CARD.pad;
+if (醫寬 > 可用) throw new Error(`預約醫師那一列 ${醫寬}px，${BUB.階} 只有 ${可用}px —— 放不下`);
+const 醫列節點 = {
+  type: "box", layout: "horizontal", alignItems: "baseline", margin: `${醫距}px`,
+  contents: [
+    { type: "text", text: 醫標, size: "xs", color: "#5C5F57", flex: 0 },
+    { type: "text", text: "{{doctor}}", size: "sm", weight: "bold", color: "#2A2C27", flex: 0, margin: `${醫間}px` },
+    { type: "filler" },
+  ],
+};
+const 醫FLEX = (() => {
+  const src = JSON.parse(readFileSync(join(HERE, "single-card-band.json"), "utf8"));
+  const 插 = (bubble, 日值) => {
+    const 上 = bubble.body.contents[0];
+    const i = 上.contents.findIndex((c) => c.type === "text" && c.text === 日值);
+    if (i < 0 || i !== 上.contents.length - 1)
+      throw new Error(`single-card-band.json 上面那一塊的最後一個不是日期（${日值}）—— 醫師那一列會插錯地方`);
+    if (bubble.body.contents[1]?.type !== "image") throw new Error("日期那一塊後面不是帶子");
+    上.contents.splice(i + 1, 0, JSON.parse(JSON.stringify(醫列節點)));
+    return bubble;
+  };
+  const 單 = 插(src.預約成功通知, "{{date}}");
+  const 輪 = 插(src.約診紀錄查詢.contents[0], "{{date_two_lines}}");
+  return {
+    _說明: "約診卡・兩則加「預約醫師」那一列（2026-09-22，/preview/line-brief-0921/ 的 3-13）。"
+      + "⚠⚠ 這一份是 build-brief3.mjs **產生的，不要手改** —— 從 single-card-band.json（帶子那一版的定稿）"
+      + "讀回來，只在日期後面插一列，其餘一個字都沒有換。"
+      + "要填的值：single-card-band.json 那五個，再加 {{doctor}} 醫師姓名（只填姓名，不加「醫師」）。",
+    預約成功通知: 單,
+    約診紀錄查詢: { ...src.約診紀錄查詢, contents: [輪] },
+  };
+})();
+/* 模擬圖：卡片照定稿畫，再把那一列塞進**上面那一塊**的最後（帶子上面）。
+   ⚠ 用塞的、不另外抄一份卡片的畫法；塞不到就 throw。 */
+const 醫列 = `<p class="r dr"><span class="lb">${醫標}</span><b style="font-size:${FSIZE.sm}px;color:#2A2C27">${esc(醫例)}</b></p>`;
+const 加醫 = (html) => {
+  const i = html.indexOf('<div class="cb">');
+  const j = html.indexOf("\n</div>", i);
+  if (i < 0 || j < 0 || !/2026/.test(html.slice(i, j))) throw new Error("卡上找不到日期那一塊 —— 卡片的畫法改了");
+  return html.slice(0, j) + "\n" + 醫列 + html.slice(j);
+};
+
 /* ── brief3.json 裡的 {{…}} ─────────────────────────────────── */
 const V = {
+  醫距: String(醫距), 可用: String(可用), 醫寬: String(醫寬),
   顆數: String(定顆.car), 單張顆數: String(定顆.mega), 階: BUB.階,
   卡寬: 卡寬.toFixed(1), 規格卡寬: String(BUB.car), 規格內距: String(CARD.pad),
   帶留白: 帶留白.toFixed(1), 帶右留白: 帶右留白.toFixed(1), 帶墨寬: 帶墨寬.toFixed(1),
@@ -247,6 +301,14 @@ const CSS3 = `
 .tab td .pill{display:inline-block;border-radius:8.5px;line-height:1;
   padding:.42em .63em .38em;color:#fff;font-weight:700;font-size:${CARD.籤}px}
 .tab td .pill.bare{background:none;padding-left:0;padding-right:0}
+/* 3-13：醫師那一列的間距照 Flex 那一側（日期下 ${CARD.距}px、標籤到姓名 9px），
+   已經是 .stcard .r 的預設，這裡不另外寫。 */
+.stcard .r.dr b{font-weight:700}
+details{margin:.9em 0 0;font-size:.88rem}
+details+details{margin-top:.5em}
+summary{cursor:pointer;color:#214d48}
+pre.json{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:10px 12px;
+  font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.6em 0 0}
 `;
 
 /* ── 一件事 ＝ 三格（問題／事件／解決方案）。2026-09-21 使用者指定的形狀，
@@ -364,6 +426,19 @@ ${h3("s3-12", B.三之十二.標)}
 ${B.三之十二.題.map(([q, y]) => `<li>${bb(q)}<span class="y">${bb(y)}</span></li>`).join("\n")}
 </ol>
 
+${h3("s3-13", B.三之十三.標)}
+${三格({ ...B.三之十三, 隱標: true }, `
+<figure class="shot">${img("ref-0922-doctor.jpg", "翔評後台的預約設定，通知示意圖上有預約醫師")}
+<figcaption>${bb(B.三之十三.圖說)}</figcaption></figure>
+<div class="sbs">
+${卡格(加醫(卡(BUB.mega, MEGA, { 帶檔: 帶檔.mega, 前綴 })), `<b>預約成功通知</b>　mega ${BUB.mega}px`)}
+${卡格(加醫(查詢卡(by名("已確認"))), `<b>約診紀錄查詢</b>　${BUB.階} ${BUB.car}px`)}
+</div>
+<details><summary>展開　預約成功通知（單張 mega）的 Flex JSON</summary>
+<pre class="json">${esc(JSON.stringify(醫FLEX.預約成功通知, null, 2))}</pre></details>
+<details><summary>展開　約診紀錄查詢（輪播 ${BUB.階}）的 Flex JSON</summary>
+<pre class="json">${esc(JSON.stringify(醫FLEX.約診紀錄查詢, null, 2))}</pre></details>`)}
+
 ${h3("sdone", B.完成.標)}
 <p class="txt">${bb(B.完成.說)}</p>
 <div class="sbs">
@@ -389,6 +464,8 @@ const out = 稱謂(html);
 
 mkdirSync(OUT, { recursive: true });
 writeFileSync(join(OUT, "index.html"), out);
+writeFileSync(join(HERE, "single-card-doctor.json"), JSON.stringify(醫FLEX, null, 1) + "\n");
+console.log(`✓ drafts/channels/single-card-doctor.json（3-13 那兩份 Flex，產生的）`);
 console.log(`✓ preview/line-brief-0921/index.html　${(out.length / 1024).toFixed(1)}KB`);
 console.log(`  比例尺　截圖 1px ＝ 手機 ${(1 / 比例尺).toFixed(3)} CSS px（從「約診狀態」那四個 xs 的字量的）`);
 console.log(`  卡片　量到 ${卡寬.toFixed(1)}px，規格 ${BUB.階} ${BUB.car}px`);

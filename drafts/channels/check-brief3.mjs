@@ -22,6 +22,7 @@
 //     （日期那一項到底收不收，是使用者要決定的，不是這一頁）
 // ⚠ 版面（水平溢出）另外用瀏覽器量過：320／375／390／430／768／1024 六個寬度都是 0。
 import fs from "node:fs";
+import { esc } from "./build-vendor.mjs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -41,6 +42,8 @@ if (!before.equals(fs.readFileSync(PAGE))) bad.push("① 重跑之後頁面變�
 if (!has("①")) ok("① 重跑 build-brief3.mjs 逐位相同");
 const html = fs.readFileSync(PAGE, "utf8");
 const 本文 = html.replace(/<style>[\s\S]*?<\/style>/g, "");
+/* 3-13 那兩份 Flex JSON 本來就帶著 {{…}}（要交給翔評填的值），⑤ 掃之前剝掉。 */
+const 無JSON = 本文.replace(/<pre class="json">[\s\S]*?<\/pre>/g, "");
 
 /* ② ③ ④ */
 for (const w of ["noindex", "nofollow", "noarchive"]) if (!html.includes(w)) bad.push(`② 少了 ${w}`);
@@ -52,7 +55,7 @@ if (red.length) bad.push(`④ 紅線：${red.join("、")}`); else ok("④ 紅線
 
 /* ⑤ ⑥ */
 if (本文.includes("undefined")) bad.push("⑤ 出現 undefined");
-const left = [...new Set(本文.match(/\{\{[^}]*\}\}/g) || [])];
+const left = [...new Set(無JSON.match(/\{\{[^}]*\}\}/g) || [])];
 if (left.length) bad.push(`⑤ 還留著沒換掉的記號：${left.join("、")}`);
 if (!has("⑤")) ok("⑤ 沒有 undefined，也沒有沒換掉的記號");
 if (/09\d{8}/.test(html)) bad.push("⑥ 出現完整的手機號碼"); else ok("⑥ 沒有完整的手機號碼");
@@ -70,7 +73,7 @@ const sizeOf = (f) => {
   }
   return null;
 };
-const 自家 = ["reply-0921-query.jpg", "shot-0921-cancel.jpg", "shot-0921-wait.jpg"];
+const 自家 = ["reply-0921-query.jpg", "shot-0921-cancel.jpg", "shot-0921-wait.jpg", "ref-0922-doctor.jpg"];
 let imgs = 0;
 for (const [tag] of html.matchAll(/<img\s[^>]*>/g)) {
   const src = (tag.match(/src="([^"]+)"/) || [])[1];
@@ -92,7 +95,7 @@ if (!has("⑦")) ok(`⑦ 圖 ${imgs} 張，尺寸與 alt 都對，資料夾裡�
 /* ⑧ 編號：節號在、不重編，而且摘要表每一列都連得到。
    ⚠ 號碼**不可以交給 CSS 的 counter 畫**（9/21 之前那一版就是，li 的 value 對 counter
    沒有作用，外層漏設 counter-reset 就靜靜地印成 1-7）—— 現在全部是寫死的字。 */
-const 節號 = ["3-7", "3-8", "3-9", "3-9-1", "3-9-2", "3-9-3", "3-9-4", "3-10", "3-11", "3-12"];
+const 節號 = ["3-7", "3-8", "3-9", "3-9-1", "3-9-2", "3-9-3", "3-9-4", "3-10", "3-11", "3-12", "3-13"];
 for (const n of 節號) if (!本文.includes(`${n}　`)) bad.push(`⑧ 找不到節號 ${n}`);
 for (const n of ["3-1　", "3-2　", "3-3　", "3-4　", "3-5　", "3-6　"])
   if (本文.includes(n)) bad.push(`⑧ 這一頁不該自己開 ${n.trim()} 那一節（它在 9/18 那一頁）`);
@@ -101,7 +104,7 @@ for (const n of ["3-1　", "3-2　", "3-3　", "3-4　", "3-5　", "3-6　"])
 if (/class="now"/.test(本文)) bad.push("⑧ 又把號碼交給 CSS 的 counter 畫了（.now 那一塊）");
 for (const [, href] of html.matchAll(/href="#([^"]+)"/g))
   if (!html.includes(`id="${href}"`)) bad.push(`⑧ 摘要表連到 #${href}，頁內沒有這個 id`);
-if (!has("⑧")) ok(`⑧ 節號 ${節號.length} 個都在（3-7 ~ 3-12），頁內連結都指得到`);
+if (!has("⑧")) ok(`⑧ 節號 ${節號.length} 個都在（3-7 ~ 3-13），頁內連結都指得到`);
 
 /* ⑨ 翔評 9/21 那三句逐字 */
 const B = JSON.parse(fs.readFileSync(path.join(HERE, "brief3.json"), "utf8"));
@@ -178,7 +181,7 @@ if (!has("⑮")) ok("⑮ 3-11 的「刪除」與「取消」兩個詞都還在�
 /* ⑯ */
 {
   const items = [...html.matchAll(/<div class="item">([\s\S]*?)\n<\/div>/g)].map((m) => m[1]);
-  if (items.length < 6) bad.push(`⑯ 只找到 ${items.length} 個三格項目，該有 6 個（3-9 的四項 ＋ 3-10 ＋ 3-11）`);
+  if (items.length < 7) bad.push(`⑯ 只找到 ${items.length} 個三格項目，該有 7 個（3-9 的四項 ＋ 3-10 ＋ 3-11 ＋ 3-13）`);
   for (const [k, it] of items.entries()) {
     const lbl = [...it.matchAll(/<p class="lbl">([^<]+)<\/p>/g)].map((m) => m[1]);
     if (lbl.join("／") !== "問題／事件／解決方案")
@@ -190,7 +193,33 @@ if (!has("⑮")) ok("⑮ 3-11 的「刪除」與「取消」兩個詞都還在�
   if (摘 < 0 || 首節 < 0 || 摘 > 首節) bad.push("⑯ 摘要表不在最前面");
   if ((html.match(/<tr>/g) || []).length < B.摘要.length) bad.push("⑯ 摘要表的列數不對");
 }
-if (!has("⑯")) ok("⑯ 摘要表在最前面；六個項目各有問題／事件／解決方案三格，沒有一格是空的");
+if (!has("⑯")) ok("⑯ 摘要表在最前面；七個項目各有問題／事件／解決方案三格，沒有一格是空的");
+
+/* ⑰ 3-13 預約醫師（2026-09-22）：兩份 Flex 是從定稿插一列出來的，其餘一個字都不能動；
+   那一列在日期後面、帶子前面；頁面上兩張模擬卡都畫了那一列，JSON 也照原字印在頁上。 */
+{
+  const 醫 = JSON.parse(fs.readFileSync(path.join(HERE, "single-card-doctor.json"), "utf8"));
+  const 定 = JSON.parse(fs.readFileSync(path.join(HERE, "single-card-band.json"), "utf8"));
+  const 驗 = (名, b新, b舊, 日值) => {
+    const 上 = b新.body.contents[0].contents;
+    const i = 上.findIndex((c) => c.type === "text" && c.text === 日值);
+    const row = 上[i + 1];
+    if (i < 0 || !row || row.type !== "box" || i + 1 !== 上.length - 1) { bad.push(`⑰ ${名}：日期後面不是醫師那一列`); return; }
+    const t = row.contents.filter((c) => c.type === "text").map((c) => c.text).join("／");
+    if (t !== "預約醫師／{{doctor}}") bad.push(`⑰ ${名}：那一列是「${t}」`);
+    if (b新.body.contents[1].type !== "image") bad.push(`⑰ ${名}：醫師那一列後面不是帶子`);
+    const 拿掉 = JSON.parse(JSON.stringify(b新));
+    拿掉.body.contents[0].contents.splice(i + 1, 1);
+    if (JSON.stringify(拿掉) !== JSON.stringify(b舊)) bad.push(`⑰ ${名}：除了那一列，還有別的地方和定稿不一樣`);
+    if (!html.includes(esc(JSON.stringify(名 === "約診紀錄查詢" ? 醫.約診紀錄查詢 : b新, null, 2))))
+      bad.push(`⑰ ${名}：頁面上印的 JSON 和 single-card-doctor.json 對不上`);
+  };
+  驗("預約成功通知", 醫.預約成功通知, 定.預約成功通知, "{{date}}");
+  驗("約診紀錄查詢", 醫.約診紀錄查詢.contents[0], 定.約診紀錄查詢.contents[0], "{{date_two_lines}}");
+  const 卡數 = (本文.split("3-13　")[1]?.split('id="sdone"')[0] || "").split('class="r dr"').length - 1;
+  if (卡數 !== 2) bad.push(`⑰ 3-13 的模擬卡上有 ${卡數} 列預約醫師，該有 2 列`);
+}
+if (!has("⑰")) ok("⑰ 3-13 兩份 Flex 只在日期後面多一列「預約醫師」，其餘和定稿逐字相同；兩張模擬卡都畫了");
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }
 console.log("\n✓ 全部通過");
