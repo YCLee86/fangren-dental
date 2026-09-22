@@ -22,20 +22,55 @@ DO NOT change anything else in the picture. There is no writing anywhere in the 
 
 ================================================================================
 
-【編修 B：大圈的下緣引線】
+【編修 B：大圈的引線 —— 先全部擦掉，再重畫兩條】
+
+⚠ 上一版寫「把下面那條的終點移過去」，結果**新的畫上去了、舊的還留著**。
+   編修模式不擅長「移動」，擅長「刪掉」和「畫上去」。所以改成先刪再畫，
+   而且把**數量**寫死（第十三輪那份總帳的道理一樣：給可以數的東西）。
+
+Edit this image with the smallest possible change. KEEP THE EXACT SAME FRAMING, THE SAME
+CROP AND THE SAME ZOOM: do not enlarge the picture, do not shift it, do not re-centre it and
+do not crop anything off the edges. Do not redraw, restyle or repaint any part of it. Do not
+touch the people, the tunnel, the tooth, the pale pocket at the root tip, the bacteria circle
+or the two thin lines that run between the bacteria circle and that pocket.
+
+CHANGE ONE THING ONLY — THE THIN LINES THAT RUN FROM THE BIG LEFT-HAND LENS ACROSS TO THE
+TOOTH. Right now there are too many of them and they end in the wrong places.
+
+STEP 1 — ERASE EVERY SINGLE ONE OF THEM COMPLETELY. Every line that starts at the big lens
+must go: no faint remnant, no ghost, no shortened stub. Where each line used to be, leave
+clean untouched background — plain wall, plain tooth surface, plain gum — exactly as if the
+line had never been drawn there.
+
+STEP 2 — NOW DRAW EXACTLY TWO NEW LINES, NO MORE AND NO FEWER. Both of them start at the rim
+of the big lens on its right-hand side, one high up on the rim and one low down on the rim.
+BOTH OF THEM END AT THE SAME SINGLE POINT: the small dark speck on the dashed root canal,
+high up inside the LEFT-hand root of the tooth. They meet each other there tip to tip, so
+that together they form one narrow V lying on its side, opening out towards the lens. Each
+is a single clean straight stroke, thin, the same dark brown as the tooth's own outline, with
+no arrowhead and no break.
+
+WHEN YOU HAVE FINISHED, COUNT THEM: exactly two lines from the big lens, meeting at one
+point; plus the two that already belong to the bacteria circle, untouched. Four in total,
+and nothing else. There is no writing anywhere in the image.
+
+================================================================================
+
+【編修 B-2（備案）：只擦掉，不重畫】
+
+⚠ 如果 B 再跑歪一次就用這一段：**只要它擦乾淨，兩條線我自己畫上去。**
+   直線是程式最會畫的東西，外切線有公式（`cave-ref.mjs` 裡那個 `leaderTo`）。
+   跑完把圖給我，我用 Chromium canvas 補上去，順便對齊顏色與線寬。
 
 Edit this image with the smallest possible change. KEEP THE EXACT SAME FRAMING, THE SAME
 CROP AND THE SAME ZOOM: do not enlarge the picture, do not shift it, do not re-centre it and
 do not crop anything off the edges. Do not redraw, restyle or repaint any part of it.
 
-CHANGE ONE THING ONLY: two thin lines run from the big left-hand lens across to the tooth.
-The UPPER one ends at a small point on the dashed root canal inside the tooth. The LOWER one
-ends somewhere else. Move the far end of the LOWER line so that it finishes at exactly the
-same point as the upper line, tip to tip, so that the two lines form one narrow sideways V.
-The lower line still leaves the rim of the lens from exactly where it leaves it now, stays
-perfectly straight, stays the same thickness and the same darkness as the upper line, and
-has no arrowhead.
+CHANGE ONE THING ONLY: ERASE EVERY THIN LINE THAT RUNS FROM THE BIG LEFT-HAND LENS ACROSS TO
+THE TOOTH. All of them, completely — no faint remnant, no ghost, no shortened stub. Where
+each one used to be, leave clean untouched background: plain wall, plain tooth surface, plain
+gum, exactly as if it had never been drawn there. DRAW NOTHING IN THEIR PLACE.
 
-DO NOT add a line. DO NOT remove a line. DO NOT touch the two lines belonging to the small
-bacteria circle on the right. DO NOT change anything else in the picture. There is no writing
-anywhere in the image.
+DO NOT touch the two thin lines that run between the small bacteria circle and the pale
+pocket at the root tip — those two stay exactly as they are. DO NOT change anything else in
+the picture. There is no writing anywhere in the image.
