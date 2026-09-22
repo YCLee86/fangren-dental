@@ -114,11 +114,29 @@ node drafts/wisdom-eruption/preview-gen.mjs
 
 | | |
 | --- | --- |
-| **HERO 插畫** | **梗已定（2026-09-22 使用者給的）＋ 提示詞與兩張參考圖已備妥，還沒出圖。** 預覽頁上仍是一塊虛線佔位。<br>・提示詞：`hero-prompt.txt`（可直接貼，出圖用 Gemini）<br>・推導與每一條在擋什麼：`hero-prompt.md`<br>・參考圖**三張都要一起餵**：`house-style-ref.jpg`（風格範本 ＝ 站上〈拔智齒之後〉那張）、`growth-arrow-ref.png`（S 形箭頭的走向 ＋ 每個人的大小）、`pano-ref.png`（片子裡的排列）<br>・⚠ 已經出過兩版圖、退回兩輪共六件。**第三版最要緊的一件是風格**：站上是淡粉彩＋灰棕細線＋鉛筆質感，生出來的是乾淨的向量線＋較重的黑邊。解法是把站上已上線的那張當風格參考一起餵（第七節第 18 條）。六件逐條在 `hero-prompt.md`<br>・出圖後跑那三個交件門檻，再 `node tools/hero-resize.mjs <原檔> wisdom-eruption-photo` 與 `node tools/webp.mjs` |
+| ~~**HERO 插畫**~~ | ✅ **2026-09-22 定稿並接上預覽頁。** 七輪。原檔 `hero-src.jpg`，裁切 `hero-crop.mjs` → `hero-src-crop.jpg`，成品 `assets/hero-wisdom-eruption-photo-{2000,1600,800}.jpg`。提示詞與逐輪推導在 `hero-prompt.md`／`hero-prompt.txt`，參考圖三張 |
 | **上線日期** | `post-meta` 的 `published` 是佔位符，定案那天填 |
 | **`about` 的 Wikidata** | 阻生智齒 Q1968827、智齒拔除 Q849893、牙周病 Q520127 沿用站上已經查證過的三筆；**智齒冠周炎留白**（容器連不到 wikidata.org，不要猜 Q 編號） |
 | **十七個外部連結** | 容器連不出去（`curl` 與 `WebFetch` 都被 egress proxy 擋，只有 `WebSearch` 能用），**沒有真的點開過**。請在手機上各點一次 |
 | **要不要問診所** | 三件寫在 `SOURCES.md` 最後一張表：拔智齒的流程與次數、全景 X 光的費用與給付、智齒的追蹤間隔。**文章刻意都沒有寫**，只借站上已經定案的「半年一次的例行檢查」 |
+
+## HERO 接圖那一輪驗過的（2026-09-22）
+
+| | 結果 |
+| --- | --- |
+| 四邊烘進去的白框 | ⚠ 交回來那張**下緣有 17px 白列**，`tools/hero-resize.mjs` 第一道守門擋下來（第七節第 6 條）。`hero-crop.mjs` 去白邊後 1376×753，比例 1.832 超出容差，再**置中裁寬**回 1349×753（1.7915，目標 1.7921）|
+| 無彩空白（S<12 且 L>80）| **3.9%**（門檻 < 5%）✓ |
+| 邊緣密度 | **33.9%**（門檻 ≥ 30%）✓ |
+| 每個人的線一樣實 | 七個人的最暗 5 百分位 68.7～75.6，**極差 6.9 階**（門檻 < 20）✓<br>⚠ 第一次量出 24.1 不過，是**我把嬰兒的框畫太大**（框裡大半是淡色的地板與箭頭，5 百分位被抬高），收緊到只框住嬰兒就是 70.9。**框畫錯會冤枉一張沒問題的圖。** |
+| 四個視窗 | 375／390／834／1440 都沒有水平捲動 |
+| 手機上的 HERO | 390 視窗下實際 **390×202**，五個階段的高矮、對話框裡半露的牙、燈箱、痛的折線都讀得出來 |
+
+⚠ **還沒跑 `tools/webp.mjs`**：那一支只掃 `index.html`／`assets/style.css`／`posts/*/`，
+掃不到 `preview/`，所以現在沒有對應的 `.webp`。預覽頁因此**刻意只用 JPEG、沒有
+`<picture>` ＋ `<source type="image/webp">`**（寫了會 404）。定案搬進 `posts/` 那天再跑。
+
+⚠ 三張 JPEG 進了 `assets/`，所以會跟著上線 —— 但**站上沒有任何一頁引用它們**
+（只有 noindex 的預覽頁引用），不會出現在首頁或 sitemap 上。
 
 ## 驗過的
 
@@ -132,5 +150,7 @@ node drafts/wisdom-eruption/preview-gen.mjs
 1. `git mv` 預覽頁的內容搬成 `posts/wisdom-eruption/index.html`
    （照 CLAUDE.md 第五節：改 `<head>`、`post-meta`、`data-views-self="wisdom-eruption"`，
    把 noindex 與 `.pv-*` 那些東西拿掉，補回 HERO 與計數器那一塊）
-2. `node tools/build.mjs`（首頁卡、sitemap、allowed-slugs、延伸閱讀、JSON-LD 會自己跟上）
-3. 刪掉 `preview/wisdom-eruption/` 與 `preview-gen.mjs`，推導文字搬進 `history/`
+2. **`node tools/webp.mjs`**（搬進 `posts/` 之後才掃得到那三張 JPEG），
+   並把 HERO 改寫成 `<picture>` ＋ `<source type="image/webp">`
+3. `node tools/build.mjs`（首頁卡、sitemap、allowed-slugs、延伸閱讀、JSON-LD 會自己跟上）
+4. 刪掉 `preview/wisdom-eruption/` 與 `preview-gen.mjs`，推導文字搬進 `history/`

@@ -31,6 +31,12 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const src = readFileSync(resolve(root, 'posts/wisdom-tooth/index.html'), 'utf8');
 
 const TITLE = '智齒要不要拔：該拔的，要趁早';
+
+/* HERO 的 alt。⚠ 這一頁刻意只用 JPEG、不做 <picture> ＋ <source type="image/webp">：
+   tools/webp.mjs 只掃 index.html／assets/style.css／posts/ 底下，掃不到 preview/，
+   所以現在還沒有對應的 .webp，寫了 <source> 會 404。
+   定案搬進 posts/ 那天再跑一次 node tools/webp.mjs。 */
+const ALT = "插畫：一間明亮的牙科諮詢室。左邊一位穿紫色刷手服、外罩白色醫師袍的鮑伯頭女醫師站著，一手微微抬起、掌心朝上，正在聽。她右邊一位二十歲上下、穿鏽紅色外套與深色牛仔褲的男生坐在諮詢椅上，一手按著自己下顎靠近耳下的位置，那一處畫著幾道磚紅色的短折線與淡淡的排線表示痠痛。他頭頂上方一個大對話框，框裡畫著他從鏡子會看到的下顎後段：三顆後牙，最後那一顆只露出一半，牙齦瓣蓋住後半、鼓起來、比旁邊的淡粉紅一階。後方牆上是一台發光的看片燈箱，上緣夾著一張全景 X 光片，電源線沿著牆垂下；旁邊是洗手台與鏡子、芥末黃門的矮櫃、杯子、紙盤、面紙盒、盆栽、乾洗手與手套盒、一排資料夾與瓶子、沒有數字的圓鐘、掛著帆布袋的掛鉤。畫面右側有一支粗寬的紫色 S 形箭頭，從右緣的淡灰紫漸漸轉深、到左端箭頭尖變成深紫，指向坐著的男生；箭頭上站著同一個人的五個年紀，由右往左愈來愈高：最右邊的地上是一個在爬的嬰兒，接著是背著圓背包、手上拿著蠟筆的幼兒園男孩、背方書包掛水壺的小學男孩、斜背側背包的國中男生，最靠近箭頭尖的是抱著書、背著書包的高中男生。最右邊的門口露出一張診療椅的扶手與無影燈的一角。";
 const DESC  = '「你的智齒是阻生齒，建議拔掉。」智齒什麼時候長、東亞人為什麼比較容易阻生、為什麼「長得正」不等於「刷得到」，以及為什麼確定要拔的那幾顆，愈早處理對你愈省事。';
 const OGDESC = '什麼時候長、為什麼「長得正」不等於「刷得到」，以及確定要拔的那幾顆為什麼愈早處理愈省事。';
 
@@ -72,7 +78,8 @@ out = out.slice(0, metaStart) + `<script type="application/json" id="post-meta">
   "tag": "口腔外科",
   "author": "芳仁牙醫診所 編輯室",
   "published": "【上線那天填】",
-  "hero": "【還沒畫】",
+  "hero": "hero-wisdom-eruption-photo-1600.jpg",
+  "heroAlt": ${JSON.stringify(ALT)},
   "about": [
     { "type": "MedicalCondition", "name": "阻生智齒", "sameAs": "https://www.wikidata.org/wiki/Q1968827" },
     { "type": "MedicalProcedure", "name": "智齒拔除", "sameAs": "https://www.wikidata.org/wiki/Q849893" },
@@ -98,9 +105,14 @@ swap('<h1>拔智齒之後：傷口填補、術後照顧與保險怎麼問</h1>',
 const figStart = out.indexOf('    <figure class="post-hero">');
 const updEnd = out.indexOf('</p>', out.indexOf('<p class="post-updated-line">')) + '</p>'.length;
 if (figStart < 0 || updEnd < 3) throw new Error('找不到 HERO 那一塊');
-out = out.slice(0, figStart) + `    <div class="wrap-text">
-      <p class="pv-hero-slot">HERO 插畫的位置<br><small>文案定案之後才畫（圖是開場那一幕的畫面，兩件事是一組的）</small></p>
-    </div>` + out.slice(updEnd);
+out = out.slice(0, figStart) + `    <figure class="post-hero">
+      <img src="../../assets/hero-wisdom-eruption-photo-1600.jpg"
+           srcset="../../assets/hero-wisdom-eruption-photo-800.jpg 800w,
+                   ../../assets/hero-wisdom-eruption-photo-1600.jpg 1600w,
+                   ../../assets/hero-wisdom-eruption-photo-2000.jpg 2000w"
+           sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+           fetchpriority="high" alt="${ALT}" width="2000" height="1116">
+    </figure>` + out.slice(updEnd);
 
 /* ── ④ 內文 ───────────────────────────────────────────────── */
 const bodyStart = out.indexOf('    <p class="lede">');
@@ -287,10 +299,6 @@ const css = `<style>
 .pv-flag { max-width: var(--content); margin: 0 auto; padding: .55rem var(--pad); font-size: .82rem;
            color: var(--ink-soft); text-align: center; letter-spacing: .02em; }
 .pv-flag b { color: var(--accent-deep); }
-.pv-hero-slot { display: grid; place-content: center; gap: .4rem; text-align: center;
-                min-height: 34vw; padding: 2rem 1rem; border: 1px dashed var(--rule);
-                border-radius: 12px; color: var(--ink-soft); font-size: .92rem; }
-.pv-hero-slot small { font-size: .82rem; opacity: .85; }
 </style>`;
 swap('<link rel="stylesheet" href="../../assets/style.css">',
      '<link rel="stylesheet" href="../../assets/style.css">\n' + css, 'style');
@@ -330,6 +338,7 @@ const must = [
   ['重點整理', '重點整理不見了'],
   ['class="note"', '免責段落不見了'],
   ['posts/wisdom-tooth/', '沒有連回〈拔智齒之後〉'],
+  ['hero-wisdom-eruption-photo-1600.jpg', 'HERO 沒接上'],
 ];
 for (const [s, msg] of must) if (!out.includes(s)) throw new Error(msg);
 const banned = [
@@ -337,6 +346,7 @@ const banned = [
   ['SEO:START', 'SEO 區塊沒拿掉：canonical／og:url 會指向還不存在的網址'],
   ['RELATED:START', 'RELATED 區塊沒拿掉'],
   ['post-updated-line', '「最後更新」那一行沒拿掉：草稿沒有上線日期'],
+  ['pv-hero-slot', 'HERO 的佔位還在'],
   ['拔智齒之後：傷口填補', '舊標題殘留'],
   ['還不是定局', '第一版的標題方向殘留（2026-09-21 使用者退回）'],
   ['hero-wisdom-photo', '舊的 HERO 圖殘留'],
