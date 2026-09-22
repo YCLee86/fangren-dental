@@ -70,6 +70,16 @@ const tooth = `
   C ${TX+106} ${CEJ+224} ${TX+122} ${CEJ+106} ${TX+130} ${CEJ}
   C ${TX+158} ${CEJ-62} ${TX+R+16} ${TOP+116} ${TX+R} ${CTOP}
   ${cuspsFar} Z`;
+/* 咬合面 ＝ 遠排牙尖與近排牙尖之間那一塊，兩端收攏成梭形。
+   ⚠⚠⚠ 定義要在 neighbour 之前 —— 鄰牙也要用同一塊。第十四版踩過：
+   主角那顆改成有牙尖之後，**鄰牙還留著舊的那個壓扁橢圓蓋子**，
+   出圖回來三顆牙裡兩顆是「杯口被削平的杯子」。
+   ⚠ 通則：**改了一個形狀，要去找它所有的複本。** */
+const table = `
+  <path d="M ${TX-R} ${CTOP} ${cuspsNear.replace(/\s+/g,' ')}
+           ${cuspsFar.replace(/\s+/g,' ')} Z" fill="${ENAM}" stroke="none"/>
+  <path d="M ${TX-R} ${CTOP} ${cuspsNear.replace(/\s+/g,' ')}"
+        fill="none" stroke="${INK}" stroke-width="4.4" stroke-linecap="round"/>`;
 const body = `<path d="${tooth}" fill="${SIDE}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>`;
 
 /* ⚠⚠ 鄰牙（第六版加，使用者：「這顆牙齒特別高　和周圍的牙齒應該一樣高度」）——
@@ -77,19 +87,13 @@ const body = `<path d="${tooth}" fill="${SIDE}" stroke="${INK}" stroke-width="5"
    **左右各一顆、同樣大小、咬合面同高**，被畫面邊緣裁掉。 */
 const neighbour = (dx) => `<g transform="translate(${dx},0)" opacity=".85">
   <path d="${tooth}" fill="${SIDE}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
-  <ellipse cx="${TX}" cy="${TOP}" rx="${R}" ry="${RY}" fill="${ENAM}" stroke="${INK}" stroke-width="4.4"/>
+  ${table}
 </g>`;
 const neighbours = neighbour(-396) + neighbour(396);
 /* ⚠ 牙齦畫在鄰牙**後面那一層的前面**：鄰牙只露牙冠（正常的畫法），
    主角那顆畫在牙齦前面，牙根與虛線的髓腔才看得到（透視的只有它一顆）。 */
 const gum = `<rect x="0" y="${CEJ+10}" width="${W}" height="${H-CEJ-10}" fill="${GUM}"/>`;
 
-/* 咬合面 ＝ 遠排牙尖與近排牙尖之間那一塊，兩端收攏成梭形 */
-const table = `
-  <path d="M ${TX-R} ${CTOP} ${cuspsNear.replace(/\s+/g,' ')}
-           ${cuspsFar.replace(/\s+/g,' ')} Z" fill="${ENAM}" stroke="none"/>
-  <path d="M ${TX-R} ${CTOP} ${cuspsNear.replace(/\s+/g,' ')}"
-        fill="none" stroke="${INK}" stroke-width="4.4" stroke-linecap="round"/>`;
 const fissure = `
   <path d="M ${TX-R*0.78} ${TOP+16} C ${TX-R*0.44} ${TOP-10} ${TX-R*0.18} ${TOP-2} ${TX} ${TOP-2}
            C ${TX+R*0.18} ${TOP-2} ${TX+R*0.44} ${TOP-10} ${TX+R*0.78} ${TOP+16}"
@@ -228,10 +232,22 @@ const leader = leaderTo(CX, CY, CR, ZX, ZY);
    （SVG 的順序：leader 在 body 之前），線碰到牙根就被蓋住、從另一邊再出來，
    這是製圖上正常的畫法，比把圈硬塞到沒有空間的地方好。
    ⚠ 下面那條刻意從**根尖下方**過去（圈的位置壓低就是為了這個）。 */
-const YX = TX - 66, YY = APEX + 10;                 // 囊腫的位置：**左**根尖外面（使用者指定）
-const YR = 40;                                      // 囊腫的半徑
+/* ⚠⚠ 第十五版（使用者：「膿包這次沒有對到根尖　而且膿包不應該是一個正圓」）：
+   ・中心往下挪，**上緣包住根尖**、不是掛在旁邊。
+   ・形狀改成**歪的、不規則的一團**（真的病灶本來就不是正圓），不再用 <circle>。 */
+const YX = TX - 64, YY = APEX - 22;                 // 囊腫：**左**根尖外面（使用者指定）
+const YR = 62;                                      // 大致的半徑（引線的外切線用這個算）
 const SX = 1410, SY = 706, SR = 152;                // 第二個圈：右下、壓低、放大過
-const cyst = `<circle cx="${YX}" cy="${YY}" r="${YR}" fill="#e9dcc4" stroke="${DASH}" stroke-width="3"/>`;
+/* ⚠ 歪的、不對稱的一團，**上緣往上包住根尖**（根尖是插進它裡面的，不是掛在它上面）。
+   ⚠ 不可以是正圓，也不可以是規規矩矩的橢圓 —— 真的病灶本來就是歪的。 */
+const cyst = `<path d="
+  M ${YX-30} ${YY-54}
+  C ${YX-64} ${YY-42} ${YX-74} ${YY-6} ${YX-58} ${YY+24}
+  C ${YX-42} ${YY+52} ${YX-2} ${YY+60} ${YX+28} ${YY+46}
+  C ${YX+62} ${YY+30} ${YX+72} ${YY-2} ${YX+52} ${YY-26}
+  C ${YX+44} ${YY-36} ${YX+34} ${YY-30} ${YX+22} ${YY-40}
+  C ${YX+10} ${YY-50} ${YX-8} ${YY-58} ${YX-30} ${YY-54} Z"
+  fill="#e9dcc4" stroke="${DASH}" stroke-width="3" stroke-linejoin="round"/>`;
 const leader2 = leaderTo(SX, SY, SR, YX, YY);
 
 /* ⚠⚠⚠ 第十四版把細菌改回**沒有臉、沒有四肢的灰塊**（使用者：「圖片變的很簡化」）。
@@ -277,7 +293,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
   ${neighbours}
   ${gum}
   ${leader}${leader2}
-  ${body}${cyst}${ghost}${table}${fissure}${pit}${dots}
+  ${cyst}${body}${ghost}${table}${fissure}${pit}${dots}
   ${bugs}
   ${cave}
 </svg>`;

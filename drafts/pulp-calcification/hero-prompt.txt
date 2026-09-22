@@ -85,7 +85,11 @@ it, and it is the SAME SIZE as them — it is only more complete, because the ne
 cropped by the edges of the picture. It never rises above the row, and it is never drawn
 bigger than the teeth beside it.
 The neighbours are ordinary teeth: only their crowns show, their roots hidden behind the
-gum. THE MAIN TOOTH IS THE ONLY ONE WE SEE THROUGH: its roots and its dashed pulp are
+gum. ⚠⚠ THEIR TOPS ARE JUST AS LUMPY AS THE MAIN TOOTH'S: each of them shows THE SAME TWO
+ROUNDED CUSPS WITH A VALLEY DIPPING DOWN BETWEEN THEM, and the same narrow band of biting
+surface behind. A NEIGHBOURING TOOTH IS NEVER DRAWN WITH A FLAT, LEVEL OR SLICED-OFF TOP, and
+never as an open cup or a tube with its rim showing. Whatever is true of the main tooth's
+crown is true of theirs — they differ only in being cropped by the edge of the picture. THE MAIN TOOTH IS THE ONLY ONE WE SEE THROUGH: its roots and its dashed pulp are
 visible over the pink gum, and no neighbouring tooth has any dashed lines inside it.
 Its enamel is a warm off-white with two or three soft tones, drawn with a loose brown
 outline. It is a healthy, handsome tooth: no decay, no dark
@@ -283,11 +287,20 @@ never reads as a pile of dental instruments and never as weapons.
      a settled, interested smile, eyebrows lifted. HE IS NOT FRAIL, NOT FRIGHTENED AND NOT
      BEING HELD UP: he is standing on his own and he is enjoying this.
 
-AT THE TIP OF THE LEFT-HAND ROOT, JUST OUTSIDE THE TOOTH, THERE IS A CYST: one round,
-pale, soft-edged pocket sitting in the bone against the very end of the root, about as wide
-as the root tip itself, drawn with the same quiet dashed line as the pulp and filled with a
-slightly warmer cream than the gum around it. There is exactly one of it, it touches the
-root tip, and it is calm and tidy — no redness, no blood, no jagged edges, nothing alarming.
+AT THE TIP OF THE LEFT-HAND ROOT THERE IS A CYST: one pale, soft-edged pocket in the bone,
+about twice as wide as the root tip, drawn with the same quiet dashed line as the pulp and
+filled with a slightly warmer cream than the gum around it. There is exactly one of it.
+⚠⚠ TWO THINGS ABOUT IT ARE EASY TO GET WRONG:
+  • IT IS NOT A CIRCLE. It is an IRREGULAR, LOPSIDED BLOB — wider than it is tall, with one
+    side bulging further out than the other and a shallow dent in its outline. Never a
+    perfect circle, never a neat symmetrical oval, never a drawn-with-a-compass shape. Real
+    lesions are lumpy, and this one should look hand-drawn and slightly off.
+  • IT WRAPS AROUND THE VERY TIP OF THE ROOT, AND THE ROOT TIP POKES INTO IT. The tip sits
+    INSIDE the blob, with the blob spreading out around and below it on both sides — the
+    tooth is drawn in front, so the root tip covers the part of the blob it overlaps. It
+    does NOT hang below the tip like a bead on a string, it does NOT float beside it with a
+    gap, and it does NOT merely graze it at one point.
+It is calm and tidy — no redness, no blood, no jagged edges, nothing alarming.
 
 THE SECOND CIRCLE — A SMALLER ROUND LENS, LOW IN THE RIGHT-HAND PART OF THE PICTURE, to the
 RIGHT of the giant tooth's roots and below the row of teeth, sitting over the pink gum, with
@@ -416,7 +429,11 @@ anything; bacteria drawn in a different style from the third reference image; wh
 on any of the four human characters; a clean, tidy cyst interior; red liquid or
 anything that reads as blood; skulls, gore, dripping fangs or glowing red eyes; a dark or
 frightening cyst; a red, bleeding or inflamed-looking cyst; more than one cyst; a cyst that
-floats away from the root tip; a cyst on the right-hand root; the second circle placed on the
+floats away from the root tip; A CYST DRAWN AS A PERFECT CIRCLE; a cyst drawn as a neat
+symmetrical oval; a cyst hanging below the root tip like a bead instead of wrapping around
+it; a cyst that only touches the tip at one point; a cyst on the right-hand root;
+A NEIGHBOURING TOOTH WITH A FLAT, LEVEL OR SLICED-OFF TOP; a neighbouring tooth drawn as an
+open cup, a tube or a beaker with its rim showing; a neighbouring tooth without cusps; the second circle placed on the
 left of the picture or between the big circle and the tooth; the second circle drawn small or
 as a minor inset; leader lines from the second circle running leftwards; a leader line drawn
 ON TOP OF the tooth instead of behind it; a leader line bent, broken or dotted to get round
