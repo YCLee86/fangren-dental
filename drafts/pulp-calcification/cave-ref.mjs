@@ -136,7 +136,13 @@ const ghost = `<path d="${pulp}" fill="none" stroke="${DASH}" stroke-width="3"
    stroke-dasharray="11 9" stroke-linecap="round" opacity=".92"/>`;
 
 /* ── 左邊：放大鏡的圓框，裡面是那個洞被放大之後的洞口 ──────── */
-const CX = 402, CY = 448, CR = 340;   // ⚠ 第二版放大（使用者：放大鏡的視野和裡面的人物有點小）
+/* ⚠ 第二版放大（使用者：放大鏡的視野和裡面的人物有點小）
+   ⚠⚠ 第十二版再放大一次（使用者：「人物超出放大圈圈了　放大圈圈可能要再[大]一點」）——
+   340 → 368，而且**人從四個減成三個**（使用者：「醫療人員少一個」）。
+   兩件事是同一件：圈裡塞不下就會溢出來，治法是「圈更大 ＋ 人更少」兩邊一起。 */
+const CX = 402, CY = 448, CR = 368;
+/* ⚠ 圈裡的人 ＝ 這張表 ＋ 擠通道那一位。改人數只改這張表，最後那道守門會數。 */
+const FOLK = [[-152,1.0],[150,0.90]];
 const cave = `
   <clipPath id="c"><circle cx="${CX}" cy="${CY}" r="${CR-6}"/></clipPath>
   <g clip-path="url(#c)">
@@ -155,9 +161,13 @@ const cave = `
     <path d="M ${CX-21} ${CY+150} C ${CX-29} ${CY-44} ${CX-12} ${CY-140} ${CX} ${CY-146}
              C ${CX+12} ${CY-140} ${CX+29} ${CY-44} ${CX+21} ${CY+150}
              C ${CX+10} ${CY+164} ${CX-10} ${CY+164} ${CX-21} ${CY+150} Z" fill="${DARK}" opacity=".88"/>
-    <!-- ⚠⚠ 四個人：這一版把「位置與大小」畫進參考圖，因為上一輪壞的就是構圖
-         （人整組跑到鏡框外面）。最高那位 ＝ 圓圈直徑的三分之一，
-         四個人橫向約佔圈寬的六成，每個人離鏡框都留著一大段空白。
+    <!-- ⚠⚠⚠ 三個人 ＝ 擠通道那一位（下面那個深色的）＋ 這裡兩塊。
+         ⚠⚠⚠ 第十二版抓到的真正成因：前一版提示詞寫「四個人」，
+         參考圖卻畫了**擠通道那一位 ＋ 四塊 ＝ 五個人** —— 文字和圖打架，
+         模型照圖數，於是畫出五、六個，圈裡塞不下就整排溢到鏡框外面。
+         **人數這種事，參考圖上要數得出來，而且要和提示詞對得起來**（最後有守門在數）。
+         最高那位 ＝ 圓圈直徑的三分之一，三個人橫向約佔圈寬的**五成**，
+         每個人離鏡框都留著一大段空白。
          ⚠ 這裡是**灰色的塊**，只給位置與大小 —— 提示詞要明講「畫成有臉有手、
          穿彩色衣服的人，不是剪影」（A 類紅線第 2 條）。 -->
     <!-- ⚠ 正在擠進那條窄通道的那一位（使用者指定）：身體比別人窄、貼著通道口 -->
@@ -165,7 +175,7 @@ const cave = `
       <rect x="-13" y="-150" width="26" height="150" rx="13" fill="#a49b8d"/>
       <circle cx="0" cy="-164" r="16" fill="#a49b8d"/>
     </g>
-    ${[[-168,0.86],[-100,1.0],[96,0.94],[162,0.88]].map(([dx,k]) => {
+    ${FOLK.map(([dx,k]) => {
         const h = CR*2/3*k, w = h*0.30, by = CY+190;
         return `<rect x="${CX+dx-w/2}" y="${by-h}" width="${w}" height="${h}" rx="${w*0.45}"
                  fill="#b9b1a4"/><circle cx="${CX+dx}" cy="${by-h-w*0.34}" r="${w*0.40}" fill="#b9b1a4"/>`;
@@ -182,7 +192,14 @@ const cave = `
      d ＝ 點到圓心的距離、γ ＝ acos(r/d)、φ ＝ 圓心看向那一點的角度
      兩個切點 ＝ 圓心 ＋ r·(cos(φ±γ), sin(φ±γ))
    這樣兩條線會自然地包住整個圓，看起來才像「這個圓在看那一點」。 */
-const ZX = TX - 58, ZY = CEJ + 186;          // 放大的那一點：左邊那條根管的中段
+/* ⚠⚠⚠ 第十二版把這一點往上搬（使用者：「人物那邊放大鏡的下緣切線連到膿包了
+   應該拉到和上緣切線在根管裡差不多的位置」）。
+   成因：這一點原本在 CEJ+186，離根尖的膿包只有 150px，大圈的**下緣**切線掃下來
+   終點就落在膿包旁邊 —— 模型於是把它接到膿包上，變成「大圈在放大膿包」。
+   往上搬到 CEJ+120 之後，兩個目標差 216px，下緣切線在膿包上方 212px 處就停了。
+   ⚠ 通則：**兩組引線的終點要離得夠遠**，不然模型會把它們併成一組；
+   這種錯在參考圖上看起來只是「有點近」，出圖才會變成接錯。 */
+const ZX = TX - 53, ZY = CEJ + 120;          // 放大的那一點：左邊那條根管的中上段
 const leaderTo = (cx, cy, r, px, py) => {
   const dx = px - cx, dy = py - cy, d = Math.hypot(dx, dy);
   if (d <= r) throw new Error('那一點落在圓裡面，畫不出外切線');
@@ -248,9 +265,11 @@ const bugs = `
 /* ⚠⚠ 根管上那幾個「很小很小的人（甚至只有點）」（使用者指定）——
    它是整張圖的比例尺：看到管子裡有幾顆小點，才知道圈裡那群人正在**管子裡**。
    ⚠ 一顆點的直徑約 5px，在 1600 寬的圖上幾乎看不見 —— 就是要這麼小。 */
+/* ⚠ 三顆，和圈裡三個人一樣多（第十二版：人數從四改成三，這裡忘了改就又是文圖打架）。 */
+const DOTS = [[-5,-24],[-3,0],[-1,24]];
 const dots = `<g fill="${DASH}">` +
-  [[-2,-30],[0,-10],[2,10],[-1,30]].map(([dx,dy],i) =>
-    `<circle cx="${(ZX+dx).toFixed(1)}" cy="${(ZY+dy).toFixed(1)}" r="${3.3-i*0.18}"/>`).join('') +
+  DOTS.map(([dx,dy],i) =>
+    `<circle cx="${(ZX+dx).toFixed(1)}" cy="${(ZY+dy).toFixed(1)}" r="${3.3-i*0.2}"/>`).join('') +
   `</g>`;
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
@@ -282,4 +301,19 @@ await pg.screenshot({ path: resolve(here, 'cave-ref.png'), clip: { x: 0, y: 0, w
 await browser.close();
 
 if (/[A-Za-z0-9]/.test(svg.replace(/<[^>]*>/g, ''))) throw new Error('圖上長出了字');
+
+/* ⚠⚠⚠ 守門：圈裡的人數要和提示詞裡的人數一樣（第十二版踩過，文字四個、圖五個）。 */
+{
+  const want = 3;
+  const got = FOLK.length + 1;          // ＋1 ＝ 擠通道那一位
+  if (got !== want) throw new Error(`圈裡畫了 ${got} 個人，提示詞寫的是 ${want} 個`);
+  if (DOTS.length !== want) throw new Error(`根管上畫了 ${DOTS.length} 顆點，人卻有 ${want} 個`);
+  const promptFile = resolve(here, 'hero-prompt.txt');
+  if (existsSync(promptFile)) {
+    const t = (await import('node:fs')).readFileSync(promptFile, 'utf8');
+    if (/\bFOUR PEOPLE\b/.test(t) || /ALL FOUR/.test(t)) {
+      throw new Error('提示詞裡還留著「四個人」，和參考圖的三個對不起來');
+    }
+  }
+}
 console.log('寫好了：drafts/pulp-calcification/cave-ref.png　洞寬 ' + PITW.toFixed(1) + 'px ＝ 牙冠寬的 1/28');
