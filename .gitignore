@@ -15,3 +15,5 @@ drafts/channels/remind-a4.html
 drafts/channels/remind-a4*.png
 drafts/channels/stand-a4.html
 drafts/channels/stand-a4*.png
+# 影片的逐格暫存（腳本跑完自己刪，--keep 才會留下）
+drafts/card-video/.frames/
