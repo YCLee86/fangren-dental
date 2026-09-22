@@ -204,9 +204,9 @@ if (!has("⑯")) ok("⑯ 摘要表在最前面；七個項目各有問題／事�
     const 上 = b新.body.contents[0].contents;
     const i = 上.findIndex((c) => c.type === "text" && c.text === 日值);
     const row = 上[i + 1];
-    if (i < 0 || !row || row.type !== "box" || i + 1 !== 上.length - 1) { bad.push(`⑰ ${名}：日期後面不是醫師那一列`); return; }
-    const t = row.contents.filter((c) => c.type === "text").map((c) => c.text).join("／");
-    if (t !== "預約醫師／{{doctor}}") bad.push(`⑰ ${名}：那一列是「${t}」`);
+    if (i < 0 || !row || row.type !== "text" || i + 1 !== 上.length - 1) { bad.push(`⑰ ${名}：日期後面不是醫師那一行`); return; }
+    /* 2026-09-22 使用者：不要「預約醫師」標籤，只要「李柄輝醫師」 */
+    if (row.text !== "{{doctor}}醫師") bad.push(`⑰ ${名}：那一行是「${row.text}」，該是 {{doctor}}醫師`);
     if (b新.body.contents[1].type !== "image") bad.push(`⑰ ${名}：醫師那一列後面不是帶子`);
     const 拿掉 = JSON.parse(JSON.stringify(b新));
     拿掉.body.contents[0].contents.splice(i + 1, 1);
@@ -216,10 +216,14 @@ if (!has("⑯")) ok("⑯ 摘要表在最前面；七個項目各有問題／事�
   };
   驗("預約成功通知", 醫.預約成功通知, 定.預約成功通知, "{{date}}");
   驗("約診紀錄查詢", 醫.約診紀錄查詢.contents[0], 定.約診紀錄查詢.contents[0], "{{date_two_lines}}");
-  const 卡數 = (本文.split("3-13　")[1]?.split('id="sdone"')[0] || "").split('class="r dr"').length - 1;
-  if (卡數 !== 2) bad.push(`⑰ 3-13 的模擬卡上有 ${卡數} 列預約醫師，該有 2 列`);
+  const 卡數 = (本文.split("3-13　")[1]?.split('id="sdone"')[0] || "").split('class="dr"').length - 1;
+  if (卡數 !== 2) bad.push(`⑰ 3-13 的模擬卡上有 ${卡數} 行醫師姓名，該有 2 行`);
+  /* ⚠ 不掃整頁：事件那一格與截圖的 alt 本來就寫著翔評後台的「預約醫師」 */
+  const 卡上 = [...本文.matchAll(/<p class="dr"[^>]*>([^<]*)<\/p>/g)].map((m) => m[1]);
+  if (卡上.some((x) => x !== "李柄輝醫師")) bad.push(`⑰ 模擬卡上那一行是「${卡上.join("／")}」`);
+  if (JSON.stringify(醫).includes("預約醫師")) bad.push("⑰ Flex 裡還有「預約醫師」這個標籤（使用者說不要）");
 }
-if (!has("⑰")) ok("⑰ 3-13 兩份 Flex 只在日期後面多一列「預約醫師」，其餘和定稿逐字相同；兩張模擬卡都畫了");
+if (!has("⑰")) ok("⑰ 3-13 兩份 Flex 只在日期後面多一行「{{doctor}}醫師」，其餘和定稿逐字相同；兩張模擬卡都畫了");
 
 if (bad.length) { console.error("\n✗ " + bad.join("\n✗ ")); process.exit(1); }
 console.log("\n✓ 全部通過");

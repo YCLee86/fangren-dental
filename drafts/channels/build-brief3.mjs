@@ -125,7 +125,7 @@ for (const v of PILLVAL)
   if (對比(乙字(v), WCARD) < 4.5) throw new Error(`乙那一條：「${v.名}」${乙字(v)} 在卡片底上只有 ${比(乙字(v), WCARD)}`);
 if (對比("#ffffff", 丸底色) < 4.5) throw new Error("甲那一條：白字在那顆藍上沒有過 4.5");
 
-/* ── 3-13 預約醫師那一列（2026-09-22）────────────────────────────
+/* ── 3-13 醫師姓名那一行（2026-09-22）────────────────────────────
    ⚠⚠ 兩則的 Flex 不重打：從 single-card-band.json（build-brief2.mjs 產生的定稿）讀回來，
    只在**日期那一個 text 後面**插一列，寫成 single-card-doctor.json。定稿哪天換了，
    重跑這一支就跟著換；日期那一格找不到就當場停下來，不要插在別的地方。
@@ -133,18 +133,16 @@ if (對比("#ffffff", 丸底色) < 4.5) throw new Error("甲那一條：白字�
 const 醫例 = "李柄輝";
 if (!readFileSync(join(ROOT, "index.html"), "utf8").includes(`"name": "${醫例}"`))
   throw new Error(`index.html 的醫師名冊裡沒有「${醫例}」`);
-const 醫標 = "預約醫師", 醫距 = CARD.距, 醫間 = 9;
-/* 中日韓的字一個字的進位 ＝ 字級，所以這一列的寬是算得出來的（三個字的姓名）。 */
-const 醫寬 = 醫標.length * FSIZE.xs + 醫間 + 3 * FSIZE.sm;
+/* ⚠⚠ 2026-09-22 使用者：「不要有"預約醫師" 用醫師的名字+醫師就好　像這個就顯示 李柄輝醫師」——
+   所以沒有標籤、只有一行字：姓名後面直接接「醫師」（中間不空格）。 */
+const 醫尾 = "醫師", 醫距 = CARD.距;
+/* 中日韓的字一個字的進位 ＝ 字級，所以這一行的寬是算得出來的（三個字的姓名 ＋ 醫師）。 */
+const 醫寬 = (3 + 醫尾.length) * FSIZE.sm;
 const 可用 = BUB.car - 2 * CARD.pad;
-if (醫寬 > 可用) throw new Error(`預約醫師那一列 ${醫寬}px，${BUB.階} 只有 ${可用}px —— 放不下`);
+if (醫寬 > 可用) throw new Error(`醫師那一行 ${醫寬}px，${BUB.階} 只有 ${可用}px —— 放不下`);
 const 醫列節點 = {
-  type: "box", layout: "horizontal", alignItems: "baseline", margin: `${醫距}px`,
-  contents: [
-    { type: "text", text: 醫標, size: "xs", color: "#5C5F57", flex: 0 },
-    { type: "text", text: "{{doctor}}", size: "sm", weight: "bold", color: "#2A2C27", flex: 0, margin: `${醫間}px` },
-    { type: "filler" },
-  ],
+  type: "text", text: `{{doctor}}${醫尾}`, size: "sm", weight: "bold", color: "#2A2C27",
+  margin: `${醫距}px`, wrap: true,
 };
 const 醫FLEX = (() => {
   const src = JSON.parse(readFileSync(join(HERE, "single-card-band.json"), "utf8"));
@@ -160,17 +158,17 @@ const 醫FLEX = (() => {
   const 單 = 插(src.預約成功通知, "{{date}}");
   const 輪 = 插(src.約診紀錄查詢.contents[0], "{{date_two_lines}}");
   return {
-    _說明: "約診卡・兩則加「預約醫師」那一列（2026-09-22，/preview/line-brief-0921/ 的 3-13）。"
+    _說明: "約診卡・兩則在日期後面加一行「醫師姓名＋醫師」（2026-09-22，/preview/line-brief-0921/ 的 3-13）。"
       + "⚠⚠ 這一份是 build-brief3.mjs **產生的，不要手改** —— 從 single-card-band.json（帶子那一版的定稿）"
       + "讀回來，只在日期後面插一列，其餘一個字都沒有換。"
-      + "要填的值：single-card-band.json 那五個，再加 {{doctor}} 醫師姓名（只填姓名，不加「醫師」）。",
+      + "要填的值：single-card-band.json 那五個，再加 {{doctor}} 醫師姓名（只填姓名，「醫師」兩字已經寫在後面）。",
     預約成功通知: 單,
     約診紀錄查詢: { ...src.約診紀錄查詢, contents: [輪] },
   };
 })();
 /* 模擬圖：卡片照定稿畫，再把那一列塞進**上面那一塊**的最後（帶子上面）。
    ⚠ 用塞的、不另外抄一份卡片的畫法；塞不到就 throw。 */
-const 醫列 = `<p class="r dr"><span class="lb">${醫標}</span><b style="font-size:${FSIZE.sm}px;color:#2A2C27">${esc(醫例)}</b></p>`;
+const 醫列 = `<p class="dr" style="font-size:${FSIZE.sm}px;color:#2A2C27;font-weight:700;margin:${醫距}px 0 0">${esc(醫例 + 醫尾)}</p>`;
 const 加醫 = (html) => {
   const i = html.indexOf('<div class="cb">');
   const j = html.indexOf("\n</div>", i);
@@ -301,9 +299,6 @@ const CSS3 = `
 .tab td .pill{display:inline-block;border-radius:8.5px;line-height:1;
   padding:.42em .63em .38em;color:#fff;font-weight:700;font-size:${CARD.籤}px}
 .tab td .pill.bare{background:none;padding-left:0;padding-right:0}
-/* 3-13：醫師那一列的間距照 Flex 那一側（日期下 ${CARD.距}px、標籤到姓名 9px），
-   已經是 .stcard .r 的預設，這裡不另外寫。 */
-.stcard .r.dr b{font-weight:700}
 details{margin:.9em 0 0;font-size:.88rem}
 details+details{margin-top:.5em}
 summary{cursor:pointer;color:#214d48}

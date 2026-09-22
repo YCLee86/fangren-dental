@@ -1,5 +1,5 @@
 {
- "_說明": "約診卡・兩則加「預約醫師」那一列（2026-09-22，/preview/line-brief-0921/ 的 3-13）。⚠⚠ 這一份是 build-brief3.mjs **產生的，不要手改** —— 從 single-card-band.json（帶子那一版的定稿）讀回來，只在日期後面插一列，其餘一個字都沒有換。要填的值：single-card-band.json 那五個，再加 {{doctor}} 醫師姓名（只填姓名，不加「醫師」）。",
+ "_說明": "約診卡・兩則在日期後面加一行「醫師姓名＋醫師」（2026-09-22，/preview/line-brief-0921/ 的 3-13）。⚠⚠ 這一份是 build-brief3.mjs **產生的，不要手改** —— 從 single-card-band.json（帶子那一版的定稿）讀回來，只在日期後面插一列，其餘一個字都沒有換。要填的值：single-card-band.json 那五個，再加 {{doctor}} 醫師姓名（只填姓名，「醫師」兩字已經寫在後面）。",
  "預約成功通知": {
   "type": "bubble",
   "size": "mega",
@@ -41,31 +41,13 @@
        "wrap": true
       },
       {
-       "type": "box",
-       "layout": "horizontal",
-       "alignItems": "baseline",
+       "type": "text",
+       "text": "{{doctor}}醫師",
+       "size": "sm",
+       "weight": "bold",
+       "color": "#2A2C27",
        "margin": "10px",
-       "contents": [
-        {
-         "type": "text",
-         "text": "預約醫師",
-         "size": "xs",
-         "color": "#5C5F57",
-         "flex": 0
-        },
-        {
-         "type": "text",
-         "text": "{{doctor}}",
-         "size": "sm",
-         "weight": "bold",
-         "color": "#2A2C27",
-         "flex": 0,
-         "margin": "9px"
-        },
-        {
-         "type": "filler"
-        }
-       ]
+       "wrap": true
       }
      ]
     },
@@ -135,31 +117,13 @@
          "wrap": true
         },
         {
-         "type": "box",
-         "layout": "horizontal",
-         "alignItems": "baseline",
+         "type": "text",
+         "text": "{{doctor}}醫師",
+         "size": "sm",
+         "weight": "bold",
+         "color": "#2A2C27",
          "margin": "10px",
-         "contents": [
-          {
-           "type": "text",
-           "text": "預約醫師",
-           "size": "xs",
-           "color": "#5C5F57",
-           "flex": 0
-          },
-          {
-           "type": "text",
-           "text": "{{doctor}}",
-           "size": "sm",
-           "weight": "bold",
-           "color": "#2A2C27",
-           "flex": 0,
-           "margin": "9px"
-          },
-          {
-           "type": "filler"
-          }
-         ]
+         "wrap": true
         }
        ]
       },
