@@ -1294,11 +1294,33 @@ tools/
    > 不是把這一張改一改。**不要自己動手加白底。**
 3. ~~**文章 `about` 的 `sameAs`**~~ —— **2026-09-20 補上並上線**（十六篇、56 個實體，
    43 個不重複的詞去 Wikidata 查，38 個找到對應項目、5 個查不到就留白）。
+   **2026-09-22 把那一輪之後上線的三篇也補齊**（〈植牙能用多久〉〈根管鈣化〉〈智齒要不要拔〉，
+   新增五個詞）——**十九篇現在只剩那五個刻意留白的**。
    格式是 `{ "type": …, "name": …, "sameAs": "https://www.wikidata.org/wiki/Q…" }`。
    ⚠ **要改或再加一篇之前先讀 [DECISIONS.md](DECISIONS.md)「文章 `about` 的 Wikidata」那一列** ——
-   那裡有 43 筆對照、四個「不是完全等號」的判斷，以及五個刻意留白的詞。
-   ⚠ 這件事**只能在有網路的電腦上做**：雲端 session 連不到 wikidata.org，
-   而 Q 編號猜錯等於把文章綁到另一個疾病上（不報錯、畫面也看不出來）。
+   那裡有全部對照、六個「不是完全等號」的判斷，以及五個刻意留白的詞。
+   ⚠ **發一篇新文章就要順手做這件事** —— 那三篇都是上線時沒做、事後才被掃出來的。
+
+   > ### ⚠ 2026-09-22：「雲端 session 連不到 wikidata.org」**不成立了**
+   >
+   > 原本這裡寫著「這件事只能在有網路的電腦上做」。實測**雲端 session 查得到**，
+   > 但只有一條路通，而且三件事要知道：
+   >
+   > ・**`www.wikidata.org` 通**（api.php 與 `Special:EntityData/Q….json` 都通）。
+   > ・**`en.wikipedia.org` 不通** —— 代理直接回 `CONNECT tunnel failed, 403`。
+   >   要從維基條目名反查 Q 編號，改走 Wikidata 自己的
+   >   `action=wbgetentities&sites=enwiki&titles=…`，不要去打 wikipedia.org。
+   > ・**`action=wbsearchentities`（搜尋）會間歇性被限速**，回的是一段
+   >   「You are making too many requests」的**純文字、HTTP 200**，
+   >   `JSON.parse` 會炸在第一個字元。那是共用出口 IP 被擋，不是查無此詞 ——
+   >   **要能分辨這兩種，不然會把「被限速」誤記成「Wikidata 上沒有這個概念」而留白。**
+   >   指定 Q 編號的 `Special:EntityData/Q….json` 在限速期間仍然通，
+   >   所以**先用搜尋拿候選、再用 EntityData 逐一驗**這條路最穩。
+   >   ⚠ 每次呼叫都要帶 `User-Agent`（Wikimedia 的規矩）。
+   >
+   > 守門不變、也不因為查得到就放寬：**Q 編號猜錯等於把文章綁到另一個疾病上**
+   > （不報錯、畫面也看不出來）。要看 `P31`／`P279` 不是 `scientific article`／
+   > `clinical trial`、有沒有 MeSH 編號與維基條目，不能只看標籤對不對。
 4. **`sameAs` 的完整網址** —— Google 地圖與 FB 放的是分享短網址（會轉址，Google 跟得上，
    但完整網址更穩）。LINE 那條 2026-08-10 已由使用者提供並確認：
    `https://line.me/R/ti/p/@445rpiiv`（系統 ID）。
