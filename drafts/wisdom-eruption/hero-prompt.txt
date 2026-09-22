@@ -107,25 +107,67 @@ and they are clearly smaller than the two adults.
 Every one of their mouths is closed and no teeth are drawn on any of them. None is crying,
 none is rubbing an eye and none looks out at the viewer.
 
-THE ROOM.
-Bright daytime, warm off-white walls, a pale warm floor. A tall window at the far LEFT edge
-behind the dentist, with daylight. On the back wall between the adults and the arrow: a slim
-wall-mounted light box holding one panoramic dental film, softly lit; below it a low cabinet
-with a mustard-yellow door, a mug and a shallow stack of paper trays on top, and a small
-potted plant. At the far RIGHT edge, behind the tail of the arrow, a doorway through which
-we see only the arm of a dental chair and the edge of an overhead lamp.
+THE ROOM — A CONSULTATION ROOM IN A SMALL DENTAL CLINIC. IT IS PROPERLY FURNISHED, NOT
+EMPTY. Bright daytime, warm off-white walls, a pale warm floor with a skirting board.
+EVERYTHING IN THIS SECTION IS SUPPORTING DETAIL AND MUST BE UNDERSTATED: draw the room's
+fittings with a THINNER, LIGHTER line and PALER colour than the people, and with less
+detail, so that they fill the room without competing for attention.
+THIS APPLIES ONLY TO THE FURNITURE AND FITTINGS. Every person — the dentist, the patient and
+all five children on the arrow — keeps the full line weight and the full colour described
+above. NEVER fade a person.
+Along the back wall, left to right:
+  · a tall window at the far LEFT behind the dentist, with a pale half-drawn blind;
+  · the X-RAY LIGHT BOX on the wall (its own section below);
+  · below and beside it, a run of low cabinets with pale mustard doors and two drawers, and
+    at one end a small sink with a short plain mirror above it — the mirror shows nothing
+    but a pale patch of the opposite wall;
+  · on the counter: a mug, a shallow stack of paper trays, a tissue box, one small covered
+    jar and a small potted plant;
+  · on the wall beside the counter: a wall rail carrying a hand-sanitiser pump and a flat
+    box of gloves, and a slim shelf above holding three or four upright folders and two
+    small bottles;
+  · a round wall clock with a plain face, two hands and NO numbers;
+  · a coat hook with a canvas bag hanging from it;
+  · a lidded pedal bin on the floor at the end of the counter.
+Near the patient: a small round stool on castors, and a slim instrument trolley carrying one
+shallow tray — THE TRAY IS EMPTY, with no instruments on it at all.
+At the far RIGHT edge, behind the tail of the arrow, a doorway through which we see only the
+arm of a dental chair and the edge of an overhead lamp.
+The floor keeps a broad clear area in front of the counter, so the arrow and the five
+figures on it are never crowded.
 
-THE PANORAMIC FILM ON THE WALL.
+THE X-RAY LIGHT BOX — IT HAS TO READ AS A LIGHT BOX, NOT AS A PICTURE ON THE WALL.
+A slim viewing box fixed flat to the wall, about as wide as two hands, with a THIN PALE
+BEZEL and a LIT WHITE PANEL behind the film. Three things make it read as equipment rather
+than as a framed picture, and all three must be drawn:
+  · THE PANEL GLOWS. A soft warm-white light sits behind the film, the lit panel is visibly
+    brighter than the film itself, and a faint halo of that light spills onto the wall
+    around the box.
+  · A THIN CLIP OR LIP ALONG ITS TOP EDGE holds the film, and the film hangs from it — the
+    bottom edge of the film stops short of the bottom of the lit panel, so a band of bare
+    glowing white shows underneath it.
+  · A SLIM POWER CORD runs from its lower corner down the wall, and a small switch sits on
+    its side.
+It is NEVER a picture frame, NEVER a framed artwork, painting or poster, NEVER a television
+and NEVER a computer monitor. It has no thick decorative moulding, no mount board, no wire
+and no hook — it is not hung like a painting.
+KEEP IT MODEST IN SIZE: noticeably smaller than the speech bubble, clearly a piece of
+equipment on the wall and never the subject of the picture.
+
+THE FILM IN THE LIGHT BOX.
 Use the attached reference image "PANORAMIC FILM" for ONE thing only: the arrangement of the
 teeth — the wide gentle arch, the upper row and the lower row separated by a clear gap, and
 above all THE ANGLE OF THE FOUR BACK CORNER TEETH. Do not copy its flat diagram finish or
-its slab of dark grey: redraw it in the house style, as a softly lit pale blue-grey film
-with bone-white teeth.
+its slab of dark grey: redraw it in the house style, as a luminous dark blue-grey film with
+bone-white teeth, lit from behind.
+COPY THE TEETH AS THEY ARE DRAWN IN THAT REFERENCE: the crowns are broad and chunky and the
+roots are SHORT and BLUNT. They are never long thin spikes and the row is never a row of
+matchsticks.
 In the LOWER row the very last tooth at each end LEANS FORWARD, tipped against the tooth in
 front of it, and THERE IS NO TOOTH BEHIND IT AT ALL. It never leans backwards. In the UPPER
 row the last tooth at each end stands upright and in line with its neighbours.
-Keep the film small and simple. The teeth in the speech bubble and the teeth on this film
-are THE ONLY teeth anywhere in the picture.
+The teeth in the speech bubble and the teeth on this film are THE ONLY teeth anywhere in the
+picture.
 
 COLOUR.
 Follow the pale milky pastel range of the HOUSE STYLE reference. THE VIOLET #8e6299 BELONGS
@@ -149,7 +191,10 @@ never put her in green, blue or white scrubs and never leave the white coat off.
 anything in the speech bubble. Never draw the arrow flat on the floor, in perspective, as a
 carpet, as a rug, as a road or as a stripe of flooring, and never let furniture or feet of
 the room stand on top of it. Never give the arrow a second head, an outline or a pattern. No
-other arrow, no numbered captions, no ruler and no measuring scale. Never draw the last
+other arrow, no numbered captions, no ruler and no measuring scale. Never draw the light
+box as a framed picture, a painting, a poster, a television or a monitor, never hang it from
+a wire or a hook, and never leave it unlit. Never draw the room's fittings as heavily as the
+people, and never fade, grey out or flatten a person in order to keep them quiet. Never draw the last
 lower tooth leaning backwards and never put a tooth behind it. No dental instruments in the
 foreground: no syringe, no needle, no drill, no forceps, no tray of tools. No blood, no
 bleeding gum, no photo-real mouth interior, no wide-open mouth on any face in the room. No

@@ -9,6 +9,13 @@
 //     ・**它的後面不准有牙** —— 智齒是最後一顆。
 //   這兩件是「角度」與「有沒有東西」，正是文字最講不清楚的兩種。
 //
+// ⚠⚠ 2026-09-22 第二版：牙根改短改粗、顆數從 16 減到 14。
+//   使用者看過成品：「插圖中間的 X 光片上一版比較好，用上一版的」——
+//   差別在**片子被畫大之後，細長的牙根就變成一排火柴棒**。
+//   真的全景片上，牙冠佔的比例比牙根想像中大，而且根短而鈍。
+//   顆數減少 ＝ 每顆分到的像素變多（同 ILLUSTRATION.md 第七節第 10 條那條：
+//   「圈存在不代表像素夠」）。
+//
 // ⚠ 這張只提供一件事：**片子裡的排列**（弓形、上下排、四顆智齒各自的角度）。
 //   畫法不提供 —— 提示詞要明講「抄排列，不要抄這張的畫法」，
 //   不然模型會把這裡的平塗深灰底整片抄過去（第十一節那條）。
@@ -50,10 +57,10 @@ const row = (up, n, spread, tilts) => {
     const slope = -2 * curve * (x - cx);                   // 弧的斜率
     const base = Math.atan(slope) * 180 / Math.PI;
     const idx = Math.abs(i - (n - 1) / 2);                 // 離中線幾顆（0 ＝ 門牙）
-    const molar = idx > 4.4;
-    const w = molar ? 74 : idx > 2.4 ? 62 : 48;
-    const crown = molar ? 62 : 74;
-    const root = molar ? 92 : 108;
+    const molar = idx > 3.6;
+    const w = molar ? 88 : idx > 2.0 ? 74 : 56;
+    const crown = molar ? 64 : 70;
+    const root = molar ? 58 : 70;          // ⚠ 根要短而鈍，不是細長的火柴棒
     const extra = tilts[i] || 0;
     const flip = up ? 0 : 180;
     /* ⚠⚠ tooth() 的原點是**牙頸**（冠在 -y、根在 +y），不是咬合面。
@@ -72,7 +79,7 @@ const row = (up, n, spread, tilts) => {
      左端那顆往右前方倒（＋42），右端那顆往左前方倒（−42）。
    ・上排（16 顆）最外側那兩顆 ＝ 上顎智齒，**站得直、長到咬合平面**
      （文章裡那一句：上顎比下顎更常完全萌發）。 */
-const lowerTilt = { 0: 42, 15: -42 };
+const lowerTilt = { 0: 42, 13: -42 };
 const upperTilt = {};
 
 /* 下顎骨的輪廓：中間一條帶 ＋ 兩側上升的下顎枝 */
@@ -90,8 +97,8 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
   ${ramus(232)}${ramus(W - 232)}
   <path d="M 232 ${(occ(232) + 196).toFixed(1)} Q ${cx} ${(occ(cx) + 300).toFixed(1)} ${W - 232} ${(occ(W - 232) + 196).toFixed(1)}"
         fill="none" stroke="${BONE}" stroke-width="30" opacity="0.4"/>
-  ${row(false, 16, 470, upperTilt)}
-  ${row(true, 16, 470, lowerTilt)}
+  ${row(false, 14, 430, upperTilt)}
+  ${row(true, 14, 430, lowerTilt)}
 </svg>`;
 
 /* ── 出圖（Chromium，做法同 tools/webp.mjs） ───────────────── */
