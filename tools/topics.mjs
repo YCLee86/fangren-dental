@@ -388,6 +388,14 @@ for (const spec of SPECS) {
   if (allN !== 2) throw new Error(`「全部文章」應該有 2 處（頁首＋頁尾），找到 ${allN}`);
   h = h.replace(allRe, 'href="../../#topics">全部文章<');
 
+  /* 1.6 頁首的標誌＋「芳仁牙醫」要回首頁（2026-09-22 使用者回報）。
+     快照帶來的是 `href="./"`，在 /topics/<spec>/ 底下解成這一頁自己，
+     **按了只是回到這一科的著陸頁**。改成和文章頁一樣的 `../../`。 */
+  const brandRe = /<a class="brand" href="\.\/">/g;
+  const brandN = (h.match(brandRe) || []).length;
+  if (brandN !== 1) throw new Error(`頁首標誌應該有 1 處，找到 ${brandN}`);
+  h = h.replace(brandRe, '<a class="brand" href="../../">');
+
   /* 2. HERO 整塊拿掉（窄帶、詩、瀏覽計數的掛勾都在裡面一起消失） */
   const hs = h.indexOf('  <div class="hero">');
   const he = h.indexOf('  <section id="topics">');
