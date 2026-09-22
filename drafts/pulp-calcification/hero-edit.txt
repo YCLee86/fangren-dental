@@ -1,24 +1,41 @@
-Edit this image. Change ONLY the two things listed below. Everything else — the people, the
-tunnel, the giant tooth, the neighbouring teeth, the bacteria circle, the gum, the colours,
-the linework, the paper texture and the composition — stays exactly as it is. Do not redraw
-the picture, do not restyle it, do not move, add or remove anything else, and do not change
-anybody's pose, clothing or expression.
+================================================================================
+編修用。⚠ 一次只做一件，做完看過再做下一件。⚠ 只附「要被改的那一張圖」，
+不要附 cave-ref.png ——編修模式看到第二張圖會當成「照這張畫」。
+================================================================================
 
-1. THE LOWER OF THE TWO THIN LINES THAT RUN FROM THE BIG LEFT-HAND LENS TO THE TOOTH ENDS IN
-   THE WRONG PLACE. Both of those lines must finish at THE SAME SINGLE POINT: the point on
-   the dashed root canal where the upper line already ends. Redraw the lower line so that it
-   meets the upper line there, tip to tip, so the two of them form a narrow V lying on its
-   side. It still leaves the rim of the lens from exactly where it leaves it now, and it is
-   still one clean straight stroke of the same weight and the same darkness as the upper
-   line, with no arrowhead. Do not add a third line, do not leave the old lower line behind,
-   and do not touch the two lines belonging to the small bacteria circle.
+【編修 A：膿包的形狀】
 
-2. THE PALE POCKET AT THE TIP OF THE LEFT-HAND ROOT IS DRAWN AS A PERFECT CIRCLE. IT MUST NOT
-   BE A CIRCLE. Redraw it as an IRREGULAR, LOPSIDED BLOB: wider than it is tall, with one
-   side bulging further out than the other, a shallow dent somewhere in its outline, and a
-   soft, slightly wobbly hand-drawn edge — the way a real lesion looks, never symmetrical.
-   Keep it in the same place, the same pale cream fill, the same quiet dashed outline and
-   roughly the same size. It wraps around the very tip of the root, with the root tip sitting
-   inside it. Never a circle, never a neat oval, never a shape drawn with a compass.
+Edit this image with the smallest possible change. KEEP THE EXACT SAME FRAMING, THE SAME
+CROP AND THE SAME ZOOM: do not enlarge the picture, do not shift it, do not re-centre it and
+do not crop anything off the edges. Do not redraw, restyle or repaint any part of it.
 
-Nothing else in the picture changes. There is no writing anywhere in the image.
+CHANGE ONE THING ONLY: the small pale pocket at the tip of the LEFT-hand root of the big
+tooth is currently drawn as a perfect circle. Keep it EXACTLY WHERE IT IS, the same size,
+the same pale cream fill and the same fine dashed outline — change only the outline's shape,
+from a circle to a slightly IRREGULAR one: a little wider than it is tall, one side bulging
+a little further out than the other, one shallow dent somewhere in the edge, and a soft
+hand-drawn wobble to the line. It still touches the root tip and still overlaps it, exactly
+as it does now.
+
+DO NOT move it away from the root. DO NOT make it bigger. DO NOT detach it from the tooth.
+DO NOT change anything else in the picture. There is no writing anywhere in the image.
+
+================================================================================
+
+【編修 B：大圈的下緣引線】
+
+Edit this image with the smallest possible change. KEEP THE EXACT SAME FRAMING, THE SAME
+CROP AND THE SAME ZOOM: do not enlarge the picture, do not shift it, do not re-centre it and
+do not crop anything off the edges. Do not redraw, restyle or repaint any part of it.
+
+CHANGE ONE THING ONLY: two thin lines run from the big left-hand lens across to the tooth.
+The UPPER one ends at a small point on the dashed root canal inside the tooth. The LOWER one
+ends somewhere else. Move the far end of the LOWER line so that it finishes at exactly the
+same point as the upper line, tip to tip, so that the two lines form one narrow sideways V.
+The lower line still leaves the rim of the lens from exactly where it leaves it now, stays
+perfectly straight, stays the same thickness and the same darkness as the upper line, and
+has no arrowhead.
+
+DO NOT add a line. DO NOT remove a line. DO NOT touch the two lines belonging to the small
+bacteria circle on the right. DO NOT change anything else in the picture. There is no writing
+anywhere in the image.
