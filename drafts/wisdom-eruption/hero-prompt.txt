@@ -79,10 +79,13 @@ IT IS NOT LYING ON THE FLOOR. IT IS NOT A CARPET, NOT A RUG AND NOT A PATH. It s
 the picture, flat and face-on, like a wide painted ribbon floating in front of the room: the
 room's floor and skirting are visible underneath it and behind it, and the arrow never takes
 the floor's perspective and never has anything of the room lying on top of it.
-THIS ARROW IS THE ONE THING IN THE PICTURE THAT IS ALLOWED A GRADIENT: it fades smoothly
-from very pale warm sand at its tail on the right to a deeper warm clay at the arrowhead on
-the left, and the band grows wider as it approaches the head. It has no outline, no pattern,
-no stripes, no texture and no writing on it.
+THE ARROW IS VIOLET, AND IT IS THE ONE THING IN THE PICTURE THAT IS ALLOWED A GRADIENT.
+IT MUST BE A GRADIENT — never one flat tone. It fades smoothly along its whole length from
+a VERY PALE DUSTY LAVENDER, #e6dce9, at its tail on the right, through the mid violet
+#8e6299, to the DEEP VIOLET #784e84 at the arrowhead on the left, which is its darkest
+point. The band also grows wider as it approaches the head. It is never brick red, never
+terracotta, never clay, never sand, never brown and never grey. It has no outline, no
+pattern, no stripes, no texture and no writing on it.
 FIVE FIGURES STAND ON THE ARROW, their feet on the band and NOT on the floor of the room.
 THEY ARE ALL THE SAME BOY at five ages, and THE SIXTH AND LAST STAGE IS THE SEATED PATIENT
 HIMSELF at the point of the arrow — do not draw a sixth standing figure. All six share the
@@ -179,12 +182,14 @@ The teeth in the speech bubble and the teeth on this film are THE ONLY teeth any
 picture.
 
 COLOUR.
-Follow the pale milky pastel range of the HOUSE STYLE reference. THE VIOLET #8e6299 BELONGS
-TO THE DENTIST'S SCRUBS AND TO NOTHING ELSE — it is the one saturated note in the picture
-and it appears in that one place only. Never wash the picture in violet, never use a bright
-or candy purple, and never give anyone violet skin, violet hair, violet walls or a violet
-floor. The arrow is sand-to-clay. The teeth stay clean pale bone white and the gum stays
-pale pink; the only stronger pink in the picture is the swollen flap inside the bubble.
+Follow the pale milky pastel range of the HOUSE STYLE reference. THE VIOLET FAMILY —
+#e6dce9, #8e6299 and #784e84 — BELONGS TO EXACTLY TWO THINGS AND TO NOTHING ELSE: THE
+DENTIST'S SCRUBS and THE ARROW. Those two are the only saturated notes in the picture, and
+they are the same family, so they read as a pair. Everything else stays in the pale pastel
+range. Never wash the picture in violet, never use a bright or candy purple, and never give
+anyone violet skin, violet hair, violet walls or a violet floor. The teeth stay clean pale
+bone white and the gum stays pale pink; the only stronger pink in the picture is the swollen
+flap inside the bubble.
 
 CRITICAL — NO WRITING ANYWHERE IN THIS PICTURE.
 No text, no lettering, no numbers, no letters, no labels, no logos and no invented script
@@ -201,8 +206,9 @@ anything in the speech bubble. Never draw the arrow flat on the floor, in perspe
 carpet, as a rug, as a road or as a stripe of flooring, and never let furniture or feet of
 the room stand on top of it. Never give the arrow a second head, an outline or a pattern. NEVER REVERSE THE AGES: the
 baby is never near the seated man or near the arrowhead, and the senior high boy is never at
-the tail or at the right-hand edge. The five never get smaller from right to left. No
-other arrow, no numbered captions, no ruler and no measuring scale. Never draw the light
+the tail or at the right-hand edge. The five never get smaller from right to left. Never
+draw the arrow in one flat colour, and never draw it brick red, terracotta, clay, sand,
+brown, grey, pink or blue — it is violet, and it is a gradient. No other arrow, no numbered captions, no ruler and no measuring scale. Never draw the light
 box as a framed picture, a painting, a poster, a television or a monitor, never hang it from
 a wire or a hook, and never leave it unlit. Never draw the room's fittings as heavily as the
 people, and never fade, grey out or flatten a person in order to keep them quiet. Never draw the last

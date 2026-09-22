@@ -19,6 +19,9 @@
 //  ② **S 形**，而且**粗寬、有漸層**（尾端淡、箭頭端深）。
 //     ⚠ 漸層是使用者指定的。ILLUSTRATION.md 第三節寫著「漸層只用來描述光，不當裝飾」——
 //       這是那一條的例外，**而且只限這支箭頭**，畫面其他地方仍然是平塗。
+//     ⚠ 2026-09-22 顏色從陶土色改成**口腔外科的紫**（使用者指定）：
+//       尾 #e6dce9 → 中 #8e6299 → 箭頭 #784e84。科別色因此在畫面上出現兩處
+//       （醫師的刷手服與這支箭頭），兩者同一個家族、讀起來是一組。
 //  ③ **左右反過來**：醫師與病患在左，箭頭從右邊進來、箭頭尖指向病患。
 //  ④ **醫師與病患畫大**：兩個大人是畫面裡最大的人，五個階段明顯小一階。
 //
@@ -75,12 +78,13 @@ const headPath = `M ${pt([hx - hty * hw, hy + htx * hw])}
 const arrow = `
   <defs>
     <linearGradient id="g" x1="1555" y1="300" x2="625" y2="430" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#efe5d9"/>
-      <stop offset="1" stop-color="#bd8f70"/>
+      <stop offset="0" stop-color="#e6dce9"/>
+      <stop offset="0.55" stop-color="#8e6299"/>
+      <stop offset="1" stop-color="#784e84"/>
     </linearGradient>
   </defs>
   <path d="${bandPath}" fill="url(#g)"/>
-  <path d="${headPath}" fill="#bd8f70"/>`;
+  <path d="${headPath}" fill="#784e84"/>`;
 
 /* ── 人：極簡剪影，只為了鎖大小與位置 ─────────────────────── */
 const R = (x, y, w, h, r, f) =>
