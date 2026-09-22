@@ -6281,15 +6281,39 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
   100% { opacity: 0;   transform: scale(.45); }
 }
 
-/* 黃色的警告標示放大縮小。速度中（2 秒）、幅度 Ⓒ 明顯：1 → 1.208 → 1（＝ 1 加 .13 × 1.6）。
-   遮罩是一顆橢圓的漸層：實心的部分蓋住整塊標示（半徑 5% × 6.4%，標示本身是
-   5% × 6.28%），再往外淡出到 6.4% × 8.2%，淡出的那一圈落在螢幕的空白處。
-   ⚠ 再往外就會碰到螢幕的右緣（在 58.3%），放大時那條邊會跟著糊掉。 */
+/* ⚠⚠ 2026-09-22 第二次改這一塊。使用者：「警告標示放大的時候，連旁邊的藍色框框
+   都放大，還跑出插圖的螢幕範圍」。量過之後三件事一起錯：
+
+   ① 遮罩畫得太大。標示實際只有 x 394~459、y 70.6~117（800×445.6 的座標系，
+      逐格量的），但遮罩是「以 424 為心、半徑 51.2」→ 右緣伸到 475。
+      **螢幕那條藍框在 470**，所以遮罩把藍框也含進去了。
+   ② 放大的軸心在標示中心 → 藍框那一帶（470）會被往右推 9.6 個單位，
+      直接推出螢幕外面。這就是他看到的。
+   ③ 沒有任何東西擋住「畫到螢幕外面」。
+
+   三件各自治：
+   ① 遮罩改成**圓角矩形**（data-URI 的 SVG），不再用橢圓 ——
+      橢圓要罩住一個扁長方形，半徑一定得開得比方形大很多，右邊必然吃到藍框。
+   ② **軸心移到標示的右緣**（459）。放大時右邊幾乎不動（藍框在 470，
+      距軸心 11，乘 0.208 只走 2.3 個單位），長的那一邊往左邊的空白處長。
+   ③ **外層多一道 clip-path 當硬邊界**，而且**外層不跟著放大**（放大搬到內層）——
+      所以無論如何都畫不到螢幕外面。遮罩淡到 0 的地方才是 clip 的位置，
+      正常時看不到那條邊，它只是保險。
+   ⚠ 量測面板驗不出這件事 —— 它只量「有沒有水平捲動」，而這是畫在圖裡面的。
+     要看的是**把倍率停在最大再和原圖逐像素相減**。 */
 .post-hero .hero-fx-err {
   position: absolute; inset: 0; display: block; pointer-events: none;
-  -webkit-mask-image: radial-gradient(ellipse 6.4% 8.2% at 53% 20.65%, #000 78%, transparent 100%);
-          mask-image: radial-gradient(ellipse 6.4% 8.2% at 53% 20.65%, #000 78%, transparent 100%);
-  transform-origin: 53% 20.65%;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 445.6" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="376" y="64" width="84" height="60" rx="12" fill="%23fff" filter="url(%23b)"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 445.6" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="376" y="64" width="84" height="60" rx="12" fill="%23fff" filter="url(%23b)"/></svg>');
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  /* 硬邊界（上 右 下 左）。遮罩已經淡到 0 才輪到它，所以看不見 —— 純保險。 */
+  clip-path: inset(12.12% 41.5% 69.93% 45.75%);
+}
+/* 放大的是這一層，外層那一道 clip 不跟著動 */
+.post-hero .hero-fx-err-in {
+  display: block; width: 100%; height: 100%;
+  transform-origin: 57.375% 21.05%;   /* 標示的右緣 (459, 93.8) */
   animation: heroFxErr 2s ease-in-out infinite;
 }
 /* ⚠ 上面那條 .post-hero img 會給它圓角、陰影與卡片底色，三項都要蓋掉；
@@ -6317,14 +6341,23 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 .pv-shot .card-thumb { transition: none; }
 .card:hover .pv-shot .card-thumb, .card.pv-hover .pv-shot .card-thumb { transform: none; }
 
-/* 放大縮小的那一塊。座標與遮罩尺寸是文章頁那一組除以 0.988（卡片左右各裁 0.59%）。
-   ⚠ 這裡刻意沿用 .hero-fx-err 的動畫（速度中 2 秒、幅度 1.208），
-     只換遮罩的位置與大小 —— 規格要和正式站同一份，不要在這裡另外調。 */
+/* 放大縮小的那一塊。⚠⚠ 2026-09-22 跟著文章頁一起改過：
+   遮罩從橢圓換成**圓角矩形**（data-URI 的 SVG）、軸心移到標示的右緣、
+   外層多一道 clip-path 當硬邊界而且**不跟著放大**（放大搬到內層）。
+   成因與三個數字的由來寫在文章頁 <head> 的那一段註解裡，改之前先讀。
+   ⚠ 卡片是 16/9 的 object-fit: cover，左右各裁 0.59% —— 橫向的百分比都除以 0.9882，
+     縱向不動；遮罩的 viewBox 高度用 450（16/9）不是 445.6。 */
 .pv-card-err {
   position: absolute; inset: 0; display: block; pointer-events: none;
-  -webkit-mask-image: radial-gradient(ellipse 6.48% 8.2% at 53.05% 20.65%, #000 78%, transparent 100%);
-          mask-image: radial-gradient(ellipse 6.48% 8.2% at 53.05% 20.65%, #000 78%, transparent 100%);
-  transform-origin: 53.05% 20.65%;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="375.7" y="64.6" width="85" height="60.6" rx="12" fill="%23fff" filter="url(%23b)"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="375.7" y="64.6" width="85" height="60.6" rx="12" fill="%23fff" filter="url(%23b)"/></svg>');
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  clip-path: inset(12.12% 41.4% 69.93% 45.7%);
+}
+.pv-card-err-in {
+  display: block; width: 100%; height: 100%;
+  transform-origin: 57.46% 21.05%;
   animation: heroFxErr 2s ease-in-out infinite;
 }
 .pv-card-img { width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; display: block; }
@@ -6873,10 +6906,10 @@ body { padding-bottom: 150px; }
           <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w, ../../assets/hero-aligner-photo-1600.webp 1600w, ../../assets/hero-aligner-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="card-thumb" src="../../assets/hero-aligner-photo-1600.jpg" srcset="../../assets/hero-aligner-photo-800.jpg 800w, ../../assets/hero-aligner-photo-1600.jpg 1600w, ../../assets/hero-aligner-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫是一間明亮的診所規劃室。畫面中央偏左有一面飄浮在空中的半透明藍色大螢幕，上面用白色線條畫著上排牙齒的俯視圖：牙齒互相重疊、有的擠到外側有的縮在後面，排成一條歪斜的弧線，旁邊散著白色的彎箭頭與五個琥珀色的驚嘆號三角形；螢幕右半有一顆被放大的牙齒，整根牙根插在一塊半透明的骨頭裡，牙根尖端有一道琥珀色的短線，上方一個琥珀色的提示牌寫著 ERROR，下面一行是一個牙套圖示、200+ 與無限符號。螢幕前站著一位穿白袍、裡面是藍灰色刷手服的男醫師，側身朝著螢幕，抬起一手用食指點在那顆放大的牙上，指尖旁有三道短線，另一手垂在身側拿著一支細筆，閉著嘴微笑。畫面左邊，一位穿芥末黃毛衣的男生坐在淺色長桌前，身體前傾、雙手放在筆電鍵盤上，手腕旁有兩道短線；筆電螢幕是深色底、一行一行的淺色程式碼，右下角有一個白色的牙弓圖示，旁邊飄著一面淡藍色的小螢幕，上面同樣是程式碼與牙弓，筆電右邊立著一台沒有開機的深灰色平板。畫面右邊，一位穿藍灰色刷手服的男性一手拿著平板（上面是同一顆牙與牙根）、一手張開手掌比向大螢幕，手掌外緣與嘴邊各有兩道短線；他身旁一位穿淡綠色上衣的女性低頭看著手機。背景是白色的牆與淺色地板，木質檯面上放著兩個馬克杯和一個陶土色的杯子，矮櫃上擺著一副石膏牙模與一副透明牙套，牆上掛著一張只有牙弓線條圖的海報，右側有一盆綠色植物，房間上方橫過幾道長長的白色弧線。" width="1600" height="891" loading="lazy">
         </picture>
-          <span class="pv-card-err" aria-hidden="true" style="position:absolute;inset:0;display:block;pointer-events:none"><picture>
+          <span class="pv-card-err" aria-hidden="true" style="position:absolute;inset:0;display:block;pointer-events:none"><span class="pv-card-err-in" style="display:block;width:100%;height:100%"><picture>
           <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w, ../../assets/hero-aligner-photo-1600.webp 1600w, ../../assets/hero-aligner-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="pv-card-img" src="../../assets/hero-aligner-photo-1600.jpg" srcset="../../assets/hero-aligner-photo-800.jpg 800w, ../../assets/hero-aligner-photo-1600.jpg 1600w, ../../assets/hero-aligner-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="" width="1600" height="891" loading="lazy">
-        </picture></span>
+        </picture></span></span>
           <svg class="pv-card-fx" viewBox="0 0 800 450" preserveAspectRatio="none" aria-hidden="true" focusable="false" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
             <defs><radialGradient id="pvcGlow"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset=".55" stop-color="#ffffff" stop-opacity=".45"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient></defs>
             <circle class="hero-fx-blip pv-blip" style="opacity:0; transform-box:view-box; transform-origin:223.9px 91.9px; animation-delay:0.00s" cx="223.9" cy="91.9" r="12.1" fill="url(#pvcGlow)"/>

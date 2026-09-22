@@ -148,15 +148,39 @@ r.dataset.theme=s;})();</script>
   100% { opacity: 0;   transform: scale(.45); }
 }
 
-/* 黃色的警告標示放大縮小。速度中（2 秒）、幅度 Ⓒ 明顯：1 → 1.208 → 1（＝ 1 加 .13 × 1.6）。
-   遮罩是一顆橢圓的漸層：實心的部分蓋住整塊標示（半徑 5% × 6.4%，標示本身是
-   5% × 6.28%），再往外淡出到 6.4% × 8.2%，淡出的那一圈落在螢幕的空白處。
-   ⚠ 再往外就會碰到螢幕的右緣（在 58.3%），放大時那條邊會跟著糊掉。 */
+/* ⚠⚠ 2026-09-22 第二次改這一塊。使用者：「警告標示放大的時候，連旁邊的藍色框框
+   都放大，還跑出插圖的螢幕範圍」。量過之後三件事一起錯：
+
+   ① 遮罩畫得太大。標示實際只有 x 394~459、y 70.6~117（800×445.6 的座標系，
+      逐格量的），但遮罩是「以 424 為心、半徑 51.2」→ 右緣伸到 475。
+      **螢幕那條藍框在 470**，所以遮罩把藍框也含進去了。
+   ② 放大的軸心在標示中心 → 藍框那一帶（470）會被往右推 9.6 個單位，
+      直接推出螢幕外面。這就是他看到的。
+   ③ 沒有任何東西擋住「畫到螢幕外面」。
+
+   三件各自治：
+   ① 遮罩改成**圓角矩形**（data-URI 的 SVG），不再用橢圓 ——
+      橢圓要罩住一個扁長方形，半徑一定得開得比方形大很多，右邊必然吃到藍框。
+   ② **軸心移到標示的右緣**（459）。放大時右邊幾乎不動（藍框在 470，
+      距軸心 11，乘 0.208 只走 2.3 個單位），長的那一邊往左邊的空白處長。
+   ③ **外層多一道 clip-path 當硬邊界**，而且**外層不跟著放大**（放大搬到內層）——
+      所以無論如何都畫不到螢幕外面。遮罩淡到 0 的地方才是 clip 的位置，
+      正常時看不到那條邊，它只是保險。
+   ⚠ 量測面板驗不出這件事 —— 它只量「有沒有水平捲動」，而這是畫在圖裡面的。
+     要看的是**把倍率停在最大再和原圖逐像素相減**。 */
 .post-hero .hero-fx-err {
   position: absolute; inset: 0; display: block; pointer-events: none;
-  -webkit-mask-image: radial-gradient(ellipse 6.4% 8.2% at 53% 20.65%, #000 78%, transparent 100%);
-          mask-image: radial-gradient(ellipse 6.4% 8.2% at 53% 20.65%, #000 78%, transparent 100%);
-  transform-origin: 53% 20.65%;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 445.6" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="376" y="64" width="84" height="60" rx="12" fill="%23fff" filter="url(%23b)"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 445.6" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="376" y="64" width="84" height="60" rx="12" fill="%23fff" filter="url(%23b)"/></svg>');
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  /* 硬邊界（上 右 下 左）。遮罩已經淡到 0 才輪到它，所以看不見 —— 純保險。 */
+  clip-path: inset(12.12% 41.5% 69.93% 45.75%);
+}
+/* 放大的是這一層，外層那一道 clip 不跟著動 */
+.post-hero .hero-fx-err-in {
+  display: block; width: 100%; height: 100%;
+  transform-origin: 57.375% 21.05%;   /* 標示的右緣 (459, 93.8) */
   animation: heroFxErr 2s ease-in-out infinite;
 }
 /* ⚠ 上面那條 .post-hero img 會給它圓角、陰影與卡片底色，三項都要蓋掉；
@@ -459,6 +483,7 @@ r.dataset.theme=s;})();</script>
            結果是：<picture> 給了 WebP、<image> 又硬拉一份 JPEG，手機上多了 151 KiB。
            改過 sizes 或 srcset 的話，**兩份要一起改**。 -->
       <span class="hero-fx-err" aria-hidden="true" style="position:absolute;inset:0;display:block;pointer-events:none">
+        <span class="hero-fx-err-in" style="display:block;width:100%;height:100%">
         <picture>
           <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w,
                                             ../../assets/hero-aligner-photo-1600.webp 1600w,
@@ -471,6 +496,7 @@ r.dataset.theme=s;})();</script>
                sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
                alt="" width="2000" height="1114" style="display:block;width:100%;height:100%;box-shadow:none;border-radius:0">
         </picture>
+        </span>
       </span>
       <svg class="hero-fx" viewBox="0 0 800 445.6" preserveAspectRatio="xMidYMid meet"
            aria-hidden="true" focusable="false"

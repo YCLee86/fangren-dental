@@ -72,8 +72,9 @@ const pic = m[2];
 const overlay =
   '<span class="pv-shot" style="position:relative;display:block">' + pic +
   '\n          <span class="pv-card-err" aria-hidden="true" style="position:absolute;inset:0;display:block;pointer-events:none">' +
+  '<span class="pv-card-err-in" style="display:block;width:100%;height:100%">' +
   pic.replace(/class="card-thumb"/, 'class="pv-card-img"').replace(/ alt="[^"]*"/, ' alt=""') +
-  '</span>' +
+  '</span></span>' +
   '\n          <svg class="pv-card-fx" viewBox="0 0 800 450" preserveAspectRatio="none" aria-hidden="true" focusable="false"' +
   ' style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">' +
   '\n            <defs><radialGradient id="pvcGlow">' +
@@ -130,14 +131,23 @@ const CSS = [
 '.pv-shot .card-thumb { transition: none; }',
 '.card:hover .pv-shot .card-thumb, .card.pv-hover .pv-shot .card-thumb { transform: none; }',
 '',
-'/* 放大縮小的那一塊。座標與遮罩尺寸是文章頁那一組除以 0.988（卡片左右各裁 0.59%）。',
-'   ⚠ 這裡刻意沿用 .hero-fx-err 的動畫（速度中 2 秒、幅度 1.208），',
-'     只換遮罩的位置與大小 —— 規格要和正式站同一份，不要在這裡另外調。 */',
+'/* 放大縮小的那一塊。⚠⚠ 2026-09-22 跟著文章頁一起改過：',
+'   遮罩從橢圓換成**圓角矩形**（data-URI 的 SVG）、軸心移到標示的右緣、',
+'   外層多一道 clip-path 當硬邊界而且**不跟著放大**（放大搬到內層）。',
+'   成因與三個數字的由來寫在文章頁 <head> 的那一段註解裡，改之前先讀。',
+'   ⚠ 卡片是 16/9 的 object-fit: cover，左右各裁 0.59% —— 橫向的百分比都除以 0.9882，',
+'     縱向不動；遮罩的 viewBox 高度用 450（16/9）不是 445.6。 */',
 '.pv-card-err {',
 '  position: absolute; inset: 0; display: block; pointer-events: none;',
-'  -webkit-mask-image: radial-gradient(ellipse 6.48% 8.2% at 53.05% 20.65%, #000 78%, transparent 100%);',
-'          mask-image: radial-gradient(ellipse 6.48% 8.2% at 53.05% 20.65%, #000 78%, transparent 100%);',
-'  transform-origin: 53.05% 20.65%;',
+'  -webkit-mask-image: url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="375.7" y="64.6" width="85" height="60.6" rx="12" fill="%23fff" filter="url(%23b)"/></svg>\');',
+'          mask-image: url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="375.7" y="64.6" width="85" height="60.6" rx="12" fill="%23fff" filter="url(%23b)"/></svg>\');',
+'  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;',
+'  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;',
+'  clip-path: inset(12.12% 41.4% 69.93% 45.7%);',
+'}',
+'.pv-card-err-in {',
+'  display: block; width: 100%; height: 100%;',
+'  transform-origin: 57.46% 21.05%;',
 '  animation: heroFxErr 2s ease-in-out infinite;',
 '}',
 '.pv-card-img { width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; display: block; }',
@@ -295,6 +305,7 @@ if (!/\.\.\/\.\.\/assets\/style\.css/.test(s)) gate.push("樣式表的路徑不�
 if ((s.match(/class="pv-shot"/g) || []).length !== 1) gate.push("疊層的外框不是剛好一個");
 if ((s.match(/class="hero-fx-blip pv-blip"/g) || []).length !== 5) gate.push("驚嘆號不是五個");
 if (!/@keyframes heroFxBlip/.test(s) || !/@keyframes heroFxErr/.test(s)) gate.push("快照裡沒有動畫規格（style#hero-fx-css 沒抄進來）");
+if (!/class="pv-card-err-in"/.test(s)) gate.push("疊層少了內層（放大要在內層，外層那道 clip 不能跟著動）");
 if ((s.match(/opacity:0; transform-box:view-box;/g) || []).length !== 5) gate.push("驚嘆號少了 inline 的 opacity:0／origin／delay");
 if (s.lastIndexOf('<div class="pvbar">') < s.lastIndexOf("</main>")) gate.push("切換條插在 </main> 前面了");
 /* 注入的那一段 <script> 逐行數單引號與雙引號，奇數就是字串被切斷了 */
