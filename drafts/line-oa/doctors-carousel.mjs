@@ -80,7 +80,11 @@ const bubbles = docs.map((d) => {
         type: "box", layout: "horizontal",
         contents: [{
           type: "box", layout: "vertical", flex: 0, backgroundColor: accent[d.spec], cornerRadius: "8px",
-          paddingStart: "8px", paddingEnd: "8px", paddingTop: "2px", paddingBottom: "2px",
+          /* ⚠ 上 4 下 0，不是上下各 2（2026-09-23 使用者：「藥丸標籤的文字好像有點跑上去了」）。
+             中文字的墨在行框裡偏上：上下各 2 時量到墨離塊頂 3.3、離塊底 8.3px。
+             總內距維持 4px（塊高不變），整段往下挪 2px → 5.3／6.3，
+             留 1px 偏上 ＝ 站上藥丸那個使用者點過頭的抬升量（約 1.5px）。 */
+          paddingStart: "8px", paddingEnd: "8px", paddingTop: "4px", paddingBottom: "0px",
           contents: [{ type: "text", text: d.role, color: "#FFFFFF", size: "xs" }],
         }],
       },
