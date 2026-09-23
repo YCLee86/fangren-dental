@@ -441,6 +441,35 @@ tools/schema.mjs 讀醫師是這一條：
 提案頁整頁：git show d67fb7d8:preview/doctor-yang/index.html
 （產生器 git show d67fb7d8:tools/doctor-yang-preview.mjs、
   裁切器 git show d67fb7d8:tools/doctor-yang-crop.mjs）</pre></div>
+
+<h2>第六位・第二輪：楊小瑩換照片（2026-09-23，preview/doctor-yang/ 一輪定案）</h2>
+<div class="note"><pre>第一張（框 845）上線之後，使用者：
+  「我覺得這個圖片 髮型太圓了 合成網站上圓形 感覺雙重圓
+    就算是鮑伯頭也有沒那麼圓的」
+重新生成一張：「換這張做預覽給我看」。
+⚠ 教訓：**圓頭像裡，髮型輪廓本身是圓的，會和圓框疊成兩圈** ——
+  裁切怎麼調都救不了，要換照片。之後收到新的形象照，先看髮型輪廓再算框。
+
+新照片 1086x1448，量到 髮頂 70／眼睛 388／下巴 655／臉中線 520，
+位置照李柄輝的比例（眼睛在框高 44.2%、臉中線在框寬 49.3%）。
+  Ⓐ 870　頭頂留白 7.7%　頭高 67%
+  Ⓑ 845　頭頂留白 6.5%　頭高 69%（預設 ＝ 第一輪挑的框）
+  Ⓒ 820　頭頂留白 5.4%　頭高 71%
+  Ⓓ 795　頭頂留白 4.2%　頭高 74%
+  現況　站上那張（第一張）
+上界 870：再大框的上緣就超出原圖。
+使用者：「795 上線」
+
+定案 128,37,795,795
+⚠ 這一次往「**滿**」走（第一輪是往鬆走）—— 頭髮不再那麼蓬，頭可以放大。
+  六位挑下來兩個方向都有，所以仍然沒有標準值，下一位照樣給一把尺。
+⚠ 原檔直接蓋掉 drafts/doctor-photo/src/yang-xiaoying.png、
+  成品檔名不變（assets/doctor-yang-xiaoying-400.jpg／.webp），index.html 不必動。
+  第一張的原檔：git show 8184b2b5:drafts/doctor-photo/src/yang-xiaoying.png
+
+提案頁整頁：git show 482014fd:preview/doctor-yang/index.html
+（產生器 git show 482014fd:tools/doctor-yang-preview.mjs、
+  裁切器 git show 482014fd:tools/doctor-yang-crop.mjs）</pre></div>
 <h2>第七位：廖立揚（2026-09-23，preview/doctor-liao/ 三輪定案）</h2>
 <div class="note"><pre>使用者給了**四張**（同一個人、四種表情），「把這四張做成廖立揚醫師的圖卡
 作成站上首頁提案頁給我看」。所以這一輪有兩件要挑：**表情**與**框的大小**。
