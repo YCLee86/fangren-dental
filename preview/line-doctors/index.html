@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 醫師介紹　改版預覽</title>
+<!-- 2026-09-23 開的提案頁。起因：使用者「目前 line 商家帳號的醫師介紹圖卡長這樣。重新設計、
+     有個重點要特別注意：這個圖卡的圖片非常大、我不喜歡。所以網站上特別放了比較小的圖示
+     在 line 上也要沿用這個概念 把網站上的醫師做預覽給我看」。
+     卡片是 drafts/line-oa/doctors-carousel.json（由 doctors-carousel.mjs 從 index.html 讀出來），
+     圖是 drafts/line-oa/doctors-shots.mjs 從那份 JSON 畫的 —— 不要手改這一頁的圖。 -->
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;--ok:#3f654a;--wait:#9e6301}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:26px 16px 72px}
+h1{font-size:1.3rem;line-height:1.5;margin:0 0 .3em}
+.lede{color:var(--soft);font-size:.92rem;margin:0 0 1.2em}
+h2{font-size:1.04rem;margin:2.2em 0 .6em;padding-top:1em;border-top:1px solid var(--rule)}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:10px;overflow:hidden;font-size:.9rem}
+th,td{padding:.55em .7em;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+th{font-size:.8rem;color:var(--soft);font-weight:500;white-space:nowrap}
+td:first-child{white-space:nowrap;font-weight:600}
+.ok{color:var(--ok);font-weight:600;white-space:nowrap}
+.wait{color:var(--wait);font-weight:600;white-space:nowrap}
+/* LINE 的聊天室：深色底、卡片 300px、橫著滑 */
+.chat{background:#1c1c1e;border-radius:12px;padding:14px 0 12px;margin:.8em -4px 0}
+.strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding:0 16px 6px;-webkit-overflow-scrolling:touch}
+.strip img{flex:0 0 300px;width:300px;height:auto;scroll-snap-align:center;border-radius:12px;display:block}
+.hint{color:#9a9a9a;font-size:.78rem;text-align:center;margin:.4em 0 0}
+.now{display:flex;gap:10px;overflow-x:auto;margin:.8em 0 0}
+.now img{flex:0 0 auto;width:min(46%,260px);height:auto;border-radius:10px;display:block}
+.cap{font-size:.8rem;color:var(--soft);margin:.4em 0 0}
+ol.items{list-style:none;margin:0;padding:0}
+ol.items>li{background:var(--card);border-radius:10px;padding:12px 14px;margin:.7em 0 0}
+.it{font-weight:700;margin:0 0 .3em}
+dl.pes{margin:0;display:grid;grid-template-columns:4.6em 1fr;gap:.2em .6em;font-size:.9rem}
+dl.pes dt{color:var(--soft)}
+dl.pes dd{margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>LINE「醫師介紹」改版預覽</h1>
+<p class="lede">圖文選單「醫師介紹」點下去回的那組卡。照片改成網站那顆 76px 的小圓，九位的文字全部從網站讀出來。</p>
+
+<table>
+<thead><tr><th>項次</th><th>問題</th><th>狀態</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>插畫太大，佔卡片六成高度</td><td class="ok">✅ 已改</td></tr>
+<tr><td>2</td><td>插畫不是醫師本人，而且九位共用兩張</td><td class="ok">✅ 已改</td></tr>
+<tr><td>3</td><td>三位還沒有照片</td><td class="ok">✅ 同網站，純文字</td></tr>
+<tr><td>4</td><td>換上 LINE 要誰動手</td><td class="wait">待使用者確認</td></tr>
+</tbody>
+</table>
+
+<h2>新版（左右滑，共九張）</h2>
+<div class="chat">
+  <div class="strip">
+    <img src="doc-1.png" alt="李柄輝醫師">
+    <img src="doc-2.png" alt="李侑津醫師">
+    <img src="doc-3.png" alt="王俊偉醫師">
+    <img src="doc-4.png" alt="廖立揚醫師">
+    <img src="doc-5.png" alt="林晏妤醫師">
+    <img src="doc-6.png" alt="許馨文醫師">
+    <img src="doc-7.png" alt="楊小瑩醫師">
+    <img src="doc-8.png" alt="陳芷鈴醫師">
+    <img src="doc-9.png" alt="謝耀慶醫師">
+  </div>
+  <p class="hint">← 左右滑 →　順序同網站</p>
+</div>
+<p class="cap">模擬圖：照 Flex JSON 畫的，實際樣子以 LINE 顯示為準。</p>
+
+<h2>現況（對照）</h2>
+<div class="now">
+  <img src="now-1.png" alt="現況：李柄輝醫師的卡">
+  <img src="now-2.png" alt="現況：林晏妤醫師的卡">
+</div>
+
+<h2>逐項</h2>
+<ol class="items">
+<li><p class="it">1　插畫太大</p>
+<dl class="pes">
+<dt>問題</dt><dd>插畫佔卡片高度約 62%，名字與資歷被擠到最下面。</dd>
+<dt>事件</dt><dd>網站已經用 76px 的小圓頭像解決過同一件事。</dd>
+<dt>解決方案</dt><dd>拿掉大圖；頭像 76px 放左上，名字與專科標籤放右邊。卡高 320px，資料從頂端就開始。</dd>
+</dl></li>
+<li><p class="it">2　插畫不是醫師本人</p>
+<dl class="pes">
+<dt>問題</dt><dd>男女各一張通用插畫，九位共用。</dd>
+<dt>事件</dt><dd>網站上六位已經有本人的形象照。</dd>
+<dt>解決方案</dt><dd>直接用網站那六張照片（fangren.net 上的 JPEG），專科標籤用網站同一顆科別色。</dd>
+</dl></li>
+<li><p class="it">3　三位沒有照片</p>
+<dl class="pes">
+<dt>問題</dt><dd>廖立揚、林晏妤、許馨文三位沒有照片。</dd>
+<dt>事件</dt><dd>網站上這三張是純文字卡（廖立揚醫師的照片 9/23 依要求移除）。</dd>
+<dt>解決方案</dt><dd>同網站，不補插畫、不放佔位圖。之後照片上了網站，重跑一次產生器就會跟上。</dd>
+</dl></li>
+<li><p class="it">4　換上 LINE 要誰動手</p>
+<dl class="pes">
+<dt>問題</dt><dd>現在這組卡不是我們做的，不確定是哪一個後台產的。</dd>
+<dt>事件</dt><dd>新版已經是可以直接貼的 Flex Message JSON（15.4 KB，上限 50 KB）。</dd>
+<dt>解決方案</dt><dd>待使用者確認：定案後是自己貼進 LINE 後台，還是交給廠商換。</dd>
+</dl></li>
+</ol>
+</div>
+</body>
+</html>

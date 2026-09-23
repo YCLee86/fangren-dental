@@ -19,7 +19,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "../..");
@@ -54,7 +54,7 @@ function render(n, dir = "vertical", first = false) {
       `line-height:1.45`,
       n.align ? `text-align:${n.align}` : "",
       "min-width:0",
-      n.wrap ? "white-space:normal;overflow-wrap:anywhere" : "white-space:nowrap;overflow:hidden;text-overflow:ellipsis",
+      n.wrap ? "white-space:pre-line;overflow-wrap:anywhere" : "white-space:nowrap;overflow:hidden;text-overflow:ellipsis",
       n.flex === 0 ? "flex:0 0 auto" : (n.flex != null ? `flex:${n.flex} 1 0` : "flex:1 1 auto"),
       mg,
     ].filter(Boolean).join(";");
@@ -112,10 +112,13 @@ function render(n, dir = "vertical", first = false) {
       n.justifyContent ? `justify-content:${n.justifyContent}` : "",
       n.alignItems && n.layout !== "baseline" ? `align-items:${n.alignItems}` : "",
       px(n.height) != null ? `height:${px(n.height)}px` : "",
+      /* width 給 px（醫師介紹那顆 76px 的圓頭像，2026-09-23）。 */
+      px(n.width) != null ? `width:${px(n.width)}px;flex:0 0 ${px(n.width)}px` : "",
       gap ? `gap:${gap}px` : "",
       n.backgroundColor ? `background:${n.backgroundColor}` : "",
       n.borderColor ? `border:${px(n.borderWidth) || 1}px solid ${n.borderColor}` : "",
-      n.cornerRadius ? `border-radius:${px(n.cornerRadius, SP)}px` : "",
+      /* ⚠ LINE 的 box 帶 cornerRadius 會把裡面的東西一起裁掉（圓頭像就是靠這個），這裡照做。 */
+      n.cornerRadius ? `border-radius:${px(n.cornerRadius, SP)}px;overflow:hidden` : "",
       /* ⚠⚠ 決定要不要撐開的是**父層**的方向，不是自己的 layout。
          2026-08-28 踩過：綠色按鈕從 button 換成 vertical 的 box 之後，
          這一行按自己的 layout 判斷，兩顆按鈕就縮成文字寬、不再各佔一半。 */
@@ -148,7 +151,11 @@ export function bubbleHtml(b) {
     box-shadow:0 1px 3px rgba(0,0,0,.35)">${parts}</div>`;
 }
 
-/* ── 產生預覽頁 ── */
+/* ── 產生預覽頁 ──
+   ⚠ 只有直接執行時才跑（2026-09-23 加的）：doctors-shots.mjs 要 import 上面的 bubbleHtml，
+     不擋的話一 import 就會把 preview.png 重畫一次。 */
+if (import.meta.url === pathToFileURL(process.argv[1]).href) await main();
+async function main() {
 const load = (f) => JSON.parse(fs.readFileSync(path.join(HERE, f), "utf8"));
 const arg = process.argv.slice(2).find((a) => !a.startsWith("--"));
 /* ⚠⚠ `--row` ＝ 一整條攤成一列（＝ LINE 上真的橫著滑的樣子）。
@@ -231,3 +238,4 @@ await page.screenshot({ path: out });
 await browser.close();
 fs.unlinkSync(outHtml);
 console.log(`預覽：${path.relative(ROOT, out)}　${Math.ceil(box.width)}×${Math.ceil(box.height)} CSS px（DPR ${dpr}）`);
+}

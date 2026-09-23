@@ -1,0 +1,1266 @@
+{
+  "type": "flex",
+  "altText": "芳仁牙醫的九位醫師",
+  "contents": {
+    "type": "carousel",
+    "contents": [
+      {
+        "type": "bubble",
+        "size": "mega",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "backgroundColor": "#F4F4F5",
+          "paddingAll": "20px",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "spacing": "14px",
+              "alignItems": "center",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "flex": 0,
+                  "width": "76px",
+                  "height": "76px",
+                  "cornerRadius": "38px",
+                  "contents": [
+                    {
+                      "type": "image",
+                      "url": "https://fangren.net/assets/doctor-li-binghui-400.jpg",
+                      "size": "full",
+                      "aspectRatio": "1:1",
+                      "aspectMode": "cover"
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "spacing": "sm",
+                  "justifyContent": "center",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "李柄輝",
+                      "color": "#2A2C27",
+                      "size": "lg",
+                      "weight": "bold"
+                    },
+                    {
+                      "type": "box",
+                      "layout": "horizontal",
+                      "contents": [
+                        {
+                          "type": "box",
+                          "layout": "vertical",
+                          "flex": 0,
+                          "backgroundColor": "#3F654A",
+                          "cornerRadius": "8px",
+                          "paddingStart": "8px",
+                          "paddingEnd": "8px",
+                          "paddingTop": "2px",
+                          "paddingBottom": "2px",
+                          "contents": [
+                            {
+                              "type": "text",
+                              "text": "創辦醫師",
+                              "color": "#FFFFFF",
+                              "size": "xs"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "color": "#CDD0D2",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "專長",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "口腔檢查、一般牙科治療、牙周照護",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ],
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "資歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "台灣國際植牙醫師學會專科醫師（ATIOI）\n國際牙醫學院院士（TICD）\n衛生福利部家庭牙醫專科",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "學歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "中山醫學大學牙醫學學士\n中山醫學大學牙醫學碩士\n中山醫學大學牙醫學博士",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "size": "mega",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "backgroundColor": "#F4F4F5",
+          "paddingAll": "20px",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "spacing": "14px",
+              "alignItems": "center",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "flex": 0,
+                  "width": "76px",
+                  "height": "76px",
+                  "cornerRadius": "38px",
+                  "contents": [
+                    {
+                      "type": "image",
+                      "url": "https://fangren.net/assets/doctor-li-youjin-400.jpg",
+                      "size": "full",
+                      "aspectRatio": "1:1",
+                      "aspectMode": "cover"
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "spacing": "sm",
+                  "justifyContent": "center",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "李侑津",
+                      "color": "#2A2C27",
+                      "size": "lg",
+                      "weight": "bold"
+                    },
+                    {
+                      "type": "box",
+                      "layout": "horizontal",
+                      "contents": [
+                        {
+                          "type": "box",
+                          "layout": "vertical",
+                          "flex": 0,
+                          "backgroundColor": "#317D78",
+                          "cornerRadius": "8px",
+                          "paddingStart": "8px",
+                          "paddingEnd": "8px",
+                          "paddingTop": "2px",
+                          "paddingBottom": "2px",
+                          "contents": [
+                            {
+                              "type": "text",
+                              "text": "醫師",
+                              "color": "#FFFFFF",
+                              "size": "xs"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "color": "#CDD0D2",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "專長",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "牙周病治療、牙周再生手術、植牙手術、固定假牙、活動假牙、水雷射牙周治療、一般牙科治療",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ],
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "資歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "臺北榮民總醫院\n衛生福利部雙和醫院",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "學歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "臺北醫學大學牙醫學學士\n國立陽明交通大學牙醫學碩士",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "size": "mega",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "backgroundColor": "#F4F4F5",
+          "paddingAll": "20px",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "spacing": "14px",
+              "alignItems": "center",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "flex": 0,
+                  "width": "76px",
+                  "height": "76px",
+                  "cornerRadius": "38px",
+                  "contents": [
+                    {
+                      "type": "image",
+                      "url": "https://fangren.net/assets/doctor-wang-junwei-400.jpg",
+                      "size": "full",
+                      "aspectRatio": "1:1",
+                      "aspectMode": "cover"
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "spacing": "sm",
+                  "justifyContent": "center",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "王俊偉",
+                      "color": "#2A2C27",
+                      "size": "lg",
+                      "weight": "bold"
+                    },
+                    {
+                      "type": "box",
+                      "layout": "horizontal",
+                      "contents": [
+                        {
+                          "type": "box",
+                          "layout": "vertical",
+                          "flex": 0,
+                          "backgroundColor": "#4478B5",
+                          "cornerRadius": "8px",
+                          "paddingStart": "8px",
+                          "paddingEnd": "8px",
+                          "paddingTop": "2px",
+                          "paddingBottom": "2px",
+                          "contents": [
+                            {
+                              "type": "text",
+                              "text": "矯正專科醫師",
+                              "color": "#FFFFFF",
+                              "size": "xs"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "color": "#CDD0D2",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "專長",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "齒顎矯正、隱適美",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ],
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "資歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "衛生福利部齒顎矯正專科\n臺北醫學大學附設醫院齒顎矯正科\n臺安醫院主治醫師",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "學歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "臺北醫學大學牙醫學學士\n臺北醫學大學牙醫學碩士",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "size": "mega",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "backgroundColor": "#F4F4F5",
+          "paddingAll": "20px",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "vertical",
+              "spacing": "sm",
+              "justifyContent": "center",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "廖立揚",
+                  "color": "#2A2C27",
+                  "size": "lg",
+                  "weight": "bold"
+                },
+                {
+                  "type": "box",
+                  "layout": "horizontal",
+                  "contents": [
+                    {
+                      "type": "box",
+                      "layout": "vertical",
+                      "flex": 0,
+                      "backgroundColor": "#4478B5",
+                      "cornerRadius": "8px",
+                      "paddingStart": "8px",
+                      "paddingEnd": "8px",
+                      "paddingTop": "2px",
+                      "paddingBottom": "2px",
+                      "contents": [
+                        {
+                          "type": "text",
+                          "text": "矯正專科醫師",
+                          "color": "#FFFFFF",
+                          "size": "xs"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "color": "#CDD0D2",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "專長",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "齒顎矯正、隱適美、阻生齒矯正",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ],
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "資歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "衛生福利部齒顎矯正專科\n臺中榮民總醫院齒顎矯正科\n國立臺灣大學附設醫院",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "學歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "臺北醫學大學牙醫學學士",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "size": "mega",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "backgroundColor": "#F4F4F5",
+          "paddingAll": "20px",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "vertical",
+              "spacing": "sm",
+              "justifyContent": "center",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "林晏妤",
+                  "color": "#2A2C27",
+                  "size": "lg",
+                  "weight": "bold"
+                },
+                {
+                  "type": "box",
+                  "layout": "horizontal",
+                  "contents": [
+                    {
+                      "type": "box",
+                      "layout": "vertical",
+                      "flex": 0,
+                      "backgroundColor": "#C28229",
+                      "cornerRadius": "8px",
+                      "paddingStart": "8px",
+                      "paddingEnd": "8px",
+                      "paddingTop": "2px",
+                      "paddingBottom": "2px",
+                      "contents": [
+                        {
+                          "type": "text",
+                          "text": "兒牙專科醫師",
+                          "color": "#FFFFFF",
+                          "size": "xs"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "color": "#CDD0D2",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "專長",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ],
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "資歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "衛生福利部兒童牙科專科\n隱適美認證醫師\n臺中榮民總醫院兒童牙科",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "學歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "高雄醫學大學牙醫學學士",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "size": "mega",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "backgroundColor": "#F4F4F5",
+          "paddingAll": "20px",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "vertical",
+              "spacing": "sm",
+              "justifyContent": "center",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "許馨文",
+                  "color": "#2A2C27",
+                  "size": "lg",
+                  "weight": "bold"
+                },
+                {
+                  "type": "box",
+                  "layout": "horizontal",
+                  "contents": [
+                    {
+                      "type": "box",
+                      "layout": "vertical",
+                      "flex": 0,
+                      "backgroundColor": "#8E6299",
+                      "cornerRadius": "8px",
+                      "paddingStart": "8px",
+                      "paddingEnd": "8px",
+                      "paddingTop": "2px",
+                      "paddingBottom": "2px",
+                      "contents": [
+                        {
+                          "type": "text",
+                          "text": "口外專科醫師",
+                          "color": "#FFFFFF",
+                          "size": "xs"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "color": "#CDD0D2",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "專長",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "阻生齒拔除、齒槽骨保留術",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ],
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "資歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "衛生福利部口腔顎面外科專科\n奇美醫學中心口腔顎面外科總醫師\n保提拉肉毒學院認證醫師",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "學歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "臺北醫學大學牙醫學學士",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "size": "mega",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "backgroundColor": "#F4F4F5",
+          "paddingAll": "20px",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "spacing": "14px",
+              "alignItems": "center",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "flex": 0,
+                  "width": "76px",
+                  "height": "76px",
+                  "cornerRadius": "38px",
+                  "contents": [
+                    {
+                      "type": "image",
+                      "url": "https://fangren.net/assets/doctor-yang-xiaoying-400.jpg",
+                      "size": "full",
+                      "aspectRatio": "1:1",
+                      "aspectMode": "cover"
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "spacing": "sm",
+                  "justifyContent": "center",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "楊小瑩",
+                      "color": "#2A2C27",
+                      "size": "lg",
+                      "weight": "bold"
+                    },
+                    {
+                      "type": "box",
+                      "layout": "horizontal",
+                      "contents": [
+                        {
+                          "type": "box",
+                          "layout": "vertical",
+                          "flex": 0,
+                          "backgroundColor": "#465885",
+                          "cornerRadius": "8px",
+                          "paddingStart": "8px",
+                          "paddingEnd": "8px",
+                          "paddingTop": "2px",
+                          "paddingBottom": "2px",
+                          "contents": [
+                            {
+                              "type": "text",
+                              "text": "贋復假牙專科醫師",
+                              "color": "#FFFFFF",
+                              "size": "xs"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "color": "#CDD0D2",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "專長",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "活動假牙、固定假牙、牙橋、全口重建、一般牙科治療",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ],
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "資歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "衛生福利部贋復牙科專科\n台大醫院補綴科兼任主治醫師\n台大雲林分院主治醫師",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "學歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "高雄醫學大學牙醫學學士",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "size": "mega",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "backgroundColor": "#F4F4F5",
+          "paddingAll": "20px",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "spacing": "14px",
+              "alignItems": "center",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "flex": 0,
+                  "width": "76px",
+                  "height": "76px",
+                  "cornerRadius": "38px",
+                  "contents": [
+                    {
+                      "type": "image",
+                      "url": "https://fangren.net/assets/doctor-chen-zhiling-400.jpg",
+                      "size": "full",
+                      "aspectRatio": "1:1",
+                      "aspectMode": "cover"
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "spacing": "sm",
+                  "justifyContent": "center",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "陳芷鈴",
+                      "color": "#2A2C27",
+                      "size": "lg",
+                      "weight": "bold"
+                    },
+                    {
+                      "type": "box",
+                      "layout": "horizontal",
+                      "contents": [
+                        {
+                          "type": "box",
+                          "layout": "vertical",
+                          "flex": 0,
+                          "backgroundColor": "#AE4F4D",
+                          "cornerRadius": "8px",
+                          "paddingStart": "8px",
+                          "paddingEnd": "8px",
+                          "paddingTop": "2px",
+                          "paddingBottom": "2px",
+                          "contents": [
+                            {
+                              "type": "text",
+                              "text": "顯微根管專科醫師",
+                              "color": "#FFFFFF",
+                              "size": "xs"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "color": "#CDD0D2",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "專長",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "顯微根管、根尖手術、活髓治療、固定假牙",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ],
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "資歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "衛生福利部牙髓病科專科\n成大醫院口腔醫學部總醫師\n臺北榮民總醫院",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "學歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "臺北醫學大學牙醫學學士",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "size": "mega",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "backgroundColor": "#F4F4F5",
+          "paddingAll": "20px",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "spacing": "14px",
+              "alignItems": "center",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "flex": 0,
+                  "width": "76px",
+                  "height": "76px",
+                  "cornerRadius": "38px",
+                  "contents": [
+                    {
+                      "type": "image",
+                      "url": "https://fangren.net/assets/doctor-xie-yaoqing-400.jpg",
+                      "size": "full",
+                      "aspectRatio": "1:1",
+                      "aspectMode": "cover"
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "spacing": "sm",
+                  "justifyContent": "center",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "謝耀慶",
+                      "color": "#2A2C27",
+                      "size": "lg",
+                      "weight": "bold"
+                    },
+                    {
+                      "type": "box",
+                      "layout": "horizontal",
+                      "contents": [
+                        {
+                          "type": "box",
+                          "layout": "vertical",
+                          "flex": 0,
+                          "backgroundColor": "#C28229",
+                          "cornerRadius": "8px",
+                          "paddingStart": "8px",
+                          "paddingEnd": "8px",
+                          "paddingTop": "2px",
+                          "paddingBottom": "2px",
+                          "contents": [
+                            {
+                              "type": "text",
+                              "text": "兒童牙科",
+                              "color": "#FFFFFF",
+                              "size": "xs"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "color": "#CDD0D2",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "專長",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "兒童隱適美、兒童早期矯正、兒童鎮靜麻醉、兒童齲齒治療、一般牙科治療",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ],
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "資歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "臺北榮總兒童牙科總醫師\n日本新潟大學吞嚥功能受訓醫師\n隱適美認證醫師",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "md",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "學歷",
+                  "color": "#5C5F57",
+                  "size": "xs",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "國立陽明交通大學牙醫學學士",
+                  "color": "#2A2C27",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
