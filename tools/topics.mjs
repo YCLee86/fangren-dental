@@ -390,11 +390,16 @@ for (const spec of SPECS) {
 
   /* 1.6 頁首的標誌＋「芳仁牙醫」要回首頁（2026-09-22 使用者回報）。
      快照帶來的是 `href="./"`，在 /topics/<spec>/ 底下解成這一頁自己，
-     **按了只是回到這一科的著陸頁**。改成和文章頁一樣的 `../../`。 */
+     **按了只是回到這一科的著陸頁**。
+     ⚠ 指 `../../#topics`，**不是**文章頁那個 `../../`（2026-09-23 使用者第二次回報）：
+       落在首頁最上面的 HERO，他還要自己往下滑一屏才回到標籤那一排。
+       在著陸頁上按標誌的意思是「取消篩選」，和「全部」那顆一樣 ——
+       首頁那支開頁腳本看到 #topics 會在第一幀就捲好，不會先閃一下 HERO。
+       ⚠ 文章頁的標誌仍然回首頁最上面，那邊沒有「篩選」可以取消，不要一起改。 */
   const brandRe = /<a class="brand" href="\.\/">/g;
   const brandN = (h.match(brandRe) || []).length;
   if (brandN !== 1) throw new Error(`頁首標誌應該有 1 處，找到 ${brandN}`);
-  h = h.replace(brandRe, '<a class="brand" href="../../">');
+  h = h.replace(brandRe, '<a class="brand" href="../../#topics">');
 
   /* 2. HERO 整塊拿掉（窄帶、詩、瀏覽計數的掛勾都在裡面一起消失） */
   const hs = h.indexOf('  <div class="hero">');
