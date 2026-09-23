@@ -108,9 +108,16 @@ const FACES = {
        —— 直接目測原檔的頭頂與下巴會差一截（第一輪的臉中線就量偏了 10px，
        臉因此偏左 2~3%）。下一位建議照這個做法量。
      位置仍照李柄輝的比例：眼睛在框高 44.2%、臉中線在框寬 49.3%。 */
+  /* ⚠⚠ 廖立揚 2026-09-23 上線，**當天由使用者要求移除**（「廖立揚醫師照片移除」）。
+     整段刻意留著但註解掉 —— 量到的四個點與定案的框是三輪換來的，刪掉就要重來。
+     要放回來：把底下那三行解除註解 → node tools/doctor-photo-crop.mjs liao-liyang
+     → node tools/webp.mjs → index.html 那張卡補 data-face 與 picture
+     → node tools/topics.mjs && node tools/build.mjs。
+     原檔（四張候選）仍在 drafts/doctor-photo/src/liao-liyang*.png。
   "liao-liyang": { name: "廖立揚", src: [1122, 1402],
     marks: { hair: 110, eyes: 346, chin: 604, midX: 546 },
     sq: [217, 51, 668, 668] },
+  */
 };
 
 const WIDTH   = 400;

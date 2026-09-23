@@ -6135,16 +6135,12 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>臺北醫學大學牙醫學碩士</dd>
           </dl>
         </article>
-        <article class="doc" data-face data-spec="ortho">
-          <!-- 形象照（2026-09-23 上線，站上第六張）。提案頁 preview/doctor-liao/ 三輪：
-               四張表情選 Ⓑ（微笑不露齒），頭的大小選「頭高佔圓 74%」。
-               ⚠ 裁切框在 tools/doctor-photo-crop.mjs 的 FACES，不要手改這張圖。 -->
-          <picture class="doc-face">
-            <source type="image/webp" srcset="../../assets/doctor-liao-liyang-400.webp">
-            <img src="../../assets/doctor-liao-liyang-400.jpg" width="400" height="400" loading="lazy"
-                 alt="廖立揚醫師的形象照，身著白袍站在診所候診區">
-          </picture>
-          <h3>廖立揚<span class="doc-role tag-off">矯正專科醫師</span></h3>
+        <article class="doc" data-spec="ortho">
+          <!-- ⚠ 形象照 2026-09-23 上線當天由使用者要求**移除**，這張卡回到純文字。
+               要放回來：tools/doctor-photo-crop.mjs 的 FACES 裡 liao-liyang 那一段
+               解除註解（五個步驟寫在那裡）。原檔仍在 drafts/doctor-photo/src/。
+               ⚠ 這段註解要留在 article 裡面 —— 放外面的話七科快照每一頁都會帶一份。 -->
+          <h3>廖立揚<span class="doc-role">矯正專科醫師</span></h3>
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk tag-on" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk tag-on" data-spec="ortho">隱適美</span><span class="sep">、</span><span class="sk tag-on" data-spec="ortho">阻生齒矯正</span></dd>
             <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺中榮民總醫院齒顎矯正科<br>國立臺灣大學附設醫院</dd>
