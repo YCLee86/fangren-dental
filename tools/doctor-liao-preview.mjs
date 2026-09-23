@@ -50,11 +50,18 @@ const NOTE = `<!-- =============================================================
      --------------------------------------------------------------------------
      使用者給了四張，「把這四張做成廖立揚醫師的圖卡，作成站上首頁提案頁給我看」。
 
-     ---- 要挑的是什麼（兩條尺，互相獨立） ---------------------------------
+     ---- 要挑的是什麼 -------------------------------------------------------
      **不是版面。** 圓頭像那一套 2026-09-19 已經定案上線，這一頁完全沿用
-     index.html 現行的規則，只換 img 的 src。要挑的是：
+     index.html 現行的規則，只換 img 的 src。
 
-       ① 頭在圓裡多大（四張一起動）　② 哪一種表情
+     ✅ **第三輪（2026-09-23）：頭的大小定案了 —— 使用者「留 74%」。**
+       那條尺已經從切換條上拿掉、收成寫死的 74%（同 head-search、
+       night-map-park 那兩輪的做法），**網址參數 ?h=70|77|81 仍然吃得到**，
+       要回頭比另外三格還打得開。
+       ⚠ 74% 比站上那三位（77／81）鬆一點，**那是他看過四格之後挑的，
+         不是算出來的** —— 不要拿「和王俊偉一致」去把它訂正回 77。
+
+     所以這一頁現在只剩一件事要挑：**哪一種表情**。
 
        Ⓐ 露齒笑，畫法最接近照片（原檔 1024x1536，和另外三張不同組）
        Ⓑ 微笑不露齒
@@ -127,7 +134,7 @@ if (art < 0) throw new Error('廖立揚的 h3 前面找不到 article');
 html = html.slice(0, art) + TAG + ' data-face' + html.slice(art + TAG.length);
 const ALT = '廖立揚醫師的形象照，身著白袍站在診所候診區';
 html = html.replace(H3, '<picture class="doc-face">\n' +
-  '            <img class="pv-liao" src="img/liao-a-81-400.jpg" width="400" height="400" alt="' + ALT + '">\n' +
+  '            <img class="pv-liao" src="img/liao-a-74-400.jpg" width="400" height="400" alt="' + ALT + '">\n' +
   '          </picture>\n          ' + H3);
 /* 守門：站上原本三張 ＋ 廖立揚這張 ＝ 4。數字不對就是掛錯人或掛了兩次。 */
 const got = (html.match(/<article class="doc" data-face/g) || []).length;
@@ -163,13 +170,6 @@ BARCSS
   <button class="pvbar-btn" type="button" aria-expanded="false">廖立揚 <b></b></button>
   <div class="pvbar-panel">
     <div class="pvbar-body">
-      <div class="pvbar-g">頭的大小　<em>頭高佔圓的比例</em></div>
-      <div class="pvbar-row" data-k="h">
-        <button type="button" data-h="70">70%<small>第一輪</small></button>
-        <button type="button" data-h="74">74%<small>中間</small></button>
-        <button type="button" data-h="77">77%<small>同王俊偉</small></button>
-        <button type="button" data-h="81">81%<small>同李柄輝</small></button>
-      </div>
       <div class="pvbar-g">四張照片　<em>版面已定案，這裡只換照片</em></div>
       <div class="pvbar-row" data-k="p">
         <button type="button" data-v="a">Ⓐ<small>露齒・像照片</small></button>
@@ -195,15 +195,17 @@ BARCSS
   var card = pic.parentNode;
   var ALL  = ['a','b','c','d','off'];
   var LBL  = { a:'Ⓐ 露齒・像照片', b:'Ⓑ 微笑', c:'Ⓒ 露齒', d:'Ⓓ 抿嘴', off:'現況（沒有照片）' };
-  var SAME = { 70:'第一輪那一格（最鬆）', 74:'介於第一輪與王俊偉之間',
+  var SAME = { 70:'第一輪那一格（最鬆）', 74:'比站上那三位鬆一點，使用者挑的',
                77:'和站上的王俊偉一樣', 81:'和站上的李柄輝、李侑津一樣（最滿）' };
   var NOTE  = NOTEMAP;
   var BOXES = BOXMAP;
   var HS    = HSLIST;
-  var st = 'a', hs = 81, open1 = false;
+  var st = 'a', hs = 74, open1 = false;   /* 2026-09-23 使用者定案：「留 74%」 */
 
   var qs = new URLSearchParams(location.search);
   var q = qs.get('p'); if (q !== null && ALL.indexOf(q) >= 0) st = q;
+  /* ⚠ 那條尺 2026-09-23 已經定案收掉（留 74%），但網址參數留著吃得到
+     ——要回頭比另外三格時 ?h=70|77|81 仍然打得開（同 night-map-park 那一輪）。 */
   var h = parseInt(qs.get('h'), 10); if (HS.indexOf(h) >= 0) hs = h;
 
   function src(k, r) { return 'img/liao-' + k + '-' + r + '-400.jpg'; }
@@ -212,10 +214,7 @@ BARCSS
      不預抓的話每按一次都要重抓一遍（og-topic-card 那一輪定下的做法）。
      ⚠ 先抓同一張的其他尺寸（使用者這一輪主要在動那條尺），再抓其餘的。 */
   addEventListener('load', function () {
-    var q = [];
-    HS.forEach(function (r) { q.push(src(st, r)); });
-    ['a','b','c','d'].forEach(function (k) { HS.forEach(function (r) { q.push(src(k, r)); }); });
-    q.forEach(function (u) { new Image().src = u; });
+    ['a','b','c','d'].forEach(function (k) { new Image().src = src(k, hs); });
   });
 
   function apply() {
@@ -225,11 +224,9 @@ BARCSS
       if (b.dataset.h) b.setAttribute('aria-pressed', String(+b.dataset.h === hs));
       else b.setAttribute('aria-pressed', String(b.dataset.v === st));
     });
-    /* 照片關掉的時候那條尺沒有作用，整排調淡（同 card-more 那一輪的 is-off）。 */
-    box.querySelector('.pvbar-row[data-k="h"]').classList.toggle('is-off', st === 'off');
     var u = [];
     if (st !== 'a')  u.push('p=' + st);
-    if (hs !== 81)   u.push('h=' + hs);
+    if (hs !== 74)   u.push('h=' + hs);
     history.replaceState(null, '', u.length ? '?' + u.join('&') : location.pathname);
     btn.querySelector('b').textContent = st === 'off' ? LBL.off : LBL[st] + '・' + hs + '%';
     measure();
@@ -275,8 +272,9 @@ BARCSS
       '<div class="m ' + (even ? 'good' : 'bad') + '"><span>照片四周三個間距</span><b>' + g.map(n).join(' / ') + '</b></div>' +
       '<div class="m ' + (over > 0 ? 'bad' : 'good') + '"><span>水平捲動</span><b>' + (over > 0 ? over + 'px' : '無') + '</b></div>';
     foot.innerHTML =
-      '<div class="pvbar-note"><b>' + hs + '%</b>：' + SAME[hs] +
-      '<br><b>' + LBL[st] + '</b>：' + NOTE[st] + '</div>' +
+      '<div class="pvbar-note"><b>' + LBL[st] + '</b>：' + NOTE[st] +
+      '<br>頭的大小已定案：<b>頭高佔圓 ' + hs + '%</b>（' + SAME[hs] + '）。' +
+      '這一頁現在只剩一件事要挑：<b>哪一種表情</b>。</div>' +
       '<details class="pvbar-det"' + (open1 ? ' open' : '') + '><summary>量測 ' +
       (ok ? '・都對' : '・⚠ 有一項不對') + '</summary>' + rows + det + '</details>';
     /* 使用者自己打開過就記著，換一格不要又收起來。 */
