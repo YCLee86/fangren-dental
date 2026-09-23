@@ -106,17 +106,23 @@ r.dataset.theme=s;})();</script>
      **不是版面。** 圓頭像那一套 2026-09-19 已經定案上線，這一頁完全沿用。
      只有一張照片，所以要挑的是**框的大小**（頭在圓裡多滿）：
 
-       Ⓐ 框 760　頭比較滿
-       Ⓑ 框 800　和王俊偉並排最接近（預設）
-       Ⓒ 框 840　留白多一點
+     第一輪給 760／800／840，使用者：「感覺臉可以比760再大一點」。
+     第二輪往臉大那一側給一把尺，760 留著當對照：
+
+       對照 框 760（第一輪最滿的那一格）
+       Ⓐ 框 740　頭頂留白 5.7%
+       Ⓑ 框 720　頭頂留白 4.6%（預設）
+       Ⓒ 框 700　頭頂留白 3.4%
+       Ⓓ 框 680　頭頂留白 2.4%（再小頭頂就貼邊了）
 
      ---- 裁切怎麼來的 -------------------------------------------------------
      原圖 1024x1536，量到 髮頂 135／眼睛 420／下巴 685／臉中線 580，
      照李柄輝的比例（眼睛在框高 44.2%、臉中線在框寬 49.3%）定位置。
-       Ⓐ 205,84,760,760　Ⓑ 186,66,800,800　Ⓒ 166,49,840,840
+       對照 205,84,760,760　Ⓐ 215,93,740,740　Ⓑ 225,102,720,720
+       Ⓒ 235,111,700,700　Ⓓ 245,119,680,680
 
      ---- 切換條 -------------------------------------------------------------
-     網址參數 ?p=off|a|b|c（off ＝ 對照現況，那張卡沒有照片；不帶 ＝ Ⓑ）
+     網址參數 ?p=off|r|a|b|c|d（off ＝ 沒有照片、r ＝ 760 對照；不帶 ＝ Ⓑ）
      ========================================================================== -->
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary_large_image">
@@ -9423,9 +9429,13 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     <div class="pvbar-body">
       <div class="pvbar-g">框的大小　<em>版面已定案，這裡只換裁切</em></div>
       <div class="pvbar-row" data-k="p">
-        <button type="button" data-v="a">Ⓐ<small>頭滿・760</small></button>
-        <button type="button" data-v="b">Ⓑ<small>居中・800</small></button>
-        <button type="button" data-v="c">Ⓒ<small>留白・840</small></button>
+        <button type="button" data-v="a">Ⓐ<small>740</small></button>
+        <button type="button" data-v="b">Ⓑ<small>720</small></button>
+        <button type="button" data-v="c">Ⓒ<small>700</small></button>
+        <button type="button" data-v="d">Ⓓ<small>680</small></button>
+      </div>
+      <div class="pvbar-row">
+        <button type="button" data-v="r">對照：上一輪的 760</button>
       </div>
       <div class="pvbar-row">
         <button type="button" data-v="off">對照現況（這張卡沒有照片）</button>
@@ -9443,18 +9453,18 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
   var img  = document.querySelector('.pv-face');
   var pic  = img.parentNode;
   var card = pic.parentNode;
-  var ALL  = ['a','b','c','off'];
-  var LBL  = { a:'Ⓐ 頭滿 760', b:'Ⓑ 居中 800', c:'Ⓒ 留白 840', off:'現況（沒有照片）' };
-  var NOTE = {"a":"裁切 205,84,760,760　頭比較滿","b":"裁切 186,66,800,800　和王俊偉並排最接近","c":"裁切 166,49,840,840　留白多一點"};
+  var ALL  = ['r','a','b','c','d','off'];
+  var LBL  = { r:'對照 760', a:'Ⓐ 740', b:'Ⓑ 720', c:'Ⓒ 700', d:'Ⓓ 680', off:'現況（沒有照片）' };
+  var NOTE = {"r":"裁切 205,84,760,760　第一輪最滿的那一格，當對照","a":"裁切 215,93,740,740　頭頂留白 5.7%","b":"裁切 225,102,720,720　頭頂留白 4.6%","c":"裁切 235,111,700,700　頭頂留白 3.4%","d":"裁切 245,119,680,680　頭頂留白 2.4%，再小頭頂就貼邊"};
   var st = 'b';
 
   var q = new URLSearchParams(location.search).get('p');
   if (q !== null && ALL.indexOf(q) >= 0) st = q;
 
-  /* 三格都先抓下來，切換才不必等下載 —— Worker 對 preview 設 no-store，
+  /* 每一格都先抓下來，切換才不必等下載 —— Worker 對 preview 設 no-store，
      不預抓的話每按一次都要重抓一遍（og-topic-card 那一輪定下的做法）。 */
   addEventListener('load', function () {
-    ['a','b','c'].forEach(function (k) { new Image().src = 'img/xie-' + k + '-400.jpg'; });
+    ['r','a','b','c','d'].forEach(function (k) { new Image().src = 'img/xie-' + k + '-400.jpg'; });
   });
 
   function apply() {
@@ -9505,7 +9515,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     rows += '<div class="m"><span>同一列還有</span><b>' + mates.length + ' 張</b></div>';
     rows += '<div class="m ' + (over > 0 ? 'bad' : 'good') + '"><span>水平捲動</span><b>' + (over > 0 ? over + 'px' : '無') + '</b></div>';
     rows += '<hr><div class="pvbar-note"><b>' + LBL[st] + '</b>：' + NOTE[st] +
-      '<br>版面是 2026-09-19 已經定案的那一套，這一頁只換裁切；三格差在頭在圓裡多滿，' +
+      '<br>版面是 2026-09-19 已經定案的那一套，這一頁只換裁切；各格差在頭在圓裡多滿，' +
       '和站上那三顆並排比比看。要對照沒有照片的樣子按最底下那一顆。</div>';
     foot.innerHTML = rows;
   }

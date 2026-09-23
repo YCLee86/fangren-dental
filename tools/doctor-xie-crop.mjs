@@ -2,7 +2,7 @@
 /* ==========================================================================
    謝耀慶醫師・形象照的裁切器（提案期間用）
        drafts/doctor-photo/src/xie-yaoqing.png
-         →  preview/doctor-xie/img/xie-<a|b|c>-400.jpg
+         →  preview/doctor-xie/img/xie-<r|a|b|c|d>-400.jpg
    --------------------------------------------------------------------------
    tools/doctor-photo-crop.mjs 的**提案期分身**（同 doctor-liao-crop.mjs）：
    同樣的量法、同樣的比例、同樣的 400／0.82，只輸出到提案頁自己的資料夾。
@@ -10,14 +10,14 @@
    （slug 用 xie-yaoqing），再跑那一支出正式檔 —— 這一支連同
    tools/doctor-xie-preview.mjs 與 preview/doctor-xie/ 一起刪掉。
 
-   只有一張照片，所以這一輪要挑的是**框的大小**（頭在圓裡多滿）：
+   只有一張照片，所以要挑的是**框的大小**（頭在圓裡多滿）：
      原圖 1024x1536，量到 髮頂 135／眼睛 420／下巴 685／臉中線 580
      照李柄輝的比例（眼睛在框高 44.2%、臉中線在框寬 49.3%）定位置，
-     大小給三格。800 那一格頭圍和王俊偉（660）並排最接近 —— 但
-     「算出來的是起點，並排看才是判準」（王俊偉那一輪使用者自己改過一次）。
+     大小第一輪給 760／800／840（800 和王俊偉並排最接近），使用者要比 760
+     再大一點 ——「算出來的是起點，並排看才是判準」再一次（王俊偉那一輪也是）。
 
    跑法：
-       node tools/doctor-xie-crop.mjs           # 三格全出
+       node tools/doctor-xie-crop.mjs           # 全出
        node tools/doctor-xie-crop.mjs b         # 只出一格
        node tools/doctor-xie-crop.mjs --check   # 只比對，不寫檔
    ========================================================================== */
@@ -34,10 +34,15 @@ const OUT  = path.join(ROOT, "preview", "doctor-xie", "img");
    sq 是照上面那組比例算出來的框。留著 marks 是為了日後要重算時不必重量。 */
 const MARKS = { hair: 135, eyes: 420, chin: 685, midX: 580 };
 const box = (S) => [Math.round(MARKS.midX - 0.493 * S), Math.round(MARKS.eyes - 0.442 * S), S, S];
+/* 第二輪（同一天）：使用者看完第一輪「感覺臉可以比760再大一點」——
+   第一輪的 760／800／840 三格全部作廢，改成往小框（＝臉大）那一側給一把尺，
+   760 留著當對照。框再小下去頭頂的留白就沒了：680 只剩 16px（2.4%）。 */
 const FACES = {
-  a: { src: [1024, 1536], sq: box(760), note: "頭比較滿（框 760）" },
-  b: { src: [1024, 1536], sq: box(800), note: "和王俊偉並排最接近（框 800）" },
-  c: { src: [1024, 1536], sq: box(840), note: "留白多一點（框 840）" },
+  r: { src: [1024, 1536], sq: box(760), note: "對照：第一輪最滿的那一格（框 760）" },
+  a: { src: [1024, 1536], sq: box(740), note: "框 740，頭頂留白 5.7%" },
+  b: { src: [1024, 1536], sq: box(720), note: "框 720，頭頂留白 4.6%" },
+  c: { src: [1024, 1536], sq: box(700), note: "框 700，頭頂留白 3.4%" },
+  d: { src: [1024, 1536], sq: box(680), note: "框 680，頭頂留白 2.4%" },
 };
 
 const WIDTH   = 400;
@@ -108,5 +113,5 @@ for (const [k, face] of jobs) {
 await browser.close();
 
 if (check) console.log(`(--check 模式，未寫入)　相同 ${same}、有差 ${diff}`);
-else console.log(`謝耀慶三格：寫了 ${wrote} 個、${same} 個沒變`);
+else console.log(`謝耀慶各格：寫了 ${wrote} 個、${same} 個沒變`);
 if (!check && wrote) console.log("⚠ 接著要跑：node tools/doctor-xie-preview.mjs");

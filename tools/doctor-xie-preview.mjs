@@ -12,7 +12,7 @@
 
    ⚠⚠ **版面不必在這裡做** —— 圓頭像那一套 2026-09-19 已經定案上線在
        index.html 裡，這一頁只換 img 的 src。只有一張照片，所以切換條上
-       三格是**框的大小**（頭在圓裡多滿），不是三張不同的照片。
+       那幾格是**框的大小**（頭在圓裡多滿），不是不同的照片。
 
    ⚠ 定案之後要做的：把選中那一格的框搬進 tools/doctor-photo-crop.mjs 的 FACES、
      產出 assets/doctor-xie-yaoqing-400.jpg、在 index.html 那張卡補 data-face
@@ -29,7 +29,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIR  = join(ROOT, 'preview', 'doctor-xie');
 const OUT  = join(DIR, 'index.html');
-const KEYS = ['a', 'b', 'c'];
+const KEYS = ['r', 'a', 'b', 'c', 'd'];
 
 KEYS.forEach((k) => {
   if (!existsSync(join(DIR, 'img', 'xie-' + k + '-400.jpg')))
@@ -47,17 +47,23 @@ const NOTE = `<!-- =============================================================
      **不是版面。** 圓頭像那一套 2026-09-19 已經定案上線，這一頁完全沿用。
      只有一張照片，所以要挑的是**框的大小**（頭在圓裡多滿）：
 
-       Ⓐ 框 760　頭比較滿
-       Ⓑ 框 800　和王俊偉並排最接近（預設）
-       Ⓒ 框 840　留白多一點
+     第一輪給 760／800／840，使用者：「感覺臉可以比760再大一點」。
+     第二輪往臉大那一側給一把尺，760 留著當對照：
+
+       對照 框 760（第一輪最滿的那一格）
+       Ⓐ 框 740　頭頂留白 5.7%
+       Ⓑ 框 720　頭頂留白 4.6%（預設）
+       Ⓒ 框 700　頭頂留白 3.4%
+       Ⓓ 框 680　頭頂留白 2.4%（再小頭頂就貼邊了）
 
      ---- 裁切怎麼來的 -------------------------------------------------------
      原圖 1024x1536，量到 髮頂 135／眼睛 420／下巴 685／臉中線 580，
      照李柄輝的比例（眼睛在框高 44.2%、臉中線在框寬 49.3%）定位置。
-       Ⓐ 205,84,760,760　Ⓑ 186,66,800,800　Ⓒ 166,49,840,840
+       對照 205,84,760,760　Ⓐ 215,93,740,740　Ⓑ 225,102,720,720
+       Ⓒ 235,111,700,700　Ⓓ 245,119,680,680
 
      ---- 切換條 -------------------------------------------------------------
-     網址參數 ?p=off|a|b|c（off ＝ 對照現況，那張卡沒有照片；不帶 ＝ Ⓑ）
+     網址參數 ?p=off|r|a|b|c|d（off ＝ 沒有照片、r ＝ 760 對照；不帶 ＝ Ⓑ）
      ========================================================================== -->`;
 
 /* ---- (1) 相對路徑往上兩層。不要改用 base href —— 錨點會跳回首頁。 ---- */
@@ -111,7 +117,7 @@ const got = (html.match(/<article class="doc" data-face/g) || []).length;
 if (got !== 4) throw new Error('data-face 有 ' + got + ' 張，預期 4 張（站上三位＋謝耀慶）');
 
 const BAR_CSS = ".pvbar, .pvbar * { box-sizing: border-box; }\n.pvbar {\n  position: fixed; z-index: 999; right: 12px; top: 12px;\n  font: 400 13px/1.6 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",system-ui,sans-serif;\n  color: #f2f0ee;\n}\n.pvbar-btn {\n  display: flex; align-items: center; gap: .4em; margin-left: auto;\n  padding: .5em .8em; min-height: 36px;\n  background: rgba(20,18,16,.92); color: #f2f0ee;\n  border: 1px solid rgba(255,255,255,.28); border-radius: 8px;\n  font: inherit; font-weight: 700; letter-spacing: .05em; cursor: pointer;\n  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);\n}\n.pvbar-btn b { font-weight: 700; opacity: .8; }\n.pvbar-panel {\n  display: none; margin-top: 8px; width: min(340px, calc(100vw - 24px));\n  /* ⚠ 用 svh 不用 vh —— iOS 的 vh 是工具列收起後的大視窗高度。 */\n  flex-direction: column; max-height: calc(100svh - 68px);\n  background: rgba(20,18,16,.95); border: 1px solid rgba(255,255,255,.22);\n  border-radius: 10px; overflow: hidden;\n  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);\n  box-shadow: 0 12px 34px rgba(0,0,0,.45);\n}\n.pvbar[data-open=\"1\"] .pvbar-panel { display: flex; }\n.pvbar-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 0 8px; }\n.pvbar-g { padding: 9px 11px 5px; font-size: 11px; letter-spacing: .1em; color: #8f8a84; }\n.pvbar-g em { font-style: normal; color: #cfc9c2; letter-spacing: 0; }\n.pvbar-row { display: flex; gap: 6px; padding: 0 9px 6px; }\n.pvbar-row button {\n  flex: 1 1 0; padding: .45em .2em; min-height: 42px;\n  background: rgba(255,255,255,.07); color: #cfc9c2;\n  border: 1px solid rgba(255,255,255,.2); border-radius: 6px;\n  font: inherit; font-size: 12px; line-height: 1.35; cursor: pointer;\n}\n.pvbar-row button small { display: block; font-size: 10px; color: #8f8a84; }\n.pvbar-row button:hover { background: rgba(255,255,255,.15); color: #f2f0ee; }\n.pvbar-row button[aria-pressed=\"true\"] {\n  background: #6fb3a8; border-color: #6fb3a8; color: #14120f; font-weight: 700;\n}\n.pvbar-row button[aria-pressed=\"true\"] small { color: rgba(20,18,15,.7); }\n.pvbar-row.is-off { opacity: .38; }\n.pvbar-foot {\n  flex: 0 0 auto; padding: 8px 11px 10px; border-top: 1px solid rgba(255,255,255,.16);\n  font-size: 11.5px; line-height: 1.8; color: #b8b2ab;\n}\n.pvbar-foot .m { display: flex; justify-content: space-between; gap: 8px; }\n.pvbar-foot .m b { color: #f2f0ee; font-weight: 600; font-variant-numeric: tabular-nums; }\n.pvbar-foot .m.good b { color: #8fd6a4; }\n.pvbar-foot .m.bad  b { color: #ff9a9a; }\n.pvbar-foot hr { border: 0; border-top: 1px solid rgba(255,255,255,.14); margin: 7px 0; }\n.pvbar-note { color: #8f8a84; font-size: 11px; line-height: 1.7; }\n.pvbar-note b { color: #cfc9c2; font-weight: 600; }\n@media (max-width: 420px) { .pvbar { right: 8px; top: 8px; } .pvbar-panel { width: calc(100vw - 16px); } }\n@media print { .pvbar { display: none; } }";
-const NOTE_MAP = JSON.stringify({ a: "裁切 205,84,760,760　頭比較滿", b: "裁切 186,66,800,800　和王俊偉並排最接近", c: "裁切 166,49,840,840　留白多一點" });
+const NOTE_MAP = JSON.stringify({ r: "裁切 205,84,760,760　第一輪最滿的那一格，當對照", a: "裁切 215,93,740,740　頭頂留白 5.7%", b: "裁切 225,102,720,720　頭頂留白 4.6%", c: "裁切 235,111,700,700　頭頂留白 3.4%", d: "裁切 245,119,680,680　頭頂留白 2.4%，再小頭頂就貼邊" });
 
 const BAR = `
 <!-- 切換條（提案用）。定案之後整段連同 pv-face 那張圖一起刪掉。 -->
@@ -125,9 +131,13 @@ BARCSS
     <div class="pvbar-body">
       <div class="pvbar-g">框的大小　<em>版面已定案，這裡只換裁切</em></div>
       <div class="pvbar-row" data-k="p">
-        <button type="button" data-v="a">Ⓐ<small>頭滿・760</small></button>
-        <button type="button" data-v="b">Ⓑ<small>居中・800</small></button>
-        <button type="button" data-v="c">Ⓒ<small>留白・840</small></button>
+        <button type="button" data-v="a">Ⓐ<small>740</small></button>
+        <button type="button" data-v="b">Ⓑ<small>720</small></button>
+        <button type="button" data-v="c">Ⓒ<small>700</small></button>
+        <button type="button" data-v="d">Ⓓ<small>680</small></button>
+      </div>
+      <div class="pvbar-row">
+        <button type="button" data-v="r">對照：上一輪的 760</button>
       </div>
       <div class="pvbar-row">
         <button type="button" data-v="off">對照現況（這張卡沒有照片）</button>
@@ -145,18 +155,18 @@ BARCSS
   var img  = document.querySelector('.pv-face');
   var pic  = img.parentNode;
   var card = pic.parentNode;
-  var ALL  = ['a','b','c','off'];
-  var LBL  = { a:'Ⓐ 頭滿 760', b:'Ⓑ 居中 800', c:'Ⓒ 留白 840', off:'現況（沒有照片）' };
+  var ALL  = ['r','a','b','c','d','off'];
+  var LBL  = { r:'對照 760', a:'Ⓐ 740', b:'Ⓑ 720', c:'Ⓒ 700', d:'Ⓓ 680', off:'現況（沒有照片）' };
   var NOTE = NOTEMAP;
   var st = 'b';
 
   var q = new URLSearchParams(location.search).get('p');
   if (q !== null && ALL.indexOf(q) >= 0) st = q;
 
-  /* 三格都先抓下來，切換才不必等下載 —— Worker 對 preview 設 no-store，
+  /* 每一格都先抓下來，切換才不必等下載 —— Worker 對 preview 設 no-store，
      不預抓的話每按一次都要重抓一遍（og-topic-card 那一輪定下的做法）。 */
   addEventListener('load', function () {
-    ['a','b','c'].forEach(function (k) { new Image().src = 'img/xie-' + k + '-400.jpg'; });
+    ['r','a','b','c','d'].forEach(function (k) { new Image().src = 'img/xie-' + k + '-400.jpg'; });
   });
 
   function apply() {
@@ -207,7 +217,7 @@ BARCSS
     rows += '<div class="m"><span>同一列還有</span><b>' + mates.length + ' 張</b></div>';
     rows += '<div class="m ' + (over > 0 ? 'bad' : 'good') + '"><span>水平捲動</span><b>' + (over > 0 ? over + 'px' : '無') + '</b></div>';
     rows += '<hr><div class="pvbar-note"><b>' + LBL[st] + '</b>：' + NOTE[st] +
-      '<br>版面是 2026-09-19 已經定案的那一套，這一頁只換裁切；三格差在頭在圓裡多滿，' +
+      '<br>版面是 2026-09-19 已經定案的那一套，這一頁只換裁切；各格差在頭在圓裡多滿，' +
       '和站上那三顆並排比比看。要對照沒有照片的樣子按最底下那一顆。</div>';
     foot.innerHTML = rows;
   }
