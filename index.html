@@ -434,6 +434,7 @@ r.dataset.theme=s;})();</script>
         "postalCode": "640",
         "addressCountry": "TW"
       },
+      "image": "https://fangren.net/assets/doctor-liao-liyang-400.jpg",
       "knowsAbout": [
         "齒顎矯正"
       ],
@@ -7072,7 +7073,15 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>臺北醫學大學牙醫學碩士</dd>
           </dl>
         </article>
-        <article class="doc" data-spec="ortho">
+        <article class="doc" data-face data-spec="ortho">
+          <!-- 形象照（2026-09-23 上線，站上第六張）。提案頁 preview/doctor-liao/ 三輪：
+               四張表情選 Ⓑ（微笑不露齒），頭的大小選「頭高佔圓 74%」。
+               ⚠ 裁切框在 tools/doctor-photo-crop.mjs 的 FACES，不要手改這張圖。 -->
+          <picture class="doc-face">
+            <source type="image/webp" srcset="assets/doctor-liao-liyang-400.webp">
+            <img src="assets/doctor-liao-liyang-400.jpg" width="400" height="400" loading="lazy"
+                 alt="廖立揚醫師的形象照，身著白袍站在診所候診區">
+          </picture>
           <h3>廖立揚<span class="doc-role">矯正專科醫師</span></h3>
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk" data-spec="ortho">隱適美</span><span class="sep">、</span><span class="sk" data-spec="ortho">阻生齒矯正</span></dd>
