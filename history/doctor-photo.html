@@ -379,6 +379,42 @@ tools/schema.mjs 讀醫師是這一條：
 （產生器 git show 8a3fc2da:tools/doctor-xie-preview.mjs、
   裁切器 git show 8a3fc2da:tools/doctor-xie-crop.mjs）</pre></div>
 
+<h2>第五位：陳芷鈴（2026-09-23，preview/doctor-chen/ 一輪定案）</h2>
+<div class="note"><pre>使用者給了一張，「合成陳芷鈴醫師的圖卡 預覽給我看」。
+版面沿用上面定案的那一套，這一輪只挑**框的大小**。
+
+原圖 1122x1402，量到 髮頂 140／眼睛 371／下巴 578／臉中線 528，
+位置照李柄輝的比例（眼睛在框高 44.2%、臉中線在框寬 49.3%）。
+
+照謝耀慶那一輪留下的話，起點直接從頭頂留白 ~5% 給：
+  Ⓐ 640　頭頂留白 8.1%　頭高 68%
+  Ⓑ 615　頭頂留白 6.7%　頭高 71%
+  Ⓒ 590　頭頂留白 5.1%　頭高 74%（預設）
+  Ⓓ 565　頭頂留白 3.4%　頭高 78%
+使用者：「615 上線」
+
+定案 225,99,615,615
+⚠ 這一次是往「**鬆**一格」走，和王俊偉、謝耀慶兩輪（都往更滿改）方向相反。
+  所以「從 5% 起算」只是起點，**不是新的標準** —— 下一位照樣給一把尺，兩側都要有格子。
+
+⚠ 她的藥丸「顯微根管專科醫師」是八個字，在 320 與兩欄（744）會折到第二行 ——
+  這是 2026-09-19 那一輪就預告過的（見 DECISIONS.md 那一列「藥丸放不下躲不掉」），
+  照定案的寫法：名字對頭像中線、藥丸切齊名字左緣，「專長」因此比同列低一點。
+⚠ 她的專長有「固定假牙」，所以除了 /topics/endo/，/topics/prosth/ 那一頁也有她的圓頭像。
+
+驗收（本機）
+  首頁與 /topics/endo/、/topics/prosth/ × 320／375／744／1112／1440：
+  五張有照片的卡頭像都是 76、照片四周三個間距單一值（14.19／17.80／16.59）、
+  吃到 WebP、無水平捲動、無 JS 錯誤、無 404；
+  頭像下緣到「專長」在不折行的寬度都是 8.00（折行時 11.2~18.6，同上一條）
+  JSON-LD：九位都在，五位有 image（多了陳芷鈴）
+  assets/doctor-chen-zhiling-400.jpg 與提案頁 Ⓑ 那一格逐位元組相同
+  node tools/night-mode.mjs --check → 全部一致
+
+提案頁整頁：git show ff8025d2:preview/doctor-chen/index.html
+（產生器 git show ff8025d2:tools/doctor-chen-preview.mjs、
+  裁切器 git show ff8025d2:tools/doctor-chen-crop.mjs）</pre></div>
+
 <h2>再加一位醫師要做什麼</h2>
 <div class="note"><pre>① 原檔放 drafts/doctor-photo/src/&lt;slug&gt;.png（不會進 _site）
 ② 在原圖上量髮頂／眼睛／下巴／臉中線，照上面的比例算出框，加進

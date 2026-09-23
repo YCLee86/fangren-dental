@@ -6149,7 +6149,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
             <dt>學歷</dt><dd>高雄醫學大學牙醫學學士</dd>
           </dl>
         </article>
-        <article class="doc" data-spec="endo">
+        <article class="doc" data-face data-spec="endo">
           <!-- ⚠ 2026-08-30：藥丸改回「顯微根管專科醫師」—— 陳芷鈴醫師**已經取得**
                衛生福利部牙髓病科專科醫師，資歷欄第一行從「成大醫院牙髓病專科訓練」
                換成部定專科本身（訓練的地方仍看得到，在下一行的成大總醫師）。
@@ -6159,6 +6159,11 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
                的理由是「專科**訓練**不等於部定專科」，現在證照真的有了，理由消失。
                ⚠ 連帶：窄帶那個「部定專科」種數 5 → 6（牙髓病科回到頁面上）。
                規則見 COPY.md 第八之一節。 -->
+          <picture class="doc-face">
+            <source type="image/webp" srcset="../../assets/doctor-chen-zhiling-400.webp">
+            <img src="../../assets/doctor-chen-zhiling-400.jpg" width="400" height="400" loading="lazy"
+                 alt="陳芷鈴醫師的形象照，身著白袍站在診所樓梯間前">
+          </picture>
           <h3>陳芷鈴<span class="doc-role tag-off">顯微根管專科醫師</span></h3>
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="endo">顯微根管</span><span class="sep">、</span><span class="sk" data-spec="endo">根尖手術</span><span class="sep">、</span><span class="sk" data-spec="endo">活髓治療</span><span class="sep">、</span><span class="sk tag-on" data-spec="prosth">固定假牙</span></dd>
@@ -6739,7 +6744,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-09-22">2026 年 9 月 22 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-09-23">2026 年 9 月 23 日</time></span>
     </div>
   </div>
 </footer>
