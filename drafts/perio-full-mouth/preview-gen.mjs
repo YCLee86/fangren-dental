@@ -123,20 +123,20 @@ function BODY() { return `    <p class="lede">因為「右下那一顆在痛」�
     <h2>牙周病大部分時候不痛</h2>
     <p>牙周病是一種慢性、安靜的發炎。它在牙齦底下慢慢破壞托住牙齒的骨頭，很長一段時間只會刷牙流血，不痛不癢（這件事單獨寫過一篇：<a href="../../posts/perio-prevalence/">〈八成人有牙周病〉</a>）。</p>
     <p>等到出現腫痛、流膿、牙齒搖動，通常代表那個位置已經發展到比較嚴重的程度。所以會痛的那一顆，其實是<strong>最嚴重、最先出現症狀的一顆</strong>；同一張嘴裡的其他牙齒，可能也有牙周囊袋加深、骨頭流失的情形，只是還沒到會痛的階段。</p>
-    <p>牙周病的診斷方式也反映了這一點：國際牙周病分類判斷嚴重程度時，是以全口「最嚴重的那一顆」為準<sup class="cite"><a href="#ref-1">[1]</a></sup>。最嚴重的一顆決定了你是第幾期，但其他牙齒是什麼狀況，要一顆一顆量過才知道。</p>
+    <p>牙周病的診斷方式也反映了這一點：<a href="https://pubmed.ncbi.nlm.nih.gov/29926490/" target="_blank" rel="noopener">國際牙周病分類判斷嚴重程度時，是以全口「最嚴重的那一顆」為準</a>。最嚴重的一顆決定了你是第幾期，但其他牙齒是什麼狀況，要一顆一顆量過才知道。</p>
 
     <h2>為什麼偏偏是那一顆特別嚴重</h2>
     <p>造成牙周病的原因——牙菌斑與牙結石——是整口都有的。但同樣的清潔習慣，有些位置天生就比較吃虧：</p>
     <ul>
-      <li><strong>大臼齒的根分岔</strong>：大臼齒有兩到三支牙根，牙根分開的那個夾角，牙刷刷不到、器械也不容易伸進去。一份統合分析發現，有根分岔病變的大臼齒，在長期的牙周維護中掉牙的風險大約是沒有的兩倍<sup class="cite"><a href="#ref-2">[2]</a></sup>。</li>
-      <li><strong>牙齒天生的形狀</strong>：有些大臼齒的琺瑯質會往下多延伸一小段，伸進兩支牙根之間（稱為「琺瑯突起」），牙齦在那裡貼不牢，細菌容易往下鑽。高雄醫學大學的研究發現，已經出現根分岔病變的大臼齒，有八成以上有這個構造；沒有病變的只有不到兩成<sup class="cite"><a href="#ref-3">[3]</a></sup>。</li>
-      <li><strong>咬合力量過大</strong>：某一顆牙如果長期承受比較大的咬合力，在已經有牙周病的情況下，可能會加速那一顆的破壞。研究觀察到，有咬合不協調的牙齒，囊袋比較深、動搖度也比較大<sup class="cite"><a href="#ref-4">[4]</a></sup>；咬合問題沒有處理的牙齒，囊袋每年持續加深<sup class="cite"><a href="#ref-5">[5]</a></sup>。</li>
+      <li><strong>大臼齒的根分岔</strong>：大臼齒有兩到三支牙根，牙根分開的那個夾角，牙刷刷不到、器械也不容易伸進去。一份統合分析發現，<a href="https://pubmed.ncbi.nlm.nih.gov/26932323/" target="_blank" rel="noopener">有根分岔病變的大臼齒，在長期的牙周維護中掉牙的風險大約是沒有的兩倍</a>。</li>
+      <li><strong>牙齒天生的形狀</strong>：有些大臼齒的琺瑯質會往下多延伸一小段，伸進兩支牙根之間（稱為「琺瑯突起」），牙齦在那裡貼不牢，細菌容易往下鑽。高雄醫學大學的研究發現，<a href="https://pubmed.ncbi.nlm.nih.gov/3478466/" target="_blank" rel="noopener">已經出現根分岔病變的大臼齒，有八成以上有這個構造；沒有病變的只有不到兩成</a>。</li>
+      <li><strong>咬合力量過大</strong>：某一顆牙如果長期承受比較大的咬合力，在已經有牙周病的情況下，可能會加速那一顆的破壞。研究觀察到，<a href="https://pubmed.ncbi.nlm.nih.gov/11338301/" target="_blank" rel="noopener">有咬合不協調的牙齒，囊袋比較深、動搖度也比較大</a>；<a href="https://pubmed.ncbi.nlm.nih.gov/11338302/" target="_blank" rel="noopener">咬合問題沒有處理的牙齒，囊袋每年持續加深</a>。</li>
     </ul>
     <p>這些條件解釋了<strong>為什麼是這一顆先壞</strong>，但不代表其他牙齒沒事。原因在整口，只是這一顆的條件最差。</p>
 
     <h2>其他還不痛的牙齒，放著會怎樣</h2>
-    <p>牙周病多數是以年為單位、慢慢加重的；但也有少數人進展得特別快。一項在斯里蘭卡、從未接受過牙科治療的族群身上做的長期追蹤裡，大約每十二個人就有一個屬於快速進展，那一群人的牙周附著與牙齒都流失得又早又快<sup class="cite"><a href="#ref-6">[6]</a></sup>。而且它不是等速變差的，同一個位置可能安靜好幾年，然後在一段時間裡明顯惡化<sup class="cite"><a href="#ref-7">[7]</a></sup>。</p>
-    <p>「只是刷牙會流血」也不是小事。一項在挪威奧斯陸追蹤了 26 年的研究，對象是每天刷牙、也定期看牙醫的一般民眾。即使如此，牙齦長期處在發炎狀態的位置，失去的牙周附著仍比牙齦健康的位置多了大約七成<sup class="cite"><a href="#ref-8">[8]</a></sup>；整圈牙齦持續發炎的牙齒，掉牙的風險更高出數十倍<sup class="cite"><a href="#ref-9">[9]</a></sup>。</p>
+    <p>牙周病多數是以年為單位、慢慢加重的；但也有少數人進展得特別快。一項在斯里蘭卡、從未接受過牙科治療的族群身上做的長期追蹤裡，<a href="https://pubmed.ncbi.nlm.nih.gov/3487557/" target="_blank" rel="noopener">大約每十二個人就有一個屬於快速進展，那一群人的牙周附著與牙齒都流失得又早又快</a>。而且它不是等速變差的，<a href="https://pubmed.ncbi.nlm.nih.gov/6582072/" target="_blank" rel="noopener">同一個位置可能安靜好幾年，然後在一段時間裡明顯惡化</a>。</p>
+    <p>「只是刷牙會流血」也不是小事。一項在挪威奧斯陸追蹤了 26 年的研究，對象是每天刷牙、也定期看牙醫的一般民眾。即使如此，牙齦長期處在發炎狀態的位置，<a href="https://pubmed.ncbi.nlm.nih.gov/14710769/" target="_blank" rel="noopener">失去的牙周附著仍比牙齦健康的位置多了大約七成</a>；整圈牙齦持續發炎的牙齒，<a href="https://pubmed.ncbi.nlm.nih.gov/15560816/" target="_blank" rel="noopener">掉牙的風險更高出數十倍</a>。</p>
     <p>換句話說，今天還不痛的那幾顆，如果放著不處理，就是幾年後下一顆會痛的牙。</p>
 
     <h2>全口檢查在看什麼</h2>
@@ -146,7 +146,7 @@ function BODY() { return `    <p class="lede">因為「右下那一顆在痛」�
       <li><strong>X 光</strong>：一顆一顆確認牙齒周圍的骨頭還剩多少、流失的範圍有多大。</li>
       <li><strong>牙齒的動搖度與咬合</strong>：哪幾顆會搖、咬合的力量有沒有集中在某幾顆上。</li>
     </ul>
-    <p>為什麼一定要每一顆都量？美國有一項研究，拿同一批民眾的檢查資料做比較：全口每一顆都檢查時，重度牙周病的比例是 7.3%；如果只檢查一半的牙齒，比例掉到 2.5%；用更簡化的檢查方式，只剩 1.5%<sup class="cite"><a href="#ref-10">[10]</a></sup>。也就是說，<strong>只看一部分牙齒，會漏掉一半以上的重度牙周病</strong>。連做研究時都會因為少看幾顆而低估病情，在診間更不能只看會痛的那一顆。</p>
+    <p>為什麼一定要每一顆都量？美國有一項研究，拿同一批民眾的檢查資料做比較：全口每一顆都檢查時，<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12176459/" target="_blank" rel="noopener">重度牙周病的比例是 7.3%；如果只檢查一半的牙齒，比例掉到 2.5%；用更簡化的檢查方式，只剩 1.5%</a>。也就是說，<strong>只看一部分牙齒，會漏掉一半以上的重度牙周病</strong>。連做研究時都會因為少看幾顆而低估病情，在診間更不能只看會痛的那一顆。</p>
     <p>這些資料用來判斷牙周病到了第幾期、進展得快不快，也決定<strong>哪些牙齒值得全力保留、哪些需要另外處理</strong>，以及治療的先後順序。只看會痛的那一顆，就只能「哪裡痛補哪裡」，下一顆什麼時候出問題，誰也說不準。</p>
 
     <h2>治療後留下的深囊袋，決定哪一顆最容易掉</h2>
@@ -154,7 +154,7 @@ function BODY() { return `    <p class="lede">因為「右下那一顆在痛」�
     <p>治療結束後，醫師會再檢查一次囊袋的深度。這一步很重要，因為治療後還留著的深囊袋，和日後會不會掉牙關係很大。</p>
     <p>先有一個尺度，那些毫米數才有意義。<strong>牙根埋在骨頭裡的長度，大約十三毫米上下</strong>（依牙齒不同，約 12 到 17 毫米）。健康的牙齦和牙齒之間只有一道 1 到 3 毫米的淺溝，溝底就在牙根的最上緣。囊袋變深，意思是溝底往牙根的方向退下去了——退下去的那一段，牙根已經和牙齦、骨頭分開，不再被托住。</p>
     <p>概念上可以這樣換算：牙齦還在原本的高度時，因為牙齦邊緣本來就比牙根上緣高出一兩毫米，<strong>5 毫米的囊袋，大約代表牙根上段有三毫米左右已經失去附著，約是整支牙根的四分之一；7 毫米以上，就接近四成。</strong>如果牙齦已經退縮，實際流失的還要再加上退縮的那一段——所以囊袋看起來不深，不一定代表沒事。牙齒是立體的，每一面流失的程度不一樣，這只是方便理解的換算；確切還剩多少，要看每個位置的檢查紀錄搭配 X 光。</p>
-    <p>有了這個尺度，再看這份平均追蹤 11 年的研究，比較了治療後囊袋深度不同的牙齒<sup class="cite"><a href="#ref-11">[11]</a></sup>：</p>
+    <p>有了這個尺度，再看<a href="https://pubmed.ncbi.nlm.nih.gov/18549447/" target="_blank" rel="noopener">這份平均追蹤 11 年的研究</a>，比較了治療後囊袋深度不同的牙齒：</p>
     <div class="table-scroll">
       <table>
         <thead>
@@ -169,7 +169,7 @@ function BODY() { return `    <p class="lede">因為「右下那一顆在痛」�
       </table>
     </div>
     <p>這張表說的是：牙周治療的成果要一顆一顆算。會痛的那一顆治好了，旁邊如果還有一顆留著 6 毫米的囊袋沒有處理，那一顆就是日後最容易出問題的一顆。深層清潔之後仍然清不到底的地方，醫師會評估是否需要進一步的處理。</p>
-    <p>另外，研究也發現牙周病的嚴重程度和血糖控制有關：糖化血色素越高，牙周病往往越嚴重<sup class="cite"><a href="#ref-12">[12]</a></sup>。有糖尿病的人，更需要把整口的發炎控制下來。</p>
+    <p>另外，研究也發現牙周病的嚴重程度和血糖控制有關：<a href="https://doi.org/10.1002/jper.70064" target="_blank" rel="noopener">糖化血色素越高，牙周病往往越嚴重</a>。有糖尿病的人，更需要把整口的發炎控制下來。</p>
 
     <h2>那現在正在痛的那一顆怎麼辦</h2>
     <ul>
@@ -204,22 +204,6 @@ function BODY() { return `    <p class="lede">因為「右下那一顆在痛」�
       <dd>會。急性的腫痛會先處理，讓你舒服下來，再安排全口的檢查與治療。深層牙結石刮除會局部麻醉、分區分次完成，治療後還有固定回診的維護期。</dd>
     </dl>
 
-    <h2>參考文獻</h2>
-    <ol class="refs">
-      <li id="ref-1">Papapanou PN, Sanz M, Buduneli N, et al. Periodontitis: Consensus report of workgroup 2 of the 2017 World Workshop on the Classification of Periodontal and Peri-Implant Diseases and Conditions. <i>J Clin Periodontol</i>. 2018;45(Suppl 20):S162–S170. <a href="https://pubmed.ncbi.nlm.nih.gov/29926490/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-2">Nibali L, Zavattini A, Nagata K, et al. Tooth loss in molars with and without furcation involvement – a systematic review and meta-analysis. <i>J Clin Periodontol</i>. 2016;43(2):156–166. <a href="https://pubmed.ncbi.nlm.nih.gov/26932323/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-3">Hou GL, Tsai CC. Relationship between periodontal furcation involvement and molar cervical enamel projections. <i>J Periodontol</i>. 1987;58(10):715–721. <a href="https://pubmed.ncbi.nlm.nih.gov/3478466/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-4">Nunn ME, Harrel SK. The effect of occlusal discrepancies on periodontitis. I. Relationship of initial occlusal discrepancies to initial clinical parameters. <i>J Periodontol</i>. 2001;72(4):485–494. <a href="https://pubmed.ncbi.nlm.nih.gov/11338301/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-5">Harrel SK, Nunn ME. The effect of occlusal discrepancies on periodontitis. II. Relationship of occlusal treatment to the progression of periodontal disease. <i>J Periodontol</i>. 2001;72(4):495–505. <a href="https://pubmed.ncbi.nlm.nih.gov/11338302/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-6">Löe H, Anerud A, Boysen H, Morrison E. Natural history of periodontal disease in man. Rapid, moderate and no loss of attachment in Sri Lankan laborers 14 to 46 years of age. <i>J Clin Periodontol</i>. 1986;13(5):431–445. <a href="https://pubmed.ncbi.nlm.nih.gov/3487557/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-7">Socransky SS, Haffajee AD, Goodson JM, Lindhe J. New concepts of destructive periodontal disease. <i>J Clin Periodontol</i>. 1984;11(1):21–32. <a href="https://pubmed.ncbi.nlm.nih.gov/6582072/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-8">Schätzle M, Löe H, Bürgin W, Anerud A, Boysen H, Lang NP. Clinical course of chronic periodontitis. I. Role of gingivitis. <i>J Clin Periodontol</i>. 2003;30(10):887–901. <a href="https://pubmed.ncbi.nlm.nih.gov/14710769/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-9">Schätzle M, Löe H, Lang NP, Bürgin W, Anerud A, Boysen H. The clinical course of chronic periodontitis. IV. Gingival inflammation as a risk factor in tooth mortality. <i>J Clin Periodontol</i>. 2004;31(12):1122–1127. <a href="https://pubmed.ncbi.nlm.nih.gov/15560816/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-10">Tay JRH, Holtfreter B, Baumeister SE, Peres MA, Nascimento GG. Application of the 2018 periodontal status classification to epidemiological survey data (ACES) framework to estimate the periodontitis prevalence in the United States. <i>J Clin Periodontol</i>. 2025;52(7):1032–1043. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12176459/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-11">Matuliene G, Pjetursson BE, Salvi GE, et al. Influence of residual pockets on progression of periodontitis and tooth loss: results after 11 years of maintenance. <i>J Clin Periodontol</i>. 2008;35(8):685–695. <a href="https://pubmed.ncbi.nlm.nih.gov/18549447/" target="_blank" rel="noopener">連結</a></li>
-      <li id="ref-12">Chen MX, Yu Y, Wei CX, Sabri H, Saleh MHA. Periodontitis severity and its social and clinical determinants: An ACES framework-based NHANES analysis. <i>J Periodontol</i>. 2026;97(6):1327–1339. <a href="https://doi.org/10.1002/jper.70064" target="_blank" rel="noopener">連結</a></li>
-    </ol>
-
     <p class="note">本文為一般口腔衛教資訊，不能取代臨床診斷。文中的盛行率與追蹤數字來自國外的研究，個別條件不同，結果因人而異。牙周病的分期、哪些牙齒需要優先處理、治療要分幾次完成，都要經牙周檢查並搭配 X 光評估後判斷。</p>
 
 `; }
@@ -248,12 +232,6 @@ const css = `<style>
                 min-height: 34vw; padding: 2rem 1rem; border: 1px dashed var(--rule);
                 border-radius: 12px; color: var(--ink-soft); font-size: .92rem; }
 .pv-hero-slot small { font-size: .82rem; opacity: .85; }
-/* 參考文獻與文中的 [n]。站上還沒有這一種，先放在預覽頁；定案時要搬進 assets/style.css（見 README）。 */
-.post-body sup.cite { font-size: .7em; line-height: 0; margin-left: .1em; }
-.post-body sup.cite a { text-decoration: none; }
-.post-body ol.refs { font-size: .82rem; line-height: 1.6; color: var(--ink-soft); padding-left: 1.4em; }
-.post-body ol.refs li { margin-bottom: .45em; overflow-wrap: anywhere; scroll-margin-top: 5rem; }
-.post-body ol.refs li:target { color: var(--ink); }
 </style>`;
 if (!PUBLISH) {
   swap('<link rel="stylesheet" href="../../assets/style.css">',
