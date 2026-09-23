@@ -29,47 +29,58 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { FACES, RATIOS, box } from './doctor-liao-crop.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIR  = join(ROOT, 'preview', 'doctor-liao');
 const OUT  = join(DIR, 'index.html');
 const KEYS = ['a', 'b', 'c', 'd'];
 
-KEYS.forEach((k) => {
-  if (!existsSync(join(DIR, 'img', 'liao-' + k + '-400.jpg')))
-    throw new Error('找不到 img/liao-' + k + '-400.jpg —— 先跑 node tools/doctor-liao-crop.mjs');
-});
-
 let html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+
+const MARKS = Object.entries(FACES).map(([k, f]) => {
+  const m = f.marks;
+  return '       ' + k.toUpperCase() + ' 髮頂 ' + m.hair + ' 眼睛 ' + m.eyes +
+    ' 下巴 ' + m.chin + ' 臉中線 ' + m.midX + '\n' +
+    RATIOS.map((r) => '           ' + r.k + '% → ' + box(m, r.k).join(',')).join('\n');
+}).join('\n');
 
 const NOTE = `<!-- ==========================================================================
      提案：廖立揚醫師的形象照四選一（2026-09-23）
      --------------------------------------------------------------------------
      使用者給了四張，「把這四張做成廖立揚醫師的圖卡，作成站上首頁提案頁給我看」。
 
-     ---- 要挑的是什麼 -------------------------------------------------------
+     ---- 要挑的是什麼（兩條尺，互相獨立） ---------------------------------
      **不是版面。** 圓頭像那一套 2026-09-19 已經定案上線，這一頁完全沿用
-     index.html 現行的規則，只換 img 的 src。要挑的是**表情與畫法**：
+     index.html 現行的規則，只換 img 的 src。要挑的是：
+
+       ① 頭在圓裡多大（四張一起動）　② 哪一種表情
 
        Ⓐ 露齒笑，畫法最接近照片（原檔 1024x1536，和另外三張不同組）
        Ⓑ 微笑不露齒
        Ⓒ 露齒笑
        Ⓓ 抿嘴笑，頭略大
 
+     ---- 第二輪：尺的單位從「框幾 px」改成「頭高佔圓的比例」---------------
+     第一輪四張全部太小（使用者：「698好像還有點小　再大一點」）。
+     回頭把四張和站上那三顆圓一起套格線量，才看出問題不在某一個數字：
+
+       李柄輝 81%　李侑津 81%　王俊偉 77%
+       Ⓐ 70%　Ⓑ 69%　Ⓒ 70%　Ⓓ 73%
+
+     四張都比站上那三位小一級。**框的 px 沒辦法跨醫師比**（四個人的原檔
+     尺寸與取景都不一樣，王俊偉的 660 和廖立揚的 698 不在同一把尺上），
+     頭高佔比可以 —— 所以尺改成這個單位，而且 77%／81% 兩格直接等於站上那三位。
+     順帶修掉第一輪量偏的臉中線（Ⓐ 505 → 495，臉原本偏左 2~3%）。
+
      ---- 裁切怎麼來的 -------------------------------------------------------
-     照 /history/doctor-photo.html 定下的做法：先在原圖上量髮頂／眼睛／下巴／
-     臉中線，換算成第一張（李柄輝）的比例（眼睛在框高 44.2%、臉中線在框寬 49.3%），
-     算完**再和站上那三顆圓並排看** —— 那才是判準，算出來的只是起點。
+     框的位置仍照 /history/doctor-photo.html 定下的兩個錨：
+     **眼睛在框高 44.2%、臉中線在框寬 49.3%**；這一輪只動框的大小。
+     marks 是在已經裁出來的 400px 成品上套格線讀、再換算回原檔座標的。
 
-       Ⓐ 髮頂 140 眼睛 395 下巴 610 臉中線 505 → 161,87,698,698
-       Ⓑ 髮頂 100 眼睛 355 下巴 560 臉中線 540 → 187,38,717,717
-       Ⓒ 髮頂  95 眼睛 355 下巴 560 臉中線 540 → 187,38,717,717
-       Ⓓ 髮頂  90 眼睛 380 下巴 600 臉中線 525 → 153,46,755,755
-
-     四張的頭圍和站上那三顆並排比都合得起來，所以四張都可以選。
-
+${MARKS}
      ---- 切換條 -------------------------------------------------------------
-     網址參數 ?p=off|a|b|c|d（off ＝ 對照現況，那張卡沒有照片）
+     網址參數 ?p=off|a|b|c|d（off ＝ 對照現況，那張卡沒有照片）＋ ?h=70|74|77|81
      ========================================================================== -->`;
 
 /* ---- (1) 相對路徑往上兩層。不要改用 base href —— 錨點會跳回首頁。 ---- */
@@ -116,14 +127,31 @@ if (art < 0) throw new Error('廖立揚的 h3 前面找不到 article');
 html = html.slice(0, art) + TAG + ' data-face' + html.slice(art + TAG.length);
 const ALT = '廖立揚醫師的形象照，身著白袍站在診所候診區';
 html = html.replace(H3, '<picture class="doc-face">\n' +
-  '            <img class="pv-liao" src="img/liao-a-400.jpg" width="400" height="400" alt="' + ALT + '">\n' +
+  '            <img class="pv-liao" src="img/liao-a-81-400.jpg" width="400" height="400" alt="' + ALT + '">\n' +
   '          </picture>\n          ' + H3);
 /* 守門：站上原本三張 ＋ 廖立揚這張 ＝ 4。數字不對就是掛錯人或掛了兩次。 */
 const got = (html.match(/<article class="doc" data-face/g) || []).length;
 if (got !== 4) throw new Error('data-face 有 ' + got + ' 張，預期 4 張（站上三位＋廖立揚）');
 
-const BAR_CSS = ".pvbar, .pvbar * { box-sizing: border-box; }\n.pvbar {\n  position: fixed; z-index: 999; right: 12px; top: 12px;\n  font: 400 13px/1.6 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",system-ui,sans-serif;\n  color: #f2f0ee;\n}\n.pvbar-btn {\n  display: flex; align-items: center; gap: .4em; margin-left: auto;\n  padding: .5em .8em; min-height: 36px;\n  background: rgba(20,18,16,.92); color: #f2f0ee;\n  border: 1px solid rgba(255,255,255,.28); border-radius: 8px;\n  font: inherit; font-weight: 700; letter-spacing: .05em; cursor: pointer;\n  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);\n}\n.pvbar-btn b { font-weight: 700; opacity: .8; }\n.pvbar-panel {\n  display: none; margin-top: 8px; width: min(340px, calc(100vw - 24px));\n  /* ⚠ 用 svh 不用 vh —— iOS 的 vh 是工具列收起後的大視窗高度。 */\n  flex-direction: column; max-height: calc(100svh - 68px);\n  background: rgba(20,18,16,.95); border: 1px solid rgba(255,255,255,.22);\n  border-radius: 10px; overflow: hidden;\n  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);\n  box-shadow: 0 12px 34px rgba(0,0,0,.45);\n}\n.pvbar[data-open=\"1\"] .pvbar-panel { display: flex; }\n.pvbar-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 0 8px; }\n.pvbar-g { padding: 9px 11px 5px; font-size: 11px; letter-spacing: .1em; color: #8f8a84; }\n.pvbar-g em { font-style: normal; color: #cfc9c2; letter-spacing: 0; }\n.pvbar-row { display: flex; gap: 6px; padding: 0 9px 6px; }\n.pvbar-row button {\n  flex: 1 1 0; padding: .45em .2em; min-height: 42px;\n  background: rgba(255,255,255,.07); color: #cfc9c2;\n  border: 1px solid rgba(255,255,255,.2); border-radius: 6px;\n  font: inherit; font-size: 12px; line-height: 1.35; cursor: pointer;\n}\n.pvbar-row button small { display: block; font-size: 10px; color: #8f8a84; }\n.pvbar-row button:hover { background: rgba(255,255,255,.15); color: #f2f0ee; }\n.pvbar-row button[aria-pressed=\"true\"] {\n  background: #6fb3a8; border-color: #6fb3a8; color: #14120f; font-weight: 700;\n}\n.pvbar-row button[aria-pressed=\"true\"] small { color: rgba(20,18,15,.7); }\n.pvbar-row.is-off { opacity: .38; }\n.pvbar-foot {\n  flex: 0 0 auto; padding: 8px 11px 10px; border-top: 1px solid rgba(255,255,255,.16);\n  font-size: 11.5px; line-height: 1.8; color: #b8b2ab;\n}\n.pvbar-foot .m { display: flex; justify-content: space-between; gap: 8px; }\n.pvbar-foot .m b { color: #f2f0ee; font-weight: 600; font-variant-numeric: tabular-nums; }\n.pvbar-foot .m.good b { color: #8fd6a4; }\n.pvbar-foot .m.bad  b { color: #ff9a9a; }\n.pvbar-foot hr { border: 0; border-top: 1px solid rgba(255,255,255,.14); margin: 7px 0; }\n.pvbar-note { color: #8f8a84; font-size: 11px; line-height: 1.7; }\n.pvbar-note b { color: #cfc9c2; font-weight: 600; }\n@media (max-width: 420px) { .pvbar { right: 8px; top: 8px; } .pvbar-panel { width: calc(100vw - 16px); } }\n@media print { .pvbar { display: none; } }";
-const NOTE_MAP = "{\"a\": \"原檔 1024×1536，裁切 161,87,698,698　露齒笑，畫法最接近照片（和另外三張不同組）\", \"b\": \"原檔 1122×1402，裁切 187,38,717,717　微笑不露齒\", \"c\": \"原檔 1122×1402，裁切 187,38,717,717　露齒笑\", \"d\": \"原檔 1122×1402，裁切 153,46,755,755　抿嘴笑，頭略大\"}";
+const BAR_CSS = ".pvbar, .pvbar * { box-sizing: border-box; }\n.pvbar {\n  position: fixed; z-index: 999; right: 12px; top: 12px;\n  font: 400 13px/1.6 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",system-ui,sans-serif;\n  color: #f2f0ee;\n}\n.pvbar-btn {\n  display: flex; align-items: center; gap: .4em; margin-left: auto;\n  padding: .5em .8em; min-height: 36px;\n  background: rgba(20,18,16,.92); color: #f2f0ee;\n  border: 1px solid rgba(255,255,255,.28); border-radius: 8px;\n  font: inherit; font-weight: 700; letter-spacing: .05em; cursor: pointer;\n  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);\n}\n.pvbar-btn b { font-weight: 700; opacity: .8; }\n.pvbar-panel {\n  display: none; margin-top: 8px; width: min(340px, calc(100vw - 24px));\n  /* ⚠ 用 svh 不用 vh —— iOS 的 vh 是工具列收起後的大視窗高度。 */\n  flex-direction: column; max-height: calc(100svh - 68px);\n  background: rgba(20,18,16,.95); border: 1px solid rgba(255,255,255,.22);\n  border-radius: 10px; overflow: hidden;\n  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);\n  box-shadow: 0 12px 34px rgba(0,0,0,.45);\n}\n.pvbar[data-open=\"1\"] .pvbar-panel { display: flex; }\n.pvbar-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 0 8px; }\n.pvbar-g { padding: 9px 11px 5px; font-size: 11px; letter-spacing: .1em; color: #8f8a84; }\n.pvbar-g em { font-style: normal; color: #cfc9c2; letter-spacing: 0; }\n.pvbar-row { display: flex; gap: 6px; padding: 0 9px 6px; }\n.pvbar-row button {\n  flex: 1 1 0; padding: .45em .2em; min-height: 42px;\n  background: rgba(255,255,255,.07); color: #cfc9c2;\n  border: 1px solid rgba(255,255,255,.2); border-radius: 6px;\n  font: inherit; font-size: 12px; line-height: 1.35; cursor: pointer;\n}\n.pvbar-row button small { display: block; font-size: 10px; color: #8f8a84; }\n.pvbar-row button:hover { background: rgba(255,255,255,.15); color: #f2f0ee; }\n.pvbar-row button[aria-pressed=\"true\"] {\n  background: #6fb3a8; border-color: #6fb3a8; color: #14120f; font-weight: 700;\n}\n.pvbar-row button[aria-pressed=\"true\"] small { color: rgba(20,18,15,.7); }\n.pvbar-row.is-off { opacity: .38; }\n.pvbar-foot {\n  flex: 0 0 auto; padding: 8px 11px 10px; border-top: 1px solid rgba(255,255,255,.16);\n  font-size: 11.5px; line-height: 1.8; color: #b8b2ab;\n}\n.pvbar-foot .m { display: flex; justify-content: space-between; gap: 8px; }\n.pvbar-foot .m b { color: #f2f0ee; font-weight: 600; font-variant-numeric: tabular-nums; }\n.pvbar-foot .m.good b { color: #8fd6a4; }\n.pvbar-foot .m.bad  b { color: #ff9a9a; }\n.pvbar-foot hr { border: 0; border-top: 1px solid rgba(255,255,255,.14); margin: 7px 0; }\n.pvbar-note { color: #8f8a84; font-size: 11px; line-height: 1.7; }\n.pvbar-note b { color: #cfc9c2; font-weight: 600; }\n.pvbar-row.slim button { min-height: 32px; font-size: 11.5px; }\n.pvbar-det > summary {\n  list-style: none; cursor: pointer; padding: 4px 0 2px;\n  color: #8f8a84; font-size: 11px; letter-spacing: .06em;\n}\n.pvbar-det > summary::-webkit-details-marker { display: none; }\n.pvbar-det > summary::before { content: \"▸ \"; }\n.pvbar-det[open] > summary::before { content: \"▾ \"; }\n@media (max-width: 420px) { .pvbar { right: 8px; top: 8px; } .pvbar-panel { width: calc(100vw - 16px); } }\n@media print { .pvbar { display: none; } }";
+/* 表情的說明。框的數字不寫在這裡 —— 那是 BOXES 算出來的（下面那一段）。 */
+const NOTE_MAP = JSON.stringify(Object.fromEntries(
+  Object.entries(FACES).map(([k, f]) => [k, '原檔 ' + f.src[0] + '×' + f.src[1] + '　' + f.note])));
+
+/* 每一張 × 每一格的裁切框，直接跟 tools/doctor-liao-crop.mjs 要。
+   ⚠ 不要在這裡自己再算一次 —— 兩邊各記一份的話，改了一邊另一邊會靜靜地說謊。 */
+const BOXES = JSON.stringify(Object.fromEntries(
+  Object.entries(FACES).map(([k, f]) => [k, Object.fromEntries(
+    RATIOS.map((r) => [r.k, box(f.marks, r.k).join(',')]))])));
+
+const HS = JSON.stringify(RATIOS.map((r) => r.k));
+
+/* 尺的每一格要先確定圖真的在 —— 少一張的話畫面是破圖，不會報錯。 */
+for (const k of KEYS) for (const r of RATIOS) {
+  const f = 'liao-' + k + '-' + r.k + '-400.jpg';
+  if (!existsSync(join(DIR, 'img', f)))
+    throw new Error('找不到 img/' + f + ' —— 先跑 node tools/doctor-liao-crop.mjs');
+}
 
 const BAR = `
 <!-- 切換條（提案用）。定案之後整段連同 pv-liao 那張圖一起刪掉。 -->
@@ -135,6 +163,13 @@ BARCSS
   <button class="pvbar-btn" type="button" aria-expanded="false">廖立揚 <b></b></button>
   <div class="pvbar-panel">
     <div class="pvbar-body">
+      <div class="pvbar-g">頭的大小　<em>頭高佔圓的比例</em></div>
+      <div class="pvbar-row" data-k="h">
+        <button type="button" data-h="70">70%<small>第一輪</small></button>
+        <button type="button" data-h="74">74%<small>中間</small></button>
+        <button type="button" data-h="77">77%<small>同王俊偉</small></button>
+        <button type="button" data-h="81">81%<small>同李柄輝</small></button>
+      </div>
       <div class="pvbar-g">四張照片　<em>版面已定案，這裡只換照片</em></div>
       <div class="pvbar-row" data-k="p">
         <button type="button" data-v="a">Ⓐ<small>露齒・像照片</small></button>
@@ -142,7 +177,7 @@ BARCSS
         <button type="button" data-v="c">Ⓒ<small>露齒</small></button>
         <button type="button" data-v="d">Ⓓ<small>抿嘴</small></button>
       </div>
-      <div class="pvbar-row">
+      <div class="pvbar-row slim">
         <button type="button" data-v="off">對照現況（這張卡沒有照片）</button>
       </div>
     </div>
@@ -160,31 +195,49 @@ BARCSS
   var card = pic.parentNode;
   var ALL  = ['a','b','c','d','off'];
   var LBL  = { a:'Ⓐ 露齒・像照片', b:'Ⓑ 微笑', c:'Ⓒ 露齒', d:'Ⓓ 抿嘴', off:'現況（沒有照片）' };
-  var NOTE = NOTEMAP;
-  var st = 'a';
+  var SAME = { 70:'第一輪那一格（最鬆）', 74:'介於第一輪與王俊偉之間',
+               77:'和站上的王俊偉一樣', 81:'和站上的李柄輝、李侑津一樣（最滿）' };
+  var NOTE  = NOTEMAP;
+  var BOXES = BOXMAP;
+  var HS    = HSLIST;
+  var st = 'a', hs = 81, open1 = false;
 
-  var q = new URLSearchParams(location.search).get('p');
-  if (q !== null && ALL.indexOf(q) >= 0) st = q;
+  var qs = new URLSearchParams(location.search);
+  var q = qs.get('p'); if (q !== null && ALL.indexOf(q) >= 0) st = q;
+  var h = parseInt(qs.get('h'), 10); if (HS.indexOf(h) >= 0) hs = h;
 
-  /* 四張都先抓下來，切換才不必等下載 —— Worker 對 preview 設 no-store，
-     不預抓的話每按一次都要重抓一遍（og-topic-card 那一輪定下的做法）。 */
+  function src(k, r) { return 'img/liao-' + k + '-' + r + '-400.jpg'; }
+
+  /* 十六張都先抓下來，切換才不必等下載 —— Worker 對 preview 設 no-store，
+     不預抓的話每按一次都要重抓一遍（og-topic-card 那一輪定下的做法）。
+     ⚠ 先抓同一張的其他尺寸（使用者這一輪主要在動那條尺），再抓其餘的。 */
   addEventListener('load', function () {
-    ['a','b','c','d'].forEach(function (k) { new Image().src = 'img/liao-' + k + '-400.jpg'; });
+    var q = [];
+    HS.forEach(function (r) { q.push(src(st, r)); });
+    ['a','b','c','d'].forEach(function (k) { HS.forEach(function (r) { q.push(src(k, r)); }); });
+    q.forEach(function (u) { new Image().src = u; });
   });
 
   function apply() {
     if (st === 'off') { card.removeAttribute('data-face'); pic.style.display = 'none'; }
-    else { card.setAttribute('data-face', ''); pic.style.display = ''; img.src = 'img/liao-' + st + '-400.jpg'; }
+    else { card.setAttribute('data-face', ''); pic.style.display = ''; img.src = src(st, hs); }
     Array.prototype.forEach.call(box.querySelectorAll('.pvbar-row button'), function (b) {
-      b.setAttribute('aria-pressed', String(b.dataset.v === st));
+      if (b.dataset.h) b.setAttribute('aria-pressed', String(+b.dataset.h === hs));
+      else b.setAttribute('aria-pressed', String(b.dataset.v === st));
     });
-    history.replaceState(null, '', st === 'a' ? location.pathname : '?p=' + st);
-    btn.querySelector('b').textContent = LBL[st];
+    /* 照片關掉的時候那條尺沒有作用，整排調淡（同 card-more 那一輪的 is-off）。 */
+    box.querySelector('.pvbar-row[data-k="h"]').classList.toggle('is-off', st === 'off');
+    var u = [];
+    if (st !== 'a')  u.push('p=' + st);
+    if (hs !== 81)   u.push('h=' + hs);
+    history.replaceState(null, '', u.length ? '?' + u.join('&') : location.pathname);
+    btn.querySelector('b').textContent = st === 'off' ? LBL.off : LBL[st] + '・' + hs + '%';
     measure();
   }
   box.addEventListener('click', function (e) {
     var b = e.target.closest('.pvbar-row button'); if (!b) return;
-    st = b.dataset.v; apply();
+    if (b.dataset.h) hs = +b.dataset.h; else st = b.dataset.v;
+    apply();
   });
   btn.addEventListener('click', function () {
     var o = box.dataset.open === '1' ? '0' : '1';
@@ -199,7 +252,7 @@ BARCSS
     if (box.dataset.open !== '1') return;
     var rows = '<div class="m"><span>視窗寬</span><b>' + window.innerWidth + '</b></div>';
     if (st === 'off') {
-      foot.innerHTML = rows + '<hr><div class="pvbar-note">這一格是<b>對照現況</b>：' +
+      foot.innerHTML = '<div class="pvbar-note">這一格是<b>對照現況</b>：' +
         '廖立揚那張卡沒有照片，和另外五位一樣。</div>';
       return;
     }
@@ -209,26 +262,32 @@ BARCSS
     var ink = rg.getBoundingClientRect();
     var g = [fr.left - cr.left, fr.top - cr.top, ink.left - fr.right];
     var even = Math.max.apply(null, g) - Math.min.apply(null, g) < 0.6;
-    var mates = Array.prototype.filter.call(document.querySelectorAll('.docs .doc'), function (c) {
-      return Math.abs(c.offsetTop - card.offsetTop) < 4 && c !== card;
-    });
     var need = Math.round(fr.width * (window.devicePixelRatio || 1));
     var over = document.documentElement.scrollWidth - document.documentElement.clientWidth;
-    rows += '<div class="m"><span>頭像</span><b>' + n(fr.width) + ' × ' + n(fr.height) + '</b></div>';
-    rows += '<div class="m ' + (400 >= need ? 'good' : 'bad') + '"><span>原檔夠不夠（需 ' + need + '）</span><b>400 ' + (400 >= need ? '夠' : '不夠') + '</b></div>';
-    rows += '<div class="m ' + (even ? 'good' : 'bad') + '"><span>照片四周三個間距</span><b>' + g.map(n).join(' / ') + '</b></div>';
-    rows += '<div class="m"><span>同一列還有</span><b>' + mates.length + ' 張</b></div>';
-    rows += '<div class="m ' + (over > 0 ? 'bad' : 'good') + '"><span>水平捲動</span><b>' + (over > 0 ? over + 'px' : '無') + '</b></div>';
-    rows += '<hr><div class="pvbar-note"><b>' + LBL[st] + '</b>：' + NOTE[st] +
-      '<br>版面是 2026-09-19 已經定案的那一套，這一頁只換照片；四張的頭圍都和站上' +
-      '那三顆並排比過，差別在表情與畫法。要對照沒有照片的樣子按最底下那一顆。</div>';
-    foot.innerHTML = rows;
+    /* ⚠⚠ 面板不可以長到蓋住那張卡 —— 這一頁要判斷的正是那顆頭像
+       （hero-motion-mobile 那一輪踩過）。所以預設只留一句說明，
+       量測那幾行（是給我看的守門，不是給使用者看的）收進「量測」裡。 */
+    var ok = (400 >= need) && even && !(over > 0);
+    var det = '<div class="m"><span>頭高佔圓</span><b>' + hs + '%</b></div>' +
+      '<div class="m"><span>裁切框</span><b>' + BOXES[st][hs] + '</b></div>' +
+      '<div class="m"><span>頭像</span><b>' + n(fr.width) + ' × ' + n(fr.height) + '</b></div>' +
+      '<div class="m ' + (400 >= need ? 'good' : 'bad') + '"><span>原檔夠不夠（需 ' + need + '）</span><b>400 ' + (400 >= need ? '夠' : '不夠') + '</b></div>' +
+      '<div class="m ' + (even ? 'good' : 'bad') + '"><span>照片四周三個間距</span><b>' + g.map(n).join(' / ') + '</b></div>' +
+      '<div class="m ' + (over > 0 ? 'bad' : 'good') + '"><span>水平捲動</span><b>' + (over > 0 ? over + 'px' : '無') + '</b></div>';
+    foot.innerHTML =
+      '<div class="pvbar-note"><b>' + hs + '%</b>：' + SAME[hs] +
+      '<br><b>' + LBL[st] + '</b>：' + NOTE[st] + '</div>' +
+      '<details class="pvbar-det"' + (open1 ? ' open' : '') + '><summary>量測 ' +
+      (ok ? '・都對' : '・⚠ 有一項不對') + '</summary>' + rows + det + '</details>';
+    /* 使用者自己打開過就記著，換一格不要又收起來。 */
+    foot.querySelector('.pvbar-det').addEventListener('toggle', function () { open1 = this.open; });
   }
   addEventListener('resize', measure);
   apply();
 })();
 </script>
-`.replace('BARCSS', BAR_CSS).replace('NOTEMAP', NOTE_MAP);
+`.replace('BARCSS', BAR_CSS).replace('NOTEMAP', NOTE_MAP)
+ .replace('BOXMAP', BOXES).replace('HSLIST', HS);
 
 /* ---- (3) 切換條插在**最後一個** body 結束標籤前面 ---------------------
    ⚠ 這一站的註解裡就寫著那幾個字，用 String.replace 會換到註解裡那一個。 */

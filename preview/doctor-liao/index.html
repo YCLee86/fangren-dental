@@ -102,29 +102,56 @@ r.dataset.theme=s;})();</script>
      --------------------------------------------------------------------------
      使用者給了四張，「把這四張做成廖立揚醫師的圖卡，作成站上首頁提案頁給我看」。
 
-     ---- 要挑的是什麼 -------------------------------------------------------
+     ---- 要挑的是什麼（兩條尺，互相獨立） ---------------------------------
      **不是版面。** 圓頭像那一套 2026-09-19 已經定案上線，這一頁完全沿用
-     index.html 現行的規則，只換 img 的 src。要挑的是**表情與畫法**：
+     index.html 現行的規則，只換 img 的 src。要挑的是：
+
+       ① 頭在圓裡多大（四張一起動）　② 哪一種表情
 
        Ⓐ 露齒笑，畫法最接近照片（原檔 1024x1536，和另外三張不同組）
        Ⓑ 微笑不露齒
        Ⓒ 露齒笑
        Ⓓ 抿嘴笑，頭略大
 
+     ---- 第二輪：尺的單位從「框幾 px」改成「頭高佔圓的比例」---------------
+     第一輪四張全部太小（使用者：「698好像還有點小　再大一點」）。
+     回頭把四張和站上那三顆圓一起套格線量，才看出問題不在某一個數字：
+
+       李柄輝 81%　李侑津 81%　王俊偉 77%
+       Ⓐ 70%　Ⓑ 69%　Ⓒ 70%　Ⓓ 73%
+
+     四張都比站上那三位小一級。**框的 px 沒辦法跨醫師比**（四個人的原檔
+     尺寸與取景都不一樣，王俊偉的 660 和廖立揚的 698 不在同一把尺上），
+     頭高佔比可以 —— 所以尺改成這個單位，而且 77%／81% 兩格直接等於站上那三位。
+     順帶修掉第一輪量偏的臉中線（Ⓐ 505 → 495，臉原本偏左 2~3%）。
+
      ---- 裁切怎麼來的 -------------------------------------------------------
-     照 /history/doctor-photo.html 定下的做法：先在原圖上量髮頂／眼睛／下巴／
-     臉中線，換算成第一張（李柄輝）的比例（眼睛在框高 44.2%、臉中線在框寬 49.3%），
-     算完**再和站上那三顆圓並排看** —— 那才是判準，算出來的只是起點。
+     框的位置仍照 /history/doctor-photo.html 定下的兩個錨：
+     **眼睛在框高 44.2%、臉中線在框寬 49.3%**；這一輪只動框的大小。
+     marks 是在已經裁出來的 400px 成品上套格線讀、再換算回原檔座標的。
 
-       Ⓐ 髮頂 140 眼睛 395 下巴 610 臉中線 505 → 161,87,698,698
-       Ⓑ 髮頂 100 眼睛 355 下巴 560 臉中線 540 → 187,38,717,717
-       Ⓒ 髮頂  95 眼睛 355 下巴 560 臉中線 540 → 187,38,717,717
-       Ⓓ 髮頂  90 眼睛 380 下巴 600 臉中線 525 → 153,46,755,755
-
-     四張的頭圍和站上那三顆並排比都合得起來，所以四張都可以選。
-
+       A 髮頂 143 眼睛 380 下巴 631 臉中線 495
+           70% → 151,72,697,697
+           74% → 170,89,659,659
+           77% → 182,100,634,634
+           81% → 198,114,602,602
+       B 髮頂 110 眼睛 346 下巴 604 臉中線 546
+           70% → 198,34,706,706
+           74% → 217,51,668,668
+           77% → 229,62,642,642
+           81% → 245,76,610,610
+       C 髮頂 110 眼睛 346 下巴 612 臉中線 546
+           70% → 193,29,717,717
+           74% → 212,46,678,678
+           77% → 225,58,652,652
+           81% → 240,72,620,620
+       D 髮頂 99 眼睛 378 下巴 650 臉中線 538
+           70% → 150,30,787,787
+           74% → 171,49,745,745
+           77% → 185,62,716,716
+           81% → 203,77,680,680
      ---- 切換條 -------------------------------------------------------------
-     網址參數 ?p=off|a|b|c|d（off ＝ 對照現況，那張卡沒有照片）
+     網址參數 ?p=off|a|b|c|d（off ＝ 對照現況，那張卡沒有照片）＋ ?h=70|74|77|81
      ========================================================================== -->
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary_large_image">
@@ -7100,7 +7127,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
         </article>
         <article class="doc" data-face data-spec="ortho">
           <picture class="doc-face">
-            <img class="pv-liao" src="img/liao-a-400.jpg" width="400" height="400" alt="廖立揚醫師的形象照，身著白袍站在診所候診區">
+            <img class="pv-liao" src="img/liao-a-81-400.jpg" width="400" height="400" alt="廖立揚醫師的形象照，身著白袍站在診所候診區">
           </picture>
           <h3>廖立揚<span class="doc-role">矯正專科醫師</span></h3>
           <dl>
@@ -9421,6 +9448,14 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 .pvbar-foot hr { border: 0; border-top: 1px solid rgba(255,255,255,.14); margin: 7px 0; }
 .pvbar-note { color: #8f8a84; font-size: 11px; line-height: 1.7; }
 .pvbar-note b { color: #cfc9c2; font-weight: 600; }
+.pvbar-row.slim button { min-height: 32px; font-size: 11.5px; }
+.pvbar-det > summary {
+  list-style: none; cursor: pointer; padding: 4px 0 2px;
+  color: #8f8a84; font-size: 11px; letter-spacing: .06em;
+}
+.pvbar-det > summary::-webkit-details-marker { display: none; }
+.pvbar-det > summary::before { content: "▸ "; }
+.pvbar-det[open] > summary::before { content: "▾ "; }
 @media (max-width: 420px) { .pvbar { right: 8px; top: 8px; } .pvbar-panel { width: calc(100vw - 16px); } }
 @media print { .pvbar { display: none; } }
 </style>
@@ -9429,6 +9464,13 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
   <button class="pvbar-btn" type="button" aria-expanded="false">廖立揚 <b></b></button>
   <div class="pvbar-panel">
     <div class="pvbar-body">
+      <div class="pvbar-g">頭的大小　<em>頭高佔圓的比例</em></div>
+      <div class="pvbar-row" data-k="h">
+        <button type="button" data-h="70">70%<small>第一輪</small></button>
+        <button type="button" data-h="74">74%<small>中間</small></button>
+        <button type="button" data-h="77">77%<small>同王俊偉</small></button>
+        <button type="button" data-h="81">81%<small>同李柄輝</small></button>
+      </div>
       <div class="pvbar-g">四張照片　<em>版面已定案，這裡只換照片</em></div>
       <div class="pvbar-row" data-k="p">
         <button type="button" data-v="a">Ⓐ<small>露齒・像照片</small></button>
@@ -9436,7 +9478,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
         <button type="button" data-v="c">Ⓒ<small>露齒</small></button>
         <button type="button" data-v="d">Ⓓ<small>抿嘴</small></button>
       </div>
-      <div class="pvbar-row">
+      <div class="pvbar-row slim">
         <button type="button" data-v="off">對照現況（這張卡沒有照片）</button>
       </div>
     </div>
@@ -9454,31 +9496,49 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
   var card = pic.parentNode;
   var ALL  = ['a','b','c','d','off'];
   var LBL  = { a:'Ⓐ 露齒・像照片', b:'Ⓑ 微笑', c:'Ⓒ 露齒', d:'Ⓓ 抿嘴', off:'現況（沒有照片）' };
-  var NOTE = {"a": "原檔 1024×1536，裁切 161,87,698,698　露齒笑，畫法最接近照片（和另外三張不同組）", "b": "原檔 1122×1402，裁切 187,38,717,717　微笑不露齒", "c": "原檔 1122×1402，裁切 187,38,717,717　露齒笑", "d": "原檔 1122×1402，裁切 153,46,755,755　抿嘴笑，頭略大"};
-  var st = 'a';
+  var SAME = { 70:'第一輪那一格（最鬆）', 74:'介於第一輪與王俊偉之間',
+               77:'和站上的王俊偉一樣', 81:'和站上的李柄輝、李侑津一樣（最滿）' };
+  var NOTE  = {"a":"原檔 1024×1536　露齒笑，畫法最接近照片（和另外三張不同組）","b":"原檔 1122×1402　微笑不露齒","c":"原檔 1122×1402　露齒笑","d":"原檔 1122×1402　抿嘴笑，頭略大"};
+  var BOXES = {"a":{"70":"151,72,697,697","74":"170,89,659,659","77":"182,100,634,634","81":"198,114,602,602"},"b":{"70":"198,34,706,706","74":"217,51,668,668","77":"229,62,642,642","81":"245,76,610,610"},"c":{"70":"193,29,717,717","74":"212,46,678,678","77":"225,58,652,652","81":"240,72,620,620"},"d":{"70":"150,30,787,787","74":"171,49,745,745","77":"185,62,716,716","81":"203,77,680,680"}};
+  var HS    = [70,74,77,81];
+  var st = 'a', hs = 81, open1 = false;
 
-  var q = new URLSearchParams(location.search).get('p');
-  if (q !== null && ALL.indexOf(q) >= 0) st = q;
+  var qs = new URLSearchParams(location.search);
+  var q = qs.get('p'); if (q !== null && ALL.indexOf(q) >= 0) st = q;
+  var h = parseInt(qs.get('h'), 10); if (HS.indexOf(h) >= 0) hs = h;
 
-  /* 四張都先抓下來，切換才不必等下載 —— Worker 對 preview 設 no-store，
-     不預抓的話每按一次都要重抓一遍（og-topic-card 那一輪定下的做法）。 */
+  function src(k, r) { return 'img/liao-' + k + '-' + r + '-400.jpg'; }
+
+  /* 十六張都先抓下來，切換才不必等下載 —— Worker 對 preview 設 no-store，
+     不預抓的話每按一次都要重抓一遍（og-topic-card 那一輪定下的做法）。
+     ⚠ 先抓同一張的其他尺寸（使用者這一輪主要在動那條尺），再抓其餘的。 */
   addEventListener('load', function () {
-    ['a','b','c','d'].forEach(function (k) { new Image().src = 'img/liao-' + k + '-400.jpg'; });
+    var q = [];
+    HS.forEach(function (r) { q.push(src(st, r)); });
+    ['a','b','c','d'].forEach(function (k) { HS.forEach(function (r) { q.push(src(k, r)); }); });
+    q.forEach(function (u) { new Image().src = u; });
   });
 
   function apply() {
     if (st === 'off') { card.removeAttribute('data-face'); pic.style.display = 'none'; }
-    else { card.setAttribute('data-face', ''); pic.style.display = ''; img.src = 'img/liao-' + st + '-400.jpg'; }
+    else { card.setAttribute('data-face', ''); pic.style.display = ''; img.src = src(st, hs); }
     Array.prototype.forEach.call(box.querySelectorAll('.pvbar-row button'), function (b) {
-      b.setAttribute('aria-pressed', String(b.dataset.v === st));
+      if (b.dataset.h) b.setAttribute('aria-pressed', String(+b.dataset.h === hs));
+      else b.setAttribute('aria-pressed', String(b.dataset.v === st));
     });
-    history.replaceState(null, '', st === 'a' ? location.pathname : '?p=' + st);
-    btn.querySelector('b').textContent = LBL[st];
+    /* 照片關掉的時候那條尺沒有作用，整排調淡（同 card-more 那一輪的 is-off）。 */
+    box.querySelector('.pvbar-row[data-k="h"]').classList.toggle('is-off', st === 'off');
+    var u = [];
+    if (st !== 'a')  u.push('p=' + st);
+    if (hs !== 81)   u.push('h=' + hs);
+    history.replaceState(null, '', u.length ? '?' + u.join('&') : location.pathname);
+    btn.querySelector('b').textContent = st === 'off' ? LBL.off : LBL[st] + '・' + hs + '%';
     measure();
   }
   box.addEventListener('click', function (e) {
     var b = e.target.closest('.pvbar-row button'); if (!b) return;
-    st = b.dataset.v; apply();
+    if (b.dataset.h) hs = +b.dataset.h; else st = b.dataset.v;
+    apply();
   });
   btn.addEventListener('click', function () {
     var o = box.dataset.open === '1' ? '0' : '1';
@@ -9493,7 +9553,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     if (box.dataset.open !== '1') return;
     var rows = '<div class="m"><span>視窗寬</span><b>' + window.innerWidth + '</b></div>';
     if (st === 'off') {
-      foot.innerHTML = rows + '<hr><div class="pvbar-note">這一格是<b>對照現況</b>：' +
+      foot.innerHTML = '<div class="pvbar-note">這一格是<b>對照現況</b>：' +
         '廖立揚那張卡沒有照片，和另外五位一樣。</div>';
       return;
     }
@@ -9503,20 +9563,25 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     var ink = rg.getBoundingClientRect();
     var g = [fr.left - cr.left, fr.top - cr.top, ink.left - fr.right];
     var even = Math.max.apply(null, g) - Math.min.apply(null, g) < 0.6;
-    var mates = Array.prototype.filter.call(document.querySelectorAll('.docs .doc'), function (c) {
-      return Math.abs(c.offsetTop - card.offsetTop) < 4 && c !== card;
-    });
     var need = Math.round(fr.width * (window.devicePixelRatio || 1));
     var over = document.documentElement.scrollWidth - document.documentElement.clientWidth;
-    rows += '<div class="m"><span>頭像</span><b>' + n(fr.width) + ' × ' + n(fr.height) + '</b></div>';
-    rows += '<div class="m ' + (400 >= need ? 'good' : 'bad') + '"><span>原檔夠不夠（需 ' + need + '）</span><b>400 ' + (400 >= need ? '夠' : '不夠') + '</b></div>';
-    rows += '<div class="m ' + (even ? 'good' : 'bad') + '"><span>照片四周三個間距</span><b>' + g.map(n).join(' / ') + '</b></div>';
-    rows += '<div class="m"><span>同一列還有</span><b>' + mates.length + ' 張</b></div>';
-    rows += '<div class="m ' + (over > 0 ? 'bad' : 'good') + '"><span>水平捲動</span><b>' + (over > 0 ? over + 'px' : '無') + '</b></div>';
-    rows += '<hr><div class="pvbar-note"><b>' + LBL[st] + '</b>：' + NOTE[st] +
-      '<br>版面是 2026-09-19 已經定案的那一套，這一頁只換照片；四張的頭圍都和站上' +
-      '那三顆並排比過，差別在表情與畫法。要對照沒有照片的樣子按最底下那一顆。</div>';
-    foot.innerHTML = rows;
+    /* ⚠⚠ 面板不可以長到蓋住那張卡 —— 這一頁要判斷的正是那顆頭像
+       （hero-motion-mobile 那一輪踩過）。所以預設只留一句說明，
+       量測那幾行（是給我看的守門，不是給使用者看的）收進「量測」裡。 */
+    var ok = (400 >= need) && even && !(over > 0);
+    var det = '<div class="m"><span>頭高佔圓</span><b>' + hs + '%</b></div>' +
+      '<div class="m"><span>裁切框</span><b>' + BOXES[st][hs] + '</b></div>' +
+      '<div class="m"><span>頭像</span><b>' + n(fr.width) + ' × ' + n(fr.height) + '</b></div>' +
+      '<div class="m ' + (400 >= need ? 'good' : 'bad') + '"><span>原檔夠不夠（需 ' + need + '）</span><b>400 ' + (400 >= need ? '夠' : '不夠') + '</b></div>' +
+      '<div class="m ' + (even ? 'good' : 'bad') + '"><span>照片四周三個間距</span><b>' + g.map(n).join(' / ') + '</b></div>' +
+      '<div class="m ' + (over > 0 ? 'bad' : 'good') + '"><span>水平捲動</span><b>' + (over > 0 ? over + 'px' : '無') + '</b></div>';
+    foot.innerHTML =
+      '<div class="pvbar-note"><b>' + hs + '%</b>：' + SAME[hs] +
+      '<br><b>' + LBL[st] + '</b>：' + NOTE[st] + '</div>' +
+      '<details class="pvbar-det"' + (open1 ? ' open' : '') + '><summary>量測 ' +
+      (ok ? '・都對' : '・⚠ 有一項不對') + '</summary>' + rows + det + '</details>';
+    /* 使用者自己打開過就記著，換一格不要又收起來。 */
+    foot.querySelector('.pvbar-det').addEventListener('toggle', function () { open1 = this.open; });
   }
   addEventListener('resize', measure);
   apply();
