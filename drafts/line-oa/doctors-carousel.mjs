@@ -72,8 +72,8 @@ const row = (label, value, first) => ({
 });
 
 const bubbles = docs.map((d) => {
-  /* 名字與藥丸疊成兩行：卡片 300、內距 20 ＋ 20、頭像 76 ＋ 間距 14，剩 170px；
-     「贋復假牙專科醫師」的藥丸 ＋ 名字排成一行要 185px，放不下。九張一律兩行，才整齊。 */
+  /* 名字與藥丸疊成兩行：卡片 260（kilo）、內距 20 ＋ 20、頭像 76 ＋ 間距 14，剩 130px；
+     最長的藥丸「贋復假牙專科醫師」是 120px，單獨一行放得下，和名字排成一行放不下。九張一律兩行，才整齊。 */
   const title = {
     type: "box", layout: "vertical", spacing: "sm", justifyContent: "center",
     contents: [
@@ -109,7 +109,10 @@ const bubbles = docs.map((d) => {
     : title;
 
   return {
-    type: "bubble", size: "mega",
+    /* ⚠⚠ 尺寸定案 kilo（260px），2026-09-24 使用者在 LINE「芳仁測試01」實機測過四種之後定的：
+       mega 偏空、giga 和 mega 看不出差別、micro 過窄、kilo 密度與閱讀性最好。
+       **之後醫師介紹的卡一律以 kilo 為準，不要改回 mega。** */
+    type: "bubble", size: "kilo",
     body: {
       type: "box", layout: "vertical", backgroundColor: CARD, paddingAll: "20px",
       contents: [

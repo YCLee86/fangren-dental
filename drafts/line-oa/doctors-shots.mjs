@@ -51,6 +51,6 @@ if (process.argv.includes("--now")) {
   for (const [i, el] of els.entries()) await el.screenshot({ path: path.join(OUT, `doc-${i + 1}.png`) });
   fs.unlinkSync(tmp);
   const h = (await els[0].boundingBox()).height;
-  console.log(`preview/line-doctors/doc-1…${els.length}.png　300×${Math.round(h)} CSS px（DPR 3，九張齊高）`);
+  console.log(`preview/line-doctors/doc-1…${els.length}.png　${Math.round((await els[0].boundingBox()).width)}×${Math.round(h)} CSS px（DPR 3，九張齊高）`);
 }
 await browser.close();

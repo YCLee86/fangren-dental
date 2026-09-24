@@ -6,7 +6,7 @@
     "contents": [
       {
         "type": "bubble",
-        "size": "mega",
+        "size": "kilo",
         "body": {
           "type": "box",
           "layout": "vertical",
@@ -154,7 +154,7 @@
       },
       {
         "type": "bubble",
-        "size": "mega",
+        "size": "kilo",
         "body": {
           "type": "box",
           "layout": "vertical",
@@ -302,7 +302,7 @@
       },
       {
         "type": "bubble",
-        "size": "mega",
+        "size": "kilo",
         "body": {
           "type": "box",
           "layout": "vertical",
@@ -450,7 +450,7 @@
       },
       {
         "type": "bubble",
-        "size": "mega",
+        "size": "kilo",
         "body": {
           "type": "box",
           "layout": "vertical",
@@ -573,7 +573,7 @@
       },
       {
         "type": "bubble",
-        "size": "mega",
+        "size": "kilo",
         "body": {
           "type": "box",
           "layout": "vertical",
@@ -721,7 +721,7 @@
       },
       {
         "type": "bubble",
-        "size": "mega",
+        "size": "kilo",
         "body": {
           "type": "box",
           "layout": "vertical",
@@ -869,7 +869,7 @@
       },
       {
         "type": "bubble",
-        "size": "mega",
+        "size": "kilo",
         "body": {
           "type": "box",
           "layout": "vertical",
@@ -1017,7 +1017,7 @@
       },
       {
         "type": "bubble",
-        "size": "mega",
+        "size": "kilo",
         "body": {
           "type": "box",
           "layout": "vertical",
@@ -1165,7 +1165,7 @@
       },
       {
         "type": "bubble",
-        "size": "mega",
+        "size": "kilo",
         "body": {
           "type": "box",
           "layout": "vertical",
