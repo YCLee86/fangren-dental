@@ -20,6 +20,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import crypto from "node:crypto";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "../..");
@@ -58,6 +59,7 @@ const docs = arts.map((a) => {
   return { spec, name: plain(h3[1]), role: plain(h3[2]), skills, exp: lines("資歷"), edu: lines("學歷"), face };
 });
 
+const ver = (f) => crypto.createHash("sha1").update(fs.readFileSync(path.join(ROOT, f))).digest("hex").slice(0, 8);
 const INK = "#2A2C27", SOFT = "#5C5F57", CARD = "#F4F4F5", RULE = "#CDD0D2";
 const FACE = 76; // ＝ 站上 .doc[data-face] 的 --face
 
@@ -97,7 +99,9 @@ const bubbles = docs.map((d) => {
           {
             type: "box", layout: "vertical", flex: 0, width: `${FACE}px`, height: `${FACE}px`,
             cornerRadius: `${FACE / 2}px`,
-            contents: [{ type: "image", url: `${SITE}/${d.face}`, size: "full", aspectRatio: "1:1", aspectMode: "cover" }],
+            /* ⚠ 網址後面帶 ?v=<檔案內容雜湊>（2026-09-24 加的）：林晏妤醫師換照片時檔名沒變，
+               LINE 會照網址快取圖，同一個網址就一直顯示舊照片。帶雜湊之後照片一換網址就跟著換。 */
+            contents: [{ type: "image", url: `${SITE}/${d.face}?v=${ver(d.face)}`, size: "full", aspectRatio: "1:1", aspectMode: "cover" }],
           },
           title,
         ],

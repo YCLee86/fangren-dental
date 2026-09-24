@@ -70,7 +70,7 @@ function render(n, dir = "vertical", first = false) {
     /* 網址寫的是**未來的**位置（https://fangren.net/assets/…）；
        檔案還沒進 assets/ 的話退到 drafts/line-oa/handouts/ 找。
        ⚠ 這只是預覽的方便，JSON 本身一律寫上線後的網址，不要改成相對路徑。 */
-    let src = n.url.replace("https://fangren.net/", ROOT + "/");
+    let src = n.url.replace("https://fangren.net/", ROOT + "/").replace(/\?.*$/, ""); // 去掉 ?v= 快取參數
     if (!fs.existsSync(src)) {
       const alt = path.join(HERE, "handouts", path.basename(src));
       if (fs.existsSync(alt)) src = alt;
