@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>芳仁牙醫診所　LINE 醫師介紹　改版規格</title>
+<!-- 由 drafts/line-oa/doctors-vendor.mjs 產生，不要手改。 -->
+<style>
+:root{--paper:#e2e5e6;--card:#f4f4f5;--ink:#2a2c27;--soft:#5c5f57;--rule:#c9ccc9;--brand:#3f654a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.7 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:26px 16px 72px}
+h1{font-size:1.3rem;line-height:1.5;margin:0 0 .2em}
+.lede{color:var(--soft);font-size:.9rem;margin:0}
+h2{font-size:1.04rem;margin:2em 0 .6em;padding-top:1em;border-top:1px solid var(--rule)}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+.vs figure{margin:0}
+.vs img{width:100%;height:auto;display:block;border-radius:10px}
+/* 新版縮到和現況截圖同一比例尺：截圖寬 ＝ 手機 390px，卡片 260px */
+.vs .new img{width:66.7%}
+td.nm{white-space:nowrap}
+.vs figcaption,.cap{font-size:.8rem;color:var(--soft);margin-top:.35em}
+.chat{background:#1c1c1e;border-radius:12px;padding:14px 0 10px}
+.strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 16px 6px}
+.strip img{flex:0 0 260px;width:260px;height:auto;border-radius:12px;scroll-snap-align:center;display:block}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:10px;overflow:hidden;font-size:.86rem}
+th,td{padding:.5em .65em;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child>*{border-bottom:0}
+th{font-weight:500;color:var(--soft);white-space:nowrap}
+code{font-size:.82rem}
+.sw{display:inline-block;width:.9em;height:.9em;border-radius:3px;vertical-align:-.1em;margin-right:.3em}
+.dl{display:block;background:var(--brand);color:#fff;text-decoration:none;text-align:center;
+  font-weight:600;border-radius:9px;padding:.75em;margin:0 0 .8em}
+ul.files{list-style:none;margin:0;padding:0;background:var(--card);border-radius:10px;font-size:.88rem}
+ul.files li{padding:.5em .7em;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;gap:.6em}
+ul.files li:last-child{border-bottom:0}
+ul.files a{color:var(--brand);word-break:break-all}
+ul.files span{color:var(--soft);white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>LINE「醫師介紹」改版規格</h1>
+<p class="lede">圖文選單「醫師介紹」回覆的 Flex Carousel。大插畫改成醫師本人小頭像。</p>
+
+<h2>1　現況 → 新版</h2>
+<div class="vs">
+  <figure><img src="preview/now-1.png" alt="現況"><figcaption>現況</figcaption></figure>
+  <figure class="new"><img src="preview/doc-1.png" alt="新版"><figcaption>新版（kilo，同比例）</figcaption></figure>
+</div>
+
+<h2>2　新版九張</h2>
+<div class="chat"><div class="strip">
+  <img src="preview/doc-1.png" alt="李柄輝">
+  <img src="preview/doc-2.png" alt="李侑津">
+  <img src="preview/doc-3.png" alt="王俊偉">
+  <img src="preview/doc-4.png" alt="廖立揚">
+  <img src="preview/doc-5.png" alt="林晏妤">
+  <img src="preview/doc-6.png" alt="許馨文">
+  <img src="preview/doc-7.png" alt="楊小瑩">
+  <img src="preview/doc-8.png" alt="陳芷鈴">
+  <img src="preview/doc-9.png" alt="謝耀慶">
+</div></div>
+<p class="cap">模擬圖，依 JSON 繪製。左右滑。</p>
+
+<h2>3　規格</h2>
+<table>
+<tr><th>觸發</th><td>圖文選單「醫師介紹」</td></tr>
+<tr><th>訊息</th><td>Flex Message・carousel・bubble 9 張</td></tr>
+<tr><th>bubble</th><td><code>size: "kilo"</code>（實機測試定案）</td></tr>
+<tr><th>altText</th><td>芳仁牙醫的九位醫師</td></tr>
+<tr><th>頭像</th><td>76×76px 圓形（box <code>cornerRadius: 38px</code>）・JPEG 400×400</td></tr>
+<tr><th>字級</th><td>姓名 <code>lg</code> 粗・標籤 <code>xs</code>・欄位名 <code>xs</code>・內文 <code>sm</code></td></tr>
+<tr><th>顏色</th><td>底 <code>#F4F4F5</code>・字 <code>#2A2C27</code>・欄位名 <code>#5C5F57</code>・分隔線 <code>#CDD0D2</code>・標籤底＝科別色、白字</td></tr>
+<tr><th>JSON</th><td>16.2 KB（上限 50 KB）・可直接送出</td></tr>
+<tr><th>照片網址</th><td>已寫在 JSON 內（fangren.net），保留 <code>?v=</code></td></tr>
+</table>
+
+<h2>4　九位醫師</h2>
+<table>
+<tr><th>#</th><th>醫師</th><th>標籤</th><th>照片</th></tr>
+<tr><td>1</td><td class="nm">李柄輝</td><td><span class="sw" style="background:#3F654A"></span>創辦醫師<br><code>#3F654A</code></td><td><a href="photos/01-doctor-li-binghui-400.jpg" download>01-doctor-li-binghui-400.jpg</a></td></tr>
+<tr><td>2</td><td class="nm">李侑津</td><td><span class="sw" style="background:#317D78"></span>醫師<br><code>#317D78</code></td><td><a href="photos/02-doctor-li-youjin-400.jpg" download>02-doctor-li-youjin-400.jpg</a></td></tr>
+<tr><td>3</td><td class="nm">王俊偉</td><td><span class="sw" style="background:#4478B5"></span>矯正專科醫師<br><code>#4478B5</code></td><td><a href="photos/03-doctor-wang-junwei-400.jpg" download>03-doctor-wang-junwei-400.jpg</a></td></tr>
+<tr><td>4</td><td class="nm">廖立揚</td><td><span class="sw" style="background:#4478B5"></span>矯正專科醫師<br><code>#4478B5</code></td><td>無（純文字）</td></tr>
+<tr><td>5</td><td class="nm">林晏妤</td><td><span class="sw" style="background:#C28229"></span>兒牙專科醫師<br><code>#C28229</code></td><td><a href="photos/05-doctor-lin-yanyu-400.jpg" download>05-doctor-lin-yanyu-400.jpg</a></td></tr>
+<tr><td>6</td><td class="nm">許馨文</td><td><span class="sw" style="background:#8E6299"></span>口外專科醫師<br><code>#8E6299</code></td><td><a href="photos/06-doctor-xu-xinwen-400.jpg" download>06-doctor-xu-xinwen-400.jpg</a></td></tr>
+<tr><td>7</td><td class="nm">楊小瑩</td><td><span class="sw" style="background:#465885"></span>贋復假牙專科醫師<br><code>#465885</code></td><td><a href="photos/07-doctor-yang-xiaoying-400.jpg" download>07-doctor-yang-xiaoying-400.jpg</a></td></tr>
+<tr><td>8</td><td class="nm">陳芷鈴</td><td><span class="sw" style="background:#AE4F4D"></span>顯微根管專科醫師<br><code>#AE4F4D</code></td><td><a href="photos/08-doctor-chen-zhiling-400.jpg" download>08-doctor-chen-zhiling-400.jpg</a></td></tr>
+<tr><td>9</td><td class="nm">謝耀慶</td><td><span class="sw" style="background:#C28229"></span>兒童牙科<br><code>#C28229</code></td><td><a href="photos/09-doctor-xie-yaoqing-400.jpg" download>09-doctor-xie-yaoqing-400.jpg</a></td></tr>
+</table>
+
+<h2>5　下載</h2>
+<a class="dl" href="fangren-line-doctors.zip" download>全部下載（zip，1831 KB）</a>
+<ul class="files">
+<li><a href="doctors-message.json" download>doctors-message.json</a><span>Flex Message・41 KB</span></li>
+<li><a href="photos/01-doctor-li-binghui-400.jpg" download>photos/01-doctor-li-binghui-400.jpg</a><span>李柄輝・26 KB</span></li>
+<li><a href="photos/02-doctor-li-youjin-400.jpg" download>photos/02-doctor-li-youjin-400.jpg</a><span>李侑津・28 KB</span></li>
+<li><a href="photos/03-doctor-wang-junwei-400.jpg" download>photos/03-doctor-wang-junwei-400.jpg</a><span>王俊偉・25 KB</span></li>
+<li><a href="photos/05-doctor-lin-yanyu-400.jpg" download>photos/05-doctor-lin-yanyu-400.jpg</a><span>林晏妤・28 KB</span></li>
+<li><a href="photos/06-doctor-xu-xinwen-400.jpg" download>photos/06-doctor-xu-xinwen-400.jpg</a><span>許馨文・24 KB</span></li>
+<li><a href="photos/07-doctor-yang-xiaoying-400.jpg" download>photos/07-doctor-yang-xiaoying-400.jpg</a><span>楊小瑩・28 KB</span></li>
+<li><a href="photos/08-doctor-chen-zhiling-400.jpg" download>photos/08-doctor-chen-zhiling-400.jpg</a><span>陳芷鈴・21 KB</span></li>
+<li><a href="photos/09-doctor-xie-yaoqing-400.jpg" download>photos/09-doctor-xie-yaoqing-400.jpg</a><span>謝耀慶・25 KB</span></li>
+<li><a href="preview/doc-1.png" download>preview/doc-1.png</a><span>新版 1・175 KB</span></li>
+<li><a href="preview/doc-2.png" download>preview/doc-2.png</a><span>新版 2・173 KB</span></li>
+<li><a href="preview/doc-3.png" download>preview/doc-3.png</a><span>新版 3・159 KB</span></li>
+<li><a href="preview/doc-4.png" download>preview/doc-4.png</a><span>新版 4・89 KB</span></li>
+<li><a href="preview/doc-5.png" download>preview/doc-5.png</a><span>新版 5・172 KB</span></li>
+<li><a href="preview/doc-6.png" download>preview/doc-6.png</a><span>新版 6・163 KB</span></li>
+<li><a href="preview/doc-7.png" download>preview/doc-7.png</a><span>新版 7・170 KB</span></li>
+<li><a href="preview/doc-8.png" download>preview/doc-8.png</a><span>新版 8・155 KB</span></li>
+<li><a href="preview/doc-9.png" download>preview/doc-9.png</a><span>新版 9・177 KB</span></li>
+<li><a href="preview/now-1.png" download>preview/now-1.png</a><span>現況・74 KB</span></li>
+<li><a href="preview/now-2.png" download>preview/now-2.png</a><span>現況・77 KB</span></li>
+</ul>
+</div>
+</body>
+</html>
