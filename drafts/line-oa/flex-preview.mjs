@@ -61,6 +61,9 @@ function render(n, dir = "vertical", first = false) {
     return `<div style="${st}">${esc(n.text ?? "")}</div>`;
   }
 
+  /* filler：佔位用的空白（醫師介紹那張沒有照片的卡，2026-09-24） */
+  if (n.type === "filler") return `<div style="flex:1 1 0"></div>`;
+
   if (n.type === "separator") {
     return `<div style="height:1px;background:${n.color || "#E0E0E0"};${mg};flex:0 0 auto"></div>`;
   }

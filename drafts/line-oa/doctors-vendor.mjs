@@ -159,7 +159,7 @@ ${docs.map((d) => `  <img src="${d.shot}" alt="${esc(d.name)}">`).join("\n")}
 <tr><th>訊息</th><td>Flex Message・carousel・bubble ${bubbles.length} 張</td></tr>
 <tr><th>bubble</th><td><code>size: "kilo"</code>（實機測試定案）</td></tr>
 <tr><th>altText</th><td>${esc(msg.altText)}</td></tr>
-<tr><th>頭像</th><td>76×76px 圓形（box <code>cornerRadius: 38px</code>）・JPEG 400×400</td></tr>
+<tr><th>頭像</th><td>76×76px 圓形（box <code>cornerRadius: 38px</code>）・JPEG 400×400・無照片者留同尺寸空位（<code>filler</code>）</td></tr>
 <tr><th>字級</th><td>姓名 <code>lg</code> 粗・標籤 <code>xs</code>・欄位名 <code>xs</code>・內文 <code>sm</code></td></tr>
 <tr><th>顏色</th><td>底 <code>#F4F4F5</code>・字 <code>#2A2C27</code>・欄位名 <code>#5C5F57</code>・分隔線 <code>#CDD0D2</code>・標籤底＝科別色、白字</td></tr>
 <tr><th>JSON</th><td>${jsonKb} KB（上限 50 KB）・可直接送出</td></tr>
@@ -169,7 +169,7 @@ ${docs.map((d) => `  <img src="${d.shot}" alt="${esc(d.name)}">`).join("\n")}
 <h2>4　九位醫師</h2>
 <table>
 <tr><th>#</th><th>醫師</th><th>標籤</th><th>照片</th></tr>
-${docs.map((d) => `<tr><td>${d.n}</td><td class="nm">${esc(d.name)}</td><td><span class="sw" style="background:${d.color}"></span>${esc(d.role)}<br><code>${d.color}</code></td><td>${d.photo ? `<a href="${d.photo}" download>${path.basename(d.photo)}</a>` : "無（純文字）"}</td></tr>`).join("\n")}
+${docs.map((d) => `<tr><td>${d.n}</td><td class="nm">${esc(d.name)}</td><td><span class="sw" style="background:${d.color}"></span>${esc(d.role)}<br><code>${d.color}</code></td><td>${d.photo ? `<a href="${d.photo}" download>${path.basename(d.photo)}</a>` : "無（留空位，不畫框）"}</td></tr>`).join("\n")}
 </table>
 
 <h2>5　下載</h2>

@@ -10,8 +10,9 @@
  * ⚠⚠ **每一格的內容都是從 index.html 的 #doctors 讀出來的，這一份不抄第二份**
  *   （同 topics-carousel.mjs、CLAUDE.md 第十節第 1 條）：順序、名字、藥丸、專長、
  *   資歷、學歷、照片、科別色。醫師一換、照片一加，重跑這支就跟上。
- *   ⚠ 站上沒有照片的（2026-09-24 起只剩廖立揚；林晏妤、許馨文當天補上）這裡也沒有 —— 站上是純文字卡，
- *     這裡也是純文字卡。**不要補插畫或佔位圖**（廖立揚那張是使用者當天要求移除的）。
+ *   ⚠ 站上沒有照片的（2026-09-24 起只剩廖立揚；林晏妤、許馨文當天補上）這裡也沒有照片。
+ *     **不要補插畫或佔位圖**（廖立揚那張是使用者當天要求移除的）；照片那一格留空位、不畫框，
+ *     姓名與標籤和其他八張同位置（2026-09-24 使用者指定，見 head 那一段）。
  *
  * ⚠ 照片網址用 `-400.jpg` 不用 `.webp`：LINE 的 Flex image 只吃 JPEG／PNG。
  *
@@ -92,21 +93,24 @@ const bubbles = docs.map((d) => {
       },
     ],
   };
-  const head = d.face
-    ? {
-        type: "box", layout: "horizontal", spacing: "14px", alignItems: "center",
-        contents: [
-          {
-            type: "box", layout: "vertical", flex: 0, width: `${FACE}px`, height: `${FACE}px`,
-            cornerRadius: `${FACE / 2}px`,
-            /* ⚠ 網址後面帶 ?v=<檔案內容雜湊>（2026-09-24 加的）：林晏妤醫師換照片時檔名沒變，
-               LINE 會照網址快取圖，同一個網址就一直顯示舊照片。帶雜湊之後照片一換網址就跟著換。 */
-            contents: [{ type: "image", url: `${SITE}/${d.face}?v=${ver(d.face)}`, size: "full", aspectRatio: "1:1", aspectMode: "cover" }],
-          },
-          title,
-        ],
-      }
-    : title;
+  /* ⚠ 沒有照片的醫師（目前是廖立揚）也留一格 76px 的空位 —— 不畫框、不放圖，
+     只是讓姓名與標籤落在和其他八張同一個位置（2026-09-24 使用者指定）。
+     ⚠ 站上那張卡是純文字、沒有留位，這裡刻意不同：LINE 是左右滑著比，位置跳動很明顯。 */
+  const head = {
+    type: "box", layout: "horizontal", spacing: "14px", alignItems: "center",
+    contents: [
+      {
+        type: "box", layout: "vertical", flex: 0, width: `${FACE}px`, height: `${FACE}px`,
+        ...(d.face ? { cornerRadius: `${FACE / 2}px` } : {}),
+        /* ⚠ 網址後面帶 ?v=<檔案內容雜湊>（2026-09-24 加的）：林晏妤醫師換照片時檔名沒變，
+           LINE 會照網址快取圖，同一個網址就一直顯示舊照片。帶雜湊之後照片一換網址就跟著換。 */
+        contents: d.face
+          ? [{ type: "image", url: `${SITE}/${d.face}?v=${ver(d.face)}`, size: "full", aspectRatio: "1:1", aspectMode: "cover" }]
+          : [{ type: "filler" }],
+      },
+      title,
+    ],
+  };
 
   return {
     /* ⚠⚠ 尺寸定案 kilo（260px），2026-09-24 使用者在 LINE「芳仁測試01」實機測過四種之後定的：

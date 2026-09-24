@@ -459,37 +459,57 @@
           "contents": [
             {
               "type": "box",
-              "layout": "vertical",
-              "spacing": "sm",
-              "justifyContent": "center",
+              "layout": "horizontal",
+              "spacing": "14px",
+              "alignItems": "center",
               "contents": [
                 {
-                  "type": "text",
-                  "text": "廖立揚",
-                  "color": "#2A2C27",
-                  "size": "lg",
-                  "weight": "bold"
+                  "type": "box",
+                  "layout": "vertical",
+                  "flex": 0,
+                  "width": "76px",
+                  "height": "76px",
+                  "contents": [
+                    {
+                      "type": "filler"
+                    }
+                  ]
                 },
                 {
                   "type": "box",
-                  "layout": "horizontal",
+                  "layout": "vertical",
+                  "spacing": "sm",
+                  "justifyContent": "center",
                   "contents": [
                     {
+                      "type": "text",
+                      "text": "廖立揚",
+                      "color": "#2A2C27",
+                      "size": "lg",
+                      "weight": "bold"
+                    },
+                    {
                       "type": "box",
-                      "layout": "vertical",
-                      "flex": 0,
-                      "backgroundColor": "#4478B5",
-                      "cornerRadius": "8px",
-                      "paddingStart": "8px",
-                      "paddingEnd": "8px",
-                      "paddingTop": "4px",
-                      "paddingBottom": "0px",
+                      "layout": "horizontal",
                       "contents": [
                         {
-                          "type": "text",
-                          "text": "矯正專科醫師",
-                          "color": "#FFFFFF",
-                          "size": "xs"
+                          "type": "box",
+                          "layout": "vertical",
+                          "flex": 0,
+                          "backgroundColor": "#4478B5",
+                          "cornerRadius": "8px",
+                          "paddingStart": "8px",
+                          "paddingEnd": "8px",
+                          "paddingTop": "4px",
+                          "paddingBottom": "0px",
+                          "contents": [
+                            {
+                              "type": "text",
+                              "text": "矯正專科醫師",
+                              "color": "#FFFFFF",
+                              "size": "xs"
+                            }
+                          ]
                         }
                       ]
                     }
