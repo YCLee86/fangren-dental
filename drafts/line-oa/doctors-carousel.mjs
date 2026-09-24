@@ -126,8 +126,12 @@ const bubbles = docs.map((d) => {
 const out = { type: "carousel", contents: bubbles };
 fs.writeFileSync(path.join(HERE, "doctors-carousel.json"), JSON.stringify(out, null, 2) + "\n");
 /* 後台「Flex Message」那一格要的是這一份：外面多包一層 altText（通知列與聊天列表顯示的字） */
-fs.writeFileSync(path.join(HERE, "doctors-message.json"),
-  JSON.stringify({ type: "flex", altText: "芳仁牙醫的九位醫師", contents: out }, null, 2) + "\n");
+const msg = JSON.stringify({ type: "flex", altText: "芳仁牙醫的九位醫師", contents: out }, null, 2) + "\n";
+fs.writeFileSync(path.join(HERE, "doctors-message.json"), msg);
+/* 同一份也放上規格頁（2026-09-24）：使用者要用「已連動 LINE 官方帳號的 ChatGPT」送測試訊息，
+   頁面上的「複製」按鈕讀的就是這一份，ChatGPT 也可以直接讀這個網址。不要手改，重跑這支。 */
+fs.mkdirSync(path.join(ROOT, "preview/line-doctors"), { recursive: true });
+fs.writeFileSync(path.join(ROOT, "preview/line-doctors/doctors-message.json"), msg);
 const kb = (Buffer.byteLength(JSON.stringify(out)) / 1024).toFixed(1);
 if (kb > 50) throw new Error(`carousel ${kb} KB，超過 LINE 的 50 KB 上限`);
 console.log(`doctors-carousel.json　${docs.length} 位（有照片 ${docs.filter((d) => d.face).length} 位）　${kb} KB`);

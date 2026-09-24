@@ -42,6 +42,17 @@ ol.items>li{background:var(--card);border-radius:10px;padding:12px 14px;margin:.
 dl.pes{margin:0;display:grid;grid-template-columns:4.6em 1fr;gap:.2em .6em;font-size:.9rem}
 dl.pes dt{color:var(--soft)}
 dl.pes dd{margin:0}
+/* 給 ChatGPT 測試那一塊（2026-09-24） */
+.gpt{background:var(--card);border-radius:10px;padding:12px 14px;margin:.7em 0 0}
+.gpt ol{margin:.2em 0 0;padding-left:1.4em;font-size:.92rem}
+.gpt ol li{margin:.25em 0}
+.cp{display:block;width:100%;margin:.8em 0 0;padding:.75em;border:0;border-radius:9px;
+  background:#3f654a;color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.cp.done{background:#5c5f57}
+pre.box{margin:.6em 0 0;max-height:13em;overflow:auto;background:#fff;border:1px solid var(--rule);
+  border-radius:8px;padding:.6em .7em;font-size:.72rem;line-height:1.5;white-space:pre-wrap;word-break:break-all}
+.warn{font-size:.86rem;color:#8a3b39;margin:.7em 0 0}
+.url{font-size:.8rem;word-break:break-all;margin:.4em 0 0}
 </style>
 </head>
 <body>
@@ -55,9 +66,22 @@ dl.pes dd{margin:0}
 <tr><td>1</td><td>插畫太大，佔卡片六成高度</td><td class="ok">✅ 已改</td></tr>
 <tr><td>2</td><td>插畫不是醫師本人，而且九位共用兩張</td><td class="ok">✅ 已改</td></tr>
 <tr><td>3</td><td>廖立揚醫師還沒有照片</td><td class="ok">✅ 同網站，純文字</td></tr>
-<tr><td>4</td><td>換上 LINE 要誰動手</td><td class="wait">待使用者確認</td></tr>
+<tr><td>4</td><td>用 ChatGPT 送到 LINE 測試</td><td class="wait">素材備好，待測試</td></tr>
 </tbody>
 </table>
+
+<h2>用 ChatGPT 送到 LINE 測試</h2>
+<div class="gpt">
+<ol>
+<li>按下面的綠色按鈕，整段（指示＋卡片內容）會一起複製。</li>
+<li>打開已經連動 LINE 官方帳號的 ChatGPT，貼上、送出。</li>
+<li>收到之後在 LINE 上左右滑，對照上面的新版。</li>
+</ol>
+<p class="warn">⚠ 指示裡已經寫明「只傳給你自己、不要群發」。ChatGPT 如果回說只能群發，先不要按確定——群發會送給所有加好友的病人。</p>
+<button class="cp" id="cp" type="button">複製整段給 ChatGPT</button>
+<pre class="box" id="box">載入中…</pre>
+<p class="url">卡片內容也放在這個網址（ChatGPT 能讀網址的話可以直接給它）：<br>https://fangren.net/preview/line-doctors/doctors-message.json</p>
+</div>
 
 <h2>新版（左右滑，共九張）</h2>
 <div class="chat">
@@ -102,13 +126,48 @@ dl.pes dd{margin:0}
 <dt>事件</dt><dd>網站上這一張是純文字卡（照片 9/23 依要求移除）。</dd>
 <dt>解決方案</dt><dd>同網站，不補插畫、不放佔位圖。之後照片上了網站，重跑一次產生器就會跟上。</dd>
 </dl></li>
-<li><p class="it">4　換上 LINE 要誰動手</p>
+<li><p class="it">4　用 ChatGPT 送到 LINE 測試</p>
 <dl class="pes">
-<dt>問題</dt><dd>現在這組卡不是我們做的，不確定是哪一個後台產的。</dd>
-<dt>事件</dt><dd>新版已經是可以直接貼的 Flex Message JSON（16.1 KB，上限 50 KB）。</dd>
-<dt>解決方案</dt><dd>待使用者確認：定案後是自己貼進 LINE 後台，還是交給廠商換。</dd>
+<dt>問題</dt><dd>要先在真的 LINE 上看過，模擬圖不等於 LINE 的實際畫面。</dd>
+<dt>事件</dt><dd>9/24 使用者指定：用已經連動 LINE 官方帳號的 ChatGPT 送測試訊息。卡片是 Flex Message JSON（16.2 KB，上限 50 KB）。</dd>
+<dt>解決方案</dt><dd>上面那顆按鈕複製「指示＋卡片」整段貼給 ChatGPT；指示限定只傳給自己。待使用者測試回報。</dd>
 </dl></li>
 </ol>
 </div>
+<script>
+/* 指示與卡片一起複製。卡片讀同資料夾的 doctors-message.json（由 drafts/line-oa/doctors-carousel.mjs 產生），
+   這一頁不另存一份，免得兩份對不上。 */
+(async () => {
+  const box = document.getElementById("box"), btn = document.getElementById("cp");
+  const ask = [
+    "我已經把「芳仁牙醫診所」的 LINE 官方帳號連動在這裡。請幫我送一則測試訊息，規則如下：",
+    "1. 只傳給我自己（測試用）。不要群發（broadcast）給所有好友。如果你只能群發，請先停下來告訴我，不要送出。",
+    "2. 訊息內容就是最下面那段 JSON，原封不動使用：不要改字、不要改網址（照片網址後面的 ?v= 也要保留）、不要重新排版。它已經是完整的 message 物件（type 是 flex，contents 是九張卡的 carousel）。",
+    "3. 送出後告訴我：用的是哪一種傳送方式（push／broadcast／narrowcast）、送給誰、結果如何。如果 LINE 回錯誤，把完整的錯誤訊息原文貼給我。",
+    "",
+    "JSON："
+  ].join("\n");
+  let text = "";
+  try {
+    const r = await fetch("doctors-message.json", { cache: "no-store" });
+    if (!r.ok) throw new Error(r.status);
+    text = ask + "\n" + (await r.text()).trim();
+    box.textContent = text;
+  } catch (e) {
+    box.textContent = "卡片內容讀不到（" + e.message + "），請重新整理。";
+    btn.disabled = true;
+    return;
+  }
+  btn.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(text); }
+    catch {
+      const r = document.createRange(); r.selectNodeContents(box);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      document.execCommand("copy");
+    }
+    btn.textContent = "已複製，去 ChatGPT 貼上"; btn.classList.add("done");
+  });
+})();
+</script>
 </body>
 </html>
