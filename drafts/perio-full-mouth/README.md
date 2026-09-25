@@ -28,7 +28,7 @@ node drafts/perio-full-mouth/preview-gen.mjs
 
 | | |
 | --- | --- |
-| HERO 插畫 | 還沒畫，文字定案後再出圖 |
+| HERO 插畫 | ✅ 2026-09-25 定稿，見 hero-prompt.md 最後一節 |
 | 上架日 | `PUBDATE` 是佔位符；`--publish` 分支刻意會擋下來（HERO 沒有就不能上線） |
 | 診所事實 | 分幾次、多久做完、急性處理的內容 —— **沒寫**，見 SOURCES.md 🏥 那幾列 |
 | 外部連結 | 兩個 PubMed 搜尋連結，容器連不出去、沒有真的點開過 |

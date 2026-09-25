@@ -140,3 +140,14 @@
 
 做法：**第四版當底圖、第二版當泡泡內容的來源**，兩張一起餵，只換泡泡裡面，並把泡泡往下長到檯面高度
 （第二版的細菌需要泡泡下半部那塊空間）。提示詞 `hero-edit-v5.txt`。
+
+---
+
+## ✅ 定稿（2026-09-25）
+
+`hero-v6-final.jpg`（用 `hero-edit-v5.txt` 編修第四版、泡泡內容取第二版）。使用者：「圖片好了」。
+
+- 原檔底部有 1px 白邊，`hero-resize.mjs` 的守門擋下 → `hero-crop.mjs` 裁掉 → `hero-src.jpg`（1375×767）
+- `node tools/hero-resize.mjs drafts/perio-full-mouth/hero-src.jpg perio-full-mouth-photo`
+  → `assets/hero-perio-full-mouth-photo-{2000,1600,800}.jpg`（2000×1116）
+- 預覽頁只放 `<img>`；定案上線時 `--publish` 會包 `<picture>`，**要先跑 `node tools/webp.mjs`**

@@ -26,6 +26,7 @@ const src = readFileSync(resolve(root, 'posts/perio-laser/index.html'), 'utf8');
 const TITLE = '牙周病為什麼要全口治療：會痛的，通常只是最嚴重的那一顆';
 const DESC  = '明明只有一顆牙在痛，醫師卻說要做全口的牙周檢查與治療？牙周病多半不痛，會痛的那一顆往往只是最嚴重的一顆。為什麼偏偏是它、其他牙齒放著會怎樣、全口檢查在看什麼，以及正在痛的那一顆會先怎麼處理。';
 const OGDESC = '會痛的那一顆，往往只是最嚴重的一顆。為什麼偏偏是它、其他牙齒放著會怎樣，以及正在痛的那一顆會先怎麼處理。';
+const ALT = '插畫。明亮的牙科診間裡，穿芥末黃開襟衫的中年男病患坐在淡綠色診療椅上，一手按著臉頰、眉頭皺起；穿淡青綠刷手服與白袍的男醫師坐在他身旁的滾輪椅上，攤開一隻手向他解釋。病患頭上的小對話框裡是一排五顆牙，中間那顆的牙齦紅腫、牙齒在搖。醫師頭上的大對話框裡是同一排五顆牙，都長了臉和手：中間那顆牙齦紅腫，高舉雙手喊救命；一大群深色的小細菌從它紅腫的牙齦湧出來，往四周亂竄、搗亂，碎屑亂飛；旁邊四顆牙的牙齦邊也各有幾隻細菌，它們有的擔心地看著中間那顆，有的緊張地看著自己腳邊的細菌。背景是診療椅、器械臂、洗手台、櫃子、滅菌鍋與通往隔壁診間的玻璃隔間。';
 const EXCERPT = '「只有右下那一顆在痛，為什麼要檢查整口？」牙周病大部分時候不痛，會腫會痛的那一顆，往往只是最嚴重、最先出現症狀的一顆。這一篇講為什麼偏偏是它、其他牙齒放著會怎樣，以及正在痛的那一顆會先怎麼處理。';
 
 let out = src;
@@ -72,7 +73,7 @@ out = out.slice(0, metaStart) + `<script type="application/json" id="post-meta">
   "author": "芳仁牙醫診所 編輯室",
   "published": "${PUBDATE}",
   "hero": "hero-${SLUG}-photo-1600.jpg",
-  "heroAlt": "【HERO 還沒畫】",
+  "heroAlt": "${ALT}",
   "about": [
     { "type": "MedicalCondition", "name": "牙周病", "sameAs": "https://www.wikidata.org/wiki/Q520127" },
     { "type": "MedicalCondition", "name": "根分岔病變", "sameAs": "https://www.wikidata.org/wiki/Q3090996" },
@@ -96,18 +97,36 @@ swap('<time datetime="2026-08-16">2026/08/16</time>',
              : '<time datetime="2026-09-23">草稿・尚未上線</time>', 'date');
 swap('<h1>牙周病治療：清創、水雷射與再生手術</h1>', `<h1>${TITLE}</h1>`, 'h1');
 
-/* ── ③ HERO：還沒畫，放一塊佔位說明；「最後更新」那一行一起拿掉 ── */
+/* ── ③ HERO：預覽頁只放 <img>（webp.mjs 刻意不掃 preview/，包 <source> 會指到不存在的檔）；
+      正式站包 <picture>，「最後更新」那一行留著給 build 寫。 ── */
 {
   const figStart = out.indexOf('    <figure class="post-hero">');
+  const figEnd = out.indexOf('</figure>', figStart) + '</figure>'.length;
   const updEnd = out.indexOf('</p>', out.indexOf('<p class="post-updated-line">')) + '</p>'.length;
   if (figStart < 0 || updEnd < 3) throw new Error('找不到 HERO 那一塊');
-  if (PUBLISH) throw new Error('HERO 還沒畫：先出圖、跑 hero-resize.mjs，再把 <picture> 補進這一支（照 pulp-calcification 那一支的 PUBLISH 分支）');
-  out = out.slice(0, figStart) + `    <figure class="post-hero">
-      <div class="pv-hero-slot">
-        <span>HERO 插畫還沒畫</span>
-        <small>文字定案之後再出圖</small>
-      </div>
+  const H = `hero-${SLUG}-photo`;
+  const SIZES = '(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)';
+  const img = `<img src="../../assets/${H}-1600.jpg"
+             srcset="../../assets/${H}-800.jpg 800w,
+                     ../../assets/${H}-1600.jpg 1600w,
+                     ../../assets/${H}-2000.jpg 2000w"
+             sizes="${SIZES}"
+             fetchpriority="high" alt="${ALT}" width="2000" height="1116">`;
+  if (PUBLISH) {
+    out = out.slice(0, figStart) + `    <figure class="post-hero">
+      <picture>
+        <source type="image/webp" srcset="../../assets/${H}-800.webp 800w,
+                                          ../../assets/${H}-1600.webp 1600w,
+                                          ../../assets/${H}-2000.webp 2000w"
+                sizes="${SIZES}">
+        ${img}
+      </picture>
+    </figure>` + out.slice(figEnd);
+  } else {
+    out = out.slice(0, figStart) + `    <figure class="post-hero">
+      ${img}
     </figure>` + out.slice(updEnd);
+  }
 }
 
 /* ── ④ 內文 ───────────────────────────────────────────────── */
@@ -224,10 +243,6 @@ const css = `<style>
 .pv-flag { max-width: var(--content); margin: 0 auto; padding: .55rem var(--pad); font-size: .82rem;
            color: var(--ink-soft); text-align: center; letter-spacing: .02em; }
 .pv-flag b { color: var(--accent-deep); }
-.pv-hero-slot { display: grid; place-content: center; gap: .4rem; text-align: center;
-                min-height: 34vw; padding: 2rem 1rem; border: 1px dashed var(--rule);
-                border-radius: 12px; color: var(--ink-soft); font-size: .92rem; }
-.pv-hero-slot small { font-size: .82rem; opacity: .85; }
 </style>`;
 if (!PUBLISH) {
   swap('<link rel="stylesheet" href="../../assets/style.css">',
