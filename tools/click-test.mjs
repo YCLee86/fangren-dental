@@ -82,6 +82,8 @@ eq(normCode("chip:dermatology"), null, "站上沒有這一科 → 丟掉");
 eq(normCode("theme:dark"), "theme:dark", "夜間開關記的是切過去之後那一邊");
 eq(normCode("theme:sepia"), null, "第三種主題不存在 → 丟掉");
 eq(normCode("park:d"), null, "第四個停車場不存在 → 丟掉");
+eq(normCode("fb:liao-liyang"), "fb:liao-liyang", "醫師卡上的臉書粉專");
+eq(normCode("fb:li-binghui"), null, "沒有粉專的醫師 → 丟掉");
 eq(normCode("nav:topics"), "nav:topics", "頁首選單");
 eq(normCode("<script>x"), null, "夾標籤的 → 丟掉");
 eq(normCode("card:"), null, "半截的代碼 → 丟掉");
@@ -249,6 +251,7 @@ await one('.hero-contact.c-tel a', "tel", "home", "撥電話（HERO 那一行）
 await one('.foot-tel a', "tel", "home", "撥電話（頁尾）");
 await one('.hero-contact.c-addr a', "map:clinic", "home", "地址 → Google 地圖");
 await one('.cm-link', "map:pin", "home", "地圖上的診所");
+await one('.doc-fb[data-doc="liao-liyang"]', "fb:liao-liyang", "home", "醫師卡上的臉書粉專");
 await one('.rlab[data-lot="a"] .rl-link', "park:a", "home", "停車場的名字 → Google 地圖");
 await one('.lot[data-lot="b"]', "lot:b", "home", "地圖上點停車場那一塊");
 await one('.bay-chip', "bays", "home", "鄰近停車格");
@@ -280,6 +283,7 @@ await page.waitForTimeout(200);
 await one('.hero-contact.c-tel a, .foot-tel a', "tel", "topic:ortho",
           "著陸頁上的來源是 topic:<spec>（沒過就是忘了重跑 node tools/topics.mjs）");
 await one('.tp-count a[href="#doctors"]', "count:doctors", "topic:ortho", "「N 位醫師」那個連結");
+await one('.doc-fb[data-doc="liao-liyang"]', "fb:liao-liyang", "topic:ortho", "矯正頁醫師卡上的臉書粉專");
 await one('.chips a[data-spec="perio"]', "chip:perio", "topic:ortho", "從這一科跳到另一科");
 
 console.log("\n【九】文章頁");
@@ -367,7 +371,7 @@ console.log("\n【十一】報告頁");
   const since30 = new Date(Date.now() - 30 * 86400000).toISOString().replace(/\.\d+Z$/, "Z");
   const n = (where, ...a) => web.DB.raw.prepare(
     `SELECT COUNT(*) c FROM click_log WHERE at >= ?${where ? " AND " + where : ""}`).get(since30, ...a).c;
-  const allN = n(""), outN = n("(code IN ('tel','line') OR code LIKE 'map:%' OR code LIKE 'park:%')");
+  const allN = n(""), outN = n("(code IN ('tel','line') OR code LIKE 'map:%' OR code LIKE 'park:%' OR code LIKE 'fb:%')");
   const telN = n("code = 'tel'");
   eq(await page.textContent("#c-all"), String(allN), `摘要的總點擊 ＝ 資料庫這 30 天的筆數（${allN}）`);
   eq(await page.textContent("#c-out"), outN + "（" + Math.round(outN / allN * 100) + "%）",

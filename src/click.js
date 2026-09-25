@@ -44,6 +44,10 @@ const SPECS = new Set(["general", "perio", "endo", "kids", "ortho", "prosth", "s
    對應 index.html 那三個 data-lot（不要重新編號，舊資料會對不上）。 */
 const LOTS = new Set(["a", "b", "c"]);
 
+/* 醫師卡上有自己臉書粉專的那幾位（2026-09-25 起）。對應 index.html 那顆 .doc-fb 的 data-doc。
+   ⚠ 再加一位醫師的粉專時這裡要跟著加，不然他那一顆按下去的紀錄會被當成偽造的丟掉。 */
+const DOC_FB = new Set(["liao-liyang"]);
+
 /* 沒有參數的那些。⚠ 這張表就是「站上有哪些可以按的東西」的清單，
    版面上新增一顆要按的東西時，這裡與 assets/click-log.js 的規則表要一起加。 */
 const FLAT = new Set([
@@ -83,6 +87,8 @@ export function normCode(raw) {
     case "chip":                        /* 「主題與科別」那一排 */
     case "hours":                       /* 門診表上的科別篩選 */
       return v === "all" || SPECS.has(v) ? code : null;
+    case "fb":                          /* 醫師卡上的臉書粉專（離站） */
+      return DOC_FB.has(v) ? code : null;
     case "tag":                         /* 文章頁最上面那顆科別標記 */
       return SPECS.has(v) ? code : null;
     case "nav":                         /* 頁首選單 */

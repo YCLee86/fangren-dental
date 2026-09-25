@@ -244,8 +244,9 @@ td.q { word-break: break-word; }
   var PREFIX = {
     chip: '科別標記', hours: '門診表篩選', tag: '文章上的科別', nav: '頁首選單',
     foot: '頁尾導覽', count: '著陸頁的醫師／文章數', card: '文章卡', rel: '延伸閱讀',
-    prev: '上一篇', next: '下一篇'
+    prev: '上一篇', next: '下一篇', fb: '醫師的臉書粉專'
   };
+  var DOC = { 'liao-liyang': '廖立揚' };
   /* ---- 文章的中文標題 ------------------------------------------------------
      代碼裡的是 slug（three-month-recall 與 regular-checkup 看字面分不出來），
      報告上要印中文。來源是 build 產生的 assets/post-titles.json（唯一來源仍是
@@ -283,12 +284,13 @@ td.q { word-break: break-word; }
     if (k === 'tag') return PREFIX[k] + '：' + (SPEC[v] || v);
     if (k === 'nav' || k === 'foot' || k === 'count') return PREFIX[k] + '：' + (HASH[v] || v);
     if (k === 'card' || k === 'rel' || k === 'prev' || k === 'next') return PREFIX[k] + '：' + title(v);
+    if (k === 'fb') return PREFIX[k] + '：' + (DOC[v] || v);
     if (PREFIX[k]) return PREFIX[k] + '：' + v;
     return code;
   }
   /* 離站 ＝ 按下去人就離開 fangren.net 了（打電話、開導航、加 LINE）。
      這幾顆是這一份報告真正要回答的事，所以自己一張表。 */
-  function isOut(code) { return /^(tel$|line$|map:|park:)/.test(String(code)); }
+  function isOut(code) { return /^(tel$|line$|map:|park:|fb:)/.test(String(code)); }
 
   var $ = function (id) { return document.getElementById(id); };
   var key = '', win = '30d', tab = 'search';

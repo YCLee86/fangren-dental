@@ -86,6 +86,7 @@
     ['.lot[data-lot]', function (el) { return 'lot:' + el.getAttribute('data-lot'); }],
     ['.cm-link',                        'map:pin'],                 /* 地圖上的診所 */
     ['a[href*="google.com/maps"]',      'map:clinic'],              /* 地址那一行 */
+    ['.doc-fb[data-doc]', function (el) { return 'fb:' + el.getAttribute('data-doc'); }], /* 醫師卡上的臉書粉專 */
 
     /* ---- 頁首與頁尾 ---- */
     ['.skip-link',                      'skip'],

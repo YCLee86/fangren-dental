@@ -2263,6 +2263,28 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 /* 資料那一塊把左移的量補回來 —— 只有頭像那一行往左，這裡維持原位。 */
 .doc[data-face] > dl { grid-column: 1 / -1; grid-row: 2; padding-left: var(--face-pull); }
 
+/* ---- 醫師自己的臉書粉專（2026-09-25 上線，推導在 /history/doctor-fb.html）----
+   目前只有廖立揚醫師一位。卡片最底下一行「標誌 ＋ 臉書粉絲專頁」，和「專長／資歷／學歷」
+   的左緣切齊。三件是使用者在提案頁上挑的（位置三案、顏色兩案、圓角三格）：
+     ・位置：卡片底一行（落選：名字旁、右上角）
+     ・顏色：這張卡自己的科別色 --accent-deep（落選：臉書官方藍 #1877F2）——
+       夜間模式跟著科別色一起提亮，不必另外寫
+     ・圓角：半徑 ÷ 邊長 18%（落選：27% 同「專長」標籤、38% 同科別藥丸）
+   ⚠ 標誌不用臉書的圓形官方標誌，改成**圓角方塊 ＋ 白色的 f**：使用者「除了頭像
+     網站上的圖案都是方形帶圓角 這個臉書的logo沿用這個概念」。f 的路徑取自官方標誌。
+   ⚠ 要再加一位醫師：同一段標記抄進那張卡的 </dl> 後面、換 href 與 data-doc，
+     再去 src/click.js 的 DOC_FB 加他的代號（不加的話按下去的紀錄會被丟掉）。 */
+.doc-fb {
+  display: inline-flex; align-items: center; gap: .45rem; margin-top: .8rem;
+  font-size: .83rem; line-height: 1.5; font-weight: 500;
+  color: var(--accent-deep); text-decoration: none;
+}
+.doc[data-face] > .doc-fb { grid-column: 1 / -1; padding-left: var(--face-pull); margin-top: 0; }
+.doc-fb svg { display: block; width: 1.3rem; height: 1.3rem; flex: none; }
+.doc-fb span { color: var(--ink-soft); }
+.doc-fb:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.doc-fb:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; border-radius: 4px; }
+
 /* ---- 圓角：比例對齊，不是同一個數字。基準是醫師藥丸的 半徑÷框高 = 0.384。
    這幾個元件的字級和手機版一樣，所以手機版量出來的值原樣沿用。 ---------- */
 .doc dt          { border-radius: 6px; }
@@ -6146,6 +6168,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
             <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺中榮民總醫院齒顎矯正科<br>國立臺灣大學附設醫院</dd>
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
           </dl>
+          <a class="doc-fb" data-doc="liao-liyang" href="https://www.facebook.com/share/1DnASFyC96/" target="_blank" rel="noopener" aria-label="廖立揚醫師的臉書粉絲專頁（另開視窗）"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><rect width="24" height="24" rx="4.32" fill="currentColor"/><path fill="#fff" d="M9.101 24v-8.289H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246V24Z"/></svg><span>臉書粉絲專頁</span></a>
         </article>
       </div>
       <p class="empty-note" data-for="doctors" hidden>這一科目前沒有駐診醫師。</p>

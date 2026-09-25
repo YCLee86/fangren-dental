@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>doctor-fb｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>doctor-fb — 醫師卡上的臉書粉專連結</h1>
+<p class="meta">
+  2026-09-25 開、當天三輪定案上線<br>
+  原網址 <code>/preview/doctor-fb/</code>（已刪除 2026-09-25）<br>
+  整頁還原：<code>git show fddd4dc1:preview/doctor-fb/index.html</code><br>
+  提案期的產生器 <code>tools/doctor-fb-preview.mjs</code>（定案時刪掉，同一個 sha 還原得到）
+</p>
+
+<h2>起點</h2>
+<div class="note"><pre>「廖立揚在臉書有自己的粉絲專頁 我想把這個粉專連結 做在他的醫師圖卡
+　用臉書的logo標記 做預覽給我看」
+
+第二輪：「除了頭像 網站上的圖案都是方形帶圓角 這個臉書的logo沿用這個概念」
+　→ 不用臉書的圓形官方標誌，改成圓角方塊 ＋ 白色的 f（f 的路徑取自官方標誌）
+第三輪：給了網址（手機截圖上亮著的是 Ⓒ 卡片底／矯正科的藍灰／18%）「選這個」
+第四輪：「先這樣 上線」</pre></div>
+
+<h2>定案（＝ 現在站上的）</h2>
+<div class="note"><pre>位置　Ⓒ 卡片底　　 學歷下面一行「標誌 ＋ 臉書粉絲專頁」，和「專長」標籤左緣切齊
+　　　　　　　　　　（落選：Ⓐ 名字旁、跟在科別藥丸後面／Ⓑ 卡片右上角）
+顏色　矯正科的藍灰　這張卡自己的 --accent-deep（淺色 #31637f、夜間 #6897b5）
+　　　　　　　　　　（落選：臉書官方藍 #1877F2）
+圓角　18%　　　　　 半徑 ÷ 邊長，viewBox 24 裡 rx 4.32
+　　　　　　　　　　（落選：27% 同「專長」灰底標籤、38% 同科別藥丸）
+尺寸　標誌 1.3rem、字 .83rem（＝ dd 的字級）、字色 --ink-soft
+網址　https://www.facebook.com/share/1DnASFyC96/
+　　　使用者給的分享短網址，拿掉了 ?mibextid=wwXIfr（臉書的追蹤參數）。
+　　　⚠ 會轉址；雲端 session 連不到 facebook.com，解不出完整網址。
+　　　日後拿到粉專的完整網址就換掉（同 CLAUDE.md 第十節 sameAs 那一條的理由）。
+另開視窗　target=_blank ＋ rel=noopener，aria-label「廖立揚醫師的臉書粉絲專頁（另開視窗）」</pre></div>
+
+<h2>一起改的地方</h2>
+<div class="note"><pre>index.html　　　　　 .doc-fb 那段樣式 ＋ 廖立揚那張卡的 &lt;/dl&gt; 後面那個連結
+topics/*　　　　　　 重跑 tools/topics.mjs（只有 /topics/ortho/ 有他那張卡）
+點擊紀錄　　　　　　 代碼 fb:&lt;醫師代號&gt;，算「離站」那一張表
+　assets/click-log.js　RULES 多一條 .doc-fb[data-doc]
+　src/click.js　　　　 DOC_FB 白名單（目前只有 liao-liyang）
+　admin/search/　　　　印成「醫師的臉書粉專：廖立揚」，isOut 加 fb:
+　tools/click-test.mjs　白名單兩項 ＋ 首頁與矯正頁各按一次（96 項通過）
+
+再加一位醫師的粉專：標記抄進他那張卡的 &lt;/dl&gt; 後面、換 href 與 data-doc，
+src/click.js 的 DOC_FB 與 admin 的 DOC 對照各加一筆，再跑 topics.mjs 與 click-test.mjs。
+有照片的卡也吃得到（.doc[data-face] &gt; .doc-fb 那一條讓它跨整列、補回 --face-pull）。</pre></div>
+
+<h2>驗收</h2>
+<div class="note"><pre>本機 node tools/serve.mjs：
+  首頁 320／375／1440、夜間 375、/topics/ortho/ 375：水平捲動 0、主控台無錯誤、
+  標誌左緣對「專長」標籤左緣 0.00
+  node tools/click-test.mjs → 96 項通過
+  JSON-LD 沒有動（醫師的 Person 節點沒有加 sameAs —— 分享短網址不適合當實體的身分）</pre></div>
+
+<footer>
+  <a href="/history/">← 回改版紀錄目錄</a>
+</footer>
+
+</div></body>
+</html>
