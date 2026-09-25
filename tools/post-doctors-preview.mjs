@@ -141,25 +141,24 @@ function blockFor(spec) {
 `;
 }
 
-// ---- 3b. 兩個入口：頂端那一行的頭像、捲動時底部浮出的那一條 ------------
-// 頭像只疊有照片的那幾位（最多三顆）；沒有照片的不放佔位圖（字首圓章是落選案）。
-function faces(spec, size) {
-  return docsOf(spec).items.filter((d) => d.face).slice(0, 3).map((d) =>
-    `<picture><source type="image/webp" srcset="${d.webp}"><img src="${d.face}" width="${size}" height="${size}" alt=""></picture>`).join('');
-}
+// ---- 3b. 兩個入口（2026-09-25 第三輪：使用者定「1＋2、不要頭像」）---------
+// 1：頂端那一行的「N 位醫師 ›」。
+// 2：首頁「回到最上面」那一顆的同一個概念 —— 右下角一顆玻璃小方塊，點下去捲到醫師那一塊。
+//    外觀逐項照 index.html 的 .btt（44×44、--card 的 .80 ＋ blur 6px、無框線、柔墨 .82、
+//    圓角 --frame-r、離右下角 20px），只換記號。記號三種給使用者挑（data-g）。
 function peekFor(spec) {
   const n = docsOf(spec).items.length;
-  return `<a class="pd-peek" href="#pd" data-pd-jump><span class="pd-stack" aria-hidden="true">${faces(spec, 22)}</span><span>${n} 位醫師</span></a>
+  return `<a class="pd-peek" href="#pd" data-pd-jump>${n} 位醫師<span aria-hidden="true"> ›</span></a>
         `;
 }
 function floatFor(spec) {
   const n = docsOf(spec).items.length;
   return `
-<a class="pd-float" href="#pd" data-pd-jump data-spec="${spec}" aria-hidden="true" tabindex="-1">
-  <span class="pd-stack" aria-hidden="true">${faces(spec, 30)}</span>
-  <span class="pd-float-t"><b>這一科的醫師</b><span>${SPEC_NAME[spec]}・${n} 位</span></span>
-  <span class="pd-chev" aria-hidden="true">›</span>
-</a>
+<button class="pd-btt" type="button" data-pd-jump aria-label="看這一科的 ${n} 位醫師">
+  <svg class="pd-g-a" viewBox="0 0 18 19.5" aria-hidden="true"><circle cx="9" cy="5.6" r="4.3"/><path d="M1.2 18.5c0-4.3 3.5-7.3 7.8-7.3s7.8 3 7.8 7.3"/></svg>
+  <span class="pd-g-b" aria-hidden="true">醫師</span>
+  <span class="pd-g-c" aria-hidden="true">醫師<svg viewBox="0 0 12 7" aria-hidden="true"><path d="M1 1l5 5 5-5"/></svg></span>
+</button>
 `;
 }
 
@@ -211,34 +210,48 @@ ${DOC_CSS}
 .pd[data-pos="in"] .docs { grid-template-columns: 1fr; }
 @media (min-width: 721px) { .pd[data-pos="in"] .docs { grid-template-columns: repeat(2, 1fr); } }
 
-/* ===== 入口 1：頂端那一行的頭像 =====
-   放在瀏覽數後面、夜間開關前面（開關靠 margin-left:auto 貼右）。 */
-.pd-peek { display: none; align-items: center; gap: .35rem; white-space: nowrap; }
-body[data-pe="top"] .pd-peek, body[data-pe="both"] .pd-peek { display: inline-flex; }
-.crumbs a.pd-peek, .crumbs a.pd-peek:hover { color: var(--accent-deep); }
-.pd-stack { display: inline-flex; }
-.pd-stack picture { display: block; }
-.pd-stack img { display: block; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px var(--paper); }
-.pd-stack picture + picture { margin-left: -7px; }
-.pd-peek .pd-stack img { width: 22px; height: 22px; }
-/* 手機上那一行本來就滿了（正式站 375 寬：首頁／科別／日期／瀏覽數已經把開關擠到第二列），
-   所以這一顆自然換行、和開關排在第二列，不另外佔一列。 */
+/* ===== 入口 1：頂端那一行的「N 位醫師 ›」=====
+   放在瀏覽數後面、夜間開關前面；手機上那一行本來就滿了（正式站 375 寬已經把開關擠到第二列），
+   所以它自然換行、和開關排在第二列，不另外佔一列。 */
+.crumbs a.pd-peek, .crumbs a.pd-peek:hover { color: var(--accent-deep); white-space: nowrap; }
+body[data-pe="none"] .pd-peek, body[data-pe="float"] .pd-peek { display: none; }
 
-/* ===== 入口 2：捲過首圖之後，底部浮出一條；捲到醫師那一塊就收起來 ===== */
-.pd-float { position: fixed; z-index: 80; left: 12px; right: 12px; bottom: calc(var(--pv-h, 0px) + 12px);
-  max-width: 26rem; margin-inline: auto;
-  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .7rem;
-  padding: .55rem .9rem .55rem .6rem; border-radius: 14px;
-  background: var(--card); border: 1px solid var(--rule); box-shadow: var(--shadow-lift, 0 6px 20px rgba(0,0,0,.18));
-  color: var(--ink); text-decoration: none;
-  opacity: 0; transform: translateY(12px); pointer-events: none; visibility: hidden;
-  transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s; }
-.pd-float.is-on { opacity: 1; transform: none; pointer-events: auto; visibility: visible; transition: opacity .2s ease, transform .2s ease; }
-.pd-float .pd-stack img { width: 30px; height: 30px; box-shadow: 0 0 0 2px var(--card); }
-.pd-float-t { display: grid; line-height: 1.35; min-width: 0; }
-.pd-float-t b { font-size: .95rem; }
-.pd-float-t span { font-size: .8rem; color: var(--accent-deep); }
-@media (prefers-reduced-motion: reduce) { .pd-float, .pd-float.is-on { transition: none; transform: none; } }
+/* ===== 入口 2：右下角那一顆（照首頁 .btt）===== */
+.pd-btt {
+  position: fixed; z-index: 20;
+  right: calc(20px + env(safe-area-inset-right, 0px));
+  bottom: calc(20px + var(--pv-h, 0px) + env(safe-area-inset-bottom, 0px));
+  min-width: 44px; height: 44px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: var(--frame-r, 8px);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  background-color: rgba(244, 244, 245, .8);
+  -webkit-backdrop-filter: blur(6px) saturate(1.15); backdrop-filter: blur(6px) saturate(1.15);
+  box-shadow: 0 1px 2px rgba(42, 44, 39, .07), 0 4px 10px rgba(42, 44, 39, .09);
+  color: rgba(92, 95, 87, .82); font: inherit;
+  opacity: 0; visibility: hidden; transform: translateY(6px);
+  transition: opacity .22s ease, transform .22s ease, visibility .22s, background-color .18s ease, box-shadow .22s ease;
+}
+.pd-btt.is-on { opacity: 1; visibility: visible; transform: translateY(0); }
+.pd-btt.is-lit { background-color: var(--card); }
+@media (hover: hover) and (pointer: fine) {
+  .pd-btt:hover { background-color: var(--card); box-shadow: 0 5px 10px rgba(42, 44, 39, .09), 0 16px 32px rgba(42, 44, 39, .16); }
+}
+.pd-btt:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .pd-btt { transform: none; transition: opacity .22s ease, visibility .22s; } }
+html[data-theme="dark"] .pd-btt { background-color: color-mix(in srgb, var(--card) 80%, transparent);
+  color: color-mix(in srgb, var(--ink-soft) 82%, transparent); }
+/* 三種記號，一次只亮一種 */
+.pd-btt > * { display: none; }
+body[data-g="a"] .pd-g-a { display: block; }
+body[data-g="b"] .pd-g-b, body[data-g="c"] .pd-g-c { display: inline-flex; }
+.pd-g-a { width: 18px; height: 19.5px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.4;
+  stroke-linecap: round; stroke-linejoin: round; }
+.pd-g-a * { vector-effect: non-scaling-stroke; }
+.pd-g-b, .pd-g-c { align-items: center; gap: .3rem; font-size: .8rem; font-weight: 500; letter-spacing: .04em; line-height: 1; }
+body[data-g="c"] .pd-btt { padding-inline: .7rem; }
+.pd-g-c svg { width: 10px; height: 6px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.4;
+  stroke-linecap: round; stroke-linejoin: round; }
 
 /* ===== 切換條 ===== */
 .pv-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; background: #1f2226; color: #eef0f1;
@@ -255,20 +268,10 @@ body.pv-closed .pv-bar { display: none; } body.pv-closed .pv-mini { display: blo
 
 const BAR = `
 <div class="pv-bar" role="region" aria-label="提案切換">
-  <div class="pv-row"><span class="pv-lab">入口</span>
-    <button type="button" data-k="e" data-v="none">無</button>
-    <button type="button" data-k="e" data-v="top">1 頂端頭像</button>
-    <button type="button" data-k="e" data-v="float">2 底部浮條</button>
-    <button type="button" data-k="e" data-v="both">1＋2</button>
-  </div>
-  <div class="pv-row"><span class="pv-lab">內容</span>
-    <button type="button" data-k="d" data-v="a">Ⓐ 名字</button>
-    <button type="button" data-k="d" data-v="b">Ⓑ ＋專長</button>
-    <button type="button" data-k="d" data-v="c">Ⓒ 完整卡</button>
-  </div>
-  <div class="pv-row"><span class="pv-lab">位置</span>
-    <button type="button" data-k="p" data-v="in">① 內文結尾</button>
-    <button type="button" data-k="p" data-v="wide">② 延伸閱讀上方</button>
+  <div class="pv-row"><span class="pv-lab">按鈕</span>
+    <button type="button" data-k="g" data-v="a">Ⓐ 人像</button>
+    <button type="button" data-k="g" data-v="b">Ⓑ 醫師</button>
+    <button type="button" data-k="g" data-v="c">Ⓒ 醫師 ﹀</button>
     <button type="button" class="pv-x" data-close>收起</button>
   </div>
 </div>
@@ -279,18 +282,20 @@ const BAR = `
   var inA = document.getElementById('pd-in'), wideA = document.getElementById('pd-wide');
   var q = new URLSearchParams(location.search), st = {};
   try { st = JSON.parse(sessionStorage.getItem('pv:pd') || '{}'); } catch (e) {}
-  var s = { d: q.get('d') || st.d || 'b', p: q.get('p') || st.p || 'wide', e: q.get('e') || st.e || 'top' };
-  if (!/^(none|top|float|both)$/.test(s.e)) s.e = 'top';
+  // 內容、位置、入口三條尺已經定案（Ⓑ＋專長／① 內文結尾／1＋2），收成預設值、從切換條上拿掉；網址參數仍然吃得到
+  var s = { d: q.get('d') || 'b', p: q.get('p') || 'in', e: q.get('e') || 'both', g: q.get('g') || st.g || 'a' };
+  if (!/^(none|top|float|both)$/.test(s.e)) s.e = 'both';
+  if (!/^[abc]$/.test(s.g)) s.g = 'a';
   if (!/^[abc]$/.test(s.d)) s.d = 'b';
-  if (!/^(in|wide)$/.test(s.p)) s.p = 'wide';
+  if (!/^(in|wide)$/.test(s.p)) s.p = 'in';
   function apply() {
-    pd.dataset.d = s.d; pd.dataset.pos = s.p; document.body.dataset.pe = s.e;
+    pd.dataset.d = s.d; pd.dataset.pos = s.p; document.body.dataset.pe = s.e; document.body.dataset.g = s.g;
     (s.p === 'in' ? inA : wideA).appendChild(pd);
     document.querySelectorAll('.pv-bar [data-k]').forEach(function (b) {
       b.setAttribute('aria-pressed', String(s[b.dataset.k] === b.dataset.v));
     });
     try { sessionStorage.setItem('pv:pd', JSON.stringify(s)); } catch (e) {}
-    var u = new URL(location.href); u.searchParams.set('d', s.d); u.searchParams.set('p', s.p); u.searchParams.set('e', s.e);
+    var u = new URL(location.href); u.searchParams.set('d', s.d); u.searchParams.set('p', s.p); u.searchParams.set('e', s.e); u.searchParams.set('g', s.g);
     history.replaceState(null, '', u);
     padPv(); floatCheck();
   }
@@ -301,15 +306,14 @@ const BAR = `
     document.documentElement.style.setProperty('--pv-h', h + 'px');
     document.body.style.paddingBottom = h ? h + 'px' : '';
   }
-  // 浮條：首圖捲出畫面之後出現，醫師那一塊進到畫面就收起來
-  var fl = document.querySelector('.pd-float'), hero = document.querySelector('.post-hero');
+  // 右下角那一顆：和首頁那一顆一樣「捲過半個螢幕才出現」，醫師那一塊進到畫面就收起來
+  var fl = document.querySelector('.pd-btt');
+  function vh() { return (window.visualViewport && visualViewport.height) || innerHeight; }
   function floatCheck() {
     var want = s.e === 'float' || s.e === 'both';
-    var past = hero ? hero.getBoundingClientRect().bottom < 0 : scrollY > 400;
-    var reached = pd.getBoundingClientRect().top < innerHeight;
-    var on = want && past && !reached;
-    fl.classList.toggle('is-on', on);
-    fl.setAttribute('aria-hidden', String(!on)); fl.tabIndex = on ? 0 : -1;
+    var past = scrollY > vh() * 0.5;
+    var reached = pd.getBoundingClientRect().top < vh();
+    fl.classList.toggle('is-on', want && past && !reached);
   }
   addEventListener('scroll', floatCheck, { passive: true });
   addEventListener('resize', function () { padPv(); floatCheck(); });
@@ -319,6 +323,7 @@ const BAR = `
   document.querySelectorAll('[data-pd-jump]').forEach(function (a) {
     a.addEventListener('click', function (ev) {
       ev.preventDefault();
+      if (a === fl) { fl.classList.add('is-lit'); setTimeout(function () { fl.classList.remove('is-lit'); }, 700); }
       var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
       pd.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
     });
