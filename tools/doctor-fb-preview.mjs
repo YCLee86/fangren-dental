@@ -30,7 +30,10 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT  = join(ROOT, 'preview', 'doctor-fb', 'index.html');
-const FB_URL = '';   // ← 使用者給了粉專網址就填這裡，再跑一次
+/* 使用者 2026-09-25 給的分享短網址（去掉了 ?mibextid= 那段追蹤參數）。
+   ⚠ 這是會轉址的短網址，雲端 session 連不到 facebook.com、解不出完整網址；
+     上線前能換成粉專的完整網址更穩（同 CLAUDE.md 第十節 sameAs 那一條）。 */
+const FB_URL = 'https://www.facebook.com/share/1DnASFyC96/';
 
 let html = readFileSync(join(ROOT, 'index.html'), 'utf8');
 
