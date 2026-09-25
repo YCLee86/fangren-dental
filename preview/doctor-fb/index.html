@@ -100,14 +100,18 @@ r.dataset.theme=s;})();</script>
      使用者：「廖立揚在臉書有自己的粉絲專頁 我想把這個粉專連結 做在他的醫師圖卡
      用臉書的logo標記 做預覽給我看」
      兩條尺：位置 ?pos=a|b|c（名字旁／右上角／卡片底一行）× 顏色 ?c=blue|spec
-     （臉書官方藍 #1877F2／這張卡自己的科別色 --accent-deep）。
+     （臉書官方藍 #1877F2／這張卡自己的科別色 --accent-deep）× 圓角 ?r=18|27|38。
+     第二輪（同日）：「除了頭像 網站上的圖案都是方形帶圓角 這個臉書的logo沿用這個概念」
+     → 圓形標誌改成圓角方塊 ＋ 白 f。
      ========================================================================== -->
 <style>
 /* 提案用。定案後只留選上的那一格，其餘連同 <html data-fbpos / data-fbc> 一起刪掉。 */
 .pv-fb { display: none; color: var(--pv-fb, #1877F2); text-decoration: none; }
 :root[data-fbc="spec"] .pv-fb { --pv-fb: var(--accent-deep); }
 .pv-fb svg { display: block; width: 100%; height: 100%; }
-.pv-fb:focus-visible { outline: 2px solid var(--pv-fb, #1877F2); outline-offset: 2px; border-radius: 50%; }
+.pv-fb rect { display: none; }
+:root[data-fbr="18"] .pv-r18, :root[data-fbr="27"] .pv-r27, :root[data-fbr="38"] .pv-r38 { display: inline; }
+.pv-fb:focus-visible { outline: 2px solid var(--pv-fb, #1877F2); outline-offset: 2px; border-radius: 4px; }
 .pv-fb-card { position: relative; }
 
 /* Ⓐ 名字旁：跟在藥丸後面，和藥丸同高、墨對齊名字那一行 */
@@ -6513,14 +6517,14 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
                要放回來：tools/doctor-photo-crop.mjs 的 FACES 裡 liao-liyang 那一段
                解除註解（五個步驟寫在那裡）。原檔仍在 drafts/doctor-photo/src/。
                ⚠ 這段註解要留在 article 裡面 —— 放外面的話七科快照每一頁都會帶一份。 -->
-          <h3>廖立揚<span class="doc-role">矯正專科醫師</span><a class="pv-fb pv-fb-a" href="#pv-fb-todo" target="_blank" rel="noopener" aria-label="廖立揚醫師的臉書粉絲專頁（另開視窗）"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="11.4" fill="#fff"/><path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a></h3>
-          <a class="pv-fb pv-fb-b" href="#pv-fb-todo" target="_blank" rel="noopener" aria-label="廖立揚醫師的臉書粉絲專頁（另開視窗）"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="11.4" fill="#fff"/><path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a>
+          <h3>廖立揚<span class="doc-role">矯正專科醫師</span><a class="pv-fb pv-fb-a" href="#pv-fb-todo" target="_blank" rel="noopener" aria-label="廖立揚醫師的臉書粉絲專頁（另開視窗）"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><rect class="pv-r18" width="24" height="24" rx="4.32" fill="currentColor"/><rect class="pv-r27" width="24" height="24" rx="6.48" fill="currentColor"/><rect class="pv-r38" width="24" height="24" rx="9.22" fill="currentColor"/><path fill="#fff" d="M9.101 24v-8.289H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246V24Z"/></svg></a></h3>
+          <a class="pv-fb pv-fb-b" href="#pv-fb-todo" target="_blank" rel="noopener" aria-label="廖立揚醫師的臉書粉絲專頁（另開視窗）"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><rect class="pv-r18" width="24" height="24" rx="4.32" fill="currentColor"/><rect class="pv-r27" width="24" height="24" rx="6.48" fill="currentColor"/><rect class="pv-r38" width="24" height="24" rx="9.22" fill="currentColor"/><path fill="#fff" d="M9.101 24v-8.289H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246V24Z"/></svg></a>
           <dl>
             <dt>專長</dt><dd class="skills"><span class="sk" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk" data-spec="ortho">隱適美</span><span class="sep">、</span><span class="sk" data-spec="ortho">阻生齒矯正</span></dd>
             <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺中榮民總醫院齒顎矯正科<br>國立臺灣大學附設醫院</dd>
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
           </dl>
-          <a class="pv-fb pv-fb-c" href="#pv-fb-todo" target="_blank" rel="noopener" aria-label="廖立揚醫師的臉書粉絲專頁（另開視窗）"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="11.4" fill="#fff"/><path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg><span>臉書粉絲專頁</span></a>
+          <a class="pv-fb pv-fb-c" href="#pv-fb-todo" target="_blank" rel="noopener" aria-label="廖立揚醫師的臉書粉絲專頁（另開視窗）"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><rect class="pv-r18" width="24" height="24" rx="4.32" fill="currentColor"/><rect class="pv-r27" width="24" height="24" rx="6.48" fill="currentColor"/><rect class="pv-r38" width="24" height="24" rx="9.22" fill="currentColor"/><path fill="#fff" d="M9.101 24v-8.289H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246V24Z"/></svg><span>臉書粉絲專頁</span></a>
         </article>
         <article class="doc" data-face data-spec="kids">
           <picture class="doc-face">
@@ -8839,15 +8843,20 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     <button type="button" data-v="spec">矯正科的藍灰</button>
     <button type="button" class="pvbar-go" aria-label="捲到廖立揚醫師的卡">↥ 看卡</button>
   </div>
+  <div class="pvbar-r" data-k="r"><span class="pvbar-k">圓角</span>
+    <button type="button" data-v="18">18% 方一點</button>
+    <button type="button" data-v="27">27% 同專長標籤</button>
+    <button type="button" data-v="38">38% 同藥丸</button>
+  </div>
 </div>
 <script>
 (function () {
   var root = document.documentElement, box = document.querySelector('.pvbar');
-  var KEYS = { pos: ['a','b','c'], c: ['blue','spec'] }, DEF = { pos: 'a', c: 'blue' };
-  var st = { pos: DEF.pos, c: DEF.c }, qs = new URLSearchParams(location.search);
+  var KEYS = { pos: ['a','b','c'], c: ['blue','spec'], r: ['18','27','38'] }, DEF = { pos: 'a', c: 'blue', r: '27' };
+  var st = { pos: DEF.pos, c: DEF.c, r: DEF.r }, qs = new URLSearchParams(location.search);
   Object.keys(KEYS).forEach(function (k) { var v = qs.get(k); if (v && KEYS[k].indexOf(v) >= 0) st[k] = v; });
   function apply() {
-    root.setAttribute('data-fbpos', st.pos); root.setAttribute('data-fbc', st.c);
+    root.setAttribute('data-fbpos', st.pos); root.setAttribute('data-fbc', st.c); root.setAttribute('data-fbr', st.r);
     Object.keys(KEYS).forEach(function (k) {
       box.querySelectorAll('.pvbar-r[data-k="' + k + '"] button[data-v]').forEach(function (b) {
         b.setAttribute('aria-pressed', String(b.dataset.v === st[k]));

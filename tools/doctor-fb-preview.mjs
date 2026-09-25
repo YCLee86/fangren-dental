@@ -58,10 +58,22 @@ if (/data-views-self|search-log\.js|click-log\.js/.test(html.replace(/<!--[\s\S]
 
 /* ── 臉書標誌 ─────────────────────────────────────────────────────────
    形狀是臉書 2019 起的官方標誌（圓 ＋ 挖空的 f），單一路徑、currentColor。
-   ⚠ 底下墊一個白圓：路徑的 f 是挖空的，夜間模式會透出深色卡底，官方標誌的 f 是白的。
    按鈕本身只有標誌沒有字，所以 aria-label 要把「臉書粉絲專頁」與「另開視窗」講清楚。 */
-const FB_PATH = 'M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z';
-const svg = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="11.4" fill="#fff"/><path fill="currentColor" d="' + FB_PATH + '"/></svg>';
+/* 第一輪是圓形的官方標誌（圓 ＋ 挖空的 f），第二輪被退回，理由見下。 */
+/* ⚠ 2026-09-25 第二輪：使用者「除了頭像 網站上的圖案都是方形帶圓角 這個臉書的logo沿用這個概念」。
+     所以不用臉書的圓形標誌，改成圓角方塊 ＋ 白色的 f（臉書早年那一款的構圖）。
+     f 取自上面那條官方路徑的 f 那一段，底部直接接到方塊下緣。
+   圓角是一把尺（半徑 ÷ 邊長，站上是「比例對齊」不是同一個數字，見 .doc-role 那一段）：
+     18 ＝ 比站上都方一點
+     27 ＝ 同「專長／資歷／學歷」那幾顆灰底標籤（6px ÷ 約 22px）
+     38 ＝ 同醫師的科別藥丸（0.384，站上圓角比例的基準）
+   三個半徑三個 rect 都畫著，由 <html data-fbr> 決定哪一個看得到 ——
+   CSS 的 rx 屬性 Safari 舊版不吃，用切換的比較穩。 */
+const F_PATH = 'M9.101 24v-8.289H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246V24Z';
+const RADII = { 18: 4.32, 27: 6.48, 38: 9.22 };
+const svg = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">' +
+  Object.entries(RADII).map(([k, r]) => `<rect class="pv-r${k}" width="24" height="24" rx="${r}" fill="currentColor"/>`).join('') +
+  `<path fill="#fff" d="${F_PATH}"/></svg>`;
 const href = FB_URL || '#pv-fb-todo';
 const a = (cls, txt) =>
   `<a class="pv-fb ${cls}" href="${href}" target="_blank" rel="noopener" aria-label="廖立揚醫師的臉書粉絲專頁（另開視窗）">${svg}${txt || ''}</a>`;
@@ -87,7 +99,9 @@ const NOTE = `<!-- =============================================================
      使用者：「廖立揚在臉書有自己的粉絲專頁 我想把這個粉專連結 做在他的醫師圖卡
      用臉書的logo標記 做預覽給我看」
      兩條尺：位置 ?pos=a|b|c（名字旁／右上角／卡片底一行）× 顏色 ?c=blue|spec
-     （臉書官方藍 #1877F2／這張卡自己的科別色 --accent-deep）。
+     （臉書官方藍 #1877F2／這張卡自己的科別色 --accent-deep）× 圓角 ?r=18|27|38。
+     第二輪（同日）：「除了頭像 網站上的圖案都是方形帶圓角 這個臉書的logo沿用這個概念」
+     → 圓形標誌改成圓角方塊 ＋ 白 f。
      ========================================================================== -->`;
 const STYLE = `
 <style>
@@ -95,7 +109,9 @@ const STYLE = `
 .pv-fb { display: none; color: var(--pv-fb, #1877F2); text-decoration: none; }
 :root[data-fbc="spec"] .pv-fb { --pv-fb: var(--accent-deep); }
 .pv-fb svg { display: block; width: 100%; height: 100%; }
-.pv-fb:focus-visible { outline: 2px solid var(--pv-fb, #1877F2); outline-offset: 2px; border-radius: 50%; }
+.pv-fb rect { display: none; }
+:root[data-fbr="18"] .pv-r18, :root[data-fbr="27"] .pv-r27, :root[data-fbr="38"] .pv-r38 { display: inline; }
+.pv-fb:focus-visible { outline: 2px solid var(--pv-fb, #1877F2); outline-offset: 2px; border-radius: 4px; }
 .pv-fb-card { position: relative; }
 
 /* Ⓐ 名字旁：跟在藥丸後面，和藥丸同高、墨對齊名字那一行 */
@@ -156,15 +172,20 @@ const BAR = `
     <button type="button" data-v="spec">矯正科的藍灰</button>
     <button type="button" class="pvbar-go" aria-label="捲到廖立揚醫師的卡">↥ 看卡</button>
   </div>
+  <div class="pvbar-r" data-k="r"><span class="pvbar-k">圓角</span>
+    <button type="button" data-v="18">18% 方一點</button>
+    <button type="button" data-v="27">27% 同專長標籤</button>
+    <button type="button" data-v="38">38% 同藥丸</button>
+  </div>
 </div>
 <script>
 (function () {
   var root = document.documentElement, box = document.querySelector('.pvbar');
-  var KEYS = { pos: ['a','b','c'], c: ['blue','spec'] }, DEF = { pos: 'a', c: 'blue' };
-  var st = { pos: DEF.pos, c: DEF.c }, qs = new URLSearchParams(location.search);
+  var KEYS = { pos: ['a','b','c'], c: ['blue','spec'], r: ['18','27','38'] }, DEF = { pos: 'a', c: 'blue', r: '27' };
+  var st = { pos: DEF.pos, c: DEF.c, r: DEF.r }, qs = new URLSearchParams(location.search);
   Object.keys(KEYS).forEach(function (k) { var v = qs.get(k); if (v && KEYS[k].indexOf(v) >= 0) st[k] = v; });
   function apply() {
-    root.setAttribute('data-fbpos', st.pos); root.setAttribute('data-fbc', st.c);
+    root.setAttribute('data-fbpos', st.pos); root.setAttribute('data-fbc', st.c); root.setAttribute('data-fbr', st.r);
     Object.keys(KEYS).forEach(function (k) {
       box.querySelectorAll('.pvbar-r[data-k="' + k + '"] button[data-v]').forEach(function (b) {
         b.setAttribute('aria-pressed', String(b.dataset.v === st[k]));
