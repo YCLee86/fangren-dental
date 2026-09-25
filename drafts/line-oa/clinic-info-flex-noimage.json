@@ -294,7 +294,7 @@
         "action": {
           "type": "uri",
           "label": "到網站看看",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {
