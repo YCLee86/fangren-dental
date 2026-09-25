@@ -243,13 +243,45 @@ const css = `<style>
 .pv-flag { max-width: var(--content); margin: 0 auto; padding: .55rem var(--pad); font-size: .82rem;
            color: var(--ink-soft); text-align: center; letter-spacing: .02em; }
 .pv-flag b { color: var(--accent-deep); }
+.pv-wb { max-width: var(--content); margin: 0 auto .4rem; padding: 0 var(--pad); display: flex; flex-wrap: wrap;
+         gap: .4rem; align-items: center; justify-content: center; font-size: .82rem; color: var(--ink-soft); }
+.pv-wb button { font: inherit; padding: .35rem .7rem; border-radius: 999px; border: 1px solid var(--rule);
+                background: transparent; color: var(--ink); cursor: pointer; }
+.pv-wb button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
 </style>`;
 if (!PUBLISH) {
   swap('<link rel="stylesheet" href="../../assets/style.css">',
        '<link rel="stylesheet" href="../../assets/style.css">\n' + css, 'style');
   swap('<main id="main">\n<article>',
-       '<main id="main">\n<p class="pv-flag"><b>草稿預覽</b>：這一頁還沒上線，網址沒有被搜尋引擎收錄。</p>\n<article>',
+       '<main id="main">\n<p class="pv-flag"><b>草稿預覽</b>：這一頁還沒上線，網址沒有被搜尋引擎收錄。</p>\n' +
+       /* 首圖白平衡 B／C 兩格（2026-09-25）。B＝assets/ 那三張；C 的三張放在這個資料夾裡，
+          定案後刪掉。網址帶 ?wb=c 直接開 C。 */
+       '<div class="pv-wb" role="group" aria-label="首圖色調">' +
+       '<span>首圖色調</span>' +
+       '<button type="button" data-wb="b" aria-pressed="true">B 對齊同科</button>' +
+       '<button type="button" data-wb="c" aria-pressed="false">C 接近中性</button></div>\n<article>',
        'flag');
+  const wbJs = `<script>
+(function(){
+  var img = document.querySelector('.post-hero img'); if (!img) return;
+  var sets = {
+    b: ['../../assets/hero-${SLUG}-photo-', '.jpg'],
+    c: ['./hero-c-', '.jpg']
+  };
+  function set(k){
+    var p = sets[k][0], x = sets[k][1];
+    img.srcset = p + '800' + x + ' 800w, ' + p + '1600' + x + ' 1600w, ' + p + '2000' + x + ' 2000w';
+    img.src = p + '1600' + x;
+    document.querySelectorAll('.pv-wb button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.wb === k); });
+    var u = new URL(location.href); u.searchParams.set('wb', k); history.replaceState(null, '', u);
+  }
+  document.querySelectorAll('.pv-wb button').forEach(function(b){ b.addEventListener('click', function(){ set(b.dataset.wb); }); });
+  var q = new URLSearchParams(location.search).get('wb');
+  if (q === 'c') set('c');
+})();
+</script>`;
+  const lb = out.lastIndexOf('</body>');
+  out = out.slice(0, lb) + wbJs + '\n' + out.slice(lb);
 }
 
 /* ── 守門 ─────────────────────────────────────────────────── */
