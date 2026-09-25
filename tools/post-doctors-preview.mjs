@@ -76,6 +76,15 @@ const styles = [...home.matchAll(/<style>([\s\S]*?)<\/style>/g)].map((m) => m[1]
 const DOC_CSS = pick(stripComments(styles));
 
 // ---- 2. 每一科的醫師 -----------------------------------------------------
+// 首頁那一份的醫師卡要有錨點才跳得過去。代號沿用站上已經在用的那一套
+// （形象照的檔名 doctor-<代號>-400.jpg、臉書那一顆的 data-doc），沒有照片也沒有臉書的才查這張表。
+const HOME = '/preview/post-doctors/home/';
+const SLUG_BY_NAME = { 廖立揚: 'liao-liyang' };
+function docSlug(x, name) {
+  const s = x.match(/doctor-([a-z-]+)-400\.jpg/)?.[1] || x.match(/data-doc="([a-z-]+)"/)?.[1] || SLUG_BY_NAME[name];
+  if (!s) throw new Error(`${name}：找不到醫師代號，補進 SLUG_BY_NAME`);
+  return s;
+}
 function docsOf(spec) {
   const t = rd(`topics/${spec}/index.html`);
   const sec = t.slice(t.indexOf('<section id="doctors">'));
@@ -91,14 +100,17 @@ function docsOf(spec) {
     const h3 = x.match(/<h3>([^<]+)<span class="doc-role([^"]*)">([^<]+)<\/span>/);
     const skills = [...x.matchAll(/<span class="sk( tag-on)?" data-spec="[a-z]+">([^<]+)<\/span>/g)]
       .filter((s) => s[1]).map((s) => s[2]);
-    return { raw: x, docSpec, face, webp, name: h3[1], roleCls: h3[2], role: h3[3], skills };
+    const slug = docSlug(x, h3[1]);
+    // 完整卡那一格：卡片上蓋一層透明連結（卡片裡可能已經有臉書那一顆 <a>，不能整張包成 <a>）
+    const card = x.replace(/<\/article>$/, `  <a class="pd-go" href="${HOME}#doc-${slug}" aria-label="到首頁看${h3[1]}醫師的介紹"></a>\n        </article>`);
+    return { raw: x, card, slug, docSpec, face, webp, name: h3[1], roleCls: h3[2], role: h3[3], skills };
   });
   return { html, items };
 }
 
 // ---- 3. 三種密度 ---------------------------------------------------------
 function blockFor(spec) {
-  const { html, items } = docsOf(spec);
+  const { items } = docsOf(spec);
   const topic = `/topics/${spec}/#doctors`;
   const row = (d, withSkills) => `
         <li class="pd-row" data-spec="${d.docSpec}">
@@ -107,6 +119,8 @@ function blockFor(spec) {
             <span class="pd-name">${d.name}<span class="doc-role${d.roleCls}">${d.role}</span></span>${withSkills && d.skills.length ? `
             <span class="pd-sk">${d.skills.map((s) => `<span class="sk tag-on" data-spec="${spec}">${s}</span>`).join('')}</span>` : ''}
           </span>
+          <span class="pd-chev" aria-hidden="true">›</span>
+          <a class="pd-go" href="${HOME}#doc-${d.slug}" aria-label="到首頁看${d.name}醫師的介紹"></a>
         </li>`;
   return `
 <section class="pd" aria-labelledby="pd-h" data-spec="${spec}">
@@ -120,7 +134,7 @@ function blockFor(spec) {
     <ul class="pd-rows" data-d="b">${items.map((d) => row(d, true)).join('')}
     </ul>
     <div class="docs" data-d="c">
-      ${html}
+      ${items.map((d) => d.card).join('\n        ')}
     </div>
   </div>
 </section>
@@ -156,7 +170,7 @@ ${DOC_CSS}
 .pd[data-d="c"] .docs[data-d="c"] { display: grid; }
 .pd-rows { list-style: none; margin: 0; padding: 0; gap: .7rem;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
-.pd-row { display: grid; grid-template-columns: 52px 1fr; align-items: center; column-gap: .8rem;
+.pd-row { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; column-gap: .8rem;
   background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .7rem .9rem .7rem .7rem; }
 .pd-face { width: 52px; height: 52px; }
 .pd-face img { display: block; width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
@@ -164,6 +178,13 @@ ${DOC_CSS}
 .pd-name { font-weight: 700; font-size: 1.05rem; line-height: 1.5; display: flex; flex-wrap: wrap; align-items: center; column-gap: .5rem; }
 .pd-name .doc-role { margin-left: 0; vertical-align: 0; }
 .pd-sk { display: flex; flex-wrap: wrap; gap: .3rem; }
+/* 整張卡都可以按：透明連結蓋滿卡片；臉書那一顆墊在它上面，仍然按得到 */
+.pd .doc, .pd-row { position: relative; transition: border-color .15s ease, box-shadow .15s ease; }
+.pd-go { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.pd .doc-fb { position: relative; z-index: 2; }
+.pd .doc:hover, .pd-row:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+.pd-go:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+.pd-chev { font-size: 1.4rem; line-height: 1; color: var(--ink-soft); }
 .pd .docs { grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
 .pd[data-pos="in"] .docs { grid-template-columns: 1fr; }
 @media (min-width: 721px) { .pd[data-pos="in"] .docs { grid-template-columns: repeat(2, 1fr); } }
@@ -263,6 +284,49 @@ for (const slug of slugs) {
   fs.mkdirSync(path.join(OUT, slug), { recursive: true });
   fs.writeFileSync(path.join(OUT, slug, 'index.html'), h);
   list.push({ slug, spec, title, n: docsOf(spec).items.length });
+}
+
+// ---- 6. 首頁的快照：醫師卡加上錨點 ---------------------------------------
+// ⚠ 這是 index.html 的完整複本，第八節那幾件照做：路徑改絕對、SEO 區塊換 noindex、
+//   計數器降級、拿掉三支紀錄、提示條插在最後一個 </body> 前面。
+{
+  let h = home;
+  h = h.replace(/<!-- SEO:START[\s\S]*?<!-- SEO:END -->/, '<meta name="robots" content="noindex, nofollow, noarchive">');
+  if (!h.includes('noindex')) throw new Error('首頁：沒有 SEO 區塊可換');
+  h = h.replace(/<title>([^<]*)<\/title>/, '<title>$1（提案預覽）</title>');
+  h = h.replace(/data-views-self=/g, 'data-views=');
+  h = h.replace(/\s*<script src="assets\/(click-log|source-log|search-log)\.js" defer><\/script>/g, '');
+  if (/(click|source|search)-log\.js/.test(h.slice(h.lastIndexOf('</style>')))) throw new Error('首頁：紀錄的 script 沒拿乾淨');
+  h = h.replace(/(["'\s,(])(assets|posts|history)\//g, '$1/$2/');
+  h = h.replace(/(["'\s,(])(favicon\.ico|site\.webmanifest)/g, '$1/$2');
+  // 醫師卡加 id（放在 class 後面：schema.mjs 比對的是 class="doc" 緊接一個引號）
+  const secA = h.indexOf('<section id="doctors">'), secB = h.indexOf('</section>', secA);
+  let sec = h.slice(secA, secB), n = 0;
+  sec = sec.replace(/<article class="doc"([^>]*)>([\s\S]*?)<\/article>/g, (m, attrs, body) => {
+    n++;
+    const name = body.match(/<h3>([^<]+)/)[1];
+    return `<article class="doc" id="doc-${docSlug(m, name)}"${attrs}>${body}</article>`;
+  });
+  if (n !== 9) throw new Error(`首頁：醫師卡應該是 9 張，找到 ${n}`);
+  h = h.slice(0, secA) + sec + h.slice(secB);
+  const css = `<style>
+/* 提案：從文章跳過來的那一張，外框亮一下再退掉 */
+.doc:target { animation: pd-hit 2.4s ease-out 1; }
+@keyframes pd-hit {
+  0%, 35% { box-shadow: 0 0 0 3px var(--accent); border-color: var(--accent); }
+  100%    { box-shadow: 0 0 0 3px transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .doc:target { animation: none; box-shadow: 0 0 0 3px var(--accent); } }
+.pv-back { position: fixed; left: 10px; bottom: 10px; z-index: 90; font: 13px system-ui, sans-serif;
+  background: #1f2226; color: #eef0f1; border: 0; border-radius: 16px; padding: 7px 13px; }
+</style>
+`;
+  const headEnd = h.indexOf('</head>');
+  h = h.slice(0, headEnd) + css + h.slice(headEnd);
+  const bodyEnd = h.lastIndexOf('</body>');
+  h = h.slice(0, bodyEnd) + `<button type="button" class="pv-back" onclick="history.length > 1 ? history.back() : location.assign('/preview/post-doctors/')">‹ 回文章（提案預覽）</button>\n` + h.slice(bodyEnd);
+  fs.mkdirSync(path.join(OUT, 'home'), { recursive: true });
+  fs.writeFileSync(path.join(OUT, 'home', 'index.html'), h);
 }
 
 fs.writeFileSync(path.join(OUT, 'index.html'), `<!DOCTYPE html>

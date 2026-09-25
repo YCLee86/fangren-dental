@@ -192,7 +192,7 @@ html[data-theme="dark"] .sk.tag-on { color: var(--sk-ink); }
 .pd[data-d="c"] .docs[data-d="c"] { display: grid; }
 .pd-rows { list-style: none; margin: 0; padding: 0; gap: .7rem;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
-.pd-row { display: grid; grid-template-columns: 52px 1fr; align-items: center; column-gap: .8rem;
+.pd-row { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; column-gap: .8rem;
   background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .7rem .9rem .7rem .7rem; }
 .pd-face { width: 52px; height: 52px; }
 .pd-face img { display: block; width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
@@ -200,6 +200,13 @@ html[data-theme="dark"] .sk.tag-on { color: var(--sk-ink); }
 .pd-name { font-weight: 700; font-size: 1.05rem; line-height: 1.5; display: flex; flex-wrap: wrap; align-items: center; column-gap: .5rem; }
 .pd-name .doc-role { margin-left: 0; vertical-align: 0; }
 .pd-sk { display: flex; flex-wrap: wrap; gap: .3rem; }
+/* 整張卡都可以按：透明連結蓋滿卡片；臉書那一顆墊在它上面，仍然按得到 */
+.pd .doc, .pd-row { position: relative; transition: border-color .15s ease, box-shadow .15s ease; }
+.pd-go { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.pd .doc-fb { position: relative; z-index: 2; }
+.pd .doc:hover, .pd-row:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+.pd-go:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+.pd-chev { font-size: 1.4rem; line-height: 1; color: var(--ink-soft); }
 .pd .docs { grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
 .pd[data-pos="in"] .docs { grid-template-columns: 1fr; }
 @media (min-width: 721px) { .pd[data-pos="in"] .docs { grid-template-columns: repeat(2, 1fr); } }
@@ -416,12 +423,16 @@ body:not(.pv-closed) { padding-bottom: 92px; }
           <span class="pd-main">
             <span class="pd-name">李柄輝<span class="doc-role tag-off">創辦醫師</span></span>
           </span>
+          <span class="pd-chev" aria-hidden="true">›</span>
+          <a class="pd-go" href="/preview/post-doctors/home/#doc-li-binghui" aria-label="到首頁看李柄輝醫師的介紹"></a>
         </li>
         <li class="pd-row" data-spec="perio">
           <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-li-youjin-400.webp"><img src="/assets/doctor-li-youjin-400.jpg" width="400" height="400" alt=""></picture></span>
           <span class="pd-main">
             <span class="pd-name">李侑津<span class="doc-role tag-off">醫師</span></span>
           </span>
+          <span class="pd-chev" aria-hidden="true">›</span>
+          <a class="pd-go" href="/preview/post-doctors/home/#doc-li-youjin" aria-label="到首頁看李侑津醫師的介紹"></a>
         </li>
     </ul>
     <ul class="pd-rows" data-d="b">
@@ -431,6 +442,8 @@ body:not(.pv-closed) { padding-bottom: 92px; }
             <span class="pd-name">李柄輝<span class="doc-role tag-off">創辦醫師</span></span>
             <span class="pd-sk"><span class="sk tag-on" data-spec="perio">牙周照護</span></span>
           </span>
+          <span class="pd-chev" aria-hidden="true">›</span>
+          <a class="pd-go" href="/preview/post-doctors/home/#doc-li-binghui" aria-label="到首頁看李柄輝醫師的介紹"></a>
         </li>
         <li class="pd-row" data-spec="perio">
           <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-li-youjin-400.webp"><img src="/assets/doctor-li-youjin-400.jpg" width="400" height="400" alt=""></picture></span>
@@ -438,6 +451,8 @@ body:not(.pv-closed) { padding-bottom: 92px; }
             <span class="pd-name">李侑津<span class="doc-role tag-off">醫師</span></span>
             <span class="pd-sk"><span class="sk tag-on" data-spec="perio">牙周病治療</span><span class="sk tag-on" data-spec="perio">牙周再生手術</span><span class="sk tag-on" data-spec="perio">水雷射牙周治療</span></span>
           </span>
+          <span class="pd-chev" aria-hidden="true">›</span>
+          <a class="pd-go" href="/preview/post-doctors/home/#doc-li-youjin" aria-label="到首頁看李侑津醫師的介紹"></a>
         </li>
     </ul>
     <div class="docs" data-d="c">
@@ -453,6 +468,7 @@ body:not(.pv-closed) { padding-bottom: 92px; }
             <dt>資歷</dt><dd>台灣國際植牙醫師學會專科醫師（ATIOI）<br>國際牙醫學院院士（TICD）<br>衛生福利部家庭牙醫專科</dd>
             <dt>學歷</dt><dd>中山醫學大學牙醫學學士<br>中山醫學大學牙醫學碩士<br>中山醫學大學牙醫學博士</dd>
           </dl>
+          <a class="pd-go" href="/preview/post-doctors/home/#doc-li-binghui" aria-label="到首頁看李柄輝醫師的介紹"></a>
         </article>
         <article class="doc" data-face data-spec="perio">
           <picture class="doc-face">
@@ -466,6 +482,7 @@ body:not(.pv-closed) { padding-bottom: 92px; }
             <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>國立陽明交通大學牙醫學碩士</dd>
           </dl>
+          <a class="pd-go" href="/preview/post-doctors/home/#doc-li-youjin" aria-label="到首頁看李侑津醫師的介紹"></a>
         </article>
     </div>
   </div>
