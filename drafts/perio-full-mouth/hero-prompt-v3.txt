@@ -53,27 +53,19 @@ none of it in close-up:
   sink with a tall curved tap and a pump bottle; a few small glass jars of cotton rolls; two
   plain boxes of gloves; a small tray of sealed sterilisation pouches; a compact white
   steriliser box with a round door; a small potted plant with rounded leaves.
-- One thin, quiet line of very pale grey-green (#cdd8d0) runs along the wall just above the
-  cabinets — no wider than a finger, soft and barely noticeable, the same lightness as the
-  wall. It is an accent, never a bold band of colour.
+- One horizontal stripe of muted teal (#317d78) runs along the wall at waist height, just
+  above the cabinets.
 - ON THE LEFT, a tall window with a pale roller blind half down, letting in soft morning
   light across the chair.
-- ON THE RIGHT-HAND SIDE OF THE ROOM, a pale glass partition with a softly frosted band, through which a
+- BEHIND THE DENTIST, a pale glass partition with a softly frosted band, through which a
   second treatment chair and its light are faintly visible — the clinic continues beyond
   this room.
-- On the floor: pale warm-grey flooring with faint seams, and a small rolling cart with two
-  drawers standing a little way off to the right.
+- On the floor: pale warm-grey flooring with faint seams, a small rolling cart with two
+  drawers beside the dentist, and a round rolling stool.
 - On the ceiling edge: a long soft recessed light panel.
 EVERY BOX, JAR, BOTTLE, SCREEN, DRAWER AND DOOR IS BLANK — no labels, no logos, no writing.
 The two bubbles are drawn over the upper part of this room and cover part of it; the room
 continues behind them.
-
-THE TWO PEOPLE SIT CLOSE TOGETHER, THE WAY A DENTIST REALLY TALKS TO A PATIENT IN THE CHAIR.
-The dentist's stool is pulled right up beside the treatment chair, on the right-hand side of the chair as we see it,
-so that the gap between them is no more than a forearm's length — his knees almost touch the
-side of the chair. Together the two of them form ONE close group in the lower-left and centre
-of the picture. There is NO wide empty stretch of floor between them, and the dentist is NOT
-across the room on the far right.
 
 THE PATIENT is on the LEFT of the picture, in the lower-left quarter. A man in his fifties,
 short neat hair, slightly heavy build, in a mustard-yellow knitted cardigan over a white
@@ -82,17 +74,14 @@ hand nearer the viewer pressed flat against his cheek, the other hand resting on
 the chair. His eyebrows are drawn up and together — uncomfortable and a bit worried, not in
 agony. His mouth is a small open shape because he is speaking.
 
-THE DENTIST sits immediately to the RIGHT of the patient in the picture, at the side of the chair, roughly in
-the centre of the picture's width, drawn at the same modest size as the patient. THE DENTIST
-IS A MAN, in his late thirties, slim, clean-shaven, with short hair a little longer on top and
-neatly swept to one side — clearly younger and slimmer than the patient, with a different
-haircut. HE WEARS
+THE DENTIST is on the RIGHT of the picture, in the lower-right corner, drawn at the same
+modest size as the patient. A woman in her late thirties, hair in a low ponytail. SHE WEARS
 THIS CLINIC'S PERIODONTAL COLOUR: a scrub top and matching scrub trousers in #b7d7d5,
 with #99b8b6 in the folds and shadows, drawn in two or three tones with the collar, hems and
-creases showing — and an open short white coat over the top. Nothing on him is pink or rose. He sits on a low round rolling stool, leaning slightly
-towards the patient, one hand open and raised towards the big bubble above him as he
-explains, the other resting on his knee. His expression is calm, kind and serious — eyebrows
-level, mouth a small open shape because he is speaking.
+creases showing — and an open short white coat over the top. Nothing on her is pink or rose. She sits on a low round stool turned
+towards the patient, one hand open and raised towards the big bubble above her as she
+explains, the other resting on her knee. Her expression is calm, kind and serious — eyebrows
+level, mouth a small open shape because she is speaking.
 NEITHER PERSON IS TALLER THAN ABOUT HALF THE HEIGHT OF THE PICTURE. The two bubbles are the
 main subject, not the people.
 
@@ -113,7 +102,7 @@ straight and look perfectly fine.
 
 BUBBLE TWO — THE DENTIST'S, BIG. THIS IS THE HEART OF THE PICTURE. It fills most of the
 upper-right and centre of the frame — about three fifths of the width of the picture and
-about two thirds of its height — with its tail pointing down and to the left to the dentist's mouth. Inside
+about two thirds of its height — with its tail pointing down to the dentist's mouth. Inside
 it is THE SAME ROW OF EXACTLY FIVE TEETH — five, not six — in the same order, now drawn large, and now we can see
 what is really going on.
 THE FIVE TEETH ARE CHARACTERS, drawn the way the tooth is drawn in the first reference
@@ -212,9 +201,7 @@ patient; syringes, needles, forceps or any instrument held up or shown in close-
 tray piled with instruments; X-ray films; posters, charts, certificates, framed pictures or
 a wall-mounted TV on the walls; labels, logos or writing on any box, jar, bottle, screen or
 cabinet; a bare, empty room or a plain blank wall with nothing on it; more than one
-operating light over the chair; the dentist in pink, rose or mauve; a female dentist; a ponytail; the dentist sitting far
-away from the patient or on the far right of the room; a wide empty floor between the two
-people; a bold, dark or saturated teal band across the wall; brown or auburn hair; a dark or dim room; greyscale; pure black outlines; even mechanical vector
+operating light over the chair; the dentist in pink, rose or mauve; brown or auburn hair; a dark or dim room; greyscale; pure black outlines; even mechanical vector
 linework; flat untextured single-tone clothing; anime or manga styling; glossy 3D rendering;
 any text, letters or numbers anywhere.
 
