@@ -279,14 +279,18 @@ td.q { word-break: break-word; }
     'lot:a': '地圖上點「斗六永樂站」', 'lot:b': '地圖上點「合廷」', 'lot:c': '地圖上點「壹車房」',
     brand: '頁首標誌（回首頁）', skip: '跳到主要內容', 'hero-cue': 'HERO 底下的往下看',
     'search-open': '頁首的放大鏡', 'search-close': '關閉搜尋', btt: '回到最上面',
-    bays: '鄰近停車格', 'back-list': '回文章列表'
+    bays: '鄰近停車格', 'back-list': '回文章列表',
+    'doc-peek': '文章頂端「N 位醫師」', 'doc-btn': '文章右下角「醫師」'
   };
   var PREFIX = {
     chip: '科別標記', hours: '門診表篩選', tag: '文章上的科別', nav: '頁首選單',
     foot: '頁尾導覽', count: '著陸頁的醫師／文章數', card: '文章卡', rel: '延伸閱讀',
-    prev: '上一篇', next: '下一篇', fb: '醫師的臉書粉專'
+    prev: '上一篇', next: '下一篇', fb: '醫師的臉書粉專',
+    doc: '文章裡的醫師 → 首頁', 'doc-more': '文章裡「這一科・N 位」→ 著陸頁'
   };
-  var DOC = { 'liao-liyang': '廖立揚' };
+  var DOC = { 'li-binghui': '李柄輝', 'li-youjin': '李侑津', 'wang-junwei': '王俊偉', 'liao-liyang': '廖立揚',
+              'lin-yanyu': '林晏妤', 'xu-xinwen': '許馨文', 'yang-xiaoying': '楊小瑩',
+              'chen-zhiling': '陳芷鈴', 'xie-yaoqing': '謝耀慶' };
   /* ---- 文章的中文標題 ------------------------------------------------------
      代碼裡的是 slug（three-month-recall 與 regular-checkup 看字面分不出來），
      報告上要印中文。來源是 build 產生的 assets/post-titles.json（唯一來源仍是
@@ -324,7 +328,8 @@ td.q { word-break: break-word; }
     if (k === 'tag') return PREFIX[k] + '：' + (SPEC[v] || v);
     if (k === 'nav' || k === 'foot' || k === 'count') return PREFIX[k] + '：' + (HASH[v] || v);
     if (k === 'card' || k === 'rel' || k === 'prev' || k === 'next') return PREFIX[k] + '：' + title(v);
-    if (k === 'fb') return PREFIX[k] + '：' + (DOC[v] || v);
+    if (k === 'fb' || k === 'doc') return PREFIX[k] + '：' + (DOC[v] || v);
+    if (k === 'doc-more') return PREFIX[k] + '：' + (SPEC[v] || v);
     if (PREFIX[k]) return PREFIX[k] + '：' + v;
     return code;
   }

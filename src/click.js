@@ -48,6 +48,12 @@ const LOTS = new Set(["a", "b", "c"]);
    ⚠ 再加一位醫師的粉專時這裡要跟著加，不然他那一顆按下去的紀錄會被當成偽造的丟掉。 */
 const DOC_FB = new Set(["liao-liyang"]);
 
+/* 九位醫師的代號（2026-09-25 起）。對應 index.html 醫師卡的 id="doc-<代號>"，
+   文章頁「這一科的醫師」每一位點下去記成 doc:<代號>。
+   ⚠ 再加一位醫師時這裡要跟著加，不然他那一列按下去的紀錄會被當成偽造的丟掉。 */
+const DOCS = new Set(["li-binghui", "li-youjin", "wang-junwei", "liao-liyang", "lin-yanyu",
+                      "xu-xinwen", "yang-xiaoying", "chen-zhiling", "xie-yaoqing"]);
+
 /* 沒有參數的那些。⚠ 這張表就是「站上有哪些可以按的東西」的清單，
    版面上新增一顆要按的東西時，這裡與 assets/click-log.js 的規則表要一起加。 */
 const FLAT = new Set([
@@ -65,6 +71,8 @@ const FLAT = new Set([
   "btt",            /* 回到最上面 */
   "bays",           /* 地圖上的「鄰近停車格」標籤 */
   "back-list",      /* 文章頁的「← 回文章列表」 */
+  "doc-peek",       /* 文章頂端那一行底下的「N 位醫師 ›」 */
+  "doc-btn",        /* 文章右下角那一顆「醫師 ﹀」 */
 ]);
 
 /* 有參數的那些：前綴 → 值合不合法。
@@ -89,6 +97,10 @@ export function normCode(raw) {
       return v === "all" || SPECS.has(v) ? code : null;
     case "fb":                          /* 醫師卡上的臉書粉專（離站） */
       return DOC_FB.has(v) ? code : null;
+    case "doc":                         /* 文章裡「這一科的醫師」的某一位 → 首頁那張卡 */
+      return DOCS.has(v) ? code : null;
+    case "doc-more":                    /* 那一塊右上角「○○・N 位 ›」→ 著陸頁 */
+      return SPECS.has(v) ? code : null;
     case "tag":                         /* 文章頁最上面那顆科別標記 */
       return SPECS.has(v) ? code : null;
     case "nav":                         /* 頁首選單 */

@@ -1119,6 +1119,120 @@ html[data-qopen="1"] .head-search {
   .head-search, .brand, .site-nav { transition: none; }
 }
 
+/* ==========================================================================
+   文章頁的「這一科的醫師」（2026-09-25 四輪定案上線）
+   --------------------------------------------------------------------------
+   使用者：「文章點開後出現該科的醫師資訊（不然看文章還要回去查有誰在做這個相關治療）」。
+   HTML 由 tools/build.mjs 寫進每一篇（DOCS／DOCPEEK 兩個區塊），行為在
+   assets/post-doctors.js。推導、四輪的尺與落選案見 /history/post-doctors.html。
+
+     ・內文結尾一塊：一位一列 —— 頭像 52px ＋ 名字 ＋ 專科藥丸 ＋ **這一科的專長**
+       （落選：只有名字；完整醫師卡 ＝ 手機上一般牙科那篇要多捲 1486px）
+     ・整列點下去 → 首頁那一位的醫師卡（/#doc-<代號>，那一張外框會亮一下）
+     ・頂端那一行底下「N 位醫師 ›」、右下角「醫師 ﹀」→ 捲到這一塊
+
+   ⚠ 專科藥丸與專長標記的樣式**抄自 index.html**（首頁的醫師卡），文章頁的樣式表本來沒有：
+     `.doc-role`、`.doc-role.tag-off`、`.sk.tag-on`、`--role-padT/padB`、`--sk-*`。
+     首頁那邊由 skFit() 現量上下內距；這裡沒有那支 JS，吃的是首頁樣式表裡的後備值
+     （同一組數字），提案四輪使用者看到的就是這一組。**改首頁那幾條要回來對一次。**
+   ⚠ 藥丸在這裡 `vertical-align: 0`：名字那一行是 flex、置中對齊，
+     首頁那個 `--role-rise` 抬升量是給行內排版用的，放進 flex 會失效（首頁同一段有寫）。
+   ========================================================================== */
+html { --tint: 12%; --sk-fs: .83rem; --sk-padX: .4546em; --sk-padT: .30em; --sk-padB: .12em;
+       --role-padT: .425em; --role-padB: .21em; }
+@media (min-width: 721px) and (max-aspect-ratio: 9 / 10) { html { --sk-fs: .926rem; } }
+@media (max-width: 720px) { html { --sk-fs: 1rem; } }
+
+.doc-role {
+  display: inline-block; font-size: .8rem; font-weight: 400;
+  line-height: 1; padding: var(--role-padT) .6rem var(--role-padB); white-space: nowrap;
+  border: 1px solid var(--accent); border-radius: 8px;
+  background: var(--accent); color: var(--on-fill);
+}
+.doc-role.tag-off { background: var(--card); color: var(--accent-deep); border-color: var(--accent-deep); }
+.sk.tag-on {
+  display: inline-block; font-size: var(--sk-fs); font-weight: 400;
+  line-height: 1; padding: var(--sk-padT) var(--sk-padX) var(--sk-padB);
+  border-radius: 8px; white-space: nowrap;
+  background: color-mix(in srgb, var(--accent) var(--tint), var(--card));
+  border: 1px solid color-mix(in srgb, var(--accent) var(--tint), var(--card));
+  color: var(--accent-deep);
+}
+html[data-theme="dark"] .doc-role.tag-off {
+  background: color-mix(in srgb, var(--accent) 20%, var(--card));
+  border-color: color-mix(in srgb, var(--accent) 20%, var(--card));
+  color: var(--pill-ink);
+}
+html[data-theme="dark"] .sk.tag-on { color: var(--sk-ink); }
+
+/* ---- 那一塊 ---- */
+.pd { padding-top: 1.6rem; }
+.pd-head { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+/* 標題的樣子和內文的 h2 一樣（前面那一小段枝條），只是上下的邊距交給 .pd 自己管 */
+.post-body .pd-head h2 { margin: 0; }
+.pd-more { font-size: .9rem; color: var(--accent-deep); text-decoration: none; white-space: nowrap; }
+.pd-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* ⚠ 放在 .post-body 裡，文章的 ul／li 規則會漏進來（左內距 1.35rem、每一項下邊距 .5rem），這裡擋掉 */
+.post-body .pd-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+.post-body .pd-row { margin: 0; }
+.pd-row {
+  position: relative; display: grid; grid-template-columns: 52px 1fr auto; align-items: center; column-gap: .8rem;
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .7rem .9rem .7rem .7rem;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.pd-row:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+.pd-face { width: 52px; height: 52px; }
+.pd-face img { display: block; width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
+.pd-main { display: grid; gap: .35rem; min-width: 0; }
+.pd-name { font-weight: 700; font-size: 1.05rem; line-height: 1.5; color: var(--ink);
+  display: flex; flex-wrap: wrap; align-items: center; column-gap: .5rem; }
+.pd-sk { display: flex; flex-wrap: wrap; gap: .3rem; }
+.pd-chev { font-size: 1.4rem; line-height: 1; color: var(--ink-soft); }
+/* 整列都可以按：一層透明連結蓋滿（列裡沒有別的連結，但寫成蓋一層而不是整列包成 <a>，
+   名字與專長才會照一般文字被讀出來，連結本身用 aria-label 講清楚要去哪裡） */
+.pd-go { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.pd-go:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+
+/* ---- 頂端那一行底下的「N 位醫師 ›」 ----
+   ⚠ 使用者：「醫師要斷行到下面，白天夜間切換桿在原來的位置」—— 排在那一行的最後、
+     自己佔一列，開關因此留在第一列最右邊（六個寬度 × 兩種瀏覽數實測，開關位置逐項不變）。 */
+.crumbs a.pd-peek, .crumbs a.pd-peek:hover { color: var(--accent-deep); white-space: nowrap; }
+.crumbs .pd-peek { order: 9; flex-basis: 100%; }
+
+/* ---- 右下角那一顆（照首頁「回到最上面」的 .btt，逐項同值，只換記號）----
+   44 高、淡灰玻璃（--card 的 .80 ＋ blur 6px）、無框線、柔墨 .82、圓角 --frame-r、離右下角 20px。
+   記號是使用者三案裡挑的 Ⓒ「醫師 ﹀」（落選：人像圖示、只有「醫師」兩字），所以比 .btt 寬（64px）。
+   ⚠ 沒有 JS 就一直是 visibility: hidden（同 .btt 的理由：它的全部價值就是那段捲動）。 */
+.pd-btt {
+  position: fixed; z-index: 20;
+  right: calc(20px + env(safe-area-inset-right, 0px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  height: 44px; padding: 0 .7rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: var(--frame-r, 8px);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  background-color: rgba(244, 244, 245, .8);
+  -webkit-backdrop-filter: blur(6px) saturate(1.15); backdrop-filter: blur(6px) saturate(1.15);
+  box-shadow: 0 1px 2px rgba(42, 44, 39, .07), 0 4px 10px rgba(42, 44, 39, .09);
+  color: rgba(92, 95, 87, .82); font: inherit;
+  opacity: 0; visibility: hidden; transform: translateY(6px);
+  transition: opacity .22s ease, transform .22s ease, visibility .22s, background-color .18s ease, box-shadow .22s ease;
+}
+.pd-btt.is-on { opacity: 1; visibility: visible; transform: translateY(0); }
+.pd-btt.is-lit { background-color: var(--card); }
+@media (hover: hover) and (pointer: fine) {
+  .pd-btt:hover { background-color: var(--card); box-shadow: 0 5px 10px rgba(42, 44, 39, .09), 0 16px 32px rgba(42, 44, 39, .16); }
+}
+.pd-btt:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .pd-btt { transform: none; } }
+html[data-theme="dark"] .pd-btt { background-color: color-mix(in srgb, var(--card) 80%, transparent);
+  color: color-mix(in srgb, var(--ink-soft) 82%, transparent); }
+.pd-btt > span { display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .8rem; font-weight: 500; letter-spacing: .04em; line-height: 1; }
+.pd-btt svg { width: 10px; height: 6px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.4;
+  stroke-linecap: round; stroke-linejoin: round; }
+
 /* NIGHT:START — 由 tools/night-mode.mjs 產生，請勿手動編輯 */
 
 html[data-theme="dark"] {

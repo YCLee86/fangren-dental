@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>post-doctors｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>post-doctors — 文章頁的「這一科的醫師」</h1>
+<p class="meta">
+  2026-09-25 開、當天五輪定案上線<br>
+  原網址 <code>/preview/post-doctors/</code>（二十篇快照 ＋ 首頁快照，已刪除 2026-09-25）<br>
+  整頁還原：<code>git show ba06cd81:preview/post-doctors/regular-checkup/index.html</code><br>
+  提案期的產生器 <code>tools/post-doctors-preview.mjs</code>（定案時刪掉，同一個 sha 還原得到）
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者：「我想要文章點開後出現該科的醫師資訊（不然看文章還要回去查有誰在做這個相關治療）」
+名單：回頭讀 index.html 的 #doctors，規則和首頁點科別、七科著陸頁同一條 ——
+　　　專科是這一科，或專長裡有一顆是這一科。一般牙科 4 位、假牙 3 位、牙周／矯正／兒牙各 2 位、
+　　　口外與根管各 1 位。</pre></div>
+
+<h2>五輪</h2>
+<div class="note"><pre>一　內容 × 位置兩條尺
+　　內容　Ⓐ 頭像＋名字＋專科　Ⓑ 再加這一科的專長 ← 定案　Ⓒ 完整醫師卡（同首頁）
+　　　　　　Ⓒ 落選的量測：手機 375 上一般牙科那篇多捲 1486px（Ⓑ 是 423px）
+　　位置　① 內文結尾（上下篇按鈕之前）← 定案　② 延伸閱讀上方
+
+二　使用者：「點文章內的醫師卡跳回首頁的醫師介紹圖卡」
+　　→ 首頁九張醫師卡加 id="doc-<代號>"，整列蓋一層透明連結，跳過去那一張外框亮一下
+
+三　使用者：「文章要看到最下面才看到的醫師，可以怎麼處理」
+　　四個做法：頂端那一行加入口／捲動時底部浮一條／電腦版右側固定欄／插在內文中間
+　　→ 前兩個做成提案（入口：無／1／2／1＋2）
+
+四　使用者：「入口 1＋2 但不要頭像」「那個底部浮條太大了，我們在首頁做過點下去移到最頂的按鈕，
+　　可以把那個概念用在這裡」
+　　→ 底部浮條換成右下角一顆小方塊，外觀逐項照首頁「回到最上面」的 .btt
+　　　 記號三案：Ⓐ 人像圖示　Ⓑ「醫師」　Ⓒ「醫師 ﹀」← 定案（64×44，比 .btt 寬）
+
+五　使用者（手機截圖）：「標題上面的醫師要斷行到下面，白天夜間切換桿在原來的位置」
+　　→「N 位醫師 ›」排在頂端那一行的最後、自己佔一列（order ＋ flex-basis 100%）
+　　　 實測 320／375／390／430／744／1440 × 瀏覽數 63／1,234：開關位置與沒有它時逐項相同</pre></div>
+
+<h2>定案（＝ 現在站上的）</h2>
+<div class="note"><pre>那一塊　內文結尾、上下篇按鈕之前。標題「這一科的醫師」＋ 右上「○○・N 位 ›」（連到著陸頁）
+　　　　一位一列：頭像 52px ＋ 名字 ＋ 專科藥丸 ＋ 這一科的專長（淡色填滿）＋ ›
+　　　　整列點下去 → /#doc-&lt;代號&gt;（首頁那一張外框亮 2.4 秒）
+　　　　專科藥丸：本科實心、不是本科退成白底（同首頁點科別的規則）
+入口一　頂端那一行底下「N 位醫師 ›」，純文字、不要頭像
+入口二　右下角「醫師 ﹀」，捲過半個螢幕出現、那一塊進到畫面就收起來
+兩個入口點下去都平滑捲到那一塊（減少動態效果開著就直接跳）</pre></div>
+
+<h2>⚠ 上線時要知道的</h2>
+<div class="note"><pre>・那兩塊在 &lt;main&gt; 裡，由 tools/build.mjs 寫（DOCS／DOCPEEK 兩個區塊），
+　normalize() 把它們**連同插入時補的空白整段拿掉**再算雜湊 —— 所以二十篇的「最後更新」一天都沒跳
+　（上線前後比對 build-manifest.json：二十篇的 hash 與 updated 逐篇相同）。
+・專科藥丸與專長標記的樣式原本只在 index.html，這一次抄一份進 assets/style.css。
+　首頁那邊的上下內距由 skFit() 現量，文章頁吃的是同一組後備值（提案四輪看到的就是這一組）。
+・點擊紀錄多四種代碼：doc-peek、doc-btn、doc:&lt;代號&gt;、doc-more:&lt;科別&gt;
+　（src/click.js、assets/click-log.js、/admin/search/ 三處一起加；click-test 104 項過）。
+・醫師卡的 id 寫在屬性的最後面：topics.mjs 要 class 後面緊接 data-spec、schema.mjs 要 class 後面緊接引號。
+
+・⚠⚠ 同一輪發現、**沒有修**的既有問題：七科著陸頁的專科藥丸全部是白底。
+　topics.mjs 判斷「這位醫師的專科是不是這一科」寫的是 class 後面緊接 data-spec，
+　2026-09-19 有照片的卡多了 data-face 之後就比對不到了（只有沒照片的廖立揚醫師還是實心）。
+　名單本身沒受影響（每一位都有一顆這一科的專長）。要不要修，帶回去問使用者。</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄。這一頁不會再改。</footer>
+</div></body>
+</html>

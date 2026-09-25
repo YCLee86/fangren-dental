@@ -2292,6 +2292,20 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ⚠ 寫在 NIGHT 區塊外面是刻意的：那一區由 tools/night-mode.mjs 整段重寫。 */
 html[data-theme="dark"] .doc-fb { color: var(--accent); }
 
+/* ---- 從文章頁的「這一科的醫師」點過來（2026-09-25 上線，推導在 /history/post-doctors.html）----
+   文章裡每一位醫師都連到 `/#doc-<代號>`，跳過來的那一張外框亮一下再退掉，
+   讓人一眼知道是哪一張（九張卡長得很像）。
+   ⚠ `id` 寫在醫師卡屬性的**最後面**，不要往前搬：tools/topics.mjs 要 class 後面緊接著 data-spec，
+     schema.mjs 則要 class 的值後面緊接一個引號（兩支的比對寫法見各自的檔案）。
+     ⚠ 這段註解裡刻意不寫出完整的標籤開頭 —— 兩支產生器都是對整份檔案做字串比對，寫出來會被數進去。
+   ⚠ 代號沿用站上已經在用的那一套（形象照的檔名、臉書那一顆的 data-doc）。 */
+.doc:target { animation: doc-hit 2.4s ease-out 1; }
+@keyframes doc-hit {
+  0%, 35% { box-shadow: 0 0 0 3px var(--accent); border-color: var(--accent); }
+  100%    { box-shadow: 0 0 0 3px transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .doc:target { animation: none; box-shadow: 0 0 0 3px var(--accent); } }
+
 /* ---- 圓角：比例對齊，不是同一個數字。基準是醫師藥丸的 半徑÷框高 = 0.384。
    這幾個元件的字級和手機版一樣，所以手機版量出來的值原樣沿用。 ---------- */
 .doc dt          { border-radius: 6px; }
@@ -6151,7 +6165,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
         <h2>醫師介紹</h2>
       </div>
       <div class="docs">
-        <article class="doc" data-face data-spec="ortho">
+        <article class="doc" data-face data-spec="ortho" id="doc-wang-junwei">
           <picture class="doc-face">
             <source type="image/webp" srcset="../../assets/doctor-wang-junwei-400.webp">
             <img src="../../assets/doctor-wang-junwei-400.jpg" width="400" height="400" loading="lazy"
@@ -6164,7 +6178,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>臺北醫學大學牙醫學碩士</dd>
           </dl>
         </article>
-        <article class="doc" data-spec="ortho">
+        <article class="doc" data-spec="ortho" id="doc-liao-liyang">
           <!-- ⚠ 形象照 2026-09-23 上線當天由使用者要求**移除**，這張卡回到純文字。
                要放回來：tools/doctor-photo-crop.mjs 的 FACES 裡 liao-liyang 那一段
                解除註解（五個步驟寫在那裡）。原檔仍在 drafts/doctor-photo/src/。

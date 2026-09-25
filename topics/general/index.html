@@ -2292,6 +2292,20 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ⚠ 寫在 NIGHT 區塊外面是刻意的：那一區由 tools/night-mode.mjs 整段重寫。 */
 html[data-theme="dark"] .doc-fb { color: var(--accent); }
 
+/* ---- 從文章頁的「這一科的醫師」點過來（2026-09-25 上線，推導在 /history/post-doctors.html）----
+   文章裡每一位醫師都連到 `/#doc-<代號>`，跳過來的那一張外框亮一下再退掉，
+   讓人一眼知道是哪一張（九張卡長得很像）。
+   ⚠ `id` 寫在醫師卡屬性的**最後面**，不要往前搬：tools/topics.mjs 要 class 後面緊接著 data-spec，
+     schema.mjs 則要 class 的值後面緊接一個引號（兩支的比對寫法見各自的檔案）。
+     ⚠ 這段註解裡刻意不寫出完整的標籤開頭 —— 兩支產生器都是對整份檔案做字串比對，寫出來會被數進去。
+   ⚠ 代號沿用站上已經在用的那一套（形象照的檔名、臉書那一顆的 data-doc）。 */
+.doc:target { animation: doc-hit 2.4s ease-out 1; }
+@keyframes doc-hit {
+  0%, 35% { box-shadow: 0 0 0 3px var(--accent); border-color: var(--accent); }
+  100%    { box-shadow: 0 0 0 3px transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .doc:target { animation: none; box-shadow: 0 0 0 3px var(--accent); } }
+
 /* ---- 圓角：比例對齊，不是同一個數字。基準是醫師藥丸的 半徑÷框高 = 0.384。
    這幾個元件的字級和手機版一樣，所以手機版量出來的值原樣沿用。 ---------- */
 .doc dt          { border-radius: 6px; }
@@ -6158,7 +6172,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
         <h2>醫師介紹</h2>
       </div>
       <div class="docs">
-        <article class="doc" data-face data-spec="general">
+        <article class="doc" data-face data-spec="general" id="doc-li-binghui">
           <picture class="doc-face">
             <source type="image/webp" srcset="../../assets/doctor-li-binghui-400.webp">
             <img src="../../assets/doctor-li-binghui-400.jpg" width="400" height="400" loading="lazy"
@@ -6171,7 +6185,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
             <dt>學歷</dt><dd>中山醫學大學牙醫學學士<br>中山醫學大學牙醫學碩士<br>中山醫學大學牙醫學博士</dd>
           </dl>
         </article>
-        <article class="doc" data-face data-spec="perio">
+        <article class="doc" data-face data-spec="perio" id="doc-li-youjin">
           <picture class="doc-face">
             <source type="image/webp" srcset="../../assets/doctor-li-youjin-400.webp">
             <img src="../../assets/doctor-li-youjin-400.jpg" width="400" height="400" loading="lazy"
@@ -6184,7 +6198,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>國立陽明交通大學牙醫學碩士</dd>
           </dl>
         </article>
-        <article class="doc" data-face data-spec="prosth">
+        <article class="doc" data-face data-spec="prosth" id="doc-yang-xiaoying">
           <picture class="doc-face">
             <source type="image/webp" srcset="../../assets/doctor-yang-xiaoying-400.webp">
             <img src="../../assets/doctor-yang-xiaoying-400.jpg" width="400" height="400" loading="lazy"
@@ -6197,7 +6211,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
             <dt>學歷</dt><dd>高雄醫學大學牙醫學學士</dd>
           </dl>
         </article>
-        <article class="doc" data-face data-spec="kids">
+        <article class="doc" data-face data-spec="kids" id="doc-xie-yaoqing">
           <!-- 藥丸寫「兒童牙科」不是「兒牙專科醫師」：他的資歷裡沒有衛福部的部定專科
                （臺北榮總兒童牙科總醫師、日本新潟大學受訓、隱適美認證都不是部定專科）。
                規則見 COPY.md 第八節。這和林晏妤醫師不一樣是刻意的，不要「順手統一」。 -->

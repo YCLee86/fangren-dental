@@ -387,6 +387,8 @@ assets/
   source-log.js         **來源紀錄**的前端那一側（2026-09-25）。開頁時送一筆（重新整理、
                         上一頁、站內換頁都不送），**並把網址列上的 ?from= 擦掉**。
                         三種頁面都載，改完 index.html 要重跑 topics.mjs
+  post-doctors.js       文章頁「這一科的醫師」的兩個入口（2026-09-25）：頂端「N 位醫師 ›」與
+                        右下角「醫師 ﹀」捲到那一塊。HTML 由 build.mjs 寫，見 DECISIONS.md 那一列
   search-log.js         **搜尋紀錄**的前端那一側（2026-09-20）。只在「這次搜尋結束」
                         時送一筆（Enter／失焦／離開頁面／停手 8 秒），不是每按一鍵送一次。
                         ⚠ 首頁與七科頁共用它（七科頁的快照由 topics.mjs 產生，
@@ -567,6 +569,9 @@ tools/
 - **`index.html` 的 `<!-- BAYS:START -->` ~ `<!-- BAYS:END -->` 之間**（地圖上那 24 格
   路邊停車格，由 `drafts/door-notice/map-bays.mjs` 從現地清查產生）。
   ⚠ 它**不是** build 產物 —— `node tools/build.mjs` 不會重跑它
+- **文章頁 `<!-- DOCS:START -->` ~ `<!-- DOCS:END -->` 與 `<!-- DOCPEEK:START -->` ~ `<!-- DOCPEEK:END -->`**
+  （「這一科的醫師」那一塊與頂端那一句，2026-09-25 起）。名單讀 `index.html` 的 `#doctors`，
+  所以**改了醫師卡就要重跑 build**。⚠ 兩塊在 `<main>` 裡，但 `normalize()` 會整段拿掉，不進內容雜湊
 - `src/allowed-slugs.js`
 - `assets/post-titles.json`（十六篇的「slug → 標題」，只給 `/admin/search/` 的點擊報告用）
 - `tools/build-manifest.json`

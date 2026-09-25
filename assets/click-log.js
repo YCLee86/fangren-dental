@@ -106,6 +106,11 @@
     ['a.card',           function (el) { return 'card:' + slug(el); }],
     ['.rel-card a',      function (el) { return 'rel:'  + slug(el); }],
     ['.post-tag',        function (el) { return 'tag:'  + el.getAttribute('data-spec'); }],
+    /* 「這一科的醫師」（2026-09-25）：頂端那一句、右下角那一顆、那一塊裡的每一位與「○○・N 位」 */
+    ['.pd-peek',                        'doc-peek'],
+    ['.pd-btt',                         'doc-btn'],
+    ['.pd-go',   function (el) { return 'doc:' + hash(el).replace(/^doc-/, ''); }],
+    ['.pd-more', function (el) { return 'doc-more:' + slug(el); }],
     ['.post-nav a', function (el) {
       var t = el.textContent || '';
       if (t.indexOf('上一篇') >= 0) return 'prev:' + slug(el);

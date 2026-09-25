@@ -84,6 +84,10 @@ eq(normCode("theme:sepia"), null, "第三種主題不存在 → 丟掉");
 eq(normCode("park:d"), null, "第四個停車場不存在 → 丟掉");
 eq(normCode("fb:liao-liyang"), "fb:liao-liyang", "醫師卡上的臉書粉專");
 eq(normCode("fb:li-binghui"), null, "沒有粉專的醫師 → 丟掉");
+eq(normCode("doc:li-binghui"), "doc:li-binghui", "文章裡的醫師 → 首頁那張卡");
+eq(normCode("doc:nobody"), null, "站上沒有這一位 → 丟掉");
+eq(normCode("doc-more:endo"), "doc-more:endo", "文章裡「○○・N 位」→ 著陸頁");
+eq(normCode("doc-peek"), "doc-peek", "文章頂端「N 位醫師」");
 eq(normCode("nav:topics"), "nav:topics", "頁首選單");
 eq(normCode("<script>x"), null, "夾標籤的 → 丟掉");
 eq(normCode("card:"), null, "半截的代碼 → 丟掉");
@@ -300,6 +304,11 @@ await one('.rel-card a', "rel:" + relSlug, "post:missing-tooth", `延伸閱讀�
 await one('.post-nav a.btn-ghost', "prev:kids-first-visit", "post:missing-tooth", "上一篇");
 await one('.post-nav a.btn:not(.btn-ghost)', "next:regular-checkup", "post:missing-tooth", "下一篇");
 await one('.foot-tel a', "tel", "post:missing-tooth", "文章頁尾的電話");
+/* 「這一科的醫師」（2026-09-25）。〈缺牙之後〉是假牙與植牙，三位（李侑津、楊小瑩、陳芷鈴） */
+await one('.pd-peek', "doc-peek", "post:missing-tooth", "頂端那一行底下的「N 位醫師」");
+await one('.pd-btt', "doc-btn", "post:missing-tooth", "右下角那一顆「醫師」");
+await one('.pd-go[href$="#doc-yang-xiaoying"]', "doc:yang-xiaoying", "post:missing-tooth", "那一塊裡的某一位 → 首頁那張卡");
+await one('.pd-more', "doc-more:prosth", "post:missing-tooth", "那一塊右上角「○○・N 位」→ 著陸頁");
 await page.goto(base + "/posts/bass-brushing/", { waitUntil: "load" });
 await page.waitForTimeout(200);
 await one('.post-nav a.btn-ghost', "back-list", "post:bass-brushing",

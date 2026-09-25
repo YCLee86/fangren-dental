@@ -243,6 +243,10 @@ const normalize = (html) => {
     .join("\n---\n")
     .replace(/("updated"\s*:\s*")[^"]*"/g, '$1@"')
     .replace(/<time class="post-updated"[^>]*>[^<]*<\/time>/g, '<time class="post-updated">@</time>')
+    /* 「這一科的醫師」那兩塊是本腳本寫進 <main> 的（見第 2.7 節），**整段連同插入時補的空白一起拿掉**，
+       不是換成佔位符 —— 換成佔位符的話，第一次寫進去那天二十篇的雜湊全部會變、日期一起跳成當天。 */
+    .replace(/<!-- DOCS:START[\s\S]*?<!-- DOCS:END -->\n\n    /g, "")
+    .replace(/<!-- DOCPEEK:START[\s\S]*?<!-- DOCPEEK:END -->\n        /g, "")
     .replace(/\r\n/g, "\n");
 };
 
@@ -566,13 +570,108 @@ const card = (p) => {
       </a>`;
 };
 
+/* ---------- 2.7 文章頁的「這一科的醫師」（2026-09-25 上線）----------
+   使用者：「文章點開後出現該科的醫師資訊（不然看文章還要回去查有誰在做這個相關治療）」。
+   四輪提案定案的樣子（推導與落選案在 /history/post-doctors.html）：
+     ・內文結尾（上下篇按鈕之前）一塊「這一科的醫師」：一位一列，頭像＋名字＋專科藥丸＋
+       **這一科的專長**（淡色填滿），整列點下去跳到首頁那一位的醫師卡（/#doc-<代號>）
+     ・頂端那一行底下一句「N 位醫師 ›」，點了捲到那一塊（夜間開關留在原位）
+     ・右下角一顆「醫師 ﹀」小方塊（照首頁「回到最上面」），捲過半個螢幕出現、
+       捲到那一塊就收起來。行為在 assets/post-doctors.js
+   ⚠ 名單不另外維護：回頭讀 index.html 的 #doctors，規則和首頁點科別、七科著陸頁同一條 ——
+     **專科是這一科，或專長裡有一顆是這一科**。專科藥丸：本科實心、不是本科退成白底。
+   ⚠⚠ 這兩塊在 <main> 裡面，所以 normalize() 會把它們整段拿掉 —— 插入的時候補的空白
+     要和那兩條正規式**一字不差**，改其中一邊就要改另一邊，不然二十篇的日期會一起跳成當天。
+   ⚠ 科別看的是那一篇頂端科別藥丸的 data-spec（和頁面自己連過去的著陸頁同一科）。 */
+const DOCS_START = "<!-- DOCS:START — 由 tools/build.mjs 產生，請勿手動編輯 -->";
+const DOCS_END = "<!-- DOCS:END -->";
+const PEEK_START = "<!-- DOCPEEK:START — 由 tools/build.mjs 產生 -->";
+const PEEK_END = "<!-- DOCPEEK:END -->";
+const SPEC_NAME = {
+  general: "一般牙科", perio: "牙周治療", ortho: "齒顎矯正", kids: "兒童牙科",
+  surg: "口腔外科", prosth: "假牙與植牙", endo: "顯微根管",
+};
+const allDoctors = (() => {
+  const h = read(INDEX_FILE);
+  const a = h.indexOf('<section id="doctors">');
+  const b = h.indexOf("</section>", a);
+  return [...h.slice(a, b).matchAll(/<article class="doc"([^>]*)>([\s\S]*?)<\/article>/g)].map((m) => {
+    const [attrs, body] = [m[1], m[2]];
+    const id = /\bid="doc-([a-z-]+)"/.exec(attrs);
+    const h3 = /<h3>([^<]+)<span class="doc-role">([^<]+)<\/span>/.exec(body);
+    if (!id || !h3) throw new Error("index.html 的醫師卡少了 id=\"doc-<代號>\" 或名字／專科那一行，文章頁的醫師區塊產生不出來");
+    return {
+      slug: id[1], name: h3[1], role: h3[2],
+      spec: /data-spec="([a-z]+)"/.exec(attrs)[1],
+      face: /<img src="assets\/(doctor-[a-z-]+-400)\.jpg"/.exec(body)?.[1] || null,
+      skills: [...body.matchAll(/<span class="sk" data-spec="([a-z]+)">([^<]+)<\/span>/g)].map((x) => ({ spec: x[1], text: x[2] })),
+    };
+  });
+})();
+const doctorsFor = (spec) => allDoctors.filter((d) => d.spec === spec || d.skills.some((k) => k.spec === spec));
+
+const docRow = (d, spec) => {
+  const face = d.face
+    ? `<picture><source type="image/webp" srcset="../../assets/${d.face}.webp"><img src="../../assets/${d.face}.jpg" width="400" height="400" loading="lazy" alt=""></picture>`
+    : "";
+  const sk = d.skills.filter((k) => k.spec === spec).map((k) => `<span class="sk tag-on">${esc(k.text)}</span>`).join("");
+  return `        <li class="pd-row" data-spec="${d.spec}">
+          <span class="pd-face">${face}</span>
+          <span class="pd-main">
+            <span class="pd-name">${esc(d.name)}<span class="doc-role${d.spec === spec ? "" : " tag-off"}">${esc(d.role)}</span></span>${sk ? `
+            <span class="pd-sk" data-spec="${spec}">${sk}</span>` : ""}
+          </span>
+          <span class="pd-chev" aria-hidden="true">›</span>
+          <a class="pd-go" href="../../#doc-${d.slug}" aria-label="到首頁看${esc(d.name)}醫師的介紹"></a>
+        </li>`;
+};
+const docsBlock = (spec) => {
+  const list = doctorsFor(spec);
+  if (!list.length) return "";
+  return `${DOCS_START}
+    <section class="pd" id="pd" aria-labelledby="pd-h">
+      <div class="pd-head">
+        <h2 id="pd-h">這一科的醫師</h2>
+        <a class="pd-more" href="/topics/${spec}/#doctors">${SPEC_NAME[spec]}・${list.length} 位<span aria-hidden="true"> ›</span></a>
+      </div>
+      <ul class="pd-rows">
+${list.map((d) => docRow(d, spec)).join("\n")}
+      </ul>
+      <button class="pd-btt" type="button" aria-label="看這一科的 ${list.length} 位醫師"><span aria-hidden="true">醫師<svg viewBox="0 0 12 7"><path d="M1 1l5 5 5-5"/></svg></span></button>
+    </section>
+    ${DOCS_END}`;
+};
+const peekLink = (spec) => {
+  const n = doctorsFor(spec).length;
+  return n ? `${PEEK_START}<a class="pd-peek" href="#pd">${n} 位醫師<span aria-hidden="true"> ›</span></a>${PEEK_END}` : "";
+};
+const injectDocs = (html) => {
+  const spec = /<a class="post-tag"[^>]*data-spec="([a-z]+)"/.exec(html)?.[1];
+  if (!spec) { console.warn("  ⚠ 找不到頂端科別藥丸的 data-spec，這一篇不放醫師區塊"); return html; }
+  /* 先拿掉舊的（連同插入時補的空白），再照現在的名單重寫 —— 和 normalize() 是同一組正規式 */
+  let h = html
+    .replace(/<!-- DOCS:START[\s\S]*?<!-- DOCS:END -->\n\n    /g, "")
+    .replace(/<!-- DOCPEEK:START[\s\S]*?<!-- DOCPEEK:END -->\n        /g, "");
+  const block = docsBlock(spec), peek = peekLink(spec);
+  const foot = h.indexOf('<div class="post-foot">');
+  if (block && foot !== -1) h = h.slice(0, foot) + block + "\n\n    " + h.slice(foot);
+  const tg = h.indexOf('<button class="theme-toggle"');
+  if (peek && tg !== -1) h = h.slice(0, tg) + peek + "\n        " + h.slice(tg);
+  /* 行為那一支：放在最後一個 </body> 前面（在 </main> 外面，不進雜湊） */
+  if (!h.includes("assets/post-doctors.js")) {
+    const b = h.lastIndexOf("</body>");
+    h = h.slice(0, b) + '<script src="../../assets/post-doctors.js" defer></script>\n' + h.slice(b);
+  }
+  return h;
+};
+
 /* 第二趟：把「延伸閱讀」寫進每一篇。
    要等 posts 排序完才知道誰排在誰前面，所以不能併進上面那個掃描迴圈。 */
 if (!CHECK_ONLY) {
   for (const p of posts) {
     const file = path.join(POSTS_DIR, p.slug, "index.html");
     const before = read(file);
-    const after = injectRelated(before, relatedBlock(p, posts, navSlugs(before)));
+    const after = injectDocs(injectRelated(before, relatedBlock(p, posts, navSlugs(before))));
     if (after !== before) fs.writeFileSync(file, after, "utf8");
   }
 }
