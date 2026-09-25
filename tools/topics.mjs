@@ -461,7 +461,7 @@ for (const spec of SPECS) {
     a: (h.match(/<a class="card"[^>]*data-spec="[a-z]+"/g) || [])
          .filter((m) => m.includes(`data-spec="${spec}"`)).length,
     d: (h.match(/\n\s*<article class="doc"[\s\S]*?<\/article>/g) || [])
-         .filter((m) => new RegExp(`<article class="doc" data-spec="${spec}"`).test(m)
+         .filter((m) => new RegExp(`<article class="doc"[^>]*\\bdata-spec="${spec}"`).test(m)
                      || new RegExp(`class="sk" data-spec="${spec}"`).test(m)).length,
   };
 
@@ -549,8 +549,13 @@ document.head.appendChild(l);})();</script>`;
   });
 
   /* 7. 醫師：專科或專長命中才留（和站上 2026-08-11 那一輪同一條規則） */
+  /* ⚠⚠ 「本科」的比對允許 class 和 data-spec 之間夾別的屬性（2026-09-25 修）。
+     原本寫成 class 後面緊接 data-spec，2026-09-19 有照片的醫師卡多了 data-face 之後
+     就比對不到了 —— 七頁的本科醫師藥丸因此全部退成白底（只有沒照片的那一位還是實心），
+     名單沒受影響（每一位剛好都有一顆本科的專長），畫面也不會報錯。
+     這一段下面三處（含第 5 步的計數）用的是同一個寫法，改一處就要改三處。 */
   h = h.replace(/\n\s*<article class="doc"[\s\S]*?<\/article>/g, (m) => {
-    const own = new RegExp(`<article class="doc" data-spec="${spec}"`).test(m);
+    const own = new RegExp(`<article class="doc"[^>]*\\bdata-spec="${spec}"`).test(m);
     const skill = new RegExp(`class="sk" data-spec="${spec}"`).test(m);
     return own || skill ? m : "";
   });
@@ -571,7 +576,7 @@ document.head.appendChild(l);})();</script>`;
      ⚠ 這一步要放在第 6、7 步**之後**：那兩步已經把別科的卡與醫師刪掉了，
        這裡處理的都是留下來的，不必再判斷一次要不要顯示。 */
   h = h.replace(/\n\s*<article class="doc"[\s\S]*?<\/article>/g, (m) => {
-    const own = new RegExp(`<article class="doc" data-spec="${spec}"`).test(m);
+    const own = new RegExp(`<article class="doc"[^>]*\\bdata-spec="${spec}"`).test(m);
     let out = m;
     /* 專科藥丸：這一位的專科不是本頁這一科 → tag-off */
     if (!own) out = out.replace('<span class="doc-role">', '<span class="doc-role tag-off">');
