@@ -289,7 +289,7 @@ anime; thick uniform black outlines; greyscale.
 **做法：拿第二版那張圖當底圖改，不要從零再生一次。** 那一張的建築、月亮、光、三組人都對了，
 重生一次等於讓那些重新擲骰子（ILLUSTRATION.md 第七節第 19 條、颱風那一份第五之二節）。
 
-**餵圖：只餵 `v2-result.jpg` 一張**（它已經帶著風格了；再餵參考照，模型容易回頭照抄照片的構圖）。
+**餵圖：只餵 `v2-result.jpg` 一張**（所以提示詞裡提到「照片」「白天那張」的句子都改成指這一張）（它已經帶著風格了；再餵參考照，模型容易回頭照抄照片的構圖）。
 
 加的人都放在**畫面中段那一截空著的街上**（B 組與 C 組之間、往消失點的方向），不蓋到原本的人：
 
@@ -312,8 +312,7 @@ Editorial illustration, landscape 4:3. One single continuous scene, no panels, n
 borders.
 
 STYLE - THIS IS THE MOST IMPORTANT PARAGRAPH. It must look exactly like the hand-drawn editorial
-illustrations provided (the drawing of this same building by day, the family in the dental
-chair, the waiting room). Thin hand-drawn linework in warm dark brown or soft charcoal, the
+illustration provided. Thin hand-drawn linework in warm dark brown or soft charcoal, the
 weight varying, strokes tapering and sometimes breaking - not a thick even outline and not a
 ruled vector line. Colour laid on like soft coloured pencil and light marker, edges a little
 loose and not always meeting the line. Flat fills with two or three tones per hue; gradients
@@ -334,12 +333,12 @@ friends arriving - see GROUP D in section 3. Everything new is added into the em
 street and pavement; nothing that is already there is covered up.
 
 THE STORY IN ONE SENTENCE: it is the night of the Mid-Autumn Festival in a small Taiwanese town,
-the full moon is up, and outside the dental clinic in the provided photograph the clinic's staff,
+the full moon is up, and outside the dental clinic in the provided picture the clinic's staff,
 a few neighbours and some of their patients are having a relaxed street barbecue together, like
 old friends - grilling, chatting, eating pomelo, and the children are waving sparklers. The mood
 is warm, easy and happy: a neighbourhood party, not a staged group photo.
 
-1. THE PLACE AND THE VIEWPOINT ARE COPIED FROM THE PROVIDED PHOTOGRAPH. Same low camera, same
+1. THE PLACE AND THE VIEWPOINT ARE COPIED FROM THE PROVIDED PICTURE. Same low camera, same
    framing, same proportions. Redraw it in the illustration style; do not re-invent it:
      • The building fills the LEFT two-thirds of the picture. Its front corner is near the left
        edge; its long side wall runs away from us towards the RIGHT, getting smaller, and the
@@ -347,7 +346,7 @@ is warm, easy and happy: a neighbourhood party, not a staged group photo.
        right of centre.
      • The side wall is smooth warm-grey concrete with a slightly rough hand-plastered texture.
        Set into it are deep projecting window boxes of dark rusty-brown metal, their insides
-       glowing warm amber, staggered across three floors exactly as in the photograph. Thin
+       glowing warm amber, staggered across three floors exactly as in the provided picture. Thin
        horizontal concrete ledges run across the wall. A timber roof structure with a pitched
        dark roof sits on top.
      • At the lower left, the ground floor is set back into a covered walkway with tall dark
@@ -359,9 +358,7 @@ is warm, easy and happy: a neighbourhood party, not a staged group photo.
        a few overhead wires, and at the far right edge the dark eaves of an old house, cropped.
      • The street tonight has NO CARS parked on it and no traffic cone - it has been given over
        to the party.
-   Use the illustration of this building by day ONLY for how to draw it - its linework, its
-   colours and its paper grain. Do NOT copy its daylight, its blue sky or the long white curving
-   wind lines drawn across its sky: there is no wind line of any kind in this picture.
+   There is no wind line of any kind in this picture - no long white curving lines in the sky.
 
 2. THE SKY AND THE MOON. The sky fills the upper RIGHT part of the picture, above the street and
    to the right of the building's roof. It is a deep dusky indigo-blue night sky - clearly dark,
@@ -424,9 +421,9 @@ is warm, easy and happy: a neighbourhood party, not a staged group photo.
        headlight off, one foot on the ground, his plain open-face helmet pushed back. Hanging from
        the hook between his knees is a bulging bag of food for the grill - a tray of skewers,
        corn cobs, a bunch of green onions - and on the footboard sits a big clear bag of ice. In
-       his raised hand he holds out a clear plastic drink carrier with four hand-shaken teas. The
-       dentist's neighbour in the white vest has turned on his stool and is waving him in, and a
-       woman from the party in a teal top is walking over to take the bag of food from him.
+       his raised hand he holds out a clear plastic drink carrier with four hand-shaken teas. A
+       newly arrived woman in a teal top is walking over from the party, one arm raised in
+       welcome, to take the bag of food from him.
      • AN OLDER COUPLE ON THEIR EVENING WALK: a grey-haired man in a short-sleeved checked shirt
        and his wife in a soft plum cardigan, strolling slowly down the middle of the street arm in
        arm. He lifts his free hand to wave hello to the grill group; she laughs and calls out
