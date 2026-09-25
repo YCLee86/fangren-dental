@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- NIGHT:START — 由 tools/night-mode.mjs 產生，請勿手動編輯 -->
+<script>(function(){var r=document.documentElement,s=null;try{s=localStorage.getItem('fangren:theme')}catch(e){}
+if(s!=='light'&&s!=='dark')s=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+r.dataset.theme=s;})();</script>
+<script src="/assets/theme.js" defer></script>
+<!-- NIGHT:END -->
+<title>半年一次的洗牙：健保給付的那一次，到底在做什麼 — 芳仁牙醫診所（提案預覽）</title>
+<meta name="description" content="洗牙不是美白，是清除牙結石。洗牙會不會把牙齒洗壞、為什麼洗完會酸、以及定期檢查真正的價值在哪裡。">
+<meta name="author" content="芳仁牙醫診所 編輯室">
+<meta name="theme-color" content="#12656a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="半年一次的洗牙：健保給付的那一次，到底在做什麼">
+<meta property="og:description" content="洗牙不是美白，是清除牙結石。破解常見迷思，說明定期檢查真正的價值。">
+<meta property="og:site_name" content="芳仁牙醫診所">
+<link rel="canonical" href="https://fangren.net/posts/regular-checkup/">
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，兩者刻意分開 ——
+     差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
+     apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
+
+     ⚠⚠ **只宣告這一個尺寸，而且是 192 —— 這是照別站的成功案例做的，不要改。**
+     iPhone 主畫面要 180（60pt × @3x）。192 比它大 6%，iOS 只需要縮一點點；
+     **放大會糊，大幅縮小也會糊，只有「幾乎不用縮」才銳利。**
+     前面試過 180（1:1 竟然還是糊，因為 iOS 其實去拿了 manifest 裡更大的那張）
+     和 1024（縮 5.7 倍，更糊）。
+     ⚠ **不要好心多補幾個尺寸**（57／76／120／152／512／1024）——
+       候選一多，iOS 會挑錯那張再縮放，這正是前五輪一直糊的原因。
+       整個站現在能被 iOS 找到的 any 版就只有這一張。
+     ⚠ sizes 屬性只是宣告，iOS 不會驗證 —— 檔案實際像素必須真的是 192×192
+       （tools/app-icons.mjs 產生時會檢查尺寸，改不動它就不會過）。
+
+     ⚠ 主畫面那顆是**按下「加入」的當下**存進捷徑的，之後不會自己更新。
+     換了圖要把 ?v= 加一，並且**把主畫面上那顆刪掉重加**，兩件都要做。 -->
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192.png?v=10">
+<!-- Android 的「加到主螢幕」讀這一份（iOS 不需要它也能加）。
+     manifest 裡 display 是 "browser" 不是 "standalone"，是刻意的：
+     這是一個會連出去（Google 地圖、LINE）的內容網站，
+     standalone 會把網址列與上一頁一起收掉，等於把人關在裡面。 -->
+<link rel="manifest" href="/site.webmanifest?v=20260812d">
+<!-- 主畫面圖示底下顯示的名字。不寫的話 iOS 會拿 <title> 去截，
+     首頁那一句是「芳仁牙醫診所｜雲林斗六・永樂街」，截完會變成半句。 -->
+<meta name="apple-mobile-web-app-title" content="芳仁牙醫">
+<link rel="stylesheet" href="/assets/style.css">
+
+<script type="application/json" id="post-meta">
+{
+  "slug": "regular-checkup",
+  "title": "半年一次的洗牙：健保給付的那一次，到底在做什麼",
+  "excerpt": "洗牙不會把牙齒洗薄，也不是美白。它清的是自己刷不掉的牙結石，順便讓醫師在問題還小的時候先看見它。",
+  "tag": "定期檢查",
+  "author": "芳仁牙醫診所 編輯室",
+  "published": "2026-07-08",
+  "updated": "2026-09-20",
+  "hero": "hero-checkup-photo-1600.jpg",
+  "heroAlt": "明亮的診所櫃檯前，老太太的集章卡被蓋上新的一格，小男孩踮著腳仰頭看，候診區坐著各個年紀的人",
+  "about": [
+    {
+      "type": "MedicalCondition",
+      "name": "牙結石",
+      "sameAs": "https://www.wikidata.org/wiki/Q144037"
+    },
+    {
+      "type": "MedicalProcedure",
+      "name": "洗牙",
+      "sameAs": "https://www.wikidata.org/wiki/Q15139949"
+    }
+  ]
+}
+</script>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<style>
+/* ===== 提案：文章頁的「這一科的醫師」（抽自 index.html 的醫師卡樣式）===== */
+.docs { display: grid; gap: 1.2rem; grid-template-columns: repeat(3, 1fr); }
+.doc { background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 1.1rem 1.2rem 1.2rem; }
+.doc h3 { margin: 0 0 .7rem; font-size: 1.05rem; line-height: 1.5; }
+.doc-role { display: inline-block; margin-left: .5rem; font-size: .72rem; font-weight: 400;
+  line-height: 1; padding: var(--role-padT) .6rem var(--role-padB); white-space: nowrap; }
+.doc dl { margin: 0; display: grid; grid-template-columns: 3.2em 1fr; gap: .35rem .7rem; }
+.doc dd { margin: 0; font-size: .83rem; line-height: 1.75; }
+.doc dt { font-size: .74rem; font-weight: 500; line-height: 1.6;
+  justify-self: start; align-self: start; white-space: nowrap;
+  padding: .1rem .4rem;
+  background: var(--paper); color: var(--ink-soft); }
+.doc[data-face] { --face: 76px;
+  
+  --face-pull: 6px;
+  
+  --face-gap: calc(1.2rem - var(--face-pull));
+  padding-left: var(--face-gap);
+  padding-top:  var(--face-gap);
+  display: grid; grid-template-columns: var(--face) 1fr;
+  column-gap: calc(var(--face-gap) + 1px); row-gap: 8px; align-items: start;
+  
+  align-content: start; }
+.doc-face { display: block; grid-column: 1; grid-row: 1; }
+.doc-face img { display: block; width: var(--face); height: var(--face);
+  border-radius: 50%; object-fit: cover; }
+.doc[data-face] > h3 { display: flex; flex-wrap: wrap; align-items: baseline;
+  column-gap: .5rem; row-gap: .2rem; }
+.doc[data-face] > h3 .doc-role { margin-left: 0; position: relative; top: calc(-1 * var(--role-rise)); }
+.doc[data-face] > h3 { grid-column: 2; grid-row: 1; margin-bottom: 0;
+  align-self: start; margin-top: calc((var(--face) - 1.5em) / 2); }
+.doc[data-face] > dl { grid-column: 1 / -1; grid-row: 2; padding-left: var(--face-pull); }
+.doc-fb { display: inline-flex; align-items: center; gap: .45rem; margin-top: .8rem;
+  font-size: .83rem; line-height: 1.5; font-weight: 500;
+  color: var(--accent-deep); text-decoration: none; }
+.doc[data-face] > .doc-fb { grid-column: 1 / -1; padding-left: var(--face-pull); margin-top: 0; }
+.doc-fb svg { display: block; width: 1.3rem; height: 1.3rem; flex: none; }
+.doc-fb span { color: var(--ink-soft); }
+.doc-fb:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.doc-fb:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; border-radius: 4px; }
+html[data-theme="dark"] .doc-fb { color: var(--accent); }
+.doc dt { border-radius: 6px; }
+.doc-role { border-radius: 8px; }
+.doc-role { background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep); }
+.doc-role { background: var(--accent); color: var(--on-fill); border-color: var(--accent); }
+@media (max-width: 1040px) {
+.docs { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+.docs { grid-template-columns: 1fr; }
+}
+.sk {  }
+html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0; --sk-padX: .4546em; --sk-padT: .30em; --sk-padB: .12em; --role-padT: .425em; --role-padB: .21em; }
+.sk.tag-on { display: inline-block; font-size: var(--sk-fs); font-weight: 400;
+  
+  line-height: 1; padding: var(--sk-padT) var(--sk-padX) var(--sk-padB);
+  border-radius: 8px;
+  white-space: nowrap; vertical-align: var(--sk-lift);
+  background: color-mix(in srgb, var(--accent) var(--tint), var(--card));
+  border: 1px solid color-mix(in srgb, var(--accent) var(--tint), var(--card));
+  color: var(--accent-deep); }
+.doc-role.tag-off { background: var(--card); color: var(--accent-deep); border-color: var(--accent-deep); }
+.doc-role, .sk { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+@media (prefers-reduced-motion: reduce) {
+.doc-role, .sk { transition: none; }
+}
+.doc-role { --role-rise: .158em; vertical-align: var(--role-rise); }
+.doc-role { font-size: .8rem; }
+.doc dt { font-size: .81rem; }
+@media (min-width: 721px) and (min-aspect-ratio: 9/10) {
+.doc { border-radius: calc(12px * var(--type-scale)); }
+.doc dt { border-radius: calc(6px   * var(--type-scale)); }
+.doc-role, .sk.tag-on { border-radius: calc(8px   * var(--type-scale)); }
+}
+@media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
+.doc { border-radius: calc(12px * var(--type-scale)); }
+.doc dt { border-radius: calc(6px   * var(--type-scale)); }
+.doc-role, .sk.tag-on { border-radius: calc(8px   * var(--type-scale)); }
+}
+@media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
+.doc h3 { font-size: 1.179rem; }
+.doc dd { font-size: .926rem; }
+html { --sk-fs: .926rem; }
+.doc dt { font-size: .90rem; }
+.doc-role { --role-rise: .2136em; vertical-align: var(--role-rise); }
+}
+@media (max-width: 720px) {
+.doc h3 { font-size: 1.24rem; }
+.doc dd { font-size: 1rem; }
+html { --sk-fs: 1rem; }
+.doc dt { font-size: .976rem; }
+.doc-role { --role-rise: .21em; vertical-align: var(--role-rise); }
+}
+html[data-theme="dark"] :is(.chips :is(button:not([aria-pressed="true"]), a:not([aria-current="page"])), .hours-filter button:not([aria-pressed="true"]), .card-tag:not(.tag-on), .doc-role.tag-off) { background: color-mix(in srgb, var(--accent) 20%, var(--card));
+  border-color: color-mix(in srgb, var(--accent) 20%, var(--card));
+  color: var(--pill-ink); }
+html[data-theme="dark"] .sk.tag-on { color: var(--sk-ink); }
+
+/* ===== 提案本身 ===== */
+/* 文章頁的根字級不放大（首頁在 721 以上才有 --type-scale），圓角照 1 倍算 */
+.pd { --type-scale: 1; }
+.pd { padding-block: clamp(1.8rem, 5vw, 2.8rem); border-top: 1px solid var(--rule); }
+.pd-in { width: 100%; margin-inline: auto; padding-inline: var(--pad); }
+.pd[data-pos="wide"] .pd-in { max-width: var(--wide); }
+.pd[data-pos="in"] { border-top: 0; padding-block: 1.6rem 0; }
+.pd[data-pos="in"] .pd-in { max-width: none; padding-inline: 0; }
+.pd-head { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.pd .pd-head h2 { display: flex; align-items: baseline; gap: .6rem; margin: 0;
+  font-size: clamp(1.15rem, 3.4vw, 1.38rem); line-height: 1.55; color: var(--ink); }
+/* 標題前那一小段枝條：和文章內文的 h2、首頁「醫師介紹」同一個做法 */
+.pd .pd-head h2::before { content: ''; flex: 0 0 3px; align-self: center;
+  height: 1.05em; border-radius: 2px; background: var(--accent); }
+/* 放在內文裡的時候，文章的 ul／li／h3 規則會漏進來，這裡擋掉 */
+.pd .pd-rows { margin: 0; padding: 0; }
+.pd .pd-row { margin: 0; }
+.pd .doc h3 { color: var(--ink); }
+.pd-more { font-size: .9rem; color: var(--accent-deep); text-decoration: none; white-space: nowrap; }
+.pd-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+.pd [data-d] { display: none; }
+.pd[data-d="a"] [data-d="a"], .pd[data-d="b"] [data-d="b"] { display: grid; }
+.pd[data-d="c"] .docs[data-d="c"] { display: grid; }
+.pd-rows { list-style: none; margin: 0; padding: 0; gap: .7rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+.pd-row { display: grid; grid-template-columns: 52px 1fr; align-items: center; column-gap: .8rem;
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .7rem .9rem .7rem .7rem; }
+.pd-face { width: 52px; height: 52px; }
+.pd-face img { display: block; width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
+.pd-main { display: grid; gap: .35rem; min-width: 0; }
+.pd-name { font-weight: 700; font-size: 1.05rem; line-height: 1.5; display: flex; flex-wrap: wrap; align-items: center; column-gap: .5rem; }
+.pd-name .doc-role { margin-left: 0; vertical-align: 0; }
+.pd-sk { display: flex; flex-wrap: wrap; gap: .3rem; }
+.pd .docs { grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+.pd[data-pos="in"] .docs { grid-template-columns: 1fr; }
+@media (min-width: 721px) { .pd[data-pos="in"] .docs { grid-template-columns: repeat(2, 1fr); } }
+
+/* ===== 切換條 ===== */
+.pv-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; background: #1f2226; color: #eef0f1;
+  font: 13px/1.4 system-ui, sans-serif; padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); box-shadow: 0 -2px 10px rgba(0,0,0,.25); }
+.pv-bar .pv-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pv-bar .pv-row + .pv-row { margin-top: 6px; }
+.pv-bar .pv-lab { opacity: .7; min-width: 2.4em; }
+.pv-bar button { font: inherit; color: inherit; background: #33373c; border: 1px solid #4a4f55; border-radius: 6px; padding: 4px 9px; }
+.pv-bar button[aria-pressed="true"] { background: #eef0f1; color: #1f2226; border-color: #eef0f1; }
+.pv-bar .pv-x { margin-left: auto; }
+.pv-mini { position: fixed; right: 10px; bottom: 10px; z-index: 90; display: none; font: 13px system-ui; background: #1f2226; color: #eef0f1; border: 0; border-radius: 16px; padding: 6px 12px; }
+body.pv-closed .pv-bar { display: none; } body.pv-closed .pv-mini { display: block; }
+body:not(.pv-closed) { padding-bottom: 92px; }
+</style>
+</head>
+<!-- data-spec：這一篇的科別，讓 assets/style.css 把重點色換成首頁
+     「主題與科別」標記的同一個顏色。標籤 → 代碼的對照表在 tools/build.mjs。 -->
+<body data-spec="general">
+<a class="skip-link" href="#main">跳到主要內容</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand-mark">
+        <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai。牙那條子路徑依自己的中心放大 1.3 倍、
+             再往上移 0.50 個單位（2026-08-07 定案），嘴一個節點都沒改。
+             一個路徑、兩條子路徑，用奇偶填充規則讓中間那顆牙成為真正的洞。
+             width／height 屬性不能省 —— 少了它 WebKit 用預設的 300×150 當內在尺寸，
+             這個 flex 項目就縮不下去，整條頁首會被撐寬。 -->
+        <svg width="44.2873" height="21.8244" viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="translate(-232.8729 -333.8286)">
+              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
+            </g>
+          </svg>
+      </span>
+      <span class="brand-text">
+        <b>芳仁牙醫診所</b>
+        <small>雲林斗六・永樂街</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="主選單">
+      <a href="/#topics">全部文章</a>
+      <a href="/#doctors">醫師介紹</a>
+      <a href="/#clinic">診所資訊</a>
+      <!-- 放大鏡。素材出處：Lucide "search"／"x"，ISC 授權，https://lucide.dev ——
+           這一行註解就是署名，改圖或搬檔的時候不要刪。
+           ⚠⚠ **是 <a> 不是 <button>**：沒有 JS 的時候它退回「跳到主題與科別」
+             ＝ 使用者原本手動在做的事，有 JS 才 preventDefault 改成就地展開。
+           ⚠ 它會被底下那支 scrollspy 抓到，所以那一行選擇器加了 :not(.nav-q)。 -->
+      <a class="nav-q" href="/#topics" aria-label="搜尋文章與醫師" aria-expanded="false" aria-controls="headsearch">
+        <span class="nav-q-i" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.6" cy="10.6" r="7"/><path d="m20.4 20.4-4.85-4.85"/></svg></span>
+      </a>
+    </nav>
+    <!-- 頁首的搜尋列。關著的時候 visibility: hidden ＋ inert，**不佔任何版面**
+         （絕對定位），所以收著的頁首和加這一顆之前逐項相同。
+         ⚠ 輸入框字級 16px 是硬條件：iOS 對 <16px 的輸入框會在聚焦時放大整頁。 -->
+    <form class="head-search" id="headsearch" role="search" inert>
+      <span class="hs-ico" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.6" cy="10.6" r="7"/><path d="m20.4 20.4-4.85-4.85"/></svg></span>
+      <input class="hs-in" type="search" placeholder="搜尋文章與醫師" aria-label="搜尋文章與醫師"
+             autocomplete="off" spellcheck="false" enterkeyhint="search">
+      <span class="hs-n" aria-hidden="true"></span>
+      <button class="hs-x" type="button" aria-label="關閉搜尋"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.5 5.5 5.5 18.5M5.5 5.5l13 13"/></svg></button>
+    </form>
+  </div>
+</header>
+
+<main id="main">
+<article>
+
+  <div class="post-head">
+    <div class="wrap-text">
+      <p class="crumbs">
+        <a href="/">首頁</a>
+        <span class="sep" aria-hidden="true">&rsaquo;</span>
+        <a class="post-tag" href="/topics/general/" data-spec="general">定期檢查</a>
+        <time datetime="2026-07-08">2026/07/08</time>
+        <span class="views" data-views="regular-checkup" data-state="loading">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span class="views-n">—</span> 次瀏覽
+        </span>
+        <button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="夜間模式"><span class="tt-track" aria-hidden="true"><span class="tt-knob"><svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span></span></button>
+      </p>
+      <h1>半年一次的洗牙：健保給付的那一次，到底在做什麼</h1>
+    </div>
+    <figure class="post-hero">
+      <picture>
+        <source type="image/webp" srcset="/assets/hero-checkup-photo-800.webp 800w,
+                                          /assets/hero-checkup-photo-1600.webp 1600w,
+                                          /assets/hero-checkup-photo-2000.webp 2000w"
+                sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)">
+        <img src="/assets/hero-checkup-photo-1600.jpg"
+             srcset="/assets/hero-checkup-photo-800.jpg 800w,
+                     /assets/hero-checkup-photo-1600.jpg 1600w,
+                     /assets/hero-checkup-photo-2000.jpg 2000w"
+             sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+             fetchpriority="high" alt="明亮的牙醫診所櫃檯前：一位老太太遞出蓋滿一整排小牙齒章的卡片，穿綠色制服的櫃檯人員正把印章蓋在下一格上，兩人都在笑；一個小男孩踮著腳、下巴剛好搆到檯面，仰頭盯著蓋章那一下，媽媽站在後面放下心地看著他。左邊長椅上還有戴耳機的少年、看書的男子、共看一支手機的年輕情侶、拄拐杖的老先生，一個小女孩蹲在玩具籃旁邊玩積木；牆上三張只有圖沒有字的牙齒海報，右邊門內看得到診療椅，檯面上放著透明的牙齒模型與一排牙刷" width="2000" height="1116">
+      </picture>
+    </figure>
+      <p class="post-updated-line">最後更新：<time class="post-updated" datetime="2026-09-20">2026/09/20</time></p>
+  </div>
+
+  <div class="post-body wrap-text">
+    <p class="lede">健保給十三歲以上民眾每半年一次的洗牙，正式名稱是「牙結石清除」。它不是保養、不是美白，而是一項治療——處理你在家裡怎麼刷都刷不掉的東西。</p>
+
+    <h2>牙結石是怎麼來的</h2>
+    <p>牙菌斑是細菌與其分泌物形成的軟性薄膜，剛形成時用牙刷和牙線就能清掉。但如果留在牙面上超過一到兩天，唾液中的鈣、磷離子會沉積進去，讓它<strong>逐漸鈣化成牙結石</strong>。</p>
+    <p>牙結石一旦形成，就<strong>牢牢黏在牙齒表面</strong>，牙刷、牙線、漱口水都拿它沒辦法，只能靠器械把它震下來。而它的表面粗糙多孔，等於幫細菌蓋了一棟公寓，讓牙菌斑更快堆積、牙齦持續發炎。</p>
+    <p>牙結石最愛長的位置有兩個：<strong>下排前牙的內側</strong>與<strong>上排後牙的外側</strong>，因為那裡正對著唾液腺的開口。這也是為什麼很多人明明覺得自己刷得很仔細，這兩處還是年年有結石。</p>
+
+    <h2>洗牙時醫師在做什麼</h2>
+    <p>超音波洗牙機的尖端以每秒數萬次的頻率微幅振動，靠振動把結石從牙面震離，同時噴出水霧沖走碎屑並降溫。過程中通常會搭配：</p>
+    <ul>
+      <li><strong>全口檢查</strong>：肉眼與探針檢查每顆牙有沒有蛀牙、填補物是否鬆脫或邊緣滲漏。</li>
+      <li><strong>牙周評估</strong>：觀察牙齦顏色、腫脹、出血點，必要時做牙周探測。</li>
+      <li><strong>口腔黏膜檢查</strong>：舌頭、頰黏膜、口底、上顎有無異常白斑、紅斑或潰瘍。這一步對<strong>有嚼檳榔、抽菸習慣</strong>的人特別重要，口腔癌早期幾乎不痛。</li>
+      <li><strong>拋光</strong>：把牙面磨平，讓牙菌斑不易附著。</li>
+      <li><strong>衛教</strong>：指出你刷不乾淨的位置，並示範怎麼改。</li>
+    </ul>
+    <p>換個角度說：這半小時真正的價值，有一半在於<strong>讓醫師定期看見你的嘴巴</strong>。蛀牙在小的時候補，成本是幾百塊；等到深及神經，就是根管治療加牙套，時間與費用都是十倍以上。</p>
+
+    <h2>四個常見的誤解</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>迷思</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>洗牙會把牙齒洗薄、洗出縫</td>
+            <td>超音波作用的是鈣化的結石，正常操作不會磨損琺瑯質。洗完覺得「牙縫變大」，是因為原本被結石填滿的空隙露出來了——那個空隙是牙齦發炎萎縮造成的，結石只是把它遮住。</td>
+          </tr>
+          <tr>
+            <td>洗牙可以美白牙齒</td>
+            <td>洗牙能去除茶漬、菸垢等<strong>外源性染色</strong>，讓牙齒回到自己原本的顏色，但無法改變牙齒本身的色調。想更白需要另外做美白療程。</td>
+          </tr>
+          <tr>
+            <td>洗牙會流血代表醫師手法差</td>
+            <td>出血絕大多數來自本來就發炎的牙齦。牙齦健康的人洗牙幾乎不會流血。</td>
+          </tr>
+          <tr>
+            <td>沒有不舒服就不用洗</td>
+            <td>牙結石堆積與牙周破壞都是無痛的。等到有感覺，通常已經進入需要更多治療的階段。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>洗完之後會怎樣</h2>
+    <p>結石清掉後，原本被覆蓋的牙根表面重新暴露在口腔環境中，<strong>短暫的冷熱敏感</strong>是常見反應，通常幾天到兩週內會逐漸緩解。這段期間可以：</p>
+    <ul>
+      <li>使用<strong>抗敏感牙膏</strong>，並在刷完後把牙膏塗在敏感處停留一下再吐掉。</li>
+      <li>暫時避開過冰、過熱與過酸的飲食。</li>
+      <li>牙齦如果有出血，<strong>照常刷、輕輕刷</strong>，通常一到兩週會明顯改善。</li>
+    </ul>
+    <p>如果敏感持續超過兩週沒有改善，或出現特定一顆牙的自發性抽痛，請回診檢查。</p>
+
+    <div class="callout">
+      <p><b>健保給付重點：</b>依<a href="https://www.nhi.gov.tw/ch/lp-3778-1.html" target="_blank" rel="noopener">健保署的醫療服務給付項目及支付標準</a>，十三歲以上民眾每半年（間隔滿一百八十天）給付一次牙結石清除（法規是用「未滿十三歲不得申報全口牙結石清除」的方式寫的，<a href="https://www.nhi.gov.tw/ch/dl-66093-a34d92f8e6b64b38b72668aeed6bb554-1.pdf" target="_blank" rel="noopener">牙醫醫療費用審查注意事項</a>裡有完整條文）。孕婦、身心障礙者及部分特定對象另有較密集的給付規定。實際條件依就診當時健保署公告為準，掛號時可先詢問。</p>
+    </div>
+
+    <h2>把它變成固定習慣</h2>
+    <p>最有效的方法很單純：<strong>洗完牙離開診所之前，直接把下一次預約掛好。</strong>不要依賴自己記得。牙周狀況較不穩定、抽菸、糖尿病或已接受牙周治療的人，建議把間隔縮短到三到四個月，這部分自費，但比日後重建的代價低太多。</p>
+
+    <h2>重點整理</h2>
+    <dl class="keypoints">
+      <dt>健保的洗牙多久給付一次？</dt>
+      <dd>十三歲以上民眾每半年、間隔滿一百八十天給付一次牙結石清除。孕婦、身心障礙者及部分特定對象另有較密集的規定，實際條件依就診當時健保署公告為準。</dd>
+
+      <dt>洗牙會把牙齒洗薄、洗出縫嗎？</dt>
+      <dd>不會。超音波作用的對象是鈣化的結石，正常操作不會磨損琺瑯質。洗完覺得牙縫變大，是原本被結石填滿的空隙露出來了，那個空隙來自牙齦發炎萎縮。</dd>
+
+      <dt>洗牙可以美白牙齒嗎？</dt>
+      <dd>洗牙能去除茶漬、菸垢等外源性染色，讓牙齒回到自己原本的顏色，但無法改變牙齒本身的色調。想更白需要另外做美白療程。</dd>
+
+      <dt>洗完牙酸軟正常嗎？要多久？</dt>
+      <dd>常見。結石清掉後牙根表面重新暴露，短暫的冷熱敏感通常幾天到兩週內緩解。若超過兩週沒改善，或出現特定一顆牙的自發性抽痛，請回診檢查。</dd>
+
+      <dt>沒有不舒服就不用洗牙嗎？</dt>
+      <dd>牙結石堆積與牙周破壞都是無痛的。等到有感覺，通常已經進入需要更多治療的階段。</dd>
+    </dl>
+
+    <p class="note">本文為一般口腔衛教資訊，健保給付規定可能調整，實際以就診當時公告為準。個別口腔狀況請由醫師評估。</p>
+
+    <div id="pd-in"></div>
+
+    <div class="post-foot">
+      <nav class="post-nav" aria-label="文章導覽">
+        <a class="btn btn-ghost" href="/preview/post-doctors/missing-tooth/">&larr; 上一篇：缺牙之後怎麼選</a>
+        <a class="btn" href="/#articles">回文章列表 &rarr;</a>
+      </nav>
+    </div>
+  </div>
+
+</article>
+</main>
+
+<div id="pd-wide">
+<section class="pd" aria-labelledby="pd-h" data-spec="general">
+  <div class="pd-in">
+    <div class="pd-head">
+      <h2 id="pd-h">這一科的醫師</h2>
+      <a class="pd-more" href="/topics/general/#doctors">一般牙科・4 位<span aria-hidden="true"> ›</span></a>
+    </div>
+    <ul class="pd-rows" data-d="a">
+        <li class="pd-row" data-spec="general">
+          <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-li-binghui-400.webp"><img src="/assets/doctor-li-binghui-400.jpg" width="400" height="400" alt=""></picture></span>
+          <span class="pd-main">
+            <span class="pd-name">李柄輝<span class="doc-role tag-off">創辦醫師</span></span>
+          </span>
+        </li>
+        <li class="pd-row" data-spec="perio">
+          <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-li-youjin-400.webp"><img src="/assets/doctor-li-youjin-400.jpg" width="400" height="400" alt=""></picture></span>
+          <span class="pd-main">
+            <span class="pd-name">李侑津<span class="doc-role tag-off">醫師</span></span>
+          </span>
+        </li>
+        <li class="pd-row" data-spec="prosth">
+          <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-yang-xiaoying-400.webp"><img src="/assets/doctor-yang-xiaoying-400.jpg" width="400" height="400" alt=""></picture></span>
+          <span class="pd-main">
+            <span class="pd-name">楊小瑩<span class="doc-role tag-off">贋復假牙專科醫師</span></span>
+          </span>
+        </li>
+        <li class="pd-row" data-spec="kids">
+          <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-xie-yaoqing-400.webp"><img src="/assets/doctor-xie-yaoqing-400.jpg" width="400" height="400" alt=""></picture></span>
+          <span class="pd-main">
+            <span class="pd-name">謝耀慶<span class="doc-role tag-off">兒童牙科</span></span>
+          </span>
+        </li>
+    </ul>
+    <ul class="pd-rows" data-d="b">
+        <li class="pd-row" data-spec="general">
+          <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-li-binghui-400.webp"><img src="/assets/doctor-li-binghui-400.jpg" width="400" height="400" alt=""></picture></span>
+          <span class="pd-main">
+            <span class="pd-name">李柄輝<span class="doc-role tag-off">創辦醫師</span></span>
+            <span class="pd-sk"><span class="sk tag-on" data-spec="general">口腔檢查</span><span class="sk tag-on" data-spec="general">一般牙科治療</span></span>
+          </span>
+        </li>
+        <li class="pd-row" data-spec="perio">
+          <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-li-youjin-400.webp"><img src="/assets/doctor-li-youjin-400.jpg" width="400" height="400" alt=""></picture></span>
+          <span class="pd-main">
+            <span class="pd-name">李侑津<span class="doc-role tag-off">醫師</span></span>
+            <span class="pd-sk"><span class="sk tag-on" data-spec="general">一般牙科治療</span></span>
+          </span>
+        </li>
+        <li class="pd-row" data-spec="prosth">
+          <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-yang-xiaoying-400.webp"><img src="/assets/doctor-yang-xiaoying-400.jpg" width="400" height="400" alt=""></picture></span>
+          <span class="pd-main">
+            <span class="pd-name">楊小瑩<span class="doc-role tag-off">贋復假牙專科醫師</span></span>
+            <span class="pd-sk"><span class="sk tag-on" data-spec="general">一般牙科治療</span></span>
+          </span>
+        </li>
+        <li class="pd-row" data-spec="kids">
+          <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-xie-yaoqing-400.webp"><img src="/assets/doctor-xie-yaoqing-400.jpg" width="400" height="400" alt=""></picture></span>
+          <span class="pd-main">
+            <span class="pd-name">謝耀慶<span class="doc-role tag-off">兒童牙科</span></span>
+            <span class="pd-sk"><span class="sk tag-on" data-spec="general">一般牙科治療</span></span>
+          </span>
+        </li>
+    </ul>
+    <div class="docs" data-d="c">
+      <article class="doc" data-face data-spec="general">
+          <picture class="doc-face">
+            <source type="image/webp" srcset="/assets/doctor-li-binghui-400.webp">
+            <img src="/assets/doctor-li-binghui-400.jpg" width="400" height="400" loading="lazy"
+                 alt="李柄輝醫師的形象照，身著白袍站在診療室內">
+          </picture>
+          <h3>李柄輝<span class="doc-role tag-off">創辦醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd class="skills"><span class="sk tag-on" data-spec="general">口腔檢查</span><span class="sep">、</span><span class="sk tag-on" data-spec="general">一般牙科治療</span><span class="sep">、</span><span class="sk" data-spec="perio">牙周照護</span></dd>
+            <dt>資歷</dt><dd>台灣國際植牙醫師學會專科醫師（ATIOI）<br>國際牙醫學院院士（TICD）<br>衛生福利部家庭牙醫專科</dd>
+            <dt>學歷</dt><dd>中山醫學大學牙醫學學士<br>中山醫學大學牙醫學碩士<br>中山醫學大學牙醫學博士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-face data-spec="perio">
+          <picture class="doc-face">
+            <source type="image/webp" srcset="/assets/doctor-li-youjin-400.webp">
+            <img src="/assets/doctor-li-youjin-400.jpg" width="400" height="400" loading="lazy"
+                 alt="李侑津醫師的形象照，身著診療服站在診所走廊">
+          </picture>
+          <h3>李侑津<span class="doc-role tag-off">醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="perio">牙周病治療</span><span class="sep">、</span><span class="sk" data-spec="perio">牙周再生手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">植牙手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">活動假牙</span><span class="sep">、</span><span class="sk" data-spec="perio">水雷射牙周治療</span><span class="sep">、</span><span class="sk tag-on" data-spec="general">一般牙科治療</span></dd>
+            <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
+            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>國立陽明交通大學牙醫學碩士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-face data-spec="prosth">
+          <picture class="doc-face">
+            <source type="image/webp" srcset="/assets/doctor-yang-xiaoying-400.webp">
+            <img src="/assets/doctor-yang-xiaoying-400.jpg" width="400" height="400" loading="lazy"
+                 alt="楊小瑩醫師的形象照，身著深藍診療服站在診所內">
+          </picture>
+          <h3>楊小瑩<span class="doc-role tag-off">贋復假牙專科醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="prosth">活動假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">牙橋</span><span class="sep">、</span><span class="sk" data-spec="prosth">全口重建</span><span class="sep">、</span><span class="sk tag-on" data-spec="general">一般牙科治療</span></dd>
+            <dt>資歷</dt><dd>衛生福利部贋復牙科專科<br>台大醫院補綴科兼任主治醫師<br>台大雲林分院主治醫師</dd>
+            <dt>學歷</dt><dd>高雄醫學大學牙醫學學士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-face data-spec="kids">
+          <!-- 藥丸寫「兒童牙科」不是「兒牙專科醫師」：他的資歷裡沒有衛福部的部定專科
+               （臺北榮總兒童牙科總醫師、日本新潟大學受訓、隱適美認證都不是部定專科）。
+               規則見 COPY.md 第八節。這和林晏妤醫師不一樣是刻意的，不要「順手統一」。 -->
+          <picture class="doc-face">
+            <source type="image/webp" srcset="/assets/doctor-xie-yaoqing-400.webp">
+            <img src="/assets/doctor-xie-yaoqing-400.jpg" width="400" height="400" loading="lazy"
+                 alt="謝耀慶醫師的形象照，身著白袍站在診所診療區前">
+          </picture>
+          <h3>謝耀慶<span class="doc-role tag-off">兒童牙科</span></h3>
+          <dl>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span><span class="sep">、</span><span class="sk tag-on" data-spec="general">一般牙科治療</span></dd>
+            <dt>資歷</dt><dd>臺北榮總兒童牙科總醫師<br>日本新潟大學吞嚥功能受訓醫師<br>隱適美認證醫師</dd>
+            <dt>學歷</dt><dd>國立陽明交通大學牙醫學學士</dd>
+          </dl>
+        </article>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- RELATED:START — 由 tools/build.mjs 產生，請勿手動編輯 -->
+<aside class="related" aria-label="延伸閱讀">
+  <div class="wrap">
+    <ul class="rel-list">
+        <li class="rel-card" data-spec="general">
+          <a href="/preview/post-doctors/three-month-recall/">
+            <picture>
+              <source type="image/webp" srcset="/assets/hero-recall-photo-800.webp 800w, /assets/hero-recall-photo-1600.webp 1600w, /assets/hero-recall-photo-2000.webp 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)">
+              <img src="/assets/hero-recall-photo-1600.jpg" srcset="/assets/hero-recall-photo-800.jpg 800w, /assets/hero-recall-photo-1600.jpg 1600w, /assets/hero-recall-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="1600" height="1194" loading="lazy">
+            </picture>
+            <span class="rel-body">
+              <span class="rel-tag">定期檢查</span>
+              <span class="rel-title">三個月一次的洗牙與塗氟：哪些人適用，為什麼是三個月</span>
+              <time class="rel-date" datetime="2026-09-05">2026/09/05</time>
+            </span>
+          </a>
+        </li>
+        <li class="rel-card" data-spec="general">
+          <a href="/preview/post-doctors/bass-brushing/">
+            <picture>
+              <source type="image/webp" srcset="/assets/hero-brushing-photo-800.webp 800w, /assets/hero-brushing-photo-1600.webp 1600w, /assets/hero-brushing-photo-2000.webp 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)">
+              <img src="/assets/hero-brushing-photo-1600.jpg" srcset="/assets/hero-brushing-photo-800.jpg 800w, /assets/hero-brushing-photo-1600.jpg 1600w, /assets/hero-brushing-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="1600" height="893" loading="lazy">
+            </picture>
+            <span class="rel-body">
+              <span class="rel-tag">日常保健</span>
+              <span class="rel-title">貝氏刷牙法：刷了三十年，可能一直刷錯地方</span>
+              <time class="rel-date" datetime="2026-03-11">2026/03/11</time>
+            </span>
+          </a>
+        </li>
+        <li class="rel-card" data-spec="perio">
+          <a href="/preview/post-doctors/perio-full-mouth/">
+            <picture>
+              <source type="image/webp" srcset="/assets/hero-perio-full-mouth-photo-800.webp 800w, /assets/hero-perio-full-mouth-photo-1600.webp 1600w, /assets/hero-perio-full-mouth-photo-2000.webp 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)">
+              <img src="/assets/hero-perio-full-mouth-photo-1600.jpg" srcset="/assets/hero-perio-full-mouth-photo-800.jpg 800w, /assets/hero-perio-full-mouth-photo-1600.jpg 1600w, /assets/hero-perio-full-mouth-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="1600" height="893" loading="lazy">
+            </picture>
+            <span class="rel-body">
+              <span class="rel-tag">牙周照護</span>
+              <span class="rel-title">牙周病為什麼要全口治療：會痛的，通常只是最嚴重的那一顆</span>
+              <time class="rel-date" datetime="2026-09-25">2026/09/25</time>
+            </span>
+          </a>
+        </li>
+    </ul>
+  </div>
+</aside>
+<!-- RELATED:END -->
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <!-- 名稱＋地址＋電話留著：文章頁沒有「診所資訊」那一節，
+           這裡是這六頁上**唯一**的聯絡資訊。看診時間與地圖不放 ——
+           那是內容不是落款，想看的人會點進診所資訊。COPY.md 第六之二節。
+           「雲林縣斗六市・在地經營超過四十年」已拿掉：同一句在首頁與頁首都講過，
+           而且它是形容詞、主詞是診所。 -->
+      <div>
+        <h4 class="foot-brand">
+          <!-- 診所標誌。**牙那條子路徑和頁首那顆不一樣，是刻意的** ——
+               這裡只有 12.5px 高（比 favicon 還小），洞橫向只剩約 2px，抗鋸齒會把它吃掉。
+               所以牙依自己的中心放大 1.15 倍、再往上移 1.4 個單位（2026-08-09 定案，B 案）。
+               **嘴一個節點都沒改**，fill-rule="evenodd" 讓那顆牙成為真正的洞，
+               頁尾的卡片底色直接透過來。
+
+               ⚠ **這一顆沒有遵守 PALETTE.md 第六之七節「把洞下方的肉還原成原標誌」那條規則。**
+               同一支逐像素掃描量下來：頁首那顆最薄處 3.13 個單位，這一顆 4.13 ——
+               肉多了一個單位（32%），牙比那條規則規定的位置**高**。
+               這是使用者在實際大小逐案看過之後挑的，不是從那條規則推出來的。
+               規則的用意是「放大時不要讓外觀走樣」，這裡是刻意讓它走樣一點點。
+
+               ⚠ 另外更正一筆會誤導後人的話：牙的底部本來就有一道分叉，那是**牙自己的輪廓**，
+               不是嘴的邊緣被切開。原始比例下洞的下方一直有 3.13 個單位的實心肉，沒有破。 -->
+          <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true"><g transform="translate(-232.8729 -333.8286)"><path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9658 351.1677 C 264.3395 351.0569 264.4797 351.0334 264.8417 351.1677 C 265.087 351.2612 265.4141 351.2438 265.6594 351.1677 C 266.4418 350.9226 267.2185 349.375 267.0726 347.4069 C 266.9324 345.4389 261.8635 345.7134 261.8693 347.4069 C 261.8693 348.756 262.354 350.4963 263.0255 350.9692 C 263.3118 351.1736 263.522 351.2963 263.9658 351.1677 Z"/></g></svg>
+          芳仁牙醫診所
+        </h4>
+        <p class="foot-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
+          <!-- 實心地圖釘。和話筒同一套：Font Awesome Free 6 "location-dot"，
+               圖示部分授權 CC BY 4.0，https://fontawesome.com/license/free ——
+               這一行註解就是署名，改圖或搬檔的時候不要刪。 -->
+          <span class="ico"><svg viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg></span>
+          <span class="txt">雲林縣斗六市永樂街&nbsp;70&nbsp;號</span>
+        </a></p>
+        <p class="foot-tel"><a href="tel:+88655339369">
+          <!-- 實心話筒。路徑直接內嵌，不引任何外部檔（站上沒有圖示字型，也不該為了一顆去載）。
+               素材出處：Font Awesome Free 6 "phone"，圖示部分授權 CC BY 4.0，
+               https://fontawesome.com/license/free —— 這一行註解就是署名，改圖或搬檔的時候不要刪。
+               aria-hidden：號碼本身已經是連結的可讀內容，圖示再念一次是重複。 -->
+          <span class="ico"><svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></span>
+          <data class="num" value="05-5339369">05-5339369</data>
+        </a></p>
+      </div>
+      <div>
+        <h4>站內導覽</h4>
+        <ul class="foot-nav">
+          <li><a href="/#topics">全部文章</a></li>
+          <li><a href="/#doctors">醫師介紹</a></li>
+          <li><a href="/#clinic">診所資訊</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>關於這些文章</h4>
+        <p>本站文章為一般口腔衛教資訊，用意在於幫助讀者理解常見狀況，不能取代臨床診斷。實際狀況請就診由醫師評估。</p>
+        <p class="credit">照片與插圖為芳仁牙醫診所自有或本站自製，未經同意請勿轉載。</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 芳仁牙醫診所</span>
+      <span>雲林縣斗六市</span>
+    </div>
+  </div>
+</footer>
+<script src="/assets/img-guard.js" defer></script>
+<script src="/assets/counter.js" defer></script>
+<script src="/assets/head-search.js" defer></script>
+
+<div class="pv-bar" role="region" aria-label="提案切換">
+  <div class="pv-row"><span class="pv-lab">內容</span>
+    <button type="button" data-k="d" data-v="a">Ⓐ 頭像＋名字</button>
+    <button type="button" data-k="d" data-v="b">Ⓑ ＋這一科的專長</button>
+    <button type="button" data-k="d" data-v="c">Ⓒ 完整醫師卡</button>
+  </div>
+  <div class="pv-row"><span class="pv-lab">位置</span>
+    <button type="button" data-k="p" data-v="in">① 內文結尾</button>
+    <button type="button" data-k="p" data-v="wide">② 延伸閱讀上方</button>
+    <button type="button" class="pv-x" data-close>收起</button>
+  </div>
+</div>
+<button type="button" class="pv-mini" data-open>提案 ▴</button>
+<script>
+(function () {
+  var pd = document.querySelector('.pd');
+  var inA = document.getElementById('pd-in'), wideA = document.getElementById('pd-wide');
+  var q = new URLSearchParams(location.search), st = {};
+  try { st = JSON.parse(sessionStorage.getItem('pv:pd') || '{}'); } catch (e) {}
+  var s = { d: q.get('d') || st.d || 'b', p: q.get('p') || st.p || 'in' };
+  if (!/^[abc]$/.test(s.d)) s.d = 'b';
+  if (!/^(in|wide)$/.test(s.p)) s.p = 'in';
+  function apply() {
+    pd.dataset.d = s.d; pd.dataset.pos = s.p;
+    (s.p === 'in' ? inA : wideA).appendChild(pd);
+    document.querySelectorAll('.pv-bar [data-k]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(s[b.dataset.k] === b.dataset.v));
+    });
+    try { sessionStorage.setItem('pv:pd', JSON.stringify(s)); } catch (e) {}
+    var u = new URL(location.href); u.searchParams.set('d', s.d); u.searchParams.set('p', s.p);
+    history.replaceState(null, '', u);
+  }
+  document.querySelectorAll('.pv-bar [data-k]').forEach(function (b) {
+    b.addEventListener('click', function () { s[b.dataset.k] = b.dataset.v; apply(); });
+  });
+  document.querySelector('[data-close]').addEventListener('click', function () { document.body.classList.add('pv-closed'); });
+  document.querySelector('[data-open]').addEventListener('click', function () { document.body.classList.remove('pv-closed'); });
+  apply();
+})();
+</script>
+</body>
+</html>

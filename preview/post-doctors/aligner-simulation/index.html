@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- NIGHT:START — 由 tools/night-mode.mjs 產生，請勿手動編輯 -->
+<script>(function(){var r=document.documentElement,s=null;try{s=localStorage.getItem('fangren:theme')}catch(e){}
+if(s!=='light'&&s!=='dark')s=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+r.dataset.theme=s;})();</script>
+<script src="/assets/theme.js" defer></script>
+<!-- NIGHT:END -->
+<title>隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位 — 芳仁牙醫診所（提案預覽）</title>
+<meta name="description" content="透明牙套把規劃好的力量穩定地傳到牙齒上，把這份規劃走成結果的那一段，是醫師在療程中一副一副對照出來的。模擬裡為什麼沒有牙根與齒槽骨、牙套為什麼會戴不下去、什麼時候重新規劃，以及開始之前值得先問清楚的幾件事。">
+<meta name="author" content="芳仁牙醫診所 編輯室">
+<meta name="theme-color" content="#12656a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位">
+<meta property="og:description" content="模擬是規劃，把它走成結果的那一段由醫師接手。牙套為什麼會戴不下去、什麼時候重新規劃，以及開始之前值得先問清楚的幾件事。">
+<meta property="og:site_name" content="芳仁牙醫診所">
+<link rel="canonical" href="https://fangren.net/posts/aligner-simulation/">
+<link rel="icon" href="/assets/favicon.svg?v=20260808b" type="image/svg+xml">
+<!-- 加到手機主畫面用的圖示。分頁列那顆走上面的 SVG，兩者刻意分開 ——
+     差別與理由寫在 assets/icon.svg 的註解裡（最要緊的一條：iOS 會把帶透明的
+     apple-touch-icon 壓在純黑上，所以這顆一定要有不透明的底）。
+
+     ⚠⚠ **只宣告這一個尺寸，而且是 192 —— 這是照別站的成功案例做的，不要改。**
+     iPhone 主畫面要 180（60pt × @3x）。192 比它大 6%，iOS 只需要縮一點點；
+     **放大會糊，大幅縮小也會糊，只有「幾乎不用縮」才銳利。**
+     前面試過 180（1:1 竟然還是糊，因為 iOS 其實去拿了 manifest 裡更大的那張）
+     和 1024（縮 5.7 倍，更糊）。
+     ⚠ **不要好心多補幾個尺寸**（57／76／120／152／512／1024）——
+       候選一多，iOS 會挑錯那張再縮放，這正是前五輪一直糊的原因。
+       整個站現在能被 iOS 找到的 any 版就只有這一張。
+     ⚠ sizes 屬性只是宣告，iOS 不會驗證 —— 檔案實際像素必須真的是 192×192
+       （tools/app-icons.mjs 產生時會檢查尺寸，改不動它就不會過）。
+
+     ⚠ 主畫面那顆是**按下「加入」的當下**存進捷徑的，之後不會自己更新。
+     換了圖要把 ?v= 加一，並且**把主畫面上那顆刪掉重加**，兩件都要做。 -->
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192.png?v=10">
+<!-- Android 的「加到主螢幕」讀這一份（iOS 不需要它也能加）。
+     manifest 裡 display 是 "browser" 不是 "standalone"，是刻意的：
+     這是一個會連出去（Google 地圖、LINE）的內容網站，
+     standalone 會把網址列與上一頁一起收掉，等於把人關在裡面。 -->
+<link rel="manifest" href="/site.webmanifest?v=20260812d">
+<!-- 主畫面圖示底下顯示的名字。不寫的話 iOS 會拿 <title> 去截，
+     首頁那一句是「芳仁牙醫診所｜雲林斗六・永樂街」，截完會變成半句。 -->
+<meta name="apple-mobile-web-app-title" content="芳仁牙醫">
+<link rel="stylesheet" href="/assets/style.css">
+
+<style id="hero-fx-css">
+/* ⚠⚠⚠ 2026-09-22：這一段**從 assets/style.css 搬到這裡**（只有這一頁用得到）。
+   成因是使用者在手機上回報「沒有動畫，只有驚嘆號全亮」——
+   他的瀏覽器手上是**舊的 style.css**（這一站的樣式表檔名沒有內容雜湊，
+   邊緣與瀏覽器都會存住舊的，DECISIONS.md 第 23 條那一條）。模擬舊樣式表實測，
+   症狀逐項對上，而且還多一個更糟的：
+     ・.hero-fx-blip 沒有規則 → 不透明度回到 1 → **五個驚嘆號全部永久亮著**
+     ・@keyframes 不存在 → **什麼都不會動**
+     ・.hero-fx-err 沒有 position: absolute → 那份複本變成**第二張滿版的 HERO 圖
+       疊在下面**（實測真的多出一張 201px 高的圖）
+   HTML 和它的 CSS 一起送，就不可能對不上。⚠ 不要再搬回共用樣式表。
+
+   ⚠ 另外三處結構宣告（position／inset／width／height）刻意**寫在標記的 style 屬性裡**：
+     萬一這一段樣式整個沒生效，那份複本也會正好疊在原圖上（同一張圖、同一個位置）
+     → 看起來就是「沒有特效」，而不是多一張圖。驚嘆號同理，inline 寫死 opacity:0。
+     ⚠ CSS 動畫的優先序高於 style 屬性，所以動起來的時候會正常蓋過那個 0。
+*/
+
+/* ==========================================================================
+   文章 HERO 的動態疊層（2026-09-21 定案上線）
+   --------------------------------------------------------------------------
+   起點：使用者在捷運車廂的燈箱面板錄了影片，指著說「像這種簡單的動畫感」，
+   並問會不會讓網站讀取很久。逐格查過那段影片之後確認面板真的在播動畫，
+   而那種動畫的共同點是「背景不動、只有幾個小東西在動」——
+   那正是 CSS 最便宜的一種：**不換圖、不多載任何檔案**。
+   推導、量測與落選的做法現在還在提案頁 /preview/hero-motion/ 的註解裡 ——
+   那一頁還開著（〈植牙能用多久〉與〈貝氏刷牙法〉兩張使用者說「先保留、之後再看」），
+   ⚠ 等那兩張也收掉、提案頁刪掉的時候，文字要搬進 /history/hero-motion.html，
+     那時記得回來把這兩行改成指向 history。
+
+   目前只有〈隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位〉那一篇用，兩件在動：
+     ・五個驚嘆號依序亮一下 —— 速度中（3.4 秒一輪）、幅度 Ⓑ 中
+     ・右上角黃色的警告標示放大縮小 —— 速度中（2 秒一次）、幅度 Ⓒ 明顯
+   兩組數字是使用者逐項挑的（2026-09-21「速度都用中　驚嘆號幅度中　警告標示明顯」），
+   **不要改**。⚠ 前一輪他曾經挑過「警告標示快」（1.24 秒），最後一輪改成都用中 ——
+   日後在舊紀錄裡看到 1.24 秒，那是作廢的版本，不要拿它回頭訂正這裡。
+
+   ⚠⚠ 警告標示的做法是「把同一張圖再疊一份、用柔邊遮罩只留那一小塊、再縮放」。
+     倍率回到 1 的時候和底下那張逐像素相同，所以接縫看不出來。
+     ⚠ 因此**絕對不要把它調成半透明** —— 那會同時看到原本那一塊和放大之後那一塊，
+       變成疊影。濃淡只能寫在「憑空加上去」的那些元素（驚嘆號）的 keyframes 裡。
+     ⚠⚠ 那一份**一定要是 `<picture>`，而且 srcset 與 sizes 和主圖逐字相同** ——
+       這樣瀏覽器挑到的是同一個檔案，直接命中快取，一個位元組都不會多載。
+       第一版寫成 SVG 的 `<image href="…-1600.jpg">`，結果 `<picture>` 給了 WebP、
+       `<image>` 又硬拉一份 JPEG，手機上多載 151 KiB（實測才發現，畫面完全正常）。
+
+   ⚠ 上面那條 `.post-hero img, .post-hero svg` 會給 svg 一個卡片底色與陰影，
+     疊層一定要把那三項蓋掉，不然會整片把照片遮住。
+
+   ⚠ pointer-events: none 是必要的：疊層蓋在 <img> 上面，不關掉指標事件的話
+     assets/img-guard.js 的右鍵與拖曳攔截會收不到事件（症狀是圖忽然可以按右鍵存）。
+
+   ⚠⚠ **這裡刻意不看 prefers-reduced-motion**，和 index.html 的 HERO 緩慢推進
+     同一個理由（2026-08-16 使用者定的，推導在 /history/hero-motion-mobile.html）：
+     使用者自己的 iPhone 與 iPad 都開著那個設定，跟了的話這組動畫在他手上
+     從上線那天起就不存在。他是在「不跟」的狀態下看過三輪才定案的。
+     要改成跟，就是在底下兩個 animation 外面包一層 @media 把它們關掉，一行的事。
+
+   ⛔ 曾經做過、被使用者退掉的三件（不要再加回來）：
+     ・整面螢幕由上而下的掃描光帶
+     ・歪掉的牙齒轉動 —— 手機上一顆牙齒只有 11px 寬，24° 也只走 2~3px；
+       而且遮罩貼著牙齒邊緣會在整顆牙外面糊出一圈白霧（治法是把遮罩縮進
+       牙齒內部，半徑 ≤ 13，但使用者看過之後仍然決定不要）
+     ・那三個坑的完整經過在 /history/hero-motion.html
+   ========================================================================== */
+/* ⚠⚠ overflow: hidden 是必要的，不是保險。警告標示放大到 1.208 的時候，
+   疊層的右緣會伸出圖外 35px（原點在 53%，(1.208−1) × 0.47 × 圖寬），
+   390 的手機上直接撐出水平捲動 —— 而且只在放大的那半秒發生，
+   量的時機不對就會以為沒事（第一次量就是這樣漏掉的）。
+   ⚠ 陰影要改掛在這一層：留在 <img> 上會被 overflow 裁掉。圓角也要跟著搬，
+     不然裁出來的是直角。 */
+.post-hero .hero-fx-wrap {
+  position: relative; display: block;
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.post-hero .hero-fx-wrap img { display: block; box-shadow: none; }
+.post-hero svg.hero-fx {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  background: none; box-shadow: none; border-radius: 0;
+  pointer-events: none;
+}
+
+/* 驚嘆號依序亮一下。速度中（3.4 秒）、幅度 Ⓑ 中：不透明度 .62（＝ .95 × .65）、放大到 1.25 再散到 2。
+   ⚠⚠ 每一顆的 transform-origin 與 animation-delay **寫死在標記的 style 屬性裡**，
+     這裡不再用 calc(var(--i) * .28s) 那種寫法。理由：那是唯一一處要瀏覽器自己去解
+     「自訂屬性 ＋ calc」的地方，而 iOS Safari 這台我驗不到；萬一它解不出來，
+     delay 會整組退回 0（五顆一起閃）、origin 會退回 viewBox 中心（光暈飛到別的地方），
+     而且**不會報錯**。寫死就沒有這個風險，成本是多幾十個位元組。 */
+.hero-fx-blip {
+  animation: heroFxBlip 3.4s ease-out infinite;
+  opacity: 0;
+}
+@keyframes heroFxBlip {
+  0%   { opacity: 0;   transform: scale(.45); }
+  8%   { opacity: .62; transform: scale(1.25); }
+  26%  { opacity: 0;   transform: scale(2); }
+  100% { opacity: 0;   transform: scale(.45); }
+}
+
+/* ⚠⚠ 2026-09-22 第二次改這一塊。使用者：「警告標示放大的時候，連旁邊的藍色框框
+   都放大，還跑出插圖的螢幕範圍」。量過之後三件事一起錯：
+
+   ① 遮罩畫得太大。標示實際只有 x 394~459、y 70.6~117（800×445.6 的座標系，
+      逐格量的），但遮罩是「以 424 為心、半徑 51.2」→ 右緣伸到 475。
+      **螢幕那條藍框在 470**，所以遮罩把藍框也含進去了。
+   ② 放大的軸心在標示中心 → 藍框那一帶（470）會被往右推 9.6 個單位，
+      直接推出螢幕外面。這就是他看到的。
+   ③ 沒有任何東西擋住「畫到螢幕外面」。
+
+   三件各自治：
+   ① 遮罩改成**圓角矩形**（data-URI 的 SVG），不再用橢圓 ——
+      橢圓要罩住一個扁長方形，半徑一定得開得比方形大很多，右邊必然吃到藍框。
+   ② **軸心移到標示的右緣**（459）。放大時右邊幾乎不動（藍框在 470，
+      距軸心 11，乘 0.208 只走 2.3 個單位），長的那一邊往左邊的空白處長。
+   ③ **外層多一道 clip-path 當硬邊界**，而且**外層不跟著放大**（放大搬到內層）——
+      所以無論如何都畫不到螢幕外面。遮罩淡到 0 的地方才是 clip 的位置，
+      正常時看不到那條邊，它只是保險。
+   ⚠ 量測面板驗不出這件事 —— 它只量「有沒有水平捲動」，而這是畫在圖裡面的。
+     要看的是**把倍率停在最大再和原圖逐像素相減**。 */
+.post-hero .hero-fx-err {
+  position: absolute; inset: 0; display: block; pointer-events: none;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 445.6" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="376" y="64" width="84" height="60" rx="12" fill="%23fff" filter="url(%23b)"/></svg>');
+          mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 445.6" preserveAspectRatio="none"><filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><rect x="376" y="64" width="84" height="60" rx="12" fill="%23fff" filter="url(%23b)"/></svg>');
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  /* 硬邊界（上 右 下 左）。遮罩已經淡到 0 才輪到它，所以看不見 —— 純保險。 */
+  clip-path: inset(12.12% 41.5% 69.93% 45.75%);
+}
+/* 放大的是這一層，外層那一道 clip 不跟著動 */
+.post-hero .hero-fx-err-in {
+  display: block; width: 100%; height: 100%;
+  transform-origin: 57.375% 21.05%;   /* 標示的右緣 (459, 93.8) */
+  animation: heroFxErr 2s ease-in-out infinite;
+}
+/* ⚠ 上面那條 .post-hero img 會給它圓角、陰影與卡片底色，三項都要蓋掉；
+   height 也要從 auto 改成 100%，不然疊層會比底下那張矮。 */
+.post-hero .hero-fx-err img {
+  display: block; width: 100%; height: 100%;
+  border-radius: 0; box-shadow: none; background: none;
+}
+@keyframes heroFxErr {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.208); }
+}
+</style>
+
+<script type="application/json" id="post-meta">
+{
+  "slug": "aligner-simulation",
+  "title": "隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位",
+  "excerpt": "模擬動畫把牙齒一格一格挪到整齊的位置，那是一份規劃；把規劃走成結果的那一段，是醫師在療程中一副一副對照出來的。畫面上為什麼沒有牙根與骨頭、牙套為什麼會戴不下去、什麼時候該重新規劃，以及開始之前值得先問清楚的幾件事。",
+  "tag": "齒顎矯正",
+  "author": "芳仁牙醫診所 編輯室",
+  "published": "2026-09-19",
+  "updated": "2026-09-19",
+  "hero": "hero-aligner-photo-1600.jpg",
+  "heroAlt": "插畫是一間明亮的診所規劃室。畫面中央偏左有一面飄浮在空中的半透明藍色大螢幕，上面用白色線條畫著上排牙齒的俯視圖：牙齒互相重疊、有的擠到外側有的縮在後面，排成一條歪斜的弧線，旁邊散著白色的彎箭頭與五個琥珀色的驚嘆號三角形；螢幕右半有一顆被放大的牙齒，整根牙根插在一塊半透明的骨頭裡，牙根尖端有一道琥珀色的短線，上方一個琥珀色的提示牌寫著 ERROR，下面一行是一個牙套圖示、200+ 與無限符號。螢幕前站著一位穿白袍、裡面是藍灰色刷手服的男醫師，側身朝著螢幕，抬起一手用食指點在那顆放大的牙上，指尖旁有三道短線，另一手垂在身側拿著一支細筆，閉著嘴微笑。畫面左邊，一位穿芥末黃毛衣的男生坐在淺色長桌前，身體前傾、雙手放在筆電鍵盤上，手腕旁有兩道短線；筆電螢幕是深色底、一行一行的淺色程式碼，右下角有一個白色的牙弓圖示，旁邊飄著一面淡藍色的小螢幕，上面同樣是程式碼與牙弓，筆電右邊立著一台沒有開機的深灰色平板。畫面右邊，一位穿藍灰色刷手服的男性一手拿著平板（上面是同一顆牙與牙根）、一手張開手掌比向大螢幕，手掌外緣與嘴邊各有兩道短線；他身旁一位穿淡綠色上衣的女性低頭看著手機。背景是白色的牆與淺色地板，木質檯面上放著兩個馬克杯和一個陶土色的杯子，矮櫃上擺著一副石膏牙模與一副透明牙套，牆上掛著一張只有牙弓線條圖的海報，右側有一盆綠色植物，房間上方橫過幾道長長的白色弧線。",
+  "about": [
+    {
+      "type": "MedicalProcedure",
+      "name": "隱形矯正",
+      "sameAs": "https://www.wikidata.org/wiki/Q593903"
+    },
+    {
+      "type": "MedicalProcedure",
+      "name": "齒顎矯正",
+      "sameAs": "https://www.wikidata.org/wiki/Q118301"
+    },
+    {
+      "type": "MedicalCondition",
+      "name": "齒列擁擠",
+      "sameAs": "https://www.wikidata.org/wiki/Q19607237"
+    },
+    {
+      "type": "MedicalCondition",
+      "name": "深咬",
+      "sameAs": "https://www.wikidata.org/wiki/Q21286530"
+    }
+  ]
+}
+</script>
+
+<meta name="robots" content="noindex, nofollow, noarchive">
+<style>
+/* ===== 提案：文章頁的「這一科的醫師」（抽自 index.html 的醫師卡樣式）===== */
+.docs { display: grid; gap: 1.2rem; grid-template-columns: repeat(3, 1fr); }
+.doc { background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 1.1rem 1.2rem 1.2rem; }
+.doc h3 { margin: 0 0 .7rem; font-size: 1.05rem; line-height: 1.5; }
+.doc-role { display: inline-block; margin-left: .5rem; font-size: .72rem; font-weight: 400;
+  line-height: 1; padding: var(--role-padT) .6rem var(--role-padB); white-space: nowrap; }
+.doc dl { margin: 0; display: grid; grid-template-columns: 3.2em 1fr; gap: .35rem .7rem; }
+.doc dd { margin: 0; font-size: .83rem; line-height: 1.75; }
+.doc dt { font-size: .74rem; font-weight: 500; line-height: 1.6;
+  justify-self: start; align-self: start; white-space: nowrap;
+  padding: .1rem .4rem;
+  background: var(--paper); color: var(--ink-soft); }
+.doc[data-face] { --face: 76px;
+  
+  --face-pull: 6px;
+  
+  --face-gap: calc(1.2rem - var(--face-pull));
+  padding-left: var(--face-gap);
+  padding-top:  var(--face-gap);
+  display: grid; grid-template-columns: var(--face) 1fr;
+  column-gap: calc(var(--face-gap) + 1px); row-gap: 8px; align-items: start;
+  
+  align-content: start; }
+.doc-face { display: block; grid-column: 1; grid-row: 1; }
+.doc-face img { display: block; width: var(--face); height: var(--face);
+  border-radius: 50%; object-fit: cover; }
+.doc[data-face] > h3 { display: flex; flex-wrap: wrap; align-items: baseline;
+  column-gap: .5rem; row-gap: .2rem; }
+.doc[data-face] > h3 .doc-role { margin-left: 0; position: relative; top: calc(-1 * var(--role-rise)); }
+.doc[data-face] > h3 { grid-column: 2; grid-row: 1; margin-bottom: 0;
+  align-self: start; margin-top: calc((var(--face) - 1.5em) / 2); }
+.doc[data-face] > dl { grid-column: 1 / -1; grid-row: 2; padding-left: var(--face-pull); }
+.doc-fb { display: inline-flex; align-items: center; gap: .45rem; margin-top: .8rem;
+  font-size: .83rem; line-height: 1.5; font-weight: 500;
+  color: var(--accent-deep); text-decoration: none; }
+.doc[data-face] > .doc-fb { grid-column: 1 / -1; padding-left: var(--face-pull); margin-top: 0; }
+.doc-fb svg { display: block; width: 1.3rem; height: 1.3rem; flex: none; }
+.doc-fb span { color: var(--ink-soft); }
+.doc-fb:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.doc-fb:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; border-radius: 4px; }
+html[data-theme="dark"] .doc-fb { color: var(--accent); }
+.doc dt { border-radius: 6px; }
+.doc-role { border-radius: 8px; }
+.doc-role { background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep); }
+.doc-role { background: var(--accent); color: var(--on-fill); border-color: var(--accent); }
+@media (max-width: 1040px) {
+.docs { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+.docs { grid-template-columns: 1fr; }
+}
+.sk {  }
+html { --tint: 12%; --sk-fs: .83rem; --sk-lift: 0; --sk-padX: .4546em; --sk-padT: .30em; --sk-padB: .12em; --role-padT: .425em; --role-padB: .21em; }
+.sk.tag-on { display: inline-block; font-size: var(--sk-fs); font-weight: 400;
+  
+  line-height: 1; padding: var(--sk-padT) var(--sk-padX) var(--sk-padB);
+  border-radius: 8px;
+  white-space: nowrap; vertical-align: var(--sk-lift);
+  background: color-mix(in srgb, var(--accent) var(--tint), var(--card));
+  border: 1px solid color-mix(in srgb, var(--accent) var(--tint), var(--card));
+  color: var(--accent-deep); }
+.doc-role.tag-off { background: var(--card); color: var(--accent-deep); border-color: var(--accent-deep); }
+.doc-role, .sk { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+@media (prefers-reduced-motion: reduce) {
+.doc-role, .sk { transition: none; }
+}
+.doc-role { --role-rise: .158em; vertical-align: var(--role-rise); }
+.doc-role { font-size: .8rem; }
+.doc dt { font-size: .81rem; }
+@media (min-width: 721px) and (min-aspect-ratio: 9/10) {
+.doc { border-radius: calc(12px * var(--type-scale)); }
+.doc dt { border-radius: calc(6px   * var(--type-scale)); }
+.doc-role, .sk.tag-on { border-radius: calc(8px   * var(--type-scale)); }
+}
+@media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
+.doc { border-radius: calc(12px * var(--type-scale)); }
+.doc dt { border-radius: calc(6px   * var(--type-scale)); }
+.doc-role, .sk.tag-on { border-radius: calc(8px   * var(--type-scale)); }
+}
+@media (min-width: 721px) and (max-aspect-ratio: 9 / 10) {
+.doc h3 { font-size: 1.179rem; }
+.doc dd { font-size: .926rem; }
+html { --sk-fs: .926rem; }
+.doc dt { font-size: .90rem; }
+.doc-role { --role-rise: .2136em; vertical-align: var(--role-rise); }
+}
+@media (max-width: 720px) {
+.doc h3 { font-size: 1.24rem; }
+.doc dd { font-size: 1rem; }
+html { --sk-fs: 1rem; }
+.doc dt { font-size: .976rem; }
+.doc-role { --role-rise: .21em; vertical-align: var(--role-rise); }
+}
+html[data-theme="dark"] :is(.chips :is(button:not([aria-pressed="true"]), a:not([aria-current="page"])), .hours-filter button:not([aria-pressed="true"]), .card-tag:not(.tag-on), .doc-role.tag-off) { background: color-mix(in srgb, var(--accent) 20%, var(--card));
+  border-color: color-mix(in srgb, var(--accent) 20%, var(--card));
+  color: var(--pill-ink); }
+html[data-theme="dark"] .sk.tag-on { color: var(--sk-ink); }
+
+/* ===== 提案本身 ===== */
+/* 文章頁的根字級不放大（首頁在 721 以上才有 --type-scale），圓角照 1 倍算 */
+.pd { --type-scale: 1; }
+.pd { padding-block: clamp(1.8rem, 5vw, 2.8rem); border-top: 1px solid var(--rule); }
+.pd-in { width: 100%; margin-inline: auto; padding-inline: var(--pad); }
+.pd[data-pos="wide"] .pd-in { max-width: var(--wide); }
+.pd[data-pos="in"] { border-top: 0; padding-block: 1.6rem 0; }
+.pd[data-pos="in"] .pd-in { max-width: none; padding-inline: 0; }
+.pd-head { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.pd .pd-head h2 { display: flex; align-items: baseline; gap: .6rem; margin: 0;
+  font-size: clamp(1.15rem, 3.4vw, 1.38rem); line-height: 1.55; color: var(--ink); }
+/* 標題前那一小段枝條：和文章內文的 h2、首頁「醫師介紹」同一個做法 */
+.pd .pd-head h2::before { content: ''; flex: 0 0 3px; align-self: center;
+  height: 1.05em; border-radius: 2px; background: var(--accent); }
+/* 放在內文裡的時候，文章的 ul／li／h3 規則會漏進來，這裡擋掉 */
+.pd .pd-rows { margin: 0; padding: 0; }
+.pd .pd-row { margin: 0; }
+.pd .doc h3 { color: var(--ink); }
+.pd-more { font-size: .9rem; color: var(--accent-deep); text-decoration: none; white-space: nowrap; }
+.pd-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+.pd [data-d] { display: none; }
+.pd[data-d="a"] [data-d="a"], .pd[data-d="b"] [data-d="b"] { display: grid; }
+.pd[data-d="c"] .docs[data-d="c"] { display: grid; }
+.pd-rows { list-style: none; margin: 0; padding: 0; gap: .7rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+.pd-row { display: grid; grid-template-columns: 52px 1fr; align-items: center; column-gap: .8rem;
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .7rem .9rem .7rem .7rem; }
+.pd-face { width: 52px; height: 52px; }
+.pd-face img { display: block; width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
+.pd-main { display: grid; gap: .35rem; min-width: 0; }
+.pd-name { font-weight: 700; font-size: 1.05rem; line-height: 1.5; display: flex; flex-wrap: wrap; align-items: center; column-gap: .5rem; }
+.pd-name .doc-role { margin-left: 0; vertical-align: 0; }
+.pd-sk { display: flex; flex-wrap: wrap; gap: .3rem; }
+.pd .docs { grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+.pd[data-pos="in"] .docs { grid-template-columns: 1fr; }
+@media (min-width: 721px) { .pd[data-pos="in"] .docs { grid-template-columns: repeat(2, 1fr); } }
+
+/* ===== 切換條 ===== */
+.pv-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; background: #1f2226; color: #eef0f1;
+  font: 13px/1.4 system-ui, sans-serif; padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); box-shadow: 0 -2px 10px rgba(0,0,0,.25); }
+.pv-bar .pv-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pv-bar .pv-row + .pv-row { margin-top: 6px; }
+.pv-bar .pv-lab { opacity: .7; min-width: 2.4em; }
+.pv-bar button { font: inherit; color: inherit; background: #33373c; border: 1px solid #4a4f55; border-radius: 6px; padding: 4px 9px; }
+.pv-bar button[aria-pressed="true"] { background: #eef0f1; color: #1f2226; border-color: #eef0f1; }
+.pv-bar .pv-x { margin-left: auto; }
+.pv-mini { position: fixed; right: 10px; bottom: 10px; z-index: 90; display: none; font: 13px system-ui; background: #1f2226; color: #eef0f1; border: 0; border-radius: 16px; padding: 6px 12px; }
+body.pv-closed .pv-bar { display: none; } body.pv-closed .pv-mini { display: block; }
+body:not(.pv-closed) { padding-bottom: 92px; }
+</style>
+</head>
+<!-- data-spec：這一篇的科別，讓 assets/style.css 把重點色換成首頁
+     「主題與科別」標記的同一個顏色。標籤 → 代碼的對照表在 tools/build.mjs。 -->
+<body data-spec="ortho">
+<a class="skip-link" href="#main">跳到主要內容</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand-mark">
+        <!-- 取自 20241205 芳仁牙醫LOGO_中英標準字.ai。牙那條子路徑依自己的中心放大 1.3 倍、
+             再往上移 0.50 個單位（2026-08-07 定案），嘴一個節點都沒改。
+             一個路徑、兩條子路徑，用奇偶填充規則讓中間那顆牙成為真正的洞。
+             width／height 屬性不能省 —— 少了它 WebKit 用預設的 300×150 當內在尺寸，
+             這個 flex 項目就縮不下去，整條頁首會被撐寬。 -->
+        <svg width="44.2873" height="21.8244" viewBox="0 0 44.2873 21.8244" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="translate(-232.8729 -333.8286)">
+              <path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 264.0408 352.2025 C 264.3658 352.1061 264.4877 352.0857 264.8025 352.2025 C 265.0158 352.2838 265.3002 352.2686 265.5135 352.2025 C 266.1939 351.9893 266.8693 350.6436 266.7424 348.9322 C 266.6205 347.2209 262.2127 347.4596 262.2178 348.9322 C 262.2178 350.1053 262.6393 351.6186 263.2232 352.0299 C 263.4721 352.2076 263.6549 352.3143 264.0408 352.2025 Z"/>
+            </g>
+          </svg>
+      </span>
+      <span class="brand-text">
+        <b>芳仁牙醫診所</b>
+        <small>雲林斗六・永樂街</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="主選單">
+      <a href="/#topics">全部文章</a>
+      <a href="/#doctors">醫師介紹</a>
+      <a href="/#clinic">診所資訊</a>
+      <!-- 放大鏡。素材出處：Lucide "search"／"x"，ISC 授權，https://lucide.dev ——
+           這一行註解就是署名，改圖或搬檔的時候不要刪。
+           ⚠⚠ **是 <a> 不是 <button>**：沒有 JS 的時候它退回「跳到主題與科別」
+             ＝ 使用者原本手動在做的事，有 JS 才 preventDefault 改成就地展開。
+           ⚠ 它會被底下那支 scrollspy 抓到，所以那一行選擇器加了 :not(.nav-q)。 -->
+      <a class="nav-q" href="/#topics" aria-label="搜尋文章與醫師" aria-expanded="false" aria-controls="headsearch">
+        <span class="nav-q-i" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.6" cy="10.6" r="7"/><path d="m20.4 20.4-4.85-4.85"/></svg></span>
+      </a>
+    </nav>
+    <!-- 頁首的搜尋列。關著的時候 visibility: hidden ＋ inert，**不佔任何版面**
+         （絕對定位），所以收著的頁首和加這一顆之前逐項相同。
+         ⚠ 輸入框字級 16px 是硬條件：iOS 對 <16px 的輸入框會在聚焦時放大整頁。 -->
+    <form class="head-search" id="headsearch" role="search" inert>
+      <span class="hs-ico" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.6" cy="10.6" r="7"/><path d="m20.4 20.4-4.85-4.85"/></svg></span>
+      <input class="hs-in" type="search" placeholder="搜尋文章與醫師" aria-label="搜尋文章與醫師"
+             autocomplete="off" spellcheck="false" enterkeyhint="search">
+      <span class="hs-n" aria-hidden="true"></span>
+      <button class="hs-x" type="button" aria-label="關閉搜尋"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.5 5.5 5.5 18.5M5.5 5.5l13 13"/></svg></button>
+    </form>
+  </div>
+</header>
+
+<main id="main">
+<article>
+
+  <div class="post-head">
+    <div class="wrap-text">
+      <p class="crumbs">
+        <a href="/">首頁</a>
+        <span class="sep" aria-hidden="true">&rsaquo;</span>
+        <a class="post-tag" href="/topics/ortho/" data-spec="ortho">齒顎矯正</a>
+        <time datetime="2026-09-19">2026/09/19</time>
+        <span class="views" data-views="aligner-simulation" data-state="loading">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span class="views-n">&mdash;</span> 次瀏覽
+        </span>
+        <button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="夜間模式"><span class="tt-track" aria-hidden="true"><span class="tt-knob"><svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span></span></button>
+      </p>
+      <h1>隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位</h1>
+    </div>
+    <figure class="post-hero">
+      <!-- HERO 的動態疊層（2026-09-21 定案上線）。規格、理由與三件被退掉的做法
+           全部寫在這一頁 <head> 裡那個 style#hero-fx-css，改之前先讀。
+           ⚠⚠ 那一段 2026-09-22 從共用樣式表搬進來了 —— 使用者的瀏覽器手上是舊的
+             樣式表時，會看到「五個驚嘆號全亮、什麼都不動、而且多一張圖」。
+           ⚠ 疊層與 <img> 共用同一個盒子，兩者的長寬比也一樣（2000:1114 ＝ viewBox
+             800:445.6），所以永遠對齊。
+           ⚠ 幾處結構宣告（position／inset／width／height／opacity:0）刻意寫在
+             style 屬性裡，樣式萬一沒生效才會退成「看起來沒有特效」而不是壞掉。 -->
+      <span class="hero-fx-wrap" style="position:relative;display:block">
+      <picture>
+        <source type="image/webp" srcset="/assets/hero-aligner-photo-800.webp 800w,
+                                          /assets/hero-aligner-photo-1600.webp 1600w,
+                                          /assets/hero-aligner-photo-2000.webp 2000w"
+                sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)">
+        <img src="/assets/hero-aligner-photo-1600.jpg"
+             srcset="/assets/hero-aligner-photo-800.jpg 800w,
+                     /assets/hero-aligner-photo-1600.jpg 1600w,
+                     /assets/hero-aligner-photo-2000.jpg 2000w"
+             sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+             fetchpriority="high" alt="插畫是一間明亮的診所規劃室。畫面中央偏左有一面飄浮在空中的半透明藍色大螢幕，上面用白色線條畫著上排牙齒的俯視圖：牙齒互相重疊、有的擠到外側有的縮在後面，排成一條歪斜的弧線，旁邊散著白色的彎箭頭與五個琥珀色的驚嘆號三角形；螢幕右半有一顆被放大的牙齒，整根牙根插在一塊半透明的骨頭裡，牙根尖端有一道琥珀色的短線，上方一個琥珀色的提示牌寫著 ERROR，下面一行是一個牙套圖示、200+ 與無限符號。螢幕前站著一位穿白袍、裡面是藍灰色刷手服的男醫師，側身朝著螢幕，抬起一手用食指點在那顆放大的牙上，指尖旁有三道短線，另一手垂在身側拿著一支細筆，閉著嘴微笑。畫面左邊，一位穿芥末黃毛衣的男生坐在淺色長桌前，身體前傾、雙手放在筆電鍵盤上，手腕旁有兩道短線；筆電螢幕是深色底、一行一行的淺色程式碼，右下角有一個白色的牙弓圖示，旁邊飄著一面淡藍色的小螢幕，上面同樣是程式碼與牙弓，筆電右邊立著一台沒有開機的深灰色平板。畫面右邊，一位穿藍灰色刷手服的男性一手拿著平板（上面是同一顆牙與牙根）、一手張開手掌比向大螢幕，手掌外緣與嘴邊各有兩道短線；他身旁一位穿淡綠色上衣的女性低頭看著手機。背景是白色的牆與淺色地板，木質檯面上放著兩個馬克杯和一個陶土色的杯子，矮櫃上擺著一副石膏牙模與一副透明牙套，牆上掛著一張只有牙弓線條圖的海報，右側有一盆綠色植物，房間上方橫過幾道長長的白色弧線。" width="2000" height="1114">
+      </picture>
+      <!-- 警告標示的放大縮小。⚠⚠ 這一塊**一定要是 <picture>、而且 srcset 與 sizes
+           和上面那一份逐字相同** —— 這樣瀏覽器挑到的會是同一個檔案，直接命中快取，
+           一個位元組都不會多載。第一版寫成 SVG 的 <image href="…-1600.jpg">，
+           結果是：<picture> 給了 WebP、<image> 又硬拉一份 JPEG，手機上多了 151 KiB。
+           改過 sizes 或 srcset 的話，**兩份要一起改**。 -->
+      <span class="hero-fx-err" aria-hidden="true" style="position:absolute;inset:0;display:block;pointer-events:none">
+        <span class="hero-fx-err-in" style="display:block;width:100%;height:100%">
+        <picture>
+          <source type="image/webp" srcset="/assets/hero-aligner-photo-800.webp 800w,
+                                            /assets/hero-aligner-photo-1600.webp 1600w,
+                                            /assets/hero-aligner-photo-2000.webp 2000w"
+                  sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)">
+          <img src="/assets/hero-aligner-photo-1600.jpg"
+               srcset="/assets/hero-aligner-photo-800.jpg 800w,
+                       /assets/hero-aligner-photo-1600.jpg 1600w,
+                       /assets/hero-aligner-photo-2000.jpg 2000w"
+               sizes="(min-width: 1041px) 656px, (min-width: 721px) 660px, calc(100vw - 28px)"
+               alt="" width="2000" height="1114" style="display:block;width:100%;height:100%;box-shadow:none;border-radius:0">
+        </picture>
+        </span>
+      </span>
+      <svg class="hero-fx" viewBox="0 0 800 445.6" preserveAspectRatio="xMidYMid meet"
+           aria-hidden="true" focusable="false"
+           style="position:absolute;inset:0;width:100%;height:100%;background:none;box-shadow:none;pointer-events:none">
+        <defs>
+          <radialGradient id="hfxGlow">
+            <stop offset="0"   stop-color="#ffffff" stop-opacity=".95"/>
+            <stop offset=".55" stop-color="#ffffff" stop-opacity=".45"/>
+            <stop offset="1"   stop-color="#ffffff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle class="hero-fx-blip" style="opacity:0; transform-box:view-box; transform-origin:226px 91px; animation-delay:0.00s" cx="226" cy="91"  r="12" fill="url(#hfxGlow)"/>
+        <circle class="hero-fx-blip" style="opacity:0; transform-box:view-box; transform-origin:354px 95px; animation-delay:0.28s" cx="354" cy="95"  r="12" fill="url(#hfxGlow)"/>
+        <circle class="hero-fx-blip" style="opacity:0; transform-box:view-box; transform-origin:314px 126px; animation-delay:0.56s" cx="314" cy="126" r="12" fill="url(#hfxGlow)"/>
+        <circle class="hero-fx-blip" style="opacity:0; transform-box:view-box; transform-origin:199px 161px; animation-delay:0.84s" cx="199" cy="161" r="12" fill="url(#hfxGlow)"/>
+        <circle class="hero-fx-blip" style="opacity:0; transform-box:view-box; transform-origin:261px 186px; animation-delay:1.12s" cx="261" cy="186" r="12" fill="url(#hfxGlow)"/>
+      </svg>
+      </span>
+    </figure>
+      <p class="post-updated-line">最後更新：<time class="post-updated" datetime="2026-09-19">2026/09/19</time></p>
+  </div>
+
+  <div class="post-body wrap-text">
+    <p class="lede">戴上第一副透明牙套之前，多數人看過的是那段模擬動畫：牙齒一格一格挪動，最後停在整齊的位置。真正讓人不安的問題都在後面——這一副怎麼壓不下去、醫師為什麼說要重新掃描再做一套。這一篇講的就是那段落差，以及醫師怎麼把它補上。</p>
+    <p>幾歲開始、金屬與隱形怎麼選，在〈<a href="/preview/post-doctors/orthodontics/">牙齒矯正：年齡、矯正器與第一次諮詢</a>〉那一篇。</p>
+
+    <h2>一套透明牙套是怎麼做出來的</h2>
+    <p>醫師口掃之後，資料送進隱形矯正廠商的軟體，軟體算出模擬與分期，廠商照著做出一整套牙套。聽起來像是先把結果看完再照著做，但<strong>模擬是規劃，不是結果</strong>——把規劃走成結果的那一段，是醫師一副一副對照出來的。</p>
+
+    <h2>模擬畫面之外，醫師還要看的三件事</h2>
+    <ul>
+      <li><strong>骨頭的厚薄</strong>：牙齒能走到哪裡，是<strong>齒槽骨</strong>（包著牙根的骨頭）決定的，而虛擬排牙多半只處理牙冠。<a href="https://pubmed.ncbi.nlm.nih.gov/38506775/" target="_blank" rel="noopener">一份讓醫師同時看到牙根與骨頭的研究</a>發現，看過三維影像之後原本的規劃往往會被改掉：排得漂亮的位置，牙根可能已經頂到骨頭外緣。（骨頭高度也和牙周有關，見〈<a href="/preview/post-doctors/perio-laser/">牙周病治療</a>〉。）</li>
+      <li><strong>牙根的位置</strong>：畫面上移動的是牙冠，支點卻在牙根。整顆連根移動，和牙冠倒過去、牙根沒動，在動畫裡看起來一樣。<a href="https://pubmed.ncbi.nlm.nih.gov/39046382/" target="_blank" rel="noopener">一份針對門牙牙根角度的研究</a>中，規劃超過 10 度的案例只達成約四成。</li>
+      <li><strong>不同的移動，難易差很多</strong>：</li>
+    </ul>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>移動的種類</th><th>可預測性</th><th>為什麼</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>前牙的傾斜與左右挪移</td><td>相對高</td><td>輕中度擁擠、把門牙排開。</td></tr>
+          <tr><td>旋轉，尤其犬齒與小臼齒</td><td>中等，差異大</td><td>牙冠偏圓，牙套不容易抓住，要黏<strong>附件</strong>（attachment）幫忙受力。</td></tr>
+          <tr><td>擴張牙弓、改變牙根角度</td><td>較低</td><td>容易變成牙冠往外倒，牙根沒跟著走。</td></tr>
+          <tr><td>把牙齒壓進骨頭、改善深咬</td><td>最低</td><td>常需要搭配其他裝置。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>以旋轉為例，<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12564582/" target="_blank" rel="noopener">十二篇研究統計下來</a>平均約六成五——同一副牙套，有些牙齒走完了，有些只走一半。</p>
+
+    <h2>為什麼牙套會「突然戴不下去」</h2>
+    <p>理想的分期是每一副只走 0.2 毫米或一兩度。但在牙齒要互相讓位的區段，會出現移動量比較大的一副；牙齒沒跟上，牙套就浮起來、咬不密合，後面每一副繼續累積，臨床上叫做<strong>脫離軌道</strong>。</p>
+    <p>這不是少見的狀況。<a href="https://www.ajodo.org/article/S0889-5406(22)00773-9/fulltext" target="_blank" rel="noopener">一份追蹤五百位患者的回顧研究</a>裡，全程沒有重新規劃過的只有 6%；另一份<a href="https://pubmed.ncbi.nlm.nih.gov/40435056/" target="_blank" rel="noopener">對矯正專科醫師的問卷調查</a>中，七成左右的案例至少重做一次，而且提出的往往是經手案例比較多的醫師——<strong>那多半不是治療走偏了才補救，而是有人一直在對照</strong>。</p>
+
+    <h2>偏離了，接下來怎麼處理</h2>
+    <p>兩條路，臨床上常常一起用：</p>
+    <ol>
+      <li><strong>重新掃描、重新規劃</strong>：把牙齒現在的位置當成新的起點，再做下一套牙套，代價是等待製作的那幾週。</li>
+      <li><strong>加上固定式的裝置</strong>：在需要的牙齒上黏矯正器或鈕扣、掛橡皮筋，必要時搭配骨釘，把牙齒帶回規劃的位置。這是矯正本來就有的做法，不是臨時的補救。</li>
+    </ol>
+
+    <div class="callout">
+      <p><b>醫師小叮嚀。</b>偏差在第幾副被發現，決定你是多戴幾副，還是整套重做——所以療程中要一直有人在對照。</p>
+    </div>
+
+    <h2>芳仁的矯正門診怎麼安排</h2>
+    <p>每一次規劃控制在 <strong>30 到 40 副</strong>左右，每副配戴約一週，大約是<strong>六到八個月</strong>的量，走完就重新評估、重新口掃、再規劃下一階段；一個療程通常經過<strong>兩到三次</strong>這樣的循環，整體落在<strong>兩年上下</strong>。</p>
+    <p>這和固定式矯正相去不遠。<a href="https://pubmed.ncbi.nlm.nih.gov/41466679/" target="_blank" rel="noopener">一份隨機分派的臨床試驗</a>中，隱形組平均 18.2 個月、固定組 14.5 個月，兩組的咬合改善沒有顯著差異。隱形矯正的價值在配戴的體驗與清潔的方便，不在比較快。</p>
+
+    <h2>兩件容易被誤解的事</h2>
+    <ul>
+      <li><strong>「隱形矯正一定比較舒服」</strong>：順利的階段確實如此——<a href="https://pubmed.ncbi.nlm.nih.gov/42270616/" target="_blank" rel="noopener">一份把疼痛與牙周狀況一起比較的系統性回顧</a>裡，隱形矯正的疼痛經驗優於固定矯正器，牙菌斑與牙齦發炎的指數也較低。但需要加上矯正器或橡皮筋時，感受會回到接近固定矯正。</li>
+      <li><strong>「副數多代表狀況比較複雜」</strong>：副數是分期算出來的結果，排得細就多、排得粗就少；真正決定難度的是要做哪幾種移動，以及齒槽骨給不給得起那個空間。</li>
+    </ul>
+
+    <h2>開始之前，可以先問清楚的幾件事</h2>
+    <p>比起「幾副」「多久」，這幾題更值得先問：</p>
+    <ul>
+      <li>療程中多久回診一次，用什麼判斷有沒有照著規劃走。</li>
+      <li>偏離了是重新規劃，還是加上其他裝置。</li>
+      <li>重新規劃、追加牙套與中途重新口掃，條件與費用怎麼算。</li>
+      <li>結束之後的維持器怎麼算、要戴多久。</li>
+    </ul>
+    <p>問清楚了，中途需要調整時你會知道，那是療程本來就可能發生的一段。</p>
+
+    <h2>重點整理</h2>
+    <dl class="keypoints">
+      <dt>模擬動畫跑出來的，就是我最後會得到的結果嗎？</dt>
+      <dd>那是規劃，不是結果。畫面上多半只有牙冠，沒有牙根，也沒有包著牙根的齒槽骨，而牙齒能走到哪裡是骨頭決定的。</dd>
+
+      <dt>牙套戴不下去，是我戴得不夠久嗎？</dt>
+      <dd>那是常見原因之一，但不是唯一：分期在某些區段會排出比較大的移動量，牙齒沒跟上就會浮起來。先回診讓醫師確認。</dd>
+
+      <dt>醫師說要重新掃描再做一套，是治療失敗嗎？</dt>
+      <dd>不是。五百位患者的回顧研究裡，全程沒有重新規劃過的只有 6%——那本來就是這種療程的一部分。</dd>
+
+      <dt>隱形矯正是不是比較快、比較舒服？</dt>
+      <dd>配戴體驗確實比較好，但沒有比較快——試驗中隱形組平均 18.2 個月、固定組 14.5 個月，咬合改善沒有顯著差異。</dd>
+    </dl>
+
+    <p class="note">本文為一般口腔衛教資訊，不能取代臨床診斷。</p>
+
+    <div id="pd-in"></div>
+
+    <div class="post-foot">
+      <nav class="post-nav" aria-label="文章導覽">
+        <a class="btn btn-ghost" href="/preview/post-doctors/kids-sedation/">&larr; 上一篇：這麼小就要麻醉？</a>
+        <a class="btn" href="/#articles">回文章列表 &rarr;</a>
+      </nav>
+    </div>
+  </div>
+
+
+</article>
+</main>
+
+<div id="pd-wide">
+<section class="pd" aria-labelledby="pd-h" data-spec="ortho">
+  <div class="pd-in">
+    <div class="pd-head">
+      <h2 id="pd-h">這一科的醫師</h2>
+      <a class="pd-more" href="/topics/ortho/#doctors">齒顎矯正・2 位<span aria-hidden="true"> ›</span></a>
+    </div>
+    <ul class="pd-rows" data-d="a">
+        <li class="pd-row" data-spec="ortho">
+          <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-wang-junwei-400.webp"><img src="/assets/doctor-wang-junwei-400.jpg" width="400" height="400" alt=""></picture></span>
+          <span class="pd-main">
+            <span class="pd-name">王俊偉<span class="doc-role tag-off">矯正專科醫師</span></span>
+          </span>
+        </li>
+        <li class="pd-row" data-spec="ortho">
+          <span class="pd-face"></span>
+          <span class="pd-main">
+            <span class="pd-name">廖立揚<span class="doc-role">矯正專科醫師</span></span>
+          </span>
+        </li>
+    </ul>
+    <ul class="pd-rows" data-d="b">
+        <li class="pd-row" data-spec="ortho">
+          <span class="pd-face"><picture><source type="image/webp" srcset="/assets/doctor-wang-junwei-400.webp"><img src="/assets/doctor-wang-junwei-400.jpg" width="400" height="400" alt=""></picture></span>
+          <span class="pd-main">
+            <span class="pd-name">王俊偉<span class="doc-role tag-off">矯正專科醫師</span></span>
+            <span class="pd-sk"><span class="sk tag-on" data-spec="ortho">齒顎矯正</span><span class="sk tag-on" data-spec="ortho">隱適美</span></span>
+          </span>
+        </li>
+        <li class="pd-row" data-spec="ortho">
+          <span class="pd-face"></span>
+          <span class="pd-main">
+            <span class="pd-name">廖立揚<span class="doc-role">矯正專科醫師</span></span>
+            <span class="pd-sk"><span class="sk tag-on" data-spec="ortho">齒顎矯正</span><span class="sk tag-on" data-spec="ortho">隱適美</span><span class="sk tag-on" data-spec="ortho">阻生齒矯正</span></span>
+          </span>
+        </li>
+    </ul>
+    <div class="docs" data-d="c">
+      <article class="doc" data-face data-spec="ortho">
+          <picture class="doc-face">
+            <source type="image/webp" srcset="/assets/doctor-wang-junwei-400.webp">
+            <img src="/assets/doctor-wang-junwei-400.jpg" width="400" height="400" loading="lazy"
+                 alt="王俊偉醫師的形象照，身著白袍站在診療室內">
+          </picture>
+          <h3>王俊偉<span class="doc-role tag-off">矯正專科醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd class="skills"><span class="sk tag-on" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk tag-on" data-spec="ortho">隱適美</span></dd>
+            <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺北醫學大學附設醫院齒顎矯正科<br>臺安醫院主治醫師</dd>
+            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>臺北醫學大學牙醫學碩士</dd>
+          </dl>
+        </article>
+        <article class="doc" data-spec="ortho">
+          <!-- ⚠ 形象照 2026-09-23 上線當天由使用者要求**移除**，這張卡回到純文字。
+               要放回來：tools/doctor-photo-crop.mjs 的 FACES 裡 liao-liyang 那一段
+               解除註解（五個步驟寫在那裡）。原檔仍在 drafts/doctor-photo/src/。
+               ⚠ 這段註解要留在 article 裡面 —— 放外面的話七科快照每一頁都會帶一份。 -->
+          <h3>廖立揚<span class="doc-role">矯正專科醫師</span></h3>
+          <dl>
+            <dt>專長</dt><dd class="skills"><span class="sk tag-on" data-spec="ortho">齒顎矯正</span><span class="sep">、</span><span class="sk tag-on" data-spec="ortho">隱適美</span><span class="sep">、</span><span class="sk tag-on" data-spec="ortho">阻生齒矯正</span></dd>
+            <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺中榮民總醫院齒顎矯正科<br>國立臺灣大學附設醫院</dd>
+            <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
+          </dl>
+          <a class="doc-fb" data-doc="liao-liyang" href="https://www.facebook.com/share/1DnASFyC96/" target="_blank" rel="noopener" aria-label="廖立揚醫師的臉書粉絲專頁（另開視窗）"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><rect width="24" height="24" rx="4.32" fill="currentColor"/><path fill="#fff" d="M9.101 24v-8.289H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246V24Z"/></svg><span>臉書粉絲專頁</span></a>
+        </article>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- RELATED:START — 由 tools/build.mjs 產生，請勿手動編輯 -->
+<aside class="related" aria-label="延伸閱讀">
+  <div class="wrap">
+    <ul class="rel-list">
+        <li class="rel-card" data-spec="ortho">
+          <a href="/preview/post-doctors/orthodontics/">
+            <picture>
+              <source type="image/webp" srcset="/assets/hero-ortho-photo-800.webp 800w, /assets/hero-ortho-photo-1600.webp 1600w, /assets/hero-ortho-photo-2000.webp 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)">
+              <img src="/assets/hero-ortho-photo-1600.jpg" srcset="/assets/hero-ortho-photo-800.jpg 800w, /assets/hero-ortho-photo-1600.jpg 1600w, /assets/hero-ortho-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="1600" height="893" loading="lazy">
+            </picture>
+            <span class="rel-body">
+              <span class="rel-tag">齒顎矯正</span>
+              <span class="rel-title">牙齒矯正：年齡、矯正器與第一次諮詢</span>
+              <time class="rel-date" datetime="2026-08-20">2026/08/20</time>
+            </span>
+          </a>
+        </li>
+        <li class="rel-card" data-spec="perio">
+          <a href="/preview/post-doctors/perio-full-mouth/">
+            <picture>
+              <source type="image/webp" srcset="/assets/hero-perio-full-mouth-photo-800.webp 800w, /assets/hero-perio-full-mouth-photo-1600.webp 1600w, /assets/hero-perio-full-mouth-photo-2000.webp 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)">
+              <img src="/assets/hero-perio-full-mouth-photo-1600.jpg" srcset="/assets/hero-perio-full-mouth-photo-800.jpg 800w, /assets/hero-perio-full-mouth-photo-1600.jpg 1600w, /assets/hero-perio-full-mouth-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="1600" height="893" loading="lazy">
+            </picture>
+            <span class="rel-body">
+              <span class="rel-tag">牙周照護</span>
+              <span class="rel-title">牙周病為什麼要全口治療：會痛的，通常只是最嚴重的那一顆</span>
+              <time class="rel-date" datetime="2026-09-25">2026/09/25</time>
+            </span>
+          </a>
+        </li>
+        <li class="rel-card" data-spec="endo">
+          <a href="/preview/post-doctors/pulp-calcification/">
+            <picture>
+              <source type="image/webp" srcset="/assets/hero-pulp-calcification-photo-800.webp 800w, /assets/hero-pulp-calcification-photo-1600.webp 1600w, /assets/hero-pulp-calcification-photo-2000.webp 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)">
+              <img src="/assets/hero-pulp-calcification-photo-1600.jpg" srcset="/assets/hero-pulp-calcification-photo-800.jpg 800w, /assets/hero-pulp-calcification-photo-1600.jpg 1600w, /assets/hero-pulp-calcification-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 396px, (min-width: 721px) 30vw, calc(100vw - 28px)" alt="" width="1600" height="893" loading="lazy">
+            </picture>
+            <span class="rel-body">
+              <span class="rel-tag">顯微根管</span>
+              <span class="rel-title">根管鈣化：要做根管治療、抽神經，卻找不到那條神經</span>
+              <time class="rel-date" datetime="2026-09-22">2026/09/22</time>
+            </span>
+          </a>
+        </li>
+    </ul>
+  </div>
+</aside>
+<!-- RELATED:END -->
+
+
+
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <!-- 名稱＋地址＋電話留著：文章頁沒有「診所資訊」那一節，
+           這裡是這六頁上**唯一**的聯絡資訊。看診時間與地圖不放 ——
+           那是內容不是落款，想看的人會點進診所資訊。COPY.md 第六之二節。
+           「雲林縣斗六市・在地經營超過四十年」已拿掉：同一句在首頁與頁首都講過，
+           而且它是形容詞、主詞是診所。 -->
+      <div>
+        <h4 class="foot-brand">
+          <!-- 診所標誌。**牙那條子路徑和頁首那顆不一樣，是刻意的** ——
+               這裡只有 12.5px 高（比 favicon 還小），洞橫向只剩約 2px，抗鋸齒會把它吃掉。
+               所以牙依自己的中心放大 1.15 倍、再往上移 1.4 個單位（2026-08-09 定案，B 案）。
+               **嘴一個節點都沒改**，fill-rule="evenodd" 讓那顆牙成為真正的洞，
+               頁尾的卡片底色直接透過來。
+
+               ⚠ **這一顆沒有遵守 PALETTE.md 第六之七節「把洞下方的肉還原成原標誌」那條規則。**
+               同一支逐像素掃描量下來：頁首那顆最薄處 3.13 個單位，這一顆 4.13 ——
+               肉多了一個單位（32%），牙比那條規則規定的位置**高**。
+               這是使用者在實際大小逐案看過之後挑的，不是從那條規則推出來的。
+               規則的用意是「放大時不要讓外觀走樣」，這裡是刻意讓它走樣一點點。
+
+               ⚠ 另外更正一筆會誤導後人的話：牙的底部本來就有一道分叉，那是**牙自己的輪廓**，
+               不是嘴的邊緣被切開。原始比例下洞的下方一直有 3.13 個單位的實心肉，沒有破。 -->
+          <svg viewBox="0 0 44.2873 21.8244" aria-hidden="true"><g transform="translate(-232.8729 -333.8286)"><path fill="currentColor" fill-rule="evenodd" d="M 240.117188 354.414062 C 241.84375 355.789062 245.367188 356.175781 248.933594 354.648438 C 253.785156 352.566406 257.820312 353.464844 261.925781 354.910156 C 263.128906 355.332031 267.371094 356.449219 270.015625 354.707031 C 273.160156 352.636719 280.171875 343.027344 275.722656 337.023438 C 272.015625 332.023438 266.25 334.273438 265.015625 334.714844 C 260.597656 336.296875 252.972656 338.09375 243.207031 334.503906 C 241.492188 333.875 235.996094 332.605469 233.613281 337.023438 C 231.050781 341.777344 235.609375 350.816406 240.117188 354.414062 Z M 263.9658 351.1677 C 264.3395 351.0569 264.4797 351.0334 264.8417 351.1677 C 265.087 351.2612 265.4141 351.2438 265.6594 351.1677 C 266.4418 350.9226 267.2185 349.375 267.0726 347.4069 C 266.9324 345.4389 261.8635 345.7134 261.8693 347.4069 C 261.8693 348.756 262.354 350.4963 263.0255 350.9692 C 263.3118 351.1736 263.522 351.2963 263.9658 351.1677 Z"/></g></svg>
+          芳仁牙醫診所
+        </h4>
+        <p class="foot-addr"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8A%B3%E4%BB%81%E7%89%99%E9%86%AB%E8%A8%BA%E6%89%80%20%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E6%A8%82%E8%A1%9770%E8%99%9F" rel="noopener">
+          <!-- 實心地圖釘。和話筒同一套：Font Awesome Free 6 "location-dot"，
+               圖示部分授權 CC BY 4.0，https://fontawesome.com/license/free ——
+               這一行註解就是署名，改圖或搬檔的時候不要刪。 -->
+          <span class="ico"><svg viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg></span>
+          <span class="txt">雲林縣斗六市永樂街&nbsp;70&nbsp;號</span>
+        </a></p>
+        <p class="foot-tel"><a href="tel:+88655339369">
+          <!-- 實心話筒。路徑直接內嵌，不引任何外部檔（站上沒有圖示字型，也不該為了一顆去載）。
+               素材出處：Font Awesome Free 6 "phone"，圖示部分授權 CC BY 4.0，
+               https://fontawesome.com/license/free —— 這一行註解就是署名，改圖或搬檔的時候不要刪。
+               aria-hidden：號碼本身已經是連結的可讀內容，圖示再念一次是重複。 -->
+          <span class="ico"><svg viewBox="0 0 512 512" aria-hidden="true"><path fill="currentColor" d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></span>
+          <data class="num" value="05-5339369">05-5339369</data>
+        </a></p>
+      </div>
+      <div>
+        <h4>站內導覽</h4>
+        <ul class="foot-nav">
+          <li><a href="/#topics">全部文章</a></li>
+          <li><a href="/#doctors">醫師介紹</a></li>
+          <li><a href="/#clinic">診所資訊</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>關於這些文章</h4>
+        <p>本站文章為一般口腔衛教資訊，用意在於幫助讀者理解常見狀況，不能取代臨床診斷。實際狀況請就診由醫師評估。</p>
+        <p class="credit">照片與插圖為芳仁牙醫診所自有或本站自製，未經同意請勿轉載。</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 芳仁牙醫診所</span>
+      <span>雲林縣斗六市</span>
+    </div>
+  </div>
+</footer>
+<script src="/assets/img-guard.js" defer></script>
+<script src="/assets/counter.js" defer></script>
+<script src="/assets/head-search.js" defer></script>
+
+<div class="pv-bar" role="region" aria-label="提案切換">
+  <div class="pv-row"><span class="pv-lab">內容</span>
+    <button type="button" data-k="d" data-v="a">Ⓐ 頭像＋名字</button>
+    <button type="button" data-k="d" data-v="b">Ⓑ ＋這一科的專長</button>
+    <button type="button" data-k="d" data-v="c">Ⓒ 完整醫師卡</button>
+  </div>
+  <div class="pv-row"><span class="pv-lab">位置</span>
+    <button type="button" data-k="p" data-v="in">① 內文結尾</button>
+    <button type="button" data-k="p" data-v="wide">② 延伸閱讀上方</button>
+    <button type="button" class="pv-x" data-close>收起</button>
+  </div>
+</div>
+<button type="button" class="pv-mini" data-open>提案 ▴</button>
+<script>
+(function () {
+  var pd = document.querySelector('.pd');
+  var inA = document.getElementById('pd-in'), wideA = document.getElementById('pd-wide');
+  var q = new URLSearchParams(location.search), st = {};
+  try { st = JSON.parse(sessionStorage.getItem('pv:pd') || '{}'); } catch (e) {}
+  var s = { d: q.get('d') || st.d || 'b', p: q.get('p') || st.p || 'in' };
+  if (!/^[abc]$/.test(s.d)) s.d = 'b';
+  if (!/^(in|wide)$/.test(s.p)) s.p = 'in';
+  function apply() {
+    pd.dataset.d = s.d; pd.dataset.pos = s.p;
+    (s.p === 'in' ? inA : wideA).appendChild(pd);
+    document.querySelectorAll('.pv-bar [data-k]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(s[b.dataset.k] === b.dataset.v));
+    });
+    try { sessionStorage.setItem('pv:pd', JSON.stringify(s)); } catch (e) {}
+    var u = new URL(location.href); u.searchParams.set('d', s.d); u.searchParams.set('p', s.p);
+    history.replaceState(null, '', u);
+  }
+  document.querySelectorAll('.pv-bar [data-k]').forEach(function (b) {
+    b.addEventListener('click', function () { s[b.dataset.k] = b.dataset.v; apply(); });
+  });
+  document.querySelector('[data-close]').addEventListener('click', function () { document.body.classList.add('pv-closed'); });
+  document.querySelector('[data-open]').addEventListener('click', function () { document.body.classList.remove('pv-closed'); });
+  apply();
+})();
+</script>
+</body>
+</html>
