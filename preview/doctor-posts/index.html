@@ -101,14 +101,14 @@ r.dataset.theme=s;})();</script>
      →「ABC都做提案頁」。?dp=off|a|b|c
        Ⓐ 卡片多一列「文章」：每一科一個連結「牙周治療・4 篇 ›」→ 著陸頁的文章區
        Ⓑ 同一列先列兩篇標題（直接進文章），底下再接 Ⓐ 那一排
-       Ⓒ 卡片不加東西，專長那幾個詞變成連結 → 那一科的著陸頁
+       Ⓒ 卡片不加東西，專長那幾個詞變成連結 → 直接進講那件事的那一篇（沒有文章的詞維持純文字）
      ========================================================================== -->
 <style>
 /* 提案用。定案後只留選上的那一案，其餘連同 <html data-dp> 一起刪掉。 */
 .pv-dp, .pv-sk-c { display: none; }
 :root[data-dp="a"] .pv-dp-a, :root[data-dp="b"] .pv-dp-b { display: block; }
 :root[data-dp="c"] .pv-sk-c { display: inline; }
-:root[data-dp="c"] .skills > span.sk { display: none; }
+:root[data-dp="c"] .pv-sk-0 { display: none; }
 
 /* Ⓐ Ⓑ 的連結：字色 ＝ 那一科的 --accent-deep（連結自己帶 data-spec，
    站上那排 [data-spec] 變數宣告會落在它身上），夜間跟著那一科一起提亮。 */
@@ -6538,7 +6538,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
           </picture>
           <h3>李柄輝<span class="doc-role">創辦醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="general">口腔檢查</span><a class="sk pv-sk-c" data-spec="general" href="../../topics/general/#articles" aria-label="口腔檢查：一般牙科的文章">口腔檢查</a><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><a class="sk pv-sk-c" data-spec="general" href="../../topics/general/#articles" aria-label="一般牙科治療：一般牙科的文章">一般牙科治療</a><span class="sep">、</span><span class="sk" data-spec="perio">牙周照護</span><a class="sk pv-sk-c" data-spec="perio" href="../../topics/perio/#articles" aria-label="牙周照護：牙周治療的文章">牙周照護</a></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk pv-sk-0" data-spec="general">口腔檢查</span><a class="sk pv-sk-c" data-spec="general" href="../../posts/regular-checkup/" aria-label="口腔檢查：看〈半年一次的洗牙：健保給付的那一次，到底在做什麼〉">口腔檢查</a><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><span class="sep">、</span><span class="sk pv-sk-0" data-spec="perio">牙周照護</span><a class="sk pv-sk-c" data-spec="perio" href="../../posts/perio-prevalence/" aria-label="牙周照護：看〈八成人有牙周病：牙齒不是老了才掉，是從年輕累積來的〉">牙周照護</a></dd>
             <dt>資歷</dt><dd>台灣國際植牙醫師學會專科醫師（ATIOI）<br>國際牙醫學院院士（TICD）<br>衛生福利部家庭牙醫專科</dd>
             <dt>學歷</dt><dd>中山醫學大學牙醫學學士<br>中山醫學大學牙醫學碩士<br>中山醫學大學牙醫學博士</dd>
             <dt class="pv-dp pv-dp-a">文章</dt><dd class="pv-dp pv-dp-a"><a class="pv-dp-spec" data-spec="general" href="../../topics/general/#articles">一般牙科・3 篇<span aria-hidden="true"> ›</span></a><span class="sep">　</span><a class="pv-dp-spec" data-spec="perio" href="../../topics/perio/#articles">牙周治療・4 篇<span aria-hidden="true"> ›</span></a></dd>
@@ -6553,7 +6553,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
           </picture>
           <h3>李侑津<span class="doc-role">醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="perio">牙周病治療</span><a class="sk pv-sk-c" data-spec="perio" href="../../topics/perio/#articles" aria-label="牙周病治療：牙周治療的文章">牙周病治療</a><span class="sep">、</span><span class="sk" data-spec="perio">牙周再生手術</span><a class="sk pv-sk-c" data-spec="perio" href="../../topics/perio/#articles" aria-label="牙周再生手術：牙周治療的文章">牙周再生手術</a><span class="sep">、</span><span class="sk" data-spec="prosth">植牙手術</span><a class="sk pv-sk-c" data-spec="prosth" href="../../topics/prosth/#articles" aria-label="植牙手術：假牙與植牙的文章">植牙手術</a><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><a class="sk pv-sk-c" data-spec="prosth" href="../../topics/prosth/#articles" aria-label="固定假牙：假牙與植牙的文章">固定假牙</a><span class="sep">、</span><span class="sk" data-spec="prosth">活動假牙</span><a class="sk pv-sk-c" data-spec="prosth" href="../../topics/prosth/#articles" aria-label="活動假牙：假牙與植牙的文章">活動假牙</a><span class="sep">、</span><span class="sk" data-spec="perio">水雷射牙周治療</span><a class="sk pv-sk-c" data-spec="perio" href="../../topics/perio/#articles" aria-label="水雷射牙周治療：牙周治療的文章">水雷射牙周治療</a><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><a class="sk pv-sk-c" data-spec="general" href="../../topics/general/#articles" aria-label="一般牙科治療：一般牙科的文章">一般牙科治療</a></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk pv-sk-0" data-spec="perio">牙周病治療</span><a class="sk pv-sk-c" data-spec="perio" href="../../posts/perio-full-mouth/" aria-label="牙周病治療：看〈牙周病為什麼要全口治療：會痛的，通常只是最嚴重的那一顆〉">牙周病治療</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="perio">牙周再生手術</span><a class="sk pv-sk-c" data-spec="perio" href="../../posts/perio-laser/" aria-label="牙周再生手術：看〈牙周病治療：清創、水雷射與再生手術〉">牙周再生手術</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="prosth">植牙手術</span><a class="sk pv-sk-c" data-spec="prosth" href="../../posts/implant-lifespan/" aria-label="植牙手術：看〈植牙能用多久：世界第一顆植牙用了四十年〉">植牙手術</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="prosth">固定假牙</span><a class="sk pv-sk-c" data-spec="prosth" href="../../posts/crown-materials/" aria-label="固定假牙：看〈一體成型的假牙好在哪：金屬燒瓷、全瓷與全鋯冠的差別〉">固定假牙</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="prosth">活動假牙</span><a class="sk pv-sk-c" data-spec="prosth" href="../../posts/missing-tooth/" aria-label="活動假牙：看〈缺牙之後：活動假牙、牙橋與植牙怎麼選〉">活動假牙</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="perio">水雷射牙周治療</span><a class="sk pv-sk-c" data-spec="perio" href="../../posts/perio-laser/" aria-label="水雷射牙周治療：看〈牙周病治療：清創、水雷射與再生手術〉">水雷射牙周治療</a><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
             <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>國立陽明交通大學牙醫學碩士</dd>
             <dt class="pv-dp pv-dp-a">文章</dt><dd class="pv-dp pv-dp-a"><a class="pv-dp-spec" data-spec="perio" href="../../topics/perio/#articles">牙周治療・4 篇<span aria-hidden="true"> ›</span></a><span class="sep">　</span><a class="pv-dp-spec" data-spec="prosth" href="../../topics/prosth/#articles">假牙與植牙・3 篇<span aria-hidden="true"> ›</span></a><span class="sep">　</span><a class="pv-dp-spec" data-spec="general" href="../../topics/general/#articles">一般牙科・3 篇<span aria-hidden="true"> ›</span></a></dd>
@@ -6568,7 +6568,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
           </picture>
           <h3>王俊偉<span class="doc-role">矯正專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="ortho">齒顎矯正</span><a class="sk pv-sk-c" data-spec="ortho" href="../../topics/ortho/#articles" aria-label="齒顎矯正：齒顎矯正的文章">齒顎矯正</a><span class="sep">、</span><span class="sk" data-spec="ortho">隱適美</span><a class="sk pv-sk-c" data-spec="ortho" href="../../topics/ortho/#articles" aria-label="隱適美：齒顎矯正的文章">隱適美</a></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk pv-sk-0" data-spec="ortho">齒顎矯正</span><a class="sk pv-sk-c" data-spec="ortho" href="../../posts/orthodontics/" aria-label="齒顎矯正：看〈牙齒矯正：年齡、矯正器與第一次諮詢〉">齒顎矯正</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="ortho">隱適美</span><a class="sk pv-sk-c" data-spec="ortho" href="../../posts/aligner-simulation/" aria-label="隱適美：看〈隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位〉">隱適美</a></dd>
             <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺北醫學大學附設醫院齒顎矯正科<br>臺安醫院主治醫師</dd>
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>臺北醫學大學牙醫學碩士</dd>
             <dt class="pv-dp pv-dp-a">文章</dt><dd class="pv-dp pv-dp-a"><a class="pv-dp-spec" data-spec="ortho" href="../../topics/ortho/#articles">齒顎矯正・2 篇<span aria-hidden="true"> ›</span></a></dd>
@@ -6582,7 +6582,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
                ⚠ 這段註解要留在 article 裡面 —— 放外面的話七科快照每一頁都會帶一份。 -->
           <h3>廖立揚<span class="doc-role">矯正專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="ortho">齒顎矯正</span><a class="sk pv-sk-c" data-spec="ortho" href="../../topics/ortho/#articles" aria-label="齒顎矯正：齒顎矯正的文章">齒顎矯正</a><span class="sep">、</span><span class="sk" data-spec="ortho">隱適美</span><a class="sk pv-sk-c" data-spec="ortho" href="../../topics/ortho/#articles" aria-label="隱適美：齒顎矯正的文章">隱適美</a><span class="sep">、</span><span class="sk" data-spec="ortho">阻生齒矯正</span><a class="sk pv-sk-c" data-spec="ortho" href="../../topics/ortho/#articles" aria-label="阻生齒矯正：齒顎矯正的文章">阻生齒矯正</a></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk pv-sk-0" data-spec="ortho">齒顎矯正</span><a class="sk pv-sk-c" data-spec="ortho" href="../../posts/orthodontics/" aria-label="齒顎矯正：看〈牙齒矯正：年齡、矯正器與第一次諮詢〉">齒顎矯正</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="ortho">隱適美</span><a class="sk pv-sk-c" data-spec="ortho" href="../../posts/aligner-simulation/" aria-label="隱適美：看〈隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位〉">隱適美</a><span class="sep">、</span><span class="sk" data-spec="ortho">阻生齒矯正</span></dd>
             <dt>資歷</dt><dd>衛生福利部齒顎矯正專科<br>臺中榮民總醫院齒顎矯正科<br>國立臺灣大學附設醫院</dd>
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
             <dt class="pv-dp pv-dp-a">文章</dt><dd class="pv-dp pv-dp-a"><a class="pv-dp-spec" data-spec="ortho" href="../../topics/ortho/#articles">齒顎矯正・2 篇<span aria-hidden="true"> ›</span></a></dd>
@@ -6598,7 +6598,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
           </picture>
           <h3>林晏妤<span class="doc-role">兒牙專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><a class="sk pv-sk-c" data-spec="kids" href="../../topics/kids/#articles" aria-label="兒童隱適美：兒童牙科的文章">兒童隱適美</a><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><a class="sk pv-sk-c" data-spec="kids" href="../../topics/kids/#articles" aria-label="兒童早期矯正：兒童牙科的文章">兒童早期矯正</a><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><a class="sk pv-sk-c" data-spec="kids" href="../../topics/kids/#articles" aria-label="兒童鎮靜麻醉：兒童牙科的文章">兒童鎮靜麻醉</a><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span><a class="sk pv-sk-c" data-spec="kids" href="../../topics/kids/#articles" aria-label="兒童齲齒治療：兒童牙科的文章">兒童齲齒治療</a></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk pv-sk-0" data-spec="kids">兒童隱適美</span><a class="sk pv-sk-c" data-spec="kids" href="../../posts/kids-arch-expansion/" aria-label="兒童隱適美：看〈別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」〉">兒童隱適美</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="kids">兒童早期矯正</span><a class="sk pv-sk-c" data-spec="kids" href="../../posts/kids-arch-expansion/" aria-label="兒童早期矯正：看〈別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」〉">兒童早期矯正</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="kids">兒童鎮靜麻醉</span><a class="sk pv-sk-c" data-spec="kids" href="../../posts/kids-sedation/" aria-label="兒童鎮靜麻醉：看〈這麼小就要麻醉？認識兒童舒眠牙科治療〉">兒童鎮靜麻醉</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="kids">兒童齲齒治療</span><a class="sk pv-sk-c" data-spec="kids" href="../../posts/kids-crown/" aria-label="兒童齲齒治療：看〈同一顆補了又掉：小朋友的牙套什麼時候該做，怎麼選〉">兒童齲齒治療</a></dd>
             <dt>資歷</dt><dd>衛生福利部兒童牙科專科<br>隱適美認證醫師<br>臺中榮民總醫院兒童牙科</dd>
             <dt>學歷</dt><dd>高雄醫學大學牙醫學學士</dd>
             <dt class="pv-dp pv-dp-a">文章</dt><dd class="pv-dp pv-dp-a"><a class="pv-dp-spec" data-spec="kids" href="../../topics/kids/#articles">兒童牙科・4 篇<span aria-hidden="true"> ›</span></a></dd>
@@ -6613,7 +6613,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
           </picture>
           <h3>許馨文<span class="doc-role">口外專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="surg">阻生齒拔除</span><a class="sk pv-sk-c" data-spec="surg" href="../../topics/surg/#articles" aria-label="阻生齒拔除：口腔外科的文章">阻生齒拔除</a><span class="sep">、</span><span class="sk" data-spec="surg">齒槽骨保留術</span><a class="sk pv-sk-c" data-spec="surg" href="../../topics/surg/#articles" aria-label="齒槽骨保留術：口腔外科的文章">齒槽骨保留術</a></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk pv-sk-0" data-spec="surg">阻生齒拔除</span><a class="sk pv-sk-c" data-spec="surg" href="../../posts/wisdom-eruption/" aria-label="阻生齒拔除：看〈智齒要不要拔：該拔的，要趁早〉">阻生齒拔除</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="surg">齒槽骨保留術</span><a class="sk pv-sk-c" data-spec="surg" href="../../posts/wisdom-tooth/" aria-label="齒槽骨保留術：看〈拔智齒之後：傷口填補、術後照顧與保險怎麼問〉">齒槽骨保留術</a></dd>
             <dt>資歷</dt><dd>衛生福利部口腔顎面外科專科<br>奇美醫學中心口腔顎面外科總醫師<br>保提拉肉毒學院認證醫師</dd>
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
             <dt class="pv-dp pv-dp-a">文章</dt><dd class="pv-dp pv-dp-a"><a class="pv-dp-spec" data-spec="surg" href="../../topics/surg/#articles">口腔外科・2 篇<span aria-hidden="true"> ›</span></a></dd>
@@ -6628,7 +6628,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
           </picture>
           <h3>楊小瑩<span class="doc-role">贋復假牙專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="prosth">活動假牙</span><a class="sk pv-sk-c" data-spec="prosth" href="../../topics/prosth/#articles" aria-label="活動假牙：假牙與植牙的文章">活動假牙</a><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><a class="sk pv-sk-c" data-spec="prosth" href="../../topics/prosth/#articles" aria-label="固定假牙：假牙與植牙的文章">固定假牙</a><span class="sep">、</span><span class="sk" data-spec="prosth">牙橋</span><a class="sk pv-sk-c" data-spec="prosth" href="../../topics/prosth/#articles" aria-label="牙橋：假牙與植牙的文章">牙橋</a><span class="sep">、</span><span class="sk" data-spec="prosth">全口重建</span><a class="sk pv-sk-c" data-spec="prosth" href="../../topics/prosth/#articles" aria-label="全口重建：假牙與植牙的文章">全口重建</a><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><a class="sk pv-sk-c" data-spec="general" href="../../topics/general/#articles" aria-label="一般牙科治療：一般牙科的文章">一般牙科治療</a></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk pv-sk-0" data-spec="prosth">活動假牙</span><a class="sk pv-sk-c" data-spec="prosth" href="../../posts/missing-tooth/" aria-label="活動假牙：看〈缺牙之後：活動假牙、牙橋與植牙怎麼選〉">活動假牙</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="prosth">固定假牙</span><a class="sk pv-sk-c" data-spec="prosth" href="../../posts/crown-materials/" aria-label="固定假牙：看〈一體成型的假牙好在哪：金屬燒瓷、全瓷與全鋯冠的差別〉">固定假牙</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="prosth">牙橋</span><a class="sk pv-sk-c" data-spec="prosth" href="../../posts/missing-tooth/" aria-label="牙橋：看〈缺牙之後：活動假牙、牙橋與植牙怎麼選〉">牙橋</a><span class="sep">、</span><span class="sk" data-spec="prosth">全口重建</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
             <dt>資歷</dt><dd>衛生福利部贋復牙科專科<br>台大醫院補綴科兼任主治醫師<br>台大雲林分院主治醫師</dd>
             <dt>學歷</dt><dd>高雄醫學大學牙醫學學士</dd>
             <dt class="pv-dp pv-dp-a">文章</dt><dd class="pv-dp pv-dp-a"><a class="pv-dp-spec" data-spec="prosth" href="../../topics/prosth/#articles">假牙與植牙・3 篇<span aria-hidden="true"> ›</span></a><span class="sep">　</span><a class="pv-dp-spec" data-spec="general" href="../../topics/general/#articles">一般牙科・3 篇<span aria-hidden="true"> ›</span></a></dd>
@@ -6652,7 +6652,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
           </picture>
           <h3>陳芷鈴<span class="doc-role">顯微根管專科醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="endo">顯微根管</span><a class="sk pv-sk-c" data-spec="endo" href="../../topics/endo/#articles" aria-label="顯微根管：顯微根管的文章">顯微根管</a><span class="sep">、</span><span class="sk" data-spec="endo">根尖手術</span><a class="sk pv-sk-c" data-spec="endo" href="../../topics/endo/#articles" aria-label="根尖手術：顯微根管的文章">根尖手術</a><span class="sep">、</span><span class="sk" data-spec="endo">活髓治療</span><a class="sk pv-sk-c" data-spec="endo" href="../../topics/endo/#articles" aria-label="活髓治療：顯微根管的文章">活髓治療</a><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><a class="sk pv-sk-c" data-spec="prosth" href="../../topics/prosth/#articles" aria-label="固定假牙：假牙與植牙的文章">固定假牙</a></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk pv-sk-0" data-spec="endo">顯微根管</span><a class="sk pv-sk-c" data-spec="endo" href="../../posts/pulp-calcification/" aria-label="顯微根管：看〈根管鈣化：要做根管治療、抽神經，卻找不到那條神經〉">顯微根管</a><span class="sep">、</span><span class="sk" data-spec="endo">根尖手術</span><span class="sep">、</span><span class="sk pv-sk-0" data-spec="endo">活髓治療</span><a class="sk pv-sk-c" data-spec="endo" href="../../posts/bioceramic/" aria-label="活髓治療：看〈根管治療的生物陶瓷：它多做了什麼〉">活髓治療</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="prosth">固定假牙</span><a class="sk pv-sk-c" data-spec="prosth" href="../../posts/crown-materials/" aria-label="固定假牙：看〈一體成型的假牙好在哪：金屬燒瓷、全瓷與全鋯冠的差別〉">固定假牙</a></dd>
             <dt>資歷</dt><dd>衛生福利部牙髓病科專科<br>成大醫院口腔醫學部總醫師<br>臺北榮民總醫院</dd>
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士</dd>
             <dt class="pv-dp pv-dp-a">文章</dt><dd class="pv-dp pv-dp-a"><a class="pv-dp-spec" data-spec="endo" href="../../topics/endo/#articles">顯微根管・2 篇<span aria-hidden="true"> ›</span></a><span class="sep">　</span><a class="pv-dp-spec" data-spec="prosth" href="../../topics/prosth/#articles">假牙與植牙・3 篇<span aria-hidden="true"> ›</span></a></dd>
@@ -6670,7 +6670,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
           </picture>
           <h3>謝耀慶<span class="doc-role">兒童牙科</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="kids">兒童隱適美</span><a class="sk pv-sk-c" data-spec="kids" href="../../topics/kids/#articles" aria-label="兒童隱適美：兒童牙科的文章">兒童隱適美</a><span class="sep">、</span><span class="sk" data-spec="kids">兒童早期矯正</span><a class="sk pv-sk-c" data-spec="kids" href="../../topics/kids/#articles" aria-label="兒童早期矯正：兒童牙科的文章">兒童早期矯正</a><span class="sep">、</span><span class="sk" data-spec="kids">兒童鎮靜麻醉</span><a class="sk pv-sk-c" data-spec="kids" href="../../topics/kids/#articles" aria-label="兒童鎮靜麻醉：兒童牙科的文章">兒童鎮靜麻醉</a><span class="sep">、</span><span class="sk" data-spec="kids">兒童齲齒治療</span><a class="sk pv-sk-c" data-spec="kids" href="../../topics/kids/#articles" aria-label="兒童齲齒治療：兒童牙科的文章">兒童齲齒治療</a><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><a class="sk pv-sk-c" data-spec="general" href="../../topics/general/#articles" aria-label="一般牙科治療：一般牙科的文章">一般牙科治療</a></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk pv-sk-0" data-spec="kids">兒童隱適美</span><a class="sk pv-sk-c" data-spec="kids" href="../../posts/kids-arch-expansion/" aria-label="兒童隱適美：看〈別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」〉">兒童隱適美</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="kids">兒童早期矯正</span><a class="sk pv-sk-c" data-spec="kids" href="../../posts/kids-arch-expansion/" aria-label="兒童早期矯正：看〈別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」〉">兒童早期矯正</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="kids">兒童鎮靜麻醉</span><a class="sk pv-sk-c" data-spec="kids" href="../../posts/kids-sedation/" aria-label="兒童鎮靜麻醉：看〈這麼小就要麻醉？認識兒童舒眠牙科治療〉">兒童鎮靜麻醉</a><span class="sep">、</span><span class="sk pv-sk-0" data-spec="kids">兒童齲齒治療</span><a class="sk pv-sk-c" data-spec="kids" href="../../posts/kids-crown/" aria-label="兒童齲齒治療：看〈同一顆補了又掉：小朋友的牙套什麼時候該做，怎麼選〉">兒童齲齒治療</a><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
             <dt>資歷</dt><dd>臺北榮總兒童牙科總醫師<br>日本新潟大學吞嚥功能受訓醫師<br>隱適美認證醫師</dd>
             <dt>學歷</dt><dd>國立陽明交通大學牙醫學學士</dd>
             <dt class="pv-dp pv-dp-a">文章</dt><dd class="pv-dp pv-dp-a"><a class="pv-dp-spec" data-spec="kids" href="../../topics/kids/#articles">兒童牙科・4 篇<span aria-hidden="true"> ›</span></a><span class="sep">　</span><a class="pv-dp-spec" data-spec="general" href="../../topics/general/#articles">一般牙科・3 篇<span aria-hidden="true"> ›</span></a></dd>
@@ -8925,7 +8925,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
     off: '站上現在的樣子',
     a: '卡片多一列：每一科一個連結 → 那一科的文章',
     b: '卡片多一列：兩篇標題直接進文章 ＋ 各科「全部 N 篇」',
-    c: '卡片不變，專長的詞可以按 → 那一科的文章'
+    c: '卡片不變，專長有虛線的詞可以按 → 直接進那一篇文章'
   };
   var v = new URLSearchParams(location.search).get('dp');
   if (v && KEYS.indexOf(v) >= 0) cur = v;

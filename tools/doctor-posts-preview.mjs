@@ -6,7 +6,9 @@
      Ⓐ 專長／資歷／學歷底下多一列「文章」：這位醫師涵蓋的每一科一個連結
         「牙周治療・4 篇 ›」→ 那一科著陸頁的文章區（/topics/<spec>/#articles）
      Ⓑ 同一列，先列兩篇文章的標題（點了直接進文章），底下再接 Ⓐ 那一排
-     Ⓒ 卡片不加任何東西，把「專長」那幾個詞變成連結 → 那個詞所屬那一科的著陸頁
+     Ⓒ 卡片不加任何東西，把「專長」那幾個詞變成連結 → **直接進講那件事的那一篇文章**
+        （第二輪改的。第一輪連到著陸頁，使用者：「點下去都是著陸頁 如果我想點下去是文章
+         要怎麼做比較好 使用者如果在著陸頁點還是著陸頁就有點怪」）
    起因：使用者 2026-09-25「醫師介紹的瀏覽明顯高於其他頁面不少，有想到在醫師圖卡
         做文章導流」→「ABC都做提案頁」。
 
@@ -68,6 +70,39 @@ const doctors = [...html.slice(a0, a1).matchAll(/<article class="doc"([^>]*)>([\
 });
 if (doctors.length !== 9) throw new Error('醫師卡不是九張：' + doctors.length);
 
+/* ── Ⓒ 的對照表：專長的詞 → 講那件事的那一篇 ─────────────────────────
+   ⚠⚠ 逐詞對過內文（2026-09-25），只收「那一篇真的在講這件事」的：
+       標題或某一個 h2 就是它、或內文用了整段在講它。**只被提到一句的不算**。
+   ⚠ 沒有對應文章的詞**維持純文字、不做連結** —— 連到一篇不相干的文章比不連更糟。
+     目前是：一般牙科治療（太廣）、全口重建、根尖手術（只在〈根管鈣化〉提到一句）、
+     阻生齒矯正（只在〈牙齒矯正〉提到一句）。將來有文章了再補。
+   ⚠ 齒槽骨保留術這個詞文章裡沒有寫出來，但〈拔智齒之後〉那一節
+     「那個洞，要不要放東西進去」（放含骨粉的膠原蛋白）講的就是這件事。
+   ⚠ 隱適美是品牌名，〈隱形矯正〉那一篇沒有寫出這個牌子，講的是透明牙套這一類。 */
+const SK_POST = {
+  '口腔檢查': 'regular-checkup',
+  '牙周照護': 'perio-prevalence',
+  '牙周病治療': 'perio-full-mouth',
+  '牙周再生手術': 'perio-laser',
+  '水雷射牙周治療': 'perio-laser',
+  '植牙手術': 'implant-lifespan',
+  '固定假牙': 'crown-materials',
+  '活動假牙': 'missing-tooth',
+  '牙橋': 'missing-tooth',
+  '齒顎矯正': 'orthodontics',
+  '隱適美': 'aligner-simulation',
+  '兒童隱適美': 'kids-arch-expansion',
+  '兒童早期矯正': 'kids-arch-expansion',
+  '兒童鎮靜麻醉': 'kids-sedation',
+  '兒童齲齒治療': 'kids-crown',
+  '阻生齒拔除': 'wisdom-eruption',
+  '齒槽骨保留術': 'wisdom-tooth',
+  '顯微根管': 'pulp-calcification',
+  '活髓治療': 'bioceramic',
+};
+for (const slug of new Set(Object.values(SK_POST)))
+  if (!posts.some((p) => p.slug === slug)) throw new Error('對照表指到一篇不存在的文章：' + slug);
+
 /* ── 三案的標記 ──────────────────────────────────────────────────────
    Ⓐ 與 Ⓑ 都是 dl 裡多一列 dt「文章」＋ dd，和專長／資歷／學歷同一套欄位，
    左緣、灰底標籤、行高全部沿用，不另外發明一種版面。 */
@@ -96,7 +131,12 @@ html = html.slice(0, a0) + html.slice(a0, a1).replace(/(<article class="doc"[^>]
   const d = doctors.find((x) => x.slug === slug);
   /* Ⓒ：專長那幾個詞換成連結。平常看起來仍是一句話，只多一道虛線底線。 */
   head = head.replace(/<span class="sk" data-spec="([a-z]+)">([^<]+)<\/span>/g,
-    (_, s, t) => `<span class="sk" data-spec="${s}">${t}</span><a class="sk pv-sk-c" data-spec="${s}" href="topics/${s}/#articles" aria-label="${t}：${SPEC_NAME[s]}的文章">${t}</a>`);
+    (m, s, t) => {
+      const slug = SK_POST[t];
+      if (!slug) return m;
+      const p = posts.find((x) => x.slug === slug);
+      return `<span class="sk pv-sk-0" data-spec="${s}">${t}</span><a class="sk pv-sk-c" data-spec="${s}" href="posts/${slug}/" aria-label="${t}：看〈${esc(p.title)}〉">${t}</a>`;
+    });
   return head + block(d) + tail;
 }) + html.slice(a1);
 if (n !== 9) throw new Error('只有 ' + n + ' 張卡插進去');
@@ -134,7 +174,7 @@ const NOTE = `<!-- =============================================================
      →「ABC都做提案頁」。?dp=off|a|b|c
        Ⓐ 卡片多一列「文章」：每一科一個連結「牙周治療・4 篇 ›」→ 著陸頁的文章區
        Ⓑ 同一列先列兩篇標題（直接進文章），底下再接 Ⓐ 那一排
-       Ⓒ 卡片不加東西，專長那幾個詞變成連結 → 那一科的著陸頁
+       Ⓒ 卡片不加東西，專長那幾個詞變成連結 → 直接進講那件事的那一篇（沒有文章的詞維持純文字）
      ========================================================================== -->`;
 const STYLE = `
 <style>
@@ -142,7 +182,7 @@ const STYLE = `
 .pv-dp, .pv-sk-c { display: none; }
 :root[data-dp="a"] .pv-dp-a, :root[data-dp="b"] .pv-dp-b { display: block; }
 :root[data-dp="c"] .pv-sk-c { display: inline; }
-:root[data-dp="c"] .skills > span.sk { display: none; }
+:root[data-dp="c"] .pv-sk-0 { display: none; }
 
 /* Ⓐ Ⓑ 的連結：字色 ＝ 那一科的 --accent-deep（連結自己帶 data-spec，
    站上那排 [data-spec] 變數宣告會落在它身上），夜間跟著那一科一起提亮。 */
@@ -210,7 +250,7 @@ const BAR = `
     off: '站上現在的樣子',
     a: '卡片多一列：每一科一個連結 → 那一科的文章',
     b: '卡片多一列：兩篇標題直接進文章 ＋ 各科「全部 N 篇」',
-    c: '卡片不變，專長的詞可以按 → 那一科的文章'
+    c: '卡片不變，專長有虛線的詞可以按 → 直接進那一篇文章'
   };
   var v = new URLSearchParams(location.search).get('dp');
   if (v && KEYS.indexOf(v) >= 0) cur = v;
