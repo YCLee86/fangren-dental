@@ -32,3 +32,21 @@ node drafts/perio-full-mouth/preview-gen.mjs
 | 上架日 | `PUBDATE` 是佔位符；`--publish` 分支刻意會擋下來（HERO 沒有就不能上線） |
 | 診所事實 | 分幾次、多久做完、急性處理的內容 —— **沒寫**，見 SOURCES.md 🏥 那幾列 |
 | 外部連結 | 兩個 PubMed 搜尋連結，容器連不出去、沒有真的點開過 |
+
+---
+
+## ✅ 2026-09-25 定案上線 —— `/posts/perio-full-mouth/`（站上第二十篇・牙周照護）
+
+`preview/perio-full-mouth/` 已刪（含白平衡 C 的三張暫存圖），推導在 `/history/perio-full-mouth.html`。
+**這個資料夾留著，因為它仍然是這一篇的唯一來源。**
+
+```bash
+node drafts/perio-full-mouth/preview-gen.mjs --publish   # → posts/perio-full-mouth/index.html
+node tools/webp.mjs                                      # 換過 HERO 才要跑
+node tools/build.mjs
+```
+
+⚠⚠ **不要手改 `posts/perio-full-mouth/index.html`**，內文與 `post-meta` 改 `preview-gen.mjs` 再重跑。
+
+HERO：定稿 `hero-v6-final.jpg` → 裁掉底部 1px 白邊 `hero-src.jpg` → 白平衡 C（紙色 R−B 6）`hero-src-wb-6.jpg`
+→ `node tools/hero-resize.mjs drafts/perio-full-mouth/hero-src-wb-6.jpg perio-full-mouth-photo`。

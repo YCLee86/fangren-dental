@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 
 const SLUG = 'perio-full-mouth';
 const PUBLISH = process.argv.includes('--publish');
-const PUBDATE = '【上線那天填】';                  // 上架日（--publish 之前改成 YYYY-MM-DD）
+const PUBDATE = '2026-09-25';                      // 上架日（--publish 才用得到）
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const src = readFileSync(resolve(root, 'posts/perio-laser/index.html'), 'utf8');
 
@@ -44,13 +44,14 @@ swap('<title>牙周病治療：清創、水雷射與再生手術 — 芳仁牙�
 out = out.replace(/<meta name="description"[^>]*>\n/, `<meta name="description" content="${DESC}">\n`);
 out = out.replace(/<meta property="og:title"[^>]*>\n/, `<meta property="og:title" content="${TITLE}">\n`);
 out = out.replace(/<meta property="og:description"[^>]*>\n/, `<meta property="og:description" content="${OGDESC}">\n`);
+/* ⚠ canonical 要在量 SEO 區塊的位置之前換：它若在區塊之前，長度一變，下面的 a／z 就錯位。 */
+if (PUBLISH) out = out.replace(/<link rel="canonical" href="[^"]*">/,
+  `<link rel="canonical" href="https://fangren.net/posts/${SLUG}/">`);
 {
   const a = out.indexOf('<!-- SEO:START');
   const z = out.indexOf('<!-- SEO:END -->');
   if (a < 0 || z < 0) throw new Error('找不到 SEO 區塊');
   if (PUBLISH) {
-    out = out.replace(/<link rel="canonical" href="[^"]*">/,
-      `<link rel="canonical" href="https://fangren.net/posts/${SLUG}/">`);
     out = out.slice(0, a) + '<!-- SEO:START — 由 tools/build.mjs 產生，請勿手動編輯 -->\n' + out.slice(z);
   } else {
     out = out.slice(0, a) +
@@ -225,7 +226,7 @@ function BODY() { return `    <p class="lede">因為「右下那一顆在痛」�
 
 /* ── ⑤ 文末導覽：最新那一篇只往回指一篇，右邊固定「回文章列表」 ── */
 swap('        <a class="btn btn-ghost" href="../kids-arch-expansion/">&larr; 上一篇：擴張牙弓</a>\n',
-     PUBLISH ? '        <a class="btn btn-ghost" href="../【上一篇 slug】/">&larr; 上一篇：【上一篇】</a>\n'
+     PUBLISH ? '        <a class="btn btn-ghost" href="../wisdom-eruption/">&larr; 上一篇：智齒要不要拔</a>\n'
              : '        <a class="btn btn-ghost" href="../../posts/perio-prevalence/">&larr; 八成人有牙周病</a>\n',
      'post-nav');
 
@@ -304,21 +305,37 @@ const must = [
   ['theme-toggle', '夜間模式的開關被切掉了'],
   ['重點整理', '重點整理不見了'],
   ['class="note"', '免責段落不見了'],
-  ['noindex', 'noindex 不見了'],
+  ...(PUBLISH ? [
+    [`data-views-self="${SLUG}"`, '計數器沒接上這一篇'],
+    ['<!-- SEO:START', 'SEO 區塊不見了：build 會找不到地方寫'],
+    ['<!-- RELATED:START', 'RELATED 標記不見了：延伸閱讀會生不出來'],
+    ['post-updated-line', '「最後更新」那一行不見了'],
+    ['<source type="image/webp"', '正式站的 HERO 要包 <picture>'],
+    [`"published": "${PUBDATE}"`, '上架日沒填進 post-meta'],
+  ] : [['noindex', 'noindex 不見了']]),
 ];
 for (const [s, msg] of must) if (!out.includes(s)) throw new Error(msg);
 const banned = [
   ['清創、水雷射與再生手術 —', '舊標題殘留'],
   ['hero-perio-photo', '舊的 HERO 圖殘留'],
-  ['data-views-self', '計數器沒拿掉：每開一次預覽就會 POST +1'],
-  ['SEO:START', 'SEO 區塊沒拿掉'],
-  ['RELATED:START', 'RELATED 區塊沒拿掉'],
-  ['post-updated-line', '「最後更新」那一行沒拿掉'],
+  ...(PUBLISH ? [
+    ['【', '還有佔位符（【…】）'],
+    ['noindex', '正式站不可以有 noindex'],
+    ['pv-', '預覽頁的 pv- 東西殘留'],
+    ['data-views-self="perio-laser"', '計數器還指著骨架那一篇'],
+  ] : [
+    ['data-views-self', '計數器沒拿掉：每開一次預覽就會 POST +1'],
+    ['SEO:START', 'SEO 區塊沒拿掉'],
+    ['RELATED:START', 'RELATED 區塊沒拿掉'],
+    ['post-updated-line', '「最後更新」那一行沒拿掉'],
+  ]),
 ];
 for (const [s, msg] of banned) if (out.includes(s)) throw new Error(msg);
-if (/href="\.\.\/(?!\.\/)[a-z]/.test(out)) throw new Error('還有同層的 ../<資料夾>/ 連結');
+/* 草稿頁不可以有同層連結（會指到 preview/ 底下）；正式站那一份本來就該有。 */
+if (!PUBLISH && /href="\.\.\/(?!\.\/)[a-z]/.test(out)) throw new Error('還有同層的 ../<資料夾>/ 連結');
 
-const dest = resolve(root, `preview/${SLUG}/index.html`);
+const rel = `${PUBLISH ? 'posts' : 'preview'}/${SLUG}/index.html`;
+const dest = resolve(root, rel);
 mkdirSync(dirname(dest), { recursive: true });
 writeFileSync(dest, out);
-console.log(`寫好了：preview/${SLUG}/index.html　${out.length} 字元`);
+console.log(`寫好了：${rel}　${out.length} 字元`);

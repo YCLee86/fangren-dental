@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>perio-full-mouth｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>perio-full-mouth — 〈牙周病為什麼要全口治療：會痛的，通常只是最嚴重的那一顆〉</h1>
+<p class="meta">
+  2026-09-23 開、2026-09-25 定案上線・<strong>文章草稿的預覽，不是設計提案</strong>（同 <code>wisdom-eruption</code> 那一種）<br>
+  原網址 <code>/preview/perio-full-mouth/</code>（已刪除 2026-09-25）<br>
+  成品 <code>/posts/perio-full-mouth/</code>（牙周照護，站上第二十篇）<br>
+  文案六輪、HERO 六版＋白平衡三格・最後一輪預覽頁上有「首圖色調 B／C」兩顆按鈕<br>
+  整頁存檔：<code>git show a3e69627:preview/perio-full-mouth/index.html</code>
+</p>
+
+<h2>起點</h2>
+<p>使用者貼進來兩份：一份衛教初稿（「牙周病治療，為什麼要從全口開始？」）與一份文獻整理
+（局部型盛行率、局部重度的成因、輕中度不處理的進展、治療後殘留囊袋）。
+站上已有〈八成人有牙周病〉（分層與進展）與〈牙周病治療〉（清創、水雷射、再生手術），
+這一篇只講「只有一顆在痛，為什麼要全口」，重疊的部分一律連過去。</p>
+
+<h2>文案：六輪</h2>
+<div class="note">
+<p>① 初稿刪掉「只清一處，細菌會重新影響剛治療好的地方」—— 那是全口一次消毒的立論，系統性回顧顯示和分區做沒有臨床差別，留著會和「分次完成」矛盾。</p>
+<p>② 使用者要求補「牙根在骨頭裡約十三毫米，囊袋毫米數怎麼換算」的概念段（並說日後另寫一篇講量測數字）。</p>
+<p>③ 使用者要求查證兩句的文獻：容器連不到 PubMed，改用 Wikidata 的文獻條目核對 PMID／DOI／卷期頁碼。「美國調查局部型比廣泛型多」那一句找不到來源（PMID 41553855 查不到）。</p>
+<p>④ 使用者貼回整合版（十二篇參考文獻、改用分類邏輯、補 Tay 2025、毫米換算改成約四分之一／接近四成），逐字照搬。</p>
+<p>⑤ 使用者：「超連結直接做在文章內文文字上，不要列在最後面。」—— 文中 [n] 與文末清單拿掉，連結掛在主張上。</p>
+<p>⑥ 使用者逐句改：拿掉「分期以最嚴重的那一顆為準」與 Tay 2025 那兩段、毫米換算兩段合成一段、補「（mm）」。</p>
+</div>
+
+<h2>HERO：六版</h2>
+<div class="note">
+<p>梗是使用者給的：病人說一顆牙不舒服（小對話框），醫師解釋牙周病不只一顆（大對話框，同一排五顆牙，腫的那顆被細菌圍攻、喊救命，其他牙也各有細菌）。</p>
+<p>v1 細菌太大太少、其他牙的細菌太可愛（有牙齒抱著細菌）→ v2 細菌縮到八分之一、病牙 18 隻、「是害蟲不是寵物」→ v3 醫師換牙周科別色（刷手服 <code>#b7d7d5</code>、髮色 <code>#374847</code>，照 ILLUSTRATION.md 第十之三節移色相）、診間補設備 → v4 醫師改男性並坐到椅邊、牆上色帶從 <code>#317d78</code> 淡到 <code>#cdd8d0</code> → 細菌又變少（診間段落把細菌段擠掉，第七節第 18 條）→ <strong>定稿是編修：第四版的診間 ＋ 第二版的細菌</strong>（使用者：「第二版有蜂擁而上的感覺」——好在分布與動作，不是數量）。</p>
+<p>上線前使用者在手機上說「偏黃」：量紙色（亮度 &gt; 225 的像素）R−B 是 24，同科〈八成人有牙周病〉12、全站中位數約 12。做了三格（16／12／6），預覽頁上 B／C 兩顆按鈕切換，<strong>使用者選 C（R−B 6，接近中性）</strong>。增益 1.000／1.023／1.080，產生器 <code>drafts/perio-full-mouth/hero-wb.mjs</code>。</p>
+</div>
+
+<h2>還沒做的</h2>
+<p>診所事實三件沒寫（全口刮除分幾次、急性腫痛當天怎麼處理、治療後多久再評估）；Tay 2025 與 Chen 2026 兩篇 Wikidata 查不到，連結沿用使用者給的，要在手機上點開確認。</p>
+
+<footer>
+  來源：<code>drafts/perio-full-mouth/</code>（README、SOURCES.md、hero-prompt.md、各版提示詞與原檔）。<br>
+  文體規範：<code>COPY.md</code> 第十節。插畫：<code>ILLUSTRATION.md</code> 第七、十節。
+</footer>
+
+</div></body>
+</html>

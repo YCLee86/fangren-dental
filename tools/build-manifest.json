@@ -47,6 +47,10 @@
     "hash": "252efa66c28feea6",
     "updated": "2026-08-20"
   },
+  "perio-full-mouth": {
+    "hash": "782feb32d0b24006",
+    "updated": "2026-09-25"
+  },
   "perio-laser": {
     "hash": "b3d342c49c580bd2",
     "updated": "2026-09-20"
@@ -76,7 +80,7 @@
     "updated": "2026-08-19"
   },
   "/": {
-    "hash": "b57edad196c6de5d",
+    "hash": "935bfd15069687ed",
     "updated": "2026-09-25"
   }
 }
