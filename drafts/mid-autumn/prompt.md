@@ -1,4 +1,4 @@
-# 中秋節・診所門口烤肉：提示詞（第一版）
+# 中秋節・診所門口烤肉：提示詞（第二版）
 
 使用者 2026-09-25 的原話（逐字）：
 
@@ -7,7 +7,7 @@
 > 也有像當代露營講究的設備 有人在玩煙火 也有人把柚子皮撥開 反戴在頭上 呈現中秋節歡樂
 > 輕鬆的氣氛 用照片這個背景 天空有一點雲 滿月 插畫風格也是網站上現在一致的風格
 
-背景照片是 `drafts/mid-autumn/ref-street-dusk.jpg`（原間攝影工作室拍的傍晚側面街景，
+背景照片是 `drafts/mid-autumn/refs/1-street-photo.jpg`（原間攝影工作室拍的傍晚側面街景，
 畫面左邊三分之二是建築、街道往右後方延伸）。出圖用 Gemini。
 
 ---
@@ -30,10 +30,10 @@
 
 | | 檔案 | 參考什麼 | **不要**參考 |
 | --- | --- | --- | --- |
-| ① | `drafts/mid-autumn/ref-street-dusk.jpg`（使用者給的照片） | **機位、取景、建築的比例與構造、街道往哪裡收** | 照片的寫實感、招牌上的字、下緣那個浮水印、停著的車、交通錐 |
-| ② | `drafts/og-topic-general-src.jpg` | **這棟樓畫成插畫時的樣子**：線、顏色、窗盒的畫法、紙的顆粒 | 白天的光、藍天、那幾條白色弧線、那七個人 |
-| ③ | `assets/hero-kids-photo-1600.jpg` | **一群人很開心時的臉與身體**（全站唯一一張「人是主角」的） | 室內、構圖、診療椅 |
-| ④ | `preview/line-remind/hero-remind.jpg` | 手繪線的實度、紙的顆粒 | 構圖、候診間 |
+| ① | `drafts/mid-autumn/refs/1-street-photo.jpg`（使用者給的照片） | **機位、取景、建築的比例與構造、街道往哪裡收** | 照片的寫實感、招牌上的字、下緣那個浮水印、停著的車、交通錐 |
+| ② | `drafts/mid-autumn/refs/2-building-style.jpg`（＝ drafts/og-topic-general-src.jpg） | **這棟樓畫成插畫時的樣子**：線、顏色、窗盒的畫法、紙的顆粒 | 白天的光、藍天、那幾條白色弧線、那七個人 |
+| ③ | `drafts/mid-autumn/refs/3-happy-group.jpg` | **一群人很開心時的臉與身體**（全站唯一一張「人是主角」的） | 室內、構圖、診療椅 |
+| ④ | `drafts/mid-autumn/refs/4-line-grain.jpg` | 手繪線的實度、紙的顆粒 | 構圖、候診間 |
 
 ⚠⚠ ② 一定要用 `-src.jpg`，**不可以用 `assets/og-topic-general.jpg`** —— 那一張上緣有印著中文字的綠帶子，餵進去會被學走。
 ⚠⚠ ② 那張晴天圖上有**白色的風線**，颱風那一輪兩度被模型照抄回來（颱風那一份第六節第 12 條）。
@@ -110,24 +110,26 @@ is warm, easy and happy: a neighbourhood party, not a staged group photo.
    GROUP A - THE MODERN CAMPING CORNER, LOWER LEFT, just in front of the covered walkway:
      • A low slatted wooden folding camp table and three or four canvas folding camp chairs in
        olive, sand and dark green, a hanging camping lantern with a warm glow on a slim black
-       stand, a hard-sided cooler box, and a neat compact charcoal barbecue grill on legs - the
+       stand, a hard-sided cooler box standing open and full of ice with drinks in it (see section
+       5), and a neat compact charcoal barbecue grill on legs - the
        kind of good-looking, carefully chosen outdoor gear people bring to a glamping weekend.
      • A dental nurse in her late twenties, in pale sage-green scrubs with a dusty-rose cardigan
        over them, stands at this grill turning skewers with long tongs, laughing at something.
      • An older neighbour, a grandmother in her seventies from the old house next door, in a
        terracotta-patterned blouse, sits in a camp chair peeling a big pomelo on her lap,
        pulling the thick rind apart in large curved pieces. On the table: a plate of pomelo
-       segments, a plate of round mooncakes, plain paper cups of tea.
+       segments, a plate of round mooncakes, and beside her a hand-shaken tea (see section 5).
    GROUP B - THE CLASSIC STREET BARBECUE, CENTRE, on the pavement against the side wall among
    the concrete pots:
      • A simple low rectangular metal charcoal grill set directly on two bricks on the ground,
        the traditional Taiwanese way. Two people crouch or sit on small low plastic stools beside
        it: a dentist in his forties in a navy polo shirt, brushing sauce onto skewers with a
        small brush, and a middle-aged neighbour in a white vest and faded blue shorts with flip-
-       flops, fanning the coals with a round woven fan. Skewers of meat, sausages, corn, green
+       flops, fanning the coals with a round woven fan in one hand, an aluminium can of soft drink in the
+       other. Skewers of meat, sausages, corn, green
        peppers and slices of toast on the grill.
      • A patient's father in his late thirties, in a mustard-yellow T-shirt, stands beside them
-       holding a paper plate, WEARING A POMELO-PEEL HAT (see section 4), grinning while the
+       holding a paper plate in one hand and a glass bottle of soda in the other, WEARING A POMELO-PEEL HAT (see section 4), grinning while the
        dentist hands him a skewer.
    GROUP C - THE SPARKLERS, RIGHT FOREGROUND, out on the empty street where it is safely away
    from both grills:
@@ -138,7 +140,7 @@ is warm, easy and happy: a neighbourhood party, not a staged group photo.
        trousers, crouches beside them holding a sparkler of her own and lighting the boy's
        from it.
      • The children's mother, in a soft lilac top, stands just behind them filming them on her
-       phone, the phone screen facing away from us.
+       phone, the phone screen facing away from us, a bottle of water in her other hand.
 
 4. THE POMELO-PEEL HAT - DRAW IT EXACTLY LIKE THIS. After the fruit is eaten, half of the thick
    empty rind of a big pomelo is turned upside down and worn on the head like a small round
@@ -149,7 +151,24 @@ is warm, easy and happy: a neighbourhood party, not a staged group photo.
    brim, NOT a leafy crown. Exactly two people wear one: the father in the mustard T-shirt and
    the six-year-old boy.
 
-5. THE SPARKLERS AND THE SMOKE.
+5. THE DRINKS - A REAL TAIWANESE STREET-PARTY MIX, HELD IN PEOPLE'S HANDS. Draw four kinds and
+   make each one recognisable by its shape:
+     • HAND-SHAKEN TEA: a tall clear plastic cup with a flat sealed film lid and a fat straw
+       pushed through it, the drink visible through the cup - one is golden-brown milk tea with
+       dark tapioca pearls at the bottom, one is pale amber-green tea with ice. One stands on the
+       camp table beside the grandmother; the nurse has one on the edge of the table next to her
+       grill, half drunk.
+     • GLASS BOTTLE SODA: a classic thick glass soda bottle, green-tinted or clear, with a short
+       neck - the father in the mustard T-shirt holds one.
+     • ALUMINIUM CANS: plain soft-drink cans in solid colours (red, green, silver) - the
+       neighbour in the white vest holds one, and a few more stand in the ice of the open cooler.
+     • WATER: a clear plastic bottle of water with no label - the mother holds one, and one or two
+       more stand on the camp table.
+   Every cup, bottle and can is PLAIN: any label is just a band of flat colour with nothing
+   written on it, no logo, no brand, no character. These are soft drinks, tea and water only.
+   The children and the receptionist are holding sparklers, not drinks.
+
+6. THE SPARKLERS AND THE SMOKE.
      • Each sparkler is a thin wire with a small bright white-gold burst of tiny sparks at its tip
        and a short looping trail of light behind it in the air. Three sparklers in all, all in
        Group C. Nothing else explodes: no fireworks in the sky, no rockets, no firecrackers.
@@ -158,13 +177,13 @@ is warm, easy and happy: a neighbourhood party, not a staged group photo.
        person's head. Never one long continuous ribbon of smoke, never a loop, never a big cloud
        that hides anyone.
 
-6. THE FACES - HAPPY AND EASY. Real smiles and laughter: eyes curved into happy crescents,
+7. THE FACES - HAPPY AND EASY. Real smiles and laughter: eyes curved into happy crescents,
    mouths open in laughter or in a broad smile, cheeks lifted. People are turned towards each
    other, talking, handing food across, leaning in. Everyone is kind to everyone - nobody is
    being laughed at, nobody is pointing at anyone, nobody is drunk, nobody is posing for a photo,
    nobody looks at the camera.
 
-7. THE LIGHT - IT IS NIGHT, AND THE PICTURE MUST BE CLEARLY DARKER THAN THE DAYTIME ILLUSTRATION.
+8. THE LIGHT - IT IS NIGHT, AND THE PICTURE MUST BE CLEARLY DARKER THAN THE DAYTIME ILLUSTRATION.
    Two kinds of light only:
      • COOL MOONLIGHT over everything: the concrete wall is a mid cool blue-grey, NOT pale, NOT
        cream, NOT white; the street is a deep blue-grey; the sky is deep indigo.
@@ -177,23 +196,25 @@ is warm, easy and happy: a neighbourhood party, not a staged group photo.
    and the lit glass; then the faces lit by them; then the window boxes; then the concrete wall
    and the clouds; then the sky; darkest of all, the street in the distance.
 
-8. COLOUR. Night blues and warm orange-gold light, with the clothes as the colour accents: sage
+9. COLOUR. Night blues and warm orange-gold light, with the clothes as the colour accents: sage
    green, dusty rose, terracotta, navy, mustard yellow, pale sky blue, coral, cream, dark green,
    lilac - every person in a different colour from their neighbours. The pomelo hats and the
    pomelo on the table are a fresh pale yellow-green. At least eight distinct colours must be
    readable. Not monochrome, not sepia, not all-orange, not all-blue, not washed out to pale.
 
-9. NO WRITING ANYWHERE IN THE IMAGE - no text, letters, words, numbers, Chinese characters, logos,
+10. NO WRITING ANYWHERE IN THE IMAGE - no text, letters, words, numbers, Chinese characters, logos,
    brand marks, captions, signatures or watermarks, in any language. The real building has
    Chinese lettering on its column and above its entrance, and the provided photograph has a
    photographer's watermark along its bottom edge: IGNORE ALL OF THEM and leave those surfaces
    plain. The mooncakes are plain round cakes with no stamped characters. The cooler box, the
-   camp chairs, the grills, the paper cups, the phone, the lantern and every piece of clothing
+   camp chairs, the grills, the tea cups and their sealed lids, the soda bottles, the cans,
+   the water bottles, the phone, the lantern and every piece of clothing
    are plain, with no logo and no writing.
 
 AVOID: any letters, words, Chinese characters, logos or watermarks anywhere, including the
 photographer's watermark and the lettering on the clinic copied from the photograph; stamped
-characters on the mooncakes; branded cans, beer, bottles with labels; parked cars, a traffic
+characters on the mooncakes; any brand, logo or writing on a cup, cup lid, bottle or can;
+beer, beer bottles, wine or anyone drunk; a cup of tea drawn as a paper cup or a mug; parked cars, a traffic
 cone; fireworks, rockets or bursts in the sky; long white curving wind lines or chalk ribbons in
 the sky; one long ribbon of smoke; a pomelo hat drawn as a whole fruit, a bowl, a brimmed cap or
 a crown; more than two people wearing pomelo hats; a sparkler near a grill or near anyone's face;
@@ -223,7 +244,11 @@ anime; thick uniform black outlines; greyscale.
 7. **方向用畫面的左／右寫死**（颱風那一份第六節第 5 條）：建築在左、街往右收、月亮在右上、煙往右飄。
 8. **沒有人看鏡頭、沒有人在笑別人**（第三節的例外段、第七節第 14 條）。
 9. **仙女棒離烤爐、離臉都遠** —— 一張診所發的圖，畫面上不能有會被讀成危險的東西。
-   同理**不畫啤酒**，飲料一律是無字的紙杯茶。
+   同理**不畫啤酒**。
+10. **飲料（第二版，使用者 2026-09-25 指定）**：手搖飲、玻璃瓶汽水、鋁罐飲料、水，
+   **逐項指派給誰拿**（同第 6 條衣服顏色的道理：只列清單，模型會堆在桌上或全部變同一種）。
+   ⚠ 鋁罐最容易被畫成啤酒、也最容易長出商標 —— 所以寫「純色、無字、軟性飲料」，
+   `AVOID` 補啤酒。手搖飲靠**形狀**認：透明杯、封膜、粗吸管、看得到珍珠。
 
 ---
 
@@ -238,6 +263,7 @@ anime; thick uniform black outlines; greyscale.
 | 是夜晚 | 牆是中間偏冷的灰，不是米白；天空是深藍不是黑 |
 | 人 | 三組、沒有人看鏡頭、臉是插畫的簡化臉，不寫實 |
 | 煙與仙女棒 | 煙是短線不是長帶；天上沒有煙火 |
+| 飲料 | 手搖飲（封膜＋粗吸管）、玻璃瓶汽水、鋁罐、礦泉水四種都在，**上面沒有字**，沒有啤酒 |
 
 ---
 
