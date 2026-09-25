@@ -13,7 +13,7 @@
         "action": {
           "type": "uri",
           "label": "Ⓐ 現況・無框　彩色 11.4%",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         }
       },
       "body": {
@@ -79,7 +79,7 @@
             "action": {
               "type": "uri",
               "label": "看大圖",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -111,7 +111,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -147,7 +147,7 @@
         "action": {
           "type": "uri",
           "label": "Ⓑ 留外框　彩色 18.6%",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         }
       },
       "body": {
@@ -213,7 +213,7 @@
             "action": {
               "type": "uri",
               "label": "看大圖",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -245,7 +245,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -281,7 +281,7 @@
         "action": {
           "type": "uri",
           "label": "Ⓒ 留外框＋加高 4:3　15.6%",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         }
       },
       "body": {
@@ -347,7 +347,7 @@
             "action": {
               "type": "uri",
               "label": "看大圖",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -379,7 +379,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -415,7 +415,7 @@
         "action": {
           "type": "uri",
           "label": "Ⓓ Ⓒ＋青綠換成牙周的套色",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         }
       },
       "body": {
@@ -481,7 +481,7 @@
             "action": {
               "type": "uri",
               "label": "看大圖",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -513,7 +513,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {

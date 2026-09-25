@@ -105,7 +105,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/perio-laser/"
+              "uri": "https://fangren.net/posts/perio-laser/?from=line"
             },
             "contents": [
               {
@@ -234,7 +234,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/bioceramic/"
+              "uri": "https://fangren.net/posts/bioceramic/?from=line"
             },
             "contents": [
               {
@@ -363,7 +363,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/wisdom-tooth/"
+              "uri": "https://fangren.net/posts/wisdom-tooth/?from=line"
             },
             "contents": [
               {
@@ -492,7 +492,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/crown-materials/"
+              "uri": "https://fangren.net/posts/crown-materials/?from=line"
             },
             "contents": [
               {
@@ -913,7 +913,7 @@
         "action": {
           "type": "uri",
           "label": "到網站看看",
-          "uri": "https://fangren.net/#topics"
+          "uri": "https://fangren.net/?from=line#topics"
         }
       },
       "body": {
@@ -973,7 +973,7 @@
             "action": {
               "type": "uri",
               "label": "到網站看看　fangren.net",
-              "uri": "https://fangren.net/#topics"
+              "uri": "https://fangren.net/?from=line#topics"
             },
             "contents": [
               {

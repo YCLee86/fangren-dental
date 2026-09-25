@@ -10,7 +10,7 @@
     "action": {
       "type": "uri",
       "label": "口腔外科",
-      "uri": "https://fangren.net/topics/surg/"
+      "uri": "https://fangren.net/topics/surg/?from=line"
     }
   },
   "body": {
@@ -204,7 +204,7 @@
         "action": {
           "type": "uri",
           "label": "口腔外科",
-          "uri": "https://fangren.net/topics/surg/"
+          "uri": "https://fangren.net/topics/surg/?from=line"
         }
       }
     ]

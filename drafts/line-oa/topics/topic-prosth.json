@@ -10,7 +10,7 @@
     "action": {
       "type": "uri",
       "label": "植牙・假牙重建",
-      "uri": "https://fangren.net/topics/prosth/"
+      "uri": "https://fangren.net/topics/prosth/?from=line"
     }
   },
   "body": {
@@ -204,7 +204,7 @@
         "action": {
           "type": "uri",
           "label": "植牙・假牙重建",
-          "uri": "https://fangren.net/topics/prosth/"
+          "uri": "https://fangren.net/topics/prosth/?from=line"
         }
       }
     ]

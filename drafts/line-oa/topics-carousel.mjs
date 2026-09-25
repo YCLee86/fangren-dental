@@ -27,6 +27,12 @@ import { LINE_TOPIC } from "./topic-copy-line.mjs";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "../..");
 const SITE = JSON.parse(fs.readFileSync(path.join(ROOT, "site.json"), "utf8")).url.replace(/\/$/, "");
+/* 來源紀錄（2026-09-25）：連到網站「頁面」的網址一律帶 ?from=line，
+   fangren.net 的報告才分得出是從 LINE 點進來的（LINE 的瀏覽器常常不帶 referrer）。
+   圖檔（/assets/）不帶。標記放在 # 前面；網站那一側進站後會把它從網址列擦掉，
+   所以讀者看不到。值 line 是 src/source.js 的 TAGS 白名單裡的，不要自己改。 */
+const tagLine = (u) => u.includes("/assets/") ? u
+  : u.replace(/^([^?#]*)(\?[^#]*)?(#.*)?$/, (m, a, q, h) => a + (q ? q + "&" : "?") + "from=line" + (h || ""));
 const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 const plain = (s) => String(s).replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 
@@ -72,7 +78,7 @@ const bubbles = chips.map((spec) => {
 
   const img = `assets/og-topic-${spec}.jpg`;
   if (!fs.existsSync(path.join(ROOT, img))) throw new Error(`${img} 不存在`);
-  const url = `${SITE}/topics/${spec}/`;
+  const url = tagLine(`${SITE}/topics/${spec}/`);
   const row = (label, value) => ({
     type: "box", layout: "baseline", spacing: "sm",
     contents: [

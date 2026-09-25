@@ -10,7 +10,7 @@
     "action": {
       "type": "uri",
       "label": "顯微根管",
-      "uri": "https://fangren.net/topics/endo/"
+      "uri": "https://fangren.net/topics/endo/?from=line"
     }
   },
   "body": {
@@ -204,7 +204,7 @@
         "action": {
           "type": "uri",
           "label": "顯微根管",
-          "uri": "https://fangren.net/topics/endo/"
+          "uri": "https://fangren.net/topics/endo/?from=line"
         }
       }
     ]

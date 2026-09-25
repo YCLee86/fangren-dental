@@ -10,7 +10,7 @@
     "action": {
       "type": "uri",
       "label": "牙周治療",
-      "uri": "https://fangren.net/topics/perio/"
+      "uri": "https://fangren.net/topics/perio/?from=line"
     }
   },
   "body": {
@@ -204,7 +204,7 @@
         "action": {
           "type": "uri",
           "label": "牙周治療",
-          "uri": "https://fangren.net/topics/perio/"
+          "uri": "https://fangren.net/topics/perio/?from=line"
         }
       }
     ]

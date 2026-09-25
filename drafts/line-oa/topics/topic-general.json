@@ -10,7 +10,7 @@
     "action": {
       "type": "uri",
       "label": "一般牙科・定期檢查",
-      "uri": "https://fangren.net/topics/general/"
+      "uri": "https://fangren.net/topics/general/?from=line"
     }
   },
   "body": {
@@ -241,7 +241,7 @@
         "action": {
           "type": "uri",
           "label": "一般牙科・定期檢查",
-          "uri": "https://fangren.net/topics/general/"
+          "uri": "https://fangren.net/topics/general/?from=line"
         }
       }
     ]

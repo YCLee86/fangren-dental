@@ -24,6 +24,12 @@ import { fileURLToPath } from "node:url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "../..");
 const SITE = JSON.parse(fs.readFileSync(path.join(ROOT, "site.json"), "utf8")).url.replace(/\/$/, "");
+/* 來源紀錄（2026-09-25）：連到網站「頁面」的網址一律帶 ?from=line，
+   fangren.net 的報告才分得出是從 LINE 點進來的（LINE 的瀏覽器常常不帶 referrer）。
+   圖檔（/assets/）不帶。標記放在 # 前面；網站那一側進站後會把它從網址列擦掉，
+   所以讀者看不到。值 line 是 src/source.js 的 TAGS 白名單裡的，不要自己改。 */
+const tagLine = (u) => u.includes("/assets/") ? u
+  : u.replace(/^([^?#]*)(\?[^#]*)?(#.*)?$/, (m, a, q, h) => a + (q ? q + "&" : "?") + "from=line" + (h || ""));
 
 /* ⚠⚠ 顏色**每一張跟著自己的紙本走，不跟科別走**（2026-08-28 使用者定的）。
    值由 handout-crop.mjs 從那圈外框取出來，寫在 handouts/colors.json，
@@ -154,7 +160,7 @@ function make(c, sc, tag) {
   const { ink, hero } = C[c.img];
   const [bg, fg] = solid(C[c.img], sc, c.fg);
   const foot = [btn("看大圖", `${SITE}/assets/handout-${c.img}.jpg`, bg, { fg })];
-  if (c.post) foot.push(btn("讀文章", SITE + c.post, ink, { outline: true }));
+  if (c.post) foot.push(btn("讀文章", tagLine(SITE + c.post), ink, { outline: true }));
   return {
     type: "bubble", size: "mega",
     hero: {
@@ -208,7 +214,7 @@ bubbles.push({
   type: "bubble", size: "mega",
   hero: { type: "image", url: `${SITE}/assets/og-home.jpg`,
     size: "full", aspectRatio: "1200:628", aspectMode: "cover",
-    action: { type: "uri", label: "到網站看看", uri: `${SITE}/#topics` } },
+    action: { type: "uri", label: "到網站看看", uri: tagLine(`${SITE}/#topics`) } },
   body: {
     type: "box", layout: "vertical", backgroundColor: "#F4F4F5",
     paddingAll: "16px", spacing: "md",
@@ -224,7 +230,7 @@ bubbles.push({
   footer: {
     type: "box", layout: "vertical", backgroundColor: "#F4F4F5",
     paddingAll: "16px", paddingTop: "0px", spacing: "sm",
-      contents: [btn("到網站看看　fangren.net", `${SITE}/#topics`, GREEN, { outline: true })],
+      contents: [btn("到網站看看　fangren.net", tagLine(`${SITE}/#topics`), GREEN, { outline: true })],
   },
 });
 }

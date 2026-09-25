@@ -385,7 +385,7 @@
         "action": {
           "type": "uri",
           "label": "診所網站",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {
@@ -433,7 +433,7 @@
         "action": {
           "type": "uri",
           "label": "認識芳仁",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {
@@ -481,7 +481,7 @@
         "action": {
           "type": "uri",
           "label": "走進芳仁",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {
@@ -529,7 +529,7 @@
         "action": {
           "type": "uri",
           "label": "到芳仁看看",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {
@@ -577,7 +577,7 @@
         "action": {
           "type": "uri",
           "label": "看看芳仁的四十年",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {
@@ -625,7 +625,7 @@
         "action": {
           "type": "uri",
           "label": "認識這一間診所",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {
@@ -673,7 +673,7 @@
         "action": {
           "type": "uri",
           "label": "認識醫師與科別",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {
@@ -721,7 +721,7 @@
         "action": {
           "type": "uri",
           "label": "認識芳仁",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {
@@ -769,7 +769,7 @@
         "action": {
           "type": "uri",
           "label": "診所介紹與文章",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {
@@ -817,7 +817,7 @@
         "action": {
           "type": "uri",
           "label": "醫師、科別與文章",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         },
         "contents": [
           {

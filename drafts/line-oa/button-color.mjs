@@ -45,7 +45,7 @@ const vivid = (frame) => {
 const btn = (bg, fg, label) => ({
   type: "box", layout: "vertical", backgroundColor: bg,
   cornerRadius: "6px", height: "40px", justifyContent: "center", flex: 1,
-  action: { type: "uri", label, uri: "https://fangren.net/" },
+  action: { type: "uri", label, uri: "https://fangren.net/?from=line" },   /* ?from=line：來源紀錄用（2026-09-25） */
   contents: [{ type: "box", layout: "horizontal", justifyContent: "center", alignItems: "center",
     contents: [{ type: "text", text: label, color: fg, size: "md", weight: "bold", flex: 0 }] }],
 });

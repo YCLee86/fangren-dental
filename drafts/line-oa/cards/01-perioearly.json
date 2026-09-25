@@ -102,7 +102,7 @@
         "action": {
           "type": "uri",
           "label": "讀文章",
-          "uri": "https://fangren.net/posts/gum-bleeding/"
+          "uri": "https://fangren.net/posts/gum-bleeding/?from=line"
         },
         "contents": [
           {

@@ -102,7 +102,7 @@
         "action": {
           "type": "uri",
           "label": "讀文章",
-          "uri": "https://fangren.net/posts/regular-checkup/"
+          "uri": "https://fangren.net/posts/regular-checkup/?from=line"
         },
         "contents": [
           {

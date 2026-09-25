@@ -13,7 +13,7 @@
         "action": {
           "type": "uri",
           "label": "Ⓑ 智齒・原本的青綠",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         }
       },
       "body": {
@@ -79,7 +79,7 @@
             "action": {
               "type": "uri",
               "label": "看大圖",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -111,7 +111,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -147,7 +147,7 @@
         "action": {
           "type": "uri",
           "label": "Ⓓ 智齒・換成口外的紫",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         }
       },
       "body": {
@@ -213,7 +213,7 @@
             "action": {
               "type": "uri",
               "label": "看大圖",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -245,7 +245,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -281,7 +281,7 @@
         "action": {
           "type": "uri",
           "label": "Ⓑ 輻射・原本的青綠",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         }
       },
       "body": {
@@ -347,7 +347,7 @@
             "action": {
               "type": "uri",
               "label": "看大圖",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -379,7 +379,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -415,7 +415,7 @@
         "action": {
           "type": "uri",
           "label": "Ⓓ 輻射・換成根管的紅",
-          "uri": "https://fangren.net/"
+          "uri": "https://fangren.net/?from=line"
         }
       },
       "body": {
@@ -481,7 +481,7 @@
             "action": {
               "type": "uri",
               "label": "看大圖",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {
@@ -513,7 +513,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/"
+              "uri": "https://fangren.net/?from=line"
             },
             "contents": [
               {

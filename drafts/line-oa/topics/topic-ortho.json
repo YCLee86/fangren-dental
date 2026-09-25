@@ -10,7 +10,7 @@
     "action": {
       "type": "uri",
       "label": "齒顎矯正",
-      "uri": "https://fangren.net/topics/ortho/"
+      "uri": "https://fangren.net/topics/ortho/?from=line"
     }
   },
   "body": {
@@ -191,7 +191,7 @@
         "action": {
           "type": "uri",
           "label": "齒顎矯正",
-          "uri": "https://fangren.net/topics/ortho/"
+          "uri": "https://fangren.net/topics/ortho/?from=line"
         }
       }
     ]

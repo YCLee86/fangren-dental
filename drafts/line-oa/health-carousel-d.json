@@ -105,7 +105,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/gum-bleeding/"
+              "uri": "https://fangren.net/posts/gum-bleeding/?from=line"
             },
             "contents": [
               {
@@ -234,7 +234,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/perio-laser/"
+              "uri": "https://fangren.net/posts/perio-laser/?from=line"
             },
             "contents": [
               {
@@ -363,7 +363,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/regular-checkup/"
+              "uri": "https://fangren.net/posts/regular-checkup/?from=line"
             },
             "contents": [
               {
@@ -492,7 +492,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/bioceramic/"
+              "uri": "https://fangren.net/posts/bioceramic/?from=line"
             },
             "contents": [
               {
@@ -621,7 +621,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/wisdom-tooth/"
+              "uri": "https://fangren.net/posts/wisdom-tooth/?from=line"
             },
             "contents": [
               {
@@ -750,7 +750,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/wisdom-tooth/"
+              "uri": "https://fangren.net/posts/wisdom-tooth/?from=line"
             },
             "contents": [
               {
@@ -879,7 +879,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/orthodontics/"
+              "uri": "https://fangren.net/posts/orthodontics/?from=line"
             },
             "contents": [
               {
@@ -1008,7 +1008,7 @@
             "action": {
               "type": "uri",
               "label": "讀文章",
-              "uri": "https://fangren.net/posts/crown-materials/"
+              "uri": "https://fangren.net/posts/crown-materials/?from=line"
             },
             "contents": [
               {

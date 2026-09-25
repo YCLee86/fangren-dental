@@ -10,7 +10,7 @@
     "action": {
       "type": "uri",
       "label": "兒童牙科",
-      "uri": "https://fangren.net/topics/kids/"
+      "uri": "https://fangren.net/topics/kids/?from=line"
     }
   },
   "body": {
@@ -204,7 +204,7 @@
         "action": {
           "type": "uri",
           "label": "兒童牙科",
-          "uri": "https://fangren.net/topics/kids/"
+          "uri": "https://fangren.net/topics/kids/?from=line"
         }
       }
     ]

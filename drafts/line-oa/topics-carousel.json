@@ -13,7 +13,7 @@
         "action": {
           "type": "uri",
           "label": "一般牙科・定期檢查",
-          "uri": "https://fangren.net/topics/general/"
+          "uri": "https://fangren.net/topics/general/?from=line"
         }
       },
       "body": {
@@ -244,7 +244,7 @@
             "action": {
               "type": "uri",
               "label": "一般牙科・定期檢查",
-              "uri": "https://fangren.net/topics/general/"
+              "uri": "https://fangren.net/topics/general/?from=line"
             }
           }
         ]
@@ -262,7 +262,7 @@
         "action": {
           "type": "uri",
           "label": "牙周治療",
-          "uri": "https://fangren.net/topics/perio/"
+          "uri": "https://fangren.net/topics/perio/?from=line"
         }
       },
       "body": {
@@ -456,7 +456,7 @@
             "action": {
               "type": "uri",
               "label": "牙周治療",
-              "uri": "https://fangren.net/topics/perio/"
+              "uri": "https://fangren.net/topics/perio/?from=line"
             }
           }
         ]
@@ -474,7 +474,7 @@
         "action": {
           "type": "uri",
           "label": "顯微根管",
-          "uri": "https://fangren.net/topics/endo/"
+          "uri": "https://fangren.net/topics/endo/?from=line"
         }
       },
       "body": {
@@ -668,7 +668,7 @@
             "action": {
               "type": "uri",
               "label": "顯微根管",
-              "uri": "https://fangren.net/topics/endo/"
+              "uri": "https://fangren.net/topics/endo/?from=line"
             }
           }
         ]
@@ -686,7 +686,7 @@
         "action": {
           "type": "uri",
           "label": "兒童牙科",
-          "uri": "https://fangren.net/topics/kids/"
+          "uri": "https://fangren.net/topics/kids/?from=line"
         }
       },
       "body": {
@@ -880,7 +880,7 @@
             "action": {
               "type": "uri",
               "label": "兒童牙科",
-              "uri": "https://fangren.net/topics/kids/"
+              "uri": "https://fangren.net/topics/kids/?from=line"
             }
           }
         ]
@@ -898,7 +898,7 @@
         "action": {
           "type": "uri",
           "label": "齒顎矯正",
-          "uri": "https://fangren.net/topics/ortho/"
+          "uri": "https://fangren.net/topics/ortho/?from=line"
         }
       },
       "body": {
@@ -1079,7 +1079,7 @@
             "action": {
               "type": "uri",
               "label": "齒顎矯正",
-              "uri": "https://fangren.net/topics/ortho/"
+              "uri": "https://fangren.net/topics/ortho/?from=line"
             }
           }
         ]
@@ -1097,7 +1097,7 @@
         "action": {
           "type": "uri",
           "label": "植牙・假牙重建",
-          "uri": "https://fangren.net/topics/prosth/"
+          "uri": "https://fangren.net/topics/prosth/?from=line"
         }
       },
       "body": {
@@ -1291,7 +1291,7 @@
             "action": {
               "type": "uri",
               "label": "植牙・假牙重建",
-              "uri": "https://fangren.net/topics/prosth/"
+              "uri": "https://fangren.net/topics/prosth/?from=line"
             }
           }
         ]
@@ -1309,7 +1309,7 @@
         "action": {
           "type": "uri",
           "label": "口腔外科",
-          "uri": "https://fangren.net/topics/surg/"
+          "uri": "https://fangren.net/topics/surg/?from=line"
         }
       },
       "body": {
@@ -1503,7 +1503,7 @@
             "action": {
               "type": "uri",
               "label": "口腔外科",
-              "uri": "https://fangren.net/topics/surg/"
+              "uri": "https://fangren.net/topics/surg/?from=line"
             }
           }
         ]
