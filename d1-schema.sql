@@ -79,3 +79,35 @@ CREATE TABLE IF NOT EXISTS click_quota (
   day TEXT    PRIMARY KEY,
   n   INTEGER NOT NULL DEFAULT 0
 );
+
+-- =============================================================================
+-- 來源紀錄（2026-09-25）
+-- -----------------------------------------------------------------------------
+-- ⚠ 同上，**不必手動執行**：src/source.js 會在第一次用到的時候自己建。
+--
+-- 只在「從站外進來的那一下」記一筆，站內換頁不記。
+-- **沒有 IP、沒有 User-Agent、沒有 cookie、沒有流水號**（同上兩張的紅線）。
+--
+-- src   歸好類的來源：google／line／facebook／gbp／direct／other…（src/source.js 的 BUCKETS 與 TAGS）
+-- via   怎麼認出來的：tag（網址上的 ?from=）／ref（瀏覽器帶的 referrer）／none
+-- host  referrer 的**網域**，只有 via=ref 才有。⚠ 整段網址不存（裡面可能帶著搜尋的字）
+-- page  進站的第一頁：home／topic:<spec>／post:<slug>
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS source_log (
+  id   INTEGER PRIMARY KEY AUTOINCREMENT,
+  src  TEXT    NOT NULL,               -- 來源（歸好類的）
+  via  TEXT    NOT NULL,               -- tag／ref／none
+  host TEXT,                           -- referrer 的網域（只有 via=ref）
+  page TEXT    NOT NULL,               -- 進站的第一頁
+  at   TEXT    NOT NULL                -- 例：2026-09-25T07:15:03Z
+);
+
+CREATE INDEX IF NOT EXISTS idx_source_at  ON source_log (at);
+CREATE INDEX IF NOT EXISTS idx_source_src ON source_log (src);
+
+-- 每日收件上限（src/source.js 的 DAY_CAP）。
+CREATE TABLE IF NOT EXISTS source_quota (
+  day TEXT    PRIMARY KEY,
+  n   INTEGER NOT NULL DEFAULT 0
+);

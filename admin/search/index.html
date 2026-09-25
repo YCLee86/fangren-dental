@@ -6,12 +6,17 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>站上的紀錄 — 芳仁牙醫診所</title>
 <!--
-  搜尋紀錄 ＋ 點擊紀錄報告（2026-09-20）
+  搜尋紀錄 ＋ 點擊紀錄 ＋ 來源紀錄報告（2026-09-20；來源 2026-09-25）
   ---------------------------------------------------------------------------
   兩份報告在同一頁，上面一排分頁切換，**共用同一把密碼與同一排「期間」**。
   第二份（點擊）是同一天稍晚加的：使用者問「能記錄網站上的按鈕或超連結
   點擊次數嗎」，接著指定「都要記」——所以離站的三件（打電話、開導航、加 LINE）
   與站內每一顆會動的東西都記，資料那一側在 src/click.js。
+  第三份（來源）是 2026-09-25 加的：使用者問「有辦法記錄使用者是從那邊進入網站的嗎」。
+  只記「從站外進來的那一下」，資料那一側在 src/source.js。
+  ⚠ 「直接輸入」那一列一定會很大——LINE 與不少 App 內的瀏覽器不帶 referrer，
+     沒貼 ?from= 標記的連結點進來都落在那裡。那不是壞掉，第二張表的
+     「認法」那一欄會講清楚每一筆是靠標記還是靠 referrer 認出來的。
   ⚠ 點擊那一份的兩張排名表**刻意先分離站／站內再排名次**：次數天生就多的
      站內元件（回到最上面、科別標記）混在一起的話，會把真正重要的那幾顆擠掉。
 
@@ -192,6 +197,27 @@ td.q { word-break: break-word; }
       <div id="c-t-log"></div>
     </div>
 
+    <!-- 來源那一份（2026-09-25）。只算「從站外進來的那一下」，站內換頁不算。 -->
+    <div id="view-source" hidden>
+      <div class="sum">
+        <div><span>從站外進來</span><strong id="r-all">—</strong></div>
+        <div><span>來源種類</span><strong id="r-uniq">—</strong></div>
+        <div><span>沒帶來源</span><strong id="r-direct">—</strong></div>
+      </div>
+
+      <h2>從哪裡來<small>小標籤是認法：「標記」＝ 網址上的 ?from=，「網域」＝ 瀏覽器帶的</small></h2>
+      <div id="r-t-src"></div>
+
+      <h2>進站的第一頁<small>從站外點進來時落在哪一頁</small></h2>
+      <div id="r-t-page"></div>
+
+      <h2>是哪個網站<small>靠瀏覽器認出來的那些，各是哪個網域</small></h2>
+      <div id="r-t-host"></div>
+
+      <h2>逐筆明細<small>最近 200 筆</small></h2>
+      <div id="r-t-log"></div>
+    </div>
+
     <div class="foot">
       <p id="span"></p>
       <button type="button" id="reload">重新整理</button>
@@ -207,7 +233,8 @@ td.q { word-break: break-word; }
   var STORE = 'fangren:report-key';
   /* 兩份報告、兩個端點，**同一把密碼**（Cloudflare 的 REPORT_KEY）。
      ⚠ 不要寫成根目錄絕對路徑——理由同站上那幾支腳本（舊站還活著）。 */
-  var API = { search: '../../api/search-report', click: '../../api/click-report' };
+  var API = { search: '../../api/search-report', click: '../../api/click-report',
+              source: '../../api/source-report' };
 
   var SPEC = { general: '一般牙科', perio: '牙周治療', kids: '兒童牙科', endo: '顯微根管',
                ortho: '齒顎矯正', prosth: '植牙假牙', surg: '口腔外科' };
@@ -216,16 +243,29 @@ td.q { word-break: break-word; }
   /* 使用者指定的七格，加一格「全部」。value 是天數代碼，給兩個報告端點共用。 */
   var WINS = [['7d', '一週'], ['30d', '一個月'], ['60d', '兩個月'], ['90d', '三個月'],
               ['180d', '半年'], ['365d', '一年'], ['730d', '兩年'], ['all', '全部']];
-  var TABS = [['search', '搜尋紀錄'], ['click', '點擊紀錄']];
+  var TABS = [['search', '搜尋紀錄'], ['click', '點擊紀錄'], ['source', '來源紀錄']];
   /* 「來源」那把尺兩份不一樣：搜尋框只出現在首頁與七科頁，點擊則每一頁都有。 */
   var SCOPES = {
     search: [['', '全部'], ['home', '全站搜尋'], ['topic', '各科頁內']],
-    click:  [['', '全部'], ['home', '首頁'], ['topic', '科別頁'], ['post', '文章頁']]
+    click:  [['', '全部'], ['home', '首頁'], ['topic', '科別頁'], ['post', '文章頁']],
+    source: [['', '全部'], ['home', '首頁'], ['topic', '科別頁'], ['post', '文章頁']]
   };
   var TITLE = {
     search: ['搜尋紀錄', '訪客在站上搜尋框打過的字。沒有記錄 IP、瀏覽器或任何身分資訊。'],
-    click:  ['點擊紀錄', '訪客按過站上哪些連結與按鈕。同樣沒有記錄 IP、瀏覽器或任何身分資訊。']
+    click:  ['點擊紀錄', '訪客按過站上哪些連結與按鈕。同樣沒有記錄 IP、瀏覽器或任何身分資訊。'],
+    source: ['來源紀錄', '訪客從哪裡點進網站。只算從站外進來的那一下，同樣沒有記錄 IP、瀏覽器或任何身分資訊。']
   };
+
+  /* ---- 來源代碼 → 名字（對照 src/source.js 的 BUCKETS 與 TAGS）-------------
+     ⚠ 漏加只會印出英文代碼，不會少記。 */
+  var SRC = {
+    google: 'Google 搜尋', gbp: 'Google 商家檔案', line: 'LINE', facebook: 'Facebook',
+    instagram: 'Instagram', threads: 'Threads', youtube: 'YouTube', bing: 'Bing',
+    yahoo: 'Yahoo', ai: 'AI 助理（ChatGPT 等）', qr: 'QR code',
+    direct: '沒帶來源（直接輸入、書籤、App 內瀏覽器）', other: '其他網站'
+  };
+  var VIA = { tag: '標記', ref: '網域', none: '' };
+  function srcName(s) { return SRC[s] || s; }
 
   /* ---- 代碼 → 看得懂的名字（對照 src/click.js 的白名單）-------------------
      ⚠ 這張表只管「怎麼印」。站上新增一顆要按的東西時，真正要改的是
@@ -265,7 +305,7 @@ td.q { word-break: break-word; }
     return t;
   }
   (function () {
-    var done = function () { if (tab === 'click' && data.click) render(); };
+    var done = function () { if (tab !== 'search' && data[tab]) render(); };
     try {
       fetch('../../assets/post-titles.json')
         .then(function (r) { return r.json(); })
@@ -294,8 +334,8 @@ td.q { word-break: break-word; }
 
   var $ = function (id) { return document.getElementById(id); };
   var key = '', win = '30d', tab = 'search';
-  var scope = { search: '', click: '' };
-  var data = { search: null, click: null };
+  var scope = { search: '', click: '', source: '' };
+  var data = { search: null, click: null, source: null };
 
   /* ---- 時間：資料庫存的是 UTC 的 ISO 字串，畫面上一律台灣時間 -------------
      ⚠ 不要自己 +8 —— toLocaleString 帶 timeZone 才會處理各種邊界，
@@ -320,6 +360,11 @@ td.q { word-break: break-word; }
     /* ⚠ 這個字會落在 white-space: nowrap 的那一欄，所以只取冒號前那一段再截短，
        整句標題會把表格撐破（390 寬就破框了）。 */
     return m ? title(m[1], 9) + '頁' : s;
+  }
+  /* 進站頁那張表是整列一格，印得下完整一點的標題。 */
+  function pageName(s) {
+    var m = /^post:(.+)$/.exec(s || '');
+    return m ? '文章：' + title(m[1]) : scopeName(s);
   }
   function inScope(s) {
     var cur = scope[tab];
@@ -346,12 +391,15 @@ td.q { word-break: break-word; }
     bar($('scopes'), SCOPES[tab], scope[tab], function (v) { scope[tab] = v; render(); });
   }
 
+  function views() {
+    TABS.forEach(function (t) { $('view-' + t[0]).hidden = tab !== t[0]; });
+  }
+
   /* 換分頁：標題與兩塊畫面先換，資料沒有或期間不同才去拿。 */
   function show() {
     $('h1').textContent = TITLE[tab][0];
     $('sub').textContent = TITLE[tab][1];
-    $('view-search').hidden = tab !== 'search';
-    $('view-click').hidden = tab !== 'click';
+    views();
     if (!data[tab] || data[tab].win !== win) load(); else render();
   }
 
@@ -467,16 +515,83 @@ td.q { word-break: break-word; }
     clickLogTable($('c-t-log'), d.recent || []);
   }
 
+  /* ---- 來源 ---------------------------------------------------------------- */
+  /* 一張「名字 ｜ 次數 ｜ 佔幾成 ｜ 最近一次」的表。groups 是 { key: {n, last, tags:[]} }。 */
+  function shareTable(box, groups, head, name, total, empty) {
+    var list = Object.keys(groups).map(function (k) { return groups[k]; })
+                     .sort(function (a, b) { return b.n - a.n || (b.last < a.last ? -1 : 1); });
+    if (!list.length) { box.innerHTML = '<p class="empty">' + empty + '</p>'; return; }
+    var h = '<table class="rank hit"><thead><tr><th>' + head + '</th><th class="n">次數</th>' +
+            '<th class="n">佔</th><th class="t">最近一次</th></tr></thead><tbody>';
+    list.slice(0, 100).forEach(function (g) {
+      var tags = Object.keys(g.tags).filter(function (k) { return k; }).map(function (k) {
+        return '<span class="tag">' + esc(k) + ' ' + g.tags[k] + '</span>';
+      }).join('');
+      h += '<tr><td class="q">' + esc(name(g.key)) + tags + '</td><td class="n"><b>' + g.n + '</b></td>' +
+           '<td class="n">' + (total ? Math.round(g.n / total * 100) + '%' : '') + '</td>' +
+           '<td class="t">' + tw(g.last) + '</td></tr>';
+    });
+    box.innerHTML = h + '</tbody></table>';
+  }
+  function group(rows, keyOf, tagOf) {
+    var out = {};
+    rows.forEach(function (r) {
+      var k = keyOf(r);
+      var g = out[k] || (out[k] = { key: k, n: 0, last: '', tags: {} });
+      g.n += r.n;
+      if (r.last > g.last) g.last = r.last;
+      var t = tagOf ? tagOf(r) : '';
+      if (t) g.tags[t] = (g.tags[t] || 0) + r.n;
+    });
+    return out;
+  }
+
+  function renderSource(d) {
+    var rows = (d.rows || []).filter(function (r) { return inScope(r.page); });
+    var all = 0, direct = 0, kinds = {};
+    rows.forEach(function (r) {
+      all += r.n;
+      if (r.src === 'direct') direct += r.n;
+      kinds[r.src] = 1;
+    });
+    $('r-all').textContent = all;
+    $('r-uniq').textContent = Object.keys(kinds).length;
+    $('r-direct').textContent = direct + (all ? '（' + Math.round(direct / all * 100) + '%）' : '');
+
+    shareTable($('r-t-src'), group(rows, function (r) { return r.src; },
+                                   function (r) { return VIA[r.via]; }),
+               '來源', srcName, all, '這段期間沒有人從站外進來。');
+    shareTable($('r-t-page'), group(rows, function (r) { return r.page; },
+                                    function (r) { return srcName(r.src).split('（')[0]; }),
+               '進站的第一頁', pageName, all, '這段期間沒有人從站外進來。');
+    var hosts = (d.hosts || []).filter(function (r) { return inScope(r.page); });
+    shareTable($('r-t-host'), group(hosts, function (r) { return r.host; },
+                                    function (r) { return srcName(r.src).split('（')[0]; }),
+               '網域', function (k) { return k; }, 0, '這段期間沒有靠網域認出來的來源。');
+
+    var log = (d.recent || []).filter(function (r) { return inScope(r.page); });
+    if (!log.length) { $('r-t-log').innerHTML = '<p class="empty">這段期間沒有紀錄。</p>'; return; }
+    var h = '<table><thead><tr><th class="t">時間</th><th>來源</th><th class="t">進站頁</th></tr></thead><tbody>';
+    log.forEach(function (r) {
+      h += '<tr><td class="t">' + tw(r.at, true) + '</td><td class="q">' + esc(srcName(r.src).split('（')[0]) +
+           (r.host && r.src === 'other' ? '<span class="tag">' + esc(r.host) + '</span>' : '') +
+           '</td><td class="t">' + esc(scopeName(r.page)) + '</td></tr>';
+    });
+    $('r-t-log').innerHTML = h + '</tbody></table>';
+  }
+
   function render() {
     var d = data[tab];
     if (!d) return;
     bars();
-    if (tab === 'search') renderSearch(d); else renderClick(d);
+    if (tab === 'search') renderSearch(d);
+    else if (tab === 'click') renderClick(d);
+    else renderSource(d);
 
     /* 資料從哪天開始 —— 「兩年」那一格在上線初期一定比實際資料長很多，
        不講清楚的話那張空表看起來會像壞掉。 */
     var sp = d.span || {};
-    var what = tab === 'search' ? '搜尋' : '點擊';
+    var what = { search: '搜尋', click: '點擊', source: '來源' }[tab];
     var txt;
     if (!sp.first) {
       txt = '目前資料庫裡還沒有任何一筆' + what + '紀錄。上線之後要等有人用才會開始累積。';
@@ -509,8 +624,7 @@ td.q { word-break: break-word; }
         $('app').hidden = false;
         $('h1').textContent = TITLE[tab][0];
         $('sub').textContent = TITLE[tab][1];
-        $('view-search').hidden = tab !== 'search';
-        $('view-click').hidden = tab !== 'click';
+        views();
         if (t === tab) render();
       })
       .catch(function (e) {
@@ -534,7 +648,7 @@ td.q { word-break: break-word; }
   $('reload').addEventListener('click', function () { load(); });
   $('out').addEventListener('click', function () {
     try { localStorage.removeItem(STORE); } catch (x) {}
-    key = ''; data = { search: null, click: null };
+    key = ''; data = { search: null, click: null, source: null };
     $('key').value = '';
     $('app').hidden = true;
     $('gate').hidden = false;
@@ -557,6 +671,18 @@ td.q { word-break: break-word; }
       lines.push('搜尋的字,總次數,其中搜不到,最近一次');
       (d.rows || []).filter(function (r) { return inScope(r.scope); }).forEach(function (r) {
         lines.push([q(r.q), r.n, r.miss, q(tw(r.last, true))].join(','));
+      });
+    } else if (tab === 'source') {
+      lines = ['時間,來源,代碼,認法,網域,進站頁'];
+      (d.recent || []).filter(function (r) { return inScope(r.page); }).forEach(function (r) {
+        lines.push([q(tw(r.at, true)), q(srcName(r.src)), q(r.src), q(VIA[r.via] || ''), q(r.host || ''),
+                    q(pageName(r.page))].join(','));
+      });
+      lines.push('');
+      lines.push('來源,代碼,認法,進站頁,次數,最近一次');
+      (d.rows || []).filter(function (r) { return inScope(r.page); }).forEach(function (r) {
+        lines.push([q(srcName(r.src)), q(r.src), q(VIA[r.via] || ''), q(pageName(r.page)), r.n,
+                    q(tw(r.last, true))].join(','));
       });
     } else {
       lines = ['時間,按了哪一顆,代碼,在哪一頁,離站'];

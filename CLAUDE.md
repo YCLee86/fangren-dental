@@ -361,6 +361,10 @@ src/
                         User-Agent、沒有 cookie，連這次瀏覽的流水號都沒有**（有流水號就能
                         把動作串成軌跡）。⚠ 代碼是白名單，站上多一顆可以按的東西時，
                         這裡與 assets/click-log.js 的規則表要一起加
+  source.js             **來源紀錄**的寫入與查詢（2026-09-25）。被 worker.js 匯入。
+                        只在「從站外進來的那一下」記一筆：來源、認法、referrer 的**網域**、
+                        進站頁、時間。⚠⚠ 同樣**沒有 IP、UA、cookie、流水號**，referrer
+                        **只存網域**。`?from=` 的值是白名單（TAGS），貼新的地方先加一個值
   allowed-slugs.js      白名單，由 build 產生，勿手改
 assets/
   style.css             全站樣式
@@ -380,6 +384,9 @@ assets/
                         寫成冒泡的話那三顆一筆都記不到而畫面完全正常。
                         ⚠ 三種頁面都載（首頁／文章／著陸頁），改完 index.html 要重跑 topics.mjs。
                         ⚠ 版面改了 class 那一顆就靜靜地不再被記 —— 改完跑 tools/click-test.mjs
+  source-log.js         **來源紀錄**的前端那一側（2026-09-25）。開頁時送一筆（重新整理、
+                        上一頁、站內換頁都不送），**並把網址列上的 ?from= 擦掉**。
+                        三種頁面都載，改完 index.html 要重跑 topics.mjs
   search-log.js         **搜尋紀錄**的前端那一側（2026-09-20）。只在「這次搜尋結束」
                         時送一筆（Enter／失焦／離開頁面／停手 8 秒），不是每按一鍵送一次。
                         ⚠ 首頁與七科頁共用它（七科頁的快照由 topics.mjs 產生，
@@ -422,8 +429,8 @@ topics/<spec>/index.html 科別著陸頁（七科，2026-08-21 上線）。**由
                         版型改 tools/topics.mjs，改完重跑產生器。已進版控
 history/<name>.html     改版紀錄（原提案頁的推導文字，定案後只留這個。見第八節）
 history/index.html      改版紀錄的目錄
-admin/search/index.html **搜尋紀錄 ＋ 點擊紀錄報告**（2026-09-20，網址 /admin/search/）。
-                        兩份在同一頁，上面一排分頁切換，共用同一把密碼與同一排「期間」。
+admin/search/index.html **搜尋紀錄 ＋ 點擊紀錄 ＋ 來源紀錄報告**（2026-09-20，網址 /admin/search/；
+                        來源那一份 2026-09-25 加的）。三份在同一頁，上面一排分頁切換，共用同一把密碼與同一排「期間」。
                         ⚠ 這一頁**本身沒有任何資料**，只有一個密碼框——資料要帶
                         Cloudflare 加密變數 REPORT_KEY 跟 /api/search-report 要。
                         ⚠ 刻意**不寫進 robots.txt**，理由在 worker.js 的 ADMIN_PREFIX
@@ -521,6 +528,8 @@ tools/
                         search-test.mjs）。會真的在瀏覽器裡把每一顆按一次，對不上就擋下來。
                         ⚠ 改過 src/click.js、assets/click-log.js、admin/search/，
                         **或改過站上任何一顆可以按的東西的 class**，都要跑它
+  source-test.mjs       **來源紀錄那條線的守門**（2026-09-25）。61 項，做法同 click-test.mjs。
+                        ⚠ 改過 src/source.js、assets/source-log.js、admin/search/ 都要跑它
   search-test.mjs       **搜尋紀錄那條線的守門**（2026-09-20）。47 項，零依賴
                         （資料庫用 node 內建的 node:sqlite 假裝成 D1，瀏覽器用站上
                         既有的那顆 Chromium）。`--site` 改對 _site/ 跑、`--shot` 順便截圖。

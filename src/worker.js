@@ -14,6 +14,8 @@
      GET  /api/search-report?win=30d           → 報告要的數字（要 X-Report-Key）
      POST /api/click   body: { "code": "tel", "scope": "post:missing-tooth" } → { ok: true }
      GET  /api/click-report?win=30d            → 同上（同一把 X-Report-Key）
+     POST /api/source  body: { "page": "home", "from": "line", "host": "" } → { ok: true }
+     GET  /api/source-report?win=30d           → 同上（同一把 X-Report-Key）
      /admin/*                                 → 報告頁＋noindex＋no-store（見下方 ADMIN_PREFIX）
      其他                                        → 靜態檔，沒有就給 404 頁
 
@@ -24,6 +26,7 @@
 import { ALLOWED } from "./allowed-slugs.js";
 import { logSearch, searchReport } from "./search.js";
 import { logClick, clickReport } from "./click.js";
+import { logSource, sourceReport } from "./source.js";
 
 const allowed = new Set(ALLOWED);
 
@@ -179,6 +182,17 @@ export default {
 
     if (url.pathname === "/api/click-report") {
       if (request.method === "GET") return clickReport(request, url, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
+    /* 來源紀錄（2026-09-25）。同一個形狀、同一把 REPORT_KEY（見 src/source.js）。 */
+    if (url.pathname === "/api/source") {
+      if (request.method === "POST") return logSource(request, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
+    if (url.pathname === "/api/source-report") {
+      if (request.method === "GET") return sourceReport(request, url, env);
       return json({ error: "method not allowed" }, 405);
     }
 
