@@ -123,7 +123,7 @@ function blockFor(spec) {
           <a class="pd-go" href="${HOME}#doc-${d.slug}" aria-label="到首頁看${d.name}醫師的介紹"></a>
         </li>`;
   return `
-<section class="pd" aria-labelledby="pd-h" data-spec="${spec}">
+<section class="pd" id="pd" aria-labelledby="pd-h" data-spec="${spec}">
   <div class="pd-in">
     <div class="pd-head">
       <h2 id="pd-h">這一科的醫師</h2>
@@ -138,6 +138,28 @@ function blockFor(spec) {
     </div>
   </div>
 </section>
+`;
+}
+
+// ---- 3b. 兩個入口：頂端那一行的頭像、捲動時底部浮出的那一條 ------------
+// 頭像只疊有照片的那幾位（最多三顆）；沒有照片的不放佔位圖（字首圓章是落選案）。
+function faces(spec, size) {
+  return docsOf(spec).items.filter((d) => d.face).slice(0, 3).map((d) =>
+    `<picture><source type="image/webp" srcset="${d.webp}"><img src="${d.face}" width="${size}" height="${size}" alt=""></picture>`).join('');
+}
+function peekFor(spec) {
+  const n = docsOf(spec).items.length;
+  return `<a class="pd-peek" href="#pd" data-pd-jump><span class="pd-stack" aria-hidden="true">${faces(spec, 22)}</span><span>${n} 位醫師</span></a>
+        `;
+}
+function floatFor(spec) {
+  const n = docsOf(spec).items.length;
+  return `
+<a class="pd-float" href="#pd" data-pd-jump data-spec="${spec}" aria-hidden="true" tabindex="-1">
+  <span class="pd-stack" aria-hidden="true">${faces(spec, 30)}</span>
+  <span class="pd-float-t"><b>這一科的醫師</b><span>${SPEC_NAME[spec]}・${n} 位</span></span>
+  <span class="pd-chev" aria-hidden="true">›</span>
+</a>
 `;
 }
 
@@ -189,6 +211,35 @@ ${DOC_CSS}
 .pd[data-pos="in"] .docs { grid-template-columns: 1fr; }
 @media (min-width: 721px) { .pd[data-pos="in"] .docs { grid-template-columns: repeat(2, 1fr); } }
 
+/* ===== 入口 1：頂端那一行的頭像 =====
+   放在瀏覽數後面、夜間開關前面（開關靠 margin-left:auto 貼右）。 */
+.pd-peek { display: none; align-items: center; gap: .35rem; white-space: nowrap; }
+body[data-pe="top"] .pd-peek, body[data-pe="both"] .pd-peek { display: inline-flex; }
+.crumbs a.pd-peek, .crumbs a.pd-peek:hover { color: var(--accent-deep); }
+.pd-stack { display: inline-flex; }
+.pd-stack picture { display: block; }
+.pd-stack img { display: block; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px var(--paper); }
+.pd-stack picture + picture { margin-left: -7px; }
+.pd-peek .pd-stack img { width: 22px; height: 22px; }
+/* 手機上那一行本來就滿了（正式站 375 寬：首頁／科別／日期／瀏覽數已經把開關擠到第二列），
+   所以這一顆自然換行、和開關排在第二列，不另外佔一列。 */
+
+/* ===== 入口 2：捲過首圖之後，底部浮出一條；捲到醫師那一塊就收起來 ===== */
+.pd-float { position: fixed; z-index: 80; left: 12px; right: 12px; bottom: calc(var(--pv-h, 0px) + 12px);
+  max-width: 26rem; margin-inline: auto;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .7rem;
+  padding: .55rem .9rem .55rem .6rem; border-radius: 14px;
+  background: var(--card); border: 1px solid var(--rule); box-shadow: var(--shadow-lift, 0 6px 20px rgba(0,0,0,.18));
+  color: var(--ink); text-decoration: none;
+  opacity: 0; transform: translateY(12px); pointer-events: none; visibility: hidden;
+  transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s; }
+.pd-float.is-on { opacity: 1; transform: none; pointer-events: auto; visibility: visible; transition: opacity .2s ease, transform .2s ease; }
+.pd-float .pd-stack img { width: 30px; height: 30px; box-shadow: 0 0 0 2px var(--card); }
+.pd-float-t { display: grid; line-height: 1.35; min-width: 0; }
+.pd-float-t b { font-size: .95rem; }
+.pd-float-t span { font-size: .8rem; color: var(--accent-deep); }
+@media (prefers-reduced-motion: reduce) { .pd-float, .pd-float.is-on { transition: none; transform: none; } }
+
 /* ===== 切換條 ===== */
 .pv-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; background: #1f2226; color: #eef0f1;
   font: 13px/1.4 system-ui, sans-serif; padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); box-shadow: 0 -2px 10px rgba(0,0,0,.25); }
@@ -200,15 +251,20 @@ ${DOC_CSS}
 .pv-bar .pv-x { margin-left: auto; }
 .pv-mini { position: fixed; right: 10px; bottom: 10px; z-index: 90; display: none; font: 13px system-ui; background: #1f2226; color: #eef0f1; border: 0; border-radius: 16px; padding: 6px 12px; }
 body.pv-closed .pv-bar { display: none; } body.pv-closed .pv-mini { display: block; }
-body:not(.pv-closed) { padding-bottom: 92px; }
 `;
 
 const BAR = `
 <div class="pv-bar" role="region" aria-label="提案切換">
+  <div class="pv-row"><span class="pv-lab">入口</span>
+    <button type="button" data-k="e" data-v="none">無</button>
+    <button type="button" data-k="e" data-v="top">1 頂端頭像</button>
+    <button type="button" data-k="e" data-v="float">2 底部浮條</button>
+    <button type="button" data-k="e" data-v="both">1＋2</button>
+  </div>
   <div class="pv-row"><span class="pv-lab">內容</span>
-    <button type="button" data-k="d" data-v="a">Ⓐ 頭像＋名字</button>
-    <button type="button" data-k="d" data-v="b">Ⓑ ＋這一科的專長</button>
-    <button type="button" data-k="d" data-v="c">Ⓒ 完整醫師卡</button>
+    <button type="button" data-k="d" data-v="a">Ⓐ 名字</button>
+    <button type="button" data-k="d" data-v="b">Ⓑ ＋專長</button>
+    <button type="button" data-k="d" data-v="c">Ⓒ 完整卡</button>
   </div>
   <div class="pv-row"><span class="pv-lab">位置</span>
     <button type="button" data-k="p" data-v="in">① 內文結尾</button>
@@ -223,24 +279,55 @@ const BAR = `
   var inA = document.getElementById('pd-in'), wideA = document.getElementById('pd-wide');
   var q = new URLSearchParams(location.search), st = {};
   try { st = JSON.parse(sessionStorage.getItem('pv:pd') || '{}'); } catch (e) {}
-  var s = { d: q.get('d') || st.d || 'b', p: q.get('p') || st.p || 'in' };
+  var s = { d: q.get('d') || st.d || 'b', p: q.get('p') || st.p || 'wide', e: q.get('e') || st.e || 'top' };
+  if (!/^(none|top|float|both)$/.test(s.e)) s.e = 'top';
   if (!/^[abc]$/.test(s.d)) s.d = 'b';
-  if (!/^(in|wide)$/.test(s.p)) s.p = 'in';
+  if (!/^(in|wide)$/.test(s.p)) s.p = 'wide';
   function apply() {
-    pd.dataset.d = s.d; pd.dataset.pos = s.p;
+    pd.dataset.d = s.d; pd.dataset.pos = s.p; document.body.dataset.pe = s.e;
     (s.p === 'in' ? inA : wideA).appendChild(pd);
     document.querySelectorAll('.pv-bar [data-k]').forEach(function (b) {
       b.setAttribute('aria-pressed', String(s[b.dataset.k] === b.dataset.v));
     });
     try { sessionStorage.setItem('pv:pd', JSON.stringify(s)); } catch (e) {}
-    var u = new URL(location.href); u.searchParams.set('d', s.d); u.searchParams.set('p', s.p);
+    var u = new URL(location.href); u.searchParams.set('d', s.d); u.searchParams.set('p', s.p); u.searchParams.set('e', s.e);
     history.replaceState(null, '', u);
+    padPv(); floatCheck();
   }
+  // 切換條的高度讓浮條墊在它上面
+  var bar = document.querySelector('.pv-bar');
+  function padPv() {
+    var h = document.body.classList.contains('pv-closed') ? 0 : bar.offsetHeight;
+    document.documentElement.style.setProperty('--pv-h', h + 'px');
+    document.body.style.paddingBottom = h ? h + 'px' : '';
+  }
+  // 浮條：首圖捲出畫面之後出現，醫師那一塊進到畫面就收起來
+  var fl = document.querySelector('.pd-float'), hero = document.querySelector('.post-hero');
+  function floatCheck() {
+    var want = s.e === 'float' || s.e === 'both';
+    var past = hero ? hero.getBoundingClientRect().bottom < 0 : scrollY > 400;
+    var reached = pd.getBoundingClientRect().top < innerHeight;
+    var on = want && past && !reached;
+    fl.classList.toggle('is-on', on);
+    fl.setAttribute('aria-hidden', String(!on)); fl.tabIndex = on ? 0 : -1;
+  }
+  addEventListener('scroll', floatCheck, { passive: true });
+  addEventListener('resize', function () { padPv(); floatCheck(); });
+  addEventListener('load', padPv);
+  if (window.ResizeObserver) new ResizeObserver(padPv).observe(bar);
+  // 兩個入口點下去：平滑捲到醫師那一塊（減少動態效果的話直接跳）
+  document.querySelectorAll('[data-pd-jump]').forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      pd.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
   document.querySelectorAll('.pv-bar [data-k]').forEach(function (b) {
     b.addEventListener('click', function () { s[b.dataset.k] = b.dataset.v; apply(); });
   });
-  document.querySelector('[data-close]').addEventListener('click', function () { document.body.classList.add('pv-closed'); });
-  document.querySelector('[data-open]').addEventListener('click', function () { document.body.classList.remove('pv-closed'); });
+  document.querySelector('[data-close]').addEventListener('click', function () { document.body.classList.add('pv-closed'); padPv(); });
+  document.querySelector('[data-open]').addEventListener('click', function () { document.body.classList.remove('pv-closed'); padPv(); });
   apply();
 })();
 </script>
@@ -267,6 +354,11 @@ for (const slug of slugs) {
   h = h.replace(/(["\s])\.\.\/\.\.\//g, '$1/');
   h = h.replace(/"\.\.\/([a-z0-9-]+)\/"/g, '"/preview/post-doctors/$1/"');
 
+  // 入口 1：放進頂端那一行（夜間開關前面）
+  const tgAt = h.indexOf('<button class="theme-toggle"');
+  if (tgAt < 0) throw new Error(`${slug}: 頂端那一行找不到夜間開關`);
+  h = h.slice(0, tgAt) + peekFor(spec) + h.slice(tgAt);
+
   // 兩個錨點
   const footAt = h.indexOf('<div class="post-foot">');
   if (footAt < 0) throw new Error(`${slug}: 沒有 post-foot`);
@@ -279,7 +371,7 @@ for (const slug of slugs) {
   const headEnd = h.indexOf('</head>');
   h = h.slice(0, headEnd) + `<style>${PD_CSS}</style>\n` + h.slice(headEnd);
   const bodyEnd = h.lastIndexOf('</body>');
-  h = h.slice(0, bodyEnd) + BAR + h.slice(bodyEnd);
+  h = h.slice(0, bodyEnd) + floatFor(spec) + BAR + h.slice(bodyEnd);
 
   fs.mkdirSync(path.join(OUT, slug), { recursive: true });
   fs.writeFileSync(path.join(OUT, slug, 'index.html'), h);
