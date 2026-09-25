@@ -8831,6 +8831,10 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 .pvbar-r button[aria-pressed="true"] { background: #f2f0ee; color: #1c1e22; border-color: #f2f0ee; font-weight: 600; }
 .pvbar-go { flex: none !important; width: auto; padding: 5px 8px !important; }
 @media print { .pvbar { display: none; } }
+/* 第三輪（2026-09-25）使用者挑定 Ⓒ 卡片底 ＋ 矯正科的藍灰 ＋ 圓角 18%（他手機截圖上亮著的那三格），
+   要的是「上線後長什麼樣」—— 切換條預設收起來，網址帶 ?pv=1 才出現。 */
+.pvbar { display: none; }
+:root[data-pv="1"] .pvbar { display: block; }
 </style>
 <div class="pvbar">
   <div class="pvbar-r" data-k="pos"><span class="pvbar-k">位置</span>
@@ -8852,8 +8856,9 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 <script>
 (function () {
   var root = document.documentElement, box = document.querySelector('.pvbar');
-  var KEYS = { pos: ['a','b','c'], c: ['blue','spec'], r: ['18','27','38'] }, DEF = { pos: 'a', c: 'blue', r: '27' };
+  var KEYS = { pos: ['a','b','c'], c: ['blue','spec'], r: ['18','27','38'] }, DEF = { pos: 'c', c: 'spec', r: '18' };
   var st = { pos: DEF.pos, c: DEF.c, r: DEF.r }, qs = new URLSearchParams(location.search);
+  if (qs.get('pv') === '1') root.setAttribute('data-pv', '1');
   Object.keys(KEYS).forEach(function (k) { var v = qs.get(k); if (v && KEYS[k].indexOf(v) >= 0) st[k] = v; });
   function apply() {
     root.setAttribute('data-fbpos', st.pos); root.setAttribute('data-fbc', st.c); root.setAttribute('data-fbr', st.r);
