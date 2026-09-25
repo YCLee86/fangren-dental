@@ -507,9 +507,9 @@ r.dataset.theme=s;})();</script>
   var q = new URLSearchParams(location.search), st = {};
   try { st = JSON.parse(sessionStorage.getItem('pv:pd') || '{}'); } catch (e) {}
   // 內容、位置、入口三條尺已經定案（Ⓑ＋專長／① 內文結尾／1＋2），收成預設值、從切換條上拿掉；網址參數仍然吃得到
-  var s = { d: q.get('d') || 'b', p: q.get('p') || 'in', e: q.get('e') || 'both', g: q.get('g') || st.g || 'a' };
+  var s = { d: q.get('d') || 'b', p: q.get('p') || 'in', e: q.get('e') || 'both', g: q.get('g') || st.g || 'c' };
   if (!/^(none|top|float|both)$/.test(s.e)) s.e = 'both';
-  if (!/^[abc]$/.test(s.g)) s.g = 'a';
+  if (!/^[abc]$/.test(s.g)) s.g = 'c';
   if (!/^[abc]$/.test(s.d)) s.d = 'b';
   if (!/^(in|wide)$/.test(s.p)) s.p = 'in';
   function apply() {
@@ -709,6 +709,9 @@ html[data-theme="dark"] .sk.tag-on { color: var(--sk-ink); }
    放在瀏覽數後面、夜間開關前面；手機上那一行本來就滿了（正式站 375 寬已經把開關擠到第二列），
    所以它自然換行、和開關排在第二列，不另外佔一列。 */
 .crumbs a.pd-peek, .crumbs a.pd-peek:hover { color: var(--accent-deep); white-space: nowrap; }
+/* 第四輪（使用者）：「醫師要斷行到下面，白天夜間切換桿在原來的位置」——
+   排到那一行的最後、自己佔一列（order 排在開關後面，開關因此留在第一列最右邊）。 */
+.crumbs .pd-peek { order: 9; flex-basis: 100%; }
 body[data-pe="none"] .pd-peek, body[data-pe="float"] .pd-peek { display: none; }
 
 /* ===== 入口 2：右下角那一顆（照首頁 .btt）===== */
