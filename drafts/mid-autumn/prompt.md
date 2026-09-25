@@ -800,7 +800,7 @@ anime; thick uniform black outlines; greyscale.
    **畫面最左邊、從建築轉角那邊沿人行道走進來、在柱子外面不在騎樓裡、在露營燈架旁邊**，
    並明講**玻璃門裡要空著**（只寫「移出來」，模型可能會留一對在門裡、外面再畫一對）。
    大小寫成**和阿嬤、護理師一樣大** —— 他們和前景一樣近，不然會被畫成遠處的小人。
-   順手讓阿嬤轉頭回應，打招呼才有對象。
+   （本來想讓阿嬤轉頭回應，拿掉了 —— 那等於又動一個已經對的人。）
 2. **柚子帽**：形狀對了（分瓣、白皮），**只有尺寸錯**：瓣往上豎、往外張，比頭還大。
    用「柚子本來就和頭差不多大」當理由，給可以量的錨點：**整張皮不大於頭、頂上最多一指寬、
    不超出頭的兩側、瓣全部往下貼著頭**。
@@ -937,8 +937,7 @@ is warm, easy and happy: a neighbourhood party, not a staged group photo.
        the covered walkway, at the left-hand end of the camping corner, beside the lantern
        stand. They are the same size as the grandmother and the nurse, because they are just as
        close to us. He lifts his free hand high to wave hello to the people at the grills; she
-       laughs and calls out to them. The grandmother in the camp chair has turned her head
-       towards them and is smiling back. They are passing by on their evening walk, not joining
+       laughs and calls out to them. They are passing by on their evening walk, not joining
        in - just greeting old neighbours.
      • A WOMAN WALKING HER DOG: a woman in her fifties in a pale olive T-shirt and cropped
        trousers walks a medium-sized fluffy honey-coloured dog on a red lead along the edge of the
