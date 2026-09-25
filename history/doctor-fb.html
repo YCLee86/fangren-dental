@@ -63,6 +63,20 @@
 　　　日後拿到粉專的完整網址就換掉（同 CLAUDE.md 第十節 sameAs 那一條的理由）。
 另開視窗　target=_blank ＋ rel=noopener，aria-label「廖立揚醫師的臉書粉絲專頁（另開視窗）」</pre></div>
 
+<h2>上線當天補的：夜間的底色</h2>
+<div class="note"><pre>使用者拿手機的夜間截圖：「深夜模式下的臉書標記顏色不好看」
+成因：標誌吃 --accent-deep，夜間的矯正科那一支 #6897b5 是為了「深底上的字」提亮的色，
+　　　當白 f 的底只剩 3.14:1（白天 #31637f 是 6.52）。
+提案頁 /preview/doctor-fb-night/（開頁強制夜間），整頁還原：
+　git show cd17114a:preview/doctor-fb-night/index.html
+
+　Ⓐ 同藥丸 --accent #4478b5　白 f 4.57／對卡 3.11　← 定案（使用者：「A 上線」）
+　Ⓑ 再深一階 #3b6a9a　　　　 白 f 5.65／對卡 2.51（方塊沉進卡片）
+　Ⓒ 反白 #6897b5 底＋深色 f　 f 4.51／對卡 4.51
+　Ⓓ 現況 #6897b5 ＋ 白 f　　　白 f 3.14
+
+寫法：html[data-theme="dark"] .doc-fb { color: var(--accent); }，白天不動。</pre></div>
+
 <h2>一起改的地方</h2>
 <div class="note"><pre>index.html　　　　　 .doc-fb 那段樣式 ＋ 廖立揚那張卡的 &lt;/dl&gt; 後面那個連結
 topics/*　　　　　　 重跑 tools/topics.mjs（只有 /topics/ortho/ 有他那張卡）

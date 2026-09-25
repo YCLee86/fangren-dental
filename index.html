@@ -2791,6 +2791,13 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
 .doc-fb span { color: var(--ink-soft); }
 .doc-fb:hover span { text-decoration: underline; text-underline-offset: 3px; }
 .doc-fb:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; border-radius: 4px; }
+/* ⚠ 夜間改吃 --accent（＝ 旁邊那顆科別藥丸的色），不吃 --accent-deep（2026-09-25 上線當天改的）。
+     使用者拿夜間截圖：「深夜模式下的臉書標記顏色不好看」。成因：夜間的 --accent-deep
+     是為了「深底上的字」提亮到 4.5 的色（矯正 #6897b5），拿來當白 f 的底只剩 3.14:1，
+     整塊像褪色。改成 --accent（矯正 #4478b5）：白 f 4.57、方塊對卡 3.11。
+     落選：再深一階 #3b6a9a（對卡 2.51，沉進卡片）、反白（淺底深 f）。
+   ⚠ 寫在 NIGHT 區塊外面是刻意的：那一區由 tools/night-mode.mjs 整段重寫。 */
+html[data-theme="dark"] .doc-fb { color: var(--accent); }
 
 /* ---- 圓角：比例對齊，不是同一個數字。基準是醫師藥丸的 半徑÷框高 = 0.384。
    這幾個元件的字級和手機版一樣，所以手機版量出來的值原樣沿用。 ---------- */
