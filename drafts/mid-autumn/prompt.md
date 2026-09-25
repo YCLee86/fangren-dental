@@ -1,4 +1,4 @@
-# 中秋節・診所門口烤肉：提示詞（現行是第四版，見第七節）
+# 中秋節・診所門口烤肉：提示詞（現行是第五版，見第八節）
 
 使用者 2026-09-25 的原話（逐字）：
 
@@ -530,7 +530,7 @@ anime; thick uniform black outlines; greyscale.
 
 ---
 
-## 七、⭐ 第四版（2026-09-25）：**只修柚子帽** —— 現行版本
+## 七、第四版（2026-09-25）：**只修柚子帽** —— 形狀對了但太大，出圖是 `v4-result.jpg`；現行是第八節
 
 使用者看第三版出的圖（`drafts/mid-autumn/v3-result.jpg`）：「不錯不錯 柚子帽修一下」，
 附了一張 IG 限動（asarisoba 畫的兩隻鳥戴柚子帽）當形狀參考。
@@ -776,6 +776,271 @@ a crown; a smooth yellow dome; a knitted beanie; a hat with no white pith showin
 more than two people wearing pomelo hats; birds anywhere in the picture; the cartoon style or
 thick black outlines of the bird drawing; moving, redrawing, restyling, adding or removing any
 person, the dog or the scooter; a scooter with its headlight on or moving fast; a helmet with a logo; a dog on
+the table or eating from the grill; a big crowd or a street festival with stalls; a sparkler near a grill or near anyone's face;
+the moon cropped, covered by cloud, drawn with a face or a rabbit, or drawn huge like a poster;
+a cloudless empty sky or a sky full of heavy clouds; daylight, a blue daytime sky, sunset
+orange; a pale, cream or brightly lit wall; a washed-out high-key picture; a black sky; dental
+instruments, dental chairs, teeth, X-rays; anyone crying, drunk, mocking, pointing or looking at
+the camera; a posed row of people facing the viewer; an empty middle stretch of street;
+anyone drawn pale, faint, translucent or in outline only; a re-invented or re-proportioned
+building; the building mirrored to the other side of the picture; photo-realism; 3D rendering;
+anime; thick uniform black outlines; greyscale.
+```
+
+---
+
+## 八、⭐ 第五版（2026-09-25）：**老夫妻搬出門、柚子帽縮小** —— 現行版本
+
+使用者看第四版出的圖（`drafts/mid-autumn/v4-result.jpg`）：
+
+> 門裡的兩位老夫婦要移出來 讓他們從左邊的路口走來向烤肉的人們打招呼
+> 另外柚子皮帽太大了 不合理
+
+1. **老夫妻**：第三版就被放進診所玻璃門裡（第七節最後提過，當時沒改）。這一版寫死
+   **畫面最左邊、從建築轉角那邊沿人行道走進來、在柱子外面不在騎樓裡、在露營燈架旁邊**，
+   並明講**玻璃門裡要空著**（只寫「移出來」，模型可能會留一對在門裡、外面再畫一對）。
+   大小寫成**和阿嬤、護理師一樣大** —— 他們和前景一樣近，不然會被畫成遠處的小人。
+   順手讓阿嬤轉頭回應，打招呼才有對象。
+2. **柚子帽**：形狀對了（分瓣、白皮），**只有尺寸錯**：瓣往上豎、往外張，比頭還大。
+   用「柚子本來就和頭差不多大」當理由，給可以量的錨點：**整張皮不大於頭、頂上最多一指寬、
+   不超出頭的兩側、瓣全部往下貼著頭**。
+   ⚠ 第四版的 `「lower tip curls OUTWARDS」` 大概就是瓣往外張的成因 —— 這一版改成「只有最尖端微翹」。
+
+**餵圖只要一張：`v4-result.jpg`**。柚子帽形狀的參考圖（鳥）這一輪**不要**再餵 —— 形狀已經對了，
+再餵反而多一個被抄的風險；提示詞裡跟鳥有關的句子也一併拿掉。
+
+```
+Editorial illustration, landscape 4:3. One single continuous scene, no panels, no insets, no
+borders.
+
+STYLE - THIS IS THE MOST IMPORTANT PARAGRAPH. It must look exactly like the hand-drawn editorial
+illustration provided. Thin hand-drawn linework in warm dark brown or soft charcoal, the
+weight varying, strokes tapering and sometimes breaking - not a thick even outline and not a
+ruled vector line. Colour laid on like soft coloured pencil and light marker, edges a little
+loose and not always meeting the line. Flat fills with two or three tones per hue; gradients
+only where they describe light. A fine even coloured-pencil paper grain over EVERY surface of
+the picture, including the night sky. People are simplified but naturally proportioned, with
+believable ages: each face is one flat skin tone with only its outline, eyes as small dots or
+short curved lines, two short eyebrows, a tiny nose mark, a small mouth and an ear - no
+wrinkles, no cheek lines, no realistic shading. Clothes are drawn with two or three tones each,
+with folds, cuffs, collars and hems visible. Not photo-realistic, not 3D, not anime, not a
+children's cartoon.
+
+THE PROVIDED PICTURE OF THIS PARTY AT NIGHT IS AN EARLIER ATTEMPT, AND ALMOST ALL OF IT IS RIGHT.
+Keep its framing, its building, its sky and moon, its light, its colours, its drawing style, and
+every one of its people, the dog, the scooter and all the props - their places, sizes, poses,
+clothes and drinks - exactly as they are. THERE ARE ONLY TWO CHANGES THIS ROUND:
+  • THE OLDER COUPLE STANDING INSIDE THE LIT GLASS DOORWAY OF THE CLINIC ARE MOVED OUT OF IT. They
+    now come walking in from the LEFT EDGE of the picture along the pavement - see GROUP D in
+    section 3. The glass doorway is left EMPTY: just the warm lit interior, nobody in it.
+  • THE TWO POMELO-PEEL HATS ARE MADE MUCH SMALLER - see section 4. Their shape (lobes of green
+    peel with white pith at the edges) is already right; only their size is wrong.
+Nothing else moves and nothing else is redrawn.
+
+THE STORY IN ONE SENTENCE: it is the night of the Mid-Autumn Festival in a small Taiwanese town,
+the full moon is up, and outside the dental clinic in the provided picture the clinic's staff,
+a few neighbours and some of their patients are having a relaxed street barbecue together, like
+old friends - grilling, chatting, eating pomelo, and the children are waving sparklers. The mood
+is warm, easy and happy: a neighbourhood party, not a staged group photo.
+
+1. THE PLACE AND THE VIEWPOINT ARE COPIED FROM THE PROVIDED PICTURE. Same low camera, same
+   framing, same proportions. Redraw it in the illustration style; do not re-invent it:
+     • The building fills the LEFT two-thirds of the picture. Its front corner is near the left
+       edge; its long side wall runs away from us towards the RIGHT, getting smaller, and the
+       quiet narrow street runs beside it into the distance towards a vanishing point just
+       right of centre.
+     • The side wall is smooth warm-grey concrete with a slightly rough hand-plastered texture.
+       Set into it are deep projecting window boxes of dark rusty-brown metal, their insides
+       glowing warm amber, staggered across three floors exactly as in the provided picture. Thin
+       horizontal concrete ledges run across the wall. A timber roof structure with a pitched
+       dark roof sits on top.
+     • At the lower left, the ground floor is set back into a covered walkway with tall dark
+       brown metal-clad columns and a floor-to-ceiling glass front; warm light spills out of the
+       glass onto the walkway floor.
+     • A row of small round grey concrete pots with green leafy plants stands along the foot of
+       the side wall.
+     • Further down the street on the right, the neighbouring buildings with small lit windows,
+       a few overhead wires, and at the far right edge the dark eaves of an old house, cropped.
+     • The street tonight has NO CARS parked on it and no traffic cone - it has been given over
+       to the party.
+   There is no wind line of any kind in this picture - no long white curving lines in the sky.
+
+2. THE SKY AND THE MOON. The sky fills the upper RIGHT part of the picture, above the street and
+   to the right of the building's roof. It is a deep dusky indigo-blue night sky - clearly dark,
+   never black, never flat, with the fine paper grain showing through it.
+     • THE FULL MOON sits high in that patch of sky, in the upper right quarter of the picture,
+       well clear of the roofline and of the picture edge. It is perfectly round and completely
+       full, a pale warm cream, about as wide as one of the window boxes on the near wall, with
+       one soft pale halo around it. No face, no rabbit, no craters drawn as a pattern.
+     • A FEW THIN CLOUDS drift in long soft horizontal wisps across the sky, two or three of them,
+       their edges lit silver-white by the moon. One passes just below the moon; NONE of them
+       covers it. The sky is mostly clear.
+
+3. THE PARTY - WHO IS WHERE. About twenty people in all - the ten already in the earlier attempt
+   plus the newcomers in GROUP D - all East Asian (Taiwanese), spread across the
+   lower half of the picture along the pavement at the foot of the side wall and out into the
+   quiet street, in three loose groups with space between them. The nearest people are large:
+   the head of the nearest standing adult reaches roughly the first-floor ledge of the building.
+   Nobody looks at the camera.
+   GROUP A - THE MODERN CAMPING CORNER, LOWER LEFT, just in front of the covered walkway:
+     • A low slatted wooden folding camp table and three or four canvas folding camp chairs in
+       olive, sand and dark green, a hanging camping lantern with a warm glow on a slim black
+       stand, a hard-sided cooler box standing open and full of ice with drinks in it (see section
+       5), and a neat compact charcoal barbecue grill on legs - the
+       kind of good-looking, carefully chosen outdoor gear people bring to a glamping weekend.
+     • A dental nurse in her late twenties, in pale sage-green scrubs with a dusty-rose cardigan
+       over them, stands at this grill turning skewers with long tongs, laughing at something.
+     • An older neighbour, a grandmother in her seventies from the old house next door, in a
+       terracotta-patterned blouse, sits in a camp chair peeling a big pomelo on her lap,
+       pulling the thick rind apart in large curved pieces. On the table: a plate of pomelo
+       segments, a plate of round mooncakes, and beside her a hand-shaken tea (see section 5).
+   GROUP B - THE CLASSIC STREET BARBECUE, CENTRE, on the pavement against the side wall among
+   the concrete pots:
+     • A simple low rectangular metal charcoal grill set directly on two bricks on the ground,
+       the traditional Taiwanese way. Two people crouch or sit on small low plastic stools beside
+       it: a dentist in his forties in a navy polo shirt, brushing sauce onto skewers with a
+       small brush, and a middle-aged neighbour in a white vest and faded blue shorts with flip-
+       flops, fanning the coals with a round woven fan in one hand, an aluminium can of soft drink in the
+       other. Skewers of meat, sausages, corn, green
+       peppers and slices of toast on the grill.
+     • A patient's father in his late thirties, in a mustard-yellow T-shirt, stands beside them
+       holding a paper plate in one hand and a glass bottle of soda in the other, WEARING A POMELO-PEEL HAT (see section 4), grinning while the
+       dentist hands him a skewer.
+   GROUP C - THE SPARKLERS, RIGHT FOREGROUND, out on the empty street where it is safely away
+   from both grills:
+     • Two children, a boy of about six in a pale sky-blue T-shirt WEARING A POMELO-PEEL HAT, and
+       a girl of about nine in a coral dress, each holding one lit sparkler out at arm's length,
+       drawing loops of light in the air, delighted.
+     • The clinic's receptionist, a woman in her thirties in a cream blouse and dark green
+       trousers, crouches beside them holding a sparkler of her own and lighting the boy's
+       from it.
+     • The children's mother, in a soft lilac top, stands just behind them filming them on her
+       phone, the phone screen facing away from us, a bottle of water in her other hand.
+   GROUP D - PASSERS-BY AND LATE ARRIVALS (already in the earlier attempt - keep them as they are), placed in the EMPTY STRETCH OF STREET in
+   the middle distance, between Group B and Group C and further back down the street towards the
+   vanishing point. They are a little smaller than the front groups because they are further away,
+   but drawn with exactly the same line weight, the same solidity of colour and the same simple
+   happy faces - clearly readable people, not faint or tiny specks:
+     • A FRIEND ARRIVING BY SCOOTER: a young man in his twenties in a khaki jacket has just pulled
+       up at the kerb on an ordinary Taiwanese step-through scooter, the engine off and the
+       headlight off, one foot on the ground, his plain open-face helmet pushed back. Hanging from
+       the hook between his knees is a bulging bag of food for the grill - a tray of skewers,
+       corn cobs, a bunch of green onions - and on the footboard sits a big clear bag of ice. In
+       his raised hand he holds out a clear plastic drink carrier with four hand-shaken teas. A
+       newly arrived woman in a teal top is walking over from the party, one arm raised in
+       welcome, to take the bag of food from him.
+     • AN OLDER COUPLE ON THEIR EVENING WALK - MOVED THIS ROUND: the same grey-haired man in a
+       short-sleeved checked shirt and his wife in a soft plum cardigan who were standing inside
+       the clinic's glass doorway. They are NOT inside the clinic any more. They have just come
+       round the corner of the building at the far LEFT EDGE of the picture, walking arm in arm
+       along the pavement from the left towards the right, IN FRONT OF THE COLUMNS AND OUTSIDE
+       the covered walkway, at the left-hand end of the camping corner, beside the lantern
+       stand. They are the same size as the grandmother and the nurse, because they are just as
+       close to us. He lifts his free hand high to wave hello to the people at the grills; she
+       laughs and calls out to them. The grandmother in the camp chair has turned her head
+       towards them and is smiling back. They are passing by on their evening walk, not joining
+       in - just greeting old neighbours.
+     • A WOMAN WALKING HER DOG: a woman in her fifties in a pale olive T-shirt and cropped
+       trousers walks a medium-sized fluffy honey-coloured dog on a red lead along the edge of the
+       street, in front of Group B. The dog has stopped, tail wagging, nose raised hopefully
+       towards the grill; she is laughing and giving the lead a gentle tug while chatting with the
+       father in the mustard T-shirt.
+     • FURTHER DOWN THE STREET, near the vanishing point: another household is having its own
+       small barbecue in front of its house - one small glowing grill and three or four people
+       around it, one of them waving back up the street. This is small because it is far away,
+       but it is clearly people, lit warm by their grill.
+
+4. THE POMELO-PEEL HAT - MAKE IT MUCH SMALLER. In the earlier attempt the shape is right but the
+   two hats are far too big: they rise high above the heads and the lobes stand up and flare out
+   like a giant flower, bigger than the head itself. That is impossible - a pomelo is only about
+   the size of a person's head, so its empty rind fits the head like a snug cap. Redraw ONLY the
+   two hats, keeping their colours and their lobes, at this size:
+     • THE WHOLE PEEL IS NO BIGGER THAN THE WEARER'S OWN HEAD. It hugs the skull like a swimming
+       cap: it adds only a thin layer on top, never more than a finger's width above the top of
+       the head, and it never sticks out past the sides of the head.
+     • The four or five lobes of peel all HANG DOWNWARDS, lying close against the head, joined at
+       the crown - none of them stands up, points upwards or flares outwards. Only their very
+       tips curl out a little at the bottom edge, just enough to show a thin band of creamy WHITE
+       PITH under the fresh yellow-green skin.
+     • The lobes reach down to about the eyebrows at the front and just over the tops of the
+       ears; the face is fully visible.
+   The six-year-old boy's peel is proportionally just as snug on his smaller head. Exactly two
+   people wear one, the same two as before: the father in the mustard T-shirt and the boy. Their
+   faces, poses and everything else about them stay exactly as they are. It is NOT a smooth dome,
+   NOT a knitted beanie, NOT a cap with a brim, NOT a whole fruit, NOT a bowl, NOT a leafy crown.
+
+5. THE DRINKS - A REAL TAIWANESE STREET-PARTY MIX, HELD IN PEOPLE'S HANDS. Draw four kinds and
+   make each one recognisable by its shape:
+     • HAND-SHAKEN TEA: a tall clear plastic cup with a flat sealed film lid and a fat straw
+       pushed through it, the drink visible through the cup - one is golden-brown milk tea with
+       dark tapioca pearls at the bottom, one is pale amber-green tea with ice. One stands on the
+       camp table beside the grandmother; the nurse has one on the edge of the table next to her
+       grill, half drunk.
+     • GLASS BOTTLE SODA: a classic thick glass soda bottle, green-tinted or clear, with a short
+       neck - the father in the mustard T-shirt holds one.
+     • ALUMINIUM CANS: plain soft-drink cans in solid colours (red, green, silver) - the
+       neighbour in the white vest holds one, and a few more stand in the ice of the open cooler.
+     • WATER: a clear plastic bottle of water with no label - the mother holds one, and one or two
+       more stand on the camp table.
+   Every cup, bottle and can is PLAIN: any label is just a band of flat colour with nothing
+   written on it, no logo, no brand, no character. These are soft drinks, tea and water only.
+   The children and the receptionist are holding sparklers, not drinks.
+
+6. THE SPARKLERS AND THE SMOKE.
+     • Each sparkler is a thin wire with a small bright white-gold burst of tiny sparks at its tip
+       and a short looping trail of light behind it in the air. Three sparklers in all, all in
+       Group C. Nothing else explodes: no fireworks in the sky, no rockets, no firecrackers.
+     • Smoke from the two grills is drawn as a small group of three or four short, soft,
+       separate curling strokes rising and drifting towards the RIGHT, each no taller than a
+       person's head. Never one long continuous ribbon of smoke, never a loop, never a big cloud
+       that hides anyone.
+
+7. THE FACES - HAPPY AND EASY. Real smiles and laughter: eyes curved into happy crescents,
+   mouths open in laughter or in a broad smile, cheeks lifted. People are turned towards each
+   other, talking, handing food across, leaning in. Everyone is kind to everyone - nobody is
+   being laughed at, nobody is pointing at anyone, nobody is drunk, nobody is posing for a photo,
+   nobody looks at the camera.
+
+8. THE LIGHT - IT IS NIGHT, AND THE PICTURE MUST BE CLEARLY DARKER THAN THE DAYTIME ILLUSTRATION.
+   Two kinds of light only:
+     • COOL MOONLIGHT over everything: the concrete wall is a mid cool blue-grey, NOT pale, NOT
+       cream, NOT white; the street is a deep blue-grey; the sky is deep indigo.
+     • ONE FAMILY OF WARM LIGHT from the party: the glow of the two grills, the camping lantern,
+       the amber insides of the window boxes, the glass of the covered walkway, and the sparkler
+       tips. Each is a small pool of warm orange-gold that falls off quickly into the blue: it
+       lights the faces, hands and clothes of the people nearest to it, warm on the side facing
+       the light and blue on the side facing away.
+   From brightest to darkest: the moon and the sparkler tips; then the grill glow, the lantern
+   and the lit glass; then the faces lit by them; then the window boxes; then the concrete wall
+   and the clouds; then the sky; darkest of all, the street in the distance.
+
+9. COLOUR. Night blues and warm orange-gold light, with the clothes as the colour accents: sage
+   green, dusty rose, terracotta, navy, mustard yellow, pale sky blue, coral, cream, dark green,
+   lilac - every person in a different colour from their neighbours. The pomelo hats and the
+   pomelo on the table are a fresh pale yellow-green. At least eight distinct colours must be
+   readable. Not monochrome, not sepia, not all-orange, not all-blue, not washed out to pale.
+
+10. NO WRITING ANYWHERE IN THE IMAGE - no text, letters, words, numbers, Chinese characters, logos,
+   brand marks, captions, signatures or watermarks, in any language. The real building has
+   Chinese lettering on its column and above its entrance, and the provided photograph has a
+   photographer's watermark along its bottom edge: IGNORE ALL OF THEM and leave those surfaces
+   plain. The mooncakes are plain round cakes with no stamped characters. The cooler box, the
+   camp chairs, the grills, the tea cups and their sealed lids, the soda bottles, the cans,
+   the water bottles, the phone, the lantern, the scooter, its helmet, its
+   number plate (blank), the bag of ice, the food bag, the dog's lead and every piece of clothing
+   are plain, with no logo and no writing.
+
+AVOID: any letters, words, Chinese characters, logos or watermarks anywhere, including the
+photographer's watermark and the lettering on the clinic copied from the photograph; stamped
+characters on the mooncakes; any brand, logo or writing on a cup, cup lid, bottle or can;
+beer, beer bottles, wine or anyone drunk; a cup of tea drawn as a paper cup or a mug; parked cars, a traffic
+cone; fireworks, rockets or bursts in the sky; long white curving wind lines or chalk ribbons in
+the sky; one long ribbon of smoke; a pomelo hat drawn as a whole fruit, a bowl, a brimmed cap or
+a crown; a smooth yellow dome; a knitted beanie; a hat with no white pith showing at its edge;
+A POMELO HAT BIGGER THAN THE HEAD; lobes standing up or flaring out like a flower; a hat taller
+than the face; more than two people wearing pomelo hats; ANYONE STANDING INSIDE THE CLINIC'S GLASS
+DOORWAY; the older couple inside the clinic or under the covered walkway; moving, redrawing,
+restyling, adding or removing any other person, the dog or the scooter; a scooter with its headlight on or moving fast; a helmet with a logo; a dog on
 the table or eating from the grill; a big crowd or a street festival with stalls; a sparkler near a grill or near anyone's face;
 the moon cropped, covered by cloud, drawn with a face or a rabbit, or drawn huge like a poster;
 a cloudless empty sky or a sky full of heavy clouds; daylight, a blue daytime sky, sunset
