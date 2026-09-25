@@ -82,10 +82,10 @@ if (doctors.length !== 9) throw new Error('醫師卡不是九張：' + doctors.l
 const SK_POST = {
   '口腔檢查': 'regular-checkup',
   '牙周照護': 'perio-prevalence',
-  '牙周病治療': 'perio-full-mouth',
+  '牙周病治療': ['perio-full-mouth', 'perio-laser'],
   '牙周再生手術': 'perio-laser',
   '水雷射牙周治療': 'perio-laser',
-  '植牙手術': 'implant-lifespan',
+  '植牙手術': ['implant-lifespan', 'missing-tooth'],
   '固定假牙': 'crown-materials',
   '活動假牙': 'missing-tooth',
   '牙橋': 'missing-tooth',
@@ -95,12 +95,18 @@ const SK_POST = {
   '兒童早期矯正': 'kids-arch-expansion',
   '兒童鎮靜麻醉': 'kids-sedation',
   '兒童齲齒治療': 'kids-crown',
-  '阻生齒拔除': 'wisdom-eruption',
+  '阻生齒拔除': ['wisdom-eruption', 'wisdom-tooth'],
   '齒槽骨保留術': 'wisdom-tooth',
   '顯微根管': 'pulp-calcification',
   '活髓治療': 'bioceramic',
 };
-for (const slug of new Set(Object.values(SK_POST)))
+/* 第三輪（同日）：同一個專長對得到兩篇以上時怎麼辦。規則照文章數分三段：
+     1 篇 → 直接進那一篇
+     2～3 篇 → 詞底下浮出一個小框列標題（卡片高度不變）
+     4 篇以上 → 小框列最新 3 篇 ＋「全部 N 篇 ›」（目前沒有任何一個專長到 4 篇，這一段還看不到）
+   陣列裡的順序就是小框裡的順序；上線版改成照上架日期排。 */
+const skList = (t) => [].concat(SK_POST[t] || []).map((slug) => posts.find((p) => p.slug === slug));
+for (const slug of new Set(Object.values(SK_POST).flat()))
   if (!posts.some((p) => p.slug === slug)) throw new Error('對照表指到一篇不存在的文章：' + slug);
 
 /* ── 三案的標記 ──────────────────────────────────────────────────────
@@ -132,10 +138,22 @@ html = html.slice(0, a0) + html.slice(a0, a1).replace(/(<article class="doc"[^>]
   /* Ⓒ：專長那幾個詞換成連結。平常看起來仍是一句話，只多一道虛線底線。 */
   head = head.replace(/<span class="sk" data-spec="([a-z]+)">([^<]+)<\/span>/g,
     (m, s, t) => {
-      const slug = SK_POST[t];
-      if (!slug) return m;
-      const p = posts.find((x) => x.slug === slug);
-      return `<span class="sk pv-sk-0" data-spec="${s}">${t}</span><a class="sk pv-sk-c" data-spec="${s}" href="posts/${slug}/" aria-label="${t}：看〈${esc(p.title)}〉">${t}</a>`;
+      const list = skList(t);
+      if (!list.length) return m;
+      const orig = `<span class="sk pv-sk-0" data-spec="${s}">${t}</span>`;
+      if (list.length === 1) {
+        const p = list[0];
+        return orig + `<a class="sk pv-sk-c" data-spec="${s}" href="posts/${p.slug}/" aria-label="${t}：看〈${esc(p.title)}〉">${t}</a>`;
+      }
+      /* 兩篇以上：詞本身是一顆按鈕，小框是它後面的兄弟。框的位置由切換條那支 JS 現算（貼在詞底下、不超出卡片）。 */
+      const shown = list.slice(0, 3);
+      const more = list.length > 3
+        ? `<a class="pv-pop-more" href="topics/${s}/?sk=${encodeURIComponent(t)}#articles">全部 ${list.length} 篇<span aria-hidden="true"> ›</span></a>` : '';
+      return orig + `<button type="button" class="sk pv-sk-c pv-sk-multi" data-spec="${s}" aria-expanded="false">${t}</button>` +
+        `<span class="pv-pop" data-spec="${s}" role="group" aria-label="${t}的文章" hidden>` +
+        `<span class="pv-pop-h">${t}・${list.length} 篇文章</span>` +
+        shown.map((p) => `<a class="pv-pop-a" data-spec="${p.spec}" href="posts/${p.slug}/">${esc(p.title)}</a>`).join('') + more +
+        `</span>`;
     });
   return head + block(d) + tail;
 }) + html.slice(a1);
@@ -145,7 +163,7 @@ if (n !== 9) throw new Error('只有 ' + n + ' 張卡插進去');
 const IDX = "return { el: el, text: (el.textContent || '').replace(/\\s+/g, '').toLowerCase() };";
 if (html.split(IDX).length !== 2) throw new Error('indexOf() 那一行不是剛好一個');
 html = html.replace(IDX,
-  "var c = el.cloneNode(true); Array.prototype.forEach.call(c.querySelectorAll('.pv-dp, .pv-sk-c'), function (x) { x.remove(); });\n" +
+  "var c = el.cloneNode(true); Array.prototype.forEach.call(c.querySelectorAll('.pv-dp, .pv-sk-c, .pv-pop'), function (x) { x.remove(); });\n" +
   "      return { el: el, text: (c.textContent || '').replace(/\\s+/g, '').toLowerCase() };");
 
 /* ── ① 相對路徑往上兩層 ─────────────────────────────────────────── */
@@ -203,6 +221,37 @@ const STYLE = `
 .pv-sk-c:hover { color: var(--accent-deep); text-decoration-style: solid; }
 /* 著陸頁那支篩選 JS 會幫命中的專長加 .tag-on（淡色塊），連結版要跟著長一樣 */
 .pv-sk-c.tag-on { text-decoration: none; }
+/* 兩篇以上的那幾個詞是按鈕，長相要和連結一模一樣（按鈕的預設字型、內距、底色全部歸零） */
+button.pv-sk-c {
+  font: inherit; line-height: inherit; letter-spacing: inherit; padding: 0; margin: 0;
+  background: none; border: 0; border-radius: 0; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+button.pv-sk-c[aria-expanded="true"] { color: var(--accent-deep); text-decoration-style: solid; }
+
+/* 小框：浮在卡片上面，不推擠任何東西。寬度不超過卡片內寬。
+   ⚠ .doc 本身沒有 z-index，所以框的 z-index 會壓過排在後面的卡片。 */
+.doc { position: relative; }
+.pv-pop {
+  position: absolute; z-index: 20; display: block;
+  width: max-content; max-width: min(19rem, calc(100% - 1.6rem));
+  padding: .7rem .85rem .6rem; border-radius: 12px;
+  background: var(--card); border: 1px solid var(--rule);
+  box-shadow: 0 8px 28px rgba(0,0,0,.14), 0 1px 3px rgba(0,0,0,.08);
+  font-size: .83rem; line-height: 1.55; text-align: left;
+}
+.pv-pop[hidden] { display: none; }
+.pv-pop-h { display: block; font-size: .74rem; color: var(--ink-soft); margin-bottom: .3rem; }
+.pv-pop-a, .pv-pop-more {
+  display: block; padding: .45rem 1.1rem .45rem 0; position: relative;
+  color: var(--accent-deep); font-weight: 500; text-decoration: none;
+  border-top: 1px solid var(--rule);
+}
+.pv-pop-h + .pv-pop-a { border-top: 0; }
+.pv-pop-a::after, .pv-pop-more::after { content: "›"; position: absolute; right: 0; top: .45rem; color: var(--ink-soft); font-weight: 400; }
+.pv-pop-more span { display: none; }
+.pv-pop-a:hover, .pv-pop-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+html[data-theme="dark"] .pv-pop { box-shadow: 0 8px 28px rgba(0,0,0,.5); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pv-pop { box-shadow: 0 8px 28px rgba(0,0,0,.5); } }
 </style>`;
 html = html.replace('<meta name="robots" content="noindex, nofollow, noarchive">',
   '<meta name="robots" content="noindex, nofollow, noarchive">\n' + NOTE + STYLE);
@@ -250,7 +299,7 @@ const BAR = `
     off: '站上現在的樣子',
     a: '卡片多一列：每一科一個連結 → 那一科的文章',
     b: '卡片多一列：兩篇標題直接進文章 ＋ 各科「全部 N 篇」',
-    c: '卡片不變，專長有虛線的詞可以按 → 直接進那一篇文章'
+    c: '專長有虛線的詞可以按：1 篇直接進文章，2 篇以上跳出小框選（植牙手術／牙周病治療／阻生齒拔除）'
   };
   var v = new URLSearchParams(location.search).get('dp');
   if (v && KEYS.indexOf(v) >= 0) cur = v;
@@ -289,6 +338,32 @@ const BAR = `
   apply();
   /* 照片與字型晚到會改變卡高 —— load 之後再量一次，轉向或拉寬視窗也重量。 */
   addEventListener('load', function () { apply(); if (!location.hash) setTimeout(go, 300); });
+
+  /* 小框：點詞打開、再點一次／點別處／按 Esc 收起；一次只開一個。
+     位置：框的左緣對齊那個詞的左緣，超出卡片右緣就往左推；上緣貼在詞底下 6px。 */
+  var open = null;
+  function close() { if (!open) return; open.b.setAttribute('aria-expanded', 'false'); open.p.hidden = true; open = null; }
+  function place(b, p) {
+    var card = b.closest('.doc'), cr = card.getBoundingClientRect();
+    var rs = b.getClientRects(), r = rs[rs.length - 1] || b.getBoundingClientRect();  /* 折行的話對齊最後一段 */
+    p.style.left = '0px'; p.style.top = '0px';
+    var w = p.offsetWidth, pad = 12;
+    var left = Math.min(r.left - cr.left, cr.width - w - pad);
+    p.style.left = Math.max(pad, left) + 'px';
+    p.style.top = (r.bottom - cr.top + 6) + 'px';
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button.pv-sk-multi');
+    if (b) {
+      var p = b.nextElementSibling, same = open && open.b === b;
+      close();
+      if (!same) { p.hidden = false; place(b, p); b.setAttribute('aria-expanded', 'true'); open = { b: b, p: p }; }
+      return;
+    }
+    if (open && !e.target.closest('.pv-pop')) close();
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) { var b = open.b; close(); b.focus(); } });
+  addEventListener('resize', close);
   var t; addEventListener('resize', function () { clearTimeout(t); t = setTimeout(apply, 200); });
 })();
 </script>
