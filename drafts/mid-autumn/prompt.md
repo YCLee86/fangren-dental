@@ -1,0 +1,253 @@
+# 中秋節・診所門口烤肉：提示詞（第一版）
+
+使用者 2026-09-25 的原話（逐字）：
+
+> 寫提示詞
+> 大意是中秋節診所人員、幾個街坊鄰居、患者像朋友一樣 招呼 在街邊烤肉 不完全是蹲在路邊，
+> 也有像當代露營講究的設備 有人在玩煙火 也有人把柚子皮撥開 反戴在頭上 呈現中秋節歡樂
+> 輕鬆的氣氛 用照片這個背景 天空有一點雲 滿月 插畫風格也是網站上現在一致的風格
+
+背景照片是 `drafts/mid-autumn/ref-street-dusk.jpg`（原間攝影工作室拍的傍晚側面街景，
+畫面左邊三分之二是建築、街道往右後方延伸）。出圖用 Gemini。
+
+---
+
+## 摘要
+
+| # | 項目 | 定成什麼 | 為什麼 |
+| --- | --- | --- | --- |
+| 1 | 比例 | **橫的 4:3** | ⚠ 用途還沒講（LINE 貼文、臉書，還是別處）。照片本身接近方形，4:3 兩邊都裁得出來。要 1:1 或 2:1 請說 |
+| 2 | 構圖 | **完全照那張照片的機位** | 建築角在左、街道往右後方收、天空在右上 —— 月亮擺在那塊天空裡 |
+| 3 | 人是主角 | **是**（喜悅場面，ILLUSTRATION.md 第三節的例外） | 十個人，佔畫面下半；建築仍然要認得出來 |
+| 4 | 煙火 | **仙女棒為主**（小孩與一個大人），不畫天上的大煙火 | 天上的大煙火會搶月亮，而且會變成第二個主光 |
+| 5 | 柚子帽 | **兩個人戴**（一個小孩、一個大人），另有人在桌上剝柚子 | 形狀要寫死，見第六節第 2 條 |
+| 6 | 光 | 月光（冷）＋ **一組暖光**（烤爐、露營燈、診所窗盒與玻璃、仙女棒） | 見第五節第 1 條，這一條偏離了規格表的「只有一個光源」 |
+| 7 | 零文字 | 招牌、浮水印、月餅盒、飲料、冰桶全部空白 | 照片上**有三處字**（招牌兩處＋浮水印），要點名 |
+
+---
+
+## 一、參考圖（餵圖時用途要分開講）
+
+| | 檔案 | 參考什麼 | **不要**參考 |
+| --- | --- | --- | --- |
+| ① | `drafts/mid-autumn/ref-street-dusk.jpg`（使用者給的照片） | **機位、取景、建築的比例與構造、街道往哪裡收** | 照片的寫實感、招牌上的字、下緣那個浮水印、停著的車、交通錐 |
+| ② | `drafts/og-topic-general-src.jpg` | **這棟樓畫成插畫時的樣子**：線、顏色、窗盒的畫法、紙的顆粒 | 白天的光、藍天、那幾條白色弧線、那七個人 |
+| ③ | `assets/hero-kids-photo-1600.jpg` | **一群人很開心時的臉與身體**（全站唯一一張「人是主角」的） | 室內、構圖、診療椅 |
+| ④ | `preview/line-remind/hero-remind.jpg` | 手繪線的實度、紙的顆粒 | 構圖、候診間 |
+
+⚠⚠ ② 一定要用 `-src.jpg`，**不可以用 `assets/og-topic-general.jpg`** —— 那一張上緣有印著中文字的綠帶子，餵進去會被學走。
+⚠⚠ ② 那張晴天圖上有**白色的風線**，颱風那一輪兩度被模型照抄回來（颱風那一份第六節第 12 條）。
+所以「不要抄那些白線」寫在**叫它照抄那張圖的那一段裡**，不是只寫在 `AVOID`。
+
+---
+
+## 二、提示詞（直接整份貼進去）
+
+```
+Editorial illustration, landscape 4:3. One single continuous scene, no panels, no insets, no
+borders.
+
+STYLE - THIS IS THE MOST IMPORTANT PARAGRAPH. It must look exactly like the hand-drawn editorial
+illustrations provided (the drawing of this same building by day, the family in the dental
+chair, the waiting room). Thin hand-drawn linework in warm dark brown or soft charcoal, the
+weight varying, strokes tapering and sometimes breaking - not a thick even outline and not a
+ruled vector line. Colour laid on like soft coloured pencil and light marker, edges a little
+loose and not always meeting the line. Flat fills with two or three tones per hue; gradients
+only where they describe light. A fine even coloured-pencil paper grain over EVERY surface of
+the picture, including the night sky. People are simplified but naturally proportioned, with
+believable ages: each face is one flat skin tone with only its outline, eyes as small dots or
+short curved lines, two short eyebrows, a tiny nose mark, a small mouth and an ear - no
+wrinkles, no cheek lines, no realistic shading. Clothes are drawn with two or three tones each,
+with folds, cuffs, collars and hems visible. Not photo-realistic, not 3D, not anime, not a
+children's cartoon.
+
+THE STORY IN ONE SENTENCE: it is the night of the Mid-Autumn Festival in a small Taiwanese town,
+the full moon is up, and outside the dental clinic in the provided photograph the clinic's staff,
+a few neighbours and some of their patients are having a relaxed street barbecue together, like
+old friends - grilling, chatting, eating pomelo, and the children are waving sparklers. The mood
+is warm, easy and happy: a neighbourhood party, not a staged group photo.
+
+1. THE PLACE AND THE VIEWPOINT ARE COPIED FROM THE PROVIDED PHOTOGRAPH. Same low camera, same
+   framing, same proportions. Redraw it in the illustration style; do not re-invent it:
+     • The building fills the LEFT two-thirds of the picture. Its front corner is near the left
+       edge; its long side wall runs away from us towards the RIGHT, getting smaller, and the
+       quiet narrow street runs beside it into the distance towards a vanishing point just
+       right of centre.
+     • The side wall is smooth warm-grey concrete with a slightly rough hand-plastered texture.
+       Set into it are deep projecting window boxes of dark rusty-brown metal, their insides
+       glowing warm amber, staggered across three floors exactly as in the photograph. Thin
+       horizontal concrete ledges run across the wall. A timber roof structure with a pitched
+       dark roof sits on top.
+     • At the lower left, the ground floor is set back into a covered walkway with tall dark
+       brown metal-clad columns and a floor-to-ceiling glass front; warm light spills out of the
+       glass onto the walkway floor.
+     • A row of small round grey concrete pots with green leafy plants stands along the foot of
+       the side wall.
+     • Further down the street on the right, the neighbouring buildings with small lit windows,
+       a few overhead wires, and at the far right edge the dark eaves of an old house, cropped.
+     • The street tonight has NO CARS parked on it and no traffic cone - it has been given over
+       to the party.
+   Use the illustration of this building by day ONLY for how to draw it - its linework, its
+   colours and its paper grain. Do NOT copy its daylight, its blue sky or the long white curving
+   wind lines drawn across its sky: there is no wind line of any kind in this picture.
+
+2. THE SKY AND THE MOON. The sky fills the upper RIGHT part of the picture, above the street and
+   to the right of the building's roof. It is a deep dusky indigo-blue night sky - clearly dark,
+   never black, never flat, with the fine paper grain showing through it.
+     • THE FULL MOON sits high in that patch of sky, in the upper right quarter of the picture,
+       well clear of the roofline and of the picture edge. It is perfectly round and completely
+       full, a pale warm cream, about as wide as one of the window boxes on the near wall, with
+       one soft pale halo around it. No face, no rabbit, no craters drawn as a pattern.
+     • A FEW THIN CLOUDS drift in long soft horizontal wisps across the sky, two or three of them,
+       their edges lit silver-white by the moon. One passes just below the moon; NONE of them
+       covers it. The sky is mostly clear.
+
+3. THE PARTY - WHO IS WHERE. About ten people, all East Asian (Taiwanese), spread across the
+   lower half of the picture along the pavement at the foot of the side wall and out into the
+   quiet street, in three loose groups with space between them. The nearest people are large:
+   the head of the nearest standing adult reaches roughly the first-floor ledge of the building.
+   Nobody looks at the camera.
+   GROUP A - THE MODERN CAMPING CORNER, LOWER LEFT, just in front of the covered walkway:
+     • A low slatted wooden folding camp table and three or four canvas folding camp chairs in
+       olive, sand and dark green, a hanging camping lantern with a warm glow on a slim black
+       stand, a hard-sided cooler box, and a neat compact charcoal barbecue grill on legs - the
+       kind of good-looking, carefully chosen outdoor gear people bring to a glamping weekend.
+     • A dental nurse in her late twenties, in pale sage-green scrubs with a dusty-rose cardigan
+       over them, stands at this grill turning skewers with long tongs, laughing at something.
+     • An older neighbour, a grandmother in her seventies from the old house next door, in a
+       terracotta-patterned blouse, sits in a camp chair peeling a big pomelo on her lap,
+       pulling the thick rind apart in large curved pieces. On the table: a plate of pomelo
+       segments, a plate of round mooncakes, plain paper cups of tea.
+   GROUP B - THE CLASSIC STREET BARBECUE, CENTRE, on the pavement against the side wall among
+   the concrete pots:
+     • A simple low rectangular metal charcoal grill set directly on two bricks on the ground,
+       the traditional Taiwanese way. Two people crouch or sit on small low plastic stools beside
+       it: a dentist in his forties in a navy polo shirt, brushing sauce onto skewers with a
+       small brush, and a middle-aged neighbour in a white vest and faded blue shorts with flip-
+       flops, fanning the coals with a round woven fan. Skewers of meat, sausages, corn, green
+       peppers and slices of toast on the grill.
+     • A patient's father in his late thirties, in a mustard-yellow T-shirt, stands beside them
+       holding a paper plate, WEARING A POMELO-PEEL HAT (see section 4), grinning while the
+       dentist hands him a skewer.
+   GROUP C - THE SPARKLERS, RIGHT FOREGROUND, out on the empty street where it is safely away
+   from both grills:
+     • Two children, a boy of about six in a pale sky-blue T-shirt WEARING A POMELO-PEEL HAT, and
+       a girl of about nine in a coral dress, each holding one lit sparkler out at arm's length,
+       drawing loops of light in the air, delighted.
+     • The clinic's receptionist, a woman in her thirties in a cream blouse and dark green
+       trousers, crouches beside them holding a sparkler of her own and lighting the boy's
+       from it.
+     • The children's mother, in a soft lilac top, stands just behind them filming them on her
+       phone, the phone screen facing away from us.
+
+4. THE POMELO-PEEL HAT - DRAW IT EXACTLY LIKE THIS. After the fruit is eaten, half of the thick
+   empty rind of a big pomelo is turned upside down and worn on the head like a small round
+   helmet. It is a smooth dome, pale yellow-green on the outside, sitting snugly on top of the
+   head and coming down to just above the eyebrows and the tops of the ears, with a thick band of
+   pale cream-white pith showing along its cut lower rim. It is empty, hollow and light. It is
+   NOT a whole fruit balanced on the head, NOT a bowl held in the hands, NOT a green cap with a
+   brim, NOT a leafy crown. Exactly two people wear one: the father in the mustard T-shirt and
+   the six-year-old boy.
+
+5. THE SPARKLERS AND THE SMOKE.
+     • Each sparkler is a thin wire with a small bright white-gold burst of tiny sparks at its tip
+       and a short looping trail of light behind it in the air. Three sparklers in all, all in
+       Group C. Nothing else explodes: no fireworks in the sky, no rockets, no firecrackers.
+     • Smoke from the two grills is drawn as a small group of three or four short, soft,
+       separate curling strokes rising and drifting towards the RIGHT, each no taller than a
+       person's head. Never one long continuous ribbon of smoke, never a loop, never a big cloud
+       that hides anyone.
+
+6. THE FACES - HAPPY AND EASY. Real smiles and laughter: eyes curved into happy crescents,
+   mouths open in laughter or in a broad smile, cheeks lifted. People are turned towards each
+   other, talking, handing food across, leaning in. Everyone is kind to everyone - nobody is
+   being laughed at, nobody is pointing at anyone, nobody is drunk, nobody is posing for a photo,
+   nobody looks at the camera.
+
+7. THE LIGHT - IT IS NIGHT, AND THE PICTURE MUST BE CLEARLY DARKER THAN THE DAYTIME ILLUSTRATION.
+   Two kinds of light only:
+     • COOL MOONLIGHT over everything: the concrete wall is a mid cool blue-grey, NOT pale, NOT
+       cream, NOT white; the street is a deep blue-grey; the sky is deep indigo.
+     • ONE FAMILY OF WARM LIGHT from the party: the glow of the two grills, the camping lantern,
+       the amber insides of the window boxes, the glass of the covered walkway, and the sparkler
+       tips. Each is a small pool of warm orange-gold that falls off quickly into the blue: it
+       lights the faces, hands and clothes of the people nearest to it, warm on the side facing
+       the light and blue on the side facing away.
+   From brightest to darkest: the moon and the sparkler tips; then the grill glow, the lantern
+   and the lit glass; then the faces lit by them; then the window boxes; then the concrete wall
+   and the clouds; then the sky; darkest of all, the street in the distance.
+
+8. COLOUR. Night blues and warm orange-gold light, with the clothes as the colour accents: sage
+   green, dusty rose, terracotta, navy, mustard yellow, pale sky blue, coral, cream, dark green,
+   lilac - every person in a different colour from their neighbours. The pomelo hats and the
+   pomelo on the table are a fresh pale yellow-green. At least eight distinct colours must be
+   readable. Not monochrome, not sepia, not all-orange, not all-blue, not washed out to pale.
+
+9. NO WRITING ANYWHERE IN THE IMAGE - no text, letters, words, numbers, Chinese characters, logos,
+   brand marks, captions, signatures or watermarks, in any language. The real building has
+   Chinese lettering on its column and above its entrance, and the provided photograph has a
+   photographer's watermark along its bottom edge: IGNORE ALL OF THEM and leave those surfaces
+   plain. The mooncakes are plain round cakes with no stamped characters. The cooler box, the
+   camp chairs, the grills, the paper cups, the phone, the lantern and every piece of clothing
+   are plain, with no logo and no writing.
+
+AVOID: any letters, words, Chinese characters, logos or watermarks anywhere, including the
+photographer's watermark and the lettering on the clinic copied from the photograph; stamped
+characters on the mooncakes; branded cans, beer, bottles with labels; parked cars, a traffic
+cone; fireworks, rockets or bursts in the sky; long white curving wind lines or chalk ribbons in
+the sky; one long ribbon of smoke; a pomelo hat drawn as a whole fruit, a bowl, a brimmed cap or
+a crown; more than two people wearing pomelo hats; a sparkler near a grill or near anyone's face;
+the moon cropped, covered by cloud, drawn with a face or a rabbit, or drawn huge like a poster;
+a cloudless empty sky or a sky full of heavy clouds; daylight, a blue daytime sky, sunset
+orange; a pale, cream or brightly lit wall; a washed-out high-key picture; a black sky; dental
+instruments, dental chairs, teeth, X-rays; anyone crying, drunk, mocking, pointing or looking at
+the camera; a posed row of people facing the viewer; tiny distant figures in an empty street;
+anyone drawn pale, faint, translucent or in outline only; a re-invented or re-proportioned
+building; the building mirrored to the other side of the picture; photo-realism; 3D rendering;
+anime; thick uniform black outlines; greyscale.
+```
+
+---
+
+## 三、這一份裡已經先擋掉的坑（都是這一站踩過的）
+
+1. **風格段放最前面、而且寫具體**（ILLUSTRATION.md 第七節第 18 條）——
+   這一張要交代的事很多，最容易被擠掉的就是風格。
+2. **柚子帽的形狀寫死**（第十之一節：形狀不要只靠形容詞）。
+   模型對「柚子戴頭上」沒有先驗，很可能畫成一整顆柚子頂在頭上或一頂綠帽子。
+   ⚠ 第一版若還是畫錯，**下一輪改餵一張柚子帽的參考照**，不要再加形容詞。
+3. **煙只能是一小群短線**（第七節第 17 條：一條長曲線會被讀成靈魂出竅）。
+4. **晴天那張的白色風線寫在「照抄那張圖」那一段裡**（颱風那一份第六節第 12 條）。
+5. **夜晚要明講「比白天那張暗、牆不可以是白的」**（第七節第 18 條：high-key 會把夜晚洗白）。
+6. **每個人的衣服顏色逐一指派**（第七節第 18 條：只給色票，一家人會穿成同一色）。
+7. **方向用畫面的左／右寫死**（颱風那一份第六節第 5 條）：建築在左、街往右收、月亮在右上、煙往右飄。
+8. **沒有人看鏡頭、沒有人在笑別人**（第三節的例外段、第七節第 14 條）。
+9. **仙女棒離烤爐、離臉都遠** —— 一張診所發的圖，畫面上不能有會被讀成危險的東西。
+   同理**不畫啤酒**，飲料一律是無字的紙杯茶。
+
+---
+
+## 四、生成之後逐條看
+
+| | 門檻 |
+| --- | --- |
+| 建築 | 和照片並排：角在左、側牆往右收、窗盒錯落三層、左下是騎樓與玻璃 |
+| 零文字 | 放大柱子、騎樓上緣、下緣（浮水印的位置）、月餅、冰桶 |
+| 柚子帽 | 兩個人、是空心的半顆皮倒扣在頭上 |
+| 月亮 | 正圓、全滿、沒被雲遮、在右上 |
+| 是夜晚 | 牆是中間偏冷的灰，不是米白；天空是深藍不是黑 |
+| 人 | 三組、沒有人看鏡頭、臉是插畫的簡化臉，不寫實 |
+| 煙與仙女棒 | 煙是短線不是長帶；天上沒有煙火 |
+
+---
+
+## 五、還沒定的
+
+1. ⚠ **這一張的光偏離了規格表**：ILLUSTRATION.md 第三節寫「整張只有一個光源，暖色」。
+   這一張是「冷的月光 ＋ 一組暖光」，因為照片本身就是這樣（窗盒亮著），
+   而且中秋少了月亮就不成立。我把幾處暖光寫成**同一組**（都是小範圍、迅速暗掉），
+   畫出來若覺得太亂，第一個要減的是**診所玻璃那一片**。
+2. **用在哪裡**還沒講 —— 決定了比例，也決定了要不要在縮圖尺寸下驗收。
+   ⚠ LINE 那條線有一個相關的判斷（`drafts/channels/README.md` 第 34-3 節）：
+   主頁「最新貼文」只有三格，**放一則中秋快樂等於少一格在回答真問題**。
+   要貼那裡的話，建議節後撤掉。
