@@ -250,7 +250,7 @@ const bar = `
       <button data-v="g1">極慢 8</button><button data-v="g2">很慢 14</button><button data-v="g3">慢 25</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">換科快慢</span><span class="pv-seg" data-k="s">
-      <button data-v="s0">2 秒</button><button data-v="s4">2.5 秒</button><button data-v="s1">3 秒</button><button data-v="s2">4.5 秒</button>
+      <button data-v="s0">2 秒</button><button data-v="s4">2.5 秒</button><button data-v="s5">2.67 秒</button><button data-v="s6">2.84 秒</button><button data-v="s1">3 秒</button><button data-v="s2">4.5 秒</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">標籤換色</span><span class="pv-seg" data-k="x">
       <button data-v="x2">0.45 秒</button><button data-v="x4">0.6 秒</button><button data-v="x5">0.7 秒</button><button data-v="x3">0.8 秒</button>
@@ -292,7 +292,7 @@ const bar = `
      換科要再快一點）。原本停留時間是從「這一條滑得完」反推的，兩件事綁在一起，
      滑得愈慢就停得愈久 —— 他要的正好是相反的組合。 */
   var V = { g1: 8, g2: 14, g3: 25 };                    /* 橫向滑動，px/s，定速 */
-  var SPEED = { s0: 2000, s4: 2500, s1: 3000, s2: 4500 }; /* 一科停多久就換 */
+  var SPEED = { s0: 2000, s4: 2500, s5: 2670, s6: 2840, s1: 3000, s2: 4500 }; /* 一科停多久就換 */
   var XT = { x2: '.45s', x4: '.6s', x5: '.7s', x3: '.8s' }; /* 標籤換色的時間 */
 
   D.classList.add('pv-js');
