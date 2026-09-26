@@ -10495,7 +10495,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
       <button data-v="center">正中間</button><button data-v="second">第二格</button><button data-v="left">最左邊</button><button data-v="off">不捲動</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">標籤移動</span><span class="pv-seg" data-k="ts">
-      <button data-v="t25">0.25 秒</button><button data-v="t50">0.5 秒</button><button data-v="t80">0.8 秒</button>
+      <button data-v="t25">0.25 秒</button><button data-v="t50">0.5 秒</button><button data-v="t60">0.6 秒</button><button data-v="t70">0.7 秒</button><button data-v="t80">0.8 秒</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">橫幅捲軸</span><span class="pv-seg" data-k="sb">
       <button data-v="hide">隱藏</button><button data-v="stable">留位（八科等高）</button><button data-v="auto">跟著需要</button>
@@ -10625,7 +10625,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
   /* ✅ 2026-09-26 使用者定案：**前快後緩**（cubic-bezier(.16,1,.3,1)）。
      那一排收成預設值、從切換條上拿掉；?e=e1 仍然切得回平順，要回頭比對不必改程式。
      0.2 秒下量過三次，到 80% 平順 169~219ms、前快後緩 119~129ms，兩組沒有重疊。 */
-  var TS = { t25: 250, t50: 500, t80: 800 };   /* 標籤那一列滑多久 */
+  var TS = { t25: 250, t50: 500, t60: 600, t70: 700, t80: 800 };   /* 標籤那一列滑多久 */
   var EASE = { e1: 'ease', e2: 'cubic-bezier(.16,1,.3,1)' };
   function tdur() { return Math.round(parseFloat(XT[st.x]) * 1000); }
   function fxdur() { return st.l === 'same' ? tdur() : (LEN[st.l] || 0); }
