@@ -69,8 +69,8 @@ const groups = TABS.map((s) => {
     : '<a class="pv-all" data-spec="' + s.spec + '" href="/topics/' + s.spec + '/">看' + s.name + '<br>全部 ' + mine.length + ' 篇 ›</a>';
   return '<div class="pv-group" data-spec="' + s.spec + '">'
     + '<h3 class="pv-gh">' + s.name + '</h3>'
-    + '<div class="pv-rail cards">' + rail + tail
-    + '</div></div>';
+    + '<div class="pv-rail cards"><div class="pv-track">' + rail + tail
+    + '</div></div></div>';
 }).join("\n");
 
 const tabs = TABS.map((s, i) => '<button class="pv-tab" type="button" data-spec="' + s.spec + '"'
@@ -183,16 +183,27 @@ html.pv-js .pv-group.pv-out {
 .pv-strip, .pv-groups, .pv-group { min-width: 0; }
 .pv-groups { position: relative; }
 .pv-rail.cards {
-  display: flex; grid-template-columns: none; gap: 1rem; min-width: 0; max-width: 100%;
+  display: block; grid-template-columns: none; min-width: 0; max-width: 100%;
   overflow-x: auto; padding-bottom: .7rem;
-  scroll-snap-type: x proximity;
-  /* ⚠⚠ 自動滑動的時候一定要把吸附關掉。scroll-snap 會把每一幀的小位移
-     吸回最近的那一格，畫面上看到的是「每隔幾秒跳一張卡」，不是緩慢滑動
-     （桌機量到 0,0,0,0,388,388 —— 388 剛好是一張卡 370 ＋ 間距 16）。 */
+  /* ⚠⚠ 這裡**刻意沒有 scroll-snap**。試過 x proximity，兩次都被它咬到：
+     ① 自動滑動時它把每一幀的小位移吸回整格，畫面變成「每隔幾秒跳一張卡」
+        （桌機量到 0,0,0,0,388,388 —— 388 剛好是一張卡 370 ＋ 間距 16）；
+     ② 使用者一碰、要把 transform 換算回 scrollLeft 交還給手指時，
+        它又把位置吸回 0（強制指定 52 也一樣被吸回去），於是畫面倒退一截。
+     這一條橫幅本來就是連續飄移、卡片刻意露半張，吸附幫不上忙。
+     真的要的話是另一條尺，不要默默加回來。 */
   overscroll-behavior-x: contain;
 }
-.pv-rail.cards > .card {
-  flex: 0 0 var(--pv-cw, 74%); scroll-snap-align: start;
+/* ⚠⚠ 自動滑動**不可以推 scrollLeft**：那個值讀回來只有整數（實測 0 個小數），
+   極慢 8px/秒 ＝ 每幀 0.13px，於是 87% 的幀完全不動、然後跳 1px，看起來就是卡卡的
+   （2026-09-26 使用者在手機上回報；14px/秒 77%、25px/秒 58%）。
+   所以卡片外面多包一層 .pv-track，自動滑動改推它的 transform ——
+   transform 有小數精度又走合成器，多慢都順。
+   ⚠ 使用者一碰（stopAuto）就把 transform 換算回 scrollLeft 再清掉，
+   之後交還給原生捲動，不然他一滑畫面會跳回去。 */
+.pv-track { display: flex; gap: 1rem; width: max-content; will-change: transform; }
+.pv-rail.cards .pv-track > .card {
+  flex: 0 0 var(--pv-cw, 74%);
   /* ⚠ 一定要 relative：卡片裡那顆 .sr-only 是 position:absolute 而卡片本來是 static，
      定位脈絡會跑到橫幅外面去，於是它**不被橫幅裁切**、整頁在 390 寬多出 180px 的
      水平捲動（畫面完全看不出來，只有量 scrollWidth 才知道）。 */
@@ -200,7 +211,7 @@ html.pv-js .pv-group.pv-out {
 }
 .pv-rail .card-body { padding: .85rem .95rem 1rem; }
 .pv-all {
-  flex: 0 0 9.5rem; scroll-snap-align: start; display: flex; align-items: center; justify-content: center;
+  flex: 0 0 9.5rem; display: flex; align-items: center; justify-content: center;
   text-align: center; text-decoration: none; font-size: .86rem; line-height: 1.7;
   border-radius: 12px; border: 1px dashed var(--accent-deep); color: var(--accent-deep);
   background: var(--card);
@@ -227,7 +238,6 @@ html[data-pvsb="hide"] .pv-rail.cards { scrollbar-width: none; }
 html[data-pvsb="hide"] .pv-rail.cards::-webkit-scrollbar { display: none; }
 html[data-pvsb="stable"] .pv-rail.cards { scrollbar-width: thin; scrollbar-gutter: stable; }
 html[data-pvsb="auto"] .pv-rail.cards { scrollbar-width: thin; }
-html[data-pvglide="1"] .pv-rail.cards { scroll-snap-type: none; }
 html[data-pvall="0"] .pv-all { display: none; }
 /* 「全部」那一條要不要把已經在上面當大卡的那幾張藏起來。 */
 html[data-pvd="on"][data-pvn="1"] .pv-group[data-spec="all"] .card[data-pvdup="1"],
@@ -313,7 +323,10 @@ const bar = `
       <button data-v="x">疊著對拉</button><button data-v="a">同時淡入</button><button data-v="b">先出後進</button><button data-v="c">0.4 秒才換</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">亮的標籤停在</span><span class="pv-seg" data-k="tp">
-      <button data-v="second">第二格</button><button data-v="left">最左邊</button><button data-v="center">正中間</button><button data-v="off">不捲動</button>
+      <button data-v="center">正中間</button><button data-v="second">第二格</button><button data-v="left">最左邊</button><button data-v="off">不捲動</button>
+    </span></div>
+    <div class="pv-row"><span class="pv-lab">標籤移動</span><span class="pv-seg" data-k="ts">
+      <button data-v="t25">0.25 秒</button><button data-v="t50">0.5 秒</button><button data-v="t80">0.8 秒</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">橫幅捲軸</span><span class="pv-seg" data-k="sb">
       <button data-v="hide">隱藏</button><button data-v="stable">留位（八科等高）</button><button data-v="auto">跟著需要</button>
@@ -345,7 +358,7 @@ const bar = `
    自動播放 科別＋卡片滑動／上面大卡 自動（跟版面）／按標籤 就地切換／
    滑動 很慢 14／換科時 橫幅停在原處／一屏幾張 中／全部那條 接在大卡後面。
    ⚠ 手機那一側他還沒看，所以尺**先不收**，等他看完再一起定。 */
-  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', l: 'l20', e: 'e2', sb: 'hide', tp: 'second', p: 'keep', w: 'w2', d: 'on', cur: '0' };
+  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', l: 'l20', e: 'e2', sb: 'hide', tp: 'center', ts: 't50', p: 'keep', w: 'w2', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -371,6 +384,19 @@ const bar = `
   D.classList.add('pv-js');
 
   function railOf(i) { return groups[i].querySelector('.pv-rail'); }
+  function trackOf(i) { return groups[i].querySelector('.pv-track'); }
+  function maxOf(i) {
+    var r = railOf(i), t = trackOf(i);
+    return (r && t) ? Math.max(0, t.offsetWidth - r.clientWidth) : 0;
+  }
+  function putX(i, x) { var t = trackOf(i); if (t) t.style.transform = 'translate3d(' + (-x) + 'px,0,0)'; }
+  /* 把 transform 換算回原生捲動，交還給手指。 */
+  function handOver(i) {
+    var r = railOf(i), t = trackOf(i); if (!r || !t) return;
+    var x = gpos[i] || 0;
+    t.style.transform = '';
+    r.scrollLeft = x;
+  }
 
   /* 換科那一下，圖卡怎麼交棒。標籤的顏色一律在第 0 毫秒就開始變、T 毫秒後全亮
      （T ＝ 標籤換色那條尺），四種做法都讓圖卡在同一個 T 到位：
@@ -406,9 +432,10 @@ const bar = `
     var from = tabRow.scrollLeft, to = tabTarget(), d = to - from;
     if (Math.abs(d) < 2) return;
     if (tabRaf) cancelAnimationFrame(tabRaf);
-    var ms = Math.max(180, fxdur()), t0 = performance.now();
-    /* 和 --pv-fxease 同一條曲線（cubic-bezier(.16,1,.3,1)）的近似：前快後緩。 */
-    function ez(x) { return 1 - Math.pow(1 - x, 3); }
+    var ms = TS[st.ts], t0 = performance.now();
+    /* 頭尾都放慢的 ease-in-out —— 標籤那一列是「跟著走」不是「彈到位」，
+       前快後緩用在這裡會像被彈過去（2026-09-26 使用者：移動的很瞬間，可以絲滑一點）。 */
+    function ez(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
     (function step(now) {
       var k = Math.min(1, (now - t0) / ms);
       tabRow.scrollLeft = from + d * ez(k);
@@ -429,6 +456,7 @@ const bar = `
   /* ✅ 2026-09-26 使用者定案：**前快後緩**（cubic-bezier(.16,1,.3,1)）。
      那一排收成預設值、從切換條上拿掉；?e=e1 仍然切得回平順，要回頭比對不必改程式。
      0.2 秒下量過三次，到 80% 平順 169~219ms、前快後緩 119~129ms，兩組沒有重疊。 */
+  var TS = { t25: 250, t50: 500, t80: 800 };   /* 標籤那一列滑多久 */
   var EASE = { e1: 'ease', e2: 'cubic-bezier(.16,1,.3,1)' };
   function tdur() { return Math.round(parseFloat(XT[st.x]) * 1000); }
   function fxdur() { return st.l === 'same' ? tdur() : (LEN[st.l] || 0); }
@@ -437,6 +465,9 @@ const bar = `
     groups.forEach(function (g, j) {
       g.classList.toggle('pv-on', j === idx);
       g.classList.remove('pv-dim'); g.classList.remove('pv-out');
+      /* 每一組回到它自己記著的位置（自動播放中用 transform，停掉之後用原生捲動）。 */
+      if (stopped || st.a !== 'both') { var tt = trackOf(j); if (tt) tt.style.transform = ''; }
+      else { putX(j, gpos[j] || 0); railOf(j).scrollLeft = 0; }
     });
     shown = idx;
   }
@@ -481,6 +512,7 @@ const bar = `
     if (timer) { clearTimeout(timer); timer = null; }
     if (raf) { cancelAnimationFrame(raf); raf = null; }
     D.removeAttribute('data-pvglide');
+    handOver(shown);
     if (hint) hint.hidden = true;
     measure(why || 'stopped');
   }
@@ -498,23 +530,19 @@ const bar = `
     var last = performance.now();
     function step(now) {
       if (stopped || st.a !== 'both') { raf = null; D.removeAttribute('data-pvglide'); return; }
-      var r = railOf(shown), dt = Math.min(0.05, (now - last) / 1000); last = now;
-      if (r) {
-        var max = r.scrollWidth - r.clientWidth;
-        if (max > 2) {
-          /* 位置記在各科自己身上：滑得慢又換得快的話，如果每次回來都歸零，
-             二十篇那一條永遠只看得到最前面兩三張。
-             ⚠⚠ 但**滑到底不可以就這樣停著**（2026-09-26 使用者回報）——
-             底部不是任何一張卡的邊界，畫面會變成「左邊固定掛著半張卡、而且再也
-             不動」，讀的人得自己猜那半張是剛剛看過的哪一篇。量過：電腦上
-             一般牙科／植牙假牙只可滑 115px，轉兩三圈就卡死；牙周／兒童 507px，
-             十幾圈之後一樣卡死。做法是**記下「這一條已經滑完」，等換科之後
-             （那時它已經 display:none）再把它歸零**，下次輪回來從第一張重新滑。
-             在畫面上歸零的話會看到它跳一下。 */
-          var cur = (gpos[shown] || 0) + V[st.g] * dt;
-          if (cur >= max) { cur = max; done[shown] = true; }
-          gpos[shown] = cur; r.scrollLeft = cur;
-        }
+      var dt = Math.min(0.05, (now - last) / 1000); last = now;
+      /* 位置記在各科自己身上：滑得慢又換得快的話，如果每次回來都歸零，
+         二十篇那一條永遠只看得到最前面兩三張。
+         ⚠⚠ 但**滑到底不可以就這樣停著**（2026-09-26 使用者回報）——
+         底部不是任何一張卡的邊界，畫面會變成「左邊固定掛著半張卡、而且再也
+         不動」，讀的人得自己猜那半張是剛剛看過的哪一篇。做法是記下
+         「這一條已經滑完」，等換科之後（那時它已經 display:none）再把它歸零。
+         ⚠ 推的是 .pv-track 的 transform，不是 scrollLeft —— 理由見樣式那一段。 */
+      var max = maxOf(shown);
+      if (max > 2) {
+        var cur = (gpos[shown] || 0) + V[st.g] * dt;
+        if (cur >= max) { cur = max; done[shown] = true; }
+        gpos[shown] = cur; putX(shown, cur);
       }
       raf = requestAnimationFrame(step);
     }
@@ -527,10 +555,10 @@ const bar = `
       timer = setTimeout(function () {
         if (stopped) return;
         var prev = idx;
-        if (st.p === 'reset') { var r = railOf(prev); if (r) r.scrollLeft = 0; gpos[prev] = 0; }
+        if (st.p === 'reset') { gpos[prev] = 0; putX(prev, 0); var r = railOf(prev); if (r) r.scrollLeft = 0; }
         show(idx + 1);
         /* 滑完的那一條在這裡歸零 —— show() 之後它已經是 display:none，看不到跳動。 */
-        if (done[prev]) { var r2 = railOf(prev); if (r2) r2.scrollLeft = 0; gpos[prev] = 0; done[prev] = false; }
+        if (done[prev]) { gpos[prev] = 0; putX(prev, 0); var r2 = railOf(prev); if (r2) r2.scrollLeft = 0; done[prev] = false; }
         measure('auto');
         next();
       }, dwell());
@@ -638,7 +666,7 @@ const bar = `
     var docs = document.getElementById('doctors');
     var total = document.documentElement.scrollHeight;
     var dy = docs ? docs.getBoundingClientRect().top + scrollY : 0;
-    var r = railOf(idx), left = r ? Math.max(0, r.scrollWidth - r.clientWidth) : 0;
+    var r = railOf(idx), left = maxOf(idx);
     /* ⚠ 要抓「看得見的」第一張。「全部」那一條最前面幾張是重複卡、被藏起來了，
        抓到它的話寬度是 0，一除就變成「一屏看到 22.63 張」。 */
     var one = 0;

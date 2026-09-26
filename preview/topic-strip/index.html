@@ -6443,16 +6443,27 @@ html.pv-js .pv-group.pv-out {
 .pv-strip, .pv-groups, .pv-group { min-width: 0; }
 .pv-groups { position: relative; }
 .pv-rail.cards {
-  display: flex; grid-template-columns: none; gap: 1rem; min-width: 0; max-width: 100%;
+  display: block; grid-template-columns: none; min-width: 0; max-width: 100%;
   overflow-x: auto; padding-bottom: .7rem;
-  scroll-snap-type: x proximity;
-  /* ⚠⚠ 自動滑動的時候一定要把吸附關掉。scroll-snap 會把每一幀的小位移
-     吸回最近的那一格，畫面上看到的是「每隔幾秒跳一張卡」，不是緩慢滑動
-     （桌機量到 0,0,0,0,388,388 —— 388 剛好是一張卡 370 ＋ 間距 16）。 */
+  /* ⚠⚠ 這裡**刻意沒有 scroll-snap**。試過 x proximity，兩次都被它咬到：
+     ① 自動滑動時它把每一幀的小位移吸回整格，畫面變成「每隔幾秒跳一張卡」
+        （桌機量到 0,0,0,0,388,388 —— 388 剛好是一張卡 370 ＋ 間距 16）；
+     ② 使用者一碰、要把 transform 換算回 scrollLeft 交還給手指時，
+        它又把位置吸回 0（強制指定 52 也一樣被吸回去），於是畫面倒退一截。
+     這一條橫幅本來就是連續飄移、卡片刻意露半張，吸附幫不上忙。
+     真的要的話是另一條尺，不要默默加回來。 */
   overscroll-behavior-x: contain;
 }
-.pv-rail.cards > .card {
-  flex: 0 0 var(--pv-cw, 74%); scroll-snap-align: start;
+/* ⚠⚠ 自動滑動**不可以推 scrollLeft**：那個值讀回來只有整數（實測 0 個小數），
+   極慢 8px/秒 ＝ 每幀 0.13px，於是 87% 的幀完全不動、然後跳 1px，看起來就是卡卡的
+   （2026-09-26 使用者在手機上回報；14px/秒 77%、25px/秒 58%）。
+   所以卡片外面多包一層 .pv-track，自動滑動改推它的 transform ——
+   transform 有小數精度又走合成器，多慢都順。
+   ⚠ 使用者一碰（stopAuto）就把 transform 換算回 scrollLeft 再清掉，
+   之後交還給原生捲動，不然他一滑畫面會跳回去。 */
+.pv-track { display: flex; gap: 1rem; width: max-content; will-change: transform; }
+.pv-rail.cards .pv-track > .card {
+  flex: 0 0 var(--pv-cw, 74%);
   /* ⚠ 一定要 relative：卡片裡那顆 .sr-only 是 position:absolute 而卡片本來是 static，
      定位脈絡會跑到橫幅外面去，於是它**不被橫幅裁切**、整頁在 390 寬多出 180px 的
      水平捲動（畫面完全看不出來，只有量 scrollWidth 才知道）。 */
@@ -6460,7 +6471,7 @@ html.pv-js .pv-group.pv-out {
 }
 .pv-rail .card-body { padding: .85rem .95rem 1rem; }
 .pv-all {
-  flex: 0 0 9.5rem; scroll-snap-align: start; display: flex; align-items: center; justify-content: center;
+  flex: 0 0 9.5rem; display: flex; align-items: center; justify-content: center;
   text-align: center; text-decoration: none; font-size: .86rem; line-height: 1.7;
   border-radius: 12px; border: 1px dashed var(--accent-deep); color: var(--accent-deep);
   background: var(--card);
@@ -6487,7 +6498,6 @@ html[data-pvsb="hide"] .pv-rail.cards { scrollbar-width: none; }
 html[data-pvsb="hide"] .pv-rail.cards::-webkit-scrollbar { display: none; }
 html[data-pvsb="stable"] .pv-rail.cards { scrollbar-width: thin; scrollbar-gutter: stable; }
 html[data-pvsb="auto"] .pv-rail.cards { scrollbar-width: thin; }
-html[data-pvglide="1"] .pv-rail.cards { scroll-snap-type: none; }
 html[data-pvall="0"] .pv-all { display: none; }
 /* 「全部」那一條要不要把已經在上面當大卡的那幾張藏起來。 */
 html[data-pvd="on"][data-pvn="1"] .pv-group[data-spec="all"] .card[data-pvdup="1"],
@@ -7054,7 +7064,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
           </p>
         </div>
       </a></div>
-<div class="pv-strip"><div class="pv-tabs" role="tablist"><button class="pv-tab" type="button" data-spec="all" aria-selected="true">全部</button><button class="pv-tab" type="button" data-spec="general" aria-selected="false">一般牙科・定期檢查</button><button class="pv-tab" type="button" data-spec="perio" aria-selected="false">牙周治療</button><button class="pv-tab" type="button" data-spec="endo" aria-selected="false">顯微根管</button><button class="pv-tab" type="button" data-spec="kids" aria-selected="false">兒童牙科</button><button class="pv-tab" type="button" data-spec="ortho" aria-selected="false">齒顎矯正</button><button class="pv-tab" type="button" data-spec="prosth" aria-selected="false">植牙・假牙重建</button><button class="pv-tab" type="button" data-spec="surg" aria-selected="false">口腔外科</button></div><div class="pv-groups"><div class="pv-group" data-spec="all"><h3 class="pv-gh">全部</h3><div class="pv-rail cards"><a class="card" data-pvdup="1" href="../../posts/perio-full-mouth/" data-spec="perio">
+<div class="pv-strip"><div class="pv-tabs" role="tablist"><button class="pv-tab" type="button" data-spec="all" aria-selected="true">全部</button><button class="pv-tab" type="button" data-spec="general" aria-selected="false">一般牙科・定期檢查</button><button class="pv-tab" type="button" data-spec="perio" aria-selected="false">牙周治療</button><button class="pv-tab" type="button" data-spec="endo" aria-selected="false">顯微根管</button><button class="pv-tab" type="button" data-spec="kids" aria-selected="false">兒童牙科</button><button class="pv-tab" type="button" data-spec="ortho" aria-selected="false">齒顎矯正</button><button class="pv-tab" type="button" data-spec="prosth" aria-selected="false">植牙・假牙重建</button><button class="pv-tab" type="button" data-spec="surg" aria-selected="false">口腔外科</button></div><div class="pv-groups"><div class="pv-group" data-spec="all"><h3 class="pv-gh">全部</h3><div class="pv-rail cards"><div class="pv-track"><a class="card" data-pvdup="1" href="../../posts/perio-full-mouth/" data-spec="perio">
         <picture>
           <source type="image/webp" srcset="../../assets/hero-perio-full-mouth-photo-800.webp 800w, ../../assets/hero-perio-full-mouth-photo-1600.webp 1600w, ../../assets/hero-perio-full-mouth-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="card-thumb" src="../../assets/hero-perio-full-mouth-photo-1600.jpg" srcset="../../assets/hero-perio-full-mouth-photo-800.jpg 800w, ../../assets/hero-perio-full-mouth-photo-1600.jpg 1600w, ../../assets/hero-perio-full-mouth-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫。明亮的牙科診間裡，穿芥末黃開襟衫的中年男病患坐在淡綠色診療椅上，一手按著臉頰、眉頭皺起；穿淡青綠刷手服與白袍的男醫師坐在他身旁的滾輪椅上，攤開一隻手向他解釋。病患頭上的小對話框裡是一排五顆牙，中間那顆的牙齦紅腫、牙齒在搖。醫師頭上的大對話框裡是同一排五顆牙，都長了臉和手：中間那顆牙齦紅腫，高舉雙手喊救命；一大群深色的小細菌從它紅腫的牙齦湧出來，往四周亂竄、搗亂，碎屑亂飛；旁邊四顆牙的牙齦邊也各有幾隻細菌，它們有的擔心地看著中間那顆，有的緊張地看著自己腳邊的細菌。背景是診療椅、器械臂、洗手台、櫃子、滅菌鍋與通往隔壁診間的玻璃隔間。" width="1600" height="893" loading="lazy">
@@ -7403,8 +7413,8 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
             <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
-      </a></div></div>
-<div class="pv-group" data-spec="general"><h3 class="pv-gh">一般牙科・定期檢查</h3><div class="pv-rail cards"><a class="card" href="../../posts/three-month-recall/" data-spec="general">
+      </a></div></div></div>
+<div class="pv-group" data-spec="general"><h3 class="pv-gh">一般牙科・定期檢查</h3><div class="pv-rail cards"><div class="pv-track"><a class="card" href="../../posts/three-month-recall/" data-spec="general">
         <picture>
           <source type="image/webp" srcset="../../assets/hero-recall-photo-800.webp 800w, ../../assets/hero-recall-photo-1600.webp 1600w, ../../assets/hero-recall-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="card-thumb" src="../../assets/hero-recall-photo-1600.jpg" srcset="../../assets/hero-recall-photo-800.jpg 800w, ../../assets/hero-recall-photo-1600.jpg 1600w, ../../assets/hero-recall-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="七格拼起來的鑲嵌畫，六個人各自在自己家裡：孕婦坐在沙發上看小冊子、拿拐杖的阿嬤在廚房伸手拿杯子、早餐桌上量血糖的先生、桌上放著藥袋若有所思的中年男子、半夜起來倒水喝的女性、綁著頭巾在藤椅上看書笑出來的女性；右下角那一格是診所，白袍的醫師與穿刷手服的護理師一起往左上方看，醫師的手向那幾格攤開" width="1600" height="1194" loading="lazy">
@@ -7454,8 +7464,8 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
             <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
-      </a><a class="pv-all" data-spec="general" href="/topics/general/">看一般牙科・定期檢查<br>全部 3 篇 ›</a></div></div>
-<div class="pv-group" data-spec="perio"><h3 class="pv-gh">牙周治療</h3><div class="pv-rail cards"><a class="card" href="../../posts/perio-full-mouth/" data-spec="perio">
+      </a><a class="pv-all" data-spec="general" href="/topics/general/">看一般牙科・定期檢查<br>全部 3 篇 ›</a></div></div></div>
+<div class="pv-group" data-spec="perio"><h3 class="pv-gh">牙周治療</h3><div class="pv-rail cards"><div class="pv-track"><a class="card" href="../../posts/perio-full-mouth/" data-spec="perio">
         <picture>
           <source type="image/webp" srcset="../../assets/hero-perio-full-mouth-photo-800.webp 800w, ../../assets/hero-perio-full-mouth-photo-1600.webp 1600w, ../../assets/hero-perio-full-mouth-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="card-thumb" src="../../assets/hero-perio-full-mouth-photo-1600.jpg" srcset="../../assets/hero-perio-full-mouth-photo-800.jpg 800w, ../../assets/hero-perio-full-mouth-photo-1600.jpg 1600w, ../../assets/hero-perio-full-mouth-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫。明亮的牙科診間裡，穿芥末黃開襟衫的中年男病患坐在淡綠色診療椅上，一手按著臉頰、眉頭皺起；穿淡青綠刷手服與白袍的男醫師坐在他身旁的滾輪椅上，攤開一隻手向他解釋。病患頭上的小對話框裡是一排五顆牙，中間那顆的牙齦紅腫、牙齒在搖。醫師頭上的大對話框裡是同一排五顆牙，都長了臉和手：中間那顆牙齦紅腫，高舉雙手喊救命；一大群深色的小細菌從它紅腫的牙齦湧出來，往四周亂竄、搗亂，碎屑亂飛；旁邊四顆牙的牙齦邊也各有幾隻細菌，它們有的擔心地看著中間那顆，有的緊張地看著自己腳邊的細菌。背景是診療椅、器械臂、洗手台、櫃子、滅菌鍋與通往隔壁診間的玻璃隔間。" width="1600" height="893" loading="lazy">
@@ -7522,8 +7532,8 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
             <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
-      </a><a class="pv-all" data-spec="perio" href="/topics/perio/">看牙周治療<br>全部 4 篇 ›</a></div></div>
-<div class="pv-group" data-spec="endo"><h3 class="pv-gh">顯微根管</h3><div class="pv-rail cards"><a class="card" href="../../posts/pulp-calcification/" data-spec="endo">
+      </a><a class="pv-all" data-spec="perio" href="/topics/perio/">看牙周治療<br>全部 4 篇 ›</a></div></div></div>
+<div class="pv-group" data-spec="endo"><h3 class="pv-gh">顯微根管</h3><div class="pv-rail cards"><div class="pv-track"><a class="card" href="../../posts/pulp-calcification/" data-spec="endo">
         <picture>
           <source type="image/webp" srcset="../../assets/hero-pulp-calcification-photo-800.webp 800w, ../../assets/hero-pulp-calcification-photo-1600.webp 1600w, ../../assets/hero-pulp-calcification-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="card-thumb" src="../../assets/hero-pulp-calcification-photo-1600.jpg" srcset="../../assets/hero-pulp-calcification-photo-800.jpg 800w, ../../assets/hero-pulp-calcification-photo-1600.jpg 1600w, ../../assets/hero-pulp-calcification-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫。右邊是一顆巨大的下顎大臼齒，站在一排同高的牙齒中間，下半截埋在粉紅色的牙齦裡；咬合面的溝上只有一個極小的深色凹洞。透過琺瑯質看得見裡面用虛線畫出的牙髓：一個又低又扁的髓腔，往下收成兩條細如髮絲的根管，順著牙根的弧度一路收到根尖前才變成一個點。左邊是一個很大的圓形放大鏡框，框裡是那條根管被放大之後的樣子——一條淡米色的隧道，前方收窄成一道又高又細的暗縫。框裡有四個人，都穿著半透明的淡薄荷青防護衣、帽兜戴起來、戴著透明面罩：最左邊一位站著；旁邊是穿藕粉色刷手服、帽兜前緣有一盞小燈、手握細噴桿的領隊；一名穿淡黃上衣的男孩側身把半個身體擠進那道細縫，衣服被夾得皺起來；另一位單膝跪在他身旁抬手比著。圓框外面的牙齦上還站著兩位：穿鼠尾草綠外套、手拿噴瓶的女性，以及拄著手杖、手腕掛著小水桶的老先生。兩條細線從放大鏡框的外緣拉出來，收在牙根上段那條根管的同一點上。左邊那支牙根的根尖外面有一個淡色的膿包，另外兩條細線把它連到右下角的第二個圓框；框裡是那個膿包被放大之後的內部，一群深色的細菌在裡面搗亂——丟碎屑、噴出濁綠色的液體，地上與牆上都是水坑和污痕。" width="1600" height="893" loading="lazy">
@@ -7556,8 +7566,8 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
             <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
-      </a><a class="pv-all" data-spec="endo" href="/topics/endo/">看顯微根管<br>全部 2 篇 ›</a></div></div>
-<div class="pv-group" data-spec="kids"><h3 class="pv-gh">兒童牙科</h3><div class="pv-rail cards"><a class="card" href="../../posts/kids-sedation/" data-spec="kids">
+      </a><a class="pv-all" data-spec="endo" href="/topics/endo/">看顯微根管<br>全部 2 篇 ›</a></div></div></div>
+<div class="pv-group" data-spec="kids"><h3 class="pv-gh">兒童牙科</h3><div class="pv-rail cards"><div class="pv-track"><a class="card" href="../../posts/kids-sedation/" data-spec="kids">
         <img class="card-thumb" src="../../assets/card-kids-sedation.jpg" alt="插畫：家裡的餐桌前，媽媽一手拿著手機講電話、一手拿筆，爸爸在旁邊探頭看桌上的紙；右上角一個圓形對話框，裡面是穿松樹印花刷手服、戴同一塊布做的手術帽的麻醉科醫師，拿著話筒看著一張空白的紙。" width="1000" height="563" loading="lazy">
         <div class="card-body">
           <span class="card-tag">兒童牙科</span>
@@ -7621,8 +7631,8 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
             <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
-      </a><a class="pv-all" data-spec="kids" href="/topics/kids/">看兒童牙科<br>全部 4 篇 ›</a></div></div>
-<div class="pv-group" data-spec="ortho"><h3 class="pv-gh">齒顎矯正</h3><div class="pv-rail cards"><a class="card" href="../../posts/aligner-simulation/" data-spec="ortho">
+      </a><a class="pv-all" data-spec="kids" href="/topics/kids/">看兒童牙科<br>全部 4 篇 ›</a></div></div></div>
+<div class="pv-group" data-spec="ortho"><h3 class="pv-gh">齒顎矯正</h3><div class="pv-rail cards"><div class="pv-track"><a class="card" href="../../posts/aligner-simulation/" data-spec="ortho">
         <span class="card-shot" style="position:relative;display:block"><picture>
           <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w, ../../assets/hero-aligner-photo-1600.webp 1600w, ../../assets/hero-aligner-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="card-thumb" src="../../assets/hero-aligner-photo-1600.jpg" srcset="../../assets/hero-aligner-photo-800.jpg 800w, ../../assets/hero-aligner-photo-1600.jpg 1600w, ../../assets/hero-aligner-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫是一間明亮的診所規劃室。畫面中央偏左有一面飄浮在空中的半透明藍色大螢幕，上面用白色線條畫著上排牙齒的俯視圖：牙齒互相重疊、有的擠到外側有的縮在後面，排成一條歪斜的弧線，旁邊散著白色的彎箭頭與五個琥珀色的驚嘆號三角形；螢幕右半有一顆被放大的牙齒，整根牙根插在一塊半透明的骨頭裡，牙根尖端有一道琥珀色的短線，上方一個琥珀色的提示牌寫著 ERROR，下面一行是一個牙套圖示、200+ 與無限符號。螢幕前站著一位穿白袍、裡面是藍灰色刷手服的男醫師，側身朝著螢幕，抬起一手用食指點在那顆放大的牙上，指尖旁有三道短線，另一手垂在身側拿著一支細筆，閉著嘴微笑。畫面左邊，一位穿芥末黃毛衣的男生坐在淺色長桌前，身體前傾、雙手放在筆電鍵盤上，手腕旁有兩道短線；筆電螢幕是深色底、一行一行的淺色程式碼，右下角有一個白色的牙弓圖示，旁邊飄著一面淡藍色的小螢幕，上面同樣是程式碼與牙弓，筆電右邊立著一台沒有開機的深灰色平板。畫面右邊，一位穿藍灰色刷手服的男性一手拿著平板（上面是同一顆牙與牙根）、一手張開手掌比向大螢幕，手掌外緣與嘴邊各有兩道短線；他身旁一位穿淡綠色上衣的女性低頭看著手機。背景是白色的牆與淺色地板，木質檯面上放著兩個馬克杯和一個陶土色的杯子，矮櫃上擺著一副石膏牙模與一副透明牙套，牆上掛著一張只有牙弓線條圖的海報，右側有一盆綠色植物，房間上方橫過幾道長長的白色弧線。" width="1600" height="891" loading="lazy">
@@ -7668,8 +7678,8 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
             <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
-      </a><a class="pv-all" data-spec="ortho" href="/topics/ortho/">看齒顎矯正<br>全部 2 篇 ›</a></div></div>
-<div class="pv-group" data-spec="prosth"><h3 class="pv-gh">植牙・假牙重建</h3><div class="pv-rail cards"><a class="card" href="../../posts/implant-lifespan/" data-spec="prosth">
+      </a><a class="pv-all" data-spec="ortho" href="/topics/ortho/">看齒顎矯正<br>全部 2 篇 ›</a></div></div></div>
+<div class="pv-group" data-spec="prosth"><h3 class="pv-gh">植牙・假牙重建</h3><div class="pv-rail cards"><div class="pv-track"><a class="card" href="../../posts/implant-lifespan/" data-spec="prosth">
         <picture>
           <source type="image/webp" srcset="../../assets/hero-implant-lifespan-photo-800.webp 800w, ../../assets/hero-implant-lifespan-photo-1600.webp 1600w, ../../assets/hero-implant-lifespan-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="card-thumb" src="../../assets/hero-implant-lifespan-photo-1600.jpg" srcset="../../assets/hero-implant-lifespan-photo-800.jpg 800w, ../../assets/hero-implant-lifespan-photo-1600.jpg 1600w, ../../assets/hero-implant-lifespan-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="八個人擠在一台用牙科家具拼成的飛行木板上，穿過飄滿時鐘的時光隧道" width="1600" height="893" loading="lazy">
@@ -7719,8 +7729,8 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
             <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
-      </a><a class="pv-all" data-spec="prosth" href="/topics/prosth/">看植牙・假牙重建<br>全部 3 篇 ›</a></div></div>
-<div class="pv-group" data-spec="surg"><h3 class="pv-gh">口腔外科</h3><div class="pv-rail cards"><a class="card" href="../../posts/wisdom-eruption/" data-spec="surg">
+      </a><a class="pv-all" data-spec="prosth" href="/topics/prosth/">看植牙・假牙重建<br>全部 3 篇 ›</a></div></div></div>
+<div class="pv-group" data-spec="surg"><h3 class="pv-gh">口腔外科</h3><div class="pv-rail cards"><div class="pv-track"><a class="card" href="../../posts/wisdom-eruption/" data-spec="surg">
         <picture>
           <source type="image/webp" srcset="../../assets/hero-wisdom-eruption-photo-800.webp 800w, ../../assets/hero-wisdom-eruption-photo-1600.webp 1600w, ../../assets/hero-wisdom-eruption-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="card-thumb" src="../../assets/hero-wisdom-eruption-photo-1600.jpg" srcset="../../assets/hero-wisdom-eruption-photo-800.jpg 800w, ../../assets/hero-wisdom-eruption-photo-1600.jpg 1600w, ../../assets/hero-wisdom-eruption-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫：一間明亮的牙科諮詢室。左邊一位穿紫色刷手服、外罩白色醫師袍的鮑伯頭女醫師站著，一手微微抬起、掌心朝上，正在聽。她右邊一位二十歲上下、穿鏽紅色外套與深色牛仔褲的男生坐在諮詢椅上，一手按著自己下顎靠近耳下的位置，那一處畫著幾道磚紅色的短折線與淡淡的排線表示痠痛。他頭頂上方一個大對話框，框裡畫著他從鏡子會看到的下顎後段：三顆後牙，最後那一顆只露出一半，牙齦瓣蓋住後半、鼓起來、比旁邊的淡粉紅一階。後方牆上是一台發光的看片燈箱，上緣夾著一張全景 X 光片，電源線沿著牆垂下；旁邊是洗手台與鏡子、芥末黃門的矮櫃、杯子、紙盤、面紙盒、盆栽、乾洗手與手套盒、一排資料夾與瓶子、沒有數字的圓鐘、掛著帆布袋的掛鉤。畫面右側有一支粗寬的紫色 S 形箭頭，從右緣的淡灰紫漸漸轉深、到左端箭頭尖變成深紫，指向坐著的男生；箭頭上站著同一個人的五個年紀，由右往左愈來愈高：最右邊的地上是一個在爬的嬰兒，接著是背著圓背包、手上拿著蠟筆的幼兒園男孩、背方書包掛水壺的小學男孩、斜背側背包的國中男生，最靠近箭頭尖的是抱著書、背著書包的高中男生。最右邊的門口露出一張診療椅的扶手與無影燈的一角。" width="1600" height="893" loading="lazy">
@@ -7753,7 +7763,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
             <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
           </p>
         </div>
-      </a><a class="pv-all" data-spec="surg" href="/topics/surg/">看口腔外科<br>全部 2 篇 ›</a></div></div></div></div>
+      </a><a class="pv-all" data-spec="surg" href="/topics/surg/">看口腔外科<br>全部 2 篇 ›</a></div></div></div></div></div>
 <div class="pv-orig cards">
       <a class="card" href="../../posts/perio-full-mouth/" data-spec="perio">
         <picture>
@@ -10482,7 +10492,10 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
       <button data-v="x">疊著對拉</button><button data-v="a">同時淡入</button><button data-v="b">先出後進</button><button data-v="c">0.4 秒才換</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">亮的標籤停在</span><span class="pv-seg" data-k="tp">
-      <button data-v="second">第二格</button><button data-v="left">最左邊</button><button data-v="center">正中間</button><button data-v="off">不捲動</button>
+      <button data-v="center">正中間</button><button data-v="second">第二格</button><button data-v="left">最左邊</button><button data-v="off">不捲動</button>
+    </span></div>
+    <div class="pv-row"><span class="pv-lab">標籤移動</span><span class="pv-seg" data-k="ts">
+      <button data-v="t25">0.25 秒</button><button data-v="t50">0.5 秒</button><button data-v="t80">0.8 秒</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">橫幅捲軸</span><span class="pv-seg" data-k="sb">
       <button data-v="hide">隱藏</button><button data-v="stable">留位（八科等高）</button><button data-v="auto">跟著需要</button>
@@ -10514,7 +10527,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
    自動播放 科別＋卡片滑動／上面大卡 自動（跟版面）／按標籤 就地切換／
    滑動 很慢 14／換科時 橫幅停在原處／一屏幾張 中／全部那條 接在大卡後面。
    ⚠ 手機那一側他還沒看，所以尺**先不收**，等他看完再一起定。 */
-  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', l: 'l20', e: 'e2', sb: 'hide', tp: 'second', p: 'keep', w: 'w2', d: 'on', cur: '0' };
+  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', l: 'l20', e: 'e2', sb: 'hide', tp: 'center', ts: 't50', p: 'keep', w: 'w2', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -10540,6 +10553,19 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
   D.classList.add('pv-js');
 
   function railOf(i) { return groups[i].querySelector('.pv-rail'); }
+  function trackOf(i) { return groups[i].querySelector('.pv-track'); }
+  function maxOf(i) {
+    var r = railOf(i), t = trackOf(i);
+    return (r && t) ? Math.max(0, t.offsetWidth - r.clientWidth) : 0;
+  }
+  function putX(i, x) { var t = trackOf(i); if (t) t.style.transform = 'translate3d(' + (-x) + 'px,0,0)'; }
+  /* 把 transform 換算回原生捲動，交還給手指。 */
+  function handOver(i) {
+    var r = railOf(i), t = trackOf(i); if (!r || !t) return;
+    var x = gpos[i] || 0;
+    t.style.transform = '';
+    r.scrollLeft = x;
+  }
 
   /* 換科那一下，圖卡怎麼交棒。標籤的顏色一律在第 0 毫秒就開始變、T 毫秒後全亮
      （T ＝ 標籤換色那條尺），四種做法都讓圖卡在同一個 T 到位：
@@ -10575,9 +10601,10 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     var from = tabRow.scrollLeft, to = tabTarget(), d = to - from;
     if (Math.abs(d) < 2) return;
     if (tabRaf) cancelAnimationFrame(tabRaf);
-    var ms = Math.max(180, fxdur()), t0 = performance.now();
-    /* 和 --pv-fxease 同一條曲線（cubic-bezier(.16,1,.3,1)）的近似：前快後緩。 */
-    function ez(x) { return 1 - Math.pow(1 - x, 3); }
+    var ms = TS[st.ts], t0 = performance.now();
+    /* 頭尾都放慢的 ease-in-out —— 標籤那一列是「跟著走」不是「彈到位」，
+       前快後緩用在這裡會像被彈過去（2026-09-26 使用者：移動的很瞬間，可以絲滑一點）。 */
+    function ez(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
     (function step(now) {
       var k = Math.min(1, (now - t0) / ms);
       tabRow.scrollLeft = from + d * ez(k);
@@ -10598,6 +10625,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
   /* ✅ 2026-09-26 使用者定案：**前快後緩**（cubic-bezier(.16,1,.3,1)）。
      那一排收成預設值、從切換條上拿掉；?e=e1 仍然切得回平順，要回頭比對不必改程式。
      0.2 秒下量過三次，到 80% 平順 169~219ms、前快後緩 119~129ms，兩組沒有重疊。 */
+  var TS = { t25: 250, t50: 500, t80: 800 };   /* 標籤那一列滑多久 */
   var EASE = { e1: 'ease', e2: 'cubic-bezier(.16,1,.3,1)' };
   function tdur() { return Math.round(parseFloat(XT[st.x]) * 1000); }
   function fxdur() { return st.l === 'same' ? tdur() : (LEN[st.l] || 0); }
@@ -10606,6 +10634,9 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     groups.forEach(function (g, j) {
       g.classList.toggle('pv-on', j === idx);
       g.classList.remove('pv-dim'); g.classList.remove('pv-out');
+      /* 每一組回到它自己記著的位置（自動播放中用 transform，停掉之後用原生捲動）。 */
+      if (stopped || st.a !== 'both') { var tt = trackOf(j); if (tt) tt.style.transform = ''; }
+      else { putX(j, gpos[j] || 0); railOf(j).scrollLeft = 0; }
     });
     shown = idx;
   }
@@ -10650,6 +10681,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     if (timer) { clearTimeout(timer); timer = null; }
     if (raf) { cancelAnimationFrame(raf); raf = null; }
     D.removeAttribute('data-pvglide');
+    handOver(shown);
     if (hint) hint.hidden = true;
     measure(why || 'stopped');
   }
@@ -10667,23 +10699,19 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     var last = performance.now();
     function step(now) {
       if (stopped || st.a !== 'both') { raf = null; D.removeAttribute('data-pvglide'); return; }
-      var r = railOf(shown), dt = Math.min(0.05, (now - last) / 1000); last = now;
-      if (r) {
-        var max = r.scrollWidth - r.clientWidth;
-        if (max > 2) {
-          /* 位置記在各科自己身上：滑得慢又換得快的話，如果每次回來都歸零，
-             二十篇那一條永遠只看得到最前面兩三張。
-             ⚠⚠ 但**滑到底不可以就這樣停著**（2026-09-26 使用者回報）——
-             底部不是任何一張卡的邊界，畫面會變成「左邊固定掛著半張卡、而且再也
-             不動」，讀的人得自己猜那半張是剛剛看過的哪一篇。量過：電腦上
-             一般牙科／植牙假牙只可滑 115px，轉兩三圈就卡死；牙周／兒童 507px，
-             十幾圈之後一樣卡死。做法是**記下「這一條已經滑完」，等換科之後
-             （那時它已經 display:none）再把它歸零**，下次輪回來從第一張重新滑。
-             在畫面上歸零的話會看到它跳一下。 */
-          var cur = (gpos[shown] || 0) + V[st.g] * dt;
-          if (cur >= max) { cur = max; done[shown] = true; }
-          gpos[shown] = cur; r.scrollLeft = cur;
-        }
+      var dt = Math.min(0.05, (now - last) / 1000); last = now;
+      /* 位置記在各科自己身上：滑得慢又換得快的話，如果每次回來都歸零，
+         二十篇那一條永遠只看得到最前面兩三張。
+         ⚠⚠ 但**滑到底不可以就這樣停著**（2026-09-26 使用者回報）——
+         底部不是任何一張卡的邊界，畫面會變成「左邊固定掛著半張卡、而且再也
+         不動」，讀的人得自己猜那半張是剛剛看過的哪一篇。做法是記下
+         「這一條已經滑完」，等換科之後（那時它已經 display:none）再把它歸零。
+         ⚠ 推的是 .pv-track 的 transform，不是 scrollLeft —— 理由見樣式那一段。 */
+      var max = maxOf(shown);
+      if (max > 2) {
+        var cur = (gpos[shown] || 0) + V[st.g] * dt;
+        if (cur >= max) { cur = max; done[shown] = true; }
+        gpos[shown] = cur; putX(shown, cur);
       }
       raf = requestAnimationFrame(step);
     }
@@ -10696,10 +10724,10 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
       timer = setTimeout(function () {
         if (stopped) return;
         var prev = idx;
-        if (st.p === 'reset') { var r = railOf(prev); if (r) r.scrollLeft = 0; gpos[prev] = 0; }
+        if (st.p === 'reset') { gpos[prev] = 0; putX(prev, 0); var r = railOf(prev); if (r) r.scrollLeft = 0; }
         show(idx + 1);
         /* 滑完的那一條在這裡歸零 —— show() 之後它已經是 display:none，看不到跳動。 */
-        if (done[prev]) { var r2 = railOf(prev); if (r2) r2.scrollLeft = 0; gpos[prev] = 0; done[prev] = false; }
+        if (done[prev]) { gpos[prev] = 0; putX(prev, 0); var r2 = railOf(prev); if (r2) r2.scrollLeft = 0; done[prev] = false; }
         measure('auto');
         next();
       }, dwell());
@@ -10807,7 +10835,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     var docs = document.getElementById('doctors');
     var total = document.documentElement.scrollHeight;
     var dy = docs ? docs.getBoundingClientRect().top + scrollY : 0;
-    var r = railOf(idx), left = r ? Math.max(0, r.scrollWidth - r.clientWidth) : 0;
+    var r = railOf(idx), left = maxOf(idx);
     /* ⚠ 要抓「看得見的」第一張。「全部」那一條最前面幾張是重複卡、被藏起來了，
        抓到它的話寬度是 0，一除就變成「一屏看到 22.63 張」。 */
     var one = 0;
