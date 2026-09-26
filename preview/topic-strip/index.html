@@ -10465,7 +10465,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
   var groups = [].slice.call(document.querySelectorAll('.pv-group'));
   var hint = document.querySelector('.pv-hint');
   var panel = document.getElementById('pv-panel');
-  var idx = 0, stopped = false, timer = null, raf = null, gpos = [];
+  var idx = 0, stopped = false, timer = null, raf = null, gpos = [], done = [];
   /* ✅ 2026-09-26 使用者定案：**換科 2.67 秒、標籤換色 0.6 秒**。
      兩條尺收成預設值、從切換條上拿掉（同 head-search 與 night-map-park 那兩輪），
      網址參數仍然吃得到（?s=s0…、?x=x2…），要回頭比對不必改程式。
@@ -10512,8 +10512,16 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
         var max = r.scrollWidth - r.clientWidth;
         if (max > 2) {
           /* 位置記在各科自己身上：滑得慢又換得快的話，如果每次回來都歸零，
-             二十篇那一條永遠只看得到最前面兩三張。滑到底就停著，不要跳回去。 */
-          var cur = Math.min(max, (gpos[idx] || 0) + V[st.g] * dt);
+             二十篇那一條永遠只看得到最前面兩三張。
+             ⚠⚠ 但**滑到底不可以就這樣停著**（2026-09-26 使用者回報）——
+             底部不是任何一張卡的邊界，畫面會變成「左邊固定掛著半張卡、而且再也
+             不動」，讀的人得自己猜那半張是剛剛看過的哪一篇。量過：電腦上
+             一般牙科／植牙假牙只可滑 115px，轉兩三圈就卡死；牙周／兒童 507px，
+             十幾圈之後一樣卡死。做法是**記下「這一條已經滑完」，等換科之後
+             （那時它已經 display:none）再把它歸零**，下次輪回來從第一張重新滑。
+             在畫面上歸零的話會看到它跳一下。 */
+          var cur = (gpos[idx] || 0) + V[st.g] * dt;
+          if (cur >= max) { cur = max; done[idx] = true; }
           gpos[idx] = cur; r.scrollLeft = cur;
         }
       }
@@ -10527,8 +10535,11 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     (function next() {
       timer = setTimeout(function () {
         if (stopped) return;
-        if (st.p === 'reset') { var r = railOf(idx); if (r) r.scrollLeft = 0; gpos[idx] = 0; }
+        var prev = idx;
+        if (st.p === 'reset') { var r = railOf(prev); if (r) r.scrollLeft = 0; gpos[prev] = 0; }
         show(idx + 1);
+        /* 滑完的那一條在這裡歸零 —— show() 之後它已經是 display:none，看不到跳動。 */
+        if (done[prev]) { var r2 = railOf(prev); if (r2) r2.scrollLeft = 0; gpos[prev] = 0; done[prev] = false; }
         measure('auto');
         next();
       }, dwell());
