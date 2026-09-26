@@ -10487,9 +10487,6 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     <div class="pv-row"><span class="pv-lab">過場長度</span><span class="pv-seg" data-k="l">
       <button data-v="same">同標籤 0.6</button><button data-v="l30">0.3 秒</button><button data-v="l20">0.2 秒</button><button data-v="l15">0.15 秒</button><button data-v="l10">0.1 秒</button><button data-v="l0">直接換</button>
     </span></div>
-    <div class="pv-row"><span class="pv-lab">過場曲線</span><span class="pv-seg" data-k="e">
-      <button data-v="e2">前快後緩</button><button data-v="e1">平順</button>
-    </span></div>
     <div class="pv-row"><span class="pv-lab">換科時</span><span class="pv-seg" data-k="p">
       <button data-v="keep">橫幅停在原處</button><button data-v="reset">回到最前面</button>
     </span></div>
@@ -10563,6 +10560,9 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
      不要再切 0.08／0.05 這種分不出來的格子。
      ⚠ 直接換不會有空檔：舊的消失與新的出現在同一幀，不是淡入淡出。 */
   var LEN = { l30: 300, l20: 200, l15: 150, l10: 100, l0: 0 };
+  /* ✅ 2026-09-26 使用者定案：**前快後緩**（cubic-bezier(.16,1,.3,1)）。
+     那一排收成預設值、從切換條上拿掉；?e=e1 仍然切得回平順，要回頭比對不必改程式。
+     0.2 秒下量過三次，到 80% 平順 169~219ms、前快後緩 119~129ms，兩組沒有重疊。 */
   var EASE = { e1: 'ease', e2: 'cubic-bezier(.16,1,.3,1)' };
   function tdur() { return Math.round(parseFloat(XT[st.x]) * 1000); }
   function fxdur() { return st.l === 'same' ? tdur() : (LEN[st.l] || 0); }
