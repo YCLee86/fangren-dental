@@ -23,12 +23,16 @@
    每一頁（sid ＋ ref）可能有好幾筆，取最大值。按頁面分開記：看了幾次、平均滑到幾成、
    讀完幾次（滑到九成以上，或讀到最後一節）、每一節有幾次讀到、停留秒數分成幾格，
    以及「讀完的那幾次，那一次來訪最後有沒有行動」。
+   一次來訪的總時長 ＝ 它每一頁秒數的加總，分格存在 visit／visitConv（有行動的那幾次）。
    ========================================================================== */
 (function (root) {
   var V = 2, MAXP = 6, TOP_PATHS = 300, TOP_TRANS = 1500;
   /* 停留秒數的格子（上界）。最後一格是「10 分鐘以上」。 */
   var SECS = [10, 30, 60, 120, 300, 600];
   function secBin(t) { for (var i = 0; i < SECS.length; i++) if (t < SECS[i]) return String(i); return String(SECS.length); }
+  /* 一次來訪總共看了多久（每一頁的秒數加起來）的格子：30 秒／1 分／3 分／10 分。 */
+  var VBIN = [30, 60, 180, 600];
+  function visitBin(t) { for (var i = 0; i < VBIN.length; i++) if (t < VBIN[i]) return String(i); return String(VBIN.length); }
   var OUT = /^(tel$|line$|map:|park:|fb:)/;
 
   function act(code) {
@@ -84,7 +88,8 @@
 
   function blank() {
     return { v: V, sessions: 0, converted: 0, views: 0, types: {}, typesConv: {}, paths: {},
-             entries: {}, entriesConv: {}, exits: {}, trans: {}, src: {}, srcConv: {}, acts: {}, steps: {}, read: {} };
+             entries: {}, entriesConv: {}, exits: {}, trans: {}, src: {}, srcConv: {}, acts: {}, steps: {}, read: {},
+             visit: {}, visitConv: {} };
   }
   /* 讀到哪裡：reads 是 path_read 的原始逐筆；只收 conv 裡有的那幾次來訪（同一天的）。 */
   function addReads(s, reads, conv) {
@@ -101,8 +106,10 @@
         if (r.secs > b.secs) b.secs = r.secs;
       }
     }
+    var per = {};
     for (var key in best) {
       var x = best[key];
+      per[x.sid] = (per[x.sid] || 0) + x.secs;
       var g = s.read[x.scope] || (s.read[x.scope] = { n: 0, depth: 0, done: 0, doneConv: 0, reach: {}, totals: {}, secs: {}, depths: {} });
       var done = x.depth >= 90 || (x.total > 0 && x.sec >= x.total);
       g.n++; g.depth += x.depth;
@@ -111,6 +118,11 @@
       bump(g.totals, String(x.total));
       bump(g.secs, secBin(x.secs));
       bump(g.depths, String(x.depth));
+    }
+    /* 一次來訪的總時長：只算至少有一頁送回秒數的那幾次（全部來不及送的不算成 0 秒） */
+    for (var sid in per) {
+      bump(s.visit, visitBin(per[sid]));
+      if (conv[sid]) bump(s.visitConv, visitBin(per[sid]));
     }
   }
 
@@ -195,5 +207,5 @@
     return s;
   }
 
-  root.fangrenPathSummary = { V: V, OUT: OUT, SECS: SECS, one: one, summarize: summarize, group: group, merge: merge };
+  root.fangrenPathSummary = { V: V, OUT: OUT, SECS: SECS, VBIN: VBIN, one: one, summarize: summarize, group: group, merge: merge };
 })(typeof window !== 'undefined' ? window : this);

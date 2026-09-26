@@ -227,6 +227,9 @@ console.log("\n【三之二】讀到哪裡（寫入 ＋ 歸納）");
   eq(sum.read["post:gum-bleeding"].done, 1, "滑到九成算讀完");
   eq(sum.read.home, undefined, "不屬於這一天的來訪不算");
   eq(PS.merge([sum, sum]).read["post:missing-tooth"].reach["1"], 4, "合併兩天逐格相加");
+  eq([sum.visit, sum.visitConv], [{ 0: 1, 2: 1, 3: 1 }, { 0: 1, 2: 1 }],
+     "每次來訪的總時長：s1 95 秒（1–3 分，有行動）、s2 8 秒（30 秒內，有行動）、s4 400 秒（3–10 分）");
+  eq(PS.merge([sum, sum]).visit["2"], 2, "總時長也是逐格相加");
 }
 
 /* =============================== 瀏覽器那一側 =============================== */
@@ -378,6 +381,26 @@ console.log("\n【四之二】真的讀一篇（讀到哪裡）");
   eq(g.length >= 1 && g.every((x) => x.ref === gv.n), true, "重新整理之後讀到哪裡仍然掛回同一步（沒有多一步）");
   eq(g.every((x) => x.depth < 100), true, "沒往下滑的那一頁不會被記成讀完");
 }
+{
+  /* ⑥ 沒動作就停表：把門檻調成 1.5 秒來驗（正式站是 90 秒）。 */
+  const ctxI = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  await ctxI.addInitScript(() => { window.fangrenPathIdleMs = 1500; });
+  const pi = await ctxI.newPage();
+  pi.on("pageerror", (e) => errs.push(String(e)));
+  const reads = () => web.PATHS.raw.prepare("SELECT scope, secs FROM path_read ORDER BY id").all();
+  await pi.goto(base + "/posts/kids-crown/", { waitUntil: "load" });
+  await pi.waitForTimeout(5000);                                          /* 放著不動 5 秒 */
+  await pi.goto(base + "/posts/kids-sedation/", { waitUntil: "load" });
+  await pi.waitForTimeout(400);
+  const idle = reads().filter((r) => r.scope === "post:kids-crown").pop();
+  eq(idle && idle.secs <= 2, true, `開著不動 5 秒只算到門檻為止：${idle && idle.secs} 秒`);
+  for (let i = 0; i < 10; i++) { await pi.mouse.move(50 + i * 10, 300); await pi.waitForTimeout(500); }  /* 一直有動作 5 秒 */
+  await pi.goto(base + "/", { waitUntil: "load" });
+  await pi.waitForTimeout(400);
+  const busy = reads().filter((r) => r.scope === "post:kids-sedation").pop();
+  eq(busy && busy.secs >= 4, true, `一直有動作的 5 秒照算：${busy && busy.secs} 秒`);
+  await ctxI.close();
+}
 eq(errs, [], "讀到哪裡：沒有 JS 錯誤");
 
 console.log("\n【五】報告頁「訪客軌跡」那一份");
@@ -431,6 +454,8 @@ console.log("\n【五】報告頁「訪客軌跡」那一份");
   await page.waitForSelector('#p-t-read details[data-sc="post:missing-tooth"] .bar-row');
   eq((await page.textContent('#p-t-read details[data-sc="post:missing-tooth"] .rdb')).includes("1. 不處理會發生什麼"), true,
      "點開看得到每一節的名字（從那一頁抓回來的 <h2>）");
+  eq((await page.textContent("#p-t-visit")).includes("中位數：全部 1–3 分・有行動的 1–3 分"), true,
+     "每次來訪總共看了多久：缺牙那篇 70 秒的那幾次落在 1–3 分");
 
   rowCalls = 0;
   await page.click('#wins button:text-is("一週")');
@@ -453,6 +478,7 @@ console.log("\n【五】報告頁「訪客軌跡」那一份");
       await p2.click('#tabs button:text-is("訪客軌跡")');
       await p2.waitForFunction(() => document.getElementById("p-all").textContent !== "—");
       await p2.screenshot({ path: `/tmp/path-report-${scheme}.png`, fullPage: true });
+      await (await p2.$("#p-t-visit")).screenshot({ path: `/tmp/path-visit-${scheme}.png` });
       await p2.click('#p-t-read details summary');
       await p2.waitForSelector('#p-t-read .bar-row');
       await (await p2.$("#p-t-read")).screenshot({ path: `/tmp/path-read-${scheme}.png` });

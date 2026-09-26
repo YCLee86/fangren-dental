@@ -268,6 +268,12 @@ td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-alig
         <div><span>有採取行動</span><strong id="p-conv">—</strong></div>
       </div>
 
+      <!-- 每次來訪總共看了多久（2026-09-26）＝ 每一頁停留秒數的加總。
+           ⚠ 秒數只算「畫面在前面、90 秒內有動作」的時間（assets/path-log.js 的⑥），
+             開著頁面人走開不會被算成兩小時。 -->
+      <h2>每次來訪總共看了多久<small>只算畫面在前面、而且有在動的時間</small></h2>
+      <div id="p-t-visit"></div>
+
       <h2>訪客類型<small>每一次來訪歸成一種，規則寫在表下面</small></h2>
       <div id="p-t-type"></div>
 
@@ -979,6 +985,27 @@ td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-alig
     for (var i = 0; i <= 6; i++) { acc += m[String(i)] || 0; if (acc * 2 >= n) return SECN[i]; }
     return '—';
   }
+  var VISN = ['30 秒內', '30 秒–1 分', '1–3 分', '3–10 分', '10 分以上'];
+  function renderVisit(all, conv) {
+    var n = 0, nc = 0, i;
+    for (i = 0; i < VISN.length; i++) { n += all[String(i)] || 0; nc += conv[String(i)] || 0; }
+    var box = $('p-t-visit');
+    if (!n) { box.innerHTML = '<p class="empty">這段期間還沒有停留時間的資料（2026-09-26 起才開始記）。</p>'; return; }
+    var med = function (m, t) { var a = 0; for (var j = 0; j < VISN.length; j++) { a += m[String(j)] || 0; if (a * 2 >= t) return VISN[j]; } return '—'; };
+    var other = {};
+    for (i = 0; i < VISN.length; i++) other[String(i)] = (all[String(i)] || 0) - (conv[String(i)] || 0);
+    var h = '<div class="rdbox"><p class="note" style="margin:.5rem .55rem .2rem">中位數：全部 <b>' + med(all, n) + '</b>' +
+            (nc ? '・有行動的 <b>' + med(conv, nc) + '</b>' : '') + (n - nc ? '・沒有行動的 <b>' + med(other, n - nc) + '</b>' : '') +
+            '（' + n + ' 次來訪）</p>';
+    for (i = 0; i < VISN.length; i++) {
+      var c = all[String(i)] || 0, p = Math.round(c / n * 100);
+      h += '<div class="bar-row"><span class="bl"><i style="width:' + p + '%"></i><span>' + VISN[i] +
+           (conv[String(i)] ? ' <small class="note">其中 ' + conv[String(i)] + ' 次有行動</small>' : '') +
+           '</span></span><b>' + p + '%</b></div>';
+    }
+    box.innerHTML = h + '<div style="height:.4rem"></div></div>';
+  }
+
   function renderRead(read) {
     var keys = Object.keys(read).sort(function (a, b) { return read[b].n - read[a].n; }).slice(0, 30);
     var box = $('p-t-read');
@@ -1024,7 +1051,7 @@ td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-alig
     if (d.off) {
       pathMsg('');
       $('p-t-type').innerHTML = '<p class="empty">訪客軌跡的資料庫還沒有接上（Cloudflare 那一個 D1 還沒綁到網站）。接上之後這裡就會開始有資料。</p>';
-      ['p-t-path', 'p-t-entry', 'p-t-next', 'p-t-src', 'p-t-exit', 'p-t-read', 'p-t-recent'].forEach(function (id) { $(id).innerHTML = ''; });
+      ['p-t-visit', 'p-t-path', 'p-t-entry', 'p-t-next', 'p-t-src', 'p-t-exit', 'p-t-read', 'p-t-recent'].forEach(function (id) { $(id).innerHTML = ''; });
       $('p-all').textContent = $('p-avg').textContent = $('p-conv').textContent = '—';
       $('span').textContent = '';
       return;
@@ -1068,6 +1095,7 @@ td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-alig
     }
 
     renderRead(s.read || {});
+    renderVisit(s.visit || {}, s.visitConv || {});
 
     /* 最近 30 次：逐步全列，站內的按鈕也列（虛線框），才看得出他在那一頁做了什麼 */
     var by = {}, order = [];

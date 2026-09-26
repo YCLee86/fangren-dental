@@ -26,6 +26,10 @@
       畫面真的在前面的秒數。r ＝ 它屬於這次來訪的第幾步（那一頁的 view）。
       ⚠ 同一頁切走又回來會再送一筆（數字只會變大），報告取最大的那一筆。
       ⚠ 不是步——n 不加一，不進路徑。手機直接關掉瀏覽器時可能來不及送，那一頁就沒有這一筆。
+   ⑥ **沒動作就停表**（2026-09-26，使用者：「如果這個使用者頁面都沒關閉會有問題嗎」）：
+      秒數只算「畫面在前面，而且 90 秒內有過動作」的時間——滑、點、打字、滑鼠移動、
+      切回這個分頁都算動作。電腦開著頁面人走開，最多只會多算 90 秒，不會算成兩小時。
+      ⚠ 90 秒是「一個畫面的字讀得完」的寬度；改它要一起改報告頁的說明。
 
    ── 不記什麼 ────────────────────────────────────────────────────────────
    不記 IP、不記 User-Agent、不發 cookie。代碼只活在這個分頁裡，
@@ -134,6 +138,7 @@
   /* ---- ⑤ 讀到哪裡 ---- */
   function startRead(sid, ref) {
     flushRead();
+    lastAct = Date.now();
     R = { sid: sid, ref: ref, d: 0, x: 0, y: 0, secs: 0, since: document.visibilityState === 'visible' ? Date.now() : 0,
           last: '', sent: 0 };
     measure();
@@ -155,11 +160,29 @@
       if (hs[i].getBoundingClientRect().top < window.innerHeight * 0.85) R.x = i + 1; else break;
     }
   }
+  /* ⑥ 把「上一次結算到現在」這一段算進去：只算到最後一次動作之後 READ_IDLE 為止。 */
+  var READ_IDLE = window.fangrenPathIdleMs > 0 ? window.fangrenPathIdleMs : 90 * 1000;   /* 前者只給 tools/path-test.mjs 用 */
+  var lastAct = Date.now();
+  function acc() {
+    if (!R || !R.since) return;
+    var now = Date.now(), end = Math.min(now, lastAct + READ_IDLE);
+    if (end > R.since) R.secs += (end - R.since) / 1000;
+    R.since = document.visibilityState === 'visible' ? now : 0;
+  }
+  function act() { acc(); lastAct = Date.now(); if (R && !R.since && document.visibilityState === 'visible') R.since = lastAct; }
+  var lastMove = 0;
+  ['pointerdown', 'touchstart', 'keydown', 'wheel'].forEach(function (t) {
+    window.addEventListener(t, act, { passive: true, capture: true });
+  });
+  window.addEventListener('mousemove', function () {
+    var now = Date.now();
+    if (now - lastMove > 1000) { lastMove = now; act(); }          /* 滑鼠一動就是幾十次，一秒算一次就好 */
+  }, { passive: true });
   function flushRead() {
     if (!R || R.sent >= 30) return;
     measure();
-    var secs = R.secs + (R.since ? (Date.now() - R.since) / 1000 : 0);
-    var t = Math.min(7200, Math.round(secs));
+    acc();
+    var t = Math.min(7200, Math.round(R.secs));
     var key = R.d + '|' + R.x + '|' + R.y + '|' + Math.floor(t / 5);
     if (key === R.last) return;
     R.last = key; R.sent++;
@@ -169,15 +192,15 @@
   window.addEventListener('scroll', function () {
     if (ticking) return;
     ticking = true;
-    (window.requestAnimationFrame || setTimeout)(function () { ticking = false; measure(); });
+    (window.requestAnimationFrame || setTimeout)(function () { ticking = false; act(); measure(); });
   }, { passive: true });
   window.addEventListener('load', measure);
   document.addEventListener('visibilitychange', function () {
     if (!R) return;
     if (document.visibilityState === 'hidden') {
-      if (R.since) { R.secs += (Date.now() - R.since) / 1000; R.since = 0; }
+      acc(); R.since = 0;
       flushRead();
-    } else if (!R.since) R.since = Date.now();
+    } else { lastAct = Date.now(); R.since = lastAct; }             /* 切回來本身就是一個動作 */
   });
   window.addEventListener('pagehide', flushRead);
 
