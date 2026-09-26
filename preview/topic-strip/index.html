@@ -6373,6 +6373,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 
 <style>
 /* 提案頁自己的樣式。名字一律 pv- 前綴 —— 站上 .card .cards .chips .foot 都已經有人用了。 */
+.pv-wrap { display: block; }
 .pv-top { margin-bottom: 1.6rem; }
 .pv-top .card[data-pvi="2"] { display: none; }
 .pv-top .card[data-pvi="3"] { display: none; }
@@ -6931,7 +6932,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
        aria-label 留著，導覽列的 #articles 與螢幕閱讀器還是需要這一節有名字。 -->
   <section id="articles" aria-label="最新文章">
     <div class="shell">
-      <div class="cards">
+      <div class="pv-wrap">
         <!-- POSTS:START — 這一段由 node tools/build.mjs 自動產生，請勿手動編輯 -->
 <div class="cards pv-top"><a class="card pv-big" data-pvi="1" href="../../posts/perio-full-mouth/" data-spec="perio">
         <picture>

@@ -83,6 +83,15 @@ const newArticles =
 /* ---------- 3. 組頁面 ---------- */
 let out = src.slice(0, blockStart) + "\n" + newArticles + "\n" + src.slice(i1);
 
+/* ⚠⚠ 外面那個 <div class="cards"> 要換掉。它是 grid-template-columns: repeat(3, 1fr)，
+   新版的三塊（大卡區／橫幅／對照現況）塞進去會各自只拿到**畫面的三分之一**，
+   卡片被擠成一行一個字。手機上那個 grid 收成一欄，所以 390 寬完全正常 ——
+   只有電腦版看得出來（2026-09-26 使用者截圖回報）。
+   ⚠ 站上那支搜尋篩選找的是 .cards .card[data-spec]，而 .pv-top 與 .pv-rail
+   自己都帶著 cards，所以換掉外層不影響它。 */
+out = out.replace('<div class="cards">\n        <!-- POSTS:START', '<div class="pv-wrap">\n        <!-- POSTS:START');
+if (out.indexOf('pv-wrap') < 0) { console.error("× 外層那個 cards 沒有換到"); process.exit(1); }
+
 /* 相對路徑往上兩層。前面必須是引號、括號、空白或逗號 —— 這樣 /assets/ 這種
    絕對路徑不會被改到（它前面是斜線）。 */
 out = out.replace(/(["'(\s,])(assets\/|posts\/|site\.webmanifest)/g, "$1../../$2");
@@ -99,6 +108,7 @@ out = out.replace(/<head>/, '<head>\n  <meta name="robots" content="noindex, nof
 const css = `
 <style>
 /* 提案頁自己的樣式。名字一律 pv- 前綴 —— 站上 .card .cards .chips .foot 都已經有人用了。 */
+.pv-wrap { display: block; }
 .pv-top { margin-bottom: 1.6rem; }
 .pv-top .card[data-pvi="2"] { display: none; }
 .pv-top .card[data-pvi="3"] { display: none; }
