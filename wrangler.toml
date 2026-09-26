@@ -37,3 +37,10 @@ custom_domain = true
 binding = "DB"
 database_name = "fangren-dental-views"
 database_id = "17f4c65d-bf4b-4c49-830e-f155a79d56a8"
+
+# 訪客軌跡（2026-09-26）。另開一個資料庫，全部保留、會一直長，滿了不可以拖累上面那一個
+# （計數器與三份紀錄）。資料表由 src/paths.js 自己建，不必跑 wrangler。見 DECISIONS.md「訪客軌跡」。
+[[d1_databases]]
+binding = "PATHS"
+database_name = "fangren-dental-paths"
+database_id = "af5447b3-ecbf-45b8-89c6-1062fefebf88"
