@@ -111,7 +111,8 @@
 
 ・同一輪發現、**沒有修**的既有問題：schema.mjs 讀醫師欄位的正規式寫的是 &lt;dd&gt;，
 　而專長那一格是 &lt;dd class="skills"&gt; —— 所以 JSON-LD 的 knowsAbout 目前只有科別、
-　一個專長都沒有。待使用者決定要不要修。</pre></div>
+　一個專長都沒有。→ 同日使用者：「好」，正規式改成 &lt;dd[^&gt;]*&gt;，九位的 knowsAbout 補上專長
+　（小框裡的文章標題沒有混進去，先拿掉 SKPOP 那一步擋住了）。</pre></div>
 
 <footer>芳仁牙醫診所・改版紀錄。這一頁不會再改。</footer>
 </div></body>

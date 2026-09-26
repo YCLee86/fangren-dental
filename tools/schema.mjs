@@ -194,7 +194,9 @@ export function parseDoctors(indexHtml, warn = console.warn) {
     }
 
     const fields = {};
-    for (const f of body.matchAll(/<dt>([^<]*)<\/dt>\s*<dd>([\s\S]*?)<\/dd>/g)) {
+    /* ⚠ <dd> 要允許帶屬性：專長那一格是 <dd class="skills">（2026-08-11 起），
+       原本寫死 <dd> 比對不到，knowsAbout 因此一直只有科別、一個專長都沒有（2026-09-26 修）。 */
+    for (const f of body.matchAll(/<dt>([^<]*)<\/dt>\s*<dd[^>]*>([\s\S]*?)<\/dd>/g)) {
       fields[clean(f[1])] = f[2];
     }
 
