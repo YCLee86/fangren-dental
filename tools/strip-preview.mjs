@@ -157,6 +157,16 @@ html[data-pvn="auto"] .pv-top .card[data-pvi="3"] { display: flex; }
 html.pv-js .pv-gh { display: none; }
 html.pv-js .pv-group { display: none; }
 html.pv-js .pv-group.pv-on { display: block; }
+/* 換科時圖卡要和標籤同時到位。原本圖卡是 display 直接換（0 秒），
+   標籤的顏色是 0.6 秒的漸變 —— 每一次換科圖卡都比標籤早 0.6 秒到，
+   看起來就是「標籤還沒全亮圖卡就先切了」（2026-09-26 使用者回報）。
+   讓進來的那一組用**同一個變數、同一條曲線**淡入，兩邊就對齊了。
+   ⚠ 用 animation 不用 transition：這一組是從 display:none 變回來的，
+   transition 在同一幀裡不會跑（起始值沒有被算過）。
+   ⚠ 不做「兩組同時疊著對拉」的 cross-fade —— 那要把七組一起留在版面上
+   （grid 疊層 ＋ visibility），二十張卡的圖會全部被載進來。 */
+@keyframes pv-fade { from { opacity: 0; } to { opacity: 1; } }
+html.pv-js .pv-group.pv-on { animation: pv-fade var(--pv-tabt, .6s) ease both; }
 
 .pv-strip, .pv-groups, .pv-group { min-width: 0; }
 .pv-rail.cards {
