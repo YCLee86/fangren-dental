@@ -79,35 +79,40 @@ if (doctors.length !== 9) throw new Error('醫師卡不是九張：' + doctors.l
    ⚠ 齒槽骨保留術這個詞文章裡沒有寫出來，但〈拔智齒之後〉那一節
      「那個洞，要不要放東西進去」（放含骨粉的膠原蛋白）講的就是這件事。
    ⚠ 隱適美是品牌名，〈隱形矯正〉那一篇沒有寫出這個牌子，講的是透明牙套這一類。 */
-const SK_POST = {
-  '口腔檢查': 'regular-checkup',
-  '牙周照護': 'perio-prevalence',
-  '牙周病治療': ['perio-full-mouth', 'perio-laser'],
-  '牙周再生手術': 'perio-laser',
-  '水雷射牙周治療': 'perio-laser',
-  '植牙手術': ['implant-lifespan', 'missing-tooth'],
-  '固定假牙': 'crown-materials',
-  '活動假牙': 'missing-tooth',
-  '牙橋': 'missing-tooth',
-  '齒顎矯正': 'orthodontics',
-  '隱適美': 'aligner-simulation',
-  '兒童隱適美': 'kids-arch-expansion',
-  '兒童早期矯正': 'kids-arch-expansion',
-  '兒童鎮靜麻醉': 'kids-sedation',
-  '兒童齲齒治療': 'kids-crown',
-  '阻生齒拔除': ['wisdom-eruption', 'wisdom-tooth'],
-  '齒槽骨保留術': 'wisdom-tooth',
-  '顯微根管': 'pulp-calcification',
-  '活髓治療': 'bioceramic',
+/* 第四輪（2026-09-26）：對照表改成**以文章為主**逐篇列（使用者：「把目前文章都整理出來
+   和對應的醫師專長做好對應 給我確認」），專長 → 文章由這張表反推。
+   一篇可以對到好幾個專長；一個專長的文章在小框裡照上架日期新到舊排。
+   ⚠ 值裡帶「?」的是**待使用者確認**的那幾格（提案頁照樣畫出來讓他點點看）。 */
+const POST_SK = {
+  'regular-checkup':     ['口腔檢查', '牙周照護?'],
+  'three-month-recall':  ['口腔檢查?'],
+  'bass-brushing':       ['牙周照護?'],
+  'gum-bleeding':        ['牙周照護', '牙周病治療'],
+  'perio-prevalence':    ['牙周照護'],
+  'perio-full-mouth':    ['牙周病治療'],
+  'perio-laser':         ['牙周病治療', '水雷射牙周治療', '牙周再生手術'],
+  'orthodontics':        ['齒顎矯正', '隱適美'],
+  'aligner-simulation':  ['隱適美', '齒顎矯正'],
+  'kids-first-visit':    ['兒童齲齒治療?'],
+  'kids-crown':          ['兒童齲齒治療'],
+  'kids-sedation':       ['兒童鎮靜麻醉'],
+  'kids-arch-expansion': ['兒童早期矯正', '兒童隱適美'],
+  'wisdom-eruption':     ['阻生齒拔除'],
+  'wisdom-tooth':        ['阻生齒拔除', '齒槽骨保留術'],
+  'crown-materials':     ['固定假牙'],
+  'missing-tooth':       ['活動假牙', '牙橋', '植牙手術', '固定假牙?'],
+  'implant-lifespan':    ['植牙手術'],
+  'bioceramic':          ['顯微根管', '活髓治療'],
+  'pulp-calcification':  ['顯微根管'],
 };
-/* 第三輪（同日）：同一個專長對得到兩篇以上時怎麼辦。規則照文章數分三段：
-     1 篇 → 直接進那一篇
-     2～3 篇 → 詞底下浮出一個小框列標題（卡片高度不變）
-     4 篇以上 → 小框列最新 3 篇 ＋「全部 N 篇 ›」（目前沒有任何一個專長到 4 篇，這一段還看不到）
-   陣列裡的順序就是小框裡的順序；上線版改成照上架日期排。 */
-const skList = (t) => [].concat(SK_POST[t] || []).map((slug) => posts.find((p) => p.slug === slug));
-for (const slug of new Set(Object.values(SK_POST).flat()))
+for (const slug of Object.keys(POST_SK))
   if (!posts.some((p) => p.slug === slug)) throw new Error('對照表指到一篇不存在的文章：' + slug);
+for (const p of posts) if (!POST_SK[p.slug]) throw new Error('這一篇沒有登記任何專長：' + p.slug);
+const allSk = new Set([...html.slice(a0, a1).matchAll(/<span class="sk" data-spec="[a-z]+">([^<]+)</g)].map((m) => m[1]));
+for (const [slug, list] of Object.entries(POST_SK)) for (const t of list)
+  if (!allSk.has(t.replace('?', ''))) throw new Error(`${slug} 的「${t}」在醫師卡上找不到（打錯字？）`);
+/* 專長 → 文章（上架日期新到舊，posts 本來就是這個順序） */
+const skList = (t) => posts.filter((p) => POST_SK[p.slug].some((x) => x.replace('?', '') === t));
 
 /* ── 三案的標記 ──────────────────────────────────────────────────────
    Ⓐ 與 Ⓑ 都是 dl 裡多一列 dt「文章」＋ dd，和專長／資歷／學歷同一套欄位，
@@ -141,14 +146,11 @@ html = html.slice(0, a0) + html.slice(a0, a1).replace(/(<article class="doc"[^>]
       const list = skList(t);
       if (!list.length) return m;
       const orig = `<span class="sk pv-sk-0" data-spec="${s}">${t}</span>`;
-      if (list.length === 1) {
-        const p = list[0];
-        return orig + `<a class="sk pv-sk-c" data-spec="${s}" href="posts/${p.slug}/" aria-label="${t}：看〈${esc(p.title)}〉">${t}</a>`;
-      }
-      /* 兩篇以上：詞本身是一顆按鈕，小框是它後面的兄弟。框的位置由切換條那支 JS 現算（貼在詞底下、不超出卡片）。 */
-      const shown = list.slice(0, 3);
-      const more = list.length > 3
-        ? `<a class="pv-pop-more" href="topics/${s}/?sk=${encodeURIComponent(t)}#articles">全部 ${list.length} 篇<span aria-hidden="true"> ›</span></a>` : '';
+      /* 第四輪：只要有文章，不管幾篇都跳小框（使用者指定）。小框列全部，不設上限 ——
+         「4 篇以上改成全部 N 篇 ›」那一段拿掉了：牙周照護的四篇橫跨一般牙科與牙周兩科，
+         沒有任何一頁著陸頁列得全。 */
+      const shown = list;
+      const more = '';
       return orig + `<button type="button" class="sk pv-sk-c pv-sk-multi" data-spec="${s}" aria-expanded="false">${t}</button>` +
         `<span class="pv-pop" data-spec="${s}" role="group" aria-label="${t}的文章" hidden>` +
         `<span class="pv-pop-h">${t}・${list.length} 篇文章</span>` +
@@ -299,7 +301,7 @@ const BAR = `
     off: '站上現在的樣子',
     a: '卡片多一列：每一科一個連結 → 那一科的文章',
     b: '卡片多一列：兩篇標題直接進文章 ＋ 各科「全部 N 篇」',
-    c: '專長有虛線的詞可以按：1 篇直接進文章，2 篇以上跳出小框選（植牙手術／牙周病治療／阻生齒拔除）'
+    c: '專長有虛線的詞可以按，跳出小框列出講這件事的文章'
   };
   var v = new URLSearchParams(location.search).get('dp');
   if (v && KEYS.indexOf(v) >= 0) cur = v;
