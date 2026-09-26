@@ -6429,6 +6429,13 @@ html.pv-js .pv-group.pv-on { display: block; }
   background: var(--card);
 }
 html[data-pvall="0"] .pv-all { display: none; }
+/* 「全部」那一條要不要把已經在上面當大卡的那幾張藏起來。 */
+html[data-pvd="on"][data-pvn="1"] .pv-group[data-spec="all"] .card[data-pvdup="1"],
+html[data-pvd="on"][data-pvn="2"] .pv-group[data-spec="all"] .card[data-pvdup="1"],
+html[data-pvd="on"][data-pvn="2"] .pv-group[data-spec="all"] .card[data-pvdup="2"],
+html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="1"],
+html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="2"],
+html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="3"] { display: none; }
 
 @media (min-width: 721px) {
   .pv-rail.cards > .card { flex-basis: var(--pv-cwd, 44%); }
@@ -6985,7 +6992,357 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
           </p>
         </div>
       </a></div>
-<div class="pv-strip"><div class="pv-shead"><span class="pv-stitle">照科別看</span><span class="pv-hint" hidden>自動播放中 —— 點一下就停</span></div><div class="pv-tabs" role="tablist"><button class="pv-tab" type="button" data-spec="general" aria-selected="true">一般牙科・定期檢查<span class="pv-n">3</span></button><button class="pv-tab" type="button" data-spec="perio" aria-selected="false">牙周治療<span class="pv-n">4</span></button><button class="pv-tab" type="button" data-spec="endo" aria-selected="false">顯微根管<span class="pv-n">2</span></button><button class="pv-tab" type="button" data-spec="kids" aria-selected="false">兒童牙科<span class="pv-n">4</span></button><button class="pv-tab" type="button" data-spec="ortho" aria-selected="false">齒顎矯正<span class="pv-n">2</span></button><button class="pv-tab" type="button" data-spec="prosth" aria-selected="false">植牙・假牙重建<span class="pv-n">3</span></button><button class="pv-tab" type="button" data-spec="surg" aria-selected="false">口腔外科<span class="pv-n">2</span></button></div><div class="pv-groups"><div class="pv-group" data-spec="general"><h3 class="pv-gh">一般牙科・定期檢查</h3><div class="pv-rail cards"><a class="card" href="../../posts/three-month-recall/" data-spec="general">
+<div class="pv-strip"><div class="pv-shead"><span class="pv-stitle">照科別看</span><span class="pv-hint" hidden>自動播放中 —— 點一下就停</span></div><div class="pv-tabs" role="tablist"><button class="pv-tab" type="button" data-spec="all" aria-selected="true">全部<span class="pv-n">20</span></button><button class="pv-tab" type="button" data-spec="general" aria-selected="false">一般牙科・定期檢查<span class="pv-n">3</span></button><button class="pv-tab" type="button" data-spec="perio" aria-selected="false">牙周治療<span class="pv-n">4</span></button><button class="pv-tab" type="button" data-spec="endo" aria-selected="false">顯微根管<span class="pv-n">2</span></button><button class="pv-tab" type="button" data-spec="kids" aria-selected="false">兒童牙科<span class="pv-n">4</span></button><button class="pv-tab" type="button" data-spec="ortho" aria-selected="false">齒顎矯正<span class="pv-n">2</span></button><button class="pv-tab" type="button" data-spec="prosth" aria-selected="false">植牙・假牙重建<span class="pv-n">3</span></button><button class="pv-tab" type="button" data-spec="surg" aria-selected="false">口腔外科<span class="pv-n">2</span></button></div><div class="pv-groups"><div class="pv-group" data-spec="all"><h3 class="pv-gh">全部</h3><div class="pv-rail cards"><a class="card" data-pvdup="1" href="../../posts/perio-full-mouth/" data-spec="perio">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-perio-full-mouth-photo-800.webp 800w, ../../assets/hero-perio-full-mouth-photo-1600.webp 1600w, ../../assets/hero-perio-full-mouth-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-perio-full-mouth-photo-1600.jpg" srcset="../../assets/hero-perio-full-mouth-photo-800.jpg 800w, ../../assets/hero-perio-full-mouth-photo-1600.jpg 1600w, ../../assets/hero-perio-full-mouth-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫。明亮的牙科診間裡，穿芥末黃開襟衫的中年男病患坐在淡綠色診療椅上，一手按著臉頰、眉頭皺起；穿淡青綠刷手服與白袍的男醫師坐在他身旁的滾輪椅上，攤開一隻手向他解釋。病患頭上的小對話框裡是一排五顆牙，中間那顆的牙齦紅腫、牙齒在搖。醫師頭上的大對話框裡是同一排五顆牙，都長了臉和手：中間那顆牙齦紅腫，高舉雙手喊救命；一大群深色的小細菌從它紅腫的牙齦湧出來，往四周亂竄、搗亂，碎屑亂飛；旁邊四顆牙的牙齦邊也各有幾隻細菌，它們有的擔心地看著中間那顆，有的緊張地看著自己腳邊的細菌。背景是診療椅、器械臂、洗手台、櫃子、滅菌鍋與通往隔壁診間的玻璃隔間。" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">牙周照護</span>
+          <h3>牙周病為什麼要全口治療：會痛的，通常只是最嚴重的那一顆</h3>
+          <p>「只有右下那一顆在痛，為什麼要檢查整口？」牙周病大部分時候不痛，會腫會痛的那一顆，往往只是最嚴重、最先出現症狀的一顆。這一篇講為什麼偏偏是它、其他牙齒放著會怎樣，以及正在痛的那一顆會先怎麼處理。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-09-25">2026/09/25</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="perio-full-mouth" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" data-pvdup="2" href="../../posts/pulp-calcification/" data-spec="endo">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-pulp-calcification-photo-800.webp 800w, ../../assets/hero-pulp-calcification-photo-1600.webp 1600w, ../../assets/hero-pulp-calcification-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-pulp-calcification-photo-1600.jpg" srcset="../../assets/hero-pulp-calcification-photo-800.jpg 800w, ../../assets/hero-pulp-calcification-photo-1600.jpg 1600w, ../../assets/hero-pulp-calcification-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫。右邊是一顆巨大的下顎大臼齒，站在一排同高的牙齒中間，下半截埋在粉紅色的牙齦裡；咬合面的溝上只有一個極小的深色凹洞。透過琺瑯質看得見裡面用虛線畫出的牙髓：一個又低又扁的髓腔，往下收成兩條細如髮絲的根管，順著牙根的弧度一路收到根尖前才變成一個點。左邊是一個很大的圓形放大鏡框，框裡是那條根管被放大之後的樣子——一條淡米色的隧道，前方收窄成一道又高又細的暗縫。框裡有四個人，都穿著半透明的淡薄荷青防護衣、帽兜戴起來、戴著透明面罩：最左邊一位站著；旁邊是穿藕粉色刷手服、帽兜前緣有一盞小燈、手握細噴桿的領隊；一名穿淡黃上衣的男孩側身把半個身體擠進那道細縫，衣服被夾得皺起來；另一位單膝跪在他身旁抬手比著。圓框外面的牙齦上還站著兩位：穿鼠尾草綠外套、手拿噴瓶的女性，以及拄著手杖、手腕掛著小水桶的老先生。兩條細線從放大鏡框的外緣拉出來，收在牙根上段那條根管的同一點上。左邊那支牙根的根尖外面有一個淡色的膿包，另外兩條細線把它連到右下角的第二個圓框；框裡是那個膿包被放大之後的內部，一群深色的細菌在裡面搗亂——丟碎屑、噴出濁綠色的液體，地上與牆上都是水坑和污痕。" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">顯微根管</span>
+          <h3>根管鈣化：要做根管治療、抽神經，卻找不到那條神經</h3>
+          <p>「這顆牙要做根管治療。」然後醫師又補了一句：「不過它鈣化了。」這一篇講的就是這個處境——為什麼偏偏是要治療的這一顆鈣化、這一次會多出什麼、顯微鏡下實際在做什麼，以及過程中真的出了狀況該怎麼處理。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-09-22">2026/09/22</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="pulp-calcification" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" data-pvdup="3" href="../../posts/wisdom-eruption/" data-spec="surg">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-wisdom-eruption-photo-800.webp 800w, ../../assets/hero-wisdom-eruption-photo-1600.webp 1600w, ../../assets/hero-wisdom-eruption-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-wisdom-eruption-photo-1600.jpg" srcset="../../assets/hero-wisdom-eruption-photo-800.jpg 800w, ../../assets/hero-wisdom-eruption-photo-1600.jpg 1600w, ../../assets/hero-wisdom-eruption-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫：一間明亮的牙科諮詢室。左邊一位穿紫色刷手服、外罩白色醫師袍的鮑伯頭女醫師站著，一手微微抬起、掌心朝上，正在聽。她右邊一位二十歲上下、穿鏽紅色外套與深色牛仔褲的男生坐在諮詢椅上，一手按著自己下顎靠近耳下的位置，那一處畫著幾道磚紅色的短折線與淡淡的排線表示痠痛。他頭頂上方一個大對話框，框裡畫著他從鏡子會看到的下顎後段：三顆後牙，最後那一顆只露出一半，牙齦瓣蓋住後半、鼓起來、比旁邊的淡粉紅一階。後方牆上是一台發光的看片燈箱，上緣夾著一張全景 X 光片，電源線沿著牆垂下；旁邊是洗手台與鏡子、芥末黃門的矮櫃、杯子、紙盤、面紙盒、盆栽、乾洗手與手套盒、一排資料夾與瓶子、沒有數字的圓鐘、掛著帆布袋的掛鉤。畫面右側有一支粗寬的紫色 S 形箭頭，從右緣的淡灰紫漸漸轉深、到左端箭頭尖變成深紫，指向坐著的男生；箭頭上站著同一個人的五個年紀，由右往左愈來愈高：最右邊的地上是一個在爬的嬰兒，接著是背著圓背包、手上拿著蠟筆的幼兒園男孩、背方書包掛水壺的小學男孩、斜背側背包的國中男生，最靠近箭頭尖的是抱著書、背著書包的高中男生。最右邊的門口露出一張診療椅的扶手與無影燈的一角。" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">口腔外科</span>
+          <h3>智齒要不要拔：該拔的，要趁早</h3>
+          <p>被告知「你有阻生智齒」的那張片子，多半拍在大學時期。有些智齒後來確實會自己長出來——但真正要緊的是早一點把「留還是拔」判斷清楚：年輕時骨頭還軟、牙根還沒長完，該拔的那幾顆會好拔很多，腫痛與請假的天數也少。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-09-22">2026/09/22</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="wisdom-eruption" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/implant-lifespan/" data-spec="prosth">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-implant-lifespan-photo-800.webp 800w, ../../assets/hero-implant-lifespan-photo-1600.webp 1600w, ../../assets/hero-implant-lifespan-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-implant-lifespan-photo-1600.jpg" srcset="../../assets/hero-implant-lifespan-photo-800.jpg 800w, ../../assets/hero-implant-lifespan-photo-1600.jpg 1600w, ../../assets/hero-implant-lifespan-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="八個人擠在一台用牙科家具拼成的飛行木板上，穿過飄滿時鐘的時光隧道" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">缺牙重建</span>
+          <h3>植牙能用多久：世界第一顆植牙用了四十年</h3>
+          <p>1965 年植入的第一組鈦植體，用了四十年直到患者過世；第二位患者的十一顆，紀錄上至少用了四十八年。但十年 96.4%、二十年約八成的群體數字，以及「存活」與「成功」的差別，說的是另一件事：植牙能用多久，一半取決於植入之後。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-09-21">2026/09/21</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="implant-lifespan" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/perio-prevalence/" data-spec="perio">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-perio-prevalence-photo-800.webp 800w, ../../assets/hero-perio-prevalence-photo-1600.webp 1600w, ../../assets/hero-perio-prevalence-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-perio-prevalence-photo-1600.jpg" srcset="../../assets/hero-perio-prevalence-photo-800.jpg 800w, ../../assets/hero-perio-prevalence-photo-1600.jpg 1600w, ../../assets/hero-perio-prevalence-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫分成中央一大格與左右各兩小格。中央是一間明亮的連線會議室：牆上掛著一面大螢幕，上方有一支攝影機橫桿，螢幕中央是台灣島的形狀，島上用深淺不同的青綠色塊標示，散著幾個琥珀色圓點；島的左邊浮著 78.7% 與 24.7%、右邊浮著 9.3% 與 6.9%，各用一條細引線連到島的邊緣，旁邊還有幾個琥珀色的驚嘆號三角形。螢幕四周是幾個沒有文字的圖表：直條圖、折線圖、橫條圖、圓餅圖與雷達圖。螢幕右側一直行三面小螢幕，各顯示一位連線的同事。螢幕前一位穿藕粉色上衣的短髮女性伸出食指指著島的中段、正在說話；她身旁一位穿灰綠毛衣的男性抱著攤開的資料夾看著她指的地方。前景一張長桌上放著三台筆電與一顆圓形的會議電話，一位穿藍灰襯衫的男性坐著打字；一位穿米色外套的女性抱著一疊紙張走過、抬起一手說著話；右側一位戴著細頭戴式麥克風的男性正伸手調整設備機櫃。右邊是細框的玻璃隔間，左邊是大窗，牆上一只沒有數字的圓鐘，天花板兩條嵌燈，上方橫過幾道白色的細線。左上格是診所櫃檯：綁馬尾的年輕女性穿著淡青色刷手服，閉著嘴微笑伸手接過一位背著側背包的女士遞來的卡片，櫃檯上有資料夾、讀卡機與一盆小植物，牆上掛著一張只有牙齒圖案的畫，後方門內露出診療椅與燈臂。左下格是診療室：一位四十幾歲的男醫師坐在滑輪椅上大幅前傾，抿著嘴專注地拿著口鏡替躺在診療椅上的病患檢查，上方是圓形的無影燈，旁邊有器械盤、抽吸管、面紙盒與矮櫃。右上格是社區活動中心：一位短髮女醫師坐在折疊桌前，抬起一手、正在向對面坐著的男孩說明；後方一位女性牽著小女孩在等候，牆邊疊著折疊椅，地上一個紙箱，窗前掛著窗簾，牆上是一面佈告板。右下格是看 X 光片：一位五十幾歲的男醫師站著用食指點在牆上的片子上、嘴角微微上揚，一位穿灰色毛衣的男性坐在圓凳上抬頭看；牆上掛著鉛衣，旁邊是 X 光機的臂桿與一張放著鍵盤與螢幕的小桌。" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">牙周照護</span>
+          <h3>八成人有牙周病：牙齒不是老了才掉，是從年輕累積來的</h3>
+          <p>「大家都嘛有」常常被接成「所以不用管」。近八成的人確實有牙周問題，而嚴重的那一群並不是另外一批人，是從輕度一年一年走過來的。這一篇把它拆成四層、講清楚每一層該做什麼，也講牙齒為什麼不是老了才掉——時間累積是一種機制，懷孕這類讓身體反應改變的階段是另一種。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-09-20">2026/09/20</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="perio-prevalence" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/kids-sedation/" data-spec="kids">
+        <img class="card-thumb" src="../../assets/card-kids-sedation.jpg" alt="插畫：家裡的餐桌前，媽媽一手拿著手機講電話、一手拿筆，爸爸在旁邊探頭看桌上的紙；右上角一個圓形對話框，裡面是穿松樹印花刷手服、戴同一塊布做的手術帽的麻醉科醫師，拿著話筒看著一張空白的紙。" width="1000" height="563" loading="lazy">
+        <div class="card-body">
+          <span class="card-tag">兒童牙科</span>
+          <h3>這麼小就要麻醉？認識兒童舒眠牙科治療</h3>
+          <p>孩子滿口蛀牙，一坐上診療椅就哭、就掙扎。醫師提到「舒眠治療」的時候，多數爸媽第一個冒出來的念頭往往不是別的，是安全——這麼小就讓他睡著看牙，真的可以嗎？舒眠不是一個開關，是一條從清醒到睡著的連續刻度；決定它安不安全的，是旁邊有誰在看著、看的是什麼。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-09-19">2026/09/19</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="kids-sedation" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/aligner-simulation/" data-spec="ortho">
+        <span class="card-shot" style="position:relative;display:block"><picture>
+          <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w, ../../assets/hero-aligner-photo-1600.webp 1600w, ../../assets/hero-aligner-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-aligner-photo-1600.jpg" srcset="../../assets/hero-aligner-photo-800.jpg 800w, ../../assets/hero-aligner-photo-1600.jpg 1600w, ../../assets/hero-aligner-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="插畫是一間明亮的診所規劃室。畫面中央偏左有一面飄浮在空中的半透明藍色大螢幕，上面用白色線條畫著上排牙齒的俯視圖：牙齒互相重疊、有的擠到外側有的縮在後面，排成一條歪斜的弧線，旁邊散著白色的彎箭頭與五個琥珀色的驚嘆號三角形；螢幕右半有一顆被放大的牙齒，整根牙根插在一塊半透明的骨頭裡，牙根尖端有一道琥珀色的短線，上方一個琥珀色的提示牌寫著 ERROR，下面一行是一個牙套圖示、200+ 與無限符號。螢幕前站著一位穿白袍、裡面是藍灰色刷手服的男醫師，側身朝著螢幕，抬起一手用食指點在那顆放大的牙上，指尖旁有三道短線，另一手垂在身側拿著一支細筆，閉著嘴微笑。畫面左邊，一位穿芥末黃毛衣的男生坐在淺色長桌前，身體前傾、雙手放在筆電鍵盤上，手腕旁有兩道短線；筆電螢幕是深色底、一行一行的淺色程式碼，右下角有一個白色的牙弓圖示，旁邊飄著一面淡藍色的小螢幕，上面同樣是程式碼與牙弓，筆電右邊立著一台沒有開機的深灰色平板。畫面右邊，一位穿藍灰色刷手服的男性一手拿著平板（上面是同一顆牙與牙根）、一手張開手掌比向大螢幕，手掌外緣與嘴邊各有兩道短線；他身旁一位穿淡綠色上衣的女性低頭看著手機。背景是白色的牆與淺色地板，木質檯面上放著兩個馬克杯和一個陶土色的杯子，矮櫃上擺著一副石膏牙模與一副透明牙套，牆上掛著一張只有牙弓線條圖的海報，右側有一盆綠色植物，房間上方橫過幾道長長的白色弧線。" width="1600" height="891" loading="lazy">
+        </picture>
+          <span class="card-fx-err" aria-hidden="true" style="position:absolute;inset:0;display:block;pointer-events:none"><span class="card-fx-err-in" style="display:block;width:100%;height:100%"><picture>
+          <source type="image/webp" srcset="../../assets/hero-aligner-photo-800.webp 800w, ../../assets/hero-aligner-photo-1600.webp 1600w, ../../assets/hero-aligner-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-fx-img" src="../../assets/hero-aligner-photo-1600.jpg" srcset="../../assets/hero-aligner-photo-800.jpg 800w, ../../assets/hero-aligner-photo-1600.jpg 1600w, ../../assets/hero-aligner-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="" width="1600" height="891" loading="lazy">
+        </picture></span></span>
+          <svg class="card-fx" viewBox="0 0 800 450" preserveAspectRatio="none" aria-hidden="true" focusable="false" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+            <defs><radialGradient id="cardFxGlow"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset=".55" stop-color="#ffffff" stop-opacity=".45"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient></defs>
+            <circle class="hero-fx-blip" style="opacity:0; transform-box:view-box; transform-origin:223.9px 91.9px; animation-delay:0.00s" cx="223.9" cy="91.9" r="12.1" fill="url(#cardFxGlow)"/>
+            <circle class="hero-fx-blip" style="opacity:0; transform-box:view-box; transform-origin:353.5px 95.9px; animation-delay:0.28s" cx="353.5" cy="95.9" r="12.1" fill="url(#cardFxGlow)"/>
+            <circle class="hero-fx-blip" style="opacity:0; transform-box:view-box; transform-origin:313.0px 127.2px; animation-delay:0.56s" cx="313.0" cy="127.2" r="12.1" fill="url(#cardFxGlow)"/>
+            <circle class="hero-fx-blip" style="opacity:0; transform-box:view-box; transform-origin:196.6px 162.6px; animation-delay:0.84s" cx="196.6" cy="162.6" r="12.1" fill="url(#cardFxGlow)"/>
+            <circle class="hero-fx-blip" style="opacity:0; transform-box:view-box; transform-origin:259.3px 187.8px; animation-delay:1.12s" cx="259.3" cy="187.8" r="12.1" fill="url(#cardFxGlow)"/>
+          </svg>
+        </span>
+        <div class="card-body">
+          <span class="card-tag">齒顎矯正</span>
+          <h3>隱形矯正：模擬之後，醫師怎麼讓牙齒跑到位</h3>
+          <p>模擬動畫把牙齒一格一格挪到整齊的位置，那是一份規劃；把規劃走成結果的那一段，是醫師在療程中一副一副對照出來的。畫面上為什麼沒有牙根與骨頭、牙套為什麼會戴不下去、什麼時候該重新規劃，以及開始之前值得先問清楚的幾件事。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-09-19">2026/09/19</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="aligner-simulation" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/kids-crown/" data-spec="kids">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-kids-crown-photo-800.webp 800w, ../../assets/hero-kids-crown-photo-1600.webp 1600w, ../../assets/hero-kids-crown-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-kids-crown-photo-1600.jpg" srcset="../../assets/hero-kids-crown-photo-800.jpg 800w, ../../assets/hero-kids-crown-photo-1600.jpg 1600w, ../../assets/hero-kids-crown-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="四格插畫。上排三格：同一位媽媽帶著兒子看了三位不同的牙醫師，三位都露出為難又抱歉的樣子——第一位攤著手、額頭冒汗，第二位低頭看著小卡片、頭上浮著一團打結的線，第三位搔著後腦不好意思地朝門口比；媽媽從雙手合十拜託、按著胸口焦急，到最後一格眉頭深鎖。下面一整條寬格是兒童牙科的診間：戴著印花手術帽、白袍敞開的兒牙醫師坐在小圓椅上微笑解說，左邊是穿圓點刷手服、端著托盤的助理，右邊是坐在治療椅上的男孩與在旁邊微笑的爸媽；醫師左右各一個對話框，每個裡面都有三顆牙，左邊中間那顆包著銀色的牙套、右邊中間那顆包著白色的牙套" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">兒童牙科</span>
+          <h3>同一顆補了又掉：小朋友的牙套什麼時候該做，怎麼選</h3>
+          <p>「同一顆牙補了又掉，已經好幾次了。」很多爸媽的第一個念頭是孩子的牙齒特別不好——可能說對了一半。蛀過的那顆牙結構確實被弱化了，但補得住與補不住，差別多半不在孩子身上，而在那顆牙當下的條件。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-09-07">2026/09/07</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="kids-crown" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/three-month-recall/" data-spec="general">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-recall-photo-800.webp 800w, ../../assets/hero-recall-photo-1600.webp 1600w, ../../assets/hero-recall-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-recall-photo-1600.jpg" srcset="../../assets/hero-recall-photo-800.jpg 800w, ../../assets/hero-recall-photo-1600.jpg 1600w, ../../assets/hero-recall-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="七格拼起來的鑲嵌畫，六個人各自在自己家裡：孕婦坐在沙發上看小冊子、拿拐杖的阿嬤在廚房伸手拿杯子、早餐桌上量血糖的先生、桌上放著藥袋若有所思的中年男子、半夜起來倒水喝的女性、綁著頭巾在藤椅上看書笑出來的女性；右下角那一格是診所，白袍的醫師與穿刷手服的護理師一起往左上方看，醫師的手向那幾格攤開" width="1600" height="1194" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">定期檢查</span>
+          <h3>三個月一次的洗牙與塗氟：哪些人適用，為什麼是三個月</h3>
+          <p>一般人半年洗一次牙，是因為拿牙刷的手還穩、唾液正常、傷口癒合正常。這些條件少了一項，同樣三個月，口腔裡累積出來的東西就和一般人不是同一個量級——健保因此把間隔縮短到三個月，塗氟也不再只是小孩才做的事。這一篇說哪些人適用、為什麼是三個月，以及來的時候要帶什麼。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-09-05">2026/09/05</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="three-month-recall" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/crown-materials/" data-spec="prosth">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-crown-photo-800.webp 800w, ../../assets/hero-crown-photo-1600.webp 1600w, ../../assets/hero-crown-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-crown-photo-1600.jpg" srcset="../../assets/hero-crown-photo-800.jpg 800w, ../../assets/hero-crown-photo-1600.jpg 1600w, ../../assets/hero-crown-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="診間裡女醫師捧著一副打開的上下顎牙齒模型向病患解說，模型上有幾顆牙的外層瓷剝落、露出深灰色的金屬；她的對話泡泡裡是一棟貼磁磚的公寓，整面牆的磁磚東一塊西一塊掉下來" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">贋復假牙</span>
+          <h3>一體成型的假牙好在哪：金屬燒瓷、全瓷與全鋯冠的差別</h3>
+          <p>真正把幾種牙冠分開的，是一件不太會出現在價目表上的事：它是一塊材料做出來的，還是兩層堆起來的。那個差別會長出兩個弱點，也決定了要讓出多少自己的齒質。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-08-27">2026/08/27</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="crown-materials" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/bioceramic/" data-spec="endo">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-bioceramic-photo-800.webp 800w, ../../assets/hero-bioceramic-photo-1600.webp 1600w, ../../assets/hero-bioceramic-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-bioceramic-photo-1600.jpg" srcset="../../assets/hero-bioceramic-photo-800.jpg 800w, ../../assets/hero-bioceramic-photo-1600.jpg 1600w, ../../assets/hero-bioceramic-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="左邊是明亮的診間諮詢室，短髮的女醫師隔著桌子向年輕的男病患解說，上方的思考泡泡裡是一顆牙齒的剖面，根管內滿是黃濁的膿、根尖下方的骨頭裡有一個膿包；右邊是治療室，同一位醫師伏在顯微鏡前工作，病患嘴上蓋著粉紅色的橡皮障，泡泡裡的同一顆牙正被注射器灌入淡粉紅色的糊劑" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">顯微根管</span>
+          <h3>根管治療的生物陶瓷：它多做了什麼</h3>
+          <p>「都已經抽過神經了，牙齦怎麼又長膿包？」根管末端的分支往往比器械到得了的地方複雜。生物陶瓷在根管治療裡做三件事：封填的糊劑、活髓治療的修復材料、根管破孔的修補——這一篇聊聊它的密封與鹼性環境多做了什麼，以及什麼樣的牙齒用得上。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-08-21">2026/08/21</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="bioceramic" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/orthodontics/" data-spec="ortho">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-ortho-photo-800.webp 800w, ../../assets/hero-ortho-photo-1600.webp 1600w, ../../assets/hero-ortho-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-ortho-photo-1600.jpg" srcset="../../assets/hero-ortho-photo-800.jpg 800w, ../../assets/hero-ortho-photo-1600.jpg 1600w, ../../assets/hero-ortho-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="街邊小吃店前，戴著金屬矯正器的年輕人和朋友笑著自拍；右邊兩格是合菜桌上把隱形牙套收進盒子裡，以及夜裡床頭放著牙套盒的房間" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">齒顎矯正</span>
+          <h3>牙齒矯正：年齡、矯正器與第一次諮詢</h3>
+          <p>為了外觀走進來沒有什麼不好意思，但牙齒的位置一改變，跟著改變的還有清潔與咬合的長期條件。幾歲開始還來得及、金屬與隱形怎麼選、時間與費用怎麼看，以及第一次諮詢會做哪些事。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-08-20">2026/08/20</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="orthodontics" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/wisdom-tooth/" data-spec="surg">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-wisdom-photo-800.webp 800w, ../../assets/hero-wisdom-photo-1600.webp 1600w, ../../assets/hero-wisdom-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-wisdom-photo-1600.jpg" srcset="../../assets/hero-wisdom-photo-800.jpg 800w, ../../assets/hero-wisdom-photo-1600.jpg 1600w, ../../assets/hero-wisdom-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="診間裡醫師向手扶著臉頰的病患解說，上方的思考泡泡分三格畫出智齒往前擠、拔完的窩洞不敢刷、填入填補材料並縫合；右邊是幾天後他在街上邊走邊吃紅豆餅" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">口腔外科</span>
+          <h3>拔智齒之後：傷口填補、術後照顧與保險怎麼問</h3>
+          <p>怕的通常是「拔」的那一下，但決定接下來一週好不好過的，是拔完留下的那個洞。血塊為什麼不能被破壞、膠原蛋白與骨粉各自補足什麼，以及門診手術的保險該問什麼。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-08-19">2026/08/19</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="wisdom-tooth" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/perio-laser/" data-spec="perio">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-perio-photo-800.webp 800w, ../../assets/hero-perio-photo-1600.webp 1600w, ../../assets/hero-perio-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-perio-photo-1600.jpg" srcset="../../assets/hero-perio-photo-800.jpg 800w, ../../assets/hero-perio-photo-1600.jpg 1600w, ../../assets/hero-perio-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="診間裡醫師握著細長的水雷射手機，射出青綠色光束打掉巨大臼齒表面結痂的牙結石，助理舉著防護盾護著後方的病患，細菌四散逃竄" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">牙周照護</span>
+          <h3>牙周病治療：清創、水雷射與再生手術</h3>
+          <p>牙齒像一棵樹，牙周組織是托著它的那塊土壤。牙周治療分成三個層次：健保的基礎清創、自費水雷射能補上什麼，以及骨頭已經流失時的牙周再生手術。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-08-16">2026/08/16</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="perio-laser" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/kids-arch-expansion/" data-spec="kids">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-arch-photo-800.webp 800w, ../../assets/hero-arch-photo-1600.webp 1600w, ../../assets/hero-arch-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-arch-photo-1600.jpg" srcset="../../assets/hero-arch-photo-800.jpg 800w, ../../assets/hero-arch-photo-1600.jpg 1600w, ../../assets/hero-arch-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="三格畫面：男孩在鏡前看擠在一起的上排門牙、夜裡張著嘴睡、隔天早上在玄關垂著頭沒什麼精神" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">兒童牙科</span>
+          <h3>別讓擁擠影響發育！兒童早期矯正：關鍵在於「擴張牙弓」</h3>
+          <p>牙弓不夠寬，恆牙就像在擠公車，沒位置站只能前後亂鑽。幾歲該做，看的其實是上顎那道骨縫而不是年齡。兒童隱適美與肌功能矯正差在哪、打呼能不能靠擴弓解決，以及爸媽在家就看得到的六個徵兆。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-08-02">2026/08/02</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="kids-arch-expansion" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/regular-checkup/" data-spec="general">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-checkup-photo-800.webp 800w, ../../assets/hero-checkup-photo-1600.webp 1600w, ../../assets/hero-checkup-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-checkup-photo-1600.jpg" srcset="../../assets/hero-checkup-photo-800.jpg 800w, ../../assets/hero-checkup-photo-1600.jpg 1600w, ../../assets/hero-checkup-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="明亮的診所櫃檯前，老太太的集章卡被蓋上新的一格，小男孩踮著腳仰頭看，候診區坐著各個年紀的人" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">定期檢查</span>
+          <h3>半年一次的洗牙：健保給付的那一次，到底在做什麼</h3>
+          <p>洗牙不會把牙齒洗薄，也不是美白。它清的是自己刷不掉的牙結石，順便讓醫師在問題還小的時候先看見它。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-07-08">2026/07/08</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="regular-checkup" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/missing-tooth/" data-spec="prosth">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-implant-photo-800.webp 800w, ../../assets/hero-implant-photo-1600.webp 1600w, ../../assets/hero-implant-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-implant-photo-1600.jpg" srcset="../../assets/hero-implant-photo-800.jpg 800w, ../../assets/hero-implant-photo-1600.jpg 1600w, ../../assets/hero-implant-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="三格畫面：火鍋、夜市與家族聚餐上被熱情勸食卻舉手推辭的三個人，思考泡泡裡分別是咬不動、後排少一顆牙、只能喝粥" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">缺牙重建</span>
+          <h3>缺牙之後：活動假牙、牙橋與植牙怎麼選</h3>
+          <p>缺一顆牙不只是缺一顆牙。旁邊的牙會倒、對面的牙會長長、齒槽骨會流失。三種重建方式各自的原理、代價與限制。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-06-02">2026/06/02</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="missing-tooth" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/kids-first-visit/" data-spec="kids">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-kids-photo-800.webp 800w, ../../assets/hero-kids-photo-1600.webp 1600w, ../../assets/hero-kids-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-kids-photo-1600.jpg" srcset="../../assets/hero-kids-photo-800.jpg 800w, ../../assets/hero-kids-photo-1600.jpg 1600w, ../../assets/hero-kids-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="一家人圍在餐桌旁，中間的孩子高舉著剛掉下來的乳牙張嘴大笑，爸媽與兩個手足湊過來一起看" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">兒童牙科</span>
+          <h3>孩子第一次看牙：時機、氟化物與窩溝封填</h3>
+          <p>「乳牙反正會換掉」是最常見也最昂貴的誤解。從第一顆牙長出來後的六個月談起，帶爸媽看懂塗氟、窩溝封填與政府補助。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-05-06">2026/05/06</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="kids-first-visit" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/gum-bleeding/" data-spec="perio">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-gum-photo-800.webp 800w, ../../assets/hero-gum-photo-1600.webp 1600w, ../../assets/hero-gum-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-gum-photo-1600.jpg" srcset="../../assets/hero-gum-photo-800.jpg 800w, ../../assets/hero-gum-photo-1600.jpg 1600w, ../../assets/hero-gum-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="四格畫面：悶熱的一天裡搧著扇子、買一杯冰飲、吹電扇冰敷臉頰，最後在鏡子前掀開嘴唇看牙齦" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">牙周照護</span>
+          <h3>牙齦流血不是火氣大：牙周病的早期訊號</h3>
+          <p>健康的牙齦被牙刷碰到不會出血。流血代表牙齦正在發炎，而發炎和退火無關，是牙菌斑長期堆積的結果。認識牙齦炎與牙周炎那條關鍵的分界線。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-04-15">2026/04/15</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="gum-bleeding" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a>
+<a class="card" href="../../posts/bass-brushing/" data-spec="general">
+        <picture>
+          <source type="image/webp" srcset="../../assets/hero-brushing-photo-800.webp 800w, ../../assets/hero-brushing-photo-1600.webp 1600w, ../../assets/hero-brushing-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
+          <img class="card-thumb" src="../../assets/hero-brushing-photo-1600.jpg" srcset="../../assets/hero-brushing-photo-800.jpg 800w, ../../assets/hero-brushing-photo-1600.jpg 1600w, ../../assets/hero-brushing-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="洗手台前一整排人各自對著鏡子刷牙，上方三個放大圈畫出刷毛斜靠在牙齦溝上與小幅度來回的方向" width="1600" height="893" loading="lazy">
+        </picture>
+        <div class="card-body">
+          <span class="card-tag">日常保健</span>
+          <h3>貝氏刷牙法：刷了三十年，可能一直刷錯地方</h3>
+          <p>刷得用力不等於刷得乾淨。刷毛斜四十五度對準牙齒與牙齦的交界，一次只顧兩顆牙，原地來回十次——這是把牙菌斑真正刷掉的方法。</p>
+          <p class="card-date">
+            <span><span class="sr-only">上架 </span><time datetime="2026-03-11">2026/03/11</time></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="views" data-views="bass-brushing" data-state="loading"><span class="views-n">—</span><small>次瀏覽</small></span>
+            <span class="card-more" aria-hidden="true"><span class="card-more-t"></span><svg width="9" height="18" viewBox="0 0 9 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l7 8-7 8"/></svg></span>
+          </p>
+        </div>
+      </a></div></div>
+<div class="pv-group" data-spec="general"><h3 class="pv-gh">一般牙科・定期檢查</h3><div class="pv-rail cards"><a class="card" href="../../posts/three-month-recall/" data-spec="general">
         <picture>
           <source type="image/webp" srcset="../../assets/hero-recall-photo-800.webp 800w, ../../assets/hero-recall-photo-1600.webp 1600w, ../../assets/hero-recall-photo-2000.webp 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw">
           <img class="card-thumb" src="../../assets/hero-recall-photo-1600.jpg" srcset="../../assets/hero-recall-photo-800.jpg 800w, ../../assets/hero-recall-photo-1600.jpg 1600w, ../../assets/hero-recall-photo-2000.jpg 2000w" sizes="(min-width: 1041px) 393px, (min-width: 721px) 46vw, 92vw" alt="七格拼起來的鑲嵌畫，六個人各自在自己家裡：孕婦坐在沙發上看小冊子、拿拐杖的阿嬤在廚房伸手拿杯子、早餐桌上量血糖的先生、桌上放著藥袋若有所思的中年男子、半夜起來倒水喝的女性、綁著頭巾在藤椅上看書笑出來的女性；右下角那一格是診所，白袍的醫師與穿刷手服的護理師一起往左上方看，醫師的手向那幾格攤開" width="1600" height="1194" loading="lazy">
@@ -10061,6 +10418,9 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     <div class="pv-row"><span class="pv-lab">一屏幾張</span><span class="pv-seg" data-k="w">
       <button data-v="115">1.15</button><button data-v="135">1.35</button><button data-v="160">1.6</button>
     </span></div>
+    <div class="pv-row"><span class="pv-lab">全部那條</span><span class="pv-seg" data-k="d">
+      <button data-v="on">接在大卡後面</button><button data-v="off">完整 20 篇</button>
+    </span></div>
     <div class="pv-row"><span class="pv-lab">對照</span><span class="pv-seg" data-k="cur">
       <button data-v="0">新版</button><button data-v="1">現況（直排 20 張）</button>
     </span></div>
@@ -10072,7 +10432,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
 <script>
 (function () {
   var D = document.documentElement;
-  var DEF = { a: 'both', t: 'here2', n: '2', s: 'mid', w: '135', cur: '0' };
+  var DEF = { a: 'both', t: 'here2', n: '2', s: 'mid', w: '135', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -10152,7 +10512,11 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
 
   tabs.forEach(function (t, j) {
     t.addEventListener('click', function () {
-      if (st.t === 'land') { location.href = '/topics/' + t.getAttribute('data-spec') + '/'; return; }
+      if (st.t === 'land') {
+        var sp = t.getAttribute('data-spec');
+        location.href = sp === 'all' ? '/#topics' : '/topics/' + sp + '/';
+        return;
+      }
       stopAuto('tab'); show(j);
     });
   });
@@ -10176,6 +10540,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     D.setAttribute('data-pvn', st.n);
     D.setAttribute('data-pvcur', st.cur);
     D.setAttribute('data-pvall', st.t === 'here2' ? '1' : '0');
+    D.setAttribute('data-pvd', st.d);
     D.style.setProperty('--pv-cw', (100 / (parseInt(st.w, 10) / 100) - 4).toFixed(1) + '%');
     url();
   }

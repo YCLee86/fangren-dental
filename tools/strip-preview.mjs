@@ -56,19 +56,26 @@ const topHtml = top.map((c, i) => c.html.replace('<a class="card"', '<a class="c
 
 /* 橫幅：七科各一組，卡片照原本的上架順序（cards 已經是新到舊）。
    每一科最後掛一張「看○○全部」的小卡，切換條可以關掉。 */
-const groups = SPECS.map((s) => {
-  const mine = cards.filter((c) => c.spec === s.spec);
-  const rail = mine.map((c) => c.html).join("\n");
+/* 「全部」排在最前面，和首頁那排標記的順序一致（那一排也是「全部」打頭）。
+   ⚠ 它和上面的大卡是同一批文章、同一個順序，所以最前面那幾張會重複 ——
+   給它們 data-pvdup，切換條的「全部這一條」可以選要不要把它們藏起來。 */
+const TABS = [{ spec: "all", name: "全部" }].concat(SPECS);
+const groups = TABS.map((s) => {
+  const mine = s.spec === "all" ? cards : cards.filter((c) => c.spec === s.spec);
+  const rail = mine.map((c, i) => (s.spec === "all" && i < TOPN)
+    ? c.html.replace('<a class="card"', '<a class="card" data-pvdup="' + (i + 1) + '"')
+    : c.html).join("\n");
+  const tail = s.spec === "all" ? ""
+    : '<a class="pv-all" data-spec="' + s.spec + '" href="/topics/' + s.spec + '/">看' + s.name + '<br>全部 ' + mine.length + ' 篇 ›</a>';
   return '<div class="pv-group" data-spec="' + s.spec + '">'
     + '<h3 class="pv-gh">' + s.name + '</h3>'
-    + '<div class="pv-rail cards">' + rail
-    + '<a class="pv-all" data-spec="' + s.spec + '" href="/topics/' + s.spec + '/">看' + s.name + '<br>全部 ' + mine.length + ' 篇 ›</a>'
+    + '<div class="pv-rail cards">' + rail + tail
     + '</div></div>';
 }).join("\n");
 
-const tabs = SPECS.map((s, i) => '<button class="pv-tab" type="button" data-spec="' + s.spec + '"'
+const tabs = TABS.map((s, i) => '<button class="pv-tab" type="button" data-spec="' + s.spec + '"'
   + ' aria-selected="' + (i === 0 ? "true" : "false") + '">' + s.name
-  + '<span class="pv-n">' + (byCount[s.spec] || 0) + '</span></button>').join("");
+  + '<span class="pv-n">' + (s.spec === "all" ? cards.length : (byCount[s.spec] || 0)) + '</span></button>').join("");
 
 const newArticles =
   '<div class="cards pv-top">' + topHtml + '</div>\n'
@@ -164,6 +171,13 @@ html.pv-js .pv-group.pv-on { display: block; }
   background: var(--card);
 }
 html[data-pvall="0"] .pv-all { display: none; }
+/* 「全部」那一條要不要把已經在上面當大卡的那幾張藏起來。 */
+html[data-pvd="on"][data-pvn="1"] .pv-group[data-spec="all"] .card[data-pvdup="1"],
+html[data-pvd="on"][data-pvn="2"] .pv-group[data-spec="all"] .card[data-pvdup="1"],
+html[data-pvd="on"][data-pvn="2"] .pv-group[data-spec="all"] .card[data-pvdup="2"],
+html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="1"],
+html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="2"],
+html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="3"] { display: none; }
 
 @media (min-width: 721px) {
   .pv-rail.cards > .card { flex-basis: var(--pv-cwd, 44%); }
@@ -237,6 +251,9 @@ const bar = `
     <div class="pv-row"><span class="pv-lab">一屏幾張</span><span class="pv-seg" data-k="w">
       <button data-v="115">1.15</button><button data-v="135">1.35</button><button data-v="160">1.6</button>
     </span></div>
+    <div class="pv-row"><span class="pv-lab">全部那條</span><span class="pv-seg" data-k="d">
+      <button data-v="on">接在大卡後面</button><button data-v="off">完整 20 篇</button>
+    </span></div>
     <div class="pv-row"><span class="pv-lab">對照</span><span class="pv-seg" data-k="cur">
       <button data-v="0">新版</button><button data-v="1">現況（直排 20 張）</button>
     </span></div>
@@ -248,7 +265,7 @@ const bar = `
 <script>
 (function () {
   var D = document.documentElement;
-  var DEF = { a: 'both', t: 'here2', n: '2', s: 'mid', w: '135', cur: '0' };
+  var DEF = { a: 'both', t: 'here2', n: '2', s: 'mid', w: '135', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -328,7 +345,11 @@ const bar = `
 
   tabs.forEach(function (t, j) {
     t.addEventListener('click', function () {
-      if (st.t === 'land') { location.href = '/topics/' + t.getAttribute('data-spec') + '/'; return; }
+      if (st.t === 'land') {
+        var sp = t.getAttribute('data-spec');
+        location.href = sp === 'all' ? '/#topics' : '/topics/' + sp + '/';
+        return;
+      }
       stopAuto('tab'); show(j);
     });
   });
@@ -352,6 +373,7 @@ const bar = `
     D.setAttribute('data-pvn', st.n);
     D.setAttribute('data-pvcur', st.cur);
     D.setAttribute('data-pvall', st.t === 'here2' ? '1' : '0');
+    D.setAttribute('data-pvd', st.d);
     D.style.setProperty('--pv-cw', (100 / (parseInt(st.w, 10) / 100) - 4).toFixed(1) + '%');
     url();
   }
