@@ -167,17 +167,17 @@ html.pv-js .pv-group.pv-on { display: block; }
    （grid 疊層 ＋ visibility），二十張卡的圖會全部被載進來。 */
 @keyframes pv-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes pv-fadeout { from { opacity: 1; } to { opacity: 0; } }
-html.pv-js .pv-group.pv-on { animation: pv-fade var(--pv-fxin, .6s) ease both; }
+html.pv-js .pv-group.pv-on { animation: pv-fade var(--pv-fxin, .6s) var(--pv-fxease, ease) both; }
 /* 出場有兩種，分開兩個 class：
    pv-dim ＝ 留在版面裡淡出（「先出後進」用）。這時候它是唯一看得見的一組，
      抽掉的話容器會塌成 0 高、整頁跳一下。
    pv-out ＝ 疊在新的那一組上面淡出（「疊著對拉」用），position:absolute 不佔版面。
      ⚠ 只有「出」跟「進」兩組會同時在版面上，不是七組 —— 所以不會把二十張圖一起載進來。
    ⚠ 兩條都要寫在 .pv-on 後面：同權重靠順序決勝，不然出場會被進場的動畫蓋掉。 */
-html.pv-js .pv-group.pv-dim { animation: pv-fadeout var(--pv-fxout, .3s) ease both; }
+html.pv-js .pv-group.pv-dim { animation: pv-fadeout var(--pv-fxout, .3s) var(--pv-fxease, ease) both; }
 html.pv-js .pv-group.pv-out {
   display: block; position: absolute; inset: 0; pointer-events: none;
-  animation: pv-fadeout var(--pv-fxout, .6s) ease both;
+  animation: pv-fadeout var(--pv-fxout, .6s) var(--pv-fxease, ease) both;
 }
 
 .pv-strip, .pv-groups, .pv-group { min-width: 0; }
@@ -300,6 +300,12 @@ const bar = `
     <div class="pv-row"><span class="pv-lab">換科動畫</span><span class="pv-seg" data-k="f">
       <button data-v="x">疊著對拉</button><button data-v="a">同時淡入</button><button data-v="b">先出後進</button><button data-v="c">0.4 秒才換</button>
     </span></div>
+    <div class="pv-row"><span class="pv-lab">過場長度</span><span class="pv-seg" data-k="l">
+      <button data-v="same">同標籤 0.6</button><button data-v="l45">0.45 秒</button><button data-v="l30">0.3 秒</button><button data-v="l20">0.2 秒</button>
+    </span></div>
+    <div class="pv-row"><span class="pv-lab">過場曲線</span><span class="pv-seg" data-k="e">
+      <button data-v="e2">前快後緩</button><button data-v="e1">平順</button>
+    </span></div>
     <div class="pv-row"><span class="pv-lab">換科時</span><span class="pv-seg" data-k="p">
       <button data-v="keep">橫幅停在原處</button><button data-v="reset">回到最前面</button>
     </span></div>
@@ -324,7 +330,7 @@ const bar = `
    自動播放 科別＋卡片滑動／上面大卡 自動（跟版面）／按標籤 就地切換／
    滑動 很慢 14／換科時 橫幅停在原處／一屏幾張 中／全部那條 接在大卡後面。
    ⚠ 手機那一側他還沒看，所以尺**先不收**，等他看完再一起定。 */
-  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', p: 'keep', w: 'w2', d: 'on', cur: '0' };
+  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', l: 'same', e: 'e2', p: 'keep', w: 'w2', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -362,7 +368,16 @@ const bar = `
        晚一點才換畫面），所以橫向滑動那一支要看 shown 不是 idx，
        不然它會去捲一組還沒被顯示出來的橫幅，切進來的時候就會跳一下。 */
   var shown = 0, fxTimer = null;
+  /* 過場多長、走哪一條曲線。
+     ⚠ 長度預設「同標籤」是有原因的：標籤的顏色走 T 毫秒，圖卡也走 T，兩邊才會
+       同時到位（2026-09-26 使用者回報過「標籤還沒全亮圖卡就先切」）。選短的那幾格
+       圖卡會比標籤早到，面板會把差幾毫秒印出來。
+     ⚠ 進場與出場**一定要用同一條曲線**：出場是 1→0、進場是 0→1，同一條曲線相加
+       剛好等於 1，畫面上的總亮度才會全程持平；用不同曲線會中間偏暗或偏亮。 */
+  var LEN = { l45: 450, l30: 300, l20: 200 };
+  var EASE = { e1: 'ease', e2: 'cubic-bezier(.16,1,.3,1)' };
   function tdur() { return Math.round(parseFloat(XT[st.x]) * 1000); }
+  function fxdur() { return st.l === 'same' ? tdur() : LEN[st.l]; }
   function applyGroups(inMs) {
     D.style.setProperty('--pv-fxin', Math.max(0, Math.round(inMs)) + 'ms');
     groups.forEach(function (g, j) {
@@ -377,7 +392,7 @@ const bar = `
     tabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === idx ? 'true' : 'false'); });
     if (fxTimer) { clearTimeout(fxTimer); fxTimer = null; }
     groups.forEach(function (g) { g.classList.remove('pv-dim'); g.classList.remove('pv-out'); });
-    var T = tdur();
+    var T = fxdur();
     if (prev === idx || !T) { applyGroups(0); return; }
     var old = groups[prev];
     if (st.f === 'x') {
@@ -511,6 +526,7 @@ const bar = `
     D.setAttribute('data-pvall', st.t === 'here2' ? '1' : '0');
     D.setAttribute('data-pvd', st.d);
     D.style.setProperty('--pv-tabt', XT[st.x]);
+    D.style.setProperty('--pv-fxease', EASE[st.e]);
     sizeCards();
     url();
   }
@@ -596,6 +612,8 @@ const bar = `
       + '・一屏看到 <b>' + seen.toFixed(2) + ' 張</b>・還能滑 <b>' + Math.round(left) + 'px</b>'
       + '・自動播放 <b>' + (stopped ? '已停' : (st.a === 'off' ? '關' : '進行中')) + '</b>'
       + ' ' + V[st.g] + 'px/秒・' + (SPEED[st.s] / 1000) + ' 秒換科・換色 ' + XT[st.x]
+      + '・過場 ' + fxdur() + 'ms'
+      + (fxdur() === tdur() ? '' : '（比標籤早 ' + (tdur() - fxdur()) + 'ms）')
 ;
   }
 
