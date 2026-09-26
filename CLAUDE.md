@@ -360,7 +360,14 @@ src/
                         ⚠⚠ 存的只有「按了哪一顆、在哪一頁、什麼時候」——**沒有 IP、沒有
                         User-Agent、沒有 cookie，連這次瀏覽的流水號都沒有**（有流水號就能
                         把動作串成軌跡）。⚠ 代碼是白名單，站上多一顆可以按的東西時，
-                        這裡與 assets/click-log.js 的規則表要一起加
+                        這裡與 assets/click-log.js 的規則表要一起加。
+                        ⚠⚠ 2026-09-26 使用者同意**為了訪客軌跡**解開「沒有流水號」那條線，
+                        但軌跡**還沒開工**，三份紀錄現在照舊 —— 定了什麼見 DECISIONS.md
+                        「訪客軌跡（決定了、還沒做）」那一列
+  store.js              **資料庫的容量與完整匯出**（2026-09-26）。報告頁「資料庫」那一份讀它：
+                        用了多少／500 MB、照最近的速度幾時到八成、按月分段匯出原始逐筆。
+                        ⚠ 刻意不做 COUNT(*)（讀取額度 9/1 起是硬上限），理由在檔頭。
+                        ⚠ 新增一張紀錄表或另開資料庫（軌跡那一個）要在它的 TABLES／DBS 加一筆
   source.js             **來源紀錄**的寫入與查詢（2026-09-25）。被 worker.js 匯入。
                         只在「從站外進來的那一下」記一筆：來源、認法、referrer 的**網域**、
                         進站頁、時間。⚠⚠ 同樣**沒有 IP、UA、cookie、流水號**，referrer
@@ -433,8 +440,8 @@ topics/<spec>/index.html 科別著陸頁（七科，2026-08-21 上線）。**由
                         版型改 tools/topics.mjs，改完重跑產生器。已進版控
 history/<name>.html     改版紀錄（原提案頁的推導文字，定案後只留這個。見第八節）
 history/index.html      改版紀錄的目錄
-admin/search/index.html **搜尋紀錄 ＋ 點擊紀錄 ＋ 來源紀錄報告**（2026-09-20，網址 /admin/search/；
-                        來源那一份 2026-09-25 加的）。三份在同一頁，上面一排分頁切換，共用同一把密碼與同一排「期間」。
+admin/search/index.html **搜尋紀錄 ＋ 點擊紀錄 ＋ 來源紀錄報告 ＋ 資料庫**（2026-09-20，網址 /admin/search/；
+                        來源那一份 2026-09-25、資料庫那一份 2026-09-26 加的）。四份在同一頁，上面一排分頁切換，共用同一把密碼與同一排「期間」。
                         ⚠ 這一頁**本身沒有任何資料**，只有一個密碼框——資料要帶
                         Cloudflare 加密變數 REPORT_KEY 跟 /api/search-report 要。
                         ⚠ 刻意**不寫進 robots.txt**，理由在 worker.js 的 ADMIN_PREFIX
@@ -536,6 +543,9 @@ tools/
                         **或改過站上任何一顆可以按的東西的 class**，都要跑它
   source-test.mjs       **來源紀錄那條線的守門**（2026-09-25）。61 項，做法同 click-test.mjs。
                         ⚠ 改過 src/source.js、assets/source-log.js、admin/search/ 都要跑它
+  store-test.mjs        **資料庫容量與匯出的守門**（2026-09-26）。49 項，做法同 source-test.mjs；
+                        含一項 EXPLAIN QUERY PLAN（擋「寫成整張表掃描、數字照樣對」）。
+                        ⚠ 改過 src/store.js、admin/search/ 都要跑它
   search-test.mjs       **搜尋紀錄那條線的守門**（2026-09-20）。47 項，零依賴
                         （資料庫用 node 內建的 node:sqlite 假裝成 D1，瀏覽器用站上
                         既有的那顆 Chromium）。`--site` 改對 _site/ 跑、`--shot` 順便截圖。

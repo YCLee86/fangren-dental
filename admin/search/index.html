@@ -14,6 +14,8 @@
   與站內每一顆會動的東西都記，資料那一側在 src/click.js。
   第三份（來源）是 2026-09-25 加的：使用者問「有辦法記錄使用者是從那邊進入網站的嗎」。
   只記「從站外進來的那一下」，資料那一側在 src/source.js。
+  第四份（資料庫）是 2026-09-26 加的：用了多少／500 MB、幾時會滿、按月匯出原始逐筆，
+  資料那一側在 src/store.js（理由見 DECISIONS.md「資料庫的容量與完整匯出」那一列）。
   ⚠ 「直接輸入」那一列一定會很大——LINE 與不少 App 內的瀏覽器不帶 referrer，
      沒貼 ?from= 標記的連結點進來都落在那裡。那不是壞掉，第二張表的
      「認法」那一欄會講清楚每一筆是靠標記還是靠 referrer 認出來的。
@@ -73,6 +75,8 @@
   .bar.tabs button[aria-pressed=true] { background: var(--hit); color: #17191d; border-color: var(--hit); }
 }
 * { box-sizing: border-box; }
+/* .bar 與 .exp 是 display:flex，會蓋掉 hidden 屬性的 display:none——資料庫那一份要藏兩排尺。 */
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--paper); color: var(--ink);
@@ -131,6 +135,23 @@ td.q { word-break: break-word; }
 .empty { color: var(--ink-soft); font-size: .85rem; background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: .9rem; margin: 0; }
 .foot { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
 .foot p { margin: 0; flex: 1 1 100%; color: var(--ink-soft); font-size: .75rem; }
+/* ---- 資料庫那一份（2026-09-26）-------------------------------------------
+   容量條：底是線色、已用是松綠、到 WARN_AT（八成）之後換磚紅。那條細直線就是八成的位置。
+   ⚠ 顏色一樣只用上面已經有的變數，夜間跟著那兩支推亮過的走。 */
+.db { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: .8rem .9rem; margin: 1rem 0 0; }
+.db h2 { margin: 0 0 .5rem; }
+.gauge { position: relative; height: 12px; border-radius: 999px; background: var(--rule); overflow: hidden; }
+.gauge i { position: absolute; inset: 0 auto 0 0; background: var(--hit); border-radius: 999px; min-width: 3px; }
+.gauge.warn i { background: var(--miss); }
+.gauge em { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--ink-soft); }
+.db p { margin: .5rem 0 0; font-size: .85rem; }
+.db p.state { font-weight: 600; }
+.db p.state.warn { color: var(--miss); }
+.db p.note, p.note { color: var(--ink-soft); font-size: .78rem; }
+.db table { margin-top: .7rem; background: transparent; }
+.exp { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .6rem 0 0; font-size: .85rem; }
+button:disabled { opacity: .5; cursor: default; }
+.exp select { font: inherit; font-size: 16px; color: var(--ink); background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: .3rem .4rem; }
 @media (max-width: 400px) {
   .sum { grid-template-columns: 1fr 1fr; }
   .sum div:first-child { grid-column: 1 / -1; }
@@ -218,6 +239,22 @@ td.q { word-break: break-word; }
       <div id="r-t-log"></div>
     </div>
 
+    <!-- 資料庫那一份（2026-09-26）。資料在 src/store.js。
+         ⚠ 這一份沒有「期間」與「來源」那兩排尺，也沒有底下那顆「下載 CSV」——
+           它的匯出是完整的原始逐筆（備份用），和那顆只拼畫面上那批資料的不是同一件事。 -->
+    <div id="view-store" hidden>
+      <div id="st-dbs"></div>
+
+      <h2>完整匯出<small>原始逐筆，備份用。存好之後才可以從資料庫刪掉舊的月份</small></h2>
+      <div class="bar" id="st-tables"><b>哪一份</b></div>
+      <div class="exp" id="st-range">
+        <label for="st-from">從</label><select id="st-from"></select>
+        <label for="st-to">到</label><select id="st-to"></select>
+      </div>
+      <div class="exp"><button type="button" class="go" id="st-go">匯出 CSV</button></div>
+      <p class="note" id="st-msg"></p>
+    </div>
+
     <div class="foot">
       <p id="span"></p>
       <button type="button" id="reload">重新整理</button>
@@ -234,7 +271,8 @@ td.q { word-break: break-word; }
   /* 兩份報告、兩個端點，**同一把密碼**（Cloudflare 的 REPORT_KEY）。
      ⚠ 不要寫成根目錄絕對路徑——理由同站上那幾支腳本（舊站還活著）。 */
   var API = { search: '../../api/search-report', click: '../../api/click-report',
-              source: '../../api/source-report' };
+              source: '../../api/source-report', store: '../../api/store-report' };
+  var EXPORT = '../../api/export';
 
   var SPEC = { general: '一般牙科', perio: '牙周治療', kids: '兒童牙科', endo: '顯微根管',
                ortho: '齒顎矯正', prosth: '植牙假牙', surg: '口腔外科' };
@@ -243,17 +281,19 @@ td.q { word-break: break-word; }
   /* 使用者指定的七格，加一格「全部」。value 是天數代碼，給兩個報告端點共用。 */
   var WINS = [['7d', '一週'], ['30d', '一個月'], ['60d', '兩個月'], ['90d', '三個月'],
               ['180d', '半年'], ['365d', '一年'], ['730d', '兩年'], ['all', '全部']];
-  var TABS = [['search', '搜尋紀錄'], ['click', '點擊紀錄'], ['source', '來源紀錄']];
+  var TABS = [['search', '搜尋紀錄'], ['click', '點擊紀錄'], ['source', '來源紀錄'], ['store', '資料庫']];
   /* 「來源」那把尺兩份不一樣：搜尋框只出現在首頁與七科頁，點擊則每一頁都有。 */
   var SCOPES = {
     search: [['', '全部'], ['home', '全站搜尋'], ['topic', '各科頁內']],
     click:  [['', '全部'], ['home', '首頁'], ['topic', '科別頁'], ['post', '文章頁']],
-    source: [['', '全部'], ['home', '首頁'], ['topic', '科別頁'], ['post', '文章頁']]
+    source: [['', '全部'], ['home', '首頁'], ['topic', '科別頁'], ['post', '文章頁']],
+    store: []
   };
   var TITLE = {
     search: ['搜尋紀錄', '訪客在站上搜尋框打過的字。沒有記錄 IP、瀏覽器或任何身分資訊。'],
     click:  ['點擊紀錄', '訪客按過站上哪些連結與按鈕。同樣沒有記錄 IP、瀏覽器或任何身分資訊。'],
-    source: ['來源紀錄', '訪客從哪裡點進網站。只算從站外進來的那一下，同樣沒有記錄 IP、瀏覽器或任何身分資訊。']
+    source: ['來源紀錄', '訪客從哪裡點進網站。只算從站外進來的那一下，同樣沒有記錄 IP、瀏覽器或任何身分資訊。'],
+    store:  ['資料庫', '紀錄存在 Cloudflare 的資料庫裡，一個資料庫最多 500 MB。這裡看用了多少、照現在的速度幾時會滿，以及把原始資料匯出備份。']
   };
 
   /* ---- 來源代碼 → 名字（對照 src/source.js 的 BUCKETS 與 TAGS）-------------
@@ -341,8 +381,8 @@ td.q { word-break: break-word; }
 
   var $ = function (id) { return document.getElementById(id); };
   var key = '', win = '30d', tab = 'search';
-  var scope = { search: '', click: '', source: '' };
-  var data = { search: null, click: null, source: null };
+  var scope = { search: '', click: '', source: '', store: '' };
+  var data = { search: null, click: null, source: null, store: null };
 
   /* ---- 時間：資料庫存的是 UTC 的 ISO 字串，畫面上一律台灣時間 -------------
      ⚠ 不要自己 +8 —— toLocaleString 帶 timeZone 才會處理各種邊界，
@@ -400,6 +440,8 @@ td.q { word-break: break-word; }
 
   function views() {
     TABS.forEach(function (t) { $('view-' + t[0]).hidden = tab !== t[0]; });
+    /* 資料庫那一份沒有期間、來源兩排尺，也沒有「下載 CSV」（它有自己的完整匯出）。 */
+    $('wins').hidden = $('scopes').hidden = $('csv').hidden = tab === 'store';
   }
 
   /* 換分頁：標題與兩塊畫面先換，資料沒有或期間不同才去拿。 */
@@ -587,12 +629,171 @@ td.q { word-break: break-word; }
     $('r-t-log').innerHTML = h + '</tbody></table>';
   }
 
+  /* ---- 資料庫 ------------------------------------------------------------- */
+  var MB = function (b) { return (b / 1048576).toFixed(b < 10485760 ? 2 : 1) + ' MB'; };
+  /* 每天長多少：剛開始每天只有幾 KB，印成 0.00 MB 等於什麼都沒說。 */
+  var size = function (b) { return b < 1048576 ? Math.max(1, Math.round(b / 1024)) + ' KB' : MB(b); };
+  var num = function (n) { return Number(n || 0).toLocaleString('en-US'); };
+  /* 「還有多久」：年＋月，一個月以內講天。 */
+  function howLong(days) {
+    if (days > 3653) return '十年以上';
+    if (days < 31) return Math.max(1, Math.round(days)) + ' 天';
+    var mo = Math.round(days / 30.44), y = Math.floor(mo / 12);
+    return (y ? y + ' 年' : '') + (mo % 12 ? (mo % 12) + ' 個月' : '');
+  }
+  function dbBlock(db) {
+    var rows = 0, recent = 0, first = null;
+    db.tables.forEach(function (t) {
+      rows += t.rows; recent += t.recent30;
+      if (t.first && (!first || t.first < first)) first = t.first;
+    });
+    var h = '<div class="db"><h2>' + esc(db.label) + '<small>' + esc(db.name) + '</small></h2>';
+    if (db.bytes == null) {
+      h += '<p class="state">量不到用了多少</p><p class="note">Cloudflare 這一次沒有回報資料庫的大小。' +
+           '等一下按「重新整理」再看一次；一直量不到的話請 Claude 查。</p>';
+    } else {
+      var pct = db.bytes / db.limit, warn = pct >= db.warnAt;
+      h += '<div class="gauge' + (warn ? ' warn' : '') + '"><i style="width:' + Math.min(100, pct * 100).toFixed(2) +
+           '%"></i><em style="left:' + (db.warnAt * 100) + '%"></em></div>';
+      h += '<p>已用 <b>' + MB(db.bytes) + '</b>／' + MB(db.limit) + '（' + (pct * 100).toFixed(1) + '%）</p>';
+      var state = pct >= db.warnAt ? '快滿了：先把最舊的幾個月匯出存好，再請 Claude 從資料庫刪掉'
+                : pct >= 0.5 ? '過半了：可以開始排時間匯出舊的月份'
+                : '還很空，不必處理';
+      h += '<p class="state' + (warn ? ' warn' : '') + '">' + state + '</p>';
+      /* 速度：最近 30 天的筆數 × 平均每筆佔多少（整個資料庫 ÷ 總筆數，含索引，所以估得偏快、偏保守）。
+         資料還不滿 30 天的話，就用實際累積的天數去除。 */
+      var age = first ? Math.max(1, (Date.now() - new Date(first)) / 86400000) : 0;
+      var perDay = rows && age ? (db.bytes / rows) * recent / Math.min(30, age) : 0;
+      var left = db.limit * db.warnAt - db.bytes;
+      var est;
+      if (!rows) est = '還沒有任何紀錄，估不出速度。';
+      else if (left <= 0) est = '已經超過八成。';
+      else if (!perDay) est = '最近 30 天沒有新資料，照這個速度不會滿。';
+      else est = '照最近 30 天的速度（每天約 ' + size(perDay) + '），大約 <b>' + howLong(left / perDay) +
+                 '</b> 之後到八成（那條細線）。' + (age < 30 ? '資料還不滿 30 天，這個數字會再變。' : '');
+      h += '<p class="note">' + est + '</p>';
+    }
+    h += '<table><thead><tr><th>哪一份</th><th class="n">筆數</th><th class="n">近 30 天</th><th class="t">從哪天開始</th></tr></thead><tbody>';
+    db.tables.forEach(function (t) {
+      h += '<tr><td>' + esc(t.label) + '</td><td class="n">' + num(t.rows) + '</td><td class="n">' + num(t.recent30) +
+           '</td><td class="t">' + (t.first ? tw(t.first).slice(0, 10) : '—') + '</td></tr>';
+    });
+    if (db.counter) {
+      h += '<tr><td>瀏覽計數<span class="tag">一頁一列</span></td><td class="n">' + num(db.counter.pages) +
+           '</td><td class="n">—</td><td class="t">累計 ' + num(db.counter.views) + ' 次</td></tr>';
+    }
+    return h + '</tbody></table></div>';
+  }
+
+  /* 匯出：一個月一段、一段最多 d.page 筆，接著要到完為止，最後拼成一個檔。
+     ⚠ 月份是 UTC 的月份（和資料庫的 at 同一套），每月 1 日台灣時間 0~8 點那幾筆
+       會落在前一個月——備份不會少任何一筆，只是切點差八小時。 */
+  var exp = { table: 'click_log', busy: false };
+  function months(from, to) {
+    var out = [], y = +from.slice(0, 4), m = +from.slice(5, 7);
+    while (true) {
+      var s = y + '-' + (m < 10 ? '0' : '') + m;
+      out.push(s);
+      if (s >= to) break;
+      if (++m > 12) { m = 1; y++; }
+    }
+    return out;
+  }
+  function expTables(d) {
+    var list = [];
+    (d.dbs || []).forEach(function (db) {
+      db.tables.forEach(function (t) { list.push({ table: t.table, label: t.label, first: t.first, last: t.last, rows: t.rows }); });
+      if (db.counter) list.push({ table: 'page_views', label: '瀏覽計數', rows: db.counter.pages });
+    });
+    return list;
+  }
+  function paintExport(d) {
+    var list = expTables(d);
+    if (!list.some(function (t) { return t.table === exp.table; }) && list.length) exp.table = list[0].table;
+    bar($('st-tables'), list.map(function (t) { return [t.table, t.label]; }), exp.table,
+        function (v) { exp.table = v; paintExport(d); });
+    var t = list.filter(function (x) { return x.table === exp.table; })[0];
+    var msg = $('st-msg');
+    $('st-range').hidden = exp.table === 'page_views';
+    if (exp.table === 'page_views') {
+      msg.textContent = '每一頁目前的總瀏覽數，一次全部匯出。';
+      $('st-go').disabled = false;
+      return;
+    }
+    if (!t || !t.first) {
+      $('st-from').innerHTML = $('st-to').innerHTML = '';
+      $('st-go').disabled = true;
+      msg.textContent = '這一份還沒有任何資料。';
+      return;
+    }
+    var ms = months(t.first.slice(0, 7), t.last.slice(0, 7));
+    var opt = ms.map(function (m) { return '<option>' + m + '</option>'; }).join('');
+    $('st-from').innerHTML = opt; $('st-to').innerHTML = opt;
+    $('st-from').value = ms[0]; $('st-to').value = ms[ms.length - 1];
+    $('st-go').disabled = false;
+    msg.textContent = '共 ' + ms.length + ' 個月、約 ' + num(t.rows) + ' 筆。月份以 UTC 切（台灣時間每月 1 日早上 8 點前的會算在前一個月）。';
+  }
+  function renderStore(d) {
+    $('st-dbs').innerHTML = (d.dbs || []).map(dbBlock).join('') ||
+      '<p class="empty">這個環境沒有綁定任何資料庫。</p>';
+    if (!exp.busy) paintExport(d);
+  }
+  function getJson(u) {
+    return fetch(u, { headers: { 'X-Report-Key': key } }).then(function (r) {
+      if (!r.ok) throw new Error('伺服器回了 ' + r.status);
+      return r.json();
+    });
+  }
+  $('st-go').addEventListener('click', function () {
+    if (exp.busy) return;
+    var table = exp.table, msg = $('st-msg');
+    var from = $('st-from').value, to = $('st-to').value;
+    if (table !== 'page_views' && from > to) { var x = from; from = to; to = x; }
+    var list = table === 'page_views' ? [null] : months(from, to);
+    var cols = null, rows = [], i = 0;
+    exp.busy = true; $('st-go').disabled = true;
+    msg.textContent = '匯出中…';
+    function step(after) {
+      var m = list[i];
+      var u = EXPORT + '?table=' + table + (m ? '&month=' + m + '&after=' + after : '');
+      return getJson(u).then(function (j) {
+        cols = j.cols; rows = rows.concat(j.rows || []);
+        msg.textContent = '匯出中…已拿到 ' + num(rows.length) + ' 筆' + (m ? '（' + m + '）' : '');
+        if (j.next != null) return step(j.next);
+        if (++i < list.length) return step(0);
+      });
+    }
+    step(0).then(function () {
+      var q = function (s) { return '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"'; };
+      /* 原始欄位照資料庫的名字一欄不少（之後要倒回去才對得上），另外在時間後面多一欄台灣時間。 */
+      var timeCol = cols.indexOf('at') >= 0 ? 'at' : (cols.indexOf('updated_at') >= 0 ? 'updated_at' : null);
+      var head = cols.slice();
+      if (timeCol) head.splice(head.indexOf(timeCol) + 1, 0, 'tw_time');
+      var lines = [head.join(',')];
+      rows.forEach(function (r) {
+        var cells = cols.map(function (c) { return q(r[c]); });
+        if (timeCol) cells.splice(cols.indexOf(timeCol) + 1, 0, q(tw(/Z$/.test(r[timeCol]) ? r[timeCol] : String(r[timeCol]).replace(' ', 'T') + 'Z', true)));
+        lines.push(cells.join(','));
+      });
+      var blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = table + (table === 'page_views' ? '-' + new Date().toISOString().slice(0, 10) : '-' + from + (from === to ? '' : '_' + to)) + '.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+      msg.textContent = '完成：' + num(rows.length) + ' 筆，檔名 ' + a.download + '。';
+    }).catch(function (e) {
+      msg.textContent = '匯出失敗（' + (e.message || '連不上') + '），已經拿到的沒有存。等一下再試一次。';
+    }).then(function () { exp.busy = false; $('st-go').disabled = false; });
+  });
+
   function render() {
     var d = data[tab];
     if (!d) return;
     bars();
     if (tab === 'search') renderSearch(d);
     else if (tab === 'click') renderClick(d);
+    else if (tab === 'store') { renderStore(d); $('span').textContent = '時間是台灣時間。'; return; }
     else renderSource(d);
 
     /* 資料從哪天開始 —— 「兩年」那一格在上線初期一定比實際資料長很多，
@@ -626,6 +827,7 @@ td.q { word-break: break-word; }
         return r.json();
       })
       .then(function (j) {
+        if (t === 'store') j.win = win;
         data[t] = j;
         $('gate').hidden = true;
         $('app').hidden = false;
@@ -655,7 +857,7 @@ td.q { word-break: break-word; }
   $('reload').addEventListener('click', function () { load(); });
   $('out').addEventListener('click', function () {
     try { localStorage.removeItem(STORE); } catch (x) {}
-    key = ''; data = { search: null, click: null, source: null };
+    key = ''; data = { search: null, click: null, source: null, store: null };
     $('key').value = '';
     $('app').hidden = true;
     $('gate').hidden = false;

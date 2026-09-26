@@ -16,6 +16,8 @@
      GET  /api/click-report?win=30d            → 同上（同一把 X-Report-Key）
      POST /api/source  body: { "page": "home", "from": "line", "host": "" } → { ok: true }
      GET  /api/source-report?win=30d           → 同上（同一把 X-Report-Key）
+     GET  /api/store-report                   → 資料庫用了多少、幾時會滿（同一把 X-Report-Key）
+     GET  /api/export?table=click_log&month=2026-09 → 某張表某個月的原始逐筆（同上，備份用）
      /admin/*                                 → 報告頁＋noindex＋no-store（見下方 ADMIN_PREFIX）
      其他                                        → 靜態檔，沒有就給 404 頁
 
@@ -27,6 +29,7 @@ import { ALLOWED } from "./allowed-slugs.js";
 import { logSearch, searchReport } from "./search.js";
 import { logClick, clickReport } from "./click.js";
 import { logSource, sourceReport } from "./source.js";
+import { storeReport, exportRows } from "./store.js";
 
 const allowed = new Set(ALLOWED);
 
@@ -193,6 +196,17 @@ export default {
 
     if (url.pathname === "/api/source-report") {
       if (request.method === "GET") return sourceReport(request, url, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
+    /* 資料庫的容量與完整匯出（2026-09-26）。只有讀、一律要密碼（見 src/store.js）。 */
+    if (url.pathname === "/api/store-report") {
+      if (request.method === "GET") return storeReport(request, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
+    if (url.pathname === "/api/export") {
+      if (request.method === "GET") return exportRows(request, url, env);
       return json({ error: "method not allowed" }, 405);
     }
 
