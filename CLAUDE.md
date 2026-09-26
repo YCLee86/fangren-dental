@@ -387,6 +387,8 @@ assets/
   source-log.js         **來源紀錄**的前端那一側（2026-09-25）。開頁時送一筆（重新整理、
                         上一頁、站內換頁都不送），**並把網址列上的 ?from= 擦掉**。
                         三種頁面都載，改完 index.html 要重跑 topics.mjs
+  doctor-skills.js      醫師卡「專長」的小框（2026-09-26）：有文章的詞變成可以按、點了跳出文章清單。
+                        小框的標記由 build.mjs 寫（對照表 tools/skill-posts.mjs），見 DECISIONS.md 那一列
   post-doctors.js       文章頁「這一科的醫師」的兩個入口（2026-09-25）：頂端「N 位醫師 ›」與
                         右下角「醫師 ﹀」捲到那一塊。HTML 由 build.mjs 寫，見 DECISIONS.md 那一列
   search-log.js         **搜尋紀錄**的前端那一側（2026-09-20）。只在「這次搜尋結束」
@@ -475,6 +477,8 @@ tools/
                         `--art <線稿檔> --crop x,y,w,h`（生成的線稿幾乎一定會多畫
                         一條地面線，要裁掉）。⚠ `--region` 那條是「從插畫抽線」的舊路，
                         已經被使用者退回，留著只是紀錄，不要再用
+  skill-posts.mjs       **醫師專長 ↔ 文章的對照表**（2026-09-26，被 build.mjs 匯入）。以文章為主一篇一列。
+                        ⚠⚠ **發新文章要在這裡加一列**，沒加 build 會擋（對不到就寫 []）
   topic-copy.mjs        七科的文案（被 topics.mjs 匯入）。**要改文字只改這一份**，
                         每一科：lead 或 stance 或 groups／cases／flowTitle／flow／close／ask
   serve.mjs             本機預覽伺服器
@@ -572,6 +576,9 @@ tools/
 - **文章頁 `<!-- DOCS:START -->` ~ `<!-- DOCS:END -->` 與 `<!-- DOCPEEK:START -->` ~ `<!-- DOCPEEK:END -->`**
   （「這一科的醫師」那一塊與頂端那一句，2026-09-25 起）。名單讀 `index.html` 的 `#doctors`，
   所以**改了醫師卡就要重跑 build**。⚠ 兩塊在 `<main>` 裡，但 `normalize()` 會整段拿掉，不進內容雜湊
+- **`index.html` 醫師卡裡的 `<!-- SKPOP -->` ~ `<!-- /SKPOP -->`**（專長後面的文章小框，2026-09-26 起，
+  由 build.mjs 照 `tools/skill-posts.mjs` 寫）。⚠ 它**是** build 產物，但七科著陸頁是快照 ——
+  改了對照表要 `build.mjs` → `topics.mjs` → `build.mjs`
 - `src/allowed-slugs.js`
 - `assets/post-titles.json`（十六篇的「slug → 標題」，只給 `/admin/search/` 的點擊報告用）
 - `tools/build-manifest.json`
@@ -611,6 +618,10 @@ tools/
 只是補後設資料（內文一個字沒改）的話，照第五節那個陷阱的程序把日期改回去。
 
 底部的「延伸閱讀」三張卡不必管，build 會自己產生並排除上下篇。
+
+⚠⚠ **新文章要登記到 `tools/skill-posts.mjs`**（2026-09-26 起）：它對得到醫師卡上哪幾個專長，
+一篇一列；沒登記 build 會擋。登記完跑 `build.mjs` → `topics.mjs` → `build.mjs`，
+首頁與七科的醫師卡小框才會多這一篇。對應要先問使用者（那張表每一格都是他確認過的）。
 
 ### 陷阱：跨全部文章的 `<main>` 內修改
 

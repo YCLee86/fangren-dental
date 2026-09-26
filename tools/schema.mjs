@@ -183,7 +183,9 @@ export function parseDoctors(indexHtml, warn = console.warn) {
 
   for (const m of indexHtml.matchAll(re)) {
     const spec = m[1];
-    const body = stripComments(m[2]);
+    /* 專長後面接的小框（build.mjs 3.45 節寫的，一串文章標題）要先整段拿掉，
+       不然那些標題會被當成專長寫進 knowsAbout。 */
+    const body = stripComments(m[2].replace(/<!-- SKPOP -->[\s\S]*?<!-- \/SKPOP -->/g, ""));
 
     const head = body.match(/<h3>([^<]*)<span class="doc-role">([^<]*)<\/span><\/h3>/);
     if (!head) {

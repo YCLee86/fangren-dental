@@ -2292,6 +2292,47 @@ html { scroll-padding-top: calc(var(--head-h-sm) + 1rem); }
    ⚠ 寫在 NIGHT 區塊外面是刻意的：那一區由 tools/night-mode.mjs 整段重寫。 */
 html[data-theme="dark"] .doc-fb { color: var(--accent); }
 
+/* ---- 專長的詞 → 文章的小框（2026-09-26 上線，推導在 /history/doctor-posts.html）----
+   專長那一句裡有文章的詞，點了在詞底下浮出一個小框列出文章（不管幾篇都跳框，使用者指定）。
+   小框的標記由 tools/build.mjs 寫（對照表 tools/skill-posts.mjs），行為在 assets/doctor-skills.js。
+   ・詞：仍然是一句話，只多一道那一科顏色的虛線 —— 按得到，但不搶名字與藥丸的份量。
+     ⚠ 虛線吃 --accent-deep 不吃 --accent：夜間的一般牙科綠 --accent 在深卡上幾乎看不見。
+     ⚠ .sk-go 由 JS 加上，沒有 JS 的時候不畫虛線（不給一個按了沒反應的樣子）。
+   ・框：浮在卡片上面，不推擠任何東西，醫師卡高度不變；寬度不超過卡片內寬。
+     ⚠ .doc 本身沒有 z-index，所以框的 z-index 會壓過排在後面的那幾張卡。
+   落選：卡片多一列「科別・N 篇 ›」（375 上醫師介紹多捲 471px）、
+        兩篇標題 ＋ 科別（多捲 910px）、點詞進著陸頁（「在著陸頁點還是著陸頁就有點怪」）、
+        只有一篇就直接進文章（使用者：「只要有文章 不管幾篇 點下去都顯示跳出小框」）。 */
+.doc { position: relative; }
+.sk-go {
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  text-decoration: underline dotted; text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px; text-decoration-color: var(--accent-deep);
+}
+.sk-go:hover, .sk-go[aria-expanded="true"] { color: var(--accent-deep); text-decoration-style: solid; }
+.sk-go:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; border-radius: 4px; }
+/* 著陸頁上本科的那幾顆已經是淡色塊（.tag-on），塊本身就是記號，不再疊虛線 */
+.sk-go.tag-on { text-decoration: none; }
+.sk-pop {
+  position: absolute; z-index: 20; display: block;
+  width: max-content; max-width: min(19rem, calc(100% - 1.6rem));
+  padding: .7rem .85rem .6rem; border-radius: 12px;
+  background: var(--card); border: 1px solid var(--rule);
+  box-shadow: 0 8px 28px rgba(0,0,0,.14), 0 1px 3px rgba(0,0,0,.08);
+  font-size: .83rem; line-height: 1.55; text-align: left;
+}
+.sk-pop[hidden] { display: none; }
+.sk-pop-h { display: block; font-size: .74rem; color: var(--ink-soft); margin-bottom: .3rem; }
+.sk-pop-a {
+  display: block; padding: .45rem 1.1rem .45rem 0; position: relative;
+  color: var(--accent-deep); font-weight: 500; text-decoration: none;
+  border-top: 1px solid var(--rule);
+}
+.sk-pop-h + .sk-pop-a { border-top: 0; }
+.sk-pop-a::after { content: "›"; position: absolute; right: 0; top: .45rem; color: var(--ink-soft); font-weight: 400; }
+.sk-pop-a:hover { text-decoration: underline; text-underline-offset: 3px; }
+html[data-theme="dark"] .sk-pop { box-shadow: 0 8px 28px rgba(0,0,0,.5); }
+
 /* ---- 從文章頁的「這一科的醫師」點過來（2026-09-25 上線，推導在 /history/post-doctors.html）----
    文章裡每一位醫師都連到 `/#doc-<代號>`，跳過來的那一張外框亮一下再退掉，
    讓人一眼知道是哪一張（九張卡長得很像）。
@@ -6194,7 +6235,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
           </picture>
           <h3>李柄輝<span class="doc-role tag-off">創辦醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="general">口腔檢查</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><span class="sep">、</span><span class="sk tag-on" data-spec="perio">牙周照護</span></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk" data-spec="general">口腔檢查</span><!-- SKPOP --><span class="sk-pop" role="group" aria-label="口腔檢查的文章" hidden><span class="sk-pop-h">口腔檢查・3 篇文章</span><a class="sk-pop-a" data-spec="general" href="../../posts/three-month-recall/">三個月一次的洗牙與塗氟：哪些人適用，為什麼是三個月</a><a class="sk-pop-a" data-spec="general" href="../../posts/regular-checkup/">半年一次的洗牙：健保給付的那一次，到底在做什麼</a><a class="sk-pop-a" data-spec="general" href="../../posts/bass-brushing/">貝氏刷牙法：刷了三十年，可能一直刷錯地方</a></span><!-- /SKPOP --><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><!-- SKPOP --><span class="sk-pop" role="group" aria-label="一般牙科治療的文章" hidden><span class="sk-pop-h">一般牙科治療・3 篇文章</span><a class="sk-pop-a" data-spec="general" href="../../posts/three-month-recall/">三個月一次的洗牙與塗氟：哪些人適用，為什麼是三個月</a><a class="sk-pop-a" data-spec="general" href="../../posts/regular-checkup/">半年一次的洗牙：健保給付的那一次，到底在做什麼</a><a class="sk-pop-a" data-spec="general" href="../../posts/bass-brushing/">貝氏刷牙法：刷了三十年，可能一直刷錯地方</a></span><!-- /SKPOP --><span class="sep">、</span><span class="sk tag-on" data-spec="perio">牙周照護</span><!-- SKPOP --><span class="sk-pop" role="group" aria-label="牙周照護的文章" hidden><span class="sk-pop-h">牙周照護・6 篇文章</span><a class="sk-pop-a" data-spec="perio" href="../../posts/perio-full-mouth/">牙周病為什麼要全口治療：會痛的，通常只是最嚴重的那一顆</a><a class="sk-pop-a" data-spec="perio" href="../../posts/perio-prevalence/">八成人有牙周病：牙齒不是老了才掉，是從年輕累積來的</a><a class="sk-pop-a" data-spec="general" href="../../posts/three-month-recall/">三個月一次的洗牙與塗氟：哪些人適用，為什麼是三個月</a><a class="sk-pop-a" data-spec="general" href="../../posts/regular-checkup/">半年一次的洗牙：健保給付的那一次，到底在做什麼</a><a class="sk-pop-a" data-spec="perio" href="../../posts/gum-bleeding/">牙齦流血不是火氣大：牙周病的早期訊號</a><a class="sk-pop-a" data-spec="general" href="../../posts/bass-brushing/">貝氏刷牙法：刷了三十年，可能一直刷錯地方</a></span><!-- /SKPOP --></dd>
             <dt>資歷</dt><dd>台灣國際植牙醫師學會專科醫師（ATIOI）<br>國際牙醫學院院士（TICD）<br>衛生福利部家庭牙醫專科</dd>
             <dt>學歷</dt><dd>中山醫學大學牙醫學學士<br>中山醫學大學牙醫學碩士<br>中山醫學大學牙醫學博士</dd>
           </dl>
@@ -6207,7 +6248,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
           </picture>
           <h3>李侑津<span class="doc-role">醫師</span></h3>
           <dl>
-            <dt>專長</dt><dd class="skills"><span class="sk tag-on" data-spec="perio">牙周病治療</span><span class="sep">、</span><span class="sk tag-on" data-spec="perio">牙周再生手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">植牙手術</span><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><span class="sep">、</span><span class="sk" data-spec="prosth">活動假牙</span><span class="sep">、</span><span class="sk tag-on" data-spec="perio">水雷射牙周治療</span><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span></dd>
+            <dt>專長</dt><dd class="skills"><span class="sk tag-on" data-spec="perio">牙周病治療</span><!-- SKPOP --><span class="sk-pop" role="group" aria-label="牙周病治療的文章" hidden><span class="sk-pop-h">牙周病治療・4 篇文章</span><a class="sk-pop-a" data-spec="perio" href="../../posts/perio-full-mouth/">牙周病為什麼要全口治療：會痛的，通常只是最嚴重的那一顆</a><a class="sk-pop-a" data-spec="perio" href="../../posts/perio-prevalence/">八成人有牙周病：牙齒不是老了才掉，是從年輕累積來的</a><a class="sk-pop-a" data-spec="perio" href="../../posts/perio-laser/">牙周病治療：清創、水雷射與再生手術</a><a class="sk-pop-a" data-spec="perio" href="../../posts/gum-bleeding/">牙齦流血不是火氣大：牙周病的早期訊號</a></span><!-- /SKPOP --><span class="sep">、</span><span class="sk tag-on" data-spec="perio">牙周再生手術</span><!-- SKPOP --><span class="sk-pop" role="group" aria-label="牙周再生手術的文章" hidden><span class="sk-pop-h">牙周再生手術・1 篇文章</span><a class="sk-pop-a" data-spec="perio" href="../../posts/perio-laser/">牙周病治療：清創、水雷射與再生手術</a></span><!-- /SKPOP --><span class="sep">、</span><span class="sk" data-spec="prosth">植牙手術</span><!-- SKPOP --><span class="sk-pop" role="group" aria-label="植牙手術的文章" hidden><span class="sk-pop-h">植牙手術・2 篇文章</span><a class="sk-pop-a" data-spec="prosth" href="../../posts/implant-lifespan/">植牙能用多久：世界第一顆植牙用了四十年</a><a class="sk-pop-a" data-spec="prosth" href="../../posts/missing-tooth/">缺牙之後：活動假牙、牙橋與植牙怎麼選</a></span><!-- /SKPOP --><span class="sep">、</span><span class="sk" data-spec="prosth">固定假牙</span><!-- SKPOP --><span class="sk-pop" role="group" aria-label="固定假牙的文章" hidden><span class="sk-pop-h">固定假牙・2 篇文章</span><a class="sk-pop-a" data-spec="prosth" href="../../posts/crown-materials/">一體成型的假牙好在哪：金屬燒瓷、全瓷與全鋯冠的差別</a><a class="sk-pop-a" data-spec="prosth" href="../../posts/missing-tooth/">缺牙之後：活動假牙、牙橋與植牙怎麼選</a></span><!-- /SKPOP --><span class="sep">、</span><span class="sk" data-spec="prosth">活動假牙</span><!-- SKPOP --><span class="sk-pop" role="group" aria-label="活動假牙的文章" hidden><span class="sk-pop-h">活動假牙・1 篇文章</span><a class="sk-pop-a" data-spec="prosth" href="../../posts/missing-tooth/">缺牙之後：活動假牙、牙橋與植牙怎麼選</a></span><!-- /SKPOP --><span class="sep">、</span><span class="sk tag-on" data-spec="perio">水雷射牙周治療</span><!-- SKPOP --><span class="sk-pop" role="group" aria-label="水雷射牙周治療的文章" hidden><span class="sk-pop-h">水雷射牙周治療・1 篇文章</span><a class="sk-pop-a" data-spec="perio" href="../../posts/perio-laser/">牙周病治療：清創、水雷射與再生手術</a></span><!-- /SKPOP --><span class="sep">、</span><span class="sk" data-spec="general">一般牙科治療</span><!-- SKPOP --><span class="sk-pop" role="group" aria-label="一般牙科治療的文章" hidden><span class="sk-pop-h">一般牙科治療・3 篇文章</span><a class="sk-pop-a" data-spec="general" href="../../posts/three-month-recall/">三個月一次的洗牙與塗氟：哪些人適用，為什麼是三個月</a><a class="sk-pop-a" data-spec="general" href="../../posts/regular-checkup/">半年一次的洗牙：健保給付的那一次，到底在做什麼</a><a class="sk-pop-a" data-spec="general" href="../../posts/bass-brushing/">貝氏刷牙法：刷了三十年，可能一直刷錯地方</a></span><!-- /SKPOP --></dd>
             <dt>資歷</dt><dd>臺北榮民總醫院<br>衛生福利部雙和醫院</dd>
             <dt>學歷</dt><dd>臺北醫學大學牙醫學學士<br>國立陽明交通大學牙醫學碩士</dd>
           </dl>
@@ -6785,7 +6826,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
            寫進去的值是「首頁自己的 lastmod」與「最新那篇文章的更新日」取較新的那個。
            ⚠ build.mjs 的 normalizeHome() 會把這個 <time> 整個從雜湊裡剔除，
            所以寫日期不會回頭改變雜湊（不然會變成每天自己跳）。 -->
-      <span>網站最後更新：<time class="site-updated" datetime="2026-09-25">2026 年 9 月 25 日</time></span>
+      <span>網站最後更新：<time class="site-updated" datetime="2026-09-26">2026 年 9 月 26 日</time></span>
     </div>
   </div>
 </footer>
@@ -7361,9 +7402,13 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
   /* 每張卡／每位醫師的可搜尋文字先算好收起來。
      用 textContent 而不是另外維護一份關鍵字：標題、摘要、標籤、專長全都在裡面，
      漏掉一個欄位的機會是零，而且之後加欄位不必回來改這裡。 */
+  /* ⚠ 醫師卡專長後面的小框（.sk-pop，一串文章標題）不算那位醫師的字 ——
+       不拿掉的話搜「貝氏」會跑出三位醫師（2026-09-26，推導在 /history/doctor-posts.html）。 */
   function indexOf(list) {
     return Array.prototype.map.call(list, function (el) {
-      return { el: el, text: (el.textContent || '').replace(/\s+/g, '').toLowerCase() };
+      var c = el.cloneNode(true);
+      Array.prototype.forEach.call(c.querySelectorAll('.sk-pop'), function (x) { x.parentNode.removeChild(x); });
+      return { el: el, text: (c.textContent || '').replace(/\s+/g, '').toLowerCase() };
     });
   }
   var cardIdx = indexOf(cards);
@@ -7793,6 +7838,7 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 <script src="../../assets/img-guard.js" defer></script>
 <script src="../../assets/counter.js" defer></script>
 <script src="../../assets/head-search.js" defer></script>
+<script src="../../assets/doctor-skills.js" defer></script>
 <script src="../../assets/search-log.js" defer></script>
 <script src="../../assets/click-log.js" defer></script>
 <script src="../../assets/source-log.js" defer></script>

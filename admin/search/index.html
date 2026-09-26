@@ -286,7 +286,8 @@ td.q { word-break: break-word; }
     chip: '科別標記', hours: '門診表篩選', tag: '文章上的科別', nav: '頁首選單',
     foot: '頁尾導覽', count: '著陸頁的醫師／文章數', card: '文章卡', rel: '延伸閱讀',
     prev: '上一篇', next: '下一篇', fb: '醫師的臉書粉專',
-    doc: '文章裡的醫師 → 首頁', 'doc-more': '文章裡「這一科・N 位」→ 著陸頁'
+    doc: '文章裡的醫師 → 首頁', 'doc-more': '文章裡「這一科・N 位」→ 著陸頁',
+    sk: '醫師卡專長 → 打開小框', 'sk-post': '專長小框 → 文章'
   };
   var DOC = { 'li-binghui': '李柄輝', 'li-youjin': '李侑津', 'wang-junwei': '王俊偉', 'liao-liyang': '廖立揚',
               'lin-yanyu': '林晏妤', 'xu-xinwen': '許馨文', 'yang-xiaoying': '楊小瑩',
@@ -328,7 +329,8 @@ td.q { word-break: break-word; }
     if (k === 'tag') return PREFIX[k] + '：' + (SPEC[v] || v);
     if (k === 'nav' || k === 'foot' || k === 'count') return PREFIX[k] + '：' + (HASH[v] || v);
     if (k === 'card' || k === 'rel' || k === 'prev' || k === 'next') return PREFIX[k] + '：' + title(v);
-    if (k === 'fb' || k === 'doc') return PREFIX[k] + '：' + (DOC[v] || v);
+    if (k === 'fb' || k === 'doc' || k === 'sk') return PREFIX[k] + '：' + (DOC[v] || v);
+    if (k === 'sk-post') return PREFIX[k] + '：' + title(v);
     if (k === 'doc-more') return PREFIX[k] + '：' + (SPEC[v] || v);
     if (PREFIX[k]) return PREFIX[k] + '：' + v;
     return code;

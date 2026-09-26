@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>doctor-posts｜芳仁牙醫診所・改版紀錄</title>
+<style>
+  :root { --paper: #e2e5e6; --card: #f4f4f5; --rule: #cdd0d2; --ink: #2a2c27; --ink-soft: #5c5f57; --teal: #214D48; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.6rem 1.1rem 4rem; background: var(--paper); color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.85; font-size: 15px;
+  }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  a { color: var(--teal); }
+  h1 { font-size: 1.25rem; line-height: 1.5; margin: 0 0 .3rem; }
+  h2 { font-size: .95rem; margin: 2rem 0 .5rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .meta { margin: 0 0 1.4rem; font-size: .82rem; color: var(--ink-soft); }
+  .meta code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .05rem .35rem; }
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .9rem 1rem; font-size: .86rem; }
+  .note :first-child { margin-top: 0; } .note :last-child { margin-bottom: 0; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    padding: .9rem 1rem; overflow-x: auto; font-size: 12.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC", monospace;
+  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--ink-soft); }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>doctor-posts — 醫師卡往文章導流（專長的詞 → 文章的小框）</h1>
+<p class="meta">
+  2026-09-25 開、09-26 五輪定案上線<br>
+  原網址 <code>/preview/doctor-posts/</code>（首頁快照，已刪除 2026-09-26）<br>
+  整頁還原：<code>git show 8ab0f746:preview/doctor-posts/index.html</code><br>
+  提案期的產生器 <code>tools/doctor-posts-preview.mjs</code>（定案時刪掉，同一個 sha 還原得到）
+</p>
+
+<h2>起因</h2>
+<div class="note"><pre>使用者：「目前醫師介紹的瀏覽明顯高於其他頁面不少，有想到在醫師圖卡做文章導流。但要怎麼做呢？」
+反方向（文章 → 醫師）前一天剛上線（/history/post-doctors.html），醫師卡上還沒有往文章走的路。</pre></div>
+
+<h2>五輪</h2>
+<div class="note"><pre>一　「ABC都做提案頁」
+　　Ⓐ 卡片多一列「文章」：每一科一個連結「牙周治療・4 篇 ›」→ 著陸頁的文章區
+　　Ⓑ 同一列先列兩篇標題，底下再接 Ⓐ 那一排
+　　Ⓒ 卡片不加東西，專長的詞變成連結 → 那一科的著陸頁
+　　量測（醫師介紹整段多捲）：375　Ⓐ +471　Ⓑ +910　Ⓒ 0
+　　　　　　　　　　　　　　　1440　Ⓐ +100　Ⓑ +256　Ⓒ 0
+
+二　使用者：「我覺得專長比較好 但點下去都是著陸頁 如果我想點下去是文章 要怎麼做比較好
+　　使用者如果在著陸頁點還是著陸頁就有點怪」
+　　→ 每個詞指定講那件事的那一篇；沒有文章的詞維持純文字（連到不相干的文章比不連更糟）
+
+三　使用者：「那以後同一個專長的文章變多怎麼辦」→「做成提案頁給我看」
+　　→ 兩篇以上時詞底下浮出小框列標題（卡片高度不變）
+
+四　使用者：「只要有文章 不管幾篇 點下去都顯示跳出小框」
+　　「把目前文章都整理出來和對應的醫師專長做好對應 給我確認」
+　　→ 對照表改成以文章為主，一篇一列
+　　→「4 篇以上只列 3 篇＋全部 N 篇 ›」那一段拿掉：牙周照護的文章橫跨一般牙科與牙周兩科，
+　　　 沒有任何一頁著陸頁列得全，小框一律列全部
+
+五　使用者逐格改對照表：
+　　「半年洗牙 三個月洗牙 貝氏刷牙 都是口腔檢查 一般牙科治療 牙周照護」
+　　「八成人有牙周病 也有牙周病治療」「牙周病全口治療 也要有牙周照護」
+　　「孩子第一次看牙 兒童齲齒治療」「拔智齒之後 沒有齒槽骨保留術」「缺牙之後 有固定假牙」
+　　→「上線」</pre></div>
+
+<h2>定案（＝ 現在站上的）</h2>
+<div class="note"><pre>醫師卡「專長」那一句裡有文章的詞：那一科顏色的虛線底線，點了在詞底下浮出小框
+　小框：「牙周照護・6 篇文章」＋ 一篇一行完整標題（照上架日期新到舊），點標題進文章
+　再點一次那個詞／點框外／Esc 收起；一次只開一個；框浮在卡片上，醫師卡高度不變
+首頁與七科著陸頁都是這樣（著陸頁本科的詞是淡色塊，不再疊虛線）
+沒有文章、維持純文字的四個：全口重建、根尖手術、阻生齒矯正、齒槽骨保留術
+
+對照表（tools/skill-posts.mjs，一篇一列）
+　半年一次的洗牙／三個月一次的洗牙與塗氟／貝氏刷牙法　口腔檢查、一般牙科治療、牙周照護
+　牙齦流血不是火氣大／八成人有牙周病　牙周照護、牙周病治療
+　牙周病為什麼要全口治療　牙周病治療、牙周照護
+　牙周病治療：清創、水雷射與再生手術　牙周病治療、水雷射牙周治療、牙周再生手術
+　牙齒矯正／隱形矯正　齒顎矯正、隱適美
+　孩子第一次看牙／小朋友的牙套　兒童齲齒治療
+　兒童舒眠牙科治療　兒童鎮靜麻醉
+　兒童早期矯正　兒童早期矯正、兒童隱適美
+　智齒要不要拔／拔智齒之後　阻生齒拔除
+　一體成型的假牙好在哪　固定假牙
+　缺牙之後　活動假牙、牙橋、植牙手術、固定假牙
+　植牙能用多久　植牙手術
+　根管治療的生物陶瓷　顯微根管、活髓治療
+　根管鈣化　顯微根管</pre></div>
+
+<h2>⚠ 上線時要知道的</h2>
+<div class="note"><pre>・小框由 tools/build.mjs 寫（3.45 節），接在原本的 &lt;span class="sk"&gt; 後面，
+　頭尾用 SKPOP 兩個註解包起來、每次 build 整段拿掉再重寫。原本那個 span 一個字都沒動 ——
+　build.mjs 的 allDoctors、topics.mjs 的本科判斷與 tag-on、schema.mjs 都靠那個寫法比對。
+・build 擋三件：表裡的文章不存在、有文章沒登記、表裡的詞在醫師卡上找不到（打錯字）。
+　**發新文章要在 tools/skill-posts.mjs 加一列**，真的對不到就寫 []。
+・行為在 assets/doctor-skills.js。虛線（.sk-go）是那一支加上的，沒有 JS 就是原本那句話。
+・首頁搜尋的 indexOf() 先拿掉 .sk-pop 再讀字（不然搜「貝氏」會跑出三位醫師）；
+　schema.mjs 讀醫師卡前也先拿掉 SKPOP（不然標題會變成 knowsAbout）。
+・點擊紀錄多兩種代碼：sk:&lt;醫師代號&gt;（打開小框）、sk-post:&lt;文章&gt;（點標題）。
+　click-test 110 項、search-test 51 項、source-test 61 項，repo 與 _site 都過。
+・量測：320／375（白天、夜間）／1440 × 首頁與著陸頁，框都在卡片內、壓在下一張卡上面、沒破框；
+　Esc 收起、鍵盤 Enter 打開。
+・二十篇文章的「最後更新」一天都沒動（build-manifest.json 只有首頁那一筆換成當天）。
+
+・同一輪發現、**沒有修**的既有問題：schema.mjs 讀醫師欄位的正規式寫的是 &lt;dd&gt;，
+　而專長那一格是 &lt;dd class="skills"&gt; —— 所以 JSON-LD 的 knowsAbout 目前只有科別、
+　一個專長都沒有。待使用者決定要不要修。</pre></div>
+
+<footer>芳仁牙醫診所・改版紀錄。這一頁不會再改。</footer>
+</div></body>
+</html>

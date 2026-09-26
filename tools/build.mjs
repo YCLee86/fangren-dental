@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 
 import { homeGraph, parseDoctors, parseHours, parseTopics, postGraph } from "./schema.mjs";
 import { CARD_FX, cardCss, cardOverlay, readFxCss } from "./card-motion.mjs";
+import { POST_SKILLS } from "./skill-posts.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const POSTS_DIR = path.join(ROOT, "posts");
@@ -767,6 +768,44 @@ if (siteUrl && clinic) {
     `結構化資料：${facts.doctors.length} 位醫師、` +
       `${Object.keys(facts.topics).length} 個科別、${facts.hours.length} 段營業時間`
   );
+}
+
+/* ---------- 3.45 醫師卡「專長」的小框（2026-09-26 上線，推導在 /history/doctor-posts.html）----------
+   專長那一句裡有文章的詞，後面緊接一個 hidden 的 .sk-pop（列出講那件事的文章），
+   assets/doctor-skills.js 把那個詞變成可以按的，按了打開小框。沒有 JS 的時候就是原本那句話。
+   對照表在 tools/skill-posts.mjs（以文章為主，一篇一列），這裡反推成「詞 → 文章」。
+   ⚠ 原本的 <span class="sk"> 一個字都不動：build.mjs 的 allDoctors、topics.mjs 的
+     本科判斷與 tag-on、schema.mjs 都靠那個寫法在比對。小框只是**接在它後面**，
+     頭尾用兩個註解包起來，每次 build 先整段拿掉再重寫（冪等）。
+   ⚠ 小框裡的字不能被首頁搜尋讀到（不然搜「貝氏」會跑出三位醫師）——
+     index.html 那支篩選的 indexOf() 會先拿掉 .sk-pop 再讀 textContent。
+   ⚠ 放在結構化資料那一步之後：parseDoctors() 讀的是這一步之前的醫師卡。 */
+{
+  const known = new Set(posts.map((p) => p.slug));
+  for (const sl of Object.keys(POST_SKILLS))
+    if (!known.has(sl)) throw new Error(`tools/skill-posts.mjs 指到一篇不存在的文章：${sl}`);
+  for (const p of posts)
+    if (!POST_SKILLS[p.slug]) throw new Error(`〈${p.title}〉（${p.slug}）沒有登記在 tools/skill-posts.mjs —— 發新文章要順手登記它對得到哪幾個醫師專長（真的沒有就寫 []）`);
+
+  const a0 = nextIndex.indexOf('<section id="doctors">');
+  const a1 = nextIndex.indexOf("</section>", a0);
+  if (a0 === -1 || a1 === -1) throw new Error("index.html 找不到醫師介紹那一段，專長的小框產生不出來");
+  let sec = nextIndex.slice(a0, a1).replace(/<!-- SKPOP -->[\s\S]*?<!-- \/SKPOP -->/g, "");
+  const onCards = new Set([...sec.matchAll(/<span class="sk" data-spec="[a-z]+">([^<]+)<\/span>/g)].map((m) => m[1]));
+  for (const [sl, list] of Object.entries(POST_SKILLS))
+    for (const t of list)
+      if (!onCards.has(t)) throw new Error(`tools/skill-posts.mjs 裡 ${sl} 的「${t}」在醫師卡的專長裡找不到（打錯字？醫師卡改過？）`);
+
+  let nPop = 0;
+  sec = sec.replace(/(<span class="sk" data-spec="[a-z]+">([^<]+)<\/span>)/g, (m, span, t) => {
+    const list = posts.filter((p) => POST_SKILLS[p.slug].includes(t));   /* posts 已經照上架日期新到舊排好 */
+    if (!list.length) return m;
+    nPop++;
+    const links = list.map((p) => `<a class="sk-pop-a" data-spec="${SPEC[p.tag]}" href="posts/${esc(p.slug)}/">${esc(p.title)}</a>`).join("");
+    return `${span}<!-- SKPOP --><span class="sk-pop" role="group" aria-label="${esc(t)}的文章" hidden><span class="sk-pop-h">${esc(t)}・${list.length} 篇文章</span>${links}</span><!-- /SKPOP -->`;
+  });
+  nextIndex = nextIndex.slice(0, a0) + sec + nextIndex.slice(a1);
+  console.log(`醫師專長的小框：${nPop} 個詞有文章（${onCards.size - [...onCards].filter((t) => posts.some((p) => POST_SKILLS[p.slug].includes(t))).length} 個詞沒有）`);
 }
 
 /* ---------- 3.5 首頁自己的最後更新日（給 sitemap 用） ----------

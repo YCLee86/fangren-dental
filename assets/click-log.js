@@ -110,6 +110,13 @@
     ['.pd-peek',                        'doc-peek'],
     ['.pd-btt',                         'doc-btn'],
     ['.pd-go',   function (el) { return 'doc:' + hash(el).replace(/^doc-/, ''); }],
+    /* 醫師卡「專長」的小框（2026-09-26）：打開記是哪一位醫師、點標題記是哪一篇。
+       ⚠ .sk-go 是 assets/doctor-skills.js 開頁時加上的，那一支沒跑的話這一條就不會命中 */
+    ['.sk-pop-a', function (el) { return 'sk-post:' + slug(el); }],
+    ['.sk-go', function (el) {
+      var d = el.closest('.doc');
+      return 'sk:' + (d && d.id ? d.id.replace(/^doc-/, '') : '');
+    }],
     ['.post-nav a', function (el) {
       var t = el.textContent || '';
       if (t.indexOf('上一篇') >= 0) return 'prev:' + slug(el);
